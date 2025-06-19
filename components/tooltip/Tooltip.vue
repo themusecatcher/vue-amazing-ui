@@ -7,7 +7,8 @@ import {
   useEventListener,
   useResizeObserver,
   rafTimeout,
-  cancelRaf
+  cancelRaf,
+  useOptionsSupported
 } from 'components/utils'
 export interface Props {
   maxWidth?: string | number // 文字提示最大宽度，单位 px
@@ -64,6 +65,8 @@ const tooltipCardWidth = ref<number>(0) // 文字提示内容 tooltip-card 宽�
 const tooltipCardHeight = ref<number>(0) // 文字提示内容 tooltip-card 高度
 const viewportWidth = ref<number>(document.documentElement.clientWidth) // 视口宽度(不包括滚动条)
 const viewportHeight = ref<number>(document.documentElement.clientHeight) // 视口高度(不包括滚动条)
+const { isSupported: passiveSupported } = useOptionsSupported('passive')
+const { isSupported: captureSupported } = useOptionsSupported('capture')
 const emits = defineEmits(['update:show', 'openChange', 'animationend'])
 const slotsExist = useSlotsExist(['tooltip'])
 const tooltipMaxWidth = computed(() => {
@@ -166,8 +169,13 @@ function getViewportSize() {
 // 查询并监听最近可滚动父元素
 function observeScroll() {
   cleanup()
-  scrollTarget.value = getScrollParent(contentRef.value?.parentElement ?? null)
-  scrollTarget.value && scrollTarget.value.addEventListener('scroll', updatePosition)
+  scrollTarget.value = getScrollParent(contentRef.value)
+  scrollTarget.value &&
+    scrollTarget.value.addEventListener(
+      'scroll',
+      updatePosition,
+      passiveSupported.value ? { passive: true } : undefined
+    )
   if (scrollTarget.value === document.documentElement) {
     mutationObserver.start()
   }
@@ -177,23 +185,26 @@ function cleanup() {
   scrollTarget.value = null
   mutationObserver.stop()
 }
-// 查询最近的可滚动父元素
+// 获取父元素
+function getParentElement(el: HTMLElement): HTMLElement | null {
+  // Document
+  if (el === document.documentElement) return null
+  return el.parentElement
+}
+// 查找最近的可滚动父元素
 function getScrollParent(el: HTMLElement | null): HTMLElement | null {
+  if (el === null) return null
+  const parentElement = getParentElement(el)
+  if (parentElement === null) return null
+  // Document
+  if (parentElement === document.documentElement) return document.documentElement
   const isScrollable = (el: HTMLElement): boolean => {
-    const style = window.getComputedStyle(el)
-    if (
-      (el.scrollWidth > el.clientWidth && ['scroll', 'auto'].includes(style.overflowX)) ||
-      (el.scrollHeight > el.clientHeight && ['scroll', 'auto'].includes(style.overflowY)) ||
-      ((el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight) && el === document.documentElement)
-    ) {
-      return true
-    }
-    return false
+    const { overflow, overflowX, overflowY } = getComputedStyle(el)
+    return /(auto|scroll|overlay)/.test(overflow + overflowY + overflowX)
   }
-  if (el) {
-    return isScrollable(el) ? el : getScrollParent(el.parentElement ?? null)
-  }
-  return null
+  // Element
+  if (isScrollable(parentElement)) return parentElement
+  return getScrollParent(parentElement)
 }
 // 更新文字提示位置
 function updatePosition() {
@@ -359,7 +370,7 @@ function onShow(): void {
       emits('update:show', true)
       emits('openChange', true)
       if (showTooltip.value && props.trigger === 'click') {
-        document.addEventListener('click', handleClick)
+        document.addEventListener('click', handleClick, captureSupported.value ? { capture: true } : true)
       }
     }, props.showDelay)
   }
@@ -372,7 +383,7 @@ function onHide(): void {
       emits('update:show', false)
       emits('openChange', false)
       if (showTooltip.value && props.trigger === 'click') {
-        document.removeEventListener('click', handleClick)
+        document.removeEventListener('click', handleClick, captureSupported.value ? { capture: true } : true)
       }
     }, props.hideDelay)
   }

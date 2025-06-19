@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*全局展示操作反馈信息*
+_全局展示操作反馈信息_
 
 ## 何时使用
 
@@ -23,11 +23,8 @@
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { SoundFilled, FireFilled } from '@ant-design/icons-vue'
-import { generate } from '@ant-design/colors'
 const message = ref()
 const customMessage = ref()
-const customThemeMessage = ref()
-const primaryColor = ref('#ff6900')
 function onOpen(content: string) {
   message.value.open(content) // open 调用
 }
@@ -77,19 +74,6 @@ function onStyleCustom(content: string) {
     }
   })
 }
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6],
-    '--button-ripple-color': color
-  }
-  return style
-}
-function onThemeCustom(content: string) {
-  customThemeMessage.value.info(content)
-}
 function onCustomClose() {
   message.value.info({
     content: 'The message will automatically turn off after 3 seconds.',
@@ -116,14 +100,7 @@ function onClose() {
 }
 </script>
 
-<Message ref="message" @click="onClick" @close="onClose" />
-<Message ref="customMessage" @click="onClick" @close="onClose" />
-<Message
-  ref="customThemeMessage"
-  :style="`--message-primary-color: ${primaryColor};`"
-  @click="onClick"
-  @close="onClose"
-/>
+<Message ref="message" @click="onClick" @close="onClose" /> <Message ref="customMessage" @click="onClick" @close="onClose" />
 
 ## 基本使用
 
@@ -246,21 +223,9 @@ function onClose() {
 
 ## 自定义样式
 
-<Space vertical>
-  <Space>
-    <Button type="primary" @click="onClassCustom('This is a custom class message')">Custom Class</Button>
-    <Button type="primary" @click="onStyleCustom('This is a custom style message')">Custom Style</Button>
-  </Space>
-  <Space align="center">
-    messagePrimaryColor:
-    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-    <Button
-      :style="getThemeStyle(primaryColor)"
-      type="primary"
-      @click="onThemeCustom('This is a custom theme message')"
-      >Custom Theme</Button
-    >
-  </Space>
+<Space>
+  <Button type="primary" @click="onClassCustom('This is a custom class message')">Custom Class</Button>
+  <Button type="primary" @click="onStyleCustom('This is a custom style message')">Custom Style</Button>
 </Space>
 
 <style lang="less" scoped>
@@ -275,11 +240,8 @@ function onClose() {
 <script setup lang="ts">
 import { ref, h } from 'vue'
 import { SoundFilled, FireFilled } from '@ant-design/icons-vue'
-import { generate } from '@ant-design/colors'
 const message = ref()
 const customMessage = ref()
-const customThemeMessage = ref()
-const primaryColor = ref('#ff6900')
 function onClassCustom(content: string) {
   message.value.info({
     content,
@@ -298,19 +260,6 @@ function onStyleCustom(content: string) {
     }
   })
 }
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6],
-    '--button-ripple-color': color
-  }
-  return style
-}
-function onThemeCustom(content: string) {
-  customThemeMessage.value.info(content)
-}
 function onClick(e: Event) {
   console.log('click', e)
 }
@@ -319,30 +268,12 @@ function onClose() {
 }
 </script>
 <template>
-  <Space vertical>
-    <Space>
-      <Button type="primary" @click="onClassCustom('This is a custom class message')">Custom Class</Button>
-      <Button type="primary" @click="onStyleCustom('This is a custom style message')">Custom Style</Button>
-    </Space>
-    <Space align="center">
-      messagePrimaryColor:
-      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-      <Button
-        :style="getThemeStyle(primaryColor)"
-        type="primary"
-        @click="onThemeCustom('This is a custom theme message')"
-        >Custom Theme</Button
-      >
-    </Space>
+  <Space>
+    <Button type="primary" @click="onClassCustom('This is a custom class message')">Custom Class</Button>
+    <Button type="primary" @click="onStyleCustom('This is a custom style message')">Custom Style</Button>
   </Space>
   <Message ref="message" @click="onClick" @close="onClose" />
   <Message ref="customMessage" @click="onClick" @close="onClose" />
-  <Message
-    ref="customThemeMessage"
-    :style="`--message-primary-color: ${primaryColor};`"
-    @click="onClick"
-    @close="onClose"
-  />
 </template>
 <style lang="less" scoped>
 :deep(.custom-class) {
@@ -403,46 +334,46 @@ function onClose() {
 
 ### Message
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-content | 提示内容 | string | undefined
-duration | 自动关闭的延时，单位 `ms`，设置 `null` 时，不自动关闭 | number | 3000
-top | 消息距离顶部的位置，单位 `px` | string &#124; number | 30
+| 参数     | 说明                                                  | 类型                 | 默认值    |
+| :------- | :---------------------------------------------------- | :------------------- | :-------- |
+| content  | 提示内容                                              | string               | undefined |
+| duration | 自动关闭的延时，单位 `ms`，设置 `null` 时，不自动关闭 | number               | 3000      |
+| top      | 消息距离顶部的位置，单位 `px`                         | string &#124; number | 30        |
 
 ### Message Type
 
 <br/>
 
-*调用时传入的 `Message` 类型，以下属性均具有更高优先级*
+_调用时传入的 `Message` 类型，以下属性均具有更高优先级_
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-content? | 提示内容 | string | undefined
-icon? | 自定义图标 | VNode | undefined
-duration? | 自动关闭的延时时长，单位 `ms`；设置 `null` 时，不自动关闭 | number &#124; null | undefined
-top? | 消息距离顶部的位置，单位 `px` | string &#124; number | undefined
-class? | 自定义类名 | string | undefined
-style? | 自定义样式 | string | undefined
-onClick? | 点击 `message` 时的回调函数 | Function | undefined
-onClose? | 关闭时的回调函数 | Function | undefined
+| 名称      | 说明                                                      | 类型                 | 默认值    |
+| :-------- | :-------------------------------------------------------- | :------------------- | :-------- |
+| content?  | 提示内容                                                  | string               | undefined |
+| icon?     | 自定义图标                                                | VNode                | undefined |
+| duration? | 自动关闭的延时时长，单位 `ms`；设置 `null` 时，不自动关闭 | number &#124; null   | undefined |
+| top?      | 消息距离顶部的位置，单位 `px`                             | string &#124; number | undefined |
+| class?    | 自定义类名                                                | string               | undefined |
+| style?    | 自定义样式                                                | string               | undefined |
+| onClick?  | 点击 `message` 时的回调函数                               | Function             | undefined |
+| onClose?  | 关闭时的回调函数                                          | Function             | undefined |
 
 ## Methods
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-open | 基本全局提示 | (content: string &#124; [Message](#message-type)) => void
-info | 信息全局提示 | (content: string &#124; [Message](#message-type)) => void
-success | 成功全局提示 | (content: string &#124; [Message](#message-type)) => void
-error | 失败全局提示 | (content: string &#124; [Message](#message-type)) => void
-warning | 警告全局提示 | (content: string &#124; [Message](#message-type)) => void
-loading | 加载全局提示 | (content: string &#124; [Message](#message-type)) => void
+| 名称    | 说明         | 类型                                                      |
+| :------ | :----------- | :-------------------------------------------------------- |
+| open    | 基本全局提示 | (content: string &#124; [Message](#message-type)) => void |
+| info    | 信息全局提示 | (content: string &#124; [Message](#message-type)) => void |
+| success | 成功全局提示 | (content: string &#124; [Message](#message-type)) => void |
+| error   | 失败全局提示 | (content: string &#124; [Message](#message-type)) => void |
+| warning | 警告全局提示 | (content: string &#124; [Message](#message-type)) => void |
+| loading | 加载全局提示 | (content: string &#124; [Message](#message-type)) => void |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-click | 点击 `message` 时触发的回调函数 | (e: Event) => void
-close | 关闭时触发的回调函数 | () => void
+| 名称  | 说明                            | 类型               |
+| :---- | :------------------------------ | :----------------- |
+| click | 点击 `message` 时触发的回调函数 | (e: Event) => void |
+| close | 关闭时触发的回调函数            | () => void         |
 
 ## 全局挂载使用
 

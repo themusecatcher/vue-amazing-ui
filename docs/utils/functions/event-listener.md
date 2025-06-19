@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*添加和清除 `DOM` 事件监听器的组合式函数*
+_添加和清除 `DOM` 事件监听器的组合式函数_
 
 ::: details Show Source Code
 
@@ -33,10 +33,8 @@ export function useEventListener(target: HTMLElement | Window | Document, event:
 <script setup lang="ts">
 import { ref } from 'vue'
 import { throttle, useEventListener } from 'vue-amazing-ui'
-
 const scrollDown = ref(false) // 是否向下滚动
 let lastScrollPosition = 0 // 保存上一次滚动的位置
-
 function scrollEvent () {
   // 获取当前滚动条的位置
   const currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop
@@ -57,11 +55,9 @@ useEventListener(window, 'scroll', throttleScroll)
 <script setup lang="ts">
 import { ref } from 'vue'
 import { throttle, useEventListener } from 'vue-amazing-ui'
-
 const scrollDown = ref(false) // 是否向下滚动
 let lastScrollPosition = 0 // 保存上一次滚动的位置
-
-function scrollEvent () {
+function scrollEvent() {
   // 获取当前滚动条的位置
   const currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop
   // 比较当前位置和上一次记录的位置
@@ -76,8 +72,8 @@ useEventListener(window, 'scroll', throttleScroll)
 
 ## Params
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-target | 要添加监听事件的目标元素 | HTMLElement &#124; Window &#124; Document | undefined
-event | 监听的事件类型（大小写敏感） | string | undefined
-callback | 监听事件触发时的回调函数 | Function | undefined
+| 参数     | 说明                         | 类型                                      | 默认值    |
+| -------- | ---------------------------- | ----------------------------------------- | --------- |
+| target   | 要添加监听事件的目标元素     | HTMLElement &#124; Window &#124; Document | undefined |
+| event    | 监听的事件类型（大小写敏感） | string                                    | undefined |
+| callback | 监听事件触发时的回调函数     | Function                                  | undefined |

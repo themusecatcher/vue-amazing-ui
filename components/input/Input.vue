@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { useSlotsExist } from 'components/utils'
+import { useSlotsExist, useInject } from 'components/utils'
 export interface Props {
   width?: string | number // 输入框宽度，单位 px
   size?: 'small' | 'middle' | 'large' // 输入框大小
@@ -36,9 +36,11 @@ const props = withDefaults(defineProps<Props>(), {
 const inputRef = ref<HTMLElement | null>(null) // input 元素引用
 const inputWrapHover = ref<boolean>(false) // 鼠标是否悬浮
 const inputFocus = ref<boolean>(false) // input 元素是否聚焦
+const isComposing = ref<boolean>(false) // 是否正在使用文本合成系统输入中
 const inputValue = ref<string>() // 输入框的值
 const showPassword = ref<boolean>(false) // 是否显示密码
-const emits = defineEmits(['update:value', 'change', 'enter'])
+const { colorPalettes, shadowColor } = useInject('Input') // 主题色注入
+const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'enter'])
 const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore', 'addonAfter'])
 const inputWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -51,9 +53,9 @@ const showClear = computed(() => {
 })
 const showCountNum = computed(() => {
   if (props.maxlength) {
-    return `${props.value ? props.value.length : 0} / ${props.maxlength}`
+    return `${inputValue.value ? inputValue.value.length : 0} / ${props.maxlength}`
   }
-  return props.value ? props.value.length : 0
+  return inputValue.value ? inputValue.value.length : 0
 })
 const showPrefix = computed(() => {
   return slotsExist.prefix || props.prefix
@@ -96,12 +98,26 @@ function onFocus(): void {
 function onBlur(): void {
   inputFocus.value = false
 }
+// 文本合成系统即输入法编辑器开始新的输入合成时会触发
+function onCompositionStart(e: CompositionEvent): void {
+  isComposing.value = true
+  emits('compositionstart', e)
+}
+// 当文本段落的组成完成或取消时触发 (具有特殊字符的触发，需要一系列键和其他输入，如语音识别或移动中的字词建议)
+function onCompositionEnd(e: CompositionEvent): void {
+  isComposing.value = false
+  emits('compositionend', e)
+  const changeEvent = new Event('change')
+  e.target?.dispatchEvent(changeEvent)
+}
 function onInput(e: Event): void {
-  const target = e.target as HTMLInputElement
-  inputValue.value = target.value
-  if (!lazyInput.value) {
-    emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
-    emits('change', e)
+  if (!isComposing.value) {
+    const target = e.target as HTMLInputElement
+    inputValue.value = target.value
+    if (!lazyInput.value) {
+      emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
+      emits('change', e)
+    }
   }
 }
 function onChange(e: Event): void {
@@ -112,6 +128,9 @@ function onChange(e: Event): void {
   }
 }
 function onEnter(e: KeyboardEvent): void {
+  if (isComposing.value) {
+    return
+  }
   emits('enter', e)
   if (lazyInput.value) {
     const changeEvent = new Event('change')
@@ -119,6 +138,7 @@ function onEnter(e: KeyboardEvent): void {
   }
 }
 function onClear(): void {
+  inputValue.value = ''
   emits('update:value', '')
   inputRef.value?.focus()
 }
@@ -131,9 +151,9 @@ function onPassword(): void {
     class="m-input"
     :style="`
       --input-width: ${inputWidth};
-      --input-primary-color-hover: #4096ff;
-      --input-primary-color-focus: #4096ff;
-      --input-primary-shadow-color: rgba(5, 145, 255, 0.1);
+      --input-primary-color-hover: ${colorPalettes[4]};
+      --input-primary-color-focus: ${colorPalettes[4]};
+      --input-primary-shadow-color: ${shadowColor};
     `"
   >
     <span v-if="showBefore" class="input-addon" :class="{ 'addon-before': showBefore }">
@@ -168,12 +188,14 @@ function onPassword(): void {
         :disabled="disabled"
         @focus="onFocus"
         @blur="onBlur"
+        @compositionstart="onCompositionStart"
+        @compositionend="onCompositionEnd"
         @input="onInput"
         @change="onChange"
         @keydown.enter.prevent="onEnter"
       />
       <span v-if="showInputSuffix" class="input-suffix">
-        <span v-if="showClear" class="input-actions" :class="{ 'clear-hidden': !value }" @click="onClear">
+        <span v-if="showClear" class="input-actions" :class="{ 'clear-hidden': !inputValue }" @click="onClear">
           <svg
             class="clear-svg"
             focusable="false"

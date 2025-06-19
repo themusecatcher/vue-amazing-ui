@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*实时监测浏览器刷新率 `FPS` 的组合式函数*
+_实时监测浏览器刷新率 `FPS` 的组合式函数_
 
 ::: details Show Source Code
 
@@ -16,7 +16,8 @@
  * @returns {Object} 返回一个包含 FPS 值的 ref 对象
  */
 import { ref } from 'vue'
-export function useFps() {
+import type { Ref } from 'vue'
+export function useFps(): { fps: Ref<number> } {
   const fps = ref<number>(0)
   const frameCount = ref<number>(0)
   let lastTime = performance.now()
@@ -43,7 +44,6 @@ export function useFps() {
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useFps } from 'vue-amazing-ui'
-
 const { fps } = useFps()
 </script>
 
@@ -55,7 +55,6 @@ const { fps } = useFps()
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useFps } from 'vue-amazing-ui'
-
 const { fps } = useFps()
 </script>
 <template>

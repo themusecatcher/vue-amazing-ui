@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*用于多行输入*
+_用于多行输入_
 
 ## 何时使用
 
@@ -10,26 +10,14 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { generate } from '@ant-design/colors'
 const value = ref('')
 const lazyValue = ref('')
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 watchEffect(() => {
   console.log('value', value.value)
 })
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--textarea-primary-color-hover': colorPalettes[4],
-    '--textarea-primary-color-focus': colorPalettes[4],
-    '--textarea-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
 function onChange(e: Event) {
   console.log('change', e)
 }
@@ -40,8 +28,7 @@ function onEnter(e: KeyboardEvent) {
 
 ## 基本使用
 
-::: tip `.lazy`
-默认情况下，`v-model` 会在每次 `input` 事件后更新数据 (`IME` 拼字阶段的状态例外)。你可以添加 `lazy` 修饰符来改为在每次 `change` 事件后更新数据
+::: tip `.lazy` 默认情况下，`v-model` 会在每次 `input` 事件后更新数据 (`IME` 拼字阶段的状态例外)。你可以添加 `lazy` 修饰符来改为在每次 `change` 事件后更新数据
 
 ```vue
 <!-- 在 "change" 事件后同步更新而不是 "input" -->
@@ -74,10 +61,10 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
-function onChange (e: Event) {
+function onChange(e: Event) {
   console.log('change', e)
 }
-function onEnter (e: KeyboardEvent) {
+function onEnter(e: KeyboardEvent) {
   console.log('enter', e)
 }
 </script>
@@ -117,12 +104,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Textarea
-    :width="360"
-    v-model:value="value"
-    placeholder="Autosize height based on content lines"
-    auto-size
-  />
+  <Textarea :width="360" v-model:value="value" placeholder="Autosize height based on content lines" auto-size />
 </template>
 ```
 
@@ -219,79 +201,26 @@ const value = ref('')
 
 :::
 
-## 自定义主题色
-
-<Space vertical>
-  <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-  <Space align="center">
-    primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-  </Space>
-  <Textarea
-    :width="360"
-    :style="getThemeStyle(primaryColor)"
-    v-model:value="value"
-    placeholder="custom theme textarea"
-  />
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import { generate } from '@ant-design/colors'
-const value = ref('')
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
-watchEffect(() => {
-  console.log('value', value.value)
-})
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--textarea-primary-color-hover': colorPalettes[4],
-    '--textarea-primary-color-focus': colorPalettes[4],
-    '--textarea-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
-</script>
-<template>
-  <Space vertical>
-    <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-    <Space align="center">
-      primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-    </Space>
-    <Textarea
-      :width="360"
-      :style="getThemeStyle(primaryColor)"
-      v-model:value="value"
-      placeholder="custom theme textarea"
-    />
-  </Space>
-</template>
-```
-
-:::
-
 ## APIs
 
 ### Textarea
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-width | 文本域宽度，单位 `px` | string &#124; number | '100%'
-allowClear | 可以点击清除图标删除内容 | boolean | false
-autoSize | 自适应内容高度 | boolean &#124; {minRows\?: number, maxRows?: number} | false
-disabled | 是否禁用 | boolean | false
-placeholder | 文本域输入的占位符 | string | undefined
-maxlength | 文字最大长度 | number | undefined
-showCount | 是否展示字数 | boolean | false
-value <Tag color="cyan">v-model</Tag> | 文本域内容 | string | undefined
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| width | 文本域宽度，单位 `px` | string &#124; number | '100%' |
+| allowClear | 可以点击清除图标删除内容 | boolean | false |
+| autoSize | 自适应内容高度 | boolean &#124; {minRows\?: number, maxRows?: number} | false |
+| disabled | 是否禁用 | boolean | false |
+| placeholder | 文本域输入的占位符 | string | undefined |
+| maxlength | 文字最大长度 | number | undefined |
+| showCount | 是否展示字数 | boolean | false |
+| value <Tag color="cyan">v-model</Tag> | 文本域内容 | string | undefined |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 文本域内容变化时的回调 | (e: Event) => void
-enter | 按下回车的回调 | (e: Event) => void
+| 名称             | 说明                                               | 类型                          |
+| :--------------- | :------------------------------------------------- | :---------------------------- |
+| change           | 文本域内容变化时的回调                             | (e: Event) => void            |
+| enter            | 按下回车的回调                                     | (e: Event) => void            |
+| compositionstart | 使用文本合成系统即输入法编辑器开始新的输入时的回调 | (e: CompositionEvent) => void |
+| compositionend   | 当文本段落的组成完成或取消时触发的回调             | (e: CompositionEvent) => void |

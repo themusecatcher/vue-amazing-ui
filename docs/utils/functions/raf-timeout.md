@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*使用 `raf` 动画帧模拟实现的定时器，等效替代 `setTimeout()` 和 `setInterval()`*
+_使用 `raf` 动画帧模拟实现的定时器，等效替代 `setTimeout()` 和 `setInterval()`_
 
 ::: details Show Source Code
 
@@ -15,7 +15,7 @@
  * @param interval 是否间隔执行，如果为 true，则在首次执行后，以 delay 为间隔持续执行
  * @returns 返回一个对象，包含一个 id 属性，该 id 为 requestAnimationFrame 的调用 ID，可用于取消动画帧
  */
-export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = false): object {
+export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = false): { id: number } {
   let start: number | null = null // 记录动画开始的时间戳
   function timeElapse(timestamp: number) {
     // 定义动画帧回调函数
@@ -72,11 +72,9 @@ export function cancelRaf(raf: { id: number }): void {
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
 import { rafTimeout, cancelRaf } from 'vue-amazing-ui'
-
 const timeoutRaf = rafTimeout(() => {
   console.log('raf timeout')
 }, 1000)
-
 const intervalRaf = rafTimeout(() => {
   console.log('raf interval')
 }, 1000, true)
@@ -88,17 +86,15 @@ onUnmounted(() => {
 
 ## 延时调用
 
-*打开控制台查看输出*
+_打开控制台查看输出_
 
 ```vue
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
 import { rafTimeout, cancelRaf } from 'vue-amazing-ui'
-
 const timeoutRaf = rafTimeout(() => {
   console.log('raf timeout')
 }, 1000)
-
 onUnmounted(() => {
   cancelRaf(timeoutRaf)
 })
@@ -107,17 +103,19 @@ onUnmounted(() => {
 
 ## 间歇调用
 
-*打开控制台查看输出*
+_打开控制台查看输出_
 
 ```vue
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
 import { rafTimeout, cancelRaf } from 'vue-amazing-ui'
-
-const intervalRaf = rafTimeout(() => {
-  console.log('raf interval')
-}, 1000, true)
-
+const intervalRaf = rafTimeout(
+  () => {
+    console.log('raf interval')
+  },
+  1000,
+  true
+)
 onUnmounted(() => {
   cancelRaf(intervalRaf)
 })
@@ -128,14 +126,14 @@ onUnmounted(() => {
 
 ### rafTimeout
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-fn | 要执行的函数 | Function | undefined
-delay | 延时调用或间歇调用时间间隔，单位 `ms` | number | 0
-interval | 是否使用间歇调用 | boolean | false
+| 参数     | 说明                                  | 类型     | 默认值    |
+| -------- | ------------------------------------- | -------- | --------- |
+| fn       | 要执行的函数                          | Function | undefined |
+| delay    | 延时调用或间歇调用时间间隔，单位 `ms` | number   | 0         |
+| interval | 是否使用间歇调用                      | boolean  | false     |
 
 ### cancelRaf
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-raf | 包含请求动画帧 `ID` 的对象；该 `ID` 是由 `requestAnimationFrame` 返回的 | object | undefined
+| 参数 | 说明                                                                    | 类型   | 默认值    |
+| ---- | ----------------------------------------------------------------------- | ------ | --------- |
+| raf  | 包含请求动画帧 `ID` 的对象；该 `ID` 是由 `requestAnimationFrame` 返回的 | object | undefined |

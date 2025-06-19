@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*使用 `MutationObserver` 观察 `DOM` 元素的变化的组合式函数*
+_使用 `MutationObserver` 观察 `DOM` 元素的变化的组合式函数_
 
 ::: details Show Source Code
 
@@ -24,11 +24,12 @@
  * @returns 返回一个对象，包含停止和开始观察的方法，使用者可以调用 start 方法开始观察，调用 stop 方法停止观察
  */
 import { ref, toValue, computed, watch, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
+import type { Ref, ComputedRef } from 'vue'
 export function useMutationObserver(
   target: Ref | Ref[] | HTMLElement | HTMLElement[],
   callback: MutationCallback,
   options = {}
-) {
+): { start: () => void; stop: () => void } {
   const isSupported = useSupported(() => window && 'MutationObserver' in window)
   const stopObservation = ref(false)
   let observer: MutationObserver | undefined
@@ -69,23 +70,23 @@ export function useMutationObserver(
       flush: 'post'
     }
   )
-  const stop = () => {
-    stopObservation.value = true
-    cleanup()
-  }
   const start = () => {
     stopObservation.value = false
     observeElements()
   }
+  const stop = () => {
+    stopObservation.value = true
+    cleanup()
+  }
   // 在组件卸载前清理 MutationObserver
   onBeforeUnmount(() => cleanup())
   return {
-    stop,
-    start
+    start,
+    stop
   }
 }
 // 辅助函数
-export function useSupported(callback: () => unknown) {
+export function useSupported(callback: () => unknown): ComputedRef<boolean> {
   const isMounted = useMounted()
   return computed(() => {
     // to trigger the ref
@@ -93,7 +94,7 @@ export function useSupported(callback: () => unknown) {
     return Boolean(callback())
   })
 }
-export function useMounted() {
+export function useMounted(): Ref<boolean> {
   const isMounted = ref(false)
   // 获取当前组件的实例
   const instance = getCurrentInstance()
@@ -118,7 +119,6 @@ export function useMounted() {
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useMutationObserver } from 'vue-amazing-ui'
-
 const defaultSlotsRef = ref()
 // 监听 defaultSlotsRef DOM 变化
 const callback = (mutationsList: MutationRecord[], observer: MutationObserver) => {
@@ -137,8 +137,8 @@ useMutationObserver(defaultSlotsRef, callback, options)
 
 ## Params
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-target | 要观察的 `DOM` 元素或元素数组，可以是 `ref` 引用，也可以是 `DOM` 元素本身 | Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[] | undefined
-callback | 当观察到变化时调用的回调函数 | MutationCallback | undefined
-options | 观察选项，默认为空对象，[参考文档](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver/observe#options) | object | {}
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| target | 要观察的 `DOM` 元素或元素数组，可以是 `ref` 引用，也可以是 `DOM` 元素本身 | Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[] | undefined |
+| callback | 当观察到变化时调用的回调函数 | MutationCallback | undefined |
+| options | 观察选项，默认为空对象，[参考文档](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver/observe#options) | object | {} |

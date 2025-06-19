@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*屏幕边缘滑出的浮层面板*
+_屏幕边缘滑出的浮层面板_
 
 ## 何时使用
 
@@ -14,13 +14,11 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import type { RadioOption } from 'vue-amazing-ui'
-import { generate } from '@ant-design/colors'
 const open1 = ref<boolean>(false)
 const open2 = ref<boolean>(false)
 const open3 = ref<boolean>(false)
 const open4 = ref<boolean>(false)
 const open5 = ref<boolean>(false)
-const open6 = ref<boolean>(false)
 const options = ref<RadioOption[]>([
   {
     label: 'top',
@@ -42,29 +40,17 @@ const options = ref<RadioOption[]>([
 const placement = ref('right')
 const extraPlacement = ref('right')
 const footerPlacement = ref('right')
-const primaryColor = ref('#ff6900')
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6],
-    '--button-ripple-color': color
-  }
-  return style
-}
 function onClose() {
   open3.value = false
   open4.value = false
-  open6.value = false
   console.log('close')
 }
 </script>
 
 ## 基本使用
 
-<Button type="primary" @click="open1 = true">Open</Button>
-<Drawer v-model:open="open1" title="Basic Drawer" @close="onClose">
+<Button type="primary" @click="open1 = true">Open</Button> <Drawer v-model:open="open1" title="Basic Drawer" @close="onClose">
+
   <p>Some contents...</p>
   <p>Some contents...</p>
   <p>Some contents...</p>
@@ -76,8 +62,7 @@ function onClose() {
 <script lang="ts" setup>
 import { ref } from 'vue'
 const open = ref<boolean>(false)
-function onClose () {
-  open.value = false
+function onClose() {
   console.log('close')
 }
 </script>
@@ -133,7 +118,14 @@ const placement = ref('right')
 <template>
   <Radio v-model:value="placement" :options="options" style="margin-right: 8px;" />
   <Button type="primary" @click="open = true">Open</Button>
-  <Drawer v-model:open="open" title="Basic Drawer" :closable="false" extra="extra" footer="footer" :placement="placement">
+  <Drawer
+    v-model:open="open"
+    title="Basic Drawer"
+    :closable="false"
+    extra="extra"
+    footer="footer"
+    :placement="placement"
+  >
     <p>Some contents...</p>
     <p>Some contents...</p>
     <p>Some contents...</p>
@@ -183,7 +175,7 @@ const options = ref<RadioOption[]>([
   }
 ])
 const extraPlacement = ref('right')
-function onClose () {
+function onClose() {
   open.value = false
   console.log('close')
 }
@@ -245,7 +237,7 @@ const options = ref<RadioOption[]>([
   }
 ])
 const footerPlacement = ref('right')
-function onClose () {
+function onClose() {
   open.value = false
   console.log('close')
 }
@@ -269,14 +261,10 @@ function onClose () {
 
 ## 自定义 header & body 样式
 
-<Button type="primary" @click="open5 = true">Open</Button>
-<Drawer
-  v-model:open="open5"
-  :closable="false"
-  title="Basic Drawer"
-  :header-style="{ textAlign: 'center' }"
-  :body-style="{ textAlign: 'center' }"
+<Button type="primary" @click="open5 = true">Open</Button> <Drawer v-model:open="open5" :closable="false" title="Basic Drawer" :header-style="{ textAlign: 'center' }" :body-style="{ textAlign: 'center' }"
+
 >
+
   <p>Some contents...</p>
   <p>Some contents...</p>
   <p>Some contents...</p>
@@ -307,76 +295,6 @@ const open = ref<boolean>(false)
 
 :::
 
-## 自定义主题色
-
-<Space align="center">
-  primaryColor:
-  <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-  <Button :style="getThemeStyle(primaryColor)" type="primary" @click="open6 = true">Open</Button>
-</Space>
-<Drawer
-  v-model:open="open6"
-  :closable="false"
-  title="Basic Drawer"
-  :footer-style="{ textAlign: 'right' }"
->
-  <p>Some contents...</p>
-  <p>Some contents...</p>
-  <p>Some contents...</p>
-  <template #footer>
-    <Button style="margin-right: 8px" :style="getThemeStyle(primaryColor)" @click="onClose">Cancel</Button>
-    <Button :style="getThemeStyle(primaryColor)" type="primary" @click="onClose">Submit</Button>
-  </template>
-</Drawer>
-
-::: details Show Code
-
-```vue
-<script lang="ts" setup>
-import { ref } from 'vue'
-import { generate } from '@ant-design/colors'
-const open = ref<boolean>(false)
-const primaryColor = ref('#ff6900')
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--button-primary-color': color,
-    '--button-primary-color-hover': colorPalettes[4],
-    '--button-primary-color-active': colorPalettes[6],
-    '--button-ripple-color': color
-  }
-  return style
-}
-function onClose() {
-  open.value = false
-  console.log('close')
-}
-</script>
-<template>
-  <Space align="center">
-    primaryColor:
-    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-    <Button :style="getThemeStyle(primaryColor)" type="primary" @click="open = true">Open</Button>
-  </Space>
-  <Drawer
-    v-model:open="open"
-    :closable="false"
-    title="Basic Drawer"
-    :footer-style="{ textAlign: 'right' }"
-  >
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-    <template #footer>
-      <Button style="margin-right: 8px" :style="getThemeStyle(primaryColor)" @click="onClose">Cancel</Button>
-      <Button :style="getThemeStyle(primaryColor)" type="primary" @click="onClose">Submit</Button>
-    </template>
-  </Drawer>
-</template>
-```
-
-:::
-
 <style lang="less" scoped>
 p {
   color: rgba(0, 0, 0, 0.88);
@@ -387,37 +305,37 @@ p {
 
 ### Drawer
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-width | 抽屉宽度，在 `placement` 为 `right` 或 `left` 时使用，单位 `px` | string &#124; number | 378
-height | 抽屉高度，在 `placement` 为 `top` 或 `bottom` 时使用，单位 `px` | string &#124; number | 378
-title | 标题 | string &#124; slot | undefined
-closable | 是否显示左上角的关闭按钮 | boolean | true
-placement | 抽屉的方向 | 'top' &#124; 'right' &#124; 'bottom' &#124; 'left' | 'right'
-headerClass | 设置 `Drawer` 头部的类名 | string | undefined
-headerStyle | 设置 `Drawer` 头部的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-bodyClass | 设置 `Drawer` 内容部分的类名 | string | undefined
-bodyStyle | 设置 `Drawer` 内容部分的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html#scrollbar)，用于设置内容滚动条的样式 | object | {}
-extra | 抽屉右上角的操作区域 | string &#124; slot | undefined
-footer | 抽屉的页脚 | string &#124; slot | undefined
-footerClass | 设置 `Drawer` 页脚的类名 | string | undefined
-footerStyle | 设置 `Drawer` 页脚的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-destroyOnClose | 关闭时是否销毁 `Drawer` 里的子元素 | boolean | false
-zIndex | 设置 `Drawer` 的 `z-index` | number | 1000
-open <Tag color="cyan">v-model</Tag> | 抽屉是否可见 | boolean | false
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| width | 抽屉宽度，在 `placement` 为 `right` 或 `left` 时使用，单位 `px` | string &#124; number | 378 |
+| height | 抽屉高度，在 `placement` 为 `top` 或 `bottom` 时使用，单位 `px` | string &#124; number | 378 |
+| title | 标题 | string &#124; slot | undefined |
+| closable | 是否显示左上角的关闭按钮 | boolean | true |
+| placement | 抽屉的方向 | 'top' &#124; 'right' &#124; 'bottom' &#124; 'left' | 'right' |
+| headerClass | 设置 `Drawer` 头部的类名 | string | undefined |
+| headerStyle | 设置 `Drawer` 头部的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| bodyClass | 设置 `Drawer` 内容部分的类名 | string | undefined |
+| bodyStyle | 设置 `Drawer` 内容部分的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html#scrollbar)，用于设置内容滚动条的样式 | object | {} |
+| extra | 抽屉右上角的操作区域 | string &#124; slot | undefined |
+| footer | 抽屉的页脚 | string &#124; slot | undefined |
+| footerClass | 设置 `Drawer` 页脚的类名 | string | undefined |
+| footerStyle | 设置 `Drawer` 页脚的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| destroyOnClose | 关闭时是否销毁 `Drawer` 里的子元素 | boolean | false |
+| zIndex | 设置 `Drawer` 的 `z-index` | number | 1000 |
+| open <Tag color="cyan">v-model</Tag> | 抽屉是否可见 | boolean | false |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-title | 自定义标题 | v-slot:title
-extra | 自定义抽屉右上角的操作区域 | v-slot:extra
-default | 自定义抽屉内容 | v-slot:default
-footer | 自定义抽屉的页脚 | v-slot:footer
+| 名称    | 说明                       | 类型           |
+| :------ | :------------------------- | :------------- |
+| title   | 自定义标题                 | v-slot:title   |
+| extra   | 自定义抽屉右上角的操作区域 | v-slot:extra   |
+| default | 自定义抽屉内容             | v-slot:default |
+| footer  | 自定义抽屉的页脚           | v-slot:footer  |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-close | 点击遮罩层或左上角叉或取消按钮的回调 | (e: Event) => void
+| 名称  | 说明                                 | 类型               |
+| :---- | :----------------------------------- | :----------------- |
+| close | 点击遮罩层或左上角叉或取消按钮的回调 | (e: Event) => void |

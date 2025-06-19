@@ -28,7 +28,7 @@ $ bun add vue-amazing-ui
 
 > **全局完整注册（不推荐）**
 
-*失去 `tree-shaking` 的能力，打包后有冗余代码*
+_失去 `tree-shaking` 的能力，打包后有冗余代码_
 
 ```ts
 import { createApp } from 'vue'
@@ -43,7 +43,7 @@ app.mount('#app')
 
 > **全局部分注册**
 
-*全局或局部引入部分组件，都只有导入的组件才会被打包*
+_全局或局部引入部分组件，都只有导入的组件才会被打包_
 
 ```ts
 import { createApp } from 'vue'
@@ -59,7 +59,7 @@ app.mount('#app')
 
 > **局部注册组件**
 
-*这种情况下，也只有导入的组件才会被打包*
+_这种情况下，也只有导入的组件才会被打包_
 
 ```vue
 <script setup lang="ts">
@@ -86,7 +86,7 @@ app.mount('#app')
 
 ## 使用类型
 
-*所有类型均可直接从 `vue-amazing-ui` 中引入使用，无需任何额外安装*
+_所有类型均可直接从 `vue-amazing-ui` 中引入使用，无需任何额外安装_
 
 ```vue
 <script setup lang="ts">
@@ -119,7 +119,9 @@ import {
   useFps,
   useMediaQuery,
   useResizeObserver,
-  useSlotsExist
+  useSlotsExist,
+  useInject,
+  useOptionsSupported
 } from 'vue-amazing-ui'
 </script>
 ```

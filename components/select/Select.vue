@@ -3,6 +3,7 @@ import { ref, computed, watchEffect, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 import Empty from 'components/empty'
 import Scrollbar from 'components/scrollbar'
+import { useInject } from 'components/utils'
 export interface Option {
   label?: string // 选项名
   value?: string | number // 选项值
@@ -24,7 +25,7 @@ export interface Props {
     根据输入项进行筛选，默认为 true 时，筛选每个选项的文本字段 label 是否包含输入项，包含返回 true，反之返回 false
     当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
   */
-  filter?: Function | true // 过滤条件函数，仅当支持搜索时生效
+  filter?: ((inputValue: string, option: Option) => boolean) | true // 过滤条件函数，仅当支持搜索时生效
   maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
   scrollbarProps?: object // 下拉面板滚动条 scrollbar 组件属性配置
   modelValue?: number | string // (v-model) 当前选中的 option 条目值
@@ -60,6 +61,7 @@ const showClear = ref(false) // 清除图标显隐
 const showCaret = ref(false) // 支持搜索时，输入光标的显隐
 const showSearch = ref(false) // 搜索图标显隐
 const selectFocused = ref(false) /// select 是否聚焦
+const { colorPalettes, shadowColor } = useInject('Select') // 主题色注入
 const emits = defineEmits(['update:modelValue', 'change', 'openChange'])
 const selectWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -260,10 +262,10 @@ function onChange(value: string | number, label: string, index: number): void {
     :style="`
       --select-width: ${selectWidth};
       --select-height: ${selectHeight};
-      --select-primary-color-hover: #4096ff;
-      --select-primary-color-focus: #4096ff;
-      --select-primary-shadow-color: rgba(5, 145, 255, 0.1);
-      --select-item-bg-color-active: #e6f4ff;
+      --select-primary-color-hover: ${colorPalettes[4]};
+      --select-primary-color-focus: ${colorPalettes[4]};
+      --select-primary-shadow-color: ${shadowColor};
+      --select-item-bg-color-active: ${colorPalettes[0]};
     `"
     @click="disabled ? () => false : toggleSelect()"
   >

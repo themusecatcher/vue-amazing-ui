@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useSlotsExist } from 'components/utils'
+import { useSlotsExist, useInject } from 'components/utils'
 export interface Gradient {
   '0%'?: string
   '100%'?: string
@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
   width: undefined,
   percent: 0,
   lineSize: undefined,
-  lineColor: '#1677FF',
+  lineColor: undefined,
   lineCap: 'round',
   showInfo: true,
   infoSize: undefined,
@@ -32,9 +32,10 @@ const props = withDefaults(defineProps<Props>(), {
   format: (percent: number) => percent + '%',
   type: 'line'
 })
+const { colorPalettes } = useInject('Progress') // 主题色注入
 const slotsExist = useSlotsExist(['success'])
+// 进度条宽度/进度圈宽高
 const progressSize = computed(() => {
-  // 进度条宽度；进度圈宽高
   if (props.width === undefined) {
     if (props.type === 'line') {
       return '100%'
@@ -45,8 +46,8 @@ const progressSize = computed(() => {
   }
   return typeof props.width === 'number' ? `${props.width}px` : props.width
 })
+// 进度条高度；进度圈线宽
 const progressLineSize = computed(() => {
-  // 进度条高度；进度圈线宽
   if (props.lineSize === undefined) {
     if (props.type === 'line') {
       return 8
@@ -57,8 +58,8 @@ const progressLineSize = computed(() => {
   }
   return props.lineSize as number
 })
+// 进度条/圈进度数值或状态图标尺寸
 const progressInfoSize = computed(() => {
-  // 进度条/圈进度数值或状态图标尺寸
   if (props.infoSize === undefined) {
     if (props.type === 'line') {
       return '14px'
@@ -69,43 +70,47 @@ const progressInfoSize = computed(() => {
   }
   return `${props.infoSize}px`
 })
+// 圆条周长
 const perimeter = computed(() => {
-  // 圆条周长
   return (100 - progressLineSize.value) * Math.PI
 })
+// 圆条轨道路径指令
 const path = computed(() => {
-  // 圆条轨道路径指令
   const long = 100 - progressLineSize.value
   return `M 50,50 m 0,-${long / 2}
    a ${long / 2},${long / 2} 0 1 1 0,${long}
    a ${long / 2},${long / 2} 0 1 1 0,-${long}`
 })
-const gradientColor = computed(() => {
-  // 是否为渐变色
-  return typeof props.lineColor !== 'string'
+// 是否为渐变色
+const isGradientColor = computed(() => {
+  if (props.lineColor !== undefined && typeof props.lineColor !== 'string') {
+    return true
+  }
+  return false
 })
-const lineColor = computed(() => {
-  // 进度条/圈颜色
-  if (typeof props.lineColor === 'string') {
+// 进度条/圈颜色
+const lineColorComputed = computed(() => {
+  if (props.lineColor === undefined) {
+    return colorPalettes.value[5]
+  } else if (typeof props.lineColor === 'string') {
     return props.lineColor
   } else {
     return `linear-gradient(to ${props.lineColor.direction || 'right'}, ${props.lineColor['0%'] || props.lineColor.from}, ${props.lineColor['100%'] || props.lineColor.to})`
   }
 })
+// 进度圈渐变色 id
 const circleGradient = computed(() => {
-  // 进度圈渐变色 id
-  if (gradientColor.value) {
+  if (isGradientColor.value) {
     const gradientColor = props.lineColor as Gradient
     if (gradientColor.direction === undefined || gradientColor.direction === 'right') {
       return `right-${gradientColor['0%'] || gradientColor.from}-${gradientColor['100%'] || gradientColor.to}`
-    } else {
-      return `left-${gradientColor['100%'] || gradientColor.to}-${gradientColor['0%'] || gradientColor.from}`
     }
+    return `left-${gradientColor['100%'] || gradientColor.to}-${gradientColor['0%'] || gradientColor.from}`
   }
   return null
 })
 const circleColorFrom = computed(() => {
-  if (gradientColor.value) {
+  if (isGradientColor.value) {
     const gradientColor = props.lineColor as Gradient
     if (gradientColor.direction === undefined || gradientColor.direction === 'right') {
       return gradientColor['0%'] || gradientColor.from
@@ -113,10 +118,10 @@ const circleColorFrom = computed(() => {
       return gradientColor['100%'] || gradientColor.to
     }
   }
-  return
+  return undefined
 })
 const circleColorTo = computed(() => {
-  if (gradientColor.value) {
+  if (isGradientColor.value) {
     const gradientColor = props.lineColor as Gradient
     if (!gradientColor.direction || gradientColor.direction === 'right') {
       return gradientColor['100%'] || gradientColor.to
@@ -124,7 +129,7 @@ const circleColorTo = computed(() => {
       return gradientColor['0%'] || gradientColor.from
     }
   }
-  return
+  return undefined
 })
 const showPercent = computed(() => {
   return props.format(props.percent > 100 ? 100 : props.percent)
@@ -139,7 +144,7 @@ const showSuccess = computed(() => {
     class="m-progress-line"
     :style="`
       --progress-size: ${progressSize};
-      --progress-primary-color: ${lineColor};
+      --progress-primary-color: ${lineColorComputed};
       --progress-success-color: #52c41a;
       --progress-font-size: ${progressInfoSize};
       --progress-border-radius: ${lineCap === 'round' ? '100px' : 0};
@@ -147,7 +152,7 @@ const showSuccess = computed(() => {
   >
     <div class="progress-inner">
       <div
-        :class="['progress-bg', { 'line-success': percent >= 100 && !gradientColor }]"
+        :class="['progress-bg', { 'line-success': percent >= 100 && !isGradientColor }]"
         :style="`width: ${percent >= 100 ? 100 : percent}%; height: ${progressLineSize}px;`"
       ></div>
     </div>
@@ -184,16 +189,16 @@ const showSuccess = computed(() => {
     class="m-progress-circle"
     :style="`
       --progress-size: ${progressSize};
-      --progress-primary-color: ${gradientColor ? `url(#${circleGradient})` : lineColor};
+      --progress-primary-color: ${isGradientColor ? `url(#${circleGradient})` : lineColorComputed};
       --progress-success-color: #52c41a;
       --progress-font-size: ${progressInfoSize};
     `"
   >
     <svg class="progress-circle" viewBox="0 0 100 100">
-      <defs v-if="gradientColor">
+      <defs v-if="isGradientColor">
         <linearGradient :id="`${circleGradient}`" x1="100%" y1="0%" x2="0%" y2="0%">
-          <stop offset="0%" :stop-color="circleColorFrom as string"></stop>
-          <stop offset="100%" :stop-color="circleColorTo as string"></stop>
+          <stop offset="0%" :stop-color="circleColorFrom"></stop>
+          <stop offset="100%" :stop-color="circleColorTo"></stop>
         </linearGradient>
       </defs>
       <path
@@ -208,7 +213,7 @@ const showSuccess = computed(() => {
         :d="path"
         :stroke-linecap="lineCap"
         class="circle-path"
-        :class="{ 'circle-path-success': percent >= 100 && !gradientColor }"
+        :class="{ 'circle-path-success': percent >= 100 && !isGradientColor }"
         :stroke-width="progressLineSize"
         :style="`stroke-dasharray: ${(percent / 100) * perimeter}px, ${perimeter}px;`"
         :opacity="percent === 0 ? 0 : 1"

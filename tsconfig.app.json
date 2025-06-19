@@ -19,6 +19,8 @@
     "removeComments": true,
     "isolatedModules": true,
     "composite": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "baseUrl": ".",
     "paths": {

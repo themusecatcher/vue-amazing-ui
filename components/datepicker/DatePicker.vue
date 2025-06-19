@@ -1,21 +1,24 @@
 <script setup lang="ts">
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useInject } from 'components/utils'
 export interface Props {
-  width?: number // 日期选择器宽度
+  width?: string | number // 日期选择器宽度，单位 px
   size?: 'small' | 'middle' | 'large' // 日期选择器大小
-  mode?: 'time' | 'date' | 'week' | 'month' | 'year' // 选择器模式，可选：时间time，日期date，周week，月month，年year
+  mode?: 'time' | 'date' | 'week' | 'month' | 'year' // 选择器模式，可选：时间 time，日期 date，周 week，月 month，年 year
   // format?: string | ((date: Date) => string) | ((dates: Date[]) => string) // 日期展示格式，(yy: 年, M: 月, d: 天, H: 时, m: 分, s: 秒, w: 周)
   showTime?: boolean // 是否增加时间选择
   showToday?: boolean // 是否展示”今天“按钮
+  range?: boolean // 是否使用范围选择器
+  maxRange?: number // 范围选择器最长日期可选择范围，单位天，仅当 range: true 时生效
   // multiCalendars?: boolean // 范围选择器是否使用双日期面板
   // flow?: any[] // 定义选择顺序 ("calendar" | "time" | "month" | "year" | "minutes" | "hours" | "seconds")[]
   // dark?: boolean // 样式主题是否使用黑色
   modelType?: 'timestamp' | 'format' // v-model 值类型，可选 timestamp: 时间戳、format: 字符串，mode 为 week 或 year 时，该配置不生效
 }
 const props = withDefaults(defineProps<Props>(), {
-  width: 180,
+  width: 150,
   size: 'middle',
   mode: 'date',
   /* format default
@@ -28,10 +31,19 @@ const props = withDefaults(defineProps<Props>(), {
   */
   showTime: false,
   showToday: false,
+  range: false,
+  maxRange: undefined,
   // multiCalendars: false,
   // flow: () => [],
   // dark: false,
   modelType: 'format'
+})
+const { colorPalettes, shadowColor } = useInject('DatePicker') // 主题色注入
+const datepickerWidth = computed(() => {
+  if (typeof props.width === 'number') {
+    return `${props.width}px`
+  }
+  return props.width
 })
 const time = computed(() => {
   return props.mode === 'time'
@@ -51,6 +63,27 @@ const year = computed(() => {
 //   const year = date.getFullYear()
 //   return `${year}-${month}-${day}`
 // }
+const startTs = ref<number | null>(null) // 范围选择器的开始时间戳
+const rangeTs = computed(() => {
+  return (props.maxRange ?? 0) * 24 * 60 * 60 * 1000
+})
+watch(
+  () => props.maxRange,
+  () => {
+    startTs.value = null
+  }
+)
+function onClosed() {
+  startTs.value = null
+}
+function rangeStart(date: Date) {
+  startTs.value = date.getTime()
+}
+function maxRangeDisabledDates(date: Date): boolean {
+  const current = date.getTime()
+  if (startTs.value && Math.abs(current - startTs.value) >= rangeTs.value) return true
+  return false
+}
 </script>
 <template>
   <VueDatePicker
@@ -60,11 +93,11 @@ const year = computed(() => {
       'datepicker-large': size === 'large'
     }"
     :style="`
-      --datepicker-width: ${width}px;
-      --datepicker-primary-color: #1677ff;
-      --datepicker-primary-color-hover: #4096ff;
-      --datepicker-primary-color-focus: #4096ff;
-      --datepicker-primary-shadow-color: rgba(5, 145, 255, 0.1);
+      --datepicker-width: ${datepickerWidth};
+      --datepicker-primary-color: ${colorPalettes[5]};
+      --datepicker-primary-color-hover: ${colorPalettes[4]};
+      --datepicker-primary-color-focus: ${colorPalettes[4]};
+      --datepicker-primary-shadow-color: ${shadowColor};
     `"
     locale="zh-CN"
     position="left"
@@ -74,12 +107,16 @@ const year = computed(() => {
     :week-picker="week"
     :month-picker="month"
     :year-picker="year"
+    :range="range"
     now-button-label="今天"
     :show-now-button="showToday"
     auto-apply
     text-input
     :model-type="modelType"
     :day-names="['一', '二', '三', '四', '五', '六', '七']"
+    :disabled-dates="range && maxRange ? maxRangeDisabledDates : []"
+    @range-start="rangeStart"
+    @closed="onClosed"
   />
 </template>
 <style lang="less" scoped>
@@ -132,15 +169,31 @@ const year = computed(() => {
           }
         }
       }
+      .dp__cell_offset.dp__range_start {
+        color: var(--dp-primary-text-color);
+      }
+      .dp__cell_disabled.dp__date_hover {
+        &:hover {
+          background: transparent;
+          color: var(--dp-secondary-color);
+        }
+      }
       .dp__cell_disabled.dp__today {
         background: transparent;
         border: 1px solid var(--dp-secondary-color);
       }
       .dp__cell_disabled.dp__active_date {
+        color: rgba(0, 0, 0, 0.45);
         border-color: var(--dp-secondary-color);
       }
       .dp__range_between {
-        border-color: transparent;
+        &:not(.dp__today) {
+          border-color: transparent;
+        }
+        &.dp__cell_disabled {
+          background: transparent;
+          color: var(--dp-secondary-color);
+        }
       }
     }
   }

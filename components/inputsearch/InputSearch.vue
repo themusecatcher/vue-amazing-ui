@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import Button from 'components/button'
-import { useSlotsExist } from 'components/utils'
+import { useSlotsExist, useInject } from 'components/utils'
 export interface Props {
   width?: string | number // 搜索框宽度，单位 px
   icon?: boolean // 搜索图标 boolean | slot
@@ -39,8 +39,11 @@ const props = withDefaults(defineProps<Props>(), {
   valueModifiers: () => ({})
 })
 const inputRef = ref<HTMLElement | null>(null) // input 元素引用
+const isComposing = ref<boolean>(false) // 是否正在使用文本合成系统输入中
+const inputSearchValue = ref<string>() // 搜索框内容
+const { colorPalettes, shadowColor } = useInject('InputSearch') // 主题色注入
+const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'search'])
 const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore'])
-const emits = defineEmits(['update:value', 'change', 'search'])
 const inputSearchWidth = computed(() => {
   if (typeof props.width === 'number') {
     return `${props.width}px`
@@ -52,9 +55,9 @@ const showClear = computed(() => {
 })
 const showCountNum = computed(() => {
   if (props.maxlength) {
-    return (props.value ? props.value.length : 0) + ' / ' + props.maxlength
+    return (inputSearchValue.value ? inputSearchValue.value.length : 0) + ' / ' + props.maxlength
   }
-  return props.value ? props.value.length : 0
+  return inputSearchValue.value ? inputSearchValue.value.length : 0
 })
 const showPrefix = computed(() => {
   return slotsExist.prefix || props.prefix
@@ -71,11 +74,37 @@ const showBefore = computed(() => {
 const lazyInput = computed(() => {
   return 'lazy' in props.valueModifiers
 })
+watch(
+  () => props.value,
+  (to) => {
+    if (inputSearchValue.value !== to) {
+      inputSearchValue.value = to
+    }
+  },
+  {
+    immediate: true
+  }
+)
+// 文本合成系统即输入法编辑器开始新的输入合成时会触发
+function onCompositionStart(e: CompositionEvent): void {
+  isComposing.value = true
+  emits('compositionstart', e)
+}
+// 当文本段落的组成完成或取消时触发 (具有特殊字符的触发，需要一系列键和其他输入，如语音识别或移动中的字词建议)
+function onCompositionEnd(e: CompositionEvent): void {
+  isComposing.value = false
+  emits('compositionend', e)
+  const changeEvent = new Event('change')
+  e.target?.dispatchEvent(changeEvent)
+}
 function onInput(e: Event): void {
-  const target = e.target as HTMLInputElement
-  if (!lazyInput.value) {
-    emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
-    emits('change', e)
+  if (!isComposing.value) {
+    const target = e.target as HTMLInputElement
+    inputSearchValue.value = target.value
+    if (!lazyInput.value) {
+      emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
+      emits('change', e)
+    }
   }
 }
 function onChange(e: Event): void {
@@ -86,19 +115,22 @@ function onChange(e: Event): void {
   }
 }
 function onClear(): void {
+  inputSearchValue.value = ''
   emits('update:value', '')
   inputRef.value?.focus()
 }
-async function onInputSearch(e: KeyboardEvent): Promise<void> {
-  const target = e.target as HTMLInputElement
-  emits('search', target.value, e)
+function onInputSearch(e: KeyboardEvent): void {
+  if (isComposing.value || props.loading) {
+    return
+  }
+  onSearch(e)
   if (lazyInput.value) {
     const changeEvent = new Event('change')
     e.target?.dispatchEvent(changeEvent)
   }
 }
-function onSearch(e: Event): void {
-  emits('search', props.value, e)
+function onSearch(e: MouseEvent | KeyboardEvent): void {
+  emits('search', inputSearchValue.value, e)
 }
 </script>
 <template>
@@ -106,9 +138,9 @@ function onSearch(e: Event): void {
     class="m-input-search"
     :style="`
       --input-search-width: ${inputSearchWidth};
-      --input-search-primary-color-hover: #4096ff;
-      --input-search-primary-color-focus: #4096ff;
-      --input-search-primary-shadow-color: rgba(5, 145, 255, 0.1);
+      --input-search-primary-color-hover: ${colorPalettes[4]};
+      --input-search-primary-color-focus: ${colorPalettes[4]};
+      --input-search-primary-shadow-color: ${shadowColor};
     `"
   >
     <span v-if="showBefore" class="input-search-addon-before" :class="`addon-before-${size}`">
@@ -132,16 +164,23 @@ function onSearch(e: Event): void {
         ref="inputRef"
         class="input-search"
         type="text"
-        :value="value"
+        :value="inputSearchValue"
         :placeholder="placeholder"
         :maxlength="maxlength"
         :disabled="disabled"
+        @compositionstart="onCompositionStart"
+        @compositionend="onCompositionEnd"
         @input="onInput"
         @change="onChange"
         @keydown.enter.prevent="onInputSearch"
       />
       <span v-if="showInputSuffix" class="input-search-suffix">
-        <span v-if="showClear" class="input-search-clear" :class="{ 'clear-hidden': !value }" @click="onClear">
+        <span
+          v-if="showClear"
+          class="input-search-clear"
+          :class="{ 'clear-hidden': !inputSearchValue }"
+          @click="onClear"
+        >
           <svg
             class="clear-svg"
             focusable="false"

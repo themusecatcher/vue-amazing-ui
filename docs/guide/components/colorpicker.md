@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*用于选择和展示颜色*
+_用于选择和展示颜色_
 
 ## 何时使用
 
@@ -11,13 +11,10 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import type { CheckboxOption } from 'vue-amazing-ui'
-import { generate } from '@ant-design/colors'
 const colorValue = ref('rgba(0, 0, 0, 1)')
 const showAlpha = ref(false)
 const showPreview = ref(true)
 const show = ref(false)
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
 const modeOptions: CheckboxOption[] = [
   {
     label: 'rgb',
@@ -66,24 +63,6 @@ function handleConfirm(color: string) {
 function handleClear() {
   console.log('clear')
 }
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--color-picker-primary-color-hover': colorPalettes[4],
-    '--color-picker-primary-color-focus': colorPalettes[4],
-    '--color-picker-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
-function getInputThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--input-primary-color-hover': colorPalettes[4],
-    '--input-primary-color-focus': colorPalettes[4],
-    '--input-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
 </script>
 
 ## 基本使用
@@ -128,11 +107,9 @@ function labelFormat(color: string) {
 </script>
 <template>
   <Space :width="240">
-    <ColorPicker :label="labelFormat"/>
+    <ColorPicker :label="labelFormat" />
     <ColorPicker>
-      <template #label="{ color }">
-        I'm {{ color }}
-      </template>
+      <template #label="{ color }"> I'm {{ color }} </template>
     </ColorPicker>
   </Space>
 </template>
@@ -170,7 +147,7 @@ function labelFormat(color: string) {
 
 ## 不透明度
 
-*`show-alpha` 控制是否可调节 `alpha` 通道*
+_`show-alpha` 控制是否可调节 `alpha` 通道_
 
 <br/>
 
@@ -198,8 +175,7 @@ const showAlpha = ref(false)
 
 ## 颜色预览块
 
-*使用 `showPreview` 控制是否展示颜色预览块；点击颜色预览块可以触发浏览器原生的颜色选择器*
-<br/>
+_使用 `showPreview` 控制是否展示颜色预览块；点击颜色预览块可以触发浏览器原生的颜色选择器_ <br/>
 
 <Space vertical>
   <Space align="center"> showPreview: <Switch v-model="showPreview"></Switch> </Space>
@@ -263,7 +239,7 @@ const showPreview = ref(true)
 
 ## 设定模式
 
-*使用 `modes` 设定可选模式*
+_使用 `modes` 设定可选模式_
 
 <br/>
 
@@ -348,7 +324,7 @@ const modes = ref(['rgb'])
 
 ## 显示按钮
 
-*通过在 `actions` 属性中添加 `confirm` `clear`，来显示确认/清除按钮*
+_通过在 `actions` 属性中添加 `confirm` `clear`，来显示确认/清除按钮_
 
 <br/>
 
@@ -387,7 +363,13 @@ function handleClear() {
 <template>
   <Space vertical>
     <Space align="center"> actions: <Checkbox :options="actionOptions" v-model:value="actions" /> </Space>
-    <ColorPicker :width="240" :actions="actions" @complete="handleComplele" @confirm="handleConfirm" @clear="handleClear" />
+    <ColorPicker
+      :width="240"
+      :actions="actions"
+      @complete="handleComplele"
+      @confirm="handleConfirm"
+      @clear="handleClear"
+    />
   </Space>
 </template>
 ```
@@ -414,7 +396,7 @@ function handleClear() {
 
 ## 使用按钮控制面板
 
-*使用 `Tooltip` 组件的 `show` 属性控制面板显隐*
+_使用 `Tooltip` 组件的 `show` 属性控制面板显隐_
 
 <br/>
 
@@ -445,113 +427,55 @@ watchEffect(() => {
 
 :::
 
-## 自定义主题色
-
-<Space vertical>
-  <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-  <Space align="center">
-    primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-  </Space>
-  <ColorPicker
-    :width="240"
-    :style="getThemeStyle(primaryColor)"
-    :input-props="{ style: getInputThemeStyle(primaryColor) }"
-  />
-</Space>
-
-::: details Show Code
-
-```vue
-<script lang="ts" setup>
-import { ref } from 'vue'
-import { generate } from '@ant-design/colors'
-const primaryColor = ref('#ff6900')
-const primaryShadowColor = ref('rgba(255, 116, 32, 0.1)')
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--color-picker-primary-color-hover': colorPalettes[4],
-    '--color-picker-primary-color-focus': colorPalettes[4],
-    '--color-picker-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
-function getInputThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--input-primary-color-hover': colorPalettes[4],
-    '--input-primary-color-focus': colorPalettes[4],
-    '--input-primary-shadow-color': primaryShadowColor.value
-  }
-  return style
-}
-</script>
-<template>
-  <Space vertical>
-    <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-    <Space align="center">
-      primaryShadowColor:<ColorPicker style="width: 200px" v-model:value="primaryShadowColor" />
-    </Space>
-    <ColorPicker
-      :width="240"
-      :style="getThemeStyle(primaryColor)"
-      :input-props="{ style: getInputThemeStyle(primaryColor) }"
-    />
-  </Space>
-</template>
-```
-
-:::
-
 <br/>
 
-> *更多使用方式请参考 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html)*
+> _更多使用方式请参考 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html)_
 
 ## APIs
 
 ### ColorPicker
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-width | 颜色选择器的宽度，单位 `px` | string &#124; number | '100%'
-label | 展示的内容 | (color: string) => string &#124; slot | undefined
-tooltipStyle | 设置弹出面板的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-inputProps | 输入框组件 `props`，参考 [Input Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html#input) | object | {}
-showAlpha | 是否可调节 `alpha` 通道 | boolean | true
-showPreview | 是否展示颜色预览块 | boolean | false
-size | 颜色选择器的尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
-disabled | 是否禁用 | boolean | false
-value <Tag color="cyan">v-model</Tag> | 颜色选择器的值 | string | undefined
-modes | 颜色选择器支持颜色的格式 | [ColorPickerMode](#colorpickermode-type)[] | ['rgb', 'hex', 'hsl']
-swatches | 色板的值 | string[] | []
-actions | 显示按钮 | [ColorPickerAction](#colorpickeraction-type)[] | []
-footer | 底部额外的页脚内容 | string &#124; slot | undefined
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| width | 颜色选择器的宽度，单位 `px` | string &#124; number | '100%' |
+| label | 展示的内容 | (color: string) => string &#124; slot | undefined |
+| tooltipStyle | 设置弹出面板的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| inputProps | 输入框组件 `props`，参考 [Input Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html#input) | object | {} |
+| showAlpha | 是否可调节 `alpha` 通道 | boolean | true |
+| showPreview | 是否展示颜色预览块 | boolean | false |
+| size | 颜色选择器的尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
+| disabled | 是否禁用 | boolean | false |
+| value <Tag color="cyan">v-model</Tag> | 颜色选择器的值 | string | undefined |
+| modes | 颜色选择器支持颜色的格式 | [ColorPickerMode](#colorpickermode-type)[] | ['rgb', 'hex', 'hsl'] |
+| swatches | 色板的值 | string[] | [] |
+| actions | 显示按钮 | [ColorPickerAction](#colorpickeraction-type)[] | [] |
+| footer | 底部额外的页脚内容 | string &#124; slot | undefined |
 
 更多属性请参考 [Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)
 
 ### ColorPickerMode Type
 
-名称 | 值
-:-- | :--
-ColorPickerMode | 'rgb' &#124; 'hsl' &#124; 'hsv' &#124; 'hex'
+| 名称            | 值                                           |
+| :-------------- | :------------------------------------------- |
+| ColorPickerMode | 'rgb' &#124; 'hsl' &#124; 'hsv' &#124; 'hex' |
 
 ### ColorPickerAction Type
 
-名称 | 值
-:-- | :--
-ColorPickerAction | 'confirm' &#124; 'clear'
+| 名称              | 值                       |
+| :---------------- | :----------------------- |
+| ColorPickerAction | 'confirm' &#124; 'clear' |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-label | 自定义展示的内容 | v-slot:label="{ color }"
-footer | 自定义底部额外的页脚内容 | v-slot:footer
+| 名称   | 说明                     | 类型                     |
+| :----- | :----------------------- | :----------------------- |
+| label  | 自定义展示的内容         | v-slot:label="{ color }" |
+| footer | 自定义底部额外的页脚内容 | v-slot:footer            |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-complete | 颜色完成改变后的回调（在鼠标拖动时候不会调用） | (color: string) => void
-confirm | 点击确认按钮的回调 | (color: string) => void
-clear | 点击清除按钮的回调 | () => void
+| 名称     | 说明                                           | 类型                    |
+| :------- | :--------------------------------------------- | :---------------------- |
+| complete | 颜色完成改变后的回调（在鼠标拖动时候不会调用） | (color: string) => void |
+| confirm  | 点击确认按钮的回调                             | (color: string) => void |
+| clear    | 点击清除按钮的回调                             | () => void              |

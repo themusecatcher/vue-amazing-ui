@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*引导用户按照流程完成任务的导航条*
+_引导用户按照流程完成任务的导航条_
 
 ## 何时使用
 
@@ -11,7 +11,6 @@
 <script setup lang="ts">
 import { ref, watchEffect, reactive } from 'vue'
 import type { StepsProps, StepsItem } from 'vue-amazing-ui'
-import { generate } from '@ant-design/colors'
 const stepsItems = ref<StepsItem[]>([
   {
     title: 'Step 1',
@@ -24,14 +23,6 @@ const stepsItems = ref<StepsItem[]>([
   {
     title: 'Step 3',
     description: 'description 3'
-  },
-  {
-    title: 'Step 4',
-    description: 'description 4'
-  },
-  {
-    title: 'Step 5',
-    description: 'description 5'
   }
 ])
 const minStepsItems = ref<StepsItem[]>([
@@ -43,16 +34,9 @@ const minStepsItems = ref<StepsItem[]>([
   },
   {
     title: 'Step 3'
-  },
-  {
-    title: 'Step 4'
-  },
-  {
-    title: 'Step 5'
   }
 ])
-const current = ref(3)
-const primaryColor = ref('#ff6900')
+const current = ref(2)
 watchEffect(() => {
   console.log('current', current.value)
 })
@@ -78,16 +62,6 @@ const placeOptions = [
   }
 ]
 const place = ref('bottom')
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--steps-primary-color': color,
-    '--steps-primary-color-hover': color,
-    '--steps-icon-color': colorPalettes[0],
-    '--steps-icon-color-hover': color
-  }
-  return style
-}
 function onChange(index: number) {
   // 父组件获取切换后的选中步骤
   console.log('change', index)
@@ -107,7 +81,7 @@ const state = reactive<StepsProps>({
   vertical: false,
   labelPlacement: 'right',
   dotted: false,
-  current: 3
+  current: 2
 })
 </script>
 
@@ -340,7 +314,7 @@ watchEffect(() => {
 
 ## 可点击
 
-*设置 `v-model:current` 后即可点击*
+_设置 `v-model:current` 后即可点击_
 
 <br/>
 
@@ -377,12 +351,12 @@ const current = ref(2)
 watchEffect(() => {
   console.log('current', current.value)
 })
-function onPrev () {
+function onPrev() {
   if (current.value > 1) {
     current.value--
   }
 }
-function onNext () {
+function onNext() {
   if (steps.value.length >= current.value) {
     current.value++
   }
@@ -396,66 +370,6 @@ function onNext () {
     </Space>
     <Steps :items="stepsItems" v-model:current="current" />
     <Steps :items="stepsItems" vertical v-model:current="current" />
-  </Flex>
-</template>
-```
-
-:::
-
-## 自定义主题色
-
-<Flex vertical>
-  <Space align="center">
-    stepsPrimaryColor:
-    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-  </Space>
-  <Steps :style="getThemeStyle(primaryColor)" :items="stepsItems" v-model:current="current" />
-</Flex>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import type { StepsItem } from 'vue-amazing-ui'
-import { generate } from '@ant-design/colors'
-const stepsItems = ref<StepsItem[]>([
-  {
-    title: 'Step 1',
-    description: 'description 1'
-  },
-  {
-    title: 'Step 2',
-    description: 'description 2'
-  },
-  {
-    title: 'Step 3',
-    description: 'description 3'
-  }
-])
-const current = ref(2)
-const primaryColor = ref('#ff6900')
-watchEffect(() => {
-  console.log('current', current.value)
-})
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--steps-primary-color': color,
-    '--steps-primary-color-hover': color,
-    '--steps-icon-color': colorPalettes[0],
-    '--steps-icon-color-hover': color
-  }
-  return style
-}
-</script>
-<template>
-  <Flex vertical>
-    <Space align="center">
-      stepsPrimaryColor:
-      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-    </Space>
-    <Steps :style="getThemeStyle(primaryColor)" :items="stepsItems" v-model:current="current" />
   </Flex>
 </template>
 ```
@@ -549,7 +463,7 @@ const state = reactive<StepsProps>({
   vertical: false,
   labelPlacement: 'right',
   dotted: false,
-  current: 3
+  current: 2
 })
 </script>
 <template>
@@ -608,25 +522,25 @@ const state = reactive<StepsProps>({
 
 ### Steps
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-items | 步骤数组 | [Item](#item-type)[] | []
-width | 步骤条总宽度，单位 `px` | number &#124; string | 'auto'
-size | 步骤条大小 | 'default' &#124; 'small' | 'default'
-vertical | 是否使用垂直步骤条，当 `vertical: true` `时，labelPlacement` 自动设为 `right` | boolean | false
-labelPlacement | 标签放置位置，默认放图标右侧，可选 `bottom` 放图标下方 | 'right' &#124; 'bottom' | 'right'
-dotted | 是否使用点状步骤条，当 `dotted: true` 且 `vertical: false` 时，`labelPlacement` 将自动设为 `bottom` | boolean | false
-current <Tag color="cyan">v-model</Tag> | 当前选中的步骤，设置 `v-model` 后，`Steps` 变为可点击状态。从 `1` 开始计数 | number | 1
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| items | 步骤数组 | [Item](#item-type)[] | [] |
+| width | 步骤条总宽度，单位 `px` | number &#124; string | 'auto' |
+| size | 步骤条大小 | 'default' &#124; 'small' | 'default' |
+| vertical | 是否使用垂直步骤条，当 `vertical: true` `时，labelPlacement` 自动设为 `right` | boolean | false |
+| labelPlacement | 标签放置位置，默认放图标右侧，可选 `bottom` 放图标下方 | 'right' &#124; 'bottom' | 'right' |
+| dotted | 是否使用点状步骤条，当 `dotted: true` 且 `vertical: false` 时，`labelPlacement` 将自动设为 `bottom` | boolean | false |
+| current <Tag color="cyan">v-model</Tag> | 当前选中的步骤，设置 `v-model` 后，`Steps` 变为可点击状态。从 `1` 开始计数 | number | 1 |
 
 ### Item Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-title? | 标题 | string | undefined
-description? | 描述 | string | undefined
+| 名称         | 说明 | 类型   | 默认值    |
+| :----------- | :--- | :----- | :-------- |
+| title?       | 标题 | string | undefined |
+| description? | 描述 | string | undefined |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 点击切换步骤时触发 | (index: number) => void
+| 名称   | 说明               | 类型                    |
+| :----- | :----------------- | :---------------------- |
+| change | 点击切换步骤时触发 | (index: number) => void |

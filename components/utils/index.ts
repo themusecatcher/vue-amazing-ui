@@ -111,7 +111,7 @@ export function formatNumber(
  * @param interval 是否间隔执行，如果为 true，则在首次执行后，以 delay 为间隔持续执行
  * @returns 返回一个对象，包含一个 id 属性，该 id 为 requestAnimationFrame 的调用 ID，可用于取消动画帧
  */
-export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = false): object {
+export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = false): { id: number } {
   let start: number | null = null // 记录动画开始的时间戳
   function timeElapse(timestamp: number) {
     // 定义动画帧回调函数
@@ -171,9 +171,10 @@ export function cancelRaf(raf: { id: number }): void {
  * @param delay 节流的时间间隔，单位 ms，默认为 300ms
  * @returns 返回一个新的节流的函数
  */
-export function throttle(fn: Function, delay: number = 300): any {
+export function throttle(fn: Function, delay: number = 300): Function {
   let valid = true // 用于标记函数是否可以执行
   return function (...args: any[]) {
+    if (!valid) return false // 返回 false，表示当前不执行函数
     // 返回一个新的函数，该函数负责执行节流逻辑
     if (valid) {
       fn(...args) // 执行原函数
@@ -182,7 +183,6 @@ export function throttle(fn: Function, delay: number = 300): any {
         valid = true
       }, delay)
     }
-    return false // 返回false，表示当前不执行函数
   }
 }
 /**
@@ -195,7 +195,7 @@ export function throttle(fn: Function, delay: number = 300): any {
  * @param delay 防抖的时间期限，单位 ms，默认为 300ms
  * @returns 返回一个新的防抖的函数
  */
-export function debounce(fn: Function, delay: number = 300): any {
+export function debounce(fn: Function, delay: number = 300): Function {
   let timer: any = null // 使用闭包保存定时器的引用
   return function (...args: any[]) {
     // 返回一个包装函数
@@ -296,7 +296,7 @@ export function downloadFile(url: string, fileName?: string): void {
     }
   }
 */
-export function toggleDark() {
+export function toggleDark(): void {
   const html = document.documentElement
   // 如果 <html> 上 dark 类值已存在，则移除它，否则添加它
   html.classList.toggle('dark')
@@ -320,16 +320,16 @@ import {
   Text,
   Comment
 } from 'vue'
-import type { Ref, VNode } from 'vue'
+import type { Ref, ComputedRef, Reactive, VNode } from 'vue'
 /**
  * 用于判断组件是否已挂载的自定义钩子
  *
  * 在组件的生命周期中，我们经常需要知道组件是否已经挂载，特别是在异步操作或者动态渲染的场景中
- * 此钩子通过在组件挂载时设置一个Ref对象的状态来帮助我们进行判断
+ * 此钩子通过在组件挂载时设置一个 Ref 对象的状态来帮助我们进行判断
  *
- * @returns {Ref<boolean>} 返回一个Ref对象，用于指示组件是否已挂载
+ * @returns { Ref<boolean> } 返回一个 Ref 对象，用于指示组件是否已挂载
  */
-export function useMounted() {
+export function useMounted(): Ref<boolean> {
   const isMounted = ref(false)
   // 获取当前组件的实例
   const instance = getCurrentInstance()
@@ -348,7 +348,7 @@ export function useMounted() {
  * @param callback 回调函数，用于执行某些操作，并返回用于计算的值
  * @returns 返回一个计算属性，该属性在组件挂载时会触发回调函数，并根据回调函数的返回值计算支持状态
  */
-export function useSupported(callback: () => unknown) {
+export function useSupported(callback: () => unknown): ComputedRef<boolean> {
   const isMounted = useMounted()
   return computed(() => {
     // to trigger the ref
@@ -393,7 +393,7 @@ export function useMutationObserver(
   target: Ref | Ref[] | HTMLElement | HTMLElement[],
   callback: MutationCallback,
   options = {}
-) {
+): { start: () => void; stop: () => void } {
   const isSupported = useSupported(() => window && 'MutationObserver' in window)
   const stopObservation = ref(false)
   let observer: MutationObserver | undefined
@@ -434,19 +434,19 @@ export function useMutationObserver(
       flush: 'post'
     }
   )
-  const stop = () => {
-    stopObservation.value = true
-    cleanup()
-  }
   const start = () => {
     stopObservation.value = false
     observeElements()
   }
+  const stop = () => {
+    stopObservation.value = true
+    cleanup()
+  }
   // 在组件卸载前清理 MutationObserver
   onBeforeUnmount(() => cleanup())
   return {
-    stop,
-    start
+    start,
+    stop
   }
 }
 /**
@@ -465,7 +465,17 @@ export function useScroll(
   throttleDelay: number = 0,
   onScroll?: (e: Event) => void,
   onStop?: (e: Event) => void
-) {
+): {
+  x: Ref<number>
+  xScrollMax: Ref<number>
+  y: Ref<number>
+  yScrollMax: Ref<number>
+  isScrolling: Ref<boolean>
+  left: Ref<boolean>
+  right: Ref<boolean>
+  top: Ref<boolean>
+  bottom: Ref<boolean>
+} {
   const x = ref(0) // 水平滚动距离
   const xScrollMax = ref(0) // 水平最大可滚动距离
   const y = ref(0) // 垂直滚动距离
@@ -529,8 +539,8 @@ export function useScroll(
           (to as HTMLElement)) as Element
         xScrollMax.value = el.scrollWidth - el.clientWidth
         yScrollMax.value = el.scrollHeight - el.clientHeight
-        el.addEventListener('scroll', throttleScroll)
-        el.addEventListener('scrollend', debounceScrollEnd)
+        el.addEventListener('scroll', throttleScroll as EventListener)
+        el.addEventListener('scrollend', debounceScrollEnd as EventListener)
       }
     },
     {
@@ -543,8 +553,8 @@ export function useScroll(
     const el: Element = ((target as Window)?.document?.documentElement ||
       (target as Document)?.documentElement ||
       (target as HTMLElement)) as Element
-    el.removeEventListener('scroll', throttleScroll)
-    el.removeEventListener('scrollend', debounceScrollEnd)
+    el.removeEventListener('scroll', throttleScroll as EventListener)
+    el.removeEventListener('scrollend', debounceScrollEnd as EventListener)
   }
   // 在组件卸载前调用清理函数
   onBeforeUnmount(() => cleanup(scrollTarget.value))
@@ -559,7 +569,7 @@ export function useScroll(
  *
  * @returns {Object} 返回一个包含 FPS 值的 ref 对象
  */
-export function useFps() {
+export function useFps(): { fps: Ref<number> } {
   const fps = ref<number>(0)
   const frameCount = ref<number>(0)
   let lastTime = performance.now()
@@ -588,7 +598,7 @@ export function useFps() {
  * @param mediaQuery 媒体查询字符串，用于定义要查询的媒体条件
  * @returns 返回一个对象，其中包含一个名为 match 的 ref 对象，表示当前是否为移动设备视口
  */
-export function useMediaQuery(mediaQuery: string) {
+export function useMediaQuery(mediaQuery: string): { match: Ref<boolean> } {
   // 检查传入的mediaQuery参数是否为空或非法
   if (!mediaQuery || typeof mediaQuery !== 'string' || mediaQuery.trim() === '') {
     throw new Error('Invalid mediaQuery parameter. It must be a non-empty string.')
@@ -622,7 +632,7 @@ export function useResizeObserver(
   target: Ref | Ref[] | HTMLElement | HTMLElement[],
   callback: ResizeObserverCallback,
   options: object = {}
-) {
+): { start: () => void; stop: () => void } {
   const isSupported = useSupported(() => window && 'ResizeObserver' in window)
   let observer: ResizeObserver | undefined
   const stopObservation = ref(false)
@@ -663,19 +673,19 @@ export function useResizeObserver(
       flush: 'post'
     }
   )
-  const stop = () => {
-    stopObservation.value = true
-    cleanup()
-  }
   const start = () => {
     stopObservation.value = false
     observeElements()
   }
+  const stop = () => {
+    stopObservation.value = true
+    cleanup()
+  }
   // 在组件卸载前清理 ResizeObserver
   onBeforeUnmount(() => cleanup())
   return {
-    stop,
-    start
+    start,
+    stop
   }
 }
 /**
@@ -686,7 +696,10 @@ export function useResizeObserver(
  * @returns 如果是单个插槽名称，则返回一个计算属性，表示该插槽是否存在
  *          如果是插槽名称数组，则返回一个 reactive 对象，其中的每个属性对应该插槽是否存在
  */
-export function useSlotsExist(slotsName: string | string[] = 'default') {
+type SlotsExistResult<T extends string | string[]> = T extends string
+  ? ComputedRef<boolean>
+  : Reactive<Record<string, ComputedRef<boolean>>>
+export function useSlotsExist<T extends string | string[] = 'default'>(slotsName: T): SlotsExistResult<T> {
   const slots = useSlots() // 获取当前组件的所有插槽
   // 检查特定名称的插槽是否存在且不为空
   const checkSlotsExist = (slotName: string): boolean => {
@@ -714,13 +727,101 @@ export function useSlotsExist(slotsName: string | string[] = 'default') {
     return false
   }
   if (Array.isArray(slotsName)) {
-    const slotsExist = reactive<any>({})
+    const slotsExist = reactive<Record<string, ComputedRef<boolean>>>({})
     slotsName.forEach((slotName: string) => {
       const exist = computed(() => checkSlotsExist(slotName))
       slotsExist[slotName] = exist // 将一个 ref 赋值给一个 reactive 属性时，该 ref 会自动解包
     })
-    return slotsExist
+    return slotsExist as SlotsExistResult<T>
   } else {
-    return computed(() => checkSlotsExist(slotsName))
+    return computed(() => checkSlotsExist(slotsName)) as SlotsExistResult<T>
   }
+}
+import { TinyColor } from '@ctrl/tinycolor'
+import { generate } from '@ant-design/colors'
+import { inject, toRefs } from 'vue'
+/**
+ * 使用依赖注入的函数
+ * 用于获取颜色调色板和阴影颜色
+ * 如果在组件中使用，则会尝试从组件的依赖注入中获取颜色配置
+ * 如果未找到，则回退到全局的默认颜色配置
+ *
+ * @param key 组件名，用于在组件的依赖注入中查找颜色配置
+ * @returns 返回包含颜色调色板和阴影颜色的主题对象
+ */
+export function useInject(key: string): { colorPalettes: Ref<string[]>; shadowColor: Ref<string> } {
+  // 获取默认的颜色调色板
+  const colorPalettes = getColorPalettes('#1677ff')
+  // 获取 common 的依赖注入
+  const commonInjectValue = inject('common', reactive({ colorPalettes, shadowColor: getAlphaColor(colorPalettes[0]) }))
+  // 获取组件的依赖注入
+  const componentsInjectValue = inject('components', null) as Record<
+    string,
+    { colorPalettes: string[]; shadowColor: string }
+  > | null
+  if (
+    componentsInjectValue !== null &&
+    key in componentsInjectValue &&
+    componentsInjectValue[key].colorPalettes.length
+  ) {
+    return toRefs(componentsInjectValue[key])
+  }
+  return toRefs(commonInjectValue)
+}
+/**
+ * 获取颜色调色板
+ *
+ * @param primaryColor 主色
+ * @returns 返回颜色调色板
+ */
+export function getColorPalettes(primaryColor: string): string[] {
+  return generate(primaryColor)
+}
+function isStableColor(color: number): boolean {
+  return color >= 0 && color <= 255
+}
+/**
+ * 获取透明度颜色，一般用作阴影色
+ *
+ * @param frontColor 前景色
+ * @param backgroundColor 背景色
+ * @returns 返回透明度颜色
+ */
+export function getAlphaColor(frontColor: string, backgroundColor: string = '#ffffff'): string {
+  const { r: fR, g: fG, b: fB, a: originAlpha } = new TinyColor(frontColor).toRgb()
+  if (originAlpha < 1) return frontColor
+  const { r: bR, g: bG, b: bB } = new TinyColor(backgroundColor).toRgb()
+  for (let fA = 0.01; fA <= 1; fA += 0.01) {
+    const r = Math.round((fR - bR * (1 - fA)) / fA)
+    const g = Math.round((fG - bG * (1 - fA)) / fA)
+    const b = Math.round((fB - bB * (1 - fA)) / fA)
+    if (isStableColor(r) && isStableColor(g) && isStableColor(b)) {
+      return new TinyColor({ r, g, b, a: Math.round(fA * 100) / 100 }).toRgbString()
+    }
+  }
+  return new TinyColor({ r: fR, g: fG, b: fB, a: 1 }).toRgbString()
+}
+/**
+ * 检查浏览器是否支持给定的事件监听器选项
+ *
+ * @param prop 一个表示要检查的事件监听器属性的字符串，可选 'capture'、'once'、'passive' 或 'signal'
+ * @returns 返回一个对象，包含一个 Ref 对象，其值指示浏览器是否支持给定的选项
+ */
+export function useOptionsSupported(prop: 'capture' | 'once' | 'passive' | 'signal'): { isSupported: Ref<boolean> } {
+  // 兼容旧版本的浏览器（以及一些相对不算古老的）仍然假定 addEventListener 第三个参数是布尔值的情况
+  const isSupported = ref<boolean>(false) // 浏览器是否支持 options 参数
+  try {
+    const options = {
+      get [prop]() {
+        // 该函数会在浏览器尝试访问 [prop] 值时被调用
+        isSupported.value = true
+        return false
+      }
+    }
+    window.addEventListener('test', () => null, options)
+    window.removeEventListener('test', () => null, options)
+  } catch (err) {
+    isSupported.value = false
+  }
+  return { isSupported }
 }

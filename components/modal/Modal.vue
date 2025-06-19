@@ -2,6 +2,7 @@
 import { ref, computed, watch, watchEffect, onMounted, onUnmounted, nextTick } from 'vue'
 import type { VNode, Slot, CSSProperties } from 'vue'
 import Button from 'components/button'
+import { useInject, useOptionsSupported } from 'components/utils'
 export interface Props {
   width?: string | number // 模态框宽度，单位 px
   icon?: VNode | Slot // 自定义图标
@@ -78,18 +79,20 @@ export interface Modal {
   keyboard?: boolean // 是否支持键盘 esc 关闭
   maskClosable?: boolean // 点击蒙层是否允许关闭
   maskStyle?: CSSProperties // 自定义蒙层样式
-  onKnow?: Function // 点击知道了按钮的回调
-  onOk?: Function // 点击确认按钮的回调
-  onCancel?: Function // 点击遮罩层或取消按钮的回调
+  onKnow?: () => void // 点击知道了按钮的回调
+  onOk?: () => void // 点击确认按钮的回调
+  onCancel?: () => void // 点击遮罩层或取消按钮的回调
 }
 const modalWrapRef = ref() // modal DOM 引用
 const mousePosition = ref<{ x: number; y: number } | null>(null) // 鼠标点击位置
 const modalOpen = ref<boolean>(false)
 const showModalWrap = ref<boolean>(false)
 const confirmBtnLoading = ref<boolean>(false)
-const transformOrigin = ref<string>('50% 50%')
+const modalTransformOrigin = ref<string>('50% 50%')
 const modalData = ref<Modal>()
 const modalMode = ref() // 弹窗类型：'info' 'success' 'error' 'warning' 'confirm' 'erase'
+const { colorPalettes } = useInject('Modal') // 主题色注入
+const { isSupported: captureSupported } = useOptionsSupported('capture')
 const emits = defineEmits(['update:open', 'cancel', 'ok', 'know'])
 const modalWidth = computed(() => {
   const width = getComputedValue('width')
@@ -106,13 +109,13 @@ const modalStyle = computed(() => {
   if (modalCentered.value) {
     return {
       width: modalWidth.value,
-      transformOrigin: transformOrigin.value
+      transformOrigin: modalTransformOrigin.value
     } as CSSProperties
   } else {
     return {
       width: modalWidth.value,
       top: modalTop.value,
-      transformOrigin: transformOrigin.value
+      transformOrigin: modalTransformOrigin.value
     } as CSSProperties
   }
 })
@@ -192,10 +195,10 @@ watchEffect(() => {
   confirmBtnLoading.value = props.confirmLoading
 })
 onMounted(() => {
-  document.addEventListener('click', getClickPosition, true) // 事件在捕获阶段执行
+  document.addEventListener('click', getClickPosition, captureSupported.value ? { capture: true } : true) // 事件在捕获阶段执行
 })
 onUnmounted(() => {
-  document.removeEventListener('click', getClickPosition, true)
+  document.removeEventListener('click', getClickPosition, captureSupported.value ? { capture: true } : true)
 })
 function getClickPosition(e: MouseEvent) {
   if (!modalOpen.value) {
@@ -211,18 +214,18 @@ async function onBeforeEnter(el: Element) {
   const transOrigin = getComputedValue('transformOrigin')
   if (transOrigin === 'mouse' && mousePosition.value) {
     const rect = el.getBoundingClientRect()
-    transformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
+    modalTransformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
   } else {
-    transformOrigin.value = '50% 50%'
+    modalTransformOrigin.value = '50% 50%'
   }
 }
 function onBeforeLeave(el: Element) {
   const transOrigin = getComputedValue('transformOrigin')
   if (transOrigin === 'mouse' && mousePosition.value) {
     const rect = el.getBoundingClientRect()
-    transformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
+    modalTransformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
   } else {
-    transformOrigin.value = '50% 50%'
+    modalTransformOrigin.value = '50% 50%'
   }
 }
 function onAfterLeave() {
@@ -301,7 +304,7 @@ defineExpose({
   <div
     class="m-modal-root"
     :style="`
-      --modal-primary-color: #1677ff;
+      --modal-primary-color: ${colorPalettes[5]};
       --modal-success-color: #52c41a;
       --modal-error-color: #ff4d4f;
       --modal-warning-color: #faad14;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
-import { useSlotsExist, add } from 'components/utils'
+import { useSlotsExist, add, useInject } from 'components/utils'
 export interface Props {
   width?: string | number // 数字输入框宽度，单位 px
   min?: number // 最小值
@@ -32,7 +32,8 @@ const props = withDefaults(defineProps<Props>(), {
   valueModifiers: () => ({})
 })
 const inputRef = ref() // input 模板引用
-const numValue = ref<string>()
+const numValue = ref<string>() // 数字输入框的内容
+const { colorPalettes, shadowColor } = useInject('InputNumber') // 主题色注入
 const emits = defineEmits(['update:value', 'change', 'enter'])
 const slotsExist = useSlotsExist(['prefix'])
 const inputWidth = computed(() => {
@@ -179,10 +180,10 @@ function onDown(): void {
     :class="{ 'input-number-disabled': disabled }"
     :style="`
       --input-number-width: ${inputWidth};
-      --input-number-primary-color: #1677ff;
-      --input-number-primary-color-hover: #4096ff;
-      --input-number-primary-color-focus: #4096ff;
-      --input-number-primary-shadow-color: rgba(5, 145, 255, 0.1);
+      --input-number-primary-color: ${colorPalettes[5]};
+      --input-number-primary-color-hover: ${colorPalettes[4]};
+      --input-number-primary-color-focus: ${colorPalettes[4]};
+      --input-number-primary-shadow-color: ${shadowColor};
     `"
   >
     <div class="input-number-wrap">

@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*警告提示，展现需要关注的信息*
+_警告提示，展现需要关注的信息_
 
 ## 何时使用
 
@@ -10,19 +10,7 @@
 - 非浮层的静态展现形式，始终展现，不会自动消失，用户可以点击关闭
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { generate } from '@ant-design/colors'
 import { AlertFilled, AlertOutlined, SmileOutlined } from '@ant-design/icons-vue'
-const primaryColor = ref('#ff6900')
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--alert-primary-color': color,
-    '--alert-primary-bg-color': colorPalettes[0],
-    '--alert-primary-border-color': colorPalettes[2]
-  }
-  return style
-}
 function onClose(e: Event) {
   console.log(e, 'I was closed.')
 }
@@ -129,7 +117,7 @@ function onClose(e: Event) {
 
 ```vue
 <script setup lang="ts">
-function onClose (e: Event) {
+function onClose(e: Event) {
   console.log(e, 'I was closed.')
 }
 </script>
@@ -328,18 +316,8 @@ import { AlertFilled, AlertOutlined } from '@ant-design/icons-vue'
       type="info"
       show-icon
     />
-    <Alert
-      message="Warning"
-      description="This is a warning notice about copywriting."
-      type="warning"
-      show-icon
-    />
-    <Alert
-      message="Error"
-      description="This is an error message about copywriting."
-      type="error"
-      show-icon
-    />
+    <Alert message="Warning" description="This is a warning notice about copywriting." type="warning" show-icon />
+    <Alert message="Error" description="This is an error message about copywriting." type="error" show-icon />
   </Flex>
 </template>
 ```
@@ -513,7 +491,7 @@ import { SmileOutlined } from '@ant-design/icons-vue'
 
 ```vue
 <script setup lang="ts">
-function onClose (e: Event) {
+function onClose(e: Event) {
   console.log(e, 'I was closed.')
 }
 </script>
@@ -566,7 +544,7 @@ function onClose (e: Event) {
 
 ```vue
 <script setup lang="ts">
-function onClose (e: Event) {
+function onClose(e: Event) {
   console.log(e, 'I was closed.')
 }
 </script>
@@ -611,90 +589,34 @@ function onClose (e: Event) {
 
 :::
 
-## 自定义主题色
-
-<Flex vertical>
-  <Space align="center">
-    alertPrimaryColor:
-    <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-  </Space>
-  <Alert :style="getThemeStyle(primaryColor)" message="Info Text" type="info" :bordered="false" />
-  <Alert :style="getThemeStyle(primaryColor)" message="Info Text" type="info" show-icon />
-  <Alert
-    :style="getThemeStyle(primaryColor)"
-    message="Info Text"
-    description="Info Description Info Description Info Description Info Description"
-    type="info"
-    show-icon
-  />
-</Flex>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import { generate } from '@ant-design/colors'
-const primaryColor = ref('#ff6900')
-function getThemeStyle(color: string) {
-  const colorPalettes = generate(color)
-  const style = {
-    '--alert-primary-color': color,
-    '--alert-primary-bg-color': colorPalettes[0],
-    '--alert-primary-border-color': colorPalettes[2]
-  }
-  return style
-}
-</script>
-<template>
-  <Flex vertical>
-    <Space align="center">
-      alertPrimaryColor:
-      <ColorPicker style="width: 200px" v-model:value="primaryColor" />
-    </Space>
-    <Alert :style="getThemeStyle(primaryColor)" message="Info Text" type="info" :bordered="false" />
-    <Alert :style="getThemeStyle(primaryColor)" message="Info Text" type="info" show-icon />
-    <Alert
-      :style="getThemeStyle(primaryColor)"
-      message="Info Text"
-      description="Info Description Info Description Info Description Info Description"
-      type="info"
-      show-icon
-    />
-  </Flex>
-</template>
-```
-
-:::
-
 ## APIs
 
 ### Alert
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-message | 警告提示内容 | string &#124; slot | undefined
-description | 警告提示的辅助性文字介绍 | string &#124; slot | undefined
-type | 警告提示的类型 | 'default' &#124; 'success' &#124; 'info' &#124; 'warning' &#124; 'error' | 'default'
-bordered | 是否显示边框 | boolean | true
-closable | 是否显示关闭按钮 | boolean | false
-closeText | 自定义关闭按钮 |  string &#124; slot | undefined
-icon | 自定义图标，`showIcon` 为 `true` 时有效 |  string &#124; slot | undefined
-showIcon | 是否显示辅助图标 | boolean | false
-actions | 自定义操作项 | slot | undefined
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| message | 警告提示内容 | string &#124; slot | undefined |
+| description | 警告提示的辅助性文字介绍 | string &#124; slot | undefined |
+| type | 警告提示的类型 | 'default' &#124; 'success' &#124; 'info' &#124; 'warning' &#124; 'error' | 'default' |
+| bordered | 是否显示边框 | boolean | true |
+| closable | 是否显示关闭按钮 | boolean | false |
+| closeText | 自定义关闭按钮 | string &#124; slot | undefined |
+| icon | 自定义图标，`showIcon` 为 `true` 时有效 | string &#124; slot | undefined |
+| showIcon | 是否显示辅助图标 | boolean | false |
+| actions | 自定义操作项 | slot | undefined |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-message | 警告提示内容 | v-slot:default
-description | 警告提示的辅助性文字介绍 | v-slot:description
-closeText | 自定义关闭按钮 | v-slot:closeText
-icon | 自定义图标 | v-slot:icon
-actions | 自定义操作项 | v-slot:actions
+| 名称        | 说明                     | 类型               |
+| :---------- | :----------------------- | :----------------- |
+| message     | 警告提示内容             | v-slot:default     |
+| description | 警告提示的辅助性文字介绍 | v-slot:description |
+| closeText   | 自定义关闭按钮           | v-slot:closeText   |
+| icon        | 自定义图标               | v-slot:icon        |
+| actions     | 自定义操作项             | v-slot:actions     |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-close | 关闭时触发的回调函数 | (e: Event) => void
+| 名称  | 说明                 | 类型               |
+| :---- | :------------------- | :----------------- |
+| close | 关闭时触发的回调函数 | (e: Event) => void |
