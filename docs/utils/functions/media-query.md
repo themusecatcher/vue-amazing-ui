@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*根据 `CSS media query` 的不同结果动态地更新：是桌面端还是移动端*
+_根据 `CSS media query` 的不同结果动态地更新：是桌面端还是移动端_
 
 ::: details Show Source Code
 
@@ -13,8 +13,8 @@
  *
  * 该函数提供了一个响应式的媒体查询机制，根据查询的不同结果动态更新响应式变量
  *
- * @param mediaQuery 媒体查询字符串，用于定义要查询的媒体条件
- * @returns 返回一个对象，其中包含一个名为 match 的 ref 对象，表示当前是否为移动设备视口
+ * @param {string} mediaQuery 媒体查询字符串，用于定义要查询的媒体条件
+ * @returns {{ match: Ref<boolean> }} 返回一个对象，其中包含一个名为 match 的 ref 对象，表示当前是否为移动设备视口
  */
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import type { Ref } from 'vue'
@@ -52,7 +52,7 @@ const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 
 ## 基本使用
 
-*请缩放浏览器查看效果*
+_请缩放浏览器查看效果_
 
 <h3>{{ isMobile ? '移动端' : '桌面端' }}</h3>
 
@@ -68,6 +68,6 @@ const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 
 ## Params
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-mediaQuery | 媒体查询字符串，用于定义要查询的媒体条件 | string | undefined
+| 参数       | 说明                                     | 类型   | 默认值    |
+| ---------- | ---------------------------------------- | ------ | --------- |
+| mediaQuery | 媒体查询字符串，用于定义要查询的媒体条件 | string | undefined |

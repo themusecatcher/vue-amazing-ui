@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*格式化数字为指定格式的工具函数*
+_格式化数字为指定格式的工具函数_
 
 ::: details Show Source Code
 
@@ -12,13 +12,13 @@
  *
  * 该函数提供了一种灵活的方式将数字格式化为字符串，包括设置精度、千位分隔符、小数点字符、前缀和后缀
  *
- * @param value 要格式化的数字或数字字符串
- * @param precision 小数点后的位数，默认为 2
- * @param separator 千分位分隔符，默认为 ','
- * @param decimal 小数点字符，默认为 '.'
- * @param prefix 数字前的字符串，默认为 undefined
- * @param suffix 数字后的字符串，默认为 undefined
- * @returns 格式化后的字符串；如果输入值不是数字或字符串，则抛出类型错误
+ * @param {number | string} value 要格式化的数字或数字字符串
+ * @param {number} [precision = 2] 小数点后的位数，默认为 2
+ * @param {string} [separator = ','] 千分位分隔符，默认为 ','
+ * @param {string} [decimal = '.'] 小数点字符，默认为 '.'
+ * @param {string} prefix 数字前的字符串，默认为 undefined
+ * @param {string} suffix 数字后的字符串，默认为 undefined
+ * @returns {string} 格式化后的字符串；如果输入值不是数字或字符串，则抛出类型错误
  */
 export function formatNumber(
   value: number | string,
@@ -75,11 +75,11 @@ formatNumber(123456789.87654321, 2, ',') // 123,456,789.88
 
 ## Params
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-value | 要格式化的数字或数字字符串 | number &#124; string | undefined
-precision | 小数点后的位数 | number | 2
-separator | 千分位分隔符 | string | ','
-decimal | 小数点字符 | string | '.'
-prefix? | 数字前的字符串 | string | undefined
-suffix? | 数字后的字符串 | string | undefined
+| 参数      | 说明                       | 类型                 | 默认值    |
+| --------- | -------------------------- | -------------------- | --------- |
+| value     | 要格式化的数字或数字字符串 | number &#124; string | undefined |
+| precision | 小数点后的位数             | number               | 2         |
+| separator | 千分位分隔符               | string               | ','       |
+| decimal   | 小数点字符                 | string               | '.'       |
+| prefix?   | 数字前的字符串             | string               | undefined |
+| suffix?   | 数字后的字符串             | string               | undefined |

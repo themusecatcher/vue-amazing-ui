@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*添加和清除 `DOM` 事件监听器的组合式函数*
+_添加和清除 `DOM` 事件监听器的组合式函数_
 
 ::: details Show Source Code
 
@@ -15,9 +15,9 @@
  * 从而可能导致内存泄漏的问题；通过结合 Vue 的 onMounted 和 onUnmounted 钩子，
  * 在组件挂载时添加事件监听器，并在组件卸载时移除它
  *
- * @param target 目标元素或对象；可以是 DOM 元素或其他支持 addEventListener 的对象
- * @param event 要监听的事件名称
- * @param callback 事件被触发时执行的回调函数
+ * @param {HTMLElement | Window | Document} target 目标元素或对象；可以是 DOM 元素或其他支持 addEventListener 的对象
+ * @param {string} event 要监听的事件名称
+ * @param {Function} callback 事件被触发时执行的回调函数
  */
 import { onMounted, onUnmounted } from 'vue'
 import type { Ref } from 'vue'
@@ -57,7 +57,7 @@ import { ref } from 'vue'
 import { throttle, useEventListener } from 'vue-amazing-ui'
 const scrollDown = ref(false) // 是否向下滚动
 let lastScrollPosition = 0 // 保存上一次滚动的位置
-function scrollEvent () {
+function scrollEvent() {
   // 获取当前滚动条的位置
   const currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop
   // 比较当前位置和上一次记录的位置
@@ -72,8 +72,8 @@ useEventListener(window, 'scroll', throttleScroll)
 
 ## Params
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-target | 要添加监听事件的目标元素 | HTMLElement &#124; Window &#124; Document | undefined
-event | 监听的事件类型（大小写敏感） | string | undefined
-callback | 监听事件触发时的回调函数 | Function | undefined
+| 参数     | 说明                         | 类型                                      | 默认值    |
+| -------- | ---------------------------- | ----------------------------------------- | --------- |
+| target   | 要添加监听事件的目标元素     | HTMLElement &#124; Window &#124; Document | undefined |
+| event    | 监听的事件类型（大小写敏感） | string                                    | undefined |
+| callback | 监听事件触发时的回调函数     | Function                                  | undefined |
