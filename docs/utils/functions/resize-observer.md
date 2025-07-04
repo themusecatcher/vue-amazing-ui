@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化的组合式函数*
+_使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化的组合式函数_
 
 ::: details Show Source Code
 
@@ -13,10 +13,10 @@
  *
  * 该函数提供了一种方便的方式来观察一个或多个元素的尺寸变化，并在变化时执行指定的回调函数
  *
- * @param target 要观察的目标，可以是 Ref 对象、Ref 数组、HTMLElement 或 HTMLElement 数组
- * @param callback 当元素尺寸变化时调用的回调函数
- * @param options ResizeObserver 选项，用于定制观察行为
- * @returns 返回一个对象，包含停止和开始观察的方法，使用者可以调用 start 方法开始观察，调用 stop 方法停止观察
+ * @param {Ref | Ref[] | HTMLElement | HTMLElement[]} target 要观察的目标，可以是 Ref 对象、Ref 数组、HTMLElement 或 HTMLElement 数组
+ * @param {ResizeObserverCallback} callback 当元素尺寸变化时调用的回调函数
+ * @param {object} [options = {}] ResizeObserver 选项，用于定制观察行为
+ * @returns {{ start: () => void, stop: () => void }} 返回一个对象，包含停止和开始观察的方法，使用者可以调用 start 方法开始观察，调用 stop 方法停止观察
  */
 import { ref, toValue, computed, watch, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
 import type { Ref, ComputedRef } from 'vue'
@@ -110,7 +110,7 @@ export function useMounted(): Ref<boolean> {
 
 ## 基本使用
 
-*请缩放下面的盒子来观察变化*
+_请缩放下面的盒子来观察变化_
 
 <br/>
 
@@ -288,7 +288,7 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
     min-width: 300px;
     min-height: 450px;
     max-width: 688px;
-    border: 1px solid #2e2e32;;
+    border: 1px solid #2e2e32;
     border-radius: 4px;
     outline: none;
     white-space: pre;
@@ -317,8 +317,8 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
 
 ## Params
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-target | 要观察的目标，可以是 `Ref` 对象、`Ref` 数组、`HTMLElement` 或 `HTMLElement` 数组 | Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[] | undefined
-callback | 当元素尺寸变化时调用的回调函数 | ResizeObserverCallback | undefined
-options | `ResizeObserver` 选项，用于定制观察行为，[参考文档](https://developer.mozilla.org/zh-CN/docs/Web/API/ResizeObserver/observe#options) | object | {}
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| target | 要观察的目标，可以是 `Ref` 对象、`Ref` 数组、`HTMLElement` 或 `HTMLElement` 数组 | Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[] | undefined |
+| callback | 当元素尺寸变化时调用的回调函数 | ResizeObserverCallback | undefined |
+| options | `ResizeObserver` 选项，用于定制观察行为，[参考文档](https://developer.mozilla.org/zh-CN/docs/Web/API/ResizeObserver/observe#options) | object | {} |

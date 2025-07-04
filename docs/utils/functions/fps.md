@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*实时监测浏览器刷新率 `FPS` 的组合式函数*
+_实时监测浏览器刷新率 `FPS` 的组合式函数_
 
 ::: details Show Source Code
 
@@ -13,7 +13,7 @@
  *
  * FPS值可以帮助开发者识别性能瓶颈，以优化应用的性能
  *
- * @returns {Object} 返回一个包含 FPS 值的 ref 对象
+ * @returns {{ fps: Ref<number> }} 返回一个包含 FPS 值的 ref 对象
  */
 import { ref } from 'vue'
 import type { Ref } from 'vue'
