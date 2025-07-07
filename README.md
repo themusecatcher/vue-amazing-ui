@@ -210,7 +210,7 @@ pnpm dev
 - Run docs
 
 ```sh
-docs:dev
+pnpm docs:dev
 ```
 
 ## Blogs
