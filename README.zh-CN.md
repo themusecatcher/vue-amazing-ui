@@ -210,7 +210,7 @@ pnpm dev
 - 启动文档
 
 ```sh
-docs:dev
+pnpm docs:dev
 ```
 
 ## 博客
