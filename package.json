@@ -77,6 +77,8 @@
   },
   "devDependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@tsconfig/node22": "^22.0.2",
     "@types/minimist": "^1.2.5",
     "@types/node": "^22.15.27",

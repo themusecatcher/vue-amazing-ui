@@ -1,0 +1,2 @@
+# 显式指定配置路径
+npx --no-install commitlint --config commitlint.config.js --edit "$1"
