@@ -1,2 +1,2 @@
-# 显式指定配置路径
+# 在用户输入提交信息后触发，用于校验提交信息的格式，并显式指定配置路径
 npx --no-install commitlint --config commitlint.config.js --edit "$1"
