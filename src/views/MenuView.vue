@@ -53,7 +53,7 @@ const items = ref([
   },
   {
     key: 'alipay',
-    label: h('a', { href: 'https://antdv.com', target: '_blank' }, 'Navigation Four - Link'),
+    label: h('a', { href: 'https://themusecatcher.github.io/vue-amazing-ui/', target: '_blank' }, 'Navigation Four - Link'),
     title: 'Navigation Four - Link'
   }
 ])

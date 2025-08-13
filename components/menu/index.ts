@@ -1,5 +1,7 @@
-import Menu from './Menu.vue'
-export type { Props, Item } from './Menu.vue'
-import { withInstall } from '../utils/type'
+import Menu from './menu'
+import MenuItem from './menuitem'
 
-export default withInstall(Menu)
+export type { MenuProps } from './menu'
+export type { MenuItemProps } from './menuitem'
+
+export { Menu, MenuItem }
