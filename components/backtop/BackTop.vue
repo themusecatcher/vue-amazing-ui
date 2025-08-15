@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, useTemplateRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { VNode, Slot } from 'vue'
 import Tooltip from 'components/tooltip'
 import { useSlotsExist, useMutationObserver, useInject, useOptionsSupported } from 'components/utils'
@@ -31,10 +31,9 @@ const props = withDefaults(defineProps<Props>(), {
   to: 'body',
   listenTo: undefined
 })
-const backtopRef = ref<HTMLElement | null>(null) // backTop 元素引用
+const backTopPlaceholderRef = useTemplateRef('backTopPlaceholderRef') // backTop 元素引用
 const scrollTop = ref<number>(0) // 滚动距离
 const scrollTarget = ref<HTMLElement | null>(null) // 滚动目标元素
-const targetElement = ref<HTMLElement | null>(null) // 渲染容器元素
 const { colorPalettes } = useInject('BackTop') // 主题色注入
 const { isSupported: passiveSupported } = useOptionsSupported('passive')
 const emits = defineEmits(['click', 'show'])
@@ -55,15 +54,6 @@ const showDescription = computed(() => {
   return slotsExist.description || props.description
 })
 watch(
-  () => props.to,
-  () => {
-    appendBackTop()
-  },
-  {
-    flush: 'post'
-  }
-)
-watch(
   () => props.listenTo,
   () => {
     observeScroll()
@@ -80,7 +70,6 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   cleanup()
-  backtopRef.value?.remove()
 })
 const mutationObserver = useMutationObserver(
   scrollTarget,
@@ -96,7 +85,7 @@ function updateScrollTop(e: Event): void {
 function observeScroll(): void {
   cleanup()
   if (props.listenTo === undefined) {
-    scrollTarget.value = getScrollParent(backtopRef.value)
+    scrollTarget.value = getScrollParent(backTopPlaceholderRef.value)
   } else if (typeof props.listenTo === 'string') {
     scrollTarget.value = document.getElementsByTagName(props.listenTo)[0] as HTMLElement
   } else if (props.listenTo instanceof HTMLElement) {
@@ -114,21 +103,11 @@ function observeScroll(): void {
   if (scrollTarget.value === document.documentElement) {
     mutationObserver.start()
   }
-  appendBackTop()
 }
 function cleanup(): void {
   scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updateScrollTop)
   scrollTarget.value = null
   mutationObserver.stop()
-}
-function appendBackTop(): void {
-  // 渲染容器节点
-  if (typeof props.to === 'string') {
-    targetElement.value = document.getElementsByTagName(props.to)[0] as HTMLElement
-  } else if (props.to instanceof HTMLElement) {
-    targetElement.value = props.to
-  }
-  targetElement.value && targetElement.value?.appendChild(backtopRef.value!) // 保证 backtop 节点只存在一个
 }
 function getParentElement(el: HTMLElement): HTMLElement | null {
   // Document
@@ -159,91 +138,95 @@ function onBackTop(): void {
 }
 </script>
 <template>
-  <Transition name="zoom">
-    <div
-      v-show="backTopShow"
-      ref="backtopRef"
-      class="m-backtop"
-      :style="[
-        backTopStyle,
-        `
-          --backtop-z-index: ${zIndex};
-          --backtop-width: 44px;
-          --backtop-height: 44px;
-          --backtop-icon-size: 26px;
-          --backtop-icon-with-desc-size: 24px;
-          --backtop-desc-font-size: 12px;
-          --backtop-default-color: rgba(0, 0, 0, 0.88);
-          --backtop-default-color-hover: ${colorPalettes[5]};
-          --backtop-default-bg-color: rgba(255, 255, 255, 0.88);
-          --backtop-default-bg-color-hover: rgba(255, 255, 255);
-          --backtop-default-shadow-color: rgba(0, 0, 0, 0.12);
-          --backtop-default-shadow-color-hover: rgba(0, 0, 0, 0.12);
-          --backtop-primary-color: #fff;
-          --backtop-primary-color-hover: #fff;
-          --backtop-primary-bg-color: ${colorPalettes[5]};
-          --backtop-primary-bg-color-hover: ${colorPalettes[4]};
-          --backtop-primary-shadow-color: rgba(9, 88, 217, 0.32);
-          --backtop-primary-shadow-color-hover: rgba(9, 88, 217, 0.32);
-          --backtop-circle-border-radius: calc(var(--backtop-width) / 2);
-          --backtop-square-border-radius: 8px;
-        `
-      ]"
-      @click="onBackTop"
-    >
-      <Tooltip
-        :style="`border-radius: var(--${shape}-border-radius)`"
-        :content-style="{ borderRadius: `var(--${shape}-border-radius)` }"
-        v-bind="tooltipProps"
-      >
-        <template v-if="showTooltip" #tooltip>
-          <slot name="tooltip">{{ tooltip }}</slot>
-        </template>
-        <div class="backtop-wrap" :class="`backtop-${type} backtop-${shape}`">
-          <slot>
-            <span class="backtop-icon" :class="{ 'icon-with-description': showDescription }">
-              <slot name="icon">
-                <component v-if="icon" :is="icon" />
-                <svg
-                  v-else
-                  width="1em"
-                  height="1em"
-                  viewBox="0 0 24 24"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xlinkHref="http://www.w3.org/1999/xlink"
-                >
-                  <g stroke="none" stroke-width="1" fill-rule="evenodd">
-                    <g transform="translate(-139.000000, -4423.000000)" fill-rule="nonzero">
-                      <g transform="translate(120.000000, 4285.000000)">
-                        <g transform="translate(7.000000, 126.000000)">
-                          <g
-                            transform="translate(24.000000, 24.000000) scale(1, -1) translate(-24.000000, -24.000000) translate(12.000000, 12.000000)"
-                          >
-                            <g transform="translate(4.000000, 2.000000)">
-                              <path
-                                d="M8,0 C8.51283584,0 8.93550716,0.38604019 8.99327227,0.883378875 L9,1 L9,10.584 L12.2928932,7.29289322 C12.6834175,6.90236893 13.3165825,6.90236893 13.7071068,7.29289322 C14.0675907,7.65337718 14.0953203,8.22060824 13.7902954,8.61289944 L13.7071068,8.70710678 L8.70710678,13.7071068 L8.62544899,13.7803112 L8.618,13.784 L8.59530661,13.8036654 L8.4840621,13.8753288 L8.37133602,13.9287745 L8.22929083,13.9735893 L8.14346259,13.9897165 L8.03324678,13.9994506 L7.9137692,13.9962979 L7.77070917,13.9735893 L7.6583843,13.9401293 L7.57677845,13.9063266 L7.47929125,13.8540045 L7.4048407,13.8036865 L7.38131006,13.7856883 C7.35030318,13.7612383 7.32077858,13.7349921 7.29289322,13.7071068 L2.29289322,8.70710678 L2.20970461,8.61289944 C1.90467972,8.22060824 1.93240926,7.65337718 2.29289322,7.29289322 C2.65337718,6.93240926 3.22060824,6.90467972 3.61289944,7.20970461 L3.70710678,7.29289322 L7,10.585 L7,1 L7.00672773,0.883378875 C7.06449284,0.38604019 7.48716416,0 8,0 Z"
-                              ></path>
-                              <path
-                                d="M14.9333333,15.9994506 C15.5224371,15.9994506 16,16.4471659 16,16.9994506 C16,17.5122865 15.5882238,17.9349578 15.0577292,17.9927229 L14.9333333,17.9994506 L1.06666667,17.9994506 C0.477562934,17.9994506 0,17.5517354 0,16.9994506 C0,16.4866148 0.411776203,16.0639435 0.9422708,16.0061783 L1.06666667,15.9994506 L14.9333333,15.9994506 Z"
-                              ></path>
+  <div ref="backTopPlaceholderRef" class="back-top-placeholder" style="display: none">
+    <Teleport :to="to">
+      <Transition name="zoom">
+        <div
+          v-show="backTopShow"
+          class="back-top"
+          :style="[
+            backTopStyle,
+            `
+              --backtop-z-index: ${zIndex};
+              --backtop-width: 44px;
+              --backtop-height: 44px;
+              --backtop-icon-size: 26px;
+              --backtop-icon-with-desc-size: 24px;
+              --backtop-desc-font-size: 12px;
+              --backtop-default-color: rgba(0, 0, 0, 0.88);
+              --backtop-default-color-hover: ${colorPalettes[5]};
+              --backtop-default-bg-color: rgba(255, 255, 255, 0.88);
+              --backtop-default-bg-color-hover: rgba(255, 255, 255);
+              --backtop-default-shadow-color: rgba(0, 0, 0, 0.12);
+              --backtop-default-shadow-color-hover: rgba(0, 0, 0, 0.12);
+              --backtop-primary-color: #fff;
+              --backtop-primary-color-hover: #fff;
+              --backtop-primary-bg-color: ${colorPalettes[5]};
+              --backtop-primary-bg-color-hover: ${colorPalettes[4]};
+              --backtop-primary-shadow-color: rgba(9, 88, 217, 0.32);
+              --backtop-primary-shadow-color-hover: rgba(9, 88, 217, 0.32);
+              --backtop-circle-border-radius: calc(var(--backtop-width) / 2);
+              --backtop-square-border-radius: 8px;
+            `
+          ]"
+          @click="onBackTop"
+          v-bind="$attrs"
+        >
+          <Tooltip
+            :style="`border-radius: var(--backtop-${shape}-border-radius)`"
+            :content-style="{ borderRadius: `var(--backtop-${shape}-border-radius)` }"
+            v-bind="tooltipProps"
+          >
+            <template v-if="showTooltip" #tooltip>
+              <slot name="tooltip">{{ tooltip }}</slot>
+            </template>
+            <div class="backtop-wrap" :class="`backtop-${type} backtop-${shape}`">
+              <slot>
+                <span class="backtop-icon" :class="{ 'icon-with-description': showDescription }">
+                  <slot name="icon">
+                    <component v-if="icon" :is="icon" />
+                    <svg
+                      v-else
+                      width="1em"
+                      height="1em"
+                      viewBox="0 0 24 24"
+                      version="1.1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xlinkHref="http://www.w3.org/1999/xlink"
+                    >
+                      <g stroke="none" stroke-width="1" fill-rule="evenodd">
+                        <g transform="translate(-139.000000, -4423.000000)" fill-rule="nonzero">
+                          <g transform="translate(120.000000, 4285.000000)">
+                            <g transform="translate(7.000000, 126.000000)">
+                              <g
+                                transform="translate(24.000000, 24.000000) scale(1, -1) translate(-24.000000, -24.000000) translate(12.000000, 12.000000)"
+                              >
+                                <g transform="translate(4.000000, 2.000000)">
+                                  <path
+                                    d="M8,0 C8.51283584,0 8.93550716,0.38604019 8.99327227,0.883378875 L9,1 L9,10.584 L12.2928932,7.29289322 C12.6834175,6.90236893 13.3165825,6.90236893 13.7071068,7.29289322 C14.0675907,7.65337718 14.0953203,8.22060824 13.7902954,8.61289944 L13.7071068,8.70710678 L8.70710678,13.7071068 L8.62544899,13.7803112 L8.618,13.784 L8.59530661,13.8036654 L8.4840621,13.8753288 L8.37133602,13.9287745 L8.22929083,13.9735893 L8.14346259,13.9897165 L8.03324678,13.9994506 L7.9137692,13.9962979 L7.77070917,13.9735893 L7.6583843,13.9401293 L7.57677845,13.9063266 L7.47929125,13.8540045 L7.4048407,13.8036865 L7.38131006,13.7856883 C7.35030318,13.7612383 7.32077858,13.7349921 7.29289322,13.7071068 L2.29289322,8.70710678 L2.20970461,8.61289944 C1.90467972,8.22060824 1.93240926,7.65337718 2.29289322,7.29289322 C2.65337718,6.93240926 3.22060824,6.90467972 3.61289944,7.20970461 L3.70710678,7.29289322 L7,10.585 L7,1 L7.00672773,0.883378875 C7.06449284,0.38604019 7.48716416,0 8,0 Z"
+                                  ></path>
+                                  <path
+                                    d="M14.9333333,15.9994506 C15.5224371,15.9994506 16,16.4471659 16,16.9994506 C16,17.5122865 15.5882238,17.9349578 15.0577292,17.9927229 L14.9333333,17.9994506 L1.06666667,17.9994506 C0.477562934,17.9994506 0,17.5517354 0,16.9994506 C0,16.4866148 0.411776203,16.0639435 0.9422708,16.0061783 L1.06666667,15.9994506 L14.9333333,15.9994506 Z"
+                                  ></path>
+                                </g>
+                              </g>
                             </g>
                           </g>
                         </g>
                       </g>
-                    </g>
-                  </g>
-                </svg>
+                    </svg>
+                  </slot>
+                </span>
+                <span v-if="showDescription" class="backtop-description">
+                  <slot name="description">{{ description }}</slot>
+                </span>
               </slot>
-            </span>
-            <span v-if="showDescription" class="backtop-description">
-              <slot name="description">{{ description }}</slot>
-            </span>
-          </slot>
+            </div>
+          </Tooltip>
         </div>
-      </Tooltip>
-    </div>
-  </Transition>
+      </Transition>
+    </Teleport>
+  </div>
 </template>
 <style lang="less" scoped>
 .zoom-enter-active,
@@ -255,7 +238,7 @@ function onBackTop(): void {
   opacity: 0;
   transform: scale(0.5);
 }
-.m-backtop {
+.back-top {
   position: fixed;
   z-index: var(--backtop-z-index);
   .backtop-wrap {

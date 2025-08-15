@@ -1853,7 +1853,7 @@ function onPaginationChange(page: number, pageSize: number) {
               }
             }
           }
-          :deep(.m-tooltip-card) {
+          :deep(.tooltip-card-container) {
             cursor: auto;
           }
           .table-cell-sorter {
