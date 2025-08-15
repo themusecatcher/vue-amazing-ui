@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { ref, useTemplateRef, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
 import {
   useSlotsExist,
@@ -24,6 +24,7 @@ export interface Props {
   flip?: boolean // 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
   trigger?: 'hover' | 'click' // 文字提示触发方式
   keyboard?: boolean // 是否支持按键操作 (enter 显示；esc 关闭)，仅当 trigger: 'click' 时生效
+  to?: string | HTMLElement | false // 弹出框挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   transitionDuration?: number // 文字提示动画的过渡持续时间，单位 ms
   showDelay?: number // 文字提示显示的延迟时间，单位 ms
   hideDelay?: number // 文字提示隐藏的延迟时间，单位 ms
@@ -44,25 +45,32 @@ const props = withDefaults(defineProps<Props>(), {
   flip: true,
   trigger: 'hover',
   keyboard: false,
+  to: 'body',
   transitionDuration: 100,
   showDelay: 100,
   hideDelay: 100,
   show: false,
   showControl: false
 })
+interface Rect {
+  width: number
+  height: number
+  top: number
+  bottom: number
+  left: number
+  right: number
+}
 const tooltipShow = ref<boolean>(false) // tooltip 显示隐藏标识
 const tooltipTimer = ref() // tooltip 延迟显示隐藏的定时器标识符
 const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
 const top = ref<number>(0) // 提示框 top 定位
 const left = ref<number>(0) // 提示框 left 定位
 const tooltipPlace = ref<string>('top') // 文字提示位置
-const contentRef = ref() // 声明一个同名的模板引用
-const contentWidth = ref<number>(0) // 展示内容宽度
-const contentHeight = ref<number>(0) // 展示内容高度
-const tooltipRef = ref() // tooltip 模板引用
-const tooltipCardRef = ref() // tooltip-card 模板引用
-const tooltipCardWidth = ref<number>(0) // 文字提示内容 tooltip-card 宽度
-const tooltipCardHeight = ref<number>(0) // 文字提示内容 tooltip-card 高度
+const tooltipContentRef = useTemplateRef('tooltipContentRef') // tooltipContent 模板引用
+const tooltipContentRect = ref<DOMRect>() // tooltipContent 元素的大小及其相对于视口的位置
+const tooltipRef = useTemplateRef('tooltipRef') // tooltip 模板引用
+const tooltipCardRef = useTemplateRef('tooltipCardRef') // tooltipCard 模板引用
+const tooltipCardRect = ref<DOMRect>() // tooltipCard 元素的大小及其相对于视口的位置
 const viewportWidth = ref<number>(document.documentElement.clientWidth) // 视口宽度(不包括滚动条)
 const viewportHeight = ref<number>(document.documentElement.clientHeight) // 视口高度(不包括滚动条)
 const { isSupported: passiveSupported } = useOptionsSupported('passive')
@@ -83,32 +91,32 @@ const tooltipPlacement = computed(() => {
     case 'top':
       return {
         transformOrigin: `50% ${top.value}px`,
-        top: `${-top.value}px`,
-        left: `${-left.value}px`
+        top: `${(tooltipContentRect.value as DOMRect)?.top - top.value}px`,
+        left: `${(tooltipContentRect.value as DOMRect)?.left - left.value}px`
       }
     case 'bottom':
       return {
         transformOrigin: `50% ${props.arrow ? -4 : -6}px`,
-        bottom: `${-top.value}px`,
-        left: `${-left.value}px`
+        top: `${(tooltipContentRect.value as DOMRect)?.top + top.value}px`,
+        left: `${(tooltipContentRect.value as DOMRect)?.left - left.value}px`
       }
     case 'left':
       return {
         transformOrigin: `${left.value}px 50%`,
-        top: `${-top.value}px`,
-        left: `${-left.value}px`
+        top: `${(tooltipContentRect.value as DOMRect)?.top - top.value}px`,
+        left: `${(tooltipContentRect.value as DOMRect)?.left - left.value}px`
       }
     case 'right':
       return {
         transformOrigin: `${props.arrow ? -4 : -6}px 50%`,
-        top: `${-top.value}px`,
-        right: `${-left.value}px`
+        top: `${(tooltipContentRect.value as DOMRect)?.top - top.value}px`,
+        left: `${(tooltipContentRect.value as DOMRect)?.left + left.value}px`
       }
     default:
       return {
         transformOrigin: `50% ${top.value}px`,
-        top: `${-top.value}px`,
-        left: `${-left.value}px`
+        top: `${(tooltipContentRect.value as DOMRect)?.top - top.value}px`,
+        left: `${(tooltipContentRect.value as DOMRect)?.left - left.value}px`
       }
   }
 })
@@ -149,12 +157,16 @@ const mutationObserver = useMutationObserver(
   { subtree: true, childList: true, attributes: true, characterData: true }
 )
 useEventListener(window, 'resize', getViewportSize)
-// 监听 tooltip-card 和 content 的尺寸变化，更新文字提示位置
-useResizeObserver([tooltipCardRef, contentRef], (entries: ResizeObserverEntry[]) => {
-  // 排除 tooltip-card 显示过渡动画时的尺寸变化
-  if (entries.length === 1 && entries[0].target.className === 'tooltip-card') {
+// 监听 tooltipCard 和 tooltipContent 的尺寸变化，更新文字提示位置
+useResizeObserver([tooltipCardRef, tooltipContentRef], (entries: ResizeObserverEntry[]) => {
+  // 排除 tooltipCard 显示过渡动画时的尺寸变化
+  if (!(showTooltip.value && tooltipShow.value)) return
+  if (entries.length === 1 && entries[0].target.classList.contains('tooltip-card')) {
     const { blockSize, inlineSize } = entries[0].borderBoxSize[0]
-    if (blockSize === tooltipCardHeight.value && inlineSize === tooltipCardWidth.value) {
+    if (
+      Math.round(blockSize) === Math.round((tooltipCardRect.value as DOMRect).height) &&
+      Math.round(inlineSize) === Math.round((tooltipCardRect.value as DOMRect).width)
+    ) {
       return
     }
   }
@@ -169,7 +181,7 @@ function getViewportSize() {
 // 查询并监听最近可滚动父元素
 function observeScroll() {
   cleanup()
-  scrollTarget.value = getScrollParent(contentRef.value)
+  scrollTarget.value = getScrollParent(tooltipContentRef.value)
   scrollTarget.value &&
     scrollTarget.value.addEventListener(
       'scroll',
@@ -213,19 +225,23 @@ function updatePosition() {
 // 计算文字提示位置
 async function getPosition() {
   await nextTick()
-  contentWidth.value = contentRef.value.offsetWidth
-  contentHeight.value = contentRef.value.offsetHeight
-  tooltipCardWidth.value = tooltipCardRef.value.offsetWidth
-  tooltipCardHeight.value = tooltipCardRef.value.offsetHeight
+  tooltipContentRect.value = tooltipContentRef.value?.getBoundingClientRect() as DOMRect
+  tooltipCardRect.value = tooltipCardRef.value?.getBoundingClientRect() as DOMRect
   if (props.flip) {
     tooltipPlace.value = getPlacement()
   }
-  if (['top', 'bottom'].includes(tooltipPlace.value)) {
-    top.value = tooltipCardHeight.value + (props.arrow ? 4 + 12 : 6)
-    left.value = (tooltipCardWidth.value - contentWidth.value) / 2
-  } else {
-    top.value = (tooltipCardHeight.value - contentHeight.value) / 2
-    left.value = tooltipCardWidth.value + (props.arrow ? 4 + 12 : 6)
+  if (tooltipPlace.value === 'top') {
+    top.value = tooltipCardRect.value.height + (props.arrow ? 4 + 12 : 6)
+    left.value = (tooltipCardRect.value.width - tooltipContentRect.value.width) / 2
+  } else if (tooltipPlace.value === 'bottom') {
+    top.value = tooltipContentRect.value.height + (props.arrow ? 4 : 6)
+    left.value = (tooltipCardRect.value.width - tooltipContentRect.value.width) / 2
+  } else if (tooltipPlace.value === 'left') {
+    top.value = (tooltipCardRect.value.height - tooltipContentRect.value.height) / 2
+    left.value = tooltipCardRect.value.width + (props.arrow ? 4 + 12 : 6)
+  } else if (tooltipPlace.value === 'right') {
+    top.value = (tooltipCardRect.value.height - tooltipContentRect.value.height) / 2
+    left.value = tooltipContentRect.value.width + (props.arrow ? 4 : 6)
   }
 }
 // 获取可滚动父元素或视口的矩形信息
@@ -242,20 +258,25 @@ function getShelterRect() {
 }
 // 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
 function getPlacement(): string {
-  const { top, bottom, left, right } = contentRef.value.getBoundingClientRect() // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
+  const { top, bottom, left, right } = tooltipContentRect.value as DOMRect // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
   const { top: targetTop, bottom: targetBottom, left: targetLeft, right: targetRight } = getShelterRect() // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
   const topDistance = top - targetTop - (props.arrow ? 12 : 0) // 内容元素上边缘距离滚动元素上边缘的距离
   const bottomDistance = targetBottom - bottom - (props.arrow ? 12 : 0) // 内容元素下边缘距离动元素下边缘的距离
   const leftDistance = left - targetLeft - (props.arrow ? 12 : 0) // 内容元素左边缘距离滚动元素左边缘的距离
   const rightDistance = targetRight - right - (props.arrow ? 12 : 0) // 内容元素右边缘距离滚动元素右边缘的距离
-  const horizontalDistance = (tooltipCardWidth.value - contentWidth.value) / 2 // 水平方向容纳文字提示需要的最小宽度
-  const verticalDistance = (tooltipCardHeight.value - contentHeight.value) / 2 // 垂直方向容纳文字提示需要的最小高度
+  const horizontalDistance =
+    ((tooltipCardRect.value as DOMRect).width - (tooltipContentRect.value as DOMRect).width) / 2 // 水平方向容纳文字提示需要的最小宽度
+  const verticalDistance =
+    ((tooltipCardRect.value as DOMRect).height - (tooltipContentRect.value as DOMRect).height) / 2 // 垂直方向容纳文字提示需要的最小高度
   return findPlace(props.placement, [])
   // 查询满足条件的 place，如果没有，则返回默认值
   function findPlace(place: string, disabledPlaces: string[]): string {
     if (place === 'top') {
       if (!disabledPlaces.includes('top')) {
-        if (topDistance < tooltipCardHeight.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
+        if (
+          topDistance < (tooltipCardRect.value as DOMRect).height + (props.arrow ? 4 : 6) &&
+          disabledPlaces.length !== 3
+        ) {
           return findPlace('bottom', [...disabledPlaces, 'top'])
         } else {
           if (leftDistance >= horizontalDistance && rightDistance >= horizontalDistance) {
@@ -281,7 +302,10 @@ function getPlacement(): string {
       }
     } else if (place === 'bottom') {
       if (!disabledPlaces.includes('bottom')) {
-        if (bottomDistance < tooltipCardHeight.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
+        if (
+          bottomDistance < (tooltipCardRect.value as DOMRect).height + (props.arrow ? 4 : 6) &&
+          disabledPlaces.length !== 3
+        ) {
           return findPlace('top', [...disabledPlaces, 'bottom'])
         } else {
           if (leftDistance >= horizontalDistance && rightDistance >= horizontalDistance) {
@@ -307,7 +331,10 @@ function getPlacement(): string {
       }
     } else if (place === 'left') {
       if (!disabledPlaces.includes('left')) {
-        if (leftDistance < tooltipCardWidth.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
+        if (
+          leftDistance < (tooltipCardRect.value as DOMRect).width + (props.arrow ? 4 : 6) &&
+          disabledPlaces.length !== 3
+        ) {
           return findPlace('right', [...disabledPlaces, 'left'])
         } else {
           if (topDistance >= verticalDistance && bottomDistance >= verticalDistance) {
@@ -333,7 +360,10 @@ function getPlacement(): string {
       }
     } else if (place === 'right') {
       if (!disabledPlaces.includes('right')) {
-        if (rightDistance < tooltipCardWidth.value + (props.arrow ? 4 : 6) && disabledPlaces.length !== 3) {
+        if (
+          rightDistance < (tooltipCardRect.value as DOMRect).width + (props.arrow ? 4 : 6) &&
+          disabledPlaces.length !== 3
+        ) {
           return findPlace('left', [...disabledPlaces, 'right'])
         } else {
           if (topDistance >= verticalDistance && bottomDistance >= verticalDistance) {
@@ -396,7 +426,7 @@ function toggleVisible() {
   }
 }
 function handleClick(e: Event) {
-  if (!tooltipRef.value.contains(e.target)) {
+  if (!tooltipRef.value?.contains(e.target as Node)) {
     onHide()
   }
 }
@@ -430,40 +460,42 @@ defineExpose({
 })
 </script>
 <template>
-  <div
-    class="m-tooltip-wrap"
-    :style="`--tooltip-max-width: ${tooltipMaxWidth}; --tooltip-background-color: ${bgColor}; --transition-duration: ${transitionDuration}ms;`"
-    @mouseenter="onEnterWrap"
-    @mouseleave="onLeaveWrap"
-  >
-    <Transition
-      name="zoom"
-      enter-from-class="zoom-enter"
-      enter-active-class="zoom-enter"
-      enter-to-class="zoom-enter zoom-enter-active"
-      leave-from-class="zoom-leave"
-      leave-active-class="zoom-leave zoom-leave-active"
-      leave-to-class="zoom-leave zoom-leave-active"
-      @animationend="onAnimationEnd"
-    >
-      <div
-        v-show="showTooltip && tooltipShow"
-        ref="tooltipRef"
-        class="m-tooltip-card"
-        :class="{ [`tooltip-${tooltipPlace}-padding`]: arrow }"
-        :style="tooltipPlacement"
-        @mouseenter="onEnterTooltip"
-        @mouseleave="onLeaveTooltip"
-        @keydown.esc="trigger === 'click' && keyboard && tooltipShow ? onHide() : () => false"
+  <div class="tooltip-wrap" @mouseenter="onEnterWrap" @mouseleave="onLeaveWrap">
+    <Teleport :disabled="to === false" :to="to === false ? null : to">
+      <Transition
+        name="zoom"
+        enter-from-class="zoom-enter"
+        enter-active-class="zoom-enter"
+        enter-to-class="zoom-enter zoom-enter-active"
+        leave-from-class="zoom-leave"
+        leave-active-class="zoom-leave zoom-leave-active"
+        leave-to-class="zoom-leave zoom-leave-active"
+        @animationend="onAnimationEnd"
       >
-        <div ref="tooltipCardRef" class="tooltip-card" :class="tooltipClass" :style="tooltipStyle">
-          <slot name="tooltip">{{ tooltip }}</slot>
+        <div
+          v-show="showTooltip && tooltipShow"
+          ref="tooltipRef"
+          class="tooltip-card-container"
+          :class="{ [`tooltip-${tooltipPlace}-padding`]: arrow }"
+          :style="{
+            ...tooltipPlacement,
+            '--tooltip-max-width': tooltipMaxWidth,
+            '--tooltip-background-color': bgColor,
+            '--tooltip-transition-duration': `${transitionDuration}ms`
+          }"
+          @mouseenter="onEnterTooltip"
+          @mouseleave="onLeaveTooltip"
+          @keydown.esc="trigger === 'click' && keyboard && tooltipShow ? onHide() : () => false"
+        >
+          <div ref="tooltipCardRef" class="tooltip-card" :class="tooltipClass" :style="tooltipStyle">
+            <slot name="tooltip">{{ tooltip }}</slot>
+          </div>
+          <div v-if="arrow" class="tooltip-arrow" :class="`arrow-${tooltipPlace || 'top'}`"></div>
         </div>
-        <div v-if="arrow" class="tooltip-arrow" :class="`arrow-${tooltipPlace || 'top'}`"></div>
-      </div>
-    </Transition>
+      </Transition>
+    </Teleport>
     <span
-      ref="contentRef"
+      ref="tooltipContentRef"
       class="tooltip-content"
       :class="contentClass"
       :style="contentStyle"
@@ -476,53 +508,55 @@ defineExpose({
   </div>
 </template>
 <style lang="less" scoped>
-.zoom-enter {
-  transform: none;
-  opacity: 0;
-  animation-duration: var(--transition-duration);
-  animation-fill-mode: both;
-  animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1);
-  animation-play-state: paused;
-}
-.zoom-enter-active {
-  animation-name: zoomIn;
-  animation-play-state: running;
-  @keyframes zoomIn {
-    0% {
-      transform: scale(0.8);
-      opacity: 0;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-}
-.zoom-leave {
-  animation-duration: var(--transition-duration);
-  animation-fill-mode: both;
-  animation-play-state: paused;
-  animation-timing-function: cubic-bezier(0.78, 0.14, 0.15, 0.86);
-}
-.zoom-leave-active {
-  animation-name: zoomOut;
-  animation-play-state: running;
-  pointer-events: none;
-  @keyframes zoomOut {
-    0% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    100% {
-      transform: scale(0.8);
-      opacity: 0;
-    }
-  }
-}
 .m-tooltip-wrap {
   position: relative;
   display: inline-block;
-  .m-tooltip-card {
+}
+body {
+  .zoom-enter {
+    transform: none;
+    opacity: 0;
+    animation-duration: var(--tooltip-transition-duration);
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1);
+    animation-play-state: paused;
+  }
+  .zoom-enter-active {
+    animation-name: zoomIn;
+    animation-play-state: running;
+    @keyframes zoomIn {
+      0% {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+  }
+  .zoom-leave {
+    animation-duration: var(--tooltip-transition-duration);
+    animation-fill-mode: both;
+    animation-play-state: paused;
+    animation-timing-function: cubic-bezier(0.78, 0.14, 0.15, 0.86);
+  }
+  .zoom-leave-active {
+    animation-name: zoomOut;
+    animation-play-state: running;
+    pointer-events: none;
+    @keyframes zoomOut {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+    }
+  }
+  .tooltip-card-container {
     position: absolute;
     z-index: 999;
     width: max-content;

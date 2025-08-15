@@ -68,16 +68,17 @@ function onOk(e: Event): void {
     trigger="click"
     :keyboard="keyboard"
     :transition-duration="200"
-    :style="`
-      --popconfirm-primary-color: ${colorPalettes[5]};
-      --popconfirm-success-color: #52c41a;
-      --popconfirm-danger-color: #ff4d4f;
-      --popconfirm-warning-color: #faad14;
-    `"
-    v-bind="$attrs"
   >
     <template #tooltip>
-      <div class="popconfirm-wrap">
+      <div
+        class="popconfirm-wrap"
+        :style="`
+          --popconfirm-primary-color: ${colorPalettes[5]};
+          --popconfirm-success-color: #52c41a;
+          --popconfirm-danger-color: #ff4d4f;
+          --popconfirm-warning-color: #faad14;
+        `"
+      >
         <span class="popconfirm-icon" :style="iconStyle">
           <slot name="icon">
             <svg

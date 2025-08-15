@@ -128,7 +128,6 @@ defineExpose({
     :tooltip-style="{ padding: '8px 12px' }"
     :transition-duration="200"
     @animationend="onAnimationEnd"
-    v-bind="$attrs"
   >
     <template #tooltip>
       <slot v-if="showTooltip" name="tooltip">

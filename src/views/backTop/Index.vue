@@ -34,9 +34,9 @@ function onShow(show: boolean) {
 }
 </script>
 <template>
-  <div>
+  <div style="height: 200vh">
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
-    <h2 class="mt30 mb10">基本使用</h2>
+    <!-- <h2 class="mt30 mb10">基本使用</h2>
     <h3 class="mb10">BackTop 会找到首个可滚动的祖先元素并且监听它的滚动事件</h3>
     <BackTop @show="onShow" />
     <h2 class="mt30 mb10">自定义图标</h2>
@@ -58,9 +58,9 @@ function onShow(show: boolean) {
     <BackTop type="primary" shape="square" :right="280" :bottom="100" />
     <BackTop type="primary" shape="square" description="顶部" :right="340" :bottom="100" />
     <h2 class="mt30 mb10">文字描述</h2>
-    <BackTop description="顶部" :right="100" :bottom="160" />
+    <BackTop description="顶部" :right="100" :bottom="160" /> -->
     <h2 class="mt30 mb10">悬浮提示</h2>
-    <BackTop tooltip="回到顶部" :right="160" :bottom="160" />
+    <!-- <BackTop tooltip="回到顶部" :right="160" :bottom="160" /> -->
     <BackTop
       type="primary"
       shape="square"
@@ -78,7 +78,7 @@ function onShow(show: boolean) {
       :right="220"
       :bottom="160"
     />
-    <h2 class="mt30 mb10">自定义样式</h2>
+    <!-- <h2 class="mt30 mb10">自定义样式</h2>
     <BackTop :style="defaultCustomStyle" :right="280" :bottom="160" />
     <BackTop :style="primaryCustomStyle" type="primary" shape="square" :right="350" :bottom="160" />
     <BackTop
@@ -145,6 +145,6 @@ function onShow(show: boolean) {
       <br />
       这块应该写一个有意思的笑话。
       <br />
-    </Scrollbar>
+    </Scrollbar> -->
   </div>
 </template>

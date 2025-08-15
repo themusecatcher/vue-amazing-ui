@@ -229,7 +229,7 @@ function onClick(e: Event) {
   .float-btn-tooltip {
     width: 100%;
     height: 100%;
-    :deep(.m-tooltip-card) {
+    :deep(.tooltip-card-container) {
       cursor: auto;
     }
     :deep(.tooltip-content) {
