@@ -43,7 +43,7 @@ function onHide() {
         }"
       >
         <template #tooltip>
-          <h3 style="text-align: center; margin: 0 0 8px">Godzilla VS Kong</h3>
+          <h3 style="font-weight: bold; text-align: center; margin: 0 0 8px">Godzilla VS Kong</h3>
           电影讲述帝王组织在地心世界找到巨兽起源的线索，与此同时传说中的王者哥斯拉和金刚的对决也将展开的故事
         </template>
         <Button type="primary">哥斯拉大战金刚</Button>
@@ -126,8 +126,8 @@ function onHide() {
     </Tooltip>
   </div>
 </template>
-<style lang="less" scoped>
-:deep(.custom-class) {
+<style lang="less">
+.custom-class {
   font-size: 16px !important;
   color: #0958d9 !important;
   padding: 12px 18px !important;
