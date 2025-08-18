@@ -14,7 +14,7 @@ pnpm build
 git add .
 
 if [ -z "$commitDesc" ]; then
-  git commit -m 'update'
+  git commit -m 'feat: update components library'
 else
   git commit -m "$commitDesc"
 fi
