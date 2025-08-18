@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useTemplateRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { VNode, Slot } from 'vue'
 import Tooltip from 'components/tooltip'
 import { useSlotsExist, useMutationObserver, useInject, useOptionsSupported } from 'components/utils'
@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
   to: 'body',
   listenTo: undefined
 })
-const backTopPlaceholderRef = useTemplateRef('backTopPlaceholderRef') // backTop 元素引用
+const backTopPlaceholderRef = ref<HTMLElement | null>(null) // backTop 元素引用
 const scrollTop = ref<number>(0) // 滚动距离
 const scrollTarget = ref<HTMLElement | null>(null) // 滚动目标元素
 const { colorPalettes } = useInject('BackTop') // 主题色注入
@@ -102,6 +102,8 @@ function observeScroll(): void {
     )
   if (scrollTarget.value === document.documentElement) {
     mutationObserver.start()
+  } else {
+    mutationObserver.stop()
   }
 }
 function cleanup(): void {

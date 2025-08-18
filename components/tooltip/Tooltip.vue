@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useTemplateRef, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
 import {
   useSlotsExist,
@@ -52,24 +52,17 @@ const props = withDefaults(defineProps<Props>(), {
   show: false,
   showControl: false
 })
-interface Rect {
-  width: number
-  height: number
-  top: number
-  bottom: number
-  left: number
-  right: number
-}
 const tooltipShow = ref<boolean>(false) // tooltip 显示隐藏标识
 const tooltipTimer = ref() // tooltip 延迟显示隐藏的定时器标识符
 const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
+const scrollTop = ref<number>(0) // scrollTarget 的滚动距离
 const top = ref<number>(0) // 提示框 top 定位
 const left = ref<number>(0) // 提示框 left 定位
 const tooltipPlace = ref<string>('top') // 文字提示位置
-const tooltipContentRef = useTemplateRef('tooltipContentRef') // tooltipContent 模板引用
+const tooltipContentRef = ref<HTMLElement | null>(null) // tooltipContent 模板引用
 const tooltipContentRect = ref<DOMRect>() // tooltipContent 元素的大小及其相对于视口的位置
-const tooltipRef = useTemplateRef('tooltipRef') // tooltip 模板引用
-const tooltipCardRef = useTemplateRef('tooltipCardRef') // tooltipCard 模板引用
+const tooltipRef = ref<HTMLElement | null>(null) // tooltip 模板引用
+const tooltipCardRef = ref<HTMLElement | null>(null) // tooltipCard 模板引用
 const tooltipCardRect = ref<DOMRect>() // tooltipCard 元素的大小及其相对于视口的位置
 const viewportWidth = ref<number>(document.documentElement.clientWidth) // 视口宽度(不包括滚动条)
 const viewportHeight = ref<number>(document.documentElement.clientHeight) // 视口高度(不包括滚动条)
@@ -91,31 +84,31 @@ const tooltipPlacement = computed(() => {
     case 'top':
       return {
         transformOrigin: `50% ${top.value}px`,
-        top: `${(tooltipContentRect.value as DOMRect)?.top - top.value}px`,
+        top: `${scrollTop.value + (tooltipContentRect.value as DOMRect)?.top - top.value}px`,
         left: `${(tooltipContentRect.value as DOMRect)?.left - left.value}px`
       }
     case 'bottom':
       return {
         transformOrigin: `50% ${props.arrow ? -4 : -6}px`,
-        top: `${(tooltipContentRect.value as DOMRect)?.top + top.value}px`,
+        top: `${scrollTop.value + (tooltipContentRect.value as DOMRect)?.top + top.value}px`,
         left: `${(tooltipContentRect.value as DOMRect)?.left - left.value}px`
       }
     case 'left':
       return {
         transformOrigin: `${left.value}px 50%`,
-        top: `${(tooltipContentRect.value as DOMRect)?.top - top.value}px`,
+        top: `${scrollTop.value + (tooltipContentRect.value as DOMRect)?.top - top.value}px`,
         left: `${(tooltipContentRect.value as DOMRect)?.left - left.value}px`
       }
     case 'right':
       return {
         transformOrigin: `${props.arrow ? -4 : -6}px 50%`,
-        top: `${(tooltipContentRect.value as DOMRect)?.top - top.value}px`,
+        top: `${scrollTop.value + (tooltipContentRect.value as DOMRect)?.top - top.value}px`,
         left: `${(tooltipContentRect.value as DOMRect)?.left + left.value}px`
       }
     default:
       return {
         transformOrigin: `50% ${top.value}px`,
-        top: `${(tooltipContentRect.value as DOMRect)?.top - top.value}px`,
+        top: `${scrollTop.value + (tooltipContentRect.value as DOMRect)?.top - top.value}px`,
         left: `${(tooltipContentRect.value as DOMRect)?.left - left.value}px`
       }
   }
@@ -152,7 +145,10 @@ onBeforeUnmount(() => {
 const mutationObserver = useMutationObserver(
   scrollTarget,
   () => {
-    updatePosition()
+    if (scrollTop.value !== scrollTarget.value?.scrollTop) {
+      scrollTop.value = scrollTarget.value?.scrollTop ?? 0
+      updatePosition()
+    }
   },
   { subtree: true, childList: true, attributes: true, characterData: true }
 )
@@ -190,6 +186,8 @@ function observeScroll() {
     )
   if (scrollTarget.value === document.documentElement) {
     mutationObserver.start()
+  } else {
+    mutationObserver.stop()
   }
 }
 function cleanup() {
