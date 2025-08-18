@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const tooltip = ref()
+const tooltipRef = ref()
 function openChange(open: boolean) {
   console.log('open', open)
+}
+function onShow() {
+  tooltipRef.value?.show()
+}
+function onHide() {
+  tooltipRef.value?.hide()
 }
 </script>
 <template>
@@ -108,11 +114,11 @@ function openChange(open: boolean) {
     </Space>
     <h2 class="mt30 mb10">使用 Methods</h2>
     <Space>
-      <Tooltip ref="tooltip" tooltip="Vue Amazing UI">
+      <Tooltip ref="tooltipRef" tooltip="Vue Amazing UI">
         <Button type="primary">Methods Tooltip</Button>
       </Tooltip>
-      <Button type="primary" @click="tooltip.show()">显示</Button>
-      <Button @click="tooltip.hide()">隐藏</Button>
+      <Button type="primary" @click="onShow">显示</Button>
+      <Button @click="onHide">隐藏</Button>
     </Space>
     <h2 class="mt30 mb10">隐藏箭头</h2>
     <Tooltip :arrow="false" tooltip="Vue Amazing UI">
