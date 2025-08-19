@@ -32,7 +32,7 @@ import {
   provide,
   ref,
   watch
-} from './chunk-5U2WJACE.js'
+} from './chunk-G6266EAP.js'
 import './chunk-JVWSFFO4.js'
 
 // node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/swiper-core.mjs
