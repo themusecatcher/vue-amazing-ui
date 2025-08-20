@@ -4,6 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-08-19">2.4.16</VersionDateTag>
+
+- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件拖动效果，修复不透明度拖动时位置偏差的问题
+
 ## <VersionDateTag date="2025-08-18">2.4.15</VersionDateTag>
 
 - 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，新增 `to` 属性，支持设置弹出框挂载的容器节点，默认挂载到 `body` 下
