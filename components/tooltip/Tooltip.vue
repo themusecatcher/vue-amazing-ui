@@ -3,7 +3,6 @@ import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
 import {
   useSlotsExist,
-  useMutationObserver,
   useEventListener,
   useResizeObserver,
   rafTimeout,
@@ -55,13 +54,14 @@ const props = withDefaults(defineProps<Props>(), {
 const tooltipShow = ref<boolean>(false) // tooltip 显示隐藏标识
 const tooltipTimer = ref() // tooltip 延迟显示隐藏的定时器标识符
 const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
-const scrollTop = ref<number>(0) // scrollTarget 的滚动距离
-const top = ref<number>(0) // 提示框 top 定位
-const left = ref<number>(0) // 提示框 left 定位
+const cardTop = ref<number>(0) // 弹出框相对于 tooltipContent 的垂直位置
+const cardLeft = ref<number>(0) // 弹出框相对于 tooltipContent 的水平位置
 const tooltipPlace = ref<string>('top') // 文字提示位置
 const tooltipContentRef = ref<HTMLElement | null>(null) // tooltipContent 模板引用
 const tooltipContentRect = ref<DOMRect>() // tooltipContent 元素的大小及其相对于视口的位置
 const tooltipRef = ref<HTMLElement | null>(null) // tooltip 模板引用
+const positionedContainer = ref<HTMLElement | null>(null) // 弹出框相对定位的容器元素
+const positionedContainerRect = ref<DOMRect>() // positionedContainer 元素的大小及其相对于视口的位置
 const tooltipCardRef = ref<HTMLElement | null>(null) // tooltipCard 模板引用
 const tooltipCardRect = ref<DOMRect>() // tooltipCard 元素的大小及其相对于视口的位置
 const viewportWidth = ref<number>(document.documentElement.clientWidth) // 视口宽度(不包括滚动条)
@@ -80,36 +80,42 @@ const showTooltip = computed(() => {
   return slotsExist.tooltip || props.tooltip
 })
 const tooltipPlacement = computed(() => {
+  const contentTop = (tooltipContentRect.value as DOMRect)?.top ?? 0
+  const containerTop = (positionedContainerRect.value as DOMRect)?.top ?? 0
+  const offsetTop = contentTop - containerTop
+  const contentLeft = (tooltipContentRect.value as DOMRect)?.left ?? 0
+  const containerLeft = (positionedContainerRect.value as DOMRect)?.left ?? 0
+  const offsetLeft = contentLeft - containerLeft
   switch (tooltipPlace.value) {
     case 'top':
       return {
-        transformOrigin: `50% ${top.value}px`,
-        top: `${scrollTop.value + (tooltipContentRect.value as DOMRect)?.top - top.value}px`,
-        left: `${(tooltipContentRect.value as DOMRect)?.left - left.value}px`
+        transformOrigin: `50% ${cardTop.value}px`,
+        top: `${offsetTop - cardTop.value}px`,
+        left: `${offsetLeft - cardLeft.value}px`
       }
     case 'bottom':
       return {
         transformOrigin: `50% ${props.arrow ? -4 : -6}px`,
-        top: `${scrollTop.value + (tooltipContentRect.value as DOMRect)?.top + top.value}px`,
-        left: `${(tooltipContentRect.value as DOMRect)?.left - left.value}px`
+        top: `${offsetTop + cardTop.value}px`,
+        left: `${offsetLeft - cardLeft.value}px`
       }
     case 'left':
       return {
-        transformOrigin: `${left.value}px 50%`,
-        top: `${scrollTop.value + (tooltipContentRect.value as DOMRect)?.top - top.value}px`,
-        left: `${(tooltipContentRect.value as DOMRect)?.left - left.value}px`
+        transformOrigin: `${cardLeft.value}px 50%`,
+        top: `${offsetTop - cardTop.value}px`,
+        left: `${offsetLeft - cardLeft.value}px`
       }
     case 'right':
       return {
         transformOrigin: `${props.arrow ? -4 : -6}px 50%`,
-        top: `${scrollTop.value + (tooltipContentRect.value as DOMRect)?.top - top.value}px`,
-        left: `${(tooltipContentRect.value as DOMRect)?.left + left.value}px`
+        top: `${offsetTop - cardTop.value}px`,
+        left: `${offsetLeft + cardLeft.value}px`
       }
     default:
       return {
-        transformOrigin: `50% ${top.value}px`,
-        top: `${scrollTop.value + (tooltipContentRect.value as DOMRect)?.top - top.value}px`,
-        left: `${(tooltipContentRect.value as DOMRect)?.left - left.value}px`
+        transformOrigin: `50% ${cardTop.value}px`,
+        top: `${offsetTop - cardTop.value}px`,
+        left: `${offsetLeft - cardLeft.value}px`
       }
   }
 })
@@ -137,21 +143,12 @@ watch(
   }
 )
 onMounted(() => {
+  getPositionedContainer()
   observeScroll()
 })
 onBeforeUnmount(() => {
   cleanup()
 })
-const mutationObserver = useMutationObserver(
-  scrollTarget,
-  () => {
-    if (scrollTop.value !== scrollTarget.value?.scrollTop) {
-      scrollTop.value = scrollTarget.value?.scrollTop ?? 0
-      updatePosition()
-    }
-  },
-  { subtree: true, childList: true, attributes: true, characterData: true }
-)
 useEventListener(window, 'resize', getViewportSize)
 // 监听 tooltipCard 和 tooltipContent 的尺寸变化，更新文字提示位置
 useResizeObserver([tooltipCardRef, tooltipContentRef], (entries: ResizeObserverEntry[]) => {
@@ -168,6 +165,24 @@ useResizeObserver([tooltipCardRef, tooltipContentRef], (entries: ResizeObserverE
   }
   updatePosition()
 })
+// 获取弹出框相对定位的容器元素
+function getPositionedContainer() {
+  nextTick(() => {
+    let target = tooltipRef.value?.parentElement
+    while (target) {
+      if (target === document.documentElement) {
+        positionedContainer.value = document.documentElement
+        return
+      }
+      const { position } = getComputedStyle(target)
+      if (position !== 'static') {
+        positionedContainer.value = target
+        return
+      }
+      target = target.parentElement
+    }
+  })
+}
 function getViewportSize() {
   viewportWidth.value = document.documentElement.clientWidth
   viewportHeight.value = document.documentElement.clientHeight
@@ -184,16 +199,10 @@ function observeScroll() {
       updatePosition,
       passiveSupported.value ? { passive: true } : undefined
     )
-  if (scrollTarget.value === document.documentElement) {
-    mutationObserver.start()
-  } else {
-    mutationObserver.stop()
-  }
 }
 function cleanup() {
   scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updatePosition)
   scrollTarget.value = null
-  mutationObserver.stop()
 }
 // 获取父元素
 function getParentElement(el: HTMLElement): HTMLElement | null {
@@ -223,23 +232,24 @@ function updatePosition() {
 // 计算文字提示位置
 async function getPosition() {
   await nextTick()
+  positionedContainerRect.value = positionedContainer.value?.getBoundingClientRect() as DOMRect
   tooltipContentRect.value = tooltipContentRef.value?.getBoundingClientRect() as DOMRect
   tooltipCardRect.value = tooltipCardRef.value?.getBoundingClientRect() as DOMRect
   if (props.flip) {
     tooltipPlace.value = getPlacement()
   }
   if (tooltipPlace.value === 'top') {
-    top.value = tooltipCardRect.value.height + (props.arrow ? 4 + 12 : 6)
-    left.value = (tooltipCardRect.value.width - tooltipContentRect.value.width) / 2
+    cardTop.value = tooltipCardRect.value.height + (props.arrow ? 4 + 12 : 6)
+    cardLeft.value = (tooltipCardRect.value.width - tooltipContentRect.value.width) / 2
   } else if (tooltipPlace.value === 'bottom') {
-    top.value = tooltipContentRect.value.height + (props.arrow ? 4 : 6)
-    left.value = (tooltipCardRect.value.width - tooltipContentRect.value.width) / 2
+    cardTop.value = tooltipContentRect.value.height + (props.arrow ? 4 : 6)
+    cardLeft.value = (tooltipCardRect.value.width - tooltipContentRect.value.width) / 2
   } else if (tooltipPlace.value === 'left') {
-    top.value = (tooltipCardRect.value.height - tooltipContentRect.value.height) / 2
-    left.value = tooltipCardRect.value.width + (props.arrow ? 4 + 12 : 6)
+    cardTop.value = (tooltipCardRect.value.height - tooltipContentRect.value.height) / 2
+    cardLeft.value = tooltipCardRect.value.width + (props.arrow ? 4 + 12 : 6)
   } else if (tooltipPlace.value === 'right') {
-    top.value = (tooltipCardRect.value.height - tooltipContentRect.value.height) / 2
-    left.value = tooltipContentRect.value.width + (props.arrow ? 4 : 6)
+    cardTop.value = (tooltipCardRect.value.height - tooltipContentRect.value.height) / 2
+    cardLeft.value = tooltipContentRect.value.width + (props.arrow ? 4 : 6)
   }
 }
 // 获取可滚动父元素或视口的矩形信息
