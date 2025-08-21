@@ -133,8 +133,8 @@ importers:
         specifier: ^3.5.18
         version: 3.5.18(typescript@5.9.2)
       vue-amazing-ui:
-        specifier: 2.4.15
-        version: 2.4.15(vue@3.5.18(typescript@5.9.2))
+        specifier: 2.4.17
+        version: 2.4.17(vue@3.5.18(typescript@5.9.2))
       vue-router:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.18(typescript@5.9.2))
@@ -3257,8 +3257,8 @@ packages:
   vscode-uri@3.1.0:
     resolution: {integrity: sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==}
 
-  vue-amazing-ui@2.4.15:
-    resolution: {integrity: sha512-ttA5Nf52IWQWJTfLmmnMkVALV/Tsj/oX/k1XBUVGeVkI/Z4IurSeuX78hnbIRnOuELJnJd5cCNOzYYruedDLvQ==}
+  vue-amazing-ui@2.4.17:
+    resolution: {integrity: sha512-NUghe8A8u/aLXSzBtoPRdPlDYfdrP7k4yS1sQtx9j9zsb+H9savLlZEgM/5c3IoFRlD2KRYLj3SzMZ+3bxujIQ==}
 
   vue-eslint-parser@10.2.0:
     resolution: {integrity: sha512-CydUvFOQKD928UzZhTp4pr2vWz1L+H99t7Pkln2QSPdvmURT0MoC4wUccfCnuEaihNsu9aYYyk+bep8rlfkUXw==}
@@ -6610,7 +6610,7 @@ snapshots:
 
   vscode-uri@3.1.0: {}
 
-  vue-amazing-ui@2.4.15(vue@3.5.18(typescript@5.9.2)):
+  vue-amazing-ui@2.4.17(vue@3.5.18(typescript@5.9.2)):
     dependencies:
       '@ant-design/colors': 8.0.0
       '@ctrl/tinycolor': 4.1.0

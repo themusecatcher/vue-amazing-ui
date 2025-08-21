@@ -29,7 +29,7 @@ pnpm up vue-amazing-ui@$version
 
 # 提交版本更新代码到 github
 git add .
-git commit -m "update $version"
+git commit -m "feat: update $version"
 git push
 
 # 重新部署文档
