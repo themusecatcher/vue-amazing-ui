@@ -481,6 +481,7 @@ defineExpose({
         @animationend="onAnimationEnd"
       >
         <div
+          v-if="originShow"
           v-show="showTooltip && tooltipShow"
           ref="tooltipRef"
           class="tooltip-card-container"
