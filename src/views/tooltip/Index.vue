@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+const containerRef = ref()
 const tooltipRef = ref()
 function openChange(open: boolean) {
   console.log('open', open)
@@ -88,6 +89,20 @@ function onHide() {
       <template #tooltip>Vue Amazing UI</template>
       <Button type="primary">Click Me</Button>
     </Tooltip>
+    <h2 class="mt30 mb10">自定义弹出框挂载容器</h2>
+    <div
+      ref="containerRef"
+      style="display: inline-block; padding: 64px 32px; border-radius: 8px; border: 1px solid #f0f0f0"
+    >
+      <Space>
+        <Tooltip tooltip="Vue Amazing UI" :to="false">
+          <Button type="primary">Stay in place</Button>
+        </Tooltip>
+        <Tooltip tooltip="Vue Amazing UI" :to="containerRef">
+          <Button type="primary">Mounted to Container</Button>
+        </Tooltip>
+      </Space>
+    </div>
     <h2 class="mt30 mb10">自定义过渡动画时间</h2>
     <Tooltip :transition-duration="300">
       <template #tooltip>Vue Amazing UI</template>

@@ -10,6 +10,7 @@ _悬浮提示，展现需要关注的信息_
 
 <script setup lang="ts">
 import { ref } from 'vue'
+const containerRef = ref()
 const tooltipRef = ref()
 function openChange(open: boolean) {
   console.log('open', open)
@@ -255,6 +256,45 @@ _`enter` 显示；`esc` 关闭，仅当 `trigger: 'click'` 时生效_
     <template #tooltip>Vue Amazing UI</template>
     <Button type="primary">Click Me</Button>
   </Tooltip>
+</template>
+```
+
+:::
+
+## 自定义弹出框挂载容器
+
+<div ref="containerRef" style="display: inline-block; padding: 64px 32px; border-radius: 8px; border: 1px solid #f0f0f0;">
+  <Space>
+    <Tooltip tooltip="Vue Amazing UI" :to="false">
+      <Button type="primary">Stay in place</Button>
+    </Tooltip>
+    <Tooltip tooltip="Vue Amazing UI" :to="containerRef">
+      <Button type="primary">Mounted to Container</Button>
+    </Tooltip>
+  </Space>
+</div>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const containerRef = ref()
+</script>
+<template>
+  <div
+    ref="containerRef"
+    style="display: inline-block; padding: 64px 32px; border-radius: 8px; border: 1px solid #f0f0f0;"
+  >
+    <Space>
+      <Tooltip tooltip="Vue Amazing UI" :to="false">
+        <Button type="primary">Stay in place</Button>
+      </Tooltip>
+      <Tooltip tooltip="Vue Amazing UI" :to="containerRef">
+        <Button type="primary">Mounted to Container</Button>
+      </Tooltip>
+    </Space>
+  </div>
 </template>
 ```
 
