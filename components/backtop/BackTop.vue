@@ -31,6 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
   to: 'body',
   listenTo: undefined
 })
+const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const backTopPlaceholderRef = ref<HTMLElement | null>(null) // backTop 元素引用
 const scrollTop = ref<number>(0) // 滚动距离
 const scrollTarget = ref<HTMLElement | null>(null) // 滚动目标元素
@@ -53,6 +54,17 @@ const showTooltip = computed(() => {
 const showDescription = computed(() => {
   return slotsExist.description || props.description
 })
+watch(
+  backTopShow,
+  (to) => {
+    if (to && !initialDisplay.value) {
+      initialDisplay.value = true
+    }
+  },
+  {
+    immediate: true
+  }
+)
 watch(
   () => props.listenTo,
   () => {
@@ -144,6 +156,7 @@ function onBackTop(): void {
     <Teleport :to="to">
       <Transition name="zoom">
         <div
+          v-if="initialDisplay"
           v-show="backTopShow"
           class="back-top"
           :style="[
