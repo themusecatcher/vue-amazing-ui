@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useInject } from 'components/utils'
 export interface Props {
@@ -9,7 +9,7 @@ export interface Props {
   colorLoading?: string // 加载中颜色
   colorFinish?: string // 加载完成颜色
   colorError?: string // 加载错误颜色
-  to?: string | HTMLElement // 加载条的挂载位置，可选：元素标签名（例如 body）或者元素本身
+  to?: string | HTMLElement | false // 加载条的挂载位置，可选：元素标签名（例如 body）或者元素本身，false 会待在原地
 }
 const props = withDefaults(defineProps<Props>(), {
   containerClass: undefined,
@@ -20,6 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
   colorError: '#ff4d4f',
   to: 'body'
 })
+const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const showLoadingBar = ref<boolean>(false) // 加载条是否显示
 const loadingBarRef = ref() // 加载条元素引用
 const transitionDisabled = ref(false) // 是否禁用过渡，表示使用仅由 JavaScript 执行的动画
@@ -41,6 +42,17 @@ const colorFinishComputed = computed(() => {
     return props.colorFinish
   }
 })
+watch(
+  showLoadingBar,
+  (to) => {
+    if (to && !initialDisplay.value) {
+      initialDisplay.value = true
+    }
+  },
+  {
+    immediate: true
+  }
+)
 async function init(): Promise<void> {
   showLoadingBar.value = false
   loadingFinishing.value = false
@@ -120,7 +132,7 @@ defineExpose({
 })
 </script>
 <template>
-  <Teleport :disabled="!to" :to="to || 'body'">
+  <Teleport :disabled="to === false" :to="to === false ? null : to">
     <Transition
       name="fade-in"
       appear
@@ -129,8 +141,9 @@ defineExpose({
       :css="!transitionDisabled"
     >
       <div
+        v-if="initialDisplay"
         v-show="showLoadingBar"
-        class="m-loading-bar-container"
+        class="loading-bar-container"
         :class="containerClass"
         :style="[
           `
@@ -158,12 +171,12 @@ defineExpose({
 .fade-in-leave-to {
   opacity: 0;
 }
-.m-loading-bar-container {
-  z-index: 9999;
+.loading-bar-container {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
+  z-index: 9999;
   height: var(--loading-bar-size);
   .loading-bar {
     width: 100%;

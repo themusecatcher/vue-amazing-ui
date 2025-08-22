@@ -4,6 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-08-22">2.4.18</VersionDateTag>
+
+- 优化更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html)、[加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html)、[文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，在初始未展示时不进行任何组件渲染，提升初始加载性能
+
 ## <VersionDateTag date="2025-08-21">2.4.17</VersionDateTag>
 
 - 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件代码逻辑，并在文档新增自定义设置弹出框挂载容器示例

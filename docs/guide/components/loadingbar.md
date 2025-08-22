@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*加载进度条*
+_加载进度条_
 
 ## 何时使用
 
@@ -12,7 +12,7 @@
 
 ::: tip 使用
 
-- loadingBar.value.start(from = 0, to = 80)  // 开始加载调用
+- loadingBar.value.start(from = 0, to = 80) // 开始加载调用
 - loadingBar.value.finish() // 结束加载调用
 - loadingBar.value.error() // 出现错误调用
 
@@ -20,22 +20,22 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-const loadingBar = ref()
+const loadingBarRef = ref()
 const disabled = ref(true)
 const localCardRef = ref()
-const localLoadingBar = ref()
-const customLoadingBar = ref()
-function handleStart () {
-  loadingBar.value.start()
+const localLoadingBarRef = ref()
+const customLoadingBarRef = ref()
+function handleStart() {
+  loadingBarRef.value.start()
   disabled.value = false
 }
-function handleFinish () {
-  loadingBar.value.finish()
+function handleFinish() {
+  loadingBarRef.value.finish()
   disabled.value = true
 }
-function handleError () {
+function handleError() {
   disabled.value = true
-  loadingBar.value.error()
+  loadingBarRef.value.error()
 }
 </script>
 
@@ -46,26 +46,26 @@ function handleError () {
   <Button :disabled="disabled" @click="handleFinish">结束</Button>
   <Button type="danger" @click="handleError">报个错</Button>
 </Space>
-<LoadingBar ref="loadingBar" />
+<LoadingBar ref="loadingBarRef" />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const loadingBar = ref()
+const loadingBarRef = ref()
 const disabled = ref(true)
 function handleStart() {
-  loadingBar.value.start()
+  loadingBarRef.value.start()
   disabled.value = false
 }
 function handleFinish() {
-  loadingBar.value.finish()
+  loadingBarRef.value.finish()
   disabled.value = true
 }
 function handleError() {
   disabled.value = true
-  loadingBar.value.error()
+  loadingBarRef.value.error()
 }
 </script>
 <template>
@@ -74,7 +74,7 @@ function handleError() {
     <Button :disabled="disabled" @click="handleFinish">结束</Button>
     <Button type="danger" @click="handleError">报个错</Button>
   </Space>
-  <LoadingBar ref="loadingBar" />
+  <LoadingBar ref="loadingBarRef" />
 </template>
 ```
 
@@ -82,17 +82,17 @@ function handleError() {
 
 ## 局部加载条
 
-<div class="m-container" ref="localCardRef">
+<div class="card-container" ref="localCardRef">
   <Space>
-    <Button type="primary" @click="localLoadingBar.start()">Start</Button>
-    <Button @click="localLoadingBar.finish()">Finish</Button>
-    <Button type="danger" @click="localLoadingBar.error()">Error</Button>
+    <Button type="primary" @click="localLoadingBarRef.start()">Start</Button>
+    <Button @click="localLoadingBarRef.finish()">Finish</Button>
+    <Button type="danger" @click="localLoadingBarRef.error()">Error</Button>
   </Space>
 </div>
-<LoadingBar ref="localLoadingBar" :container-style="{ position: 'absolute' }" :to="localCardRef" />
+<LoadingBar ref="localLoadingBarRef" :container-style="{ position: 'absolute' }" :to="localCardRef" />
 
 <style lang="less" scoped>
-.m-container {
+.card-container {
   position: relative;
   display: flex;
   align-items: center;
@@ -108,20 +108,20 @@ function handleError() {
 <script setup lang="ts">
 import { ref } from 'vue'
 const localCardRef = ref()
-const localLoadingBar = ref()
+const localLoadingBarRef = ref()
 </script>
 <template>
-  <div class="m-container" ref="localCardRef">
+  <div class="card-container" ref="localCardRef">
     <Space>
-      <Button type="primary" @click="localLoadingBar.start()">Start</Button>
-      <Button @click="localLoadingBar.finish()">Finish</Button>
-      <Button type="danger" @click="localLoadingBar.error()">Error</Button>
+      <Button type="primary" @click="localLoadingBarRef.start()">Start</Button>
+      <Button @click="localLoadingBarRef.finish()">Finish</Button>
+      <Button type="danger" @click="localLoadingBarRef.error()">Error</Button>
     </Space>
   </div>
-  <LoadingBar ref="localLoadingBar" :container-style="{ position: 'absolute' }" :to="localCardRef" />
+  <LoadingBar ref="localLoadingBarRef" :container-style="{ position: 'absolute' }" :to="localCardRef" />
 </template>
 <style lang="less" scoped>
-.m-container {
+.card-container {
   position: relative;
   display: flex;
   align-items: center;
@@ -137,12 +137,12 @@ const localLoadingBar = ref()
 ## 自定义加载条样式
 
 <Space>
-  <Button type="primary" @click="customLoadingBar.start()">Start</Button>
-  <Button @click="customLoadingBar.finish()">Finish</Button>
-  <Button type="danger" @click="customLoadingBar.error()">Error</Button>
+  <Button type="primary" @click="customLoadingBarRef.start()">Start</Button>
+  <Button @click="customLoadingBarRef.finish()">Finish</Button>
+  <Button type="danger" @click="customLoadingBarRef.error()">Error</Button>
 </Space>
 <LoadingBar
-  ref="customLoadingBar"
+  ref="customLoadingBarRef"
   :loading-bar-size="5"
   color-loading="#2db7f5"
   color-finish="#52c41a"
@@ -154,16 +154,16 @@ const localLoadingBar = ref()
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const customLoadingBar = ref()
+const customLoadingBarRef = ref()
 </script>
 <template>
   <Space>
-    <Button type="primary" @click="customLoadingBar.start()">Start</Button>
-    <Button @click="customLoadingBar.finish()">Finish</Button>
-    <Button type="danger" @click="customLoadingBar.error()">Error</Button>
+    <Button type="primary" @click="customLoadingBarRef.start()">Start</Button>
+    <Button @click="customLoadingBarRef.finish()">Finish</Button>
+    <Button type="danger" @click="customLoadingBarRef.error()">Error</Button>
   </Space>
   <LoadingBar
-    ref="customLoadingBar"
+    ref="customLoadingBarRef"
     :loading-bar-size="5"
     color-loading="#2db7f5"
     color-finish="#52c41a"
@@ -178,20 +178,20 @@ const customLoadingBar = ref()
 
 ### LoadingBar
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-containerClass | 加载条容器的类名 | string | undefined
-containerStyle | 加载条容器的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-loadingBarSize | 加载条大小，单位 `px` | number | 2
-colorLoading | 加载中颜色 | string | undefined
-colorFinish | 加载完成颜色 | string | undefined
-colorError | 加载错误颜色 | string | '#ff4d4f'
-to | 加载条的挂载位置，可选：元素标签名（例如 `body`）或者元素本身 | string &#124; HTMLElement | 'body'
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| containerClass | 加载条容器的类名 | string | undefined |
+| containerStyle | 加载条容器的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| loadingBarSize | 加载条大小，单位 `px` | number | 2 |
+| colorLoading | 加载中颜色 | string | undefined |
+| colorFinish | 加载完成颜色 | string | undefined |
+| colorError | 加载错误颜色 | string | '#ff4d4f' |
+| to | 加载条的挂载位置，可选：元素标签名（例如 `body`）或者元素本身，false 会待在原地 | string &#124; HTMLElement &#124; false | 'body' |
 
 ## Methods
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-start | 开始加载的回调函数 | (from = 0, to = 80) => void
-finish | 结束加载的回调函数 | () => void
-error | 出现错误的回调函数 | () => void
+| 名称   | 说明               | 类型                        |
+| :----- | :----------------- | :-------------------------- |
+| start  | 开始加载的回调函数 | (from = 0, to = 80) => void |
+| finish | 结束加载的回调函数 | () => void                  |
+| error  | 出现错误的回调函数 | () => void                  |
