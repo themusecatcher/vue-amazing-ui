@@ -51,6 +51,7 @@ const props = withDefaults(defineProps<Props>(), {
   show: false,
   showControl: false
 })
+const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时弹出框不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const tooltipShow = ref<boolean>(false) // tooltip 显示隐藏标识
 const tooltipTimer = ref() // tooltip 延迟显示隐藏的定时器标识符
 const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
@@ -143,7 +144,6 @@ watch(
   }
 )
 onMounted(() => {
-  getPositionedContainer()
   observeScroll()
 })
 onBeforeUnmount(() => {
@@ -166,22 +166,20 @@ useResizeObserver([tooltipCardRef, tooltipContentRef], (entries: ResizeObserverE
   updatePosition()
 })
 // 获取弹出框相对定位的容器元素
-function getPositionedContainer() {
-  nextTick(() => {
-    let target = tooltipRef.value?.parentElement
-    while (target) {
-      if (target === document.documentElement) {
-        positionedContainer.value = document.documentElement
-        return
-      }
-      const { position } = getComputedStyle(target)
-      if (position !== 'static') {
-        positionedContainer.value = target
-        return
-      }
-      target = target.parentElement
+function getPositionedContainer(): void {
+  let parentElement = tooltipRef.value?.parentElement
+  while (parentElement) {
+    if (parentElement === document.documentElement) {
+      positionedContainer.value = document.documentElement
+      return
     }
-  })
+    const { position } = getComputedStyle(parentElement)
+    if (position !== 'static') {
+      positionedContainer.value = parentElement
+      return
+    }
+    parentElement = parentElement.parentElement
+  }
 }
 function getViewportSize() {
   viewportWidth.value = document.documentElement.clientWidth
@@ -232,6 +230,7 @@ function updatePosition() {
 // 计算文字提示位置
 async function getPosition() {
   await nextTick()
+  getPositionedContainer()
   positionedContainerRect.value = positionedContainer.value?.getBoundingClientRect() as DOMRect
   tooltipContentRect.value = tooltipContentRef.value?.getBoundingClientRect() as DOMRect
   tooltipCardRect.value = tooltipCardRef.value?.getBoundingClientRect() as DOMRect
@@ -403,6 +402,9 @@ function onShow(): void {
   tooltipTimer.value && cancelRaf(tooltipTimer.value)
   if (!tooltipShow.value) {
     tooltipTimer.value = rafTimeout(() => {
+      if (!initialDisplay.value) {
+        initialDisplay.value = true
+      }
       tooltipShow.value = true
       getPosition()
       emits('update:show', true)
@@ -481,7 +483,7 @@ defineExpose({
         @animationend="onAnimationEnd"
       >
         <div
-          v-if="originShow"
+          v-if="initialDisplay"
           v-show="showTooltip && tooltipShow"
           ref="tooltipRef"
           class="tooltip-card-container"
@@ -521,178 +523,176 @@ defineExpose({
   position: relative;
   display: inline-block;
 }
-body {
-  .zoom-enter {
-    transform: none;
-    opacity: 0;
-    animation-duration: var(--tooltip-transition-duration);
-    animation-fill-mode: both;
-    animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1);
-    animation-play-state: paused;
-  }
-  .zoom-enter-active {
-    animation-name: zoomIn;
-    animation-play-state: running;
-    @keyframes zoomIn {
-      0% {
-        transform: scale(0.8);
-        opacity: 0;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
+.zoom-enter {
+  transform: none;
+  opacity: 0;
+  animation-duration: var(--tooltip-transition-duration);
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1);
+  animation-play-state: paused;
+}
+.zoom-enter-active {
+  animation-name: zoomIn;
+  animation-play-state: running;
+  @keyframes zoomIn {
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
     }
   }
-  .zoom-leave {
-    animation-duration: var(--tooltip-transition-duration);
-    animation-fill-mode: both;
-    animation-play-state: paused;
-    animation-timing-function: cubic-bezier(0.78, 0.14, 0.15, 0.86);
-  }
-  .zoom-leave-active {
-    animation-name: zoomOut;
-    animation-play-state: running;
-    pointer-events: none;
-    @keyframes zoomOut {
-      0% {
-        transform: scale(1);
-        opacity: 1;
-      }
-      100% {
-        transform: scale(0.8);
-        opacity: 0;
-      }
+}
+.zoom-leave {
+  animation-duration: var(--tooltip-transition-duration);
+  animation-fill-mode: both;
+  animation-play-state: paused;
+  animation-timing-function: cubic-bezier(0.78, 0.14, 0.15, 0.86);
+}
+.zoom-leave-active {
+  animation-name: zoomOut;
+  animation-play-state: running;
+  pointer-events: none;
+  @keyframes zoomOut {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(0.8);
+      opacity: 0;
     }
   }
-  .tooltip-card-container {
+}
+.tooltip-card-container {
+  position: absolute;
+  z-index: 999;
+  width: max-content;
+  outline: none;
+  .tooltip-card {
+    min-width: 32px;
+    max-width: var(--tooltip-max-width);
+    min-height: 32px;
+    padding: 6px 8px;
+    font-size: 14px;
+    color: #fff;
+    line-height: 1.5714285714285714;
+    text-align: justify;
+    text-decoration: none;
+    word-break: break-all;
+    background-color: var(--tooltip-background-color);
+    border-radius: 6px;
+    box-shadow:
+      0 6px 16px 0 rgba(0, 0, 0, 0.08),
+      0 3px 6px -4px rgba(0, 0, 0, 0.12),
+      0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    :deep(svg) {
+      fill: currentColor;
+    }
+  }
+  .tooltip-arrow {
     position: absolute;
-    z-index: 999;
-    width: max-content;
-    outline: none;
-    .tooltip-card {
-      min-width: 32px;
-      max-width: var(--tooltip-max-width);
-      min-height: 32px;
-      padding: 6px 8px;
-      font-size: 14px;
-      color: #fff;
-      line-height: 1.5714285714285714;
-      text-align: justify;
-      text-decoration: none;
-      word-break: break-all;
-      background-color: var(--tooltip-background-color);
-      border-radius: 6px;
-      box-shadow:
-        0 6px 16px 0 rgba(0, 0, 0, 0.08),
-        0 3px 6px -4px rgba(0, 0, 0, 0.12),
-        0 9px 28px 8px rgba(0, 0, 0, 0.05);
-      :deep(svg) {
-        fill: currentColor;
-      }
-    }
-    .tooltip-arrow {
+    z-index: 9;
+    display: block;
+    pointer-events: none;
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+    &::before {
       position: absolute;
-      z-index: 9;
-      display: block;
-      pointer-events: none;
       width: 16px;
-      height: 16px;
-      overflow: hidden;
-      &::before {
-        position: absolute;
-        width: 16px;
-        height: 8px;
-        background-color: var(--tooltip-background-color);
-        clip-path: path(
-          'M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z'
-        );
-        content: '';
-      }
-      &::after {
-        position: absolute;
-        width: 8.970562748477143px;
-        height: 8.970562748477143px;
-        margin: auto;
-        border-radius: 0 0 2px 0;
-        transform: translateY(50%) rotate(-135deg);
-        box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.1);
-        z-index: 0;
-        background: transparent;
-        content: '';
-      }
+      height: 8px;
+      background-color: var(--tooltip-background-color);
+      clip-path: path(
+        'M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z'
+      );
+      content: '';
     }
-    .arrow-top {
-      left: 50%;
-      bottom: 12px;
-      transform: translateX(-50%) translateY(100%) rotate(180deg);
-      &::before {
-        bottom: 0;
-        left: 0;
-      }
-      &::after {
-        bottom: 0;
-        left: 0;
-        right: 0;
-      }
-    }
-    .arrow-bottom {
-      left: 50%;
-      top: 12px;
-      transform: translateX(-50%) translateY(-100%) rotate(0deg);
-      &::before {
-        bottom: 0;
-        left: 0;
-      }
-      &::after {
-        bottom: 0;
-        left: 0;
-        right: 0;
-      }
-    }
-    .arrow-left {
-      top: 50%;
-      right: 12px;
-      transform: translateX(100%) translateY(-50%) rotate(90deg);
-      &::before {
-        bottom: 0;
-        left: 0;
-      }
-      &::after {
-        bottom: 0;
-        left: 0;
-        right: 0;
-      }
-    }
-    .arrow-right {
-      top: 50%;
-      left: 12px;
-      transform: translateX(-100%) translateY(-50%) rotate(-90deg);
-      &::before {
-        bottom: 0;
-        left: 0;
-      }
-      &::after {
-        bottom: 0;
-        left: 0;
-        right: 0;
-      }
+    &::after {
+      position: absolute;
+      width: 8.970562748477143px;
+      height: 8.970562748477143px;
+      margin: auto;
+      border-radius: 0 0 2px 0;
+      transform: translateY(50%) rotate(-135deg);
+      box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.1);
+      z-index: 0;
+      background: transparent;
+      content: '';
     }
   }
-  .tooltip-top-padding {
-    padding-bottom: 12px;
+  .arrow-top {
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%) translateY(100%) rotate(180deg);
+    &::before {
+      bottom: 0;
+      left: 0;
+    }
+    &::after {
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
   }
-  .tooltip-bottom-padding {
-    padding-top: 12px;
+  .arrow-bottom {
+    left: 50%;
+    top: 12px;
+    transform: translateX(-50%) translateY(-100%) rotate(0deg);
+    &::before {
+      bottom: 0;
+      left: 0;
+    }
+    &::after {
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
   }
-  .tooltip-left-padding {
-    padding-right: 12px;
+  .arrow-left {
+    top: 50%;
+    right: 12px;
+    transform: translateX(100%) translateY(-50%) rotate(90deg);
+    &::before {
+      bottom: 0;
+      left: 0;
+    }
+    &::after {
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
   }
-  .tooltip-right-padding {
-    padding-left: 12px;
+  .arrow-right {
+    top: 50%;
+    left: 12px;
+    transform: translateX(-100%) translateY(-50%) rotate(-90deg);
+    &::before {
+      bottom: 0;
+      left: 0;
+    }
+    &::after {
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
   }
-  .tooltip-content {
-    display: inline-block;
-  }
+}
+.tooltip-top-padding {
+  padding-bottom: 12px;
+}
+.tooltip-bottom-padding {
+  padding-top: 12px;
+}
+.tooltip-left-padding {
+  padding-right: 12px;
+}
+.tooltip-right-padding {
+  padding-left: 12px;
+}
+.tooltip-content {
+  display: inline-block;
 }
 </style>
