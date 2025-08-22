@@ -51,7 +51,7 @@ const props = withDefaults(defineProps<Props>(), {
   show: false,
   showControl: false
 })
-const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时弹出框不必要的渲染，展示之后使用 v-show 来控制显示隐藏
+const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const tooltipShow = ref<boolean>(false) // tooltip 显示隐藏标识
 const tooltipTimer = ref() // tooltip 延迟显示隐藏的定时器标识符
 const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
@@ -127,6 +127,17 @@ watch(
   },
   {
     deep: true
+  }
+)
+watch(
+  () => showTooltip.value && tooltipShow.value,
+  (to) => {
+    if (to && !initialDisplay.value) {
+      initialDisplay.value = true
+    }
+  },
+  {
+    immediate: true
   }
 )
 watch(
@@ -402,9 +413,6 @@ function onShow(): void {
   tooltipTimer.value && cancelRaf(tooltipTimer.value)
   if (!tooltipShow.value) {
     tooltipTimer.value = rafTimeout(() => {
-      if (!initialDisplay.value) {
-        initialDisplay.value = true
-      }
       tooltipShow.value = true
       getPosition()
       emits('update:show', true)
