@@ -64,6 +64,9 @@ export { default as Divider } from './divider'
 export type { Props as DrawerProps } from './drawer'
 export { default as Drawer } from './drawer'
 
+export type { Props as DropdownProps } from './dropdown'
+export { default as Dropdown } from './dropdown'
+
 export type { Props as EllipsisProps } from './ellipsis'
 export { default as Ellipsis } from './ellipsis'
 
