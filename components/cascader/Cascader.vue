@@ -26,7 +26,7 @@ export interface Props {
     根据输入项进行筛选，默认为 true 时，筛选每个选项的文本字段 label 是否包含输入项，包含返回 true，反之返回 false
     当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
   */
-  filter?: Function | true // 过滤条件函数，仅当支持搜索时生效
+  filter?: ((inputValue: string, option: Option) => boolean) | true // 过滤条件函数，仅当支持搜索时生效
   maxDisplay?: number // 选择器面板最多能展示的项数，超过后滚动显示
   modelValue?: number[] | string[] //（v-model）级联选中项
 }
