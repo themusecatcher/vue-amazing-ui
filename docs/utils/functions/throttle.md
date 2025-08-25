@@ -13,9 +13,9 @@ _如果短时间内大量触发同一事件，那么在函数执行一次之后�
  * 该函数用于生成一个节流函数，用于控制某个函数在给定时间间隔内只能被执行一次
  * 主要用于性能优化，例如限制事件处理函数的触发频率
  *
- * @param fn 要被节流的函数
- * @param delay 节流的时间间隔，单位 ms，默认为 300ms
- * @returns 返回一个新的节流的函数
+ * @param {Function} fn 要被节流的函数
+ * @param {number} [delay = 300] 节流的时间间隔，单位 ms，默认为 300ms
+ * @returns {Function} 返回一个新的节流的函数
  */
 export function throttle(fn: Function, delay: number = 300): Function {
   let valid = true // 用于标记函数是否可以执行

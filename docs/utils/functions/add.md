@@ -13,9 +13,9 @@ _消除 `js` 加减精度问题的工具函数_
  * 该函数旨在添加两个数字，考虑到它们可能是整数或小数；对于整数，直接返回它们的和
  * 对于小数，为了确保精确计算，将小数转换为相同长度的字符串进行处理，然后将结果转换回小数
  *
- * @param num1 第一个数字
- * @param num2 第二个数字
- * @returns 返回两个数字的和
+ * @param {number} num1 第一个数字
+ * @param {number} num2 第二个数字
+ * @returns {number} 返回两个数字的和
  */
 export function add(num1: number, num2: number): number {
   // 验证输入是否为有效的数字

@@ -873,10 +873,9 @@ _调用时传入的 `Modal` 类型，以下属性均具有更高优先级_
 
 ```vue
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-const modal = ref()
+const modalRef = useTemplateRef('modalRef')
 onMounted(() => {
-  window['$modal'] = modal.value
+  window['$modal'] = modalRef.value
 })
 onBeforeUnmount(() => {
   delete window['$modal']
@@ -884,7 +883,7 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <RouterView />
-  <Modal ref="modal" />
+  <Modal ref="modalRef" />
 </template>
 ```
 

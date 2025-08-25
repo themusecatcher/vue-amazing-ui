@@ -383,10 +383,9 @@ _调用时传入的 `Message` 类型，以下属性均具有更高优先级_
 
 ```vue
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-const message = ref()
+const messageRef = useTemplateRef('messageRef')
 onMounted(() => {
-  window['$message'] = message.value
+  window['$message'] = messageRef.value
 })
 onBeforeUnmount(() => {
   delete window['$message']
@@ -394,7 +393,7 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <RouterView />
-  <Message ref="message" />
+  <Message ref="messageRef" />
 </template>
 ```
 

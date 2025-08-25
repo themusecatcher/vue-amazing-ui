@@ -10,9 +10,9 @@ _格式化日期为指定格式的工具函数_
 /**
  * 格式化日期时间字符串
  *
- * @param value 待格式化的日期时间值，支持数字、字符串和 Date 类型，默认为当前时间戳
- * @param format 格式化字符串，默认为'YYYY-MM-DD HH:mm:ss'，支持格式化参数：YY：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒
- * @returns 返回格式化后的日期时间字符串
+ * @param {number | string | Date} [value = Date.now()] 待格式化的日期时间值，支持数字、字符串和 Date 类型，默认为当前时间戳
+ * @param {string} [format = 'YYYY-MM-DD HH:mm:ss'] 格式化字符串，默认为'YYYY-MM-DD HH:mm:ss'，支持格式化参数：YY：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒
+ * @returns {string} 返回格式化后的日期时间字符串
  */
 export function dateFormat(value: number | string | Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss'): string {
   try {

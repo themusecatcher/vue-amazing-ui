@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const tooltip = ref()
+const containerRef = ref()
+const tooltipRef = ref()
 function openChange(open: boolean) {
   console.log('open', open)
+}
+function onShow() {
+  tooltipRef.value?.show()
+}
+function onHide() {
+  tooltipRef.value?.hide()
 }
 </script>
 <template>
@@ -37,7 +44,7 @@ function openChange(open: boolean) {
         }"
       >
         <template #tooltip>
-          <h3 style="text-align: center; margin: 0 0 8px">Godzilla VS Kong</h3>
+          <h3 style="font-weight: bold; text-align: center; margin: 0 0 8px">Godzilla VS Kong</h3>
           电影讲述帝王组织在地心世界找到巨兽起源的线索，与此同时传说中的王者哥斯拉和金刚的对决也将展开的故事
         </template>
         <Button type="primary">哥斯拉大战金刚</Button>
@@ -82,6 +89,20 @@ function openChange(open: boolean) {
       <template #tooltip>Vue Amazing UI</template>
       <Button type="primary">Click Me</Button>
     </Tooltip>
+    <h2 class="mt30 mb10">自定义弹出框挂载容器</h2>
+    <div
+      ref="containerRef"
+      style="display: inline-block; padding: 64px 32px; border-radius: 8px; border: 1px solid #f0f0f0"
+    >
+      <Space>
+        <Tooltip tooltip="Vue Amazing UI" :to="false">
+          <Button type="primary">Stay in place</Button>
+        </Tooltip>
+        <Tooltip tooltip="Vue Amazing UI" :to="containerRef">
+          <Button type="primary">Mounted to Container</Button>
+        </Tooltip>
+      </Space>
+    </div>
     <h2 class="mt30 mb10">自定义过渡动画时间</h2>
     <Tooltip :transition-duration="300">
       <template #tooltip>Vue Amazing UI</template>
@@ -108,11 +129,11 @@ function openChange(open: boolean) {
     </Space>
     <h2 class="mt30 mb10">使用 Methods</h2>
     <Space>
-      <Tooltip ref="tooltip" tooltip="Vue Amazing UI">
+      <Tooltip ref="tooltipRef" tooltip="Vue Amazing UI">
         <Button type="primary">Methods Tooltip</Button>
       </Tooltip>
-      <Button type="primary" @click="tooltip.show()">显示</Button>
-      <Button @click="tooltip.hide()">隐藏</Button>
+      <Button type="primary" @click="onShow">显示</Button>
+      <Button @click="onHide">隐藏</Button>
     </Space>
     <h2 class="mt30 mb10">隐藏箭头</h2>
     <Tooltip :arrow="false" tooltip="Vue Amazing UI">
@@ -120,8 +141,8 @@ function openChange(open: boolean) {
     </Tooltip>
   </div>
 </template>
-<style lang="less" scoped>
-:deep(.custom-class) {
+<style lang="less">
+.custom-class {
   font-size: 16px !important;
   color: #0958d9 !important;
   padding: 12px 18px !important;

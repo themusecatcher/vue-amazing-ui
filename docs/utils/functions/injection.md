@@ -17,8 +17,8 @@ import type { Ref } from 'vue'
  * 如果在组件中使用，则会尝试从组件的依赖注入中获取颜色配置
  * 如果未找到，则回退到全局的默认颜色配置
  *
- * @param key 组件名，用于在组件的依赖注入中查找颜色配置
- * @returns 返回包含颜色调色板和阴影颜色的主题对象
+ * @param {string} key 组件名，用于在组件的依赖注入中查找颜色配置
+ * @returns {{ colorPalettes: Ref<string[]>, shadowColor: Ref<string> }} 返回包含颜色调色板和阴影颜色的主题对象
  */
 export function useInject(key: string): { colorPalettes: Ref<string[]>; shadowColor: Ref<string> } {
   // 获取默认的颜色调色板
@@ -39,12 +39,31 @@ export function useInject(key: string): { colorPalettes: Ref<string[]>; shadowCo
   }
   return toRefs(commonInjectValue)
 }
+/**
+ * 获取颜色调色板
+ *
+ * @param {string} primaryColor 主色
+ * @returns {string[]} 返回颜色调色板
+ */
 function getColorPalettes(primaryColor: string): string[] {
   return generate(primaryColor)
 }
+/**
+ * 是否为可靠的颜色值
+ *
+ * @param {number} color 颜色值
+ * @returns {boolean} 返回颜色值是否可靠
+ */
 function isStableColor(color: number): boolean {
   return color >= 0 && color <= 255
 }
+/**
+ * 获取透明度颜色，一般用作阴影色
+ *
+ * @param {string} frontColor 前景色
+ * @param {string} [backgroundColor = '#ffffff'] 背景色
+ * @returns {string} 返回透明度颜色
+ */
 function getAlphaColor(frontColor: string, backgroundColor: string = '#ffffff'): string {
   const { r: fR, g: fG, b: fB, a: originAlpha } = new TinyColor(frontColor).toRgb()
   if (originAlpha < 1) return frontColor

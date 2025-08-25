@@ -12,11 +12,11 @@ _实时监测目标元素滚动位置及状态的组合式函数_
  * 实时监测目标元素滚动位置及状态
  *
  * 自定义钩子用于处理滚动事件和状态
- * @param target 滚动目标元素，可以是 Ref、HTMLElement、Window 或 Document，默认为 window
- * @param throttleDelay 节流延迟，用于限制滚动事件的触发频率，默认为 0
- * @param onScroll 滚动事件的回调函数，可选
- * @param onStop 滚动结束的回调函数，可选
- * @returns 返回一个对象，包含滚动位置和各种状态信息
+ * @param {Ref | HTMLElement | Window | Document} [target = window] 滚动目标元素，可以是 Ref、HTMLElement、Window 或 Document，默认为 window
+ * @param {number} [throttleDelay = 0] 节流延迟，用于限制滚动事件的触发频率，默认为 0
+ * @param {(e: Event) => void} onScroll 滚动事件的回调函数，可选
+ * @param {(e: Event) => void} onStop 滚动结束的回调函数，可选
+ * @returns {{ x: Ref<number>, xScrollMax: Ref<number>, y: Ref<number>, yScrollMax: Ref<number>, isScrolling: Ref<boolean>, left: Ref<boolean>, right: Ref<boolean>, top: Ref<boolean>, bottom: Ref<boolean> }} 返回一个对象，包含滚动位置和各种状态信息
  */
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import type { Ref } from 'vue'
