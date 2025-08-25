@@ -50,10 +50,11 @@ function getMenuIcon(icon: VNode | undefined) {
 </script>
 <template>
   <div
-    class="m-menu menu-overflow"
+    class="menu-wrap menu-overflow"
     :class="{
       'menu-horizontal': props.mode === 'horizontal',
       'menu-vertical': props.mode === 'vertical',
+      'menu-inline': props.mode === 'inline',
       'menu-light': props.theme === 'light',
       'menu-dark': props.theme === 'dark'
     }"
@@ -78,7 +79,7 @@ function getMenuIcon(icon: VNode | undefined) {
   </div>
 </template>
 <style lang="less" scoped>
-.m-menu {
+.menu-wrap {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   outline: none;
@@ -148,6 +149,11 @@ function getMenuIcon(icon: VNode | undefined) {
       border-color 0.3s,
       background 0.3s;
   }
+}
+.menu-vertical {
+}
+.menu-inline {
+  border-right: 1px solid rgba(5, 5, 5, 0.06);
 }
 .menu-light {
   color: rgba(0, 0, 0, 0.88);
