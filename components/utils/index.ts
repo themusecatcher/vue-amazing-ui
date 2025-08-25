@@ -1,9 +1,9 @@
 /**
  * 格式化日期时间字符串
  *
- * @param value 待格式化的日期时间值，支持数字、字符串和 Date 类型，默认为当前时间戳
- * @param format 格式化字符串，默认为'YYYY-MM-DD HH:mm:ss'，支持格式化参数：YY：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒
- * @returns 返回格式化后的日期时间字符串
+ * @param {number | string | Date} [value = Date.now()] 待格式化的日期时间值，支持数字、字符串和 Date 类型，默认为当前时间戳
+ * @param {string} [format = 'YYYY-MM-DD HH:mm:ss'] 格式化字符串，默认为'YYYY-MM-DD HH:mm:ss'，支持格式化参数：YY：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒
+ * @returns {string} 返回格式化后的日期时间字符串
  */
 export function dateFormat(value: number | string | Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss'): string {
   try {
@@ -63,13 +63,13 @@ export function dateFormat(value: number | string | Date = Date.now(), format: s
  *
  * 该函数提供了一种灵活的方式将数字格式化为字符串，包括设置精度、千位分隔符、小数点字符、前缀和后缀
  *
- * @param value 要格式化的数字或数字字符串
- * @param precision 小数点后的位数，默认为 2
- * @param separator 千分位分隔符，默认为 ','
- * @param decimal 小数点字符，默认为 '.'
- * @param prefix 数字前的字符串，默认为 undefined
- * @param suffix 数字后的字符串，默认为 undefined
- * @returns 格式化后的字符串；如果输入值不是数字或字符串，则抛出类型错误
+ * @param {number | string} value 要格式化的数字或数字字符串
+ * @param {number} [precision = 2] 小数点后的位数，默认为 2
+ * @param {string} [separator = ','] 千分位分隔符，默认为 ','
+ * @param {string} [decimal = '.'] 小数点字符，默认为 '.'
+ * @param {string} prefix 数字前的字符串，默认为 undefined
+ * @param {string} suffix 数字后的字符串，默认为 undefined
+ * @returns {string} 格式化后的字符串；如果输入值不是数字或字符串，则抛出类型错误
  */
 export function formatNumber(
   value: number | string,
@@ -106,10 +106,10 @@ export function formatNumber(
 /**
  * 使用 requestAnimationFrame 实现的延迟 setTimeout 或间隔 setInterval 调用函数
  *
- * @param fn 要执行的函数
- * @param delay 延迟的时间，单位为 ms，默认为 0，表示不延迟立即执行
- * @param interval 是否间隔执行，如果为 true，则在首次执行后，以 delay 为间隔持续执行
- * @returns 返回一个对象，包含一个 id 属性，该 id 为 requestAnimationFrame 的调用 ID，可用于取消动画帧
+ * @param {Function} fn 要执行的函数
+ * @param {number} [delay = 0] 延迟的时间，单位为 ms，默认为 0，表示不延迟立即执行
+ * @param {boolean} [interval = false] 是否间隔执行，如果为 true，则在首次执行后，以 delay 为间隔持续执行
+ * @returns {{ id: number }} 返回一个对象，包含一个 id 属性，该 id 为 requestAnimationFrame 的调用 ID，可用于取消动画帧
  */
 export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = false): { id: number } {
   let start: number | null = null // 记录动画开始的时间戳
@@ -150,7 +150,7 @@ export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = 
 /**
  * 用于取消 rafTimeout 函数
  *
- * @param raf - 包含请求动画帧 ID 的对象；该 ID 是由 requestAnimationFrame 返回的
+ * @param {{id: number}} raf - 包含请求动画帧 ID 的对象；该 ID 是由 requestAnimationFrame 返回的
  *              该函数旨在取消之前通过 requestAnimationFrame 请求的动画帧
  *              如果传入的 raf 对象或其 id 无效，则会打印警告
  */
@@ -167,9 +167,9 @@ export function cancelRaf(raf: { id: number }): void {
  * 该函数用于生成一个节流函数，用于控制某个函数在给定时间间隔内只能被执行一次
  * 主要用于性能优化，例如限制事件处理函数的触发频率
  *
- * @param fn 要被节流的函数
- * @param delay 节流的时间间隔，单位 ms，默认为 300ms
- * @returns 返回一个新的节流的函数
+ * @param {Function} fn 要被节流的函数
+ * @param {number} [delay = 300] 节流的时间间隔，单位 ms，默认为 300ms
+ * @returns {Function} 返回一个新的节流的函数
  */
 export function throttle(fn: Function, delay: number = 300): Function {
   let valid = true // 用于标记函数是否可以执行
@@ -191,9 +191,9 @@ export function throttle(fn: Function, delay: number = 300): Function {
  * 主要用于限制函数调用的频率，当频繁触发某个函数时，实际上只需要在最后一次触发后的一段时间内执行一次即可
  * 这对于诸如输入事件处理函数、窗口大小调整事件处理函数等可能会频繁触发的函数非常有用
  *
- * @param fn 要执行的函数
- * @param delay 防抖的时间期限，单位 ms，默认为 300ms
- * @returns 返回一个新的防抖的函数
+ * @param {Function} fn 要执行的函数
+ * @param {number} [delay = 300] 防抖的时间期限，单位 ms，默认为 300ms
+ * @returns {Function} 返回一个新的防抖的函数
  */
 export function debounce(fn: Function, delay: number = 300): Function {
   let timer: any = null // 使用闭包保存定时器的引用
@@ -215,9 +215,9 @@ export function debounce(fn: Function, delay: number = 300): Function {
  * 该函数旨在添加两个数字，考虑到它们可能是整数或小数；对于整数，直接返回它们的和
  * 对于小数，为了确保精确计算，将小数转换为相同长度的字符串进行处理，然后将结果转换回小数
  *
- * @param num1 第一个数字
- * @param num2 第二个数字
- * @returns 返回两个数字的和
+ * @param {number} num1 第一个数字
+ * @param {number} num2 第二个数字
+ * @returns {number} 返回两个数字的和
  */
 export function add(num1: number, num2: number): number {
   // 验证输入是否为有效的数字
@@ -244,8 +244,8 @@ export function add(num1: number, num2: number): number {
 /**
  * 下载文件并自定义文件名
  *
- * @param url 文件的 URL，支持网络路径或本地路径
- * @param fileName 文件名；文件的命名，如果未提供，则从 URL 中尝试提取
+ * @param {string} url 文件的 URL，支持网络路径或本地路径
+ * @param {string} fileName 文件名；文件的命名，如果未提供，则从 URL 中尝试提取
  */
 export function downloadFile(url: string, fileName?: string): void {
   if (!url) {
@@ -345,8 +345,8 @@ export function useMounted(): Ref<boolean> {
  *
  * 用于检查给定的回调函数是否在组件挂载期间被支持
  *
- * @param callback 回调函数，用于执行某些操作，并返回用于计算的值
- * @returns 返回一个计算属性，该属性在组件挂载时会触发回调函数，并根据回调函数的返回值计算支持状态
+ * @param {() => unknown} callback 回调函数，用于执行某些操作，并返回用于计算的值
+ * @returns {ComputedRef<boolean>} 返回一个计算属性，该属性在组件挂载时会触发回调函数，并根据回调函数的返回值计算支持状态
  */
 export function useSupported(callback: () => unknown): ComputedRef<boolean> {
   const isMounted = useMounted()
@@ -364,9 +364,9 @@ export function useSupported(callback: () => unknown): ComputedRef<boolean> {
  * 从而可能导致内存泄漏的问题；通过结合 Vue 的 onMounted 和 onUnmounted 钩子，
  * 在组件挂载时添加事件监听器，并在组件卸载时移除它
  *
- * @param target 目标元素或对象；可以是 DOM 元素或其他支持 addEventListener 的对象
- * @param event 要监听的事件名称
- * @param callback 事件被触发时执行的回调函数
+ * @param {HTMLElement | Window | Document} target 目标元素或对象；可以是 DOM 元素或其他支持 addEventListener 的对象
+ * @param {string} event 要监听的事件名称
+ * @param {Function} callback 事件被触发时执行的回调函数
  */
 export function useEventListener(target: HTMLElement | Window | Document, event: string, callback: Function): void {
   // 也可以用字符串形式的 CSS 选择器来寻找目标 DOM 元素
@@ -380,19 +380,19 @@ export function useEventListener(target: HTMLElement | Window | Document, event:
  * 该函数提供了一个便捷的方式来订阅 DOM 元素的变动，当元素发生指定的变化时，调用提供的回调函数
  * 使用者可以指定要观察的一个或多个 DOM 元素，以及观察的选项和回调函数
  *
- * @param target 要观察的目标，可以是 Ref 对象、Ref 数组、HTMLElement 或 HTMLElement 数组
- * @param callback 当观察到变化时调用的回调函数
- * @param options MutationObserver 的观察选项，默认为空对象；例如:
+ * @param {Ref | Ref[] | HTMLElement | HTMLElement[]} target 要观察的目标，可以是 Ref 对象、Ref 数组、HTMLElement 或 HTMLElement 数组
+ * @param {MutationCallback} callback 当观察到变化时调用的回调函数
+ * @param {object} [options = {}] MutationObserver 的观察选项，默认为空对象；例如:
  *          subtree: 是否监听以 target 为根节点的整个子树，包括子树中所有节点的属性
  *          childList: 是否监听 target 节点中发生的节点的新增与删除
  *          attributes: 是否观察所有监听的节点属性值的变化
  *          attributeFilter: 声明哪些属性名会被监听的数组；如果不声明该属性，所有属性的变化都将触发通知
- * @returns 返回一个对象，包含停止和开始观察的方法，使用者可以调用 start 方法开始观察，调用 stop 方法停止观察
+ * @returns {start: () => void, stop: () => void} 返回一个对象，包含停止和开始观察的方法，使用者可以调用 start 方法开始观察，调用 stop 方法停止观察
  */
 export function useMutationObserver(
   target: Ref | Ref[] | HTMLElement | HTMLElement[],
   callback: MutationCallback,
-  options = {}
+  options: object = {}
 ): { start: () => void; stop: () => void } {
   const isSupported = useSupported(() => window && 'MutationObserver' in window)
   const stopObservation = ref(false)
@@ -454,11 +454,11 @@ export function useMutationObserver(
  * 实时监测目标元素滚动位置及状态
  *
  * 自定义钩子用于处理滚动事件和状态
- * @param target 滚动目标元素，可以是 Ref、HTMLElement、Window 或 Document，默认为 window
- * @param throttleDelay 节流延迟，用于限制滚动事件的触发频率，默认为 0
- * @param onScroll 滚动事件的回调函数，可选
- * @param onStop 滚动结束的回调函数，可选
- * @returns 返回一个对象，包含滚动位置和各种状态信息
+ * @param {Ref | HTMLElement | Window | Document} [target = window] 滚动目标元素，可以是 Ref、HTMLElement、Window 或 Document，默认为 window
+ * @param {number} [throttleDelay = 0] 节流延迟，用于限制滚动事件的触发频率，默认为 0
+ * @param {(e: Event) => void} onScroll 滚动事件的回调函数，可选
+ * @param {(e: Event) => void} onStop 滚动结束的回调函数，可选
+ * @returns {{ x: Ref<number>, xScrollMax: Ref<number>, y: Ref<number>, yScrollMax: Ref<number>, isScrolling: Ref<boolean>, left: Ref<boolean>, right: Ref<boolean>, top: Ref<boolean>, bottom: Ref<boolean> }} 返回一个对象，包含滚动位置和各种状态信息
  */
 export function useScroll(
   target: Ref | HTMLElement | Window | Document = window,
@@ -567,7 +567,7 @@ export function useScroll(
  *
  * FPS值可以帮助开发者识别性能瓶颈，以优化应用的性能
  *
- * @returns {Object} 返回一个包含 FPS 值的 ref 对象
+ * @returns {{ fps: Ref<number> }} 返回一个包含 FPS 值的 ref 对象
  */
 export function useFps(): { fps: Ref<number> } {
   const fps = ref<number>(0)
@@ -595,8 +595,8 @@ export function useFps(): { fps: Ref<number> } {
  *
  * 该函数提供了一个响应式的媒体查询机制，根据查询的不同结果动态更新响应式变量
  *
- * @param mediaQuery 媒体查询字符串，用于定义要查询的媒体条件
- * @returns 返回一个对象，其中包含一个名为 match 的 ref 对象，表示当前是否为移动设备视口
+ * @param {string} mediaQuery 媒体查询字符串，用于定义要查询的媒体条件
+ * @returns {{ match: Ref<boolean> }} 返回一个对象，其中包含一个名为 match 的 ref 对象，表示当前是否为移动设备视口
  */
 export function useMediaQuery(mediaQuery: string): { match: Ref<boolean> } {
   // 检查传入的mediaQuery参数是否为空或非法
@@ -623,10 +623,10 @@ export function useMediaQuery(mediaQuery: string): { match: Ref<boolean> } {
  *
  * 该函数提供了一种方便的方式来观察一个或多个元素的尺寸变化，并在变化时执行指定的回调函数
  *
- * @param target 要观察的目标，可以是 Ref 对象、Ref 数组、HTMLElement 或 HTMLElement 数组
- * @param callback 当元素尺寸变化时调用的回调函数
- * @param options ResizeObserver 选项，用于定制观察行为
- * @returns 返回一个对象，包含停止和开始观察的方法，使用者可以调用 start 方法开始观察，调用 stop 方法停止观察
+ * @param {Ref | Ref[] | HTMLElement | HTMLElement[]} target 要观察的目标，可以是 Ref 对象、Ref 数组、HTMLElement 或 HTMLElement 数组
+ * @param {ResizeObserverCallback} callback 当元素尺寸变化时调用的回调函数
+ * @param {object} [options = {}] ResizeObserver 选项，用于定制观察行为
+ * @returns {{ start: () => void, stop: () => void }} 返回一个对象，包含停止和开始观察的方法，使用者可以调用 start 方法开始观察，调用 stop 方法停止观察
  */
 export function useResizeObserver(
   target: Ref | Ref[] | HTMLElement | HTMLElement[],
@@ -746,8 +746,8 @@ import { inject, toRefs } from 'vue'
  * 如果在组件中使用，则会尝试从组件的依赖注入中获取颜色配置
  * 如果未找到，则回退到全局的默认颜色配置
  *
- * @param key 组件名，用于在组件的依赖注入中查找颜色配置
- * @returns 返回包含颜色调色板和阴影颜色的主题对象
+ * @param {string} key 组件名，用于在组件的依赖注入中查找颜色配置
+ * @returns {{ colorPalettes: Ref<string[]>, shadowColor: Ref<string> }} 返回包含颜色调色板和阴影颜色的主题对象
  */
 export function useInject(key: string): { colorPalettes: Ref<string[]>; shadowColor: Ref<string> } {
   // 获取默认的颜色调色板
@@ -771,21 +771,27 @@ export function useInject(key: string): { colorPalettes: Ref<string[]>; shadowCo
 /**
  * 获取颜色调色板
  *
- * @param primaryColor 主色
- * @returns 返回颜色调色板
+ * @param {string} primaryColor 主色
+ * @returns {string[]} 返回颜色调色板
  */
 export function getColorPalettes(primaryColor: string): string[] {
   return generate(primaryColor)
 }
+/**
+ * 是否为可靠的颜色值
+ *
+ * @param {number} color 颜色值
+ * @returns {boolean} 返回颜色值是否可靠
+ */
 function isStableColor(color: number): boolean {
   return color >= 0 && color <= 255
 }
 /**
  * 获取透明度颜色，一般用作阴影色
  *
- * @param frontColor 前景色
- * @param backgroundColor 背景色
- * @returns 返回透明度颜色
+ * @param {string} frontColor 前景色
+ * @param {string} [backgroundColor = '#ffffff'] 背景色
+ * @returns {string} 返回透明度颜色
  */
 export function getAlphaColor(frontColor: string, backgroundColor: string = '#ffffff'): string {
   const { r: fR, g: fG, b: fB, a: originAlpha } = new TinyColor(frontColor).toRgb()
@@ -804,8 +810,8 @@ export function getAlphaColor(frontColor: string, backgroundColor: string = '#ff
 /**
  * 检查浏览器是否支持给定的事件监听器选项
  *
- * @param prop 一个表示要检查的事件监听器属性的字符串，可选 'capture'、'once'、'passive' 或 'signal'
- * @returns 返回一个对象，包含一个 Ref 对象，其值指示浏览器是否支持给定的选项
+ * @param {'capture' | 'once' | 'passive' | 'signal'} prop 一个表示要检查的事件监听器属性的字符串，可选 'capture'、'once'、'passive' 或 'signal'
+ * @returns {{ isSupported: Ref<boolean> }} 返回一个对象，包含一个 Ref 对象，其值指示浏览器是否支持给定的选项
  */
 export function useOptionsSupported(prop: 'capture' | 'once' | 'passive' | 'signal'): { isSupported: Ref<boolean> } {
   // 兼容旧版本的浏览器（以及一些相对不算古老的）仍然假定 addEventListener 第三个参数是布尔值的情况

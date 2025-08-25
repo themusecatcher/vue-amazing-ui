@@ -60,7 +60,6 @@ const imagesAmount = computed(() => {
 watch(
   () => props.images,
   (to, from) => {
-    console.log('images changed', to)
     // 只有当图片数组长度变化或图片文件变化时才清空图片尺寸数组并重新初始化
     if (to.length !== to.length || to.some((image, index) => image.src !== from[index]?.src)) {
       imagesSize.value = []

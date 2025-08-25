@@ -10,8 +10,8 @@ _下载文件并自定义文件名的工具函数_
 /**
  * 下载文件并自定义文件名
  *
- * @param url 文件的 URL，支持网络路径或本地路径
- * @param fileName 文件名；文件的命名，如果未提供，则从 URL 中尝试提取
+ * @param {string} url 文件的 URL，支持网络路径或本地路径
+ * @param {string} fileName 文件名；文件的命名，如果未提供，则从 URL 中尝试提取
  */
 export function downloadFile(url: string, fileName?: string): void {
   if (!url) {

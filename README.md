@@ -16,7 +16,7 @@
 
 ## Features
 
-- The component library is implemented with `Vue@3.5.16`+ `TypeScript@5.8.3` + `Vite@6.3.5` + `Less@4.3.0`.
+- The component library is implemented with `Vue@3.5.18`+ `TypeScript@5.9.2` + `Vite@6.3.5` + `Less@4.4.0`.
 - Currently, it includes `67` basic UI components and `18` utility functions, with continuous exploration and updates ongoing...
 - Theme Customizable, all you need is to provide a theme color, then all the stuffs will be done by me.
 - By the way, they are all treeshakable.
@@ -210,7 +210,7 @@ pnpm dev
 - Run docs
 
 ```sh
-docs:dev
+pnpm docs:dev
 ```
 
 ## Blogs
@@ -282,11 +282,11 @@ All sponsors will be listed here, thank you very much for your support and spons
 | downloadFile | Function to download a file with a custom filename; if no filename is provided, it extracts the filename from the URL | (url: string, fileName?: string) => void |
 | toggleDark | Function to toggle dark mode | () => void |
 | useEventListener | Function to add and remove event listeners using Vue lifecycle hooks | (target: HTMLElement &#124; Window &#124; Document, event: string, callback: Function) => void |
-| useMutationObserver | Function to observe changes in DOM elements using `MutationObserver` | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: MutationCallback, options = {}) => { start: \() => void; stop: \() => void } |
-| useScroll | Function to monitor the scroll position and state of a target element in real time | (target: Ref &#124; HTMLElement &#124; Window &#124; Document = window, throttleDelay: number = 0, onScroll?: (e: Event) => void, onStop?: (e: Event) => void) => { x: Ref\<number>; xScrollMax: Ref\<number>; y: Ref\<number>; yScrollMax: Ref\<number>; isScrolling: Ref\<boolean>; left: Ref\<boolean>; right: Ref\<boolean>; top: Ref\<boolean>; bottom: Ref\<boolean> } |
+| useMutationObserver | Function to observe changes in DOM elements using `MutationObserver` | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: MutationCallback, options: object = {}) => { start: \() => void, stop: \() => void } |
+| useScroll | Function to monitor the scroll position and state of a target element in real time | (target: Ref &#124; HTMLElement &#124; Window &#124; Document = window, throttleDelay: number = 0, onScroll?: (e: Event) => void, onStop?: (e: Event) => void) => { x: Ref\<number>, xScrollMax: Ref\<number>, y: Ref\<number>, yScrollMax: Ref\<number>, isScrolling: Ref\<boolean>, left: Ref\<boolean>, right: Ref\<boolean>, top: Ref\<boolean>, bottom: Ref\<boolean> } |
 | useFps | Function to monitor the browser's refresh rate (FPS) in real time | () => { fps: Ref\<number> } |
 | useMediaQuery | Function to determine if the current environment matches a specified media query condition | (mediaQuery: string) => { match: Ref\<boolean> } |
-| useResizeObserver | Function to observe changes in the dimensions of DOM elements using `ResizeObserver` | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options = {}) => { start: \() => void; stop: \() => void } |
+| useResizeObserver | Function to observe changes in the dimensions of DOM elements using `ResizeObserver` | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options: object = {}) => { start: \() => void, stop: \() => void } |
 | useSlotsExist | Function to watch for the existence of slots with given names, supporting single slots or an array of slots | <T extends string &#124; string[] = 'default'>(slotsName: T) => T extends string ? ComputedRef\<boolean> : Reactive\<Record\<string, ComputedRef\<boolean>>> |
-| useInject | A function that uses injection to obtain color palettes and shadow color | (key: string) => { colorPalettes: Ref\<string[]>; shadowColor: Ref\<string> } |
+| useInject | A function that uses injection to obtain color palettes and shadow color | (key: string) => { colorPalettes: Ref\<string[]>, shadowColor: Ref\<string> } |
 | useOptionsSupported | Checks if the browser supports the given event listener options | (prop: 'capture' &#124; 'once' &#124; 'passive' &#124; 'signal') => { isSupported: Ref\<boolean> } |

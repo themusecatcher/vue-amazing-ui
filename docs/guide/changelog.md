@@ -4,6 +4,24 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-08-22">2.4.18</VersionDateTag>
+
+- 优化更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html)、[加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html)、[文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，在初始未展示时不进行任何组件渲染，提升初始加载性能
+
+## <VersionDateTag date="2025-08-21">2.4.17</VersionDateTag>
+
+- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件代码逻辑，并在文档新增自定义设置弹出框挂载容器示例
+
+## <VersionDateTag date="2025-08-19">2.4.16</VersionDateTag>
+
+- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件拖动效果，修复不透明度拖动时位置偏差的问题
+
+## <VersionDateTag date="2025-08-18">2.4.15</VersionDateTag>
+
+- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，新增 `to` 属性，支持设置弹出框挂载的容器节点，默认挂载到 `body` 下
+- 优化组件库部分使用 `Tooltip` 组件的代码逻辑
+- 更新组件库部分依赖版本
+
 ## <VersionDateTag date="2025-06-19">2.4.14</VersionDateTag>
 
 - 修复 [触摸滑动 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件，使用按需引入时样式版本引入错误的问题

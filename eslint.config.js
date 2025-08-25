@@ -15,7 +15,7 @@ export default defineConfigWithVueTs(
 
   {
     name: 'app/files-to-ignore',
-    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**', '**/docs/.vitepress/cache/**']
+    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**', 'docs/.vitepress/**']
   },
 
   pluginVue.configs['flat/essential'],
@@ -33,7 +33,8 @@ export default defineConfigWithVueTs(
       '@typescript-eslint/no-unsafe-function-type': 'off',
       'vue/multi-word-component-names': 'off',
       'vue/no-unused-vars': 'off',
-      'vue/return-in-computed-property': 'off'
+      'vue/return-in-computed-property': 'off',
+      'vue/require-toggle-inside-transition': 'off'
     }
   }
 )

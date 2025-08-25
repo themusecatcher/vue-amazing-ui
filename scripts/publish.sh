@@ -14,7 +14,7 @@ pnpm build
 git add .
 
 if [ -z "$commitDesc" ]; then
-  git commit -m 'update'
+  git commit -m 'feat: update components library'
 else
   git commit -m "$commitDesc"
 fi
@@ -29,7 +29,7 @@ pnpm up vue-amazing-ui@$version
 
 # 提交版本更新代码到 github
 git add .
-git commit -m "update $version"
+git commit -m "feat: update $version"
 git push
 
 # 重新部署文档

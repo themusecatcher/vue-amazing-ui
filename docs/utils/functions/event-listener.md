@@ -15,9 +15,9 @@ _添加和清除 `DOM` 事件监听器的组合式函数_
  * 从而可能导致内存泄漏的问题；通过结合 Vue 的 onMounted 和 onUnmounted 钩子，
  * 在组件挂载时添加事件监听器，并在组件卸载时移除它
  *
- * @param target 目标元素或对象；可以是 DOM 元素或其他支持 addEventListener 的对象
- * @param event 要监听的事件名称
- * @param callback 事件被触发时执行的回调函数
+ * @param {HTMLElement | Window | Document} target 目标元素或对象；可以是 DOM 元素或其他支持 addEventListener 的对象
+ * @param {string} event 要监听的事件名称
+ * @param {Function} callback 事件被触发时执行的回调函数
  */
 import { onMounted, onUnmounted } from 'vue'
 import type { Ref } from 'vue'

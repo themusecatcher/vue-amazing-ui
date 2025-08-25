@@ -13,8 +13,8 @@ _根据 `CSS media query` 的不同结果动态地更新：是桌面端还是移
  *
  * 该函数提供了一个响应式的媒体查询机制，根据查询的不同结果动态更新响应式变量
  *
- * @param mediaQuery 媒体查询字符串，用于定义要查询的媒体条件
- * @returns 返回一个对象，其中包含一个名为 match 的 ref 对象，表示当前是否为移动设备视口
+ * @param {string} mediaQuery 媒体查询字符串，用于定义要查询的媒体条件
+ * @returns {{ match: Ref<boolean> }} 返回一个对象，其中包含一个名为 match 的 ref 对象，表示当前是否为移动设备视口
  */
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import type { Ref } from 'vue'

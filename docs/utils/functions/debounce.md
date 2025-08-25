@@ -13,9 +13,9 @@ _对于短时间内连续触发的事件，防抖就是让某个时间 `delay` �
  * 主要用于限制函数调用的频率，当频繁触发某个函数时，实际上只需要在最后一次触发后的一段时间内执行一次即可
  * 这对于诸如输入事件处理函数、窗口大小调整事件处理函数等可能会频繁触发的函数非常有用
  *
- * @param fn 要执行的函数
- * @param delay 防抖的时间期限，单位 ms，默认为 300ms
- * @returns 返回一个新的防抖的函数
+ * @param {Function} fn 要执行的函数
+ * @param {number} [delay = 300] 防抖的时间期限，单位 ms，默认为 300ms
+ * @returns {Function} 返回一个新的防抖的函数
  */
 export function debounce(fn: Function, delay: number = 300): Function {
   let timer: any = null // 使用闭包保存定时器的引用

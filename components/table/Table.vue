@@ -1073,11 +1073,7 @@ function onPaginationChange(page: number, pageSize: number) {
           <slot name="header">{{ header }}</slot>
         </div>
         <!-- 没有设置垂直滚动 & 没有设置粘性定位的表头和水平滚动条 -->
-        <div
-          v-if="!verticalScroll && !sticky"
-          class="table-container"
-          :class="{ 'container-no-x-scroll': !xScrollable }"
-        >
+        <div v-if="!verticalScroll && !sticky" class="table-container">
           <Scrollbar
             ref="scrollbarRef"
             :style="showHeader ? {} : { borderRadius: '8px 8px 0 0' }"
@@ -1372,14 +1368,7 @@ function onPaginationChange(page: number, pageSize: number) {
             </table>
           </Scrollbar>
         </div>
-        <div
-          v-else
-          class="table-container"
-          :class="{
-            'container-vertical-no-x-scroll': !xScrollable,
-            'container-no-scroll': !xScrollable && !yScrollable
-          }"
-        >
+        <div v-else class="table-container">
           <div class="table-head" :class="{ 'table-head-sticky': sticky }">
             <table :style="[tableStyle, tableHeadStyle]" @wheel="xScrollable ? onWheel($event) : () => false">
               <colgroup>
@@ -1457,7 +1446,6 @@ function onPaginationChange(page: number, pageSize: number) {
                       :colspan="column.colSpan"
                       :colstart="column.colStart"
                       :colend="column.colEnd"
-                      :title="column.ellipsis && xScrollable ? column.title : undefined"
                       @mouseenter="column.sorter ? onEnterSorter(column.dataIndex as string) : () => false"
                       @mouseleave="column.sorter ? onLeaveSorter() : () => false"
                       @click="column.sorter ? onSorter(column) : () => false"
@@ -1475,12 +1463,7 @@ function onPaginationChange(page: number, pageSize: number) {
                       >
                         <div class="table-cell-sorter">
                           <span class="table-cell-title">
-                            <slot
-                              v-if="column.ellipsis && !xScrollable"
-                              name="headerCell"
-                              :column="column"
-                              :title="column.title"
-                            >
+                            <slot v-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
                               <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
                                 {{ column.title }}
                               </Ellipsis>
@@ -1514,12 +1497,7 @@ function onPaginationChange(page: number, pageSize: number) {
                           </span>
                         </div>
                       </Tooltip>
-                      <slot
-                        v-else-if="column.ellipsis && !xScrollable"
-                        name="headerCell"
-                        :column="column"
-                        :title="column.title"
-                      >
+                      <slot v-else-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
                         <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
                           {{ column.title }}
                         </Ellipsis>
@@ -1853,7 +1831,7 @@ function onPaginationChange(page: number, pageSize: number) {
               }
             }
           }
-          :deep(.m-tooltip-card) {
+          :deep(.tooltip-card-container) {
             cursor: auto;
           }
           .table-cell-sorter {
@@ -2034,21 +2012,6 @@ function onPaginationChange(page: number, pageSize: number) {
             align-items: center;
           }
         }
-      }
-    }
-    .container-no-x-scroll {
-      .m-scrollbar {
-        overflow: visible;
-      }
-    }
-    .container-vertical-no-x-scroll {
-      .table-head {
-        overflow: visible;
-      }
-    }
-    .container-no-scroll {
-      .m-scrollbar {
-        overflow: visible;
       }
     }
     .table-header + .table-container {
