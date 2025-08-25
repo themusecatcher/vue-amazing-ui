@@ -9,7 +9,7 @@
   <p style="font-size: 18px; font-weight: 600; color: #1677ff;">Join Me</p>
   <template #description>
     <p style="font-size: 16px;">
-      如果您对 Vue Amazing UI 感兴趣，欢迎加入我，一起开发、维护和迭代组件库。您的贡献将帮助组件库不断的更新与完善，共同打造更 amazing 的 UI 组件库！
+      如果您对 Vue Amazing UI 感兴趣，欢迎加入我，一起开发、维护和迭代组件库。您的贡献将帮助组件库不断的更新与完善，共同打造更 Amazing 的 UI 组件库！
     </p>
   </template>
 </Alert>
@@ -34,55 +34,55 @@
 
 ## 全局默认样式
 
-*使用单文件组件 `SFC` 时，请按需要引入如下所示组件库全局默认样式：*
+_使用单文件组件 `SFC` 时，请按需要引入如下所示组件库全局默认样式：_
 
-  ```less
-  // 组件库全局样式定义
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    caret-color: transparent; // 消除 win 系统点击后出现插入光标闪烁的问题
+```less
+// 组件库全局样式定义
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  caret-color: transparent; // 消除 win 系统点击后出现插入光标闪烁的问题
+}
+:root {
+  --primary-color: #1677ff;
+  --primary-color-hover: #4096ff;
+}
+body {
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
+}
+input,
+textarea {
+  caret-color: auto;
+}
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  background-color: transparent;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  &:hover {
+    color: var(--primary-color-hover);
   }
-  :root {
-    --primary-color: #1677ff;
-    --primary-color-hover: #4096ff;
-  }
-  body {
-    font-family:
-      Inter,
-      -apple-system,
-      BlinkMacSystemFont,
-      'Segoe UI',
-      Roboto,
-      Oxygen,
-      Ubuntu,
-      Cantarell,
-      'Fira Sans',
-      'Droid Sans',
-      'Helvetica Neue',
-      sans-serif;
-  }
-  input,
-  textarea {
-    caret-color: auto;
-  }
-  a {
-    color: var(--primary-color);
-    text-decoration: none;
-    background-color: transparent;
-    -webkit-tap-highlight-color: transparent;
-    outline: none;
-    cursor: pointer;
-    transition: color 0.3s ease;
-    &:hover {
-      color: var(--primary-color-hover);
-    }
-  }
-  ```
-  
+}
+```
+
 <script setup lang="ts">
 import { TeamOutlined } from '@ant-design/icons-vue'
 import pkg from '../../package.json'
