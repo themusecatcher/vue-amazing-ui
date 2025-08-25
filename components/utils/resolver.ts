@@ -41,6 +41,8 @@ const componentsMap = {
   List: 'list/list',
   ListItem: 'list/listitem',
   LoadingBar: 'loadingbar',
+  Menu: 'menu/menu',
+  MenuItem: 'menu/menuitem',
   Message: 'message',
   Modal: 'modal',
   Notification: 'notification',

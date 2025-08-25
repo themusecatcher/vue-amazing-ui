@@ -9,10 +9,10 @@ const themeDark = ref<boolean>(false)
 const html = document.documentElement
 onMounted(() => {
   themeDark.value = html.classList.contains('dark')
-  if (!themeDark.value) {
-    // 默认开启暗黑模式
-    toggleDark()
-  }
+  // if (!themeDark.value) {
+  //   // 默认开启暗黑模式
+  //   toggleDark()
+  // }
 })
 useMutationObserver(
   html,
