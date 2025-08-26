@@ -21,6 +21,7 @@ export interface Props {
   size?: 'small' | 'middle' | 'large' // 选择器大小
   allowClear?: boolean // 是否支持清除
   search?: boolean // 是否支持搜索
+  to?: string | HTMLElement | false // 下拉菜单挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   /*
     根据输入项进行筛选，默认为 true 时，筛选每个选项的文本字段 label 是否包含输入项，包含返回 true，反之返回 false
     当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
@@ -41,12 +42,14 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'middle',
   allowClear: false,
   search: false,
+  to: 'body',
   filter: true,
   maxDisplay: 6,
   scrollbarProps: () => ({}),
   modelValue: undefined
 })
-const filterOptions = ref<Option[]>() // 过滤后的选项数组
+const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
+const filterOptions = ref<Option[]>([]) // 过滤后的选项数组
 const selectedName = ref() // 当前选中选项的 label
 const inputRef = ref<HTMLElement | null>(null) // input 元素引用
 const inputValue = ref() // 支持搜索时，用户输入内容
@@ -117,6 +120,17 @@ watchEffect(() => {
   // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
   initSelector()
 })
+watch(
+  () => showOptions.value && filterOptions.value.length,
+  (to) => {
+    if (to && !initialDisplay.value) {
+      initialDisplay.value = true
+    }
+  },
+  {
+    immediate: true
+  }
+)
 watch(showOptions, async (to) => {
   if (isScrollable.value) {
     if (!to) {
@@ -251,7 +265,7 @@ function onChange(value: string | number, label: string, index: number): void {
 </script>
 <template>
   <div
-    class="m-select"
+    class="select-wrap"
     :class="{
       'select-focused': selectFocused,
       'search-select': search,
@@ -269,7 +283,7 @@ function onChange(value: string | number, label: string, index: number): void {
     `"
     @click="disabled ? () => false : toggleSelect()"
   >
-    <div class="select-wrap" @mouseenter="onEnter" @mouseleave="onLeave">
+    <div class="select-container" @mouseenter="onEnter" @mouseleave="onLeave">
       <span class="select-search">
         <input
           ref="inputRef"
@@ -340,52 +354,60 @@ function onChange(value: string | number, label: string, index: number): void {
         ></path>
       </svg>
     </div>
-    <Transition
-      name="slide-down"
-      enter-from-class="slide-down-enter"
-      enter-active-class="slide-down-enter"
-      enter-to-class="slide-down-enter slide-down-enter-active"
-      leave-from-class="slide-down-leave"
-      leave-active-class="slide-down-leave slide-down-leave-active"
-      leave-to-class="slide-down-leave slide-down-leave-active"
-    >
-      <div
-        v-if="showOptions && filterOptions && filterOptions.length"
-        class="select-options-panel"
-        @click.stop="selectFocus"
-        @mouseenter="disabledBlur = true"
-        @mouseleave="disabledBlur = false"
+    <Teleport :disabled="to === false" :to="to === false ? null : to">
+      <Transition
+        name="slide-down"
+        enter-from-class="slide-down-enter"
+        enter-active-class="slide-down-enter"
+        enter-to-class="slide-down-enter slide-down-enter-active"
+        leave-from-class="slide-down-leave"
+        leave-active-class="slide-down-leave slide-down-leave-active"
+        leave-to-class="slide-down-leave slide-down-leave-active"
       >
-        <Scrollbar ref="scrollbarRef" :content-style="{ padding: '4px' }" :style="optionsStyle" v-bind="scrollbarProps">
-          <p
-            v-for="(option, index) in filterOptions"
-            :key="index"
-            :class="[
-              'select-option',
-              {
-                'option-hover': !option.disabled && option[value] === hoverValue,
-                'option-selected': option[label] === selectedName,
-                'option-disabled': option.disabled
-              }
-            ]"
-            :title="option[label]"
-            @mouseenter="onHover(option[value], option.disabled)"
-            @click.stop="option.disabled ? selectFocus() : onChange(option[value], option[label], index)"
+        <div
+          v-if="initialDisplay"
+          v-show="showOptions && filterOptions && filterOptions.length"
+          class="select-options-panel"
+          @click.stop="selectFocus"
+          @mouseenter="disabledBlur = true"
+          @mouseleave="disabledBlur = false"
+        >
+          <Scrollbar
+            ref="scrollbarRef"
+            :content-style="{ padding: '4px' }"
+            :style="optionsStyle"
+            v-bind="scrollbarProps"
           >
-            {{ option[label] }}
-          </p>
-        </Scrollbar>
-      </div>
-      <div
-        v-else-if="showOptions && filterOptions && !filterOptions.length"
-        class="select-options-panel options-empty"
-        @click.stop="selectFocus"
-        @mouseenter="disabledBlur = true"
-        @mouseleave="disabledBlur = false"
-      >
-        <Empty image="outlined" />
-      </div>
-    </Transition>
+            <p
+              v-for="(option, index) in filterOptions"
+              :key="index"
+              :class="[
+                'select-option',
+                {
+                  'option-hover': !option.disabled && option[value] === hoverValue,
+                  'option-selected': option[label] === selectedName,
+                  'option-disabled': option.disabled
+                }
+              ]"
+              :title="option[label]"
+              @mouseenter="onHover(option[value], option.disabled)"
+              @click.stop="option.disabled ? selectFocus() : onChange(option[value], option[label], index)"
+            >
+              {{ option[label] }}
+            </p>
+          </Scrollbar>
+        </div>
+        <div
+          v-else-if="showOptions && filterOptions && !filterOptions.length"
+          class="select-options-panel options-empty"
+          @click.stop="selectFocus"
+          @mouseenter="disabledBlur = true"
+          @mouseleave="disabledBlur = false"
+        >
+          <Empty image="outlined" />
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 <style lang="less" scoped>
@@ -436,7 +458,7 @@ function onChange(value: string | number, label: string, index: number): void {
     }
   }
 }
-.m-select {
+.select-wrap {
   position: relative;
   display: inline-block;
   width: var(--select-width);
@@ -449,11 +471,11 @@ function onChange(value: string | number, label: string, index: number): void {
   transition: all 0.3s;
   &:not(.select-disabled):hover {
     // 悬浮时样式
-    .select-wrap {
+    .select-container {
       border-color: var(--select-primary-color-hover);
     }
   }
-  .select-wrap {
+  .select-container {
     position: relative;
     display: flex;
     padding: 0 11px;
@@ -558,70 +580,16 @@ function onChange(value: string | number, label: string, index: number): void {
       pointer-events: auto;
     }
   }
-  .select-options-panel {
-    position: absolute;
-    top: calc(var(--select-height) + 4px);
-    z-index: 1000;
-    width: 100%;
-    background-color: #fff;
-    border-radius: 8px;
-    outline: none;
-    cursor: auto;
-    box-shadow:
-      0 6px 16px 0 rgba(0, 0, 0, 0.08),
-      0 3px 6px -4px rgba(0, 0, 0, 0.12),
-      0 9px 28px 8px rgba(0, 0, 0, 0.05);
-    .select-option {
-      // 下拉项默认样式
-      min-height: 32px;
-      display: block;
-      padding: 5px 12px;
-      border-radius: 4px;
-      color: rgba(0, 0, 0, 0.88);
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 1.5714285714285714;
-      cursor: pointer;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      transition: background 0.3s ease;
-    }
-    .option-hover {
-      // 悬浮时的下拉项样式
-      background: rgba(0, 0, 0, 0.04);
-    }
-    .option-selected {
-      // 被选中的下拉项样式
-      font-weight: 600;
-      background: var(--select-item-bg-color-active);
-    }
-    .option-disabled {
-      // 禁用某个下拉选项时的样式
-      color: rgba(0, 0, 0, 0.25);
-      cursor: not-allowed;
-    }
-  }
-  .options-empty {
-    min-width: 112px;
-    padding: 9px 16px;
-    .m-empty {
-      margin-block: 8px;
-      :deep(.empty-image-wrap) {
-        height: 35px;
-      }
-    }
-  }
 }
 .select-focused:not(.select-disabled) {
   // 激活时样式
-  .select-wrap {
+  .select-container {
     border-color: var(--select-primary-color-focus);
     box-shadow: 0 0 0 2px var(--select-primary-shadow-color);
   }
 }
 .search-select {
-  .select-wrap {
+  .select-container {
     cursor: text;
     .select-search {
       .search-input {
@@ -634,7 +602,7 @@ function onChange(value: string | number, label: string, index: number): void {
 }
 .select-small {
   font-size: 14px;
-  .select-wrap {
+  .select-container {
     padding: 0 7px;
     border-radius: 4px;
     .select-search {
@@ -648,7 +616,7 @@ function onChange(value: string | number, label: string, index: number): void {
 }
 .select-large {
   font-size: 16px;
-  .select-wrap {
+  .select-container {
     padding: 0 11px;
     border-radius: 8px;
     .select-item {
@@ -657,7 +625,7 @@ function onChange(value: string | number, label: string, index: number): void {
   }
 }
 .select-disabled {
-  .select-wrap {
+  .select-container {
     // 下拉禁用样式
     color: rgba(0, 0, 0, 0.25);
     background: #f5f5f5;
@@ -665,6 +633,60 @@ function onChange(value: string | number, label: string, index: number): void {
     cursor: not-allowed;
     .select-search .search-input {
       cursor: not-allowed;
+    }
+  }
+}
+.select-options-panel {
+  position: absolute;
+  top: calc(var(--select-height) + 4px);
+  z-index: 1000;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 8px;
+  outline: none;
+  cursor: auto;
+  box-shadow:
+    0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  .select-option {
+    // 下拉项默认样式
+    min-height: 32px;
+    display: block;
+    padding: 5px 12px;
+    border-radius: 4px;
+    color: rgba(0, 0, 0, 0.88);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5714285714285714;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transition: background 0.3s ease;
+  }
+  .option-hover {
+    // 悬浮时的下拉项样式
+    background: rgba(0, 0, 0, 0.04);
+  }
+  .option-selected {
+    // 被选中的下拉项样式
+    font-weight: 600;
+    background: var(--select-item-bg-color-active);
+  }
+  .option-disabled {
+    // 禁用某个下拉选项时的样式
+    color: rgba(0, 0, 0, 0.25);
+    cursor: not-allowed;
+  }
+}
+.options-empty {
+  min-width: 112px;
+  padding: 9px 16px;
+  .m-empty {
+    margin-block: 8px;
+    :deep(.empty-image-wrap) {
+      height: 35px;
     }
   }
 }
