@@ -1,4 +1,4 @@
-// node_modules/.pnpm/swiper@11.2.5/node_modules/swiper/shared/ssr-window.esm.mjs
+// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/ssr-window.esm.mjs
 function isObject(obj) {
   return obj !== null && typeof obj === "object" && "constructor" in obj && obj.constructor === Object;
 }
@@ -148,7 +148,7 @@ function getWindow() {
   return win;
 }
 
-// node_modules/.pnpm/swiper@11.2.5/node_modules/swiper/shared/utils.mjs
+// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/utils.mjs
 function classesToTokens(classes) {
   if (classes === void 0) {
     classes = "";
@@ -461,6 +461,18 @@ function getRotateFix(swiper) {
     return v;
   };
 }
+function setInnerHTML(el, html) {
+  if (html === void 0) {
+    html = "";
+  }
+  if (typeof trustedTypes !== "undefined") {
+    el.innerHTML = trustedTypes.createPolicy("html", {
+      createHTML: (s) => s
+    }).createHTML(html);
+  } else {
+    el.innerHTML = html;
+  }
+}
 
 export {
   getDocument,
@@ -488,6 +500,7 @@ export {
   elementTransitionEnd,
   elementOuterSize,
   makeElementsArray,
-  getRotateFix
+  getRotateFix,
+  setInnerHTML
 };
-//# sourceMappingURL=chunk-QIBXB4V6.js.map
+//# sourceMappingURL=chunk-6G25GEVL.js.map

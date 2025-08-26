@@ -1,5 +1,4 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
