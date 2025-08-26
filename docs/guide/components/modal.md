@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*模态对话框*
+_模态对话框_
 
 ## 何时使用
 
@@ -248,7 +248,7 @@ function onKnow() {
 
 ## 基本使用
 
-*共有六种不同类型的模态框*
+_共有六种不同类型的模态框_
 
 <br/>
 
@@ -350,7 +350,7 @@ function onKnow() {
     <Button type="primary" @click="openConfirmModal">Confirm Modal</Button>
     <Button type="primary" @click="openEraseModal">Erase Modal</Button>
   </Space>
-  <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow"/>
+  <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow" />
 </template>
 ```
 
@@ -380,7 +380,7 @@ function openCustomPercentWidth() {
   modal.value.confirm({
     title: 'This is a custom percent width modal',
     content: 'Some descriptions ...',
-    width: '28%',
+    width: '28%'
   })
 }
 function onCancel() {
@@ -401,7 +401,7 @@ function onKnow() {
     <Button type="primary" @click="openCustomNumberWidth">Custom Number Width Modal</Button>
     <Button type="primary" @click="openCustomPercentWidth">Custom Percent Width Modal</Button>
   </Space>
-  <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow"/>
+  <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow" />
 </template>
 ```
 
@@ -425,14 +425,14 @@ function openCustomInfoIcon() {
   modal.value.info({
     title: 'This is a custom info icon modal',
     content: 'Some descriptions ...',
-    icon: h(CloudFilled),
+    icon: h(CloudFilled)
   })
 }
 function openCustomConfirmIcon() {
   modal.value.confirm({
     title: 'This is a custom confirm icon modal',
     content: 'Some descriptions ...',
-    icon: h(NotificationFilled, { style: 'color: #ff6900' }),
+    icon: h(NotificationFilled, { style: 'color: #ff6900' })
   })
 }
 function onCancel() {
@@ -453,7 +453,7 @@ function onKnow() {
     <Button type="primary" @click="openCustomInfoIcon">Custom Info Icon Modal</Button>
     <Button type="primary" @click="openCustomConfirmIcon">Custom Confirm Icon Modal</Button>
   </Space>
-  <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow"/>
+  <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow" />
 </template>
 ```
 
@@ -542,7 +542,7 @@ function onKnow() {
     <Button type="primary" @click="openCustomStyle">Custom Body & Mask Style Modal</Button>
     <Button type="primary" @click="openCustomTitleContentStyle">Custom Title & Content Style Modal</Button>
   </Space>
-  <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow"/>
+  <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow" />
 </template>
 <style lang="less" scoped>
 :deep(.custom-class) {
@@ -623,7 +623,7 @@ function onKnow() {
     <Button type="primary" @click="openCustomInfoBtn">Custom Info Btn Modal</Button>
     <Button type="primary" @click="openCustomConfirmBtns">Custom Confirm Btns Modal</Button>
   </Space>
-  <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow"/>
+  <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow" />
 </template>
 ```
 
@@ -685,7 +685,7 @@ function onKnow() {
     <Button type="primary" @click="openPercentFixed">Fixed Top Percent Modal</Button>
     <Button type="primary" @click="openVerticalCentered">Vertically Centered Modal</Button>
   </Space>
-  <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow"/>
+  <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow" />
 </template>
 ```
 
@@ -723,7 +723,7 @@ function onKnow() {
 </script>
 <template>
   <Button type="primary" @click="openTransformCenterModal">Transform Origin Center Modal</Button>
-  <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow"/>
+  <Modal ref="modal" @cancel="onCancel" @ok="onOk" @know="onKnow" />
 </template>
 ```
 
@@ -777,93 +777,93 @@ function onOk() {
 
 ### Modal
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-width | 模态框宽度，单位 `px` | string &#124; number | 420
-icon | 自定义图标 | VNode &#124; Slot | undefined
-title | 模态框标题 | string &#124; slot | undefined
-titleStyle | 自定义标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-content | 模态框内容 | string &#124; slot | undefined
-contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-bodyClass | 自定义 `body` 类名 | string | undefined
-bodyStyle | 自定义 `body` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-cancelText | 取消按钮文字 | string | '取消'
-cancelProps | 取消按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
-okText | 确认按钮文字 | string | '确定'
-okType | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'primary'
-okProps | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
-noticeText | 通知按钮文字 | string | '知道了'
-noticeProps | 通知按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
-destroyOnClose | 关闭时是否销毁 `Modal` 里的子元素 | boolean | false
-centered | 是否水平垂直居中，否则固定高度水平居中 | boolean | false
-top | 固定高度水平居中时，距顶部高度，仅当 `centered: false` 时生效，单位 `px` | string &#124; number | 100
-transformOrigin | 模态框动画出现的位置 | 'mouse' &#124; 'center' | 'mouse'
-confirmLoading | 确定按钮 `loading` | boolean | false
-blockScroll | 是否在打开模态框时禁用背景滚动 | boolean | true
-keyboard | 是否支持键盘 `esc` 关闭 | boolean | true
-maskClosable | 点击蒙层是否允许关闭 | boolean | true
-maskStyle | 自定义蒙层样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| width | 模态框宽度，单位 `px` | string &#124; number | 420 |
+| icon | 自定义图标 | VNode &#124; Slot | undefined |
+| title | 模态框标题 | string &#124; slot | undefined |
+| titleStyle | 自定义标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| content | 模态框内容 | string &#124; slot | undefined |
+| contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| bodyClass | 自定义 `body` 类名 | string | undefined |
+| bodyStyle | 自定义 `body` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| cancelText | 取消按钮文字 | string | '取消' |
+| cancelProps | 取消按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {} |
+| okText | 确认按钮文字 | string | '确定' |
+| okType | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'primary' |
+| okProps | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {} |
+| noticeText | 通知按钮文字 | string | '知道了' |
+| noticeProps | 通知按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {} |
+| destroyOnClose | 关闭时是否销毁 `Modal` 里的子元素 | boolean | false |
+| centered | 是否水平垂直居中，否则固定高度水平居中 | boolean | false |
+| top | 固定高度水平居中时，距顶部高度，仅当 `centered: false` 时生效，单位 `px` | string &#124; number | 100 |
+| transformOrigin | 模态框动画出现的位置 | 'mouse' &#124; 'center' | 'mouse' |
+| confirmLoading | 确定按钮 `loading` | boolean | false |
+| blockScroll | 是否在打开模态框时禁用背景滚动 | boolean | true |
+| keyboard | 是否支持键盘 `esc` 关闭 | boolean | true |
+| maskClosable | 点击蒙层是否允许关闭 | boolean | true |
+| maskStyle | 自定义蒙层样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 
 ### Modal Type
 
 <br/>
 
-*调用时传入的 `Modal` 类型，以下属性均具有更高优先级*
+_调用时传入的 `Modal` 类型，以下属性均具有更高优先级_
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-width? | 模态框宽度，单位 `px` | string &#124; number | undefined
-icon? | 自定义图标 | VNode | undefined
-title? | 模态框标题 | string | undefined
-titleStyle? | 自定义标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
-content? | 模态框内容 | string | undefined
-contentStyle? | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
-bodyClass? | 自定义 `body` 类名 | string | undefined
-bodyStyle? | 自定义 `body` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
-cancelText? | 取消按钮文字 | string | undefined
-cancelProps? | 取消按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | undefined
-okText? | 确认按钮文字 | string | undefined
-okType? | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | undefined
-okProps? | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | undefined
-noticeText? | 通知按钮文字 | string | undefined
-noticeProps? | 通知按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | undefined
-destroyOnClose? | 关闭时是否销毁 `Modal` 里的子元素 | boolean | undefined
-centered? | 是否水平垂直居中，否则固定高度水平居中 | boolean | undefined
-top? | 固定高度水平居中时，距顶部高度，仅当 `centered: false` 时生效，单位 `px` | string &#124; number | undefined
-transformOrigin? | 模态框动画出现的位置 | 'mouse' &#124; 'center' | undefined
-blockScroll? | 是否在打开模态框时禁用背景滚动 | boolean | undefined
-keyboard? | 是否支持键盘 `esc` 关闭 | boolean | undefined
-maskClosable? | 点击蒙层是否允许关闭 | boolean | undefined
-maskStyle? | 自定义蒙层样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
-onKnow? | 点击知道了按钮的回调 | Function | undefined
-onOk? | 点击确认按钮的回调 | Function | undefined
-onCancel? | 点击遮罩层或取消按钮的回调 | Function | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| width? | 模态框宽度，单位 `px` | string &#124; number | undefined |
+| icon? | 自定义图标 | VNode | undefined |
+| title? | 模态框标题 | string | undefined |
+| titleStyle? | 自定义标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
+| content? | 模态框内容 | string | undefined |
+| contentStyle? | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
+| bodyClass? | 自定义 `body` 类名 | string | undefined |
+| bodyStyle? | 自定义 `body` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
+| cancelText? | 取消按钮文字 | string | undefined |
+| cancelProps? | 取消按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | undefined |
+| okText? | 确认按钮文字 | string | undefined |
+| okType? | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | undefined |
+| okProps? | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | undefined |
+| noticeText? | 通知按钮文字 | string | undefined |
+| noticeProps? | 通知按钮 `props` 配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | undefined |
+| destroyOnClose? | 关闭时是否销毁 `Modal` 里的子元素 | boolean | undefined |
+| centered? | 是否水平垂直居中，否则固定高度水平居中 | boolean | undefined |
+| top? | 固定高度水平居中时，距顶部高度，仅当 `centered: false` 时生效，单位 `px` | string &#124; number | undefined |
+| transformOrigin? | 模态框动画出现的位置 | 'mouse' &#124; 'center' | undefined |
+| blockScroll? | 是否在打开模态框时禁用背景滚动 | boolean | undefined |
+| keyboard? | 是否支持键盘 `esc` 关闭 | boolean | undefined |
+| maskClosable? | 点击蒙层是否允许关闭 | boolean | undefined |
+| maskStyle? | 自定义蒙层样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
+| onKnow? | 点击知道了按钮的回调 | Function | undefined |
+| onOk? | 点击确认按钮的回调 | Function | undefined |
+| onCancel? | 点击遮罩层或取消按钮的回调 | Function | undefined |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-icon | 自定义图标 | v-slot:icon
-title | 自定义模态框标题 | v-slot:title
-default | 自定义模态框内容 | v-slot:default
+| 名称    | 说明             | 类型           |
+| :------ | :--------------- | :------------- |
+| icon    | 自定义图标       | v-slot:icon    |
+| title   | 自定义模态框标题 | v-slot:title   |
+| default | 自定义模态框内容 | v-slot:default |
 
 ## Methods
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-info | 信息提示模态框 | (data: [Modal](#modal-type)) => void
-success | 成功提示模态框 | (data: [Modal](#modal-type)) => void
-error | 错误提示模态框 | (data: [Modal](#modal-type)) => void
-warning | 警告提示模态框 | (data: [Modal](#modal-type)) => void
-erase | 删除提示模态框 | (data: [Modal](#modal-type)) => void
+| 名称    | 说明           | 类型                                 |
+| :------ | :------------- | :----------------------------------- |
+| info    | 信息提示模态框 | (data: [Modal](#modal-type)) => void |
+| success | 成功提示模态框 | (data: [Modal](#modal-type)) => void |
+| error   | 错误提示模态框 | (data: [Modal](#modal-type)) => void |
+| warning | 警告提示模态框 | (data: [Modal](#modal-type)) => void |
+| erase   | 删除提示模态框 | (data: [Modal](#modal-type)) => void |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-cancel | 点击蒙层或 `Esc` 键或取消按钮的回调 | () => void
-ok | 点击确定按钮的回调 | () => void
-know | 点击知道了按钮的回调 | () => void
+| 名称   | 说明                                | 类型       |
+| :----- | :---------------------------------- | :--------- |
+| cancel | 点击蒙层或 `Esc` 键或取消按钮的回调 | () => void |
+| ok     | 点击确定按钮的回调                  | () => void |
+| know   | 点击知道了按钮的回调                | () => void |
 
 ## 全局挂载使用
 
@@ -873,10 +873,9 @@ know | 点击知道了按钮的回调 | () => void
 
 ```vue
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-const modal = ref()
+const modalRef = useTemplateRef('modalRef')
 onMounted(() => {
-  window['$modal'] = modal.value
+  window['$modal'] = modalRef.value
 })
 onBeforeUnmount(() => {
   delete window['$modal']
@@ -884,7 +883,7 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <RouterView />
-  <Modal ref="modal" />
+  <Modal ref="modalRef" />
 </template>
 ```
 

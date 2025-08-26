@@ -39,7 +39,6 @@ const showContent = computed(() => {
     }"
     :keyboard="keyboard"
     :transition-duration="200"
-    v-bind="$attrs"
   >
     <template #tooltip>
       <div v-if="showTitle" class="popover-title" :class="{ mb8: showContent }" :style="titleStyle">

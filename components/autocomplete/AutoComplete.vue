@@ -1,10 +1,21 @@
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue'
+interface Option {
+  disabled?: boolean // 是否禁用
+  value: string | number // 唯一的 value 值
+  label: string // 显示的 label 值
+}
+interface GroupOption {
+  children?: (string | number | Option)[] // 子选项
+  label: string // label 文本
+  value: string | number // value 值
+  type?: 'group' // 选项的类型
+}
 export interface Props {
   allowClear?: boolean // 是否支持清除
   disabled?: boolean // 是否禁用
   placeholder?: string // 默认占位文本
-  options?: Option[] //	自动完成的数据源
+  options?: (string | number | Option | GroupOption)[] //	自动完成的数据源
   value: string // (v-model) 当前选中的条目
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -16,5 +27,10 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const emit = defineEmits(['close'])
 </script>
-<template></template>
-<style lang="less" scoped></style>
+<template>
+  <div class="auto-complete-wrap"></div>
+</template>
+<style lang="less" scoped>
+.auto-complete-wrap {
+}
+</style>

@@ -4,9 +4,73 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-08-22">2.4.18</VersionDateTag>
+
+- 优化更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html)、[加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html)、[文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，在初始未展示时不进行任何组件渲染，提升初始加载性能
+
+## <VersionDateTag date="2025-08-21">2.4.17</VersionDateTag>
+
+- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件代码逻辑，并在文档新增自定义设置弹出框挂载容器示例
+
+## <VersionDateTag date="2025-08-19">2.4.16</VersionDateTag>
+
+- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件拖动效果，修复不透明度拖动时位置偏差的问题
+
+## <VersionDateTag date="2025-08-18">2.4.15</VersionDateTag>
+
+- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，新增 `to` 属性，支持设置弹出框挂载的容器节点，默认挂载到 `body` 下
+- 优化组件库部分使用 `Tooltip` 组件的代码逻辑
+- 更新组件库部分依赖版本
+
+## <VersionDateTag date="2025-06-19">2.4.14</VersionDateTag>
+
+- 修复 [触摸滑动 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件，使用按需引入时样式版本引入错误的问题
+
+## <VersionDateTag date="2025-06-05">2.4.13</VersionDateTag>
+
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件部分代码逻辑，新增 `rowKey` 属性，用于支持设置表格内容行的唯一标识 `key`
+
+## <VersionDateTag date="2025-06-04">2.4.12</VersionDateTag>
+
+- 优化并更新 [瀑布流 Waterfall](https://themusecatcher.github.io/vue-amazing-ui/guide/components/waterfall.html) 组件代码逻辑
+
+## <VersionDateTag date="2025-06-02">2.4.11</VersionDateTag>
+
+- 优化并更新 [图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html) 组件，修复预览时图片居中的问题
+
+## <VersionDateTag date="2025-05-30">2.4.10</VersionDateTag>
+
+- 新增 [否支持事件监听器选项 useOptionsSupported](https://themusecatcher.github.io/vue-amazing-ui/utils/functions/options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
+- 更新组件库部分依赖版本
+
+## <VersionDateTag date="2025-05-29">2.4.9</VersionDateTag>
+
+- 新增 [否支持事件监听器选项 useOptionsSupported](https://themusecatcher.github.io/vue-amazing-ui/utils/functions/options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
+
+## <VersionDateTag date="2025-05-26">2.4.8</VersionDateTag>
+
+- 优化并更新 [图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html) 组件，优化图片已成功加载逻辑：兼容缓存加载以及使用 `SSG` 时 `@load` 事件偶尔无法正常触发的问题；新增 `previewSpinProps`，用于支持配置预览图片加载中样式
+
+## <VersionDateTag date="2025-05-23">2.4.7</VersionDateTag>
+
+- 修复 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html)、[搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html)、[文本域 Textarea](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textarea.html) 组件使用文本合成系统输入且带字数提示时字数统计的问题
+
+## <VersionDateTag date="2025-05-22">2.4.6</VersionDateTag>
+
+- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，优化自动查找最近的可滚动父元素代码逻辑
+- 优化并更新 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html) 组件，修复使用文本合成系统输入时的问题；新增 `compositionstart` `compositionend` 回调事件
+- 优化并更新 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html) 组件，修复使用文本合成系统输入时的问题；新增 `compositionstart` `compositionend` 回调事件
+- 优化并更新 [文本域 Textarea](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textarea.html) 组件，修复使用文本合成系统输入时的问题；新增 `compositionstart` `compositionend` 回调事件
+- 更新组件库文档及部分依赖版本
+
+## <VersionDateTag date="2025-05-06">2.4.5</VersionDateTag>
+
+- 优化并更新 [瀑布流 Waterfall](https://themusecatcher.github.io/vue-amazing-ui/guide/components/waterfall.html) 组件代码和瀑布流渲染逻辑
+- 更新组件库部分依赖版本
+
 ## <VersionDateTag date="2025-04-16">2.4.4</VersionDateTag>
 
-- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件水平滚动动画
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件水平滚动动画
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-03-27">2.4.3</VersionDateTag>
@@ -58,7 +122,7 @@
 ## <VersionDateTag date="2025-03-07">2.2.15</VersionDateTag>
 
 - 优化并更新 [日期选择 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件，新增颜色样式变量，用于支持自定义主题色
-- 优化并更新 [触摸滑动插件 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件，新增 `CSS` 变量，支持：自定义主题色；自定义切换动画效果
+- 优化并更新 [触摸滑动 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件，新增 `CSS` 变量，支持：自定义主题色；自定义切换动画效果
 
 ## <VersionDateTag date="2025-03-06">2.2.14</VersionDateTag>
 
@@ -148,7 +212,7 @@
 ## <VersionDateTag date="2025-02-14">2.2.3</VersionDateTag>
 
 - 优化并更新 [日期选择 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件样式和过渡动画效果；新增属性 `size`，支持设置日期选择组件大小
-- 优化并更新 [触摸滑动插件 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件过渡动画效果
+- 优化并更新 [触摸滑动 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件过渡动画效果
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-02-13">2.2.2</VersionDateTag>
@@ -156,7 +220,7 @@
 - 优化并更新 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件代码
 - 优化并更新 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件代码
 - 优化并更新 [通知提醒 Notification](https://themusecatcher.github.io/vue-amazing-ui/guide/components/notification.html) 组件代码
-- 优化并更新 [触摸滑动插件 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件代码
+- 优化并更新 [触摸滑动 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件代码
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-02-12">2.2.1</VersionDateTag>
@@ -251,7 +315,7 @@
 ## <VersionDateTag date="2025-01-07">2.0.7</VersionDateTag>
 
 - 优化并更新 [轮播图 Carousel](https://themusecatcher.github.io/vue-amazing-ui/guide/components/carousel.html) 组件，图片类型 `Image` 新增 `link` `target` 属性，支持：设置图片跳转链接；设置如何打开跳转链接
-- 优化并更新 [触摸滑动插件 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件，图片类型 `Image` 新增 `target` 属性，支持设置如何打开跳转链接
+- 优化并更新 [触摸滑动 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件，图片类型 `Image` 新增 `target` 属性，支持设置如何打开跳转链接
 - 优化并更新 [瀑布流 Waterfall](https://themusecatcher.github.io/vue-amazing-ui/guide/components/waterfall.html) 组件，图片类型 `Image` 新增 `link` `target` 属性，支持：设置图片跳转链接；设置如何打开跳转链接
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件；`rowSelection` 属性新增 `selectedRowKeys`，用于支持设置选中项的 `key` 数组，需和 `onChange` 配合使用
 

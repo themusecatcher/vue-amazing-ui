@@ -20,6 +20,7 @@ export interface Props {
   previewImageStyle?: CSSProperties // 自定义预览图片时 img 元素的样式
   spaceProps?: object // Space 组件属性配置，用于配置多张展示图片时的排列方式
   spinProps?: object // Spin 组件属性配置，用于配置图片加载中样式
+  previewSpinProps?: object // Spin 组件属性配置，用于配置预览图片加载中样式
   zoomRatio?: number // 每次缩放比率
   minZoomScale?: number // 最小缩放比例
   maxZoomScale?: number // 最大缩放比例
@@ -40,6 +41,7 @@ const props = withDefaults(defineProps<Props>(), {
   previewImageStyle: () => ({}),
   spaceProps: () => ({}),
   spinProps: () => ({}),
+  previewSpinProps: () => ({}),
   zoomRatio: 0.1,
   minZoomScale: 0.1,
   maxZoomScale: 10,
@@ -49,19 +51,23 @@ const props = withDefaults(defineProps<Props>(), {
   album: false
 })
 const images = ref<Image[]>([]) // 图片数组
-const previewRef = ref() // 预览 DOM 引用
-const previewIndex = ref(0) // 当前预览的图片索引
-const showPreview = ref(false) // 是否显示预览
-const rotate = ref(0) // 预览图片旋转角度
-const scale = ref(1) // 缩放比例
-const swapX = ref(1) // 水平镜像数值符号
-const swapY = ref(1) // 垂直镜像数值符号
-const sourceX = ref(0) // 拖动开始时位置
-const sourceY = ref(0) // 拖动开始时位置
-const dragX = ref(0) // 拖动横向距离
-const dragY = ref(0) // 拖动纵向距离
-const sourceDragX = ref(0) // 鼠标按下时图片的X轴偏移量
-const sourceDragY = ref(0) // 鼠标按下时图片的Y轴偏移量
+const previewRef = ref<HTMLElement | null>(null) // 预览 DOM 引用
+const previewIndex = ref<number>(0) // 当前预览的图片索引
+const showPreview = ref<boolean>(false) // 是否显示预览
+const imagesRef = ref<HTMLImageElement[]>([]) // 图片 DOM 引用
+const imagesCompleted = ref<boolean[]>([]) // 图片是否加载完成
+const previewImagesRef = ref<HTMLImageElement[]>([]) // 预览图片 DOM 引用
+const previewCompleted = ref<boolean[]>([]) // 预览图片是否加载完成
+const rotate = ref<number>(0) // 预览图片旋转角度
+const scale = ref<number>(1) // 缩放比例
+const swapX = ref<number>(1) // 水平镜像数值符号
+const swapY = ref<number>(1) // 垂直镜像数值符号
+const sourceX = ref<number>(0) // 拖动开始时位置
+const sourceY = ref<number>(0) // 拖动开始时位置
+const dragX = ref<number>(0) // 拖动横向距离
+const dragY = ref<number>(0) // 拖动纵向距离
+const sourceDragX = ref<number>(0) // 鼠标按下时图片的X轴偏移量
+const sourceDragY = ref<number>(0) // 鼠标按下时图片的Y轴偏移量
 const top = ref<number>(0) // 图片上边缘距浏览器窗口上边界的距离
 const bottom = ref<number>(0) // 图片下边缘距浏览器窗口上边界的距离
 const right = ref<number>(0) // 图片右边缘距浏览器窗口左边界的距离
@@ -75,12 +81,10 @@ const imageAmount = computed(() => {
 const dragTransitionDuration = computed(() => {
   return props.draggable ? '100ms' : '200ms'
 })
-const complete = ref(Array(imageAmount.value).fill(false)) // 图片是否加载完成
-const loaded = ref(Array(imageAmount.value).fill(false)) // 预览图片是否加载完成
 watchEffect(() => {
   images.value = getImages()
 })
-function getImages() {
+function getImages(): Image[] {
   if (Array.isArray(props.src)) {
     return props.src
   } else {
@@ -92,16 +96,16 @@ function getImages() {
     ]
   }
 }
-function onComplete(n: number) {
-  // 图片加载完成
-  complete.value[n] = true
+// 图片加载完成
+function onImageLoaded(index: number): void {
+  imagesCompleted.value[index] = true
 }
-function onLoaded(index: number) {
-  // 预览图片加载完成
-  loaded.value[index] = true
+// 预览图片加载完成（例如相册模式，可在预览中切换到未加载完成的图片）
+function onPreviewLoaded(index: number): void {
+  previewCompleted.value[index] = true
 }
-function getImageName(image: Image) {
-  // 从图像地址src中获取图像名称
+// 从图像地址 src 中获取图像名称
+function getImageName(image: Image): string | undefined {
   if (image) {
     if (image.name) {
       return image.name
@@ -124,7 +128,8 @@ function getImageSize(size: string | number | (string | number)[], index: number
     return size
   }
 }
-function onKeyboard(e: KeyboardEvent) {
+// 使用键盘切换图片
+function onKeyboard(e: KeyboardEvent): void {
   if (showPreview.value && imageAmount.value > 1) {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       onSwitchLeft()
@@ -134,7 +139,8 @@ function onKeyboard(e: KeyboardEvent) {
     }
   }
 }
-async function onPreview(index: number) {
+// 预览
+async function onPreview(index: number): Promise<void> {
   scale.value = 1
   rotate.value = 0
   dragX.value = 0
@@ -142,37 +148,38 @@ async function onPreview(index: number) {
   showPreview.value = true
   previewIndex.value = index
   await nextTick()
-  previewRef.value.focus()
+  previewRef.value?.focus()
 }
 defineExpose({
   preview: onPreview
 })
-function onClose() {
-  // 关闭
+// 关闭
+function onClose(): void {
   showPreview.value = false
 }
-function onDownload() {
+// 下载
+function onDownload(): void {
   const image = images.value[previewIndex.value]
   downloadFile(image.src, image.name)
 }
-function onZoomin() {
-  // 放大
+// 放大
+function onZoomin(): void {
   if (scale.value + props.zoomRatio > props.maxZoomScale) {
     scale.value = props.maxZoomScale
   } else {
     scale.value = add(scale.value, props.zoomRatio)
   }
 }
-function onZoomout() {
-  // 缩小
+// 缩小
+function onZoomout(): void {
   if (scale.value - props.zoomRatio < props.minZoomScale) {
     scale.value = props.minZoomScale
   } else {
     scale.value = add(scale.value, -props.zoomRatio)
   }
 }
-function onResetOrigin() {
-  // 重置图片为初始状态
+// 重置图片为初始状态
+function onResetOrigin(): void {
   scale.value = 1
   swapX.value = 1
   swapY.value = 1
@@ -180,22 +187,24 @@ function onResetOrigin() {
   dragX.value = 0
   dragY.value = 0
 }
-function onClockwiseRotate() {
-  // 顺时针旋转
+// 顺时针旋转
+function onClockwiseRotate(): void {
   rotate.value += 90
 }
-function onAnticlockwiseRotate() {
-  // 逆时针旋转
+// 逆时针旋转
+function onAnticlockwiseRotate(): void {
   rotate.value -= 90
 }
-function onHorizontalMirror() {
+// 水平镜像
+function onHorizontalMirror(): void {
   swapX.value *= -1
 }
-function onVerticalMirror() {
+// 垂直镜像
+function onVerticalMirror(): void {
   swapY.value *= -1
 }
+// 鼠标滚轮缩放
 function onWheel(e: WheelEvent) {
-  // 鼠标滚轮缩放
   // e.preventDefault() // 禁止浏览器捕获滑动事件
   const scrollZoom = e.deltaY * props.zoomRatio * 0.1 // 滚轮的纵向滚动量
   if (scale.value === props.minZoomScale && scrollZoom > 0) {
@@ -232,7 +241,7 @@ function handleMouseDown(e: MouseEvent) {
   handleMouseMove(e)
 }
 function handleMouseMove(e: MouseEvent) {
-  // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
+  // e.clientX 返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
   dragX.value = sourceDragX.value + e.clientX - sourceX.value
   dragY.value = sourceDragY.value + e.clientY - sourceY.value
 }
@@ -261,7 +270,8 @@ function handleMouseUp() {
   document.removeEventListener('mousemove', handleMouseMove)
   document.removeEventListener('mouseup', handleMouseUp)
 }
-function onSwitchLeft() {
+// 切换到上一张
+function onSwitchLeft(): void {
   if (props.loop) {
     previewIndex.value = (previewIndex.value - 1 + imageAmount.value) % imageAmount.value
   } else {
@@ -271,7 +281,8 @@ function onSwitchLeft() {
   }
   onResetOrigin()
 }
-function onSwitchRight() {
+// 切换到下一张
+function onSwitchRight(): void {
   if (props.loop) {
     previewIndex.value = (previewIndex.value + 1) % imageAmount.value
   } else {
@@ -286,24 +297,28 @@ function onSwitchRight() {
   <div class="m-image" :style="`--image-primary-color: ${colorPalettes[5]};`">
     <Space gap="small" v-bind="spaceProps">
       <div
-        v-show="!album || (album && index === 0)"
-        class="image-wrap"
-        :class="{ 'image-bordered': bordered, 'image-hover-mask': !disabled && complete[index] }"
-        :style="`width: ${getImageSize(props.width, index)}; height: ${getImageSize(props.height, index)};`"
         v-for="(image, index) in images"
         :key="index"
+        v-show="!album || (album && index === 0)"
+        class="image-wrap"
+        :class="{
+          'image-bordered': bordered,
+          'image-hover-mask': !disabled && (imagesCompleted[index] || imagesRef[index]?.naturalWidth)
+        }"
+        :style="`width: ${getImageSize(props.width, index)}; height: ${getImageSize(props.height, index)};`"
       >
         <Spin
-          :spinning="!complete[index]"
+          :spinning="!(imagesCompleted[index] || imagesRef[index]?.naturalWidth)"
           color="var(--image-primary-color)"
           indicator="dynamic-circle"
           size="small"
           v-bind="spinProps"
         >
           <img
+            ref="imagesRef"
             class="image-item"
             :style="`object-fit: ${fit};`"
-            @load="onComplete(index)"
+            @load="onImageLoaded(index)"
             :src="image.src"
             :alt="getImageName(image)"
           />
@@ -532,24 +547,32 @@ function onSwitchRight() {
             </div>
           </div>
           <div
-            class="preview-image-wrap"
-            :style="`--drag-transition-duration: ${dragTransitionDuration}; transform: translate3d(${dragX}px, ${dragY}px, 0px);`"
-            v-show="previewIndex === index"
             v-for="(image, index) in images"
             :key="index"
+            v-show="previewIndex === index"
+            class="preview-image-wrap"
+            :style="`--drag-transition-duration: ${dragTransitionDuration}; transform: translate3d(${dragX}px, ${dragY}px, 0px);`"
           >
-            <img
-              class="preview-image"
-              :style="[
-                previewImageStyle,
-                `transform: scale3d(${swapX * scale}, ${swapY * scale}, 1) rotate(${rotate}deg);`
-              ]"
-              :src="image.src"
-              :alt="getImageName(image)"
-              @mousedown.prevent="handleMouseDown"
-              @load="onLoaded(index)"
-              @dblclick="resetOnDbclick ? onResetOrigin() : () => false"
-            />
+            <Spin
+              :spinning="!(previewCompleted[index] || previewImagesRef[index]?.naturalWidth)"
+              color="var(--image-primary-color)"
+              indicator="dynamic-circle"
+              v-bind="previewSpinProps"
+            >
+              <img
+                ref="previewImagesRef"
+                class="preview-image"
+                :style="[
+                  previewImageStyle,
+                  `transform: scale3d(${swapX * scale}, ${swapY * scale}, 1) rotate(${rotate}deg);`
+                ]"
+                @load="onPreviewLoaded(index)"
+                :src="image.src"
+                :alt="getImageName(image)"
+                @mousedown.prevent="handleMouseDown"
+                @dblclick="resetOnDbclick ? onResetOrigin() : () => false"
+              />
+            </Spin>
           </div>
           <template v-if="imageAmount > 1">
             <div class="switch-left" :class="{ 'switch-disabled': previewIndex === 0 && !loop }" @click="onSwitchLeft">
@@ -797,9 +820,11 @@ function onSwitchRight() {
         z-index: 3;
         inset: 0;
         transition: transform var(--drag-transition-duration) cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        :deep(.spin-content) {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
         .preview-image {
           display: inline-block;
           vertical-align: middle;

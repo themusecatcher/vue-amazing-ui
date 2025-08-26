@@ -107,7 +107,7 @@ function onDrop(e: DragEvent, index: number) {
         break
       }
     }
-    // input的change事件默认保存上一次input的value值，同一value值(根据文件路径判断)在上传时不重新加载
+    // input 的 change 事件默认保存上一次 input 的 value 值，同一 value 值(根据文件路径判断)在上传时不重新加载
     uploadInputRef.value[index].value = ''
   }
   emits('drop', e)
@@ -127,7 +127,7 @@ function onUpload(e: any, index: number) {
         break
       }
     }
-    // input的change事件默认保存上一次input的value值，同一value值(根据文件路径判断)在上传时不重新加载
+    // input 的 change 事件默认保存上一次 input 的value 值，同一 value 值(根据文件路径判断)在上传时不重新加载
     uploadInputRef.value[index].value = ''
   }
 }
@@ -149,7 +149,7 @@ const uploadFile = async (file: File, index: number) => {
             // 如果是布尔值，根据值 resolve 或 reject
             result ? resolve(result) : reject(new Error('Function returned false'))
           } else {
-            // 否则，直接resolve返回值
+            // 否则，直接 resolve 返回值
             resolve(result)
           }
         }
@@ -181,8 +181,8 @@ const uploadFile = async (file: File, index: number) => {
     })
 }
 function base64Upload(file: File, index: number) {
-  var reader = new FileReader()
-  reader.readAsDataURL(file) // 以base64方式读取文件
+  const reader = new FileReader()
+  reader.readAsDataURL(file) // 以 base64 方式读取文件
   reader.onloadstart = function (e) {
     // 当读取操作开始时触发
     // reader.abort() // 取消上传
@@ -197,7 +197,7 @@ function base64Upload(file: File, index: number) {
     // console.log('读取错误 onerror:', e)
   }
   reader.onprogress = function (e) {
-    // 在读取Blob时触发，读取上传进度，50ms左右调用一次
+    // 在读取 Blob 时触发，读取上传进度，50ms 左右调用一次
     // console.log('读取中 onprogress:', e)
     // console.log('已读取:', Math.ceil(e.loaded / e.total * 100))
     if (e.loaded === e.total) {
@@ -208,7 +208,7 @@ function base64Upload(file: File, index: number) {
   reader.onload = function (e) {
     // 当读取操作成功完成时调用
     // console.log('读取成功 onload:', e)
-    // 该文件的base64数据，如果是图片，则前端可直接用来展示图片
+    // 该文件的 base64 数据，如果是图片，则前端可直接用来展示图片
     uploadedFiles.value.push({
       name: file.name,
       url: e.target?.result

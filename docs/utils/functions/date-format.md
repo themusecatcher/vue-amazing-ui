@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*格式化日期为指定格式的工具函数*
+_格式化日期为指定格式的工具函数_
 
 ::: details Show Source Code
 
@@ -10,9 +10,9 @@
 /**
  * 格式化日期时间字符串
  *
- * @param value 待格式化的日期时间值，支持数字、字符串和 Date 类型，默认为当前时间戳
- * @param format 格式化字符串，默认为'YYYY-MM-DD HH:mm:ss'，支持格式化参数：YY：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒
- * @returns 返回格式化后的日期时间字符串
+ * @param {number | string | Date} [value = Date.now()] 待格式化的日期时间值，支持数字、字符串和 Date 类型，默认为当前时间戳
+ * @param {string} [format = 'YYYY-MM-DD HH:mm:ss'] 格式化字符串，默认为'YYYY-MM-DD HH:mm:ss'，支持格式化参数：YY：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒
+ * @returns {string} 返回格式化后的日期时间字符串
  */
 export function dateFormat(value: number | string | Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss'): string {
   try {
@@ -77,7 +77,7 @@ import { dateFormat } from 'vue-amazing-ui'
 
 ## 基本使用
 
-*格式化时间戳*
+_格式化时间戳_
 
 <br/>
 
@@ -118,25 +118,25 @@ dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS')
 
 ## Params
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-value | 待格式化的日期时间值，支持数字、字符串和 `Date` 类型，默认为当前时间戳 | number &#124; string &#124; Date | Date.now()
-format | 格式化字符串 | string | 'YYYY-MM-DD HH:mm:ss'
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| value | 待格式化的日期时间值，支持数字、字符串和 `Date` 类型，默认为当前时间戳 | number &#124; string &#124; Date | Date.now() |
+| format | 格式化字符串 | string | 'YYYY-MM-DD HH:mm:ss' |
 
 ## format 支持的格式化占位符列表
 
-标识 | 示例 | 描述
--- | -- | --
-YY | 23 | 年，两位数
-YYYY | 2023 | 年，四位数
-M | 1-12 | 月，从1开始
-MM | 01-12 | 月，两位数
-D | 1-31 | 日
-DD | 01-31 | 日，两位数
-H | 0-23 | 小时
-HH | 00-23 | 小时，两位数
-m | 0-59 | 分钟
-mm | 00-59 | 分钟，两位数
-s | 0-59 | 秒
-ss | 00-59 | 秒，两位数
-SSS | 000-999 |毫秒，三位数
+| 标识 | 示例    | 描述         |
+| ---- | ------- | ------------ |
+| YY   | 23      | 年，两位数   |
+| YYYY | 2023    | 年，四位数   |
+| M    | 1-12    | 月，从1开始  |
+| MM   | 01-12   | 月，两位数   |
+| D    | 1-31    | 日           |
+| DD   | 01-31   | 日，两位数   |
+| H    | 0-23    | 小时         |
+| HH   | 00-23   | 小时，两位数 |
+| m    | 0-59    | 分钟         |
+| mm   | 00-59   | 分钟，两位数 |
+| s    | 0-59    | 秒           |
+| ss   | 00-59   | 秒，两位数   |
+| SSS  | 000-999 | 毫秒，三位数 |

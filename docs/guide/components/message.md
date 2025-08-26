@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*全局展示操作反馈信息*
+_全局展示操作反馈信息_
 
 ## 何时使用
 
@@ -100,8 +100,7 @@ function onClose() {
 }
 </script>
 
-<Message ref="message" @click="onClick" @close="onClose" />
-<Message ref="customMessage" @click="onClick" @close="onClose" />
+<Message ref="message" @click="onClick" @close="onClose" /> <Message ref="customMessage" @click="onClick" @close="onClose" />
 
 ## 基本使用
 
@@ -335,46 +334,46 @@ function onClose() {
 
 ### Message
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-content | 提示内容 | string | undefined
-duration | 自动关闭的延时，单位 `ms`，设置 `null` 时，不自动关闭 | number | 3000
-top | 消息距离顶部的位置，单位 `px` | string &#124; number | 30
+| 参数     | 说明                                                  | 类型                 | 默认值    |
+| :------- | :---------------------------------------------------- | :------------------- | :-------- |
+| content  | 提示内容                                              | string               | undefined |
+| duration | 自动关闭的延时，单位 `ms`，设置 `null` 时，不自动关闭 | number               | 3000      |
+| top      | 消息距离顶部的位置，单位 `px`                         | string &#124; number | 30        |
 
 ### Message Type
 
 <br/>
 
-*调用时传入的 `Message` 类型，以下属性均具有更高优先级*
+_调用时传入的 `Message` 类型，以下属性均具有更高优先级_
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-content? | 提示内容 | string | undefined
-icon? | 自定义图标 | VNode | undefined
-duration? | 自动关闭的延时时长，单位 `ms`；设置 `null` 时，不自动关闭 | number &#124; null | undefined
-top? | 消息距离顶部的位置，单位 `px` | string &#124; number | undefined
-class? | 自定义类名 | string | undefined
-style? | 自定义样式 | string | undefined
-onClick? | 点击 `message` 时的回调函数 | Function | undefined
-onClose? | 关闭时的回调函数 | Function | undefined
+| 名称      | 说明                                                      | 类型                 | 默认值    |
+| :-------- | :-------------------------------------------------------- | :------------------- | :-------- |
+| content?  | 提示内容                                                  | string               | undefined |
+| icon?     | 自定义图标                                                | VNode                | undefined |
+| duration? | 自动关闭的延时时长，单位 `ms`；设置 `null` 时，不自动关闭 | number &#124; null   | undefined |
+| top?      | 消息距离顶部的位置，单位 `px`                             | string &#124; number | undefined |
+| class?    | 自定义类名                                                | string               | undefined |
+| style?    | 自定义样式                                                | string               | undefined |
+| onClick?  | 点击 `message` 时的回调函数                               | Function             | undefined |
+| onClose?  | 关闭时的回调函数                                          | Function             | undefined |
 
 ## Methods
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-open | 基本全局提示 | (content: string &#124; [Message](#message-type)) => void
-info | 信息全局提示 | (content: string &#124; [Message](#message-type)) => void
-success | 成功全局提示 | (content: string &#124; [Message](#message-type)) => void
-error | 失败全局提示 | (content: string &#124; [Message](#message-type)) => void
-warning | 警告全局提示 | (content: string &#124; [Message](#message-type)) => void
-loading | 加载全局提示 | (content: string &#124; [Message](#message-type)) => void
+| 名称    | 说明         | 类型                                                      |
+| :------ | :----------- | :-------------------------------------------------------- |
+| open    | 基本全局提示 | (content: string &#124; [Message](#message-type)) => void |
+| info    | 信息全局提示 | (content: string &#124; [Message](#message-type)) => void |
+| success | 成功全局提示 | (content: string &#124; [Message](#message-type)) => void |
+| error   | 失败全局提示 | (content: string &#124; [Message](#message-type)) => void |
+| warning | 警告全局提示 | (content: string &#124; [Message](#message-type)) => void |
+| loading | 加载全局提示 | (content: string &#124; [Message](#message-type)) => void |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-click | 点击 `message` 时触发的回调函数 | (e: Event) => void
-close | 关闭时触发的回调函数 | () => void
+| 名称  | 说明                            | 类型               |
+| :---- | :------------------------------ | :----------------- |
+| click | 点击 `message` 时触发的回调函数 | (e: Event) => void |
+| close | 关闭时触发的回调函数            | () => void         |
 
 ## 全局挂载使用
 
@@ -384,10 +383,9 @@ close | 关闭时触发的回调函数 | () => void
 
 ```vue
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-const message = ref()
+const messageRef = useTemplateRef('messageRef')
 onMounted(() => {
-  window['$message'] = message.value
+  window['$message'] = messageRef.value
 })
 onBeforeUnmount(() => {
   delete window['$message']
@@ -395,7 +393,7 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <RouterView />
-  <Message ref="message" />
+  <Message ref="messageRef" />
 </template>
 ```
 

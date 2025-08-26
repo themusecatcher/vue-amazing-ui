@@ -3,6 +3,7 @@ import { ref, computed, watch, watchEffect, nextTick, onMounted, onUnmounted } f
 import type { CSSProperties } from 'vue'
 import Scrollbar from 'components/scrollbar'
 import Button from 'components/button'
+import { useOptionsSupported } from 'components/utils'
 export interface Props {
   width?: string | number // 对话框宽度，单位 px
   height?: string | number // 对话框高度，单位 px，默认自适应内容高度
@@ -63,8 +64,9 @@ const dialogRef = ref() // dialog DOM 引用
 const mousePosition = ref<{ x: number; y: number } | null>(null) // 鼠标点击位置
 const dialogOpen = ref<boolean>()
 const showDialogWrap = ref<boolean>()
-const transformOrigin = ref<string>('50% 50%')
+const dialogTransformOrigin = ref<string>('50% 50%')
 const fullscreen = ref<boolean>(false)
+const { isSupported: captureSupported } = useOptionsSupported('capture')
 const emits = defineEmits(['update:open', 'cancel', 'ok'])
 const dialogWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -94,19 +96,19 @@ const dialogStyle = computed(() => {
     } else {
       return {
         width: '100%',
-        transformOrigin: transformOrigin.value
+        transformOrigin: dialogTransformOrigin.value
       } as CSSProperties
     }
   } else {
     if (props.centered) {
       return {
         width: dialogWidth.value,
-        transformOrigin: transformOrigin.value
+        transformOrigin: dialogTransformOrigin.value
       } as CSSProperties
     } else {
       return {
         width: dialogWidth.value,
-        transformOrigin: transformOrigin.value,
+        transformOrigin: dialogTransformOrigin.value,
         top: dialogTop.value
       } as CSSProperties
     }
@@ -152,10 +154,10 @@ watchEffect(() => {
   dialogOpen.value = props.open
 })
 onMounted(() => {
-  document.addEventListener('click', getClickPosition, true) // 事件在捕获阶段执行
+  document.addEventListener('click', getClickPosition, captureSupported.value ? { capture: true } : true) // 事件在捕获阶段执行
 })
 onUnmounted(() => {
-  document.removeEventListener('click', getClickPosition, true)
+  document.removeEventListener('click', getClickPosition, captureSupported.value ? { capture: true } : true)
 })
 function getClickPosition(e: MouseEvent) {
   if (!dialogOpen.value) {
@@ -170,17 +172,17 @@ async function onBeforeEnter(el: Element) {
   await nextTick()
   if (props.transformOrigin === 'mouse' && mousePosition.value) {
     const rect = el.getBoundingClientRect()
-    transformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
+    dialogTransformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
   } else {
-    transformOrigin.value = '50% 50%'
+    dialogTransformOrigin.value = '50% 50%'
   }
 }
 function onBeforeLeave(el: Element) {
   if (props.transformOrigin === 'mouse' && mousePosition.value) {
     const rect = el.getBoundingClientRect()
-    transformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
+    dialogTransformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
   } else {
-    transformOrigin.value = '50% 50%'
+    dialogTransformOrigin.value = '50% 50%'
   }
 }
 function onAfterLeave() {

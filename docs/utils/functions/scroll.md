@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*实时监测目标元素滚动位置及状态的组合式函数*
+_实时监测目标元素滚动位置及状态的组合式函数_
 
 ::: details Show Source Code
 
@@ -12,11 +12,11 @@
  * 实时监测目标元素滚动位置及状态
  *
  * 自定义钩子用于处理滚动事件和状态
- * @param target 滚动目标元素，可以是 Ref、HTMLElement、Window 或 Document，默认为 window
- * @param throttleDelay 节流延迟，用于限制滚动事件的触发频率，默认为 0
- * @param onScroll 滚动事件的回调函数，可选
- * @param onStop 滚动结束的回调函数，可选
- * @returns 返回一个对象，包含滚动位置和各种状态信息
+ * @param {Ref | HTMLElement | Window | Document} [target = window] 滚动目标元素，可以是 Ref、HTMLElement、Window 或 Document，默认为 window
+ * @param {number} [throttleDelay = 0] 节流延迟，用于限制滚动事件的触发频率，默认为 0
+ * @param {(e: Event) => void} onScroll 滚动事件的回调函数，可选
+ * @param {(e: Event) => void} onStop 滚动结束的回调函数，可选
+ * @returns {{ x: Ref<number>, xScrollMax: Ref<number>, y: Ref<number>, yScrollMax: Ref<number>, isScrolling: Ref<boolean>, left: Ref<boolean>, right: Ref<boolean>, top: Ref<boolean>, bottom: Ref<boolean> }} 返回一个对象，包含滚动位置和各种状态信息
  */
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import type { Ref } from 'vue'
@@ -26,7 +26,17 @@ export function useScroll(
   throttleDelay: number = 0,
   onScroll?: (e: Event) => void,
   onStop?: (e: Event) => void
-) {
+): {
+  x: Ref<number>
+  xScrollMax: Ref<number>
+  y: Ref<number>
+  yScrollMax: Ref<number>
+  isScrolling: Ref<boolean>
+  left: Ref<boolean>
+  right: Ref<boolean>
+  top: Ref<boolean>
+  bottom: Ref<boolean>
+} {
   const x = ref(0) // 水平滚动距离
   const xScrollMax = ref(0) // 水平最大可滚动距离
   const y = ref(0) // 垂直滚动距离
@@ -90,8 +100,8 @@ export function useScroll(
           (to as HTMLElement)) as Element
         xScrollMax.value = el.scrollWidth - el.clientWidth
         yScrollMax.value = el.scrollHeight - el.clientHeight
-        el.addEventListener('scroll', throttleScroll)
-        el.addEventListener('scrollend', debounceScrollEnd)
+        el.addEventListener('scroll', throttleScroll as EventListener)
+        el.addEventListener('scrollend', debounceScrollEnd as EventListener)
       }
     },
     {
@@ -102,10 +112,10 @@ export function useScroll(
   // 清理函数，用于移除事件监听器
   function cleanup(target: any) {
     const el: Element = ((target as Window)?.document?.documentElement ||
-          (target as Document)?.documentElement ||
-          (target as HTMLElement)) as Element
-    el.removeEventListener('scroll', throttleScroll)
-    el.removeEventListener('scrollend', debounceScrollEnd)
+      (target as Document)?.documentElement ||
+      (target as HTMLElement)) as Element
+    el.removeEventListener('scroll', throttleScroll as EventListener)
+    el.removeEventListener('scrollend', debounceScrollEnd as EventListener)
   }
   // 在组件卸载前调用清理函数
   onBeforeUnmount(() => cleanup(scrollTarget.value))
@@ -181,7 +191,12 @@ function onStop(e: Event) {
 import { ref } from 'vue'
 import { useScroll } from 'vue-amazing-ui'
 const scrollRef = ref()
-const { x, xScrollMax, y, yScrollMax, isScrolling, left, right, top, bottom } = useScroll(scrollRef, 0, onScroll, onStop)
+const { x, xScrollMax, y, yScrollMax, isScrolling, left, right, top, bottom } = useScroll(
+  scrollRef,
+  0,
+  onScroll,
+  onStop
+)
 function onScroll(e: Event) {
   console.log('scroll', e)
 }
@@ -191,7 +206,7 @@ function onStop(e: Event) {
 </script>
 <template>
   <Flex justify="space-between">
-    <div class="scroll-container" ref="scrollRef" >
+    <div class="scroll-container" ref="scrollRef">
       <div class="scroll-content">
         <div class="inside-content">Scroll Me</div>
       </div>
@@ -238,9 +253,9 @@ function onStop(e: Event) {
 
 ## Params
 
-参数 | 说明 | 类型 | 默认值
--- | -- | -- | --
-target | 滚动目标元素 | Ref &#124; HTMLElement &#124; Window &#124; Document | window
-throttleDelay | 节流延迟时间，单位 `ms`，用于限制滚动事件的触发频率 | number | 0
-onScroll? | 滚动事件的回调函数 | (e: Event) => void | undefined
-onStop? | 滚动结束的回调函数 | (e: Event) => void | undefined
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| target | 滚动目标元素 | Ref &#124; HTMLElement &#124; Window &#124; Document | window |
+| throttleDelay | 节流延迟时间，单位 `ms`，用于限制滚动事件的触发频率 | number | 0 |
+| onScroll? | 滚动事件的回调函数 | (e: Event) => void | undefined |
+| onStop? | 滚动结束的回调函数 | (e: Event) => void | undefined |

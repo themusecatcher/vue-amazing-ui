@@ -32,7 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
   valueModifiers: () => ({})
 })
 const inputRef = ref() // input 模板引用
-const numValue = ref<string>()
+const numValue = ref<string>() // 数字输入框的内容
 const { colorPalettes, shadowColor } = useInject('InputNumber') // 主题色注入
 const emits = defineEmits(['update:value', 'change', 'enter'])
 const slotsExist = useSlotsExist(['prefix'])

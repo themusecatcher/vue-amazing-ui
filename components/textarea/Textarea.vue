@@ -24,8 +24,11 @@ const props = withDefaults(defineProps<Props>(), {
   valueModifiers: () => ({})
 })
 const textareaRef = ref<HTMLElement | null>(null) // textarea 元素引用
+const isComposing = ref<boolean>(false) // 是否正在使用文本合成系统输入中
+const textareaValue = ref<string>() // 文本域的值
 const areaHeight = ref<number>(32)
 const { colorPalettes, shadowColor } = useInject('Textarea') // 主题色注入
+const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'enter'])
 const textareaWidth = computed(() => {
   if (typeof props.width === 'number') {
     return `${props.width}px`
@@ -39,10 +42,10 @@ const autoSizeStyle = computed(() => {
       resize: 'none'
     }
     if ('minRows' in props.autoSize) {
-      style['min-height'] = (props.autoSize.minRows as number) * 22 + 10 + 'px'
+      style['min-height'] = `${(props.autoSize.minRows as number) * 22 + 10}px`
     }
     if ('maxRows' in props.autoSize) {
-      style['max-height'] = (props.autoSize.maxRows as number) * 22 + 10 + 'px'
+      style['max-height'] = `${(props.autoSize.maxRows as number) * 22 + 10}px`
     }
     return style
   }
@@ -57,20 +60,23 @@ const autoSizeStyle = computed(() => {
   }
 })
 const showClear = computed(() => {
-  return !props.disabled && props.allowClear && props.value
+  return !props.disabled && props.allowClear && textareaValue.value
 })
 const showCountNum = computed(() => {
   if (props.maxlength) {
-    return `${props.value.length} / ${props.maxlength}`
+    return `${textareaValue.value ? textareaValue.value.length : 0} / ${props.maxlength}`
   }
-  return props.value.length
+  return textareaValue.value ? textareaValue.value.length : 0
 })
 const lazyTextarea = computed(() => {
   return 'lazy' in props.valueModifiers
 })
 watch(
   () => props.value,
-  async () => {
+  async (to) => {
+    if (textareaValue.value !== to) {
+      textareaValue.value = to
+    }
     if (JSON.stringify(autoSizeStyle.value) !== '{}') {
       areaHeight.value = 32
       await nextTick()
@@ -78,6 +84,7 @@ watch(
     }
   },
   {
+    immediate: true,
     flush: 'post'
   }
 )
@@ -87,12 +94,26 @@ onMounted(() => {
 function getAreaHeight(): void {
   areaHeight.value = (textareaRef.value as HTMLElement).scrollHeight + 2
 }
-const emits = defineEmits(['update:value', 'change', 'enter'])
+// 文本合成系统即输入法编辑器开始新的输入合成时会触发
+function onCompositionStart(e: CompositionEvent): void {
+  isComposing.value = true
+  emits('compositionstart', e)
+}
+// 当文本段落的组成完成或取消时触发 (具有特殊字符的触发，需要一系列键和其他输入，如语音识别或移动中的字词建议)
+function onCompositionEnd(e: CompositionEvent): void {
+  isComposing.value = false
+  emits('compositionend', e)
+  const changeEvent = new Event('change')
+  e.target?.dispatchEvent(changeEvent)
+}
 function onInput(e: Event): void {
-  const target = e.target as HTMLInputElement
-  if (!lazyTextarea.value) {
-    emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
-    emits('change', e)
+  if (!isComposing.value) {
+    const target = e.target as HTMLInputElement
+    textareaValue.value = target.value
+    if (!lazyTextarea.value) {
+      emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
+      emits('change', e)
+    }
   }
 }
 function onChange(e: Event): void {
@@ -103,9 +124,13 @@ function onChange(e: Event): void {
   }
 }
 function onEnter(e: KeyboardEvent): void {
+  if (isComposing.value) {
+    return
+  }
   emits('enter', e)
 }
 function onClear(): void {
+  textareaValue.value = ''
   emits('update:value', '')
   textareaRef.value?.focus()
 }
@@ -128,10 +153,12 @@ function onClear(): void {
       class="textarea-item"
       :class="{ 'clear-class': showClear, 'textarea-disabled': disabled }"
       :style="autoSizeStyle"
-      :value="value"
+      :value="textareaValue"
       :placeholder="placeholder"
       :maxlength="maxlength"
       :disabled="disabled"
+      @compositionstart="onCompositionStart"
+      @compositionend="onCompositionEnd"
       @input="onInput"
       @change="onChange"
       @keydown.enter="onEnter"
