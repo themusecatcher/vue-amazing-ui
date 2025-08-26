@@ -1,6 +1,7 @@
 // 所有组件样式的路径映射
 const componentsMap = {
   Alert: 'alert',
+  AutoComplete: 'autocomplete',
   Avatar: 'avatar',
   BackTop: 'backtop',
   Badge: 'badge',
@@ -124,12 +125,12 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
   if (componentName === 'DatePicker') {
     // 特殊处理 DatePicker 组件样式依赖文件
     sideEffects.push(
-      `vue-amazing-ui/${type}/node_modules/.pnpm/@vuepic_vue-datepicker@11.0.2_vue@3.5.13_typescript@5.8.2_/node_modules/@vuepic/vue-datepicker/dist/main.css`
+      `vue-amazing-ui/${type}/node_modules/.pnpm/@vuepic_vue-datepicker@11.0.2_vue@3.5.18_typescript@5.9.2_/node_modules/@vuepic/vue-datepicker/dist/main.css`
     )
   }
   if (componentName === 'Swiper') {
     // 特殊处理 Swiper 组件样式依赖文件
-    sideEffects.push(`vue-amazing-ui/${type}/node_modules/.pnpm/swiper@11.2.5/node_modules/swiper/swiper.css`)
+    sideEffects.push(`vue-amazing-ui/${type}/node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/swiper.css`)
     const swiperModulesStyle = [
       'effect-cards',
       'effect-creative',
@@ -141,7 +142,7 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
     ]
     swiperModulesStyle.forEach((moduleName) => {
       sideEffects.push(
-        `vue-amazing-ui/${type}/node_modules/.pnpm/swiper@11.2.5/node_modules/swiper/modules/${moduleName}.css`
+        `vue-amazing-ui/${type}/node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/${moduleName}.css`
       )
     })
   }

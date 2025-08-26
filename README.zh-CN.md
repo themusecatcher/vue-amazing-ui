@@ -16,8 +16,8 @@
 
 ## 特性
 
-- 组件库采用 `Vue@3.5.13`+ `TypeScript@5.8.2` + `Vite@6.2.2` + `Less@4.2.2` 实现
-- 目前共包含 `67` 个基础 `UI` 组件以及 `17` 个工具函数，并且持续探索更新中...
+- 组件库采用 `Vue@3.5.18`+ `TypeScript@5.9.2` + `Vite@6.3.5` + `Less@4.4.0` 实现
+- 目前共包含 `67` 个基础 `UI` 组件以及 `18` 个工具函数，并且持续探索更新中...
 - 主题可调，你只需提供一个主题色，剩下的都交给我
 - 顺便一提，它们全都可以 `treeshaking`
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
@@ -40,7 +40,7 @@ bun add vue-amazing-ui
 
 **全局完整注册（不推荐）**
 
-*失去 `tree-shaking` 的能力，打包后有冗余代码*
+_失去 `tree-shaking` 的能力，打包后有冗余代码_
 
 ```ts
 import { createApp } from 'vue'
@@ -55,7 +55,7 @@ app.mount('#app')
 
 **全局部分注册**
 
-*这种情况下，只有导入的组件才会被打包*
+_这种情况下，只有导入的组件才会被打包_
 
 ```ts
 import { createApp } from 'vue'
@@ -71,7 +71,7 @@ app.mount('#app')
 
 **局部注册组件**
 
-*这种情况下，也只有导入的组件才会被打包*
+_这种情况下，也只有导入的组件才会被打包_
 
 ```vue
 <script setup lang="ts">
@@ -145,7 +145,7 @@ export default defineConfig({
 
 ## 使用类型
 
-*所有类型均可直接从 `vue-amazing-ui` 中引入使用，无需任何额外安装*
+_所有类型均可直接从 `vue-amazing-ui` 中引入使用，无需任何额外安装_
 
 ```vue
 <script setup lang="ts">
@@ -179,7 +179,8 @@ import {
   useMediaQuery,
   useResizeObserver,
   useSlotsExist,
-  useInject
+  useInject,
+  useOptionsSupported
 } from 'vue-amazing-ui'
 </script>
 ```
@@ -209,7 +210,7 @@ pnpm dev
 - 启动文档
 
 ```sh
-docs:dev
+pnpm docs:dev
 ```
 
 ## 博客
@@ -226,65 +227,66 @@ docs:dev
 
 所有的赞助者都将出现在此处，非常感谢你们的支持与赞助 ❤️
 
-<a href="https://github.com/themusecatcher" target="_blank"><img width="64" height="64" src="./docs/public/avatar.png" alt="GitHub@themusecatcher" title="GitHub@themusecatcher"></a> <img width="64" height="64" src="./docs/public/avatar_1.jpeg" alt="WeChat@Ant" title="WeChat@Ant" /> <a href="https://github.com/nizhensh-i" target="_blank"><img width="64" height="64" src="./docs/public/avatar_2.jpg" alt="GitHub@nizhensh-i" title="GitHub@nizhensh-i"></a> <a href="https://github.com/beijin1949" target="_blank"><img width="64" height="64" src="./docs/public/avatar_3.png" alt="GitHub@beijin1949" title="GitHub@beijin1949"></a>
+<a href="https://github.com/themusecatcher" target="_blank"><img width="64" height="64" src="./docs/public/avatar.png" alt="GitHub@themusecatcher" title="GitHub@themusecatcher"></a> <img width="64" height="64" src="./docs/public/avatar_1.jpeg" alt="WeChat@Ant" title="WeChat@Ant" /> <a href="https://github.com/nizhensh-i" target="_blank"><img width="64" height="64" src="./docs/public/avatar_2.jpg" alt="GitHub@nizhensh-i" title="GitHub@nizhensh-i"></a> <a href="https://github.com/beijin1949" target="_blank"><img width="64" height="64" src="./docs/public/avatar_3.png" alt="GitHub@beijin1949" title="GitHub@beijin1949"></a> <a href="https://github.com/JinZemin" target="_blank"><img width="64" height="64" src="./docs/public/avatar_4.png" alt="GitHub@JinZemin" title="GitHub@JinZemin"></a> <a href="hhttps://github.com/ye5840" target="_blank"><img width="64" height="64" src="./docs/public/avatar_5.png" alt="GitHub@ye5840" title="GitHub@ye5840"></a>
 
 ## 组件
 
-名称 | 说明 | 名称 | 说明
-:-- | :-- | :-- | :--
-Alert | 警告提示 | Avatar | 头像
-BackTop | 回到顶部 | Badge | 徽标
-Breadcrumb | 面包屑 | Button | 按钮
-Calendar | 日历 | Card | 卡片
-Carousel | 轮播图 | Cascader | 级联选择
-Checkbox | 复选框 | Collapse | 折叠面板
-ColorPicker | 颜色选择器 | ConfigProvider | 全局化配置
-Countdown | 倒计时 | DatePicker | 日期选择器
-Descriptions | 描述列表 | Dialog | 对话框
-Divider | 分割线 | Drawer | 抽屉
-Ellipsis | 文本省略 | Empty | 空状态
-Flex | 弹性布局 | FloatButton | 浮动按钮
-GradientText | 渐变文字 | Grid | 栅格
-Highlight | 高亮文本 | Image | 图片
-Input | 输入框 | InputNumber | 数字输入框
-InputSearch | 搜索框 | List | 列表
-LoadingBar | 加载条 | Message | 全局提示
-Modal | 模态框 | Notification | 通知提醒
-NumberAnimation | 数值动画 | Pagination | 分页
-Popconfirm | 弹出确认 | Popover | 气泡卡片
-Progress | 进度条 | QRCode | 二维码
-Radio | 单选框 | Rate | 评分
-Result | 结果 | Scrollbar | 滚动条
-Segmented | 分段控制器 | Select | 选择器
-Skeleton | 骨架屏 | Slider | 滑动输入条
-Space | 间距 | Spin | 加载中
-Statistic | 统计数值 | Steps | 步骤条
-Swiper | 触摸滑动插件 | Switch | 开关
-Table | 表格 | Tabs | 标签页
-Tag | 标签 | Textarea | 文本域
-TextScroll | 文字滚动 | Timeline | 时间轴
-Tooltip | 文字提示 | Upload | 上传
-Video | 播放器 | Waterfall | 瀑布流
-Watermark | 水印
+| 名称            | 说明       | 名称           | 说明       |
+| :-------------- | :--------- | :------------- | :--------- |
+| Alert           | 警告提示   | Avatar         | 头像       |
+| BackTop         | 回到顶部   | Badge          | 徽标       |
+| Breadcrumb      | 面包屑     | Button         | 按钮       |
+| Calendar        | 日历       | Card           | 卡片       |
+| Carousel        | 轮播图     | Cascader       | 级联选择   |
+| Checkbox        | 复选框     | Collapse       | 折叠面板   |
+| ColorPicker     | 颜色选择器 | ConfigProvider | 全局化配置 |
+| Countdown       | 倒计时     | DatePicker     | 日期选择器 |
+| Descriptions    | 描述列表   | Dialog         | 对话框     |
+| Divider         | 分割线     | Drawer         | 抽屉       |
+| Ellipsis        | 文本省略   | Empty          | 空状态     |
+| Flex            | 弹性布局   | FloatButton    | 浮动按钮   |
+| GradientText    | 渐变文字   | Grid           | 栅格       |
+| Highlight       | 高亮文本   | Image          | 图片       |
+| Input           | 输入框     | InputNumber    | 数字输入框 |
+| InputSearch     | 搜索框     | List           | 列表       |
+| LoadingBar      | 加载条     | Message        | 全局提示   |
+| Modal           | 模态框     | Notification   | 通知提醒   |
+| NumberAnimation | 数值动画   | Pagination     | 分页       |
+| Popconfirm      | 弹出确认   | Popover        | 气泡卡片   |
+| Progress        | 进度条     | QRCode         | 二维码     |
+| Radio           | 单选框     | Rate           | 评分       |
+| Result          | 结果       | Scrollbar      | 滚动条     |
+| Segmented       | 分段控制器 | Select         | 选择器     |
+| Skeleton        | 骨架屏     | Slider         | 滑动输入条 |
+| Space           | 间距       | Spin           | 加载中     |
+| Statistic       | 统计数值   | Steps          | 步骤条     |
+| Swiper          | 触摸滑动   | Switch         | 开关       |
+| Table           | 表格       | Tabs           | 标签页     |
+| Tag             | 标签       | Textarea       | 文本域     |
+| TextScroll      | 文字滚动   | Timeline       | 时间轴     |
+| Tooltip         | 文字提示   | Upload         | 上传       |
+| Video           | 播放器     | Waterfall      | 瀑布流     |
+| Watermark       | 水印       |
 
 ## 工具函数
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-dateFormat | 格式化日期时间字符串函数 | (value: number &#124; string &#124; Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss') => string
-formatNumber | 数字格式化函数 | (value: number &#124; string, precision: number = 2, separator: string = ',', decimal: string = '.', prefix?: string, suffix?: string) => string
-rafTimeout | 使用 `requestAnimationFrame` 实现的 `setTimeout` 或 `setInterval` 调用函数 | (fn: Function, delay: number = 0, interval: boolean = false) => object
-cancelRaf | 用于取消 `rafTimeout` 函数 | (raf: { id: number }) => void
-throttle | 节流函数 | (fn: Function, delay: number = 300) => any
-debounce | 防抖函数 | (fn: Function, delay: number = 300) => any
-add | 消除 `js` 加减精度问题的加法函数 | (num1: number, num2: number) => number
-downloadFile | 下载文件并自定义文件名，未传 `fileName` 时，从文件地址中自动提取文件名称 | (url: string, fileName?: string) => void
-toggleDark | 一键切换暗黑模式函数 | () => void
-useEventListener | 使用 `Vue` 的生命周期钩子添加和移除事件监听器 | (target: HTMLElement &#124; Window &#124; Document, event: string, callback: Function) => void
-useMutationObserver | 使用 `MutationObserver` 观察 `DOM` 元素的变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: MutationCallback, options = {}) => object
-useScroll | 实时监测目标元素滚动位置及状态 | (target: Ref &#124; HTMLElement &#124; Window &#124; Document = window, throttleDelay: number = 0, onScroll?: (e: Event) => void, onStop?: (e: Event) => void) => object
-useFps | 实时监测浏览器刷新率FPS | () => object
-useMediaQuery | 使用媒体查询来判断当前环境是否符合指定的媒体查询条件 | (mediaQuery: string) => object
-useResizeObserver | 使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options = {}) => object
-useSlotsExist | 监听给定名称或名称数组的插槽是否存在，支持监听单个插槽或一组插槽的存在 | (slotsName: string &#124; string[] = 'default') => Reactive &#124; Ref\<boolean>
-useInject | 使用依赖注入的函数，用于获取颜色调色板和阴影颜色 | (key: string) => { colorPalettes: Ref<string[]>; shadowColor: Ref<string> }
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| dateFormat | 格式化日期时间字符串函数 | (value: number &#124; string &#124; Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss') => string |
+| formatNumber | 数字格式化函数 | (value: number &#124; string, precision: number = 2, separator: string = ',', decimal: string = '.', prefix?: string, suffix?: string) => string |
+| rafTimeout | 使用 `requestAnimationFrame` 实现的延迟 `setTimeout` 或间隔 `setInterval` 调用函数 | (fn: Function, delay: number = 0, interval: boolean = false) => \{ id: number } |
+| cancelRaf | 用于取消 `rafTimeout` 函数 | (raf: { id: number }) => void |
+| throttle | 节流函数 | (fn: Function, delay: number = 300) => Function |
+| debounce | 防抖函数 | (fn: Function, delay: number = 300) => Function |
+| add | 消除 `js` 加减精度问题的加法函数 | (num1: number, num2: number) => number |
+| downloadFile | 下载文件并自定义文件名，未传 `fileName` 时，从文件地址中自动提取文件名称 | (url: string, fileName?: string) => void |
+| toggleDark | 一键切换暗黑模式函数 | () => void |
+| useEventListener | 使用 `Vue` 的生命周期钩子添加和移除事件监听器 | (target: HTMLElement &#124; Window &#124; Document, event: string, callback: Function) => void |
+| useMutationObserver | 使用 `MutationObserver` 观察 `DOM` 元素的变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: MutationCallback, options: object = {}) => { start: \() => void, stop: \() => void } |
+| useScroll | 实时监测目标元素滚动位置及状态 | (target: Ref &#124; HTMLElement &#124; Window &#124; Document = window, throttleDelay: number = 0, onScroll?: (e: Event) => void, onStop?: (e: Event) => void) => { x: Ref\<number>, xScrollMax: Ref\<number>, y: Ref\<number>, yScrollMax: Ref\<number>, isScrolling: Ref\<boolean>, left: Ref\<boolean>, right: Ref\<boolean>, top: Ref\<boolean>, bottom: Ref\<boolean> } |
+| useFps | 实时监测浏览器刷新率FPS | () => { fps: Ref\<number> } |
+| useMediaQuery | 使用媒体查询来判断当前环境是否符合指定的媒体查询条件 | (mediaQuery: string) => { match: Ref\<boolean> } |
+| useResizeObserver | 使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options: object = {}) => { start: \() => void, stop: \() => void } |
+| useSlotsExist | 监听给定名称或名称数组的插槽是否存在，支持监听单个插槽或一组插槽的存在 | <T extends string &#124; string[] = 'default'>(slotsName: T) => T extends string ? ComputedRef\<boolean> : Reactive\<Record\<string, ComputedRef\<boolean>>> |
+| useInject | 使用依赖注入的函数，用于获取颜色调色板和阴影颜色 | (key: string) => { colorPalettes: Ref\<string[]>, shadowColor: Ref\<string> } |
+| useOptionsSupported | 检查浏览器是否支持给定的事件监听器选项 | (prop: 'capture' &#124; 'once' &#124; 'passive' &#124; 'signal') => { isSupported: Ref\<boolean> } |

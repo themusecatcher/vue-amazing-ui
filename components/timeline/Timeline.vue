@@ -18,8 +18,8 @@ const props = withDefaults(defineProps<Props>(), {
   mode: 'left',
   position: 'left'
 })
+// 颜色主题对象
 enum ColorStyle {
-  // 颜色主题对象
   blue = '#1677ff',
   green = '#52c41a',
   red = '#ff4d4f',

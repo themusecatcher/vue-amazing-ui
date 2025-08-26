@@ -7,8 +7,7 @@ export default defineConfig({
 
   head: [
     // 网站图标
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: 'https://cn.vitejs.dev/viteconf.svg' }]
-    // ['link', { rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' }],
+    ['link', { rel: 'icon', href: '/vue-amazing-ui/amazing-icon.svg' }]
   ],
   appearance: true, // 默认 true，设为 false 则无法切换 dark/light 主题，可选 'dark' true false
   markdown: {
@@ -342,7 +341,7 @@ export default defineConfig({
               link: '/guide/components/steps'
             },
             {
-              text: '触摸滑动插件 Swiper',
+              text: '触摸滑动 Swiper',
               link: '/guide/components/swiper'
             },
             {
@@ -472,6 +471,10 @@ export default defineConfig({
             {
               text: 'useInject 获取注入数据',
               link: '/utils/functions/injection'
+            },
+            {
+              text: 'useOptionsSupported 否支持事件监听器选项',
+              link: '/utils/functions/options-supported'
             }
           ]
         }

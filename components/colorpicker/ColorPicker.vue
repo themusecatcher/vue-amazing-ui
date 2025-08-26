@@ -440,7 +440,6 @@ function handleUpdateAlpha(alpha: number): void {
 }
 // alpha slider mouse down
 function handleAlphaSliderMouseDown(e: MouseEvent): void {
-  if (!alphaRailRef.value || !rgbaComputed.value) return
   document.addEventListener('mousemove', handleAlphaSliderMouseMove)
   document.addEventListener('mouseup', handleAlphaSliderMouseUp)
   handleAlphaSliderMouseMove(e)
@@ -452,7 +451,7 @@ function normalizeAlpha(alpha: number): number {
 function handleAlphaSliderMouseMove(e: MouseEvent): void {
   if (!alphaRailRef.value) return
   const { width, left } = alphaRailRef.value.getBoundingClientRect()
-  const newAlpha = normalizeAlpha((e.clientX - left) / (width - HANDLE_SIZE_NUM))
+  const newAlpha = normalizeAlpha((e.clientX - left - BORDER_RADIUS_NUM) / (width - HANDLE_SIZE_NUM))
   handleUpdateAlpha(newAlpha)
 }
 function handleAlphaSliderMouseUp(): void {
@@ -932,6 +931,7 @@ function onClear() {
       .color-picker-slider {
         margin-bottom: 8px;
         position: relative;
+        cursor: pointer;
         &::after {
           content: '';
           position: absolute;

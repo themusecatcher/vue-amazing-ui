@@ -1,6 +1,6 @@
 {
   "name": "vue-amazing-ui",
-  "version": "2.4.4",
+  "version": "2.4.18",
   "private": false,
   "type": "module",
   "author": "theMuseCatcher",
@@ -38,15 +38,13 @@
   "jsdelivr": "dist/index.iife.js",
   "types": "es/index.d.ts",
   "exports": {
-    "./dist/*": "./dist/*",
-    "./es/*": "./es/*",
-    "./lib/*": "./lib/*",
-    "./css": "./dist/style.css",
     ".": {
       "types": "./es/index.d.ts",
       "import": "./es/index.js",
       "require": "./lib/index.cjs"
-    }
+    },
+    "./css": "./dist/style.css",
+    "./*": "./*"
   },
   "scripts": {
     "docs:dev": "vitepress dev docs --port 8000 --open",
@@ -64,49 +62,56 @@
     "build:browser": "vite build -- dir=dist f=iife",
     "build-only": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "prepare": "husky"
   },
   "dependencies": {
-    "@ant-design/colors": "^7.2.0",
+    "@ant-design/colors": "^8.0.0",
     "@ctrl/tinycolor": "^4.1.0",
     "@vuepic/vue-datepicker": "^11.0.2",
-    "@vueuse/core": "^13.0.0",
+    "@vueuse/core": "^13.6.0",
     "date-fns": "^4.1.0",
     "qrcode": "^1.5.4",
     "seemly": "^0.3.10",
-    "swiper": "^11.2.5"
+    "swiper": "^11.2.10"
   },
   "devDependencies": {
     "@ant-design/icons-vue": "^7.0.1",
-    "@tsconfig/node22": "^22.0.0",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@tsconfig/node22": "^22.0.2",
     "@types/minimist": "^1.2.5",
-    "@types/node": "^22.13.10",
+    "@types/node": "^24.3.0",
     "@types/qrcode": "^1.5.5",
-    "@vitejs/plugin-vue": "^5.2.3",
+    "@types/spark-md5": "^3.0.5",
+    "@vitejs/plugin-vue": "^5.2.4",
     "@vue/eslint-config-prettier": "^10.2.0",
-    "@vue/eslint-config-typescript": "^14.5.0",
+    "@vue/eslint-config-typescript": "^14.6.0",
     "@vue/tsconfig": "^0.7.0",
     "ant-design-vue": "^4.2.6",
-    "eslint": "^9.22.0",
-    "eslint-plugin-vue": "^10.0.0",
-    "less": "^4.2.2",
+    "eslint": "^9.33.0",
+    "eslint-plugin-vue": "^10.4.0",
+    "husky": "^9.1.7",
+    "less": "^4.4.0",
+    "lint-staged": "^16.1.5",
     "minimist": "^1.2.8",
-    "naive-ui": "^2.41.0",
-    "npm-run-all2": "^7.0.2",
-    "prettier": "^3.5.3",
+    "naive-ui": "^2.42.0",
+    "npm-run-all2": "^8.0.4",
+    "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
-    "rollup-plugin-visualizer": "^5.14.0",
-    "typescript": "^5.8.2",
-    "unplugin-auto-import": "^19.1.1",
-    "unplugin-vue-components": "^28.4.1",
-    "vite": "^6.2.2",
-    "vite-plugin-dts": "^4.5.3",
-    "vite-plugin-vue-devtools": "^7.7.2",
-    "vitepress": "^1.6.3",
-    "vue": "^3.5.13",
-    "vue-amazing-ui": "2.4.4",
-    "vue-router": "^4.5.0",
-    "vue-tsc": "^2.2.8"
+    "rollup-plugin-visualizer": "^6.0.3",
+    "spark-md5": "^3.0.2",
+    "typescript": "^5.9.2",
+    "unplugin-auto-import": "^20.0.0",
+    "unplugin-vue-components": "^29.0.0",
+    "vite": "^7.1.2",
+    "vite-plugin-dts": "^4.5.4",
+    "vite-plugin-vue-devtools": "^8.0.0",
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.18",
+    "vue-amazing-ui": "2.4.18",
+    "vue-router": "^4.5.1",
+    "vue-tsc": "^3.0.5"
   },
   "license": "MIT",
   "bugs": {
@@ -116,5 +121,22 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "lint-staged": {
+    "*.{js,ts}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.vue": [
+      "prettier --parser=vue --write",
+      "eslint --fix"
+    ],
+    "*.{html,css,less}": [
+      "prettier --write"
+    ],
+    "*.md": [
+      "prettier --write --parser markdown --prose-wrap never",
+      "eslint --fix"
+    ]
+  }
 }
