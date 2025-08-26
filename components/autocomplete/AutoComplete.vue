@@ -16,7 +16,5 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const emit = defineEmits(['close'])
 </script>
-<template>
-</template>
-<style lang="less" scoped>
-</style>
+<template></template>
+<style lang="less" scoped></style>

@@ -1,44 +1,160 @@
-import "./chunk-JVWSFFO4.js";
+import {
+  __publicField
+} from "./chunk-JVWSFFO4.js";
 
-// node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/typeof.js
-function _typeof(o) {
-  "@babel/helpers - typeof";
-  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o2) {
-    return typeof o2;
-  } : function(o2) {
-    return o2 && "function" == typeof Symbol && o2.constructor === Symbol && o2 !== Symbol.prototype ? "symbol" : typeof o2;
-  }, _typeof(o);
-}
+// node_modules/.pnpm/@ant-design+fast-color@3.0.0/node_modules/@ant-design/fast-color/es/presetColors.js
+var presetColors_default = {
+  aliceblue: "9ehhb",
+  antiquewhite: "9sgk7",
+  aqua: "1ekf",
+  aquamarine: "4zsno",
+  azure: "9eiv3",
+  beige: "9lhp8",
+  bisque: "9zg04",
+  black: "0",
+  blanchedalmond: "9zhe5",
+  blue: "73",
+  blueviolet: "5e31e",
+  brown: "6g016",
+  burlywood: "8ouiv",
+  cadetblue: "3qba8",
+  chartreuse: "4zshs",
+  chocolate: "87k0u",
+  coral: "9yvyo",
+  cornflowerblue: "3xael",
+  cornsilk: "9zjz0",
+  crimson: "8l4xo",
+  cyan: "1ekf",
+  darkblue: "3v",
+  darkcyan: "rkb",
+  darkgoldenrod: "776yz",
+  darkgray: "6mbhl",
+  darkgreen: "jr4",
+  darkgrey: "6mbhl",
+  darkkhaki: "7ehkb",
+  darkmagenta: "5f91n",
+  darkolivegreen: "3bzfz",
+  darkorange: "9yygw",
+  darkorchid: "5z6x8",
+  darkred: "5f8xs",
+  darksalmon: "9441m",
+  darkseagreen: "5lwgf",
+  darkslateblue: "2th1n",
+  darkslategray: "1ugcv",
+  darkslategrey: "1ugcv",
+  darkturquoise: "14up",
+  darkviolet: "5rw7n",
+  deeppink: "9yavn",
+  deepskyblue: "11xb",
+  dimgray: "442g9",
+  dimgrey: "442g9",
+  dodgerblue: "16xof",
+  firebrick: "6y7tu",
+  floralwhite: "9zkds",
+  forestgreen: "1cisi",
+  fuchsia: "9y70f",
+  gainsboro: "8m8kc",
+  ghostwhite: "9pq0v",
+  goldenrod: "8j4f4",
+  gold: "9zda8",
+  gray: "50i2o",
+  green: "pa8",
+  greenyellow: "6senj",
+  grey: "50i2o",
+  honeydew: "9eiuo",
+  hotpink: "9yrp0",
+  indianred: "80gnw",
+  indigo: "2xcoy",
+  ivory: "9zldc",
+  khaki: "9edu4",
+  lavenderblush: "9ziet",
+  lavender: "90c8q",
+  lawngreen: "4vk74",
+  lemonchiffon: "9zkct",
+  lightblue: "6s73a",
+  lightcoral: "9dtog",
+  lightcyan: "8s1rz",
+  lightgoldenrodyellow: "9sjiq",
+  lightgray: "89jo3",
+  lightgreen: "5nkwg",
+  lightgrey: "89jo3",
+  lightpink: "9z6wx",
+  lightsalmon: "9z2ii",
+  lightseagreen: "19xgq",
+  lightskyblue: "5arju",
+  lightslategray: "4nwk9",
+  lightslategrey: "4nwk9",
+  lightsteelblue: "6wau6",
+  lightyellow: "9zlcw",
+  lime: "1edc",
+  limegreen: "1zcxe",
+  linen: "9shk6",
+  magenta: "9y70f",
+  maroon: "4zsow",
+  mediumaquamarine: "40eju",
+  mediumblue: "5p",
+  mediumorchid: "79qkz",
+  mediumpurple: "5r3rv",
+  mediumseagreen: "2d9ip",
+  mediumslateblue: "4tcku",
+  mediumspringgreen: "1di2",
+  mediumturquoise: "2uabw",
+  mediumvioletred: "7rn9h",
+  midnightblue: "z980",
+  mintcream: "9ljp6",
+  mistyrose: "9zg0x",
+  moccasin: "9zfzp",
+  navajowhite: "9zest",
+  navy: "3k",
+  oldlace: "9wq92",
+  olive: "50hz4",
+  olivedrab: "472ub",
+  orange: "9z3eo",
+  orangered: "9ykg0",
+  orchid: "8iu3a",
+  palegoldenrod: "9bl4a",
+  palegreen: "5yw0o",
+  paleturquoise: "6v4ku",
+  palevioletred: "8k8lv",
+  papayawhip: "9zi6t",
+  peachpuff: "9ze0p",
+  peru: "80oqn",
+  pink: "9z8wb",
+  plum: "8nba5",
+  powderblue: "6wgdi",
+  purple: "4zssg",
+  rebeccapurple: "3zk49",
+  red: "9y6tc",
+  rosybrown: "7cv4f",
+  royalblue: "2jvtt",
+  saddlebrown: "5fmkz",
+  salmon: "9rvci",
+  sandybrown: "9jn1c",
+  seagreen: "1tdnb",
+  seashell: "9zje6",
+  sienna: "6973h",
+  silver: "7ir40",
+  skyblue: "5arjf",
+  slateblue: "45e4t",
+  slategray: "4e100",
+  slategrey: "4e100",
+  snow: "9zke2",
+  springgreen: "1egv",
+  steelblue: "2r1kk",
+  tan: "87yx8",
+  teal: "pds",
+  thistle: "8ggk8",
+  tomato: "9yqfb",
+  turquoise: "2j4r4",
+  violet: "9b10u",
+  wheat: "9ld4j",
+  white: "9zldr",
+  whitesmoke: "9lhpx",
+  yellow: "9zl6o",
+  yellowgreen: "61fzm"
+};
 
-// node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/toPrimitive.js
-function toPrimitive(t, r) {
-  if ("object" != _typeof(t) || !t) return t;
-  var e = t[Symbol.toPrimitive];
-  if (void 0 !== e) {
-    var i = e.call(t, r || "default");
-    if ("object" != _typeof(i)) return i;
-    throw new TypeError("@@toPrimitive must return a primitive value.");
-  }
-  return ("string" === r ? String : Number)(t);
-}
-
-// node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/toPropertyKey.js
-function toPropertyKey(t) {
-  var i = toPrimitive(t, "string");
-  return "symbol" == _typeof(i) ? i : i + "";
-}
-
-// node_modules/.pnpm/@babel+runtime@7.26.10/node_modules/@babel/runtime/helpers/esm/defineProperty.js
-function _defineProperty(e, r, t) {
-  return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
-    value: t,
-    enumerable: true,
-    configurable: true,
-    writable: true
-  }) : e[r] = t, e;
-}
-
-// node_modules/.pnpm/@ant-design+fast-color@2.0.6/node_modules/@ant-design/fast-color/es/FastColor.js
+// node_modules/.pnpm/@ant-design+fast-color@3.0.0/node_modules/@ant-design/fast-color/es/FastColor.js
 var round = Math.round;
 function splitColorStr(str, parseNum) {
   const match = str.replace(/^[^(]*\((.*)/, "$1").replace(/\).*/, "").match(/\d*\.?\d+%?/g) || [];
@@ -66,18 +182,35 @@ function limitRange(value, max) {
 }
 var FastColor = class _FastColor {
   constructor(input) {
-    _defineProperty(this, "isValid", true);
-    _defineProperty(this, "r", 0);
-    _defineProperty(this, "g", 0);
-    _defineProperty(this, "b", 0);
-    _defineProperty(this, "a", 1);
-    _defineProperty(this, "_h", void 0);
-    _defineProperty(this, "_s", void 0);
-    _defineProperty(this, "_l", void 0);
-    _defineProperty(this, "_v", void 0);
-    _defineProperty(this, "_max", void 0);
-    _defineProperty(this, "_min", void 0);
-    _defineProperty(this, "_brightness", void 0);
+    /**
+     * All FastColor objects are valid. So isValid is always true. This property is kept to be compatible with TinyColor.
+     */
+    __publicField(this, "isValid", true);
+    /**
+     * Red, R in RGB
+     */
+    __publicField(this, "r", 0);
+    /**
+     * Green, G in RGB
+     */
+    __publicField(this, "g", 0);
+    /**
+     * Blue, B in RGB
+     */
+    __publicField(this, "b", 0);
+    /**
+     * Alpha/Opacity, A in RGBA/HSLA
+     */
+    __publicField(this, "a", 1);
+    // HSV privates
+    __publicField(this, "_h");
+    __publicField(this, "_s");
+    __publicField(this, "_l");
+    __publicField(this, "_v");
+    // intermediate variables to calculate HSL/HSV
+    __publicField(this, "_max");
+    __publicField(this, "_min");
+    __publicField(this, "_brightness");
     function matchFormat(str) {
       return str[0] in input && str[1] in input && str[2] in input;
     }
@@ -95,6 +228,14 @@ var FastColor = class _FastColor {
         this.fromHslString(trimStr);
       } else if (matchPrefix("hsv") || matchPrefix("hsb")) {
         this.fromHsvString(trimStr);
+      } else {
+        const presetColor = presetColors_default[trimStr.toLowerCase()];
+        if (presetColor) {
+          this.fromHexString(
+            // Convert 36 hex to 16 hex
+            parseInt(presetColor, 36).toString(16).padStart(6, "0")
+          );
+        }
       }
     } else if (input instanceof _FastColor) {
       this.r = input.r;
@@ -510,7 +651,7 @@ var FastColor = class _FastColor {
   }
 };
 
-// node_modules/.pnpm/@ant-design+colors@7.2.0/node_modules/@ant-design/colors/es/generate.js
+// node_modules/.pnpm/@ant-design+colors@8.0.0/node_modules/@ant-design/colors/es/generate.js
 var hueStep = 2;
 var saturationStep = 0.16;
 var saturationStep2 = 0.05;
@@ -550,7 +691,7 @@ var darkColorMap = [{
   amount: 98
 }];
 function getHue(hsv, i, light) {
-  var hue;
+  let hue;
   if (Math.round(hsv.h) >= 60 && Math.round(hsv.h) <= 240) {
     hue = light ? Math.round(hsv.h) - hueStep * i : Math.round(hsv.h) + hueStep * i;
   } else {
@@ -567,7 +708,7 @@ function getSaturation(hsv, i, light) {
   if (hsv.h === 0 && hsv.s === 0) {
     return hsv.s;
   }
-  var saturation;
+  let saturation;
   if (light) {
     saturation = hsv.s - saturationStep * i;
   } else if (i === darkColorCount) {
@@ -587,7 +728,7 @@ function getSaturation(hsv, i, light) {
   return Math.round(saturation * 100) / 100;
 }
 function getValue(hsv, i, light) {
-  var value;
+  let value;
   if (light) {
     value = hsv.v + brightnessStep1 * i;
   } else {
@@ -596,13 +737,12 @@ function getValue(hsv, i, light) {
   value = Math.max(0, Math.min(1, value));
   return Math.round(value * 100) / 100;
 }
-function generate(color) {
-  var opts = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-  var patterns = [];
-  var pColor = new FastColor(color);
-  var hsv = pColor.toHsv();
-  for (var i = lightColorCount; i > 0; i -= 1) {
-    var c = new FastColor({
+function generate(color, opts = {}) {
+  const patterns = [];
+  const pColor = new FastColor(color);
+  const hsv = pColor.toHsv();
+  for (let i = lightColorCount; i > 0; i -= 1) {
+    const c = new FastColor({
       h: getHue(hsv, i, true),
       s: getSaturation(hsv, i, true),
       v: getValue(hsv, i, true)
@@ -610,26 +750,24 @@ function generate(color) {
     patterns.push(c);
   }
   patterns.push(pColor);
-  for (var _i = 1; _i <= darkColorCount; _i += 1) {
-    var _c = new FastColor({
-      h: getHue(hsv, _i),
-      s: getSaturation(hsv, _i),
-      v: getValue(hsv, _i)
+  for (let i = 1; i <= darkColorCount; i += 1) {
+    const c = new FastColor({
+      h: getHue(hsv, i),
+      s: getSaturation(hsv, i),
+      v: getValue(hsv, i)
     });
-    patterns.push(_c);
+    patterns.push(c);
   }
   if (opts.theme === "dark") {
-    return darkColorMap.map(function(_ref) {
-      var index = _ref.index, amount = _ref.amount;
-      return new FastColor(opts.backgroundColor || "#141414").mix(patterns[index], amount).toHexString();
-    });
+    return darkColorMap.map(({
+      index,
+      amount
+    }) => new FastColor(opts.backgroundColor || "#141414").mix(patterns[index], amount).toHexString());
   }
-  return patterns.map(function(c2) {
-    return c2.toHexString();
-  });
+  return patterns.map((c) => c.toHexString());
 }
 
-// node_modules/.pnpm/@ant-design+colors@7.2.0/node_modules/@ant-design/colors/es/presets.js
+// node_modules/.pnpm/@ant-design+colors@8.0.0/node_modules/@ant-design/colors/es/presets.js
 var presetPrimaryColors = {
   "red": "#F5222D",
   "volcano": "#FA541C",
