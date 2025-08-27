@@ -181,7 +181,7 @@ const uploadFile = async (file: File, index: number) => {
     })
 }
 function base64Upload(file: File, index: number) {
-  var reader = new FileReader()
+  const reader = new FileReader()
   reader.readAsDataURL(file) // 以 base64 方式读取文件
   reader.onloadstart = function (e) {
     // 当读取操作开始时触发
@@ -284,7 +284,7 @@ defineExpose({
 })
 </script>
 <template>
-  <div class="m-upload-wrap" :style="`--upload-primary-color: ${colorPalettes[5]};`">
+  <div class="upload-wrap" :style="`--upload-primary-color: ${colorPalettes[5]};`">
     <Space gap="small" v-bind="spaceProps">
       <div class="upload-item-panel" v-for="n of showUpload" :key="n">
         <div
@@ -419,7 +419,7 @@ defineExpose({
   </div>
 </template>
 <style lang="less" scoped>
-.m-upload-wrap {
+.upload-wrap {
   display: inline-block;
   width: 100%;
   .upload-item-panel {

@@ -294,13 +294,13 @@ function onSwitchRight(): void {
 }
 </script>
 <template>
-  <div class="m-image" :style="`--image-primary-color: ${colorPalettes[5]};`">
+  <div class="image-wrap" :style="`--image-primary-color: ${colorPalettes[5]};`">
     <Space gap="small" v-bind="spaceProps">
       <div
         v-for="(image, index) in images"
         :key="index"
         v-show="!album || (album && index === 0)"
-        class="image-wrap"
+        class="image-container"
         :class="{
           'image-bordered': bordered,
           'image-hover-mask': !disabled && (imagesCompleted[index] || imagesRef[index]?.naturalWidth)
@@ -361,7 +361,7 @@ function onSwitchRight(): void {
       <div
         v-show="showPreview"
         ref="previewRef"
-        class="preview-wrap"
+        class="preview-container"
         tabindex="-1"
         @click.self="onClose"
         @wheel.prevent="onWheel"
@@ -550,7 +550,7 @@ function onSwitchRight(): void {
             v-for="(image, index) in images"
             :key="index"
             v-show="previewIndex === index"
-            class="preview-image-wrap"
+            class="preview-image-container"
             :style="`--drag-transition-duration: ${dragTransitionDuration}; transform: translate3d(${dragX}px, ${dragY}px, 0px);`"
           >
             <Spin
@@ -670,7 +670,7 @@ function onSwitchRight(): void {
   }
 }
 
-.m-image {
+.image-wrap {
   display: inline-block;
   .image-hover-mask {
     &:hover {
@@ -680,7 +680,7 @@ function onSwitchRight(): void {
       }
     }
   }
-  .image-wrap {
+  .image-container {
     position: relative;
     display: inline-block;
     vertical-align: top;
@@ -736,7 +736,7 @@ function onSwitchRight(): void {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.45);
   }
-  .preview-wrap {
+  .preview-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -815,7 +815,7 @@ function onSwitchRight(): void {
           }
         }
       }
-      .preview-image-wrap {
+      .preview-image-container {
         position: absolute;
         z-index: 3;
         inset: 0;

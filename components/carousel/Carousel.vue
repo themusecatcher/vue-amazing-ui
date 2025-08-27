@@ -250,7 +250,7 @@ function onRightArrow(): void {
 const baseNumber = ref(0)
 const originNumber = ref(0) // 初始位置
 const distance = ref(0) // 滑动距离
-// @ts-ignore
+// @ts-expect-error useTransition error
 const cubicBezierNumber = useTransition(baseNumber, {
   duration: props.slideDuration, // 过渡动画时长
   transition: props.slideFunction // 过渡动画函数
@@ -383,7 +383,7 @@ defineExpose({
 <template>
   <div
     ref="carouselRef"
-    class="m-carousel"
+    class="carousel-wrap"
     :class="{ 'carousel-vertical': verticalSlide, 'carousel-fade': effect === 'fade' }"
     :style="`
       --carousel-width: ${carouselWidth};
@@ -486,7 +486,7 @@ defineExpose({
   </div>
 </template>
 <style lang="less" scoped>
-.m-carousel {
+.carousel-wrap {
   display: inline-block;
   width: var(--carousel-width);
   height: var(--carousel-height);

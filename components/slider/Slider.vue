@@ -127,7 +127,7 @@ const marksDot = computed(() => {
 })
 // 刻度标记位置数组
 const marksPosition = computed(() => {
-  let positions: number[] = []
+  const positions: number[] = []
   if (marksDot.value.length > 0) {
     marksDot.value.forEach((markValue: number) => {
       positions.push(getPositionFromValue(markValue))
@@ -363,7 +363,7 @@ function getTargetPosition(originalPosition: number, stepPosition: number): numb
 }
 // 点击滑动输入条任意位置
 function onClickSliderPoint(e: MouseEvent): void {
-  let {
+  const {
     originalPosition, // 鼠标点击位置
     stepPosition // 只考虑步长时将要移动的位置
   } = getSliderPosition(e)
@@ -426,7 +426,7 @@ function handleLowMouseDown(e: MouseEvent): void {
 }
 // 在滑动输入条上拖动较小数值滑块
 function handleLowMouseMove(e: MouseEvent): void {
-  let {
+  const {
     originalPosition, // 初始位置
     stepPosition // 只考虑步长时将要移动的位置
   } = getSliderPosition(e)
@@ -548,7 +548,7 @@ function isDotActive(value: number): boolean {
 function getMarkLabel(value: number): string | VNode | null {
   const mark = props.marks[value]
   const markIsObject = typeof mark === 'object' && !isVNode(mark)
-  let markLabel = markIsObject ? mark.label : mark
+  const markLabel = markIsObject ? mark.label : mark
   if (!markLabel) return null
   return typeof markLabel === 'function' ? markLabel() : markLabel
 }
@@ -658,7 +658,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
 <template>
   <div
     ref="sliderRef"
-    class="m-slider"
+    class="slider-wrap"
     :class="{
       'slider-horizontal': !vertical,
       'slider-vertical': vertical,
@@ -768,7 +768,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
   </div>
 </template>
 <style lang="less" scoped>
-.m-slider {
+.slider-wrap {
   position: relative;
   cursor: pointer;
   touch-action: none; // 禁用元素上的所有手势,使用自己的拖动和缩放api

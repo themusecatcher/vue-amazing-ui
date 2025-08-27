@@ -87,7 +87,7 @@ function maxRangeDisabledDates(date: Date): boolean {
 </script>
 <template>
   <VueDatePicker
-    class="m-datepicker"
+    class="datepicker-wrap"
     :class="{
       'datepicker-small': size === 'small',
       'datepicker-large': size === 'large'
@@ -120,7 +120,7 @@ function maxRangeDisabledDates(date: Date): boolean {
   />
 </template>
 <style lang="less" scoped>
-.m-datepicker {
+.datepicker-wrap {
   display: inline-block;
   width: var(--datepicker-width);
   :deep(.dp__input_wrap) {
@@ -199,7 +199,7 @@ function maxRangeDisabledDates(date: Date): boolean {
   }
 }
 // CSS variables
-.m-datepicker {
+.datepicker-wrap {
   /*General*/
   --dp-font-family:
     -apple-system, blinkmacsystemfont, 'Segoe UI', roboto, oxygen, ubuntu, cantarell, 'Open Sans', 'Helvetica Neue',

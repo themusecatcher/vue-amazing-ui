@@ -137,7 +137,7 @@ function onClear(): void {
 </script>
 <template>
   <div
-    class="m-textarea"
+    class="textarea-wrap"
     :class="{ 'show-count': showCount }"
     :style="`
       --textarea-width: ${textareaWidth};
@@ -182,7 +182,7 @@ function onClear(): void {
   </div>
 </template>
 <style lang="less" scoped>
-.m-textarea {
+.textarea-wrap {
   position: relative;
   display: inline-block;
   width: var(--textarea-width);

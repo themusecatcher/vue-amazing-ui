@@ -137,7 +137,7 @@ function onThirdChange(value: string | number, label: string): void {
 }
 </script>
 <template>
-  <div class="m-cascader" :style="`--cascader-select-gap: ${selectGap};`">
+  <div class="cascader-wrap" :style="`--cascader-select-gap: ${selectGap};`">
     <Select
       :options="firstOptions"
       :label="label"
@@ -192,7 +192,7 @@ function onThirdChange(value: string | number, label: string): void {
   </div>
 </template>
 <style lang="less" scoped>
-.m-cascader {
+.cascader-wrap {
   display: inline-flex;
   gap: var(--cascader-select-gap);
 }

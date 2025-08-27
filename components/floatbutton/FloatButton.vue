@@ -113,7 +113,7 @@ function onClick(e: Event) {
   <component
     :is="href ? 'a' : 'div'"
     tabindex="0"
-    class="m-float-btn"
+    class="float-btn-wrap"
     :class="`float-btn-${type} float-btn-${shape}`"
     :style="`
       --float-btn-width: ${floatBtnWidth};
@@ -207,7 +207,7 @@ function onClick(e: Event) {
   transform-origin: 0 0;
   opacity: 0;
 }
-.m-float-btn {
+.float-btn-wrap {
   position: fixed;
   left: var(--float-btn-left);
   right: var(--float-btn-right);
@@ -235,11 +235,11 @@ function onClick(e: Event) {
     :deep(.tooltip-content) {
       width: 100%;
       height: 100%;
-      .m-badge {
+      .badge-wrap {
         vertical-align: top;
         width: 100%;
         height: 100%;
-        .m-badge-value:not(.only-dot) {
+        .badge-value:not(.only-dot) {
           transform: translate(0, 0);
           transform-origin: center;
           top: -6px;
@@ -286,7 +286,7 @@ function onClick(e: Event) {
     bottom: 100%;
     display: block;
     z-index: -1;
-    .m-float-btn {
+    .float-btn-wrap {
       position: static;
     }
     & > * {
@@ -346,7 +346,7 @@ function onClick(e: Event) {
 }
 .float-btn-circle {
   border-radius: 50%;
-  :deep(.m-badge) {
+  :deep(.badge-wrap) {
     .only-dot {
       top: 5.857864376269049px;
       right: 5.857864376269049px;
@@ -362,7 +362,7 @@ function onClick(e: Event) {
   height: auto;
   min-height: var(--float-btn-height);
   border-radius: 8px;
-  :deep(.m-badge) {
+  :deep(.badge-wrap) {
     .only-dot {
       top: 2.3431457505076194px;
       right: 2.3431457505076194px;
