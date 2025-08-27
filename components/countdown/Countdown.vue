@@ -125,46 +125,51 @@ function padZero(value: number, targetLength: number = 2): string {
 function timeFormat(time: number): string {
   let showTime = props.format
   if (showType.value.showMillisecond) {
-    var millisecond = time % 1000
+    const millisecond = time % 1000
     showTime = showTime.replace('SSS', padZero(millisecond, 3))
   }
   time = Math.floor(time / 1000) // 将时间转为 s 为单位
+  let Y
   if (showType.value.showYear) {
-    var Y = Math.floor(time / (60 * 60 * 24 * 30 * 12))
+    Y = Math.floor(time / (60 * 60 * 24 * 30 * 12))
     showTime = showTime.includes('YY') ? showTime.replace('YY', padZero(Y)) : showTime.replace('Y', String(Y))
   } else {
-    var Y = 0
+    Y = 0
   }
+  let M
   if (showType.value.showMonth) {
     time = time - Y * 60 * 60 * 24 * 30 * 12
-    var M = Math.floor(time / (60 * 60 * 24 * 30))
+    M = Math.floor(time / (60 * 60 * 24 * 30))
     showTime = showTime.includes('MM') ? showTime.replace('MM', padZero(M)) : showTime.replace('M', String(M))
   } else {
-    var M = 0
+    M = 0
   }
+  let D
   if (showType.value.showDay) {
     time = time - M * 60 * 60 * 24 * 30
-    var D = Math.floor(time / (60 * 60 * 24))
+    D = Math.floor(time / (60 * 60 * 24))
     showTime = showTime.includes('DD') ? showTime.replace('DD', padZero(D)) : showTime.replace('D', String(D))
   } else {
-    var D = 0
+    D = 0
   }
+  let H
   if (showType.value.showHour) {
     time = time - D * 60 * 60 * 24
-    var H = Math.floor(time / (60 * 60))
+    H = Math.floor(time / (60 * 60))
     showTime = showTime.includes('HH') ? showTime.replace('HH', padZero(H)) : showTime.replace('H', String(H))
   } else {
-    var H = 0
+    H = 0
   }
+  let m
   if (showType.value.showMinute) {
     time = time - H * 60 * 60
-    var m = Math.floor(time / 60)
+    m = Math.floor(time / 60)
     showTime = showTime.includes('mm') ? showTime.replace('mm', padZero(m)) : showTime.replace('m', String(m))
   } else {
-    var m = 0
+    m = 0
   }
   if (showType.value.showSecond) {
-    var s = time - m * 60
+    const s = time - m * 60
     showTime = showTime.includes('ss') ? showTime.replace('ss', padZero(s)) : showTime.replace('s', String(s))
   }
   return showTime
