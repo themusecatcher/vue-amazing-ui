@@ -57,7 +57,7 @@ const tooltipTimer = ref() // tooltip 延迟显示隐藏的定时器标识符
 const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
 const cardTop = ref<number>(0) // 弹出框相对于 tooltipContent 的垂直位置
 const cardLeft = ref<number>(0) // 弹出框相对于 tooltipContent 的水平位置
-const tooltipPlace = ref<string>('top') // 文字提示位置
+const tooltipPlace = ref<'top' | 'bottom' | 'left' | 'right'>('top') // 弹出框位置
 const tooltipContentRef = ref<HTMLElement | null>(null) // tooltipContent 模板引用
 const tooltipContentRect = ref<DOMRect>() // tooltipContent 元素的大小及其相对于视口的位置
 const tooltipRef = ref<HTMLElement | null>(null) // tooltip 模板引用
@@ -161,7 +161,7 @@ onBeforeUnmount(() => {
   cleanup()
 })
 useEventListener(window, 'resize', getViewportSize)
-// 监听 tooltipCard 和 tooltipContent 的尺寸变化，更新文字提示位置
+// 监听 tooltipCard 和 tooltipContent 的尺寸变化，更新弹出框位置
 useResizeObserver([tooltipCardRef, tooltipContentRef], (entries: ResizeObserverEntry[]) => {
   // 排除 tooltipCard 显示过渡动画时的尺寸变化
   if (!(showTooltip.value && tooltipShow.value)) return
@@ -264,7 +264,7 @@ async function getPosition() {
 }
 // 获取可滚动父元素或视口的矩形信息
 function getShelterRect() {
-  if (scrollTarget.value && scrollTarget.value !== document.documentElement) {
+  if (scrollTarget.value) {
     return scrollTarget.value.getBoundingClientRect()
   }
   return {
@@ -275,7 +275,7 @@ function getShelterRect() {
   }
 }
 // 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
-function getPlacement(): string {
+function getPlacement(): 'top' | 'bottom' | 'left' | 'right' {
   const { top, bottom, left, right } = tooltipContentRect.value as DOMRect // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
   const { top: targetTop, bottom: targetBottom, left: targetLeft, right: targetRight } = getShelterRect() // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
   const topDistance = top - targetTop - (props.arrow ? 12 : 0) // 内容元素上边缘距离滚动元素上边缘的距离
@@ -288,7 +288,7 @@ function getPlacement(): string {
     ((tooltipCardRect.value as DOMRect).height - (tooltipContentRect.value as DOMRect).height) / 2 // 垂直方向容纳文字提示需要的最小高度
   return findPlace(props.placement, [])
   // 查询满足条件的 place，如果没有，则返回默认值
-  function findPlace(place: string, disabledPlaces: string[]): string {
+  function findPlace(place: string, disabledPlaces: string[]): 'top' | 'bottom' | 'left' | 'right' {
     if (place === 'top') {
       if (!disabledPlaces.includes('top')) {
         if (
@@ -527,10 +527,6 @@ defineExpose({
   </div>
 </template>
 <style lang="less" scoped>
-.m-tooltip-wrap {
-  position: relative;
-  display: inline-block;
-}
 .zoom-enter {
   transform: none;
   opacity: 0;
