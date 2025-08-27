@@ -21,8 +21,8 @@ fi
 
 git push
 
-# 发布到 npm，pnpm(高性能的npm)
-pnpm publish
+# 发布到 npm
+npm publish
 
 # 升级 vue-amazing-ui 依赖版本
 pnpm up vue-amazing-ui@$version
