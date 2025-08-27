@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch, nextTick } from 'vue'
+import { ref, computed, watchEffect, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
 import Empty from 'components/empty'
 import Scrollbar from 'components/scrollbar'
-import { useInject } from 'components/utils'
+import { useEventListener, useInject, useOptionsSupported } from 'components/utils'
 export interface Option {
   label?: string // 选项名
   value?: string | number // 选项值
@@ -21,11 +21,14 @@ export interface Props {
   size?: 'small' | 'middle' | 'large' // 选择器大小
   allowClear?: boolean // 是否支持清除
   search?: boolean // 是否支持搜索
+  filter?: Function | true // 过滤条件函数，仅当支持搜索时生效
+  placement?: 'bottom' | 'top' // 下拉面板弹出位置
+  flip?: boolean // 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
+  to?: string | HTMLElement | false // 下拉面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   /*
     根据输入项进行筛选，默认为 true 时，筛选每个选项的文本字段 label 是否包含输入项，包含返回 true，反之返回 false
     当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
   */
-  filter?: Function | true // 过滤条件函数，仅当支持搜索时生效
   maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
   scrollbarProps?: object // 下拉面板滚动条 scrollbar 组件属性配置
   modelValue?: number | string // (v-model) 当前选中的 option 条目值
@@ -42,26 +45,40 @@ const props = withDefaults(defineProps<Props>(), {
   allowClear: false,
   search: false,
   filter: true,
+  placement: 'bottom',
+  flip: true,
+  to: 'body',
   maxDisplay: 6,
   scrollbarProps: () => ({}),
   modelValue: undefined
 })
-const filterOptions = ref<Option[]>() // 过滤后的选项数组
+const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
+const filterOptions = ref<Option[]>([]) // 过滤后的选项数组
 const selectedName = ref() // 当前选中选项的 label
 const inputRef = ref<HTMLElement | null>(null) // input 元素引用
 const inputValue = ref() // 支持搜索时，用户输入内容
-const disabledBlur = ref(false) // 是否禁用 input 标签的 blur 事件
-const hideSelectName = ref(false) // 用户输入时，隐藏 selectName 的展示
+const disabledBlur = ref<boolean>(false) // 是否禁用 input 标签的 blur 事件
+const hideSelectName = ref<boolean>(false) // 用户输入时，隐藏 selectName 的展示
 const hoverValue = ref() // 鼠标悬浮项的 value 值
-const scrollbarRef = ref() // 下拉面板滚动条 DOM 引用
-const scrollTop = ref(0) // 下拉面板滚动条滚动高度
-const showOptions = ref(false) // 显示隐藏 options 面板
-const showArrow = ref(true) // 剪头图标显隐
-const showClear = ref(false) // 清除图标显隐
-const showCaret = ref(false) // 支持搜索时，输入光标的显隐
-const showSearch = ref(false) // 搜索图标显隐
-const selectFocused = ref(false) /// select 是否聚焦
+const showOptions = ref<boolean>(false) // 显示隐藏 options 面板
+const showArrow = ref<boolean>(true) // 剪头图标显隐
+const showClear = ref<boolean>(false) // 清除图标显隐
+const showCaret = ref<boolean>(false) // 支持搜索时，输入光标的显隐
+const showSearch = ref<boolean>(false) // 搜索图标显隐
+const selectFocused = ref<boolean>(false) /// select 是否聚焦
 const { colorPalettes, shadowColor } = useInject('Select') // 主题色注入
+const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
+const panelOffset = ref<number>(0) // 下拉面板相对于 selectContent 的垂直偏移距离
+const panelPlace = ref<'bottom' | 'top'>('bottom') // 下拉面板位置
+const selectContentRef = ref<HTMLElement | null>(null) // selectContent 模板引用
+const selectContentRect = ref<DOMRect>() // selectContent 元素的大小及其相对于视口的位置
+const positionedContainer = ref<HTMLElement | null>(null) // 下拉面板相对定位的容器元素
+const positionedContainerRect = ref<DOMRect>() // positionedContainer 元素的大小及其相对于视口的位置
+const selectPanelRef = ref<HTMLElement | null>(null) // 下拉面板 selectPanel 模板引用
+const selectPanelHeight = ref<number>() // 下拉面板 selectPanel 的高度
+const viewportWidth = ref<number>(document.documentElement.clientWidth) // 视口宽度(不包括滚动条)
+const viewportHeight = ref<number>(document.documentElement.clientHeight) // 视口高度(不包括滚动条)
+const { isSupported: passiveSupported } = useOptionsSupported('passive')
 const emits = defineEmits(['update:modelValue', 'change', 'openChange'])
 const selectWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -90,10 +107,68 @@ const optionsStyle = computed(() => {
   }
   return style
 })
+const panelPlacement = computed(() => {
+  const contentTop = (selectContentRect.value as DOMRect)?.top ?? 0
+  const containerTop = (positionedContainerRect.value as DOMRect)?.top ?? 0
+  const offsetTop = contentTop - containerTop
+  const contentBottom = (selectContentRect.value as DOMRect)?.bottom ?? 0
+  const containerBottom = (positionedContainerRect.value as DOMRect)?.bottom ?? 0
+  const offsetBottom = containerBottom - contentBottom
+  const contentLeft = (selectContentRect.value as DOMRect)?.left ?? 0
+  const containerLeft = (positionedContainerRect.value as DOMRect)?.left ?? 0
+  const offsetLeft = contentLeft - containerLeft
+  const panelWidth = (selectContentRect.value as DOMRect)?.width ?? 0
+  switch (panelPlace.value) {
+    case 'bottom':
+      return {
+        transformOrigin: '0 0',
+        top: `${offsetTop + panelOffset.value}px`,
+        left: `${offsetLeft}px`,
+        minWidth: `${panelWidth}px`,
+        width: `${panelWidth}px`
+      }
+    case 'top':
+      return {
+        transformOrigin: '100% 100%',
+        bottom: `${offsetBottom + panelOffset.value}px`,
+        left: `${offsetLeft}px`,
+        minWidth: `${panelWidth}px`,
+        width: `${panelWidth}px`
+      }
+    default:
+      return {
+        transformOrigin: '0 0',
+        top: `${offsetTop + panelOffset.value}px`,
+        left: `${offsetLeft}px`,
+        minWidth: `${panelWidth}px`,
+        width: `${panelWidth}px`
+      }
+  }
+})
+watch(
+  () => [props.placement, props.flip],
+  () => {
+    updatePosition()
+  },
+  {
+    deep: true
+  }
+)
+watch(showOptions, (to) => {
+  if (to && !initialDisplay.value) {
+    initialDisplay.value = true
+  }
+})
+watch(showOptions, (to) => {
+  emits('openChange', to)
+  if (props.search && !to) {
+    inputValue.value = undefined
+    hideSelectName.value = false
+  }
+})
 watchEffect(() => {
   if (props.search) {
     if (inputValue.value) {
-      showOptions.value = true
       filterOptions.value = props.options.filter((option) => {
         if (typeof props.filter === 'function') {
           return props.filter(inputValue.value, option)
@@ -102,7 +177,13 @@ watchEffect(() => {
         }
       })
     } else {
-      filterOptions.value = [...props.options]
+      if (showOptions.value) {
+        filterOptions.value = [...props.options]
+      } else {
+        setTimeout(() => {
+          filterOptions.value = [...props.options]
+        }, 200)
+      }
     }
     if (filterOptions.value.length && inputValue.value) {
       hoverValue.value = filterOptions.value[0][props.value]
@@ -114,29 +195,135 @@ watchEffect(() => {
   }
 })
 watchEffect(() => {
-  // 回调立即执行一次，同时会自动跟踪回调中所依赖的所有响应式依赖
   initSelector()
 })
-watch(showOptions, async (to) => {
-  if (isScrollable.value) {
-    if (!to) {
-      const scrollData = scrollbarRef.value && scrollbarRef.value.getScrollData()
-      scrollTop.value = scrollData?.scrollTop || 0
-    } else {
-      await nextTick()
-      scrollbarRef.value &&
-        scrollbarRef.value.scrollTo({
-          top: scrollTop.value,
-          behavior: 'instant'
-        })
-    }
-  }
-  emits('openChange', to)
-  if (props.search && !to) {
-    inputValue.value = undefined
-    hideSelectName.value = false
-  }
+onMounted(() => {
+  observeScroll()
 })
+onBeforeUnmount(() => {
+  cleanup()
+})
+useEventListener(window, 'resize', getViewportSize)
+function getPositionedContainer(): void {
+  let parentElement = selectPanelRef.value?.parentElement
+  while (parentElement) {
+    if (parentElement === document.documentElement) {
+      positionedContainer.value = document.documentElement
+      return
+    }
+    const { position } = getComputedStyle(parentElement)
+    if (position !== 'static') {
+      positionedContainer.value = parentElement
+      return
+    }
+    parentElement = parentElement.parentElement
+  }
+}
+function getViewportSize() {
+  viewportWidth.value = document.documentElement.clientWidth
+  viewportHeight.value = document.documentElement.clientHeight
+  observeScroll() // 窗口尺寸变化时，重新查询并监听最近可滚动父元素
+  updatePosition()
+}
+// 查询并监听最近可滚动父元素
+function observeScroll() {
+  cleanup()
+  scrollTarget.value = getScrollParent(selectContentRef.value)
+  scrollTarget.value &&
+    scrollTarget.value.addEventListener(
+      'scroll',
+      updatePosition,
+      passiveSupported.value ? { passive: true } : undefined
+    )
+}
+function cleanup() {
+  scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updatePosition)
+  scrollTarget.value = null
+}
+// 获取父元素
+function getParentElement(el: HTMLElement): HTMLElement | null {
+  // Document
+  if (el === document.documentElement) return null
+  return el.parentElement
+}
+// 查找最近的可滚动父元素
+function getScrollParent(el: HTMLElement | null): HTMLElement | null {
+  if (el === null) return null
+  const parentElement = getParentElement(el)
+  if (parentElement === null) return null
+  // Document
+  if (parentElement === document.documentElement) return document.documentElement
+  const isScrollable = (el: HTMLElement): boolean => {
+    const { overflow, overflowX, overflowY } = getComputedStyle(el)
+    return /(auto|scroll|overlay)/.test(overflow + overflowY + overflowX)
+  }
+  // Element
+  if (isScrollable(parentElement)) return parentElement
+  return getScrollParent(parentElement)
+}
+// 更新下拉面板位置
+function updatePosition() {
+  showOptions.value && getPosition()
+}
+// 计算下拉面板位置
+async function getPosition() {
+  await nextTick()
+  getPositionedContainer()
+  positionedContainerRect.value = positionedContainer.value?.getBoundingClientRect() as DOMRect
+  selectContentRect.value = selectContentRef.value?.getBoundingClientRect() as DOMRect
+  selectPanelHeight.value = selectPanelRef.value?.offsetHeight
+  panelOffset.value = selectContentRect.value.height + 4
+  if (props.flip) {
+    panelPlace.value = getPlacement()
+  }
+}
+// 获取可滚动父元素或视口的矩形信息
+function getShelterRect() {
+  if (scrollTarget.value) {
+    return scrollTarget.value.getBoundingClientRect()
+  }
+  return {
+    top: 0,
+    bottom: viewportHeight.value
+  }
+}
+// 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
+function getPlacement(): 'bottom' | 'top' {
+  const { top, bottom } = selectContentRect.value as DOMRect // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
+  const { top: targetTop, bottom: targetBottom } = getShelterRect() // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
+  const topDistance = top - targetTop // 内容元素上边缘距离滚动元素上边缘的距离
+  const bottomDistance = targetBottom - bottom // 内容元素下边缘距离动元素下边缘的距离
+  return findPlace(props.placement, [])
+  // 查询满足条件的 place，如果没有，则返回默认值
+  function findPlace(place: string, disabledPlaces: string[]): 'bottom' | 'top' {
+    if (place === 'bottom') {
+      if (!disabledPlaces.includes('bottom')) {
+        if (bottomDistance < (selectPanelHeight.value as number) + 4) {
+          return findPlace('top', [...disabledPlaces, 'bottom'])
+        } else {
+          return 'bottom'
+        }
+      } else {
+        if (!disabledPlaces.includes('top')) {
+          return findPlace('top', disabledPlaces)
+        }
+      }
+    } else if (place === 'top') {
+      if (!disabledPlaces.includes('top')) {
+        if (topDistance < (selectPanelHeight.value as number) + 4) {
+          return findPlace('bottom', [...disabledPlaces, 'top'])
+        } else {
+          return 'top'
+        }
+      } else {
+        if (!disabledPlaces.includes('bottom')) {
+          return findPlace('bottom', disabledPlaces)
+        }
+      }
+    }
+    return props.placement
+  }
+}
 function initSelector(): void {
   if (props.modelValue) {
     const target = props.options.find((option) => option[props.value] === props.modelValue)
@@ -200,12 +387,15 @@ function onHover(value: string | number, disabled: boolean | undefined): void {
   disabledBlur.value = Boolean(disabled)
   hoverValue.value = value
 }
-function toggleSelect(): void {
+async function toggleSelect(): Promise<void> {
   selectFocus()
   if (!props.search && inputRef.value) {
     inputRef.value.style.opacity = '0'
   }
   showOptions.value = !showOptions.value
+  if (showOptions.value) {
+    getPosition()
+  }
   if (!hoverValue.value && selectedName.value) {
     const target = props.options.find((option) => option[props.label] === selectedName.value)
     hoverValue.value = target ? target[props.value] : null
@@ -251,7 +441,7 @@ function onChange(value: string | number, label: string, index: number): void {
 </script>
 <template>
   <div
-    class="m-select"
+    class="select-wrap"
     :class="{
       'select-focused': selectFocused,
       'search-select': search,
@@ -265,11 +455,10 @@ function onChange(value: string | number, label: string, index: number): void {
       --select-primary-color-hover: ${colorPalettes[4]};
       --select-primary-color-focus: ${colorPalettes[4]};
       --select-primary-shadow-color: ${shadowColor};
-      --select-item-bg-color-active: ${colorPalettes[0]};
     `"
     @click="disabled ? () => false : toggleSelect()"
   >
-    <div class="select-wrap" @mouseenter="onEnter" @mouseleave="onLeave">
+    <div ref="selectContentRef" class="select-content-container" @mouseenter="onEnter" @mouseleave="onLeave">
       <span class="select-search">
         <input
           ref="inputRef"
@@ -340,103 +529,111 @@ function onChange(value: string | number, label: string, index: number): void {
         ></path>
       </svg>
     </div>
-    <Transition
-      name="slide-down"
-      enter-from-class="slide-down-enter"
-      enter-active-class="slide-down-enter"
-      enter-to-class="slide-down-enter slide-down-enter-active"
-      leave-from-class="slide-down-leave"
-      leave-active-class="slide-down-leave slide-down-leave-active"
-      leave-to-class="slide-down-leave slide-down-leave-active"
-    >
-      <div
-        v-if="showOptions && filterOptions && filterOptions.length"
-        class="select-options-panel"
-        @click.stop="selectFocus"
-        @mouseenter="disabledBlur = true"
-        @mouseleave="disabledBlur = false"
+    <Teleport :disabled="to === false" :to="to === false ? null : to">
+      <Transition
+        name="slide"
+        enter-from-class="slide-enter"
+        enter-active-class="slide-enter"
+        enter-to-class="slide-enter slide-enter-active"
+        leave-from-class="slide-leave"
+        leave-active-class="slide-leave slide-leave-active"
+        leave-to-class="slide-leave slide-leave-active"
       >
-        <Scrollbar ref="scrollbarRef" :content-style="{ padding: '4px' }" :style="optionsStyle" v-bind="scrollbarProps">
-          <p
-            v-for="(option, index) in filterOptions"
-            :key="index"
-            :class="[
-              'select-option',
-              {
-                'option-hover': !option.disabled && option[value] === hoverValue,
-                'option-selected': option[label] === selectedName,
-                'option-disabled': option.disabled
-              }
-            ]"
-            :title="option[label]"
-            @mouseenter="onHover(option[value], option.disabled)"
-            @click.stop="option.disabled ? selectFocus() : onChange(option[value], option[label], index)"
+        <div
+          v-if="initialDisplay"
+          v-show="showOptions"
+          ref="selectPanelRef"
+          class="select-panel-container"
+          :style="{
+            ...panelPlacement,
+            '--select-option-bg-color-active': colorPalettes[0]
+          }"
+        >
+          <Scrollbar
+            v-show="filterOptions.length"
+            :style="{ ...optionsStyle, '--scrollbar-rail-vertical-right': '2px 0 2px auto' }"
+            class="select-options-panel"
+            @click.stop="selectFocus"
+            @mouseenter="disabledBlur = true"
+            @mouseleave="disabledBlur = false"
+            v-bind="scrollbarProps"
           >
-            {{ option[label] }}
-          </p>
-        </Scrollbar>
-      </div>
-      <div
-        v-else-if="showOptions && filterOptions && !filterOptions.length"
-        class="select-options-panel options-empty"
-        @click.stop="selectFocus"
-        @mouseenter="disabledBlur = true"
-        @mouseleave="disabledBlur = false"
-      >
-        <Empty image="outlined" />
-      </div>
-    </Transition>
+            <p
+              v-for="(option, index) in filterOptions"
+              :key="index"
+              :class="[
+                'select-option',
+                {
+                  'option-hover': !option.disabled && option[value] === hoverValue,
+                  'option-selected': option[label] === selectedName,
+                  'option-disabled': option.disabled
+                }
+              ]"
+              :title="option[label]"
+              @mouseenter="onHover(option[value], option.disabled)"
+              @click.stop="option.disabled ? selectFocus() : onChange(option[value], option[label], index)"
+            >
+              {{ option[label] }}
+            </p>
+          </Scrollbar>
+          <div
+            v-show="!filterOptions.length"
+            class="select-options-panel options-panel-empty"
+            @click.stop="selectFocus"
+            @mouseenter="disabledBlur = true"
+            @mouseleave="disabledBlur = false"
+          >
+            <Empty image="outlined" />
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 <style lang="less" scoped>
-.slide-down-enter {
+.slide-enter {
   transform: scale(0);
-  transform-origin: 0% 0%;
   opacity: 0;
   animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
   animation-duration: 0.2s;
   animation-fill-mode: both;
   animation-play-state: paused;
 }
-.slide-down-enter-active {
-  animation-name: slideDownIn;
+.slide-enter-active {
+  animation-name: slideIn;
   animation-play-state: running;
-  @keyframes slideDownIn {
+  @keyframes slideIn {
     0% {
       transform: scaleY(0.8);
-      transform-origin: 0% 0%;
       opacity: 0;
     }
     100% {
       transform: scaleY(1);
-      transform-origin: 0% 0%;
       opacity: 1;
     }
   }
 }
-.slide-down-leave {
+.slide-leave {
   animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
   animation-duration: 0.2s;
   animation-fill-mode: both;
   animation-play-state: paused;
 }
-.slide-down-leave-active {
-  animation-name: slideDownOut;
+.slide-leave-active {
+  animation-name: slideOut;
   animation-play-state: running;
-  @keyframes slideDownOut {
+  @keyframes slideOut {
     0% {
       transform: scaleY(1);
-      transform-origin: 0% 0%;
       opacity: 1;
     }
     100% {
       transform: scaleY(0.8);
-      transform-origin: 0% 0%;
       opacity: 0;
     }
   }
 }
-.m-select {
+.select-wrap {
   position: relative;
   display: inline-block;
   width: var(--select-width);
@@ -448,12 +645,11 @@ function onChange(value: string | number, label: string, index: number): void {
   cursor: pointer;
   transition: all 0.3s;
   &:not(.select-disabled):hover {
-    // 悬浮时样式
-    .select-wrap {
+    .select-content-container {
       border-color: var(--select-primary-color-hover);
     }
   }
-  .select-wrap {
+  .select-content-container {
     position: relative;
     display: flex;
     padding: 0 11px;
@@ -558,21 +754,76 @@ function onChange(value: string | number, label: string, index: number): void {
       pointer-events: auto;
     }
   }
-  .select-options-panel {
-    position: absolute;
-    top: calc(var(--select-height) + 4px);
-    z-index: 1000;
-    width: 100%;
-    background-color: #fff;
+}
+.select-focused:not(.select-disabled) {
+  .select-content-container {
+    border-color: var(--select-primary-color-focus);
+    box-shadow: 0 0 0 2px var(--select-primary-shadow-color);
+  }
+}
+.search-select {
+  .select-content-container {
+    cursor: text;
+    .select-search {
+      .search-input {
+        cursor: auto;
+        color: inherit;
+        opacity: 1;
+      }
+    }
+  }
+}
+.select-small {
+  font-size: 14px;
+  .select-content-container {
+    padding: 0 7px;
+    border-radius: 4px;
+    .select-search {
+      left: 7px;
+      right: 28px;
+    }
+    .select-item {
+      padding-right: 22px;
+    }
+  }
+}
+.select-large {
+  font-size: 16px;
+  .select-content-container {
+    padding: 0 11px;
     border-radius: 8px;
-    outline: none;
-    cursor: auto;
-    box-shadow:
-      0 6px 16px 0 rgba(0, 0, 0, 0.08),
-      0 3px 6px -4px rgba(0, 0, 0, 0.12),
-      0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    .select-item {
+      padding-right: 20px;
+    }
+  }
+}
+.select-disabled {
+  .select-content-container {
+    color: rgba(0, 0, 0, 0.25);
+    background: #f5f5f5;
+    user-select: none;
+    cursor: not-allowed;
+    .select-search .search-input {
+      cursor: not-allowed;
+    }
+  }
+}
+.select-panel-container {
+  position: absolute;
+  z-index: 1000;
+  padding: 4px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
+  outline: none;
+  cursor: auto;
+  box-shadow:
+    0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05);
+
+  .select-options-panel {
     .select-option {
-      // 下拉项默认样式
       min-height: 32px;
       display: block;
       padding: 5px 12px;
@@ -588,83 +839,25 @@ function onChange(value: string | number, label: string, index: number): void {
       transition: background 0.3s ease;
     }
     .option-hover {
-      // 悬浮时的下拉项样式
       background: rgba(0, 0, 0, 0.04);
     }
     .option-selected {
-      // 被选中的下拉项样式
       font-weight: 600;
-      background: var(--select-item-bg-color-active);
+      background: var(--select-option-bg-color-active);
     }
     .option-disabled {
-      // 禁用某个下拉选项时的样式
       color: rgba(0, 0, 0, 0.25);
       cursor: not-allowed;
     }
   }
-  .options-empty {
+  .options-panel-empty {
     min-width: 112px;
     padding: 9px 16px;
-    .m-empty {
+    .empty-wrap {
       margin-block: 8px;
       :deep(.empty-image-wrap) {
         height: 35px;
       }
-    }
-  }
-}
-.select-focused:not(.select-disabled) {
-  // 激活时样式
-  .select-wrap {
-    border-color: var(--select-primary-color-focus);
-    box-shadow: 0 0 0 2px var(--select-primary-shadow-color);
-  }
-}
-.search-select {
-  .select-wrap {
-    cursor: text;
-    .select-search {
-      .search-input {
-        cursor: auto;
-        color: inherit;
-        opacity: 1;
-      }
-    }
-  }
-}
-.select-small {
-  font-size: 14px;
-  .select-wrap {
-    padding: 0 7px;
-    border-radius: 4px;
-    .select-search {
-      left: 7px;
-      right: 28px;
-    }
-    .select-item {
-      padding-right: 22px;
-    }
-  }
-}
-.select-large {
-  font-size: 16px;
-  .select-wrap {
-    padding: 0 11px;
-    border-radius: 8px;
-    .select-item {
-      padding-right: 20px;
-    }
-  }
-}
-.select-disabled {
-  .select-wrap {
-    // 下拉禁用样式
-    color: rgba(0, 0, 0, 0.25);
-    background: #f5f5f5;
-    user-select: none;
-    cursor: not-allowed;
-    .select-search .search-input {
-      cursor: not-allowed;
     }
   }
 }
