@@ -4,9 +4,16 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-08-27">2.4.19</VersionDateTag>
+
+- 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，新增 `placement` `flip` `to` 属性，支持：设置下拉面板弹出位置；下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置；下拉面板挂载的容器节点，默认挂载到 `body` 下
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，属性 `amount` 新增 `false` 类型，用于支持所有文字平铺展示；新增 `ellipsis` `ellipsisProps` 属性，支持：文字超出时是否启用文本省略组件；配置文本省略组件属性
+- 组件库及文档代码优化
+- 更新组件库部分依赖版本
+
 ## <VersionDateTag date="2025-08-22">2.4.18</VersionDateTag>
 
-- 优化更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html)、[加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html)、[文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，在初始未展示时不进行任何组件渲染，提升初始加载性能
+- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html)、[加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html)、[文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，在初始未展示时不进行任何组件渲染，提升初始加载性能
 
 ## <VersionDateTag date="2025-08-21">2.4.17</VersionDateTag>
 
