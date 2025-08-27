@@ -96,6 +96,7 @@ const componentDependencies = {
   Select: ['Empty', 'Scrollbar'],
   Table: ['Checkbox', 'Ellipsis', 'Empty', 'Pagination', 'Input', 'Select', 'Radio', 'Scrollbar', 'Spin', 'Tooltip'],
   Tag: ['Space'],
+  TextScroll: ['Ellipsis', 'Tooltip'],
   Upload: ['Image', 'Message', 'Space', 'Spin'],
   Waterfall: ['Spin']
 }
@@ -118,7 +119,7 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
   if (componentName === 'DatePicker') {
     // 特殊处理 DatePicker 组件样式依赖文件
     sideEffects.push(
-      `vue-amazing-ui/${type}/node_modules/.pnpm/@vuepic_vue-datepicker@11.0.2_vue@3.5.18_typescript@5.9.2_/node_modules/@vuepic/vue-datepicker/dist/main.css`
+      `vue-amazing-ui/${type}/node_modules/.pnpm/@vuepic_vue-datepicker@11.0.2_vue@3.5.20_typescript@5.9.2_/node_modules/@vuepic/vue-datepicker/dist/main.css`
     )
   }
   if (componentName === 'Swiper') {
