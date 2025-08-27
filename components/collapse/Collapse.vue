@@ -149,7 +149,7 @@ function onCopy(index: number, key: string | number) {
 </script>
 <template>
   <div
-    class="m-collapse"
+    class="collapse-wrap"
     :class="{
       'collapse-borderless': !bordered,
       'collapse-ghost': ghost
@@ -297,7 +297,7 @@ function onCopy(index: number, key: string | number) {
   height: 0 !important;
   opacity: 0 !important;
 }
-.m-collapse {
+.collapse-wrap {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;

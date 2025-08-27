@@ -105,7 +105,7 @@ function getOptionLabel(option: string | number | Option) {
 </script>
 <template>
   <div
-    class="m-segmented"
+    class="segmented-wrap"
     :class="{
       'segmented-small': size == 'small',
       'segmented-large': size == 'large',
@@ -151,7 +151,7 @@ function getOptionLabel(option: string | number | Option) {
   </div>
 </template>
 <style lang="less" scoped>
-.m-segmented {
+.segmented-wrap {
   display: inline-block;
   padding: 2px;
   color: rgba(0, 0, 0, 0.65);
@@ -210,7 +210,7 @@ function getOptionLabel(option: string | number | Option) {
         :deep(svg) {
           fill: currentColor;
         }
-        :deep(.m-avatar) {
+        :deep(.avatar-wrap) {
           cursor: pointer;
         }
       }

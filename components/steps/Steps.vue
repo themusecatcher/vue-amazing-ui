@@ -55,7 +55,7 @@ function onChange(index: number): void {
 </script>
 <template>
   <div
-    class="m-steps"
+    class="steps-wrap"
     :class="{
       'steps-small': size === 'small',
       'steps-vertical': vertical,
@@ -114,7 +114,7 @@ function onChange(index: number): void {
   </div>
 </template>
 <style lang="less" scoped>
-.m-steps {
+.steps-wrap {
   display: flex;
   gap: 16px;
   width: var(--steps-width);

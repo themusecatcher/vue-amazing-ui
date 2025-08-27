@@ -350,7 +350,7 @@ defineExpose({
 </script>
 <template>
   <div
-    class="m-scrollbar"
+    class="scrollbar-wrap"
     :style="`
       --scrollbar-width: ${size}px;
       --scrollbar-height: ${size}px;
@@ -409,7 +409,7 @@ defineExpose({
   </div>
 </template>
 <style lang="less" scoped>
-.m-scrollbar {
+.scrollbar-wrap {
   overflow: hidden;
   position: relative;
   z-index: auto;

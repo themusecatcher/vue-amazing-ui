@@ -76,7 +76,7 @@ function splitAndMarkByRegex(str: string, regex: RegExp): Array<{ text: string; 
 }
 </script>
 <template>
-  <span class="m-highlight">
+  <span class="highlight-wrap">
     <template v-for="(textOrVnode, index) in textOrVnodeChildren" :key="index">
       <template v-if="typeof textOrVnode === 'string'">{{ textOrVnode }}</template>
       <component v-else :is="textOrVnode" />

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
+import Ellipsis from 'components/ellipsis'
 import { rafTimeout, cancelRaf, useResizeObserver, useInject } from 'components/utils'
 export interface Item {
   title: string // 文字标题
@@ -14,12 +15,14 @@ export interface Props {
   height?: number // 滚动区域高度，单位 px
   itemStyle?: CSSProperties // 滚动文字样式
   hrefHoverColor?: string // 链接文字鼠标悬浮颜色；仅当 href 存在时生效
-  amount?: number // 滚动区域展示条数，水平滚动时生效
+  amount?: number | false // 滚动区域展示条数，为 false 时所有文字平铺展示，水平滚动时生效
   gap?: number // 水平滚动文字各列间距或垂直滚动文字两边的间距，单位 px
   speed?: number // 水平滚动时移动的速度，单位是像素每秒，水平滚动时生效
   vertical?: boolean // 是否垂直滚动
   duration?: number // 垂直滚动过渡持续时间，单位 ms，垂直滚动时生效
   interval?: number // 垂直文字滚动时间间隔，单位 ms，垂直滚动时生效
+  ellipsis?: boolean // 是否启用文本省略组件
+  ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于配置文本省略弹出提示
   pauseOnMouseEnter?: boolean // 鼠标移入是否暂停滚动
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -35,6 +38,8 @@ const props = withDefaults(defineProps<Props>(), {
   vertical: false,
   duration: 1000,
   interval: 3000,
+  ellipsis: false,
+  ellipsisProps: () => ({}),
   pauseOnMouseEnter: false
 })
 const horizontalRef = ref() // 水平滚动 DOM 引用
@@ -47,7 +52,7 @@ const reset = ref<boolean>(true) // 重置水平滚动动画状态
 const activeIndex = ref<number>(0) // 垂直滚动当前索引
 const verticalMoveRaf = ref() // 垂直滚动定时器引用标识
 const originVertical = ref<boolean>(true) // 垂直滚动初始状态
-const scrollItems = ref<Item[]>([])
+const scrollItems = ref<Item[]>([]) // 滚动目标文字数组
 const { colorPalettes } = useInject('TextScroll') // 主题色注入
 const emit = defineEmits(['click'])
 const itemsAmount = computed(() => {
@@ -64,13 +69,18 @@ const scrollBoardStyle = computed(() => {
 const displayAmount = computed(() => {
   if (props.single) {
     return 1
-  } else {
-    return props.amount
   }
+  if (props.amount === false) {
+    return 0
+  }
+  return props.amount
 })
 const itemWidth = computed(() => {
   // 水平滚动单条文字宽度
-  return parseFloat((horizontalWrapWidth.value / displayAmount.value).toFixed(2))
+  if (props.amount === false) {
+    return 'auto'
+  }
+  return `${parseFloat((horizontalWrapWidth.value / displayAmount.value).toFixed(2)) - props.gap}px`
 })
 const animationDuration = computed(() => {
   // 水平滚动动画持续时间
@@ -205,7 +215,7 @@ defineExpose({
   <div
     v-if="!vertical"
     ref="horizontalRef"
-    class="m-scroll-horizontal"
+    class="text-scroll-horizontal"
     :style="[
       scrollBoardStyle,
       `
@@ -231,39 +241,57 @@ defineExpose({
       <component
         :is="item.href ? 'a' : 'div'"
         class="scroll-item"
-        :class="{ 'href-item': item.href }"
-        :style="[itemStyle, `width: ${itemWidth}px;`]"
-        v-for="(item, index) in <Item[]>scrollItems"
+        :class="{ 'href-item': !ellipsis && item.href }"
+        :style="[ellipsis ? null : itemStyle, `width: ${itemWidth};`]"
+        v-for="(item, index) in scrollItems"
         :key="index"
-        :title="item.title"
+        :title="ellipsis ? null : item.title"
         :href="item.href"
         :target="item.target"
         @click="onClick(item)"
       >
-        {{ item.title }}
+        <Ellipsis
+          v-if="ellipsis"
+          :max-width="itemWidth"
+          :content-class="`${item.href ? 'href-item' : null}`"
+          :content-style="itemStyle"
+          v-bind="ellipsisProps"
+        >
+          {{ item.title }}
+        </Ellipsis>
+        <template v-else>{{ item.title }}</template>
       </component>
     </div>
     <div class="scroll-items-group" :class="{ 'scroll-items-reset': reset }">
       <component
         :is="item.href ? 'a' : 'div'"
         class="scroll-item"
-        :class="{ 'href-item': item.href }"
-        :style="[itemStyle, `width: ${itemWidth}px;`]"
+        :class="{ 'href-item': !ellipsis && item.href }"
+        :style="[ellipsis ? null : itemStyle, `width: ${itemWidth};`]"
         v-for="(item, index) in scrollItems"
         :key="index"
-        :title="item.title"
+        :title="ellipsis ? null : item.title"
         :href="item.href"
         :target="item.target"
         @click="onClick(item)"
       >
-        {{ item.title }}
+        <Ellipsis
+          v-if="ellipsis"
+          :max-width="itemWidth"
+          :content-class="`${item.href ? 'href-item' : null}`"
+          :content-style="itemStyle"
+          v-bind="ellipsisProps"
+        >
+          {{ item.title }}
+        </Ellipsis>
+        <template v-else>{{ item.title }}</template>
       </component>
     </div>
   </div>
   <div
     v-else
     ref="verticalRef"
-    class="m-scroll-vertical"
+    class="text-scroll-vertical"
     :style="[
       scrollBoardStyle,
       `
@@ -284,14 +312,22 @@ defineExpose({
         <component
           :is="item.href ? 'a' : 'div'"
           class="scroll-item"
-          :class="{ 'href-item': item.href }"
-          :style="itemStyle"
-          :title="item.title"
+          :class="{ 'href-item': !ellipsis && item.href }"
+          :style="!ellipsis ? itemStyle : {}"
+          :title="ellipsis ? null : item.title"
           :href="item.href"
           :target="item.target"
           @click="onClick(item)"
         >
-          {{ item.title }}
+          <Ellipsis
+            v-if="ellipsis"
+            :content-class="`${item.href ? 'href-item' : null}`"
+            :content-style="{ ...itemStyle, maxWidth: '100%' }"
+            v-bind="ellipsisProps"
+          >
+            {{ item.title }}
+          </Ellipsis>
+          <template v-else>{{ item.title }}</template>
         </component>
       </div>
     </TransitionGroup>
@@ -299,7 +335,7 @@ defineExpose({
 </template>
 <style lang="less" scoped>
 // 水平滚动
-.m-scroll-horizontal {
+.text-scroll-horizontal {
   overflow: hidden;
   display: flex;
   box-shadow: 0px 0px 5px var(--text-scroll-shadow-color);
@@ -322,7 +358,7 @@ defineExpose({
       }
     }
     .scroll-item {
-      padding-left: var(--text-scroll-item-gap);
+      margin-left: var(--text-scroll-item-gap);
       font-size: 16px;
       font-weight: 400;
       color: rgba(0, 0, 0, 0.88);
@@ -331,11 +367,14 @@ defineExpose({
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .href-item {
+    :deep(.href-item) {
       cursor: pointer;
       transition: color 0.3s;
       &:hover {
         color: var(--text-scroll-href-hover-color) !important;
+      }
+      .ellipsis-container {
+        cursor: inherit;
       }
     }
   }
@@ -356,7 +395,7 @@ defineExpose({
   transform: translateY(-100%) scale(var(--text-scroll-scale));
   opacity: 0;
 }
-.m-scroll-vertical {
+.text-scroll-vertical {
   overflow: hidden;
   position: relative;
   box-shadow: 0px 0px 5px var(--text-scroll-shadow-color);
@@ -380,11 +419,14 @@ defineExpose({
       white-space: nowrap;
       text-overflow: ellipsis;
     }
-    .href-item {
+    :deep(.href-item) {
       cursor: pointer;
       transition: color 0.3s;
       &:hover {
         color: var(--text-scroll-href-hover-color) !important;
+      }
+      .ellipsis-container {
+        cursor: inherit;
       }
     }
   }

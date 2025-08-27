@@ -1,3 +1,4 @@
+​
 <script setup lang="ts">
 import { ref, computed, watchEffect, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
@@ -21,7 +22,6 @@ export interface Props {
   size?: 'small' | 'middle' | 'large' // 选择器大小
   allowClear?: boolean // 是否支持清除
   search?: boolean // 是否支持搜索
-  filter?: Function | true // 过滤条件函数，仅当支持搜索时生效
   placement?: 'bottom' | 'top' // 下拉面板弹出位置
   flip?: boolean // 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
   to?: string | HTMLElement | false // 下拉面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
@@ -29,6 +29,7 @@ export interface Props {
     根据输入项进行筛选，默认为 true 时，筛选每个选项的文本字段 label 是否包含输入项，包含返回 true，反之返回 false
     当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
   */
+  filter?: Function | true // 过滤条件函数，仅当支持搜索时生效
   maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
   scrollbarProps?: object // 下拉面板滚动条 scrollbar 组件属性配置
   modelValue?: number | string // (v-model) 当前选中的 option 条目值
@@ -44,10 +45,10 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'middle',
   allowClear: false,
   search: false,
-  filter: true,
   placement: 'bottom',
   flip: true,
   to: 'body',
+  filter: true,
   maxDisplay: 6,
   scrollbarProps: () => ({}),
   modelValue: undefined

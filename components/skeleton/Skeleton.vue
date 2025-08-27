@@ -113,7 +113,7 @@ const paragraphWidth = computed(() => {
 <template>
   <div
     v-if="loading"
-    class="m-skeleton"
+    class="skeleton-wrap"
     :class="{ 'skeleton-avatar': avatar, 'skeleton-animated': animated }"
     :style="`--button-size: ${buttonSize}px; --title-top: ${titleTop}px;`"
   >
@@ -166,7 +166,7 @@ const paragraphWidth = computed(() => {
   <slot v-else></slot>
 </template>
 <style lang="less" scoped>
-.m-skeleton {
+.skeleton-wrap {
   display: table;
   width: 100%;
   .skeleton-button {

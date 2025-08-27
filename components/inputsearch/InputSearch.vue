@@ -135,7 +135,7 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
 </script>
 <template>
   <div
-    class="m-input-search"
+    class="input-search-wrap"
     :style="`
       --input-search-width: ${inputSearchWidth};
       --input-search-primary-color-hover: ${colorPalettes[4]};
@@ -148,7 +148,7 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
     </span>
     <div
       tabindex="1"
-      class="input-search-wrap"
+      class="input-search-container"
       :class="[
         `input-search-${size}`,
         {
@@ -229,7 +229,7 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
   </div>
 </template>
 <style lang="less" scoped>
-.m-input-search {
+.input-search-wrap {
   width: var(--input-search-width);
   position: relative;
   display: inline-flex;
@@ -265,7 +265,7 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
   .addon-before-small {
     height: 40px;
   }
-  .input-search-wrap {
+  .input-search-container {
     font-size: 14px;
     color: rgba(0, 0, 0, 0.88);
     line-height: 1.5714285714285714;

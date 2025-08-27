@@ -28,7 +28,7 @@ const showExtra = computed(() => {
 })
 </script>
 <template>
-  <div class="m-result">
+  <div class="result-wrap">
     <div class="result-image">
       <slot name="icon">
         <svg
@@ -953,7 +953,7 @@ const showExtra = computed(() => {
   </div>
 </template>
 <style lang="less" scoped>
-.m-result {
+.result-wrap {
   padding: 48px 32px;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);

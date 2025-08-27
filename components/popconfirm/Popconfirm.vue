@@ -216,7 +216,7 @@ function onOk(e: Event): void {
 }
 .popconfirm-btns {
   text-align: end;
-  .m-btn {
+  .btn-wrap {
     margin-left: 8px;
   }
 }

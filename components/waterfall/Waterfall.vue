@@ -194,7 +194,7 @@ function getImageName(image: Image): string {
 <template>
   <div
     ref="waterfallRef"
-    class="m-waterfall"
+    class="waterfall-wrap"
     :style="`
       --waterfall-border-radius: ${borderRadius}px;
       --waterfall-bg-color: ${backgroundColor};
@@ -224,7 +224,7 @@ function getImageName(image: Image): string {
   </div>
 </template>
 <style lang="less" scoped>
-.m-waterfall {
+.waterfall-wrap {
   position: relative;
   width: var(--waterfall-width);
   height: var(--waterfall-height);

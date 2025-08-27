@@ -183,7 +183,7 @@ defineExpose({
 })
 </script>
 <template>
-  <div class="m-countdown">
+  <div class="countdown-wrap">
     <div v-if="showTitle" class="countdown-title" :style="titleStyle">
       <slot name="title">{{ props.title }}</slot>
     </div>
@@ -208,7 +208,7 @@ defineExpose({
   </div>
 </template>
 <style lang="less" scoped>
-.m-countdown {
+.countdown-wrap {
   display: inline-block;
   line-height: 1.5714285714285714;
   .countdown-title {

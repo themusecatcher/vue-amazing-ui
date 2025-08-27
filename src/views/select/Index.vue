@@ -118,8 +118,19 @@ const sizeOptions = [
     value: 'large'
   }
 ]
+const placementOptions = [
+  {
+    label: 'bottom',
+    value: 'bottom'
+  },
+  {
+    label: 'top',
+    value: 'top'
+  }
+]
 const size = ref('large')
 const selectedValue = ref<SelectProps['modelValue']>(5)
+const placement = ref('bottom')
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
@@ -159,11 +170,17 @@ function filter(inputValue: string, option: any) {
     <Select :options="options" allow-clear v-model="selectedValue" />
     <h2 class="mt30 mb10">支持搜索</h2>
     <Select :options="options" search allow-clear v-model="selectedValue" />
-    <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
+    <h2 class="mt30 mb10">搜索过滤函数</h2>
     <Select :options="options" search :filter="filter" v-model="selectedValue" />
-    <h2 class="mt30 mb10">自定义下拉面板数</h2>
+    <h2 class="mt30 mb10">下拉面板弹出位置</h2>
+    <Space vertical>
+      <Radio :options="placementOptions" v-model:value="placement" button button-style="solid" />
+      <Select :options="options" v-model="selectedValue" :placement="placement" />
+      <Select :options="options" search allow-clear v-model="selectedValue" :placement="placement" />
+    </Space>
+    <h2 class="mt30 mb10">下拉面板数</h2>
     <Select :options="options" :max-display="8" v-model="selectedValue" />
-    <h2 class="mt30 mb10">自定义下拉面板滚动条</h2>
+    <h2 class="mt30 mb10">下拉面板滚动条</h2>
     <Select :options="options" v-model="selectedValue" :scrollbar-props="{ size: 8, delay: 2000 }" />
   </div>
 </template>

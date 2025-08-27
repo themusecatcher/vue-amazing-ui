@@ -73,7 +73,7 @@ function isNumber(value: string | number): boolean {
 </script>
 <template>
   <span
-    class="m-gradient-text"
+    class="gradient-text-wrap"
     :style="[
       `--rotate: ${rotate}; --color-start: ${colorStart}; --color-end: ${colorEnd}; --font-size: ${fontSize}; --font-weight: ${weight};`,
       gradientText
@@ -83,7 +83,7 @@ function isNumber(value: string | number): boolean {
   </span>
 </template>
 <style lang="less" scoped>
-.m-gradient-text {
+.gradient-text-wrap {
   display: inline-block;
   font-size: var(--font-size);
   font-weight: var(--font-weight);

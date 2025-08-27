@@ -97,9 +97,6 @@ export { default as InputNumber } from './inputnumber'
 export type { Props as InputSearchProps } from './inputsearch'
 export { default as InputSearch } from './inputsearch'
 
-// export type { LayoutProps } from './layout'
-// export { default as { Layout, LayoutHeader, LayoutSider, LayoutContent, LayoutFooter } } from './layout'
-
 export type { ListProps, ListItemProps } from './list'
 export { List, ListItem } from './list'
 
@@ -204,9 +201,6 @@ export { default as TextScroll } from './textscroll'
 
 export type { Props as TimelineProps, Item as TimelineItem } from './timeline'
 export { default as Timeline } from './timeline'
-
-// export type { Props as TimePickerProps, DisabledTime as TimePickerDisabledTime } from './timepicker'
-// export { default as TimePicker } from './timepicker'
 
 export type { Props as TooltipProps } from './tooltip'
 export { default as Tooltip } from './tooltip'

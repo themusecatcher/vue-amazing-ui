@@ -115,12 +115,12 @@ function onClose(e: Event) {
 }
 </script>
 <template>
-  <div ref="drawerRef" tabindex="-1" class="m-drawer" @keydown.esc="onClose">
+  <div ref="drawerRef" tabindex="-1" class="drawer-wrap" @keydown.esc="onClose">
     <Transition name="fade">
       <div v-show="drawerOpen" class="drawer-mask" @click.self="onBlur"></div>
     </Transition>
     <Transition :name="`motion-${placement}`">
-      <div v-show="drawerOpen" class="drawer-wrap" :class="`drawer-${placement}`" :style="drawerStyle">
+      <div v-show="drawerOpen" class="drawer-container" :class="`drawer-${placement}`" :style="drawerStyle">
         <div class="drawer-content">
           <div v-if="!destroyOnClose" class="drawer-body-wrapper">
             <div v-show="showHeader" class="drawer-header" :class="headerClass" :style="headerStyle">
@@ -240,7 +240,7 @@ function onClose(e: Event) {
 .motion-left-leave-to {
   transform: translateX(-100%);
 }
-.m-drawer {
+.drawer-wrap {
   position: fixed;
   inset: 0;
   z-index: 1000;
@@ -253,7 +253,7 @@ function onClose(e: Event) {
     background: rgba(0, 0, 0, 0.45);
     pointer-events: auto;
   }
-  .drawer-wrap {
+  .drawer-container {
     position: absolute;
     transition: all 0.3s;
     .drawer-content {

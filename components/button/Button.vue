@@ -85,7 +85,7 @@ function onWaveEnd() {
   <component
     :is="href ? 'a' : 'div'"
     tabindex="0"
-    class="m-btn"
+    class="btn-wrap"
     :class="[
       `btn-${type} btn-${size}`,
       {
@@ -117,7 +117,7 @@ function onWaveEnd() {
     @keydown.enter.prevent="keyboard && !disabled && !loading ? onKeyboard($event) : () => false"
   >
     <div v-if="loading || !showIcon" class="btn-loading">
-      <div v-if="!href && loadingType === 'static'" class="m-static-circle">
+      <div v-if="!href && loadingType === 'static'" class="static-circle">
         <svg class="circle" width="1em" height="1em" fill="currentColor" viewBox="0 0 100 100">
           <path
             d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
@@ -127,7 +127,7 @@ function onWaveEnd() {
           ></path>
         </svg>
       </div>
-      <div v-if="!href && loadingType === 'dynamic'" class="m-dynamic-circle">
+      <div v-if="!href && loadingType === 'dynamic'" class="dynamic-circle">
         <svg class="circle" viewBox="0 0 50 50" width="1em" height="1em" fill="currentColor">
           <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
         </svg>
@@ -145,7 +145,7 @@ function onWaveEnd() {
   </component>
 </template>
 <style lang="less" scoped>
-.m-btn {
+.btn-wrap {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -172,15 +172,15 @@ function onWaveEnd() {
       margin-right 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
       width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
       opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-    .m-static-circle,
-    .m-dynamic-circle {
+    .static-circle,
+    .dynamic-circle {
       display: inline-flex;
       justify-content: start;
       .circle .path {
         stroke: currentColor;
       }
     }
-    .m-static-circle {
+    .static-circle {
       .circle {
         animation: spinCircle 0.8s linear infinite;
         -webkit-animation: spinCircle 0.8s linear infinite;
@@ -191,7 +191,7 @@ function onWaveEnd() {
         }
       }
     }
-    .m-dynamic-circle {
+    .dynamic-circle {
       .circle {
         animation: spinCircle 2s linear infinite;
         -webkit-animation: spinCircle 2s linear infinite;

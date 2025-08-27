@@ -64,7 +64,7 @@ const dialogRef = ref() // dialog DOM 引用
 const mousePosition = ref<{ x: number; y: number } | null>(null) // 鼠标点击位置
 const dialogOpen = ref<boolean>()
 const showDialogWrap = ref<boolean>()
-const transformOrigin = ref<string>('50% 50%')
+const dialogTransformOrigin = ref<string>('50% 50%')
 const fullscreen = ref<boolean>(false)
 const { isSupported: captureSupported } = useOptionsSupported('capture')
 const emits = defineEmits(['update:open', 'cancel', 'ok'])
@@ -96,19 +96,19 @@ const dialogStyle = computed(() => {
     } else {
       return {
         width: '100%',
-        transformOrigin: transformOrigin.value
+        transformOrigin: dialogTransformOrigin.value
       } as CSSProperties
     }
   } else {
     if (props.centered) {
       return {
         width: dialogWidth.value,
-        transformOrigin: transformOrigin.value
+        transformOrigin: dialogTransformOrigin.value
       } as CSSProperties
     } else {
       return {
         width: dialogWidth.value,
-        transformOrigin: transformOrigin.value,
+        transformOrigin: dialogTransformOrigin.value,
         top: dialogTop.value
       } as CSSProperties
     }
@@ -172,17 +172,17 @@ async function onBeforeEnter(el: Element) {
   await nextTick()
   if (props.transformOrigin === 'mouse' && mousePosition.value) {
     const rect = el.getBoundingClientRect()
-    transformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
+    dialogTransformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
   } else {
-    transformOrigin.value = '50% 50%'
+    dialogTransformOrigin.value = '50% 50%'
   }
 }
 function onBeforeLeave(el: Element) {
   if (props.transformOrigin === 'mouse' && mousePosition.value) {
     const rect = el.getBoundingClientRect()
-    transformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
+    dialogTransformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
   } else {
-    transformOrigin.value = '50% 50%'
+    dialogTransformOrigin.value = '50% 50%'
   }
 }
 function onAfterLeave() {
@@ -203,7 +203,7 @@ function onOk() {
 }
 </script>
 <template>
-  <div class="m-dialog-root">
+  <div class="dialog-root">
     <Transition name="fade">
       <div v-show="dialogOpen" class="dialog-mask" :style="maskStyle"></div>
     </Transition>
@@ -211,7 +211,7 @@ function onOk() {
       v-show="showDialogWrap"
       tabindex="-1"
       ref="dialogRef"
-      class="m-dialog-wrap"
+      class="dialog-wrap"
       :class="{ 'flex-centered': centered }"
       @click.self="props.maskClosable ? onCancel() : () => false"
       @keydown.esc="props.keyboard ? onCancel() : () => false"
@@ -230,7 +230,7 @@ function onOk() {
       >
         <div
           v-show="dialogOpen"
-          class="m-dialog"
+          class="dialog-container"
           :class="{ 'dialog-with-fullscreen': fullscreen }"
           :style="dialogStyle"
         >
@@ -424,13 +424,13 @@ function onOk() {
   z-index: 1000;
   background: rgba(0, 0, 0, 0.45);
 }
-.m-dialog-wrap {
+.dialog-wrap {
   position: fixed;
   inset: 0;
   overflow: auto;
   outline: 0;
   z-index: 1010;
-  .m-dialog {
+  .dialog-container {
     position: relative;
     margin: 0 auto;
     color: rgba(0, 0, 0, 0.88);
@@ -524,7 +524,7 @@ function onOk() {
   display: flex;
   justify-content: center;
   align-items: center;
-  .m-dialog {
+  .dialog-container {
     padding-bottom: 0;
   }
 }

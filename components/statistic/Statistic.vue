@@ -37,7 +37,7 @@ const showSuffix = computed(() => {
 })
 </script>
 <template>
-  <div class="m-statistic">
+  <div class="statistic-wrap">
     <div v-if="showTitle" class="statistic-title">
       <slot name="title">{{ title }}</slot>
     </div>
@@ -55,7 +55,7 @@ const showSuffix = computed(() => {
   </div>
 </template>
 <style lang="less" scoped>
-.m-statistic {
+.statistic-wrap {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;

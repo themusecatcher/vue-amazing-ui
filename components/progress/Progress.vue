@@ -141,7 +141,7 @@ const showSuccess = computed(() => {
 <template>
   <div
     v-if="type === 'line'"
-    class="m-progress-line"
+    class="progress-line-wrap"
     :style="`
       --progress-size: ${progressSize};
       --progress-primary-color: ${lineColorComputed};
@@ -186,7 +186,7 @@ const showSuccess = computed(() => {
   </div>
   <div
     v-else
-    class="m-progress-circle"
+    class="progress-circle-wrap"
     :style="`
       --progress-size: ${progressSize};
       --progress-primary-color: ${isGradientColor ? `url(#${circleGradient})` : lineColorComputed};
@@ -256,7 +256,7 @@ const showSuccess = computed(() => {
 .fade-leave-to {
   opacity: 0;
 }
-.m-progress-line {
+.progress-line-wrap {
   display: flex;
   align-items: center;
   width: var(--progress-size);
@@ -334,7 +334,7 @@ const showSuccess = computed(() => {
     color: rgba(0, 0, 0, 0.88);
   }
 }
-.m-progress-circle {
+.progress-circle-wrap {
   display: inline-block;
   position: relative;
   width: var(--progress-size);

@@ -46,7 +46,7 @@ const showExtra = computed(() => {
 </script>
 <template>
   <div
-    class="m-card"
+    class="card-wrap"
     :class="{
       'card-bordered': bordered,
       'card-small': size === 'small',
@@ -74,7 +74,7 @@ const showExtra = computed(() => {
   </div>
 </template>
 <style lang="less" scoped>
-.m-card {
+.card-wrap {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;

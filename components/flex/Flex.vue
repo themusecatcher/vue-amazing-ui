@@ -44,7 +44,7 @@ const gapValue = computed(() => {
 </script>
 <template>
   <div
-    class="m-flex"
+    class="flex-wrap"
     :class="{ 'flex-vertical': vertical }"
     :style="`
       width: ${flexWidth};
@@ -59,7 +59,7 @@ const gapValue = computed(() => {
   </div>
 </template>
 <style lang="less" scoped>
-.m-flex {
+.flex-wrap {
   display: flex;
   flex-wrap: var(--wrap);
   justify-content: var(--justify);

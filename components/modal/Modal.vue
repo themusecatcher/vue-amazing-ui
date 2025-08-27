@@ -88,7 +88,7 @@ const mousePosition = ref<{ x: number; y: number } | null>(null) // 鼠标点击
 const modalOpen = ref<boolean>(false)
 const showModalWrap = ref<boolean>(false)
 const confirmBtnLoading = ref<boolean>(false)
-const transformOrigin = ref<string>('50% 50%')
+const modalTransformOrigin = ref<string>('50% 50%')
 const modalData = ref<Modal>()
 const modalMode = ref() // 弹窗类型：'info' 'success' 'error' 'warning' 'confirm' 'erase'
 const { colorPalettes } = useInject('Modal') // 主题色注入
@@ -109,13 +109,13 @@ const modalStyle = computed(() => {
   if (modalCentered.value) {
     return {
       width: modalWidth.value,
-      transformOrigin: transformOrigin.value
+      transformOrigin: modalTransformOrigin.value
     } as CSSProperties
   } else {
     return {
       width: modalWidth.value,
       top: modalTop.value,
-      transformOrigin: transformOrigin.value
+      transformOrigin: modalTransformOrigin.value
     } as CSSProperties
   }
 })
@@ -214,18 +214,18 @@ async function onBeforeEnter(el: Element) {
   const transOrigin = getComputedValue('transformOrigin')
   if (transOrigin === 'mouse' && mousePosition.value) {
     const rect = el.getBoundingClientRect()
-    transformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
+    modalTransformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
   } else {
-    transformOrigin.value = '50% 50%'
+    modalTransformOrigin.value = '50% 50%'
   }
 }
 function onBeforeLeave(el: Element) {
   const transOrigin = getComputedValue('transformOrigin')
   if (transOrigin === 'mouse' && mousePosition.value) {
     const rect = el.getBoundingClientRect()
-    transformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
+    modalTransformOrigin.value = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
   } else {
-    transformOrigin.value = '50% 50%'
+    modalTransformOrigin.value = '50% 50%'
   }
 }
 function onAfterLeave() {
@@ -302,7 +302,7 @@ defineExpose({
 </script>
 <template>
   <div
-    class="m-modal-root"
+    class="modal-root"
     :style="`
       --modal-primary-color: ${colorPalettes[5]};
       --modal-success-color: #52c41a;
@@ -319,7 +319,7 @@ defineExpose({
       v-show="showModalWrap"
       tabindex="-1"
       ref="modalWrapRef"
-      class="m-modal-wrap"
+      class="modal-wrap"
       :class="{ 'flex-centered': modalCentered }"
       @click.self="getComputedValue('maskClosable') ? onCancel() : () => false"
       @keydown.esc="getComputedValue('keyboard') ? onCancel() : () => false"
@@ -336,7 +336,7 @@ defineExpose({
         @before-leave="onBeforeLeave"
         @after-leave="onAfterLeave"
       >
-        <div v-show="modalOpen" class="m-modal" :style="modalStyle">
+        <div v-show="modalOpen" class="modal-container" :style="modalStyle">
           <div v-if="!modalDestroyOnClose" class="modal-body-wrap" :class="modalBodyClass" :style="modalBodyStyle">
             <div class="modal-body">
               <div
@@ -642,13 +642,13 @@ defineExpose({
   z-index: 1000;
   background: rgba(0, 0, 0, 0.45);
 }
-.m-modal-wrap {
+.modal-wrap {
   position: fixed;
   inset: 0;
   overflow: auto;
   outline: 0;
   z-index: 1010;
-  .m-modal {
+  .modal-container {
     position: relative;
     margin: 0 auto;
     color: rgba(0, 0, 0, 0.88);
@@ -736,7 +736,7 @@ defineExpose({
   display: flex;
   justify-content: center;
   align-items: center;
-  .m-modal {
+  .modal-container {
     padding-bottom: 0;
   }
 }

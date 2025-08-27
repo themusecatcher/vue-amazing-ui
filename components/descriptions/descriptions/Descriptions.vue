@@ -213,7 +213,7 @@ function setStyle(element: any, styles: any) {
 }
 </script>
 <template>
-  <div class="m-descriptions" :class="`descriptions-${size}`">
+  <div class="descriptions-wrap" :class="`descriptions-${size}`">
     <div class="descriptions-header" v-if="showHeader">
       <div class="descriptions-title">
         <slot name="title">{{ title }}</slot>
@@ -271,7 +271,7 @@ function setStyle(element: any, styles: any) {
   </div>
 </template>
 <style lang="less" scoped>
-.m-descriptions {
+.descriptions-wrap {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;

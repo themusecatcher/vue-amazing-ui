@@ -52,7 +52,7 @@ function onWaveEnd(): void {
 </script>
 <template>
   <div
-    class="m-switch"
+    class="switch-wrap"
     :class="{
       'switch-loading': loading,
       'switch-small': size === 'small',
@@ -85,7 +85,7 @@ function onWaveEnd(): void {
   </div>
 </template>
 <style lang="less" scoped>
-.m-switch {
+.switch-wrap {
   position: relative;
   display: inline-flex;
   align-items: center;

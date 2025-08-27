@@ -527,6 +527,10 @@ defineExpose({
   </div>
 </template>
 <style lang="less" scoped>
+.m-tooltip-wrap {
+  position: relative;
+  display: inline-block;
+}
 .zoom-enter {
   transform: none;
   opacity: 0;

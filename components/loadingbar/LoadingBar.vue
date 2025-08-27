@@ -143,7 +143,7 @@ defineExpose({
       <div
         v-if="initialDisplay"
         v-show="showLoadingBar"
-        class="loading-bar-container"
+        class="loading-bar-wrap"
         :class="containerClass"
         :style="[
           `
@@ -171,7 +171,7 @@ defineExpose({
 .fade-in-leave-to {
   opacity: 0;
 }
-.loading-bar-container {
+.loading-bar-wrap {
   position: fixed;
   top: 0;
   left: 0;

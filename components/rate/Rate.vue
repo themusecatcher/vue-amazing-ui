@@ -101,7 +101,7 @@ function onDown(): void {
 </script>
 <template>
   <div
-    class="m-rate"
+    class="rate-wrap"
     :class="{ 'rate-disabled': disabled }"
     :style="`--rate-star-color: ${color}; --rate-star-gap: ${gap}px; --rate-star-size: ${size}px;`"
     @mouseleave="onLeave"
@@ -276,7 +276,7 @@ function onDown(): void {
   </div>
 </template>
 <style lang="less" scoped>
-.m-rate {
+.rate-wrap {
   display: inline-flex;
   gap: var(--rate-star-gap);
   line-height: normal;

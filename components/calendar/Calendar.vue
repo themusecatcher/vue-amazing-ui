@@ -362,7 +362,7 @@ function onPanelChange(): void {
 </script>
 <template>
   <div
-    class="m-calendar"
+    class="calendar-wrap"
     :class="`calendar-${display}`"
     :style="`
       --calendar-primary-color: ${colorPalettes[5]};
@@ -491,7 +491,7 @@ function onPanelChange(): void {
   </div>
 </template>
 <style lang="less" scoped>
-.m-calendar {
+.calendar-wrap {
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
   line-height: 1.5714285714285714;

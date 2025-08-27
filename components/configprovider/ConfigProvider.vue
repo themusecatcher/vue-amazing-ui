@@ -312,7 +312,7 @@ function getAlphaColor(frontColor: string, backgroundColor: string = '#ffffff'):
 </script>
 <template>
   <slot v-if="abstract"></slot>
-  <component v-else :is="tag" class="m-config-provider">
+  <component v-else :is="tag" class="config-provider-wrap">
     <slot></slot>
   </component>
 </template>

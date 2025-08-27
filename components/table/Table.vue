@@ -1054,10 +1054,10 @@ function onPaginationChange(page: number, pageSize: number) {
 }
 </script>
 <template>
-  <div ref="tableRef" class="m-table-wrap">
+  <div ref="tableRef" class="table-wrap">
     <Spin size="small" :spinning="loading" v-bind="spinProps">
       <div
-        class="m-table"
+        class="table-container"
         :class="{
           'table-shadow-left': showShadowLeft,
           'table-shadow-right': showShadowRight,
@@ -1073,7 +1073,7 @@ function onPaginationChange(page: number, pageSize: number) {
           <slot name="header">{{ header }}</slot>
         </div>
         <!-- 没有设置垂直滚动 & 没有设置粘性定位的表头和水平滚动条 -->
-        <div v-if="!verticalScroll && !sticky" class="table-container">
+        <div v-if="!verticalScroll && !sticky" class="table-content-container">
           <Scrollbar
             ref="scrollbarRef"
             :style="showHeader ? {} : { borderRadius: '8px 8px 0 0' }"
@@ -1368,7 +1368,7 @@ function onPaginationChange(page: number, pageSize: number) {
             </table>
           </Scrollbar>
         </div>
-        <div v-else class="table-container">
+        <div v-else class="table-content-container">
           <div class="table-head" :class="{ 'table-head-sticky': sticky }">
             <table :style="[tableStyle, tableHeadStyle]" @wheel="xScrollable ? onWheel($event) : () => false">
               <colgroup>
@@ -1695,10 +1695,10 @@ function onPaginationChange(page: number, pageSize: number) {
   </div>
 </template>
 <style lang="less" scoped>
-.m-table-wrap {
+.table-wrap {
   clear: both;
   max-width: 100%;
-  .m-table {
+  .table-container {
     color: rgba(0, 0, 0, 0.88);
     font-size: 14px;
     line-height: 1.5714285714285714;
@@ -1716,7 +1716,7 @@ function onPaginationChange(page: number, pageSize: number) {
       background: #fafafa;
       transition: padding 0.3s;
     }
-    .table-container {
+    .table-content-container {
       position: relative;
       border-top-left-radius: 8px;
       border-top-right-radius: 8px;
@@ -2014,7 +2014,7 @@ function onPaginationChange(page: number, pageSize: number) {
         }
       }
     }
-    .table-header + .table-container {
+    .table-header + .table-content-container {
       border-top-left-radius: 0;
       border-top-right-radius: 0;
       table {
@@ -2030,13 +2030,13 @@ function onPaginationChange(page: number, pageSize: number) {
   }
   .table-shadow-left {
     &:not(.table-has-fix-left) {
-      .table-container {
+      .table-content-container {
         &::before {
           box-shadow: inset 10px 0 8px -8px rgba(5, 5, 5, 0.06);
         }
       }
     }
-    .table-container {
+    .table-content-container {
       .table-cell-fix-left-last {
         &::after {
           box-shadow: inset 10px 0 8px -8px rgba(5, 5, 5, 0.06);
@@ -2046,13 +2046,13 @@ function onPaginationChange(page: number, pageSize: number) {
   }
   .table-shadow-right {
     &:not(.table-has-fix-right) {
-      .table-container {
+      .table-content-container {
         &::after {
           box-shadow: inset -10px 0 8px -8px rgba(5, 5, 5, 0.06);
         }
       }
     }
-    .table-container {
+    .table-content-container {
       .table-cell-fix-right-first {
         &::before {
           box-shadow: inset -10px 0 8px -8px rgba(5, 5, 5, 0.06);
@@ -2066,7 +2066,7 @@ function onPaginationChange(page: number, pageSize: number) {
     .table-footer {
       padding: 8px;
     }
-    .table-container {
+    .table-content-container {
       table {
         .table-th,
         .table-td {
@@ -2081,7 +2081,7 @@ function onPaginationChange(page: number, pageSize: number) {
     .table-footer {
       padding: 12px 8px;
     }
-    .table-container {
+    .table-content-container {
       table {
         .table-th,
         .table-td {
@@ -2108,7 +2108,7 @@ function onPaginationChange(page: number, pageSize: number) {
       border: 1px solid #f0f0f0;
       border-top: 0;
     }
-    .table-container {
+    .table-content-container {
       border: 1px solid #f0f0f0;
       border-bottom: 0;
       border-right: 0;

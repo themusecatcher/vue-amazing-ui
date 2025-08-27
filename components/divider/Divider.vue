@@ -38,7 +38,7 @@ const showText = computed(() => {
 </script>
 <template>
   <div
-    class="m-divider"
+    class="divider-wrap"
     :class="[
       vertical ? 'divider-vertical' : 'divider-horizontal',
       {
@@ -58,7 +58,7 @@ const showText = computed(() => {
   </div>
 </template>
 <style lang="less" scoped>
-.m-divider {
+.divider-wrap {
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
   line-height: 1.5714285714285714;

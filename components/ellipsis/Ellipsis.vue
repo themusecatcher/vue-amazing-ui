@@ -136,7 +136,7 @@ defineExpose({
     </template>
     <div
       ref="ellipsisRef"
-      class="m-ellipsis"
+      class="ellipsis-container"
       :class="[line ? 'ellipsis-line' : 'not-ellipsis-line', { 'ellipsis-cursor-pointer': showExpand }]"
       :style="`--ellipsis-max-width: ${textMaxWidth}; --ellipsis-line: ${ellipsisLine};`"
       @click="showExpand ? onExpand() : () => false"
@@ -146,7 +146,7 @@ defineExpose({
   </Tooltip>
 </template>
 <style lang="less" scoped>
-.m-ellipsis {
+.ellipsis-container {
   overflow: hidden;
   cursor: text;
   max-width: var(--ellipsis-max-width);

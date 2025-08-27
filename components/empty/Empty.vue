@@ -25,7 +25,7 @@ const showFooter = computed(() => {
 })
 </script>
 <template>
-  <div class="m-empty" :class="{ 'empty-image-outlined': image === 'outlined' }">
+  <div class="empty-wrap" :class="{ 'empty-image-outlined': image === 'outlined' }">
     <div class="empty-image-wrap" :style="imageStyle">
       <slot v-if="slotsExist.default"></slot>
       <svg
@@ -97,7 +97,7 @@ const showFooter = computed(() => {
   </div>
 </template>
 <style lang="less" scoped>
-.m-empty {
+.empty-wrap {
   margin-inline: 8px;
   text-align: center;
   .empty-image-wrap {

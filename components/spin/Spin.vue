@@ -60,7 +60,7 @@ const showTip = computed(() => {
 </script>
 <template>
   <div
-    :class="`m-spin spin-${size}`"
+    :class="`spin-wrap spin-${size}`"
     :style="`
       --spin-primary-color: ${primaryColor};
       --spin-ring-rail-color: ${ringRailColor};
@@ -69,7 +69,7 @@ const showTip = computed(() => {
       --spin-speed: ${speed}ms;
     `"
   >
-    <div class="spin-wrap" v-show="spinning">
+    <div class="spin-container" v-show="spinning">
       <div class="spin-box">
         <div v-if="indicator === 'dot'" class="spin-loading-dot">
           <span class="dot-item"></span>
@@ -77,7 +77,7 @@ const showTip = computed(() => {
           <span class="dot-item"></span>
           <span class="dot-item"></span>
         </div>
-        <div v-if="indicator === 'spin-dot'" class="spin-wrap-box" :class="{ 'spin-box-rotate': rotate }">
+        <div v-if="indicator === 'spin-dot'" class="spin-container-box" :class="{ 'spin-box-rotate': rotate }">
           <div class="spin-dot-items">
             <span class="dot-item"></span>
             <span class="dot-item"></span>
@@ -91,7 +91,7 @@ const showTip = computed(() => {
             <span class="dot-item"></span>
           </div>
         </div>
-        <div v-if="indicator === 'spin-line'" class="spin-wrap-box" :class="{ 'spin-box-rotate': rotate }">
+        <div v-if="indicator === 'spin-line'" class="spin-container-box" :class="{ 'spin-box-rotate': rotate }">
           <div class="spin-line-items">
             <span class="line-item"></span>
             <span class="line-item"></span>
@@ -155,14 +155,14 @@ const showTip = computed(() => {
   </div>
 </template>
 <style lang="less" scoped>
-.m-spin {
+.spin-wrap {
   position: relative;
   height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  .spin-wrap {
+  .spin-container {
     position: absolute;
     top: 0;
     left: 0;
@@ -227,7 +227,7 @@ const showTip = computed(() => {
         animation: spinCircle 2.4s ease-in-out;
         -webkit-animation: spinCircle 2.4s ease-in-out;
       }
-      .spin-wrap-box {
+      .spin-container-box {
         text-align: center;
         line-height: 0;
         position: relative;
@@ -549,7 +549,7 @@ const showTip = computed(() => {
   }
 }
 .spin-small {
-  .spin-wrap .spin-box {
+  .spin-container .spin-box {
     .spin-loading-dot {
       width: 20px;
       height: 20px;
@@ -612,7 +612,7 @@ const showTip = computed(() => {
   }
 }
 .spin-middle {
-  .spin-wrap .spin-box {
+  .spin-container .spin-box {
     .spin-loading-dot {
       width: 30px;
       height: 30px;
@@ -675,7 +675,7 @@ const showTip = computed(() => {
   }
 }
 .spin-large {
-  .spin-wrap .spin-box {
+  .spin-container .spin-box {
     .spin-loading-dot {
       width: 40px;
       height: 40px;

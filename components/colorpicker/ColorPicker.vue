@@ -1024,23 +1024,23 @@ function onClear() {
       width: 100%;
       flex-wrap: nowrap;
       vertical-align: bottom;
-      :deep(.m-input) {
+      :deep(.input-wrap) {
         flex-grow: 1;
         flex-basis: 0;
         &:not(:first-child) {
           margin-left: -1px;
-          .input-wrap {
+          .input-container {
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
           }
         }
         &:not(:last-child) {
-          .input-wrap {
+          .input-container {
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
           }
         }
-        .input-wrap {
+        .input-container {
           padding: 1px 4px;
         }
         .input-item {
