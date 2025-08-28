@@ -36,10 +36,10 @@ import {
   unref,
   watch,
   watchEffect
-} from './chunk-G6266EAP.js'
+} from './chunk-WIXD4IJL.js'
 import './chunk-JVWSFFO4.js'
 
-// node_modules/.pnpm/@vueuse+shared@13.6.0_vue@3.5.18_typescript@5.9.2_/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@13.8.0_vue@3.5.20_typescript@5.9.2_/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a
   const result = shallowRef()
@@ -1466,8 +1466,9 @@ function whenever(source, cb, options) {
   return stop
 }
 
-// node_modules/.pnpm/@vueuse+core@13.6.0_vue@3.5.18_typescript@5.9.2_/node_modules/@vueuse/core/index.mjs
+// node_modules/.pnpm/@vueuse+core@13.8.0_vue@3.5.20_typescript@5.9.2_/node_modules/@vueuse/core/index.mjs
 function computedAsync(evaluationCallback, initialState, optionsOrRef) {
+  var _a
   let options
   if (isRef(optionsOrRef)) {
     options = {
@@ -1476,7 +1477,13 @@ function computedAsync(evaluationCallback, initialState, optionsOrRef) {
   } else {
     options = optionsOrRef || {}
   }
-  const { lazy = false, flush = 'pre', evaluating = void 0, shallow = true, onError = noop } = options
+  const {
+    lazy = false,
+    flush = 'pre',
+    evaluating = void 0,
+    shallow = true,
+    onError = (_a = globalThis.reportError) != null ? _a : noop
+  } = options
   const started = shallowRef(!lazy)
   const current = shallow ? shallowRef(initialState) : ref(initialState)
   let counter = 0
@@ -1822,12 +1829,12 @@ function useMutationObserver(target, callback, options = {}) {
     return new Set(items)
   })
   const stopWatch = watch(
-    () => targets.value,
-    (targets2) => {
+    targets,
+    (newTargets) => {
       cleanup()
-      if (isSupported.value && targets2.size) {
+      if (isSupported.value && newTargets.size) {
         observer = new MutationObserver(callback)
-        targets2.forEach((el) => observer.observe(el, mutationOptions))
+        newTargets.forEach((el) => observer.observe(el, mutationOptions))
       }
     },
     { immediate: true, flush: 'post' }
@@ -2282,7 +2289,7 @@ function useAnimate(target, keyframes, options) {
     () => unrefElement(target),
     (el) => {
       if (el) {
-        update()
+        update(true)
       } else {
         animate.value = void 0
       }
@@ -2431,10 +2438,11 @@ function whenAborted(signal) {
   })
 }
 function useAsyncState(promise, initialState, options) {
+  var _a
   const {
     immediate = true,
     delay = 0,
-    onError = noop,
+    onError = (_a = globalThis.reportError) != null ? _a : noop,
     onSuccess = noop,
     resetOnExecute = true,
     shallow = true,
@@ -3109,7 +3117,9 @@ function useClipboardItems(options = {}) {
       })
     }
   }
-  if (isSupported.value && read) useEventListener(['copy', 'cut'], updateContent, { passive: true })
+  if (isSupported.value && read) {
+    useEventListener(['copy', 'cut'], updateContent, { passive: true })
+  }
   async function copy(value = toValue(source)) {
     if (isSupported.value && value != null) {
       await navigator2.clipboard.write(value)
@@ -3120,9 +3130,10 @@ function useClipboardItems(options = {}) {
   }
   return {
     isSupported,
-    content,
-    copied,
-    copy
+    content: shallowReadonly(content),
+    copied: readonly(copied),
+    copy,
+    read: updateContent
   }
 }
 function cloneFnJSON(source) {
@@ -3280,7 +3291,7 @@ function useStorage(key, defaults2, storage, options = {}) {
   const rawInit = toValue(defaults2)
   const type = guessSerializerType(rawInit)
   const serializer = (_a = options.serializer) != null ? _a : StorageSerializers[type]
-  const { pause: pauseWatch, resume: resumeWatch } = watchPausable(data, () => write(data.value), {
+  const { pause: pauseWatch, resume: resumeWatch } = watchPausable(data, (newValue) => write(newValue), {
     flush,
     deep,
     eventFilter
@@ -3367,10 +3378,15 @@ function useStorage(key, defaults2, storage, options = {}) {
       data.value = rawInit
       return
     }
-    if (event && event.key !== keyComputed.value) return
+    if (event && event.key !== keyComputed.value) {
+      return
+    }
     pauseWatch()
     try {
-      if ((event == null ? void 0 : event.newValue) !== serializer.write(data.value)) data.value = read(event)
+      const serializedData = serializer.write(data.value)
+      if (event === void 0 || (event == null ? void 0 : event.newValue) !== serializedData) {
+        data.value = read(event)
+      }
     } catch (e) {
       onError(e)
     } finally {
@@ -4587,7 +4603,15 @@ function useEventSource(url, events2 = [], options = {}) {
   const lastEventId = shallowRef(null)
   let explicitlyClosed = false
   let retried = 0
-  const { withCredentials = false, immediate = true, autoConnect = true, autoReconnect } = options
+  const {
+    withCredentials = false,
+    immediate = true,
+    autoConnect = true,
+    autoReconnect,
+    serializer = {
+      read: (v) => v
+    }
+  } = options
   const close = () => {
     if (isClient && eventSource.value) {
       eventSource.value.close()
@@ -4618,8 +4642,9 @@ function useEventSource(url, events2 = [], options = {}) {
       }
     }
     es.onmessage = (e) => {
+      var _a
       event.value = null
-      data.value = e.data
+      data.value = (_a = serializer.read(e.data)) != null ? _a : null
       lastEventId.value = e.lastEventId
     }
     for (const event_name of events2) {
@@ -4627,9 +4652,10 @@ function useEventSource(url, events2 = [], options = {}) {
         es,
         event_name,
         (e) => {
+          var _a, _b
           event.value = event_name
-          data.value = e.data || null
-          lastEventId.value = e.lastEventId || null
+          data.value = (_a = serializer.read(e.data)) != null ? _a : null
+          lastEventId.value = (_b = e.lastEventId) != null ? _b : null
         },
         { passive: true }
       )
@@ -6867,7 +6893,7 @@ var keys = Object.keys(defaultState)
 function usePointer(options = {}) {
   const { target = defaultWindow } = options
   const isInside = shallowRef(false)
-  const state = ref(options.initialValue || {})
+  const state = shallowRef(options.initialValue || {})
   Object.assign(state.value, defaultState, state.value)
   const handler = (event) => {
     isInside.value = true
@@ -7073,9 +7099,9 @@ function usePreferredContrast(options) {
 }
 function usePreferredLanguages(options = {}) {
   const { window: window2 = defaultWindow } = options
-  if (!window2) return ref(['en'])
+  if (!window2) return shallowRef(['en'])
   const navigator2 = window2.navigator
-  const value = ref(navigator2.languages)
+  const value = shallowRef(navigator2.languages)
   useEventListener(
     window2,
     'languagechange',
@@ -7430,7 +7456,7 @@ function useSpeechRecognition(options = {}) {
   }
 }
 function useSpeechSynthesis(text, options = {}) {
-  const { pitch = 1, rate = 1, volume = 1, window: window2 = defaultWindow } = options
+  const { pitch = 1, rate = 1, volume = 1, window: window2 = defaultWindow, onBoundary } = options
   const synth = window2 && window2.speechSynthesis
   const isSupported = useSupported(() => synth)
   const isPlaying = shallowRef(false)
@@ -7465,6 +7491,9 @@ function useSpeechSynthesis(text, options = {}) {
     }
     utterance2.onerror = (event) => {
       error.value = event
+    }
+    utterance2.onboundary = (event) => {
+      onBoundary == null ? void 0 : onBoundary(event)
     }
   }
   const utterance = computed(() => {
@@ -7974,6 +8003,60 @@ function formatTimeAgo(from, options = {}, now2 = Date.now()) {
     if (absDiff < unit.max) return format(diff, unit)
   }
   return messages.invalid
+}
+var UNITS = [
+  { name: 'year', ms: 31536e6 },
+  { name: 'month', ms: 2592e6 },
+  { name: 'week', ms: 6048e5 },
+  { name: 'day', ms: 864e5 },
+  { name: 'hour', ms: 36e5 },
+  { name: 'minute', ms: 6e4 },
+  { name: 'second', ms: 1e3 }
+]
+function useTimeAgoIntl(time, options = {}) {
+  const { controls: exposeControls = false, updateInterval = 3e4 } = options
+  const { now: now2, ...controls } = useNow({ interval: updateInterval, controls: true })
+  const result = computed(() => getTimeAgoIntlResult(new Date(toValue(time)), options, toValue(now2)))
+  const parts = computed(() => result.value.parts)
+  const timeAgoIntl = computed(() =>
+    formatTimeAgoIntlParts(parts.value, {
+      ...options,
+      locale: result.value.resolvedLocale
+    })
+  )
+  return exposeControls ? { timeAgoIntl, parts, ...controls } : timeAgoIntl
+}
+function formatTimeAgoIntl(from, options = {}, now2 = Date.now()) {
+  const { parts, resolvedLocale } = getTimeAgoIntlResult(from, options, now2)
+  return formatTimeAgoIntlParts(parts, {
+    ...options,
+    locale: resolvedLocale
+  })
+}
+function getTimeAgoIntlResult(from, options = {}, now2 = Date.now()) {
+  const { locale, relativeTimeFormatOptions = { numeric: 'auto' } } = options
+  const rtf = new Intl.RelativeTimeFormat(locale, relativeTimeFormatOptions)
+  const { locale: resolvedLocale } = rtf.resolvedOptions()
+  const diff = +from - +now2
+  const absDiff = Math.abs(diff)
+  for (const { name, ms } of UNITS) {
+    if (absDiff >= ms) {
+      return {
+        resolvedLocale,
+        parts: rtf.formatToParts(Math.round(diff / ms), name)
+      }
+    }
+  }
+  return {
+    resolvedLocale,
+    parts: rtf.formatToParts(0, 'second')
+  }
+}
+function formatTimeAgoIntlParts(parts, options = {}) {
+  const { insertSpace = true, joinParts, locale } = options
+  if (typeof joinParts === 'function') return joinParts(parts, locale)
+  if (!insertSpace) return parts.map((part) => part.value).join('')
+  return parts.map((part) => part.value.trim()).join(' ')
 }
 function useTimeoutPoll(fn, interval, options = {}) {
   const { immediate = true, immediateCallback = false } = options
@@ -9168,6 +9251,8 @@ export {
   extendRef,
   formatDate,
   formatTimeAgo,
+  formatTimeAgoIntl,
+  formatTimeAgoIntlParts,
   get,
   getLifeCycleTarget,
   getSSRHandler,
@@ -9375,6 +9460,7 @@ export {
   useThrottleFn,
   useThrottledRefHistory,
   useTimeAgo,
+  useTimeAgoIntl,
   useTimeout,
   useTimeoutFn,
   useTimeoutPoll,
