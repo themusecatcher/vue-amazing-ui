@@ -9,7 +9,43 @@
   <p style="font-size: 18px; font-weight: 600; color: #1677ff;">Join Me</p>
   <template #description>
     <p style="font-size: 16px;">
-      如果您对 Vue Amazing UI 感兴趣，欢迎加入我，一起开发、维护和迭代组件库。您的贡献将帮助组件库不断的更新与完善，共同打造更 Amazing 的 UI 组件库！
+      如果您对
+      <GradientText
+        :size="18"
+        :weight="600"
+        :gradient="{
+          deg: '90deg',
+          from: '#09c8ce',
+          to: '#eb2f96'
+        }"
+      >
+        Vue Amazing UI
+      </GradientText>
+      感兴趣，欢迎加入我，一起开发、维护和迭代组件库。您的贡献将帮助组件库不断的更新与完善，共同打造更
+      <GradientText
+        :size="18"
+        :weight="600"
+        :gradient="{
+          deg: '90deg',
+          from: '#09c8ce',
+          to: '#eb2f96'
+        }"
+      >
+        Amazing
+      </GradientText>
+      的
+      <GradientText
+        :size="18"
+        :weight="600"
+        :gradient="{
+          deg: '90deg',
+          from: '#09c8ce',
+          to: '#eb2f96'
+        }"
+      >
+        UI
+      </GradientText>
+      组件库！
     </p>
   </template>
 </Alert>
