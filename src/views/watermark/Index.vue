@@ -1,5 +1,12 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
+import { dateFormat } from 'vue-amazing-ui'
+const realTime = ref<string>(dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS'))
+const updateTime = () => {
+  realTime.value = dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS')
+  requestAnimationFrame(updateTime)
+}
+requestAnimationFrame(updateTime)
 const show = ref(false)
 const fixed = ref(true)
 const imageModel = reactive({
@@ -43,6 +50,10 @@ const layoutOptions = [
     <h3 class="mb10">通过 content 设置 字符串数组 指定多行文字水印内容。</h3>
     <Watermark :content="['Vue Amazing UI', 'Hello World']">
       <div style="height: 400px" />
+    </Watermark>
+    <h2 class="mt30 mb10">实时水印</h2>
+    <Watermark :content="realTime" :text-style="{ fontFamily: 'Helvetica Neue' }">
+      <div style="height: 360px" />
     </Watermark>
     <h2 class="mt30 mb10">图片水印</h2>
     <h3 class="mb10"
