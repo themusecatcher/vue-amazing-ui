@@ -44,8 +44,8 @@ const QRCodes = [
   single
   :gap="12"
   :item-style="{ fontSize: '18px', fontWeight: 500, color: 'rgba(0, 0, 0, 0.88)' }"
-/>
-<Alert v-else style="background-color: #fff; box-shadow: 0 0 5px #d3d3d3;">
+/> <Alert v-else style="background-color: #fff; box-shadow: 0 0 5px #d3d3d3;">
+
   <p style="font-size: 18px; font-weight: 500; color: rgba(0, 0, 0, 0.88);">
     {{ sponsorItem.title }}
   </p>
@@ -100,11 +100,21 @@ const QRCodes = [
 
 <Alert type="info" :bordered="false" show-icon>
   <template #icon>
-    <HeartFilled style="font-size: 32px; color: #cf1322;" />
+    <HeartFilled style="font-size: 36px; color: #cf1322;" />
   </template>
-  <span style="font-size: 20px; font-weight: 600;">Vue Amazing UI to YOU ：</span>
+  <GradientText
+    :size="24"
+    :weight="700"
+    :gradient="{
+      deg: '90deg',
+      from: '#09c8ce',
+      to: '#eb2f96'
+    }"
+  >
+    Vue Amazing UI to YOU：
+  </GradientText>
   <template #description>
-    <span style="font-size: 16px;">
+    <span style="font-size: 18px; font-weight: 500;">
       • 您的支持和赞助对我来说至关重要！
       <br/>
       • 真诚感谢每一位现有的和未来的支持者和赞助者！
@@ -148,7 +158,7 @@ const QRCodes = [
 
 所有的赞助者都将出现在此处，非常感谢你们的支持与赞助 ❤️❤️
 
-*可自定义展示您的个人头像，名称以及主页的跳转地址（只需将这些信息发送至右下角的邮箱，稍待片刻 😉）*
+_可自定义展示您的个人头像，名称以及主页的跳转地址（只需将这些信息发送至右下角的邮箱，稍待片刻 😉）_
 
 <br/>
 
