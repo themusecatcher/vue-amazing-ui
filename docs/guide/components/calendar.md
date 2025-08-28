@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*按照日历形式展示数据的容器*
+_按照日历形式展示数据的容器_
 
 ## 何时使用
 
@@ -287,9 +287,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
   <Space>
     <Calendar v-model:value="headerDate" header="Custom header" display="card" @panelChange="onPanelChange" />
     <Calendar v-model:value="headerDate" display="card" @panelChange="onPanelChange">
-      <template #header>
-        <CalendarOutlined /> 日历
-      </template>
+      <template #header> <CalendarOutlined /> 日历 </template>
     </Calendar>
   </Space>
 </template>
@@ -365,7 +363,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ## 自定义展示格式
 
-*使用 `weekFormat` / `dateFormat` / `monthFormat` 自定义日期/星期/月的展示格式*
+_使用 `weekFormat` / `dateFormat` / `monthFormat` 自定义日期/星期/月的展示格式_
 
 <br/>
 
@@ -477,31 +475,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ## 通知事项日历
 
-<Calendar v-model:value="noticeDate" @panelChange="onPanelChange">
-  <template #dateValue="{ dateObject, timestamp }">
-    <span v-if="[8, 12, 16].includes(dateObject.date)">{{ dateObject.date }}日</span>
-  </template>
-  <template #dateContent="{ dateObject, timestamp }">
-    <template v-if="[8, 12, 16].includes(dateObject.date)">
-      <Badge status="warning" text="This is warning event." />
-      <Badge status="success" text="This is usual event." />
-      <Badge color="volcano" text="This is volcano event" />
-    </template>
-  </template>
-  <template #monthValue="{ monthObject, timestamp }">
-    <template v-if="[1, 7].includes(monthObject.month)">
-      <template v-if="monthObject.month === 1">二月</template>
-      <template v-if="monthObject.month === 7">八月</template>
-    </template>
-  </template>
-  <template #monthContent="{ monthObject, timestamp }">
-    <template v-if="[1, 7].includes(monthObject.month)">
-      <Badge status="warning" text="This is warning event." />
-      <Badge status="success" text="This is usual event." />
-      <Badge color="volcano" text="This is volcano event" />
-    </template>
-  </template>
-</Calendar>
+<Calendar v-model:value="noticeDate" @panelChange="onPanelChange"> <template #dateValue="{ dateObject, timestamp }"> <span v-if="[8, 12, 16].includes(dateObject.date)">{{ dateObject.date }}日</span> </template> <template #dateContent="{ dateObject, timestamp }"> <template v-if="[8, 12, 16].includes(dateObject.date)"> <Badge status="warning" text="This is warning event." /> <Badge status="success" text="This is usual event." /> <Badge color="volcano" text="This is volcano event" /> </template> </template> <template #monthValue="{ monthObject, timestamp }"> <template v-if="[1, 7].includes(monthObject.month)"> <template v-if="monthObject.month === 1">二月</template> <template v-if="monthObject.month === 7">八月</template> </template> </template> <template #monthContent="{ monthObject, timestamp }"> <template v-if="[1, 7].includes(monthObject.month)"> <Badge status="warning" text="This is warning event." /> <Badge status="success" text="This is usual event." /> <Badge color="volcano" text="This is volcano event" /> </template> </template> </Calendar>
 
 ::: details Show Code
 
@@ -544,7 +518,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
   </Calendar>
 </template>
 <style lang="less" scoped>
-.m-badge {
+.badge-wrap {
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
@@ -557,15 +531,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ## 自定义插槽
 
-<Calendar v-model:value="slotDate" @panelChange="onPanelChange">
-  <template #week="{ defaultWeek, week, timestamp }">
-    {{ format(timestamp, 'EEE') }}
-  </template>
-  <template #dateValue="{ dateObject, timestamp }"> {{ dateObject.date }}日 </template>
-  <template #monthValue="{ monthObject, timestamp }">
-    {{ format(timestamp, 'MMMM') }}
-  </template>
-</Calendar>
+<Calendar v-model:value="slotDate" @panelChange="onPanelChange"> <template #week="{ defaultWeek, week, timestamp }"> {{ format(timestamp, 'EEE') }} </template> <template #dateValue="{ dateObject, timestamp }"> {{ dateObject.date }}日 </template> <template #monthValue="{ monthObject, timestamp }"> {{ format(timestamp, 'MMMM') }} </template> </Calendar>
 
 ::: details Show Code
 
@@ -698,11 +664,23 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
     <Space>
       <Flex vertical>
         <Alert type="info" message="禁用指定日期 (以今天为准的前三天和后三天)" />
-        <Calendar v-model:value="disableDate" :disabled-date="disabledDate" :display="disabledDisplay" @select="onSelect" @panelChange="onPanelChange" />
+        <Calendar
+          v-model:value="disableDate"
+          :disabled-date="disabledDate"
+          :display="disabledDisplay"
+          @select="onSelect"
+          @panelChange="onPanelChange"
+        />
       </Flex>
       <Flex vertical>
         <Alert type="info" message="禁用所有周末 (星期六 & 星期日)" />
-        <Calendar v-model:value="disableDate" :disabled-date="disabledWeekend" :display="disabledDisplay" @select="onSelect" @panelChange="onPanelChange" />
+        <Calendar
+          v-model:value="disableDate"
+          :disabled-date="disabledWeekend"
+          :display="disabledDisplay"
+          @select="onSelect"
+          @panelChange="onPanelChange"
+        />
       </Flex>
     </Space>
   </Flex>
@@ -746,7 +724,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 <Message ref="message" />
 
 <style lang="less" scoped>
-.m-badge {
+.badge-wrap {
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
@@ -758,69 +736,69 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ### Calendar
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-display | 日历展示方式，面板/卡片 | 'panel' &#124; 'card' | 'panel'
-mode | 初始模式 | 'month' &#124; 'year' | 'month'
-header | 自定义日历头部内容 | string &#124; slot | undefined
-yearSelectProps | 年选择器 `props`，参考 [Select Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html#select) | object | {}
-monthSelectProps | 月选择器 `props`，参考 [Select Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html#select) | object | {}
-modeRadioProps | 模式切换器 `props`，参考 [Radio Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/radio.html#radio) | object | {}
-startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一 | [DayOfWeek](#dayofweek-type) | 0
-dateStrip | 日历面板默认会显示六周的日期，当最后一周的日期不包含当月日期时，是否去掉 | boolean | true
-dateFormat | 自定义日期展示格式 | (date: number, timestamp: number) => string | undefined
-weekFormat | 自定义星期展示格式 (defaultWeek: [DefaultWeek](#defaultweek-type), week: number, timestamp: number) => string | undefined
-monthFormat | 自定义月展示格式 | (month: number, timestamp: number) => string | undefined
-disabledDate | 不可选择的日期 | (timestamp: number) => boolean | undefined
-valueFormat | 被选中日期的格式，默认为时间戳；参考 [format](https://date-fns.org/v4.1.0/docs/format) | string | undefined
-value <Tag color="cyan">v-model</Tag> | 当前被选中的日期 | string &#124; number | undefined
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| display | 日历展示方式，面板/卡片 | 'panel' &#124; 'card' | 'panel' |
+| mode | 初始模式 | 'month' &#124; 'year' | 'month' |
+| header | 自定义日历头部内容 | string &#124; slot | undefined |
+| yearSelectProps | 年选择器 `props`，参考 [Select Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html#select) | object | {} |
+| monthSelectProps | 月选择器 `props`，参考 [Select Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html#select) | object | {} |
+| modeRadioProps | 模式切换器 `props`，参考 [Radio Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/radio.html#radio) | object | {} |
+| startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一 | [DayOfWeek](#dayofweek-type) | 0 |
+| dateStrip | 日历面板默认会显示六周的日期，当最后一周的日期不包含当月日期时，是否去掉 | boolean | true |
+| dateFormat | 自定义日期展示格式 | (date: number, timestamp: number) => string | undefined |
+| weekFormat | 自定义星期展示格式 (defaultWeek: [DefaultWeek](#defaultweek-type), week: number, timestamp: number) => string | undefined |
+| monthFormat | 自定义月展示格式 | (month: number, timestamp: number) => string | undefined |
+| disabledDate | 不可选择的日期 | (timestamp: number) => boolean | undefined |
+| valueFormat | 被选中日期的格式，默认为时间戳；参考 [format](https://date-fns.org/v4.1.0/docs/format) | string | undefined |
+| value <Tag color="cyan">v-model</Tag> | 当前被选中的日期 | string &#124; number | undefined |
 
 ### DayOfWeek Type
 
-名称 | 值
-:-- | :--
-DayOfWeek | 0 &#124; 1 &#124; 2 &#124; 3 &#124; 4 &#124; 5 &#124; 6
+| 名称      | 值                                                      |
+| :-------- | :------------------------------------------------------ |
+| DayOfWeek | 0 &#124; 1 &#124; 2 &#124; 3 &#124; 4 &#124; 5 &#124; 6 |
 
 ### DefaultWeek Type
 
-名称 | 值
-:-- | :--
-DefaultWeek | '一' &#124; '二' &#124; '三' &#124; '四' &#124; '五' &#124; '六' &#124; '日'
+| 名称        | 值                                                                           |
+| :---------- | :--------------------------------------------------------------------------- |
+| DefaultWeek | '一' &#124; '二' &#124; '三' &#124; '四' &#124; '五' &#124; '六' &#124; '日' |
 
 ### DateItem Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-type | 类型 | 'date' | undefined
-dateObject | 日期对象 | \{ date: number, month: number, year: number } | undefined
-timestamp | 当天开始的时间戳 | number | undefined
-inCurrentMonth | 是否在当前月 | boolean | undefined
-isCurrentDate | 是否为今天 | boolean | undefined
+| 名称           | 说明             | 类型                                           | 默认值    |
+| :------------- | :--------------- | :--------------------------------------------- | :-------- |
+| type           | 类型             | 'date'                                         | undefined |
+| dateObject     | 日期对象         | \{ date: number, month: number, year: number } | undefined |
+| timestamp      | 当天开始的时间戳 | number                                         | undefined |
+| inCurrentMonth | 是否在当前月     | boolean                                        | undefined |
+| isCurrentDate  | 是否为今天       | boolean                                        | undefined |
 
 ### MonthItem Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-type | 类型 | 'month' | undefined
-monthObject | 月份对象 | \{ month: number, year: number } | undefined
-timestamp | 当月开始的时间戳 | number | undefined
-isCurrent | 是否为当前月 | boolean | undefined
+| 名称        | 说明             | 类型                             | 默认值    |
+| :---------- | :--------------- | :------------------------------- | :-------- |
+| type        | 类型             | 'month'                          | undefined |
+| monthObject | 月份对象         | \{ month: number, year: number } | undefined |
+| timestamp   | 当月开始的时间戳 | number                           | undefined |
+| isCurrent   | 是否为当前月     | boolean                          | undefined |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-header | 自定义日历头部内容 | v-slot:header
-week | 自定义周展示 | v-slot:week="{ defaultWeek, week, timestamp }"
-dateValue | 自定义日期展示 | v-slot:dateValue="{ type, dateObject, timestamp, inCurrentMonth, isCurrentDate }"
-dateContent | 自定义日期内容展示 | v-slot:dateContent="{ type, dateObject, timestamp, inCurrentMonth, isCurrentDate }"
-monthValue | 自定义月份展示 | v-slot:dateValue="{ type, monthObject, timestamp, isCurrent }"
-monthContent | 自定义月份内容展示 | v-slot:dateContent="{ type, monthObject, timestamp, isCurrent }"
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| header | 自定义日历头部内容 | v-slot:header |
+| week | 自定义周展示 | v-slot:week="{ defaultWeek, week, timestamp }" |
+| dateValue | 自定义日期展示 | v-slot:dateValue="{ type, dateObject, timestamp, inCurrentMonth, isCurrentDate }" |
+| dateContent | 自定义日期内容展示 | v-slot:dateContent="{ type, dateObject, timestamp, inCurrentMonth, isCurrentDate }" |
+| monthValue | 自定义月份展示 | v-slot:dateValue="{ type, monthObject, timestamp, isCurrent }" |
+| monthContent | 自定义月份内容展示 | v-slot:dateContent="{ type, monthObject, timestamp, isCurrent }" |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 日期变化时的回调 | (date: string &#124; number, dateOrMonth: [DateItem](#dateitem-type)['dateObject'] &#124; [MonthItem](#monthitem-type)['monthObject']) => void
-panelChange | 日期面板变化的回调 | (date: string &#124; number, info: { year: number, month?: number }, mode: 'month' &#124; 'year') => void
-select | 选择日期回调，包含来源信息 | (date: string &#124; number, source: 'date' &#124; 'month') => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| change | 日期变化时的回调 | (date: string &#124; number, dateOrMonth: [DateItem](#dateitem-type)['dateObject'] &#124; [MonthItem](#monthitem-type)['monthObject']) => void |
+| panelChange | 日期面板变化的回调 | (date: string &#124; number, info: { year: number, month?: number }, mode: 'month' &#124; 'year') => void |
+| select | 选择日期回调，包含来源信息 | (date: string &#124; number, source: 'date' &#124; 'month') => void |
