@@ -6,8 +6,8 @@
 
 ## <VersionDateTag date="2025-08-28">2.4.19</VersionDateTag>
 
-- 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，新增 `placement` `flip` `to` 属性，支持：设置下拉面板弹出位置；下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置；下拉面板挂载的容器节点，默认挂载到 `body` 下
-- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，属性 `amount` 新增 `false` 类型，用于支持所有文字平铺展示；新增 `ellipsis` `ellipsisProps` 属性，支持：文字超出时是否启用文本省略组件；配置文本省略组件属性
+- 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，新增 `placement` `flip` `to` 属性，支持：设置下拉面板弹出位置；设置下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置；设置下拉面板挂载的容器节点，默认挂载到 `body` 下
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，属性 `amount` 新增 `false` 类型，用于支持所有文字平铺展示；新增 `ellipsis` `ellipsisProps` 属性，支持：设置文字超出时是否启用文本省略组件；配置文本省略组件属性
 - 组件库及文档代码优化
 - 更新组件库部分依赖版本
 
