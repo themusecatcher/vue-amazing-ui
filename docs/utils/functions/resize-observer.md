@@ -155,9 +155,9 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
 })
 </script>
 
-<div class="m-size-wrap">
+<div class="size-wrap">
   <textarea ref="el" class="resizer" disabled />
-  <div class="m-size">
+  <div class="size-container">
     <p>borderBlockSize: {{ state.borderBlockSize }}</p>
     <p>borderInlineSize: {{ state.borderInlineSize }}</p>
     <p>contentBlockSize: {{ state.contentBlockSize }}</p>
@@ -177,7 +177,7 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
 </div>
 
 <style lang="less" scoped>
-.m-size-wrap {
+.size-wrap {
   position: relative;
   .resizer {
     background: #222;
@@ -200,7 +200,7 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
     background: #1b1b1f;
     touch-action: manipulation;
   }
-  .m-size {
+  .size-container {
     top: 12px;
     left: 16px;
     position: absolute;
@@ -256,9 +256,9 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
 </script>
 <template>
   <h3>Resize the box to see changes</h3>
-  <div class="m-size-wrap">
+  <div class="size-wrap">
     <textarea ref="el" class="resizer" disabled />
-    <div class="m-size">
+    <div class="size-container">
       <p>borderBlockSize: {{ state.borderBlockSize }}</p>
       <p>borderInlineSize: {{ state.borderInlineSize }}</p>
       <p>contentBlockSize: {{ state.contentBlockSize }}</p>
@@ -278,7 +278,7 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
   </div>
 </template>
 <style lang="less" scoped>
-.m-size-wrap {
+.size-wrap {
   position: relative;
   .resizer {
     background: #222;
@@ -301,7 +301,7 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
     background: #1b1b1f;
     touch-action: manipulation;
   }
-  .m-size {
+  .size-container {
     top: 12px;
     left: 16px;
     position: absolute;

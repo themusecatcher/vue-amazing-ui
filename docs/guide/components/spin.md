@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*用于页面和区块的加载中状态*
+_用于页面和区块的加载中状态_
 
 ## 何时使用
 
@@ -52,7 +52,9 @@ const spinning = ref(true)
 <template>
   <Spin :spinning="spinning">
     <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+      描述文案一起水平垂直居中。
     </p>
   </Spin>
 </template>
@@ -87,7 +89,9 @@ const spinning = ref(true)
 <template>
   <Spin :spinning="spinning" indicator="spin-dot">
     <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+      描述文案一起水平垂直居中。
     </p>
   </Spin>
 </template>
@@ -122,7 +126,9 @@ const spinning = ref(true)
 <template>
   <Spin :spinning="spinning" indicator="spin-line">
     <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+      描述文案一起水平垂直居中。
     </p>
   </Spin>
 </template>
@@ -157,7 +163,9 @@ const spinning = ref(true)
 <template>
   <Spin :spinning="spinning" indicator="ring-circle">
     <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+      描述文案一起水平垂直居中。
     </p>
   </Spin>
 </template>
@@ -231,7 +239,9 @@ const spinning = ref(true)
 <template>
   <Spin :spinning="spinning" indicator="dynamic-circle">
     <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+      描述文案一起水平垂直居中。
     </p>
   </Spin>
 </template>
@@ -248,7 +258,7 @@ const spinning = ref(true)
 
 :::
 
-## 魔法圆环指示符
+## 双圆环指示符
 
 <Spin :spinning="spinning" indicator="magic-ring">
   <p class="spin-content">
@@ -266,7 +276,9 @@ const spinning = ref(true)
 <template>
   <Spin :spinning="spinning" indicator="magic-ring">
     <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+      描述文案一起水平垂直居中。
     </p>
   </Spin>
 </template>
@@ -287,27 +299,27 @@ const spinning = ref(true)
 
 <Space vertical>
   <Space>
-    <Spin class="u-spin" :spinning="spinning" size="small" />
-    <Spin class="u-spin" :spinning="spinning" />
-    <Spin class="u-spin" :spinning="spinning" size="large" />
-    <Spin class="u-spin" :spinning="spinning" size="small" indicator="spin-dot" />
-    <Spin class="u-spin" :spinning="spinning" indicator="spin-dot" />
-    <Spin class="u-spin" :spinning="spinning" size="large" indicator="spin-dot" />
-    <Spin class="u-spin" :spinning="spinning" size="small" indicator="spin-line" />
-    <Spin class="u-spin" :spinning="spinning" indicator="spin-line" />
-    <Spin class="u-spin" :spinning="spinning" size="large" indicator="spin-line" />
-    <Spin class="u-spin" :spinning="spinning" size="small" indicator="ring-circle" />
-    <Spin class="u-spin" :spinning="spinning" indicator="ring-circle" />
-    <Spin class="u-spin" :spinning="spinning" size="large" indicator="ring-circle" />
-    <Spin class="u-spin" :spinning="spinning" size="small" indicator="ring-rail" />
-    <Spin class="u-spin" :spinning="spinning" indicator="ring-rail" />
-    <Spin class="u-spin" :spinning="spinning" size="large" indicator="ring-rail" />
-    <Spin class="u-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
-    <Spin class="u-spin" :spinning="spinning" indicator="dynamic-circle" />
-    <Spin class="u-spin" :spinning="spinning" size="large" indicator="dynamic-circle" />
-    <Spin class="u-spin" :spinning="spinning" size="small" indicator="magic-ring" />
-    <Spin class="u-spin" :spinning="spinning" indicator="magic-ring" />
-    <Spin class="u-spin" :spinning="spinning" size="large" indicator="magic-ring" />
+    <Spin class="spin-size" :spinning="spinning" size="small" />
+    <Spin class="spin-size" :spinning="spinning" />
+    <Spin class="spin-size" :spinning="spinning" size="large" />
+    <Spin class="spin-size" :spinning="spinning" size="small" indicator="spin-dot" />
+    <Spin class="spin-size" :spinning="spinning" indicator="spin-dot" />
+    <Spin class="spin-size" :spinning="spinning" size="large" indicator="spin-dot" />
+    <Spin class="spin-size" :spinning="spinning" size="small" indicator="spin-line" />
+    <Spin class="spin-size" :spinning="spinning" indicator="spin-line" />
+    <Spin class="spin-size" :spinning="spinning" size="large" indicator="spin-line" />
+    <Spin class="spin-size" :spinning="spinning" size="small" indicator="ring-circle" />
+    <Spin class="spin-size" :spinning="spinning" indicator="ring-circle" />
+    <Spin class="spin-size" :spinning="spinning" size="large" indicator="ring-circle" />
+    <Spin class="spin-size" :spinning="spinning" size="small" indicator="ring-rail" />
+    <Spin class="spin-size" :spinning="spinning" indicator="ring-rail" />
+    <Spin class="spin-size" :spinning="spinning" size="large" indicator="ring-rail" />
+    <Spin class="spin-size" :spinning="spinning" size="small" indicator="dynamic-circle" />
+    <Spin class="spin-size" :spinning="spinning" indicator="dynamic-circle" />
+    <Spin class="spin-size" :spinning="spinning" size="large" indicator="dynamic-circle" />
+    <Spin class="spin-size" :spinning="spinning" size="small" indicator="magic-ring" />
+    <Spin class="spin-size" :spinning="spinning" indicator="magic-ring" />
+    <Spin class="spin-size" :spinning="spinning" size="large" indicator="magic-ring" />
   </Space>
 </Space>
 
@@ -321,34 +333,34 @@ const spinning = ref(true)
 <template>
   <Space vertical>
     <Space>
-      <Spin class="u-spin" :spinning="spinning" size="small" />
-      <Spin class="u-spin" :spinning="spinning" />
-      <Spin class="u-spin" :spinning="spinning" size="large" />
-      <Spin class="u-spin" :spinning="spinning" size="small" indicator="spin-dot" />
-      <Spin class="u-spin" :spinning="spinning" indicator="spin-dot" />
-      <Spin class="u-spin" :spinning="spinning" size="large" indicator="spin-dot" />
-      <Spin class="u-spin" :spinning="spinning" size="small" indicator="spin-line" />
-      <Spin class="u-spin" :spinning="spinning" indicator="spin-line" />
-      <Spin class="u-spin" :spinning="spinning" size="large" indicator="spin-line" />
-      <Spin class="u-spin" :spinning="spinning" size="small" indicator="ring-circle" />
-      <Spin class="u-spin" :spinning="spinning" indicator="ring-circle" />
-      <Spin class="u-spin" :spinning="spinning" size="large" indicator="ring-circle" />
-      <Spin class="u-spin" :spinning="spinning" size="small" indicator="ring-rail" />
-      <Spin class="u-spin" :spinning="spinning" indicator="ring-rail" />
-      <Spin class="u-spin" :spinning="spinning" size="large" indicator="ring-rail" />
-      <Spin class="u-spin" :spinning="spinning" size="small" indicator="dynamic-circle" />
-      <Spin class="u-spin" :spinning="spinning" indicator="dynamic-circle" />
-      <Spin class="u-spin" :spinning="spinning" size="large" indicator="dynamic-circle" />
-      <Spin class="u-spin" :spinning="spinning" size="small" indicator="magic-ring" />
-      <Spin class="u-spin" :spinning="spinning" indicator="magic-ring" />
-      <Spin class="u-spin" :spinning="spinning" size="large" indicator="magic-ring" />
+      <Spin class="spin-size" :spinning="spinning" size="small" />
+      <Spin class="spin-size" :spinning="spinning" />
+      <Spin class="spin-size" :spinning="spinning" size="large" />
+      <Spin class="spin-size" :spinning="spinning" size="small" indicator="spin-dot" />
+      <Spin class="spin-size" :spinning="spinning" indicator="spin-dot" />
+      <Spin class="spin-size" :spinning="spinning" size="large" indicator="spin-dot" />
+      <Spin class="spin-size" :spinning="spinning" size="small" indicator="spin-line" />
+      <Spin class="spin-size" :spinning="spinning" indicator="spin-line" />
+      <Spin class="spin-size" :spinning="spinning" size="large" indicator="spin-line" />
+      <Spin class="spin-size" :spinning="spinning" size="small" indicator="ring-circle" />
+      <Spin class="spin-size" :spinning="spinning" indicator="ring-circle" />
+      <Spin class="spin-size" :spinning="spinning" size="large" indicator="ring-circle" />
+      <Spin class="spin-size" :spinning="spinning" size="small" indicator="ring-rail" />
+      <Spin class="spin-size" :spinning="spinning" indicator="ring-rail" />
+      <Spin class="spin-size" :spinning="spinning" size="large" indicator="ring-rail" />
+      <Spin class="spin-size" :spinning="spinning" size="small" indicator="dynamic-circle" />
+      <Spin class="spin-size" :spinning="spinning" indicator="dynamic-circle" />
+      <Spin class="spin-size" :spinning="spinning" size="large" indicator="dynamic-circle" />
+      <Spin class="spin-size" :spinning="spinning" size="small" indicator="magic-ring" />
+      <Spin class="spin-size" :spinning="spinning" indicator="magic-ring" />
+      <Spin class="spin-size" :spinning="spinning" size="large" indicator="magic-ring" />
     </Space>
   </Space>
 </template>
 <style lang="less" scoped>
-.u-spin {
-  width: 100px !important;
-  height: 100px !important;
+.spin-size {
+  width: 100px;
+  height: 100px;
 }
 </style>
 ```
@@ -360,13 +372,13 @@ const spinning = ref(true)
 <Space vertical>
   <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
   <Space>
-    <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" />
-    <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="spin-dot" />
-    <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="spin-line" />
-    <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="ring-circle" />
-    <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="ring-rail" />
-    <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="dynamic-circle" />
-    <Spin class="u-spin" :size="size" :spinning="spinning" indicator="magic-ring">
+    <Spin class="spin-item" :size="size" tip="加载中..." :spinning="spinning" />
+    <Spin class="spin-item" :size="size" tip="加载中..." :spinning="spinning" indicator="spin-dot" />
+    <Spin class="spin-item" :size="size" tip="加载中..." :spinning="spinning" indicator="spin-line" />
+    <Spin class="spin-item" :size="size" tip="加载中..." :spinning="spinning" indicator="ring-circle" />
+    <Spin class="spin-item" :size="size" tip="加载中..." :spinning="spinning" indicator="ring-rail" />
+    <Spin class="spin-item" :size="size" tip="加载中..." :spinning="spinning" indicator="dynamic-circle" />
+    <Spin class="spin-item" :size="size" :spinning="spinning" indicator="magic-ring">
       <template #tip>加载中...</template>
     </Spin>
   </Space>
@@ -398,20 +410,20 @@ const size = ref('middle')
   <Space vertical>
     <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
     <Space>
-      <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" />
-      <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="spin-dot" />
-      <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="spin-line" />
-      <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="ring-circle" />
-      <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="ring-rail" />
-      <Spin class="u-spin" :size="size" tip="加载中..." :spinning="spinning" indicator="dynamic-circle" />
-      <Spin class="u-spin" :size="size" :spinning="spinning" indicator="magic-ring">
+      <Spin class="spin-item" :size="size" tip="加载中..." :spinning="spinning" />
+      <Spin class="spin-item" :size="size" tip="加载中..." :spinning="spinning" indicator="spin-dot" />
+      <Spin class="spin-item" :size="size" tip="加载中..." :spinning="spinning" indicator="spin-line" />
+      <Spin class="spin-item" :size="size" tip="加载中..." :spinning="spinning" indicator="ring-circle" />
+      <Spin class="spin-item" :size="size" tip="加载中..." :spinning="spinning" indicator="ring-rail" />
+      <Spin class="spin-item" :size="size" tip="加载中..." :spinning="spinning" indicator="dynamic-circle" />
+      <Spin class="spin-item" :size="size" :spinning="spinning" indicator="magic-ring">
         <template #tip>加载中...</template>
       </Spin>
     </Space>
   </Space>
 </template>
 <style lang="less" scoped>
-.u-spin {
+.spin-item {
   width: 100px !important;
   height: 100px !important;
 }
@@ -425,12 +437,19 @@ const size = ref('middle')
 <Space vertical>
   <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
   <Space>
-    <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" />
-    <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" indicator="spin-dot" />
-    <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" indicator="spin-line" />
-    <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" :spin-circle-percent="50" indicator="ring-circle" />
+    <Spin class="spin-item" :size="size" color="#fadb14" :spinning="spinning" />
+    <Spin class="spin-item" :size="size" color="#fadb14" :spinning="spinning" indicator="spin-dot" />
+    <Spin class="spin-item" :size="size" color="#fadb14" :spinning="spinning" indicator="spin-line" />
     <Spin
-      class="u-spin"
+      class="spin-item"
+      :size="size"
+      color="#fadb14"
+      :spinning="spinning"
+      :spin-circle-percent="50"
+      indicator="ring-circle"
+    />
+    <Spin
+      class="spin-item"
       :size="size"
       color="#fadb14"
       :spin-circle-percent="50"
@@ -438,8 +457,15 @@ const size = ref('middle')
       :spinning="spinning"
       indicator="ring-rail"
     />
-    <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
-    <Spin class="u-spin" :size="size" color="#fadb14" magic-ring-color="#ffe58f" :spinning="spinning" indicator="magic-ring" />
+    <Spin class="spin-item" :size="size" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
+    <Spin
+      class="spin-item"
+      :size="size"
+      color="#fadb14"
+      magic-ring-color="#ffe58f"
+      :spinning="spinning"
+      indicator="magic-ring"
+    />
   </Space>
 </Space>
 
@@ -469,12 +495,19 @@ const size = ref('middle')
   <Space vertical>
     <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
     <Space>
-      <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" />
-      <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" indicator="spin-dot" />
-      <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" indicator="spin-line" />
-      <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" :spin-circle-percent="50" indicator="ring-circle" />
+      <Spin class="spin-item" :size="size" color="#fadb14" :spinning="spinning" />
+      <Spin class="spin-item" :size="size" color="#fadb14" :spinning="spinning" indicator="spin-dot" />
+      <Spin class="spin-item" :size="size" color="#fadb14" :spinning="spinning" indicator="spin-line" />
       <Spin
-        class="u-spin"
+        class="spin-item"
+        :size="size"
+        color="#fadb14"
+        :spinning="spinning"
+        :spin-circle-percent="50"
+        indicator="ring-circle"
+      />
+      <Spin
+        class="spin-item"
         :size="size"
         color="#fadb14"
         :spin-circle-percent="50"
@@ -482,15 +515,22 @@ const size = ref('middle')
         :spinning="spinning"
         indicator="ring-rail"
       />
-      <Spin class="u-spin" :size="size" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
-      <Spin class="u-spin" :size="size" color="#fadb14" magic-ring-color="#ffe58f" :spinning="spinning" indicator="magic-ring" />
+      <Spin class="spin-item" :size="size" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
+      <Spin
+        class="spin-item"
+        :size="size"
+        color="#fadb14"
+        magic-ring-color="#ffe58f"
+        :spinning="spinning"
+        indicator="magic-ring"
+      />
     </Space>
   </Space>
 </template>
 <style lang="less" scoped>
-.u-spin {
-  width: 100px !important;
-  height: 100px !important;
+.spin-item {
+  width: 100px;
+  height: 100px;
 }
 </style>
 ```
@@ -498,22 +538,17 @@ const size = ref('middle')
 :::
 
 <style lang="less" scoped>
-.m-flex {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-.u-h3 {
-  margin-top: 0 !important;
-}
 .spin-content {
   display: inline-block;
-  border-radius: 6px;
   border: 1px solid #91d5ff;
   background-color: #e6f7ff;
-  padding: 16px;
+  padding: 30px;
 }
-.u-spin {
+.spin-item {
+  width: 100px;
+  height: 100px;
+}
+.spin-size {
   width: 100px;
   height: 100px;
 }
@@ -523,23 +558,23 @@ const size = ref('middle')
 
 ### Spin
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-spinning | 是否为加载中状态 | boolean | true
-size | 加载中尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
-tip | 描述文案 | string &#124; slot | undefined
-indicator | 加载指示符 | 'dot' &#124; 'spin-dot' &#124; 'spin-line' &#124; 'ring-circle' &#124; 'ring-rail' &#124; 'dynamic-circle' &#124; 'magic-ring' | 'dot'
-color | 指示符颜色，当 `indicator: 'magic-ring'` 时为外环颜色 | string | undefined
-spinCircleWidth | 圆环宽度，单位是加载指示符宽度的百分比，仅当 `indicator: 'ring-circle' \| 'ring-rail'` 时生效 | number | 12
-spinCirclePercent | 圆环长度百分比 (`0～100`)，单位是圆环周长的百分比，仅当 `indicator: 'ring-circle' \| 'ring-rail'` 时生效 | number | 33
-ringRailColor | 圆环轨道颜色，仅当 `indicator: 'ring-rail'` 时生效 | string | 'rgba(0, 0, 0, 0.12)'
-magicRingColor | 内环颜色，仅当 `indicator: 'magic-ring'` 时生效 | string | undefined
-rotate | `spin-dot` 或 `spin-line` 初始是否旋转，仅当 `indicator: 'spin-dot' \| 'spin-line'` 时生效 | boolean | false
-speed | `spin-dot` 或 `spin-line` 渐变旋转的动画速度，单位 `ms`，仅当 `indicator: 'spin-dot' \| 'spin-line'` 时生效 | number | 800
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| spinning | 是否为加载中状态 | boolean | true |
+| size | 加载中尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
+| tip | 描述文案 | string &#124; slot | undefined |
+| indicator | 加载指示符 | 'dot' &#124; 'spin-dot' &#124; 'spin-line' &#124; 'ring-circle' &#124; 'ring-rail' &#124; 'dynamic-circle' &#124; 'magic-ring' | 'dot' |
+| color | 指示符颜色，当 `indicator: 'magic-ring'` 时为外环颜色 | string | undefined |
+| spinCircleWidth | 圆环宽度，单位是加载指示符宽度的百分比，仅当 `indicator: 'ring-circle' \| 'ring-rail'` 时生效 | number | 12 |
+| spinCirclePercent | 圆环长度百分比 (`0～100`)，单位是圆环周长的百分比，仅当 `indicator: 'ring-circle' \| 'ring-rail'` 时生效 | number | 33 |
+| ringRailColor | 圆环轨道颜色，仅当 `indicator: 'ring-rail'` 时生效 | string | 'rgba(0, 0, 0, 0.12)' |
+| magicRingColor | 内环颜色，仅当 `indicator: 'magic-ring'` 时生效 | string | undefined |
+| rotate | `spin-dot` 或 `spin-line` 初始是否旋转，仅当 `indicator: 'spin-dot' \| 'spin-line'` 时生效 | boolean | false |
+| speed | `spin-dot` 或 `spin-line` 渐变旋转的动画速度，单位 `ms`，仅当 `indicator: 'spin-dot' \| 'spin-line'` 时生效 | number | 800 |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-tip | 自定义描述文案 | v-slot:tip
-default | 自定义内容 | v-slot:default
+| 名称    | 说明           | 类型           |
+| :------ | :------------- | :------------- |
+| tip     | 自定义描述文案 | v-slot:tip     |
+| default | 自定义内容     | v-slot:default |

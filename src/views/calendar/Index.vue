@@ -287,7 +287,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
   </div>
 </template>
 <style lang="less" scoped>
-.m-badge {
+.badge-wrap {
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
