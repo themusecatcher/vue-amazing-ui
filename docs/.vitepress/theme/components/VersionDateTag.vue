@@ -10,9 +10,6 @@ withDefaults(defineProps<Props>(), {
 </script>
 <template>
   <Flex gap="small" align="center" style="font-size: 24px; font-weight: 600; line-height: 32px">
-    <slot></slot>
-    <Tag color="volcano" size="small" v-bind="tagProps">
-      {{ date }}
-    </Tag>
+    <slot></slot> <Tag color="volcano" size="small" v-bind="tagProps">{{ date }}</Tag>
   </Flex>
 </template>
