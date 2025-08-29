@@ -215,7 +215,7 @@ pnpm docs:dev
 
 ## Blogs
 
-[My CSDN Blogs](https://blog.csdn.net/Dandrose)
+[My CSDN Blogs](https://themusecatcher.blog.csdn.net)
 
 ## Sponsorship
 

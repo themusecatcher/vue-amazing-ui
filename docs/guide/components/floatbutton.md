@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*浮动按钮*
+_浮动按钮_
 
 ## 何时使用
 
@@ -266,10 +266,7 @@ import { StarFilled, SettingOutlined } from '@ant-design/icons-vue'
         <StarFilled spin style="color: gold" />
       </template>
     </FloatButton>
-    <FloatButton
-      shape="square"
-      :icon="() => h(SettingOutlined, { style: 'color: #1677ff' })"
-    />
+    <FloatButton shape="square" :icon="() => h(SettingOutlined, { style: 'color: #1677ff' })" />
   </Card>
 </template>
 ```
@@ -329,7 +326,7 @@ import { GlobalOutlined, CustomerServiceOutlined } from '@ant-design/icons-vue'
     type="primary"
     shape="square"
     description="CSDN"
-    href="https://blog.csdn.net/Dandrose"
+    href="https://themusecatcher.blog.csdn.net"
     target="_blank"
   />
 </Card>
@@ -348,7 +345,7 @@ import { GlobalOutlined, CustomerServiceOutlined } from '@ant-design/icons-vue'
       type="primary"
       shape="square"
       description="CSDN"
-      href="https://blog.csdn.net/Dandrose"
+      href="https://themusecatcher.blog.csdn.net"
       target="_blank"
     />
   </Card>
@@ -571,38 +568,38 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 
 ### FloatButton
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-top | 按钮定位的上边距，单位 `px` | number &#124; string | undefined
-bottom | 按钮定位的下边距，单位 `px` | number &#124; string | 40
-left | 按钮定位的左边距，单位 `px` | number &#124; string | undefined
-right | 按钮定位的右边距，单位 `px` | number &#124; string | 40
-zIndex | 设置按钮的 `z-index` | number | 9
-width | 浮动按钮宽度，单位 `px` | number &#124; string | 44
-height | 浮动按钮高度，单位 `px` | number &#124; string | 44
-type | 浮动按钮类型 | 'default' &#124; 'primary' | 'default'
-shape | 浮动按钮形状 | 'circle' &#124; 'square' | 'circle'
-icon | 浮动按钮图标 | VNode &#124; Slot | undefined
-description | 文字描述信息 | string &#124; slot | undefined
-href | 点击跳转的地址，指定此属性按钮的行为和 `a` 链接一致 | string | undefined
-target | 相当于 `a` 标签的 `target` `属性，href` 存在时生效 | 'self' &#124; '_blank' | 'self'
-menuTrigger | 浮动按钮菜单显示的触发方式 | 'click' &#124; 'hover' | undefined
-tooltip | 气泡卡片的内容 | sring &#124; slot | undefined
-tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip) | object | {}
-badgeProps | 带徽标的浮动按钮（不支持 `status` 以及相关属性），参考 [Badge Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/badge.html#badge) | object | {}
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| top | 按钮定位的上边距，单位 `px` | number &#124; string | undefined |
+| bottom | 按钮定位的下边距，单位 `px` | number &#124; string | 40 |
+| left | 按钮定位的左边距，单位 `px` | number &#124; string | undefined |
+| right | 按钮定位的右边距，单位 `px` | number &#124; string | 40 |
+| zIndex | 设置按钮的 `z-index` | number | 9 |
+| width | 浮动按钮宽度，单位 `px` | number &#124; string | 44 |
+| height | 浮动按钮高度，单位 `px` | number &#124; string | 44 |
+| type | 浮动按钮类型 | 'default' &#124; 'primary' | 'default' |
+| shape | 浮动按钮形状 | 'circle' &#124; 'square' | 'circle' |
+| icon | 浮动按钮图标 | VNode &#124; Slot | undefined |
+| description | 文字描述信息 | string &#124; slot | undefined |
+| href | 点击跳转的地址，指定此属性按钮的行为和 `a` 链接一致 | string | undefined |
+| target | 相当于 `a` 标签的 `target` `属性，href` 存在时生效 | 'self' &#124; '\_blank' | 'self' |
+| menuTrigger | 浮动按钮菜单显示的触发方式 | 'click' &#124; 'hover' | undefined |
+| tooltip | 气泡卡片的内容 | sring &#124; slot | undefined |
+| tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip) | object | {} |
+| badgeProps | 带徽标的浮动按钮（不支持 `status` 以及相关属性），参考 [Badge Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/badge.html#badge) | object | {} |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-icon | 自定义浮动按钮图标 | v-slot:icon
-description | 自定义文字描述信息 | v-slot:description
-menu | 自定义菜单按钮 | v-slot:menu
-tooltip | 自定义气泡卡片的内容 | v-slot:tooltip
+| 名称        | 说明                 | 类型               |
+| :---------- | :------------------- | :----------------- |
+| icon        | 自定义浮动按钮图标   | v-slot:icon        |
+| description | 自定义文字描述信息   | v-slot:description |
+| menu        | 自定义菜单按钮       | v-slot:menu        |
+| tooltip     | 自定义气泡卡片的内容 | v-slot:tooltip     |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-click | 点击浮动按钮时的回调 | (e: Event) => void
-openChange | 浮动按钮菜单展开收起时的回调 | (open: boolean) => void
+| 名称       | 说明                         | 类型                    |
+| :--------- | :--------------------------- | :---------------------- |
+| click      | 点击浮动按钮时的回调         | (e: Event) => void      |
+| openChange | 浮动按钮菜单展开收起时的回调 | (open: boolean) => void |

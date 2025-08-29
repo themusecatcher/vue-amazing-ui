@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*二维码*
+_二维码_
 
 ## 何时使用
 
@@ -47,13 +47,13 @@ const dowloadQRCode = async () => {
 
 ## 基本使用
 
-<QRCode value="https://blog.csdn.net/Dandrose"/>
+<QRCode value="https://themusecatcher.blog.csdn.net"/>
 
 ::: details Show Code
 
 ```vue
 <template>
-  <QRCode value="https://blog.csdn.net/Dandrose"/>
+  <QRCode value="https://themusecatcher.blog.csdn.net" />
 </template>
 ```
 
@@ -61,13 +61,13 @@ const dowloadQRCode = async () => {
 
 ## 无边框
 
-<QRCode value="https://blog.csdn.net/Dandrose" :bordered="false" />
+<QRCode value="https://themusecatcher.blog.csdn.net" :bordered="false" />
 
 ::: details Show Code
 
 ```vue
 <template>
-  <QRCode value="https://blog.csdn.net/Dandrose" :bordered="false" />
+  <QRCode value="https://themusecatcher.blog.csdn.net" :bordered="false" />
 </template>
 ```
 
@@ -84,7 +84,7 @@ const dowloadQRCode = async () => {
       large
     </Button>
   </Space>
-  <QRCode :size="size" value="https://blog.csdn.net/Dandrose" />
+  <QRCode :size="size" value="https://themusecatcher.blog.csdn.net" />
 </Space>
 
 ::: details Show Code
@@ -110,14 +110,10 @@ const increase = () => {
 <template>
   <Space vertical>
     <Space>
-      <Button @click="decline" :icon="() => h(MinusOutlined)">
-        small
-      </Button>
-      <Button @click="increase" :icon="() => h(PlusOutlined)">
-        large
-      </Button>
+      <Button @click="decline" :icon="() => h(MinusOutlined)"> small </Button>
+      <Button @click="increase" :icon="() => h(PlusOutlined)"> large </Button>
     </Space>
-    <QRCode :size="size" value="https://blog.csdn.net/Dandrose" />
+    <QRCode :size="size" value="https://themusecatcher.blog.csdn.net" />
   </Space>
 </template>
 ```
@@ -127,7 +123,7 @@ const increase = () => {
 ## 下载二维码
 
 <Space vertical>
-  <QRCode ref="qrcodeRef" value="https://blog.csdn.net/Dandrose" />
+  <QRCode ref="qrcodeRef" value="https://themusecatcher.blog.csdn.net" />
   <Button type="primary" @click="dowloadQRCode">Downlaod</Button>
 </Space>
 
@@ -149,7 +145,7 @@ const dowloadQRCode = async () => {
 </script>
 <template>
   <Space vertical>
-    <QRCode ref="qrcodeRef" value="https://blog.csdn.net/Dandrose" />
+    <QRCode ref="qrcodeRef" value="https://themusecatcher.blog.csdn.net" />
     <Button type="primary" @click="dowloadQRCode">Downlaod</Button>
   </Space>
 </template>
@@ -161,7 +157,7 @@ const dowloadQRCode = async () => {
 
 <Popover :tooltip-style="{ padding: 0 }">
   <template #content>
-    <QRCode value="https://blog.csdn.net/Dandrose" :bordered="false" />
+    <QRCode value="https://themusecatcher.blog.csdn.net" :bordered="false" />
   </template>
   <img width="100" height="100" src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg" />
 </Popover>
@@ -172,7 +168,7 @@ const dowloadQRCode = async () => {
 <template>
   <Popover :tooltip-style="{ padding: 0 }">
     <template #content>
-      <QRCode value="https://blog.csdn.net/Dandrose" :bordered="false" />
+      <QRCode value="https://themusecatcher.blog.csdn.net" :bordered="false" />
     </template>
     <img width="100" height="100" src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg" />
   </Popover>
@@ -185,7 +181,7 @@ const dowloadQRCode = async () => {
 
 <QRCode
   error-level="H"
-  value="https://blog.csdn.net/Dandrose"
+  value="https://themusecatcher.blog.csdn.net"
   icon="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg"
 />
 
@@ -195,7 +191,7 @@ const dowloadQRCode = async () => {
 <template>
   <QRCode
     error-level="H"
-    value="https://blog.csdn.net/Dandrose"
+    value="https://themusecatcher.blog.csdn.net"
     icon="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg"
   />
 </template>
@@ -205,14 +201,14 @@ const dowloadQRCode = async () => {
 
 ## 自定义渲染类型
 
-*通过设置 `type` 自定义渲染结果，可选 `svg` `canvas` `image` 三种类型*
+_通过设置 `type` 自定义渲染结果，可选 `svg` `canvas` `image` 三种类型_
 
 <br/>
 
 <Space>
-  <QRCode value="https://blog.csdn.net/Dandrose" type="svg" />
-  <QRCode value="https://blog.csdn.net/Dandrose" type="canvas" />
-  <QRCode value="https://blog.csdn.net/Dandrose" type="image" />
+  <QRCode value="https://themusecatcher.blog.csdn.net" type="svg" />
+  <QRCode value="https://themusecatcher.blog.csdn.net" type="canvas" />
+  <QRCode value="https://themusecatcher.blog.csdn.net" type="image" />
 </Space>
 
 ::: details Show Code
@@ -220,9 +216,9 @@ const dowloadQRCode = async () => {
 ```vue
 <template>
   <Space>
-    <QRCode value="https://blog.csdn.net/Dandrose" type="svg" />
-    <QRCode value="https://blog.csdn.net/Dandrose" type="canvas" />
-    <QRCode value="https://blog.csdn.net/Dandrose" type="image" />
+    <QRCode value="https://themusecatcher.blog.csdn.net" type="svg" />
+    <QRCode value="https://themusecatcher.blog.csdn.net" type="canvas" />
+    <QRCode value="https://themusecatcher.blog.csdn.net" type="image" />
   </Space>
 </template>
 ```
@@ -231,14 +227,14 @@ const dowloadQRCode = async () => {
 
 ## 自定义样式
 
-*自定义二维码颜色和背景色*
+_自定义二维码颜色和背景色_
 
 <br/>
 
 <Space>
-  <QRCode value="https://blog.csdn.net/Dandrose" color="#52c41a" />
-  <QRCode value="https://blog.csdn.net/Dandrose" color="#1677FF" bg-color="#f5f5f5" />
-  <QRCode value="https://blog.csdn.net/Dandrose" :color="color" :bg-color="bgColor" />
+  <QRCode value="https://themusecatcher.blog.csdn.net" color="#52c41a" />
+  <QRCode value="https://themusecatcher.blog.csdn.net" color="#1677FF" bg-color="#f5f5f5" />
+  <QRCode value="https://themusecatcher.blog.csdn.net" :color="color" :bg-color="bgColor" />
   <Space vertical :width="164">
     <ColorPicker v-model:value="color" :modes="['hex']" />
     <ColorPicker v-model:value="bgColor" :modes="['hex']" />
@@ -255,9 +251,9 @@ const bgColor = ref('#00000030')
 </script>
 <template>
   <Space>
-    <QRCode value="https://blog.csdn.net/Dandrose" color="#52c41a" />
-    <QRCode value="https://blog.csdn.net/Dandrose" color="#1677FF" bg-color="#f5f5f5" />
-    <QRCode value="https://blog.csdn.net/Dandrose" :color="color" :bg-color="bgColor" />
+    <QRCode value="https://themusecatcher.blog.csdn.net" color="#52c41a" />
+    <QRCode value="https://themusecatcher.blog.csdn.net" color="#1677FF" bg-color="#f5f5f5" />
+    <QRCode value="https://themusecatcher.blog.csdn.net" :color="color" :bg-color="bgColor" />
     <Space vertical :width="164">
       <ColorPicker v-model:value="color" :modes="['hex']" />
       <ColorPicker v-model:value="bgColor" :modes="['hex']" />
@@ -270,9 +266,9 @@ const bgColor = ref('#00000030')
 
 ## 纠错等级
 
-*纠错等级也叫纠错率，就是指二维码可以被遮挡后还能正常扫描，而这个能被遮挡的最大面积就是纠错率。*
+_纠错等级也叫纠错率，就是指二维码可以被遮挡后还能正常扫描，而这个能被遮挡的最大面积就是纠错率。_
 
-*通常情况下二维码分为 `4` 个纠错级别：*
+_通常情况下二维码分为 `4` 个纠错级别：_
 
 - **L级** 可纠正约 `7%` 错误
 - **M级** 可纠正约 `15%` 错误
@@ -284,7 +280,7 @@ const bgColor = ref('#00000030')
 <br/>
 
 <Space vertical>
-  <QRCode value="https://blog.csdn.net/Dandrose" :error-level="level" />
+  <QRCode value="https://themusecatcher.blog.csdn.net" :error-level="level" />
   <Segmented v-model:value="level" :options="segmentedOptions" />
 </Space>
 
@@ -298,7 +294,7 @@ const level = ref('L')
 </script>
 <template>
   <Space vertical>
-    <QRCode value="https://blog.csdn.net/Dandrose" :error-level="level" />
+    <QRCode value="https://themusecatcher.blog.csdn.net" :error-level="level" />
     <Segmented v-model:value="level" :options="segmentedOptions" />
   </Space>
 </template>
@@ -334,22 +330,22 @@ const value = ref('hello world')
 
 ### QRCode
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-value | 扫描后的文本或地址 | string | undefined
-type | 二维码的渲染类型 | 'svg' &#124; 'canvas' &#124; 'image' | 'svg'
-icon | 二维码中图片的地址 | string | undefined
-size | 二维码大小，单位 `px` | number | 160
-iconSize | 二维码中图片的大小，单位 `px` | number | 40
-color | 二维码颜色，Value must be in `hex format` (十六进制颜色值) | string | '#000'
-bgColor | 二维码背景色，Value must be in `hex format` (十六进制颜色值) | string | '#FFF'
-bordered | 是否有边框 | boolean | true
-borderColor | 边框颜色 | string | 'rgba(5, 5, 5, 0.06)'
-scale | 缩放因子，每个 `black dots` 多少像素 | number | 8
-errorLevel | 二维码纠错等级 | 'L' &#124; 'M' &#124; 'Q' &#124; 'H' | 'H'
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| value | 扫描后的文本或地址 | string | undefined |
+| type | 二维码的渲染类型 | 'svg' &#124; 'canvas' &#124; 'image' | 'svg' |
+| icon | 二维码中图片的地址 | string | undefined |
+| size | 二维码大小，单位 `px` | number | 160 |
+| iconSize | 二维码中图片的大小，单位 `px` | number | 40 |
+| color | 二维码颜色，Value must be in `hex format` (十六进制颜色值) | string | '#000' |
+| bgColor | 二维码背景色，Value must be in `hex format` (十六进制颜色值) | string | '#FFF' |
+| bordered | 是否有边框 | boolean | true |
+| borderColor | 边框颜色 | string | 'rgba(5, 5, 5, 0.06)' |
+| scale | 缩放因子，每个 `black dots` 多少像素 | number | 8 |
+| errorLevel | 二维码纠错等级 | 'L' &#124; 'M' &#124; 'Q' &#124; 'H' | 'H' |
 
 ## Methods
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-getQRCodeImage | 获取二维码图片 | () => string
+| 名称           | 说明           | 类型         |
+| :------------- | :------------- | :----------- |
+| getQRCodeImage | 获取二维码图片 | () => string |
