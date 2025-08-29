@@ -60,7 +60,7 @@ export default defineConfig({
         text: '🔗 链接',
         items: [
           { text: 'Github', link: 'https://github.com/themusecatcher' },
-          { text: 'CSDN', link: 'https://blog.csdn.net/Dandrose?type=blog' },
+          { text: 'CSDN', link: 'https://themusecatcher.blog.csdn.net' },
           { text: 'Front-end Notes', link: 'https://themusecatcher.github.io/front-end-notes/' },
           {
             items: [

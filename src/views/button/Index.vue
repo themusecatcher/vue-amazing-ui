@@ -62,7 +62,7 @@ function onClick(e: Event) {
       </Space>
       <Space>
         <Tooltip tooltip="search">
-          <Button href="https://blog.csdn.net/Dandrose" target="_blank">
+          <Button href="https://themusecatcher.blog.csdn.net" target="_blank">
             <template #icon>
               <SearchOutlined />
             </template>
@@ -348,7 +348,7 @@ function onClick(e: Event) {
       >
         Button Component
       </Button>
-      <Button type="primary" ghost shape="round" href="https://blog.csdn.net/Dandrose" target="_blank">
+      <Button type="primary" ghost shape="round" href="https://themusecatcher.blog.csdn.net" target="_blank">
         My CSDN Blogs
       </Button>
     </Space>

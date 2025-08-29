@@ -39,16 +39,16 @@ const dowloadQRCode = async () => {
       </li>
     </ul>
     <h2 class="mt30 mb10">基本使用</h2>
-    <QRCode value="https://blog.csdn.net/Dandrose" />
+    <QRCode value="https://themusecatcher.blog.csdn.net" />
     <h2 class="mt30 mb10">无边框</h2>
-    <QRCode value="https://blog.csdn.net/Dandrose" :bordered="false" />
+    <QRCode value="https://themusecatcher.blog.csdn.net" :bordered="false" />
     <h2 class="mt30 mb10">自定义尺寸</h2>
     <Space vertical>
       <Space>
         <Button @click="decline" :icon="() => h(MinusOutlined)"> small </Button>
         <Button @click="increase" :icon="() => h(PlusOutlined)"> large </Button>
       </Space>
-      <QRCode :size="size" value="https://blog.csdn.net/Dandrose" />
+      <QRCode :size="size" value="https://themusecatcher.blog.csdn.net" />
     </Space>
     <h2 class="mt30 mb10">下载二维码</h2>
     <Space vertical>
@@ -58,29 +58,29 @@ const dowloadQRCode = async () => {
     <h2 class="mt30 mb10">气泡卡片二维码</h2>
     <Popover :tooltip-style="{ padding: 0 }">
       <template #content>
-        <QRCode value="https://blog.csdn.net/Dandrose" :bordered="false" />
+        <QRCode value="https://themusecatcher.blog.csdn.net" :bordered="false" />
       </template>
       <img width="100" height="100" src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg" />
     </Popover>
     <h2 class="mt30 mb10">带 Icon 的二维码</h2>
     <QRCode
       error-level="H"
-      value="https://blog.csdn.net/Dandrose"
+      value="https://themusecatcher.blog.csdn.net"
       icon="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg"
     />
     <h2 class="mt30 mb10">自定义渲染类型</h2>
     <h3 class="mb10">通过设置 type 自定义渲染结果，可选 svg canvas image 三种类型</h3>
     <Space>
-      <QRCode value="https://blog.csdn.net/Dandrose" type="svg" />
-      <QRCode value="https://blog.csdn.net/Dandrose" type="canvas" />
-      <QRCode value="https://blog.csdn.net/Dandrose" type="image" />
+      <QRCode value="https://themusecatcher.blog.csdn.net" type="svg" />
+      <QRCode value="https://themusecatcher.blog.csdn.net" type="canvas" />
+      <QRCode value="https://themusecatcher.blog.csdn.net" type="image" />
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
     <h3 class="mb10">通过设置 color 和 bgColor 自定义二维码颜色和背景色</h3>
     <Space>
-      <QRCode value="https://blog.csdn.net/Dandrose" color="#52c41a" />
-      <QRCode value="https://blog.csdn.net/Dandrose" color="#1677FF" bg-color="#f5f5f5" />
-      <QRCode value="https://blog.csdn.net/Dandrose" :color="color" :bg-color="bgColor" />
+      <QRCode value="https://themusecatcher.blog.csdn.net" color="#52c41a" />
+      <QRCode value="https://themusecatcher.blog.csdn.net" color="#1677FF" bg-color="#f5f5f5" />
+      <QRCode value="https://themusecatcher.blog.csdn.net" :color="color" :bg-color="bgColor" />
       <Space vertical :width="164">
         <ColorPicker v-model:value="color" :modes="['hex']" />
         <ColorPicker v-model:value="bgColor" :modes="['hex']" />
@@ -94,7 +94,7 @@ const dowloadQRCode = async () => {
       错误。并不是所有位置都可以缺损，像最明显的三个角上的方框，直接影响初始定位。中间零散的部分是内容编码，可以容忍缺损。当二维码的内容编码携带信息比较少的时候，也就是链接比较短的时候，设置不同的纠错等级，生成的图片不会发生变化。
     </h3>
     <Space vertical>
-      <QRCode value="https://blog.csdn.net/Dandrose" :error-level="level" />
+      <QRCode value="https://themusecatcher.blog.csdn.net" :error-level="level" />
       <Segmented v-model:value="level" :options="segmentedOptions" />
     </Space>
     <h2 class="mt30 mb10">自定义生成二维码</h2>

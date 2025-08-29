@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*为组件提供统一的全局化配置*
+_为组件提供统一的全局化配置_
 
 ## 何时使用
 
@@ -153,12 +153,12 @@ const textareaValue = ref<string>('')
 const scrollItems = ref<TextScrollItem[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   },
   {
     title: '《麦田里的守望者》首次出版于1951年',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   },
   {
@@ -166,12 +166,12 @@ const scrollItems = ref<TextScrollItem[]>([
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   }
 ])
@@ -205,7 +205,7 @@ function onDecline(scale: number) {
 
 ## 基本使用
 
-*`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应用外围包裹一次即可全局生效。*
+_`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应用外围包裹一次即可全局生效。_
 
 <br/>
 <Card title="以下示例已包含所有使用主题色的组件" >
@@ -463,12 +463,12 @@ const textareaValue = ref<string>('')
 const scrollItems = ref<TextScrollItem[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   },
   {
     title: '《麦田里的守望者》首次出版于1951年',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   },
   {
@@ -476,12 +476,12 @@ const scrollItems = ref<TextScrollItem[]>([
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   }
 ])
@@ -513,11 +513,9 @@ function onDecline(scale: number) {
 }
 </script>
 <template>
-  <Space align="center">
-    primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
-  </Space>
-  <br/>
-  <br/>
+  <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+  <br />
+  <br />
   <ConfigProvider :theme="{ common: { primaryColor } }">
     <Flex vertical>
       <Space align="center">
@@ -711,33 +709,33 @@ const theme = ref<ConfigProviderTheme>({
 
 ### ConfigProvider
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-theme | 主题对象 | [Theme](#theme-type) | {}
-abstract | boolean | 是否不存在 `DOM` 包裹元素 | true
-tag | string | `ConfigProvider` 被渲染成的元素，`abstract` 为 `true` 时有效 | 'div'
+| 参数     | 说明     | 类型                                                         | 默认值 |
+| :------- | :------- | :----------------------------------------------------------- | :----- |
+| theme    | 主题对象 | [Theme](#theme-type)                                         | {}     |
+| abstract | boolean  | 是否不存在 `DOM` 包裹元素                                    | true   |
+| tag      | string   | `ConfigProvider` 被渲染成的元素，`abstract` 为 `true` 时有效 | 'div'  |
 
 ### Theme Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-common? | 全局通用配置，优先级低于组件配置 | [Config](#config-type) | undefined
-[ComponentName?](#componentname-type) | 组件自定义配置 | [Config](#config-type) | undefined
+| 名称                                  | 说明                             | 类型                   | 默认值    |
+| :------------------------------------ | :------------------------------- | :--------------------- | :-------- |
+| common?                               | 全局通用配置，优先级低于组件配置 | [Config](#config-type) | undefined |
+| [ComponentName?](#componentname-type) | 组件自定义配置                   | [Config](#config-type) | undefined |
 
 ### Config Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-primaryColor? | 主题色 | string | undefined
+| 名称          | 说明   | 类型   | 默认值    |
+| :------------ | :----- | :----- | :-------- |
+| primaryColor? | 主题色 | string | undefined |
 
 ### ComponentName Type
 
-名称 | 值
-:-- | :--
-ComponentName | 'Alert' &#124; 'BackTop' &#124; 'Button' &#124; 'Calendar' &#124; 'Carousel' &#124; 'Checkbox' &#124; 'ColorPicker' &#124; 'DatePicker' &#124; 'FloatButton' &#124; 'Image' &#124; 'Input' &#124; 'InputNumber' &#124; 'InputSearch' &#124; 'LoadingBar' &#124; 'Message' &#124; 'Modal' &#124; 'Notification' &#124; 'Pagination' &#124; 'Popconfirm' &#124; 'Progress' &#124; 'Radio' &#124; 'Select' &#124; 'Slider' &#124; 'Spin' &#124; 'Steps' &#124; 'Swiper' &#124; 'Switch' &#124; 'Tabs' &#124; 'Textarea' &#124; 'TextScroll' &#124; 'Upload'
+| 名称 | 值 |
+| :-- | :-- |
+| ComponentName | 'Alert' &#124; 'BackTop' &#124; 'Button' &#124; 'Calendar' &#124; 'Carousel' &#124; 'Checkbox' &#124; 'ColorPicker' &#124; 'DatePicker' &#124; 'FloatButton' &#124; 'Image' &#124; 'Input' &#124; 'InputNumber' &#124; 'InputSearch' &#124; 'LoadingBar' &#124; 'Message' &#124; 'Modal' &#124; 'Notification' &#124; 'Pagination' &#124; 'Popconfirm' &#124; 'Progress' &#124; 'Radio' &#124; 'Select' &#124; 'Slider' &#124; 'Spin' &#124; 'Steps' &#124; 'Swiper' &#124; 'Switch' &#124; 'Tabs' &#124; 'Textarea' &#124; 'TextScroll' &#124; 'Upload' |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-default | 内容 | v-slot:default
+| 名称    | 说明 | 类型           |
+| :------ | :--- | :------------- |
+| default | 内容 | v-slot:default |
