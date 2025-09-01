@@ -146,10 +146,8 @@ watchEffect(() => {
 
 ## 自定义图标和样式
 
-<Switch class="theme-switch" v-model="checked" ripple-color="#faad14" :circle-style="{ background: checked ? '#001529' : '#fff' }"
-
-> <template #node="{ checked }">
-
+<Switch class="theme-switch" v-model="checked" ripple-color="#faad14" :circle-style="{ background: checked ? '#001529' : '#fff' }">
+  <template #node="{ checked }">
     <svg
       v-if="checked"
       class="svg-dark"
@@ -190,7 +188,6 @@ watchEffect(() => {
         d="M18.4,6.6c-0.3,0-0.5-0.1-0.7-0.3c-0.4-0.4-0.4-1,0-1.4l1.4-1.4c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-1.4,1.4C18.9,6.5,18.6,6.6,18.4,6.6z"
       ></path>
     </svg>
-
   </template>
 </Switch>
 
