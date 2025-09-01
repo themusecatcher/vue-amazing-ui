@@ -70,15 +70,20 @@ export function cancelRaf(raf: { id: number }): void {
 :::
 
 <script setup lang="ts">
-import { onUnmounted } from 'vue'
+import { ref, onBeforeUnmount } from 'vue'
 import { rafTimeout, cancelRaf } from 'vue-amazing-ui'
+const timeoutMessage = ref('timeout 1000ms later...')
 const timeoutRaf = rafTimeout(() => {
   console.log('raf timeout')
+  timeoutMessage.value = 'raf timeout'
 }, 1000)
+const interval = ref(0)
+const intervalMessage = ref('interval 1000ms...')
 const intervalRaf = rafTimeout(() => {
-  console.log('raf interval')
+  console.log(`raf interval ${interval.value++}`)
+  intervalMessage.value = `raf interval ${interval.value++}`
 }, 1000, true)
-onUnmounted(() => {
+onBeforeUnmount(() => {
   cancelRaf(timeoutRaf)
   cancelRaf(intervalRaf)
 })
@@ -86,16 +91,18 @@ onUnmounted(() => {
 
 ## 延时调用
 
-_打开控制台查看输出_
+<Alert :message="timeoutMessage" type="info" />
 
 ```vue
 <script setup lang="ts">
-import { onUnmounted } from 'vue'
+import { ref, onBeforeUnmount } from 'vue'
 import { rafTimeout, cancelRaf } from 'vue-amazing-ui'
+const timeoutMessage = ref('timeout 1000ms later...')
 const timeoutRaf = rafTimeout(() => {
   console.log('raf timeout')
+  timeoutMessage.value = 'raf timeout'
 }, 1000)
-onUnmounted(() => {
+onBeforeUnmount(() => {
   cancelRaf(timeoutRaf)
 })
 </script>
@@ -103,20 +110,23 @@ onUnmounted(() => {
 
 ## 间歇调用
 
-_打开控制台查看输出_
+<Alert :message="intervalMessage" type="info" />
 
 ```vue
 <script setup lang="ts">
-import { onUnmounted } from 'vue'
+import { ref, onBeforeUnmount } from 'vue'
 import { rafTimeout, cancelRaf } from 'vue-amazing-ui'
+const interval = ref(0)
+const intervalMessage = ref('interval 1000ms...')
 const intervalRaf = rafTimeout(
   () => {
-    console.log('raf interval')
+    console.log(`raf interval ${interval.value++}`)
+    intervalMessage.value = `raf interval ${interval.value++}`
   },
   1000,
   true
 )
-onUnmounted(() => {
+onBeforeUnmount(() => {
   cancelRaf(intervalRaf)
 })
 </script>
