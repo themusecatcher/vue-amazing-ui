@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*开关选择器*
+_开关选择器_
 
 ## 何时使用
 
@@ -146,15 +146,17 @@ watchEffect(() => {
 
 ## 自定义图标和样式
 
-<Switch class="theme-switch" v-model="checked" ripple-color="#faad14" :circle-style="{ background: checked ? '#001529' : '#fff' }">
-  <template #node="{ checked }">
+<Switch class="theme-switch" v-model="checked" ripple-color="#faad14" :circle-style="{ background: checked ? '#001529' : '#fff' }"
+
+> <template #node="{ checked }">
+
     <svg
       v-if="checked"
+      class="svg-dark"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
       focusable="false"
       viewBox="0 0 24 24"
-      class="svg-dark"
     >
       <path
         d="M12.1,22c-0.3,0-0.6,0-0.9,0c-5.5-0.5-9.5-5.4-9-10.9c0.4-4.8,4.2-8.6,9-9c0.4,0,0.8,0.2,1,0.5c0.2,0.3,0.2,0.8-0.1,1.1c-2,2.7-1.4,6.4,1.3,8.4c2.1,1.6,5,1.6,7.1,0c0.3-0.2,0.7-0.3,1.1-0.1c0.3,0.2,0.5,0.6,0.5,1c-0.2,2.7-1.5,5.1-3.6,6.8C16.6,21.2,14.4,22,12.1,22zM9.3,4.4c-2.9,1-5,3.6-5.2,6.8c-0.4,4.4,2.8,8.3,7.2,8.7c2.1,0.2,4.2-0.4,5.8-1.8c1.1-0.9,1.9-2.1,2.4-3.4c-2.5,0.9-5.3,0.5-7.5-1.1C9.2,11.4,8.1,7.7,9.3,4.4z"
@@ -162,11 +164,11 @@ watchEffect(() => {
     </svg>
     <svg
       v-else
+      class="svg-light"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
       focusable="false"
       viewBox="0 0 24 24"
-      class="svg-light"
     >
       <path
         d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18zM12,8c-2.2,0-4,1.8-4,4c0,2.2,1.8,4,4,4c2.2,0,4-1.8,4-4C16,9.8,14.2,8,12,8z"
@@ -188,27 +190,26 @@ watchEffect(() => {
         d="M18.4,6.6c-0.3,0-0.5-0.1-0.7-0.3c-0.4-0.4-0.4-1,0-1.4l1.4-1.4c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-1.4,1.4C18.9,6.5,18.6,6.6,18.4,6.6z"
       ></path>
     </svg>
+
   </template>
 </Switch>
 
 <style lang="less" scoped>
 .theme-switch {
-  :deep(.switch-checked) {
-    background: #faad14;
-    &:hover:not(.disabled) {
-      background: #e8b339;
-    }
+  background: #faad14;
+  &:hover:not(.disabled) {
+    background: #e8b339;
   }
-}
-.svg-dark {
-  width: 12px;
-  height: 12px;
-  fill: #fff;
-}
-.svg-light {
-  width: 12px;
-  height: 12px;
-  fill: rgba(60, 60, 67, .75);
+  .svg-dark {
+    width: 12px;
+    height: 12px;
+    fill: #fff;
+  }
+  .svg-light {
+    width: 12px;
+    height: 12px;
+    fill: rgba(60, 60, 67, 0.75);
+  }
 }
 </style>
 
@@ -223,15 +224,20 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Switch class="theme-switch" v-model="checked" ripple-color="#faad14" :circle-style="{ background: checked ? '#001529' : '#fff' }">
+  <Switch
+    class="theme-switch"
+    v-model="checked"
+    ripple-color="#faad14"
+    :circle-style="{ background: checked ? '#001529' : '#fff' }"
+  >
     <template #node="{ checked }">
       <svg
         v-if="checked"
+        class="svg-dark"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
         focusable="false"
         viewBox="0 0 24 24"
-        class="svg-dark"
       >
         <path
           d="M12.1,22c-0.3,0-0.6,0-0.9,0c-5.5-0.5-9.5-5.4-9-10.9c0.4-4.8,4.2-8.6,9-9c0.4,0,0.8,0.2,1,0.5c0.2,0.3,0.2,0.8-0.1,1.1c-2,2.7-1.4,6.4,1.3,8.4c2.1,1.6,5,1.6,7.1,0c0.3-0.2,0.7-0.3,1.1-0.1c0.3,0.2,0.5,0.6,0.5,1c-0.2,2.7-1.5,5.1-3.6,6.8C16.6,21.2,14.4,22,12.1,22zM9.3,4.4c-2.9,1-5,3.6-5.2,6.8c-0.4,4.4,2.8,8.3,7.2,8.7c2.1,0.2,4.2-0.4,5.8-1.8c1.1-0.9,1.9-2.1,2.4-3.4c-2.5,0.9-5.3,0.5-7.5-1.1C9.2,11.4,8.1,7.7,9.3,4.4z"
@@ -239,11 +245,11 @@ watchEffect(() => {
       </svg>
       <svg
         v-else
+        class="svg-light"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
         focusable="false"
         viewBox="0 0 24 24"
-        class="svg-light"
       >
         <path
           d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18zM12,8c-2.2,0-4,1.8-4,4c0,2.2,1.8,4,4,4c2.2,0,4-1.8,4-4C16,9.8,14.2,8,12,8z"
@@ -270,22 +276,20 @@ watchEffect(() => {
 </template>
 <style lang="less" scoped>
 .theme-switch {
-  :deep(.switch-checked) {
-    background: #faad14;
-    &:hover:not(.disabled) {
-      background: #e8b339;
-    }
+  background: #faad14;
+  &:hover:not(.disabled) {
+    background: #e8b339;
   }
-}
-.svg-dark {
-  width: 12px;
-  height: 12px;
-  fill: #fff;
-}
-.svg-light {
-  width: 12px;
-  height: 12px;
-  fill: rgba(60, 60, 67, .75);
+  .svg-dark {
+    width: 12px;
+    height: 12px;
+    fill: #fff;
+  }
+  .svg-light {
+    width: 12px;
+    height: 12px;
+    fill: rgba(60, 60, 67, 0.75);
+  }
 }
 </style>
 ```
@@ -345,29 +349,29 @@ const customValue2 = ref(2)
 
 ### Switch
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-checked | 选中时的内容 | string &#124; slot | undefined
-checkedValue | 选中时的值 | boolean &#124; string &#124; number | true
-unchecked | 未选中时的内容 | string &#124; slot | undefined
-uncheckedValue | 未选中时的值 | boolean &#124; string &#124; number | false
-loading | 是否加载中 | boolean | false
-disabled | 是否禁用 | boolean | false
-size | 开关大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
-rippleColor | 点击时的波纹颜色，当自定义选中颜色时需要设置 | string | undefined
-circleStyle | 圆点样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-modelValue <Tag color="cyan">v-model</Tag> | 指定当前是否选中 | boolean &#124; string &#124; number | false
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| checked | 选中时的内容 | string &#124; slot | undefined |
+| checkedValue | 选中时的值 | boolean &#124; string &#124; number | true |
+| unchecked | 未选中时的内容 | string &#124; slot | undefined |
+| uncheckedValue | 未选中时的值 | boolean &#124; string &#124; number | false |
+| loading | 是否加载中 | boolean | false |
+| disabled | 是否禁用 | boolean | false |
+| size | 开关大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
+| rippleColor | 点击时的波纹颜色，当自定义选中颜色时需要设置 | string | undefined |
+| circleStyle | 圆点样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| modelValue <Tag color="cyan">v-model</Tag> | 指定当前是否选中 | boolean &#124; string &#124; number | false |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-checked | 自定义选中时的内容 | v-slot:checked
-unchecked | 自定义未选中时的内容 | v-slot:unchecked
-node | 自定义开关节点 | v-slot:node="{ checked }"
+| 名称      | 说明                 | 类型                      |
+| :-------- | :------------------- | :------------------------ |
+| checked   | 自定义选中时的内容   | v-slot:checked            |
+| unchecked | 自定义未选中时的内容 | v-slot:unchecked          |
+| node      | 自定义开关节点       | v-slot:node="{ checked }" |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 变化时的回调 | (checked: boolean) => void
+| 名称   | 说明         | 类型                       |
+| :----- | :----------- | :------------------------- |
+| change | 变化时的回调 | (checked: boolean) => void |
