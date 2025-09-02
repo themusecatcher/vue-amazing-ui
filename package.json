@@ -109,7 +109,7 @@
     "vite-plugin-vue-devtools": "^8.0.1",
     "vitepress": "^1.6.4",
     "vue": "^3.5.20",
-    "vue-amazing-ui": "2.4.19",
+    "vue-amazing-ui": "2.4.20",
     "vue-router": "^4.5.1",
     "vue-tsc": "^3.0.6"
   },
