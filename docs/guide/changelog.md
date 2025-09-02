@@ -4,6 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-09-02">2.4.20</VersionDateTag>
+
+- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，兼容弹出框在文档中自动调整弹出位置的功能
+
 ## <VersionDateTag date="2025-08-28">2.4.19</VersionDateTag>
 
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，新增 `placement` `flip` `to` 属性，支持：设置下拉面板弹出位置；设置下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置；设置下拉面板挂载的容器节点，默认挂载到 `body` 下

@@ -3,6 +3,7 @@ import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
 import {
   useSlotsExist,
+  useMutationObserver,
   useEventListener,
   useResizeObserver,
   rafTimeout,
@@ -55,6 +56,7 @@ const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免�
 const tooltipShow = ref<boolean>(false) // tooltip 显示隐藏标识
 const tooltipTimer = ref() // tooltip 延迟显示隐藏的定时器标识符
 const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
+const scrollTop = ref<number>(0) // scrollTarget 的滚动位置
 const cardTop = ref<number>(0) // 弹出框相对于 tooltipContent 的垂直位置
 const cardLeft = ref<number>(0) // 弹出框相对于 tooltipContent 的水平位置
 const tooltipPlace = ref<'top' | 'bottom' | 'left' | 'right'>('top') // 弹出框位置
@@ -160,6 +162,17 @@ onMounted(() => {
 onBeforeUnmount(() => {
   cleanup()
 })
+// 监听 vitepress 文档页面滚动
+const mutationObserver = useMutationObserver(
+  scrollTarget,
+  () => {
+    if (scrollTop.value !== scrollTarget.value?.scrollTop) {
+      scrollTop.value = scrollTarget.value?.scrollTop ?? 0
+      updatePosition()
+    }
+  },
+  { subtree: true, attributes: true }
+)
 useEventListener(window, 'resize', getViewportSize)
 // 监听 tooltipCard 和 tooltipContent 的尺寸变化，更新弹出框位置
 useResizeObserver([tooltipCardRef, tooltipContentRef], (entries: ResizeObserverEntry[]) => {
@@ -208,7 +221,17 @@ function observeScroll() {
       updatePosition,
       passiveSupported.value ? { passive: true } : undefined
     )
+  if (scrollTarget.value === document.documentElement) {
+    mutationObserver.start()
+  } else {
+    mutationObserver.stop()
+  }
 }
+/**
+ * 清理滚动监听事件并重置滚动目标。
+ *
+ * 清理函数，移除滚动事件监听并重置滚动目标
+ */
 function cleanup() {
   scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updatePosition)
   scrollTarget.value = null
@@ -265,7 +288,13 @@ async function getPosition() {
 // 获取可滚动父元素或视口的矩形信息
 function getShelterRect() {
   if (scrollTarget.value) {
-    return scrollTarget.value.getBoundingClientRect()
+    const scrollTargetRect = scrollTarget.value.getBoundingClientRect()
+    return {
+      top: scrollTargetRect.top < 0 ? 0 : scrollTargetRect.top,
+      left: scrollTargetRect.left < 0 ? 0 : scrollTargetRect.left,
+      bottom: scrollTargetRect.bottom > viewportHeight.value ? viewportHeight.value : scrollTargetRect.bottom,
+      right: scrollTargetRect.right > viewportWidth.value ? viewportWidth.value : scrollTargetRect.right
+    }
   }
   return {
     top: 0,
