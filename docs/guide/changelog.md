@@ -6,7 +6,7 @@
 
 ## <VersionDateTag date="2025-09-05">2.4.21</VersionDateTag>
 
-- 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，兼容弹出框在文档中自动调整弹出位置的功能
+- 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，兼容弹出框在文档中自动调整弹出位置的功能
 - 更新组件库部分依赖版本
 
 ## <VersionDateTag date="2025-09-02">2.4.20</VersionDateTag>
