@@ -36,10 +36,10 @@ import {
   unref,
   watch,
   watchEffect
-} from './chunk-WIXD4IJL.js'
+} from './chunk-DCJDM2X5.js'
 import './chunk-JVWSFFO4.js'
 
-// node_modules/.pnpm/@vueuse+shared@13.8.0_vue@3.5.20_typescript@5.9.2_/node_modules/@vueuse/shared/index.mjs
+// node_modules/.pnpm/@vueuse+shared@13.9.0_vue@3.5.21_typescript@5.9.2_/node_modules/@vueuse/shared/index.mjs
 function computedEager(fn, options) {
   var _a
   const result = shallowRef()
@@ -1466,7 +1466,7 @@ function whenever(source, cb, options) {
   return stop
 }
 
-// node_modules/.pnpm/@vueuse+core@13.8.0_vue@3.5.20_typescript@5.9.2_/node_modules/@vueuse/core/index.mjs
+// node_modules/.pnpm/@vueuse+core@13.9.0_vue@3.5.21_typescript@5.9.2_/node_modules/@vueuse/core/index.mjs
 function computedAsync(evaluationCallback, initialState, optionsOrRef) {
   var _a
   let options
@@ -1960,6 +1960,13 @@ function onLongPress(target, handler, options) {
     startTimestamp = void 0
     hasLongPressed = false
   }
+  function getDelay(ev) {
+    const delay = options == null ? void 0 : options.delay
+    if (typeof delay === 'function') {
+      return delay(ev)
+    }
+    return delay != null ? delay : DEFAULT_DELAY
+  }
   function onRelease(ev) {
     var _a2, _b2, _c
     const [_startTimestamp, _posStart, _hasLongPressed] = [startTimestamp, posStart, hasLongPressed]
@@ -1978,7 +1985,7 @@ function onLongPress(target, handler, options) {
     options.onMouseUp(ev.timeStamp - _startTimestamp, distance, _hasLongPressed)
   }
   function onDown(ev) {
-    var _a2, _b2, _c, _d
+    var _a2, _b2, _c
     if (
       ((_a2 = options == null ? void 0 : options.modifiers) == null ? void 0 : _a2.self) &&
       ev.target !== elementRef.value
@@ -1992,13 +1999,10 @@ function onLongPress(target, handler, options) {
       y: ev.y
     }
     startTimestamp = ev.timeStamp
-    timeout = setTimeout(
-      () => {
-        hasLongPressed = true
-        handler(ev)
-      },
-      (_d = options == null ? void 0 : options.delay) != null ? _d : DEFAULT_DELAY
-    )
+    timeout = setTimeout(() => {
+      hasLongPressed = true
+      handler(ev)
+    }, getDelay(ev))
   }
   function onMove(ev) {
     var _a2, _b2, _c, _d
@@ -2453,7 +2457,7 @@ function useAsyncState(promise, initialState, options) {
   const isLoading = shallowRef(false)
   const error = shallowRef(void 0)
   async function execute(delay2 = 0, ...args) {
-    if (resetOnExecute) state.value = initialState
+    if (resetOnExecute) state.value = toValue(initialState)
     error.value = void 0
     isReady.value = false
     isLoading.value = true
@@ -8346,7 +8350,7 @@ function useUrlSearchParams(mode = 'history', options = {}) {
     },
     { deep: true }
   )
-  function write(params, shouldUpdate) {
+  function write(params, shouldUpdate, shouldWriteHistory = true) {
     pause()
     if (shouldUpdate) updateState(params)
     if (writeMode === 'replace') {
@@ -8356,17 +8360,19 @@ function useUrlSearchParams(mode = 'history', options = {}) {
         window2.location.pathname + constructQuery(params)
       )
     } else {
-      window2.history.pushState(
-        window2.history.state,
-        window2.document.title,
-        window2.location.pathname + constructQuery(params)
-      )
+      if (shouldWriteHistory) {
+        window2.history.pushState(
+          window2.history.state,
+          window2.document.title,
+          window2.location.pathname + constructQuery(params)
+        )
+      }
     }
-    resume()
+    nextTick(() => resume())
   }
   function onChanged() {
     if (!enableWrite) return
-    write(read(), true)
+    write(read(), true, false)
   }
   const listenerOptions = { passive: true }
   useEventListener(window2, 'popstate', onChanged, listenerOptions)
