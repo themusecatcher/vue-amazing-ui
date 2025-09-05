@@ -4,7 +4,7 @@ import { ref, computed, watchEffect, watch, nextTick, onMounted, onBeforeUnmount
 import type { CSSProperties } from 'vue'
 import Empty from 'components/empty'
 import Scrollbar from 'components/scrollbar'
-import { useEventListener, useInject, useOptionsSupported } from 'components/utils'
+import { useEventListener, useMutationObserver, useInject, useOptionsSupported } from 'components/utils'
 export interface Option {
   label?: string // 选项名
   value?: string | number // 选项值
@@ -69,6 +69,7 @@ const showSearch = ref<boolean>(false) // 搜索图标显隐
 const selectFocused = ref<boolean>(false) /// select 是否聚焦
 const { colorPalettes, shadowColor } = useInject('Select') // 主题色注入
 const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
+const scrollTop = ref<number>(0) // scrollTarget 的滚动位置
 const panelOffset = ref<number>(0) // 下拉面板相对于 selectContent 的垂直偏移距离
 const panelPlace = ref<'bottom' | 'top'>('bottom') // 下拉面板位置
 const selectContentRef = ref<HTMLElement | null>(null) // selectContent 模板引用
@@ -204,6 +205,17 @@ onMounted(() => {
 onBeforeUnmount(() => {
   cleanup()
 })
+// 监听 vitepress 文档页面滚动
+const mutationObserver = useMutationObserver(
+  scrollTarget,
+  () => {
+    if (scrollTop.value !== scrollTarget.value?.scrollTop) {
+      scrollTop.value = scrollTarget.value?.scrollTop ?? 0
+      updatePosition()
+    }
+  },
+  { subtree: true, attributes: true }
+)
 useEventListener(window, 'resize', getViewportSize)
 function getPositionedContainer(): void {
   let parentElement = selectPanelRef.value?.parentElement
@@ -236,7 +248,17 @@ function observeScroll() {
       updatePosition,
       passiveSupported.value ? { passive: true } : undefined
     )
+  if (scrollTarget.value === document.documentElement) {
+    mutationObserver.start()
+  } else {
+    mutationObserver.stop()
+  }
 }
+/**
+ * 清理滚动监听事件并重置滚动目标。
+ *
+ * 清理函数，移除滚动事件监听并重置滚动目标
+ */
 function cleanup() {
   scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updatePosition)
   scrollTarget.value = null
@@ -281,14 +303,18 @@ async function getPosition() {
 // 获取可滚动父元素或视口的矩形信息
 function getShelterRect() {
   if (scrollTarget.value) {
-    return scrollTarget.value.getBoundingClientRect()
+    const scrollTargetRect = scrollTarget.value.getBoundingClientRect()
+    return {
+      top: scrollTargetRect.top < 0 ? 0 : scrollTargetRect.top,
+      bottom: scrollTargetRect.bottom > viewportHeight.value ? viewportHeight.value : scrollTargetRect.bottom
+    }
   }
   return {
     top: 0,
     bottom: viewportHeight.value
   }
 }
-// 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
+// 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
 function getPlacement(): 'bottom' | 'top' {
   const { top, bottom } = selectContentRect.value as DOMRect // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
   const { top: targetTop, bottom: targetBottom } = getShelterRect() // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
