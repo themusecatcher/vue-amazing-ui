@@ -442,8 +442,8 @@ function onClick(item: TextScrollItem) {
 ## 文本省略弹出提示
 
 <Flex vertical>
-  <TextScroll :items="scrollItems" ellipsis @click="onClick" />
-  <TextScroll :items="scrollItems" vertical ellipsis @click="onClick" />
+  <TextScroll :items="scrollItems" ellipsis pause-on-mouse-enter @click="onClick" />
+  <TextScroll :items="scrollItems" ellipsis pause-on-mouse-enter vertical @click="onClick" />
 </Flex>
 
 ::: details Show Code
@@ -484,8 +484,8 @@ function onClick(item: TextScrollItem) {
 </script>
 <template>
   <Flex vertical>
-    <TextScroll :items="scrollItems" ellipsis @click="onClick" />
-    <TextScroll :items="scrollItems" vertical ellipsis @click="onClick" />
+    <TextScroll :items="scrollItems" ellipsis pause-on-mouse-enter @click="onClick" />
+    <TextScroll :items="scrollItems" ellipsis pause-on-mouse-enter vertical @click="onClick" />
   </Flex>
 </template>
 ```

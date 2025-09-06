@@ -119,8 +119,8 @@ const state = reactive({
     </Flex>
     <h2 class="mt30 mb10">文本省略弹出提示</h2>
     <Flex vertical>
-      <TextScroll :items="scrollItems" ellipsis @click="onClick" />
-      <TextScroll :items="scrollItems" vertical ellipsis @click="onClick" />
+      <TextScroll :items="scrollItems" ellipsis pause-on-mouse-enter @click="onClick" />
+      <TextScroll :items="scrollItems" ellipsis pause-on-mouse-enter vertical @click="onClick" />
     </Flex>
     <h2 class="mt30 mb10">鼠标移入暂停</h2>
     <Flex vertical>
