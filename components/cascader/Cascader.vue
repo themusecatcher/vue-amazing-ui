@@ -10,9 +10,9 @@ export interface Option {
 }
 export interface Props {
   options?: Option[] // 可选项数据源
-  label?: string // 下拉字典项的文本字段名
-  value?: string // 下拉字典项的值字段名
-  children?: string // 下拉字典项的后代字段名
+  label?: string // 字典项的文本字段名
+  value?: string // 字典项的值字段名
+  children?: string // 字典项的后代字段名
   placeholder?: string | string[] // 三级选择器各自占位文本
   disabled?: boolean | boolean[] // 是否禁用，可全部禁用或单独禁用某一级选择器
   width?: 'auto' | number | number[] // 三级选择器各自宽度，单位 px
@@ -22,12 +22,16 @@ export interface Props {
   changeOnSelect?: boolean // 当此项为 true 时，点选每级菜单选项值（v-model）都会发生变化；否则只有选择第三级选项后选项值才会变化
   allowClear?: boolean // 是否支持清除
   search?: boolean // 是否支持搜索
+  placement?: 'bottom' | 'top' // 下拉面板弹出位置
+  flip?: boolean // 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
+  to?: string | HTMLElement | false // 下拉面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   /*
     根据输入项进行筛选，默认为 true 时，筛选每个选项的文本字段 label 是否包含输入项，包含返回 true，反之返回 false
     当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
   */
   filter?: Function | true // 过滤条件函数，仅当支持搜索时生效
-  maxDisplay?: number // 选择器面板最多能展示的项数，超过后滚动显示
+  maxDisplay?: number // 下拉面板最多能展示的项数，超过后滚动显示
+  scrollbarProps?: object // 下拉面板滚动条 scrollbar 组件属性配置
   modelValue?: number[] | string[] //（v-model）级联选中项
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -44,8 +48,12 @@ const props = withDefaults(defineProps<Props>(), {
   changeOnSelect: false,
   allowClear: false,
   search: false,
+  placement: 'bottom',
+  flip: true,
+  to: 'body',
   filter: true,
   maxDisplay: 6,
+  scrollbarProps: () => ({}),
   modelValue: () => []
 })
 const values = ref<(string | number)[]>([]) // 级联 value 值数组
@@ -149,8 +157,12 @@ function onThirdChange(value: string | number, label: string): void {
       :size="size"
       :allow-clear="allowClear"
       :search="search"
+      :placement="placement"
+      :flip="flip"
+      :to="to"
       :filter="filter"
       :max-display="maxDisplay"
+      :scrollbar-props="scrollbarProps"
       v-model="values[0]"
       @change="onFirstChange"
       v-bind="$attrs"
@@ -166,8 +178,12 @@ function onThirdChange(value: string | number, label: string): void {
       :size="size"
       :allow-clear="allowClear"
       :search="search"
+      :placement="placement"
+      :flip="flip"
+      :to="to"
       :filter="filter"
       :max-display="maxDisplay"
+      :scrollbar-props="scrollbarProps"
       v-model="values[1]"
       @change="onSecondChange"
       v-bind="$attrs"
@@ -183,8 +199,12 @@ function onThirdChange(value: string | number, label: string): void {
       :size="size"
       :allow-clear="allowClear"
       :search="search"
+      :placement="placement"
+      :flip="flip"
+      :to="to"
       :filter="filter"
       :max-display="maxDisplay"
+      :scrollbar-props="scrollbarProps"
       v-model="values[2]"
       @change="onThirdChange"
       v-bind="$attrs"
