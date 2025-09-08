@@ -30,7 +30,7 @@ export interface Props {
     当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
   */
   filter?: Function | true // 过滤条件函数，仅当支持搜索时生效
-  maxDisplay?: number // 下拉面板最多能展示的下拉项数，超过后滚动显示
+  maxDisplay?: number // 下拉面板最多能展示的项数，超过后滚动显示
   scrollbarProps?: object // 下拉面板滚动条 scrollbar 组件属性配置
   modelValue?: number | string // (v-model) 当前选中的 option 条目值
 }

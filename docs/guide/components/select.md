@@ -910,8 +910,8 @@ watchEffect(() => {
 | flip | 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true |
 | to | 下拉面板挂载的容器节点，可选：元素标签名 (例如 `'body'`) 或者元素本身，`false` 会待在原地 | string &#124; HTMLElement &#124; false | 'body' |
 | filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含时返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | Function &#124; true | true |
+| maxDisplay | 下拉面板最多能展示的项数，超过后滚动显示 | number | 6 |
 | scrollbarProps | 下拉面板滚动条 `scrollbar` 组件属性配置，参考 [Scrollbar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html#scrollbar) | object | {} |
-| maxDisplay | 下拉面板最多能展示的下拉项数，超过后滚动显示 | number | 6 |
 | modelValue <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值 | number &#124; string | undefined |
 
 ### Option Type
