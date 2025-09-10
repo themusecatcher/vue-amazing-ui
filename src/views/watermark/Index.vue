@@ -16,11 +16,13 @@ const imageModel = reactive({
 const model = reactive({
   content: 'Vue Amazing UI',
   layout: 'alternate',
-  color: 'rgba(0, 0, 0, 0.15)',
-  fontSize: 16,
-  fontWeight: 400,
   zIndex: 9,
   rotate: -22,
+  textStyle: {
+    color: 'rgba(0, 0, 0, 0.15)',
+    fontSize: 16,
+    fontWeight: 400
+  },
   gap: [100, 100],
   offset: [50, 50]
 })
@@ -99,7 +101,7 @@ const layoutOptions = [
           </p>
           <img
             style="max-width: 100%"
-            src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/6.jpg"
+            src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/6.jpg"
             alt="示例图片"
           />
         </Watermark>
@@ -108,10 +110,12 @@ const layoutOptions = [
         <Flex vertical :gap="12">
           <Flex vertical> Content:<Input v-model:value="model.content" /> </Flex>
           <Flex vertical> Layout:<Radio :options="layoutOptions" v-model:value="model.layout" button /> </Flex>
-          <Flex vertical> Color:<ColorPicker v-model:value="model.color" /> </Flex>
-          <Flex vertical> FontSize:<Slider v-model:value="model.fontSize" :step="1" :min="0" :max="100" /> </Flex>
+          <Flex vertical> Color:<ColorPicker v-model:value="model.textStyle.color" /> </Flex>
           <Flex vertical>
-            FontWeight:<InputNumber v-model:value="model.fontWeight" :step="100" :min="100" :max="1000" />
+            FontSize:<Slider v-model:value="model.textStyle.fontSize" :step="1" :min="0" :max="100" />
+          </Flex>
+          <Flex vertical>
+            FontWeight:<InputNumber v-model:value="model.textStyle.fontWeight" :step="100" :min="100" :max="1000" />
           </Flex>
           <Flex vertical> zIndex:<Slider v-model:value="model.zIndex" :step="1" :min="0" :max="100" /> </Flex>
           <Flex vertical> Rotate:<Slider v-model:value="model.rotate" :step="1" :min="-180" :max="180" /> </Flex>
