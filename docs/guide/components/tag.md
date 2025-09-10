@@ -142,7 +142,7 @@ const onClose = (e: MouseEvent) => {
 
 ## 预设状态的标签
 
-<template>
+<div>
   <Divider orientation="left">Without icon</Divider>
   <Space gap="small">
     <Tag color="success">success</Tag>
@@ -191,7 +191,7 @@ const onClose = (e: MouseEvent) => {
     </Tag>
     <Tag color="default" icon="😉"> blink </Tag>
   </Space>
-</template>
+</div>
 
 ::: details Show Code
 
