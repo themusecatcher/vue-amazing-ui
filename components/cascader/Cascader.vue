@@ -165,7 +165,6 @@ function onThirdChange(value: string | number, label: string): void {
       :scrollbar-props="scrollbarProps"
       v-model="values[0]"
       @change="onFirstChange"
-      v-bind="$attrs"
     />
     <Select
       :options="secondOptions"
@@ -186,7 +185,6 @@ function onThirdChange(value: string | number, label: string): void {
       :scrollbar-props="scrollbarProps"
       v-model="values[1]"
       @change="onSecondChange"
-      v-bind="$attrs"
     />
     <Select
       :options="thirdOptions"
@@ -207,7 +205,6 @@ function onThirdChange(value: string | number, label: string): void {
       :scrollbar-props="scrollbarProps"
       v-model="values[2]"
       @change="onThirdChange"
-      v-bind="$attrs"
     />
   </div>
 </template>
