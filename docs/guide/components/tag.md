@@ -142,7 +142,56 @@ const onClose = (e: MouseEvent) => {
 
 ## 预设状态的标签
 
-<Divider orientation="left">Without icon</Divider> <Space gap="small"> <Tag color="success">success</Tag> <Tag color="processing">processing</Tag> <Tag color="error">error</Tag> <Tag color="warning">warning</Tag> <Tag color="default">default</Tag> </Space> <Divider orientation="left">With icon</Divider> <Space gap="small"> <Tag color="success"> <template #icon> <CheckCircleOutlined /> </template> success </Tag> <Tag color="processing"> <template #icon> <SyncOutlined spin /> </template> processing </Tag> <Tag color="error"> <template #icon> <CloseCircleOutlined /> </template> error </Tag> <Tag color="warning"> <template #icon> <ExclamationCircleOutlined /> </template> warning </Tag> <Tag color="default"> <template #icon> <ClockCircleOutlined /> </template> waiting </Tag> <Tag color="default"> <template #icon> <MinusCircleOutlined /> </template> stop </Tag> <Tag color="default" icon="😉"> blink </Tag> </Space>
+<template>
+  <Divider orientation="left">Without icon</Divider>
+  <Space gap="small">
+    <Tag color="success">success</Tag>
+    <Tag color="processing">processing</Tag>
+    <Tag color="error">error</Tag>
+    <Tag color="warning">warning</Tag>
+    <Tag color="default">default</Tag>
+  </Space>
+  <Divider orientation="left">With icon</Divider>
+  <Space gap="small">
+    <Tag color="success">
+      <template #icon>
+        <CheckCircleOutlined />
+      </template>
+      success
+    </Tag>
+    <Tag color="processing">
+      <template #icon>
+        <SyncOutlined spin />
+      </template>
+      processing
+    </Tag>
+    <Tag color="error">
+      <template #icon>
+        <CloseCircleOutlined />
+      </template>
+      error
+    </Tag>
+    <Tag color="warning">
+      <template #icon>
+        <ExclamationCircleOutlined />
+      </template>
+      warning
+    </Tag>
+    <Tag color="default">
+      <template #icon>
+        <ClockCircleOutlined />
+      </template>
+      waiting
+    </Tag>
+    <Tag color="default">
+      <template #icon>
+        <MinusCircleOutlined />
+      </template>
+      stop
+    </Tag>
+    <Tag color="default" icon="😉"> blink </Tag>
+  </Space>
+</template>
 
 ::: details Show Code
 
