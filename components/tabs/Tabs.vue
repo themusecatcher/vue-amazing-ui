@@ -262,32 +262,20 @@ function onWheel(e: WheelEvent): void {
   if (e.deltaX || e.deltaY) {
     if (['top', 'bottom'].includes(props.tabPosition)) {
       // 水平滚动
-      getHorizontalScroll(e)
+      getHorizontalScroll(e.deltaX)
     } else {
       // 垂直滚动
-      getVerticalScroll(e)
+      getVerticalScroll(e.deltaY)
     }
   }
 }
-function getHorizontalScroll(e: WheelEvent): void {
-  const scrollX = (e.deltaX || e.deltaY) * 1 // 滚轮的水平滚动量
-  if (scrollLeft.value + scrollX > scrollMax.value) {
-    scrollLeft.value = scrollMax.value
-  } else if (scrollLeft.value + scrollX < 0) {
-    scrollLeft.value = 0
-  } else {
-    scrollLeft.value += scrollX
-  }
+function getHorizontalScroll(deltaX: number): void {
+  const scrollX = deltaX * 1 // 水平滚动量
+  scrollLeft.value = Math.min(Math.max(scrollLeft.value + scrollX, 0), scrollMax.value)
 }
-function getVerticalScroll(e: WheelEvent): void {
-  const scrollY = (e.deltaX || e.deltaY) * 1 // 滚轮的垂直滚动量
-  if (scrollTop.value + scrollY > scrollMax.value) {
-    scrollTop.value = scrollMax.value
-  } else if (scrollTop.value + scrollY < 0) {
-    scrollTop.value = 0
-  } else {
-    scrollTop.value += scrollY
-  }
+function getVerticalScroll(deltaY: number): void {
+  const scrollY = deltaY * 1 // 垂直滚动量
+  scrollTop.value = Math.min(Math.max(scrollTop.value + scrollY, 0), scrollMax.value)
 }
 function getContentStyle(key: string | number | undefined, index: number): CSSProperties {
   if (props.activeKey !== getPageKey(key, index)) {

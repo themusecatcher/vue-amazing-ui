@@ -1020,16 +1020,10 @@ function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
 // 鼠标滚轮或触摸板滑动事件
 function onWheel(e: WheelEvent) {
   if (e.deltaX) {
+    e.stopPropagation() // 阻止事件冒泡
+    e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
     const scrollX = e.deltaX * 1 // 滚轮的水平滚动量
-    if (scrollLeft.value + scrollX > scrollMax.value) {
-      scrollLeft.value = scrollMax.value
-    } else if (scrollLeft.value + scrollX < 0) {
-      scrollLeft.value = 0
-    } else {
-      e.stopPropagation() // 阻止事件冒泡
-      e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
-      scrollLeft.value += scrollX
-    }
+    scrollLeft.value = Math.min(Math.max(scrollLeft.value + scrollX, 0), scrollMax.value)
     scrollbarRef.value.scrollTo({
       left: scrollLeft.value,
       behavior: 'instant'
@@ -1079,7 +1073,6 @@ function onPaginationChange(page: number, pageSize: number) {
             :style="showHeader ? {} : { borderRadius: '8px 8px 0 0' }"
             :x-scrollable="xScrollable"
             :y-scrollable="yScrollable"
-            :auto-hide="false"
             @scroll="onScroll"
             v-bind="scrollbarProps"
           >
@@ -1517,7 +1510,6 @@ function onPaginationChange(page: number, pageSize: number) {
             :class="{ 'table-x-scrollbar-sticky': sticky }"
             :x-scrollable="xScrollable"
             :y-scrollable="yScrollable"
-            :auto-hide="false"
             :style="tableBodyScrollStyle"
             @scroll="onScroll"
             v-bind="scrollbarProps"
