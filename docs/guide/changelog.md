@@ -6,7 +6,9 @@
 
 ## <VersionDateTag date="2025-10-15">2.4.22</VersionDateTag>
 
-- 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，兼容弹出框在文档中自动调整弹出位置的功能
+- 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件代码，修复当使用 `Methods` 进行滚动时滚动条无法正常显示的问题
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件代码
+- 优化并更新 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件代码
 - 更新组件库部分依赖版本
 
 ## <VersionDateTag date="2025-09-05">2.4.21</VersionDateTag>
