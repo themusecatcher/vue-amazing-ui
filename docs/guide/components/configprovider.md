@@ -7,10 +7,10 @@ _为组件提供统一的全局化配置_
 ## 何时使用
 
 - 当需要定制主题时
-<!-- - 当需要为组件提供的全局配置时 -->
+<!-- - 当需要为组件提供全局配置时 -->
 
 <script setup lang="ts">
-import { ref, h } from 'vue'
+import { ref } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { ConfigProviderTheme, CarouselImage, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
@@ -286,8 +286,8 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
         <Progress :percent="percent" />
         <Space align="center">
           <Progress type="circle" :percent="percent" />
-          <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-          <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+          <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+          <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
         </Space>
       </Flex>
     </Card>
@@ -330,7 +330,7 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
 
 ```vue
 <script setup lang="ts">
-import { ref, h } from 'vue'
+import { ref } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { CarouselImage, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
@@ -587,8 +587,8 @@ function onDecline(scale: number) {
           <Progress :percent="percent" />
           <Space align="center">
             <Progress type="circle" :percent="percent" />
-            <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-            <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+            <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+            <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
           </Space>
         </Flex>
       </Card>

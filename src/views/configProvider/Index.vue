@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, h } from 'vue'
+import { ref } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type {
@@ -279,8 +279,8 @@ function onDecline(scale: number) {
             <Progress :percent="percent" />
             <Space align="center">
               <Progress type="circle" :percent="percent" />
-              <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-              <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+              <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+              <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
             </Space>
           </Flex>
         </Card>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { h, ref } from 'vue'
+import { ref } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const qrcodeRef = ref()
 const size = ref(160)
@@ -45,8 +45,8 @@ const dowloadQRCode = async () => {
     <h2 class="mt30 mb10">自定义尺寸</h2>
     <Space vertical>
       <Space>
-        <Button @click="decline" :icon="() => h(MinusOutlined)"> small </Button>
-        <Button @click="increase" :icon="() => h(PlusOutlined)"> large </Button>
+        <Button @click="decline" :icon="MinusOutlined"> small </Button>
+        <Button @click="increase" :icon="PlusOutlined"> large </Button>
       </Space>
       <QRCode :size="size" value="https://themusecatcher.blog.csdn.net" />
     </Space>
