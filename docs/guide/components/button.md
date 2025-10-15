@@ -9,7 +9,7 @@ _按钮用于开始一个即时操作_
 - 响应用户点击行为，触发相应的业务逻辑
 
 <script setup lang="ts">
-import { h, ref } from 'vue'
+import { ref } from 'vue'
 import { SearchOutlined, DownloadOutlined, CrownOutlined } from '@ant-design/icons-vue'
 const disabled = ref(true)
 const sizeOptions = [
@@ -89,16 +89,16 @@ function onClick(e: Event) {
 <Space vertical>
   <Space>
     <Tooltip tooltip="search">
-      <Button type="primary" shape="circle" :icon="() => h(SearchOutlined)" />
+      <Button type="primary" shape="circle" :icon="SearchOutlined" />
     </Tooltip>
     <Button type="primary" shape="circle">A</Button>
-    <Button type="primary" shape="round" :icon="() => h(SearchOutlined)">
+    <Button type="primary" shape="round" :icon="SearchOutlined">
       Search
     </Button>
     <Tooltip tooltip="search">
-      <Button type="primary" shape="round" :icon="() => h(SearchOutlined)" />
+      <Button type="primary" shape="round" :icon="SearchOutlined" />
     </Tooltip>
-    <Button type="primary" :icon="() => h(SearchOutlined)">
+    <Button type="primary" :icon="SearchOutlined">
       Search
     </Button>
   </Space>
@@ -185,21 +185,20 @@ function onClick(e: Event) {
 
 ```vue
 <script setup lang="ts">
-import { h } from 'vue'
 import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
   <Space vertical>
     <Space>
       <Tooltip tooltip="search">
-        <Button type="primary" shape="circle" :icon="() => h(SearchOutlined)" />
+        <Button type="primary" shape="circle" :icon="SearchOutlined" />
       </Tooltip>
       <Button type="primary" shape="circle">A</Button>
-      <Button type="primary" shape="round" :icon="() => h(SearchOutlined)"> Search </Button>
+      <Button type="primary" shape="round" :icon="SearchOutlined"> Search </Button>
       <Tooltip tooltip="search">
-        <Button type="primary" shape="round" :icon="() => h(SearchOutlined)" />
+        <Button type="primary" shape="round" :icon="SearchOutlined" />
       </Tooltip>
-      <Button type="primary" :icon="() => h(SearchOutlined)"> Search </Button>
+      <Button type="primary" :icon="SearchOutlined"> Search </Button>
     </Space>
     <Space>
       <Tooltip tooltip="search">

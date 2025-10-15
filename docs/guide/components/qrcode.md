@@ -13,7 +13,7 @@ _二维码_
 - [qrcode](https://www.npmjs.com/package/qrcode)
 
 <script lang="ts" setup>
-import { h, ref } from 'vue'
+import { ref } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const qrcodeRef = ref()
 const size = ref(160)
@@ -77,10 +77,10 @@ const dowloadQRCode = async () => {
 
 <Space vertical>
   <Space>
-    <Button @click="decline" :icon="() => h(MinusOutlined)">
+    <Button @click="decline" :icon="MinusOutlined">
       small
     </Button>
-    <Button @click="increase" :icon="() => h(PlusOutlined)">
+    <Button @click="increase" :icon="PlusOutlined">
       large
     </Button>
   </Space>
@@ -110,8 +110,8 @@ const increase = () => {
 <template>
   <Space vertical>
     <Space>
-      <Button @click="decline" :icon="() => h(MinusOutlined)"> small </Button>
-      <Button @click="increase" :icon="() => h(PlusOutlined)"> large </Button>
+      <Button @click="decline" :icon="MinusOutlined"> small </Button>
+      <Button @click="increase" :icon="PlusOutlined"> large </Button>
     </Space>
     <QRCode :size="size" value="https://themusecatcher.blog.csdn.net" />
   </Space>
