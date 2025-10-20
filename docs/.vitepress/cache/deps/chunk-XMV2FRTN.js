@@ -1,14 +1,8 @@
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/ssr-window.esm.mjs
+// node_modules/.pnpm/swiper@12.0.2/node_modules/swiper/shared/ssr-window.esm.mjs
 function isObject(obj) {
   return obj !== null && typeof obj === 'object' && 'constructor' in obj && obj.constructor === Object
 }
-function extend(target, src) {
-  if (target === void 0) {
-    target = {}
-  }
-  if (src === void 0) {
-    src = {}
-  }
+function extend(target = {}, src = {}) {
   const noExtend = ['__proto__', 'constructor', 'prototype']
   Object.keys(src)
     .filter((key) => noExtend.indexOf(key) < 0)
@@ -135,11 +129,8 @@ function getWindow() {
   return win
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/utils.mjs
-function classesToTokens(classes) {
-  if (classes === void 0) {
-    classes = ''
-  }
+// node_modules/.pnpm/swiper@12.0.2/node_modules/swiper/shared/utils.mjs
+function classesToTokens(classes = '') {
   return classes
     .trim()
     .split(' ')
@@ -156,10 +147,7 @@ function deleteProps(obj) {
     } catch (e) {}
   })
 }
-function nextTick(callback, delay) {
-  if (delay === void 0) {
-    delay = 0
-  }
+function nextTick(callback, delay = 0) {
   return setTimeout(callback, delay)
 }
 function now() {
@@ -179,10 +167,7 @@ function getComputedStyle(el) {
   }
   return style
 }
-function getTranslate(el, axis) {
-  if (axis === void 0) {
-    axis = 'x'
-  }
+function getTranslate(el, axis = 'x') {
   const window2 = getWindow()
   let matrix
   let curTransform
@@ -230,11 +215,11 @@ function isNode(node) {
   }
   return node && (node.nodeType === 1 || node.nodeType === 11)
 }
-function extend2() {
-  const to = Object(arguments.length <= 0 ? void 0 : arguments[0])
+function extend2(...args) {
+  const to = Object(args[0])
   const noExtend = ['__proto__', 'constructor', 'prototype']
-  for (let i = 1; i < arguments.length; i += 1) {
-    const nextSource = i < 0 || arguments.length <= i ? void 0 : arguments[i]
+  for (let i = 1; i < args.length; i += 1) {
+    const nextSource = args[i]
     if (nextSource !== void 0 && nextSource !== null && !isNode(nextSource)) {
       const keysArray = Object.keys(Object(nextSource)).filter((key) => noExtend.indexOf(key) < 0)
       for (let nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex += 1) {
@@ -266,8 +251,7 @@ function extend2() {
 function setCSSProperty(el, varName, varValue) {
   el.style.setProperty(varName, varValue)
 }
-function animateCSSModeScroll(_ref) {
-  let { swiper, targetPosition, side } = _ref
+function animateCSSModeScroll({ swiper, targetPosition, side }) {
   const window2 = getWindow()
   const startPosition = -swiper.translate
   let startTime = null
@@ -316,10 +300,7 @@ function getSlideTransformEl(slideEl) {
     slideEl
   )
 }
-function elementChildren(element, selector) {
-  if (selector === void 0) {
-    selector = ''
-  }
+function elementChildren(element, selector = '') {
   const window2 = getWindow()
   const children = [...element.children]
   if (window2.HTMLSlotElement && element instanceof HTMLSlotElement) {
@@ -362,10 +343,7 @@ function showWarning(text) {
     return
   } catch (err) {}
 }
-function createElement(tag, classes) {
-  if (classes === void 0) {
-    classes = []
-  }
+function createElement(tag, classes = []) {
   const el = document.createElement(tag)
   el.classList.add(...(Array.isArray(classes) ? classes : classesToTokens(classes)))
   return el
@@ -471,10 +449,7 @@ function getRotateFix(swiper) {
     return v
   }
 }
-function setInnerHTML(el, html) {
-  if (html === void 0) {
-    html = ''
-  }
+function setInnerHTML(el, html = '') {
   if (typeof trustedTypes !== 'undefined') {
     el.innerHTML = trustedTypes
       .createPolicy('html', {
@@ -515,4 +490,4 @@ export {
   getRotateFix,
   setInnerHTML
 }
-//# sourceMappingURL=chunk-6G25GEVL.js.map
+//# sourceMappingURL=chunk-XMV2FRTN.js.map
