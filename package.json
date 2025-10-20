@@ -31,7 +31,6 @@
     "README.md",
     "README.zh-CN.md"
   ],
-  "sideEffects": false,
   "main": "lib/index.cjs",
   "module": "es/index.js",
   "unpkg": "dist/index.iife.js",
@@ -46,6 +45,10 @@
     "./css": "./dist/style.css",
     "./*": "./*"
   },
+  "sideEffects": [
+    "dist/*",
+    "*.css"
+  ],
   "scripts": {
     "docs:dev": "vitepress dev docs --port 8000 --open",
     "docs:build": "vitepress build docs",
