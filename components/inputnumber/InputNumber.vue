@@ -122,13 +122,7 @@ function updateValue(value: string): void {
       numValue.value = getFormatValue()
     }
   } else {
-    if (!props.value) {
-      if (props.formatter) {
-        numValue.value = props.formatter(value)
-      }
-    } else {
-      numValue.value = getFormatValue()
-    }
+    numValue.value = getFormatValue()
   }
 }
 function onInput(e: Event): void {
