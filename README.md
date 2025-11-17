@@ -16,7 +16,7 @@
 
 ## Features
 
-- The component library is implemented with `Vue@3.5.22`+ `TypeScript@5.9.3` + `Vite@7.1.10` + `Less@4.4.2`.
+- The component library is implemented with `Vue@3.5.24`+ `TypeScript@5.9.3` + `Vite@7.2.2` + `Less@4.4.2`.
 - Currently, it includes `67` basic UI components and `18` utility functions, with continuous exploration and updates ongoing...
 - Theme Customizable, all you need is to provide a theme color, then all the stuffs will be done by me.
 - By the way, they are all treeshakable.

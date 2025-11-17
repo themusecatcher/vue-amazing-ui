@@ -19,7 +19,7 @@ import {
   setCSSProperty,
   setInnerHTML,
   showWarning
-} from './chunk-XMV2FRTN.js'
+} from './chunk-T6WREOVV.js'
 import {
   computed,
   h,
@@ -32,10 +32,10 @@ import {
   provide,
   ref,
   watch
-} from './chunk-B4YH5ZTW.js'
+} from './chunk-2YTPUVVG.js'
 import './chunk-JVWSFFO4.js'
 
-// node_modules/.pnpm/swiper@12.0.2/node_modules/swiper/shared/swiper-core.mjs
+// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/shared/swiper-core.mjs
 var support
 function calcSupport() {
   const window2 = getWindow()
@@ -3742,7 +3742,7 @@ Object.keys(prototypes).forEach((prototypeGroup) => {
 })
 Swiper.use([Resize, Observer])
 
-// node_modules/.pnpm/swiper@12.0.2/node_modules/swiper/shared/update-swiper.mjs
+// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/shared/update-swiper.mjs
 var paramsList = [
   'eventsPrefix',
   'injectStyles',
@@ -4087,14 +4087,14 @@ function updateSwiper({ swiper, slides, passedParams, changedParams, nextEl, pre
       if (!nextEl || typeof nextEl === 'string') {
         nextEl = document.createElement('div')
         nextEl.classList.add('swiper-button-next')
-        setInnerHTML(nextEl, swiper.hostEl.constructor.nextButtonSvg)
+        setInnerHTML(nextEl, swiper.navigation.arrowSvg)
         nextEl.part.add('button-next')
         swiper.el.appendChild(nextEl)
       }
       if (!prevEl || typeof prevEl === 'string') {
         prevEl = document.createElement('div')
         prevEl.classList.add('swiper-button-prev')
-        setInnerHTML(prevEl, swiper.hostEl.constructor.prevButtonSvg)
+        setInnerHTML(prevEl, swiper.navigation.arrowSvg)
         prevEl.part.add('button-prev')
         swiper.el.appendChild(prevEl)
       }
@@ -4122,7 +4122,7 @@ function updateSwiper({ swiper, slides, passedParams, changedParams, nextEl, pre
   swiper.update()
 }
 
-// node_modules/.pnpm/swiper@12.0.2/node_modules/swiper/shared/update-on-virtual-data.mjs
+// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/shared/update-on-virtual-data.mjs
 function getParams(obj = {}, splitEvents = true) {
   const params = {
     on: {}
@@ -4239,7 +4239,7 @@ var updateOnVirtualData = (swiper) => {
   }
 }
 
-// node_modules/.pnpm/swiper@12.0.2/node_modules/swiper/swiper-vue.mjs
+// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/swiper-vue.mjs
 function getChildren(originalSlots = {}, slidesRef, oldSlidesRef) {
   const slides = []
   const slots = {
