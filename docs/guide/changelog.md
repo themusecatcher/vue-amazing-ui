@@ -4,6 +4,11 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2025-11-17">2.4.23</VersionDateTag>
+
+- 修复 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件初始为空值时非法输入未置空问题，关闭 [#44](https://github.com/themusecatcher/vue-amazing-ui/issues/44)
+- 更新组件库部分依赖版本
+
 ## <VersionDateTag date="2025-10-15">2.4.22</VersionDateTag>
 
 - 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件代码，修复当使用 `Methods` 进行滚动时滚动条无法正常显示的问题
