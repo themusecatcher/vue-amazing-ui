@@ -279,9 +279,9 @@ function toggleNumber(target: number): void {
 // 滑动效果函数
 function moveEffect(): void {
   if (baseNumber.value) {
-    offset.value = originNumber.value + distance.value * cubicBezierNumber.value
+    offset.value = originNumber.value + distance.value * (cubicBezierNumber.value as unknown as number)
   } else {
-    offset.value = originNumber.value + distance.value * (1 - cubicBezierNumber.value)
+    offset.value = originNumber.value + distance.value * (1 - (cubicBezierNumber.value as unknown as number))
   }
 }
 function moveLeftEffect(): void {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import VueDatePicker from '@vuepic/vue-datepicker'
+import { VueDatePicker } from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { computed, ref, watch } from 'vue'
 import { useInject } from 'components/utils'
@@ -99,7 +99,6 @@ function maxRangeDisabledDates(date: Date): boolean {
       --datepicker-primary-color-focus: ${colorPalettes[4]};
       --datepicker-primary-shadow-color: ${shadowColor};
     `"
-    locale="zh-CN"
     position="left"
     :month-change-on-scroll="false"
     :enable-time-picker="showTime"
