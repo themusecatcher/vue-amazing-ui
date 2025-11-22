@@ -67,7 +67,7 @@ const maxFileCount = computed(() => {
 watchEffect(() => {
   initUpload()
 })
-function initUpload() {
+function initUpload(): void {
   uploadedFiles.value = [...props.fileList]
   if (uploadedFiles.value.length > maxFileCount.value) {
     uploadedFiles.value.splice(maxFileCount.value)
@@ -84,19 +84,19 @@ function initUpload() {
   }
 }
 // 检查 url 是否为图片
-function isImage(url: string) {
+function isImage(url: string): boolean {
   const imageUrlReg = /\.(jpg|jpeg|png|gif)$/i
   const base64Reg = /^data:image/
   return imageUrlReg.test(url) || base64Reg.test(url)
 }
-// 检查 url 是否为pdf
-function isPDF(url: string) {
+// 检查 url 是否为 pdf
+function isPDF(url: string): boolean {
   const pdfUrlReg = /\.pdf$/i
   const base64Reg = /^data:application\/pdf/
   return pdfUrlReg.test(url) || base64Reg.test(url)
 }
 // 拖拽上传
-function onDrop(e: DragEvent, index: number) {
+function onDrop(e: DragEvent, index: number): void {
   const files = e.dataTransfer?.files
   if (files?.length) {
     const len = files.length
@@ -108,15 +108,15 @@ function onDrop(e: DragEvent, index: number) {
       }
     }
     // input 的 change 事件默认保存上一次 input 的 value 值，同一 value 值(根据文件路径判断)在上传时不重新加载
-    uploadInputRef.value[index].value = ''
+    uploadInputRef.value[index].value = null
   }
   emits('drop', e)
 }
-function onClickFileInput(index: number) {
+function onClickFileInput(index: number): void {
   uploadInputRef.value[index].click()
 }
 // 点击上传
-function onUpload(e: any, index: number) {
+function onUpload(e: any, index: number): void {
   const files = e.target.files
   if (files?.length) {
     const len = files.length
@@ -127,12 +127,12 @@ function onUpload(e: any, index: number) {
         break
       }
     }
-    // input 的 change 事件默认保存上一次 input 的value 值，同一 value 值(根据文件路径判断)在上传时不重新加载
-    uploadInputRef.value[index].value = ''
+    // input 的 change 事件默认保存上一次 input 的 value 值，同一 value 值(根据文件路径判断)在上传时不重新加载
+    uploadInputRef.value[index].value = null
   }
 }
 // 统一上传文件方法
-const uploadFile = async (file: File, index: number) => {
+async function uploadFile(file: File, index: number): Promise<void> {
   // console.log('开始上传 upload-event files:', file)
   const promiseFunction = () => {
     return new Promise((resolve, reject) => {
@@ -166,7 +166,7 @@ const uploadFile = async (file: File, index: number) => {
         showUpload.value++
       }
       if (props.uploadMode === 'base64') {
-        // 以base64方式读取文件
+        // 以 base64 方式读取文件
         uploading.value[index] = true
         base64Upload(file, index)
       }
@@ -180,7 +180,7 @@ const uploadFile = async (file: File, index: number) => {
       console.log('beforeUpload error:', error)
     })
 }
-function base64Upload(file: File, index: number) {
+function base64Upload(file: File, index: number): void {
   const reader = new FileReader()
   reader.readAsDataURL(file) // 以 base64 方式读取文件
   reader.onloadstart = function (e) {
@@ -202,17 +202,17 @@ function base64Upload(file: File, index: number) {
     // console.log('已读取:', Math.ceil(e.loaded / e.total * 100))
     if (e.loaded === e.total) {
       // 上传完成
-      uploading.value[index] = false // 隐藏loading状态
+      uploading.value[index] = false // 隐藏 loading 状态
     }
   }
   reader.onload = function (e) {
     // 当读取操作成功完成时调用
     // console.log('读取成功 onload:', e)
     // 该文件的 base64 数据，如果是图片，则前端可直接用来展示图片
-    uploadedFiles.value.push({
+    uploadedFiles.value[index] = {
       name: file.name,
       url: e.target?.result
-    })
+    }
     props.actionMessage.upload && messageRef.value.success(props.actionMessage.upload)
     emits('update:fileList', uploadedFiles.value)
     emits('change', uploadedFiles.value)
@@ -222,11 +222,11 @@ function base64Upload(file: File, index: number) {
     // console.log('读取结束 onloadend:', e)
   }
 }
-function customUpload(file: File, index: number) {
+function customUpload(file: File, index: number): void {
   props
     .customRequest(file)
     .then((res: any) => {
-      uploadedFiles.value.push(res)
+      uploadedFiles.value[index] = res
       props.actionMessage.upload && messageRef.value.success(props.actionMessage.upload)
       emits('update:fileList', uploadedFiles.value)
       emits('change', uploadedFiles.value)
@@ -241,7 +241,7 @@ function customUpload(file: File, index: number) {
       uploading.value[index] = false
     })
 }
-function onPreview(index: number, url: string) {
+function onPreview(index: number, url: string): void {
   if (isImage(url)) {
     const files = uploadedFiles.value.slice(0, index).filter((file) => !isImage(file.url))
     imageRef.value[index - files.length].preview(0)
@@ -250,7 +250,7 @@ function onPreview(index: number, url: string) {
   }
   emits('preview', uploadedFiles.value[index])
 }
-function onRemove(index: number) {
+function onRemove(index: number): void {
   if (uploadedFiles.value.length < maxFileCount.value) {
     showUpload.value--
   }
@@ -260,19 +260,19 @@ function onRemove(index: number) {
   emits('update:fileList', uploadedFiles.value)
   emits('change', uploadedFiles.value)
 }
-function onInfo(content: string) {
+function onInfo(content: string): void {
   messageRef.value.info(content)
 }
-function onSuccess(content: string) {
+function onSuccess(content: string): void {
   messageRef.value.success(content)
 }
-function onError(content: string) {
+function onError(content: string): void {
   messageRef.value.error(content)
 }
-function onWarning(content: string) {
+function onWarning(content: string): void {
   messageRef.value.warning(content)
 }
-function onLoading(content: string) {
+function onLoading(content: string): void {
   messageRef.value.loading(content)
 }
 defineExpose({
