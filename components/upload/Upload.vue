@@ -51,7 +51,7 @@ const props = withDefaults(defineProps<Props>(), {
   fileList: () => []
 })
 const uploadedFiles = ref<FileType[]>([]) // 上传文件列表
-const showUpload = ref(1) // 展示的上传框
+const showUpload = ref<number>(1) // 展示的上传框
 const uploading = ref<boolean[]>([]) // 上传中
 const uploadInputRef = ref() // 上传文件控件引用
 const imageRef = ref()
@@ -85,7 +85,7 @@ function initUpload(): void {
 }
 // 检查 url 是否为图片
 function isImage(url: string): boolean {
-  const imageUrlReg = /\.(jpg|jpeg|png|gif)$/i
+  const imageUrlReg = /\.(jpg|jpeg|png|gif|bmp|webp|svg|ico)$/i
   const base64Reg = /^data:image/
   return imageUrlReg.test(url) || base64Reg.test(url)
 }
@@ -132,9 +132,9 @@ function onUpload(e: any, index: number): void {
   }
 }
 // 统一上传文件方法
-async function uploadFile(file: File, index: number): Promise<void> {
+function uploadFile(file: File, index: number): void {
   // console.log('开始上传 upload-event files:', file)
-  const promiseFunction = () => {
+  function promiseFunction() {
     return new Promise((resolve, reject) => {
       try {
         // 尝试执行传入的函数，并获取返回值
@@ -177,7 +177,7 @@ async function uploadFile(file: File, index: number): Promise<void> {
       }
     })
     .catch((error: any) => {
-      console.log('beforeUpload error:', error)
+      console.warn('beforeUpload error:', error)
     })
 }
 function base64Upload(file: File, index: number): void {
@@ -325,7 +325,7 @@ defineExpose({
             </p>
           </div>
         </div>
-        <div v-show="uploading[n - 1]" class="file-uploading">
+        <div v-if="uploading[n - 1]" class="file-uploading">
           <Spin
             class="spin-uploading"
             tip="uploading"
@@ -335,7 +335,7 @@ defineExpose({
             v-bind="spinProps"
           />
         </div>
-        <div v-if="uploadedFiles[n - 1]" class="file-preview">
+        <div v-else-if="uploadedFiles[n - 1]" class="file-preview">
           <Image
             v-if="isImage(uploadedFiles[n - 1].url)"
             ref="imageRef"
