@@ -115,7 +115,8 @@ const sliderRailStyle = computed(() => {
     boxShadow: 'inset 0 0 2px 0 rgba(0, 0, 0, 0.24)',
     backgroundImage: 'linear-gradient(90deg, red, #ff0 16.66%, #0f0 33.33%, #0ff 50%, #00f 66.66%, #f0f 83.33%, red)',
     height: HANDLE_SIZE,
-    borderRadius: BORDER_RADIUS
+    borderRadius: BORDER_RADIUS,
+    touchAction: 'none'
   }
   return style
 })
@@ -353,14 +354,17 @@ function handleUpdateSv(s: number, v: number): void {
       break
   }
 }
-// pallete mouse down
-function handlePalleteMouseDown(e: MouseEvent): void {
+// pallete pointer down
+function handlePalletePointerDown(e: PointerEvent): void {
   if (!palleteRef.value) return
-  document.addEventListener('mousemove', handlePalleteMouseMove)
-  document.addEventListener('mouseup', handlePalleteMouseUp)
-  handlePalleteMouseMove(e)
+  // 捕获指针，确保即使移出元素也能继续跟踪
+  palleteRef.value.setPointerCapture(e.pointerId)
+  document.addEventListener('pointermove', handlePalletePointerMove)
+  document.addEventListener('pointerup', handlePalletePointerUp)
+  document.addEventListener('pointercancel', handlePalletePointerUp)
+  handlePalletePointerMove(e)
 }
-function handlePalleteMouseMove(e: MouseEvent): void {
+function handlePalletePointerMove(e: PointerEvent): void {
   if (!palleteRef.value) return
   const { width, height, left, bottom } = palleteRef.value.getBoundingClientRect()
   const newV = (bottom - e.clientY) / height
@@ -369,9 +373,10 @@ function handlePalleteMouseMove(e: MouseEvent): void {
   const normalizedNewV = 100 * (newV > 1 ? 1 : newV < 0 ? 0 : newV)
   handleUpdateSv(normalizedNewS, normalizedNewV)
 }
-function handlePalleteMouseUp(): void {
-  document.removeEventListener('mousemove', handlePalleteMouseMove)
-  document.removeEventListener('mouseup', handlePalleteMouseUp)
+function handlePalletePointerUp(): void {
+  document.removeEventListener('pointermove', handlePalletePointerMove)
+  document.removeEventListener('pointerup', handlePalletePointerUp)
+  document.removeEventListener('pointercancel', handlePalletePointerUp)
   emits('complete', displayedValue.value)
 }
 function handleUpdateHue(hue: number): void {
@@ -395,26 +400,30 @@ function handleUpdateHue(hue: number): void {
       break
   }
 }
-// hue slider mouse down
-function handleHueSliderMouseDown(e: MouseEvent): void {
+// hue slider pointer down
+function handleHueSliderPointerDown(e: PointerEvent): void {
   if (!hueRailRef.value) return
-  document.addEventListener('mousemove', handleHueSliderMouseMove)
-  document.addEventListener('mouseup', handleHueSliderMouseUp)
-  handleHueSliderMouseMove(e)
+  // 捕获指针，确保即使移出元素也能继续跟踪
+  hueRailRef.value.setPointerCapture(e.pointerId)
+  document.addEventListener('pointermove', handleHueSliderPointerMove)
+  document.addEventListener('pointerup', handleHueSliderPointerUp)
+  document.addEventListener('pointercancel', handleHueSliderPointerUp)
+  handleHueSliderPointerMove(e)
 }
 function normalizeHue(hue: number): number {
   hue = Math.round(hue)
   return hue >= 360 ? 359 : hue < 0 ? 0 : hue
 }
-function handleHueSliderMouseMove(e: MouseEvent): void {
+function handleHueSliderPointerMove(e: PointerEvent): void {
   if (!hueRailRef.value) return
   const { width, left } = hueRailRef.value.getBoundingClientRect()
   const newHue = normalizeHue(((e.clientX - left - BORDER_RADIUS_NUM) / (width - HANDLE_SIZE_NUM)) * 360)
   handleUpdateHue(newHue)
 }
-function handleHueSliderMouseUp(): void {
-  document.removeEventListener('mousemove', handleHueSliderMouseMove)
-  document.removeEventListener('mouseup', handleHueSliderMouseUp)
+function handleHueSliderPointerUp(): void {
+  document.removeEventListener('pointermove', handleHueSliderPointerMove)
+  document.removeEventListener('pointerup', handleHueSliderPointerUp)
+  document.removeEventListener('pointercancel', handleHueSliderPointerUp)
   emits('complete', displayedValue.value)
 }
 function handleUpdateAlpha(alpha: number): void {
@@ -438,25 +447,30 @@ function handleUpdateAlpha(alpha: number): void {
   }
   displayedAlpha.value = alpha
 }
-// alpha slider mouse down
-function handleAlphaSliderMouseDown(e: MouseEvent): void {
-  document.addEventListener('mousemove', handleAlphaSliderMouseMove)
-  document.addEventListener('mouseup', handleAlphaSliderMouseUp)
-  handleAlphaSliderMouseMove(e)
+// alpha slider pointer down
+function handleAlphaSliderPointerDown(e: PointerEvent): void {
+  if (!alphaRailRef.value) return
+  // 捕获指针，确保即使移出元素也能继续跟踪
+  alphaRailRef.value.setPointerCapture(e.pointerId)
+  document.addEventListener('pointermove', handleAlphaSliderPointerMove)
+  document.addEventListener('pointerup', handleAlphaSliderPointerUp)
+  document.addEventListener('pointercancel', handleAlphaSliderPointerUp)
+  handleAlphaSliderPointerMove(e)
 }
 function normalizeAlpha(alpha: number): number {
   alpha = Math.round(alpha * 100) / 100
   return alpha > 1 ? 1 : alpha < 0 ? 0 : alpha
 }
-function handleAlphaSliderMouseMove(e: MouseEvent): void {
+function handleAlphaSliderPointerMove(e: PointerEvent): void {
   if (!alphaRailRef.value) return
   const { width, left } = alphaRailRef.value.getBoundingClientRect()
   const newAlpha = normalizeAlpha((e.clientX - left - BORDER_RADIUS_NUM) / (width - HANDLE_SIZE_NUM))
   handleUpdateAlpha(newAlpha)
 }
-function handleAlphaSliderMouseUp(): void {
-  document.removeEventListener('mousemove', handleAlphaSliderMouseMove)
-  document.removeEventListener('mouseup', handleAlphaSliderMouseUp)
+function handleAlphaSliderPointerUp(): void {
+  document.removeEventListener('pointermove', handleAlphaSliderPointerMove)
+  document.removeEventListener('pointerup', handleAlphaSliderPointerUp)
+  document.removeEventListener('pointercancel', handleAlphaSliderPointerUp)
   emits('complete', displayedValue.value)
 }
 function getModeFromValue(color: string | undefined): ColorPickerMode | undefined {
@@ -753,7 +767,7 @@ function onClear() {
     <template #tooltip>
       <template v-if="!disabled">
         <div class="color-picker-panel" :class="{ 'panel-with-actions': actions.length }">
-          <div ref="palleteRef" class="color-picker-pallete" @mousedown="handlePalleteMouseDown">
+          <div ref="palleteRef" class="color-picker-pallete" @pointerdown="handlePalletePointerDown">
             <div
               class="color-picker-pallete-layer"
               :style="{ backgroundImage: `linear-gradient(90deg, white, hsl(${displayedHue}, 100%, 50%))` }"
@@ -769,7 +783,7 @@ function onClear() {
           <div class="color-picker-preview">
             <div class="color-picker-preview-sliders">
               <div class="color-picker-slider" :style="sliderStyle">
-                <div ref="hueRailRef" :style="sliderRailStyle" @mousedown="handleHueSliderMouseDown">
+                <div ref="hueRailRef" :style="sliderRailStyle" @pointerdown="handleHueSliderPointerDown">
                   <div
                     :style="`position: absolute; top: 0px; bottom: 0; left: ${BORDER_RADIUS}; right: ${BORDER_RADIUS}`"
                   >
@@ -784,7 +798,7 @@ function onClear() {
                 ref="alphaRailRef"
                 class="color-picker-slider"
                 :style="sliderStyle"
-                @mousedown="handleAlphaSliderMouseDown"
+                @pointerdown="handleAlphaSliderPointerDown"
               >
                 <div
                   :style="`
@@ -913,6 +927,7 @@ function onClear() {
     position: relative;
     margin-bottom: 8px;
     cursor: crosshair;
+    touch-action: none;
     .color-picker-pallete-layer {
       position: absolute;
       left: 0;

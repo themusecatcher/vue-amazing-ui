@@ -779,7 +779,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
 .slider-wrap {
   position: relative;
   cursor: pointer;
-  touch-action: none; // 禁用元素上的所有手势,使用自己的拖动和缩放api
+  touch-action: none;
   .slider-rail {
     // 灰色轨道颜色
     position: absolute;
