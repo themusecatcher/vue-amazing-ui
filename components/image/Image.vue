@@ -221,7 +221,7 @@ function onWheel(e: WheelEvent) {
     scale.value = add(scale.value, -scrollZoom)
   }
 }
-function handleMouseDown(e: MouseEvent) {
+function handlePointerDown(e: PointerEvent) {
   // event.preventDefault() // 消除拖动元素时的阴影
   if (!e.target) return
   const el = e.target // 当前点击的元素
@@ -232,20 +232,23 @@ function handleMouseDown(e: MouseEvent) {
   left.value = imageRect.left // 图片左边缘距浏览器窗口左边界的距离
   viewportWidth.value = window.innerWidth // 视口宽度
   viewportHeight.value = window.innerHeight // 视口高度
-  sourceX.value = e.clientX // 鼠标按下时相对于视口左边缘的X坐标
-  sourceY.value = e.clientY // 鼠标按下时相对于视口上边缘的Y坐标
-  sourceDragX.value = dragX.value // 鼠标按下时图片的X轴偏移量
-  sourceDragY.value = dragY.value // 鼠标按下时图片的Y轴偏移量
-  document.addEventListener('mousemove', handleMouseMove)
-  document.addEventListener('mouseup', handleMouseUp)
-  handleMouseMove(e)
+  sourceX.value = e.clientX // 指针按下时相对于视口左边缘的X坐标
+  sourceY.value = e.clientY // 指针按下时相对于视口上边缘的Y坐标
+  sourceDragX.value = dragX.value // 指针按下时图片的X轴偏移量
+  sourceDragY.value = dragY.value // 指针按下时图片的Y轴偏移量
+  // 捕获指针，确保即使移出元素也能继续跟踪
+  ;(el as HTMLElement).setPointerCapture(e.pointerId)
+  document.addEventListener('pointermove', handlePointerMove)
+  document.addEventListener('pointerup', handlePointerUp)
+  document.addEventListener('pointercancel', handlePointerUp)
+  handlePointerMove(e)
 }
-function handleMouseMove(e: MouseEvent) {
-  // e.clientX 返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
+function handlePointerMove(e: PointerEvent) {
+  // e.clientX 返回事件被触发时指针相对于浏览器可视窗口的水平坐标
   dragX.value = sourceDragX.value + e.clientX - sourceX.value
   dragY.value = sourceDragY.value + e.clientY - sourceY.value
 }
-function handleMouseUp() {
+function handlePointerUp() {
   if (props.draggable) {
     if (dragX.value > sourceDragX.value + viewportWidth.value - right.value) {
       // 溢出视口右边缘
@@ -267,8 +270,9 @@ function handleMouseUp() {
     dragX.value = 0
     dragY.value = 0
   }
-  document.removeEventListener('mousemove', handleMouseMove)
-  document.removeEventListener('mouseup', handleMouseUp)
+  document.removeEventListener('pointermove', handlePointerMove)
+  document.removeEventListener('pointerup', handlePointerUp)
+  document.removeEventListener('pointercancel', handlePointerUp)
 }
 // 切换到上一张
 function onSwitchLeft(): void {
@@ -569,7 +573,7 @@ function onSwitchRight(): void {
                 @load="onPreviewLoaded(index)"
                 :src="image.src"
                 :alt="getImageName(image)"
-                @mousedown.prevent="handleMouseDown"
+                @pointerdown.prevent="handlePointerDown"
                 @dblclick="resetOnDbclick ? onResetOrigin() : () => false"
               />
             </Spin>
@@ -834,6 +838,7 @@ function onSwitchRight(): void {
           transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
           user-select: none;
           pointer-events: auto;
+          touch-action: none;
         }
       }
       .switch-left {

@@ -271,15 +271,18 @@ function onLeaveXTrack(): void {
     debounceHideXScrollbar()
   }
 }
-function handleYTrackMouseDown(e: MouseEvent): void {
+function handleYTrackPointerDown(e: PointerEvent): void {
   trackYPressed.value = true
   memoYTop.value = containerScrollTop.value
   memoMouseY.value = e.clientY
-  document.addEventListener('mousemove', handleYTrackMouseMove)
-  document.addEventListener('mouseup', handleYTrackMouseUp)
-  handleYTrackMouseMove(e)
+  // 捕获指针，确保即使移出元素也能继续跟踪
+  ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
+  document.addEventListener('pointermove', handleYTrackPointerMove)
+  document.addEventListener('pointerup', handleYTrackPointerUp)
+  document.addEventListener('pointercancel', handleYTrackPointerUp)
+  handleYTrackPointerMove(e)
 }
-function handleYTrackMouseMove(e: MouseEvent): void {
+function handleYTrackPointerMove(e: PointerEvent): void {
   const diffY = e.clientY - memoMouseY.value
   const dScrollTop =
     (diffY * (contentHeight.value - containerHeight.value)) / (containerHeight.value - trackHeight.value)
@@ -289,7 +292,7 @@ function handleYTrackMouseMove(e: MouseEvent): void {
   toScrollTop = Math.max(toScrollTop, 0)
   containerRef.value.scrollTop = toScrollTop
 }
-function handleYTrackMouseUp(): void {
+function handleYTrackPointerUp(): void {
   trackYPressed.value = false
   if (autoShowTrack.value && props.autoHide && !yTrackHover.value) {
     debounceHideYScrollbar()
@@ -297,18 +300,22 @@ function handleYTrackMouseUp(): void {
     mousePressedLeave.value = false
     debounceHideYScrollbar()
   }
-  document.removeEventListener('mousemove', handleYTrackMouseMove)
-  document.removeEventListener('mouseup', handleYTrackMouseUp)
+  document.removeEventListener('pointermove', handleYTrackPointerMove)
+  document.removeEventListener('pointerup', handleYTrackPointerUp)
+  document.removeEventListener('pointercancel', handleYTrackPointerUp)
 }
-function handleXTrackMouseDown(e: MouseEvent): void {
+function handleXTrackPointerDown(e: PointerEvent): void {
   trackXPressed.value = true
   memoXLeft.value = containerScrollLeft.value
   memoMouseX.value = e.clientX
-  document.addEventListener('mousemove', handleXTrackMouseMove)
-  document.addEventListener('mouseup', handleXTrackMouseUp)
-  handleXTrackMouseMove(e)
+  // 捕获指针，确保即使移出元素也能继续跟踪
+  ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
+  document.addEventListener('pointermove', handleXTrackPointerMove)
+  document.addEventListener('pointerup', handleXTrackPointerUp)
+  document.addEventListener('pointercancel', handleXTrackPointerUp)
+  handleXTrackPointerMove(e)
 }
-function handleXTrackMouseMove(e: MouseEvent): void {
+function handleXTrackPointerMove(e: PointerEvent): void {
   const diffX = e.clientX - memoMouseX.value
   const dScrollLeft = (diffX * (contentWidth.value - containerWidth.value)) / (containerWidth.value - trackWidth.value)
   const toScrollLeftUpperBound = contentWidth.value - containerWidth.value
@@ -317,7 +324,7 @@ function handleXTrackMouseMove(e: MouseEvent): void {
   toScrollLeft = Math.max(toScrollLeft, 0)
   containerRef.value.scrollLeft = toScrollLeft
 }
-function handleXTrackMouseUp(): void {
+function handleXTrackPointerUp(): void {
   trackXPressed.value = false
   if (autoShowTrack.value && props.autoHide && !xTrackHover.value) {
     debounceHideXScrollbar()
@@ -325,8 +332,9 @@ function handleXTrackMouseUp(): void {
     mousePressedLeave.value = false
     debounceHideXScrollbar()
   }
-  document.removeEventListener('mousemove', handleXTrackMouseMove)
-  document.removeEventListener('mouseup', handleXTrackMouseUp)
+  document.removeEventListener('pointermove', handleXTrackPointerMove)
+  document.removeEventListener('pointerup', handleXTrackPointerUp)
+  document.removeEventListener('pointercancel', handleXTrackPointerUp)
 }
 function scrollTo(...args: any[]): void {
   containerRef.value?.scrollTo(...args)
@@ -389,7 +397,7 @@ defineExpose({
         :style="verticalTrackStyle"
         @mouseenter="autoShowTrack && props.autoHide ? onEnterYTrack() : () => false"
         @mouseleave="autoShowTrack && props.autoHide ? onLeaveYTrack() : () => false"
-        @mousedown.prevent.stop="handleYTrackMouseDown"
+        @pointerdown.prevent.stop="handleYTrackPointerDown"
       ></div>
     </div>
     <div
@@ -404,7 +412,7 @@ defineExpose({
         :style="horizontalTrackStyle"
         @mouseenter="autoShowTrack && props.autoHide ? onEnterXTrack() : () => false"
         @mouseleave="autoShowTrack && props.autoHide ? onLeaveXTrack() : () => false"
-        @mousedown.prevent.stop="handleXTrackMouseDown"
+        @pointerdown.prevent.stop="handleXTrackPointerDown"
       ></div>
     </div>
   </div>
@@ -450,6 +458,7 @@ defineExpose({
       opacity: 0;
       pointer-events: none;
       background-color: var(--scrollbar-color);
+      touch-action: none;
       transition:
         background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
         opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
