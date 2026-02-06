@@ -322,20 +322,20 @@ function handlerFocus(handler: HTMLElement, tooltip: HTMLElement): void {
     tooltip.classList.add('show-handle-tooltip')
   }
 }
-// 获取鼠标事件出发时的点击位置 & 步长位置
-function getSliderPosition(e: MouseEvent): { originalPosition: number; stepPosition: number } {
-  let originalPosition // 鼠标点击位置
+// 获取指针事件触发时的点击位置 & 步长位置
+function getSliderPosition(e: PointerEvent): { originalPosition: number; stepPosition: number } {
+  let originalPosition // 指针点击位置
   let stepPosition // 只考虑步长时将要移动的位置
   if (!props.vertical) {
     // horizontal
     const leftX = sliderRef.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
-    // e.clientX 返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
+    // e.clientX 返回事件被触发时指针相对于浏览器可视窗口的水平坐标
     originalPosition = e.clientX - leftX
     const position = Math.round(pixelStepOperation(originalPosition, '/'))
     stepPosition = fixedDigit(pixelStepOperation(position, '*'), 2)
   } else {
     const bottomY = sliderRef.value.getBoundingClientRect().bottom // 滑动条下端距离屏幕可视区域上边界的距离
-    // e.clientY 返回事件被触发时鼠标指针相对于浏览器可视窗口的垂直坐标
+    // e.clientY 返回事件被触发时指针相对于浏览器可视窗口的垂直坐标
     originalPosition = bottomY - e.clientY
     const position = Math.round(pixelStepOperation(originalPosition, '/'))
     stepPosition = fixedDigit(pixelStepOperation(position, '*'), 2)
@@ -362,9 +362,9 @@ function getTargetPosition(originalPosition: number, stepPosition: number): numb
   }
 }
 // 点击滑动输入条任意位置
-function onClickSliderPoint(e: MouseEvent): void {
+function onClickSliderPoint(e: PointerEvent): void {
   const {
-    originalPosition, // 鼠标点击位置
+    originalPosition, // 指针点击位置
     stepPosition // 只考虑步长时将要移动的位置
   } = getSliderPosition(e)
   let targetPosition // 考虑步长和刻度标记时，将要移动的目标位置
@@ -418,14 +418,17 @@ function onClickSliderPoint(e: MouseEvent): void {
     }
   }
 }
-function handleLowMouseDown(e: MouseEvent): void {
+function handleLowPointerDown(e: PointerEvent): void {
   if (!lowHandleRef.value) return
-  document.addEventListener('mousemove', handleLowMouseMove)
-  document.addEventListener('mouseup', handleLowMouseUp)
-  handleLowMouseMove(e)
+  // 捕获指针，确保即使移出元素也能继续跟踪
+  lowHandleRef.value.setPointerCapture(e.pointerId)
+  document.addEventListener('pointermove', handleLowPointerMove)
+  document.addEventListener('pointerup', handleLowPointerUp)
+  document.addEventListener('pointercancel', handleLowPointerUp)
+  handleLowPointerMove(e)
 }
 // 在滑动输入条上拖动较小数值滑块
-function handleLowMouseMove(e: MouseEvent): void {
+function handleLowPointerMove(e: PointerEvent): void {
   const {
     originalPosition, // 初始位置
     stepPosition // 只考虑步长时将要移动的位置
@@ -445,8 +448,8 @@ function handleLowMouseMove(e: MouseEvent): void {
     } else {
       low.value = high.value
       highHandleRef.value.focus()
-      handleLowMouseUp()
-      handleHighMouseDown(e)
+      handleLowPointerUp()
+      handleHighPointerDown(e)
     }
   } else {
     targetPosition = getTargetPosition(originalPosition, stepPosition)
@@ -458,26 +461,30 @@ function handleLowMouseMove(e: MouseEvent): void {
       // targetPosition > high
       low.value = high.value
       highHandleRef.value.focus()
-      handleLowMouseUp()
-      handleHighMouseDown(e)
+      handleLowPointerUp()
+      handleHighPointerDown(e)
     }
   }
 }
-function handleLowMouseUp(): void {
+function handleLowPointerUp(): void {
   if (props.tooltip && !props.tooltipOpen) {
     lowTooltipRef.value.classList.remove('show-handle-tooltip')
   }
-  document.removeEventListener('mousemove', handleLowMouseMove)
-  document.removeEventListener('mouseup', handleLowMouseUp)
+  document.removeEventListener('pointermove', handleLowPointerMove)
+  document.removeEventListener('pointerup', handleLowPointerUp)
+  document.removeEventListener('pointercancel', handleLowPointerUp)
 }
-function handleHighMouseDown(e: MouseEvent): void {
+function handleHighPointerDown(e: PointerEvent): void {
   if (!highHandleRef.value) return
-  document.addEventListener('mousemove', handleHighMouseMove)
-  document.addEventListener('mouseup', handleHighMouseUp)
-  handleHighMouseMove(e)
+  // 捕获指针，确保即使移出元素也能继续跟踪
+  highHandleRef.value.setPointerCapture(e.pointerId)
+  document.addEventListener('pointermove', handleHighPointerMove)
+  document.addEventListener('pointerup', handleHighPointerUp)
+  document.addEventListener('pointercancel', handleHighPointerUp)
+  handleHighPointerMove(e)
 }
 // 在滑动输入条上拖动较大数值滑块
-function handleHighMouseMove(e: MouseEvent): void {
+function handleHighPointerMove(e: PointerEvent): void {
   let {
     originalPosition, // 初始位置
     stepPosition // 只考虑步长时将要移动的位置
@@ -499,8 +506,8 @@ function handleHighMouseMove(e: MouseEvent): void {
       high.value = low.value
       if (props.range) {
         lowHandleRef.value.focus()
-        handleHighMouseUp()
-        handleLowMouseDown(e)
+        handleHighPointerUp()
+        handleLowPointerDown(e)
       }
     }
   } else {
@@ -514,18 +521,19 @@ function handleHighMouseMove(e: MouseEvent): void {
       high.value = low.value
       if (props.range) {
         lowHandleRef.value.focus()
-        handleHighMouseUp()
-        handleLowMouseDown(e)
+        handleHighPointerUp()
+        handleLowPointerDown(e)
       }
     }
   }
 }
-function handleHighMouseUp(): void {
+function handleHighPointerUp(): void {
   if (props.tooltip && !props.tooltipOpen) {
     highTooltipRef.value.classList.remove('show-handle-tooltip')
   }
-  document.removeEventListener('mousemove', handleHighMouseMove)
-  document.removeEventListener('mouseup', handleHighMouseUp)
+  document.removeEventListener('pointermove', handleHighPointerMove)
+  document.removeEventListener('pointerup', handleHighPointerUp)
+  document.removeEventListener('pointercancel', handleHighPointerUp)
 }
 function getDotStyle(value: number): CSSProperties {
   const offset = `${(Math.abs(value - props.min) / (props.max - props.min)) * 100}%`
@@ -688,7 +696,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
         --slider-tooltip-bg-color: rgba(0, 0, 0, 0.85);
       `
     ]"
-    @click="disabled ? () => false : onClickSliderPoint($event)"
+    @pointerdown="disabled ? () => false : onClickSliderPoint($event)"
   >
     <div class="slider-rail"></div>
     <div class="slider-track" :style="trackStyle"></div>
@@ -728,7 +736,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       @keydown.right.prevent="disabled ? () => false : handleHighSlide(low, 'low')"
       @keydown.down.prevent="disabled ? () => false : handleLowSlide(low, 'low')"
       @keydown.up.prevent="disabled ? () => false : handleHighSlide(low, 'low')"
-      @mousedown="disabled ? () => false : handleLowMouseDown($event)"
+      @pointerdown="disabled ? () => false : handleLowPointerDown($event)"
       @blur="tooltip && !disabled && !tooltipOpen ? handlerBlur(lowTooltipRef) : () => false"
     >
       <div
@@ -751,7 +759,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       @keydown.right.prevent="disabled ? () => false : handleHighSlide(high, 'high')"
       @keydown.down.prevent="disabled ? () => false : handleLowSlide(high, 'high')"
       @keydown.up.prevent="disabled ? () => false : handleHighSlide(high, 'high')"
-      @mousedown="disabled ? () => false : handleHighMouseDown($event)"
+      @pointerdown="disabled ? () => false : handleHighPointerDown($event)"
       @blur="tooltip && !disabled && !tooltipOpen ? handlerBlur(highTooltipRef) : () => false"
     >
       <div
