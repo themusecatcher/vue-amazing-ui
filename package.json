@@ -138,8 +138,7 @@
       "prettier --write"
     ],
     "*.md": [
-      "prettier --write --parser markdown --prose-wrap never",
-      "eslint --fix"
+      "prettier --write --parser markdown --prose-wrap never"
     ]
   }
 }
