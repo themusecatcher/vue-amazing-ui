@@ -947,6 +947,7 @@ function onClear() {
         margin-bottom: 8px;
         position: relative;
         cursor: pointer;
+        touch-action: none;
         &::after {
           content: '';
           position: absolute;
