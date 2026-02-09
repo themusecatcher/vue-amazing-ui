@@ -152,6 +152,7 @@ const scrollHeight = ref<number>(0) // 表格垂直滚动元素高度，包括�
 const clientWidth = ref<number>(0) // 表格水平滚动元素宽度，不包括溢出滚动，不包括边框
 const clientHeight = ref<number>(0) // 表格垂直滚动元素高度，不包括溢出滚动，不包括边框
 const scrollMax = ref<number>(0) // 表格水平滚动时，最大可滚动距离
+let scrollRAF: number = 0 // 水平滚动 requestAnimationFrame ID
 const colExpandRef = ref() // 表格展开列 col 的引用
 const colSelectionRef = ref() // 表格可选择列 col 的引用
 const colRef = ref() // 表格除展开列/可选择列以外 col 的引用
@@ -331,11 +332,11 @@ const tableExpandRowFixStyle = computed(() => {
   }
   return style
 })
-// 表头固定时的样式，用于模拟滚动效果
+// 表头固定时的样式，用于模拟滚动效果，使用 transform 替代 left 利用 GPU 加速减少重排
 const tableHeadStyle = computed(() => {
   const style: CSSProperties = {
-    position: 'relative',
-    left: `${-scrollLeft.value}px`
+    transform: `translateX(${-scrollLeft.value}px)`,
+    willChange: 'transform'
   }
   return style
 })
@@ -1006,10 +1007,16 @@ function onExpandCell(record: Record<string, any>) {
 // 表格滚动事件
 function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
   if (['left', 'right'].includes(direction)) {
-    // 水平滚动
-    scrollLeft.value = (e.target as HTMLElement).scrollLeft
-    scrollWidth.value = (e.target as HTMLElement).scrollWidth
-    clientWidth.value = (e.target as HTMLElement).clientWidth
+    // 水平滚动，使用 rAF 对齐浏览器渲染帧，减少表头跟随滚动的错位感
+    if (scrollRAF) {
+      cancelAnimationFrame(scrollRAF)
+    }
+    const target = e.target as HTMLElement
+    scrollRAF = requestAnimationFrame(() => {
+      scrollLeft.value = target.scrollLeft
+      scrollWidth.value = target.scrollWidth
+      clientWidth.value = target.clientWidth
+    })
   }
   if (['top', 'bottom'].includes(direction)) {
     // 垂直滚动
