@@ -156,6 +156,7 @@ import {
   useConfirmDialog,
   useCountdown,
   useCounter,
+  useCssSupports,
   useCssVar,
   useCurrentElement,
   useCycleList,
@@ -296,8 +297,8 @@ import {
   watchTriggerable,
   watchWithFilter,
   whenever
-} from './chunk-KPE6JYCH.js'
-import './chunk-2YTPUVVG.js'
+} from './chunk-FKMBGTFJ.js'
+import './chunk-VLS4B2PU.js'
 import './chunk-JVWSFFO4.js'
 export {
   DefaultMagicKeysAliasMap,
@@ -457,6 +458,7 @@ export {
   useConfirmDialog,
   useCountdown,
   useCounter,
+  useCssSupports,
   useCssVar,
   useCurrentElement,
   useCycleList,

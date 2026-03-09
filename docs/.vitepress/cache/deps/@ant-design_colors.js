@@ -658,7 +658,7 @@ var FastColor = class _FastColor {
   }
 }
 
-// node_modules/.pnpm/@ant-design+colors@8.0.0/node_modules/@ant-design/colors/es/generate.js
+// node_modules/.pnpm/@ant-design+colors@8.0.1/node_modules/@ant-design/colors/es/generate.js
 var hueStep = 2
 var saturationStep = 0.16
 var saturationStep2 = 0.05
@@ -784,7 +784,7 @@ function generate(color, opts = {}) {
   return patterns.map((c) => c.toHexString())
 }
 
-// node_modules/.pnpm/@ant-design+colors@8.0.0/node_modules/@ant-design/colors/es/presets.js
+// node_modules/.pnpm/@ant-design+colors@8.0.1/node_modules/@ant-design/colors/es/presets.js
 var presetPrimaryColors = {
   red: '#F5222D',
   volcano: '#FA541C',

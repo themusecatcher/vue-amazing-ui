@@ -7,7 +7,7 @@ export interface Props {
   width?: string | number // 日期选择器宽度，单位 px
   size?: 'small' | 'middle' | 'large' // 日期选择器大小
   mode?: 'time' | 'date' | 'week' | 'month' | 'year' // 选择器模式，可选：时间 time，日期 date，周 week，月 month，年 year
-  // format?: string | ((date: Date) => string) | ((dates: Date[]) => string) // 日期展示格式，(yy: 年, M: 月, d: 天, H: 时, m: 分, s: 秒, w: 周)
+  format?: string | ((date: Date) => string) | ((dates: Date[]) => string) // 日期展示格式，(yy: 年, M: 月, d: 天, H: 时, m: 分, s: 秒, w: 周)
   showTime?: boolean // 是否增加时间选择
   showToday?: boolean // 是否展示”今天“按钮
   range?: boolean // 是否使用范围选择器
@@ -22,13 +22,14 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'middle',
   mode: 'date',
   /* format default
-    Single picker: 'MM/dd/yyyy HH:mm'
+    Date picker: 'MM/dd/yyyy HH:mm'
     Range picker: 'MM/dd/yyyy HH:mm - MM/dd/yyyy HH:mm'
     Month picker: 'MM/yyyy'
     Time picker: 'HH:mm'
     Time picker range: 'HH:mm - HH:mm'
-    Week picker: 'ww-yyyy'
+    Week picker: 'RR-yyyy' | 'ww-yyyy' (depends on week numbering)
   */
+  format: undefined,
   showTime: false,
   showToday: false,
   range: false,
@@ -112,6 +113,7 @@ function maxRangeDisabledDates(date: Date): boolean {
     auto-apply
     text-input
     :model-type="modelType"
+    :formats="{ input: format }"
     :day-names="['一', '二', '三', '四', '五', '六', '七']"
     :disabled-dates="range && maxRange ? maxRangeDisabledDates : []"
     @range-start="rangeStart"

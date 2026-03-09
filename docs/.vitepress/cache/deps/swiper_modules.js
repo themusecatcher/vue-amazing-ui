@@ -18,10 +18,10 @@ import {
   now,
   setCSSProperty,
   setInnerHTML
-} from './chunk-T6WREOVV.js'
+} from './chunk-DSPOMRI4.js'
 import './chunk-JVWSFFO4.js'
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/virtual.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/virtual.mjs
 function Virtual({ swiper, extendParams, on, emit }) {
   extendParams({
     virtual: {
@@ -376,7 +376,7 @@ function Virtual({ swiper, extendParams, on, emit }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/keyboard.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/keyboard.mjs
 function Keyboard({ swiper, extendParams, on, emit }) {
   const document2 = getDocument()
   const window2 = getWindow()
@@ -387,7 +387,8 @@ function Keyboard({ swiper, extendParams, on, emit }) {
     keyboard: {
       enabled: false,
       onlyInViewport: true,
-      pageUpDown: true
+      pageUpDown: true,
+      speed: void 0
     }
   })
   function handle(event2) {
@@ -460,20 +461,21 @@ function Keyboard({ swiper, extendParams, on, emit }) {
       }
       if (!inView) return void 0
     }
+    const speed = swiper.params.keyboard.speed
     if (swiper.isHorizontal()) {
       if (isPageUp || isPageDown || isArrowLeft || isArrowRight) {
         if (e.preventDefault) e.preventDefault()
         else e.returnValue = false
       }
-      if (((isPageDown || isArrowRight) && !rtl) || ((isPageUp || isArrowLeft) && rtl)) swiper.slideNext()
-      if (((isPageUp || isArrowLeft) && !rtl) || ((isPageDown || isArrowRight) && rtl)) swiper.slidePrev()
+      if (((isPageDown || isArrowRight) && !rtl) || ((isPageUp || isArrowLeft) && rtl)) swiper.slideNext(speed)
+      if (((isPageUp || isArrowLeft) && !rtl) || ((isPageDown || isArrowRight) && rtl)) swiper.slidePrev(speed)
     } else {
       if (isPageUp || isPageDown || isArrowUp || isArrowDown) {
         if (e.preventDefault) e.preventDefault()
         else e.returnValue = false
       }
-      if (isPageDown || isArrowDown) swiper.slideNext()
-      if (isPageUp || isArrowUp) swiper.slidePrev()
+      if (isPageDown || isArrowDown) swiper.slideNext(speed)
+      if (isPageUp || isArrowUp) swiper.slidePrev(speed)
     }
     emit('keyPress', kc)
     return void 0
@@ -504,7 +506,7 @@ function Keyboard({ swiper, extendParams, on, emit }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/mousewheel.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/mousewheel.mjs
 function Mousewheel({ swiper, extendParams, on, emit }) {
   const window2 = getWindow()
   extendParams({
@@ -814,7 +816,7 @@ function Mousewheel({ swiper, extendParams, on, emit }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/shared/create-element-if-not-defined.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/shared/create-element-if-not-defined.mjs
 function createElementIfNotDefined(swiper, originalParams, params, checkProps) {
   if (swiper.params.createElements) {
     Object.keys(checkProps).forEach((key) => {
@@ -833,7 +835,7 @@ function createElementIfNotDefined(swiper, originalParams, params, checkProps) {
   return params
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/navigation.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/navigation.mjs
 var arrowSvg = `<svg class="swiper-navigation-icon" width="11" height="20" viewBox="0 0 11 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.38296 20.0762C0.111788 19.805 0.111788 19.3654 0.38296 19.0942L9.19758 10.2796L0.38296 1.46497C0.111788 1.19379 0.111788 0.754138 0.38296 0.482966C0.654131 0.211794 1.09379 0.211794 1.36496 0.482966L10.4341 9.55214C10.8359 9.9539 10.8359 10.6053 10.4341 11.007L1.36496 20.0762C1.09379 20.3474 0.654131 20.3474 0.38296 20.0762Z" fill="currentColor"/></svg>`
 function Navigation({ swiper, extendParams, on, emit }) {
   extendParams({
@@ -1037,15 +1039,15 @@ function Navigation({ swiper, extendParams, on, emit }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/shared/classes-to-selector.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/shared/classes-to-selector.mjs
 function classesToSelector(classes = '') {
   return `.${classes
     .trim()
-    .replace(/([\.:!+\/()[\]])/g, '\\$1')
+    .replace(/([\.:!+\/()[\]#>~*^$|=,'"@{}\\])/g, '\\$1')
     .replace(/ /g, '.')}`
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/pagination.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/pagination.mjs
 function Pagination({ swiper, extendParams, on, emit }) {
   const pfx = 'swiper-pagination'
   extendParams({
@@ -1516,7 +1518,7 @@ function Pagination({ swiper, extendParams, on, emit }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/scrollbar.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/scrollbar.mjs
 function Scrollbar({ swiper, extendParams, on, emit }) {
   const document2 = getDocument()
   let isTouched = false
@@ -1851,7 +1853,7 @@ function Scrollbar({ swiper, extendParams, on, emit }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/parallax.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/parallax.mjs
 function Parallax({ swiper, extendParams, on }) {
   extendParams({
     parallax: {
@@ -1955,7 +1957,7 @@ function Parallax({ swiper, extendParams, on }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/zoom.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/zoom.mjs
 function Zoom({ swiper, extendParams, on, emit }) {
   const window2 = getWindow()
   extendParams({
@@ -2408,6 +2410,7 @@ function Zoom({ swiper, extendParams, on, emit }) {
       }
     }
     if (!gesture.imageEl || !gesture.imageWrapEl) return
+    gesture.maxRatio = getMaxRatio()
     if (swiper.params.cssMode) {
       swiper.wrapperEl.style.overflow = 'hidden'
       swiper.wrapperEl.style.touchAction = 'none'
@@ -2519,6 +2522,7 @@ function Zoom({ swiper, extendParams, on, emit }) {
       }
     }
     if (!gesture.imageEl || !gesture.imageWrapEl) return
+    gesture.maxRatio = getMaxRatio()
     if (swiper.params.cssMode) {
       swiper.wrapperEl.style.overflow = ''
       swiper.wrapperEl.style.touchAction = ''
@@ -2639,7 +2643,7 @@ function Zoom({ swiper, extendParams, on, emit }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/controller.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/controller.mjs
 function Controller({ swiper, extendParams, on }) {
   extendParams({
     controller: {
@@ -2813,7 +2817,7 @@ function Controller({ swiper, extendParams, on }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/a11y.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/a11y.mjs
 function A11y({ swiper, extendParams, on }) {
   extendParams({
     a11y: {
@@ -3030,7 +3034,10 @@ function A11y({ swiper, extendParams, on }) {
     const slideEl = e.target.closest(`.${swiper.params.slideClass}, swiper-slide`)
     if (!slideEl || !swiper.slides.includes(slideEl)) return
     focusTargetSlideEl = slideEl
-    const isActive = swiper.slides.indexOf(slideEl) === swiper.activeIndex
+    const isVirtual = swiper.virtual && swiper.params.virtual.enabled
+    const isActive =
+      (isVirtual ? parseInt(slideEl.getAttribute('data-swiper-slide-index'), 10) : swiper.slides.indexOf(slideEl)) ===
+      swiper.activeIndex
     const isVisible =
       swiper.params.watchSlidesProgress && swiper.visibleSlides && swiper.visibleSlides.includes(slideEl)
     if (isActive || isVisible) return
@@ -3044,6 +3051,8 @@ function A11y({ swiper, extendParams, on }) {
       if (preventFocusHandler) return
       if (swiper.params.loop) {
         swiper.slideToLoop(swiper.getSlideIndexWhenGrid(parseInt(slideEl.getAttribute('data-swiper-slide-index'))), 0)
+      } else if (isVirtual) {
+        swiper.slideTo(swiper.getSlideIndexWhenGrid(parseInt(slideEl.getAttribute('data-swiper-slide-index'), 10)), 0)
       } else {
         swiper.slideTo(swiper.getSlideIndexWhenGrid(swiper.slides.indexOf(slideEl)), 0)
       }
@@ -3108,7 +3117,6 @@ function A11y({ swiper, extendParams, on }) {
     const document2 = getDocument()
     document2.addEventListener('visibilitychange', onVisibilityChange)
     swiper.el.addEventListener('focus', handleFocus, true)
-    swiper.el.addEventListener('focus', handleFocus, true)
     swiper.el.addEventListener('pointerdown', handlePointerDown, true)
     swiper.el.addEventListener('pointerup', handlePointerUp, true)
   }
@@ -3164,7 +3172,7 @@ function A11y({ swiper, extendParams, on }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/history.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/history.mjs
 function History({ swiper, extendParams, on }) {
   extendParams({
     history: {
@@ -3319,7 +3327,7 @@ function History({ swiper, extendParams, on }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/hash-navigation.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/hash-navigation.mjs
 function HashNavigation({ swiper, extendParams, emit, on }) {
   let initialized = false
   const document2 = getDocument()
@@ -3416,7 +3424,7 @@ function HashNavigation({ swiper, extendParams, emit, on }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/autoplay.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/autoplay.mjs
 function Autoplay({ swiper, extendParams, on, emit, params }) {
   swiper.autoplay = {
     running: false,
@@ -3444,7 +3452,6 @@ function Autoplay({ swiper, extendParams, on, emit, params }) {
   let isTouched
   let pausedByTouch
   let touchStartTimeout
-  let slideChanged
   let pausedByInteraction
   let pausedByPointerEnter
   function onTransitionEnd(e) {
@@ -3484,18 +3491,23 @@ function Autoplay({ swiper, extendParams, on, emit, params }) {
     const currentSlideDelay = parseInt(activeSlideEl.getAttribute('data-swiper-autoplay'), 10)
     return currentSlideDelay
   }
+  const getTotalDelay = () => {
+    let totalDelay = swiper.params.autoplay.delay
+    const currentSlideDelay = getSlideDelay()
+    if (!Number.isNaN(currentSlideDelay) && currentSlideDelay > 0) {
+      totalDelay = currentSlideDelay
+    }
+    return totalDelay
+  }
   const run = (delayForce) => {
     if (swiper.destroyed || !swiper.autoplay.running) return
     cancelAnimationFrame(raf)
     calcTimeLeft()
-    let delay = typeof delayForce === 'undefined' ? swiper.params.autoplay.delay : delayForce
-    autoplayDelayTotal = swiper.params.autoplay.delay
-    autoplayDelayCurrent = swiper.params.autoplay.delay
-    const currentSlideDelay = getSlideDelay()
-    if (!Number.isNaN(currentSlideDelay) && currentSlideDelay > 0 && typeof delayForce === 'undefined') {
-      delay = currentSlideDelay
-      autoplayDelayTotal = currentSlideDelay
-      autoplayDelayCurrent = currentSlideDelay
+    let delay = delayForce
+    if (typeof delay === 'undefined') {
+      delay = getTotalDelay()
+      autoplayDelayTotal = delay
+      autoplayDelayCurrent = delay
     }
     autoplayTimeLeft = delay
     const speed = swiper.params.speed
@@ -3565,10 +3577,6 @@ function Autoplay({ swiper, extendParams, on, emit, params }) {
     }
     swiper.autoplay.paused = true
     if (reset) {
-      if (slideChanged) {
-        autoplayTimeLeft = swiper.params.autoplay.delay
-      }
-      slideChanged = false
       proceed()
       return
     }
@@ -3700,7 +3708,10 @@ function Autoplay({ swiper, extendParams, on, emit, params }) {
   })
   on('slideChange', () => {
     if (swiper.destroyed || !swiper.autoplay.running) return
-    slideChanged = true
+    if (swiper.autoplay.paused) {
+      autoplayTimeLeft = getTotalDelay()
+      autoplayDelayTotal = getTotalDelay()
+    }
   })
   Object.assign(swiper.autoplay, {
     start,
@@ -3710,7 +3721,7 @@ function Autoplay({ swiper, extendParams, on, emit, params }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/thumbs.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/thumbs.mjs
 function Thumb({ swiper, extendParams, on }) {
   extendParams({
     thumbs: {
@@ -3725,6 +3736,11 @@ function Thumb({ swiper, extendParams, on }) {
   let swiperCreated = false
   swiper.thumbs = {
     swiper: null
+  }
+  function isVirtualEnabled() {
+    const thumbsSwiper = swiper.thumbs.swiper
+    if (!thumbsSwiper || thumbsSwiper.destroyed) return false
+    return thumbsSwiper.params.virtual && thumbsSwiper.params.virtual.enabled
   }
   function onThumbClick() {
     const thumbsSwiper = swiper.thumbs.swiper
@@ -3776,15 +3792,18 @@ function Thumb({ swiper, extendParams, on }) {
     }
     swiper.thumbs.swiper.el.classList.add(swiper.params.thumbs.thumbsContainerClass)
     swiper.thumbs.swiper.on('tap', onThumbClick)
+    if (isVirtualEnabled()) {
+      swiper.thumbs.swiper.on('virtualUpdate', () => {
+        update(false, {
+          autoScroll: false
+        })
+      })
+    }
     return true
   }
-  function update(initial) {
+  function update(initial, p) {
     const thumbsSwiper = swiper.thumbs.swiper
     if (!thumbsSwiper || thumbsSwiper.destroyed) return
-    const slidesPerView =
-      thumbsSwiper.params.slidesPerView === 'auto'
-        ? thumbsSwiper.slidesPerViewDynamic()
-        : thumbsSwiper.params.slidesPerView
     let thumbsToActivate = 1
     const thumbActiveClass = swiper.params.thumbs.slideThumbActiveClass
     if (swiper.params.slidesPerView > 1 && !swiper.params.centeredSlides) {
@@ -3795,7 +3814,7 @@ function Thumb({ swiper, extendParams, on }) {
     }
     thumbsToActivate = Math.floor(thumbsToActivate)
     thumbsSwiper.slides.forEach((slideEl) => slideEl.classList.remove(thumbActiveClass))
-    if (thumbsSwiper.params.loop || (thumbsSwiper.params.virtual && thumbsSwiper.params.virtual.enabled)) {
+    if (thumbsSwiper.params.loop || isVirtualEnabled()) {
       for (let i = 0; i < thumbsToActivate; i += 1) {
         elementChildren(thumbsSwiper.slidesEl, `[data-swiper-slide-index="${swiper.realIndex + i}"]`).forEach(
           (slideEl) => {
@@ -3810,6 +3829,17 @@ function Thumb({ swiper, extendParams, on }) {
         }
       }
     }
+    if ((p == null ? void 0 : p.autoScroll) ?? true) {
+      autoScroll(initial ? 0 : void 0)
+    }
+  }
+  function autoScroll(slideSpeed) {
+    const thumbsSwiper = swiper.thumbs.swiper
+    if (!thumbsSwiper || thumbsSwiper.destroyed) return
+    const slidesPerView =
+      thumbsSwiper.params.slidesPerView === 'auto'
+        ? thumbsSwiper.slidesPerViewDynamic()
+        : thumbsSwiper.params.slidesPerView
     const autoScrollOffset = swiper.params.thumbs.autoScrollOffset
     const useOffset = autoScrollOffset && !thumbsSwiper.params.loop
     if (swiper.realIndex !== thumbsSwiper.realIndex || useOffset) {
@@ -3837,7 +3867,7 @@ function Thumb({ swiper, extendParams, on }) {
             newThumbsIndex = newThumbsIndex + Math.floor(slidesPerView / 2) - 1
           }
         } else if (newThumbsIndex > currentThumbsIndex && thumbsSwiper.params.slidesPerGroup === 1);
-        thumbsSwiper.slideTo(newThumbsIndex, initial ? 0 : void 0)
+        thumbsSwiper.slideTo(newThumbsIndex, slideSpeed)
       }
     }
   }
@@ -3900,7 +3930,7 @@ function Thumb({ swiper, extendParams, on }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/free-mode.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/free-mode.mjs
 function freeMode({ swiper, extendParams, emit, once }) {
   extendParams({
     freeMode: {
@@ -4108,7 +4138,7 @@ function freeMode({ swiper, extendParams, emit, once }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/grid.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/grid.mjs
 function Grid({ swiper, extendParams, on }) {
   extendParams({
     grid: {
@@ -4242,7 +4272,7 @@ function Grid({ swiper, extendParams, on }) {
   }
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/manipulation.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/manipulation.mjs
 function appendSlide(slides) {
   const swiper = this
   const { params, slidesEl } = swiper
@@ -4411,7 +4441,7 @@ function Manipulation({ swiper }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/shared/effect-init.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/shared/effect-init.mjs
 function effectInit(params) {
   const {
     effect,
@@ -4471,7 +4501,7 @@ function effectInit(params) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/shared/effect-target.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/shared/effect-target.mjs
 function effectTarget(effectParams, slideEl) {
   const transformEl = getSlideTransformEl(slideEl)
   if (transformEl !== slideEl) {
@@ -4481,7 +4511,7 @@ function effectTarget(effectParams, slideEl) {
   return transformEl
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/shared/effect-virtual-transition-end.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/shared/effect-virtual-transition-end.mjs
 function effectVirtualTransitionEnd({ swiper, duration, transformElements, allSlides }) {
   const { activeIndex } = swiper
   const getSlide = (el) => {
@@ -4518,7 +4548,7 @@ function effectVirtualTransitionEnd({ swiper, duration, transformElements, allSl
   }
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/effect-fade.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/effect-fade.mjs
 function EffectFade({ swiper, extendParams, on }) {
   extendParams({
     fadeEffect: {
@@ -4574,7 +4604,7 @@ function EffectFade({ swiper, extendParams, on }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/effect-cube.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/effect-cube.mjs
 function EffectCube({ swiper, extendParams, on }) {
   extendParams({
     cubeEffect: {
@@ -4751,7 +4781,7 @@ function EffectCube({ swiper, extendParams, on }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/shared/create-shadow.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/shared/create-shadow.mjs
 function createShadow(suffix, slideEl, side) {
   const shadowClass = `swiper-slide-shadow${side ? `-${side}` : ''}${suffix ? ` swiper-slide-shadow-${suffix}` : ''}`
   const shadowContainer = getSlideTransformEl(slideEl)
@@ -4763,7 +4793,7 @@ function createShadow(suffix, slideEl, side) {
   return shadowEl
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/effect-flip.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/effect-flip.mjs
 function EffectFlip({ swiper, extendParams, on }) {
   extendParams({
     flipEffect: {
@@ -4865,7 +4895,7 @@ function EffectFlip({ swiper, extendParams, on }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/effect-coverflow.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/effect-coverflow.mjs
 function EffectCoverflow({ swiper, extendParams, on }) {
   extendParams({
     coverflowEffect: {
@@ -4955,7 +4985,7 @@ function EffectCoverflow({ swiper, extendParams, on }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/effect-creative.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/effect-creative.mjs
 function EffectCreative({ swiper, extendParams, on }) {
   extendParams({
     creativeEffect: {
@@ -5087,7 +5117,7 @@ function EffectCreative({ swiper, extendParams, on }) {
   })
 }
 
-// node_modules/.pnpm/swiper@12.0.3/node_modules/swiper/modules/effect-cards.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/effect-cards.mjs
 function EffectCards({ swiper, extendParams, on }) {
   extendParams({
     cardsEffect: {

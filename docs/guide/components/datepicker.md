@@ -1,4 +1,4 @@
-# 日期选择器 DatePicker<Tag color="volcano" style="vertical-align: top; margin-left: 6px;">12.0.4</Tag>
+# 日期选择器 DatePicker<Tag color="volcano" style="vertical-align: top; margin-left: 6px;">12.1.0</Tag>
 
 <GlobalElement />
 

@@ -126,7 +126,7 @@ const modalContentStyle = computed(() => {
   return getComputedValue('contentStyle') as CSSProperties
 })
 const modalBodyClass = computed(() => {
-  return getComputedValue('bodyClass')
+  return getComputedValue('bodyClass') as string
 })
 const modalBodyStyle = computed(() => {
   return getComputedValue('bodyStyle') as CSSProperties
