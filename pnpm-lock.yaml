@@ -133,8 +133,8 @@ importers:
         specifier: ^3.5.29
         version: 3.5.29(typescript@5.9.3)
       vue-amazing-ui:
-        specifier: 2.4.23
-        version: 2.4.23(vue@3.5.29(typescript@5.9.3))
+        specifier: 2.4.24
+        version: 2.4.24(vue@3.5.29(typescript@5.9.3))
       vue-router:
         specifier: ^4.6.4
         version: 4.6.4(vue@3.5.29(typescript@5.9.3))
@@ -3313,8 +3313,8 @@ packages:
   vscode-uri@3.1.0:
     resolution: {integrity: sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==}
 
-  vue-amazing-ui@2.4.23:
-    resolution: {integrity: sha512-6mJy/2wyQO9Tu+FfxHVykBfk1SZAjVq34aYnjUYKH4Qd5XMabqylmj9e86IGB1awgNFOuSakoXnaAmeToYktjA==}
+  vue-amazing-ui@2.4.24:
+    resolution: {integrity: sha512-Bdj6giQz072B4ZawE4eMKF/aPwsSfvqZ64zoMBGH09NC8YninPii98LhZ/Hso9Z3mOgtvmVIQXs8A2RJ4oy5+Q==}
 
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
@@ -6366,7 +6366,7 @@ snapshots:
   terser@5.37.0:
     dependencies:
       '@jridgewell/source-map': 0.3.11
-      acorn: 8.15.0
+      acorn: 8.16.0
       commander: 2.20.3
       source-map-support: 0.5.21
     optional: true
@@ -6692,7 +6692,7 @@ snapshots:
 
   vscode-uri@3.1.0: {}
 
-  vue-amazing-ui@2.4.23(vue@3.5.29(typescript@5.9.3)):
+  vue-amazing-ui@2.4.24(vue@3.5.29(typescript@5.9.3)):
     dependencies:
       '@ant-design/colors': 8.0.1
       '@ctrl/tinycolor': 4.2.0
