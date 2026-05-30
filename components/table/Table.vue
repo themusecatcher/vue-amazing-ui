@@ -292,6 +292,10 @@ const thColumns = computed(() => {
 const thColumnsGroup = computed(() => {
   return getThColumnsGroup(props.columns)
 })
+// thColumns 的最大深度，用于表头跨行 rowspan，避免模板中重复递归调用
+const thColumnsMaxDepth = computed(() => {
+  return getMaxDepth(thColumns.value)
+})
 const thFirstColumnFixed = computed(() => {
   return thColumnsGroup.value[0][0].fixed === 'left'
 })
@@ -332,11 +336,11 @@ const tableExpandRowFixStyle = computed(() => {
   }
   return style
 })
-// 表头固定时的样式，用于模拟滚动效果，使用 transform 替代 left 利用 GPU 加速减少重排
+// 表头固定时的样式，用于模拟滚动效果
 const tableHeadStyle = computed(() => {
   const style: CSSProperties = {
-    transform: `translateX(${-scrollLeft.value}px)`,
-    willChange: 'transform'
+    position: 'relative',
+    left: `${-scrollLeft.value}px`
   }
   return style
 })
@@ -415,7 +419,8 @@ watch(displayDataSource, (to) => {
   const len = to.length
   for (let i = 0; i < len; i++) {
     const record = to[i]
-    if (selectedRowKeys.value.includes(record.key)) {
+    const recordKey = getRowKey.value(record, i)
+    if (selectedRowKeys.value.includes(recordKey)) {
       if (
         props.rowSelection?.type === undefined ||
         props.rowSelection?.type === 'checkbox' ||
@@ -439,20 +444,21 @@ watch(
     selectedRowKeys.value = []
     selectedRows.value = []
     displayDataSource.value.forEach((record: Record<string, any>, rowIndex) => {
+      const recordKey = getRowKey.value(record, rowIndex)
       if (props.rowSelection?.type === 'radio') {
         // 单选
-        if (props.rowSelection?.selectedRowKeys && props.rowSelection.selectedRowKeys[0] === record.key) {
+        if (props.rowSelection?.selectedRowKeys && props.rowSelection.selectedRowKeys[0] === recordKey) {
           tableOptionsChecked.value[rowIndex] = true
-          selectedRowKeys.value.push(record.key)
+          selectedRowKeys.value.push(recordKey)
           selectedRows.value.push(record)
         } else {
           tableOptionsChecked.value[rowIndex] = false
         }
       } else {
         // 复选
-        if (props.rowSelection?.selectedRowKeys && props.rowSelection.selectedRowKeys.includes(record.key)) {
+        if (props.rowSelection?.selectedRowKeys && props.rowSelection.selectedRowKeys.includes(recordKey)) {
           tableOptionsChecked.value[rowIndex] = true
-          selectedRowKeys.value.push(record.key)
+          selectedRowKeys.value.push(recordKey)
           selectedRows.value.push(record)
         } else {
           tableOptionsChecked.value[rowIndex] = false
@@ -526,13 +532,14 @@ function onCheckAllChange(checked: boolean) {
     const checkboxProps =
       props.rowSelection?.getSelectionProps && props.rowSelection.getSelectionProps(record, rowIndex)
     if (!(checkboxProps && 'disabled' in checkboxProps && checkboxProps.disabled)) {
+      const recordKey = getRowKey.value(record, rowIndex)
       if (checked) {
         // 全选
         if (!tableOptionsChecked.value[rowIndex]) {
           tableOptionsChecked.value[rowIndex] = true
-          selectedRowKeys.value.push(record.key)
+          selectedRowKeys.value.push(recordKey)
           selectedRows.value.push(record)
-          changeRowKeys.value.push(record.key)
+          changeRowKeys.value.push(recordKey)
           changeRows.value.push(record)
         }
       } else {
@@ -541,7 +548,7 @@ function onCheckAllChange(checked: boolean) {
         selectedRows.value = []
         if (tableOptionsChecked.value[rowIndex]) {
           tableOptionsChecked.value[rowIndex] = false
-          changeRowKeys.value.push(record.key)
+          changeRowKeys.value.push(recordKey)
           changeRows.value.push(record)
         }
       }
@@ -575,8 +582,11 @@ function onTableSelectionChange(selected: boolean, rowIndex: number, key: string
     }
   } else {
     // 复选框取消选中
+    // 先用旧的 selectedRowKeys 索引同步过滤 selectedRows，避免依赖 selectedRow.key 硬编码字段
+    selectedRows.value = selectedRows.value.filter(
+      (_selectedRow: Record<string, any>, index: number) => selectedRowKeys.value[index] !== key
+    )
     selectedRowKeys.value = selectedRowKeys.value.filter((selectedRowKey: string) => selectedRowKey !== key)
-    selectedRows.value = selectedRows.value.filter((selectedRow: Record<string, any>) => selectedRow.key !== key)
   }
   props.rowSelection?.onSelect &&
     props.rowSelection.onSelect(record, selected, selectedRows.value, selectedRowKeys.value)
@@ -993,8 +1003,8 @@ function checkHoverCoord(row: number, col: number) {
   return mergeHoverCoords.value.some((coord: Coords) => coord.row === row && coord.col === col)
 }
 // 展开/收起展开行
-function onExpandCell(record: Record<string, any>) {
-  const key = record.key
+function onExpandCell(record: Record<string, any>, rowIndex: number) {
+  const key = getRowKey.value(record, rowIndex)
   if (tableExpandedRowKeys.value.includes(key)) {
     tableExpandedRowKeys.value = tableExpandedRowKeys.value.filter((rowKey: string | number) => rowKey !== key)
   } else {
@@ -1105,7 +1115,7 @@ function onPaginationChange(page: number, pageSize: number) {
                         'table-cell-fix-left-last': expandColumnFixedLast
                       }"
                       :style="tableExpandCellFixStyle(expandColumnFixed)"
-                      :rowspan="getMaxDepth(thColumns)"
+                      :rowspan="thColumnsMaxDepth"
                       :colstart="0"
                       :colend="0"
                     >
@@ -1119,7 +1129,7 @@ function onPaginationChange(page: number, pageSize: number) {
                         'table-cell-fix-left-last': selectionColumnFixedLast
                       }"
                       :style="tableSelectionCellFixStyle(selectionColumnFixed)"
-                      :rowspan="getMaxDepth(thColumns)"
+                      :rowspan="thColumnsMaxDepth"
                       :colstart="0"
                       :colend="0"
                     >
@@ -1238,7 +1248,7 @@ function onPaginationChange(page: number, pageSize: number) {
                       :class="getRowClassName(record, rowIndex)"
                       @mouseenter="onEnterRow(record, rowIndex)"
                       @mouseleave="onLeaveRow"
-                      @click="expandRowByClick ? onExpandCell(record) : () => false"
+                      @click="expandRowByClick ? onExpandCell(record, rowIndex) : () => false"
                     >
                       <td
                         v-if="showExpandColumn"
@@ -1249,17 +1259,19 @@ function onPaginationChange(page: number, pageSize: number) {
                           'table-td-hover': hoverRowIndex === rowIndex
                         }"
                         :style="tableExpandCellFixStyle(expandColumnFixed)"
-                        @click.stop="onExpandCell(record)"
+                        @click.stop="onExpandCell(record, rowIndex)"
                       >
                         <slot
                           name="expandCell"
                           :record="record"
                           :index="rowIndex"
-                          :expanded="tableExpandedRowKeys.includes(record.key)"
+                          :expanded="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))"
                         >
                           <button
                             class="expand-btn"
-                            :class="{ 'expand-btn-collapsed': !tableExpandedRowKeys.includes(record.key) }"
+                            :class="{
+                              'expand-btn-collapsed': !tableExpandedRowKeys.includes(getRowKey(record, rowIndex))
+                            }"
                           ></button>
                         </slot>
                       </td>
@@ -1277,13 +1289,13 @@ function onPaginationChange(page: number, pageSize: number) {
                           <Radio
                             v-if="rowSelection?.type === 'radio'"
                             v-model:checked="tableOptionsChecked[rowIndex]"
-                            @change="onTableSelectionChange($event, rowIndex, record.key, record)"
+                            @change="onTableSelectionChange($event, rowIndex, getRowKey(record, rowIndex), record)"
                             v-bind="rowSelection?.getSelectionProps && rowSelection.getSelectionProps(record, rowIndex)"
                           />
                           <Checkbox
                             v-else
                             v-model:checked="tableOptionsChecked[rowIndex]"
-                            @change="onTableSelectionChange($event, rowIndex, record.key, record)"
+                            @change="onTableSelectionChange($event, rowIndex, getRowKey(record, rowIndex), record)"
                             v-bind="rowSelection?.getSelectionProps && rowSelection.getSelectionProps(record, rowIndex)"
                           />
                         </div>
@@ -1342,14 +1354,14 @@ function onPaginationChange(page: number, pageSize: number) {
                       </td>
                     </tr>
                     <template v-if="showExpandColumn">
-                      <tr v-show="tableExpandedRowKeys.includes(record.key)">
+                      <tr v-show="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))">
                         <td class="table-td table-td-expand-row" :colspan="thColumnsLeaf.length + 1">
                           <div v-if="expandColumnFixed" class="table-expand-row-fixed" :style="tableExpandRowFixStyle">
                             <slot
                               name="expandedRowRender"
                               :record="record"
                               :index="rowIndex"
-                              :expanded="tableExpandedRowKeys.includes(record.key)"
+                              :expanded="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))"
                             ></slot>
                           </div>
                           <slot
@@ -1357,7 +1369,7 @@ function onPaginationChange(page: number, pageSize: number) {
                             name="expandedRowRender"
                             :record="record"
                             :index="rowIndex"
-                            :expanded="tableExpandedRowKeys.includes(record.key)"
+                            :expanded="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))"
                           ></slot>
                         </td>
                       </tr>
@@ -1392,7 +1404,7 @@ function onPaginationChange(page: number, pageSize: number) {
                         'table-cell-fix-left-last': expandColumnFixedLast
                       }"
                       :style="tableExpandCellFixStyle(expandColumnFixed)"
-                      :rowspan="getMaxDepth(thColumns)"
+                      :rowspan="thColumnsMaxDepth"
                       :colstart="0"
                       :colend="0"
                     >
@@ -1406,7 +1418,7 @@ function onPaginationChange(page: number, pageSize: number) {
                         'table-cell-fix-left-last': selectionColumnFixedLast
                       }"
                       :style="tableSelectionCellFixStyle(selectionColumnFixed)"
-                      :rowspan="getMaxDepth(thColumns)"
+                      :rowspan="thColumnsMaxDepth"
                       :colstart="0"
                       :colend="0"
                     >
@@ -1543,7 +1555,7 @@ function onPaginationChange(page: number, pageSize: number) {
                       :class="getRowClassName(record, rowIndex)"
                       @mouseenter="onEnterRow(record, rowIndex)"
                       @mouseleave="onLeaveRow"
-                      @click="expandRowByClick ? onExpandCell(record) : () => false"
+                      @click="expandRowByClick ? onExpandCell(record, rowIndex) : () => false"
                     >
                       <td
                         v-if="showExpandColumn"
@@ -1554,17 +1566,19 @@ function onPaginationChange(page: number, pageSize: number) {
                           'table-td-hover': hoverRowIndex === rowIndex
                         }"
                         :style="tableExpandCellFixStyle(expandColumnFixed)"
-                        @click.stop="onExpandCell(record)"
+                        @click.stop="onExpandCell(record, rowIndex)"
                       >
                         <slot
                           name="expandCell"
                           :record="record"
                           :index="rowIndex"
-                          :expanded="tableExpandedRowKeys.includes(record.key)"
+                          :expanded="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))"
                         >
                           <button
                             class="expand-btn"
-                            :class="{ 'expand-btn-collapsed': !tableExpandedRowKeys.includes(record.key) }"
+                            :class="{
+                              'expand-btn-collapsed': !tableExpandedRowKeys.includes(getRowKey(record, rowIndex))
+                            }"
                           ></button>
                         </slot>
                       </td>
@@ -1582,13 +1596,13 @@ function onPaginationChange(page: number, pageSize: number) {
                           <Radio
                             v-if="rowSelection?.type === 'radio'"
                             v-model:checked="tableOptionsChecked[rowIndex]"
-                            @change="onTableSelectionChange($event, rowIndex, record.key, record)"
+                            @change="onTableSelectionChange($event, rowIndex, getRowKey(record, rowIndex), record)"
                             v-bind="rowSelection?.getSelectionProps && rowSelection.getSelectionProps(record, rowIndex)"
                           />
                           <Checkbox
                             v-else
                             v-model:checked="tableOptionsChecked[rowIndex]"
-                            @change="onTableSelectionChange($event, rowIndex, record.key, record)"
+                            @change="onTableSelectionChange($event, rowIndex, getRowKey(record, rowIndex), record)"
                             v-bind="rowSelection?.getSelectionProps && rowSelection.getSelectionProps(record, rowIndex)"
                           />
                         </div>
@@ -1647,14 +1661,14 @@ function onPaginationChange(page: number, pageSize: number) {
                       </td>
                     </tr>
                     <template v-if="showExpandColumn">
-                      <tr v-show="tableExpandedRowKeys.includes(record.key)">
+                      <tr v-show="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))">
                         <td class="table-td table-td-expand-row" :colspan="thColumnsLeaf.length + 1">
                           <div v-if="expandColumnFixed" class="table-expand-row-fixed" :style="tableExpandRowFixStyle">
                             <slot
                               name="expandedRowRender"
                               :record="record"
                               :index="rowIndex"
-                              :expanded="tableExpandedRowKeys.includes(record.key)"
+                              :expanded="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))"
                             ></slot>
                           </div>
                           <slot
@@ -1662,7 +1676,7 @@ function onPaginationChange(page: number, pageSize: number) {
                             name="expandedRowRender"
                             :record="record"
                             :index="rowIndex"
-                            :expanded="tableExpandedRowKeys.includes(record.key)"
+                            :expanded="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))"
                           ></slot>
                         </td>
                       </tr>

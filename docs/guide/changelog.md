@@ -4,6 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2026-05-30">2.4.25</VersionDateTag>
+
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件代码逻辑
+
 ## <VersionDateTag date="2026-03-08">2.4.24</VersionDateTag>
 
 - 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html)、[滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html)、[图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html)、[滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，将鼠标事件（`Mouse Events`）迁移为指针事件（`Pointer Events`），统一支持鼠标、触屏和手写笔等多种输入设备的交互
