@@ -136,9 +136,6 @@
     ],
     "*.{html,css,less}": [
       "prettier --write"
-    ],
-    "*.md": [
-      "prettier --write --parser markdown --prose-wrap never"
     ]
   }
 }
