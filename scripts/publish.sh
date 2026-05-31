@@ -11,15 +11,20 @@ version=$(jq -r .version package.json)
 # 打包构建
 pnpm build
 
-git add .
+# 检查是否有待提交的更改
+if [ -n "$(git status --porcelain)" ]; then
+    git add .
 
-if [ -z "$commitDesc" ]; then
-  git commit -m 'feat: update components library'
+    if [ -z "$commitDesc" ]; then
+        git commit -m 'feat: update components library'
+    else
+        git commit -m "$commitDesc"
+    fi
+
+    git push
 else
-  git commit -m "$commitDesc"
+    echo "No changes to commit. Skipping git commit and push."
 fi
-
-git push
 
 # 发布到 npm
 npm publish
