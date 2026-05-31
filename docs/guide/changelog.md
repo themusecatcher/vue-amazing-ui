@@ -4,9 +4,13 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2026-05-31">2.4.26</VersionDateTag>
+
+- 优化 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件使用效果，调整属性 `autoHide` 默认值为 `false`，`delay` 属性默认值为 `0`
+
 ## <VersionDateTag date="2026-05-30">2.4.25</VersionDateTag>
 
-- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件代码逻辑
+- 优化 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件代码逻辑
 
 ## <VersionDateTag date="2026-03-08">2.4.24</VersionDateTag>
 
