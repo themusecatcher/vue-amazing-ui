@@ -262,32 +262,20 @@ function onWheel(e: WheelEvent): void {
   if (e.deltaX || e.deltaY) {
     if (['top', 'bottom'].includes(props.tabPosition)) {
       // 水平滚动
-      getHorizontalScroll(e)
+      getHorizontalScroll(e.deltaX)
     } else {
       // 垂直滚动
-      getVerticalScroll(e)
+      getVerticalScroll(e.deltaY)
     }
   }
 }
-function getHorizontalScroll(e: WheelEvent): void {
-  const scrollX = (e.deltaX || e.deltaY) * 1 // 滚轮的水平滚动量
-  if (scrollLeft.value + scrollX > scrollMax.value) {
-    scrollLeft.value = scrollMax.value
-  } else if (scrollLeft.value + scrollX < 0) {
-    scrollLeft.value = 0
-  } else {
-    scrollLeft.value += scrollX
-  }
+function getHorizontalScroll(deltaX: number): void {
+  const scrollX = deltaX * 1 // 水平滚动量
+  scrollLeft.value = Math.min(Math.max(scrollLeft.value + scrollX, 0), scrollMax.value)
 }
-function getVerticalScroll(e: WheelEvent): void {
-  const scrollY = (e.deltaX || e.deltaY) * 1 // 滚轮的垂直滚动量
-  if (scrollTop.value + scrollY > scrollMax.value) {
-    scrollTop.value = scrollMax.value
-  } else if (scrollTop.value + scrollY < 0) {
-    scrollTop.value = 0
-  } else {
-    scrollTop.value += scrollY
-  }
+function getVerticalScroll(deltaY: number): void {
+  const scrollY = deltaY * 1 // 垂直滚动量
+  scrollTop.value = Math.min(Math.max(scrollTop.value + scrollY, 0), scrollMax.value)
 }
 function getContentStyle(key: string | number | undefined, index: number): CSSProperties {
   if (props.activeKey !== getPageKey(key, index)) {
@@ -298,7 +286,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
 </script>
 <template>
   <div
-    class="m-tabs"
+    class="tabs-wrap"
     :class="[
       `tabs-${tabPosition} tabs-${size}`,
       {
@@ -307,7 +295,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
     ]"
     :style="`--tabs-primary-color: ${colorPalettes[5]};`"
   >
-    <div class="m-tabs-nav" :style="tabStyle">
+    <div class="tabs-nav-container" :style="tabStyle">
       <div v-if="showPrefix" class="tabs-prefix">
         <slot name="prefix">{{ prefix }}</slot>
       </div>
@@ -360,7 +348,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
         <slot name="suffix">{{ suffix }}</slot>
       </div>
     </div>
-    <div class="m-tabs-page" :style="contentStyle">
+    <div class="tabs-page-container" :style="contentStyle">
       <div
         class="tabs-content-wrap"
         :class="{ 'tabs-content-animated': animated && ['top', 'bottom'].includes(tabPosition) }"
@@ -381,13 +369,13 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
   </div>
 </template>
 <style lang="less" scoped>
-.m-tabs {
+.tabs-wrap {
   display: flex;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
   list-style: none;
-  .m-tabs-nav {
+  .tabs-nav-container {
     position: relative;
     display: flex;
     flex: none;
@@ -492,7 +480,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
       }
     }
   }
-  .m-tabs-page {
+  .tabs-page-container {
     flex: auto;
     min-width: 0;
     min-height: 0;
@@ -514,7 +502,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
 }
 .tabs-top {
   flex-direction: column;
-  .m-tabs-nav {
+  .tabs-nav-container {
     margin-bottom: 16px;
     .tabs-prefix {
       padding-right: 12px;
@@ -557,7 +545,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
     }
   }
   &.tabs-card {
-    .m-tabs-nav {
+    .tabs-nav-container {
       border-radius: 8px 8px 0 0;
       .tabs-nav-wrap {
         .tabs-nav-list {
@@ -569,7 +557,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
     }
   }
   &.tabs-card.tabs-small {
-    .m-tabs-nav {
+    .tabs-nav-container {
       border-radius: 6px 6px 0 0;
       .tabs-nav-wrap {
         .tabs-nav-list {
@@ -583,7 +571,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
 }
 .tabs-bottom {
   flex-direction: column;
-  .m-tabs-nav {
+  .tabs-nav-container {
     order: 1;
     margin-top: 16px;
     .tabs-prefix {
@@ -626,11 +614,11 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
       }
     }
   }
-  .m-tabs-page {
+  .tabs-page-container {
     order: 0;
   }
   &.tabs-card {
-    .m-tabs-nav {
+    .tabs-nav-container {
       border-radius: 0 0 8px 8px;
       .tabs-nav-wrap {
         .tabs-nav-list {
@@ -642,7 +630,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
     }
   }
   &.tabs-card.tabs-small {
-    .m-tabs-nav {
+    .tabs-nav-container {
       border-radius: 0 0 6px 6px;
       .tabs-nav-wrap {
         .tabs-nav-list {
@@ -655,7 +643,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
   }
 }
 .tabs-left {
-  .m-tabs-nav {
+  .tabs-nav-container {
     flex-direction: column;
     min-width: 40px;
     margin-right: 24px;
@@ -705,7 +693,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
     }
   }
   &.tabs-card {
-    .m-tabs-nav {
+    .tabs-nav-container {
       border-radius: 8px 0 0 8px;
       .tabs-nav-wrap {
         .tabs-nav-list {
@@ -717,7 +705,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
     }
   }
   &.tabs-card.tabs-small {
-    .m-tabs-nav {
+    .tabs-nav-container {
       border-radius: 6px 0 0 6px;
       .tabs-nav-wrap {
         .tabs-nav-list {
@@ -730,7 +718,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
   }
 }
 .tabs-right {
-  .m-tabs-nav {
+  .tabs-nav-container {
     order: 1;
     flex-direction: column;
     min-width: 40px;
@@ -778,7 +766,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
     }
   }
   &.tabs-card {
-    .m-tabs-nav {
+    .tabs-nav-container {
       border-radius: 0 8px 8px 0;
       .tabs-nav-wrap {
         .tabs-nav-list {
@@ -790,7 +778,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
     }
   }
   &.tabs-card.tabs-small {
-    .m-tabs-nav {
+    .tabs-nav-container {
       border-radius: 0 6px 6px 0;
       .tabs-nav-wrap {
         .tabs-nav-list {
@@ -803,12 +791,12 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
   }
 }
 .tabs-small {
-  .m-tabs-nav {
+  .tabs-nav-container {
     font-size: 14px;
   }
   &.tabs-top:not(.tabs-card),
   &.tabs-bottom:not(.tabs-card) {
-    .m-tabs-nav {
+    .tabs-nav-container {
       .tabs-nav-wrap {
         .tabs-nav-list {
           .tab-item {
@@ -820,12 +808,12 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
   }
 }
 .tabs-middle {
-  .m-tabs-nav {
+  .tabs-nav-container {
     font-size: 14px;
   }
   &.tabs-top:not(.tabs-card),
   &.tabs-bottom:not(.tabs-card) {
-    .m-tabs-nav {
+    .tabs-nav-container {
       .tabs-nav-wrap {
         .tabs-nav-list {
           .tab-item {
@@ -837,12 +825,12 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
   }
 }
 .tabs-large {
-  .m-tabs-nav {
+  .tabs-nav-container {
     font-size: 16px;
   }
   &.tabs-top:not(.tabs-card),
   &.tabs-bottom:not(.tabs-card) {
-    .m-tabs-nav {
+    .tabs-nav-container {
       .tabs-nav-wrap {
         .tabs-nav-list {
           .tab-item {
@@ -854,7 +842,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
   }
 }
 .tabs-card {
-  .m-tabs-nav {
+  .tabs-nav-container {
     .tabs-nav-wrap {
       .tabs-nav-list {
         .tab-item {
@@ -879,7 +867,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
     }
   }
   &.tabs-top {
-    .m-tabs-nav {
+    .tabs-nav-container {
       .tabs-nav-wrap {
         .tabs-nav-list {
           .tab-item {
@@ -895,7 +883,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
     }
   }
   &.tabs-bottom {
-    .m-tabs-nav {
+    .tabs-nav-container {
       .tabs-nav-wrap {
         .tabs-nav-list {
           .tab-item {
@@ -911,7 +899,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
     }
   }
   &.tabs-left {
-    .m-tabs-nav {
+    .tabs-nav-container {
       .tabs-nav-wrap {
         .tabs-nav-list {
           .tab-item {
@@ -927,7 +915,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
     }
   }
   &.tabs-right {
-    .m-tabs-nav {
+    .tabs-nav-container {
       .tabs-nav-wrap {
         .tabs-nav-list {
           .tab-item {
@@ -943,7 +931,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
     }
   }
   &.tabs-small {
-    .m-tabs-nav {
+    .tabs-nav-container {
       .tabs-nav-wrap {
         .tabs-nav-list {
           .tab-item {

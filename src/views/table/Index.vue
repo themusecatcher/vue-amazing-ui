@@ -1010,9 +1010,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
       </template>
     </Table>
     <h2 class="mt30 mb10">可编辑单元格</h2>
-    <Button style="margin-bottom: 16px" type="primary" :icon="() => h(PlusOutlined)" @click="handleCellAdd"
-      >新增</Button
-    >
+    <Button style="margin-bottom: 16px" type="primary" :icon="PlusOutlined" @click="handleCellAdd">新增</Button>
     <Table :columns="columnsCellEditable" :data-source="dataSourceCellEditable" bordered>
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">

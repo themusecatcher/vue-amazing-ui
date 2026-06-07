@@ -52,7 +52,7 @@ async function onClose(e: Event) {
     <div
       v-if="!closeAlert"
       ref="alertRef"
-      class="m-alert"
+      class="alert-wrap"
       :class="[
         `alert-${type}`,
         {
@@ -76,7 +76,7 @@ async function onClose(e: Event) {
       `"
     >
       <template v-if="showIcon && showSlotsIcon">
-        <span v-if="!showDesc" class="m-alert-icon">
+        <span v-if="!showDesc" class="alert-icon">
           <slot name="icon">
             <img v-if="icon" :src="icon" class="icon-img" />
             <svg
@@ -141,7 +141,7 @@ async function onClose(e: Event) {
             </svg>
           </slot>
         </span>
-        <span v-else class="m-big-icon">
+        <span v-else class="big-icon">
           <slot name="icon">
             <img v-if="icon" :src="icon" class="big-icon-img" />
             <svg
@@ -219,7 +219,7 @@ async function onClose(e: Event) {
           </slot>
         </span>
       </template>
-      <div class="m-alert-content">
+      <div class="alert-content">
         <div class="alert-message">
           <slot>{{ message }}</slot>
         </div>
@@ -227,10 +227,10 @@ async function onClose(e: Event) {
           <slot name="description">{{ description }}</slot>
         </div>
       </div>
-      <div v-if="slotsExist.actions" class="m-alert-actions">
+      <div v-if="slotsExist.actions" class="alert-actions">
         <slot name="actions"></slot>
       </div>
-      <a v-if="closable" tabindex="0" class="m-alert-close" @click="onClose" @keydown.enter.prevent="onClose">
+      <a v-if="closable" tabindex="0" class="alert-close" @click="onClose" @keydown.enter.prevent="onClose">
         <slot name="closeText">
           <span v-if="closeText">{{ closeText }}</span>
           <svg
@@ -267,7 +267,7 @@ async function onClose(e: Event) {
   opacity: 0 !important;
   padding-block: 0 !important;
 }
-.m-alert {
+.alert-wrap {
   padding: 8px 12px;
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
@@ -277,12 +277,12 @@ async function onClose(e: Event) {
   align-items: center;
   word-break: break-all;
   border-radius: 8px;
-  .m-alert-icon {
+  .alert-icon {
     display: inline-block;
     margin-right: 8px;
     line-height: 0;
   }
-  .m-big-icon {
+  .big-icon {
     margin-right: 12px;
     font-size: 24px;
     line-height: 0;
@@ -300,14 +300,14 @@ async function onClose(e: Event) {
   .icon-svg {
     display: inline-block;
   }
-  .m-alert-content {
+  .alert-content {
     flex: 1;
     min-width: 0;
   }
-  .m-alert-actions {
+  .alert-actions {
     margin-left: 8px;
   }
-  .m-alert-close {
+  .alert-close {
     margin-left: 8px;
     font-size: 12px;
     color: rgba(0, 0, 0, 0.45);
@@ -332,8 +332,8 @@ async function onClose(e: Event) {
 .alert-default {
   background-color: rgba(0, 0, 0, 0.02);
   border: 1px solid #d9d9d9;
-  .m-alert-icon,
-  .m-big-icon {
+  .alert-icon,
+  .big-icon {
     color: rgba(0, 0, 0, 0.88);
     .icon-svg,
     :deep(svg) {
@@ -344,8 +344,8 @@ async function onClose(e: Event) {
 .alert-info {
   background-color: var(--alert-primary-bg-color);
   border: 1px solid var(--alert-primary-border-color);
-  .m-alert-icon,
-  .m-big-icon {
+  .alert-icon,
+  .big-icon {
     color: var(--alert-primary-color);
     .icon-svg,
     :deep(svg) {
@@ -356,8 +356,8 @@ async function onClose(e: Event) {
 .alert-success {
   background-color: var(--alert-success-bg-color);
   border: 1px solid var(--alert-success-border-color);
-  .m-alert-icon,
-  .m-big-icon {
+  .alert-icon,
+  .big-icon {
     color: var(--alert-success-color);
     .icon-svg,
     :deep(svg) {
@@ -368,8 +368,8 @@ async function onClose(e: Event) {
 .alert-warning {
   background-color: var(--alert-warning-bg-color);
   border: 1px solid var(--alert-warning-border-color);
-  .m-alert-icon,
-  .m-big-icon {
+  .alert-icon,
+  .big-icon {
     color: var(--alert-warning-color);
     .icon-svg,
     :deep(svg) {
@@ -380,8 +380,8 @@ async function onClose(e: Event) {
 .alert-error {
   background-color: var(--alert-error-bg-color);
   border: 1px solid var(--alert-error-border-color);
-  .m-alert-icon,
-  .m-big-icon {
+  .alert-icon,
+  .big-icon {
     color: var(--alert-error-color);
     .icon-svg,
     :deep(svg) {

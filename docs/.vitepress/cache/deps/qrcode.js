@@ -121,7 +121,7 @@ var require_bit_buffer = __commonJS({
           this.buffer.push(0)
         }
         if (bit) {
-          this.buffer[bufIndex] |= 128 >>> this.length % 8
+          this.buffer[bufIndex] |= 128 >>> (this.length % 8)
         }
         this.length++
       }

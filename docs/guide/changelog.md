@@ -4,9 +4,53 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2026-05-31">2.4.26</VersionDateTag>
+
+- 优化 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件使用效果，调整属性 `autoHide` 默认值为 `false`，`delay` 属性默认值为 `0`
+
+## <VersionDateTag date="2026-05-30">2.4.25</VersionDateTag>
+
+- 优化 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件代码逻辑
+
+## <VersionDateTag date="2026-03-08">2.4.24</VersionDateTag>
+
+- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html)、[滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html)、[图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html)、[滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，将鼠标事件（`Mouse Events`）迁移为指针事件（`Pointer Events`），统一支持鼠标、触屏和手写笔等多种输入设备的交互
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，优化表格头部跟随滚动效果
+- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件样式交互，为色相滑块和透明度滑块添加 `touch-action: none` 样式，修复触屏设备拖动时触发页面滚动的问题
+- 组件库及文档代码优化
+- 更新组件库部分依赖版本
+
+## <VersionDateTag date="2025-11-17">2.4.23</VersionDateTag>
+
+- 修复 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件初始为空值时非法输入未置空问题，关闭 [#44](https://github.com/themusecatcher/vue-amazing-ui/issues/44)
+- 更新组件库部分依赖版本
+
+## <VersionDateTag date="2025-10-15">2.4.22</VersionDateTag>
+
+- 优化并更新 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件代码，修复当使用 `Methods` 进行滚动时滚动条无法正常显示的问题
+- 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件代码
+- 优化并更新 [标签页 Tabs](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tabs.html) 组件代码
+- 更新组件库部分依赖版本
+
+## <VersionDateTag date="2025-09-05">2.4.21</VersionDateTag>
+
+- 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，兼容弹出框在文档中自动调整弹出位置的功能
+- 更新组件库部分依赖版本
+
+## <VersionDateTag date="2025-09-02">2.4.20</VersionDateTag>
+
+- 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，兼容弹出框在文档中自动调整弹出位置的功能
+
+## <VersionDateTag date="2025-08-28">2.4.19</VersionDateTag>
+
+- 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，新增 `placement` `flip` `to` 属性，支持：设置下拉面板弹出位置；设置下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置；设置下拉面板挂载的容器节点，默认挂载到 `body` 下
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，属性 `amount` 新增 `false` 类型，用于支持所有文字平铺展示；新增 `ellipsis` `ellipsisProps` 属性，支持：设置文字超出时是否启用文本省略组件；配置文本省略组件属性
+- 组件库及文档代码优化
+- 更新组件库部分依赖版本
+
 ## <VersionDateTag date="2025-08-22">2.4.18</VersionDateTag>
 
-- 优化更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html)、[加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html)、[文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，在初始未展示时不进行任何组件渲染，提升初始加载性能
+- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html)、[加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html)、[文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，在初始未展示时不进行任何组件渲染，提升初始加载性能
 
 ## <VersionDateTag date="2025-08-21">2.4.17</VersionDateTag>
 

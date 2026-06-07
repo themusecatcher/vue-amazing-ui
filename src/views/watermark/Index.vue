@@ -1,5 +1,12 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
+import { dateFormat } from 'vue-amazing-ui'
+const realTime = ref<string>(dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS'))
+const updateTime = () => {
+  realTime.value = dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS')
+  requestAnimationFrame(updateTime)
+}
+requestAnimationFrame(updateTime)
 const show = ref(false)
 const fixed = ref(true)
 const imageModel = reactive({
@@ -9,11 +16,13 @@ const imageModel = reactive({
 const model = reactive({
   content: 'Vue Amazing UI',
   layout: 'alternate',
-  color: 'rgba(0, 0, 0, 0.15)',
-  fontSize: 16,
-  fontWeight: 400,
   zIndex: 9,
   rotate: -22,
+  textStyle: {
+    color: 'rgba(0, 0, 0, 0.15)',
+    fontSize: 16,
+    fontWeight: 400
+  },
   gap: [100, 100],
   offset: [50, 50]
 })
@@ -43,6 +52,10 @@ const layoutOptions = [
     <h3 class="mb10">通过 content 设置 字符串数组 指定多行文字水印内容。</h3>
     <Watermark :content="['Vue Amazing UI', 'Hello World']">
       <div style="height: 400px" />
+    </Watermark>
+    <h2 class="mt30 mb10">实时水印</h2>
+    <Watermark :content="realTime" :text-style="{ fontFamily: 'Helvetica Neue' }">
+      <div style="height: 360px" />
     </Watermark>
     <h2 class="mt30 mb10">图片水印</h2>
     <h3 class="mb10"
@@ -88,7 +101,7 @@ const layoutOptions = [
           </p>
           <img
             style="max-width: 100%"
-            src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/6.jpg"
+            src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/6.jpg"
             alt="示例图片"
           />
         </Watermark>
@@ -97,10 +110,12 @@ const layoutOptions = [
         <Flex vertical :gap="12">
           <Flex vertical> Content:<Input v-model:value="model.content" /> </Flex>
           <Flex vertical> Layout:<Radio :options="layoutOptions" v-model:value="model.layout" button /> </Flex>
-          <Flex vertical> Color:<ColorPicker v-model:value="model.color" /> </Flex>
-          <Flex vertical> FontSize:<Slider v-model:value="model.fontSize" :step="1" :min="0" :max="100" /> </Flex>
+          <Flex vertical> Color:<ColorPicker v-model:value="model.textStyle.color" /> </Flex>
           <Flex vertical>
-            FontWeight:<InputNumber v-model:value="model.fontWeight" :step="100" :min="100" :max="1000" />
+            FontSize:<Slider v-model:value="model.textStyle.fontSize" :step="1" :min="0" :max="100" />
+          </Flex>
+          <Flex vertical>
+            FontWeight:<InputNumber v-model:value="model.textStyle.fontWeight" :step="100" :min="100" :max="1000" />
           </Flex>
           <Flex vertical> zIndex:<Slider v-model:value="model.zIndex" :step="1" :min="0" :max="100" /> </Flex>
           <Flex vertical> Rotate:<Slider v-model:value="model.rotate" :step="1" :min="-180" :max="180" /> </Flex>

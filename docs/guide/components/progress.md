@@ -10,7 +10,7 @@ _展示操作的当前进度_
 - 当需要显示一个操作完成的百分比时
 
 <script setup lang="ts">
-import { h, ref } from 'vue'
+import { ref } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { ProgressProps } from 'vue-amazing-ui'
 const percent = ref(80)
@@ -71,15 +71,15 @@ const percent = ref(80)
 
 <Space align="center">
   <Progress type="circle" :percent="percent" />
-  <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-  <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+  <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+  <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
 </Space>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
-import { h, ref } from 'vue'
+import { ref } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const percent = ref(80)
 function onIncrease(scale: number) {
@@ -102,8 +102,8 @@ function onDecline(scale: number) {
 <template>
   <Space align="center">
     <Progress type="circle" :percent="percent" />
-    <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-    <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+    <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+    <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
   </Space>
 </template>
 ```
@@ -153,8 +153,8 @@ _`strokeColor`: `{ '0%': '#108ee9', '100%': '#87d068', direction: 'right' }` 或
       }"
       :percent="percent"
     />
-    <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-    <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+    <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+    <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
   </Space>
 </Flex>
 
@@ -162,7 +162,7 @@ _`strokeColor`: `{ '0%': '#108ee9', '100%': '#87d068', direction: 'right' }` 或
 
 ```vue
 <script setup lang="ts">
-import { h, ref } from 'vue'
+import { ref } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const percent = ref(80)
 function onIncrease(scale: number) {
@@ -200,8 +200,8 @@ function onDecline(scale: number) {
         }"
         :percent="percent"
       />
-      <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-      <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+      <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+      <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
     </Space>
   </Flex>
 </template>
@@ -237,8 +237,8 @@ function onDecline(scale: number) {
       :info-size="28"
       :percent="percent"
     />
-    <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-    <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+    <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+    <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
   </Space>
 </Flex>
 
@@ -246,7 +246,7 @@ function onDecline(scale: number) {
 
 ```vue
 <script setup lang="ts">
-import { h, ref } from 'vue'
+import { ref } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const percent = ref(80)
 function onIncrease(scale: number) {
@@ -293,8 +293,8 @@ function onDecline(scale: number) {
         :info-size="28"
         :percent="percent"
       />
-      <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-      <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+      <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+      <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
     </Space>
   </Flex>
 </template>
@@ -329,8 +329,8 @@ function onDecline(scale: number) {
       :info-size="24"
       :percent="percent"
     />
-    <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-    <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+    <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+    <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
   </Space>
 </Flex>
 
@@ -338,7 +338,7 @@ function onDecline(scale: number) {
 
 ```vue
 <script setup lang="ts">
-import { h, ref } from 'vue'
+import { ref } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { ProgressProps } from 'vue-amazing-ui'
 const percent = ref(80)
@@ -396,8 +396,8 @@ function onDecline(scale: number) {
         :info-size="24"
         :percent="percent"
       />
-      <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-      <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+      <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+      <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
     </Space>
   </Flex>
 </template>
@@ -441,8 +441,8 @@ function onDecline(scale: number) {
         <span style="color: #d48806">Bingo</span>
       </template>
     </Progress>
-    <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-    <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+    <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+    <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
   </Space>
 </Flex>
 
@@ -450,7 +450,7 @@ function onDecline(scale: number) {
 
 ```vue
 <script setup lang="ts">
-import { h, ref } from 'vue'
+import { ref } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const percent = ref(80)
 function onIncrease(scale: number) {
@@ -512,8 +512,8 @@ function onDecline(scale: number) {
           <span style="color: #d48806">Bingo</span>
         </template>
       </Progress>
-      <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-      <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+      <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+      <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
     </Space>
   </Flex>
 </template>

@@ -29,7 +29,7 @@ const buildDistOptions = {
   lib: {
     // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
     /*
-      es: 将 bundle 保留为 ES 模块文件，适用于其他打包工具，以及支持 <script type=module> 标签的浏览器
+      es: 将 bundle 保留为 ES 模块文件，适用于其他打包工具，以及支持 <script type="module"> 标签的浏览器
       umd: 通用模块定义规范，同时支持 amd，cjs 和 iife
       iife: 自执行函数，适用于 <script> 标签（如果你想为你的应用程序创建 bundle，那么你可能会使用它）。iife 表示“自执行 函数表达式”
     */

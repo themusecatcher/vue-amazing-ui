@@ -50,7 +50,7 @@ function getTargetUrl(route: Route): string {
 </script>
 <template>
   <div
-    class="m-breadcrumb"
+    class="breadcrumb-wrap"
     :class="breadcrumbClass"
     :style="[
       `
@@ -103,7 +103,7 @@ function getTargetUrl(route: Route): string {
   </div>
 </template>
 <style lang="less" scoped>
-.m-breadcrumb {
+.breadcrumb-wrap {
   font-size: 14px;
   color: var(--breadcrumb-color);
   line-height: 1.5714285714285714;

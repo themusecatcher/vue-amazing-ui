@@ -7,10 +7,10 @@ _为组件提供统一的全局化配置_
 ## 何时使用
 
 - 当需要定制主题时
-<!-- - 当需要为组件提供的全局配置时 -->
+<!-- - 当需要为组件提供全局配置时 -->
 
 <script setup lang="ts">
-import { ref, h } from 'vue'
+import { ref } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { ConfigProviderTheme, CarouselImage, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
@@ -153,12 +153,12 @@ const textareaValue = ref<string>('')
 const scrollItems = ref<TextScrollItem[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   },
   {
     title: '《麦田里的守望者》首次出版于1951年',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   },
   {
@@ -166,12 +166,12 @@ const scrollItems = ref<TextScrollItem[]>([
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   }
 ])
@@ -286,8 +286,8 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
         <Progress :percent="percent" />
         <Space align="center">
           <Progress type="circle" :percent="percent" />
-          <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-          <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+          <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+          <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
         </Space>
       </Flex>
     </Card>
@@ -330,7 +330,7 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
 
 ```vue
 <script setup lang="ts">
-import { ref, h } from 'vue'
+import { ref } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { CarouselImage, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
@@ -463,12 +463,12 @@ const textareaValue = ref<string>('')
 const scrollItems = ref<TextScrollItem[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   },
   {
     title: '《麦田里的守望者》首次出版于1951年',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   },
   {
@@ -476,12 +476,12 @@ const scrollItems = ref<TextScrollItem[]>([
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   }
 ])
@@ -587,8 +587,8 @@ function onDecline(scale: number) {
           <Progress :percent="percent" />
           <Space align="center">
             <Progress type="circle" :percent="percent" />
-            <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-            <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+            <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+            <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
           </Space>
         </Flex>
       </Card>

@@ -114,7 +114,7 @@ function getViewportWidth(): void {
 <template>
   <component
     :is="href ? 'a' : 'div'"
-    class="m-avatar"
+    class="avatar-wrap"
     :class="[
       `avatar-${shape}`,
       {
@@ -137,7 +137,7 @@ function getViewportWidth(): void {
   </component>
 </template>
 <style lang="less" scoped>
-.m-avatar {
+.avatar-wrap {
   position: relative;
   display: inline-flex;
   justify-content: center;

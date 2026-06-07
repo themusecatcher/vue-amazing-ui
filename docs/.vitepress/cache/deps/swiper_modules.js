@@ -18,17 +18,17 @@ import {
   now,
   setCSSProperty,
   setInnerHTML
-} from './chunk-6G25GEVL.js'
+} from './chunk-DSPOMRI4.js'
 import './chunk-JVWSFFO4.js'
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/virtual.mjs
-function Virtual(_ref) {
-  let { swiper, extendParams, on, emit } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/virtual.mjs
+function Virtual({ swiper, extendParams, on, emit }) {
   extendParams({
     virtual: {
       enabled: false,
       slides: [],
       cache: true,
+      slidesPerViewAutoSlideSize: 320,
       renderSlide: null,
       renderExternal: null,
       renderExternalUpdate: true,
@@ -74,11 +74,11 @@ function Virtual(_ref) {
     return slideEl
   }
   function update(force, beforeInit, forceActiveIndex) {
-    const { slidesPerView, slidesPerGroup, centeredSlides, loop: isLoop, initialSlide } = swiper.params
+    const { slidesPerGroup, centeredSlides, slidesPerView, loop: isLoop, initialSlide } = swiper.params
     if (beforeInit && !isLoop && initialSlide > 0) {
       return
     }
-    const { addSlidesBefore, addSlidesAfter } = swiper.params.virtual
+    const { addSlidesBefore, addSlidesAfter, slidesPerViewAutoSlideSize } = swiper.params.virtual
     const {
       from: previousFrom,
       to: previousTo,
@@ -93,14 +93,30 @@ function Virtual(_ref) {
     let offsetProp
     if (swiper.rtlTranslate) offsetProp = 'right'
     else offsetProp = swiper.isHorizontal() ? 'left' : 'top'
+    let slidesPerViewNumeric
+    if (slidesPerView === 'auto') {
+      if (slidesPerViewAutoSlideSize) {
+        let swiperSize = swiper.size
+        if (!swiperSize) {
+          swiperSize = swiper.isHorizontal()
+            ? swiper.el.getBoundingClientRect().width
+            : swiper.el.getBoundingClientRect().height
+        }
+        slidesPerViewNumeric = Math.max(1, Math.ceil(swiperSize / slidesPerViewAutoSlideSize))
+      } else {
+        slidesPerViewNumeric = 1
+      }
+    } else {
+      slidesPerViewNumeric = slidesPerView
+    }
     let slidesAfter
     let slidesBefore
     if (centeredSlides) {
-      slidesAfter = Math.floor(slidesPerView / 2) + slidesPerGroup + addSlidesAfter
-      slidesBefore = Math.floor(slidesPerView / 2) + slidesPerGroup + addSlidesBefore
+      slidesAfter = Math.floor(slidesPerViewNumeric / 2) + slidesPerGroup + addSlidesAfter
+      slidesBefore = Math.floor(slidesPerViewNumeric / 2) + slidesPerGroup + addSlidesBefore
     } else {
-      slidesAfter = slidesPerView + (slidesPerGroup - 1) + addSlidesAfter
-      slidesBefore = (isLoop ? slidesPerView : slidesPerGroup) + addSlidesBefore
+      slidesAfter = slidesPerViewNumeric + (slidesPerGroup - 1) + addSlidesAfter
+      slidesBefore = (isLoop ? slidesPerViewNumeric : slidesPerGroup) + addSlidesBefore
     }
     let from = activeIndex - slidesBefore
     let to = activeIndex + slidesAfter
@@ -360,9 +376,8 @@ function Virtual(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/keyboard.mjs
-function Keyboard(_ref) {
-  let { swiper, extendParams, on, emit } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/keyboard.mjs
+function Keyboard({ swiper, extendParams, on, emit }) {
   const document2 = getDocument()
   const window2 = getWindow()
   swiper.keyboard = {
@@ -372,7 +387,8 @@ function Keyboard(_ref) {
     keyboard: {
       enabled: false,
       onlyInViewport: true,
-      pageUpDown: true
+      pageUpDown: true,
+      speed: void 0
     }
   })
   function handle(event2) {
@@ -445,20 +461,21 @@ function Keyboard(_ref) {
       }
       if (!inView) return void 0
     }
+    const speed = swiper.params.keyboard.speed
     if (swiper.isHorizontal()) {
       if (isPageUp || isPageDown || isArrowLeft || isArrowRight) {
         if (e.preventDefault) e.preventDefault()
         else e.returnValue = false
       }
-      if (((isPageDown || isArrowRight) && !rtl) || ((isPageUp || isArrowLeft) && rtl)) swiper.slideNext()
-      if (((isPageUp || isArrowLeft) && !rtl) || ((isPageDown || isArrowRight) && rtl)) swiper.slidePrev()
+      if (((isPageDown || isArrowRight) && !rtl) || ((isPageUp || isArrowLeft) && rtl)) swiper.slideNext(speed)
+      if (((isPageUp || isArrowLeft) && !rtl) || ((isPageDown || isArrowRight) && rtl)) swiper.slidePrev(speed)
     } else {
       if (isPageUp || isPageDown || isArrowUp || isArrowDown) {
         if (e.preventDefault) e.preventDefault()
         else e.returnValue = false
       }
-      if (isPageDown || isArrowDown) swiper.slideNext()
-      if (isPageUp || isArrowUp) swiper.slidePrev()
+      if (isPageDown || isArrowDown) swiper.slideNext(speed)
+      if (isPageUp || isArrowUp) swiper.slidePrev(speed)
     }
     emit('keyPress', kc)
     return void 0
@@ -489,9 +506,8 @@ function Keyboard(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/mousewheel.mjs
-function Mousewheel(_ref) {
-  let { swiper, extendParams, on, emit } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/mousewheel.mjs
+function Mousewheel({ swiper, extendParams, on, emit }) {
   const window2 = getWindow()
   extendParams({
     mousewheel: {
@@ -800,7 +816,7 @@ function Mousewheel(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/create-element-if-not-defined.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/shared/create-element-if-not-defined.mjs
 function createElementIfNotDefined(swiper, originalParams, params, checkProps) {
   if (swiper.params.createElements) {
     Object.keys(checkProps).forEach((key) => {
@@ -819,13 +835,14 @@ function createElementIfNotDefined(swiper, originalParams, params, checkProps) {
   return params
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/navigation.mjs
-function Navigation(_ref) {
-  let { swiper, extendParams, on, emit } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/navigation.mjs
+var arrowSvg = `<svg class="swiper-navigation-icon" width="11" height="20" viewBox="0 0 11 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.38296 20.0762C0.111788 19.805 0.111788 19.3654 0.38296 19.0942L9.19758 10.2796L0.38296 1.46497C0.111788 1.19379 0.111788 0.754138 0.38296 0.482966C0.654131 0.211794 1.09379 0.211794 1.36496 0.482966L10.4341 9.55214C10.8359 9.9539 10.8359 10.6053 10.4341 11.007L1.36496 20.0762C1.09379 20.3474 0.654131 20.3474 0.38296 20.0762Z" fill="currentColor"/></svg>`
+function Navigation({ swiper, extendParams, on, emit }) {
   extendParams({
     navigation: {
       nextEl: null,
       prevEl: null,
+      addIcons: true,
       hideOnClick: false,
       disabledClass: 'swiper-button-disabled',
       hiddenClass: 'swiper-button-hidden',
@@ -835,7 +852,8 @@ function Navigation(_ref) {
   })
   swiper.navigation = {
     nextEl: null,
-    prevEl: null
+    prevEl: null,
+    arrowSvg
   }
   function getEl(el) {
     let res
@@ -917,6 +935,12 @@ function Navigation(_ref) {
     prevEl = makeElementsArray(prevEl)
     const initButton = (el, dir) => {
       if (el) {
+        if (params.addIcons && el.matches('.swiper-button-next,.swiper-button-prev') && !el.querySelector('svg')) {
+          const tempEl = document.createElement('div')
+          setInnerHTML(tempEl, arrowSvg)
+          el.appendChild(tempEl.querySelector('svg'))
+          tempEl.remove()
+        }
         el.addEventListener('click', dir === 'next' ? onNextClick : onPrevClick)
       }
       if (!swiper.enabled && el) {
@@ -1015,20 +1039,16 @@ function Navigation(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/classes-to-selector.mjs
-function classesToSelector(classes) {
-  if (classes === void 0) {
-    classes = ''
-  }
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/shared/classes-to-selector.mjs
+function classesToSelector(classes = '') {
   return `.${classes
     .trim()
-    .replace(/([\.:!+\/()[\]])/g, '\\$1')
+    .replace(/([\.:!+\/()[\]#>~*^$|=,'"@{}\\])/g, '\\$1')
     .replace(/ /g, '.')}`
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/pagination.mjs
-function Pagination(_ref) {
-  let { swiper, extendParams, on, emit } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/pagination.mjs
+function Pagination({ swiper, extendParams, on, emit }) {
   const pfx = 'swiper-pagination'
   extendParams({
     pagination: {
@@ -1498,9 +1518,8 @@ function Pagination(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/scrollbar.mjs
-function Scrollbar(_ref) {
-  let { swiper, extendParams, on, emit } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/scrollbar.mjs
+function Scrollbar({ swiper, extendParams, on, emit }) {
   const document2 = getDocument()
   let isTouched = false
   let timeout = null
@@ -1834,9 +1853,8 @@ function Scrollbar(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/parallax.mjs
-function Parallax(_ref) {
-  let { swiper, extendParams, on } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/parallax.mjs
+function Parallax({ swiper, extendParams, on }) {
   extendParams({
     parallax: {
       enabled: false
@@ -1908,10 +1926,7 @@ function Parallax(_ref) {
       })
     })
   }
-  const setTransition = function (duration) {
-    if (duration === void 0) {
-      duration = swiper.params.speed
-    }
+  const setTransition = (duration = swiper.params.speed) => {
     const { el, hostEl } = swiper
     const elements = [...el.querySelectorAll(elementsSelector)]
     if (swiper.isElement) {
@@ -1942,9 +1957,8 @@ function Parallax(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/zoom.mjs
-function Zoom(_ref) {
-  let { swiper, extendParams, on, emit } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/zoom.mjs
+function Zoom({ swiper, extendParams, on, emit }) {
   const window2 = getWindow()
   extendParams({
     zoom: {
@@ -2396,6 +2410,7 @@ function Zoom(_ref) {
       }
     }
     if (!gesture.imageEl || !gesture.imageWrapEl) return
+    gesture.maxRatio = getMaxRatio()
     if (swiper.params.cssMode) {
       swiper.wrapperEl.style.overflow = 'hidden'
       swiper.wrapperEl.style.touchAction = 'none'
@@ -2507,6 +2522,7 @@ function Zoom(_ref) {
       }
     }
     if (!gesture.imageEl || !gesture.imageWrapEl) return
+    gesture.maxRatio = getMaxRatio()
     if (swiper.params.cssMode) {
       swiper.wrapperEl.style.overflow = ''
       swiper.wrapperEl.style.touchAction = ''
@@ -2627,9 +2643,8 @@ function Zoom(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/controller.mjs
-function Controller(_ref) {
-  let { swiper, extendParams, on } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/controller.mjs
+function Controller({ swiper, extendParams, on }) {
   extendParams({
     controller: {
       control: void 0,
@@ -2802,9 +2817,8 @@ function Controller(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/a11y.mjs
-function A11y(_ref) {
-  let { swiper, extendParams, on } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/a11y.mjs
+function A11y({ swiper, extendParams, on }) {
   extendParams({
     a11y: {
       enabled: true,
@@ -2821,7 +2835,8 @@ function A11y(_ref) {
       itemRoleDescriptionMessage: null,
       slideRole: 'group',
       id: null,
-      scrollOnFocus: true
+      scrollOnFocus: true,
+      wrapperLiveRegion: true
     }
   })
   swiper.a11y = {
@@ -2836,10 +2851,7 @@ function A11y(_ref) {
     if (notification.length === 0) return
     setInnerHTML(notification, message)
   }
-  function getRandomNumber(size) {
-    if (size === void 0) {
-      size = 16
-    }
+  function getRandomNumber(size = 16) {
     const randomChar = () => Math.round(16 * Math.random()).toString(16)
     return 'x'.repeat(size).replace(/x/g, randomChar)
   }
@@ -3022,7 +3034,10 @@ function A11y(_ref) {
     const slideEl = e.target.closest(`.${swiper.params.slideClass}, swiper-slide`)
     if (!slideEl || !swiper.slides.includes(slideEl)) return
     focusTargetSlideEl = slideEl
-    const isActive = swiper.slides.indexOf(slideEl) === swiper.activeIndex
+    const isVirtual = swiper.virtual && swiper.params.virtual.enabled
+    const isActive =
+      (isVirtual ? parseInt(slideEl.getAttribute('data-swiper-slide-index'), 10) : swiper.slides.indexOf(slideEl)) ===
+      swiper.activeIndex
     const isVisible =
       swiper.params.watchSlidesProgress && swiper.visibleSlides && swiper.visibleSlides.includes(slideEl)
     if (isActive || isVisible) return
@@ -3036,6 +3051,8 @@ function A11y(_ref) {
       if (preventFocusHandler) return
       if (swiper.params.loop) {
         swiper.slideToLoop(swiper.getSlideIndexWhenGrid(parseInt(slideEl.getAttribute('data-swiper-slide-index'))), 0)
+      } else if (isVirtual) {
+        swiper.slideTo(swiper.getSlideIndexWhenGrid(parseInt(slideEl.getAttribute('data-swiper-slide-index'), 10)), 0)
       } else {
         swiper.slideTo(swiper.getSlideIndexWhenGrid(swiper.slides.indexOf(slideEl)), 0)
       }
@@ -3076,9 +3093,11 @@ function A11y(_ref) {
     }
     const wrapperEl = swiper.wrapperEl
     const wrapperId = params.id || wrapperEl.getAttribute('id') || `swiper-wrapper-${getRandomNumber(16)}`
-    const live = swiper.params.autoplay && swiper.params.autoplay.enabled ? 'off' : 'polite'
     addElId(wrapperEl, wrapperId)
-    addElLive(wrapperEl, live)
+    if (params.wrapperLiveRegion) {
+      const live = swiper.params.autoplay && swiper.params.autoplay.enabled ? 'off' : 'polite'
+      addElLive(wrapperEl, live)
+    }
     initSlides()
     let { nextEl, prevEl } = swiper.navigation ? swiper.navigation : {}
     nextEl = makeElementsArray(nextEl)
@@ -3097,7 +3116,6 @@ function A11y(_ref) {
     }
     const document2 = getDocument()
     document2.addEventListener('visibilitychange', onVisibilityChange)
-    swiper.el.addEventListener('focus', handleFocus, true)
     swiper.el.addEventListener('focus', handleFocus, true)
     swiper.el.addEventListener('pointerdown', handlePointerDown, true)
     swiper.el.addEventListener('pointerup', handlePointerUp, true)
@@ -3154,9 +3172,8 @@ function A11y(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/history.mjs
-function History(_ref) {
-  let { swiper, extendParams, on } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/history.mjs
+function History({ swiper, extendParams, on }) {
   extendParams({
     history: {
       enabled: false,
@@ -3310,9 +3327,8 @@ function History(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/hash-navigation.mjs
-function HashNavigation(_ref) {
-  let { swiper, extendParams, emit, on } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/hash-navigation.mjs
+function HashNavigation({ swiper, extendParams, emit, on }) {
   let initialized = false
   const document2 = getDocument()
   const window2 = getWindow()
@@ -3408,9 +3424,8 @@ function HashNavigation(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/autoplay.mjs
-function Autoplay(_ref) {
-  let { swiper, extendParams, on, emit, params } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/autoplay.mjs
+function Autoplay({ swiper, extendParams, on, emit, params }) {
   swiper.autoplay = {
     running: false,
     paused: false,
@@ -3437,7 +3452,6 @@ function Autoplay(_ref) {
   let isTouched
   let pausedByTouch
   let touchStartTimeout
-  let slideChanged
   let pausedByInteraction
   let pausedByPointerEnter
   function onTransitionEnd(e) {
@@ -3477,18 +3491,23 @@ function Autoplay(_ref) {
     const currentSlideDelay = parseInt(activeSlideEl.getAttribute('data-swiper-autoplay'), 10)
     return currentSlideDelay
   }
+  const getTotalDelay = () => {
+    let totalDelay = swiper.params.autoplay.delay
+    const currentSlideDelay = getSlideDelay()
+    if (!Number.isNaN(currentSlideDelay) && currentSlideDelay > 0) {
+      totalDelay = currentSlideDelay
+    }
+    return totalDelay
+  }
   const run = (delayForce) => {
     if (swiper.destroyed || !swiper.autoplay.running) return
     cancelAnimationFrame(raf)
     calcTimeLeft()
-    let delay = typeof delayForce === 'undefined' ? swiper.params.autoplay.delay : delayForce
-    autoplayDelayTotal = swiper.params.autoplay.delay
-    autoplayDelayCurrent = swiper.params.autoplay.delay
-    const currentSlideDelay = getSlideDelay()
-    if (!Number.isNaN(currentSlideDelay) && currentSlideDelay > 0 && typeof delayForce === 'undefined') {
-      delay = currentSlideDelay
-      autoplayDelayTotal = currentSlideDelay
-      autoplayDelayCurrent = currentSlideDelay
+    let delay = delayForce
+    if (typeof delay === 'undefined') {
+      delay = getTotalDelay()
+      autoplayDelayTotal = delay
+      autoplayDelayCurrent = delay
     }
     autoplayTimeLeft = delay
     const speed = swiper.params.speed
@@ -3558,15 +3577,11 @@ function Autoplay(_ref) {
     }
     swiper.autoplay.paused = true
     if (reset) {
-      if (slideChanged) {
-        autoplayTimeLeft = swiper.params.autoplay.delay
-      }
-      slideChanged = false
       proceed()
       return
     }
     const delay = autoplayTimeLeft || swiper.params.autoplay.delay
-    autoplayTimeLeft = delay - (/* @__PURE__ */ new Date().getTime() - autoplayStartTime)
+    autoplayTimeLeft = delay - /* @__PURE__ */ (new Date().getTime() - autoplayStartTime)
     if (swiper.isEnd && autoplayTimeLeft < 0 && !swiper.params.loop) return
     if (autoplayTimeLeft < 0) autoplayTimeLeft = 0
     proceed()
@@ -3693,7 +3708,10 @@ function Autoplay(_ref) {
   })
   on('slideChange', () => {
     if (swiper.destroyed || !swiper.autoplay.running) return
-    slideChanged = true
+    if (swiper.autoplay.paused) {
+      autoplayTimeLeft = getTotalDelay()
+      autoplayDelayTotal = getTotalDelay()
+    }
   })
   Object.assign(swiper.autoplay, {
     start,
@@ -3703,9 +3721,8 @@ function Autoplay(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/thumbs.mjs
-function Thumb(_ref) {
-  let { swiper, extendParams, on } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/thumbs.mjs
+function Thumb({ swiper, extendParams, on }) {
   extendParams({
     thumbs: {
       swiper: null,
@@ -3719,6 +3736,11 @@ function Thumb(_ref) {
   let swiperCreated = false
   swiper.thumbs = {
     swiper: null
+  }
+  function isVirtualEnabled() {
+    const thumbsSwiper = swiper.thumbs.swiper
+    if (!thumbsSwiper || thumbsSwiper.destroyed) return false
+    return thumbsSwiper.params.virtual && thumbsSwiper.params.virtual.enabled
   }
   function onThumbClick() {
     const thumbsSwiper = swiper.thumbs.swiper
@@ -3770,15 +3792,18 @@ function Thumb(_ref) {
     }
     swiper.thumbs.swiper.el.classList.add(swiper.params.thumbs.thumbsContainerClass)
     swiper.thumbs.swiper.on('tap', onThumbClick)
+    if (isVirtualEnabled()) {
+      swiper.thumbs.swiper.on('virtualUpdate', () => {
+        update(false, {
+          autoScroll: false
+        })
+      })
+    }
     return true
   }
-  function update(initial) {
+  function update(initial, p) {
     const thumbsSwiper = swiper.thumbs.swiper
     if (!thumbsSwiper || thumbsSwiper.destroyed) return
-    const slidesPerView =
-      thumbsSwiper.params.slidesPerView === 'auto'
-        ? thumbsSwiper.slidesPerViewDynamic()
-        : thumbsSwiper.params.slidesPerView
     let thumbsToActivate = 1
     const thumbActiveClass = swiper.params.thumbs.slideThumbActiveClass
     if (swiper.params.slidesPerView > 1 && !swiper.params.centeredSlides) {
@@ -3789,7 +3814,7 @@ function Thumb(_ref) {
     }
     thumbsToActivate = Math.floor(thumbsToActivate)
     thumbsSwiper.slides.forEach((slideEl) => slideEl.classList.remove(thumbActiveClass))
-    if (thumbsSwiper.params.loop || (thumbsSwiper.params.virtual && thumbsSwiper.params.virtual.enabled)) {
+    if (thumbsSwiper.params.loop || isVirtualEnabled()) {
       for (let i = 0; i < thumbsToActivate; i += 1) {
         elementChildren(thumbsSwiper.slidesEl, `[data-swiper-slide-index="${swiper.realIndex + i}"]`).forEach(
           (slideEl) => {
@@ -3804,6 +3829,17 @@ function Thumb(_ref) {
         }
       }
     }
+    if ((p == null ? void 0 : p.autoScroll) ?? true) {
+      autoScroll(initial ? 0 : void 0)
+    }
+  }
+  function autoScroll(slideSpeed) {
+    const thumbsSwiper = swiper.thumbs.swiper
+    if (!thumbsSwiper || thumbsSwiper.destroyed) return
+    const slidesPerView =
+      thumbsSwiper.params.slidesPerView === 'auto'
+        ? thumbsSwiper.slidesPerViewDynamic()
+        : thumbsSwiper.params.slidesPerView
     const autoScrollOffset = swiper.params.thumbs.autoScrollOffset
     const useOffset = autoScrollOffset && !thumbsSwiper.params.loop
     if (swiper.realIndex !== thumbsSwiper.realIndex || useOffset) {
@@ -3831,7 +3867,7 @@ function Thumb(_ref) {
             newThumbsIndex = newThumbsIndex + Math.floor(slidesPerView / 2) - 1
           }
         } else if (newThumbsIndex > currentThumbsIndex && thumbsSwiper.params.slidesPerGroup === 1);
-        thumbsSwiper.slideTo(newThumbsIndex, initial ? 0 : void 0)
+        thumbsSwiper.slideTo(newThumbsIndex, slideSpeed)
       }
     }
   }
@@ -3894,9 +3930,8 @@ function Thumb(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/free-mode.mjs
-function freeMode(_ref) {
-  let { swiper, extendParams, emit, once } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/free-mode.mjs
+function freeMode({ swiper, extendParams, emit, once }) {
   extendParams({
     freeMode: {
       enabled: false,
@@ -3933,8 +3968,7 @@ function freeMode(_ref) {
       time: now()
     })
   }
-  function onTouchEnd(_ref2) {
-    let { currentPos } = _ref2
+  function onTouchEnd({ currentPos }) {
     if (swiper.params.cssMode) return
     const { params, wrapperEl, rtlTranslate: rtl, snapGrid, touchEventsData: data } = swiper
     const touchEndTime = now()
@@ -4104,9 +4138,8 @@ function freeMode(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/grid.mjs
-function Grid(_ref) {
-  let { swiper, extendParams, on } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/grid.mjs
+function Grid({ swiper, extendParams, on }) {
   extendParams({
     grid: {
       rows: 1,
@@ -4239,7 +4272,7 @@ function Grid(_ref) {
   }
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/manipulation.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/manipulation.mjs
 function appendSlide(slides) {
   const swiper = this
   const { params, slidesEl } = swiper
@@ -4398,8 +4431,7 @@ function removeAllSlides() {
   }
   swiper.removeSlide(slidesIndexes)
 }
-function Manipulation(_ref) {
-  let { swiper } = _ref
+function Manipulation({ swiper }) {
   Object.assign(swiper, {
     appendSlide: appendSlide.bind(swiper),
     prependSlide: prependSlide.bind(swiper),
@@ -4409,7 +4441,7 @@ function Manipulation(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/effect-init.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/shared/effect-init.mjs
 function effectInit(params) {
   const {
     effect,
@@ -4469,7 +4501,7 @@ function effectInit(params) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/effect-target.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/shared/effect-target.mjs
 function effectTarget(effectParams, slideEl) {
   const transformEl = getSlideTransformEl(slideEl)
   if (transformEl !== slideEl) {
@@ -4479,9 +4511,8 @@ function effectTarget(effectParams, slideEl) {
   return transformEl
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/effect-virtual-transition-end.mjs
-function effectVirtualTransitionEnd(_ref) {
-  let { swiper, duration, transformElements, allSlides } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/shared/effect-virtual-transition-end.mjs
+function effectVirtualTransitionEnd({ swiper, duration, transformElements, allSlides }) {
   const { activeIndex } = swiper
   const getSlide = (el) => {
     if (!el.parentElement) {
@@ -4517,9 +4548,8 @@ function effectVirtualTransitionEnd(_ref) {
   }
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/effect-fade.mjs
-function EffectFade(_ref) {
-  let { swiper, extendParams, on } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/effect-fade.mjs
+function EffectFade({ swiper, extendParams, on }) {
   extendParams({
     fadeEffect: {
       crossFade: false
@@ -4574,9 +4604,8 @@ function EffectFade(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/effect-cube.mjs
-function EffectCube(_ref) {
-  let { swiper, extendParams, on } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/effect-cube.mjs
+function EffectCube({ swiper, extendParams, on }) {
   extendParams({
     cubeEffect: {
       slideShadows: true,
@@ -4752,7 +4781,7 @@ function EffectCube(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/shared/create-shadow.mjs
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/shared/create-shadow.mjs
 function createShadow(suffix, slideEl, side) {
   const shadowClass = `swiper-slide-shadow${side ? `-${side}` : ''}${suffix ? ` swiper-slide-shadow-${suffix}` : ''}`
   const shadowContainer = getSlideTransformEl(slideEl)
@@ -4764,9 +4793,8 @@ function createShadow(suffix, slideEl, side) {
   return shadowEl
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/effect-flip.mjs
-function EffectFlip(_ref) {
-  let { swiper, extendParams, on } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/effect-flip.mjs
+function EffectFlip({ swiper, extendParams, on }) {
   extendParams({
     flipEffect: {
       slideShadows: true,
@@ -4867,9 +4895,8 @@ function EffectFlip(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/effect-coverflow.mjs
-function EffectCoverflow(_ref) {
-  let { swiper, extendParams, on } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/effect-coverflow.mjs
+function EffectCoverflow({ swiper, extendParams, on }) {
   extendParams({
     coverflowEffect: {
       rotate: 50,
@@ -4958,9 +4985,8 @@ function EffectCoverflow(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/effect-creative.mjs
-function EffectCreative(_ref) {
-  let { swiper, extendParams, on } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/effect-creative.mjs
+function EffectCreative({ swiper, extendParams, on }) {
   extendParams({
     creativeEffect: {
       limitProgress: 1,
@@ -5091,9 +5117,8 @@ function EffectCreative(_ref) {
   })
 }
 
-// node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/effect-cards.mjs
-function EffectCards(_ref) {
-  let { swiper, extendParams, on } = _ref
+// node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/effect-cards.mjs
+function EffectCards({ swiper, extendParams, on }) {
   extendParams({
     cardsEffect: {
       slideShadows: true,
@@ -5142,7 +5167,7 @@ function EffectCards(_ref) {
         rotate += -28 * progress * subProgress
         scale += -0.5 * subProgress
         tXAdd += 96 * subProgress
-        tY = `${-25 * subProgress * Math.abs(progress)}%`
+        tY = `${(params.rotate || swiper.isHorizontal() ? -25 : 0) * subProgress * Math.abs(progress)}%`
       }
       if (progress < 0) {
         tX = `calc(${tX}px ${rtl ? '-' : '+'} (${tXAdd * Math.abs(progress)}%))`
