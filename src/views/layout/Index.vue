@@ -600,9 +600,7 @@ const onBreakpoint = (broken: boolean) => {
           <Breadcrumb :routes="routes" style="margin: 16px 0" />
           <div :style="{ background: '#fff', padding: '24px', minHeight: '380px' }">Content</div>
         </LayoutContent>
-        <LayoutFooter :style="{ textAlign: 'center' }">
-          Vue Amazing UI ©2023 Created by the Muse Catcher
-        </LayoutFooter>
+        <LayoutFooter :style="{ textAlign: 'center' }"> Vue Amazing UI ©2023 Created by the Muse Catcher </LayoutFooter>
       </Layout>
     </div>
   </div>
