@@ -22,14 +22,11 @@
     // "noUnusedLocals": true,
     // "noUnusedParameters": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "#/*": ["types/*"],
-      "components/*": ["components/*"],
-      "images/*": ["src/assets/images/*"],
-      "less/*": ["src/assets/less/*"],
-      "utils/*": ["src/utils/*"]
+      "@/*": ["./src/*"],
+      "#/*": ["./types/*"],
+      "components/*": ["./components/*"],
+      "less/*": ["./src/assets/less/*"]
     }
   }
 }
