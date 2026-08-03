@@ -19,6 +19,10 @@ coverage
 *.local
 .npmrc
 
+# vitepress cache and build output
+docs/.vitepress/cache
+docs/.vitepress/dist
+
 /cypress/videos/
 /cypress/screenshots/
 
