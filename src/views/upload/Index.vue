@@ -70,7 +70,7 @@ function onCustomRequest(file: File) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       // 模拟接口调用返回 name 和 url
-      let res
+      let res: { name: string; url: string }
       if (file.type === 'application/pdf') {
         res = {
           name: 'Markdown.pdf',
@@ -99,7 +99,7 @@ function onCustomSliceUpload(file: File) {
       console.timeEnd('sliceFile')
       setTimeout(() => {
         // 模拟接口调用返回 name 和 url
-        let res
+        let res: { name: string; url: string }
         if (file.type === 'application/pdf') {
           res = {
             name: 'Markdown.pdf',

@@ -65,7 +65,9 @@
     "build:browser": "vite build -- dir=dist f=iife",
     "build-only": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "lint": "eslint . --fix",
+    "lint:check": "eslint .",
+    "check": "run-s lint:check type-check",
     "prepare": "husky"
   },
   "dependencies": {
@@ -117,6 +119,10 @@
     "vue-tsc": "^3.2.5"
   },
   "license": "MIT",
+  "engines": {
+    "node": ">=20.19.0",
+    "pnpm": ">=9"
+  },
   "bugs": {
     "url": "https://github.com/themusecatcher/vue-amazing-ui/issues"
   },
