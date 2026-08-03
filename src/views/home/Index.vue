@@ -126,11 +126,11 @@ const componentsTotal = computed(() => {
 })
 function onOpenWindow() {
   // 打开一个新的窗口，并导航到指定的URL
-  // let newWindow = window.open() // 在当前浏览器窗口中打开一个空的标签页
-  // let newWindow = window.open('http://localhost:9000/backtop') // 在当前浏览器窗口中打开新的标签页
-  // let newWindow = window.open('http://localhost:9000/backtop', 'Backtop') // 在当前浏览器窗口中打开新的标签页
+  // const newWindow = window.open() // 在当前浏览器窗口中打开一个空的标签页
+  // const newWindow = window.open('http://localhost:9000/backtop') // 在当前浏览器窗口中打开新的标签页
+  // const newWindow = window.open('http://localhost:9000/backtop', 'Backtop') // 在当前浏览器窗口中打开新的标签页
   // 使用弹窗形式打开新的标签页，不指定 left，top 时，默认紧靠电脑桌面左上角
-  let newWindow = window.open('http://localhost:9000/backtop', '_blank', 'popup,width=800,height=600')
+  const newWindow = window.open('http://localhost:9000/backtop', '_blank', 'popup,width=800,height=600')
   // newWindow?.resizeTo(800, 600)
   // newWindow?.moveTo(100, 100)
 }
