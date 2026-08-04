@@ -1,0 +1,3 @@
+# 在 git push 前触发，运行类型检查，确保推送到远程的代码类型正确
+# type-check 约 9s，放在 push 前而非 commit 前，避免拖慢碎片化提交
+pnpm type-check

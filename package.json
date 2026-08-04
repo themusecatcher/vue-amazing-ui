@@ -66,6 +66,8 @@
     "build-only": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "lint:check": "eslint .",
+    "check": "run-s lint:check type-check",
     "prepare": "husky"
   },
   "dependencies": {
