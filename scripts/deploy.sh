@@ -5,6 +5,12 @@ set -e
 
 commitDesc=$1
 
+# 强制要求传入语义化的提交描述，避免产生无信息量的 commit
+if [ -z "$commitDesc" ]; then
+  echo "❌ 缺少提交描述。用法: pnpm docs:deploy \"<type>: <描述>\"（如 pnpm docs:deploy \"docs: update guide\"）"
+  exit 1
+fi
+
 # 重新打包组件库
 pnpm build
 
@@ -18,7 +24,7 @@ cd docs/.vitepress/dist
 git init
 git branch -M main
 git add .
-git commit -m 'deploy'
+git commit -m 'docs: deploy site'
 
 # 部署到 https://<username>.github.io/<repo>
 git push -f git@github.com:themusecatcher/vue-amazing-ui.git main:gh-pages
@@ -26,12 +32,7 @@ git push -f git@github.com:themusecatcher/vue-amazing-ui.git main:gh-pages
 # 提交所有代码到 github
 cd ../../../
 git add .
-
-if [ -z "$commitDesc" ]; then
-  git commit -m 'feat: update components library'
-else
-  git commit -m "$commitDesc"
-fi
+git commit -m "$commitDesc"
 
 git push
 
