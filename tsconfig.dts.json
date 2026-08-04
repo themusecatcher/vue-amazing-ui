@@ -13,10 +13,9 @@
     "removeComments": true,
     "isolatedModules": true,
     "composite": true,
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "baseUrl": ".",
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.dts.tsbuildinfo",
     "paths": {
-      "components/*": ["components/*"],
+      "components/*": ["./components/*"],
     }
   }
 }
