@@ -32,6 +32,16 @@
 - naive 组件源码：`{REF_NAIVE_LOCAL}/src/{组件名}/`
 - 找API 定义、Props 类型、事件回调参数结构时，直接读源码的 types 文件最准
 
+## Demo 源码定位
+
+> **对齐范围必须包含 demo**：demo 定义了「用户如何感知和使用」这个组件，是演示页/文档用例的对齐基准。
+
+- antdv demo：`{REF_ANTDV_LOCAL}/components/{组件名}/demo/`（每个 `.vue` 文件一个用例）
+- naive demo：`{REF_NAIVE_LOCAL}/src/{组件名}/demos/`（enUS/zhCN 各一份）
+- antdv 文档页（成品效果）：antdv 官网 `https://www.antdv.com/components/{组件名}-cn/`
+- 对齐方式：先读 demo 源码理解数据和交互方式，再浏览器打开官网对照成品效果
+- **每个 antdv demo 在演示页中至少有一条对应用例**（覆盖或显式标记暂不覆盖）
+
 ## 注意
 
 - 参考库版本：antdv `^4.2.6`、naive `^2.44.0`（devDependencies），对齐时以此版本为准

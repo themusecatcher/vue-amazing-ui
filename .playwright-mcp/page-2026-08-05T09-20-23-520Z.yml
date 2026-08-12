@@ -1,0 +1,641 @@
+- generic [active] [ref=f6e1]:
+  - generic [ref=f6e4]:
+    - list [ref=f6e14]:
+      - listitem "首页" [ref=f6e15] [cursor=pointer]:
+        - link "首页 Home" [ref=f6e17]:
+          - /url: /home
+      - listitem "警告提示" [ref=f6e18] [cursor=pointer]:
+        - link "警告提示 Alert" [ref=f6e20]:
+          - /url: /alert
+      - listitem "头像" [ref=f6e21] [cursor=pointer]:
+        - link "头像 Avatar" [ref=f6e23]:
+          - /url: /avatar
+      - listitem "回到顶部" [ref=f6e24] [cursor=pointer]:
+        - link "回到顶部 BackTop" [ref=f6e26]:
+          - /url: /backTop
+      - listitem "徽标" [ref=f6e27] [cursor=pointer]:
+        - link "徽标 Badge" [ref=f6e29]:
+          - /url: /badge
+      - listitem "面包屑" [ref=f6e30] [cursor=pointer]:
+        - link "面包屑 Breadcrumb" [ref=f6e32]:
+          - /url: /breadcrumb
+      - listitem "按钮" [ref=f6e33] [cursor=pointer]:
+        - link "按钮 Button" [ref=f6e35]:
+          - /url: /button
+      - listitem "日历" [ref=f6e36] [cursor=pointer]:
+        - link "日历 Calendar" [ref=f6e38]:
+          - /url: /calendar
+      - listitem "卡片" [ref=f6e39] [cursor=pointer]:
+        - link "卡片 Card" [ref=f6e41]:
+          - /url: /card
+      - listitem "轮播图" [ref=f6e42] [cursor=pointer]:
+        - link "轮播图 Carousel" [ref=f6e44]:
+          - /url: /carousel
+      - listitem "级联选择" [ref=f6e45] [cursor=pointer]:
+        - link "级联选择 Cascader" [ref=f6e47]:
+          - /url: /cascader
+      - listitem "复选框" [ref=f6e48] [cursor=pointer]:
+        - link "复选框 Checkbox" [ref=f6e50]:
+          - /url: /checkbox
+      - listitem "折叠面板" [ref=f6e51] [cursor=pointer]:
+        - link "折叠面板 Collapse" [ref=f6e53]:
+          - /url: /collapse
+      - listitem "颜色选择器" [ref=f6e54] [cursor=pointer]:
+        - link "颜色选择器 ColorPicker" [ref=f6e56]:
+          - /url: /colorPicker
+      - listitem "全局化配置" [ref=f6e57] [cursor=pointer]:
+        - link "全局化配置 ConfigProvider" [ref=f6e59]:
+          - /url: /configProvider
+      - listitem "倒计时" [ref=f6e60] [cursor=pointer]:
+        - link "倒计时 Countdown" [ref=f6e62]:
+          - /url: /countdown
+      - listitem "日期选择" [ref=f6e63] [cursor=pointer]:
+        - link "日期选择 DatePicker" [ref=f6e65]:
+          - /url: /datePicker
+      - listitem "描述列表" [ref=f6e66] [cursor=pointer]:
+        - link "描述列表 Descriptions" [ref=f6e68]:
+          - /url: /descriptions
+      - listitem "对话框" [ref=f6e69] [cursor=pointer]:
+        - link "对话框 Dialog" [ref=f6e71]:
+          - /url: /dialog
+      - listitem "分割线" [ref=f6e72] [cursor=pointer]:
+        - link "分割线 Divider" [ref=f6e74]:
+          - /url: /divider
+      - listitem "抽屉" [ref=f6e75] [cursor=pointer]:
+        - link "抽屉 Drawer" [ref=f6e77]:
+          - /url: /drawer
+      - listitem "文本省略" [ref=f6e78] [cursor=pointer]:
+        - link "文本省略 Ellipsis" [ref=f6e80]:
+          - /url: /ellipsis
+      - listitem "空状态" [ref=f6e81] [cursor=pointer]:
+        - link "空状态 Empty" [ref=f6e83]:
+          - /url: /empty
+      - listitem "弹性布局" [ref=f6e84] [cursor=pointer]:
+        - link "弹性布局 Flex" [ref=f6e86]:
+          - /url: /flex
+      - listitem "浮动按钮" [ref=f6e87] [cursor=pointer]:
+        - link "浮动按钮 FloatButton" [ref=f6e89]:
+          - /url: /floatButton
+      - listitem "渐变文字" [ref=f6e90] [cursor=pointer]:
+        - link "渐变文字 GradientText" [ref=f6e92]:
+          - /url: /gradientText
+      - listitem "栅格" [ref=f6e93] [cursor=pointer]:
+        - link "栅格 Grid" [ref=f6e95]:
+          - /url: /grid
+      - listitem "高亮文本" [ref=f6e96] [cursor=pointer]:
+        - link "高亮文本 Highlight" [ref=f6e98]:
+          - /url: /highlight
+      - listitem "图片" [ref=f6e99] [cursor=pointer]:
+        - link "图片 Image" [ref=f6e101]:
+          - /url: /image
+      - listitem "输入框" [ref=f6e102] [cursor=pointer]:
+        - link "输入框 Input" [ref=f6e104]:
+          - /url: /input
+      - listitem "数字输入框" [ref=f6e105] [cursor=pointer]:
+        - link "数字输入框 InputNumber" [ref=f6e107]:
+          - /url: /inputNumber
+      - listitem "搜索框" [ref=f6e108] [cursor=pointer]:
+        - link "搜索框 InputSearch" [ref=f6e110]:
+          - /url: /inputSearch
+      - listitem "布局" [ref=f6e111] [cursor=pointer]:
+        - link "布局 Layout" [ref=f6e113]:
+          - /url: /layout
+      - listitem "列表" [ref=f6e114] [cursor=pointer]:
+        - link "列表 List" [ref=f6e116]:
+          - /url: /list
+      - listitem "加载条" [ref=f6e117] [cursor=pointer]:
+        - link "加载条 LoadingBar" [ref=f6e119]:
+          - /url: /loadingBar
+      - listitem "菜单" [ref=f6e120] [cursor=pointer]:
+        - link "菜单 Menu" [ref=f6e122]:
+          - /url: /menu
+      - listitem "全局提示" [ref=f6e123] [cursor=pointer]:
+        - link "全局提示 Message" [ref=f6e125]:
+          - /url: /message
+      - listitem "模态框" [ref=f6e126] [cursor=pointer]:
+        - link "模态框 Modal" [ref=f6e128]:
+          - /url: /modal
+      - listitem "通知提醒" [ref=f6e129] [cursor=pointer]:
+        - link "通知提醒 Notification" [ref=f6e131]:
+          - /url: /notification
+      - listitem "数值动画" [ref=f6e132] [cursor=pointer]:
+        - link "数值动画 NumberAnimation" [ref=f6e134]:
+          - /url: /numberAnimation
+      - listitem "分页" [ref=f6e135] [cursor=pointer]:
+        - link "分页 Pagination" [ref=f6e137]:
+          - /url: /pagination
+      - listitem "弹出确认" [ref=f6e138] [cursor=pointer]:
+        - link "弹出确认 Popconfirm" [ref=f6e140]:
+          - /url: /popconfirm
+      - listitem "气泡卡片" [ref=f6e141] [cursor=pointer]:
+        - link "气泡卡片 Popover" [ref=f6e143]:
+          - /url: /popover
+      - listitem "进度条" [ref=f6e144] [cursor=pointer]:
+        - link "进度条 Progress" [ref=f6e146]:
+          - /url: /progress
+      - listitem "二维码" [ref=f6e147] [cursor=pointer]:
+        - link "二维码 Qrcode" [ref=f6e149]:
+          - /url: /qrcode
+      - listitem "单选框" [ref=f6e150] [cursor=pointer]:
+        - link "单选框 Radio" [ref=f6e152]:
+          - /url: /radio
+      - listitem "评分" [ref=f6e153] [cursor=pointer]:
+        - link "评分 Rate" [ref=f6e155]:
+          - /url: /rate
+      - listitem "结果" [ref=f6e156] [cursor=pointer]:
+        - link "结果 Result" [ref=f6e158]:
+          - /url: /result
+      - listitem "滚动条" [ref=f6e159] [cursor=pointer]:
+        - link "滚动条 Scrollbar" [ref=f6e161]:
+          - /url: /scrollbar
+      - listitem "分段控制器" [ref=f6e162] [cursor=pointer]:
+        - link "分段控制器 Segmented" [ref=f6e164]:
+          - /url: /segmented
+      - listitem "选择器" [ref=f6e165] [cursor=pointer]:
+        - link "选择器 Select" [ref=f6e167]:
+          - /url: /select
+      - listitem "骨架屏" [ref=f6e168] [cursor=pointer]:
+        - link "骨架屏 Skeleton" [ref=f6e170]:
+          - /url: /skeleton
+      - listitem "滑动输入条" [ref=f6e171] [cursor=pointer]:
+        - link "滑动输入条 Slider" [ref=f6e173]:
+          - /url: /slider
+      - listitem "间距" [ref=f6e174] [cursor=pointer]:
+        - link "间距 Space" [ref=f6e176]:
+          - /url: /space
+      - listitem "加载中" [ref=f6e177] [cursor=pointer]:
+        - link "加载中 Spin" [ref=f6e179]:
+          - /url: /spin
+      - listitem "统计数值" [ref=f6e180] [cursor=pointer]:
+        - link "统计数值 Statistic" [ref=f6e182]:
+          - /url: /statistic
+      - listitem "步骤条" [ref=f6e183] [cursor=pointer]:
+        - link "步骤条 Steps" [ref=f6e185]:
+          - /url: /steps
+      - listitem "触摸滑动" [ref=f6e186] [cursor=pointer]:
+        - link "触摸滑动 Swiper" [ref=f6e188]:
+          - /url: /swiper
+      - listitem "开关" [ref=f6e189] [cursor=pointer]:
+        - link "开关 Switch" [ref=f6e191]:
+          - /url: /switch
+      - listitem "表格" [ref=f6e192] [cursor=pointer]:
+        - link "表格 Table" [ref=f6e194]:
+          - /url: /table
+      - listitem "标签页" [ref=f6e195] [cursor=pointer]:
+        - link "标签页 Tabs" [ref=f6e197]:
+          - /url: /tabs
+      - listitem "标签" [ref=f6e198] [cursor=pointer]:
+        - link "标签 Tag" [ref=f6e200]:
+          - /url: /tag
+      - listitem "文字滚动" [ref=f6e201] [cursor=pointer]:
+        - link "文字滚动 TextScroll" [ref=f6e203]:
+          - /url: /textScroll
+      - listitem "文本域" [ref=f6e204] [cursor=pointer]:
+        - link "文本域 Textarea" [ref=f6e206]:
+          - /url: /textarea
+      - listitem "时间轴" [ref=f6e207] [cursor=pointer]:
+        - link "时间轴 Timeline" [ref=f6e209]:
+          - /url: /timeline
+      - listitem "时间选择器" [ref=f6e210] [cursor=pointer]:
+        - link "时间选择器 Timepicker" [ref=f6e212]:
+          - /url: /timepicker
+      - listitem "文字提示" [ref=f6e213] [cursor=pointer]:
+        - link "文字提示 Tooltip" [ref=f6e215]:
+          - /url: /tooltip
+      - listitem "上传" [ref=f6e216] [cursor=pointer]:
+        - link "上传 Upload" [ref=f6e218]:
+          - /url: /upload
+      - listitem "播放器" [ref=f6e219] [cursor=pointer]:
+        - link "播放器 Video" [ref=f6e221]:
+          - /url: /video
+      - listitem "瀑布流" [ref=f6e222] [cursor=pointer]:
+        - link "瀑布流 Waterfall" [ref=f6e224]:
+          - /url: /waterfall
+      - listitem "水印" [ref=f6e225] [cursor=pointer]:
+        - link "水印 Watermark" [ref=f6e227]:
+          - /url: /watermark
+    - generic [ref=f6e233]:
+      - heading "Menu 菜单" [level=1] [ref=f6e234]
+      - heading "内嵌菜单" [level=2] [ref=f6e235]
+      - heading "垂直菜单，子菜单内嵌在菜单区域，通过 openKeys 与 selectedKeys 双向绑定控制展开与选中" [level=3] [ref=f6e236]
+      - list [ref=f6e237]:
+        - listitem [ref=f6e238]:
+          - generic [ref=f6e239] [cursor=pointer]:
+            - img "mail" [ref=f6e240]
+            - generic [ref=f6e243]: Navigation One
+          - list [ref=f6e247]:
+            - listitem [ref=f6e248]:
+              - generic [ref=f6e249]: Item 1
+              - list [ref=f6e250]:
+                - listitem [ref=f6e251] [cursor=pointer]:
+                  - generic [ref=f6e252]: Option 1
+                - listitem [ref=f6e253] [cursor=pointer]:
+                  - generic [ref=f6e254]: Option 2
+            - listitem [ref=f6e255]:
+              - generic [ref=f6e256]: Item 2
+              - list [ref=f6e257]:
+                - listitem [ref=f6e258] [cursor=pointer]:
+                  - generic [ref=f6e259]: Option 3
+                - listitem [ref=f6e260] [cursor=pointer]:
+                  - generic [ref=f6e261]: Option 4
+        - listitem [ref=f6e262]:
+          - generic [ref=f6e263] [cursor=pointer]:
+            - img "appstore" [ref=f6e264]
+            - generic [ref=f6e267]: Navigation Two
+        - listitem [ref=f6e271]
+        - listitem [ref=f6e272]:
+          - generic [ref=f6e273] [cursor=pointer]:
+            - img "setting" [ref=f6e274]
+            - generic [ref=f6e277]: Navigation Three
+      - heading "只展开当前父级菜单" [level=2] [ref=f6e281]
+      - heading "通过监听 openChange 事件手动控制 openKeys，展开一个顶层子菜单时自动收起其他" [level=3] [ref=f6e282]
+      - list [ref=f6e283]:
+        - listitem [ref=f6e284]:
+          - generic [ref=f6e285] [cursor=pointer]:
+            - img "mail" [ref=f6e286]
+            - generic [ref=f6e289]: Navigation One
+          - list [ref=f6e293]:
+            - listitem [ref=f6e294]:
+              - generic [ref=f6e295]: Item 1
+              - list [ref=f6e296]:
+                - listitem [ref=f6e297] [cursor=pointer]:
+                  - generic [ref=f6e298]: Option 1
+                - listitem [ref=f6e299] [cursor=pointer]:
+                  - generic [ref=f6e300]: Option 2
+            - listitem [ref=f6e301]:
+              - generic [ref=f6e302]: Item 2
+              - list [ref=f6e303]:
+                - listitem [ref=f6e304] [cursor=pointer]:
+                  - generic [ref=f6e305]: Option 3
+                - listitem [ref=f6e306] [cursor=pointer]:
+                  - generic [ref=f6e307]: Option 4
+        - listitem [ref=f6e308]:
+          - generic [ref=f6e309] [cursor=pointer]:
+            - img "appstore" [ref=f6e310]
+            - generic [ref=f6e313]: Navigation Two
+        - listitem [ref=f6e317]
+        - listitem [ref=f6e318]:
+          - generic [ref=f6e319] [cursor=pointer]:
+            - img "setting" [ref=f6e320]
+            - generic [ref=f6e323]: Navigation Three
+      - heading "主题" [level=2] [ref=f6e327]
+      - heading "内建 light 和 dark 两套主题，通过 theme 切换" [level=3] [ref=f6e328]
+      - generic [ref=f6e329]:
+        - list [ref=f6e330]:
+          - listitem [ref=f6e331]:
+            - generic [ref=f6e332] [cursor=pointer]:
+              - img "mail" [ref=f6e333]
+              - generic [ref=f6e336]: Navigation One
+            - list [ref=f6e340]:
+              - listitem [ref=f6e341]:
+                - generic [ref=f6e342]: Item 1
+                - list [ref=f6e343]:
+                  - listitem [ref=f6e344] [cursor=pointer]:
+                    - generic [ref=f6e345]: Option 1
+                  - listitem [ref=f6e346] [cursor=pointer]:
+                    - generic [ref=f6e347]: Option 2
+              - listitem [ref=f6e348]:
+                - generic [ref=f6e349]: Item 2
+                - list [ref=f6e350]:
+                  - listitem [ref=f6e351] [cursor=pointer]:
+                    - generic [ref=f6e352]: Option 3
+                  - listitem [ref=f6e353] [cursor=pointer]:
+                    - generic [ref=f6e354]: Option 4
+          - listitem [ref=f6e355]:
+            - generic [ref=f6e356] [cursor=pointer]:
+              - img "appstore" [ref=f6e357]
+              - generic [ref=f6e360]: Navigation Two
+          - listitem [ref=f6e364]
+          - listitem [ref=f6e365]:
+            - generic [ref=f6e366] [cursor=pointer]:
+              - img "setting" [ref=f6e367]
+              - generic [ref=f6e370]: Navigation Three
+        - list [ref=f6e374]:
+          - listitem [ref=f6e375]:
+            - generic [ref=f6e376] [cursor=pointer]:
+              - img "mail" [ref=f6e377]
+              - generic [ref=f6e380]: Navigation One
+            - list [ref=f6e384]:
+              - listitem [ref=f6e385]:
+                - generic [ref=f6e386]: Item 1
+                - list [ref=f6e387]:
+                  - listitem [ref=f6e388] [cursor=pointer]:
+                    - generic [ref=f6e389]: Option 1
+                  - listitem [ref=f6e390] [cursor=pointer]:
+                    - generic [ref=f6e391]: Option 2
+              - listitem [ref=f6e392]:
+                - generic [ref=f6e393]: Item 2
+                - list [ref=f6e394]:
+                  - listitem [ref=f6e395] [cursor=pointer]:
+                    - generic [ref=f6e396]: Option 3
+                  - listitem [ref=f6e397] [cursor=pointer]:
+                    - generic [ref=f6e398]: Option 4
+          - listitem [ref=f6e399]:
+            - generic [ref=f6e400] [cursor=pointer]:
+              - img "appstore" [ref=f6e401]
+              - generic [ref=f6e404]: Navigation Two
+          - listitem [ref=f6e408]
+          - listitem [ref=f6e409]:
+            - generic [ref=f6e410] [cursor=pointer]:
+              - img "setting" [ref=f6e411]
+              - generic [ref=f6e414]: Navigation Three
+      - heading "自定义缩进" [level=2] [ref=f6e418]
+      - heading "通过 inlineIndent 自定义每一级菜单的缩进宽度，单位 px（默认 24）" [level=3] [ref=f6e419]
+      - list [ref=f6e420]:
+        - listitem [ref=f6e421]:
+          - generic [ref=f6e422] [cursor=pointer]:
+            - img "mail" [ref=f6e423]
+            - generic [ref=f6e426]: Navigation One
+          - list [ref=f6e430]:
+            - listitem [ref=f6e431]:
+              - generic [ref=f6e432]: Item 1
+              - list [ref=f6e433]:
+                - listitem [ref=f6e434] [cursor=pointer]:
+                  - generic [ref=f6e435]: Option 1
+                - listitem [ref=f6e436] [cursor=pointer]:
+                  - generic [ref=f6e437]: Option 2
+            - listitem [ref=f6e438]:
+              - generic [ref=f6e439]: Item 2
+              - list [ref=f6e440]:
+                - listitem [ref=f6e441] [cursor=pointer]:
+                  - generic [ref=f6e442]: Option 3
+                - listitem [ref=f6e443] [cursor=pointer]:
+                  - generic [ref=f6e444]: Option 4
+        - listitem [ref=f6e445]:
+          - generic [ref=f6e446] [cursor=pointer]:
+            - img "appstore" [ref=f6e447]
+            - generic [ref=f6e450]: Navigation Two
+        - listitem [ref=f6e454]
+        - listitem [ref=f6e455]:
+          - generic [ref=f6e456] [cursor=pointer]:
+            - img "setting" [ref=f6e457]
+            - generic [ref=f6e460]: Navigation Three
+      - heading "禁用" [level=2] [ref=f6e464]
+      - heading "通过 disabled 禁用菜单项或子菜单，禁用后不可点击、展开与选中" [level=3] [ref=f6e465]
+      - list [ref=f6e466]:
+        - listitem [ref=f6e467] [cursor=pointer]:
+          - img "mail" [ref=f6e468]
+          - generic [ref=f6e471]: Navigation One
+        - listitem [ref=f6e472]:
+          - img "appstore" [ref=f6e473]
+          - generic [ref=f6e476]: Navigation Two
+        - listitem [ref=f6e477]:
+          - generic [ref=f6e478]:
+            - img "setting" [ref=f6e479]
+            - generic [ref=f6e482]: Navigation Three
+        - listitem [ref=f6e486] [cursor=pointer]:
+          - generic [ref=f6e487]: Navigation Four
+      - heading "危险菜单项" [level=2] [ref=f6e488]
+      - heading "通过 danger 将菜单项标记为危险状态，常用于删除等操作" [level=3] [ref=f6e489]
+      - list [ref=f6e490]:
+        - listitem [ref=f6e491] [cursor=pointer]:
+          - img "mail" [ref=f6e492]
+          - generic [ref=f6e495]: Navigation One
+        - listitem [ref=f6e496] [cursor=pointer]:
+          - img "appstore" [ref=f6e497]
+          - generic [ref=f6e500]: Navigation Two
+        - listitem [ref=f6e501]
+        - listitem [ref=f6e502] [cursor=pointer]:
+          - img "setting" [ref=f6e503]
+          - generic [ref=f6e506]: Navigation Three
+        - listitem [ref=f6e507]:
+          - generic [ref=f6e508] [cursor=pointer]:
+            - img "delete" [ref=f6e509]
+            - generic [ref=f6e512]: Danger Submenu
+          - list [ref=f6e516]:
+            - listitem [ref=f6e517] [cursor=pointer]:
+              - generic [ref=f6e518]: Option 4
+            - listitem [ref=f6e519] [cursor=pointer]:
+              - generic [ref=f6e520]: Option 5
+      - heading "不可选中" [level=2] [ref=f6e521]
+      - heading "设置 selectable 为 false 使菜单项点击后不展示选中态" [level=3] [ref=f6e522]
+      - list [ref=f6e523]:
+        - listitem [ref=f6e524]:
+          - generic [ref=f6e525] [cursor=pointer]:
+            - img "mail" [ref=f6e526]
+            - generic [ref=f6e529]: Navigation One
+          - list [ref=f6e533]:
+            - listitem [ref=f6e534]:
+              - generic [ref=f6e535]: Item 1
+              - list [ref=f6e536]:
+                - listitem [ref=f6e537] [cursor=pointer]:
+                  - generic [ref=f6e538]: Option 1
+                - listitem [ref=f6e539] [cursor=pointer]:
+                  - generic [ref=f6e540]: Option 2
+            - listitem [ref=f6e541]:
+              - generic [ref=f6e542]: Item 2
+              - list [ref=f6e543]:
+                - listitem [ref=f6e544] [cursor=pointer]:
+                  - generic [ref=f6e545]: Option 3
+                - listitem [ref=f6e546] [cursor=pointer]:
+                  - generic [ref=f6e547]: Option 4
+        - listitem [ref=f6e548]:
+          - generic [ref=f6e549] [cursor=pointer]:
+            - img "appstore" [ref=f6e550]
+            - generic [ref=f6e553]: Navigation Two
+        - listitem [ref=f6e557]
+        - listitem [ref=f6e558]:
+          - generic [ref=f6e559] [cursor=pointer]:
+            - img "setting" [ref=f6e560]
+            - generic [ref=f6e563]: Navigation Three
+      - heading "监听事件" [level=2] [ref=f6e567]
+      - heading "监听 click（点击菜单项）、select（选中菜单项）、openChange（展开/收起子菜单）事件" [level=3] [ref=f6e568]
+      - list [ref=f6e569]:
+        - listitem [ref=f6e570]:
+          - generic [ref=f6e571] [cursor=pointer]:
+            - img "mail" [ref=f6e572]
+            - generic [ref=f6e575]: Navigation One
+          - list [ref=f6e579]:
+            - listitem [ref=f6e580]:
+              - generic [ref=f6e581]: Item 1
+              - list [ref=f6e582]:
+                - listitem [ref=f6e583] [cursor=pointer]:
+                  - generic [ref=f6e584]: Option 1
+                - listitem [ref=f6e585] [cursor=pointer]:
+                  - generic [ref=f6e586]: Option 2
+            - listitem [ref=f6e587]:
+              - generic [ref=f6e588]: Item 2
+              - list [ref=f6e589]:
+                - listitem [ref=f6e590] [cursor=pointer]:
+                  - generic [ref=f6e591]: Option 3
+                - listitem [ref=f6e592] [cursor=pointer]:
+                  - generic [ref=f6e593]: Option 4
+        - listitem [ref=f6e594]:
+          - generic [ref=f6e595] [cursor=pointer]:
+            - img "appstore" [ref=f6e596]
+            - generic [ref=f6e599]: Navigation Two
+        - listitem [ref=f6e603]
+        - listitem [ref=f6e604]:
+          - generic [ref=f6e605] [cursor=pointer]:
+            - img "setting" [ref=f6e606]
+            - generic [ref=f6e609]: Navigation Three
+      - heading "垂直弹出菜单" [level=2] [ref=f6e613]
+      - heading "mode=\"vertical\" 时子菜单以弹出层形式展开在右侧，支持 click 和 hover 两种触发方式" [level=3] [ref=f6e614]
+      - generic [ref=f6e615]:
+        - list [ref=f6e616]:
+          - listitem [ref=f6e617]:
+            - generic [ref=f6e618] [cursor=pointer]:
+              - img "mail" [ref=f6e619]
+              - generic [ref=f6e622]: Navigation One
+          - listitem [ref=f6e626]:
+            - generic [ref=f6e627] [cursor=pointer]:
+              - img "appstore" [ref=f6e628]
+              - generic [ref=f6e631]: Navigation Two
+          - listitem [ref=f6e635]
+          - listitem [ref=f6e636]:
+            - generic [ref=f6e637] [cursor=pointer]:
+              - img "setting" [ref=f6e638]
+              - generic [ref=f6e641]: Navigation Three
+        - list [ref=f6e645]:
+          - listitem [ref=f6e646]:
+            - generic [ref=f6e647] [cursor=pointer]:
+              - img "mail" [ref=f6e648]
+              - generic [ref=f6e651]: Navigation One
+          - listitem [ref=f6e655]:
+            - generic [ref=f6e656] [cursor=pointer]:
+              - img "appstore" [ref=f6e657]
+              - generic [ref=f6e660]: Navigation Two
+          - listitem [ref=f6e664]
+          - listitem [ref=f6e665]:
+            - generic [ref=f6e666] [cursor=pointer]:
+              - img "setting" [ref=f6e667]
+              - generic [ref=f6e670]: Navigation Three
+      - heading "水平菜单" [level=2] [ref=f6e674]
+      - heading "mode=\"horizontal\" 时菜单水平排列，子菜单以弹出层形式展开在下方" [level=3] [ref=f6e675]
+      - list [ref=f6e676]:
+        - listitem [ref=f6e677] [cursor=pointer]:
+          - img "mail" [ref=f6e678]
+          - generic [ref=f6e681]: Navigation One
+        - listitem [ref=f6e682] [cursor=pointer]:
+          - img "appstore" [ref=f6e683]
+          - generic [ref=f6e686]: Navigation Two
+        - listitem [ref=f6e687]:
+          - generic [ref=f6e688] [cursor=pointer]:
+            - img "setting" [ref=f6e689]
+            - generic [ref=f6e692]: Navigation Three
+      - heading "收起菜单 (inlineCollapsed)" [level=2] [ref=f6e696]
+      - heading [level=3] [ref=f6e697]:
+        - text: inlineCollapsed 为 true 时，menu 只显示图标，子菜单以弹出层形式展开
+        - button "展开" [ref=f6e698] [cursor=pointer]
+      - list [ref=f6e699]:
+        - listitem [ref=f6e700]:
+          - generic "Navigation One" [ref=f6e701] [cursor=pointer]:
+            - img "mail" [ref=f6e702]
+        - listitem [ref=f6e705]:
+          - generic "Navigation Two" [ref=f6e706] [cursor=pointer]:
+            - img "appstore" [ref=f6e707]
+        - listitem [ref=f6e710]
+        - listitem [ref=f6e711]:
+          - generic "Navigation Three" [ref=f6e712] [cursor=pointer]:
+            - img "setting" [ref=f6e713]
+      - heading "主题切换" [level=2] [ref=f6e716]
+      - heading "通过 Switch 动态切换 light / dark 两套主题" [level=3] [ref=f6e717]
+      - generic [ref=f6e719] [cursor=pointer]:
+        - generic: Dark
+        - generic: Light
+      - list [ref=f6e721]:
+        - listitem [ref=f6e722]:
+          - generic [ref=f6e723] [cursor=pointer]:
+            - img "mail" [ref=f6e724]
+            - generic [ref=f6e727]: Navigation One
+          - list [ref=f6e731]:
+            - listitem [ref=f6e732]:
+              - generic [ref=f6e733]: Item 1
+              - list [ref=f6e734]:
+                - listitem [ref=f6e735] [cursor=pointer]:
+                  - generic [ref=f6e736]: Option 1
+                - listitem [ref=f6e737] [cursor=pointer]:
+                  - generic [ref=f6e738]: Option 2
+            - listitem [ref=f6e739]:
+              - generic [ref=f6e740]: Item 2
+              - list [ref=f6e741]:
+                - listitem [ref=f6e742] [cursor=pointer]:
+                  - generic [ref=f6e743]: Option 3
+                - listitem [ref=f6e744] [cursor=pointer]:
+                  - generic [ref=f6e745]: Option 4
+        - listitem [ref=f6e746]:
+          - generic [ref=f6e747] [cursor=pointer]:
+            - img "appstore" [ref=f6e748]
+            - generic [ref=f6e751]: Navigation Two
+        - listitem [ref=f6e755]
+        - listitem [ref=f6e756]:
+          - generic [ref=f6e757] [cursor=pointer]:
+            - img "setting" [ref=f6e758]
+            - generic [ref=f6e761]: Navigation Three
+      - heading "切换菜单类型" [level=2] [ref=f6e765]
+      - heading "通过 Switch 动态切换 inline / vertical 菜单类型与 light / dark 主题" [level=3] [ref=f6e766]
+      - generic [ref=f6e767]:
+        - generic [ref=f6e769] [cursor=pointer]:
+          - generic: vertical
+          - generic: inline
+        - generic [ref=f6e772] [cursor=pointer]:
+          - generic: Dark
+          - generic: Light
+      - list [ref=f6e774]:
+        - listitem [ref=f6e775]:
+          - generic [ref=f6e776] [cursor=pointer]:
+            - img "mail" [ref=f6e777]
+            - generic [ref=f6e780]: Navigation One
+          - list [ref=f6e784]:
+            - listitem [ref=f6e785]:
+              - generic [ref=f6e786]: Item 1
+              - list [ref=f6e787]:
+                - listitem [ref=f6e788] [cursor=pointer]:
+                  - generic [ref=f6e789]: Option 1
+                - listitem [ref=f6e790] [cursor=pointer]:
+                  - generic [ref=f6e791]: Option 2
+            - listitem [ref=f6e792]:
+              - generic [ref=f6e793]: Item 2
+              - list [ref=f6e794]:
+                - listitem [ref=f6e795] [cursor=pointer]:
+                  - generic [ref=f6e796]: Option 3
+                - listitem [ref=f6e797] [cursor=pointer]:
+                  - generic [ref=f6e798]: Option 4
+        - listitem [ref=f6e799]:
+          - generic [ref=f6e800] [cursor=pointer]:
+            - img "appstore" [ref=f6e801]
+            - generic [ref=f6e804]: Navigation Two
+        - listitem [ref=f6e808]
+        - listitem [ref=f6e809]:
+          - generic [ref=f6e810] [cursor=pointer]:
+            - img "setting" [ref=f6e811]
+            - generic [ref=f6e814]: Navigation Three
+      - heading "子菜单主题" [level=2] [ref=f6e818]
+      - heading "通过菜单项的 theme 属性单独设置某个 SubMenu 的主题，实现根目录深色、子目录浅色" [level=3] [ref=f6e819]
+      - generic [ref=f6e821] [cursor=pointer]:
+        - generic: dark
+        - generic: light
+      - list [ref=f6e823]:
+        - listitem [ref=f6e824]:
+          - generic [ref=f6e825] [cursor=pointer]:
+            - img "mail" [ref=f6e826]
+            - generic [ref=f6e829]: Navigation One
+        - listitem [ref=f6e833] [cursor=pointer]:
+          - generic [ref=f6e834]: Option 5
+        - listitem [ref=f6e835] [cursor=pointer]:
+          - generic [ref=f6e836]: Option 6
+  - generic [ref=f6e837]:
+    - generic "Toggle devtools panel" [ref=f6e838] [cursor=pointer]
+    - generic "Toggle Component Inspector" [ref=f6e844] [cursor=pointer]
+  - list [ref=f6e852]:
+    - listitem [ref=f6e853]:
+      - generic [ref=f6e854]: Item 1
+      - list [ref=f6e855]:
+        - listitem [ref=f6e856] [cursor=pointer]:
+          - generic [ref=f6e857]: Option 1
+        - listitem [ref=f6e858] [cursor=pointer]:
+          - generic [ref=f6e859]: Option 2
+    - listitem [ref=f6e860]:
+      - generic [ref=f6e861]: Item 2
+      - list [ref=f6e862]:
+        - listitem [ref=f6e863] [cursor=pointer]:
+          - generic [ref=f6e864]: Option 3
+        - listitem [ref=f6e865] [cursor=pointer]:
+          - generic [ref=f6e866]: Option 4
+  - list [ref=f6e868]:
+    - listitem [ref=f6e869] [cursor=pointer]:
+      - generic [ref=f6e870]: Option 1
+    - listitem [ref=f6e871] [cursor=pointer]:
+      - generic [ref=f6e872]: Option 2
+    - listitem [ref=f6e873] [cursor=pointer]:
+      - generic [ref=f6e874]: Option 3

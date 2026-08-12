@@ -1,0 +1,9 @@
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e4]:
+    - generic [ref=f2e65]: "404"
+    - generic [ref=f2e66]: Sorry, the page you visited does not exist.
+    - link "Back Home" [ref=f2e68] [cursor=pointer]:
+      - /url: /
+  - generic [ref=f2e70]:
+    - generic "Toggle devtools panel" [ref=f2e71] [cursor=pointer]
+    - generic "Toggle Component Inspector" [ref=f2e77] [cursor=pointer]

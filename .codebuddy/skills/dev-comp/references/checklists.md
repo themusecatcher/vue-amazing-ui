@@ -30,6 +30,15 @@
 - [ ] 组件内无裸用 `window` / `document` / `localStorage`
 - [ ] 浏览器 API 放在 `onMounted` 内或加 `typeof window !== 'undefined'` 判断
 
+## 对齐检查（阶段 2，新增）
+
+- [ ] antdv 全部 demo（`{REF_ANTDV_LOCAL}/components/{组件名}/demo/*.vue`）已逐一读取
+- [ ] 每个 antdv demo 在演示页中有对应用例（覆盖或标记暂不覆盖）
+- [ ] API Props 对比清单已完成（逐字段对比默认值/类型/必填）
+- [ ] 默认值与 antdv 一致（`mode`/`triggerSubMenuAction` 等）
+- [ ] ItemType 接口字段名与 antdv 一致（如 Menu 的 `itemIcon` 非 `icon`）
+- [ ] 关键行为对齐（openKeys 自动关闭 / 级联高亮 / hover delay）
+
 ## 演示用例（阶段 3）
 
 - [ ] `src/views/{组件名}/Index.vue` + `index.ts`（`export default { title: '中文名' }`）

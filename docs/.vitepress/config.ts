@@ -257,6 +257,10 @@ export default defineConfig({
               link: '/guide/components/loadingbar'
             },
             {
+              text: '菜单 Menu',
+              link: '/guide/components/menu'
+            },
+            {
               text: '全局提示 Message',
               link: '/guide/components/message'
             },

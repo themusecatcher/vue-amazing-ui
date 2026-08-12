@@ -1,0 +1,351 @@
+- generic [ref=f7e1]:
+  - generic [ref=f7e4]:
+    - list [ref=f7e14]:
+      - listitem "首页" [ref=f7e15] [cursor=pointer]:
+        - link "首页 Home" [ref=f7e17]:
+          - /url: /home
+      - listitem "警告提示" [ref=f7e18] [cursor=pointer]:
+        - link "警告提示 Alert" [active] [ref=f7e20]:
+          - /url: /alert
+      - listitem "头像" [ref=f7e21] [cursor=pointer]:
+        - link "头像 Avatar" [ref=f7e23]:
+          - /url: /avatar
+      - listitem "回到顶部" [ref=f7e24] [cursor=pointer]:
+        - link "回到顶部 BackTop" [ref=f7e26]:
+          - /url: /backTop
+      - listitem "徽标" [ref=f7e27] [cursor=pointer]:
+        - link "徽标 Badge" [ref=f7e29]:
+          - /url: /badge
+      - listitem "面包屑" [ref=f7e30] [cursor=pointer]:
+        - link "面包屑 Breadcrumb" [ref=f7e32]:
+          - /url: /breadcrumb
+      - listitem "按钮" [ref=f7e33] [cursor=pointer]:
+        - link "按钮 Button" [ref=f7e35]:
+          - /url: /button
+      - listitem "日历" [ref=f7e36] [cursor=pointer]:
+        - link "日历 Calendar" [ref=f7e38]:
+          - /url: /calendar
+      - listitem "卡片" [ref=f7e39] [cursor=pointer]:
+        - link "卡片 Card" [ref=f7e41]:
+          - /url: /card
+      - listitem "轮播图" [ref=f7e42] [cursor=pointer]:
+        - link "轮播图 Carousel" [ref=f7e44]:
+          - /url: /carousel
+      - listitem "级联选择" [ref=f7e45] [cursor=pointer]:
+        - link "级联选择 Cascader" [ref=f7e47]:
+          - /url: /cascader
+      - listitem "复选框" [ref=f7e48] [cursor=pointer]:
+        - link "复选框 Checkbox" [ref=f7e50]:
+          - /url: /checkbox
+      - listitem "折叠面板" [ref=f7e51] [cursor=pointer]:
+        - link "折叠面板 Collapse" [ref=f7e53]:
+          - /url: /collapse
+      - listitem "颜色选择器" [ref=f7e54] [cursor=pointer]:
+        - link "颜色选择器 ColorPicker" [ref=f7e56]:
+          - /url: /colorPicker
+      - listitem "全局化配置" [ref=f7e57] [cursor=pointer]:
+        - link "全局化配置 ConfigProvider" [ref=f7e59]:
+          - /url: /configProvider
+      - listitem "倒计时" [ref=f7e60] [cursor=pointer]:
+        - link "倒计时 Countdown" [ref=f7e62]:
+          - /url: /countdown
+      - listitem "日期选择" [ref=f7e63] [cursor=pointer]:
+        - link "日期选择 DatePicker" [ref=f7e65]:
+          - /url: /datePicker
+      - listitem "描述列表" [ref=f7e66] [cursor=pointer]:
+        - link "描述列表 Descriptions" [ref=f7e68]:
+          - /url: /descriptions
+      - listitem "对话框" [ref=f7e69] [cursor=pointer]:
+        - link "对话框 Dialog" [ref=f7e71]:
+          - /url: /dialog
+      - listitem "分割线" [ref=f7e72] [cursor=pointer]:
+        - link "分割线 Divider" [ref=f7e74]:
+          - /url: /divider
+      - listitem "抽屉" [ref=f7e75] [cursor=pointer]:
+        - link "抽屉 Drawer" [ref=f7e77]:
+          - /url: /drawer
+      - listitem "文本省略" [ref=f7e78] [cursor=pointer]:
+        - link "文本省略 Ellipsis" [ref=f7e80]:
+          - /url: /ellipsis
+      - listitem "空状态" [ref=f7e81] [cursor=pointer]:
+        - link "空状态 Empty" [ref=f7e83]:
+          - /url: /empty
+      - listitem "弹性布局" [ref=f7e84] [cursor=pointer]:
+        - link "弹性布局 Flex" [ref=f7e86]:
+          - /url: /flex
+      - listitem "浮动按钮" [ref=f7e87] [cursor=pointer]:
+        - link "浮动按钮 FloatButton" [ref=f7e89]:
+          - /url: /floatButton
+      - listitem "渐变文字" [ref=f7e90] [cursor=pointer]:
+        - link "渐变文字 GradientText" [ref=f7e92]:
+          - /url: /gradientText
+      - listitem "栅格" [ref=f7e93] [cursor=pointer]:
+        - link "栅格 Grid" [ref=f7e95]:
+          - /url: /grid
+      - listitem "高亮文本" [ref=f7e96] [cursor=pointer]:
+        - link "高亮文本 Highlight" [ref=f7e98]:
+          - /url: /highlight
+      - listitem "图片" [ref=f7e99] [cursor=pointer]:
+        - link "图片 Image" [ref=f7e101]:
+          - /url: /image
+      - listitem "输入框" [ref=f7e102] [cursor=pointer]:
+        - link "输入框 Input" [ref=f7e104]:
+          - /url: /input
+      - listitem "数字输入框" [ref=f7e105] [cursor=pointer]:
+        - link "数字输入框 InputNumber" [ref=f7e107]:
+          - /url: /inputNumber
+      - listitem "搜索框" [ref=f7e108] [cursor=pointer]:
+        - link "搜索框 InputSearch" [ref=f7e110]:
+          - /url: /inputSearch
+      - listitem "布局" [ref=f7e111] [cursor=pointer]:
+        - link "布局 Layout" [ref=f7e113]:
+          - /url: /layout
+      - listitem "列表" [ref=f7e114] [cursor=pointer]:
+        - link "列表 List" [ref=f7e116]:
+          - /url: /list
+      - listitem "加载条" [ref=f7e117] [cursor=pointer]:
+        - link "加载条 LoadingBar" [ref=f7e119]:
+          - /url: /loadingBar
+      - listitem "菜单" [ref=f7e120] [cursor=pointer]:
+        - link "菜单 Menu" [ref=f7e122]:
+          - /url: /menu
+      - listitem "全局提示" [ref=f7e123] [cursor=pointer]:
+        - link "全局提示 Message" [ref=f7e125]:
+          - /url: /message
+      - listitem "模态框" [ref=f7e126] [cursor=pointer]:
+        - link "模态框 Modal" [ref=f7e128]:
+          - /url: /modal
+      - listitem "通知提醒" [ref=f7e129] [cursor=pointer]:
+        - link "通知提醒 Notification" [ref=f7e131]:
+          - /url: /notification
+      - listitem "数值动画" [ref=f7e132] [cursor=pointer]:
+        - link "数值动画 NumberAnimation" [ref=f7e134]:
+          - /url: /numberAnimation
+      - listitem "分页" [ref=f7e135] [cursor=pointer]:
+        - link "分页 Pagination" [ref=f7e137]:
+          - /url: /pagination
+      - listitem "弹出确认" [ref=f7e138] [cursor=pointer]:
+        - link "弹出确认 Popconfirm" [ref=f7e140]:
+          - /url: /popconfirm
+      - listitem "气泡卡片" [ref=f7e141] [cursor=pointer]:
+        - link "气泡卡片 Popover" [ref=f7e143]:
+          - /url: /popover
+      - listitem "进度条" [ref=f7e144] [cursor=pointer]:
+        - link "进度条 Progress" [ref=f7e146]:
+          - /url: /progress
+      - listitem "二维码" [ref=f7e147] [cursor=pointer]:
+        - link "二维码 Qrcode" [ref=f7e149]:
+          - /url: /qrcode
+      - listitem "单选框" [ref=f7e150] [cursor=pointer]:
+        - link "单选框 Radio" [ref=f7e152]:
+          - /url: /radio
+      - listitem "评分" [ref=f7e153] [cursor=pointer]:
+        - link "评分 Rate" [ref=f7e155]:
+          - /url: /rate
+      - listitem "结果" [ref=f7e156] [cursor=pointer]:
+        - link "结果 Result" [ref=f7e158]:
+          - /url: /result
+      - listitem "滚动条" [ref=f7e159] [cursor=pointer]:
+        - link "滚动条 Scrollbar" [ref=f7e161]:
+          - /url: /scrollbar
+      - listitem "分段控制器" [ref=f7e162] [cursor=pointer]:
+        - link "分段控制器 Segmented" [ref=f7e164]:
+          - /url: /segmented
+      - listitem "选择器" [ref=f7e165] [cursor=pointer]:
+        - link "选择器 Select" [ref=f7e167]:
+          - /url: /select
+      - listitem "骨架屏" [ref=f7e168] [cursor=pointer]:
+        - link "骨架屏 Skeleton" [ref=f7e170]:
+          - /url: /skeleton
+      - listitem "滑动输入条" [ref=f7e171] [cursor=pointer]:
+        - link "滑动输入条 Slider" [ref=f7e173]:
+          - /url: /slider
+      - listitem "间距" [ref=f7e174] [cursor=pointer]:
+        - link "间距 Space" [ref=f7e176]:
+          - /url: /space
+      - listitem "加载中" [ref=f7e177] [cursor=pointer]:
+        - link "加载中 Spin" [ref=f7e179]:
+          - /url: /spin
+      - listitem "统计数值" [ref=f7e180] [cursor=pointer]:
+        - link "统计数值 Statistic" [ref=f7e182]:
+          - /url: /statistic
+      - listitem "步骤条" [ref=f7e183] [cursor=pointer]:
+        - link "步骤条 Steps" [ref=f7e185]:
+          - /url: /steps
+      - listitem "触摸滑动" [ref=f7e186] [cursor=pointer]:
+        - link "触摸滑动 Swiper" [ref=f7e188]:
+          - /url: /swiper
+      - listitem "开关" [ref=f7e189] [cursor=pointer]:
+        - link "开关 Switch" [ref=f7e191]:
+          - /url: /switch
+      - listitem "表格" [ref=f7e192] [cursor=pointer]:
+        - link "表格 Table" [ref=f7e194]:
+          - /url: /table
+      - listitem "标签页" [ref=f7e195] [cursor=pointer]:
+        - link "标签页 Tabs" [ref=f7e197]:
+          - /url: /tabs
+      - listitem "标签" [ref=f7e198] [cursor=pointer]:
+        - link "标签 Tag" [ref=f7e200]:
+          - /url: /tag
+      - listitem "文字滚动" [ref=f7e201] [cursor=pointer]:
+        - link "文字滚动 TextScroll" [ref=f7e203]:
+          - /url: /textScroll
+      - listitem "文本域" [ref=f7e204] [cursor=pointer]:
+        - link "文本域 Textarea" [ref=f7e206]:
+          - /url: /textarea
+      - listitem "时间轴" [ref=f7e207] [cursor=pointer]:
+        - link "时间轴 Timeline" [ref=f7e209]:
+          - /url: /timeline
+      - listitem "时间选择器" [ref=f7e210] [cursor=pointer]:
+        - link "时间选择器 Timepicker" [ref=f7e212]:
+          - /url: /timepicker
+      - listitem "文字提示" [ref=f7e213] [cursor=pointer]:
+        - link "文字提示 Tooltip" [ref=f7e215]:
+          - /url: /tooltip
+      - listitem "上传" [ref=f7e216] [cursor=pointer]:
+        - link "上传 Upload" [ref=f7e218]:
+          - /url: /upload
+      - listitem "播放器" [ref=f7e219] [cursor=pointer]:
+        - link "播放器 Video" [ref=f7e221]:
+          - /url: /video
+      - listitem "瀑布流" [ref=f7e222] [cursor=pointer]:
+        - link "瀑布流 Waterfall" [ref=f7e224]:
+          - /url: /waterfall
+      - listitem "水印" [ref=f7e225] [cursor=pointer]:
+        - link "水印 Watermark" [ref=f7e227]:
+          - /url: /watermark
+    - generic [ref=f7e662]:
+      - heading "Alert 警告提示" [level=1] [ref=f7e663]
+      - heading "基本使用" [level=2] [ref=f7e664]
+      - generic [ref=f7e665]: Default Text
+      - heading "不同类型" [level=2] [ref=f7e668]
+      - generic [ref=f7e669]:
+        - generic [ref=f7e670]: Info Text
+        - generic [ref=f7e673]: Success Text
+        - generic [ref=f7e676]: Warning Text
+        - generic [ref=f7e679]: Error Text
+      - heading "无边框" [level=2] [ref=f7e682]
+      - generic [ref=f7e683]:
+        - generic [ref=f7e684]: Default Text
+        - generic [ref=f7e687]: Info Text
+        - generic [ref=f7e690]: Success Text
+        - generic [ref=f7e693]: Warning Text
+        - generic [ref=f7e696]: Error Text
+      - heading "可关闭" [level=2] [ref=f7e699]
+      - generic [ref=f7e700]:
+        - generic [ref=f7e701]: Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text Warning Text
+        - generic [ref=f7e708]:
+          - generic [ref=f7e709]: Error Text
+          - generic [ref=f7e710]: Error Description Error Description Error Description Error Description Error Description
+        - generic [ref=f7e714]: Info Text Info Text Info Text Info Text Info Text Info Text Info Text
+        - generic [ref=f7e721]:
+          - generic [ref=f7e722]: Success Text
+          - generic [ref=f7e723]: Success Description Success Description Success Description Success Description
+      - heading "辅助性文字介绍" [level=2] [ref=f7e727]
+      - generic [ref=f7e728]:
+        - generic [ref=f7e730]:
+          - generic [ref=f7e731]: Default Text
+          - generic [ref=f7e732]: Default Description Default Description Default Description Default Description
+        - generic [ref=f7e734]:
+          - generic [ref=f7e735]: Success Text
+          - paragraph [ref=f7e737]: Success Description Success Description Success Description
+        - generic [ref=f7e739]:
+          - generic [ref=f7e740]: Info Text
+          - generic [ref=f7e741]: Info Description Info Description Info Description Info Description
+        - generic [ref=f7e743]:
+          - generic [ref=f7e744]: Warning Text
+          - generic [ref=f7e745]: Warning Description Warning Description Warning Description Warning Description
+        - generic [ref=f7e747]:
+          - generic [ref=f7e748]: Error Text
+          - generic [ref=f7e749]: Error Description Error Description Error Description Error Description
+      - heading "辅助图标" [level=2] [ref=f7e750]
+      - generic [ref=f7e751]:
+        - generic [ref=f7e752]:
+          - img "alert" [ref=f7e754]
+          - generic [ref=f7e757]: Default Tips
+        - generic [ref=f7e759]: Success Tips
+        - generic [ref=f7e765]: Informational Notes
+        - generic [ref=f7e771]: Warning
+        - generic [ref=f7e777]: Error
+        - generic [ref=f7e783]:
+          - img "alert" [ref=f7e785]
+          - generic [ref=f7e788]:
+            - generic [ref=f7e789]: Default Tips
+            - generic [ref=f7e790]: Detailed description and advices about successful copywriting.
+        - generic [ref=f7e796]:
+          - generic [ref=f7e797]: Success Tips
+          - generic [ref=f7e798]: Detailed description and advices about successful copywriting.
+        - generic [ref=f7e804]:
+          - generic [ref=f7e805]: Informational Notes
+          - generic [ref=f7e806]: Additional description and informations about copywriting.
+        - generic [ref=f7e812]:
+          - generic [ref=f7e813]: Warning
+          - generic [ref=f7e814]: This is a warning notice about copywriting.
+        - generic [ref=f7e820]:
+          - generic [ref=f7e821]: Error
+          - generic [ref=f7e822]: This is an error message about copywriting.
+      - heading "自定义图标" [level=2] [ref=f7e823]
+      - generic [ref=f7e824]:
+        - generic [ref=f7e825]:
+          - img "smile" [ref=f7e827]
+          - generic [ref=f7e830]: Success Tips
+        - generic [ref=f7e832]:
+          - img "smile" [ref=f7e834]
+          - generic [ref=f7e837]: Informational Notes
+        - generic [ref=f7e839]:
+          - img "smile" [ref=f7e841]
+          - generic [ref=f7e844]: Warning
+        - generic [ref=f7e846]:
+          - img "smile" [ref=f7e848]
+          - generic [ref=f7e851]: Error
+        - generic [ref=f7e853]: Success
+        - generic [ref=f7e859]:
+          - img "smile" [ref=f7e861]
+          - generic [ref=f7e864]:
+            - generic [ref=f7e865]: Success Tips
+            - generic [ref=f7e866]: Detailed description and advices about successful copywriting.
+        - generic [ref=f7e867]:
+          - img "smile" [ref=f7e869]
+          - generic [ref=f7e872]:
+            - generic [ref=f7e873]: Informational Notes
+            - generic [ref=f7e874]: Additional description and informations about copywriting.
+        - generic [ref=f7e875]:
+          - img "smile" [ref=f7e877]
+          - generic [ref=f7e880]:
+            - generic [ref=f7e881]: Warning
+            - generic [ref=f7e882]: This is a warning notice about copywriting.
+        - generic [ref=f7e883]:
+          - img "smile" [ref=f7e885]
+          - generic [ref=f7e888]:
+            - generic [ref=f7e889]: Error
+            - generic [ref=f7e890]: This is an error message about copywriting.
+        - generic [ref=f7e895]:
+          - generic [ref=f7e896]: Info Tips
+          - generic [ref=f7e897]: Detailed description and advices about successful copywriting.
+      - heading "自定义关闭文字" [level=2] [ref=f7e898]
+      - generic [ref=f7e899]:
+        - generic [ref=f7e900]: Info Text
+        - generic [ref=f7e902] [cursor=pointer]: Close Now
+      - heading "自定义操作项" [level=2] [ref=f7e903]
+      - generic [ref=f7e904]:
+        - generic [ref=f7e905]:
+          - generic [ref=f7e909]: Success Tips
+          - generic [ref=f7e911]: UNDO
+        - generic [ref=f7e920]:
+          - generic [ref=f7e925]:
+            - generic [ref=f7e926]: Error Text
+            - generic [ref=f7e927]: Error Description Error Description Error Description Error Description
+          - generic [ref=f7e928]: Detail
+        - generic [ref=f7e934]:
+          - generic [ref=f7e935]: Warning Text
+          - generic [ref=f7e937]: Done
+        - generic [ref=f7e946]:
+          - generic [ref=f7e947]:
+            - generic [ref=f7e948]: Info Text
+            - generic [ref=f7e949]: Info Description Info Description Info Description Info Description
+          - generic [ref=f7e951]:
+            - generic [ref=f7e952] [cursor=pointer]: Accept
+            - generic [ref=f7e957] [cursor=pointer]: Decline
+  - generic [ref=f7e647]:
+    - generic "Toggle devtools panel" [ref=f7e648] [cursor=pointer]
+    - generic "Toggle Component Inspector" [ref=f7e654] [cursor=pointer]

@@ -1,0 +1,530 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - menu [ref=e14]:
+      - menuitem [ref=e15] [cursor=pointer]:
+        - link "首页 Home" [ref=e17]:
+          - /url: /home
+      - menuitem [ref=e18] [cursor=pointer]:
+        - link "警告提示 Alert" [ref=e20]:
+          - /url: /alert
+      - menuitem [ref=e21] [cursor=pointer]:
+        - link "头像 Avatar" [ref=e23]:
+          - /url: /avatar
+      - menuitem [ref=e24] [cursor=pointer]:
+        - link "回到顶部 BackTop" [ref=e26]:
+          - /url: /backTop
+      - menuitem [ref=e27] [cursor=pointer]:
+        - link "徽标 Badge" [ref=e29]:
+          - /url: /badge
+      - menuitem [ref=e30] [cursor=pointer]:
+        - link "面包屑 Breadcrumb" [ref=e32]:
+          - /url: /breadcrumb
+      - menuitem [ref=e33] [cursor=pointer]:
+        - link "按钮 Button" [ref=e35]:
+          - /url: /button
+      - menuitem [ref=e36] [cursor=pointer]:
+        - link "日历 Calendar" [ref=e38]:
+          - /url: /calendar
+      - menuitem [ref=e39] [cursor=pointer]:
+        - link "卡片 Card" [ref=e41]:
+          - /url: /card
+      - menuitem [ref=e42] [cursor=pointer]:
+        - link "轮播图 Carousel" [ref=e44]:
+          - /url: /carousel
+      - menuitem [ref=e45] [cursor=pointer]:
+        - link "级联选择 Cascader" [ref=e47]:
+          - /url: /cascader
+      - menuitem [ref=e48] [cursor=pointer]:
+        - link "复选框 Checkbox" [ref=e50]:
+          - /url: /checkbox
+      - menuitem [ref=e51] [cursor=pointer]:
+        - link "折叠面板 Collapse" [ref=e53]:
+          - /url: /collapse
+      - menuitem [ref=e54] [cursor=pointer]:
+        - link "颜色选择器 ColorPicker" [ref=e56]:
+          - /url: /colorPicker
+      - menuitem [ref=e57] [cursor=pointer]:
+        - link "全局化配置 ConfigProvider" [ref=e59]:
+          - /url: /configProvider
+      - menuitem [ref=e60] [cursor=pointer]:
+        - link "倒计时 Countdown" [ref=e62]:
+          - /url: /countdown
+      - menuitem [ref=e63] [cursor=pointer]:
+        - link "日期选择 DatePicker" [ref=e65]:
+          - /url: /datePicker
+      - menuitem [ref=e66] [cursor=pointer]:
+        - link "描述列表 Descriptions" [ref=e68]:
+          - /url: /descriptions
+      - menuitem [ref=e69] [cursor=pointer]:
+        - link "对话框 Dialog" [ref=e71]:
+          - /url: /dialog
+      - menuitem [ref=e72] [cursor=pointer]:
+        - link "分割线 Divider" [ref=e74]:
+          - /url: /divider
+      - menuitem [ref=e75] [cursor=pointer]:
+        - link "抽屉 Drawer" [ref=e77]:
+          - /url: /drawer
+      - menuitem [ref=e78] [cursor=pointer]:
+        - link "文本省略 Ellipsis" [ref=e80]:
+          - /url: /ellipsis
+      - menuitem [ref=e81] [cursor=pointer]:
+        - link "空状态 Empty" [ref=e83]:
+          - /url: /empty
+      - menuitem [ref=e84] [cursor=pointer]:
+        - link "弹性布局 Flex" [ref=e86]:
+          - /url: /flex
+      - menuitem [ref=e87] [cursor=pointer]:
+        - link "浮动按钮 FloatButton" [ref=e89]:
+          - /url: /floatButton
+      - menuitem [ref=e90] [cursor=pointer]:
+        - link "渐变文字 GradientText" [ref=e92]:
+          - /url: /gradientText
+      - menuitem [ref=e93] [cursor=pointer]:
+        - link "栅格 Grid" [ref=e95]:
+          - /url: /grid
+      - menuitem [ref=e96] [cursor=pointer]:
+        - link "高亮文本 Highlight" [ref=e98]:
+          - /url: /highlight
+      - menuitem [ref=e99] [cursor=pointer]:
+        - link "图片 Image" [ref=e101]:
+          - /url: /image
+      - menuitem [ref=e102] [cursor=pointer]:
+        - link "输入框 Input" [ref=e104]:
+          - /url: /input
+      - menuitem [ref=e105] [cursor=pointer]:
+        - link "数字输入框 InputNumber" [ref=e107]:
+          - /url: /inputNumber
+      - menuitem [ref=e108] [cursor=pointer]:
+        - link "搜索框 InputSearch" [ref=e110]:
+          - /url: /inputSearch
+      - menuitem [ref=e111] [cursor=pointer]:
+        - link "布局 Layout" [ref=e113]:
+          - /url: /layout
+      - menuitem [ref=e114] [cursor=pointer]:
+        - link "列表 List" [ref=e116]:
+          - /url: /list
+      - menuitem [ref=e117] [cursor=pointer]:
+        - link "加载条 LoadingBar" [ref=e119]:
+          - /url: /loadingBar
+      - menuitem [ref=e120] [cursor=pointer]:
+        - link "菜单 Menu" [ref=e122]:
+          - /url: /menu
+      - menuitem [ref=e123] [cursor=pointer]:
+        - link "全局提示 Message" [ref=e125]:
+          - /url: /message
+      - menuitem [ref=e126] [cursor=pointer]:
+        - link "模态框 Modal" [ref=e128]:
+          - /url: /modal
+      - menuitem [ref=e129] [cursor=pointer]:
+        - link "通知提醒 Notification" [ref=e131]:
+          - /url: /notification
+      - menuitem [ref=e132] [cursor=pointer]:
+        - link "数值动画 NumberAnimation" [ref=e134]:
+          - /url: /numberAnimation
+      - menuitem [ref=e135] [cursor=pointer]:
+        - link "分页 Pagination" [ref=e137]:
+          - /url: /pagination
+      - menuitem [ref=e138] [cursor=pointer]:
+        - link "弹出确认 Popconfirm" [ref=e140]:
+          - /url: /popconfirm
+      - menuitem [ref=e141] [cursor=pointer]:
+        - link "气泡卡片 Popover" [ref=e143]:
+          - /url: /popover
+      - menuitem [ref=e144] [cursor=pointer]:
+        - link "进度条 Progress" [ref=e146]:
+          - /url: /progress
+      - menuitem [ref=e147] [cursor=pointer]:
+        - link "二维码 Qrcode" [ref=e149]:
+          - /url: /qrcode
+      - menuitem [ref=e150] [cursor=pointer]:
+        - link "单选框 Radio" [ref=e152]:
+          - /url: /radio
+      - menuitem [ref=e153] [cursor=pointer]:
+        - link "评分 Rate" [ref=e155]:
+          - /url: /rate
+      - menuitem [ref=e156] [cursor=pointer]:
+        - link "结果 Result" [ref=e158]:
+          - /url: /result
+      - menuitem [ref=e159] [cursor=pointer]:
+        - link "滚动条 Scrollbar" [ref=e161]:
+          - /url: /scrollbar
+      - menuitem [ref=e162] [cursor=pointer]:
+        - link "分段控制器 Segmented" [ref=e164]:
+          - /url: /segmented
+      - menuitem [ref=e165] [cursor=pointer]:
+        - link "选择器 Select" [ref=e167]:
+          - /url: /select
+      - menuitem [ref=e168] [cursor=pointer]:
+        - link "骨架屏 Skeleton" [ref=e170]:
+          - /url: /skeleton
+      - menuitem [ref=e171] [cursor=pointer]:
+        - link "滑动输入条 Slider" [ref=e173]:
+          - /url: /slider
+      - menuitem [ref=e174] [cursor=pointer]:
+        - link "间距 Space" [ref=e176]:
+          - /url: /space
+      - menuitem [ref=e177] [cursor=pointer]:
+        - link "加载中 Spin" [ref=e179]:
+          - /url: /spin
+      - menuitem [ref=e180] [cursor=pointer]:
+        - link "统计数值 Statistic" [ref=e182]:
+          - /url: /statistic
+      - menuitem [ref=e183] [cursor=pointer]:
+        - link "步骤条 Steps" [ref=e185]:
+          - /url: /steps
+      - menuitem [ref=e186] [cursor=pointer]:
+        - link "触摸滑动 Swiper" [ref=e188]:
+          - /url: /swiper
+      - menuitem [ref=e189] [cursor=pointer]:
+        - link "开关 Switch" [ref=e191]:
+          - /url: /switch
+      - menuitem [ref=e192] [cursor=pointer]:
+        - link "表格 Table" [ref=e194]:
+          - /url: /table
+      - menuitem [ref=e195] [cursor=pointer]:
+        - link "标签页 Tabs" [ref=e197]:
+          - /url: /tabs
+      - menuitem [ref=e198] [cursor=pointer]:
+        - link "标签 Tag" [ref=e200]:
+          - /url: /tag
+      - menuitem [ref=e201] [cursor=pointer]:
+        - link "文字滚动 TextScroll" [ref=e203]:
+          - /url: /textScroll
+      - menuitem [ref=e204] [cursor=pointer]:
+        - link "文本域 Textarea" [ref=e206]:
+          - /url: /textarea
+      - menuitem [ref=e207] [cursor=pointer]:
+        - link "时间轴 Timeline" [ref=e209]:
+          - /url: /timeline
+      - menuitem [ref=e210] [cursor=pointer]:
+        - link "时间选择器 Timepicker" [ref=e212]:
+          - /url: /timepicker
+      - menuitem [ref=e213] [cursor=pointer]:
+        - link "文字提示 Tooltip" [ref=e215]:
+          - /url: /tooltip
+      - menuitem [ref=e216] [cursor=pointer]:
+        - link "上传 Upload" [ref=e218]:
+          - /url: /upload
+      - menuitem [ref=e219] [cursor=pointer]:
+        - link "播放器 Video" [ref=e221]:
+          - /url: /video
+      - menuitem [ref=e222] [cursor=pointer]:
+        - link "瀑布流 Waterfall" [ref=e224]:
+          - /url: /waterfall
+      - menuitem [ref=e225] [cursor=pointer]:
+        - link "水印 Watermark" [ref=e227]:
+          - /url: /watermark
+    - generic [ref=e233]:
+      - generic [ref=e234]:
+        - heading "Vue Amazing UI" [level=1] [ref=e235]
+        - generic [ref=e236]: 2.4.26
+      - generic [ref=e238]: FPS：0
+      - generic [ref=e240] [cursor=pointer]: Open New Window
+      - paragraph [ref=e245]:
+        - text: 组件库采用
+        - generic [ref=e246]: Vue@^3.5.29
+        - text: +
+        - generic [ref=e248]: TypeScript@^5.9.3
+        - text: +
+        - generic [ref=e250]: Vite@^7.3.1
+        - text: +
+        - generic [ref=e252]: Less@^4.5.1
+        - text: 实现！
+      - paragraph [ref=e254]:
+        - text: 目前共包含
+        - generic [ref=e255]: "68"
+        - text: 个基础
+        - generic [ref=e257]: UI
+        - text: 组件以及
+        - generic [ref=e259]: "18"
+        - text: 个工具函数，并且持续探索更新中...
+      - paragraph [ref=e261]:
+        - text: 顺便一提，它们全都可以
+        - generic [ref=e262]: treeshaking
+      - paragraph [ref=e264]: 主题可调，你只需提供一个主题色，剩下的都交给我
+      - paragraph [ref=e265]:
+        - generic [ref=e266]: Vue Amazing UI
+        - text: 全量使用
+        - generic [ref=e268]: TypeScript
+        - text: 编写，和你的
+        - generic [ref=e270]: TypeScript
+        - text: 项目无缝衔接
+      - paragraph [ref=e272]:
+        - text: 全部组件均采用单文件组件
+        - generic [ref=e273]: SFC
+        - text: ，可独立使用
+      - paragraph [ref=e275]: 开箱即用，不墨迹
+      - heading "使用方式：" [level=2] [ref=e276]
+      - generic [ref=e278]:
+        - generic [ref=e279] [cursor=pointer]: Install
+        - generic [ref=e284]:
+          - generic [ref=e285]: bash
+          - generic: Copy
+          - generic [ref=e286]: "npm install vue-amazing-ui # or pnpm add vue-amazing-ui # or yarn add vue-amazing-ui # or bun add vue-amazing-ui"
+      - list [ref=e287]:
+        - listitem [ref=e288]: 全局引入注册所有组件
+        - listitem [ref=e289]: 全局引入注册部分组件
+        - listitem [ref=e290]: 局部引入注册部分组件
+        - listitem [ref=e291]:
+          - text: 无需任何安装引入注册，直接使用单文件组件
+          - generic [ref=e292]: SFC
+      - heading "常用工具函数：" [level=2] [ref=e294]
+      - list [ref=e295]:
+        - listitem [ref=e296]:
+          - generic [ref=e297]: dateFormat
+          - text: ": 格式化日期时间字符串函数"
+        - listitem [ref=e299]:
+          - generic [ref=e300]: formatNumber
+          - text: ": 数字格式化函数"
+        - listitem [ref=e302]:
+          - generic [ref=e303]: rafTimeout
+          - text: ": 使用 requestAnimationFrame 实现的延迟 setTimeout 或间隔 setInterval 调用函数"
+        - listitem [ref=e305]:
+          - generic [ref=e306]: cancelRaf
+          - text: ": 用于取消 rafTimeout 函数"
+        - listitem [ref=e308]:
+          - generic [ref=e309]: throttle
+          - text: ": 节流函数"
+        - listitem [ref=e311]:
+          - generic [ref=e312]: debounce
+          - text: ": 防抖函数"
+        - listitem [ref=e314]:
+          - generic [ref=e315]: add
+          - text: ": 消除 js 加减精度问题的加法函数"
+        - listitem [ref=e317]:
+          - generic [ref=e318]: downloadFile
+          - text: ": 下载文件并自定义文件名，未传文件名时，从文件地址中自动提取文件名称"
+        - listitem [ref=e320]:
+          - generic [ref=e321]: toggleDark
+          - text: ": 一键切换暗黑模式函数"
+        - listitem [ref=e323]:
+          - generic [ref=e324]: useEventListener
+          - text: ": 使用 Vue 的生命周期钩子添加和移除事件监听器"
+        - listitem [ref=e326]:
+          - generic [ref=e327]: useMutationObserver
+          - text: ": 使用 MutationObserver 观察 DOM 元素的变化"
+        - listitem [ref=e329]:
+          - generic [ref=e330]: useScroll
+          - text: ": 实时监测目标元素滚动位置及状态"
+        - listitem [ref=e332]:
+          - generic [ref=e333]: useFps
+          - text: ": 实时监测浏览器刷新率 FPS"
+        - listitem [ref=e335]:
+          - generic [ref=e336]: useMediaQuery
+          - text: ": 使用媒体查询来判断当前环境是否符合指定的媒体查询条件"
+        - listitem [ref=e338]:
+          - generic [ref=e339]: useResizeObserver
+          - text: ": 使用 ResizeObserver 观察 DOM 元素尺寸变化"
+        - listitem [ref=e341]:
+          - generic [ref=e342]: useSlotsExist
+          - text: ": 监听给定名称或名称数组的插槽是否存在，支持监听单个插槽或一组插槽的存在"
+        - listitem [ref=e344]:
+          - generic [ref=e345]: useInject
+          - text: ": 使用依赖注入的函数，用于获取颜色调色板和阴影颜色"
+        - listitem [ref=e347]:
+          - generic [ref=e348]: useOptionsSupported
+          - text: ": 检查浏览器是否支持给定的事件监听器选项"
+      - generic [ref=e351]:
+        - generic [ref=e352] [cursor=pointer]: "以上工具函数 API 使用时直接引入即可:"
+        - generic [ref=e357]:
+          - generic [ref=e358]: vue
+          - generic: Copy
+          - generic [ref=e359]: "<script setup lang=\"ts\"> import { dateFormat, formatNumber, rafTimeout, cancelRaf, throttle, debounce, add, downloadFile, toggleDark, useEventListener, useMutationObserver, useScroll, useFps, useMediaQuery, useResizeObserver, useSlotsExist, useInject, useOptionsSupported } from 'vue-amazing-ui' </script>"
+      - generic [ref=e360]:
+        - generic [ref=e361]: 生产环境依赖 (dependencies)
+        - table [ref=e364]:
+          - rowgroup [ref=e365]:
+            - row [ref=e366]:
+              - 'cell "@ant-design/colors : ^8.0.1" [ref=e367]':
+                - generic [ref=e368]:
+                  - generic [ref=e369]: "@ant-design/colors :"
+                  - generic [ref=e370]: ^8.0.1
+              - 'cell "@ctrl/tinycolor : ^4.2.0" [ref=e373]':
+                - generic [ref=e374]:
+                  - generic [ref=e375]: "@ctrl/tinycolor :"
+                  - generic [ref=e376]: ^4.2.0
+              - 'cell "@vuepic/vue-datepicker : ^12.1.0" [ref=e379]':
+                - generic [ref=e380]:
+                  - generic [ref=e381]: "@vuepic/vue-datepicker :"
+                  - generic [ref=e382]: ^12.1.0
+              - 'cell "@vueuse/core : ^14.2.1" [ref=e385]':
+                - generic [ref=e386]:
+                  - generic [ref=e387]: "@vueuse/core :"
+                  - generic [ref=e388]: ^14.2.1
+            - row [ref=e391]:
+              - 'cell "date-fns : ^4.1.0" [ref=e392]':
+                - generic [ref=e393]:
+                  - generic [ref=e394]: "date-fns :"
+                  - generic [ref=e395]: ^4.1.0
+              - 'cell "qrcode : ^1.5.4" [ref=e398]':
+                - generic [ref=e399]:
+                  - generic [ref=e400]: "qrcode :"
+                  - generic [ref=e401]: ^1.5.4
+              - 'cell "seemly : ^0.3.10" [ref=e404]':
+                - generic [ref=e405]:
+                  - generic [ref=e406]: "seemly :"
+                  - generic [ref=e407]: ^0.3.10
+              - 'cell "swiper : ^12.1.2" [ref=e410]':
+                - generic [ref=e411]:
+                  - generic [ref=e412]: "swiper :"
+                  - generic [ref=e413]: ^12.1.2
+      - generic [ref=e416]:
+        - generic [ref=e417]: 开发环境依赖 (devDependencies)
+        - table [ref=e420]:
+          - rowgroup [ref=e421]:
+            - row [ref=e422]:
+              - 'cell "@ant-design/icons-vue : ^7.0.1" [ref=e423]':
+                - generic [ref=e424]:
+                  - generic [ref=e425]: "@ant-design/icons-vue :"
+                  - generic [ref=e426]: ^7.0.1
+              - 'cell "@commitlint/cli : ^20.4.3" [ref=e429]':
+                - generic [ref=e430]:
+                  - generic [ref=e431]: "@commitlint/cli :"
+                  - generic [ref=e432]: ^20.4.3
+              - 'cell "@commitlint/config-conventional : ^20.4.3" [ref=e435]':
+                - generic [ref=e436]:
+                  - generic [ref=e437]: "@commitlint/config-conventional :"
+                  - generic [ref=e438]: ^20.4.3
+              - 'cell "@tsconfig/node22 : ^22.0.5" [ref=e441]':
+                - generic [ref=e442]:
+                  - generic [ref=e443]: "@tsconfig/node22 :"
+                  - generic [ref=e444]: ^22.0.5
+            - row [ref=e447]:
+              - 'cell "@types/minimist : ^1.2.5" [ref=e448]':
+                - generic [ref=e449]:
+                  - generic [ref=e450]: "@types/minimist :"
+                  - generic [ref=e451]: ^1.2.5
+              - 'cell "@types/node : ^24.12.0" [ref=e454]':
+                - generic [ref=e455]:
+                  - generic [ref=e456]: "@types/node :"
+                  - generic [ref=e457]: ^24.12.0
+              - 'cell "@types/qrcode : ^1.5.6" [ref=e460]':
+                - generic [ref=e461]:
+                  - generic [ref=e462]: "@types/qrcode :"
+                  - generic [ref=e463]: ^1.5.6
+              - 'cell "@types/spark-md5 : ^3.0.5" [ref=e466]':
+                - generic [ref=e467]:
+                  - generic [ref=e468]: "@types/spark-md5 :"
+                  - generic [ref=e469]: ^3.0.5
+            - row [ref=e472]:
+              - 'cell "@vitejs/plugin-vue : ^5.2.4" [ref=e473]':
+                - generic [ref=e474]:
+                  - generic [ref=e475]: "@vitejs/plugin-vue :"
+                  - generic [ref=e476]: ^5.2.4
+              - 'cell "@vue/eslint-config-prettier : ^10.2.0" [ref=e479]':
+                - generic [ref=e480]:
+                  - generic [ref=e481]: "@vue/eslint-config-prettier :"
+                  - generic [ref=e482]: ^10.2.0
+              - 'cell "@vue/eslint-config-typescript : ^14.7.0" [ref=e485]':
+                - generic [ref=e486]:
+                  - generic [ref=e487]: "@vue/eslint-config-typescript :"
+                  - generic [ref=e488]: ^14.7.0
+              - 'cell "@vue/tsconfig : ^0.7.0" [ref=e491]':
+                - generic [ref=e492]:
+                  - generic [ref=e493]: "@vue/tsconfig :"
+                  - generic [ref=e494]: ^0.7.0
+            - row [ref=e497]:
+              - 'cell "ant-design-vue : ^4.2.6" [ref=e498]':
+                - generic [ref=e499]:
+                  - generic [ref=e500]: "ant-design-vue :"
+                  - generic [ref=e501]: ^4.2.6
+              - 'cell "eslint : ^9.39.4" [ref=e504]':
+                - generic [ref=e505]:
+                  - generic [ref=e506]: "eslint :"
+                  - generic [ref=e507]: ^9.39.4
+              - 'cell "eslint-plugin-vue : ^10.8.0" [ref=e510]':
+                - generic [ref=e511]:
+                  - generic [ref=e512]: "eslint-plugin-vue :"
+                  - generic [ref=e513]: ^10.8.0
+              - 'cell "husky : ^9.1.7" [ref=e516]':
+                - generic [ref=e517]:
+                  - generic [ref=e518]: "husky :"
+                  - generic [ref=e519]: ^9.1.7
+            - row [ref=e522]:
+              - 'cell "less : ^4.5.1" [ref=e523]':
+                - generic [ref=e524]:
+                  - generic [ref=e525]: "less :"
+                  - generic [ref=e526]: ^4.5.1
+              - 'cell "lint-staged : ^16.3.2" [ref=e529]':
+                - generic [ref=e530]:
+                  - generic [ref=e531]: "lint-staged :"
+                  - generic [ref=e532]: ^16.3.2
+              - 'cell "minimist : ^1.2.8" [ref=e535]':
+                - generic [ref=e536]:
+                  - generic [ref=e537]: "minimist :"
+                  - generic [ref=e538]: ^1.2.8
+              - 'cell "naive-ui : ^2.44.0" [ref=e541]':
+                - generic [ref=e542]:
+                  - generic [ref=e543]: "naive-ui :"
+                  - generic [ref=e544]: ^2.44.0
+            - row [ref=e547]:
+              - 'cell "npm-run-all2 : ^8.0.4" [ref=e548]':
+                - generic [ref=e549]:
+                  - generic [ref=e550]: "npm-run-all2 :"
+                  - generic [ref=e551]: ^8.0.4
+              - 'cell "prettier : ^3.8.1" [ref=e554]':
+                - generic [ref=e555]:
+                  - generic [ref=e556]: "prettier :"
+                  - generic [ref=e557]: ^3.8.1
+              - 'cell "rimraf : ^6.1.3" [ref=e560]':
+                - generic [ref=e561]:
+                  - generic [ref=e562]: "rimraf :"
+                  - generic [ref=e563]: ^6.1.3
+              - 'cell "rollup-plugin-visualizer : ^6.0.11" [ref=e566]':
+                - generic [ref=e567]:
+                  - generic [ref=e568]: "rollup-plugin-visualizer :"
+                  - generic [ref=e569]: ^6.0.11
+            - row [ref=e572]:
+              - 'cell "spark-md5 : ^3.0.2" [ref=e573]':
+                - generic [ref=e574]:
+                  - generic [ref=e575]: "spark-md5 :"
+                  - generic [ref=e576]: ^3.0.2
+              - 'cell "typescript : ^5.9.3" [ref=e579]':
+                - generic [ref=e580]:
+                  - generic [ref=e581]: "typescript :"
+                  - generic [ref=e582]: ^5.9.3
+              - 'cell "unplugin-auto-import : ^20.3.0" [ref=e585]':
+                - generic [ref=e586]:
+                  - generic [ref=e587]: "unplugin-auto-import :"
+                  - generic [ref=e588]: ^20.3.0
+              - 'cell "unplugin-vue-components : ^30.0.0" [ref=e591]':
+                - generic [ref=e592]:
+                  - generic [ref=e593]: "unplugin-vue-components :"
+                  - generic [ref=e594]: ^30.0.0
+            - row [ref=e597]:
+              - 'cell "vite : ^7.3.1" [ref=e598]':
+                - generic [ref=e599]:
+                  - generic [ref=e600]: "vite :"
+                  - generic [ref=e601]: ^7.3.1
+              - 'cell "vite-plugin-dts : ^4.5.4" [ref=e604]':
+                - generic [ref=e605]:
+                  - generic [ref=e606]: "vite-plugin-dts :"
+                  - generic [ref=e607]: ^4.5.4
+              - 'cell "vite-plugin-vue-devtools : ^8.0.7" [ref=e610]':
+                - generic [ref=e611]:
+                  - generic [ref=e612]: "vite-plugin-vue-devtools :"
+                  - generic [ref=e613]: ^8.0.7
+              - 'cell "vitepress : ^1.6.4" [ref=e616]':
+                - generic [ref=e617]:
+                  - generic [ref=e618]: "vitepress :"
+                  - generic [ref=e619]: ^1.6.4
+            - row [ref=e622]:
+              - 'cell "vue : ^3.5.29" [ref=e623]':
+                - generic [ref=e624]:
+                  - generic [ref=e625]: "vue :"
+                  - generic [ref=e626]: ^3.5.29
+              - 'cell "vue-amazing-ui : 2.4.26" [ref=e629]':
+                - generic [ref=e630]:
+                  - generic [ref=e631]: "vue-amazing-ui :"
+                  - generic [ref=e632]: 2.4.26
+              - 'cell "vue-router : ^4.6.4" [ref=e635]':
+                - generic [ref=e636]:
+                  - generic [ref=e637]: "vue-router :"
+                  - generic [ref=e638]: ^4.6.4
+              - 'cell "vue-tsc : ^3.2.5" [ref=e641]':
+                - generic [ref=e642]:
+                  - generic [ref=e643]: "vue-tsc :"
+                  - generic [ref=e644]: ^3.2.5
+  - generic [ref=e647]:
+    - generic "Toggle devtools panel" [ref=e648] [cursor=pointer]
+    - generic "Toggle Component Inspector" [ref=e654] [cursor=pointer]

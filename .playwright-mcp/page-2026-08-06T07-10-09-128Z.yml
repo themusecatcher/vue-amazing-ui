@@ -1,0 +1,822 @@
+- generic [active] [ref=f22e1]:
+  - generic [ref=f22e3]:
+    - link "Skip to content" [ref=f22e4] [cursor=pointer]:
+      - /url: "#VPContent"
+    - banner:
+      - generic:
+        - generic:
+          - generic:
+            - link "Vue Amazing UI" [ref=f22e6] [cursor=pointer]:
+              - /url: /vue-amazing-ui/
+            - generic:
+              - generic:
+                - button "Search" [ref=f22e9] [cursor=pointer]:
+                  - generic [ref=f22e13]:
+                    - generic [ref=f22e14]: ⌘
+                    - generic [ref=f22e15]: K
+                - navigation "Main Navigation" [ref=f22e16]:
+                  - link "🔥 组件" [ref=f22e18] [cursor=pointer]:
+                    - /url: /vue-amazing-ui/guide/features.html
+                  - link "🛠️ 工具" [ref=f22e20] [cursor=pointer]:
+                    - /url: /vue-amazing-ui/utils/started.html
+                  - link "✨ 赞助" [ref=f22e22] [cursor=pointer]:
+                    - /url: /vue-amazing-ui/sponsor/charge.html
+                  - button "🔗 链接" [ref=f22e25] [cursor=pointer]
+                - button "extra navigation" [ref=f22e30] [cursor=pointer]
+    - button "On this page" [ref=f22e35] [cursor=pointer]
+    - complementary [ref=f22e37]:
+      - navigation "Sidebar Navigation" [ref=f22e39]:
+        - generic [ref=f22e42]:
+          - button [ref=f22e43]:
+            - heading "指引" [level=2] [ref=f22e45]
+          - generic [ref=f22e46]:
+            - link [ref=f22e50] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/features.html
+              - paragraph [ref=f22e51]: 特性
+            - link [ref=f22e55] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/started.html
+              - paragraph [ref=f22e56]: 快速上手
+            - link [ref=f22e60] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/ondemand.html
+              - paragraph [ref=f22e61]: 按需引入
+            - link [ref=f22e65] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/customize.html
+              - paragraph [ref=f22e66]: 定制主题
+            - link [ref=f22e70] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/changelog.html
+              - paragraph [ref=f22e71]: 更新日志
+        - generic [ref=f22e73]:
+          - button [ref=f22e74]:
+            - heading "组件" [level=2] [ref=f22e76]
+          - generic [ref=f22e77]:
+            - link [ref=f22e81] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/alert.html
+              - paragraph [ref=f22e82]: 警告提示 Alert
+            - link [ref=f22e86] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/avatar.html
+              - paragraph [ref=f22e87]: 头像 Avatar
+            - link [ref=f22e91] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/backtop.html
+              - paragraph [ref=f22e92]: 回到顶部 BackTop
+            - link [ref=f22e96] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/badge.html
+              - paragraph [ref=f22e97]: 徽标 Badge
+            - link [ref=f22e101] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/breadcrumb.html
+              - paragraph [ref=f22e102]: 面包屑 Breadcrumb
+            - link [ref=f22e106] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/button.html
+              - paragraph [ref=f22e107]: 按钮 Button
+            - link [ref=f22e111] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/calendar.html
+              - paragraph [ref=f22e112]: 日历 Calendar
+            - link [ref=f22e116] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/card.html
+              - paragraph [ref=f22e117]: 卡片 Card
+            - link [ref=f22e121] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/menu.html
+              - paragraph [ref=f22e122]: 导航菜单 Menu
+            - link [ref=f22e126] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/carousel.html
+              - paragraph [ref=f22e127]: 轮播图 Carousel
+            - link [ref=f22e131] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/cascader.html
+              - paragraph [ref=f22e132]: 级联选择 Cascader
+            - link [ref=f22e136] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/checkbox.html
+              - paragraph [ref=f22e137]: 复选框 Checkbox
+            - link [ref=f22e141] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/collapse.html
+              - paragraph [ref=f22e142]: 折叠面板 Collapse
+            - link [ref=f22e146] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/colorpicker.html
+              - paragraph [ref=f22e147]: 颜色选择器 ColorPicker
+            - link [ref=f22e151] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/configprovider.html
+              - paragraph [ref=f22e152]: 全局化配置 ConfigProvider
+            - link [ref=f22e156] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/countdown.html
+              - paragraph [ref=f22e157]: 倒计时 Countdown
+            - link [ref=f22e161] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/datepicker.html
+              - paragraph [ref=f22e162]: 日期选择 DatePicker
+            - link [ref=f22e166] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/descriptions.html
+              - paragraph [ref=f22e167]: 描述列表 Descriptions
+            - link [ref=f22e171] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/dialog.html
+              - paragraph [ref=f22e172]: 对话框 Dialog
+            - link [ref=f22e176] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/divider.html
+              - paragraph [ref=f22e177]: 分割线 Divider
+            - link [ref=f22e181] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/drawer.html
+              - paragraph [ref=f22e182]: 抽屉 Drawer
+            - link [ref=f22e186] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/ellipsis.html
+              - paragraph [ref=f22e187]: 文本省略 Ellipsis
+            - link [ref=f22e191] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/empty.html
+              - paragraph [ref=f22e192]: 空状态 Empty
+            - link [ref=f22e196] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/flex.html
+              - paragraph [ref=f22e197]: 弹性布局 Flex
+            - link [ref=f22e201] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/floatbutton.html
+              - paragraph [ref=f22e202]: 浮动按钮 FloatButton
+            - link [ref=f22e206] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/gradienttext.html
+              - paragraph [ref=f22e207]: 渐变文字 GradientText
+            - link [ref=f22e211] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/grid.html
+              - paragraph [ref=f22e212]: 栅格 Grid
+            - link [ref=f22e216] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/highlight.html
+              - paragraph [ref=f22e217]: 高亮文本 Highlight
+            - link [ref=f22e221] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/image.html
+              - paragraph [ref=f22e222]: 图片 Image
+            - link [ref=f22e226] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/input.html
+              - paragraph [ref=f22e227]: 输入框 Input
+            - link [ref=f22e231] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/inputnumber.html
+              - paragraph [ref=f22e232]: 数字输入框 InputNumber
+            - link [ref=f22e236] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/inputsearch.html
+              - paragraph [ref=f22e237]: 搜索框 InputSearch
+            - link [ref=f22e241] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/list.html
+              - paragraph [ref=f22e242]: 列表 List
+            - link [ref=f22e246] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/loadingbar.html
+              - paragraph [ref=f22e247]: 加载条 LoadingBar
+            - link [ref=f22e251] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/message.html
+              - paragraph [ref=f22e252]: 全局提示 Message
+            - link [ref=f22e256] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/modal.html
+              - paragraph [ref=f22e257]: 模态框 Modal
+            - link [ref=f22e261] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/notification.html
+              - paragraph [ref=f22e262]: 通知提醒 Notification
+            - link [ref=f22e266] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/numberanimation.html
+              - paragraph [ref=f22e267]: 数值动画 NumberAnimation
+            - link [ref=f22e271] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/pagination.html
+              - paragraph [ref=f22e272]: 分页 Pagination
+            - link [ref=f22e276] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/popconfirm.html
+              - paragraph [ref=f22e277]: 弹出确认 Popconfirm
+            - link [ref=f22e281] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/popover.html
+              - paragraph [ref=f22e282]: 气泡卡片 Popover
+            - link [ref=f22e286] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/progress.html
+              - paragraph [ref=f22e287]: 进度条 Progress
+            - link [ref=f22e291] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/qrcode.html
+              - paragraph [ref=f22e292]: 二维码 QRCode
+            - link [ref=f22e296] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/radio.html
+              - paragraph [ref=f22e297]: 单选框 Radio
+            - link [ref=f22e301] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/rate.html
+              - paragraph [ref=f22e302]: 评分 Rate
+            - link [ref=f22e306] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/result.html
+              - paragraph [ref=f22e307]: 结果 Result
+            - link [ref=f22e311] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/scrollbar.html
+              - paragraph [ref=f22e312]: 滚动条 Scrollbar
+            - link [ref=f22e316] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/segmented.html
+              - paragraph [ref=f22e317]: 分段控制器 Segmented
+            - link [ref=f22e321] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/select.html
+              - paragraph [ref=f22e322]: 选择器 Select
+            - link [ref=f22e326] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/skeleton.html
+              - paragraph [ref=f22e327]: 骨架屏 Skeleton
+            - link [ref=f22e331] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/slider.html
+              - paragraph [ref=f22e332]: 滑动输入条 Slider
+            - link [ref=f22e336] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/space.html
+              - paragraph [ref=f22e337]: 间距 Space
+            - link [ref=f22e341] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/spin.html
+              - paragraph [ref=f22e342]: 加载中 Spin
+            - link [ref=f22e346] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/statistic.html
+              - paragraph [ref=f22e347]: 统计数值 Statistic
+            - link [ref=f22e351] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/steps.html
+              - paragraph [ref=f22e352]: 步骤条 Steps
+            - link [ref=f22e356] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/swiper.html
+              - paragraph [ref=f22e357]: 触摸滑动 Swiper
+            - link [ref=f22e361] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/switch.html
+              - paragraph [ref=f22e362]: 开关 Switch
+            - link [ref=f22e366] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/table.html
+              - paragraph [ref=f22e367]: 表格 Table
+            - link [ref=f22e371] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/tabs.html
+              - paragraph [ref=f22e372]: 标签页 Tabs
+            - link [ref=f22e376] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/tag.html
+              - paragraph [ref=f22e377]: 标签 Tag
+            - link [ref=f22e381] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/textarea.html
+              - paragraph [ref=f22e382]: 文本域 Textarea
+            - link [ref=f22e386] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/textscroll.html
+              - paragraph [ref=f22e387]: 文字滚动 TextScroll
+            - link [ref=f22e391] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/timeline.html
+              - paragraph [ref=f22e392]: 时间轴 Timeline
+            - link [ref=f22e396] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/tooltip.html
+              - paragraph [ref=f22e397]: 文字提示 Tooltip
+            - link [ref=f22e401] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/upload.html
+              - paragraph [ref=f22e402]: 上传 Upload
+            - link [ref=f22e406] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/video.html
+              - paragraph [ref=f22e407]: 播放器 Video
+            - link [ref=f22e411] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/waterfall.html
+              - paragraph [ref=f22e412]: 瀑布流 Waterfall
+            - link [ref=f22e416] [cursor=pointer]:
+              - /url: /vue-amazing-ui/guide/components/watermark.html
+              - paragraph [ref=f22e417]: 水印 Watermark
+    - generic [ref=f22e422]:
+      - main [ref=f22e423]:
+        - generic [ref=f22e425]:
+          - heading [level=1] [ref=f22e426]:
+            - text: 菜单 Menu
+            - link "Permalink to \"菜单 Menu\"" [ref=f22e427] [cursor=pointer]:
+              - /url: "#菜单-menu"
+              - text: "#"
+          - link "赞助" [ref=f22e428] [cursor=pointer]:
+            - /url: https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html
+          - img "message" [ref=f22e443] [cursor=pointer]
+          - paragraph [ref=f22e458]:
+            - emphasis [ref=f22e459]: 为页面提供导航功能的菜单列表
+          - heading [level=2] [ref=f22e460]:
+            - text: 何时使用
+            - link "Permalink to \"何时使用\"" [ref=f22e461] [cursor=pointer]:
+              - /url: "#何时使用"
+              - text: "#"
+          - list [ref=f22e462]:
+            - listitem [ref=f22e463]: 为页面和功能提供导航的菜单列表
+            - listitem [ref=f22e464]: 可作为网站整体导航，也可作为页面局部功能的导航
+          - heading [level=2] [ref=f22e465]:
+            - text: 顶部导航
+            - link "Permalink to \"顶部导航\"" [ref=f22e466] [cursor=pointer]:
+              - /url: "#顶部导航"
+              - text: "#"
+          - paragraph [ref=f22e467]: 水平的顶部导航菜单。
+          - list [ref=f22e468]:
+            - listitem [ref=f22e469] [cursor=pointer]:
+              - img "mail" [ref=f22e470]
+              - generic [ref=f22e473]: Navigation One
+            - listitem [ref=f22e474] [cursor=pointer]:
+              - img "appstore" [ref=f22e475]
+              - generic [ref=f22e478]: Navigation Two
+            - listitem [ref=f22e479]:
+              - generic [ref=f22e480] [cursor=pointer]:
+                - img "setting" [ref=f22e481]
+                - generic [ref=f22e484]: Navigation Three - Submenu
+            - listitem [ref=f22e488] [cursor=pointer]:
+              - link "Navigation Four - Link" [ref=f22e490]:
+                - /url: https://antdv.com
+          - group [ref=f22e491]:
+            - generic "Show Code" [ref=f22e492] [cursor=pointer]
+          - heading [level=2] [ref=f22e493]:
+            - text: 内嵌菜单
+            - link "Permalink to \"内嵌菜单\"" [ref=f22e494] [cursor=pointer]:
+              - /url: "#内嵌菜单"
+              - text: "#"
+          - paragraph [ref=f22e495]: 垂直菜单，子菜单内嵌在菜单区域。
+          - list [ref=f22e496]:
+            - listitem [ref=f22e497]:
+              - generic [ref=f22e498] [cursor=pointer]:
+                - img "mail" [ref=f22e499]
+                - generic [ref=f22e502]: Navigation One
+              - list [ref=f22e506]:
+                - listitem [ref=f22e507]:
+                  - generic [ref=f22e508]: Item 1
+                  - list [ref=f22e509]:
+                    - listitem [ref=f22e510] [cursor=pointer]:
+                      - generic [ref=f22e511]: Option 1
+                    - listitem [ref=f22e512] [cursor=pointer]:
+                      - generic [ref=f22e513]: Option 2
+                - listitem [ref=f22e514]:
+                  - generic [ref=f22e515]: Item 2
+                  - list [ref=f22e516]:
+                    - listitem [ref=f22e517] [cursor=pointer]:
+                      - generic [ref=f22e518]: Option 3
+                    - listitem [ref=f22e519] [cursor=pointer]:
+                      - generic [ref=f22e520]: Option 4
+            - listitem [ref=f22e521]:
+              - generic [ref=f22e522] [cursor=pointer]:
+                - img "appstore" [ref=f22e523]
+                - generic [ref=f22e526]: Navigation Two
+            - listitem [ref=f22e530]
+            - listitem [ref=f22e531]:
+              - generic [ref=f22e532] [cursor=pointer]:
+                - img "setting" [ref=f22e533]
+                - generic [ref=f22e536]: Navigation Three
+          - group [ref=f22e540]:
+            - generic "Show Code" [ref=f22e541] [cursor=pointer]
+          - heading [level=2] [ref=f22e542]:
+            - text: 缩起内嵌菜单
+            - link "Permalink to \"缩起内嵌菜单\"" [ref=f22e543] [cursor=pointer]:
+              - /url: "#缩起内嵌菜单"
+              - text: "#"
+          - paragraph [ref=f22e544]:
+            - text: 内嵌菜单可以被缩起/展开。收起时只显示图标，子菜单以弹出层形式展示；切换时自动缓存并恢复
+            - code [ref=f22e545]: openKeys
+            - text: 。
+          - button "展开菜单" [ref=f22e546] [cursor=pointer]
+          - list [ref=f22e548]:
+            - listitem [ref=f22e549]:
+              - generic "Navigation One" [ref=f22e550] [cursor=pointer]:
+                - img "mail" [ref=f22e551]
+            - listitem [ref=f22e554]:
+              - generic "Navigation Two" [ref=f22e555] [cursor=pointer]:
+                - img "appstore" [ref=f22e556]
+            - listitem [ref=f22e559]
+            - listitem [ref=f22e560]:
+              - generic "Navigation Three" [ref=f22e561] [cursor=pointer]:
+                - img "setting" [ref=f22e562]
+          - group [ref=f22e565]:
+            - generic "Show Code" [ref=f22e566] [cursor=pointer]
+          - heading [level=2] [ref=f22e567]:
+            - text: 只展开当前父级菜单
+            - link "Permalink to \"只展开当前父级菜单\"" [ref=f22e568] [cursor=pointer]:
+              - /url: "#只展开当前父级菜单"
+              - text: "#"
+          - paragraph [ref=f22e569]: 点击菜单，收起其他展开的所有菜单，保持菜单聚焦简洁。
+          - list [ref=f22e570]:
+            - listitem [ref=f22e571]:
+              - generic [ref=f22e572] [cursor=pointer]:
+                - img "mail" [ref=f22e573]
+                - generic [ref=f22e576]: Navigation One
+              - list [ref=f22e580]:
+                - listitem [ref=f22e581]:
+                  - generic [ref=f22e582]: Item 1
+                  - list [ref=f22e583]:
+                    - listitem [ref=f22e584] [cursor=pointer]:
+                      - generic [ref=f22e585]: Option 1
+                    - listitem [ref=f22e586] [cursor=pointer]:
+                      - generic [ref=f22e587]: Option 2
+                - listitem [ref=f22e588]:
+                  - generic [ref=f22e589]: Item 2
+                  - list [ref=f22e590]:
+                    - listitem [ref=f22e591] [cursor=pointer]:
+                      - generic [ref=f22e592]: Option 3
+                    - listitem [ref=f22e593] [cursor=pointer]:
+                      - generic [ref=f22e594]: Option 4
+            - listitem [ref=f22e595]:
+              - generic [ref=f22e596] [cursor=pointer]:
+                - img "appstore" [ref=f22e597]
+                - generic [ref=f22e600]: Navigation Two
+            - listitem [ref=f22e604]
+            - listitem [ref=f22e605]:
+              - generic [ref=f22e606] [cursor=pointer]:
+                - img "setting" [ref=f22e607]
+                - generic [ref=f22e610]: Navigation Three
+          - group [ref=f22e614]:
+            - generic "Show Code" [ref=f22e615] [cursor=pointer]
+          - heading [level=2] [ref=f22e616]:
+            - text: 垂直菜单
+            - link "Permalink to \"垂直菜单\"" [ref=f22e617] [cursor=pointer]:
+              - /url: "#垂直菜单"
+              - text: "#"
+          - paragraph [ref=f22e618]: 子菜单是弹出的形式，支持多级嵌套。
+          - list [ref=f22e619]:
+            - listitem [ref=f22e620] [cursor=pointer]:
+              - img "mail" [ref=f22e621]
+              - generic [ref=f22e624]: Navigation One
+            - listitem [ref=f22e625] [cursor=pointer]:
+              - img "calendar" [ref=f22e626]
+              - generic [ref=f22e629]: Navigation Two
+            - listitem [ref=f22e630]:
+              - generic [ref=f22e631] [cursor=pointer]:
+                - img "appstore" [ref=f22e632]
+                - generic [ref=f22e635]: Navigation Three
+            - listitem [ref=f22e639]:
+              - generic [ref=f22e640] [cursor=pointer]:
+                - img "setting" [ref=f22e641]
+                - generic [ref=f22e644]: Navigation Four
+          - group [ref=f22e648]:
+            - generic "Show Code" [ref=f22e649] [cursor=pointer]
+          - heading [level=2] [ref=f22e650]:
+            - text: 主题
+            - link "Permalink to \"主题\"" [ref=f22e651] [cursor=pointer]:
+              - /url: "#主题"
+              - text: "#"
+          - paragraph [ref=f22e652]:
+            - text: 内建了两套主题
+            - code [ref=f22e653]: light
+            - text: 和
+            - code [ref=f22e654]: dark
+            - text: ，默认
+            - code [ref=f22e655]: light
+            - text: 。
+          - generic [ref=f22e657] [cursor=pointer]:
+            - generic: Dark
+            - generic: Light
+          - list [ref=f22e659]:
+            - listitem [ref=f22e660]:
+              - generic [ref=f22e661] [cursor=pointer]:
+                - img "mail" [ref=f22e662]
+                - generic [ref=f22e665]: Navigation One
+              - list [ref=f22e669]:
+                - listitem [ref=f22e670]:
+                  - generic [ref=f22e671]: Item 1
+                  - list [ref=f22e672]:
+                    - listitem [ref=f22e673] [cursor=pointer]:
+                      - generic [ref=f22e674]: Option 1
+                    - listitem [ref=f22e675] [cursor=pointer]:
+                      - generic [ref=f22e676]: Option 2
+                - listitem [ref=f22e677]:
+                  - generic [ref=f22e678]: Item 2
+                  - list [ref=f22e679]:
+                    - listitem [ref=f22e680] [cursor=pointer]:
+                      - generic [ref=f22e681]: Option 3
+                    - listitem [ref=f22e682] [cursor=pointer]:
+                      - generic [ref=f22e683]: Option 4
+            - listitem [ref=f22e684]:
+              - generic [ref=f22e685] [cursor=pointer]:
+                - img "appstore" [ref=f22e686]
+                - generic [ref=f22e689]: Navigation Two
+            - listitem [ref=f22e693]
+            - listitem [ref=f22e694]:
+              - generic [ref=f22e695] [cursor=pointer]:
+                - img "setting" [ref=f22e696]
+                - generic [ref=f22e699]: Navigation Three
+          - group [ref=f22e703]:
+            - generic "Show Code" [ref=f22e704] [cursor=pointer]
+          - heading [level=2] [ref=f22e705]:
+            - text: 子菜单主题
+            - link "Permalink to \"子菜单主题\"" [ref=f22e706] [cursor=pointer]:
+              - /url: "#子菜单主题"
+              - text: "#"
+          - paragraph [ref=f22e707]:
+            - text: 你可以通过
+            - code [ref=f22e708]: theme
+            - text: 属性来设置 SubMenu 的主题从而达到不同目录树下不同主题色的效果。该例子默认为根目录深色，子目录浅色效果。
+          - generic [ref=f22e710] [cursor=pointer]:
+            - generic: dark
+            - generic: light
+          - list [ref=f22e712]:
+            - listitem [ref=f22e713]:
+              - generic [ref=f22e714] [cursor=pointer]:
+                - img "mail" [ref=f22e715]
+                - generic [ref=f22e718]: Navigation One
+            - listitem [ref=f22e722] [cursor=pointer]:
+              - generic [ref=f22e723]: Option 5
+            - listitem [ref=f22e724] [cursor=pointer]:
+              - generic [ref=f22e725]: Option 6
+          - group [ref=f22e726]:
+            - generic "Show Code" [ref=f22e727] [cursor=pointer]
+          - heading [level=2] [ref=f22e728]:
+            - text: 切换菜单类型
+            - link "Permalink to \"切换菜单类型\"" [ref=f22e729] [cursor=pointer]:
+              - /url: "#切换菜单类型"
+              - text: "#"
+          - paragraph [ref=f22e730]: 展示动态切换模式。
+          - generic [ref=f22e731]:
+            - generic [ref=f22e733] [cursor=pointer]:
+              - generic: vertical
+              - generic: inline
+            - generic [ref=f22e736] [cursor=pointer]:
+              - generic: Dark
+              - generic: Light
+          - list [ref=f22e738]:
+            - listitem [ref=f22e739]:
+              - generic [ref=f22e740] [cursor=pointer]:
+                - img "mail" [ref=f22e741]
+                - generic [ref=f22e744]: Navigation One
+              - list [ref=f22e748]:
+                - listitem [ref=f22e749]:
+                  - generic [ref=f22e750]: Item 1
+                  - list [ref=f22e751]:
+                    - listitem [ref=f22e752] [cursor=pointer]:
+                      - generic [ref=f22e753]: Option 1
+                    - listitem [ref=f22e754] [cursor=pointer]:
+                      - generic [ref=f22e755]: Option 2
+                - listitem [ref=f22e756]:
+                  - generic [ref=f22e757]: Item 2
+                  - list [ref=f22e758]:
+                    - listitem [ref=f22e759] [cursor=pointer]:
+                      - generic [ref=f22e760]: Option 3
+                    - listitem [ref=f22e761] [cursor=pointer]:
+                      - generic [ref=f22e762]: Option 4
+            - listitem [ref=f22e763]:
+              - generic [ref=f22e764] [cursor=pointer]:
+                - img "appstore" [ref=f22e765]
+                - generic [ref=f22e768]: Navigation Two
+            - listitem [ref=f22e772]
+            - listitem [ref=f22e773]:
+              - generic [ref=f22e774] [cursor=pointer]:
+                - img "setting" [ref=f22e775]
+                - generic [ref=f22e778]: Navigation Three
+          - group [ref=f22e782]:
+            - generic "Show Code" [ref=f22e783] [cursor=pointer]
+          - heading [level=2] [ref=f22e784]:
+            - text: API
+            - link "Permalink to \"API\"" [ref=f22e785] [cursor=pointer]:
+              - /url: "#api"
+              - text: "#"
+          - heading [level=3] [ref=f22e786]:
+            - text: Menu Props
+            - link "Permalink to \"Menu Props\"" [ref=f22e787] [cursor=pointer]:
+              - /url: "#menu-props"
+              - text: "#"
+          - table [ref=f22e788]:
+            - rowgroup [ref=f22e789]:
+              - row [ref=f22e790]:
+                - columnheader "参数" [ref=f22e791]
+                - columnheader "说明" [ref=f22e792]
+                - columnheader "类型" [ref=f22e793]
+                - columnheader "默认值" [ref=f22e794]
+            - rowgroup [ref=f22e795]:
+              - row [ref=f22e796]:
+                - cell "items" [ref=f22e797]
+                - cell "菜单内容数据" [ref=f22e798]
+                - cell [ref=f22e799]:
+                  - code [ref=f22e800]: ItemType[]
+                - cell [ref=f22e801]:
+                  - code [ref=f22e802]: "[]"
+              - row [ref=f22e803]:
+                - cell "mode" [ref=f22e804]
+                - cell "菜单类型，支持垂直、水平、内嵌三种模式" [ref=f22e805]
+                - cell [ref=f22e806]:
+                  - code [ref=f22e807]: "'vertical' | 'horizontal' | 'inline'"
+                - cell [ref=f22e808]:
+                  - code [ref=f22e809]: "'vertical'"
+              - row [ref=f22e810]:
+                - cell "theme" [ref=f22e811]
+                - cell "主题颜色" [ref=f22e812]
+                - cell [ref=f22e813]:
+                  - code [ref=f22e814]: "'light' | 'dark'"
+                - cell [ref=f22e815]:
+                  - code [ref=f22e816]: "'light'"
+              - row [ref=f22e817]:
+                - cell "selectedKeys(v-model)" [ref=f22e818]
+                - cell "当前选中的菜单项 key 数组" [ref=f22e819]
+                - cell [ref=f22e820]:
+                  - code [ref=f22e821]: (string | number)[]
+                - cell [ref=f22e822]:
+                  - code [ref=f22e823]: "[]"
+              - row [ref=f22e824]:
+                - cell "openKeys(v-model)" [ref=f22e825]
+                - cell "当前展开的 SubMenu 菜单项 key 数组" [ref=f22e826]
+                - cell [ref=f22e827]:
+                  - code [ref=f22e828]: (string | number)[]
+                - cell [ref=f22e829]:
+                  - code [ref=f22e830]: "[]"
+              - row [ref=f22e831]:
+                - cell "multiple" [ref=f22e832]
+                - cell "是否允许多选" [ref=f22e833]
+                - cell [ref=f22e834]:
+                  - code [ref=f22e835]: boolean
+                - cell [ref=f22e836]:
+                  - code [ref=f22e837]: "false"
+              - row [ref=f22e838]:
+                - cell "selectable" [ref=f22e839]
+                - cell "是否允许选中" [ref=f22e840]
+                - cell [ref=f22e841]:
+                  - code [ref=f22e842]: boolean
+                - cell [ref=f22e843]:
+                  - code [ref=f22e844]: "true"
+              - row [ref=f22e845]:
+                - cell "inlineCollapsed" [ref=f22e846]
+                - cell "inline 时菜单是否收起状态（收起/展开时自动缓存并恢复 openKeys）" [ref=f22e847]
+                - cell [ref=f22e848]:
+                  - code [ref=f22e849]: boolean
+                - cell [ref=f22e850]:
+                  - code [ref=f22e851]: undefined
+              - row [ref=f22e852]:
+                - cell "inlineIndent" [ref=f22e853]
+                - cell "inline 模式的菜单缩进宽度 (px)" [ref=f22e854]
+                - cell [ref=f22e855]:
+                  - code [ref=f22e856]: number
+                - cell [ref=f22e857]:
+                  - code [ref=f22e858]: "24"
+              - row [ref=f22e859]:
+                - cell "triggerSubMenuAction" [ref=f22e860]
+                - cell "触发子菜单展开的行为（inline 模式恒为 click）" [ref=f22e861]
+                - cell [ref=f22e862]:
+                  - code [ref=f22e863]: "'click' | 'hover'"
+                - cell [ref=f22e864]:
+                  - code [ref=f22e865]: "'hover'"
+              - row [ref=f22e866]:
+                - cell "subMenuOpenDelay" [ref=f22e867]
+                - cell "鼠标进入子菜单后开启延时，单位秒" [ref=f22e868]
+                - cell [ref=f22e869]:
+                  - code [ref=f22e870]: number
+                - cell [ref=f22e871]:
+                  - code [ref=f22e872]: "0"
+              - row [ref=f22e873]:
+                - cell "subMenuCloseDelay" [ref=f22e874]
+                - cell "鼠标离开子菜单后关闭延时，单位秒" [ref=f22e875]
+                - cell [ref=f22e876]:
+                  - code [ref=f22e877]: number
+                - cell [ref=f22e878]:
+                  - code [ref=f22e879]: "0.1"
+              - row [ref=f22e880]:
+                - cell "forceSubMenuRender" [ref=f22e881]
+                - cell "在子菜单展示之前就渲染进 DOM" [ref=f22e882]
+                - cell [ref=f22e883]:
+                  - code [ref=f22e884]: boolean
+                - cell [ref=f22e885]:
+                  - code [ref=f22e886]: "false"
+              - row [ref=f22e887]:
+                - cell "getPopupContainer" [ref=f22e888]
+                - cell "自定义弹出层挂载容器" [ref=f22e889]
+                - cell [ref=f22e890]:
+                  - code [ref=f22e891]: "(node: HTMLElement) => HTMLElement"
+                - cell [ref=f22e892]:
+                  - text: 默认
+                  - code [ref=f22e893]: body
+              - row [ref=f22e894]:
+                - cell "expandIcon" [ref=f22e895]
+                - cell "自定义 SubMenu 展开图标（可被单个 SubMenu 的 expandIcon 覆盖）" [ref=f22e896]
+                - cell [ref=f22e897]:
+                  - code [ref=f22e898]: "VNode | ((info: { isOpen: boolean }) => VNode)"
+                - cell "-" [ref=f22e899]
+              - row [ref=f22e900]:
+                - cell "motion" [ref=f22e901]
+                - cell [ref=f22e902]:
+                  - text: inline 展开/收起动画配置（Vue Transition 属性子集，如
+                  - code [ref=f22e903]: "{ name }"
+                  - text: ）
+                - cell [ref=f22e904]:
+                  - code [ref=f22e905]: MenuMotion
+                - cell "-" [ref=f22e906]
+              - row [ref=f22e907]:
+                - cell "disabled" [ref=f22e908]
+                - cell "整个菜单是否禁用" [ref=f22e909]
+                - cell [ref=f22e910]:
+                  - code [ref=f22e911]: boolean
+                - cell [ref=f22e912]:
+                  - code [ref=f22e913]: "false"
+              - row [ref=f22e914]:
+                - cell "id" [ref=f22e915]
+                - cell "根元素 id（无障碍）" [ref=f22e916]
+                - cell [ref=f22e917]:
+                  - code [ref=f22e918]: string
+                - cell "-" [ref=f22e919]
+              - row [ref=f22e920]:
+                - cell "tabindex" [ref=f22e921]
+                - cell "根元素 tabindex（无障碍）" [ref=f22e922]
+                - cell [ref=f22e923]:
+                  - code [ref=f22e924]: number | string
+                - cell "-" [ref=f22e925]
+              - row [ref=f22e926]:
+                - cell "role" [ref=f22e927]
+                - cell "根元素 role（无障碍）" [ref=f22e928]
+                - cell [ref=f22e929]:
+                  - code [ref=f22e930]: string
+                - cell "-" [ref=f22e931]
+          - heading [level=3] [ref=f22e932]:
+            - text: Menu Events
+            - link "Permalink to \"Menu Events\"" [ref=f22e933] [cursor=pointer]:
+              - /url: "#menu-events"
+              - text: "#"
+          - table [ref=f22e934]:
+            - rowgroup [ref=f22e935]:
+              - row [ref=f22e936]:
+                - columnheader "事件名称" [ref=f22e937]
+                - columnheader "说明" [ref=f22e938]
+                - columnheader "回调参数" [ref=f22e939]
+            - rowgroup [ref=f22e940]:
+              - row [ref=f22e941]:
+                - cell "click" [ref=f22e942]
+                - cell "点击 MenuItem 时触发" [ref=f22e943]
+                - cell [ref=f22e944]:
+                  - code [ref=f22e945]: "(info: { item; key; keyPath })"
+              - row [ref=f22e946]:
+                - cell "select" [ref=f22e947]
+                - cell "选中 MenuItem 时触发" [ref=f22e948]
+                - cell [ref=f22e949]:
+                  - code [ref=f22e950]: "(info: { item; key; keyPath; selectedKeys })"
+              - row [ref=f22e951]:
+                - cell "deselect" [ref=f22e952]
+                - cell "多选模式下取消选中 MenuItem 时触发" [ref=f22e953]
+                - cell [ref=f22e954]:
+                  - code [ref=f22e955]: "(info: { item; key; keyPath; selectedKeys })"
+              - row [ref=f22e956]:
+                - cell "openChange" [ref=f22e957]
+                - cell "SubMenu 展开/关闭时触发" [ref=f22e958]
+                - cell [ref=f22e959]:
+                  - code [ref=f22e960]: "(openKeys: (string | number)[])"
+              - row [ref=f22e961]:
+                - cell "focus" [ref=f22e962]
+                - cell "根元素获得焦点时触发" [ref=f22e963]
+                - cell [ref=f22e964]:
+                  - code [ref=f22e965]: "(event: FocusEvent)"
+              - row [ref=f22e966]:
+                - cell "blur" [ref=f22e967]
+                - cell "根元素失去焦点时触发" [ref=f22e968]
+                - cell [ref=f22e969]:
+                  - code [ref=f22e970]: "(event: FocusEvent)"
+              - row [ref=f22e971]:
+                - cell "mousedown" [ref=f22e972]
+                - cell "根元素鼠标按下时触发" [ref=f22e973]
+                - cell [ref=f22e974]:
+                  - code [ref=f22e975]: "(event: MouseEvent)"
+          - heading [level=3] [ref=f22e976]:
+            - text: ItemType
+            - link "Permalink to \"ItemType\"" [ref=f22e977] [cursor=pointer]:
+              - /url: "#itemtype"
+              - text: "#"
+          - generic [ref=f22e978]:
+            - button "Copy Code" [ref=f22e979] [cursor=pointer]
+            - generic [ref=f22e980]: ts
+            - code [ref=f22e982]:
+              - generic [ref=f22e983]: type ItemType = MenuItemType | SubMenuType | MenuItemGroupType | MenuDividerType
+              - generic [ref=f22e984]: // 所有菜单项共享的属性
+              - generic [ref=f22e985]: "interface ItemSharedProps {"
+              - generic [ref=f22e986]: "style?: CSSProperties // 自定义行内样式"
+              - generic [ref=f22e987]: "class?: string // 自定义类名"
+              - generic [ref=f22e988]: "}"
+              - generic [ref=f22e989]: "interface MenuItemType extends ItemSharedProps {"
+              - generic [ref=f22e990]: "key: string | number // 唯一标识（必填）"
+              - generic [ref=f22e991]: "label?: string | VNode // 菜单项标题"
+              - generic [ref=f22e992]: "icon?: VNode | (() => VNode) // 菜单图标"
+              - generic [ref=f22e993]: "title?: string // 收起时展示的悬浮标题"
+              - generic [ref=f22e994]: "disabled?: boolean // 是否禁用，默认 false"
+              - generic [ref=f22e995]: "danger?: boolean // 危险样式，默认 false"
+              - generic [ref=f22e996]: "onClick?: (info: MenuItemClickInfo) => void // 点击回调（先于 Menu 的 click 事件触发）"
+              - generic [ref=f22e997]: "onMouseenter?: (info: MenuItemHoverInfo) => void // 鼠标移入回调"
+              - generic [ref=f22e998]: "onMouseleave?: (info: MenuItemHoverInfo) => void // 鼠标移出回调"
+              - generic [ref=f22e999]: "}"
+              - generic [ref=f22e1000]: "interface SubMenuType extends ItemSharedProps {"
+              - generic [ref=f22e1001]: "key: string | number // 唯一标识（必填）"
+              - generic [ref=f22e1002]: "children: ItemType[] // 子菜单项"
+              - generic [ref=f22e1003]: "label?: string | VNode // 子菜单标题"
+              - generic [ref=f22e1004]: "icon?: VNode | (() => VNode) // 菜单图标"
+              - generic [ref=f22e1005]: "title?: string // 收起时展示的悬浮标题"
+              - generic [ref=f22e1006]: "disabled?: boolean // 是否禁用，默认 false"
+              - generic [ref=f22e1007]: "theme?: 'light' | 'dark' // 子菜单主题（默认从 Menu 继承）"
+              - generic [ref=f22e1008]: "popupClassName?: string // 弹出层类名"
+              - generic [ref=f22e1009]: "popupOffset?: [number, number] // 弹出层偏移 [x, y]"
+              - generic [ref=f22e1010]: "rootClassName?: string // 弹出层根类名"
+              - generic [ref=f22e1011]: "expandIcon?: VNode | ((info: { isOpen: boolean }) => VNode) // 自定义展开图标"
+              - generic [ref=f22e1012]: "onMouseenter?: (info: MenuItemHoverInfo) => void"
+              - generic [ref=f22e1013]: "onMouseleave?: (info: MenuItemHoverInfo) => void"
+              - generic [ref=f22e1014]: "onTitleClick?: (info: { key; domEvent: MouseEvent }) => void // 点击子菜单标题回调"
+              - generic [ref=f22e1015]: "}"
+              - generic [ref=f22e1016]: "interface MenuItemGroupType extends ItemSharedProps {"
+              - generic [ref=f22e1017]: "type: 'group' // 分组标识（必填）"
+              - generic [ref=f22e1018]: "label?: string | VNode // 分组标题"
+              - generic [ref=f22e1019]: "children: ItemType[] // 分组内菜单项"
+              - generic [ref=f22e1020]: "key?: string | number // 可选唯一标识"
+              - generic [ref=f22e1021]: "}"
+              - generic [ref=f22e1022]: "interface MenuDividerType extends ItemSharedProps {"
+              - generic [ref=f22e1023]: "type: 'divider' // 分割线标识（必填）"
+              - generic [ref=f22e1024]: "dashed?: boolean // 是否虚线，默认 false"
+              - generic [ref=f22e1025]: "}"
+      - contentinfo [ref=f22e1026]:
+        - link "在 GitHub 上编辑此页面" [ref=f22e1029] [cursor=pointer]:
+          - /url: https://github.com/themusecatcher/vue-amazing-ui/tree/main/docs/guide/components/menu.md
+        - navigation "Pager" [ref=f22e1031]:
+          - link "Previous page 卡片 Card" [ref=f22e1034] [cursor=pointer]:
+            - /url: /vue-amazing-ui/guide/components/card.html
+            - generic [ref=f22e1035]: Previous page
+            - generic [ref=f22e1036]: 卡片 Card
+          - link "Next page 轮播图 Carousel" [ref=f22e1038] [cursor=pointer]:
+            - /url: /vue-amazing-ui/guide/components/carousel.html
+            - generic [ref=f22e1039]: Next page
+            - generic [ref=f22e1040]: 轮播图 Carousel
+  - list [ref=f22e1042]:
+    - listitem [ref=f22e1043]:
+      - generic [ref=f22e1044]: Item 1
+      - list [ref=f22e1045]:
+        - listitem [ref=f22e1046] [cursor=pointer]:
+          - generic [ref=f22e1047]: Option 1
+        - listitem [ref=f22e1048] [cursor=pointer]:
+          - generic [ref=f22e1049]: Option 2
+    - listitem [ref=f22e1050]:
+      - generic [ref=f22e1051]: Item 2
+      - list [ref=f22e1052]:
+        - listitem [ref=f22e1053] [cursor=pointer]:
+          - generic [ref=f22e1054]: Option 3
+        - listitem [ref=f22e1055] [cursor=pointer]:
+          - generic [ref=f22e1056]: Option 4
+  - list [ref=f22e1058]:
+    - listitem [ref=f22e1059] [cursor=pointer]:
+      - generic [ref=f22e1060]: Option 1
+    - listitem [ref=f22e1061] [cursor=pointer]:
+      - generic [ref=f22e1062]: Option 2
+    - listitem [ref=f22e1063] [cursor=pointer]:
+      - generic [ref=f22e1064]: Option 3

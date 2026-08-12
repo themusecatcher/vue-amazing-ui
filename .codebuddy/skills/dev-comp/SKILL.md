@@ -6,7 +6,7 @@ description: 面向 vue-amazing-ui 组件库的单组件开发迭代工作流。
 # dev-comp —— 组件库开发迭代工作流
 
 > 定位：vue-amazing-ui 单组件开发迭代领域 SOP。
-> 架构：**轻量领域流程 + 软复用 dev-flow 能力模块**。全程❌ 不产生 `.flow` 锁、❌ 不走门控、❌ 不做逐步 JSON 校验。
+> 架构：**轻量领域流程 + 软复用 dev-flow 能力模块**。全程❌ 不产生 `.flow` 锁、❌ 不走 dev-flow 重型门控（`.validated` 物理检查点 / JSON 逐步校验 / 门控 subagent / post-step 脚本 / 工具门禁）；✅ 仅保留**轻量交互式 Gate**——每阶段完成后输出「阶段完成报告」并弹 `ask_followup_question`，等用户确认再进入下一阶段（详见「6 阶段 + Gate 流程总览」）。
 
 ## ⚙️ 个人化配置区（复用/分享时只改这一块）
 
@@ -16,9 +16,9 @@ description: 面向 vue-amazing-ui 组件库的单组件开发迭代工作流。
 
 | 配置项 | 填写你的本地路径 | 说明 |
 |:--|:--|:--|
-| `PROJECT_ROOT` | `<填写>` | 组件库项目根，如 `~/myGithub/vue-amazing-ui` |
-| `REF_ANTDV_LOCAL` | `<填写或留空>` | Ant Design Vue 本地 clone 路径（留空则降级用官网） |
-| `REF_NAIVE_LOCAL` | `<填写或留空>` | Naive UI 本地 clone 路径（留空则降级用官网） |
+| `PROJECT_ROOT` | `~/myGithub/vue-amazing-ui` | 组件库项目根 |
+| `REF_ANTDV_LOCAL` | `~/myGithub/ant-design-vue` | Ant Design Vue 本地 clone 路径（留空则降级用官网） |
+| `REF_NAIVE_LOCAL` | `~/myGithub/naive-ui` | Naive UI 本地 clone 路径（留空则降级用官网） |
 
 ### 默认可用（无需修改）
 
@@ -47,7 +47,9 @@ description: 面向 vue-amazing-ui 组件库的单组件开发迭代工作流。
 **优先级**：incident-triage（告警硬触发）> 用户显式 dev-flow 命令 > dev-comp > 普通对话。
 **与 dev-flow 互斥**：用户显式用 `dev-flow` 命令时走 dev-flow；用 `dc:` / `dev-comp` 或组件开发意图时走本 skill。二者不同时激活。
 
-## 6 阶段流程总览
+## 6 阶段 + Gate 流程总览
+
+> 每阶段完成后插入一道 🚦 **Gate**：先输出「阶段完成报告」，再弹 `ask_followup_question`（✅ 继续 / ⏸️ 暂停 / ⬅️ 回退），**未获用户确认不得进入下一阶段**。
 
 ```
 阶段 0  接续/初始化   → 读/建精简工作上下文 + todo plan + 分阶段决策
@@ -58,6 +60,9 @@ description: 面向 vue-amazing-ui 组件库的单组件开发迭代工作流。
 阶段 5  验收收尾      → lint+type-check+浏览器对照 → devlog+metrics+knowledge → smart-commit
 ```
 
+**各阶段对应 Gate**：Gate 0 确认组件名/分阶段计划/参考源 · Gate 1 确认分支/目录/注册骨架 · Gate 2 确认功能 + API/Demo 用例对齐清单 · Gate 3 确认演示页覆盖所有用例 · Gate 4 确认文档完整 · Gate 5 确认验收结果 + 提交。
+
+> Gate 报告模板 + 交互式选项定义 → `references/flow.md` §Gate 门控机制
 > 完整执行规范 → `read_file("references/flow.md")`
 
 ## 能力复用索引（软复用，零硬依赖 dev-flow）
