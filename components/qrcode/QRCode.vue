@@ -92,7 +92,7 @@ defineExpose({
 })
 </script>
 <template>
-  <div class="m-qrcode" :class="{ 'qrcode-bordered': bordered }" :style="qrcodeStyle">
+  <div class="qrcode-wrap" :class="{ 'qrcode-bordered': bordered }" :style="qrcodeStyle">
     <span v-if="type === 'svg'" ref="qrcodeSVGRef" class="qrcode-svg"></span>
     <span v-if="type === 'canvas'" ref="qrcodeCanvasRef" class="qrcode-canvas"></span>
     <img v-if="type === 'image'" :src="qrcode as string" class="qrcode-image" alt="QR Code" />
@@ -100,7 +100,7 @@ defineExpose({
   </div>
 </template>
 <style lang="less" scoped>
-.m-qrcode {
+.qrcode-wrap {
   position: relative;
   display: inline-flex;
   justify-content: center;

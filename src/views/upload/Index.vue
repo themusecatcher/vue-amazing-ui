@@ -70,13 +70,14 @@ function onCustomRequest(file: File) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       // 模拟接口调用返回 name 和 url
+      let res: { name: string; url: string }
       if (file.type === 'application/pdf') {
-        var res = {
+        res = {
           name: 'Markdown.pdf',
           url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
         }
       } else {
-        var res = {
+        res = {
           name: '1.jpg',
           url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
         }
@@ -98,13 +99,14 @@ function onCustomSliceUpload(file: File) {
       console.timeEnd('sliceFile')
       setTimeout(() => {
         // 模拟接口调用返回 name 和 url
+        let res: { name: string; url: string }
         if (file.type === 'application/pdf') {
-          var res = {
+          res = {
             name: 'Markdown.pdf',
             url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
           }
         } else {
-          var res = {
+          res = {
             name: '1.jpg',
             url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
           }

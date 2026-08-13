@@ -122,13 +122,7 @@ function updateValue(value: string): void {
       numValue.value = getFormatValue()
     }
   } else {
-    if (!props.value) {
-      if (props.formatter) {
-        numValue.value = props.formatter(value)
-      }
-    } else {
-      numValue.value = getFormatValue()
-    }
+    numValue.value = getFormatValue()
   }
 }
 function onInput(e: Event): void {
@@ -176,7 +170,7 @@ function onDown(): void {
 <template>
   <div
     tabindex="1"
-    class="m-input-number"
+    class="input-number-wrap"
     :class="{ 'input-number-disabled': disabled }"
     :style="`
       --input-number-width: ${inputWidth};
@@ -186,7 +180,7 @@ function onDown(): void {
       --input-number-primary-shadow-color: ${shadowColor};
     `"
   >
-    <div class="input-number-wrap">
+    <div class="input-number-container">
       <span v-if="showPrefix" class="input-prefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
@@ -249,7 +243,7 @@ function onDown(): void {
   </div>
 </template>
 <style lang="less" scoped>
-.m-input-number {
+.input-number-wrap {
   position: relative;
   display: inline-block;
   width: var(--input-number-width);
@@ -274,7 +268,7 @@ function onDown(): void {
     border-color: var(--input-number-primary-color-focus);
     box-shadow: 0 0 0 2px var(--input-number-primary-shadow-color);
   }
-  .input-number-wrap {
+  .input-number-container {
     height: 100%;
     display: flex;
     .input-prefix {
@@ -371,7 +365,7 @@ function onDown(): void {
     border-color: #d9d9d9;
     box-shadow: none;
   }
-  .input-number-wrap .input-number {
+  .input-number-container .input-number {
     color: rgba(0, 0, 0, 0.25);
     cursor: not-allowed;
   }

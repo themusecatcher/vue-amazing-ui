@@ -50,7 +50,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
     <Space gap="small">
       <Tag color="magenta">pink</Tag>
       <Tag>Tag 1</Tag>
-      <Tag><a href="https://blog.csdn.net/Dandrose">Link</a></Tag>
+      <Tag><a href="https://themusecatcher.blog.csdn.net">Link</a></Tag>
       <Tag closable @close="onClose">Tag 2</Tag>
     </Space>
     <h2 class="mt30 mb10">多彩标签</h2>

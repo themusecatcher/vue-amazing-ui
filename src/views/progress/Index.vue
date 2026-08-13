@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h, ref } from 'vue'
+import { ref } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { ProgressProps } from 'vue-amazing-ui'
 const percent = ref(80)
@@ -39,8 +39,8 @@ function onDecline(scale: number) {
     <h2 class="mt30 mb10">进度圈</h2>
     <Space align="center">
       <Progress type="circle" :percent="percent" />
-      <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-      <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+      <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+      <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
     </Space>
     <h2 class="mt30 mb10">完成进度条</h2>
     <Flex vertical>
@@ -69,8 +69,8 @@ function onDecline(scale: number) {
           }"
           :percent="percent"
         />
-        <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-        <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+        <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+        <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
       </Space>
     </Flex>
     <h2 class="mt30 mb10">自定义样式</h2>
@@ -100,8 +100,8 @@ function onDecline(scale: number) {
           :info-size="28"
           :percent="percent"
         />
-        <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-        <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+        <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+        <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
       </Space>
     </Flex>
     <h2 class="mt30 mb10">自定义边缘形状</h2>
@@ -130,8 +130,8 @@ function onDecline(scale: number) {
           :info-size="24"
           :percent="percent"
         />
-        <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-        <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+        <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+        <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
       </Space>
     </Flex>
     <h2 class="mt30 mb10">自定义文字</h2>
@@ -176,8 +176,8 @@ function onDecline(scale: number) {
             <span style="color: #d48806">Bingo</span>
           </template>
         </Progress>
-        <Button @click="onDecline(5)" size="large" :icon="() => h(MinusOutlined)">Decline</Button>
-        <Button @click="onIncrease(5)" size="large" :icon="() => h(PlusOutlined)">Increase</Button>
+        <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
+        <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
       </Space>
     </Flex>
   </div>

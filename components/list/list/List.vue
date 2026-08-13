@@ -43,7 +43,7 @@ const showFooter = computed(() => {
 <template>
   <Spin size="small" :spinning="loading" v-bind="spinProps">
     <div
-      class="m-list"
+      class="list-wrap"
       :class="{
         'list-bordered': bordered,
         'list-vertical': vertical,
@@ -70,7 +70,7 @@ const showFooter = computed(() => {
   </Spin>
 </template>
 <style lang="less" scoped>
-.m-list {
+.list-wrap {
   margin: 0;
   position: relative;
   color: rgba(0, 0, 0, 0.88);

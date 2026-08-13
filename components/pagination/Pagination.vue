@@ -112,9 +112,9 @@ watch(
   }
 )
 function dealPageList(curPage: number): number[] {
-  var resList = []
-  var offset = Math.floor(props.pageAmount / 2)
-  var pager = {
+  const resList = []
+  const offset = Math.floor(props.pageAmount / 2)
+  const pager = {
     start: curPage - offset,
     end: curPage + offset
   }
@@ -210,7 +210,7 @@ function onPageSizeChange(pageSize: number): void {
 </script>
 <template>
   <div
-    class="m-pagination"
+    class="pagination-wrap"
     :class="[
       `pagination-${placement}`,
       {
@@ -369,7 +369,7 @@ function onPageSizeChange(pageSize: number): void {
   </div>
 </template>
 <style lang="less" scoped>
-.m-pagination {
+.pagination-wrap {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -612,8 +612,8 @@ function onPageSizeChange(pageSize: number): void {
     .pagination-jump-page {
       gap: 6px;
       height: 28px;
-      :deep(.m-input) {
-        .input-wrap {
+      :deep(.input-wrap) {
+        .input-container {
           padding: 3px 11px;
         }
       }

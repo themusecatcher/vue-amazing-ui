@@ -1,2 +1,2 @@
 # 在 git commit 命令执行前，但在用户输入提交信息后触发
-npx lint-staged
+npx --no-install lint-staged

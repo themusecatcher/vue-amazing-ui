@@ -9,7 +9,9 @@ export default {
   extends: ['@commitlint/config-conventional'],
   rules: {
     'type-enum': [2, 'always', ['feat', 'fix', 'docs', 'style', 'refactor', 'test', 'chore', 'revert', 'perf']],
-    'header-max-length': [0, 'always', 120]
+    'header-max-length': [2, 'always', 120],
+    // 禁止使用 scope，强制 `<type>: <description>` 格式
+    'scope-empty': [2, 'always']
   },
   // ESM 兼容配置
   parserPreset: {

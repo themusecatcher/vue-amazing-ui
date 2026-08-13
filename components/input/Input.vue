@@ -148,7 +148,7 @@ function onPassword(): void {
 </script>
 <template>
   <div
-    class="m-input"
+    class="input-wrap"
     :style="`
       --input-width: ${inputWidth};
       --input-primary-color-hover: ${colorPalettes[4]};
@@ -161,7 +161,7 @@ function onPassword(): void {
     </span>
     <div
       tabindex="1"
-      class="input-wrap"
+      class="input-container"
       :class="[
         `input-${size}`,
         {
@@ -258,7 +258,7 @@ function onPassword(): void {
   </div>
 </template>
 <style lang="less" scoped>
-.m-input {
+.input-wrap {
   width: var(--input-width);
   text-align: start;
   vertical-align: top;
@@ -296,7 +296,7 @@ function onPassword(): void {
     border-bottom-left-radius: 0;
     border-left: 0;
   }
-  .input-wrap {
+  .input-container {
     position: relative;
     font-size: 14px;
     color: rgba(0, 0, 0, 0.88);

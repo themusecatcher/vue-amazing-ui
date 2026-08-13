@@ -77,7 +77,7 @@ watchEffect(
 )
 </script>
 <template>
-  <div class="m-timeline" :style="`width: ${totalWidth};`">
+  <div class="timeline-wrap" :style="`width: ${totalWidth};`">
     <div
       class="timeline-item"
       :class="{ 'item-last': index === items.length - 1 }"
@@ -101,7 +101,7 @@ watchEffect(
   </div>
 </template>
 <style lang="less" scoped>
-.m-timeline {
+.timeline-wrap {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
