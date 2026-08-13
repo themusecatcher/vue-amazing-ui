@@ -1,4 +1,4 @@
-# /bin/bash
+#!/bin/bash
 
 # 确保脚本抛出遇到的错误
 set -e
@@ -7,14 +7,14 @@ set -e
 
 commitDesc=$1
 
-git add .
-
+# 强制要求传入语义化的提交描述，避免产生无信息量的 commit
 if [ -z "$commitDesc" ]; then
-  git commit -m 'feat: update components library'
-else
-  git commit -m "$commitDesc"
+  echo "❌ 缺少提交描述。用法: pnpm push \"<type>: <描述>\"（如 pnpm push \"fix: correct InputNumber empty value\"）"
+  exit 1
 fi
 
+git add .
+git commit -m "$commitDesc"
 git push
 
 echo ⏰ "$(date '+%Y-%m-%d %H:%M:%S')"

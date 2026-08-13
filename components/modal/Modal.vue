@@ -126,7 +126,7 @@ const modalContentStyle = computed(() => {
   return getComputedValue('contentStyle') as CSSProperties
 })
 const modalBodyClass = computed(() => {
-  return getComputedValue('bodyClass')
+  return getComputedValue('bodyClass') as string
 })
 const modalBodyStyle = computed(() => {
   return getComputedValue('bodyStyle') as CSSProperties
@@ -302,7 +302,7 @@ defineExpose({
 </script>
 <template>
   <div
-    class="m-modal-root"
+    class="modal-root"
     :style="`
       --modal-primary-color: ${colorPalettes[5]};
       --modal-success-color: #52c41a;
@@ -319,7 +319,7 @@ defineExpose({
       v-show="showModalWrap"
       tabindex="-1"
       ref="modalWrapRef"
-      class="m-modal-wrap"
+      class="modal-wrap"
       :class="{ 'flex-centered': modalCentered }"
       @click.self="getComputedValue('maskClosable') ? onCancel() : () => false"
       @keydown.esc="getComputedValue('keyboard') ? onCancel() : () => false"
@@ -336,7 +336,7 @@ defineExpose({
         @before-leave="onBeforeLeave"
         @after-leave="onAfterLeave"
       >
-        <div v-show="modalOpen" class="m-modal" :style="modalStyle">
+        <div v-show="modalOpen" class="modal-container" :style="modalStyle">
           <div v-if="!modalDestroyOnClose" class="modal-body-wrap" :class="modalBodyClass" :style="modalBodyStyle">
             <div class="modal-body">
               <div
@@ -642,13 +642,13 @@ defineExpose({
   z-index: 1000;
   background: rgba(0, 0, 0, 0.45);
 }
-.m-modal-wrap {
+.modal-wrap {
   position: fixed;
   inset: 0;
   overflow: auto;
   outline: 0;
   z-index: 1010;
-  .m-modal {
+  .modal-container {
     position: relative;
     margin: 0 auto;
     color: rgba(0, 0, 0, 0.88);
@@ -736,7 +736,7 @@ defineExpose({
   display: flex;
   justify-content: center;
   align-items: center;
-  .m-modal {
+  .modal-container {
     padding-bottom: 0;
   }
 }

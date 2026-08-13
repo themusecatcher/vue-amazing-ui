@@ -173,7 +173,7 @@ defineExpose({
 </script>
 <template>
   <div
-    class="m-video"
+    class="video-wrap"
     :class="{ 'video-hover': showPlayIcon }"
     :style="`--video-width: ${veoWidth}; --video-height: ${veoHeight}; --video-icon-scale: ${iconSize / 80};`"
   >
@@ -208,7 +208,7 @@ defineExpose({
   </div>
 </template>
 <style lang="less" scoped>
-.m-video {
+.video-wrap {
   width: var(--video-width);
   height: var(--video-height);
   position: relative;

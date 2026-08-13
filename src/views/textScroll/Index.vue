@@ -4,12 +4,12 @@ import type { TextScrollItem } from 'vue-amazing-ui'
 const scrollItems = ref<TextScrollItem[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   },
   {
     title: '《麦田里的守望者》首次出版于1951年',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   },
   {
@@ -17,35 +17,36 @@ const scrollItems = ref<TextScrollItem[]>([
   },
   {
     title: '并借鉴了意识流天马行空的写作方法，充分探索了一个十几岁少年的内心世界',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   },
   {
     title: '愤怒与焦虑是此书的两大主题，主人公的经历和思想在青少年中引起强烈共鸣',
-    href: 'https://blog.csdn.net/Dandrose?type=blog',
+    href: 'https://themusecatcher.blog.csdn.net',
     target: '_blank'
   }
 ])
 const singleItem: TextScrollItem = {
   title: '请用一只玫瑰纪念我 🌹'
 }
-const textScroll = ref()
+const textScrollRef = ref()
 const disabled = ref<boolean>(true)
 const vertical = ref<boolean>(false)
+const ellipsis = ref<boolean>(true)
 function onClick(item: TextScrollItem) {
   // 获取点击的 item
   console.log('item', item)
 }
 function handleStart() {
-  textScroll.value.start()
+  textScrollRef.value.start()
   disabled.value = true
 }
 function handleStop() {
-  textScroll.value.stop()
+  textScrollRef.value.stop()
   disabled.value = false
 }
 function handleReset() {
-  textScroll.value.reset()
+  textScrollRef.value.reset()
   disabled.value = true
 }
 const state = reactive({
@@ -62,7 +63,8 @@ const state = reactive({
   vertical: false,
   duration: 1000,
   interval: 3000,
-  pauseOnMouseEnter: false
+  ellipsis: true,
+  pauseOnMouseEnter: true
 })
 </script>
 <template>
@@ -83,7 +85,7 @@ const state = reactive({
       <TextScroll
         :items="singleItem"
         single
-        :width="280"
+        :width="300"
         :item-style="{ fontSize: '24px', fontWeight: 600, color: 'darkred' }"
         @click="onClick"
       />
@@ -103,14 +105,22 @@ const state = reactive({
       :height="60"
       @click="onClick"
     />
-    <h2 class="mt30 mb10">自定义链接悬浮色</h2>
+    <h2 class="mt30 mb10">链接悬浮色</h2>
     <TextScroll :items="scrollItems" href-hover-color="#ff6900" @click="onClick" />
-    <h2 class="mt30 mb10">自定义展示条数和间距</h2>
-    <TextScroll :items="scrollItems" :amount="3" :gap="30" @click="onClick" />
-    <h2 class="mt30 mb10">自定义滚动速度</h2>
+    <h2 class="mt30 mb10">展示条数和间距</h2>
+    <Flex vertical>
+      <TextScroll :items="scrollItems" :amount="3" :gap="30" @click="onClick" />
+      <TextScroll :items="scrollItems" :amount="false" :gap="30" @click="onClick" />
+    </Flex>
+    <h2 class="mt30 mb10">滚动速度</h2>
     <Flex vertical>
       <TextScroll :items="scrollItems" :speed="72" @click="onClick" />
       <TextScroll :items="scrollItems" vertical :duration="800" :interval="2000" @click="onClick" />
+    </Flex>
+    <h2 class="mt30 mb10">文本省略弹出提示</h2>
+    <Flex vertical>
+      <TextScroll :items="scrollItems" ellipsis pause-on-mouse-enter @click="onClick" />
+      <TextScroll :items="scrollItems" ellipsis pause-on-mouse-enter vertical @click="onClick" />
     </Flex>
     <h2 class="mt30 mb10">鼠标移入暂停</h2>
     <Flex vertical>
@@ -123,6 +133,8 @@ const state = reactive({
         <Space align="center">
           vertical:
           <Switch v-model="vertical" />
+          ellipsis:
+          <Switch v-model="ellipsis" />
         </Space>
         <Space>
           <Button type="primary" :disabled="disabled" @click="handleStart">开始</Button>
@@ -130,7 +142,7 @@ const state = reactive({
           <Button type="primary" ghost @click="handleReset">重置</Button>
         </Space>
       </Space>
-      <TextScroll ref="textScroll" :vertical="vertical" :items="scrollItems" @click="onClick" />
+      <TextScroll ref="textScrollRef" :vertical="vertical" :ellipsis="ellipsis" :items="scrollItems" @click="onClick" />
     </Flex>
     <h2 class="mt30 mb10">文字滚动配置器</h2>
     <Flex vertical>
@@ -209,6 +221,12 @@ const state = reactive({
         </Col>
         <Col :span="6">
           <Space gap="small" vertical>
+            ellipsis:
+            <Switch v-model="state.ellipsis" />
+          </Space>
+        </Col>
+        <Col :span="6">
+          <Space gap="small" vertical>
             pauseOnMouseEnter:
             <Switch v-model="state.pauseOnMouseEnter" />
           </Space>
@@ -231,6 +249,7 @@ const state = reactive({
         :vertical="state.vertical"
         :duration="state.duration"
         :interval="state.interval"
+        :ellipsis="state.ellipsis"
         :pause-on-mouse-enter="state.pauseOnMouseEnter"
         @click="onClick"
       />

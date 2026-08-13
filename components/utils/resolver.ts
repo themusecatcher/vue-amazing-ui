@@ -34,11 +34,6 @@ const componentsMap = {
   Input: 'input',
   InputNumber: 'inputnumber',
   InputSearch: 'inputsearch',
-  Layout: 'layout',
-  LayoutHeader: 'layout/layoutheader',
-  LayoutSider: 'layout/layoutsider',
-  LayoutContent: 'layout/layoutcontent',
-  LayoutFooter: 'layout/layoutfooter',
   List: 'list/list',
   ListItem: 'list/listitem',
   LoadingBar: 'loadingbar',
@@ -71,7 +66,6 @@ const componentsMap = {
   Textarea: 'textarea',
   TextScroll: 'textscroll',
   Timeline: 'timeline',
-  TimePicker: 'timepicker',
   Tooltip: 'tooltip',
   Upload: 'upload',
   Video: 'video',
@@ -103,6 +97,7 @@ const componentDependencies = {
   Select: ['Empty', 'Scrollbar'],
   Table: ['Checkbox', 'Ellipsis', 'Empty', 'Pagination', 'Input', 'Select', 'Radio', 'Scrollbar', 'Spin', 'Tooltip'],
   Tag: ['Space'],
+  TextScroll: ['Ellipsis', 'Tooltip'],
   Upload: ['Image', 'Message', 'Space', 'Spin'],
   Waterfall: ['Spin']
 }
@@ -125,12 +120,12 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
   if (componentName === 'DatePicker') {
     // 特殊处理 DatePicker 组件样式依赖文件
     sideEffects.push(
-      `vue-amazing-ui/${type}/node_modules/.pnpm/@vuepic_vue-datepicker@11.0.2_vue@3.5.18_typescript@5.9.2_/node_modules/@vuepic/vue-datepicker/dist/main.css`
+      `vue-amazing-ui/${type}/node_modules/.pnpm/@vuepic_vue-datepicker@12.1.0_vue@3.5.29_typescript@5.9.3_/node_modules/@vuepic/vue-datepicker/dist/main.css`
     )
   }
   if (componentName === 'Swiper') {
     // 特殊处理 Swiper 组件样式依赖文件
-    sideEffects.push(`vue-amazing-ui/${type}/node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/swiper.css`)
+    sideEffects.push(`vue-amazing-ui/${type}/node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/swiper.css`)
     const swiperModulesStyle = [
       'effect-cards',
       'effect-creative',
@@ -142,7 +137,7 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
     ]
     swiperModulesStyle.forEach((moduleName) => {
       sideEffects.push(
-        `vue-amazing-ui/${type}/node_modules/.pnpm/swiper@11.2.10/node_modules/swiper/modules/${moduleName}.css`
+        `vue-amazing-ui/${type}/node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/${moduleName}.css`
       )
     })
   }

@@ -3,6 +3,7 @@ import { ref, computed, watch } from 'vue'
 import type { CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf, useEventListener, useResizeObserver, useInject } from 'components/utils'
 import { useTransition } from '@vueuse/core'
+import type { CubicBezierPoints, EasingFunction } from '@vueuse/core'
 import Spin from 'components/spin'
 export interface Image {
   name?: string // 图片名称
@@ -33,7 +34,7 @@ export interface Props {
   fadeDuration?: number // 渐变动画持续时长，单位 ms，仅当 effect 为 'fade' 时生效
   fadeFunction?: string // 渐变动画函数，仅当 effect 为 'fade' 时生效，可参考 transition-timing-function 写法：https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function
   slideDuration?: number // 滑动动画持续时长，单位 ms，仅当 effect 为 'slide' 时生效
-  slideFunction?: string | number[] // 滑动动画函数，仅当 effect 为 'slide' 时生效，可参考 useTransition 写法：https://vueuse.org/core/useTransition/#usage
+  slideFunction?: CubicBezierPoints | EasingFunction // 滑动动画函数，仅当 effect 为 'slide' 时生效，可参考 useTransition 写法：https://vueuse.org/core/useTransition/#usage
 }
 const props = withDefaults(defineProps<Props>(), {
   images: () => [],
@@ -58,7 +59,7 @@ const props = withDefaults(defineProps<Props>(), {
   fadeDuration: 500,
   fadeFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
   slideDuration: 800,
-  slideFunction: () => [0.65, 0, 0.35, 1]
+  slideFunction: () => [0.65, 0, 0.35, 1] as CubicBezierPoints
 })
 const offset = ref(0) // 滑动偏移值
 const slideTimer = ref() // 轮播切换定时器
@@ -250,10 +251,9 @@ function onRightArrow(): void {
 const baseNumber = ref(0)
 const originNumber = ref(0) // 初始位置
 const distance = ref(0) // 滑动距离
-// @ts-ignore
 const cubicBezierNumber = useTransition(baseNumber, {
   duration: props.slideDuration, // 过渡动画时长
-  transition: props.slideFunction // 过渡动画函数
+  easing: props.slideFunction // 过渡动画函数
 })
 function moveFade(direction: 'left' | 'right' | 'switch', n?: number): void {
   if (direction === 'left') {
@@ -279,9 +279,9 @@ function toggleNumber(target: number): void {
 // 滑动效果函数
 function moveEffect(): void {
   if (baseNumber.value) {
-    offset.value = originNumber.value + distance.value * cubicBezierNumber.value
+    offset.value = originNumber.value + distance.value * (cubicBezierNumber.value as unknown as number)
   } else {
-    offset.value = originNumber.value + distance.value * (1 - cubicBezierNumber.value)
+    offset.value = originNumber.value + distance.value * (1 - (cubicBezierNumber.value as unknown as number))
   }
 }
 function moveLeftEffect(): void {
@@ -383,7 +383,7 @@ defineExpose({
 <template>
   <div
     ref="carouselRef"
-    class="m-carousel"
+    class="carousel-wrap"
     :class="{ 'carousel-vertical': verticalSlide, 'carousel-fade': effect === 'fade' }"
     :style="`
       --carousel-width: ${carouselWidth};
@@ -486,7 +486,7 @@ defineExpose({
   </div>
 </template>
 <style lang="less" scoped>
-.m-carousel {
+.carousel-wrap {
   display: inline-block;
   width: var(--carousel-width);
   height: var(--carousel-height);

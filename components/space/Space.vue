@@ -39,15 +39,15 @@ const gapValue = computed(() => {
 </script>
 <template>
   <div
-    class="m-space"
-    :class="[`space-${align}`, { 'space-vertical': vertical, 'space-wrap': wrap }]"
+    class="space-wrap"
+    :class="[`space-${align}`, { 'space-vertical': vertical, 'space-flex-wrap': wrap }]"
     :style="`width: ${spaceWidth}; gap: ${gapValue}; margin-bottom: -${Array.isArray(props.gap) && wrap ? props.gap[1] : 0}px;`"
   >
     <slot></slot>
   </div>
 </template>
 <style lang="less" scoped>
-.m-space {
+.space-wrap {
   display: inline-flex;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
@@ -72,7 +72,7 @@ const gapValue = computed(() => {
 .space-baseline {
   align-items: baseline;
 }
-.space-wrap {
+.space-flex-wrap {
   flex-wrap: wrap;
 }
 </style>

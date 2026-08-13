@@ -137,7 +137,7 @@ function handleOffset(value: string): string {
 </script>
 <template>
   <div
-    class="m-badge"
+    class="badge-wrap"
     :class="{ 'badge-status-color': value === undefined && (color || status) }"
     :style="[`--badge-z-index: ${zIndex}`, value === undefined && !dot ? dotOffestStyle : null]"
   >
@@ -151,7 +151,7 @@ function handleOffset(value: string): string {
       <template v-if="showContent">
         <slot></slot>
       </template>
-      <span v-if="showValue" class="m-value" :class="{ 'only-number': !showContent }">
+      <span v-if="showValue" class="value" :class="{ 'only-number': !showContent }">
         <slot name="value"></slot>
       </span>
       <Transition
@@ -166,7 +166,7 @@ function handleOffset(value: string): string {
       >
         <div
           v-if="showBadge"
-          class="m-badge-value"
+          class="badge-value"
           :class="[
             {
               'small-num': typeof value === 'number' && value < 10,
@@ -178,8 +178,8 @@ function handleOffset(value: string): string {
           :style="[customStyle, dotOffestStyle, valueStyle]"
           :title="title || (value !== undefined ? String(value) : '')"
         >
-          <span v-if="!dot" class="m-number" style="transition: none 0s ease 0s">
-            <span class="u-number">{{ typeof value === 'number' && value > max ? max + '+' : value }}</span>
+          <span v-if="!dot" class="number-value" style="transition: none 0s ease 0s">
+            <span class="number">{{ typeof value === 'number' && value > max ? max + '+' : value }}</span>
           </span>
         </div>
       </Transition>
@@ -217,7 +217,7 @@ function handleOffset(value: string): string {
     }
   }
 }
-.m-badge {
+.badge-wrap {
   position: relative;
   display: inline-block;
   width: fit-content;
@@ -267,7 +267,7 @@ function handleOffset(value: string): string {
     color: rgba(0, 0, 0, 0.88);
     font-size: 14px;
   }
-  .m-value {
+  .value {
     position: absolute;
     top: 0;
     z-index: var(--badge-z-index);
@@ -275,8 +275,8 @@ function handleOffset(value: string): string {
     transform: translate(50%, -50%);
     transform-origin: 100% 0%;
   }
-  .m-badge-value {
-    .m-value();
+  .badge-value {
+    .value();
     overflow: hidden;
     padding: 0 8px;
     min-width: 20px;
@@ -291,7 +291,7 @@ function handleOffset(value: string): string {
     border-radius: 10px;
     box-shadow: 0 0 0 1px #ffffff;
     transition: background 0.2s;
-    .m-number {
+    .number-value {
       position: relative;
       display: inline-block;
       height: 20px;
@@ -300,7 +300,7 @@ function handleOffset(value: string): string {
       -webkit-transform-style: preserve-3d; // 设置元素的子元素是位于 3D 空间中还是平面中 flat | preserve-3d
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden; // 当元素背面朝向观察者时是否可见 hidden | visible
-      .u-number {
+      .number {
         display: inline-block;
         height: 20px;
         margin: 0;

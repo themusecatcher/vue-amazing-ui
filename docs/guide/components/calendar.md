@@ -518,7 +518,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
   </Calendar>
 </template>
 <style lang="less" scoped>
-.m-badge {
+.badge-wrap {
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
@@ -724,7 +724,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 <Message ref="message" />
 
 <style lang="less" scoped>
-.m-badge {
+.badge-wrap {
   width: 100%;
   overflow: hidden;
   white-space: nowrap;

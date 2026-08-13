@@ -151,7 +151,7 @@ function onKeyboard(e: KeyboardEvent) {
 <template>
   <div
     v-if="!dynamic"
-    class="m-tag"
+    class="tag-wrap"
     :class="[
       `tag-${size}`,
       color && presetColor.includes(color) ? `tag-${color}` : '',
@@ -188,7 +188,7 @@ function onKeyboard(e: KeyboardEvent) {
   </div>
   <Space v-else gap="small" v-bind="spaceProps">
     <div
-      class="m-tag"
+      class="tag-wrap"
       :class="[
         `tag-${item.size || size}`,
         (item.color || color) && presetColor.includes(item.color || color) ? `tag-${item.color || color}` : '',
@@ -224,7 +224,7 @@ function onKeyboard(e: KeyboardEvent) {
         </svg>
       </span>
     </div>
-    <div v-if="!showInput" class="m-tag" :class="[`tag-${size}`, { 'tag-plus': dynamic }]" @click="onAdd">
+    <div v-if="!showInput" class="tag-wrap" :class="[`tag-${size}`, { 'tag-plus': dynamic }]" @click="onAdd">
       <svg
         focusable="false"
         class="plus-svg"
@@ -253,7 +253,7 @@ function onKeyboard(e: KeyboardEvent) {
   </Space>
 </template>
 <style lang="less" scoped>
-.m-tag {
+.tag-wrap {
   display: inline-flex;
   align-items: center;
   height: 24px;

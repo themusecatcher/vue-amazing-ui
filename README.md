@@ -16,7 +16,7 @@
 
 ## Features
 
-- The component library is implemented with `Vue@3.5.18`+ `TypeScript@5.9.2` + `Vite@6.3.5` + `Less@4.4.0`.
+- The component library is implemented with `Vue@3.5.29`+ `TypeScript@5.9.3` + `Vite@7.3.1` + `Less@4.5.1`.
 - Currently, it includes `67` basic UI components and `18` utility functions, with continuous exploration and updates ongoing...
 - Theme Customizable, all you need is to provide a theme color, then all the stuffs will be done by me.
 - By the way, they are all treeshakable.
@@ -215,7 +215,7 @@ pnpm docs:dev
 
 ## Blogs
 
-[My CSDN Blogs](https://blog.csdn.net/Dandrose)
+[My CSDN Blogs](https://themusecatcher.blog.csdn.net)
 
 ## Sponsorship
 
@@ -227,7 +227,7 @@ pnpm docs:dev
 
 All sponsors will be listed here, thank you very much for your support and sponsorship ❤️
 
-<a href="https://github.com/themusecatcher" target="_blank"><img width="64" height="64" src="./docs/public/avatar.png" alt="GitHub@themusecatcher" title="GitHub@themusecatcher"></a> <img width="64" height="64" src="./docs/public/avatar_1.jpeg" alt="WeChat@Ant" title="WeChat@Ant" /> <a href="https://github.com/nizhensh-i" target="_blank"><img width="64" height="64" src="./docs/public/avatar_2.jpg" alt="GitHub@nizhensh-i" title="GitHub@nizhensh-i"></a> <a href="https://github.com/beijin1949" target="_blank"><img width="64" height="64" src="./docs/public/avatar_3.png" alt="GitHub@beijin1949" title="GitHub@beijin1949"></a> <a href="https://github.com/JinZemin" target="_blank"><img width="64" height="64" src="./docs/public/avatar_4.png" alt="GitHub@JinZemin" title="GitHub@JinZemin"></a> <a href="hhttps://github.com/ye5840" target="_blank"><img width="64" height="64" src="./docs/public/avatar_5.png" alt="GitHub@ye5840" title="GitHub@ye5840"></a>
+<a href="https://github.com/themusecatcher" target="_blank"><img width="64" height="64" src="./docs/public/avatar.png" alt="GitHub@themusecatcher" title="GitHub@themusecatcher"></a> <img width="64" height="64" src="./docs/public/avatar_1.jpeg" alt="WeChat@Ant" title="WeChat@Ant" /> <a href="https://github.com/nizhensh-i" target="_blank"><img width="64" height="64" src="./docs/public/avatar_2.jpg" alt="GitHub@nizhensh-i" title="GitHub@nizhensh-i"></a> <a href="https://github.com/beijin1949" target="_blank"><img width="64" height="64" src="./docs/public/avatar_3.png" alt="GitHub@beijin1949" title="GitHub@beijin1949"></a> <a href="https://github.com/JinZemin" target="_blank"><img width="64" height="64" src="./docs/public/avatar_4.png" alt="GitHub@JinZemin" title="GitHub@JinZemin"></a> <a href="https://github.com/ye5840" target="_blank"><img width="64" height="64" src="./docs/public/avatar_5.png" alt="GitHub@ye5840" title="GitHub@ye5840"></a><img width="64" height="64" src="./docs/public/avatar_6.jpg" alt="WeChat@**洋" title="WeChat@**洋">
 
 ## Components
 

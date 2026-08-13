@@ -181,7 +181,7 @@ defineExpose({
 </script>
 <template>
   <div
-    class="m-message"
+    class="message-wrap"
     :style="`
       top: ${messageTop};
       --message-primary-color: ${colorPalettes[5]};
@@ -193,7 +193,7 @@ defineExpose({
     <TransitionGroup name="slide-fade">
       <div
         v-show="showMessage[index]"
-        class="message-wrap"
+        class="message-container"
         :class="message.class"
         :style="message.style"
         v-for="(message, index) in messageContent"
@@ -303,7 +303,7 @@ defineExpose({
   right: 0;
   margin: 0 auto;
 }
-.m-message {
+.message-wrap {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
@@ -313,7 +313,7 @@ defineExpose({
   left: 0;
   right: 0;
   pointer-events: none; // 保证整个 message 区域不遮挡背后元素响应鼠标事件
-  .message-wrap {
+  .message-container {
     text-align: center;
     &:not(:last-child) {
       margin-bottom: 8px;

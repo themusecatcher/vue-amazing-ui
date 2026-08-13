@@ -203,7 +203,7 @@ function onOk() {
 }
 </script>
 <template>
-  <div class="m-dialog-root">
+  <div class="dialog-root">
     <Transition name="fade">
       <div v-show="dialogOpen" class="dialog-mask" :style="maskStyle"></div>
     </Transition>
@@ -211,7 +211,7 @@ function onOk() {
       v-show="showDialogWrap"
       tabindex="-1"
       ref="dialogRef"
-      class="m-dialog-wrap"
+      class="dialog-wrap"
       :class="{ 'flex-centered': centered }"
       @click.self="props.maskClosable ? onCancel() : () => false"
       @keydown.esc="props.keyboard ? onCancel() : () => false"
@@ -230,7 +230,7 @@ function onOk() {
       >
         <div
           v-show="dialogOpen"
-          class="m-dialog"
+          class="dialog-container"
           :class="{ 'dialog-with-fullscreen': fullscreen }"
           :style="dialogStyle"
         >
@@ -424,13 +424,13 @@ function onOk() {
   z-index: 1000;
   background: rgba(0, 0, 0, 0.45);
 }
-.m-dialog-wrap {
+.dialog-wrap {
   position: fixed;
   inset: 0;
   overflow: auto;
   outline: 0;
   z-index: 1010;
-  .m-dialog {
+  .dialog-container {
     position: relative;
     margin: 0 auto;
     color: rgba(0, 0, 0, 0.88);
@@ -524,7 +524,7 @@ function onOk() {
   display: flex;
   justify-content: center;
   align-items: center;
-  .m-dialog {
+  .dialog-container {
     padding-bottom: 0;
   }
 }

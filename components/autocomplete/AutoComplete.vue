@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue'
-interface Option {
+export interface Option {
   disabled?: boolean // 是否禁用
   value: string | number // 唯一的 value 值
   label: string // 显示的 label 值
 }
-interface GroupOption {
+export interface GroupOption {
   children?: (string | number | Option)[] // 子选项
   label: string // label 文本
   value: string | number // value 值

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h, ref } from 'vue'
+import { ref } from 'vue'
 import { SearchOutlined, DownloadOutlined, CrownOutlined } from '@ant-design/icons-vue'
 const disabled = ref(true)
 const sizeOptions = [
@@ -51,18 +51,18 @@ function onClick(e: Event) {
     <Space vertical>
       <Space>
         <Tooltip tooltip="search">
-          <Button type="primary" shape="circle" :icon="() => h(SearchOutlined)" />
+          <Button type="primary" shape="circle" :icon="SearchOutlined" />
         </Tooltip>
         <Button type="primary" shape="circle">A</Button>
-        <Button type="primary" shape="round" :icon="() => h(SearchOutlined)"> Search </Button>
+        <Button type="primary" shape="round" :icon="SearchOutlined"> Search </Button>
         <Tooltip tooltip="search">
-          <Button type="primary" shape="round" :icon="() => h(SearchOutlined)" />
+          <Button type="primary" shape="round" :icon="SearchOutlined" />
         </Tooltip>
-        <Button type="primary" :icon="() => h(SearchOutlined)"> Search </Button>
+        <Button type="primary" :icon="SearchOutlined"> Search </Button>
       </Space>
       <Space>
         <Tooltip tooltip="search">
-          <Button href="https://blog.csdn.net/Dandrose" target="_blank">
+          <Button href="https://themusecatcher.blog.csdn.net" target="_blank">
             <template #icon>
               <SearchOutlined />
             </template>
@@ -348,7 +348,7 @@ function onClick(e: Event) {
       >
         Button Component
       </Button>
-      <Button type="primary" ghost shape="round" href="https://blog.csdn.net/Dandrose" target="_blank">
+      <Button type="primary" ghost shape="round" href="https://themusecatcher.blog.csdn.net" target="_blank">
         My CSDN Blogs
       </Button>
     </Space>

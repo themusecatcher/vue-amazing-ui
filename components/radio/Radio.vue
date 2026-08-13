@@ -94,7 +94,7 @@ function onWaveEnd(): void {
 <template>
   <div
     v-if="optionsAmount"
-    class="m-radio"
+    class="radio-wrap"
     :class="{ 'radio-vertical': !button && vertical }"
     :style="`
       --radio-gap: ${gapValue};
@@ -104,7 +104,7 @@ function onWaveEnd(): void {
   >
     <template v-if="!button">
       <div
-        class="radio-wrap"
+        class="radio-container"
         :class="{ 'radio-disabled': checkDisabled(option.disabled) }"
         v-for="(option, index) in options"
         :key="index"
@@ -153,7 +153,7 @@ function onWaveEnd(): void {
   <template v-else>
     <div
       v-if="!button"
-      class="radio-wrap"
+      class="radio-container"
       :class="{ 'radio-disabled': disabled }"
       :style="`--radio-primary-color: ${colorPalettes[5]};`"
       @click="disabled ? () => false : onChecked()"
@@ -199,7 +199,7 @@ function onWaveEnd(): void {
   </template>
 </template>
 <style lang="less" scoped>
-.m-radio {
+.radio-wrap {
   display: inline-flex;
   flex-wrap: wrap;
   gap: var(--radio-gap);
@@ -208,7 +208,7 @@ function onWaveEnd(): void {
   flex-direction: column;
   flex-wrap: nowrap;
 }
-.radio-wrap {
+.radio-container {
   display: inline-flex;
   align-items: baseline;
   cursor: pointer;

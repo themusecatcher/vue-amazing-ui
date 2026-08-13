@@ -72,7 +72,20 @@ export function dateFormat(value: number | string | Date = Date.now(), format: s
 :::
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
+const date = ref(dateFormat(new Date()))
+const updateDate = () => {
+  date.value = dateFormat(new Date())
+  requestAnimationFrame(updateDate)
+}
+requestAnimationFrame(updateDate)
+const realTime = ref(dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS'))
+const updateTime = () => {
+  realTime.value = dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS')
+  requestAnimationFrame(updateTime)
+}
+requestAnimationFrame(updateTime)
 </script>
 
 ## 基本使用
@@ -81,38 +94,46 @@ _格式化时间戳_
 
 <br/>
 
-**{{ dateFormat(Date.now()) }}**
+<Alert :message="date" type="info" />
 
 ```vue
 <script setup lang="ts">
+import { ref } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
-dateFormat(Date.now())
+const date = ref(dateFormat(new Date()))
+const updateDate = () => {
+  date.value = dateFormat(new Date())
+  requestAnimationFrame(updateDate)
+}
+requestAnimationFrame(updateDate)
 </script>
 ```
 
 ## 格式化字符串
 
-<br/>
-
-**05/31/2023**
+<Alert message="10/10/2025" type="info" />
 
 ```vue
 <script setup lang="ts">
 import { dateFormat } from 'vue-amazing-ui'
-dateFormat('2023-05-31', 'MM/DD/YYYY') // 05/31/2023
+dateFormat('2025-10-10', 'MM/DD/YYYY') // 10/10/2025
 </script>
 ```
 
 ## 展示毫秒值
 
-<br/>
-
-**{{ dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS') }}**
+<Alert :message="realTime" type="info" />
 
 ```vue
 <script setup lang="ts">
+import { ref } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
-dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS')
+const realTime = ref(dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS'))
+const updateTime = () => {
+  realTime.value = dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS')
+  requestAnimationFrame(updateTime)
+}
+requestAnimationFrame(updateTime)
 </script>
 ```
 

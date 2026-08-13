@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*进行标记和分类的小标签*
+_进行标记和分类的小标签_
 
 ## 何时使用
 
@@ -59,7 +59,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
 
 <Space gap="small">
   <Tag>Tag 1</Tag>
-  <Tag><a href="https://blog.csdn.net/Dandrose">Link</a></Tag>
+  <Tag><a href="https://themusecatcher.blog.csdn.net">Link</a></Tag>
   <Tag closable @close="onClose">Tag 2</Tag>
 </Space>
 
@@ -74,7 +74,7 @@ const onClose = (e: MouseEvent) => {
 <template>
   <Space gap="small">
     <Tag>Tag 1</Tag>
-    <Tag><a href="https://blog.csdn.net/Dandrose">Link</a></Tag>
+    <Tag><a href="https://themusecatcher.blog.csdn.net">Link</a></Tag>
     <Tag closable @close="onClose">Tag 2</Tag>
   </Space>
 </template>
@@ -127,8 +127,8 @@ const onClose = (e: MouseEvent) => {
     <Tag color="gold">gold</Tag>
     <Tag color="lime">lime</Tag>
   </Space>
-  <br/>
-  <br/>
+  <br />
+  <br />
   <Space gap="small">
     <Tag color="#f50">#f50</Tag>
     <Tag color="#2db7f5">#2db7f5</Tag>
@@ -142,56 +142,56 @@ const onClose = (e: MouseEvent) => {
 
 ## 预设状态的标签
 
-<Divider orientation="left">Without icon</Divider>
-<Space gap="small">
-  <Tag color="success">success</Tag>
-  <Tag color="processing">processing</Tag>
-  <Tag color="error">error</Tag>
-  <Tag color="warning">warning</Tag>
-  <Tag color="default">default</Tag>
-</Space>
-<Divider orientation="left">With icon</Divider>
-<Space gap="small">
-  <Tag color="success">
-    <template #icon>
-      <CheckCircleOutlined />
-    </template>
-    success
-  </Tag>
-  <Tag color="processing">
-    <template #icon>
-      <SyncOutlined spin />
-    </template>
-    processing
-  </Tag>
-  <Tag color="error">
-    <template #icon>
-      <CloseCircleOutlined />
-    </template>
-    error
-  </Tag>
-  <Tag color="warning">
-    <template #icon>
-      <ExclamationCircleOutlined />
-    </template>
-    warning
-  </Tag>
-  <Tag color="default">
-    <template #icon>
-      <ClockCircleOutlined />
-    </template>
-    waiting
-  </Tag>
-  <Tag color="default">
-    <template #icon>
-      <MinusCircleOutlined />
-    </template>
-    stop
-  </Tag>
-  <Tag color="default" icon="😉">
-    blink
-  </Tag>
-</Space>
+<div>
+  <Divider orientation="left">Without icon</Divider>
+  <Space gap="small">
+    <Tag color="success">success</Tag>
+    <Tag color="processing">processing</Tag>
+    <Tag color="error">error</Tag>
+    <Tag color="warning">warning</Tag>
+    <Tag color="default">default</Tag>
+  </Space>
+  <Divider orientation="left">With icon</Divider>
+  <Space gap="small">
+    <Tag color="success">
+      <template #icon>
+        <CheckCircleOutlined />
+      </template>
+      success
+    </Tag>
+    <Tag color="processing">
+      <template #icon>
+        <SyncOutlined spin />
+      </template>
+      processing
+    </Tag>
+    <Tag color="error">
+      <template #icon>
+        <CloseCircleOutlined />
+      </template>
+      error
+    </Tag>
+    <Tag color="warning">
+      <template #icon>
+        <ExclamationCircleOutlined />
+      </template>
+      warning
+    </Tag>
+    <Tag color="default">
+      <template #icon>
+        <ClockCircleOutlined />
+      </template>
+      waiting
+    </Tag>
+    <Tag color="default">
+      <template #icon>
+        <MinusCircleOutlined />
+      </template>
+      stop
+    </Tag>
+    <Tag color="default" icon="😉"> blink </Tag>
+  </Space>
+</div>
 
 ::: details Show Code
 
@@ -253,9 +253,7 @@ import {
       </template>
       stop
     </Tag>
-    <Tag color="default" icon="😉">
-      blink
-    </Tag>
+    <Tag color="default" icon="😉"> blink </Tag>
   </Space>
 </template>
 ```
@@ -295,12 +293,7 @@ import {
 
 ```vue
 <script setup lang="ts">
-import {
-  AppleOutlined,
-  TwitterOutlined,
-  YoutubeOutlined,
-  InstagramOutlined
-} from '@ant-design/icons-vue'
+import { AppleOutlined, TwitterOutlined, YoutubeOutlined, InstagramOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
   <Space gap="small">
@@ -336,7 +329,7 @@ import {
 
 ## 动态添加和删除
 
-*使用字符串格式数组*
+_使用字符串格式数组_
 
 <br/>
 
@@ -368,7 +361,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
 
 :::
 
-*使用对象格式数组*
+_使用对象格式数组_
 
 <br/>
 
@@ -421,12 +414,10 @@ const onDynamicClose = (item: TagItem, index: number) => {
   <Space gap="small">
     <Tag dynamic v-model:value="objTags" @dynamic-close="onDynamicClose">
       <template #label="{ label, index }">
-        <template v-if="index===1">
-          {{ label }} {{ index }}
-        </template>
+        <template v-if="index === 1"> {{ label }} {{ index }} </template>
       </template>
       <template #icon="{ index }">
-        <template v-if="index===0">
+        <template v-if="index === 0">
           <CheckCircleOutlined />
         </template>
       </template>
@@ -475,19 +466,9 @@ const onDynamicClose = (item: TagItem, index: number) => {
 </script>
 <template>
   <Space gap="small">
-    <Tag closable size="small" @close="onClose">
-      爱在西元前
-    </Tag>
-    <Tag color="warning" closable @close="onClose">
-      超人不会飞
-    </Tag>
-    <Tag
-      color="blue"
-      size="large"
-      dynamic
-      v-model:value="strTags"
-      closable
-      @close="onDynamicClose" />
+    <Tag closable size="small" @close="onClose"> 爱在西元前 </Tag>
+    <Tag color="warning" closable @close="onClose"> 超人不会飞 </Tag>
+    <Tag color="blue" size="large" dynamic v-model:value="strTags" closable @close="onDynamicClose" />
   </Space>
 </template>
 ```
@@ -496,15 +477,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
 
 ## 自定义动态标签排列
 
-<Tag
-  closable
-  dynamic
-  color="blue"
-  size="large"
-  :space-props="{ vertical: true, gap: 12 }"
-  v-model:value="strTags"
-  @close="onDynamicClose"
-/>
+<Tag closable dynamic color="blue" size="large" :space-props="{ vertical: true, gap: 12 }" v-model:value="strTags" @close="onDynamicClose" />
 
 ::: details Show Code
 
@@ -600,39 +573,39 @@ const onDynamicClose = (item: TagItem, index: number) => {
 
 ### Tag
 
-参数 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-closable | 标签是否可以关闭 | boolean | false
-color | 标签颜色，预置多种常用颜色：`'success'`, `'processing'`, `'error'`, `'warning'`, `'pink'`, `'red'`, `'yellow'`, `'orange'`, `'cyan'`, `'green'`, `'blue'`, `'purple'`, `'geekblue'`, `'magenta'`, `'volcano'`, `'gold'`, `'lime'` | string | undefined
-icon | 设置图标 | string &#124; slot | undefined
-size | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
-bordered | 是否有边框 | boolean | true
-dynamic | 是否启用标签动态添加和删除 | boolean | false
-spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space) ，仅当 `dynamic: true` 时生效 | object | {}
-value <Tag color="cyan">v-model</Tag> | 动态标签数组，仅当 `dynamic: true` 时生效 | string[] &#124; [Item](#item-type)[] | []
+| 参数 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| closable | 标签是否可以关闭 | boolean | false |
+| color | 标签颜色，预置多种常用颜色：`'success'`, `'processing'`, `'error'`, `'warning'`, `'pink'`, `'red'`, `'yellow'`, `'orange'`, `'cyan'`, `'green'`, `'blue'`, `'purple'`, `'geekblue'`, `'magenta'`, `'volcano'`, `'gold'`, `'lime'` | string | undefined |
+| icon | 设置图标 | string &#124; slot | undefined |
+| size | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
+| bordered | 是否有边框 | boolean | true |
+| dynamic | 是否启用标签动态添加和删除 | boolean | false |
+| spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space) ，仅当 `dynamic: true` 时生效 | object | {} |
+| value <Tag color="cyan">v-model</Tag> | 动态标签数组，仅当 `dynamic: true` 时生效 | string[] &#124; [Item](#item-type)[] | [] |
 
 ### Item Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-label? | 标签文本 | string &#124; slot | undefined
-closable? | 标签是否可以关闭 | boolean | true
-color? | 标签颜色 | string | undefined
-icon? | 设置图标 | string &#124; slot | undefined
-size? | 标签尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
-bordered? | 是否有边框 | boolean | true
+| 名称      | 说明             | 类型                                   | 默认值    |
+| :-------- | :--------------- | :------------------------------------- | :-------- |
+| label?    | 标签文本         | string &#124; slot                     | undefined |
+| closable? | 标签是否可以关闭 | boolean                                | true      |
+| color?    | 标签颜色         | string                                 | undefined |
+| icon?     | 设置图标         | string &#124; slot                     | undefined |
+| size?     | 标签尺寸         | 'small' &#124; 'middle' &#124; 'large' | 'middle'  |
+| bordered? | 是否有边框       | boolean                                | true      |
 
 ## Slots
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-icon | 自定义图标 | v-slot:icon="{ item, icon, index }"
-label | 自定义标签文本 | v-slot:label="{ item, label, index }"
-default | 自定义内容 | v-slot:default
+| 名称    | 说明           | 类型                                  |
+| :------ | :------------- | :------------------------------------ |
+| icon    | 自定义图标     | v-slot:icon="{ item, icon, index }"   |
+| label   | 自定义标签文本 | v-slot:label="{ item, label, index }" |
+| default | 自定义内容     | v-slot:default                        |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-close | 关闭时的回调 | (e: Event) => void
-dynamicClose | 启用标签动态添加和删除时关闭的回调 | (item: [Item](#item-type), index: number) => void
+| 名称         | 说明                               | 类型                                              |
+| :----------- | :--------------------------------- | :------------------------------------------------ |
+| close        | 关闭时的回调                       | (e: Event) => void                                |
+| dynamicClose | 启用标签动态添加和删除时关闭的回调 | (item: [Item](#item-type), index: number) => void |

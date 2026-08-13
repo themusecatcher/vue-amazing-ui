@@ -106,13 +106,13 @@ function onWaveOptionEnd(value: string | number): void {
 <template>
   <div
     v-if="optionsAmount"
-    class="m-checkbox"
+    class="checkbox-wrap"
     :class="{ 'checkbox-vertical': vertical }"
     :style="`--checkbox-gap: ${gapValue}; --checkbox-primary-color: ${colorPalettes[5]};`"
     v-bind="$attrs"
   >
     <div
-      class="checkbox-wrap"
+      class="checkbox-container"
       :class="{ 'checkbox-disabled': checkDisabled(option.disabled) }"
       v-for="(option, index) in options"
       :key="index"
@@ -133,7 +133,7 @@ function onWaveOptionEnd(value: string | number): void {
   </div>
   <div
     v-else
-    class="checkbox-wrap"
+    class="checkbox-container"
     :class="{ 'checkbox-disabled': disabled }"
     :style="`--checkbox-primary-color: ${colorPalettes[5]};`"
     @click="disabled ? () => false : onChecked()"
@@ -154,7 +154,7 @@ function onWaveOptionEnd(value: string | number): void {
   </div>
 </template>
 <style lang="less" scoped>
-.m-checkbox {
+.checkbox-wrap {
   display: inline-flex;
   flex-wrap: wrap;
   gap: var(--checkbox-gap);
@@ -163,7 +163,7 @@ function onWaveOptionEnd(value: string | number): void {
   flex-direction: column;
   flex-wrap: nowrap;
 }
-.checkbox-wrap {
+.checkbox-container {
   display: inline-flex;
   align-items: baseline;
   cursor: pointer;
