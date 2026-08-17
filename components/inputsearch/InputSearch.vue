@@ -424,7 +424,7 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
     border-bottom-left-radius: 0;
     transition: all 0.3s;
     line-height: 1;
-    :deep(.m-btn) {
+    :deep(.btn-wrap) {
       padding-top: 0;
       padding-bottom: 0;
       border-top-left-radius: 0;
