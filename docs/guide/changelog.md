@@ -4,6 +4,13 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2026-08-17">2.4.27</VersionDateTag>
+
+- 修复 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html) 组件搜索按钮与输入框连接处的样式问题
+- 优化 [走马灯 Carousel](https://themusecatcher.github.io/vue-amazing-ui/guide/components/carousel.html) 组件 `slideFunction` 属性类型定义，由 `string | number[]` 精确为 `CubicBezierPoints | EasingFunction`，提供更准确的类型提示
+- 新增项目贡献指南，优化项目构建、工程配置及发布流程
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-05-31">2.4.26</VersionDateTag>
 
 - 优化 [滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html) 组件使用效果，调整属性 `autoHide` 默认值为 `false`，`delay` 属性默认值为 `0`
