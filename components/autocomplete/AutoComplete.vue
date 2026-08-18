@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, watch, nextTick, onMounted, onBeforeUnmount, useSlots } from 'vue'
 import type { CSSProperties } from 'vue'
-import Empty from 'components/empty'
 import Scrollbar from 'components/scrollbar'
 import { useEventListener, useMutationObserver, useInject, useOptionsSupported } from 'components/utils'
 export interface Option {
@@ -10,16 +9,23 @@ export interface Option {
   label: string // 显示的 label 值
 }
 export interface GroupOption {
-  children?: (string | number | Option)[] // 子选项
-  label: string // label 文本
-  value: string | number // value 值
-  type?: 'group' // 选项的类型
+  options?: (string | number | Option)[] // 子选项，存在该字段即视为分组（与 Ant Design Vue 保持一致）
+  label?: string // label 文本
+  value?: string | number // value 值
 }
 export interface Props {
   allowClear?: boolean // 是否支持清除
+  autofocus?: boolean // 是否自动获取焦点
+  backfill?: boolean // 使用键盘选择选项的时候把选中项回填到输入框中
   bordered?: boolean // 是否有边框
+  defaultActiveFirstOption?: boolean // 是否默认高亮第一个选项
+  defaultOpen?: boolean // 是否默认展开下拉菜单
   disabled?: boolean // 是否禁用
+  open?: boolean // 是否展开下拉菜单（受控）
   placeholder?: string // 默认占位文本
+  popupClassName?: string // 下拉菜单的 className 属性
+  dropdownMatchSelectWidth?: boolean | number // 下拉菜单和选择器同宽，为数字时指定下拉菜单宽度
+  dropdownMenuStyle?: CSSProperties // 下拉菜单自定义样式
   to?: string | HTMLElement | false // 下拉面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   options?: (string | number | Option | GroupOption)[] // 自动完成的数据源
   value: string // (v-model) 当前输入的值
@@ -30,13 +36,21 @@ export interface Props {
     当其为 true 时，筛选每个选项的文本字段 label 是否包含输入项，包含返回 true，反之返回 false
     当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
   */
-  filterOption?: boolean | Function // 过滤条件函数
+  filterOption?: boolean | ((inputValue: string, option: Option) => boolean) // 过滤条件函数
 }
 const props = withDefaults(defineProps<Props>(), {
   allowClear: false,
+  autofocus: false,
+  backfill: false,
   bordered: true,
+  defaultActiveFirstOption: true,
+  defaultOpen: false,
   disabled: false,
+  open: undefined,
   placeholder: undefined,
+  popupClassName: undefined,
+  dropdownMatchSelectWidth: true,
+  dropdownMenuStyle: undefined,
   to: 'body',
   options: () => [],
   value: undefined,
@@ -44,30 +58,47 @@ const props = withDefaults(defineProps<Props>(), {
   status: undefined,
   filterOption: false
 })
-const emit = defineEmits(['update:value', 'search', 'select', 'change', 'focus', 'blur', 'clear', 'openChange'])
+const emit = defineEmits([
+  'update:value',
+  'search',
+  'select',
+  'change',
+  'focus',
+  'blur',
+  'clear',
+  'openChange',
+  'dropdownVisibleChange'
+])
 const slots = useSlots()
 const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const inputRef = ref<HTMLInputElement | null>(null) // input 元素引用
 const customInputRef = ref<HTMLElement | null>(null) // 自定义输入组件容器引用
 const disabledBlur = ref<boolean>(false) // 是否禁用 input 标签的 blur 事件
+const isComposing = ref<boolean>(false) // 是否处于输入法(IME)合成中，合成期间不触发 search/filter
 const hoverValue = ref<string | number | null>(null) // 鼠标悬浮项的 value 值
+const lastUserValue = ref<string>('') // 用户原始输入（backfill 时键盘 Esc 还原用，与 onInput 同步更新）
 const showOptions = ref<boolean>(false) // 显示隐藏下拉面板
-const showClear = ref<boolean>(false) // 清除图标显隐
 const focused = ref<boolean>(false) // 自动完成是否聚焦
 const { colorPalettes, shadowColor } = useInject('AutoComplete') // 主题色注入
 const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
 const scrollTop = ref<number>(0) // scrollTarget 的滚动位置
 const panelOffset = ref<number>(0) // 下拉面板相对于内容的垂直偏移距离
-const panelPlace = ref<'bottom' | 'top'>('bottom') // 下拉面板位置
+const panelPlace = ref<'bottom' | 'top'>('bottom') // 下拉面板垂直位置
+const panelAlign = ref<'left' | 'right' | 'viewport-left'>('left') // 下拉面板水平对齐方向：右侧空间不足时右对齐，超宽时贴视口左边缘
 const contentRef = ref<HTMLElement | null>(null) // 内容模板引用
 const contentRect = ref<DOMRect>() // 内容元素的大小及其相对于视口的位置
 const positionedContainer = ref<HTMLElement | null>(null) // 下拉面板相对定位的容器元素
 const positionedContainerRect = ref<DOMRect>() // positionedContainer 元素的大小及其相对于视口的位置
 const panelRef = ref<HTMLElement | null>(null) // 下拉面板模板引用
 const panelHeight = ref<number>() // 下拉面板的高度
+const panelWidth = ref<number>() // 下拉面板的宽度
 const viewportWidth = ref<number>(document.documentElement.clientWidth) // 视口宽度(不包括滚动条)
 const viewportHeight = ref<number>(document.documentElement.clientHeight) // 视口高度(不包括滚动条)
 const { isSupported: passiveSupported } = useOptionsSupported('passive')
+// 清除图标显隐：开启 allowClear、未禁用且有值时显示（与 Input 组件保持一致，有值即显示，不依赖 hover）
+const showClear = computed<boolean>(() => {
+  return props.allowClear && !props.disabled && Boolean(props.value)
+})
 const autoCompleteHeight = computed(() => {
   const heightMap = {
     small: 24,
@@ -82,9 +113,9 @@ const optionsStyle = computed(() => {
   }
   return style
 })
-// 判断是否为分组项
+// 判断是否为分组项：存在 options 字段即视为分组（与 Ant Design Vue 保持一致）
 function isGroup(item: string | number | Option | GroupOption): item is GroupOption {
-  return typeof item === 'object' && (item as GroupOption).type === 'group'
+  return typeof item === 'object' && Array.isArray((item as GroupOption).options)
 }
 // 获取叶子选项的 value 值
 function getValue(item: string | number | Option): string | number {
@@ -125,15 +156,16 @@ function childSlotProps(item: string | number | Option): Option {
 }
 // 过滤后的选项数据（保留分组结构，过滤后空组剔除）
 const filteredData = computed<(string | number | Option | GroupOption)[]>(() => {
-  if (props.filterOption === false) {
+  // 输入法合成中不参与本地筛选，显示全部数据源，待合成结束后再按最终输入筛选，与官网行为一致
+  if (props.filterOption === false || isComposing.value) {
     return props.options
   }
   const result: (string | number | Option | GroupOption)[] = []
   props.options.forEach((item) => {
     if (isGroup(item)) {
-      const children = (item.children ?? []).filter(matchOption)
-      if (children.length) {
-        result.push({ ...item, children })
+      const options = (item.options ?? []).filter(matchOption)
+      if (options.length) {
+        result.push({ ...item, options })
       }
     } else if (matchOption(item)) {
       result.push(item)
@@ -146,7 +178,7 @@ const flattenOptions = computed<Option[]>(() => {
   const result: Option[] = []
   filteredData.value.forEach((item) => {
     if (isGroup(item)) {
-      item.children?.forEach((child) => {
+      item.options?.forEach((child) => {
         result.push({ value: getValue(child), label: getLabel(child), disabled: isDisabled(child) })
       })
     } else {
@@ -155,6 +187,19 @@ const flattenOptions = computed<Option[]>(() => {
   })
   return result
 })
+// 面板是否可见：打开状态且有可展示的选项（无选项时隐藏，与官网一致），单一布尔驱动 Transition 保证隐藏动画完整
+const panelVisible = computed<boolean>(() => showOptions.value && flattenOptions.value.length > 0)
+// 面板渲染用的选项数据（保留态）：有选项时同步 filteredData，选项变空时保留上一次内容，避免面板隐藏动画期间内容突然清空导致高度塌缩打断 leave 动画
+const displayData = ref<(string | number | Option | GroupOption)[]>([])
+watch(
+  filteredData,
+  (val) => {
+    if (val.length) {
+      displayData.value = val
+    }
+  },
+  { immediate: true }
+)
 const panelPlacement = computed(() => {
   const contentTop = (contentRect.value as DOMRect)?.top ?? 0
   const containerTop = (positionedContainerRect.value as DOMRect)?.top ?? 0
@@ -165,31 +210,43 @@ const panelPlacement = computed(() => {
   const contentLeft = (contentRect.value as DOMRect)?.left ?? 0
   const containerLeft = (positionedContainerRect.value as DOMRect)?.left ?? 0
   const offsetLeft = contentLeft - containerLeft
-  const panelWidth = (contentRect.value as DOMRect)?.width ?? 0
+  const contentRight = (contentRect.value as DOMRect)?.right ?? 0
+  const containerRight = (positionedContainerRect.value as DOMRect)?.right ?? 0
+  const offsetRight = containerRight - contentRight
+  // 贴视口左边缘时的水平偏移：使面板左边缘落在视口 x=0 处（相对定位容器左边缘换算）
+  const offsetViewportLeft = -containerLeft
+  const contentWidth = (contentRect.value as DOMRect)?.width ?? 0
+  // dropdownMatchSelectWidth：true 面板与内容同宽（min-width）；number 指定面板宽度；false 面板宽度自适应内容（min-width 兜底）
+  const widthStyle: CSSProperties =
+    typeof props.dropdownMatchSelectWidth === 'number'
+      ? { width: `${props.dropdownMatchSelectWidth}px`, minWidth: `${contentWidth}px` }
+      : { minWidth: `${contentWidth}px`, width: props.dropdownMatchSelectWidth ? `${contentWidth}px` : 'auto' }
+  // 水平定位：right 右对齐（面板右边缘对齐内容右边缘）；viewport-left 贴视口左边缘；否则默认左对齐（面板左边缘对齐内容左边缘）
+  let horizontalStyle: CSSProperties
+  if (panelAlign.value === 'right') {
+    horizontalStyle = { right: `${offsetRight}px` }
+  } else if (panelAlign.value === 'viewport-left') {
+    horizontalStyle = { left: `${offsetViewportLeft}px` }
+  } else {
+    horizontalStyle = { left: `${offsetLeft}px` }
+  }
+  // transformOrigin 水平锚点跟随对齐方向：右对齐时锚点在右侧，其余在左侧
+  const originX = panelAlign.value === 'right' ? '100%' : '0'
   switch (panelPlace.value) {
-    case 'bottom':
-      return {
-        transformOrigin: '0 0',
-        top: `${offsetTop + panelOffset.value}px`,
-        left: `${offsetLeft}px`,
-        minWidth: `${panelWidth}px`,
-        width: `${panelWidth}px`
-      }
     case 'top':
       return {
-        transformOrigin: '100% 100%',
+        transformOrigin: `${originX} 100%`,
         bottom: `${offsetBottom + panelOffset.value}px`,
-        left: `${offsetLeft}px`,
-        minWidth: `${panelWidth}px`,
-        width: `${panelWidth}px`
+        ...horizontalStyle,
+        ...widthStyle
       }
+    case 'bottom':
     default:
       return {
-        transformOrigin: '0 0',
+        transformOrigin: `${originX} 0`,
         top: `${offsetTop + panelOffset.value}px`,
-        left: `${offsetLeft}px`,
-        minWidth: `${panelWidth}px`,
-        width: `${panelWidth}px`
+        ...horizontalStyle,
+        ...widthStyle
       }
   }
 })
@@ -200,13 +257,48 @@ watch(showOptions, (to) => {
 })
 watch(showOptions, (to) => {
   emit('openChange', to)
+  emit('dropdownVisibleChange', to)
 })
+// 受控 open：外部传入 open 时，同步到内部面板显隐
+watch(
+  () => props.open,
+  (val) => {
+    if (typeof val === 'boolean') {
+      showOptions.value = val
+      if (val) {
+        getPosition()
+      }
+    }
+  },
+  { immediate: true }
+)
 watchEffect(() => {
+  // defaultActiveFirstOption 为 true 时默认高亮第一个可用选项，否则不预高亮
+  if (!props.defaultActiveFirstOption) {
+    hoverValue.value = null
+    return
+  }
   const firstEnabled = flattenOptions.value.find((option) => !option.disabled)
   hoverValue.value = firstEnabled ? firstEnabled.value : null
 })
+// 重置 hover 高亮：优先定位到当前选中值对应的选项，否则回退到默认高亮首项逻辑
+function resetHoverValue(): void {
+  const selected = flattenOptions.value.find((option) => !option.disabled && String(option.value) === props.value)
+  if (selected) {
+    hoverValue.value = selected.value
+  } else if (props.defaultActiveFirstOption) {
+    const firstEnabled = flattenOptions.value.find((option) => !option.disabled)
+    hoverValue.value = firstEnabled ? firstEnabled.value : null
+  } else {
+    hoverValue.value = null
+  }
+}
+// 面板打开或关闭时都重置 hover：关闭时重置确保下次打开定位正确，打开时重置兜底面板未真正关闭的场景
+watch(showOptions, () => {
+  resetHoverValue()
+})
 watchEffect(() => {
-  if (focused.value) {
+  if (focused.value && props.open === undefined) {
     showOptions.value = true
   }
 })
@@ -218,6 +310,14 @@ onMounted(() => {
     if (el && el.value !== props.value) {
       el.value = props.value ?? ''
     }
+  }
+  // autofocus：挂载后自动获取焦点
+  if (props.autofocus && !props.disabled) {
+    inputFocus()
+  }
+  // defaultOpen：非受控时初始展开下拉面板
+  if (props.defaultOpen && props.open === undefined && !props.disabled) {
+    openPanel()
   }
 })
 onBeforeUnmount(() => {
@@ -313,8 +413,10 @@ async function getPosition() {
   positionedContainerRect.value = positionedContainer.value?.getBoundingClientRect() as DOMRect
   contentRect.value = contentRef.value?.getBoundingClientRect() as DOMRect
   panelHeight.value = panelRef.value?.offsetHeight
+  panelWidth.value = panelRef.value?.offsetWidth
   panelOffset.value = contentRect.value.height + 4
   panelPlace.value = getPlacement()
+  panelAlign.value = getAlign()
 }
 // 获取可滚动父元素或视口的矩形信息
 function getShelterRect() {
@@ -367,14 +469,63 @@ function getPlacement(): 'bottom' | 'top' {
     return 'bottom'
   }
 }
+// 下拉面板水平方向被视口遮挡时自动调整对齐方式（基于实际遮挡检测，而非单纯宽度对比）
+// left：默认左对齐（面板左边缘对齐内容左边缘），左对齐不溢出视口右侧时采用
+// right：左对齐会溢出视口右侧、但右对齐不溢出视口左侧时采用（面板右边缘对齐内容右边缘）
+// viewport-left：左右对齐均会溢出视口时，贴视口左边缘兜底，保证从左侧可见内容（与 Ant Design Vue 一致）
+function getAlign(): 'left' | 'right' | 'viewport-left' {
+  const { left, right } = contentRect.value as DOMRect // 内容元素左右边缘相对于视口的位置
+  const width = panelWidth.value ?? 0 // 面板实际宽度
+  // 左对齐：面板左边缘 = 内容左边缘 left，右边缘 = left + width，超过视口右边缘则遮挡
+  const leftAlignOverflow = left + width > viewportWidth.value
+  // 右对齐：面板右边缘 = 内容右边缘 right，左边缘 = right - width，小于 0 则遮挡视口左侧
+  const rightAlignOverflow = right - width < 0
+  // 左对齐不遮挡，直接左对齐
+  if (!leftAlignOverflow) {
+    return 'left'
+  }
+  // 左对齐遮挡但右对齐不遮挡，切换为右对齐
+  if (!rightAlignOverflow) {
+    return 'right'
+  }
+  // 左右对齐都遮挡，贴视口左边缘兜底
+  return 'viewport-left'
+}
+// 统一控制面板显隐：受控 open 模式下不直接修改内部状态，仅由外部 open 驱动（openChange/dropdownVisibleChange 已在 watch 中 emit）
+function setPanelOpen(open: boolean): void {
+  if (props.open === undefined) {
+    showOptions.value = open
+  }
+}
 function openPanel(): void {
   if (!props.disabled) {
-    showOptions.value = true
+    setPanelOpen(true)
     getPosition()
   }
 }
 function onInput(e: Event): void {
   const input = (e.target as HTMLInputElement)?.value ?? ''
+  // 记录用户原始输入，backfill 键盘 Esc 时还原（onHover/onKeydown 的回填不会触发 onInput，lastUserValue 仅由用户主动输入更新）
+  lastUserValue.value = input
+  // 始终同步 value 保证输入框回显（含合成中的拼音）
+  emit('update:value', input)
+  // 输入法合成中仅回显，不触发 search/filter，待合成结束(compositionend)统一触发，与官网行为一致
+  if (isComposing.value) {
+    return
+  }
+  emit('search', input)
+  openPanel()
+}
+// 输入法合成开始：标记合成中，暂停 search/filter
+function onCompositionStart(): void {
+  isComposing.value = true
+}
+// 输入法合成结束：清除标记并触发一次 search/filter（此时才是真正上屏的完整输入）
+function onCompositionEnd(e: Event): void {
+  isComposing.value = false
+  const input = (e.target as HTMLInputElement)?.value ?? ''
+  // 合成结束后同步更新用户原始输入
+  lastUserValue.value = input
   emit('update:value', input)
   emit('search', input)
   openPanel()
@@ -386,7 +537,7 @@ function onFocus(): void {
 }
 function onBlur(): void {
   focused.value = false
-  showOptions.value = false
+  setPanelOpen(false)
   emit('blur')
 }
 function onClick(): void {
@@ -394,26 +545,83 @@ function onClick(): void {
 }
 function onEnter(): void {
   disabledBlur.value = true
-  if (props.allowClear && props.value) {
-    showClear.value = true
-  }
 }
 function onLeave(): void {
   disabledBlur.value = false
-  if (props.allowClear && showClear.value) {
-    showClear.value = false
+}
+// 键盘导航：↑↓ 移动高亮（backfill 时回填到输入框），Enter 选中，Esc 还原为用户原始输入
+function onKeydown(e: KeyboardEvent): void {
+  if (props.disabled) return
+  const list = flattenOptions.value
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    if (!list.length) return
+    // 面板未打开时，↑↓ 仅打开面板并保持/设置默认高亮，不修改 hoverValue
+    if (!showOptions.value) {
+      openPanel()
+      e.preventDefault()
+      return
+    }
+    e.preventDefault()
+    const currentIdx = list.findIndex((option) => !option.disabled && option.value === hoverValue.value)
+    // 环形查找下一个未禁用项：从当前项的下一个开始循环一圈；无高亮时向下从第一项、向上从最后一项开始（与官网一致）
+    const start =
+      e.key === 'ArrowDown'
+        ? currentIdx === -1
+          ? 0
+          : currentIdx + 1
+        : currentIdx === -1
+          ? list.length - 1
+          : currentIdx - 1
+    let nextIdx = -1
+    const direction = e.key === 'ArrowDown' ? 1 : -1
+    for (let i = 0; i < list.length; i++) {
+      const idx = (start + direction * i + list.length) % list.length
+      if (!list[idx].disabled) {
+        nextIdx = idx
+        break
+      }
+    }
+    // 无其他可用项（仅当前项未禁用或全部禁用）时保持原 hoverValue
+    if (nextIdx < 0 || nextIdx === currentIdx) return
+    hoverValue.value = list[nextIdx].value
+    // backfill：键盘导航时回填到输入框（不触发 search），与 onHover 行为一致
+    if (props.backfill) {
+      emit('update:value', String(list[nextIdx].value))
+    }
+  } else if (e.key === 'Enter') {
+    // 面板打开且有高亮未禁用项时，Enter 确认选中
+    if (showOptions.value && hoverValue.value !== null) {
+      const target = list.find((option) => !option.disabled && option.value === hoverValue.value)
+      if (target) {
+        e.preventDefault()
+        onSelectOption(target)
+      }
+    }
+  } else if (e.key === 'Escape') {
+    // Esc：还原用户原始输入并关闭面板
+    if (showOptions.value) {
+      e.preventDefault()
+      emit('update:value', lastUserValue.value)
+      setPanelOpen(false)
+    }
   }
 }
 function onHover(value: string | number, disabled: boolean | undefined): void {
   disabledBlur.value = Boolean(disabled)
   hoverValue.value = value
+  // backfill：hover 高亮选项时把选中项 value 回填到输入框（不触发 search）
+  if (props.backfill && !disabled) {
+    emit('update:value', String(value))
+  }
 }
 function onSelectOption(item: string | number | Option): void {
   const value = getValue(item)
+  // 确认选项后，更新用户原始输入为选中值
+  lastUserValue.value = String(value)
   emit('update:value', String(value))
   emit('select', value, childSlotProps(item))
   emit('change', value)
-  showOptions.value = false
+  setPanelOpen(false)
   // select 后保持 input 失焦，避免 watchEffect 重新打开面板
   focused.value = false
   blurInput()
@@ -422,11 +630,12 @@ function onClear(): void {
   if (focused.value) {
     inputFocus()
   }
-  showClear.value = false
+  // 清除后同步重置用户原始输入
+  lastUserValue.value = ''
   emit('update:value', '')
   emit('change', '')
   emit('clear')
-  showOptions.value = false
+  setPanelOpen(false)
 }
 function inputFocus(): void {
   const customEl = getCustomInputEl()
@@ -459,6 +668,17 @@ watch(
   },
   { immediate: true }
 )
+// 暴露方法：focus() 获取焦点、blur() 移除焦点
+function focus(): void {
+  inputFocus()
+}
+function blur(): void {
+  blurInput()
+}
+defineExpose({
+  focus,
+  blur
+})
 </script>
 <template>
   <div
@@ -486,8 +706,11 @@ watch(
         ref="customInputRef"
         class="auto-complete-custom-input"
         @input="onInput"
+        @compositionstart="onCompositionStart"
+        @compositionend="onCompositionEnd"
         @focusin="!disabled ? onFocus() : () => false"
         @focusout="!disabledBlur && !disabled ? onBlur() : () => false"
+        @keydown="onKeydown"
         @click="onClick"
       >
         <slot />
@@ -502,6 +725,9 @@ watch(
         :placeholder="placeholder"
         :value="value"
         @input="onInput"
+        @compositionstart="onCompositionStart"
+        @compositionend="onCompositionEnd"
+        @keydown="onKeydown"
         @blur="!disabledBlur && !disabled ? onBlur() : () => false"
         @focus="!disabled ? onFocus() : () => false"
         @click="onClick"
@@ -540,30 +766,35 @@ watch(
       >
         <div
           v-if="initialDisplay"
-          v-show="showOptions"
+          v-show="panelVisible"
           ref="panelRef"
           class="auto-complete-panel"
+          :class="popupClassName"
           :style="{
             ...panelPlacement,
+            ...dropdownMenuStyle,
             '--auto-complete-option-bg-color-active': colorPalettes[0]
           }"
         >
           <Scrollbar
-            v-show="flattenOptions.length"
             :style="{ ...optionsStyle, '--scrollbar-rail-vertical-right': '2px 0 2px auto' }"
             class="auto-complete-options"
             @click.stop="inputFocus"
             @mouseenter="disabledBlur = true"
             @mouseleave="disabledBlur = false"
           >
-            <template v-for="(item, index) in filteredData" :key="index">
+            <template v-for="(item, index) in displayData" :key="index">
               <template v-if="isGroup(item)">
-                <p class="auto-complete-group-title">{{ item.label }}</p>
+                <p class="auto-complete-group-title">
+                  <slot v-if="slots.option" name="option" v-bind="item" />
+                  <template v-else>{{ item.label ?? item.value }}</template>
+                </p>
                 <p
-                  v-for="(child, childIndex) in item.children"
+                  v-for="(child, childIndex) in item.options"
                   :key="`${index}-${childIndex}`"
                   :class="[
                     'auto-complete-option',
+                    'option-grouped',
                     {
                       'option-hover': !isDisabled(child) && getValue(child) === hoverValue,
                       'option-disabled': isDisabled(child)
@@ -595,15 +826,6 @@ watch(
               </p>
             </template>
           </Scrollbar>
-          <div
-            v-show="!flattenOptions.length"
-            class="auto-complete-options options-empty"
-            @click.stop="inputFocus"
-            @mouseenter="disabledBlur = true"
-            @mouseleave="disabledBlur = false"
-          >
-            <Empty image="outlined" />
-          </div>
         </div>
       </Transition>
     </Teleport>
@@ -670,6 +892,7 @@ watch(
     position: relative;
     display: inline-flex;
     align-items: center;
+    width: 100%;
     min-width: 120px;
     padding: 0 11px;
     border: 1px solid #d9d9d9;
@@ -700,7 +923,11 @@ watch(
       bottom: 0;
       right: 11px;
       margin: auto 0;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 12px;
+      height: 12px;
       font-size: 12px;
       color: rgba(0, 0, 0, 0.25);
       fill: currentColor;
@@ -714,6 +941,13 @@ watch(
         opacity 0.3s;
       &:hover {
         color: rgba(0, 0, 0, 0.45);
+      }
+      // 自定义 clearIcon 插槽内的图标统一约束尺寸，避免默认图标组件尺寸过大或垂直错位
+      :deep(svg) {
+        display: block;
+        width: 1em;
+        height: 1em;
+        fill: currentColor;
       }
     }
     .show-svg {
@@ -759,26 +993,26 @@ watch(
 }
 .auto-complete-status-error:not(.auto-complete-disabled) {
   .auto-complete-content {
-    border-color: #ff4d4f;
+    border-color: #ff7875;
   }
   &:hover .auto-complete-content {
     border-color: #ff7875;
   }
   &.auto-complete-focused .auto-complete-content {
-    border-color: #ff4d4f;
-    box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
+    border-color: #ff7875;
+    box-shadow: 0 0 0 2px rgba(255, 38, 5, 0.06);
   }
 }
 .auto-complete-status-warning:not(.auto-complete-disabled) {
   .auto-complete-content {
-    border-color: #faad14;
+    border-color: #ffd666;
   }
   &:hover .auto-complete-content {
-    border-color: #ffc53d;
+    border-color: #ffd666;
   }
   &.auto-complete-focused .auto-complete-content {
-    border-color: #faad14;
-    box-shadow: 0 0 0 2px rgba(250, 173, 20, 0.2);
+    border-color: #ffd666;
+    box-shadow: 0 0 0 2px rgba(255, 215, 5, 0.1);
   }
 }
 .auto-complete-custom {
@@ -791,6 +1025,12 @@ watch(
   }
   .auto-complete-custom-input {
     width: 100%;
+  }
+  // 自定义输入组件模式下，边框与聚焦阴影由内部输入组件(如 InputSearch)自行渲染，外层不再叠加，避免阴影覆盖搜索按钮等附加内容
+  &:not(.auto-complete-disabled):hover .auto-complete-content,
+  &.auto-complete-focused .auto-complete-content {
+    border-color: transparent;
+    box-shadow: none;
   }
 }
 .auto-complete-disabled {
@@ -822,7 +1062,7 @@ watch(
       padding: 5px 12px;
       color: rgba(0, 0, 0, 0.45);
       font-size: 12px;
-      line-height: 1.5714285714285714;
+      line-height: 22px;
       cursor: default;
     }
     .auto-complete-option {
@@ -839,6 +1079,20 @@ watch(
       white-space: nowrap;
       text-overflow: ellipsis;
       transition: background 0.3s ease;
+      // 分组内选项相对分组标题额外缩进 12px（对齐 Ant Design Vue grouped option 行为）
+      &.option-grouped {
+        padding-left: 24px;
+      }
+      // 自定义选项内容为 flex 布局时，允许子项收缩并对超宽文本省略号截断，与官网表现一致
+      :deep(> div) {
+        min-width: 0;
+        > span,
+        > a {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
     }
     .option-hover {
       background: rgba(0, 0, 0, 0.04);
@@ -846,16 +1100,6 @@ watch(
     .option-disabled {
       color: rgba(0, 0, 0, 0.25);
       cursor: not-allowed;
-    }
-  }
-  .options-empty {
-    min-width: 112px;
-    padding: 9px 16px;
-    .empty-wrap {
-      margin-block: 8px;
-      :deep(.empty-image-wrap) {
-        height: 35px;
-      }
     }
   }
 }

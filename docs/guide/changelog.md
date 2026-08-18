@@ -4,6 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2026-08-18">2.4.28</VersionDateTag>
+
+- 新增 [自动完成 AutoComplete](https://themusecatcher.github.io/vue-amazing-ui/guide/components/autocomplete.html) 组件
+
 ## <VersionDateTag date="2026-08-17">2.4.27</VersionDateTag>
 
 - 修复 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html) 组件搜索按钮与输入框连接处的样式问题
