@@ -11,6 +11,13 @@
 # 确保脚本遇到错误立即退出
 set -e
 
+# 将 URL 渲染为终端可点击的超链接（OSC 8 转义序列）
+# 支持：iTerm2 / WezTerm / Kitty / Windows Terminal / VS Code 集成的终端
+# 不支持的终端自动降级为纯文本
+link() {
+  printf '\033]8;;%s\033\\%s\033]8;;\033\\' "$1" "$1"
+}
+
 commitDesc=$1
 
 # 强制要求传入语义化的提交描述，避免产生无信息量的 commit
@@ -49,5 +56,5 @@ git add .
 git commit -m "$commitDesc"
 git push
 
-echo ✅ "部署完成：https://themusecatcher.github.io/vue-amazing-ui/"
-echo ⏰ "$(date '+%Y-%m-%d %H:%M:%S')"
+printf '✅ 部署完成：%s\n' "$(link 'https://themusecatcher.github.io/vue-amazing-ui/')"
+echo "⏰ $(date '+%Y-%m-%d %H:%M:%S')"
