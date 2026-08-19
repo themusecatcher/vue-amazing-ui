@@ -3,8 +3,8 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { loadingBarRef } from '@/router'
 const theme = ref({
-  token: {
-    colorPrimary: '#d4380d'
+  common: {
+    primaryColor: '#ff6900'
   }
 })
 const route = useRoute()
@@ -17,11 +17,11 @@ onMounted(() => {
 })
 </script>
 <template>
-  <a-config-provider :theme="theme">
+  <ConfigProvider :theme="theme">
     <RouterView v-if="routeName === 'Watermark'" />
     <Watermark v-else content="Vue Amazing UI">
       <RouterView />
     </Watermark>
     <LoadingBar ref="loadingBar" />
-  </a-config-provider>
+  </ConfigProvider>
 </template>

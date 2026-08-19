@@ -194,13 +194,13 @@
             constructor: void 0,
             __v: null == r ? ++u$1 : r
           }
-          return null == r && null != l$1.vnode && l$1.vnode(f), f
+          return (null == r && null != l$1.vnode && l$1.vnode(f), f)
         }
         function k$1(n) {
           return n.children
         }
         function b$1(n, l) {
-          ;(this.props = n), (this.context = l)
+          ;((this.props = n), (this.context = l))
         }
         function g$1(n, l) {
           if (null == l) return n.__ ? g$1(n.__, n.__.__k.indexOf(n) + 1) : null
@@ -283,7 +283,7 @@
                   }
                   y = null
                 }
-              L(n, _, (y = y || c$1), t, o, r, f, e, a),
+              ;(L(n, _, (y = y || c$1), t, o, r, f, e, a),
                 (b = _.__e),
                 (p = _.ref) && y.ref != p && (w || (w = []), y.ref && w.push(y.ref, null, _), w.push(p, _.__c || b, _)),
                 null != b
@@ -292,7 +292,7 @@
                       ? (_.__d = e = C(_, e, n))
                       : (e = $(n, _, y, x, b, e)),
                     'function' == typeof u.type && (u.__d = e))
-                  : e && y.__e == e && e.parentNode != n && (e = g$1(y))
+                  : e && y.__e == e && e.parentNode != n && (e = g$1(y)))
             }
           for (u.__e = m, h = P; h--; )
             null != x[h] &&
@@ -307,12 +307,12 @@
         }
         function $(n, l, u, i, t, o) {
           var r, f, e
-          if (void 0 !== l.__d) (r = l.__d), (l.__d = void 0)
+          if (void 0 !== l.__d) ((r = l.__d), (l.__d = void 0))
           else if (null == u || t != o || null == t.parentNode)
-            n: if (null == o || o.parentNode !== n) n.appendChild(t), (r = null)
+            n: if (null == o || o.parentNode !== n) (n.appendChild(t), (r = null))
             else {
               for (f = o, e = 0; (f = f.nextSibling) && e < i.length; e += 1) if (f == t) break n
-              n.insertBefore(t, o), (r = o)
+              ;(n.insertBefore(t, o), (r = o))
             }
           return void 0 !== r ? r : t.nextSibling
         }
@@ -349,11 +349,11 @@
               if (u) for (l in u) (i && u[l] === i[l]) || I(n.style, l, u[l])
             }
           else if ('o' === l[0] && 'n' === l[1])
-            (o = l !== (l = l.replace(/Capture$/, ''))),
+            ((o = l !== (l = l.replace(/Capture$/, ''))),
               (l = l.toLowerCase() in n ? l.toLowerCase().slice(2) : l.slice(2)),
               n.l || (n.l = {}),
               (n.l[l + o] = u),
-              u ? i || n.addEventListener(l, o ? z$1 : j$1, o) : n.removeEventListener(l, o ? z$1 : j$1, o)
+              u ? i || n.addEventListener(l, o ? z$1 : j$1, o) : n.removeEventListener(l, o ? z$1 : j$1, o))
           else if ('dangerouslySetInnerHTML' !== l) {
             if (t) l = l.replace(/xlink(H|:h)/, 'h').replace(/sName$/, 's')
             else if (
@@ -400,7 +400,7 @@
             H,
             I = u.type
           if (void 0 !== u.constructor) return null
-          null != i.__h && ((c = i.__h), (e = u.__e = i.__e), (u.__h = null), (r = [e])), (s = l$1.__b) && s(u)
+          ;(null != i.__h && ((c = i.__h), (e = u.__e = i.__e), (u.__h = null), (r = [e])), (s = l$1.__b) && s(u))
           try {
             n: if ('function' == typeof I) {
               if (
@@ -428,8 +428,8 @@
                 (a.__v = u),
                 p)
               )
-                null == I.getDerivedStateFromProps && null != a.componentWillMount && a.componentWillMount(),
-                  null != a.componentDidMount && a.__h.push(a.componentDidMount)
+                (null == I.getDerivedStateFromProps && null != a.componentWillMount && a.componentWillMount(),
+                  null != a.componentDidMount && a.__h.push(a.componentDidMount))
               else {
                 if (
                   (null == I.getDerivedStateFromProps &&
@@ -452,14 +452,14 @@
                     C++
                   )
                     a.__h.push(a._sb[C])
-                  ;(a._sb = []), a.__h.length && f.push(a)
+                  ;((a._sb = []), a.__h.length && f.push(a))
                   break n
                 }
-                null != a.componentWillUpdate && a.componentWillUpdate(m, a.__s, x),
+                ;(null != a.componentWillUpdate && a.componentWillUpdate(m, a.__s, x),
                   null != a.componentDidUpdate &&
                     a.__h.push(function () {
                       a.componentDidUpdate(y, d, _)
-                    })
+                    }))
               }
               if (
                 ((a.context = x),
@@ -478,9 +478,9 @@
                 a._sb = []
               } else
                 do {
-                  ;(a.__d = !1), S && S(u), (s = a.render(a.props, a.state, a.context)), (a.state = a.__s)
+                  ;((a.__d = !1), S && S(u), (s = a.render(a.props, a.state, a.context)), (a.state = a.__s))
                 } while (a.__d && ++$ < 25)
-              ;(a.state = a.__s),
+              ;((a.state = a.__s),
                 null != a.getChildContext && (t = h$1(h$1({}, t), a.getChildContext())),
                 p || null == a.getSnapshotBeforeUpdate || (_ = a.getSnapshotBeforeUpdate(y, d)),
                 P(
@@ -499,31 +499,31 @@
                 (u.__h = null),
                 a.__h.length && f.push(a),
                 g && (a.__E = a.__ = null),
-                (a.__e = !1)
+                (a.__e = !1))
             } else
               null == r && u.__v === i.__v
                 ? ((u.__k = i.__k), (u.__e = i.__e))
                 : (u.__e = N(i.__e, u, i, t, o, r, f, c))
             ;(s = l$1.diffed) && s(u)
           } catch (n) {
-            ;(u.__v = null),
+            ;((u.__v = null),
               (c || null != r) && ((u.__e = e), (u.__h = !!c), (r[r.indexOf(e)] = null)),
-              l$1.__e(n, u, i)
+              l$1.__e(n, u, i))
           }
         }
         function M(n, u) {
-          l$1.__c && l$1.__c(u, n),
+          ;(l$1.__c && l$1.__c(u, n),
             n.some(function (u) {
               try {
-                ;(n = u.__h),
+                ;((n = u.__h),
                   (u.__h = []),
                   n.some(function (n) {
                     n.call(u)
-                  })
+                  }))
               } catch (n) {
                 l$1.__e(n, u.__v)
               }
-            })
+            }))
         }
         function N(l, u, i, t, o, r, f, e) {
           var s,
@@ -536,14 +536,16 @@
           if (('svg' === _ && (o = !0), null != r))
             for (; k < r.length; k++)
               if ((s = r[k]) && 'setAttribute' in s == !!_ && (_ ? s.localName === _ : 3 === s.nodeType)) {
-                ;(l = s), (r[k] = null)
+                ;((l = s), (r[k] = null))
                 break
               }
           if (null == l) {
             if (null === _) return document.createTextNode(d)
-            ;(l = o ? document.createElementNS('http://www.w3.org/2000/svg', _) : document.createElement(_, d.is && d)),
+            ;((l = o
+              ? document.createElementNS('http://www.w3.org/2000/svg', _)
+              : document.createElement(_, d.is && d)),
               (r = null),
-              (e = !1)
+              (e = !1))
           }
           if (null === _) y === d || (e && l.data === d) || (l.data = d)
           else {
@@ -605,17 +607,17 @@
               } catch (n) {
                 l$1.__e(n, u)
               }
-            ;(t.base = t.__P = null), (n.__c = void 0)
+            ;((t.base = t.__P = null), (n.__c = void 0))
           }
           if ((t = n.__k)) for (o = 0; o < t.length; o++) t[o] && q$1(t[o], u, i || 'function' != typeof n.type)
-          i || null == n.__e || p$1(n.__e), (n.__ = n.__e = n.__d = void 0)
+          ;(i || null == n.__e || p$1(n.__e), (n.__ = n.__e = n.__d = void 0))
         }
         function B$1(n, l, u) {
           return this.constructor(n, u)
         }
         function D(u, i, t) {
           var o, r, f
-          l$1.__ && l$1.__(u, i),
+          ;(l$1.__ && l$1.__(u, i),
             (r = (o = 'function' == typeof t) ? null : (t && t.__k) || i.__k),
             (f = []),
             L(
@@ -629,7 +631,7 @@
               !o && t ? t : r ? r.__e : i.firstChild,
               o
             ),
-            M(f, u)
+            M(f, u))
         }
         function G(n, l) {
           var u = {
@@ -650,14 +652,14 @@
                   (this.shouldComponentUpdate = function (n) {
                     this.props.value !== n.value &&
                       u.some(function (n) {
-                        ;(n.__e = !0), w$1(n)
+                        ;((n.__e = !0), w$1(n))
                       })
                   }),
                   (this.sub = function (n) {
                     u.push(n)
                     var l = n.componentWillUnmount
                     n.componentWillUnmount = function () {
-                      u.splice(u.indexOf(n), 1), l && l.call(n)
+                      ;(u.splice(u.indexOf(n), 1), l && l.call(n))
                     }
                   })),
                 n.children
@@ -666,7 +668,7 @@
           }
           return (u.Provider.__ = u.Consumer.contextType = u)
         }
-        ;(n = s$1.slice),
+        ;((n = s$1.slice),
           (l$1 = {
             __e: function (n, l, u, i) {
               for (var t, o, r; (l = l.__); )
@@ -689,10 +691,10 @@
           (u$1 = 0),
           (b$1.prototype.setState = function (n, l) {
             var u
-            ;(u = null != this.__s && this.__s !== this.state ? this.__s : (this.__s = h$1({}, this.state))),
+            ;((u = null != this.__s && this.__s !== this.state ? this.__s : (this.__s = h$1({}, this.state))),
               'function' == typeof n && (n = n(h$1({}, u), this.props)),
               n && h$1(u, n),
-              null != n && this.__v && (l && this._sb.push(l), w$1(this))
+              null != n && this.__v && (l && this._sb.push(l), w$1(this)))
           }),
           (b$1.prototype.forceUpdate = function (n) {
             this.__v && ((this.__e = !0), n && this.__h.push(n), w$1(this))
@@ -704,7 +706,7 @@
             return n.__v.__b - l.__v.__b
           }),
           (x.__r = 0),
-          (e$1 = 0)
+          (e$1 = 0))
 
         var _$1 = 0
         function o$1(o, e, n, t, f, l) {
@@ -730,7 +732,7 @@
             __self: l
           }
           if ('function' == typeof o && (s = o.defaultProps)) for (u in s) void 0 === a[u] && (a[u] = s[u])
-          return l$1.vnode && l$1.vnode(i), i
+          return (l$1.vnode && l$1.vnode(i), i)
         }
 
         function count$1(node) {
@@ -894,7 +896,7 @@
             i,
             n
           do {
-            ;(current = next.reverse()), (next = [])
+            ;((current = next.reverse()), (next = []))
             while ((node = current.pop())) {
               yield node
               if ((children = node.children)) {
@@ -1013,8 +1015,8 @@
             k = parent.value && (x1 - x0) / parent.value
 
           while (++i < n) {
-            ;(node = nodes[i]), (node.y0 = y0), (node.y1 = y1)
-            ;(node.x0 = x0), (node.x1 = x0 += node.value * k)
+            ;((node = nodes[i]), (node.y0 = y0), (node.y1 = y1))
+            ;((node.x0 = x0), (node.x1 = x0 += node.value * k))
           }
         }
 
@@ -1026,8 +1028,8 @@
             k = parent.value && (y1 - y0) / parent.value
 
           while (++i < n) {
-            ;(node = nodes[i]), (node.x0 = x0), (node.x1 = x1)
-            ;(node.y0 = y0), (node.y1 = y0 += node.value * k)
+            ;((node = nodes[i]), (node.x0 = x0), (node.x1 = x1))
+            ;((node.y0 = y0), (node.y1 = y0 += node.value * k))
           }
         }
 
@@ -1053,7 +1055,7 @@
             beta
 
           while (i0 < n) {
-            ;(dx = x1 - x0), (dy = y1 - y0)
+            ;((dx = x1 - x0), (dy = y1 - y0))
 
             // Find the next non-empty node.
             do sumValue = nodes[i1++].value
@@ -1081,7 +1083,7 @@
             rows.push((row = { value: sumValue, dice: dx < dy, children: nodes.slice(i0, i1) }))
             if (row.dice) treemapDice(row, x0, y0, x1, value ? (y0 += (dy * sumValue) / value) : y1)
             else treemapSlice(row, x0, y0, value ? (x0 += (dx * sumValue) / value) : x1, y1)
-            ;(value -= sumValue), (i0 = i1)
+            ;((value -= sumValue), (i0 = i1))
           }
 
           return rows
@@ -1213,7 +1215,7 @@
                 value = parent.value
 
               while (++j < m) {
-                ;(row = rows[j]), (nodes = row.children)
+                ;((row = rows[j]), (nodes = row.children))
                 for (i = row.value = 0, n = nodes.length; i < n; ++i) row.value += nodes[i].value
                 if (row.dice) treemapDice(row, x0, y0, x1, value ? (y0 += ((y1 - y0) * row.value) / value) : y1)
                 else treemapSlice(row, x0, y0, value ? (x0 += ((x1 - x0) * row.value) / value) : x1, y1)
@@ -1287,12 +1289,12 @@
           l = l$1.__c,
           m = l$1.unmount
         function d(t, u) {
-          l$1.__h && l$1.__h(r, t, o || u), (o = 0)
+          ;(l$1.__h && l$1.__h(r, t, o || u), (o = 0))
           var i = r.__H || (r.__H = { __: [], __h: [] })
-          return t >= i.__.length && i.__.push({ __V: c }), i.__[t]
+          return (t >= i.__.length && i.__.push({ __V: c }), i.__[t])
         }
         function h(n) {
-          return (o = 1), s(B, n)
+          return ((o = 1), s(B, n))
         }
         function s(n, u, i) {
           var o = d(t++, 2)
@@ -1326,7 +1328,7 @@
                 u.forEach(function (n) {
                   if (n.__N) {
                     var t = n.__[0]
-                    ;(n.__ = n.__N), (n.__N = void 0), t !== n.__[0] && (i = !0)
+                    ;((n.__ = n.__N), (n.__N = void 0), t !== n.__[0] && (i = !0))
                   }
                 }),
                 !(!i && o.__c.props === n) && (!c || c.call(this, n, t, r))
@@ -1335,14 +1337,14 @@
             r.u = !0
             var c = r.shouldComponentUpdate,
               e = r.componentWillUpdate
-            ;(r.componentWillUpdate = function (n, t, r) {
+            ;((r.componentWillUpdate = function (n, t, r) {
               if (this.__e) {
                 var u = c
-                ;(c = void 0), f(n, t, r), (c = u)
+                ;((c = void 0), f(n, t, r), (c = u))
               }
               e && e.call(this, n, t, r)
             }),
-              (r.shouldComponentUpdate = f)
+              (r.shouldComponentUpdate = f))
           }
           return o.__N || o.__
         }
@@ -1377,61 +1379,61 @@
         function q(n) {
           var u = r.context[n.__c],
             i = d(t++, 9)
-          return (i.c = n), u ? (null == i.__ && ((i.__ = !0), u.sub(r)), u.props.value) : n.__
+          return ((i.c = n), u ? (null == i.__ && ((i.__ = !0), u.sub(r)), u.props.value) : n.__)
         }
         function b() {
           for (var t; (t = f.shift()); )
             if (t.__P && t.__H)
               try {
-                t.__H.__h.forEach(k), t.__H.__h.forEach(w), (t.__H.__h = [])
+                ;(t.__H.__h.forEach(k), t.__H.__h.forEach(w), (t.__H.__h = []))
               } catch (r) {
-                ;(t.__H.__h = []), l$1.__e(r, t.__v)
+                ;((t.__H.__h = []), l$1.__e(r, t.__v))
               }
         }
-        ;(l$1.__b = function (n) {
-          ;(r = null), e && e(n)
+        ;((l$1.__b = function (n) {
+          ;((r = null), e && e(n))
         }),
           (l$1.__r = function (n) {
-            a && a(n), (t = 0)
+            ;(a && a(n), (t = 0))
             var i = (r = n.__c).__H
-            i &&
+            ;(i &&
               (u === r
                 ? ((i.__h = []),
                   (r.__h = []),
                   i.__.forEach(function (n) {
-                    n.__N && (n.__ = n.__N), (n.__V = c), (n.__N = n.i = void 0)
+                    ;(n.__N && (n.__ = n.__N), (n.__V = c), (n.__N = n.i = void 0))
                   }))
                 : (i.__h.forEach(k), i.__h.forEach(w), (i.__h = []), (t = 0))),
-              (u = r)
+              (u = r))
           }),
           (l$1.diffed = function (t) {
             v && v(t)
             var o = t.__c
-            o &&
+            ;(o &&
               o.__H &&
               (o.__H.__h.length &&
                 ((1 !== f.push(o) && i === l$1.requestAnimationFrame) || ((i = l$1.requestAnimationFrame) || j)(b)),
               o.__H.__.forEach(function (n) {
-                n.i && (n.__H = n.i), n.__V !== c && (n.__ = n.__V), (n.i = void 0), (n.__V = c)
+                ;(n.i && (n.__H = n.i), n.__V !== c && (n.__ = n.__V), (n.i = void 0), (n.__V = c))
               })),
-              (u = r = null)
+              (u = r = null))
           }),
           (l$1.__c = function (t, r) {
-            r.some(function (t) {
+            ;(r.some(function (t) {
               try {
-                t.__h.forEach(k),
+                ;(t.__h.forEach(k),
                   (t.__h = t.__h.filter(function (n) {
                     return !n.__ || w(n)
-                  }))
+                  })))
               } catch (u) {
-                r.some(function (n) {
+                ;(r.some(function (n) {
                   n.__h && (n.__h = [])
                 }),
                   (r = []),
-                  l$1.__e(u, t.__v)
+                  l$1.__e(u, t.__v))
               }
             }),
-              l && l(t, r)
+              l && l(t, r))
           }),
           (l$1.unmount = function (t) {
             m && m(t)
@@ -1448,12 +1450,12 @@
               }),
               (u.__H = void 0),
               r && l$1.__e(r, u.__v))
-          })
+          }))
         var g = 'function' == typeof requestAnimationFrame
         function j(n) {
           var t,
             r = function () {
-              clearTimeout(u), g && cancelAnimationFrame(t), setTimeout(n)
+              ;(clearTimeout(u), g && cancelAnimationFrame(t), setTimeout(n))
             },
             u = setTimeout(r, 100)
           g && (t = requestAnimationFrame(r))
@@ -1461,11 +1463,11 @@
         function k(n) {
           var t = r,
             u = n.__c
-          'function' == typeof u && ((n.__c = void 0), u()), (r = t)
+          ;('function' == typeof u && ((n.__c = void 0), u()), (r = t))
         }
         function w(n) {
           var t = r
-          ;(n.__c = n.__()), (r = t)
+          ;((n.__c = n.__()), (r = t))
         }
         function z(n, t) {
           return (
@@ -3892,7 +3894,7 @@
         }
 
         function ticks(start, stop, count) {
-          ;(stop = +stop), (start = +start), (count = +count)
+          ;((stop = +stop), (start = +start), (count = +count))
           if (!(count > 0)) return []
           if (start === stop) return [start]
           const reverse = stop < start,
@@ -3911,12 +3913,12 @@
         }
 
         function tickIncrement(start, stop, count) {
-          ;(stop = +stop), (start = +start), (count = +count)
+          ;((stop = +stop), (start = +start), (count = +count))
           return tickSpec(start, stop, count)[2]
         }
 
         function tickStep(start, stop, count) {
-          ;(stop = +stop), (start = +start), (count = +count)
+          ;((stop = +stop), (start = +start), (count = +count))
           const reverse = stop < start,
             inc = reverse ? tickIncrement(stop, start, count) : tickIncrement(start, stop, count)
           return (reverse ? -1 : 1) * (inc < 0 ? 1 / -inc : inc)
@@ -5031,7 +5033,7 @@
             (a = +a),
             (b = +b),
             function (t) {
-              return d.setTime(a * (1 - t) + b * t), d
+              return (d.setTime(a * (1 - t) + b * t), d)
             }
           )
         }
@@ -5093,7 +5095,7 @@
             q = [] // number interpolators
 
           // Coerce inputs to strings.
-          ;(a = a + ''), (b = b + '')
+          ;((a = a + ''), (b = b + ''))
 
           // Interpolate pairs of numbers in a & b.
           while ((am = reA.exec(a)) && (bm = reB.exec(b))) {
@@ -5198,7 +5200,7 @@
 
         function clamper(a, b) {
           var t
-          if (a > b) (t = a), (a = b), (b = t)
+          if (a > b) ((t = a), (a = b), (b = t))
           return function (x) {
             return Math.max(a, Math.min(b, x))
           }
@@ -5211,8 +5213,8 @@
             d1 = domain[1],
             r0 = range[0],
             r1 = range[1]
-          if (d1 < d0) (d0 = normalize(d1, d0)), (r0 = interpolate(r1, r0))
-          else (d0 = normalize(d0, d1)), (r0 = interpolate(r0, r1))
+          if (d1 < d0) ((d0 = normalize(d1, d0)), (r0 = interpolate(r1, r0)))
+          else ((d0 = normalize(d0, d1)), (r0 = interpolate(r0, r1)))
           return function (x) {
             return r0(d0(x))
           }
@@ -5291,7 +5293,7 @@
           }
 
           scale.rangeRound = function (_) {
-            return (range = Array.from(_)), (interpolate$1 = interpolateRound), rescale()
+            return ((range = Array.from(_)), (interpolate$1 = interpolateRound), rescale())
           }
 
           scale.clamp = function (_) {
@@ -5307,7 +5309,7 @@
           }
 
           return function (t, u) {
-            ;(transform = t), (untransform = u)
+            ;((transform = t), (untransform = u))
             return rescale()
           }
         }
@@ -5334,7 +5336,7 @@
         }
 
         function exponent(x) {
-          return (x = formatDecimalParts(Math.abs(x))), x ? x[1] : NaN
+          return ((x = formatDecimalParts(Math.abs(x))), x ? x[1] : NaN)
         }
 
         function formatGroup(grouping, thousands) {
@@ -5515,12 +5517,12 @@
               type = specifier.type
 
             // The "n" type is an alias for ",g".
-            if (type === 'n') (comma = true), (type = 'g')
+            if (type === 'n') ((comma = true), (type = 'g'))
             // The "" type, and any invalid type, is an alias for ".12~g".
-            else if (!formatTypes[type]) precision === undefined && (precision = 12), (trim = true), (type = 'g')
+            else if (!formatTypes[type]) (precision === undefined && (precision = 12), (trim = true), (type = 'g'))
 
             // If zero fill is specified, padding goes after sign and before digits.
-            if (zero || (fill === '0' && align === '=')) (zero = true), (fill = '0'), (align = '=')
+            if (zero || (fill === '0' && align === '=')) ((zero = true), (fill = '0'), (align = '='))
 
             // Compute the prefix and suffix.
             // For SI-prefix, the suffix is lazily computed.
@@ -5582,7 +5584,7 @@
                 // Break the formatted value into the integer “value” part that can be
                 // grouped, and fractional or exponential “suffix” part that is not.
                 if (maybeSuffix) {
-                  ;(i = -1), (n = value.length)
+                  ;((i = -1), (n = value.length))
                   while (++i < n) {
                     if (((c = value.charCodeAt(i)), 48 > c || c > 57)) {
                       valueSuffix = (c === 46 ? decimal + value.slice(i + 1) : value.slice(i)) + valueSuffix
@@ -5602,7 +5604,8 @@
 
               // If the fill character is "0", grouping is applied after padding.
               if (comma && zero)
-                (value = group(padding + value, padding.length ? width - valueSuffix.length : Infinity)), (padding = '')
+                ((value = group(padding + value, padding.length ? width - valueSuffix.length : Infinity)),
+                  (padding = ''))
 
               // Reconstruct the final output based on the desired alignment.
               switch (align) {
@@ -5677,7 +5680,7 @@
         }
 
         function precisionRound(step, max) {
-          ;(step = Math.abs(step)), (max = Math.abs(max) - step)
+          ;((step = Math.abs(step)), (max = Math.abs(max) - step))
           return Math.max(0, exponent(max) - exponent(step)) + 1
         }
 
@@ -5740,8 +5743,8 @@
             var maxIter = 10
 
             if (stop < start) {
-              ;(step = start), (start = stop), (stop = step)
-              ;(step = i0), (i0 = i1), (i1 = step)
+              ;((step = start), (start = stop), (stop = step))
+              ;((step = i0), (i0 = i1), (i1 = step))
             }
 
             while (maxIter-- > 0) {
@@ -5835,7 +5838,7 @@
           }
 
           return function (t) {
-            ;(transform = t), (t0 = t(x0)), (t1 = t(x1)), (k10 = t0 === t1 ? 0 : 1 / (t1 - t0))
+            ;((transform = t), (t0 = t(x0)), (t1 = t(x1)), (k10 = t0 === t1 ? 0 : 1 / (t1 - t0)))
             return scale
           }
         }

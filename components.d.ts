@@ -11,6 +11,12 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AAutoComplete: typeof import('ant-design-vue/es')['AutoComplete']
+    AButton: typeof import('ant-design-vue/es')['Button']
+    AInputSearch: typeof import('ant-design-vue/es')['InputSearch']
+    AMenu: typeof import('ant-design-vue/es')['Menu']
+    AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
+    ATextarea: typeof import('ant-design-vue/es')['Textarea']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

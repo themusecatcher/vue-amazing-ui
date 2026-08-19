@@ -129,6 +129,10 @@ export default defineConfig({
               link: '/guide/components/alert'
             },
             {
+              text: '自动完成 AutoComplete',
+              link: '/guide/components/autocomplete'
+            },
+            {
               text: '头像 Avatar',
               link: '/guide/components/avatar'
             },
