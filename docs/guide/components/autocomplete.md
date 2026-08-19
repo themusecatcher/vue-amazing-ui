@@ -969,9 +969,11 @@ const optionsGroup = ref([
 
 ::::
 
-## 键盘/悬浮回填（backfill）
+## 键盘/悬浮回填
 
 键盘 `↑` `↓` 导航选项时会回填选中项到输入框中，按 `Enter` 确认选中，按 `Esc` 还原输入，悬浮选项同样会回填。
+
+<br/>
 
 <AutoComplete
   v-model:value="valueBackfill"
@@ -1002,19 +1004,23 @@ const optionsBackfill = ['Apple', 'Banana', 'Cherry', 'Durian']
 
 ::::
 
-## 受控展开（open）
+## 受控展开
 
-<Button @click="openControlled = !openControlled">{{ openControlled ? '收起' : '展开' }}下拉</Button>
-<br />
-<br />
-<AutoComplete
-  v-model:value="valueOpen"
-  :options="optionsOpen"
-  :open="openControlled"
-  style="width: 200px"
-  placeholder="input here"
-  @dropdown-visible-change="openControlled = $event"
-/>
+通过 `open` 控制面板显隐，配合 `dropdownVisibleChange` 事件使用。
+
+<br/>
+
+<Space>
+  <AutoComplete
+    v-model:value="valueOpen"
+    :options="optionsOpen"
+    :open="openControlled"
+    style="width: 200px"
+    placeholder="input here"
+    @dropdown-visible-change="openControlled = $event"
+  />
+  <Button type="primary" @click="openControlled = !openControlled">{{ openControlled ? '收起' : '展开' }}下拉</Button>
+</Space>
 
 :::: details Show Code
 
@@ -1026,23 +1032,27 @@ const openControlled = ref(false)
 const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 </script>
 <template>
-  <Button @click="openControlled = !openControlled">{{ openControlled ? '收起' : '展开' }}下拉</Button>
-  <br />
-  <br />
-  <AutoComplete
-    v-model:value="valueOpen"
-    :options="optionsOpen"
-    :open="openControlled"
-    style="width: 200px"
-    placeholder="input here"
-    @dropdown-visible-change="openControlled = $event"
-  />
+  <Space>
+    <AutoComplete
+      v-model:value="valueOpen"
+      :options="optionsOpen"
+      :open="openControlled"
+      style="width: 200px"
+      placeholder="input here"
+      @dropdown-visible-change="openControlled = $event"
+    />
+    <Button type="primary" @click="openControlled = !openControlled">{{ openControlled ? '收起' : '展开' }}下拉</Button>
+  </Space>
 </template>
 ```
 
 ::::
 
-## 默认展开（defaultOpen）
+## 默认展开
+
+初始即展开面板，区别于受控的 `open`，初始值生效后不受外部状态控制。
+
+<br/>
 
 <AutoComplete
   v-model:value="valueDefaultOpen"
@@ -1073,7 +1083,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 
 ::::
 
-## 关闭默认高亮首项（defaultActiveFirstOption）
+## 关闭默认高亮首项
 
 <AutoComplete
   v-model:value="valueActiveFirst"
@@ -1104,7 +1114,11 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 
 ::::
 
-## 下拉面板宽度（dropdownMatchSelectWidth）
+## 下拉面板宽度
+
+通过 `dropdownMatchSelectWidth` 指定面板宽度，空间不足时自动调整对齐。
+
+<br/>
 
 <AutoComplete
   v-model:value="valueMatchWidth"
@@ -1197,7 +1211,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
 | clearIcon | 自定义清除图标                           | -                   |
 | default   | 自定义输入组件（替代原生 `input` 元素）  | -                   |
 
-## Expose
+## Methods
 
 | 名称  | 说明               | 类型       |
 | :---- | :----------------- | :--------- |

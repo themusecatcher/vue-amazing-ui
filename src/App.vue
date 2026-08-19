@@ -2,11 +2,6 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { loadingBarRef } from '@/router'
-const antTheme = ref({
-  token: {
-    colorPrimary: '#d4380d'
-  }
-})
 const theme = ref({
   common: {
     primaryColor: '#ff6900'

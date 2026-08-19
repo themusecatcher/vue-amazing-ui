@@ -114,14 +114,12 @@ _自定义宽高；同时图片覆盖容器；预览文本设为 `preview`_
 
 <br/>
 
-<Image :src="images" :width="[100, 200, 100, 200, 100]" :space-props="{ width: 416 }" fit="cover" loop
-
-> <template #preview>
-
+<Image :src="images" :width="[100, 200, 100, 200, 100]" :space-props="{ width: 416 }" fit="cover" loop>
+  <template #preview>
     <p class="preview-txt">preview</p>
-
   </template>
 </Image>
+
 
 <style lang="less" scoped>
 .preview-txt {

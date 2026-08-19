@@ -74,6 +74,7 @@ const componentsMap = {
 }
 // 定义组件依赖关系
 const componentDependencies = {
+  AutoComplete: ['Scrollbar'],
   BackTop: ['Tooltip'],
   Calendar: ['Radio', 'Select', 'Empty', 'Scrollbar'],
   Card: ['Skeleton'],
