@@ -17,7 +17,7 @@
 ## 特性
 
 - 组件库采用 `Vue@3.5.29`+ `TypeScript@5.9.3` + `Vite@7.3.1` + `Less@4.5.1` 实现
-- 目前共包含 `68` 个基础 `UI` 组件以及 `18` 个工具函数，并且持续探索更新中...
+- 目前共包含 `69` 个基础 `UI` 组件以及 `18` 个工具函数，并且持续探索更新中...
 - 主题可调，你只需提供一个主题色，剩下的都交给我
 - 顺便一提，它们全都可以 `treeshaking`
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
@@ -243,8 +243,9 @@ pnpm docs:dev
 | ConfigProvider  | 全局化配置 | Countdown      | 倒计时     |
 | DatePicker      | 日期选择器 | Descriptions   | 描述列表   |
 | Dialog          | 对话框     | Divider        | 分割线     |
-| Drawer          | 抽屉       | Ellipsis       | 文本省略   |
-| Empty           | 空状态     | Flex           | 弹性布局   |
+| Drawer          | 抽屉       | Dropdown       | 下拉菜单   |
+| Ellipsis        | 文本省略   | Empty          | 空状态     |
+| Flex            | 弹性布局   | FloatButton    | 浮动按钮   |
 | FloatButton     | 浮动按钮   | GradientText   | 渐变文字   |
 | Grid            | 栅格       | Highlight      | 高亮文本   |
 | Image           | 图片       | Input          | 输入框     |

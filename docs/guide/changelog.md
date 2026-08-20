@@ -4,6 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2026-08-20">2.6.0</VersionDateTag>
+
+- 新增 [下拉菜单 Dropdown](https://themusecatcher.github.io/vue-amazing-ui/guide/components/dropdown.html) 组件
+
 ## <VersionDateTag date="2026-08-19">2.5.0</VersionDateTag>
 
 - 新增 [自动完成 AutoComplete](https://themusecatcher.github.io/vue-amazing-ui/guide/components/autocomplete.html) 组件

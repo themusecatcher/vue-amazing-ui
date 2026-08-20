@@ -209,6 +209,10 @@ export default defineConfig({
               link: '/guide/components/drawer'
             },
             {
+              text: '下拉菜单 Dropdown',
+              link: '/guide/components/dropdown'
+            },
+            {
               text: '文本省略 Ellipsis',
               link: '/guide/components/ellipsis'
             },

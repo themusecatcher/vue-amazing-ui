@@ -68,6 +68,14 @@ export { default as Dialog } from './dialog'
 export type { Props as DividerProps } from './divider'
 export { default as Divider } from './divider'
 
+export type {
+  DropdownProps,
+  DropdownButtonProps,
+  MenuOption as DropdownMenuOption,
+  Key as DropdownKey
+} from './dropdown'
+export { Dropdown, DropdownButton } from './dropdown'
+
 export type { Props as DrawerProps } from './drawer'
 export { default as Drawer } from './drawer'
 
