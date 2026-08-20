@@ -18,12 +18,26 @@ export interface Props {
   tooltip?: string // 文字提示内容 string | slot
   tooltipClass?: string // 设置文字提示的类名
   tooltipStyle?: CSSProperties // 设置文字提示的样式
-  bgColor?: string // 文字提示框背景颜色
+  bgColor?: string // 文字提示框背景颜色，支持预设色 (pink/red/yellow/orange/cyan/green/blue/purple/geekblue/magenta/volcano/gold/lime) 或自定义色值 (如 #f50/rgba)
   arrow?: boolean // 是否显示箭头
-  placement?: 'top' | 'bottom' | 'left' | 'right' // 文字提示位置
+  arrowPointAtCenter?: boolean // 箭头是否指向目标元素中心，仅当 placement 为复合方向 (如 topLeft) 时生效
+  placement?:
+    | 'top'
+    | 'topLeft'
+    | 'topRight'
+    | 'bottom'
+    | 'bottomLeft'
+    | 'bottomRight'
+    | 'left'
+    | 'leftTop'
+    | 'leftBottom'
+    | 'right'
+    | 'rightTop'
+    | 'rightBottom' // 文字提示位置
   flip?: boolean // 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
-  trigger?: 'hover' | 'click' // 文字提示触发方式
+  trigger?: 'hover' | 'click' | 'focus' | 'contextmenu' // 文字提示触发方式
   keyboard?: boolean // 是否支持按键操作 (enter 显示；esc 关闭)，仅当 trigger: 'click' 时生效
+  disabled?: boolean // 是否禁用文字提示，禁用后不响应任何触发
   to?: string | HTMLElement | false // 弹出框挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   transitionDuration?: number // 文字提示动画的过渡持续时间，单位 ms
   showDelay?: number // 文字提示显示的延迟时间，单位 ms
@@ -41,10 +55,12 @@ const props = withDefaults(defineProps<Props>(), {
   tooltipStyle: () => ({}),
   bgColor: 'rgba(0, 0, 0, 0.85)',
   arrow: true,
+  arrowPointAtCenter: false,
   placement: 'top',
   flip: true,
   trigger: 'hover',
   keyboard: false,
+  disabled: false,
   to: 'body',
   transitionDuration: 100,
   showDelay: 100,
@@ -55,11 +71,27 @@ const props = withDefaults(defineProps<Props>(), {
 const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const tooltipShow = ref<boolean>(false) // tooltip 显示隐藏标识
 const tooltipTimer = ref() // tooltip 延迟显示隐藏的定时器标识符
+const positionRaf = ref<{ id: number } | null>(null) // 位置更新的 rAF 帧标识，用于合并同一帧内的多次位置重算
 const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
 const scrollTop = ref<number>(0) // scrollTarget 的滚动位置
 const cardTop = ref<number>(0) // 弹出框相对于 tooltipContent 的垂直位置
 const cardLeft = ref<number>(0) // 弹出框相对于 tooltipContent 的水平位置
-const tooltipPlace = ref<'top' | 'bottom' | 'left' | 'right'>('top') // 弹出框位置
+type Placement =
+  | 'top'
+  | 'topLeft'
+  | 'topRight'
+  | 'bottom'
+  | 'bottomLeft'
+  | 'bottomRight'
+  | 'left'
+  | 'leftTop'
+  | 'leftBottom'
+  | 'right'
+  | 'rightTop'
+  | 'rightBottom'
+type MainAxis = 'top' | 'bottom' | 'left' | 'right' // 主轴方向
+type CrossAlign = 'start' | 'center' | 'end' // 次轴对齐方式
+const tooltipPlace = ref<Placement>('top') // 弹出框位置
 const tooltipContentRef = ref<HTMLElement | null>(null) // tooltipContent 模板引用
 const tooltipContentRect = ref<DOMRect>() // tooltipContent 元素的大小及其相对于视口的位置
 const tooltipRef = ref<HTMLElement | null>(null) // tooltip 模板引用
@@ -73,6 +105,26 @@ const { isSupported: passiveSupported } = useOptionsSupported('passive')
 const { isSupported: captureSupported } = useOptionsSupported('capture')
 const emits = defineEmits(['update:show', 'openChange', 'animationend'])
 const slotsExist = useSlotsExist(['tooltip'])
+// antd 预设色板：色名 → 色值（来源 ant-design-vue seed token）
+const presetColors: Record<string, string> = {
+  pink: '#eb2f96',
+  red: '#f5222d',
+  yellow: '#fadb14',
+  orange: '#fa8c16',
+  cyan: '#13c2c2',
+  green: '#52c41a',
+  blue: '#1677ff',
+  purple: '#722ed1',
+  geekblue: '#2f54eb',
+  magenta: '#eb2f96',
+  volcano: '#fa541c',
+  gold: '#faad14',
+  lime: '#a0d911'
+}
+// 解析背景色：预设色名映射为对应色值，否则作为自定义色值直接使用
+const tooltipBgColor = computed(() => {
+  return presetColors[props.bgColor] ?? props.bgColor
+})
 const tooltipMaxWidth = computed(() => {
   if (typeof props.maxWidth === 'number') {
     return `${props.maxWidth}px`
@@ -82,6 +134,26 @@ const tooltipMaxWidth = computed(() => {
 const showTooltip = computed(() => {
   return slotsExist.tooltip || props.tooltip
 })
+// 复合方向时箭头中心距卡片对齐边的距离，单位 px
+const arrowOffset = computed(() => {
+  return props.arrow ? 13 : 8
+})
+// 将 tooltipPlace 拆分为主轴方向 (top/bottom/left/right)
+const mainAxis = computed<MainAxis>(() => {
+  const place = tooltipPlace.value
+  if (place.startsWith('top')) return 'top'
+  if (place.startsWith('bottom')) return 'bottom'
+  if (place.startsWith('left')) return 'left'
+  if (place.startsWith('right')) return 'right'
+  return 'top'
+})
+// 将 tooltipPlace 拆分为次轴对齐方式 (start/center/end)
+const crossAlign = computed<CrossAlign>(() => {
+  const place = tooltipPlace.value
+  if (place.endsWith('Left') || place.endsWith('Top')) return 'start'
+  if (place.endsWith('Right') || place.endsWith('Bottom')) return 'end'
+  return 'center'
+})
 const tooltipPlacement = computed(() => {
   const contentTop = (tooltipContentRect.value as DOMRect)?.top ?? 0
   const containerTop = (positionedContainerRect.value as DOMRect)?.top ?? 0
@@ -89,28 +161,30 @@ const tooltipPlacement = computed(() => {
   const contentLeft = (tooltipContentRect.value as DOMRect)?.left ?? 0
   const containerLeft = (positionedContainerRect.value as DOMRect)?.left ?? 0
   const offsetLeft = contentLeft - containerLeft
-  switch (tooltipPlace.value) {
+  // 箭头贴合边缘时的 transformOrigin 基准值
+  const arrowEdge = props.arrow ? -4 : -6
+  switch (mainAxis.value) {
     case 'top':
       return {
-        transformOrigin: `50% ${cardTop.value}px`,
+        transformOrigin: `${transformOriginCross.value} ${cardTop.value}px`,
         top: `${offsetTop - cardTop.value}px`,
         left: `${offsetLeft - cardLeft.value}px`
       }
     case 'bottom':
       return {
-        transformOrigin: `50% ${props.arrow ? -4 : -6}px`,
+        transformOrigin: `${transformOriginCross.value} ${arrowEdge}px`,
         top: `${offsetTop + cardTop.value}px`,
         left: `${offsetLeft - cardLeft.value}px`
       }
     case 'left':
       return {
-        transformOrigin: `${cardLeft.value}px 50%`,
+        transformOrigin: `${cardLeft.value}px ${transformOriginCross.value}`,
         top: `${offsetTop - cardTop.value}px`,
         left: `${offsetLeft - cardLeft.value}px`
       }
     case 'right':
       return {
-        transformOrigin: `${props.arrow ? -4 : -6}px 50%`,
+        transformOrigin: `${arrowEdge}px ${transformOriginCross.value}`,
         top: `${offsetTop - cardTop.value}px`,
         left: `${offsetLeft + cardLeft.value}px`
       }
@@ -122,8 +196,14 @@ const tooltipPlacement = computed(() => {
       }
   }
 })
+// 次轴方向上的缩放动画原点 (复合方向对齐到箭头所在侧)
+const transformOriginCross = computed(() => {
+  if (crossAlign.value === 'start') return `${arrowOffset.value}px`
+  if (crossAlign.value === 'end') return `calc(100% - ${arrowOffset.value}px)`
+  return '50%'
+})
 watch(
-  () => [props.placement, props.arrow, props.flip],
+  () => [props.placement, props.arrow, props.arrowPointAtCenter, props.flip],
   () => {
     updatePosition()
   },
@@ -235,6 +315,10 @@ function observeScroll() {
 function cleanup() {
   scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updatePosition)
   scrollTarget.value = null
+  if (positionRaf.value) {
+    cancelRaf(positionRaf.value)
+    positionRaf.value = null
+  }
 }
 // 获取父元素
 function getParentElement(el: HTMLElement): HTMLElement | null {
@@ -257,9 +341,15 @@ function getScrollParent(el: HTMLElement | null): HTMLElement | null {
   if (isScrollable(parentElement)) return parentElement
   return getScrollParent(parentElement)
 }
-// 更新文字提示位置
+// 更新文字提示位置：用 rAF 合并同一帧内的多次调用 (scroll/resize/observer 高频触发)，
+// 每帧渲染前只执行一次 getPosition，与浏览器渲染节奏对齐，跟手且减少强制 reflow
 function updatePosition() {
-  tooltipShow.value && getPosition()
+  if (!tooltipShow.value) return
+  if (positionRaf.value) return // 本帧已排队，跳过重复调度
+  positionRaf.value = rafTimeout(() => {
+    positionRaf.value = null
+    tooltipShow.value && getPosition()
+  })
 }
 // 计算文字提示位置
 async function getPosition() {
@@ -270,24 +360,53 @@ async function getPosition() {
   tooltipCardRect.value = tooltipCardRef.value?.getBoundingClientRect() as DOMRect
   if (props.flip) {
     tooltipPlace.value = getPlacement()
+  } else {
+    tooltipPlace.value = props.placement
   }
-  if (tooltipPlace.value === 'top') {
-    cardTop.value = tooltipCardRect.value.height + (props.arrow ? 4 + 12 : 6)
-    cardLeft.value = (tooltipCardRect.value.width - tooltipContentRect.value.width) / 2
-  } else if (tooltipPlace.value === 'bottom') {
-    cardTop.value = tooltipContentRect.value.height + (props.arrow ? 4 : 6)
-    cardLeft.value = (tooltipCardRect.value.width - tooltipContentRect.value.width) / 2
-  } else if (tooltipPlace.value === 'left') {
-    cardTop.value = (tooltipCardRect.value.height - tooltipContentRect.value.height) / 2
-    cardLeft.value = tooltipCardRect.value.width + (props.arrow ? 4 + 12 : 6)
-  } else if (tooltipPlace.value === 'right') {
-    cardTop.value = (tooltipCardRect.value.height - tooltipContentRect.value.height) / 2
-    cardLeft.value = tooltipContentRect.value.width + (props.arrow ? 4 : 6)
+  const cardWidth = tooltipCardRect.value.width
+  const cardHeight = tooltipCardRect.value.height
+  const contentWidth = tooltipContentRect.value.width
+  const contentHeight = tooltipContentRect.value.height
+  // 主轴偏移：弹出框相对内容元素在主轴方向上的距离
+  const mainOffset = {
+    top: cardHeight + (props.arrow ? 4 + 12 : 6),
+    bottom: contentHeight + (props.arrow ? 4 : 6),
+    left: cardWidth + (props.arrow ? 4 + 12 : 6),
+    right: contentWidth + (props.arrow ? 4 : 6)
+  }
+  // 次轴偏移：根据对齐方式 (start/center/end) 计算，复合方向支持箭头指向中心
+  function getCrossOffset(cardSize: number, contentSize: number): number {
+    if (crossAlign.value === 'center') {
+      return (cardSize - contentSize) / 2
+    }
+    if (crossAlign.value === 'start') {
+      return props.arrowPointAtCenter ? arrowOffset.value - contentSize / 2 : 0
+    }
+    // end
+    return props.arrowPointAtCenter ? cardSize - arrowOffset.value - contentSize / 2 : cardSize - contentSize
+  }
+  if (mainAxis.value === 'top') {
+    cardTop.value = mainOffset.top
+    cardLeft.value = getCrossOffset(cardWidth, contentWidth)
+  } else if (mainAxis.value === 'bottom') {
+    cardTop.value = mainOffset.bottom
+    cardLeft.value = getCrossOffset(cardWidth, contentWidth)
+  } else if (mainAxis.value === 'left') {
+    cardTop.value = getCrossOffset(cardHeight, contentHeight)
+    cardLeft.value = mainOffset.left
+  } else if (mainAxis.value === 'right') {
+    cardTop.value = getCrossOffset(cardHeight, contentHeight)
+    cardLeft.value = mainOffset.right
   }
 }
-// 获取可滚动父元素或视口的矩形信息
+// 获取遮挡边界矩形：仅当可滚动父元素真正裁剪弹出框 (即弹出框挂载在该容器内) 时，才以其为界，否则以视口为界
+// 修复：弹出框 Teleport 到 body/具名容器时不受中间滚动容器 overflow 裁剪，flip 边界应为视口，避免空间充足却意外翻转
 function getShelterRect() {
-  if (scrollTarget.value) {
+  const clipByScrollTarget =
+    scrollTarget.value &&
+    scrollTarget.value !== document.documentElement &&
+    scrollTarget.value.contains(tooltipRef.value)
+  if (scrollTarget.value && clipByScrollTarget) {
     const scrollTargetRect = scrollTarget.value.getBoundingClientRect()
     return {
       top: scrollTargetRect.top < 0 ? 0 : scrollTargetRect.top,
@@ -304,7 +423,16 @@ function getShelterRect() {
   }
 }
 // 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
-function getPlacement(): 'top' | 'bottom' | 'left' | 'right' {
+// flip 仅翻转主轴方向 (top/bottom/left/right)，保留原次轴对齐后缀 (如 Left/Right/Top/Bottom)
+function getPlacement(): Placement {
+  // 提取 props.placement 的主轴方向与次轴后缀
+  const propPlace = props.placement
+  let baseMain: MainAxis = 'top'
+  if (propPlace.startsWith('top')) baseMain = 'top'
+  else if (propPlace.startsWith('bottom')) baseMain = 'bottom'
+  else if (propPlace.startsWith('left')) baseMain = 'left'
+  else if (propPlace.startsWith('right')) baseMain = 'right'
+  const crossSuffix = propPlace.slice(baseMain.length) // '' | 'Left' | 'Right' | 'Top' | 'Bottom'
   const { top, bottom, left, right } = tooltipContentRect.value as DOMRect // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
   const { top: targetTop, bottom: targetBottom, left: targetLeft, right: targetRight } = getShelterRect() // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
   const topDistance = top - targetTop - (props.arrow ? 12 : 0) // 内容元素上边缘距离滚动元素上边缘的距离
@@ -315,7 +443,8 @@ function getPlacement(): 'top' | 'bottom' | 'left' | 'right' {
     ((tooltipCardRect.value as DOMRect).width - (tooltipContentRect.value as DOMRect).width) / 2 // 水平方向容纳文字提示需要的最小宽度
   const verticalDistance =
     ((tooltipCardRect.value as DOMRect).height - (tooltipContentRect.value as DOMRect).height) / 2 // 垂直方向容纳文字提示需要的最小高度
-  return findPlace(props.placement, [])
+  const flippedMain = findPlace(baseMain, [])
+  return `${flippedMain}${crossSuffix}` as Placement
   // 查询满足条件的 place，如果没有，则返回默认值
   function findPlace(place: string, disabledPlaces: string[]): 'top' | 'bottom' | 'left' | 'right' {
     if (place === 'top') {
@@ -435,10 +564,11 @@ function getPlacement(): 'top' | 'bottom' | 'left' | 'right' {
         }
       }
     }
-    return props.placement
+    return baseMain
   }
 }
 function onShow(): void {
+  if (props.disabled) return
   tooltipTimer.value && cancelRaf(tooltipTimer.value)
   if (!tooltipShow.value) {
     tooltipTimer.value = rafTimeout(() => {
@@ -446,7 +576,7 @@ function onShow(): void {
       getPosition()
       emits('update:show', true)
       emits('openChange', true)
-      if (showTooltip.value && props.trigger === 'click') {
+      if (showTooltip.value && (props.trigger === 'click' || props.trigger === 'contextmenu')) {
         document.addEventListener('click', handleClick, captureSupported.value ? { capture: true } : true)
       }
     }, props.showDelay)
@@ -459,7 +589,7 @@ function onHide(): void {
       tooltipShow.value = false
       emits('update:show', false)
       emits('openChange', false)
-      if (showTooltip.value && props.trigger === 'click') {
+      if (showTooltip.value && (props.trigger === 'click' || props.trigger === 'contextmenu')) {
         document.removeEventListener('click', handleClick, captureSupported.value ? { capture: true } : true)
       }
     }, props.hideDelay)
@@ -500,6 +630,24 @@ function onLeaveTooltip() {
     onHide()
   }
 }
+// focus 触发：内容元素获得/失去焦点时显示/隐藏
+function onFocus() {
+  if (showTooltip.value && props.trigger === 'focus') {
+    onShow()
+  }
+}
+function onBlur() {
+  if (showTooltip.value && props.trigger === 'focus') {
+    onHide()
+  }
+}
+// contextmenu 触发：右键菜单时显示 (阻止默认菜单)，点击外部由 handleClick 关闭
+function onContextmenu(e: Event) {
+  if (showTooltip.value && props.trigger === 'contextmenu' && !tooltipShow.value) {
+    e.preventDefault()
+    onShow()
+  }
+}
 defineExpose({
   show: onShow,
   hide: onHide,
@@ -524,11 +672,11 @@ defineExpose({
           v-show="showTooltip && tooltipShow"
           ref="tooltipRef"
           class="tooltip-card-container"
-          :class="{ [`tooltip-${tooltipPlace}-padding`]: arrow }"
+          :class="{ [`tooltip-${mainAxis}-padding`]: arrow }"
           :style="{
             ...tooltipPlacement,
             '--tooltip-max-width': tooltipMaxWidth,
-            '--tooltip-background-color': bgColor,
+            '--tooltip-background-color': tooltipBgColor,
             '--tooltip-transition-duration': `${transitionDuration}ms`
           }"
           @mouseenter="onEnterTooltip"
@@ -538,7 +686,7 @@ defineExpose({
           <div ref="tooltipCardRef" class="tooltip-card" :class="tooltipClass" :style="tooltipStyle">
             <slot name="tooltip">{{ tooltip }}</slot>
           </div>
-          <div v-if="arrow" class="tooltip-arrow" :class="`arrow-${tooltipPlace || 'top'}`"></div>
+          <div v-if="arrow" class="tooltip-arrow" :class="[`arrow-${mainAxis}`, `arrow-cross-${crossAlign}`]"></div>
         </div>
       </Transition>
     </Teleport>
@@ -547,7 +695,11 @@ defineExpose({
       class="tooltip-content"
       :class="contentClass"
       :style="contentStyle"
+      :tabindex="trigger === 'focus' ? 0 : undefined"
       @click="showTooltip && trigger === 'click' && !tooltipShow ? onShow() : () => false"
+      @contextmenu="onContextmenu"
+      @focus="onFocus"
+      @blur="onBlur"
       @keydown.enter="showTooltip && trigger === 'click' && keyboard ? toggleVisible() : () => false"
       @keydown.esc="showTooltip && trigger === 'click' && keyboard && tooltipShow ? onHide() : () => false"
     >
@@ -556,7 +708,7 @@ defineExpose({
   </div>
 </template>
 <style lang="less" scoped>
-.m-tooltip-wrap {
+.tooltip-wrap {
   position: relative;
   display: inline-block;
 }
@@ -714,6 +866,56 @@ defineExpose({
       bottom: 0;
       left: 0;
       right: 0;
+    }
+  }
+  // 复合方向箭头次轴对齐：--arrow-edge = 箭头中心距卡片边(13px) - 箭头视觉半宽(8px)
+  --arrow-edge: 5px;
+  // 水平主轴 (top/bottom)：箭头沿水平方向靠边
+  .arrow-top,
+  .arrow-bottom {
+    &.arrow-cross-start {
+      left: var(--arrow-edge);
+      transform: translateX(0) translateY(100%) rotate(180deg);
+    }
+    &.arrow-cross-end {
+      left: auto;
+      right: var(--arrow-edge);
+      transform: translateX(0) translateY(100%) rotate(180deg);
+    }
+  }
+  .arrow-bottom {
+    &.arrow-cross-start {
+      transform: translateX(0) translateY(-100%) rotate(0deg);
+    }
+    &.arrow-cross-end {
+      transform: translateX(0) translateY(-100%) rotate(0deg);
+    }
+  }
+  // 垂直主轴 (left/right)：箭头沿垂直方向靠边
+  .arrow-left,
+  .arrow-right {
+    &.arrow-cross-start {
+      top: var(--arrow-edge);
+    }
+    &.arrow-cross-end {
+      top: auto;
+      bottom: var(--arrow-edge);
+    }
+  }
+  .arrow-left {
+    &.arrow-cross-start {
+      transform: translateX(100%) translateY(0) rotate(90deg);
+    }
+    &.arrow-cross-end {
+      transform: translateX(100%) translateY(0) rotate(90deg);
+    }
+  }
+  .arrow-right {
+    &.arrow-cross-start {
+      transform: translateX(-100%) translateY(0) rotate(-90deg);
+    }
+    &.arrow-cross-end {
+      transform: translateX(-100%) translateY(0) rotate(-90deg);
     }
   }
 }

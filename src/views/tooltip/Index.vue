@@ -2,6 +2,23 @@
 import { ref } from 'vue'
 const containerRef = ref()
 const tooltipRef = ref()
+const buttonWidth = 70
+const presetColors = [
+  'pink',
+  'red',
+  'yellow',
+  'orange',
+  'cyan',
+  'green',
+  'blue',
+  'purple',
+  'geekblue',
+  'magenta',
+  'volcano',
+  'gold',
+  'lime'
+]
+const customColors = ['#f50', '#2db7f5', '#87d068', '#108ee9']
 function openChange(open: boolean) {
   console.log('open', open)
 }
@@ -51,27 +68,82 @@ function onHide() {
       </Tooltip>
     </Space>
     <h2 class="mt30 mb10">位置</h2>
-    <Flex vertical :width="360" align="center" :gap="32">
-      <Tooltip tooltip="Vue Amazing UI" placement="bottom">
-        <Button type="primary">Bottom</Button>
-      </Tooltip>
-      <Flex width="100%" justify="space-between">
-        <Tooltip tooltip="Vue Amazing UI" placement="right">
-          <Button type="primary">Right</Button>
+    <p class="mb10">位置有 12 个方向</p>
+    <div class="placement-demo">
+      <div :style="{ marginLeft: `${buttonWidth}px`, whiteSpace: 'nowrap' }">
+        <Tooltip tooltip="Vue Amazing UI" placement="topLeft">
+          <Button class="place-btn">TL</Button>
+        </Tooltip>
+        <Tooltip tooltip="Vue Amazing UI" placement="top">
+          <Button class="place-btn">Top</Button>
+        </Tooltip>
+        <Tooltip tooltip="Vue Amazing UI" placement="topRight">
+          <Button class="place-btn">TR</Button>
+        </Tooltip>
+      </div>
+      <div :style="{ width: `${buttonWidth}px`, float: 'left' }">
+        <Tooltip tooltip="Vue Amazing UI" placement="leftTop">
+          <Button class="place-btn">LT</Button>
         </Tooltip>
         <Tooltip tooltip="Vue Amazing UI" placement="left">
-          <Button type="primary">Left</Button>
+          <Button class="place-btn">Left</Button>
         </Tooltip>
-      </Flex>
-      <Tooltip tooltip="Vue Amazing UI" placement="top">
-        <Button type="primary">Top</Button>
+        <Tooltip tooltip="Vue Amazing UI" placement="leftBottom">
+          <Button class="place-btn">LB</Button>
+        </Tooltip>
+      </div>
+      <div :style="{ width: `${buttonWidth}px`, marginLeft: `${buttonWidth * 4 + 24}px` }">
+        <Tooltip tooltip="Vue Amazing UI" placement="rightTop">
+          <Button class="place-btn">RT</Button>
+        </Tooltip>
+        <Tooltip tooltip="Vue Amazing UI" placement="right">
+          <Button class="place-btn">Right</Button>
+        </Tooltip>
+        <Tooltip tooltip="Vue Amazing UI" placement="rightBottom">
+          <Button class="place-btn">RB</Button>
+        </Tooltip>
+      </div>
+      <div :style="{ marginLeft: `${buttonWidth}px`, clear: 'both', whiteSpace: 'nowrap' }">
+        <Tooltip tooltip="Vue Amazing UI" placement="bottomLeft">
+          <Button class="place-btn">BL</Button>
+        </Tooltip>
+        <Tooltip tooltip="Vue Amazing UI" placement="bottom">
+          <Button class="place-btn">Bottom</Button>
+        </Tooltip>
+        <Tooltip tooltip="Vue Amazing UI" placement="bottomRight">
+          <Button class="place-btn">BR</Button>
+        </Tooltip>
+      </div>
+    </div>
+    <h2 class="mt30 mb10">箭头指向</h2>
+    <p class="mb10">设置了 <code>arrowPointAtCenter</code> 后，箭头将指向目标元素的中心</p>
+    <Space>
+      <Tooltip tooltip="Vue Amazing UI" placement="topLeft">
+        <Button type="primary">Align edge / 边缘对齐</Button>
       </Tooltip>
-    </Flex>
+      <Tooltip tooltip="Vue Amazing UI" placement="topLeft" arrow-point-at-center>
+        <Button type="primary">Arrow points to center / 箭头指向中心</Button>
+      </Tooltip>
+    </Space>
     <h2 class="mt30 mb10">自动调整位置</h2>
     <p class="mb10">请滚动或缩放浏览器窗口来查看自适应调整弹出位置的效果</p>
     <Tooltip tooltip="Vue Amazing UI">
       <Button type="primary">Flip Automatically</Button>
     </Tooltip>
+    <h2 class="mt30 mb10">多彩文字提示</h2>
+    <p class="mb10">我们添加了多种预设色彩的文字提示样式，用作不同场景使用</p>
+    <Divider orientation="left">Presets</Divider>
+    <Space wrap>
+      <Tooltip v-for="color in presetColors" :key="color" tooltip="prompt text" :bg-color="color">
+        <Button>{{ color }}</Button>
+      </Tooltip>
+    </Space>
+    <Divider orientation="left">Custom</Divider>
+    <Space wrap>
+      <Tooltip v-for="color in customColors" :key="color" tooltip="prompt text" :bg-color="color">
+        <Button>{{ color }}</Button>
+      </Tooltip>
+    </Space>
     <h2 class="mt30 mb10">不同的触发方式</h2>
     <Space>
       <Tooltip>
@@ -82,7 +154,20 @@ function onHide() {
         <template #tooltip>Vue Amazing UI</template>
         <Button type="primary">Click Me</Button>
       </Tooltip>
+      <Tooltip trigger="focus">
+        <template #tooltip>Vue Amazing UI</template>
+        <Button type="primary">Focus Me</Button>
+      </Tooltip>
+      <Tooltip trigger="contextmenu">
+        <template #tooltip>Vue Amazing UI</template>
+        <Button type="primary">Right Click Me</Button>
+      </Tooltip>
     </Space>
+    <h2 class="mt30 mb10">禁用</h2>
+    <p class="mb10">设置 <code>disabled</code> 后不再响应任何触发</p>
+    <Tooltip tooltip="Vue Amazing UI" disabled>
+      <Button type="primary">Disabled Tooltip</Button>
+    </Tooltip>
     <h2 class="mt30 mb10">按键控制</h2>
     <p class="mb10"><code>enter</code> 显示；<code>esc</code> 关闭，仅当 <code>trigger: 'click'</code> 时生效</p>
     <Tooltip trigger="click" keyboard>
@@ -151,6 +236,14 @@ function onHide() {
     margin-bottom: 8px;
     font-size: 20px;
     font-weight: 600;
+  }
+}
+.placement-demo {
+  .place-btn {
+    width: 70px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    text-align: center;
   }
 }
 </style>

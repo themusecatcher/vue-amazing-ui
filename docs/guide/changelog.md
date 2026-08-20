@@ -4,6 +4,10 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2026-08-20">2.5.1</VersionDateTag>
+
+- 优化并增强 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，`placement` 支持 12 个方向，新增 `arrowPointAtCenter` 属性使箭头指向目标元素中心，`bgColor` 支持多种预设色彩，`trigger` 新增 `focus` / `contextmenu` 触发方式，新增 `disabled` 属性支持禁用，修复弹出框挂载到 `body` 时被中间可滚动容器边界误判导致意外翻转的问题，并使用 `requestAnimationFrame` 合并同帧内的多次位置重算，减少滚动时的强制重排
+
 ## <VersionDateTag date="2026-08-19">2.5.0</VersionDateTag>
 
 - 新增 [自动完成 AutoComplete](https://themusecatcher.github.io/vue-amazing-ui/guide/components/autocomplete.html) 组件

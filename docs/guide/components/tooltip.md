@@ -12,6 +12,23 @@
 import { ref } from 'vue'
 const containerRef = ref()
 const tooltipRef = ref()
+const buttonWidth = 70
+const presetColors = [
+  'pink',
+  'red',
+  'yellow',
+  'orange',
+  'cyan',
+  'green',
+  'blue',
+  'purple',
+  'geekblue',
+  'magenta',
+  'volcano',
+  'gold',
+  'lime'
+]
+const customColors = ['#f50', '#2db7f5', '#87d068', '#108ee9']
 function openChange(open: boolean) {
   console.log('open', open)
 }
@@ -141,43 +158,159 @@ function openChange(open: boolean) {
 
 ## 位置
 
-<Flex vertical :width="360" align="center" :gap="32">
-  <Tooltip tooltip="Vue Amazing UI" placement="bottom">
-    <Button type="primary">Bottom</Button>
-  </Tooltip>
-  <Flex width="100%" justify="space-between">
-    <Tooltip tooltip="Vue Amazing UI" placement="right">
-      <Button type="primary">Right</Button>
+位置有 12 个方向
+
+<div class="placement-demo">
+  <div :style="{ marginLeft: `${buttonWidth}px`, whiteSpace: 'nowrap' }">
+    <Tooltip tooltip="Vue Amazing UI" placement="topLeft">
+      <Button class="place-btn">TL</Button>
+    </Tooltip>
+    <Tooltip tooltip="Vue Amazing UI" placement="top">
+      <Button class="place-btn">Top</Button>
+    </Tooltip>
+    <Tooltip tooltip="Vue Amazing UI" placement="topRight">
+      <Button class="place-btn">TR</Button>
+    </Tooltip>
+  </div>
+  <div :style="{ width: `${buttonWidth}px`, float: 'left' }">
+    <Tooltip tooltip="Vue Amazing UI" placement="leftTop">
+      <Button class="place-btn">LT</Button>
     </Tooltip>
     <Tooltip tooltip="Vue Amazing UI" placement="left">
-      <Button type="primary">Left</Button>
+      <Button class="place-btn">Left</Button>
     </Tooltip>
-  </Flex>
-  <Tooltip tooltip="Vue Amazing UI" placement="top">
-    <Button type="primary">Top</Button>
+    <Tooltip tooltip="Vue Amazing UI" placement="leftBottom">
+      <Button class="place-btn">LB</Button>
+    </Tooltip>
+  </div>
+  <div :style="{ width: `${buttonWidth}px`, marginLeft: `${buttonWidth * 4 + 24}px` }">
+    <Tooltip tooltip="Vue Amazing UI" placement="rightTop">
+      <Button class="place-btn">RT</Button>
+    </Tooltip>
+    <Tooltip tooltip="Vue Amazing UI" placement="right">
+      <Button class="place-btn">Right</Button>
+    </Tooltip>
+    <Tooltip tooltip="Vue Amazing UI" placement="rightBottom">
+      <Button class="place-btn">RB</Button>
+    </Tooltip>
+  </div>
+  <div :style="{ marginLeft: `${buttonWidth}px`, clear: 'both', whiteSpace: 'nowrap' }">
+    <Tooltip tooltip="Vue Amazing UI" placement="bottomLeft">
+      <Button class="place-btn">BL</Button>
+    </Tooltip>
+    <Tooltip tooltip="Vue Amazing UI" placement="bottom">
+      <Button class="place-btn">Bottom</Button>
+    </Tooltip>
+    <Tooltip tooltip="Vue Amazing UI" placement="bottomRight">
+      <Button class="place-btn">BR</Button>
+    </Tooltip>
+  </div>
+</div>
+
+<style lang="less">
+.placement-demo {
+  .place-btn {
+    width: 70px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+}
+</style>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+const buttonWidth = 70
+</script>
+<template>
+  <div class="placement-demo">
+    <div :style="{ marginLeft: `${buttonWidth}px`, whiteSpace: 'nowrap' }">
+      <Tooltip tooltip="Vue Amazing UI" placement="topLeft">
+        <Button class="place-btn">TL</Button>
+      </Tooltip>
+      <Tooltip tooltip="Vue Amazing UI" placement="top">
+        <Button class="place-btn">Top</Button>
+      </Tooltip>
+      <Tooltip tooltip="Vue Amazing UI" placement="topRight">
+        <Button class="place-btn">TR</Button>
+      </Tooltip>
+    </div>
+    <div :style="{ width: `${buttonWidth}px`, float: 'left' }">
+      <Tooltip tooltip="Vue Amazing UI" placement="leftTop">
+        <Button class="place-btn">LT</Button>
+      </Tooltip>
+      <Tooltip tooltip="Vue Amazing UI" placement="left">
+        <Button class="place-btn">Left</Button>
+      </Tooltip>
+      <Tooltip tooltip="Vue Amazing UI" placement="leftBottom">
+        <Button class="place-btn">LB</Button>
+      </Tooltip>
+    </div>
+    <div :style="{ width: `${buttonWidth}px`, marginLeft: `${buttonWidth * 4 + 24}px` }">
+      <Tooltip tooltip="Vue Amazing UI" placement="rightTop">
+        <Button class="place-btn">RT</Button>
+      </Tooltip>
+      <Tooltip tooltip="Vue Amazing UI" placement="right">
+        <Button class="place-btn">Right</Button>
+      </Tooltip>
+      <Tooltip tooltip="Vue Amazing UI" placement="rightBottom">
+        <Button class="place-btn">RB</Button>
+      </Tooltip>
+    </div>
+    <div :style="{ marginLeft: `${buttonWidth}px`, clear: 'both', whiteSpace: 'nowrap' }">
+      <Tooltip tooltip="Vue Amazing UI" placement="bottomLeft">
+        <Button class="place-btn">BL</Button>
+      </Tooltip>
+      <Tooltip tooltip="Vue Amazing UI" placement="bottom">
+        <Button class="place-btn">Bottom</Button>
+      </Tooltip>
+      <Tooltip tooltip="Vue Amazing UI" placement="bottomRight">
+        <Button class="place-btn">BR</Button>
+      </Tooltip>
+    </div>
+  </div>
+</template>
+<style lang="less" scoped>
+.placement-demo {
+  .place-btn {
+    width: 70px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+}
+</style>
+```
+
+:::
+
+## 箭头指向
+
+设置了 `arrowPointAtCenter` 后，箭头将指向目标元素的中心
+
+<Space>
+  <Tooltip tooltip="Vue Amazing UI" placement="topLeft">
+    <Button type="primary">Align edge / 边缘对齐</Button>
   </Tooltip>
-</Flex>
+  <Tooltip tooltip="Vue Amazing UI" placement="topLeft" arrow-point-at-center>
+    <Button type="primary">Arrow points to center / 箭头指向中心</Button>
+  </Tooltip>
+</Space>
 
 ::: details Show Code
 
 ```vue
 <template>
-  <Flex vertical :width="360" align="center" :gap="32">
-    <Tooltip tooltip="Vue Amazing UI" placement="bottom">
-      <Button type="primary">Bottom</Button>
+  <Space>
+    <Tooltip tooltip="Vue Amazing UI" placement="topLeft">
+      <Button type="primary">Align edge / 边缘对齐</Button>
     </Tooltip>
-    <Flex width="100%" justify="space-between">
-      <Tooltip tooltip="Vue Amazing UI" placement="right">
-        <Button type="primary">Right</Button>
-      </Tooltip>
-      <Tooltip tooltip="Vue Amazing UI" placement="left">
-        <Button type="primary">Left</Button>
-      </Tooltip>
-    </Flex>
-    <Tooltip tooltip="Vue Amazing UI" placement="top">
-      <Button type="primary">Top</Button>
+    <Tooltip tooltip="Vue Amazing UI" placement="topLeft" arrow-point-at-center>
+      <Button type="primary">Arrow points to center / 箭头指向中心</Button>
     </Tooltip>
-  </Flex>
+  </Space>
 </template>
 ```
 
@@ -205,6 +338,62 @@ function openChange(open: boolean) {
 
 :::
 
+## 多彩文字提示
+
+我们添加了多种预设色彩的文字提示样式，用作不同场景使用
+
+<Divider orientation="left">Presets</Divider>
+<Space wrap>
+  <Tooltip v-for="color in presetColors" :key="color" tooltip="prompt text" :bg-color="color">
+    <Button>{{ color }}</Button>
+  </Tooltip>
+</Space>
+<Divider orientation="left">Custom</Divider>
+<Space wrap>
+  <Tooltip v-for="color in customColors" :key="color" tooltip="prompt text" :bg-color="color">
+    <Button>{{ color }}</Button>
+  </Tooltip>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+const presetColors = [
+  'pink',
+  'red',
+  'yellow',
+  'orange',
+  'cyan',
+  'green',
+  'blue',
+  'purple',
+  'geekblue',
+  'magenta',
+  'volcano',
+  'gold',
+  'lime'
+]
+const customColors = ['#f50', '#2db7f5', '#87d068', '#108ee9']
+</script>
+<template>
+  <Divider orientation="left">Presets</Divider>
+  <Space wrap>
+    <Tooltip v-for="color in presetColors" :key="color" tooltip="prompt text" :bg-color="color">
+      <Button>{{ color }}</Button>
+    </Tooltip>
+  </Space>
+  <Divider orientation="left">Custom</Divider>
+  <Space wrap>
+    <Tooltip v-for="color in customColors" :key="color" tooltip="prompt text" :bg-color="color">
+      <Button>{{ color }}</Button>
+    </Tooltip>
+  </Space>
+</template>
+```
+
+:::
+
 ## 不同的触发方式
 
 <Space>
@@ -215,6 +404,14 @@ function openChange(open: boolean) {
   <Tooltip trigger="click">
     <template #tooltip>Vue Amazing UI</template>
     <Button type="primary">Click Me</Button>
+  </Tooltip>
+  <Tooltip trigger="focus">
+    <template #tooltip>Vue Amazing UI</template>
+    <Button type="primary">Focus Me</Button>
+  </Tooltip>
+  <Tooltip trigger="contextmenu">
+    <template #tooltip>Vue Amazing UI</template>
+    <Button type="primary">Right Click Me</Button>
   </Tooltip>
 </Space>
 
@@ -231,7 +428,35 @@ function openChange(open: boolean) {
       <template #tooltip>Vue Amazing UI</template>
       <Button type="primary">Click Me</Button>
     </Tooltip>
+    <Tooltip trigger="focus">
+      <template #tooltip>Vue Amazing UI</template>
+      <Button type="primary">Focus Me</Button>
+    </Tooltip>
+    <Tooltip trigger="contextmenu">
+      <template #tooltip>Vue Amazing UI</template>
+      <Button type="primary">Right Click Me</Button>
+    </Tooltip>
   </Space>
+</template>
+```
+
+:::
+
+## 禁用
+
+设置 `disabled` 后不再响应任何触发
+
+<Tooltip tooltip="Vue Amazing UI" disabled>
+  <Button type="primary">Disabled Tooltip</Button>
+</Tooltip>
+
+::: details Show Code
+
+```vue
+<template>
+  <Tooltip tooltip="Vue Amazing UI" disabled>
+    <Button type="primary">Disabled Tooltip</Button>
+  </Tooltip>
 </template>
 ```
 
@@ -429,12 +654,14 @@ const tooltipRef = ref()
 | tooltip | 文字提示内容 | string &#124; slot | undefined |
 | tooltipClass | 设置文字提示的类名 | string | undefined |
 | tooltipStyle | 设置文字提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| bgColor | 文字提示框背景颜色 | string | 'rgba(0, 0, 0, 0.85)' |
+| bgColor | 文字提示框背景颜色，支持预设色 (`pink` &#124; `red` &#124; `yellow` &#124; `orange` &#124; `cyan` &#124; `green` &#124; `blue` &#124; `purple` &#124; `geekblue` &#124; `magenta` &#124; `volcano` &#124; `gold` &#124; `lime`) 或自定义色值 (如 `#f50` / `rgba`) | string | 'rgba(0, 0, 0, 0.85)' |
 | arrow | 是否显示箭头 | boolean | true |
-| placement | 文字提示位置 | 'top' &#124; 'bottom' &#124; 'left' &#124; 'right' | 'top' |
+| arrowPointAtCenter | 箭头是否指向目标元素中心，仅当 `placement` 为复合方向 (如 `topLeft`) 时生效 | boolean | false |
+| placement | 文字提示位置 | 'top' &#124; 'topLeft' &#124; 'topRight' &#124; 'bottom' &#124; 'bottomLeft' &#124; 'bottomRight' &#124; 'left' &#124; 'leftTop' &#124; 'leftBottom' &#124; 'right' &#124; 'rightTop' &#124; 'rightBottom' | 'top' |
 | flip | 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true |
-| trigger | 文字提示触发方式 | 'hover' &#124; 'click' | 'hover' |
+| trigger | 文字提示触发方式 | 'hover' &#124; 'click' &#124; 'focus' &#124; 'contextmenu' | 'hover' |
 | keyboard | 是否支持按键操作 (`enter` 显示；`esc` 关闭)，仅当 `trigger: 'click'` 时生效 | boolean | false |
+| disabled | 是否禁用文字提示，禁用后不响应任何触发 | boolean | false |
 | to | 弹出框挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，`false` 会待在原地 | string &#124; HTMLElement &#124; false | 'body' |
 | transitionDuration | 文字提示动画的过渡持续时间，单位 `ms` | number | 100 |
 | showDelay | 文字提示显示的延迟时间，单位 `ms` | number | 100 |
