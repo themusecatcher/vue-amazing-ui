@@ -175,7 +175,9 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
       <Calendar v-model:value="startDayOfWeekDate" :start-day-of-week="startDayOfWeek" />
     </Flex>
     <h2 class="mt30 mb10">自定义展示格式</h2>
-    <h3 class="mb10">使用 weekFormat / dateFormat / monthFormat 自定义日期/星期/月的展示格式</h3>
+    <p class="mb10"
+      >使用 <code>weekFormat</code> / <code>dateFormat</code> / <code>monthFormat</code> 自定义日期/星期/月的展示格式</p
+    >
     <Flex vertical>
       <Space>
         <Calendar

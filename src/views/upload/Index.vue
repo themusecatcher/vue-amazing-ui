@@ -139,19 +139,19 @@ function onRemove(file: UploadFileType) {
     <h2 class="mt30 mb10">基本使用</h2>
     <Upload v-model:fileList="files" @drop="onDrop" @change="onChange" @preview="onPreview" @remove="onRemove" />
     <h2 class="mt30 mb10">禁用</h2>
-    <h3 class="mb10">只能预览，不能删除和上传</h3>
+    <p class="mb10">只能预览，不能删除和上传</p>
     <Upload disabled v-model:fileList="fileList" />
     <h2 class="mt30 mb10">限制数量</h2>
-    <h3 class="mb10">通过 maxCount 限制上传数量；当为 1 时，始终用最新上传的代替当前</h3>
+    <p class="mb10">通过 <code>maxCount</code> 限制上传数量；当为 <code>1</code> 时，始终用最新上传的代替当前</p>
     <Space vertical>
       <Upload :max-count="1" tip="maxCount: 1" v-model:fileList="files" />
       <Upload :max-count="3" tip="maxCount: 3" v-model:fileList="fileList" />
     </Space>
     <h2 class="mt30 mb10">多文件上传</h2>
-    <h3 class="mb10">可一次选择多个文件进行上传</h3>
+    <p class="mb10">可一次选择多个文件进行上传</p>
     <Upload multiple v-model:fileList="files" />
     <h2 class="mt30 mb10">自定义样式布局</h2>
-    <h3 class="mb10">缩略图等比覆盖；上传描述文字使用：上传</h3>
+    <p class="mb10">缩略图等比覆盖；上传描述文字使用：上传</p>
     <Upload tip="上传" fit="cover" v-model:fileList="fileList" />
     <h3 class="mt30 mb10">排列间距使用：'middle'；自定义上传 uploading 动画样式</h3>
     <Upload
@@ -168,7 +168,7 @@ function onRemove(file: UploadFileType) {
       v-model:fileList="fileList"
     />
     <h2 class="mt30 mb10">上传文件校验</h2>
-    <h3 class="mb10">上传文件最大 500KB；同时限定文件类型</h3>
+    <p class="mb10">上传文件最大 <code>500KB</code>；同时限定文件类型</p>
     <Space vertical>
       <Upload
         ref="uploadRef"

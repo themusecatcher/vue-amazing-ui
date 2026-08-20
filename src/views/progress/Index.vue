@@ -48,10 +48,10 @@ function onDecline(scale: number) {
       <Progress type="circle" :percent="100" />
     </Flex>
     <h2 class="mt30">渐变进度条</h2>
-    <h3 class="mb10">
-      strokeColor: { '0%': '#108ee9', '100%': '#87d068', direction: 'right' } 或 { from: '#108ee9', to: '#87d068',
-      direction: 'right' }
-    </h3>
+    <p class="mb10">
+      <code>strokeColor</code>: <code>{ '0%': '#108ee9', '100%': '#87d068', direction: 'right' }</code> 或
+      <code>{ from: '#108ee9', to: '#87d068', direction: 'right' }</code>
+    </p>
     <Flex vertical>
       <Progress
         :line-color="{

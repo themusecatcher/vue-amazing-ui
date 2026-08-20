@@ -120,7 +120,7 @@ const state = reactive<CarouselProps>({
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <h3 class="mb10">当焦点在 Arrow 或 Dots 上时，可以通过键盘上、下、左、右按键切换</h3>
+    <p class="mb10">当焦点在 <code>Arrow</code> 或 <code>Dots</code> 上时，可以通过键盘上、下、左、右按键切换</p>
     <Carousel :images="images" :width="800" :height="450" @click="clickImage" />
     <h2 class="mt30 mb10">箭头</h2>
     <Space align="center"> showArrow: <Switch v-model="showArrow" /> </Space>

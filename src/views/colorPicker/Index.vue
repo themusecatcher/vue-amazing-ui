@@ -76,13 +76,15 @@ function handleClear() {
       }"
     />
     <h2 class="mt30 mb10">不透明度</h2>
-    <h3 class="mb10">show-alpha 控制是否可调节 alpha 通道</h3>
+    <p class="mb10"><code>show-alpha</code> 控制是否可调节 <code>alpha</code> 通道</p>
     <Space vertical>
       <Space align="center"> showAlpha: <Switch v-model="showAlpha"></Switch> </Space>
       <ColorPicker :width="240" :show-alpha="showAlpha" />
     </Space>
     <h2 class="mt30 mb10">颜色预览块</h2>
-    <h3 class="mb10">使用 showPreview 控制是否展示颜色预览块；点击颜色预览块可以触发浏览器原生的颜色选择器</h3>
+    <p class="mb10"
+      >使用 <code>showPreview</code> 控制是否展示颜色预览块；点击颜色预览块可以触发浏览器原生的颜色选择器</p
+    >
     <Space vertical>
       <Space align="center"> showPreview: <Switch v-model="showPreview"></Switch> </Space>
       <ColorPicker :width="240" :show-preview="showPreview" />
@@ -96,7 +98,7 @@ function handleClear() {
     <h2 class="mt30 mb10">禁用</h2>
     <ColorPicker :width="240" disabled />
     <h2 class="mt30 mb10">设定模式</h2>
-    <h3 class="mb10">使用 modes 设定可选模式</h3>
+    <p class="mb10">使用 <code>modes</code> 设定可选模式</p>
     <Space vertical>
       <Space align="center"> modes: <Checkbox :options="modeOptions" v-model:value="modes" /> </Space>
       <ColorPicker :width="240" :modes="modes" />
@@ -116,7 +118,9 @@ function handleClear() {
       ]"
     />
     <h2 class="mt30 mb10">显示按钮</h2>
-    <h3 class="mb10">通过在 actions 属性中添加 confirm clear，来显示确认/清除按钮</h3>
+    <p class="mb10"
+      >通过在 <code>actions</code> 属性中添加 <code>confirm</code> <code>clear</code>，来显示确认/清除按钮</p
+    >
     <Space vertical>
       <Space align="center"> actions: <Checkbox :options="actionOptions" v-model:value="actions" /> </Space>
       <ColorPicker

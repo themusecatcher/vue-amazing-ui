@@ -12,7 +12,7 @@
     <Divider orientation="left">Left Text</Divider>
     <Divider orientation="right">Right Text</Divider>
     <h2 class="mt30 mb10">自定义文字边距</h2>
-    <h3 class="mb10">文字居左(右)并距左(右)边 120px</h3>
+    <p class="mb10">文字居左(右)并距左(右)边 <code>120px</code></p>
     <Divider orientation="left" :orientation-margin="120">Left Text</Divider>
     <Divider orientation="right" :orientation-margin="120">Right Text</Divider>
     <h2 class="mt30 mb10">垂直分割线</h2>

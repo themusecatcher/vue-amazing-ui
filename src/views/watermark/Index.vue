@@ -49,7 +49,7 @@ const layoutOptions = [
       <div style="height: 360px" />
     </Watermark>
     <h2 class="mt30 mb10">多行水印</h2>
-    <h3 class="mb10">通过 content 设置 字符串数组 指定多行文字水印内容。</h3>
+    <p class="mb10">通过 <code>content</code> 设置字符串数组，指定多行文字水印内容</p>
     <Watermark :content="['Vue Amazing UI', 'Hello World']">
       <div style="height: 400px" />
     </Watermark>
@@ -58,10 +58,10 @@ const layoutOptions = [
       <div style="height: 360px" />
     </Watermark>
     <h2 class="mt30 mb10">图片水印</h2>
-    <h3 class="mb10"
-      >通过 image 指定图片地址；为保证图片高清且不被拉伸，请设置 width 和 height；另支持设置图片布局方式 layout
-      和旋转角度 rotate 等</h3
-    >
+    <p class="mb10">
+      通过 <code>image</code> 指定图片地址；为保证图片高清且不被拉伸，请设置 <code>width</code> 和
+      <code>height</code>；另支持设置图片布局方式 <code>layout</code> 和旋转角度 <code>rotate</code> 等
+    </p>
     <Flex>
       <Flex vertical :gap="8">
         Layout: <Radio :options="layoutOptions" v-model:value="imageModel.layout" button />
@@ -83,7 +83,7 @@ const layoutOptions = [
     <Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark>
     <Space align="center"> Fullscreen: <Switch v-model="show" /> Fixed: <Switch v-model="fixed" /> </Space>
     <h2 class="mt30 mb10">水印配置器</h2>
-    <h3 class="mb10">通过自定义参数配置预览水印效果</h3>
+    <p class="mb10">通过自定义参数配置预览水印效果</p>
     <Row :gutter="24">
       <Col :span="18">
         <Watermark v-bind="model">

@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-_输入或选择日期的控件_
+*输入或选择日期的控件*
 
 ## 何时使用
 
@@ -240,7 +240,7 @@ const dateValue = ref(format(new Date(), 'yyyy-MM-dd'))
 
 ## 禁用日期
 
-_不可选择过去日期，`min-date` 支持：`Date | string` 类型_
+*不可选择过去日期，`min-date` 支持：`Date | string` 类型*
 
 <br/>
 
@@ -264,7 +264,7 @@ watchEffect(() => {
 
 :::
 
-_不可选择未来日期，`max-date` 支持：`Date | string` 类型_
+*不可选择未来日期，`max-date` 支持：`Date | string` 类型*
 
 <br/>
 
@@ -298,7 +298,7 @@ watchEffect(() => {
 
 :::
 
-_只能选择未来七天内的日期，`disabled-dates` 支持：`Date[] | string[] | (date: Date) => boolean` 类型_
+*只能选择未来七天内的日期，`disabled-dates` 支持：`Date[] | string[] | (date: Date) => boolean` 类型*
 
 <br/>
 
@@ -329,7 +329,7 @@ function disabledDates(date: Date): boolean {
 
 :::
 
-_不可选择未来七天的日期_
+*不可选择未来七天的日期*
 
 <br/>
 
@@ -370,7 +370,7 @@ function disabledDatesNextWeek(date: Date): boolean {
 
 :::
 
-_不可选择明天/后天_
+*不可选择明天/后天*
 
 <br/>
 
@@ -404,7 +404,7 @@ watchEffect(() => {
 
 :::
 
-_不可选择周六和周日，`disabled-week-days` 支持：`string[] | number[]` 类型；`0-6`, `0`是周日, `6`是周六_
+*不可选择周六和周日，`disabled-week-days` 支持：`string[] | number[]` 类型；`0-6`, `0`是周日, `6`是周六*
 
 <br/>
 
@@ -428,7 +428,7 @@ watchEffect(() => {
 
 :::
 
-_不可选择未来三个月，`filters` 支持：`Filters` 类型_
+*不可选择未来三个月，`filters` 支持：`Filters` 类型*
 
 <br/>
 
@@ -605,7 +605,7 @@ watchEffect(() => {
 
 ## 预设范围
 
-_预设常用的日期范围以提高用户体验_
+*预设常用的日期范围以提高用户体验*
 
 <br/>
 
@@ -656,7 +656,7 @@ watchEffect(() => {
 
 ## 自定义最长日期可选择范围
 
-_最长日期可选范围不超过七天_
+*最长日期可选范围不超过 `7` 天*
 
 <br/>
 
@@ -931,7 +931,7 @@ watchEffect(() => {
 
 <br/>
 
-_更多使用 `API` 请参考 [官方文档](https://vue3datepicker.com/)_
+*更多使用 `API` 请参考 [官方文档](https://vue3datepicker.com/)*
 
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |

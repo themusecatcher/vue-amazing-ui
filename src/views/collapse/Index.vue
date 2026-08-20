@@ -220,10 +220,12 @@ function handleClick(key: string | number) {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <h3 class="mb10">activeKey 传入 number[] | string[]，所有面板可同时展开</h3>
+    <p class="mb10"><code>activeKey</code> 传入 <code>number[]</code> | <code>string[]</code>，所有面板可同时展开</p>
     <Collapse :items="collapseItems" v-model:active-key="activeKey" @change="onChange" />
     <h2 class="mt30 mb10">'手风琴'</h2>
-    <h3 class="mb10">只允许单个内容区域展开，只需 activeKey 传入 number | string 即可</h3>
+    <p class="mb10"
+      >只允许单个内容区域展开，只需 <code>activeKey</code> 传入 <code>number</code> | <code>string</code> 即可</p
+    >
     <Collapse :items="collapseItems" v-model:active-key="accordionActiveKey" />
     <h2 class="mt30 mb10">无边框</h2>
     <Collapse :items="collapseItems" v-model:active-key="borderlessActiveKey" :bordered="false" />
@@ -241,7 +243,7 @@ function handleClick(key: string | number) {
       </template>
     </Collapse>
     <h2 class="mt30 mb10">自定义面板</h2>
-    <h3 class="mb10">自定义各个面板的背景色、圆角、边距</h3>
+    <p class="mb10">自定义各个面板的背景色、圆角、边距</p>
     <Collapse
       style="background-color: #fff"
       :items="collapseItems"

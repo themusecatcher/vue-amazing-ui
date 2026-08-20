@@ -169,7 +169,7 @@ const filters = computed<Filters>(() => {
     <h2 class="mt30 mb10">禁用</h2>
     <DatePicker disabled v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
     <h2 class="mt30 mb10">禁用日期</h2>
-    <h3 class="mb10">不可选择过去日期，min-date 支持：Date | string 类型</h3>
+    <p class="mb10">不可选择过去日期，<code>min-date</code> 支持：<code>Date | string</code> 类型</p>
     <DatePicker v-model="dateValue" :min-date="new Date()" format="yyyy-MM-dd" placeholder="请选择日期" />
     <h3 class="mt10 mb10">不可选择未来日期，max-date 支持：Date | string 类型</h3>
     <DatePicker
@@ -234,7 +234,7 @@ const filters = computed<Filters>(() => {
       placeholder="请选择日期时间范围"
     />
     <h2 class="mt30 mb10">预设范围</h2>
-    <h3 class="mb10">预设常用的日期范围以提高用户体验</h3>
+    <p class="mb10">预设常用的日期范围以提高用户体验</p>
     <DatePicker
       :width="240"
       v-model="rangeValue"
@@ -245,7 +245,7 @@ const filters = computed<Filters>(() => {
       placeholder="请选择日期范围"
     />
     <h2 class="mt30 mb10">自定义最长日期可选择范围</h2>
-    <h3 class="mb10">最长日期可选范围不超过7天</h3>
+    <p class="mb10">最长日期可选范围不超过 <code>7</code> 天</p>
     <DatePicker
       :width="240"
       v-model="maxRangeValue"

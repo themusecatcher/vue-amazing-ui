@@ -226,7 +226,7 @@ function onKnow() {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <h3 class="mb10">共有六种不同类型的模态框</h3>
+    <p class="mb10">共有六种不同类型的模态框</p>
     <Space>
       <Button type="primary" @click="openInfoModal">Info Modal</Button>
       <Button type="primary" @click="openSuccessModal">Success Modal</Button>

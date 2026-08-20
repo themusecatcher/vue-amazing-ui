@@ -114,7 +114,7 @@ const state = reactive<StepsProps>({
       <Steps :items="stepsItems" vertical dotted v-model:current="current" />
     </Space>
     <h2 class="mt30 mb10">可点击</h2>
-    <h3 class="mb10">设置 v-model:current 后即可点击</h3>
+    <p class="mb10">设置 <code>v-model:current</code> 后即可点击</p>
     <Flex vertical>
       <Space>
         <Button @click="onPrev">Prev</Button>

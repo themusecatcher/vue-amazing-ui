@@ -205,11 +205,11 @@ function filter(inputValue: string, option: any) {
     <h2 class="mt30 mb10">禁用</h2>
     <Cascader :options="options" v-model="selectedValue" disabled />
     <h2 class="mt30 mb10">禁用某一级</h2>
-    <h3 class="mb10">只禁用第一级：disabled: [true]</h3>
-    <h3 class="mb10">禁用前两级：disabled: [true, true]</h3>
+    <p class="mb10">只禁用第一级：<code>disabled: [true]</code></p>
+    <p class="mb10">禁用前两级：<code>disabled: [true, true]</code></p>
     <Cascader :options="options" v-model="selectedValue" :disabled="[true]" @change="onChange" />
     <h2 class="mt30 mb10">禁用选项</h2>
-    <h3 class="mb10">只需指定 options 里的 disabled 字段</h3>
+    <p class="mb10">只需指定 <code>options</code> 里的 <code>disabled</code> 字段</p>
     <Cascader :options="optionsDisabled" v-model="selectedValue" @change="onChange" />
     <h2 class="mt30 mb10">自定义字段名</h2>
     <Cascader

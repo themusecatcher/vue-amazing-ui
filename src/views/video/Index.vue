@@ -24,20 +24,21 @@ const pause = () => {
     <h2 class="mt30 mb10">自定义视频和图标尺寸</h2>
     <Video :src="src" :poster="poster" :width="400" :height="225" :icon-size="60" />
     <h2 class="mt30 mb10">自动截取视频指定帧作为视频封面</h2>
-    <h3 class="mb10">在未设置封面时，自动截取视频第 second 秒指定帧作为封面图</h3>
+    <p class="mb10">在未设置封面时，自动截取视频第 <code>second</code> 秒指定帧作为封面图</p>
     <Video :src="src" :second="3" />
     <h2 class="mt30 mb10">自定义视频封面和内容的缩放规则</h2>
     <Video :src="src" :poster="poster" fit="cover" />
     <h2 class="mt30 mb10">自动循环播放</h2>
-    <h3 class="mb10">
-      autoplay：由于目前在最新版的 Chrome 浏览器（以及所有以 Chromium
-      为内核的浏览器）中，已不再允许自动播放音频和视频。就算你为 video 或 audio 标签设置了 autoplay
+    <p class="mb10">
+      <code>autoplay</code>：由于目前在最新版的 <code>Chrome</code> 浏览器（以及所有以
+      <code>Chromium</code> 为内核的浏览器）中，已不再允许自动播放音频和视频。就算你为 <code>video</code> 或
+      <code>audio</code> 标签设置了 <code>autoplay</code>
       属性也一样不能自动播放！
-    </h3>
-    <h3 class="mb10">
-      解决方法：设置视频 autoplay 时，视频必须设置为静音 muted: true
+    </p>
+    <p class="mb10">
+      解决方法：设置视频 <code>autoplay</code> 时，视频必须设置为静音 <code>muted: true</code>
       即可实现自动播放，然后用户可以使用控制栏开启声音，类似某宝商品自动播放的宣传视频逻辑
-    </h3>
+    </p>
     <Video :src="src" :poster="poster" autoplay loop />
     <h2 class="mt30 mb10">隐藏播放控件</h2>
     <Video :src="src" :poster="poster" :controls="false" />

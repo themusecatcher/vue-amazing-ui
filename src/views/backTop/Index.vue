@@ -37,7 +37,7 @@ function onShow(show: boolean) {
   <div style="height: 200vh">
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <h3 class="mb10">BackTop 会找到首个可滚动的祖先元素并且监听它的滚动事件</h3>
+    <p class="mb10"><code>BackTop</code> 会找到首个可滚动的祖先元素并且监听它的滚动事件</p>
     <BackTop @show="onShow" />
     <h2 class="mt30 mb10">自定义图标</h2>
     <BackTop :right="100" :icon="() => h(VerticalAlignTopOutlined)" />
@@ -90,7 +90,7 @@ function onShow(show: boolean) {
       :bottom="160"
     />
     <h2 class="mt30 mb10">自定义可视高度</h2>
-    <h3 class="mb10">自定义滚动时触发显示回到顶部的高度</h3>
+    <p class="mb10">自定义滚动时触发显示回到顶部的高度</p>
     <BackTop :bottom="280" :visibility-height="300">
       <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
         可视高度：300px
@@ -101,7 +101,7 @@ function onShow(show: boolean) {
       <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">改变位置</div>
     </BackTop>
     <h2 class="mt30 mb10">自定义监听目标</h2>
-    <h3 class="mb10">自定义设定监听哪个元素来触发 BackTop</h3>
+    <p class="mb10">自定义设定监听哪个元素来触发 <code>BackTop</code></p>
     <BackTop :listen-to="scrollContainer" :bottom="340" :visibility-height="10">
       <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px"> 指定目标 </div>
     </BackTop>
@@ -118,7 +118,7 @@ function onShow(show: boolean) {
       这块应该写一个有意思的笑话。<br />
     </div>
     <br />
-    <h3 class="mb10">自动监听 Scrollbar 来触发 BackTop</h3>
+    <p class="mb10">自动监听 <code>Scrollbar</code> 来触发 <code>BackTop</code></p>
     <Scrollbar style="width: 600px; height: 100px">
       <BackTop :bottom="340" :right="260" :visibility-height="10">
         <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">

@@ -47,19 +47,19 @@ const timelineItems = ref<TimelineItem[]>([
     <h2 class="mb10">右侧时间轴点</h2>
     <Timeline :items="timelineItems" mode="right" :width="540" />
     <h2 class="mb10">中间时间轴点</h2>
-    <h3 class="mb10">内容从左边开始交替展现</h3>
+    <p class="mb10">内容从左边开始交替展现</p>
     <Timeline :items="timelineItems" mode="center" :width="540">
       <template #dot="{ index }">
         <span class="big-dot" v-if="index === 2"></span>
       </template>
     </Timeline>
-    <h3 class="mb10">内容从右边开始交替展现</h3>
+    <p class="mb10">内容从右边开始交替展现</p>
     <Timeline :items="timelineItems" mode="center" position="right" :width="640">
       <template #dot="{ index }">
         <span class="big-dot" v-if="index === 2"></span>
       </template>
     </Timeline>
-    <h3 class="mb10">水平时间轴</h3>
+    <p class="mb10">水平时间轴</p>
     <Timeline horizontal :items="timelineItems">
       <template #dot="{ index }">
         <span class="big-dot" v-if="index === 2"></span>

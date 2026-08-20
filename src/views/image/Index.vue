@@ -30,12 +30,15 @@ const images = ref<ImageItem[]>([
     <h2 class="mt30 mb10">基本使用</h2>
     <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
     <h2 class="mt30 mb10">多张图片预览</h2>
-    <h3 class="mb10">可循环切换图片，并支持键盘 (left / right / up / down) 按键切换</h3>
+    <p class="mb10"
+      >可循环切换图片，并支持键盘 (<code>left</code> / <code>right</code> / <code>up</code> / <code>down</code>)
+      按键切换</p
+    >
     <Image :src="images" loop />
     <h2 class="mt30 mb10">禁用预览</h2>
     <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" disabled />
     <h2 class="mt30 mb10">自定义样式</h2>
-    <h3 class="mb10">自定义宽高；同时图片覆盖容器；预览文本设为 preview</h3>
+    <p class="mb10">自定义宽高；同时图片覆盖容器；预览文本设为 <code>preview</code></p>
     <Image :src="images" :width="[100, 200, 100, 200, 100]" :space-props="{ width: 416 }" fit="cover" loop>
       <template #preview>
         <p class="preview-txt">preview</p>
@@ -55,7 +58,7 @@ const images = ref<ImageItem[]>([
     <h2 class="mt30 mb10">相册模式</h2>
     <Image :src="images" album loop />
     <h2 class="mt30 mb10">自定义预览配置</h2>
-    <h3 class="mb10">更改缩放比率和最大最小缩放比例</h3>
+    <p class="mb10">更改缩放比率和最大最小缩放比例</p>
     <Image
       :zoom-ratio="0.2"
       :min-zoom-scale="0.5"

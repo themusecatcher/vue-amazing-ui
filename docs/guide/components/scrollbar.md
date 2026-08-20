@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-_看起来好看点，但是我能保证这个没有原生滚动条可靠_
+*看起来好看点，但是我能保证这个没有原生滚动条可靠*
 
 <script setup lang="ts">
 function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
@@ -241,7 +241,7 @@ function onScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
 
 ## 自定义样式
 
-_可通过设置 `size` 属性，自定义相关 `--scrollbar` 变量进行各种样式自定义_
+*可通过设置 `size` 属性，自定义相关 `--scrollbar` 变量进行各种样式自定义*
 
 <br/>
 

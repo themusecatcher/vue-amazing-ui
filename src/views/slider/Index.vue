@@ -200,7 +200,7 @@ function formatter(value: number) {
       <Slider range :step="5" v-model:value="customStepDoubleValue" />
     </Flex>
     <h2 class="mt30 mb10">自定义刻度标记</h2>
-    <h3 class="mb10">使用 marks 属性可以添加刻度标记</h3>
+    <p class="mb10">使用 <code>marks</code> 属性可以添加刻度标记</p>
     <Flex vertical>
       <Slider v-model:value="markSingleValue1" :marks="marks">
         <template #mark="{ label, value }">
@@ -219,7 +219,7 @@ function formatter(value: number) {
         </template>
       </Slider>
     </Flex>
-    <h3 class="mb10">同时设置 marks & step 属性</h3>
+    <p class="mb10">同时设置 <code>marks</code> & <code>step</code> 属性</p>
     <Flex vertical>
       <Slider v-model:value="markSingleValue2" :marks="marks" :step="10">
         <template #mark="{ label, value }">
@@ -238,7 +238,10 @@ function formatter(value: number) {
         </template>
       </Slider>
     </Flex>
-    <h3 class="mb10">设置 step 为 'mark'，此时 Slider 的可选值仅有 marks 标记的部分</h3>
+    <p class="mb10"
+      >设置 <code>step</code> 为 <code>'mark'</code>，此时 <code>Slider</code> 的可选值仅有
+      <code>marks</code> 标记的部分</p
+    >
     <Flex vertical>
       <Slider v-model:value="markSingleValue3" :marks="marks" step="mark">
         <template #mark="{ label, value }">
@@ -302,7 +305,7 @@ function formatter(value: number) {
       <Slider range tooltip-open v-model:value="tooltipOpenDoubleValue" />
     </Flex>
     <h2 class="mt30 mb10">自定义样式</h2>
-    <h3 class="mb10">通过修改样式变量可以自定义滑动输入条样式、标记样式、Tooltip 样式</h3>
+    <p class="mb10">通过修改样式变量可以自定义滑动输入条样式、标记样式、<code>Tooltip</code> 样式</p>
     <Flex vertical gap="large">
       <Slider :style="singleCustomStyle" v-model:value="customStyleSingleValue" />
       <Slider

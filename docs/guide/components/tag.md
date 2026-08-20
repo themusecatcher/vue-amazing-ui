@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-_进行标记和分类的小标签_
+*进行标记和分类的小标签*
 
 ## 何时使用
 
@@ -329,7 +329,7 @@ import { AppleOutlined, TwitterOutlined, YoutubeOutlined, InstagramOutlined } fr
 
 ## 动态添加和删除
 
-_使用字符串格式数组_
+*使用字符串格式数组*
 
 <br/>
 
@@ -361,7 +361,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
 
 :::
 
-_使用对象格式数组_
+*使用对象格式数组*
 
 <br/>
 

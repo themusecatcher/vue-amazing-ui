@@ -68,7 +68,7 @@ function onHide() {
       </Tooltip>
     </Flex>
     <h2 class="mt30 mb10">自动调整位置</h2>
-    <h3 class="mb10">请滚动或缩放浏览器窗口来查看自适应调整弹出位置的效果</h3>
+    <p class="mb10">请滚动或缩放浏览器窗口来查看自适应调整弹出位置的效果</p>
     <Tooltip tooltip="Vue Amazing UI">
       <Button type="primary">Flip Automatically</Button>
     </Tooltip>
@@ -84,7 +84,7 @@ function onHide() {
       </Tooltip>
     </Space>
     <h2 class="mt30 mb10">按键控制</h2>
-    <h3 class="mb10">enter 显示；esc 关闭，仅当 trigger: 'click' 时生效</h3>
+    <p class="mb10"><code>enter</code> 显示；<code>esc</code> 关闭，仅当 <code>trigger: 'click'</code> 时生效</p>
     <Tooltip trigger="click" keyboard>
       <template #tooltip>Vue Amazing UI</template>
       <Button type="primary">Click Me</Button>

@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-_可预览的图片_
+*可预览的图片*
 
 ## 何时使用
 
@@ -52,7 +52,7 @@ const images = ref<ImageItem[]>([
 
 ## 多张图片预览
 
-_可循环切换图片，并支持键盘 (`left` / `right` / `up` / `down`) 按键切换_
+*可循环切换图片，并支持键盘 (`left` / `right` / `up` / `down`) 按键切换*
 
 <br/>
 
@@ -110,7 +110,7 @@ const images = ref<ImageItem[]>([
 
 ## 自定义样式
 
-_自定义宽高；同时图片覆盖容器；预览文本设为 `preview`_
+*自定义宽高；同时图片覆盖容器；预览文本设为 `preview`*
 
 <br/>
 
@@ -346,7 +346,7 @@ const images = ref<ImageItem[]>([
 
 ## 自定义预览配置
 
-_更改缩放比率和最大最小缩放比例_
+*更改缩放比率和最大最小缩放比例*
 
 <br/>
 

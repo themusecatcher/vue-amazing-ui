@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-_按照日历形式展示数据的容器_
+*按照日历形式展示数据的容器*
 
 ## 何时使用
 
@@ -363,7 +363,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ## 自定义展示格式
 
-_使用 `weekFormat` / `dateFormat` / `monthFormat` 自定义日期/星期/月的展示格式_
+*使用 `weekFormat` / `dateFormat` / `monthFormat` 自定义日期/星期/月的展示格式*
 
 <br/>
 

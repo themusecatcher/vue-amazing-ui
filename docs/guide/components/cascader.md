@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-_级联选择框_
+*级联选择框*
 
 ## 何时使用
 
@@ -362,9 +362,9 @@ const selectedValue = ref(['2', '21', '212'])
 
 ## 禁用某一级
 
-_只禁用第一级：`disabled: [true]`_
+*只禁用第一级：`disabled: [true]`*
 
-_禁用前两级：`disabled: [true, true]`_
+*禁用前两级：`disabled: [true, true]`*
 
 <br/>
 
@@ -449,7 +449,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 
 ## 禁用选项
 
-_只需指定 `options` 里的 `disabled` 字段_
+*只需指定 `options` 里的 `disabled` 字段*
 
 <br/>
 

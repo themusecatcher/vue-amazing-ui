@@ -2,7 +2,7 @@
 
 <GlobalElement hide-watermark />
 
-_给页面的某个区域加上水印_
+*给页面的某个区域加上水印*
 
 ## 何时使用
 
@@ -87,7 +87,7 @@ const layoutOptions = [
 
 ## 多行水印
 
-_通过 `content` 设置字符串数组，指定多行文字水印内容_
+*通过 `content` 设置字符串数组，指定多行文字水印内容*
 
 <Watermark :content="['Vue Amazing UI', 'Hello World']">
   <div style="height: 400px" />
@@ -135,7 +135,7 @@ requestAnimationFrame(updateTime)
 
 ## 图片水印
 
-_通过 `image` 指定图片地址；为保证图片高清且不被拉伸，请设置 `width` 和 `height`；另支持设置图片布局方式 `layout` 和旋转角度 `rotate` 等_
+*通过 `image` 指定图片地址；为保证图片高清且不被拉伸，请设置 `width` 和 `height`；另支持设置图片布局方式 `layout` 和旋转角度 `rotate` 等*
 
 <Flex>
   <Flex vertical :gap="8">
@@ -218,7 +218,7 @@ const fixed = ref(true)
 
 ## 水印配置器
 
-_通过自定义参数配置预览水印效果_
+*通过自定义参数配置预览水印效果*
 
 <Row :gutter="24">
   <Col :span="18">
