@@ -17,7 +17,7 @@
 ## 特性
 
 - 组件库采用 `Vue@3.5.29`+ `TypeScript@5.9.3` + `Vite@7.3.1` + `Less@4.5.1` 实现
-- 目前共包含 `68` 个基础 `UI` 组件以及 `18` 个工具函数，并且持续探索更新中...
+- 目前共包含 `69` 个基础 `UI` 组件以及 `18` 个工具函数，并且持续探索更新中...
 - 主题可调，你只需提供一个主题色，剩下的都交给我
 - 顺便一提，它们全都可以 `treeshaking`
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
@@ -240,33 +240,34 @@ pnpm docs:dev
 | Card            | 卡片       | Carousel       | 轮播图     |
 | Cascader        | 级联选择   | Checkbox       | 复选框     |
 | Collapse        | 折叠面板   | ColorPicker    | 颜色选择器 |
-| ConfigProvider  | 全局化配置 | Countdown      | 倒计时     |
-| DatePicker      | 日期选择器 | Descriptions   | 描述列表   |
-| Dialog          | 对话框     | Divider        | 分割线     |
-| Drawer          | 抽屉       | Ellipsis       | 文本省略   |
-| Empty           | 空状态     | Flex           | 弹性布局   |
-| FloatButton     | 浮动按钮   | GradientText   | 渐变文字   |
-| Grid            | 栅格       | Highlight      | 高亮文本   |
-| Image           | 图片       | Input          | 输入框     |
-| InputNumber     | 数字输入框 | InputSearch    | 搜索框     |
-| List            | 列表       | LoadingBar     | 加载条     |
-| Message         | 全局提示   | Modal          | 模态框     |
-| Notification    | 通知提醒   | NumberAnimation| 数值动画   |
-| Pagination      | 分页       | Popconfirm     | 弹出确认   |
-| Popover         | 气泡卡片   | Progress       | 进度条     |
-| QRCode          | 二维码     | Radio          | 单选框     |
-| Rate            | 评分       | Result         | 结果       |
-| Scrollbar       | 滚动条     | Segmented      | 分段控制器 |
-| Select          | 选择器     | Skeleton       | 骨架屏     |
-| Slider          | 滑动输入条 | Space          | 间距       |
-| Spin            | 加载中     | Statistic      | 统计数值   |
-| Steps           | 步骤条     | Swiper         | 触摸滑动   |
-| Switch          | 开关       | Table          | 表格       |
-| Tabs            | 标签页     | Tag            | 标签       |
-| Textarea        | 文本域     | TextScroll     | 文字滚动   |
-| Timeline        | 时间轴     | Tooltip        | 文字提示   |
-| Upload          | 上传       | Video          | 播放器     |
-| Waterfall       | 瀑布流     | Watermark      | 水印       |
+| Comment         | 评论       | ConfigProvider | 全局化配置 |
+| Countdown       | 倒计时     | DatePicker     | 日期选择器 |
+| Descriptions    | 描述列表   | Dialog         | 对话框     |
+| Divider         | 分割线     | Drawer         | 抽屉       |
+| Ellipsis        | 文本省略   | Empty          | 空状态     |
+| Flex            | 弹性布局   | FloatButton    | 浮动按钮   |
+| GradientText    | 渐变文字   | Grid           | 栅格       |
+| Highlight       | 高亮文本   | Image          | 图片       |
+| Input           | 输入框     | InputNumber    | 数字输入框 |
+| InputSearch     | 搜索框     | List           | 列表       |
+| LoadingBar      | 加载条     | Message        | 全局提示   |
+| Modal           | 模态框     | Notification   | 通知提醒   |
+| NumberAnimation | 数值动画   | Pagination     | 分页       |
+| Popconfirm      | 弹出确认   | Popover        | 气泡卡片   |
+| Progress        | 进度条     | QRCode         | 二维码     |
+| Radio           | 单选框     | Rate           | 评分       |
+| Result          | 结果       | Scrollbar      | 滚动条     |
+| Segmented       | 分段控制器 | Select         | 选择器     |
+| Skeleton        | 骨架屏     | Slider         | 滑动输入条 |
+| Space           | 间距       | Spin           | 加载中     |
+| Statistic       | 统计数值   | Steps          | 步骤条     |
+| Swiper          | 触摸滑动   | Switch         | 开关       |
+| Table           | 表格       | Tabs           | 标签页     |
+| Tag             | 标签       | Textarea       | 文本域     |
+| TextScroll      | 文字滚动   | Timeline       | 时间轴     |
+| Tooltip         | 文字提示   | Upload         | 上传       |
+| Video           | 播放器     | Waterfall      | 瀑布流     |
+| Watermark       | 水印       |                |            |
 
 ## 工具函数
 

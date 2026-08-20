@@ -14,6 +14,7 @@ const componentsMap = {
   Checkbox: 'checkbox',
   Collapse: 'collapse',
   ColorPicker: 'colorpicker',
+  Comment: 'comment',
   ConfigProvider: 'configprovider',
   Countdown: 'countdown',
   DatePicker: 'datepicker',

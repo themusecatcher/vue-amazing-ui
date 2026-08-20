@@ -50,6 +50,9 @@ export { default as Collapse } from './collapse'
 export type { Props as ColorPickerProps, ColorPickerMode, ColorPickerAction } from './colorpicker'
 export { default as ColorPicker } from './colorpicker'
 
+export type { Props as CommentProps } from './comment'
+export { default as Comment } from './comment'
+
 export type { Props as ConfigProviderProps, Theme as ConfigProviderTheme } from './configprovider'
 export { default as ConfigProvider } from './configprovider'
 
