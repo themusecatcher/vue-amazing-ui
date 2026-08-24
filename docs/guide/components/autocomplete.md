@@ -53,7 +53,7 @@ function filterOption(input: string, option: unknown): boolean {
   const value = (option as { value?: string }).value ?? ''
   return value.toUpperCase().includes(input.toUpperCase())
 }
-// 查询模式 - 确定类目（options 嵌套 options 结构，与 Ant Design Vue 一致）
+// 查询模式 - 确定类目（options 嵌套 options 结构）
 const value5 = ref('')
 const options5 = ref([
   {
@@ -181,7 +181,7 @@ const optionsD = ref([
 // 字符串数组数据源
 const valueArr = ref('')
 const optionsArr = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry', 'Fig', 'Grape']
-// 分组数据源（options 嵌套 options 结构，与 Ant Design Vue 一致）
+// 分组数据源（options 嵌套 options 结构）
 const valueGroup = ref('')
 const optionsGroup = ref([
   {
@@ -1186,7 +1186,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
 
 | 名称               | 说明                                                     | 类型                           | 默认值    |
 | :----------------- | :------------------------------------------------------- | :----------------------------- | :-------- |
-| options            | 子选项，存在该字段即视为分组（与 Ant Design Vue 保持一致） | (string &#124; number &#124; Option)[] | undefined |
+| options            | 子选项，存在该字段即视为分组 | (string &#124; number &#124; Option)[] | undefined |
 | label?             | 分组名（显示为分组标题）                                   | string                         | undefined |
 | value?             | 分组值                                                   | string &#124; number           | undefined |
 

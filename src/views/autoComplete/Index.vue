@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
-// 1. 基本使用（远程搜索）
+// 基本使用（远程搜索）
 const value1 = ref('')
 const options1 = ref<{ value: string }[]>([])
 function mockVal(str: string, repeat = 1): { value: string } {
@@ -10,14 +10,14 @@ function mockVal(str: string, repeat = 1): { value: string } {
 function onSearch1(searchText: string) {
   options1.value = !searchText ? [] : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)]
 }
-// 2. 自定义选项
+// 自定义选项
 const value2 = ref('')
 const options2 = ref<{ value: string }[]>([])
 function onSearch2(val: string) {
   options2.value =
     !val || val.includes('@') ? [] : ['gmail.com', '163.com', 'qq.com'].map((domain) => ({ value: `${val}@${domain}` }))
 }
-// 3. 自定义输入组件
+// 自定义输入组件
 const value3 = ref('')
 const options3 = ref<{ value: string }[]>([])
 function onSearch3(val: string) {
@@ -26,7 +26,7 @@ function onSearch3(val: string) {
 function onSelect3(value: string) {
   console.log('onSelect', value)
 }
-// 4. 不区分大小写（filterOption 函数）
+// 不区分大小写（filterOption 函数）
 const value4 = ref('')
 const options4 = ref<{ value: string }[]>([
   { value: 'Burns Bay Road' },
@@ -37,7 +37,7 @@ function filterOption(input: string, option: unknown): boolean {
   const value = (option as { value?: string }).value ?? ''
   return value.toUpperCase().includes(input.toUpperCase())
 }
-// 5. 查询模式 - 确定类目（options 嵌套 options 结构，与 Ant Design Vue 一致）
+// 查询模式 - 确定类目（options 嵌套 options 结构）
 const value5 = ref('')
 const options5 = ref([
   {
@@ -62,7 +62,7 @@ const options5 = ref([
     value: 'all'
   }
 ])
-// 6. 查询模式 - 不确定类目
+// 查询模式 - 不确定类目
 interface SearchOption {
   query: string
   category: string
@@ -91,7 +91,7 @@ function searchResult(query: string): SearchOption[] {
 function onSearch6(val: string) {
   options6.value = val ? searchResult(val) : []
 }
-// 7. 自定义状态 / 8. 无边框 / 9. 自定义清除按钮 共用数据源
+// 自定义状态 / 无边框 / 自定义清除按钮 共用数据源
 const value7 = ref('')
 const value8 = ref('')
 const value9 = ref('')
@@ -107,7 +107,7 @@ function onSelect7(value: string) {
 function onClear() {
   console.log('onClear')
 }
-// 补充用例：三种尺寸
+// 三种尺寸
 const size = ref('middle')
 const sizeOptions = [
   {
@@ -124,7 +124,7 @@ const sizeOptions = [
   }
 ]
 const valueS = ref('')
-// 补充用例：禁用 / 禁用选项
+// 禁用 / 禁用选项
 const valueD = ref('')
 const valueDD = ref('')
 const optionsD = ref([
@@ -162,10 +162,10 @@ const optionsD = ref([
     value: '君士坦丁堡'
   }
 ])
-// 补充用例：字符串数组数据源
+// 字符串数组数据源
 const valueArr = ref('')
 const optionsArr = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry', 'Fig', 'Grape']
-// 补充用例：分组数据源（options 嵌套 options 结构，与 Ant Design Vue 一致）
+// 分组数据源（options 嵌套 options 结构）
 const valueGroup = ref('')
 const optionsGroup = ref([
   {
@@ -190,18 +190,18 @@ const optionsGroup = ref([
     ]
   }
 ])
-// 补充用例：键盘/悬浮回填 backfill（hover 选项时回填输入框）
+// 键盘/悬浮回填 backfill（hover 选项时回填输入框）
 const valueBackfill = ref('')
 const optionsBackfill = ['Apple', 'Banana', 'Cherry', 'Durian']
-// 补充用例：受控展开 open（外部按钮控制下拉面板显隐）
+// 受控展开 open（外部按钮控制下拉面板显隐）
 const valueOpen = ref('')
 const openControlled = ref(false)
 const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
-// 补充用例：默认展开 defaultOpen
+// 默认展开 defaultOpen
 const valueDefaultOpen = ref('')
-// 补充用例：关闭默认高亮首项 defaultActiveFirstOption
+// 关闭默认高亮首项 defaultActiveFirstOption
 const valueActiveFirst = ref('')
-// 补充用例：下拉面板宽度 dropdownMatchSelectWidth（指定为 300）
+// 下拉面板宽度 dropdownMatchSelectWidth（指定为 300）
 const valueMatchWidth = ref('')
 const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选项文本 B', '一个较长的选项文本 C']
 </script>

@@ -7,7 +7,9 @@
 ## <VersionDateTag date="2026-08-24">2.5.1</VersionDateTag>
 
 - 优化并增强 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件和文档，`placement`  属性新增支持 `12` 个方向；新增 `arrowPointAtCenter` 属性使箭头指向目标元素中心；`bgColor` 支持多种预设色彩；`trigger` 新增 `focus` / `contextmenu` 触发方式；新增 `disabled` 属性支持禁用；`showDelay` / `hideDelay` 属性调整为仅在 `trigger: hover` 时生效，`click` / `focus` / `contextmenu` 等触发方式立即显示与隐藏；修复弹出框挂载到 `body` 时被中间可滚动容器边界误判导致意外翻转的问题；使用 `requestAnimationFrame` 合并同帧内的多次位置重算，减少滚动时的强制重排
+- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件和文档，优化弹层定位与显隐行为：弹层定位由 `bottom` 调整为 `bottomLeft`，避免面板与触发元素错位；新增 `keyboard` 键盘支持；`showDelay` / `hideDelay` 调整为立即显示与隐藏
 - 优化并更新 [文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html) 组件，过渡动画时长由 `200ms` 对齐为默认 `100ms`
+- 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-08-19">2.5.0</VersionDateTag>
 

@@ -9,7 +9,7 @@ export interface Option {
   label: string // 显示的 label 值
 }
 export interface GroupOption {
-  options?: (string | number | Option)[] // 子选项，存在该字段即视为分组（与 Ant Design Vue 保持一致）
+  options?: (string | number | Option)[] // 子选项，存在该字段即视为分组
   label?: string // label 文本
   value?: string | number // value 值
 }
@@ -113,7 +113,7 @@ const optionsStyle = computed(() => {
   }
   return style
 })
-// 判断是否为分组项：存在 options 字段即视为分组（与 Ant Design Vue 保持一致）
+// 判断是否为分组项：存在 options 字段即视为分组
 function isGroup(item: string | number | Option | GroupOption): item is GroupOption {
   return typeof item === 'object' && Array.isArray((item as GroupOption).options)
 }
@@ -472,7 +472,7 @@ function getPlacement(): 'bottom' | 'top' {
 // 下拉面板水平方向被视口遮挡时自动调整对齐方式（基于实际遮挡检测，而非单纯宽度对比）
 // left：默认左对齐（面板左边缘对齐内容左边缘），左对齐不溢出视口右侧时采用
 // right：左对齐会溢出视口右侧、但右对齐不溢出视口左侧时采用（面板右边缘对齐内容右边缘）
-// viewport-left：左右对齐均会溢出视口时，贴视口左边缘兜底，保证从左侧可见内容（与 Ant Design Vue 一致）
+// viewport-left：左右对齐均会溢出视口时，贴视口左边缘兜底，保证从左侧可见内容
 function getAlign(): 'left' | 'right' | 'viewport-left' {
   const { left, right } = contentRect.value as DOMRect // 内容元素左右边缘相对于视口的位置
   const width = panelWidth.value ?? 0 // 面板实际宽度
@@ -1079,7 +1079,7 @@ defineExpose({
       white-space: nowrap;
       text-overflow: ellipsis;
       transition: background 0.3s ease;
-      // 分组内选项相对分组标题额外缩进 12px（对齐 Ant Design Vue grouped option 行为）
+      // 分组内选项相对分组标题额外缩进 12px
       &.option-grouped {
         padding-left: 24px;
       }
