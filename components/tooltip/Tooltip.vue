@@ -18,7 +18,7 @@ export interface Props {
   tooltip?: string // 文字提示内容 string | slot
   tooltipClass?: string // 设置文字提示的类名
   tooltipStyle?: CSSProperties // 设置文字提示的样式
-  bgColor?: string // 文字提示框背景颜色，支持预设色 (pink/red/yellow/orange/cyan/green/blue/purple/geekblue/magenta/volcano/gold/lime) 或自定义色值 (如 #f50/rgba)
+  bgColor?: string // 文字提示框背景颜色，支持预设色或自定义色值 (如 #f50/rgba)
   arrow?: boolean // 是否显示箭头
   arrowPointAtCenter?: boolean // 箭头是否指向目标元素中心，仅当 placement 为复合方向 (如 topLeft) 时生效
   placement?:
@@ -105,7 +105,7 @@ const { isSupported: passiveSupported } = useOptionsSupported('passive')
 const { isSupported: captureSupported } = useOptionsSupported('capture')
 const emits = defineEmits(['update:show', 'openChange', 'animationend'])
 const slotsExist = useSlotsExist(['tooltip'])
-// antd 预设色板：色名 → 色值（来源 ant-design-vue seed token）
+// 预设色板：色名 → 色值
 const presetColors: Record<string, string> = {
   pink: '#eb2f96',
   red: '#f5222d',
@@ -308,7 +308,7 @@ function observeScroll() {
   }
 }
 /**
- * 清理滚动监听事件并重置滚动目标。
+ * 清理滚动监听事件并重置滚动目标
  *
  * 清理函数，移除滚动事件监听并重置滚动目标
  */
