@@ -670,8 +670,8 @@ const tooltipRef = ref()
 | disabled | 是否禁用文字提示，禁用后不响应任何触发 | boolean | false |
 | to | 弹出框挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，`false` 会待在原地 | string &#124; HTMLElement &#124; false | 'body' |
 | transitionDuration | 文字提示动画的过渡持续时间，单位 `ms` | number | 100 |
-| showDelay | 文字提示显示的延迟时间，单位 `ms` | number | 100 |
-| hideDelay | 文字提示隐藏的延迟时间，单位 `ms` | number | 100 |
+| showDelay | 文字提示显示的延迟时间，单位 `ms`，仅当 `trigger: hover` 时生效 | number | 100 |
+| hideDelay | 文字提示隐藏的延迟时间，单位 `ms`，仅当 `trigger: hover` 时生效 | number | 100 |
 | show <Tag color="cyan">v-model</Tag> | 文字提示是否显示 | boolean | false |
 | showControl | 只使用 `show` 属性控制显示隐藏，仅当 `trigger: hover` 时生效，此时移入移出将不会触发显示隐藏，全部由 `show` 属性控制 | boolean | false |
 

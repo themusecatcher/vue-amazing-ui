@@ -764,8 +764,6 @@ function onClear() {
     trigger="click"
     keyboard
     :transition-duration="200"
-    :showDelay="0"
-    :hideDelay="0"
   >
     <template #tooltip>
       <template v-if="!disabled">

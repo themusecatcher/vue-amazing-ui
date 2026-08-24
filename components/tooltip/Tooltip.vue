@@ -40,8 +40,8 @@ export interface Props {
   disabled?: boolean // 是否禁用文字提示，禁用后不响应任何触发
   to?: string | HTMLElement | false // 弹出框挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   transitionDuration?: number // 文字提示动画的过渡持续时间，单位 ms
-  showDelay?: number // 文字提示显示的延迟时间，单位 ms
-  hideDelay?: number // 文字提示隐藏的延迟时间，单位 ms
+  showDelay?: number // 文字提示显示的延迟时间，单位 ms，仅当 trigger: hover 时生效
+  hideDelay?: number // 文字提示隐藏的延迟时间，单位 ms，仅当 trigger: hover 时生效
   show?: boolean // (v-model) 文字提示是否显示
   showControl?: boolean // 只使用 show 属性控制显示隐藏，仅当 trigger: hover 时生效，此时移入移出将不会触发显示隐藏，全部由 show 属性控制
 }
@@ -574,6 +574,8 @@ function onShow(): void {
   if (props.disabled) return
   tooltipTimer.value && cancelRaf(tooltipTimer.value)
   if (!tooltipShow.value) {
+    // 显示延迟仅在 hover 触发时生效，click/contextmenu/focus 等触发方式立即显示
+    const delay = props.trigger === 'hover' ? props.showDelay : 0
     tooltipTimer.value = rafTimeout(() => {
       tooltipShow.value = true
       getPosition()
@@ -582,12 +584,14 @@ function onShow(): void {
       if (showTooltip.value && (props.trigger === 'click' || props.trigger === 'contextmenu')) {
         document.addEventListener('click', handleClick, captureSupported.value ? { capture: true } : true)
       }
-    }, props.showDelay)
+    }, delay)
   }
 }
 function onHide(): void {
   tooltipTimer.value && cancelRaf(tooltipTimer.value)
   if (tooltipShow.value) {
+    // 隐藏延迟仅在 hover 触发时生效，click/contextmenu/focus 等触发方式立即隐藏
+    const delay = props.trigger === 'hover' ? props.hideDelay : 0
     tooltipTimer.value = rafTimeout(() => {
       tooltipShow.value = false
       emits('update:show', false)
@@ -595,7 +599,7 @@ function onHide(): void {
       if (showTooltip.value && (props.trigger === 'click' || props.trigger === 'contextmenu')) {
         document.removeEventListener('click', handleClick, captureSupported.value ? { capture: true } : true)
       }
-    }, props.hideDelay)
+    }, delay)
   }
 }
 function toggleVisible() {
