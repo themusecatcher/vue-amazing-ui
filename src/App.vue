@@ -3,9 +3,9 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { loadingBarRef } from '@/router'
 const theme = ref({
-  common: {
-    primaryColor: '#ff6900'
-  }
+  // common: {
+  //   primaryColor: '#ff6900'
+  // }
 })
 const route = useRoute()
 const routeName = computed(() => {

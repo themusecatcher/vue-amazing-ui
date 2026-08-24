@@ -58,9 +58,9 @@ function handleClear() {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <ColorPicker :width="240" v-model:value="colorValue" />
+    <ColorPicker :width="360" v-model:value="colorValue" />
     <h2 class="mt30 mb10">自定义展示内容</h2>
-    <Space :width="240">
+    <Space :width="360">
       <ColorPicker :label="labelFormat" />
       <ColorPicker>
         <template #label="{ color }"> I'm {{ color }} </template>
@@ -68,7 +68,7 @@ function handleClear() {
     </Space>
     <h2 class="mt30 mb10">自定义面板样式</h2>
     <ColorPicker
-      :width="240"
+      :width="360"
       :tooltip-style="{
         width: '280px',
         padding: '4px',
@@ -79,7 +79,7 @@ function handleClear() {
     <p class="mb10"><code>show-alpha</code> 控制是否可调节 <code>alpha</code> 通道</p>
     <Space vertical>
       <Space align="center"> showAlpha: <Switch v-model="showAlpha"></Switch> </Space>
-      <ColorPicker :width="240" :show-alpha="showAlpha" />
+      <ColorPicker :width="360" :show-alpha="showAlpha" />
     </Space>
     <h2 class="mt30 mb10">颜色预览块</h2>
     <p class="mb10"
@@ -87,25 +87,25 @@ function handleClear() {
     >
     <Space vertical>
       <Space align="center"> showPreview: <Switch v-model="showPreview"></Switch> </Space>
-      <ColorPicker :width="240" :show-preview="showPreview" />
+      <ColorPicker :width="360" :show-preview="showPreview" />
     </Space>
     <h2 class="mt30 mb10">尺寸</h2>
-    <Space :width="240">
+    <Space :width="360">
       <ColorPicker size="small" />
       <ColorPicker />
       <ColorPicker size="large" />
     </Space>
     <h2 class="mt30 mb10">禁用</h2>
-    <ColorPicker :width="240" disabled />
+    <ColorPicker :width="360" disabled />
     <h2 class="mt30 mb10">设定模式</h2>
     <p class="mb10">使用 <code>modes</code> 设定可选模式</p>
     <Space vertical>
       <Space align="center"> modes: <Checkbox :options="modeOptions" v-model:value="modes" /> </Space>
-      <ColorPicker :width="240" :modes="modes" />
+      <ColorPicker :width="360" :modes="modes" />
     </Space>
     <h2 class="mt30 mb10">预设色板</h2>
     <ColorPicker
-      :width="240"
+      :width="360"
       :swatches="[
         '#FFFFFF',
         '#18A058',
@@ -124,7 +124,7 @@ function handleClear() {
     <Space vertical>
       <Space align="center"> actions: <Checkbox :options="actionOptions" v-model:value="actions" /> </Space>
       <ColorPicker
-        :width="240"
+        :width="360"
         :actions="actions"
         @complete="handleComplele"
         @confirm="handleConfirm"
@@ -132,12 +132,12 @@ function handleClear() {
       />
     </Space>
     <h2 class="mt30 mb10">额外页脚</h2>
-    <ColorPicker :width="240">
+    <ColorPicker :width="360">
       <template #footer>extra footer</template>
     </ColorPicker>
     <h2 class="mt30 mb10">使用按钮控制面板</h2>
     <Space>
-      <ColorPicker :width="240" v-model:show="show" />
+      <ColorPicker :width="360" v-model:show="show" />
       <Button type="primary" @click="show = true">显示</Button>
       <Button @click="show = false">隐藏</Button>
     </Space>
