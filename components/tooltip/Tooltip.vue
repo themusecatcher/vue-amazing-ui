@@ -365,8 +365,11 @@ async function getPosition() {
   }
   const cardWidth = tooltipCardRect.value.width
   const cardHeight = tooltipCardRect.value.height
-  const contentWidth = tooltipContentRect.value.width
-  const contentHeight = tooltipContentRect.value.height
+  // 内容实际尺寸：取首个元素 (触发元素) 的边框矩形，避免 tooltip-content 包裹的子元素 margin 被计入
+  const contentEl = tooltipContentRef.value?.firstElementChild as HTMLElement | null
+  const contentRect = contentEl?.getBoundingClientRect() ?? tooltipContentRect.value
+  const contentWidth = contentRect.width
+  const contentHeight = contentRect.height
   // 主轴偏移：弹出框相对内容元素在主轴方向上的距离
   const mainOffset = {
     top: cardHeight + (props.arrow ? 4 + 12 : 6),

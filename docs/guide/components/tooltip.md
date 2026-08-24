@@ -160,6 +160,8 @@ function openChange(open: boolean) {
 
 位置有 12 个方向
 
+<br/>
+
 <div class="placement-demo">
   <div :style="{ marginLeft: `${buttonWidth}px`, whiteSpace: 'nowrap' }">
     <Tooltip tooltip="Vue Amazing UI" placement="topLeft">
@@ -289,6 +291,8 @@ const buttonWidth = 70
 ## 箭头指向
 
 设置了 `arrowPointAtCenter` 后，箭头将指向目标元素的中心
+
+<br/>
 
 <Space>
   <Tooltip tooltip="Vue Amazing UI" placement="topLeft">
@@ -445,6 +449,8 @@ const customColors = ['#f50', '#2db7f5', '#87d068', '#108ee9']
 ## 禁用
 
 设置 `disabled` 后不再响应任何触发
+
+<br/>
 
 <Tooltip tooltip="Vue Amazing UI" disabled>
   <Button type="primary">Disabled Tooltip</Button>
