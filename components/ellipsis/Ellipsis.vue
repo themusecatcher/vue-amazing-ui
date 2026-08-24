@@ -126,7 +126,6 @@ defineExpose({
     :max-width="computedTooltipMaxWidth"
     :content-style="{ maxWidth: textMaxWidth }"
     :tooltip-style="{ padding: '8px 12px' }"
-    :transition-duration="200"
     @animationend="onAnimationEnd"
   >
     <template #tooltip>

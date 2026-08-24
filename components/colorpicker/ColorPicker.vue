@@ -751,7 +751,7 @@ function onClear() {
     :style="`width: ${colorPickerWidth}; height: ${colorPickerHeight};`"
     max-width="none"
     :arrow="false"
-    placement="bottom"
+    placement="bottomLeft"
     bg-color="#fff"
     :tooltip-style="{
       width: '240px',
@@ -762,6 +762,7 @@ function onClear() {
     }"
     :content-style="{ width: '100%', height: '100%' }"
     trigger="click"
+    keyboard
     :transition-duration="200"
   >
     <template #tooltip>
