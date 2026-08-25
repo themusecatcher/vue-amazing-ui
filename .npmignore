@@ -9,18 +9,24 @@ node_modules
 public/
 scripts/
 src/
+types/
 
 # 忽略指定文件
-.eslintrc.cjs
+.env
 .gitignore
+.markdownlint.json
 .npmignore
 .npmrc
 .prettierrc.json
+commitlint.config.js
 components.d.ts
-env.d.ts
+CONTRIBUTING.md
+eslint.config.js
 index.html
 pnpm-lock.yaml
 stats.html
-tsconfig.config.json
+tsconfig.app.json
+tsconfig.dts.json
 tsconfig.json
+tsconfig.node.json
 vite.config.ts
