@@ -56,15 +56,28 @@ fi
 
 # 发布到 npm
 # 发布后若后续步骤失败，提示当前可能处于「npm 已发布但 git 未同步」的状态
-trap 'echo "⚠️ 发布流程中断：npm 可能已发布 $version，但后续 git 提交/文档部署未完成，请检查状态并手动补全"' ERR
+trap "echo \"⚠️ 发布流程中断：npm 可能已发布 $version，但后续 git 提交/文档部署未完成，请检查状态并手动补全\"" ERR
 npm publish
 
-# 升级 vue-amazing-ui 依赖版本
-pnpm up vue-amazing-ui@$version
+# 升级 vue-amazing-ui 依赖版本（npm publish 后 registry 存在同步延迟，失败则等待重试）
+retry=0
+until pnpm up vue-amazing-ui@$version; do
+  retry=$((retry + 1))
+  if [ $retry -ge 6 ]; then
+    echo "❌ pnpm up 重试 6 次仍失败，请稍后手动执行: pnpm up vue-amazing-ui@$version"
+    exit 1
+  fi
+  echo "⏳ registry 可能尚未同步 $version，10 秒后重试 ($retry/6)..."
+  sleep 10
+done
 
 # 提交版本更新代码到 github
 git add .
-git commit -m "chore: update vue-amazing-ui@$version"
+if [ -n "$(git status --porcelain)" ]; then
+  git commit -m "chore: update vue-amazing-ui@$version"
+else
+  echo "No changes to commit. Skipping git commit."
+fi
 git push
 
 # 重新部署文档（组件库已构建过，跳过重复构建）
