@@ -19,16 +19,21 @@ link() {
   printf '\033[1;34m\033]8;;%s\033\\%s\033]8;;\033\\\033[0m' "$1" "$1"
 }
 
-commitDesc=$1
+commitMessage=$1
+
+# 是否跳过组件库构建（publish.sh 已构建过时传 1，避免重复构建）
+skipBuild=${2:-0}
 
 # 强制要求传入语义化的提交描述，避免产生无信息量的 commit
-if [ -z "$commitDesc" ]; then
+if [ -z "$commitMessage" ]; then
   echo "❌ 缺少提交描述。用法: pnpm docs:deploy \"<type>: <描述>\"（如 pnpm docs:deploy \"docs: update guide\"）"
   exit 1
 fi
 
-# 重新打包组件库
-pnpm build
+# 重新打包组件库（被 publish.sh 调用时已构建过，可跳过）
+if [ "$skipBuild" != "1" ]; then
+  pnpm build
+fi
 
 # 打包生成静态文件
 pnpm docs:build
@@ -54,7 +59,17 @@ cd ../../../
 
 # 提交所有源码到 github
 git add .
-git commit -m "$commitDesc"
+if [ -n "$(git status --porcelain)" ]; then
+  # 被 publish.sh 调用时 (skipBuild=1) 源码已在 publish 中提交过，此处仅提交构建产物变更，用固定描述；
+  # 独立使用时提交本次文档源码改动，用传入的 commitMessage
+  if [ "$skipBuild" = "1" ]; then
+    git commit -m 'docs: deploy site'
+  else
+    git commit -m "$commitMessage"
+  fi
+else
+  echo "No changes to commit. Skipping git commit."
+fi
 git push
 
 printf '✅ 部署完成：%s\n' "$(link 'https://themusecatcher.github.io/vue-amazing-ui/')"

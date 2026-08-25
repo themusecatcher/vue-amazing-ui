@@ -10,7 +10,7 @@
 - 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html)、[选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html)、[文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html)、[数字动画 NumberAnimation](https://themusecatcher.github.io/vue-amazing-ui/guide/components/numberanimation.html)、[倒计时 Countdown](https://themusecatcher.github.io/vue-amazing-ui/guide/components/countdown.html)、[瀑布流 Waterfall](https://themusecatcher.github.io/vue-amazing-ui/guide/components/waterfall.html)、[文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html)、[日历 Calendar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/calendar.html)、[数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件代码逻辑，将多源原子值监听由「数组字面量 + deep」优化为多源 `getter` 数组，去除冗余的深度遍历
 - 优化并更新 [悬浮按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件和文档，调整属性 `zIndex` 默认值由 `9` 为 `99`
 - 文档新增 [AI Coding Kit](https://themusecatcher.github.io/ai-coding-kit/) 导航链接
-- 组件库及文档代码优化
+- 组件库配置脚本优化
 
 ## <VersionDateTag date="2026-08-24">2.5.1</VersionDateTag>
 
