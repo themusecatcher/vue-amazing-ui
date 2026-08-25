@@ -61,6 +61,7 @@ export default defineConfig({
         items: [
           { text: 'Github', link: 'https://github.com/themusecatcher' },
           { text: 'CSDN', link: 'https://themusecatcher.blog.csdn.net' },
+          { text: 'AI Coding Kit', link: 'https://themusecatcher.github.io/ai-coding-kit/' },
           { text: 'Front-end Notes', link: 'https://themusecatcher.github.io/front-end-notes/' },
           {
             items: [

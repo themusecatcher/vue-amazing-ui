@@ -108,12 +108,11 @@ watch(scrollItems, () => {
   resetMove()
 })
 watch(
-  () => [props.vertical, props.duration, props.interval],
+  [() => props.vertical, () => props.duration, () => props.interval],
   () => {
     initScroll()
   },
   {
-    deep: true,
     flush: 'post'
   }
 )

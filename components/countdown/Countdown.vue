@@ -65,15 +65,9 @@ watch(
     }
   }
 )
-watch(
-  () => [props.value, props.future],
-  () => {
-    initCountdown()
-  },
-  {
-    deep: true
-  }
-)
+watch([() => props.value, () => props.future], () => {
+  initCountdown()
+})
 onMounted(() => {
   initCountdown()
 })

@@ -76,19 +76,7 @@ const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元�
 const scrollTop = ref<number>(0) // scrollTarget 的滚动位置
 const cardTop = ref<number>(0) // 弹出框相对于 tooltipContent 的垂直位置
 const cardLeft = ref<number>(0) // 弹出框相对于 tooltipContent 的水平位置
-type Placement =
-  | 'top'
-  | 'topLeft'
-  | 'topRight'
-  | 'bottom'
-  | 'bottomLeft'
-  | 'bottomRight'
-  | 'left'
-  | 'leftTop'
-  | 'leftBottom'
-  | 'right'
-  | 'rightTop'
-  | 'rightBottom'
+type Placement = NonNullable<Props['placement']>
 type MainAxis = 'top' | 'bottom' | 'left' | 'right' // 主轴方向
 type CrossAlign = 'start' | 'center' | 'end' // 次轴对齐方式
 const tooltipPlace = ref<Placement>('top') // 弹出框位置
@@ -202,15 +190,9 @@ const transformOriginCross = computed(() => {
   if (crossAlign.value === 'end') return `calc(100% - ${arrowOffset.value}px)`
   return '50%'
 })
-watch(
-  () => [props.placement, props.arrow, props.arrowPointAtCenter, props.flip],
-  () => {
-    updatePosition()
-  },
-  {
-    deep: true
-  }
-)
+watch([() => props.placement, () => props.arrow, () => props.arrowPointAtCenter, () => props.flip], () => {
+  updatePosition()
+})
 watch(
   () => showTooltip.value && tooltipShow.value,
   (to) => {
@@ -391,15 +373,49 @@ async function getPosition() {
   if (mainAxis.value === 'top') {
     cardTop.value = mainOffset.top
     cardLeft.value = getCrossOffset(cardWidth, contentWidth)
+    clampCrossAxis(cardWidth, cardHeight, 'horizontal')
   } else if (mainAxis.value === 'bottom') {
     cardTop.value = mainOffset.bottom
     cardLeft.value = getCrossOffset(cardWidth, contentWidth)
+    clampCrossAxis(cardWidth, cardHeight, 'horizontal')
   } else if (mainAxis.value === 'left') {
     cardTop.value = getCrossOffset(cardHeight, contentHeight)
     cardLeft.value = mainOffset.left
+    clampCrossAxis(cardWidth, cardHeight, 'vertical')
   } else if (mainAxis.value === 'right') {
     cardTop.value = getCrossOffset(cardHeight, contentHeight)
     cardLeft.value = mainOffset.right
+    clampCrossAxis(cardWidth, cardHeight, 'vertical')
+  }
+}
+// 次轴方向溢出兜底 (对齐 dom-align 的 adjustX/adjustY)：
+// 主轴为 top/bottom 时按水平方向 clamp 弹出框到遮挡边界内，主轴为 left/right 时按垂直方向 clamp，
+// 避免弹出框次轴方向超出视口或滚动容器边界。基准使用 tooltipContentRect (即 .tooltip-content)，
+// 与 tooltipPlacement 渲染时的 left/top 计算口径保持一致
+function clampCrossAxis(cardWidth: number, cardHeight: number, crossAxis: 'horizontal' | 'vertical'): void {
+  if (!props.flip) return
+  const shelter = getShelterRect()
+  const contentRect = tooltipContentRect.value as DOMRect
+  if (crossAxis === 'horizontal') {
+    // 弹出框左/右边缘相对视口位置 = contentRect.left - cardLeft (+ cardWidth)
+    const cardLeftEdge = contentRect.left - cardLeft.value
+    const cardRightEdge = cardLeftEdge + cardWidth
+    if (cardRightEdge > shelter.right) {
+      cardLeft.value += cardRightEdge - shelter.right
+    }
+    if (cardLeftEdge < shelter.left) {
+      cardLeft.value -= shelter.left - cardLeftEdge
+    }
+  } else {
+    // 弹出框上/下边缘相对视口位置 = contentRect.top - cardTop (+ cardHeight)
+    const cardTopEdge = contentRect.top - cardTop.value
+    const cardBottomEdge = cardTopEdge + cardHeight
+    if (cardBottomEdge > shelter.bottom) {
+      cardTop.value += cardBottomEdge - shelter.bottom
+    }
+    if (cardTopEdge < shelter.top) {
+      cardTop.value -= shelter.top - cardTopEdge
+    }
   }
 }
 // 获取遮挡边界矩形：仅当可滚动父元素真正裁剪弹出框 (即弹出框挂载在该容器内) 时，才以其为界，否则以视口为界
@@ -426,7 +442,8 @@ function getShelterRect() {
   }
 }
 // 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
-// flip 仅翻转主轴方向 (top/bottom/left/right)，保留原次轴对齐后缀 (如 Left/Right/Top/Bottom)
+// 主轴仅在同轴方向翻转 (top↔bottom / left↔right)，绝不跨轴，
+// 且始终保留原次轴对齐后缀 (如 Left/Right/Top/Bottom)，因此 bottomLeft 只会在 bottomLeft ↔ topLeft 之间切换
 function getPlacement(): Placement {
   // 提取 props.placement 的主轴方向与次轴后缀
   const propPlace = props.placement
@@ -439,135 +456,39 @@ function getPlacement(): Placement {
   const { top, bottom, left, right } = tooltipContentRect.value as DOMRect // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
   const { top: targetTop, bottom: targetBottom, left: targetLeft, right: targetRight } = getShelterRect() // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
   const topDistance = top - targetTop - (props.arrow ? 12 : 0) // 内容元素上边缘距离滚动元素上边缘的距离
-  const bottomDistance = targetBottom - bottom - (props.arrow ? 12 : 0) // 内容元素下边缘距离动元素下边缘的距离
+  const bottomDistance = targetBottom - bottom - (props.arrow ? 12 : 0) // 内容元素下边缘距离滚动元素下边缘的距离
   const leftDistance = left - targetLeft - (props.arrow ? 12 : 0) // 内容元素左边缘距离滚动元素左边缘的距离
   const rightDistance = targetRight - right - (props.arrow ? 12 : 0) // 内容元素右边缘距离滚动元素右边缘的距离
-  const horizontalDistance =
-    ((tooltipCardRect.value as DOMRect).width - (tooltipContentRect.value as DOMRect).width) / 2 // 水平方向容纳文字提示需要的最小宽度
-  const verticalDistance =
-    ((tooltipCardRect.value as DOMRect).height - (tooltipContentRect.value as DOMRect).height) / 2 // 垂直方向容纳文字提示需要的最小高度
-  const flippedMain = findPlace(baseMain, [])
+  const cardHeight = (tooltipCardRect.value as DOMRect).height
+  const cardWidth = (tooltipCardRect.value as DOMRect).width
+  const gap = props.arrow ? 4 : 6 // 主轴方向弹出框与内容元素之间的间距
+  const flippedMain = flipMainAxis(baseMain)
   return `${flippedMain}${crossSuffix}` as Placement
-  // 查询满足条件的 place，如果没有，则返回默认值
-  function findPlace(place: string, disabledPlaces: string[]): 'top' | 'bottom' | 'left' | 'right' {
-    if (place === 'top') {
-      if (!disabledPlaces.includes('top')) {
-        if (
-          topDistance < (tooltipCardRect.value as DOMRect).height + (props.arrow ? 4 : 6) &&
-          disabledPlaces.length !== 3
-        ) {
-          return findPlace('bottom', [...disabledPlaces, 'top'])
-        } else {
-          if (leftDistance >= horizontalDistance && rightDistance >= horizontalDistance) {
-            return 'top'
-          } else {
-            if (disabledPlaces.length !== 3) {
-              if (leftDistance >= horizontalDistance) {
-                return findPlace('left', ['top', 'bottom', 'right'])
-              } else if (rightDistance >= horizontalDistance) {
-                return findPlace('right', ['top', 'bottom', 'left'])
-              }
-            }
-          }
-        }
-      } else {
-        if (!disabledPlaces.includes('bottom')) {
-          return findPlace('bottom', disabledPlaces)
-        } else if (!disabledPlaces.includes('left')) {
-          return findPlace('left', disabledPlaces)
-        } else {
-          return findPlace('right', disabledPlaces)
-        }
-      }
-    } else if (place === 'bottom') {
-      if (!disabledPlaces.includes('bottom')) {
-        if (
-          bottomDistance < (tooltipCardRect.value as DOMRect).height + (props.arrow ? 4 : 6) &&
-          disabledPlaces.length !== 3
-        ) {
-          return findPlace('top', [...disabledPlaces, 'bottom'])
-        } else {
-          if (leftDistance >= horizontalDistance && rightDistance >= horizontalDistance) {
-            return 'bottom'
-          } else {
-            if (disabledPlaces.length !== 3) {
-              if (leftDistance >= horizontalDistance) {
-                return findPlace('left', ['top', 'bottom', 'right'])
-              } else if (rightDistance >= horizontalDistance) {
-                return findPlace('right', ['top', 'bottom', 'left'])
-              }
-            }
-          }
-        }
-      } else {
-        if (!disabledPlaces.includes('top')) {
-          return findPlace('top', disabledPlaces)
-        } else if (!disabledPlaces.includes('left')) {
-          return findPlace('left', disabledPlaces)
-        } else {
-          return findPlace('right', disabledPlaces)
-        }
-      }
-    } else if (place === 'left') {
-      if (!disabledPlaces.includes('left')) {
-        if (
-          leftDistance < (tooltipCardRect.value as DOMRect).width + (props.arrow ? 4 : 6) &&
-          disabledPlaces.length !== 3
-        ) {
-          return findPlace('right', [...disabledPlaces, 'left'])
-        } else {
-          if (topDistance >= verticalDistance && bottomDistance >= verticalDistance) {
-            return 'left'
-          } else {
-            if (disabledPlaces.length !== 3) {
-              if (topDistance >= verticalDistance) {
-                return findPlace('top', ['left', 'right', 'bottom'])
-              } else if (bottomDistance >= verticalDistance) {
-                return findPlace('bottom', ['left', 'right', 'top'])
-              }
-            }
-          }
-        }
-      } else {
-        if (!disabledPlaces.includes('right')) {
-          return findPlace('right', disabledPlaces)
-        } else if (!disabledPlaces.includes('top')) {
-          return findPlace('top', disabledPlaces)
-        } else {
-          return findPlace('bottom', disabledPlaces)
-        }
-      }
-    } else if (place === 'right') {
-      if (!disabledPlaces.includes('right')) {
-        if (
-          rightDistance < (tooltipCardRect.value as DOMRect).width + (props.arrow ? 4 : 6) &&
-          disabledPlaces.length !== 3
-        ) {
-          return findPlace('left', [...disabledPlaces, 'right'])
-        } else {
-          if (topDistance >= verticalDistance && bottomDistance >= verticalDistance) {
-            return 'right'
-          } else {
-            if (disabledPlaces.length !== 3) {
-              if (topDistance >= verticalDistance) {
-                return findPlace('top', ['left', 'right', 'bottom'])
-              } else if (bottomDistance >= verticalDistance) {
-                return findPlace('bottom', ['left', 'right', 'top'])
-              }
-            }
-          }
-        }
-      } else {
-        if (!disabledPlaces.includes('left')) {
-          return findPlace('left', disabledPlaces)
-        } else if (!disabledPlaces.includes('top')) {
-          return findPlace('top', disabledPlaces)
-        } else {
-          return findPlace('bottom', disabledPlaces)
-        }
-      }
+  // 主轴仅在自身反方向上翻转一次 (同轴翻转)：空间不足则翻到反方向，
+  // 若反方向也完全放不下 (isCompleteFail) 则恢复原方向，交由后续次轴 clamp 兜底
+  function flipMainAxis(main: MainAxis): MainAxis {
+    if (main === 'top') {
+      const fitsTop = topDistance >= cardHeight + gap
+      const fitsBottom = bottomDistance >= cardHeight + gap
+      if (fitsTop) return 'top'
+      return fitsBottom ? 'bottom' : 'top'
     }
-    return baseMain
+    if (main === 'bottom') {
+      const fitsTop = topDistance >= cardHeight + gap
+      const fitsBottom = bottomDistance >= cardHeight + gap
+      if (fitsBottom) return 'bottom'
+      return fitsTop ? 'top' : 'bottom'
+    }
+    if (main === 'left') {
+      const fitsLeft = leftDistance >= cardWidth + gap
+      const fitsRight = rightDistance >= cardWidth + gap
+      if (fitsLeft) return 'left'
+      return fitsRight ? 'right' : 'left'
+    }
+    const fitsLeft = leftDistance >= cardWidth + gap
+    const fitsRight = rightDistance >= cardWidth + gap
+    if (fitsRight) return 'right'
+    return fitsLeft ? 'left' : 'right'
   }
 }
 function onShow(): void {
@@ -655,6 +576,30 @@ function onContextmenu(e: Event) {
     onShow()
   }
 }
+// 弹出框卡片上的 esc 按键处理：trigger 为 click 且开启 keyboard 时关闭
+function onTooltipKeydownEsc() {
+  if (props.trigger === 'click' && props.keyboard && tooltipShow.value) {
+    onHide()
+  }
+}
+// 内容元素点击处理：trigger 为 click 时切换显示
+function onContentClick() {
+  if (showTooltip.value && props.trigger === 'click' && !tooltipShow.value) {
+    onShow()
+  }
+}
+// 内容元素 enter 按键处理：trigger 为 click 且开启 keyboard 时切换显示
+function onContentKeydownEnter() {
+  if (showTooltip.value && props.trigger === 'click' && props.keyboard) {
+    toggleVisible()
+  }
+}
+// 内容元素 esc 按键处理：trigger 为 click 且开启 keyboard 时关闭
+function onContentKeydownEsc() {
+  if (showTooltip.value && props.trigger === 'click' && props.keyboard && tooltipShow.value) {
+    onHide()
+  }
+}
 defineExpose({
   show: onShow,
   hide: onHide,
@@ -688,7 +633,7 @@ defineExpose({
           }"
           @mouseenter="onEnterTooltip"
           @mouseleave="onLeaveTooltip"
-          @keydown.esc="trigger === 'click' && keyboard && tooltipShow ? onHide() : () => false"
+          @keydown.esc="onTooltipKeydownEsc"
         >
           <div ref="tooltipCardRef" class="tooltip-card" :class="tooltipClass" :style="tooltipStyle">
             <slot name="tooltip">{{ tooltip }}</slot>
@@ -703,12 +648,12 @@ defineExpose({
       :class="contentClass"
       :style="contentStyle"
       :tabindex="trigger === 'focus' ? 0 : undefined"
-      @click="showTooltip && trigger === 'click' && !tooltipShow ? onShow() : () => false"
+      @click="onContentClick"
       @contextmenu="onContextmenu"
       @focus="onFocus"
       @blur="onBlur"
-      @keydown.enter="showTooltip && trigger === 'click' && keyboard ? toggleVisible() : () => false"
-      @keydown.esc="showTooltip && trigger === 'click' && keyboard && tooltipShow ? onHide() : () => false"
+      @keydown.enter="onContentKeydownEnter"
+      @keydown.esc="onContentKeydownEsc"
     >
       <slot>{{ content }}</slot>
     </span>
@@ -801,6 +746,12 @@ defineExpose({
       width: 16px;
       height: 8px;
       background-color: var(--tooltip-background-color);
+      clip-path: polygon(
+        1.6568542494923806px 100%,
+        50% 1.6568542494923806px,
+        14.34314575050762px 100%,
+        1.6568542494923806px 100%
+      );
       clip-path: path(
         'M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z'
       );

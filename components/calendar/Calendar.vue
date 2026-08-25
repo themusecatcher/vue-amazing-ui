@@ -140,13 +140,12 @@ watch(
   }
 )
 watch(
-  () => [props.startDayOfWeek, props.dateStrip, calendarMonth.value, calendarYear.value],
+  [() => props.startDayOfWeek, () => props.dateStrip, () => calendarMonth.value, () => calendarYear.value],
   () => {
     calendarDates.value = getCalendarDates()
   },
   {
-    immediate: true,
-    deep: true
+    immediate: true
   }
 )
 watch(

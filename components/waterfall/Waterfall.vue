@@ -72,12 +72,11 @@ watch(
   }
 )
 watch(
-  () => [props.columnCount, props.columnGap, props.width],
+  [() => props.columnCount, () => props.columnGap, () => props.width],
   () => {
     initWaterfall()
   },
   {
-    deep: true,
     flush: 'post'
   }
 )

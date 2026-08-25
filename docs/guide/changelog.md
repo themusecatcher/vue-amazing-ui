@@ -4,6 +4,14 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2026-08-25">2.5.2</VersionDateTag>
+
+- 优化并增强 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件代码逻辑：`flip` 主轴翻转改为同轴方向翻转（`top`↔`bottom` / `left`↔`right`），并始终保留原次轴对齐后缀；新增次轴方向溢出兜底逻辑，避免弹出框次轴方向超出视口或滚动容器边界；箭头新增回退样式，兼容不支持 `clip-path: path` 的浏览器；消除重复的类型定义；将模板内联事件表达式提取为具名方法，提升可读性与可维护性
+- 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html)、[选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html)、[文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html)、[数字动画 NumberAnimation](https://themusecatcher.github.io/vue-amazing-ui/guide/components/numberanimation.html)、[倒计时 Countdown](https://themusecatcher.github.io/vue-amazing-ui/guide/components/countdown.html)、[瀑布流 Waterfall](https://themusecatcher.github.io/vue-amazing-ui/guide/components/waterfall.html)、[文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html)、[日历 Calendar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/calendar.html)、[数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件代码逻辑，将多源原子值监听由「数组字面量 + deep」优化为多源 `getter` 数组，去除冗余的深度遍历
+- 优化并更新 [悬浮按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件和文档，调整属性 `zIndex` 默认值由 `9` 为 `99`
+- 文档新增 [AI Coding Kit](https://themusecatcher.github.io/ai-coding-kit/) 导航链接
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-08-24">2.5.1</VersionDateTag>
 
 - 优化并增强 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件和文档，`placement`  属性新增支持 `12` 个方向；新增 `arrowPointAtCenter` 属性使箭头指向目标元素中心；`bgColor` 支持多种预设色彩；`trigger` 新增 `focus` / `contextmenu` 触发方式；新增 `disabled` 属性支持禁用；`showDelay` / `hideDelay` 属性调整为仅在 `trigger: hover` 时生效，`click` / `focus` / `contextmenu` 等触发方式立即显示与隐藏；修复弹出框挂载到 `body` 时被中间可滚动容器边界误判导致意外翻转的问题；使用 `requestAnimationFrame` 合并同帧内的多次位置重算，减少滚动时的强制重排

@@ -46,12 +46,11 @@ watch(
   }
 )
 watch(
-  () => [props.maxWidth, props.line, props.tooltip],
+  [() => props.maxWidth, () => props.line, () => props.tooltip],
   () => {
     updateTooltipShow()
   },
   {
-    deep: true,
     flush: 'post'
   }
 )

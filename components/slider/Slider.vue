@@ -207,12 +207,11 @@ const highTooltipValue = computed(() => {
   return props.formatTooltip(sliderValue.value as number)
 })
 watch(
-  () => [props.min, props.max, props.step, props.vertical, props.value],
+  [() => props.min, () => props.max, () => props.step, () => props.vertical, () => props.value],
   () => {
     updateSliderPosition()
   },
   {
-    deep: true,
     flush: 'post'
   }
 )

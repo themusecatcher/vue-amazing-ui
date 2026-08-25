@@ -54,7 +54,7 @@ const lazyInput = computed(() => {
   return 'lazy' in props.valueModifiers
 })
 watch(
-  () => [props.value, precision.value, props.formatter],
+  [() => props.value, () => precision.value, () => props.formatter],
   async () => {
     if (props.value !== undefined) {
       if (inputRef.value) {
@@ -71,8 +71,7 @@ watch(
   },
   {
     immediate: true,
-    flush: 'post',
-    deep: true
+    flush: 'post'
   }
 )
 function restoreCursor(start: number, beforeTxt: string, afterTxt: string): void {

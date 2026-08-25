@@ -574,7 +574,7 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 | bottom | 按钮定位的下边距，单位 `px` | number &#124; string | 40 |
 | left | 按钮定位的左边距，单位 `px` | number &#124; string | undefined |
 | right | 按钮定位的右边距，单位 `px` | number &#124; string | 40 |
-| zIndex | 设置按钮的 `z-index` | number | 9 |
+| zIndex | 设置按钮的 `z-index` | number | 99 |
 | width | 浮动按钮宽度，单位 `px` | number &#124; string | 44 |
 | height | 浮动按钮高度，单位 `px` | number &#124; string | 44 |
 | type | 浮动按钮类型 | 'default' &#124; 'primary' | 'default' |

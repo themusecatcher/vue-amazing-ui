@@ -147,15 +147,9 @@ const panelPlacement = computed(() => {
       }
   }
 })
-watch(
-  () => [props.placement, props.flip],
-  () => {
-    updatePosition()
-  },
-  {
-    deep: true
-  }
-)
+watch([() => props.placement, () => props.flip], () => {
+  updatePosition()
+})
 watch(showOptions, (to) => {
   if (to && !initialDisplay.value) {
     initialDisplay.value = true

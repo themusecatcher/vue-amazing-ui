@@ -28,7 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
   bottom: 40,
   left: undefined,
   right: 40,
-  zIndex: 9,
+  zIndex: 99,
   width: 44,
   height: 44,
   type: 'default',
