@@ -25,7 +25,8 @@ commitMessage=$1
 skipBuild=${2:-0}
 
 # 强制要求传入语义化的提交描述，避免产生无信息量的 commit
-if [ -z "$commitMessage" ]; then
+# 被 publish.sh 调用时 (skipBuild=1) 第 3 次 commit 使用固定描述，无需 commitMessage，跳过校验
+if [ "$skipBuild" != "1" ] && [ -z "$commitMessage" ]; then
   echo "❌ 缺少提交描述。用法: pnpm docs:deploy \"<type>: <描述>\"（如 pnpm docs:deploy \"docs: update guide\"）"
   exit 1
 fi

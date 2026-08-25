@@ -80,5 +80,5 @@ else
 fi
 git push
 
-# 重新部署文档（组件库已构建过，跳过重复构建）
-pnpm docs:deploy "$commitMessage" 1
+# 重新部署文档（组件库已构建过，跳过重复构建；skipBuild=1 时 commitMessage 用不上，传空占位）
+pnpm docs:deploy "" 1
