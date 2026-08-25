@@ -29,6 +29,7 @@ export interface Props {
   to?: string | HTMLElement | false // 下拉面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   options?: (string | number | Option | GroupOption)[] // 自动完成的数据源
   value: string // (v-model) 当前输入的值
+  width?: string | number // 自动完成宽度，单位 px
   size?: 'small' | 'middle' | 'large' // 自动完成大小
   status?: 'error' | 'warning' // 设置校验状态
   /*
@@ -54,6 +55,7 @@ const props = withDefaults(defineProps<Props>(), {
   to: 'body',
   options: () => [],
   value: undefined,
+  width: '100%',
   size: 'middle',
   status: undefined,
   filterOption: false
@@ -98,6 +100,12 @@ const { isSupported: passiveSupported } = useOptionsSupported('passive')
 // 清除图标显隐：开启 allowClear、未禁用且有值时显示（与 Input 组件保持一致，有值即显示，不依赖 hover）
 const showClear = computed<boolean>(() => {
   return props.allowClear && !props.disabled && Boolean(props.value)
+})
+const autoCompleteWidth = computed(() => {
+  if (typeof props.width === 'number') {
+    return `${props.width}px`
+  }
+  return props.width
 })
 const autoCompleteHeight = computed(() => {
   const heightMap = {
@@ -694,6 +702,7 @@ defineExpose({
       'auto-complete-status-warning': status === 'warning'
     }"
     :style="`
+      --auto-complete-width: ${autoCompleteWidth};
       --auto-complete-height: ${autoCompleteHeight};
       --auto-complete-primary-color-hover: ${colorPalettes[4]};
       --auto-complete-primary-color-focus: ${colorPalettes[4]};
@@ -877,6 +886,7 @@ defineExpose({
 .auto-complete-wrap {
   position: relative;
   display: inline-block;
+  width: var(--auto-complete-width);
   font-size: 14px;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.88);

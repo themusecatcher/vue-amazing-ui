@@ -28,6 +28,14 @@ const dateValue = ref<string>(format(new Date(), 'yyyy-MM-dd'))
 const inputValue = ref<string>('')
 const inputNumberValue = ref<number>(3)
 const inputSearchValue = ref<string>('')
+const autoCompleteValue = ref<string>('')
+const autoCompleteOptions = ref<string[]>([])
+function onAutoCompleteSearch(searchText: string) {
+  // 模拟远程搜索：根据输入动态生成联想选项
+  autoCompleteOptions.value = !searchText
+    ? []
+    : [searchText, `${searchText}${searchText}`, `${searchText}${searchText}${searchText}`]
+}
 const cardRef = ref()
 const loadingBarRef = ref()
 const messageRef = ref()
@@ -204,7 +212,10 @@ function onDecline(scale: number) {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Card width="50%" title="以下示例已包含所有使用主题色的组件">
-      <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+      <Space align="center">
+        primaryColor:
+        <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+      </Space>
     </Card>
     <br />
     <br />
@@ -212,12 +223,19 @@ function onDecline(scale: number) {
       <Flex vertical>
         <Space align="center">
           <Alert style="width: 200px" message="Info Text" type="info" show-icon />
+          <AutoComplete
+            :width="200"
+            v-model:value="autoCompleteValue"
+            :options="autoCompleteOptions"
+            placeholder="输入以远程搜索"
+            @search="onAutoCompleteSearch"
+          />
           <BackTop />
           <Button type="primary">Primary Button</Button>
           <Checkbox v-model:checked="checkboxChecked">Checkbox</Checkbox>
           <ColorPicker :width="200" />
           <DatePicker v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
-          <Input :width="200" v-model:value="inputValue" placeholder="custom theme input" />
+          <Input :width="200" v-model:value="inputValue" placeholder="please input" />
           <InputNumber :width="120" v-model:value="inputNumberValue" placeholder="please input" />
           <InputSearch
             :width="200"
@@ -322,10 +340,12 @@ function onDecline(scale: number) {
     <h2 class="mt30 mb10">自定义组件主题</h2>
     <Flex vertical>
       <Space align="center">
-        commonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="commonPrimaryColor" />
+        commonPrimaryColor:
+        <ColorPicker style="width: 200px" v-model:value="commonPrimaryColor" />
       </Space>
       <Space align="center">
-        buttonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="buttonPrimaryColor" />
+        buttonPrimaryColor:
+        <ColorPicker style="width: 200px" v-model:value="buttonPrimaryColor" />
       </Space>
       <ConfigProvider :theme="theme">
         <Space align="center">

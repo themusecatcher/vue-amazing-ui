@@ -225,7 +225,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
 <AutoComplete
   v-model:value="value1"
   :options="options1"
-  style="width: 200px"
+  :width="200"
   placeholder="input here"
   @search="onSearch1"
 />
@@ -248,7 +248,7 @@ function onSearch1(searchText: string) {
   <AutoComplete
     v-model:value="value1"
     :options="options1"
-    style="width: 200px"
+    :width="200"
     placeholder="input here"
     @search="onSearch1"
   />
@@ -262,7 +262,7 @@ function onSearch1(searchText: string) {
 <AutoComplete
   v-model:value="value2"
   :options="options2"
-  style="width: 200px"
+  :width="200"
   placeholder="input here"
   @search="onSearch2"
 >
@@ -288,7 +288,7 @@ function onSearch2(val: string) {
   <AutoComplete
     v-model:value="value2"
     :options="options2"
-    style="width: 200px"
+    :width="200"
     placeholder="input here"
     @search="onSearch2"
   >
@@ -307,7 +307,7 @@ function onSearch2(val: string) {
 <AutoComplete
   v-model:value="value3"
   :options="options3"
-  style="width: 200px"
+  :width="200"
   @search="onSearch3"
   @select="onSelect3"
 >
@@ -332,7 +332,7 @@ function onSelect3(value: string) {
   <AutoComplete
     v-model:value="value3"
     :options="options3"
-    style="width: 200px"
+    :width="200"
     @search="onSearch3"
     @select="onSelect3"
   >
@@ -348,7 +348,7 @@ function onSelect3(value: string) {
 <AutoComplete
   v-model:value="value4"
   :options="options4"
-  style="width: 200px"
+  :width="200"
   placeholder="input here"
   :filter-option="filterOption"
 />
@@ -373,7 +373,7 @@ function filterOption(input: string, option: unknown): boolean {
   <AutoComplete
     v-model:value="value4"
     :options="options4"
-    style="width: 200px"
+    :width="200"
     placeholder="input here"
     :filter-option="filterOption"
   />
@@ -387,7 +387,7 @@ function filterOption(input: string, option: unknown): boolean {
 <AutoComplete
   v-model:value="value5"
   :options="options5"
-  style="width: 250px"
+  :width="250"
   :dropdown-match-select-width="500"
 >
   <template #option="item">
@@ -452,7 +452,7 @@ const options5 = ref([
   <AutoComplete
     v-model:value="value5"
     :options="options5"
-    style="width: 250px"
+    :width="250"
     :dropdown-match-select-width="500"
   >
     <template #option="item">
@@ -491,7 +491,7 @@ const options5 = ref([
 <AutoComplete
   v-model:value="value6"
   :options="options6"
-  style="width: 300px"
+  :width="300"
   @select="onSelect6"
   @search="onSearch6"
 >
@@ -547,7 +547,7 @@ function onSearch6(val: string) {
   <AutoComplete
     v-model:value="value6"
     :options="options6"
-    style="width: 300px"
+    :width="300"
     @select="onSelect6"
     @search="onSearch6"
   >
@@ -574,7 +574,7 @@ function onSearch6(val: string) {
 <AutoComplete
   v-model:value="value7"
   :options="options7"
-  style="width: 200px"
+  :width="200"
   placeholder="input here"
   status="error"
   @search="onSearch7"
@@ -585,7 +585,7 @@ function onSearch6(val: string) {
 <AutoComplete
   v-model:value="value8"
   :options="options7"
-  style="width: 200px"
+  :width="200"
   placeholder="input here"
   status="warning"
   allow-clear
@@ -619,7 +619,7 @@ function onClear() {
   <AutoComplete
     v-model:value="value7"
     :options="options7"
-    style="width: 200px"
+    :width="200"
     placeholder="input here"
     status="error"
     @search="onSearch7"
@@ -630,7 +630,7 @@ function onClear() {
   <AutoComplete
     v-model:value="value8"
     :options="options7"
-    style="width: 200px"
+    :width="200"
     placeholder="input here"
     status="warning"
     allow-clear
@@ -648,7 +648,7 @@ function onClear() {
 <AutoComplete
   v-model:value="value9"
   :options="options7"
-  style="width: 200px"
+  :width="200"
   placeholder="border less"
   :bordered="false"
   @search="onSearch7"
@@ -673,7 +673,7 @@ function onSearch7(searchText: string) {
   <AutoComplete
     v-model:value="value9"
     :options="options7"
-    style="width: 200px"
+    :width="200"
     placeholder="border less"
     :bordered="false"
     @search="onSearch7"
@@ -688,7 +688,7 @@ function onSearch7(searchText: string) {
 <AutoComplete
   v-model:value="value10"
   :options="options7"
-  style="width: 200px"
+  :width="200"
   placeholder="Clearable"
   allow-clear
   @search="onSearch7"
@@ -699,7 +699,7 @@ function onSearch7(searchText: string) {
 <AutoComplete
   v-model:value="value11"
   :options="options7"
-  style="width: 200px"
+  :width="200"
   placeholder="Customized clear icon"
   allow-clear
   @search="onSearch7"
@@ -741,7 +741,7 @@ function onSearch7(searchText: string) {
   <AutoComplete
     v-model:value="value10"
     :options="options7"
-    style="width: 200px"
+    :width="200"
     placeholder="Clearable"
     allow-clear
     @search="onSearch7"
@@ -751,7 +751,7 @@ function onSearch7(searchText: string) {
   <AutoComplete
     v-model:value="value11"
     :options="options7"
-    style="width: 200px"
+    :width="200"
     placeholder="Customized clear icon"
     allow-clear
     @search="onSearch7"
@@ -785,7 +785,7 @@ function onSearch7(searchText: string) {
 <AutoComplete
   v-model:value="valueS"
   :options="optionsD"
-  style="width: 200px"
+  :width="200"
   placeholder="input here"
   :size="size"
 />
@@ -834,7 +834,7 @@ const optionsD = ref([
   <AutoComplete
     v-model:value="valueS"
     :options="optionsD"
-    style="width: 200px"
+    :width="200"
     placeholder="input here"
     :size="size"
   />
@@ -845,7 +845,7 @@ const optionsD = ref([
 
 ## 禁用
 
-<AutoComplete v-model:value="valueD" :options="optionsD" style="width: 200px" placeholder="input here" disabled />
+<AutoComplete v-model:value="valueD" :options="optionsD" :width="200" placeholder="input here" disabled />
 
 :::: details Show Code
 
@@ -870,7 +870,7 @@ const optionsD = ref([
 ])
 </script>
 <template>
-  <AutoComplete v-model:value="valueD" :options="optionsD" style="width: 200px" placeholder="input here" disabled />
+  <AutoComplete v-model:value="valueD" :options="optionsD" :width="200" placeholder="input here" disabled />
 </template>
 ```
 
@@ -878,7 +878,7 @@ const optionsD = ref([
 
 ## 禁用选项
 
-<AutoComplete v-model:value="valueDD" :options="optionsD" style="width: 200px" placeholder="input here" />
+<AutoComplete v-model:value="valueDD" :options="optionsD" :width="200" placeholder="input here" />
 
 :::: details Show Code
 
@@ -903,7 +903,7 @@ const optionsD = ref([
 ])
 </script>
 <template>
-  <AutoComplete v-model:value="valueDD" :options="optionsD" style="width: 200px" placeholder="input here" />
+  <AutoComplete v-model:value="valueDD" :options="optionsD" :width="200" placeholder="input here" />
 </template>
 ```
 
@@ -911,7 +911,7 @@ const optionsD = ref([
 
 ## 字符串数组数据源
 
-<AutoComplete v-model:value="valueArr" :options="optionsArr" style="width: 200px" placeholder="input here" />
+<AutoComplete v-model:value="valueArr" :options="optionsArr" :width="200" placeholder="input here" />
 
 :::: details Show Code
 
@@ -922,7 +922,7 @@ const valueArr = ref('')
 const optionsArr = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry', 'Fig', 'Grape']
 </script>
 <template>
-  <AutoComplete v-model:value="valueArr" :options="optionsArr" style="width: 200px" placeholder="input here" />
+  <AutoComplete v-model:value="valueArr" :options="optionsArr" :width="200" placeholder="input here" />
 </template>
 ```
 
@@ -930,7 +930,7 @@ const optionsArr = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry', 'Fig', 
 
 ## 分组数据源
 
-<AutoComplete v-model:value="valueGroup" :options="optionsGroup" style="width: 200px" placeholder="input here" />
+<AutoComplete v-model:value="valueGroup" :options="optionsGroup" :width="200" placeholder="input here" />
 
 :::: details Show Code
 
@@ -963,7 +963,7 @@ const optionsGroup = ref([
 ])
 </script>
 <template>
-  <AutoComplete v-model:value="valueGroup" :options="optionsGroup" style="width: 200px" placeholder="input here" />
+  <AutoComplete v-model:value="valueGroup" :options="optionsGroup" :width="200" placeholder="input here" />
 </template>
 ```
 
@@ -978,7 +978,7 @@ const optionsGroup = ref([
 <AutoComplete
   v-model:value="valueBackfill"
   :options="optionsBackfill"
-  style="width: 200px"
+  :width="200"
   placeholder="input here"
   backfill
 />
@@ -995,7 +995,7 @@ const optionsBackfill = ['Apple', 'Banana', 'Cherry', 'Durian']
   <AutoComplete
     v-model:value="valueBackfill"
     :options="optionsBackfill"
-    style="width: 200px"
+    :width="200"
     placeholder="input here"
     backfill
   />
@@ -1015,7 +1015,7 @@ const optionsBackfill = ['Apple', 'Banana', 'Cherry', 'Durian']
     v-model:value="valueOpen"
     :options="optionsOpen"
     :open="openControlled"
-    style="width: 200px"
+    :width="200"
     placeholder="input here"
     @dropdown-visible-change="openControlled = $event"
   />
@@ -1037,7 +1037,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
       v-model:value="valueOpen"
       :options="optionsOpen"
       :open="openControlled"
-      style="width: 200px"
+      :width="200"
       placeholder="input here"
       @dropdown-visible-change="openControlled = $event"
     />
@@ -1057,7 +1057,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 <AutoComplete
   v-model:value="valueDefaultOpen"
   :options="optionsOpen"
-  style="width: 200px"
+  :width="200"
   placeholder="input here"
   default-open
 />
@@ -1074,7 +1074,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
   <AutoComplete
     v-model:value="valueDefaultOpen"
     :options="optionsOpen"
-    style="width: 200px"
+    :width="200"
     placeholder="input here"
     default-open
   />
@@ -1088,7 +1088,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 <AutoComplete
   v-model:value="valueActiveFirst"
   :options="optionsOpen"
-  style="width: 200px"
+  :width="200"
   placeholder="input here"
   :default-active-first-option="false"
 />
@@ -1105,7 +1105,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
   <AutoComplete
     v-model:value="valueActiveFirst"
     :options="optionsOpen"
-    style="width: 200px"
+    :width="200"
     placeholder="input here"
     :default-active-first-option="false"
   />
@@ -1123,7 +1123,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 <AutoComplete
   v-model:value="valueMatchWidth"
   :options="optionsMatchWidth"
-  style="width: 200px"
+  :width="200"
   placeholder="面板宽 300"
   :dropdown-match-select-width="300"
 />
@@ -1140,7 +1140,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
   <AutoComplete
     v-model:value="valueMatchWidth"
     :options="optionsMatchWidth"
-    style="width: 200px"
+    :width="200"
     placeholder="面板宽 300"
     :dropdown-match-select-width="300"
   />
@@ -1159,6 +1159,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
 | value <Tag color="cyan">v-model</Tag> | 当前输入的值 | string | undefined |
 | placeholder | 默认占位文本 | string | undefined |
 | disabled | 是否禁用 | boolean | false |
+| width | 自动完成宽度，单位 `px` | string &#124; number | '100%' |
 | size | 自动完成大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | allowClear | 是否支持清除，有值时即显示清除图标 | boolean | false |
 | autofocus | 是否自动获取焦点 | boolean | false |
@@ -1184,11 +1185,11 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
 
 ### GroupOption Type
 
-| 名称               | 说明                                                     | 类型                           | 默认值    |
-| :----------------- | :------------------------------------------------------- | :----------------------------- | :-------- |
-| options            | 子选项，存在该字段即视为分组 | (string &#124; number &#124; Option)[] | undefined |
-| label?             | 分组名（显示为分组标题）                                   | string                         | undefined |
-| value?             | 分组值                                                   | string &#124; number           | undefined |
+| 名称    | 说明                         | 类型                                   | 默认值    |
+| :------ | :--------------------------- | :------------------------------------- | :-------- |
+| options | 子选项，存在该字段即视为分组 | (string &#124; number &#124; Option)[] | undefined |
+| label?  | 分组名（显示为分组标题）     | string                                 | undefined |
+| value?  | 分组值                       | string &#124; number                   | undefined |
 
 ## Events
 
@@ -1205,11 +1206,11 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
 
 ## Slots
 
-| 名称      | 说明                                     | 参数                |
-| :-------- | :--------------------------------------- | :------------------ |
-| option    | 自定义选项内容                           | [Option](#option-type) |
-| clearIcon | 自定义清除图标                           | -                   |
-| default   | 自定义输入组件（替代原生 `input` 元素）  | -                   |
+| 名称      | 说明                                    | 参数                   |
+| :-------- | :-------------------------------------- | :--------------------- |
+| option    | 自定义选项内容                          | [Option](#option-type) |
+| clearIcon | 自定义清除图标                          | -                      |
+| default   | 自定义输入组件（替代原生 `input` 元素） | -                      |
 
 ## Methods
 

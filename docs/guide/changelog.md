@@ -4,6 +4,12 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2026-08-26">2.5.3</VersionDateTag>
+
+- 优化并更新 [自动完成 AutoComplete](https://themusecatcher.github.io/vue-amazing-ui/guide/components/autocomplete.html) 组件和文档：新增 `width` 属性，支持显式指定组件宽度
+- 优化并更新 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件和文档：`Theme` 类型新增 `AutoComplete` 组件级主题色配置，修复 `AutoComplete` 无法通过 `theme.AutoComplete` 单独定制主题色的问题
+- 组件库配置优化
+
 ## <VersionDateTag date="2026-08-25">2.5.2</VersionDateTag>
 
 - 优化并增强 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件代码逻辑：`flip` 主轴翻转改为同轴方向翻转（`top`↔`bottom` / `left`↔`right`），并始终保留原次轴对齐后缀；新增次轴方向溢出兜底逻辑，避免弹出框次轴方向超出视口或滚动容器边界；箭头新增回退样式，兼容不支持 `clip-path: path` 的浏览器；消除重复的类型定义；将模板内联事件表达式提取为具名方法，提升可读性与可维护性

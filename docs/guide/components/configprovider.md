@@ -31,6 +31,14 @@ const dateValue = ref<string>(format(new Date(), 'yyyy-MM-dd'))
 const inputValue = ref<string>('')
 const inputNumberValue = ref<number>(3)
 const inputSearchValue = ref<string>('')
+const autoCompleteValue = ref<string>('')
+const autoCompleteOptions = ref<string[]>([])
+function onAutoCompleteSearch(searchText: string) {
+  // 模拟远程搜索：根据输入动态生成联想选项
+  autoCompleteOptions.value = !searchText
+    ? []
+    : [searchText, `${searchText}${searchText}`, `${searchText}${searchText}${searchText}`]
+}
 const cardRef = ref()
 const loadingBarRef = ref()
 const messageRef = ref()
@@ -219,12 +227,19 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
   <Flex vertical>
     <Space align="center">
       <Alert style="width: 200px" message="Info Text" type="info" show-icon />
+      <AutoComplete
+        :width="200"
+        v-model:value="autoCompleteValue"
+        :options="autoCompleteOptions"
+        placeholder="输入以远程搜索"
+        @search="onAutoCompleteSearch"
+      />
       <BackTop />
       <Button type="primary">Primary Button</Button>
       <Checkbox v-model:checked="checkboxChecked">Checkbox</Checkbox>
       <ColorPicker :width="200" />
       <DatePicker v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
-      <Input :width="200" v-model:value="inputValue" placeholder="custom theme input" />
+      <Input :width="200" v-model:value="inputValue" placeholder="please input" />
       <InputNumber :width="120" v-model:value="inputNumberValue" placeholder="please input" />
       <InputSearch
         :width="200"
@@ -341,6 +356,14 @@ const dateValue = ref<string>(format(new Date(), 'yyyy-MM-dd'))
 const inputValue = ref<string>('')
 const inputNumberValue = ref<number>(3)
 const inputSearchValue = ref<string>('')
+const autoCompleteValue = ref<string>('')
+const autoCompleteOptions = ref<string[]>([])
+function onAutoCompleteSearch(searchText: string) {
+  // 模拟远程搜索：根据输入动态生成联想选项
+  autoCompleteOptions.value = !searchText
+    ? []
+    : [searchText, `${searchText}${searchText}`, `${searchText}${searchText}${searchText}`]
+}
 const cardRef = ref()
 const loadingBarRef = ref()
 const messageRef = ref()
@@ -520,12 +543,19 @@ function onDecline(scale: number) {
     <Flex vertical>
       <Space align="center">
         <Alert style="width: 200px" message="Info Text" type="info" show-icon />
+        <AutoComplete
+          :width="200"
+          v-model:value="autoCompleteValue"
+          :options="autoCompleteOptions"
+          placeholder="输入以远程搜索"
+          @search="onAutoCompleteSearch"
+        />
         <BackTop />
         <Button type="primary">Primary Button</Button>
         <Checkbox v-model:checked="checkboxChecked">Checkbox</Checkbox>
         <ColorPicker :width="200" />
         <DatePicker v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
-        <Input :width="200" v-model:value="inputValue" placeholder="custom theme input" />
+        <Input :width="200" v-model:value="inputValue" placeholder="please input" />
         <InputNumber :width="120" v-model:value="inputNumberValue" placeholder="please input" />
         <InputSearch
           :width="200"
@@ -732,7 +762,7 @@ const theme = ref<ConfigProviderTheme>({
 
 | 名称 | 值 |
 | :-- | :-- |
-| ComponentName | 'Alert' &#124; 'BackTop' &#124; 'Button' &#124; 'Calendar' &#124; 'Carousel' &#124; 'Checkbox' &#124; 'ColorPicker' &#124; 'DatePicker' &#124; 'FloatButton' &#124; 'Image' &#124; 'Input' &#124; 'InputNumber' &#124; 'InputSearch' &#124; 'LoadingBar' &#124; 'Message' &#124; 'Modal' &#124; 'Notification' &#124; 'Pagination' &#124; 'Popconfirm' &#124; 'Progress' &#124; 'Radio' &#124; 'Select' &#124; 'Slider' &#124; 'Spin' &#124; 'Steps' &#124; 'Swiper' &#124; 'Switch' &#124; 'Tabs' &#124; 'Textarea' &#124; 'TextScroll' &#124; 'Upload' |
+| ComponentName | 'Alert' &#124; 'AutoComplete' &#124; 'BackTop' &#124; 'Button' &#124; 'Calendar' &#124; 'Carousel' &#124; 'Checkbox' &#124; 'ColorPicker' &#124; 'DatePicker' &#124; 'FloatButton' &#124; 'Image' &#124; 'Input' &#124; 'InputNumber' &#124; 'InputSearch' &#124; 'LoadingBar' &#124; 'Message' &#124; 'Modal' &#124; 'Notification' &#124; 'Pagination' &#124; 'Popconfirm' &#124; 'Progress' &#124; 'Radio' &#124; 'Select' &#124; 'Slider' &#124; 'Spin' &#124; 'Steps' &#124; 'Swiper' &#124; 'Switch' &#124; 'Tabs' &#124; 'Textarea' &#124; 'TextScroll' &#124; 'Upload' |
 
 ## Slots
 

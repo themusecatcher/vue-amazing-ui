@@ -10,6 +10,9 @@ export interface Theme {
   Alert?: {
     primaryColor?: string
   }
+  AutoComplete?: {
+    primaryColor?: string
+  }
   BackTop?: {
     primaryColor?: string
   }
@@ -123,6 +126,10 @@ const commonThemeColor = reactive<ThemeColor>({
 // 各个组件的主题颜色
 const componentsThemeColor = reactive<Record<string, ThemeColor>>({
   Alert: {
+    colorPalettes: [],
+    shadowColor: ''
+  },
+  AutoComplete: {
     colorPalettes: [],
     shadowColor: ''
   },
