@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch, nextTick, onMounted, onBeforeUnmount, useSlots } from 'vue'
+import { ref, computed, watchEffect, watch, onMounted, useSlots } from 'vue'
 import type { CSSProperties } from 'vue'
 import Scrollbar from 'components/scrollbar'
-import { useEventListener, useMutationObserver, useInject, useOptionsSupported } from 'components/utils'
+import { useInject, useScrollParent, useFloatingPosition } from 'components/utils'
 export interface Option {
   disabled?: boolean // 是否禁用
   value: string | number // 唯一的 value 值
@@ -82,21 +82,15 @@ const lastUserValue = ref<string>('') // 用户原始输入（backfill 时键盘
 const showOptions = ref<boolean>(false) // 显示隐藏下拉面板
 const focused = ref<boolean>(false) // 自动完成是否聚焦
 const { colorPalettes, shadowColor } = useInject('AutoComplete') // 主题色注入
-const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
-const scrollTop = ref<number>(0) // scrollTarget 的滚动位置
 const panelOffset = ref<number>(0) // 下拉面板相对于内容的垂直偏移距离
 const panelPlace = ref<'bottom' | 'top'>('bottom') // 下拉面板垂直位置
 const panelAlign = ref<'left' | 'right' | 'viewport-left'>('left') // 下拉面板水平对齐方向：右侧空间不足时右对齐，超宽时贴视口左边缘
 const contentRef = ref<HTMLElement | null>(null) // 内容模板引用
-const contentRect = ref<DOMRect>() // 内容元素的大小及其相对于视口的位置
-const positionedContainer = ref<HTMLElement | null>(null) // 下拉面板相对定位的容器元素
-const positionedContainerRect = ref<DOMRect>() // positionedContainer 元素的大小及其相对于视口的位置
 const panelRef = ref<HTMLElement | null>(null) // 下拉面板模板引用
 const panelHeight = ref<number>() // 下拉面板的高度
 const panelWidth = ref<number>() // 下拉面板的宽度
-const viewportWidth = ref<number>(document.documentElement.clientWidth) // 视口宽度(不包括滚动条)
-const viewportHeight = ref<number>(document.documentElement.clientHeight) // 视口高度(不包括滚动条)
-const { isSupported: passiveSupported } = useOptionsSupported('passive')
+// 测量定位容器与内容元素矩形
+const { positionedContainerRect, contentRect, measure } = useFloatingPosition(contentRef, panelRef)
 // 清除图标显隐：开启 allowClear、未禁用且有值时显示（与 Input 组件保持一致，有值即显示，不依赖 hover）
 const showClear = computed<boolean>(() => {
   return props.allowClear && !props.disabled && Boolean(props.value)
@@ -311,7 +305,6 @@ watchEffect(() => {
   }
 })
 onMounted(() => {
-  observeScroll()
   // 挂载后同步一次 value 到自定义输入组件插槽元素
   if (slots.default) {
     const el = getCustomInputEl()
@@ -328,107 +321,27 @@ onMounted(() => {
     openPanel()
   }
 })
-onBeforeUnmount(() => {
-  cleanup()
-})
-// 监听 vitepress 文档页面滚动
-const mutationObserver = useMutationObserver(
-  scrollTarget,
-  () => {
-    if (scrollTop.value !== scrollTarget.value?.scrollTop) {
-      scrollTop.value = scrollTarget.value?.scrollTop ?? 0
-      updatePosition()
-    }
-  },
-  { subtree: true, attributes: true }
-)
-useEventListener(window, 'resize', getViewportSize)
-function getPositionedContainer(): void {
-  let parentElement = panelRef.value?.parentElement
-  while (parentElement) {
-    if (parentElement === document.documentElement) {
-      positionedContainer.value = document.documentElement
-      return
-    }
-    const { position } = getComputedStyle(parentElement)
-    if (position !== 'static') {
-      positionedContainer.value = parentElement
-      return
-    }
-    parentElement = parentElement.parentElement
-  }
-}
-function getViewportSize() {
-  viewportWidth.value = document.documentElement.clientWidth
-  viewportHeight.value = document.documentElement.clientHeight
-  observeScroll() // 窗口尺寸变化时，重新查询并监听最近可滚动父元素
-  updatePosition()
-}
-// 查询并监听最近可滚动父元素
-function observeScroll() {
-  cleanup()
-  scrollTarget.value = getScrollParent(contentRef.value)
-  scrollTarget.value &&
-    scrollTarget.value.addEventListener(
-      'scroll',
-      updatePosition,
-      passiveSupported.value ? { passive: true } : undefined
-    )
-  if (scrollTarget.value === document.documentElement) {
-    mutationObserver.start()
-  } else {
-    mutationObserver.stop()
-  }
-}
-/**
- * 清理滚动监听事件并重置滚动目标。
- *
- * 清理函数，移除滚动事件监听并重置滚动目标
- */
-function cleanup() {
-  scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updatePosition)
-  scrollTarget.value = null
-}
-// 获取父元素
-function getParentElement(el: HTMLElement): HTMLElement | null {
-  // Document
-  if (el === document.documentElement) return null
-  return el.parentElement
-}
-// 查找最近的可滚动父元素
-function getScrollParent(el: HTMLElement | null): HTMLElement | null {
-  if (el === null) return null
-  const parentElement = getParentElement(el)
-  if (parentElement === null) return null
-  // Document
-  if (parentElement === document.documentElement) return document.documentElement
-  const isScrollable = (el: HTMLElement): boolean => {
-    const { overflow, overflowX, overflowY } = getComputedStyle(el)
-    return /(auto|scroll|overlay)/.test(overflow + overflowY + overflowX)
-  }
-  // Element
-  if (isScrollable(parentElement)) return parentElement
-  return getScrollParent(parentElement)
-}
+// 查询并监听最近可滚动父元素，响应视口 resize
+const { scrollTarget, viewportWidth, viewportHeight } = useScrollParent(contentRef, updatePosition)
 // 更新下拉面板位置
 function updatePosition() {
   showOptions.value && getPosition()
 }
 // 计算下拉面板位置
 async function getPosition() {
-  await nextTick()
-  getPositionedContainer()
-  positionedContainerRect.value = positionedContainer.value?.getBoundingClientRect() as DOMRect
-  contentRect.value = contentRef.value?.getBoundingClientRect() as DOMRect
+  await measure()
   panelHeight.value = panelRef.value?.offsetHeight
   panelWidth.value = panelRef.value?.offsetWidth
-  panelOffset.value = contentRect.value.height + 4
+  panelOffset.value = (contentRect.value as DOMRect).height + 4
   panelPlace.value = getPlacement()
   panelAlign.value = getAlign()
 }
-// 获取可滚动父元素或视口的矩形信息
+// 获取可滚动父元素或视口的矩形信息：仅当可滚动父元素真正裁剪面板 (即面板挂载在该容器内) 时，才以其为界，否则以视口为界
+// 修复：面板 Teleport 到 body/具名容器时不受中间滚动容器 overflow 裁剪，flip 边界应为视口，避免空间充足却意外翻转
 function getShelterRect() {
-  if (scrollTarget.value) {
+  const clipByScrollTarget =
+    scrollTarget.value && scrollTarget.value !== document.documentElement && scrollTarget.value.contains(panelRef.value)
+  if (scrollTarget.value && clipByScrollTarget) {
     const scrollTargetRect = scrollTarget.value.getBoundingClientRect()
     return {
       top: scrollTargetRect.top < 0 ? 0 : scrollTargetRect.top,

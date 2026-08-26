@@ -1,7 +1,8 @@
 import { fileURLToPath, URL } from 'node:url'
-import { resolve } from 'path'
+import { resolve, dirname } from 'path'
+import { readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs'
 import { defineConfig } from 'vite'
-import type { BuildEnvironmentOptions } from 'vite'
+import type { Plugin, BuildEnvironmentOptions } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import VueDevTools from 'vite-plugin-vue-devtools'
 // 用于在 库模式 中从 .ts(x) 或 .vue 源文件生成类型文件（*.d.ts）的 Vite 插件 https://github.com/qmhc/vite-plugin-dts/tree/main
@@ -18,11 +19,79 @@ import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/r
 import minimist from 'minimist'
 // 最小化混淆器
 // import terser from '@rollup/plugin-terser'
+// 第三方样式依赖清单（单一数据源，与 resolver.ts 共享）
+import { vendorStyles } from './components/utils/vendor-styles'
 
-// 获取 vite build 构建时，传入的参数：dir f
+// 获取 vite build 构建时，传入的参数：dir f（形如 `vite build -- dir=dist f=iife`）
 const { _: args } = minimist(process.argv.slice(2))
-const dir = args[1] ? args[1].split('=')[1] : undefined
-const f = args[2] ? args[2].split('=')[1] : undefined
+// 从位置参数中按 key=value 形式查找，避免依赖固定索引
+const findArg = (key: string) => {
+  const matched = args.find((arg: string) => arg.startsWith(`${key}=`))
+  return matched ? matched.split('=')[1] : undefined
+}
+const dir = findArg('dir')
+const f = findArg('f')
+// 库模式需外部化处理、不打包进产物的第三方依赖（es/lib 按需引入时由消费方解析）
+const externalDependencies = [
+  'vue',
+  'date-fns',
+  'swiper/modules',
+  'swiper/vue',
+  '@vuepic/vue-datepicker',
+  '@vueuse/core',
+  'seemly',
+  'qrcode',
+  '@ant-design/colors',
+  '@ctrl/tinycolor'
+]
+// UMD/IIFE 构建时为外部依赖提供的全局变量名
+const externalGlobals: Record<string, string> = {
+  vue: 'Vue',
+  'date-fns': 'dateFns',
+  'swiper/modules': 'SwiperModules',
+  'swiper/vue': 'SwiperVue',
+  '@vuepic/vue-datepicker': 'VueDatePicker',
+  '@vueuse/core': 'Core',
+  seemly: 'seemly',
+  qrcode: 'QRCode',
+  '@ant-design/colors': 'Colors',
+  '@ctrl/tinycolor': 'TinyColor'
+}
+// 注意：dist（IIFE/UMD 全量构建）的第三方 CSS 已打进 style.css，无需 vendor 目录
+// 将第三方 CSS 复制到产物（es/lib）的 vendor-styles 固定目录，供 resolver 按需引入引用
+function copyVendorStylesPlugin(): Plugin {
+  return {
+    name: 'copy-vendor-styles',
+    apply: 'build',
+    closeBundle() {
+      if (dir === 'dist') {
+        // 全量构建：第三方 CSS 已合入 style.css，无需额外复制，跳过
+        return
+      }
+      const outDirs = ['es', 'lib']
+      outDirs.forEach((outDir) => {
+        vendorStyles.forEach(({ source, target }) => {
+          const sourcePath = resolve(__dirname, 'node_modules', source)
+          const targetPath = resolve(__dirname, outDir, target)
+          try {
+            mkdirSync(dirname(targetPath), { recursive: true })
+            // 读取并剥离 sourceMappingURL 注释，避免消费方因缺失 .map 文件报错
+            const content = readFileSync(sourcePath, 'utf-8').replace(/\/\*#\s*sourceMappingURL=[^*]+\*\//g, '')
+            writeFileSync(targetPath, content, 'utf-8')
+          } catch (error) {
+            console.warn(`[copy-vendor-styles] 复制第三方样式失败: ${source} -> ${target}`, error)
+          }
+        })
+        // 清理 Vite 隐式 emit 到 node_modules/.pnpm 的孤儿 CSS asset（已被 vendor 固定路径取代）
+        try {
+          rmSync(resolve(__dirname, outDir, 'node_modules'), { recursive: true, force: true })
+        } catch (error) {
+          console.warn('[copy-vendor-styles] 清理 node_modules 孤儿 asset 失败', error)
+        }
+      })
+    }
+  }
+}
 const buildDistOptions = {
   emptyOutDir: false, // 若 outDir 在 root 目录下，则为 true。默认情况下，若 outDir 在 root 目录下，则 Vite 会在构建时清空该目录。若 outDir 在根目录之外则会抛出一个警告避免意外删除掉重要的文件。
   copyPublicDir: false, // 默认情况下，Vite 会在构建阶段将 publicDir 目录中的所有文件复制到 outDir 目录中。可以通过设置该选项为 false 来禁用该行为。
@@ -47,21 +116,7 @@ const buildDistOptions = {
     ],
     // https://cn.rollupjs.org/configuration-options
     // 确保外部化处理那些你不想打包进库的依赖（作为外部依赖）
-    external:
-      f === 'iife'
-        ? ['vue']
-        : [
-            'vue',
-            'date-fns',
-            'swiper/modules',
-            'swiper/vue',
-            '@vuepic/vue-datepicker',
-            '@vueuse/core',
-            'seemly',
-            'qrcode',
-            '@ant-design/colors',
-            '@ctrl/tinycolor'
-          ],
+    external: f === 'iife' ? ['vue'] : externalDependencies,
     // 当创建 iife 或 umd 格式的 bundle 时，你需要通过 output.globals 选项提供全局变量名，以替换掉外部引入。
     output: {
       name: 'VueAmazingUI', // 对于输出格式为 iife | umd 的 bundle 来说，若想要使用全局变量名来表示你的 bundle 时，该选项是必要的。同一页面上的其他脚本可以使用这个变量名来访问你的 bundle 输出
@@ -79,19 +134,7 @@ const buildDistOptions = {
       // 在大多数情况下，该选项值为 false 将避免 Rollup 生成多余代码的 getters，因此在很多情况下，可以使代码兼容 IE8。
       externalLiveBindings: false, // 默认 true，当该选项的值为 false 时，Rollup 不会为外部依赖生成支持动态绑定的代码，而是假定外部依赖永远不会改变。这使得 Rollup 会生成更多优化代码。请注意，当外部依赖存在循环引用时，该选项值为 false 可能会引起问题。
       // 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
-      globals: {
-        vue: 'Vue',
-        // 'vue-router': 'VueRouter', // 引入 vue-router 全局变量，否则 router.push 将无法使用
-        'date-fns': 'dateFns',
-        'swiper/modules': 'SwiperModules',
-        'swiper/vue': 'SwiperVue',
-        '@vuepic/vue-datepicker': 'VueDatePicker',
-        '@vueuse/core': 'Core',
-        seemly: 'seemly',
-        qrcode: 'QRCode',
-        '@ant-design/colors': 'Colors',
-        '@ctrl/tinycolor': 'TinyColor'
-      }
+      globals: externalGlobals
     }
   },
   /*
@@ -120,7 +163,7 @@ const buildDistOptions = {
   cssCodeSplit: false, // 默认 true，如果指定了 build.lib，build.cssCodeSplit 会默认为 false
   // cssMinify: 'esbuild', // boolean | 'esbuild' | 'lightningcss'，默认: 与 build.minify 一致，允许用户覆盖 CSS 最小化压缩的配置，而不是使用默认的 build.minify
   // reportCompressedSize: true, // 默认 true，启用/禁用 gzip 压缩大小报告。压缩大型输出文件可能会很慢，因此禁用该功能可能会提高大型项目的构建性能。
-  chunkSizeWarningLimit: 1000 // 默认 500，规定触发警告的 chunk 大小，单位kbs
+  chunkSizeWarningLimit: 1000 // 默认 500，规定触发警告的 chunk 大小，单位 kbs
   // sourcemap: false // boolean | 'inline' | 'hidden'，构建后是否生成 source map 文件。默认 false
 }
 const buildESAndLibOptions = {
@@ -137,18 +180,7 @@ const buildESAndLibOptions = {
     ],
     // https://cn.rollupjs.org/configuration-options
     // 确保外部化处理那些你不想打包进库的依赖（作为外部依赖）
-    external: [
-      'vue',
-      'date-fns',
-      'swiper/modules',
-      'swiper/vue',
-      '@vuepic/vue-datepicker',
-      '@vueuse/core',
-      'seemly',
-      'qrcode',
-      '@ant-design/colors',
-      '@ctrl/tinycolor'
-    ],
+    external: externalDependencies,
     input: resolve(__dirname, 'components', 'index.ts'), // 'components/index.ts'
     output: [
       // https://cn.rollupjs.org/javascript-api/#outputoptions-object
@@ -193,8 +225,11 @@ export default defineConfig({
   plugins: [
     vue(),
     VueDevTools({
-      launchEditor: 'cursor'
+      // https://devtools.vuejs.org
+      // https://github.com/yyx990803/launch-editor?tab=readme-ov-file#supported-editors
+      launchEditor: 'cursor' // code【VSCode】 | cursor【Cursor】 ...
     }),
+    copyVendorStylesPlugin(),
     dts({
       // 自动生成类型文件
       outDir: ['es', 'lib'], // 指定输出目录，默认为 Vite 配置的 'build.outDir'，使用 Rollup 时为 tsconfig.json 的 `outDir`

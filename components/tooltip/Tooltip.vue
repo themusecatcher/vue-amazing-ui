@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch } from 'vue'
 import type { CSSProperties } from 'vue'
 import {
   useSlotsExist,
-  useMutationObserver,
-  useEventListener,
   useResizeObserver,
   rafTimeout,
   cancelRaf,
-  useOptionsSupported
+  useOptionsSupported,
+  useScrollParent,
+  useFloatingPosition
 } from 'components/utils'
 export interface Props {
   maxWidth?: string | number // 文字提示最大宽度，单位 px
@@ -72,8 +72,6 @@ const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免�
 const tooltipShow = ref<boolean>(false) // tooltip 显示隐藏标识
 const tooltipTimer = ref() // tooltip 延迟显示隐藏的定时器标识符
 const positionRaf = ref<{ id: number } | null>(null) // 位置更新的 rAF 帧标识，用于合并同一帧内的多次位置重算
-const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
-const scrollTop = ref<number>(0) // scrollTarget 的滚动位置
 const cardTop = ref<number>(0) // 弹出框相对于 tooltipContent 的垂直位置
 const cardLeft = ref<number>(0) // 弹出框相对于 tooltipContent 的水平位置
 type Placement = NonNullable<Props['placement']>
@@ -81,15 +79,11 @@ type MainAxis = 'top' | 'bottom' | 'left' | 'right' // 主轴方向
 type CrossAlign = 'start' | 'center' | 'end' // 次轴对齐方式
 const tooltipPlace = ref<Placement>('top') // 弹出框位置
 const tooltipContentRef = ref<HTMLElement | null>(null) // tooltipContent 模板引用
-const tooltipContentRect = ref<DOMRect>() // tooltipContent 元素的大小及其相对于视口的位置
 const tooltipRef = ref<HTMLElement | null>(null) // tooltip 模板引用
-const positionedContainer = ref<HTMLElement | null>(null) // 弹出框相对定位的容器元素
-const positionedContainerRect = ref<DOMRect>() // positionedContainer 元素的大小及其相对于视口的位置
 const tooltipCardRef = ref<HTMLElement | null>(null) // tooltipCard 模板引用
 const tooltipCardRect = ref<DOMRect>() // tooltipCard 元素的大小及其相对于视口的位置
-const viewportWidth = ref<number>(document.documentElement.clientWidth) // 视口宽度(不包括滚动条)
-const viewportHeight = ref<number>(document.documentElement.clientHeight) // 视口高度(不包括滚动条)
-const { isSupported: passiveSupported } = useOptionsSupported('passive')
+// 测量定位容器与内容元素矩形
+const { positionedContainerRect, contentRect, measure } = useFloatingPosition(tooltipContentRef, tooltipRef)
 const { isSupported: captureSupported } = useOptionsSupported('capture')
 const emits = defineEmits(['update:show', 'openChange', 'animationend'])
 const slotsExist = useSlotsExist(['tooltip'])
@@ -143,10 +137,10 @@ const crossAlign = computed<CrossAlign>(() => {
   return 'center'
 })
 const tooltipPlacement = computed(() => {
-  const contentTop = (tooltipContentRect.value as DOMRect)?.top ?? 0
+  const contentTop = (contentRect.value as DOMRect)?.top ?? 0
   const containerTop = (positionedContainerRect.value as DOMRect)?.top ?? 0
   const offsetTop = contentTop - containerTop
-  const contentLeft = (tooltipContentRect.value as DOMRect)?.left ?? 0
+  const contentLeft = (contentRect.value as DOMRect)?.left ?? 0
   const containerLeft = (positionedContainerRect.value as DOMRect)?.left ?? 0
   const offsetLeft = contentLeft - containerLeft
   // 箭头贴合边缘时的 transformOrigin 基准值
@@ -218,24 +212,6 @@ watch(
     immediate: true
   }
 )
-onMounted(() => {
-  observeScroll()
-})
-onBeforeUnmount(() => {
-  cleanup()
-})
-// 监听 vitepress 文档页面滚动
-const mutationObserver = useMutationObserver(
-  scrollTarget,
-  () => {
-    if (scrollTop.value !== scrollTarget.value?.scrollTop) {
-      scrollTop.value = scrollTarget.value?.scrollTop ?? 0
-      updatePosition()
-    }
-  },
-  { subtree: true, attributes: true }
-)
-useEventListener(window, 'resize', getViewportSize)
 // 监听 tooltipCard 和 tooltipContent 的尺寸变化，更新弹出框位置
 useResizeObserver([tooltipCardRef, tooltipContentRef], (entries: ResizeObserverEntry[]) => {
   // 排除 tooltipCard 显示过渡动画时的尺寸变化
@@ -251,78 +227,19 @@ useResizeObserver([tooltipCardRef, tooltipContentRef], (entries: ResizeObserverE
   }
   updatePosition()
 })
-// 获取弹出框相对定位的容器元素
-function getPositionedContainer(): void {
-  let parentElement = tooltipRef.value?.parentElement
-  while (parentElement) {
-    if (parentElement === document.documentElement) {
-      positionedContainer.value = document.documentElement
-      return
+// 查询并监听最近可滚动父元素，响应视口 resize；通过 onCleanup 注入 Tooltip 的 rAF 清理，避免帧泄漏
+const { scrollTarget, viewportWidth, viewportHeight, observeScroll } = useScrollParent(
+  tooltipContentRef,
+  updatePosition,
+  {
+    onCleanup: () => {
+      if (positionRaf.value) {
+        cancelRaf(positionRaf.value)
+        positionRaf.value = null
+      }
     }
-    const { position } = getComputedStyle(parentElement)
-    if (position !== 'static') {
-      positionedContainer.value = parentElement
-      return
-    }
-    parentElement = parentElement.parentElement
   }
-}
-function getViewportSize() {
-  viewportWidth.value = document.documentElement.clientWidth
-  viewportHeight.value = document.documentElement.clientHeight
-  observeScroll() // 窗口尺寸变化时，重新查询并监听最近可滚动父元素
-  updatePosition()
-}
-// 查询并监听最近可滚动父元素
-function observeScroll() {
-  cleanup()
-  scrollTarget.value = getScrollParent(tooltipContentRef.value)
-  scrollTarget.value &&
-    scrollTarget.value.addEventListener(
-      'scroll',
-      updatePosition,
-      passiveSupported.value ? { passive: true } : undefined
-    )
-  if (scrollTarget.value === document.documentElement) {
-    mutationObserver.start()
-  } else {
-    mutationObserver.stop()
-  }
-}
-/**
- * 清理滚动监听事件并重置滚动目标
- *
- * 清理函数，移除滚动事件监听并重置滚动目标
- */
-function cleanup() {
-  scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updatePosition)
-  scrollTarget.value = null
-  if (positionRaf.value) {
-    cancelRaf(positionRaf.value)
-    positionRaf.value = null
-  }
-}
-// 获取父元素
-function getParentElement(el: HTMLElement): HTMLElement | null {
-  // Document
-  if (el === document.documentElement) return null
-  return el.parentElement
-}
-// 查找最近的可滚动父元素
-function getScrollParent(el: HTMLElement | null): HTMLElement | null {
-  if (el === null) return null
-  const parentElement = getParentElement(el)
-  if (parentElement === null) return null
-  // Document
-  if (parentElement === document.documentElement) return document.documentElement
-  const isScrollable = (el: HTMLElement): boolean => {
-    const { overflow, overflowX, overflowY } = getComputedStyle(el)
-    return /(auto|scroll|overlay)/.test(overflow + overflowY + overflowX)
-  }
-  // Element
-  if (isScrollable(parentElement)) return parentElement
-  return getScrollParent(parentElement)
-}
+)
 // 更新文字提示位置：用 rAF 合并同一帧内的多次调用 (scroll/resize/observer 高频触发)，
 // 每帧渲染前只执行一次 getPosition，与浏览器渲染节奏对齐，跟手且减少强制 reflow
 function updatePosition() {
@@ -335,10 +252,7 @@ function updatePosition() {
 }
 // 计算文字提示位置
 async function getPosition() {
-  await nextTick()
-  getPositionedContainer()
-  positionedContainerRect.value = positionedContainer.value?.getBoundingClientRect() as DOMRect
-  tooltipContentRect.value = tooltipContentRef.value?.getBoundingClientRect() as DOMRect
+  await measure()
   tooltipCardRect.value = tooltipCardRef.value?.getBoundingClientRect() as DOMRect
   if (props.flip) {
     tooltipPlace.value = getPlacement()
@@ -349,9 +263,9 @@ async function getPosition() {
   const cardHeight = tooltipCardRect.value.height
   // 内容实际尺寸：取首个元素 (触发元素) 的边框矩形，避免 tooltip-content 包裹的子元素 margin 被计入
   const contentEl = tooltipContentRef.value?.firstElementChild as HTMLElement | null
-  const contentRect = contentEl?.getBoundingClientRect() ?? tooltipContentRect.value
-  const contentWidth = contentRect.width
-  const contentHeight = contentRect.height
+  const contentSizeRect = contentEl?.getBoundingClientRect() ?? (contentRect.value as DOMRect)
+  const contentWidth = contentSizeRect.width
+  const contentHeight = contentSizeRect.height
   // 主轴偏移：弹出框相对内容元素在主轴方向上的距离
   const mainOffset = {
     top: cardHeight + (props.arrow ? 4 + 12 : 6),
@@ -390,15 +304,15 @@ async function getPosition() {
 }
 // 次轴方向溢出兜底 (对齐 dom-align 的 adjustX/adjustY)：
 // 主轴为 top/bottom 时按水平方向 clamp 弹出框到遮挡边界内，主轴为 left/right 时按垂直方向 clamp，
-// 避免弹出框次轴方向超出视口或滚动容器边界。基准使用 tooltipContentRect (即 .tooltip-content)，
+// 避免弹出框次轴方向超出视口或滚动容器边界。基准使用 contentRect (即 .tooltip-content)，
 // 与 tooltipPlacement 渲染时的 left/top 计算口径保持一致
 function clampCrossAxis(cardWidth: number, cardHeight: number, crossAxis: 'horizontal' | 'vertical'): void {
   if (!props.flip) return
   const shelter = getShelterRect()
-  const contentRect = tooltipContentRect.value as DOMRect
+  const contentSizeRect = contentRect.value as DOMRect
   if (crossAxis === 'horizontal') {
     // 弹出框左/右边缘相对视口位置 = contentRect.left - cardLeft (+ cardWidth)
-    const cardLeftEdge = contentRect.left - cardLeft.value
+    const cardLeftEdge = contentSizeRect.left - cardLeft.value
     const cardRightEdge = cardLeftEdge + cardWidth
     if (cardRightEdge > shelter.right) {
       cardLeft.value += cardRightEdge - shelter.right
@@ -408,7 +322,7 @@ function clampCrossAxis(cardWidth: number, cardHeight: number, crossAxis: 'horiz
     }
   } else {
     // 弹出框上/下边缘相对视口位置 = contentRect.top - cardTop (+ cardHeight)
-    const cardTopEdge = contentRect.top - cardTop.value
+    const cardTopEdge = contentSizeRect.top - cardTop.value
     const cardBottomEdge = cardTopEdge + cardHeight
     if (cardBottomEdge > shelter.bottom) {
       cardTop.value += cardBottomEdge - shelter.bottom
@@ -453,7 +367,7 @@ function getPlacement(): Placement {
   else if (propPlace.startsWith('left')) baseMain = 'left'
   else if (propPlace.startsWith('right')) baseMain = 'right'
   const crossSuffix = propPlace.slice(baseMain.length) // '' | 'Left' | 'Right' | 'Top' | 'Bottom'
-  const { top, bottom, left, right } = tooltipContentRect.value as DOMRect // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
+  const { top, bottom, left, right } = contentRect.value as DOMRect // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
   const { top: targetTop, bottom: targetBottom, left: targetLeft, right: targetRight } = getShelterRect() // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
   const topDistance = top - targetTop - (props.arrow ? 12 : 0) // 内容元素上边缘距离滚动元素上边缘的距离
   const bottomDistance = targetBottom - bottom - (props.arrow ? 12 : 0) // 内容元素下边缘距离滚动元素下边缘的距离

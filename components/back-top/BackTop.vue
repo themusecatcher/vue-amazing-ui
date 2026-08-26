@@ -2,7 +2,7 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { VNode, Slot } from 'vue'
 import Tooltip from 'components/tooltip'
-import { useSlotsExist, useMutationObserver, useInject, useOptionsSupported } from 'components/utils'
+import { useSlotsExist, useMutationObserver, useInject, useOptionsSupported, getScrollParent } from 'components/utils'
 export interface Props {
   icon?: VNode | Slot // 自定义图标
   description?: string // 文字描述 string | slot
@@ -122,25 +122,6 @@ function cleanup(): void {
   scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updateScrollTop)
   scrollTarget.value = null
   mutationObserver.stop()
-}
-function getParentElement(el: HTMLElement): HTMLElement | null {
-  // Document
-  if (el === document.documentElement) return null
-  return el.parentElement
-}
-function getScrollParent(el: HTMLElement | null): HTMLElement | null {
-  if (el === null) return null
-  const parentElement = getParentElement(el)
-  if (parentElement === null) return null
-  // Document
-  if (parentElement === document.documentElement) return document.documentElement
-  const isScrollable = (el: HTMLElement): boolean => {
-    const { overflow, overflowX, overflowY } = getComputedStyle(el)
-    return /(auto|scroll|overlay)/.test(overflow + overflowY + overflowX)
-  }
-  // Element
-  if (isScrollable(parentElement)) return parentElement
-  return getScrollParent(parentElement)
 }
 function onBackTop(): void {
   scrollTarget.value &&
