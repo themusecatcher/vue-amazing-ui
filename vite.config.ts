@@ -65,7 +65,14 @@ function copyVendorStylesPlugin(): Plugin {
     apply: 'build',
     closeBundle() {
       if (dir === 'dist') {
-        // 全量构建：第三方 CSS 已合入 style.css，无需额外复制，跳过
+        // 全量构建：第三方 CSS 已合入 style.css，无需额外复制
+        // 但需生成 css.d.ts，供 package.json exports["./css"].types 指向，解决 `import 'vue-amazing-ui/css'` 的 TS 报错
+        try {
+          const cssDts = '// CSS 副作用导入的类型声明（side-effect import）\nexport {}\n'
+          writeFileSync(resolve(__dirname, 'dist', 'css.d.ts'), cssDts, 'utf-8')
+        } catch (error) {
+          console.warn('[copy-vendor-styles] 生成 css.d.ts 失败', error)
+        }
         return
       }
       const outDirs = ['es', 'lib']

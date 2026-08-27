@@ -42,11 +42,14 @@
       "import": "./es/index.js",
       "require": "./lib/index.cjs"
     },
-    "./css": "./dist/style.css",
+    "./css": {
+      "types": "./dist/css.d.ts",
+      "default": "./dist/style.css"
+    },
     "./*": "./*"
   },
   "sideEffects": [
-    "dist/*",
+    "dist/*.css",
     "*.css"
   ],
   "scripts": {

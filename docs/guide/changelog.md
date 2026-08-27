@@ -4,6 +4,17 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2026-08-27">2.6.0</VersionDateTag>
+
+- 重构组件库工程结构：规范化组件目录及文档为短横线命名，同步更新侧边栏与引用链接
+- 拆分 `utils` 为多模块并整理导出；新增抽象弹出定位与滚动感知组合式函数，重构 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html)、[文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html)、[自动完成 AutoComplete](https://themusecatcher.github.io/vue-amazing-ui/guide/components/auto-complete.html) 等弹出类组件代码
+- 优化 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/config-provider.html) 组件代码
+- 优化并更新 [自动完成 AutoComplete](https://themusecatcher.github.io/vue-amazing-ui/guide/components/auto-complete.html) 组件文档及演示用例
+- 新增第三方样式单一数据源，优化按需引入时第三方样式处理逻辑
+- 优化组件库 `vite` 构建与按需引入 `resolver` 逻辑
+- 修复全局样式导入 `import 'vue-amazing-ui/css'` 的 `TypeScript` 类型声明缺失问题
+- 组件库文档代码优化
+
 ## <VersionDateTag date="2026-08-26">2.5.3</VersionDateTag>
 
 - 优化并更新 [自动完成 AutoComplete](https://themusecatcher.github.io/vue-amazing-ui/guide/components/auto-complete.html) 组件和文档：新增 `width` 属性，支持显式指定组件宽度
