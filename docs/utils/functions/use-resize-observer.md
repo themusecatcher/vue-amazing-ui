@@ -322,3 +322,10 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
 | target | 要观察的目标，可以是 `Ref` 对象、`Ref` 数组、`HTMLElement` 或 `HTMLElement` 数组 | Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[] | undefined |
 | callback | 当元素尺寸变化时调用的回调函数 | ResizeObserverCallback | undefined |
 | options | `ResizeObserver` 选项，用于定制观察行为，[参考文档](https://developer.mozilla.org/zh-CN/docs/Web/API/ResizeObserver/observe#options) | object | {} |
+
+## Return
+
+| 名称 | 说明 | 类型 |
+| --- | --- | --- |
+| start | 开始观察目标元素 | () => void |
+| stop | 停止观察并断开与目标元素的连接 | () => void |

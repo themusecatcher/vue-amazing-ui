@@ -59,3 +59,9 @@ add(0.1, 0.2) // 0.3
 | ---- | ----- | ------ | --------- |
 | num1 | 加数1 | number | undefined |
 | num2 | 加数2 | number | undefined |
+
+## Return
+
+| 类型 | 说明 |
+| --- | --- |
+| number | 两个数字的和 |

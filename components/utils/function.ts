@@ -6,7 +6,8 @@
  * @param {boolean} [interval = false] 是否间隔执行，如果为 true，则在首次执行后，以 delay 为间隔持续执行
  * @returns {{ id: number }} 返回一个对象，包含一个 id 属性，该 id 为 requestAnimationFrame 的调用 ID，可用于取消动画帧
  */
-export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = false): { id: number } {
+export type AnimationFrameID = { id: number }
+export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = false): AnimationFrameID {
   let start: number | null = null // 记录动画开始的时间戳
   function timeElapse(timestamp: number) {
     // 定义动画帧回调函数
@@ -33,9 +34,6 @@ export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = 
       raf.id = requestAnimationFrame(timeElapse)
     }
   }
-  interface AnimationFrameID {
-    id: number
-  }
   // 创建一个对象用于存储动画帧的 ID，并初始化动画帧
   const raf: AnimationFrameID = {
     id: requestAnimationFrame(timeElapse)
@@ -45,11 +43,11 @@ export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = 
 /**
  * 用于取消 rafTimeout 函数
  *
- * @param {{id: number}} raf - 包含请求动画帧 ID 的对象；该 ID 是由 requestAnimationFrame 返回的
+ * @param {{ id: number }} raf - 包含请求动画帧 ID 的对象；该 ID 是由 requestAnimationFrame 返回的
  *              该函数旨在取消之前通过 requestAnimationFrame 请求的动画帧
  *              如果传入的 raf 对象或其 id 无效，则会打印警告
  */
-export function cancelRaf(raf: { id: number }): void {
+export function cancelRaf(raf: AnimationFrameID): void {
   if (raf && raf.id && typeof raf.id === 'number') {
     cancelAnimationFrame(raf.id)
   } else {

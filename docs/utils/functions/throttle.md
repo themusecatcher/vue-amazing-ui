@@ -71,3 +71,9 @@ function showPosition() {
 | ----- | ------------------------- | -------- | --------- |
 | fn    | 要被节流的函数            | Function | undefined |
 | delay | 节流的时间间隔，单位 `ms` | number   | 300       |
+
+## Return
+
+| 类型 | 说明 |
+| --- | --- |
+| Function | 节流后的新函数 |

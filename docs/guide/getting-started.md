@@ -121,7 +121,12 @@ import {
   useResizeObserver,
   useSlotsExist,
   useInject,
-  useOptionsSupported
+  useOptionsSupported,
+  getColorPalettes,
+  getAlphaColor,
+  getScrollParent,
+  useScrollParent,
+  useFloatingPosition
 } from 'vue-amazing-ui'
 </script>
 ```

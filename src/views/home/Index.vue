@@ -50,7 +50,8 @@ const toolFunctions = [
   },
   {
     name: 'downloadFile',
-    description: '下载文件并自定义文件名，未传文件名时，从文件地址中自动提取文件名称'
+    description:
+      '下载文件并自定义文件名，内置同源 anchor 与跨域 iframe 双下载策略，未传文件名时，从文件地址中自动提取文件名称'
   },
   {
     name: 'toggleDark',
@@ -91,6 +92,26 @@ const toolFunctions = [
   {
     name: 'useOptionsSupported',
     description: '检查浏览器是否支持给定的事件监听器选项'
+  },
+  {
+    name: 'getColorPalettes',
+    description: '根据主色生成颜色调色板函数'
+  },
+  {
+    name: 'getAlphaColor',
+    description: '获取透明度颜色函数，一般用作阴影色'
+  },
+  {
+    name: 'getScrollParent',
+    description: '向上查找元素最近的可滚动父元素函数'
+  },
+  {
+    name: 'useScrollParent',
+    description: '查询并监听最近可滚动父元素，响应视口 resize 的组合式函数'
+  },
+  {
+    name: 'useFloatingPosition',
+    description: '为弹出类组件提供统一测量骨架的组合式函数'
   }
 ]
 const functionItems = [
@@ -115,7 +136,12 @@ import {
   useResizeObserver,
   useSlotsExist,
   useInject,
-  useOptionsSupported
+  useOptionsSupported,
+  getColorPalettes,
+  getAlphaColor,
+  getScrollParent,
+  useScrollParent,
+  useFloatingPosition
 } from 'vue-amazing-ui'
 <\/script>`
   }

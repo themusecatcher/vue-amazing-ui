@@ -23,6 +23,28 @@ const images = ref<ImageItem[]>([
     name: 'image-5.jpg'
   }
 ])
+// 自定义下载示例：用 XHR + Blob 下载跨域图床图片
+// 内置 downloadFile 的 iframe 策略受图床 X-Frame-Options 限制，改用 XHR 取二进制后通过 Blob 触发下载，不受该限制
+function customDownload(url: string, fileName?: string) {
+  // 以二进制流方式请求图片，需要图床开启 CORS 才能跨域读取
+  const xhr = new XMLHttpRequest()
+  xhr.open('GET', url, true)
+  xhr.responseType = 'blob'
+  xhr.onload = () => {
+    if (xhr.status === 200) {
+      // 将二进制流转为本地 Blob URL，再通过 a 标签的 download 属性强制下载（blob 同源，download 始终生效）
+      const blobUrl = URL.createObjectURL(xhr.response)
+      const a = document.createElement('a')
+      a.href = blobUrl
+      a.download = fileName || url.split('?')[0].split('/').pop() || 'download'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(blobUrl) // 释放 Blob URL，避免内存泄漏
+    }
+  }
+  xhr.send()
+}
 </script>
 <template>
   <div>
@@ -65,6 +87,12 @@ const images = ref<ImageItem[]>([
       :max-zoom-scale="2"
       src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg"
     />
+    <h2 class="mt30 mb10">自定义下载</h2>
+    <p class="mb10"
+      >跨域图床（如设置 <code>X-Frame-Options</code> 拒绝 <code>iframe</code> 的 CDN）下载受限时，可通过
+      <code>customDownload</code> 提供自定义下载方法，或通过 <code>downloadOptions</code> 调整内置下载策略</p
+    >
+    <Image :src="images" :custom-download="customDownload" loop />
   </div>
 </template>
 <style lang="less" scoped>

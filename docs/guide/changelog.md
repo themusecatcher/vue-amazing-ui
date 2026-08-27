@@ -11,9 +11,10 @@
 - 优化 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 组件代码
 - 优化并更新 [自动完成 AutoComplete](/guide/components/auto-complete.html) 组件文档及演示用例
 - 新增第三方样式单一数据源，优化按需引入时第三方样式处理逻辑
+- 优化并重构 [下载文件 downloadFile](/utils/functions/download-file.html) 工具函数：内置同源 `anchor` 与跨域 `iframe` 双下载策略并自动分流，支持自定义文件名（含中文）与下载策略配置；优化并更新 [图片 Image](/guide/components/image.html) 组件，新增 `downloadOptions`、`customDownload` 属性，支持调整内置下载策略或提供完全自定义的下载方法
 - 优化组件库 `vite` 构建与按需引入 `resolver` 逻辑
 - 修复全局样式导入 `import 'vue-amazing-ui/css'` 的 `TypeScript` 类型声明缺失问题
-- 组件库文档代码优化
+- 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-08-26">2.5.3</VersionDateTag>
 
@@ -127,12 +128,12 @@
 
 ## <VersionDateTag date="2025-05-30">2.4.10</VersionDateTag>
 
-- 新增 [否支持事件监听器选项 useOptionsSupported](/utils/functions/options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
+- 新增 [否支持事件监听器选项 useOptionsSupported](/utils/functions/use-options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
 - 更新组件库部分依赖版本
 
 ## <VersionDateTag date="2025-05-29">2.4.9</VersionDateTag>
 
-- 新增 [否支持事件监听器选项 useOptionsSupported](/utils/functions/options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
+- 新增 [否支持事件监听器选项 useOptionsSupported](/utils/functions/use-options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
 
 ## <VersionDateTag date="2025-05-26">2.4.8</VersionDateTag>
 
@@ -355,7 +356,7 @@
 ## <VersionDateTag date="2025-01-20">2.1.2</VersionDateTag>
 
 - 优化并更新 [颜色选择器 ColorPicker](/guide/components/color-picker.html) 组件
-- 优化并更新 [监听插槽存在 useSlotsExist](/utils/functions/slots-exist.html) 工具函数
+- 优化并更新 [监听插槽存在 useSlotsExist](/utils/functions/use-slots-exist.html) 工具函数
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-01-17">2.1.1</VersionDateTag>
@@ -509,7 +510,7 @@
 
 - 优化并更新 [滚动条 Scrollbar](/guide/components/scrollbar.html) 组件，新增 `xPlacement` `yPlacement` 属性，支持设置滚动条位置；调整是否使用横向滚动属性名 `horizontal` 为 `xScrollable`；新增 `getScrollData` 方法，用于获取滚动区域相关数据；新增 `scrollend` 回调函数，同时回调函数新增 `direction` 参数，用于表示滚动方向
 - 优化并更新 [表格 Table](/guide/components/table.html) 组件，新增 `scrollbarProps` 属性，表格所有滚动均使用 [滚动条 Scrollbar](/guide/components/scrollbar.html) 组件，并支持滚动条相关属性配置
-- 新增 [滚动监测 useScroll](/utils/functions/scroll.html) 工具函数，用于实时监测指定元素滚动位置及状态；删除 `useScrollDirection` 工具函数
+- 新增 [滚动监测 useScroll](/utils/functions/use-scroll.html) 工具函数，用于实时监测指定元素滚动位置及状态；删除 `useScrollDirection` 工具函数
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2024-11-15">1.9.6</VersionDateTag>
@@ -712,7 +713,7 @@
 ## <VersionDateTag date="2024-08-22">1.5.4</VersionDateTag>
 
 - 优化并更新 [按钮 Button](/guide/components/button.html) 组件，新增 `shape` `icon` 属性
-- 新增工具函数 [监听插槽存在 useSlotsExist](/utils/functions/slots-exist.html)，用于监听 Vue 组件中插槽是否存在
+- 新增工具函数 [监听插槽存在 useSlotsExist](/utils/functions/use-slots-exist.html)，用于监听 Vue 组件中插槽是否存在
 - 组件库代码优化
 
 ## <VersionDateTag date="2024-08-19">1.5.3</VersionDateTag>
@@ -829,7 +830,7 @@
 
 ## <VersionDateTag date="2024-07-22">1.1.2</VersionDateTag>
 
-- 新增 [监听DOM尺寸 useResizeObserver](/utils/functions/resize-observer.html) 工具函数
+- 新增 [监听DOM尺寸 useResizeObserver](/utils/functions/use-resize-observer.html) 工具函数
 
 ## <VersionDateTag date="2024-07-19">1.1.1</VersionDateTag>
 
@@ -838,7 +839,7 @@
 ## <VersionDateTag date="2024-07-18">1.1.0</VersionDateTag>
 
 - 新增 [滚动条 Scrollbar](/guide/components/scrollbar.html) 组件
-- 新增 [DOM监听 useMutationObserver](/utils/functions/mutation-observer.html) 工具函数
+- 新增 [DOM监听 useMutationObserver](/utils/functions/use-mutation-observer.html) 工具函数
 
 ## future
 

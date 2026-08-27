@@ -24,7 +24,7 @@ features:
     details: '基于 Vue@3.5.29、TypeScript@5.9.3、Vite@7.3.1 等最新技术栈开发'
   - icon: 🚀
     title: 开箱即用
-    details: 目前共包含 68 个基础 UI 组件以及 18 个工具函数，持续探索更新中
+    details: 目前共包含 68 个基础 UI 组件以及 23 个工具函数，持续探索更新中
   - icon: 😉
     title: 有点意思
     details: '主题可调，全量使用 TypeScript 和 SFC，支持 tree shaking'
