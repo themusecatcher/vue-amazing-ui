@@ -590,15 +590,9 @@ watch(
   { immediate: true }
 )
 // 暴露方法：focus() 获取焦点、blur() 移除焦点
-function focus(): void {
-  inputFocus()
-}
-function blur(): void {
-  blurInput()
-}
 defineExpose({
-  focus,
-  blur
+  focus: inputFocus,
+  blur: blurInput
 })
 </script>
 <template>
