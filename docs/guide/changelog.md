@@ -6,32 +6,32 @@
 
 ## <VersionDateTag date="2026-08-26">2.5.3</VersionDateTag>
 
-- 优化并更新 [自动完成 AutoComplete](https://themusecatcher.github.io/vue-amazing-ui/guide/components/autocomplete.html) 组件和文档：新增 `width` 属性，支持显式指定组件宽度
-- 优化并更新 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件和文档：`Theme` 类型新增 `AutoComplete` 组件级主题色配置，修复 `AutoComplete` 无法通过 `theme.AutoComplete` 单独定制主题色的问题
+- 优化并更新 [自动完成 AutoComplete](https://themusecatcher.github.io/vue-amazing-ui/guide/components/auto-complete.html) 组件和文档：新增 `width` 属性，支持显式指定组件宽度
+- 优化并更新 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/config-provider.html) 组件和文档：`Theme` 类型新增 `AutoComplete` 组件级主题色配置，修复 `AutoComplete` 无法通过 `theme.AutoComplete` 单独定制主题色的问题
 - 组件库配置优化
 
 ## <VersionDateTag date="2026-08-25">2.5.2</VersionDateTag>
 
 - 优化并增强 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件代码逻辑：`flip` 主轴翻转改为同轴方向翻转（`top`↔`bottom` / `left`↔`right`），并始终保留原次轴对齐后缀；新增次轴方向溢出兜底逻辑，避免弹出框次轴方向超出视口或滚动容器边界；箭头新增回退样式，兼容不支持 `clip-path: path` 的浏览器；消除重复的类型定义；将模板内联事件表达式提取为具名方法，提升可读性与可维护性
-- 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html)、[选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html)、[文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html)、[数字动画 NumberAnimation](https://themusecatcher.github.io/vue-amazing-ui/guide/components/numberanimation.html)、[倒计时 Countdown](https://themusecatcher.github.io/vue-amazing-ui/guide/components/countdown.html)、[瀑布流 Waterfall](https://themusecatcher.github.io/vue-amazing-ui/guide/components/waterfall.html)、[文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html)、[日历 Calendar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/calendar.html)、[数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件代码逻辑，将多源原子值监听由「数组字面量 + deep」优化为多源 `getter` 数组，去除冗余的深度遍历
-- 优化并更新 [悬浮按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件和文档，调整属性 `zIndex` 默认值由 `9` 为 `99`
+- 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html)、[选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html)、[文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html)、[数字动画 NumberAnimation](https://themusecatcher.github.io/vue-amazing-ui/guide/components/number-animation.html)、[倒计时 Countdown](https://themusecatcher.github.io/vue-amazing-ui/guide/components/countdown.html)、[瀑布流 Waterfall](https://themusecatcher.github.io/vue-amazing-ui/guide/components/waterfall.html)、[文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/text-scroll.html)、[日历 Calendar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/calendar.html)、[数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input-number.html) 组件代码逻辑，将多源原子值监听由「数组字面量 + deep」优化为多源 `getter` 数组，去除冗余的深度遍历
+- 优化并更新 [悬浮按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/float-button.html) 组件和文档，调整属性 `zIndex` 默认值由 `9` 为 `99`
 - 文档新增 [AI Coding Kit](https://themusecatcher.github.io/ai-coding-kit/) 导航链接
 - 组件库脚本优化
 
 ## <VersionDateTag date="2026-08-24">2.5.1</VersionDateTag>
 
 - 优化并增强 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件和文档，`placement`  属性新增支持 `12` 个方向；新增 `arrowPointAtCenter` 属性使箭头指向目标元素中心；`bgColor` 支持多种预设色彩；`trigger` 新增 `focus` / `contextmenu` 触发方式；新增 `disabled` 属性支持禁用；`showDelay` / `hideDelay` 属性调整为仅在 `trigger: hover` 时生效，`click` / `focus` / `contextmenu` 等触发方式立即显示与隐藏；修复弹出框挂载到 `body` 时被中间可滚动容器边界误判导致意外翻转的问题；使用 `requestAnimationFrame` 合并同帧内的多次位置重算，减少滚动时的强制重排
-- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件和文档，优化弹层定位与显隐行为：弹层定位由 `bottom` 调整为 `bottomLeft`，避免面板与触发元素错位；新增 `keyboard` 键盘支持；`showDelay` / `hideDelay` 调整为立即显示与隐藏
+- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/color-picker.html) 组件和文档，优化弹层定位与显隐行为：弹层定位由 `bottom` 调整为 `bottomLeft`，避免面板与触发元素错位；新增 `keyboard` 键盘支持；`showDelay` / `hideDelay` 调整为立即显示与隐藏
 - 优化并更新 [文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html) 组件，过渡动画时长由 `200ms` 对齐为默认 `100ms`
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-08-19">2.5.0</VersionDateTag>
 
-- 新增 [自动完成 AutoComplete](https://themusecatcher.github.io/vue-amazing-ui/guide/components/autocomplete.html) 组件
+- 新增 [自动完成 AutoComplete](https://themusecatcher.github.io/vue-amazing-ui/guide/components/auto-complete.html) 组件
 
 ## <VersionDateTag date="2026-08-17">2.4.27</VersionDateTag>
 
-- 修复 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html) 组件搜索按钮与输入框连接处的样式问题
+- 修复 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input-search.html) 组件搜索按钮与输入框连接处的样式问题
 - 优化 [走马灯 Carousel](https://themusecatcher.github.io/vue-amazing-ui/guide/components/carousel.html) 组件 `slideFunction` 属性类型定义，由 `string | number[]` 精确为 `CubicBezierPoints | EasingFunction`，提供更准确的类型提示
 - 新增项目贡献指南，优化项目构建、工程配置及发布流程
 - 组件库及文档代码优化
@@ -46,15 +46,15 @@
 
 ## <VersionDateTag date="2026-03-08">2.4.24</VersionDateTag>
 
-- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html)、[滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html)、[图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html)、[滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，将鼠标事件（`Mouse Events`）迁移为指针事件（`Pointer Events`），统一支持鼠标、触屏和手写笔等多种输入设备的交互
+- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/color-picker.html)、[滚动条 Scrollbar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html)、[图片 Image](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html)、[滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，将鼠标事件（`Mouse Events`）迁移为指针事件（`Pointer Events`），统一支持鼠标、触屏和手写笔等多种输入设备的交互
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，优化表格头部跟随滚动效果
-- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件样式交互，为色相滑块和透明度滑块添加 `touch-action: none` 样式，修复触屏设备拖动时触发页面滚动的问题
+- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/color-picker.html) 组件样式交互，为色相滑块和透明度滑块添加 `touch-action: none` 样式，修复触屏设备拖动时触发页面滚动的问题
 - 组件库及文档代码优化
 - 更新组件库部分依赖版本
 
 ## <VersionDateTag date="2025-11-17">2.4.23</VersionDateTag>
 
-- 修复 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件初始为空值时非法输入未置空问题，关闭 [#44](https://github.com/themusecatcher/vue-amazing-ui/issues/44)
+- 修复 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input-number.html) 组件初始为空值时非法输入未置空问题，关闭 [#44](https://github.com/themusecatcher/vue-amazing-ui/issues/44)
 - 更新组件库部分依赖版本
 
 ## <VersionDateTag date="2025-10-15">2.4.22</VersionDateTag>
@@ -76,13 +76,13 @@
 ## <VersionDateTag date="2025-08-28">2.4.19</VersionDateTag>
 
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，新增 `placement` `flip` `to` 属性，支持：设置下拉面板弹出位置；设置下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置；设置下拉面板挂载的容器节点，默认挂载到 `body` 下
-- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，属性 `amount` 新增 `false` 类型，用于支持所有文字平铺展示；新增 `ellipsis` `ellipsisProps` 属性，支持：设置文字超出时是否启用文本省略组件；配置文本省略组件属性
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/text-scroll.html) 组件，属性 `amount` 新增 `false` 类型，用于支持所有文字平铺展示；新增 `ellipsis` `ellipsisProps` 属性，支持：设置文字超出时是否启用文本省略组件；配置文本省略组件属性
 - 组件库及文档代码优化
 - 更新组件库部分依赖版本
 
 ## <VersionDateTag date="2025-08-22">2.4.18</VersionDateTag>
 
-- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html)、[加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html)、[文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，在初始未展示时不进行任何组件渲染，提升初始加载性能
+- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/back-top.html)、[加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loading-bar.html)、[文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，在初始未展示时不进行任何组件渲染，提升初始加载性能
 
 ## <VersionDateTag date="2025-08-21">2.4.17</VersionDateTag>
 
@@ -90,7 +90,7 @@
 
 ## <VersionDateTag date="2025-08-19">2.4.16</VersionDateTag>
 
-- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件拖动效果，修复不透明度拖动时位置偏差的问题
+- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/color-picker.html) 组件拖动效果，修复不透明度拖动时位置偏差的问题
 
 ## <VersionDateTag date="2025-08-18">2.4.15</VersionDateTag>
 
@@ -129,13 +129,13 @@
 
 ## <VersionDateTag date="2025-05-23">2.4.7</VersionDateTag>
 
-- 修复 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html)、[搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html)、[文本域 Textarea](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textarea.html) 组件使用文本合成系统输入且带字数提示时字数统计的问题
+- 修复 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html)、[搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input-search.html)、[文本域 Textarea](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textarea.html) 组件使用文本合成系统输入且带字数提示时字数统计的问题
 
 ## <VersionDateTag date="2025-05-22">2.4.6</VersionDateTag>
 
 - 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，优化自动查找最近的可滚动父元素代码逻辑
 - 优化并更新 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html) 组件，修复使用文本合成系统输入时的问题；新增 `compositionstart` `compositionend` 回调事件
-- 优化并更新 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html) 组件，修复使用文本合成系统输入时的问题；新增 `compositionstart` `compositionend` 回调事件
+- 优化并更新 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input-search.html) 组件，修复使用文本合成系统输入时的问题；新增 `compositionstart` `compositionend` 回调事件
 - 优化并更新 [文本域 Textarea](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textarea.html) 组件，修复使用文本合成系统输入时的问题；新增 `compositionstart` `compositionend` 回调事件
 - 更新组件库文档及部分依赖版本
 
@@ -146,12 +146,12 @@
 
 ## <VersionDateTag date="2025-04-16">2.4.4</VersionDateTag>
 
-- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件水平滚动动画
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/text-scroll.html) 组件水平滚动动画
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-03-27">2.4.3</VersionDateTag>
 
-- 优化并更新[日期选择器 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件，新增 `maxRange` 属性，用于支持自定义最长日期可选择范围
+- 优化并更新[日期选择器 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/date-picker.html) 组件，新增 `maxRange` 属性，用于支持自定义最长日期可选择范围
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-03-25">2.4.2</VersionDateTag>
@@ -160,7 +160,7 @@
 
 ## <VersionDateTag date="2025-03-21">2.4.1</VersionDateTag>
 
-- 优化并更新[日期选择器 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件，文档新增多种日期禁用场景及使用方式
+- 优化并更新[日期选择器 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/date-picker.html) 组件，文档新增多种日期禁用场景及使用方式
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-03-19">2.4.0</VersionDateTag>
@@ -184,29 +184,29 @@
 
 ## <VersionDateTag date="2025-03-14">2.3.1</VersionDateTag>
 
-- 优化并更新 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件，新增 `abstract` `tag` 属性，支持：设置是否不存在 `DOM` 包裹元素；自定义 `ConfigProvider` 被渲染成的元素，`abstract` 为 `true` 时有效
-- 更新自动按需引入，修复 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件引入的问题
+- 优化并更新 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/config-provider.html) 组件，新增 `abstract` `tag` 属性，支持：设置是否不存在 `DOM` 包裹元素；自定义 `ConfigProvider` 被渲染成的元素，`abstract` 为 `true` 时有效
+- 更新自动按需引入，修复 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/config-provider.html) 组件引入的问题
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-03-13">2.3.0</VersionDateTag>
 
-- 新增 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/configprovider.html) 组件，用于支持全局自定义主题色
-- 优化并更新 [加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html) 组件代码
+- 新增 [全局化配置 ConfigProvider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/config-provider.html) 组件，用于支持全局自定义主题色
+- 优化并更新 [加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loading-bar.html) 组件代码
 - 优化并更新支持自定义主题色的组件，用于配合 `ConfigProvider` 组件支持全局自定义主题色
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-03-07">2.2.15</VersionDateTag>
 
-- 优化并更新 [日期选择 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件，新增颜色样式变量，用于支持自定义主题色
+- 优化并更新 [日期选择 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/date-picker.html) 组件，新增颜色样式变量，用于支持自定义主题色
 - 优化并更新 [触摸滑动 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件，新增 `CSS` 变量，支持：自定义主题色；自定义切换动画效果
 
 ## <VersionDateTag date="2025-03-06">2.2.14</VersionDateTag>
 
 - 优化并更新 [警告提示 Alert](https://themusecatcher.github.io/vue-amazing-ui/guide/components/alert.html) 组件，新增颜色样式变量，用于支持自定义主题色
 - 优化并更新 [级联选择 Cascader](https://themusecatcher.github.io/vue-amazing-ui/guide/components/cascader.html) 组件，新增 `size` 属性，支持三种尺寸；同时支持自定义主题色
-- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件代码，重命名相关样式变量
+- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/back-top.html) 组件代码，重命名相关样式变量
 - 优化并更新 [轮播图 Carousel](https://themusecatcher.github.io/vue-amazing-ui/guide/components/carousel.html) 组件代码，重命名相关样式变量
-- 优化并更新 [加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html) 组件代码，重命名相关样式变量
+- 优化并更新 [加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loading-bar.html) 组件代码，重命名相关样式变量
 - 优化并更新 [进度条 Progress](https://themusecatcher.github.io/vue-amazing-ui/guide/components/progress.html) 组件代码，重命名相关样式变量
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件代码
 - 组件库及文档代码优化
@@ -214,7 +214,7 @@
 ## <VersionDateTag date="2025-03-05">2.2.13</VersionDateTag>
 
 - 优化并更新 [日历 Calendar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/calendar.html) 组件，新增颜色样式变量和 `yearSelectProps` `monthSelectProps` `modeRadioProps` 属性，用于支持自定义主题色和设置组件属性
-- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件，新增颜色样式变量和 `width` `inputProps` 属性，用于支持自定义主题色和设置组件属性
+- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/color-picker.html) 组件，新增颜色样式变量和 `width` `inputProps` 属性，用于支持自定义主题色和设置组件属性
 - 优化并更新 [分页 Pagination](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html) 组件代码
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件代码
 - 组件库及文档代码优化
@@ -222,10 +222,10 @@
 ## <VersionDateTag date="2025-03-04">2.2.12</VersionDateTag>
 
 - 优化并更新 [按钮 Button](/guide/components/button.html) 组件，新增颜色样式变量，用于支持自定义主题色或样式
-- 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件，新增颜色样式变量，用于支持自定义主题色
+- 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/float-button.html) 组件，新增颜色样式变量，用于支持自定义主题色
 - 优化并更新 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html) 组件，新增颜色样式变量，用于支持自定义主题色
-- 优化并更新 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件，新增颜色样式变量，用于支持自定义主题色
-- 优化并更新 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html) 组件，新增颜色样式变量，用于支持自定义主题色
+- 优化并更新 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input-number.html) 组件，新增颜色样式变量，用于支持自定义主题色
+- 优化并更新 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input-search.html) 组件，新增颜色样式变量，用于支持自定义主题色
 - 优化并更新 [文本域 Textarea](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textarea.html) 组件，新增颜色样式变量，用于支持自定义主题色
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，新增颜色样式变量，用于支持自定义主题色
 - 优化并更新 [全局提示 Message](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html) 组件，新增颜色样式变量，用于支持自定义不同类型颜色
@@ -246,7 +246,7 @@
 
 ## <VersionDateTag date="2025-02-28">2.2.11</VersionDateTag>
 
-- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件代码
+- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/back-top.html) 组件代码
 - 优化并更新 [面包屑 Breadcrumb](https://themusecatcher.github.io/vue-amazing-ui/guide/components/breadcrumb.html) 组件，新增多个样式变量，用于支持更丰富的样式自定义
 - 优化并更新 [复选框 Checkbox](https://themusecatcher.github.io/vue-amazing-ui/guide/components/checkbox.html) 组件，新增主题色样式变量，用于支持自定义主题色
 - 优化并更新 [单选框 Radio](https://themusecatcher.github.io/vue-amazing-ui/guide/components/radio.html) 组件，新增主题色样式变量，用于支持自定义主题色
@@ -265,7 +265,7 @@
 
 ## <VersionDateTag date="2025-02-22">2.2.8</VersionDateTag>
 
-- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件自动查找可滚动祖先节点相关代码逻辑，修复在某些情况下无法自动找到可滚动祖先节点的问题
+- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/back-top.html) 组件自动查找可滚动祖先节点相关代码逻辑，修复在某些情况下无法自动找到可滚动祖先节点的问题
 
 ## <VersionDateTag date="2025-02-21">2.2.7</VersionDateTag>
 
@@ -279,7 +279,7 @@
 ## <VersionDateTag date="2025-02-18">2.2.5</VersionDateTag>
 
 - 优化并更新 [进度条 Progress](https://themusecatcher.github.io/vue-amazing-ui/guide/components/progress.html) 组件；调整属性 `lineCap` 类型为：`'round' | 'butt'`
-- 优化并更新 [二维码 QRCode](https://themusecatcher.github.io/vue-amazing-ui/guide/components/qrcode.html) 组件；新增 `type` `icon` `iconSize` 属性；支持：设置二维码渲染类型，可选 `svg` `canvas` `image` 三种；在二维码中设置图片 `Icon` 并自定义 `Icon` 尺寸大小；新增方法：`getQRCodeImage()`，用于获取二维码图片
+- 优化并更新 [二维码 QRCode](https://themusecatcher.github.io/vue-amazing-ui/guide/components/qr-code.html) 组件；新增 `type` `icon` `iconSize` 属性；支持：设置二维码渲染类型，可选 `svg` `canvas` `image` 三种；在二维码中设置图片 `Icon` 并自定义 `Icon` 尺寸大小；新增方法：`getQRCodeImage()`，用于获取二维码图片
 
 ## <VersionDateTag date="2025-02-17">2.2.4</VersionDateTag>
 
@@ -287,7 +287,7 @@
 
 ## <VersionDateTag date="2025-02-14">2.2.3</VersionDateTag>
 
-- 优化并更新 [日期选择 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/datepicker.html) 组件样式和过渡动画效果；新增属性 `size`，支持设置日期选择组件大小
+- 优化并更新 [日期选择 DatePicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/date-picker.html) 组件样式和过渡动画效果；新增属性 `size`，支持设置日期选择组件大小
 - 优化并更新 [触摸滑动 Swiper](https://themusecatcher.github.io/vue-amazing-ui/guide/components/swiper.html) 组件过渡动画效果
 - 组件库及文档代码优化
 
@@ -311,7 +311,7 @@
 
 ## <VersionDateTag date="2025-02-10">2.1.8</VersionDateTag>
 
-- 更新自动按需引入：`VueAmazingUIResolver` ，修复无法识别 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件的问题
+- 更新自动按需引入：`VueAmazingUIResolver` ，修复无法识别 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/color-picker.html) 组件的问题
 - 组件库代码优化
 
 ## <VersionDateTag date="2025-02-07">2.1.7</VersionDateTag>
@@ -333,7 +333,7 @@
 ## <VersionDateTag date="2025-01-22">2.1.4</VersionDateTag>
 
 - 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件，新增支持设置多种 `CSS` 变量自定义样式
-- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件，调整弹出面板默认弹出位置为 `bottom`，关闭 [#27](https://github.com/themusecatcher/vue-amazing-ui/issues/27)
+- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/color-picker.html) 组件，调整弹出面板默认弹出位置为 `bottom`，关闭 [#27](https://github.com/themusecatcher/vue-amazing-ui/issues/27)
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-01-21">2.1.3</VersionDateTag>
@@ -343,7 +343,7 @@
 
 ## <VersionDateTag date="2025-01-20">2.1.2</VersionDateTag>
 
-- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件
+- 优化并更新 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/color-picker.html) 组件
 - 优化并更新 [监听插槽存在 useSlotsExist](https://themusecatcher.github.io/vue-amazing-ui/utils/functions/slots-exist.html) 工具函数
 - 组件库及文档代码优化
 
@@ -353,7 +353,7 @@
 
 ## <VersionDateTag date="2025-01-16">2.1.0</VersionDateTag>
 
-- 新增 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/colorpicker.html) 组件，关闭 [#23](https://github.com/themusecatcher/vue-amazing-ui/issues/23)
+- 新增 [颜色选择器 ColorPicker](https://themusecatcher.github.io/vue-amazing-ui/guide/components/color-picker.html) 组件，关闭 [#23](https://github.com/themusecatcher/vue-amazing-ui/issues/23)
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-01-15">2.0.12</VersionDateTag>
@@ -364,9 +364,9 @@
 ## <VersionDateTag date="2025-01-14">2.0.11</VersionDateTag>
 
 - 优化并更新 [输入框 Input](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html) 组件代码逻辑
-- 优化并更新 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html) 组件代码逻辑
+- 优化并更新 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input-search.html) 组件代码逻辑
 - 优化并更新 [文本域 Textarea](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textarea.html) 组件代码逻辑
-- 优化并更新 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件代码，新增 `enter` 事件，支持监听按下回车的回调
+- 优化并更新 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input-number.html) 组件代码，新增 `enter` 事件，支持监听按下回车的回调
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-01-13">2.0.10</VersionDateTag>
@@ -379,7 +379,7 @@
 
 ## <VersionDateTag date="2025-01-10">2.0.9</VersionDateTag>
 
-- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，将 `pauseOnMouseEnter` 属性默认值调整为 `false`，并更新文档示例
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/text-scroll.html) 组件，将 `pauseOnMouseEnter` 属性默认值调整为 `false`，并更新文档示例
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-01-09">2.0.8</VersionDateTag>
@@ -416,14 +416,14 @@
 ## <VersionDateTag date="2024-12-26">2.0.3</VersionDateTag>
 
 - 优化并更新 [倒计时 Countdown](https://themusecatcher.github.io/vue-amazing-ui/guide/components/countdown.html) 组件，将 `finishedText` 属性重命名为 `finish`
-- 修复 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html) 组件使用插槽自定义搜索图标不生效的问题
+- 修复 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input-search.html) 组件使用插槽自定义搜索图标不生效的问题
 - 所有支持插槽的组件文档新增 `Slots` 相关说明文档
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2024-12-24">2.0.2</VersionDateTag>
 
-- 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件，`icon` 属性新增类型 `VNode`
-- 新增 `VueAmazingUIStyleResolve` 方法导出，用于配合 `vite-plugin-style-import` 插件实现按需自动引入组件样式，具体请参考 [自动引入样式](https://themusecatcher.github.io/vue-amazing-ui/guide/ondemand.html#%E8%87%AA%E5%8A%A8%E5%BC%95%E5%85%A5%E6%A0%B7%E5%BC%8F-%E6%8E%A8%E8%8D%90)
+- 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/float-button.html) 组件，`icon` 属性新增类型 `VNode`
+- 新增 `VueAmazingUIStyleResolve` 方法导出，用于配合 `vite-plugin-style-import` 插件实现按需自动引入组件样式，具体请参考 [自动引入样式](https://themusecatcher.github.io/vue-amazing-ui/guide/import-on-demand.html#%E8%87%AA%E5%8A%A8%E5%BC%95%E5%85%A5%E6%A0%B7%E5%BC%8F-%E6%8E%A8%E8%8D%90)
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2024-12-20">2.0.1</VersionDateTag>
@@ -435,19 +435,19 @@
 ## <VersionDateTag date="2024-12-18">2.0.0</VersionDateTag>
 
 - 优化组件库打包构建；所有组件支持手动或自动按需引入；全面支持基于 `ES modules` 的 `tree shaking`
-- 新增 `VueAmazingUIResolver` 方法导出，用于配合 `unplugin-vue-components` 插件支持组件库的自动按需引入，具体请参考 [自动按需引入](https://themusecatcher.github.io/vue-amazing-ui/guide/ondemand.html#%E8%87%AA%E5%8A%A8%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5-%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90)
+- 新增 `VueAmazingUIResolver` 方法导出，用于配合 `unplugin-vue-components` 插件支持组件库的自动按需引入，具体请参考 [自动按需引入](https://themusecatcher.github.io/vue-amazing-ui/guide/import-on-demand.html#%E8%87%AA%E5%8A%A8%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5-%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90)
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2024-12-10">1.10.4</VersionDateTag>
 
 - 优化并更新 [复选框 Checkbox](https://themusecatcher.github.io/vue-amazing-ui/guide/components/checkbox.html) 组件，删除 `width` `height` 属性；新增选中动画效果
 - 优化并更新 [单选框 Radio](https://themusecatcher.github.io/vue-amazing-ui/guide/components/radio.html) 组件，删除 `width` `height` 属性；新增选中动画效果
-- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，将 `verticalInterval` 属性重命名为 `interval`；新增 `duration` 属性；用于控制垂直滚动过渡持续时间；代码逻辑优化
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/text-scroll.html) 组件，将 `verticalInterval` 属性重命名为 `interval`；新增 `duration` 属性；用于控制垂直滚动过渡持续时间；代码逻辑优化
 
 ## <VersionDateTag date="2024-12-09">1.10.3</VersionDateTag>
 
 - 优化并更新 [表格 Table](https://themusecatcher.github.io/vue-amazing-ui/guide/components/table.html) 组件，新增 `sticky` 属性，支持：对于长表格设置跟随页面固定表头和水平滚动条，方便查看表头和使用滚动条
-- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，将 `scrollText` 属性重命名为 `items`；删除 `interval` `step` 属性，新增 `speed` 属性；用于更方便的控制水平滚动动画速度；重构水平滚动动画效果；新增 `pauseOnMouseEnter` 属性，支持控制鼠标移入时是否暂停滚动
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/text-scroll.html) 组件，将 `scrollText` 属性重命名为 `items`；删除 `interval` `step` 属性，新增 `speed` 属性；用于更方便的控制水平滚动动画速度；重构水平滚动动画效果；新增 `pauseOnMouseEnter` 属性，支持控制鼠标移入时是否暂停滚动
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2024-12-05">1.10.2</VersionDateTag>
@@ -475,7 +475,7 @@
 
 ## <VersionDateTag date="2024-11-28">1.9.10</VersionDateTag>
 
-- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件，新增支持设置多种 `CSS` 变量自定义样式
+- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/back-top.html) 组件，新增支持设置多种 `CSS` 变量自定义样式
 - 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，新增支持设置多种 `CSS` 变量自定义样式
 - 组件库及文档代码优化
 
@@ -510,8 +510,8 @@
 
 ## <VersionDateTag date="2024-11-13">1.9.5</VersionDateTag>
 
-- 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件，新增 `zIndex` 属性，支持设置按钮的 `z-index` 值
-- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件代码
+- 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/float-button.html) 组件，新增 `zIndex` 属性，支持设置按钮的 `z-index` 值
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/float-button.html) 组件代码
 - 优化并更新 [文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html) 组件代码逻辑
 - 组件库及文档代码优化
 
@@ -531,7 +531,7 @@
 
 - 优化并更新 [上传 Upload](https://themusecatcher.github.io/vue-amazing-ui/guide/components/upload.html) 组件，新增 `draggable` 属性，支持控制拖拽上传功能
 - 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件代码和动画效果，支持异步更新内容和文字提示，自动更新文字提示框位置
-- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件，`icon` 属性新增支持 `VNode` 类型
+- 优化并更新 [回到顶部 BackTop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/back-top.html) 组件，`icon` 属性新增支持 `VNode` 类型
 - 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件，`icon` 属性新增支持 `VNode` 类型
 - 组件库及文档代码优化
 
@@ -566,14 +566,14 @@
 
 ## <VersionDateTag date="2024-10-24">1.8.9</VersionDateTag>
 
-- 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件
+- 优化并更新 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/float-button.html) 组件
 - 组件库文档代新增赞助功能模块
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2024-10-22">1.8.8</VersionDateTag>
 
 - 优化并更新 [头像 Avatar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/avatar.html) 组件，新增 `href` `target` 属性，支持链接跳转功能
-- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，新增 `hrefHoverColor` 属性，支持自定义链接悬浮颜色
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/text-scroll.html) 组件，新增 `hrefHoverColor` 属性，支持自定义链接悬浮颜色
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2024-10-21">1.8.7</VersionDateTag>
@@ -586,7 +586,7 @@
 
 - 优化并更新 [警告提示 Alert](https://themusecatcher.github.io/vue-amazing-ui/guide/components/alert.html) 组件，新增 `type: 'default'` 类型，以及 `bordered` 属性
 - 优化并更新 [头像 Avatar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/avatar.html) 组件，新增 `color` 属性
-- 优化并更新 [渐变文字 GradientText](https://themusecatcher.github.io/vue-amazing-ui/guide/components/gradienttext.html) 组件，新增 `weight` 属性
+- 优化并更新 [渐变文字 GradientText](https://themusecatcher.github.io/vue-amazing-ui/guide/components/gradient-text.html) 组件，新增 `weight` 属性
 - 优化并更新 [抽屉 Drawer](https://themusecatcher.github.io/vue-amazing-ui/guide/components/drawer.html) 组件，支持开启抽屉时，禁止背景滚动
 - 组件库及文档代码优化
 
@@ -614,12 +614,12 @@
 ## <VersionDateTag date="2024-10-11">1.8.1</VersionDateTag>
 
 - 优化并更新 [选择器 Select](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html) 组件，新增 `openChange` 事件
-- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，新增 `start` `stop` `reset` 方法，支持手动控制开始、暂停、重置滚动
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/text-scroll.html) 组件，新增 `start` `stop` `reset` 方法，支持手动控制开始、暂停、重置滚动
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2024-10-10">1.8.0</VersionDateTag>
 
-- 新增 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/floatbutton.html) 组件
+- 新增 [浮动按钮 FloatButton](https://themusecatcher.github.io/vue-amazing-ui/guide/components/float-button.html) 组件
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2024-10-09">1.7.2</VersionDateTag>
@@ -656,7 +656,7 @@
 ## <VersionDateTag date="2024-09-13">1.6.6</VersionDateTag>
 
 - 优化并更新 [滑动输入条 Slider](https://themusecatcher.github.io/vue-amazing-ui/guide/components/slider.html) 组件，新增垂直模式
-- 优化并更新 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputnumber.html) 组件
+- 优化并更新 [数字输入框 InputNumber](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input-number.html) 组件
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2024-09-10">1.6.5</VersionDateTag>
@@ -673,7 +673,7 @@
 
 ## <VersionDateTag date="2024-08-30">1.6.3</VersionDateTag>
 
-- 优化并更新 [回到顶部 Backtop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/backtop.html) 组件，新增 `icon` `description` `tooltip` `tooltipProps` `type` `shape` 属性
+- 优化并更新 [回到顶部 Backtop](https://themusecatcher.github.io/vue-amazing-ui/guide/components/back-top.html) 组件，新增 `icon` `description` `tooltip` `tooltipProps` `type` `shape` 属性
 - 优化并更新 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html) 组件，新增 `contentStyle` 属性
 - 优化并更新 [按钮 Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html) 组件，新增 `buttonClass` 属性，删除 `loadingColor` 属性
 - 组件库及文档代码优化
@@ -695,7 +695,7 @@
 
 ## <VersionDateTag date="2024-08-23">1.6.0</VersionDateTag>
 
-- 新增 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/inputsearch.html) 组件
+- 新增 [搜索框 InputSearch](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input-search.html) 组件
 - 组件库代码优化
 
 ## <VersionDateTag date="2024-08-22">1.5.4</VersionDateTag>
@@ -739,7 +739,7 @@
 
 ## <VersionDateTag date="2024-08-08">1.4.6</VersionDateTag>
 
-- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html) 组件，优化滚动逻辑
+- 优化并更新 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/text-scroll.html) 组件，优化滚动逻辑
 - 优化并更新 [空状态 Empty](https://themusecatcher.github.io/vue-amazing-ui/guide/components/empty.html) 组件，新增 `descriptionStyle` 属性
 
 ## <VersionDateTag date="2024-08-07">1.4.5</VersionDateTag>
@@ -780,7 +780,7 @@
 
 ## <VersionDateTag date="2024-07-30">1.4.0</VersionDateTag>
 
-- 新增 [加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loadingbar.html) 组件
+- 新增 [加载条 LoadingBar](https://themusecatcher.github.io/vue-amazing-ui/guide/components/loading-bar.html) 组件
 
 ## <VersionDateTag date="2024-07-29">1.3.4</VersionDateTag>
 
@@ -808,7 +808,7 @@
 
 - 新增 [分段控制器 Segmented](https://themusecatcher.github.io/vue-amazing-ui/guide/components/segmented.html) 组件
 - 修复 [文本省略 Ellipsis](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html) 组件：当文本区域宽高变化时，`tooltip` 显示的问题
-- 修复 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/textscroll.html)组件：滚动区域尺寸变化时的横向滚动问题
+- 修复 [文字滚动 TextScroll](https://themusecatcher.github.io/vue-amazing-ui/guide/components/text-scroll.html)组件：滚动区域尺寸变化时的横向滚动问题
 
 ## <VersionDateTag date="2024-07-23">1.2.0</VersionDateTag>
 

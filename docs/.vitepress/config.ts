@@ -106,15 +106,15 @@ export default defineConfig({
             },
             {
               text: '快速上手',
-              link: '/guide/started'
+              link: '/guide/getting-started'
             },
             {
               text: '按需引入',
-              link: '/guide/ondemand'
+              link: '/guide/import-on-demand'
             },
             {
               text: '定制主题',
-              link: '/guide/customize'
+              link: '/guide/customize-theme'
             },
             {
               text: '更新日志',
@@ -131,7 +131,7 @@ export default defineConfig({
             },
             {
               text: '自动完成 AutoComplete',
-              link: '/guide/components/autocomplete'
+              link: '/guide/components/auto-complete'
             },
             {
               text: '头像 Avatar',
@@ -139,7 +139,7 @@ export default defineConfig({
             },
             {
               text: '回到顶部 BackTop',
-              link: '/guide/components/backtop'
+              link: '/guide/components/back-top'
             },
             {
               text: '徽标 Badge',
@@ -179,11 +179,11 @@ export default defineConfig({
             },
             {
               text: '颜色选择器 ColorPicker',
-              link: '/guide/components/colorpicker'
+              link: '/guide/components/color-picker'
             },
             {
               text: '全局化配置 ConfigProvider',
-              link: '/guide/components/configprovider'
+              link: '/guide/components/config-provider'
             },
             {
               text: '倒计时 Countdown',
@@ -191,7 +191,7 @@ export default defineConfig({
             },
             {
               text: '日期选择 DatePicker',
-              link: '/guide/components/datepicker'
+              link: '/guide/components/date-picker'
             },
             {
               text: '描述列表 Descriptions',
@@ -223,11 +223,11 @@ export default defineConfig({
             },
             {
               text: '浮动按钮 FloatButton',
-              link: '/guide/components/floatbutton'
+              link: '/guide/components/float-button'
             },
             {
               text: '渐变文字 GradientText',
-              link: '/guide/components/gradienttext'
+              link: '/guide/components/gradient-text'
             },
             {
               text: '栅格 Grid',
@@ -247,11 +247,11 @@ export default defineConfig({
             },
             {
               text: '数字输入框 InputNumber',
-              link: '/guide/components/inputnumber'
+              link: '/guide/components/input-number'
             },
             {
               text: '搜索框 InputSearch',
-              link: '/guide/components/inputsearch'
+              link: '/guide/components/input-search'
             },
             {
               text: '列表 List',
@@ -259,7 +259,7 @@ export default defineConfig({
             },
             {
               text: '加载条 LoadingBar',
-              link: '/guide/components/loadingbar'
+              link: '/guide/components/loading-bar'
             },
             {
               text: '全局提示 Message',
@@ -275,7 +275,7 @@ export default defineConfig({
             },
             {
               text: '数值动画 NumberAnimation',
-              link: '/guide/components/numberanimation'
+              link: '/guide/components/number-animation'
             },
             {
               text: '分页 Pagination',
@@ -295,7 +295,7 @@ export default defineConfig({
             },
             {
               text: '二维码 QRCode',
-              link: '/guide/components/qrcode'
+              link: '/guide/components/qr-code'
             },
             {
               text: '单选框 Radio',
@@ -371,7 +371,7 @@ export default defineConfig({
             },
             {
               text: '文字滚动 TextScroll',
-              link: '/guide/components/textscroll'
+              link: '/guide/components/text-scroll'
             },
             {
               text: '时间轴 Timeline',

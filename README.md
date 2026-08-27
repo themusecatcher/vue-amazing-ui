@@ -85,7 +85,7 @@ import 'vue-amazing-ui/es/tag/Tag.css'
 </template>
 ```
 
-**Both Global Partial Registration and Local Registration require manually importing the global default styles of the component library ([Automatic On-Demand Import](https://themusecatcher.github.io/vue-amazing-ui/guide/ondemand.html#%E8%87%AA%E5%8A%A8%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5-%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90) is recommended).**
+**Both Global Partial Registration and Local Registration require manually importing the global default styles of the component library ([Automatic On-Demand Import](https://themusecatcher.github.io/vue-amazing-ui/guide/import-on-demand.html#%E8%87%AA%E5%8A%A8%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5-%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90) is recommended).**
 
 ```ts
 import { createApp } from 'vue'

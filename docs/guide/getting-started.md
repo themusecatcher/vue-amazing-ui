@@ -73,7 +73,7 @@ import 'vue-amazing-ui/es/tag/Tag.css'
 </template>
 ```
 
-> **全局部分注册和局部注册组件，都需手动引入组件库全局默认样式（推荐使用[自动按需引入](/guide/ondemand#自动按需引入-强烈推荐)）**
+> **全局部分注册和局部注册组件，都需手动引入组件库全局默认样式（推荐使用[自动按需引入](/guide/import-on-demand#自动按需引入-强烈推荐)）**
 
 ```ts
 import { createApp } from 'vue'
