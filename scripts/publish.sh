@@ -80,5 +80,15 @@ else
 fi
 git push
 
+# 打版本 tag（确保指向最终发布状态的 commit），并推送
+tag="v$version"
+if git rev-parse -q --verify "refs/tags/$tag" >/dev/null 2>&1; then
+    echo "⚠️ git tag $tag 已存在，跳过打 tag"
+else
+    git tag -a "$tag" -m "release: $version"
+    git push origin "$tag"
+    echo "✅ 已生成并推送 git tag: $tag"
+fi
+
 # 重新部署文档（组件库已构建过，跳过重复构建；skipBuild=1 时 commitMessage 用不上，传空占位）
 pnpm docs:deploy "" 1

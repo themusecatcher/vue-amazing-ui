@@ -17,12 +17,11 @@ import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/r
 // import { visualizer } from 'rollup-plugin-visualizer'
 // 功能全面且轻量级的命令行参数解析工具
 import minimist from 'minimist'
-// 最小化混淆器
-// import terser from '@rollup/plugin-terser'
 // 第三方样式依赖清单（单一数据源，与 resolver.ts 共享）
 import { vendorStyles } from './components/utils/vendor-styles'
 
 // 获取 vite build 构建时，传入的参数：dir f（形如 `vite build -- dir=dist f=iife`）
+// minimist 的 `_` 字段收集所有「非 -x/--x 开头的裸位置参数」，即 `--` 之后的 `dir=dist f=iife` 会被归入 _ 数组
 const { _: args } = minimist(process.argv.slice(2))
 // 从位置参数中按 key=value 形式查找，避免依赖固定索引
 const findArg = (key: string) => {
@@ -31,7 +30,11 @@ const findArg = (key: string) => {
 }
 const dir = findArg('dir')
 const f = findArg('f')
+// 项目根目录（vite.config.ts 所在目录），ESM 标准 API 获取，与下方 resolve.alias 写法保持一致
+const rootDir = fileURLToPath(new URL('.', import.meta.url))
 // 库模式需外部化处理、不打包进产物的第三方依赖（es/lib 按需引入时由消费方解析）
+// 注意：swiper 只列出子路径 swiper/modules、swiper/vue 而未列主包 swiper——因为源码中仅从这两个子路径 import，
+// 主包 swiper 是它们的公共依赖，保持打包进产物（Rollup 会自动处理），外部化子路径即可让消费方解析到对应实现
 const externalDependencies = [
   'vue',
   'date-fns',
@@ -57,6 +60,22 @@ const externalGlobals: Record<string, string> = {
   '@ant-design/colors': 'Colors',
   '@ctrl/tinycolor': 'TinyColor'
 }
+// dist（IIFE/UMD 全量构建）下生成 dist/css.d.ts，供 package.json exports["./css"].types 指向，解决 `import 'vue-amazing-ui/css'` 的 TS 报错
+function generateCssDtsPlugin(): Plugin {
+  return {
+    name: 'generate-css-dts',
+    apply: 'build',
+    closeBundle() {
+      if (dir !== 'dist') return
+      try {
+        const cssDts = '// CSS 副作用导入的类型声明（side-effect import）\nexport {}\n'
+        writeFileSync(resolve(rootDir, 'dist', 'css.d.ts'), cssDts, 'utf-8')
+      } catch (error) {
+        console.warn('[generate-css-dts] 生成 css.d.ts 失败', error)
+      }
+    }
+  }
+}
 // 注意：dist（IIFE/UMD 全量构建）的第三方 CSS 已打进 style.css，无需 vendor 目录
 // 将第三方 CSS 复制到产物（es/lib）的 vendor-styles 固定目录，供 resolver 按需引入引用
 function copyVendorStylesPlugin(): Plugin {
@@ -64,23 +83,14 @@ function copyVendorStylesPlugin(): Plugin {
     name: 'copy-vendor-styles',
     apply: 'build',
     closeBundle() {
-      if (dir === 'dist') {
-        // 全量构建：第三方 CSS 已合入 style.css，无需额外复制
-        // 但需生成 css.d.ts，供 package.json exports["./css"].types 指向，解决 `import 'vue-amazing-ui/css'` 的 TS 报错
-        try {
-          const cssDts = '// CSS 副作用导入的类型声明（side-effect import）\nexport {}\n'
-          writeFileSync(resolve(__dirname, 'dist', 'css.d.ts'), cssDts, 'utf-8')
-        } catch (error) {
-          console.warn('[copy-vendor-styles] 生成 css.d.ts 失败', error)
-        }
-        return
-      }
+      if (dir === 'dist') return
       const outDirs = ['es', 'lib']
       outDirs.forEach((outDir) => {
         vendorStyles.forEach(({ source, target }) => {
-          const sourcePath = resolve(__dirname, 'node_modules', source)
-          const targetPath = resolve(__dirname, outDir, target)
+          const sourcePath = resolve(rootDir, 'node_modules', source)
+          const targetPath = resolve(rootDir, outDir, target)
           try {
+            // mkdirSync 需要创建的是文件所在目录（父目录）而非文件本身，故用 dirname 取 targetPath 的父目录
             mkdirSync(dirname(targetPath), { recursive: true })
             // 读取并剥离 sourceMappingURL 注释，避免消费方因缺失 .map 文件报错
             const content = readFileSync(sourcePath, 'utf-8').replace(/\/\*#\s*sourceMappingURL=[^*]+\*\//g, '')
@@ -91,7 +101,7 @@ function copyVendorStylesPlugin(): Plugin {
         })
         // 清理 Vite 隐式 emit 到 node_modules/.pnpm 的孤儿 CSS asset（已被 vendor 固定路径取代）
         try {
-          rmSync(resolve(__dirname, outDir, 'node_modules'), { recursive: true, force: true })
+          rmSync(resolve(rootDir, outDir, 'node_modules'), { recursive: true, force: true })
         } catch (error) {
           console.warn('[copy-vendor-styles] 清理 node_modules 孤儿 asset 失败', error)
         }
@@ -100,8 +110,13 @@ function copyVendorStylesPlugin(): Plugin {
   }
 }
 const buildDistOptions = {
-  emptyOutDir: false, // 若 outDir 在 root 目录下，则为 true。默认情况下，若 outDir 在 root 目录下，则 Vite 会在构建时清空该目录。若 outDir 在根目录之外则会抛出一个警告避免意外删除掉重要的文件。
+  // 注意：必须为 false，不能改成 true！
+  // 因为 build:components 脚本用 run-p 并行执行 build:dist / build:browser（两者都写 dist 目录），
+  // 若设 true，两个并行任务会在开始时各自清空 dist，产生竞态导致产物互相覆盖丢失。
+  // 清空动作由 pnpm build 的前置 clean 脚本（rimraf dist es lib）串行完成，故此处无需（也不能）让 Vite 清空。
+  emptyOutDir: false,
   copyPublicDir: false, // 默认情况下，Vite 会在构建阶段将 publicDir 目录中的所有文件复制到 outDir 目录中。可以通过设置该选项为 false 来禁用该行为。
+  // minify: 设置为 false 可禁用混淆，或指定混淆器（默认 'esbuild'）。若需用 terser 去除 console/debugger，需先 `pnpm i -D terser` 并在此配置 minify:'terser' + terserOptions。注意：es/lib 按需构建走 buildESAndLibOptions，该配置仅在 dist 全量构建生效。
   lib: {
     // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
     /*
@@ -109,18 +124,15 @@ const buildDistOptions = {
       umd: 通用模块定义规范，同时支持 amd，cjs 和 iife
       iife: 自执行函数，适用于 <script> 标签（如果你想为你的应用程序创建 bundle，那么你可能会使用它）。iife 表示“自执行 函数表达式”
     */
-    formats: f === 'iife' ? ['iife'] : ['es', 'umd'], // iife: 自执行函数表达式 Immediately Invoked Function Expression
-    // __dirname 的值是 vite.config.ts 文件所在目录
-    entry: resolve(__dirname, 'components', 'index.ts'), // 或 'components/index.ts' entry 是必需的，因为库不能使用HTML作为入口。
+    formats: f === 'iife' ? ['iife'] : ['es', 'umd'], // f=iife（build:browser）只出 iife；默认（build:dist）出 es+umd，iife 由 build:browser 单独产出，避免重复
+    entry: resolve(rootDir, 'components', 'index.ts'), // 或 'components/index.ts' entry 是必需的，因为库不能使用HTML作为入口。
     name: 'VueAmazingUI', // 暴露的全局变量
     fileName: 'index', // 输出的包文件名，默认是 package.json 的 name 选项；也可以定义为以 format 和 entryName 为参数的函数，并返回文件名
     cssFileName: 'style' // 指定 CSS 输出文件的名称，默认为 package.json 中的 name
   },
   rollupOptions: {
     // 自定义底层的 Rollup 打包配置
-    plugins: [
-      // terser()
-    ],
+    plugins: [],
     // https://cn.rollupjs.org/configuration-options
     // 确保外部化处理那些你不想打包进库的依赖（作为外部依赖）
     external: f === 'iife' ? ['vue'] : externalDependencies,
@@ -144,28 +156,6 @@ const buildDistOptions = {
       globals: externalGlobals
     }
   },
-  /*
-    minify:
-    设置为 false 可以禁用最小化混淆，或是用来指定使用哪种混淆器。
-    默认为 'esbuild'，它比 terser 快 20-40 倍，压缩率只差 1%-2%。
-    注意，在 lib 模式下使用 'es' 时，build.minify 选项不会缩减空格，因为会移除掉 pure 标注，导致破坏 tree-shaking。
-    当设置为 'terser' 时必须先安装 Terser。（pnpm i terser -D）
-  */
-  // minify: 'terser', // Vite 2.6.x 以上需要配置 minify: "terser", terserOptions 才能生效
-  // terserOptions: { // 在打包代码时移除 console、debugger 和 注释
-  //   compress: {
-  //     /* (default: false) -- Pass true to discard calls to console.* functions.
-  //       If you wish to drop a specific function call such as console.info and/or
-  //       retain side effects from function arguments after dropping the function
-  //       call then use pure_funcs instead
-  //     */
-  //     drop_console: true, // 生产环境时移除console
-  //     drop_debugger: true
-  //   },
-  //   format: {
-  //     comments: false // 删除注释comments
-  //   }
-  // },
   // 启用/禁用 CSS 代码拆分。当启用时，在异步 chunk 中导入的 CSS 将内联到异步 chunk 本身，并在其被加载时一并获取。如果禁用，整个项目中的所有 CSS 将被提取到一个 CSS 文件中。
   cssCodeSplit: false, // 默认 true，如果指定了 build.lib，build.cssCodeSplit 会默认为 false
   // cssMinify: 'esbuild', // boolean | 'esbuild' | 'lightningcss'，默认: 与 build.minify 一致，允许用户覆盖 CSS 最小化压缩的配置，而不是使用默认的 build.minify
@@ -178,17 +168,15 @@ const buildESAndLibOptions = {
   copyPublicDir: false, // 默认情况下，Vite 会在构建阶段将 publicDir 目录中的所有文件复制到 outDir 目录中。
   lib: {
     // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
-    entry: resolve(__dirname, 'components', 'index.ts') // 或 'components/index.ts'
+    entry: resolve(rootDir, 'components', 'index.ts') // 或 'components/index.ts'
   },
   rollupOptions: {
     // 自定义底层的 Rollup 打包配置
-    plugins: [
-      // terser()
-    ],
+    plugins: [],
     // https://cn.rollupjs.org/configuration-options
     // 确保外部化处理那些你不想打包进库的依赖（作为外部依赖）
     external: externalDependencies,
-    input: resolve(__dirname, 'components', 'index.ts'), // 'components/index.ts'
+    input: resolve(rootDir, 'components', 'index.ts'), // 'components/index.ts'
     output: [
       // https://cn.rollupjs.org/javascript-api/#outputoptions-object
       {
@@ -236,6 +224,7 @@ export default defineConfig({
       // https://github.com/yyx990803/launch-editor?tab=readme-ov-file#supported-editors
       launchEditor: 'cursor' // code【VSCode】 | cursor【Cursor】 ...
     }),
+    generateCssDtsPlugin(),
     copyVendorStylesPlugin(),
     dts({
       // 自动生成类型文件
@@ -306,7 +295,8 @@ export default defineConfig({
     //   open: true // 打包后自动打开分析图
     // })
   ],
-  // 构建为库
+  // 构建为库：dir=dist（build:dist / build:browser 全量构建）走 buildDistOptions；
+  // 其余情况（含 build-only 无 dir 参数）走 buildESAndLibOptions，产出 es + lib 按需产物
   build: (dir === 'dist' ? buildDistOptions : buildESAndLibOptions) as BuildEnvironmentOptions,
   resolve: {
     alias: {
