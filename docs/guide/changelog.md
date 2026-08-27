@@ -11,7 +11,8 @@
 - 优化 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 组件代码
 - 优化并更新 [自动完成 AutoComplete](/guide/components/auto-complete.html) 组件文档及演示用例
 - 新增第三方样式单一数据源，优化按需引入时第三方样式处理逻辑
-- 优化并重构 [下载文件 downloadFile](/utils/functions/download-file.html) 工具函数：内置同源 `anchor` 与跨域 `iframe` 双下载策略并自动分流，支持自定义文件名（含中文）与下载策略配置；优化并更新 [图片 Image](/guide/components/image.html) 组件，新增 `downloadOptions`、`customDownload` 属性，支持调整内置下载策略或提供完全自定义的下载方法
+- 优化并重构 [下载文件 downloadFile](/utils/functions/download-file.html) 工具函数：内置同源 `anchor` 与跨域 `iframe` 双下载策略并自动分流，支持自定义文件名（含中文）与下载策略配置
+- 优化并更新 [图片 Image](/guide/components/image.html) 组件，新增 `downloadOptions`、`customDownload` 属性，支持调整内置下载策略或提供完全自定义的下载方法
 - 优化组件库 `vite` 构建配置逻辑与按需引入 `resolver` 逻辑
 - 修复全局样式导入 `import 'vue-amazing-ui/css'` 的 `TypeScript` 类型声明缺失问题
 - 优化组件库发布脚本，发版时自动生成并推送版本标签
