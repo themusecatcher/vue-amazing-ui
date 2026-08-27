@@ -1,12 +1,16 @@
 import { ref, nextTick } from 'vue'
 import type { Ref } from 'vue'
 /**
- * 组合式函数
- * 测量触发器、弹出面板与相对定位容器的矩形，收敛定位容器查询与测量骨架
+ * 组合式函数（定位测量层）
  *
- * 高层定位 composable 的测量层：向上查找面板最近的非 static 定位容器（getPositionedContainer），
- * 并在 nextTick 后统一测量定位容器与触发器的视口矩形，消除各弹出组件逐字重复的测量样板。
- * 翻转算法、对齐几何与遮挡边界因组件差异保留在各组件层（见设计文档查漏补缺结论）。
+ * 为所有弹出类组件（Select / AutoComplete / Tooltip 等）提供统一的测量骨架，只负责「量」，
+ * 不负责「往哪弹」：
+ * - 定位容器查询：从面板元素向上找到最近的非 static 祖先（getPositionedContainer），
+ *   作为面板绝对定位的参照坐标系；
+ * - 矩形测量：在 nextTick 后统一测量定位容器与触发器的视口矩形，消除各组件重复的测量样板。
+ *
+ * 职责边界：翻转算法、对齐几何、遮挡边界等「定位决策」因组件需求不同，刻意保留在各组件层
+ * （如 Tooltip 支持四轴翻转、Select 仅垂直翻转），本函数不参与决策。
  *
  * @param {Ref<HTMLElement | null>} contentRef 触发器内容元素
  * @param {Ref<HTMLElement | null>} panelRef 弹出面板（同时作为 getPositionedContainer 的查询起点）

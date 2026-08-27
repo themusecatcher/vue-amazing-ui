@@ -1,4 +1,4 @@
-import { ref, toValue, computed, watch, onBeforeUnmount, nextTick, onMounted } from 'vue'
+import { ref, toValue, computed, watch, onBeforeUnmount, onMounted } from 'vue'
 import type { Ref } from 'vue'
 import { useSupported, useOptionsSupported, useEventListener } from './hooks'
 import { throttle, debounce } from './function'
@@ -267,7 +267,7 @@ export function useScroll(
  * 查询并监听最近可滚动父元素，响应视口 resize，维护滚动位置与视口尺寸状态
  *
  * 与定位算法解耦，任何需要滚动感知的组件均可复用。滚动父元素查找（getScrollParent）、
- * 滚动监听（observeScroll）、清理（cleanup）等样板逻辑在此收敛。
+ * 滚动监听（observeScroll）、清理（cleanup）等逻辑在此收敛。
  *
  * @param {Ref<HTMLElement | null>} contentRef 触发器内容元素（用于向上查找可滚动父元素）
  * @param {() => void} onScroll 滚动/resize 触发的回调（组件侧传入 updatePosition）
