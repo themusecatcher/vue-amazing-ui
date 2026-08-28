@@ -90,5 +90,20 @@ else
     echo "✅ 已生成并推送 git tag: $tag"
 fi
 
+# 自动创建 GitHub Release（与 tag 同名，正文统一引用 CHANGELOG）
+# 依赖 gh CLI；未安装或未登录时不阻塞主流程，仅提示手动创建
+releaseBody="Please refer to [CHANGELOG.md](https://github.com/themusecatcher/vue-amazing-ui/blob/main/docs/guide/changelog.md) for details."
+if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+    if gh release view "$tag" >/dev/null 2>&1; then
+        echo "⚠️ GitHub Release $tag 已存在，跳过创建"
+    else
+        gh release create "$tag" --title "$tag" --notes "$releaseBody"
+        echo "✅ 已创建 GitHub Release: $tag"
+    fi
+else
+    echo "⚠️ 未检测到已登录的 gh CLI，跳过自动创建 GitHub Release"
+    echo "   请手动创建: gh release create $tag --title $tag --notes \"$releaseBody\""
+fi
+
 # 重新部署文档（组件库已构建过，跳过重复构建；skipBuild=1 时 commitMessage 用不上，传空占位）
 pnpm docs:deploy "" 1
