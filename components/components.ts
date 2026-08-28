@@ -5,14 +5,14 @@ export type {
   Props as AutoCompleteProps,
   Option as AutoCompleteOption,
   GroupOption as AutoCompleteGroupOption
-} from './autocomplete'
-export { default as AutoComplete } from './autocomplete'
+} from './auto-complete'
+export { default as AutoComplete } from './auto-complete'
 
 export type { Props as AvatarProps, Responsive as AvatarResponsive } from './avatar'
 export { default as Avatar } from './avatar'
 
-export type { Props as BackTopProps } from './backtop'
-export { default as BackTop } from './backtop'
+export type { Props as BackTopProps } from './back-top'
+export { default as BackTop } from './back-top'
 
 export type { Props as BadgeProps, PresetColor as BadgePresetColor, Status as BadgeStatus } from './badge'
 export { default as Badge } from './badge'
@@ -47,17 +47,17 @@ export { default as Checkbox } from './checkbox'
 export type { Props as CollapseProps, Item as CollapseItem } from './collapse'
 export { default as Collapse } from './collapse'
 
-export type { Props as ColorPickerProps, ColorPickerMode, ColorPickerAction } from './colorpicker'
-export { default as ColorPicker } from './colorpicker'
+export type { Props as ColorPickerProps, ColorPickerMode, ColorPickerAction } from './color-picker'
+export { default as ColorPicker } from './color-picker'
 
-export type { Props as ConfigProviderProps, Theme as ConfigProviderTheme } from './configprovider'
-export { default as ConfigProvider } from './configprovider'
+export type { Props as ConfigProviderProps, Theme as ConfigProviderTheme } from './config-provider'
+export { default as ConfigProvider } from './config-provider'
 
 export type { Props as CountdownProps } from './countdown'
 export { default as Countdown } from './countdown'
 
-export type { Props as DatePickerProps } from './datepicker'
-export { default as DatePicker } from './datepicker'
+export type { Props as DatePickerProps } from './date-picker'
+export { default as DatePicker } from './date-picker'
 
 export type { DescriptionsProps, Responsive as DescriptionsResponsive, DescriptionsItemProps } from './descriptions'
 export { Descriptions, DescriptionsItem } from './descriptions'
@@ -80,11 +80,11 @@ export { default as Empty } from './empty'
 export type { Props as FlexProps } from './flex'
 export { default as Flex } from './flex'
 
-export type { Props as FloatButtonProps } from './floatbutton'
-export { default as FloatButton } from './floatbutton'
+export type { Props as FloatButtonProps } from './float-button'
+export { default as FloatButton } from './float-button'
 
-export type { Props as GradientTextProps, Gradient as GradientTextGradient } from './gradienttext'
-export { default as GradientText } from './gradienttext'
+export type { Props as GradientTextProps, Gradient as GradientTextGradient } from './gradient-text'
+export { default as GradientText } from './gradient-text'
 
 export type { RowProps, Responsive as RowResponsive, ColProps } from './grid'
 export { Row, Col } from './grid'
@@ -98,17 +98,17 @@ export { default as Image } from './image'
 export type { Props as InputProps } from './input'
 export { default as Input } from './input'
 
-export type { Props as InputNumberProps } from './inputnumber'
-export { default as InputNumber } from './inputnumber'
+export type { Props as InputNumberProps } from './input-number'
+export { default as InputNumber } from './input-number'
 
-export type { Props as InputSearchProps } from './inputsearch'
-export { default as InputSearch } from './inputsearch'
+export type { Props as InputSearchProps } from './input-search'
+export { default as InputSearch } from './input-search'
 
 export type { ListProps, ListItemProps } from './list'
 export { List, ListItem } from './list'
 
-export type { Props as LoadingBarProps } from './loadingbar'
-export { default as LoadingBar } from './loadingbar'
+export type { Props as LoadingBarProps } from './loading-bar'
+export { default as LoadingBar } from './loading-bar'
 
 export type { Props as MessageProps, Message as MessageOptions } from './message'
 export { default as Message } from './message'
@@ -119,8 +119,8 @@ export { default as Modal } from './modal'
 export type { Props as NotificationProps, Notification as NotificationOptions } from './notification'
 export { default as Notification } from './notification'
 
-export type { Props as NumberAnimationProps, TransitionFunc as NumberAnimationTransitionFunc } from './numberanimation'
-export { default as NumberAnimation } from './numberanimation'
+export type { Props as NumberAnimationProps, TransitionFunc as NumberAnimationTransitionFunc } from './number-animation'
+export { default as NumberAnimation } from './number-animation'
 
 export type { Props as PaginationProps } from './pagination'
 export { default as Pagination } from './pagination'
@@ -134,8 +134,8 @@ export { default as Popover } from './popover'
 export type { Props as ProgressProps, Gradient as ProgressGradient } from './progress'
 export { default as Progress } from './progress'
 
-export type { Props as QRCodeProps } from './qrcode'
-export { default as QRCode } from './qrcode'
+export type { Props as QRCodeProps } from './qr-code'
+export { default as QRCode } from './qr-code'
 
 export type { Props as RadioProps, Option as RadioOption } from './radio'
 export { default as Radio } from './radio'
@@ -203,8 +203,8 @@ export { default as Tag } from './tag'
 export type { Props as TextareaProps } from './textarea'
 export { default as Textarea } from './textarea'
 
-export type { Props as TextScrollProps, Item as TextScrollItem } from './textscroll'
-export { default as TextScroll } from './textscroll'
+export type { Props as TextScrollProps, Item as TextScrollItem } from './text-scroll'
+export { default as TextScroll } from './text-scroll'
 
 export type { Props as TimelineProps, Item as TimelineItem } from './timeline'
 export { default as Timeline } from './timeline'

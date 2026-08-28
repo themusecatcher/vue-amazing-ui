@@ -144,13 +144,19 @@ requestAnimationFrame(updateTime)
 | value | 待格式化的日期时间值，支持数字、字符串和 `Date` 类型，默认为当前时间戳 | number &#124; string &#124; Date | Date.now() |
 | format | 格式化字符串 | string | 'YYYY-MM-DD HH:mm:ss' |
 
-## format 支持的格式化占位符列表
+## Return
+
+| 类型 | 说明 |
+| --- | --- |
+| string | 格式化后的日期时间字符串 |
+
+## `format` 支持的格式化占位符列表
 
 | 标识 | 示例    | 描述         |
 | ---- | ------- | ------------ |
 | YY   | 23      | 年，两位数   |
 | YYYY | 2023    | 年，四位数   |
-| M    | 1-12    | 月，从1开始  |
+| M    | 1-12    | 月，从 `1` 开始  |
 | MM   | 01-12   | 月，两位数   |
 | D    | 1-31    | 日           |
 | DD   | 01-31   | 日，两位数   |

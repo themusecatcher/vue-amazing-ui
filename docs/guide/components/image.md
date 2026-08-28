@@ -9,6 +9,13 @@
 - 需要展示图片和预览时
 - 加载图片时显示 `loading`
 
+> [!WARNING]
+> 下方示例图片虽以 `cdn.jsdelivr.net` 为入口，但下载时会 301 重定向到 `raw.githubusercontent.com`，导致默认的「下载」按钮失效，原因如下：
+>
+> 内置 `downloadFile` 对跨域地址走 `iframe` 策略，而 `raw.githubusercontent.com` 设置了 `X-Frame-Options: deny`，浏览器拒绝在 iframe 内加载，控制台报 `Refused to display ... in a frame`；即便不重定向，`cdn.jsdelivr.net` 作为普通 CDN 也不支持 iframe 策略依赖的 `response-content-disposition` 参数。
+>
+> 下方的「自定义下载」小节演示了可用的 `XHR + Blob` 方案：以二进制流读取图片（需图床开启 CORS，`raw.githubusercontent.com` 返回 `Access-Control-Allow-Origin: *`）后转 Blob URL，再用 `a` 标签 `download` 属性强制下载，不受上述限制。
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { ImageItem } from 'vue-amazing-ui'
@@ -34,6 +41,30 @@ const images = ref<ImageItem[]>([
     name: 'image-5.jpg'
   }
 ])
+/**
+ * 自定义下载示例：用 XHR + Blob 下载跨域图床图片
+ * 内置 downloadFile 的 iframe 策略受图床 X-Frame-Options 限制，改用 XHR 取二进制后通过 Blob 触发下载，不受该限制
+ */
+function customDownload(url: string, fileName?: string) {
+  // 以二进制流方式请求图片，需要图床开启 CORS 才能跨域读取
+  const xhr = new XMLHttpRequest()
+  xhr.open('GET', url, true)
+  xhr.responseType = 'blob'
+  xhr.onload = () => {
+    if (xhr.status === 200) {
+      // 将二进制流转为本地 Blob URL，再通过 a 标签的 download 属性强制下载（blob 同源，download 始终生效）
+      const blobUrl = URL.createObjectURL(xhr.response)
+      const a = document.createElement('a')
+      a.href = blobUrl
+      a.download = fileName || url.split('?')[0].split('/').pop() || 'download'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(blobUrl) // 释放 Blob URL，避免内存泄漏
+    }
+  }
+  xhr.send()
+}
 </script>
 
 ## 基本使用
@@ -372,6 +403,137 @@ const images = ref<ImageItem[]>([
 
 :::
 
+## 下载配置
+
+*通过 `downloadOptions` 配置内置下载策略（`anchor` / `iframe`）与打开方式（`_self` / `_blank`）*
+
+*下方示例强制 `anchor` 策略并设 `target="_blank"`，跨域下 `download` 属性失效，点击后在新窗口打开图片*
+
+<br/>
+
+<Image
+  album
+  :src="images"
+  :download-options="{ strategy: 'anchor', target: '_blank' }"
+  loop
+/>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { ImageItem } from 'vue-amazing-ui'
+const images = ref<ImageItem[]>([
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
+    name: 'image-1.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
+    name: 'image-2.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
+    name: 'image-3.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    name: 'image-4.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    name: 'image-5.jpg'
+  }
+])
+</script>
+<template>
+  <Image
+    album
+    :src="images"
+    :download-options="{ strategy: 'anchor', target: '_blank' }"
+    loop
+  />
+</template>
+```
+
+:::
+
+## 自定义下载
+
+*跨域图床（如设置 `X-Frame-Options` 拒绝 `iframe` 的 CDN）下载受限时，内置 `downloadFile` 可能无法满足：可通过 `downloadOptions` 调整内置下载策略，或通过 `customDownload` 提供完全自定义的下载方法*
+
+*下方示例演示了用 `XHR + Blob` 绕过 `X-Frame-Options` 限制下载跨域图床图片*
+
+<br/>
+
+<Image
+  album
+  :src="images"
+  :custom-download="customDownload"
+  loop
+/>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { ImageItem } from 'vue-amazing-ui'
+const images = ref<ImageItem[]>([
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg',
+    name: 'image-1.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg',
+    name: 'image-2.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg',
+    name: 'image-3.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    name: 'image-4.jpg'
+  },
+  {
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    name: 'image-5.jpg'
+  }
+])
+/**
+ * 自定义下载示例：用 XHR + Blob 下载跨域图床图片
+ * 内置 downloadFile 的 iframe 策略受图床 X-Frame-Options 限制，改用 XHR 取二进制后通过 Blob 触发下载，不受该限制
+ */
+function customDownload(url: string, fileName?: string) {
+  // 以二进制流方式请求图片，需要图床开启 CORS 才能跨域读取
+  const xhr = new XMLHttpRequest()
+  xhr.open('GET', url, true)
+  xhr.responseType = 'blob'
+  xhr.onload = () => {
+    if (xhr.status === 200) {
+      // 将二进制流转为本地 Blob URL，再通过 a 标签的 download 属性强制下载（blob 同源，download 始终生效）
+      const blobUrl = URL.createObjectURL(xhr.response)
+      const a = document.createElement('a')
+      a.href = blobUrl
+      a.download = fileName || url.split('?')[0].split('/').pop() || 'download'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(blobUrl) // 释放 Blob URL，避免内存泄漏
+    }
+  }
+  xhr.send()
+}
+</script>
+<template>
+  <Image album :src="images" :custom-download="customDownload" loop />
+</template>
+```
+
+:::
+
 ## APIs
 
 ### Image
@@ -397,6 +559,8 @@ const images = ref<ImageItem[]>([
 | draggable | 是否可以拖动图片 | boolean | false |
 | loop | 是否可以循环切换图片 | boolean | false |
 | album | 是否相册模式，即从一张展示图片点开相册 | boolean | false |
+| downloadOptions | 图片下载配置，透传给内置 `downloadFile` 的第三个参数 `options`；默认 `auto` 策略（同源 `anchor` / 跨域 `iframe`） | { target?: '_self' &#124; '_blank'; strategy?: 'auto' &#124; 'anchor' &#124; 'iframe' } | undefined |
+| customDownload | 自定义下载方法，提供时优先于内置 `downloadFile` 使用；用于解决跨域图床下载受限（如 `X-Frame-Options`、无 `CORS`）等内置策略无法满足的场景 | (url: string, fileName?: string) => void &#124; Promise&lt;void&gt; | undefined |
 
 ### Image Type
 

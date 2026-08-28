@@ -1,12 +1,3 @@
-# 加法 add
-
-<GlobalElement />
-
-_消除 `js` 加减精度问题的工具函数_
-
-::: details Show Source Code
-
-```ts
 /**
  * 消除 js 加减精度问题的加法函数
  *
@@ -39,29 +30,3 @@ export function add(num1: number, num2: number): number {
   const result = (+num1Str.replace('.', '') + +num2Str.replace('.', '')) / factor
   return result
 }
-```
-
-:::
-
-## 基本使用
-
-```vue
-<script setup lang="ts">
-import { add } from 'vue-amazing-ui'
-console.log(0.1 + 0.2) // js直接计算结果: 0.30000000000000004
-add(0.1, 0.2) // 0.3
-</script>
-```
-
-## Params
-
-| 参数 | 说明  | 类型   | 默认值    |
-| ---- | ----- | ------ | --------- |
-| num1 | 加数1 | number | undefined |
-| num2 | 加数2 | number | undefined |
-
-## Return
-
-| 类型 | 说明 |
-| --- | --- |
-| number | 两个数字的和 |

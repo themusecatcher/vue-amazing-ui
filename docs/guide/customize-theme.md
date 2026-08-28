@@ -4,7 +4,7 @@
 
 `Vue Amazing UI` 通过使用 `ConfigProvider` 调整主题，默认情况下主题色为 <Tag :bordered="false" color="#1677ff">#1677ff</Tag>，无需任何配置
 
-更多关于 `ConfigProvider` 的使用，参见 [全局化配置 ConfigProvider](/guide/components/configprovider.html)
+更多关于 `ConfigProvider` 的使用，参见 [全局化配置 ConfigProvider](/guide/components/config-provider.html)
 
 ## 动态切换主题
 

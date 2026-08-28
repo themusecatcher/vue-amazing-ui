@@ -95,3 +95,10 @@ watchEffect(() => {
 | 参数      | 说明                 | 类型                   | 默认值    |
 | --------- | -------------------- | ---------------------- | --------- |
 | slotsName | 插槽的名称或名称数组 | string &#124; string[] | 'default' |
+
+## Return
+
+| 类型 | 说明 |
+| --- | --- |
+| ComputedRef&lt;boolean&gt; | 传入单个插槽名称时，返回该插槽是否存在的计算属性 |
+| Reactive&lt;Record&lt;string, ComputedRef&lt;boolean&gt;&gt;&gt; | 传入插槽名称数组时，返回各插槽是否存在状态的响应式对象 |

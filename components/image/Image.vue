@@ -28,6 +28,11 @@ export interface Props {
   draggable?: boolean // 是否可以拖动图片
   loop?: boolean // 是否可以循环切换图片
   album?: boolean // 是否相册模式，即从一张展示图片点开相册
+  downloadOptions?: {
+    target?: '_self' | '_blank' // 打开方式
+    strategy?: 'auto' | 'anchor' | 'iframe' // 下载策略
+  } // 图片下载配置，透传给内置 downloadFile 工具函数的第三个参数 options
+  customDownload?: (url: string, fileName?: string) => void | Promise<void> // 自定义下载方法，提供时优先于内置 downloadFile，用于解决跨域图床下载受限等内置策略无法满足的场景
 }
 const props = withDefaults(defineProps<Props>(), {
   src: undefined,
@@ -160,7 +165,13 @@ function onClose(): void {
 // 下载
 function onDownload(): void {
   const image = images.value[previewIndex.value]
-  downloadFile(image.src, image.name)
+  // 提供自定义下载方法时优先使用，绕开内置下载方法
+  if (props.customDownload) {
+    props.customDownload(image.src, image.name)
+    return
+  }
+  // 未自定义时走内置 downloadFile，透传下载配置
+  downloadFile(image.src, image.name, props.downloadOptions)
 }
 // 放大
 function onZoomin(): void {

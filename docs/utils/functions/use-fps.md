@@ -61,3 +61,9 @@ const { fps } = useFps()
   <h3>帧率：{{ fps }}</h3>
 </template>
 ```
+
+## Return
+
+| 名称 | 说明 | 类型 |
+| --- | --- | --- |
+| fps | 实时监测的浏览器刷新率 | Ref&lt;number&gt; |

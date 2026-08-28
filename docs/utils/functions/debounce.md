@@ -72,3 +72,9 @@ function showPosition() {
 | ----- | ------------------------- | -------- | --------- |
 | fn    | 要执行的函数              | Function | undefined |
 | delay | 防抖的时间期限，单位 `ms` | number   | 300       |
+
+## Return
+
+| 类型 | 说明 |
+| --- | --- |
+| Function | 防抖后的新函数 |

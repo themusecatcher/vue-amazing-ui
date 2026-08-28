@@ -259,3 +259,17 @@ function onStop(e: Event) {
 | throttleDelay | 节流延迟时间，单位 `ms`，用于限制滚动事件的触发频率 | number | 0 |
 | onScroll? | 滚动事件的回调函数 | (e: Event) => void | undefined |
 | onStop? | 滚动结束的回调函数 | (e: Event) => void | undefined |
+
+## Return
+
+| 名称 | 说明 | 类型 |
+| --- | --- | --- |
+| x | 水平滚动距离 | Ref&lt;number&gt; |
+| xScrollMax | 水平最大可滚动距离 | Ref&lt;number&gt; |
+| y | 垂直滚动距离 | Ref&lt;number&gt; |
+| yScrollMax | 垂直最大可滚动距离 | Ref&lt;number&gt; |
+| isScrolling | 是否正在滚动 | Ref&lt;boolean&gt; |
+| left | 是否向左滚动 | Ref&lt;boolean&gt; |
+| right | 是否向右滚动 | Ref&lt;boolean&gt; |
+| top | 是否向上滚动 | Ref&lt;boolean&gt; |
+| bottom | 是否向下滚动 | Ref&lt;boolean&gt; |

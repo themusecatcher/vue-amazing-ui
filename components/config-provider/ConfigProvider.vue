@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { reactive, computed, watch, provide } from 'vue'
-import { TinyColor } from '@ctrl/tinycolor'
-import { generate } from '@ant-design/colors'
+import { getColorPalettes, getAlphaColor } from 'components/utils'
 export interface Theme {
   common?: {
     // 优先级低于组件配置
@@ -296,26 +295,6 @@ watch(
     immediate: true
   }
 )
-function getColorPalettes(primaryColor: string): string[] {
-  return generate(primaryColor)
-}
-function isStableColor(color: number): boolean {
-  return color >= 0 && color <= 255
-}
-function getAlphaColor(frontColor: string, backgroundColor: string = '#ffffff'): string {
-  const { r: fR, g: fG, b: fB, a: originAlpha } = new TinyColor(frontColor).toRgb()
-  if (originAlpha < 1) return frontColor
-  const { r: bR, g: bG, b: bB } = new TinyColor(backgroundColor).toRgb()
-  for (let fA = 0.01; fA <= 1; fA += 0.01) {
-    const r = Math.round((fR - bR * (1 - fA)) / fA)
-    const g = Math.round((fG - bG * (1 - fA)) / fA)
-    const b = Math.round((fB - bB * (1 - fA)) / fA)
-    if (isStableColor(r) && isStableColor(g) && isStableColor(b)) {
-      return new TinyColor({ r, g, b, a: Math.round(fA * 100) / 100 }).toRgbString()
-    }
-  }
-  return new TinyColor({ r: fR, g: fG, b: fB, a: 1 }).toRgbString()
-}
 </script>
 <template>
   <slot v-if="abstract"></slot>

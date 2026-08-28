@@ -83,3 +83,9 @@ formatNumber(123456789.87654321, 2, ',') // 123,456,789.88
 | decimal   | 小数点字符                 | string               | '.'       |
 | prefix?   | 数字前的字符串             | string               | undefined |
 | suffix?   | 数字后的字符串             | string               | undefined |
+
+## Return
+
+| 类型 | 说明 |
+| --- | --- |
+| string | 格式化后的数字字符串 |

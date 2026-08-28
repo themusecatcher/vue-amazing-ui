@@ -142,3 +142,10 @@ useMutationObserver(defaultSlotsRef, callback, options)
 | target | 要观察的 `DOM` 元素或元素数组，可以是 `ref` 引用，也可以是 `DOM` 元素本身 | Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[] | undefined |
 | callback | 当观察到变化时调用的回调函数 | MutationCallback | undefined |
 | options | 观察选项，默认为空对象，[参考文档](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver/observe#options) | object | {} |
+
+## Return
+
+| 名称 | 说明 | 类型 |
+| --- | --- | --- |
+| start | 开始观察目标元素 | () => void |
+| stop | 停止观察并断开与目标元素的连接 | () => void |

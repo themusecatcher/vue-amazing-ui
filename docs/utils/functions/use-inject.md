@@ -99,3 +99,10 @@ console.log('shadowColor', shadowColor.value)
 | 参数 | 说明   | 类型   | 默认值    |
 | ---- | ------ | ------ | --------- |
 | key  | 组件名 | string | undefined |
+
+## Return
+
+| 名称 | 说明 | 类型 |
+| --- | --- | --- |
+| colorPalettes | 颜色调色板数组 | Ref&lt;string[]&gt; |
+| shadowColor | 阴影颜色 | Ref&lt;string&gt; |

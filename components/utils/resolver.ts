@@ -1,9 +1,10 @@
+import { vendorStylesByComponent } from './vendor-styles'
 // 所有组件样式的路径映射
 const componentsMap = {
   Alert: 'alert',
-  AutoComplete: 'autocomplete',
+  AutoComplete: 'auto-complete',
   Avatar: 'avatar',
-  BackTop: 'backtop',
+  BackTop: 'back-top',
   Badge: 'badge',
   Breadcrumb: 'breadcrumb',
   Button: 'button',
@@ -13,39 +14,39 @@ const componentsMap = {
   Cascader: 'cascader',
   Checkbox: 'checkbox',
   Collapse: 'collapse',
-  ColorPicker: 'colorpicker',
-  ConfigProvider: 'configprovider',
+  ColorPicker: 'color-picker',
+  ConfigProvider: 'config-provider',
   Countdown: 'countdown',
-  DatePicker: 'datepicker',
+  DatePicker: 'date-picker',
   Descriptions: 'descriptions/descriptions',
-  DescriptionsItem: 'descriptions/descriptionsitem',
+  DescriptionsItem: 'descriptions/descriptions-item',
   Dialog: 'dialog',
   Divider: 'divider',
   Drawer: 'drawer',
   Ellipsis: 'ellipsis',
   Empty: 'empty',
   Flex: 'flex',
-  FloatButton: 'floatbutton',
-  GradientText: 'gradienttext',
+  FloatButton: 'float-button',
+  GradientText: 'gradient-text',
   Row: 'grid/row',
   Col: 'grid/col',
   Highlight: 'highlight',
   Image: 'image',
   Input: 'input',
-  InputNumber: 'inputnumber',
-  InputSearch: 'inputsearch',
+  InputNumber: 'input-number',
+  InputSearch: 'input-search',
   List: 'list/list',
-  ListItem: 'list/listitem',
-  LoadingBar: 'loadingbar',
+  ListItem: 'list/list-item',
+  LoadingBar: 'loading-bar',
   Message: 'message',
   Modal: 'modal',
   Notification: 'notification',
-  NumberAnimation: 'numberanimation',
+  NumberAnimation: 'number-animation',
   Pagination: 'pagination',
   Popconfirm: 'popconfirm',
   Popover: 'popover',
   Progress: 'progress',
-  QRCode: 'qrcode',
+  QRCode: 'qr-code',
   Radio: 'radio',
   Rate: 'rate',
   Result: 'result',
@@ -64,7 +65,7 @@ const componentsMap = {
   Tabs: 'tabs',
   Tag: 'tag',
   Textarea: 'textarea',
-  TextScroll: 'textscroll',
+  TextScroll: 'text-scroll',
   Timeline: 'timeline',
   Tooltip: 'tooltip',
   Upload: 'upload',
@@ -118,28 +119,11 @@ function getSideEffects(componentName: string, options?: VueAmazingUIResolverOpt
       `vue-amazing-ui/${type}/${componentsMap[component as keyof typeof componentsMap]}/${component}.css`
     )
   })
-  if (componentName === 'DatePicker') {
-    // 特殊处理 DatePicker 组件样式依赖文件
-    sideEffects.push(
-      `vue-amazing-ui/${type}/node_modules/.pnpm/@vuepic_vue-datepicker@12.1.0_vue@3.5.29_typescript@5.9.3_/node_modules/@vuepic/vue-datepicker/dist/main.css`
-    )
-  }
-  if (componentName === 'Swiper') {
-    // 特殊处理 Swiper 组件样式依赖文件
-    sideEffects.push(`vue-amazing-ui/${type}/node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/swiper.css`)
-    const swiperModulesStyle = [
-      'effect-cards',
-      'effect-creative',
-      'effect-cube',
-      'effect-fade',
-      'effect-flip',
-      'navigation',
-      'pagination'
-    ]
-    swiperModulesStyle.forEach((moduleName) => {
-      sideEffects.push(
-        `vue-amazing-ui/${type}/node_modules/.pnpm/swiper@12.1.2/node_modules/swiper/modules/${moduleName}.css`
-      )
+  // 第三方样式依赖：从共享清单按组件名查表，追加到 sideEffects（构建时已复制到产物 vendor 固定路径）
+  const vendorTargets = vendorStylesByComponent[componentName]
+  if (vendorTargets) {
+    vendorTargets.forEach((target) => {
+      sideEffects.push(`vue-amazing-ui/${type}/${target}`)
     })
   }
   return sideEffects

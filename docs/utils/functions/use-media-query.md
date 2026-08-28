@@ -71,3 +71,9 @@ const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 | 参数       | 说明                                     | 类型   | 默认值    |
 | ---------- | ---------------------------------------- | ------ | --------- |
 | mediaQuery | 媒体查询字符串，用于定义要查询的媒体条件 | string | undefined |
+
+## Return
+
+| 名称 | 说明 | 类型 |
+| --- | --- | --- |
+| match | 当前视口是否匹配给定的媒体查询条件 | Ref&lt;boolean&gt; |

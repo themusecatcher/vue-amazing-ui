@@ -43,20 +43,20 @@ const options5 = ref([
   {
     value: 'Libraries',
     options: [
-      { value: 'AntDesignVue', count: 10000 },
-      { value: 'AntDesignVue UI', count: 10600 }
+      { value: 'VueAmazingUI', count: 10000 },
+      { value: 'VueAmazingUI 组件', count: 10600 }
     ]
   },
   {
     value: 'Solutions',
     options: [
-      { value: 'AntDesignVue UI FAQ', count: 60100 },
-      { value: 'AntDesignVue FAQ', count: 30010 }
+      { value: 'VueAmazingUI 组件 FAQ', count: 60100 },
+      { value: 'VueAmazingUI FAQ', count: 30010 }
     ]
   },
   {
     value: 'Articles',
-    options: [{ value: 'AntDesignVue design language', count: 100000 }]
+    options: [{ value: 'VueAmazingUI 设计语言', count: 100000 }]
   },
   {
     value: 'all'
@@ -265,13 +265,13 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
             <template v-if="item.options">
               <div style="display: flex; justify-content: space-between; align-items: center">
                 <span>{{ item.value }}</span>
-                <a href="https://www.google.com/search?q=ant-design-vue" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.google.com/search?q=vue-amazing-ui" target="_blank" rel="noopener noreferrer">
                   more
                 </a>
               </div>
             </template>
             <template v-else-if="item.value === 'all'">
-              <a href="https://www.google.com/search?q=ant-design-vue" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.google.com/search?q=vue-amazing-ui" target="_blank" rel="noopener noreferrer">
                 View all results
               </a>
             </template>
