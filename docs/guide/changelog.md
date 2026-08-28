@@ -4,7 +4,7 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
-## <VersionDateTag date="2026-08-27">2.6.0</VersionDateTag>
+## <VersionDateTag date="2026-08-28">2.6.0</VersionDateTag>
 
 - 优化并重构组件库工程结构：规范化组件目录及文档为短横线命名，同步更新侧边栏与引用链接
 - 拆分 `utils` 为多模块并整理导出；新增抽象弹出定位与滚动感知组合式函数，重构 [选择器 Select](/guide/components/select.html)、[文字提示 Tooltip](/guide/components/tooltip.html)、[自动完成 AutoComplete](/guide/components/auto-complete.html) 等弹出类组件代码
@@ -12,10 +12,10 @@
 - 优化并更新 [自动完成 AutoComplete](/guide/components/auto-complete.html) 组件文档及演示用例
 - 新增第三方样式单一数据源，优化按需引入时第三方样式处理逻辑
 - 优化并重构 [下载文件 downloadFile](/utils/functions/download-file.html) 工具函数：内置同源 `anchor` 与跨域 `iframe` 双下载策略并自动分流，支持自定义文件名（含中文）与下载策略配置
-- 优化并更新 [图片 Image](/guide/components/image.html) 组件，新增 `downloadOptions`、`customDownload` 属性，支持调整内置下载策略或提供完全自定义的下载方法
+- 优化并更新 [图片 Image](/guide/components/image.html) 组件和文档用例，新增 `downloadOptions`、`customDownload` 属性，支持调整内置下载策略或提供完全自定义的下载方法
 - 优化组件库 `vite` 构建配置逻辑与按需引入 `resolver` 逻辑
 - 修复全局样式导入 `import 'vue-amazing-ui/css'` 的 `TypeScript` 类型声明缺失问题
-- 优化组件库发布脚本，发版时自动生成并推送版本标签
+- 优化组件库发布脚本，发版时自动生成并推送版本标签，并自动创建与标签同名的 `GitHub Release`
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-08-26">2.5.3</VersionDateTag>
