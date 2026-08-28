@@ -81,7 +81,7 @@ function onStyleCustom(description: string) {
     description,
     icon: h(CloudFilled),
     style: {
-      width: '500px',
+      width: '420px',
       color: '#ff6900'
     }
   })
@@ -285,7 +285,7 @@ function onStyleCustom(description: string) {
     description,
     icon: h(CloudFilled),
     style: {
-      width: '500px',
+      width: '420px',
       color: '#ff6900'
     }
   })

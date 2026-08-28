@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect, nextTick, onBeforeUnmount } from 'vue'
-import type { VNode, CSSProperties } from 'vue'
+import { ref, reactive, nextTick, onBeforeUnmount } from 'vue'
+import type { VNode, CSSProperties, ComponentPublicInstance } from 'vue'
 import { rafTimeout, cancelRaf, useInject } from 'components/utils'
 export interface Props {
   title?: string // 通知提醒标题，优先级低于 Notification 中的 title
@@ -28,134 +28,140 @@ export interface Notification {
   placement?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' // 通知提醒弹出位置
   onClose?: Function // 关闭时的回调函数
 }
-const resetTimer = ref()
-const hideIndex = ref<number[]>([])
-const hideTimers = ref<any[]>([])
-const notificationData = ref<any[]>([])
-const closeDuration = ref<number | null>(null) // 自动关闭延时
-const notificationPlace = ref() // 弹出位置
-const notificationRef = ref() // notificationData 数组的 DOM 引用
+type Placement = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
+// 每条通知的展示数据
+interface NotificationItem extends Notification {
+  mode: 'open' | 'info' | 'success' | 'error' | 'warning'
+}
+// 单个 placement 分组的状态：独立的通知列表 + 独立的隐藏状态 + 独立的自动关闭定时器
+interface NotificationGroup {
+  placement: Placement
+  data: NotificationItem[]
+  hideIndex: number[]
+  hideTimers: any[]
+  resetTimer: any
+}
+const notificationGroups = ref<NotificationGroup[]>([])
+const notificationRefs = ref<Record<string, HTMLElement[]>>({}) // 分组 DOM 引用
 const { colorPalettes } = useInject('Notification') // 主题色注入
 const emit = defineEmits(['close'])
-const topStyle = computed(() => {
-  if (['topRight', 'topLeft'].includes(notificationPlace.value)) {
-    return {
-      top: `${props.top}px`
-    }
+// 根据 placement 找到对应分组，不存在则创建
+function getGroup(placement: Placement): NotificationGroup {
+  let group = notificationGroups.value.find((g) => g.placement === placement)
+  if (!group) {
+    group = reactive<NotificationGroup>({
+      placement,
+      data: [],
+      hideIndex: [],
+      hideTimers: [],
+      resetTimer: null
+    })
+    notificationGroups.value.push(group)
+  }
+  return group
+}
+function topStyle(placement: Placement): CSSProperties {
+  if (['topRight', 'topLeft'].includes(placement)) {
+    return { top: `${props.top}px` }
   }
   return {}
-})
-const bottomStyle = computed(() => {
-  if (['bottomRight', 'bottomLeft'].includes(notificationPlace.value)) {
-    return {
-      bottom: `${props.bottom}px`
-    }
+}
+function bottomStyle(placement: Placement): CSSProperties {
+  if (['bottomRight', 'bottomLeft'].includes(placement)) {
+    return { bottom: `${props.bottom}px` }
   }
   return {}
-})
-const clear = computed(() => {
-  // 所有提示是否已经全部变为 false
-  return hideIndex.value.length === notificationData.value.length
-})
-watch(
-  clear,
-  (to, from) => {
-    // 所有提示都消失后重置
-    if (!from && to) {
-      resetTimer.value = rafTimeout(() => {
-        hideIndex.value = []
-        notificationData.value = []
-      }, 300)
-    }
-  },
-  {
-    flush: 'post'
-  }
-)
-watchEffect(() => {
-  notificationPlace.value = props.placement
-})
+}
 onBeforeUnmount(() => {
-  hideTimers.value.forEach((rafId: any) => {
-    rafId && cancelRaf(rafId)
+  notificationGroups.value.forEach((group) => {
+    group.resetTimer && cancelRaf(group.resetTimer)
+    group.hideTimers.forEach((rafId: any) => {
+      rafId && cancelRaf(rafId)
+    })
   })
 })
-function onEnter(index: number) {
-  stopAutoClose(index)
-}
-function onLeave(index: number) {
-  if (!hideIndex.value.includes(index)) {
-    autoClose(index)
+// 收集每条通知的 DOM 引用，用于关闭动画时设置 maxHeight
+function setRef(el: Element | ComponentPublicInstance | null, placement: Placement, index: number) {
+  if (el) {
+    if (!notificationRefs.value[placement]) {
+      notificationRefs.value[placement] = []
+    }
+    notificationRefs.value[placement][index] = el as HTMLElement
   }
 }
-function stopAutoClose(index: number) {
-  hideTimers.value[index] && cancelRaf(hideTimers.value[index])
-  hideTimers.value[index] = null
+function onEnter(group: NotificationGroup, index: number) {
+  stopAutoClose(group, index)
 }
-function autoClose(index: number) {
-  if (closeDuration.value !== null) {
-    hideTimers.value[index] = rafTimeout(() => {
-      onClose(index)
-    }, closeDuration.value)
+function onLeave(group: NotificationGroup, index: number) {
+  if (!group.hideIndex.includes(index)) {
+    autoClose(group, index)
   }
 }
-async function onClose(index: number) {
-  notificationRef.value[index].style.maxHeight = notificationRef.value[index].offsetHeight + 'px'
+function stopAutoClose(group: NotificationGroup, index: number) {
+  group.hideTimers[index] && cancelRaf(group.hideTimers[index])
+  group.hideTimers[index] = null
+}
+function autoClose(group: NotificationGroup, index: number) {
+  const closeDuration = group.data[index].duration
+  // duration 为 null 表示不自动关闭；为 undefined 时使用默认时长
+  if (closeDuration !== null) {
+    const delay: number = closeDuration || (props.duration ?? 4500)
+    group.hideTimers[index] = rafTimeout(() => {
+      onClose(group, index)
+    }, delay)
+  }
+}
+async function onClose(group: NotificationGroup, index: number) {
+  const target = notificationRefs.value[group.placement]?.[index]
+  if (target) {
+    target.style.maxHeight = `${target.offsetHeight}px`
+  }
   await nextTick()
-  hideIndex.value.push(index)
-  hideTimers.value[index] = null
-  notificationData.value[index].onClose && notificationData.value[index].onClose()
+  group.hideIndex.push(index)
+  group.hideTimers[index] = null
+  const item = group.data[index]
+  item.onClose && item.onClose()
   emit('close')
+  watchClear(group)
 }
-function show() {
-  resetTimer.value && cancelRaf(resetTimer.value)
-  hideTimers.value.push(null)
-  const index = notificationData.value.length - 1
-  const last = notificationData.value[index]
-  if (last.placement) {
-    notificationPlace.value = last.placement
+// 当某分组内所有通知都隐藏后，清空该分组数据（保留分组容器，保证 leave 动画完整播放）
+function watchClear(group: NotificationGroup) {
+  if (group.hideIndex.length === group.data.length && group.data.length > 0) {
+    group.resetTimer = rafTimeout(() => {
+      group.data = []
+      group.hideIndex = []
+      group.hideTimers = []
+      group.resetTimer = null
+    }, 300)
   }
-  if (last.duration !== null) {
-    closeDuration.value = last.duration || props.duration
-    autoClose(index)
-  } else {
-    closeDuration.value = null
-  }
+}
+function push(notification: Notification, mode: NotificationItem['mode']) {
+  const placement = notification.placement || props.placement
+  const group = getGroup(placement)
+  group.resetTimer && cancelRaf(group.resetTimer)
+  group.resetTimer = null
+  group.hideTimers.push(null)
+  group.data.push({
+    ...notification,
+    mode
+  })
+  const index = group.data.length - 1
+  autoClose(group, index)
 }
 function open(notification: Notification) {
-  notificationData.value.push({
-    ...notification,
-    mode: 'open'
-  })
-  show()
+  push(notification, 'open')
 }
 function info(notification: Notification) {
-  notificationData.value.push({
-    ...notification,
-    mode: 'info'
-  })
-  show()
+  push(notification, 'info')
 }
 function success(notification: Notification) {
-  notificationData.value.push({
-    ...notification,
-    mode: 'success'
-  })
-  show()
+  push(notification, 'success')
 }
 function error(notification: Notification) {
-  notificationData.value.push({
-    ...notification,
-    mode: 'error'
-  })
-  show()
+  push(notification, 'error')
 }
 function warning(notification: Notification) {
-  notificationData.value.push({
-    ...notification,
-    mode: 'warning'
-  })
-  show()
+  push(notification, 'warning')
 }
 defineExpose({
   open,
@@ -167,11 +173,13 @@ defineExpose({
 </script>
 <template>
   <div
+    v-for="group in notificationGroups"
+    :key="group.placement"
     class="notification-wrap"
-    :class="`notification-${notificationPlace}`"
+    :class="`notification-${group.placement}`"
     :style="[
-      topStyle,
-      bottomStyle,
+      topStyle(group.placement),
+      bottomStyle(group.placement),
       `
         --notification-primary-color: ${colorPalettes[5]};
         --notification-success-color: #52c41a;
@@ -180,17 +188,17 @@ defineExpose({
       `
     ]"
   >
-    <TransitionGroup :name="['topRight', 'bottomRight'].includes(notificationPlace) ? 'right' : 'left'">
+    <TransitionGroup appear :name="['topRight', 'bottomRight'].includes(group.placement) ? 'right' : 'left'">
       <div
-        v-show="!hideIndex.includes(index)"
-        ref="notificationRef"
+        v-show="!group.hideIndex.includes(index)"
+        :ref="(el) => setRef(el, group.placement, index)"
         class="notification-container"
         :class="[`icon-${notification.mode}`, notification.class]"
         :style="notification.style"
-        v-for="(notification, index) in notificationData"
+        v-for="(notification, index) in group.data"
         :key="index"
-        @mouseenter="onEnter(index)"
-        @mouseleave="onLeave(index)"
+        @mouseenter="onEnter(group, index)"
+        @mouseleave="onLeave(group, index)"
       >
         <component v-if="notification.icon" :is="notification.icon" class="icon-svg" />
         <svg
@@ -269,7 +277,7 @@ defineExpose({
           <div class="notification-title">{{ notification.title || title }}</div>
           <div class="notification-description">{{ notification.description || description }}</div>
         </div>
-        <a tabindex="0" class="notification-close" @click="onClose(index)">
+        <a tabindex="0" class="notification-close" @click="onClose(group, index)">
           <svg
             class="close-svg"
             viewBox="64 64 896 896"
