@@ -31,7 +31,7 @@ export interface Props {
   downloadOptions?: {
     target?: '_self' | '_blank' // 打开方式
     strategy?: 'auto' | 'anchor' | 'iframe' // 下载策略
-  } // 图片下载配置，透传给内置 downloadFile 工具函数的第三个参数 options
+  } // 图片下载配置，透传给内置 downloadFile 的第三个参数 options；默认 auto 策略（同源 anchor / 跨域 iframe）
   customDownload?: (url: string, fileName?: string) => void | Promise<void> // 自定义下载方法，提供时优先于内置 downloadFile，用于解决跨域图床下载受限等内置策略无法满足的场景
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -53,7 +53,9 @@ const props = withDefaults(defineProps<Props>(), {
   resetOnDbclick: true,
   draggable: false,
   loop: false,
-  album: false
+  album: false,
+  downloadOptions: undefined,
+  customDownload: undefined
 })
 const images = ref<Image[]>([]) // 图片数组
 const previewRef = ref<HTMLElement | null>(null) // 预览 DOM 引用
@@ -109,14 +111,32 @@ function onImageLoaded(index: number): void {
 function onPreviewLoaded(index: number): void {
   previewCompleted.value[index] = true
 }
+// 从地址中提取路径末段作为原始文件名
+function getRawNameFromUrl(src: string): string {
+  // 以当前页面地址为 base 解析，兼容相对路径；解析失败时降级为手工切分
+  let pathname = ''
+  try {
+    pathname = new URL(src, location.href).pathname
+  } catch {
+    pathname = src.split('?')[0].split('#')[0]
+  }
+  const segments = pathname.split('/')
+  return segments[segments.length - 1] || ''
+}
 // 从图像地址 src 中获取图像名称
+// 优先使用显式传入的 name，否则从 src 中提取：
+// 用 URL.pathname 天然剥离查询参数（?）与哈希（#），再取末段并做 URL 解码
 function getImageName(image: Image): string | undefined {
   if (image) {
     if (image.name) {
       return image.name
-    } else {
-      const res = image.src.split('?')[0].split('/')
-      return res[res.length - 1]
+    }
+    const rawName = getRawNameFromUrl(image.src)
+    try {
+      return decodeURIComponent(rawName)
+    } catch {
+      // 路径段含非法百分号编码时 decodeURIComponent 会抛异常，此时原样返回
+      return rawName
     }
   }
 }
@@ -361,7 +381,15 @@ function onSwitchRight(): void {
         </div>
       </div>
     </Space>
-    <Transition name="fade">
+    <Transition
+      name="fade"
+      enter-from-class="fade-enter"
+      enter-active-class="fade-enter"
+      enter-to-class="fade-enter fade-enter-active"
+      leave-from-class="fade-leave"
+      leave-active-class="fade-leave fade-leave-active"
+      leave-to-class="fade-leave fade-leave-active"
+    >
       <div v-show="showPreview" class="preview-mask"></div>
     </Transition>
     <Transition
@@ -633,18 +661,48 @@ function onSwitchRight(): void {
   </div>
 </template>
 <style lang="less" scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s linear;
-}
-.fade-enter-from,
-.fade-leave-to {
+.fade-enter {
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
   opacity: 0;
+  animation-timing-function: linear;
+}
+.fade-enter-active {
+  animation-name: fadeIn;
+  animation-play-state: running;
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}
+.fade-leave {
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+  animation-timing-function: linear;
+}
+.fade-leave-active {
+  animation-name: fadeOut;
+  animation-play-state: running;
+  pointer-events: none;
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
 }
 .zoom-enter {
-  transform: none;
+  transform: scale(0);
   opacity: 0;
-  animation-duration: 0.3s;
+  animation-duration: 0.2s;
   animation-fill-mode: both;
   animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1);
   animation-play-state: paused;
@@ -676,7 +734,6 @@ function onSwitchRight(): void {
   @keyframes zoomOut {
     0% {
       transform: scale(1);
-      opacity: 1;
     }
     100% {
       transform: scale(0.2);
