@@ -5,14 +5,13 @@ set -e
 
 commitMessage=$1
 
-# 强制要求传入语义化的提交描述，避免产生无信息量的 commit
-if [ -z "$commitMessage" ]; then
-    echo "❌ 缺少提交描述。用法: pnpm pub \"<type>: <描述>\"（如 pnpm pub \"fix: correct InputNumber empty value\"）"
-    exit 1
-fi
-
 # 读取 package.json 中的 version（用 node 读取，避免引入 jq 依赖）
 version=$(node -p "require('./package.json').version")
+
+# 未传入提交描述时使用默认语义化描述（版本号动态拼接），传入则以传入为准
+if [ -z "$commitMessage" ]; then
+    commitMessage="feat: 发布 $version 版本"
+fi
 # 版本 tag（提前定义，供前置校验与后续打 tag / 建 release 复用）
 tag="v$version"
 
