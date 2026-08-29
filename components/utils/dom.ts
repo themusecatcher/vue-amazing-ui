@@ -26,6 +26,7 @@ const IFRAME_REMOVE_DELAY = 10000
  * - auto: 自动分流——同源走 anchor，跨域走 iframe（推荐，默认值）
  * - anchor: a 标签 download 属性下载，文件名纯前端可控，仅同源地址有效
  * - iframe: 隐藏 iframe 触发下载，适合跨域地址，文件名依赖服务端支持 response-content-disposition 参数
+ *            （COS/OSS 等对象存储专有）；未传文件名时同样从 URL 中提取
  */
 export type DownloadStrategy = 'auto' | 'anchor' | 'iframe'
 
@@ -106,15 +107,24 @@ function downloadViaAnchor(parsedUrl: URL, target: '_self' | '_blank', fileName?
  *   → 浏览器按响应头触发下载
  *
  * 注意：
- * 1. 普通服务端不认识该参数，fileName 会被忽略；且若响应头为 inline 类型
- *    （如未设置 Content-Disposition 的 PDF），浏览器会在 iframe 内预览而非下载
+ * 1. 普通服务端不认识该参数，文件名会被忽略，此时是否下载完全取决于服务端响应头：
+ *    inline 类型（如未设置 Content-Disposition 的 PDF）会在 iframe 内预览而非下载
  * 2. 跨域限制导致前端无法读取 iframe 内容，下载失败只能依赖 checkIframeError 尽力检测
+ *
+ * @param parsedUrl 已解析的 URL 对象（用于兜底提取文件名）
+ * @param fileName 期望文件名，未传则从 URL 提取
  */
-function downloadViaIframe(url: string, fileName?: string): void {
+function downloadViaIframe(parsedUrl: URL, fileName?: string): void {
+  const url = parsedUrl.href
   let srcUrl = url
-  if (fileName) {
+  // 未传文件名时从 URL 兜底提取，与 anchor 策略行为保持一致；
+  // 携带 attachment 可强制跨域图片 / PDF 等可预览类型触发下载，而非在 iframe 内预览
+  const finalName = fileName || getFileName(parsedUrl)
+  // 判空守卫：URL 无有效文件名末段（如纯域名）时提取结果为空，
+  // 此时不拼参数，避免发出 filename 为空的畸形 Content-Disposition 而被服务端拒绝
+  if (finalName) {
     // 按 RFC 5987 规范同时携带 filename 与 filename*，兼容中文文件名
-    const disposition = `attachment;filename=${encodeURIComponent(fileName)};filename*=UTF-8''${encodeURIComponent(fileName)}`
+    const disposition = `attachment;filename=${encodeURIComponent(finalName)};filename*=UTF-8''${encodeURIComponent(finalName)}`
     const separator = url.includes('?') ? '&' : '?'
     srcUrl = `${url}${separator}response-content-disposition=${encodeURIComponent(disposition)}`
   }
@@ -174,8 +184,8 @@ function checkIframeError(iframe: HTMLIFrameElement): void {
  * 判断下载成败，故返回值不携带成败信息，触发成功即 resolve。
  *
  * @param url 下载地址，支持绝对 URL 与同源相对路径
- * @param fileName 期望的下载文件名；anchor 策略纯前端生效，iframe 策略通过
- *                 response-content-disposition 参数传递给服务端（仅 COS/OSS 识别）
+ * @param fileName 期望的下载文件名；未传时两种策略均从 URL 中提取。anchor 策略纯前端生效，
+ *                 iframe 策略通过 response-content-disposition 参数传递给服务端（仅 COS/OSS 识别）
  * @param options 下载配置（打开方式、下载策略）
  * @returns Promise<void>，resolve 表示已触发下载；URL 非法时 reject
  *
@@ -207,7 +217,7 @@ export function downloadFile(url: string, fileName?: string, options: DownloadOp
   if (shouldUseAnchor) {
     downloadViaAnchor(parsedUrl, target, fileName)
   } else {
-    downloadViaIframe(parsedUrl.href, fileName)
+    downloadViaIframe(parsedUrl, fileName)
   }
   return Promise.resolve()
 }

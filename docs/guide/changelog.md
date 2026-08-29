@@ -4,6 +4,12 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2026-08-30">2.6.2</VersionDateTag>
+
+- 优化并更新 [下载文件 downloadFile](/utils/functions/download-file.html) 工具函数和文档：`iframe` 策略在未传入文件名时，自动从文件地址中提取文件名并拼接 `response-content-disposition` 参数，与 `anchor` 策略行为对齐，修复跨域图片 / `PDF` 等可预览类型在 `iframe` 内预览而非下载的问题；地址无有效文件名时（如纯域名）不拼接参数，避免发出 `filename` 为空的畸形请求
+- 优化并更新 [图片 Image](/guide/components/image.html) 组件下载逻辑：未显式设置 `name` 时，自动使用从图片地址中提取的图片名称，内置下载与 `customDownload` 自定义下载方法均生效
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-08-29">2.6.1</VersionDateTag>
 
 - 优化并重构 [通知提醒 Notification](/guide/components/notification.html) 组件代码逻辑，按弹出位置 `placement` 分组管理通知数据、关闭定时器与隐藏状态，修复不同弹出位置的通知相互干扰的问题，多个弹出位置的通知可同时独立展示；自动关闭时长改为优先取单条通知的 `duration`，未设置时使用组件默认 `duration`

@@ -53,21 +53,18 @@ function customDownload(url: string, fileName?: string) {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <Alert class="mt10 mb10" type="warning" message="关于示例图片的下载功能" show-icon>
       <template #description>
-        <p
-          >示例图片虽以 <code>cdn.jsdelivr.net</code> 为入口，但下载时会 301 重定向到
-          <code>raw.githubusercontent.com</code>，导致默认的「下载」按钮失效，原因如下：</p
-        >
+        <p>示例图片以 <code>cdn.jsdelivr.net</code> 为入口，默认的「下载」按钮会失效，原因如下：</p>
         <p class="mb10 mt10"
-          >内置 <code>downloadFile</code> 对跨域地址走 <code>iframe</code> 策略，而
-          <code>raw.githubusercontent.com</code> 设置了 <code>X-Frame-Options: deny</code>，浏览器拒绝在 iframe
-          内加载，控制台报 <code>Refused to display ... in a frame</code>；即便不重定向，<code>cdn.jsdelivr.net</code>
-          作为普通 CDN 也不支持 iframe 策略依赖的 <code>response-content-disposition</code> 参数。</p
+          >内置 <code>downloadFile</code> 对跨域地址走 <code>iframe</code> 策略，需由服务端识别
+          <code>response-content-disposition</code> 参数并下发
+          <code>Content-Disposition: attachment</code>，浏览器才会触发下载；而 <code>cdn.jsdelivr.net</code> 是普通
+          CDN，不识别该参数（仅 COS / OSS 等对象存储支持），响应中不含 <code>attachment</code>，图片仅在隐藏 iframe
+          内渲染。因此请求虽返回 <code>200</code>，却不会触发下载，控制台也不会有任何报错——跨域 iframe
+          内容禁止读取，内置的错误检测同样失效，表现为「静默失败」。</p
         >
         <p class="mt10"
-          >下方的「自定义下载」小节演示了可用的 <code>XHR + Blob</code> 方案：以二进制流读取图片（需图床开启 CORS，<code
-            >raw.githubusercontent.com</code
-          >
-          返回 <code>Access-Control-Allow-Origin: *</code>）后转 Blob URL，再用 <code>a</code> 标签
+          >下方的「自定义下载」小节演示了可用的 <code>XHR + Blob</code> 方案：以二进制流读取图片（需图床开启
+          CORS，本示例图床返回 <code>Access-Control-Allow-Origin: *</code>）后转 Blob URL，再用 <code>a</code> 标签
           <code>download</code> 属性强制下载，不受上述限制。</p
         >
       </template>

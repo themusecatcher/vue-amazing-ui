@@ -6,11 +6,11 @@ import Spin from 'components/spin'
 import { add, downloadFile, useInject } from 'components/utils'
 export interface Image {
   src: string // 图像地址
-  name?: string // 图像名称
+  name?: string // 图像名称，未设置时自动从图像地址 src 中提取
 }
 export interface Props {
   src?: string | Image[] // 图像地址或图像地址数组
-  name?: string // 图像名称，没有传入图片名时自动从图像地址 src 中读取
+  name?: string // 图像名称，未设置时自动从图像地址 src 中提取
   width?: string | number | (string | number)[] // 图像宽度，单位 px
   height?: string | number | (string | number)[] // 图像高度，单位 px
   disabled?: boolean // 是否禁用图像预览
@@ -187,11 +187,11 @@ function onDownload(): void {
   const image = images.value[previewIndex.value]
   // 提供自定义下载方法时优先使用，绕开内置下载方法
   if (props.customDownload) {
-    props.customDownload(image.src, image.name)
+    props.customDownload(image.src, getImageName(image))
     return
   }
   // 未自定义时走内置 downloadFile，透传下载配置
-  downloadFile(image.src, image.name, props.downloadOptions)
+  downloadFile(image.src, getImageName(image), props.downloadOptions)
 }
 // 放大
 function onZoomin(): void {

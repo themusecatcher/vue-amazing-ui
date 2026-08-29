@@ -10,11 +10,11 @@
 - 加载图片时显示 `loading`
 
 > [!WARNING]
-> 下方示例图片虽以 `cdn.jsdelivr.net` 为入口，但下载时会 301 重定向到 `raw.githubusercontent.com`，导致默认的「下载」按钮失效，原因如下：
+> 下方示例图片以 `cdn.jsdelivr.net` 为入口，默认的「下载」按钮会失效，原因如下：
 >
-> 内置 `downloadFile` 对跨域地址走 `iframe` 策略，而 `raw.githubusercontent.com` 设置了 `X-Frame-Options: deny`，浏览器拒绝在 iframe 内加载，控制台报 `Refused to display ... in a frame`；即便不重定向，`cdn.jsdelivr.net` 作为普通 CDN 也不支持 iframe 策略依赖的 `response-content-disposition` 参数。
+> 内置 `downloadFile` 对跨域地址走 `iframe` 策略，需由服务端识别 `response-content-disposition` 参数并下发 `Content-Disposition: attachment`，浏览器才会触发下载；而 `cdn.jsdelivr.net` 是普通 `CDN`，不识别该参数（仅 `COS / OSS` 等对象存储支持），响应中不含 `attachment`，图片仅在隐藏的 `iframe` 内渲染。因此请求虽返回 `200`，却不会触发下载，控制台也不会有任何报错——跨域 `iframe` 内容禁止读取，内置的错误检测同样失效，表现为「静默失败」。
 >
-> 下方的「自定义下载」小节演示了可用的 `XHR + Blob` 方案：以二进制流读取图片（需图床开启 CORS，`raw.githubusercontent.com` 返回 `Access-Control-Allow-Origin: *`）后转 Blob URL，再用 `a` 标签 `download` 属性强制下载，不受上述限制。
+> 下方的「自定义下载」小节演示了可用的 `XHR + Blob` 方案：以二进制流读取图片（需图床开启 `CORS`，本示例图床返回 `Access-Control-Allow-Origin: *`）后转 Blob URL，再用 `a` 标签 `download` 属性强制下载，不受上述限制。
 
 <script setup lang="ts">
 import { ref } from 'vue'
@@ -541,7 +541,7 @@ function customDownload(url: string, fileName?: string) {
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | src | 图像地址或图像地址数组 | string &#124; [Image](#image-type)[] | undefined |
-| name | 图像名称，没有传入图片名时自动从图像地址 `src` 中读取 | string | undefined |
+| name | 图像名称，未设置时自动从图像地址 `src` 中提取 | string | undefined |
 | width | 图像宽度，单位 `px` | string &#124; number &#124; (string &#124; number)[] | 100 |
 | height | 图像高度，单位 `px` | string &#124; number &#124; (string &#124; number)[] | 100 |
 | disabled | 是否禁用图像预览 | boolean | false |
@@ -567,7 +567,7 @@ function customDownload(url: string, fileName?: string) {
 | 名称  | 说明     | 类型   | 默认值    |
 | :---- | :------- | :----- | :-------- |
 | src   | 图像地址 | string | undefined |
-| name? | 图像名称 | string | undefined |
+| name? | 图像名称，未设置时自动从图像地址 `src` 中提取 | string | undefined |
 
 ## Slots
 
