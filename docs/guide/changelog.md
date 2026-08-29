@@ -4,6 +4,13 @@
 
 对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
 
+## <VersionDateTag date="2026-08-29">2.6.1</VersionDateTag>
+
+- 优化并重构 [通知提醒 Notification](/guide/components/notification.html) 组件代码逻辑，按弹出位置 `placement` 分组管理通知数据、关闭定时器与隐藏状态，修复不同弹出位置的通知相互干扰的问题，多个弹出位置的通知可同时独立展示；自动关闭时长改为优先取单条通知的 `duration`，未设置时使用组件默认 `duration`
+- 优化并更新 [图片 Image](/guide/components/image.html) 组件代码逻辑：优化从图片地址提取图片名称的逻辑，兼容相对路径与带查询参数 / 哈希的地址，并支持 `URL` 解码（含非法百分号编码兜底）；优化预览动画效果，遮罩层过渡由 `transition` 改为 `animation` 实现，与预览图动画保持一致
+- 优化组件库发布脚本
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-08-28">2.6.0</VersionDateTag>
 
 - 优化并重构组件库工程结构：规范化组件目录及文档为短横线命名，同步更新侧边栏与引用链接
