@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, reactive, nextTick, onBeforeUnmount } from 'vue'
-import type { VNode, CSSProperties, ComponentPublicInstance } from 'vue'
+import { ref, reactive, onBeforeUnmount } from 'vue'
+import type { VNode, CSSProperties } from 'vue'
+import type { AnimationFrameID } from 'components/utils'
 import { rafTimeout, cancelRaf, useInject } from 'components/utils'
 export interface Props {
   title?: string // 通知提醒标题，优先级低于 Notification 中的 title
@@ -9,6 +10,8 @@ export interface Props {
   top?: number // 消息从顶部弹出时，距离顶部的位置，单位 px
   bottom?: number // 消息从底部弹出时，距离底部的位置，单位 px
   placement?: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' // 消息弹出位置，优先级低于 Notification 中的 placement
+  maxCount?: number // 同一 placement 下可同时存在的最大通知数，超出时淘汰最旧的一条
+  keepAliveOnHover?: boolean // 鼠标移入时是否暂停自动关闭
 }
 const props = withDefaults(defineProps<Props>(), {
   title: undefined,
@@ -16,7 +19,9 @@ const props = withDefaults(defineProps<Props>(), {
   duration: 4500,
   top: 24,
   bottom: 24,
-  placement: 'topRight'
+  placement: 'topRight',
+  maxCount: undefined,
+  keepAliveOnHover: true
 })
 export interface Notification {
   title?: string // 通知提醒标题
@@ -29,32 +34,40 @@ export interface Notification {
   onClose?: Function // 关闭时的回调函数
 }
 type Placement = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
+// 单条通知的句柄，用于编程式关闭与更新
+export interface NotificationReactive extends Notification {
+  readonly key: string // 该条通知的唯一标识
+  destroy: () => void // 关闭该条通知
+  update: (options: Partial<Notification>) => void // 更新该条通知
+}
+type Mode = 'open' | 'info' | 'success' | 'error' | 'warning'
 // 每条通知的展示数据
 interface NotificationItem extends Notification {
-  mode: 'open' | 'info' | 'success' | 'error' | 'warning'
+  key: string // 唯一标识，替代数组下标作为身份
+  mode: Mode
 }
-// 单个 placement 分组的状态：独立的通知列表 + 独立的隐藏状态 + 独立的自动关闭定时器
+// 单个 placement 分组的状态：独立的通知列表
 interface NotificationGroup {
   placement: Placement
   data: NotificationItem[]
-  hideIndex: number[]
-  hideTimers: any[]
-  resetTimer: any
 }
 const notificationGroups = ref<NotificationGroup[]>([])
-const notificationRefs = ref<Record<string, HTMLElement[]>>({}) // 分组 DOM 引用
 const { colorPalettes } = useInject('Notification') // 主题色注入
 const emit = defineEmits(['close'])
+// 每条通知独立持有自动关闭定时器，按 key 存取，避免多条通知互相干扰
+const closeTimers = new Map<string, AnimationFrameID>()
+let seed = 0
+function createKey(): string {
+  seed += 1
+  return `notification_${Date.now()}_${seed}`
+}
 // 根据 placement 找到对应分组，不存在则创建
 function getGroup(placement: Placement): NotificationGroup {
   let group = notificationGroups.value.find((g) => g.placement === placement)
   if (!group) {
     group = reactive<NotificationGroup>({
       placement,
-      data: [],
-      hideIndex: [],
-      hideTimers: [],
-      resetTimer: null
+      data: []
     })
     notificationGroups.value.push(group)
   }
@@ -73,102 +86,125 @@ function bottomStyle(placement: Placement): CSSProperties {
   return {}
 }
 onBeforeUnmount(() => {
-  notificationGroups.value.forEach((group) => {
-    group.resetTimer && cancelRaf(group.resetTimer)
-    group.hideTimers.forEach((rafId: any) => {
-      rafId && cancelRaf(rafId)
-    })
+  closeTimers.forEach((raf) => {
+    raf && cancelRaf(raf)
   })
+  closeTimers.clear()
 })
-// 收集每条通知的 DOM 引用，用于关闭动画时设置 maxHeight
-function setRef(el: Element | ComponentPublicInstance | null, placement: Placement, index: number) {
-  if (el) {
-    if (!notificationRefs.value[placement]) {
-      notificationRefs.value[placement] = []
-    }
-    notificationRefs.value[placement][index] = el as HTMLElement
+function clearTimer(key: string): void {
+  const raf = closeTimers.get(key)
+  if (raf) {
+    cancelRaf(raf)
+    closeTimers.delete(key)
   }
 }
-function onEnter(group: NotificationGroup, index: number) {
-  stopAutoClose(group, index)
-}
-function onLeave(group: NotificationGroup, index: number) {
-  if (!group.hideIndex.includes(index)) {
-    autoClose(group, index)
+function autoClose(group: NotificationGroup, key: string): void {
+  const item = group.data.find((n) => n.key === key)
+  if (!item) {
+    return
   }
-}
-function stopAutoClose(group: NotificationGroup, index: number) {
-  group.hideTimers[index] && cancelRaf(group.hideTimers[index])
-  group.hideTimers[index] = null
-}
-function autoClose(group: NotificationGroup, index: number) {
-  const closeDuration = group.data[index].duration
   // duration 为 null 表示不自动关闭；为 undefined 时使用默认时长
-  if (closeDuration !== null) {
-    const delay: number = closeDuration || (props.duration ?? 4500)
-    group.hideTimers[index] = rafTimeout(() => {
-      onClose(group, index)
-    }, delay)
+  if (item.duration !== null) {
+    clearTimer(key)
+    const delay: number = item.duration || (props.duration ?? 4500)
+    closeTimers.set(
+      key,
+      rafTimeout(() => {
+        close(group, key)
+      }, delay)
+    )
   }
 }
-async function onClose(group: NotificationGroup, index: number) {
-  const target = notificationRefs.value[group.placement]?.[index]
-  if (target) {
-    target.style.maxHeight = `${target.offsetHeight}px`
+function onEnter(group: NotificationGroup, key: string): void {
+  if (!props.keepAliveOnHover) {
+    return
   }
-  await nextTick()
-  group.hideIndex.push(index)
-  group.hideTimers[index] = null
+  clearTimer(key)
+}
+function onLeave(group: NotificationGroup, key: string): void {
+  if (!props.keepAliveOnHover) {
+    return
+  }
+  autoClose(group, key)
+}
+// 离场前固定当前高度，使 max-height 收缩动画具备确定的起始值
+function onBeforeLeave(el: Element): void {
+  const target = el as HTMLElement
+  target.style.maxHeight = `${target.offsetHeight}px`
+}
+// 关闭单条通知：按 key 精确移除，离场动画交由 TransitionGroup 播放
+function close(group: NotificationGroup, key: string): void {
+  const index = group.data.findIndex((n) => n.key === key)
+  if (index === -1) {
+    return
+  }
   const item = group.data[index]
+  clearTimer(key)
   item.onClose && item.onClose()
   emit('close')
-  watchClear(group)
+  group.data.splice(index, 1)
 }
-// 当某分组内所有通知都隐藏后，清空该分组数据（保留分组容器，保证 leave 动画完整播放）
-function watchClear(group: NotificationGroup) {
-  if (group.hideIndex.length === group.data.length && group.data.length > 0) {
-    group.resetTimer = rafTimeout(() => {
-      group.data = []
-      group.hideIndex = []
-      group.hideTimers = []
-      group.resetTimer = null
-    }, 300)
+function destroyAll(): void {
+  notificationGroups.value.forEach((group) => {
+    group.data.slice().forEach((item) => {
+      close(group, item.key)
+    })
+  })
+}
+function updateItem(group: NotificationGroup, key: string, options: Partial<Notification>): void {
+  const item = group.data.find((n) => n.key === key)
+  if (!item) {
+    return
+  }
+  Object.assign(item, options)
+  // duration 发生变更时按新时长重新计时
+  if ('duration' in options) {
+    autoClose(group, key)
   }
 }
-function push(notification: Notification, mode: NotificationItem['mode']) {
+function push(notification: Notification, mode: Mode): NotificationReactive {
   const placement = notification.placement || props.placement
   const group = getGroup(placement)
-  group.resetTimer && cancelRaf(group.resetTimer)
-  group.resetTimer = null
-  group.hideTimers.push(null)
+  const key = createKey()
+  // 超出上限时淘汰最旧的一条
+  if (props.maxCount && group.data.length >= props.maxCount) {
+    clearTimer(group.data[0].key)
+    group.data.shift()
+  }
   group.data.push({
     ...notification,
+    key,
     mode
   })
-  const index = group.data.length - 1
-  autoClose(group, index)
+  autoClose(group, key)
+  return {
+    key,
+    destroy: () => close(group, key),
+    update: (options: Partial<Notification>) => updateItem(group, key, options)
+  }
 }
-function open(notification: Notification) {
-  push(notification, 'open')
+function open(notification: Notification): NotificationReactive {
+  return push(notification, 'open')
 }
-function info(notification: Notification) {
-  push(notification, 'info')
+function info(notification: Notification): NotificationReactive {
+  return push(notification, 'info')
 }
-function success(notification: Notification) {
-  push(notification, 'success')
+function success(notification: Notification): NotificationReactive {
+  return push(notification, 'success')
 }
-function error(notification: Notification) {
-  push(notification, 'error')
+function error(notification: Notification): NotificationReactive {
+  return push(notification, 'error')
 }
-function warning(notification: Notification) {
-  push(notification, 'warning')
+function warning(notification: Notification): NotificationReactive {
+  return push(notification, 'warning')
 }
 defineExpose({
   open,
   info,
   success,
   error,
-  warning
+  warning,
+  destroyAll
 })
 </script>
 <template>
@@ -188,17 +224,19 @@ defineExpose({
       `
     ]"
   >
-    <TransitionGroup appear :name="['topRight', 'bottomRight'].includes(group.placement) ? 'right' : 'left'">
+    <TransitionGroup
+      appear
+      :name="['topRight', 'bottomRight'].includes(group.placement) ? 'right' : 'left'"
+      @before-leave="onBeforeLeave"
+    >
       <div
-        v-show="!group.hideIndex.includes(index)"
-        :ref="(el) => setRef(el, group.placement, index)"
         class="notification-container"
         :class="[`icon-${notification.mode}`, notification.class]"
         :style="notification.style"
-        v-for="(notification, index) in group.data"
-        :key="index"
-        @mouseenter="onEnter(group, index)"
-        @mouseleave="onLeave(group, index)"
+        v-for="notification in group.data"
+        :key="notification.key"
+        @mouseenter="onEnter(group, notification.key)"
+        @mouseleave="onLeave(group, notification.key)"
       >
         <component v-if="notification.icon" :is="notification.icon" class="icon-svg" />
         <svg
@@ -277,7 +315,7 @@ defineExpose({
           <div class="notification-title">{{ notification.title || title }}</div>
           <div class="notification-description">{{ notification.description || description }}</div>
         </div>
-        <a tabindex="0" class="notification-close" @click="onClose(group, index)">
+        <a tabindex="0" class="notification-close" @click="close(group, notification.key)">
           <svg
             class="close-svg"
             viewBox="64 64 896 896"
