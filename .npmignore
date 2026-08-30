@@ -24,6 +24,7 @@ CONTRIBUTING.md
 eslint.config.js
 index.html
 pnpm-lock.yaml
+pnpm-workspace.yaml
 stats.html
 tsconfig.app.json
 tsconfig.dts.json
