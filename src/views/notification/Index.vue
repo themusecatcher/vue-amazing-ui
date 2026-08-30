@@ -93,6 +93,26 @@ function onClose() {
   // 通知提醒关闭时的回调函数
   console.log('notification closed')
 }
+// ========== 缺陷复现与验证 ==========
+// B5：常驻通知阻塞分组回收。该缺陷已于本次队列重构修复，以下用例用于回归验证
+function onB5Persistent() {
+  notification.value.info({
+    title: 'B5 常驻通知',
+    description: 'duration: null，不会自动关闭',
+    duration: null
+  })
+}
+function onB5Temp() {
+  notification.value.success({
+    title: 'B5 临时通知',
+    description: 'duration: 2000，2 秒后自动关闭',
+    duration: 2000
+  })
+}
+function logNotificationCount() {
+  const count = document.querySelectorAll('.notification-container').length
+  console.log('[B5] 当前 DOM 中 .notification-container 节点数:', count)
+}
 </script>
 <template>
   <div>
@@ -127,6 +147,22 @@ function onClose() {
     <Space>
       <Button type="primary" @click="onCustomClose">Custom Close</Button>
       <Button type="primary" @click="onNeverAutoClose">Never Auto Close</Button>
+    </Space>
+    <h2 class="mt30 mb10">【缺陷 B5】常驻通知阻塞分组回收（已修复，回归验证）</h2>
+    <p class="mb10">
+      问题：旧实现仅在「整组通知全部关闭」时才清理数据。因此只要存在一条 <code>duration: null</code> 的常驻通知，
+      该分组内所有已关闭通知的 DOM 节点都会永久保留，造成内存与 DOM 泄漏。
+    </p>
+    <p class="mb10">
+      步骤：① 点击「常驻通知」→ ② 点击「临时通知」→ ③ 等临时通知自动消失 → ④ 点击「打印通知节点数」并查看控制台。
+    </p>
+    <p class="mb10">
+      预期：<strong>输出 1</strong>（仅剩常驻通知）。修复前会输出 <strong>2</strong>（临时通知的 DOM 未被回收）。
+    </p>
+    <Space>
+      <Button type="primary" @click="onB5Persistent">① 常驻通知</Button>
+      <Button type="primary" @click="onB5Temp">② 临时通知（2s）</Button>
+      <Button type="primary" @click="logNotificationCount">④ 打印通知节点数</Button>
     </Space>
     <Notification ref="notification" @close="onClose" />
   </div>
