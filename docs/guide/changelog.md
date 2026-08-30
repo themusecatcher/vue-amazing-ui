@@ -9,7 +9,7 @@
 - 优化并更新 [下载文件 downloadFile](/utils/functions/download-file.html) 工具函数和文档：`iframe` 策略在未传入文件名时，自动从文件地址中提取文件名并拼接 `response-content-disposition` 参数，与 `anchor` 策略行为对齐，修复跨域图片 / `PDF` 等可预览类型在 `iframe` 内预览而非下载的问题；地址无有效文件名时（如纯域名）不拼接参数，避免发出 `filename` 为空的畸形请求
 - 优化并更新 [图片 Image](/guide/components/image.html) 组件下载逻辑：未显式设置 `name` 时，自动使用从图片地址中提取的图片名称，内置下载与 `customDownload` 自定义下载方法均生效
 - 优化组件库发布脚本
-- 组件库及文档代码优化
+- 组件库配置及文档代码优化
 
 ## <VersionDateTag date="2026-08-29">2.6.1</VersionDateTag>
 
