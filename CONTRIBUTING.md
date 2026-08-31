@@ -5,6 +5,7 @@
 ## 目录
 
 - [环境准备](#环境准备)
+- [开发设计指南](#开发设计指南)
 - [分支规范](#分支规范)
 - [提交规范](#提交规范)
 - [代码质量门禁](#代码质量门禁)
@@ -26,6 +27,18 @@ pnpm dev
 # 启动文档站
 pnpm docs:dev
 ```
+
+## 开发设计指南
+
+在开始编写组件之前，建议先阅读以下设计实现文档。它们完整描述了组件库的**设计实现画像**——组织架构、各类规范与实现机制，是新增 / 修改组件的权威依据；组件的功能与使用说明请查阅官方文档站（`docs/`）：
+
+| 文档 | 说明 |
+| :--- | :--- |
+| [`development/project-structure.md`](development/project-structure.md) | 组织架构与目录结构 |
+| [`development/import-export.md`](development/import-export.md) | 导入导出规范 |
+| [`development/component-design.md`](development/component-design.md) | 组件设计规范（含主题系统） |
+| [`development/demo-doc-guide.md`](development/demo-doc-guide.md) | 演示与文档编写规范 |
+| [`development/build-system.md`](development/build-system.md) | 构建产物体系（含测试） |
 
 ## 分支规范
 
