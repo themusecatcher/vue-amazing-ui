@@ -36,19 +36,25 @@ vi.mock('components/utils', async (importOriginal) => {
 })
 
 import Message from 'components/message/Message.vue'
+import type { MessageApi } from 'components/message'
 
-interface MessageInst {
-  info(m: { content: string; duration: number | null }): void
-  success(m: { content: string; duration: number | null }): void
+interface MessageReactive {
+  key: string
+  destroy(): void
 }
-
-function wait(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms))
+interface MessageInst {
+  info(m: { content: string; duration: number | null }): MessageReactive
+  success(m: { content: string; duration: number | null }): MessageReactive
 }
 
 function mountMessage() {
-  const wrapper = mount(Message, { attachTo: document.body })
-  return { wrapper, vm: wrapper.vm as unknown as MessageInst }
+  // Message 已移除 defineExpose，改用 ready 事件回传命令式 api
+  let api!: MessageApi
+  const wrapper = mount(Message, {
+    attachTo: document.body,
+    props: { onReady: (value: MessageApi) => (api = value) }
+  })
+  return { wrapper, vm: api as unknown as MessageInst }
 }
 
 /**
@@ -60,24 +66,21 @@ function pendingTimers(): number[] {
   return timerState.registered.filter((r) => !r.fired && !timerState.cancelled.has(r.id)).map((r) => r.id)
 }
 
-describe('P1 - Message 卸载时应清理全部定时器（含整批重置定时器）', () => {
+describe('P1 - Message 卸载时应清理全部定时器', () => {
   beforeEach(() => {
     timerState.registered.length = 0
     timerState.cancelled.clear()
   })
 
-  it('卸载后不应残留未被取消的定时器', async () => {
+  it('定时器尚未触发时卸载，不应残留未被取消的定时器', async () => {
     const { wrapper, vm } = mountMessage()
-    vm.info({ content: 'P1', duration: 20 })
+    vm.info({ content: 'P1', duration: 5000 })
     await wrapper.vm.$nextTick()
-    // 等自动关闭触发，进而注册用于整批重置的 resetTimer（其内部延时 300ms）
-    await wait(120)
-    // 确保确实注册了不止一个定时器，否则本用例失去意义
-    expect(timerState.registered.length).toBeGreaterThan(1)
+    // 尚未到达 5000ms，定时器处于 pending 状态，卸载必须主动取消，否则会残留
+    expect(pendingTimers().length).toBe(1)
 
     wrapper.unmount()
 
-    // 当前实现仅清理 hideTimers，resetTimer 未清理 → 此处会暴露残留
     expect(pendingTimers()).toEqual([])
   })
 })
@@ -88,16 +91,19 @@ describe('P5 - Message 定时器应随消息关闭而释放', () => {
     timerState.cancelled.clear()
   })
 
-  it('多条消息全部关闭后不应残留未被取消的定时器', async () => {
+  it('单条消息关闭后其定时器应被取消，剩余消息的定时器保留', async () => {
     const { wrapper, vm } = mountMessage()
-    vm.success({ content: 'A', duration: 20 })
-    vm.success({ content: 'B', duration: 20 })
-    vm.success({ content: 'C', duration: 20 })
+    const handleA = vm.info({ content: 'A', duration: 5000 })
+    vm.info({ content: 'B', duration: 5000 })
     await wrapper.vm.$nextTick()
-    await wait(150)
+    expect(pendingTimers().length).toBe(2)
+
+    // 关闭 A，其定时器应被取消，B 的定时器仍在
+    handleA.destroy()
+    await wrapper.vm.$nextTick()
+    expect(pendingTimers().length).toBe(1)
 
     wrapper.unmount()
-
     expect(pendingTimers()).toEqual([])
   })
 })
