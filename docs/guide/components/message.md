@@ -144,14 +144,17 @@ axios.interceptors.response.use(
 import { h, onBeforeUnmount, onMounted, ref } from 'vue'
 import { SoundFilled, FireFilled } from '@ant-design/icons-vue'
 import { createDiscreteApi, useMessage } from 'vue-amazing-ui'
-import type { MessageApi, MessageReactive, MessageUpdate } from 'vue-amazing-ui'
+import type { DiscreteApiInstance, MessageApi, MessageReactive, MessageUpdate } from 'vue-amazing-ui'
 // setup 内调用 useMessage()：需外层存在 <MessageProvider>（docs 站点已在主题层全局包裹）
 const message = useMessage()
 // setup 外调用示例：createDiscreteApi 创建脱离组件树的独立实例
-// 注意：createDiscreteApi 内部会访问 document，故在点击时才创建（SSR 阶段不会执行）
+// 惰性单例：仅首次调用时创建，避免重复创建独立实例与挂载 DOM
+let discreteMessage: DiscreteApiInstance<'message'> | null = null
 function onDiscreteMessage() {
-  const { message } = createDiscreteApi(['message'])
-  message.info('This message is opened by createDiscreteApi outside setup')
+  if (!discreteMessage) {
+    discreteMessage = createDiscreteApi(['message'])
+  }
+  discreteMessage.message.info('This message is opened by createDiscreteApi outside setup')
 }
 // 基本使用
 function onOpen(content: string) {
