@@ -16,7 +16,7 @@ export interface DiscreteApi {
   modal: ModalApi
 }
 
-// 与 naive-ui createDiscreteApp 返回的 unmount 语义一致：调用方可按需销毁独立实例
+// 调用方可按需销毁独立实例
 export type DiscreteApiInstance<K extends DiscreteApiType> = Pick<DiscreteApi, K> & {
   dispose: () => void
 }
@@ -79,7 +79,7 @@ export function createDiscreteApi<K extends DiscreteApiType>(types: K[]): Discre
     }
   })
   app.mount(container)
-  // 销毁实例：卸载独立应用并移除挂载容器；重复调用为空操作（对齐 naive-ui 的 unmount 语义）
+  // 销毁实例：卸载独立应用并移除挂载容器；重复调用为空操作
   let disposed = false
   const dispose = (): void => {
     if (disposed) {
