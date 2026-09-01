@@ -300,6 +300,8 @@ export default defineConfig({
   build: (dir === 'dist' ? buildDistOptions : buildESAndLibOptions) as BuildEnvironmentOptions,
   resolve: {
     alias: {
+      // demo 演示页按真实用户用法从包总出口引入，重定向到源码总出口
+      'vue-amazing-ui': fileURLToPath(new URL('./components/index.ts', import.meta.url)),
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       '#': fileURLToPath(new URL('./types', import.meta.url)),
       components: fileURLToPath(new URL('./components', import.meta.url)),

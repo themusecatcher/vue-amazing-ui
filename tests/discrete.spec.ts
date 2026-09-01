@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import { createDiscreteApi } from 'components/discrete'
 import ConfigProvider from 'components/config-provider'
 import { MessageProvider, useMessage } from 'components/message'
-import { themeSnapshot } from 'components/_internal/theme-snapshot'
+import { themeSnapshot } from 'components/_internal'
 
 /**
  * S4 双入口 D+ 用例：
@@ -14,7 +14,7 @@ import { themeSnapshot } from 'components/_internal/theme-snapshot'
  */
 describe('S4 - createDiscreteApi 可在任意位置调用', () => {
   it('setup 外调用 notification / message / modal 均可正常弹出', async () => {
-    const { notification, message, modal } = createDiscreteApi(['notification', 'message', 'modal'])
+    const { notification, message, modal, dispose } = createDiscreteApi(['notification', 'message', 'modal'])
     notification.info({ title: '离散通知', duration: null })
     message.info({ content: '离散消息', duration: null })
     modal.info({ content: '离散弹窗' })
@@ -23,6 +23,26 @@ describe('S4 - createDiscreteApi 可在任意位置调用', () => {
     expect(document.querySelector('.notification-container')).not.toBeNull()
     expect(document.querySelector('.message-container')).not.toBeNull()
     expect(document.querySelector('.modal-container')).not.toBeNull()
+    dispose()
+  })
+})
+
+describe('S4 - createDiscreteApi 支持 dispose 销毁独立实例', () => {
+  it('dispose 后消息容器应从 DOM 移除', async () => {
+    const api = createDiscreteApi(['message'])
+    api.message.info({ content: '待销毁', duration: null })
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(document.querySelector('.message-container')).not.toBeNull()
+
+    api.dispose()
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    expect(document.querySelector('.message-container')).toBeNull()
+  })
+
+  it('重复调用 dispose 不应抛错', () => {
+    const api = createDiscreteApi(['message'])
+    api.dispose()
+    expect(() => api.dispose()).not.toThrow()
   })
 })
 

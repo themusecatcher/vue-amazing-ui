@@ -66,7 +66,8 @@ interface ModalInst {
   erase(o: ModalOptions): void
 }
 
-// rafTimeout 基于 requestAnimationFrame 的时间戳差值，测试中使用真实等待推进
+// 自动关闭依赖真实计时，此处直接等待对应时长推进；
+// 不引入假定时器，以免干扰 Teleport 与过渡相关的断言
 function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
@@ -153,6 +154,26 @@ describe('B2 Message - duration 为 null 时永久阻塞清理', () => {
 
     // 期望：临时消息被移除，仅剩常驻的 1 条
     expect(containers('.message-container').length).toBe(1)
+    wrapper.unmount()
+  })
+})
+
+describe('B3 Message - 容器 top 为组件级配置，后发消息不改变位置', () => {
+  it('容器 top 由组件级 props 决定，连续打开消息后保持不变', async () => {
+    let api!: MessageApi
+    const wrapper = mount(Message, {
+      attachTo: document.body,
+      props: { top: 80, onReady: (value: MessageApi) => (api = value) }
+    })
+    api.success({ content: 'A' })
+    await wrapper.vm.$nextTick()
+    expect(containers('.message-wrap')[0].style.top).toBe('80px')
+
+    // 后发消息不再改写容器位置（原 B3 缺陷：messageTop 为全局单例，后发消息顶掉已显示消息）
+    api.success({ content: 'B' })
+    api.success({ content: 'C' })
+    await wrapper.vm.$nextTick()
+    expect(containers('.message-wrap')[0].style.top).toBe('80px')
     wrapper.unmount()
   })
 })

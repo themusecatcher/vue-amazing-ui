@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive, computed, watch, provide } from 'vue'
 import { getColorPalettes, getAlphaColor } from 'components/utils'
+import { setThemeSnapshot } from 'components/_internal'
 export interface Theme {
   common?: {
     // 优先级低于组件配置
@@ -268,6 +269,17 @@ const componentsTheme = computed(() => {
   }
   return themes
 })
+// 同步主题快照，供 createDiscreteApi 在独立应用实例中还原与主应用一致的主题
+watch(
+  () => props.theme,
+  (to) => {
+    setThemeSnapshot(to)
+  },
+  {
+    immediate: true,
+    deep: true
+  }
+)
 // 监听 common 主题变化
 watch(
   commonTheme,

@@ -65,6 +65,9 @@ export { Descriptions, DescriptionsItem } from './descriptions'
 export type { Props as DialogProps } from './dialog'
 export { default as Dialog } from './dialog'
 
+export type { DiscreteApi, DiscreteApiInstance, DiscreteApiType } from './discrete'
+export { createDiscreteApi } from './discrete'
+
 export type { Props as DividerProps } from './divider'
 export { default as Divider } from './divider'
 
@@ -110,8 +113,14 @@ export { List, ListItem } from './list'
 export type { Props as LoadingBarProps } from './loading-bar'
 export { default as LoadingBar } from './loading-bar'
 
-export type { Props as MessageProps, Message as MessageOptions } from './message'
-export { default as Message } from './message'
+export type {
+  Props as MessageProps,
+  Message as MessageOptions,
+  MessageApi,
+  MessageReactive,
+  MessageUpdate
+} from './message'
+export { default as Message, MessageProvider, useMessage } from './message'
 
 export type { Props as ModalProps, Modal as ModalOptions } from './modal'
 export { default as Modal } from './modal'

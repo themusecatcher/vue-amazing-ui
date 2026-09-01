@@ -1,132 +1,219 @@
 <script setup lang="ts">
-import { ref, h } from 'vue'
-import { SoundFilled, FireFilled } from '@ant-design/icons-vue'
-const message = ref()
-const customMessage = ref()
-function onOpen(content: string) {
-  message.value.open(content) // open 调用
+import { h, onBeforeUnmount, onMounted, ref } from 'vue'
+import { SoundFilled, FireFilled, ExclamationCircleFilled } from '@ant-design/icons-vue'
+import { useMessage, MessageProvider, createDiscreteApi } from 'vue-amazing-ui'
+import type { MessageApi, MessageReactive, MessageUpdate } from 'vue-amazing-ui'
+const message = useMessage()
+// setup 外调用示例：createDiscreteApi 创建脱离组件树的独立实例
+// 注意：createDiscreteApi 内部会访问 document，故在点击时才创建（SSR 阶段不会执行）
+function onDiscreteMessage() {
+  const { message } = createDiscreteApi(['message'])
+  message.info('This message is opened by createDiscreteApi outside setup')
 }
+// 基本使用
+function onOpen(content: string) {
+  message.open(content) // open 调用
+}
+// 不同类型的全局提示
 function onInfo(content: string) {
-  message.value.info(content) // info 调用
+  message.info(content) // info 调用
 }
 function onSuccess(content: string) {
-  message.value.success(content) // success 调用
+  message.success(content) // success 调用
 }
 function onError(content: string) {
-  message.value.error(content) // error 调用
+  message.error(content) // error 调用
 }
 function onWarning(content: string) {
-  message.value.warning(content) // warning 调用
+  message.warning(content) // warning 调用
 }
 function onLoading(content: string) {
-  message.value.loading(content) // loading 调用
+  message.loading(content) // loading 调用
 }
-function onInfoCustom(content: string) {
-  // info 调用, 并自定义图标
-  message.value.info({
-    content,
+// 自定义图标
+function onInfoIcon() {
+  message.info({
+    content: 'This is an info message with a custom icon',
     icon: h(SoundFilled)
   })
 }
-function onOpenCustom(content: string) {
-  // open 调用, 并自定义图标
-  message.value.open({
-    content,
+function onOpenIcon() {
+  message.open({
+    content: 'This is an open message with a custom icon',
     icon: h(FireFilled, { style: 'color: gold' })
   })
 }
+// icon 也支持渲染函数形态，每次渲染时动态生成图标
+function onIconRenderFn() {
+  message.success({
+    content: 'icon 渲染函数：每次渲染时动态生成图标',
+    icon: () => h(SoundFilled, { style: 'color: #52c41a' })
+  })
+}
+// 自定义样式
 function onClassCustom(content: string) {
-  message.value.info({
+  message.info({
     content,
     icon: h(SoundFilled),
     class: 'custom-class'
   })
 }
 function onStyleCustom(content: string) {
-  customMessage.value.warning({
+  message.warning({
     content,
     icon: h(FireFilled),
-    top: '30vh',
     style: {
       color: '#f50'
     }
   })
 }
+// 自定义关闭延时与回调
 function onCustomClose() {
-  message.value.info({
-    content: 'The message will automatically turn off after 3 seconds.',
+  message.info({
+    content: 'This message will automatically turn off after 3 seconds.',
     duration: 3000,
     onClose: () => {
-      console.log('custom message closed')
+      // onClose 回调：消息关闭后给出可见反馈
+      message.success('onClose 回调触发: 上一条消息已自动关闭')
     }
   })
 }
+// 不自动关闭（duration: null），点击消息时通过句柄手动关闭（onClick 回调）
 function onNeverAutoClose() {
-  message.value.info({
-    content: 'This message will not automatically turn off.',
+  const handle = message.info({
+    content: 'This message will not automatically turn off. Click it to close.',
     duration: null,
-    onClick: () => {
-      console.log('custom message clicked')
+    onClick: () => handle.destroy()
+  })
+}
+// 复杂内容：VNode 与渲染函数
+function onVNodeContent() {
+  message.info({
+    content: h('span', { style: 'color: #1677ff; font-weight: 600' }, '这是一条 VNode 渲染的富文本内容')
+  })
+}
+function onRenderFnContent() {
+  message.info({
+    content: () => h('span', { style: 'color: #52c41a; font-weight: 600' }, '这是一条渲染函数动态生成的内容')
+  })
+}
+let messageReactive: MessageReactive | null = null
+function onOpenMessage() {
+  if (!messageReactive) {
+    messageReactive = message.info({
+      content: '这是一条消息（duration: null），可通过手动关闭',
+      duration: null
+    })
+  }
+}
+function onDestroy() {
+  if (messageReactive) {
+    messageReactive.destroy()
+    messageReactive = null
+  }
+}
+// 原地更新 update
+const updateTimers: ReturnType<typeof setInterval>[] = []
+function onProgressUpdate() {
+  const percent = ref(0)
+  const handle = message.loading({
+    // content 传渲染函数：内部引用响应式 percent，进度变化时消息内容自动更新
+    content: () =>
+      h('span', { style: 'white-space: nowrap' }, [
+        '提交中...',
+        h(
+          'span',
+          {
+            style: `
+            display: inline-block;
+            min-width: 4ch;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+          `
+          },
+          [h('span', { style: 'font-weight: 600; color: #1677ff' }, `${percent.value}%`)]
+        )
+      ]),
+    duration: null
+  })
+  const timer = setInterval(() => {
+    percent.value += 2
+    if (percent.value >= 100) {
+      clearInterval(timer)
+      // update 支持 mode：原地把 loading 图标切换为 success，并重设时长自动关闭
+      const doneOptions: MessageUpdate = { content: '提交成功', mode: 'success', duration: 2000 }
+      handle.update(doneOptions)
     }
+  }, 100)
+  updateTimers.push(timer)
+}
+onBeforeUnmount(() => {
+  updateTimers.forEach((timer) => {
+    clearInterval(timer)
   })
-}
-function onClick(e: Event) {
-  console.log('click', e)
-}
-function onClose() {
-  console.log('close')
-}
-// ========== 缺陷复现与验证 ==========
-// B1：duration 为全局单例，hover 离开后按错误的 duration 重新计时
-function onB1MessageA() {
-  message.value.success({
-    content: 'B1-A（duration: 2000）',
-    duration: 2000
-  })
-}
-function onB1MessageB() {
-  message.value.info({
-    content: 'B1-B（duration: 10000）',
-    duration: 10000
-  })
-}
-// B2：duration 为 null 时永久阻塞清理
-function onB2Persistent() {
-  message.value.info({
-    content: 'B2-常驻消息（duration: null）',
+})
+const maxCountMessage = ref<MessageApi>()
+const hoverMessage = ref<MessageApi>()
+const noHoverMessage = ref<MessageApi>()
+const topMessage = ref<MessageApi>()
+const toMessage = ref<MessageApi>()
+const toReady = ref(false)
+// 目标容器与组件位于同一组件树，需等挂载完成（目标已插入文档）后再渲染组件，Teleport 才能定位到目标
+onMounted(() => {
+  toReady.value = true
+})
+let maxCountSeed = 0
+function onMaxCountMessage() {
+  maxCountSeed += 1
+  maxCountMessage.value?.info({
+    content: `第 ${maxCountSeed} 条消息（最多同时存在 3 条）`,
     duration: null
   })
 }
-function onB2Temp() {
-  message.value.success({
-    content: 'B2-临时消息（duration: 2000）',
+function onHoverPauseMessage() {
+  hoverMessage.value?.info({
+    content: '鼠标移入时暂停计时，移出后重新计时 2s 关闭',
     duration: 2000
   })
 }
-function logMessageCount() {
-  const count = document.querySelectorAll('.message-container').length
-  console.log('[B2] 当前 DOM 中 .message-container 节点数:', count)
-}
-// B3：容器 top 为全局单例，后发消息会顶掉已显示消息的位置
-function onB3DefaultTop() {
-  message.value.success({
-    content: 'B3-默认位置（top: 30）',
-    duration: 10000
+function onHoverNoPauseMessage() {
+  noHoverMessage.value?.info({
+    content: '鼠标移入不暂停计时，2s 后照常关闭',
+    duration: 2000
   })
 }
-function onB3CustomTop() {
-  message.value.warning({
-    content: 'B3-自定义位置（top: 200）',
-    top: 200,
-    duration: 10000
+function onTopMessage() {
+  topMessage.value?.info({
+    content: '这条消息距离页面顶部 100px',
+    duration: 2000
   })
+}
+function onToMessage() {
+  toMessage.value?.info('这条消息被挂载到当前虚线容器中')
 }
 </script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
+    <h2 class="mt30 mb10">使用方式</h2>
+    <Alert type="warning" message="提示" show-icon style="max-width: 800px">
+      <template #icon>
+        <ExclamationCircleFilled />
+      </template>
+      <template #description>
+        <Space vertical>
+          <p>
+            本页示例在 <code>setup</code> 内通过 <code>useMessage()</code> 获取 api，需在应用入口
+            <code>App.vue</code> 用 <code>&lt;MessageProvider&gt;</code> 包裹（本项目已在入口全局包裹）。<br />
+            在 <code>setup</code> 之外（axios 拦截器、路由守卫、Pinia action 等）调用时，改用
+            <code>createDiscreteApi(['message'])</code>，无需外层 Provider：
+          </p>
+          <Button type="primary" @click="onDiscreteMessage">Discrete Message（脱离组件树调用）</Button>
+        </Space>
+      </template>
+    </Alert>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Button type="primary" @click="onOpen('This is a noraml message')">Open</Button>
+    <Button type="primary" @click="onOpen('This is a normal message')">Open</Button>
     <h2 class="mt30 mb10">不同类型的全局提示</h2>
     <Space>
       <Button type="primary" @click="onInfo('This is an info message')">Info</Button>
@@ -137,67 +224,70 @@ function onB3CustomTop() {
     </Space>
     <h2 class="mt30 mb10">自定义图标</h2>
     <Space>
-      <Button type="primary" @click="onInfoCustom('This is a custom icon message')">Custom Info Icon</Button>
-      <Button type="primary" @click="onOpenCustom('This is a custom icon message')">Custom Icon</Button>
+      <Button type="primary" @click="onInfoIcon">自定义 Info 图标</Button>
+      <Button type="primary" @click="onOpenIcon">自定义 Open 图标</Button>
+      <Button type="primary" @click="onIconRenderFn">图标渲染函数</Button>
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Space>
-      <Button type="primary" @click="onClassCustom('This is a custom class message')">Custom Class</Button>
-      <Button type="primary" @click="onStyleCustom('This is a custom style message')">Custom Style</Button>
+      <Button type="primary" @click="onClassCustom('This is a custom class message')">自定义类名</Button>
+      <Button type="primary" @click="onStyleCustom('This is a custom style message')">自定义样式</Button>
     </Space>
     <h2 class="mt30 mb10">自定义关闭延时</h2>
     <Space>
-      <Button type="primary" @click="onCustomClose">Custom Close</Button>
-      <Button type="primary" @click="onNeverAutoClose">Never Auto Close</Button>
+      <Button type="primary" @click="onCustomClose">3s 后自动关闭</Button>
+      <Button type="primary" @click="onNeverAutoClose">常驻消息，点击关闭</Button>
     </Space>
-    <h2 class="mt30 mb10">【缺陷 B1】duration 为全局单例，hover 后按错误的时长重新计时</h2>
+    <h2 class="mt30 mb10">复杂内容</h2>
     <p class="mb10">
-      问题：组件内 <code>closeDuration</code> 是单个 ref，被所有消息共享，后发消息会覆盖它。
-      导致先发消息在「鼠标移入再移出」后，按后发消息的 duration 重新计时。
-    </p>
-    <p class="mb10">
-      步骤：① 点击「B1-A（2s）」→ ② 点击「B1-B（10s）」→ ③ 把鼠标移到 A 上停留一会再移开 → ④ 观察 A 的消失时间。
-    </p>
-    <p class="mb10">
-      预期：A 应在移开后约 <strong>2 秒</strong> 消失。实际会等到 <strong>10 秒</strong>（沿用了 B 的时长）。
+      <code>content</code> 支持三种形态：纯文本、<code>VNode</code> 与返回 <code>VNode</code> 的渲染函数
     </p>
     <Space>
-      <Button type="primary" @click="onB1MessageA">① B1-A（2s）</Button>
-      <Button type="primary" @click="onB1MessageB">② B1-B（10s）</Button>
+      <Button type="primary" @click="onVNodeContent">VNode 内容</Button>
+      <Button type="primary" @click="onRenderFnContent">渲染函数内容</Button>
     </Space>
-    <h2 class="mt30 mb10">【缺陷 B2】duration 为 null 时永久阻塞清理</h2>
-    <p class="mb10">
-      问题：清理条件是「所有消息都已隐藏」，而 <code>duration: null</code> 的常驻消息永不隐藏，
-      导致后续消息关闭后也无法被回收，数组与 DOM 无限增长。Message 组件没有关闭按钮，用户无法解除。
-    </p>
-    <p class="mb10">
-      步骤：① 点击「常驻消息」→ ② 点击「临时消息（2s）」→ ③ 等临时消息消失 → ④ 点击「打印消息节点数」查看控制台。
-    </p>
-    <p class="mb10">
-      预期：<strong>输出 1</strong>。实际会输出 <strong>2</strong>（临时消息仍以 display:none 残留在 DOM 中）。
-    </p>
+    <h2 class="mt30 mb10">手动关闭</h2>
     <Space>
-      <Button type="primary" @click="onB2Persistent">① 常驻消息</Button>
-      <Button type="primary" @click="onB2Temp">② 临时消息（2s）</Button>
-      <Button type="primary" @click="logMessageCount">④ 打印消息节点数</Button>
+      <Button type="primary" @click="onOpenMessage">打开</Button>
+      <Button @click="onDestroy">关闭</Button>
     </Space>
-    <h2 class="mt30 mb10">【缺陷 B3】容器 top 为全局单例</h2>
-    <p class="mb10">
-      问题：所有消息共用一个 <code>.message-wrap</code> 容器，其 <code>top</code> 由单个 ref 控制。 后发消息传入不同
-      <code>top</code> 时，会把已显示的消息一起挪走。
-    </p>
-    <p class="mb10"> 步骤：① 点击「默认位置」→ ② 点击「自定义位置 top:200」→ ③ 观察第一条消息的位置变化。 </p>
-    <p class="mb10"> 预期：第一条消息位置 <strong>保持不变</strong>。实际会 <strong>整体跳到 200px</strong>。 </p>
+    <h2 class="mt30 mb10">原地更新</h2>
+    <Button type="primary" @click="onProgressUpdate">异步提交</Button>
+    <h2 class="mt30 mb10">最大消息数</h2>
+    <p class="mb10"> 连续打开消息时，超出上限会淘汰最旧的一条（淘汰不触发 <code>onClose</code>） </p>
+    <MessageProvider :max-count="3" @ready="maxCountMessage = $event" />
     <Space>
-      <Button type="primary" @click="onB3DefaultTop">① 默认位置</Button>
-      <Button type="primary" @click="onB3CustomTop">② 自定义位置 top:200</Button>
+      <Button type="primary" @click="onMaxCountMessage">打开消息（最多 3 条）</Button>
+      <Button @click="maxCountMessage?.destroyAll()">全部销毁</Button>
     </Space>
-    <Message ref="message" @click="onClick" @close="onClose" />
-    <Message ref="customMessage" @click="onClick" @close="onClose" />
+    <h2 class="mt30 mb10">鼠标移入保持显示</h2>
+    <MessageProvider :keep-alive-on-hover="true" @ready="hoverMessage = $event" />
+    <MessageProvider :keep-alive-on-hover="false" @ready="noHoverMessage = $event" />
+    <Space>
+      <Button type="primary" @click="onHoverPauseMessage">hover 暂停关闭</Button>
+      <Button type="primary" @click="onHoverNoPauseMessage">hover 不暂停关闭</Button>
+    </Space>
+    <h2 class="mt30 mb10">顶部位置</h2>
+    <MessageProvider :top="100" @ready="topMessage = $event" />
+    <Button type="primary" @click="onTopMessage">消息距顶部 100px</Button>
+    <h2 class="mt30 mb10">自定义挂载容器</h2>
+    <div id="message-to-container" class="message-to-container"></div>
+    <MessageProvider v-if="toReady" to="#message-to-container" :top="20" @ready="toMessage = $event" />
+    <Button type="primary" @click="onToMessage">挂载到指定容器</Button>
   </div>
 </template>
 <style lang="less" scoped>
-:deep(.custom-class) {
+::deep(.custom-class) {
   color: #ff6900;
+}
+.message-to-container {
+  position: relative;
+  transform: translateZ(0); // 建立包含块，使内部 fixed 定位的消息相对该容器定位
+  max-width: 800px;
+  height: 240px;
+  margin-bottom: 10px;
+  border: 1px dashed #d9d9d9;
+  border-radius: 8px;
+  overflow: hidden;
 }
 </style>
