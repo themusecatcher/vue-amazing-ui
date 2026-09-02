@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { h } from 'vue'
 import { mount, flushPromises } from '@vue/test-utils'
 import Message from 'components/message/Message.vue'
@@ -31,9 +31,13 @@ interface MessageInst {
 }
 
 interface NotificationOptions {
+  key?: string
   title?: unknown // string | VNode | (() => VNode)
-  description?: unknown
+  content?: unknown
+  closable?: boolean
   duration?: number | null
+  placement?: string
+  onClick?: () => void
 }
 interface NotificationReactive {
   readonly key: string
@@ -281,6 +285,110 @@ describe('B7 Notification - update({ duration: null }) 无法取消已有定时�
   })
 })
 
+describe('Notification - onClose 返回 false 应取消本次关闭（对齐 naive-ui）', () => {
+  it('onClose 返回 false 时点击关闭按钮，通知保留', async () => {
+    const { wrapper, vm } = mountNotification()
+    vm.open({
+      title: 'Satisfaction',
+      content: '通知内容',
+      duration: null,
+      onClose: () => false
+    })
+    await wrapper.vm.$nextTick()
+    dispatch(containers('.notification-close')[0], 'click')
+    await flushPromises()
+    await wrapper.vm.$nextTick()
+
+    expect(containers('.notification-container').length).toBe(1)
+    wrapper.unmount()
+  })
+
+  it('onClose 未返回 false 时点击关闭按钮，通知移除', async () => {
+    const { wrapper, vm } = mountNotification()
+    vm.open({
+      title: 'Normal',
+      content: '通知内容',
+      duration: null,
+      onClose: () => true
+    })
+    await wrapper.vm.$nextTick()
+    dispatch(containers('.notification-close')[0], 'click')
+    await flushPromises()
+    await wrapper.vm.$nextTick()
+
+    expect(containers('.notification-container').length).toBe(0)
+    wrapper.unmount()
+  })
+})
+
+describe('Notification - meta 与 action 底部区域渲染', () => {
+  it('meta 与 action 同时传入时渲染到通知底部', async () => {
+    const { wrapper, vm } = mountNotification()
+    vm.open({
+      title: 'Satisfaction',
+      content: '通知内容',
+      duration: null,
+      meta: '2019-5-27 15:11',
+      action: () => h('a', { onClick: () => {} }, '已读')
+    })
+    await wrapper.vm.$nextTick()
+    const footer = containers('.notification-footer')[0]
+    expect(footer.querySelector('.notification-footer__meta')?.textContent).toContain('2019-5-27 15:11')
+    expect(footer.querySelector('.notification-footer__action')?.textContent).toBe('已读')
+    wrapper.unmount()
+  })
+
+  it('仅传 action 时 footer 渲染且无 meta 节点', async () => {
+    const { wrapper, vm } = mountNotification()
+    vm.open({
+      title: 'Notification Title',
+      content: '通知内容',
+      duration: null,
+      action: () => h('a', { onClick: () => {} }, 'Confirm')
+    })
+    await wrapper.vm.$nextTick()
+    const footer = containers('.notification-footer')[0]
+    expect(footer.querySelector('.notification-footer__meta')).toBeNull()
+    expect(footer.querySelector('.notification-footer__action')?.textContent).toBe('Confirm')
+    wrapper.unmount()
+  })
+
+  it('未传 meta / action 时不渲染 footer', async () => {
+    const { wrapper, vm } = mountNotification()
+    vm.open({ title: 'plain', content: '通知内容', duration: null })
+    await wrapper.vm.$nextTick()
+    expect(containers('.notification-footer').length).toBe(0)
+    wrapper.unmount()
+  })
+})
+
+describe('Notification - 并发关闭时按 key 精确移除（await 期间数组位移不误删）', () => {
+  it('异步 onClose 的通知在其他通知移除后仍能按 key 正确关闭', async () => {
+    const { wrapper, vm } = mountNotification()
+    let resolveA!: () => void
+    // B 在前（同步关闭），A 在后（异步 onClose）
+    vm.open({ title: 'B', duration: null, onClose: () => true })
+    vm.open({
+      title: 'A',
+      duration: null,
+      onClose: () => new Promise<void>((resolve) => (resolveA = resolve))
+    })
+    await wrapper.vm.$nextTick()
+    expect(containers('.notification-container').length).toBe(2)
+    // 先关闭 index 0 的 B（同步 onClose，立即移除），A 前移到 index 0
+    dispatch(containers('.notification-close')[0], 'click')
+    await flushPromises()
+    expect(containers('.notification-container').length).toBe(1)
+    // 再关闭 A（异步 onClose），期间数组已位移，必须按 key 重新定位后再移除
+    dispatch(containers('.notification-close')[0], 'click')
+    resolveA!()
+    await flushPromises()
+    await wrapper.vm.$nextTick()
+    expect(containers('.notification-container').length).toBe(0)
+    wrapper.unmount()
+  })
+})
+
 // ========== P 类补充问题用例 ==========
 /**
  * P2：命令式组件应 Teleport 到 body。
@@ -397,5 +505,163 @@ describe('P6 - Upload 已移除内嵌 Message，操作提示交由使用方处�
     mount(Upload, { attachTo: host })
     expect(document.querySelectorAll('.message-wrap').length).toBe(0)
     host.remove()
+  })
+})
+
+describe('Notification - top / bottom 偏移通过内容 padding 生效且不裁切阴影', () => {
+  // 偏移通过内容区 paddingTop/paddingBottom 表达（容器贴边 top/bottom: 0）：
+  // 通知卡片的溢出阴影落在内容区内，不会被滚动容器 overflow: hidden 裁切；
+  // 该方案对 scrollable=true（默认）与 scrollable=false 均一致生效。
+  it('top 偏移应体现为内容区 paddingTop，而非容器 top 定位', async () => {
+    let api!: NotificationApi
+    const wrapper = mount(Notification, {
+      attachTo: document.body,
+      props: { top: 100, onReady: (value: NotificationApi) => (api = value) }
+    })
+    api.info({ title: 'offset', duration: null })
+    await wrapper.vm.$nextTick()
+    const wrap = containers('.notification-wrap.notification-topRight')[0]
+    const content = wrap?.querySelector<HTMLElement>('.scrollbar-content')
+    expect(wrap).toBeTruthy()
+    // 容器贴边，偏移落在内容 padding 上，避免裁切通知卡片的溢出阴影
+    expect(wrap?.style.top).toBe('0px')
+    expect(content?.style.paddingTop).toBe('100px')
+    expect(content?.style.paddingBottom).toBe('32px')
+    wrapper.unmount()
+  })
+
+  it('bottom 偏移应体现为内容区 paddingBottom，而非容器 bottom 定位', async () => {
+    let api!: NotificationApi
+    const wrapper = mount(Notification, {
+      attachTo: document.body,
+      props: { bottom: 80, onReady: (value: NotificationApi) => (api = value) }
+    })
+    api.info({ title: 'offset', placement: 'bottomRight', duration: null })
+    await wrapper.vm.$nextTick()
+    const wrap = containers('.notification-wrap.notification-bottomRight')[0]
+    const content = wrap?.querySelector<HTMLElement>('.scrollbar-content')
+    expect(wrap).toBeTruthy()
+    expect(wrap?.style.bottom).toBe('0px')
+    expect(content?.style.paddingBottom).toBe('80px')
+    expect(content?.style.paddingTop).toBe('32px')
+    wrapper.unmount()
+  })
+
+  it('scrollable=false 时 top 偏移同样通过内容 padding 生效', async () => {
+    let api!: NotificationApi
+    const wrapper = mount(Notification, {
+      attachTo: document.body,
+      props: { top: 100, scrollable: false, onReady: (value: NotificationApi) => (api = value) }
+    })
+    api.info({ title: 'offset', duration: null })
+    await wrapper.vm.$nextTick()
+    const wrap = containers('.notification-wrap.notification-topRight')[0]
+    const content = wrap?.querySelector<HTMLElement>('.scrollbar-content')
+    expect(wrap).toBeTruthy()
+    expect(wrap?.style.top).toBe('0px')
+    expect(content?.style.paddingTop).toBe('100px')
+    // 非滚动模式不附加对向滚动留白
+    expect(content?.style.paddingBottom).toBe('')
+    wrapper.unmount()
+  })
+})
+
+describe('Notification - closable 控制关闭按钮渲染', () => {
+  // 计数断言基于 document 级查询，先清理此前用例可能残留的容器，避免相互干扰
+  beforeEach(() => {
+    containers('.notification-wrap').forEach((el) => el.remove())
+  })
+
+  it('closable: false 时不渲染关闭按钮', async () => {
+    const { wrapper, vm } = mountNotification()
+    vm.info({ title: 'no close', content: 'body', duration: null, closable: false })
+    await wrapper.vm.$nextTick()
+    expect(containers('.notification-close').length).toBe(0)
+    wrapper.unmount()
+  })
+
+  it('单条 closable 优先于组件级配置', async () => {
+    let api!: NotificationApi
+    const wrapper = mount(Notification, {
+      attachTo: document.body,
+      props: { closable: false, onReady: (value: NotificationApi) => (api = value) }
+    })
+    api.info({ title: 'inherit', content: '继承组件级 false', duration: null })
+    api.info({ title: 'override', content: '单条 true 覆盖组件级', duration: null, closable: true })
+    await wrapper.vm.$nextTick()
+    // 组件级 false 已生效，仅单条 closable: true 的那条渲染关闭按钮
+    expect(containers('.notification-close').length).toBe(1)
+    wrapper.unmount()
+  })
+})
+
+describe('Notification - key 去重与按 key 关闭', () => {
+  beforeEach(() => {
+    containers('.notification-wrap').forEach((el) => el.remove())
+  })
+
+  it('相同 key 重复调用不叠加，只原地更新该条内容', async () => {
+    const { wrapper, vm } = mountNotification()
+    vm.info({ key: 'sync', title: '第一次', content: 'first', duration: null })
+    vm.info({ key: 'sync', title: '第二次', content: 'second', duration: null })
+    await wrapper.vm.$nextTick()
+    expect(containers('.notification-container').length).toBe(1)
+    expect(containers('.notification-container')[0].textContent).toContain('second')
+    wrapper.unmount()
+  })
+
+  it('destroy(key) 可精确关闭指定 key 的通知', async () => {
+    const { wrapper, vm } = mountNotification()
+    vm.info({ key: 'sync', title: 'sync', duration: null })
+    vm.info({ title: 'other', duration: null })
+    await wrapper.vm.$nextTick()
+    expect(containers('.notification-container').length).toBe(2)
+    ;(vm as unknown as NotificationApi).destroy('sync')
+    await flushPromises()
+    await wrapper.vm.$nextTick()
+    expect(containers('.notification-container').length).toBe(1)
+    wrapper.unmount()
+  })
+})
+
+describe('Notification - onClick 点击通知体回调', () => {
+  beforeEach(() => {
+    containers('.notification-wrap').forEach((el) => el.remove())
+  })
+
+  it('点击通知体触发 onClick，点击关闭按钮不触发', async () => {
+    const { wrapper, vm } = mountNotification()
+    let clicked = 0
+    vm.info({ title: 'click', content: 'body', duration: null, onClick: () => (clicked += 1) })
+    await wrapper.vm.$nextTick()
+    dispatch(containers('.notification-container')[0], 'click')
+    expect(clicked).toBe(1)
+    // 关闭按钮点击已阻止冒泡，不应再触发 onClick
+    dispatch(containers('.notification-close')[0], 'click')
+    await flushPromises()
+    await wrapper.vm.$nextTick()
+    expect(clicked).toBe(1)
+    wrapper.unmount()
+  })
+})
+
+describe('Notification - 通知清空后回收空容器 DOM（对齐 naive-ui）', () => {
+  beforeEach(() => {
+    containers('.notification-wrap').forEach((el) => el.remove())
+  })
+
+  it('分组内最后一条通知离场后，容器 DOM 应被移除', async () => {
+    const { wrapper, vm } = mountNotification()
+    vm.info({ title: 'only', duration: null })
+    await wrapper.vm.$nextTick()
+    expect(containers('.notification-wrap').length).toBe(1)
+    ;(vm as unknown as NotificationApi).destroyAll()
+    await flushPromises()
+    await wrapper.vm.$nextTick()
+    // 需等离场动画结束（after-leave）后回收分组，jsdom 无真实动画，短等即可
+    await wait(400)
+    await wrapper.vm.$nextTick()
+    expect(containers('.notification-wrap').length).toBe(0)
+    wrapper.unmount()
   })
 })
