@@ -54,27 +54,26 @@ function onIconRenderFn() {
   })
 }
 // 自定义样式
-function onClassCustom(content: string) {
+function onCustomClass(content: string) {
   message.info({
-    content,
+    content: 'This is a custom class message',
     icon: h(SoundFilled),
-    class: 'custom-class'
+    class: 'custom-message-class'
   })
 }
-function onStyleCustom(content: string) {
+function onCustomStyle(content: string) {
   message.warning({
-    content,
+    content: 'This is a custom style message',
     icon: h(FireFilled),
     style: {
       color: '#f50'
     }
   })
 }
-// 自定义关闭延时与回调
-function onCustomClose() {
+// 自动关闭
+function onAutoClose() {
   message.info({
     content: 'This message will automatically turn off after 3 seconds.',
-    duration: 3000,
     onClose: () => {
       // onClose 回调：消息关闭后给出可见反馈
       message.success('onClose 回调触发: 上一条消息已自动关闭')
@@ -117,13 +116,13 @@ function onDestroy() {
 }
 // 原地更新 update
 const updateTimers: ReturnType<typeof setInterval>[] = []
-function onProgressUpdate() {
+function onProgressUpload() {
   const percent = ref(0)
   const handle = message.loading({
     // content 传渲染函数：内部引用响应式 percent，进度变化时消息内容自动更新
     content: () =>
       h('span', { style: 'white-space: nowrap' }, [
-        '提交中...',
+        '上传中...',
         h(
           'span',
           {
@@ -144,7 +143,7 @@ function onProgressUpdate() {
     if (percent.value >= 100) {
       clearInterval(timer)
       // update 支持 mode：原地把 loading 图标切换为 success，并重设时长自动关闭
-      const doneOptions: MessageUpdate = { content: '提交成功', mode: 'success', duration: 2000 }
+      const doneOptions: MessageUpdate = { content: '上传成功', mode: 'success', duration: 2000 }
       handle.update(doneOptions)
     }
   }, 100)
@@ -233,12 +232,12 @@ function onToMessage() {
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Space>
-      <Button type="primary" @click="onClassCustom('This is a custom class message')">自定义类名</Button>
-      <Button type="primary" @click="onStyleCustom('This is a custom style message')">自定义样式</Button>
+      <Button type="primary" @click="onCustomClass">自定义 class</Button>
+      <Button type="primary" @click="onCustomStyle">自定义 style</Button>
     </Space>
     <h2 class="mt30 mb10">自定义关闭延时</h2>
     <Space>
-      <Button type="primary" @click="onCustomClose">3s 后自动关闭</Button>
+      <Button type="primary" @click="onAutoClose">3s 后自动关闭</Button>
       <Button type="primary" @click="onNeverAutoClose">常驻消息，点击关闭</Button>
     </Space>
     <h2 class="mt30 mb10">复杂内容</h2>
@@ -255,7 +254,7 @@ function onToMessage() {
       <Button @click="onDestroy">关闭</Button>
     </Space>
     <h2 class="mt30 mb10">原地更新</h2>
-    <Button type="primary" @click="onProgressUpdate">异步提交</Button>
+    <Button type="primary" @click="onProgressUpload">异步上传</Button>
     <h2 class="mt30 mb10">最大消息数</h2>
     <p class="mb10"> 连续打开消息时，超出上限会淘汰最旧的一条（淘汰不触发 <code>onClose</code>） </p>
     <MessageProvider :max-count="3" @ready="maxCountMessage = $event" />
@@ -280,9 +279,6 @@ function onToMessage() {
   </div>
 </template>
 <style lang="less" scoped>
-::deep(.custom-class) {
-  color: #ff6900;
-}
 .message-to-container {
   position: relative;
   transform: translateZ(0); // 建立包含块，使内部 fixed 定位的消息相对该容器定位
@@ -292,5 +288,11 @@ function onToMessage() {
   border: 1px dashed #d9d9d9;
   border-radius: 8px;
   overflow: hidden;
+}
+</style>
+<style lang="less">
+// 消息通过 Teleport 挂载到 body 下，scoped 样式无法命中，需使用全局样式
+.custom-message-class {
+  color: #ff6900;
 }
 </style>

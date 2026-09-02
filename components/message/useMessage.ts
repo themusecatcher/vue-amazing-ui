@@ -1,14 +1,14 @@
 import { inject } from 'vue'
 import type { InjectionKey } from 'vue'
-import type { Message, MessageReactive } from './Message.vue'
+import type { MessageOptions, MessageReactive } from './Message.vue'
 
 export interface MessageApi {
-  open(message: string | Message): MessageReactive
-  info(message: string | Message): MessageReactive
-  success(message: string | Message): MessageReactive
-  error(message: string | Message): MessageReactive
-  warning(message: string | Message): MessageReactive
-  loading(message: string | Message): MessageReactive
+  open(message: string | MessageOptions): MessageReactive
+  info(message: string | MessageOptions): MessageReactive
+  success(message: string | MessageOptions): MessageReactive
+  error(message: string | MessageOptions): MessageReactive
+  warning(message: string | MessageOptions): MessageReactive
+  loading(message: string | MessageOptions): MessageReactive
   destroyAll(): void
 }
 

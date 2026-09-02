@@ -26,7 +26,7 @@ _适用于组件内部调用：先在应用根节点放置一次 `<MessageProvid
 
 - `MessageProvider` 内部渲染一个 `Message` 组件，并通过 `provide/inject` 向下提供 `useMessage()` 所需的 API，自身不渲染任何可见内容
 - 组件级配置属性（`duration` / `top` / `maxCount` / `keepAliveOnHover` / `to`）会透传给内部的 `Message`，因此直接参考下方 [Message Props](#message) 设置即可
-- 使用 `useMessage()` 时，组件级配置设置在 `<MessageProvider>` 上（无法直接接触内部 `Message`）；每条消息的个性化配置（`content` / `icon` / `class` / `style` 等）则在调用 `open` / `info` 等方法时作为参数传入，参考 [Message Type](#message-type)
+- 使用 `useMessage()` 时，组件级配置设置在 `<MessageProvider>` 上（无法直接接触内部 `Message`）；每条消息的个性化配置（`content` / `icon` / `class` / `style` 等）则在调用 `open` / `info` 等方法时作为参数传入，参考 [MessageOptions Type](#messageoptions-type)
 
 :::
 
@@ -197,27 +197,26 @@ function onIconRenderFn() {
   })
 }
 // 自定义样式
-function onClassCustom(content: string) {
+function onCustomClass(content: string) {
   message.info({
-    content,
+    content: 'This is a custom class message',
     icon: h(SoundFilled),
-    class: 'custom-class'
+    class: 'custom-message-class'
   })
 }
-function onStyleCustom(content: string) {
+function onCustomStyle(content: string) {
   message.warning({
-    content,
+    content: 'This is a custom style message',
     icon: h(FireFilled),
     style: {
       color: '#f50'
     }
   })
 }
-// 自定义关闭延时与回调
-function onCustomClose() {
+// 自动关闭
+function onAutoClose() {
   message.info({
     content: 'This message will automatically turn off after 3 seconds.',
-    duration: 3000,
     onClose: () => {
       // onClose 回调：消息关闭后给出可见反馈
       message.success('onClose 回调触发: 上一条消息已自动关闭')
@@ -261,13 +260,13 @@ function onDestroy() {
 }
 // 原地更新 update
 const updateTimers: ReturnType<typeof setInterval>[] = []
-function onProgressUpdate() {
+function onProgressUpload() {
   const percent = ref(0)
   const handle = message.loading({
     // content 传渲染函数：内部引用响应式 percent，进度变化时消息内容自动更新
     content: () =>
       h('span', { style: 'white-space: nowrap' }, [
-        '提交中...',
+        '上传中...',
         h(
           'span',
           {
@@ -288,7 +287,7 @@ function onProgressUpdate() {
     if (percent.value >= 100) {
       clearInterval(timer)
       // update 支持 mode：原地把 loading 图标切换为 success，并重设时长自动关闭
-      const doneOptions: MessageUpdate = { content: '提交成功', mode: 'success', duration: 2000 }
+      const doneOptions: MessageUpdate = { content: '上传成功', mode: 'success', duration: 2000 }
       handle.update(doneOptions)
     }
   }, 100)
@@ -466,12 +465,13 @@ function onIconRenderFn() {
 ## 自定义样式
 
 <Space>
-  <Button type="primary" @click="onClassCustom('This is a custom class message')">自定义类名</Button>
-  <Button type="primary" @click="onStyleCustom('This is a custom style message')">自定义样式</Button>
+  <Button type="primary" @click="onCustomClass">自定义 class</Button>
+  <Button type="primary" @click="onCustomStyle">自定义 style</Button>
 </Space>
 
-<style lang="less" scoped>
-::deep(.custom-class) {
+<style lang="less">
+// 消息通过 Teleport 挂载到 body 下，scoped 样式无法命中，需使用全局样式
+.custom-message-class {
   color: #ff6900;
 }
 </style>
@@ -484,16 +484,16 @@ import { h } from 'vue'
 import { SoundFilled, FireFilled } from '@ant-design/icons-vue'
 import { useMessage } from 'vue-amazing-ui'
 const message = useMessage()
-function onClassCustom(content: string) {
+function onCustomClass(content: string) {
   message.info({
-    content,
+    content: 'This is a custom class message',
     icon: h(SoundFilled),
-    class: 'custom-class'
+    class: 'custom-message-class'
   })
 }
-function onStyleCustom(content: string) {
+function onCustomStyle(content: string) {
   message.warning({
-    content,
+    content: 'This is a custom style message',
     icon: h(FireFilled),
     style: {
       color: '#f50'
@@ -503,12 +503,13 @@ function onStyleCustom(content: string) {
 </script>
 <template>
   <Space>
-    <Button type="primary" @click="onClassCustom('This is a custom class message')">自定义类名</Button>
-    <Button type="primary" @click="onStyleCustom('This is a custom style message')">自定义样式</Button>
+    <Button type="primary" @click="onCustomClass">自定义 class</Button>
+    <Button type="primary" @click="onCustomStyle">自定义 style</Button>
   </Space>
 </template>
-<style lang="less" scoped>
-::deep(.custom-class) {
+<style lang="less">
+// 消息通过 Teleport 挂载到 body 下，scoped 样式无法命中，需使用全局样式
+.custom-message-class {
   color: #ff6900;
 }
 </style>
@@ -519,7 +520,7 @@ function onStyleCustom(content: string) {
 ## 自定义关闭延时
 
 <Space>
-  <Button type="primary" @click="onCustomClose">3s 后自动关闭</Button>
+  <Button type="primary" @click="onAutoClose">3s 后自动关闭</Button>
   <Button type="primary" @click="onNeverAutoClose">常驻消息，点击关闭</Button>
 </Space>
 
@@ -529,10 +530,10 @@ function onStyleCustom(content: string) {
 <script setup lang="ts">
 import { useMessage } from 'vue-amazing-ui'
 const message = useMessage()
-function onCustomClose() {
+// 自动关闭
+function onAutoClose() {
   message.info({
     content: 'This message will automatically turn off after 3 seconds.',
-    duration: 3000,
     onClose: () => {
       // onClose 回调：消息关闭后给出可见反馈
       message.success('onClose 回调触发: 上一条消息已自动关闭')
@@ -550,7 +551,7 @@ function onNeverAutoClose() {
 </script>
 <template>
   <Space>
-    <Button type="primary" @click="onCustomClose">3s 后自动关闭</Button>
+    <Button type="primary" @click="onAutoClose">3s 后自动关闭</Button>
     <Button type="primary" @click="onNeverAutoClose">常驻消息，点击关闭</Button>
   </Space>
 </template>
@@ -639,7 +640,7 @@ function onDestroy() {
 
 ## 原地更新
 
-<Button type="primary" @click="onProgressUpdate">异步提交</Button>
+<Button type="primary" @click="onProgressUpload">异步上传</Button>
 
 ::: details Show Code
 
@@ -650,13 +651,13 @@ import { useMessage } from 'vue-amazing-ui'
 import type { MessageUpdate } from 'vue-amazing-ui'
 const message = useMessage()
 const updateTimers: ReturnType<typeof setInterval>[] = []
-function onProgressUpdate() {
+function onProgressUpload() {
   const percent = ref(0)
   const handle = message.loading({
     // content 传渲染函数：内部引用响应式 percent，进度变化时消息内容自动更新
     content: () =>
       h('span', { style: 'white-space: nowrap' }, [
-        '提交中...',
+        '上传中...',
         h(
           'span',
           {
@@ -677,7 +678,7 @@ function onProgressUpdate() {
     if (percent.value >= 100) {
       clearInterval(timer)
       // update 支持 mode：原地把 loading 图标切换为 success，并重设时长自动关闭
-      const doneOptions: MessageUpdate = { content: '提交成功', mode: 'success', duration: 2000 }
+      const doneOptions: MessageUpdate = { content: '上传成功', mode: 'success', duration: 2000 }
       handle.update(doneOptions)
     }
   }, 100)
@@ -690,7 +691,7 @@ onBeforeUnmount(() => {
 })
 </script>
 <template>
-  <Button type="primary" @click="onProgressUpdate">异步提交</Button>
+  <Button type="primary" @click="onProgressUpload">异步上传</Button>
 </template>
 ```
 
@@ -879,7 +880,7 @@ _组件级配置属性：使用 `useMessage()` 时设置在 `<MessageProvider>` 
 
 <br/>
 
-_每条消息的个性化配置请参考 [Message Type](#message-type)_
+_每条消息的个性化配置请参考 [MessageOptions Type](#messageoptions-type)_
 
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
@@ -889,11 +890,11 @@ _每条消息的个性化配置请参考 [Message Type](#message-type)_
 | keepAliveOnHover | 鼠标移入时是否暂停自动关闭 | boolean | true |
 | to | 消息容器挂载的节点，可选：元素标签名（例如 `'body'`）或者元素本身 | string &#124; HTMLElement | 'body' |
 
-### Message Type
+### MessageOptions Type
 
 <br/>
 
-_调用时传入的 `Message` 类型（`open` / `info` / `success` / `error` / `warning` / `loading` 的参数），以下属性均具有更高优先级（覆盖组件级配置）_
+_调用时传入的 `MessageOptions` 类型（`open` / `info` / `success` / `error` / `warning` / `loading` 的参数），以下属性均具有更高优先级（覆盖组件级配置）_
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
@@ -911,12 +912,12 @@ _`useMessage()` 返回的 `MessageApi`，或通过 `<Message>` / `<MessageProvid
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| open | 基本全局提示 | (content: string &#124; [Message](#message-type)) => [MessageReactive](#messagereactive-type) |
-| info | 信息全局提示 | (content: string &#124; [Message](#message-type)) => [MessageReactive](#messagereactive-type) |
-| success | 成功全局提示 | (content: string &#124; [Message](#message-type)) => [MessageReactive](#messagereactive-type) |
-| error | 失败全局提示 | (content: string &#124; [Message](#message-type)) => [MessageReactive](#messagereactive-type) |
-| warning | 警告全局提示 | (content: string &#124; [Message](#message-type)) => [MessageReactive](#messagereactive-type) |
-| loading | 加载全局提示 | (content: string &#124; [Message](#message-type)) => [MessageReactive](#messagereactive-type) |
+| open | 基本全局提示 | (content: string &#124; [MessageOptions](#messageoptions-type)) => [MessageReactive](#messagereactive-type) |
+| info | 信息全局提示 | (content: string &#124; [MessageOptions](#messageoptions-type)) => [MessageReactive](#messagereactive-type) |
+| success | 成功全局提示 | (content: string &#124; [MessageOptions](#messageoptions-type)) => [MessageReactive](#messagereactive-type) |
+| error | 失败全局提示 | (content: string &#124; [MessageOptions](#messageoptions-type)) => [MessageReactive](#messagereactive-type) |
+| warning | 警告全局提示 | (content: string &#124; [MessageOptions](#messageoptions-type)) => [MessageReactive](#messagereactive-type) |
+| loading | 加载全局提示 | (content: string &#124; [MessageOptions](#messageoptions-type)) => [MessageReactive](#messagereactive-type) |
 | destroyAll | 销毁所有全局提示 | () => void |
 
 ### MessageReactive Type
@@ -935,7 +936,7 @@ _单条消息的句柄，由 `open` / `info` 等方法调用后返回：_
 
 <br/>
 
-_`update` 可更新的字段为 `Message` 的全部属性，另支持 `mode` 用于切换内置图标类型（例如 `loading` 消息完成后原地切换为 `success`）。_
+_`update` 可更新的字段为 `MessageOptions` 的全部属性，另支持 `mode` 用于切换内置图标类型（例如 `loading` 消息完成后原地切换为 `success`）。_
 
 > 注意：若该条消息设置了自定义 `icon`，图标不随 `mode` 切换。
 

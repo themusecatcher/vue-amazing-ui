@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
   keepAliveOnHover: true,
   to: 'body'
 })
-export interface Message {
+export interface MessageOptions {
   content?: ContentType // 提示内容
   icon?: VNode | (() => VNode) // 自定义图标
   duration?: number | null // 自动关闭的延时时长，单位 ms；设置 null 时，不自动关闭
@@ -29,17 +29,17 @@ export interface Message {
   onClose?: () => void // 关闭时的回调函数
 }
 type Mode = 'open' | 'info' | 'success' | 'error' | 'warning' | 'loading'
-// update 可更新的字段：Message 全部属性 + mode（用于切换内置图标类型）
-export interface MessageUpdate extends Message {
+// update 可更新的字段：MessageOptions 全部属性 + mode（用于切换内置图标类型）
+export interface MessageUpdate extends MessageOptions {
   mode?: Mode
 }
 // 每条消息的展示数据
-interface MessageItem extends Message {
+interface MessageItem extends MessageOptions {
   readonly key: string // 唯一标识，替代数组下标作为身份
   mode: Mode
 }
 // 单条消息的句柄，用于编程式关闭与更新
-export interface MessageReactive extends Message {
+export interface MessageReactive extends MessageOptions {
   readonly key: string // 该条消息的唯一标识
   destroy: () => void // 关闭该条消息
   update: (options: MessageUpdate) => void // 更新该条消息；mode 可切换内置图标类型
@@ -137,8 +137,8 @@ function updateItem(key: string, options: MessageUpdate): void {
     autoClose(key)
   }
 }
-function push(message: string | Message, mode: Mode): MessageReactive {
-  const data: Message = typeof message === 'string' ? { content: message } : { ...message }
+function push(message: string | MessageOptions, mode: Mode): MessageReactive {
+  const data: MessageOptions = typeof message === 'string' ? { content: message } : { ...message }
   const key = createKey()
   // 超出上限时淘汰最旧的一条，不触发 onClose；maxCount 非法（0 或负数）时不淘汰
   if (props.maxCount && props.maxCount > 0 && messageItems.value.length >= props.maxCount) {
@@ -154,22 +154,22 @@ function push(message: string | Message, mode: Mode): MessageReactive {
     update: (options: MessageUpdate) => updateItem(key, options)
   }
 }
-function open(message: string | Message): MessageReactive {
+function open(message: string | MessageOptions): MessageReactive {
   return push(message, 'open')
 }
-function info(message: string | Message): MessageReactive {
+function info(message: string | MessageOptions): MessageReactive {
   return push(message, 'info')
 }
-function success(message: string | Message): MessageReactive {
+function success(message: string | MessageOptions): MessageReactive {
   return push(message, 'success')
 }
-function error(message: string | Message): MessageReactive {
+function error(message: string | MessageOptions): MessageReactive {
   return push(message, 'error')
 }
-function warning(message: string | Message): MessageReactive {
+function warning(message: string | MessageOptions): MessageReactive {
   return push(message, 'warning')
 }
-function loading(message: string | Message): MessageReactive {
+function loading(message: string | MessageOptions): MessageReactive {
   return push(message, 'loading')
 }
 // 将内容归一化为可直接渲染的形态：函数式内容调用后得到 VNode
