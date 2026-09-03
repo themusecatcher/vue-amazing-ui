@@ -17,8 +17,8 @@ import {
   startOfYear,
   set
 } from 'date-fns'
-import Select from 'components/select'
-import Radio from 'components/radio'
+import Select, { type SelectProps } from 'components/select'
+import Radio, { type RadioProps } from 'components/radio'
 import { useSlotsExist, useInject } from 'components/utils'
 import type { SelectOption, RadioOption } from 'vue-amazing-ui'
 export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -27,9 +27,9 @@ export interface Props {
   display?: 'panel' | 'card' // 日历展示方式，面板/卡片
   mode?: 'month' | 'year' // 初始模式
   header?: string // 自定义日历头部内容 string | slot
-  yearSelectProps?: object // 年选择器 props，参考 Select 组件 Props
-  monthSelectProps?: object // 月选择器 props，参考 Select 组件 Props
-  modeRadioProps?: object // 模式切换器 props，参考 Radio 组件 Props
+  yearSelectProps?: SelectProps // 年选择器 props，参考 Select 组件 Props
+  monthSelectProps?: SelectProps // 月选择器 props，参考 Select 组件 Props
+  modeRadioProps?: RadioProps // 模式切换器 props，参考 Radio 组件 Props
   startDayOfWeek?: DayOfWeek // 一周的开始是星期几，0-6，0 是周一
   dateStrip?: boolean // 日历面板默认会显示六周的日期，当最后一周的日期不包含当月日期时，是否去掉
   dateFormat?: (date: number, timestamp: number) => string // 自定义日期展示格式

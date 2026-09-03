@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
-import Space from 'components/space'
-import Spin from 'components/spin'
+import Space, { type SpaceProps } from 'components/space'
+import Spin, { type SpinProps } from 'components/spin'
 import { add, downloadFile, useInject } from 'components/utils'
 export interface Image {
   src: string // 图像地址
@@ -18,9 +18,9 @@ export interface Props {
   fit?: 'contain' | 'fill' | 'cover' | 'none' | 'scale-down' // 图片在容器内的的适应类型
   preview?: string // 预览文本 string | slot
   previewImageStyle?: CSSProperties // 自定义预览图片时 img 元素的样式
-  spaceProps?: object // Space 组件属性配置，用于配置多张展示图片时的排列方式
-  spinProps?: object // Spin 组件属性配置，用于配置图片加载中样式
-  previewSpinProps?: object // Spin 组件属性配置，用于配置预览图片加载中样式
+  spaceProps?: SpaceProps // Space 组件属性配置，用于配置多张展示图片时的排列方式
+  spinProps?: SpinProps // Spin 组件属性配置，用于配置图片加载中样式
+  previewSpinProps?: SpinProps // Spin 组件属性配置，用于配置预览图片加载中样式
   zoomRatio?: number // 每次缩放比率
   minZoomScale?: number // 最小缩放比例
   maxZoomScale?: number // 最大缩放比例

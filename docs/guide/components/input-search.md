@@ -675,7 +675,7 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 | width | 搜索框宽度，单位 `px` | string &#124; number | '100%' |
 | icon | 搜索图标 | boolean &#124; slot | true |
 | search | 搜索按钮，默认时为搜索图标 | string &#124; slot | undefined |
-| searchProps | 设置搜索按钮的属性，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {} |
+| searchProps | 设置搜索按钮的属性，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {} |
 | size | 搜索框大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | addonBefore | 设置前置标签 | string &#124; slot | undefined |
 | prefix | 前缀图标 | string | undefined |

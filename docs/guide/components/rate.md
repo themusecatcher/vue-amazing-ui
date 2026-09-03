@@ -493,7 +493,7 @@ color | 字符选中颜色 | string | '#fadb14'
 gap | 字符间距，单位 `px` | number | 8
 disabled | 只读，无法进行交互 | boolean | false
 tooltips | 自定义每项的提示信息 | string[] | []
-tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip) | object | {}
+tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip) | [TooltipProps](./tooltip.md#tooltip) | {}
 value <Tag color="cyan">v-model</Tag> | 当前数，受控值 `0,1,2,3...` | number | 0
 
 ## Slots

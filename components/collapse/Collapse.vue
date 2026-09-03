@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import type { CSSProperties, VNode, Slot } from 'vue'
-import Button from 'components/button'
+import Button, { type ButtonProps } from 'components/button'
 import { debounce } from 'components/utils'
 export interface Item {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
@@ -18,7 +18,7 @@ export interface Item {
   extra?: string // 面板标题右侧的额外内容 string | slot
   lang?: string // 面板右上角固定内容，例如 language 标识 string | slot
   copyable?: boolean // 是否可复制面板内容
-  copyProps?: object // 复制按钮属性配置，参考 Button Props
+  copyProps?: ButtonProps // 复制按钮属性配置，参考 Button Props
   copyText?: string // 复制按钮文本
   copiedText?: string // 已复制按钮文本
   [propName: string]: any // 用于包含带有任意数量的其他属性
@@ -39,7 +39,7 @@ export interface Props {
   extra?: string // 面板标题右侧的额外内容，较低优先级 string | slot
   lang?: string // 面板右上角固定内容，例如 language 标识，较低优先级 string | slot
   copyable?: boolean // 是否可复制面板内容，较低优先级
-  copyProps?: object // 复制按钮属性配置，参考 Button Props，较低优先级
+  copyProps?: ButtonProps // 复制按钮属性配置，参考 Button Props，较低优先级
   copyText?: string // 复制按钮文本，较低优先级
   copiedText?: string // 已复制按钮文本，较低优先级
 }

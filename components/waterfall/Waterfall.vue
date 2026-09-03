@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
-import Spin from 'components/spin'
+import Spin, { type SpinProps } from 'components/spin'
 import { useResizeObserver } from 'components/utils'
 /*
   宽度固定，图片等比例缩放；使用JS获取每张图片宽度和高度，结合 `relative` 和 `absolute` 定位
@@ -19,7 +19,7 @@ export interface Props {
   width?: string | number // 瀑布流区域的总宽度，单位 px
   borderRadius?: number // 瀑布流区域和图片圆角，单位 px
   backgroundColor?: string // 瀑布流区域背景填充色
-  spinProps?: object // Spin 组件属性配置，参考 Spin Props，用于配置图片加载中样式
+  spinProps?: SpinProps // Spin 组件属性配置，参考 Spin Props，用于配置图片加载中样式
 }
 const props = withDefaults(defineProps<Props>(), {
   images: () => [],

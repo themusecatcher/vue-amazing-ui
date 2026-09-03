@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { CSSProperties } from 'vue'
-import Skeleton from 'components/skeleton'
+import Skeleton, { type SkeletonProps } from 'components/skeleton'
 import { useSlotsExist } from 'components/utils'
 export interface Props {
   width?: number | string // 卡片宽度，单位 px
@@ -9,7 +9,7 @@ export interface Props {
   size?: 'small' | 'middle' | 'large' // 卡片的尺寸
   hoverable?: boolean // 鼠标移过时可浮起
   loading?: boolean // 当卡片内容还在加载中时，可以用 loading 展示一个占位
-  skeletonProps?: object // 加载中时，骨架屏的属性配置，参考 Skeleton Props
+  skeletonProps?: SkeletonProps // 加载中时，骨架屏的属性配置，参考 Skeleton Props
   title?: string // 卡片标题 string | slot
   extra?: string // 卡片右上角的操作区域 string | slot
   headStyle?: CSSProperties // 自定义标题区域样式

@@ -1,171 +1,167 @@
-export type { Props as AlertProps } from './alert'
+export type { AlertProps } from './alert'
 export { default as Alert } from './alert'
 
-export type {
-  Props as AutoCompleteProps,
-  Option as AutoCompleteOption,
-  GroupOption as AutoCompleteGroupOption
-} from './auto-complete'
+export type { AutoCompleteProps, AutoCompleteOption, AutoCompleteGroupOption } from './auto-complete'
 export { default as AutoComplete } from './auto-complete'
 
-export type { Props as AvatarProps, Responsive as AvatarResponsive } from './avatar'
+export type { AvatarProps, AvatarResponsive } from './avatar'
 export { default as Avatar } from './avatar'
 
-export type { Props as BackTopProps } from './back-top'
+export type { BackTopProps } from './back-top'
 export { default as BackTop } from './back-top'
 
-export type { Props as BadgeProps, PresetColor as BadgePresetColor, Status as BadgeStatus } from './badge'
+export type { BadgeProps, BadgePresetColor, BadgeStatus } from './badge'
 export { default as Badge } from './badge'
 
-export type { Props as BreadcrumbProps, Route as BreadcrumbRoute, Query as BreadcrumbRouteQuery } from './breadcrumb'
+export type { BreadcrumbProps, BreadcrumbRoute, BreadcrumbRouteQuery } from './breadcrumb'
 export { default as Breadcrumb } from './breadcrumb'
 
-export type { Props as ButtonProps } from './button'
+export type { ButtonProps } from './button'
 export { default as Button } from './button'
 
 export type {
-  Props as CalendarProps,
-  DayOfWeek as CalendarDayOfWeek,
-  DefaultWeek as CalendarDefaultWeek,
-  DateItem as CalendarDateItem,
-  MonthItem as CalendarMonthItem
+  CalendarProps,
+  CalendarDayOfWeek,
+  CalendarDefaultWeek,
+  CalendarDateItem,
+  CalendarMonthItem
 } from './calendar'
 export { default as Calendar } from './calendar'
 
-export type { Props as CardProps } from './card'
+export type { CardProps } from './card'
 export { default as Card } from './card'
 
-export type { Props as CarouselProps, Image as CarouselImage } from './carousel'
+export type { CarouselProps, CarouselImage } from './carousel'
 export { default as Carousel } from './carousel'
 
-export type { Props as CascaderProps, Option as CascaderOption } from './cascader'
+export type { CascaderProps, CascaderOption } from './cascader'
 export { default as Cascader } from './cascader'
 
-export type { Props as CheckboxProps, Option as CheckboxOption } from './checkbox'
+export type { CheckboxProps, CheckboxOption } from './checkbox'
 export { default as Checkbox } from './checkbox'
 
-export type { Props as CollapseProps, Item as CollapseItem } from './collapse'
+export type { CollapseProps, CollapseItem } from './collapse'
 export { default as Collapse } from './collapse'
 
-export type { Props as ColorPickerProps, ColorPickerMode, ColorPickerAction } from './color-picker'
+export type { ColorPickerProps, ColorPickerMode, ColorPickerAction } from './color-picker'
 export { default as ColorPicker } from './color-picker'
 
-export type { Props as ConfigProviderProps, Theme as ConfigProviderTheme } from './config-provider'
+export type { ConfigProviderProps, ConfigProviderTheme } from './config-provider'
 export { default as ConfigProvider } from './config-provider'
 
-export type { Props as CountdownProps } from './countdown'
+export type { CountdownProps } from './countdown'
 export { default as Countdown } from './countdown'
 
-export type { Props as DatePickerProps } from './date-picker'
+export type { DatePickerProps } from './date-picker'
 export { default as DatePicker } from './date-picker'
 
-export type { DescriptionsProps, Responsive as DescriptionsResponsive, DescriptionsItemProps } from './descriptions'
+export type { DescriptionsProps, DescriptionsResponsive, DescriptionsItemProps } from './descriptions'
 export { Descriptions, DescriptionsItem } from './descriptions'
 
-export type { Props as DialogProps } from './dialog'
+export type { DialogProps } from './dialog'
 export { default as Dialog } from './dialog'
 
 export type { DiscreteApi, DiscreteApiInstance, DiscreteApiType } from './discrete'
 export { createDiscreteApi } from './discrete'
 
-export type { Props as DividerProps } from './divider'
+export type { DividerProps } from './divider'
 export { default as Divider } from './divider'
 
-export type { Props as DrawerProps } from './drawer'
+export type { DrawerProps } from './drawer'
 export { default as Drawer } from './drawer'
 
-export type { Props as EllipsisProps } from './ellipsis'
+export type { EllipsisProps } from './ellipsis'
 export { default as Ellipsis } from './ellipsis'
 
-export type { Props as EmptyProps } from './empty'
+export type { EmptyProps } from './empty'
 export { default as Empty } from './empty'
 
-export type { Props as FlexProps } from './flex'
+export type { FlexProps } from './flex'
 export { default as Flex } from './flex'
 
-export type { Props as FloatButtonProps } from './float-button'
+export type { FloatButtonProps } from './float-button'
 export { default as FloatButton } from './float-button'
 
-export type { Props as GradientTextProps, Gradient as GradientTextGradient } from './gradient-text'
+export type { GradientTextProps, GradientTextGradient } from './gradient-text'
 export { default as GradientText } from './gradient-text'
 
-export type { RowProps, Responsive as RowResponsive, ColProps } from './grid'
+export type { RowProps, RowResponsive, ColProps } from './grid'
 export { Row, Col } from './grid'
 
-export type { Props as HighlightProps } from './highlight'
+export type { HighlightProps } from './highlight'
 export { default as Highlight } from './highlight'
 
-export type { Props as ImageProps, Image as ImageItem } from './image'
+export type { ImageProps, ImageItem } from './image'
 export { default as Image } from './image'
 
-export type { Props as InputProps } from './input'
+export type { InputProps } from './input'
 export { default as Input } from './input'
 
-export type { Props as InputNumberProps } from './input-number'
+export type { InputNumberProps } from './input-number'
 export { default as InputNumber } from './input-number'
 
-export type { Props as InputSearchProps } from './input-search'
+export type { InputSearchProps } from './input-search'
 export { default as InputSearch } from './input-search'
 
 export type { ListProps, ListItemProps } from './list'
 export { List, ListItem } from './list'
 
-export type { Props as LoadingBarProps } from './loading-bar'
+export type { LoadingBarProps } from './loading-bar'
 export { default as LoadingBar } from './loading-bar'
 
-export type {
-  Props as MessageProps,
-  Message as MessageOptions,
-  MessageApi,
-  MessageReactive,
-  MessageUpdate
-} from './message'
+export type { MessageProps, MessageOptions, MessageApi, MessageReactive, MessageUpdate } from './message'
 export { default as Message, MessageProvider, useMessage } from './message'
 
-export type { Props as ModalProps, Modal as ModalOptions } from './modal'
+export type { ModalProps, ModalOptions } from './modal'
 export { default as Modal } from './modal'
 
-export type { Props as NotificationProps, Notification as NotificationOptions } from './notification'
-export { default as Notification } from './notification'
+export type {
+  NotificationProps,
+  NotificationOptions,
+  NotificationApi,
+  NotificationReactive,
+  NotificationUpdate
+} from './notification'
+export { default as Notification, NotificationProvider, useNotification } from './notification'
 
-export type { Props as NumberAnimationProps, TransitionFunc as NumberAnimationTransitionFunc } from './number-animation'
+export type { NumberAnimationProps, NumberAnimationTransitionFunc } from './number-animation'
 export { default as NumberAnimation } from './number-animation'
 
-export type { Props as PaginationProps } from './pagination'
+export type { PaginationProps } from './pagination'
 export { default as Pagination } from './pagination'
 
-export type { Props as PopconfirmProps } from './popconfirm'
+export type { PopconfirmProps } from './popconfirm'
 export { default as Popconfirm } from './popconfirm'
 
-export type { Props as PopoverProps } from './popover'
+export type { PopoverProps } from './popover'
 export { default as Popover } from './popover'
 
-export type { Props as ProgressProps, Gradient as ProgressGradient } from './progress'
+export type { ProgressProps, ProgressGradient } from './progress'
 export { default as Progress } from './progress'
 
-export type { Props as QRCodeProps } from './qr-code'
+export type { QRCodeProps } from './qr-code'
 export { default as QRCode } from './qr-code'
 
-export type { Props as RadioProps, Option as RadioOption } from './radio'
+export type { RadioProps, RadioOption } from './radio'
 export { default as Radio } from './radio'
 
-export type { Props as RateProps } from './rate'
+export type { RateProps } from './rate'
 export { default as Rate } from './rate'
 
-export type { Props as ResultProps } from './result'
+export type { ResultProps } from './result'
 export { default as Result } from './result'
 
-export type { Props as ScrollbarProps } from './scrollbar'
+export type { ScrollbarProps } from './scrollbar'
 export { default as Scrollbar } from './scrollbar'
 
-export type { Props as SegmentedProps, Option as SegmentedOption } from './segmented'
+export type { SegmentedProps, SegmentedOption } from './segmented'
 export { default as Segmented } from './segmented'
 
-export type { Props as SelectProps, Option as SelectOption } from './select'
+export type { SelectProps, SelectOption } from './select'
 export { default as Select } from './select'
 
 export type {
-  Props as SkeletonProps,
+  SkeletonProps,
   SkeletonParagraphProps,
   SkeletonTitleProps,
   SkeletonInputProps,
@@ -174,61 +170,56 @@ export type {
 } from './skeleton'
 export { default as Skeleton } from './skeleton'
 
-export type { Props as SliderProps } from './slider'
+export type { SliderProps } from './slider'
 export { default as Slider } from './slider'
 
-export type { Props as SpaceProps } from './space'
+export type { SpaceProps } from './space'
 export { default as Space } from './space'
 
-export type { Props as SpinProps } from './spin'
+export type { SpinProps } from './spin'
 export { default as Spin } from './spin'
 
-export type { Props as StatisticProps } from './statistic'
+export type { StatisticProps } from './statistic'
 export { default as Statistic } from './statistic'
 
-export type { Props as StepsProps, Item as StepsItem } from './steps'
+export type { StepsProps, StepsItem } from './steps'
 export { default as Steps } from './steps'
 
-export type { Props as SwiperProps, Image as SwiperImage } from './swiper'
+export type { SwiperProps, SwiperImage } from './swiper'
 export { default as Swiper } from './swiper'
 
-export type { Props as SwitchProps } from './switch'
+export type { SwitchProps } from './switch'
 export { default as Switch } from './switch'
 
-export type {
-  Props as TableProps,
-  Column as TableColumn,
-  Selection as TableSelection,
-  ScrollOption as TableScrollOption
-} from './table'
+export type { TableProps, TableColumn, TableSelection, TableScrollOption } from './table'
 export { default as Table } from './table'
 
-export type { Props as TabsProps, Item as TabsItem } from './tabs'
+export type { TabsProps, TabsItem } from './tabs'
 export { default as Tabs } from './tabs'
 
-export type { Props as TagProps, Item as TagItem } from './tag'
+export type { TagProps, TagItem } from './tag'
 export { default as Tag } from './tag'
 
-export type { Props as TextareaProps } from './textarea'
+export type { TextareaProps } from './textarea'
 export { default as Textarea } from './textarea'
 
-export type { Props as TextScrollProps, Item as TextScrollItem } from './text-scroll'
+export type { TextScrollProps, TextScrollItem } from './text-scroll'
 export { default as TextScroll } from './text-scroll'
 
-export type { Props as TimelineProps, Item as TimelineItem } from './timeline'
+export type { TimelineProps, TimelineItem } from './timeline'
 export { default as Timeline } from './timeline'
 
-export type { Props as TooltipProps } from './tooltip'
+export type { TooltipProps } from './tooltip'
 export { default as Tooltip } from './tooltip'
 
-export type { Props as UploadProps, MessageType as UploadMessageType, FileType as UploadFileType } from './upload'
+export type { UploadProps, UploadFileType } from './upload'
 export { default as Upload } from './upload'
 
-export type { Props as VideoProps } from './video'
+export type { VideoProps } from './video'
 export { default as Video } from './video'
 
-export type { Props as WaterfallProps, Image as WaterfallImage } from './waterfall'
+export type { WaterfallProps, WaterfallImage } from './waterfall'
 export { default as Waterfall } from './waterfall'
 
-export type { Props as WatermarkProps, Font as WatermarkFont } from './watermark'
+export type { WatermarkProps, WatermarkFont } from './watermark'
 export { default as Watermark } from './watermark'

@@ -960,7 +960,7 @@ dotStyle | 指示点样式，优先级高于 `dotSize`、`dotColor` | [CSSProper
 dotActiveStyle | 指示点选中样式，优先级高于 `dotActiveColor` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 dotPosition | 指示点位置，位置为 `left` &#124; `right` 时，`effect: 'slide'` 轮播自动变为垂直轮播 | 'bottom' &#124; 'top' &#124; 'left' &#124; 'right' | 'bottom'
 dotsTrigger | 指示点触发切换的方式 | 'click' &#124; 'hover' | 'click'
-spinProps | 图片加载中样式，`Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin) | object | {}
+spinProps | 图片加载中样式，`Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin) | [SpinProps](./spin.md#spin) | {}
 fadeDuration | 渐变动画持续时长，单位 `ms`，仅当 `effect` 为 `'fade'` 时生效 | number | 500
 fadeFunction | 渐变动画函数，仅当 `effect` 为 `'fade'` 时生效，可参考 [transition-timing-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function) | string | 'cubic-bezier(0.4, 0, 0.2, 1)'
 slideDuration | 滑动动画持续时长，单位 `ms`，仅当 `effect` 为 `'slide'` 时生效 | number | 800

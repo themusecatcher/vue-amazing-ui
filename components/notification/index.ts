@@ -2,7 +2,12 @@ import Notification from './Notification.vue'
 import NotificationProviderComp from './NotificationProvider.vue'
 import { withInstall } from '../utils/type'
 
-export type { Props, NotificationOptions, NotificationReactive, NotificationUpdate } from './Notification.vue'
+export type {
+  Props as NotificationProps,
+  NotificationOptions,
+  NotificationReactive,
+  NotificationUpdate
+} from './Notification.vue'
 export type { NotificationApi } from './useNotification'
 export { useNotification } from './useNotification'
 

@@ -3111,19 +3111,19 @@ watchEffect(() => {
 | size | 表格大小 | 'large' &#124; 'middle' &#124; small | 'large' |
 | striped | 是否使用斑马条纹 | boolean | false |
 | loading | 是否加载中 | boolean | false |
-| spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置数据加载中 | object | {} |
-| emptyProps | `Empty` 组件属性配置，参考 [Empty Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/empty.html#empty)，用于配置暂无数据 | object | {} |
-| ellipsisProps | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html#ellipsis)，用于全局配置文本省略 | object | {} |
+| spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置数据加载中 | [SpinProps](./spin.md#spin) | {} |
+| emptyProps | `Empty` 组件属性配置，参考 [Empty Props](./empty.md#empty)，用于配置暂无数据 | [EmptyProps](./empty.md#empty) | {} |
+| ellipsisProps | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](./ellipsis.md#ellipsis)，用于全局配置文本省略 | [EllipsisProps](./ellipsis.md#ellipsis) | {} |
 | showSorterTooltip | 表头是否显示下一次排序的 `tooltip` 提示 | boolean | true |
 | sortDirections | 支持的排序方式 | ('ascend' &#124; 'descend')[] | ['ascend', 'descend'] |
-| sortTooltipProps | 排序 `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)，用于全局配置排序弹出提示 | object | {} |
+| sortTooltipProps | 排序 `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip)，用于全局配置排序弹出提示 | [TooltipProps](./tooltip.md#tooltip) | {} |
 | sticky | 是否设置粘性定位的表头和水平滚动条，设置之后表头和滚动条会跟随页面固定 | boolean | false |
 | showPagination | 是否显示分页 | boolean | true |
-| pagination | `Pagination` 组件属性配置，参考 [Pagination Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html#pagination)，用于配置分页功能 | object | {} |
+| pagination | `Pagination` 组件属性配置，参考 [Pagination Props](./pagination.md#pagination)，用于配置分页功能 | [PaginationProps](./pagination.md#pagination) | {} |
 | rowKey | 表格内容行的唯一标识 `key`，可以是字符串或一个函数 | string &#124; ((record: Record<string, any>, index?: number) => string) | 'key' |
 | rowSelection | 列表项是否可选择 | [Selection](#selection-type) | undefined |
 | scroll | 表格是否可滚动，也可以指定滚动区域的宽、高 | [ScrollOption](#scrolloption-type) &#124; boolean | undefined |
-| scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/scrollbar.html#scrollbar)，用于配置表格滚动条 | object | {} |
+| scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar)，用于配置表格滚动条 | [ScrollbarProps](./scrollbar.md#scrollbar) | {} |
 | tableLayout | 表格布局方式，设为 `fixed` 表示内容不会影响列的布局，参考 [table-layout](https://developer.mozilla.org/zh-CN/docs/Web/CSS/table-layout) 属性，固定表头/列或使用了 `column.ellipsis` 时，默认值为 `fixed` | 'auto' &#124; 'fixed' | undefined |
 | showExpandColumn | 是否展示展开列 | boolean | false |
 | expandColumnTitle | 自定义展开列表头 | string &#124; slot | undefined |
@@ -3146,12 +3146,12 @@ watchEffect(() => {
 | dataIndex? | 列数据在数据项中对应的路径索引；数据展示列必传，操作列可忽略 | string | undefined |
 | key? | 自定义列标识，未设置 `dataIndex` 时作为 `Vue` 唯一的标识 | string | undefined |
 | ellipsis? | 超过宽度是否自动省略 | boolean | undefined |
-| ellipsisProps? | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html#ellipsis)，用于单独配置某列文本省略 | object | undefined |
+| ellipsisProps? | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](./ellipsis.md#ellipsis)，用于单独配置某列文本省略 | [EllipsisProps](./ellipsis.md#ellipsis) | undefined |
 | fixed? | 列是否固定 | 'left' &#124; 'right' | undefined |
 | slot? | 列插槽名称索引 | string | undefined |
 | children? | 列表头分组的子节点 | [Column](#column-type)[] | undefined |
 | showSorterTooltip? | 表头是否显示下一次排序的 `tooltip` 提示，较高优先级 | boolean | undefined |
-| sortTooltipProps? | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)，用于单独配置某列的排序弹出提示，较高优先级 | object | undefined |
+| sortTooltipProps? | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip)，用于单独配置某列的排序弹出提示，较高优先级 | [TooltipProps](./tooltip.md#tooltip) | undefined |
 | defaultSortOrder? | 默认排序顺序，建议只设置一列的默认排序；如果设置多列，则只有第一列默认排序生效 | 'ascend' &#124; 'descend' | undefined |
 | sortDirections? | 支持的排序方式 | ('ascend' &#124; 'descend')[] | undefined |
 | sorter? | 升序排序函数，参考 [Array.sort](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) 的 `compareFunction`，当列表头分组时，请将排序设置在叶子节点 | Function | undefined |

@@ -1,5 +1,5 @@
 import LoadingBar from './LoadingBar.vue'
-export type { Props } from './LoadingBar.vue'
+export type { Props as LoadingBarProps } from './LoadingBar.vue'
 import { withInstall } from '../utils/type'
 
 export default withInstall(LoadingBar)

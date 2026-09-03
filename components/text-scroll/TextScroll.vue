@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
-import Ellipsis from 'components/ellipsis'
+import Ellipsis, { type EllipsisProps } from 'components/ellipsis'
 import { rafTimeout, cancelRaf, useResizeObserver, useInject } from 'components/utils'
 export interface Item {
   title: string // 文字标题
@@ -22,7 +22,7 @@ export interface Props {
   duration?: number // 垂直滚动过渡持续时间，单位 ms，垂直滚动时生效
   interval?: number // 垂直文字滚动时间间隔，单位 ms，垂直滚动时生效
   ellipsis?: boolean // 是否启用文本省略组件
-  ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于配置文本省略弹出提示
+  ellipsisProps?: EllipsisProps // Ellipsis 组件属性配置，参考 Ellipsis Props，用于配置文本省略弹出提示
   pauseOnMouseEnter?: boolean // 鼠标移入是否暂停滚动
 }
 const props = withDefaults(defineProps<Props>(), {

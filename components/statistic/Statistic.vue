@@ -10,7 +10,7 @@ export interface Props {
   prefix?: string // 设置数值的前缀 string | slot
   suffix?: string // 设置数值的后缀 string | slot
   separator?: string // 设置千分位标识符
-  formatter?: Function // 自定义数值展示
+  formatter?: (value: string) => string // 自定义数值展示
 }
 const props = withDefaults(defineProps<Props>(), {
   title: undefined,

@@ -398,7 +398,7 @@ const scrollContainer = ref()
 icon | 自定义图标 | VNode &#124; Slot | undefined
 description | 文字描述 | string &#124; slot | undefined
 tooltip | 文字提示内容 | string &#124; slot | undefined
-tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip) | object | {}
+tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip) | [TooltipProps](./tooltip.md#tooltip) | {}
 type | 设置按钮类型 | 'default' &#124; 'primary' | 'default'
 shape | 设置按钮形状 | 'circle' &#124; 'square' | 'circle'
 bottom | `BackTop` 距离页面底部的高度，单位 `px` | number &#124; string | 40

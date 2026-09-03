@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
-import Input from 'components/input'
-import Select from 'components/select'
+import Input, { type InputProps } from 'components/input'
+import Select, { type SelectProps } from 'components/select'
 import { useInject } from 'components/utils'
 export interface Props {
   page?: number // (v-model) 当前页数
@@ -11,9 +11,9 @@ export interface Props {
   pageAmount?: number // 显示的页码数
   hideOnSinglePage?: boolean // 只有一页时是否隐藏分页
   showQuickJumper?: boolean // 是否可以快速跳转至某页
-  jumperProps?: object // 快速跳转组件 props，参考 Input 组件 Props
+  jumperProps?: InputProps // 快速跳转组件 props，参考 Input 组件 Props
   showSizeChanger?: boolean // 是否展示 pageSize 切换器，当 total 大于 50 时默认为 true
-  changerProps?: object // pageSize 切换器组件 props，参考 Select 组件 Props
+  changerProps?: SelectProps // pageSize 切换器组件 props，参考 Select 组件 Props
   pageSizeOptions?: string[] | number[] // 设置每页可以显示多少条
   showTotal?: boolean | ((total: number, range: number[]) => string) // 用于显示数据总量和当前数据顺序
   placement?: 'left' | 'center' | 'right' // 分页展示位置，靠左 left，居中 center，靠右 right

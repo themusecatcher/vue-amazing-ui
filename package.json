@@ -80,6 +80,7 @@
     "@ctrl/tinycolor": "^4.2.0",
     "@vuepic/vue-datepicker": "^12.1.0",
     "@vueuse/core": "^14.2.1",
+    "csstype": "3.2.3",
     "date-fns": "^4.1.0",
     "qrcode": "^1.5.4",
     "seemly": "^0.3.10",

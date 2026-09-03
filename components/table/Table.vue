@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { isVNode, ref, computed, watch, watchEffect, onMounted, nextTick } from 'vue'
 import type { VNode, CSSProperties, Slot } from 'vue'
-import Spin from 'components/spin'
-import Empty from 'components/empty'
-import Scrollbar from 'components/scrollbar'
+import Spin, { type SpinProps } from 'components/spin'
+import Empty, { type EmptyProps } from 'components/empty'
+import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import Checkbox from 'components/checkbox'
 import Radio from 'components/radio'
-import Tooltip from 'components/tooltip'
-import Ellipsis from 'components/ellipsis'
-import Pagination from 'components/pagination'
+import Tooltip, { type TooltipProps } from 'components/tooltip'
+import Ellipsis, { type EllipsisProps } from 'components/ellipsis'
+import Pagination, { type PaginationProps } from 'components/pagination'
 import { useSlotsExist, useResizeObserver } from 'components/utils'
 export interface Column {
   title?: string // 列头显示文字
@@ -19,15 +19,15 @@ export interface Column {
   dataIndex?: string // 列数据在数据项中对应的路径索引；数据展示列必传，操作列可忽略
   key?: string // 自定义列标识，未设置 dataIndex 时作为 Vue 唯一的标识
   ellipsis?: boolean // 超过宽度是否自动省略
-  ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于单独配置某列文本省略，较高优先级
+  ellipsisProps?: EllipsisProps // Ellipsis 组件属性配置，参考 Ellipsis Props，用于单独配置某列文本省略，较高优先级
   fixed?: 'left' | 'right' // 列是否固定，列表头分组时，只需设置所有叶子节点是否固定
   slot?: string // 列插槽名称索引
   children?: Column[] // 列表头分组的子节点
   showSorterTooltip?: boolean // 表头是否显示下一次排序的 tooltip 提示，较高优先级
-  sortTooltipProps?: object // Tooltip 组件属性配置，参考 Tooltip Props，用于单独配置某列的排序弹出提示，较高优先级
+  sortTooltipProps?: TooltipProps // Tooltip 组件属性配置，参考 Tooltip Props，用于单独配置某列的排序弹出提示，较高优先级
   defaultSortOrder?: 'ascend' | 'descend' // 默认排序顺序，建议只设置一列的默认排序；如果设置多列，则只有第一列默认排序生效
   sortDirections?: ('ascend' | 'descend')[] // 支持的排序方式
-  sorter?: Function // 升序排序函数，参考 Array.sort 的 compareFunction，当列表头分组时，请将排序设置在叶子节点
+  sorter?: (a: any, b: any) => number // 升序排序函数，参考 Array.sort 的 compareFunction，当列表头分组时，请将排序设置在叶子节点
   customCell?: (record: Record<string, any>, rowIndex: number, column: Column) => object | undefined // 设置单元格属性
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
@@ -69,19 +69,19 @@ export interface Props {
   size?: 'large' | 'middle' | 'small' // 表格大小
   striped?: boolean // 是否使用斑马条纹
   loading?: boolean // 是否加载中
-  spinProps?: object // Spin 组件属性配置，参考 Spin Props，用于配置数据加载中
-  emptyProps?: object // Empty 组件属性配置，参考 Empty Props，用于配置暂无数据
-  ellipsisProps?: object // Ellipsis 组件属性配置，参考 Ellipsis Props，用于全局配置文本省略
+  spinProps?: SpinProps // Spin 组件属性配置，参考 Spin Props，用于配置数据加载中
+  emptyProps?: EmptyProps // Empty 组件属性配置，参考 Empty Props，用于配置暂无数据
+  ellipsisProps?: EllipsisProps // Ellipsis 组件属性配置，参考 Ellipsis Props，用于全局配置文本省略
   showSorterTooltip?: boolean // 表头是否显示下一次排序的 tooltip 提示
   sortDirections?: ('ascend' | 'descend')[] // 支持的排序方式
-  sortTooltipProps?: object // 排序 Tooltip 组件属性配置，参考 Tooltip Props，用于全局配置排序弹出提示
+  sortTooltipProps?: TooltipProps // 排序 Tooltip 组件属性配置，参考 Tooltip Props，用于全局配置排序弹出提示
   sticky?: boolean //	是否设置粘性定位的表头和水平滚动条，设置之后表头和滚动条会跟随页面固定
   showPagination?: boolean // 是否显示分页
-  pagination?: object // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
+  pagination?: PaginationProps // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
   rowKey?: string | ((record: Record<string, any>, index?: number) => string) // 表格内容行的唯一标识 key，可以是字符串或一个函数
   rowSelection?: Selection // 列表项选择配置
   scroll?: ScrollOption // 表格是否可滚动，也可以指定滚动区域的宽、高，配置项
-  scrollbarProps?: object // Scrollbar 组件属性配置，参考 Scrollbar Props，用于配置表格滚动条
+  scrollbarProps?: ScrollbarProps // Scrollbar 组件属性配置，参考 Scrollbar Props，用于配置表格滚动条
   tableLayout?: 'auto' | 'fixed' // 表格布局方式，设为 fixed 表示内容不会影响列的布局，参考 table-layout 属性
   showExpandColumn?: boolean // 是否展示展开列
   expandColumnTitle?: string // 自定义展开列表头 string | slot

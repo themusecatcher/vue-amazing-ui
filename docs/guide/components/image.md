@@ -549,9 +549,9 @@ function customDownload(url: string, fileName?: string) {
 | fit | 图片在容器内的的适应类型，参考 [object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit) | 'contain' &#124; 'fill' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain' |
 | preview | 预览文本 | string &#124; slot | '预览' |
 | previewImageStyle | 自定义预览图片时 `img` 元素的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space)，用于配置多张展示图片时的排列方式 | object | {} |
-| spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置图片加载中样式 | object | {} |
-| previewSpinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置预览图片加载中样式 | object | {} |
+| spaceProps | `Space` 组件属性配置，参考 [Space Props](./space.md#space)，用于配置多张展示图片时的排列方式 | [SpaceProps](./space.md#space) | {} |
+| spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置图片加载中样式 | [SpinProps](./spin.md#spin) | {} |
+| previewSpinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置预览图片加载中样式 | [SpinProps](./spin.md#spin) | {} |
 | zoomRatio | 每次缩放比率 | number | 0.1 |
 | minZoomScale | 最小缩放比例 | number | 0.1 |
 | maxZoomScale | 最大缩放比例 | number | 10 |

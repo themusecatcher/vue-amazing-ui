@@ -1,6 +1,6 @@
 import Skeleton from './Skeleton.vue'
 export type {
-  Props,
+  Props as SkeletonProps,
   SkeletonParagraphProps,
   SkeletonTitleProps,
   SkeletonInputProps,

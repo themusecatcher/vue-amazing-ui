@@ -2,7 +2,7 @@ import Message from './Message.vue'
 import MessageProviderComp from './MessageProvider.vue'
 import { withInstall } from '../utils/type'
 
-export type { Props, MessageOptions, MessageReactive, MessageUpdate } from './Message.vue'
+export type { Props as MessageProps, MessageOptions, MessageReactive, MessageUpdate } from './Message.vue'
 export type { MessageApi } from './useMessage'
 export { useMessage } from './useMessage'
 

@@ -437,7 +437,7 @@ watchEffect(() => {
 width | 颜色选择器的宽度，单位 `px` | string &#124; number | '100%'
 label | 展示的内容 | (color: string) => string &#124; slot | undefined
 tooltipStyle | 设置弹出面板的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-inputProps | 输入框组件 `props`，参考 [Input Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html#input) | object | {}
+inputProps | 输入框组件 `props`，参考 [Input Props](./input.md#input) | [InputProps](./input.md#input) | {}
 showAlpha | 是否可调节 `alpha` 通道 | boolean | true
 showPreview | 是否展示颜色预览块 | boolean | false
 size | 颜色选择器的尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
