@@ -1,18 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue'
-import Spin from 'components/spin'
-import Message from 'components/message'
-import Image from 'components/image'
-import Space from 'components/space'
+import Spin, { type SpinProps } from 'components/spin'
+import Image, { type ImageProps } from 'components/image'
+import Space, { type SpaceProps } from 'components/space'
 import { useInject } from 'components/utils'
 export interface FileType {
   name?: string // 文件名
   url: any // 文件地址
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
-}
-export interface MessageType {
-  upload?: string // 上传成功的消息提示，没有设置该属性时即不显示上传消息提示
-  remove?: string // 删除成功的消息提示，没有设置该属性时即不显示删除消息提示
 }
 export interface Props {
   accept?: string // 接受上传的文件类型，与 <input type="file" /> 的 accept 属性一致，参考 https://developer.mozilla.org/zh-CN/docs/Web/HTML/Attributes/accept
@@ -22,14 +17,12 @@ export interface Props {
   fit?: 'contain' | 'fill' | 'cover' | 'none' | 'scale-down' // 预览图片缩放规则，仅当上传文件为图片时生效
   draggable?: boolean // 是否支持拖拽上传，开启后可拖拽文件到选择框上传
   disabled?: boolean // 是否禁用，只能预览，不能删除和上传
-  spaceProps?: object // Space 组件属性配置，用于配置多个文件时的排列方式
-  spinProps?: object // Spin 组件属性配置，用于配置上传中样式
-  imageProps?: object // Image 组件属性配置，用于配置图片预览
-  messageProps?: object // Message 组件属性配置，用于配置操作消息提示
-  actionMessage?: MessageType // 操作完成的消息提示，传 {} 即可不显示任何消息提示
-  beforeUpload?: Function // 上传文件之前的钩子，参数为上传的文件，返回 false 则停止上传，返回 true 开始上传；支持返回一个 Promise 对象（如服务端校验等），Promise 对象 reject 时停止上传，resolve 时开始上传；通常用来校验用户上传的文件格式和大小
+  spaceProps?: SpaceProps // Space 组件属性配置，用于配置多个文件时的排列方式
+  spinProps?: SpinProps // Spin 组件属性配置，用于配置上传中样式
+  imageProps?: ImageProps // Image 组件属性配置，用于配置图片预览
+  beforeUpload?: (file: File) => boolean | void | Promise<unknown> // 上传文件之前的钩子，参数为上传的文件，返回 false 则停止上传，返回 true 开始上传；支持返回一个 Promise 对象（如服务端校验等），Promise 对象 reject 时停止上传，resolve 时开始上传；通常用来校验用户上传的文件格式和大小
   uploadMode?: 'base64' | 'custom' // 上传文件的方式，默认是 base64，可选 'base64' | 'custom'
-  customRequest?: Function // 自定义上传行为，只有 uploadMode: custom 时，才会使用 customRequest 自定义上传行为
+  customRequest?: (file: File) => Promise<FileType> // 自定义上传行为，只有 uploadMode: custom 时，才会使用 customRequest 自定义上传行为
   fileList?: FileType[] // (v-model) 已上传的文件列表
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -43,11 +36,10 @@ const props = withDefaults(defineProps<Props>(), {
   spaceProps: () => ({}),
   spinProps: () => ({}),
   imageProps: () => ({}),
-  messageProps: () => ({}),
-  actionMessage: () => ({ upload: '上传成功', remove: '删除成功' }),
   beforeUpload: () => true,
   uploadMode: 'base64',
-  customRequest: () => {},
+  // custom 模式下的兜底实现：返回空结果，避免未配置时 .then 抛错
+  customRequest: () => Promise.resolve({ url: '' }),
   fileList: () => []
 })
 const uploadedFiles = ref<FileType[]>([]) // 上传文件列表
@@ -55,9 +47,9 @@ const showUpload = ref<number>(1) // 展示的上传框
 const uploading = ref<boolean[]>([]) // 上传中
 const uploadInputRef = ref() // 上传文件控件引用
 const imageRef = ref()
-const messageRef = ref()
 const { colorPalettes } = useInject('Upload') // 主题色注入
-const emits = defineEmits(['update:fileList', 'drop', 'change', 'preview', 'remove'])
+// 组件自身不再持有 Message，操作提示交由使用方通过 success / error / remove 事件自行处理
+const emits = defineEmits(['update:fileList', 'drop', 'change', 'preview', 'remove', 'success', 'error'])
 const maxFileCount = computed(() => {
   if (props.maxCount === undefined) {
     return Infinity
@@ -213,8 +205,8 @@ function base64Upload(file: File, index: number): void {
       name: file.name,
       url: e.target?.result
     }
-    props.actionMessage.upload && messageRef.value.success(props.actionMessage.upload)
     emits('update:fileList', uploadedFiles.value)
+    emits('success', uploadedFiles.value[index], uploadedFiles.value)
     emits('change', uploadedFiles.value)
   }
   reader.onloadend = function (e) {
@@ -225,17 +217,17 @@ function base64Upload(file: File, index: number): void {
 function customUpload(file: File, index: number): void {
   props
     .customRequest(file)
-    .then((res: any) => {
+    .then((res: FileType) => {
       uploadedFiles.value[index] = res
-      props.actionMessage.upload && messageRef.value.success(props.actionMessage.upload)
       emits('update:fileList', uploadedFiles.value)
+      emits('success', uploadedFiles.value[index], uploadedFiles.value)
       emits('change', uploadedFiles.value)
     })
     .catch((err: any) => {
       if (maxFileCount.value > 1) {
         showUpload.value = uploadedFiles.value.length + 1
       }
-      messageRef.value.error(err)
+      emits('error', err)
     })
     .finally(() => {
       uploading.value[index] = false
@@ -255,33 +247,10 @@ function onRemove(index: number): void {
     showUpload.value--
   }
   const removeFile = uploadedFiles.value.splice(index, 1)
-  props.actionMessage.remove && messageRef.value.success(props.actionMessage.remove)
   emits('remove', removeFile[0])
   emits('update:fileList', uploadedFiles.value)
   emits('change', uploadedFiles.value)
 }
-function onInfo(content: string): void {
-  messageRef.value.info(content)
-}
-function onSuccess(content: string): void {
-  messageRef.value.success(content)
-}
-function onError(content: string): void {
-  messageRef.value.error(content)
-}
-function onWarning(content: string): void {
-  messageRef.value.warning(content)
-}
-function onLoading(content: string): void {
-  messageRef.value.loading(content)
-}
-defineExpose({
-  info: onInfo,
-  success: onSuccess,
-  error: onError,
-  warning: onWarning,
-  loading: onLoading
-})
 </script>
 <template>
   <div class="upload-wrap" :style="`--upload-primary-color: ${colorPalettes[5]};`">
@@ -415,7 +384,6 @@ defineExpose({
         </div>
       </div>
     </Space>
-    <Message ref="messageRef" v-bind="messageProps" />
   </div>
 </template>
 <style lang="less" scoped>

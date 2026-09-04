@@ -3154,7 +3154,7 @@ watchEffect(() => {
 | sortTooltipProps? | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip)，用于单独配置某列的排序弹出提示，较高优先级 | [TooltipProps](./tooltip.md#tooltip) | undefined |
 | defaultSortOrder? | 默认排序顺序，建议只设置一列的默认排序；如果设置多列，则只有第一列默认排序生效 | 'ascend' &#124; 'descend' | undefined |
 | sortDirections? | 支持的排序方式 | ('ascend' &#124; 'descend')[] | undefined |
-| sorter? | 升序排序函数，参考 [Array.sort](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) 的 `compareFunction`，当列表头分组时，请将排序设置在叶子节点 | Function | undefined |
+| sorter? | 升序排序函数，参考 [Array.sort](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) 的 `compareFunction`，当列表头分组时，请将排序设置在叶子节点 | (a: any, b: any) => number | undefined |
 | customCell? | 设置单元格属性 | (record: Record<string, any>, rowIndex: number, column: Column) => object &#124; undefined | undefined |
 
 ### Selection Type
