@@ -4,7 +4,16 @@
 
 ## 介绍
 
-功能丰富，简单易用！
+`vue-amazing-ui` 内置 `24` 个可独立使用的工具函数，覆盖日期数字格式化、节流防抖、文件下载、暗黑主题、`DOM` 观察与滚动定位等场景。全部按需具名导出、`tree shaking` 友好，功能丰富，简单易用！
+
+### 分类索引
+
+- **格式化与精度**：`dateFormat` · `formatNumber` · `add`
+- **定时与交互**：`throttle` · `debounce` · `rafTimeout` · `cancelRaf`
+- **文件与主题**：`downloadFile` · `toggleDark`
+- **DOM 与能力**：`useEventListener` · `useMutationObserver` · `useResizeObserver` · `useMediaQuery` · `useFps` · `useSlotsExist` · `useInject` · `useOptionsSupported`
+- **滚动与定位**：`useScroll` · `useScrollParent` · `lockScroll` · `getScrollParent` · `useFloatingPosition`
+- **色板与阴影**：`getColorPalettes` · `getAlphaColor`
 
 ## 使用
 
@@ -32,6 +41,7 @@ import {
   getColorPalettes,
   getAlphaColor,
   getScrollParent,
+  lockScroll,
   useScrollParent,
   useFloatingPosition
 } from 'vue-amazing-ui'
@@ -63,5 +73,6 @@ import {
 | getColorPalettes | 根据主色生成颜色调色板函数 | (primaryColor: string) => string[] |
 | getAlphaColor | 获取透明度颜色函数，一般用作阴影色 | (frontColor: string, backgroundColor: string = '#ffffff') => string |
 | getScrollParent | 向上查找元素最近的可滚动父元素函数 | (el: HTMLElement &#124; null) => HTMLElement &#124; null |
+| lockScroll | 锁定页面滚动并补偿滚动条宽度，防止页面横向抖动函数 | () => () => void |
 | useScrollParent | 查询并监听最近可滚动父元素，响应视口 `resize` 的组合式函数 | (contentRef: Ref\<HTMLElement &#124; null>, onScroll: () => void, options: object = {}) => { scrollTarget: Ref\<HTMLElement &#124; null>, viewportWidth: Ref\<number>, viewportHeight: Ref\<number>, observeScroll: \() => void, cleanup: \() => void } |
 | useFloatingPosition | 为弹出类组件提供统一测量骨架的组合式函数 | (contentRef: Ref\<HTMLElement &#124; null>, panelRef: Ref\<HTMLElement &#124; null>) => { positionedContainerRect: Ref\<DOMRect &#124; undefined>, contentRect: Ref\<DOMRect &#124; undefined>, measure: \() => Promise\<void> } |

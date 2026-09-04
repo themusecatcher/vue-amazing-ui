@@ -24,6 +24,7 @@ export {
   getColorPalettes,
   getAlphaColor,
   getScrollParent,
+  lockScroll,
   useScrollParent,
   useFloatingPosition
 } from './utils'

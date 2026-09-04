@@ -125,6 +125,7 @@ import {
   getColorPalettes,
   getAlphaColor,
   getScrollParent,
+  lockScroll,
   useScrollParent,
   useFloatingPosition
 } from 'vue-amazing-ui'
