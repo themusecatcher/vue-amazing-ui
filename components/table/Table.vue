@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { isVNode, ref, computed, watch, watchEffect, onMounted, nextTick } from 'vue'
+import { isVNode, ref, computed, watch, watchEffect, onMounted, onUnmounted, nextTick } from 'vue'
 import type { VNode, CSSProperties, Slot } from 'vue'
 import Spin, { type SpinProps } from 'components/spin'
 import Empty, { type EmptyProps } from 'components/empty'
@@ -15,7 +15,7 @@ export interface Column {
   align?: 'left' | 'center' | 'right' // 列文本的对齐方式
   width?: string | number // 列宽度，单位 px
   className?: string // 自定义列的类名
-  colSpan?: number // 表头列合并，设置为 0 时，不渲染
+  colSpan?: number // 表头列合并，设置为 0 时，该列表头不渲染
   dataIndex?: string // 列数据在数据项中对应的路径索引；数据展示列必传，操作列可忽略
   key?: string // 自定义列标识，未设置 dataIndex 时作为 Vue 唯一的标识
   ellipsis?: boolean // 超过宽度是否自动省略
@@ -125,14 +125,32 @@ const props = withDefaults(defineProps<Props>(), {
   expandedRowKeys: () => [],
   expandRowByClick: false
 })
+// 子组件暴露的滚动容器最小接口（模板 ref 类型化，避免 any）
+interface ScrollbarExpose {
+  scrollTo(options?: ScrollToOptions): void
+  scrollBy(options?: ScrollToOptions): void
+  getScrollData(): object
+}
+// Scrollbar 暴露的滚动数据（结构与 scrollbar getScrollData 返回值一致）
+interface ScrollbarScrollData {
+  scrollTop: number
+  scrollWidth: number
+  scrollHeight: number
+  clientWidth: number
+  clientHeight: number
+}
+// Tooltip / Ellipsis 子组件暴露的 observeScroll 最小接口
+interface ObserveScrollExpose {
+  observeScroll?: () => void
+}
 interface Coords {
   row: number // 行索引坐标
   col: number // 列索引坐标
 }
-const tableRef = ref() // table 组件模板引用
+const tableRef = ref<HTMLElement | null>(null) // table 组件模板引用
 const tablePage = ref<number>(1) // 分页器当前页数
 const tablePageSize = ref<number>(10) // 分页器每页条数
-const hoverRowIndex = ref<number | null>() // 鼠标悬浮行的索引
+const hoverRowIndex = ref<number | null>(null) // 鼠标悬浮行的索引
 const mergeHoverCoords = ref<Coords[]>([]) // 鼠标悬浮时被合并单元格的坐标
 const displayDataSource = ref<Record<string, any>[]>([]) // 当前展示的表格数据
 const tableExpandedRowKeys = ref<string[]>([]) // 当前展开行的 key 数组
@@ -143,9 +161,9 @@ const selectedRowKeys = ref<string[]>([]) // 已选中行的 key 数组
 const changeRowKeys = ref<string[]>([]) // 变化行的 key 数组
 const selectedRows = ref<Record<string, any>[]>([]) // 已选中行的数组
 const changeRows = ref<Record<string, any>[]>([]) // 变化行的数组
-const tooltipRef = ref() // 排序 tooltip 提示组件模板引用
-const ellipsisRef = ref() // 文本省略组件模板引用
-const scrollbarRef = ref() // 水平滚动容器模板引用
+const tooltipRef = ref<ObserveScrollExpose[] | null>(null) // 排序 tooltip 提示组件模板引用
+const ellipsisRef = ref<ObserveScrollExpose[] | null>(null) // 文本省略组件模板引用
+const scrollbarRef = ref<ScrollbarExpose | null>(null) // 水平滚动容器模板引用
 const scrollLeft = ref<number>(0) // 表格水平滚动时距容器左边位置
 const scrollWidth = ref<number>(0) // 表格水平滚动元素宽度，包括溢出滚动，不包括边框
 const scrollHeight = ref<number>(0) // 表格垂直滚动元素高度，包括溢出滚动，不包括边框
@@ -153,19 +171,26 @@ const clientWidth = ref<number>(0) // 表格水平滚动元素宽度，不包括
 const clientHeight = ref<number>(0) // 表格垂直滚动元素高度，不包括溢出滚动，不包括边框
 const scrollMax = ref<number>(0) // 表格水平滚动时，最大可滚动距离
 let scrollRAF: number = 0 // 水平滚动 requestAnimationFrame ID
-const colExpandRef = ref() // 表格展开列 col 的引用
-const colSelectionRef = ref() // 表格可选择列 col 的引用
-const colRef = ref() // 表格除展开列/可选择列以外 col 的引用
+const colExpandRef = ref<HTMLTableColElement | null>(null) // 表格展开列 col 的引用
+const colSelectionRef = ref<HTMLTableColElement | null>(null) // 表格可选择列 col 的引用
+const colRef = ref<HTMLTableColElement[] | null>(null) // 表格除展开列/可选择列以外 col 的引用
 const thColumnsLeaf = ref<Column[]>([]) // thColumns 的所有叶子节点,包括 colSpan: 0 的列
 const disabledDefaultSort = ref<boolean>(false) // 是否禁用默认排序
 const sortColumn = ref<Column | null>(null) // 排序列
 const sortColumnDataIndex = ref<string | null>(null) // 排序列的数据索引
-const sortColumnSorter = ref<Function | null>(null) // 排序列的升序排序函数
+const sortColumnSorter = ref<((a: any, b: any) => number) | null>(null) // 排序列的升序排序函数
 const sortSymbol = ref<'ascend' | 'descend' | null>(null) // 排序标识
 const sortHoverDataIndex = ref<string | null>(null) // 鼠标悬浮排序列的数据索引
 const clickSorter = ref(false) // 是否点击排序
 const slotsExist = useSlotsExist(['header', 'footer'])
-const emits = defineEmits(['expand', 'expandedRowsChange', 'update:expandedRowKeys', 'sortChange', 'change'])
+interface TableEmits {
+  expand: [expanded: boolean, record: Record<string, any>] // 展开状态变化：是否展开 + 对应行数据
+  expandedRowsChange: [expandedRowKeys: string[]] // 展开行 key 数组变化
+  'update:expandedRowKeys': [expandedRowKeys: string[]] // v-model:expandedRowKeys
+  sortChange: [column: Column | null, dataSource: Record<string, any>[]] // 排序变化：排序列 + 排序后当前页数据
+  change: [page: number, pageSize: number] // 分页变化
+}
+const emits = defineEmits<TableEmits>()
 // 获取表格内容行的 key 标识函数
 const getRowKey = computed(() => {
   if (typeof props.rowKey === 'function') {
@@ -177,57 +202,57 @@ const getRowKey = computed(() => {
   }
 })
 // 是否展示复选框
-const showSelectionColumn = computed(() => {
+const showSelectionColumn = computed<boolean>(() => {
   return props.rowSelection !== undefined
 })
 // 是否自定义了复选框标题
-const showSelectionColumnTitle = computed(() => {
+const showSelectionColumnTitle = computed<string | VNode | undefined>(() => {
   return props.rowSelection?.columnTitle
 })
 // 是否展示全选复选框
-const showSelectionAll = computed(() => {
+const showSelectionAll = computed<boolean>(() => {
   return !props.rowSelection?.hideSelectAll && props.rowSelection?.type !== 'radio'
 })
 // 是否设置了水平滚动
-const horizontalScroll = computed(() => {
+const horizontalScroll = computed<boolean>(() => {
   return props.scroll?.x !== undefined
 })
 // 是否存在水平滚动
-const xScrollable = computed(() => {
+const xScrollable = computed<boolean>(() => {
   return horizontalScroll.value && scrollWidth.value > clientWidth.value
 })
 // 是否设置了垂直滚动
-const verticalScroll = computed(() => {
+const verticalScroll = computed<boolean>(() => {
   return props.scroll?.y !== undefined
 })
 // 是否存在垂直滚动
-const yScrollable = computed(() => {
+const yScrollable = computed<boolean>(() => {
   return verticalScroll.value && scrollHeight.value > clientHeight.value
 })
 // 是否显示左阴影
-const showShadowLeft = computed(() => {
+const showShadowLeft = computed<boolean>(() => {
   return scrollLeft.value > 0
 })
 // 是否显示右阴影
-const showShadowRight = computed(() => {
+const showShadowRight = computed<boolean>(() => {
   return scrollWidth.value - clientWidth.value > Math.round(scrollLeft.value)
 })
 // 是否存在左固定列
-const hasFixLeft = computed(() => {
+const hasFixLeft = computed<boolean>(() => {
   const fixedLeft = props.columns.some((column: Column) => column.fixed === 'left')
   return expandColumnFixed.value || selectionColumnFixed.value || fixedLeft
 })
 // 是否存在右固定列
-const hasFixRight = computed(() => {
+const hasFixRight = computed<boolean>(() => {
   const fixedRight = props.columns.some((column: Column) => column.fixed === 'right')
   return fixedRight
 })
 // 是否存在表格标题
-const showHeader = computed(() => {
-  return slotsExist.header || props.header
+const showHeader = computed<boolean>(() => {
+  return !!(slotsExist.header || props.header)
 })
 // 表格布局方式
-const tableLayoutComputed = computed(() => {
+const tableLayoutComputed = computed<'auto' | 'fixed'>(() => {
   if (props.tableLayout === undefined) {
     const ellipsis = props.columns.some((column: Column) => column.ellipsis)
     const columnFixed = props.columns.some((column: Column) => column.fixed)
@@ -239,7 +264,7 @@ const tableLayoutComputed = computed(() => {
   return props.tableLayout
 })
 // 表格 table 元素的样式
-const tableStyle = computed(() => {
+const tableStyle = computed<CSSProperties>(() => {
   const style: CSSProperties = {
     minWidth: '100%'
   }
@@ -255,7 +280,7 @@ const tableStyle = computed(() => {
   return style
 })
 // 无数据时的样式
-const emptyFixStyle = computed(() => {
+const emptyFixStyle = computed<CSSProperties>(() => {
   const style: CSSProperties = {
     width: `${clientWidth.value}px`,
     position: 'sticky',
@@ -265,13 +290,13 @@ const emptyFixStyle = computed(() => {
   return style
 })
 // 展开列的宽度样式
-const tableExpandCellStyle = computed(() => {
+const tableExpandCellStyle = computed<CSSProperties>(() => {
   return {
     width: typeof props.expandColumnWidth === 'number' ? `${props.expandColumnWidth}px` : props.expandColumnWidth
   }
 })
 // 复选框列的宽度样式
-const tableSelectionCellStyle = computed(() => {
+const tableSelectionCellStyle = computed<CSSProperties>(() => {
   const style: CSSProperties = {
     width: '32px'
   }
@@ -285,22 +310,23 @@ const tableSelectionCellStyle = computed(() => {
   return style
 })
 // 过滤掉 colSpan 为 0 的列
-const thColumns = computed(() => {
+const thColumns = computed<Column[]>(() => {
   return props.columns.filter((column: Column) => column.colSpan !== 0)
 })
 // 表头分组后的 th columns
-const thColumnsGroup = computed(() => {
+const thColumnsGroup = computed<Column[][]>(() => {
   return getThColumnsGroup(props.columns)
 })
 // thColumns 的最大深度，用于表头跨行 rowspan，避免模板中重复递归调用
-const thColumnsMaxDepth = computed(() => {
+const thColumnsMaxDepth = computed<number>(() => {
   return getMaxDepth(thColumns.value)
 })
-const thFirstColumnFixed = computed(() => {
-  return thColumnsGroup.value[0][0].fixed === 'left'
+// 表头第一列是否固定（空 columns 时返回 false，避免读取 undefined.fixed 崩溃）
+const thFirstColumnFixed = computed<boolean>(() => {
+  return thColumnsGroup.value[0]?.[0]?.fixed === 'left'
 })
 // 可选择列是否固定
-const selectionColumnFixed = computed(() => {
+const selectionColumnFixed = computed<boolean>(() => {
   if (props.rowSelection !== undefined) {
     if (props.rowSelection.fixed || thFirstColumnFixed.value) {
       return true
@@ -309,25 +335,25 @@ const selectionColumnFixed = computed(() => {
   return false
 })
 // 可选择列是否固定，且为最后一个
-const selectionColumnFixedLast = computed(() => {
+const selectionColumnFixedLast = computed<boolean>(() => {
   return selectionColumnFixed.value && !thFirstColumnFixed.value
 })
 // 展开列是否固定
-const expandColumnFixed = computed(() => {
+const expandColumnFixed = computed<boolean>(() => {
   return (
     props.showExpandColumn &&
     (props.expandFixed || selectionColumnFixed.value || (!showSelectionColumn.value && thFirstColumnFixed.value))
   )
 })
 // 展开列是否固定，且为最后一个
-const expandColumnFixedLast = computed(() => {
+const expandColumnFixedLast = computed<boolean>(() => {
   return (
     (expandColumnFixed.value && showSelectionColumn.value && !selectionColumnFixed.value) ||
     (expandColumnFixed.value && !showSelectionColumn.value && !thFirstColumnFixed.value)
   )
 })
 // 表格展开行固定时的样式
-const tableExpandRowFixStyle = computed(() => {
+const tableExpandRowFixStyle = computed<CSSProperties>(() => {
   const style: CSSProperties = {
     width: `${clientWidth.value + (props.bordered ? 1 : 0)}px`,
     position: 'sticky',
@@ -337,7 +363,7 @@ const tableExpandRowFixStyle = computed(() => {
   return style
 })
 // 表头固定时的样式，用于模拟滚动效果
-const tableHeadStyle = computed(() => {
+const tableHeadStyle = computed<CSSProperties>(() => {
   const style: CSSProperties = {
     position: 'relative',
     left: `${-scrollLeft.value}px`
@@ -345,7 +371,7 @@ const tableHeadStyle = computed(() => {
   return style
 })
 // 设置垂直滚动时的 tbody 样式
-const tableBodyScrollStyle = computed(() => {
+const tableBodyScrollStyle = computed<CSSProperties>(() => {
   const style: CSSProperties = {}
   if (verticalScroll.value) {
     const scroll = props.scroll
@@ -354,11 +380,11 @@ const tableBodyScrollStyle = computed(() => {
   return style
 })
 // 是否存在表格尾部
-const showFooter = computed(() => {
-  return slotsExist.footer || props.footer
+const showFooter = computed<boolean>(() => {
+  return !!(slotsExist.footer || props.footer)
 })
 // 表格数据总数
-const totalDataSource = computed(() => {
+const totalDataSource = computed<number>(() => {
   let total = props.dataSource.length
   if (props.showPagination && 'total' in props.pagination) {
     total = props.pagination.total as number
@@ -366,8 +392,13 @@ const totalDataSource = computed(() => {
   return total
 })
 // 是否一次性加载全部数据并进行分页，即：展示分页，且数据总数等于数据源的长度
-const loadAllData = computed(() => {
+const loadAllData = computed<boolean>(() => {
   return props.showPagination && totalDataSource.value === props.dataSource.length
+})
+// 整行占位单元格（空态 / 展开行）跨列的 colspan：展开列 + 选择列 + 叶子数据列
+// 叶子数据列沿用 thColumnsLeaf（与 getTdColumnsGroup 渲染口径一致），仅补此前漏算的展开列/选择列
+const tableFullRowColspan = computed<number>(() => {
+  return thColumnsLeaf.value.length + (props.showExpandColumn ? 1 : 0) + (showSelectionColumn.value ? 1 : 0)
 })
 // 监听数据源/是否一次性加载全部数据并进行分页/全部数据/分页状态/排序状态变化，更新展示数据
 watch(
@@ -512,20 +543,27 @@ watchEffect(() => {
   }
 })
 // 监听当前展开行的 key 数组变化
+// 注意：拷贝而非直接引用 props 数组，避免组件内部 push/filter 污染外部传入的 expandedRowKeys 数组
 watchEffect(() => {
-  tableExpandedRowKeys.value = props.expandedRowKeys
+  tableExpandedRowKeys.value = props.expandedRowKeys ? [...props.expandedRowKeys] : []
 })
 onMounted(() => {
   getScrollState()
   tooltipObserveScroll()
   ellipsisObserveScroll()
 })
+onUnmounted(() => {
+  // 卸载时取消未执行的滚动帧回调，避免卸载后继续更新已销毁组件的状态
+  if (scrollRAF) {
+    cancelAnimationFrame(scrollRAF)
+  }
+})
 // 监听表格尺寸变化，更新滚动状态
 useResizeObserver(tableRef, () => {
   getScrollState()
 })
 // 点击复选框全选
-function onCheckAllChange(checked: boolean) {
+function onCheckAllChange(checked: boolean): void {
   changeRowKeys.value = []
   changeRows.value = []
   displayDataSource.value.forEach((record: Record<string, any>, rowIndex: number) => {
@@ -565,7 +603,7 @@ function onCheckAllChange(checked: boolean) {
   props.rowSelection?.onChange && props.rowSelection.onChange(selectedRowKeys.value, selectedRows.value)
 }
 // 点击某行复选框/单选框
-function onTableSelectionChange(selected: boolean, rowIndex: number, key: string, record: Record<string, any>) {
+function onTableSelectionChange(selected: boolean, rowIndex: number, key: string, record: Record<string, any>): void {
   if (selected) {
     // 选中复选框/单选框
     if (props.rowSelection?.type === 'radio') {
@@ -593,7 +631,7 @@ function onTableSelectionChange(selected: boolean, rowIndex: number, key: string
   props.rowSelection?.onChange && props.rowSelection.onChange(selectedRowKeys.value, selectedRows.value)
 }
 // 初始化默认排序时的数据索引，标识和展示数据
-function initDefaultSort() {
+function initDefaultSort(): void {
   const thLeaf = thColumnsLeaf.value.filter((column: Column) => column.colSpan !== 0)
   const len = thLeaf.length
   for (let i = 0; i < len; i++) {
@@ -607,9 +645,9 @@ function initDefaultSort() {
   }
 }
 // 获取滚动状态信息
-function getScrollState() {
+function getScrollState(): void {
   if (scrollbarRef.value) {
-    const scrollData = scrollbarRef.value.getScrollData()
+    const scrollData = scrollbarRef.value.getScrollData() as ScrollbarScrollData
     if (horizontalScroll.value) {
       scrollWidth.value = scrollData.scrollWidth
       clientWidth.value = scrollData.clientWidth
@@ -622,18 +660,14 @@ function getScrollState() {
   }
 }
 // 在组件挂载后主动触发 tooltip 组件弹出提示的滚动元素监听
-async function tooltipObserveScroll() {
+async function tooltipObserveScroll(): Promise<void> {
   await nextTick()
-  if (tooltipRef.value) {
-    tooltipRef.value.forEach((el: any) => el.observeScroll())
-  }
+  tooltipRef.value?.forEach((el: ObserveScrollExpose) => el.observeScroll?.())
 }
 // 在组件挂载后主动触发 ellipsis 组件弹出提示的滚动元素监听
-async function ellipsisObserveScroll() {
+async function ellipsisObserveScroll(): Promise<void> {
   await nextTick()
-  if (ellipsisRef.value) {
-    ellipsisRef.value.forEach((el: any) => el.observeScroll())
-  }
+  ellipsisRef.value?.forEach((el: ObserveScrollExpose) => el.observeScroll?.())
 }
 // 检查 children 中是否有固定列
 function checkChildrenFix(columns: Column[] | undefined, fixed: 'left' | 'right'): boolean {
@@ -653,7 +687,7 @@ function checkChildrenFix(columns: Column[] | undefined, fixed: 'left' | 'right'
   return false
 }
 // 获取 children 的叶子节点数量
-function getChildrenLeafNumber(columns: Column[]) {
+function getChildrenLeafNumber(columns: Column[]): number {
   let result = 0
   columns.forEach((column: Column) => {
     if (column.children && column.children.length > 0) {
@@ -665,7 +699,7 @@ function getChildrenLeafNumber(columns: Column[]) {
   return result
 }
 // 获取 columns 的最大深度
-function getMaxDepth(columns: Column[], currentDepth = 1) {
+function getMaxDepth(columns: Column[], currentDepth = 1): number {
   let maxDepth = currentDepth
   columns.forEach((column: Column) => {
     if (column.children && column.children.length > 0) {
@@ -677,16 +711,28 @@ function getMaxDepth(columns: Column[], currentDepth = 1) {
   })
   return maxDepth
 }
+// 递归克隆列配置：colSpan/rowSpan/colStart/colEnd 等内部计算字段只落在副本上，
+// 不再就地写入用户传入的 columns 对象，避免多实例共享 / Object.freeze / 深监听等场景被污染
+function cloneColumns(columns: Column[]): Column[] {
+  return columns.map((column: Column) => {
+    const clonedColumn: Column = { ...column }
+    if (column.children?.length) {
+      clonedColumn.children = cloneColumns(column.children)
+    }
+    return clonedColumn
+  })
+}
 // 计算获取表头分组的 th columns
-function getThColumnsGroup(columns: Column[]) {
+function getThColumnsGroup(columns: Column[]): Column[][] {
+  const clonedColumns = cloneColumns(columns) // 在克隆列树上计算，保留响应式字段依赖但不改写用户数据
   thColumnsLeaf.value = []
-  const maxDepth = getMaxDepth(columns)
+  const maxDepth = getMaxDepth(clonedColumns)
   const result: Array<Column[]> = []
   for (let i = 0; i < maxDepth; i++) {
     result.push([])
   }
-  function processColumns(columns: Column[], depth: number, colStart: number) {
-    columns.forEach((column: Column) => {
+  function processColumns(groupColumns: Column[], depth: number, colStart: number) {
+    groupColumns.forEach((column: Column) => {
       if (column.children && column.children.length > 0) {
         column.colSpan = getChildrenLeafNumber(column.children)
         column.colStart = colStart
@@ -709,11 +755,12 @@ function getThColumnsGroup(columns: Column[]) {
       result[depth].push(column)
     })
   }
-  processColumns(columns, 0, props.showExpandColumn ? 1 : 0)
+  processColumns(clonedColumns, 0, props.showExpandColumn ? 1 : 0)
   return result
 }
 // 获取表格对应于表头分组，处理后每行的 columns
-function getTdColumnsGroup(record: Record<string, any>, rowIndex: number) {
+// 显式标注返回类型：避免模板中 slot props 类型被结构化展开（含 Column -> TooltipProps -> CSSProperties 全量属性）导致声明文件体积超限（TS7056）
+function getTdColumnsGroup(record: Record<string, any>, rowIndex: number): Column[] {
   return thColumnsLeaf.value.filter((column: Column) => {
     if (column.customCell) {
       const custom = column.customCell(record, rowIndex, column)
@@ -730,7 +777,7 @@ function getTdColumnsGroup(record: Record<string, any>, rowIndex: number) {
   })
 }
 // 针对于 props 和 Column 都有的属性，获取计算后的值，优先级为 Column's > props's
-function getComputedValue(column: Column, key: keyof Props) {
+function getComputedValue(column: Column, key: keyof Props): object | ('ascend' | 'descend')[] {
   let computedValue = props[key as keyof Props]
   if (column?.[key as keyof Column] !== undefined) {
     computedValue = column[key as keyof Column]
@@ -738,7 +785,7 @@ function getComputedValue(column: Column, key: keyof Props) {
   return computedValue as object | ('ascend' | 'descend')[]
 }
 // 获取 sorter 排序提示文本
-function getSortTooltip(column: Column) {
+function getSortTooltip(column: Column): string | undefined {
   const sortTooltipMap = {
     ascend: '点击升序',
     descend: '点击降序'
@@ -796,7 +843,7 @@ function getSortTooltip(column: Column) {
   }
 }
 // 点击 th 单元格操作排序，更新 sortColumnDataIndex sortColumnSorter sortSymbol
-function onSorter(column: Column) {
+function onSorter(column: Column): void {
   clickSorter.value = true
   sortColumn.value = column
   if (!disabledDefaultSort.value) {
@@ -851,15 +898,15 @@ function onSorter(column: Column) {
   initialScrollPosition()
 }
 // 鼠标移入排序
-function onEnterSorter(dataIndex: string) {
+function onEnterSorter(dataIndex: string): void {
   sortHoverDataIndex.value = dataIndex
 }
 // 鼠标离开排序
-function onLeaveSorter() {
+function onLeaveSorter(): void {
   sortHoverDataIndex.value = null
 }
 // 检查是否是左固定列的最后一列
-function checkFixLeftLast(columns: Column[], column: Column, index: number) {
+function checkFixLeftLast(columns: Column[], column: Column, index: number): boolean {
   if (column.fixed === 'left' && index < columns.length - 1) {
     if (columns[index + 1].fixed !== 'left') {
       return true
@@ -868,7 +915,7 @@ function checkFixLeftLast(columns: Column[], column: Column, index: number) {
   return false
 }
 // 检查是否是右固定列的第一列
-function checkFixRightFirst(columns: Column[], column: Column, index: number) {
+function checkFixRightFirst(columns: Column[], column: Column, index: number): boolean {
   if (column.fixed === 'right' && index > 0) {
     if (columns[index - 1].fixed !== 'right') {
       return true
@@ -877,7 +924,7 @@ function checkFixRightFirst(columns: Column[], column: Column, index: number) {
   return false
 }
 // 表格单元格样式
-function tableCellWidthStyle(column: Column) {
+function tableCellWidthStyle(column: Column): CSSProperties {
   const style: CSSProperties = {}
   if (column.width !== undefined) {
     style.width = typeof column.width === 'number' ? `${column.width}px` : column.width
@@ -892,12 +939,12 @@ function getColumnKey(column: Column, index: number): string | number {
   return column.key !== undefined ? column.key : index
 }
 // 获取表格每行表头的唯一标识 key
-function getThColumnsGroupRowKey(columns: Column[]) {
+function getThColumnsGroupRowKey(columns: Column[]): string {
   return columns.map(getColumnKey).join('-')
 }
 
 // 展开列固定时的样式
-function tableExpandCellFixStyle(fixed: boolean) {
+function tableExpandCellFixStyle(fixed: boolean): CSSProperties {
   const style: CSSProperties = {}
   if (fixed) {
     style.position = 'sticky'
@@ -906,44 +953,44 @@ function tableExpandCellFixStyle(fixed: boolean) {
   return style
 }
 // 可选择列固定时的样式
-function tableSelectionCellFixStyle(fixed: boolean) {
+function tableSelectionCellFixStyle(fixed: boolean): CSSProperties {
   const style: CSSProperties = {}
   if (fixed) {
     style.position = 'sticky'
-    style.left = props.showExpandColumn ? `${colExpandRef.value && colExpandRef.value.offsetWidth}px` : '0px'
+    const expandWidth = colExpandRef.value?.offsetWidth ?? 0
+    style.left = props.showExpandColumn ? `${expandWidth}px` : '0px'
   }
   return style
 }
 // 表格单元格固定时的样式
-function tableCellFixStyle(column: Column) {
+function tableCellFixStyle(column: Column): CSSProperties {
   const style: CSSProperties = {}
-  if (column.fixed) {
-    if (colRef.value && colRef.value.length) {
-      style.position = 'sticky'
-      if (column.fixed === 'left') {
-        const colStart = column.colStart
-        let offset = 0
-        if (props.showExpandColumn) {
-          offset += colExpandRef.value.offsetWidth
-        }
-        if (showSelectionColumn.value) {
-          offset += colSelectionRef.value.offsetWidth
-        }
-        for (let i = 0; i < (props.showExpandColumn ? colStart - 1 : colStart); i++) {
-          offset += colRef.value[i].offsetWidth
-        }
-        style.left = `${offset}px`
-        return style
+  const dataCols = colRef.value
+  if (column.fixed && dataCols && dataCols.length) {
+    style.position = 'sticky'
+    if (column.fixed === 'left') {
+      const colStart = column.colStart
+      let offset = 0
+      if (props.showExpandColumn) {
+        offset += colExpandRef.value?.offsetWidth ?? 0
       }
-      if (column.fixed === 'right') {
-        const colEnd = column.colEnd
-        let offset = 0
-        for (let i = colRef.value.length - 1; i > (props.showExpandColumn ? colEnd - 1 : colEnd); i--) {
-          offset += colRef.value[i].offsetWidth
-        }
-        style.right = `${offset}px`
-        return style
+      if (showSelectionColumn.value) {
+        offset += colSelectionRef.value?.offsetWidth ?? 0
       }
+      for (let i = 0; i < (props.showExpandColumn ? colStart - 1 : colStart); i++) {
+        offset += dataCols[i].offsetWidth
+      }
+      style.left = `${offset}px`
+      return style
+    }
+    if (column.fixed === 'right') {
+      const colEnd = column.colEnd
+      let offset = 0
+      for (let i = dataCols.length - 1; i > (props.showExpandColumn ? colEnd - 1 : colEnd); i--) {
+        offset += dataCols[i].offsetWidth
+      }
+      style.right = `${offset}px`
+      return style
     }
   }
   return style
@@ -962,8 +1009,12 @@ function getMergedCellsColIndex(record: Record<string, any>, rowIndex: number): 
   return mergedCellsColIndex
 }
 // 获取被合并单元格的行索引
-function getMergeCellRowIndex(record: Record<string, any>, column: Column, rowIndex: number) {
-  if (rowIndex >= 0) {
+function getMergeCellRowIndex(
+  record: Record<string, any> | undefined,
+  column: Column,
+  rowIndex: number
+): number | undefined {
+  if (rowIndex >= 0 && record) {
     const custom = column.customCell?.(record, rowIndex, column)
     if (custom && 'rowSpan' in custom && (custom.rowSpan as number) > 0) {
       return rowIndex
@@ -971,39 +1022,41 @@ function getMergeCellRowIndex(record: Record<string, any>, column: Column, rowIn
       return getMergeCellRowIndex(record, column, rowIndex - 1)
     }
   }
+  return undefined
 }
 // 获取每行的类名
-function getRowClassName(record: Record<string, any>, rowIndex: number) {
+function getRowClassName(record: Record<string, any>, rowIndex: number): string | undefined {
   if (typeof props.rowClassName == 'function') {
     return props.rowClassName(record, rowIndex)
   }
   return props.rowClassName
 }
 // 鼠标悬浮某行
-function onEnterRow(record: Record<string, any>, rowIndex: number) {
+function onEnterRow(record: Record<string, any>, rowIndex: number): void {
   hoverRowIndex.value = rowIndex
   const mergedCellsColIndex = getMergedCellsColIndex(record, rowIndex)
   if (mergedCellsColIndex.length) {
     mergedCellsColIndex.forEach((colIndex: number) => {
       const column = props.columns[colIndex]
-      mergeHoverCoords.value.push({
-        row: getMergeCellRowIndex(displayDataSource.value[rowIndex - 1], column, rowIndex - 1) as number,
-        col: colIndex
-      })
+      // 首行上方无数据行时传入 undefined，此时不存在合并起点，跳过
+      const mergeRow = getMergeCellRowIndex(displayDataSource.value[rowIndex - 1], column, rowIndex - 1)
+      if (mergeRow !== undefined) {
+        mergeHoverCoords.value.push({ row: mergeRow, col: colIndex })
+      }
     })
   }
 }
 // 鼠标离开某行
-function onLeaveRow() {
+function onLeaveRow(): void {
   hoverRowIndex.value = null
   mergeHoverCoords.value = [] // 重置被合并单元格的坐标
 }
 // 检查单元格是否处于鼠标悬浮所在的区域，包括行/列合并的单元格
-function checkHoverCoord(row: number, col: number) {
+function checkHoverCoord(row: number, col: number): boolean {
   return mergeHoverCoords.value.some((coord: Coords) => coord.row === row && coord.col === col)
 }
 // 展开/收起展开行
-function onExpandCell(record: Record<string, any>, rowIndex: number) {
+function onExpandCell(record: Record<string, any>, rowIndex: number): void {
   const key = getRowKey.value(record, rowIndex)
   if (tableExpandedRowKeys.value.includes(key)) {
     tableExpandedRowKeys.value = tableExpandedRowKeys.value.filter((rowKey: string | number) => rowKey !== key)
@@ -1015,7 +1068,7 @@ function onExpandCell(record: Record<string, any>, rowIndex: number) {
   emits('update:expandedRowKeys', tableExpandedRowKeys.value)
 }
 // 表格滚动事件
-function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
+function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom'): void {
   if (['left', 'right'].includes(direction)) {
     // 水平滚动，使用 rAF 对齐浏览器渲染帧，减少表头跟随滚动的错位感
     if (scrollRAF) {
@@ -1035,21 +1088,22 @@ function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
   }
 }
 // 鼠标滚轮或触摸板滑动事件
-function onWheel(e: WheelEvent) {
+function onWheel(e: WheelEvent): void {
   if (e.deltaX) {
     e.stopPropagation() // 阻止事件冒泡
     e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
     const scrollX = e.deltaX * 1 // 滚轮的水平滚动量
     scrollLeft.value = Math.min(Math.max(scrollLeft.value + scrollX, 0), scrollMax.value)
-    scrollbarRef.value.scrollTo({
+    scrollbarRef.value?.scrollTo({
       left: scrollLeft.value,
       behavior: 'instant'
     })
   }
 }
-function initialScrollPosition() {
+// 分页、排序等状态变化后是否滚动到表格初始位置
+function initialScrollPosition(): void {
   if (props.scroll?.initialScrollPositionOnChange) {
-    scrollbarRef.value.scrollTo({
+    scrollbarRef.value?.scrollTo({
       top: 0,
       left: 0,
       behavior: 'smooth'
@@ -1057,7 +1111,7 @@ function initialScrollPosition() {
   }
 }
 // 分页变化事件
-function onPaginationChange(page: number, pageSize: number) {
+function onPaginationChange(page: number, pageSize: number): void {
   tablePage.value = page
   tablePageSize.value = pageSize
   emits('change', page, pageSize)
@@ -1234,7 +1288,7 @@ function onPaginationChange(page: number, pageSize: number) {
               </thead>
               <tbody>
                 <tr v-if="!displayDataSource.length">
-                  <td class="table-empty" :colspan="thColumnsLeaf.length">
+                  <td class="table-empty" :colspan="tableFullRowColspan">
                     <div v-if="xScrollable" class="table-empty-fixed" :style="emptyFixStyle">
                       <Empty class="empty" image="outlined" v-bind="emptyProps" />
                     </div>
@@ -1355,7 +1409,7 @@ function onPaginationChange(page: number, pageSize: number) {
                     </tr>
                     <template v-if="showExpandColumn">
                       <tr v-show="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))">
-                        <td class="table-td table-td-expand-row" :colspan="thColumnsLeaf.length + 1">
+                        <td class="table-td table-td-expand-row" :colspan="tableFullRowColspan">
                           <div v-if="expandColumnFixed" class="table-expand-row-fixed" :style="tableExpandRowFixStyle">
                             <slot
                               name="expandedRowRender"
@@ -1541,7 +1595,7 @@ function onPaginationChange(page: number, pageSize: number) {
               </colgroup>
               <tbody>
                 <tr v-if="!displayDataSource.length">
-                  <td class="table-empty" :colspan="thColumnsLeaf.length">
+                  <td class="table-empty" :colspan="tableFullRowColspan">
                     <div v-if="xScrollable" class="table-empty-fixed" :style="emptyFixStyle">
                       <Empty class="empty" image="outlined" v-bind="emptyProps" />
                     </div>
@@ -1662,7 +1716,7 @@ function onPaginationChange(page: number, pageSize: number) {
                     </tr>
                     <template v-if="showExpandColumn">
                       <tr v-show="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))">
-                        <td class="table-td table-td-expand-row" :colspan="thColumnsLeaf.length + 1">
+                        <td class="table-td table-td-expand-row" :colspan="tableFullRowColspan">
                           <div v-if="expandColumnFixed" class="table-expand-row-fixed" :style="tableExpandRowFixStyle">
                             <slot
                               name="expandedRowRender"

@@ -3142,7 +3142,7 @@ watchEffect(() => {
 | align? | 列文本的对齐方式 | 'left' &#124; 'center' &#124; 'right' | undefined |
 | width? | 列宽度，单位 `px` | string &#124; number | undefined |
 | className? | 自定义列的类名 | string | undefined |
-| colSpan? | 表头列合并,设置为 `0` 时，不渲染 | number | undefined |
+| colSpan? | 表头列合并,设置为 `0` 时，该列表头不渲染 | number | undefined |
 | dataIndex? | 列数据在数据项中对应的路径索引；数据展示列必传，操作列可忽略 | string | undefined |
 | key? | 自定义列标识，未设置 `dataIndex` 时作为 `Vue` 唯一的标识 | string | undefined |
 | ellipsis? | 超过宽度是否自动省略 | boolean | undefined |
