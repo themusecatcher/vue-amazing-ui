@@ -112,8 +112,8 @@ export { default as LoadingBar } from './loading-bar'
 export type { MessageProps, MessageOptions, MessageApi, MessageReactive, MessageUpdate } from './message'
 export { default as Message, MessageProvider, useMessage } from './message'
 
-export type { ModalProps, ModalOptions } from './modal'
-export { default as Modal } from './modal'
+export type { ModalProps, ModalOptions, ModalApi, ModalReactive, ModalUpdate, FooterType, ModalCallback } from './modal'
+export { default as Modal, ModalProvider, useModal } from './modal'
 
 export type {
   NotificationProps,

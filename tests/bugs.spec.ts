@@ -225,8 +225,8 @@ describe('B5 Notification - 存在常驻通知时分组数据永不回收', () =
   })
 })
 
-describe('B6 Modal - onOk 抛错导致后续语句被跳过，弹窗无法关闭', () => {
-  it('onOk 抛错后，loading 应复位且弹窗应关闭', async () => {
+describe('B6 Modal - onOk 抛错导致后续语句被跳过，按钮 loading 卡死', () => {
+  it('onOk 抛错后，loading 应复位且弹窗保持打开（对齐 antdv：reject 视为取消关闭）', async () => {
     const { wrapper, vm } = mountModal()
     vm.confirm({
       content: '确认',
@@ -243,9 +243,9 @@ describe('B6 Modal - onOk 抛错导致后续语句被跳过，弹窗无法关闭
     await flushPromises()
     await wrapper.vm.$nextTick()
 
-    // 断言与实现无关：抛错后弹窗应关闭，可见容器数为 0
+    // 断言与实现无关：抛错后弹窗保持打开（reject 阻止关闭），loading 已复位
     const visible = visibleContainers('.modal-container')
-    expect(visible.length).toBe(0)
+    expect(visible.length).toBe(1)
     wrapper.unmount()
   })
 })
@@ -266,6 +266,50 @@ describe('Modal 定位 - centered 实例的居中类', () => {
     await wrapper.vm.$nextTick()
     const el = containers('.modal-container')[0]
     expect(el.classList.contains('is-centered')).toBe(false)
+    wrapper.unmount()
+  })
+})
+
+describe('Modal 多实例 - 每实例独占全屏 layer，弹窗层叠而非纵向排列', () => {
+  // 回归保护：曾因所有实例平铺在 flex column 的 .modal-wrap 下而上下排列（与 naive-ui / antdv 的层叠行为不一致）。
+  // 修复后每实例渲染独立全屏 .modal-layer，遮罩与弹窗均在层内，实例间靠 zIndex 层叠。
+  it('同时打开多个实例时各渲染独立 modal-layer，容器不再作为 modal-wrap 的直接子级', async () => {
+    const { wrapper, vm } = mountModal()
+    vm.info({ content: 'first' })
+    vm.confirm({ content: 'second' })
+    vm.error({ content: 'third' })
+    await wrapper.vm.$nextTick()
+
+    const layers = containers('.modal-layer')
+    expect(layers.length).toBe(3)
+    // 容器均被 layer 包裹，不再直接平铺在 modal-wrap 下
+    expect(containers('.modal-wrap > .modal-container').length).toBe(0)
+    expect(containers('.modal-wrap > .modal-layer').length).toBe(3)
+    // 每个 layer 内各含一个弹窗容器与一个遮罩
+    layers.forEach((layer) => {
+      expect(layer.querySelector('.modal-container')).not.toBeNull()
+      expect(layer.querySelector('.modal-mask')).not.toBeNull()
+    })
+    wrapper.unmount()
+  })
+
+  it('关闭其中一层后仅移除该实例的 layer，其余 layer 保留', async () => {
+    const { wrapper, vm } = mountModal()
+    const modal = vm as unknown as ModalApi
+    const first = modal.info({ content: 'first' })
+    modal.confirm({ content: 'second' })
+    modal.error({ content: 'third' })
+    await wrapper.vm.$nextTick()
+    expect(containers('.modal-layer').length).toBe(3)
+
+    first.destroy()
+    await wrapper.vm.$nextTick()
+    // happy-dom 下 Transition 离场动画回调不可靠，DOM 不实际移除，故按「可见性」判定（与既有 Modal 用例一致）：
+    // 被关闭实例的容器进入离场态（v-show: false），其余两个实例保持可见
+    const visible = visibleContainers('.modal-container')
+    expect(visible.length).toBe(2)
+    expect(visible.some((el) => el.textContent?.includes('second'))).toBe(true)
+    expect(visible.some((el) => el.textContent?.includes('third'))).toBe(true)
     wrapper.unmount()
   })
 })
@@ -433,7 +477,7 @@ describe('P2 - 命令式组件应 Teleport 到 body', () => {
     const host = createHost()
     const wrapper = mount(Modal, { attachTo: host })
     await wrapper.vm.$nextTick()
-    expect(host.querySelector('.modal-root')).toBeNull()
+    expect(host.querySelector('.modal-wrap')).toBeNull()
     wrapper.unmount()
     host.remove()
   })
