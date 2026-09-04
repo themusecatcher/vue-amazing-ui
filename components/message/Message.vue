@@ -317,7 +317,7 @@ onBeforeUnmount(() => {
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
   position: fixed;
-  z-index: 999; // 突出显示该层级
+  z-index: 2000;
   width: 100%;
   left: 0;
   right: 0;

@@ -599,7 +599,7 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
 }
 .notification-wrap {
   position: fixed;
-  z-index: 999;
+  z-index: 2000;
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
   line-height: 1.5714285714285714;
