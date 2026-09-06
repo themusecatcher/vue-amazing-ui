@@ -26,7 +26,7 @@ export type ModalCallback = () => unknown | Promise<unknown>
 export interface Props {
   width?: string | number // 模态框宽度，单位 px
   height?: string | number // 内容区高度，单位 px，默认自适应内容高度
-  icon?: VNode | Slot // 自定义图标
+  icon?: VNode | (() => VNode) | Slot // 自定义图标，支持 VNode / 渲染函数 / slot
   title?: ContentType // 模态框标题，支持 string | VNode | 渲染函数
   titleClass?: string // 自定义标题类名
   titleStyle?: CSSProperties // 自定义标题样式
@@ -45,7 +45,7 @@ export interface Props {
   noticeProps?: ButtonProps // 通知按钮 props 配置，参考 Button 组件 Props
   footer?: FooterType // 是否显示底部按钮区 boolean | slot
   closable?: boolean // 是否显示右上角关闭按钮
-  closeIcon?: VNode | Slot // 自定义关闭图标
+  closeIcon?: VNode | (() => VNode) | Slot // 自定义关闭图标，支持 VNode / 渲染函数 / slot
   renderBeforeOpen?: boolean // 首次打开前是否渲染内容（关闭懒渲染）
   destroyOnClose?: boolean // 关闭时是否销毁 Modal 里的子元素
   centered?: boolean // 是否水平垂直居中，否则固定高度水平居中
@@ -341,6 +341,16 @@ function showFooter(item: ModalItem): boolean {
     return true
   }
   return getComputedValue(item, 'footer') !== false && (isConfirmMode(item) || isNoticeMode(item))
+}
+// 自定义图标：未配置时返回 null，由模板按弹窗类型渲染内置图标
+// 走 renderContent 而非直接把配置交给 <component :is>，避免渲染函数被当成函数式组件：
+// 函数式组件以函数引用为 type，声明式内联箭头函数每次渲染都是新引用，会导致图标被反复销毁重建
+function iconNode(item: ModalItem): VNode | null {
+  const icon = getComputedValue(item, 'icon')
+  if (icon === undefined || icon === null) {
+    return null
+  }
+  return renderContent(icon as ContentType)
 }
 // 关闭图标：未配置时返回 null，由模板渲染默认图标
 function closeIconNode(item: ModalItem): VNode | null {
@@ -896,11 +906,7 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
                       :class="[itemIconClass(item), { 'header-with-close': getComputedValue(item, 'closable') }]"
                     >
                       <slot name="icon">
-                        <component
-                          v-if="getComputedValue(item, 'icon')"
-                          :is="getComputedValue(item, 'icon')"
-                          class="icon-svg"
-                        />
+                        <component v-if="iconNode(item)" :is="iconNode(item)" class="icon-svg" />
                         <svg
                           v-else-if="isConfirmMode(item)"
                           class="icon-svg"
@@ -1180,9 +1186,6 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
             line-height: 1.5;
             font-weight: 600;
           }
-          :deep(svg) {
-            fill: currentColor;
-          }
         }
         .icon-info {
           color: var(--modal-primary-color);
@@ -1231,6 +1234,9 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
           color: rgba(0, 0, 0, 0.45);
           fill: currentColor;
           transition: color 0.2s;
+          svg {
+            fill: currentColor;
+          }
         }
         &:hover {
           background: rgba(0, 0, 0, 0.06);

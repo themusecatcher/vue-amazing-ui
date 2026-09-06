@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import { createDiscreteApi } from 'vue-amazing-ui'
 import type {
   ConfigProviderTheme,
   CarouselImage,
@@ -22,25 +23,19 @@ const theme = ref<ConfigProviderTheme>({
     primaryColor: buttonPrimaryColor.value
   }
 })
+const autoCompleteValue = ref<string>('')
+const autoCompleteOptions = ref<string[]>([])
 const checkboxChecked = ref<boolean>(false)
 const cardDate = ref<number>(Date.now())
 const dateValue = ref<string>(format(new Date(), 'yyyy-MM-dd'))
 const inputValue = ref<string>('')
 const inputNumberValue = ref<number>(3)
 const inputSearchValue = ref<string>('')
-const autoCompleteValue = ref<string>('')
-const autoCompleteOptions = ref<string[]>([])
-function onAutoCompleteSearch(searchText: string) {
-  // 模拟远程搜索：根据输入动态生成联想选项
-  autoCompleteOptions.value = !searchText
-    ? []
-    : [searchText, `${searchText}${searchText}`, `${searchText}${searchText}${searchText}`]
-}
-const cardRef = ref()
-const loadingBarRef = ref()
 const messageRef = ref()
 const modalRef = ref()
 const notificationRef = ref()
+const cardRef = ref()
+const loadingBarRef = ref()
 const page = ref<number>(1)
 const radioChecked = ref<boolean>(false)
 const images = ref<CarouselImage[]>([
@@ -68,7 +63,7 @@ const images = ref<CarouselImage[]>([
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
-const options = ref<SelectOption[]>([
+const selectOptions = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -190,6 +185,12 @@ const fileList = ref<UploadFileType[]>([
     url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
+function onAutoCompleteSearch(searchText: string) {
+  // 模拟远程搜索：根据输入动态生成联想选项
+  autoCompleteOptions.value = !searchText
+    ? []
+    : [searchText, `${searchText}${searchText}`, `${searchText}${searchText}${searchText}`]
+}
 function onIncrease(scale: number) {
   const res = percent.value + scale
   if (res > 100) {
@@ -205,6 +206,29 @@ function onDecline(scale: number) {
   } else {
     percent.value = res
   }
+}
+// 主题同步到离散 API
+const discretePrimaryColor = ref<string>('#1677ff')
+// createDiscreteApi 创建脱离组件树的独立实例，主题自动读取 ConfigProvider 写入的主题快照
+const {
+  message: discreteMessage,
+  notification: discreteNotification,
+  modal: discreteModal
+} = createDiscreteApi(['message', 'notification', 'modal'])
+function onDiscreteMessage() {
+  discreteMessage.info('Discrete Message 跟随 ConfigProvider 主题色')
+}
+function onDiscreteNotification() {
+  discreteNotification.info({
+    title: 'Discrete Notification',
+    content: '跟随 ConfigProvider 主题色'
+  })
+}
+function onDiscreteModal() {
+  discreteModal.info({
+    title: 'Discrete Modal',
+    content: '跟随 ConfigProvider 主题色'
+  })
 }
 </script>
 <template>
@@ -244,24 +268,24 @@ function onDecline(scale: number) {
             placeholder="input search"
           />
           <Button type="primary" @click="messageRef.info('This is an info message')">Show Message</Button>
-          <Message ref="messageRef" />
+          <Message @ready="messageRef = $event" />
           <Button
             type="primary"
             @click="modalRef.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
             >Show Modal</Button
           >
-          <Modal ref="modalRef" />
+          <Modal @ready="modalRef = $event" />
           <Button
             type="primary"
-            @click="notificationRef.info({ title: 'Notification Title', description: 'This is a normal notification' })"
+            @click="notificationRef.info({ title: 'Notification Title', content: 'This is a normal notification' })"
             >Show Notification</Button
           >
-          <Notification ref="notificationRef" />
+          <Notification @ready="notificationRef = $event" />
           <Popconfirm title="Custom Theme" description="There will have some descriptions ..." icon="info">
             <Button type="primary">Show Confirm</Button>
           </Popconfirm>
           <Radio v-model:checked="radioChecked">Radio</Radio>
-          <Select :options="options" v-model="selectedValue" />
+          <Select :options="selectOptions" v-model="selectedValue" />
           <Switch v-model="switchChecked" />
           <Textarea :width="360" v-model:value="textareaValue" placeholder="custom theme textarea" />
           <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
@@ -357,6 +381,20 @@ function onDecline(scale: number) {
     <h2 class="mt30 mb10">自定义包裹元素</h2>
     <ConfigProvider :abstract="false" tag="span" :theme="{ common: { primaryColor: '#ff6900' } }">
       <Button type="primary">Primary Button</Button>
+    </ConfigProvider>
+    <h2 class="mt30 mb10">主题同步到离散 API</h2>
+    <p class="mb10">
+      <code>createDiscreteApi()</code> 创建的独立实例会读取 <code>ConfigProvider</code> 自动写入的主题快照，
+      切换下方主题色后再次触发按钮，message / notification / modal 将同步跟随（无需手工传入主题）。
+    </p>
+    <ConfigProvider :theme="{ common: { primaryColor: discretePrimaryColor } }">
+      <Space align="center">
+        primaryColor:
+        <ColorPicker style="width: 200px" v-model:value="discretePrimaryColor" />
+        <Button type="primary" @click="onDiscreteMessage">Discrete Message</Button>
+        <Button type="primary" @click="onDiscreteNotification">Discrete Notification</Button>
+        <Button type="primary" @click="onDiscreteModal">Discrete Modal</Button>
+      </Space>
     </ConfigProvider>
   </div>
 </template>

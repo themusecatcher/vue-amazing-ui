@@ -9,6 +9,11 @@ _全局展示操作反馈信息_
 - 可提供成功、警告和错误等反馈信息
 - 顶部居中显示并自动消失，是一种不打断用户操作的轻量级提示方式
 
+::: warning 提示
+`Message` 推荐在组件 `setup` 内通过 `useMessage()` 调用，使用前需在应用根节点放置一次 `<MessageProvider>`。<br/>
+如果你想在 `setup` 外使用（例如 `axios` 拦截器、路由守卫、`Pinia action` 等），请参考文档末尾的 [在 setup 外使用](#在-setup-外使用)。
+:::
+
 ## 使用方式
 
 | 调用方式 | API | 适用位置 |
@@ -16,7 +21,7 @@ _全局展示操作反馈信息_
 | 组件树内调用 <Tag color="success" size="small">推荐</Tag> | `useMessage()` | 组件 `setup` 内，需外层存在 `<MessageProvider>` |
 | 脱离组件树调用 <Tag color="processing" size="small">无需 MessageProvider</Tag> | `createDiscreteApi()` | 任意位置（`axios` 拦截器、路由守卫、`Pinia action` 等） |
 
-### 一、组件树内调用：`useMessage()` <Tag color="success" size="small">推荐</Tag>
+### 组件树内使用：`useMessage()` <Tag color="success" size="small">推荐</Tag>
 
 <br/>
 
@@ -65,80 +70,6 @@ function onClick() {
 ```
 
 :::
-
-### 二、脱离组件树调用：`createDiscreteApi()` <Tag color="processing" size="small">无需 MessageProvider</Tag>
-
-<br/>
-
-_适用于脱离组件树的场景：内部会创建一个独立的应用实例，因此可在任意位置调用，无需外层 `MessageProvider`_
-
-::: tip 注意
-
-- 主题会随 `ConfigProvider` 自动同步，无需手工传入
-- 每次调用都会创建一套独立实例（独立的容器与消息栈），建议缓存返回值复用，避免重复创建；不再使用时可通过返回的 `dispose()` 销毁该实例
-- 内部会访问 `document`，`SSR` 场景请在客户端（点击回调、`onMounted` 等）中调用
-
-:::
-
-::: tip 独立实例的复用与销毁（dispose）
-
-_独立实例创建后不会随组件卸载自动销毁，也不会因内部消息全部关闭而回收，需根据使用场景决定是否手动 `dispose()`：_
-
-**场景 A · 全局单例，缓存复用（推荐）**：适用于 `axios` 拦截器、路由守卫、`Pinia action` 等常驻场景，整个应用生命周期内复用同一实例：
-
-```ts
-import { createDiscreteApi } from 'vue-amazing-ui'
-
-// 在模块顶层创建一次，全局复用
-const { message } = createDiscreteApi(['message'])
-
-message.success('这是一条消息')
-```
-
-**场景 B · 临时使用后手动 `dispose()`**：适用于测试用例、单次任务等按需回收场景，用完即销毁：
-
-```ts
-import { createDiscreteApi } from 'vue-amazing-ui'
-import type { DiscreteApiInstance } from 'vue-amazing-ui'
-
-let discrete: DiscreteApiInstance<'message'> | null = null
-function getMessageApi() {
-  if (!discrete) {
-    discrete = createDiscreteApi(['message'])
-  }
-  return discrete.message
-}
-getMessageApi().success('这是一条消息')
-
-// 不再需要时手动销毁：卸载内部应用并移除挂载容器
-// 重复调用无副作用（内部有 disposed 保护）；再次调用 getMessageApi() 会安全重建
-discrete?.dispose()
-discrete = null
-```
-
-:::
-
-::: tip XXX.ts（任意 .ts 文件）
-
-```ts
-import { createDiscreteApi } from 'vue-amazing-ui'
-
-// 任意位置调用，无需外层 MessageProvider
-const { message } = createDiscreteApi(['message'])
-
-// 例：axios 响应拦截器
-axios.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    message.error(error.message)
-    return Promise.reject(error)
-  }
-)
-```
-
-:::
-
-<Button type="primary" @click="onDiscreteMessage">Discrete Message（脱离组件树调用）</Button>
 
 <script setup lang="ts">
 import { h, onBeforeUnmount, onMounted, ref } from 'vue'
@@ -953,3 +884,140 @@ _`click` / `close` 为 `<Message>` / `<MessageProvider>` 组件的原生事件�
 | ready | 实例挂载完成时触发，参数为该实例的 api | (api: [MessageApi](#methods)) => void |
 | click | 点击 `message` 时触发的回调函数 | (e: Event) => void |
 | close | 关闭时触发的回调函数，参数为该条消息的 `key` | (key: string) => void |
+
+## 在 setup 外使用
+
+### 选择 1：`createDiscreteApi()`（脱离组件树）
+
+<br/>
+
+_适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：内部会创建一个独立的应用实例，因此可在任意位置调用，无需外层 `MessageProvider`_
+
+::: tip 注意
+
+- 主题会随 `ConfigProvider` 自动同步，无需手工传入
+- 每次调用都会创建一套独立实例（独立的容器与消息栈），建议缓存返回值复用，避免重复创建；不再使用时可通过返回的 `dispose()` 销毁该实例
+- 内部会访问 `document`，`SSR` 场景请在客户端（点击回调、`onMounted` 等）中调用
+- 不建议与 `useMessage()` 在同一 App 中混用：两者各自持有独立的消息栈，`maxCount` / `top` 等组件级配置互不共享，同一页面会出现两套消息容器
+
+:::
+
+::: tip 独立实例的复用与销毁（dispose）
+
+_独立实例创建后不会随组件卸载自动销毁，也不会因内部消息全部关闭而回收，需根据使用场景决定是否手动 `dispose()`：_
+
+**场景 A · 全局单例，缓存复用（推荐）**：适用于 `axios` 拦截器、路由守卫、`Pinia action` 等常驻场景，整个应用生命周期内复用同一实例：
+
+```ts
+import { createDiscreteApi } from 'vue-amazing-ui'
+
+// 在模块顶层创建一次，全局复用
+const { message } = createDiscreteApi(['message'])
+
+message.success('这是一条消息')
+```
+
+**场景 B · 临时使用后手动 `dispose()`**：适用于测试用例、单次任务等按需回收场景，用完即销毁：
+
+```ts
+import { createDiscreteApi } from 'vue-amazing-ui'
+import type { DiscreteApiInstance } from 'vue-amazing-ui'
+
+let discrete: DiscreteApiInstance<'message'> | null = null
+function getMessageApi() {
+  if (!discrete) {
+    discrete = createDiscreteApi(['message'])
+  }
+  return discrete.message
+}
+getMessageApi().success('这是一条消息')
+
+// 不再需要时手动销毁：卸载内部应用并移除挂载容器
+// 重复调用无副作用（内部有 disposed 保护）；再次调用 getMessageApi() 会安全重建
+discrete?.dispose()
+discrete = null
+```
+
+:::
+
+::: tip XXX.ts（任意 .ts 文件）
+
+```ts
+import { createDiscreteApi } from 'vue-amazing-ui'
+
+// 任意位置调用，无需外层 MessageProvider
+const { message } = createDiscreteApi(['message'])
+
+// 例：axios 响应拦截器
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    message.error(error.message)
+    return Promise.reject(error)
+  }
+)
+```
+
+:::
+
+<Button type="primary" @click="onDiscreteMessage">Discrete Message（脱离组件树调用）</Button>
+
+### 选择 2：挂载到 `window`（复用组件树内实例）
+
+::: warning 注意
+
+如果你想在 `setup` 外使用 `message`，需要在顶层 `setup` 中把 `useMessage()` 返回的实例挂载到 `window` 下然后再调用，调用前需要确保实例已经挂载成功。
+
+:::
+
+::: tip App.vue
+
+```vue
+<script setup lang="ts">
+import { MessageProvider } from 'vue-amazing-ui'
+</script>
+<template>
+  <MessageProvider>
+    <Content />
+  </MessageProvider>
+</template>
+```
+
+:::
+
+::: tip content.vue（`<MessageProvider>` 内的顶层组件）
+
+```vue
+<script setup lang="ts">
+import { useMessage } from 'vue-amazing-ui'
+
+// 挂载到 window 后，即可在任意非组件环境（工具函数、事件监听等）中调用
+window.$message = useMessage()
+</script>
+```
+
+:::
+
+::: tip XXX.ts（任意 .ts 文件）
+
+```ts
+// 需确保已在顶层 setup 中执行了 window.$message = useMessage()
+window.$message?.success('这是一条消息')
+```
+
+:::
+
+::: tip 可选：为 `window.$message` 补充 `TypeScript` 类型声明
+
+```ts
+// types/global.d.ts
+import type { MessageApi } from 'vue-amazing-ui'
+
+declare global {
+  interface Window {
+    $message?: MessageApi
+  }
+}
+```
+
+:::

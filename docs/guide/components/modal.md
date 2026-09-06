@@ -8,6 +8,11 @@
 
 - 在当前页面正中打开一个浮层，承载相应的操作或者提示内容
 
+::: warning 提示
+`Modal` 提供两种组件内用法：命令式 `useModal()`（需外层存在 `<ModalProvider>`）与声明式 `<Modal v-model:open>`（由 `v-model:open` 驱动显隐）。<br/>
+如果你想在 `setup` 外使用（例如路由守卫、`axios` 拦截器、`Pinia action` 等），请参考文档末尾的 [在 setup 外使用](#在-setup-外使用)。
+:::
+
 ## 使用方式
 
 | 调用方式 | API | 适用位置 |
@@ -16,7 +21,7 @@
 | 声明式用法 <Tag color="warning" size="small">插槽自定义</Tag> | `<Modal v-model:open>` | 模板中，标题 / 内容 / 底部需用插槽自定义时 |
 | 脱离组件树调用 <Tag color="processing" size="small">无需 ModalProvider</Tag> | `createDiscreteApi()` | 任意位置（`axios` 拦截器、路由守卫、`Pinia action` 等） |
 
-### 一、组件树内调用：`useModal()` <Tag color="success" size="small">推荐</Tag>
+### 一、组件树内使用：`useModal()` <Tag color="success" size="small">推荐</Tag>
 
 <br/>
 
@@ -104,85 +109,6 @@ const open = ref(false)
 - **内容来源**：命令式通过 `title` / `content` 等参数传入；声明式除参数外，还可用 `#icon` / `#title` / `#default` / `#footer` / `#closeIcon` 插槽自定义
 
 :::
-
-### 三、脱离组件树调用：`createDiscreteApi()` <Tag color="processing" size="small">无需 ModalProvider</Tag>
-
-<br/>
-
-_适用于脱离组件树的场景：内部会创建一个独立的应用实例，因此可在任意位置调用，无需外层 `ModalProvider`_
-
-::: tip 注意
-
-- 主题会随 `ConfigProvider` 自动同步，无需手工传入
-- 每次调用都会创建一套独立实例（独立的容器与弹窗栈），建议缓存返回值复用，避免重复创建；不再使用时可通过返回的 `dispose()` 销毁该实例
-- 内部会访问 `document`，`SSR` 场景请在客户端（点击回调、`onMounted` 等）中调用
-
-:::
-
-::: tip 独立实例的复用与销毁（dispose）
-
-_独立实例创建后不会随组件卸载自动销毁，也不会因内部弹窗全部关闭而回收，需根据使用场景决定是否手动 `dispose()`：_
-
-**场景 A · 全局单例，缓存复用（推荐）**：适用于 `axios` 拦截器、路由守卫、`Pinia action` 等常驻场景，整个应用生命周期内复用同一实例：
-
-```ts
-import { createDiscreteApi } from 'vue-amazing-ui'
-
-// 在模块顶层创建一次，全局复用
-const { modal } = createDiscreteApi(['modal'])
-
-modal.info({ title: 'Modal Title', content: '这是一个弹窗' })
-```
-
-**场景 B · 临时使用后手动 `dispose()`**：适用于测试用例、单次任务等按需回收场景，用完即销毁：
-
-```ts
-import { createDiscreteApi } from 'vue-amazing-ui'
-import type { DiscreteApiInstance } from 'vue-amazing-ui'
-
-let discrete: DiscreteApiInstance<'modal'> | null = null
-function getModalApi() {
-  if (!discrete) {
-    discrete = createDiscreteApi(['modal'])
-  }
-  return discrete.modal
-}
-getModalApi().info({ title: 'Modal Title', content: '这是一个弹窗' })
-
-// 不再需要时手动销毁：卸载内部应用并移除挂载容器
-// 重复调用无副作用（内部有 disposed 保护）；再次调用 getModalApi() 会安全重建
-discrete?.dispose()
-discrete = null
-```
-
-:::
-
-::: tip XXX.ts（任意 .ts 文件）
-
-```ts
-import { createDiscreteApi } from 'vue-amazing-ui'
-
-// 任意位置调用，无需外层 ModalProvider
-const { modal } = createDiscreteApi(['modal'])
-
-// 例：路由守卫中离开页面前二次确认
-router.beforeEach((to, from, next) => {
-  if (to.meta.needConfirm) {
-    modal.confirm({
-      title: '离开当前页面',
-      content: '存在未保存的修改，确认离开？',
-      onOk: () => next(),
-      onCancel: () => next(false)
-    })
-    return
-  }
-  next()
-})
-```
-
-:::
-
-<Button type="primary" @click="onDiscreteModal">Discrete Modal（脱离组件树调用）</Button>
 
 <script setup lang="ts">
 import { computed, defineComponent, h, onBeforeUnmount, onMounted, reactive, ref, withDirectives } from 'vue'
@@ -460,6 +386,8 @@ function onRenderFnIconModal() {
     icon: () => h(SoundFilled, { style: 'color: gold' })
   })
 }
+// 声明式用法下 icon / closeIcon 同样支持渲染函数形态
+const renderFnIconOpen = ref(false)
 // 自定义样式
 function onCustomClassModal() {
   modal.info({
@@ -1625,22 +1553,32 @@ function onPercentWidthModal() {
 
 ## 自定义图标
 
-_`icon` 支持 `VNode` 与返回 `VNode` 的渲染函数两种形态_
+_`icon` 与 `closeIcon` 均支持 `VNode` / 渲染函数 / 插槽三种形态，命令式与声明式一致_
 
 <br/>
 
 <Space>
   <Button type="primary" @click="onVNodeIconModal">VNode 图标</Button>
   <Button type="primary" @click="onRenderFnIconModal">渲染函数图标</Button>
+  <Button type="primary" @click="renderFnIconOpen = true">声明式渲染函数图标</Button>
 </Space>
+
+<Modal
+  v-model:open="renderFnIconOpen"
+  title="声明式渲染函数图标"
+  content="icon 与 closeIcon 在声明式用法下同样支持渲染函数形态，右上角关闭图标也是渲染函数。"
+  closable
+  :icon="() => h(SoundFilled, { style: 'color: gold' })"
+  :close-icon="() => h(CloseCircleFilled, { style: 'color: #ff4d4f' })"
+/>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
-import { h } from 'vue'
-import { CloudFilled, SoundFilled } from '@ant-design/icons-vue'
-import { useModal } from 'vue-amazing-ui'
+import { h, ref } from 'vue'
+import { CloseCircleFilled, CloudFilled, SoundFilled } from '@ant-design/icons-vue'
+import { Modal, useModal } from 'vue-amazing-ui'
 const modal = useModal()
 function onVNodeIconModal() {
   modal.info({
@@ -1657,12 +1595,23 @@ function onRenderFnIconModal() {
     icon: () => h(SoundFilled, { style: 'color: gold' })
   })
 }
+// 声明式用法下 icon / closeIcon 同样支持渲染函数形态
+const renderFnIconOpen = ref(false)
 </script>
 <template>
   <Space>
     <Button type="primary" @click="onVNodeIconModal">VNode 图标</Button>
     <Button type="primary" @click="onRenderFnIconModal">渲染函数图标</Button>
+    <Button type="primary" @click="renderFnIconOpen = true">声明式渲染函数图标</Button>
   </Space>
+  <Modal
+    v-model:open="renderFnIconOpen"
+    title="声明式渲染函数图标"
+    content="icon 与 closeIcon 在声明式用法下同样支持渲染函数形态，右上角关闭图标也是渲染函数。"
+    closable
+    :icon="() => h(SoundFilled, { style: 'color: gold' })"
+    :close-icon="() => h(CloseCircleFilled, { style: 'color: #ff4d4f' })"
+  />
 </template>
 ```
 
@@ -2685,11 +2634,11 @@ _每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)
 | :-- | :-- | :-- | :-- |
 | width | 模态框宽度，单位 `px` | string &#124; number | 420 |
 | height | 内容区高度，单位 `px`，默认自适应内容高度；指定后内容区内部滚动 | string &#124; number | 'auto' |
-| icon | 自定义图标 | VNode &#124; Slot | undefined |
-| title | 模态框标题 | string &#124; VNode &#124; 渲染函数 | undefined |
+| icon | 自定义图标，支持 `VNode` / 渲染函数 / `slot` | VNode &#124; (() => VNode) &#124; slot | undefined |
+| title | 模态框标题 | string &#124; VNode &#124; (() => VNode) | undefined |
 | titleClass | 自定义标题类名 | string | undefined |
 | titleStyle | 自定义标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| content | 模态框内容 | string &#124; VNode &#124; 渲染函数 | undefined |
+| content | 模态框内容 | string &#124; VNode &#124; (() => VNode) | undefined |
 | contentClass | 自定义内容类名 | string | undefined |
 | contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | scrollbarProps | 内容滚动条 `Scrollbar` 属性配置 | [ScrollbarProps](./scrollbar.md#scrollbar) | {} |
@@ -2704,7 +2653,7 @@ _每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)
 | noticeProps | 通知按钮 `props` 配置，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {} |
 | footer | 是否显示底部按钮区，`false` 隐藏，`slot` 自定义 | boolean &#124; slot | true |
 | closable | 是否显示右上角关闭按钮，默认 `false`，需要时显式开启 | boolean | false |
-| closeIcon | 自定义关闭图标 | VNode &#124; Slot | undefined |
+| closeIcon | 自定义关闭图标，支持 `VNode` / 渲染函数 / `slot` | VNode &#124; (() => VNode) &#124; slot | undefined |
 | destroyOnClose | 关闭时是否销毁 `Modal` 里的子元素，实例栈下关闭即从栈中移除，内容随之销毁 | boolean | false |
 | renderBeforeOpen | 首次打开前是否渲染内容（关闭懒渲染） | boolean | false |
 | centered | 是否水平垂直居中，否则固定高度水平居中 | boolean | false |
@@ -2744,11 +2693,11 @@ _调用时传入的 `ModalOptions` 类型（`info` / `success` / `error` / `warn
 | :-- | :-- | :-- | :-- |
 | width? | 模态框宽度，单位 `px` | string &#124; number | undefined |
 | height? | 内容区高度，单位 `px`，指定后内容区内部滚动 | string &#124; number | undefined |
-| icon? | 自定义图标 | VNode &#124; 渲染函数 | undefined |
-| title? | 模态框标题 | string &#124; VNode &#124; 渲染函数 | undefined |
+| icon? | 自定义图标 | VNode &#124; (() => VNode) | undefined |
+| title? | 模态框标题 | string &#124; VNode &#124; (() => VNode) | undefined |
 | titleClass? | 自定义标题类名 | string | undefined |
 | titleStyle? | 自定义标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| content? | 模态框内容 | string &#124; VNode &#124; 渲染函数 | undefined |
+| content? | 模态框内容 | string &#124; VNode &#124; (() => VNode) | undefined |
 | contentClass? | 自定义内容类名 | string | undefined |
 | contentStyle? | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
 | scrollbarProps? | 内容滚动条 `Scrollbar` 属性配置 | [ScrollbarProps](./scrollbar.md#scrollbar) | undefined |
@@ -2762,9 +2711,9 @@ _调用时传入的 `ModalOptions` 类型（`info` / `success` / `error` / `warn
 | okProps? | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | undefined |
 | noticeText? | 通知按钮文字 | string | undefined |
 | noticeProps? | 通知按钮 `props` 配置，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | undefined |
-| footer? | 底部区域，`false` 隐藏，函数则完全自定义；无内置按钮组时（`create` 调用）即便为 `true` 也不渲染空白区域 | boolean &#124; 渲染函数 | undefined |
+| footer? | 底部区域，`false` 隐藏，函数则完全自定义；无内置按钮组时（`create` 调用）即便为 `true` 也不渲染空白区域 | boolean &#124; (() => VNode) | undefined |
 | closable? | 是否显示右上角关闭按钮，默认 `false`，需要时显式开启 | boolean | undefined |
-| closeIcon? | 自定义关闭图标 | VNode &#124; 渲染函数 | undefined |
+| closeIcon? | 自定义关闭图标 | VNode &#124; (() => VNode) | undefined |
 | renderBeforeOpen? | 首次打开前是否渲染内容（关闭懒渲染） | boolean | undefined |
 | destroyOnClose? | 关闭时是否销毁 `Modal` 里的子元素，命令式默认 `true` | boolean | undefined |
 | centered? | 是否水平垂直居中，否则固定高度水平居中 | boolean | undefined |
@@ -2858,3 +2807,148 @@ _`cancel` / `ok` / `know` / `change` / `ready` 为 `<Modal>` 与 `<ModalProvider
 | know   | 点击知道了按钮的回调                | (e: MouseEvent) => void         |
 | change | 任一弹窗打开 / 关闭时触发，多实例下携带该实例 `key` | (open: boolean, key: string) => void |
 | update:open | 声明式用法下 `v-model:open` 对应的更新事件 | (open: boolean) => void |
+
+## 在 setup 外使用
+
+### 选择 1：`createDiscreteApi()`（脱离组件树）
+
+<br/>
+
+_适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：内部会创建一个独立的应用实例，因此可在任意位置调用，无需外层 `ModalProvider`_
+
+::: tip 注意
+
+- 主题会随 `ConfigProvider` 自动同步，无需手工传入
+- 每次调用都会创建一套独立实例（独立的容器与弹窗栈），建议缓存返回值复用，避免重复创建；不再使用时可通过返回的 `dispose()` 销毁该实例
+- 内部会访问 `document`，`SSR` 场景请在客户端（点击回调、`onMounted` 等）中调用
+- 不建议与 `useModal()` 在同一 App 中混用：两者各自持有独立的弹窗栈与挂载容器，`zIndex` 层级互不感知
+
+:::
+
+::: tip 独立实例的复用与销毁（dispose）
+
+_独立实例创建后不会随组件卸载自动销毁，也不会因内部弹窗全部关闭而回收，需根据使用场景决定是否手动 `dispose()`：_
+
+**场景 A · 全局单例，缓存复用（推荐）**：适用于 `axios` 拦截器、路由守卫、`Pinia action` 等常驻场景，整个应用生命周期内复用同一实例：
+
+```ts
+import { createDiscreteApi } from 'vue-amazing-ui'
+
+// 在模块顶层创建一次，全局复用
+const { modal } = createDiscreteApi(['modal'])
+
+modal.info({ title: 'Modal Title', content: '这是一个弹窗' })
+```
+
+**场景 B · 临时使用后手动 `dispose()`**：适用于测试用例、单次任务等按需回收场景，用完即销毁：
+
+```ts
+import { createDiscreteApi } from 'vue-amazing-ui'
+import type { DiscreteApiInstance } from 'vue-amazing-ui'
+
+let discrete: DiscreteApiInstance<'modal'> | null = null
+function getModalApi() {
+  if (!discrete) {
+    discrete = createDiscreteApi(['modal'])
+  }
+  return discrete.modal
+}
+getModalApi().info({ title: 'Modal Title', content: '这是一个弹窗' })
+
+// 不再需要时手动销毁：卸载内部应用并移除挂载容器
+// 重复调用无副作用（内部有 disposed 保护）；再次调用 getModalApi() 会安全重建
+discrete?.dispose()
+discrete = null
+```
+
+:::
+
+::: tip XXX.ts（任意 .ts 文件）
+
+```ts
+import { createDiscreteApi } from 'vue-amazing-ui'
+
+// 任意位置调用，无需外层 ModalProvider
+const { modal } = createDiscreteApi(['modal'])
+
+// 例：路由守卫中离开页面前二次确认
+router.beforeEach((to, from, next) => {
+  if (to.meta.needConfirm) {
+    modal.confirm({
+      title: '离开当前页面',
+      content: '存在未保存的修改，确认离开？',
+      onOk: () => next(),
+      onCancel: () => next(false)
+    })
+    return
+  }
+  next()
+})
+```
+
+:::
+
+<Button type="primary" @click="onDiscreteModal">Discrete Modal（脱离组件树调用）</Button>
+
+### 选择 2：挂载到 `window`（复用组件树内实例）
+
+::: warning 注意
+
+如果你想在 `setup` 外使用 `modal`，需要在顶层 `setup` 中把 `useModal()` 返回的实例挂载到 `window` 下然后再调用，调用前需要确保实例已经挂载成功。
+
+:::
+
+::: tip App.vue
+
+```vue
+<script setup lang="ts">
+import { ModalProvider } from 'vue-amazing-ui'
+</script>
+<template>
+  <ModalProvider>
+    <Content />
+  </ModalProvider>
+</template>
+```
+
+:::
+
+::: tip content.vue（`<ModalProvider>` 内的顶层组件）
+
+```vue
+<script setup lang="ts">
+import { useModal } from 'vue-amazing-ui'
+
+// 挂载到 window 后，即可在任意非组件环境（工具函数、事件监听等）中调用
+window.$modal = useModal()
+</script>
+```
+
+:::
+
+::: tip XXX.ts（任意 .ts 文件）
+
+```ts
+// 需确保已在顶层 setup 中执行了 window.$modal = useModal()
+window.$modal?.confirm({
+  title: '确认操作',
+  content: '确定要执行该操作吗？'
+})
+```
+
+:::
+
+::: tip 可选：为 `window.$modal` 补充 `TypeScript` 类型声明
+
+```ts
+// types/global.d.ts
+import type { ModalApi } from 'vue-amazing-ui'
+
+declare global {
+  interface Window {
+    $modal?: ModalApi
+  }
+}
+```
+
+:::

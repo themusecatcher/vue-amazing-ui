@@ -270,6 +270,8 @@ function onRenderFnIconModal() {
     icon: () => h(SoundFilled, { style: 'color: gold' })
   })
 }
+// 声明式用法下 icon / closeIcon 同样支持渲染函数形态
+const renderFnIconOpen = ref(false)
 // 自定义样式
 function onCustomClassModal() {
   modal.info({
@@ -962,10 +964,23 @@ onBeforeUnmount(() => {
       <Button type="primary" @click="onPercentWidthModal">百分比宽度</Button>
     </Space>
     <h2 class="mt30 mb10">自定义图标</h2>
+    <p class="mb10">
+      <code>icon</code> 与 <code>closeIcon</code> 均支持 <code>VNode</code> / 渲染函数 /
+      插槽三种形态，命令式与声明式一致。
+    </p>
     <Space>
       <Button type="primary" @click="onVNodeIconModal">VNode 图标</Button>
       <Button type="primary" @click="onRenderFnIconModal">渲染函数图标</Button>
+      <Button type="primary" @click="renderFnIconOpen = true">声明式渲染函数图标</Button>
     </Space>
+    <Modal
+      v-model:open="renderFnIconOpen"
+      title="声明式渲染函数图标"
+      content="icon 与 closeIcon 在声明式用法下同样支持渲染函数形态，右上角关闭图标也是渲染函数。"
+      closable
+      :icon="() => h(SoundFilled, { style: 'color: gold' })"
+      :close-icon="() => h(CloseCircleFilled, { style: 'color: #ff4d4f' })"
+    />
     <h2 class="mt30 mb10">自定义样式</h2>
     <Space>
       <Button type="primary" @click="onCustomClassModal">自定义内容样式类</Button>

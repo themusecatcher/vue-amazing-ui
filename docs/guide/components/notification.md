@@ -9,6 +9,11 @@ _全局展示通知提醒信息_
 - 在页面顶部、底部或四个角显示通知提醒信息
 - 系统主动推送
 
+::: warning 提示
+`Notification` 推荐在组件 `setup` 内通过 `useNotification()` 调用，使用前需在应用根节点放置一次 `<NotificationProvider>`。<br/>
+如果你想在 `setup` 外使用（例如 `axios` 拦截器、路由守卫、`Pinia action` 等），请参考文档末尾的 [在 setup 外使用](#在-setup-外使用)。
+:::
+
 ## 使用方式
 
 | 调用方式 | API | 适用位置 |
@@ -16,7 +21,7 @@ _全局展示通知提醒信息_
 | 组件树内调用 <Tag color="success" size="small">推荐</Tag> | `useNotification()` | 组件 `setup` 内，需外层存在 `<NotificationProvider>` |
 | 脱离组件树调用 <Tag color="processing" size="small">无需 NotificationProvider</Tag> | `createDiscreteApi()` | 任意位置（`axios` 拦截器、路由守卫、`Pinia action` 等） |
 
-### 一、组件树内调用：`useNotification()` <Tag color="success" size="small">推荐</Tag>
+### 组件树内使用：`useNotification()` <Tag color="success" size="small">推荐</Tag>
 
 <br/>
 
@@ -68,80 +73,6 @@ function onClick() {
 ```
 
 :::
-
-### 二、脱离组件树调用：`createDiscreteApi()` <Tag color="processing" size="small">无需 NotificationProvider</Tag>
-
-<br/>
-
-_适用于脱离组件树的场景：内部会创建一个独立的应用实例，因此可在任意位置调用，无需外层 `NotificationProvider`_
-
-::: tip 注意
-
-- 主题会随 `ConfigProvider` 自动同步，无需手工传入
-- 每次调用都会创建一套独立实例（独立的容器与通知栈），建议缓存返回值复用，避免重复创建；不再使用时可通过返回的 `dispose()` 销毁该实例
-- 内部会访问 `document`，`SSR` 场景请在客户端（点击回调、`onMounted` 等）中调用
-
-:::
-
-::: tip 独立实例的复用与销毁（dispose）
-
-_独立实例创建后不会随组件卸载自动销毁，也不会因内部通知全部关闭而回收，需根据使用场景决定是否手动 `dispose()`：_
-
-**场景 A · 全局单例，缓存复用（推荐）**：适用于 `axios` 拦截器、路由守卫、`Pinia action` 等常驻场景，整个应用生命周期内复用同一实例：
-
-```ts
-import { createDiscreteApi } from 'vue-amazing-ui'
-
-// 在模块顶层创建一次，全局复用
-const { notification } = createDiscreteApi(['notification'])
-
-notification.info({ title: 'Notification Title', content: '这是一条通知' })
-```
-
-**场景 B · 临时使用后手动 `dispose()`**：适用于测试用例、单次任务等按需回收场景，用完即销毁：
-
-```ts
-import { createDiscreteApi } from 'vue-amazing-ui'
-import type { DiscreteApiInstance } from 'vue-amazing-ui'
-
-let discrete: DiscreteApiInstance<'notification'> | null = null
-function getNotificationApi() {
-  if (!discrete) {
-    discrete = createDiscreteApi(['notification'])
-  }
-  return discrete.notification
-}
-getNotificationApi().info({ title: 'Notification Title', content: '这是一条通知' })
-
-// 不再需要时手动销毁：卸载内部应用并移除挂载容器
-// 重复调用无副作用（内部有 disposed 保护）；再次调用 getNotificationApi() 会安全重建
-discrete?.dispose()
-discrete = null
-```
-
-:::
-
-::: tip XXX.ts（任意 .ts 文件）
-
-```ts
-import { createDiscreteApi } from 'vue-amazing-ui'
-
-// 任意位置调用，无需外层 NotificationProvider
-const { notification } = createDiscreteApi(['notification'])
-
-// 例：axios 响应拦截器
-axios.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    notification.error({ title: '请求失败', content: error.message })
-    return Promise.reject(error)
-  }
-)
-```
-
-:::
-
-<Button type="primary" @click="onDiscreteNotification">Discrete Notification（脱离组件树调用）</Button>
 
 <script setup lang="ts">
 import { h, onBeforeUnmount, onMounted, ref } from 'vue'
@@ -1475,3 +1406,143 @@ _`close` 为 `<Notification>` / `<NotificationProvider>` 组件的事件（需�
 | :-- | :-- | :-- |
 | ready | 实例挂载完成时触发，参数为该实例的 api | (api: [NotificationApi](#methods)) => void |
 | close | 通知提醒关闭时的回调，参数为该条通知的 `key` | (key: string) => void |
+
+## 在 setup 外使用
+
+### 选择 1：`createDiscreteApi()`（脱离组件树）
+
+<br/>
+
+_适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：内部会创建一个独立的应用实例，因此可在任意位置调用，无需外层 `NotificationProvider`_
+
+::: tip 注意
+
+- 主题会随 `ConfigProvider` 自动同步，无需手工传入
+- 每次调用都会创建一套独立实例（独立的容器与通知栈），建议缓存返回值复用，避免重复创建；不再使用时可通过返回的 `dispose()` 销毁该实例
+- 内部会访问 `document`，`SSR` 场景请在客户端（点击回调、`onMounted` 等）中调用
+- 不建议与 `useNotification()` 在同一 App 中混用：两者各自持有独立的通知栈与挂载容器，`maxCount` / `placement` 等组件级配置互不共享
+
+:::
+
+::: tip 独立实例的复用与销毁（dispose）
+
+_独立实例创建后不会随组件卸载自动销毁，也不会因内部通知全部关闭而回收，需根据使用场景决定是否手动 `dispose()`：_
+
+**场景 A · 全局单例，缓存复用（推荐）**：适用于 `axios` 拦截器、路由守卫、`Pinia action` 等常驻场景，整个应用生命周期内复用同一实例：
+
+```ts
+import { createDiscreteApi } from 'vue-amazing-ui'
+
+// 在模块顶层创建一次，全局复用
+const { notification } = createDiscreteApi(['notification'])
+
+notification.info({ title: 'Notification Title', content: '这是一条通知' })
+```
+
+**场景 B · 临时使用后手动 `dispose()`**：适用于测试用例、单次任务等按需回收场景，用完即销毁：
+
+```ts
+import { createDiscreteApi } from 'vue-amazing-ui'
+import type { DiscreteApiInstance } from 'vue-amazing-ui'
+
+let discrete: DiscreteApiInstance<'notification'> | null = null
+function getNotificationApi() {
+  if (!discrete) {
+    discrete = createDiscreteApi(['notification'])
+  }
+  return discrete.notification
+}
+getNotificationApi().info({ title: 'Notification Title', content: '这是一条通知' })
+
+// 不再需要时手动销毁：卸载内部应用并移除挂载容器
+// 重复调用无副作用（内部有 disposed 保护）；再次调用 getNotificationApi() 会安全重建
+discrete?.dispose()
+discrete = null
+```
+
+:::
+
+::: tip XXX.ts（任意 .ts 文件）
+
+```ts
+import { createDiscreteApi } from 'vue-amazing-ui'
+
+// 任意位置调用，无需外层 NotificationProvider
+const { notification } = createDiscreteApi(['notification'])
+
+// 例：axios 响应拦截器
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    notification.error({ title: '请求失败', content: error.message })
+    return Promise.reject(error)
+  }
+)
+```
+
+:::
+
+<Button type="primary" @click="onDiscreteNotification">Discrete Notification（脱离组件树调用）</Button>
+
+### 选择 2：挂载到 `window`（复用组件树内实例）
+
+::: warning 注意
+
+如果你想在 `setup` 外使用 `notification`，需要在顶层 `setup` 中把 `useNotification()` 返回的实例挂载到 `window` 下然后再调用，调用前需要确保实例已经挂载成功。
+
+:::
+
+::: tip App.vue
+
+```vue
+<script setup lang="ts">
+import { NotificationProvider } from 'vue-amazing-ui'
+</script>
+<template>
+  <NotificationProvider>
+    <Content />
+  </NotificationProvider>
+</template>
+```
+
+:::
+
+::: tip content.vue（`<NotificationProvider>` 内的顶层组件）
+
+```vue
+<script setup lang="ts">
+import { useNotification } from 'vue-amazing-ui'
+
+// 挂载到 window 后，即可在任意非组件环境（工具函数、事件监听等）中调用
+window.$notification = useNotification()
+</script>
+```
+
+:::
+
+::: tip XXX.ts（任意 .ts 文件）
+
+```ts
+// 需确保已在顶层 setup 中执行了 window.$notification = useNotification()
+window.$notification?.info({
+  title: 'Notification Title',
+  content: '这是一条通知'
+})
+```
+
+:::
+
+::: tip 可选：为 `window.$notification` 补充 `TypeScript` 类型声明
+
+```ts
+// types/global.d.ts
+import type { NotificationApi } from 'vue-amazing-ui'
+
+declare global {
+  interface Window {
+    $notification?: NotificationApi
+  }
+}
+```
+
+:::

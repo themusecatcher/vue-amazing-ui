@@ -13,6 +13,8 @@ _为组件提供统一的全局化配置_
 import { ref } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
+// ConfigProvider 需与 createDiscreteApi 同源（docs 站点全局注册的是 dist 版，快照模块不同源会导致主题不同步）
+import { ConfigProvider, createDiscreteApi } from 'vue-amazing-ui'
 import type { ConfigProviderTheme, CarouselImage, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
 const primaryColor = ref<string>('#ff6900')
 const commonPrimaryColor = ref<string>('#1677ff')
@@ -71,7 +73,7 @@ const images = ref<CarouselImage[]>([
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
-const options = ref<SelectOption[]>([
+const selectOptions = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -209,6 +211,29 @@ function onDecline(scale: number) {
     percent.value = res
   }
 }
+// 主题同步到离散 API
+const discretePrimaryColor = ref<string>('#1677ff')
+// createDiscreteApi 创建脱离组件树的独立实例，主题自动读取 ConfigProvider 写入的主题快照
+const {
+  message: discreteMessage,
+  notification: discreteNotification,
+  modal: discreteModal
+} = createDiscreteApi(['message', 'notification', 'modal'])
+function onDiscreteMessage() {
+  discreteMessage.info('Discrete Message 跟随 ConfigProvider 主题色')
+}
+function onDiscreteNotification() {
+  discreteNotification.info({
+    title: 'Discrete Notification',
+    content: '跟随 ConfigProvider 主题色'
+  })
+}
+function onDiscreteModal() {
+  discreteModal.info({
+    title: 'Discrete Modal',
+    content: '跟随 ConfigProvider 主题色'
+  })
+}
 </script>
 
 ## 基本使用
@@ -248,24 +273,24 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
         placeholder="input search"
       />
       <Button type="primary" @click="messageRef.info('This is an info message')">Show Message</Button>
-      <Message ref="messageRef" />
+      <Message @ready="messageRef = $event" />
       <Button
         type="primary"
         @click="modalRef.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
         >Show Modal</Button
       >
-      <Modal ref="modalRef" />
+      <Modal @ready="modalRef = $event" />
       <Button
         type="primary"
-        @click="notificationRef.info({ title: 'Notification Title', description: 'This is a normal notification' })"
+        @click="notificationRef.info({ title: 'Notification Title', content: 'This is a normal notification' })"
         >Show Notification</Button
       >
-      <Notification ref="notificationRef" />
+      <Notification @ready="notificationRef = $event" />
       <Popconfirm title="Custom Theme" description="There will have some descriptions ..." icon="info">
         <Button type="primary">Show Confirm</Button>
       </Popconfirm>
       <Radio v-model:checked="radioChecked">Radio</Radio>
-      <Select :options="options" v-model="selectedValue" />
+      <Select :options="selectOptions" v-model="selectedValue" />
       <Switch v-model="switchChecked" />
       <Textarea :width="360" v-model:value="textareaValue" placeholder="custom theme textarea" />
       <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
@@ -396,7 +421,7 @@ const images = ref<CarouselImage[]>([
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
-const options = ref<SelectOption[]>([
+const selectOptions = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -564,24 +589,24 @@ function onDecline(scale: number) {
           placeholder="input search"
         />
         <Button type="primary" @click="messageRef.info('This is an info message')">Show Message</Button>
-        <Message ref="messageRef" />
+        <Message @ready="messageRef = $event" />
         <Button
           type="primary"
           @click="modalRef.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
           >Show Modal</Button
         >
-        <Modal ref="modalRef" />
+        <Modal @ready="modalRef = $event" />
         <Button
           type="primary"
-          @click="notificationRef.info({ title: 'Notification Title', description: 'This is a normal notification' })"
+          @click="notificationRef.info({ title: 'Notification Title', content: 'This is a normal notification' })"
           >Show Notification</Button
         >
-        <Notification ref="notificationRef" />
+        <Notification @ready="notificationRef = $event" />
         <Popconfirm title="Custom Theme" description="There will have some descriptions ..." icon="info">
           <Button type="primary">Show Confirm</Button>
         </Popconfirm>
         <Radio v-model:checked="radioChecked">Radio</Radio>
-        <Select :options="options" v-model="selectedValue" />
+        <Select :options="selectOptions" v-model="selectedValue" />
         <Switch v-model="switchChecked" />
         <Textarea :width="360" v-model:value="textareaValue" placeholder="custom theme textarea" />
         <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
@@ -729,6 +754,65 @@ const theme = ref<ConfigProviderTheme>({
 <template>
   <ConfigProvider :abstract="false" tag="span" :theme="{ common: { primaryColor: '#ff6900' } }">
     <Button type="primary">Primary Button</Button>
+  </ConfigProvider>
+</template>
+```
+
+:::
+
+## 主题同步到离散 API
+
+_`createDiscreteApi()` 创建的独立实例会读取 `ConfigProvider` 自动写入的主题快照，切换下方主题色后再次触发按钮，message / notification / modal 将同步跟随（无需手工传入主题）。_
+
+<br/>
+<ConfigProvider :theme="{ common: { primaryColor: discretePrimaryColor } }">
+  <Space align="center">
+    primaryColor:<ColorPicker style="width: 200px" v-model:value="discretePrimaryColor" />
+    <Button type="primary" @click="onDiscreteMessage">Discrete Message</Button>
+    <Button type="primary" @click="onDiscreteNotification">Discrete Notification</Button>
+    <Button type="primary" @click="onDiscreteModal">Discrete Modal</Button>
+  </Space>
+</ConfigProvider>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { ConfigProvider, createDiscreteApi } from 'vue-amazing-ui'
+// 主题同步到离散 API
+const discretePrimaryColor = ref<string>('#1677ff')
+// createDiscreteApi 创建脱离组件树的独立实例，主题自动读取 ConfigProvider 写入的主题快照
+const {
+  message: discreteMessage,
+  notification: discreteNotification,
+  modal: discreteModal
+} = createDiscreteApi(['message', 'notification', 'modal'])
+function onDiscreteMessage() {
+  discreteMessage.info('Discrete Message 跟随 ConfigProvider 主题色')
+}
+function onDiscreteNotification() {
+  discreteNotification.info({
+    title: 'Discrete Notification',
+    content: '跟随 ConfigProvider 主题色'
+  })
+}
+function onDiscreteModal() {
+  discreteModal.info({
+    title: 'Discrete Modal',
+    content: '跟随 ConfigProvider 主题色'
+  })
+}
+</script>
+<template>
+  <ConfigProvider :theme="{ common: { primaryColor: discretePrimaryColor } }">
+    <Space align="center">
+      primaryColor:
+      <ColorPicker style="width: 200px" v-model:value="discretePrimaryColor" />
+      <Button type="primary" @click="onDiscreteMessage">Discrete Message</Button>
+      <Button type="primary" @click="onDiscreteNotification">Discrete Notification</Button>
+      <Button type="primary" @click="onDiscreteModal">Discrete Modal</Button>
+    </Space>
   </ConfigProvider>
 </template>
 ```
