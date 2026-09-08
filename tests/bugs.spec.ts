@@ -227,26 +227,35 @@ describe('B5 Notification - 存在常驻通知时分组数据永不回收', () =
 
 describe('B6 Modal - onOk 抛错导致后续语句被跳过，按钮 loading 卡死', () => {
   it('onOk 抛错后，loading 应复位且弹窗保持打开（reject 视为取消关闭）', async () => {
-    const { wrapper, vm } = mountModal()
-    vm.confirm({
-      content: '确认',
-      onOk: () => {
-        throw new Error('boom')
-      }
-    })
-    await flushPromises()
+    // 故意抛错会触发 Modal 内部 console.error 记录，此处拦截以免污染测试输出；
+    // 同时断言组件确有记录该错误，保留回归语义。
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    try {
+      const { wrapper, vm } = mountModal()
+      vm.confirm({
+        content: '确认',
+        onOk: () => {
+          throw new Error('boom')
+        }
+      })
+      await flushPromises()
 
-    // Button 组件根元素为 div（:is="href ? 'a' : 'div'"），故按 .btn-wrap 定位而非 button 标签
-    const okBtn = containers('.btn-wrap').find((el) => el.textContent?.trim() === '确定')
-    expect(okBtn).toBeTruthy()
-    dispatch(okBtn!, 'click')
-    await flushPromises()
-    await wrapper.vm.$nextTick()
+      // Button 组件根元素为 div（:is="href ? 'a' : 'div'"），故按 .btn-wrap 定位而非 button 标签
+      const okBtn = containers('.btn-wrap').find((el) => el.textContent?.trim() === '确定')
+      expect(okBtn).toBeTruthy()
+      dispatch(okBtn!, 'click')
+      await flushPromises()
+      await wrapper.vm.$nextTick()
 
-    // 断言与实现无关：抛错后弹窗保持打开（reject 阻止关闭），loading 已复位
-    const visible = visibleContainers('.modal-container')
-    expect(visible.length).toBe(1)
-    wrapper.unmount()
+      // 断言与实现无关：抛错后弹窗保持打开（reject 阻止关闭），loading 已复位
+      const visible = visibleContainers('.modal-container')
+      expect(visible.length).toBe(1)
+      // 组件应记录该错误（仅为日志，不阻断关闭流程）
+      expect(errorSpy).toHaveBeenCalled()
+      wrapper.unmount()
+    } finally {
+      errorSpy.mockRestore()
+    }
   })
 })
 
