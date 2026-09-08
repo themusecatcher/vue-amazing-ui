@@ -226,7 +226,7 @@ describe('B5 Notification - 存在常驻通知时分组数据永不回收', () =
 })
 
 describe('B6 Modal - onOk 抛错导致后续语句被跳过，按钮 loading 卡死', () => {
-  it('onOk 抛错后，loading 应复位且弹窗保持打开（对齐 antdv：reject 视为取消关闭）', async () => {
+  it('onOk 抛错后，loading 应复位且弹窗保持打开（reject 视为取消关闭）', async () => {
     const { wrapper, vm } = mountModal()
     vm.confirm({
       content: '确认',
@@ -271,7 +271,7 @@ describe('Modal 定位 - centered 实例的居中类', () => {
 })
 
 describe('Modal 多实例 - 每实例独占全屏 layer，弹窗层叠而非纵向排列', () => {
-  // 回归保护：曾因所有实例平铺在 flex column 的 .modal-wrap 下而上下排列（与 naive-ui / antdv 的层叠行为不一致）。
+  // 回归保护：曾因所有实例平铺在 flex column 的 .modal-wrap 下而上下排列
   // 修复后每实例渲染独立全屏 .modal-layer，遮罩与弹窗均在层内，实例间靠 zIndex 层叠。
   it('同时打开多个实例时各渲染独立 modal-layer，容器不再作为 modal-wrap 的直接子级', async () => {
     const { wrapper, vm } = mountModal()
@@ -329,7 +329,7 @@ describe('B7 Notification - update({ duration: null }) 无法取消已有定时�
   })
 })
 
-describe('Notification - onClose 返回 false 应取消本次关闭（对齐 naive-ui）', () => {
+describe('Notification - onClose 返回 false 应取消本次关闭', () => {
   it('onClose 返回 false 时点击关闭按钮，通知保留', async () => {
     const { wrapper, vm } = mountNotification()
     vm.open({
@@ -689,7 +689,7 @@ describe('Notification - onClick 点击通知体回调', () => {
   })
 })
 
-describe('Notification - 通知清空后回收空容器 DOM（对齐 naive-ui）', () => {
+describe('Notification - 通知清空后回收空容器 DOM', () => {
   beforeEach(() => {
     containers('.notification-wrap').forEach((el) => el.remove())
   })

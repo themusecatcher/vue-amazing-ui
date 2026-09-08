@@ -6,14 +6,17 @@ import { MessageProvider, useMessage } from 'components/message'
 import type { MessageApi } from 'components/message'
 import { ModalProvider, useModal } from 'components/modal'
 import type { ModalApi } from 'components/modal'
+import { DialogProvider, useDialog } from 'components/dialog'
+import type { DialogApi } from 'components/dialog'
 import { themeSnapshot } from 'components/_internal'
 
-export type DiscreteApiType = 'notification' | 'message' | 'modal'
+export type DiscreteApiType = 'notification' | 'message' | 'modal' | 'dialog'
 
 export interface DiscreteApi {
   notification: NotificationApi
   message: MessageApi
   modal: ModalApi
+  dialog: DialogApi
 }
 
 // 调用方可按需销毁独立实例
@@ -24,13 +27,15 @@ export type DiscreteApiInstance<K extends DiscreteApiType> = Pick<DiscreteApi, K
 const providerMap = {
   notification: NotificationProvider,
   message: MessageProvider,
-  modal: ModalProvider
+  modal: ModalProvider,
+  dialog: DialogProvider
 } as const
 
 const hookMap = {
   notification: useNotification,
   message: useMessage,
-  modal: useModal
+  modal: useModal,
+  dialog: useDialog
 } as const
 
 /**
@@ -44,7 +49,8 @@ export function createDiscreteApi<K extends DiscreteApiType>(types: K[]): Discre
   const apis: Record<DiscreteApiType, unknown> = {
     notification: null,
     message: null,
-    modal: null
+    modal: null,
+    dialog: null
   }
   // 提取器：在 Provider 内部的 setup 中取 api，渲染为空
   const extractors = types.map((type) =>

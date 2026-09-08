@@ -87,3 +87,19 @@ describe('S4 - useXxx 在 Provider 内部可用', () => {
     wrapper.unmount()
   })
 })
+
+describe('S4 - createDiscreteApi 支持 dialog', () => {
+  it('setup 外调用 dialog.open 可弹出对话框，dispose 后应从 DOM 移除', async () => {
+    const { dialog, dispose } = createDiscreteApi(['dialog'])
+    dialog.open({ title: '离散弹窗', content: '脱离组件树调用' })
+    await new Promise((resolve) => setTimeout(resolve, 50))
+
+    const dialogEl = document.querySelector('[role="dialog"]')
+    expect(dialogEl).not.toBeNull()
+    expect(dialogEl?.textContent).toContain('脱离组件树调用')
+
+    dispose()
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    expect(document.querySelector('.dialog-container')).toBeNull()
+  })
+})

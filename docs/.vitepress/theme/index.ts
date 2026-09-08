@@ -9,7 +9,7 @@ import VueAmazingUI from '../../../dist/index'
 // 注意：Provider 必须与页面演示 script 中的 useXxx 共享同一 injection key。
 // 页面 script 的 import { useMessage } from 'vue-amazing-ui' 走 vite alias 指向源码出口（components/index.ts），
 // 若此处从 dist 导入 Provider，dist 与源码各生成独立的 Symbol('messageApi')，inject 将无法命中。
-import { MessageProvider, ModalProvider, NotificationProvider } from 'vue-amazing-ui'
+import { MessageProvider, ModalProvider, DialogProvider, NotificationProvider } from 'vue-amazing-ui'
 import '../../../dist/style.css'
 
 // 全局包裹各 Provider，使 docs 页面内可直接使用 useMessage / useModal / useNotification（与 demo 应用 App.vue 保持一致）
@@ -20,8 +20,11 @@ const Layout = defineComponent({
         default: () =>
           h(ModalProvider, null, {
             default: () =>
-              h(NotificationProvider, null, {
-                default: () => h(DefaultTheme.Layout)
+              h(DialogProvider, null, {
+                default: () =>
+                  h(NotificationProvider, null, {
+                    default: () => h(DefaultTheme.Layout)
+                  })
               })
           })
       })

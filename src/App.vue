@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { loadingBarRef } from '@/router'
 import { MessageProvider } from 'components/message'
 import { ModalProvider } from 'components/modal'
+import { DialogProvider } from 'components/dialog'
 import { NotificationProvider } from 'components/notification'
 const theme = ref({
   // common: {
@@ -23,13 +24,15 @@ onMounted(() => {
   <ConfigProvider :theme="theme">
     <MessageProvider>
       <ModalProvider>
-        <NotificationProvider>
-          <RouterView v-if="routeName === 'Watermark'" />
-          <Watermark v-else content="Vue Amazing UI">
-            <RouterView />
-          </Watermark>
-          <LoadingBar ref="loadingBar" />
-        </NotificationProvider>
+        <DialogProvider>
+          <NotificationProvider>
+            <RouterView v-if="routeName === 'Watermark'" />
+            <Watermark v-else content="Vue Amazing UI">
+              <RouterView />
+            </Watermark>
+            <LoadingBar ref="loadingBar" />
+          </NotificationProvider>
+        </DialogProvider>
       </ModalProvider>
     </MessageProvider>
   </ConfigProvider>
