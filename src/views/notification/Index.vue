@@ -136,7 +136,7 @@ function onRenderFnContent() {
     content: () => h('span', { style: 'color: #389e0d' }, '这是一条渲染函数动态生成的内容')
   })
 }
-// 自定义按钮：点击 Confirm 关闭当前通知（对齐 antdv with-btn）
+// 自定义按钮：点击 Confirm 关闭当前通知
 function onAction() {
   const handle = notification.open({
     title: 'Notification Title',
@@ -364,7 +364,9 @@ function onToNotification() {
         <Space vertical>
           <p>
             本页示例在 <code>setup</code> 内通过 <code>useNotification()</code> 获取 api，需在应用入口
-            <code>App.vue</code> 用 <code>&lt;NotificationProvider&gt;</code> 包裹（本项目已在入口全局包裹）。<br />
+            <code>App.vue</code> 用 <code>&lt;NotificationProvider&gt;</code> 包裹（本项目已在入口全局包裹）。
+          </p>
+          <p>
             在 <code>setup</code> 之外（axios 拦截器、路由守卫、Pinia action 等）调用时，改用
             <code>createDiscreteApi(['notification'])</code>，无需外层 Provider：
           </p>

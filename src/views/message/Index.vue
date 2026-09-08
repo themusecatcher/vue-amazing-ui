@@ -207,6 +207,8 @@ function onToMessage() {
           <p>
             本页示例在 <code>setup</code> 内通过 <code>useMessage()</code> 获取 api，需在应用入口
             <code>App.vue</code> 用 <code>&lt;MessageProvider&gt;</code> 包裹（本项目已在入口全局包裹）。<br />
+          </p>
+          <p>
             在 <code>setup</code> 之外（axios 拦截器、路由守卫、Pinia action 等）调用时，改用
             <code>createDiscreteApi(['message'])</code>，无需外层 Provider：
           </p>
