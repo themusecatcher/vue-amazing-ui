@@ -2,14 +2,7 @@ import Modal from './Modal.vue'
 import ModalProviderComp from './ModalProvider.vue'
 import { withInstall } from '../utils/type'
 
-export type {
-  Props as ModalProps,
-  ModalOptions,
-  ModalUpdate,
-  ModalReactive,
-  FooterType,
-  ModalCallback
-} from './Modal.vue'
+export type { Props as ModalProps, ModalOptions, ModalUpdate, ModalReactive } from './Modal.vue'
 export type { ModalApi } from './useModal'
 export { useModal } from './useModal'
 

@@ -1,32 +1,18 @@
 <script setup lang="ts">
-import {
-  ref,
-  computed,
-  watch,
-  onMounted,
-  onUnmounted,
-  nextTick,
-  isVNode,
-  createTextVNode,
-  useSlots,
-  h,
-  Fragment
-} from 'vue'
-import type { VNode, Slot, CSSProperties } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted, nextTick, isVNode, createTextVNode, h, Fragment } from 'vue'
+import type { VNode, CSSProperties } from 'vue'
 import Button, { type ButtonProps } from 'components/button'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import ModalRenderHost from './ModalRenderHost'
 import { useInject, useOptionsSupported, lockScroll } from 'components/utils'
 // 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数
 export type ContentType = string | VNode | (() => VNode)
-// 底部区域：false 隐藏；true 渲染内置按钮组；函数则完全自定义
-export type FooterType = boolean | (() => VNode)
 // 按钮回调：返回 false 或 Promise reject 时阻止关闭，其余情况（含 Promise resolve）自动关闭
 export type ModalCallback = () => unknown | Promise<unknown>
 export interface Props {
   width?: string | number // 模态框宽度，单位 px
   height?: string | number // 内容区高度，单位 px，默认自适应内容高度
-  icon?: VNode | (() => VNode) | Slot // 自定义图标，支持 VNode / 渲染函数 / slot
+  icon?: VNode | (() => VNode) // 自定义图标，prop 支持 VNode / 渲染函数；插槽形态请用 #icon
   title?: ContentType // 模态框标题，支持 string | VNode | 渲染函数
   titleClass?: string // 自定义标题类名
   titleStyle?: CSSProperties // 自定义标题样式
@@ -34,8 +20,8 @@ export interface Props {
   contentClass?: string // 自定义内容类名
   contentStyle?: CSSProperties // 自定义内容样式
   scrollbarProps?: ScrollbarProps // Scrollbar 组件属性配置，用于设置内容滚动条的样式
-  bodyClass?: string // 自定义 body 类名
-  bodyStyle?: CSSProperties // 自定义 body 样式
+  bodyClass?: string // 自定义弹窗卡片（.modal-body-wrap）类名，用于定制背景 / 圆角 / 阴影等外观
+  bodyStyle?: CSSProperties // 自定义弹窗卡片（.modal-body-wrap）样式，用于定制背景 / 圆角 / 阴影等外观
   cancelText?: string // 取消按钮文字
   cancelProps?: ButtonProps // 取消按钮 props 配置，参考 Button 组件 Props
   okText?: string // 确认按钮文字
@@ -43,9 +29,9 @@ export interface Props {
   okProps?: ButtonProps // 确认按钮 props 配置，优先级高于 okType，参考 Button 组件 Props
   noticeText?: string // 通知按钮文字
   noticeProps?: ButtonProps // 通知按钮 props 配置，参考 Button 组件 Props
-  footer?: FooterType // 是否显示底部按钮区 boolean | slot
+  footer?: boolean | (() => VNode) // 是否显示底部按钮区：false 隐藏；true 渲染内置按钮组；函数则完全自定义；插槽形态请用 #footer
   closable?: boolean // 是否显示右上角关闭按钮
-  closeIcon?: VNode | (() => VNode) | Slot // 自定义关闭图标，支持 VNode / 渲染函数 / slot
+  closeIcon?: VNode | (() => VNode) // 自定义关闭图标，prop 支持 VNode / 渲染函数；插槽形态请用 #closeIcon
   renderBeforeOpen?: boolean // 首次打开前是否渲染内容（关闭懒渲染）
   destroyOnClose?: boolean // 关闭时是否销毁 Modal 里的子元素
   centered?: boolean // 是否水平垂直居中，否则固定高度水平居中
@@ -60,12 +46,11 @@ export interface Props {
   maskStyle?: CSSProperties // 自定义蒙层样式
   wrapClass?: string // 自定义外层容器（.modal-wrap）类名，多实例同时打开时以栈顶为准
   wrapStyle?: CSSProperties // 自定义外层容器（.modal-wrap）样式，多实例同时打开时以栈顶为准
-  containerClass?: string // 自定义弹窗容器（.modal-container）类名
-  containerStyle?: CSSProperties // 自定义弹窗容器（.modal-container）样式，优先级高于 width / top / zIndex 等内置样式
+  containerClass?: string // 自定义弹窗定位层（.modal-container）类名，用于覆盖 width / top / zIndex 等定位表现
+  containerStyle?: CSSProperties // 自定义弹窗定位层（.modal-container）样式，优先级高于 width / top / zIndex 等内置样式；定制背景 / 圆角 / 阴影等卡片外观请用 bodyClass / bodyStyle
   zIndex?: number // 模态框层级，遮罩取该值，弹窗取该值 + 10
-  autoFocusButton?: null | 'ok' | 'cancel' // 打开时自动聚焦的按钮，null 表示不聚焦
+  autoFocusButton?: 'ok' | 'cancel' // 打开时自动聚焦的按钮。Esc 监听绑定在弹窗主体上，必须聚焦到弹窗内才会响应
   focusTriggerAfterClose?: boolean // 关闭后是否将焦点归还给触发元素
-  trapFocus?: boolean // 是否将键盘焦点锁定在弹窗内，开启后 Tab / Shift + Tab 在弹窗内循环
   modalRender?: (arg: { originVNode: VNode }) => VNode // 自定义渲染弹窗内容，常用于包裹拖拽逻辑
   afterClose?: () => void // 完全关闭（离场动画结束）后的回调
   onEsc?: (e: KeyboardEvent) => void // 按下 Esc 键的回调，无论是否允许关闭都会触发
@@ -115,7 +100,6 @@ const props = withDefaults(defineProps<Props>(), {
   zIndex: 1000,
   autoFocusButton: 'ok',
   focusTriggerAfterClose: true,
-  trapFocus: true,
   modalRender: undefined,
   afterClose: undefined,
   onEsc: undefined,
@@ -134,8 +118,8 @@ export interface ModalOptions {
   contentClass?: string // 自定义内容类名
   contentStyle?: CSSProperties // 自定义内容样式
   scrollbarProps?: ScrollbarProps // Scrollbar 组件属性配置，用于设置内容滚动条的样式
-  bodyClass?: string // 自定义 body 类名
-  bodyStyle?: CSSProperties // 自定义 body 样式
+  bodyClass?: string // 自定义弹窗卡片（.modal-body-wrap）类名，用于定制背景 / 圆角 / 阴影等外观
+  bodyStyle?: CSSProperties // 自定义弹窗卡片（.modal-body-wrap）样式，用于定制背景 / 圆角 / 阴影等外观
   showCancel?: boolean // 是否显示取消按钮，仅 confirm / erase 双按钮形态生效，默认 true；其余形态该配置不生效
   cancelText?: string // 取消按钮文字
   cancelProps?: ButtonProps // 取消按钮 props 配置，参考 Button 组件 Props
@@ -144,10 +128,9 @@ export interface ModalOptions {
   okProps?: ButtonProps // 确认按钮 props 配置，优先级高于 okType，参考 Button 组件 Props
   noticeText?: string // 通知按钮文字
   noticeProps?: ButtonProps // 通知按钮 props 配置，参考 Button 组件 Props
-  footer?: FooterType // 底部按钮区，false 隐藏，传函数则完全自定义；create() 调用默认 false，其余默认 true
+  footer?: boolean | (() => VNode) // 底部按钮区，false 隐藏，传函数则完全自定义；create() 调用默认 false，其余默认 true
   closable?: boolean // 是否显示右上角关闭按钮，默认 false，需要时显式开启
   closeIcon?: VNode | (() => VNode) // 自定义关闭图标
-  renderBeforeOpen?: boolean // 首次打开前是否渲染内容（关闭懒渲染）
   destroyOnClose?: boolean // 关闭时是否销毁 Modal 里的子元素，命令式调用默认 true
   centered?: boolean // 是否水平垂直居中，否则固定高度水平居中
   top?: string | number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效，单位 px
@@ -160,12 +143,11 @@ export interface ModalOptions {
   maskStyle?: CSSProperties // 自定义蒙层样式
   wrapClass?: string // 自定义外层容器（.modal-wrap）类名，多实例同时打开时以栈顶为准
   wrapStyle?: CSSProperties // 自定义外层容器（.modal-wrap）样式，多实例同时打开时以栈顶为准
-  containerClass?: string // 自定义弹窗容器（.modal-container）类名
-  containerStyle?: CSSProperties // 自定义弹窗容器（.modal-container）样式，优先级高于 width / top / zIndex 等内置样式
+  containerClass?: string // 自定义弹窗定位层（.modal-container）类名，用于覆盖 width / top / zIndex 等定位表现
+  containerStyle?: CSSProperties // 自定义弹窗定位层（.modal-container）样式，优先级高于 width / top / zIndex 等内置样式；定制背景 / 圆角 / 阴影等卡片外观请用 bodyClass / bodyStyle
   zIndex?: number // 模态框层级，遮罩取该值，弹窗取该值 + 10
-  autoFocusButton?: null | 'ok' | 'cancel' // 打开时自动聚焦的按钮，null 表示不聚焦
+  autoFocusButton?: 'ok' | 'cancel'
   focusTriggerAfterClose?: boolean // 关闭后是否将焦点归还给触发元素
-  trapFocus?: boolean // 是否将键盘焦点锁定在弹窗内，开启后 Tab / Shift + Tab 在弹窗内循环
   modalRender?: (arg: { originVNode: VNode }) => VNode // 自定义渲染弹窗内容
   afterClose?: () => void // 完全关闭（离场动画结束）后的回调
   // 下列回调返回 false 或 Promise reject 时阻止关闭，其余情况（含 Promise resolve）自动关闭
@@ -253,14 +235,25 @@ const mousePosition = ref<{ x: number; y: number } | null>(null) // 鼠标点击
 const showModalWrap = ref<boolean>(false)
 const { colorPalettes } = useInject('Modal') // 主题色注入
 const { isSupported: captureSupported } = useOptionsSupported('capture')
+// 事件监听选项：不支持 capture 时退化为布尔值
+const captureOption = computed<AddEventListenerOptions | boolean>(() =>
+  captureSupported.value ? { capture: true } : true
+)
 const emits = defineEmits(['update:open', 'cancel', 'ok', 'know', 'change', 'ready'])
-// 声明式用法下传入的插槽，仅用于为 modalRender 等能力提供兜底
-// #modalRender 具名插槽在模板中没有对应的 <slot> 渲染位：内容经脚本读取后作为渲染
-// 回调注入 ModalRenderHost，故需在此显式声明，避免 Volar 按模板插槽精确推断时报缺失
-interface ModalSlots {
+// 声明式用法下暴露的具名插槽：除 modalRender 外均有模板 <slot> 出口；
+// 显式声明用于稳定 d.ts 导出，不依赖 Volar 对模板实现的推断
+// 需导出：defineSlots 使组件实例类型引用它，生成 d.ts 时要求为 public
+export interface ModalSlots {
+  icon?: () => VNode[] // 自定义图标
+  title?: () => VNode[] // 自定义标题
+  default?: () => VNode[] // 自定义内容
+  footer?: () => VNode[] // 自定义底部区域
+  closeIcon?: () => VNode[] // 自定义关闭图标
+  // #modalRender 在模板中没有对应的 <slot> 渲染位：内容经脚本读取后作为渲染
+  // 回调注入 ModalRenderHost，故必须在此声明，使用方模板才能获得 { originVNode } 参数类型
   modalRender?: (arg: { originVNode: VNode }) => VNode[]
 }
-const slots = useSlots() as unknown as ModalSlots
+const slots = defineSlots<ModalSlots>()
 // 弹窗实例栈：每次命令式调用入栈一个实例，关闭时仅弹出自身
 const modalList = ref<ModalItem[]>([])
 let seed = 0
@@ -268,8 +261,19 @@ function createKey(): string {
   seed += 1
   return `modal_${Date.now()}_${seed}`
 }
-// 栈顶实例：遮罩样式、是否居中、遮罩关闭等共享表现以栈顶为准
+// 栈尾实例：可能已关闭（destroyOnClose / renderBeforeOpen 的实例关闭后会滞留栈中）
 const topItem = computed<ModalItem | undefined>(() => modalList.value[modalList.value.length - 1])
+// 栈顶的「打开中」实例：Esc / 遮罩点击 / 焦点锁定 / 共享表现必须作用于它，
+// 直接用 topItem 会命中已关闭的滞留实例，导致上述交互静默失效
+const topOpenItem = computed<ModalItem | undefined>(() => {
+  for (let index = modalList.value.length - 1; index >= 0; index -= 1) {
+    const item = modalList.value[index]
+    if (item.open) {
+      return item
+    }
+  }
+  return undefined
+})
 // 栈中处于打开状态的实例数，用于滚动锁的引用计数
 const openCount = computed(() => modalList.value.filter((item) => item.open).length)
 // 本组件持有的滚动锁释放函数：加锁后保存返回值、释放后置空，存在即代表本组件持锁；
@@ -432,13 +436,11 @@ watch(openCount, (to, from) => {
   triggerElement = null
 })
 onMounted(() => {
-  document.addEventListener('click', getClickPosition, captureSupported.value ? { capture: true } : true) // 事件在捕获阶段执行
-  // Tab 焦点锁定同样走捕获阶段，避免被弹窗内部元素的 stopPropagation 阻断
-  document.addEventListener('keydown', onKeydownTab, captureSupported.value ? { capture: true } : true)
+  // 点击位置走捕获阶段：记录每次点击的位置，供 transformOrigin: 'mouse' 计算动画原点
+  document.addEventListener('click', getClickPosition, captureOption.value)
 })
 onUnmounted(() => {
-  document.removeEventListener('click', getClickPosition, captureSupported.value ? { capture: true } : true)
-  document.removeEventListener('keydown', onKeydownTab, captureSupported.value ? { capture: true } : true)
+  document.removeEventListener('click', getClickPosition, captureOption.value)
   // 卸载兜底：本组件仍持锁时释放，否则滚动锁随组件销毁而残留，页面滚动永久锁死；
   // 以 scrollLockRelease 而非 openCount 判定，避免 blockScroll=false 从未加锁却误解锁他人
   scrollLockRelease?.()
@@ -467,22 +469,26 @@ async function onBeforeEnter(el: Element) {
     item.origin = '50% 50%'
   }
 }
-// 入场动画结束后按 autoFocusButton 聚焦；目标按钮不存在时回落到容器，保证 Esc 键可用
+// 入场动画结束后按 autoFocusButton 聚焦：默认聚焦确定按钮（autoFocusButton: 'ok'）；
+// 未指定或按钮不存在时聚焦弹窗主体，保证焦点进入弹窗内（Esc 监听绑定在主体上）
 function onAfterEnter(el: Element): void {
   const item = findItem(getKey(el))
   if (!item) {
     return
   }
-  const target = getComputedValue(item, 'autoFocusButton')
-  if (target === null || target === undefined) {
+  const container = el as HTMLElement
+  const defaultTarget = container.querySelector<HTMLElement>('.modal-body-wrap') ?? modalWrapRef.value ?? container
+  const autoFocusButton = getComputedValue(item, 'autoFocusButton')
+  if (autoFocusButton === undefined) {
+    defaultTarget.focus({ preventScroll: true })
     return
   }
-  const btnEl = target === 'cancel' ? cancelBtnEls.get(item.key) : okBtnEls.get(item.key)
+  const btnEl = autoFocusButton === 'cancel' ? cancelBtnEls.get(item.key) : okBtnEls.get(item.key)
   if (btnEl) {
     btnEl.focus({ preventScroll: true })
     return
   }
-  modalWrapRef.value?.focus({ preventScroll: true })
+  defaultTarget.focus({ preventScroll: true })
 }
 // 焦点锁定的可聚焦元素选择器，覆盖常见交互元素与显式 tabindex
 const FOCUSABLE_SELECTOR = [
@@ -504,30 +510,33 @@ function getFocusableEls(container: HTMLElement): HTMLElement[] {
     (el) => el.getClientRects().length > 0
   )
 }
-// 焦点锁定：Tab / Shift + Tab 在栈顶弹窗内循环，避免键盘焦点跑到背景页面
-function onKeydownTab(e: KeyboardEvent): void {
-  if (e.key !== 'Tab') {
+/**
+ * 弹窗主体的键盘处理：keydown 绑定在弹窗主体上，
+ * 由「焦点是否在弹窗内」决定由哪个弹窗响应，无需跨实例仲裁；
+ * 代价是焦点移出弹窗后（如 mask: false 时点击背景）Esc 不再响应。
+ */
+function onKeydown(item: ModalItem, e: KeyboardEvent): void {
+  if (e.key === 'Tab') {
+    trapTab(item, e)
     return
   }
-  if (openCount.value === 0) {
-    return
+  if (e.key === 'Escape') {
+    handleEsc(item, e)
   }
-  const item = topItem.value
-  if (!item || !getComputedValue(item, 'trapFocus')) {
-    return
-  }
+}
+// Tab 焦点锁定：Tab / Shift + Tab 在弹窗内循环，避免键盘焦点跑到背景页面
+function trapTab(item: ModalItem, e: KeyboardEvent): void {
   const container = containerEls.get(item.key)
   if (!container) {
     return
   }
+  e.preventDefault()
   const focusable = getFocusableEls(container)
   if (focusable.length === 0) {
-    e.preventDefault()
     // 无可聚焦元素时退回外层容器，焦点不至于跑回背景页面
     modalWrapRef.value?.focus({ preventScroll: true })
     return
   }
-  e.preventDefault()
   const first = focusable[0]
   const last = focusable[focusable.length - 1]
   const activeIndex = focusable.indexOf(document.activeElement as HTMLElement)
@@ -576,7 +585,7 @@ function push(modal: ModalOptions, mode: Mode): ModalReactive {
     // 命令式弹窗默认不显示关闭按钮，需要时可显式传 closable: true；
     // 该默认值固化到实例，与 destroyOnClose 一致，ModalProvider 上的 :closable 不会覆盖命令式
     closable: modal.closable ?? false,
-    // 命令式弹窗默认不响应遮罩点击（与 antdv Modal.confirm 一致，避免误触关闭）；
+    // 命令式弹窗默认不响应遮罩点击；
     // 同样固化到实例，需要时显式传 maskClosable: true
     maskClosable: modal.maskClosable ?? false
   })
@@ -716,10 +725,10 @@ watch(
   },
   { immediate: true }
 )
-// 遮罩点击：先派发 onMaskClick（无论是否允许关闭），再按 maskClosable 决定是否关闭栈顶实例
-function handleMaskClick(e: MouseEvent): void {
-  const item = topItem.value
-  if (!item) {
+// 遮罩点击作用于该遮罩所属的实例：各实例遮罩按自身 zIndex 层叠，视觉最上层的不一定是栈尾，
+// 统一按 topItem 处理会在 zIndex 与入栈顺序不一致时关闭错误的实例
+function handleMaskClick(item: ModalItem, e: MouseEvent): void {
+  if (!item.open) {
     return
   }
   getComputedValue(item, 'onMaskClick')?.(e)
@@ -727,11 +736,13 @@ function handleMaskClick(e: MouseEvent): void {
     onCancel(item.key, e)
   }
 }
-function onKeydownEsc(e: KeyboardEvent): void {
-  const item = topItem.value
-  if (!item) {
+// Esc 关闭：stopPropagation 避免冒泡后又被页面其他 Esc 监听处理一次
+function handleEsc(item: ModalItem, e: KeyboardEvent): void {
+  // 输入法组合态下的 Esc 用于取消候选词，不应关闭弹窗
+  if (e.isComposing || e.keyCode === 229) {
     return
   }
+  e.stopPropagation()
   getComputedValue(item, 'onEsc')?.(e)
   if (getComputedValue(item, 'keyboard')) {
     onCancel(item.key, e)
@@ -819,9 +830,9 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
       tabindex="-1"
       ref="modalWrapRef"
       class="modal-wrap"
-      :class="getComputedValue(topItem, 'wrapClass')"
+      :class="getComputedValue(topOpenItem, 'wrapClass')"
       :style="[
-        getComputedValue(topItem, 'wrapStyle'),
+        getComputedValue(topOpenItem, 'wrapStyle'),
         {
           zIndex: baseZIndex + 10,
           '--modal-primary-color': colorPalettes[5],
@@ -832,10 +843,10 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
           '--modal-erase-color': '#faad14'
         }
       ]"
-      @keydown.esc="onKeydownEsc"
     >
       <template v-for="item in modalList" :key="item.key">
-        <div class="modal-layer" @click.self="handleMaskClick">
+        <!-- layer 自身 pointer-events: none，click.self 永不触发，遮罩点击统一由 mask 处理 -->
+        <div class="modal-layer">
           <Transition name="fade" appear>
             <div
               v-show="item.open && getComputedValue(item, 'mask')"
@@ -843,7 +854,7 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
               aria-hidden="true"
               :class="getComputedValue(item, 'maskClass')"
               :style="[getComputedValue(item, 'maskStyle'), { zIndex: itemZIndex(item) }]"
-              @click="handleMaskClick"
+              @click="(e: MouseEvent) => handleMaskClick(item, e)"
             ></div>
           </Transition>
           <Transition
@@ -870,11 +881,13 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
               <ModalRenderHost v-if="shouldRenderBody(item)" :render="resolveModalRender(item)">
                 <div
                   class="modal-body-wrap"
+                  tabindex="-1"
                   role="dialog"
                   aria-modal="true"
                   :aria-labelledby="getComputedValue(item, 'title') ? titleId(item) : undefined"
                   :class="getComputedValue(item, 'bodyClass')"
                   :style="getComputedValue(item, 'bodyStyle')"
+                  @keydown="(e: KeyboardEvent) => onKeydown(item, e)"
                 >
                   <span
                     v-if="getComputedValue(item, 'closable')"
@@ -1116,7 +1129,7 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.45);
-  pointer-events: auto; // 遮罩可见时接收点击（遮罩关闭 / 阻断背景交互）
+  pointer-events: auto;
 }
 .modal-wrap {
   position: fixed;
@@ -1135,6 +1148,8 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
   pointer-events: none;
   .modal-container {
     position: relative;
+    width: auto;
+    max-width: calc(100vw - 32px);
     margin: 0 auto;
     color: rgba(0, 0, 0, 0.88);
     font-size: 14px;
@@ -1149,12 +1164,12 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
     }
     .modal-body-wrap {
       position: relative;
+      outline: none;
       word-break: break-all;
       padding: 20px 24px;
       background-color: #fff;
       border-radius: 8px;
-      width: auto;
-      max-width: calc(100vw - 32px);
+      max-width: 100%;
       box-shadow:
         0 6px 16px 0 rgba(0, 0, 0, 0.08),
         0 3px 6px -4px rgba(0, 0, 0, 0.12),

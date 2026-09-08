@@ -389,48 +389,52 @@ function onRenderFnIconModal() {
 // 声明式用法下 icon / closeIcon 同样支持渲染函数形态
 const renderFnIconOpen = ref(false)
 // 自定义样式
-function onCustomClassModal() {
+function onCustomClass() {
   modal.info({
-    title: '自定义内容样式类',
-    content: 'Some descriptions ...',
+    title: '自定义卡片类名（bodyClass）',
+    content: 'bodyClass 挂到卡片层 .modal-body-wrap，配合全局 less 将白卡改为橙色渐变 + 描边。',
     icon: h(FireFilled),
     bodyClass: 'custom-modal-body'
   })
 }
-function onBodyMaskStyleModal() {
+function onBodyMaskStyle() {
   modal.confirm({
-    title: '自定义内容与遮罩样式',
-    content: 'Some descriptions ...',
+    title: '自定义卡片与遮罩样式（bodyStyle / maskStyle）',
+    content: 'maskStyle 将遮罩染为半透明蓝，bodyStyle 为卡片加上内边距、蓝色描边与圆角。',
     icon: h(NotificationFilled),
     bodyStyle: {
-      padding: '24px',
-      borderRadius: '12px'
+      padding: '32px',
+      borderRadius: '20px',
+      border: '2px solid #1677ff',
+      boxShadow: '0 8px 32px rgba(22, 119, 255, 0.25)'
     },
-    maskStyle: {
-      backgroundColor: 'rgba(0, 0, 0, 0.6)'
-    }
+    maskStyle: { backgroundColor: 'rgba(22, 119, 255, 0.45)' }
   })
 }
-function onTitleContentStyleModal() {
+function onTitleContentStyle() {
   modal.success({
-    title: '自定义标题与内容样式',
-    content: 'Some descriptions ...',
+    title: '自定义标题与内容样式（titleStyle / contentStyle）',
+    content: '上方标题经 titleStyle 放大加粗变红，本段正文经 contentStyle 放大并调色。',
     icon: h(CrownFilled),
-    titleStyle: {
-      color: '#52c41a'
-    },
-    contentStyle: {
-      color: '#52c41a'
-    }
+    titleStyle: { fontSize: '20px', fontWeight: 600, color: '#d4380d' },
+    contentStyle: { fontSize: '15px', lineHeight: 1.8, color: '#d4380d' }
   })
 }
-// containerStyle 优先级高于 width / top / zIndex 等内置样式
-function onContainerStyleModal() {
+// 定位层与卡片层：containerClass / containerStyle 作用于定位层 .modal-container，用于覆盖 width / top / zIndex；
+// 卡片外观（背景 / 圆角 / 阴影 / 描边）请用作用于 .modal-body-wrap 的 bodyClass / bodyStyle
+function onContainerClass() {
   modal.info({
-    title: '自定义容器样式',
-    content: 'width 传的是 420，但 containerStyle 中的 560px 优先级更高。',
+    title: '自定义定位层类名（containerClass）',
+    content: '类名挂在定位层 .modal-container 上，全局样式将默认顶距覆盖为 200px、宽度覆盖为 480px。',
+    containerClass: 'custom-modal-container'
+  })
+}
+function onContainerStyle() {
+  modal.info({
+    title: '自定义定位层样式（containerStyle）',
+    content: 'containerStyle 优先级更高，将 width: 420 与默认顶距分别覆盖为 480px 宽、180px 顶距。',
     width: 420,
-    containerStyle: { width: '560px' }
+    containerStyle: { width: '480px', top: '180px' }
   })
 }
 // 自定义按钮
@@ -729,7 +733,7 @@ function onDestroyAllModals() {
 function onNoMaskModal() {
   modal.info({
     title: '无遮罩',
-    content: '不渲染遮罩层，背景仍可交互，只能通过底部按钮关闭。',
+    content: '不渲染遮罩层，背景仍可交互，只能通过底部按钮关闭。注意：点击背景会使焦点移出弹窗，此时 Esc 不再响应。',
     mask: false,
     maskClosable: false
   })
@@ -792,22 +796,6 @@ function onAutoFocusCancelModal() {
     content: '入场动画结束后，焦点自动落在「取消」按钮上。',
     autoFocusButton: 'cancel',
     onCancel: () => message.error('点击了「取消」')
-  })
-}
-function onAutoFocusNullModal() {
-  modal.confirm({
-    title: '不自动聚焦',
-    content: '不自动聚焦按钮，焦点落在弹窗容器上，Esc 依旧可用。',
-    autoFocusButton: null,
-    onOk: () => message.success('点击了「确定」')
-  })
-}
-function onNoTrapFocusModal() {
-  modal.confirm({
-    title: '取消焦点陷阱',
-    content: '关闭焦点锁定后，Tab / Shift + Tab 可以移到背景页面。',
-    trapFocus: false,
-    onOk: () => message.success('点击了「确定」')
   })
 }
 function onNoFocusRestoreModal() {
@@ -1101,12 +1089,18 @@ _命令式弹窗默认 `destroyOnClose: true`，关闭即销毁；声明式弹�
       <template #title>
         <Button type="primary" @click="onOpenDraftModal">草稿弹窗（保留内容）</Button>
       </template>
+      <template #extra>
+        <Tag>false</Tag>
+      </template>
       <p class="demo-variant-desc">实例保留，重复打开复用同一实例，内部状态持久化</p>
       <Statistic title="已打开" :value="draftOpenCount" suffix="次" :value-style="statisticValueStyle" />
     </Card>
     <Card class="demo-variant">
       <template #title>
         <Button type="primary" @click="onOpenOnceModal">一次性弹窗（关闭销毁）</Button>
+      </template>
+      <template #extra>
+        <Tag color="success">true</Tag>
       </template>
       <p class="demo-variant-desc">实例销毁，每次打开都创建全新实例，状态重置</p>
       <Statistic title="已打开" :value="onceOpenCount" suffix="次" :value-style="statisticValueStyle" />
@@ -1340,12 +1334,18 @@ function onAfterCloseModal() {
         <template #title>
           <Button type="primary" @click="onOpenDraftModal">草稿弹窗（保留内容）</Button>
         </template>
+        <template #extra>
+          <Tag>false</Tag>
+        </template>
         <p class="demo-variant-desc">实例保留，重复打开复用同一实例，内部状态持久化</p>
         <Statistic title="已打开" :value="draftOpenCount" suffix="次" :value-style="statisticValueStyle" />
       </Card>
       <Card class="demo-variant">
         <template #title>
           <Button type="primary" @click="onOpenOnceModal">一次性弹窗（关闭销毁）</Button>
+        </template>
+        <template #extra>
+          <Tag color="success">true</Tag>
         </template>
         <p class="demo-variant-desc">实例销毁，每次打开都创建全新实例，状态重置</p>
         <Statistic title="已打开" :value="onceOpenCount" suffix="次" :value-style="statisticValueStyle" />
@@ -1553,7 +1553,7 @@ function onPercentWidthModal() {
 
 ## 自定义图标
 
-_`icon` 与 `closeIcon` 均支持 `VNode` / 渲染函数 / 插槽三种形态，命令式与声明式一致_
+_`icon` 与 `closeIcon` 属性支持 `VNode` / 渲染函数（命令式与声明式一致）；插槽形态仅声明式用法下可用，通过 `#icon` / `#closeIcon` 插槽接管默认图标_
 
 <br/>
 
@@ -1619,24 +1619,39 @@ const renderFnIconOpen = ref(false)
 
 ## 自定义样式
 
+`Modal` 渲染为多层结构，各层的外观 / 定位由对应的 `XxxClass` / `XxxStyle` 控制：
+
+| 层级 | DOM 类名 | 职责 | 对应配置项 |
+| :-- | :-- | :-- | :-- |
+| 外层容器 | `.modal-wrap` | 铺满视口，多实例共享 | `wrapClass` / `wrapStyle` |
+| 蒙层 | `.modal-mask` | 遮罩 | `maskClass` / `maskStyle` |
+| 定位层 | `.modal-container` | 承载 `width` / `top` / `zIndex`，本身无视觉样式 | `containerClass` / `containerStyle` |
+| 卡片层 | `.modal-body-wrap` | 白底 / 圆角 / 阴影所在的弹窗卡片 | `bodyClass` / `bodyStyle` |
+| 标题 | `.modal-title` | 标题文字 | `titleClass` / `titleStyle` |
+| 内容 | `.modal-content` | 正文区 | `contentClass` / `contentStyle` |
+
 <Space>
-  <Button type="primary" @click="onCustomClassModal">自定义内容样式类</Button>
-  <Button type="primary" @click="onBodyMaskStyleModal">自定义内容与遮罩样式</Button>
-  <Button type="primary" @click="onTitleContentStyleModal">自定义标题与内容样式</Button>
-  <Button type="primary" @click="onContainerStyleModal">自定义容器样式</Button>
+  <Button type="primary" @click="onCustomClass">自定义卡片类名</Button>
+  <Button type="primary" @click="onBodyMaskStyle">自定义卡片与遮罩样式</Button>
+  <Button type="primary" @click="onTitleContentStyle">自定义标题与内容样式</Button>
+  <Button type="primary" @click="onContainerClass">自定义定位层类名</Button>
+  <Button type="primary" @click="onContainerStyle">自定义定位层样式</Button>
 </Space>
 
 <style lang="less">
+// 弹窗通过 Teleport 挂载到 body 下，scoped 样式无法命中，需使用全局样式
+// bodyClass 演示：类名挂在卡片层 .modal-body-wrap 上，让默认白底卡片变为橙色渐变 + 描边，一眼可辨命中层
 .custom-modal-body {
-  .modal-header {
-    color: #ff6900 !important;
-    .modal-title {
-      color: #ff6900 !important;
-    }
-  }
-  .modal-content {
-    color: #ff6900 !important;
-  }
+  background: linear-gradient(135deg, #fff7e6 0%, #ffd591 100%) !important;
+  border: 2px solid #ff6900 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 6px 24px rgba(255, 105, 0, 0.18) !important;
+}
+// containerClass 演示：类名挂在定位层 .modal-container 上（透明、本身无视觉），
+// 类内用 !important 覆盖内置 top / width，即可直观看到「定位被类接管」
+.custom-modal-container {
+  top: 200px !important;
+  width: 480px !important;
 }
 </style>
 
@@ -1648,70 +1663,78 @@ import { h } from 'vue'
 import { CrownFilled, FireFilled, NotificationFilled } from '@ant-design/icons-vue'
 import { useModal } from 'vue-amazing-ui'
 const modal = useModal()
-function onCustomClassModal() {
+function onCustomClass() {
   modal.info({
-    title: '自定义内容样式类',
-    content: 'Some descriptions ...',
+    title: '自定义卡片类名（bodyClass）',
+    content: 'bodyClass 挂到卡片层 .modal-body-wrap，配合全局 less 将白卡改为橙色渐变 + 描边。',
     icon: h(FireFilled),
     bodyClass: 'custom-modal-body'
   })
 }
-function onBodyMaskStyleModal() {
+function onBodyMaskStyle() {
   modal.confirm({
-    title: '自定义内容与遮罩样式',
-    content: 'Some descriptions ...',
+    title: '自定义卡片与遮罩样式（bodyStyle / maskStyle）',
+    content: 'maskStyle 将遮罩染为半透明蓝，bodyStyle 为卡片加上内边距、蓝色描边与圆角。',
     icon: h(NotificationFilled),
     bodyStyle: {
-      padding: '24px',
-      borderRadius: '12px'
+      padding: '32px',
+      borderRadius: '20px',
+      border: '2px solid #1677ff',
+      boxShadow: '0 8px 32px rgba(22, 119, 255, 0.25)'
     },
-    maskStyle: {
-      backgroundColor: 'rgba(0, 0, 0, 0.6)'
-    }
+    maskStyle: { backgroundColor: 'rgba(22, 119, 255, 0.45)' }
   })
 }
-function onTitleContentStyleModal() {
+function onTitleContentStyle() {
   modal.success({
-    title: '自定义标题与内容样式',
-    content: 'Some descriptions ...',
+    title: '自定义标题与内容样式（titleStyle / contentStyle）',
+    content: '上方标题经 titleStyle 放大加粗变红，本段正文经 contentStyle 放大并调色。',
     icon: h(CrownFilled),
-    titleStyle: {
-      color: '#52c41a'
-    },
-    contentStyle: {
-      color: '#52c41a'
-    }
+    titleStyle: { fontSize: '20px', fontWeight: 600, color: '#d4380d' },
+    contentStyle: { fontSize: '15px', lineHeight: 1.8, color: '#d4380d' }
   })
 }
-// containerStyle 优先级高于 width / top / zIndex 等内置样式
-function onContainerStyleModal() {
+// containerClass / containerStyle 作用于定位层 .modal-container，用于覆盖 width / top / zIndex；
+// 卡片外观（背景 / 圆角 / 阴影 / 描边）请用作用于 .modal-body-wrap 的 bodyClass / bodyStyle
+function onContainerClass() {
   modal.info({
-    title: '自定义容器样式',
-    content: 'width 传的是 420，但 containerStyle 中的 560px 优先级更高。',
+    title: '自定义定位层类名（containerClass）',
+    content: '类名挂在定位层 .modal-container 上，全局样式将默认顶距覆盖为 200px、宽度覆盖为 480px。',
+    containerClass: 'custom-modal-container'
+  })
+}
+function onContainerStyle() {
+  modal.info({
+    title: '自定义定位层样式（containerStyle）',
+    content: 'containerStyle 优先级更高，将 width: 420 与默认顶距分别覆盖为 480px 宽、180px 顶距。',
     width: 420,
-    containerStyle: { width: '560px' }
+    containerStyle: { width: '480px', top: '180px' }
   })
 }
 </script>
 <template>
   <Space>
-    <Button type="primary" @click="onCustomClassModal">自定义内容样式类</Button>
-    <Button type="primary" @click="onBodyMaskStyleModal">自定义内容与遮罩样式</Button>
-    <Button type="primary" @click="onTitleContentStyleModal">自定义标题与内容样式</Button>
-    <Button type="primary" @click="onContainerStyleModal">自定义容器样式</Button>
+    <Button type="primary" @click="onCustomClass">自定义卡片类名</Button>
+    <Button type="primary" @click="onBodyMaskStyle">自定义卡片与遮罩样式</Button>
+    <Button type="primary" @click="onTitleContentStyle">自定义标题与内容样式</Button>
+    <Button type="primary" @click="onContainerClass">自定义定位层类名</Button>
+    <Button type="primary" @click="onContainerStyle">自定义定位层样式</Button>
   </Space>
 </template>
 <style lang="less">
+// 弹窗通过 Teleport 挂载到 body 下，scoped 样式无法命中，需使用全局样式
+// bodyClass 演示：类名挂在卡片层 .modal-body-wrap 上，让默认白底卡片变为橙色渐变 + 描边，一眼可辨命中层
 .custom-modal-body {
-  .modal-header {
-    color: #ff6900 !important;
-    .modal-title {
-      color: #ff6900 !important;
-    }
-  }
-  .modal-content {
-    color: #ff6900 !important;
-  }
+  background: linear-gradient(135deg, #fff7e6 0%, #ffd591 100%) !important;
+  border: 2px solid #ff6900 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 6px 24px rgba(255, 105, 0, 0.18) !important;
+}
+// containerClass 演示：类名挂在定位层 .modal-container 上（透明、本身无视觉），
+// 类内用 !important 覆盖内置 top / width，即可直观看到「定位被类接管」
+.custom-modal-container {
+  top: 200px !important;
+  width: 480px !important;
 }
 </style>
 ```
@@ -2282,7 +2305,7 @@ const message = useMessage()
 function onNoMaskModal() {
   modal.info({
     title: '无遮罩',
-    content: '不渲染遮罩层，背景仍可交互，只能通过底部按钮关闭。',
+    content: '不渲染遮罩层，背景仍可交互，只能通过底部按钮关闭。注意：点击背景会使焦点移出弹窗，此时 Esc 不再响应。',
     mask: false,
     maskClosable: false
   })
@@ -2347,15 +2370,13 @@ function onNoBlockScrollModal() {
 
 ## 焦点管理
 
-_`autoFocusButton` 控制入场后自动聚焦的按钮，`trapFocus` 将 `Tab` 焦点锁定在弹窗内循环，`focusTriggerAfterClose` 控制关闭后是否把焦点归还触发元素_
+_`autoFocusButton` 控制入场后自动聚焦的按钮（默认确定按钮），`Tab` 焦点锁定在弹窗内循环；`focusTriggerAfterClose` 控制关闭后是否把焦点归还触发元素。注意：`Esc` 监听绑定在弹窗主体上，焦点移出弹窗（如 `mask: false` 时点击背景）后不再响应_
 
 <br/>
 
 <Space>
   <Button type="primary" @click="onAutoFocusOkModal">聚焦确定按钮</Button>
   <Button type="primary" @click="onAutoFocusCancelModal">聚焦取消按钮</Button>
-  <Button type="primary" @click="onAutoFocusNullModal">不自动聚焦</Button>
-  <Button type="primary" @click="onNoTrapFocusModal">取消焦点陷阱</Button>
   <Button type="primary" @click="onNoFocusRestoreModal">关闭不归还焦点</Button>
 </Space>
 
@@ -2382,22 +2403,6 @@ function onAutoFocusCancelModal() {
     onCancel: () => message.error('点击了「取消」')
   })
 }
-function onAutoFocusNullModal() {
-  modal.confirm({
-    title: '不自动聚焦',
-    content: '不自动聚焦按钮，焦点落在弹窗容器上，Esc 依旧可用。',
-    autoFocusButton: null,
-    onOk: () => message.success('点击了「确定」')
-  })
-}
-function onNoTrapFocusModal() {
-  modal.confirm({
-    title: '取消焦点陷阱',
-    content: '关闭焦点锁定后，Tab / Shift + Tab 可以移到背景页面。',
-    trapFocus: false,
-    onOk: () => message.success('点击了「确定」')
-  })
-}
 function onNoFocusRestoreModal() {
   modal.confirm({
     title: '关闭不归还焦点',
@@ -2411,8 +2416,6 @@ function onNoFocusRestoreModal() {
   <Space>
     <Button type="primary" @click="onAutoFocusOkModal">聚焦确定按钮</Button>
     <Button type="primary" @click="onAutoFocusCancelModal">聚焦取消按钮</Button>
-    <Button type="primary" @click="onAutoFocusNullModal">不自动聚焦</Button>
-    <Button type="primary" @click="onNoTrapFocusModal">取消焦点陷阱</Button>
     <Button type="primary" @click="onNoFocusRestoreModal">关闭不归还焦点</Button>
   </Space>
 </template>
@@ -2634,7 +2637,7 @@ _每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)
 | :-- | :-- | :-- | :-- |
 | width | 模态框宽度，单位 `px` | string &#124; number | 420 |
 | height | 内容区高度，单位 `px`，默认自适应内容高度；指定后内容区内部滚动 | string &#124; number | 'auto' |
-| icon | 自定义图标，支持 `VNode` / 渲染函数 / `slot` | VNode &#124; (() => VNode) &#124; slot | undefined |
+| icon | 自定义图标，prop 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | VNode &#124; (() => VNode) | undefined |
 | title | 模态框标题 | string &#124; VNode &#124; (() => VNode) | undefined |
 | titleClass | 自定义标题类名 | string | undefined |
 | titleStyle | 自定义标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
@@ -2642,8 +2645,8 @@ _每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)
 | contentClass | 自定义内容类名 | string | undefined |
 | contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | scrollbarProps | 内容滚动条 `Scrollbar` 属性配置 | [ScrollbarProps](./scrollbar.md#scrollbar) | {} |
-| bodyClass | 自定义 `body` 类名 | string | undefined |
-| bodyStyle | 自定义 `body` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| bodyClass | 自定义弹窗卡片（`.modal-body-wrap`）类名，用于定制背景 / 圆角 / 阴影等外观 | string | undefined |
+| bodyStyle | 自定义弹窗卡片（`.modal-body-wrap`）样式，用于定制背景 / 圆角 / 阴影等外观 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | cancelText | 取消按钮文字 | string | '取消' |
 | cancelProps | 取消按钮 `props` 配置，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {} |
 | okText | 确认按钮文字 | string | '确定' |
@@ -2651,9 +2654,9 @@ _每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)
 | okProps | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {} |
 | noticeText | 通知按钮文字 | string | '知道了' |
 | noticeProps | 通知按钮 `props` 配置，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {} |
-| footer | 是否显示底部按钮区，`false` 隐藏，`slot` 自定义 | boolean &#124; slot | true |
+| footer | 是否显示底部按钮区：`false` 隐藏，`true` 渲染内置按钮组，传函数则完全自定义；插槽形态请用 `#footer` | boolean &#124; (() => VNode) | true |
 | closable | 是否显示右上角关闭按钮，默认 `false`，需要时显式开启 | boolean | false |
-| closeIcon | 自定义关闭图标，支持 `VNode` / 渲染函数 / `slot` | VNode &#124; (() => VNode) &#124; slot | undefined |
+| closeIcon | 自定义关闭图标，prop 支持 `VNode` / 渲染函数；插槽形态请用同名 `#closeIcon` 插槽 | VNode &#124; (() => VNode) | undefined |
 | destroyOnClose | 关闭时是否销毁 `Modal` 里的子元素，实例栈下关闭即从栈中移除，内容随之销毁 | boolean | false |
 | renderBeforeOpen | 首次打开前是否渲染内容（关闭懒渲染） | boolean | false |
 | centered | 是否水平垂直居中，否则固定高度水平居中 | boolean | false |
@@ -2661,19 +2664,18 @@ _每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)
 | transformOrigin | 模态框动画出现的位置 | 'mouse' &#124; 'center' | 'mouse' |
 | confirmLoading | 确定按钮 `loading` | boolean | false |
 | blockScroll | 是否在打开模态框时禁用背景滚动 | boolean | true |
-| keyboard | 是否支持键盘 `esc` 关闭 | boolean | true |
+| keyboard | 是否支持键盘 `Esc` 关闭。`Esc` 监听在弹窗主体上，焦点离开弹窗（如 `mask: false` 时点击背景）后不再响应 | boolean | true |
 | mask | 是否展示遮罩 | boolean | true |
 | maskClosable | 点击蒙层是否允许关闭 | boolean | true |
 | maskClass | 自定义蒙层类名 | string | undefined |
 | maskStyle | 自定义蒙层样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | wrapClass | 自定义外层容器（`.modal-wrap`）类名，多实例同时打开时以栈顶为准 | string | undefined |
 | wrapStyle | 自定义外层容器（`.modal-wrap`）样式，多实例同时打开时以栈顶为准 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| containerClass | 自定义弹窗容器（`.modal-container`）类名 | string | undefined |
-| containerStyle | 自定义弹窗容器（`.modal-container`）样式，优先级高于 `width` / `top` / `zIndex` 等内置样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| containerClass | 自定义弹窗定位层（`.modal-container`）类名，用于覆盖 `width` / `top` / `zIndex` 等定位表现 | string | undefined |
+| containerStyle | 自定义弹窗定位层（`.modal-container`）样式，优先级高于 `width` / `top` / `zIndex` 等内置样式；卡片外观（背景 / 圆角 / 阴影）请用 `bodyClass` / `bodyStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | zIndex | 模态框层级，遮罩取该值，弹窗取该值 `+ 10` | number | 1000 |
-| autoFocusButton | 打开时自动聚焦的按钮，`null` 表示不聚焦 | null &#124; 'ok' &#124; 'cancel' | 'ok' |
+| autoFocusButton | 打开时自动聚焦的按钮；`Esc` 监听绑定在弹窗主体上，需聚焦到弹窗内才响应 | 'ok' &#124; 'cancel' | 'ok' |
 | focusTriggerAfterClose | 关闭后是否将焦点归还给触发元素 | boolean | true |
-| trapFocus | 是否将键盘焦点锁定在弹窗内，开启后 `Tab` / `Shift + Tab` 在弹窗内循环 | boolean | true |
 | modalRender | 自定义渲染弹窗内容，常用于包裹拖拽逻辑；与 [`#modalRender`](#slots) 插槽等价，该属性优先级更高 | (arg: { originVNode: VNode }) => VNode | undefined |
 | afterClose | 完全关闭（离场动画结束）后的回调 | () => void | undefined |
 | onEsc | 按下 `Esc` 键的回调，无论是否允许关闭都会触发 | (e: KeyboardEvent) => void | undefined |
@@ -2701,8 +2703,8 @@ _调用时传入的 `ModalOptions` 类型（`info` / `success` / `error` / `warn
 | contentClass? | 自定义内容类名 | string | undefined |
 | contentStyle? | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
 | scrollbarProps? | 内容滚动条 `Scrollbar` 属性配置 | [ScrollbarProps](./scrollbar.md#scrollbar) | undefined |
-| bodyClass? | 自定义 `body` 类名 | string | undefined |
-| bodyStyle? | 自定义 `body` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
+| bodyClass? | 自定义弹窗卡片（`.modal-body-wrap`）类名，用于定制背景 / 圆角 / 阴影等外观 | string | undefined |
+| bodyStyle? | 自定义弹窗卡片（`.modal-body-wrap`）样式，用于定制背景 / 圆角 / 阴影等外观 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
 | showCancel? | 是否显示取消按钮，仅 `confirm` &#124; `erase` 双按钮形态生效，默认 `true`；`info` 等单按钮形态与 `create` 完全自定义形态不生效 | boolean | undefined |
 | cancelText? | 取消按钮文字 | string | undefined |
 | cancelProps? | 取消按钮 `props` 配置，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | undefined |
@@ -2714,7 +2716,6 @@ _调用时传入的 `ModalOptions` 类型（`info` / `success` / `error` / `warn
 | footer? | 底部区域，`false` 隐藏，函数则完全自定义；无内置按钮组时（`create` 调用）即便为 `true` 也不渲染空白区域 | boolean &#124; (() => VNode) | undefined |
 | closable? | 是否显示右上角关闭按钮，默认 `false`，需要时显式开启 | boolean | undefined |
 | closeIcon? | 自定义关闭图标 | VNode &#124; (() => VNode) | undefined |
-| renderBeforeOpen? | 首次打开前是否渲染内容（关闭懒渲染） | boolean | undefined |
 | destroyOnClose? | 关闭时是否销毁 `Modal` 里的子元素，命令式默认 `true` | boolean | undefined |
 | centered? | 是否水平垂直居中，否则固定高度水平居中 | boolean | undefined |
 | top? | 固定高度水平居中时，距顶部高度，仅当 `centered: false` 时生效，单位 `px` | string &#124; number | undefined |
@@ -2727,12 +2728,11 @@ _调用时传入的 `ModalOptions` 类型（`info` / `success` / `error` / `warn
 | maskStyle? | 自定义蒙层样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
 | wrapClass? | 自定义外层容器（`.modal-wrap`）类名，多实例同时打开时以栈顶为准 | string | undefined |
 | wrapStyle? | 自定义外层容器（`.modal-wrap`）样式，多实例同时打开时以栈顶为准 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| containerClass? | 自定义弹窗容器（`.modal-container`）类名 | string | undefined |
-| containerStyle? | 自定义弹窗容器（`.modal-container`）样式，优先级高于 `width` / `top` / `zIndex` 等内置样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
+| containerClass? | 自定义弹窗定位层（`.modal-container`）类名，用于覆盖 `width` / `top` / `zIndex` 等定位表现 | string | undefined |
+| containerStyle? | 自定义弹窗定位层（`.modal-container`）样式，优先级高于 `width` / `top` / `zIndex` 等内置样式；卡片外观（背景 / 圆角 / 阴影）请用 `bodyClass` / `bodyStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
 | zIndex? | 模态框层级，遮罩取该值，弹窗取该值 `+ 10` | number | undefined |
-| autoFocusButton? | 打开时自动聚焦的按钮，`null` 表示不聚焦 | null &#124; 'ok' &#124; 'cancel' | undefined |
+| autoFocusButton? | 打开时自动聚焦的按钮 | 'ok' &#124; 'cancel' | undefined |
 | focusTriggerAfterClose? | 关闭后是否将焦点归还给触发元素 | boolean | undefined |
-| trapFocus? | 是否将键盘焦点锁定在弹窗内，开启后 `Tab` / `Shift + Tab` 在弹窗内循环 | boolean | undefined |
 | modalRender? | 自定义渲染弹窗内容，常用于包裹拖拽逻辑 | (arg: { originVNode: VNode }) => VNode | undefined |
 | afterClose? | 完全关闭（离场动画结束）后的回调 | () => void | undefined |
 | onKnow? | 点击知道了按钮的回调，返回 `false` 或 `Promise` reject 时阻止关闭 | () => unknown &#124; Promise\<unknown\> | undefined |
