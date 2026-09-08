@@ -3,6 +3,35 @@
 # 确保脚本抛出遇到的错误
 set -e
 
+# ============ 终端彩色输出与可点击链接（非 TTY 环境如 CI 日志自动降级为纯文本） ============
+if [ -t 1 ]; then
+    c_bold=$'\033[1m'
+    c_green=$'\033[32m'
+    c_cyan=$'\033[36m'
+    c_yellow=$'\033[33m'
+    c_reset=$'\033[0m'
+    # OSC 8 终端超链接前后缀：拼接后形如 `ESC]8;;URL ESC\ URL ESC]8;;ESC\`
+    # 支持超链接的终端（iTerm2/VSCode/WezTerm 等）中可直接点击，其余终端回退为普通文本
+    osc8_open=$'\033]8;;'
+    osc8_close=$'\033]8;;\033\\'
+fi
+
+# 打印组件库发布成功横幅：展示包名/版本号/可点击的 npm 详情链接与发布时间
+print_publish_success_banner() {
+    local pkg="vue-amazing-ui"
+    local npm_url="https://www.npmjs.com/package/${pkg}/v/${version}"
+    local divider="${c_green}${c_bold}════════════════════════════════════${c_reset}"
+    echo ""
+    echo "$divider"
+    echo "${c_green}${c_bold}  🎉 发布成功！${c_reset}${c_green}${c_bold}${pkg}@${version}${c_reset} 已发布到 npm"
+    echo "$divider"
+    echo ""
+    echo "${c_bold}  📦 版本号    ${version}${c_reset}（git tag: ${tag}）"
+    echo "  🔗 npm 详情  ${c_cyan}${osc8_open}${npm_url}${osc8_close}${c_reset}"
+    echo "  🕐 发布时间  $(date '+%Y-%m-%d %H:%M:%S')"
+    echo ""
+}
+
 commitMessage=$1
 
 # 读取 package.json 中的 version（用 node 读取，避免引入 jq 依赖）
@@ -89,6 +118,9 @@ fi
 # 发布后若后续步骤失败，提示当前可能处于「npm 已发布但 git 未同步」的状态
 trap "echo \"⚠️ 发布流程中断：npm 可能已发布 $version，但后续 git 提交/tag/release/文档部署可能未完成，请检查状态并手动补全\"" ERR
 npm publish
+
+# 发布成功：npm publish 正常返回后立即输出醒目横幅，便于核对版本与分享链接
+print_publish_success_banner
 
 # 升级 vue-amazing-ui 依赖版本（npm publish 后 registry 存在同步延迟，失败则等待重试）
 retry=0
