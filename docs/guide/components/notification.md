@@ -1417,7 +1417,7 @@ _适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：�
 
 ::: tip 注意
 
-- 主题会随 `ConfigProvider` 自动同步，无需手工传入
+- 主题使用内置默认值；如需自定义，通过第二个参数 `configProviderProps`（支持 `Ref` / `computed` 响应式）显式传入，详见 [全局化配置 ConfigProvider「主题同步到离散 API」](/guide/components/config-provider.html#主题同步到离散-api)
 - 每次调用都会创建一套独立实例（独立的容器与通知栈），建议缓存返回值复用，避免重复创建；不再使用时可通过返回的 `dispose()` 销毁该实例
 - 内部会访问 `document`，`SSR` 场景请在客户端（点击回调、`onMounted` 等）中调用
 - 不建议与 `useNotification()` 在同一 App 中混用：两者各自持有独立的通知栈与挂载容器，`maxCount` / `placement` 等组件级配置互不共享

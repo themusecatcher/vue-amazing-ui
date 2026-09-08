@@ -4,6 +4,7 @@ import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { createDiscreteApi } from 'vue-amazing-ui'
 import type {
+  ConfigProviderProps,
   ConfigProviderTheme,
   CarouselImage,
   SelectOption,
@@ -207,27 +208,34 @@ function onDecline(scale: number) {
     percent.value = res
   }
 }
-// 主题同步到离散 API
-const discretePrimaryColor = ref<string>('#1677ff')
-// createDiscreteApi 创建脱离组件树的独立实例，主题自动读取 ConfigProvider 写入的主题快照
+// createDiscreteApi 的主题经 configProviderProps 显式传入（支持 Ref/computed 响应式），
+// 与组件树内的 ConfigProvider 共享同一份 computed 主题即可保持同步，不再依赖模块级主题快照
+const discretePrimaryColor = ref<string>('#ff6900')
+const discreteConfigProviderProps = computed<ConfigProviderProps>(() => ({
+  theme: {
+    common: { primaryColor: discretePrimaryColor.value }
+  }
+}))
 const {
   message: discreteMessage,
   notification: discreteNotification,
   modal: discreteModal
-} = createDiscreteApi(['message', 'notification', 'modal'])
+} = createDiscreteApi(['message', 'notification', 'modal'], {
+  configProviderProps: discreteConfigProviderProps
+})
 function onDiscreteMessage() {
-  discreteMessage.info('Discrete Message 跟随 ConfigProvider 主题色')
+  discreteMessage.info('Discrete Message 经 configProviderProps 跟随主题色')
 }
 function onDiscreteNotification() {
   discreteNotification.info({
     title: 'Discrete Notification',
-    content: '跟随 ConfigProvider 主题色'
+    content: '经 configProviderProps 跟随主题色'
   })
 }
 function onDiscreteModal() {
   discreteModal.info({
     title: 'Discrete Modal',
-    content: '跟随 ConfigProvider 主题色'
+    content: '经 configProviderProps 跟随主题色'
   })
 }
 </script>
@@ -384,17 +392,20 @@ function onDiscreteModal() {
     </ConfigProvider>
     <h2 class="mt30 mb10">主题同步到离散 API</h2>
     <p class="mb10">
-      <code>createDiscreteApi()</code> 创建的独立实例会读取 <code>ConfigProvider</code> 自动写入的主题快照，
-      切换下方主题色后再次触发按钮，message / notification / modal 将同步跟随（无需手工传入主题）。
+      <code>createDiscreteApi()</code> 的主题经第二参 <code>configProviderProps</code> 显式传入（支持
+      <code>Ref</code>/<code>computed</code>），下方 <code>discretePrimaryColor</code> 变化后再次触发按钮， message /
+      notification / modal 将同步跟随。
     </p>
-    <ConfigProvider :theme="{ common: { primaryColor: discretePrimaryColor } }">
+    <Flex vertical>
       <Space align="center">
         primaryColor:
         <ColorPicker style="width: 200px" v-model:value="discretePrimaryColor" />
+      </Space>
+      <Space>
         <Button type="primary" @click="onDiscreteMessage">Discrete Message</Button>
         <Button type="primary" @click="onDiscreteNotification">Discrete Notification</Button>
         <Button type="primary" @click="onDiscreteModal">Discrete Modal</Button>
       </Space>
-    </ConfigProvider>
+    </Flex>
   </div>
 </template>

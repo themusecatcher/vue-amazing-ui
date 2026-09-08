@@ -144,7 +144,7 @@ export default withInstall(Message)
 
 ### createDiscreteApi
 
-`components/discrete/createDiscreteApi.ts` 提供脱离组件树上下文的命令式 API（可在 axios 拦截器、路由守卫、Pinia action 中调用）。它创建独立 Vue 应用实例，依次包裹 `ConfigProvider` 与各 `XxxProvider`，内部通过「提取器」组件在 `setup` 中取出 api；主题取自 `_internal/theme-snapshot` 模块级快照。
+`components/discrete/createDiscreteApi.ts` 提供脱离组件树上下文的命令式 API（可在 axios 拦截器、路由守卫、Pinia action 中调用）。它创建独立 Vue 应用实例，依次包裹 `ConfigProvider` 与各 `XxxProvider`，内部通过「提取器」组件在 `setup` 中取出 api；主题采用 离散 API 形态，由调用方通过第二参 `configProviderProps`（及各 `XxxProviderProps`，支持 `Ref` / `computed` 响应式）显式传入，不依赖模块级全局状态。
 
 ## 复合组件模式
 

@@ -2,12 +2,17 @@
 
 <GlobalElement />
 
-对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
+如果你在使用过程中发现了问题、`bug`或希望贡献新功能 / 新组件，欢迎通过以下任一方式与我联系：
+
+- **问题反馈**：前往 [GitHub Issues](https://github.com/themusecatcher/vue-amazing-ui/issues) 提交 `issue`，建议附上复现步骤或最小示例
+- **代码贡献**：新功能、新组件、`bug` 修复及文档更新，请先阅读[贡献指南](https://github.com/themusecatcher/vue-amazing-ui/blob/main/CONTRIBUTING.md)，再向 `main` 分支发起 `Pull Request`
+- **直接联系**：通过页面右下角邮箱地址与我直接沟通
 
 ## <VersionDateTag date="2026-09-09">2.7.0</VersionDateTag>
 
 - ⚠️ **破坏性变更**：[全局提示 Message](/guide/components/message.html)、[通知提醒 Notification](/guide/components/notification.html)、[模态框 Modal](/guide/components/modal.html) 三组件移除了组件实例 `ref` 的命令式调用方式（含 `window['$xxx']` 全局挂载用法），统一改为新 `API`，请按各组件文档「调用方式」章节迁移。
 - ⚠️ **破坏性变更**：[对话框 Dialog](/guide/components/dialog.html) 组件默认改为通过 `Teleport` 挂载到 `body` 渲染（此前渲染于组件所在位置），并新增 `to` 属性用于指定挂载节点，依赖原渲染位置覆写样式的用法请同步调整
+- ⚠️ **破坏性变更**：重构 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 与 `createDiscreteApi()` 的主题同步机制，采用离散 API 形态：移除 `ConfigProvider` 自动写入的模块级主题快照（原「无需手工传入、自动跟随」不再生效），`createDiscreteApi` 的主题改为通过第二参 `configProviderProps` 显式传入（支持 `Ref` / `computed` 响应式），同时支持 `messageProviderProps` / `dialogProviderProps` / `notificationProviderProps` / `modalProviderProps` 透传各 Provider 配置
 - ⚠️ **破坏性变更**：[通知提醒 Notification](/guide/components/notification.html) 组件调用参数 `description` 重命名为 `content`，请全局替换调用处的 `description` 为 `content`。
 - 重构 [全局提示 Message](/guide/components/message.html)、[通知提醒 Notification](/guide/components/notification.html)、[模态框 Modal](/guide/components/modal.html) 组件命令式 API：新增 `useMessage` / `useNotification` / `useModal`（`setup` 内使用，需外层 `XxxProvider`）与 `createDiscreteApi()`（`axios` 拦截器、路由守卫等任意位置使用，无需外层 `Provider`）双入口；组件挂载后通过 `@ready` 事件回传命令式 `api`
 - 重构 [对话框 Dialog](/guide/components/dialog.html) 组件命令式 API：新增 `useDialog()`（`setup` 内使用，需外层 `<DialogProvider>`）与 `createDiscreteApi(['dialog'])`（任意位置使用，无需外层 `Provider`）双入口；声明式 `<Dialog v-model:open>` 用法不变，并作为承载表单 / 大批量内容的推荐用法

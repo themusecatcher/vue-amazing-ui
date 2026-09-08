@@ -57,7 +57,6 @@ components/
 | :--- | :--- |
 | `components/utils/` | 共享工具与 Hooks（详见下文） |
 | `components/style/global.less` | 组件库全局默认样式 |
-| `components/_internal/` | 内部共享模块，**下划线前缀 = 不对外导出** |
 | `components/discrete/` | `createDiscreteApi` 命令式 API |
 | `components/components.ts` | 组件汇总导出（命名约定集中处） |
 | `components/index.ts` | 库入口（install + 工具函数导出） |
@@ -86,10 +85,6 @@ components/
 ### style/global.less
 
 全局默认样式，定义通用 reset、`--primary-color` CSS 变量与基础字体。组件按需引入时都会携带此样式。
-
-### _internal/（内部模块）
-
-下划线前缀约定：`components/_internal/` 下的模块**不对外导出**，仅供库内部跨组件共享。当前仅有 `theme-snapshot.ts`，用于 `createDiscreteApi` 还原主应用主题。
 
 ## src/ 演示环境
 
