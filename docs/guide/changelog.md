@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-如果你在使用过程中发现了问题、`bug`或希望贡献新功能 / 新组件，欢迎通过以下任一方式与我联系：
+如果你在使用过程中发现了问题、`bug`或希望贡献新功能 / 新组件，欢迎通过以下方式与我联系：
 
 - **问题反馈**：前往 [GitHub Issues](https://github.com/themusecatcher/vue-amazing-ui/issues) 提交 `issue`，建议附上复现步骤或最小示例
 - **代码贡献**：新功能、新组件、`bug` 修复及文档更新，请先阅读[贡献指南](https://github.com/themusecatcher/vue-amazing-ui/blob/main/CONTRIBUTING.md)，再向 `main` 分支发起 `Pull Request`
