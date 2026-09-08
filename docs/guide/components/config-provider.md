@@ -10,7 +10,7 @@ _为组件提供统一的全局化配置_
 <!-- - 当需要为组件提供全局配置时 -->
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 // ConfigProvider 需与 createDiscreteApi 同源（docs 站点全局注册的是 dist 版，快照模块不同源会导致主题不同步）
@@ -19,14 +19,14 @@ import type { ConfigProviderTheme, CarouselImage, SelectOption, StepsItem, TabsI
 const primaryColor = ref<string>('#ff6900')
 const commonPrimaryColor = ref<string>('#1677ff')
 const buttonPrimaryColor = ref<string>('#18a058')
-const theme = ref<ConfigProviderTheme>({
+const theme = computed<ConfigProviderTheme>(() => ({
   common: {
     primaryColor: commonPrimaryColor.value
   },
   Button: {
     primaryColor: buttonPrimaryColor.value
   }
-})
+}))
 const checkboxChecked = ref<boolean>(false)
 const cardDate = ref<number>(Date.now())
 const dateValue = ref<string>(format(new Date(), 'yyyy-MM-dd'))
@@ -695,9 +695,7 @@ function onDecline(scale: number) {
   <Space align="center">
     buttonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="buttonPrimaryColor" />
   </Space>
-  <ConfigProvider
-    :theme="{ common: { primaryColor: commonPrimaryColor }, Button: { primaryColor: buttonPrimaryColor } }"
-  >
+  <ConfigProvider :theme="theme">
     <Space align="center">
       <Alert style="width: 200px" message="Info Text" type="info" show-icon />
       <Button type="primary">Primary Button</Button>
@@ -709,18 +707,19 @@ function onDecline(scale: number) {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import type { ConfigProviderTheme } from 'vue-amazing-ui'
 const commonPrimaryColor = ref<string>('#1677ff')
 const buttonPrimaryColor = ref<string>('#18a058')
-const theme = ref<ConfigProviderTheme>({
+// 必须用 computed 建立响应式关联，直接 ref 快照会导致 ColorPicker 改动不生效
+const theme = computed<ConfigProviderTheme>(() => ({
   common: {
     primaryColor: commonPrimaryColor.value
   },
   Button: {
     primaryColor: buttonPrimaryColor.value
   }
-})
+}))
 </script>
 <template>
   <Flex vertical>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { createDiscreteApi } from 'vue-amazing-ui'
@@ -15,14 +15,14 @@ import type {
 const primaryColor = ref<string>('#ff6900')
 const commonPrimaryColor = ref<string>('#1677ff')
 const buttonPrimaryColor = ref<string>('#18a058')
-const theme = ref<ConfigProviderTheme>({
+const theme = computed<ConfigProviderTheme>(() => ({
   common: {
     primaryColor: commonPrimaryColor.value
   },
   Button: {
     primaryColor: buttonPrimaryColor.value
   }
-})
+}))
 const autoCompleteValue = ref<string>('')
 const autoCompleteOptions = ref<string[]>([])
 const checkboxChecked = ref<boolean>(false)

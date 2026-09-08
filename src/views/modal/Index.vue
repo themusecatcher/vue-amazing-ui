@@ -434,6 +434,17 @@ function onCustomCloseIconModal() {
     onOk: () => message.success('点击了「确定」')
   })
 }
+// 关闭按钮不参与 Tab 序列
+function onNoCloseFocusableModal() {
+  modal.confirm({
+    title: '关闭按钮不参与 Tab 序列',
+    content:
+      'closeFocusable: false 时右上角关闭按钮 tabindex 为 -1，Tab / Shift + Tab 会跳过它，但 Esc 与鼠标点击照常。',
+    closable: true,
+    closeFocusable: false,
+    onOk: () => message.success('点击了「确定」')
+  })
+}
 // 自定义位置
 function onNumberTopModal() {
   modal.info({
@@ -1007,6 +1018,7 @@ onBeforeUnmount(() => {
     <Space>
       <Button type="primary" @click="onClosableModal">显示关闭按钮</Button>
       <Button type="primary" @click="onCustomCloseIconModal">自定义关闭图标</Button>
+      <Button type="primary" @click="onNoCloseFocusableModal">关闭按钮不参与 Tab 序列</Button>
     </Space>
     <h2 class="mt30 mb10">自定义位置</h2>
     <Space>

@@ -32,6 +32,7 @@ export interface Props {
   footer?: boolean | (() => VNode) // 是否显示底部按钮区：false 隐藏；true 渲染内置按钮组；函数则完全自定义；插槽形态请用 #footer
   closable?: boolean // 是否显示右上角关闭按钮
   closeIcon?: VNode | (() => VNode) // 自定义关闭图标，prop 支持 VNode / 渲染函数；插槽形态请用 #closeIcon
+  closeFocusable?: boolean // 关闭按钮是否可聚焦，关闭后不参与 Tab 序列
   renderBeforeOpen?: boolean // 首次打开前是否渲染内容（关闭懒渲染）
   destroyOnClose?: boolean // 关闭时是否销毁 Modal 里的子元素
   centered?: boolean // 是否水平垂直居中，否则固定高度水平居中
@@ -81,6 +82,7 @@ const props = withDefaults(defineProps<Props>(), {
   footer: true,
   closable: false,
   closeIcon: undefined,
+  closeFocusable: true,
   renderBeforeOpen: false,
   destroyOnClose: false,
   centered: false,
@@ -131,6 +133,7 @@ export interface ModalOptions {
   footer?: boolean | (() => VNode) // 底部按钮区，false 隐藏，传函数则完全自定义；create() 调用默认 false，其余默认 true
   closable?: boolean // 是否显示右上角关闭按钮，默认 false，需要时显式开启
   closeIcon?: VNode | (() => VNode) // 自定义关闭图标
+  closeFocusable?: boolean // 关闭按钮是否可聚焦，关闭后不参与 Tab 序列
   destroyOnClose?: boolean // 关闭时是否销毁 Modal 里的子元素，命令式调用默认 true
   centered?: boolean // 是否水平垂直居中，否则固定高度水平居中
   top?: string | number // 固定高度水平居中时，距顶部高度，仅当 center: false 时生效，单位 px
@@ -889,9 +892,12 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
                   :style="getComputedValue(item, 'bodyStyle')"
                   @keydown="(e: KeyboardEvent) => onKeydown(item, e)"
                 >
-                  <span
+                  <button
                     v-if="getComputedValue(item, 'closable')"
+                    type="button"
                     class="close-action"
+                    :tabindex="getComputedValue(item, 'closeFocusable') ? 0 : -1"
+                    aria-label="关闭"
                     @click="onCancel(item.key, $event)"
                   >
                     <slot name="closeIcon">
@@ -912,7 +918,7 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
                         ></path>
                       </svg>
                     </slot>
-                  </span>
+                  </button>
                   <div class="modal-body">
                     <div
                       class="modal-header"
@@ -1236,6 +1242,12 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
         top: 20px;
         right: 18px;
         z-index: 1;
+        padding: 0;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-weight: 600;
+        line-height: 1;
         width: 22px;
         height: 22px;
         cursor: pointer;
@@ -1258,6 +1270,10 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
           :deep(.icon-svg) {
             color: rgba(0, 0, 0, 0.88);
           }
+        }
+        &:focus-visible {
+          outline: 2px solid rgba(0, 0, 0, 0.88);
+          outline-offset: 1px;
         }
       }
       .modal-btns {

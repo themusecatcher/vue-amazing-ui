@@ -1913,13 +1913,14 @@ function onCreateModal() {
 
 ## 关闭按钮
 
-_命令式弹窗默认不显示右上角关闭按钮，`closable: true` 时显示；`closeIcon` 支持 `VNode` 与渲染函数两种形态_
+_命令式弹窗默认不显示右上角关闭按钮，`closable: true` 时显示；`closeIcon` 支持 `VNode` 与渲染函数两种形态；`closeFocusable: false` 让关闭按钮不参与 `Tab` 序列_
 
 <br/>
 
 <Space>
   <Button type="primary" @click="onClosableModal">显示关闭按钮</Button>
   <Button type="primary" @click="onCustomCloseIconModal">自定义关闭图标</Button>
+  <Button type="primary" @click="onNoCloseFocusableModal">关闭按钮不参与 Tab 序列</Button>
 </Space>
 
 ::: details Show Code
@@ -1950,11 +1951,22 @@ function onCustomCloseIconModal() {
     onOk: () => message.success('点击了「确定」')
   })
 }
+// 关闭按钮不参与 Tab 序列
+function onNoCloseFocusableModal() {
+  modal.confirm({
+    title: '关闭按钮不参与 Tab 序列',
+    content: 'closeFocusable: false 时右上角关闭按钮 tabindex 为 -1，Tab / Shift + Tab 会跳过它，但 Esc 与鼠标点击照常。',
+    closable: true,
+    closeFocusable: false,
+    onOk: () => message.success('点击了「确定」')
+  })
+}
 </script>
 <template>
   <Space>
     <Button type="primary" @click="onClosableModal">显示关闭按钮</Button>
     <Button type="primary" @click="onCustomCloseIconModal">自定义关闭图标</Button>
+    <Button type="primary" @click="onNoCloseFocusableModal">关闭按钮不参与 Tab 序列</Button>
   </Space>
 </template>
 ```
@@ -2657,6 +2669,7 @@ _每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)
 | footer | 是否显示底部按钮区：`false` 隐藏，`true` 渲染内置按钮组，传函数则完全自定义；插槽形态请用 `#footer` | boolean &#124; (() => VNode) | true |
 | closable | 是否显示右上角关闭按钮，默认 `false`，需要时显式开启 | boolean | false |
 | closeIcon | 自定义关闭图标，prop 支持 `VNode` / 渲染函数；插槽形态请用同名 `#closeIcon` 插槽 | VNode &#124; (() => VNode) | undefined |
+| closeFocusable | 关闭按钮是否可聚焦，设为 `false` 后关闭按钮 `tabindex` 为 `-1`，不参与 `Tab` 序列 | boolean | true |
 | destroyOnClose | 关闭时是否销毁 `Modal` 里的子元素，实例栈下关闭即从栈中移除，内容随之销毁 | boolean | false |
 | renderBeforeOpen | 首次打开前是否渲染内容（关闭懒渲染） | boolean | false |
 | centered | 是否水平垂直居中，否则固定高度水平居中 | boolean | false |
@@ -2716,6 +2729,7 @@ _调用时传入的 `ModalOptions` 类型（`info` / `success` / `error` / `warn
 | footer? | 底部区域，`false` 隐藏，函数则完全自定义；无内置按钮组时（`create` 调用）即便为 `true` 也不渲染空白区域 | boolean &#124; (() => VNode) | undefined |
 | closable? | 是否显示右上角关闭按钮，默认 `false`，需要时显式开启 | boolean | undefined |
 | closeIcon? | 自定义关闭图标 | VNode &#124; (() => VNode) | undefined |
+| closeFocusable? | 关闭按钮是否可聚焦，设为 `false` 后不参与 `Tab` 序列 | boolean | undefined |
 | destroyOnClose? | 关闭时是否销毁 `Modal` 里的子元素，命令式默认 `true` | boolean | undefined |
 | centered? | 是否水平垂直居中，否则固定高度水平居中 | boolean | undefined |
 | top? | 固定高度水平居中时，距顶部高度，仅当 `centered: false` 时生效，单位 `px` | string &#124; number | undefined |
