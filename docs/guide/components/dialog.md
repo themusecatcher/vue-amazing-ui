@@ -2422,7 +2422,7 @@ function onNoBlockScroll() {
     <Button type="primary" @click="onNoMaskClose">禁止遮罩关闭</Button>
     <Button type="primary" @click="onNoKeyboard">禁用 Esc 关闭</Button>
     <Button type="primary" @click="onBlockScroll">锁定背景滚动</Button>
-    <Button type="priary" @click="onNoBlockScroll">不锁定滚动</Button>
+    <Button type="primary" @click="onNoBlockScroll">不锁定滚动</Button>
   </Space>
 </template>
 ```
@@ -2454,7 +2454,7 @@ function onNoFocusRestore() {
 }
 </script>
 <template>
-  <Button tpe="primary" @click="onNoFocusRestore">关闭不归还焦点</Button>
+  <Button type="primary" @click="onNoFocusRestore">关闭不归还焦点</Button>
 </template>
 ```
 
@@ -2472,7 +2472,7 @@ _`draggable` 开启后标题栏为拖拽句柄，支持 `boolean` 与 `{ bounds:
   <Button type="primary" @click="dragOpen = true">声明式可拖拽</Button>
 </Space>
 
-<Dialog v-model:open="dragOpen" title="按住标题栏拖动我（声明式）" :width="640" dragable>
+<Dialog v-model:open="dragOpen" title="按住标题栏拖动我（声明式）" :width="640" draggable>
   <p>声明式用法下同样只需传 <code>draggable</code>，标题栏即为拖拽句柄。</p>
 </Dialog>
 
@@ -2536,7 +2536,7 @@ _通过 `to` 指定 `Teleport` 的目标，默认挂载到 `body`。声明式用
   transform: translateZ(0); // 建立包含块，使内部 fixed 定位的蒙层与弹窗相对该容器定位
   max-width: 800px;
   height: 320px;
-  margin-bottm: 10px;
+  margin-bottom: 10px;
   border: 1px dashed #d9d9d9;
   border-radius: 8px;
 }
@@ -2799,13 +2799,13 @@ router.beforeEach((to, from, next) => {
 
 <br/>
 
-<Button type="primary" @click="onDiscreteDilog">Discrete Dialog（脱离组件树调用）</Button>
+<Button type="primary" @click="onDiscreteDialog">Discrete Dialog（脱离组件树调用）</Button>
 
 ### 选择 2：挂载到 `window`（复用组件树内实例）
 
 :::: warning 注意
 
-如果你想在 `setup` 外使用 `dialog`，要在顶层 setup` 中把 `useDialog()` 返回的实例挂载到 `window` 下然后再调用，调用前需要确保实例已经挂载成功。
+如果你想在 `setup` 外使用 `dialog`，要在顶层 `setup` 中把 `useDialog()` 返回的实例挂载到 `window` 下然后再调用，调用前需要确保实例已经挂载成功。
 
 ::::
 
@@ -2815,8 +2815,8 @@ router.beforeEach((to, from, next) => {
 <script setup lang="ts">
 import { DialogProvider } from 'vue-amazing-ui'
 </script>
-<template
-  <DalogProvider>
+<template>
+  <DialogProvider>
     <Content />
   </DialogProvider>
 </template>
@@ -2830,7 +2830,7 @@ import { DialogProvider } from 'vue-amazing-ui'
 <script setup lang="ts">
 import { useDialog } from 'vue-amazing-ui'
 
-// 挂载到 windo 后，即可任意非组件环境（工具函数、事件监听等）中调用
+// 挂载到 window 后，即可任意非组件环境（工具函数、事件监听等）中调用
 window.$dialog = useDialog()
 </script>
 ```
@@ -2840,8 +2840,8 @@ window.$dialog = useDialog()
 :::: tip XXX.ts（任意 .ts 文件）
 
 ```ts
-// 需确保已在顶层 setup 中执行了 window.$dialog = useDialog(
-windw.$dialog?.open({
+// 需确保已在顶层 setup 中执行了 window.$dialog = useDialog()
+window.$dialog?.open({
   title: '确认操作',
   content: '确定要执行该操作吗？'
 })

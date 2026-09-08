@@ -125,7 +125,8 @@ chore: 补齐 type-check 门禁并强化发布流程
 pnpm lint         # ESLint 检查并自动修复
 pnpm lint:check   # ESLint 只读检查（不修改文件）
 pnpm type-check   # 类型检查
-pnpm check        # 聚合检查：lint:check + type-check
+pnpm test         # 单元测试（vitest）
+pnpm check        # 聚合检查：lint:check + type-check + test
 ```
 
 提交前建议先本地运行 `pnpm check`，确保通过后再推送。
