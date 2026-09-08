@@ -1049,7 +1049,7 @@ arrowStyle | 设置面板箭头的样式 | [CSSProperties](https://cn.vuejs.org/
 extra | 面板标题右侧的额外内容 | string &#124; slot | undefined
 lang | 面板右上角固定内容，例如 `language` 标识 | string &#124; slot | undefined
 copyable | 是否可复制面板内容 | boolean | false
-copyProps | 复制按钮属性配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
+copyProps | 复制按钮属性配置，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {}
 copyText | 复制按钮文本 | string | 'Copy'
 copiedText | 已复制按钮文本 | string | 'Copied'
 
@@ -1075,7 +1075,7 @@ arrowStyle? | 设置面板箭头的样式 | [CSSProperties](https://cn.vuejs.org
 extra? | 面板标题右侧的额外内容 | string &#124; slot | undefined
 lang? | 面板右上角固定内容，例如标识 `language` | string &#124; slot | undefined
 copyable? | 是否可复制面板内容 | boolean | undefined
-copyProps? | 复制按钮属性配置，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | undefined
+copyProps? | 复制按钮属性配置，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | undefined
 copyText? | 复制按钮文本 | string | undefined
 copiedText? | 已复制按钮文本 | string | undefined
 

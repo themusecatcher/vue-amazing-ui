@@ -190,7 +190,7 @@ onBeforeMount(() => {
 | width | 瀑布流区域的总宽度 | string &#124; number | '100%' |
 | borderRadius | 瀑布流区域和图片圆角，单位 `px` | number | 8 |
 | backgroundColor | 瀑布流区域背景填充色 | string | '#F2F4F8' |
-| spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置图片加载中样式 | object | {} |
+| spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置图片加载中样式 | [SpinProps](./spin.md#spin) | {} |
 
 ### Image Type
 

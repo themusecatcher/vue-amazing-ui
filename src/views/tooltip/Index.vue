@@ -133,13 +133,13 @@ function onHide() {
     <h2 class="mt30 mb10">多彩文字提示</h2>
     <p class="mb10">我们添加了多种预设色彩的文字提示样式，用作不同场景使用</p>
     <Divider orientation="left">Presets</Divider>
-    <Space wrap>
+    <Space>
       <Tooltip v-for="color in presetColors" :key="color" tooltip="prompt text" :bg-color="color">
         <Button>{{ color }}</Button>
       </Tooltip>
     </Space>
     <Divider orientation="left">Custom</Divider>
-    <Space wrap>
+    <Space>
       <Tooltip v-for="color in customColors" :key="color" tooltip="prompt text" :bg-color="color">
         <Button>{{ color }}</Button>
       </Tooltip>

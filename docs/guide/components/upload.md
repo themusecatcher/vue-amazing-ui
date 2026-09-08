@@ -12,8 +12,9 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { useMessage } from 'vue-amazing-ui'
 import type { UploadFileType } from 'vue-amazing-ui'
-const uploadRef = ref()
+const message = useMessage()
 const files = ref<UploadFileType[]>([])
 const fileList = ref<UploadFileType[]>([
   {
@@ -52,14 +53,14 @@ watchEffect(() => {
 function onBeforeImageUpload(file: File) {
   if (file.size > 500 * 1024) {
     // 文件大于 500KB 时取消上传
-    uploadRef.value.warning('文件必须小于 500KB')
+    message.warning('文件必须小于 500KB')
     return false // 停止上传
   }
   console.log('file', file)
   console.log('type', file.type)
   if (!file.type.includes('image')) {
     // 继续上传
-    uploadRef.value.error('只能上传图片')
+    message.error('只能上传图片')
     return false // 停止上传
   }
   return true // 继续上传
@@ -68,12 +69,12 @@ function onBeforePdfUpload(file: File) {
   const acceptTypes = ['application/pdf']
   if (file.size > 500 * 1024) {
     // 文件大于 500KB 时取消上传
-    uploadRef.value.warning('文件必须小于 500KB')
+    message.warning('文件必须小于 500KB')
     return false // 停止上传
   }
   if (!acceptTypes.includes(file.type)) {
     // 继续上传
-    uploadRef.value.error('只能上传 pdf 格式的文件')
+    message.error('只能上传 pdf 格式的文件')
     return false // 停止上传
   }
   return true // 继续上传
@@ -81,14 +82,15 @@ function onBeforePdfUpload(file: File) {
 function onCustomRequest(file: File) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      // 模拟接口调用返回name和url
+      // 模拟接口调用返回 name 和 url
+      let res: { name: string; url: string }
       if (file.type === 'application/pdf') {
-        var res = {
+        res = {
           name: 'Markdown.pdf',
           url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
         }
       } else {
-        var res = {
+        res = {
           name: '1.jpg',
           url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
         }
@@ -110,14 +112,32 @@ function onChange(files: UploadFileType[]) {
 function onPreview(file: UploadFileType) {
   console.log('preview', file)
 }
+function onSuccess(file: UploadFileType) {
+  console.log('upload success', file)
+  message.success('upload success')
+}
 function onRemove(file: UploadFileType) {
-  console.log('remove', file)
+  console.log('upload remove', file)
+  message.success('remove success')
+}
+function onError(err: unknown) {
+  console.log('upload error', err)
+  message.error(err instanceof Error ? err.message : String(err))
+}
+// 上传失败演示：custom 模式 reject 会触发 @error，由使用方自行提示
+function onUploadFailRequest(file: File) {
+  console.log('upload fail request', file.name)
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error('模拟上传失败，请重试'))
+    }, 1000)
+  })
 }
 </script>
 
 ## 基本使用
 
-<Upload v-model:fileList="files" @drop="onDrop" @change="onChange" @preview="onPreview" @remove="onRemove" />
+<Upload v-model:fileList="files" @drop="onDrop" @change="onChange" @preview="onPreview" />
 
 ::: details Show Code
 
@@ -138,12 +158,9 @@ function onChange(files: UploadFileType[]) {
 function onPreview(file: UploadFileType) {
   console.log('preview', file)
 }
-function onRemove(file: UploadFileType) {
-  console.log('remove', file)
-}
 </script>
 <template>
-  <Upload v-model:fileList="files" @drop="onDrop" @change="onChange" @preview="onPreview" @remove="onRemove" />
+  <Upload v-model:fileList="files" @drop="onDrop" @change="onChange" @preview="onPreview" />
 </template>
 ```
 
@@ -163,15 +180,19 @@ function onRemove(file: UploadFileType) {
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { UploadFileType } from 'vue-amazing-ui'
-const imageList = ref<UploadFileType[]>([
+const fileList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
     url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
+  },
+  {
+    name: 'Markdown.pdf',
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
 </script>
 <template>
-  <Upload disabled v-model:file-list="imageList" />
+  <Upload disabled v-model:fileList="fileList" />
 </template>
 ```
 
@@ -324,22 +345,32 @@ watchEffect(() => {
 
 :::
 
-## 自定义操作完成的消息提示
+## 操作完成的消息提示
 
-<Upload
-  :action-message="{
-    upload: 'upload success',
-    remove: 'remove success'
-  }"
-  v-model:fileList="fileList"
-/>
+_组件不再内嵌 `Message`，上传成功 / 删除 / 上传失败等提示改由使用方监听 `@success` / `@remove` / `@error` 事件后自行调用（本例使用 `useMessage()` 演示；第二个示例为 `custom` 模式下上传失败触发 `@error` 的场景）_
+
+<Space vertical>
+  <Upload
+    v-model:fileList="fileList"
+    @success="onSuccess"
+    @remove="onRemove"
+  />
+  <Upload
+    upload-mode="custom"
+    :custom-request="onUploadFailRequest"
+    v-model:fileList="fileList"
+    @error="onError"
+  />
+</Space>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { useMessage } from 'vue-amazing-ui'
 import type { UploadFileType } from 'vue-amazing-ui'
+const message = useMessage()
 const fileList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
@@ -353,15 +384,42 @@ const fileList = ref<UploadFileType[]>([
 watchEffect(() => {
   console.log('fileList', fileList.value)
 })
+function onSuccess(file: UploadFileType) {
+  console.log('upload success', file)
+  message.success('upload success')
+}
+function onRemove(file: UploadFileType) {
+  console.log('upload remove', file)
+  message.success('remove success')
+}
+function onError(err: unknown) {
+  console.log('upload error', err)
+  message.error(err instanceof Error ? err.message : String(err))
+}
+// 上传失败演示：custom 模式 reject 会触发 @error，由使用方自行提示
+function onUploadFailRequest(file: File) {
+  console.log('upload fail request', file.name)
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error('模拟上传失败，请重试'))
+    }, 1000)
+  })
+}
 </script>
 <template>
-  <Upload
-    :action-message="{
-      upload: 'upload success',
-      remove: 'remove success'
-    }"
-    v-model:fileList="fileList"
-  />
+  <Space vertical>
+    <Upload
+      v-model:fileList="fileList"
+      @success="onSuccess"
+      @remove="onRemove"
+    />
+    <Upload
+      upload-mode="custom"
+      :custom-request="onUploadFailRequest"
+      v-model:fileList="fileList"
+      @error="onError"
+    />
+  </Space>
 </template>
 ```
 
@@ -375,7 +433,6 @@ watchEffect(() => {
 
 <Space vertical>
   <Upload
-    ref="uploadRef"
     accept="image/*"
     tip="Only Image"
     :before-upload="onBeforeImageUpload"
@@ -384,7 +441,6 @@ watchEffect(() => {
     @remove="onRemove"
   />
   <Upload
-    ref="uploadRef"
     accept="application/pdf"
     tip="Only PDF"
     :before-upload="onBeforePdfUpload"
@@ -399,8 +455,9 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { useMessage } from 'vue-amazing-ui'
 import type { UploadFileType } from 'vue-amazing-ui'
-const uploadRef = ref()
+const message = useMessage()
 const imageList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
@@ -422,14 +479,14 @@ watchEffect(() => {
 function onBeforeImageUpload(file: File) {
   if (file.size > 500 * 1024) {
     // 文件大于 500KB 时取消上传
-    uploadRef.value.warning('文件必须小于 500KB')
+    message.warning('文件必须小于 500KB')
     return false // 停止上传
   }
   console.log('file', file)
   console.log('type', file.type)
   if (!file.type.includes('image')) {
     // 继续上传
-    uploadRef.value.error('只能上传图片')
+    message.error('只能上传图片')
     return false // 停止上传
   }
   return true // 继续上传
@@ -438,12 +495,12 @@ function onBeforePdfUpload(file: File) {
   const acceptTypes = ['application/pdf']
   if (file.size > 500 * 1024) {
     // 文件大于 500KB 时取消上传
-    uploadRef.value.warning('文件必须小于 500KB')
+    message.warning('文件必须小于 500KB')
     return false // 停止上传
   }
   if (!acceptTypes.includes(file.type)) {
     // 继续上传
-    uploadRef.value.error('只能上传 pdf 格式的文件')
+    message.error('只能上传 pdf 格式的文件')
     return false // 停止上传
   }
   return true // 继续上传
@@ -458,7 +515,6 @@ function onRemove(file: UploadFileType) {
 <template>
   <Space vertical>
     <Upload
-      ref="uploadRef"
       accept="image/*"
       tip="Only Image"
       :before-upload="onBeforeImageUpload"
@@ -467,7 +523,6 @@ function onRemove(file: UploadFileType) {
       @remove="onRemove"
     />
     <Upload
-      ref="uploadRef"
       accept="application/pdf"
       tip="Only PDF"
       :before-upload="onBeforePdfUpload"
@@ -483,14 +538,16 @@ function onRemove(file: UploadFileType) {
 
 ## 自定义上传行为
 
-<Upload multiple upload-mode="custom" :custom-request="onCustomRequest" v-model:fileList="fileList" @change="onChange" @remove="onRemove" />
+<Upload multiple upload-mode="custom" :custom-request="onCustomRequest" v-model:fileList="fileList" @change="onChange" @remove="onRemove" @success="onSuccess" @error="onError" />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { useMessage } from 'vue-amazing-ui'
 import type { UploadFileType } from 'vue-amazing-ui'
+const message = useMessage()
 const fileList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
@@ -507,14 +564,15 @@ watchEffect(() => {
 function onCustomRequest(file: File) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      // 模拟接口调用返回name和url
+      // 模拟接口调用返回 name 和 url
+      let res: { name: string; url: string }
       if (file.type === 'application/pdf') {
-        var res = {
+        res = {
           name: 'Markdown.pdf',
           url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
         }
       } else {
-        var res = {
+        res = {
           name: '1.jpg',
           url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
         }
@@ -533,6 +591,14 @@ function onChange(files: UploadFileType[]) {
 function onRemove(file: UploadFileType) {
   console.log('remove', file)
 }
+function onSuccess(file: UploadFileType) {
+  console.log('upload success', file)
+  message.success('upload success')
+}
+function onError(err: unknown) {
+  console.log('upload error', err)
+  message.error(err instanceof Error ? err.message : String(err))
+}
 </script>
 <template>
   <Upload
@@ -542,6 +608,8 @@ function onRemove(file: UploadFileType) {
     v-model:fileList="fileList"
     @change="onChange"
     @remove="onRemove"
+    @success="onSuccess"
+    @error="onError"
   />
 </template>
 ```
@@ -550,14 +618,16 @@ function onRemove(file: UploadFileType) {
 
 ## 自定义分片上传
 
-<Upload upload-mode="custom" :custom-request="onCustomSliceUpload" v-model:fileList="fileList" @change="onChange" @remove="onRemove" />
+<Upload upload-mode="custom" :custom-request="onCustomSliceUpload" v-model:fileList="fileList" @change="onChange" @remove="onRemove" @success="onSuccess" @error="onError" />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import { useMessage } from 'vue-amazing-ui'
 import type { UploadFileType } from 'vue-amazing-ui'
+const message = useMessage()
 const fileList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
@@ -580,13 +650,14 @@ function onCustomSliceUpload(file: File) {
       console.timeEnd('sliceFile')
       setTimeout(() => {
         // 模拟接口调用返回 name 和 url
+        let res: { name: string; url: string }
         if (file.type === 'application/pdf') {
-          var res = {
+          res = {
             name: 'Markdown.pdf',
             url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
           }
         } else {
-          var res = {
+          res = {
             name: '1.jpg',
             url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
           }
@@ -606,15 +677,25 @@ function onChange(files: UploadFileType[]) {
 function onRemove(file: UploadFileType) {
   console.log('remove', file)
 }
+function onSuccess(file: UploadFileType) {
+  console.log('upload success', file)
+  message.success('upload success')
+}
+function onError(err: unknown) {
+  console.log('upload error', err)
+  message.error(err instanceof Error ? err.message : String(err))
+}
 </script>
 <template>
   <Upload
     multiple
     upload-mode="custom"
-    :custom-request="onCustomRequest"
+    :custom-request="onCustomSliceUpload"
     v-model:fileList="fileList"
     @change="onChange"
     @remove="onRemove"
+    @success="onSuccess"
+    @error="onError"
   />
 </template>
 ```
@@ -720,14 +801,12 @@ onmessage = async (e: MessageEvent) => {
 | fit | 预览图片缩放规则，参考 [object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit)，仅当上传文件为图片时生效 | 'fill' &#124; 'contain' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain' |
 | draggable | 是否支持拖拽上传，开启后可拖拽文件到选择框上传 | boolean | true |
 | disabled | 是否禁用，只能预览，不能删除和上传 | boolean | false |
-| spaceProps | `Space` 组件属性配置，参考 [Space Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/space.html#space)，用于配置多个文件时的排列方式 | object | {} |
-| spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置上传中样式 | object | {} |
-| imageProps | `Image` 组件属性配置，参考 [Image Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/image.html#image)，用于配置图片预览 | object | {} |
-| messageProps | `Message` 组件属性配置，参考 [Message Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/message.html#message)，用于配置操作消息提示 | object | {} |
-| actionMessage | 操作成功的消息提示，传 `{}` 即可不显示任何消息提示 | [MessageType](#messagetype-type) | \{ upload: '上传成功', remove: '删除成功' } |
-| beforeUpload | 上传文件之前的钩子，参数为上传的文件，返回 `false` 则停止上传，返回 `true` 开始上传；支持返回一个 `Promise` 对象（如服务端校验等），`Promise` 对象 `reject` 时停止上传，`resolve` 时开始上传；通常用来校验用户上传的文件格式和大小 | Function | () => true |
+| spaceProps | `Space` 组件属性配置，参考 [Space Props](./space.md#space)，用于配置多个文件时的排列方式 | [SpaceProps](./space.md#space) | {} |
+| spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置上传中样式 | [SpinProps](./spin.md#spin) | {} |
+| imageProps | `Image` 组件属性配置，参考 [Image Props](./image.md#image)，用于配置图片预览 | [ImageProps](./image.md#image) | {} |
+| beforeUpload | 上传文件之前的钩子，参数为上传的文件，返回 `false` 则停止上传，返回 `true` 开始上传；支持返回一个 `Promise` 对象（如服务端校验等），`Promise` 对象 `reject` 时停止上传，`resolve` 时开始上传；通常用来校验用户上传的文件格式和大小 | (file: File) => boolean &#124; void &#124; Promise&lt;unknown&gt; | () => true |
 | uploadMode | 上传文件的方式，可选 `'base64'` &#124; `'custom'` | 'base64' &#124; 'custom' | 'base64' |
-| customRequest | 自定义上传行为，只有 `uploadMode: custom` 时，才会使用 `customRequest` 自定义上传行为 | Function | () => {} |
+| customRequest | 自定义上传行为，只有 `uploadMode: custom` 时，才会使用 `customRequest` 自定义上传行为；未配置时默认返回空结果，避免调用 `.then` 报错 | (file: File) => Promise&lt;[FileType](#filetype-type)&gt; | () => Promise.resolve({ url: '' }) |
 | fileList <Tag color="cyan">v-model</Tag> | 已上传的文件列表 | [FileType](#filetype-type)[] | [] |
 
 ### FileType Type
@@ -738,28 +817,11 @@ onmessage = async (e: MessageEvent) => {
 | url                | 文件地址                       | string | undefined |
 | [propName: string] | 用于包含带有任意数量的其他属性 | any    | undefined |
 
-### MessageType Type
-
-| 名称    | 说明                                                     | 类型   | 默认值     |
-| :------ | :------------------------------------------------------- | :----- | :--------- |
-| upload? | 上传成功的消息提示，没有设置该属性时即不显示上传消息提示 | string | '上传成功' |
-| remove? | 删除成功的消息提示，没有设置该属性时即不显示删除消息提示 | string | '删除成功' |
-
 ## Slots
 
 | 名称 | 说明               | 类型       |
 | :--- | :----------------- | :--------- |
 | tip  | 自定义上传描述文字 | v-slot:tip |
-
-## Methods
-
-| 名称    | 说明             | 类型                      |
-| :------ | :--------------- | :------------------------ |
-| info    | 上传基本信息提示 | (content: string) => void |
-| success | 上传成功信息提示 | (content: string) => void |
-| error   | 上传失败信息提示 | (content: string) => void |
-| warning | 上传警告信息提示 | (content: string) => void |
-| loading | 加载中信息提示   | (content: string) => void |
 
 ## Events
 
@@ -768,4 +830,6 @@ onmessage = async (e: MessageEvent) => {
 | drop | 当文件被拖入上传区域时的回调 | (e: [DragEvent](https://developer.mozilla.org/zh-CN/docs/Web/API/DragEvent/DragEvent)) => void |
 | change | 上传文件改变时的回调 | (files: [FileType](#filetype-type)[]) => void |
 | preview | 点击预览时的回调 | (file: [FileType](#filetype-type)) => void |
-| remove | 点击移除文件时的回调 | (files: [FileType](#filetype-type)) => void |
+| remove | 点击移除文件时的回调 | (file: [FileType](#filetype-type)) => void |
+| success | 上传成功时的回调 | (file: [FileType](#filetype-type), files: [FileType](#filetype-type)[]) => void |
+| error | 上传失败时的回调 | (error: any) => void |

@@ -283,3 +283,54 @@ export function getScrollParent(el: HTMLElement | null): HTMLElement | null {
   if (isScrollable(parentElement)) return parentElement
   return getScrollParent(parentElement)
 }
+
+// 页面滚动锁的模块级共享计数：lockScroll 每次调用 +1，返回的释放函数与本次调用严格配对 -1。
+// 仅首个调用真正设置样式（并缓存被覆盖的内联样式），最后一个释放时才真正还原页面。
+// 由此多个入口（Modal / Dialog / Drawer 及多 Provider 并存）各自锁定互不覆盖，
+// 任一入口提前释放也不会误还原其它入口仍持有的锁。
+let bodyLockCount = 0
+// 首个锁设置前 documentElement / body 的原内联样式，归零释放时精确还原，避免误删调用方预设
+let prevHtmlOverflowY = ''
+let prevBodyOverflowY = ''
+let prevBodyPaddingRight = ''
+/**
+ * 锁定页面滚动，并返回本次锁定的释放函数
+ *
+ * 隐藏 html/body 的垂直滚动条，并补偿滚动条宽度到 body 的 padding-right，
+ * 避免滚动条消失导致内容可用宽度突变、页面横向抖动。
+ * 需先测量滚动条宽度再隐藏滚动条（顺序不可颠倒，否则差值恒为 0）。
+ *
+ * 每个调用需与返回的释放函数严格配对；仅当所有来源均已释放时才会真正还原页面滚动，
+ * 可安全用于多弹窗 / 多抽屉并存场景。
+ *
+ * @returns {() => void} 本次锁定的释放函数（幂等）：从全局计数中移除本次锁定，重复调用无副作用
+ */
+export function lockScroll(): () => void {
+  const html = document.documentElement
+  const body = document.body
+  if (bodyLockCount === 0) {
+    prevHtmlOverflowY = html.style.overflowY
+    prevBodyOverflowY = body.style.overflowY
+    prevBodyPaddingRight = body.style.paddingRight
+    const scrollbarWidth = window.innerWidth - html.clientWidth
+    html.style.overflowY = 'hidden'
+    body.style.overflowY = 'hidden'
+    if (scrollbarWidth > 0) {
+      body.style.paddingRight = `${scrollbarWidth}px`
+    }
+  }
+  bodyLockCount += 1
+  let released = false
+  return () => {
+    if (released) {
+      return
+    }
+    released = true
+    bodyLockCount -= 1
+    if (bodyLockCount === 0) {
+      html.style.overflowY = prevHtmlOverflowY
+      body.style.overflowY = prevBodyOverflowY
+      body.style.paddingRight = prevBodyPaddingRight
+    }
+  }
+}

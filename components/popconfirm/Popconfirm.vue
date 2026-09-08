@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import type { CSSProperties, VNode, Slot } from 'vue'
 import Tooltip from 'components/tooltip'
-import Button from 'components/button'
+import Button, { type ButtonProps } from 'components/button'
 import { useSlotsExist, useInject } from 'components/utils'
 export interface Props {
   title?: string // 弹出确认框的标题 string | slot
@@ -15,10 +15,10 @@ export interface Props {
   iconStyle?: CSSProperties // 设置 Icon 图标的样式，一般不需要设置，主要用于自定义 Icon 图标时
   cancelText?: string // 取消按钮文字 string | slot
   cancelType?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 取消按钮类型
-  cancelProps?: object // 取消按钮 props，优先级高于 cancelType，参考 Button 组件 props
+  cancelProps?: ButtonProps // 取消按钮 props，优先级高于 cancelType，参考 Button 组件 props
   okText?: string // 确认按钮文字 string | slot
   okType?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 确认按钮类型
-  okProps?: object // 确认按钮 props，优先级高于 okType，参考 Button 组件 props
+  okProps?: ButtonProps // 确认按钮 props，优先级高于 okType，参考 Button 组件 props
   showCancel?: boolean // 是否显示取消按钮
 }
 const props = withDefaults(defineProps<Props>(), {

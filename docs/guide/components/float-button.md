@@ -585,8 +585,8 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 | target | 相当于 `a` 标签的 `target` `属性，href` 存在时生效 | 'self' &#124; '\_blank' | 'self' |
 | menuTrigger | 浮动按钮菜单显示的触发方式 | 'click' &#124; 'hover' | undefined |
 | tooltip | 气泡卡片的内容 | sring &#124; slot | undefined |
-| tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip) | object | {} |
-| badgeProps | 带徽标的浮动按钮（不支持 `status` 以及相关属性），参考 [Badge Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/badge.html#badge) | object | {} |
+| tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip) | [TooltipProps](./tooltip.md#tooltip) | {} |
+| badgeProps | 带徽标的浮动按钮（不支持 `status` 以及相关属性），参考 [Badge Props](./badge.md#badge) | [BadgeProps](./badge.md#badge) | {} |
 
 ## Slots
 

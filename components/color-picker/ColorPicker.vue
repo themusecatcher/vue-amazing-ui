@@ -22,7 +22,7 @@ import {
 } from 'seemly'
 import type { HSVA, RGBA, HSLA, HSV, RGB, HSL } from 'seemly'
 import Tooltip from 'components/tooltip'
-import Input from 'components/input'
+import Input, { type InputProps } from 'components/input'
 import Button from 'components/button'
 import { useSlotsExist, useInject } from 'components/utils'
 export type ColorPickerMode = 'rgb' | 'hsl' | 'hsv' | 'hex'
@@ -31,7 +31,7 @@ export interface Props {
   width?: string | number // 颜色选择器的宽度，单位 px
   label?: (color: string) => string // 展示的内容 function | slot
   tooltipStyle?: CSSProperties // 设置弹出面板的样式
-  inputProps?: object // 输入框组件 props，参考 Input 组件 Props
+  inputProps?: InputProps // 输入框组件 props，参考 Input 组件 Props
   showAlpha?: boolean // 是否可调节 alpha 通道
   showPreview?: boolean // 是否展示颜色预览块
   size?: 'small' | 'middle' | 'large' // 颜色选择器的尺寸

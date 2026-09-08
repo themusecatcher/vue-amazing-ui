@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watchEffect } from 'vue'
-import Space from 'components/space'
+import Space, { type SpaceProps } from 'components/space'
 import { useSlotsExist } from 'components/utils'
 export interface Item {
   label?: string // 标签文本 string | slot
@@ -17,7 +17,7 @@ export interface Props {
   size?: 'small' | 'middle' | 'large' // 标签尺寸
   bordered?: boolean // 是否有边框
   dynamic?: boolean // 是否启用标签动态添加和删除
-  spaceProps?: object // Space 组件属性配置，仅当 dynamic: true 时生效
+  spaceProps?: SpaceProps // Space 组件属性配置，仅当 dynamic: true 时生效
   value?: string[] | Item[] // 动态标签数组，仅当 dynamic: true 时生效
 }
 const props = withDefaults(defineProps<Props>(), {

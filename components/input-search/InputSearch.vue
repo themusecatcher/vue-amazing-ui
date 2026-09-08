@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import Button from 'components/button'
+import Button, { type ButtonProps } from 'components/button'
 import { useSlotsExist, useInject } from 'components/utils'
 export interface Props {
   width?: string | number // 搜索框宽度，单位 px
   icon?: boolean // 搜索图标 boolean | slot
   search?: string // 搜索按钮，默认时为搜索图标 string | slot
-  searchProps?: object // 设置搜索按钮的属性，参考 Button Props
+  searchProps?: ButtonProps // 设置搜索按钮的属性，参考 Button Props
   size?: 'small' | 'middle' | 'large' // 搜索框大小
   allowClear?: boolean // 可以点击清除图标删除搜索框内容
   addonBefore?: string // 设置前置标签 string | slot

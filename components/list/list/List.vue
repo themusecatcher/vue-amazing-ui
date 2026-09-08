@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import Spin from 'components/spin'
-import Empty from 'components/empty'
-import Pagination from 'components/pagination'
+import Spin, { type SpinProps } from 'components/spin'
+import Empty, { type EmptyProps } from 'components/empty'
+import Pagination, { type PaginationProps } from 'components/pagination'
 import { useSlotsExist } from 'components/utils'
 export interface Props {
   bordered?: boolean // 是否展示边框
@@ -13,10 +13,10 @@ export interface Props {
   hoverable?: boolean // 是否显示悬浮样式
   header?: string // 列表头部 string | slot
   footer?: string // 列表底部 string | slot
-  spinProps?: object // Spin 组件属性配置，参考 Spin Props，用于配置列表加载中样式
-  emptyProps?: object // Empty 组件属性配置，参考 Empty Props，用于配置暂无数据样式
+  spinProps?: SpinProps // Spin 组件属性配置，参考 Spin Props，用于配置列表加载中样式
+  emptyProps?: EmptyProps // Empty 组件属性配置，参考 Empty Props，用于配置暂无数据样式
   showPagination?: boolean // 是否显示分页
-  pagination?: object // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
+  pagination?: PaginationProps // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
 }
 const props = withDefaults(defineProps<Props>(), {
   bordered: false,

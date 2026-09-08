@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import type { Slot, VNode } from 'vue'
-import Tooltip from 'components/tooltip'
-import Badge from 'components/badge'
+import Tooltip, { type TooltipProps } from 'components/tooltip'
+import Badge, { type BadgeProps } from 'components/badge'
 import { useSlotsExist, useInject } from 'components/utils'
 export interface Props {
   top?: number | string // 按钮定位的上边距，单位 px
@@ -20,8 +20,8 @@ export interface Props {
   target?: '_self' | '_blank' // 相当于 a 标签的 target 属性，href 存在时生效
   menuTrigger?: 'click' | 'hover' // 浮动按钮菜单显示的触发方式
   tooltip?: string // 气泡卡片的内容 string | slot
-  tooltipProps?: object // Tooltip 组件属性配置，参考 Tooltip Props
-  badgeProps?: object // 带徽标的浮动按钮（不支持 status 以及相关属性），参考 Badge Props
+  tooltipProps?: TooltipProps // Tooltip 组件属性配置，参考 Tooltip Props
+  badgeProps?: BadgeProps // 带徽标的浮动按钮（不支持 status 以及相关属性），参考 Badge Props
 }
 const props = withDefaults(defineProps<Props>(), {
   top: undefined,

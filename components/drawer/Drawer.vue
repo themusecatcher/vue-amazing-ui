@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect } from 'vue'
+import { ref, computed, watch, watchEffect, onUnmounted } from 'vue'
 import type { CSSProperties } from 'vue'
-import Scrollbar from 'components/scrollbar'
-import { useSlotsExist } from 'components/utils'
+import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
+import { useSlotsExist, lockScroll } from 'components/utils'
 export interface Props {
   width?: string | number // 抽屉宽度，在 placement 为 right 或 left 时使用，单位 px
   height?: string | number // 抽屉高度，在 placement 为 top 或 bottom 时使用，单位 px
@@ -13,7 +13,7 @@ export interface Props {
   headerStyle?: CSSProperties // 设置 Drawer 头部的样式
   bodyClass?: string // 设置 Drawer 内容部分的类名
   bodyStyle?: CSSProperties // 设置 Drawer 内容部分的样式
-  scrollbarProps?: object // Scrollbar 组件属性配置，用于设置内容滚动条的样式
+  scrollbarProps?: ScrollbarProps // Scrollbar 组件属性配置，用于设置内容滚动条的样式
   extra?: string // 抽屉右上角的操作区域 string | slot
   footer?: string // 抽屉的页脚 string | slot
   footerClass?: string // 设置 Drawer 页脚的类名
@@ -43,6 +43,9 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const drawerRef = ref()
 const drawerOpen = ref<boolean>()
+// 组件持有的滚动锁释放函数：加锁后保存返回值、释放后置空，存在即代表本组件持锁；
+// 卸载兜底据此精确释放，避免未持锁时误解锁他人
+let scrollLockRelease: (() => void) | null = null
 const slotsExist = useSlotsExist(['title', 'extra', 'footer'])
 const emits = defineEmits(['update:open', 'close'])
 const drawerWidth = computed(() => {
@@ -87,13 +90,14 @@ watch(
   (to) => {
     if (to) {
       drawerRef.value.focus()
-      // 锁定滚动
-      document.documentElement.style.overflowY = 'hidden'
-      document.body.style.overflowY = 'hidden'
+      // 锁定滚动（内部已做滚动条宽度补偿，防止页面横向抖动）
+      if (!scrollLockRelease) {
+        scrollLockRelease = lockScroll()
+      }
     } else {
-      // 解锁滚动
-      document.documentElement.style.removeProperty('overflow-y')
-      document.body.style.removeProperty('overflow-y')
+      // 解锁滚动（未持锁时为空调用，幂等无副作用）
+      scrollLockRelease?.()
+      scrollLockRelease = null
     }
   },
   {
@@ -102,6 +106,11 @@ watch(
 )
 watchEffect(() => {
   drawerOpen.value = props.open
+})
+onUnmounted(() => {
+  // 卸载兜底：本组件仍持锁时释放，否则滚动锁随组件销毁而残留，页面滚动永久锁死；
+  // 以 scrollLockRelease 而非 drawerOpen 判定，避免从未加锁却误解锁他人
+  scrollLockRelease?.()
 })
 function onBlur(e: Event) {
   drawerOpen.value = false

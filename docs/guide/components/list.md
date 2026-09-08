@@ -1188,17 +1188,17 @@ loading | 是否加载中 | boolean | false
 hoverable | 是否显示悬浮样式 | boolean | false
 header | 列表头部 | string &#124; slot | undefined
 footer | 列表底部 | string &#124; slot | undefined
-spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置列表加载中样式 | object | {}
-emptyProps | `Empty` 组件属性配置，参考 [Empty Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/empty.html#empty)，用于配置暂无数据样式 | object | {}
+spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置列表加载中样式 | [SpinProps](./spin.md#spin) | {}
+emptyProps | `Empty` 组件属性配置，参考 [Empty Props](./empty.md#empty)，用于配置暂无数据样式 | [EmptyProps](./empty.md#empty) | {}
 showPagination | 是否显示分页 | boolean | false
-pagination | `Pagination` 组件属性配置，参考 [Pagination Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/pagination.html#pagination)，用于配置分页功能 | object | {}
+pagination | `Pagination` 组件属性配置，参考 [Pagination Props](./pagination.md#pagination)，用于配置分页功能 | [PaginationProps](./pagination.md#pagination) | {}
 
 ### ListItem
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 avatar | 列表元素的图标 | string &#124; slot | undefined
-avatarProps | `Avatar` 组件属性配置，参考 [Avatar Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/avatar.html#avatar)，用于配置列表图标样式 | object | {}
+avatarProps | `Avatar` 组件属性配置，参考 [Avatar Props](./avatar.md#avatar)，用于配置列表图标样式 | [AvatarProps](./avatar.md#avatar) | {}
 title | 列表元素的标题 | string &#124; slot | undefined
 description | 列表元素的描述内容 | string &#124; slot | undefined
 actions | 列表操作组 | slot | undefined

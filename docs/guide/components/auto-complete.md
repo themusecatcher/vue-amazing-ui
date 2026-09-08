@@ -1173,7 +1173,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
 | dropdownMenuStyle | 下拉菜单自定义样式 | CSSProperties | undefined |
 | popupClassName | 下拉菜单的 className 属性 | string | undefined |
 | to | 下拉面板挂载的容器节点，可选：元素标签名 (例如 `'body'`) 或者元素本身，`false` 会待在原地 | string &#124; HTMLElement &#124; false | 'body' |
-| filterOption | 根据输入项进行筛选：<li>默认为 `false` 时不筛选，显示全部数据源，由用户在 `search` 事件中远程更新 `options`</li><li>当其为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | boolean &#124; Function | false |
+| filterOption | 根据输入项进行筛选：<li>默认为 `false` 时不筛选，显示全部数据源，由用户在 `search` 事件中远程更新 `options`</li><li>当其为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | boolean &#124; ((inputValue: string, option: Option) => boolean) | false |
 
 ### Option Type
 

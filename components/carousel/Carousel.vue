@@ -4,7 +4,7 @@ import type { CSSProperties } from 'vue'
 import { rafTimeout, cancelRaf, useEventListener, useResizeObserver, useInject } from 'components/utils'
 import { useTransition } from '@vueuse/core'
 import type { CubicBezierPoints, EasingFunction } from '@vueuse/core'
-import Spin from 'components/spin'
+import Spin, { type SpinProps } from 'components/spin'
 export interface Image {
   name?: string // 图片名称
   src: string // 图片地址
@@ -30,7 +30,7 @@ export interface Props {
   dotActiveStyle?: CSSProperties // 指示点选中样式，优先级高于 dotActiveColor
   dotPosition?: 'bottom' | 'top' | 'left' | 'right' // 指示点位置，位置为 'left' | 'right' 时，effect: 'slide' 轮播自动变为垂直轮播
   dotsTrigger?: 'click' | 'hover' // 指示点触发切换的方式
-  spinProps?: object // 图片加载中样式，Spin 组件属性配置，参考 Spin Props
+  spinProps?: SpinProps // 图片加载中样式，Spin 组件属性配置，参考 Spin Props
   fadeDuration?: number // 渐变动画持续时长，单位 ms，仅当 effect 为 'fade' 时生效
   fadeFunction?: string // 渐变动画函数，仅当 effect 为 'fade' 时生效，可参考 transition-timing-function 写法：https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function
   slideDuration?: number // 滑动动画持续时长，单位 ms，仅当 effect 为 'slide' 时生效

@@ -937,7 +937,7 @@ const state = reactive({
 | duration | 垂直滚动过渡持续时间，单位 `ms`，垂直滚动时生效 | number | 1000 |
 | interval | 垂直文字滚动时间间隔，单位 `ms`，垂直滚动时生效 | number | 3000 |
 | ellipsis | 是否启用文本省略组件 | boolean | false |
-| ellipsisProps | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/ellipsis.html#ellipsis)，用于配置文本省略弹出提示 | object | {} |
+| ellipsisProps | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](./ellipsis.md#ellipsis)，用于配置文本省略弹出提示 | [EllipsisProps](./ellipsis.md#ellipsis) | {} |
 | pauseOnMouseEnter | 鼠标移入是否暂停滚动 | boolean | false |
 
 ### Item Type

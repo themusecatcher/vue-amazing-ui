@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { ref, h } from 'vue'
+import { h } from 'vue'
 import { FireFilled, QuestionCircleFilled, SoundFilled } from '@ant-design/icons-vue'
-const message = ref()
+import { useMessage } from 'components/message'
+const message = useMessage()
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
-  message.value.success('Click on Yes')
+  message.success('Click on Yes')
 }
 const cancel = (e: MouseEvent) => {
   console.log('cancel', e)
-  message.value.error('Click on No')
+  message.error('Click on No')
 }
 const openChange = (open: boolean) => {
   console.log('open', open)
@@ -143,6 +144,5 @@ const openChange = (open: boolean) => {
     <Popconfirm :arrow="false" title="My arrow is hidden" @ok="confirm" @cancel="cancel">
       <Button type="primary">Hide Arrow Confirm</Button>
     </Popconfirm>
-    <Message ref="message" />
   </div>
 </template>

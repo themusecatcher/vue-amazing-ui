@@ -347,13 +347,13 @@ const buttonWidth = 70
 我们添加了多种预设色彩的文字提示样式，用作不同场景使用
 
 <Divider orientation="left">Presets</Divider>
-<Space wrap>
+<Space>
   <Tooltip v-for="color in presetColors" :key="color" tooltip="prompt text" :bg-color="color">
     <Button>{{ color }}</Button>
   </Tooltip>
 </Space>
 <Divider orientation="left">Custom</Divider>
-<Space wrap>
+<Space>
   <Tooltip v-for="color in customColors" :key="color" tooltip="prompt text" :bg-color="color">
     <Button>{{ color }}</Button>
   </Tooltip>
@@ -382,13 +382,13 @@ const customColors = ['#f50', '#2db7f5', '#87d068', '#108ee9']
 </script>
 <template>
   <Divider orientation="left">Presets</Divider>
-  <Space wrap>
+  <Space>
     <Tooltip v-for="color in presetColors" :key="color" tooltip="prompt text" :bg-color="color">
       <Button>{{ color }}</Button>
     </Tooltip>
   </Space>
   <Divider orientation="left">Custom</Divider>
-  <Space wrap>
+  <Space>
     <Tooltip v-for="color in customColors" :key="color" tooltip="prompt text" :bg-color="color">
       <Button>{{ color }}</Button>
     </Tooltip>

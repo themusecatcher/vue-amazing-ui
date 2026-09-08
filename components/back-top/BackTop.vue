@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { VNode, Slot } from 'vue'
-import Tooltip from 'components/tooltip'
+import Tooltip, { type TooltipProps } from 'components/tooltip'
 import { useSlotsExist, useMutationObserver, useInject, useOptionsSupported, getScrollParent } from 'components/utils'
 export interface Props {
   icon?: VNode | Slot // 自定义图标
   description?: string // 文字描述 string | slot
   tooltip?: string // 文字提示内容 string | slot
-  tooltipProps?: object // Tooltip 组件属性配置，参考 Tooltip Props
+  tooltipProps?: TooltipProps // Tooltip 组件属性配置，参考 Tooltip Props
   type?: 'default' | 'primary' // 设置按钮类型
   shape?: 'circle' | 'square' // 设置按钮形状
   bottom?: number | string // BackTop 距离页面底部的高度，单位 px

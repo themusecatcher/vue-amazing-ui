@@ -26,6 +26,7 @@
       "@/*": ["./src/*"],
       "#/*": ["./types/*"],
       "components/*": ["./components/*"],
+      "vue-amazing-ui": ["./components/index.ts"],
       "less/*": ["./src/assets/less/*"]
     }
   }

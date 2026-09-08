@@ -2,7 +2,40 @@
 
 <GlobalElement />
 
-对于新功能、新组件、`bug` 修复以及文档更新，您可以向 `main` 分支创建拉取请求或通过右下角邮箱地址联系我
+如果你在使用过程中发现了问题、`bug`或希望贡献新功能 / 新组件，欢迎通过以下方式与我联系：
+
+- **问题反馈**：前往 [GitHub Issues](https://github.com/themusecatcher/vue-amazing-ui/issues) 提交 `issue`，建议附上复现步骤或最小示例
+- **代码贡献**：新功能、新组件、`bug` 修复及文档更新，请先阅读[贡献指南](https://github.com/themusecatcher/vue-amazing-ui/blob/main/CONTRIBUTING.md)，再向 `main` 分支发起 `Pull Request`
+- **直接联系**：通过页面右下角邮箱地址与我直接沟通
+
+## <VersionDateTag date="2026-09-09">2.7.0</VersionDateTag>
+
+- ⚠️ **破坏性变更**：[全局提示 Message](/guide/components/message.html)、[通知提醒 Notification](/guide/components/notification.html)、[模态框 Modal](/guide/components/modal.html) 三组件移除了组件实例 `ref` 的命令式调用方式（含 `window['$xxx']` 全局挂载用法），统一改为新 `API`，请按各组件文档「调用方式」章节迁移。
+- ⚠️ **破坏性变更**：[对话框 Dialog](/guide/components/dialog.html) 组件默认改为通过 `Teleport` 挂载到 `body` 渲染（此前渲染于组件所在位置），并新增 `to` 属性用于指定挂载节点，依赖原渲染位置覆写样式的用法请同步调整
+- ⚠️ **破坏性变更**：重构 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 与 `createDiscreteApi()` 的主题同步机制，采用离散 API 形态：移除 `ConfigProvider` 自动写入的模块级主题快照（原「无需手工传入、自动跟随」不再生效），`createDiscreteApi` 的主题改为通过第二参 `configProviderProps` 显式传入（支持 `Ref` / `computed` 响应式），同时支持 `messageProviderProps` / `dialogProviderProps` / `notificationProviderProps` / `modalProviderProps` 透传各 Provider 配置
+- ⚠️ **破坏性变更**：[通知提醒 Notification](/guide/components/notification.html) 组件调用参数 `description` 重命名为 `content`，请全局替换调用处的 `description` 为 `content`。
+- 重构 [全局提示 Message](/guide/components/message.html)、[通知提醒 Notification](/guide/components/notification.html)、[模态框 Modal](/guide/components/modal.html) 组件命令式 API：新增 `useMessage` / `useNotification` / `useModal`（`setup` 内使用，需外层 `XxxProvider`）与 `createDiscreteApi()`（`axios` 拦截器、路由守卫等任意位置使用，无需外层 `Provider`）双入口；组件挂载后通过 `@ready` 事件回传命令式 `api`
+- 重构 [对话框 Dialog](/guide/components/dialog.html) 组件命令式 API：新增 `useDialog()`（`setup` 内使用，需外层 `<DialogProvider>`）与 `createDiscreteApi(['dialog'])`（任意位置使用，无需外层 `Provider`）双入口；声明式 `<Dialog v-model:open>` 用法不变，并作为承载表单 / 大批量内容的推荐用法
+- 修复 [对话框 Dialog](/guide/components/dialog.html) 组件单例状态问题：改为多实例栈，多次调用不再互相覆盖；同时在内容区内按下、拖选文字后释放在遮罩上时不再误判为遮罩点击而关闭弹窗
+- 增强 [对话框 Dialog](/guide/components/dialog.html) 组件：新增 `draggable` 拖拽（标题栏为拖拽句柄，`{ bounds: 'none' }` 可解除视口边界限制）；打开时键盘焦点锁定在弹窗内，`Tab` / `Shift + Tab` 在弹窗内循环，新增 `autoFocusButton` / `focusTriggerAfterClose` / `closeFocusable` 聚焦相关属性；新增 `wrapClass` / `wrapStyle`（外层容器）、`containerClass` / `containerStyle`（弹窗定位层）、`bodyClass` / `bodyStyle`（弹窗卡片）三类分层定制属性；多实例同时打开时按各自 `zIndex` 分层（遮罩取 `zIndex`，弹窗取 `zIndex + 10`），遮罩改为逐实例渲染；`title` / `content` / `closeIcon` / `footer` 统一支持 `string` / `VNode` / 渲染函数 / 插槽四种形态；新增 `afterClose` 完全关闭回调，命令式句柄支持 `update()` 原地更新与 `show()` 复用实例；弹窗补充 `aria-modal` / `aria-labelledby`，遮罩补充 `aria-hidden`，右上角关闭按钮改为可聚焦的 `<button>` 并补充 `aria-label`
+- 优化 [全局提示 Message](/guide/components/message.html) 组件，自动关闭时长改为按每条消息独立计时，修复多条不同时长消息并存时 `hover` 后计时串用的问题；`duration: null` 常驻消息不再阻塞其他消息的回收；消息容器 `top` 改为组件级配置，后发消息不再顶掉已显示消息；组件卸载时清理全部定时器
+- 修复 [模态框 Modal](/guide/components/modal.html) 组件单例状态问题：改为多实例栈，`onOk` 内再次弹窗不再被立即关闭；`onOk` 抛错后 `loading` 复位且弹窗可正常关闭
+- 增强 [模态框 Modal](/guide/components/modal.html) 组件：打开时将键盘焦点锁定在弹窗内，`Tab` / `Shift + Tab` 在弹窗内循环；新增 `wrapClass` / `wrapStyle`（外层容器）、`containerClass` / `containerStyle`（弹窗容器）属性，支持容器层定制；多实例同时打开时按各自 `zIndex` 分层（遮罩取 `zIndex`，弹窗取 `zIndex + 10`），遮罩改为逐实例渲染；`destroyAll()` 由立即移除改为逐实例走关闭流程，保留离场动画；弹窗内容补充 `aria-modal`，遮罩补充 `aria-hidden`；修复遮罩首次出现无淡入过渡（瞬间全黑）的问题，多层弹窗时遮罩随实例逐层叠加
+- 优化 [模态框 Modal](/guide/components/modal.html) 组件：滚动锁改为按当前栈中打开实例的 `blockScroll` 实时计算，修复后开的弹窗关闭后仍沿用其滚动锁配置的问题；新增 `onEsc` / `onMaskClick` 回调（无论是否允许关闭都会触发）与 `change` 事件（携带该实例 `key`）
+- 增强 [模态框 Modal](/guide/components/modal.html) 组件：右上角关闭按钮由不可聚焦的 `<span>` 改为可聚焦的 `<button type="button">` 并补充 `aria-label`，支持键盘 `Enter` / `Space` 触发关闭与 `:focus-visible` 焦点环；新增 `closeFocusable` 属性（默认 `true`，设为 `false` 后关闭按钮 `tabindex` 为 `-1`，不参与 `Tab` 序列）
+- ⚠️ **破坏性变更**：[模态框 Modal](/guide/components/modal.html) 组件命令式调用的 `maskClosable` 默认值由回落组件级配置（默认 `true`）改为 `false`，避免 `Modal.confirm` 误触关闭，需要响应遮罩点击请显式传入 `maskClosable: true`
+- ⚠️ **破坏性变更**：[模态框 Modal](/guide/components/modal.html) 组件键盘焦点模型调整：移除 `trapFocus` 属性（`Tab` 焦点锁定改为始终生效），`autoFocusButton` 移除 `null` 取值（不再支持「不自动聚焦」），`Esc` 监听由 `document` 级改为绑定在弹窗主体上，焦点移出弹窗后（如 `mask: false` 时点击背景）不再响应；不再对外导出 `FooterType` / `ModalCallback` 类型
+- 修复 [通知提醒 Notification](/guide/components/notification.html) 组件 `update({ duration: null })` 无法取消已有定时器的问题
+- 增强 [通知提醒 Notification](/guide/components/notification.html) 组件：新增 `action`（自定义操作区域，渲染在通知底部右侧）、`meta`（底部信息，与 `action` 同行左右分布）属性，均支持字符串 / `VNode` / 渲染函数；`onClose` 支持返回 `false`（或 `Promise` resolve `false`）取消本次关闭
+- 增强 [通知提醒 Notification](/guide/components/notification.html) 组件：新增 `key`（外部指定唯一标识，相同 `key` 不叠加仅原地更新，并支持 `destroy(key)` 在任意调用点精确关闭）、`closable`（是否显示右上角关闭按钮，支持组件级与单条配置，单条优先）、`onClick`（点击通知体回调，点击关闭按钮不触发）属性
+- 增强 [通知提醒 Notification](/guide/components/notification.html) 组件：单条通知支持 `placement` 弹出位置（新增 `top` / `bottom` 居中弹出位置，优先级高于组件级默认值）；新增 `scrollable` 属性，通知过多超出视口高度时滚动显示
+- 增强 [通知提醒 Notification](/guide/components/notification.html) 组件：新增 `keepAliveOnHover`（鼠标移入通知时是否暂停自动关闭，默认开启）、`maxCount`（同一弹出位置下可同时存在的最大通知数，超出时自动淘汰最旧的一条）与 `to`（自定义通知容器挂载节点，默认挂载到 `body`）属性
+- 增强 [通知提醒 Notification](/guide/components/notification.html) 组件：调用返回 `NotificationReactive` 句柄，支持 `destroy()` 手动关闭与 `update()` 原地更新，`update` 支持 `mode` 切换内置图标类型；`destroy(key)` 支持按 `key` 精确关闭任意调用点打开的通知
+- 修复 [通知提醒 Notification](/guide/components/notification.html) 组件通知全部关闭后仍残留空容器 `DOM` 的问题：`placement` 分组内无通知时不再渲染该分组容器
+- 优化 [全局提示 Message](/guide/components/message.html)、[通知提醒 Notification](/guide/components/notification.html) 组件弹层层级，统一上调至 `2000`，避免被页面内其他自定义浮层遮挡
+- 重构 [上传 Upload](/guide/components/upload.html) 组件：移除内嵌 [全局提示 Message](/guide/components/message.html) 与 `messageProps` / `actionMessage` 属性，上传成功 / 删除 / 上传失败等提示改由使用方监听 `@success` / `@remove` / `@error` 事件后自行调用
+- 三组件内容支持 `VNode` 与渲染函数；关闭事件携带该条消息 `key`；消息容器支持 `Teleport` 自定义挂载节点
+- 新增 `vitest` 单元测试，覆盖队列管理、定时器清理、命令式 `API` 等场景
 
 ## <VersionDateTag date="2026-08-30">2.6.2</VersionDateTag>
 

@@ -3,6 +3,7 @@ import { ref, watchEffect } from 'vue'
 import { CalendarOutlined } from '@ant-design/icons-vue'
 import { format, subDays, addDays } from 'date-fns'
 import type { CalendarDayOfWeek, CalendarDefaultWeek, CalendarDateItem, CalendarMonthItem } from 'vue-amazing-ui'
+import { useMessage } from 'components/message'
 const date = ref(Date.now())
 const cardDate = ref(Date.now())
 const modeDate = ref(Date.now())
@@ -16,7 +17,7 @@ const selectDate = ref(new Date('2030-10-06').getTime())
 const disableDate = ref(Date.now())
 const dateStr = ref(format(Date.now(), 'yyyy-MM-dd'))
 const customThemeDate = ref(Date.now())
-const message = ref()
+const message = useMessage()
 const displayOptions = [
   {
     label: 'panel',
@@ -129,7 +130,7 @@ function disabledWeekend(timestamp: number): boolean {
 }
 function onSelect(date: string | number, source: 'date' | 'month') {
   console.log('select', date, source)
-  message.value.success(format(date, 'yyyy-MM-dd'))
+  message.success(format(date, 'yyyy-MM-dd'))
 }
 function onChange(
   date: string | number,
@@ -285,7 +286,6 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
       <Alert type="info" :message="`You selected date: ${dateStr}`" />
       <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
     </Flex>
-    <Message ref="message" />
   </div>
 </template>
 <style lang="less" scoped>

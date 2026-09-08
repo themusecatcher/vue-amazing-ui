@@ -9,23 +9,22 @@
 - 目标元素的操作需要用户进一步的确认时，在目标元素附近弹出浮层提示，询问用户
 
 <script setup lang="ts">
-import { ref, h } from 'vue'
+import { h } from 'vue'
 import { FireFilled, QuestionCircleFilled, SoundFilled } from '@ant-design/icons-vue'
-const message = ref()
+import { useMessage } from 'vue-amazing-ui'
+const message = useMessage()
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
-  message.value.success('Click on Yes')
+  message.success('Click on Yes')
 }
 const cancel = (e: MouseEvent) => {
   console.log('cancel', e)
-  message.value.error('Click on No')
+  message.error('Click on No')
 }
 const openChange = (open: boolean) => {
   console.log('open', open)
 }
 </script>
-
-<Message ref="message" />
 
 ## 基本使用
 
@@ -43,15 +42,15 @@ const openChange = (open: boolean) => {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-const message = ref()
+import { useMessage } from 'vue-amazing-ui'
+const message = useMessage()
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
-  message.value.success('Click on Yes')
+  message.success('Click on Yes')
 }
 const cancel = (e: MouseEvent) => {
   console.log('cancel', e)
-  message.value.error('Click on No')
+  message.error('Click on No')
 }
 const openChange = (open: boolean) => {
   console.log('open', open)
@@ -67,7 +66,6 @@ const openChange = (open: boolean) => {
   >
     <Button type="danger">Delete Confirm</Button>
   </Popconfirm>
-  <Message ref="message" />
 </template>
 ```
 
@@ -88,11 +86,11 @@ const openChange = (open: boolean) => {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-const message = ref()
+import { useMessage } from 'vue-amazing-ui'
+const message = useMessage()
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
-  message.value.success('Click on Yes')
+  message.success('Click on Yes')
 }
 </script>
 <template>
@@ -104,7 +102,6 @@ const confirm = (e: MouseEvent) => {
   >
     <Button type="primary">Hidden Cancel Btn</Button>
   </Popconfirm>
-  <Message ref="message" />
 </template>
 ```
 
@@ -139,16 +136,16 @@ const confirm = (e: MouseEvent) => {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
 import { FireFilled } from '@ant-design/icons-vue'
-const message = ref()
+import { useMessage } from 'vue-amazing-ui'
+const message = useMessage()
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
-  message.value.success('Click on Yes')
+  message.success('Click on Yes')
 }
 const cancel = (e: MouseEvent) => {
   console.log('cancel', e)
-  message.value.error('Click on No')
+  message.error('Click on No')
 }
 </script>
 <template>
@@ -174,7 +171,6 @@ const cancel = (e: MouseEvent) => {
     </template>
     <Button type="primary">Vue Amazing UI</Button>
   </Popconfirm>
-  <Message ref="message" />
 </template>
 ```
 
@@ -209,15 +205,15 @@ const cancel = (e: MouseEvent) => {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-const message = ref()
+import { useMessage } from 'vue-amazing-ui'
+const message = useMessage()
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
-  message.value.success('Click on Yes')
+  message.success('Click on Yes')
 }
 const cancel = (e: MouseEvent) => {
   console.log('cancel', e)
-  message.value.error('Click on No')
+  message.error('Click on No')
 }
 </script>
 <template>
@@ -243,7 +239,6 @@ const cancel = (e: MouseEvent) => {
       <Button type="danger">Delete Confirm</Button>
     </Popconfirm>
   </Space>
-  <Message ref="message" />
 </template>
 ```
 
@@ -289,15 +284,15 @@ const cancel = (e: MouseEvent) => {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-const message = ref()
+import { useMessage } from 'vue-amazing-ui'
+const message = useMessage()
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
-  message.value.success('Click on Yes')
+  message.success('Click on Yes')
 }
 const cancel = (e: MouseEvent) => {
   console.log('cancel', e)
-  message.value.error('Click on No')
+  message.error('Click on No')
 }
 </script>
 <template>
@@ -334,7 +329,6 @@ const cancel = (e: MouseEvent) => {
       <Button type="primary">Danger Confirm</Button>
     </Popconfirm>
   </Space>
-  <Message ref="message" />
 </template>
 ```
 
@@ -367,16 +361,16 @@ const cancel = (e: MouseEvent) => {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
 import { QuestionCircleFilled, SoundFilled } from '@ant-design/icons-vue'
-const message = ref()
+import { useMessage } from 'vue-amazing-ui'
+const message = useMessage()
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
-  message.value.success('Click on Yes')
+  message.success('Click on Yes')
 }
 const cancel = (e: MouseEvent) => {
   console.log('cancel', e)
-  message.value.error('Click on No')
+  message.error('Click on No')
 }
 </script>
 <template>
@@ -400,7 +394,6 @@ const cancel = (e: MouseEvent) => {
       <Button type="primary">Notification Confirm</Button>
     </Popconfirm>
   </Space>
-  <Message ref="message" />
 </template>
 ```
 
@@ -430,15 +423,15 @@ const cancel = (e: MouseEvent) => {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-const message = ref()
+import { useMessage } from 'vue-amazing-ui'
+const message = useMessage()
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
-  message.value.success('Click on Yes')
+  message.success('Click on Yes')
 }
 const cancel = (e: MouseEvent) => {
   console.log('cancel', e)
-  message.value.error('Click on No')
+  message.error('Click on No')
 }
 </script>
 <template>
@@ -459,7 +452,6 @@ const cancel = (e: MouseEvent) => {
       <Button type="primary">Hover Me Confirm</Button>
     </Popconfirm>
   </Space>
-  <Message ref="message" />
 </template>
 ```
 
@@ -475,22 +467,21 @@ const cancel = (e: MouseEvent) => {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-const message = ref()
+import { useMessage } from 'vue-amazing-ui'
+const message = useMessage()
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
-  message.value.success('Click on Yes')
+  message.success('Click on Yes')
 }
 const cancel = (e: MouseEvent) => {
   console.log('cancel', e)
-  message.value.error('Click on No')
+  message.error('Click on No')
 }
 </script>
 <template>
   <Popconfirm title="Transition Duration 300ms" :transition-duration="300" @ok="confirm" @cancel="cancel">
     <Button type="primary">Transition Duration 300ms</Button>
   </Popconfirm>
-  <Message ref="message" />
 </template>
 ```
 
@@ -525,15 +516,15 @@ const cancel = (e: MouseEvent) => {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-const message = ref()
+import { useMessage } from 'vue-amazing-ui'
+const message = useMessage()
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
-  message.value.success('Click on Yes')
+  message.success('Click on Yes')
 }
 const cancel = (e: MouseEvent) => {
   console.log('cancel', e)
-  message.value.error('Click on No')
+  message.error('Click on No')
 }
 </script>
 <template>
@@ -559,7 +550,6 @@ const cancel = (e: MouseEvent) => {
       <Button type="primary">Delay 500ms Confirm</Button>
     </Popconfirm>
   </Space>
-  <Message ref="message" />
 </template>
 ```
 
@@ -580,15 +570,15 @@ const cancel = (e: MouseEvent) => {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-const message = ref()
+import { useMessage } from 'vue-amazing-ui'
+const message = useMessage()
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
-  message.value.success('Click on Yes')
+  message.success('Click on Yes')
 }
 const cancel = (e: MouseEvent) => {
   console.log('cancel', e)
-  message.value.error('Click on No')
+  message.error('Click on No')
 }
 </script>
 <template>
@@ -600,7 +590,6 @@ const cancel = (e: MouseEvent) => {
   >
     <Button type="primary">Hide Arrow Confirm</Button>
   </Popconfirm>
-  <Message ref="message" />
 </template>
 ```
 
@@ -626,10 +615,10 @@ icon | 自定义弹出确认框 `Icon` 图标 | 'success' &#124; 'info' &#124; '
 iconStyle | 设置 `Icon` 图标的样式，一般不需要设置，主要用于自定义 `Icon` 图标时 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 cancelText | 取消按钮文字 | string &#124; slot | '取消'
 cancelType | 取消按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default'
-cancelProps | 取消按钮 `props`，优先级高于 `cancelType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
+cancelProps | 取消按钮 `props`，优先级高于 `cancelType`，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {}
 okText | 确认按钮文字 | string &#124; slot | '确定'
 okType | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'primary'
-okProps | 确认按钮 `props`，优先级高于 `okType`，参考 [Button Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | object | {}
+okProps | 确认按钮 `props`，优先级高于 `okType`，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {}
 showCancel | 是否显示取消按钮 | boolean | true
 
 更多属性请参考 [Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)

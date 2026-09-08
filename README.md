@@ -17,7 +17,7 @@
 ## Features
 
 - The component library is implemented with `Vue@3.5.29`+ `TypeScript@5.9.3` + `Vite@7.3.1` + `Less@4.5.1`.
-- Currently, it includes `68` basic UI components and `23` utility functions, with continuous exploration and updates ongoing...
+- Currently, it includes `68` basic UI components and `24` utility functions, with continuous exploration and updates ongoing...
 - Theme Customizable, all you need is to provide a theme color, then all the stuffs will be done by me.
 - By the way, they are all treeshakable.
 - All the stuff in Vue Amazing UI is written in TypeScript. It can work with your typescript project seamlessly.
@@ -184,6 +184,7 @@ import {
   getColorPalettes,
   getAlphaColor,
   getScrollParent,
+  lockScroll,
   useScrollParent,
   useFloatingPosition
 } from 'vue-amazing-ui'
@@ -298,5 +299,6 @@ All sponsors will be listed here, thank you very much for your support and spons
 | getColorPalettes | Function to generate a color palette from a primary color | (primaryColor: string) => string[] |
 | getAlphaColor | Function to get an alpha color, generally used as a shadow color | (frontColor: string, backgroundColor: string = '#ffffff') => string |
 | getScrollParent | Function to find the nearest scrollable parent element upward | (el: HTMLElement &#124; null) => HTMLElement &#124; null |
+| lockScroll | Function to lock page scrolling and compensate the scrollbar width to prevent horizontal jitter | () => () => void |
 | useScrollParent | Composable to query and watch the nearest scrollable parent element and respond to viewport `resize` | (contentRef: Ref\<HTMLElement &#124; null>, onScroll: () => void, options: object = {}) => { scrollTarget: Ref\<HTMLElement &#124; null>, viewportWidth: Ref\<number>, viewportHeight: Ref\<number>, observeScroll: \() => void, cleanup: \() => void } |
 | useFloatingPosition | Composable that provides a unified measurement skeleton for floating components | (contentRef: Ref\<HTMLElement &#124; null>, panelRef: Ref\<HTMLElement &#124; null>) => { positionedContainerRect: Ref\<DOMRect &#124; undefined>, contentRect: Ref\<DOMRect &#124; undefined>, measure: \() => Promise\<void> } |

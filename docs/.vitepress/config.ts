@@ -494,6 +494,10 @@ export default defineConfig({
               link: '/utils/functions/get-scroll-parent'
             },
             {
+              text: 'lockScroll 页面滚动锁',
+              link: '/utils/functions/lock-scroll'
+            },
+            {
               text: 'useScrollParent 滚动感知',
               link: '/utils/functions/use-scroll-parent'
             },
