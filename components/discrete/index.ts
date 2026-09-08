@@ -1,2 +1,2 @@
 export { createDiscreteApi } from './createDiscreteApi'
-export type { DiscreteApi, DiscreteApiInstance, DiscreteApiType } from './createDiscreteApi'
+export type { DiscreteApiInstance, DiscreteApiOptions } from './createDiscreteApi'

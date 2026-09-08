@@ -61,7 +61,7 @@ export { Descriptions, DescriptionsItem } from './descriptions'
 export type { DialogProps, DialogOptions, DialogApi, DialogReactive, DialogUpdate } from './dialog'
 export { default as Dialog, DialogProvider, useDialog } from './dialog'
 
-export type { DiscreteApi, DiscreteApiInstance, DiscreteApiType } from './discrete'
+export type { DiscreteApiInstance, DiscreteApiOptions } from './discrete'
 export { createDiscreteApi } from './discrete'
 
 export type { DividerProps } from './divider'
