@@ -3,32 +3,31 @@
 # 确保脚本抛出遇到的错误
 set -e
 
-# ============ 终端彩色输出与可点击链接（非 TTY 环境如 CI 日志自动降级为纯文本） ============
+# ============ 终端彩色输出与背景色块（非 TTY 环境如 CI 日志自动降级为纯文本） ============
 if [ -t 1 ]; then
     c_bold=$'\033[1m'
     c_green=$'\033[32m'
-    c_cyan=$'\033[36m'
-    c_yellow=$'\033[33m'
     c_reset=$'\033[0m'
-    # OSC 8 终端超链接前后缀：拼接后形如 `ESC]8;;URL ESC\ URL ESC]8;;ESC\`
-    # 支持超链接的终端（iTerm2/VSCode/WezTerm 等）中可直接点击，其余终端回退为普通文本
-    osc8_open=$'\033]8;;'
-    osc8_close=$'\033]8;;\033\\'
+    # 绿底黑字：用于发布成功横幅的色块背景，使所有信息在终端中形成清晰聚焦的视觉卡片
+    bg_green=$'\033[42m'
+    fg_black=$'\033[30m'
 fi
 
-# 打印组件库发布成功横幅：展示包名/版本号/可点击的 npm 详情链接与发布时间
+# 打印组件库发布成功横幅：以绿底色块包络所有信息行，URL 采用纯文本以保证所有终端可见
+# （macOS Terminal.app / iTerm2 / VSCode 终端会自动把裸 URL 识别为可点击链接）
 print_publish_success_banner() {
     local pkg="vue-amazing-ui"
     local npm_url="https://www.npmjs.com/package/${pkg}/v/${version}"
-    local divider="${c_green}${c_bold}════════════════════════════════════${c_reset}"
+    local publish_time=$(date '+%Y-%m-%d %H:%M:%S')
+    # 顶/底粗绿线：38 个全角 ═ 视觉 76 列，宽于内容最长行（npm 详情 67 列），保证完整覆盖
+    local divider="${c_green}${c_bold}══════════════════════════════════════════════${c_reset}"
     echo ""
     echo "$divider"
-    echo "${c_green}${c_bold}  🎉 发布成功！${c_reset}${c_green}${c_bold}${pkg}@${version}${c_reset} 已发布到 npm"
+    echo "${bg_green}${fg_black}${c_bold}  🎉 发布成功！${pkg}@${version} 已发布到 npm${c_reset}"
+    echo "${bg_green}${fg_black}  📦 版本号    ${version}（git tag: ${tag}）${c_reset}"
+    echo "${bg_green}${fg_black}  🔗 npm 详情  ${npm_url}${c_reset}"
+    echo "${bg_green}${fg_black}  🕐 发布时间  ${publish_time}${c_reset}"
     echo "$divider"
-    echo ""
-    echo "${c_bold}  📦 版本号    ${version}${c_reset}（git tag: ${tag}）"
-    echo "  🔗 npm 详情  ${c_cyan}${osc8_open}${npm_url}${osc8_close}${c_reset}"
-    echo "  🕐 发布时间  $(date '+%Y-%m-%d %H:%M:%S')"
     echo ""
 }
 
