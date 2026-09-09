@@ -306,7 +306,7 @@ p {
 :-- | :-- | :-- | :--
 width | 抽屉宽度，在 `placement` 为 `right` 或 `left` 时使用，单位 `px` | string &#124; number | 378
 height | 抽屉高度，在 `placement` 为 `top` 或 `bottom` 时使用，单位 `px` | string &#124; number | 378
-title | 标题 | string &#124; slot | undefined
+title | 标题 | string | undefined
 closable | 是否显示左上角的关闭按钮 | boolean | true
 placement | 抽屉的方向 | 'top' &#124; 'right' &#124; 'bottom' &#124; 'left' | 'right'
 headerClass | 设置 `Drawer` 头部的类名 | string | undefined
@@ -314,8 +314,8 @@ headerStyle | 设置 `Drawer` 头部的样式 | [CSSProperties](https://cn.vuejs
 bodyClass | 设置 `Drawer` 内容部分的类名 | string | undefined
 bodyStyle | 设置 `Drawer` 内容部分的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar)，用于设置内容滚动条的样式 | [ScrollbarProps](./scrollbar.md#scrollbar) | {}
-extra | 抽屉右上角的操作区域 | string &#124; slot | undefined
-footer | 抽屉的页脚 | string &#124; slot | undefined
+extra | 抽屉右上角的操作区域 | string | undefined
+footer | 抽屉的页脚 | string | undefined
 footerClass | 设置 `Drawer` 页脚的类名 | string | undefined
 footerStyle | 设置 `Drawer` 页脚的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 destroyOnClose | 关闭时是否销毁 `Drawer` 里的子元素 | boolean | false

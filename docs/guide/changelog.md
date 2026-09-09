@@ -10,6 +10,12 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-09-09">2.7.1</VersionDateTag>
+
+- ⚠️ **破坏性变更**：[头像 Avatar](/guide/components/avatar.html)、[返回顶部 BackTop](/guide/components/back-top.html)、[按钮 Button](/guide/components/button.html)、[浮动按钮 FloatButton](/guide/components/float-button.html)、[气泡确认框 Popconfirm](/guide/components/popconfirm.html) 的 `icon` 类型由 `VNode | Slot` 收紧为 `VNode | (() => VNode)`，不再支持直接传组件对象（`:icon="SearchOutlined"`），统一改渲染函数 `:icon="h(...)"` 或 `icon: () => h(...)`，插槽图标使用 `#icon`
+- 类型强化：为具名 / 作用域插槽组件补充 `xxxSlots` 类型并接入 `defineSlots()`，原混入 `Props` 的插槽类型移入 `xxxSlots` 实现职责分离，`TS` 下插槽获得完整类型检查；文档类型表同步清理 `string | slot` 写法
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-09-08">2.7.0</VersionDateTag>
 
 - ⚠️ **破坏性变更**：[全局提示 Message](/guide/components/message.html)、[通知提醒 Notification](/guide/components/notification.html)、[模态框 Modal](/guide/components/modal.html)、[对话框 Dialog](/guide/components/dialog.html) 移除组件实例 `ref` 上的命令式方法（`info` / `success` / `open` 等），统一改用 `useXxx()`（`setup` 内使用，需外层 `XxxProvider`）或 `createDiscreteApi([...])`（`axios` 拦截器、路由守卫等任意位置使用，支持 `configProviderProps` 与各 `xxxProviderProps` 透传、`Ref` / `computed` 响应式、`dispose()` 销毁实例）；原 `window['$xxx'] = 组件 ref` 的写法改为赋值 `useXxx()` 返回的 `api`；组件挂载后通过 `@ready` 回传 `api`，调用返回句柄支持 `destroy()` 与 `update()`（`update` 支持 `mode` 切换内置图标），`Notification` 额外支持 `destroy(key)` / `destroyAll()`

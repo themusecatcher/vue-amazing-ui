@@ -1011,7 +1011,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
       </template>
     </Table>
     <h2 class="mt30 mb10">可编辑单元格</h2>
-    <Button style="margin-bottom: 16px" type="primary" :icon="PlusOutlined" @click="handleCellAdd">新增</Button>
+    <Button style="margin-bottom: 16px" type="primary" :icon="h(PlusOutlined)" @click="handleCellAdd">新增</Button>
     <Table :columns="columnsCellEditable" :data-source="dataSourceCellEditable" bordered>
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">
@@ -1180,12 +1180,23 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical>
-            columnTitle: <Input v-model:value="rowSelection.columnTitle" placeholder="columnTitle" />
+            columnTitle:
+            <Input
+              :value="typeof rowSelection.columnTitle === 'string' ? rowSelection.columnTitle : ''"
+              @update:value="rowSelection.columnTitle = $event as string"
+              placeholder="columnTitle"
+            />
           </Flex>
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical>
-            columnWidth: <Slider v-model:value="rowSelection.columnWidth" :min="32" :max="120" />
+            columnWidth:
+            <Slider
+              :value="typeof rowSelection.columnWidth === 'number' ? rowSelection.columnWidth : 32"
+              @update:value="rowSelection.columnWidth = $event as number"
+              :min="32"
+              :max="120"
+            />
           </Flex>
         </Col>
         <Col :span="6">

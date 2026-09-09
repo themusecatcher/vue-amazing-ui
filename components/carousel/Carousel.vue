@@ -76,19 +76,13 @@ const { colorPalettes } = useInject('Carousel') // 主题色注入
 const emits = defineEmits(['change', 'click'])
 // 轮播图区域宽度
 const carouselWidth = computed(() => {
-  if (typeof props.width === 'number') {
-    return `${props.width}px`
-  } else {
-    return props.width
-  }
+  const width = props.width
+  return typeof width === 'number' ? `${width}px` : width
 })
 // 轮播图区域高度
 const carouselHeight = computed(() => {
-  if (typeof props.height === 'number') {
-    return `${props.height}px`
-  } else {
-    return props.height
-  }
+  const height = props.height
+  return typeof height === 'number' ? `${height}px` : height
 })
 // 轮播图片数量
 const imageAmount = computed(() => {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import type { InputProps } from 'vue-amazing-ui'
 import {
   UserOutlined,
   InfoCircleOutlined,
@@ -23,7 +24,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const size = ref('middle')
+const size = ref<InputProps['size']>('middle')
 watchEffect(() => {
   console.log('value', value.value)
 })

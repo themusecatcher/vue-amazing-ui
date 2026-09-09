@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
+import type { WatermarkProps } from 'vue-amazing-ui'
 const realTime = ref<string>(dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS'))
 const updateTime = () => {
   realTime.value = dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS')
@@ -73,7 +74,7 @@ const layoutOptions = [
     <Watermark
       :height="48"
       :width="48"
-      :layout="imageModel.layout"
+      :layout="imageModel.layout as WatermarkProps['layout']"
       :rotate="imageModel.rotate"
       image="https://avatars.githubusercontent.com/u/46012811?v=4"
     >
@@ -86,7 +87,7 @@ const layoutOptions = [
     <p class="mb10">通过自定义参数配置预览水印效果</p>
     <Row :gutter="24">
       <Col :span="18">
-        <Watermark v-bind="model">
+        <Watermark v-bind="model as WatermarkProps">
           <p class="paragraph-text">
             《麦田里的守望者》（英语：The Catcher in the
             Rye），为美国作家J.D.塞林格于1951年发表的长篇小说。这部有争议的作品原本是面向成年读者的，但迅速因其青春期焦虑和隔绝的主题而在青少年读者中流行。

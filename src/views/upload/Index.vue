@@ -67,7 +67,7 @@ function onBeforePdfUpload(file: File): boolean {
   }
   return true // 继续上传
 }
-function onCustomRequest(file: File) {
+function onCustomRequest(file: File): Promise<UploadFileType> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       // 模拟接口调用返回 name 和 url
@@ -92,7 +92,7 @@ function onCustomRequest(file: File) {
   })
 }
 import { sliceFile } from './sliceFile'
-function onCustomSliceUpload(file: File) {
+function onCustomSliceUpload(file: File): Promise<UploadFileType> {
   return new Promise((resolve, reject) => {
     console.time('sliceFile')
     sliceFile(file).then((chunks) => {
@@ -143,7 +143,7 @@ function onError(err: unknown) {
   message.error(err instanceof Error ? err.message : String(err))
 }
 // 上传失败演示：custom 模式 reject 会触发 @error，由使用方自行提示
-function onUploadFailRequest(file: File) {
+function onUploadFailRequest(file: File): Promise<UploadFileType> {
   console.log('upload fail request', file.name)
   return new Promise((resolve, reject) => {
     setTimeout(() => {

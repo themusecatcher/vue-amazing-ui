@@ -13,7 +13,7 @@
 - [qrcode](https://www.npmjs.com/package/qrcode)
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const qrcodeRef = ref()
 const size = ref(160)
@@ -77,10 +77,10 @@ const dowloadQRCode = async () => {
 
 <Space vertical>
   <Space>
-    <Button @click="decline" :icon="MinusOutlined">
+    <Button @click="decline" :icon="h(MinusOutlined)">
       small
     </Button>
-    <Button @click="increase" :icon="PlusOutlined">
+    <Button @click="increase" :icon="h(PlusOutlined)">
       large
     </Button>
   </Space>
@@ -91,7 +91,7 @@ const dowloadQRCode = async () => {
 
 ```vue
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const size = ref(160)
 const decline = () => {
@@ -110,8 +110,8 @@ const increase = () => {
 <template>
   <Space vertical>
     <Space>
-      <Button @click="decline" :icon="MinusOutlined"> small </Button>
-      <Button @click="increase" :icon="PlusOutlined"> large </Button>
+      <Button @click="decline" :icon="h(MinusOutlined)"> small </Button>
+      <Button @click="increase" :icon="h(PlusOutlined)"> large </Button>
     </Space>
     <QRCode :size="size" value="https://themusecatcher.blog.csdn.net" />
   </Space>
@@ -346,6 +346,6 @@ const value = ref('hello world')
 
 ## Methods
 
-| 名称           | 说明           | 类型         |
+| 名称          | 说明          | 类型         |
 | :------------- | :------------- | :----------- |
 | getQRCodeImage | 获取二维码图片 | () => string |

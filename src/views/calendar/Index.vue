@@ -2,7 +2,13 @@
 import { ref, watchEffect } from 'vue'
 import { CalendarOutlined } from '@ant-design/icons-vue'
 import { format, subDays, addDays } from 'date-fns'
-import type { CalendarDayOfWeek, CalendarDefaultWeek, CalendarDateItem, CalendarMonthItem } from 'vue-amazing-ui'
+import type {
+  CalendarProps,
+  CalendarDayOfWeek,
+  CalendarDefaultWeek,
+  CalendarDateItem,
+  CalendarMonthItem
+} from 'vue-amazing-ui'
 import { useMessage } from 'components/message'
 const date = ref(Date.now())
 const cardDate = ref(Date.now())
@@ -28,8 +34,8 @@ const displayOptions = [
     value: 'card'
   }
 ]
-const modeDisplay = ref('card')
-const disabledDisplay = ref('panel')
+const modeDisplay = ref<CalendarProps['display']>('card')
+const disabledDisplay = ref<CalendarProps['display']>('panel')
 const weekOptions = [
   {
     label: '周一',
@@ -103,7 +109,7 @@ watchEffect(() => {
 function cardDateFormat(date: number, timestamp: number) {
   return String(date).padStart(2, '0')
 }
-function cardWeekFormat(defaultWeek: CalendarDefaultWeek, week: CalendarDayOfWeek) {
+function cardWeekFormat(defaultWeek: CalendarDefaultWeek, week: number) {
   return `周${defaultWeek}`
 }
 function cardMonthFormat(month: number, timestamp: number) {
@@ -113,7 +119,7 @@ function cardMonthFormat(month: number, timestamp: number) {
 function panelDateFormat(date: number, timestamp: number) {
   return format(timestamp, 'do')
 }
-function panelWeekFormat(defaultWeek: CalendarDefaultWeek, week: CalendarDayOfWeek, timestamp: number) {
+function panelWeekFormat(defaultWeek: CalendarDefaultWeek, week: number, timestamp: number) {
   return format(timestamp, 'EEEE')
 }
 function panelMonthFormat(month: number, timestamp: number) {

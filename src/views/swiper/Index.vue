@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, shallowReactive, onBeforeMount } from 'vue'
 import pkg from '/package.json'
-import type { SwiperImage } from 'vue-amazing-ui'
+import type { SwiperImage, SwiperProps } from 'vue-amazing-ui'
 const images = ref<SwiperImage[]>([])
 function loadImages() {
   for (let i = 1; i <= 6; i++) {
@@ -19,7 +19,7 @@ onBeforeMount(() => {
 function onChange(swiper: any) {
   console.log('slider change', swiper)
 }
-const effects = ['slide', 'fade', 'cube', 'flip', 'coverflow', 'cards']
+const effects: SwiperProps['effect'][] = ['slide', 'fade', 'cube', 'flip', 'coverflow', 'cards']
 const creativeEffects = [
   {
     prev: {

@@ -739,7 +739,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 | :-- | :-- | :-- | :-- |
 | display | 日历展示方式，面板/卡片 | 'panel' &#124; 'card' | 'panel' |
 | mode | 初始模式 | 'month' &#124; 'year' | 'month' |
-| header | 自定义日历头部内容 | string &#124; slot | undefined |
+| header | 自定义日历头部内容 | string | undefined |
 | yearSelectProps | 年选择器 `props`，参考 [Select Props](./select.md#select) | [SelectProps](./select.md#select) | {} |
 | monthSelectProps | 月选择器 `props`，参考 [Select Props](./select.md#select) | [SelectProps](./select.md#select) | {} |
 | modeRadioProps | 模式切换器 `props`，参考 [Radio Props](./radio.md#radio) | [RadioProps](./radio.md#radio) | {} |
@@ -754,34 +754,34 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ### DayOfWeek Type
 
-| 名称      | 值                                                      |
+| 名称     | 值                                                      |
 | :-------- | :------------------------------------------------------ |
 | DayOfWeek | 0 &#124; 1 &#124; 2 &#124; 3 &#124; 4 &#124; 5 &#124; 6 |
 
 ### DefaultWeek Type
 
-| 名称        | 值                                                                           |
+| 名称       | 值                                                                           |
 | :---------- | :--------------------------------------------------------------------------- |
 | DefaultWeek | '一' &#124; '二' &#124; '三' &#124; '四' &#124; '五' &#124; '六' &#124; '日' |
 
 ### DateItem Type
 
-| 名称           | 说明             | 类型                                           | 默认值    |
+| 名称          | 说明            | 类型                                          | 默认值    |
 | :------------- | :--------------- | :--------------------------------------------- | :-------- |
-| type           | 类型             | 'date'                                         | undefined |
-| dateObject     | 日期对象         | \{ date: number, month: number, year: number } | undefined |
-| timestamp      | 当天开始的时间戳 | number                                         | undefined |
-| inCurrentMonth | 是否在当前月     | boolean                                        | undefined |
-| isCurrentDate  | 是否为今天       | boolean                                        | undefined |
+| type          | 类型            | 'date'                                        | undefined |
+| dateObject    | 日期对象        | \{ date: number, month: number, year: number } | undefined |
+| timestamp     | 当天开始的时间戳 | number                                        | undefined |
+| inCurrentMonth | 是否在当前月    | boolean                                       | undefined |
+| isCurrentDate | 是否为今天      | boolean                                       | undefined |
 
 ### MonthItem Type
 
-| 名称        | 说明             | 类型                             | 默认值    |
+| 名称       | 说明            | 类型                            | 默认值    |
 | :---------- | :--------------- | :------------------------------- | :-------- |
-| type        | 类型             | 'month'                          | undefined |
-| monthObject | 月份对象         | \{ month: number, year: number } | undefined |
-| timestamp   | 当月开始的时间戳 | number                           | undefined |
-| isCurrent   | 是否为当前月     | boolean                          | undefined |
+| type       | 类型            | 'month'                         | undefined |
+| monthObject | 月份对象        | \{ month: number, year: number } | undefined |
+| timestamp  | 当月开始的时间戳 | number                          | undefined |
+| isCurrent  | 是否为当前月    | boolean                         | undefined |
 
 ## Slots
 
@@ -791,8 +791,8 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 | week | 自定义周展示 | v-slot:week="{ defaultWeek, week, timestamp }" |
 | dateValue | 自定义日期展示 | v-slot:dateValue="{ type, dateObject, timestamp, inCurrentMonth, isCurrentDate }" |
 | dateContent | 自定义日期内容展示 | v-slot:dateContent="{ type, dateObject, timestamp, inCurrentMonth, isCurrentDate }" |
-| monthValue | 自定义月份展示 | v-slot:dateValue="{ type, monthObject, timestamp, isCurrent }" |
-| monthContent | 自定义月份内容展示 | v-slot:dateContent="{ type, monthObject, timestamp, isCurrent }" |
+| monthValue | 自定义月份展示 | v-slot:monthValue="{ type, monthObject, timestamp, isCurrent }" |
+| monthContent | 自定义月份内容展示 | v-slot:monthContent="{ type, monthObject, timestamp, isCurrent }" |
 
 ## Events
 

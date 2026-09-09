@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import pkg from '/package.json'
 import { ref, watchEffect, computed } from 'vue'
+import type { DatePickerProps } from 'vue-amazing-ui'
 import {
   format,
   endOfDay,
@@ -78,7 +79,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const size = ref('middle')
+const size = ref<DatePickerProps['size']>('middle')
 watchEffect(() => {
   console.log('dateValue', dateValue.value)
 })

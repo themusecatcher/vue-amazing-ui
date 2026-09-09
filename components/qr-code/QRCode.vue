@@ -56,9 +56,9 @@ const iconStyle = computed(() => {
 })
 const qrcodeOptions = computed(() => {
   return {
-    quality: 1, // number 默认 0.92, 0 <= quality <= 1 仅在 type 为 'image/jpeg' 或 'image/webp' 时有效
-    margin: 0, // number 默认 4, 边距大小，单位 px
-    scale: props.scale, // number，默认 4, 缩放因子，A value of 1 means 1px per modules (black dots).
+    quality: 1, // 0 <= quality <= 1，仅在 type 为 'image/jpeg' 或 'image/webp' 时有效
+    margin: 0, // 边距大小，单位 px
+    scale: props.scale, // 缩放因子，1 即 1px per module（黑点）
     color: {
       dark: props.color, // 像素点颜色
       light: '#00000000' // 背景色

@@ -266,11 +266,11 @@ function formatter (value: string): string {
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 title | 数值的标题 | string | undefined
-value | 数值的内容 | string &#124; number &#124; slot | undefined
+value | 数值的内容 | string &#124; number | undefined
 valueStyle | 设置数值的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 precision | 数值精度 | number | 0
-prefix | 设置数值的前缀 | string &#124; slot | undefined
-suffix | 设置数值的后缀 | string &#124; slot | undefined
+prefix | 设置数值的前缀 | string | undefined
+suffix | 设置数值的后缀 | string | undefined
 separator | 设置千分位标识符 | string | ,
 formatter | 自定义数值展示 | (value: string) => string | (value: string) => value
 

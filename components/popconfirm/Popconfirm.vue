@@ -1,26 +1,37 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import type { CSSProperties, VNode, Slot } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import Tooltip from 'components/tooltip'
 import Button, { type ButtonProps } from 'components/button'
 import { useSlotsExist, useInject } from 'components/utils'
+
 export interface Props {
-  title?: string // 弹出确认框的标题 string | slot
+  title?: string // 弹出确认框的标题
   titleStyle?: CSSProperties // 设置标题的样式
-  description?: string // 弹出确认框的内容描述 string | slot
+  description?: string // 弹出确认框的内容描述
   descriptionStyle?: CSSProperties // 设置内容描述的样式
   keyboard?: boolean // 是否支持按键操作 (enter 显示；esc 关闭)
   tooltipStyle?: CSSProperties // 设置弹出提示的样式
-  icon?: 'success' | 'info' | 'warning' | 'danger' | VNode | Slot // 自定义 Icon 图标，预置四种类型图标 string | VNode | slot
+  icon?: 'success' | 'info' | 'warning' | 'danger' | VNode | (() => VNode) // 自定义 Icon 图标；插槽形态请用 #icon
   iconStyle?: CSSProperties // 设置 Icon 图标的样式，一般不需要设置，主要用于自定义 Icon 图标时
-  cancelText?: string // 取消按钮文字 string | slot
+  cancelText?: string // 取消按钮文字
   cancelType?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 取消按钮类型
   cancelProps?: ButtonProps // 取消按钮 props，优先级高于 cancelType，参考 Button 组件 props
-  okText?: string // 确认按钮文字 string | slot
+  okText?: string // 确认按钮文字
   okType?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 确认按钮类型
   okProps?: ButtonProps // 确认按钮 props，优先级高于 okType，参考 Button 组件 props
   showCancel?: boolean // 是否显示取消按钮
 }
+// 声明组件插槽类型
+export interface PopconfirmSlots {
+  icon?: () => VNode[]
+  title?: () => VNode[]
+  description?: () => VNode[]
+  cancelText?: () => VNode[]
+  okText?: () => VNode[]
+  default?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   title: undefined,
   titleStyle: () => ({}),
@@ -38,6 +49,7 @@ const props = withDefaults(defineProps<Props>(), {
   okProps: () => ({}),
   showCancel: true
 })
+defineSlots<PopconfirmSlots>()
 const tooltipRef = ref() // Tooltip 组件模板引用
 const { colorPalettes } = useInject('Popconfirm') // 主题色注入
 const emits = defineEmits(['cancel', 'ok'])

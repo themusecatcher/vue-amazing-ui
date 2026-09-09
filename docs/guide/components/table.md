@@ -2008,7 +2008,7 @@ const dataSourceMerge = ref([
 
 ```vue
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, h } from 'vue'
 import { PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
 import type { TableColumn } from 'vue-amazing-ui'
 const columnsCellEditable = reactive<TableColumn[]>([
@@ -3102,8 +3102,8 @@ watchEffect(() => {
 
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| header | 表格标题 | string &#124; slot | undefined |
-| footer | 表格尾部 | string &#124; slot | undefined |
+| header | 表格标题 | string | undefined |
+| footer | 表格尾部 | string | undefined |
 | columns | 表格列的配置项 | [Column](#column-type)[] | [] |
 | dataSource | 表格数据数组 | object[] | [] |
 | bordered | 是否展示外边框和列边框 | boolean | false |
@@ -3126,10 +3126,8 @@ watchEffect(() => {
 | scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar)，用于配置表格滚动条 | [ScrollbarProps](./scrollbar.md#scrollbar) | {} |
 | tableLayout | 表格布局方式，设为 `fixed` 表示内容不会影响列的布局，参考 [table-layout](https://developer.mozilla.org/zh-CN/docs/Web/CSS/table-layout) 属性，固定表头/列或使用了 `column.ellipsis` 时，默认值为 `fixed` | 'auto' &#124; 'fixed' | undefined |
 | showExpandColumn | 是否展示展开列 | boolean | false |
-| expandColumnTitle | 自定义展开列表头 | string &#124; slot | undefined |
+| expandColumnTitle | 自定义展开列表头 | string | undefined |
 | expandColumnWidth | 展开列的宽度 | string &#124; number | 48 |
-| expandCell | 自定义展开按钮 | slot | undefined |
-| expandedRowRender | 自定义额外的展开行内容 | slot | undefined |
 | expandFixed | 是否固定展开列 | boolean | false |
 | expandedRowKeys <Tag color="cyan">v-model</Tag> | 展开行的 `key` 数组，控制展开行的属性；需与 `dataSource` 数据中的 `key` 配合使用 | (string \| number)[] | [] |
 | expandRowByClick | 点击行是否展开 | boolean | false |
@@ -3182,14 +3180,14 @@ watchEffect(() => {
 
 ## Slots
 
-| 名称              | 说明                   | 类型                                                   |
+| 名称             | 说明                  | 类型                                                   |
 | :---------------- | :--------------------- | :----------------------------------------------------- |
-| header            | 自定义表格标题         | v-slot:header                                          |
-| footer            | 自定义表格尾部         | v-slot:footer                                          |
-| expandColumnTitle | 自定义展开列表头       | v-slot:expandColumnTitle                               |
-| headerCell        | 个性化头部单元格       | v-slot:headerCell="{ column, title }"                  |
-| expandCell        | 自定义展开按钮         | v-slot:expandCell="{ record, index, expanded }"        |
-| bodyCell          | 个性化单元格           | v-slot:bodyCell="{ column, record, text, index }"      |
+| header           | 自定义表格标题        | v-slot:header                                          |
+| footer           | 自定义表格尾部        | v-slot:footer                                          |
+| expandColumnTitle | 自定义展开列表头      | v-slot:expandColumnTitle                               |
+| headerCell       | 个性化头部单元格      | v-slot:headerCell="{ column, title }"                  |
+| expandCell       | 自定义展开按钮        | v-slot:expandCell="{ record, index, expanded }"        |
+| bodyCell         | 个性化单元格          | v-slot:bodyCell="{ column, record, text, index }"      |
 | expandedRowRender | 自定义额外的展开行内容 | v-slot:expandedRowRender="{ record, index, expanded }" |
 
 ## Events

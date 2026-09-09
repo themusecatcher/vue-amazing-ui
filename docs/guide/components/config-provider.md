@@ -10,7 +10,7 @@ _为组件提供统一的全局化配置_
 <!-- - 当需要为组件提供全局配置时 -->
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, h } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { ConfigProvider, createDiscreteApi } from 'vue-amazing-ui'
@@ -331,8 +331,8 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
         <Progress :percent="percent" />
         <Space align="center">
           <Progress type="circle" :percent="percent" />
-          <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
-          <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
+          <Button @click="onDecline(5)" size="large" :icon="h(MinusOutlined)">Decline</Button>
+          <Button @click="onIncrease(5)" size="large" :icon="h(PlusOutlined)">Increase</Button>
         </Space>
       </Flex>
     </Card>
@@ -375,7 +375,7 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { CarouselImage, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
@@ -647,8 +647,8 @@ function onDecline(scale: number) {
           <Progress :percent="percent" />
           <Space align="center">
             <Progress type="circle" :percent="percent" />
-            <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
-            <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
+            <Button @click="onDecline(5)" size="large" :icon="h(MinusOutlined)">Decline</Button>
+            <Button @click="onIncrease(5)" size="large" :icon="h(PlusOutlined)">Increase</Button>
           </Space>
         </Flex>
       </Card>
@@ -840,22 +840,22 @@ function onDiscreteModal() {
 
 ### ConfigProvider
 
-| 参数     | 说明     | 类型                                                         | 默认值 |
+| 参数    | 说明    | 类型                                                        | 默认值 |
 | :------- | :------- | :----------------------------------------------------------- | :----- |
-| theme    | 主题对象 | [Theme](#theme-type)                                         | {}     |
-| abstract | boolean  | 是否不存在 `DOM` 包裹元素                                    | true   |
-| tag      | string   | `ConfigProvider` 被渲染成的元素，`abstract` 为 `true` 时有效 | 'div'  |
+| theme   | 主题对象 | [Theme](#theme-type)                                        | {}     |
+| abstract | boolean | 是否不存在 `DOM` 包裹元素                                   | true   |
+| tag     | string  | `ConfigProvider` 被渲染成的元素，`abstract` 为 `true` 时有效 | 'div'  |
 
 ### Theme Type
 
-| 名称                                  | 说明                             | 类型                   | 默认值    |
+| 名称                                 | 说明                            | 类型                  | 默认值    |
 | :------------------------------------ | :------------------------------- | :--------------------- | :-------- |
-| common?                               | 全局通用配置，优先级低于组件配置 | [Config](#config-type) | undefined |
-| [ComponentName?](#componentname-type) | 组件自定义配置                   | [Config](#config-type) | undefined |
+| common?                              | 全局通用配置，优先级低于组件配置 | [Config](#config-type) | undefined |
+| [ComponentName?](#componentname-type) | 组件自定义配置                  | [Config](#config-type) | undefined |
 
 ### Config Type
 
-| 名称          | 说明   | 类型   | 默认值    |
+| 名称         | 说明  | 类型  | 默认值    |
 | :------------ | :----- | :----- | :-------- |
 | primaryColor? | 主题色 | string | undefined |
 
@@ -867,6 +867,6 @@ function onDiscreteModal() {
 
 ## Slots
 
-| 名称    | 说明 | 类型           |
+| 名称   | 说明 | 类型           |
 | :------ | :--- | :------------- |
 | default | 内容 | v-slot:default |

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { VNode } from 'vue'
 import { useSlotsExist, useInject } from 'components/utils'
 export interface Gradient {
   '0%'?: string
@@ -8,18 +9,25 @@ export interface Gradient {
   to?: string
   direction?: 'left' | 'right' // 默认 'right'
 }
+
 export interface Props {
   width?: number | string // 进度条宽度，单位 px；type: 'line' 时，为进度条宽度，默认值 '100%'；type: 'circle' 时，为进度圈宽高，默认值 120
   percent?: number // 当前进度百分比
   lineSize?: number // 进度条的尺寸，单位 px；type: 'line' 时，为进度条线高，默认值 8；type: 'circle' 时，单位是进度圈画布宽度的百分比，默认值 6
-  lineColor?: string | Gradient // 进度条的色彩，传入 string 时为纯色，传入 Gradient 时为渐变，进度圈时 direction: 'left' 为逆时针，direction: 'right' 为顺时针
+  lineColor?: string | Gradient // 进度条的色彩，支持纯色或渐变；进度圈时 direction: 'left' 为逆时针，direction: 'right' 为顺时针
   lineCap?: 'round' | 'butt' // 进度条边缘的形状
   showInfo?: boolean // 是否显示进度数值或状态图标
   infoSize?: number // 进度数值或状态图标的尺寸，单位 px；type: 'line' 时，默认值 14；type: 'circle' 时，默认值 24
-  success?: string // 进度完成时的信息 string | slot
-  format?: (percent: number) => string | number // 内容的模板函数 function | slot
+  success?: string // 进度完成时的信息
+  format?: (percent: number) => string | number // 内容的模板函数
   type?: 'line' | 'circle' // 进度条类型
 }
+// 声明组件插槽类型
+export interface ProgressSlots {
+  success?: () => VNode[]
+  format?: (props: { percent: number }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   width: undefined,
   percent: 0,
@@ -32,6 +40,7 @@ const props = withDefaults(defineProps<Props>(), {
   format: (percent: number) => percent + '%',
   type: 'line'
 })
+defineSlots<ProgressSlots>()
 const { colorPalettes } = useInject('Progress') // 主题色注入
 const slotsExist = useSlotsExist(['success'])
 // 进度条宽度/进度圈宽高

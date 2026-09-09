@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import { useSlotsExist } from 'components/utils'
 export type PresetColor =
   | 'pink'
@@ -17,20 +17,27 @@ export type PresetColor =
   | 'gold'
   | 'lime'
 export type Status = 'success' | 'processing' | 'default' | 'error' | 'warning'
+
 export interface Props {
   color?: PresetColor | string // 自定义小圆点的颜色，优先级高于 status
-  value?: number | string // 展示的数字或文字，为数字时大于 max 显示为 max+，为 0 时隐藏 number | string | slot
+  value?: number | string // 展示的数字或文字，为数字时大于 max 显示为 max+，为 0 时隐藏
   max?: number // 展示封顶的数字值
   showZero?: boolean // 当数值为 0 时，是否展示 Badge
   dot?: boolean // 不展示数字，只有一个小红点
   offset?: [number | string, number | string] // 设置状态点的位置偏移，距默认位置左侧、上方的偏移量 [x, y]: [水平偏移, 垂直偏移]
   status?: Status // 设置 Badge 为状态点
-  text?: string // 在设置了 status 或 color 的前提下有效，设置状态点的文本 string | slot
+  text?: string // 在设置了 status 或 color 的前提下有效，设置状态点的文本
   valueStyle?: CSSProperties // 设置徽标的样式
   zIndex?: number // 设置徽标的 z-index
   title?: string // 设置鼠标放在状态点上时显示的文字
   ripple?: boolean // 是否开启涟漪动画效果
 }
+// 声明组件插槽类型
+export interface BadgeSlots {
+  default?: () => VNode[]
+  value?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   color: undefined,
   value: undefined,
@@ -45,6 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
   title: undefined,
   ripple: false
 })
+defineSlots<BadgeSlots>()
 const presetColors: string[] = [
   'pink',
   'red',

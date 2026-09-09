@@ -562,7 +562,7 @@ const size = ref('middle')
 | :-- | :-- | :-- | :-- |
 | spinning | 是否为加载中状态 | boolean | true |
 | size | 加载中尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
-| tip | 描述文案 | string &#124; slot | undefined |
+| tip | 描述文案 | string | undefined |
 | indicator | 加载指示符 | 'dot' &#124; 'spin-dot' &#124; 'spin-line' &#124; 'ring-circle' &#124; 'ring-rail' &#124; 'dynamic-circle' &#124; 'magic-ring' | 'dot' |
 | color | 指示符颜色，当 `indicator: 'magic-ring'` 时为外环颜色 | string | undefined |
 | spinCircleWidth | 圆环宽度，单位是加载指示符宽度的百分比，仅当 `indicator: 'ring-circle' \| 'ring-rail'` 时生效 | number | 12 |
@@ -574,7 +574,7 @@ const size = ref('middle')
 
 ## Slots
 
-| 名称    | 说明           | 类型           |
+| 名称   | 说明          | 类型           |
 | :------ | :------------- | :------------- |
-| tip     | 自定义描述文案 | v-slot:tip     |
-| default | 自定义内容     | v-slot:default |
+| tip    | 自定义描述文案 | v-slot:tip     |
+| default | 自定义内容    | v-slot:default |

@@ -213,12 +213,16 @@ function onOpenWindow() {
     </ul>
     <Collapse lang="vue" :fontSize="16" :items="functionItems" v-model:activeKey="activeKey" copyable />
     <Descriptions class="mb10 mt30" title="生产环境依赖 (dependencies)" :column="{ md: 2, lg: 3, xl: 4 }">
-      <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.dependencies" :key="dependency">
+      <DescriptionsItem :label="String(dependency)" v-for="(version, dependency) in pkg.dependencies" :key="dependency">
         <Tag color="volcano">{{ version }}</Tag>
       </DescriptionsItem>
     </Descriptions>
     <Descriptions class="mb10 mt30" title="开发环境依赖 (devDependencies)" :column="{ md: 2, lg: 3, xl: 4 }">
-      <DescriptionsItem :label="dependency" v-for="(version, dependency) in pkg.devDependencies" :key="dependency">
+      <DescriptionsItem
+        :label="String(dependency)"
+        v-for="(version, dependency) in pkg.devDependencies"
+        :key="dependency"
+      >
         <Tag color="cyan">{{ version }}</Tag>
       </DescriptionsItem>
     </Descriptions>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import type { VNode } from 'vue'
 import { useEventListener } from 'components/utils'
 export interface Responsive {
   xs?: number // <576px 响应式栅格
@@ -17,6 +18,10 @@ export interface Props {
   align?: 'top' | 'middle' | 'bottom' | 'stretch' // 垂直对齐方式
   justify?: 'start' | 'end' | 'center' | 'space-around' | 'space-between' | 'space-evenly' // 水平排列方式
 }
+// 声明组件插槽类型
+export interface RowSlots {
+  default?: () => VNode[]
+}
 const props = withDefaults(defineProps<Props>(), {
   width: 'auto',
   gutter: 0,
@@ -24,6 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
   align: 'top',
   justify: 'start'
 })
+defineSlots<RowSlots>()
 const alignProperties = {
   top: 'flex-start',
   middle: 'center',

@@ -31,7 +31,7 @@
 
 <br/>
 
-_由 `v-model:open` 驱动显隐，内容写在默认插槽中，标题 / 底部 / 关闭图标可用同名插槽接管；无需任何 `Provider`，在模板中直接使用即可_
+*由 `v-model:open` 驱动显隐，内容写在默认插槽中，标题 / 底部 / 关闭图标可用同名插槽接管；无需任何 `Provider`，在模板中直接使用即可*
 
 ::: tip XXX.vue
 
@@ -60,7 +60,7 @@ function onOk() {
 
 <br/>
 
-_适用于编程式打开：先在应用根节点放置一次 `<DialogProvider>`，之后任意层级组件均可通过 `useDialog()` 取得同一实例_
+*适用于编程式打开：先在应用根节点放置一次 `<DialogProvider>`，之后任意层级组件均可通过 `useDialog()` 取得同一实例*
 
 ::: info 关于 `DialogProvider` 与 `Dialog`
 
@@ -837,7 +837,7 @@ const statisticValueStyle: CSSProperties = { fontSize: '20px' }
 
 ## 基本使用
 
-_用 `v-model:open` 控制显隐：点击「取消」/ 遮罩 / `Esc` / 关闭按钮会自动回写 `false`；点击「确定」只派发 `ok` 事件、不自动关闭，需在 `@ok` 回调中自行将 `open` 置为 `false`_
+*用 `v-model:open` 控制显隐：点击「取消」/ 遮罩 / `Esc` / 关闭按钮会自动回写 `false`；点击「确定」只派发 `ok` 事件、不自动关闭，需在 `@ok` 回调中自行将 `open` 置为 `false`*
 
 <br/>
 
@@ -880,7 +880,7 @@ function onCancel() {
 
 ## 声明式用法
 
-_用 `v-model:open` 控制显隐，标题 / 内容 / 底部 / 关闭图标均可用插槽自定义；`change` 事件在每次开关时触发，并携带该实例的 `key`。点击「确定」只派发 `ok` 事件、不自动关闭，需在 `@ok` 中自行将 `open` 置为 `false`；点击「取消」/ 遮罩 / `Esc` / 关闭按钮则自动回写 `false`。需要异步提交时，可用 `confirmLoading` 控制确定按钮 `loading`，在异步结束后再自行关闭_
+*用 `v-model:open` 控制显隐，标题 / 内容 / 底部 / 关闭图标均可用插槽自定义；`change` 事件在每次开关时触发，并携带该实例的 `key`。点击「确定」只派发 `ok` 事件、不自动关闭，需在 `@ok` 中自行将 `open` 置为 `false`；点击「取消」/ 遮罩 / `Esc` / 关闭按钮则自动回写 `false`。需要异步提交时，可用 `confirmLoading` 控制确定按钮 `loading`，在异步结束后再自行关闭*
 
 <br/>
 
@@ -978,7 +978,7 @@ function onAsyncSubmit() {
 
 ## 命令式调用
 
-_`dialog.open(options)` 立即打开一个弹窗并返回该实例的句柄，句柄提供 `key` / `destroy` / `update` / `show` 四个成员，可脱离模板做编程式控制；命令式实例默认 `destroyOnClose: true`，关闭即销毁_
+*`dialog.open(options)` 立即打开一个弹窗并返回该实例的句柄，句柄提供 `key` / `destroy` / `update` / `show` 四个成员，可脱离模板做编程式控制；命令式实例默认 `destroyOnClose: true`，关闭即销毁*
 
 <br/>
 
@@ -1047,7 +1047,7 @@ function onHandleDialog() {
 
 ## 内容三种形态
 
-_`content` / `title` 均支持 `string` / `VNode` / 渲染函数三种形态，命令式与声明式一致（声明式下内容通常直接写进默认插槽，不必传 `content`）；渲染函数在每次渲染时调用，内部引用响应式数据即可让内容自动更新_
+*`content` / `title` 均支持 `string` / `VNode` / 渲染函数三种形态，命令式与声明式一致（声明式下内容通常直接写进默认插槽，不必传 `content`）；渲染函数在每次渲染时调用，内部引用响应式数据即可让内容自动更新*
 
 <br/>
 
@@ -1108,7 +1108,7 @@ function onRenderFnContent() {
 
 ## 内容保留、预渲染与关闭回调
 
-_声明式实例默认 `destroyOnClose: false`，内容常驻、重新打开复用同一实例；命令式实例默认 `true`，关闭即销毁，传 `false` 时实例保留、内容 DOM 与内部状态持久化，可用 `show()` 重新打开。下面分三组演示内容保留、预渲染与关闭回调的差异_
+*声明式实例默认 `destroyOnClose: false`，内容常驻、重新打开复用同一实例；命令式实例默认 `true`，关闭即销毁，传 `false` 时实例保留、内容 DOM 与内部状态持久化，可用 `show()` 重新打开。下面分三组演示内容保留、预渲染与关闭回调的差异*
 
 <br/>
 
@@ -1474,11 +1474,11 @@ function onAfterCloseDialog() {
 </style>
 ```
 
-::::
+:::
 
 ## 自定义宽高
 
-_`width` / `height` 支持数值（默认 `px`）与百分比（字符串原样透传）两种写法；固定 `height` 后内容超高在内容区内部滚动_
+*`width` / `height` 支持数值（默认 `px`）与百分比（字符串原样透传）两种写法；固定 `height` 后内容超高在内容区内部滚动*
 
 <br/>
 
@@ -1488,7 +1488,7 @@ _`width` / `height` 支持数值（默认 `px`）与百分比（字符串原样�
   <Button type="primary" @click="onFixedHeight">固定高度</Button>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1517,11 +1517,11 @@ function onFixedHeight() {
 </template>
 ```
 
-::::
+:::
 
 ## 内容区高度与滚动
 
-_`height` 作用于整个弹窗主体（含标题与底部按钮）：`auto` 时内容自然撑开，超高后整个弹框滚动；指定 `height` 后内容区内部滚动，标题与按钮固定可见。滚动条由内置 `Scrollbar` 接管，可通过 `scrollbarProps` 定制大小、位置与显隐时机。声明式用法下，也可以在默认插槽内直接用 `Scrollbar` 包裹超长内容并限高_
+*`height` 作用于整个弹窗主体（含标题与底部按钮）：`auto` 时内容自然撑开，超高后整个弹框滚动；指定 `height` 后内容区内部滚动，标题与按钮固定可见。滚动条由内置 `Scrollbar` 接管，可通过 `scrollbarProps` 定制大小、位置与显隐时机。声明式用法下，也可以在默认插槽内直接用 `Scrollbar` 包裹超长内容并限高*
 
 <br/>
 
@@ -1540,7 +1540,7 @@ _`height` 作用于整个弹窗主体（含标题与底部按钮）：`auto` 时
   </Scrollbar>
 </Dialog>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1607,7 +1607,7 @@ const open = ref(false)
 </template>
 ```
 
-::::
+:::
 
 ## 自定义样式
 
@@ -1647,7 +1647,7 @@ const open = ref(false)
 }
 </style>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1729,11 +1729,11 @@ function onContainerStyle() {
 </style>
 ```
 
-::::
+:::
 
 ## 自定义遮罩和聚焦
 
-_`mask: false` 可隐藏遮罩让背景可交互；`autoFocusButton` 控制打开后自动聚焦的按钮（`undefined` 时默认聚焦内容容器）_
+*`mask: false` 可隐藏遮罩让背景可交互；`autoFocusButton` 控制打开后自动聚焦的按钮（`undefined` 时默认聚焦内容容器）*
 
 <br/>
 
@@ -1742,7 +1742,7 @@ _`mask: false` 可隐藏遮罩让背景可交互；`autoFocusButton` 控制打�
   <Button type="primary" @click="onAutoFocusCancel">自动聚焦「取消」按钮</Button>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1775,11 +1775,11 @@ function onAutoFocusCancel() {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义按钮
 
-_`cancelText` / `cancelProps` 配置取消按钮，`okText` / `okType` / `okProps` 配置确定按钮；`okProps` 优先级高于 `okType`，两者都传 `type` 时以 `okProps` 为准。`okType: 'danger'` 可用于删除等危险操作_
+*`cancelText` / `cancelProps` 配置取消按钮，`okText` / `okType` / `okProps` 配置确定按钮；`okProps` 优先级高于 `okType`，两者都传 `type` 时以 `okProps` 为准。`okType: 'danger'` 可用于删除等危险操作*
 
 <br/>
 
@@ -1788,7 +1788,7 @@ _`cancelText` / `cancelProps` 配置取消按钮，`okText` / `okType` / `okProp
   <Button type="primary" @click="onDangerOk">危险操作</Button>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1826,11 +1826,11 @@ function onDangerOk() {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义底部区域
 
-_`footer` 传渲染函数时底部区域完全由该函数接管，内置按钮组不再渲染；`footer: false` 时整块隐藏，配合 `closable` 用右上角关闭。声明式用法下还可使用 `#footer` 插槽_
+*`footer` 传渲染函数时底部区域完全由该函数接管，内置按钮组不再渲染；`footer: false` 时整块隐藏，配合 `closable` 用右上角关闭。声明式用法下还可使用 `#footer` 插槽*
 
 <br/>
 
@@ -1839,7 +1839,7 @@ _`footer` 传渲染函数时底部区域完全由该函数接管，内置按钮�
   <Button type="primary" @click="onFooterless">无底部按钮</Button>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1886,11 +1886,11 @@ function onFooterless() {
 </template>
 ```
 
-::::
+:::
 
 ## 关闭按钮
 
-_`closable: false` 隐藏右上角关闭按钮；`closeIcon` 支持 `VNode` / 渲染函数两种形态，声明式用法下插槽优先级高于 `closeIcon` 属性；`closeFocusable: false` 让关闭按钮不参与 `Tab` 序列_
+*`closable: false` 隐藏右上角关闭按钮；`closeIcon` 支持 `VNode` / 渲染函数两种形态，声明式用法下插槽优先级高于 `closeIcon` 属性；`closeFocusable: false` 让关闭按钮不参与 `Tab` 序列*
 
 <br/>
 
@@ -1909,7 +1909,7 @@ _`closable: false` 隐藏右上角关闭按钮；`closeIcon` 支持 `VNode` / �
   <p>声明式用法下可用 <code>#closeIcon</code> 插槽替换右上角图标，插槽优先级高于 <code>closeIcon</code> 属性。</p>
 </Dialog>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1972,11 +1972,11 @@ const open = ref(false)
 </template>
 ```
 
-::::
+:::
 
 ## 切换全屏
 
-_`switchFullscreen` 开启后右上角出现全屏切换按钮，切换后弹窗铺满视口；全屏态下自动禁用拖拽。命令式与声明式用法均支持_
+*`switchFullscreen` 开启后右上角出现全屏切换按钮，切换后弹窗铺满视口；全屏态下自动禁用拖拽。命令式与声明式用法均支持*
 
 <br/>
 
@@ -1991,7 +1991,7 @@ _`switchFullscreen` 开启后右上角出现全屏切换按钮，切换后弹窗
   <p>Bla bla ...</p>
 </Dialog>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -2024,11 +2024,11 @@ function onImperativeFullscreen() {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义位置
 
-_默认从顶部 `100px` 处开始垂直排列（非居中）；`top` 支持数值（`px`）与百分比，`centered` 可水平垂直居中_
+*默认从顶部 `100px` 处开始垂直排列（非居中）；`top` 支持数值（`px`）与百分比，`centered` 可水平垂直居中*
 
 <br/>
 
@@ -2054,7 +2054,7 @@ _默认从顶部 `100px` 处开始垂直排列（非居中）；`top` 支持数�
   <p>Bla bla ...</p>
 </Dialog>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -2082,11 +2082,11 @@ const centeredOpen = ref(false)
 </template>
 ```
 
-::::
+:::
 
 ## 动画出现位置
 
-_`transformOrigin: 'mouse'`（默认）时弹窗从鼠标点击位置展开，`'center'` 时从自身中心展开_
+*`transformOrigin: 'mouse'`（默认）时弹窗从鼠标点击位置展开，`'center'` 时从自身中心展开*
 
 <br/>
 
@@ -2106,7 +2106,7 @@ _`transformOrigin: 'mouse'`（默认）时弹窗从鼠标点击位置展开，`'
   <p>Bla bla ...</p>
 </Dialog>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -2129,11 +2129,11 @@ const centerOpen = ref(false)
 </template>
 ```
 
-::::
+:::
 
 ## 异步关闭与阻止关闭
 
-_命令式下 `onOk` / `onCancel` 返回 `false` 或 `Promise` `reject` 时阻止关闭，其余情况（含 `Promise` `resolve`）自动关闭；返回 `Promise` 期间确定按钮保持 `loading` 且禁用，避免重复提交。声明式下确定按钮不自动关闭，异步提交请配合 `confirmLoading` 并在 `@ok` 中自行关闭，见 [声明式用法](#声明式用法)_
+*命令式下 `onOk` / `onCancel` 返回 `false` 或 `Promise` `reject` 时阻止关闭，其余情况（含 `Promise` `resolve`）自动关闭；返回 `Promise` 期间确定按钮保持 `loading` 且禁用，避免重复提交。声明式下确定按钮不自动关闭，异步提交请配合 `confirmLoading` 并在 `@ok` 中自行关闭，见 [声明式用法](#声明式用法)*
 
 <br/>
 
@@ -2144,7 +2144,7 @@ _命令式下 `onOk` / `onCancel` 返回 `false` 或 `Promise` `reject` 时阻�
   <Button type="primary" @click="onPreventCancel">阻止取消</Button>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -2219,17 +2219,17 @@ function onPreventCancel() {
 </template>
 ```
 
-::::
+:::
 
 ## 原地更新
 
-_`update` 可更新 `DialogOptions` 的全部属性，另支持 `loading`（手动驱动确定按钮 `loading`，供外部异步流程控制）_
+*`update` 可更新 `DialogOptions` 的全部属性，另支持 `loading`（手动驱动确定按钮 `loading`，供外部异步流程控制）*
 
 <br/>
 
 <Button type="primary" @click="onProgressSave">异步保存</Button>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -2308,11 +2308,11 @@ onBeforeUnmount(() => {
 </template>
 ```
 
-::::
+:::
 
 ## 多实例层叠
 
-_连续调用依次入栈，各实例按自身 `zIndex` 分层（遮罩取 `zIndex`，弹窗取 `zIndex + 10`）；点击遮罩只关闭栈顶，`destroyAll()` 关闭并销毁全部_
+*连续调用依次入栈，各实例按自身 `zIndex` 分层（遮罩取 `zIndex`，弹窗取 `zIndex + 10`）；点击遮罩只关闭栈顶，`destroyAll()` 关闭并销毁全部*
 
 <br/>
 
@@ -2321,7 +2321,7 @@ _连续调用依次入栈，各实例按自身 `zIndex` 分层（遮罩取 `zInd
   <Button type="danger" @click="onDestroyAllDialogs">开启 3 层并 2 秒后全部销毁</Button>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -2362,11 +2362,11 @@ function onDestroyAllDialogs() {
 </template>
 ```
 
-::::
+:::
 
 ## 遮罩、键盘与滚动锁定
 
-_命令式与声明式沿用同一套组件 `props` 默认值：`maskClosable: true`、`keyboard: true`、`blockScroll: true`，两种用法行为一致（声明式下直接在 `<Dialog>` 上写同名属性即可）。`maskClosable: false` 后点击遮罩不会关闭（`onMaskClick` 回调仍会触发）；`keyboard: false` 后 `Esc` 不会关闭（`onEsc` 回调仍会触发）；`blockScroll` 控制是否锁定背景滚动_
+*命令式与声明式沿用同一套组件 `props` 默认值：`maskClosable: true`、`keyboard: true`、`blockScroll: true`，两种用法行为一致（声明式下直接在 `<Dialog>` 上写同名属性即可）。`maskClosable: false` 后点击遮罩不会关闭（`onMaskClick` 回调仍会触发）；`keyboard: false` 后 `Esc` 不会关闭（`onEsc` 回调仍会触发）；`blockScroll` 控制是否锁定背景滚动*
 
 <br/>
 
@@ -2377,7 +2377,7 @@ _命令式与声明式沿用同一套组件 `props` 默认值：`maskClosable: t
   <Button type="primary" @click="onNoBlockScroll">不锁定滚动</Button>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -2427,17 +2427,17 @@ function onNoBlockScroll() {
 </template>
 ```
 
-::::
+:::
 
 ## 焦点管理
 
-_`focusTriggerAfterClose` 控制关闭后是否把焦点归还触发元素；`autoFocusButton` 演示见上文「自定义遮罩和聚焦」，`closeFocusable` 演示见上文「关闭按钮」。注意：`Esc` 监听绑定在弹窗主体上，焦点移出弹窗（如 `mask: false` 时点击背景）后不再响应_
+*`focusTriggerAfterClose` 控制关闭后是否把焦点归还触发元素；`autoFocusButton` 演示见上文「自定义遮罩和聚焦」，`closeFocusable` 演示见上文「关闭按钮」。注意：`Esc` 监听绑定在弹窗主体上，焦点移出弹窗（如 `mask: false` 时点击背景）后不再响应*
 
 <br/>
 
 <Button type="primary" @click="onNoFocusRestore">关闭不归还焦点</Button>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -2458,11 +2458,11 @@ function onNoFocusRestore() {
 </template>
 ```
 
-::::
+:::
 
 ## 可拖拽
 
-_`draggable` 开启后标题栏为拖拽句柄，支持 `boolean` 与 `{ bounds: 'none' | 'window' }` 两种配置（默认限制在视口内）；全屏态下自动禁用拖拽_
+*`draggable` 开启后标题栏为拖拽句柄，支持 `boolean` 与 `{ bounds: 'none' | 'window' }` 两种配置（默认限制在视口内）；全屏态下自动禁用拖拽*
 
 <br/>
 
@@ -2476,7 +2476,7 @@ _`draggable` 开启后标题栏为拖拽句柄，支持 `boolean` 与 `{ bounds:
   <p>声明式用法下同样只需传 <code>draggable</code>，标题栏即为拖拽句柄。</p>
 </Dialog>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -2514,11 +2514,11 @@ const open = ref(false)
 </template>
 ```
 
-::::
+:::
 
 ## 自定义挂载容器
 
-_通过 `to` 指定 `Teleport` 的目标，默认挂载到 `body`。声明式用法下直接写在 `<Dialog>` 上（`<Dialog to="#container">`）；命令式用法下 `to` 属于 `Provider` 级配置，需在 `<DialogProvider>` 上设置，无法在 `open()` 中逐条传入，故在页面内局部嵌套 `<DialogProvider>` 演示。目标容器与组件位于同一组件树时，需等挂载完成后再渲染组件（`v-if` 延迟），`Teleport` 才能定位目标_
+*通过 `to` 指定 `Teleport` 的目标，默认挂载到 `body`。声明式用法下直接写在 `<Dialog>` 上（`<Dialog to="#container">`）；命令式用法下 `to` 属于 `Provider` 级配置，需在 `<DialogProvider>` 上设置，无法在 `open()` 中逐条传入，故在页面内局部嵌套 `<DialogProvider>` 演示。目标容器与组件位于同一组件树时，需等挂载完成后再渲染组件（`v-if` 延迟），`Teleport` 才能定位目标*
 
 <br/>
 
@@ -2542,7 +2542,7 @@ _通过 `to` 指定 `Teleport` 的目标，默认挂载到 `body`。声明式用
 }
 </style>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -2581,7 +2581,7 @@ function onToDialog() {
 </style>
 ```
 
-::::
+:::
 
 ## APIs
 
@@ -2589,11 +2589,11 @@ function onToDialog() {
 
 <br/>
 
-_组件级配置属性：声明式用法下直接设置在 `<Dialog>` 上（推荐）；使用 `useDialog()` 时设置在 `<DialogProvider>` 上（会透传给内部 `Dialog`），两者等价。_
+*组件级配置属性：声明式用法下直接设置在 `<Dialog>` 上（推荐）；使用 `useDialog()` 时设置在 `<DialogProvider>` 上（会透传给内部 `Dialog`），两者等价。*
 
 <br/>
 
-_每次调用的个性化配置请参考 [DialogOptions Type](#dialogoptions-type)_
+*每次调用的个性化配置请参考 [DialogOptions Type](#dialogoptions-type)*
 
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
@@ -2650,7 +2650,7 @@ _每次调用的个性化配置请参考 [DialogOptions Type](#dialogoptions-typ
 
 <br/>
 
-_`useDialog().open()` 的配置项，字段与 [Dialog Props](#dialog) 基本一致，以下属性均具有更高优先级（覆盖组件级配置）_
+*`useDialog().open()` 的配置项，字段与 [Dialog Props](#dialog) 基本一致，以下属性均具有更高优先级（覆盖组件级配置）*
 
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
@@ -2705,7 +2705,7 @@ _`useDialog().open()` 的配置项，字段与 [Dialog Props](#dialog) 基本一
 
 <br/>
 
-_`DialogReactive.update()` 的配置项，字段与 [DialogOptions](#dialogoptions-type) 一致，另支持：_
+*`DialogReactive.update()` 的配置项，字段与 [DialogOptions](#dialogoptions-type) 一致，另支持：*
 
 | 参数 | 说明 | 类型 |
 | :-- | :-- | :-- |
@@ -2724,7 +2724,7 @@ _`DialogReactive.update()` 的配置项，字段与 [DialogOptions](#dialogoptio
 
 ## Methods
 
-_仅命令式调用需要（声明式用法通过 `v-model:open` 控制显隐，无需这些方法）：通过 `useDialog()` 调用，需在 `<DialogProvider>` 内部使用：_
+*仅命令式调用需要（声明式用法通过 `v-model:open` 控制显隐，无需这些方法）：通过 `useDialog()` 调用，需在 `<DialogProvider>` 内部使用：*
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
@@ -2735,7 +2735,7 @@ _仅命令式调用需要（声明式用法通过 `v-model:open` 控制显隐，
 
 <br/>
 
-_单个弹窗的句柄，由 `useDialog().open()` 或 `<Dialog>` / `<DialogProvider>` 的 `@ready` 事件获取：_
+*单个弹窗的句柄，由 `useDialog().open()` 或 `<Dialog>` / `<DialogProvider>` 的 `@ready` 事件获取：*
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
@@ -2746,7 +2746,7 @@ _单个弹窗的句柄，由 `useDialog().open()` 或 `<Dialog>` / `<DialogProvi
 
 ## Events
 
-_`ok` / `cancel` / `change` / `ready` 为 `<Dialog>` 与 `<DialogProvider>` 组件的事件（需通过组件标签监听）；使用 `useDialog()` 时，请在调用参数中使用 `onOk` / `onCancel` 等回调。_
+*`ok` / `cancel` / `change` / `ready` 为 `<Dialog>` 与 `<DialogProvider>` 组件的事件（需通过组件标签监听）；使用 `useDialog()` 时，请在调用参数中使用 `onOk` / `onCancel` 等回调。*
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
@@ -2760,22 +2760,22 @@ _`ok` / `cancel` / `change` / `ready` 为 `<Dialog>` 与 `<DialogProvider>` 组�
 
 ## 在 setup 外使用
 
-_模板之外的场景（路由守卫、`axios` 拦截器、`Pinia action` 等）无法书写 `<Dialog>`，只能走命令式调用：先拿到 api，再在任意位置编程式打开_
+*模板之外的场景（路由守卫、`axios` 拦截器、`Pinia action` 等）无法书写 `<Dialog>`，只能走命令式调用：先拿到 api，再在任意位置编程式打开*
 
 ### 选择 1：`createDiscreteApi()`（脱离组件树）
 
 <br/>
 
-_适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：内部会创建一个独立的应用实，因此可在任意位置调用，无需外层 `DialogProvider`，其 `dialog` 与 `useDialog()` 返回的实例完全一致_
+*适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：内部会创建一个独立的应用实，因此可在任意位置调用，无需外层 `DialogProvider`，其 `dialog` 与 `useDialog()` 返回的实例完全一致*
 
-:::: tip 注意
+::: tip 注意
 
 - 主题使用内置默认值；如需自定义，通过第二个参数 `configProviderProps`（支持 `Ref` / `computed` 响应式）显式传入，详见 [全局化配置 ConfigProvider「主题同步到离散 API」](/guide/components/config-provider.html#主题同步到离散-api)
 - 每次调用都会创建一套独立实例（独立的容器与弹窗栈），建议缓存返回值复用，避免重复创建；不再使用时可通过返回的 `dispose()` 销毁该实例
 - 内部会访问 `document`，`SSR` 场景请在客户端（点击回调、`onMounted` ）中调用
 - 不建议与 `useDialog()` 在同一 App 中混用：两者各自持有独立的弹窗栈与挂载容器，`zIndex` 层级互不感知
 
-::::
+:::
 
 ```ts
 import { createDiscreteApi } from 'vue-amazing-ui'
@@ -2803,13 +2803,13 @@ router.beforeEach((to, from, next) => {
 
 ### 选择 2：挂载到 `window`（复用组件树内实例）
 
-:::: warning 注意
+::: warning 注意
 
 如果你想在 `setup` 外使用 `dialog`，要在顶层 `setup` 中把 `useDialog()` 返回的实例挂载到 `window` 下然后再调用，调用前需要确保实例已经挂载成功。
 
-::::
+:::
 
-:::: tip App.vue
+::: tip App.vue
 
 ```vue
 <script setup lang="ts">
@@ -2822,9 +2822,9 @@ import { DialogProvider } from 'vue-amazing-ui'
 </template>
 ```
 
-::::
+:::
 
-:::: tip content.vue（`<DialogProvider>` 内的顶层组件）
+::: tip content.vue（`<DialogProvider>` 内的顶层组件）
 
 ```vue
 <script setup lang="ts">
@@ -2835,9 +2835,9 @@ window.$dialog = useDialog()
 </script>
 ```
 
-::::
+:::
 
-:::: tip XXX.ts（任意 .ts 文件）
+::: tip XXX.ts（任意 .ts 文件）
 
 ```ts
 // 需确保已在顶层 setup 中执行了 window.$dialog = useDialog()
@@ -2847,9 +2847,9 @@ window.$dialog?.open({
 })
 ```
 
-::::
+:::
 
-:::: tip 可选：为 `window.$dialog` 补充 `TypeScript` 类型声明
+::: tip 可选：为 `window.$dialog` 补充 `TypeScript` 类型声明
 
 ```ts
 // types/global.d.ts
@@ -2862,4 +2862,4 @@ declare global {
 }
 ```
 
-::::
+:::

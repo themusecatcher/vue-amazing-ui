@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { CSSProperties, Slot } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import Avatar, { type AvatarProps } from 'components/avatar'
 import { useSlotsExist } from 'components/utils'
+
 export interface Props {
-  avatar?: string // 列表元素的图标 string | slot
+  avatar?: string // 列表元素的图标
   avatarProps?: AvatarProps // Avatar 组件属性配置，参考 Avatar Props，用于配置列表图标样式
-  title?: string // 列表元素的标题 string | slot
-  description?: string // 列表元素的描述内容 string | slot
-  actions?: Slot // 列表操作组 slot
-  extra?: string // 额外内容，展示在列表右侧 string | slot
+  title?: string // 列表元素的标题
+  description?: string // 列表元素的描述内容
+  extra?: string // 额外内容，展示在列表右侧
   avatarStyle?: CSSProperties // 设置图标的样式
   titleStyle?: CSSProperties // 设置标题的样式
   descriptionStyle?: CSSProperties // 设置描述内容的样式
@@ -17,12 +17,21 @@ export interface Props {
   actionsStyle?: CSSProperties // 设置操作区域的样式
   extraStyle?: CSSProperties // 设置额外内容的样式
 }
+// 声明组件插槽类型
+export interface ListItemSlots {
+  avatar?: () => VNode[]
+  title?: () => VNode[]
+  description?: () => VNode[]
+  default?: () => VNode[]
+  actions?: () => VNode[]
+  extra?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   avatar: undefined,
   avatarProps: () => ({}),
   title: undefined,
   description: undefined,
-  actions: undefined,
   extra: undefined,
   avatarStyle: () => ({}),
   titleStyle: () => ({}),
@@ -31,6 +40,7 @@ const props = withDefaults(defineProps<Props>(), {
   actionsStyle: () => ({}),
   extraStyle: () => ({})
 })
+defineSlots<ListItemSlots>()
 const slotsExist = useSlotsExist(['avatar', 'title', 'description', 'default', 'actions', 'extra'])
 const showAvatar = computed(() => {
   return slotsExist.avatar || props.avatar || JSON.stringify(props.avatarProps) !== '{}'

@@ -1,48 +1,59 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import type { CSSProperties, VNode, Slot } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import Button, { type ButtonProps } from 'components/button'
 import { debounce } from 'components/utils'
 export interface Item {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
   disabled?: boolean // 是否禁用展开收起
-  header?: string // 面板标题 string | slot
+  header?: string // 面板标题
   headerStyle?: CSSProperties // 设置面板标题的样式
-  content?: string // 面板内容 string | slot
+  content?: string // 面板内容
   contentStyle?: CSSProperties // 设置面板内容的样式
   collapseStyle?: CSSProperties // 设置面板容器的样式
-  arrow?: VNode // 自定义箭头切换图标
+  arrow?: VNode | (() => VNode) // 自定义箭头切换图标
   showArrow?: boolean // 是否展示箭头
   arrowPlacement?: 'left' | 'right' // 箭头位置
   arrowStyle?: CSSProperties // 设置面板箭头的样式
-  extra?: string // 面板标题右侧的额外内容 string | slot
-  lang?: string // 面板右上角固定内容，例如 language 标识 string | slot
+  extra?: string // 面板标题右侧的额外内容
+  lang?: string // 面板右上角固定内容，例如 language 标识
   copyable?: boolean // 是否可复制面板内容
   copyProps?: ButtonProps // 复制按钮属性配置，参考 Button Props
   copyText?: string // 复制按钮文本
   copiedText?: string // 已复制按钮文本
   [propName: string]: any // 用于包含带有任意数量的其他属性
 }
+
 export interface Props {
   items?: Item[] // 折叠面板数据，可使用 slot 替换指定 key 的 header、content、arrow、extra、lang
-  activeKey?: string[] | string | number[] | number | null // (v-model) 当前激活 tab 面板的 key，传入 string | number 类型时，即为手风琴模式
+  activeKey?: string[] | string | number[] | number | null // (v-model) 当前激活 tab 面板的 key，传入单个值时即为手风琴模式
   bordered?: boolean // 带边框风格的折叠面板
   disabled?: boolean // 是否禁用展开收起，较低优先级
   ghost?: boolean // 使折叠面板透明且无边框
   headerStyle?: CSSProperties // 设置面板标题的样式，较低优先级
   contentStyle?: CSSProperties // 设置面板内容的样式，较低优先级
   collapseStyle?: CSSProperties // 设置面板容器的样式，较低优先级
-  arrow?: VNode | Slot // 自定义箭头切换图标，较低优先级 vnode | slot
+  arrow?: VNode | (() => VNode) // 自定义箭头切换图标，较低优先级，支持 VNode / 渲染函数；插槽形态请用 #arrow
   showArrow?: boolean // 是否展示箭头，较低优先级
   arrowPlacement?: 'left' | 'right' // 箭头位置，较低优先级
   arrowStyle?: CSSProperties // 设置面板箭头的样式，较低优先级
-  extra?: string // 面板标题右侧的额外内容，较低优先级 string | slot
-  lang?: string // 面板右上角固定内容，例如 language 标识，较低优先级 string | slot
+  extra?: string // 面板标题右侧的额外内容，较低优先级
+  lang?: string // 面板右上角固定内容，例如 language 标识，较低优先级
   copyable?: boolean // 是否可复制面板内容，较低优先级
   copyProps?: ButtonProps // 复制按钮属性配置，参考 Button Props，较低优先级
   copyText?: string // 复制按钮文本，较低优先级
   copiedText?: string // 已复制按钮文本，较低优先级
 }
+// 声明组件插槽类型
+export interface CollapseSlots {
+  arrow?: (props: { item: Item; key: string | number; active: boolean }) => VNode[]
+  header?: (props: { item: Item; header: string | undefined; key: string | number; active: boolean }) => VNode[]
+  // extra / lang 经 getComputedValue 取值，会回退到 Props 同名配置，值类型随 key 变化无法收窄
+  extra?: (props: { item: Item; extra: any; key: string | number; active: boolean }) => VNode[]
+  lang?: (props: { item: Item; lang: any; key: string | number; active: boolean }) => VNode[]
+  content?: (props: { item: Item; content: string | undefined; key: string | number; active: boolean }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],
   activeKey: null,
@@ -63,6 +74,7 @@ const props = withDefaults(defineProps<Props>(), {
   copyText: 'Copy',
   copiedText: 'Copied'
 })
+defineSlots<CollapseSlots>()
 const contentRef = ref() // 面板内容的模板引用
 const copyBtnTxt = ref<string>() // 复制按钮文本
 const copyBtnClickedKeys = ref<(string | number)[]>([]) // 被点击的复制按钮的 key

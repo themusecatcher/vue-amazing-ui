@@ -819,7 +819,7 @@ tooltip | 是否展示 `Tooltip` | boolean | true
 tooltipOpen | 是否一直显示 `tooltip` | boolean | false
 tooltipStyle | 自定义 `Tooltip` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 formatTooltip | `Slider` 会把当前值传给 `formatTooltip`，并在 `Tooltip` 中显示 `formatTooltip` 的返回值 | (value: number) => string &#124; number | (value: number) => value
-value <Tag color="cyan">v-model</Tag> | 设置当前取值，当 `range` 为 `false` 时，使用 `number`，否则用 `[number, number]` | number &#124; number[] | 0
+value <Tag color="cyan">v-model</Tag> | 设置当前取值，`range` 为 `false` 时为单个值，否则为区间值 | number &#124; number[] | 0
 
 ### Marks Type
 

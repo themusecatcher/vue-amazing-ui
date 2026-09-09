@@ -1,18 +1,27 @@
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue'
-import type { Slot } from 'vue'
+import type { VNode } from 'vue'
 import { useSlotsExist, useInject } from 'components/utils'
+
 export interface Props {
-  message?: string // 警告提示内容 string | slot
-  description?: string // 警告提示的辅助性文字介绍 string | slot
+  message?: string // 警告提示内容
+  description?: string // 警告提示的辅助性文字介绍
   type?: 'default' | 'success' | 'info' | 'warning' | 'error' // 警告提示的类型
   bordered?: boolean // 是否显示边框
   closable?: boolean // 是否显示关闭按钮
-  closeText?: string // 自定义关闭按钮 string | slot
-  icon?: string // 自定义图标，showIcon 为 true 时有效 string | slot
+  closeText?: string // 自定义关闭按钮
+  icon?: string // 自定义图标，showIcon 为 true 时有效
   showIcon?: boolean // 是否显示辅助图标
-  actions?: Slot // 自定义操作项 slot
 }
+// 声明组件插槽类型
+export interface AlertSlots {
+  icon?: () => VNode[]
+  default?: () => VNode[]
+  description?: () => VNode[]
+  actions?: () => VNode[]
+  closeText?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   message: undefined,
   description: undefined,
@@ -21,9 +30,9 @@ const props = withDefaults(defineProps<Props>(), {
   closable: false,
   closeText: undefined,
   icon: undefined,
-  showIcon: false,
-  actions: undefined
+  showIcon: false
 })
+defineSlots<AlertSlots>()
 const alertRef = ref() // alert 模板引用
 const closeAlert = ref(false)
 const { colorPalettes } = useInject('Alert') // 主题色注入

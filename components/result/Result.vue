@@ -1,21 +1,30 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Slot } from 'vue'
+import type { VNode } from 'vue'
 import { useSlotsExist } from 'components/utils'
+
 export interface Props {
-  icon?: Slot // 自定义图标 slot
   status?: 'success' | 'error' | 'info' | 'warning' | '404' | '403' | '500' // 结果的状态，决定图标和颜色
-  title?: string // 标题文字 string | slot
-  subTitle?: string // 副标题文字 string | slot
-  extra?: string // 额外内容 string | slot
+  title?: string // 标题文字
+  subTitle?: string // 副标题文字
+  extra?: string // 额外内容
 }
+// 声明组件插槽类型
+export interface ResultSlots {
+  icon?: () => VNode[]
+  title?: () => VNode[]
+  subTitle?: () => VNode[]
+  extra?: () => VNode[]
+  default?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
-  icon: undefined,
   status: 'info',
   title: undefined,
   subTitle: undefined,
   extra: undefined
 })
+defineSlots<ResultSlots>()
 const slotsExist = useSlotsExist(['title', 'subTitle', 'extra', 'default'])
 const showTitle = computed(() => {
   return slotsExist.title || props.title

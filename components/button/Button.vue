@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, nextTick, computed } from 'vue'
-import type { VNode, Slot } from 'vue'
+import type { VNode } from 'vue'
 import { generate } from '@ant-design/colors'
 import { useSlotsExist, useInject } from 'components/utils'
+
 export interface Props {
   type?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 设置按钮类型
   shape?: 'default' | 'circle' | 'round' // 设置按钮形状
-  icon?: VNode | Slot // 设置按钮图标
+  icon?: VNode | (() => VNode) // 设置按钮图标，支持 VNode / 渲染函数；插槽形态请用 #icon
   size?: 'small' | 'middle' | 'large' // 设置按钮尺寸
   ghost?: boolean // 按钮背景是否透明，仅当 type: 'primary' | 'danger' 时生效
   buttonClass?: string // 设置按钮类名
@@ -19,6 +20,12 @@ export interface Props {
   loadingType?: 'static' | 'dynamic' // 加载指示符类型
   block?: boolean // 是否将按钮宽度调整为其父宽度
 }
+// 声明组件插槽类型
+export interface ButtonSlots {
+  icon?: () => VNode[]
+  default?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   type: 'default',
   shape: 'default',
@@ -35,6 +42,7 @@ const props = withDefaults(defineProps<Props>(), {
   loadingType: 'dynamic',
   block: false
 })
+defineSlots<ButtonSlots>()
 const wave = ref<boolean>(false)
 const { colorPalettes } = useInject('Button') // 主题色注入
 const colorPalettesComputed = computed(() => {

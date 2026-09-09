@@ -248,11 +248,11 @@ function onReset() {
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-title | 倒计时标题 | string &#124; slot | undefined
+title | 倒计时标题 | string | undefined
 titleStyle | 设置标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-prefix | 倒计时的前缀 | string &#124; slot | undefined
-suffix | 倒计时的后缀 | string &#124; slot | undefined
-finish | 倒计时完成后的展示文本 | string &#124; slot | undefined
+prefix | 倒计时的前缀 | string | undefined
+suffix | 倒计时的后缀 | string | undefined
+finish | 倒计时完成后的展示文本 | string | undefined
 future | `value` 是否为未来某时刻的时间戳；为 `false` 表示相对剩余时间戳 | boolean | true
 format | 倒计时展示格式，(`Y/YY`：年，`M/MM`：月，`D/DD`：日，`H/HH`：时，`m/mm`：分钟，`s/ss`：秒，`SSS`：毫秒) | string | 'HH:mm:ss'
 value | 倒计时数值，支持设置未来某时刻的时间戳或相对剩余时间，单位 `ms` | number | 0

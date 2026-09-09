@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import { useResizeObserver } from 'components/utils'
 export interface Option {
   label?: string // 选项名
@@ -8,13 +8,24 @@ export interface Option {
   disabled?: boolean // 是否禁用选项
   payload?: any // 自定义数据载体
 }
+
 export interface Props {
   block?: boolean // 是否将宽度调整为父元素宽度，同时所有选项占据相同的宽度
   disabled?: boolean // 是否禁用
-  options?: string[] | number[] | Option[] // 选项数据
+  options?: (string | number | Option)[] // 选项数据
   size?: 'small' | 'middle' | 'large' // 控件尺寸
   value?: string | number // (v-model) 当前选中的值
 }
+// 声明组件插槽类型
+export interface SegmentedSlots {
+  label?: (props: {
+    option: string | number | Option
+    label: string | number | undefined
+    index: number
+    payload: any
+  }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   block: false,
   disabled: false,
@@ -22,6 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'middle',
   value: undefined
 })
+defineSlots<SegmentedSlots>()
 const segmentedGroupRef = ref()
 const segmentedItemRef = ref()
 const selectedValue = ref<string | number>() // 当前选中的值

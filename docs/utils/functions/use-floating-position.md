@@ -8,7 +8,7 @@ _为弹出类组件提供统一测量骨架的组合式函数_
 
 它只负责「量」，不负责「往哪弹」：翻转算法、对齐几何、遮挡边界等定位决策因组件需求不同，刻意保留在各组件层。
 
-:::: details Show Source Code
+::: details Show Source Code
 
 ```ts
 import { ref, nextTick } from 'vue'
@@ -54,7 +54,7 @@ export function useFloatingPosition(
 }
 ```
 
-::::
+:::
 
 ## 基本使用
 

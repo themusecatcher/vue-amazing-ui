@@ -1042,12 +1042,12 @@ ghost | 使折叠面板透明且无边框 | boolean | false
 headerStyle | 设置面板标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 contentStyle | 设置面板内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 collapseStyle | 设置面板容器的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-arrow | 自定义箭头切换图标 | VNode &#124; slot | undefined
+arrow | 自定义箭头切换图标，prop 支持 `VNode` / 渲染函数；插槽形态请用同名 `#arrow` 插槽 | VNode &#124; (() => VNode) | undefined
 showArrow | 是否展示箭头 | boolean | true
 arrowPlacement | 箭头位置 | 'left' &#124; 'right' | 'left'
 arrowStyle | 设置面板箭头的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-extra | 面板标题右侧的额外内容 | string &#124; slot | undefined
-lang | 面板右上角固定内容，例如 `language` 标识 | string &#124; slot | undefined
+extra | 面板标题右侧的额外内容 | string | undefined
+lang | 面板右上角固定内容，例如 `language` 标识 | string | undefined
 copyable | 是否可复制面板内容 | boolean | false
 copyProps | 复制按钮属性配置，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {}
 copyText | 复制按钮文本 | string | 'Copy'
@@ -1063,17 +1063,17 @@ copiedText | 已复制按钮文本 | string | 'Copied'
 :-- | :-- | :-- | :--
 key? | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 (`0,1,2...`) 绑定 | string &#124; number | undefined
 disabled? | 是否禁用展开收起 | boolean | undefined
-header? | 面板标题 | string &#124; slot | undefined
+header? | 面板标题 | string | undefined
 headerStyle? | 设置面板标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
-content? | 面板内容 | string &#124; slot | undefined
+content? | 面板内容 | string | undefined
 contentStyle? | 设置面板内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
 collapseStyle? | 设置面板容器的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
-arrow? | 自定义箭头切换图标 | VNode | undefined
+arrow? | 自定义箭头切换图标 | VNode &#124; (() => VNode) | undefined
 showArrow? | 是否展示箭头 | boolean | undefined
 arrowPlacement? | 箭头位置 | 'left' &#124; 'right' | undefined
 arrowStyle? | 设置面板箭头的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
-extra? | 面板标题右侧的额外内容 | string &#124; slot | undefined
-lang? | 面板右上角固定内容，例如标识 `language` | string &#124; slot | undefined
+extra? | 面板标题右侧的额外内容 | string | undefined
+lang? | 面板右上角固定内容，例如标识 `language` | string | undefined
 copyable? | 是否可复制面板内容 | boolean | undefined
 copyProps? | 复制按钮属性配置，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | undefined
 copyText? | 复制按钮文本 | string | undefined

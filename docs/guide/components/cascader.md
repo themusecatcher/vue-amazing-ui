@@ -1163,16 +1163,16 @@ function filter(inputValue: string, option: any) {
 
 ### Option Type
 
-| 名称               | 说明                                                   | 类型                     | 默认值    |
+| 名称              | 说明                                                  | 类型                    | 默认值    |
 | :----------------- | :----------------------------------------------------- | :----------------------- | :-------- |
-| label?             | 选项名                                                 | string                   | undefined |
-| value?             | 选项值                                                 | string &#124; number     | undefined |
-| disabled?          | 是否禁用选项                                           | boolean                  | false     |
-| children?          | 选项 `children` 数组                                   | [Option](#option-type)[] | undefined |
-| [propName: string] | 添加一个字符串索引签名，用于包含带有任意数量的其他属性 | any                      | undefined |
+| label?            | 选项名                                                | string                  | undefined |
+| value?            | 选项值                                                | string &#124; number    | undefined |
+| disabled?         | 是否禁用选项                                          | boolean                 | false     |
+| children?         | 选项 `children` 数组                                  | [Option](#option-type)[] | undefined |
+| [propName: string] | 添加一个字符串索引签名，用于包含带有任意数量的其他属性 | any                     | undefined |
 
 ## Events
 
-| 名称   | 说明             | 类型                                                       |
+| 名称  | 说明            | 类型                                                       |
 | :----- | :--------------- | :--------------------------------------------------------- |
 | change | 选择完成后的回调 | (values: (number&#124;string)[], labels: string[]) => void |

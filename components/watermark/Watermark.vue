@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import { useMutationObserver } from 'components/utils'
 export interface Font {
   color?: string // 字体颜色，默认 'rgba(0, 0, 0, 0.15)'
@@ -23,6 +23,10 @@ export interface Props {
   gap?: [number, number] // 水印之间的间距
   offset?: [number, number] // 水印距离容器左上角的偏移量，默认为 gap / 2
 }
+// 声明组件插槽类型
+export interface WatermarkSlots {
+  default?: () => VNode[]
+}
 const props = withDefaults(defineProps<Props>(), {
   width: undefined,
   height: undefined,
@@ -43,6 +47,7 @@ const props = withDefaults(defineProps<Props>(), {
   gap: () => [100, 100],
   offset: () => [50, 50]
 })
+defineSlots<WatermarkSlots>()
 const FontGap = 3
 // 和 ref() 不同，浅层 ref 的内部值将会原样存储和暴露，并且不会被深层递归地转为响应式。只有对 .value 的访问是响应式的。
 const containerRef = shallowRef() // ref() 的浅层作用形式

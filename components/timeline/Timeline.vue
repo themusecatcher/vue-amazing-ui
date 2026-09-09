@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue'
+import type { VNode } from 'vue'
 export interface Item {
-  desc: string // 文字描述 string | slot
+  desc: string // 文字描述
   color?: 'blue' | 'green' | 'red' | 'gray' | string // 圆圈颜色，默认值 blue
 }
+
 export interface Props {
   items?: Item[] // 时间轴内容数组
   width?: number | string // 时间轴区域总宽度，单位 px
@@ -11,6 +13,12 @@ export interface Props {
   mode?: 'left' | 'center' | 'right' // 通过设置 mode 可以改变时间轴和内容的相对位置
   position?: 'left' | 'right' // 当 mode 为 center 时，内容交替展现，内容从左边（left）开始或者右边（right）开始展现
 }
+// 声明组件插槽类型
+export interface TimelineSlots {
+  dot?: (props: { item: Item; index: number }) => VNode[]
+  desc?: (props: { item: Item; index: number }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],
   width: '100%',
@@ -18,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
   mode: 'left',
   position: 'left'
 })
+defineSlots<TimelineSlots>()
 // 颜色主题对象
 enum ColorStyle {
   blue = '#1677ff',

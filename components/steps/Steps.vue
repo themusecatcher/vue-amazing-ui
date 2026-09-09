@@ -10,7 +10,7 @@ export interface Props {
   width?: number | string // 步骤条总宽度，单位 px
   size?: 'default' | 'small' // 步骤条大小
   vertical?: boolean // 是否使用垂直步骤条，当 vertical: true 时，labelPlacement 自动设为 right
-  labelPlacement?: 'right' | 'bottom' // 标签放置位置，默认放图标右侧，可选 bottom 放图标下方
+  labelPlacement?: 'right' | 'bottom' // 标签放置位置
   dotted?: boolean // 是否使用点状步骤条，当 dotted: true 且 vertical: false 时，labelPlacement 将自动设为 bottom
   current?: number // (v-model) 当前选中的步骤，设置 v-model 后，Steps 变为可点击状态。从 1 开始计数
 }

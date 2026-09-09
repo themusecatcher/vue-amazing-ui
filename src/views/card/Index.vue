@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { CardProps } from 'vue-amazing-ui'
 const sizeOptions = [
   {
     label: 'small',
@@ -19,7 +20,7 @@ const cardWidth = {
   middle: 300,
   large: 360
 }
-const size = ref('middle')
+const size = ref<NonNullable<CardProps['size']>>('middle')
 const loading = ref(true)
 </script>
 <template>

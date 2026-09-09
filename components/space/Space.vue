@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { VNode } from 'vue'
 export interface Props {
   width?: string | number // 区域总宽度，单位 px
   align?: 'stretch' | 'start' | 'end' | 'center' | 'baseline' // 垂直排列方式
   vertical?: boolean // 是否为垂直布局
   gap?: number | number[] | 'small' | 'middle' | 'large' // 间距大小，数组时表示: [水平间距, 垂直间距]
   wrap?: boolean // 是否自动换行，仅在 horizontal 时有效
+}
+// 声明组件插槽类型
+export interface SpaceSlots {
+  default?: () => VNode[]
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 'auto',
@@ -14,6 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
   gap: 'middle',
   wrap: true
 })
+defineSlots<SpaceSlots>()
 const spaceWidth = computed(() => {
   if (typeof props.width === 'number') {
     return `${props.width}px`

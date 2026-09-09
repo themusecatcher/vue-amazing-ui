@@ -1,25 +1,35 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watchEffect } from 'vue'
+import type { VNode } from 'vue'
 import Space, { type SpaceProps } from 'components/space'
 import { useSlotsExist } from 'components/utils'
 export interface Item {
-  label?: string // 标签文本 string | slot
+  label?: string // 标签文本
   closable?: boolean // 标签是否可以关闭，默认 true
   color?: string // 标签颜色
-  icon?: string // 设置图标 string | slot
+  icon?: string // 设置图标
   size?: 'small' | 'middle' | 'large' // 标签尺寸
   bordered?: boolean // 是否有边框，默认 true
 }
+
 export interface Props {
   closable?: boolean // 标签是否可以关闭
   color?: string // 标签颜色
-  icon?: string // 设置图标 string | slot
+  icon?: string // 设置图标
   size?: 'small' | 'middle' | 'large' // 标签尺寸
   bordered?: boolean // 是否有边框
   dynamic?: boolean // 是否启用标签动态添加和删除
   spaceProps?: SpaceProps // Space 组件属性配置，仅当 dynamic: true 时生效
   value?: string[] | Item[] // 动态标签数组，仅当 dynamic: true 时生效
 }
+// 声明组件插槽类型
+export interface TagSlots {
+  // icon 存在两类出口：动态标签列表（带 item/index）与单个标签（无参数），故参数全部可选
+  icon?: (props: { item?: Item; icon?: string; index?: number }) => VNode[]
+  default?: () => VNode[]
+  label?: (props: { item: Item; label: string | undefined; index: number }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   closable: false,
   color: undefined,
@@ -30,6 +40,7 @@ const props = withDefaults(defineProps<Props>(), {
   spaceProps: () => ({}),
   value: () => []
 })
+defineSlots<TagSlots>()
 const inputRef = ref()
 const showInput = ref(false)
 const inputValue = ref('')

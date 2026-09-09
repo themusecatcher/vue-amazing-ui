@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive, computed, watch, provide } from 'vue'
+import type { VNode } from 'vue'
 import { getColorPalettes, getAlphaColor } from 'components/utils'
 export interface Theme {
   common?: {
@@ -108,11 +109,16 @@ export interface Props {
   abstract?: boolean // 是否不存在 DOM 包裹元素
   tag?: string // ConfigProvider 被渲染成的元素，abstract 为 true 时有效
 }
+// 声明组件插槽类型
+export interface ConfigProviderSlots {
+  default?: () => VNode[]
+}
 const props = withDefaults(defineProps<Props>(), {
   theme: () => ({}),
   abstract: true,
   tag: 'div'
 })
+defineSlots<ConfigProviderSlots>()
 interface ThemeColor {
   colorPalettes: string[]
   shadowColor: string

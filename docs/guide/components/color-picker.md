@@ -435,7 +435,7 @@ watchEffect(() => {
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 width | 颜色选择器的宽度，单位 `px` | string &#124; number | '100%'
-label | 展示的内容 | (color: string) => string &#124; slot | undefined
+label | 展示的内容 | (color: string) => string | undefined
 tooltipStyle | 设置弹出面板的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 inputProps | 输入框组件 `props`，参考 [Input Props](./input.md#input) | [InputProps](./input.md#input) | {}
 showAlpha | 是否可调节 `alpha` 通道 | boolean | true
@@ -446,7 +446,7 @@ value <Tag color="cyan">v-model</Tag> | 颜色选择器的值 | string | undefin
 modes | 颜色选择器支持颜色的格式 | [ColorPickerMode](#colorpickermode-type)[] | ['rgb', 'hex', 'hsl']
 swatches | 色板的值 | string[] | []
 actions | 显示按钮 | [ColorPickerAction](#colorpickeraction-type)[] | []
-footer | 底部额外的页脚内容 | string &#124; slot | undefined
+footer | 底部额外的页脚内容 | string | undefined
 
 更多属性请参考 [Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)
 

@@ -402,7 +402,7 @@ function onScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
 
 ## Slots
 
-| 名称    | 说明       | 类型           |
+| 名称   | 说明      | 类型           |
 | :------ | :--------- | :------------- |
 | default | 自定义内容 | v-slot:default |
 
@@ -416,15 +416,15 @@ function onScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
 
 ### ScrollBehavior Type
 
-| 值      | 说明                                         |
+| 值     | 说明                                         |
 | :------ | :------------------------------------------- |
-| smooth  | 平滑滚动并产生过渡效果                       |
+| smooth | 平滑滚动并产生过渡效果                       |
 | instant | 滚动会直接跳转到目标位置，没有过渡效果       |
-| auto    | 或缺省值表示浏览器会自动选择滚动时的过渡效果 |
+| auto   | 或缺省值表示浏览器会自动选择滚动时的过渡效果 |
 
 ## Events
 
-| 名称      | 说明           | 类型                                                                  |
+| 名称     | 说明          | 类型                                                                  |
 | :-------- | :------------- | :-------------------------------------------------------------------- |
-| scroll    | 滚动的回调     | (e: Event, direction: 'left' \| 'right' \| 'top' \| 'bottom') => void |
+| scroll   | 滚动的回调    | (e: Event, direction: 'left' \| 'right' \| 'top' \| 'bottom') => void |
 | scrollend | 滚动结束的回调 | (e: Event, direction: 'left' \| 'right' \| 'top' \| 'bottom') => void |

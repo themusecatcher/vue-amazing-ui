@@ -942,22 +942,22 @@ const state = reactive({
 
 ### Item Type
 
-| 名称    | 说明                                | 类型                      | 默认      |
+| 名称   | 说明                               | 类型                     | 默认      |
 | ------- | ----------------------------------- | ------------------------- | --------- |
-| title   | 文字标题                            | string                    | undefined |
-| href?   | 跳转链接                            | string                    | undefined |
+| title  | 文字标题                           | string                   | undefined |
+| href?  | 跳转链接                           | string                   | undefined |
 | target? | 跳转链接打开方式，`href` 存在时生效 | '\_self' &#124; '\_blank' | undefined |
 
 ## Methods
 
-| 名称  | 说明     | 类型       |
+| 名称 | 说明    | 类型       |
 | :---- | :------- | :--------- |
 | start | 开始滚动 | () => void |
-| stop  | 暂停滚动 | () => void |
+| stop | 暂停滚动 | () => void |
 | reset | 重置滚动 | () => void |
 
 ## Events
 
-| 名称  | 说明             | 类型                               |
+| 名称 | 说明            | 类型                               |
 | :---- | :--------------- | :--------------------------------- |
 | click | 点击标题时的回调 | (item: [Item](#item-type)) => void |

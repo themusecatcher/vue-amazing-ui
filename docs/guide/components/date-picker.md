@@ -943,35 +943,35 @@ watchEffect(() => {
 | showToday | 是否展示”今天“按钮 | boolean | false |
 | range | 是否使用范围选择器 | boolean | false |
 | maxRange | 范围选择器最长日期可选择范围，单位天，仅当 `range: true` 时生效 | number | undefined |
-| modelType | `v-model` 值类型，可选 `timestamp`: 时间戳、`format`: 字符串，`mode` 为 `week` 或 `year` 时，该配置不生效 | 'timestamp' &#124; 'format' | 'format' |
+| modelType | `v-model` 值类型，`timestamp` 为时间戳、`format` 为格式化字符串，`mode` 为 `week` 或 `year` 时，该配置不生效 | 'timestamp' &#124; 'format' | 'format' |
 | modelValue <Tag color="cyan">v-model</Tag> | 双向绑定值 | number &#124; string &#124; object &#124; array | null |
 
 ### DefaultFormat Value
 
-| 类型              | 值                                    |
+| 类型             | 值                                    |
 | :---------------- | :------------------------------------ |
-| Single picker     | 'MM/dd/yyyy HH:mm'                    |
-| Range picker      | 'MM/dd/yyyy HH:mm - MM/dd/yyyy HH:mm' |
-| Month picker      | 'MM/yyyy'                             |
-| Time picker       | 'HH:mm'                               |
+| Single picker    | 'MM/dd/yyyy HH:mm'                    |
+| Range picker     | 'MM/dd/yyyy HH:mm - MM/dd/yyyy HH:mm' |
+| Month picker     | 'MM/yyyy'                             |
+| Time picker      | 'HH:mm'                               |
 | Time picker range | 'HH:mm - HH:mm'                       |
-| Week picker       | 'ww-yyyy'                             |
+| Week picker      | 'ww-yyyy'                             |
 
 ### format 支持的格式化占位符列表
 
-| 标识 | 示例  | 描述           |
+| 标识 | 示例 | 描述           |
 | :--- | :---- | :------------- |
-| yy   | 23    | 年，两位数     |
-| yyyy | 2023  | 年，四位数     |
-| M    | 1-12  | 月             |
-| MM   | 01-12 | 月，两位数     |
-| d    | 1-31  | 日             |
-| dd   | 01-31 | 日，两位数     |
-| H    | 0-23  | 小时           |
-| HH   | 00-23 | 小时，两位数   |
-| m    | 0-59  | 分钟           |
-| mm   | 00-59 | 分钟，两位数   |
-| s    | 0-59  | 秒             |
-| ss   | 00-59 | 秒，两位数     |
-| w    | 1-52  | 第几周         |
-| ww   | 01-52 | 第几周，两位数 |
+| yy  | 23   | 年，两位数     |
+| yyyy | 2023 | 年，四位数     |
+| M   | 1-12 | 月             |
+| MM  | 01-12 | 月，两位数     |
+| d   | 1-31 | 日             |
+| dd  | 01-31 | 日，两位数     |
+| H   | 0-23 | 小时           |
+| HH  | 00-23 | 小时，两位数   |
+| m   | 0-59 | 分钟           |
+| mm  | 00-59 | 分钟，两位数   |
+| s   | 0-59 | 秒             |
+| ss  | 00-59 | 秒，两位数     |
+| w   | 1-52 | 第几周         |
+| ww  | 01-52 | 第几周，两位数 |

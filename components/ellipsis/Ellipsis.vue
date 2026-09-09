@@ -1,14 +1,22 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
+import type { VNode } from 'vue'
 import Tooltip from 'components/tooltip'
 import { useResizeObserver } from 'components/utils'
+
 export interface Props {
   maxWidth?: string | number // 文本最大宽度，单位 px
   tooltipMaxWidth?: string | number // 弹出提示最大宽度，单位 px，默认为 文本宽度 + 24
   line?: number // 最大行数
   expand?: boolean // 是否启用点击文本展开全部
-  tooltip?: boolean // 是否启用文本提示框，可自定义设置弹出提示内容 boolean | slot
+  tooltip?: boolean // 是否启用文本提示框，可自定义设置弹出提示内容
 }
+// 声明组件插槽类型
+export interface EllipsisSlots {
+  tooltip?: () => VNode[]
+  default?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   maxWidth: '100%',
   tooltipMaxWidth: undefined,
@@ -16,6 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
   expand: false,
   tooltip: true
 })
+defineSlots<EllipsisSlots>()
 const tooltipRef = ref() // tooltip 组件引用
 const observeScroll = ref() // tooltip 组件暴露的 observeScroll 函数
 const showTooltip = ref(false) // 是否显示提示框

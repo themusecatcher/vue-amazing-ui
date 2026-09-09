@@ -1,14 +1,22 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import { useSlotsExist } from 'components/utils'
+
 export interface Props {
-  description?: string // 自定义描述内容 string | slot
+  description?: string | null // 自定义描述内容，传 null 时无描述内容
   descriptionStyle?: CSSProperties // 设置描述文本的样式
-  image?: 'filled' | 'outlined' | string // 显示图片的链接，或者 选择两种预置风格图片 string | slot
+  image?: 'filled' | 'outlined' | string // 显示图片的链接，或者 选择两种预置风格图片
   imageStyle?: CSSProperties // 设置图片的样式
-  footer?: string // 设置底部内容 string | slot
+  footer?: string // 设置底部内容
 }
+// 声明组件插槽类型
+export interface EmptySlots {
+  default?: () => VNode[]
+  description?: () => VNode[]
+  footer?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   description: '暂无数据',
   descriptionStyle: () => ({}),
@@ -16,6 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
   imageStyle: () => ({}),
   footer: undefined
 })
+defineSlots<EmptySlots>()
 const slotsExist = useSlotsExist(['default', 'description', 'footer'])
 const showDescription = computed(() => {
   return slotsExist.description || props.description

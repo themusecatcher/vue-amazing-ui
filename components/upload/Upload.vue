@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue'
+import type { VNode } from 'vue'
 import Spin, { type SpinProps } from 'components/spin'
 import Image, { type ImageProps } from 'components/image'
 import Space, { type SpaceProps } from 'components/space'
@@ -9,11 +10,12 @@ export interface FileType {
   url: any // 文件地址
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
+
 export interface Props {
   accept?: string // 接受上传的文件类型，与 <input type="file" /> 的 accept 属性一致，参考 https://developer.mozilla.org/zh-CN/docs/Web/HTML/Attributes/accept
   multiple?: boolean // 是否支持多选文件，开启后可选择多个文件
   maxCount?: number // 限制上传数量。当为 1 时，始终用最新上传的文件代替当前文件
-  tip?: string // 上传描述文字 string | slot
+  tip?: string // 上传描述文字
   fit?: 'contain' | 'fill' | 'cover' | 'none' | 'scale-down' // 预览图片缩放规则，仅当上传文件为图片时生效
   draggable?: boolean // 是否支持拖拽上传，开启后可拖拽文件到选择框上传
   disabled?: boolean // 是否禁用，只能预览，不能删除和上传
@@ -21,10 +23,15 @@ export interface Props {
   spinProps?: SpinProps // Spin 组件属性配置，用于配置上传中样式
   imageProps?: ImageProps // Image 组件属性配置，用于配置图片预览
   beforeUpload?: (file: File) => boolean | void | Promise<unknown> // 上传文件之前的钩子，参数为上传的文件，返回 false 则停止上传，返回 true 开始上传；支持返回一个 Promise 对象（如服务端校验等），Promise 对象 reject 时停止上传，resolve 时开始上传；通常用来校验用户上传的文件格式和大小
-  uploadMode?: 'base64' | 'custom' // 上传文件的方式，默认是 base64，可选 'base64' | 'custom'
+  uploadMode?: 'base64' | 'custom' // 上传文件的方式
   customRequest?: (file: File) => Promise<FileType> // 自定义上传行为，只有 uploadMode: custom 时，才会使用 customRequest 自定义上传行为
   fileList?: FileType[] // (v-model) 已上传的文件列表
 }
+// 声明组件插槽类型
+export interface UploadSlots {
+  tip?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   accept: '*', // 默认支持所有类型
   multiple: false,
@@ -42,6 +49,7 @@ const props = withDefaults(defineProps<Props>(), {
   customRequest: () => Promise.resolve({ url: '' }),
   fileList: () => []
 })
+defineSlots<UploadSlots>()
 const uploadedFiles = ref<FileType[]>([]) // 上传文件列表
 const showUpload = ref<number>(1) // 展示的上传框
 const uploading = ref<boolean[]>([]) // 上传中

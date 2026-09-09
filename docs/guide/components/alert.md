@@ -605,21 +605,20 @@ function onClose (e: Event) {
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-message | 警告提示内容 | string &#124; slot | undefined
-description | 警告提示的辅助性文字介绍 | string &#124; slot | undefined
+message | 警告提示内容 | string | undefined
+description | 警告提示的辅助性文字介绍 | string | undefined
 type | 警告提示的类型 | 'default' &#124; 'success' &#124; 'info' &#124; 'warning' &#124; 'error' | 'default'
 bordered | 是否显示边框 | boolean | true
 closable | 是否显示关闭按钮 | boolean | false
-closeText | 自定义关闭按钮 |  string &#124; slot | undefined
-icon | 自定义图标，`showIcon` 为 `true` 时有效 |  string &#124; slot | undefined
+closeText | 自定义关闭按钮 | string | undefined
+icon | 自定义图标，`showIcon` 为 `true` 时有效 | string | undefined
 showIcon | 是否显示辅助图标 | boolean | false
-actions | 自定义操作项 | slot | undefined
 
 ## Slots
 
 名称 | 说明 | 类型
 :-- | :-- | :--
-message | 警告提示内容 | v-slot:default
+default | 警告提示内容 | v-slot:default
 description | 警告提示的辅助性文字介绍 | v-slot:description
 closeText | 自定义关闭按钮 | v-slot:closeText
 icon | 自定义图标 | v-slot:icon

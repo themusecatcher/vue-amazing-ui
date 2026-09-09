@@ -1,19 +1,28 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import { useSlotsExist } from 'components/utils'
+
 export interface Props {
-  title?: string // 倒计时标题 string | slot
+  title?: string // 倒计时标题
   titleStyle?: CSSProperties // 设置标题的样式
-  prefix?: string // 倒计时的前缀 string | slot
-  suffix?: string // 倒计时的后缀 string | slot
-  finish?: string // 倒计时完成后的展示文本 string | slot
+  prefix?: string // 倒计时的前缀
+  suffix?: string // 倒计时的后缀
+  finish?: string // 倒计时完成后的展示文本
   future?: boolean // value 是否为未来某时刻的时间戳；为 false 表示相对剩余时间戳
   format?: string // 倒计时展示格式，(Y/YY：年，M/MM：月，D/DD：日，H/HH：时，m/mm：分钟，s/ss：秒，SSS：毫秒)
   value?: number // 倒计时数值，支持设置未来某时刻的时间戳 (ms) 或 相对剩余时间 (ms)
   valueStyle?: CSSProperties // 设置倒计时的样式
   active?: boolean // 是否处于计时状态，仅当 future: false 时生效
 }
+// 声明组件插槽类型
+export interface CountdownSlots {
+  title?: () => VNode[]
+  prefix?: () => VNode[]
+  finish?: () => VNode[]
+  suffix?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   title: undefined,
   titleStyle: () => ({}),
@@ -26,6 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
   valueStyle: () => ({}),
   active: true
 })
+defineSlots<CountdownSlots>()
 const futureTime = ref(0) // 未来截止时间戳
 const remainingTime = ref(0) // 剩余时间戳
 const rafID = ref<number | null>(null) // requestAnimationFrame 返回的请求 ID 是一个 long 类型整数值，是在回调列表里的唯一标识符

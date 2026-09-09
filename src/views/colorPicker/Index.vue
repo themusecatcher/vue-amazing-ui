@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import type { CheckboxOption } from 'vue-amazing-ui'
+import type { CheckboxOption, ColorPickerMode, ColorPickerAction } from 'vue-amazing-ui'
 const colorValue = ref('rgba(0, 0, 0, 1)')
 const showAlpha = ref(false)
 const showPreview = ref(true)
@@ -23,7 +23,7 @@ const modeOptions: CheckboxOption[] = [
     value: 'hsv'
   }
 ]
-const modes = ref(['rgb', 'hex'])
+const modes = ref<ColorPickerMode[]>(['rgb', 'hex'])
 const actionOptions: CheckboxOption[] = [
   {
     label: 'confirm',
@@ -34,7 +34,7 @@ const actionOptions: CheckboxOption[] = [
     value: 'clear'
   }
 ]
-const actions = ref(['confirm', 'clear'])
+const actions = ref<ColorPickerAction[]>(['confirm', 'clear'])
 watchEffect(() => {
   console.log('colorValue', colorValue.value)
 })

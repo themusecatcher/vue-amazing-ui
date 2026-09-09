@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
+import type { VNode } from 'vue'
 import { useSlotsExist, add, useInject } from 'components/utils'
+
 export interface Props {
   width?: string | number // 数字输入框宽度，单位 px
   min?: number // 最小值
   max?: number // 最大值
   step?: number // 每次改变步数，可以为小数
   precision?: number // 数值精度
-  prefix?: string // 前缀图标 string | slot
+  prefix?: string // 前缀图标
   formatter?: (value: string | number) => string // 指定展示值的格式
   parser?: (value: string) => number // 指定从 formatter 里转换回数字的方式，和 formatter 搭配使用
   keyboard?: boolean // 是否启用键盘快捷键行为（上方向键增，下方向键减）
@@ -16,6 +18,11 @@ export interface Props {
   value?: number // (v-model) 当前值
   valueModifiers?: object // 用于访问组件的 v-model 上添加的修饰符
 }
+// 声明组件插槽类型
+export interface InputNumberSlots {
+  prefix?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   width: 90,
   min: -Infinity,
@@ -31,6 +38,7 @@ const props = withDefaults(defineProps<Props>(), {
   value: undefined,
   valueModifiers: () => ({})
 })
+defineSlots<InputNumberSlots>()
 const inputRef = ref() // input 模板引用
 const numValue = ref<string>() // 数字输入框的内容
 const { colorPalettes, shadowColor } = useInject('InputNumber') // 主题色注入

@@ -673,11 +673,11 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | width | 搜索框宽度，单位 `px` | string &#124; number | '100%' |
-| icon | 搜索图标 | boolean &#124; slot | true |
-| search | 搜索按钮，默认时为搜索图标 | string &#124; slot | undefined |
+| icon | 搜索图标 | boolean | true |
+| search | 搜索按钮，默认时为搜索图标 | string | undefined |
 | searchProps | 设置搜索按钮的属性，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {} |
 | size | 搜索框大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
-| addonBefore | 设置前置标签 | string &#124; slot | undefined |
+| addonBefore | 设置前置标签 | string | undefined |
 | prefix | 前缀图标 | string | undefined |
 | suffix | 后缀图标 | string | undefined |
 | allowClear | 可以点击清除图标删除搜索框内容 | boolean | false |
@@ -690,13 +690,13 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 
 ## Slots
 
-| 名称        | 说明           | 类型               |
+| 名称       | 说明          | 类型               |
 | :---------- | :------------- | :----------------- |
-| icon        | 自定义搜索图标 | v-slot:icon        |
-| search      | 自定义搜索按钮 | v-slot:search      |
+| icon       | 自定义搜索图标 | v-slot:icon        |
+| search     | 自定义搜索按钮 | v-slot:search      |
 | addonBefore | 自定义前置标签 | v-slot:addonBefore |
-| prefix      | 自定义前缀图标 | v-slot:prefix      |
-| suffix      | 自定义后缀图标 | v-slot:suffix      |
+| prefix     | 自定义前缀图标 | v-slot:prefix      |
+| suffix     | 自定义后缀图标 | v-slot:suffix      |
 
 ## Events
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-const size = ref('default')
+import type { DescriptionsProps } from 'vue-amazing-ui'
+const size = ref<DescriptionsProps['size']>('default')
 const options = [
   {
     label: 'default',
@@ -348,7 +349,7 @@ const state = reactive({
         :extra="state.extra"
         :bordered="state.bordered"
         :vertical="state.vertical"
-        :size="state.size"
+        :size="state.size as DescriptionsProps['size']"
         :column="{
           xs: state.column.xs,
           sm: state.column.sm,

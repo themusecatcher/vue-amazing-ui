@@ -54,7 +54,7 @@ const sizeOptions = [
     value: 'small'
   }
 ]
-const size = ref('small')
+const size = ref<StepsProps['size']>('small')
 const placeOptions = [
   {
     label: 'right',
@@ -65,7 +65,7 @@ const placeOptions = [
     value: 'bottom'
   }
 ]
-const place = ref('bottom')
+const place = ref<StepsProps['labelPlacement']>('bottom')
 function onChange(index: number) {
   // 父组件获取切换后的选中步骤
   console.log('change', index)

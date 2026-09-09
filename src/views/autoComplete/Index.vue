@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { AutoCompleteProps } from 'vue-amazing-ui'
 import { UserOutlined } from '@ant-design/icons-vue'
 // 基本使用（远程搜索）
 const value1 = ref('')
@@ -108,7 +109,7 @@ function onClear() {
   console.log('onClear')
 }
 // 三种尺寸
-const size = ref('middle')
+const size = ref<AutoCompleteProps['size']>('middle')
 const sizeOptions = [
   {
     label: 'small',
@@ -231,8 +232,8 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
           @search="onSearch2"
         >
           <template #option="{ value: val }">
-            {{ val.split('@')[0] }} @
-            <span style="font-weight: bold">{{ val.split('@')[1] }}</span>
+            {{ String(val).split('@')[0] }} @
+            <span style="font-weight: bold">{{ String(val).split('@')[1] }}</span>
           </template>
         </AutoComplete>
       </Space>

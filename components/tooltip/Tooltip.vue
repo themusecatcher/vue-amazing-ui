@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import {
   useSlotsExist,
   useResizeObserver,
@@ -10,12 +10,13 @@ import {
   useScrollParent,
   useFloatingPosition
 } from 'components/utils'
+
 export interface Props {
   maxWidth?: string | number // 文字提示最大宽度，单位 px
-  content?: string // 展示的内容 string | slot
+  content?: string // 展示的内容
   contentClass?: string // 设置展示内容的类名
   contentStyle?: CSSProperties // 设置展示内容的样式
-  tooltip?: string // 文字提示内容 string | slot
+  tooltip?: string // 文字提示内容
   tooltipClass?: string // 设置文字提示的类名
   tooltipStyle?: CSSProperties // 设置文字提示的样式
   bgColor?: string // 文字提示框背景颜色，支持预设色或自定义色值 (如 #f50/rgba)
@@ -45,6 +46,12 @@ export interface Props {
   show?: boolean // (v-model) 文字提示是否显示
   showControl?: boolean // 只使用 show 属性控制显示隐藏，仅当 trigger: hover 时生效，此时移入移出将不会触发显示隐藏，全部由 show 属性控制
 }
+// 声明组件插槽类型
+export interface TooltipSlots {
+  tooltip?: () => VNode[]
+  default?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   maxWidth: 240,
   content: undefined,
@@ -68,6 +75,7 @@ const props = withDefaults(defineProps<Props>(), {
   show: false,
   showControl: false
 })
+defineSlots<TooltipSlots>()
 const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const tooltipShow = ref<boolean>(false) // tooltip 显示隐藏标识
 const tooltipTimer = ref() // tooltip 延迟显示隐藏的定时器标识符

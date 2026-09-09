@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import type { VNode } from 'vue'
 import Tooltip, { type TooltipProps } from 'components/tooltip'
+
 export interface Props {
   allowClear?: boolean // 是否允许再次点击后清除
   allowHalf?: boolean // 是否允许半选
   count?: number // star 总数
-  character?: 'star-outlined' | 'star-filled' | 'heart-outlined' | 'heart-filled' | string // 字符或图标，预置四种图标 string | slot
+  character?: 'star-outlined' | 'star-filled' | 'heart-outlined' | 'heart-filled' | string // 字符或图标，预置四种图标
   size?: number // 字符大小，单位 px
   color?: string // 字符选中颜色
   gap?: number // 字符间距，单位 px
@@ -14,6 +16,12 @@ export interface Props {
   tooltipProps?: TooltipProps // Tooltip 组件属性配置，参考 Tooltip Props
   value?: number // (v-model) 当前数，受控值 0,1,2,3...
 }
+// 声明组件插槽类型
+export interface RateSlots {
+  tooltip?: (props: { tooltip: string; value: number }) => VNode[]
+  character?: (props: { value: number }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   allowClear: true,
   allowHalf: false,
@@ -27,6 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
   tooltipProps: () => ({}),
   value: 0
 })
+defineSlots<RateSlots>()
 const activeValue = ref()
 const hoverValue = ref()
 const tempValue = ref() // 清除时保存点击value

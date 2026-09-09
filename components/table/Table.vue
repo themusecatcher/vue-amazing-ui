@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { isVNode, ref, computed, watch, watchEffect, onMounted, onUnmounted, nextTick } from 'vue'
-import type { VNode, CSSProperties, Slot } from 'vue'
+import type { VNode, CSSProperties } from 'vue'
 import Spin, { type SpinProps } from 'components/spin'
 import Empty, { type EmptyProps } from 'components/empty'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
@@ -59,9 +59,10 @@ export type ScrollOption = {
   x?: string | number | true // 设置横向滚动，也可用于指定滚动区域的宽，可以设置为像素值，百分比，true 和 'max-content'
   y?: string | number // 设置纵向滚动，也可用于指定滚动区域的高，可以设置为像素值
 }
+
 export interface Props {
-  header?: string // 表格标题 string | slot
-  footer?: string // 表格尾部 string | slot
+  header?: string // 表格标题
+  footer?: string // 表格尾部
   columns?: Column[] // 表格列的配置项
   dataSource?: object[] // 表格数据数组
   bordered?: boolean // 是否展示外边框和列边框
@@ -84,14 +85,23 @@ export interface Props {
   scrollbarProps?: ScrollbarProps // Scrollbar 组件属性配置，参考 Scrollbar Props，用于配置表格滚动条
   tableLayout?: 'auto' | 'fixed' // 表格布局方式，设为 fixed 表示内容不会影响列的布局，参考 table-layout 属性
   showExpandColumn?: boolean // 是否展示展开列
-  expandColumnTitle?: string // 自定义展开列表头 string | slot
+  expandColumnTitle?: string // 自定义展开列表头
   expandColumnWidth?: string | number // 展开列的宽度
-  expandCell?: Slot // 自定义展开按钮 slot
-  expandedRowRender?: Slot // 自定义额外的展开行内容 slot
   expandFixed?: boolean // 是否固定展开列
   expandedRowKeys?: string[] // (v-model) 展开行的 key 数组，控制展开行的属性；需与 dataSource 数据中的 key 配合使用
   expandRowByClick?: boolean // 点击行是否展开
 }
+// 声明组件插槽类型
+export interface TableSlots {
+  header?: () => VNode[]
+  expandColumnTitle?: () => VNode[]
+  headerCell?: (props: { column: Column; title: string | undefined }) => VNode[]
+  expandCell?: (props: { record: Record<string, any>; index: number; expanded: boolean }) => VNode[]
+  bodyCell?: (props: { column: Column; record: Record<string, any>; text: any; index: number }) => VNode[]
+  expandedRowRender?: (props: { record: Record<string, any>; index: number; expanded: boolean }) => VNode[]
+  footer?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   header: undefined,
   footer: undefined,
@@ -119,12 +129,11 @@ const props = withDefaults(defineProps<Props>(), {
   showExpandColumn: false,
   expandColumnTitle: undefined,
   expandColumnWidth: 48,
-  expandCell: undefined,
-  expandedRowRender: undefined,
   expandFixed: false,
   expandedRowKeys: () => [],
   expandRowByClick: false
 })
+defineSlots<TableSlots>()
 // 子组件暴露的滚动容器最小接口（模板 ref 类型化，避免 any）
 interface ScrollbarExpose {
   scrollTo(options?: ScrollToOptions): void

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { VNode } from 'vue'
 export interface Gradient {
   from: string
   to: string
@@ -11,12 +12,17 @@ export interface Props {
   weight?: number // 文字粗细
   type?: 'primary' | 'info' | 'success' | 'warning' | 'error' // 渐变文字的类型
 }
+// 声明组件插槽类型
+export interface GradientTextSlots {
+  default?: () => VNode[]
+}
 const props = withDefaults(defineProps<Props>(), {
   gradient: undefined,
   size: 14,
   weight: 400,
   type: 'primary'
 })
+defineSlots<GradientTextSlots>()
 enum TypeStartColor {
   primary = 'rgba(22, 199, 255, 0.6)',
   info = 'rgba(22, 199, 255, 0.6)',

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import type { VNode, Slot } from 'vue'
+import type { VNode } from 'vue'
 import Tooltip, { type TooltipProps } from 'components/tooltip'
 import { useSlotsExist, useMutationObserver, useInject, useOptionsSupported, getScrollParent } from 'components/utils'
+
 export interface Props {
-  icon?: VNode | Slot // 自定义图标
-  description?: string // 文字描述 string | slot
-  tooltip?: string // 文字提示内容 string | slot
+  icon?: VNode | (() => VNode) // 自定义图标，支持 VNode / 渲染函数；插槽形态请用 #icon
+  description?: string // 文字描述
+  tooltip?: string // 文字提示内容
   tooltipProps?: TooltipProps // Tooltip 组件属性配置，参考 Tooltip Props
   type?: 'default' | 'primary' // 设置按钮类型
   shape?: 'circle' | 'square' // 设置按钮形状
@@ -17,6 +18,14 @@ export interface Props {
   to?: string | HTMLElement // BackTop 渲染的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，下同
   listenTo?: string | HTMLElement // 监听滚动的元素，如果为 undefined 会监听距离最近的一个可滚动的祖先节点
 }
+// 声明组件插槽类型
+export interface BackTopSlots {
+  tooltip?: () => VNode[]
+  default?: () => VNode[]
+  icon?: () => VNode[]
+  description?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   icon: undefined,
   description: undefined,
@@ -31,6 +40,7 @@ const props = withDefaults(defineProps<Props>(), {
   to: 'body',
   listenTo: undefined
 })
+defineSlots<BackTopSlots>()
 const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const backTopPlaceholderRef = ref<HTMLElement | null>(null) // backTop 元素引用
 const scrollTop = ref<number>(0) // 滚动距离

@@ -5,6 +5,7 @@ import { useResizeObserver, useInject } from 'components/utils'
 export type Marks = {
   [markValue: number]: string | VNode | (() => VNode) | { style: CSSProperties; label: string | VNode | (() => VNode) }
 }
+
 export interface Props {
   width?: string | number // 滑动输入条宽度，单位 px，水平模式时生效
   height?: string | number // 滑动输入条高度，单位 px，垂直模式时生效
@@ -19,8 +20,13 @@ export interface Props {
   tooltipOpen?: boolean // 是否一直显示 tooltip
   tooltipStyle?: CSSProperties // 自定义 Tooltip 样式
   formatTooltip?: (value: number) => string | number // Slider 会把当前值传给 formatTooltip，并在 Tooltip 中显示 formatTooltip 的返回值
-  value?: number | number[] // (v-model) 设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
+  value?: number | number[] // (v-model) 设置当前取值，当 range 为 false 时为单个值，否则为区间值
 }
+// 声明组件插槽类型
+export interface SliderSlots {
+  mark?: (props: { label: string | VNode | null; value: number }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
   height: '100%',
@@ -37,6 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
   formatTooltip: (value: number) => value,
   value: 0
 })
+defineSlots<SliderSlots>()
 const sliderRef = ref() // slider 模板引用
 const sliderWidth = ref<number>(0) // 滑动输入条宽度
 const sliderHeight = ref<number>(0) // 滑动输入条高度

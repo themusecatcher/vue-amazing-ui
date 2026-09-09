@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, watchEffect } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import {
   hsla,
   hsva,
@@ -27,9 +27,10 @@ import Button from 'components/button'
 import { useSlotsExist, useInject } from 'components/utils'
 export type ColorPickerMode = 'rgb' | 'hsl' | 'hsv' | 'hex'
 export type ColorPickerAction = 'confirm' | 'clear'
+
 export interface Props {
   width?: string | number // 颜色选择器的宽度，单位 px
-  label?: (color: string) => string // 展示的内容 function | slot
+  label?: (color: string) => string // 展示的内容
   tooltipStyle?: CSSProperties // 设置弹出面板的样式
   inputProps?: InputProps // 输入框组件 props，参考 Input 组件 Props
   showAlpha?: boolean // 是否可调节 alpha 通道
@@ -40,8 +41,14 @@ export interface Props {
   modes?: ColorPickerMode[] // 颜色选择器支持颜色的格式
   swatches?: string[] // 色板的值
   actions?: ColorPickerAction[] // 显示按钮
-  footer?: string // 底部额外的页脚内容 string | slot
+  footer?: string // 底部额外的页脚内容
 }
+// 声明组件插槽类型
+export interface ColorPickerSlots {
+  footer?: () => VNode[]
+  label?: (props: { color: string | undefined }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
   label: undefined,
@@ -57,6 +64,7 @@ const props = withDefaults(defineProps<Props>(), {
   actions: () => [],
   footer: undefined
 })
+defineSlots<ColorPickerSlots>()
 const HANDLE_SIZE = '12px'
 const HANDLE_SIZE_NUM = 12
 const BORDER_RADIUS = '6px'

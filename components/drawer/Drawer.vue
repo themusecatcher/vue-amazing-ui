@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, watch, watchEffect, onUnmounted } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import { useSlotsExist, lockScroll } from 'components/utils'
+
 export interface Props {
   width?: string | number // 抽屉宽度，在 placement 为 right 或 left 时使用，单位 px
   height?: string | number // 抽屉高度，在 placement 为 top 或 bottom 时使用，单位 px
-  title?: string // 标题 string | slot
+  title?: string // 标题
   closable?: boolean // 是否显示左上角的关闭按钮
   placement?: 'top' | 'right' | 'bottom' | 'left' // 抽屉的方向
   headerClass?: string // 设置 Drawer 头部的类名
@@ -14,14 +15,22 @@ export interface Props {
   bodyClass?: string // 设置 Drawer 内容部分的类名
   bodyStyle?: CSSProperties // 设置 Drawer 内容部分的样式
   scrollbarProps?: ScrollbarProps // Scrollbar 组件属性配置，用于设置内容滚动条的样式
-  extra?: string // 抽屉右上角的操作区域 string | slot
-  footer?: string // 抽屉的页脚 string | slot
+  extra?: string // 抽屉右上角的操作区域
+  footer?: string // 抽屉的页脚
   footerClass?: string // 设置 Drawer 页脚的类名
   footerStyle?: CSSProperties // 设置 Drawer 页脚的样式
   destroyOnClose?: boolean // 关闭时是否销毁 Drawer 里的子元素
   zIndex?: number // 设置 Drawer 的 z-index
   open?: boolean // (v-model) 抽屉是否可见
 }
+// 声明组件插槽类型
+export interface DrawerSlots {
+  title?: () => VNode[]
+  extra?: () => VNode[]
+  default?: () => VNode[]
+  footer?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   width: 378,
   height: 378,
@@ -41,6 +50,7 @@ const props = withDefaults(defineProps<Props>(), {
   zIndex: 1000,
   open: false
 })
+defineSlots<DrawerSlots>()
 const drawerRef = ref()
 const drawerOpen = ref<boolean>()
 // 组件持有的滚动锁释放函数：加锁后保存返回值、释放后置空，存在即代表本组件持锁；

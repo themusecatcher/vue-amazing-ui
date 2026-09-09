@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect, nextTick } from 'vue'
+import type { VNode } from 'vue'
 import { useSlotsExist, useInject } from 'components/utils'
 export interface Option {
   label: string // 选项名
   value: string | number | boolean // 选项值
   disabled?: boolean // 是否禁用选项
 }
+
 export interface Props {
   options?: Option[] // 单选框选项数据
   disabled?: boolean // 是否禁用
@@ -17,6 +19,12 @@ export interface Props {
   buttonSize?: 'small' | 'middle' | 'large' // 按钮大小；仅当 button: true 时生效
   value?: string | number | boolean // (v-model) 当前选中的值
 }
+// 声明组件插槽类型
+export interface RadioSlots {
+  // options / button 模式下为每个选项提供作用域参数；children 透传模式下无真实数据，参数为 undefined
+  default?: (props: { option?: Option; label?: string; index?: number }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
   disabled: false,
@@ -28,6 +36,7 @@ const props = withDefaults(defineProps<Props>(), {
   buttonSize: 'middle',
   value: undefined
 })
+defineSlots<RadioSlots>()
 const radioChecked = ref<boolean>(false)
 const optionsCheckedValue = ref<string | number | boolean>()
 const wave = ref<boolean>(false)

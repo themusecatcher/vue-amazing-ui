@@ -315,6 +315,6 @@ const customGapSize = ref(16)
 
 ## Slots
 
-| 名称    | 说明       | 类型           |
+| 名称   | 说明      | 类型           |
 | :------ | :--------- | :------------- |
 | default | 自定义内容 | v-slot:default |

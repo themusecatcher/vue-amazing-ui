@@ -293,9 +293,9 @@ const show = ref(false)
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-title | 卡片标题 | string &#124; slot | undefined
+title | 卡片标题 | string | undefined
 titleStyle | 卡片标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-content | 卡片内容 | string &#124; slot | undefined
+content | 卡片内容 | string | undefined
 contentStyle | 卡片内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 keyboard | 是否支持按键操作 (`enter` 显示；`esc` 关闭) | boolean | true
 tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}

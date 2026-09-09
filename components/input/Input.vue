@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import type { VNode } from 'vue'
 import { useSlotsExist, useInject } from 'components/utils'
+
 export interface Props {
   width?: string | number // 输入框宽度，单位 px
   size?: 'small' | 'middle' | 'large' // 输入框大小
-  addonBefore?: string // 设置前置标签 string | slot
-  addonAfter?: string // 设置后置标签 string | slot
-  prefix?: string // 前缀图标 string | slot
-  suffix?: string // 后缀图标 string | slot
+  addonBefore?: string // 设置前置标签
+  addonAfter?: string // 设置后置标签
+  prefix?: string // 前缀图标
+  suffix?: string // 后缀图标
   allowClear?: boolean // 可以点击清除图标删除内容
   password?: boolean // 是否启用密码框
   disabled?: boolean // 是否禁用
@@ -17,6 +19,14 @@ export interface Props {
   value?: string // (v-model) 输入框内容
   valueModifiers?: object // 用于访问组件的 v-model 上添加的修饰符
 }
+// 声明组件插槽类型
+export interface InputSlots {
+  addonBefore?: () => VNode[]
+  prefix?: () => VNode[]
+  suffix?: () => VNode[]
+  addonAfter?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
   size: 'middle',
@@ -33,6 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
   value: undefined,
   valueModifiers: () => ({})
 })
+defineSlots<InputSlots>()
 const inputRef = ref<HTMLElement | null>(null) // input 元素引用
 const inputWrapHover = ref<boolean>(false) // 鼠标是否悬浮
 const inputFocus = ref<boolean>(false) // input 元素是否聚焦

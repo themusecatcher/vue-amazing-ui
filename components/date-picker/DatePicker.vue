@@ -6,7 +6,7 @@ import { useInject } from 'components/utils'
 export interface Props {
   width?: string | number // 日期选择器宽度，单位 px
   size?: 'small' | 'middle' | 'large' // 日期选择器大小
-  mode?: 'time' | 'date' | 'week' | 'month' | 'year' // 选择器模式，可选：时间 time，日期 date，周 week，月 month，年 year
+  mode?: 'time' | 'date' | 'week' | 'month' | 'year' // 选择器模式
   format?: string | ((date: Date) => string) | ((dates: Date[]) => string) // 日期展示格式，(yy: 年, M: 月, d: 天, H: 时, m: 分, s: 秒, w: 周)
   showTime?: boolean // 是否增加时间选择
   showToday?: boolean // 是否展示”今天“按钮
@@ -15,7 +15,7 @@ export interface Props {
   // multiCalendars?: boolean // 范围选择器是否使用双日期面板
   // flow?: any[] // 定义选择顺序 ("calendar" | "time" | "month" | "year" | "minutes" | "hours" | "seconds")[]
   // dark?: boolean // 样式主题是否使用黑色
-  modelType?: 'timestamp' | 'format' // v-model 值类型，可选 timestamp: 时间戳、format: 字符串，mode 为 week 或 year 时，该配置不生效
+  modelType?: 'timestamp' | 'format' // v-model 值类型，timestamp 为时间戳、format 为格式化字符串，mode 为 week 或 year 时，该配置不生效
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 150,

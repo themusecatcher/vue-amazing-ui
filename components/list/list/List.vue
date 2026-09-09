@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { VNode } from 'vue'
 import Spin, { type SpinProps } from 'components/spin'
 import Empty, { type EmptyProps } from 'components/empty'
 import Pagination, { type PaginationProps } from 'components/pagination'
 import { useSlotsExist } from 'components/utils'
+
 export interface Props {
   bordered?: boolean // 是否展示边框
   vertical?: boolean // 是否使用竖直样式
@@ -11,13 +13,20 @@ export interface Props {
   size?: 'small' | 'middle' | 'large' // 列表尺寸
   loading?: boolean // 是否加载中
   hoverable?: boolean // 是否显示悬浮样式
-  header?: string // 列表头部 string | slot
-  footer?: string // 列表底部 string | slot
+  header?: string // 列表头部
+  footer?: string // 列表底部
   spinProps?: SpinProps // Spin 组件属性配置，参考 Spin Props，用于配置列表加载中样式
   emptyProps?: EmptyProps // Empty 组件属性配置，参考 Empty Props，用于配置暂无数据样式
   showPagination?: boolean // 是否显示分页
   pagination?: PaginationProps // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
 }
+// 声明组件插槽类型
+export interface ListSlots {
+  header?: () => VNode[]
+  default?: () => VNode[]
+  footer?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   bordered: false,
   vertical: false,
@@ -32,6 +41,7 @@ const props = withDefaults(defineProps<Props>(), {
   showPagination: false,
   pagination: () => ({})
 })
+defineSlots<ListSlots>()
 const slotsExist = useSlotsExist(['header', 'default', 'footer'])
 const showHeader = computed(() => {
   return slotsExist.header || props.header

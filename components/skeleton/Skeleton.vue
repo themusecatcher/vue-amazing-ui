@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { VNode } from 'vue'
 export interface SkeletonButtonProps {
   shape?: 'default' | 'round' | 'circle' // 指定按钮的形状，默认 'default'
   size?: 'small' | 'middle' | 'large' // 设置按钮的大小，默认 'middle'
@@ -29,6 +30,10 @@ export interface Props {
   paragraph?: boolean | SkeletonParagraphProps // 是否显示段落占位图
   loading?: boolean // 为 true 时，显示占位图，反之则直接展示子组件
 }
+// 声明组件插槽类型
+export interface SkeletonSlots {
+  default?: () => VNode[]
+}
 const props = withDefaults(defineProps<Props>(), {
   animated: true,
   button: false,
@@ -39,6 +44,7 @@ const props = withDefaults(defineProps<Props>(), {
   paragraph: true,
   loading: true
 })
+defineSlots<SkeletonSlots>()
 const buttonSize = computed(() => {
   if (typeof props.button === 'object') {
     if (props.button.size === 'large') {

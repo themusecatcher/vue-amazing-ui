@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import type { VNode } from 'vue'
 import { useEventListener } from 'components/utils'
 export interface Props {
   span?: number // 栅格占位格数，取 0,1,2...24，为 0 时相当于 display: none，优先级低于 xs, sm, md, lg, xl, xxl
@@ -13,6 +14,10 @@ export interface Props {
   xl?: number | { span?: number; offset?: number } // ≥1200px 响应式栅格
   xxl?: number | { span?: number; offset?: number } // ≥1600px 响应式栅格
 }
+// 声明组件插槽类型
+export interface ColSlots {
+  default?: () => VNode[]
+}
 const props = withDefaults(defineProps<Props>(), {
   span: undefined,
   offset: 0,
@@ -25,6 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
   xl: undefined,
   xxl: undefined
 })
+defineSlots<ColSlots>()
 const viewportWidth = ref(window.innerWidth)
 const flexValue = computed(() => {
   if (typeof props.flex === 'number') {

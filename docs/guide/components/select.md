@@ -916,16 +916,16 @@ watchEffect(() => {
 
 ### Option Type
 
-| 名称               | 说明                           | 类型                 | 默认值    |
+| 名称              | 说明                          | 类型                | 默认值    |
 | :----------------- | :----------------------------- | :------------------- | :-------- |
-| label?             | 选项名                         | string               | undefined |
-| value?             | 选项值                         | string &#124; number | undefined |
-| disabled?          | 是否禁用选项                   | boolean              | false     |
-| [propName: string] | 用于包含带有任意数量的其他属性 | any                  | undefined |
+| label?            | 选项名                        | string              | undefined |
+| value?            | 选项值                        | string &#124; number | undefined |
+| disabled?         | 是否禁用选项                  | boolean             | false     |
+| [propName: string] | 用于包含带有任意数量的其他属性 | any                 | undefined |
 
 ## Events
 
-| 名称       | 说明                   | 类型                                                                |
+| 名称      | 说明                  | 类型                                                                |
 | :--------- | :--------------------- | :------------------------------------------------------------------ |
-| change     | 选项值改变后的回调     | (value: string &#124; number, label: string, index: number) => void |
+| change    | 选项值改变后的回调    | (value: string &#124; number, label: string, index: number) => void |
 | openChange | 下拉菜单展开收起的回调 | (open: boolean) => void                                             |

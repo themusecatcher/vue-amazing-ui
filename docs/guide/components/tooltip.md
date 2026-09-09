@@ -654,10 +654,10 @@ const tooltipRef = ref()
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | maxWidth | 文字提示最大宽度，单位 `px` | string &#124; number | 240 |
-| content | 展示的内容 | string &#124; slot | undefined |
+| content | 展示的内容 | string | undefined |
 | contentClass | 设置展示内容的类名 | string | undefined |
 | contentStyle | 设置展示内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| tooltip | 文字提示内容 | string &#124; slot | undefined |
+| tooltip | 文字提示内容 | string | undefined |
 | tooltipClass | 设置文字提示的类名 | string | undefined |
 | tooltipStyle | 设置文字提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | bgColor | 文字提示框背景颜色，支持预设色 (`pink` &#124; `red` &#124; `yellow` &#124; `orange` &#124; `cyan` &#124; `green` &#124; `blue` &#124; `purple` &#124; `geekblue` &#124; `magenta` &#124; `volcano` &#124; `gold` &#124; `lime`) 或自定义色值 (如 `#f50` / `rgba`) | string | 'rgba(0, 0, 0, 0.85)' |
@@ -677,21 +677,21 @@ const tooltipRef = ref()
 
 ## Slots
 
-| 名称    | 说明               | 类型           |
+| 名称   | 说明              | 类型           |
 | :------ | :----------------- | :------------- |
 | tooltip | 自定义文字提示内容 | v-slot:tooltip |
-| default | 自定义展示的内容   | v-slot:default |
+| default | 自定义展示的内容  | v-slot:default |
 
 ## Methods
 
-| 名称 | 说明         | 类型       |
+| 名称 | 说明        | 类型       |
 | :--- | :----------- | :--------- |
 | show | 显示文字提示 | () => void |
 | hide | 隐藏文字提示 | () => void |
 
 ## Events
 
-| 名称         | 说明                     | 类型                    |
+| 名称        | 说明                    | 类型                    |
 | :----------- | :----------------------- | :---------------------- |
-| openChange   | 显示隐藏的回调           | (open: boolean) => void |
+| openChange  | 显示隐藏的回调          | (open: boolean) => void |
 | animationend | 显示隐藏动画结束时的回调 | (open: boolean) => void |

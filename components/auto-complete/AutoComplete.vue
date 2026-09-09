@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch, onMounted, useSlots } from 'vue'
-import type { CSSProperties } from 'vue'
+import { ref, computed, watchEffect, watch, onMounted } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import Scrollbar from 'components/scrollbar'
-import { useInject, useScrollParent, useFloatingPosition } from 'components/utils'
+import { useInject, useScrollParent, useFloatingPosition, useSlotsExist } from 'components/utils'
 export interface Option {
   disabled?: boolean // 是否禁用
   value: string | number // 唯一的 value 值
-  label: string // 显示的 label 值
+  label?: string // 显示的 label 值，缺失时兜底展示 value
+  // 允许携带任意自定义字段：#option 插槽会透传原始数据对象，便于自定义渲染与远程数据源场景
+  [propName: string]: any
 }
 export interface GroupOption {
   options?: (string | number | Option)[] // 子选项，存在该字段即视为分组
   label?: string // label 文本
   value?: string | number // value 值
 }
+
 export interface Props {
   allowClear?: boolean // 是否支持清除
   autofocus?: boolean // 是否自动获取焦点
@@ -39,6 +42,14 @@ export interface Props {
   */
   filterOption?: boolean | ((inputValue: string, option: Option) => boolean) // 过滤条件函数
 }
+// 声明组件插槽类型
+export interface AutoCompleteSlots {
+  default?: () => VNode[]
+  clearIcon?: (props: { clearIcon: () => void }) => VNode[]
+  // option 由 v-bind 展开，结构取决于使用方数据源（Option / GroupOption / 自定义字段），无法静态收窄
+  option?: (props: any) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   allowClear: false,
   autofocus: false,
@@ -60,6 +71,8 @@ const props = withDefaults(defineProps<Props>(), {
   status: undefined,
   filterOption: false
 })
+defineSlots<AutoCompleteSlots>()
+const slotsExist = useSlotsExist(['default', 'clearIcon', 'option'])
 const emit = defineEmits([
   'update:value',
   'search',
@@ -71,7 +84,6 @@ const emit = defineEmits([
   'openChange',
   'dropdownVisibleChange'
 ])
-const slots = useSlots()
 const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const inputRef = ref<HTMLInputElement | null>(null) // input 元素引用
 const customInputRef = ref<HTMLElement | null>(null) // 自定义输入组件容器引用
@@ -306,7 +318,7 @@ watchEffect(() => {
 })
 onMounted(() => {
   // 挂载后同步一次 value 到自定义输入组件插槽元素
-  if (slots.default) {
+  if (slotsExist.default) {
     const el = getCustomInputEl()
     if (el && el.value !== props.value) {
       el.value = props.value ?? ''
@@ -604,7 +616,7 @@ defineExpose({
       'auto-complete-large': size === 'large',
       'auto-complete-disabled': disabled,
       'auto-complete-borderless': !bordered,
-      'auto-complete-custom': slots.default,
+      'auto-complete-custom': slotsExist.default,
       'auto-complete-status-error': status === 'error',
       'auto-complete-status-warning': status === 'warning'
     }"
@@ -618,7 +630,7 @@ defineExpose({
   >
     <div ref="contentRef" class="auto-complete-content" @mouseenter="onEnter" @mouseleave="onLeave">
       <div
-        v-if="slots.default"
+        v-if="slotsExist.default"
         ref="customInputRef"
         class="auto-complete-custom-input"
         @input="onInput"
@@ -648,7 +660,7 @@ defineExpose({
         @focus="!disabled ? onFocus() : () => false"
         @click="onClick"
       />
-      <span v-if="slots.clearIcon" class="clear-svg" :class="{ 'show-svg': showClear }" @click.stop="onClear">
+      <span v-if="slotsExist.clearIcon" class="clear-svg" :class="{ 'show-svg': showClear }" @click.stop="onClear">
         <slot name="clearIcon" :clear-icon="onClear" />
       </span>
       <svg
@@ -702,7 +714,7 @@ defineExpose({
             <template v-for="(item, index) in displayData" :key="index">
               <template v-if="isGroup(item)">
                 <p class="auto-complete-group-title">
-                  <slot v-if="slots.option" name="option" v-bind="item" />
+                  <slot v-if="slotsExist.option" name="option" v-bind="item" />
                   <template v-else>{{ item.label ?? item.value }}</template>
                 </p>
                 <p
@@ -720,7 +732,7 @@ defineExpose({
                   @mouseenter="onHover(getValue(child), isDisabled(child))"
                   @click.stop="isDisabled(child) ? inputFocus() : onSelectOption(child)"
                 >
-                  <slot v-if="slots.option" name="option" v-bind="childSlotProps(child)" />
+                  <slot v-if="slotsExist.option" name="option" v-bind="childSlotProps(child)" />
                   <template v-else>{{ getLabel(child) }}</template>
                 </p>
               </template>
@@ -737,7 +749,7 @@ defineExpose({
                 @mouseenter="onHover(getValue(item), isDisabled(item))"
                 @click.stop="isDisabled(item) ? inputFocus() : onSelectOption(item)"
               >
-                <slot v-if="slots.option" name="option" v-bind="childSlotProps(item)" />
+                <slot v-if="slotsExist.option" name="option" v-bind="childSlotProps(item)" />
                 <template v-else>{{ getLabel(item) }}</template>
               </p>
             </template>

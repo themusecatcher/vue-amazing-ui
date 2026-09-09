@@ -805,23 +805,23 @@ onmessage = async (e: MessageEvent) => {
 | spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置上传中样式 | [SpinProps](./spin.md#spin) | {} |
 | imageProps | `Image` 组件属性配置，参考 [Image Props](./image.md#image)，用于配置图片预览 | [ImageProps](./image.md#image) | {} |
 | beforeUpload | 上传文件之前的钩子，参数为上传的文件，返回 `false` 则停止上传，返回 `true` 开始上传；支持返回一个 `Promise` 对象（如服务端校验等），`Promise` 对象 `reject` 时停止上传，`resolve` 时开始上传；通常用来校验用户上传的文件格式和大小 | (file: File) => boolean &#124; void &#124; Promise&lt;unknown&gt; | () => true |
-| uploadMode | 上传文件的方式，可选 `'base64'` &#124; `'custom'` | 'base64' &#124; 'custom' | 'base64' |
+| uploadMode | 上传文件的方式 | 'base64' &#124; 'custom' | 'base64' |
 | customRequest | 自定义上传行为，只有 `uploadMode: custom` 时，才会使用 `customRequest` 自定义上传行为；未配置时默认返回空结果，避免调用 `.then` 报错 | (file: File) => Promise&lt;[FileType](#filetype-type)&gt; | () => Promise.resolve({ url: '' }) |
 | fileList <Tag color="cyan">v-model</Tag> | 已上传的文件列表 | [FileType](#filetype-type)[] | [] |
 
 ### FileType Type
 
-| 名称               | 说明                           | 类型   | 默认值    |
+| 名称              | 说明                          | 类型  | 默认值    |
 | :----------------- | :----------------------------- | :----- | :-------- |
-| name?              | 文件名                         | string | undefined |
-| url                | 文件地址                       | string | undefined |
-| [propName: string] | 用于包含带有任意数量的其他属性 | any    | undefined |
+| name?             | 文件名                        | string | undefined |
+| url               | 文件地址                      | string | undefined |
+| [propName: string] | 用于包含带有任意数量的其他属性 | any   | undefined |
 
 ## Slots
 
-| 名称 | 说明               | 类型       |
+| 名称 | 说明              | 类型       |
 | :--- | :----------------- | :--------- |
-| tip  | 自定义上传描述文字 | v-slot:tip |
+| tip | 自定义上传描述文字 | v-slot:tip |
 
 ## Events
 

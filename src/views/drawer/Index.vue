@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import type { RadioOption } from 'vue-amazing-ui'
+import type { RadioOption, DrawerProps } from 'vue-amazing-ui'
 const open1 = ref<boolean>(false)
 const open2 = ref<boolean>(false)
 const open3 = ref<boolean>(false)
@@ -24,9 +24,9 @@ const options = ref<RadioOption[]>([
     value: 'left'
   }
 ])
-const placement = ref('right')
-const extraPlacement = ref('right')
-const footerPlacement = ref('right')
+const placement = ref<DrawerProps['placement']>('right')
+const extraPlacement = ref<DrawerProps['placement']>('right')
+const footerPlacement = ref<DrawerProps['placement']>('right')
 function onClose() {
   open3.value = false
   open4.value = false

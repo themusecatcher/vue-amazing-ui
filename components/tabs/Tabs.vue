@@ -4,15 +4,16 @@ import type { CSSProperties, VNode } from 'vue'
 import { useResizeObserver, useSlotsExist, useInject } from 'components/utils'
 export interface Item {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
-  tab?: string // 页签显示文字 string | slot
+  tab?: string // 页签显示文字
   icon?: VNode // 页签图标
-  content?: string // 标签页内容 string | slot
+  content?: string // 标签页内容
   disabled?: boolean // 是否禁用页签
 }
+
 export interface Props {
   items?: Item[] // 标签页数组
-  prefix?: string // 标签页前缀 string | slot
-  suffix?: string // 标签页后缀 string | slot
+  prefix?: string // 标签页前缀
+  suffix?: string // 标签页后缀
   animated?: boolean // 是否启用切换动画，在 tabPosition: 'top' | 'bottom' 时有效
   centered?: boolean // 标签是否居中展示
   size?: 'small' | 'middle' | 'large' // 标签页大小
@@ -23,6 +24,14 @@ export interface Props {
   contentStyle?: CSSProperties // 自定义内容样式
   activeKey?: string | number // (v-model) 当前激活 tab 面板的 key
 }
+// 声明组件插槽类型
+export interface TabsSlots {
+  prefix?: () => VNode[]
+  tab?: (props: { item: Item; tab: string | undefined; key: string | number }) => VNode[]
+  suffix?: () => VNode[]
+  content?: (props: { item: Item; content: string | undefined; key: string | number }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],
   prefix: undefined,
@@ -37,6 +46,7 @@ const props = withDefaults(defineProps<Props>(), {
   contentStyle: () => ({}),
   activeKey: undefined
 })
+defineSlots<TabsSlots>()
 const tabsRef = ref() // 所有 tabs 的 ref 模板引用
 const tabBarLeft = ref(0) // tabBar 的水平偏移量
 const tabBarTop = ref(0) // tabBar 的垂直偏移量

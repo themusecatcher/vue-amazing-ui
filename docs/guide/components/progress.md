@@ -10,7 +10,7 @@
 - 当需要显示一个操作完成的百分比时
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { ProgressProps } from 'vue-amazing-ui'
 const percent = ref(80)
@@ -71,15 +71,15 @@ const percent = ref(80)
 
 <Space align="center">
   <Progress type="circle" :percent="percent" />
-  <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
-  <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
+  <Button @click="onDecline(5)" size="large" :icon="h(MinusOutlined)">Decline</Button>
+  <Button @click="onIncrease(5)" size="large" :icon="h(PlusOutlined)">Increase</Button>
 </Space>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const percent = ref(80)
 function onIncrease(scale: number) {
@@ -102,8 +102,8 @@ function onDecline(scale: number) {
 <template>
   <Space align="center">
     <Progress type="circle" :percent="percent" />
-    <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
-    <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
+    <Button @click="onDecline(5)" size="large" :icon="h(MinusOutlined)">Decline</Button>
+    <Button @click="onIncrease(5)" size="large" :icon="h(PlusOutlined)">Increase</Button>
   </Space>
 </template>
 ```
@@ -153,8 +153,8 @@ function onDecline(scale: number) {
       }"
       :percent="percent"
     />
-    <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
-    <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
+    <Button @click="onDecline(5)" size="large" :icon="h(MinusOutlined)">Decline</Button>
+    <Button @click="onIncrease(5)" size="large" :icon="h(PlusOutlined)">Increase</Button>
   </Space>
 </Flex>
 
@@ -162,7 +162,7 @@ function onDecline(scale: number) {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const percent = ref(80)
 function onIncrease(scale: number) {
@@ -200,8 +200,8 @@ function onDecline(scale: number) {
         }"
         :percent="percent"
       />
-      <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
-      <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
+      <Button @click="onDecline(5)" size="large" :icon="h(MinusOutlined)">Decline</Button>
+      <Button @click="onIncrease(5)" size="large" :icon="h(PlusOutlined)">Increase</Button>
     </Space>
   </Flex>
 </template>
@@ -237,8 +237,8 @@ function onDecline(scale: number) {
       :info-size="28"
       :percent="percent"
     />
-    <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
-    <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
+    <Button @click="onDecline(5)" size="large" :icon="h(MinusOutlined)">Decline</Button>
+    <Button @click="onIncrease(5)" size="large" :icon="h(PlusOutlined)">Increase</Button>
   </Space>
 </Flex>
 
@@ -246,7 +246,7 @@ function onDecline(scale: number) {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const percent = ref(80)
 function onIncrease(scale: number) {
@@ -293,8 +293,8 @@ function onDecline(scale: number) {
         :info-size="28"
         :percent="percent"
       />
-      <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
-      <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
+      <Button @click="onDecline(5)" size="large" :icon="h(MinusOutlined)">Decline</Button>
+      <Button @click="onIncrease(5)" size="large" :icon="h(PlusOutlined)">Increase</Button>
     </Space>
   </Flex>
 </template>
@@ -329,8 +329,8 @@ function onDecline(scale: number) {
       :info-size="24"
       :percent="percent"
     />
-    <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
-    <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
+    <Button @click="onDecline(5)" size="large" :icon="h(MinusOutlined)">Decline</Button>
+    <Button @click="onIncrease(5)" size="large" :icon="h(PlusOutlined)">Increase</Button>
   </Space>
 </Flex>
 
@@ -338,7 +338,7 @@ function onDecline(scale: number) {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { ProgressProps } from 'vue-amazing-ui'
 const percent = ref(80)
@@ -396,8 +396,8 @@ function onDecline(scale: number) {
         :info-size="24"
         :percent="percent"
       />
-      <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
-      <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
+      <Button @click="onDecline(5)" size="large" :icon="h(MinusOutlined)">Decline</Button>
+      <Button @click="onIncrease(5)" size="large" :icon="h(PlusOutlined)">Increase</Button>
     </Space>
   </Flex>
 </template>
@@ -441,8 +441,8 @@ function onDecline(scale: number) {
         <span style="color: #d48806">Bingo</span>
       </template>
     </Progress>
-    <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
-    <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
+    <Button @click="onDecline(5)" size="large" :icon="h(MinusOutlined)">Decline</Button>
+    <Button @click="onIncrease(5)" size="large" :icon="h(PlusOutlined)">Increase</Button>
   </Space>
 </Flex>
 
@@ -450,7 +450,7 @@ function onDecline(scale: number) {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const percent = ref(80)
 function onIncrease(scale: number) {
@@ -512,8 +512,8 @@ function onDecline(scale: number) {
           <span style="color: #d48806">Bingo</span>
         </template>
       </Progress>
-      <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
-      <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
+      <Button @click="onDecline(5)" size="large" :icon="h(MinusOutlined)">Decline</Button>
+      <Button @click="onIncrease(5)" size="large" :icon="h(PlusOutlined)">Increase</Button>
     </Space>
   </Flex>
 </template>
@@ -530,27 +530,27 @@ function onDecline(scale: number) {
 | width | 进度条宽度，单位 `px`；`type: 'line'` 时，为进度条宽度，默认值 `'100%'`；`type: 'circle'` 时，为进度圈宽高，默认值 `120` | string &#124; number | undefined |
 | percent | 当前进度百分比 | number | 0 |
 | lineSize | 进度条的尺寸，单位 `px`；`type: 'line'` 时，为进度条线高，默认值 `8`；`type: 'circle'` 时，单位是进度圈画布宽度的百分比，默认值 `6` | number | undefined |
-| lineColor | 进度条的色彩，传入 `string` 时为纯色，传入 `Gradient` 时为渐变；进度圈时 `direction: 'left'` 为逆时针，`direction: 'right'` 为顺时针 | string &#124; [Gradient](#gradient-type) | undefined |
+| lineColor | 进度条的色彩，支持纯色或渐变；进度圈时 `direction: 'left'` 为逆时针，`direction: 'right'` 为顺时针 | string &#124; [Gradient](#gradient-type) | undefined |
 | lineCap | 进度条边缘的形状 | 'round' &#124; 'butt' | 'round' |
 | showInfo | 是否显示进度数值或状态图标 | boolean | true |
 | infoSize | 进度数值或状态图标的尺寸，单位 `px`；`type: 'line'` 时，默认值 `14`；`type: 'circle'` 时，默认值 `24` | number | undefined |
-| success | 进度完成时的信息 | string &#124; slot | undefined |
-| format | 内容的模板函数 | (percent: number) => (string &#124; number) &#124; slot | (percent: number) => percent + '%' |
+| success | 进度完成时的信息 | string | undefined |
+| format | 内容的模板函数 | (percent: number) => (string &#124; number) | (percent: number) => percent + '%' |
 | type | 进度条类型 | 'line' &#124; 'circle' | 'line' |
 
 ### Gradient Type
 
-| 名称       | 说明     | 类型                  | 默认值    |
+| 名称      | 说明    | 类型                 | 默认值    |
 | :--------- | :------- | :-------------------- | :-------- |
-| '0%'?      | 起始值   | string                | undefined |
-| '100%'?    | 终点值   | string                | undefined |
-| from?      | 起始值   | string                | undefined |
-| to?        | 终点值   | string                | undefined |
+| '0%'?     | 起始值  | string               | undefined |
+| '100%'?   | 终点值  | string               | undefined |
+| from?     | 起始值  | string               | undefined |
+| to?       | 终点值  | string               | undefined |
 | direction? | 渐变方向 | 'right' &#124; 'left' | 'right'   |
 
 ## Slots
 
-| 名称    | 说明                   | 类型                        |
+| 名称   | 说明                  | 类型                        |
 | :------ | :--------------------- | :-------------------------- |
 | success | 自定义进度完成时的信息 | v-slot:success              |
-| format  | 自定义格式化内容       | v-slot:format="{ percent }" |
+| format | 自定义格式化内容      | v-slot:format="{ percent }" |

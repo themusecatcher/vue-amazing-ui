@@ -18,7 +18,7 @@ const gapOptions = ref([
     value: 'customize'
   }
 ])
-const gapSize = ref('middle')
+const gapSize = ref<'small' | 'middle' | 'large' | 'customize'>('middle')
 const customGapSize = ref(16)
 </script>
 <template>

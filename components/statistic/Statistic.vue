@@ -1,17 +1,26 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import { formatNumber, useSlotsExist } from 'components/utils'
+
 export interface Props {
-  title?: string // 数值的标题 string | slot
-  value?: string | number // 数值的内容 string | number | slot
+  title?: string // 数值的标题
+  value?: string | number // 数值的内容
   valueStyle?: CSSProperties // 设置数值的样式
   precision?: number //	数值精度
-  prefix?: string // 设置数值的前缀 string | slot
-  suffix?: string // 设置数值的后缀 string | slot
+  prefix?: string // 设置数值的前缀
+  suffix?: string // 设置数值的后缀
   separator?: string // 设置千分位标识符
   formatter?: (value: string) => string // 自定义数值展示
 }
+// 声明组件插槽类型
+export interface StatisticSlots {
+  title?: () => VNode[]
+  prefix?: () => VNode[]
+  default?: () => VNode[]
+  suffix?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   title: undefined,
   value: undefined,
@@ -22,6 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
   separator: ',',
   formatter: (value: string) => value
 })
+defineSlots<StatisticSlots>()
 const slotsExist = useSlotsExist(['title', 'prefix', 'suffix'])
 const showValue = computed(() => {
   return props.formatter(formatNumber(props.value || '', props.precision, props.separator))

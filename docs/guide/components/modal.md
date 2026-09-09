@@ -2770,13 +2770,13 @@ _`update` 可更新的字段为 `ModalOptions` 的全部属性，另支持 `mode
 
 ## Slots
 
-| 名称       | 说明             | 类型              |
+| 名称      | 说明            | 类型              |
 | :--------- | :--------------- | :---------------- |
-| icon       | 自定义图标       | v-slot:icon       |
-| title      | 自定义模态框标题 | v-slot:title      |
-| default    | 自定义模态框内容 | v-slot:default    |
-| footer     | 自定义底部按钮区 | v-slot:footer     |
-| closeIcon  | 自定义关闭图标   | v-slot:closeIcon  |
+| icon      | 自定义图标      | v-slot:icon       |
+| title     | 自定义模态框标题 | v-slot:title      |
+| default   | 自定义模态框内容 | v-slot:default    |
+| footer    | 自定义底部按钮区 | v-slot:footer     |
+| closeIcon | 自定义关闭图标  | v-slot:closeIcon  |
 | modalRender | 自定义渲染弹窗内容 | v-slot:modalRender |
 
 > `modalRender` 为作用域插槽，可接收 `{ originVNode }` 对弹窗内容做包裹式自定义渲染（常用于拖拽等场景），仅声明式用法下生效；命令式用法请使用同名的 `modalRender` 属性。当属性与该插槽同时配置时，**属性优先级更高**。
@@ -2785,15 +2785,15 @@ _`update` 可更新的字段为 `ModalOptions` 的全部属性，另支持 `mode
 
 _`useModal()` 返回的 `ModalApi`，或通过 `<Modal>` / `<ModalProvider>` 的 `@ready` 事件获取：_
 
-| 名称       | 说明           | 类型                                                                              |
+| 名称      | 说明          | 类型                                                                              |
 | :--------- | :------------- | :-------------------------------------------------------------------------------- |
-| info       | 信息提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
-| success    | 成功提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
-| error      | 错误提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
-| warning    | 警告提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
-| confirm    | 确认提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
-| erase      | 删除提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
-| create     | 完全自定义模态框（不渲染内置图标与按钮组，顶部图标与底部区域由 `icon` / `footer` 自行组合） | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
+| info      | 信息提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
+| success   | 成功提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
+| error     | 错误提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
+| warning   | 警告提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
+| confirm   | 确认提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
+| erase     | 删除提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
+| create    | 完全自定义模态框（不渲染内置图标与按钮组，顶部图标与底部区域由 `icon` / `footer` 自行组合） | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
 | destroyAll | 关闭并销毁所有模态框，逐实例走正常关闭流程以保留离场动画 | () => void                                                                        |
 
 ### ModalReactive Type
@@ -2802,23 +2802,23 @@ _`useModal()` 返回的 `ModalApi`，或通过 `<Modal>` / `<ModalProvider>` 的
 
 _单个模态框的句柄，由 `info` / `success` 等方法调用后返回：_
 
-| 名称    | 说明                                            | 类型                                                     |
+| 名称   | 说明                                           | 类型                                                     |
 | :------ | :---------------------------------------------- | :------------------------------------------------------- |
-| key     | 该模态框的唯一标识（只读）                      | string                                                   |
-| destroy | 关闭该模态框                                    | () => void                                               |
-| update  | 更新该模态框，`mode` 可切换弹窗类型与内置图标    | (options: [ModalUpdate](#modalupdate-type)) => void       |
-| show    | 重新打开该模态框，实例已销毁时调用无效          | () => void                                               |
+| key    | 该模态框的唯一标识（只读）                     | string                                                   |
+| destroy | 关闭该模态框                                   | () => void                                               |
+| update | 更新该模态框，`mode` 可切换弹窗类型与内置图标   | (options: [ModalUpdate](#modalupdate-type)) => void       |
+| show   | 重新打开该模态框，实例已销毁时调用无效         | () => void                                               |
 
 ## Events
 
 _`cancel` / `ok` / `know` / `change` / `ready` 为 `<Modal>` 与 `<ModalProvider>` 组件的事件（需通过组件标签监听）；使用 `useModal()` 时，请在调用参数中使用 `onOk` / `onCancel` / `onKnow` 等回调。_
 
-| 名称   | 说明                                | 类型                            |
+| 名称  | 说明                               | 类型                            |
 | :----- | :---------------------------------- | :------------------------------ |
 | ready | 实例挂载完成时触发，参数为该实例的 api | (api: [ModalApi](#methods)) => void |
 | cancel | 点击蒙层或 `Esc` 键或取消按钮的回调 | (e: Event) => void              |
-| ok     | 点击确定按钮的回调                  | (e: MouseEvent) => void         |
-| know   | 点击知道了按钮的回调                | (e: MouseEvent) => void         |
+| ok    | 点击确定按钮的回调                 | (e: MouseEvent) => void         |
+| know  | 点击知道了按钮的回调               | (e: MouseEvent) => void         |
 | change | 任一弹窗打开 / 关闭时触发，多实例下携带该实例 `key` | (open: boolean, key: string) => void |
 | update:open | 声明式用法下 `v-model:open` 对应的更新事件 | (open: boolean) => void |
 

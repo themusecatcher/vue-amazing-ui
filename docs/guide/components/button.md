@@ -9,7 +9,7 @@ _按钮用于开始一个即时操作_
 - 响应用户点击行为，触发相应的业务逻辑
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { SearchOutlined, DownloadOutlined, CrownOutlined } from '@ant-design/icons-vue'
 const disabled = ref(true)
 const sizeOptions = [
@@ -89,16 +89,16 @@ function onClick(e: Event) {
 <Space vertical>
   <Space>
     <Tooltip tooltip="search">
-      <Button type="primary" shape="circle" :icon="SearchOutlined" />
+      <Button type="primary" shape="circle" :icon="h(SearchOutlined)" />
     </Tooltip>
     <Button type="primary" shape="circle">A</Button>
-    <Button type="primary" shape="round" :icon="SearchOutlined">
+    <Button type="primary" shape="round" :icon="h(SearchOutlined)">
       Search
     </Button>
     <Tooltip tooltip="search">
-      <Button type="primary" shape="round" :icon="SearchOutlined" />
+      <Button type="primary" shape="round" :icon="h(SearchOutlined)" />
     </Tooltip>
-    <Button type="primary" :icon="SearchOutlined">
+    <Button type="primary" :icon="h(SearchOutlined)">
       Search
     </Button>
   </Space>
@@ -185,20 +185,21 @@ function onClick(e: Event) {
 
 ```vue
 <script setup lang="ts">
+import { h } from 'vue'
 import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
   <Space vertical>
     <Space>
       <Tooltip tooltip="search">
-        <Button type="primary" shape="circle" :icon="SearchOutlined" />
+        <Button type="primary" shape="circle" :icon="h(SearchOutlined)" />
       </Tooltip>
       <Button type="primary" shape="circle">A</Button>
-      <Button type="primary" shape="round" :icon="SearchOutlined"> Search </Button>
+      <Button type="primary" shape="round" :icon="h(SearchOutlined)"> Search </Button>
       <Tooltip tooltip="search">
-        <Button type="primary" shape="round" :icon="SearchOutlined" />
+        <Button type="primary" shape="round" :icon="h(SearchOutlined)" />
       </Tooltip>
-      <Button type="primary" :icon="SearchOutlined"> Search </Button>
+      <Button type="primary" :icon="h(SearchOutlined)"> Search </Button>
     </Space>
     <Space>
       <Tooltip tooltip="search">
@@ -984,7 +985,7 @@ const loadingType = ref('dynamic')
 | :-- | :-- | :-- | :-- |
 | type | 设置按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default' |
 | shape | 设置按钮形状 | 'default' &#124; 'circle' &#124; 'round' | 'default' |
-| icon | 设置按钮图标 | VNode &#124; Slot | undefined |
+| icon | 设置按钮图标，prop 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | VNode &#124; (() => VNode) | undefined |
 | size | 设置按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | ghost | 按钮背景是否透明，仅当 `type: 'primary' \| 'danger'` 时生效 | boolean | false |
 | buttonClass | 设置按钮类名 | string | undefined |
@@ -999,13 +1000,13 @@ const loadingType = ref('dynamic')
 
 ## Slots
 
-| 名称    | 说明           | 类型           |
+| 名称   | 说明          | 类型           |
 | :------ | :------------- | :------------- |
 | default | 自定义按钮内容 | v-slot:default |
-| icon    | 自定义按钮图标 | v-slot:icon    |
+| icon   | 自定义按钮图标 | v-slot:icon    |
 
 ## Events
 
-| 名称  | 说明             | 类型               |
+| 名称 | 说明            | 类型               |
 | :---- | :--------------- | :----------------- |
 | click | 点击按钮时的回调 | (e: Event) => void |

@@ -230,7 +230,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
   @search="onSearch1"
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -255,7 +255,7 @@ function onSearch1(searchText: string) {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义选项
 
@@ -272,7 +272,7 @@ function onSearch1(searchText: string) {
   </template>
 </AutoComplete>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -300,7 +300,7 @@ function onSearch2(val: string) {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义输入组件
 
@@ -314,7 +314,7 @@ function onSearch2(val: string) {
   <Textarea placeholder="input here" style="height: 50px" />
 </AutoComplete>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -341,7 +341,7 @@ function onSelect3(value: string) {
 </template>
 ```
 
-::::
+:::
 
 ## 不区分大小写
 
@@ -353,7 +353,7 @@ function onSelect3(value: string) {
   :filter-option="filterOption"
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -380,7 +380,7 @@ function filterOption(input: string, option: unknown): boolean {
 </template>
 ```
 
-::::
+:::
 
 ## 查询模式 - 确定类目
 
@@ -417,7 +417,7 @@ function filterOption(input: string, option: unknown): boolean {
   <InputSearch placeholder="input here" size="large" />
 </AutoComplete>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -484,7 +484,7 @@ const options5 = ref([
 </template>
 ```
 
-::::
+:::
 
 ## 查询模式 - 不确定类目
 
@@ -509,7 +509,7 @@ const options5 = ref([
   <InputSearch size="large" placeholder="input here" allow-clear :search-props="{ type: 'primary' }" />
 </AutoComplete>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -567,7 +567,7 @@ function onSearch6(val: string) {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义状态
 
@@ -594,7 +594,7 @@ function onSearch6(val: string) {
   @clear="onClear"
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -641,7 +641,7 @@ function onClear() {
 </template>
 ```
 
-::::
+:::
 
 ## 无边框
 
@@ -655,7 +655,7 @@ function onClear() {
   @select="onSelect7"
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -681,7 +681,7 @@ function onSearch7(searchText: string) {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义清除按钮
 
@@ -722,7 +722,7 @@ function onSearch7(searchText: string) {
   </template>
 </AutoComplete>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -775,7 +775,7 @@ function onSearch7(searchText: string) {
 </template>
 ```
 
-::::
+:::
 
 ## 三种尺寸
 
@@ -790,7 +790,7 @@ function onSearch7(searchText: string) {
   :size="size"
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -841,13 +841,13 @@ const optionsD = ref([
 </template>
 ```
 
-::::
+:::
 
 ## 禁用
 
 <AutoComplete v-model:value="valueD" :options="optionsD" :width="200" placeholder="input here" disabled />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -874,13 +874,13 @@ const optionsD = ref([
 </template>
 ```
 
-::::
+:::
 
 ## 禁用选项
 
 <AutoComplete v-model:value="valueDD" :options="optionsD" :width="200" placeholder="input here" />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -907,13 +907,13 @@ const optionsD = ref([
 </template>
 ```
 
-::::
+:::
 
 ## 字符串数组数据源
 
 <AutoComplete v-model:value="valueArr" :options="optionsArr" :width="200" placeholder="input here" />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -926,13 +926,13 @@ const optionsArr = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry', 'Fig', 
 </template>
 ```
 
-::::
+:::
 
 ## 分组数据源
 
 <AutoComplete v-model:value="valueGroup" :options="optionsGroup" :width="200" placeholder="input here" />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -967,7 +967,7 @@ const optionsGroup = ref([
 </template>
 ```
 
-::::
+:::
 
 ## 键盘/悬浮回填
 
@@ -983,7 +983,7 @@ const optionsGroup = ref([
   backfill
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1002,7 +1002,7 @@ const optionsBackfill = ['Apple', 'Banana', 'Cherry', 'Durian']
 </template>
 ```
 
-::::
+:::
 
 ## 受控展开
 
@@ -1022,7 +1022,7 @@ const optionsBackfill = ['Apple', 'Banana', 'Cherry', 'Durian']
   <Button type="primary" @click="openControlled = !openControlled">{{ openControlled ? '收起' : '展开' }}下拉</Button>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1046,7 +1046,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 </template>
 ```
 
-::::
+:::
 
 ## 默认展开
 
@@ -1062,7 +1062,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
   default-open
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1081,7 +1081,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 </template>
 ```
 
-::::
+:::
 
 ## 关闭默认高亮首项
 
@@ -1093,7 +1093,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
   :default-active-first-option="false"
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1112,7 +1112,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 </template>
 ```
 
-::::
+:::
 
 ## 下拉面板宽度
 
@@ -1128,7 +1128,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
   :dropdown-match-select-width="300"
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1147,7 +1147,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
 </template>
 ```
 
-::::
+:::
 
 ## APIs
 
@@ -1177,44 +1177,44 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
 
 ### Option Type
 
-| 名称               | 说明                           | 类型                 | 默认值    |
+| 名称              | 说明                          | 类型                | 默认值    |
 | :----------------- | :----------------------------- | :------------------- | :-------- |
-| value              | 唯一的 value 值                | string &#124; number | undefined |
-| label              | 显示的 label 值                | string               | undefined |
-| disabled?          | 是否禁用选项                   | boolean              | false     |
+| value             | 唯一的 value 值               | string &#124; number | undefined |
+| label?            | 显示的 `label` 值，缺失时兜底展示 `value`；支持任意自定义字段（`#option` 插槽透传） | string | undefined |
+| disabled?         | 是否禁用选项                  | boolean             | false     |
 
 ### GroupOption Type
 
-| 名称    | 说明                         | 类型                                   | 默认值    |
+| 名称   | 说明                        | 类型                                  | 默认值    |
 | :------ | :--------------------------- | :------------------------------------- | :-------- |
 | options | 子选项，存在该字段即视为分组 | (string &#124; number &#124; Option)[] | undefined |
-| label?  | 分组名（显示为分组标题）     | string                                 | undefined |
-| value?  | 分组值                       | string &#124; number                   | undefined |
+| label? | 分组名（显示为分组标题）    | string                                | undefined |
+| value? | 分组值                      | string &#124; number                  | undefined |
 
 ## Events
 
-| 名称                   | 说明                   | 类型                                                                           |
+| 名称                  | 说明                  | 类型                                                                           |
 | :--------------------- | :--------------------- | :----------------------------------------------------------------------------- |
-| search                 | 输入内容变化时回调     | (value: string) => void                                                        |
-| select                 | 选中选项时回调         | (value: string &#124; number, option: Option) => void                          |
-| change                 | 选项值改变后的回调     | (value: string) => void                                                        |
-| focus                  | 获得焦点时的回调       | () => void                                                                     |
-| blur                   | 失去焦点时的回调       | () => void                                                                     |
-| clear                  | 清除时的回调           | () => void                                                                     |
-| openChange             | 下拉菜单展开收起的回调 | (open: boolean) => void                                                        |
-| dropdownVisibleChange  | 下拉菜单展开收起的回调 | (open: boolean) => void                                                        |
+| search                | 输入内容变化时回调    | (value: string) => void                                                        |
+| select                | 选中选项时回调        | (value: string &#124; number, option: Option) => void                          |
+| change                | 选项值改变后的回调    | (value: string) => void                                                        |
+| focus                 | 获得焦点时的回调      | () => void                                                                     |
+| blur                  | 失去焦点时的回调      | () => void                                                                     |
+| clear                 | 清除时的回调          | () => void                                                                     |
+| openChange            | 下拉菜单展开收起的回调 | (open: boolean) => void                                                        |
+| dropdownVisibleChange | 下拉菜单展开收起的回调 | (open: boolean) => void                                                        |
 
 ## Slots
 
-| 名称      | 说明                                    | 参数                   |
+| 名称     | 说明                                   | 参数                   |
 | :-------- | :-------------------------------------- | :--------------------- |
-| option    | 自定义选项内容                          | [Option](#option-type) |
-| clearIcon | 自定义清除图标                          | -                      |
-| default   | 自定义输入组件（替代原生 `input` 元素） | -                      |
+| option   | 自定义选项内容                         | [Option](#option-type) |
+| clearIcon | 自定义清除图标                         | -                      |
+| default  | 自定义输入组件（替代原生 `input` 元素） | -                      |
 
 ## Methods
 
-| 名称  | 说明               | 类型       |
+| 名称 | 说明              | 类型       |
 | :---- | :----------------- | :--------- |
-| focus | 获取输入框焦点     | () => void |
-| blur  | 使输入框失去焦点   | () => void |
+| focus | 获取输入框焦点    | () => void |
+| blur | 使输入框失去焦点  | () => void |

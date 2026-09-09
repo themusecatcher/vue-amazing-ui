@@ -1,10 +1,40 @@
+<script lang="ts">
+// 本块为模块级作用域（仅在模块加载时执行一次），用于创建跨组件实例共享的单例。
+// 鼠标点击位置必须在模块加载时就开始捕获：createDiscreteApi（setup 外调用）的首次点击，
+// 组件实例尚未 mount，若把监听放在 onMounted 中，该次点击会丢失、展开动画退回中心。
+// 该变量仅在事件回调与动画钩子中读写，不参与渲染，故无需响应式。
+let mousePosition: { x: number; y: number } | null = null
+// 点击时效窗口 100ms：仅点击后短窗口内打开才从鼠标位置展开，
+// 异步 / 代码方式打开（窗口已过期）退化为中心展开，避免沿用早已失效的点击坐标
+const CLICK_EXPIRE = 100
+let expireTimer: ReturnType<typeof setTimeout> | null = null
+function getClickPosition(e: MouseEvent): void {
+  mousePosition = {
+    x: e.clientX, // 相对于浏览器视口左上角的 X 坐标，不随页面滚动而改变
+    y: e.clientY // 相对于浏览器视口左上角的 Y 坐标，不随页面滚动而改变
+  }
+  // 以最后一次点击为准重启计时：antd 不清理旧计时器，连续点击时窗口会被旧计时器提前截断
+  if (expireTimer) {
+    clearTimeout(expireTimer)
+  }
+  expireTimer = setTimeout(() => {
+    mousePosition = null
+    expireTimer = null
+  }, CLICK_EXPIRE)
+}
+// 第三参用布尔值 true，等价于 { capture: true }：省去 options 特性检测且兼容旧浏览器
+if (typeof document !== 'undefined') {
+  document.addEventListener('click', getClickPosition, true)
+}
+</script>
+
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted, nextTick, isVNode, createTextVNode, h, Fragment } from 'vue'
+import { ref, computed, watch, onUnmounted, nextTick, isVNode, createTextVNode, h, Fragment } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
 import Button, { type ButtonProps } from 'components/button'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import ModalRenderHost from './ModalRenderHost'
-import { useInject, useOptionsSupported, lockScroll } from 'components/utils'
+import { useInject, lockScroll, useSlotsExist } from 'components/utils'
 // 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数
 export type ContentType = string | VNode | (() => VNode)
 // 按钮回调：返回 false 或 Promise reject 时阻止关闭，其余情况（含 Promise resolve）自动关闭
@@ -12,11 +42,11 @@ export type ModalCallback = () => unknown | Promise<unknown>
 export interface Props {
   width?: string | number // 模态框宽度，单位 px
   height?: string | number // 内容区高度，单位 px，默认自适应内容高度
-  icon?: VNode | (() => VNode) // 自定义图标，prop 支持 VNode / 渲染函数；插槽形态请用 #icon
-  title?: ContentType // 模态框标题，支持 string | VNode | 渲染函数
+  icon?: VNode | (() => VNode) // 自定义图标；插槽形态请用 #icon
+  title?: ContentType // 模态框标题
   titleClass?: string // 自定义标题类名
   titleStyle?: CSSProperties // 自定义标题样式
-  content?: ContentType // 模态框内容，支持 string | VNode | 渲染函数
+  content?: ContentType // 模态框内容
   contentClass?: string // 自定义内容类名
   contentStyle?: CSSProperties // 自定义内容样式
   scrollbarProps?: ScrollbarProps // Scrollbar 组件属性配置，用于设置内容滚动条的样式
@@ -59,56 +89,18 @@ export interface Props {
   to?: string | HTMLElement // 弹窗容器挂载的节点，可选：元素标签名 (例如 'body') 或者元素本身
   open?: boolean // (v-model) 模态框是否可见，声明式用法下生效
 }
-const props = withDefaults(defineProps<Props>(), {
-  width: 420,
-  height: 'auto',
-  icon: undefined,
-  title: undefined,
-  titleClass: undefined,
-  titleStyle: () => ({}),
-  content: undefined,
-  contentClass: undefined,
-  contentStyle: () => ({}),
-  scrollbarProps: () => ({}),
-  bodyClass: undefined,
-  bodyStyle: () => ({}),
-  cancelText: '取消',
-  cancelProps: () => ({}),
-  okText: '确定',
-  okType: 'primary',
-  okProps: () => ({}),
-  noticeText: '知道了',
-  noticeProps: () => ({}),
-  footer: true,
-  closable: false,
-  closeIcon: undefined,
-  closeFocusable: true,
-  renderBeforeOpen: false,
-  destroyOnClose: false,
-  centered: false,
-  top: 100,
-  transformOrigin: 'mouse',
-  confirmLoading: false,
-  blockScroll: true,
-  keyboard: true,
-  mask: true,
-  maskClosable: true,
-  maskClass: undefined,
-  maskStyle: () => ({}),
-  wrapClass: undefined,
-  wrapStyle: () => ({}),
-  containerClass: undefined,
-  containerStyle: () => ({}),
-  zIndex: 1000,
-  autoFocusButton: 'ok',
-  focusTriggerAfterClose: true,
-  modalRender: undefined,
-  afterClose: undefined,
-  onEsc: undefined,
-  onMaskClick: undefined,
-  to: 'body',
-  open: false
-})
+// 声明组件插槽类型
+export interface ModalSlots {
+  icon?: () => VNode[] // 自定义图标
+  title?: () => VNode[] // 自定义标题
+  default?: () => VNode[] // 自定义内容
+  footer?: () => VNode[] // 自定义底部区域
+  closeIcon?: () => VNode[] // 自定义关闭图标
+  // #modalRender 在模板中没有对应的 <slot> 渲染位：内容经脚本读取后作为渲染
+  // 回调注入 ModalRenderHost，故必须在此声明，使用方模板才能获得 { originVNode } 参数类型
+  modalRender?: (arg: { originVNode: VNode }) => VNode[]
+}
+
 export interface ModalOptions {
   width?: string | number // 模态框宽度，单位 px
   height?: string | number // 内容区高度，单位 px，默认自适应内容高度
@@ -160,18 +152,78 @@ export interface ModalOptions {
   onEsc?: (e: KeyboardEvent) => void // 按下 Esc 键的回调，无论是否允许关闭都会触发
   onMaskClick?: (e: MouseEvent) => void // 点击遮罩的回调，无论是否允许关闭都会触发
 }
+export interface ModalUpdate extends ModalOptions {
+  mode?: Mode // 切换弹窗类型，进而决定内置图标与按钮组
+  loading?: boolean // 手动控制按钮 loading，供外部异步流程驱动
+}
+export interface ModalReactive extends ModalOptions {
+  readonly key: string // 该弹窗的唯一标识
+  destroy: () => void // 关闭该弹窗
+  update: (options: ModalUpdate) => void // 更新该弹窗；mode 可切换弹窗类型与内置图标
+  show: () => void // 重新打开该弹窗；实例已被销毁（destroyOnClose: true 且离场结束）时调用无效
+}
 // custom 为完全自定义形态：不渲染内置图标与按钮组，交由 icon / footer 自行组合
-type Mode = 'info' | 'success' | 'error' | 'warning' | 'confirm' | 'erase' | 'custom'
+export type Mode = 'info' | 'success' | 'error' | 'warning' | 'confirm' | 'erase' | 'custom'
+
+const props = withDefaults(defineProps<Props>(), {
+  width: 420,
+  height: 'auto',
+  icon: undefined,
+  title: undefined,
+  titleClass: undefined,
+  titleStyle: () => ({}),
+  content: undefined,
+  contentClass: undefined,
+  contentStyle: () => ({}),
+  scrollbarProps: () => ({}),
+  bodyClass: undefined,
+  bodyStyle: () => ({}),
+  cancelText: '取消',
+  cancelProps: () => ({}),
+  okText: '确定',
+  okType: 'primary',
+  okProps: () => ({}),
+  noticeText: '知道了',
+  noticeProps: () => ({}),
+  footer: true,
+  closable: false,
+  closeIcon: undefined,
+  closeFocusable: true,
+  renderBeforeOpen: false,
+  destroyOnClose: false,
+  centered: false,
+  top: 100,
+  transformOrigin: 'mouse',
+  confirmLoading: false,
+  blockScroll: true,
+  keyboard: true,
+  mask: true,
+  maskClosable: true,
+  maskClass: undefined,
+  maskStyle: () => ({}),
+  wrapClass: undefined,
+  wrapStyle: () => ({}),
+  containerClass: undefined,
+  containerStyle: () => ({}),
+  zIndex: 1000,
+  autoFocusButton: 'ok',
+  focusTriggerAfterClose: true,
+  modalRender: undefined,
+  afterClose: undefined,
+  onEsc: undefined,
+  onMaskClick: undefined,
+  to: 'body',
+  open: false
+})
+// 仅 modalRender 需读取插槽内容做渲染，故接收返回值
+const slots = defineSlots<ModalSlots>()
+const slotsExist = useSlotsExist(['modalRender'])
 // 声明式实例的固定标识：由 props.open 驱动，与命令式实例共用同一渲染管线
 const DECLARATIVE_KEY = 'modal_declarative'
 // 声明式固定双按钮形态，与 Dialog 一致
 const DECLARATIVE_MODE: Mode = 'confirm'
 // update 可更新的字段：ModalOptions 的全部属性 + mode（用于切换弹窗类型，进而决定内置图标与按钮组）
 // key 是身份标识，创建后不可变更；ModalOptions 本就不含 key，故无需额外剔除
-export interface ModalUpdate extends ModalOptions {
-  mode?: Mode // 切换弹窗类型，进而决定内置图标与按钮组
-  loading?: boolean // 手动控制按钮 loading，供外部异步流程驱动
-}
 // 弹窗栈中的单个实例：开关状态、loading 与动画原点各自持有，避免多实例互相覆盖
 interface ModalItem extends ModalOptions {
   readonly key: string // 唯一标识，作为身份与 :key
@@ -182,12 +234,6 @@ interface ModalItem extends ModalOptions {
   displayed: boolean // 动画期间保持内容渲染，离场结束后置 false
 }
 // 单个弹窗的句柄，用于编程式关闭与更新
-export interface ModalReactive extends ModalOptions {
-  readonly key: string // 该弹窗的唯一标识
-  destroy: () => void // 关闭该弹窗
-  update: (options: ModalUpdate) => void // 更新该弹窗；mode 可切换弹窗类型与内置图标
-  show: () => void // 重新打开该弹窗；实例已被销毁（destroyOnClose: true 且离场结束）时调用无效
-}
 const modalWrapRef = ref() // modal DOM 引用
 // 打开前的焦点元素，关闭后用于归还焦点；弹窗栈归零时统一处理，避免多开时被内层弹窗覆盖
 let triggerElement: HTMLElement | null = null
@@ -234,29 +280,12 @@ function setContainerEl(key: string, el: unknown): void {
     containerEls.delete(key)
   }
 }
-const mousePosition = ref<{ x: number; y: number } | null>(null) // 鼠标点击位置（鼠标位置本身是全局事实，可共享）
 const showModalWrap = ref<boolean>(false)
 const { colorPalettes } = useInject('Modal') // 主题色注入
-const { isSupported: captureSupported } = useOptionsSupported('capture')
-// 事件监听选项：不支持 capture 时退化为布尔值
-const captureOption = computed<AddEventListenerOptions | boolean>(() =>
-  captureSupported.value ? { capture: true } : true
-)
 const emits = defineEmits(['update:open', 'cancel', 'ok', 'know', 'change', 'ready'])
 // 声明式用法下暴露的具名插槽：除 modalRender 外均有模板 <slot> 出口；
 // 显式声明用于稳定 d.ts 导出，不依赖 Volar 对模板实现的推断
-// 需导出：defineSlots 使组件实例类型引用它，生成 d.ts 时要求为 public
-export interface ModalSlots {
-  icon?: () => VNode[] // 自定义图标
-  title?: () => VNode[] // 自定义标题
-  default?: () => VNode[] // 自定义内容
-  footer?: () => VNode[] // 自定义底部区域
-  closeIcon?: () => VNode[] // 自定义关闭图标
-  // #modalRender 在模板中没有对应的 <slot> 渲染位：内容经脚本读取后作为渲染
-  // 回调注入 ModalRenderHost，故必须在此声明，使用方模板才能获得 { originVNode } 参数类型
-  modalRender?: (arg: { originVNode: VNode }) => VNode[]
-}
-const slots = defineSlots<ModalSlots>()
+
 // 弹窗实例栈：每次命令式调用入栈一个实例，关闭时仅弹出自身
 const modalList = ref<ModalItem[]>([])
 let seed = 0
@@ -397,7 +426,7 @@ function resolveModalRender(item: ModalItem): Props['modalRender'] {
   if (render) {
     return render
   }
-  return slots.modalRender ? slotModalRender : undefined
+  return slotsExist.modalRender ? slotModalRender : undefined
 }
 // 从离场/入场元素上取回实例标识
 function getKey(el: Element): string {
@@ -438,24 +467,11 @@ watch(openCount, (to, from) => {
   pendingFocusRestore = false
   triggerElement = null
 })
-onMounted(() => {
-  // 点击位置走捕获阶段：记录每次点击的位置，供 transformOrigin: 'mouse' 计算动画原点
-  document.addEventListener('click', getClickPosition, captureOption.value)
-})
 onUnmounted(() => {
-  document.removeEventListener('click', getClickPosition, captureOption.value)
   // 卸载兜底：本组件仍持锁时释放，否则滚动锁随组件销毁而残留，页面滚动永久锁死；
   // 以 scrollLockRelease 而非 openCount 判定，避免 blockScroll=false 从未加锁却误解锁他人
   scrollLockRelease?.()
 })
-function getClickPosition(e: MouseEvent) {
-  if (openCount.value === 0) {
-    mousePosition.value = {
-      x: e.clientX, // 相对于浏览器视口左上角的 X 坐标，不页面滚动而改变
-      y: e.clientY // 相对于浏览器视口左上角的 Y 坐标，不页面滚动而改变
-    }
-  }
-}
 // 动画原点按实例持有，避免后开弹窗改写先开弹窗的动画原点
 async function onBeforeEnter(el: Element) {
   showModalWrap.value = true
@@ -465,9 +481,9 @@ async function onBeforeEnter(el: Element) {
     return
   }
   const transOrigin = getComputedValue(item, 'transformOrigin')
-  if (transOrigin === 'mouse' && mousePosition.value) {
+  if (transOrigin === 'mouse' && mousePosition) {
     const rect = el.getBoundingClientRect()
-    item.origin = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
+    item.origin = `${mousePosition.x - rect.left}px ${mousePosition.y - rect.top}px`
   } else {
     item.origin = '50% 50%'
   }

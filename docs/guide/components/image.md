@@ -547,7 +547,7 @@ function customDownload(url: string, fileName?: string) {
 | disabled | 是否禁用图像预览 | boolean | false |
 | bordered | 是否显示边框 | boolean | true |
 | fit | 图片在容器内的的适应类型，参考 [object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit) | 'contain' &#124; 'fill' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain' |
-| preview | 预览文本 | string &#124; slot | '预览' |
+| preview | 预览文本 | string | '预览' |
 | previewImageStyle | 自定义预览图片时 `img` 元素的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | spaceProps | `Space` 组件属性配置，参考 [Space Props](./space.md#space)，用于配置多张展示图片时的排列方式 | [SpaceProps](./space.md#space) | {} |
 | spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置图片加载中样式 | [SpinProps](./spin.md#spin) | {} |
@@ -564,19 +564,19 @@ function customDownload(url: string, fileName?: string) {
 
 ### Image Type
 
-| 名称  | 说明     | 类型   | 默认值    |
+| 名称 | 说明    | 类型  | 默认值    |
 | :---- | :------- | :----- | :-------- |
-| src   | 图像地址 | string | undefined |
+| src  | 图像地址 | string | undefined |
 | name? | 图像名称，未设置时自动从图像地址 `src` 中提取 | string | undefined |
 
 ## Slots
 
-| 名称    | 说明           | 类型           |
+| 名称   | 说明          | 类型           |
 | :------ | :------------- | :------------- |
 | preview | 自定义预览文本 | v-slot:preview |
 
 ## Methods
 
-| 名称    | 说明                                   | 类型                    |
+| 名称   | 说明                                  | 类型                    |
 | :------ | :------------------------------------- | :---------------------- |
 | preview | 预览索引为 `index` 的图片，从 `0` 开始 | (index: number) => void |

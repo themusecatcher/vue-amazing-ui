@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch, onMounted } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import { useEventListener, useMutationObserver, useSlotsExist } from 'components/utils'
 export interface Responsive {
   xs?: number // <576px 响应式栅格
@@ -10,9 +10,10 @@ export interface Responsive {
   xl?: number // ≥1200px 响应式栅格
   xxl?: number // ≥1600px 响应式栅格
 }
+
 export interface Props {
-  title?: string // 描述列表的标题，显示在最顶部 string | slot
-  extra?: string // 描述列表的操作区域，显示在右上方 string | slot
+  title?: string // 描述列表的标题，显示在最顶部
+  extra?: string // 描述列表的操作区域，显示在右上方
   bordered?: boolean // 是否展示边框
   vertical?: boolean // 是否使用垂直描述列表
   size?: 'default' | 'middle' | 'small' // 设置列表的大小
@@ -20,6 +21,13 @@ export interface Props {
   labelStyle?: CSSProperties // 自定义标签样式，优先级低于 DescriptionItems 的 labelStyle
   contentStyle?: CSSProperties // 自定义内容样式，优先级低于 DescriptionItems 的 contentStyle
 }
+// 声明组件插槽类型
+export interface DescriptionsSlots {
+  default?: () => VNode[]
+  title?: () => VNode[]
+  extra?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   title: undefined,
   extra: undefined,
@@ -30,6 +38,7 @@ const props = withDefaults(defineProps<Props>(), {
   labelStyle: () => ({}),
   contentStyle: () => ({})
 })
+defineSlots<DescriptionsSlots>()
 const defaultSlotsRef = ref() // 所有渲染的 DescriptionsItems 节点引用
 const defaultSlots = ref(true) // 用于刷新 <slot></slot>
 const stopObservation = ref(true) // 停止观察器

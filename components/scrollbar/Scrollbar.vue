@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import { debounce, useResizeObserver, useScroll } from 'components/utils'
 export interface Props {
   contentClass?: string // 内容 div 的类名
@@ -14,6 +14,10 @@ export interface Props {
   xPlacement?: 'top' | 'bottom' // 横向滚动时滚动条的位置
   yPlacement?: 'left' | 'right' // 纵向滚动时滚动条的位置
 }
+// 声明组件插槽类型
+export interface ScrollbarSlots {
+  default?: () => VNode[]
+}
 const props = withDefaults(defineProps<Props>(), {
   contentClass: undefined,
   contentStyle: () => ({}),
@@ -26,6 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
   xPlacement: 'bottom',
   yPlacement: 'right'
 })
+defineSlots<ScrollbarSlots>()
 const containerRef = ref() // 滚动容器 DOM 引用
 const contentRef = ref() // 滚动内容 DOM 引用
 const railVerticalRef = ref() // 垂直滚动条 DOM 引用
