@@ -102,11 +102,11 @@ _七种类型_
   <Button>Default Button</Button>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 ```vue
 ...可复制的完整代码...
 ```
-::::
+:::
 
 ## APIs
 
@@ -131,7 +131,7 @@ _七种类型_
 - 顶部 `<GlobalElement />` 是文档页必备占位（注册全局组件）。
 - 每个示例标题下用一行斜体 `_说明_` 描述。
 - 可交互 demo 直接写在正文，用内联 `<script setup>` 提供响应式状态。
-- 每个示例后接 `:::: details Show Code` 折叠块，展示可复制的完整代码。
+- 每个示例后接 `::: details Show Code` 折叠块，展示可复制的完整代码。
 
 ### 内联 demo 机制
 
@@ -152,11 +152,11 @@ _七种类型_
 
 _格式化日期为指定格式的工具函数_
 
-:::: details Show Source Code
+::: details Show Source Code
 ```ts
 // 完整源码
 ```
-::::
+:::
 
 <script setup lang="ts">
 // 内联 demo 逻辑

@@ -12,7 +12,8 @@
 
 ## <VersionDateTag date="2026-09-09">2.7.1</VersionDateTag>
 
-- ⚠️ **破坏性变更**：[头像 Avatar](/guide/components/avatar.html)、[返回顶部 BackTop](/guide/components/back-top.html)、[按钮 Button](/guide/components/button.html)、[浮动按钮 FloatButton](/guide/components/float-button.html)、[气泡确认框 Popconfirm](/guide/components/popconfirm.html) 的 `icon` 类型由 `VNode | Slot` 收紧为 `VNode | (() => VNode)`，不再支持直接传组件对象（`:icon="SearchOutlined"`），统一改渲染函数 `:icon="h(...)"` 或 `icon: () => h(...)`，插槽图标使用 `#icon`
+- 优化 [对话框 Dialog](/guide/components/dialog.html)、[模态框 Modal](/guide/components/modal.html)，鼠标点击位置改由模块级统一捕获（`import` 即注册监听），修复 `createDiscreteApi` 等命令式场景组件未挂载时点击丢失、展开退回中心的问题；新增 `100ms` 点击时效窗口，点击过期后异步 / 代码方式打开退化为默认中心展开；离场动画按打开时位置快照收起，不再受关闭时点击位置影响
+- 优化 [头像 Avatar](/guide/components/avatar.html)、[返回顶部 BackTop](/guide/components/back-top.html)、[按钮 Button](/guide/components/button.html)、[浮动按钮 FloatButton](/guide/components/float-button.html)、[气泡确认框 Popconfirm](/guide/components/popconfirm.html)，其 `icon` 类型由 `VNode | Slot` 收紧为 `VNode | (() => VNode)`，不再支持直接传组件对象（`:icon="SearchOutlined"`），统一改渲染函数 `:icon="h(...)"` 或 `icon: () => h(...)`，插槽图标使用 `#icon`
 - 类型强化：为具名 / 作用域插槽组件补充 `xxxSlots` 类型并接入 `defineSlots()`，原混入 `Props` 的插槽类型移入 `xxxSlots` 实现职责分离，`TS` 下插槽获得完整类型检查；文档类型表同步清理 `string | slot` 写法
 - 组件库及文档代码优化
 

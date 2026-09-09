@@ -1,7 +1,13 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import { flushPromises, mount } from '@vue/test-utils'
 import Dialog, { DialogProvider } from 'components/dialog'
 import type { DialogApi } from 'components/dialog'
+
+// Transition 真实渲染（stubs: false）时，组件若在离场动画结束前被卸载，
+// Teleport 到 body 的内容会残留并污染后续用例；断言失败时同样会中断清理，故统一兜底
+afterEach(() => {
+  document.body.innerHTML = ''
+})
 
 /**
  * 取底部内置按钮：Button 根元素为 div.btn-wrap，取消在前、确定在后
@@ -107,6 +113,88 @@ describe('Dialog', () => {
     await flushPromises()
     expect(container.style.display).toBe('none')
     wrapper.unmount()
+  })
+
+  it('组件挂载前的点击位置也能被捕获（setup 外首次调用场景）', async () => {
+    // 回归用例：createDiscreteApi 首调时组件实例尚未 mount，
+    // 若 click 监听挂在 onMounted 中，这次点击会丢失、展开原点退回 50% 50%
+    document.body.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 60, clientY: 80 }))
+    let api: DialogApi | null = null
+    const wrapper = mount(DialogProvider, {
+      attrs: {
+        onReady: (value: DialogApi) => {
+          api = value
+        }
+      },
+      global: { stubs: { transition: false } },
+      attachTo: document.body
+    })
+    await wrapper.vm.$nextTick()
+    api?.open({ title: '首次点击', transformOrigin: 'mouse' })
+    await flushPromises()
+    const container = document.body.querySelector('.dialog-container') as HTMLElement
+    const enterOrigin = container.style.transformOrigin
+    // 先卸载再断言：断言失败时也不会残留 DOM 污染后续用例
+    wrapper.unmount()
+    // happy-dom 下 rect 恒为 0，解析出的原点即点击坐标本身
+    expect(enterOrigin).toContain('60px')
+    expect(enterOrigin).toContain('80px')
+  })
+
+  it('点击位置超过时效窗口后打开，退化为默认中心展开', async () => {
+    // 对齐 antd（100ms）/ naive（64ms）：仅点击后短窗口内打开才从鼠标位置展开，
+    // 异步 / 代码方式打开时窗口已过期，不应沿用旧的点击坐标
+    document.body.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 60, clientY: 80 }))
+    // 等待超过 100ms 时效窗口
+    await new Promise((resolve) => setTimeout(resolve, 150))
+    let api: DialogApi | null = null
+    const wrapper = mount(DialogProvider, {
+      attrs: {
+        onReady: (value: DialogApi) => {
+          api = value
+        }
+      },
+      global: { stubs: { transition: false } },
+      attachTo: document.body
+    })
+    await wrapper.vm.$nextTick()
+    api?.open({ title: '过期窗口', transformOrigin: 'mouse' })
+    await flushPromises()
+    const container = document.body.querySelector('.dialog-container') as HTMLElement
+    const origin = container.style.transformOrigin
+    wrapper.unmount()
+    expect(origin).not.toContain('60px')
+    expect(origin).not.toContain('80px')
+  })
+
+  it('离场动画沿用打开时的鼠标位置，不随关闭时的点击位置改变', async () => {
+    let api: DialogApi | null = null
+    const wrapper = mount(DialogProvider, {
+      attrs: {
+        onReady: (value: DialogApi) => {
+          api = value
+        }
+      },
+      global: { stubs: { transition: false } },
+      attachTo: document.body
+    })
+    await wrapper.vm.$nextTick()
+
+    // 在 (100, 120) 处点击打开
+    document.body.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 100, clientY: 120 }))
+    api?.open({ title: '离场原点', transformOrigin: 'mouse' })
+    await flushPromises()
+    const container = document.body.querySelector('.dialog-container') as HTMLElement
+    const enterOrigin = container.style.transformOrigin
+    expect(enterOrigin).toContain('100px')
+    expect(enterOrigin).toContain('120px')
+
+    // 在另一位置 (900, 700) 点击确定关闭：离场原点应仍为打开时的位置
+    getOkButton()?.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 900, clientY: 700 }))
+    await flushPromises()
+    const leaveOrigin = container.style.transformOrigin
+    wrapper.unmount()
+    expect(leaveOrigin).toBe(enterOrigin)
   })
 
   it('打开后焦点应进入弹窗内，使 Esc 无需先按 Tab 即可生效', async () => {

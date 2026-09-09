@@ -1,9 +1,39 @@
+<script lang="ts">
+// 本块为模块级作用域（仅在模块加载时执行一次），用于创建跨组件实例共享的单例。
+// 鼠标点击位置必须在模块加载时就开始捕获：createDiscreteApi（setup 外调用）的首次点击，
+// 组件实例尚未 mount，若把监听放在 onMounted 中，该次点击会丢失、展开动画退回中心。
+// 该变量仅在事件回调与动画钩子中读写，不参与渲染，故无需响应式。
+let mousePosition: { x: number; y: number } | null = null
+// 点击时效窗口 100ms：仅点击后短窗口内打开才从鼠标位置展开，
+// 异步 / 代码方式打开（窗口已过期）退化为中心展开，避免沿用早已失效的点击坐标
+const CLICK_EXPIRE = 100
+let expireTimer: ReturnType<typeof setTimeout> | null = null
+function getClickPosition(e: MouseEvent): void {
+  mousePosition = {
+    x: e.clientX, // 相对于浏览器视口左上角的 X 坐标，不随页面滚动而改变
+    y: e.clientY // 相对于浏览器视口左上角的 Y 坐标，不随页面滚动而改变
+  }
+  // 以最后一次点击为准重启计时
+  if (expireTimer) {
+    clearTimeout(expireTimer)
+  }
+  expireTimer = setTimeout(() => {
+    mousePosition = null
+    expireTimer = null
+  }, CLICK_EXPIRE)
+}
+// 第三参用布尔值 true，等价于 { capture: true }：省去 options 特性检测且兼容旧浏览器
+if (typeof document !== 'undefined') {
+  document.addEventListener('click', getClickPosition, true)
+}
+</script>
+
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted, nextTick, isVNode, createTextVNode } from 'vue'
-import type { CSSProperties, Slot, VNode } from 'vue'
+import { ref, computed, watch, onUnmounted, nextTick, isVNode, createTextVNode } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import Button, { type ButtonProps } from 'components/button'
-import { lockScroll, useOptionsSupported } from 'components/utils'
+import { lockScroll, useSlotsExist } from 'components/utils'
 import type { DialogApi } from './useDialog'
 /** 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数 */
 export type ContentType = string | VNode | (() => VNode)
@@ -18,10 +48,10 @@ export interface DialogDraggableOptions {
 export interface Props {
   width?: string | number // 对话框宽度，单位 px
   height?: string | number // 对话框高度，单位 px，默认自适应内容高度
-  title?: ContentType // 标题，支持 string | VNode | 渲染函数 | slot
+  title?: ContentType // 标题
   titleClass?: string // 自定义标题类名
   titleStyle?: CSSProperties // 自定义标题样式
-  content?: ContentType // 内容，支持 string | VNode | 渲染函数 | slot
+  content?: ContentType // 内容
   contentClass?: string // 自定义内容类名
   contentStyle?: CSSProperties // 自定义内容样式
   bodyClass?: string // 自定义弹窗卡片（.dialog-body-wrap）类名，用于定制背景 / 圆角 / 阴影等外观
@@ -32,9 +62,9 @@ export interface Props {
   okText?: string // 确定按钮文字
   okType?: 'primary' | 'danger' // 确定按钮类型
   okProps?: ButtonProps // 确认按钮 props 配置，优先级高于 okType，参考 Button 组件 Props
-  footer?: FooterType // 是否显示底部按钮 boolean | 渲染函数 | slot
+  footer?: FooterType // 是否显示底部按钮
   closable?: boolean // 是否显示右上角关闭按钮
-  closeIcon?: VNode | (() => VNode) | Slot // 自定义关闭图标，支持 VNode / 渲染函数 / slot
+  closeIcon?: VNode | (() => VNode) // 自定义关闭图标；插槽形态请用 #closeIcon
   closeFocusable?: boolean // 关闭按钮是否可聚焦，关闭后不参与 Tab 序列
   renderBeforeOpen?: boolean // 首次打开前是否渲染内容（关闭懒渲染），仅声明式用法生效
   destroyOnClose?: boolean // 关闭时是否销毁 Dialog 里的子元素
@@ -64,6 +94,14 @@ export interface Props {
   open?: boolean // (v-model) 对话框是否可见，声明式用法下生效
   to?: string | HTMLElement // 对话框 Teleport 挂载的节点，可选：元素标签名 (例如 'body') 或者元素本身
 }
+// 声明组件插槽类型
+export interface DialogSlots {
+  title?: () => VNode[]
+  default?: () => VNode[]
+  footer?: () => VNode[]
+  closeIcon?: () => VNode[]
+}
+
 /** 命令式调用的配置项；声明式用法下与 Props 等价，回调支持返回 Promise 控制关闭时机 */
 export interface DialogOptions {
   width?: string | number
@@ -84,7 +122,7 @@ export interface DialogOptions {
   okProps?: ButtonProps
   footer?: FooterType
   closable?: boolean
-  closeIcon?: VNode | (() => VNode) | Slot
+  closeIcon?: VNode | (() => VNode)
   closeFocusable?: boolean
   destroyOnClose?: boolean
   switchFullscreen?: boolean
@@ -123,13 +161,7 @@ export interface DialogReactive extends DialogOptions {
   update: (options: DialogUpdate) => void // 更新该弹窗
   show: () => void // 重新打开该弹窗；实例已被销毁（destroyOnClose: true 且离场结束）时调用无效
 }
-// 需导出：defineSlots 使组件实例类型引用它，生成 d.ts 时要求为 public
-export interface DialogSlots {
-  title?: () => VNode[]
-  default?: () => VNode[]
-  footer?: () => VNode[]
-  closeIcon?: () => VNode[]
-}
+
 /** 拖拽状态载体，即弹窗实例对象 */
 interface DragTarget {
   /** 横向拖拽偏移，null 表示未拖拽 */
@@ -193,6 +225,8 @@ const props = withDefaults(defineProps<Props>(), {
   open: false,
   to: 'body'
 })
+defineSlots<DialogSlots>()
+const slotsExist = useSlotsExist(['title'])
 /** 弹窗栈中的单个实例：开关状态、loading、全屏态与动画原点各自持有，避免多实例互相覆盖 */
 interface DialogItem extends DialogOptions {
   readonly key: string // 唯一标识，作为身份与 :key
@@ -201,6 +235,8 @@ interface DialogItem extends DialogOptions {
   fullscreen: boolean
   origin: string // 解析后的动画原点（区别于 transformOrigin 配置项）
   displayed: boolean // 动画期间保持内容渲染，离场结束后置 false
+  // 打开时的鼠标位置快照：离场沿用打开位置收起，而非最后一次点击（关闭按钮）的位置
+  openOrigin: { x: number; y: number } | null
   dragX: number | null // 拖拽横向偏移，null 表示未拖拽
   dragY: number | null // 拖拽纵向偏移，null 表示未拖拽
 }
@@ -216,14 +252,7 @@ const okBtnEls = new Map<string, HTMLElement>()
 const cancelBtnEls = new Map<string, HTMLElement>()
 // 各实例的拖拽控制器，实例销毁时需停止监听
 const dragControllers = new Map<string, DragController>()
-const mousePosition = ref<{ x: number; y: number } | null>(null) // 鼠标点击位置
 const showDialogWrap = ref<boolean>(false)
-const { isSupported: captureSupported } = useOptionsSupported('capture')
-// 事件监听选项：不支持 capture 时退化为布尔值
-const captureOption = computed<AddEventListenerOptions | boolean>(() =>
-  captureSupported.value ? { capture: true } : true
-)
-const slots = defineSlots<DialogSlots>()
 const emits = defineEmits<{
   'update:open': [value: boolean]
   cancel: [e?: Event]
@@ -348,7 +377,7 @@ function setCancelBtnEl(key: string, el: unknown): void {
 }
 // 是否存在标题：title 配置与 #title 插槽任一存在即可，仅判断配置会让插槽标题丢失无障碍关联
 function hasTitle(item: DialogItem): boolean {
-  return Boolean(getComputedValue(item, 'title') || slots.title)
+  return Boolean(getComputedValue(item, 'title') || slotsExist.title)
 }
 // header 同时充当拖拽句柄，故开启拖拽时即便无标题也需渲染
 function hasHeader(item: DialogItem): boolean {
@@ -383,7 +412,7 @@ function closeIconNode(item: DialogItem): VNode | null {
   if (icon === undefined || icon === null) {
     return null
   }
-  return renderContent(icon as ContentType)
+  return renderContent(icon)
 }
 // 确定按钮的 loading：实例内部异步 loading 与受控 confirmLoading 任一为真即展示
 function okLoading(item: DialogItem): boolean {
@@ -466,12 +495,7 @@ watch(openCount, (to, from) => {
   pendingFocusRestore = false
   triggerElement = null
 })
-onMounted(() => {
-  // 点击位置走捕获阶段：记录每次点击的位置，供 transformOrigin: 'mouse' 计算动画原点
-  document.addEventListener('click', getClickPosition, captureOption.value)
-})
 onUnmounted(() => {
-  document.removeEventListener('click', getClickPosition, captureOption.value)
   if (contentPressTimer) {
     clearTimeout(contentPressTimer)
   }
@@ -483,16 +507,8 @@ onUnmounted(() => {
   // 以 scrollLockRelease 而非 openCount 判定，避免 blockScroll=false 从未加锁却误解锁他人
   scrollLockRelease?.()
 })
-function getClickPosition(e: MouseEvent) {
-  // 仅在无任何打开实例时更新位置：弹窗打开期间点击关闭/确定/取消按钮都不应刷新 mousePosition，
-  // 否则离场动画原点会跟随机位置走；该守卫同时使嵌套弹窗沿用最外层的展开位置，与 Modal 保持一致
-  if (openCount.value === 0) {
-    mousePosition.value = {
-      x: e.clientX, // 相对于浏览器视口左上角的 X 坐标，不页面滚动而改变
-      y: e.clientY // 相对于浏览器视口左上角的 Y 坐标，不页面滚动而改变
-    }
-  }
-}
+// 鼠标点击位置由上方模块级 <script> 统一捕获（import 即注册），组件实例无需再监听
+//
 // 动画原点按实例持有，避免后开弹窗改写先开弹窗的动画原点
 async function onBeforeEnter(el: Element) {
   showDialogWrap.value = true
@@ -502,10 +518,13 @@ async function onBeforeEnter(el: Element) {
     return
   }
   const transOrigin = getComputedValue(item, 'transformOrigin')
-  if (transOrigin === 'mouse' && mousePosition.value) {
+  if (transOrigin === 'mouse' && mousePosition) {
     const rect = el.getBoundingClientRect()
-    item.origin = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
+    // 快照打开时的位置，供离场沿用；否则离场会取到关闭按钮所在的最新点击位置
+    item.openOrigin = mousePosition
+    item.origin = `${mousePosition.x - rect.left}px ${mousePosition.y - rect.top}px`
   } else {
+    item.openOrigin = null
     item.origin = '50% 50%'
   }
 }
@@ -655,10 +674,10 @@ function onBeforeLeave(el: Element) {
   if (!item) {
     return
   }
-  // 离场时按当前位置重算原点，使缩放动画从最后一次点击位置收起
-  if (getComputedValue(item, 'transformOrigin') === 'mouse' && mousePosition.value) {
+  // 离场沿用打开时的鼠标位置：按当前位置重算会让缩放动画从关闭按钮处收起，而非打开位置
+  if (getComputedValue(item, 'transformOrigin') === 'mouse' && item.openOrigin) {
     const rect = el.getBoundingClientRect()
-    item.origin = `${mousePosition.value.x - rect.left}px ${mousePosition.value.y - rect.top}px`
+    item.origin = `${item.openOrigin.x - rect.left}px ${item.openOrigin.y - rect.top}px`
   } else {
     item.origin = '50% 50%'
   }
@@ -849,6 +868,7 @@ function push(dialog: DialogOptions): DialogReactive {
     fullscreen: false,
     origin: '50% 50%',
     displayed: true,
+    openOrigin: null,
     dragX: null,
     dragY: null,
     // 命令式弹窗默认销毁（一次性调用），避免关闭后实例无限累积；需要保留内容时可显式传 destroyOnClose: false
@@ -940,6 +960,7 @@ function pushDeclarative(open: boolean): void {
     fullscreen: false,
     origin: '50% 50%',
     displayed: true,
+    openOrigin: null,
     dragX: null,
     dragY: null
   })
