@@ -3,76 +3,49 @@
 # 确保脚本抛出遇到的错误
 set -e
 
-# ============ 终端彩色输出与背景色块（非 TTY 环境如 CI 日志自动降级为纯文本） ============
+# ============ 终端彩色输出与超链接（非 TTY 环境如 CI 日志自动降级为纯文本） ============
 if [ -t 1 ]; then
     c_bold=$'\033[1m'
     c_green=$'\033[32m'
     c_reset=$'\033[0m'
-    # 绿底黑字：用于发布成功横幅的色块背景，使所有信息在终端中形成清晰聚焦的视觉卡片
-    bg_green=$'\033[42m'
-    fg_black=$'\033[30m'
+
+    # OSC 8 终端超链接：把 URL 包裹在 OSC 8 序列中，支持的终端
+    # （iTerm2 / VSCode / WezTerm / GNOME Terminal 3.26+ / macOS Terminal 13+）会渲染为可点击链接；
+    # 不被支持的终端按 OSC 规范自动忽略控制序列，无副作用
+    osc8_start() { printf '\033]8;;%s\033\\' "$1"; }
+    osc8_end() { printf '\033]8;;\033\\'; }
+else
+    # CI 环境无 TTY 时降级为 noop，避免控制序列污染日志
+    osc8_start() { :; }
+    osc8_end() { :; }
 fi
 
-# 打印组件库发布成功横幅：以绿底色块包络所有信息行，URL 采用纯文本以保证所有终端可见
-# （macOS Terminal.app / iTerm2 / VSCode 终端会自动把裸 URL 识别为可点击链接）
+# 打印组件库发布成功横幅
+# 设计要点：
+# 1. 去掉上下两条绿色横线（═ × N）与绿底色块（bg_green），整体更清爽
+# 2. URL 用 OSC 8 序列包裹，在支持的终端中渲染为可点击链接
+# 3. 标题用绿色加粗作视觉锚点，标签行用 emoji + 缩进对齐，无多余装饰
 print_publish_success_banner() {
     local pkg="vue-amazing-ui"
     local npm_url="https://www.npmjs.com/package/${pkg}/v/${version}"
     local publish_time=$(date '+%Y-%m-%d %H:%M:%S')
-    # 终端可视宽度（非 TTY 环境降级为 80 列），用于横线长度与 URL 手动换行计算
-    local term_width=${COLUMNS:-$(tput cols 2>/dev/null || echo 80)}
-
-    # 借助 node 精确计算显示宽度（emoji/全角字符按 2 列计）：
-    # 1. URL 超出终端宽度时手动换行，续行以空格补齐对齐到 URL 起始列，避免折行顶到标签下方
-    # 2. 横线长度取内容最长行的显示宽度，保证完整包络所有信息行
-    local banner_output
-    banner_output=$(node -e '
-const termWidth = parseInt(process.argv[1], 10) || 80;
-const urlLabel = process.argv[2];
-const url = process.argv[3];
-const otherLines = process.argv.slice(4);
-// 显示宽度：CJK/全角/emoji 等宽字符按 2 列计，其余按 1 列
-const charWidth = (cp) =>
-    (cp >= 0x1100 && cp <= 0x115f) ||
-    (cp >= 0x2e80 && cp <= 0xa4cf) ||
-    (cp >= 0xac00 && cp <= 0xd7a3) ||
-    (cp >= 0xf900 && cp <= 0xfaff) ||
-    (cp >= 0xff00 && cp <= 0xff60) ||
-    (cp >= 0xffe0 && cp <= 0xffe6) ||
-    (cp >= 0x1f300 && cp <= 0x1faff) ||
-    cp >= 0x20000
-        ? 2
-        : 1;
-const displayWidth = (s) => [...s].reduce((w, ch) => w + charWidth(ch.codePointAt(0)), 0);
-// 按剩余宽度把 URL 切成若干段，续行用空格补齐对齐到 URL 起始列
-const labelWidth = displayWidth(urlLabel);
-const chunkSize = Math.max(termWidth - labelWidth - 1, 10);
-const chunks = [];
-for (let i = 0; i < url.length; i += chunkSize) chunks.push(url.slice(i, i + chunkSize));
-const lines = [...otherLines];
-chunks.forEach((chunk, i) => lines.push(i === 0 ? urlLabel + chunk : " ".repeat(labelWidth) + chunk));
-const maxWidth = Math.max(...lines.map(displayWidth));
-console.log(maxWidth);
-console.log(lines.join("\n"));
-' "$term_width" "  🔗 npm 详情  " "$npm_url" \
-        "  🎉 发布成功！${pkg}@${version} 已发布到 npm" \
-        "  📦 版本号    ${version}（git tag: ${tag}）" \
-        "  🕐 发布时间  ${publish_time}")
-
-    local divider_count
-    divider_count=$(head -n 1 <<<"$banner_output")
-    local divider=""
-    for ((i = 0; i < divider_count; i++)); do
-        divider+="═"
-    done
-    local colored_divider="${c_green}${c_bold}${divider}${c_reset}"
 
     echo ""
-    echo "$colored_divider"
-    tail -n +2 <<<"$banner_output" | while IFS= read -r line; do
-        echo "${bg_green}${fg_black}${line}${c_reset}"
-    done
-    echo "$colored_divider"
+    # 标题行：绿色加粗，醒目但不过度装饰
+    printf '%s%s🎉 发布成功！%s@%s 已发布到 npm%s\n' \
+        "${c_green}" "${c_bold}" "${pkg}" "${version}" "${c_reset}"
+
+    # 标签行：emoji + 缩进对齐，纯文本输出（避免背景色块视觉噪声）
+    printf '   📦 版本号    %s（git tag: %s）\n' "${version}" "${tag}"
+    printf '   ⏰ 发布时间  %s\n' "${publish_time}"
+
+    # URL 行：OSC 8 包裹的 npm 详情链接（终端支持时显示为可点击）
+    printf '   🔗 npm 详情  '
+    osc8_start "${npm_url}"
+    printf '%s' "${npm_url}"
+    osc8_end
+    echo ""
+    echo ""
 }
 
 commitMessage=$1
@@ -226,6 +199,16 @@ if gh release view "$tag" >/dev/null 2>&1; then
 else
     gh release create "$tag" --title "$tag" --notes "$releaseBody"
     echo "✅ 已创建 GitHub Release: $tag"
+fi
+
+# 输出可点击的 GitHub Release 链接（OSC 8 包裹，覆盖新建/已存在两种分支）
+release_url=$(gh release view "$tag" --json url -q '.url' 2>/dev/null || true)
+if [ -n "${release_url}" ]; then
+    echo "   🔗 Release: "
+    osc8_start "${release_url}"
+    printf '%s' "${release_url}"
+    osc8_end
+    echo ""
 fi
 
 # release 已就绪，清除 npm 发布后的中断提示（后续文档部署失败不再提示「npm 已发布」）
