@@ -157,7 +157,8 @@ function destroyWatermark() {
   }
 }
 // 全屏水印挂在 <html> 下时需其 position: relative 作为定位参照，退出全屏/组件卸载后必须撤销，避免残留影响宿主页面；
-// 仅撤销本实例写入的值，避免误清宿主或其它全屏水印实例设置在 <html> 上的 position
+// 仅在本实例写入过时才撤销，避免误清宿主页面自身在 <html> 上预设的 position。
+// 注：多个全屏实例共用同一个 <html>，任一实例卸载都会移除该共享属性，多实例并存时后者的定位参照会一并失效
 let htmlPositionApplied = false
 function resetHtmlPosition() {
   if (!htmlPositionApplied) {
@@ -193,7 +194,6 @@ function appendWatermark(base64Url: string, markWidth: number) {
     })
   }
 }
-;``
 // converting camel-cased strings to be lowercase and link it with Separator
 function toLowercaseSeparator(key: string) {
   return key.replace(/([A-Z])/g, '-$1').toLowerCase()

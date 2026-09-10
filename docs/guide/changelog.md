@@ -12,10 +12,10 @@
 
 ## <VersionDateTag date="2026-09-11">2.7.3</VersionDateTag>
 
-- 优化 [文字提示 Tooltip](/guide/components/tooltip.html) 定位与交互：修复缩放动画期间位置错位、焦点在内容内移动时闪烁，`enter` 改为切换显示，补充 `role="tooltip"` 与 `aria-describedby`
+- 优化 [文字提示 Tooltip](/guide/components/tooltip.html) 定位与交互：修复缩放动画期间位置错位、焦点在内容内移动时闪烁，受控 `show` 立即生效、`animationend` 仅响应卡片自身动画，补充 `role="tooltip"` 与 `aria-describedby`；订正 `enter` 文档描述（实际为切换显示）
 - 增强 [返回顶部 BackTop](/guide/components/back-top.html)：`listenTo` 支持 `Document` 与返回目标的函数，修复整页滚动监听失效
 - 修复 [水印 Watermark](/guide/components/watermark.html)：切换全屏后防篡改失效，清理写入 `<html>` 的 `style`
-- 优化 [气泡卡片 Popover](/guide/components/popover.html) / [气泡确认框 Popconfirm](/guide/components/popconfirm.html)：`enter` 改为切换显示，`Popover` 移除无效的 `keyboard` 透传
+- 优化 [气泡卡片 Popover](/guide/components/popover.html) / [气泡确认框 Popconfirm](/guide/components/popconfirm.html)：订正 `enter` 文档描述（实际为切换显示）；`Popover` 移除 `keyboard` 属性
 - 重构滚动工具函数：[useScroll](/utils/functions/use-scroll.html) / [useScrollParent](/utils/functions/use-scroll-parent.html) / [useMutationObserver](/utils/functions/use-mutation-observer.html) / [useResizeObserver](/utils/functions/use-resize-observer.html)：整页滚动改监听 `window` 以修复监听失效，统一观察目标归一化
 - 新增 [Tooltip](/guide/components/tooltip.html)、[Popover](/guide/components/popover.html)、[Watermark](/guide/components/watermark.html)、[useScroll](/utils/functions/use-scroll.html)、[useScrollParent](/utils/functions/use-scroll-parent.html) 单元测试，同步更新文档
 
