@@ -219,6 +219,12 @@ pnpm dev
 pnpm docs:dev
 ```
 
+## Contributing
+
+`Vue Amazing UI` grows together with its community. Whether you are adding a component, fixing a bug, or improving the docs and examples, your contribution is always welcome.
+
+Before submitting code, please read the [Contributing Guide](CONTRIBUTING.md).
+
 ## Blogs
 
 [My CSDN Blogs](https://themusecatcher.blog.csdn.net)

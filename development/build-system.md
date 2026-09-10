@@ -61,7 +61,7 @@ pnpm check             # lint:check + type-check
 pnpm test              # vitest 运行测试
 ```
 
-> 启动类命令（`pnpm dev` / `pnpm docs:dev`）见 [CONTRIBUTING.md](../CONTRIBUTING.md) 的环境准备章节。
+> 启动类命令（`pnpm dev` / `pnpm docs:dev`）见 [CONTRIBUTING.zh-CN.md](../CONTRIBUTING.zh-CN.md) 的环境准备章节。
 
 ## 测试
 

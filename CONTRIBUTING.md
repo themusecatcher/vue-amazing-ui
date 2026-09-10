@@ -1,106 +1,108 @@
-# 贡献指南 Contributing
+# Contributing
 
-感谢你对 Vue Amazing UI 的关注与贡献。为保持代码库整洁、协作顺畅，请在提交代码前阅读本指南。
+English | [中文](CONTRIBUTING.zh-CN.md)
 
-## 目录
+Thanks for your interest in Vue Amazing UI. To keep the codebase clean and collaboration smooth, please read this guide before submitting code.
 
-- [环境准备](#环境准备)
-- [开发设计指南](#开发设计指南)
-- [分支规范](#分支规范)
-- [提交规范](#提交规范)
-- [代码质量门禁](#代码质量门禁)
-- [开发流程](#开发流程)
+## Table of Contents
 
-## 环境准备
+- [Prerequisites](#prerequisites)
+- [Design Implementation Guide](#design-implementation-guide)
+- [Branch Convention](#branch-convention)
+- [Commit Convention](#commit-convention)
+- [Quality Gates](#quality-gates)
+- [Development Workflow](#development-workflow)
+
+## Prerequisites
 
 ```sh
-# 克隆仓库
+# Clone the repository
 git clone https://github.com/themusecatcher/vue-amazing-ui.git
 cd vue-amazing-ui
 
-# 安装依赖（推荐 pnpm）
+# Install dependencies (pnpm is recommended)
 pnpm i
 
-# 启动组件开发环境
+# Start the component development environment
 pnpm dev
 
-# 启动文档站
+# Start the docs site
 pnpm docs:dev
 ```
 
-## 开发设计指南
+## Design Implementation Guide
 
-在开始编写组件之前，建议先阅读以下设计实现文档。它们完整描述了组件库的**设计实现画像**——组织架构、各类规范与实现机制，是新增 / 修改组件的权威依据；组件的功能与使用说明请查阅官方文档站（`docs/`）：
+Before writing a component, it is recommended to read the design implementation documents below. They fully describe the **design implementation profile** of the component library — its structure, conventions, and mechanisms — and are the authoritative reference for adding or modifying components. For a component's features and usage, please refer to the official docs site (`docs/`):
 
-| 文档 | 说明 |
+| Document | Description |
 | :--- | :--- |
-| [`development/project-structure.md`](development/project-structure.md) | 组织架构与目录结构 |
-| [`development/import-export.md`](development/import-export.md) | 导入导出规范 |
-| [`development/component-design.md`](development/component-design.md) | 组件设计规范（含主题系统） |
-| [`development/demo-doc-guide.md`](development/demo-doc-guide.md) | 演示与文档编写规范 |
-| [`development/build-system.md`](development/build-system.md) | 构建产物体系（含测试） |
+| [`development/project-structure.md`](development/project-structure.md) | Project structure and directory layout |
+| [`development/import-export.md`](development/import-export.md) | Import and export conventions |
+| [`development/component-design.md`](development/component-design.md) | Component design conventions (including the theme system) |
+| [`development/demo-doc-guide.md`](development/demo-doc-guide.md) | Demo and documentation writing conventions |
+| [`development/build-system.md`](development/build-system.md) | Build artifacts (including testing) |
 
-## 分支规范
+## Branch Convention
 
-### 命名格式
+### Naming Format
 
-统一采用 `<type>/<描述>` 格式，`type` 与提交规范保持一致，描述使用**全小写 kebab-case**（短横线连接）。
+Always use the `<type>/<description>` format. The `type` is consistent with the commit convention, and the description must be **all-lowercase kebab-case** (words joined by hyphens).
 
-| 类型 | 格式 | 说明 | 示例 |
+| Type | Format | Description | Example |
 | :--- | :--- | :--- | :--- |
-| 新功能 / 新组件 | `feat/<名称>` | 开发新组件或新功能 | `feat/menu`、`feat/dropdown` |
-| 缺陷修复 | `fix/<描述>` | 修复已知问题 | `fix/inputnumber-empty` |
-| 重构 | `refactor/<范围>` | 不改变行为的代码重构 | `refactor/table-split` |
-| 文档 | `docs/<范围>` | 仅文档改动 | `docs/menu-api` |
-| 样式 | `style/<范围>` | 样式调整 | `style/button-hover` |
-| 性能 | `perf/<范围>` | 性能优化 | `perf/table-scroll` |
+| New feature / component | `feat/<name>` | Develop a new component or feature | `feat/menu`, `feat/dropdown` |
+| Bug fix | `fix/<description>` | Fix a known issue | `fix/inputnumber-empty` |
+| Refactor | `refactor/<scope>` | Code refactoring without behavior change | `refactor/table-split` |
+| Docs | `docs/<scope>` | Documentation-only changes | `docs/menu-api` |
+| Style | `style/<scope>` | Style adjustments | `style/button-hover` |
+| Performance | `perf/<scope>` | Performance optimization | `perf/table-scroll` |
 
-> 命名一律使用全小写 kebab-case，例如 `feat/auto-complete` 而非 `feat/autoComplete`。
+> Always use all-lowercase kebab-case, for example `feat/auto-complete` instead of `feat/autoComplete`.
 
-### 生命周期约定
+### Lifecycle Conventions
 
-为避免分支长期停滞、与主干严重分叉，请遵守：
+To avoid long-stalled branches and severe divergence from the mainline, please follow:
 
-1. **从最新 `main` 切出**：创建分支前先 `git checkout main && git pull`，确保基线最新。
-2. **定期同步主干**：开发周期较长的分支，应定期将 `main` 合并/变基进来，避免落后过多导致合并冲突。
-3. **合入后及时删除**：功能合并进 `main` 后，删除对应的本地与远程分支，保持分支列表整洁。
+1. **Branch off the latest `main`**: run `git checkout main && git pull` before creating a branch to keep the baseline up to date.
+2. **Sync with the mainline regularly**: for branches with a long development cycle, merge/rebase `main` in periodically to avoid falling too far behind and causing merge conflicts.
+3. **Delete promptly after merging**: once a feature is merged into `main`, delete the corresponding local and remote branches to keep the branch list tidy.
 
    ```sh
-   git push origin --delete <branch-name>   # 删除远程分支
-   git branch -d <branch-name>              # 删除本地分支
+   git push origin --delete <branch-name>   # delete the remote branch
+   git branch -d <branch-name>              # delete the local branch
    ```
 
-4. **不在共享分支直接提交**：`main`、`gh-pages` 等共享分支不接受直接提交，一律通过功能分支合并。
+4. **Never commit directly to shared branches**: shared branches such as `main` and `gh-pages` do not accept direct commits — always merge through a feature branch.
 
-## 提交规范
+## Commit Convention
 
-提交信息遵循 [Conventional Commits](https://www.conventionalcommits.org/)，由 `commitlint` 自动校验（`.husky/commit-msg`）。
+Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/) and are validated automatically by `commitlint` (`.husky/commit-msg`).
 
-### 格式
+### Format
 
 ```text
 <type>: <description>
 ```
 
-- **不使用 scope**，即只写 `<type>: ...` 而非 `<type>(<scope>): ...`（commitlint 通过 `scope-empty` 规则强制校验，带 scope 的提交会被拦截）。
-- header 长度不超过 **120** 个字符。
-- 描述应清晰说明改动内容，避免使用无信息量的占位描述（如 `update`）。
+- **No scope**, i.e. write `<type>: ...` instead of `<type>(<scope>): ...` (enforced by the `scope-empty` rule in commitlint; commits with a scope will be rejected).
+- The header must not exceed **120** characters.
+- The description should clearly state what changed; avoid placeholder descriptions that carry no information (e.g. `update`).
 
-### 支持的 type
+### Supported Types
 
-| type | 说明 |
+| type | Description |
 | :--- | :--- |
-| `feat` | 新增功能或组件 |
-| `fix` | 修复缺陷 |
-| `docs` | 文档变更 |
-| `style` | 代码格式 / 样式调整（不影响逻辑） |
-| `refactor` | 重构（既非新增功能也非修复缺陷） |
-| `perf` | 性能优化 |
-| `test` | 测试相关 |
-| `chore` | 构建流程、工具链、配置等杂项 |
-| `revert` | 回滚提交 |
+| `feat` | New feature or component |
+| `fix` | Bug fix |
+| `docs` | Documentation changes |
+| `style` | Code formatting / style adjustments (no logic impact) |
+| `refactor` | Refactoring (neither a new feature nor a bug fix) |
+| `perf` | Performance optimization |
+| `test` | Testing-related |
+| `chore` | Build process, tooling, configuration and other chores |
+| `revert` | Revert a commit |
 
-### 示例
+### Examples
 
 ```text
 feat: 新增 Menu 菜单组件
@@ -109,33 +111,33 @@ docs: 更新 Menu 组件 API 文档
 chore: 补齐 type-check 门禁并强化发布流程
 ```
 
-## 代码质量门禁
+## Quality Gates
 
-项目通过 [husky](https://github.com/typicode/husky) 配置了三道 Git 钩子，请勿使用 `--no-verify` 跳过。
+The project configures three Git hooks via [husky](https://github.com/typicode/husky). Please do not skip them with `--no-verify`.
 
-| 钩子 | 触发时机 | 执行内容 |
+| Hook | Trigger | Action |
 | :--- | :--- | :--- |
-| `pre-commit` | `git commit` 前 | `lint-staged`：对暂存文件执行 Prettier 格式化与 ESLint 自动修复 |
-| `commit-msg` | 输入提交信息后 | `commitlint`：校验提交信息格式 |
-| `pre-push` | `git push` 前 | `type-check`：执行 `vue-tsc` 全量类型检查 |
+| `pre-commit` | before `git commit` | `lint-staged`: run Prettier formatting and ESLint auto-fix on staged files |
+| `commit-msg` | after the commit message is entered | `commitlint`: validate the commit message format |
+| `pre-push` | before `git push` | `type-check`: run a full `vue-tsc` type check |
 
-### 常用检查命令
+### Common Check Commands
 
 ```sh
-pnpm lint         # ESLint 检查并自动修复
-pnpm lint:check   # ESLint 只读检查（不修改文件）
-pnpm type-check   # 类型检查
-pnpm test         # 单元测试（vitest）
-pnpm check        # 聚合检查：lint:check + type-check + test
+pnpm lint         # ESLint check with auto-fix
+pnpm lint:check   # ESLint check only (does not modify files)
+pnpm type-check   # Type checking
+pnpm test         # Unit tests (vitest)
+pnpm check        # Aggregate check: lint:check + type-check + test
 ```
 
-提交前建议先本地运行 `pnpm check`，确保通过后再推送。
+Before committing, it is recommended to run `pnpm check` locally and make sure it passes before pushing.
 
-## 开发流程
+## Development Workflow
 
-1. 从最新 `main` 切出符合命名规范的功能分支。
-2. 开发组件 / 功能，同步补充 `docs/` 下对应的文档与演示。
-3. 本地运行 `pnpm check` 确保 lint 与类型检查通过。
-4. 按提交规范提交（钩子会自动校验）。
-5. 推送分支并发起 Pull Request，描述改动内容。
-6. 合入 `main` 后删除功能分支。
+1. Branch off the latest `main` with a feature branch that follows the naming convention.
+2. Develop the component / feature, and add the corresponding docs and demos under `docs/`.
+3. Run `pnpm check` locally to make sure lint and type checks pass.
+4. Commit following the commit convention (the hooks validate automatically).
+5. Push the branch and open a Pull Request describing your changes.
+6. Delete the feature branch after it is merged into `main`.

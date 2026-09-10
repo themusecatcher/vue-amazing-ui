@@ -219,6 +219,12 @@ pnpm dev
 pnpm docs:dev
 ```
 
+## 参与贡献
+
+`Vue Amazing UI` 的每一次成长，都离不开每一位贡献者。无论是新增组件、修复缺陷，还是完善文档与示例，都欢迎参与。
+
+提交代码前，请先阅读[贡献指南](CONTRIBUTING.zh-CN.md)。
+
 ## 博客
 
 [My CSDN Blogs](https://themusecatcher.blog.csdn.net)
