@@ -7,15 +7,19 @@ set -e
 if [ -t 1 ]; then
     c_bold=$'\033[1m'
     c_green=$'\033[32m'
+    c_link=$'\033[1;34m'
     c_reset=$'\033[0m'
 
     # OSC 8 终端超链接：把 URL 包裹在 OSC 8 序列中，支持的终端
     # （iTerm2 / VSCode / WezTerm / GNOME Terminal 3.26+ / macOS Terminal 13+）会渲染为可点击链接；
     # 不被支持的终端按 OSC 规范自动忽略控制序列，无副作用
-    osc8_start() { printf '\033]8;;%s\033\\' "$1"; }
-    osc8_end() { printf '\033]8;;\033\\'; }
+    # 同时套用加粗蓝色，避免链接在终端里以默认前景色（白色）显示
+    osc8_start() { printf '%s\033]8;;%s\033\\' "${c_link}" "$1"; }
+    osc8_end() { printf '\033]8;;\033\\%s' "${c_reset}"; }
 else
     # CI 环境无 TTY 时降级为 noop，避免控制序列污染日志
+    c_link=""
+    c_reset=""
     osc8_start() { :; }
     osc8_end() { :; }
 fi
@@ -23,7 +27,7 @@ fi
 # 打印组件库发布成功横幅
 # 设计要点：
 # 1. 去掉上下两条绿色横线（═ × N）与绿底色块（bg_green），整体更清爽
-# 2. URL 用 OSC 8 序列包裹，在支持的终端中渲染为可点击链接
+# 2. URL 用 OSC 8 序列包裹，并以加粗蓝色渲染
 # 3. 标题用绿色加粗作视觉锚点，标签行用 emoji + 缩进对齐，无多余装饰
 print_publish_success_banner() {
     local pkg="vue-amazing-ui"
@@ -39,7 +43,7 @@ print_publish_success_banner() {
     printf '   📦 版本号    %s（git tag: %s）\n' "${version}" "${tag}"
     printf '   ⏰ 发布时间  %s\n' "${publish_time}"
 
-    # URL 行：OSC 8 包裹的 npm 详情链接（终端支持时显示为可点击）
+    # URL 行：OSC 8 包裹的 npm 详情链接（加粗蓝色，终端支持时显示为可点击）
     printf '   🔗 npm 详情  '
     osc8_start "${npm_url}"
     printf '%s' "${npm_url}"
@@ -142,11 +146,11 @@ print_publish_success_banner
 retry=0
 until pnpm up vue-amazing-ui@$version; do
   retry=$((retry + 1))
-  if [ $retry -ge 3 ]; then
-    echo "❌ pnpm up 重试 6 次仍失败，请稍后手动执行: pnpm up vue-amazing-ui@$version"
+  if [ $retry -ge 10 ]; then
+    echo "❌ pnpm up 重试 10 次仍失败，请稍后手动执行: pnpm up vue-amazing-ui@$version"
     exit 1
   fi
-  printf "⏳ registry 可能尚未同步 vue-amazing-ui 版本 %s，10 秒后重试 (%s/6)...\n" "$version" "$retry"
+  printf "⏳ registry 可能尚未同步 vue-amazing-ui 版本 %s，10 秒后重试 (%s/10)...\n" "$version" "$retry"
   sleep 10
 done
 
