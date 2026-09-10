@@ -19,6 +19,13 @@ link() {
   printf '\033[1;34m\033]8;;%s\033\\%s\033]8;;\033\\\033[0m' "$1" "$1"
 }
 
+# set -e 会让脚本在任一命令失败时静默退出，末尾的时间戳因此被跳过；
+# 用 ERR trap 补齐失败位置与时间戳（主动 exit 1 不触发 ERR，无需在此处理）
+print_time() {
+  echo "⏰ $(date '+%Y-%m-%d %H:%M:%S')"
+}
+trap 'echo "❌ 脚本在第 $LINENO 行执行失败，未部署到 GitHub Pages"; print_time' ERR
+
 commitMessage=$1
 
 # 是否跳过组件库构建（publish.sh 已构建过时传 1，避免重复构建）
@@ -74,4 +81,4 @@ fi
 git push
 
 printf '✅ 部署完成：%s\n' "$(link 'https://themusecatcher.github.io/vue-amazing-ui/')"
-echo "⏰ $(date '+%Y-%m-%d %H:%M:%S')"
+print_time
