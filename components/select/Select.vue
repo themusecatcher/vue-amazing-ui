@@ -1,6 +1,6 @@
 ​
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch } from 'vue'
+import { ref, computed, watchEffect, watch, onUnmounted } from 'vue'
 import type { CSSProperties } from 'vue'
 import Empty from 'components/empty'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
@@ -191,6 +191,13 @@ watchEffect(() => {
     }
   } else {
     filterOptions.value = props.options
+  }
+})
+// 卸载时取消面板关闭态的延迟重置定时器，避免回调在卸载后仍持有组件作用域并写入状态
+onUnmounted(() => {
+  if (filterResetTimer) {
+    clearTimeout(filterResetTimer)
+    filterResetTimer = null
   }
 })
 watchEffect(() => {

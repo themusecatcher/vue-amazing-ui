@@ -125,7 +125,7 @@
     "vitepress": "^1.6.4",
     "vitest": "4.1.11",
     "vue": "^3.5.42",
-    "vue-amazing-ui": "2.7.1",
+    "vue-amazing-ui": "2.7.2",
     "vue-router": "^4.6.4",
     "vue-tsc": "^3.2.5"
   },
