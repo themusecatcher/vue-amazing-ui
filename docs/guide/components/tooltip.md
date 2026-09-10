@@ -10,8 +10,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-const containerRef = ref()
-const tooltipRef = ref()
+import { Tooltip } from 'vue-amazing-ui'
+const containerRef = ref<HTMLDivElement>()
+const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null)
 const buttonWidth = 70
 const presetColors = [
   'pink',
@@ -470,7 +471,7 @@ const customColors = ['#f50', '#2db7f5', '#87d068', '#108ee9']
 
 ## 按键控制
 
-*`enter` 显示；`esc` 关闭，仅当 `trigger: 'click'` 时生效*
+*`enter` 切换显示；`esc` 关闭，仅当 `trigger: 'click'` 时生效*
 
 <br/>
 
@@ -510,7 +511,8 @@ const customColors = ['#f50', '#2db7f5', '#87d068', '#108ee9']
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const containerRef = ref()
+import { Tooltip } from 'vue-amazing-ui'
+const containerRef = ref<HTMLDivElement>()
 </script>
 <template>
   <div
@@ -605,8 +607,8 @@ const containerRef = ref()
   <Tooltip ref="tooltipRef" tooltip="Vue Amazing UI">
     <Button type="primary">Methods Tooltip</Button>
   </Tooltip>
-  <Button type="primary" @click="tooltipRef.show()">显示</Button>
-  <Button @click="tooltipRef.hide()">隐藏</Button>
+  <Button type="primary" @click="tooltipRef?.show()">显示</Button>
+  <Button @click="tooltipRef?.hide()">隐藏</Button>
 </Space>
 
 ::: details Show Code
@@ -614,15 +616,16 @@ const containerRef = ref()
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const tooltipRef = ref()
+import { Tooltip } from 'vue-amazing-ui'
+const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null)
 </script>
 <template>
   <Space>
     <Tooltip ref="tooltipRef" tooltip="Vue Amazing UI">
       <Button type="primary">Methods Tooltip</Button>
     </Tooltip>
-    <Button type="primary" @click="tooltipRef.show()">显示</Button>
-    <Button @click="tooltipRef.hide()">隐藏</Button>
+    <Button type="primary" @click="tooltipRef?.show()">显示</Button>
+    <Button @click="tooltipRef?.hide()">隐藏</Button>
   </Space>
 </template>
 ```
@@ -666,7 +669,7 @@ const tooltipRef = ref()
 | placement | 文字提示位置 | 'top' &#124; 'topLeft' &#124; 'topRight' &#124; 'bottom' &#124; 'bottomLeft' &#124; 'bottomRight' &#124; 'left' &#124; 'leftTop' &#124; 'leftBottom' &#124; 'right' &#124; 'rightTop' &#124; 'rightBottom' | 'top' |
 | flip | 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true |
 | trigger | 文字提示触发方式 | 'hover' &#124; 'click' &#124; 'focus' &#124; 'contextmenu' | 'hover' |
-| keyboard | 是否支持按键操作 (`enter` 显示；`esc` 关闭)，仅当 `trigger: 'click'` 时生效 | boolean | false |
+| keyboard | 是否支持按键操作 (`enter` 切换显示；`esc` 关闭)，仅当 `trigger: 'click'` 时生效 | boolean | false |
 | disabled | 是否禁用文字提示，禁用后不响应任何触发 | boolean | false |
 | to | 弹出框挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，`false` 会待在原地 | string &#124; HTMLElement &#124; false | 'body' |
 | transitionDuration | 文字提示动画的过渡持续时间，单位 `ms` | number | 100 |

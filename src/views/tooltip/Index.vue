@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const containerRef = ref()
-const tooltipRef = ref()
+import { Tooltip } from 'vue-amazing-ui'
+const containerRef = ref<HTMLDivElement>()
+const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null)
 const buttonWidth = 70
 const presetColors = [
   'pink',
