@@ -52,8 +52,9 @@ const FontGap = 3
 // 和 ref() 不同，浅层 ref 的内部值将会原样存储和暴露，并且不会被深层递归地转为响应式。只有对 .value 的访问是响应式的。
 const containerRef = shallowRef() // ref() 的浅层作用形式
 const watermarkRef = shallowRef()
-const htmlRef = shallowRef(document.documentElement) // <html></html>元素
-const isDark = shallowRef(htmlRef.value.classList.contains('dark')) // 是否开启暗黑模式
+// SSR（Node）环境无 document，先取空值；浏览器端与原来一致，setup 期即可拿到 <html> 元素
+const htmlRef = shallowRef<HTMLElement | null>(typeof document !== 'undefined' ? document.documentElement : null) // <html></html>元素
+const isDark = shallowRef(htmlRef.value?.classList.contains('dark') ?? false) // 是否开启暗黑模式
 const stopObservation = shallowRef(false)
 const gapX = computed(() => props.gap?.[0] ?? 100)
 const gapY = computed(() => props.gap?.[1] ?? 100)
@@ -121,7 +122,7 @@ onBeforeUnmount(() => {
 useMutationObserver(
   htmlRef,
   () => {
-    isDark.value = htmlRef.value.classList.contains('dark')
+    isDark.value = htmlRef.value?.classList.contains('dark') ?? false
     destroyWatermark()
     renderWatermark()
   },
@@ -162,7 +163,7 @@ function appendWatermark(base64Url: string, markWidth: number) {
         backgroundSize: `${(gapX.value + markWidth) * BaseSize.value}px`
       })
     )
-    if (props.fullscreen) {
+    if (props.fullscreen && htmlRef.value) {
       htmlRef.value.setAttribute('style', 'position: relative')
       htmlRef.value.append(watermarkRef.value)
     } else {

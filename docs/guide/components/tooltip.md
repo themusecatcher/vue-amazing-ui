@@ -10,8 +10,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-const containerRef = ref()
-const tooltipRef = ref()
+import { Tooltip } from 'vue-amazing-ui'
+const containerRef = ref<HTMLDivElement>()
+const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null)
 const buttonWidth = 70
 const presetColors = [
   'pink',
@@ -510,7 +511,7 @@ const customColors = ['#f50', '#2db7f5', '#87d068', '#108ee9']
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const containerRef = ref()
+const containerRef = ref<HTMLDivElement>()
 </script>
 <template>
   <div
@@ -605,8 +606,8 @@ const containerRef = ref()
   <Tooltip ref="tooltipRef" tooltip="Vue Amazing UI">
     <Button type="primary">Methods Tooltip</Button>
   </Tooltip>
-  <Button type="primary" @click="tooltipRef.show()">显示</Button>
-  <Button @click="tooltipRef.hide()">隐藏</Button>
+  <Button type="primary" @click="tooltipRef?.show()">显示</Button>
+  <Button @click="tooltipRef?.hide()">隐藏</Button>
 </Space>
 
 ::: details Show Code
@@ -614,15 +615,16 @@ const containerRef = ref()
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const tooltipRef = ref()
+import { Tooltip } from 'vue-amazing-ui'
+const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null)
 </script>
 <template>
   <Space>
     <Tooltip ref="tooltipRef" tooltip="Vue Amazing UI">
       <Button type="primary">Methods Tooltip</Button>
     </Tooltip>
-    <Button type="primary" @click="tooltipRef.show()">显示</Button>
-    <Button @click="tooltipRef.hide()">隐藏</Button>
+    <Button type="primary" @click="tooltipRef?.show()">显示</Button>
+    <Button @click="tooltipRef?.hide()">隐藏</Button>
   </Space>
 </template>
 ```

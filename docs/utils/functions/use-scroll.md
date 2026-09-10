@@ -129,7 +129,7 @@ export function useScroll(
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useScroll } from 'vue-amazing-ui'
-const scrollRef = ref()
+const scrollRef = ref<HTMLDivElement>()
 const { x, xScrollMax, y, yScrollMax, isScrolling, left, right, top, bottom } = useScroll(scrollRef, 0, onScroll, onStop)
 function onScroll(e: Event) {
   console.log('scroll', e)
@@ -190,7 +190,7 @@ function onStop(e: Event) {
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useScroll } from 'vue-amazing-ui'
-const scrollRef = ref()
+const scrollRef = ref<HTMLDivElement>()
 const { x, xScrollMax, y, yScrollMax, isScrolling, left, right, top, bottom } = useScroll(
   scrollRef,
   0,

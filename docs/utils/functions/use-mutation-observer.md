@@ -119,7 +119,7 @@ export function useMounted(): Ref<boolean> {
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useMutationObserver } from 'vue-amazing-ui'
-const defaultSlotsRef = ref()
+const defaultSlotsRef = ref<HTMLDivElement>()
 // 监听 defaultSlotsRef DOM 变化
 const callback = (mutationsList: MutationRecord[], observer: MutationObserver) => {
   console.log('mutationsList', mutationsList)

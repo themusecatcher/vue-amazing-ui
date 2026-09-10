@@ -24,7 +24,8 @@ export function useMutationObserver(
   callback: MutationCallback,
   options: object = {}
 ): { start: () => void; stop: () => void } {
-  const isSupported = useSupported(() => window && 'MutationObserver' in window)
+  // SSR（Node）环境无 window，需先判断存在性：下面的 immediate 侦听器会立即求值该 computed
+  const isSupported = useSupported(() => typeof window !== 'undefined' && 'MutationObserver' in window)
   const stopObservation = ref(false)
   let observer: MutationObserver | undefined
   const targets = computed(() => {
@@ -95,7 +96,8 @@ export function useResizeObserver(
   callback: ResizeObserverCallback,
   options: object = {}
 ): { start: () => void; stop: () => void } {
-  const isSupported = useSupported(() => window && 'ResizeObserver' in window)
+  // SSR（Node）环境无 window，需先判断存在性：下面的 immediate 侦听器会立即求值该 computed
+  const isSupported = useSupported(() => typeof window !== 'undefined' && 'ResizeObserver' in window)
   let observer: ResizeObserver | undefined
   const stopObservation = ref(false)
   const targets = computed(() => {
@@ -291,8 +293,9 @@ export function useScrollParent(
 } {
   const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
   const scrollTop = ref<number>(0) // scrollTarget 的滚动位置
-  const viewportWidth = ref(document.documentElement.clientWidth)
-  const viewportHeight = ref(document.documentElement.clientHeight)
+  // SSR（Node）环境无 document，视口尺寸取 0；浏览器端初始值与原来一致
+  const viewportWidth = ref(typeof document !== 'undefined' ? document.documentElement.clientWidth : 0)
+  const viewportHeight = ref(typeof document !== 'undefined' ? document.documentElement.clientHeight : 0)
   const { isSupported: passiveSupported } = useOptionsSupported('passive')
   const usePassive = options.passive !== false && passiveSupported.value
 
@@ -335,7 +338,10 @@ export function useScrollParent(
     options.onCleanup?.()
   }
 
-  useEventListener(window, 'resize', getViewportSize)
+  // 实参 window 在 setup 期求值，SSR（Node）下必须先判断存在性再调用
+  if (typeof window !== 'undefined') {
+    useEventListener(window, 'resize', getViewportSize)
+  }
   onMounted(observeScroll)
   onBeforeUnmount(cleanup)
 
