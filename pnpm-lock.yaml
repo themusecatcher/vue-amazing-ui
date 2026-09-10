@@ -148,8 +148,8 @@ importers:
         specifier: ^3.5.42
         version: 3.5.42(typescript@5.9.3)
       vue-amazing-ui:
-        specifier: 2.7.1
-        version: 2.7.1(vue@3.5.42(typescript@5.9.3))
+        specifier: 2.7.2
+        version: 2.7.2(vue@3.5.42(typescript@5.9.3))
       vue-router:
         specifier: ^4.6.4
         version: 4.6.4(vue@3.5.42(typescript@5.9.3))
@@ -3564,9 +3564,11 @@ packages:
   vscode-uri@3.1.0:
     resolution: {integrity: sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==}
 
-  vue-amazing-ui@2.7.1:
-    resolution: {integrity: sha512-1/yvd3EKb6lyiHvoJS2QvHLAPIZP9zrsjz+bL9NY1nO+MsDs7M8kU+h1y2ZDDIsSjMKMe46D+fjDtMydXcGTDg==}
-    engines: {node: '>=20.19.0', pnpm: '>=9'}
+  vue-amazing-ui@2.7.2:
+    resolution: {integrity: sha512-p4MjeLprGYjJ+JDoItbT4eZutuDzUZgN1t1pDEOiok+y+IqCjpxvXbldV6d+zQugG8EvENycKoH1gPBDlBkB2g==}
+    engines: {node: ^20.19.0 || >=22.12.0, pnpm: '>=11'}
+    peerDependencies:
+      vue: ^3.4.0
 
   vue-component-type-helpers@3.3.11:
     resolution: {integrity: sha512-LwcxzeliO9fkQcpJG0PoX8X5kmAhKmH9wkpDLxNabwzkQ9Zeib2YVHwFV4pcWmMLfXVfjr/dSV+DaJ3cIPgSNA==}
@@ -7161,7 +7163,7 @@ snapshots:
 
   vscode-uri@3.1.0: {}
 
-  vue-amazing-ui@2.7.1(vue@3.5.42(typescript@5.9.3)):
+  vue-amazing-ui@2.7.2(vue@3.5.42(typescript@5.9.3)):
     dependencies:
       '@ant-design/colors': 8.0.1
       '@ctrl/tinycolor': 4.2.0
@@ -7172,9 +7174,9 @@ snapshots:
       qrcode: 1.5.4
       seemly: 0.3.10
       swiper: 12.1.2
+      vue: 3.5.42(typescript@5.9.3)
     transitivePeerDependencies:
       - '@vue/composition-api'
-      - vue
 
   vue-component-type-helpers@3.3.11: {}
 
