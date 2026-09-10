@@ -34,7 +34,7 @@ enum ColorStyle {
   red = '#ff4d4f',
   gray = '#00000040'
 }
-const descRef = ref()
+const descRef = ref<HTMLElement[]>([]) // 所有时间轴描述节点的模板引用数组
 const dotsHeight = ref<string[]>([])
 const totalWidth = computed(() => {
   if (typeof props.width === 'number') {

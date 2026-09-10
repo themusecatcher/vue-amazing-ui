@@ -285,7 +285,7 @@ const show = ref(false)
 
 <br/>
 
-> *更多使用方式请参考 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html)*
+> *更多使用方式请参考 [文字提示 Tooltip](./tooltip.md)*
 
 ## APIs
 
@@ -300,7 +300,7 @@ contentStyle | 卡片内容样式 | [CSSProperties](https://cn.vuejs.org/api/uti
 keyboard | 是否支持按键操作 (`enter` 显示；`esc` 关闭) | boolean | true
 tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 
-更多属性请参考 [Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)
+更多属性请参考 [Tooltip Props](./tooltip.md#tooltip)
 
 ## Slots
 

@@ -1,5 +1,8 @@
 /**
- * 使用 requestAnimationFrame 实现的延迟 setTimeout 或间隔 setInterval 调用函数
+ * 基于 requestAnimationFrame 实现的延时 / 间歇调用函数
+ *
+ * 注意：回调与渲染帧绑定 —— 页面不可见时会暂停、实际延迟比 delay 多出至多一帧，
+ * 与 setTimeout / setInterval 不等价，仅适用于需要与动画帧同步的场景
  *
  * @param {Function} fn 要执行的函数
  * @param {number} [delay = 0] 延迟的时间，单位为 ms，默认为 0，表示不延迟立即执行
@@ -48,7 +51,7 @@ export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = 
  *              如果传入的 raf 对象或其 id 无效，则会打印警告
  */
 export function cancelRaf(raf: AnimationFrameID): void {
-  if (raf && raf.id && typeof raf.id === 'number') {
+  if (raf && typeof raf?.id === 'number') {
     cancelAnimationFrame(raf.id)
   } else {
     console.warn('cancelRaf received an invalid id:', raf)

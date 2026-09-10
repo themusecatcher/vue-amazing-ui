@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
-import { rafTimeout, cancelRaf, useEventListener, useResizeObserver, useInject } from 'components/utils'
+import { useEventListener, useResizeObserver, useInject } from 'components/utils'
 import { useTransition } from '@vueuse/core'
 import type { CubicBezierPoints, EasingFunction } from '@vueuse/core'
 import Spin, { type SpinProps } from 'components/spin'
@@ -62,15 +62,16 @@ const props = withDefaults(defineProps<Props>(), {
   slideFunction: () => [0.65, 0, 0.35, 1] as CubicBezierPoints
 })
 const offset = ref(0) // 滑动偏移值
-const slideTimer = ref() // 轮播切换定时器
+const slideTimer = ref<ReturnType<typeof setTimeout> | null>(null) // 轮播切换定时器
 const stopCarousel = ref(false) // 鼠标悬浮时，停止切换标志
 const switchPrevent = ref(false) // 在滑动切换过程中，禁用其他所有切换操作
-const moveEffectRaf = ref() // 移动过程 requestAnimationFrame 的返回值，一个 long 整数，请求 ID，是回调列表中唯一的标识
-const targetPosition = ref() // 目标移动位置
-const carouselRef = ref() // carousel DOM 引用
+const moveEffectRaf = ref<number | null>(null) // 移动过程 requestAnimationFrame 的返回值，一个 long 整数，请求 ID，是回调列表中唯一的标识
+const fadeTimer = ref<ReturnType<typeof setTimeout> | null>(null) // 渐变动画结束后的定时器，用于解锁切换并重启自动轮播
+const targetPosition = ref<number>() // 目标移动位置
+const carouselRef = ref<HTMLElement | null>(null) // carousel DOM 引用
 const activeSwitcher = ref(1) // 当前展示图片标识
-const imageWidth = ref() // 图片宽度
-const imageHeight = ref() // 图片高度
+const imageWidth = ref<number>() // 图片宽度
+const imageHeight = ref<number>() // 图片高度
 const complete = ref(Array(props.images.length).fill(false)) // 图片是否加载完成
 const { colorPalettes } = useInject('Carousel') // 主题色注入
 const emits = defineEmits(['change', 'click'])
@@ -94,10 +95,11 @@ const verticalSlide = computed(() => {
 })
 // 每次移动的单位距离
 const moveUnitDistance = computed(() => {
+  // 尺寸未测量时按 0 处理，调用侧以 falsy 判定「尚未就绪」，与原先的 undefined 行为一致
   if (verticalSlide.value) {
-    return imageHeight.value
+    return imageHeight.value ?? 0
   } else {
-    return imageWidth.value
+    return imageWidth.value ?? 0
   }
 })
 // 指示点选中颜色
@@ -139,16 +141,21 @@ watch(
 watch(activeSwitcher, (to) => {
   emits('change', to)
 })
-useEventListener(document, 'visibilitychange', visibilityChange)
+// 实参 document 在 setup 期求值，SSR（Node）下必须先判断存在性再调用
+if (typeof document !== 'undefined') {
+  useEventListener(document, 'visibilitychange', visibilityChange)
+}
 useResizeObserver(carouselRef, () => {
   getImageSize()
   initCarousel()
 })
 function initCarousel(): void {
-  slideTimer.value && cancelRaf(slideTimer.value)
+  slideTimer.value && clearTimeout(slideTimer.value)
+  fadeTimer.value && clearTimeout(fadeTimer.value)
   moveEffectRaf.value && cancelAnimationFrame(moveEffectRaf.value)
   switchPrevent.value = false
-  if (props.effect === 'slide') {
+  // 尺寸未就绪时跳过换算，避免 offset 被写成 NaN 而渲染出 translateX(NaNpx)
+  if (props.effect === 'slide' && moveUnitDistance.value) {
     offset.value = (activeSwitcher.value - 1) * moveUnitDistance.value
   }
   onStart()
@@ -159,6 +166,7 @@ function onComplete(index: number): void {
 }
 // 获取每张图片尺寸
 function getImageSize(): void {
+  if (!carouselRef.value) return
   imageWidth.value = carouselRef.value.offsetWidth
   imageHeight.value = carouselRef.value.offsetHeight
 }
@@ -177,7 +185,9 @@ function visibilityChange(): void {
   const visibility = document.visibilityState
   if (visibility === 'hidden') {
     // hidden
-    slideTimer.value && cancelRaf(slideTimer.value)
+    // 两个定时器都要取消：改用 setTimeout 后回调在后台仍会触发，fade 效果下会违背「暂停切换」的语义
+    slideTimer.value && clearTimeout(slideTimer.value)
+    fadeTimer.value && clearTimeout(fadeTimer.value)
     offset.value = originNumber.value + distance.value
     switchPrevent.value = false
   } else {
@@ -194,30 +204,33 @@ function onStart(): void {
   }
 }
 function onStop(): void {
-  slideTimer.value && cancelRaf(slideTimer.value)
+  slideTimer.value && clearTimeout(slideTimer.value)
   stopCarousel.value = true
   // console.log('Carousel Stop')
 }
 function autoSlide() {
-  if (!stopCarousel.value) {
-    slideTimer.value && cancelRaf(slideTimer.value)
-    slideTimer.value = rafTimeout(() => {
-      switchPrevent.value = true // 禁用导航切换
-      if (props.effect === 'slide') {
-        const target = (offset.value % (imageAmount.value * moveUnitDistance.value)) + moveUnitDistance.value
-        moveLeft(target)
-        activeSwitcher.value = (activeSwitcher.value % imageAmount.value) + 1
-      } else {
-        // fade
-        moveFade('left')
-      }
-    }, props.interval)
-  }
+  if (stopCarousel.value) return
+  // 容器尺寸为 0 或尚未完成测量时无法计算位移，直接跳过本次调度：
+  // 否则 offset % (imageAmount * 0) 会得到 NaN，使 moveLeftEffect / moveRightEffect 的帧循环永不收敛。
+  // 尺寸就绪后由 ResizeObserver → initCarousel → onStart 重新启动自动轮播。
+  if (!moveUnitDistance.value) return
+  slideTimer.value && clearTimeout(slideTimer.value)
+  slideTimer.value = setTimeout(() => {
+    switchPrevent.value = true // 禁用导航切换
+    if (props.effect === 'slide') {
+      const target = (offset.value % (imageAmount.value * moveUnitDistance.value)) + moveUnitDistance.value
+      moveLeft(target)
+      activeSwitcher.value = (activeSwitcher.value % imageAmount.value) + 1
+    } else {
+      // fade
+      moveFade('left')
+    }
+  }, props.interval)
 }
 function onLeftArrow(): void {
   if (!switchPrevent.value) {
     switchPrevent.value = true
-    slideTimer.value && cancelRaf(slideTimer.value)
+    slideTimer.value && clearTimeout(slideTimer.value)
     if (props.effect === 'slide') {
       const target = ((activeSwitcher.value + imageAmount.value - 2) % imageAmount.value) * moveUnitDistance.value
       moveRight(target)
@@ -231,7 +244,7 @@ function onLeftArrow(): void {
 function onRightArrow(): void {
   if (!switchPrevent.value) {
     switchPrevent.value = true
-    slideTimer.value && cancelRaf(slideTimer.value)
+    slideTimer.value && clearTimeout(slideTimer.value)
     if (props.effect === 'slide') {
       const target = activeSwitcher.value * moveUnitDistance.value
       moveLeft(target)
@@ -257,7 +270,8 @@ function moveFade(direction: 'left' | 'right' | 'switch', n?: number): void {
   } else {
     activeSwitcher.value = n as number
   }
-  rafTimeout(() => {
+  fadeTimer.value && clearTimeout(fadeTimer.value)
+  fadeTimer.value = setTimeout(() => {
     switchPrevent.value = false
     if (props.autoplay) {
       autoSlide()
@@ -279,7 +293,7 @@ function moveEffect(): void {
   }
 }
 function moveLeftEffect(): void {
-  if (offset.value >= targetPosition.value) {
+  if (targetPosition.value !== undefined && offset.value >= targetPosition.value) {
     switchPrevent.value = false
     if (props.autoplay) {
       autoSlide() // 自动间隔切换下一张
@@ -299,7 +313,7 @@ function moveLeft(target: number): void {
   moveEffectRaf.value = requestAnimationFrame(moveLeftEffect)
 }
 function moveRightEffect(): void {
-  if (offset.value <= targetPosition.value) {
+  if (targetPosition.value !== undefined && offset.value <= targetPosition.value) {
     switchPrevent.value = false
     if (props.autoplay) {
       autoSlide()
@@ -322,7 +336,7 @@ function moveRight(target: number): void {
 function onSwitch(n: number): void {
   if (!switchPrevent.value && activeSwitcher.value !== n) {
     switchPrevent.value = true
-    slideTimer.value && cancelRaf(slideTimer.value)
+    slideTimer.value && clearTimeout(slideTimer.value)
     if (n < activeSwitcher.value) {
       // 往右滑动
       if (props.effect === 'slide') {
@@ -367,6 +381,11 @@ function next(): void {
 function getCurrentIndex(): number {
   return activeSwitcher.value
 }
+onBeforeUnmount(() => {
+  slideTimer.value && clearTimeout(slideTimer.value)
+  fadeTimer.value && clearTimeout(fadeTimer.value)
+  moveEffectRaf.value && cancelAnimationFrame(moveEffectRaf.value)
+})
 defineExpose({
   to,
   prev,

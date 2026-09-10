@@ -1,2 +1,2 @@
-# 在 git commit 命令执行前，但在用户输入提交信息后触发
-npx --no-install lint-staged
+# 在 git commit 执行时、提交信息编辑器打开前触发，对暂存文件跑 prettier + eslint
+pnpm exec lint-staged

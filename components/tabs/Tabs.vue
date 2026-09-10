@@ -47,17 +47,17 @@ const props = withDefaults(defineProps<Props>(), {
   activeKey: undefined
 })
 defineSlots<TabsSlots>()
-const tabsRef = ref() // 所有 tabs 的 ref 模板引用
+const tabsRef = ref<HTMLElement[]>([]) // 所有 tabs 的 ref 模板引用
 const tabBarLeft = ref(0) // tabBar 的水平偏移量
 const tabBarTop = ref(0) // tabBar 的垂直偏移量
 const tabBarWidth = ref(0) // tabBar 的宽度
 const tabBarHeight = ref(0) // tabBar 的高度
-const wrapRef = ref()
-const wrapWidth = ref()
-const wrapHeight = ref()
-const navRef = ref()
-const navWidth = ref()
-const navHeight = ref()
+const wrapRef = ref<HTMLElement | null>(null)
+const wrapWidth = ref<number>()
+const wrapHeight = ref<number>()
+const navRef = ref<HTMLElement | null>(null)
+const navWidth = ref<number>()
+const navHeight = ref<number>()
 const showWheel = ref(false) // 标签页是否存在滚动
 const scrollMax = ref(0) // 最大滚动距离
 const scrollLeft = ref(0) // 水平滚动距离
@@ -171,6 +171,7 @@ function getNavSize(): void {
   }
 }
 function getNavHorizontalSize(): void {
+  if (!wrapRef.value || !navRef.value) return
   wrapWidth.value = wrapRef.value.offsetWidth
   navWidth.value = navRef.value.offsetWidth
   if (navWidth.value > wrapWidth.value) {
@@ -184,6 +185,7 @@ function getNavHorizontalSize(): void {
   getBarDisplay()
 }
 function getNavVerticalSize(): void {
+  if (!wrapRef.value || !navRef.value) return
   wrapHeight.value = wrapRef.value.offsetHeight
   navHeight.value = navRef.value.offsetHeight
   if (navHeight.value > wrapHeight.value) {
@@ -213,7 +215,7 @@ function getBarHorizontalDisplay(): void {
         transition.value = true
         scrollLeft.value = tabBarLeft.value
       }
-      const targetScroll = tabBarLeft.value + tabBarWidth.value - wrapWidth.value
+      const targetScroll = tabBarLeft.value + tabBarWidth.value - (wrapWidth.value ?? 0)
       if (targetScroll > scrollLeft.value) {
         transition.value = true
         scrollLeft.value = targetScroll
@@ -234,7 +236,7 @@ function getBarVerticalDisplay(): void {
         transition.value = true
         scrollTop.value = tabBarTop.value
       }
-      const targetScroll = tabBarTop.value + tabBarHeight.value - wrapHeight.value
+      const targetScroll = tabBarTop.value + tabBarHeight.value - (wrapHeight.value ?? 0)
       if (targetScroll > scrollTop.value) {
         transition.value = true
         scrollTop.value = targetScroll

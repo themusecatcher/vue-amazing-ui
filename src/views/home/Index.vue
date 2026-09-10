@@ -30,7 +30,7 @@ const toolFunctions = [
   },
   {
     name: 'rafTimeout',
-    description: '使用 requestAnimationFrame 实现的延迟 setTimeout 或间隔 setInterval 调用函数'
+    description: '基于 requestAnimationFrame 实现的延时 / 间歇调用函数，与 setTimeout / setInterval 不等价'
   },
   {
     name: 'cancelRaf',

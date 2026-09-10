@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
   backgroundColor: '#F2F4F8',
   spinProps: () => ({})
 })
-const waterfallRef = ref() // 瀑布流容器引用
+const waterfallRef = ref<HTMLElement | null>(null) // 瀑布流容器引用
 const waterfallWidth = ref<number>(0) // 瀑布流区域宽度
 const imagesLoaded = ref<boolean[]>([]) // 图片是否加载完成
 const imagesSize = ref<{ width: number; height: number }[]>([]) // 所有图片原始尺寸
@@ -85,7 +85,7 @@ onMounted(() => {
 })
 // 窗口宽度改变时重新计算瀑布流布局
 useResizeObserver(waterfallRef, () => {
-  const currentWidth = waterfallRef.value.offsetWidth
+  const currentWidth = waterfallRef.value?.offsetWidth
   if (props.images.length && currentWidth !== waterfallWidth.value) {
     initWaterfall()
   }

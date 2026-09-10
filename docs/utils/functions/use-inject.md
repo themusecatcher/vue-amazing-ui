@@ -45,7 +45,7 @@ export function useInject(key: string): { colorPalettes: Ref<string[]>; shadowCo
  * @param {string} primaryColor 主色
  * @returns {string[]} 返回颜色调色板
  */
-function getColorPalettes(primaryColor: string): string[] {
+export function getColorPalettes(primaryColor: string): string[] {
   return generate(primaryColor)
 }
 /**
@@ -64,7 +64,7 @@ function isStableColor(color: number): boolean {
  * @param {string} [backgroundColor = '#ffffff'] 背景色
  * @returns {string} 返回透明度颜色
  */
-function getAlphaColor(frontColor: string, backgroundColor: string = '#ffffff'): string {
+export function getAlphaColor(frontColor: string, backgroundColor: string = '#ffffff'): string {
   const { r: fR, g: fG, b: fB, a: originAlpha } = new TinyColor(frontColor).toRgb()
   if (originAlpha < 1) return frontColor
   const { r: bR, g: bG, b: bB } = new TinyColor(backgroundColor).toRgb()

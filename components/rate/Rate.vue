@@ -36,9 +36,9 @@ const props = withDefaults(defineProps<Props>(), {
   value: 0
 })
 defineSlots<RateSlots>()
-const activeValue = ref()
-const hoverValue = ref()
-const tempValue = ref() // 清除时保存点击value
+const activeValue = ref<number>()
+const hoverValue = ref<number>()
+const tempValue = ref<number | null>() // 清除时保存点击value
 const emits = defineEmits(['update:value', 'change', 'hoverChange'])
 watch(
   () => props.value,
@@ -93,7 +93,7 @@ function onLeave(): void {
 }
 function onUp(): void {
   tempValue.value = null
-  if (activeValue.value < props.count) {
+  if (activeValue.value !== undefined && activeValue.value < props.count) {
     activeValue.value += props.allowHalf ? 0.5 : 1
     emits('change', activeValue.value)
     emits('update:value', activeValue.value)
@@ -101,7 +101,7 @@ function onUp(): void {
 }
 function onDown(): void {
   tempValue.value = null
-  if (activeValue.value > 0) {
+  if (activeValue.value !== undefined && activeValue.value > 0) {
     activeValue.value -= props.allowHalf ? 0.5 : 1
     emits('change', activeValue.value)
     emits('update:value', activeValue.value)
@@ -124,8 +124,8 @@ function onDown(): void {
           tabindex="0"
           class="rate-star"
           :class="{
-            'star-half': allowHalf && hoverValue >= n - 0.5 && hoverValue < n,
-            'star-full': hoverValue >= n,
+            'star-half': allowHalf && hoverValue !== undefined && hoverValue >= n - 0.5 && hoverValue < n,
+            'star-full': hoverValue !== undefined && hoverValue >= n,
             'temp-gray': !allowHalf && tempValue === n
           }"
           @click="allowHalf ? () => false : onClick(n)"

@@ -39,18 +39,19 @@ const props = withDefaults(defineProps<Props>(), {
   contentStyle: () => ({})
 })
 defineSlots<DescriptionsSlots>()
-const defaultSlotsRef = ref() // 所有渲染的 DescriptionsItems 节点引用
+const defaultSlotsRef = ref<HTMLElement | null>(null) // 所有渲染的 DescriptionsItems 节点引用
 const defaultSlots = ref(true) // 用于刷新 <slot></slot>
 const stopObservation = ref(true) // 停止观察器
 const children = ref<any[]>() // DescriptionsItems 节点
-const tdCols = ref() // 放置 DescriptionsItems 节点的模板引用数组
-const thVerticalCols = ref() // 放置垂直列表的 DescriptionsItems 节点的 th 模板引用数组
-const tdVerticalCols = ref() // 放置垂直列表的 DescriptionsItems 节点的 td 模板引用数组
-const trBorderedRows = ref() // 放置 DescriptionsItems 节点的模板引用数组（带边框）
-const thVerticalBorderedRows = ref() // 放置垂直列表的 DescriptionsItems 节点的 th 模板引用数组（带边框）
-const tdVerticalBorderedRows = ref() // 放置垂直列表的 DescriptionsItems 节点的 td 模板引用数组（带边框）
+const tdCols = ref<HTMLElement[]>([]) // 放置 DescriptionsItems 节点的模板引用数组
+const thVerticalCols = ref<HTMLElement[]>([]) // 放置垂直列表的 DescriptionsItems 节点的 th 模板引用数组
+const tdVerticalCols = ref<HTMLElement[]>([]) // 放置垂直列表的 DescriptionsItems 节点的 td 模板引用数组
+const trBorderedRows = ref<HTMLElement[]>([]) // 放置 DescriptionsItems 节点的模板引用数组（带边框）
+const thVerticalBorderedRows = ref<HTMLElement[]>([]) // 放置垂直列表的 DescriptionsItems 节点的 th 模板引用数组（带边框）
+const tdVerticalBorderedRows = ref<HTMLElement[]>([]) // 放置垂直列表的 DescriptionsItems 节点的 td 模板引用数组（带边框）
 const groupItems = ref<any[]>([]) // 处理后的 DescriptionsItems 节点数组
-const viewportWidth = ref(window.innerWidth)
+// SSR（Node）环境无 window，取 0；浏览器端初始值与原来一致
+const viewportWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 0)
 const slotsExist = useSlotsExist(['title', 'extra'])
 const showHeader = computed(() => {
   return slotsExist.title || slotsExist.extra || props.title || props.extra
@@ -91,7 +92,10 @@ watch(
     deep: true
   }
 )
-useEventListener(window, 'resize', getViewportWidth)
+// 实参 window 在 setup 期求值，SSR（Node）下必须先判断存在性再调用
+if (typeof window !== 'undefined') {
+  useEventListener(window, 'resize', getViewportWidth)
+}
 // 监听 defaultSlotsRef DOM 节点数量变化，重新渲染 Descriptions
 useMutationObserver(
   defaultSlotsRef,
@@ -123,7 +127,7 @@ function getTotalSpan(group: any): number {
 }
 // 根据不同 cloumn 处理 DescriptionsItems 节点
 async function getGroupItems() {
-  children.value = Array.from(defaultSlotsRef.value.children).filter((element: any) => {
+  children.value = Array.from(defaultSlotsRef.value?.children ?? []).filter((element: any) => {
     return element.className === (props.bordered ? 'descriptions-item-bordered' : 'descriptions-item')
   })
   if (groupItems.value.length) {

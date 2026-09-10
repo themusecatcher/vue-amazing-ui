@@ -10,8 +10,8 @@ _检查浏览器是否支持给定的事件监听器选项_
 /**
  * 检查浏览器是否支持给定的事件监听器选项
  *
- * @param prop 一个表示要检查的事件监听器属性的字符串，可选 'capture'、'once'、'passive' 或 'signal'
- * @returns 返回一个对象，包含一个 Ref 对象，其值指示浏览器是否支持给定的选项
+ * @param {'capture' | 'once' | 'passive' | 'signal'} prop 一个表示要检查的事件监听器属性的字符串，可选 'capture'、'once'、'passive' 或 'signal'
+ * @returns {{ isSupported: Ref<boolean> }} 返回一个对象，包含一个 Ref 对象，其值指示浏览器是否支持给定的选项
  */
 import { ref } from 'vue'
 import type { Ref } from 'vue'

@@ -286,7 +286,7 @@ All sponsors will be listed here, thank you very much for your support and spons
 | :-- | :-- | :-- |
 | dateFormat | Format date-time string function | (value: number &#124; string &#124; Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss') => string |
 | formatNumber | Number formatting function | (value: number &#124; string, precision: number = 2, separator: string = ',', decimal: string = '.', prefix?: string, suffix?: string) => string |
-| rafTimeout | Function to implement `setTimeout` or `setInterval` using `requestAnimationFrame` | (fn: Function, delay: number = 0, interval: boolean = false) => \{ id: number } |
+| rafTimeout | Delay / interval invocation based on `requestAnimationFrame`; not equivalent to `setTimeout` / `setInterval` | (fn: Function, delay: number = 0, interval: boolean = false) => \{ id: number } |
 | cancelRaf | Function to cancel the `rafTimeout` function | (raf: { id: number }) => void |
 | throttle | Throttle function | (fn: Function, delay: number = 300) => Function |
 | debounce | Debounce function | (fn: Function, delay: number = 300) => Function |

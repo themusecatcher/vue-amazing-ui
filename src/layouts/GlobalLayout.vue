@@ -28,7 +28,7 @@ function onClick(e: any): void {
   // console.log(e.keyPath)
   console.log(route.name)
 }
-const routerViewRef = ref()
+const routerViewRef = ref<HTMLDivElement | null>(null)
 </script>
 <template>
   <Row style="width: 100%">

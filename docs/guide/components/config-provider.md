@@ -10,11 +10,11 @@ _为组件提供统一的全局化配置_
 <!-- - 当需要为组件提供全局配置时 -->
 
 <script setup lang="ts">
-import { ref, computed, h } from 'vue'
+import { ref, computed, h, onMounted } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import { ConfigProvider, createDiscreteApi } from 'vue-amazing-ui'
-import type { ConfigProviderProps, ConfigProviderTheme, CarouselImage, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
+import { ConfigProvider, createDiscreteApi, LoadingBar } from 'vue-amazing-ui'
+import type { ConfigProviderProps, ConfigProviderTheme, CarouselImage, MessageApi, ModalApi, NotificationApi, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
 const primaryColor = ref<string>('#ff6900')
 const commonPrimaryColor = ref<string>('#1677ff')
 const buttonPrimaryColor = ref<string>('#18a058')
@@ -40,11 +40,11 @@ function onAutoCompleteSearch(searchText: string) {
     ? []
     : [searchText, `${searchText}${searchText}`, `${searchText}${searchText}${searchText}`]
 }
-const cardRef = ref()
-const loadingBarRef = ref()
-const messageRef = ref()
-const modalRef = ref()
-const notificationRef = ref()
+const cardRef = ref<HTMLDivElement>()
+const loadingBarRef = ref<InstanceType<typeof LoadingBar> | null>(null)
+const messageRef = ref<MessageApi>()
+const modalRef = ref<ModalApi>()
+const notificationRef = ref<NotificationApi>()
 const page = ref<number>(1)
 const radioChecked = ref<boolean>(false)
 const images = ref<CarouselImage[]>([
@@ -217,24 +217,29 @@ const discreteConfigProviderProps = computed<ConfigProviderProps>(() => ({
     common: { primaryColor: discretePrimaryColor.value }
   }
 }))
-const {
-  message: discreteMessage,
-  notification: discreteNotification,
-  modal: discreteModal
-} = createDiscreteApi(['message', 'notification', 'modal'], {
-  configProviderProps: discreteConfigProviderProps
+let discreteMessage: MessageApi | null = null
+let discreteNotification: NotificationApi | null = null
+let discreteModal: ModalApi | null = null
+// createDiscreteApi 内部会创建 DOM 容器，SSR（Node）下需在挂载后调用
+onMounted(() => {
+  const discreteApi = createDiscreteApi(['message', 'notification', 'modal'], {
+    configProviderProps: discreteConfigProviderProps
+  })
+  discreteMessage = discreteApi.message
+  discreteNotification = discreteApi.notification
+  discreteModal = discreteApi.modal
 })
 function onDiscreteMessage() {
-  discreteMessage.info('Discrete Message 经 configProviderProps 跟随主题色')
+  discreteMessage?.info('Discrete Message 经 configProviderProps 跟随主题色')
 }
 function onDiscreteNotification() {
-  discreteNotification.info({
+  discreteNotification?.info({
     title: 'Discrete Notification',
     content: '经 configProviderProps 跟随主题色'
   })
 }
 function onDiscreteModal() {
-  discreteModal.info({
+  discreteModal?.info({
     title: 'Discrete Modal',
     content: '经 configProviderProps 跟随主题色'
   })
@@ -277,17 +282,17 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
         :search-props="{ type: 'primary' }"
         placeholder="input search"
       />
-      <Button type="primary" @click="messageRef.info('This is an info message')">Show Message</Button>
+      <Button type="primary" @click="messageRef?.info('This is an info message')">Show Message</Button>
       <Message @ready="messageRef = $event" />
       <Button
         type="primary"
-        @click="modalRef.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
+        @click="modalRef?.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
         >Show Modal</Button
       >
       <Modal @ready="modalRef = $event" />
       <Button
         type="primary"
-        @click="notificationRef.info({ title: 'Notification Title', content: 'This is a normal notification' })"
+        @click="notificationRef?.info({ title: 'Notification Title', content: 'This is a normal notification' })"
         >Show Notification</Button
       >
       <Notification @ready="notificationRef = $event" />
@@ -320,9 +325,9 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
       style="position: relative; width: 50%; padding: 48px 36px; border-radius: 4px; border: 1px solid #f0f0f0"
     >
       <Space>
-        <Button type="primary" @click="loadingBarRef.start()">Start</Button>
-        <Button @click="loadingBarRef.finish()">Finish</Button>
-        <Button type="danger" @click="loadingBarRef.error()">Error</Button>
+        <Button type="primary" @click="loadingBarRef?.start()">Start</Button>
+        <Button @click="loadingBarRef?.finish()">Finish</Button>
+        <Button type="danger" @click="loadingBarRef?.error()">Error</Button>
       </Space>
     </div>
     <Pagination v-model:page="page" :total="500" show-quick-jumper />
@@ -378,7 +383,8 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
 import { ref, h } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import type { CarouselImage, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
+import { LoadingBar } from 'vue-amazing-ui'
+import type { CarouselImage, MessageApi, ModalApi, NotificationApi, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
 const primaryColor = ref<string>('#ff6900')
 const checkboxChecked = ref<boolean>(false)
 const cardDate = ref<number>(Date.now())
@@ -394,11 +400,11 @@ function onAutoCompleteSearch(searchText: string) {
     ? []
     : [searchText, `${searchText}${searchText}`, `${searchText}${searchText}${searchText}`]
 }
-const cardRef = ref()
-const loadingBarRef = ref()
-const messageRef = ref()
-const modalRef = ref()
-const notificationRef = ref()
+const cardRef = ref<HTMLDivElement>()
+const loadingBarRef = ref<InstanceType<typeof LoadingBar> | null>(null)
+const messageRef = ref<MessageApi>()
+const modalRef = ref<ModalApi>()
+const notificationRef = ref<NotificationApi>()
 const page = ref<number>(1)
 const radioChecked = ref<boolean>(false)
 const images = ref<CarouselImage[]>([
@@ -593,17 +599,17 @@ function onDecline(scale: number) {
           :search-props="{ type: 'primary' }"
           placeholder="input search"
         />
-        <Button type="primary" @click="messageRef.info('This is an info message')">Show Message</Button>
+        <Button type="primary" @click="messageRef?.info('This is an info message')">Show Message</Button>
         <Message @ready="messageRef = $event" />
         <Button
           type="primary"
-          @click="modalRef.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
+          @click="modalRef?.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
           >Show Modal</Button
         >
         <Modal @ready="modalRef = $event" />
         <Button
           type="primary"
-          @click="notificationRef.info({ title: 'Notification Title', content: 'This is a normal notification' })"
+          @click="notificationRef?.info({ title: 'Notification Title', content: 'This is a normal notification' })"
           >Show Notification</Button
         >
         <Notification @ready="notificationRef = $event" />
@@ -636,9 +642,9 @@ function onDecline(scale: number) {
         style="position: relative; width: 50%; padding: 48px 36px; border-radius: 4px; border: 1px solid #f0f0f0"
       >
         <Space>
-          <Button type="primary" @click="loadingBarRef.start()">Start</Button>
-          <Button @click="loadingBarRef.finish()">Finish</Button>
-          <Button type="danger" @click="loadingBarRef.error()">Error</Button>
+          <Button type="primary" @click="loadingBarRef?.start()">Start</Button>
+          <Button @click="loadingBarRef?.finish()">Finish</Button>
+          <Button type="danger" @click="loadingBarRef?.error()">Error</Button>
         </Space>
       </div>
       <Pagination v-model:page="page" :total="500" show-quick-jumper />
@@ -786,9 +792,9 @@ _`createDiscreteApi()` 的主题经第二参 `configProviderProps` 显式传入�
 
 ```vue
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { createDiscreteApi } from 'vue-amazing-ui'
-import type { ConfigProviderProps } from 'vue-amazing-ui'
+import type { ConfigProviderProps, MessageApi, ModalApi, NotificationApi } from 'vue-amazing-ui'
 // 主题同步到离散 API：createDiscreteApi 主题经 configProviderProps 显式传入（支持 Ref/computed 响应式）
 const discretePrimaryColor = ref<string>('#ff6900')
 const discreteConfigProviderProps = computed<ConfigProviderProps>(() => ({
@@ -796,24 +802,29 @@ const discreteConfigProviderProps = computed<ConfigProviderProps>(() => ({
     common: { primaryColor: discretePrimaryColor.value }
   }
 }))
-const {
-  message: discreteMessage,
-  notification: discreteNotification,
-  modal: discreteModal
-} = createDiscreteApi(['message', 'notification', 'modal'], {
-  configProviderProps: discreteConfigProviderProps
+let discreteMessage: MessageApi | null = null
+let discreteNotification: NotificationApi | null = null
+let discreteModal: ModalApi | null = null
+// createDiscreteApi 内部会创建 DOM 容器，SSR（Node）下需在挂载后调用
+onMounted(() => {
+  const discreteApi = createDiscreteApi(['message', 'notification', 'modal'], {
+    configProviderProps: discreteConfigProviderProps
+  })
+  discreteMessage = discreteApi.message
+  discreteNotification = discreteApi.notification
+  discreteModal = discreteApi.modal
 })
 function onDiscreteMessage() {
-  discreteMessage.info('Discrete Message 跟随主题色')
+  discreteMessage?.info('Discrete Message 跟随主题色')
 }
 function onDiscreteNotification() {
-  discreteNotification.info({
+  discreteNotification?.info({
     title: 'Discrete Notification',
     content: '跟随主题色'
   })
 }
 function onDiscreteModal() {
-  discreteModal.info({
+  discreteModal?.info({
     title: 'Discrete Modal',
     content: '跟随主题色'
   })

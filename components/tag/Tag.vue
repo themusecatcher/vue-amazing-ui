@@ -41,7 +41,7 @@ const props = withDefaults(defineProps<Props>(), {
   value: () => []
 })
 defineSlots<TagSlots>()
-const inputRef = ref()
+const inputRef = ref<HTMLInputElement | null>(null)
 const showInput = ref(false)
 const inputValue = ref('')
 const presetColor = [
@@ -65,7 +65,7 @@ const presetColor = [
   'lime'
 ]
 const hidden = ref(false)
-const tagsIconRef = ref()
+const tagsIconRef = ref<HTMLElement[]>([]) // 各标签图标元素的模板引用数组
 const showTagsIcon = ref(Array(props.value.length).fill(1))
 const slotsExist = useSlotsExist(['icon'])
 const emits = defineEmits(['update:value', 'close', 'dynamicClose'])
@@ -117,7 +117,11 @@ watchEffect(() => {
     nextTick(() => {
       if (tagsIconRef.value) {
         for (let n = 0; n < len; n++) {
-          showTagsIcon.value[n] = tagsIconRef.value[n].offsetWidth
+          // SSR（Node）下模板引用数组无对应元素，跳过缺失项
+          const iconEl = tagsIconRef.value[n]
+          if (iconEl) {
+            showTagsIcon.value[n] = iconEl.offsetWidth
+          }
         }
       }
     })
@@ -137,7 +141,7 @@ function onCloseTags(item: Item, n: number) {
 async function onAdd() {
   showInput.value = true
   await nextTick()
-  inputRef.value.focus()
+  inputRef.value?.focus()
 }
 function onChange() {
   if (isStrArray.value) {
@@ -151,11 +155,11 @@ function onChange() {
     ])
   }
   showInput.value = false
-  inputRef.value = ''
+  inputValue.value = ''
 }
 function onKeyboard(e: KeyboardEvent) {
   if (e.key === 'Enter') {
-    inputRef.value.blur()
+    inputRef.value?.blur()
   }
 }
 </script>

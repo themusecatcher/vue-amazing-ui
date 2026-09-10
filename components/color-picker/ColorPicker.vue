@@ -69,7 +69,7 @@ const HANDLE_SIZE = '12px'
 const HANDLE_SIZE_NUM = 12
 const BORDER_RADIUS = '6px'
 const BORDER_RADIUS_NUM = 6
-const tooltipRef = ref() // tooltip 模板引用
+const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null) // tooltip 模板引用
 const palleteRef = ref<HTMLElement | null>(null) // pallete 调色板模板引用
 const hueRailRef = ref<HTMLElement | null>(null) // hue 轨道条模板引用
 const alphaRailRef = ref<HTMLElement | null>(null) // alpha 轨道条模板引用
@@ -745,12 +745,12 @@ function onSwatch(swatch: ParsedColor): void {
 }
 function onConfirm() {
   emits('confirm', displayedValue.value)
-  tooltipRef.value.hide()
+  tooltipRef.value?.hide()
 }
 function onClear() {
   onUpdateValue(undefined, 'input')
   emits('clear')
-  tooltipRef.value.hide()
+  tooltipRef.value?.hide()
 }
 </script>
 <template>

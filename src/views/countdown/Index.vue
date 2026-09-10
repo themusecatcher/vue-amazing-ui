@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { Countdown } from 'vue-amazing-ui'
 const active = ref(true)
 const resetActive = ref(true)
-const countdownRef = ref()
+const countdownRef = ref<InstanceType<typeof Countdown> | null>(null)
 function onFinish() {
   console.log('countdown finished')
 }
 function onReset() {
-  countdownRef.value.reset()
+  countdownRef.value?.reset()
 }
 </script>
 <template>

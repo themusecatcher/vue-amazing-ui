@@ -53,8 +53,8 @@ defineSlots<UploadSlots>()
 const uploadedFiles = ref<FileType[]>([]) // 上传文件列表
 const showUpload = ref<number>(1) // 展示的上传框
 const uploading = ref<boolean[]>([]) // 上传中
-const uploadInputRef = ref() // 上传文件控件引用
-const imageRef = ref()
+const uploadInputRef = ref<HTMLInputElement[]>([]) // 上传文件控件引用
+const imageRef = ref<InstanceType<typeof Image>[]>([]) // Image 组件实例引用
 const { colorPalettes } = useInject('Upload') // 主题色注入
 // 组件自身不再持有 Message，操作提示交由使用方通过 success / error / remove 事件自行处理
 const emits = defineEmits(['update:fileList', 'drop', 'change', 'preview', 'remove', 'success', 'error'])
@@ -108,7 +108,7 @@ function onDrop(e: DragEvent, index: number): void {
       }
     }
     // input 的 change 事件默认保存上一次 input 的 value 值，同一 value 值(根据文件路径判断)在上传时不重新加载
-    uploadInputRef.value[index].value = null
+    uploadInputRef.value[index].value = ''
   }
   emits('drop', e)
 }
@@ -128,7 +128,7 @@ function onUpload(e: any, index: number): void {
       }
     }
     // input 的 change 事件默认保存上一次 input 的 value 值，同一 value 值(根据文件路径判断)在上传时不重新加载
-    uploadInputRef.value[index].value = null
+    uploadInputRef.value[index].value = ''
   }
 }
 // 统一上传文件方法

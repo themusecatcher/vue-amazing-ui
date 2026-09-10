@@ -598,7 +598,7 @@ const cancel = (e: MouseEvent) => {
 
 <br/>
 
-> *更多使用方式请参考 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html)*
+> *更多使用方式请参考 [文字提示 Tooltip](./tooltip.md)*
 
 ## APIs
 
@@ -622,7 +622,7 @@ okType | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124;
 okProps | 确认按钮 `props`，优先级高于 `okType`，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {}
 showCancel | 是否显示取消按钮 | boolean | true
 
-更多属性请参考 [Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)
+更多属性请参考 [Tooltip Props](./tooltip.md#tooltip)
 
 ## Slots
 

@@ -58,7 +58,7 @@ html.dark {
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { toggleDark, useMutationObserver } from 'vue-amazing-ui'
-const themeDark = ref()
+const themeDark = ref<boolean>()
 onMounted(() => {
   themeDark.value = document.documentElement.classList.contains('dark')
   const config = { attributes: true, childList: false, subtree: false }
@@ -105,7 +105,7 @@ function onThemeChange () {
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { toggleDark, useMutationObserver } from 'vue-amazing-ui'
-const themeDark = ref()
+const themeDark = ref<boolean>()
 onMounted(() => {
   themeDark.value = document.documentElement.classList.contains('dark')
   const config = { attributes: true, childList: false, subtree: false }

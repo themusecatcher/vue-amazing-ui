@@ -75,7 +75,7 @@ const props = withDefaults(defineProps<Props>(), {
   copiedText: 'Copied'
 })
 defineSlots<CollapseSlots>()
-const contentRef = ref() // 面板内容的模板引用
+const contentRef = ref<HTMLElement[]>([]) // 面板内容的模板引用数组
 const copyBtnTxt = ref<string>() // 复制按钮文本
 const copyBtnClickedKeys = ref<(string | number)[]>([]) // 被点击的复制按钮的 key
 const emits = defineEmits(['update:activeKey', 'change'])

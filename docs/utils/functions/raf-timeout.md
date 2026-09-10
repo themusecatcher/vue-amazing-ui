@@ -2,13 +2,16 @@
 
 <GlobalElement />
 
-_使用 `raf` 动画帧模拟实现的定时器，等效替代 `setTimeout()` 和 `setInterval()`，并配套提供对应的取消函数 `cancelRaf()`_
+_基于 `requestAnimationFrame` 实现的延时/间歇调用，配套提供取消函数 `cancelRaf()`。其回调绑定在渲染帧上，与 `setTimeout()` / `setInterval()` **并不等价**，仅适用于需要与动画帧同步的场景_
 
 ::: details Show Source Code
 
 ```ts
 /**
- * 使用 requestAnimationFrame 实现的延迟 setTimeout 或间隔 setInterval 调用函数
+ * 基于 requestAnimationFrame 实现的延时 / 间歇调用函数
+ *
+ * 注意：回调与渲染帧绑定 —— 页面不可见时会暂停、实际延迟比 delay 多出至多一帧，
+ * 与 setTimeout / setInterval 不等价，仅适用于需要与动画帧同步的场景
  *
  * @param {Function} fn 要执行的函数
  * @param {number} [delay = 0] 延迟的时间，单位为 ms，默认为 0，表示不延迟立即执行
@@ -57,7 +60,7 @@ export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = 
  *              如果传入的 raf 对象或其 id 无效，则会打印警告
  */
 export function cancelRaf(raf: AnimationFrameID): void {
-  if (raf && raf.id && typeof raf.id === 'number') {
+  if (raf && typeof raf?.id === 'number') {
     cancelAnimationFrame(raf.id)
   } else {
     console.warn('cancelRaf received an invalid id:', raf)
@@ -68,36 +71,56 @@ export function cancelRaf(raf: AnimationFrameID): void {
 :::
 
 <script setup lang="ts">
-import { ref, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { rafTimeout, cancelRaf } from 'vue-amazing-ui'
+import type { AnimationFrameID } from 'vue-amazing-ui'
 const timeoutMessage = ref('timeout 3000ms later...')
-const timeoutRaf = rafTimeout(() => {
-  timeoutMessage.value = 'raf timeout'
-}, 3000)
+let timeoutRaf: AnimationFrameID | null = null
 const interval = ref(0)
 const intervalMessage = ref('interval 0ms...')
 const intervalStopped = ref(false)
-const intervalRaf = rafTimeout(() => {
-  interval.value += 1000
-  intervalMessage.value = `interval ${interval.value}ms...`
-}, 1000, true)
+let intervalRaf: AnimationFrameID | null = null
 function stopInterval() {
-  if (intervalStopped.value) return
+  if (intervalStopped.value || !intervalRaf) return
   intervalStopped.value = true
   cancelRaf(intervalRaf)
   intervalMessage.value = `已取消（累计 interval ${interval.value}ms）`
 }
+// SSR（Node）环境无 requestAnimationFrame：挂载后启动，卸载时取消
+onMounted(() => {
+  timeoutRaf = rafTimeout(() => {
+    timeoutMessage.value = 'raf timeout'
+  }, 3000)
+  intervalRaf = rafTimeout(() => {
+    interval.value += 1000
+    intervalMessage.value = `interval ${interval.value}ms...`
+  }, 1000, true)
+})
 onBeforeUnmount(() => {
-  cancelRaf(timeoutRaf)
-  cancelRaf(intervalRaf)
+  if (timeoutRaf) {
+    cancelRaf(timeoutRaf)
+  }
+  if (intervalRaf) {
+    cancelRaf(intervalRaf)
+  }
 })
 </script>
 
 ## 何时使用
 
-- 需要与 `requestAnimationFrame` 动画帧同步的定时任务（如与帧率一致的重绘、插值计算）
-- 需要避免 `setTimeout` / `setInterval` 在后台标签页被浏览器节流（降频）的场景
+- 需要与 `requestAnimationFrame` 动画帧同步的定时任务（如与帧率一致的重绘、插值计算，或需在绘制前完成的布局读写）
 - 定时任务需要在组件卸载前通过 `cancelRaf` 取消，避免回调泄漏
+
+::: warning 选用前请确认
+`rafTimeout` 的回调绑定在渲染帧上，与 `setTimeout()` / `setInterval()` 存在本质差异：
+
+- **精度**：回调在「已过去时间 ≥ delay」的**首个渲染帧**执行，实际延迟比 `delay` 多出至多一帧（60Hz 约 16.7ms），刷新率越低偏差越大
+- **后台行为**：页面不可见（切换标签页、最小化窗口等）时 `requestAnimationFrame` 会被浏览器**暂停**，回调将延后到页面重新可见后才触发，实际延迟可能远大于设定的 `delay`
+- **开销**：`interval` 模式需要每一帧轮询判断是否到达间隔，而非注册一次后等待
+
+因此纯计时任务（延迟显示、防抖、轮播节拍等）应优先使用 `setTimeout()` / `setInterval()`；
+需要逐帧同步时应直接使用 `requestAnimationFrame`。
+:::
 
 ## 延时调用
 
@@ -109,14 +132,21 @@ _在 `delay` `ms` 后执行一次回调_
 
 ```vue
 <script setup lang="ts">
-import { ref, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { rafTimeout, cancelRaf } from 'vue-amazing-ui'
+import type { AnimationFrameID } from 'vue-amazing-ui'
 const timeoutMessage = ref('timeout 3000ms later...')
-const timeoutRaf = rafTimeout(() => {
-  timeoutMessage.value = 'raf timeout'
-}, 3000)
+let timeoutRaf: AnimationFrameID | null = null
+// SSR（Node）环境无 requestAnimationFrame：挂载后启动，卸载时取消
+onMounted(() => {
+  timeoutRaf = rafTimeout(() => {
+    timeoutMessage.value = 'raf timeout'
+  }, 3000)
+})
 onBeforeUnmount(() => {
-  cancelRaf(timeoutRaf)
+  if (timeoutRaf) {
+    cancelRaf(timeoutRaf)
+  }
 })
 </script>
 <template>
@@ -138,23 +168,30 @@ _每隔 `delay` `ms` 执行一次回调，直到手动取消_
 
 ```vue
 <script setup lang="ts">
-import { ref, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { rafTimeout, cancelRaf } from 'vue-amazing-ui'
+import type { AnimationFrameID } from 'vue-amazing-ui'
 const interval = ref(0)
 const intervalMessage = ref('interval 0ms...')
 const intervalStopped = ref(false)
-const intervalRaf = rafTimeout(() => {
-  interval.value += 1000
-  intervalMessage.value = `interval ${interval.value}ms...`
-}, 1000, true)
+let intervalRaf: AnimationFrameID | null = null
 function stopInterval() {
-  if (intervalStopped.value) return
+  if (intervalStopped.value || !intervalRaf) return
   intervalStopped.value = true
   cancelRaf(intervalRaf)
   intervalMessage.value = `已取消（累计 interval ${interval.value}ms）`
 }
+// SSR（Node）环境无 requestAnimationFrame：挂载后启动，卸载时取消
+onMounted(() => {
+  intervalRaf = rafTimeout(() => {
+    interval.value += 1000
+    intervalMessage.value = `interval ${interval.value}ms...`
+  }, 1000, true)
+})
 onBeforeUnmount(() => {
-  cancelRaf(intervalRaf)
+  if (intervalRaf) {
+    cancelRaf(intervalRaf)
+  }
 })
 </script>
 <template>

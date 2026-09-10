@@ -44,7 +44,10 @@ function scrollEvent () {
   lastScrollPosition = currentScrollPosition
 }
 const throttleScroll = throttle(scrollEvent, 100)
-useEventListener(window, 'scroll', throttleScroll)
+// SSR（Node）环境无 window，需判断存在性后再注册监听
+if (typeof window !== 'undefined') {
+  useEventListener(window, 'scroll', throttleScroll)
+}
 </script>
 
 ## 基本使用
@@ -66,7 +69,10 @@ function scrollEvent() {
   lastScrollPosition = currentScrollPosition
 }
 const throttleScroll = throttle(scrollEvent, 100)
-useEventListener(window, 'scroll', throttleScroll)
+// SSR（Node）环境无 window，需判断存在性后再注册监听
+if (typeof window !== 'undefined') {
+  useEventListener(window, 'scroll', throttleScroll)
+}
 </script>
 ```
 

@@ -39,7 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
   valueModifiers: () => ({})
 })
 defineSlots<InputNumberSlots>()
-const inputRef = ref() // input 模板引用
+const inputRef = ref<HTMLInputElement | null>(null) // input 模板引用
 const numValue = ref<string>() // 数字输入框的内容
 const { colorPalettes, shadowColor } = useInject('InputNumber') // 主题色注入
 const emits = defineEmits(['update:value', 'change', 'enter'])
@@ -66,7 +66,9 @@ watch(
   async () => {
     if (props.value !== undefined) {
       if (inputRef.value) {
-        const { selectionStart: start, selectionEnd: end, value } = inputRef.value
+        const { selectionStart, selectionEnd, value } = inputRef.value
+        const start = selectionStart ?? 0
+        const end = selectionEnd ?? 0
         const beforeTxt = value.slice(0, start)
         const afterTxt = value.slice(end)
         numValue.value = getFormatValue() // 获取格式化后的值
@@ -83,7 +85,9 @@ watch(
   }
 )
 function restoreCursor(start: number, beforeTxt: string, afterTxt: string): void {
-  const { value: inputValue } = inputRef.value
+  const inputEl = inputRef.value
+  if (!inputEl) return
+  const { value: inputValue } = inputEl
   let startPos = inputValue.length
   if (inputValue.endsWith(afterTxt)) {
     startPos = inputValue.length - afterTxt.length
@@ -96,7 +100,7 @@ function restoreCursor(start: number, beforeTxt: string, afterTxt: string): void
       startPos = newIndex + 1
     }
   }
-  inputRef.value.setSelectionRange(startPos, startPos)
+  inputEl.setSelectionRange(startPos, startPos)
 }
 function emitValue(value: number | undefined): void {
   emits('update:value', value) // 保证在 change 回调时能获取到最新数据

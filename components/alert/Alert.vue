@@ -33,7 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
   showIcon: false
 })
 defineSlots<AlertSlots>()
-const alertRef = ref() // alert 模板引用
+const alertRef = ref<HTMLElement | null>(null) // alert 模板引用
 const closeAlert = ref(false)
 const { colorPalettes } = useInject('Alert') // 主题色注入
 const emit = defineEmits(['close'])
@@ -45,7 +45,9 @@ const showDesc = computed(() => {
   return slotsExist.description || props.description
 })
 async function onClose(e: Event) {
-  alertRef.value.style.maxHeight = `${alertRef.value.offsetHeight}px`
+  if (alertRef.value) {
+    alertRef.value.style.maxHeight = `${alertRef.value.offsetHeight}px`
+  }
   await nextTick()
   closeAlert.value = true
   emit('close', e)

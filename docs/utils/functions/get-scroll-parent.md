@@ -15,7 +15,7 @@ _向上查找元素最近的可滚动父元素的工具函数_
  * @param {HTMLElement} el 待查询的 DOM 元素
  * @returns {HTMLElement | null} 返回父元素，若传入的是 documentElement 或无父元素则返回 null
  */
-function getParentElement(el: HTMLElement): HTMLElement | null {
+export function getParentElement(el: HTMLElement): HTMLElement | null {
   // Document
   if (el === document.documentElement) return null
   return el.parentElement
@@ -55,7 +55,7 @@ _查找元素最近的可滚动父元素_
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getScrollParent } from 'vue-amazing-ui'
-const scrollContentRef = ref()
+const scrollContentRef = ref<HTMLDivElement | null>(null)
 onMounted(() => {
   const scrollParent = getScrollParent(scrollContentRef.value)
   console.log('scrollParent', scrollParent)

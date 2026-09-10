@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { loadingBarRef } from '@/router'
+import { LoadingBar } from 'vue-amazing-ui'
 import { MessageProvider } from 'components/message'
 import { ModalProvider } from 'components/modal'
 import { DialogProvider } from 'components/dialog'
@@ -15,7 +16,7 @@ const route = useRoute()
 const routeName = computed(() => {
   return route.name
 })
-const loadingBar = ref()
+const loadingBar = ref<InstanceType<typeof LoadingBar> | null>(null)
 onMounted(() => {
   loadingBarRef.value = loadingBar.value
 })

@@ -15,12 +15,13 @@ _实时监测浏览器刷新率 `FPS` 的组合式函数_
  *
  * @returns {{ fps: Ref<number> }} 返回一个包含 FPS 值的 ref 对象
  */
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import type { Ref } from 'vue'
 export function useFps(): { fps: Ref<number> } {
   const fps = ref<number>(0)
   const frameCount = ref<number>(0)
   let lastTime = performance.now()
+  let rafId: number | null = null // 当前帧请求 ID，用于卸载时取消帧回调
   const every = 10
   const calculateFrameRate = (currentTime: number) => {
     frameCount.value++
@@ -31,9 +32,19 @@ export function useFps(): { fps: Ref<number> } {
       lastTime = currentTime
       frameCount.value = 0
     }
-    requestAnimationFrame(calculateFrameRate)
+    rafId = requestAnimationFrame(calculateFrameRate)
   }
-  requestAnimationFrame(calculateFrameRate)
+  // SSR（Node）环境无 requestAnimationFrame，帧循环放到挂载后启动，浏览器端行为不变
+  onMounted(() => {
+    rafId = requestAnimationFrame(calculateFrameRate)
+  })
+  // 卸载时取消帧回调，否则该循环会永久自我续期，并持续持有 fps / frameCount 等状态
+  onUnmounted(() => {
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId)
+      rafId = null
+    }
+  })
   // 返回帧率状态
   return { fps }
 }

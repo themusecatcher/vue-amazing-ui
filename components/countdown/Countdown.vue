@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import { useSlotsExist } from 'components/utils'
 
@@ -80,6 +80,11 @@ watch([() => props.value, () => props.future], () => {
 })
 onMounted(() => {
   initCountdown()
+})
+// 卸载时取消帧回调，否则循环会一直运行到倒计时目标时刻，期间持续持有组件作用域
+onUnmounted(() => {
+  rafID.value && cancelAnimationFrame(rafID.value)
+  rafID.value = null
 })
 function initCountdown() {
   // 只有数值类型的值，且是有穷的（finite），才返回 true

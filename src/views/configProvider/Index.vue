@@ -2,11 +2,14 @@
 import { ref, computed, h } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import { createDiscreteApi } from 'vue-amazing-ui'
+import { createDiscreteApi, LoadingBar } from 'vue-amazing-ui'
 import type {
   ConfigProviderProps,
   ConfigProviderTheme,
   CarouselImage,
+  MessageApi,
+  ModalApi,
+  NotificationApi,
   SelectOption,
   StepsItem,
   TabsItem,
@@ -32,11 +35,11 @@ const dateValue = ref<string>(format(new Date(), 'yyyy-MM-dd'))
 const inputValue = ref<string>('')
 const inputNumberValue = ref<number>(3)
 const inputSearchValue = ref<string>('')
-const messageRef = ref()
-const modalRef = ref()
-const notificationRef = ref()
-const cardRef = ref()
-const loadingBarRef = ref()
+const messageRef = ref<MessageApi>()
+const modalRef = ref<ModalApi>()
+const notificationRef = ref<NotificationApi>()
+const cardRef = ref<HTMLDivElement>()
+const loadingBarRef = ref<InstanceType<typeof LoadingBar> | null>(null)
 const page = ref<number>(1)
 const radioChecked = ref<boolean>(false)
 const images = ref<CarouselImage[]>([
@@ -275,17 +278,17 @@ function onDiscreteModal() {
             :search-props="{ type: 'primary' }"
             placeholder="input search"
           />
-          <Button type="primary" @click="messageRef.info('This is an info message')">Show Message</Button>
+          <Button type="primary" @click="messageRef?.info('This is an info message')">Show Message</Button>
           <Message @ready="messageRef = $event" />
           <Button
             type="primary"
-            @click="modalRef.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
+            @click="modalRef?.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
             >Show Modal</Button
           >
           <Modal @ready="modalRef = $event" />
           <Button
             type="primary"
-            @click="notificationRef.info({ title: 'Notification Title', content: 'This is a normal notification' })"
+            @click="notificationRef?.info({ title: 'Notification Title', content: 'This is a normal notification' })"
             >Show Notification</Button
           >
           <Notification @ready="notificationRef = $event" />
@@ -318,9 +321,9 @@ function onDiscreteModal() {
           style="position: relative; width: 50%; padding: 48px 36px; border-radius: 4px; border: 1px solid #f0f0f0"
         >
           <Space>
-            <Button type="primary" @click="loadingBarRef.start()">Start</Button>
-            <Button @click="loadingBarRef.finish()">Finish</Button>
-            <Button type="danger" @click="loadingBarRef.error()">Error</Button>
+            <Button type="primary" @click="loadingBarRef?.start()">Start</Button>
+            <Button @click="loadingBarRef?.finish()">Finish</Button>
+            <Button type="danger" @click="loadingBarRef?.error()">Error</Button>
           </Space>
         </div>
         <Pagination v-model:page="page" :total="500" show-quick-jumper />

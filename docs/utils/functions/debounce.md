@@ -44,7 +44,10 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { debounce, useEventListener } from 'vue-amazing-ui'
 
 const scrollTop = ref(0)
-useEventListener(window, 'scroll', debounce(showPosition, 100))
+// SSR（Node）环境无 window，需判断存在性后再注册监听
+if (typeof window !== 'undefined') {
+  useEventListener(window, 'scroll', debounce(showPosition, 100))
+}
 function showPosition () {
   scrollTop.value = window.pageYOffset || document.documentElement.scrollTop
 }
@@ -59,7 +62,10 @@ function showPosition () {
 import { ref, onMounted, onUnmounted } from 'vue'
 import { debounce, useEventListener } from 'vue-amazing-ui'
 const scrollTop = ref(0)
-useEventListener(window, 'scroll', debounce(showPosition, 100))
+// SSR（Node）环境无 window，需判断存在性后再注册监听
+if (typeof window !== 'undefined') {
+  useEventListener(window, 'scroll', debounce(showPosition, 100))
+}
 function showPosition() {
   scrollTop.value = window.pageYOffset || document.documentElement.scrollTop
 }

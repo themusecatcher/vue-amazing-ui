@@ -77,6 +77,7 @@ export function useFps(): { fps: Ref<number> } {
   const fps = ref<number>(0)
   const frameCount = ref<number>(0)
   let lastTime = performance.now()
+  let rafId: number | null = null // 当前帧请求 ID，用于卸载时取消帧回调
   const every = 10
   const calculateFrameRate = (currentTime: number) => {
     frameCount.value++
@@ -87,9 +88,19 @@ export function useFps(): { fps: Ref<number> } {
       lastTime = currentTime
       frameCount.value = 0
     }
-    requestAnimationFrame(calculateFrameRate)
+    rafId = requestAnimationFrame(calculateFrameRate)
   }
-  requestAnimationFrame(calculateFrameRate)
+  // SSR（Node）环境无 requestAnimationFrame，帧循环放到挂载后启动，浏览器端行为不变
+  onMounted(() => {
+    rafId = requestAnimationFrame(calculateFrameRate)
+  })
+  // 卸载时取消帧回调，否则该循环会永久自我续期，并持续持有 fps / frameCount 等状态
+  onUnmounted(() => {
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId)
+      rafId = null
+    }
+  })
   // 返回帧率状态
   return { fps }
 }
@@ -107,17 +118,18 @@ export function useMediaQuery(mediaQuery: string): { match: Ref<boolean> } {
   if (!mediaQuery || typeof mediaQuery !== 'string' || mediaQuery.trim() === '') {
     throw new Error('Invalid mediaQuery parameter. It must be a non-empty string.')
   }
-  const match = ref(window && window.matchMedia(mediaQuery).matches)
-  const mediaQueryList = window.matchMedia(mediaQuery)
+  // SSR（Node）环境无 window，matchMediaList 为 null，match 取 false；浏览器端初始值与原来一致
+  const mediaQueryList = typeof window !== 'undefined' ? window.matchMedia(mediaQuery) : null
+  const match = ref(mediaQueryList?.matches ?? false)
   // 处理媒体查询状态改变的事件
   const updateChange = (e: MediaQueryListEvent) => {
     match.value = e.matches // 一个布尔值，如果当前 document 与媒体查询列表相匹配，则返回 true，否则返回 false
   }
   onMounted(() => {
-    mediaQueryList.addEventListener('change', updateChange)
+    mediaQueryList?.addEventListener('change', updateChange)
   })
   onUnmounted(() => {
-    mediaQueryList.removeEventListener('change', updateChange)
+    mediaQueryList?.removeEventListener('change', updateChange)
   })
   return { match }
 }

@@ -10,9 +10,10 @@ _数值播放动画_
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { NumberAnimation } from 'vue-amazing-ui'
 const value1 = ref(100000000.12345)
 const value2 = ref(100000000)
-const animationRef = ref()
+const animationRef = ref<InstanceType<typeof NumberAnimation> | null>(null)
 const from = ref(0)
 const to = ref(100000000)
 function onPlay() {
@@ -25,7 +26,7 @@ function onPlay() {
   }
 }
 function onClick() {
-  animationRef.value.play()
+  animationRef.value?.play()
 }
 function onStarted() {
   console.log('started')
@@ -242,11 +243,12 @@ const value = ref(100000000)
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const animationRef = ref()
+import { NumberAnimation } from 'vue-amazing-ui'
+const animationRef = ref<InstanceType<typeof NumberAnimation> | null>(null)
 const from = ref(0)
 const to = ref(100000000)
 function onClick() {
-  animationRef.value.play()
+  animationRef.value?.play()
 }
 function onStarted() {
   console.log('started')

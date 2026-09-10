@@ -55,12 +55,13 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const filterOptions = ref<Option[]>([]) // 过滤后的选项数组
-const selectedName = ref() // 当前选中选项的 label
+let filterResetTimer: ReturnType<typeof setTimeout> | null = null // 面板关闭态下延迟重置选项的定时器
+const selectedName = ref<string | number | null>() // 当前选中选项的 label
 const inputRef = ref<HTMLElement | null>(null) // input 元素引用
-const inputValue = ref() // 支持搜索时，用户输入内容
+const inputValue = ref<string>() // 支持搜索时，用户输入内容
 const disabledBlur = ref<boolean>(false) // 是否禁用 input 标签的 blur 事件
 const hideSelectName = ref<boolean>(false) // 用户输入时，隐藏 selectName 的展示
-const hoverValue = ref() // 鼠标悬浮项的 value 值
+const hoverValue = ref<string | number | null>() // 鼠标悬浮项的 value 值
 const showOptions = ref<boolean>(false) // 显示隐藏 options 面板
 const showArrow = ref<boolean>(true) // 剪头图标显隐
 const showClear = ref<boolean>(false) // 清除图标显隐
@@ -157,25 +158,33 @@ watch(showOptions, (to) => {
   }
 })
 watchEffect(() => {
+  // 重跑前先取消上一次的延迟重置，避免定时器堆积
+  if (filterResetTimer) {
+    clearTimeout(filterResetTimer)
+    filterResetTimer = null
+  }
   if (props.search) {
     if (inputValue.value) {
+      const keyword = inputValue.value
       filterOptions.value = props.options.filter((option) => {
         if (typeof props.filter === 'function') {
-          return props.filter(inputValue.value, option)
+          return props.filter(keyword, option)
         } else {
-          return option[props.label].includes(inputValue.value)
+          return option[props.label].includes(keyword)
         }
       })
     } else {
       if (showOptions.value) {
         filterOptions.value = [...props.options]
       } else {
-        setTimeout(() => {
+        filterResetTimer = setTimeout(() => {
           filterOptions.value = [...props.options]
         }, 200)
       }
     }
-    if (filterOptions.value.length && inputValue.value) {
+    // inputValue 先判空可让本分支短路：否则 filterOptions 会被登记为该 effect 的依赖，
+    // 又被上面的延迟重置定时器写入，形成「写入 → 重跑 → 再排定时器」的自触发循环
+    if (inputValue.value && filterOptions.value.length) {
       hoverValue.value = filterOptions.value[0][props.value]
     } else {
       hoverValue.value = null
@@ -411,7 +420,7 @@ function onChange(value: string | number, label: string, index: number): void {
       <span
         class="select-item"
         :class="{ 'select-placeholder': !selectedName || showOptions, 'select-item-hidden': hideSelectName }"
-        :title="selectedName"
+        :title="selectedName === null || selectedName === undefined ? undefined : String(selectedName)"
       >
         {{ selectedName || placeholder }}
       </span>

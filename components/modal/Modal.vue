@@ -234,7 +234,7 @@ interface ModalItem extends ModalOptions {
   displayed: boolean // 动画期间保持内容渲染，离场结束后置 false
 }
 // 单个弹窗的句柄，用于编程式关闭与更新
-const modalWrapRef = ref() // modal DOM 引用
+const modalWrapRef = ref<HTMLElement | null>(null) // modal DOM 引用
 // 打开前的焦点元素，关闭后用于归还焦点；弹窗栈归零时统一处理，避免多开时被内层弹窗覆盖
 let triggerElement: HTMLElement | null = null
 // 是否有实例在关闭时要求归还焦点

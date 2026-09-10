@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import type { CarouselProps, CarouselImage } from 'vue-amazing-ui'
+import { Carousel, type CarouselProps, type CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
     name: 'image-1',
@@ -92,11 +92,11 @@ function clickImage(image: CarouselImage) {
 function onChange(index: number) {
   console.log('change', index)
 }
-const carousel = ref()
+const carousel = ref<InstanceType<typeof Carousel> | null>(null)
 const toIndex = ref(1)
 const currentIndex = ref(1)
 function getCurrentIndex() {
-  currentIndex.value = carousel.value.getCurrentIndex()
+  currentIndex.value = carousel.value?.getCurrentIndex() ?? currentIndex.value
 }
 const state = reactive<CarouselProps>({
   autoplay: true,
@@ -165,9 +165,9 @@ const state = reactive<CarouselProps>({
     <h2 class="mt30 mb10">使用 Methods</h2>
     <Space>
       <InputNumber :min="1" :max="images.length" v-model:value="toIndex" />
-      <Button @click="carousel.to(toIndex)">跳转到</Button>
-      <Button @click="carousel.prev()">前一页</Button>
-      <Button @click="carousel.next()">后一页</Button>
+      <Button @click="carousel?.to(toIndex)">跳转到</Button>
+      <Button @click="carousel?.prev()">前一页</Button>
+      <Button @click="carousel?.next()">后一页</Button>
       <Button @click="getCurrentIndex">获取当前页：{{ currentIndex }}</Button>
     </Space>
     <br />

@@ -426,7 +426,7 @@ watchEffect(() => {
 
 <br/>
 
-> *更多使用方式请参考 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html)*
+> *更多使用方式请参考 [文字提示 Tooltip](./tooltip.md)*
 
 ## APIs
 
@@ -448,7 +448,7 @@ swatches | 色板的值 | string[] | []
 actions | 显示按钮 | [ColorPickerAction](#colorpickeraction-type)[] | []
 footer | 底部额外的页脚内容 | string | undefined
 
-更多属性请参考 [Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)
+更多属性请参考 [Tooltip Props](./tooltip.md#tooltip)
 
 ### ColorPickerMode Type
 

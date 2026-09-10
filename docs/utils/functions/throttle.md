@@ -43,7 +43,10 @@ export function throttle(fn: Function, delay: number = 300): Function {
 import { ref, onMounted, onUnmounted } from 'vue'
 import { throttle, useEventListener } from 'vue-amazing-ui'
 const scrollTop = ref(0)
-useEventListener(window, 'scroll', throttle(showPosition, 100))
+// SSR（Node）环境无 window，需判断存在性后再注册监听
+if (typeof window !== 'undefined') {
+  useEventListener(window, 'scroll', throttle(showPosition, 100))
+}
 function showPosition () {
   scrollTop.value = window.pageYOffset || document.documentElement.scrollTop
 }
@@ -58,7 +61,10 @@ function showPosition () {
 import { ref, onMounted, onUnmounted } from 'vue'
 import { throttle, useEventListener } from 'vue-amazing-ui'
 const scrollTop = ref(0)
-useEventListener(window, 'scroll', throttle(showPosition, 100))
+// SSR（Node）环境无 window，需判断存在性后再注册监听
+if (typeof window !== 'undefined') {
+  useEventListener(window, 'scroll', throttle(showPosition, 100))
+}
 function showPosition() {
   scrollTop.value = window.pageYOffset || document.documentElement.scrollTop
 }

@@ -51,7 +51,7 @@ const props = withDefaults(defineProps<Props>(), {
   open: false
 })
 defineSlots<DrawerSlots>()
-const drawerRef = ref()
+const drawerRef = ref<HTMLElement | null>(null)
 const drawerOpen = ref<boolean>()
 // 组件持有的滚动锁释放函数：加锁后保存返回值、释放后置空，存在即代表本组件持锁；
 // 卸载兜底据此精确释放，避免未持锁时误解锁他人
@@ -99,7 +99,7 @@ watch(
   drawerOpen,
   (to) => {
     if (to) {
-      drawerRef.value.focus()
+      drawerRef.value?.focus()
       // 锁定滚动（内部已做滚动条宽度补偿，防止页面横向抖动）
       if (!scrollLockRelease) {
         scrollLockRelease = lockScroll()

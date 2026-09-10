@@ -16,24 +16,25 @@ _根据 `CSS media query` 的不同结果动态地更新：是桌面端还是移
  * @param {string} mediaQuery 媒体查询字符串，用于定义要查询的媒体条件
  * @returns {{ match: Ref<boolean> }} 返回一个对象，其中包含一个名为 match 的 ref 对象，表示当前是否为移动设备视口
  */
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import type { Ref } from 'vue'
 export function useMediaQuery(mediaQuery: string): { match: Ref<boolean> } {
   // 检查传入的mediaQuery参数是否为空或非法
   if (!mediaQuery || typeof mediaQuery !== 'string' || mediaQuery.trim() === '') {
     throw new Error('Invalid mediaQuery parameter. It must be a non-empty string.')
   }
-  const match = ref(window && window.matchMedia(mediaQuery).matches)
-  const mediaQueryList = window.matchMedia(mediaQuery)
+  // SSR（Node）环境无 window，matchMediaList 为 null，match 取 false；浏览器端初始值与原来一致
+  const mediaQueryList = typeof window !== 'undefined' ? window.matchMedia(mediaQuery) : null
+  const match = ref(mediaQueryList?.matches ?? false)
   // 处理媒体查询状态改变的事件
   const updateChange = (e: MediaQueryListEvent) => {
     match.value = e.matches // 一个布尔值，如果当前 document 与媒体查询列表相匹配，则返回 true，否则返回 false
   }
   onMounted(() => {
-    mediaQueryList.addEventListener('change', updateChange)
+    mediaQueryList?.addEventListener('change', updateChange)
   })
-  onBeforeUnmount(() => {
-    mediaQueryList.removeEventListener('change', updateChange)
+  onUnmounted(() => {
+    mediaQueryList?.removeEventListener('change', updateChange)
   })
   return { match }
 }

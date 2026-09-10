@@ -28,7 +28,7 @@ const primaryDescCustomStyle = {
   '--backtop-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
   '--backtop-square-border-radius': '18px'
 }
-const scrollContainer = ref()
+const scrollContainer = ref<HTMLDivElement>()
 function onShow(show: boolean) {
   console.log('show', show)
 }

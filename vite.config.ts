@@ -13,8 +13,6 @@ import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 // vue-amazing-ui 按需引入
 // import { VueAmazingUIResolver } from 'vue-amazing-ui'
-// 打包体积可视化插件
-// import { visualizer } from 'rollup-plugin-visualizer'
 // 功能全面且轻量级的命令行参数解析工具
 import minimist from 'minimist'
 // 第三方样式依赖清单（单一数据源，与 resolver.ts 共享）
@@ -289,10 +287,6 @@ export default defineConfig({
     //     filepath: './.eslintrc-auto-import.json',
     //     globalsPropValue: true
     //   }
-    // }),
-    // visualizer({ // 生成的分析图文件名，默认stats.html
-    //   // file: 'stats.html',
-    //   open: true // 打包后自动打开分析图
     // })
   ],
   // 构建为库：dir=dist（build:dist / build:browser 全量构建）走 buildDistOptions；

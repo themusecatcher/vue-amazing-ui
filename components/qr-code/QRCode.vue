@@ -72,10 +72,15 @@ watch(
     if (props.value) {
       if (props.type === 'svg') {
         qrcode.value = await QRCode.toString(props.value, qrcodeOptions.value)
-        qrcodeSVGRef.value!.innerHTML = qrcode.value // !. 非空断言运算符
+        if (qrcodeSVGRef.value) {
+          qrcodeSVGRef.value.innerHTML = qrcode.value
+        }
       } else if (props.type === 'canvas') {
-        qrcode.value = await QRCode.toCanvas(props.value, qrcodeOptions.value)
-        qrcodeCanvasRef.value?.appendChild(qrcode.value)
+        // SSR（Node）下无 canvas 元素，qrcode 库会抛错，判空后再绘制
+        if (qrcodeCanvasRef.value) {
+          qrcode.value = await QRCode.toCanvas(props.value, qrcodeOptions.value)
+          qrcodeCanvasRef.value.appendChild(qrcode.value)
+        }
       } else {
         qrcode.value = await QRCode.toDataURL(props.value, qrcodeOptions.value)
       }

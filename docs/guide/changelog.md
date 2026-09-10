@@ -10,6 +10,22 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-09-10">2.7.2</VersionDateTag>
+
+- 新增 `SSR` / `Node` 环境渲染安全性：[头像 Avatar](/guide/components/avatar.html)、[栅格 Row](/guide/components/grid.html)、[栅格 Col](/guide/components/grid.html)、[描述列表 Descriptions](/guide/components/descriptions.html)、[二维码 QRCode](/guide/components/qr-code.html)、[标签 Tag](/guide/components/tag.html) 与 `useMediaQuery`、`useFps` 等不再在 `setup` 阶段裸访问 `window` / `document` / `matchMedia` / `canvas`，统一改为存在性判断，消除服务端渲染时的 `ReferenceError`；[二维码 QRCode](/guide/components/qr-code.html) 在 `canvas` 未就绪时跳过绘制
+- 修复定时器与监听泄漏：[倒计时 Countdown](/guide/components/countdown.html)、[轮播图 Carousel](/guide/components/carousel.html)、[文字滚动 TextScroll](/guide/components/text-scroll.html)、[选择器 Select](/guide/components/select.html) 及 `useFps` 在卸载时取消未完成的动画帧与定时器，避免回调在卸载后继续自我续期并持续持有组件作用域；`useFps` 帧循环改为挂载后启动。其中 [轮播图 Carousel](/guide/components/carousel.html) 的自动播放与 [文字滚动 TextScroll](/guide/components/text-scroll.html) 的滚动间隔由绑定渲染帧的 `rafTimeout` 改为 `setTimeout` 以便精确清理，代价是后台标签页下不再随之暂停；[轮播图 Carousel](/guide/components/carousel.html) 渐变动画的解锁定时器改为可取消，[文字滚动 TextScroll](/guide/components/text-scroll.html) 的滚动间隔改为启动时计算一次并逐拍沿用，避免定时器堆积与累积漂移
+- 修复 [轮播图 Carousel](/guide/components/carousel.html) 容器尺寸未就绪时自动轮播失效：尺寸为 `0` 时跳过本次调度，此前 `offset %（图片数 × 0）` 得到 `NaN`，导致位移动画的帧循环永不收敛、轮播卡死；尺寸就绪后由 `ResizeObserver` 重新启动自动轮播
+- 修复 [选择器 Select](/guide/components/select.html) 支持搜索时过滤逻辑自触发循环：面板关闭态延迟重置选项的定时器改为可取消，并将 `inputValue` 判空前移使分支短路，避免 `filterOptions` 被登记为依赖后又被定时器写入，形成"写入 → 重跑 → 再排定时器"的循环
+- 修复 [标签 Tag](/guide/components/tag.html) 动态编辑时输入框内容未清空：`onChange` 中误将模板引用 `inputRef` 赋空，修正为清空 `inputValue`
+- 修复 [上传 Upload](/guide/components/upload.html) 重复选择同一文件时 `change` 不再触发：重置 `input.value` 由 `null` 改为空字符串，避免被写入字符串 `"null"` 而与上次路径"相同"
+- 修复 [cancelRaf](/utils/functions/raf-timeout.html) 参数校验：帧 `id` 由真值判断改为 `typeof raf?.id === 'number'` 类型判断，修复 `id` 为 `0` 时被误判为无效、既不取消动画帧又打印告警的问题
+- 澄清 [rafTimeout](/utils/functions/raf-timeout.html) 语义：其回调绑定在渲染帧上，页面不可见时会暂停、实际延迟比 `delay` 多出至多一帧，与 `setTimeout` / `setInterval` **不等价**，仅适用于需要与动画帧同步的场景；同步更正 `JSDoc`、文档说明及 `README` 中"等效替代 `setTimeout` / `setInterval`"的误导性描述
+- 优化多个组件的模板引用类型，由无类型 `ref()` 收敛为 `ref<HTMLElement | null>(null)` / `ref<HTMLElement[]>([])`，并对可能为 `null` 的引用访问补充 `?.` 与判空守卫，消除裸链式访问在边缘场景下的潜在报错；其中 [评分 Rate](/guide/components/rate.html) 为未选中状态下的 `activeValue` / `hoverValue` 补充 `undefined` 守卫，避免未选中时键盘上下键误触发
+- 新增定时器与动画帧清理相关单元测试：[文字滚动 TextScroll](/guide/components/text-scroll.html)、[轮播图 Carousel](/guide/components/carousel.html) 卸载后定时器与动画帧不再自我续期，`useFps` / [倒计时 Countdown](/guide/components/countdown.html) 卸载后不再注册帧回调，[选择器 Select](/guide/components/select.html) 搜索过滤不再反复重排定时器，均纳入 `pnpm check` 门禁
+- 工程优化：新增 `postcss` + `autoprefixer`，按 `browserslist`（调整为 `> 0.5%`、新增 `Firefox ESR`）为产物 `CSS` 自动补齐厂商前缀；`vue` 提升为 `peerDependencies`（`^3.4.0`）；`engines` 调整并锁定 `packageManager`；新增 `prepublishOnly` 发布守卫，校验 `package.json` 声明的产物入口真实存在，避免产物缺失时打出悬空包；发布白名单统一由 `files` 字段管理并移除冗余的 `.npmignore`，补充 `LICENSE`；`pnpm check` 门禁新增 `format:check`（`prettier` 校验），`build` 不再重复执行格式化；`pre-commit` 改用 `pnpm exec lint-staged`，移除未使用的 `preview` 脚本与 `vite.config.ts` 中注释掉的体积可视化代码；`vue` / `@vitejs/plugin-vue` 等依赖升级，移除未使用的 `rollup-plugin-visualizer`
+- 文档与演示用例同步：各演示的组件实例引用由无类型 `ref()` 收敛为 `ref<InstanceType<typeof X> | null>(null)` 并改用 `?.` 调用；`dateFormat`、`debounce`、`throttle`、`useEventListener`、`useFps`、`useMediaQuery` 等工具函数文档补充 `SSR` 存在性判断与卸载清理示范；[全局化配置 ConfigProvider](/guide/components/config-provider.html) 演示的 `createDiscreteApi` 改为在 `onMounted` 中调用（其内部会创建 `DOM` 容器）
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-09-09">2.7.1</VersionDateTag>
 
 - 优化 [对话框 Dialog](/guide/components/dialog.html)、[模态框 Modal](/guide/components/modal.html)，鼠标点击位置改由模块级统一捕获（`import` 即注册监听），修复 `createDiscreteApi` 等命令式场景组件未挂载时点击丢失、展开退回中心的问题；新增 `100ms` 点击时效窗口，点击过期后异步 / 代码方式打开退化为默认中心展开；离场动画按打开时位置快照收起，不再受关闭时点击位置影响

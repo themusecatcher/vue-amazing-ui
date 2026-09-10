@@ -72,20 +72,29 @@ export function dateFormat(value: number | string | Date = Date.now(), format: s
 :::
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
 const date = ref(dateFormat(new Date()))
+let dateRafId = 0
 const updateDate = () => {
   date.value = dateFormat(new Date())
-  requestAnimationFrame(updateDate)
+  dateRafId = requestAnimationFrame(updateDate)
 }
-requestAnimationFrame(updateDate)
 const realTime = ref(dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS'))
+let timeRafId = 0
 const updateTime = () => {
   realTime.value = dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS')
-  requestAnimationFrame(updateTime)
+  timeRafId = requestAnimationFrame(updateTime)
 }
-requestAnimationFrame(updateTime)
+// SSR（Node）环境无 requestAnimationFrame：挂载后启动，卸载时取消
+onMounted(() => {
+  dateRafId = requestAnimationFrame(updateDate)
+  timeRafId = requestAnimationFrame(updateTime)
+})
+onBeforeUnmount(() => {
+  cancelAnimationFrame(dateRafId)
+  cancelAnimationFrame(timeRafId)
+})
 </script>
 
 ## 基本使用
@@ -98,14 +107,21 @@ _格式化时间戳_
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
 const date = ref(dateFormat(new Date()))
+let rafId = 0
 const updateDate = () => {
   date.value = dateFormat(new Date())
-  requestAnimationFrame(updateDate)
+  rafId = requestAnimationFrame(updateDate)
 }
-requestAnimationFrame(updateDate)
+// SSR（Node）环境无 requestAnimationFrame：挂载后启动，卸载时取消
+onMounted(() => {
+  rafId = requestAnimationFrame(updateDate)
+})
+onBeforeUnmount(() => {
+  cancelAnimationFrame(rafId)
+})
 </script>
 ```
 
@@ -126,14 +142,21 @@ dateFormat('2025-10-10', 'MM/DD/YYYY') // 10/10/2025
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
 const realTime = ref(dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS'))
+let rafId = 0
 const updateTime = () => {
   realTime.value = dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS')
-  requestAnimationFrame(updateTime)
+  rafId = requestAnimationFrame(updateTime)
 }
-requestAnimationFrame(updateTime)
+// SSR（Node）环境无 requestAnimationFrame：挂载后启动，卸载时取消
+onMounted(() => {
+  rafId = requestAnimationFrame(updateTime)
+})
+onBeforeUnmount(() => {
+  cancelAnimationFrame(rafId)
+})
 </script>
 ```
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
 import Ellipsis, { type EllipsisProps } from 'components/ellipsis'
-import { rafTimeout, cancelRaf, useResizeObserver, useInject } from 'components/utils'
+import { useResizeObserver, useInject } from 'components/utils'
 export interface Item {
   title: string // 文字标题
   href?: string // 跳转链接
@@ -42,15 +42,15 @@ const props = withDefaults(defineProps<Props>(), {
   ellipsisProps: () => ({}),
   pauseOnMouseEnter: false
 })
-const horizontalRef = ref() // 水平滚动 DOM 引用
+const horizontalRef = ref<HTMLElement | null>(null) // 水平滚动 DOM 引用
 const horizontalWrapWidth = ref<number>(0) // 水平滚动容器宽度
-const verticalRef = ref() // 垂直滚动 DOM 引用
-const groupRef = ref() // 水平滚动内容 DOM 引用
+const verticalRef = ref<HTMLElement | null>(null) // 垂直滚动 DOM 引用
+const groupRef = ref<HTMLElement | null>(null) // 水平滚动内容 DOM 引用
 const groupWidth = ref<number>(0) // 水平滚动内容宽度
 const playState = ref<'paused' | 'running'>('paused') // 水平滚动动画执行状态
 const reset = ref<boolean>(true) // 重置水平滚动动画状态
 const activeIndex = ref<number>(0) // 垂直滚动当前索引
-const verticalMoveRaf = ref() // 垂直滚动定时器引用标识
+const verticalMoveTimer = ref<ReturnType<typeof setTimeout> | null>(null) // 垂直滚动定时器引用标识
 const originVertical = ref<boolean>(true) // 垂直滚动初始状态
 const scrollItems = ref<Item[]>([]) // 滚动目标文字数组
 const { colorPalettes } = useInject('TextScroll') // 主题色注入
@@ -120,7 +120,7 @@ useResizeObserver([horizontalRef, groupRef, verticalRef], () => {
   initScroll()
 })
 function initScroll(): void {
-  verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
+  verticalMoveTimer.value && clearTimeout(verticalMoveTimer.value)
   if (!originVertical.value) {
     originVertical.value = true
   }
@@ -131,6 +131,7 @@ function initScroll(): void {
 }
 // 获取水平滚动容器宽度；水平滚动内容宽度
 function getScrollSize(): void {
+  if (!horizontalRef.value || !groupRef.value) return
   horizontalWrapWidth.value = horizontalRef.value.offsetWidth
   groupWidth.value = groupRef.value.offsetWidth
 }
@@ -147,16 +148,16 @@ function onAnimationIteration(): void {
   resetScrollState()
 }
 function verticalMove(): void {
-  verticalMoveRaf.value = rafTimeout(
-    () => {
-      if (originVertical.value) {
-        originVertical.value = false
-      }
-      activeIndex.value = (activeIndex.value + 1) % itemsAmount.value
-    },
-    originVertical.value ? props.interval : props.interval + props.duration,
-    true
-  )
+  // 间隔在启动时确定一次，后续每一拍沿用同一间隔；每次触发后再排下一次，避免堆积与累积漂移
+  const delay = originVertical.value ? props.interval : props.interval + props.duration
+  const tick = (): void => {
+    if (originVertical.value) {
+      originVertical.value = false
+    }
+    activeIndex.value = (activeIndex.value + 1) % itemsAmount.value
+    verticalMoveTimer.value = setTimeout(tick, delay)
+  }
+  verticalMoveTimer.value = setTimeout(tick, delay)
 }
 function onClick(item: Item): void {
   emit('click', item)
@@ -179,7 +180,7 @@ function startMove(): void {
 function stopMove(): void {
   if (props.vertical) {
     originVertical.value = true
-    verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
+    verticalMoveTimer.value && clearTimeout(verticalMoveTimer.value)
   } else {
     playState.value = 'paused'
   }
@@ -187,7 +188,7 @@ function stopMove(): void {
 // 滚动重置
 function resetMove(): void {
   if (props.vertical) {
-    verticalMoveRaf.value && cancelRaf(verticalMoveRaf.value)
+    verticalMoveTimer.value && clearTimeout(verticalMoveTimer.value)
     if (activeIndex.value !== 0) {
       activeIndex.value = 0
       originVertical.value = false
@@ -204,6 +205,9 @@ function resetMove(): void {
     })
   }
 }
+onBeforeUnmount(() => {
+  verticalMoveTimer.value && clearTimeout(verticalMoveTimer.value)
+})
 defineExpose({
   start: startMove,
   stop: stopMove,

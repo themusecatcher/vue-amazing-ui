@@ -31,7 +31,8 @@ const props = withDefaults(defineProps<Props>(), {
   xxl: undefined
 })
 defineSlots<ColSlots>()
-const viewportWidth = ref(window.innerWidth)
+// SSR（Node）环境无 window，取 0；浏览器端初始值与原来一致
+const viewportWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 0)
 const flexValue = computed(() => {
   if (typeof props.flex === 'number') {
     return `${props.flex} ${props.flex} auto`
@@ -87,7 +88,10 @@ const responsiveValue = computed(() => {
     offset: props.offset
   }
 })
-useEventListener(window, 'resize', getViewportWidth)
+// 实参 window 在 setup 期求值，SSR（Node）下必须先判断存在性再调用
+if (typeof window !== 'undefined') {
+  useEventListener(window, 'resize', getViewportWidth)
+}
 function getViewportWidth() {
   viewportWidth.value = window.innerWidth
 }

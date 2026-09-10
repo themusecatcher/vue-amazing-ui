@@ -286,7 +286,7 @@ pnpm docs:dev
 | :-- | :-- | :-- |
 | dateFormat | 格式化日期时间字符串函数 | (value: number &#124; string &#124; Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss') => string |
 | formatNumber | 数字格式化函数 | (value: number &#124; string, precision: number = 2, separator: string = ',', decimal: string = '.', prefix?: string, suffix?: string) => string |
-| rafTimeout | 使用 `requestAnimationFrame` 实现的延迟 `setTimeout` 或间隔 `setInterval` 调用函数 | (fn: Function, delay: number = 0, interval: boolean = false) => \{ id: number } |
+| rafTimeout | 基于 `requestAnimationFrame` 实现的延时 / 间歇调用函数，与 `setTimeout` / `setInterval` 不等价 | (fn: Function, delay: number = 0, interval: boolean = false) => \{ id: number } |
 | cancelRaf | 用于取消 `rafTimeout` 函数 | (raf: { id: number }) => void |
 | throttle | 节流函数 | (fn: Function, delay: number = 300) => Function |
 | debounce | 防抖函数 | (fn: Function, delay: number = 300) => Function |

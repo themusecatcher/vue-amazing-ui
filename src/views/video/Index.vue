@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { Video } from 'vue-amazing-ui'
 const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/ultra.mp4')
 const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/ultra.jpg')
-const video = ref()
+const video = ref<InstanceType<typeof Video> | null>(null)
 function onPlay() {
   console.log('play')
 }
@@ -10,10 +11,10 @@ function onPause() {
   console.log('pause')
 }
 const play = () => {
-  video.value.play()
+  video.value?.play()
 }
 const pause = () => {
-  video.value.pause()
+  video.value?.pause()
 }
 </script>
 <template>

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { ref, h } from 'vue'
-import type { QRCodeProps } from 'vue-amazing-ui'
+import { QRCode, type QRCodeProps } from 'vue-amazing-ui'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
-const qrcodeRef = ref()
+const qrcodeRef = ref<InstanceType<typeof QRCode> | null>(null)
 const size = ref(160)
 const value = ref('hello world')
 const color = ref('#FF6900')
@@ -22,7 +22,8 @@ const increase = () => {
   }
 }
 const dowloadQRCode = async () => {
-  const url = await qrcodeRef.value.getQRCodeImage()
+  const url = await qrcodeRef.value?.getQRCodeImage()
+  if (!url) return
   const a = document.createElement('a')
   a.download = 'QRCode.png'
   a.href = url

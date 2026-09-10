@@ -34,8 +34,8 @@ const props = withDefaults(defineProps<Props>(), {
   value: undefined
 })
 defineSlots<SegmentedSlots>()
-const segmentedGroupRef = ref()
-const segmentedItemRef = ref()
+const segmentedGroupRef = ref<HTMLElement | null>(null)
+const segmentedItemRef = ref<HTMLElement[]>([])
 const selectedValue = ref<string | number>() // 当前选中的值
 const selectedWallWidth = ref<number>(0) // selectedWall 的宽度
 const selectedWallOffsetLeft = ref<number>(0) // selectedWall 的偏移量

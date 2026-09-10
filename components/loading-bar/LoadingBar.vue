@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const showLoadingBar = ref<boolean>(false) // 加载条是否显示
-const loadingBarRef = ref() // 加载条元素引用
+const loadingBarRef = ref<HTMLElement | null>(null) // 加载条元素引用
 const transitionDisabled = ref(false) // 是否禁用过渡，表示使用仅由 JavaScript 执行的动画
 const loadingStarted = ref<boolean>(false) // 加载条是否开始
 const loadingFinishing = ref<boolean>(false) // 加载条是否完成

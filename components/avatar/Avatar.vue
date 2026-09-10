@@ -38,7 +38,7 @@ const props = withDefaults(defineProps<Props>(), {
   target: '_self'
 })
 defineSlots<AvatarSlots>()
-const viewportWidth = ref<number>(window.innerWidth)
+const viewportWidth = ref<number>(typeof window !== 'undefined' ? window.innerWidth : 0)
 const slotsExist = useSlotsExist(['default', 'icon'])
 const showIcon = computed(() => {
   if (!props.src) {
@@ -114,7 +114,9 @@ const strStyle = computed(() => {
   }
   return {}
 })
-useEventListener(window, 'resize', getViewportWidth)
+if (typeof window !== 'undefined') {
+  useEventListener(window, 'resize', getViewportWidth)
+}
 function getViewportWidth(): void {
   viewportWidth.value = window.innerWidth
 }
