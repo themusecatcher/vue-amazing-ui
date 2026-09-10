@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, getCurrentInstance, onBeforeUnmount } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import {
   useSlotsExist,
   useResizeObserver,
-  rafTimeout,
-  cancelRaf,
   useOptionsSupported,
   useScrollParent,
   useFloatingPosition
@@ -37,7 +35,7 @@ export interface Props {
     | 'rightBottom' // 文字提示位置
   flip?: boolean // 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
   trigger?: 'hover' | 'click' | 'focus' | 'contextmenu' // 文字提示触发方式
-  keyboard?: boolean // 是否支持按键操作 (enter 显示；esc 关闭)，仅当 trigger: 'click' 时生效
+  keyboard?: boolean // 是否支持按键操作 (enter 切换显示；esc 关闭)，仅当 trigger: 'click' 时生效
   disabled?: boolean // 是否禁用文字提示，禁用后不响应任何触发
   to?: string | HTMLElement | false // 弹出框挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   transitionDuration?: number // 文字提示动画的过渡持续时间，单位 ms
@@ -78,8 +76,9 @@ const props = withDefaults(defineProps<Props>(), {
 defineSlots<TooltipSlots>()
 const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const tooltipShow = ref<boolean>(false) // tooltip 显示隐藏标识
-const tooltipTimer = ref() // tooltip 延迟显示隐藏的定时器标识符
-const positionRaf = ref<{ id: number } | null>(null) // 位置更新的 rAF 帧标识，用于合并同一帧内的多次位置重算
+const tooltipTimer = ref<ReturnType<typeof setTimeout> | null>(null) // tooltip 延迟显示隐藏的定时器标识符
+const positionRaf = ref<number | null>(null) // 位置更新的 rAF 帧标识，用于合并同一帧内的多次位置重算
+const documentListenerAttached = ref<boolean>(false) // 外部点击关闭监听是否已注册，确保注册/移除一一对应
 const cardTop = ref<number>(0) // 弹出框相对于 tooltipContent 的垂直位置
 const cardLeft = ref<number>(0) // 弹出框相对于 tooltipContent 的水平位置
 type Placement = NonNullable<Props['placement']>
@@ -89,7 +88,9 @@ const tooltipPlace = ref<Placement>('top') // 弹出框位置
 const tooltipContentRef = ref<HTMLElement | null>(null) // tooltipContent 模板引用
 const tooltipRef = ref<HTMLElement | null>(null) // tooltip 模板引用
 const tooltipCardRef = ref<HTMLElement | null>(null) // tooltipCard 模板引用
-const tooltipCardRect = ref<DOMRect>() // tooltipCard 元素的大小及其相对于视口的位置
+// tooltipCard 元素的布局尺寸 (取 offset 尺寸)：进入时的缩放动画会改变 transform，
+// getBoundingClientRect 返回的是缩放后的视觉尺寸，动画期间测量会偏小导致位置计算错位
+const tooltipCardSize = ref<{ width: number; height: number }>({ width: 0, height: 0 })
 // 测量定位容器与内容元素矩形
 const { positionedContainerRect, contentRect, measure } = useFloatingPosition(tooltipContentRef, tooltipRef)
 const { isSupported: captureSupported } = useOptionsSupported('capture')
@@ -124,6 +125,10 @@ const tooltipMaxWidth = computed(() => {
 const showTooltip = computed(() => {
   return slotsExist.tooltip || props.tooltip
 })
+// 弹出框 id：以组件实例 uid 保证全局唯一，供触发器 aria-describedby 关联
+const tooltipCardId = `va-tooltip-${getCurrentInstance()?.uid ?? 0}`
+// 仅在弹出框实际可见时关联描述，避免初始隐藏态被读屏器朗读
+const ariaDescribedby = computed(() => (showTooltip.value && tooltipShow.value ? tooltipCardId : undefined))
 // 复合方向时箭头中心距卡片对齐边的距离，单位 px
 const arrowOffset = computed(() => {
   return props.arrow ? 13 : 8
@@ -209,11 +214,12 @@ watch(
 watch(
   () => props.show,
   (to) => {
+    // 受控 show 需立即同步（跳过 hover 延迟），与 antd visible 的受控语义保持一致
     if (to && !tooltipShow.value) {
-      onShow()
+      onShow(true)
     }
     if (!to && tooltipShow.value) {
-      onHide()
+      onHide(true)
     }
   },
   {
@@ -222,27 +228,24 @@ watch(
 )
 // 监听 tooltipCard 和 tooltipContent 的尺寸变化，更新弹出框位置
 useResizeObserver([tooltipCardRef, tooltipContentRef], (entries: ResizeObserverEntry[]) => {
-  // 排除 tooltipCard 显示过渡动画时的尺寸变化
   if (!(showTooltip.value && tooltipShow.value)) return
-  if (entries.length === 1 && entries[0].target.classList.contains('tooltip-card')) {
-    const { blockSize, inlineSize } = entries[0].borderBoxSize[0]
-    if (
-      Math.round(blockSize) === Math.round((tooltipCardRect.value as DOMRect).height) &&
-      Math.round(inlineSize) === Math.round((tooltipCardRect.value as DOMRect).width)
-    ) {
+  // 显隐切换 (v-show display:none→block) 会产生同尺寸的重复回调；卡片尺寸未变则无需重算位置（双方均为 offset 边框盒口径，无需取整）
+  if (entries.length === 1 && entries[0].target === tooltipCardRef.value) {
+    const cardEl = entries[0].target as HTMLElement
+    if (cardEl.offsetWidth === tooltipCardSize.value.width && cardEl.offsetHeight === tooltipCardSize.value.height) {
       return
     }
   }
   updatePosition()
 })
-// 查询并监听最近可滚动父元素，响应视口 resize；通过 onCleanup 注入 Tooltip 的 rAF 清理，避免帧泄漏
+// 查询并监听最近可滚动父元素，响应视口 resize；通过 onCleanup 注入 Tooltip 的位置更新帧清理，避免帧泄漏
 const { scrollTarget, viewportWidth, viewportHeight, observeScroll } = useScrollParent(
   tooltipContentRef,
   updatePosition,
   {
     onCleanup: () => {
-      if (positionRaf.value) {
-        cancelRaf(positionRaf.value)
+      if (positionRaf.value !== null) {
+        cancelAnimationFrame(positionRaf.value)
         positionRaf.value = null
       }
     }
@@ -252,8 +255,8 @@ const { scrollTarget, viewportWidth, viewportHeight, observeScroll } = useScroll
 // 每帧渲染前只执行一次 getPosition，与浏览器渲染节奏对齐，跟手且减少强制 reflow
 function updatePosition() {
   if (!tooltipShow.value) return
-  if (positionRaf.value) return // 本帧已排队，跳过重复调度
-  positionRaf.value = rafTimeout(() => {
+  if (positionRaf.value !== null) return // 本帧已排队，跳过重复调度
+  positionRaf.value = requestAnimationFrame(() => {
     positionRaf.value = null
     tooltipShow.value && getPosition()
   })
@@ -261,14 +264,19 @@ function updatePosition() {
 // 计算文字提示位置
 async function getPosition() {
   await measure()
-  tooltipCardRect.value = tooltipCardRef.value?.getBoundingClientRect() as DOMRect
+  const cardEl = tooltipCardRef.value
+  // 取 offset 尺寸 (布局尺寸) 而非 getBoundingClientRect：缩放动画会改变 transform，
+  // 使 rect 返回缩放后的视觉尺寸，导致动画期间测量偏小、位置计算错位
+  tooltipCardSize.value = {
+    width: cardEl?.offsetWidth ?? 0,
+    height: cardEl?.offsetHeight ?? 0
+  }
   if (props.flip) {
     tooltipPlace.value = getPlacement()
   } else {
     tooltipPlace.value = props.placement
   }
-  const cardWidth = tooltipCardRect.value.width
-  const cardHeight = tooltipCardRect.value.height
+  const { width: cardWidth, height: cardHeight } = tooltipCardSize.value
   // 内容实际尺寸：取首个元素 (触发元素) 的边框矩形，避免 tooltip-content 包裹的子元素 margin 被计入
   const contentEl = tooltipContentRef.value?.firstElementChild as HTMLElement | null
   const contentSizeRect = contentEl?.getBoundingClientRect() ?? (contentRect.value as DOMRect)
@@ -381,8 +389,7 @@ function getPlacement(): Placement {
   const bottomDistance = targetBottom - bottom - (props.arrow ? 12 : 0) // 内容元素下边缘距离滚动元素下边缘的距离
   const leftDistance = left - targetLeft - (props.arrow ? 12 : 0) // 内容元素左边缘距离滚动元素左边缘的距离
   const rightDistance = targetRight - right - (props.arrow ? 12 : 0) // 内容元素右边缘距离滚动元素右边缘的距离
-  const cardHeight = (tooltipCardRect.value as DOMRect).height
-  const cardWidth = (tooltipCardRect.value as DOMRect).width
+  const { height: cardHeight, width: cardWidth } = tooltipCardSize.value
   const gap = props.arrow ? 4 : 6 // 主轴方向弹出框与内容元素之间的间距
   const flippedMain = flipMainAxis(baseMain)
   return `${flippedMain}${crossSuffix}` as Placement
@@ -413,35 +420,41 @@ function getPlacement(): Placement {
     return fitsLeft ? 'left' : 'right'
   }
 }
-function onShow(): void {
+// 取消延迟显示/隐藏定时器并清空标识，避免重复取消已失效的定时器
+function clearTooltipTimer(): void {
+  if (tooltipTimer.value !== null) {
+    clearTimeout(tooltipTimer.value)
+    tooltipTimer.value = null
+  }
+}
+// immediate 为 true 时跳过 hover 延迟（用于受控 show 需立即生效的场景）
+function onShow(immediate = false): void {
   if (props.disabled) return
-  tooltipTimer.value && cancelRaf(tooltipTimer.value)
+  clearTooltipTimer()
   if (!tooltipShow.value) {
-    // 显示延迟仅在 hover 触发时生效，click/contextmenu/focus 等触发方式立即显示
-    const delay = props.trigger === 'hover' ? props.showDelay : 0
-    tooltipTimer.value = rafTimeout(() => {
+    // 显示延迟仅在 hover 触发且非立即模式下生效，click/contextmenu/focus 等触发方式立即显示
+    const delay = props.trigger === 'hover' && !immediate ? props.showDelay : 0
+    tooltipTimer.value = setTimeout(() => {
       tooltipShow.value = true
       getPosition()
       emits('update:show', true)
       emits('openChange', true)
       if (showTooltip.value && (props.trigger === 'click' || props.trigger === 'contextmenu')) {
-        document.addEventListener('click', handleClick, captureSupported.value ? { capture: true } : true)
+        addDocumentListener()
       }
     }, delay)
   }
 }
-function onHide(): void {
-  tooltipTimer.value && cancelRaf(tooltipTimer.value)
+function onHide(immediate = false): void {
+  clearTooltipTimer()
   if (tooltipShow.value) {
-    // 隐藏延迟仅在 hover 触发时生效，click/contextmenu/focus 等触发方式立即隐藏
-    const delay = props.trigger === 'hover' ? props.hideDelay : 0
-    tooltipTimer.value = rafTimeout(() => {
+    // 隐藏延迟仅在 hover 触发且非立即模式下生效，click/contextmenu/focus 等触发方式立即隐藏
+    const delay = props.trigger === 'hover' && !immediate ? props.hideDelay : 0
+    tooltipTimer.value = setTimeout(() => {
       tooltipShow.value = false
       emits('update:show', false)
       emits('openChange', false)
-      if (showTooltip.value && (props.trigger === 'click' || props.trigger === 'contextmenu')) {
-        document.removeEventListener('click', handleClick, captureSupported.value ? { capture: true } : true)
-      }
+      removeDocumentListener()
     }, delay)
   }
 }
@@ -457,6 +470,18 @@ function handleClick(e: Event) {
     onHide()
   }
 }
+// 注册外部点击关闭监听（仅 click/contextmenu 触发需要），幂等，避免重复注册
+function addDocumentListener(): void {
+  if (documentListenerAttached.value) return
+  document.addEventListener('click', handleClick, captureSupported.value ? { capture: true } : true)
+  documentListenerAttached.value = true
+}
+// 移除外部点击关闭监听，幂等；与注册条件解耦，确保卸载或显隐切换时不残留
+function removeDocumentListener(): void {
+  if (!documentListenerAttached.value) return
+  document.removeEventListener('click', handleClick, captureSupported.value ? { capture: true } : true)
+  documentListenerAttached.value = false
+}
 function onEnterWrap() {
   if (showTooltip.value && props.trigger === 'hover' && !props.showControl) {
     onShow()
@@ -467,7 +492,9 @@ function onLeaveWrap() {
     onHide()
   }
 }
-function onAnimationEnd() {
+function onAnimationEnd(e: AnimationEvent) {
+  // 仅响应弹出框自身的缩放动画：插槽内容中的嵌套动画冒泡到容器时，target 非容器，需忽略
+  if (e.target !== tooltipRef.value) return
   emits('animationend', tooltipShow.value)
 }
 function onEnterTooltip() {
@@ -480,16 +507,19 @@ function onLeaveTooltip() {
     onHide()
   }
 }
-// focus 触发：内容元素获得/失去焦点时显示/隐藏
+// focus 触发：内容元素（或其内部可聚焦子元素）获得/失去焦点时显示/隐藏
+// focus/blur 不冒泡，包裹元素无法在冒泡阶段捕获内部子元素的焦点变化，故使用捕获阶段监听 (.capture)
+// 选择捕获阶段而非 focusin/focusout：后者依赖浏览器原生支持 (Firefox 52+ 才支持)，捕获阶段监听兼容面更大
 function onFocus() {
   if (showTooltip.value && props.trigger === 'focus') {
     onShow()
   }
 }
-function onBlur() {
-  if (showTooltip.value && props.trigger === 'focus') {
-    onHide()
-  }
+function onBlur(e: FocusEvent) {
+  if (!showTooltip.value || props.trigger !== 'focus') return
+  // 焦点仍在内容内部移动时（如包裹 span → 内部可聚焦子元素）不隐藏，避免闪烁
+  if (tooltipContentRef.value?.contains(e.relatedTarget as Node | null)) return
+  onHide()
 }
 // contextmenu 触发：右键菜单时显示 (阻止默认菜单)，点击外部由 handleClick 关闭
 function onContextmenu(e: Event) {
@@ -522,9 +552,15 @@ function onContentKeydownEsc() {
     onHide()
   }
 }
+// 卸载时取消延迟显示/隐藏定时器，避免回调在组件卸载后仍然触发
+// 显示状态下卸载时 onHide 的延迟回调不会执行，需在此无条件移除外部点击监听，避免监听残留
+onBeforeUnmount(() => {
+  clearTooltipTimer()
+  removeDocumentListener()
+})
 defineExpose({
-  show: onShow,
-  hide: onHide,
+  show: () => onShow(),
+  hide: () => onHide(),
   observeScroll
 })
 </script>
@@ -557,7 +593,14 @@ defineExpose({
           @mouseleave="onLeaveTooltip"
           @keydown.esc="onTooltipKeydownEsc"
         >
-          <div ref="tooltipCardRef" class="tooltip-card" :class="tooltipClass" :style="tooltipStyle">
+          <div
+            ref="tooltipCardRef"
+            class="tooltip-card"
+            role="tooltip"
+            :id="tooltipCardId"
+            :class="tooltipClass"
+            :style="tooltipStyle"
+          >
             <slot name="tooltip">{{ tooltip }}</slot>
           </div>
           <div v-if="arrow" class="tooltip-arrow" :class="[`arrow-${mainAxis}`, `arrow-cross-${crossAlign}`]"></div>
@@ -569,11 +612,12 @@ defineExpose({
       class="tooltip-content"
       :class="contentClass"
       :style="contentStyle"
+      :aria-describedby="ariaDescribedby"
       :tabindex="trigger === 'focus' ? 0 : undefined"
       @click="onContentClick"
       @contextmenu="onContextmenu"
-      @focus="onFocus"
-      @blur="onBlur"
+      @focus.capture="onFocus"
+      @blur.capture="onBlur"
       @keydown.enter="onContentKeydownEnter"
       @keydown.esc="onContentKeydownEsc"
     >

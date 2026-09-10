@@ -25,25 +25,30 @@ _使用 `MutationObserver` 观察 `DOM` 元素的变化的组合式函数_
  */
 import { ref, toValue, computed, watch, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
 import type { Ref, ComputedRef } from 'vue'
+/**
+ * 归一化观察目标为 HTMLElement 数组
+ *
+ * 兼容 Ref / Ref[] / HTMLElement / HTMLElement[] 四种入参：先解包 Ref，再过滤空值，
+ * 保证后续 observe 调用拿到的都是可用元素。
+ */
+function resolveTargetElements(target: Ref | Ref[] | HTMLElement | HTMLElement[]): HTMLElement[] {
+  const targetValue = toValue(target) as Ref | Ref[] | HTMLElement | HTMLElement[] | null | undefined
+  if (!targetValue) return []
+  const list = Array.isArray(targetValue) ? targetValue : [targetValue]
+  return list
+    .map((item) => toValue(item) as HTMLElement | null | undefined)
+    .filter((element): element is HTMLElement => Boolean(element))
+}
 export function useMutationObserver(
   target: Ref | Ref[] | HTMLElement | HTMLElement[],
   callback: MutationCallback,
   options: object = {}
 ): { start: () => void; stop: () => void } {
-  const isSupported = useSupported(() => window && 'MutationObserver' in window)
+  // 用 typeof 判断而非裸 window：SSR（Node）下裸引用会直接抛 ReferenceError
+  const isSupported = useSupported(() => typeof window !== 'undefined' && 'MutationObserver' in window)
   const stopObservation = ref(false)
   let observer: MutationObserver | undefined
-  const targets = computed(() => {
-    const targetsValue = toValue(target)
-    if (targetsValue) {
-      if (Array.isArray(targetsValue)) {
-        return targetsValue.map((el: any) => toValue(el)).filter((el: any) => el)
-      } else {
-        return [targetsValue]
-      }
-    }
-    return []
-  })
+  const targets = computed(() => resolveTargetElements(target))
   // 定义清理函数，用于断开 MutationObserver 的连接
   const cleanup = () => {
     if (observer) {
@@ -85,7 +90,6 @@ export function useMutationObserver(
     stop
   }
 }
-// 辅助函数
 export function useSupported(callback: () => unknown): ComputedRef<boolean> {
   const isMounted = useMounted()
   return computed(() => {
@@ -119,7 +123,7 @@ export function useMounted(): Ref<boolean> {
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useMutationObserver } from 'vue-amazing-ui'
-const defaultSlotsRef = ref<HTMLDivElement>()
+const defaultSlotsRef = ref<HTMLDivElement | null>(null)
 // 监听 defaultSlotsRef DOM 变化
 const callback = (mutationsList: MutationRecord[], observer: MutationObserver) => {
   console.log('mutationsList', mutationsList)

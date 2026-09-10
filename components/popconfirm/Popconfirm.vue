@@ -10,7 +10,7 @@ export interface Props {
   titleStyle?: CSSProperties // 设置标题的样式
   description?: string // 弹出确认框的内容描述
   descriptionStyle?: CSSProperties // 设置内容描述的样式
-  keyboard?: boolean // 是否支持按键操作 (enter 显示；esc 关闭)
+  keyboard?: boolean // 是否支持按键操作 (enter 切换显示；esc 关闭)
   tooltipStyle?: CSSProperties // 设置弹出提示的样式
   icon?: 'success' | 'info' | 'warning' | 'danger' | VNode | (() => VNode) // 自定义 Icon 图标；插槽形态请用 #icon
   iconStyle?: CSSProperties // 设置 Icon 图标的样式，一般不需要设置，主要用于自定义 Icon 图标时
@@ -50,7 +50,7 @@ const props = withDefaults(defineProps<Props>(), {
   showCancel: true
 })
 defineSlots<PopconfirmSlots>()
-const tooltipRef = ref() // Tooltip 组件模板引用
+const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null) // Tooltip 组件模板引用
 const { colorPalettes } = useInject('Popconfirm') // 主题色注入
 const emits = defineEmits(['cancel', 'ok'])
 const slotsExist = useSlotsExist(['description'])
@@ -59,11 +59,11 @@ const showDesc = computed(() => {
 })
 function onCancel(e: Event): void {
   emits('cancel', e)
-  tooltipRef.value.hide()
+  tooltipRef.value?.hide()
 }
 function onOk(e: Event): void {
   emits('ok', e)
-  tooltipRef.value.hide()
+  tooltipRef.value?.hide()
 }
 </script>
 <template>

@@ -50,11 +50,11 @@ const props = withDefaults(defineProps<Props>(), {
 defineSlots<WatermarkSlots>()
 const FontGap = 3
 // 和 ref() 不同，浅层 ref 的内部值将会原样存储和暴露，并且不会被深层递归地转为响应式。只有对 .value 的访问是响应式的。
-const containerRef = shallowRef() // ref() 的浅层作用形式
-const watermarkRef = shallowRef()
-// SSR（Node）环境无 document，先取空值；浏览器端与原来一致，setup 期即可拿到 <html> 元素
+const containerRef = shallowRef<HTMLDivElement | null>(null) // ref() 的浅层作用形式
+const watermarkRef = shallowRef<HTMLDivElement>() // 水印元素，尚未创建时为 undefined
+// SSR（Node）环境无 document，htmlRef 为 null；浏览器端仍指向 <html> 元素
 const htmlRef = shallowRef<HTMLElement | null>(typeof document !== 'undefined' ? document.documentElement : null) // <html></html>元素
-const isDark = shallowRef(htmlRef.value?.classList.contains('dark') ?? false) // 是否开启暗黑模式
+const isDark = shallowRef(Boolean(htmlRef.value?.classList.contains('dark'))) // 是否开启暗黑模式
 const stopObservation = shallowRef(false)
 const gapX = computed(() => props.gap?.[0] ?? 100)
 const gapY = computed(() => props.gap?.[1] ?? 100)
@@ -117,19 +117,23 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   destroyWatermark()
+  resetHtmlPosition()
 })
 // 监听是否开启暗黑模式，自动反转水印颜色
 useMutationObserver(
   htmlRef,
   () => {
-    isDark.value = htmlRef.value?.classList.contains('dark') ?? false
+    isDark.value = Boolean(htmlRef.value?.classList.contains('dark'))
     destroyWatermark()
     renderWatermark()
   },
   { attributeFilter: ['class'] }
 )
 // 防止用户修改/隐藏水印
-useMutationObserver(props.fullscreen ? htmlRef : containerRef, onMutate, {
+// 观察目标必须随 fullscreen 变化重建：appendWatermark 用 append() 移动同一个水印节点，
+// 目标若在 setup 阶段被固化，切到全屏后节点搬到 <html> 下，观察者仍盯旧节点会导致防篡改失效
+const observeTarget = computed(() => (props.fullscreen ? htmlRef.value : containerRef.value))
+useMutationObserver(observeTarget, onMutate, {
   subtree: true, // 监听以 target 为根节点的整个子树
   childList: true, // 监听 target 节点中发生的节点的新增与删除
   attributes: true, // 观察所有监听的节点属性值的变化
@@ -152,6 +156,17 @@ function destroyWatermark() {
     watermarkRef.value = undefined
   }
 }
+// 全屏水印挂在 <html> 下时需其 position: relative 作为定位参照，退出全屏/组件卸载后必须撤销，避免残留影响宿主页面；
+// 仅在本实例写入过时才撤销，避免误清宿主页面自身在 <html> 上预设的 position。
+// 注：多个全屏实例共用同一个 <html>，任一实例卸载都会移除该共享属性，多实例并存时后者的定位参照会一并失效
+let htmlPositionApplied = false
+function resetHtmlPosition() {
+  if (!htmlPositionApplied) {
+    return
+  }
+  htmlRef.value?.style.removeProperty('position')
+  htmlPositionApplied = false
+}
 function appendWatermark(base64Url: string, markWidth: number) {
   if (containerRef.value && watermarkRef.value) {
     stopObservation.value = true
@@ -163,10 +178,15 @@ function appendWatermark(base64Url: string, markWidth: number) {
         backgroundSize: `${(gapX.value + markWidth) * BaseSize.value}px`
       })
     )
-    if (props.fullscreen && htmlRef.value) {
-      htmlRef.value.setAttribute('style', 'position: relative')
-      htmlRef.value.append(watermarkRef.value)
+    // htmlRef 在 SSR 下为 null，取出后判空（appendWatermark 仅客户端挂载后调用）
+    const htmlEl = htmlRef.value
+    if (props.fullscreen && htmlEl) {
+      // <html> 为全局共享元素：只改 position 属性而不整体覆盖 style，避免抹掉宿主已有内联样式
+      htmlEl.style.position = 'relative'
+      htmlPositionApplied = true
+      htmlEl.append(watermarkRef.value)
     } else {
+      resetHtmlPosition()
       containerRef.value?.append(watermarkRef.value)
     }
     setTimeout(() => {
@@ -174,7 +194,6 @@ function appendWatermark(base64Url: string, markWidth: number) {
     })
   }
 }
-;``
 // converting camel-cased strings to be lowercase and link it with Separator
 function toLowercaseSeparator(key: string) {
   return key.replace(/([A-Z])/g, '-$1').toLowerCase()
