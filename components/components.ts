@@ -124,7 +124,7 @@ export type {
 } from './notification'
 export { default as Notification, NotificationProvider, useNotification } from './notification'
 
-export type { NumberAnimationProps, NumberAnimationTransitionFunc } from './number-animation'
+export type { NumberAnimationProps, NumberAnimationEasingPreset } from './number-animation'
 export { default as NumberAnimation } from './number-animation'
 
 export type { PaginationProps } from './pagination'

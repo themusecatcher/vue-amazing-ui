@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type { CSSProperties, VNode } from 'vue'
 export interface Props {
-  label?: string // 内容的描述标签
+  label?: string | number | VNode // 内容的描述标签
   span?: number // 包含列的数量；当使用水平列表且未设置 span 时等效于 span: 1，但最后一行的最后一项，会包含该行剩余的所有列数
-  labelStyle?: CSSProperties // 自定义标签样式，优先级高于 Description 的 labelStyle
-  contentStyle?: CSSProperties // 自定义内容样式，优先级高于 Description 的 contentStyle
+  labelStyle?: CSSProperties // 自定义标签样式，优先级高于 Descriptions 的 labelStyle
+  contentStyle?: CSSProperties // 自定义内容样式，优先级高于 Descriptions 的 contentStyle
+  labelClass?: string // 标签自定义类名，与 Descriptions 的 labelClass 叠加
+  contentClass?: string // 内容自定义类名，与 Descriptions 的 contentClass 叠加
 }
 // 声明组件插槽类型
 export interface DescriptionsItemSlots {
@@ -13,57 +15,18 @@ export interface DescriptionsItemSlots {
 }
 withDefaults(defineProps<Props>(), {
   label: undefined,
-  span: undefined,
-  labelStyle: () => ({}),
-  contentStyle: () => ({})
+  span: 1,
+  labelStyle: undefined,
+  contentStyle: undefined,
+  labelClass: undefined,
+  contentClass: undefined
 })
 defineSlots<DescriptionsItemSlots>()
+// 本组件是 Descriptions 的纯数据载体：父组件读取其 props / slots 后自行渲染，组件自身不产出 DOM。
+// 因此不声明根元素，需关闭属性继承以消除「非 props 属性无法透传」的告警；
+// 单独使用时回退为渲染默认插槽，避免脱离 Descriptions 后内容丢失。
+defineOptions({ inheritAttrs: false })
 </script>
 <template>
-  <div class="descriptions-item" :data-span="span">
-    <span class="descriptions-label" :style="labelStyle">
-      <slot name="label">{{ label }}</slot>
-    </span>
-    <span class="descriptions-content" :style="contentStyle">
-      <slot></slot>
-    </span>
-  </div>
-  <tr class="descriptions-item-bordered" :data-span="span">
-    <th class="descriptions-label-th" :style="labelStyle">
-      <slot name="label">{{ label }}</slot>
-    </th>
-    <td class="descriptions-content-td" :style="contentStyle">
-      <slot></slot>
-    </td>
-  </tr>
+  <slot></slot>
 </template>
-<style lang="less" scoped>
-.descriptions-item {
-  display: flex;
-  .descriptions-label {
-    display: inline-flex;
-    align-items: baseline;
-    color: rgba(0, 0, 0, 0.88);
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 1.5714285714285714;
-    text-align: start;
-    &::after {
-      content: ':';
-      position: relative;
-      top: -0.5px;
-      margin-inline: 2px 8px;
-    }
-  }
-  .descriptions-content {
-    display: inline-flex;
-    align-items: baseline;
-    flex: 1;
-    color: rgba(0, 0, 0, 0.88);
-    font-size: 14px;
-    line-height: 1.5714285714285714;
-    word-break: break-word;
-    overflow-wrap: break-word;
-  }
-}
-</style>

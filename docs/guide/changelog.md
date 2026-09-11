@@ -10,6 +10,10 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-09-11">2.7.4</VersionDateTag>
+
+- 优化并更新 [描述列表 Descriptions](/guide/components/descriptions.html)：重构为数据驱动渲染，新增 `layout` / `colon` / `labelAlign` / `labelClass` / `contentClass` 属性、`#header` 插槽及 `xxxl` 响应式断点，`title` / `extra` / `label` 支持 `VNode`；修复空标签仍渲染冒号、`v-for` 与 `template` 包裹的子项丢失、标签与内容粘连、尺寸切换无过渡等问题，并移除全部 `!important`。⚠️ **破坏性变更**：移除 `vertical` 属性，请改用 `layout="vertical"` 替代
+
 ## <VersionDateTag date="2026-09-11">2.7.3</VersionDateTag>
 
 - 优化 [文字提示 Tooltip](/guide/components/tooltip.html) 定位与交互：修复缩放动画期间位置错位、焦点在内容内移动时闪烁，受控 `show` 立即生效、`animationend` 仅响应卡片自身动画，补充 `role="tooltip"` 与 `aria-describedby`；订正 `enter` 文档描述（实际为切换显示）
@@ -18,6 +22,10 @@
 - 优化 [气泡卡片 Popover](/guide/components/popover.html) / [气泡确认框 Popconfirm](/guide/components/popconfirm.html)：订正 `enter` 文档描述（实际为切换显示）；`Popover` 移除 `keyboard` 属性
 - 重构滚动工具函数：[useScroll](/utils/functions/use-scroll.html) / [useScrollParent](/utils/functions/use-scroll-parent.html) / [useMutationObserver](/utils/functions/use-mutation-observer.html) / [useResizeObserver](/utils/functions/use-resize-observer.html)：整页滚动改监听 `window` 以修复监听失效，统一观察目标归一化
 - 新增 [Tooltip](/guide/components/tooltip.html)、[Popover](/guide/components/popover.html)、[Watermark](/guide/components/watermark.html)、[useScroll](/utils/functions/use-scroll.html)、[useScrollParent](/utils/functions/use-scroll-parent.html) 单元测试，同步更新文档
+- 优化并更新 [抽屉 Drawer](/guide/components/drawer.html)：补齐 `getContainer` / `push` / `size` / `mask` / `maskClosable` / `keyboard` / `closeIcon` / `afterOpenChange` / `autofocus` / `forceRender` / `rootClassName` / `rootStyle` / `contentWrapperStyle` 等属性与 `#closeIcon` 插槽，支持多层抽屉推动、渲染在当前 DOM；新增 `blockScroll` 控制打开时是否禁用 `body` 滚动，`class` / `style` 作用于 `Drawer` 容器
+- 增强 [轮播图 Carousel](/guide/components/carousel.html)：新增 `loop` / `initialIndex` / 受控 `currentIndex` / `objectFit` / `draggable` / `mousewheel` 属性与 `beforeChange` / `afterChange` / `update:currentIndex` 事件，`to` 新增 `dontAnimate` 参数，新增 `#prevArrow` / `#nextArrow` / `#dots` 插槽；修复图片数量减少后当前页越界、图片加载失败后持续加载态、键盘焦点陷阱、单图时箭头无响应等问题，并适配系统「减弱动态效果」偏好。**破坏性变更**：移除与 `update:currentIndex` 等价的 `change` 事件，请改用 `update:currentIndex`（或 `v-model:current-index`）替代
+- 增强 [统计数值 Statistic](/guide/components/statistic.html)：新增 `tabularNums` 属性，开启后数字等宽，避免数值滚动时宽度抖动
+- 修复 [单选框 Radio](/guide/components/radio.html) / [复选框 Checkbox](/guide/components/checkbox.html) / [标签 Tag](/guide/components/tag.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html)：提供作用域插槽时页面渲染中断
 
 ## <VersionDateTag date="2026-09-10">2.7.2</VersionDateTag>
 
@@ -36,12 +44,12 @@
 
 ## <VersionDateTag date="2026-09-08">2.7.0</VersionDateTag>
 
-- ⚠️ **破坏性变更**：[Message](/guide/components/message.html)、[Notification](/guide/components/notification.html)、[Modal](/guide/components/modal.html)、[Dialog](/guide/components/dialog.html) 移除实例 `ref` 上的命令式方法，改用 `useXxx()`（需外层 `XxxProvider`）或 `createDiscreteApi()`；`window['$xxx']` 写法改为赋值 `api`；`@ready` 回传 `api`，句柄支持 `destroy()` / `update()`，Notification 额外支持 `destroy(key)` / `destroyAll()`
+- ⚠️ **破坏性变更**：[Message](/guide/components/message.html)、[Notification](/guide/components/notification.html)、[Modal](/guide/components/modal.html) 移除实例 `ref` 上的命令式方法，统一改用 `useXxx()`（需外层 `XxxProvider`）或 `createDiscreteApi()`；[Dialog](/guide/components/dialog.html) 新增 `useDialog()` / `createDiscreteApi()` 命令式入口；`window['$xxx']` 写法改为赋值 `api`；`@ready` 回传 `api`，句柄支持 `destroy()` / `update()`，Notification 额外支持 `destroy(key)` 按 `key` 精确关闭
 - ⚠️ **破坏性变更**：上述四组件浮层默认 `Teleport` 到 `body`，新增 `to` 指定挂载节点；依赖原渲染位置的 `scoped` 样式与 `:deep()` 覆写失效，需改为全局样式
 - ⚠️ **破坏性变更**：Notification `description` 更名 `content`、移除组件级 `title` / `description`、`top` / `bottom` 默认 `24` → `16`；Message 单条配置移除 `top`
-- ⚠️ **破坏性变更**：Modal 命令式 `maskClosable` 默认改 `false`、移除 `trapFocus` 与 `autoFocusButton` 的 `null` 取值、`Esc` 改绑弹窗主体、不再导出 `FooterType` / `ModalCallback`；[Upload](/guide/components/upload.html) 移除内嵌 Message：`messageProps` / `actionMessage` / `UploadMessageType` 及相关方法移除，改用 `success` / `error` / `remove` 事件
-- 重构并增强 [Dialog](/guide/components/dialog.html) / [Modal](/guide/components/modal.html)：改为多实例层叠架构，新增 `draggable` 拖拽、`mask` / `closable` / `closeIcon`、`wrapClass` / `containerClass` 等分层定制与 `onEsc` / `onMaskClick` / `afterClose` 回调，`title` / `content` 支持 `string` / `VNode` / 渲染函数 / 插槽，并补充 `aria-*` 与可聚焦关闭按钮
-- 增强 [Notification](/guide/components/notification.html) / [Message](/guide/components/message.html)：新增 `key` / `maxCount` / `keepAliveOnHover` / `to` 等属性，Notification `placement` 增加 `top` / `bottom` 居中；定时器改为按 `key` 独立管理，修复多条干扰与常驻消息阻塞回收
+- ⚠️ **破坏性变更**：Modal 命令式 `maskClosable` 默认改 `false`（组件级仍为 `true`）、`Esc` 监听改绑弹窗主体（焦点移出弹窗后不再响应）、入口类型导出由 `Props` / `Modal` 调整为 `ModalProps` / `ModalOptions` / `ModalUpdate` / `ModalReactive` / `ModalApi`；[Upload](/guide/components/upload.html) 移除内嵌 Message：`messageProps` / `actionMessage` / `UploadMessageType` 及相关方法移除，改用 `success` / `error` / `remove` 事件
+- 重构并增强 [Dialog](/guide/components/dialog.html) / [Modal](/guide/components/modal.html)：改为多实例层叠架构，新增 `mask` / `closable` / `closeIcon`、`wrapClass` / `containerClass` 等分层定制与 `onEsc` / `onMaskClick` / `afterClose` 回调（其中 [Dialog](/guide/components/dialog.html) 额外新增 `draggable` 拖拽），`title` / `content` 支持 `string` / `VNode` / 渲染函数 / 插槽，并补充 `aria-*` 与可聚焦关闭按钮
+- 增强 [Notification](/guide/components/notification.html) / [Message](/guide/components/message.html)：新增 `maxCount` / `keepAliveOnHover` / `to` 等属性，Notification 新增 `key` 与 `placement` 的 `top` / `bottom` 居中位置；定时器改为按 `key` 独立管理，修复多条干扰与常驻消息阻塞回收
 - 新增 [lockScroll](/utils/functions/lock-scroll.html) 工具函数（第 `24` 个），[Drawer](/guide/components/drawer.html) / Modal / Dialog 统一改用并补充卸载兜底释放；修复 [Table](/guide/components/table.html) 就地改写用户 `columns`、空 `columns` 崩溃与 `colspan` 计算错误
 - 优化 `VueAmazingUIResolver` 按需引入：新增四个命令式 `Provider` 组件的自动引入与样式注入，修复 Modal / Notification 缺失 [Scrollbar](/guide/components/scrollbar.html) 样式依赖
 - 工程优化：`xxxProps` 类型由 `object` 精确为对应 `Props`；新增 `vitest` 单元测试并纳入 `pnpm check`；新增 `development/` 设计指南
