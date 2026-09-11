@@ -133,7 +133,7 @@ const numberedDisplay = computed(() => {
 const renderedValue = ref<number | string | undefined>(numberedDisplay.value)
 const renderedDot = ref(props.dot)
 watch(
-  [() => props.value, numberedDisplay, () => props.dot],
+  [() => props.value, numberedDisplay, () => props.dot, () => props.showZero],
   () => {
     if (!showBadge.value) return
     renderedValue.value = numberedDisplay.value

@@ -10,9 +10,17 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-09-11">2.7.4</VersionDateTag>
+## <VersionDateTag date="2026-09-12">2.7.4</VersionDateTag>
 
 - 优化并更新 [描述列表 Descriptions](/guide/components/descriptions.html)：重构为数据驱动渲染，新增 `layout` / `colon` / `labelAlign` / `labelClass` / `contentClass` 属性、`#header` 插槽及 `xxxl` 响应式断点，`title` / `extra` / `label` 支持 `VNode`；修复空标签仍渲染冒号、`v-for` 与 `template` 包裹的子项丢失、标签与内容粘连、尺寸切换无过渡等问题，并移除全部 `!important`。⚠️ **破坏性变更**：移除 `vertical` 属性，请改用 `layout="vertical"` 替代
+- 修复 [useSlotsExist](/utils/functions/use-slots-exist.html)：作用域插槽在探测时因无参调用触发形参位置解构的 `TypeError`，导致整页渲染中断；改为传入空作用域对象并对插槽内抛错按「已提供」兜底，可准确识别「已提供但渲染为空」的插槽，新增单元测试
+- 增强 [徽标 Badge](/guide/components/badge.html)：数值变化时数字逐位上下滚动（超出 `max` 展示 `max+`），离场期间保留隐藏前最后展示的数值；`showZero` 动态切换时同步刷新展示值
+- 优化 [警告提示 Alert](/guide/components/alert.html)：重构关闭离场动画，冻结高度后平滑收缩、同步收起内边距与下边距、动画结束才卸载元素；新增 `afterClose` 事件
+- 新增 [统计数值 Statistic](/guide/components/statistic.html) `tabularNums` 属性：数值滚动时使用等宽数字，避免宽度抖动
+- 优化 [选择器 Select](/guide/components/select.html)：面板打开时自动将当前选中项滚动到可视区域内
+- 修复 [formatNumber](/utils/functions/format-number.html)：数值为 `0` 时丢失 `prefix` / `suffix` 的问题，并简化格式化逻辑
+- 优化多个组件全局文字断行：`word-break: break-all` 调整为 `break-word`，避免英文单词与数字被从中间截断
+- 组件库文档及工程优化
 
 ## <VersionDateTag date="2026-09-11">2.7.3</VersionDateTag>
 
@@ -26,6 +34,7 @@
 - 增强 [轮播图 Carousel](/guide/components/carousel.html)：新增 `loop` / `initialIndex` / 受控 `currentIndex` / `objectFit` / `draggable` / `mousewheel` 属性与 `beforeChange` / `afterChange` / `update:currentIndex` 事件，`to` 新增 `dontAnimate` 参数，新增 `#prevArrow` / `#nextArrow` / `#dots` 插槽；修复图片数量减少后当前页越界、图片加载失败后持续加载态、键盘焦点陷阱、单图时箭头无响应等问题，并适配系统「减弱动态效果」偏好。**破坏性变更**：移除与 `update:currentIndex` 等价的 `change` 事件，请改用 `update:currentIndex`（或 `v-model:current-index`）替代
 - 增强 [统计数值 Statistic](/guide/components/statistic.html)：新增 `tabularNums` 属性，开启后数字等宽，避免数值滚动时宽度抖动
 - 修复 [单选框 Radio](/guide/components/radio.html) / [复选框 Checkbox](/guide/components/checkbox.html) / [标签 Tag](/guide/components/tag.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html)：提供作用域插槽时页面渲染中断
+- 优化组件库发布脚本
 
 ## <VersionDateTag date="2026-09-10">2.7.2</VersionDateTag>
 
