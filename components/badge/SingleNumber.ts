@@ -11,7 +11,6 @@ import type { CSSProperties, PropType } from 'vue'
 interface UnitNumber {
   value: string
   offset: number
-  current: boolean
 }
 // 计算从 start 滚动到 end 需要走过的格数
 function getOffset(start: number, end: number, unit: -1 | 1): number {
@@ -63,7 +62,7 @@ export default defineComponent({
     })
     const units = computed<UnitNumber[]>(() => {
       if (isStatic.value) {
-        return [{ value: props.value, offset: 0, current: true }]
+        return [{ value: props.value, offset: 0 }]
       }
       const value = originValue.value
       const unitNumberList: number[] = []
@@ -74,8 +73,7 @@ export default defineComponent({
       const prevIndex = unitNumberList.findIndex((n) => n % 10 === prevValue.value)
       return unitNumberList.map((n, index) => ({
         value: `${n % 10}`,
-        offset: index - prevIndex,
-        current: index === prevIndex
+        offset: index - prevIndex
       }))
     })
     const offsetStyle = computed<CSSProperties>(() => {
@@ -95,7 +93,7 @@ export default defineComponent({
           h(
             'span',
             {
-              class: ['number', { current: unit.current }],
+              class: 'number',
               style: unit.offset ? { position: 'absolute', top: `${unit.offset * 100}%`, left: 0 } : undefined
             },
             unit.value

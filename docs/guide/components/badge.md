@@ -332,6 +332,10 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 
 ## 动态
 
+*数值变化时数字逐位上下滚动，隐藏前保留最后一次展示的数值*
+
+<br/>
+
 <Flex vertical>
   <Space gap="large" align="center">
     <Badge :value="value">
@@ -360,12 +364,12 @@ import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const value = ref(5)
 const dot = ref(true)
 function decline () {
-  if (count.value >= 1) {
-    count.value--
+  if (value.value >= 1) {
+    value.value--
   }
 }
 function increase () {
-  count.value++
+  value.value++
 }
 </script>
 <template>

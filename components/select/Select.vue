@@ -145,19 +145,16 @@ const panelPlacement = computed(() => {
 watch([() => props.placement, () => props.flip], () => {
   updatePosition()
 })
-watch(showOptions, (to) => {
+watch(showOptions, async (to) => {
+  // 首次打开时才用 v-if 渲染面板，此后仅由 v-show 控制显隐
   if (to && !initialDisplay.value) {
     initialDisplay.value = true
   }
-})
-watch(showOptions, (to) => {
   emits('openChange', to)
   if (props.search && !to) {
     inputValue.value = undefined
     hideSelectName.value = false
   }
-})
-watch(showOptions, async (to) => {
   // 打开面板时把当前选中项滚动到可视区域内
   if (to) {
     await scrollToSelected()
