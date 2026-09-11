@@ -629,3 +629,4 @@ actions | 自定义操作项 | v-slot:actions
 名称 | 说明 | 类型
 :-- | :-- | :--
 close | 关闭时触发的回调函数 | (e: Event) => void
+afterClose | 离场动画结束后触发的回调函数 | () => void

@@ -10,10 +10,18 @@
 - 当需要展示带描述的统计类数据时使用
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { LikeOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons-vue'
+import { NumberAnimation } from 'vue-amazing-ui'
+const defaultNumsRef = ref<InstanceType<typeof NumberAnimation> | null>(null)
+const tabularNumsRef = ref<InstanceType<typeof NumberAnimation> | null>(null)
 function formatter(value: string): string {
   console.log('value', value)
   return '1年有 ' + value + ' 天'
+}
+function playNumsCompare() {
+  defaultNumsRef.value?.play()
+  tabularNumsRef.value?.play()
 }
 </script>
 
@@ -259,6 +267,60 @@ function formatter (value: string): string {
 
 :::
 
+## 等宽数字
+
+*使用 `tabularNums` 使数值滚动时宽度保持稳定*
+
+<br/>
+
+<Row>
+  <Col :span="12">
+    <Statistic title="默认">
+      <NumberAnimation ref="defaultNumsRef" :from="0" :to="100000000.12345" :precision="2" :autoplay="false" />
+    </Statistic>
+  </Col>
+  <Col :span="12">
+    <Statistic title="tabularNums" tabular-nums>
+      <NumberAnimation ref="tabularNumsRef" :from="0" :to="100000000.12345" :precision="2" :autoplay="false" />
+    </Statistic>
+  </Col>
+</Row>
+<br />
+<Button type="primary" @click="playNumsCompare">播放对比</Button>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { NumberAnimation } from 'vue-amazing-ui'
+const defaultNumsRef = ref<InstanceType<typeof NumberAnimation> | null>(null)
+const tabularNumsRef = ref<InstanceType<typeof NumberAnimation> | null>(null)
+function playNumsCompare() {
+  defaultNumsRef.value?.play()
+  tabularNumsRef.value?.play()
+}
+</script>
+<template>
+  <Row>
+    <Col :span="12">
+      <Statistic title="默认">
+        <NumberAnimation ref="defaultNumsRef" :from="0" :to="100000000.12345" :precision="2" :autoplay="false" />
+      </Statistic>
+    </Col>
+    <Col :span="12">
+      <Statistic title="tabularNums" tabular-nums>
+        <NumberAnimation ref="tabularNumsRef" :from="0" :to="100000000.12345" :precision="2" :autoplay="false" />
+      </Statistic>
+    </Col>
+  </Row>
+  <br />
+  <Button type="primary" @click="playNumsCompare">播放对比</Button>
+</template>
+```
+
+:::
+
 ## APIs
 
 ### Statistic
@@ -273,6 +335,7 @@ prefix | 设置数值的前缀 | string | undefined
 suffix | 设置数值的后缀 | string | undefined
 separator | 设置千分位标识符 | string | ,
 formatter | 自定义数值展示 | (value: string) => string | (value: string) => value
+tabularNums | 是否使用等宽数字，避免数值变化时宽度抖动 | boolean | false
 
 ## Slots
 

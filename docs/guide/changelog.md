@@ -10,6 +10,17 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-09-12">2.7.4</VersionDateTag>
+
+- 修复 [useSlotsExist](/utils/functions/use-slots-exist.html)：作用域插槽在探测时因无参调用触发形参位置解构的 `TypeError`，导致整页渲染中断；改为传入空作用域对象并对插槽内抛错按「已提供」兜底，可准确识别「已提供但渲染为空」的插槽，新增单元测试
+- 增强 [徽标 Badge](/guide/components/badge.html)：数值变化时数字逐位上下滚动（超出 `max` 展示 `max+`），离场期间保留隐藏前最后展示的数值；`showZero` 动态切换时同步刷新展示值
+- 优化 [警告提示 Alert](/guide/components/alert.html)：重构关闭离场动画，冻结高度后平滑收缩、同步收起内边距与下边距、动画结束才卸载元素；新增 `afterClose` 事件
+- 新增 [统计数值 Statistic](/guide/components/statistic.html) `tabularNums` 属性：数值滚动时使用等宽数字，避免宽度抖动
+- 优化 [选择器 Select](/guide/components/select.html)：面板打开时自动将当前选中项滚动到可视区域内
+- 修复 [formatNumber](/utils/functions/format-number.html)：数值为 `0` 时丢失 `prefix` / `suffix` 的问题，并简化格式化逻辑
+- 优化多个组件全局文字断行：`word-break: break-all` 调整为 `break-word`，避免英文单词与数字被从中间截断
+- 组件库文档及工程优化
+
 ## <VersionDateTag date="2026-09-11">2.7.3</VersionDateTag>
 
 - 优化 [文字提示 Tooltip](/guide/components/tooltip.html) 定位与交互：修复缩放动画期间位置错位、焦点在内容内移动时闪烁，受控 `show` 立即生效、`animationend` 仅响应卡片自身动画，补充 `role="tooltip"` 与 `aria-describedby`；订正 `enter` 文档描述（实际为切换显示）

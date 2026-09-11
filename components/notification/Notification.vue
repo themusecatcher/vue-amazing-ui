@@ -616,7 +616,7 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
     padding: 20px 24px;
     overflow: hidden;
     line-height: 1.5714285714285714;
-    word-break: break-all;
+    word-break: break-word;
     background: #fff;
     border-radius: 8px;
     box-shadow:

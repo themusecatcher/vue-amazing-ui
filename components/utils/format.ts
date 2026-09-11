@@ -91,15 +91,12 @@ export function formatNumber(
   if (isNaN(numValue) || !isFinite(numValue)) {
     return ''
   }
-  if (numValue === 0) {
-    return numValue.toFixed(precision)
-  }
-  let formatValue = numValue.toFixed(precision)
+  const [integerPart, decimalPart] = numValue.toFixed(precision).split('.')
   // 如果 separator 是数值而非字符串，会导致错误，此处进行检查
-  if (typeof separator === 'string' && separator !== '') {
-    const [integerPart, decimalPart] = formatValue.split('.')
-    formatValue =
-      integerPart.replace(/(\d)(?=(\d{3})+$)/g, '$1' + separator) + (decimalPart ? decimal + decimalPart : '')
-  }
-  return (prefix || '') + formatValue + (suffix || '')
+  const formattedInteger =
+    typeof separator === 'string' && separator !== ''
+      ? integerPart.replace(/(\d)(?=(\d{3})+$)/g, `$1${separator}`)
+      : integerPart
+  const formatValue = decimalPart ? `${formattedInteger}${decimal}${decimalPart}` : formattedInteger
+  return `${prefix || ''}${formatValue}${suffix || ''}`
 }

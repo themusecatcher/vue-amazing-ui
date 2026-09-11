@@ -214,7 +214,7 @@ watch(
 watch(
   () => props.show,
   (to) => {
-    // 受控 show 需立即同步（跳过 hover 延迟），与 antd visible 的受控语义保持一致
+    // 受控 show 需立即同步（跳过 hover 延迟）
     if (to && !tooltipShow.value) {
       onShow(true)
     }
@@ -688,7 +688,7 @@ defineExpose({
     line-height: 1.5714285714285714;
     text-align: justify;
     text-decoration: none;
-    word-break: break-all;
+    word-break: break-word;
     background-color: var(--tooltip-background-color);
     border-radius: 6px;
     box-shadow:

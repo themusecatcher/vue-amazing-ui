@@ -13,7 +13,7 @@ function getClickPosition(e: MouseEvent): void {
     x: e.clientX, // 相对于浏览器视口左上角的 X 坐标，不随页面滚动而改变
     y: e.clientY // 相对于浏览器视口左上角的 Y 坐标，不随页面滚动而改变
   }
-  // 以最后一次点击为准重启计时：antd 不清理旧计时器，连续点击时窗口会被旧计时器提前截断
+  // 以最后一次点击为准重启计时
   if (expireTimer) {
     clearTimeout(expireTimer)
   }
@@ -1187,7 +1187,7 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
     .modal-body-wrap {
       position: relative;
       outline: none;
-      word-break: break-all;
+      word-break: break-word;
       padding: 20px 24px;
       background-color: #fff;
       border-radius: 8px;

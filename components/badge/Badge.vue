@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
+import SingleNumber from './SingleNumber'
 import { useSlotsExist } from 'components/utils'
 export type PresetColor =
   | 'pink'
@@ -120,9 +121,40 @@ const showBadge = computed(() => {
   }
   return false
 })
-const showDot = computed(() => {
-  return props.value === undefined || (props.value === 0 && !props.showZero) || props.dot
+// 超过 max 时限顶展示，如 100 → 99+
+const numberedDisplay = computed(() => {
+  if (typeof props.value === 'number' && props.value > props.max) {
+    return `${props.max}+`
+  }
+  return props.value
 })
+// 缓存实际用于渲染的数值与 dot 状态：badge 即将隐藏时不再跟随入参更新，
+// 保证离场动画期间展示的仍是隐藏前的数字
+const renderedValue = ref<number | string | undefined>(numberedDisplay.value)
+const renderedDot = ref(props.dot)
+watch(
+  [() => props.value, numberedDisplay, () => props.dot, () => props.showZero],
+  () => {
+    if (!showBadge.value) return
+    renderedValue.value = numberedDisplay.value
+    renderedDot.value = props.dot
+  },
+  { immediate: true }
+)
+// 是否仅以小圆点展示（不展示数字）
+const renderedShowDot = computed(() => {
+  return renderedValue.value === undefined || (renderedValue.value === 0 && !props.showZero) || renderedDot.value
+})
+// 仅整数值逐位渲染以支持滚动动画，其余（如 max+ 等非整数值）直接渲染文本
+const renderedNumberList = computed<string[] | null>(() => {
+  const value = renderedValue.value
+  if (!value || Number(value) % 1 !== 0) {
+    return null
+  }
+  return String(value).split('')
+})
+// 传入数字位的完整数值，用于判断滚动方向
+const renderedNumberCount = computed(() => Number(renderedValue.value))
 const dotOffestStyle = computed(() => {
   if (props.offset?.length) {
     return {
@@ -177,18 +209,24 @@ function handleOffset(value: string): string {
           class="badge-value"
           :class="[
             {
-              'small-num': typeof value === 'number' && value < 10,
+              'small-num': String(renderedValue).length <= 1,
               'only-number': !showContent,
-              'only-dot': showDot
+              'only-dot': renderedShowDot
             },
             presetClass
           ]"
           :style="[customStyle, dotOffestStyle, valueStyle]"
-          :title="title || (value !== undefined ? String(value) : '')"
+          :title="title || (renderedValue !== undefined ? String(renderedValue) : '')"
         >
-          <span v-if="!dot" class="number-value" style="transition: none 0s ease 0s">
-            <span class="number">{{ typeof value === 'number' && value > max ? max + '+' : value }}</span>
-          </span>
+          <template v-if="!renderedDot && renderedNumberList">
+            <SingleNumber
+              v-for="(num, index) in renderedNumberList"
+              :key="renderedNumberList.length - index"
+              :value="num"
+              :count="renderedNumberCount"
+            />
+          </template>
+          <span v-else-if="!renderedDot">{{ renderedValue }}</span>
         </div>
       </Transition>
     </template>
@@ -221,6 +259,32 @@ function handleOffset(value: string): string {
     }
     100% {
       transform: scale(0) translate(50%, -50%);
+      opacity: 0;
+    }
+  }
+}
+// 无外层内容（纯数字 / 圆点）时改用不带位移的缩放动画，
+// 避免 @keyframes 的 transform 覆盖静态定位
+.only-number.zoom-enter {
+  animation-name: noWrapperZoomBadgeIn;
+  @keyframes noWrapperZoomBadgeIn {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+}
+.only-number.zoom-leave {
+  animation-name: noWrapperZoomBadgeOut;
+  @keyframes noWrapperZoomBadgeOut {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(0);
       opacity: 0;
     }
   }
@@ -302,14 +366,15 @@ function handleOffset(value: string): string {
     .number-value {
       position: relative;
       display: inline-block;
+      vertical-align: top;
       height: 20px;
       transition: all 0.3s cubic-bezier(0.12, 0.4, 0.29, 1.46);
       transform-style: preserve-3d;
       -webkit-transform-style: preserve-3d; // 设置元素的子元素是位于 3D 空间中还是平面中 flat | preserve-3d
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden; // 当元素背面朝向观察者时是否可见 hidden | visible
-      .number {
-        display: inline-block;
+      :deep(.number) {
+        display: block;
         height: 20px;
         margin: 0;
         transform-style: preserve-3d;

@@ -1,6 +1,6 @@
 ​
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch, onUnmounted } from 'vue'
+import { ref, computed, watchEffect, watch, nextTick, onUnmounted } from 'vue'
 import type { CSSProperties } from 'vue'
 import Empty from 'components/empty'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
@@ -145,16 +145,19 @@ const panelPlacement = computed(() => {
 watch([() => props.placement, () => props.flip], () => {
   updatePosition()
 })
-watch(showOptions, (to) => {
+watch(showOptions, async (to) => {
+  // 首次打开时才用 v-if 渲染面板，此后仅由 v-show 控制显隐
   if (to && !initialDisplay.value) {
     initialDisplay.value = true
   }
-})
-watch(showOptions, (to) => {
   emits('openChange', to)
   if (props.search && !to) {
     inputValue.value = undefined
     hideSelectName.value = false
+  }
+  // 打开面板时把当前选中项滚动到可视区域内
+  if (to) {
+    await scrollToSelected()
   }
 })
 watchEffect(() => {
@@ -205,6 +208,24 @@ watchEffect(() => {
 })
 // 查询并监听最近可滚动父元素，响应视口 resize
 const { scrollTarget, viewportWidth, viewportHeight } = useScrollParent(selectContentRef, updatePosition)
+// 将面板内当前选中项滚动到可视区域内（已可见时不做任何滚动）
+async function scrollToSelected(): Promise<void> {
+  await nextTick()
+  const scrollContainer = selectPanelRef.value?.querySelector<HTMLElement>('.scrollbar-container')
+  const selectedOption = selectPanelRef.value?.querySelector<HTMLElement>('.option-selected')
+  if (!scrollContainer || !selectedOption) return
+  // 用 offsetTop / offsetHeight 而非 getBoundingClientRect：
+  // 面板打开时正在播放 enter 缩放动画，rect 会被 transform 缩放失真，
+  // 导致误判选中项已可见而跳过滚动；offsetTop 是布局值，不受 transform 影响
+  const optionTop = selectedOption.offsetTop
+  const optionBottom = optionTop + selectedOption.offsetHeight
+  const { scrollTop, clientHeight } = scrollContainer
+  if (optionTop < scrollTop) {
+    scrollContainer.scrollTop = optionTop
+  } else if (optionBottom > scrollTop + clientHeight) {
+    scrollContainer.scrollTop = optionBottom - clientHeight
+  }
+}
 // 更新下拉面板位置
 function updatePosition() {
   showOptions.value && getPosition()

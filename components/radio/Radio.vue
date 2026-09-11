@@ -273,7 +273,7 @@ function onWaveEnd(): void {
     }
   }
   .radio-label {
-    word-break: break-all;
+    word-break: break-word;
     padding: 0 8px;
     line-height: 1.5714285714285714;
   }

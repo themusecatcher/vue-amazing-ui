@@ -12,6 +12,7 @@ export interface Props {
   suffix?: string // 设置数值的后缀
   separator?: string // 设置千分位标识符
   formatter?: (value: string) => string // 自定义数值展示
+  tabularNums?: boolean // 是否使用等宽数字，避免数值变化时宽度抖动
 }
 // 声明组件插槽类型
 export interface StatisticSlots {
@@ -29,7 +30,8 @@ const props = withDefaults(defineProps<Props>(), {
   prefix: undefined,
   suffix: undefined,
   separator: ',',
-  formatter: (value: string) => value
+  formatter: (value: string) => value,
+  tabularNums: false
 })
 defineSlots<StatisticSlots>()
 const slotsExist = useSlotsExist(['title', 'prefix', 'suffix'])
@@ -55,7 +57,7 @@ const showSuffix = computed(() => {
       <span v-if="showPrefix" class="statistic-prefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
-      <span class="statistic-value">
+      <span class="statistic-value" :class="{ 'statistic-tabular': tabularNums }">
         <slot>{{ showValue }}</slot>
       </span>
       <span v-if="showSuffix" class="statistic-suffix">
@@ -87,6 +89,9 @@ const showSuffix = computed(() => {
     .statistic-value {
       display: inline-block;
       direction: ltr;
+    }
+    .statistic-tabular {
+      font-variant-numeric: tabular-nums;
     }
     .statistic-suffix {
       display: inline-block;

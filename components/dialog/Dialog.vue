@@ -1306,7 +1306,7 @@ emits('ready', { open: openDialog, destroyAll })
       color: rgba(0, 0, 0, 0.88);
       font-weight: 600;
       line-height: 1.5;
-      word-break: break-all;
+      word-break: break-word;
       background: transparent;
       border-radius: 8px 8px 0 0;
       margin-bottom: 8px;
@@ -1375,7 +1375,7 @@ emits('ready', { open: openDialog, destroyAll })
       font-size: 14px;
       color: rgba(0, 0, 0, 0.88);
       line-height: 1.5714285714285714;
-      word-break: break-all;
+      word-break: break-word;
       transition: all 0.25s;
     }
     .dialog-footer {
