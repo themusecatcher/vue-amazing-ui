@@ -230,7 +230,7 @@ function onChange(index: number): void {
           font-size: 14px;
           color: rgba(0, 0, 0, 0.45);
           line-height: 22px;
-          word-break: break-all;
+          word-break: break-word;
           transition: all 0.3s;
         }
       }

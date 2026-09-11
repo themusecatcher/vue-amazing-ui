@@ -168,7 +168,7 @@ watchEffect(
     .timeline-desc {
       font-size: 14px;
       line-height: 1.5714285714285714;
-      word-break: break-all;
+      word-break: break-word;
     }
     .desc-left {
       margin-left: 25px;

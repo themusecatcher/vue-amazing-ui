@@ -270,7 +270,7 @@ function onWaveOptionEnd(value: string | number): void {
     }
   }
   .checkbox-label {
-    word-break: break-all;
+    word-break: break-word;
     padding: 0 8px;
   }
 }

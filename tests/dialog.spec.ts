@@ -142,7 +142,7 @@ describe('Dialog', () => {
   })
 
   it('点击位置超过时效窗口后打开，退化为默认中心展开', async () => {
-    // 对齐 antd（100ms）/ naive（64ms）：仅点击后短窗口内打开才从鼠标位置展开，
+    // 仅点击后短窗口内打开才从鼠标位置展开，
     // 异步 / 代码方式打开时窗口已过期，不应沿用旧的点击坐标
     document.body.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 60, clientY: 80 }))
     // 等待超过 100ms 时效窗口

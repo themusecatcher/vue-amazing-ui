@@ -1,8 +1,16 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { LikeOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons-vue'
+import { NumberAnimation } from 'vue-amazing-ui'
+const defaultNumsRef = ref<InstanceType<typeof NumberAnimation> | null>(null)
+const tabularNumsRef = ref<InstanceType<typeof NumberAnimation> | null>(null)
 function formatter(value: string): string {
   console.log('value', value)
   return '1年有 ' + value + ' 天'
+}
+function playNumsCompare() {
+  defaultNumsRef.value?.play()
+  tabularNumsRef.value?.play()
 }
 </script>
 <template>
@@ -72,5 +80,21 @@ function formatter(value: string): string {
     <Statistic title="Precision" :value="100000000.1" separator=";" :precision="3" />
     <h2 class="mt30 mb10">自定义数值展示</h2>
     <Statistic title="Formatter" :value="365" :value-style="{ color: '#1677ff' }" :formatter="formatter" />
+    <h2 class="mt30 mb10">等宽数字</h2>
+    <p class="mb10">使用 <code>tabularNums</code> 使数值滚动时宽度保持稳定</p>
+    <Row>
+      <Col :span="12">
+        <Statistic title="默认">
+          <NumberAnimation ref="defaultNumsRef" :from="0" :to="100000000.12345" :precision="2" :autoplay="false" />
+        </Statistic>
+      </Col>
+      <Col :span="12">
+        <Statistic title="tabularNums" tabular-nums>
+          <NumberAnimation ref="tabularNumsRef" :from="0" :to="100000000.12345" :precision="2" :autoplay="false" />
+        </Statistic>
+      </Col>
+    </Row>
+    <br />
+    <Button type="primary" @click="playNumsCompare">播放对比</Button>
   </div>
 </template>

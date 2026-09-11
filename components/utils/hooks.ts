@@ -161,6 +161,9 @@ export function useOptionsSupported(prop: 'capture' | 'once' | 'passive' | 'sign
  * 组合式函数
  * 监听给定名称或名称数组的插槽是否存在，支持监听单个插槽或一组插槽的存在
  *
+ * 判定以「实际调用插槽并检查返回的 vnode」为准，可识别「已提供但渲染为空」的插槽；
+ * 探测时以空对象作为作用域参数，插槽内抛错按「已提供」处理
+ *
  * @param slotsName - 插槽的名称或名称数组，默认为 'default'
  * @returns 如果是单个插槽名称，则返回一个计算属性，表示该插槽是否存在
  *          如果是插槽名称数组，则返回一个 reactive 对象，其中的每个属性对应该插槽是否存在
@@ -172,7 +175,19 @@ export function useSlotsExist<T extends string | string[] = 'default'>(slotsName
   const slots = useSlots() // 获取当前组件的所有插槽
   // 检查特定名称的插槽是否存在且不为空
   const checkSlotsExist = (slotName: string): boolean => {
-    const slotsContent = slots[slotName]?.()
+    const slot = slots[slotName]
+    if (slot === undefined) {
+      return false
+    }
+    // 必须实际调用一次插槽才能拿到 vnode，进而判断「是否真的渲染了内容」
+    let slotsContent: VNode[] | undefined
+    try {
+      // 作用域参数在模板插槽的形参位置解构，空对象探测也可能因访问嵌套属性而抛错；
+      // 能抛错即说明插槽已被提供，按「存在」处理（探测失败不等同于未提供）
+      slotsContent = slot({})
+    } catch {
+      return true
+    }
     const checkExist = (slotContent: VNode) => {
       if (slotContent.type === Comment) {
         return false

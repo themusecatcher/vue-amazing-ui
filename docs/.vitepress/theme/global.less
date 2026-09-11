@@ -333,13 +333,34 @@ h1 {
         border-radius: 12px !important;
       }
       .VPButton.brand {
+        position: relative;
+        isolation: isolate;
         font-weight: 700;
         border: none;
-        background: linear-gradient(to right, #09c8ce, #eb2f96);
-        transition: all 0.25s;
+        background-color: transparent;
+        background-image: linear-gradient(to right, #09c8ce, #eb2f96);
+        transition: box-shadow 0.25s;
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          z-index: -1;
+          border-radius: inherit;
+          background-image: linear-gradient(to right, #eb2f96, #09c8ce);
+          opacity: 0;
+          transition: opacity 0.25s;
+        }
+
         &:hover {
-          background: linear-gradient(to right, #eb2f96, #09c8ce);
           box-shadow: 0 0 3px 3px rgba(65, 209, 255, 0.12);
+        }
+
+        &:hover::after {
+          opacity: 1;
         }
       }
     }
