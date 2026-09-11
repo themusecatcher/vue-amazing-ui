@@ -18,6 +18,7 @@
 - 优化 [气泡卡片 Popover](/guide/components/popover.html) / [气泡确认框 Popconfirm](/guide/components/popconfirm.html)：订正 `enter` 文档描述（实际为切换显示）；`Popover` 移除 `keyboard` 属性
 - 重构滚动工具函数：[useScroll](/utils/functions/use-scroll.html) / [useScrollParent](/utils/functions/use-scroll-parent.html) / [useMutationObserver](/utils/functions/use-mutation-observer.html) / [useResizeObserver](/utils/functions/use-resize-observer.html)：整页滚动改监听 `window` 以修复监听失效，统一观察目标归一化
 - 新增 [Tooltip](/guide/components/tooltip.html)、[Popover](/guide/components/popover.html)、[Watermark](/guide/components/watermark.html)、[useScroll](/utils/functions/use-scroll.html)、[useScrollParent](/utils/functions/use-scroll-parent.html) 单元测试，同步更新文档
+- 优化组件库发布脚本
 
 ## <VersionDateTag date="2026-09-10">2.7.2</VersionDateTag>
 
