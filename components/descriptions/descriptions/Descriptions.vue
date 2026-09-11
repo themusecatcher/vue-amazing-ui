@@ -19,12 +19,12 @@ export interface Props {
   layout?: 'horizontal' | 'vertical' // 描述列表布局方式
   size?: 'default' | 'middle' | 'small' // 设置列表的大小
   colon?: boolean // 是否显示标签后的冒号（边框模式不显示冒号）
-  column?: number | Responsive // 一行的 DescriptionsItems 数量，可以写成数值或支持响应式的对象写法 { xs: 8, sm: 16, md: 24 }
+  column?: number | Responsive // 一行的 DescriptionsItem 数量，可以写成数值或支持响应式的对象写法 { xs: 8, sm: 16, md: 24 }
   labelAlign?: 'left' | 'right' | 'center' // 标签对齐方式
-  labelClass?: string // 标签自定义类名，与 DescriptionsItems 的 labelClass 叠加
-  contentClass?: string // 内容自定义类名，与 DescriptionsItems 的 contentClass 叠加
-  labelStyle?: CSSProperties // 自定义标签样式，优先级低于 DescriptionsItems 的 labelStyle
-  contentStyle?: CSSProperties // 自定义内容样式，优先级低于 DescriptionsItems 的 contentStyle
+  labelClass?: string // 标签自定义类名，与 DescriptionsItem 的 labelClass 叠加
+  contentClass?: string // 内容自定义类名，与 DescriptionsItem 的 contentClass 叠加
+  labelStyle?: CSSProperties // 自定义标签样式，优先级低于 DescriptionsItem 的 labelStyle
+  contentStyle?: CSSProperties // 自定义内容样式，优先级低于 DescriptionsItem 的 contentStyle
 }
 // 声明组件插槽类型
 export interface DescriptionsSlots {

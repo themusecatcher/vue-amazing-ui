@@ -1153,10 +1153,10 @@ size | 设置列表的大小 | 'default' &#124; 'middle' &#124; 'small' | 'defau
 colon | 是否显示标签后的冒号（边框模式不显示冒号） | boolean | true
 column | 一行的 `DescriptionsItem` 数量，可以写成数值或支持响应式的对象写法 `{ xs: 8, sm: 16, md: 24 }` | number &#124; [DescriptionsResponsive](#responsive-type) | {xs: 1, sm: 2, md\: 3, lg: 3, xl: 3, xxl: 3, xxxl: 3}
 labelAlign | 标签对齐方式 | 'left' &#124; 'right' &#124; 'center' | 'left'
-labelStyle | 自定义标签样式，优先级低于 `DescriptionsItem`  的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
-contentStyle | 自定义内容样式，优先级低于 `DescriptionsItem`  的 `contentStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
 labelClass | 标签自定义类名，与 `DescriptionsItem` 的 `labelClass` 叠加 | string | undefined
 contentClass | 内容自定义类名，与 `DescriptionsItem` 的 `contentClass` 叠加 | string | undefined
+labelStyle | 自定义标签样式，优先级低于 `DescriptionsItem`  的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
+contentStyle | 自定义内容样式，优先级低于 `DescriptionsItem`  的 `contentStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
 
 ### Responsive Type
 
