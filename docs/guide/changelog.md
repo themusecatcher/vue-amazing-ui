@@ -12,9 +12,8 @@
 
 ## <VersionDateTag date="2026-09-12">2.7.4</VersionDateTag>
 
-- 优化并更新 [描述列表 Descriptions](/guide/components/descriptions.html)：重构为数据驱动渲染，新增 `layout` / `colon` / `labelAlign` / `labelClass` / `contentClass` 属性、`#header` 插槽及 `xxxl` 响应式断点，`title` / `extra` / `label` 支持 `VNode`；修复空标签仍渲染冒号、`v-for` 与 `template` 包裹的子项丢失、标签与内容粘连、尺寸切换无过渡等问题，并移除全部 `!important`。⚠️ **破坏性变更**：移除 `vertical` 属性，请改用 `layout="vertical"` 替代
-- 修复 [useSlotsExist](/utils/functions/use-slots-exist.html)：作用域插槽在探测时因无参调用触发形参位置解构的 `TypeError`，导致整页渲染中断；改为传入空作用域对象并对插槽内抛错按「已提供」兜底，可准确识别「已提供但渲染为空」的插槽，新增单元测试
-- 增强 [徽标 Badge](/guide/components/badge.html)：数值变化时数字逐位上下滚动（超出 `max` 展示 `max+`），离场期间保留隐藏前最后展示的数值；`showZero` 动态切换时同步刷新展示值
+- 优化 [useSlotsExist](/utils/functions/use-slots-exist.html) 作用域插槽在探测时因无参调用触发形参位置解构的 `TypeError`，导致整页渲染中断，同时新增单元测试
+- 增强 [徽标 Badge](/guide/components/badge.html) 组件：数值变化时数字逐位上下滚动（超出 `max` 展示 `max+`），离场期间保留隐藏前最后展示的数值；`showZero` 动态切换时同步刷新展示值
 - 优化 [警告提示 Alert](/guide/components/alert.html)：重构关闭离场动画，冻结高度后平滑收缩、同步收起内边距与下边距、动画结束才卸载元素；新增 `afterClose` 事件
 - 新增 [统计数值 Statistic](/guide/components/statistic.html) `tabularNums` 属性：数值滚动时使用等宽数字，避免宽度抖动
 - 优化 [选择器 Select](/guide/components/select.html)：面板打开时自动将当前选中项滚动到可视区域内
