@@ -12,10 +12,14 @@
 
 ## <VersionDateTag date="2026-09-14">2.8.0</VersionDateTag>
 
-- 优化并更新 [描述列表 Descriptions](/guide/components/descriptions.html)，重构为数据驱动渲染，新增 `layout` / `colon` / `labelAlign` / `labelClass` / `contentClass` 属性、`#header` 插槽及 `xxxl` 响应式断点，`title` / `extra` / `label` 支持 `VNode`；修复空标签仍渲染冒号、`v-for` 与 `template` 包裹的子项丢失、标签与内容粘连、尺寸切换无过渡等问题，并移除全部 `!important`；`DescriptionsItem` 改为纯数据载体，不再自行渲染 `label` 与内容 `DOM`，独立使用时仅渲染默认插槽。⚠️ **破坏性变更**：移除 `vertical` 属性，请改用 `layout="vertical"` 替代
-- 优化并更新 [抽屉 Drawer](/guide/components/drawer.html)，新增 `getContainer` / `push` / `size` / `mask` / `maskClosable` / `keyboard` / `closeIcon` / `afterOpenChange` / `autofocus` / `forceRender` / `rootClassName` / `rootStyle` / `contentWrapperStyle` 等属性与 `#closeIcon` 插槽，支持多层抽屉推动、渲染在当前 `DOM`；新增 `blockScroll` 控制打开时是否禁用 `body` 滚动，`class` / `style` 作用于 `Drawer` 容器；修复加锁与释放异步错位导致页面滚动被永久锁死的问题
-- 增强 [轮播图 Carousel](/guide/components/carousel.html)：新增 `loop` / `initialIndex` / 受控 `currentIndex` / `objectFit` / `draggable` / `mousewheel` 属性与 `beforeChange` / `afterChange` / `update:currentIndex` 事件，`to` 新增 `dontAnimate` 参数，新增 `#prevArrow` / `#nextArrow` / `#dots` 插槽；修复图片数量减少后当前页越界、图片加载失败后持续加载态、键盘焦点陷阱、单图时箭头无响应等问题，并在 `slide` 效果下为首尾补充过冲缓冲副本，使 `back-out` 等过冲缓动在切换到首 / 末页时同样具备过冲效果、不再露出空白，并适配系统「减弱动态效果」偏好；`slideFunction` 新增缓动预设名取值（新增导出 `CarouselEasingPreset` 类型），`fadeFunction` 支持直接传四个三次贝塞尔控制点（自动转为 CSS `cubic-bezier()` 写法），默认值写法由 `'cubic-bezier(0.4, 0, 0.2, 1)'` 改为 `[0.4, 0, 0.2, 1]`。**破坏性变更**：`dotsTrigger` 更名为 `dotTrigger`（统一为 `dot*` 命名），请同步修改；移除与 `update:currentIndex` 等价的 `change` 事件，请改用 `update:currentIndex`（或 `v-model:current-index`）替代
-- 重构并增强 [数字动画 NumberAnimation](/guide/components/number-animation.html)：缓动配置支持直接传入三次贝塞尔控制点数组与缓动函数，`autoplay` 由 `false` 切为 `true` 时重新播放，组件卸载时中止在飞动画。⚠️ **破坏性变更**：`transition` 属性更名为 `easing`，对应类型 `NumberAnimationTransitionFunc` 更名为 `NumberAnimationEasingPreset`，请同步修改
+- 重构并增强 [描述列表 Descriptions](/guide/components/descriptions.html)：改为数据驱动渲染，新增 `layout` / `colon` / `labelAlign` 等属性、`#header` 插槽与 `xxxl` 断点，修复子项丢失等问题。⚠️ **破坏性变更**：移除 `vertical` 属性，改用 `layout="vertical"`
+- 增强 [抽屉 Drawer](/guide/components/drawer.html)：新增 `to` / `push` / `size` / `mask` 等属性、`afterOpenChange` 事件与 `#closeIcon` 插槽，支持多层推动与 `class` / `style` 透传，修复打开后页面滚动被永久锁死。⚠️ **破坏性变更**：默认挂载到 `body`，依赖原渲染位置的样式需改用 `to` 或 `rootClassName` 定制
+- 修复 [对话框 Modal](/guide/components/modal.html) / [Dialog](/guide/components/dialog.html) / [加载条 LoadingBar](/guide/components/loading-bar.html) / [消息提示 Message](/guide/components/message.html) / [通知提醒 Notification](/guide/components/notification.html) 的 `class` / `style` 无法透传问题
+- 增强 [轮播图 Carousel](/guide/components/carousel.html)：新增 `loop` / `initialIndex` / 受控 `currentIndex` 等属性、`beforeChange` / `afterChange` 事件与 `#prevArrow` / `#nextArrow` / `#dots` 插槽，修复越界、加载失败、动画中断等交互问题；`fadeFunction` 默认值由 `'cubic-bezier(0.4, 0, 0.2, 1)'` 改为 `[0.4, 0, 0.2, 1]`。⚠️ **破坏性变更**：`dotsTrigger` 更名为 `dotTrigger`；移除 `change` 事件，切换监听改用 `beforeChange` / `afterChange`，当前页同步使用 `v-model:current-index`
+- 增强 [数字动画 NumberAnimation](/guide/components/number-animation.html)：缓动支持传入三次贝塞尔控制点数组与缓动函数，卸载时中止在飞动画。⚠️ **破坏性变更**：`transition` 更名为 `easing`，类型 `NumberAnimationTransitionFunc` 更名为 `NumberAnimationEasingPreset`
+- 优化工具函数文档：改用交互式演示并补充边界说明与可运行 `demo`
+- 修复 [lockScroll](/utils/functions/lock-scroll.html) 在 `SSR` / `Node` 环境调用报错；订正 [useOptionsSupported](/utils/functions/use-options-supported.html) 参数名为 `option`
+- 修复按需引入 `VueAmazingUIResolver` 引用 `DescriptionsItem` 不存在的样式路径
 
 ## <VersionDateTag date="2026-09-12">2.7.4</VersionDateTag>
 
