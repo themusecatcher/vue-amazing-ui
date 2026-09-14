@@ -10,6 +10,13 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-09-14">2.8.0</VersionDateTag>
+
+- 优化并更新 [描述列表 Descriptions](/guide/components/descriptions.html)，重构为数据驱动渲染，新增 `layout` / `colon` / `labelAlign` / `labelClass` / `contentClass` 属性、`#header` 插槽及 `xxxl` 响应式断点，`title` / `extra` / `label` 支持 `VNode`；修复空标签仍渲染冒号、`v-for` 与 `template` 包裹的子项丢失、标签与内容粘连、尺寸切换无过渡等问题，并移除全部 `!important`；`DescriptionsItem` 改为纯数据载体，不再自行渲染 `label` 与内容 `DOM`，独立使用时仅渲染默认插槽。⚠️ **破坏性变更**：移除 `vertical` 属性，请改用 `layout="vertical"` 替代
+- 优化并更新 [抽屉 Drawer](/guide/components/drawer.html)，新增 `getContainer` / `push` / `size` / `mask` / `maskClosable` / `keyboard` / `closeIcon` / `afterOpenChange` / `autofocus` / `forceRender` / `rootClassName` / `rootStyle` / `contentWrapperStyle` 等属性与 `#closeIcon` 插槽，支持多层抽屉推动、渲染在当前 `DOM`；新增 `blockScroll` 控制打开时是否禁用 `body` 滚动，`class` / `style` 作用于 `Drawer` 容器；修复加锁与释放异步错位导致页面滚动被永久锁死的问题
+- 增强 [轮播图 Carousel](/guide/components/carousel.html)：新增 `loop` / `initialIndex` / 受控 `currentIndex` / `objectFit` / `draggable` / `mousewheel` 属性与 `beforeChange` / `afterChange` / `update:currentIndex` 事件，`to` 新增 `dontAnimate` 参数，新增 `#prevArrow` / `#nextArrow` / `#dots` 插槽；修复图片数量减少后当前页越界、图片加载失败后持续加载态、键盘焦点陷阱、单图时箭头无响应等问题，并在 `slide` 效果下为首尾补充过冲缓冲副本，使 `back-out` 等过冲缓动在切换到首 / 末页时同样具备过冲效果、不再露出空白，并适配系统「减弱动态效果」偏好；`slideFunction` 新增缓动预设名取值（新增导出 `CarouselEasingPreset` 类型），`fadeFunction` 支持直接传四个三次贝塞尔控制点（自动转为 CSS `cubic-bezier()` 写法），默认值写法由 `'cubic-bezier(0.4, 0, 0.2, 1)'` 改为 `[0.4, 0, 0.2, 1]`。**破坏性变更**：`dotsTrigger` 更名为 `dotTrigger`（统一为 `dot*` 命名），请同步修改；移除与 `update:currentIndex` 等价的 `change` 事件，请改用 `update:currentIndex`（或 `v-model:current-index`）替代
+- 重构并增强 [数字动画 NumberAnimation](/guide/components/number-animation.html)：缓动配置支持直接传入三次贝塞尔控制点数组与缓动函数，`autoplay` 由 `false` 切为 `true` 时重新播放，组件卸载时中止在飞动画。⚠️ **破坏性变更**：`transition` 属性更名为 `easing`，对应类型 `NumberAnimationTransitionFunc` 更名为 `NumberAnimationEasingPreset`，请同步修改
+
 ## <VersionDateTag date="2026-09-12">2.7.4</VersionDateTag>
 
 - 优化 [useSlotsExist](/utils/functions/use-slots-exist.html) 作用域插槽在探测时因无参调用触发形参位置解构的 `TypeError`，导致整页渲染中断，同时新增单元测试
@@ -29,10 +36,6 @@
 - 优化 [气泡卡片 Popover](/guide/components/popover.html) / [气泡确认框 Popconfirm](/guide/components/popconfirm.html)：订正 `enter` 文档描述（实际为切换显示）；`Popover` 移除 `keyboard` 属性
 - 重构滚动工具函数：[useScroll](/utils/functions/use-scroll.html) / [useScrollParent](/utils/functions/use-scroll-parent.html) / [useMutationObserver](/utils/functions/use-mutation-observer.html) / [useResizeObserver](/utils/functions/use-resize-observer.html)：整页滚动改监听 `window` 以修复监听失效，统一观察目标归一化
 - 新增 [Tooltip](/guide/components/tooltip.html)、[Popover](/guide/components/popover.html)、[Watermark](/guide/components/watermark.html)、[useScroll](/utils/functions/use-scroll.html)、[useScrollParent](/utils/functions/use-scroll-parent.html) 单元测试，同步更新文档
-- 优化并更新 [抽屉 Drawer](/guide/components/drawer.html)：补齐 `getContainer` / `push` / `size` / `mask` / `maskClosable` / `keyboard` / `closeIcon` / `afterOpenChange` / `autofocus` / `forceRender` / `rootClassName` / `rootStyle` / `contentWrapperStyle` 等属性与 `#closeIcon` 插槽，支持多层抽屉推动、渲染在当前 DOM；新增 `blockScroll` 控制打开时是否禁用 `body` 滚动，`class` / `style` 作用于 `Drawer` 容器
-- 增强 [轮播图 Carousel](/guide/components/carousel.html)：新增 `loop` / `initialIndex` / 受控 `currentIndex` / `objectFit` / `draggable` / `mousewheel` 属性与 `beforeChange` / `afterChange` / `update:currentIndex` 事件，`to` 新增 `dontAnimate` 参数，新增 `#prevArrow` / `#nextArrow` / `#dots` 插槽；修复图片数量减少后当前页越界、图片加载失败后持续加载态、键盘焦点陷阱、单图时箭头无响应等问题，并适配系统「减弱动态效果」偏好。**破坏性变更**：移除与 `update:currentIndex` 等价的 `change` 事件，请改用 `update:currentIndex`（或 `v-model:current-index`）替代
-- 增强 [统计数值 Statistic](/guide/components/statistic.html)：新增 `tabularNums` 属性，开启后数字等宽，避免数值滚动时宽度抖动
-- 修复 [单选框 Radio](/guide/components/radio.html) / [复选框 Checkbox](/guide/components/checkbox.html) / [标签 Tag](/guide/components/tag.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html)：提供作用域插槽时页面渲染中断
 - 优化组件库发布脚本
 
 ## <VersionDateTag date="2026-09-10">2.7.2</VersionDateTag>
@@ -202,12 +205,12 @@
 
 ## <VersionDateTag date="2025-05-30">2.4.10</VersionDateTag>
 
-- 新增 [否支持事件监听器选项 useOptionsSupported](/utils/functions/use-options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
+- 新增 [是否支持事件监听器选项 useOptionsSupported](/utils/functions/use-options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
 - 更新组件库部分依赖版本
 
 ## <VersionDateTag date="2025-05-29">2.4.9</VersionDateTag>
 
-- 新增 [否支持事件监听器选项 useOptionsSupported](/utils/functions/use-options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
+- 新增 [是否支持事件监听器选项 useOptionsSupported](/utils/functions/use-options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
 
 ## <VersionDateTag date="2025-05-26">2.4.8</VersionDateTag>
 
