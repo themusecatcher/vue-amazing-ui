@@ -195,20 +195,30 @@ else
     echo "⚠️ git tag $tag 已存在（本地与远程一致），跳过打 tag"
 fi
 
+# 输出可点击的 git tag 链接（OSC 8 包裹，与上方 npm 链接、下方 Release 链接样式一致）
+# 覆盖本地新建 / 远程补推 / 已存在三种分支，失败分支已 exit 不会走到这里
+tag_url="https://github.com/themusecatcher/vue-amazing-ui/releases/tag/$tag"
+printf '   🔗 Tag: '
+osc8_start "${tag_url}"
+printf '%s' "${tag_url}"
+osc8_end
+echo ""
+
 # 自动创建 GitHub Release（与 tag 同名，正文统一引用 CHANGELOG）
 # 依赖 gh CLI；gh 安装与登录态已在前置校验区检查，此处仅处理创建逻辑
 releaseBody="Please refer to [CHANGELOG.md](https://github.com/themusecatcher/vue-amazing-ui/blob/main/docs/guide/changelog.md) for details."
 if gh release view "$tag" >/dev/null 2>&1; then
     echo "⚠️ GitHub Release $tag 已存在，跳过创建"
 else
-    gh release create "$tag" --title "$tag" --notes "$releaseBody"
+    # stdout 丢弃：gh 成功后会自行打印一版无样式（不可点击）的 release 链接，改用下方 OSC 8 样式的链接输出
+    gh release create "$tag" --title "$tag" --notes "$releaseBody" >/dev/null
     echo "✅ 已创建 GitHub Release: $tag"
 fi
 
 # 输出可点击的 GitHub Release 链接（OSC 8 包裹，覆盖新建/已存在两种分支）
 release_url=$(gh release view "$tag" --json url -q '.url' 2>/dev/null || true)
 if [ -n "${release_url}" ]; then
-    echo "   🔗 Release: "
+    printf '   🔗 Release: '
     osc8_start "${release_url}"
     printf '%s' "${release_url}"
     osc8_end

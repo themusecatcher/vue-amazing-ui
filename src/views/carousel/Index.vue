@@ -129,7 +129,7 @@ const objectFitOptions = [
 ]
 const objectFit = ref<CarouselProps['objectFit']>('fill')
 const draggable = ref<boolean>(true)
-const mousewheel = ref<boolean>(false)
+const mousewheel = ref<boolean>(true)
 function clickImage(image: CarouselImage) {
   console.log('image', image)
 }
@@ -205,7 +205,7 @@ const state = reactive<CarouselConfigState>({
   dotTrigger: 'click',
   objectFit: 'fill',
   draggable: true,
-  mousewheel: false,
+  mousewheel: true,
   fadeDuration: 500,
   fadeFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
   slideDuration: 800
@@ -273,14 +273,16 @@ watch(
       <code>slideFunction</code> 支持缓动预设名、三次贝塞尔控制点数组与缓动函数，预设名与 <code>@vueuse/core</code> 的
       <code>TransitionPresets</code> 一致
     </p>
-    <Radio :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
-    <Select
-      v-if="slideEasingType === 'preset'"
-      :options="slideEasingPresetOptions"
-      v-model="slideEasingPreset"
-      width="200"
-      search
-    />
+    <Space>
+      <Radio :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
+      <Select
+        v-if="slideEasingType === 'preset'"
+        :options="slideEasingPresetOptions"
+        v-model="slideEasingPreset"
+        width="200"
+        search
+      />
+    </Space>
     <br />
     <br />
     <Carousel :images="images" :width="800" :height="450" :slide-duration="800" :slide-function="slideEasing" />

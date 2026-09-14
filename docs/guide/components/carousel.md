@@ -124,7 +124,7 @@ const objectFitOptions = [
 ]
 const objectFit = ref<CarouselProps['objectFit']>('fill')
 const draggable = ref<boolean>(true)
-const mousewheel = ref<boolean>(false)
+const mousewheel = ref<boolean>(true)
 function clickImage(image: CarouselImage) {
   console.log('image', image)
 }
@@ -200,7 +200,7 @@ const state = reactive<CarouselConfigState>({
   dotTrigger: 'click',
   objectFit: 'fill',
   draggable: true,
-  mousewheel: false,
+  mousewheel: true,
   fadeDuration: 500,
   fadeFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
   slideDuration: 800
@@ -663,16 +663,20 @@ const dotTrigger = ref<CarouselProps['dotTrigger']>('hover')
 
 *`slideFunction` 支持缓动预设名、三次贝塞尔控制点数组与缓动函数，预设名与 `@vueuse/core` 的 `TransitionPresets` 一致*
 
-<Radio :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
-<Select
-  v-if="slideEasingType === 'preset'"
-  :options="slideEasingPresetOptions"
-  v-model="slideEasingPreset"
-  width="200"
-  search
-/>
-<br />
-<br />
+<br/>
+
+<Space>
+  <Radio :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
+  <Select
+    v-if="slideEasingType === 'preset'"
+    :options="slideEasingPresetOptions"
+    v-model="slideEasingPreset"
+    width="200"
+    search
+  />
+</Space>
+<br/>
+<br/>
 <Carousel :images="images" :height="450" :slide-duration="800" :slide-function="slideEasing" />
 
 ::: details Show Code
@@ -721,16 +725,18 @@ const slideEasingBezier: CubicBezierPoints = [0.45, 1, 0.55, 1]
 const slideEasing = computed(() => (slideEasingType.value === 'preset' ? slideEasingPreset.value : slideEasingBezier))
 </script>
 <template>
-  <Radio :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
-  <Select
-    v-if="slideEasingType === 'preset'"
-    :options="slideEasingPresetOptions"
-    v-model="slideEasingPreset"
-    width="200"
-    search
-  />
-  <br />
-  <br />
+  <Space>
+    <Radio :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
+    <Select
+      v-if="slideEasingType === 'preset'"
+      :options="slideEasingPresetOptions"
+      v-model="slideEasingPreset"
+      width="200"
+      search
+    />
+  </Space>
+  <br/>
+  <br/>
   <Carousel :images="images" :height="450" :slide-duration="800" :slide-function="slideEasing" />
 </template>
 ```
@@ -740,6 +746,8 @@ const slideEasing = computed(() => (slideEasingType.value === 'preset' ? slideEa
 ## 自定义渐变动画
 
 *`fadeFunction` 可传四个三次贝塞尔控制点（自动转为 CSS `cubic-bezier()` 写法），也可直接传 CSS `transition-timing-function` 写法*
+
+<br/>
 
 <Radio :options="fadeEasingTypeOptions" v-model:value="fadeEasingType" button button-style="solid" />
 <br />
@@ -1298,7 +1306,7 @@ const images = ref<CarouselImage[]>([
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
   }
 ])
-const mousewheel = ref<boolean>(false)
+const mousewheel = ref<boolean>(true)
 </script>
 <template>
   <Space align="center"> mousewheel: <Switch v-model="mousewheel" /> </Space>
@@ -1825,7 +1833,7 @@ const state = reactive<CarouselConfigState>({
   dotTrigger: 'click',
   objectFit: 'fill',
   draggable: true,
-  mousewheel: false,
+  mousewheel: true,
   fadeDuration: 500,
   fadeFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
   slideDuration: 800
