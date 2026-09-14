@@ -8,8 +8,8 @@ import type { CubicBezierPoints, EasingFunction } from '@vueuse/core'
 // 预设 / 缓动函数 / 贝塞尔控制点 / transition 文档：https://vueuse.org/core/useTransition/
 export type EasingPreset = keyof typeof TransitionPresets
 export interface Props {
-  from?: number // 数值动画起始数值
-  to?: number // 数值目标值
+  from?: number // 数值动画起始数值，未播放时展示值同步跟随该值
+  to?: number // 数值目标值，autoplay 为 true 时变更即重播，否则在下次播放时生效
   duration?: number // 数值动画持续时间，单位 ms
   autoplay?: boolean // 是否自动开始动画（由 false 变为 true 时重新播放）
   precision?: number // 精度，保留小数点后几位
@@ -82,6 +82,16 @@ watch([() => props.from, () => props.to], () => {
     animate()
   }
 })
+// 未播放时展示值跟随 from：静态展示场景（如 autoplay 为 false，仅外部改写 from）下改 from 应立即反映，
+// 而不是停留在旧值；播放中不打断动画，新的 from 留到下次播放时生效
+watch(
+  () => props.from,
+  (from) => {
+    if (!animating) {
+      displayedValue.value = from
+    }
+  }
+)
 onMounted(() => {
   if (props.autoplay) {
     animate()

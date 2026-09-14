@@ -502,8 +502,8 @@ const easingKey = computed(() => `${easingCategory.value}-${easingType.value}`)
 
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| from | 数值动画起始数值 | number | 0 |
-| to | 数值目标值 | number | 1000 |
+| from | 数值动画起始数值，未播放时展示值同步跟随该值 | number | 0 |
+| to | 数值目标值，`autoplay` 为 `true` 时变更即重播，否则在下次播放时生效 | number | 1000 |
 | duration | 数值动画持续时间，单位 `ms` | number | 3000 |
 | autoplay | 是否自动开始动画（由 `false` 变为 `true` 时重新播放） | boolean | true |
 | precision | 精度，保留小数点后几位 | number | 0 |
@@ -529,7 +529,7 @@ const easingKey = computed(() => `${easingCategory.value}-${easingType.value}`)
 
 | 名称 | 值 |
 | :-- | :-- |
-| EasingPreset | 'linear' &#124; 'easeInSine' &#124; 'easeOutSine' &#124; 'easeInOutSine' &#124; 'easeInQuad' &#124; 'easeOutQuad' &#124; 'easeInOutQuad' &#124; 'easeInCubic' &#124; 'easeOutCubic' &#124; 'easeInOutCubic' &#124; 'easeInQuart' &#124; 'easeOutQuart' &#124; 'easeInOutQuart' &#124; 'easeInQuint' &#124; 'easeOutQuint' &#124; 'easeInOutQuint' &#124; 'easeInExpo' &#124; 'easeOutExpo' &#124; 'easeInOutExpo' &#124; 'easeInCirc' &#124; 'easeOutCirc' &#124; 'easeInOutCirc' &#124; 'easeInBack' &#124; 'easeOutBack' &#124; 'easeInOutBack' |
+| NumberAnimationEasingPreset | 'linear' &#124; 'easeInSine' &#124; 'easeOutSine' &#124; 'easeInOutSine' &#124; 'easeInQuad' &#124; 'easeOutQuad' &#124; 'easeInOutQuad' &#124; 'easeInCubic' &#124; 'easeOutCubic' &#124; 'easeInOutCubic' &#124; 'easeInQuart' &#124; 'easeOutQuart' &#124; 'easeInOutQuart' &#124; 'easeInQuint' &#124; 'easeOutQuint' &#124; 'easeInOutQuint' &#124; 'easeInExpo' &#124; 'easeOutExpo' &#124; 'easeInOutExpo' &#124; 'easeInCirc' &#124; 'easeOutCirc' &#124; 'easeInOutCirc' &#124; 'easeInBack' &#124; 'easeOutBack' &#124; 'easeInOutBack' |
 
 ## Methods
 
