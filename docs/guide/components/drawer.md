@@ -237,7 +237,7 @@ function onClose() {
 
 ## 渲染在当前 DOM
 
-*渲染在当前 DOM 里。自定义容器，查看 `getContainer`*
+*渲染在当前 DOM 里。自定义容器，查看 `to`*
 
 <br/>
 
@@ -251,7 +251,7 @@ function onClose() {
     title="Basic Drawer"
     placement="right"
     :closable="false"
-    :get-container="false"
+    :to="false"
     :style="{ position: 'absolute' }"
     @close="onClose"
   >
@@ -291,7 +291,7 @@ function onClose() {
       title="Basic Drawer"
       placement="right"
       :closable="false"
-      :get-container="false"
+      :to="false"
       :style="{ position: 'absolute' }"
       @close="onClose"
     >
@@ -919,7 +919,7 @@ forceRender | 预渲染 `Drawer` 内元素 | boolean | false
 contentWrapperStyle | 设置 `Drawer` 包裹内容部分的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 rootClassName | 最外层容器的类名 | string | undefined
 rootStyle | 最外层容器的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-getContainer | 指定 `Drawer` 挂载的节点，`false` 时渲染在当前 `DOM` | string &#124; HTMLElement &#124; (() => HTMLElement) &#124; false | 'body'
+to | `Drawer` 挂载的节点，可选：元素标签名（如 `'body'`）、元素本身或 `false`（渲染在当前 `DOM`） | string &#124; HTMLElement &#124; false | 'body'
 zIndex | 设置 `Drawer` 的 `z-index` | number | 1000
 open <Tag color="cyan">v-model</Tag> | 抽屉是否可见 | boolean | false
 autofocus | 抽屉展开后是否将焦点切换至其 `DOM` 节点 | boolean | true
@@ -929,6 +929,8 @@ maskClosable | 点击蒙层是否允许关闭 | boolean | true
 maskStyle | 遮罩样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 blockScroll | 是否在打开时禁用 `body` 滚动 | boolean | true
 push | 用于设置多层 `Drawer` 的推动行为 | boolean &#124; { distance: string &#124; number } | \{ distance: 180 }
+
+> 组件上的 `class` / `style` 透传到最外层容器 `.drawer-wrap`（等价于 `rootClassName` / `rootStyle`）。
 
 ## Events
 

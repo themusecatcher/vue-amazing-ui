@@ -23,6 +23,7 @@ import BackTop from 'components/back-top/BackTop.vue'
 import Ellipsis from 'components/ellipsis/Ellipsis.vue'
 import Rate from 'components/rate/Rate.vue'
 import Tabs from 'components/tabs/Tabs.vue'
+import Drawer from 'components/drawer/Drawer.vue'
 
 /**
  * 回归守护：`SSR` / `Node` 环境下组件不得在 `setup` 阶段裸访问 `window` / `document` /
@@ -84,5 +85,32 @@ describe('SSR 渲染安全性', () => {
     await expect(renderComponent(Ellipsis, { content: 'text' })).resolves.toBeTruthy()
     await expect(renderComponent(Rate)).resolves.toBeTruthy()
     await expect(renderComponent(Tabs)).resolves.toBeTruthy()
+  })
+})
+
+/**
+ * 浮层组件默认挂载 `body`（`Teleport`），服务端渲染时内容进入 `ssrContext.teleports`，
+ * 需应用侧注入到 HTML；此处锁定该契约，避免后续把 Teleport 去掉或改错目标节点而无人察觉。
+ */
+describe('SSR 浮层与 Teleport', () => {
+  const renderWithContext = (props: Record<string, unknown>) => {
+    const ssrContext: { teleports?: Record<string, string> } = {}
+    return renderToString(createSSRApp({ render: () => h(Drawer, props) }), ssrContext).then((html) => ({
+      html,
+      ssrContext
+    }))
+  }
+
+  it('默认挂载 body：原位只留锚点，内容进入 teleports.body', async () => {
+    const { html, ssrContext } = await renderWithContext({ open: true, title: 't' })
+    expect(html).toContain('teleport')
+    expect(ssrContext.teleports?.body).toContain('drawer-wrap')
+  })
+
+  it('to 传 false 时渲染在当前 DOM：内容留在原位，不进入 teleports', async () => {
+    const { html, ssrContext } = await renderWithContext({ open: true, title: 't', to: false })
+    expect(html).toContain('drawer-wrap')
+    // Teleport 处于 disabled：内容随组件原位输出，不会收集到 teleports
+    expect(String(ssrContext.teleports?.body ?? '')).not.toContain('drawer-wrap')
   })
 })

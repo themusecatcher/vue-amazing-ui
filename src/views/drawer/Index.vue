@@ -182,7 +182,7 @@ function onClose10() {
     </Drawer>
 
     <h2 class="mt30 mb10">渲染在当前 DOM</h2>
-    <p class="mb10">渲染在当前 DOM 里。自定义容器，查看 <code>getContainer</code></p>
+    <p class="mb10">渲染在当前 DOM 里。自定义容器，查看 <code>to</code></p>
     <div class="inline-container">
       Render in this
       <div style="margin-top: 16px">
@@ -193,7 +193,7 @@ function onClose10() {
         title="Basic Drawer"
         placement="right"
         :closable="false"
-        :get-container="false"
+        :to="false"
         :style="{ position: 'absolute' }"
         @close="onClose4"
       >

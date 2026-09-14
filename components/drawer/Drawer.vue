@@ -29,7 +29,7 @@ export interface Props {
   contentWrapperStyle?: CSSProperties // 设置 Drawer 包裹内容部分的样式
   rootClassName?: string // 最外层容器的类名
   rootStyle?: CSSProperties // 最外层容器的样式
-  getContainer?: string | HTMLElement | (() => HTMLElement) | false // 指定 Drawer 挂载的节点，false 时渲染在当前 DOM
+  to?: string | HTMLElement | false // Drawer 挂载的节点，可选：元素标签名（如 'body'）、元素本身或 false（渲染在当前 DOM）
   zIndex?: number // 设置 Drawer 的 z-index
   open?: boolean // (v-model) 抽屉是否可见
   autofocus?: boolean // 抽屉展开后是否将焦点切换至其 DOM 节点
@@ -71,7 +71,7 @@ const props = withDefaults(defineProps<Props>(), {
   contentWrapperStyle: () => ({}),
   rootClassName: undefined,
   rootStyle: () => ({}),
-  getContainer: 'body',
+  to: 'body',
   zIndex: 1000,
   open: false,
   autofocus: true,
@@ -83,6 +83,9 @@ const props = withDefaults(defineProps<Props>(), {
   blockScroll: true
 })
 defineSlots<DrawerSlots>()
+// 根节点是 Teleport，属性无法自动透传（Vue 会对 teleport 根告警并丢弃 class / style），
+// 故关闭自动继承并显式绑定到最外层容器
+defineOptions({ inheritAttrs: false })
 const drawerRef = ref<HTMLElement | null>(null)
 // 将焦点切回抽屉 DOM：父抽屉复位、打开态初始化、开合动画后共用
 function focusDrawer() {
@@ -147,20 +150,8 @@ const pushTransform = computed(() => {
   }
   return `translateY(${placement === 'top' ? distance : -distance}px)`
 })
-// 挂载容器
-// getContainer 为 false 时禁用 Teleport，Drawer 渲染在当前 DOM（配合 .is-inline 绝对定位）
-const teleportDisabled = computed(() => props.getContainer === false)
-const teleportTarget = computed<string | HTMLElement>(() => {
-  const { getContainer } = props
-  if (!getContainer || getContainer === 'body') {
-    return 'body'
-  }
-  if (typeof getContainer === 'function') {
-    // 函数形态在渲染时求值；SSR 或元素未就绪时回退 body，避免 Teleport 目标无效
-    return getContainer() ?? 'body'
-  }
-  return getContainer
-})
+// 挂载容器：to 为 false 时禁用 Teleport，Drawer 渲染在当前 DOM（配合 .is-inline 绝对定位）
+const teleportDisabled = computed(() => props.to === false)
 // 显示与内容渲染
 const showHeader = computed(() => {
   return slotsExist.title || slotsExist.extra || props.title || props.extra || props.closable
@@ -269,8 +260,9 @@ function onAfterOpenChange(open: boolean) {
 }
 </script>
 <template>
-  <Teleport :to="teleportTarget" :disabled="teleportDisabled">
+  <Teleport :disabled="to === false" :to="to === false ? null : to">
     <div
+      v-bind="$attrs"
       ref="drawerRef"
       tabindex="-1"
       class="drawer-wrap"
@@ -355,7 +347,7 @@ function onAfterOpenChange(open: boolean) {
   z-index: 1000;
   pointer-events: none;
   outline: none;
-  // getContainer: false 时渲染在当前 DOM，改用绝对定位相对最近定位祖先
+  // to 为 false 时渲染在当前 DOM，改用绝对定位相对最近定位祖先
   &.is-inline {
     position: absolute;
   }

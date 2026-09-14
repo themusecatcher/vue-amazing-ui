@@ -12,9 +12,9 @@ afterEach(() => {
   document.body.style.paddingRight = ''
 })
 
-// getContainer: false 关闭 Teleport，使 DOM 留在 wrapper 内便于断言
+// to: false 关闭 Teleport，使 DOM 留在 wrapper 内便于断言
 const mountInline = (props: Record<string, unknown> = {}) =>
-  mount(Drawer, { attachTo: document.body, props: { getContainer: false, ...props } })
+  mount(Drawer, { attachTo: document.body, props: { to: false, ...props } })
 
 describe('Drawer 滚动锁', () => {
   it('打开时锁定 body 滚动，关闭后释放', async () => {
@@ -85,8 +85,8 @@ describe('Drawer 多层推动与关闭交互', () => {
     const childOpen = ref(false)
     const wrapper = mount(Drawer, {
       attachTo: document.body,
-      props: { open: true, getContainer: false, push: { distance: 100 } },
-      slots: { default: () => h(Drawer, { open: childOpen.value, getContainer: false }) }
+      props: { open: true, to: false, push: { distance: 100 } },
+      slots: { default: () => h(Drawer, { open: childOpen.value, to: false }) }
     })
     await nextTick()
     const outerStyle = () => wrapper.findAll('.drawer-container')[0].attributes('style') ?? ''
@@ -134,5 +134,49 @@ describe('Drawer 多层推动与关闭交互', () => {
     await notClosable.find('.drawer-wrap').trigger('keydown', { key: 'Escape' })
     expect(notClosable.emitted('close')).toBeUndefined()
     notClosable.unmount()
+  })
+})
+
+describe('Drawer 挂载节点与属性透传', () => {
+  it('默认挂载到 body，to 为 false 时渲染在当前 DOM', async () => {
+    const teleported = mount(Drawer, { attachTo: document.body, props: { open: true, title: 'T' } })
+    await nextTick()
+    const wrap = document.body.querySelector<HTMLElement>('.drawer-wrap')
+    expect(wrap).not.toBeNull()
+    expect(wrap?.parentElement).toBe(document.body)
+    teleported.unmount()
+
+    const inline = mountInline({ open: true, title: 'T' })
+    await nextTick()
+    expect(inline.find('.drawer-wrap').exists()).toBe(true)
+    inline.unmount()
+  })
+
+  it('to 传选择器时挂载到指定节点', async () => {
+    const holder = document.createElement('div')
+    holder.id = 'drawer-holder'
+    document.body.appendChild(holder)
+    const wrapper = mount(Drawer, {
+      attachTo: document.body,
+      props: { open: true, title: 'T', to: '#drawer-holder' }
+    })
+    await nextTick()
+    expect(holder.querySelector('.drawer-wrap')).not.toBeNull()
+    wrapper.unmount()
+    holder.remove()
+  })
+
+  // 回归守护：根节点是 Teleport 时 Vue 无法自动继承 attrs，会丢弃 class / style 并告警
+  it('class / style 透传到最外层容器', async () => {
+    const wrapper = mount(Drawer, {
+      attachTo: document.body,
+      props: { open: true, title: 'T' },
+      attrs: { class: 'custom-class', style: 'color: red;' }
+    })
+    await nextTick()
+    const wrap = document.querySelector<HTMLElement>('.drawer-wrap')
+    expect(wrap?.classList.contains('custom-class')).toBe(true)
+    expect(wrap?.getAttribute('style')).toContain('color: red')
+    wrapper.unmount()
   })
 })
