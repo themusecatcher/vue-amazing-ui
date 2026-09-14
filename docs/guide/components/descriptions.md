@@ -9,7 +9,8 @@
 - 常见于详情页的信息展示
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
+import { useWindowSize } from '@vueuse/core'
 const size = ref('default')
 const options = [
   {
@@ -44,22 +45,53 @@ const show = ref(true)
 const onClick = () => {
   show.value = false
 }
+// column 断点：与组件 Responsive 断点一一对应，rule 直观标注生效区间，min / max 用于判断当前视口命中项
+type BreakpointKey = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'
+const breakpoints: { key: BreakpointKey; rule: string; min: number; max: number }[] = [
+  { key: 'xs', rule: '<576px', min: 0, max: 575 },
+  { key: 'sm', rule: '≥576px', min: 576, max: 767 },
+  { key: 'md', rule: '≥768px', min: 768, max: 991 },
+  { key: 'lg', rule: '≥992px', min: 992, max: 1199 },
+  { key: 'xl', rule: '≥1200px', min: 1200, max: 1599 },
+  { key: 'xxl', rule: '≥1600px', min: 1600, max: 1999 },
+  { key: 'xxxl', rule: '≥2000px', min: 2000, max: Infinity }
+]
+const columnModeOptions = [
+  { label: '统一列数', value: 'number' },
+  { label: '响应式断点', value: 'responsive' }
+]
+const { width } = useWindowSize()
+// 未挂载前不渲染依赖视口的反馈，避免服务端与客户端首屏输出不一致
+const isMounted = ref(false)
+onMounted(() => {
+  isMounted.value = true
+})
+// 当前视口命中的断点：判定口径与组件一致（从大到小取第一个命中项）
+const currentBreakpoint = computed<BreakpointKey | undefined>(() => {
+  if (!isMounted.value) {
+    return undefined
+  }
+  return breakpoints.find((bp) => width.value >= bp.min && width.value <= bp.max)?.key
+})
 const state = reactive({
   title: 'User Info',
   extra: 'extra',
   bordered: false,
   layout: 'horizontal' as 'horizontal' | 'vertical',
-  colon: true,
-  labelAlign: 'left' as 'left' | 'right' | 'center',
   size: 'default',
+  colon: true,
+  columnMode: 'number' as 'number' | 'responsive',
+  columnValue: 3,
   column: {
     xs: 1,
     sm: 2,
     md: 3,
     lg: 3,
     xl: 3,
-    xxl: 3
+    xxl: 3,
+    xxxl: 3
   },
+  labelAlign: 'left' as 'left' | 'right' | 'center',
   labelStyle: {
     fontSize: '14px',
     color: '#FF6900',
@@ -70,6 +102,20 @@ const state = reactive({
     color: '#1677FF',
     fontWeight: 400
   }
+})
+// 配置器最终传给组件的 column：统一列数传数值，响应式断点传对象
+const columnConfig = computed(() => (state.columnMode === 'number' ? state.columnValue : state.column))
+// 实时反馈当前实际生效的列数，帮助理解断点规则
+const activeColumnTip = computed(() => {
+  if (state.columnMode === 'number') {
+    return `所有视口统一为 ${state.columnValue} 列`
+  }
+  const key = currentBreakpoint.value
+  if (!key) {
+    return '正在检测当前视口…'
+  }
+  const rule = breakpoints.find((bp) => bp.key === key)?.rule
+  return `当前视口 ${width.value}px，命中 ${key}（${rule}），实际 ${state.column[key]} 列`
 })
 </script>
 
@@ -757,57 +803,52 @@ const labelAlignOptions = [
       </Space>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical>
-        colon:
-        <Switch v-model="state.colon" />
-      </Space>
-    </Col>
-    <Col :span="6">
       <Flex gap="small" vertical>
         size:
         <Select :options="options" v-model="state.size" />
       </Flex>
     </Col>
     <Col :span="6">
+      <Space gap="small" vertical>
+        colon:
+        <Switch v-model="state.colon" />
+      </Space>
+    </Col>
+    <Col :span="24">
+      <Flex gap="small" vertical>
+        <Flex gap="middle" align="center" wrap="wrap">
+          column:
+          <Segmented v-model:value="state.columnMode" :options="columnModeOptions" />
+          <InputNumber
+            v-if="state.columnMode === 'number'"
+            v-model:value="state.columnValue"
+            :min="1"
+            :max="9"
+          />
+          <span class="descriptions-column-tip">{{ activeColumnTip }}</span>
+        </Flex>
+        <Flex v-if="state.columnMode === 'responsive'" gap="middle" align="flex-start" wrap="wrap">
+          <Flex
+            v-for="bp in breakpoints"
+            :key="bp.key"
+            gap="small"
+            vertical
+            align="center"
+            class="descriptions-column-breakpoint"
+          >
+            <Tag size="small" :color="bp.key === currentBreakpoint ? 'processing' : undefined">
+              {{ bp.key }}
+            </Tag>
+            <span class="descriptions-column-rule">{{ bp.rule }}</span>
+            <InputNumber v-model:value="state.column[bp.key]" :min="1" :max="9" />
+          </Flex>
+        </Flex>
+      </Flex>
+    </Col>
+    <Col :span="6">
       <Flex gap="small" vertical>
         labelAlign:
         <Select :options="labelAlignOptions" v-model="state.labelAlign" />
-      </Flex>
-    </Col>
-    <Col :span="6">
-      <Flex gap="small" vertical>
-        Column xs:
-        <InputNumber v-model:value="state.column.xs" :min="1" placeholder="xs" />
-      </Flex>
-    </Col>
-    <Col :span="6">
-      <Flex gap="small" vertical>
-        Column sm:
-        <InputNumber v-model:value="state.column.sm" :min="1" :max="9" placeholder="sm" />
-      </Flex>
-    </Col>
-    <Col :span="6">
-      <Flex gap="small" vertical>
-        Column md:
-        <InputNumber v-model:value="state.column.md" :min="1" :max="9" placeholder="md" />
-      </Flex>
-    </Col>
-    <Col :span="6">
-      <Flex gap="small" vertical>
-        Column lg:
-        <InputNumber v-model:value="state.column.lg" :min="1" :max="9" placeholder="lg" />
-      </Flex>
-    </Col>
-    <Col :span="6">
-      <Flex gap="small" vertical>
-        Column xl:
-        <InputNumber v-model:value="state.column.xl" :min="1" :max="9" placeholder="xl" />
-      </Flex>
-    </Col>
-    <Col :span="6">
-      <Flex gap="small" vertical>
-        Column xxl:
-        <InputNumber v-model:value="state.column.xxl" :min="1" :max="9" placeholder="xxl" />
       </Flex>
     </Col>
     <Col :span="6">
@@ -864,17 +905,10 @@ const labelAlignOptions = [
     :extra="state.extra"
     :bordered="state.bordered"
     :layout="state.layout"
-    :colon="state.colon"
-    :label-align="state.labelAlign"
     :size="state.size"
-    :column="{
-      xs: state.column.xs,
-      sm: state.column.sm,
-      md: state.column.md,
-      lg: state.column.lg,
-      xl: state.column.xl,
-      xxl: state.column.xxl
-    }"
+    :colon="state.colon"
+    :column="columnConfig"
+    :label-align="state.labelAlign"
     :label-style="state.labelStyle"
     :content-style="state.contentStyle"
   >
@@ -898,7 +932,8 @@ const labelAlignOptions = [
 
 ```vue
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
+import { useWindowSize } from '@vueuse/core'
 const options = [
   {
     label: 'default',
@@ -927,22 +962,52 @@ const labelAlignOptions = [
     value: 'center'
   }
 ]
+// column 断点：与组件 Responsive 断点一一对应，rule 直观标注生效区间，min / max 用于判断当前视口命中项
+const breakpoints = [
+  { key: 'xs', rule: '<576px', min: 0, max: 575 },
+  { key: 'sm', rule: '≥576px', min: 576, max: 767 },
+  { key: 'md', rule: '≥768px', min: 768, max: 991 },
+  { key: 'lg', rule: '≥992px', min: 992, max: 1199 },
+  { key: 'xl', rule: '≥1200px', min: 1200, max: 1599 },
+  { key: 'xxl', rule: '≥1600px', min: 1600, max: 1999 },
+  { key: 'xxxl', rule: '≥2000px', min: 2000, max: Infinity }
+]
+const columnModeOptions = [
+  { label: '统一列数', value: 'number' },
+  { label: '响应式断点', value: 'responsive' }
+]
+const { width } = useWindowSize()
+// 未挂载前不渲染依赖视口的反馈，避免服务端与客户端首屏输出不一致
+const isMounted = ref(false)
+onMounted(() => {
+  isMounted.value = true
+})
+// 当前视口命中的断点：判定口径与组件一致（从大到小取第一个命中项）
+const currentBreakpoint = computed(() => {
+  if (!isMounted.value) {
+    return undefined
+  }
+  return breakpoints.find((bp) => width.value >= bp.min && width.value <= bp.max)?.key
+})
 const state = reactive({
   title: 'User Info',
   extra: 'extra',
   bordered: false,
   layout: 'horizontal',
-  colon: true,
-  labelAlign: 'left',
   size: 'default',
+  colon: true,
+  columnMode: 'number',
+  columnValue: 3,
   column: {
     xs: 1,
     sm: 2,
     md: 3,
     lg: 3,
     xl: 3,
-    xxl: 3
+    xxl: 3,
+    xxxl: 3
   },
+  labelAlign: 'left',
   labelStyle: {
     fontSize: '14px',
     color: '#FF6900',
@@ -953,6 +1018,20 @@ const state = reactive({
     color: '#1677FF',
     fontWeight: 400
   }
+})
+// 配置器最终传给组件的 column：统一列数传数值，响应式断点传对象
+const columnConfig = computed(() => (state.columnMode === 'number' ? state.columnValue : state.column))
+// 实时反馈当前实际生效的列数，帮助理解断点规则
+const activeColumnTip = computed(() => {
+  if (state.columnMode === 'number') {
+    return `所有视口统一为 ${state.columnValue} 列`
+  }
+  const key = currentBreakpoint.value
+  if (!key) {
+    return '正在检测当前视口…'
+  }
+  const rule = breakpoints.find((bp) => bp.key === key)?.rule
+  return `当前视口 ${width.value}px，命中 ${key}（${rule}），实际 ${state.column[key]} 列`
 })
 </script>
 <template>
@@ -983,57 +1062,52 @@ const state = reactive({
         </Space>
       </Col>
       <Col :span="6">
-        <Space gap="small" vertical>
-          colon:
-          <Switch v-model="state.colon" />
-        </Space>
-      </Col>
-      <Col :span="6">
         <Flex gap="small" vertical>
           size:
           <Select :options="options" v-model="state.size" />
         </Flex>
       </Col>
       <Col :span="6">
+        <Space gap="small" vertical>
+          colon:
+          <Switch v-model="state.colon" />
+        </Space>
+      </Col>
+      <Col :span="24">
+        <Flex gap="small" vertical>
+          <Flex gap="middle" align="center" wrap="wrap">
+            column:
+            <Segmented v-model:value="state.columnMode" :options="columnModeOptions" />
+            <InputNumber
+              v-if="state.columnMode === 'number'"
+              v-model:value="state.columnValue"
+              :min="1"
+              :max="9"
+            />
+            <span class="descriptions-column-tip">{{ activeColumnTip }}</span>
+          </Flex>
+          <Flex v-if="state.columnMode === 'responsive'" gap="middle" align="flex-start" wrap="wrap">
+            <Flex
+              v-for="bp in breakpoints"
+              :key="bp.key"
+              gap="small"
+              vertical
+              align="center"
+              class="descriptions-column-breakpoint"
+            >
+              <Tag size="small" :color="bp.key === currentBreakpoint ? 'processing' : undefined">
+                {{ bp.key }}
+              </Tag>
+              <span class="descriptions-column-rule">{{ bp.rule }}</span>
+              <InputNumber v-model:value="state.column[bp.key]" :min="1" :max="9" />
+            </Flex>
+          </Flex>
+        </Flex>
+      </Col>
+      <Col :span="6">
         <Flex gap="small" vertical>
           labelAlign:
           <Select :options="labelAlignOptions" v-model="state.labelAlign" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex gap="small" vertical>
-          Column xs:
-          <InputNumber v-model:value="state.column.xs" :min="1" placeholder="xs" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex gap="small" vertical>
-          Column sm:
-          <InputNumber v-model:value="state.column.sm" :min="1" :max="9" placeholder="sm" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex gap="small" vertical>
-          Column md:
-          <InputNumber v-model:value="state.column.md" :min="1" :max="9" placeholder="md" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex gap="small" vertical>
-          Column lg:
-          <InputNumber v-model:value="state.column.lg" :min="1" :max="9" placeholder="lg" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex gap="small" vertical>
-          Column xl:
-          <InputNumber v-model:value="state.column.xl" :min="1" :max="9" placeholder="xl" />
-        </Flex>
-      </Col>
-      <Col :span="6">
-        <Flex gap="small" vertical>
-          Column xxl:
-          <InputNumber v-model:value="state.column.xxl" :min="1" :max="9" placeholder="xxl" />
         </Flex>
       </Col>
       <Col :span="6">
@@ -1090,17 +1164,10 @@ const state = reactive({
       :extra="state.extra"
       :bordered="state.bordered"
       :layout="state.layout"
-      :colon="state.colon"
-      :label-align="state.labelAlign"
       :size="state.size"
-      :column="{
-        xs: state.column.xs,
-        sm: state.column.sm,
-        md: state.column.md,
-        lg: state.column.lg,
-        xl: state.column.xl,
-        xxl: state.column.xxl
-      }"
+      :colon="state.colon"
+      :column="columnConfig"
+      :label-align="state.labelAlign"
       :label-style="state.labelStyle"
       :content-style="state.contentStyle"
     >
@@ -1120,6 +1187,17 @@ const state = reactive({
     </Descriptions>
   </Flex>
 </template>
+<style lang="less">
+.descriptions-column-breakpoint {
+  width: 90px;
+}
+
+.descriptions-column-rule,
+.descriptions-column-tip {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+}
+</style>
 ```
 
 :::
@@ -1137,6 +1215,16 @@ const state = reactive({
 .descriptions-wrap .descriptions-item-content.descriptions-demo-content {
   color: #52c41a;
 }
+
+.descriptions-column-breakpoint {
+  width: 90px;
+}
+
+.descriptions-column-rule,
+.descriptions-column-tip {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+}
 </style>
 
 ## APIs
@@ -1153,10 +1241,10 @@ size | 设置列表的大小 | 'default' &#124; 'middle' &#124; 'small' | 'defau
 colon | 是否显示标签后的冒号（边框模式不显示冒号） | boolean | true
 column | 一行的 `DescriptionsItem` 数量，可以写成数值或支持响应式的对象写法 `{ xs: 8, sm: 16, md: 24 }` | number &#124; [DescriptionsResponsive](#responsive-type) | {xs: 1, sm: 2, md\: 3, lg: 3, xl: 3, xxl: 3, xxxl: 3}
 labelAlign | 标签对齐方式 | 'left' &#124; 'right' &#124; 'center' | 'left'
-labelClass | 标签自定义类名，与 `DescriptionsItem` 的 `labelClass` 叠加 | string | undefined
-contentClass | 内容自定义类名，与 `DescriptionsItem` 的 `contentClass` 叠加 | string | undefined
 labelStyle | 自定义标签样式，优先级低于 `DescriptionsItem`  的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
 contentStyle | 自定义内容样式，优先级低于 `DescriptionsItem`  的 `contentStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
+labelClass | 标签自定义类名，与 `DescriptionsItem` 的 `labelClass` 叠加 | string | undefined
+contentClass | 内容自定义类名，与 `DescriptionsItem` 的 `contentClass` 叠加 | string | undefined
 
 ### Responsive Type
 

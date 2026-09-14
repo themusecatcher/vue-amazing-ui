@@ -21,10 +21,10 @@ export interface Props {
   colon?: boolean // 是否显示标签后的冒号（边框模式不显示冒号）
   column?: number | Responsive // 一行的 DescriptionsItem 数量，可以写成数值或支持响应式的对象写法 { xs: 8, sm: 16, md: 24 }
   labelAlign?: 'left' | 'right' | 'center' // 标签对齐方式
-  labelClass?: string // 标签自定义类名，与 DescriptionsItem 的 labelClass 叠加
-  contentClass?: string // 内容自定义类名，与 DescriptionsItem 的 contentClass 叠加
   labelStyle?: CSSProperties // 自定义标签样式，优先级低于 DescriptionsItem 的 labelStyle
   contentStyle?: CSSProperties // 自定义内容样式，优先级低于 DescriptionsItem 的 contentStyle
+  labelClass?: string // 标签自定义类名，与 DescriptionsItem 的 labelClass 叠加
+  contentClass?: string // 内容自定义类名，与 DescriptionsItem 的 contentClass 叠加
 }
 // 声明组件插槽类型
 export interface DescriptionsSlots {
@@ -42,10 +42,10 @@ const props = withDefaults(defineProps<Props>(), {
   colon: true,
   column: () => ({ xs: 1, sm: 2, md: 3, lg: 3, xl: 3, xxl: 3, xxxl: 3 }),
   labelAlign: 'left',
-  labelClass: undefined,
-  contentClass: undefined,
   labelStyle: undefined,
-  contentStyle: undefined
+  contentStyle: undefined,
+  labelClass: undefined,
+  contentClass: undefined
 })
 defineSlots<DescriptionsSlots>()
 const slots = useSlots()
@@ -178,7 +178,8 @@ function hasRenderableContent(nodes: VNode[]): boolean {
 }
 // 从 default 插槽解析出单元格数据：只认 DescriptionsItem，其余节点开发态告警
 const cells = computed<CellData[]>(() => {
-  const childNodes = flattenChildren(slots.default?.())
+  // 消费者在默认插槽中书写的注释节点不参与渲染，也不应触发「存在非 DescriptionsItem」的误告警
+  const childNodes = flattenChildren(slots.default?.()).filter((node) => node.type !== Comment)
   const itemNodes = childNodes.filter((node) => node.type === DescriptionsItem)
   if (import.meta.env.DEV && itemNodes.length !== childNodes.length) {
     console.warn('[vue-amazing-ui] Descriptions 仅支持 DescriptionsItem 作为子节点，其余节点已被忽略')
@@ -190,19 +191,19 @@ const cells = computed<CellData[]>(() => {
     const labelSlot = slotObject.label
     const contentSlot = slotObject.default
     // 标签优先级：label 插槽 > label 属性
-    const labelNodes: VNode[] =
-      typeof labelSlot === 'function'
-        ? toNodes((labelSlot as () => unknown)())
-        : itemProps.label === undefined
-          ? []
-          : toNodes(itemProps.label)
+    let labelNodes: VNode[] = []
+    if (typeof labelSlot === 'function') {
+      labelNodes = toNodes((labelSlot as () => unknown)())
+    } else if (itemProps.label !== undefined) {
+      labelNodes = toNodes(itemProps.label)
+    }
     // 内容优先级：default 插槽 > 直接挂在组件上的子节点（手写渲染函数场景）
-    const contentNodes: VNode[] =
-      typeof contentSlot === 'function'
-        ? toNodes((contentSlot as () => unknown)())
-        : isSlotObject(rawChildren)
-          ? []
-          : toNodes(rawChildren)
+    let contentNodes: VNode[] = []
+    if (typeof contentSlot === 'function') {
+      contentNodes = toNodes((contentSlot as () => unknown)())
+    } else if (!isSlotObject(rawChildren)) {
+      contentNodes = toNodes(rawChildren)
+    }
     const rawSpan = typeof itemProps.span === 'number' ? itemProps.span : undefined
     return {
       key: node.key ?? index,
@@ -291,7 +292,7 @@ const rows = computed<CellData[][]>(() => {
                     labelClass,
                     cell.labelClass,
                     `descriptions-label-align-${labelAlign}`,
-                    { 'descriptions-item-no-colon': !colon }
+                    { 'descriptions-item-no-colon': !colon || !cell.hasLabel }
                   ]"
                   :colspan="cell.span"
                   :style="cell.labelStyle"
