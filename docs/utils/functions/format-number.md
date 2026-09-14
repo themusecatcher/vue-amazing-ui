@@ -18,7 +18,7 @@ _格式化数字为指定格式的工具函数_
  * @param {string} [decimal = '.'] 小数点字符，默认为 '.'
  * @param {string} prefix 数字前的字符串，默认为 undefined
  * @param {string} suffix 数字后的字符串，默认为 undefined
- * @returns {string} 格式化后的字符串；如果输入值不是数字或字符串，则抛出类型错误
+ * @returns {string} 格式化后的字符串；类型不符时仅告警，无法转为有效数字时返回空字符串
  */
 export function formatNumber(
   value: number | string,
@@ -40,17 +40,14 @@ export function formatNumber(
   if (isNaN(numValue) || !isFinite(numValue)) {
     return ''
   }
-  if (numValue === 0) {
-    return numValue.toFixed(precision)
-  }
-  let formatValue = numValue.toFixed(precision)
+  const [integerPart, decimalPart] = numValue.toFixed(precision).split('.')
   // 如果 separator 是数值而非字符串，会导致错误，此处进行检查
-  if (typeof separator === 'string' && separator !== '') {
-    const [integerPart, decimalPart] = formatValue.split('.')
-    formatValue =
-      integerPart.replace(/(\d)(?=(\d{3})+$)/g, '$1' + separator) + (decimalPart ? decimal + decimalPart : '')
-  }
-  return (prefix || '') + formatValue + (suffix || '')
+  const formattedInteger =
+    typeof separator === 'string' && separator !== ''
+      ? integerPart.replace(/(\d)(?=(\d{3})+$)/g, `$1${separator}`)
+      : integerPart
+  const formatValue = decimalPart ? `${formattedInteger}${decimal}${decimalPart}` : formattedInteger
+  return `${prefix || ''}${formatValue}${suffix || ''}`
 }
 ```
 
@@ -58,19 +55,41 @@ export function formatNumber(
 
 <script setup lang="ts">
 import { formatNumber } from 'vue-amazing-ui'
+const samples = [
+  { label: '默认（保留 2 位小数 + 千分位）', value: formatNumber(123456789.87654321) },
+  { label: '保留 4 位小数', value: formatNumber(123456789.87654321, 4) },
+  { label: '空格作千分位分隔符', value: formatNumber(123456789.87654321, 2, ' ') },
+  { label: '自定义小数点 + 前后缀', value: formatNumber(1234567.89, 2, ',', '.', '¥', ' 元') },
+  { label: '无法转为有效数字', value: formatNumber('abc') }
+]
 </script>
 
 ## 基本使用
 
-**自定义保留 `precision` 位小数，并使用 `separator` 分隔符进行数字格式化**
+_自定义保留 `precision` 位小数，并使用 `separator` 分隔符进行数字格式化_
 
-<h4>{{ formatNumber(123456789.87654321, 2, ',') }}</h4>
+<br/>
+
+<Space vertical align="stretch" :gap="8">
+  <Alert v-for="item in samples" :key="item.label" type="info" :message="`${item.label}：${item.value}`" />
+</Space>
 
 ```vue
 <script setup lang="ts">
 import { formatNumber } from 'vue-amazing-ui'
-formatNumber(123456789.87654321, 2, ',') // 123,456,789.88
+const samples = [
+  { label: '默认（保留 2 位小数 + 千分位）', value: formatNumber(123456789.87654321) },
+  { label: '保留 4 位小数', value: formatNumber(123456789.87654321, 4) },
+  { label: '空格作千分位分隔符', value: formatNumber(123456789.87654321, 2, ' ') },
+  { label: '自定义小数点 + 前后缀', value: formatNumber(1234567.89, 2, ',', '.', '¥', ' 元') },
+  { label: '无法转为有效数字', value: formatNumber('abc') }
+]
 </script>
+<template>
+  <Space vertical align="stretch" :gap="8">
+    <Alert v-for="item in samples" :key="item.label" type="info" :message="`${item.label}：${item.value}`" />
+  </Space>
+</template>
 ```
 
 ## Params
@@ -89,3 +108,8 @@ formatNumber(123456789.87654321, 2, ',') // 123,456,789.88
 | 类型 | 说明 |
 | --- | --- |
 | string | 格式化后的数字字符串 |
+
+## 注意事项
+
+- `value` 无法转换为有效数字（如非数字字符串、`NaN`、`Infinity`）时返回空字符串 `''`
+- `value` 或 `precision` 类型不符时仅通过 `console.warn` 告警，不会中断执行

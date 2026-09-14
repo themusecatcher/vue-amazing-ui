@@ -2,7 +2,11 @@
 
 <GlobalElement />
 
-_对于短时间内连续触发的事件，防抖就是让某个时间 `delay` 期限内，事件处理函数只执行一次_
+_对于短时间内连续触发的事件，防抖保证在停止触发 `delay` `ms` 后才执行一次_
+
+## 何时使用
+
+- 对于短时间内连续触发的事件，停止触发 `delay` `ms` 后函数才执行一次
 
 ::: details Show Source Code
 
@@ -35,12 +39,8 @@ export function debounce(fn: Function, delay: number = 300): Function {
 
 :::
 
-## 何时使用
-
-- 对于短时间内连续触发的事件，在 `delay` `ms` 内函数只执行最后一次
-
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { debounce, useEventListener } from 'vue-amazing-ui'
 
 const scrollTop = ref(0)
@@ -48,7 +48,7 @@ const scrollTop = ref(0)
 if (typeof window !== 'undefined') {
   useEventListener(window, 'scroll', debounce(showPosition, 100))
 }
-function showPosition () {
+function showPosition() {
   scrollTop.value = window.pageYOffset || document.documentElement.scrollTop
 }
 </script>
@@ -59,7 +59,7 @@ function showPosition () {
 
 ```vue
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { debounce, useEventListener } from 'vue-amazing-ui'
 const scrollTop = ref(0)
 // SSR（Node）环境无 window，需判断存在性后再注册监听

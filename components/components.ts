@@ -31,7 +31,7 @@ export { default as Calendar } from './calendar'
 export type { CardProps } from './card'
 export { default as Card } from './card'
 
-export type { CarouselProps, CarouselImage } from './carousel'
+export type { CarouselProps, CarouselImage, CarouselEasingPreset } from './carousel'
 export { default as Carousel } from './carousel'
 
 export type { CascaderProps, CascaderOption } from './cascader'
@@ -124,7 +124,7 @@ export type {
 } from './notification'
 export { default as Notification, NotificationProvider, useNotification } from './notification'
 
-export type { NumberAnimationProps, NumberAnimationTransitionFunc } from './number-animation'
+export type { NumberAnimationProps, NumberAnimationEasingPreset } from './number-animation'
 export { default as NumberAnimation } from './number-animation'
 
 export type { PaginationProps } from './pagination'

@@ -108,16 +108,6 @@ export function useMounted(): Ref<boolean> {
 
 :::
 
-## 参考文档
-
-- [ResizeObserver](https://developer.mozilla.org/zh-CN/docs/Web/API/ResizeObserver)
-
-## 基本使用
-
-_请缩放下面的盒子来观察变化_
-
-<br/>
-
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useResizeObserver } from 'vue-amazing-ui'
@@ -159,6 +149,12 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
 })
 </script>
 
+## 基本使用
+
+_请缩放下面的盒子来观察变化_
+
+<br/>
+
 <div class="size-wrap">
   <textarea ref="el" class="resizer" disabled />
   <div class="size-container">
@@ -187,11 +183,11 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
     background: #222;
     color: #fff;
     resize: both;
-    padding: 16px 32px;
-    min-width: 300px;
-    min-height: 450px;
+    padding: 16px;
+    min-width: 500px;
+    min-height: 480px;
     max-width: 688px;
-    border: 1px solid #2e2e32;;
+    border: 1px solid #2e2e32;
     border-radius: 4px;
     outline: none;
     white-space: pre;
@@ -289,8 +285,8 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
     color: #fff;
     resize: both;
     padding: 16px;
-    min-width: 300px;
-    min-height: 450px;
+    min-width: 500px;
+    min-height: 480px;
     max-width: 688px;
     border: 1px solid #2e2e32;
     border-radius: 4px;

@@ -306,6 +306,10 @@ let prevBodyPaddingRight = ''
  * @returns {() => void} 本次锁定的释放函数（幂等）：从全局计数中移除本次锁定，重复调用无副作用
  */
 export function lockScroll(): () => void {
+  // SSR / Node 环境无 DOM 可锁：返回空释放函数，保证调用方「加锁即拿到释放句柄」的配对语义不变
+  if (typeof document === 'undefined' || typeof window === 'undefined') {
+    return () => {}
+  }
   const html = document.documentElement
   const body = document.body
   if (bodyLockCount === 0) {

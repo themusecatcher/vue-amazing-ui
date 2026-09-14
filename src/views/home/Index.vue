@@ -106,6 +106,10 @@ const toolFunctions = [
     description: '向上查找元素最近的可滚动父元素函数'
   },
   {
+    name: 'lockScroll',
+    description: '锁定页面滚动并补偿滚动条宽度，防止页面横向抖动函数'
+  },
+  {
     name: 'useScrollParent',
     description: '查询并监听最近可滚动父元素，响应视口 resize 的组合式函数'
   },
@@ -140,6 +144,7 @@ import {
   getColorPalettes,
   getAlphaColor,
   getScrollParent,
+  lockScroll,
   useScrollParent,
   useFloatingPosition
 } from 'vue-amazing-ui'

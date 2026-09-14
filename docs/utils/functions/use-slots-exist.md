@@ -77,31 +77,71 @@ export function useSlotsExist<T extends string | string[] = 'default'>(slotsName
 
 :::
 
+<script setup lang="ts">
+import { h, ref } from 'vue'
+import { useSlotsExist } from 'vue-amazing-ui'
+const showHeader = ref(true)
+// 用一个内联组件模拟「外部提供插槽」的真实场景
+const SlotChecker = {
+  setup() {
+    const slotsExist = useSlotsExist(['default', 'header'])
+    return () =>
+      h('ul', [
+        h('li', `default 插槽：${slotsExist.default ? '存在' : '不存在'}`),
+        h('li', `header 插槽：${slotsExist.header ? '存在' : '不存在'}`)
+      ])
+  }
+}
+</script>
+
 ## 基本使用
+
+_通过开关控制 `header` 插槽是否渲染内容，实时查看检测结果_
+
+<br/>
+
+<Space :gap="8">
+  <span>header 插槽内容</span>
+  <Switch v-model="showHeader" />
+</Space>
+
+<br/>
+
+<SlotChecker>
+  <template #header>
+    <span v-if="showHeader">header 内容</span>
+  </template>
+  默认内容
+</SlotChecker>
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { h, ref } from 'vue'
 import { useSlotsExist } from 'vue-amazing-ui'
-// 监听单个插槽的存在
-const slotsDefaultExist = useSlotsExist() // 等同于 useSlotsExist('default')
-const slotsHeaderExist = useSlotsExist('header')
-watchEffect(() => {
-  console.log('slotsDefaultExist', slotsDefaultExist.value)
-  console.log('slotsHeaderExist', slotsHeaderExist.value)
-})
-// 监听一组插槽的存在
-const slotsExist = useSlotsExist(['default', 'header'])
-watchEffect(() => {
-  console.log('default', slotsExist.default)
-  console.log('header', slotsExist.header)
-})
+const showHeader = ref(true)
+// 用一个内联组件模拟「外部提供插槽」的真实场景
+const SlotChecker = {
+  setup() {
+    const slotsExist = useSlotsExist(['default', 'header'])
+    return () =>
+      h('ul', [
+        h('li', `default 插槽：${slotsExist.default ? '存在' : '不存在'}`),
+        h('li', `header 插槽：${slotsExist.header ? '存在' : '不存在'}`)
+      ])
+  }
+}
 </script>
 <template>
-  <div>
-    <slot>{{ defaultContent }}</slot>
-    <slot name="header">{{ headerContent }}</slot>
-  </div>
+  <Space :gap="8">
+    <span>header 插槽内容</span>
+    <Switch v-model="showHeader" />
+  </Space>
+  <SlotChecker>
+    <template #header>
+      <span v-if="showHeader">header 内容</span>
+    </template>
+    默认内容
+  </SlotChecker>
 </template>
 ```
 

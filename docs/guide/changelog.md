@@ -10,6 +10,13 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-09-14">2.8.0</VersionDateTag>
+
+- 优化并更新 [描述列表 Descriptions](/guide/components/descriptions.html)，重构为数据驱动渲染，新增 `layout` / `colon` / `labelAlign` / `labelClass` / `contentClass` 属性、`#header` 插槽及 `xxxl` 响应式断点，`title` / `extra` / `label` 支持 `VNode`；修复空标签仍渲染冒号、`v-for` 与 `template` 包裹的子项丢失、标签与内容粘连、尺寸切换无过渡等问题，并移除全部 `!important`；`DescriptionsItem` 改为纯数据载体，不再自行渲染 `label` 与内容 `DOM`，独立使用时仅渲染默认插槽。⚠️ **破坏性变更**：移除 `vertical` 属性，请改用 `layout="vertical"` 替代
+- 优化并更新 [抽屉 Drawer](/guide/components/drawer.html)，新增 `getContainer` / `push` / `size` / `mask` / `maskClosable` / `keyboard` / `closeIcon` / `afterOpenChange` / `autofocus` / `forceRender` / `rootClassName` / `rootStyle` / `contentWrapperStyle` 等属性与 `#closeIcon` 插槽，支持多层抽屉推动、渲染在当前 `DOM`；新增 `blockScroll` 控制打开时是否禁用 `body` 滚动，`class` / `style` 作用于 `Drawer` 容器；修复加锁与释放异步错位导致页面滚动被永久锁死的问题
+- 增强 [轮播图 Carousel](/guide/components/carousel.html)：新增 `loop` / `initialIndex` / 受控 `currentIndex` / `objectFit` / `draggable` / `mousewheel` 属性与 `beforeChange` / `afterChange` / `update:currentIndex` 事件，`to` 新增 `dontAnimate` 参数，新增 `#prevArrow` / `#nextArrow` / `#dots` 插槽；修复图片数量减少后当前页越界、图片加载失败后持续加载态、键盘焦点陷阱、单图时箭头无响应等问题，并在 `slide` 效果下为首尾补充过冲缓冲副本，使 `back-out` 等过冲缓动在切换到首 / 末页时同样具备过冲效果、不再露出空白，并适配系统「减弱动态效果」偏好；`slideFunction` 新增缓动预设名取值（新增导出 `CarouselEasingPreset` 类型），`fadeFunction` 支持直接传四个三次贝塞尔控制点（自动转为 CSS `cubic-bezier()` 写法），默认值写法由 `'cubic-bezier(0.4, 0, 0.2, 1)'` 改为 `[0.4, 0, 0.2, 1]`。**破坏性变更**：`dotsTrigger` 更名为 `dotTrigger`（统一为 `dot*` 命名），请同步修改；移除与 `update:currentIndex` 等价的 `change` 事件，请改用 `update:currentIndex`（或 `v-model:current-index`）替代
+- 重构并增强 [数字动画 NumberAnimation](/guide/components/number-animation.html)：缓动配置支持直接传入三次贝塞尔控制点数组与缓动函数，`autoplay` 由 `false` 切为 `true` 时重新播放，组件卸载时中止在飞动画。⚠️ **破坏性变更**：`transition` 属性更名为 `easing`，对应类型 `NumberAnimationTransitionFunc` 更名为 `NumberAnimationEasingPreset`，请同步修改
+
 ## <VersionDateTag date="2026-09-12">2.7.4</VersionDateTag>
 
 - 优化 [useSlotsExist](/utils/functions/use-slots-exist.html) 作用域插槽在探测时因无参调用触发形参位置解构的 `TypeError`，导致整页渲染中断，同时新增单元测试
@@ -48,12 +55,12 @@
 
 ## <VersionDateTag date="2026-09-08">2.7.0</VersionDateTag>
 
-- ⚠️ **破坏性变更**：[Message](/guide/components/message.html)、[Notification](/guide/components/notification.html)、[Modal](/guide/components/modal.html)、[Dialog](/guide/components/dialog.html) 移除实例 `ref` 上的命令式方法，改用 `useXxx()`（需外层 `XxxProvider`）或 `createDiscreteApi()`；`window['$xxx']` 写法改为赋值 `api`；`@ready` 回传 `api`，句柄支持 `destroy()` / `update()`，Notification 额外支持 `destroy(key)` / `destroyAll()`
+- ⚠️ **破坏性变更**：[Message](/guide/components/message.html)、[Notification](/guide/components/notification.html)、[Modal](/guide/components/modal.html) 移除实例 `ref` 上的命令式方法，统一改用 `useXxx()`（需外层 `XxxProvider`）或 `createDiscreteApi()`；[Dialog](/guide/components/dialog.html) 新增 `useDialog()` / `createDiscreteApi()` 命令式入口；`window['$xxx']` 写法改为赋值 `api`；`@ready` 回传 `api`，句柄支持 `destroy()` / `update()`，Notification 额外支持 `destroy(key)` 按 `key` 精确关闭
 - ⚠️ **破坏性变更**：上述四组件浮层默认 `Teleport` 到 `body`，新增 `to` 指定挂载节点；依赖原渲染位置的 `scoped` 样式与 `:deep()` 覆写失效，需改为全局样式
 - ⚠️ **破坏性变更**：Notification `description` 更名 `content`、移除组件级 `title` / `description`、`top` / `bottom` 默认 `24` → `16`；Message 单条配置移除 `top`
-- ⚠️ **破坏性变更**：Modal 命令式 `maskClosable` 默认改 `false`、移除 `trapFocus` 与 `autoFocusButton` 的 `null` 取值、`Esc` 改绑弹窗主体、不再导出 `FooterType` / `ModalCallback`；[Upload](/guide/components/upload.html) 移除内嵌 Message：`messageProps` / `actionMessage` / `UploadMessageType` 及相关方法移除，改用 `success` / `error` / `remove` 事件
-- 重构并增强 [Dialog](/guide/components/dialog.html) / [Modal](/guide/components/modal.html)：改为多实例层叠架构，新增 `draggable` 拖拽、`mask` / `closable` / `closeIcon`、`wrapClass` / `containerClass` 等分层定制与 `onEsc` / `onMaskClick` / `afterClose` 回调，`title` / `content` 支持 `string` / `VNode` / 渲染函数 / 插槽，并补充 `aria-*` 与可聚焦关闭按钮
-- 增强 [Notification](/guide/components/notification.html) / [Message](/guide/components/message.html)：新增 `key` / `maxCount` / `keepAliveOnHover` / `to` 等属性，Notification `placement` 增加 `top` / `bottom` 居中；定时器改为按 `key` 独立管理，修复多条干扰与常驻消息阻塞回收
+- ⚠️ **破坏性变更**：Modal 命令式 `maskClosable` 默认改 `false`（组件级仍为 `true`）、`Esc` 监听改绑弹窗主体（焦点移出弹窗后不再响应）、入口类型导出由 `Props` / `Modal` 调整为 `ModalProps` / `ModalOptions` / `ModalUpdate` / `ModalReactive` / `ModalApi`；[Upload](/guide/components/upload.html) 移除内嵌 Message：`messageProps` / `actionMessage` / `UploadMessageType` 及相关方法移除，改用 `success` / `error` / `remove` 事件
+- 重构并增强 [Dialog](/guide/components/dialog.html) / [Modal](/guide/components/modal.html)：改为多实例层叠架构，新增 `mask` / `closable` / `closeIcon`、`wrapClass` / `containerClass` 等分层定制与 `onEsc` / `onMaskClick` / `afterClose` 回调（其中 [Dialog](/guide/components/dialog.html) 额外新增 `draggable` 拖拽），`title` / `content` 支持 `string` / `VNode` / 渲染函数 / 插槽，并补充 `aria-*` 与可聚焦关闭按钮
+- 增强 [Notification](/guide/components/notification.html) / [Message](/guide/components/message.html)：新增 `maxCount` / `keepAliveOnHover` / `to` 等属性，Notification 新增 `key` 与 `placement` 的 `top` / `bottom` 居中位置；定时器改为按 `key` 独立管理，修复多条干扰与常驻消息阻塞回收
 - 新增 [lockScroll](/utils/functions/lock-scroll.html) 工具函数（第 `24` 个），[Drawer](/guide/components/drawer.html) / Modal / Dialog 统一改用并补充卸载兜底释放；修复 [Table](/guide/components/table.html) 就地改写用户 `columns`、空 `columns` 崩溃与 `colspan` 计算错误
 - 优化 `VueAmazingUIResolver` 按需引入：新增四个命令式 `Provider` 组件的自动引入与样式注入，修复 Modal / Notification 缺失 [Scrollbar](/guide/components/scrollbar.html) 样式依赖
 - 工程优化：`xxxProps` 类型由 `object` 精确为对应 `Props`；新增 `vitest` 单元测试并纳入 `pnpm check`；新增 `development/` 设计指南
@@ -198,12 +205,12 @@
 
 ## <VersionDateTag date="2025-05-30">2.4.10</VersionDateTag>
 
-- 新增 [否支持事件监听器选项 useOptionsSupported](/utils/functions/use-options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
+- 新增 [是否支持事件监听器选项 useOptionsSupported](/utils/functions/use-options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
 - 更新组件库部分依赖版本
 
 ## <VersionDateTag date="2025-05-29">2.4.9</VersionDateTag>
 
-- 新增 [否支持事件监听器选项 useOptionsSupported](/utils/functions/use-options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
+- 新增 [是否支持事件监听器选项 useOptionsSupported](/utils/functions/use-options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
 
 ## <VersionDateTag date="2025-05-26">2.4.8</VersionDateTag>
 
