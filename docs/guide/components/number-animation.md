@@ -155,7 +155,7 @@ const precision3Ref = ref<InstanceType<typeof NumberAnimation> | null>(null)
 
 :::
 
-## 自定义前缀 & 后缀
+## 前缀 & 后缀
 
 <ClientOnly>
   <Row>
@@ -211,7 +211,7 @@ const suffixRef = ref<InstanceType<typeof NumberAnimation> | null>(null)
 
 :::
 
-## 自定义千分位分隔符 & 小数点字符
+## 千分位分隔符 & 小数点字符
 
 <ClientOnly>
   <Row>
@@ -326,7 +326,7 @@ const styleRef = ref<InstanceType<typeof NumberAnimation> | null>(null)
 
 :::
 
-## 自定义播放和动画时间
+## 播放和动画时间
 
 <Space vertical>
   <Statistic title="一个小目标" tabular-nums>
