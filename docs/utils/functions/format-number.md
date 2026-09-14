@@ -18,7 +18,7 @@ _格式化数字为指定格式的工具函数_
  * @param {string} [decimal = '.'] 小数点字符，默认为 '.'
  * @param {string} prefix 数字前的字符串，默认为 undefined
  * @param {string} suffix 数字后的字符串，默认为 undefined
- * @returns {string} 格式化后的字符串；如果输入值不是数字或字符串，则抛出类型错误
+ * @returns {string} 格式化后的字符串；类型不符时仅告警，无法转为有效数字时返回空字符串
  */
 export function formatNumber(
   value: number | string,
@@ -40,17 +40,14 @@ export function formatNumber(
   if (isNaN(numValue) || !isFinite(numValue)) {
     return ''
   }
-  if (numValue === 0) {
-    return numValue.toFixed(precision)
-  }
-  let formatValue = numValue.toFixed(precision)
+  const [integerPart, decimalPart] = numValue.toFixed(precision).split('.')
   // 如果 separator 是数值而非字符串，会导致错误，此处进行检查
-  if (typeof separator === 'string' && separator !== '') {
-    const [integerPart, decimalPart] = formatValue.split('.')
-    formatValue =
-      integerPart.replace(/(\d)(?=(\d{3})+$)/g, '$1' + separator) + (decimalPart ? decimal + decimalPart : '')
-  }
-  return (prefix || '') + formatValue + (suffix || '')
+  const formattedInteger =
+    typeof separator === 'string' && separator !== ''
+      ? integerPart.replace(/(\d)(?=(\d{3})+$)/g, `$1${separator}`)
+      : integerPart
+  const formatValue = decimalPart ? `${formattedInteger}${decimal}${decimalPart}` : formattedInteger
+  return `${prefix || ''}${formatValue}${suffix || ''}`
 }
 ```
 

@@ -46,7 +46,7 @@ export function getAlphaColor(frontColor: string, backgroundColor: string = '#ff
 import { getAlphaColor } from 'vue-amazing-ui'
 const shadowColor = getAlphaColor('#1677ff')
 console.log('shadowColor', shadowColor)
-// rgba(22, 119, 255, 0.15)
+// rgba(2, 107, 255, 0.92)
 </script>
 
 ## 基本使用
@@ -58,7 +58,7 @@ _根据前景色计算带透明度的阴影颜色_
 import { getAlphaColor } from 'vue-amazing-ui'
 const shadowColor = getAlphaColor('#1677ff')
 console.log('shadowColor', shadowColor)
-// rgba(22, 119, 255, 0.15)
+// rgba(2, 107, 255, 0.92)
 </script>
 ```
 

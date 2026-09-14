@@ -301,7 +301,7 @@ pnpm docs:dev
 | useResizeObserver | 使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options: object = {}) => { start: \() => void, stop: \() => void } |
 | useSlotsExist | 监听给定名称或名称数组的插槽是否存在，支持监听单个插槽或一组插槽的存在 | <T extends string &#124; string[] = 'default'>(slotsName: T) => T extends string ? ComputedRef\<boolean> : Reactive\<Record\<string, ComputedRef\<boolean>>> |
 | useInject | 使用依赖注入的函数，用于获取颜色调色板和阴影颜色 | (key: string) => { colorPalettes: Ref\<string[]>, shadowColor: Ref\<string> } |
-| useOptionsSupported | 检查浏览器是否支持给定的事件监听器选项 | (prop: 'capture' &#124; 'once' &#124; 'passive' &#124; 'signal') => { isSupported: Ref\<boolean> } |
+| useOptionsSupported | 检查浏览器是否支持给定的事件监听器选项 | (option: 'capture' &#124; 'once' &#124; 'passive' &#124; 'signal') => { isSupported: Ref\<boolean> } |
 | getColorPalettes | 根据主色生成颜色调色板函数 | (primaryColor: string) => string[] |
 | getAlphaColor | 获取透明度颜色函数，一般用作阴影色 | (frontColor: string, backgroundColor: string = '#ffffff') => string |
 | getScrollParent | 向上查找元素最近的可滚动父元素函数 | (el: HTMLElement &#124; null) => HTMLElement &#124; null |

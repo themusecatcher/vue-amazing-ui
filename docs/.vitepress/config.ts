@@ -478,7 +478,7 @@ export default defineConfig({
               link: '/utils/functions/use-inject'
             },
             {
-              text: 'useOptionsSupported 否支持事件监听器选项',
+              text: 'useOptionsSupported 是否支持事件监听器选项',
               link: '/utils/functions/use-options-supported'
             },
             {

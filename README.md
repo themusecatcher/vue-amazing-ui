@@ -301,7 +301,7 @@ All sponsors will be listed here, thank you very much for your support and spons
 | useResizeObserver | Function to observe changes in the dimensions of DOM elements using `ResizeObserver` | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options: object = {}) => { start: \() => void, stop: \() => void } |
 | useSlotsExist | Function to watch for the existence of slots with given names, supporting single slots or an array of slots | <T extends string &#124; string[] = 'default'>(slotsName: T) => T extends string ? ComputedRef\<boolean> : Reactive\<Record\<string, ComputedRef\<boolean>>> |
 | useInject | A function that uses injection to obtain color palettes and shadow color | (key: string) => { colorPalettes: Ref\<string[]>, shadowColor: Ref\<string> } |
-| useOptionsSupported | Checks if the browser supports the given event listener options | (prop: 'capture' &#124; 'once' &#124; 'passive' &#124; 'signal') => { isSupported: Ref\<boolean> } |
+| useOptionsSupported | Checks if the browser supports the given event listener options | (option: 'capture' &#124; 'once' &#124; 'passive' &#124; 'signal') => { isSupported: Ref\<boolean> } |
 | getColorPalettes | Function to generate a color palette from a primary color | (primaryColor: string) => string[] |
 | getAlphaColor | Function to get an alpha color, generally used as a shadow color | (frontColor: string, backgroundColor: string = '#ffffff') => string |
 | getScrollParent | Function to find the nearest scrollable parent element upward | (el: HTMLElement &#124; null) => HTMLElement &#124; null |

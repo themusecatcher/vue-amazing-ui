@@ -898,8 +898,8 @@ p {
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-width | 抽屉宽度，在 `placement` 为 `right` 或 `left` 时使用，单位 `px` | string &#124; number | 378
-height | 抽屉高度，在 `placement` 为 `top` 或 `bottom` 时使用，单位 `px` | string &#124; number | 378
+width | 抽屉宽度，在 `placement` 为 `right` 或 `left` 时使用，单位 `px`；未设置时由 `size` 推导（`default` 为 `378px`、`large` 为 `736px`） | string &#124; number | undefined
+height | 抽屉高度，在 `placement` 为 `top` 或 `bottom` 时使用，单位 `px`；未设置时由 `size` 推导（`default` 为 `378px`、`large` 为 `736px`） | string &#124; number | undefined
 size | 预设抽屉宽度（或高度），`default` 为 `378px`、`large` 为 `736px` | 'default' &#124; 'large' | 'default'
 title | 标题 | string | undefined
 closable | 是否显示左上角的关闭按钮 | boolean | true

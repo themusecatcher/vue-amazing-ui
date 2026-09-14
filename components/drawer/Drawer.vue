@@ -95,7 +95,11 @@ const drawerOpen = ref<boolean>(props.open)
 // 卸载兜底据此精确释放，避免未持锁时误解锁他人
 let scrollLockRelease: (() => void) | null = null
 const slotsExist = useSlotsExist(['title', 'extra', 'footer'])
-const emits = defineEmits(['update:open', 'close', 'afterOpenChange'])
+const emits = defineEmits<{
+  'update:open': [open: boolean] // 抽屉可见状态变更，配合 v-model:open 使用
+  close: [e: Event] // 抽屉关闭（关闭按钮 / 遮罩 / Esc）时触发
+  afterOpenChange: [open: boolean] // 开合动画结束后触发
+}>()
 // 多层抽屉 push
 // 父抽屉通过 provide 暴露 setPush / setPull：子抽屉开合时通知父抽屉位移 / 复位。
 // sPush 表示「本抽屉是否被子抽屉推动」，仅由子抽屉调用本抽屉的 setPush 置位
@@ -185,16 +189,16 @@ const closeIconNode = computed<VNode | null>(() => {
 const needScrollLock = computed(() => !!drawerOpen.value && props.blockScroll)
 watch(
   needScrollLock,
-  async (to) => {
+  (to) => {
     if (!to) {
       // 无需锁时释放本组件持有的锁（未持锁时为空调用，幂等无副作用）
       scrollLockRelease?.()
       scrollLockRelease = null
       return
     }
-    await nextTick()
-    // 等待期间可能已关闭或已持锁，需再次确认，避免重复加锁或锁残留
-    if (!needScrollLock.value || scrollLockRelease) {
+    // 加锁与释放必须落在同一条同步路径上：不引入 await / nextTick，
+    // 否则「等待期间组件被卸载、恢复执行后仍加锁」会让页面滚动永久锁死
+    if (scrollLockRelease) {
       return
     }
     scrollLockRelease = lockScroll()
