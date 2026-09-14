@@ -4,9 +4,7 @@
 
 _查询并监听最近可滚动父元素，响应视口 `resize` 的组合式函数_
 
-该组合式函数被 `Select`、`AutoComplete`、`Tooltip` 等弹出类组件内部使用，用于在可滚动容器内正确跟随滚动并维护定位；同时也可独立复用。
-
-无滚动祖先（整页滚动）时，内部会把 `scroll` 监听绑定到 `window`：视口滚动的事件目标是 `window` / `document`，`documentElement` 收不到 `scroll`。
+用于在可滚动容器内正确跟随滚动并维护定位。
 
 ::: details Show Source Code
 
@@ -76,24 +74,105 @@ export function useScrollParent(
 
 :::
 
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useScrollParent } from 'vue-amazing-ui'
+const contentRef = ref<HTMLElement | null>(null)
+const scrollCount = ref(0)
+const { scrollTarget, viewportWidth, viewportHeight } = useScrollParent(contentRef, () => {
+  scrollCount.value++
+})
+const scrollTargetName = computed(() => {
+  const target = scrollTarget.value
+  if (!target) return '未找到'
+  const className = target.className ? `.${target.className}` : ''
+  return `${target.tagName.toLowerCase()}${className}`
+})
+</script>
+
 ## 基本使用
 
 _实现弹出面板在可滚动容器内跟随滚动_
 
+<br/>
+
+<div class="scroll-container">
+  <div ref="contentRef" class="scroll-content">滚动我</div>
+</div>
+
+<br/>
+
+<Card :body-style="{ fontSize: '16px' }">
+  <p>最近可滚动父元素：{{ scrollTargetName }}</p>
+  <p>滚动触发次数：{{ scrollCount }}</p>
+  <p>视口宽度：{{ viewportWidth }}</p>
+  <p>视口高度：{{ viewportHeight }}</p>
+</Card>
+
+<style lang="less" scoped>
+.scroll-container {
+  width: 500px;
+  height: 360px;
+  border: 2px solid #1677ff;
+  border-radius: 12px;
+  overflow: auto;
+  .scroll-content {
+    width: 800px;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+</style>
+
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useScrollParent } from 'vue-amazing-ui'
 const contentRef = ref<HTMLElement | null>(null)
+const scrollCount = ref(0)
 const { scrollTarget, viewportWidth, viewportHeight } = useScrollParent(contentRef, () => {
-  console.log('scrolled')
+  scrollCount.value++
+})
+const scrollTargetName = computed(() => {
+  const target = scrollTarget.value
+  if (!target) return '未找到'
+  const className = target.className ? `.${target.className}` : ''
+  return `${target.tagName.toLowerCase()}${className}`
 })
 </script>
 <template>
   <div class="scroll-container">
-    <div ref="contentRef">Content</div>
+    <div ref="contentRef" class="scroll-content">滚动我</div>
   </div>
+  <Card :body-style="{ fontSize: '16px' }">
+    <p>最近可滚动父元素：{{ scrollTargetName }}</p>
+    <p>滚动触发次数：{{ scrollCount }}</p>
+    <p>视口宽度：{{ viewportWidth }}</p>
+    <p>视口高度：{{ viewportHeight }}</p>
+  </Card>
 </template>
+<style lang="less" scoped>
+.scroll-container {
+  width: 500px;
+  height: 360px;
+  border: 2px solid #1677ff;
+  border-radius: 12px;
+  overflow: auto;
+  .scroll-content {
+    width: 800px;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+</style>
 ```
 
 ## Params
@@ -120,3 +199,10 @@ const { scrollTarget, viewportWidth, viewportHeight } = useScrollParent(contentR
 | viewportHeight | 视口高度 | Ref&lt;number&gt; |
 | observeScroll | 查询并监听最近可滚动父元素 | () => void |
 | cleanup | 清理滚动监听并重置滚动目标 | () => void |
+
+## 注意事项
+
+- 被 `Select`、`AutoComplete`、`Tooltip` 等弹出类组件内部使用，也可脱离组件库独立复用
+- 无滚动祖先（整页滚动）时内部会把 `scroll` 监听绑定到 `window`：视口滚动的事件目标是 `window` / `document`，`documentElement` 收不到 `scroll`
+- 需在组件 `setup` 中调用；内部会在挂载时自动监听、卸载时自动清理，也可手动调用 `observeScroll` / `cleanup`
+- `viewportWidth` / `viewportHeight` 基于 `documentElement` 的 `clientWidth` / `clientHeight`，仅随视口 `resize` 更新

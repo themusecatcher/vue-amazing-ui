@@ -42,10 +42,6 @@ export function useMediaQuery(mediaQuery: string): { match: Ref<boolean> } {
 
 :::
 
-## 参考文档
-
-- [Window.matchMedia()](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/matchMedia)
-
 <script setup lang="ts">
 import { useMediaQuery } from 'vue-amazing-ui'
 const { match: isMobile } = useMediaQuery('(max-width: 768px)')
@@ -78,3 +74,12 @@ const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 | 名称 | 说明 | 类型 |
 | --- | --- | --- |
 | match | 当前视口是否匹配给定的媒体查询条件 | Ref&lt;boolean&gt; |
+
+## 注意事项
+
+- 传入空字符串或非字符串时抛出异常，需保证媒体查询字符串合法
+- `SSR`（`Node`）环境下 `match` 初始值恒为 `false`，挂载后才会跟随视口变化
+
+## 参考文档
+
+- [Window.matchMedia()](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/matchMedia)

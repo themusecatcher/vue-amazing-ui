@@ -50,6 +50,8 @@ import {
 
 ## 说明
 
+> 下表为对外公开的 `24` 个工具函数；此外 `useMounted`、`useSupported`、`getParentElement` 属组件库内部工具，虽随包导出但不承诺稳定性，故不在此列出。
+
 | Name | Description | Type |
 | :-- | :-- | :-- |
 | dateFormat | 格式化日期时间字符串函数 | (value: number &#124; string &#124; Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss') => string |

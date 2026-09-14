@@ -53,7 +53,6 @@ export function useFps(): { fps: Ref<number> } {
 :::
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useFps } from 'vue-amazing-ui'
 const { fps } = useFps()
 </script>
@@ -64,7 +63,6 @@ const { fps } = useFps()
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useFps } from 'vue-amazing-ui'
 const { fps } = useFps()
 </script>

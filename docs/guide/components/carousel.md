@@ -180,7 +180,7 @@ const slideFunction = computed(() => slideFunctionMap[slideFunctionName.value])
 // fadeFunction 在 Props 中为 string | [number, number, number, number]，此处收窄为 string，便于用 Select 调节
 type CarouselConfigState = CarouselProps & { height: number; fadeFunction: string }
 const state = reactive<CarouselConfigState>({
-  width: 800,
+  width: '100%',
   height: 450,
   autoplay: true,
   pauseOnMouseEnter: false,
@@ -188,7 +188,7 @@ const state = reactive<CarouselConfigState>({
   interval: 3000,
   loop: true,
   initialIndex: 1,
-  currentIndex: undefined,
+  currentIndex: 1,
   showArrow: true,
   arrowColor: '#FFF',
   arrowSize: 36,
@@ -1562,7 +1562,7 @@ function getCurrentIndex () {
 
 ## 轮播图配置器
 
-*currentIndex 为受控属性，留空时由组件自行维护当前页，设置后进入受控模式*
+*`currentIndex` 为受控属性，留空时由组件自行维护当前页，设置后进入受控模式*
 
 <Flex gap="large" vertical>
   <Row :gutter="[24, 12]">
@@ -1805,7 +1805,7 @@ const slideFunction = computed(() => slideFunctionMap[slideFunctionName.value])
 // fadeFunction 在 Props 中为 string | [number, number, number, number]，此处收窄为 string，便于用 Select 调节
 type CarouselConfigState = CarouselProps & { height: number; fadeFunction: string }
 const state = reactive<CarouselConfigState>({
-  width: 800,
+  width: '100%',
   height: 450,
   autoplay: true,
   pauseOnMouseEnter: false,
@@ -1813,7 +1813,7 @@ const state = reactive<CarouselConfigState>({
   interval: 3000,
   loop: true,
   initialIndex: 1,
-  currentIndex: undefined,
+  currentIndex: 1,
   showArrow: true,
   arrowColor: '#FFF',
   arrowSize: 36,

@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-_使用依赖注入的自定义函数_
+_读取主题色（颜色调色板与阴影色）的组合式函数，未注入时回退到默认主题色_
 
 ::: details Show Source Code
 
@@ -82,16 +82,147 @@ export function getAlphaColor(frontColor: string, backgroundColor: string = '#ff
 
 :::
 
+<script setup lang="ts">
+import { h, ref } from 'vue'
+import { TinyColor } from '@ctrl/tinycolor'
+import { Tooltip, useInject } from 'vue-amazing-ui'
+const primaryColor = ref('#1677ff')
+const presetColors = ['#1677ff', '#ff6900', '#18a058', '#ff4d4f']
+// 内联组件：在 ConfigProvider 内部调用 useInject，读取注入的主题色
+const ThemePreview = {
+  setup() {
+    const { colorPalettes, shadowColor } = useInject('Button')
+    const labelStyle = 'font-size: 13px'
+    const swatchStyle = (color: string) =>
+      `display: inline-block; width: 28px; height: 28px; border-radius: 4px; background: ${color}`
+    // 依据气泡背景色亮度选择可读的文字色
+    const tooltipTextColor = (color: string) => {
+      const { r, g, b } = new TinyColor(color).toRgb()
+      return (r * 299 + g * 587 + b * 114) / 1000 > 160 ? 'rgba(0, 0, 0, 0.88)' : '#fff'
+    }
+    return () => {
+      const shadowBlockStyle =
+        `width: 56px; height: 28px; border-radius: 4px; background: #fff;` +
+        ` border: 1px solid rgba(0, 0, 0, 0.06); box-shadow: 0 6px 16px 0 ${shadowColor.value}`
+      return h('div', { style: 'display: flex; flex-direction: column; gap: 12px' }, [
+        h('div', { style: 'display: flex; align-items: center; gap: 8px' }, [
+          h('span', { style: labelStyle }, 'colorPalettes:'),
+          h(
+            'div',
+            { style: 'display: flex; align-items: center; gap: 4px' },
+            colorPalettes.value.map((color: string) =>
+              h(
+                Tooltip,
+                { key: color, tooltip: color, bgColor: color, tooltipStyle: { color: tooltipTextColor(color) } },
+                { default: () => h('span', { style: swatchStyle(color) }) }
+              )
+            )
+          )
+        ]),
+        h('div', { style: 'display: flex; align-items: center; gap: 8px' }, [
+          h('span', { style: labelStyle }, 'shadowColor:'),
+          h('span', { style: shadowBlockStyle }),
+          h('span', { style: labelStyle }, shadowColor.value)
+        ])
+      ])
+    }
+  }
+}
+</script>
+
 ## 基本使用
+
+_在 `ConfigProvider` 内部调用 `useInject`，即可读取注入的组件 / 全局主题色；悬浮色块可查看对应色值_
+
+<br/>
+
+<Space vertical>
+  <Space :gap="8">
+    <span>primaryColor</span>
+    <Button
+      v-for="color in presetColors"
+      :key="color"
+      type="primary"
+      :color="color"
+      size="small"
+      @click="primaryColor = color"
+    >
+      {{ color }}
+    </Button>
+  </Space>
+  <ConfigProvider :theme="{ common: { primaryColor } }">
+    <ThemePreview />
+  </ConfigProvider>
+</Space>
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useInject } from 'vue-amazing-ui'
-const { colorPalettes, shadowColor } = useInject('Input') // 获取颜色调色板和阴影颜色
-console.log('colorPalettes', colorPalettes.value)
-console.log('shadowColor', shadowColor.value)
+import { h, ref } from 'vue'
+import { TinyColor } from '@ctrl/tinycolor'
+import { Tooltip, useInject } from 'vue-amazing-ui'
+const primaryColor = ref('#1677ff')
+const presetColors = ['#1677ff', '#ff6900', '#18a058', '#ff4d4f']
+// 内联组件：在 ConfigProvider 内部调用 useInject，读取注入的主题色
+const ThemePreview = {
+  setup() {
+    const { colorPalettes, shadowColor } = useInject('Button')
+    const labelStyle = 'font-size: 13px'
+    const swatchStyle = (color: string) =>
+      `display: inline-block; width: 28px; height: 28px; border-radius: 4px; background: ${color}`
+    // 依据气泡背景色亮度选择可读的文字色
+    const tooltipTextColor = (color: string) => {
+      const { r, g, b } = new TinyColor(color).toRgb()
+      return (r * 299 + g * 587 + b * 114) / 1000 > 160 ? 'rgba(0, 0, 0, 0.88)' : '#fff'
+    }
+    return () => {
+      const shadowBlockStyle =
+        `width: 56px; height: 28px; border-radius: 4px; background: #fff;` +
+        ` border: 1px solid rgba(0, 0, 0, 0.06); box-shadow: 0 6px 16px 0 ${shadowColor.value}`
+      return h('div', { style: 'display: flex; flex-direction: column; gap: 12px' }, [
+        h('div', { style: 'display: flex; align-items: center; gap: 8px' }, [
+          h('span', { style: labelStyle }, 'colorPalettes:'),
+          h(
+            'div',
+            { style: 'display: flex; align-items: center; gap: 4px' },
+            colorPalettes.value.map((color: string) =>
+              h(
+                Tooltip,
+                { key: color, tooltip: color, bgColor: color, tooltipStyle: { color: tooltipTextColor(color) } },
+                { default: () => h('span', { style: swatchStyle(color) }) }
+              )
+            )
+          )
+        ]),
+        h('div', { style: 'display: flex; align-items: center; gap: 8px' }, [
+          h('span', { style: labelStyle }, 'shadowColor:'),
+          h('span', { style: shadowBlockStyle }),
+          h('span', { style: labelStyle }, shadowColor.value)
+        ])
+      ])
+    }
+  }
+}
 </script>
+<template>
+  <Space vertical>
+    <Space :gap="8">
+      <span>primaryColor</span>
+      <Button
+        v-for="color in presetColors"
+        :key="color"
+        type="primary"
+        :color="color"
+        size="small"
+        @click="primaryColor = color"
+      >
+        {{ color }}
+      </Button>
+    </Space>
+    <ConfigProvider :theme="{ common: { primaryColor } }">
+      <ThemePreview />
+    </ConfigProvider>
+  </Space>
+</template>
 ```
 
 ## Params
@@ -106,3 +237,8 @@ console.log('shadowColor', shadowColor.value)
 | --- | --- | --- |
 | colorPalettes | 颜色调色板数组 | Ref&lt;string[]&gt; |
 | shadowColor | 阴影颜色 | Ref&lt;string&gt; |
+
+## 注意事项
+
+- 主题色通过 `Vue` 的 `inject` 读取，注入来源为 `ConfigProvider` 提供的 `common` / `components`；组件内部使用时会优先取对应组件的配置，`key` 不存在或未配置时回退到全局调色板
+- 未注册 `ConfigProvider` 时返回默认主题色，可脱离 `ConfigProvider` 独立使用

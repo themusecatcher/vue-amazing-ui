@@ -44,7 +44,7 @@ const { isSupported: captureSupported } = useOptionsSupported('capture')
 const { isSupported: onceSupported } = useOptionsSupported('once')
 const { isSupported: passiveSupported } = useOptionsSupported('passive')
 const { isSupported: signalSupported } = useOptionsSupported('signal')
-function callback(e: Event) {
+function callback() {
   console.log('do something')
 }
 onMounted(() => {
@@ -80,7 +80,7 @@ const { isSupported: captureSupported } = useOptionsSupported('capture')
 const { isSupported: onceSupported } = useOptionsSupported('once')
 const { isSupported: passiveSupported } = useOptionsSupported('passive')
 const { isSupported: signalSupported } = useOptionsSupported('signal')
-function callback(e: Event) {
+function callback() {
   console.log('do something')
 }
 onMounted(() => {

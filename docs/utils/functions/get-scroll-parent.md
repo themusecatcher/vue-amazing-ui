@@ -47,25 +47,91 @@ export function getScrollParent(el: HTMLElement | null): HTMLElement | null {
 
 :::
 
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { getScrollParent } from 'vue-amazing-ui'
+const scrollContentRef = ref<HTMLDivElement | null>(null)
+const scrollParentName = ref('未找到')
+onMounted(() => {
+  const scrollParent = getScrollParent(scrollContentRef.value)
+  if (scrollParent) {
+    const className = scrollParent.className ? `.${scrollParent.className}` : ''
+    scrollParentName.value = `${scrollParent.tagName.toLowerCase()}${className}`
+  }
+})
+</script>
+
 ## 基本使用
 
 _查找元素最近的可滚动父元素_
 
+<br/>
+
+<div class="scroll-container">
+  <div ref="scrollContentRef" class="scroll-content">Scroll Me</div>
+</div>
+
+<br/>
+
+<Alert type="info" :message="`最近的可滚动父元素：${scrollParentName}`" />
+
+<style lang="less" scoped>
+.scroll-container {
+  width: 500px;
+  height: 360px;
+  border: 2px solid #1677ff;
+  border-radius: 12px;
+  overflow: auto;
+  .scroll-content {
+    width: 800px;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+</style>
+
 ```vue
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { getScrollParent } from 'vue-amazing-ui'
 const scrollContentRef = ref<HTMLDivElement | null>(null)
+const scrollParentName = ref('未找到')
 onMounted(() => {
   const scrollParent = getScrollParent(scrollContentRef.value)
-  console.log('scrollParent', scrollParent)
+  if (scrollParent) {
+    const className = scrollParent.className ? `.${scrollParent.className}` : ''
+    scrollParentName.value = `${scrollParent.tagName.toLowerCase()}${className}`
+  }
 })
 </script>
 <template>
   <div class="scroll-container">
-    <div ref="scrollContentRef">Scroll Me</div>
+    <div ref="scrollContentRef" class="scroll-content">Scroll Me</div>
   </div>
+  <Alert type="info" :message="`最近的可滚动父元素：${scrollParentName}`" />
 </template>
+<style lang="less" scoped>
+.scroll-container {
+  width: 500px;
+  height: 360px;
+  border: 2px solid #1677ff;
+  border-radius: 12px;
+  overflow: auto;
+  .scroll-content {
+    width: 800px;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 500;
+  }
+}
+</style>
 ```
 
 ## Params

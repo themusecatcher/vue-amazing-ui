@@ -193,7 +193,7 @@ const state = reactive<CarouselConfigState>({
   interval: 3000,
   loop: true,
   initialIndex: 1,
-  currentIndex: undefined,
+  currentIndex: 1,
   showArrow: true,
   arrowColor: '#FFF',
   arrowSize: 36,

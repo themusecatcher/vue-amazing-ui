@@ -4,6 +4,11 @@
 
 _基于 `requestAnimationFrame` 实现的延时/间歇调用，配套提供取消函数 `cancelRaf()`。其回调绑定在渲染帧上，与 `setTimeout()` / `setInterval()` **并不等价**，仅适用于需要与动画帧同步的场景_
 
+## 何时使用
+
+- 需要与 `requestAnimationFrame` 动画帧同步的定时任务（如与帧率一致的重绘、插值计算，或需在绘制前完成的布局读写）
+- 定时任务需要在组件卸载前通过 `cancelRaf` 取消，避免回调泄漏
+
 ::: details Show Source Code
 
 ```ts
@@ -106,15 +111,10 @@ onBeforeUnmount(() => {
 })
 </script>
 
-## 何时使用
-
-- 需要与 `requestAnimationFrame` 动画帧同步的定时任务（如与帧率一致的重绘、插值计算，或需在绘制前完成的布局读写）
-- 定时任务需要在组件卸载前通过 `cancelRaf` 取消，避免回调泄漏
-
 ::: warning 选用前请确认
 `rafTimeout` 的回调绑定在渲染帧上，与 `setTimeout()` / `setInterval()` 存在本质差异：
 
-- **精度**：回调在「已过去时间 ≥ delay」的**首个渲染帧**执行，实际延迟比 `delay` 多出至多一帧（60Hz 约 16.7ms），刷新率越低偏差越大
+- **精度**：回调在「已过去时间 ≥ `delay`」的**首个渲染帧**执行，实际延迟比 `delay` 多出至多一帧（`60Hz` 约 `16.7ms`），刷新率越低偏差越大
 - **后台行为**：页面不可见（切换标签页、最小化窗口等）时 `requestAnimationFrame` 会被浏览器**暂停**，回调将延后到页面重新可见后才触发，实际延迟可能远大于设定的 `delay`
 - **开销**：`interval` 模式需要每一帧轮询判断是否到达间隔，而非注册一次后等待
 

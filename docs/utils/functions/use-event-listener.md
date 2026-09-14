@@ -20,7 +20,6 @@ _添加和清除 `DOM` 事件监听器的组合式函数_
  * @param {Function} callback 事件被触发时执行的回调函数
  */
 import { onMounted, onUnmounted } from 'vue'
-import type { Ref } from 'vue'
 export function useEventListener(target: HTMLElement | Window | Document, event: string, callback: Function): void {
   // 也可以用字符串形式的 CSS 选择器来寻找目标 DOM 元素
   onMounted(() => target.addEventListener(event, callback as EventListenerOrEventListenerObject))
