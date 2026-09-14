@@ -147,40 +147,53 @@ describe('Carousel 状态与可访问性', () => {
 
   it('图片加载失败时结束加载态，不再永久旋转', async () => {
     const wrapper = await mountCarousel()
-    // 3 张图片 + 1 张首图副本，初始全部处于加载态
-    expect(slideWraps(wrapper).length).toBe(4)
-    expect(wrapper.findAll('.spin-blur').length).toBe(4)
+    // 轨道顺序：末图副本 + a / b / c + 两张首图副本，初始全部处于加载态
+    expect(slideWraps(wrapper).length).toBe(6)
+    expect(wrapper.findAll('.spin-blur').length).toBe(6)
 
-    await slideWraps(wrapper)[0].find('img').trigger('error')
+    await slideWraps(wrapper)[1].find('img').trigger('error')
     await nextTick()
-    // a.png 与其副本同时结束加载态（加载态按 src 记录），其余仍保持加载中
-    expect(isSpinning(wrapper, 0)).toBe(false)
-    expect(isSpinning(wrapper, 3)).toBe(false)
-    expect(wrapper.findAll('.spin-blur').length).toBe(2)
+    // a.png 与其两份副本同时结束加载态（加载态按 src 记录），其余仍保持加载中
+    expect(isSpinning(wrapper, 1)).toBe(false)
+    expect(isSpinning(wrapper, 4)).toBe(false)
+    expect(isSpinning(wrapper, 5)).toBe(false)
+    expect(wrapper.findAll('.spin-blur').length).toBe(3)
     wrapper.unmount()
   })
 
   it('图片地址变更后重新进入加载态', async () => {
     const wrapper = await mountCarousel()
-    await slideWraps(wrapper)[0].find('img').trigger('load')
+    await slideWraps(wrapper)[1].find('img').trigger('load')
     await nextTick()
-    expect(isSpinning(wrapper, 0)).toBe(false)
+    expect(isSpinning(wrapper, 1)).toBe(false)
 
     await wrapper.setProps({ images: [{ src: 'a-new.png' }, { src: 'b.png' }, { src: 'c.png' }] })
     await nextTick()
     // 旧实现按下标记录加载态，新地址会被误判为已加载
-    expect(isSpinning(wrapper, 0)).toBe(true)
+    expect(isSpinning(wrapper, 1)).toBe(true)
     wrapper.unmount()
   })
 
-  it('slide 效果渲染首图副本，副本对辅助技术隐藏且不参与键盘焦点', async () => {
+  it('slide 效果渲染首尾过冲缓冲副本，副本对辅助技术隐藏且不参与键盘焦点', async () => {
     const wrapper = await mountCarousel()
-    expect(slideWraps(wrapper).length).toBe(4)
-    const clone = slideWraps(wrapper)[3]
-    expect(clone.attributes('aria-hidden')).toBe('true')
-    expect(clone.find('a').attributes('tabindex')).toBe('-1')
+    // 轨道顺序：末图副本 + a / b / c + 两张首图副本
+    expect(slideWraps(wrapper).length).toBe(6)
+    // 首部末图副本
+    expect(slideWraps(wrapper)[0].attributes('aria-hidden')).toBe('true')
+    expect(slideWraps(wrapper)[0].find('a').attributes('tabindex')).toBe('-1')
+    // 尾部两张首图副本
+    expect(slideWraps(wrapper)[4].attributes('aria-hidden')).toBe('true')
+    expect(slideWraps(wrapper)[5].attributes('aria-hidden')).toBe('true')
+    expect(slideWraps(wrapper)[5].find('a').attributes('tabindex')).toBe('-1')
     // 真实图片不应被隐藏
-    expect(slideWraps(wrapper)[0].attributes('aria-hidden')).toBeUndefined()
+    expect(slideWraps(wrapper)[1].attributes('aria-hidden')).toBeUndefined()
+    // 首部副本由负边距回移一个单位，首图才与容器对齐（水平按宽度、垂直按高度）
+    expect(slideEl(wrapper).style.marginLeft).toBe(`-${UNIT}px`)
+    expect(slideOffset(slideEl(wrapper))).toBe(0)
+    await wrapper.setProps({ dotPosition: 'left' })
+    await nextTick()
+    expect(slideEl(wrapper).style.marginTop).toBe(`-${HEIGHT}px`)
+    expect(slideEl(wrapper).style.marginLeft).toBe('')
     wrapper.unmount()
   })
 
@@ -240,14 +253,15 @@ describe('Carousel 状态与可访问性', () => {
   it('鼠标悬停暂停后，props 变更不会解除暂停', async () => {
     // 自证：相同自动轮播配置下不悬停时位移确实会被推进
     const auto = await mountCarousel({ autoplay: true, interval: 60, slideDuration: 30 })
-    await slideWraps(auto)[0].find('img').trigger('load')
+    // 轨道首部是末图副本，首张实图在下标 1（自动轮播以首图就绪为启动信号）
+    await slideWraps(auto)[1].find('img').trigger('load')
     await nextTick()
     await waitFor(() => slideOffset(slideEl(auto)) < 0)
     expect(slideOffset(slideEl(auto))).toBeLessThan(0)
     auto.unmount()
 
     const wrapper = await mountCarousel({ autoplay: true, pauseOnMouseEnter: true, interval: 60, slideDuration: 30 })
-    await slideWraps(wrapper)[0].find('img').trigger('load')
+    await slideWraps(wrapper)[1].find('img').trigger('load')
     await nextTick()
     await wrapper.trigger('mouseenter')
     const el = slideEl(wrapper)

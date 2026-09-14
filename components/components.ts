@@ -31,7 +31,7 @@ export { default as Calendar } from './calendar'
 export type { CardProps } from './card'
 export { default as Card } from './card'
 
-export type { CarouselProps, CarouselImage } from './carousel'
+export type { CarouselProps, CarouselImage, CarouselEasingPreset } from './carousel'
 export { default as Carousel } from './carousel'
 
 export type { CascaderProps, CascaderOption } from './cascader'

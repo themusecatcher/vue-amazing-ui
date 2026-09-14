@@ -2,9 +2,12 @@
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useEventListener, useResizeObserver, useInject, useMediaQuery, useSlotsExist } from 'components/utils'
-import { transition } from '@vueuse/core'
+import { transition, TransitionPresets } from '@vueuse/core'
 import type { CubicBezierPoints, EasingFunction } from '@vueuse/core'
 import Spin, { type SpinProps } from 'components/spin'
+// 缓动预设名，派生自 @vueuse/core 的 TransitionPresets，随上游自动同步
+// 预设 / 缓动函数 / 贝塞尔控制点 / transition 文档：https://vueuse.org/core/useTransition/
+export type EasingPreset = keyof typeof TransitionPresets
 export interface Image {
   name?: string // 图片名称
   src: string // 图片地址
@@ -32,15 +35,15 @@ export interface Props {
   dotStyle?: CSSProperties // 指示点样式，优先级高于 dotSize、dotColor
   dotActiveStyle?: CSSProperties // 指示点选中样式，优先级高于 dotActiveColor
   dotPosition?: 'bottom' | 'top' | 'left' | 'right' // 指示点位置，位置为 'left' | 'right' 时，effect: 'slide' 轮播自动变为垂直轮播
-  dotsTrigger?: 'click' | 'hover' // 指示点触发切换的方式
+  dotTrigger?: 'click' | 'hover' // 指示点触发切换的方式
   spinProps?: SpinProps // 图片加载中样式，Spin 组件属性配置，参考 Spin Props
   objectFit?: 'fill' | 'contain' | 'cover' | 'none' | 'scale-down' // 图片填充方式，同 CSS object-fit，默认 fill 即拉伸填满容器
   draggable?: boolean // 是否可以拖拽滑动切换（鼠标与触摸均支持）
   mousewheel?: boolean // 是否支持鼠标滚轮切换
   fadeDuration?: number // 渐变动画持续时长，单位 ms，仅当 effect 为 'fade' 时生效
-  fadeFunction?: string // 渐变动画函数，仅当 effect 为 'fade' 时生效，可参考 transition-timing-function 写法：https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function
+  fadeFunction?: string | [number, number, number, number] // 渐变动画函数，仅当 effect 为 'fade' 时生效，可传四个三次贝塞尔控制点（自动转为 cubic-bezier 写法）或 CSS transition-timing-function 写法：https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function
   slideDuration?: number // 滑动动画持续时长，单位 ms，仅当 effect 为 'slide' 时生效
-  slideFunction?: CubicBezierPoints | EasingFunction // 滑动动画函数，仅当 effect 为 'slide' 时生效，可参考 transition 写法：https://vueuse.org/core/useTransition/#usage
+  slideFunction?: EasingPreset | CubicBezierPoints | EasingFunction // 滑动动画函数，仅当 effect 为 'slide' 时生效，可传缓动预设名、三次贝塞尔控制点数组或缓动函数，参考 transition 写法：https://vueuse.org/core/useTransition/#usage
 }
 const props = withDefaults(defineProps<Props>(), {
   images: () => [],
@@ -62,13 +65,13 @@ const props = withDefaults(defineProps<Props>(), {
   dotStyle: () => ({}),
   dotActiveStyle: () => ({}),
   dotPosition: 'bottom',
-  dotsTrigger: 'click',
+  dotTrigger: 'click',
   spinProps: () => ({}),
   objectFit: 'fill',
   draggable: false,
   mousewheel: false,
   fadeDuration: 500,
-  fadeFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+  fadeFunction: () => [0.4, 0, 0.2, 1],
   slideDuration: 800,
   slideFunction: () => [0.65, 0, 0.35, 1] as CubicBezierPoints
 })
@@ -104,6 +107,7 @@ let dragStartY = 0 // 拖拽起点 Y 坐标
 let dragStartOffset = 0 // 拖拽开始时的位移
 let dragStartTime = 0 // 拖拽开始时间戳
 let pendingInitialIndex = true // 首次拿到图片数据前，initialIndex 尚未生效
+let deferredIndex: number | null = null // 切换动画期间到达的受控下标，待本次切换结束后消费
 // 拖拽超过该像素位移才视为有效拖拽，避免与点击事件冲突
 const DRAG_START_THRESHOLD = 5
 // 拖拽判定为翻页的位移比例 / 速度阈值
@@ -167,18 +171,57 @@ const arrowStyle = computed(() => {
 const fadeDurationValue = computed(() => {
   return noFadeTransition.value || prefersReducedMotion.value ? 0 : props.fadeDuration
 })
+// fade 过渡函数：CSS 由 transition-timing-function 消费，四个贝塞尔控制点需转成 cubic-bezier(...) 写法，CSS 写法原样透传
+const fadeFunctionValue = computed(() => {
+  const fadeFunction = props.fadeFunction
+  return typeof fadeFunction === 'string' ? fadeFunction : `cubic-bezier(${fadeFunction.join(', ')})`
+})
 // 滑动动画时长：系统偏好减弱动效时置 0（瞬时切换），而非禁用轮播
 const slideDurationValue = computed(() => {
   return prefersReducedMotion.value ? 0 : props.slideDuration
 })
+// 滑动动画函数：字符串形式的缓动预设名需自行查表，vueuse 仅解析缓动函数与贝塞尔控制点
+// https://vueuse.org/core/useTransition/#usage
+const slideEasing = computed(() => {
+  const easing = props.slideFunction
+  return typeof easing === 'string' ? TransitionPresets[easing] : easing
+})
+// 过冲缓冲：过冲类缓动（如 back-out）会让位移越过首 / 末页，而轨道两端之外没有内容（会露出空白），
+// 故 slide + loop 时在轨道两端补副本承接：首部 1 张末图、尾部 2 张首图
+// （尾部第一张用于无缝循环落位，第二张承接该落点处的过冲）；
+// fade、关闭 loop、图片不足两张或尺寸未就绪时不需要缓冲
+const hasEdgeBuffer = computed(() => {
+  return props.effect === 'slide' && props.loop && imageAmount.value > 1 && moveUnitDistance.value > 0
+})
+// 首部缓冲单位数：渲染位移需整体回移该偏移，首图才与容器对齐
+const headBufferUnits = computed(() => (hasEdgeBuffer.value ? 1 : 0))
+// 尾部缓冲单位数
+const tailBufferUnits = computed(() => (hasEdgeBuffer.value ? 2 : 0))
+// 可显示位移上限：轨道末项的起始位置（实图 + 尾部缓冲）；无图或尺寸未就绪时为 0
+const maxRenderOffset = computed(() => {
+  const lastStart = imageAmount.value + tailBufferUnits.value - 1
+  return lastStart > 0 ? lastStart * moveUnitDistance.value : 0
+})
+// 可显示位移下限：首部缓冲的起点
+const minRenderOffset = computed(() => -headBufferUnits.value * moveUnitDistance.value)
+// 渲染位移：兜底钳制在可显示区间内，避免自定义缓动把轨道之外的空白也绘制出来
+const renderOffset = computed(() => {
+  return Math.min(Math.max(offset.value, minRenderOffset.value), maxRenderOffset.value)
+})
 const carouselStyle = computed(() => {
   if (props.effect === 'slide') {
     return {
-      transform: (verticalSlide.value ? 'translateY' : 'translateX') + `(${-offset.value}px)`
+      transform: (verticalSlide.value ? 'translateY' : 'translateX') + `(${-renderOffset.value}px)`
     }
   } else {
     return {}
   }
+})
+// 首部缓冲的位移补偿：轨道首部多渲染了副本，需整体回移一个缓冲长度，首图才与容器对齐
+const bufferShiftStyle = computed<CSSProperties>(() => {
+  const shift = headBufferUnits.value * moveUnitDistance.value
+  if (!shift) return {}
+  return verticalSlide.value ? { marginTop: `-${shift}px` } : { marginLeft: `-${shift}px` }
 })
 // 单张图片的渲染尺寸：尚未测量时不输出内联尺寸，交由 CSS 的 100% 兜底，避免渲染出 width: undefinedpx
 const imageSizeStyle = computed(() => {
@@ -191,7 +234,8 @@ const imageSizeStyle = computed(() => {
   }
   return style
 })
-// 实际渲染的轮播项：slide 效果且开启 loop 时末尾追加一张首图副本，用于无缝循环；fade 或关闭 loop 时不需要副本
+// 实际渲染的轮播项：slide + loop 时首尾追加过冲缓冲副本（首部末图 + 尾部两张首图），
+// 尾部第一张用于无缝循环落位，其余供过冲位移显示；fade、关闭 loop 或图片不足两张时不追加
 const slideItems = computed(() => {
   const items = props.images.map((image, index) => ({
     image,
@@ -199,11 +243,23 @@ const slideItems = computed(() => {
     key: `${index}-${image.src}`,
     clone: false as boolean
   }))
+  if (!hasEdgeBuffer.value) return items
   const firstImage = props.images[0]
-  if (firstImage === undefined || props.effect !== 'slide' || !props.loop) {
-    return items
+  const lastImage = props.images[imageAmount.value - 1]
+  if (firstImage === undefined || lastImage === undefined) return items
+  const headClone = {
+    image: lastImage,
+    index: imageAmount.value - 1,
+    key: `head-${lastImage.src}`,
+    clone: true as boolean
   }
-  return [...items, { image: firstImage, index: 0, key: `clone-${firstImage.src}`, clone: true }]
+  const tailClones = Array.from({ length: tailBufferUnits.value }, (_, cloneIndex) => ({
+    image: firstImage,
+    index: 0,
+    key: `tail-${cloneIndex}-${firstImage.src}`,
+    clone: true as boolean
+  }))
+  return [headClone, ...items, ...tailClones]
 })
 watch(
   () => [
@@ -228,15 +284,23 @@ watch(
 watch(activeSwitcher, (to) => {
   emits('update:currentIndex', to)
 })
-// 受控 currentIndex 外部变更时同步内部下标（越界值按区间钳制后同步）
+// 受控 currentIndex 外部变更时同步内部下标（越界值按区间钳制后同步）。
+// 动画进行中不能直接丢弃外部意图，否则受控方与内部下标会永久失同步：先记账，待本次切换结束后消费
 watch(
   () => props.currentIndex,
   (value) => {
     if (value === undefined) return
     const nextIndex = normalizeIndex(value)
-    if (nextIndex !== activeSwitcher.value) {
-      onSwitch(nextIndex)
+    if (nextIndex === activeSwitcher.value) {
+      // 内部切换已回写同一值（v-model 场景）：清掉可能存在的记账
+      deferredIndex = null
+      return
     }
+    if (switchPrevent.value) {
+      deferredIndex = nextIndex
+      return
+    }
+    onSwitch(nextIndex)
   }
 )
 // 实参 document 在 setup 期求值，SSR（Node）下必须先判断存在性再调用
@@ -285,6 +349,8 @@ function initCarousel(): void {
   if (props.effect === 'slide' && moveUnitDistance.value) {
     offset.value = (activeSwitcher.value - 1) * moveUnitDistance.value
   }
+  // 此处同样是一次解锁，需消费动画期间积压的受控下标，与 settleSwitch 保持一致的收口
+  applyDeferredIndex()
   onStart()
 }
 // 图片加载完成
@@ -321,6 +387,9 @@ function visibilityChange(): void {
   const visibility = document.visibilityState
   if (visibility === 'hidden') {
     // hidden
+    // switchPrevent 为真说明有一次切换已提交但尚未结束（activeSwitcher 已更新、beforeChange 已抛出），
+    // 中止动画时须补抛 afterChange，否则该事件与 beforeChange 不成对
+    const wasSwitching = switchPrevent.value
     // 两个定时器都要取消：改用 setTimeout 后回调在后台仍会触发，fade 效果下会违背「暂停切换」的语义
     slideTimer.value && clearTimeout(slideTimer.value)
     fadeTimer.value && clearTimeout(fadeTimer.value)
@@ -333,9 +402,12 @@ function visibilityChange(): void {
       offset.value = targetPosition.value
     }
     abortSlide()
-    switchPrevent.value = false
+    // 隐藏期间不续排自动轮播（后台仍会触发定时器），也不消费积压的受控下标
+    // （隐藏期间启动动画会因 rAF 暂停而卡住 switchPrevent），留到恢复可见时一并处理
+    finishSwitch(wasSwitching)
   } else {
     // visible
+    applyDeferredIndex()
     onStart()
   }
 }
@@ -375,7 +447,8 @@ function normalizeCloneOffset(): void {
     offset.value = 0
   }
 }
-// 提交切换：按 effect 分派动画，并统一在结束后抛出 afterChange、续排自动轮播
+// 提交切换：按 effect 分派动画，两条结束路径统一走 settleSwitch 收口
+// （抛 afterChange、消费积压的受控下标、续排自动轮播）
 // instant 为 true 时不播动画直接落位（to(n, true) 使用）
 function commitSwitch(nextIndex: number, slideTarget: number, instant: boolean): void {
   if (props.effect === 'fade') {
@@ -386,11 +459,7 @@ function commitSwitch(nextIndex: number, slideTarget: number, instant: boolean):
     fadeTimer.value = setTimeout(
       () => {
         noFadeTransition.value = false
-        switchPrevent.value = false
-        emits('afterChange', activeSwitcher.value)
-        if (props.autoplay) {
-          autoSlide()
-        }
+        settleSwitch(true)
       },
       instant ? 0 : fadeDurationValue.value
     )
@@ -400,11 +469,7 @@ function commitSwitch(nextIndex: number, slideTarget: number, instant: boolean):
     abortSlide()
     offset.value = slideTarget
     activeSwitcher.value = nextIndex
-    switchPrevent.value = false
-    emits('afterChange', nextIndex)
-    if (props.autoplay) {
-      autoSlide()
-    }
+    settleSwitch(true)
     return
   }
   activeSwitcher.value = nextIndex
@@ -455,8 +520,9 @@ function onRightArrow(): void {
   commitSwitch(nextIndex, target, false)
 }
 // 滑动到目标位置：由 @vueuse/core 的 transition 直接驱动 offset，
-// 动画结束会精确写入目标值，因此回弹类缓动（含过冲）也能正确落位
-function slideTo(target: number): void {
+// 动画结束会精确写入目标值，因此回弹类缓动（含过冲）也能正确落位。
+// changed 为 false 表示本次只是归位、并未发生页面切换（拖拽回弹 / 边界卡住），此时不抛 afterChange
+function slideTo(target: number, changed = true): void {
   const id = ++animationId
   const from = offset.value
   targetPosition.value = target
@@ -465,17 +531,17 @@ function slideTo(target: number): void {
   if (from === target || duration <= 0) {
     offset.value = target
     targetPosition.value = undefined
-    onSlideFinish()
+    settleSwitch(changed)
     return
   }
   transition(offset, from, target, {
     duration, // 过渡动画时长，每次调用现读，保证 prop 响应式
-    easing: props.slideFunction, // 过渡动画函数，同上
+    easing: slideEasing.value, // 过渡动画函数，同上
     abort: () => id !== animationId
   }).then(() => {
     if (id !== animationId) return
     targetPosition.value = undefined
-    onSlideFinish()
+    settleSwitch(changed)
   })
 }
 // 中止在飞的滑动动画（不写入终值）
@@ -483,10 +549,27 @@ function abortSlide(): void {
   animationId++
   targetPosition.value = undefined
 }
-// 滑动结束：解锁切换，并在自动轮播下调度下一次
-function onSlideFinish(): void {
+// 切换终态：解锁切换并按需抛 afterChange；不含续排与受控下标消费，供「页面隐藏中止」这类特殊路径复用
+function finishSwitch(committed: boolean): void {
   switchPrevent.value = false
-  emits('afterChange', activeSwitcher.value)
+  if (committed) {
+    emits('afterChange', activeSwitcher.value)
+  }
+}
+// 消费动画期间积压的受控下标：外部意图优先于内部动画锁，避免受控方与内部下标永久失同步
+function applyDeferredIndex(): void {
+  if (deferredIndex === null) return
+  const next = deferredIndex
+  deferredIndex = null
+  if (next !== activeSwitcher.value) {
+    onSwitch(next)
+  }
+}
+// 切换正常结束的统一出口：解锁、按需抛 afterChange、消费积压的受控下标、续排自动轮播。
+// 所有结束路径都必须经此收口，afterChange 与 beforeChange 的成对性才成为结构性保证
+function settleSwitch(committed: boolean): void {
+  finishSwitch(committed)
+  applyDeferredIndex()
   if (props.autoplay) {
     autoSlide() // 自动间隔切换下一张
   }
@@ -503,13 +586,13 @@ function onSwitch(n: number, dontAnimate = false): void {
 }
 // 指示点点击切换
 function onDotClick(n: number): void {
-  if (props.dotsTrigger === 'click') {
+  if (props.dotTrigger === 'click') {
     onSwitch(n)
   }
 }
 // 指示点悬停切换
 function onDotMouseEnter(n: number): void {
-  if (props.dotsTrigger === 'hover') {
+  if (props.dotTrigger === 'hover') {
     onSwitch(n)
   }
 }
@@ -531,8 +614,7 @@ function onDragStart(e: DragEvent): void {
 function onPointerDown(e: PointerEvent): void {
   if (!props.draggable || imageAmount.value <= 1) return
   if (e.pointerType === 'mouse' && e.button !== 0) return
-  const el = carouselRef.value
-  if (!el) return
+  if (!carouselRef.value) return
   dragging.value = true
   dragDragged = false
   dragPointerId = e.pointerId
@@ -544,16 +626,22 @@ function onPointerDown(e: PointerEvent): void {
   abortSlide()
   switchPrevent.value = false
   slideTimer.value && clearTimeout(slideTimer.value)
-  // 指针捕获后，move / up 事件都会派发到本元素，无需在 document 上挂监听
-  if (typeof el.setPointerCapture === 'function') {
-    el.setPointerCapture(e.pointerId)
-  }
+  // 此处刻意不做指针捕获：一旦在 pointerdown 就捕获，浏览器会把随后的 click 重定向到本元素，
+  // 使箭头 / 指示点 / 图片上的 click 全部失效；改在确认构成拖拽后再捕获，见 onPointerMove
 }
 function onPointerMove(e: PointerEvent): void {
   if (!dragging.value) return
   const delta = verticalSlide.value ? e.clientY - dragStartY : e.clientX - dragStartX
   if (!dragDragged && Math.abs(delta) < DRAG_START_THRESHOLD) return
-  dragDragged = true
+  if (!dragDragged) {
+    dragDragged = true
+    // 确认构成拖拽后再捕获指针：move / up 事件会持续派发到本元素，无需在 document 上挂监听；
+    // 同时此后浏览器会把拖拽尾随的 click 重定向到本元素，天然抑制对箭头 / 指示点的误触
+    const el = carouselRef.value
+    if (el && typeof el.setPointerCapture === 'function') {
+      el.setPointerCapture(e.pointerId)
+    }
+  }
   const unit = moveUnitDistance.value
   // 可拖拽范围：loop 时尾张后可露出尾部副本，否则止步于尾张
   const maxOffset = (props.loop ? imageAmount.value : imageAmount.value - 1) * unit
@@ -586,18 +674,18 @@ function endDrag(cancel: boolean): void {
   const velocity = moved / elapsed
   const beyondThreshold = Math.abs(moved) > unit * DRAG_SWITCH_RATIO || Math.abs(velocity) > DRAG_SWITCH_VELOCITY
   if (cancel || !beyondThreshold) {
-    slideTo(dragStartOffset)
+    slideTo(dragStartOffset, false)
     return
   }
   if (moved > 0) {
     if (isNextDisabled.value) {
-      slideTo(dragStartOffset)
+      slideTo(dragStartOffset, false)
     } else {
       onRightArrow()
     }
   } else {
     if (isPrevDisabled.value) {
-      slideTo(dragStartOffset)
+      slideTo(dragStartOffset, false)
     } else {
       onLeftArrow()
     }
@@ -607,6 +695,8 @@ function endDrag(cancel: boolean): void {
 function onMouseWheel(e: WheelEvent): void {
   if (!props.mousewheel || dragging.value) return
   if (imageAmount.value <= 1) return
+  // 开启 mousewheel 即表示滚轮由本区域接管：无论是否达到切换阈值都阻止默认滚动，
+  // 否则会出现「部分滚动被吞、部分穿透到页面」的半接管状态
   e.preventDefault()
   if (switchPrevent.value) return
   // 垂直轮播取纵向滚动量；水平轮播优先取横向，无横向分量时回退到纵向以兼容普通鼠标滚轮
@@ -624,7 +714,7 @@ function onMouseWheel(e: WheelEvent): void {
   }
 }
 function to(n: number, dontAnimate = false): void {
-  // 非整数入参会写入非整数的当前页，使指示点永不命中、change 传出非法下标
+  // 非整数入参会写入非整数的当前页，使指示点永不命中、update:currentIndex 传出非法下标
   if (!Number.isInteger(n)) return
   if (n >= 1 && n <= imageAmount.value) {
     onSwitch(n, dontAnimate)
@@ -668,7 +758,7 @@ defineExpose({
       --carousel-dot-size: ${dotSize}px;
       --carousel-dot-color: ${dotColor};
       --carousel-fade-duration: ${fadeDurationValue}ms;
-      --carousel-fade-function: ${fadeFunction};
+      --carousel-fade-function: ${fadeFunctionValue};
     `"
     @mouseenter="onCarouselEnter"
     @mouseleave="onCarouselLeave"
@@ -679,7 +769,7 @@ defineExpose({
     @pointercancel="onPointerCancel"
     @dragstart="onDragStart"
   >
-    <div class="carousel-flex-wrap" :style="carouselStyle">
+    <div class="carousel-flex-wrap" :style="[carouselStyle, bufferShiftStyle]">
       <div
         class="image-wrap"
         :class="{ 'image-fade-active': effect === 'fade' && activeSwitcher === item.index + 1 }"
