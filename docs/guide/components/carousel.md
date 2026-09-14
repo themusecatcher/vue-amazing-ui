@@ -123,7 +123,7 @@ const objectFitOptions = [
   }
 ]
 const objectFit = ref<CarouselProps['objectFit']>('fill')
-const draggable = ref<boolean>(false)
+const draggable = ref<boolean>(true)
 const mousewheel = ref<boolean>(false)
 function clickImage(image: CarouselImage) {
   console.log('image', image)
@@ -199,7 +199,7 @@ const state = reactive<CarouselConfigState>({
   dotPosition: 'bottom',
   dotTrigger: 'click',
   objectFit: 'fill',
-  draggable: false,
+  draggable: true,
   mousewheel: false,
   fadeDuration: 500,
   fadeFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
@@ -1244,7 +1244,7 @@ const images = ref<CarouselImage[]>([
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
   }
 ])
-const draggable = ref<boolean>(false)
+const draggable = ref<boolean>(true)
 </script>
 <template>
   <Space align="center"> draggable: <Switch v-model="draggable" /> </Space>
@@ -1824,7 +1824,7 @@ const state = reactive<CarouselConfigState>({
   dotPosition: 'bottom',
   dotTrigger: 'click',
   objectFit: 'fill',
-  draggable: false,
+  draggable: true,
   mousewheel: false,
   fadeDuration: 500,
   fadeFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
@@ -2001,7 +2001,7 @@ effect | 轮播图切换时的过渡效果 | 'slide' &#124; 'fade' | 'slide'
 interval | 自动轮播间隔，单位 `ms` | number | 3000
 loop | 是否循环切换，为 `false` 时首尾不再回绕，到达边界后该方向的切换（箭头、键盘、滚轮、拖拽、自动轮播）失效 | boolean | true
 initialIndex | 初始展示的图片下标，从 `1` 开始，仅在初始化时生效 | number | 1
-currentIndex | 当前展示的图片下标（受控），从 `1` 开始，配合 `v-model:current-index` 使用 | number | undefined
+currentIndex <Tag color="cyan">v-model</Tag> | 当前展示的图片下标（受控），从 `1` 开始，配合 `v-model:current-index` 使用 | number | undefined
 showArrow | 是否显示箭头，图片数量大于 `1` 时才渲染 | boolean | true
 arrowColor | 箭头颜色 | string | '#FFF'
 arrowSize | 箭头大小，单位 `px` | number | 36
@@ -2055,7 +2055,6 @@ dots | 自定义指示点，需自行调用 `to(n)` 切换 | v-slot:dots="{ to, 
 :-- | :-- | :--
 beforeChange | 切换开始时触发，`from` 为当前页、`to` 为目标页，均从 `1` 开始 | (from: number, to: number) => void
 afterChange | 切换结束后触发，参数为当前页，从 `1` 开始 | (current: number) => void
-update:currentIndex | 当前页变更时触发，配合 `v-model:current-index` 使用，从 `1` 开始 | (currentIndex: number) => void
 click | 点击图片时的回调 | (image: [Image](#image-type)) => void
 
 ## Methods

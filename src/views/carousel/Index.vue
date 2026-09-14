@@ -128,7 +128,7 @@ const objectFitOptions = [
   }
 ]
 const objectFit = ref<CarouselProps['objectFit']>('fill')
-const draggable = ref<boolean>(false)
+const draggable = ref<boolean>(true)
 const mousewheel = ref<boolean>(false)
 function clickImage(image: CarouselImage) {
   console.log('image', image)
@@ -204,7 +204,7 @@ const state = reactive<CarouselConfigState>({
   dotPosition: 'bottom',
   dotTrigger: 'click',
   objectFit: 'fill',
-  draggable: false,
+  draggable: true,
   mousewheel: false,
   fadeDuration: 500,
   fadeFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',

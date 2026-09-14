@@ -104,7 +104,7 @@ let dragDragged = false // 本次拖拽会话是否已构成有效拖拽（用�
 let dragPointerId = -1 // 当前拖拽的指针 id
 let dragStartX = 0 // 拖拽起点 X 坐标
 let dragStartY = 0 // 拖拽起点 Y 坐标
-let dragStartOffset = 0 // 拖拽开始时的位移
+let dragStartOffset = 0 // 拖拽确认时的起点位移（确认构成拖拽时记录，见 onPointerMove）
 let dragStartTime = 0 // 拖拽开始时间戳
 let pendingInitialIndex = true // 首次拿到图片数据前，initialIndex 尚未生效
 let deferredIndex: number | null = null // 切换动画期间到达的受控下标，待本次切换结束后消费
@@ -336,9 +336,8 @@ function nextIndexFrom(current: number, step: 1 | -1): number {
 function initCarousel(): void {
   slideTimer.value && clearTimeout(slideTimer.value)
   fadeTimer.value && clearTimeout(fadeTimer.value)
-  abortSlide()
-  switchPrevent.value = false
-  noFadeTransition.value = false
+  // 中止在飞切换并收口：否则已提交的切换（下标已更新、beforeChange 已抛）会永久丢失 afterChange
+  abortInFlightSwitch()
   // 首次拿到图片数据时应用 initialIndex（受控 currentIndex 优先），下标与 to() / 文档一致从 1 开始
   if (pendingInitialIndex && imageAmount.value > 0) {
     pendingInitialIndex = false
@@ -387,9 +386,6 @@ function visibilityChange(): void {
   const visibility = document.visibilityState
   if (visibility === 'hidden') {
     // hidden
-    // switchPrevent 为真说明有一次切换已提交但尚未结束（activeSwitcher 已更新、beforeChange 已抛出），
-    // 中止动画时须补抛 afterChange，否则该事件与 beforeChange 不成对
-    const wasSwitching = switchPrevent.value
     // 两个定时器都要取消：改用 setTimeout 后回调在后台仍会触发，fade 效果下会违背「暂停切换」的语义
     slideTimer.value && clearTimeout(slideTimer.value)
     fadeTimer.value && clearTimeout(fadeTimer.value)
@@ -397,14 +393,10 @@ function visibilityChange(): void {
     dragging.value = false
     dragDragged = false
     dragPointerId = -1
-    // 有在飞的滑动动画时直接跳到其终点，再中止动画
-    if (targetPosition.value !== undefined) {
-      offset.value = targetPosition.value
-    }
-    abortSlide()
+    // 中止在飞切换并收口（有已提交的切换时补抛 afterChange）。
     // 隐藏期间不续排自动轮播（后台仍会触发定时器），也不消费积压的受控下标
     // （隐藏期间启动动画会因 rAF 暂停而卡住 switchPrevent），留到恢复可见时一并处理
-    finishSwitch(wasSwitching)
+    abortInFlightSwitch()
   } else {
     // visible
     applyDeferredIndex()
@@ -549,6 +541,16 @@ function abortSlide(): void {
   animationId++
   targetPosition.value = undefined
 }
+// 中止在飞切换并收口到终态：已提交的切换（activeSwitcher 已更新、beforeChange 已抛）必须补抛 afterChange，
+// 否则事件不成对；位移先落到动画终点，避免中止后停在两张图之间的中间位移
+function abortInFlightSwitch(): void {
+  if (targetPosition.value !== undefined) {
+    offset.value = targetPosition.value
+  }
+  abortSlide()
+  noFadeTransition.value = false
+  finishSwitch(switchPrevent.value)
+}
 // 切换终态：解锁切换并按需抛 afterChange；不含续排与受控下标消费，供「页面隐藏中止」这类特殊路径复用
 function finishSwitch(committed: boolean): void {
   switchPrevent.value = false
@@ -620,11 +622,10 @@ function onPointerDown(e: PointerEvent): void {
   dragPointerId = e.pointerId
   dragStartX = e.clientX
   dragStartY = e.clientY
-  dragStartOffset = offset.value
   dragStartTime = Date.now()
-  // 接管交互：中止在飞动画并暂停自动轮播，拖拽期间不与其他切换竞争
-  abortSlide()
-  switchPrevent.value = false
+  // 接管交互：暂停自动轮播，拖拽期间不与其他切换竞争。
+  // 在飞切换不在此中止：此时尚不确定是拖拽还是点击，中止会让纯点击也把动画打断、停在中间位移，
+  // 改到确认构成拖拽时再收口，见 onPointerMove
   slideTimer.value && clearTimeout(slideTimer.value)
   // 此处刻意不做指针捕获：一旦在 pointerdown 就捕获，浏览器会把随后的 click 重定向到本元素，
   // 使箭头 / 指示点 / 图片上的 click 全部失效；改在确认构成拖拽后再捕获，见 onPointerMove
@@ -635,6 +636,13 @@ function onPointerMove(e: PointerEvent): void {
   if (!dragDragged && Math.abs(delta) < DRAG_START_THRESHOLD) return
   if (!dragDragged) {
     dragDragged = true
+    // 确认构成拖拽：先把已提交的在飞切换瞬移到终点并收口（补抛 afterChange），再以落位点作为拖拽起点。
+    // 否则同一时刻既有动画写入又有拖拽写入，且中止动画后无人补抛 afterChange
+    abortInFlightSwitch()
+    // loop 回绕后停在尾部副本位，先归位到真实起点，否则该方向已无剩余可拖拽距离
+    normalizeCloneOffset()
+    dragStartOffset = offset.value
+    dragStartTime = Date.now()
     // 确认构成拖拽后再捕获指针：move / up 事件会持续派发到本元素，无需在 document 上挂监听；
     // 同时此后浏览器会把拖拽尾随的 click 重定向到本元素，天然抑制对箭头 / 指示点的误触
     const el = carouselRef.value

@@ -258,4 +258,63 @@ describe('Carousel 拖拽与切换事件契约', () => {
     expect(inst(wrapper).getCurrentIndex()).toBe(3)
     wrapper.unmount()
   })
+
+  // 回归守护：pointerdown 就中止在飞动画会停在两张图之间的中间位移，且 afterChange 永久丢失
+  it('滑动动画进行中纯点击：动画自然结束并落位，事件仍成对', async () => {
+    const wrapper = await mountCarousel({ draggable: true, slideDuration: 400 })
+    inst(wrapper).next()
+    await sleep(120)
+    const mid = slideOffset(slideEl(wrapper))
+    expect(mid).toBeLessThan(0)
+    expect(mid).toBeGreaterThan(-UNIT)
+
+    const root = rootEl(wrapper)
+    dispatchPointer(root, 'pointerdown', { pointerId: 1, pointerType: 'mouse', button: 0, clientX: 200, clientY: 0 })
+    dispatchPointer(root, 'pointerup', { pointerId: 1, pointerType: 'mouse', clientX: 200, clientY: 0 })
+
+    await waitFor(() => wrapper.emitted('afterChange') !== undefined)
+    expect(slideOffset(slideEl(wrapper))).toBe(-UNIT)
+    expect(wrapper.emitted('beforeChange')).toEqual([[1, 2]])
+    expect(wrapper.emitted('afterChange')).toEqual([[2]])
+    wrapper.unmount()
+  })
+
+  it('滑动动画进行中开始拖拽：先收口在飞切换，再按拖拽翻页，两次切换事件各自成对', async () => {
+    const wrapper = await mountCarousel({ draggable: true, slideDuration: 400 })
+    inst(wrapper).next()
+    await sleep(120)
+
+    const root = rootEl(wrapper)
+    dispatchPointer(root, 'pointerdown', { pointerId: 1, pointerType: 'mouse', button: 0, clientX: 200, clientY: 0 })
+    // 越过拖拽阈值即收口在飞切换
+    dispatchPointer(root, 'pointermove', { pointerId: 1, pointerType: 'mouse', clientX: 190, clientY: 0 })
+    await nextTick()
+    dispatchPointer(root, 'pointermove', { pointerId: 1, pointerType: 'mouse', clientX: -100, clientY: 0 })
+    await nextTick()
+    dispatchPointer(root, 'pointerup', { pointerId: 1, pointerType: 'mouse', clientX: -100, clientY: 0 })
+
+    await waitFor(() => inst(wrapper).getCurrentIndex() === 3)
+    await waitFor(() => (wrapper.emitted('afterChange')?.length ?? 0) === 2)
+    expect(wrapper.emitted('beforeChange')).toEqual([
+      [1, 2],
+      [2, 3]
+    ])
+    expect(wrapper.emitted('afterChange')).toEqual([[2], [3]])
+    wrapper.unmount()
+  })
+
+  // 回归守护：loop 回绕后位移停在尾部副本位，未归位时该方向的拖拽没有剩余空间（完全拖不动）
+  it('loop 回绕到首张后，前向拖拽仍可继续切换', async () => {
+    const wrapper = await mountCarousel({ draggable: true, loop: true, slideDuration: 60 })
+    inst(wrapper).to(3)
+    await waitFor(() => slideOffset(slideEl(wrapper)) === -2 * UNIT)
+    inst(wrapper).next()
+    await waitFor(() => slideOffset(slideEl(wrapper)) === -3 * UNIT)
+    expect(inst(wrapper).getCurrentIndex()).toBe(1)
+
+    dispatchDrag(wrapper, 0)
+    await waitFor(() => inst(wrapper).getCurrentIndex() === 2)
+    expect(inst(wrapper).getCurrentIndex()).toBe(2)
+    wrapper.unmount()
+  })
 })

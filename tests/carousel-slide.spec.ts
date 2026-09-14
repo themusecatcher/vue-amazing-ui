@@ -104,6 +104,24 @@ function inst(wrapper: CarouselWrapper): CarouselInst {
 }
 
 describe('Carousel 滑动动画', () => {
+  // 回归守护：中止在飞切换的所有路径都必须收口（补抛 afterChange），否则事件不成对
+  it('切换动画进行中变更配置（触发重新初始化）会收口并补抛 afterChange', async () => {
+    const wrapper = await mountCarousel({ slideDuration: 400 })
+    inst(wrapper).next()
+    await sleep(120)
+    // 动画确实在途中
+    const mid = slideOffset(slideEl(wrapper))
+    expect(mid).toBeLessThan(0)
+    expect(mid).toBeGreaterThan(-UNIT)
+
+    await wrapper.setProps({ interval: 1500 })
+    await waitFor(() => wrapper.emitted('afterChange') !== undefined)
+    expect(wrapper.emitted('beforeChange')).toEqual([[1, 2]])
+    expect(wrapper.emitted('afterChange')).toEqual([[2]])
+    expect(slideOffset(slideEl(wrapper))).toBe(-UNIT)
+    wrapper.unmount()
+  })
+
   beforeEach(() => {
     installLayoutStub()
   })
