@@ -4,8 +4,6 @@
 
 _实时监测目标元素滚动位置及状态的组合式函数_
 
-未传 `target` 时默认监听整页滚动：此时内部把 `scroll` 监听绑定到 `window`（视口滚动的事件目标是 `window` / `document`，`documentElement` 收不到 `scroll`）。
-
 ::: details Show Source Code
 
 ```ts
@@ -312,3 +310,9 @@ function onStop(e: Event) {
 | right | 是否向右滚动 | Ref&lt;boolean&gt; |
 | top | 是否向上滚动 | Ref&lt;boolean&gt; |
 | bottom | 是否向下滚动 | Ref&lt;boolean&gt; |
+
+## 注意事项
+
+- 未传 `target` 时默认监听整页滚动：此时内部把 `scroll` 监听绑定到 `window`（视口滚动的事件目标是 `window` / `document`，`documentElement` 收不到 `scroll`）
+- `xScrollMax` / `yScrollMax` 仅在初始化与切换 `target` 时测量，内容尺寸变化后需重新设置 `target` 才会更新
+- 不支持原生 `scrollend` 的浏览器由内部定时器（`throttleDelay + 200ms`）兜底判定滚动结束

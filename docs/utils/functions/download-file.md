@@ -234,16 +234,33 @@ export function downloadFile(url: string, fileName?: string, options: DownloadOp
 
 :::
 
+<script setup lang="ts">
+import { downloadFile } from 'vue-amazing-ui'
+function handleDownload() {
+  // 用 BASE_URL 拼接，保证 dev 与线上均为同源地址（同源走 anchor 策略）
+  downloadFile(`${import.meta.env.BASE_URL}amazing-logo.svg`, 'amazing-logo.svg')
+}
+</script>
+
 ## 基本使用
 
 _自动分流：同源走 `anchor`，跨域走 `iframe`；未传文件名时从 `URL` 中自动提取_
 
+<br/>
+
+<Button type="primary" @click="handleDownload">下载同源示例文件</Button>
+
 ```vue
 <script setup lang="ts">
 import { downloadFile } from 'vue-amazing-ui'
-// 自动分流下载，未传文件名，自动提取为 Markdown.pdf
-downloadFile('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/Markdown.pdf')
+function handleDownload() {
+  // 用 BASE_URL 拼接，保证 dev 与线上均为同源地址（同源走 anchor 策略）
+  downloadFile(`${import.meta.env.BASE_URL}amazing-logo.svg`, 'amazing-logo.svg')
+}
 </script>
+<template>
+  <Button type="primary" @click="handleDownload">下载同源示例文件</Button>
+</template>
 ```
 
 ::: warning
@@ -287,7 +304,7 @@ _`iframe` 策略依赖服务端支持，跨域下载前请先确认文件所在�
 
 | 参数      | 说明                                          | 类型   | 默认值    |
 | --------- | --------------------------------------------- | ------ | --------- |
-| url       | 文件的 `URL`，支持网络路径或本地路径          | string | undefined |
+| url       | 文件的 `URL`，支持绝对 `URL` 与同源相对路径   | string | undefined |
 | fileName? | 文件的命名，如果未提供，则从 `URL` 中尝试提取 | string | undefined |
 | options?  | 下载配置                                      | [DownloadOptions](#downloadoptions) | {} |
 

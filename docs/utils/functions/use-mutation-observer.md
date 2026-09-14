@@ -113,30 +113,116 @@ export function useMounted(): Ref<boolean> {
 
 :::
 
-## 参考文档
-
-- [MutationObserver](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver)
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useMutationObserver } from 'vue-amazing-ui'
+const observerRef = ref<HTMLDivElement | null>(null)
+const mutationCount = ref(0)
+const itemId = ref(0)
+const callback = (mutationsList: MutationRecord[]) => {
+  mutationCount.value += mutationsList.length
+}
+const options = { childList: true, attributes: true, subtree: true }
+const { start, stop } = useMutationObserver(observerRef, callback, options)
+function addItem() {
+  const item = document.createElement('div')
+  item.className = 'observer-item'
+  item.textContent = `节点 ${++itemId.value}`
+  observerRef.value?.appendChild(item)
+}
+function removeItem() {
+  observerRef.value?.lastElementChild?.remove()
+}
+</script>
 
 ## 基本使用
+
+_监听容器内节点的增删，并实时统计变更次数_
+
+<br/>
+
+<Flex vertical>
+  <Space :gap="8">
+    <Button type="primary" @click="addItem">新增节点</Button>
+    <Button @click="removeItem">删除节点</Button>
+    <Button @click="stop">停止观察</Button>
+    <Button @click="start">开始观察</Button>
+  </Space>
+  <Alert type="info" :message="`已观察到 ${mutationCount} 条变更记录`" />
+  <div ref="observerRef" class="observer-container"></div>
+</Flex>
+
+<style lang="less" scoped>
+.observer-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 52px;
+  padding: 8px 12px;
+  border: 1px dashed rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  :deep(.observer-item) {
+    height: fit-content;
+    padding: 4px 10px;
+    font-size: 14px;
+    background: #f0f5ff;
+    border-radius: 4px;
+  }
+}
+</style>
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useMutationObserver } from 'vue-amazing-ui'
-const defaultSlotsRef = ref<HTMLDivElement | null>(null)
-// 监听 defaultSlotsRef DOM 变化
-const callback = (mutationsList: MutationRecord[], observer: MutationObserver) => {
-  console.log('mutationsList', mutationsList)
-  console.log('observer', observer)
+const observerRef = ref<HTMLDivElement | null>(null)
+const mutationCount = ref(0)
+const itemId = ref(0)
+const callback = (mutationsList: MutationRecord[]) => {
+  mutationCount.value += mutationsList.length
 }
 const options = { childList: true, attributes: true, subtree: true }
-useMutationObserver(defaultSlotsRef, callback, options)
+const { start, stop } = useMutationObserver(observerRef, callback, options)
+function addItem() {
+  const item = document.createElement('div')
+  item.className = 'observer-item'
+  item.textContent = `节点 ${++itemId.value}`
+  observerRef.value?.appendChild(item)
+}
+function removeItem() {
+  observerRef.value?.lastElementChild?.remove()
+}
 </script>
 <template>
-  <div ref="defaultSlotsRef">
-    <slot></slot>
-  </div>
+  <Flex vertical>
+    <Space :gap="8">
+      <Button type="primary" @click="addItem">新增节点</Button>
+      <Button @click="removeItem">删除节点</Button>
+      <Button @click="stop">停止观察</Button>
+      <Button @click="start">开始观察</Button>
+    </Space>
+    <Alert type="info" :message="`已观察到 ${mutationCount} 条变更记录`" />
+    <div ref="observerRef" class="observer-container"></div>
+  </Flex>
 </template>
+<style lang="less" scoped>
+.observer-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 52px;
+  padding: 8px 12px;
+  border: 1px dashed rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  :deep(.observer-item) {
+    height: fit-content;
+    padding: 4px 10px;
+    font-size: 14px;
+    background: #f0f5ff;
+    border-radius: 4px;
+  }
+}
+</style>
 ```
 
 ## Params
@@ -153,3 +239,7 @@ useMutationObserver(defaultSlotsRef, callback, options)
 | --- | --- | --- |
 | start | 开始观察目标元素 | () => void |
 | stop | 停止观察并断开与目标元素的连接 | () => void |
+
+## 参考文档
+
+- [MutationObserver](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver)

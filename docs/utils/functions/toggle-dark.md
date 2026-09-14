@@ -2,6 +2,8 @@
 
 <GlobalElement />
 
+_在 `<html>` 根元素上切换 `dark` 类值并同步 `color-scheme` 的工具函数_
+
 ::: details Show Source Code
 
 ```ts
@@ -35,17 +37,20 @@ export function toggleDark(): void {
 
 :::
 
-**一键切换暗黑模式：在 `<html>` 根元素上动态切换 `dark` 模式，只在根元素添加 `dark` 类值，同时样式添加 color-scheme: dark，具体样式需自行添加**
+## 说明
+
+_`toggleDark` 只负责切换根元素上的 `dark` 类与 `color-scheme`，具体暗黑样式需自行添加_
+
+`<html>` 根元素上的 `dark` 类可用于书写暗黑主题样式，参考如下：
 
 ```less
 // dark 主题样式参考如下：
 html {
   transition: filter 0.3s ease-in-out;
 }
-· invert(): 反转输入图像，1表示完全反转
-· hue-rotate(): 在输入图像上应用色相旋转
 html.dark {
   // 暗黑模式
+  // invert() 反转输入图像，1 表示完全反转；hue-rotate() 在输入图像上应用色相旋转
   filter: invert(1) hue-rotate(180deg);
   img,
   video {
