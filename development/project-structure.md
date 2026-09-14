@@ -26,13 +26,13 @@
 
 ### 组件目录
 
-每个组件独占一个 kebab-case 目录，内部为「SFC + 入口」的固定结构：
+每个组件独占一个 kebab-case 目录，基础结构为「SFC + 入口」，可按需增加辅助模块（如 `modal/ModalRenderHost.ts`）：
 
 ```
 components/
 ├── button/                 # 组件目录（kebab-case）
 │   ├── Button.vue          # SFC 组件（PascalCase 文件名）
-│   └── index.ts            # 组件入口（默认导出 + Props 类型）
+│   └── index.ts            # 组件入口（withInstall 默认导出 + 重命名后的 XxxProps）
 ├── auto-complete/
 ├── grid/                   # 复合组件：目录下再分 row/ col/ 子目录
 │   ├── row/
@@ -92,10 +92,12 @@ components/
 
 ```
 src/
-├── views/                  # 每个组件一个演示目录
+├── views/                  # 演示页（每个组件一个目录）
 │   ├── button/             # 演示目录（camelCase）
 │   │   ├── Index.vue       # 演示页面
 │   │   └── index.ts        # 路由 meta（title）
+│   ├── layout/             # 布局演示页
+│   ├── timepicker/         # 纯演示页：无对应 components/ 组件，复用 DatePicker 能力展示
 │   ├── home/
 │   ├── exception/
 │   └── ...
@@ -119,13 +121,14 @@ docs/
 │   └── theme/              # 主题（GlobalElement 等全局组件）
 ├── guide/                  # 指引 + 组件文档
 │   ├── components/         # 每个组件一篇 md（kebab-case）
+│   ├── features.md         # 组件总览页
 │   ├── getting-started.md
 │   ├── import-on-demand.md
 │   ├── customize-theme.md
 │   ├── changelog.md
 │   └── template.md         # 组件文档模板
 ├── utils/                  # 工具函数文档
-│   ├── functions/          # 每个工具函数一篇 md
+│   ├── functions/          # 工具函数文档（kebab-case，一篇可涵盖多个关联函数）
 │   └── getting-started.md
 ├── sponsor/
 └── index.md

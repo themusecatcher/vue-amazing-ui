@@ -61,6 +61,22 @@ const emit = defineEmits<{
 }>()
 ```
 
+## 插槽类型（defineSlots）
+
+插槽统一用 `defineSlots` 声明类型，并在 SFC 内导出 `interface <组件名>Slots`（如 `ButtonSlots`），使模板与 `$slots` 获得类型提示：
+
+```ts
+// components/button/Button.vue
+export interface ButtonSlots {
+  icon?: () => VNode[]
+  default?: () => VNode[]
+}
+defineSlots<ButtonSlots>()
+```
+
+- 插槽类型名统一为 `<组件名>Slots`，可选插槽用 `?`。
+- 该类型在 SFC 内 `export` 后**不经入口 / `components.ts` 对外导出**，仅供组件自身使用，不属于库的公开 API。
+
 ## 主题注入 useInject
 
 组件通过 `useInject` 获取主题色，无需自行处理主题传递：
@@ -110,7 +126,7 @@ const showIconOnly = computed(() => slotsExist.icon && !slotsExist.default)
 
 ## 函数式 / 全局组件模式
 
-`message` / `modal` / `notification` 三个全局提示类组件采用「SFC + Hook + Provider」三段式，目录结构：
+`message` / `modal` / `notification` / `dialog` 四个全局提示类组件采用「SFC + Hook + Provider」三段式，目录结构（以 message 为例，其余三个同构）：
 
 ```
 components/message/
@@ -128,17 +144,20 @@ components/message/
 | `useMessage.ts` | 定义 `MessageApi` 接口与 injection key，`useMessage()` 通过 `inject` 取 api |
 | `MessageProvider.vue` | `provide` api 占位实现，子组件就绪后用真实实现覆盖 |
 
-入口汇总导出（`message/index.ts`）：
+入口汇总导出（`message/index.ts`）——`Provider` 与组件本体一样经 `withInstall` 包装，以支持 `app.use(MessageProvider)`：
 
 ```ts
 import Message from './Message.vue'
 import MessageProviderComp from './MessageProvider.vue'
 import { withInstall } from '../utils/type'
 
-export type { Props, Message } from './Message.vue'
+export type { Props as MessageProps, MessageOptions, MessageReactive, MessageUpdate } from './Message.vue'
 export type { MessageApi } from './useMessage'
 export { useMessage } from './useMessage'
+
+// 与普通组件一致，挂 install 以支持 app.use(MessageProvider) 单组件安装
 export const MessageProvider = withInstall(MessageProviderComp)
+
 export default withInstall(Message)
 ```
 
@@ -159,6 +178,19 @@ components/grid/
 │   ├── Col.vue
 │   └── index.ts
 └── index.ts        # 汇总导出 Row + Col
+```
+
+## 单组件目录的辅助文件
+
+单组件目录并非固定为「`Xxx.vue` + `index.ts`」两个文件，可按需在同一目录内增加辅助模块，例如：
+
+```
+components/modal/
+├── Modal.vue           # 组件本体
+├── ModalProvider.vue   # Provider
+├── useModal.ts         # Hook
+├── ModalRenderHost.ts  # 辅助模块（渲染宿主等内部实现细节）
+└── index.ts            # 入口
 ```
 
 ## 无样式组件

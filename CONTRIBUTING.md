@@ -128,7 +128,7 @@ pnpm lint         # ESLint check with auto-fix
 pnpm lint:check   # ESLint check only (does not modify files)
 pnpm type-check   # Type checking
 pnpm test         # Unit tests (vitest)
-pnpm check        # Aggregate check: lint:check + type-check + test
+pnpm check        # Aggregate check: lint:check + format:check + type-check + test
 ```
 
 Before committing, it is recommended to run `pnpm check` locally and make sure it passes before pushing.
