@@ -84,15 +84,17 @@ type ComponentName = keyof typeof componentsMap
 function isComponentName(name: string): name is ComponentName {
   return name in componentsMap
 }
-// Provider 组件自身无样式文件，复用其底层组件的样式
+// 组件样式的来源表：键为「自身无样式文件的组件」，值为「承载其样式的组件」
+// 两类来源：① 命令式 Provider 复用底层组件的样式；② 子组件样式定义在父组件 SFC 内（如 DescriptionsItem）
 // 用 Partial 表达「可能查不到」，与运行时行为一致；值约束为 ComponentName，拼错即在编译期报错
-const providerStyles: Partial<Record<ComponentName, ComponentName>> = {
+const styleSources: Partial<Record<ComponentName, ComponentName>> = {
   MessageProvider: 'Message',
   NotificationProvider: 'Notification',
   ModalProvider: 'Modal',
-  DialogProvider: 'Dialog'
+  DialogProvider: 'Dialog',
+  DescriptionsItem: 'Descriptions'
 }
-// 定义组件依赖关系（仅声明「除自身外的样式依赖」，自身样式由 providerStyles / componentsMap 兜底）
+// 定义组件依赖关系（仅声明「除自身外的样式依赖」，自身样式由 styleSources / componentsMap 兜底）
 const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   AutoComplete: ['Scrollbar'],
   BackTop: ['Tooltip'],
@@ -131,8 +133,8 @@ function getSideEffects(componentName: ComponentName, options?: VueAmazingUIReso
     // 无样式文件的组件
     return []
   }
-  // Provider 自身无样式文件，以其底层组件（如 MessageProvider -> Message）的样式作为自身样式
-  const styleComponent = providerStyles[componentName] ?? componentName
+  // 组件自身无样式文件时，改取其样式来源组件的样式（如 MessageProvider -> Message、DescriptionsItem -> Descriptions）
+  const styleComponent = styleSources[componentName] ?? componentName
   const sideEffectsComponents: ComponentName[] = [styleComponent] // 组件依赖的所有样式
   const dependencies = componentDependencies[componentName]
   if (dependencies) {

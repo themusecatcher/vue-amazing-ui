@@ -1263,11 +1263,13 @@ xxxl | `≥2000px` 响应式栅格 | number | undefined
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 label | 内容的描述标签 | string &#124; number &#124; VNode | undefined
-span | 包含列的数量，**当使用水平列表且未设置 `span` 时等效于 `span: 1`，但最后一行的最后一项，会包含该行剩余的所有列数** | number | 1
+span | 包含列的数量，未设置时按 `1` 处理；**最后一行的最后一项未设置 `span`（或显式 `span` 超出本行剩余列数）时收缩为剩余列数，即补满该行**，显式 `span` 未超出本行剩余列数时按显式值渲染 | number | 1
 labelStyle | 自定义标签样式，优先级高于 `Descriptions` 的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
 contentStyle | 自定义内容样式，优先级高于 `Descriptions` 的 `contentStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
 labelClass | 标签自定义类名，与 `Descriptions` 的 `labelClass` 叠加 | string | undefined
 contentClass | 内容自定义类名，与 `Descriptions` 的 `contentClass` 叠加 | string | undefined
+
+> 同一行 `span` 之和超过 `column` 时，超出本行剩余列数的项会收缩为剩余列数（开发环境会给出提示）。
 
 ## Slots
 

@@ -220,7 +220,7 @@ const cells = computed<CellData[]>(() => {
     }
   })
 })
-// 行末补满：未显式设置 span 或 span 超出本行剩余列数时，收缩为剩余列数
+// 行末收口：未显式设置 span、或 span 超出本行剩余列数时，按本行剩余列数渲染；显式 span 未超出时保持原值
 function fillSpan(cell: CellData, restCol: number): CellData {
   if (cell.rawSpan === undefined || cell.span > restCol) {
     if (import.meta.env.DEV && cell.rawSpan !== undefined && cell.span > restCol) {
@@ -230,7 +230,7 @@ function fillSpan(cell: CellData, restCol: number): CellData {
   }
   return cell
 }
-// 按 column 切行：span 累计达到 column 即换行；行末剩余列由该项补满
+// 按 column 切行：span 累计达到 column 即换行；触发换行的该项与列表最后一项均按行末剩余列数渲染
 const rows = computed<CellData[][]>(() => {
   const column = responsiveColumn.value
   const list = cells.value

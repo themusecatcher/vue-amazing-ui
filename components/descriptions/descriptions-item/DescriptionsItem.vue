@@ -2,7 +2,7 @@
 import type { CSSProperties, VNode } from 'vue'
 export interface Props {
   label?: string | number | VNode // 内容的描述标签
-  span?: number // 包含列的数量；当使用水平列表且未设置 span 时等效于 span: 1，但最后一行的最后一项，会包含该行剩余的所有列数
+  span?: number // 包含列的数量，未设置时按 1 处理；最后一行的最后一项未设置 span（或显式 span 超出本行剩余列数）时收缩为剩余列数（即补满该行），显式 span 未超出时按显式值渲染
   labelStyle?: CSSProperties // 自定义标签样式，优先级高于 Descriptions 的 labelStyle
   contentStyle?: CSSProperties // 自定义内容样式，优先级高于 Descriptions 的 contentStyle
   labelClass?: string // 标签自定义类名，与 Descriptions 的 labelClass 叠加

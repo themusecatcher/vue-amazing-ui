@@ -1,5 +1,5 @@
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { readFileSync, readdirSync } from 'node:fs'
+import { basename, join, resolve } from 'node:path'
 import { describe, it, expect } from 'vitest'
 import { VueAmazingUIResolver } from 'components/utils/resolver'
 import type { VueAmazingUIResolverOptions } from 'components/utils/resolver'
@@ -7,13 +7,15 @@ import type { VueAmazingUIResolverOptions } from 'components/utils/resolver'
 /**
  * 按需引入 resolver 的回归防护。
  *
- * 背景：componentsMap / providerStyles / componentDependencies 三张表互相引用
- * （Provider 指向底层组件、依赖数组指向其它组件名），任一处写错组件名都会
+ * 背景：componentsMap / styleSources / componentDependencies 三张表互相引用
+ * （样式来源指向其它组件、依赖数组指向其它组件名），任一处写错组件名都会
  * 生成 `vue-amazing-ui/es/undefined/Xxx.css` 这类不存在的路径，且只在消费方
- * 构建时才暴露。历史上出现过两类真实回归：
+ * 构建时才暴露。历史上出现过三类真实回归：
  *   1. Modal / Notification 遗漏 Scrollbar 依赖，内容区滚动条无样式；
- *   2. Upload 移除内嵌 Message 后，样式依赖未同步移除。
- * 故此处既断言关键组件的依赖，也做一次全量路径合法性扫描。
+ *   2. Upload 移除内嵌 Message 后，样式依赖未同步移除；
+ *   3. DescriptionsItem 改为纯数据载体（不再产出 DOM 与样式）后，样式来源未登记，
+ *      按需引入仍指向其不存在的自身 CSS。
+ * 故此处既断言关键组件的依赖，也做一次全量路径合法性扫描与无样式 SFC 的登记完整性校验。
  */
 function sideEffectsOf(name: string, options?: VueAmazingUIResolverOptions): string[] {
   return VueAmazingUIResolver(options).resolve(name)?.sideEffects ?? []
@@ -27,6 +29,34 @@ function parseComponentsMap(): Array<[string, string]> {
     throw new Error('未能从 components/utils/resolver.ts 中解析出 componentsMap')
   }
   return [...block[1].matchAll(/^\s*([A-Za-z0-9]+):\s*'([^']+)',?\s*$/gm)].map((m) => [m[1], m[2]])
+}
+/** 从 resolver.ts 源码解析组件样式来源表（键为自身无样式的组件，值为承载其样式的组件） */
+function parseStyleSources(): Record<string, string> {
+  const block = resolverSource.match(
+    /const styleSources: Partial<Record<ComponentName, ComponentName>> = \{([\s\S]*?)\n\}/
+  )
+  if (!block) {
+    throw new Error('未能从 components/utils/resolver.ts 中解析出 styleSources')
+  }
+  return Object.fromEntries([...block[1].matchAll(/^\s*([A-Za-z0-9]+):\s*'([^']+)',?\s*$/gm)].map((m) => [m[1], m[2]]))
+}
+/** 从 resolver.ts 源码解析「无任何样式」的组件白名单 */
+function parseStylelessComponents(): string[] {
+  const block = resolverSource.match(/if \(\[([\s\S]*?)\]\.includes\(componentName\)\)/)
+  if (!block) {
+    throw new Error('未能从 components/utils/resolver.ts 中解析出无样式组件白名单')
+  }
+  return [...block[1].matchAll(/'([^']+)'/g)].map((m) => m[1])
+}
+/** 递归收集目录下所有 SFC 的绝对路径 */
+function collectVueFiles(dir: string): string[] {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const fullPath = join(dir, entry.name)
+    if (entry.isDirectory()) {
+      return collectVueFiles(fullPath)
+    }
+    return entry.name.endsWith('.vue') ? [fullPath] : []
+  })
 }
 
 describe('resolver - Provider 组件解析', () => {
@@ -111,13 +141,15 @@ describe('resolver - 未收录组件', () => {
 
 describe('resolver - 全量组件映射', () => {
   const entries = parseComponentsMap()
+  const dirMap = new Map(entries)
+  const styleSources = parseStyleSources()
 
   it('应解析出全部组件映射', () => {
     expect(entries.length).toBeGreaterThanOrEqual(68)
   })
 
   it('每个组件的样式路径均应合法、不出现 undefined', () => {
-    entries.forEach(([name, dir]) => {
+    entries.forEach(([name]) => {
       const effects = sideEffectsOf(name)
       if (effects.length === 0) {
         return // 无样式组件，已由独立用例覆盖
@@ -127,10 +159,31 @@ describe('resolver - 全量组件映射', () => {
         expect(effect, `${name} 的样式路径 ${effect} 不应含 undefined`).not.toContain('undefined')
         expect(effect.startsWith('vue-amazing-ui/es/'), `${name} 的样式路径 ${effect} 前缀异常`).toBe(true)
       })
-      // 非 Provider 组件的首个组件样式应为 <目录>/<组件名>.css
-      if (!name.endsWith('Provider')) {
-        expect(effects, `${name} 应注入自身样式`).toContain(`vue-amazing-ui/es/${dir}/${name}.css`)
-      }
+      // 组件样式应指向其「样式来源」组件（缺省为自身）的产物 CSS，而非自身并不存在的 CSS
+      const source = styleSources[name] ?? name
+      const sourceDir = dirMap.get(source)
+      expect(sourceDir, `${name} 的样式来源 ${source} 应已收录于 componentsMap`).toBeDefined()
+      expect(effects, `${name} 应注入 ${source} 样式`).toContain(`vue-amazing-ui/es/${sourceDir}/${source}.css`)
     })
+  })
+})
+
+describe('resolver - 子组件样式来源', () => {
+  it('DescriptionsItem 应复用父组件 Descriptions 的样式', () => {
+    const effects = sideEffectsOf('DescriptionsItem')
+    expect(effects).toContain('vue-amazing-ui/es/descriptions/descriptions/Descriptions.css')
+    expect(effects.some((effect) => effect.includes('descriptions-item'))).toBe(false)
+  })
+})
+
+describe('resolver - 无 <style> 块 SFC 的登记完整性', () => {
+  it('每个无 <style> 块的 SFC 都必须登记到白名单或样式来源表', () => {
+    const styleSources = parseStyleSources()
+    const styleless = parseStylelessComponents()
+    const unregistered = collectVueFiles(resolve(process.cwd(), 'components'))
+      .filter((file) => !/<style[\s>]/.test(readFileSync(file, 'utf-8')))
+      .map((file) => basename(file, '.vue'))
+      .filter((name) => !styleless.includes(name) && styleSources[name] === undefined)
+    expect(unregistered, `以下 SFC 无 <style> 块但未登记样式来源：${unregistered.join('、')}`).toEqual([])
   })
 })
