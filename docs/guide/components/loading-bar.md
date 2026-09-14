@@ -192,6 +192,8 @@ const customLoadingBarRef = ref<InstanceType<typeof LoadingBar> | null>(null)
 | colorError | 加载错误颜色 | string | '#ff4d4f' |
 | to | 加载条的挂载位置，可选：元素标签名（例如 `body`）或者元素本身，false 会待在原地 | string &#124; HTMLElement &#124; false | 'body' |
 
+> 组件上的 `class` / `style` 透传到加载条容器 `.loading-bar-wrap`（等价于 `containerClass` / `containerStyle`）。
+
 ## Methods
 
 | 名称  | 说明              | 类型                        |

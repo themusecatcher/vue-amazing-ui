@@ -28,6 +28,10 @@ const props = withDefaults(defineProps<Props>(), {
   scrollable: true,
   to: 'body'
 })
+// 根节点是 Teleport，属性无法自动透传（Vue 会对 teleport 根告警并丢弃 class / style），
+// 故关闭自动继承并显式绑定到通知容器；多弹出位置时类名会应用到每个位置的容器，
+// 单条通知的样式请用配置项的 class / style
+defineOptions({ inheritAttrs: false })
 export interface NotificationOptions {
   key?: string // 该条通知的唯一标识，未指定时自动生成；指定后可用于去重，也可由 api.destroy(key) 精确关闭
   title?: ContentType // 通知提醒标题
@@ -386,6 +390,7 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
     <div
       v-for="group in notificationGroups"
       :key="group.placement"
+      v-bind="$attrs"
       class="notification-wrap"
       :class="`notification-${group.placement}`"
       :style="[

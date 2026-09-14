@@ -1630,6 +1630,8 @@ const renderFnIconOpen = ref(false)
 | 标题 | `.modal-title` | 标题文字 | `titleClass` / `titleStyle` |
 | 内容 | `.modal-content` | 正文区 | `contentClass` / `contentStyle` |
 
+> 组件上的 `class` / `style` 透传到最外层容器 `.modal-wrap`（等价于 `wrapClass` / `wrapStyle`）；其余各层请使用上表对应的 `XxxClass` / `XxxStyle`。
+
 <Space>
   <Button type="primary" @click="onCustomClass">自定义卡片类名</Button>
   <Button type="primary" @click="onBodyMaskStyle">自定义卡片与遮罩样式</Button>
@@ -2694,7 +2696,7 @@ _每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)
 | onEsc | 按下 `Esc` 键的回调，无论是否允许关闭都会触发 | (e: KeyboardEvent) => void | undefined |
 | onMaskClick | 点击遮罩的回调，无论是否允许关闭都会触发 | (e: MouseEvent) => void | undefined |
 | to | 容器 `Teleport` 的目标 | string &#124; HTMLElement | 'body' |
-| open | (v-model) 模态框是否可见，声明式用法下生效 | boolean | false |
+| open <Tag color="cyan">v-model</Tag> | 模态框是否可见，声明式用法下生效 | boolean | false |
 
 > 多实例同时打开时，各实例按自身 `zIndex` 分层（遮罩取 `zIndex`，弹窗取 `zIndex + 10`）；外层容器的层级取栈中打开实例的最大 `zIndex`，`wrapClass` / `wrapStyle` 以栈顶为准。
 
@@ -2820,7 +2822,6 @@ _`cancel` / `ok` / `know` / `change` / `ready` 为 `<Modal>` 与 `<ModalProvider
 | ok    | 点击确定按钮的回调                 | (e: MouseEvent) => void         |
 | know  | 点击知道了按钮的回调               | (e: MouseEvent) => void         |
 | change | 任一弹窗打开 / 关闭时触发，多实例下携带该实例 `key` | (open: boolean, key: string) => void |
-| update:open | 声明式用法下 `v-model:open` 对应的更新事件 | (open: boolean) => void |
 
 ## 在 setup 外使用
 

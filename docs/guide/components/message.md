@@ -807,7 +807,7 @@ function onToMessage() {
 
 <br/>
 
-_组件级配置属性：使用 `useMessage()` 时设置在 `<MessageProvider>` 上（会透传给内部 `Message`），直接使用 `<Message>` 组件时设置在 `<Message>` 上，两者等价。_
+_组件级配置属性（`class` / `style` 亦会透传到消息容器）：使用 `useMessage()` 时设置在 `<MessageProvider>` 上（会透传给内部 `Message`），直接使用 `<Message>` 组件时设置在 `<Message>` 上，两者等价。_
 
 <br/>
 
@@ -820,6 +820,8 @@ _每条消息的个性化配置请参考 [MessageOptions Type](#messageoptions-t
 | maxCount | 可同时存在的最大消息数，超出时淘汰最旧的一条 | number | undefined |
 | keepAliveOnHover | 鼠标移入时是否暂停自动关闭 | boolean | true |
 | to | 消息容器挂载的节点，可选：元素标签名（例如 `'body'`）或者元素本身 | string &#124; HTMLElement | 'body' |
+
+> 组件上的 `class` / `style` 透传到消息容器 `.message-wrap`；单条消息的样式请用单条配置项中的 `class` / `style`（落在该条消息自己的容器上）。
 
 ### MessageOptions Type
 

@@ -452,3 +452,18 @@ describe('Dialog', () => {
     wrapper.unmount()
   })
 })
+
+// 回归守护：根节点是 Teleport 时 Vue 无法自动继承 attrs，会丢弃 class / style 并告警
+describe('Dialog 属性透传', () => {
+  it('class / style 透传到最外层容器 .dialog-wrap', async () => {
+    const wrapper = mount(Dialog, {
+      props: { open: true, title: '标题' },
+      attrs: { class: 'custom-class', style: 'color: red;' }
+    })
+    await wrapper.vm.$nextTick()
+    const wrap = document.body.querySelector<HTMLElement>('.dialog-wrap')
+    expect(wrap?.classList.contains('custom-class')).toBe(true)
+    expect(wrap?.getAttribute('style')).toContain('color: red')
+    wrapper.unmount()
+  })
+})

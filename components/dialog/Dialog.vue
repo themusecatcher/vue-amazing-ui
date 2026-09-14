@@ -226,6 +226,9 @@ const props = withDefaults(defineProps<Props>(), {
   to: 'body'
 })
 defineSlots<DialogSlots>()
+// 根节点是 Teleport，属性无法自动透传（Vue 会对 teleport 根告警并丢弃 class / style），
+// 故关闭自动继承并显式绑定到最外层容器，保持与 2.7.0 之前一致的行为
+defineOptions({ inheritAttrs: false })
 const slotsExist = useSlotsExist(['title'])
 /** 弹窗栈中的单个实例：开关状态、loading、全屏态与动画原点各自持有，避免多实例互相覆盖 */
 interface DialogItem extends DialogOptions {
@@ -1013,6 +1016,7 @@ emits('ready', { open: openDialog, destroyAll })
 <template>
   <Teleport :to="to">
     <div
+      v-bind="$attrs"
       v-show="showDialogWrap"
       tabindex="-1"
       ref="dialogWrapRef"

@@ -1320,7 +1320,7 @@ function onToNotification() {
 
 <br/>
 
-_组件级配置属性：使用 `useNotification()` 时设置在 `<NotificationProvider>` 上（会透传给内部 `Notification`），直接使用 `<Notification>` 组件时设置在 `<Notification>` 上，两者等价。_
+_组件级配置属性（`class` / `style` 亦会透传到通知容器）：使用 `useNotification()` 时设置在 `<NotificationProvider>` 上（会透传给内部 `Notification`），直接使用 `<Notification>` 组件时设置在 `<Notification>` 上，两者等价。_
 
 <br/>
 
@@ -1337,6 +1337,8 @@ _每条通知的个性化配置请参考 [NotificationOptions Type](#notificatio
 | closable | 是否显示关闭按钮，优先级低于单条通知中的 `closable` | boolean | true |
 | scrollable | 通知列表是否可滚动，通知过多超出视口高度时滚动显示 | boolean | true |
 | to | 通知容器挂载的节点，可选：元素标签名（例如 `'body'`）或者元素本身 | string &#124; HTMLElement | 'body' |
+
+> 组件上的 `class` / `style` 透传到通知容器 `.notification-wrap`（容器按弹出位置分组渲染，故类名会应用到**每个位置**的容器）；单条通知的样式请用单条配置项中的 `class` / `style`（落在该条通知自己的容器上）。
 
 ### NotificationOptions Type
 

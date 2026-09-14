@@ -19,6 +19,9 @@ const props = withDefaults(defineProps<Props>(), {
   keepAliveOnHover: true,
   to: 'body'
 })
+// 根节点是 Teleport，属性无法自动透传（Vue 会对 teleport 根告警并丢弃 class / style），
+// 故关闭自动继承并显式绑定到消息容器；单条消息的样式请用配置项的 class / style
+defineOptions({ inheritAttrs: false })
 export interface MessageOptions {
   content?: ContentType // 提示内容
   icon?: VNode | (() => VNode) // 自定义图标
@@ -188,6 +191,7 @@ onBeforeUnmount(() => {
 <template>
   <Teleport :to="to">
     <div
+      v-bind="$attrs"
       class="message-wrap"
       :style="`
       top: ${messageTop};

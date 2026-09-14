@@ -217,6 +217,9 @@ const props = withDefaults(defineProps<Props>(), {
 })
 // 仅 modalRender 需读取插槽内容做渲染，故接收返回值
 const slots = defineSlots<ModalSlots>()
+// 根节点是 Teleport，属性无法自动透传（Vue 会对 teleport 根告警并丢弃 class / style），
+// 故关闭自动继承并显式绑定到最外层容器，保持与 2.7.0 之前一致的行为
+defineOptions({ inheritAttrs: false })
 const slotsExist = useSlotsExist(['modalRender'])
 // 声明式实例的固定标识：由 props.open 驱动，与命令式实例共用同一渲染管线
 const DECLARATIVE_KEY = 'modal_declarative'
@@ -845,6 +848,7 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
 <template>
   <Teleport :to="to">
     <div
+      v-bind="$attrs"
       v-show="showModalWrap"
       tabindex="-1"
       ref="modalWrapRef"

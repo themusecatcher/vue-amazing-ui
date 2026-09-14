@@ -20,6 +20,9 @@ const props = withDefaults(defineProps<Props>(), {
   colorError: '#ff4d4f',
   to: 'body'
 })
+// 根节点是 Teleport，属性无法自动透传（Vue 会对 teleport 根告警并丢弃 class / style），
+// 故关闭自动继承并显式绑定到加载条容器，使 class / style 可用
+defineOptions({ inheritAttrs: false })
 const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const showLoadingBar = ref<boolean>(false) // 加载条是否显示
 const loadingBarRef = ref<HTMLElement | null>(null) // 加载条元素引用
@@ -141,6 +144,7 @@ defineExpose({
       :css="!transitionDisabled"
     >
       <div
+        v-bind="$attrs"
         v-if="initialDisplay"
         v-show="showLoadingBar"
         class="loading-bar-wrap"

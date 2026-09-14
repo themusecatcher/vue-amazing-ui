@@ -1622,6 +1622,8 @@ const open = ref(false)
 | 标题 | `.dialog-header` | 标题区 | `titleClass` / `titleStyle` |
 | 内容 | `.dialog-content` | 正文区 | `contentClass` / `contentStyle` |
 
+> 组件上的 `class` / `style` 透传到最外层容器 `.dialog-wrap`（等价于 `wrapClass` / `wrapStyle`）；其余各层请使用上表对应的 `XxxClass` / `XxxStyle`。
+
 <Space>
   <Button type="primary" @click="onCustomClass">自定义卡片类名</Button>
   <Button type="primary" @click="onBodyMaskStyle">自定义卡片与遮罩样式</Button>
@@ -2754,7 +2756,6 @@ function onToDialog() {
 | cancel | 点击蒙层或 `Esc` 键或右上角关闭按钮或取消按钮的回调 | (e?: Event) => void |
 | ok | 点击确定按钮的回调；声明式下**不自动关闭**，需自行将 `v-model:open` 置为 `false`；命令式下回调结束后自动关闭 | (e?: MouseEvent) => void |
 | change | 弹窗开关状态变化的回调，命令式与声明式实例均会触发，多实例下携带该实例 `key` | (open: boolean, key: string) => void |
-| update:open | 声明式用法下 `v-model:open` 对应的更新事件 | (open: boolean) => void |
 
 > 点击「确定」只派发 `ok`，关闭与否由 `v-model:open` 决定；点击「取消」/ 遮罩 / `Esc` / 关闭按钮则自动回写 `false`。
 

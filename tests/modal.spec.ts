@@ -75,3 +75,19 @@ describe('Modal 键盘与遮罩', () => {
     wrapper.unmount()
   })
 })
+
+// 回归守护：根节点是 Teleport 时 Vue 无法自动继承 attrs，会丢弃 class / style 并告警
+describe('Modal 属性透传', () => {
+  it('class / style 透传到最外层容器 .modal-wrap', async () => {
+    const wrapper = mount(Modal, {
+      props: { open: true, title: '标题' },
+      attrs: { class: 'custom-class', style: 'color: red;' },
+      attachTo: document.body
+    })
+    await wrapper.vm.$nextTick()
+    const wrap = document.body.querySelector<HTMLElement>('.modal-wrap')
+    expect(wrap?.classList.contains('custom-class')).toBe(true)
+    expect(wrap?.getAttribute('style')).toContain('color: red')
+    wrapper.unmount()
+  })
+})
