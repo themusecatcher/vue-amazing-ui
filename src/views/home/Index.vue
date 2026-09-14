@@ -204,10 +204,11 @@ function onOpenWindow() {
     <h2 class="mt30 mb10">使用方式：</h2>
     <Collapse lang="bash" :fontSize="16" :items="installItems" v-model:activeKey="activeKey" copyable />
     <ul class="m-list">
-      <li class="u-tip mb10 mt10">全局引入注册所有组件</li>
-      <li class="u-tip mb10 mt10">全局引入注册部分组件</li>
-      <li class="u-tip mb10 mt10">局部引入注册部分组件</li>
-      <li class="u-tip mb10">无需任何安装引入注册，直接使用单文件组件 <Tag color="magenta">SFC</Tag></li>
+      <li class="u-tip mb10 mt10">全局完整注册所有组件（不推荐）</li>
+      <li class="u-tip mb10 mt10">全局部分注册组件</li>
+      <li class="u-tip mb10 mt10">局部注册组件</li>
+      <li class="u-tip mb10 mt10">自动按需引入（强烈推荐）</li>
+      <li class="u-tip mb10">无需任何安装引入，直接使用单文件组件 <Tag color="magenta">SFC</Tag></li>
     </ul>
     <h2 class="mt30">常用工具函数：</h2>
     <ul class="m-list">

@@ -49,6 +49,24 @@ import { ref } from 'vue'
 - `h2`：按功能分节（`mt30 mb10` 间距类）。
 - 示例用 `<Space>` 等布局组件包裹。
 
+### 全局包裹（src/App.vue）
+
+演示应用在根组件做了一层全局包裹，这是演示页里能直接调用 `useMessage()` / `useModal()` 等方法的前提：
+
+```text
+ConfigProvider（theme 注入）
+└── MessageProvider → ModalProvider → DialogProvider → NotificationProvider
+    ├── RouterView（Watermark 页除外）
+    ├── Watermark（content="Vue Amazing UI"）
+    └── LoadingBar
+```
+
+- `ConfigProvider` 提供主题（`theme` 支持 `common.primaryColor` 与按组件覆盖）。
+- 四个 `XxxProvider` 依次嵌套，使任意演示页内可直接使用对应的 `useXxx()`。
+- 路由切换进度由 `LoadingBar` 与路由守卫（`beforeEach` / `afterEach`）联动。
+
+> 文档站 `docs/.vitepress/theme/index.ts` 采用同构包裹，且整站组件库统一从构建产物 `dist/index` 引入——theme 以相对路径引入库主体与 `XxxProvider`，页面 demo 的 `import` 经解析钩子指向同一 `dist` 出口，二者共享同一 injection key（详见 [build-system.md](build-system.md) 的「别名与模块解析」）。
+
 ### 自动路由机制
 
 `src/router/index.ts` 使用 `import.meta.glob` 在**编译时**收集所有演示页，无需手写路由：
@@ -103,25 +121,37 @@ _七种类型_
 </Space>
 
 ::: details Show Code
+
 ```vue
 ...可复制的完整代码...
 ```
+
 :::
 
 ## APIs
 
 ### Button
 
-| 参数 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
+参数 | 说明 | 类型 | 默认值
+:-- | :-- | :-- | :--
 ...
 
 ## Slots
 
+名称 | 说明 | 类型
+:-- | :-- | :--
+...
+
+## Methods
+
+名称 | 说明 | 类型
+:-- | :-- | :--
 ...
 
 ## Events
 
+名称 | 说明 | 类型
+:-- | :-- | :--
 ...
 ````
 
@@ -132,6 +162,8 @@ _七种类型_
 - 每个示例标题下用一行斜体 `_说明_` 描述。
 - 可交互 demo 直接写在正文，用内联 `<script setup>` 提供响应式状态。
 - 每个示例后接 `::: details Show Code` 折叠块，展示可复制的完整代码。
+- 章节顺序统一为：何时使用 → 基本使用 → APIs → Slots → Methods → Events；参数表采用无首尾竖线的紧凑写法，与 `docs/guide/template.md` 保持一致。
+- `update:xxx` 属于 `v-model` 双向绑定的更新事件，**不写入 Events 表**；双向绑定统一在 APIs 表的参数名后标注 `<Tag color="cyan">v-model</Tag>`（如 `open <Tag color="cyan">v-model</Tag>`），避免同一语义在两处重复维护。
 
 ### 内联 demo 机制
 
@@ -153,9 +185,11 @@ _七种类型_
 _格式化日期为指定格式的工具函数_
 
 ::: details Show Source Code
+
 ```ts
 // 完整源码
 ```
+
 :::
 
 <script setup lang="ts">
@@ -166,10 +200,16 @@ _格式化日期为指定格式的工具函数_
 ...
 
 ## Params
+
 | 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+...
 
 ## Return
+
 | 类型 | 说明 |
+| --- | --- |
+...
 ````
 
 ### 侧边栏维护

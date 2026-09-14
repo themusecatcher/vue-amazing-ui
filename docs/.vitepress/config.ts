@@ -1,6 +1,26 @@
+import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vitepress'
+import type { Plugin } from 'vite'
+
+// 文档站统一从构建产物 dist 引入组件库（demo 说明符仍写作 'vue-amazing-ui'，展示真实用法）。
+// 项目根 vite.config.ts 的同名 alias 指向源码出口（供 pnpm dev 演示环境热更新），
+// 故用 enforce: 'pre' 的 resolveId 钩子先行拦截，使 docs 站解析到 dist 而非源码。
+function docsResolveLibraryToDist(): Plugin {
+  const distEntry = fileURLToPath(new URL('../../dist/index.js', import.meta.url))
+  return {
+    name: 'docs-resolve-library-to-dist',
+    enforce: 'pre',
+    resolveId(source) {
+      return source === 'vue-amazing-ui' ? distEntry : null
+    }
+  }
+}
 
 export default defineConfig({
+  vite: {
+    plugins: [docsResolveLibraryToDist()]
+  },
+
   title: `Vue Amazing UI`,
   description: 'Amazing UI 组件库',
   base: '/vue-amazing-ui/',

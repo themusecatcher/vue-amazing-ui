@@ -195,7 +195,15 @@ components/modal/
 
 ## 无样式组件
 
-`ConfigProvider` / `Highlight` / `NumberAnimation` / `Watermark` 无独立 CSS 文件，需在 `resolver.ts` 的 `getSideEffects` 白名单中登记，按需引入时不携带组件 CSS。
+组件库的样式一律写在 SFC 的 `<style lang="less" scoped>` 块内（唯一的独立样式文件是 `components/style/global.less`），因此「无样式组件」指的是 **SFC 内没有 `<style>` 块的组件**——按需引入时不能引用其并不存在的 `Xxx.css`。这类 SFC 分三种情况处理：
+
+| 情况 | 组件 | 处理方式 |
+| :--- | :--- | :--- |
+| 业务组件，自身完全无样式 | `ConfigProvider` / `Highlight` / `NumberAnimation` / `Watermark` | 登记在 `resolver.ts` 的 `getSideEffects` 白名单中，返回空 sideEffects |
+| 命令式 API 的 Provider | `MessageProvider` / `ModalProvider` / `DialogProvider` / `NotificationProvider` | 在 `styleSources` 中登记其底层组件（如 `MessageProvider: 'Message'`），复用底层组件样式 |
+| 子组件，样式定义在父 SFC 内 | `DescriptionsItem`（样式写在 `Descriptions.vue` 的 `<style>` 中） | 在 `styleSources` 中登记父组件（`DescriptionsItem: 'Descriptions'`），否则 resolver 会生成不存在的 CSS 路径 |
+
+> 新增无 `<style>` 块的 SFC 时，必须同步在 `resolver.ts` 中登记，否则按需引入会引用不存在的 CSS 文件。
 
 ## 主题系统
 

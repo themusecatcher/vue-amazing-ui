@@ -32,14 +32,42 @@
 
 - 根据构建参数 `dir` 分发：
   - `dir=dist` → `buildDistOptions`（全量：es + umd；`f=iife` 时只出 iife）。
-  - 其余（含 `build-only`）→ `buildESAndLibOptions`（按需：es + lib，`preserveModules: true`）。
-- `externalDependencies`：库模式外部化依赖（vue / date-fns / swiper 等），不打进产物。
+  - 其余（含 `build-only`）→ `buildESAndLibOptions`（按需：es + lib，`preserveModules: true` + `preserveModulesRoot: 'components'`，后者保证产物落在 `es/button/` 而非 `es/components/button/`）。
+- `externalDependencies`：库模式外部化依赖（vue / date-fns / swiper 等），不打进产物。注意 swiper 只外部化子路径 `swiper/modules` / `swiper/vue`，主包留在产物中由 Rollup 处理。
 - `externalGlobals`：IIFE / UMD 构建的外部依赖全局变量名。
 - `generateCssDtsPlugin`：`dir=dist` 时生成 `dist/css.d.ts`，供 `package.json` 的 `exports['./css'].types` 指向，解决 `import 'vue-amazing-ui/css'` 的 TS 报错。
 
+以下两项有「不能凭直觉改」的原因，调整前需先确认：
+
+| 配置 | 值 | 原因 |
+| :--- | :--- | :--- |
+| `buildDistOptions.emptyOutDir` | `false` | `build:components` 用 `run-p` 并行执行 `build:dist` / `build:browser`（两者都写 `dist`），若为 `true` 会在启动时各自清空 `dist` 造成竞态、产物互相覆盖；清空动作由前置 `clean` 串行完成 |
+| `cssCodeSplit` | dist 为 `false`，es / lib 为 `true` | dist 需合并出单个 `style.css` 供全量引入；es / lib 需按组件粒度拆分出各组件 `Xxx.css` 供按需引入 |
+
 ## 类型生成（dts）
 
-`vite-plugin-dts` 从源码生成 `*.d.ts`，`beforeWriteFile` 负责把输出路径从 `es/components/button/index.d.ts` 规整为 `es/button/index.d.ts`（去除 `components/` 前缀），使类型路径与运行产物路径对齐。
+`vite-plugin-dts` 从源码生成 `*.d.ts`，`beforeWriteFile` 负责把带 `components/` 前缀的输出路径规整为与运行产物对齐的形式。共 4 条正则，按序尝试（前一条未命中才试下一条）：
+
+| 生成路径 | 规整后路径 |
+| :--- | :--- |
+| `es/components/button/index.d.ts` | `es/button/index.d.ts` |
+| `es/components/button/Button.d.ts` | `es/button/Button.d.ts` |
+| `es/components/components.d.ts` | `es/components.d.ts` |
+| `es/components/grid/row/Row.d.ts` | `es/grid/row/Row.d.ts`（复合组件的二级子目录） |
+
+## 别名与模块解析
+
+`vite.config.ts` 的 `resolve.alias` 定义了 5 个别名，`vitest.config.ts` 同步了其中 4 个（无 `vue-amazing-ui`）：
+
+| 别名 | 指向 |
+| :--- | :--- |
+| `@` | `src/` |
+| `#` | `types/` |
+| `components` | `components/` |
+| `less` | `src/assets/less/` |
+| `vue-amazing-ui` | **重定向到源码出口 `components/index.ts`**，使演示页按真实用户用法书写 `import { Button } from 'vue-amazing-ui'`，实际解析到源码 |
+
+文档站与演示环境的解析目标不同：演示环境（`pnpm dev`）需要热更新，`vue-amazing-ui` 经上表别名指向源码出口；文档站演示的是发布产物行为，由 `docs/.vitepress/config.ts` 的 `docsResolveLibraryToDist`（`enforce: 'pre'` 的 `resolveId` 钩子）把 `vue-amazing-ui` 统一指向 `dist/index.js`。`docs/.vitepress/theme/index.ts` 亦从 `../../../dist/index` 引入库主体与 `XxxProvider`，与页面 demo 的 `useXxx` 同源，injection key（`Symbol`）一致、`inject` 可正常命中。因此文档站命令（`pnpm docs:dev` / `pnpm docs:build`）需先执行 `pnpm build` 产出 `dist`（`pnpm docs:deploy` 已内含构建）。新增全局提示类能力时须保持「Provider 与 useXxx 同源」，详见该文件内注释。
 
 ## 第三方样式处理（vendor-styles）
 
@@ -75,7 +103,9 @@ pnpm test              # vitest 运行测试
   - 环境 / 内建：`env.spec.ts`、`internal.spec.ts`、`ssr.spec.ts`
   - 缺陷回归：`bugs.spec.ts`
   - 命令式 API：`discrete.spec.ts`
-  - 组件行为：`dialog.spec.ts`、`modal.spec.ts`、`modal-icon.spec.ts`、`popover.spec.ts`、`select-search.spec.ts`、`tooltip.spec.ts`、`watermark.spec.ts`
+  - 组件行为：`carousel-drag.spec.ts`、`carousel-slide.spec.ts`、`carousel-state.spec.ts`、`descriptions.spec.ts`、`dialog.spec.ts`、`drawer.spec.ts`、`modal.spec.ts`、`modal-icon.spec.ts`、`number-animation.spec.ts`、`popover.spec.ts`、`select-search.spec.ts`、`tooltip.spec.ts`、`watermark.spec.ts`
   - 工具函数 / Hooks：`lock-scroll.spec.ts`、`scroll-parent.spec.ts`、`use-scroll.spec.ts`、`use-slots-exist.spec.ts`
   - 资源清理：`raf-cleanup.spec.ts`、`timer-cleanup.spec.ts`
   - 构建产物：`resolver.spec.ts`
+
+> 单个组件的用例较多时，按关注点拆为多个文件（如 `Carousel` 拆为 drag / slide / state 三篇），命名沿用 `<主题>-<关注点>.spec.ts`。

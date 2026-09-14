@@ -9,15 +9,19 @@
 | :--- | :--- |
 | `components/` | 组件库源码（核心），所有组件、工具函数、样式均在此 |
 | `src/` | 组件开发演示环境（`pnpm dev` 启动） |
+| `index.html` | 演示环境的 HTML 入口 |
 | `docs/` | VitePress 文档站（`pnpm docs:dev` 启动） |
-| `types/` | 全局类型声明（`env.d.ts`） |
+| `types/` | 全局类型声明（`env.d.ts` 环境变量、`global-components.d.ts` 全局组件） |
 | `tests/` | Vitest 测试用例 |
-| `scripts/` | 发布 / 部署脚本（`deploy.sh` / `publish.sh` / `push.sh`） |
+| `scripts/` | 发布 / 部署脚本（`deploy.sh` / `publish.sh` / `push.sh`，以及 `prepublish-guard.js` 发布前守卫） |
 | `vite.config.ts` | 构建配置（三产物 dist / es / lib） |
 | `tsconfig.*.json` | 各环境 TypeScript 配置 |
 | `vitest.config.ts` | 测试配置（独立于 vite.config.ts） |
+| `postcss.config.js` | PostCSS 配置（autoprefixer 依据 `package.json` 的 browserslist 自动补厂商前缀） |
 | `eslint.config.js` | ESLint 配置 |
 | `commitlint.config.js` | 提交信息校验配置 |
+| `pnpm-workspace.yaml` | pnpm 工作区配置（受信依赖放行、自引用安装白名单） |
+| `components.d.ts` | unplugin-vue-components 自动生成的全局组件类型声明（勿手改） |
 | `development/` | 贡献者设计规范文档（即本系列文档，组织架构 / 导入导出 / 组件设计等） |
 
 ## components/ 内部结构
@@ -80,7 +84,8 @@ components/
 | `resolver.ts` | `unplugin-vue-components` 按需引入 resolver |
 | `vendor-styles.ts` | 第三方样式依赖清单（单一数据源） |
 
-> 各文件的具体导出以 `components/utils/index.ts` 的 barrel 为准；工具函数的功能与使用说明见官方文档站 `docs/utils/functions/`。
+> `index.ts` 是 barrel，只汇总 `format` / `math` / `function` / `dom` / `color` / `hooks` / `observers` / `position` 八组；`type` / `resolver` / `vendor-styles` 不属于 barrel 成员，需从具体文件引入（如 `import { withInstall } from 'components/utils/type'`）。
+> 工具函数的功能与使用说明见官方文档站 `docs/utils/functions/`。
 
 ### style/global.less
 
@@ -117,8 +122,8 @@ src/
 ```
 docs/
 ├── .vitepress/             # VitePress 配置与主题
-│   ├── config.ts           # 站点配置（sidebar / nav / algolia）
-│   └── theme/              # 主题（GlobalElement 等全局组件）
+│   ├── config.ts           # 站点配置（sidebar / nav / algolia）、组件库解析到 dist 的 resolveId 钩子
+│   └── theme/              # 主题（GlobalElement 等全局组件、Provider 同构包裹）
 ├── guide/                  # 指引 + 组件文档
 │   ├── components/         # 每个组件一篇 md（kebab-case）
 │   ├── features.md         # 组件总览页
@@ -130,6 +135,7 @@ docs/
 ├── utils/                  # 工具函数文档
 │   ├── functions/          # 工具函数文档（kebab-case，一篇可涵盖多个关联函数）
 │   └── getting-started.md
+├── public/                 # 文档站静态资源（Logo / 配图等）
 ├── sponsor/
 └── index.md
 ```
