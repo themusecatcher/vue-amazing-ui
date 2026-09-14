@@ -234,7 +234,7 @@ const suffixRef = ref<InstanceType<typeof NumberAnimation> | null>(null)
     <Col :span="12">
       <Space vertical>
         <Statistic title="一个小目标" tabular-nums>
-          <NumberAnimation ref="plainRef" separator="" :from="0" :to="value2" :autoplay="false" />
+          <NumberAnimation ref="plainRef" separator="" :precision="2" :from="0" :to="value2" :autoplay="false" />
         </Statistic>
         <Button type="primary" @click="plainRef?.play()">播放</Button>
       </Space>
@@ -272,7 +272,7 @@ const plainRef = ref<InstanceType<typeof NumberAnimation> | null>(null)
     <Col :span="12">
       <Space vertical>
         <Statistic title="一个小目标" tabular-nums>
-          <NumberAnimation ref="plainRef" separator="" :from="0" :to="100000000.12345" :autoplay="false" />
+          <NumberAnimation ref="plainRef" separator="" :precision="2" :from="0" :to="100000000.12345" :autoplay="false" />
         </Statistic>
         <Button type="primary" @click="plainRef?.play()">播放</Button>
       </Space>
