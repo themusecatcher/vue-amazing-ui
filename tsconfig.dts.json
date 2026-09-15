@@ -4,6 +4,7 @@
     "components/*.ts",
     "components/**/*.ts",
     "components/**/*.vue",
+    "types/*.d.ts",
   ],
   "exclude": [
     "node_modules",

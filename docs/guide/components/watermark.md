@@ -10,14 +10,21 @@
 - 适用于防止信息盗用
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted, onBeforeUnmount } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
 const realTime = ref<string>(dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS'))
+let rafId = 0
 const updateTime = () => {
   realTime.value = dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS')
-  requestAnimationFrame(updateTime)
+  rafId = requestAnimationFrame(updateTime)
 }
-requestAnimationFrame(updateTime)
+// SSR（Node）环境无 requestAnimationFrame：挂载后启动，卸载时取消
+onMounted(() => {
+  rafId = requestAnimationFrame(updateTime)
+})
+onBeforeUnmount(() => {
+  cancelAnimationFrame(rafId)
+})
 const show = ref(false)
 const fixed = ref(true)
 const imageModel = reactive({
@@ -115,14 +122,21 @@ const layoutOptions = [
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
 const realTime = ref<string>(dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS'))
+let rafId = 0
 const updateTime = () => {
   realTime.value = dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS')
-  requestAnimationFrame(updateTime)
+  rafId = requestAnimationFrame(updateTime)
 }
-requestAnimationFrame(updateTime)
+// SSR（Node）环境无 requestAnimationFrame：挂载后启动，卸载时取消
+onMounted(() => {
+  rafId = requestAnimationFrame(updateTime)
+})
+onBeforeUnmount(() => {
+  cancelAnimationFrame(rafId)
+})
 </script>
 <template>
   <Watermark :content="realTime" :text-style="{ fontFamily: 'Helvetica Neue' }">
@@ -394,16 +408,16 @@ const layoutOptions = [
 
 ### Font Type
 
-| 名称       | 说明                | 类型                                                    | 默认值                |
+| 名称      | 说明               | 类型                                                   | 默认值                |
 | :--------- | :------------------ | :------------------------------------------------------ | :-------------------- |
-| color      | 字体颜色            | string                                                  | 'rgba(0, 0, 0, 0.15)' |
-| fontSize   | 字体大小，单位 `px` | number                                                  | 16                    |
-| fontWeight | 字体粗细            | 'normal' &#124; 'light' &#124; 'weight' &#124; number   | 'normal'              |
-| fontFamily | 字体类型            | string                                                  | 'sans-serif'          |
-| fontStyle  | 字体样式            | 'none' &#124; 'normal' &#124; 'italic' &#124; 'oblique' | 'normal'              |
+| color     | 字体颜色           | string                                                 | 'rgba(0, 0, 0, 0.15)' |
+| fontSize  | 字体大小，单位 `px` | number                                                 | 16                    |
+| fontWeight | 字体粗细           | 'normal' &#124; 'light' &#124; 'weight' &#124; number  | 'normal'              |
+| fontFamily | 字体类型           | string                                                 | 'sans-serif'          |
+| fontStyle | 字体样式           | 'none' &#124; 'normal' &#124; 'italic' &#124; 'oblique' | 'normal'              |
 
 ## Slots
 
-| 名称    | 说明       | 类型           |
+| 名称   | 说明      | 类型           |
 | :------ | :--------- | :------------- |
 | default | 自定义内容 | v-slot:default |

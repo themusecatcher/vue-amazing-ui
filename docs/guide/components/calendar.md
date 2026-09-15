@@ -16,6 +16,7 @@
 import { ref, watchEffect } from 'vue'
 import { CalendarOutlined } from '@ant-design/icons-vue'
 import { format, subDays, addDays } from 'date-fns'
+import { useMessage } from 'vue-amazing-ui'
 import type { CalendarDayOfWeek, CalendarDefaultWeek, CalendarDateItem, CalendarMonthItem } from 'vue-amazing-ui'
 const date = ref(Date.now())
 const cardDate = ref(Date.now())
@@ -30,7 +31,7 @@ const selectDate = ref(new Date('2030-10-06').getTime())
 const disableDate = ref(Date.now())
 const dateStr = ref(format(Date.now(), 'yyyy-MM-dd'))
 const customThemeDate = ref(Date.now())
-const message = ref()
+const message = useMessage()
 const displayOptions = [
   {
     label: 'panel',
@@ -143,7 +144,7 @@ function disabledWeekend(timestamp: number): boolean {
 }
 function onSelect(date: string | number, source: 'date' | 'month') {
   console.log('select', date, source)
-  message.value.success(format(date, 'yyyy-MM-dd'))
+  message.success(format(date, 'yyyy-MM-dd'))
 }
 function onChange(
   date: string | number,
@@ -575,14 +576,15 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
 import { format } from 'date-fns'
+import { useMessage } from 'vue-amazing-ui'
 const selectDate = ref(new Date('2030-10-06').getTime())
-const message = ref()
+const message = useMessage()
 watchEffect(() => {
   console.log('selectDate', selectDate.value)
 })
 function onSelect(date: string | number, source: 'date' | 'month') {
   console.log('select', date, source)
-  message.value.success(format(date, 'yyyy-MM-dd'))
+  message.success(format(date, 'yyyy-MM-dd'))
 }
 function onPanelChange(date: string | number, info: { year: number; month?: number }, mode: 'month' | 'year') {
   console.log('panelChange', date, info, mode)
@@ -593,7 +595,6 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
     <Alert type="info" :message="`You selected date: ${format(selectDate, 'yyyy-MM-dd')}`" />
     <Calendar v-model:value="selectDate" @select="onSelect" @panelChange="onPanelChange" />
   </Flex>
-  <Message ref="message" />
 </template>
 ```
 
@@ -623,8 +624,9 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue'
 import { format, subDays, addDays } from 'date-fns'
+import { useMessage } from 'vue-amazing-ui'
 const disableDate = ref(Date.now())
-const message = ref()
+const message = useMessage()
 const displayOptions = [
   {
     label: 'panel',
@@ -650,7 +652,7 @@ function disabledWeekend(timestamp: number): boolean {
 }
 function onSelect(date: string | number, source: 'date' | 'month') {
   console.log('select', date, source)
-  message.value.success(format(date, 'yyyy-MM-dd'))
+  message.success(format(date, 'yyyy-MM-dd'))
 }
 function onPanelChange(date: string | number, info: { year: number; month?: number }, mode: 'month' | 'year') {
   console.log('panelChange', date, info, mode)
@@ -684,7 +686,6 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
       </Flex>
     </Space>
   </Flex>
-  <Message ref="message" />
 </template>
 ```
 
@@ -721,8 +722,6 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 :::
 
-<Message ref="message" />
-
 <style lang="less" scoped>
 .badge-wrap {
   width: 100%;
@@ -740,10 +739,10 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 | :-- | :-- | :-- | :-- |
 | display | 日历展示方式，面板/卡片 | 'panel' &#124; 'card' | 'panel' |
 | mode | 初始模式 | 'month' &#124; 'year' | 'month' |
-| header | 自定义日历头部内容 | string &#124; slot | undefined |
-| yearSelectProps | 年选择器 `props`，参考 [Select Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html#select) | object | {} |
-| monthSelectProps | 月选择器 `props`，参考 [Select Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html#select) | object | {} |
-| modeRadioProps | 模式切换器 `props`，参考 [Radio Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/radio.html#radio) | object | {} |
+| header | 自定义日历头部内容 | string | undefined |
+| yearSelectProps | 年选择器 `props`，参考 [Select Props](./select.md#select) | [SelectProps](./select.md#select) | {} |
+| monthSelectProps | 月选择器 `props`，参考 [Select Props](./select.md#select) | [SelectProps](./select.md#select) | {} |
+| modeRadioProps | 模式切换器 `props`，参考 [Radio Props](./radio.md#radio) | [RadioProps](./radio.md#radio) | {} |
 | startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一 | [DayOfWeek](#dayofweek-type) | 0 |
 | dateStrip | 日历面板默认会显示六周的日期，当最后一周的日期不包含当月日期时，是否去掉 | boolean | true |
 | dateFormat | 自定义日期展示格式 | (date: number, timestamp: number) => string | undefined |
@@ -755,34 +754,34 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ### DayOfWeek Type
 
-| 名称      | 值                                                      |
+| 名称     | 值                                                      |
 | :-------- | :------------------------------------------------------ |
 | DayOfWeek | 0 &#124; 1 &#124; 2 &#124; 3 &#124; 4 &#124; 5 &#124; 6 |
 
 ### DefaultWeek Type
 
-| 名称        | 值                                                                           |
+| 名称       | 值                                                                           |
 | :---------- | :--------------------------------------------------------------------------- |
 | DefaultWeek | '一' &#124; '二' &#124; '三' &#124; '四' &#124; '五' &#124; '六' &#124; '日' |
 
 ### DateItem Type
 
-| 名称           | 说明             | 类型                                           | 默认值    |
+| 名称          | 说明            | 类型                                          | 默认值    |
 | :------------- | :--------------- | :--------------------------------------------- | :-------- |
-| type           | 类型             | 'date'                                         | undefined |
-| dateObject     | 日期对象         | \{ date: number, month: number, year: number } | undefined |
-| timestamp      | 当天开始的时间戳 | number                                         | undefined |
-| inCurrentMonth | 是否在当前月     | boolean                                        | undefined |
-| isCurrentDate  | 是否为今天       | boolean                                        | undefined |
+| type          | 类型            | 'date'                                        | undefined |
+| dateObject    | 日期对象        | \{ date: number, month: number, year: number } | undefined |
+| timestamp     | 当天开始的时间戳 | number                                        | undefined |
+| inCurrentMonth | 是否在当前月    | boolean                                       | undefined |
+| isCurrentDate | 是否为今天      | boolean                                       | undefined |
 
 ### MonthItem Type
 
-| 名称        | 说明             | 类型                             | 默认值    |
+| 名称       | 说明            | 类型                            | 默认值    |
 | :---------- | :--------------- | :------------------------------- | :-------- |
-| type        | 类型             | 'month'                          | undefined |
-| monthObject | 月份对象         | \{ month: number, year: number } | undefined |
-| timestamp   | 当月开始的时间戳 | number                           | undefined |
-| isCurrent   | 是否为当前月     | boolean                          | undefined |
+| type       | 类型            | 'month'                         | undefined |
+| monthObject | 月份对象        | \{ month: number, year: number } | undefined |
+| timestamp  | 当月开始的时间戳 | number                          | undefined |
+| isCurrent  | 是否为当前月    | boolean                         | undefined |
 
 ## Slots
 
@@ -792,8 +791,8 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 | week | 自定义周展示 | v-slot:week="{ defaultWeek, week, timestamp }" |
 | dateValue | 自定义日期展示 | v-slot:dateValue="{ type, dateObject, timestamp, inCurrentMonth, isCurrentDate }" |
 | dateContent | 自定义日期内容展示 | v-slot:dateContent="{ type, dateObject, timestamp, inCurrentMonth, isCurrentDate }" |
-| monthValue | 自定义月份展示 | v-slot:dateValue="{ type, monthObject, timestamp, isCurrent }" |
-| monthContent | 自定义月份内容展示 | v-slot:dateContent="{ type, monthObject, timestamp, isCurrent }" |
+| monthValue | 自定义月份展示 | v-slot:monthValue="{ type, monthObject, timestamp, isCurrent }" |
+| monthContent | 自定义月份内容展示 | v-slot:monthContent="{ type, monthObject, timestamp, isCurrent }" |
 
 ## Events
 

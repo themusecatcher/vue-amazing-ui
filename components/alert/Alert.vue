@@ -1,18 +1,27 @@
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue'
-import type { Slot } from 'vue'
+import { ref, computed } from 'vue'
+import type { VNode } from 'vue'
 import { useSlotsExist, useInject } from 'components/utils'
+
 export interface Props {
-  message?: string // 警告提示内容 string | slot
-  description?: string // 警告提示的辅助性文字介绍 string | slot
+  message?: string // 警告提示内容
+  description?: string // 警告提示的辅助性文字介绍
   type?: 'default' | 'success' | 'info' | 'warning' | 'error' // 警告提示的类型
   bordered?: boolean // 是否显示边框
   closable?: boolean // 是否显示关闭按钮
-  closeText?: string // 自定义关闭按钮 string | slot
-  icon?: string // 自定义图标，showIcon 为 true 时有效 string | slot
+  closeText?: string // 自定义关闭按钮
+  icon?: string // 自定义图标，showIcon 为 true 时有效
   showIcon?: boolean // 是否显示辅助图标
-  actions?: Slot // 自定义操作项 slot
 }
+// 声明组件插槽类型
+export interface AlertSlots {
+  icon?: () => VNode[]
+  default?: () => VNode[]
+  description?: () => VNode[]
+  actions?: () => VNode[]
+  closeText?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   message: undefined,
   description: undefined,
@@ -21,13 +30,14 @@ const props = withDefaults(defineProps<Props>(), {
   closable: false,
   closeText: undefined,
   icon: undefined,
-  showIcon: false,
-  actions: undefined
+  showIcon: false
 })
-const alertRef = ref() // alert 模板引用
-const closeAlert = ref(false)
+defineSlots<AlertSlots>()
+const alertRef = ref<HTMLElement | null>(null) // alert 模板引用
+const closing = ref(false) // 是否正在播放离场动画（v-show 控制显隐）
+const closed = ref(false) // 离场动画结束后才真正卸载元素（v-if 控制存在）
 const { colorPalettes } = useInject('Alert') // 主题色注入
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'afterClose'])
 const slotsExist = useSlotsExist(['icon', 'description', 'actions'])
 const showSlotsIcon = computed(() => {
   return slotsExist.icon || props.icon || ['success', 'info', 'warning', 'error'].includes(props.type)
@@ -35,22 +45,47 @@ const showSlotsIcon = computed(() => {
 const showDesc = computed(() => {
   return slotsExist.description || props.description
 })
-async function onClose(e: Event) {
-  alertRef.value.style.maxHeight = `${alertRef.value.offsetHeight}px`
-  await nextTick()
-  closeAlert.value = true
+function onClose(e: Event) {
+  const dom = alertRef.value
+  if (dom) {
+    dom.style.height = `${dom.offsetHeight}px`
+    // 重复设置一次后高度才能被正确冻结
+    dom.style.height = `${dom.offsetHeight}px`
+  }
+  closing.value = true
   emit('close', e)
+}
+// 离场动画开始前，用当前实际高度冻结 max-height 作为收缩起点，避免内容高度变化导致过渡异常
+function onBeforeLeave(el: Element) {
+  const dom = el as HTMLElement
+  dom.style.maxHeight = `${dom.offsetHeight}px`
+}
+// 离场动画启动后把 max-height 收敛到 0：
+// 既是收缩目标值，也会作为内联终值保留在元素上，保证元素卸载前不会回弹到原始高度
+function onLeave(el: Element) {
+  const dom = el as HTMLElement
+  dom.style.maxHeight = '0px'
+}
+// 离场动画结束后才真正卸载元素
+function onAfterLeave() {
+  closing.value = false
+  closed.value = true
+  emit('afterClose')
 }
 </script>
 <template>
   <Transition
+    v-if="!closed"
     name="alert-motion"
     leave-from-class="alert-motion-leave"
     leave-active-class="alert-motion-leave alert-motion-leave-active"
     leave-to-class="alert-motion-leave alert-motion-leave-active"
+    @before-leave="onBeforeLeave"
+    @leave="onLeave"
+    @after-leave="onAfterLeave"
   >
     <div
-      v-if="!closeAlert"
+      v-show="!closing"
       ref="alertRef"
       class="alert-wrap"
       :class="[
@@ -254,18 +289,22 @@ async function onClose(e: Event) {
   </Transition>
 </template>
 <style lang="less" scoped>
-.alert-motion-leave {
+.alert-wrap.alert-motion-leave {
   overflow: hidden;
   opacity: 1;
   transition:
     max-height 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86),
     opacity 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86),
-    padding 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+    padding-top 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86),
+    padding-bottom 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86),
+    margin-bottom 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
 }
-.alert-motion-leave-active {
-  max-height: 0 !important;
-  opacity: 0 !important;
-  padding-block: 0 !important;
+.alert-wrap.alert-motion-leave-active {
+  max-height: 0;
+  margin-bottom: 0 !important;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
 }
 .alert-wrap {
   padding: 8px 12px;
@@ -275,7 +314,7 @@ async function onClose(e: Event) {
   position: relative;
   display: flex;
   align-items: center;
-  word-break: break-all;
+  word-break: break-word;
   border-radius: 8px;
   .alert-icon {
     display: inline-block;

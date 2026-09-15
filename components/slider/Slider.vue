@@ -5,6 +5,7 @@ import { useResizeObserver, useInject } from 'components/utils'
 export type Marks = {
   [markValue: number]: string | VNode | (() => VNode) | { style: CSSProperties; label: string | VNode | (() => VNode) }
 }
+
 export interface Props {
   width?: string | number // 滑动输入条宽度，单位 px，水平模式时生效
   height?: string | number // 滑动输入条高度，单位 px，垂直模式时生效
@@ -19,8 +20,13 @@ export interface Props {
   tooltipOpen?: boolean // 是否一直显示 tooltip
   tooltipStyle?: CSSProperties // 自定义 Tooltip 样式
   formatTooltip?: (value: number) => string | number // Slider 会把当前值传给 formatTooltip，并在 Tooltip 中显示 formatTooltip 的返回值
-  value?: number | number[] // (v-model) 设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
+  value?: number | number[] // (v-model) 设置当前取值，当 range 为 false 时为单个值，否则为区间值
 }
+// 声明组件插槽类型
+export interface SliderSlots {
+  mark?: (props: { label: string | VNode | null; value: number }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
   height: '100%',
@@ -37,15 +43,16 @@ const props = withDefaults(defineProps<Props>(), {
   formatTooltip: (value: number) => value,
   value: 0
 })
-const sliderRef = ref() // slider 模板引用
+defineSlots<SliderSlots>()
+const sliderRef = ref<HTMLElement | null>(null) // slider 模板引用
 const sliderWidth = ref<number>(0) // 滑动输入条宽度
 const sliderHeight = ref<number>(0) // 滑动输入条高度
 const low = ref<number>(0) // 左/下滑块距离滑动条左/上端的距离
 const high = ref<number>(0) // 右/上滑动距离滑动条左/上端的距离
-const lowHandleRef = ref() // low handle DOM 引用
-const lowTooltipRef = ref() // low tooltip DOM 引用
-const highHandleRef = ref() // high handle DOM 引用
-const highTooltipRef = ref() // high tooltip DOM 引用
+const lowHandleRef = ref<HTMLElement | null>(null) // low handle DOM 引用
+const lowTooltipRef = ref<HTMLElement | null>(null) // low tooltip DOM 引用
+const highHandleRef = ref<HTMLElement | null>(null) // high handle DOM 引用
+const highTooltipRef = ref<HTMLElement | null>(null) // high tooltip DOM 引用
 const { colorPalettes } = useInject('Slider') // 主题色注入
 const emits = defineEmits(['update:value', 'change'])
 const sliderSize = computed(() => {
@@ -207,12 +214,11 @@ const highTooltipValue = computed(() => {
   return props.formatTooltip(sliderValue.value as number)
 })
 watch(
-  () => [props.min, props.max, props.step, props.vertical, props.value],
+  [() => props.min, () => props.max, () => props.step, () => props.vertical, () => props.value],
   () => {
     updateSliderPosition()
   },
   {
-    deep: true,
     flush: 'post'
   }
 )
@@ -227,6 +233,7 @@ useResizeObserver(sliderRef, () => {
 })
 // 获取滑动输入条尺寸
 function getSliderSize(): void {
+  if (!sliderRef.value) return
   sliderWidth.value = sliderRef.value.offsetWidth
   sliderHeight.value = sliderRef.value.offsetHeight
   updateSliderPosition()
@@ -313,19 +320,22 @@ function getPositionFromValue(value: number): number {
 function fixedDigit(num: number, precision: number): number {
   return parseFloat(num.toFixed(precision))
 }
-function handlerBlur(tooltip: HTMLElement): void {
-  tooltip.classList.remove('show-handle-tooltip')
+function handlerBlur(tooltip: HTMLElement | null): void {
+  tooltip?.classList.remove('show-handle-tooltip')
 }
-function handlerFocus(handler: HTMLElement, tooltip: HTMLElement): void {
-  handler.focus()
+function handlerFocus(handler: HTMLElement | null, tooltip: HTMLElement | null): void {
+  handler?.focus()
   if (props.tooltip && !props.tooltipOpen) {
-    tooltip.classList.add('show-handle-tooltip')
+    tooltip?.classList.add('show-handle-tooltip')
   }
 }
 // 获取指针事件触发时的点击位置 & 步长位置
 function getSliderPosition(e: PointerEvent): { originalPosition: number; stepPosition: number } {
   let originalPosition // 指针点击位置
   let stepPosition // 只考虑步长时将要移动的位置
+  if (!sliderRef.value) {
+    return { originalPosition: 0, stepPosition: 0 }
+  }
   if (!props.vertical) {
     // horizontal
     const leftX = sliderRef.value.getBoundingClientRect().left // 滑动条左端距离屏幕可视区域左边界的距离
@@ -435,7 +445,7 @@ function handleLowPointerMove(e: PointerEvent): void {
   } = getSliderPosition(e)
   let targetPosition // 考虑步长和刻度标记时，将要移动的目标位置
   if (props.tooltip && !props.tooltipOpen) {
-    lowTooltipRef.value.classList.add('show-handle-tooltip')
+    lowTooltipRef.value?.classList.add('show-handle-tooltip')
   }
   if (props.step === 'mark') {
     // 仅可选 marks 标记的部分
@@ -447,7 +457,7 @@ function handleLowPointerMove(e: PointerEvent): void {
       }
     } else {
       low.value = high.value
-      highHandleRef.value.focus()
+      highHandleRef.value?.focus()
       handleLowPointerUp()
       handleHighPointerDown(e)
     }
@@ -460,7 +470,7 @@ function handleLowPointerMove(e: PointerEvent): void {
     } else {
       // targetPosition > high
       low.value = high.value
-      highHandleRef.value.focus()
+      highHandleRef.value?.focus()
       handleLowPointerUp()
       handleHighPointerDown(e)
     }
@@ -468,7 +478,7 @@ function handleLowPointerMove(e: PointerEvent): void {
 }
 function handleLowPointerUp(): void {
   if (props.tooltip && !props.tooltipOpen) {
-    lowTooltipRef.value.classList.remove('show-handle-tooltip')
+    lowTooltipRef.value?.classList.remove('show-handle-tooltip')
   }
   document.removeEventListener('pointermove', handleLowPointerMove)
   document.removeEventListener('pointerup', handleLowPointerUp)
@@ -492,7 +502,7 @@ function handleHighPointerMove(e: PointerEvent): void {
   let targetPosition // 考虑步长和刻度标记时，将要移动的目标位置
   ;({ originalPosition, stepPosition } = getSliderPosition(e))
   if (props.tooltip && !props.tooltipOpen) {
-    highTooltipRef.value.classList.add('show-handle-tooltip')
+    highTooltipRef.value?.classList.add('show-handle-tooltip')
   }
   if (props.step === 'mark') {
     // 仅可选 marks 标记的部分
@@ -505,7 +515,7 @@ function handleHighPointerMove(e: PointerEvent): void {
     } else {
       high.value = low.value
       if (props.range) {
-        lowHandleRef.value.focus()
+        lowHandleRef.value?.focus()
         handleHighPointerUp()
         handleLowPointerDown(e)
       }
@@ -520,7 +530,7 @@ function handleHighPointerMove(e: PointerEvent): void {
       // targetPosition < low
       high.value = low.value
       if (props.range) {
-        lowHandleRef.value.focus()
+        lowHandleRef.value?.focus()
         handleHighPointerUp()
         handleLowPointerDown(e)
       }
@@ -529,7 +539,7 @@ function handleHighPointerMove(e: PointerEvent): void {
 }
 function handleHighPointerUp(): void {
   if (props.tooltip && !props.tooltipOpen) {
-    highTooltipRef.value.classList.remove('show-handle-tooltip')
+    highTooltipRef.value?.classList.remove('show-handle-tooltip')
   }
   document.removeEventListener('pointermove', handleHighPointerMove)
   document.removeEventListener('pointerup', handleHighPointerUp)
@@ -622,7 +632,7 @@ function handleLowSlide(source: number, place: string): void {
     } else {
       high.value = low.value
       low.value = targetDistance
-      lowHandleRef.value.focus()
+      lowHandleRef.value?.focus()
     }
   }
 }
@@ -642,7 +652,7 @@ function handleHighSlide(source: number, place: string): void {
     } else {
       low.value = high.value
       high.value = targetDistance
-      highHandleRef.value.focus()
+      highHandleRef.value?.focus()
     }
   }
 }

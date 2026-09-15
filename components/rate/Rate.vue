@@ -1,19 +1,27 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import Tooltip from 'components/tooltip'
+import type { VNode } from 'vue'
+import Tooltip, { type TooltipProps } from 'components/tooltip'
+
 export interface Props {
   allowClear?: boolean // 是否允许再次点击后清除
   allowHalf?: boolean // 是否允许半选
   count?: number // star 总数
-  character?: 'star-outlined' | 'star-filled' | 'heart-outlined' | 'heart-filled' | string // 字符或图标，预置四种图标 string | slot
+  character?: 'star-outlined' | 'star-filled' | 'heart-outlined' | 'heart-filled' | string // 字符或图标，预置四种图标
   size?: number // 字符大小，单位 px
   color?: string // 字符选中颜色
   gap?: number // 字符间距，单位 px
   disabled?: boolean // 只读，无法进行交互
   tooltips?: string[] // 自定义每项的提示信息
-  tooltipProps?: object // Tooltip 组件属性配置，参考 Tooltip Props
+  tooltipProps?: TooltipProps // Tooltip 组件属性配置，参考 Tooltip Props
   value?: number // (v-model) 当前数，受控值 0,1,2,3...
 }
+// 声明组件插槽类型
+export interface RateSlots {
+  tooltip?: (props: { tooltip: string; value: number }) => VNode[]
+  character?: (props: { value: number }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   allowClear: true,
   allowHalf: false,
@@ -27,9 +35,10 @@ const props = withDefaults(defineProps<Props>(), {
   tooltipProps: () => ({}),
   value: 0
 })
-const activeValue = ref()
-const hoverValue = ref()
-const tempValue = ref() // 清除时保存点击value
+defineSlots<RateSlots>()
+const activeValue = ref<number>()
+const hoverValue = ref<number>()
+const tempValue = ref<number | null>() // 清除时保存点击value
 const emits = defineEmits(['update:value', 'change', 'hoverChange'])
 watch(
   () => props.value,
@@ -84,7 +93,7 @@ function onLeave(): void {
 }
 function onUp(): void {
   tempValue.value = null
-  if (activeValue.value < props.count) {
+  if (activeValue.value !== undefined && activeValue.value < props.count) {
     activeValue.value += props.allowHalf ? 0.5 : 1
     emits('change', activeValue.value)
     emits('update:value', activeValue.value)
@@ -92,7 +101,7 @@ function onUp(): void {
 }
 function onDown(): void {
   tempValue.value = null
-  if (activeValue.value > 0) {
+  if (activeValue.value !== undefined && activeValue.value > 0) {
     activeValue.value -= props.allowHalf ? 0.5 : 1
     emits('change', activeValue.value)
     emits('update:value', activeValue.value)
@@ -115,8 +124,8 @@ function onDown(): void {
           tabindex="0"
           class="rate-star"
           :class="{
-            'star-half': allowHalf && hoverValue >= n - 0.5 && hoverValue < n,
-            'star-full': hoverValue >= n,
+            'star-half': allowHalf && hoverValue !== undefined && hoverValue >= n - 0.5 && hoverValue < n,
+            'star-full': hoverValue !== undefined && hoverValue >= n,
             'temp-gray': !allowHalf && tempValue === n
           }"
           @click="allowHalf ? () => false : onClick(n)"

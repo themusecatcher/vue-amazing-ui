@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import type { VNode } from 'vue'
 import { useEventListener } from 'components/utils'
 export interface Responsive {
   xs?: number // <576px 响应式栅格
@@ -17,6 +18,10 @@ export interface Props {
   align?: 'top' | 'middle' | 'bottom' | 'stretch' // 垂直对齐方式
   justify?: 'start' | 'end' | 'center' | 'space-around' | 'space-between' | 'space-evenly' // 水平排列方式
 }
+// 声明组件插槽类型
+export interface RowSlots {
+  default?: () => VNode[]
+}
 const props = withDefaults(defineProps<Props>(), {
   width: 'auto',
   gutter: 0,
@@ -24,13 +29,15 @@ const props = withDefaults(defineProps<Props>(), {
   align: 'top',
   justify: 'start'
 })
+defineSlots<RowSlots>()
 const alignProperties = {
   top: 'flex-start',
   middle: 'center',
   bottom: 'flex-end',
   stretch: 'stretch'
 }
-const viewportWidth = ref(window.innerWidth)
+// SSR（Node）环境无 window，取 0；浏览器端初始值与原来一致
+const viewportWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 0)
 const xGap = computed(() => {
   if (typeof props.gutter === 'number') {
     return props.gutter
@@ -61,7 +68,10 @@ const rowWidth = computed(() => {
   }
   return props.width
 })
-useEventListener(window, 'resize', getViewportWidth)
+// 实参 window 在 setup 期求值，SSR（Node）下必须先判断存在性再调用
+if (typeof window !== 'undefined') {
+  useEventListener(window, 'resize', getViewportWidth)
+}
 function getViewportWidth() {
   viewportWidth.value = window.innerWidth
 }

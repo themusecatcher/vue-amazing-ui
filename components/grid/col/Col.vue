@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import type { VNode } from 'vue'
 import { useEventListener } from 'components/utils'
 export interface Props {
   span?: number // 栅格占位格数，取 0,1,2...24，为 0 时相当于 display: none，优先级低于 xs, sm, md, lg, xl, xxl
@@ -13,6 +14,10 @@ export interface Props {
   xl?: number | { span?: number; offset?: number } // ≥1200px 响应式栅格
   xxl?: number | { span?: number; offset?: number } // ≥1600px 响应式栅格
 }
+// 声明组件插槽类型
+export interface ColSlots {
+  default?: () => VNode[]
+}
 const props = withDefaults(defineProps<Props>(), {
   span: undefined,
   offset: 0,
@@ -25,7 +30,9 @@ const props = withDefaults(defineProps<Props>(), {
   xl: undefined,
   xxl: undefined
 })
-const viewportWidth = ref(window.innerWidth)
+defineSlots<ColSlots>()
+// SSR（Node）环境无 window，取 0；浏览器端初始值与原来一致
+const viewportWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 0)
 const flexValue = computed(() => {
   if (typeof props.flex === 'number') {
     return `${props.flex} ${props.flex} auto`
@@ -81,7 +88,10 @@ const responsiveValue = computed(() => {
     offset: props.offset
   }
 })
-useEventListener(window, 'resize', getViewportWidth)
+// 实参 window 在 setup 期求值，SSR（Node）下必须先判断存在性再调用
+if (typeof window !== 'undefined') {
+  useEventListener(window, 'resize', getViewportWidth)
+}
 function getViewportWidth() {
   viewportWidth.value = window.innerWidth
 }

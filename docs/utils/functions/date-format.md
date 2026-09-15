@@ -72,20 +72,29 @@ export function dateFormat(value: number | string | Date = Date.now(), format: s
 :::
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
 const date = ref(dateFormat(new Date()))
+let dateRafId = 0
 const updateDate = () => {
   date.value = dateFormat(new Date())
-  requestAnimationFrame(updateDate)
+  dateRafId = requestAnimationFrame(updateDate)
 }
-requestAnimationFrame(updateDate)
 const realTime = ref(dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS'))
+let timeRafId = 0
 const updateTime = () => {
   realTime.value = dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS')
-  requestAnimationFrame(updateTime)
+  timeRafId = requestAnimationFrame(updateTime)
 }
-requestAnimationFrame(updateTime)
+// SSR（Node）环境无 requestAnimationFrame：挂载后启动，卸载时取消
+onMounted(() => {
+  dateRafId = requestAnimationFrame(updateDate)
+  timeRafId = requestAnimationFrame(updateTime)
+})
+onBeforeUnmount(() => {
+  cancelAnimationFrame(dateRafId)
+  cancelAnimationFrame(timeRafId)
+})
 </script>
 
 ## 基本使用
@@ -98,14 +107,21 @@ _格式化时间戳_
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
 const date = ref(dateFormat(new Date()))
+let rafId = 0
 const updateDate = () => {
   date.value = dateFormat(new Date())
-  requestAnimationFrame(updateDate)
+  rafId = requestAnimationFrame(updateDate)
 }
-requestAnimationFrame(updateDate)
+// SSR（Node）环境无 requestAnimationFrame：挂载后启动，卸载时取消
+onMounted(() => {
+  rafId = requestAnimationFrame(updateDate)
+})
+onBeforeUnmount(() => {
+  cancelAnimationFrame(rafId)
+})
 </script>
 ```
 
@@ -126,14 +142,21 @@ dateFormat('2025-10-10', 'MM/DD/YYYY') // 10/10/2025
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
 const realTime = ref(dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS'))
+let rafId = 0
 const updateTime = () => {
   realTime.value = dateFormat(Date.now(), 'YYYY-MM-DD HH:mm:ss:SSS')
-  requestAnimationFrame(updateTime)
+  rafId = requestAnimationFrame(updateTime)
 }
-requestAnimationFrame(updateTime)
+// SSR（Node）环境无 requestAnimationFrame：挂载后启动，卸载时取消
+onMounted(() => {
+  rafId = requestAnimationFrame(updateTime)
+})
+onBeforeUnmount(() => {
+  cancelAnimationFrame(rafId)
+})
 </script>
 ```
 
@@ -144,13 +167,19 @@ requestAnimationFrame(updateTime)
 | value | 待格式化的日期时间值，支持数字、字符串和 `Date` 类型，默认为当前时间戳 | number &#124; string &#124; Date | Date.now() |
 | format | 格式化字符串 | string | 'YYYY-MM-DD HH:mm:ss' |
 
-## format 支持的格式化占位符列表
+## Return
+
+| 类型 | 说明 |
+| --- | --- |
+| string | 格式化后的日期时间字符串 |
+
+## `format` 支持的格式化占位符列表
 
 | 标识 | 示例    | 描述         |
 | ---- | ------- | ------------ |
 | YY   | 23      | 年，两位数   |
 | YYYY | 2023    | 年，四位数   |
-| M    | 1-12    | 月，从1开始  |
+| M    | 1-12    | 月，从 `1` 开始  |
 | MM   | 01-12   | 月，两位数   |
 | D    | 1-31    | 日           |
 | DD   | 01-31   | 日，两位数   |
@@ -161,3 +190,7 @@ requestAnimationFrame(updateTime)
 | s    | 0-59    | 秒           |
 | ss   | 00-59   | 秒，两位数   |
 | SSS  | 000-999 | 毫秒，三位数 |
+
+## 注意事项
+
+- 传入无法解析的日期值时返回空字符串 `''`，并在控制台输出错误信息

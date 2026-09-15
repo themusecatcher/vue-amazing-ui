@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import { useInject } from 'components/utils'
+
 export interface Props {
-  checked?: string // 选中时的内容 string | slot
+  checked?: string // 选中时的内容
   checkedValue?: boolean | string | number // 选中时的值
-  unchecked?: string // 未选中时的内容 string | slot
+  unchecked?: string // 未选中时的内容
   uncheckedValue?: boolean | string | number // 未选中时的值
   loading?: boolean // 是否加载中
   disabled?: boolean // 是否禁用
@@ -14,6 +15,13 @@ export interface Props {
   circleStyle?: CSSProperties // 圆点样式
   modelValue?: boolean | string | number // (v-model) 指定当前是否选中
 }
+// 声明组件插槽类型
+export interface SwitchSlots {
+  checked?: () => VNode[]
+  unchecked?: () => VNode[]
+  node?: (props: { checked: boolean | string | number }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   checked: undefined,
   checkedValue: true,
@@ -26,6 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
   circleStyle: () => ({}),
   modelValue: false
 })
+defineSlots<SwitchSlots>()
 const wave = ref<boolean>(false)
 const { colorPalettes } = useInject('Switch') // 主题色注入
 const emit = defineEmits(['update:modelValue', 'change'])

@@ -510,16 +510,16 @@ function onNext() {
 
 ### Image Type
 
-| 名称    | 说明             | 类型                      | 默认值    |
+| 名称   | 说明            | 类型                     | 默认值    |
 | :------ | :--------------- | :------------------------ | :-------- |
-| name?   | 图片名称         | string                    | undefined |
-| src     | 图片地址         | string                    | undefined |
-| link?   | 图片跳转链接     | string                    | undefined |
+| name?  | 图片名称        | string                   | undefined |
+| src    | 图片地址        | string                   | undefined |
+| link?  | 图片跳转链接    | string                   | undefined |
 | target? | 如何打开跳转链接 | '\_self' &#124; '\_blank' | undefined |
 
 ## Events
 
-| 名称   | 说明                    | 类型                  |
+| 名称  | 说明                   | 类型                  |
 | :----- | :---------------------- | :-------------------- |
 | swiper | `Swiper` 初始化后的回调 | (swiper: any) => void |
-| change | 轮播图片变化时的回调    | (swiper: any) => void |
+| change | 轮播图片变化时的回调   | (swiper: any) => void |

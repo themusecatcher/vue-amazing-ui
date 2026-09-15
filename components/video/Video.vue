@@ -56,8 +56,8 @@ const props = withDefaults(defineProps<Props>(), {
   playIcon: true,
   iconSize: 80
 })
-const veoRef = ref() // 视频元素模板引用，参考文档：https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video
-const veoPoster = ref() // 自动截取视频帧生成的封面
+const veoRef = ref<HTMLVideoElement | null>(null) // 视频元素模板引用，参考文档：https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video
+const veoPoster = ref<string>() // 自动截取视频帧生成的封面
 const playing = ref<boolean>(false) // 是否正在播放
 const originPlay = ref<boolean>(true) // 是否第一次播放
 const showPlayIcon = ref<boolean>(false) // 是否展示播放器中间的播放按钮图标
@@ -130,12 +130,14 @@ function getPoster() {
 function onClickPlay() {
   if (originPlay.value) {
     originPlay.value = false
-    veoRef.value.currentTime = 0
+    if (veoRef.value) {
+      veoRef.value.currentTime = 0
+    }
   }
   if (playing.value) {
-    veoRef.value.pause()
+    veoRef.value?.pause()
   } else {
-    veoRef.value.play()
+    veoRef.value?.play()
   }
 }
 function onPause() {
@@ -155,15 +157,17 @@ function onPlay() {
 function play() {
   if (originPlay.value) {
     originPlay.value = false
-    veoRef.value.currentTime = 0
+    if (veoRef.value) {
+      veoRef.value.currentTime = 0
+    }
   }
   if (!playing.value) {
-    veoRef.value.play()
+    veoRef.value?.play()
   }
 }
 function pause() {
   if (playing.value) {
-    veoRef.value.pause()
+    veoRef.value?.pause()
   }
 }
 defineExpose({

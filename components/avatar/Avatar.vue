@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import type { VNode, Slot } from 'vue'
+import type { VNode } from 'vue'
 import { useEventListener, useSlotsExist } from 'components/utils'
 export interface Responsive {
   xs?: number // <576px 响应式栅格
@@ -10,16 +10,23 @@ export interface Responsive {
   xl?: number // ≥1200px 响应式栅格
   xxl?: number // ≥1600px 响应式栅格
 }
+
 export interface Props {
   color?: string // 头像的背景色
   shape?: 'circle' | 'square' // 指定头像的形状
-  size?: number | 'small' | 'middle' | 'large' | Responsive // 设置头像的大小，number 类型时单位 px
+  size?: number | 'small' | 'middle' | 'large' | Responsive // 设置头像的大小，为数值时单位 px
   src?: string // 图片类头像资源地址
   alt?: string // 图片无法显示时的替代文本
-  icon?: VNode | Slot // 设置头像的图标
+  icon?: VNode | (() => VNode) // 设置头像的图标，支持 VNode / 渲染函数；插槽形态请用 #icon
   href?: string // 点击跳转的地址，指定此属性按钮的行为和 a 链接一致
   target?: '_self' | '_blank' // 相当于 a 标签的 target 属性，href 存在时生效
 }
+// 声明组件插槽类型
+export interface AvatarSlots {
+  icon?: () => VNode[]
+  default?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   color: 'rgba(0, 0, 0, 0.25)',
   shape: 'circle',
@@ -30,7 +37,8 @@ const props = withDefaults(defineProps<Props>(), {
   href: undefined,
   target: '_self'
 })
-const viewportWidth = ref<number>(window.innerWidth)
+defineSlots<AvatarSlots>()
+const viewportWidth = ref<number>(typeof window !== 'undefined' ? window.innerWidth : 0)
 const slotsExist = useSlotsExist(['default', 'icon'])
 const showIcon = computed(() => {
   if (!props.src) {
@@ -106,7 +114,9 @@ const strStyle = computed(() => {
   }
   return {}
 })
-useEventListener(window, 'resize', getViewportWidth)
+if (typeof window !== 'undefined') {
+  useEventListener(window, 'resize', getViewportWidth)
+}
 function getViewportWidth(): void {
   viewportWidth.value = window.innerWidth
 }

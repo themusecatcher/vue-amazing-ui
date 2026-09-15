@@ -348,9 +348,9 @@ const customValue2 = ref(2)
 
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| checked | 选中时的内容 | string &#124; slot | undefined |
+| checked | 选中时的内容 | string | undefined |
 | checkedValue | 选中时的值 | boolean &#124; string &#124; number | true |
-| unchecked | 未选中时的内容 | string &#124; slot | undefined |
+| unchecked | 未选中时的内容 | string | undefined |
 | uncheckedValue | 未选中时的值 | boolean &#124; string &#124; number | false |
 | loading | 是否加载中 | boolean | false |
 | disabled | 是否禁用 | boolean | false |
@@ -361,14 +361,14 @@ const customValue2 = ref(2)
 
 ## Slots
 
-| 名称      | 说明                 | 类型                      |
+| 名称     | 说明                | 类型                      |
 | :-------- | :------------------- | :------------------------ |
-| checked   | 自定义选中时的内容   | v-slot:checked            |
+| checked  | 自定义选中时的内容  | v-slot:checked            |
 | unchecked | 自定义未选中时的内容 | v-slot:unchecked          |
-| node      | 自定义开关节点       | v-slot:node="{ checked }" |
+| node     | 自定义开关节点      | v-slot:node="{ checked }" |
 
 ## Events
 
-| 名称   | 说明         | 类型                       |
+| 名称  | 说明        | 类型                       |
 | :----- | :----------- | :------------------------- |
 | change | 变化时的回调 | (checked: boolean) => void |

@@ -4,6 +4,10 @@
 
 _如果短时间内大量触发同一事件，那么在函数执行一次之后，该函数在指定的时间 `delay` 期限内不再工作，直至过了这段时间才重新生效_
 
+## 何时使用
+
+- 短时间内大量触发同一事件时，每 `delay` `ms` 内函数只执行一次
+
 ::: details Show Source Code
 
 ```ts
@@ -35,16 +39,15 @@ export function throttle(fn: Function, delay: number = 300): Function {
 
 :::
 
-## 何时使用
-
-- 短时间内大量触发同一事件时，每 `delay` `ms` 内函数只执行一次
-
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { throttle, useEventListener } from 'vue-amazing-ui'
 const scrollTop = ref(0)
-useEventListener(window, 'scroll', throttle(showPosition, 100))
-function showPosition () {
+// SSR（Node）环境无 window，需判断存在性后再注册监听
+if (typeof window !== 'undefined') {
+  useEventListener(window, 'scroll', throttle(showPosition, 100))
+}
+function showPosition() {
   scrollTop.value = window.pageYOffset || document.documentElement.scrollTop
 }
 </script>
@@ -55,10 +58,13 @@ function showPosition () {
 
 ```vue
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { throttle, useEventListener } from 'vue-amazing-ui'
 const scrollTop = ref(0)
-useEventListener(window, 'scroll', throttle(showPosition, 100))
+// SSR（Node）环境无 window，需判断存在性后再注册监听
+if (typeof window !== 'undefined') {
+  useEventListener(window, 'scroll', throttle(showPosition, 100))
+}
 function showPosition() {
   scrollTop.value = window.pageYOffset || document.documentElement.scrollTop
 }
@@ -71,3 +77,9 @@ function showPosition() {
 | ----- | ------------------------- | -------- | --------- |
 | fn    | 要被节流的函数            | Function | undefined |
 | delay | 节流的时间间隔，单位 `ms` | number   | 300       |
+
+## Return
+
+| 类型 | 说明 |
+| --- | --- |
+| Function | 节流后的新函数 |

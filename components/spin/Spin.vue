@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { VNode } from 'vue'
 import { useSlotsExist, useInject } from 'components/utils'
+
 export interface Props {
   spinning?: boolean // 是否为加载中状态
   size?: 'small' | 'middle' | 'large' // 加载中尺寸
-  tip?: string // 描述文案 string | slot
+  tip?: string // 描述文案
   indicator?: 'dot' | 'spin-dot' | 'spin-line' | 'ring-circle' | 'ring-rail' | 'dynamic-circle' | 'magic-ring' // 加载指示符
   color?: string // 指示符颜色，当 indicator: 'magic-ring' 时为外环颜色
   spinCircleWidth?: number // 圆环宽度，单位是加载指示符宽度的百分比，仅当 indicator: 'ring-circle' | 'ring-rail' 时生效
@@ -14,6 +16,12 @@ export interface Props {
   rotate?: boolean // spin-dot 或 spin-line 初始是否旋转，仅当 indicator: 'spin-dot' | 'spin-line' 时生效
   speed?: number // spin-dot 或 spin-line 渐变旋转的动画速度，单位 ms，仅当 indicator: 'spin-dot' | 'spin-line' 时生效
 }
+// 声明组件插槽类型
+export interface SpinSlots {
+  tip?: () => VNode[]
+  default?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   spinning: true,
   size: 'middle',
@@ -27,6 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
   rotate: false,
   speed: 800
 })
+defineSlots<SpinSlots>()
 const { colorPalettes } = useInject('Spin') // 主题色注入
 const slotsExist = useSlotsExist(['tip'])
 // 圆环周长

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import type { TextScrollItem } from 'vue-amazing-ui'
+import { TextScroll, type TextScrollItem } from 'vue-amazing-ui'
 const scrollItems = ref<TextScrollItem[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',
@@ -29,7 +29,7 @@ const scrollItems = ref<TextScrollItem[]>([
 const singleItem: TextScrollItem = {
   title: '请用一只玫瑰纪念我 🌹'
 }
-const textScrollRef = ref()
+const textScrollRef = ref<InstanceType<typeof TextScroll> | null>(null)
 const disabled = ref<boolean>(true)
 const vertical = ref<boolean>(false)
 const ellipsis = ref<boolean>(true)
@@ -38,15 +38,15 @@ function onClick(item: TextScrollItem) {
   console.log('item', item)
 }
 function handleStart() {
-  textScrollRef.value.start()
+  textScrollRef.value?.start()
   disabled.value = true
 }
 function handleStop() {
-  textScrollRef.value.stop()
+  textScrollRef.value?.stop()
   disabled.value = false
 }
 function handleReset() {
-  textScrollRef.value.reset()
+  textScrollRef.value?.reset()
   disabled.value = true
 }
 const state = reactive({

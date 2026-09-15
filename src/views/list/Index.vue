@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, h } from 'vue'
+import type { ListProps } from 'vue-amazing-ui'
 import { UserOutlined, StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue'
 const listData = ref([
   {
@@ -67,7 +68,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const size = ref('middle')
+const size = ref<ListProps['size']>('middle')
 const loading = ref(true)
 const allListData = ref<any[]>([])
 for (let i = 1; i <= 8; i++) {
@@ -405,7 +406,7 @@ const state = reactive({
         :bordered="state.bordered"
         :vertical="state.vertical"
         :split="state.split"
-        :size="state.size"
+        :size="state.size as ListProps['size']"
         :loading="state.loading"
         :hoverable="state.hoverable"
         :header="state.header"

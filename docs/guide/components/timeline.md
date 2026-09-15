@@ -354,7 +354,7 @@ position | 当 `mode` 为 `center` 时，内容交替展现，内容从左边（
 
 名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-desc | 文字描述 | string &#124; slot | undefined
+desc | 文字描述 | string | undefined
 color? | 圆圈颜色 | 'blue' &#124; 'green' &#124; 'red' &#124; 'gray' &#124; string | 'blue'
 
 ## Slots

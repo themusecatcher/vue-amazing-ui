@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { SearchOutlined, DownloadOutlined, CrownOutlined } from '@ant-design/icons-vue'
+import type { ButtonProps } from 'vue-amazing-ui'
 const disabled = ref(true)
 const sizeOptions = [
   {
@@ -16,7 +17,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const size = ref('middle')
+const size = ref<ButtonProps['size']>('middle')
 const customLoading = ref(false)
 const loading = ref(true)
 const loadingOptions = [
@@ -29,7 +30,7 @@ const loadingOptions = [
     value: 'dynamic'
   }
 ]
-const loadingType = ref('dynamic')
+const loadingType = ref<ButtonProps['loadingType']>('dynamic')
 function onClick(e: Event) {
   console.log('click', e)
 }
@@ -51,14 +52,14 @@ function onClick(e: Event) {
     <Space vertical>
       <Space>
         <Tooltip tooltip="search">
-          <Button type="primary" shape="circle" :icon="SearchOutlined" />
+          <Button type="primary" shape="circle" :icon="h(SearchOutlined)" />
         </Tooltip>
         <Button type="primary" shape="circle">A</Button>
-        <Button type="primary" shape="round" :icon="SearchOutlined"> Search </Button>
+        <Button type="primary" shape="round" :icon="h(SearchOutlined)"> Search </Button>
         <Tooltip tooltip="search">
-          <Button type="primary" shape="round" :icon="SearchOutlined" />
+          <Button type="primary" shape="round" :icon="h(SearchOutlined)" />
         </Tooltip>
-        <Button type="primary" :icon="SearchOutlined"> Search </Button>
+        <Button type="primary" :icon="h(SearchOutlined)"> Search </Button>
       </Space>
       <Space>
         <Tooltip tooltip="search">

@@ -1,24 +1,31 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import Tooltip from 'components/tooltip'
 import { useSlotsExist } from 'components/utils'
+
 export interface Props {
-  title?: string // 卡片标题 string | slot
+  title?: string // 卡片标题
   titleStyle?: CSSProperties // 卡片标题样式
-  content?: string // 卡片内容 string | slot
+  content?: string // 卡片内容
   contentStyle?: CSSProperties // 卡片内容样式
-  keyboard?: boolean // 是否支持按键操作 (enter 显示；esc 关闭)
   tooltipStyle?: CSSProperties // 设置弹出提示的样式
 }
+// 声明组件插槽类型
+export interface PopoverSlots {
+  title?: () => VNode[]
+  content?: () => VNode[]
+  default?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   title: undefined,
   titleStyle: () => ({}),
   content: undefined,
   contentStyle: () => ({}),
-  keyboard: true,
   tooltipStyle: () => ({})
 })
+defineSlots<PopoverSlots>()
 const slotsExist = useSlotsExist(['title', 'content'])
 const showTitle = computed(() => {
   return slotsExist.title || props.title
@@ -37,7 +44,6 @@ const showContent = computed(() => {
       textAlign: 'start',
       ...tooltipStyle
     }"
-    :keyboard="keyboard"
     :transition-duration="200"
   >
     <template #tooltip>

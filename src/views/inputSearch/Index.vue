@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import type { InputSearchProps } from 'vue-amazing-ui'
 import { SearchOutlined, CompassOutlined, EnvironmentOutlined, InfoCircleOutlined } from '@ant-design/icons-vue'
 const value = ref('')
 const lazyValue = ref('')
@@ -17,7 +18,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const size = ref('middle')
+const size = ref<InputSearchProps['size']>('middle')
 const loading = ref(true)
 const disabled = ref(true)
 watchEffect(() => {

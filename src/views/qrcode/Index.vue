@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, h } from 'vue'
+import { QRCode, type QRCodeProps } from 'vue-amazing-ui'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
-const qrcodeRef = ref()
+const qrcodeRef = ref<InstanceType<typeof QRCode> | null>(null)
 const size = ref(160)
 const value = ref('hello world')
 const color = ref('#FF6900')
 const bgColor = ref('#00000030')
 const segmentedOptions = ['L', 'M', 'Q', 'H']
-const level = ref('L')
+const level = ref<QRCodeProps['errorLevel']>('L')
 const decline = () => {
   size.value = size.value - 10
   if (size.value < 48) {
@@ -21,7 +22,8 @@ const increase = () => {
   }
 }
 const dowloadQRCode = async () => {
-  const url = await qrcodeRef.value.getQRCodeImage()
+  const url = await qrcodeRef.value?.getQRCodeImage()
+  if (!url) return
   const a = document.createElement('a')
   a.download = 'QRCode.png'
   a.href = url
@@ -45,8 +47,8 @@ const dowloadQRCode = async () => {
     <h2 class="mt30 mb10">自定义尺寸</h2>
     <Space vertical>
       <Space>
-        <Button @click="decline" :icon="MinusOutlined"> small </Button>
-        <Button @click="increase" :icon="PlusOutlined"> large </Button>
+        <Button @click="decline" :icon="h(MinusOutlined)"> small </Button>
+        <Button @click="increase" :icon="h(PlusOutlined)"> large </Button>
       </Space>
       <QRCode :size="size" value="https://themusecatcher.blog.csdn.net" />
     </Space>

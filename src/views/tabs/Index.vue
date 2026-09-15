@@ -173,7 +173,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const size = ref('middle')
+const size = ref<TabsProps['size']>('middle')
 const positionOptions = [
   {
     label: 'top',
@@ -192,8 +192,8 @@ const positionOptions = [
     value: 'right'
   }
 ]
-const position = ref('top')
-const morePosition = ref('top')
+const position = ref<NonNullable<TabsProps['tabPosition']>>('top')
+const morePosition = ref<NonNullable<TabsProps['tabPosition']>>('top')
 const positionStyle = computed(() => {
   if (['top', 'bottom'].includes(morePosition.value)) {
     return {

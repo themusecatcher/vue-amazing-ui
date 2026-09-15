@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { SpinProps } from 'vue-amazing-ui'
 const spinning = ref(true)
 const sizeOptions = [
   {
@@ -15,7 +16,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const size = ref('middle')
+const size = ref<SpinProps['size']>('middle')
 </script>
 <template>
   <div>
