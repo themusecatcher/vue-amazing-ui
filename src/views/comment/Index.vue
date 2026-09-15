@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { LikeFilled, LikeOutlined, DislikeFilled, DislikeOutlined } from '@ant-design/icons-vue'
-// 1. 基本评论
+import { h, ref } from 'vue'
+import { LikeFilled, LikeOutlined, DislikeFilled, DislikeOutlined, UserOutlined } from '@ant-design/icons-vue'
+// 基本评论
 const likes = ref<number>(0)
 const dislikes = ref<number>(0)
 const action = ref<string>()
@@ -15,7 +15,7 @@ function dislike() {
   dislikes.value = 1
   action.value = 'disliked'
 }
-// 2. 配合 List 组件
+// 配合 List 组件
 const listData = [
   {
     actions: ['Reply to'],
@@ -34,7 +34,7 @@ const listData = [
     datetime: '3 days ago'
   }
 ]
-// 4. 回复框
+// 回复框
 interface CommentItem {
   author: string
   avatar: string
@@ -200,6 +200,27 @@ function handleSubmit() {
         <Button html-type="submit" :loading="submitting" type="primary" class="mt10" @click="handleSubmit">
           Add Comment
         </Button>
+      </template>
+    </Comment>
+    <h2 class="mt30 mb10">自定义头像</h2>
+    <p class="mb10">头像属性支持 <code>VNode</code> / 渲染函数，也可继续使用 <code>#avatar</code> 插槽自定义</p>
+    <Comment author="Han Solo" datetime="2 days ago" :avatar="() => h(UserOutlined, { style: 'font-size: 32px' })">
+      <template #content>
+        <p>
+          We supply a series of design principles, practical patterns and high quality design resources (Sketch and
+          Axure), to help people create their product prototypes beautifully and efficiently.
+        </p>
+      </template>
+    </Comment>
+    <Comment author="Han Solo" datetime="2 days ago">
+      <template #avatar>
+        <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=han" alt="Han Solo" />
+      </template>
+      <template #content>
+        <p>
+          We supply a series of design principles, practical patterns and high quality design resources (Sketch and
+          Axure), to help people create their product prototypes beautifully and efficiently.
+        </p>
       </template>
     </Comment>
   </div>

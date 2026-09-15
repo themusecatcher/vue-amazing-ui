@@ -3,11 +3,20 @@ import { computed, useSlots } from 'vue'
 import type { VNode } from 'vue'
 import { useSlotsExist } from 'components/utils'
 export interface Props {
-  actions?: Array<string | VNode> // 在评论内容下面呈现的操作项列表 Array | slot
-  author?: string // 要显示为评论作者的元素 string | slot
-  avatar?: string // 要显示为评论头像的元素，通常为头像图片地址 string | slot
-  content?: string // 评论的主要内容 string | slot
-  datetime?: string // 展示时间描述 string | slot
+  actions?: Array<string | VNode> // 在评论内容下面呈现的操作项列表
+  author?: string // 要显示为评论作者的元素
+  avatar?: string | VNode | (() => VNode) // 要显示为评论头像的元素，通常为头像图片地址
+  content?: string // 评论的主要内容
+  datetime?: string // 展示时间描述
+}
+// 声明组件插槽类型
+export interface CommentSlots {
+  actions?: () => VNode[]
+  author?: () => VNode[]
+  avatar?: () => VNode[]
+  content?: () => VNode[]
+  datetime?: () => VNode[]
+  default?: () => VNode[]
 }
 const props = withDefaults(defineProps<Props>(), {
   actions: undefined,
@@ -16,10 +25,23 @@ const props = withDefaults(defineProps<Props>(), {
   content: undefined,
   datetime: undefined
 })
+defineSlots<CommentSlots>()
 const slots = useSlots()
-const slotsExist = useSlotsExist(['actions', 'author', 'avatar', 'content', 'datetime', 'default'])
+const slotsExist = useSlotsExist(['actions', 'author', 'avatar', 'datetime', 'default'])
 const showAvatar = computed(() => {
   return slotsExist.avatar || props.avatar
+})
+// 头像 prop 支持「图片地址 / VNode / 渲染函数」三种形态，图片地址单独取出用于渲染 <img>
+const avatarSrc = computed<string | undefined>(() => {
+  return typeof props.avatar === 'string' ? props.avatar : undefined
+})
+// VNode / 渲染函数形态的头像原样渲染，不在组件内包一层 <Avatar>
+const avatarRender = computed<VNode | undefined>(() => {
+  const { avatar } = props
+  if (!avatar || typeof avatar === 'string') {
+    return undefined
+  }
+  return typeof avatar === 'function' ? avatar() : avatar
 })
 const showAuthor = computed(() => {
   return slotsExist.author || props.author
@@ -45,11 +67,12 @@ const showNested = computed(() => {
 })
 </script>
 <template>
-  <div class="m-comment">
+  <div class="comment-wrap">
     <div class="comment-inner">
       <div v-if="showAvatar" class="comment-avatar">
         <slot name="avatar">
-          <img :src="avatar" alt="comment-avatar" />
+          <img v-if="avatarSrc" :src="avatarSrc" alt="comment-avatar" />
+          <component :is="avatarRender" v-else />
         </slot>
       </div>
       <div class="comment-content">
@@ -78,7 +101,7 @@ const showNested = computed(() => {
   </div>
 </template>
 <style lang="less" scoped>
-.m-comment {
+.comment-wrap {
   position: relative;
   background-color: inherit;
   font-size: 14px;
@@ -90,7 +113,6 @@ const showNested = computed(() => {
       position: relative;
       flex-shrink: 0;
       margin-right: 12px;
-      cursor: pointer;
       :deep(img) {
         width: 32px;
         height: 32px;

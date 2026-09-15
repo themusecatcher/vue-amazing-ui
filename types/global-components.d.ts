@@ -21,6 +21,7 @@ declare module 'vue' {
     Col: typeof VueAmazingUI.Col
     Collapse: typeof VueAmazingUI.Collapse
     ColorPicker: typeof VueAmazingUI.ColorPicker
+    Comment: typeof VueAmazingUI.Comment
     ConfigProvider: typeof VueAmazingUI.ConfigProvider
     Countdown: typeof VueAmazingUI.Countdown
     DatePicker: typeof VueAmazingUI.DatePicker

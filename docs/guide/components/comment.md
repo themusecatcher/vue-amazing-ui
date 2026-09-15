@@ -9,9 +9,9 @@
 - 对于事物的讨论，比如评论、回复等
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { LikeFilled, LikeOutlined, DislikeFilled, DislikeOutlined } from '@ant-design/icons-vue'
-// 1. 基本评论
+import { h, ref } from 'vue'
+import { LikeFilled, LikeOutlined, DislikeFilled, DislikeOutlined, UserOutlined } from '@ant-design/icons-vue'
+// 基本评论
 const likes = ref<number>(0)
 const dislikes = ref<number>(0)
 const action = ref<string>()
@@ -25,7 +25,7 @@ function dislike() {
   dislikes.value = 1
   action.value = 'disliked'
 }
-// 2. 配合 List 组件
+// 配合 List 组件
 const listData = [
   {
     actions: ['Reply to'],
@@ -44,7 +44,7 @@ const listData = [
     datetime: '3 days ago'
   }
 ]
-// 4. 回复框
+// 回复框
 interface CommentItem {
   author: string
   avatar: string
@@ -437,15 +437,63 @@ function handleSubmit() {
 
 :::
 
+## 自定义头像
+
+*头像属性支持 `VNode` / 渲染函数，也可继续使用 `#avatar` 插槽自定义*
+
+<br/>
+
+<Comment author="Han Solo" datetime="2 days ago" :avatar="() => h(UserOutlined, { style: 'font-size: 32px' })">
+  <template #content>
+    <p>We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.</p>
+  </template>
+</Comment>
+<Comment author="Han Solo" datetime="2 days ago">
+  <template #avatar>
+    <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=han" alt="Han Solo" />
+  </template>
+  <template #content>
+    <p>We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.</p>
+  </template>
+</Comment>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { h } from 'vue'
+import { UserOutlined } from '@ant-design/icons-vue'
+</script>
+<template>
+  <Comment author="Han Solo" datetime="2 days ago" :avatar="() => h(UserOutlined, { style: 'font-size: 32px' })">
+    <template #content>
+      <p>We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.</p>
+    </template>
+  </Comment>
+  <Comment author="Han Solo" datetime="2 days ago">
+    <template #avatar>
+      <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=han" alt="Han Solo" />
+    </template>
+    <template #content>
+      <p>We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.</p>
+    </template>
+  </Comment>
+</template>
+```
+
+:::
+
 ## APIs
+
+### Comment
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-actions | 在评论内容下面呈现的操作项列表 | Array &#124; slot | undefined
-author | 要显示为评论作者的元素 | string &#124; slot | undefined
-avatar | 要显示为评论头像的元素，通常为头像图片地址 | string &#124; slot | undefined
-content | 评论的主要内容 | string &#124; slot | undefined
-datetime | 展示时间描述 | string &#124; slot | undefined
+actions | 在评论内容下面呈现的操作项列表 | Array<string &#124; VNode> | undefined
+author | 要显示为评论作者的元素 | string | undefined
+avatar | 要显示为评论头像的元素，通常为头像图片地址；`prop` 支持 `VNode` / 渲染函数，插槽形态请用同名 `#avatar` 插槽 | string &#124; VNode &#124; (() => VNode) | undefined
+content | 评论的主要内容 | string | undefined
+datetime | 展示时间描述 | string | undefined
 
 ## Slots
 
