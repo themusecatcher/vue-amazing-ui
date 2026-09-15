@@ -743,10 +743,10 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 | yearSelectProps | 年选择器 `props`，参考 [Select Props](./select.md#select) | [SelectProps](./select.md#select) | {} |
 | monthSelectProps | 月选择器 `props`，参考 [Select Props](./select.md#select) | [SelectProps](./select.md#select) | {} |
 | modeRadioProps | 模式切换器 `props`，参考 [Radio Props](./radio.md#radio) | [RadioProps](./radio.md#radio) | {} |
-| startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一 | [DayOfWeek](#dayofweek-type) | 0 |
+| startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一 | [CalendarDayOfWeek](#dayofweek-type) | 0 |
 | dateStrip | 日历面板默认会显示六周的日期，当最后一周的日期不包含当月日期时，是否去掉 | boolean | true |
 | dateFormat | 自定义日期展示格式 | (date: number, timestamp: number) => string | undefined |
-| weekFormat | 自定义星期展示格式 (defaultWeek: [DefaultWeek](#defaultweek-type), week: number, timestamp: number) => string | undefined |
+| weekFormat | 自定义星期展示格式 (defaultWeek: [CalendarDefaultWeek](#defaultweek-type), week: number, timestamp: number) => string | undefined |
 | monthFormat | 自定义月展示格式 | (month: number, timestamp: number) => string | undefined |
 | disabledDate | 不可选择的日期 | (timestamp: number) => boolean | undefined |
 | valueFormat | 被选中日期的格式，默认为时间戳；参考 [format](https://date-fns.org/v4.1.0/docs/format) | string | undefined |
@@ -798,6 +798,6 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| change | 日期变化时的回调 | (date: string &#124; number, dateOrMonth: [DateItem](#dateitem-type)['dateObject'] &#124; [MonthItem](#monthitem-type)['monthObject']) => void |
+| change | 日期变化时的回调 | (date: string &#124; number, dateOrMonth: [CalendarDateItem](#dateitem-type)['dateObject'] &#124; [CalendarMonthItem](#monthitem-type)['monthObject']) => void |
 | panelChange | 日期面板变化的回调 | (date: string &#124; number, info: { year: number, month?: number }, mode: 'month' &#124; 'year') => void |
 | select | 选择日期回调，包含来源信息 | (date: string &#124; number, source: 'date' &#124; 'month') => void |

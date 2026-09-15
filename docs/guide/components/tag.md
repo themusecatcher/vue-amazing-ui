@@ -582,7 +582,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
 | bordered | 是否有边框 | boolean | true |
 | dynamic | 是否启用标签动态添加和删除 | boolean | false |
 | spaceProps | `Space` 组件属性配置，参考 [Space Props](./space.md#space) ，仅当 `dynamic: true` 时生效 | [SpaceProps](./space.md#space) | {} |
-| value <Tag color="cyan">v-model</Tag> | 动态标签数组，仅当 `dynamic: true` 时生效 | string[] &#124; [Item](#item-type)[] | [] |
+| value <Tag color="cyan">v-model</Tag> | 动态标签数组，仅当 `dynamic: true` 时生效 | string[] &#124; [TagItem](#item-type)[] | [] |
 
 ### Item Type
 
@@ -608,4 +608,4 @@ const onDynamicClose = (item: TagItem, index: number) => {
 | 名称        | 说明                              | 类型                                              |
 | :----------- | :--------------------------------- | :------------------------------------------------ |
 | close       | 关闭时的回调                      | (e: Event) => void                                |
-| dynamicClose | 启用标签动态添加和删除时关闭的回调 | (item: [Item](#item-type), index: number) => void |
+| dynamicClose | 启用标签动态添加和删除时关闭的回调 | (item: [TagItem](#item-type), index: number) => void |

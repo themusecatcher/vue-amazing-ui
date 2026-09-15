@@ -1155,7 +1155,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
 
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| options | 自动完成的数据源 | (string &#124; number &#124; [Option](#option-type) &#124; [GroupOption](#groupoption-type))[] | [] |
+| options | 自动完成的数据源 | (string &#124; number &#124; [AutoCompleteOption](#option-type) &#124; [AutoCompleteGroupOption](#groupoption-type))[] | [] |
 | value <Tag color="cyan">v-model</Tag> | 当前输入的值 | string | undefined |
 | placeholder | 默认占位文本 | string | undefined |
 | disabled | 是否禁用 | boolean | false |
@@ -1173,7 +1173,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
 | dropdownMenuStyle | 下拉菜单自定义样式 | CSSProperties | undefined |
 | popupClassName | 下拉菜单的 className 属性 | string | undefined |
 | to | 下拉面板挂载的容器节点，可选：元素标签名 (例如 `'body'`) 或者元素本身，`false` 会待在原地 | string &#124; HTMLElement &#124; false | 'body' |
-| filterOption | 根据输入项进行筛选：<li>默认为 `false` 时不筛选，显示全部数据源，由用户在 `search` 事件中远程更新 `options`</li><li>当其为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | boolean &#124; ((inputValue: string, option: Option) => boolean) | false |
+| filterOption | 根据输入项进行筛选：<li>默认为 `false` 时不筛选，显示全部数据源，由用户在 `search` 事件中远程更新 `options`</li><li>当其为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | boolean &#124; ((inputValue: string, option: AutoCompleteOption) => boolean) | false |
 
 ### Option Type
 
@@ -1187,7 +1187,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
 
 | 名称   | 说明                        | 类型                                  | 默认值    |
 | :------ | :--------------------------- | :------------------------------------- | :-------- |
-| options | 子选项，存在该字段即视为分组 | (string &#124; number &#124; Option)[] | undefined |
+| options | 子选项，存在该字段即视为分组 | (string &#124; number &#124; AutoCompleteOption)[] | undefined |
 | label? | 分组名（显示为分组标题）    | string                                | undefined |
 | value? | 分组值                      | string &#124; number                  | undefined |
 
@@ -1196,7 +1196,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
 | 名称                  | 说明                  | 类型                                                                           |
 | :--------------------- | :--------------------- | :----------------------------------------------------------------------------- |
 | search                | 输入内容变化时回调    | (value: string) => void                                                        |
-| select                | 选中选项时回调        | (value: string &#124; number, option: Option) => void                          |
+| select                | 选中选项时回调        | (value: string &#124; number, option: AutoCompleteOption) => void                          |
 | change                | 选项值改变后的回调    | (value: string) => void                                                        |
 | focus                 | 获得焦点时的回调      | () => void                                                                     |
 | blur                  | 失去焦点时的回调      | () => void                                                                     |
@@ -1208,7 +1208,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
 
 | 名称     | 说明                                   | 参数                   |
 | :-------- | :-------------------------------------- | :--------------------- |
-| option   | 自定义选项内容                         | [Option](#option-type) |
+| option   | 自定义选项内容                         | [AutoCompleteOption](#option-type) |
 | clearIcon | 自定义清除图标                         | -                      |
 | default  | 自定义输入组件（替代原生 `input` 元素） | -                      |
 

@@ -1034,7 +1034,7 @@ watchEffect(() => {
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-items | 折叠面板数据 | [Item](#item-type)[] | []
+items | 折叠面板数据 | [CollapseItem](#item-type)[] | []
 activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | number[] &#124; number &#124; string[] &#124; string &#124; null | null
 bordered | 带边框风格的折叠面板 | boolean | true
 disabled | 是否禁用展开收起 | boolean | false

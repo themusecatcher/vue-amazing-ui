@@ -136,7 +136,7 @@
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-gradient | 文字渐变色参数 | string &#124; [Gradient](#gradient-type) | undefined
+gradient | 文字渐变色参数 | string &#124; [GradientTextGradient](#gradient-type) | undefined
 size | 文字大小，不指定单位时，默认单位 `px` | number &#124; string | 14
 weight | 文字粗细 | number | 400
 type | 渐变文字的类型 | 'primary' &#124; 'info' &#124; 'success' &#124; 'warning' &#124; 'error' | 'primary'

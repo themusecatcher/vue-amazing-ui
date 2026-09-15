@@ -10,6 +10,18 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-09-15">2.8.1</VersionDateTag>
+
+- 新增 [滑动输入条 Slider](/guide/components/slider.html) 的 `SliderMarks` 类型导出，用于标注刻度数据的类型
+- 优化并统一 [图片 Image](/guide/components/image.html) / [轮播图 Swiper](/guide/components/swiper.html) / [瀑布流 Waterfall](/guide/components/waterfall.html) 的图片名称提取：统一从 `src` 解析末段，剥离查询参数与哈希并做 `URL` 解码，`alt` 与下载文件名更准确
+- 修复 [消息提示 Message](/guide/components/message.html) / [通知提醒 Notification](/guide/components/notification.html) 的 `icon` 传入字符串时不显示内容的问题，现统一渲染为文本节点
+- 重构组件库内部公共能力（内容渲染、实例标识生成、焦点锁定、水波纹状态、视口宽度响应等），抽取为公共工具函数与组合式函数
+- 收敛 `createDiscreteApi` 的内部类型导出：`DiscreteApiType` / `MaybeRef` / `DiscreteApi` 不再对外导出，仅影响从深层子路径导入的写法；`DiscreteApiOptions` / `DiscreteApiInstance` 不受影响
+- 优化发布脚本：发版时输出可点击的 `git tag` 链接
+- 优化文档演示：轮播图 `mousewheel` 演示默认开启、数字动画补全精度示例、主题定制与刻度示例改用 `import type` 导入类型
+- 统一各组件文档中的类型引用为公开导出名（如 `TabsItem` / `SwiperImage` / `UploadFileType`），使用时可直接 `import type` 使用
+- 组件库文档优化
+
 ## <VersionDateTag date="2026-09-14">2.8.0</VersionDateTag>
 
 - 重构并增强 [描述列表 Descriptions](/guide/components/descriptions.html)：改为数据驱动渲染，新增 `layout` / `colon` / `labelAlign` 等属性、`#header` 插槽与 `xxxl` 断点，修复子项丢失等问题。⚠️ **破坏性变更**：移除 `vertical` 属性，改用 `layout="vertical"`

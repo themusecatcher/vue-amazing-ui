@@ -164,6 +164,7 @@ _七种类型_
 - 每个示例后接 `::: details Show Code` 折叠块，展示可复制的完整代码。
 - 章节顺序统一为：何时使用 → 基本使用 → APIs → Slots → Methods → Events；参数表采用无首尾竖线的紧凑写法，与 `docs/guide/template.md` 保持一致。
 - `update:xxx` 属于 `v-model` 双向绑定的更新事件，**不写入 Events 表**；双向绑定统一在 APIs 表的参数名后标注 `<Tag color="cyan">v-model</Tag>`（如 `open <Tag color="cyan">v-model</Tag>`），避免同一语义在两处重复维护。
+- APIs / Events / Methods 表中的类型引用一律写**组件入口重命名后的公开导出名**（如 `SliderMarks`、`TabsItem`、`SwiperImage`），确保读者可直接 `import type`，且与 IDE 类型提示一致；类型章节标题保留 SFC 内的定义名（如 `### Marks Type`），锚点 `#marks-type` 不随引用名变更，避免全站链接失效。文档自造的结构性类型（源码中无对应导出，如 ConfigProvider 的 `Config`、Scrollbar 的 `ScrollBehavior`）沿用文档内命名。
 
 ### 内联 demo 机制
 

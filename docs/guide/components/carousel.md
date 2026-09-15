@@ -2000,7 +2000,7 @@ watch(
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-images | 轮播图图片数组 | [Image](#image-type)[] | []
+images | 轮播图图片数组 | [CarouselImage](#image-type)[] | []
 width | 轮播图宽度，单位 `px` | number &#124; string | '100%'
 height | 轮播图高度，单位 `px` | number &#124; string | '100vh'
 autoplay | 是否自动轮播 | boolean | false
@@ -2063,7 +2063,7 @@ dots | 自定义指示点，需自行调用 `to(n)` 切换 | v-slot:dots="{ to, 
 :-- | :-- | :--
 beforeChange | 切换开始时触发，`from` 为当前页、`to` 为目标页，均从 `1` 开始 | (from: number, to: number) => void
 afterChange | 切换结束后触发，参数为当前页，从 `1` 开始 | (current: number) => void
-click | 点击图片时的回调 | (image: [Image](#image-type)) => void
+click | 点击图片时的回调 | (image: [CarouselImage](#image-type)) => void
 
 ## Methods
 

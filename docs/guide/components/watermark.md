@@ -402,7 +402,7 @@ const layoutOptions = [
 | content | 水印文字内容 | string &#124; string[] | undefined |
 | fullscreen | 是否启用全屏水印 | boolean | false |
 | fixed | 是否固定水印，仅当启用全屏水印时生效 | boolean | true |
-| textStyle | 水印文字样式 | [Font](#font-type) | {<br/>&nbsp;&nbsp;color: 'rgba(0, 0, 0, 0.15)',<br/>&nbsp;&nbsp;fontSize: 16,<br/>&nbsp;&nbsp;fontWeight: 'normal',<br/>&nbsp;&nbsp;fontFamily: 'sans-serif',<br/>&nbsp;&nbsp;fontStyle: 'normal' <br/>} |
+| textStyle | 水印文字样式 | [WatermarkFont](#font-type) | {<br/>&nbsp;&nbsp;color: 'rgba(0, 0, 0, 0.15)',<br/>&nbsp;&nbsp;fontSize: 16,<br/>&nbsp;&nbsp;fontWeight: 'normal',<br/>&nbsp;&nbsp;fontFamily: 'sans-serif',<br/>&nbsp;&nbsp;fontStyle: 'normal' <br/>} |
 | gap | 水印之间的间距 | [number, number] | [100, 100] |
 | offset | 水印距离容器左上角的偏移量，默认为 `gap/2` | [number, number] | [50, 50] |
 
