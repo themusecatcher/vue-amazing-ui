@@ -170,7 +170,7 @@ export type {
 } from './skeleton'
 export { default as Skeleton } from './skeleton'
 
-export type { SliderProps } from './slider'
+export type { SliderProps, SliderMarks } from './slider'
 export { default as Slider } from './slider'
 
 export type { SpaceProps } from './space'
