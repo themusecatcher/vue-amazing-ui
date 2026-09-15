@@ -657,7 +657,7 @@ watchEffect(() => {
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-options | 单选框选项数据 | [Option](#option-type)[] | []
+options | 单选框选项数据 | [RadioOption](#option-type)[] | []
 disabled | 是否禁用 | boolean | false
 vertical | 是否垂直排列，仅当 `button: false` 时生效 | boolean | false
 checked <Tag color="cyan">v-model</Tag> | 当前是否选中 | boolean | false

@@ -1,0 +1,11 @@
+allowBuilds:
+  # 受信依赖：放行其 postinstall/install 构建脚本
+  # （esbuild 二进制校验、less 构建、vue-demi 的 vue2/3 入口切换等）
+  core-js: true
+  esbuild: true
+  less: true
+  vue-demi: true
+# 本包自引用（docs 示例依赖自己发布的 vue-amazing-ui），发布当天安装会被
+# pnpm v11 默认的 minimumReleaseAge(1440min) 供应链策略拦截，故加入白名单
+minimumReleaseAgeExclude:
+  - vue-amazing-ui

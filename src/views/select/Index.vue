@@ -128,9 +128,9 @@ const placementOptions = [
     value: 'top'
   }
 ]
-const size = ref('large')
+const size = ref<SelectProps['size']>('large')
 const selectedValue = ref<SelectProps['modelValue']>(5)
-const placement = ref('bottom')
+const placement = ref<SelectProps['placement']>('bottom')
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })

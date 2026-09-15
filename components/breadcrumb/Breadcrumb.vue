@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 export interface Query {
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
@@ -9,15 +9,21 @@ export interface Route {
   path?: string // 路由地址
   query?: Query // 路由查询参数
 }
+
 export interface Props {
   routes?: Route[] // router 路由数组
   breadcrumbClass?: string // 设置面包屑类名
   breadcrumbStyle?: CSSProperties // 设置面包屑样式
   maxWidth?: string | number // 设置文本最大显示宽度，超出后显示省略号，单位 px
-  separator?: string // 自定义分隔符，默认为 '>' string | slot
+  separator?: string // 自定义分隔符，默认为 '>'
   separatorStyle?: CSSProperties // 设置分隔符样式
   target?: '_self' | '_blank' // 如何打开目标 URL，当前窗口或新窗口
 }
+// 声明组件插槽类型
+export interface BreadcrumbSlots {
+  separator?: (props: { route: Route; index: number }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   routes: () => [],
   breadcrumbClass: undefined,
@@ -27,6 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
   separatorStyle: () => ({}),
   target: '_self'
 })
+defineSlots<BreadcrumbSlots>()
 const breadcrumbAmount = computed(() => {
   return props.routes.length
 })

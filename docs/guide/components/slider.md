@@ -11,6 +11,7 @@
 <script setup lang="ts">
 import { ref, h, watchEffect, isVNode } from 'vue'
 import { FireFilled } from '@ant-design/icons-vue'
+import type { SliderMarks } from 'vue-amazing-ui'
 const singleValue = ref<number>(20)
 const doubleValue = ref<number[]>([20, 80])
 const disabledSingleValue = ref<number>(20)
@@ -31,7 +32,7 @@ const markVerticalSingleValue = ref<number>(37)
 const markVerticalDoubleValue1 = ref<number[]>([20, 65])
 const markVerticalDoubleValue2 = ref<number[]>([30, 60])
 const markVerticalDoubleValue3 = ref<number[]>([26, 37])
-const marks = ref<Record<number, any>>({
+const marks = ref<SliderMarks>({
   0: '0°C',
   26: '26°C',
   37: '37°C',
@@ -42,7 +43,7 @@ const marks = ref<Record<number, any>>({
     label: '100°C'
   }
 })
-const verticalMarks = ref<Record<number, any>>({
+const verticalMarks = ref<SliderMarks>({
   0: '0°C',
   26: '26°C',
   37: '37°C',
@@ -400,13 +401,14 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { FireFilled } from '@ant-design/icons-vue'
+import type { SliderMarks } from 'vue-amazing-ui'
 const markSingleValue1 = ref<number>(37)
 const markSingleValue2 = ref<number>(37)
 const markSingleValue3 = ref<number>(37)
 const markDoubleValue1 = ref<number[]>([20, 65])
 const markDoubleValue2 = ref<number[]>([30, 60])
 const markDoubleValue3 = ref<number[]>([26, 37])
-const marks = ref<Record<number, any>>({
+const marks = ref<SliderMarks>({
   0: '0°C',
   26: '26°C',
   37: '37°C',
@@ -521,13 +523,14 @@ watchEffect(() => {
 <script setup lang="ts">
 import { ref, h, watchEffect, isVNode } from 'vue'
 import { FireFilled } from '@ant-design/icons-vue'
+import type { SliderMarks } from 'vue-amazing-ui'
 const verticalSingleValue = ref<number>(37)
 const verticalDoubleValue = ref<number[]>([20, 80])
 const markVerticalSingleValue = ref<number>(37)
 const markVerticalDoubleValue1 = ref<number[]>([20, 65])
 const markVerticalDoubleValue2 = ref<number[]>([30, 60])
 const markVerticalDoubleValue3 = ref<number[]>([26, 37])
-const marks = ref<Record<number, any>>({
+const marks = ref<SliderMarks>({
   0: '0°C',
   26: '26°C',
   37: '37°C',
@@ -538,7 +541,7 @@ const marks = ref<Record<number, any>>({
     label: '100°C'
   }
 })
-const verticalMarks = ref<Record<number, any>>({
+const verticalMarks = ref<SliderMarks>({
   0: '0°C',
   26: '26°C',
   37: '37°C',
@@ -811,7 +814,7 @@ height | 滑动输入条高度，单位 `px`，垂直模式时生效 | string &#
 vertical | 是否启用垂直模式 | boolean | false
 min | 最小值 | number | 0
 max | 最大值 | number | 100
-marks | 刻度标记，`key` 的类型必须为 `number` 且取值在闭区间 `[min, max]` 内，每个标记可以单独设置样式 | [Marks](#marks-type) | {}
+marks | 刻度标记，`key` 的类型必须为 `number` 且取值在闭区间 `[min, max]` 内，每个标记可以单独设置样式 | [SliderMarks](#marks-type) | {}
 disabled | 是否禁用 | boolean | false
 range | 是否使用双滑块模式 | boolean | false
 step | 步长，取值必须大于 `0`，并且可被 `(max - min)` 整除；当 `marks` 不为空对象时，可以设置 `step` 为 `'mark'`，此时 `Slider` 的可选值仅有 `marks` 标记的部分 | number &#124; 'mark' | 1
@@ -819,7 +822,7 @@ tooltip | 是否展示 `Tooltip` | boolean | true
 tooltipOpen | 是否一直显示 `tooltip` | boolean | false
 tooltipStyle | 自定义 `Tooltip` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 formatTooltip | `Slider` 会把当前值传给 `formatTooltip`，并在 `Tooltip` 中显示 `formatTooltip` 的返回值 | (value: number) => string &#124; number | (value: number) => value
-value <Tag color="cyan">v-model</Tag> | 设置当前取值，当 `range` 为 `false` 时，使用 `number`，否则用 `[number, number]` | number &#124; number[] | 0
+value <Tag color="cyan">v-model</Tag> | 设置当前取值，`range` 为 `false` 时为单个值，否则为区间值 | number &#124; number[] | 0
 
 ### Marks Type
 

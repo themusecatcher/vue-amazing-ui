@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useEventListener } from 'components/utils'
+import { computed } from 'vue'
+import type { VNode } from 'vue'
+import { useWindowWidth } from 'components/utils'
 export interface Props {
   span?: number // 栅格占位格数，取 0,1,2...24，为 0 时相当于 display: none，优先级低于 xs, sm, md, lg, xl, xxl
   offset?: number // 栅格左侧的间隔格数，取 0,1,2...24
@@ -12,6 +13,10 @@ export interface Props {
   lg?: number | { span?: number; offset?: number } // ≥992px 响应式栅格
   xl?: number | { span?: number; offset?: number } // ≥1200px 响应式栅格
   xxl?: number | { span?: number; offset?: number } // ≥1600px 响应式栅格
+}
+// 声明组件插槽类型
+export interface ColSlots {
+  default?: () => VNode[]
 }
 const props = withDefaults(defineProps<Props>(), {
   span: undefined,
@@ -25,7 +30,8 @@ const props = withDefaults(defineProps<Props>(), {
   xl: undefined,
   xxl: undefined
 })
-const viewportWidth = ref(window.innerWidth)
+defineSlots<ColSlots>()
+const viewportWidth = useWindowWidth() // 视口宽度，用于按断点切换响应式栅格
 const flexValue = computed(() => {
   if (typeof props.flex === 'number') {
     return `${props.flex} ${props.flex} auto`
@@ -81,10 +87,6 @@ const responsiveValue = computed(() => {
     offset: props.offset
   }
 })
-useEventListener(window, 'resize', getViewportWidth)
-function getViewportWidth() {
-  viewportWidth.value = window.innerWidth
-}
 </script>
 <template>
   <div

@@ -1,14 +1,22 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
+import type { VNode } from 'vue'
 import Tooltip from 'components/tooltip'
 import { useResizeObserver } from 'components/utils'
+
 export interface Props {
   maxWidth?: string | number // 文本最大宽度，单位 px
   tooltipMaxWidth?: string | number // 弹出提示最大宽度，单位 px，默认为 文本宽度 + 24
   line?: number // 最大行数
   expand?: boolean // 是否启用点击文本展开全部
-  tooltip?: boolean // 是否启用文本提示框，可自定义设置弹出提示内容 boolean | slot
+  tooltip?: boolean // 是否启用文本提示框，可自定义设置弹出提示内容
 }
+// 声明组件插槽类型
+export interface EllipsisSlots {
+  tooltip?: () => VNode[]
+  default?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   maxWidth: '100%',
   tooltipMaxWidth: undefined,
@@ -16,14 +24,15 @@ const props = withDefaults(defineProps<Props>(), {
   expand: false,
   tooltip: true
 })
-const tooltipRef = ref() // tooltip 组件引用
-const observeScroll = ref() // tooltip 组件暴露的 observeScroll 函数
+defineSlots<EllipsisSlots>()
+const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null) // tooltip 组件引用
+const observeScroll = ref<() => void>() // tooltip 组件暴露的 observeScroll 函数
 const showTooltip = ref(false) // 是否显示提示框
 const showExpand = ref(false) // 是否可以启用点击展开
 const expanded = ref(false) // 启用点击展开时，是否展开
-const ellipsisRef = ref() // 文本 DOM 引用
-const computedTooltipMaxWidth = ref() // 计算后的弹出提示最大宽度
-const ellipsisLine = ref() // 行数
+const ellipsisRef = ref<HTMLElement | null>(null) // 文本 DOM 引用
+const computedTooltipMaxWidth = ref<string>() // 计算后的弹出提示最大宽度
+const ellipsisLine = ref<number | 'none'>() // 行数
 const stopObservation = ref(false)
 const emit = defineEmits(['expandChange'])
 const textMaxWidth = computed(() => {
@@ -46,12 +55,11 @@ watch(
   }
 )
 watch(
-  () => [props.maxWidth, props.line, props.tooltip],
+  [() => props.maxWidth, () => props.line, () => props.tooltip],
   () => {
     updateTooltipShow()
   },
   {
-    deep: true,
     flush: 'post'
   }
 )
@@ -66,14 +74,16 @@ useResizeObserver(ellipsisRef, () => {
 })
 onMounted(() => {
   updateTooltipShow()
-  observeScroll.value = tooltipRef.value.observeScroll
+  observeScroll.value = tooltipRef.value?.observeScroll
 })
 function updateTooltipShow() {
-  const scrollWidth = ellipsisRef.value.scrollWidth
-  const scrollHeight = ellipsisRef.value.scrollHeight
-  const clientWidth = ellipsisRef.value.clientWidth
-  const clientHeight = ellipsisRef.value.clientHeight
-  const offsetWidth = ellipsisRef.value.offsetWidth
+  const el = ellipsisRef.value
+  if (!el) return
+  const scrollWidth = el.scrollWidth
+  const scrollHeight = el.scrollHeight
+  const clientWidth = el.clientWidth
+  const clientHeight = el.clientHeight
+  const offsetWidth = el.offsetWidth
   computedTooltipMaxWidth.value = `${offsetWidth + 24}px`
   if (scrollWidth > clientWidth || scrollHeight > clientHeight) {
     if (props.expand) {
@@ -97,7 +107,7 @@ function onExpand() {
     ellipsisLine.value = 'none'
     if (props.tooltip && showTooltip.value) {
       expanded.value = true
-      tooltipRef.value.hide()
+      tooltipRef.value?.hide()
     }
     emit('expandChange', true)
   } else {
@@ -105,7 +115,7 @@ function onExpand() {
     if (props.tooltip && !showTooltip.value) {
       expanded.value = false
       showTooltip.value = true
-      tooltipRef.value.show()
+      tooltipRef.value?.show()
     }
     emit('expandChange', false)
   }
@@ -126,7 +136,6 @@ defineExpose({
     :max-width="computedTooltipMaxWidth"
     :content-style="{ maxWidth: textMaxWidth }"
     :tooltip-style="{ padding: '8px 12px' }"
-    :transition-duration="200"
     @animationend="onAnimationEnd"
   >
     <template #tooltip>

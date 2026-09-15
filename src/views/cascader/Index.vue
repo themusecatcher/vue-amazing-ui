@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import type { CascaderProps } from 'vue-amazing-ui'
 const options = ref([
   {
     value: '1',
@@ -183,7 +184,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const size = ref('large')
+const size = ref<CascaderProps['size']>('large')
 const selectedValue = ref(['2', '21', '212'])
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)

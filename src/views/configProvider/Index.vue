@@ -1,10 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed, h } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import { createDiscreteApi, LoadingBar } from 'vue-amazing-ui'
 import type {
+  ConfigProviderProps,
   ConfigProviderTheme,
   CarouselImage,
+  MessageApi,
+  ModalApi,
+  NotificationApi,
   SelectOption,
   StepsItem,
   TabsItem,
@@ -14,25 +19,27 @@ import type {
 const primaryColor = ref<string>('#ff6900')
 const commonPrimaryColor = ref<string>('#1677ff')
 const buttonPrimaryColor = ref<string>('#18a058')
-const theme = ref<ConfigProviderTheme>({
+const theme = computed<ConfigProviderTheme>(() => ({
   common: {
     primaryColor: commonPrimaryColor.value
   },
   Button: {
     primaryColor: buttonPrimaryColor.value
   }
-})
+}))
+const autoCompleteValue = ref<string>('')
+const autoCompleteOptions = ref<string[]>([])
 const checkboxChecked = ref<boolean>(false)
 const cardDate = ref<number>(Date.now())
 const dateValue = ref<string>(format(new Date(), 'yyyy-MM-dd'))
 const inputValue = ref<string>('')
 const inputNumberValue = ref<number>(3)
 const inputSearchValue = ref<string>('')
-const cardRef = ref()
-const loadingBarRef = ref()
-const messageRef = ref()
-const modalRef = ref()
-const notificationRef = ref()
+const messageRef = ref<MessageApi>()
+const modalRef = ref<ModalApi>()
+const notificationRef = ref<NotificationApi>()
+const cardRef = ref<HTMLDivElement>()
+const loadingBarRef = ref<InstanceType<typeof LoadingBar> | null>(null)
 const page = ref<number>(1)
 const radioChecked = ref<boolean>(false)
 const images = ref<CarouselImage[]>([
@@ -60,7 +67,7 @@ const images = ref<CarouselImage[]>([
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
-const options = ref<SelectOption[]>([
+const selectOptions = ref<SelectOption[]>([
   {
     label: '北京市',
     value: 1
@@ -182,6 +189,12 @@ const fileList = ref<UploadFileType[]>([
     url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
+function onAutoCompleteSearch(searchText: string) {
+  // 模拟远程搜索：根据输入动态生成联想选项
+  autoCompleteOptions.value = !searchText
+    ? []
+    : [searchText, `${searchText}${searchText}`, `${searchText}${searchText}${searchText}`]
+}
 function onIncrease(scale: number) {
   const res = percent.value + scale
   if (res > 100) {
@@ -198,13 +211,46 @@ function onDecline(scale: number) {
     percent.value = res
   }
 }
+// createDiscreteApi 的主题经 configProviderProps 显式传入（支持 Ref/computed 响应式），
+// 与组件树内的 ConfigProvider 共享同一份 computed 主题即可保持同步，不再依赖模块级主题快照
+const discretePrimaryColor = ref<string>('#ff6900')
+const discreteConfigProviderProps = computed<ConfigProviderProps>(() => ({
+  theme: {
+    common: { primaryColor: discretePrimaryColor.value }
+  }
+}))
+const {
+  message: discreteMessage,
+  notification: discreteNotification,
+  modal: discreteModal
+} = createDiscreteApi(['message', 'notification', 'modal'], {
+  configProviderProps: discreteConfigProviderProps
+})
+function onDiscreteMessage() {
+  discreteMessage.info('Discrete Message 经 configProviderProps 跟随主题色')
+}
+function onDiscreteNotification() {
+  discreteNotification.info({
+    title: 'Discrete Notification',
+    content: '经 configProviderProps 跟随主题色'
+  })
+}
+function onDiscreteModal() {
+  discreteModal.info({
+    title: 'Discrete Modal',
+    content: '经 configProviderProps 跟随主题色'
+  })
+}
 </script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Card width="50%" title="以下示例已包含所有使用主题色的组件">
-      <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
+      <Space align="center">
+        primaryColor:
+        <ColorPicker style="width: 200px" v-model:value="primaryColor" />
+      </Space>
     </Card>
     <br />
     <br />
@@ -212,12 +258,19 @@ function onDecline(scale: number) {
       <Flex vertical>
         <Space align="center">
           <Alert style="width: 200px" message="Info Text" type="info" show-icon />
+          <AutoComplete
+            :width="200"
+            v-model:value="autoCompleteValue"
+            :options="autoCompleteOptions"
+            placeholder="输入以远程搜索"
+            @search="onAutoCompleteSearch"
+          />
           <BackTop />
           <Button type="primary">Primary Button</Button>
           <Checkbox v-model:checked="checkboxChecked">Checkbox</Checkbox>
           <ColorPicker :width="200" />
           <DatePicker v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
-          <Input :width="200" v-model:value="inputValue" placeholder="custom theme input" />
+          <Input :width="200" v-model:value="inputValue" placeholder="please input" />
           <InputNumber :width="120" v-model:value="inputNumberValue" placeholder="please input" />
           <InputSearch
             :width="200"
@@ -225,25 +278,25 @@ function onDecline(scale: number) {
             :search-props="{ type: 'primary' }"
             placeholder="input search"
           />
-          <Button type="primary" @click="messageRef.info('This is an info message')">Show Message</Button>
-          <Message ref="messageRef" />
+          <Button type="primary" @click="messageRef?.info('This is an info message')">Show Message</Button>
+          <Message @ready="messageRef = $event" />
           <Button
             type="primary"
-            @click="modalRef.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
+            @click="modalRef?.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
             >Show Modal</Button
           >
-          <Modal ref="modalRef" />
+          <Modal @ready="modalRef = $event" />
           <Button
             type="primary"
-            @click="notificationRef.info({ title: 'Notification Title', description: 'This is a normal notification' })"
+            @click="notificationRef?.info({ title: 'Notification Title', content: 'This is a normal notification' })"
             >Show Notification</Button
           >
-          <Notification ref="notificationRef" />
+          <Notification @ready="notificationRef = $event" />
           <Popconfirm title="Custom Theme" description="There will have some descriptions ..." icon="info">
             <Button type="primary">Show Confirm</Button>
           </Popconfirm>
           <Radio v-model:checked="radioChecked">Radio</Radio>
-          <Select :options="options" v-model="selectedValue" />
+          <Select :options="selectOptions" v-model="selectedValue" />
           <Switch v-model="switchChecked" />
           <Textarea :width="360" v-model:value="textareaValue" placeholder="custom theme textarea" />
           <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
@@ -268,9 +321,9 @@ function onDecline(scale: number) {
           style="position: relative; width: 50%; padding: 48px 36px; border-radius: 4px; border: 1px solid #f0f0f0"
         >
           <Space>
-            <Button type="primary" @click="loadingBarRef.start()">Start</Button>
-            <Button @click="loadingBarRef.finish()">Finish</Button>
-            <Button type="danger" @click="loadingBarRef.error()">Error</Button>
+            <Button type="primary" @click="loadingBarRef?.start()">Start</Button>
+            <Button @click="loadingBarRef?.finish()">Finish</Button>
+            <Button type="danger" @click="loadingBarRef?.error()">Error</Button>
           </Space>
         </div>
         <Pagination v-model:page="page" :total="500" show-quick-jumper />
@@ -279,8 +332,8 @@ function onDecline(scale: number) {
             <Progress :percent="percent" />
             <Space align="center">
               <Progress type="circle" :percent="percent" />
-              <Button @click="onDecline(5)" size="large" :icon="MinusOutlined">Decline</Button>
-              <Button @click="onIncrease(5)" size="large" :icon="PlusOutlined">Increase</Button>
+              <Button @click="onDecline(5)" size="large" :icon="h(MinusOutlined)">Decline</Button>
+              <Button @click="onIncrease(5)" size="large" :icon="h(PlusOutlined)">Increase</Button>
             </Space>
           </Flex>
         </Card>
@@ -322,10 +375,12 @@ function onDecline(scale: number) {
     <h2 class="mt30 mb10">自定义组件主题</h2>
     <Flex vertical>
       <Space align="center">
-        commonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="commonPrimaryColor" />
+        commonPrimaryColor:
+        <ColorPicker style="width: 200px" v-model:value="commonPrimaryColor" />
       </Space>
       <Space align="center">
-        buttonPrimaryColor:<ColorPicker style="width: 200px" v-model:value="buttonPrimaryColor" />
+        buttonPrimaryColor:
+        <ColorPicker style="width: 200px" v-model:value="buttonPrimaryColor" />
       </Space>
       <ConfigProvider :theme="theme">
         <Space align="center">
@@ -338,5 +393,22 @@ function onDecline(scale: number) {
     <ConfigProvider :abstract="false" tag="span" :theme="{ common: { primaryColor: '#ff6900' } }">
       <Button type="primary">Primary Button</Button>
     </ConfigProvider>
+    <h2 class="mt30 mb10">主题同步到离散 API</h2>
+    <p class="mb10">
+      <code>createDiscreteApi()</code> 的主题经第二参 <code>configProviderProps</code> 显式传入（支持
+      <code>Ref</code>/<code>computed</code>），下方 <code>discretePrimaryColor</code> 变化后再次触发按钮， message /
+      notification / modal 将同步跟随。
+    </p>
+    <Flex vertical>
+      <Space align="center">
+        primaryColor:
+        <ColorPicker style="width: 200px" v-model:value="discretePrimaryColor" />
+      </Space>
+      <Space>
+        <Button type="primary" @click="onDiscreteMessage">Discrete Message</Button>
+        <Button type="primary" @click="onDiscreteNotification">Discrete Notification</Button>
+        <Button type="primary" @click="onDiscreteModal">Discrete Modal</Button>
+      </Space>
+    </Flex>
   </div>
 </template>

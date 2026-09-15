@@ -237,7 +237,7 @@ function expandChange(open: boolean) {
 
 <br/>
 
-> *更多使用方式请参考 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html)*
+> *更多使用方式请参考 [文字提示 Tooltip](./tooltip.md)*
 
 ## APIs
 
@@ -249,9 +249,9 @@ maxWidth | 文本最大宽度，单位 `px` | string &#124; number | '100%'
 tooltipMaxWidth | 弹出提示最大宽度，单位 `px`，默认为 `文本宽度 + 24` | string &#124; number | undefined
 line | 最大行数 | number | undefined
 expand | 是否启用点击文本展开全部 | boolean | false
-tooltip | 是否启用文本提示框，可自定义设置弹出提示内容 | boolean &#124; slot | true
+tooltip | 是否启用文本提示框，可自定义设置弹出提示内容 | boolean | true
 
-更多属性请参考 [Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)
+更多属性请参考 [Tooltip Props](./tooltip.md#tooltip)
 
 ## Slots
 

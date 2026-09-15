@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { VNode } from 'vue'
 import { useSlotsExist } from 'components/utils'
 export interface Props {
   orientation?: 'left' | 'center' | 'right' // 分割线标题的位置
@@ -10,6 +11,10 @@ export interface Props {
   vertical?: boolean // 是否垂直分割
   height?: string | number // 垂直分割线高度，仅当 vertical: true 时生效
 }
+// 声明组件插槽类型
+export interface DividerSlots {
+  default?: () => VNode[]
+}
 const props = withDefaults(defineProps<Props>(), {
   orientation: 'center',
   orientationMargin: undefined,
@@ -19,6 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
   vertical: false,
   height: '0.9em'
 })
+defineSlots<DividerSlots>()
 const slotsExist = useSlotsExist(['default'])
 const margin = computed(() => {
   if (typeof props.orientationMargin === 'number') {

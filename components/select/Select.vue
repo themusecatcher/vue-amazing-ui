@@ -1,10 +1,10 @@
 ​
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watchEffect, watch, nextTick, onUnmounted } from 'vue'
 import type { CSSProperties } from 'vue'
 import Empty from 'components/empty'
-import Scrollbar from 'components/scrollbar'
-import { useEventListener, useMutationObserver, useInject, useOptionsSupported } from 'components/utils'
+import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
+import { getShelterRect, useInject, useScrollParent, useFloatingPosition } from 'components/utils'
 export interface Option {
   label?: string // 选项名
   value?: string | number // 选项值
@@ -29,9 +29,9 @@ export interface Props {
     根据输入项进行筛选，默认为 true 时，筛选每个选项的文本字段 label 是否包含输入项，包含返回 true，反之返回 false
     当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
   */
-  filter?: Function | true // 过滤条件函数，仅当支持搜索时生效
+  filter?: ((inputValue: string, option: Option) => boolean) | true // 过滤条件函数，仅当支持搜索时生效
   maxDisplay?: number // 下拉面板最多能展示的项数，超过后滚动显示
-  scrollbarProps?: object // 下拉面板滚动条 scrollbar 组件属性配置
+  scrollbarProps?: ScrollbarProps // 下拉面板滚动条 scrollbar 组件属性配置
   modelValue?: number | string // (v-model) 当前选中的 option 条目值
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -55,12 +55,13 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const filterOptions = ref<Option[]>([]) // 过滤后的选项数组
-const selectedName = ref() // 当前选中选项的 label
+let filterResetTimer: ReturnType<typeof setTimeout> | null = null // 面板关闭态下延迟重置选项的定时器
+const selectedName = ref<string | number | null>() // 当前选中选项的 label
 const inputRef = ref<HTMLElement | null>(null) // input 元素引用
-const inputValue = ref() // 支持搜索时，用户输入内容
+const inputValue = ref<string>() // 支持搜索时，用户输入内容
 const disabledBlur = ref<boolean>(false) // 是否禁用 input 标签的 blur 事件
 const hideSelectName = ref<boolean>(false) // 用户输入时，隐藏 selectName 的展示
-const hoverValue = ref() // 鼠标悬浮项的 value 值
+const hoverValue = ref<string | number | null>() // 鼠标悬浮项的 value 值
 const showOptions = ref<boolean>(false) // 显示隐藏 options 面板
 const showArrow = ref<boolean>(true) // 剪头图标显隐
 const showClear = ref<boolean>(false) // 清除图标显隐
@@ -68,19 +69,13 @@ const showCaret = ref<boolean>(false) // 支持搜索时，输入光标的显隐
 const showSearch = ref<boolean>(false) // 搜索图标显隐
 const selectFocused = ref<boolean>(false) /// select 是否聚焦
 const { colorPalettes, shadowColor } = useInject('Select') // 主题色注入
-const scrollTarget = ref<HTMLElement | null>(null) // 最近的可滚动父元素
-const scrollTop = ref<number>(0) // scrollTarget 的滚动位置
 const panelOffset = ref<number>(0) // 下拉面板相对于 selectContent 的垂直偏移距离
 const panelPlace = ref<'bottom' | 'top'>('bottom') // 下拉面板位置
 const selectContentRef = ref<HTMLElement | null>(null) // selectContent 模板引用
-const selectContentRect = ref<DOMRect>() // selectContent 元素的大小及其相对于视口的位置
-const positionedContainer = ref<HTMLElement | null>(null) // 下拉面板相对定位的容器元素
-const positionedContainerRect = ref<DOMRect>() // positionedContainer 元素的大小及其相对于视口的位置
 const selectPanelRef = ref<HTMLElement | null>(null) // 下拉面板 selectPanel 模板引用
 const selectPanelHeight = ref<number>() // 下拉面板 selectPanel 的高度
-const viewportWidth = ref<number>(document.documentElement.clientWidth) // 视口宽度(不包括滚动条)
-const viewportHeight = ref<number>(document.documentElement.clientHeight) // 视口高度(不包括滚动条)
-const { isSupported: passiveSupported } = useOptionsSupported('passive')
+// 测量定位容器与内容元素矩形
+const { positionedContainerRect, contentRect, measure } = useFloatingPosition(selectContentRef, selectPanelRef)
 const emits = defineEmits(['update:modelValue', 'change', 'openChange'])
 const selectWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -110,16 +105,16 @@ const optionsStyle = computed(() => {
   return style
 })
 const panelPlacement = computed(() => {
-  const contentTop = (selectContentRect.value as DOMRect)?.top ?? 0
+  const contentTop = (contentRect.value as DOMRect)?.top ?? 0
   const containerTop = (positionedContainerRect.value as DOMRect)?.top ?? 0
   const offsetTop = contentTop - containerTop
-  const contentBottom = (selectContentRect.value as DOMRect)?.bottom ?? 0
+  const contentBottom = (contentRect.value as DOMRect)?.bottom ?? 0
   const containerBottom = (positionedContainerRect.value as DOMRect)?.bottom ?? 0
   const offsetBottom = containerBottom - contentBottom
-  const contentLeft = (selectContentRect.value as DOMRect)?.left ?? 0
+  const contentLeft = (contentRect.value as DOMRect)?.left ?? 0
   const containerLeft = (positionedContainerRect.value as DOMRect)?.left ?? 0
   const offsetLeft = contentLeft - containerLeft
-  const panelWidth = (selectContentRect.value as DOMRect)?.width ?? 0
+  const panelWidth = (contentRect.value as DOMRect)?.width ?? 0
   switch (panelPlace.value) {
     case 'bottom':
       return {
@@ -147,47 +142,52 @@ const panelPlacement = computed(() => {
       }
   }
 })
-watch(
-  () => [props.placement, props.flip],
-  () => {
-    updatePosition()
-  },
-  {
-    deep: true
-  }
-)
-watch(showOptions, (to) => {
+watch([() => props.placement, () => props.flip], () => {
+  updatePosition()
+})
+watch(showOptions, async (to) => {
+  // 首次打开时才用 v-if 渲染面板，此后仅由 v-show 控制显隐
   if (to && !initialDisplay.value) {
     initialDisplay.value = true
   }
-})
-watch(showOptions, (to) => {
   emits('openChange', to)
   if (props.search && !to) {
     inputValue.value = undefined
     hideSelectName.value = false
   }
+  // 打开面板时把当前选中项滚动到可视区域内
+  if (to) {
+    await scrollToSelected()
+  }
 })
 watchEffect(() => {
+  // 重跑前先取消上一次的延迟重置，避免定时器堆积
+  if (filterResetTimer) {
+    clearTimeout(filterResetTimer)
+    filterResetTimer = null
+  }
   if (props.search) {
     if (inputValue.value) {
+      const keyword = inputValue.value
       filterOptions.value = props.options.filter((option) => {
         if (typeof props.filter === 'function') {
-          return props.filter(inputValue.value, option)
+          return props.filter(keyword, option)
         } else {
-          return option[props.label].includes(inputValue.value)
+          return option[props.label].includes(keyword)
         }
       })
     } else {
       if (showOptions.value) {
         filterOptions.value = [...props.options]
       } else {
-        setTimeout(() => {
+        filterResetTimer = setTimeout(() => {
           filterOptions.value = [...props.options]
         }, 200)
       }
     }
-    if (filterOptions.value.length && inputValue.value) {
+    // inputValue 先判空可让本分支短路：否则 filterOptions 会被登记为该 effect 的依赖，
+    // 又被上面的延迟重置定时器写入，形成「写入 → 重跑 → 再排定时器」的自触发循环
+    if (inputValue.value && filterOptions.value.length) {
       hoverValue.value = filterOptions.value[0][props.value]
     } else {
       hoverValue.value = null
@@ -196,93 +196,35 @@ watchEffect(() => {
     filterOptions.value = props.options
   }
 })
+// 卸载时取消面板关闭态的延迟重置定时器，避免回调在卸载后仍持有组件作用域并写入状态
+onUnmounted(() => {
+  if (filterResetTimer) {
+    clearTimeout(filterResetTimer)
+    filterResetTimer = null
+  }
+})
 watchEffect(() => {
   initSelector()
 })
-onMounted(() => {
-  observeScroll()
-})
-onBeforeUnmount(() => {
-  cleanup()
-})
-// 监听 vitepress 文档页面滚动
-const mutationObserver = useMutationObserver(
-  scrollTarget,
-  () => {
-    if (scrollTop.value !== scrollTarget.value?.scrollTop) {
-      scrollTop.value = scrollTarget.value?.scrollTop ?? 0
-      updatePosition()
-    }
-  },
-  { subtree: true, attributes: true }
-)
-useEventListener(window, 'resize', getViewportSize)
-function getPositionedContainer(): void {
-  let parentElement = selectPanelRef.value?.parentElement
-  while (parentElement) {
-    if (parentElement === document.documentElement) {
-      positionedContainer.value = document.documentElement
-      return
-    }
-    const { position } = getComputedStyle(parentElement)
-    if (position !== 'static') {
-      positionedContainer.value = parentElement
-      return
-    }
-    parentElement = parentElement.parentElement
+// 查询并监听最近可滚动父元素，响应视口 resize
+const { scrollTarget, viewportWidth, viewportHeight } = useScrollParent(selectContentRef, updatePosition)
+// 将面板内当前选中项滚动到可视区域内（已可见时不做任何滚动）
+async function scrollToSelected(): Promise<void> {
+  await nextTick()
+  const scrollContainer = selectPanelRef.value?.querySelector<HTMLElement>('.scrollbar-container')
+  const selectedOption = selectPanelRef.value?.querySelector<HTMLElement>('.option-selected')
+  if (!scrollContainer || !selectedOption) return
+  // 用 offsetTop / offsetHeight 而非 getBoundingClientRect：
+  // 面板打开时正在播放 enter 缩放动画，rect 会被 transform 缩放失真，
+  // 导致误判选中项已可见而跳过滚动；offsetTop 是布局值，不受 transform 影响
+  const optionTop = selectedOption.offsetTop
+  const optionBottom = optionTop + selectedOption.offsetHeight
+  const { scrollTop, clientHeight } = scrollContainer
+  if (optionTop < scrollTop) {
+    scrollContainer.scrollTop = optionTop
+  } else if (optionBottom > scrollTop + clientHeight) {
+    scrollContainer.scrollTop = optionBottom - clientHeight
   }
-}
-function getViewportSize() {
-  viewportWidth.value = document.documentElement.clientWidth
-  viewportHeight.value = document.documentElement.clientHeight
-  observeScroll() // 窗口尺寸变化时，重新查询并监听最近可滚动父元素
-  updatePosition()
-}
-// 查询并监听最近可滚动父元素
-function observeScroll() {
-  cleanup()
-  scrollTarget.value = getScrollParent(selectContentRef.value)
-  scrollTarget.value &&
-    scrollTarget.value.addEventListener(
-      'scroll',
-      updatePosition,
-      passiveSupported.value ? { passive: true } : undefined
-    )
-  if (scrollTarget.value === document.documentElement) {
-    mutationObserver.start()
-  } else {
-    mutationObserver.stop()
-  }
-}
-/**
- * 清理滚动监听事件并重置滚动目标。
- *
- * 清理函数，移除滚动事件监听并重置滚动目标
- */
-function cleanup() {
-  scrollTarget.value && scrollTarget.value.removeEventListener('scroll', updatePosition)
-  scrollTarget.value = null
-}
-// 获取父元素
-function getParentElement(el: HTMLElement): HTMLElement | null {
-  // Document
-  if (el === document.documentElement) return null
-  return el.parentElement
-}
-// 查找最近的可滚动父元素
-function getScrollParent(el: HTMLElement | null): HTMLElement | null {
-  if (el === null) return null
-  const parentElement = getParentElement(el)
-  if (parentElement === null) return null
-  // Document
-  if (parentElement === document.documentElement) return document.documentElement
-  const isScrollable = (el: HTMLElement): boolean => {
-    const { overflow, overflowX, overflowY } = getComputedStyle(el)
-    return /(auto|scroll|overlay)/.test(overflow + overflowY + overflowX)
-  }
-  // Element
-  if (isScrollable(parentElement)) return parentElement
-  return getScrollParent(parentElement)
 }
 // 更新下拉面板位置
 function updatePosition() {
@@ -290,34 +232,23 @@ function updatePosition() {
 }
 // 计算下拉面板位置
 async function getPosition() {
-  await nextTick()
-  getPositionedContainer()
-  positionedContainerRect.value = positionedContainer.value?.getBoundingClientRect() as DOMRect
-  selectContentRect.value = selectContentRef.value?.getBoundingClientRect() as DOMRect
+  await measure()
   selectPanelHeight.value = selectPanelRef.value?.offsetHeight
-  panelOffset.value = selectContentRect.value.height + 4
+  panelOffset.value = (contentRect.value as DOMRect).height + 4
   if (props.flip) {
     panelPlace.value = getPlacement()
   }
 }
-// 获取可滚动父元素或视口的矩形信息
-function getShelterRect() {
-  if (scrollTarget.value) {
-    const scrollTargetRect = scrollTarget.value.getBoundingClientRect()
-    return {
-      top: scrollTargetRect.top < 0 ? 0 : scrollTargetRect.top,
-      bottom: scrollTargetRect.bottom > viewportHeight.value ? viewportHeight.value : scrollTargetRect.bottom
-    }
-  }
-  return {
-    top: 0,
-    bottom: viewportHeight.value
-  }
-}
 // 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
 function getPlacement(): 'bottom' | 'top' {
-  const { top, bottom } = selectContentRect.value as DOMRect // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
-  const { top: targetTop, bottom: targetBottom } = getShelterRect() // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
+  const { top, bottom } = contentRect.value as DOMRect // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
+  // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
+  const { top: targetTop, bottom: targetBottom } = getShelterRect(
+    scrollTarget.value,
+    selectPanelRef.value,
+    viewportWidth.value,
+    viewportHeight.value
+  )
   const topDistance = top - targetTop // 内容元素上边缘距离滚动元素上边缘的距离
   const bottomDistance = targetBottom - bottom // 内容元素下边缘距离动元素下边缘的距离
   return findPlace(props.placement, [])
@@ -504,7 +435,7 @@ function onChange(value: string | number, label: string, index: number): void {
       <span
         class="select-item"
         :class="{ 'select-placeholder': !selectedName || showOptions, 'select-item-hidden': hideSelectName }"
-        :title="selectedName"
+        :title="selectedName === null || selectedName === undefined ? undefined : String(selectedName)"
       >
         {{ selectedName || placeholder }}
       </span>

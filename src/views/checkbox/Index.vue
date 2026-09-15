@@ -111,7 +111,7 @@ function onCheckAllChange(checked: boolean) {
     <Checkbox :options="options" v-model:value="selectedOptions">
       <template #default="{ option, label, index }">
         <span v-if="index === 1" style="color: #ff6900">{{ label }}</span>
-        <span v-if="index === 3" style="color: #1677ff">{{ option.label }}</span>
+        <span v-if="index === 3" style="color: #1677ff">{{ option?.label }}</span>
       </template>
     </Checkbox>
     <h2 class="mt30 mb10">自定义间距</h2>

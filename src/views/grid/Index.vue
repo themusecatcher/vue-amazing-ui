@@ -2,31 +2,31 @@
 import { reactive } from 'vue'
 const colCountOptions = [
   {
-    label: 2,
+    label: '2',
     value: 2
   },
   {
-    label: 3,
+    label: '3',
     value: 3
   },
   {
-    label: 4,
+    label: '4',
     value: 4
   },
   {
-    label: 6,
+    label: '6',
     value: 6
   },
   {
-    label: 8,
+    label: '8',
     value: 8
   },
   {
-    label: 12,
+    label: '12',
     value: 12
   },
   {
-    label: 24,
+    label: '24',
     value: 24
   }
 ]

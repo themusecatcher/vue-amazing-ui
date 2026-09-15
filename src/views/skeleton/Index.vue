@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { SkeletonButtonProps, SkeletonAvatarProps } from 'vue-amazing-ui'
 const loading = ref<boolean>(false)
 const showSkeleton = () => {
   loading.value = true
@@ -9,9 +10,9 @@ const showSkeleton = () => {
 }
 const animated = ref(false)
 const block = ref(false)
-const size = ref('middle')
-const buttonShape = ref('default')
-const avatarShape = ref('circle')
+const size = ref<NonNullable<SkeletonButtonProps['size']>>('middle')
+const buttonShape = ref<SkeletonButtonProps['shape']>('default')
+const avatarShape = ref<SkeletonAvatarProps['shape']>('circle')
 const sizeOptions = ref([
   {
     label: 'small',

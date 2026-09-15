@@ -18,7 +18,7 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('formatValue2', formatValue2.value)
 })
-function formatter(value: number): string {
+function formatter(value: string | number): string {
   return formatNumber(value, 2) + '%'
 }
 function parser(value: string): number {
@@ -63,8 +63,8 @@ function onEnter(e: KeyboardEvent) {
       <InputNumber
         :width="120"
         v-model:value="formatValue1"
-        :formatter="(value: number) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-        :parser="(value: string) => value.replace(/\$\s?|(,*)/g, '')"
+        :formatter="(value: string | number) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+        :parser="(value: string) => Number(value.replace(/\$\s?|(,*)/g, ''))"
       />
       <InputNumber :width="120" v-model:value="formatValue2" :formatter="formatter" :parser="parser" />
     </Space>

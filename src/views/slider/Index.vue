@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, h, watchEffect, isVNode } from 'vue'
 import { FireFilled } from '@ant-design/icons-vue'
+import type { SliderMarks } from 'vue-amazing-ui'
 const singleValue = ref<number>(20)
 const doubleValue = ref<number[]>([20, 80])
 const disabledSingleValue = ref<number>(20)
@@ -21,7 +22,7 @@ const markVerticalSingleValue = ref<number>(37)
 const markVerticalDoubleValue1 = ref<number[]>([20, 65])
 const markVerticalDoubleValue2 = ref<number[]>([30, 60])
 const markVerticalDoubleValue3 = ref<number[]>([26, 37])
-const marks = ref<Record<number, any>>({
+const marks = ref<SliderMarks>({
   0: '0°C',
   26: '26°C',
   37: '37°C',
@@ -32,7 +33,7 @@ const marks = ref<Record<number, any>>({
     label: '100°C'
   }
 })
-const verticalMarks = ref<Record<number, any>>({
+const verticalMarks = ref<SliderMarks>({
   0: '0°C',
   26: '26°C',
   37: '37°C',

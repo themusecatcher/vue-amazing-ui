@@ -4,15 +4,16 @@ import type { CSSProperties, VNode } from 'vue'
 import { useResizeObserver, useSlotsExist, useInject } from 'components/utils'
 export interface Item {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
-  tab?: string // 页签显示文字 string | slot
+  tab?: string // 页签显示文字
   icon?: VNode // 页签图标
-  content?: string // 标签页内容 string | slot
+  content?: string // 标签页内容
   disabled?: boolean // 是否禁用页签
 }
+
 export interface Props {
   items?: Item[] // 标签页数组
-  prefix?: string // 标签页前缀 string | slot
-  suffix?: string // 标签页后缀 string | slot
+  prefix?: string // 标签页前缀
+  suffix?: string // 标签页后缀
   animated?: boolean // 是否启用切换动画，在 tabPosition: 'top' | 'bottom' 时有效
   centered?: boolean // 标签是否居中展示
   size?: 'small' | 'middle' | 'large' // 标签页大小
@@ -23,6 +24,14 @@ export interface Props {
   contentStyle?: CSSProperties // 自定义内容样式
   activeKey?: string | number // (v-model) 当前激活 tab 面板的 key
 }
+// 声明组件插槽类型
+export interface TabsSlots {
+  prefix?: () => VNode[]
+  tab?: (props: { item: Item; tab: string | undefined; key: string | number }) => VNode[]
+  suffix?: () => VNode[]
+  content?: (props: { item: Item; content: string | undefined; key: string | number }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],
   prefix: undefined,
@@ -37,17 +46,18 @@ const props = withDefaults(defineProps<Props>(), {
   contentStyle: () => ({}),
   activeKey: undefined
 })
-const tabsRef = ref() // 所有 tabs 的 ref 模板引用
+defineSlots<TabsSlots>()
+const tabsRef = ref<HTMLElement[]>([]) // 所有 tabs 的 ref 模板引用
 const tabBarLeft = ref(0) // tabBar 的水平偏移量
 const tabBarTop = ref(0) // tabBar 的垂直偏移量
 const tabBarWidth = ref(0) // tabBar 的宽度
 const tabBarHeight = ref(0) // tabBar 的高度
-const wrapRef = ref()
-const wrapWidth = ref()
-const wrapHeight = ref()
-const navRef = ref()
-const navWidth = ref()
-const navHeight = ref()
+const wrapRef = ref<HTMLElement | null>(null)
+const wrapWidth = ref<number>()
+const wrapHeight = ref<number>()
+const navRef = ref<HTMLElement | null>(null)
+const navWidth = ref<number>()
+const navHeight = ref<number>()
 const showWheel = ref(false) // 标签页是否存在滚动
 const scrollMax = ref(0) // 最大滚动距离
 const scrollLeft = ref(0) // 水平滚动距离
@@ -161,6 +171,7 @@ function getNavSize(): void {
   }
 }
 function getNavHorizontalSize(): void {
+  if (!wrapRef.value || !navRef.value) return
   wrapWidth.value = wrapRef.value.offsetWidth
   navWidth.value = navRef.value.offsetWidth
   if (navWidth.value > wrapWidth.value) {
@@ -174,6 +185,7 @@ function getNavHorizontalSize(): void {
   getBarDisplay()
 }
 function getNavVerticalSize(): void {
+  if (!wrapRef.value || !navRef.value) return
   wrapHeight.value = wrapRef.value.offsetHeight
   navHeight.value = navRef.value.offsetHeight
   if (navHeight.value > wrapHeight.value) {
@@ -203,7 +215,7 @@ function getBarHorizontalDisplay(): void {
         transition.value = true
         scrollLeft.value = tabBarLeft.value
       }
-      const targetScroll = tabBarLeft.value + tabBarWidth.value - wrapWidth.value
+      const targetScroll = tabBarLeft.value + tabBarWidth.value - (wrapWidth.value ?? 0)
       if (targetScroll > scrollLeft.value) {
         transition.value = true
         scrollLeft.value = targetScroll
@@ -224,7 +236,7 @@ function getBarVerticalDisplay(): void {
         transition.value = true
         scrollTop.value = tabBarTop.value
       }
-      const targetScroll = tabBarTop.value + tabBarHeight.value - wrapHeight.value
+      const targetScroll = tabBarTop.value + tabBarHeight.value - (wrapHeight.value ?? 0)
       if (targetScroll > scrollTop.value) {
         transition.value = true
         scrollTop.value = targetScroll

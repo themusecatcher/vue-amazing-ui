@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { AutoCompleteProps } from 'vue-amazing-ui'
 import { UserOutlined } from '@ant-design/icons-vue'
-// 1. 基本使用（远程搜索）
+// 基本使用（远程搜索）
 const value1 = ref('')
 const options1 = ref<{ value: string }[]>([])
 function mockVal(str: string, repeat = 1): { value: string } {
@@ -10,14 +11,14 @@ function mockVal(str: string, repeat = 1): { value: string } {
 function onSearch1(searchText: string) {
   options1.value = !searchText ? [] : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)]
 }
-// 2. 自定义选项
+// 自定义选项
 const value2 = ref('')
 const options2 = ref<{ value: string }[]>([])
 function onSearch2(val: string) {
   options2.value =
     !val || val.includes('@') ? [] : ['gmail.com', '163.com', 'qq.com'].map((domain) => ({ value: `${val}@${domain}` }))
 }
-// 3. 自定义输入组件
+// 自定义输入组件
 const value3 = ref('')
 const options3 = ref<{ value: string }[]>([])
 function onSearch3(val: string) {
@@ -26,7 +27,7 @@ function onSearch3(val: string) {
 function onSelect3(value: string) {
   console.log('onSelect', value)
 }
-// 4. 不区分大小写（filterOption 函数）
+// 不区分大小写（filterOption 函数）
 const value4 = ref('')
 const options4 = ref<{ value: string }[]>([
   { value: 'Burns Bay Road' },
@@ -37,32 +38,32 @@ function filterOption(input: string, option: unknown): boolean {
   const value = (option as { value?: string }).value ?? ''
   return value.toUpperCase().includes(input.toUpperCase())
 }
-// 5. 查询模式 - 确定类目（options 嵌套 options 结构，与 Ant Design Vue 一致）
+// 查询模式 - 确定类目（options 嵌套 options 结构）
 const value5 = ref('')
 const options5 = ref([
   {
     value: 'Libraries',
     options: [
-      { value: 'AntDesignVue', count: 10000 },
-      { value: 'AntDesignVue UI', count: 10600 }
+      { value: 'VueAmazingUI', count: 10000 },
+      { value: 'VueAmazingUI 组件', count: 10600 }
     ]
   },
   {
     value: 'Solutions',
     options: [
-      { value: 'AntDesignVue UI FAQ', count: 60100 },
-      { value: 'AntDesignVue FAQ', count: 30010 }
+      { value: 'VueAmazingUI 组件 FAQ', count: 60100 },
+      { value: 'VueAmazingUI FAQ', count: 30010 }
     ]
   },
   {
     value: 'Articles',
-    options: [{ value: 'AntDesignVue design language', count: 100000 }]
+    options: [{ value: 'VueAmazingUI 设计语言', count: 100000 }]
   },
   {
     value: 'all'
   }
 ])
-// 6. 查询模式 - 不确定类目
+// 查询模式 - 不确定类目
 interface SearchOption {
   query: string
   category: string
@@ -91,7 +92,7 @@ function searchResult(query: string): SearchOption[] {
 function onSearch6(val: string) {
   options6.value = val ? searchResult(val) : []
 }
-// 7. 自定义状态 / 8. 无边框 / 9. 自定义清除按钮 共用数据源
+// 自定义状态 / 无边框 / 自定义清除按钮 共用数据源
 const value7 = ref('')
 const value8 = ref('')
 const value9 = ref('')
@@ -107,8 +108,8 @@ function onSelect7(value: string) {
 function onClear() {
   console.log('onClear')
 }
-// 补充用例：三种尺寸
-const size = ref('middle')
+// 三种尺寸
+const size = ref<AutoCompleteProps['size']>('middle')
 const sizeOptions = [
   {
     label: 'small',
@@ -124,7 +125,7 @@ const sizeOptions = [
   }
 ]
 const valueS = ref('')
-// 补充用例：禁用 / 禁用选项
+// 禁用 / 禁用选项
 const valueD = ref('')
 const valueDD = ref('')
 const optionsD = ref([
@@ -162,10 +163,10 @@ const optionsD = ref([
     value: '君士坦丁堡'
   }
 ])
-// 补充用例：字符串数组数据源
+// 字符串数组数据源
 const valueArr = ref('')
 const optionsArr = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry', 'Fig', 'Grape']
-// 补充用例：分组数据源（options 嵌套 options 结构，与 Ant Design Vue 一致）
+// 分组数据源（options 嵌套 options 结构）
 const valueGroup = ref('')
 const optionsGroup = ref([
   {
@@ -190,18 +191,18 @@ const optionsGroup = ref([
     ]
   }
 ])
-// 补充用例：键盘/悬浮回填 backfill（hover 选项时回填输入框）
+// 键盘/悬浮回填 backfill（hover 选项时回填输入框）
 const valueBackfill = ref('')
 const optionsBackfill = ['Apple', 'Banana', 'Cherry', 'Durian']
-// 补充用例：受控展开 open（外部按钮控制下拉面板显隐）
+// 受控展开 open（外部按钮控制下拉面板显隐）
 const valueOpen = ref('')
 const openControlled = ref(false)
 const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
-// 补充用例：默认展开 defaultOpen
+// 默认展开 defaultOpen
 const valueDefaultOpen = ref('')
-// 补充用例：关闭默认高亮首项 defaultActiveFirstOption
+// 关闭默认高亮首项 defaultActiveFirstOption
 const valueActiveFirst = ref('')
-// 补充用例：下拉面板宽度 dropdownMatchSelectWidth（指定为 300）
+// 下拉面板宽度 dropdownMatchSelectWidth（指定为 300）
 const valueMatchWidth = ref('')
 const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选项文本 B', '一个较长的选项文本 C']
 </script>
@@ -214,7 +215,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
         <AutoComplete
           v-model:value="value1"
           :options="options1"
-          style="width: 200px"
+          :width="200"
           placeholder="input here"
           @search="onSearch1"
         />
@@ -226,13 +227,13 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
         <AutoComplete
           v-model:value="value2"
           :options="options2"
-          style="width: 200px"
+          :width="200"
           placeholder="input here"
           @search="onSearch2"
         >
           <template #option="{ value: val }">
-            {{ val.split('@')[0] }} @
-            <span style="font-weight: bold">{{ val.split('@')[1] }}</span>
+            {{ String(val).split('@')[0] }} @
+            <span style="font-weight: bold">{{ String(val).split('@')[1] }}</span>
           </template>
         </AutoComplete>
       </Space>
@@ -240,13 +241,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
     <h2 class="mt30 mb10">自定义输入组件</h2>
     <Space align="start" :size="40">
       <Space vertical>
-        <AutoComplete
-          v-model:value="value3"
-          :options="options3"
-          style="width: 200px"
-          @search="onSearch3"
-          @select="onSelect3"
-        >
+        <AutoComplete v-model:value="value3" :options="options3" :width="200" @search="onSearch3" @select="onSelect3">
           <Textarea placeholder="input here" style="height: 50px" />
         </AutoComplete>
       </Space>
@@ -257,7 +252,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
         <AutoComplete
           v-model:value="value4"
           :options="options4"
-          style="width: 200px"
+          :width="200"
           placeholder="input here"
           :filter-option="filterOption"
         />
@@ -266,23 +261,18 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
     <h2 class="mt30 mb10">查询模式 - 确定类目</h2>
     <Space align="start" :size="40">
       <Space vertical>
-        <AutoComplete
-          v-model:value="value5"
-          :options="options5"
-          style="width: 250px"
-          :dropdown-match-select-width="500"
-        >
+        <AutoComplete v-model:value="value5" :options="options5" :width="250" :dropdown-match-select-width="500">
           <template #option="item">
             <template v-if="item.options">
               <div style="display: flex; justify-content: space-between; align-items: center">
                 <span>{{ item.value }}</span>
-                <a href="https://www.google.com/search?q=ant-design-vue" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.google.com/search?q=vue-amazing-ui" target="_blank" rel="noopener noreferrer">
                   more
                 </a>
               </div>
             </template>
             <template v-else-if="item.value === 'all'">
-              <a href="https://www.google.com/search?q=ant-design-vue" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.google.com/search?q=vue-amazing-ui" target="_blank" rel="noopener noreferrer">
                 View all results
               </a>
             </template>
@@ -303,13 +293,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
     <h2 class="mt30 mb10">查询模式 - 不确定类目</h2>
     <Space align="start" :size="40">
       <Space vertical>
-        <AutoComplete
-          v-model:value="value6"
-          :options="options6"
-          style="width: 300px"
-          @select="onSelect6"
-          @search="onSearch6"
-        >
+        <AutoComplete v-model:value="value6" :options="options6" :width="300" @select="onSelect6" @search="onSearch6">
           <template #option="item">
             <div style="display: flex; justify-content: space-between">
               <span>
@@ -331,7 +315,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
         <AutoComplete
           v-model:value="value7"
           :options="options7"
-          style="width: 200px"
+          :width="200"
           placeholder="input here"
           status="error"
           @search="onSearch7"
@@ -340,7 +324,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
         <AutoComplete
           v-model:value="value8"
           :options="options7"
-          style="width: 200px"
+          :width="200"
           placeholder="input here"
           status="warning"
           allow-clear
@@ -356,7 +340,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
         <AutoComplete
           v-model:value="value9"
           :options="options7"
-          style="width: 200px"
+          :width="200"
           placeholder="border less"
           :bordered="false"
           @search="onSearch7"
@@ -370,7 +354,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
         <AutoComplete
           v-model:value="value10"
           :options="options7"
-          style="width: 200px"
+          :width="200"
           placeholder="Clearable"
           allow-clear
           @search="onSearch7"
@@ -379,7 +363,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
         <AutoComplete
           v-model:value="value11"
           :options="options7"
-          style="width: 200px"
+          :width="200"
           placeholder="Customized clear icon"
           allow-clear
           @search="onSearch7"
@@ -408,49 +392,32 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
       <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Space align="start" :size="40">
         <Space vertical>
-          <AutoComplete
-            v-model:value="valueS"
-            :options="optionsD"
-            style="width: 200px"
-            placeholder="input here"
-            :size="size"
-          />
+          <AutoComplete v-model:value="valueS" :options="optionsD" :width="200" placeholder="input here" :size="size" />
         </Space>
       </Space>
     </Space>
     <h2 class="mt30 mb10">禁用</h2>
     <Space align="start" :size="40">
       <Space vertical>
-        <AutoComplete
-          v-model:value="valueD"
-          :options="optionsD"
-          style="width: 200px"
-          placeholder="input here"
-          disabled
-        />
+        <AutoComplete v-model:value="valueD" :options="optionsD" :width="200" placeholder="input here" disabled />
       </Space>
     </Space>
     <h2 class="mt30 mb10">禁用选项</h2>
     <Space align="start" :size="40">
       <Space vertical>
-        <AutoComplete v-model:value="valueDD" :options="optionsD" style="width: 200px" placeholder="input here" />
+        <AutoComplete v-model:value="valueDD" :options="optionsD" :width="200" placeholder="input here" />
       </Space>
     </Space>
     <h2 class="mt30 mb10">字符串数组数据源</h2>
     <Space align="start" :size="40">
       <Space vertical>
-        <AutoComplete v-model:value="valueArr" :options="optionsArr" style="width: 200px" placeholder="input here" />
+        <AutoComplete v-model:value="valueArr" :options="optionsArr" :width="200" placeholder="input here" />
       </Space>
     </Space>
     <h2 class="mt30 mb10">分组数据源</h2>
     <Space align="start" :size="40">
       <Space vertical>
-        <AutoComplete
-          v-model:value="valueGroup"
-          :options="optionsGroup"
-          style="width: 200px"
-          placeholder="input here"
-        />
+        <AutoComplete v-model:value="valueGroup" :options="optionsGroup" :width="200" placeholder="input here" />
       </Space>
     </Space>
     <h2 class="mt30 mb10">键盘/悬浮回填</h2>
@@ -463,7 +430,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
         <AutoComplete
           v-model:value="valueBackfill"
           :options="optionsBackfill"
-          style="width: 200px"
+          :width="200"
           placeholder="input here"
           backfill
         />
@@ -476,7 +443,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
         v-model:value="valueOpen"
         :options="optionsOpen"
         :open="openControlled"
-        style="width: 200px"
+        :width="200"
         placeholder="input here"
         @dropdown-visible-change="openControlled = $event"
       />
@@ -491,7 +458,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
         <AutoComplete
           v-model:value="valueDefaultOpen"
           :options="optionsOpen"
-          style="width: 200px"
+          :width="200"
           placeholder="input here"
           default-open
         />
@@ -503,7 +470,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
         <AutoComplete
           v-model:value="valueActiveFirst"
           :options="optionsOpen"
-          style="width: 200px"
+          :width="200"
           placeholder="input here"
           :default-active-first-option="false"
         />
@@ -516,7 +483,7 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
         <AutoComplete
           v-model:value="valueMatchWidth"
           :options="optionsMatchWidth"
-          style="width: 200px"
+          :width="200"
           placeholder="面板宽 300"
           :dropdown-match-select-width="300"
         />

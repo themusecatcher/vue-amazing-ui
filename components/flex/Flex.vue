@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { VNode } from 'vue'
 export interface Props {
   width?: string | number // 弹性区域总宽度，单位 px
   vertical?: boolean // flex 主轴的方向是否垂直，vertical 使用 flex-direction: column
@@ -7,6 +8,10 @@ export interface Props {
   justify?: string // 设置元素在主轴方向上的对齐方式；参考 justify-content
   align?: string // 设置元素在交叉轴方向上的对齐方式；参考 align-items
   gap?: number | number[] | 'small' | 'middle' | 'large' // 设置网格之间的间隙，数组时表示: [水平间距, 垂直间距]
+}
+// 声明组件插槽类型
+export interface FlexSlots {
+  default?: () => VNode[]
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 'auto',
@@ -16,6 +21,7 @@ const props = withDefaults(defineProps<Props>(), {
   align: 'normal',
   gap: 'middle'
 })
+defineSlots<FlexSlots>()
 const flexWidth = computed(() => {
   if (typeof props.width === 'number') {
     return `${props.width}px`

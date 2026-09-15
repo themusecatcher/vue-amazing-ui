@@ -92,7 +92,11 @@ onMounted(() => {
   getAreaHeight()
 })
 function getAreaHeight(): void {
-  areaHeight.value = (textareaRef.value as HTMLElement).scrollHeight + 2
+  // SSR（Node）下模板引用为空，判空后再读取
+  if (!textareaRef.value) {
+    return
+  }
+  areaHeight.value = textareaRef.value.scrollHeight + 2
 }
 // 文本合成系统即输入法编辑器开始新的输入合成时会触发
 function onCompositionStart(e: CompositionEvent): void {

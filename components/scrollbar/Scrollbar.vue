@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import type { CSSProperties } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import { debounce, useResizeObserver, useScroll } from 'components/utils'
 export interface Props {
   contentClass?: string // 内容 div 的类名
@@ -14,6 +14,10 @@ export interface Props {
   xPlacement?: 'top' | 'bottom' // 横向滚动时滚动条的位置
   yPlacement?: 'left' | 'right' // 纵向滚动时滚动条的位置
 }
+// 声明组件插槽类型
+export interface ScrollbarSlots {
+  default?: () => VNode[]
+}
 const props = withDefaults(defineProps<Props>(), {
   contentClass: undefined,
   contentStyle: () => ({}),
@@ -26,10 +30,11 @@ const props = withDefaults(defineProps<Props>(), {
   xPlacement: 'bottom',
   yPlacement: 'right'
 })
-const containerRef = ref() // 滚动容器 DOM 引用
-const contentRef = ref() // 滚动内容 DOM 引用
-const railVerticalRef = ref() // 垂直滚动条 DOM 引用
-const railHorizontalRef = ref() // 水平滚动条 DOM 引用
+defineSlots<ScrollbarSlots>()
+const containerRef = ref<HTMLElement | null>(null) // 滚动容器 DOM 引用
+const contentRef = ref<HTMLElement | null>(null) // 滚动内容 DOM 引用
+const railVerticalRef = ref<HTMLElement | null>(null) // 垂直滚动条 DOM 引用
+const railHorizontalRef = ref<HTMLElement | null>(null) // 水平滚动条 DOM 引用
 const showYTrack = ref(false) // 是否显示垂直滚动条
 const showXTrack = ref(false) // 是否显示横向滚动条
 const containerScrollHeight = ref(0) // 滚动区域高度，包括溢出高度
@@ -141,10 +146,12 @@ const {
 } = useScroll(containerRef)
 useResizeObserver([containerRef, contentRef], updateState)
 function updateScrollState(): void {
+  if (!containerRef.value) return
   containerScrollTop.value = containerRef.value.scrollTop
   containerScrollLeft.value = containerRef.value.scrollLeft
 }
 function updateScrollbarState(): void {
+  if (!containerRef.value || !contentRef.value || !railVerticalRef.value || !railHorizontalRef.value) return
   containerScrollHeight.value = containerRef.value.scrollHeight
   containerScrollWidth.value = containerRef.value.scrollWidth
   containerClientHeight.value = containerRef.value.clientHeight
@@ -290,7 +297,9 @@ function handleYTrackPointerMove(e: PointerEvent): void {
   let toScrollTop = memoYTop.value + dScrollTop
   toScrollTop = Math.min(toScrollTopUpperBound, toScrollTop)
   toScrollTop = Math.max(toScrollTop, 0)
-  containerRef.value.scrollTop = toScrollTop
+  if (containerRef.value) {
+    containerRef.value.scrollTop = toScrollTop
+  }
 }
 function handleYTrackPointerUp(): void {
   trackYPressed.value = false
@@ -322,7 +331,9 @@ function handleXTrackPointerMove(e: PointerEvent): void {
   let toScrollLeft = memoXLeft.value + dScrollLeft
   toScrollLeft = Math.min(toScrollLeftUpperBound, toScrollLeft)
   toScrollLeft = Math.max(toScrollLeft, 0)
-  containerRef.value.scrollLeft = toScrollLeft
+  if (containerRef.value) {
+    containerRef.value.scrollLeft = toScrollLeft
+  }
 }
 function handleXTrackPointerUp(): void {
   trackXPressed.value = false
