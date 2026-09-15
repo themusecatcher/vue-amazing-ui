@@ -2,7 +2,7 @@
 import { ref, computed, watchEffect, watch, onMounted } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Scrollbar from 'components/scrollbar'
-import { useInject, useScrollParent, useFloatingPosition, useSlotsExist } from 'components/utils'
+import { getShelterRect, useInject, useScrollParent, useFloatingPosition, useSlotsExist } from 'components/utils'
 export interface Option {
   disabled?: boolean // 是否禁用
   value: string | number // 唯一的 value 值
@@ -348,27 +348,16 @@ async function getPosition() {
   panelPlace.value = getPlacement()
   panelAlign.value = getAlign()
 }
-// 获取可滚动父元素或视口的矩形信息：仅当可滚动父元素真正裁剪面板 (即面板挂载在该容器内) 时，才以其为界，否则以视口为界
-// 修复：面板 Teleport 到 body/具名容器时不受中间滚动容器 overflow 裁剪，flip 边界应为视口，避免空间充足却意外翻转
-function getShelterRect() {
-  const clipByScrollTarget =
-    scrollTarget.value && scrollTarget.value !== document.documentElement && scrollTarget.value.contains(panelRef.value)
-  if (scrollTarget.value && clipByScrollTarget) {
-    const scrollTargetRect = scrollTarget.value.getBoundingClientRect()
-    return {
-      top: scrollTargetRect.top < 0 ? 0 : scrollTargetRect.top,
-      bottom: scrollTargetRect.bottom > viewportHeight.value ? viewportHeight.value : scrollTargetRect.bottom
-    }
-  }
-  return {
-    top: 0,
-    bottom: viewportHeight.value
-  }
-}
 // 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
 function getPlacement(): 'bottom' | 'top' {
   const { top, bottom } = contentRect.value as DOMRect // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
-  const { top: targetTop, bottom: targetBottom } = getShelterRect() // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
+  // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
+  const { top: targetTop, bottom: targetBottom } = getShelterRect(
+    scrollTarget.value,
+    panelRef.value,
+    viewportWidth.value,
+    viewportHeight.value
+  )
   const topDistance = top - targetTop // 内容元素上边缘距离滚动元素上边缘的距离
   const bottomDistance = targetBottom - bottom // 内容元素下边缘距离动元素下边缘的距离
   return findPlace('bottom', [])
