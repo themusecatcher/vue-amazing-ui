@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onBeforeUnmount, isVNode } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { useInject } from 'components/utils'
+import { createKeyGenerator, renderContentToVNode, useInject } from 'components/utils'
 import type { MessageApi } from './useMessage'
 // 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数
 export type ContentType = string | VNode | (() => VNode)
@@ -62,11 +62,8 @@ const emits = defineEmits<{
 }>()
 // 每条消息独立持有自动关闭定时器，按 key 存取，避免多条消息互相干扰
 const closeTimers = new Map<string, ReturnType<typeof setTimeout>>()
-let seed = 0
-function createKey(): string {
-  seed += 1
-  return `message_${Date.now()}_${seed}`
-}
+// 每条消息的唯一标识生成器
+const createKey = createKeyGenerator('message')
 function clearTimer(key: string): void {
   const timer = closeTimers.get(key)
   if (timer) {
@@ -175,10 +172,6 @@ function warning(message: string | MessageOptions): MessageReactive {
 function loading(message: string | MessageOptions): MessageReactive {
   return push(message, 'loading')
 }
-// 将内容归一化为可直接渲染的形态：函数式内容调用后得到 VNode
-function renderContent(content: ContentType): VNode | string {
-  return typeof content === 'function' ? content() : content
-}
 // 向 <MessageProvider> 回传 api，使其无需依赖模板 ref 即可对外提供
 emits('ready', { open, info, success, error, warning, loading, destroyAll })
 onBeforeUnmount(() => {
@@ -216,7 +209,7 @@ onBeforeUnmount(() => {
             @mouseleave="onLeave(message.key)"
             @click="onClick($event, message)"
           >
-            <component v-if="message.icon" :is="renderContent(message.icon)" class="icon-svg" />
+            <component v-if="message.icon" :is="renderContentToVNode(message.icon)" class="icon-svg" />
             <svg
               v-else-if="message.mode === 'info'"
               class="icon-svg"
