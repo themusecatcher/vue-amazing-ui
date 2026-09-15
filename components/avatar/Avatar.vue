@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import type { VNode } from 'vue'
-import { useEventListener, useSlotsExist } from 'components/utils'
+import { useSlotsExist, useWindowWidth } from 'components/utils'
 export interface Responsive {
   xs?: number // <576px 响应式栅格
   sm?: number // ≥576px 响应式栅格
@@ -38,7 +38,7 @@ const props = withDefaults(defineProps<Props>(), {
   target: '_self'
 })
 defineSlots<AvatarSlots>()
-const viewportWidth = ref<number>(typeof window !== 'undefined' ? window.innerWidth : 0)
+const viewportWidth = useWindowWidth() // 视口宽度，用于按断点切换响应式 size
 const slotsExist = useSlotsExist(['default', 'icon'])
 const showIcon = computed(() => {
   if (!props.src) {
@@ -114,12 +114,6 @@ const strStyle = computed(() => {
   }
   return {}
 })
-if (typeof window !== 'undefined') {
-  useEventListener(window, 'resize', getViewportWidth)
-}
-function getViewportWidth(): void {
-  viewportWidth.value = window.innerWidth
-}
 </script>
 <template>
   <component
