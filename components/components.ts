@@ -13,7 +13,7 @@ export { default as BackTop } from './back-top'
 export type { BadgeProps, BadgePresetColor, BadgeStatus } from './badge'
 export { default as Badge } from './badge'
 
-export type { BreadcrumbProps, BregitadcrumbRoute, BreadcrumbRouteQuery } from './breadcrumb'
+export type { BreadcrumbProps, BreadcrumbRoute, BreadcrumbRouteQuery } from './breadcrumb'
 export { default as Breadcrumb } from './breadcrumb'
 
 export type { ButtonProps } from './button'
@@ -67,16 +67,11 @@ export { createDiscreteApi } from './discrete'
 export type { DividerProps } from './divider'
 export { default as Divider } from './divider'
 
-export type {
-  DropdownProps,
-  DropdownButtonProps,
-  MenuOption as DropdownMenuOption,
-  Key as DropdownKey
-} from './dropdown'
-export { Dropdown, DropdownButton } from './dropdown'
-
 export type { DrawerProps } from './drawer'
 export { default as Drawer } from './drawer'
+
+export type { DropdownProps, DropdownButtonProps, DropdownMenuOption, DropdownKey } from './dropdown'
+export { Dropdown, DropdownButton } from './dropdown'
 
 export type { EllipsisProps } from './ellipsis'
 export { default as Ellipsis } from './ellipsis'
