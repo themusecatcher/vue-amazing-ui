@@ -150,8 +150,8 @@ until pnpm up vue-amazing-ui@$version; do
     echo "❌ pnpm up 重试 10 次仍失败，请稍后手动执行: pnpm up vue-amazing-ui@$version"
     exit 1
   fi
-  printf "⏳ registry 可能尚未同步 vue-amazing-ui 版本 %s，10 秒后重试 (%s/10)...\n" "$version" "$retry"
-  sleep 10
+  printf "⏳ registry 可能尚未同步 vue-amazing-ui 版本 %s，30 秒后重试 (%s/10)...\n" "$version" "$retry"
+  sleep 30
 done
 
 # 提交版本更新代码到 github
