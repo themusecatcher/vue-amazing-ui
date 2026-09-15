@@ -105,3 +105,19 @@ export function debounce(fn: Function, delay: number = 300): Function {
     }, delay)
   }
 }
+/**
+ * 唯一标识生成器工厂
+ *
+ * 生成 `${prefix}_${时间戳}_${自增序号}` 形式的唯一 key，供以 key 标识实例的组件（Message / Notification /
+ * Modal / Dialog 等）复用；自增序号由各自闭包独立维护，故同一毫秒内连续生成也不会重复
+ *
+ * @param {string} prefix 前缀，用于区分来源组件，如 'message'、'dialog'；不含分隔符，下划线由本函数补齐
+ * @returns {() => string} 返回一个每次调用都产出新 key 的函数
+ */
+export function createKeyGenerator(prefix: string): () => string {
+  let seed = 0
+  return () => {
+    seed += 1
+    return `${prefix}_${Date.now()}_${seed}`
+  }
+}

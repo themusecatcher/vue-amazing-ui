@@ -2,6 +2,7 @@
 import { ref, computed, watch, getCurrentInstance, onBeforeUnmount } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import {
+  getShelterRect,
   useSlotsExist,
   useResizeObserver,
   useOptionsSupported,
@@ -324,7 +325,7 @@ async function getPosition() {
 // 与 tooltipPlacement 渲染时的 left/top 计算口径保持一致
 function clampCrossAxis(cardWidth: number, cardHeight: number, crossAxis: 'horizontal' | 'vertical'): void {
   if (!props.flip) return
-  const shelter = getShelterRect()
+  const shelter = getShelterRect(scrollTarget.value, tooltipRef.value, viewportWidth.value, viewportHeight.value)
   const contentSizeRect = contentRect.value as DOMRect
   if (crossAxis === 'horizontal') {
     // 弹出框左/右边缘相对视口位置 = contentRect.left - cardLeft (+ cardWidth)
@@ -348,29 +349,6 @@ function clampCrossAxis(cardWidth: number, cardHeight: number, crossAxis: 'horiz
     }
   }
 }
-// 获取遮挡边界矩形：仅当可滚动父元素真正裁剪弹出框 (即弹出框挂载在该容器内) 时，才以其为界，否则以视口为界
-// 修复：弹出框 Teleport 到 body/具名容器时不受中间滚动容器 overflow 裁剪，flip 边界应为视口，避免空间充足却意外翻转
-function getShelterRect() {
-  const clipByScrollTarget =
-    scrollTarget.value &&
-    scrollTarget.value !== document.documentElement &&
-    scrollTarget.value.contains(tooltipRef.value)
-  if (scrollTarget.value && clipByScrollTarget) {
-    const scrollTargetRect = scrollTarget.value.getBoundingClientRect()
-    return {
-      top: scrollTargetRect.top < 0 ? 0 : scrollTargetRect.top,
-      left: scrollTargetRect.left < 0 ? 0 : scrollTargetRect.left,
-      bottom: scrollTargetRect.bottom > viewportHeight.value ? viewportHeight.value : scrollTargetRect.bottom,
-      right: scrollTargetRect.right > viewportWidth.value ? viewportWidth.value : scrollTargetRect.right
-    }
-  }
-  return {
-    top: 0,
-    left: 0,
-    bottom: viewportHeight.value,
-    right: viewportWidth.value
-  }
-}
 // 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
 // 主轴仅在同轴方向翻转 (top↔bottom / left↔right)，绝不跨轴，
 // 且始终保留原次轴对齐后缀 (如 Left/Right/Top/Bottom)，因此 bottomLeft 只会在 bottomLeft ↔ topLeft 之间切换
@@ -384,7 +362,13 @@ function getPlacement(): Placement {
   else if (propPlace.startsWith('right')) baseMain = 'right'
   const crossSuffix = propPlace.slice(baseMain.length) // '' | 'Left' | 'Right' | 'Top' | 'Bottom'
   const { top, bottom, left, right } = contentRect.value as DOMRect // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
-  const { top: targetTop, bottom: targetBottom, left: targetLeft, right: targetRight } = getShelterRect() // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
+  // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
+  const {
+    top: targetTop,
+    bottom: targetBottom,
+    left: targetLeft,
+    right: targetRight
+  } = getShelterRect(scrollTarget.value, tooltipRef.value, viewportWidth.value, viewportHeight.value)
   const topDistance = top - targetTop - (props.arrow ? 12 : 0) // 内容元素上边缘距离滚动元素上边缘的距离
   const bottomDistance = targetBottom - bottom - (props.arrow ? 12 : 0) // 内容元素下边缘距离滚动元素下边缘的距离
   const leftDistance = left - targetLeft - (props.arrow ? 12 : 0) // 内容元素左边缘距离滚动元素左边缘的距离

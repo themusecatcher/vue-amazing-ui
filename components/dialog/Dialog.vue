@@ -29,11 +29,11 @@ if (typeof document !== 'undefined') {
 </script>
 
 <script setup lang="ts">
-import { ref, computed, watch, onUnmounted, nextTick, isVNode, createTextVNode } from 'vue'
+import { ref, computed, watch, onUnmounted, nextTick, createTextVNode } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import Button, { type ButtonProps } from 'components/button'
-import { lockScroll, useSlotsExist } from 'components/utils'
+import { createKeyGenerator, lockScroll, renderContentToVNode, trapTabFocus, useSlotsExist } from 'components/utils'
 import type { DialogApi } from './useDialog'
 /** 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数 */
 export type ContentType = string | VNode | (() => VNode)
@@ -267,11 +267,8 @@ const emits = defineEmits<{
 const dialogList = ref<DialogItem[]>([])
 // 声明式实例的固定标识：由 props.open 驱动，与命令式实例共用同一渲染管线
 const DECLARATIVE_KEY = 'dialog_declarative'
-let seed = 0
-function createKey(): string {
-  seed += 1
-  return `dialog_${Date.now()}_${seed}`
-}
+// 每个对话框实例的唯一标识生成器
+const createKey = createKeyGenerator('dialog')
 // 栈尾实例：可能已关闭（destroyOnClose: false 的实例关闭后会滞留栈中）
 const topItem = computed<DialogItem | undefined>(() => dialogList.value[dialogList.value.length - 1])
 // 栈顶的「打开中」实例：Esc / 遮罩点击 / 焦点锁定必须作用于它；
@@ -315,16 +312,6 @@ function getComputedValue<K extends keyof Props>(item: DialogItem | undefined, k
     return item[key as keyof DialogOptions] as unknown as Props[K]
   }
   return props[key]
-}
-// 将内容统一渲染为节点：函数式内容调用一次，VNode 直接透传，字符串转为文本节点
-function renderContent(content: ContentType | undefined): VNode {
-  if (typeof content === 'function') {
-    return content()
-  }
-  if (isVNode(content)) {
-    return content
-  }
-  return createTextVNode(content ?? '')
 }
 // 长度类配置统一转字符串：数字补 px，字符串（含百分比）原样透传
 function resolveSize(value: string | number | undefined): string | undefined {
@@ -415,7 +402,7 @@ function closeIconNode(item: DialogItem): VNode | null {
   if (icon === undefined || icon === null) {
     return null
   }
-  return renderContent(icon)
+  return renderContentToVNode(icon)
 }
 // 确定按钮的 loading：实例内部异步 loading 与受控 confirmLoading 任一为真即展示
 function okLoading(item: DialogItem): boolean {
@@ -706,26 +693,6 @@ function onAfterLeave(el: Element): void {
     showDialogWrap.value = false
   }
 }
-// 焦点锁定的可聚焦元素选择器，覆盖常见交互元素与显式 tabindex
-const FOCUSABLE_SELECTOR = [
-  'a[href]',
-  'area[href]',
-  'input:not([disabled]):not([type="hidden"])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
-  'button:not([disabled])',
-  'iframe',
-  'audio[controls]',
-  'video[controls]',
-  '[contenteditable]:not([contenteditable="false"])',
-  '[tabindex]:not([tabindex="-1"])'
-].join(',')
-// 取容器内当前可见的可聚焦元素：隐藏元素（如未展开的面板）不参与循环
-function getFocusableEls(container: HTMLElement): HTMLElement[] {
-  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
-    (el) => el.getClientRects().length > 0
-  )
-}
 /**
  * 弹窗主体的键盘处理：keydown 绑定在弹窗主体上，
  * 由「焦点是否在弹窗内」决定由哪个弹窗响应，因此无需跨实例的全局仲裁栈；
@@ -742,33 +709,7 @@ function onKeydown(item: DialogItem, e: KeyboardEvent): void {
 }
 // Tab 焦点锁定：Tab / Shift + Tab 在弹窗内循环，避免键盘焦点跑到背景页面
 function trapTab(item: DialogItem, e: KeyboardEvent): void {
-  const container = containerEls.get(item.key)
-  if (!container) {
-    return
-  }
-  e.preventDefault()
-  const focusable = getFocusableEls(container)
-  if (focusable.length === 0) {
-    // 无可聚焦元素时退回外层容器，焦点不至于跑回背景页面
-    dialogWrapRef.value?.focus({ preventScroll: true })
-    return
-  }
-  const first = focusable[0]
-  const last = focusable[focusable.length - 1]
-  const activeIndex = focusable.indexOf(document.activeElement as HTMLElement)
-  if (activeIndex === -1) {
-    // 焦点已在弹窗外（如点击了背景区域）时，正序回到首个、倒序回到末个
-    const entry = e.shiftKey ? last : first
-    entry.focus({ preventScroll: true })
-    return
-  }
-  if (e.shiftKey) {
-    const prev = activeIndex === 0 ? last : focusable[activeIndex - 1]
-    prev.focus({ preventScroll: true })
-    return
-  }
-  const next = activeIndex === focusable.length - 1 ? first : focusable[activeIndex + 1]
-  next.focus({ preventScroll: true })
+  trapTabFocus(e, containerEls.get(item.key), dialogWrapRef.value)
 }
 // Esc 关闭：stopPropagation 避免冒泡后又被页面其他 Esc 监听处理一次
 function handleEsc(item: DialogItem, e: KeyboardEvent): void {
@@ -1087,7 +1028,7 @@ emits('ready', { open: openDialog, destroyAll })
                 >
                   <div :id="titleId(item)" :class="getComputedValue(item, 'titleClass')">
                     <slot name="title">
-                      <component :is="renderContent(getComputedValue(item, 'title'))" />
+                      <component :is="renderContentToVNode(getComputedValue(item, 'title'))" />
                     </slot>
                   </div>
                 </div>
@@ -1164,7 +1105,7 @@ emits('ready', { open: openDialog, destroyAll })
                     :style="getComputedValue(item, 'contentStyle')"
                   >
                     <slot>
-                      <component :is="renderContent(getComputedValue(item, 'content'))" />
+                      <component :is="renderContentToVNode(getComputedValue(item, 'content'))" />
                     </slot>
                   </div>
                 </Scrollbar>

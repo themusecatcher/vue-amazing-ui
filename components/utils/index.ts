@@ -11,3 +11,5 @@ export * from './hooks'
 export * from './observers'
 // 弹出定位相关 composable
 export * from './position'
+// 渲染辅助
+export * from './render'

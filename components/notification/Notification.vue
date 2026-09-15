@@ -2,7 +2,7 @@
 import { ref, reactive, onBeforeUnmount, isVNode, watch } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
 import Scrollbar from 'components/scrollbar'
-import { useInject } from 'components/utils'
+import { createKeyGenerator, renderContentToVNode, useInject } from 'components/utils'
 import type { NotificationApi } from './useNotification'
 // 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数
 export type ContentType = string | VNode | (() => VNode)
@@ -82,11 +82,8 @@ const closeTimers = new Map<string, ReturnType<typeof setTimeout>>()
 const LEAVE_DURATION = 200
 // 空分组回收定时器，组件卸载时统一清理
 const recycleTimers = new Set<ReturnType<typeof setTimeout>>()
-let seed = 0
-function createKey(): string {
-  seed += 1
-  return `notification_${Date.now()}_${seed}`
-}
+// 每条通知的唯一标识生成器
+const createKey = createKeyGenerator('notification')
 // 根据 placement 找到对应分组，不存在则创建
 function getGroup(placement: Placement): NotificationGroup {
   let group = notificationGroups.value.find((g) => g.placement === placement)
@@ -147,10 +144,6 @@ function contentStyle(placement: Placement): CSSProperties {
     alignItems,
     ...paddingStyle
   }
-}
-// 将内容归一化为可直接渲染的形态：函数式内容调用后得到 VNode
-function renderContent(content: ContentType): VNode | string {
-  return typeof content === 'function' ? content() : content
 }
 // 通知列表滚动容器的高度上限（scrollable 模式）：
 // 默认挂载到 body 时沿用 CSS 的 100vh 兜底；挂载到自定义容器时实时跟随容器高度，
@@ -421,7 +414,7 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
             @mouseenter="onEnter(group, notification.key)"
             @mouseleave="onLeave(group, notification.key)"
           >
-            <component v-if="notification.icon" :is="renderContent(notification.icon)" class="icon-svg" />
+            <component v-if="notification.icon" :is="renderContentToVNode(notification.icon)" class="icon-svg" />
             <svg
               v-else-if="notification.mode === 'info'"
               class="icon-svg"
