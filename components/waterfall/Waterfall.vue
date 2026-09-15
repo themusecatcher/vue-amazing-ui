@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import Spin, { type SpinProps } from 'components/spin'
-import { useResizeObserver } from 'components/utils'
+import { getImageName, useResizeObserver } from 'components/utils'
 /*
   宽度固定，图片等比例缩放；使用JS获取每张图片宽度和高度，结合 `relative` 和 `absolute` 定位
   计算每个图片的位置 `top`，`left`，保证每张新的图片都追加在当前高度最小的那列末尾
@@ -176,18 +176,6 @@ function getPosition(i: number, height: number): { top: number; left: number } {
 }
 function onLoaded(index: number): void {
   imagesLoaded.value[index] = true
-}
-// 从图像地址 src 中获取图像名称
-function getImageName(image: Image): string {
-  if (image) {
-    if (image.name) {
-      return image.name
-    } else {
-      const res = image.src.split('?')[0].split('/')
-      return res[res.length - 1]
-    }
-  }
-  return ''
 }
 </script>
 <template>

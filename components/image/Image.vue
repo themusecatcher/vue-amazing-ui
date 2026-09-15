@@ -3,7 +3,7 @@ import { computed, ref, watchEffect, nextTick } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Space, { type SpaceProps } from 'components/space'
 import Spin, { type SpinProps } from 'components/spin'
-import { add, downloadFile, useInject } from 'components/utils'
+import { add, downloadFile, getImageName, useInject } from 'components/utils'
 export interface Image {
   src: string // 图像地址
   name?: string // 图像名称，未设置时自动从图像地址 src 中提取
@@ -117,35 +117,6 @@ function onImageLoaded(index: number): void {
 // 预览图片加载完成（例如相册模式，可在预览中切换到未加载完成的图片）
 function onPreviewLoaded(index: number): void {
   previewCompleted.value[index] = true
-}
-// 从地址中提取路径末段作为原始文件名
-function getRawNameFromUrl(src: string): string {
-  // 以当前页面地址为 base 解析，兼容相对路径；解析失败时降级为手工切分
-  let pathname = ''
-  try {
-    pathname = new URL(src, location.href).pathname
-  } catch {
-    pathname = src.split('?')[0].split('#')[0]
-  }
-  const segments = pathname.split('/')
-  return segments[segments.length - 1] || ''
-}
-// 从图像地址 src 中获取图像名称
-// 优先使用显式传入的 name，否则从 src 中提取：
-// 用 URL.pathname 天然剥离查询参数（?）与哈希（#），再取末段并做 URL 解码
-function getImageName(image: Image): string | undefined {
-  if (image) {
-    if (image.name) {
-      return image.name
-    }
-    const rawName = getRawNameFromUrl(image.src)
-    try {
-      return decodeURIComponent(rawName)
-    } catch {
-      // 路径段含非法百分号编码时 decodeURIComponent 会抛异常，此时原样返回
-      return rawName
-    }
-  }
 }
 function getImageSize(size: string | number | (string | number)[], index: number): string {
   if (Array.isArray(size)) {
