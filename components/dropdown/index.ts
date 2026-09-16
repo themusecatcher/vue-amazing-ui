@@ -1,7 +1,12 @@
 import Dropdown from './dropdown'
-import DropdownButton from './dropdownbutton'
+import DropdownButton from './dropdown-button'
 
-export type { DropdownProps, MenuOption, Key } from './dropdown'
-export type { DropdownButtonProps } from './dropdownbutton'
+export type {
+  DropdownProps,
+  DropdownArrowOptions,
+  MenuOption as DropdownMenuOption,
+  Key as DropdownKey
+} from './dropdown'
+export type { DropdownButtonProps } from './dropdown-button'
 
 export { Dropdown, DropdownButton }

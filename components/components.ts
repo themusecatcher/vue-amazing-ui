@@ -70,7 +70,13 @@ export { default as Divider } from './divider'
 export type { DrawerProps } from './drawer'
 export { default as Drawer } from './drawer'
 
-export type { DropdownProps, DropdownButtonProps, DropdownMenuOption, DropdownKey } from './dropdown'
+export type {
+  DropdownProps,
+  DropdownArrowOptions,
+  DropdownButtonProps,
+  DropdownMenuOption,
+  DropdownKey
+} from './dropdown'
 export { Dropdown, DropdownButton } from './dropdown'
 
 export type { EllipsisProps } from './ellipsis'
