@@ -37,8 +37,7 @@ app.use(Button).use(Tag)
 app.mount('#app')
 ```
 
-> 样式入口也支持（更显式的）文件写法 `import 'vue-amazing-ui/es/button/style/index.js'`。
-> 旧写法 `import 'vue-amazing-ui/es/button/Button.css'` 依然有效，但它只引入组件自身样式，依赖组件样式与全局默认样式仍需自行补齐 —— 推荐使用入口写法。
+> 样式入口也支持（更显式的）文件写法 `import 'vue-amazing-ui/es/button/style/index.js'`。旧写法 `import 'vue-amazing-ui/es/button/Button.css'` 依然有效，但它只引入组件自身样式，依赖组件样式与全局默认样式仍需自行补齐 —— 推荐使用入口写法。
 
 ## 自动按需引入（强烈推荐）
 
