@@ -165,6 +165,13 @@ function increase() {
       <Badge color="#87d068" text="#87d068" />
       <Badge color="#108ee9" text="#108ee9" />
     </Space>
+    <h2 class="mt30 mb10">与浮层叠加</h2>
+    <p class="mb10">徽标是装饰层（默认 <code>z-index: 9</code>），始终位于 <code>Tooltip</code> 等浮层之下</p>
+    <Tooltip tooltip="Vue Amazing UI">
+      <Badge :value="5">
+        <Avatar shape="square" size="large" />
+      </Badge>
+    </Tooltip>
   </div>
 </template>
 <style lang="less" scoped>

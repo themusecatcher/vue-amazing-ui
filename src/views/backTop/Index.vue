@@ -100,6 +100,10 @@ function onShow(show: boolean) {
     <BackTop :right="260" :bottom="280">
       <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">改变位置</div>
     </BackTop>
+    <h2 class="mt30 mb10">自定义层级</h2>
+    <p class="mb10"> 通过 <code>zIndex</code> 调整按钮层级；按钮上的气泡为浮层（默认 1070），恒在按钮之上 </p>
+    <BackTop tooltip="回到顶部" :right="280" />
+    <BackTop tooltip="回到顶部" :z-index="3000" :right="340" />
     <h2 class="mt30 mb10">自定义监听目标</h2>
     <p class="mb10">自定义设定监听哪个元素来触发 <code>BackTop</code></p>
     <BackTop :listen-to="scrollContainer" :bottom="340" :visibility-height="10">

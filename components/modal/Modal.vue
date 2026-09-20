@@ -29,7 +29,7 @@ if (typeof document !== 'undefined') {
 </script>
 
 <script setup lang="ts">
-import { ref, computed, watch, onUnmounted, nextTick, createTextVNode, h, Fragment } from 'vue'
+import { ref, computed, watch, onUnmounted, nextTick, createTextVNode, h, Fragment, provide } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
 import Button, { type ButtonProps } from 'components/button'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
@@ -40,7 +40,10 @@ import {
   lockScroll,
   renderContentToVNode,
   trapTabFocus,
-  useSlotsExist
+  useSlotsExist,
+  useZIndex,
+  Z_INDEX_CONTAINER_OPEN_KEY,
+  FLOATING_LAYER_Z_INDEX
 } from 'components/utils'
 // 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数
 export type ContentType = string | VNode | (() => VNode)
@@ -86,7 +89,7 @@ export interface Props {
   wrapStyle?: CSSProperties // 自定义外层容器（.modal-wrap）样式，多实例同时打开时以栈顶为准
   containerClass?: string // 自定义弹窗定位层（.modal-container）类名，用于覆盖 width / top / zIndex 等定位表现
   containerStyle?: CSSProperties // 自定义弹窗定位层（.modal-container）样式，优先级高于 width / top / zIndex 等内置样式；定制背景 / 圆角 / 阴影等卡片外观请用 bodyClass / bodyStyle
-  zIndex?: number // 模态框层级，遮罩取该值，弹窗取该值 + 10
+  zIndex?: number // 模态框层级，遮罩取该值，弹窗取该值 + 10；未传时使用默认层级（遮罩 1000 / 弹窗 1010），或由 ConfigProvider 的 baseZIndex 分配
   autoFocusButton?: 'ok' | 'cancel' // 打开时自动聚焦的按钮。Esc 监听绑定在弹窗主体上，必须聚焦到弹窗内才会响应
   focusTriggerAfterClose?: boolean // 关闭后是否将焦点归还给触发元素
   modalRender?: (arg: { originVNode: VNode }) => VNode // 自定义渲染弹窗内容，常用于包裹拖拽逻辑
@@ -147,7 +150,7 @@ export interface ModalOptions {
   wrapStyle?: CSSProperties // 自定义外层容器（.modal-wrap）样式，多实例同时打开时以栈顶为准
   containerClass?: string // 自定义弹窗定位层（.modal-container）类名，用于覆盖 width / top / zIndex 等定位表现
   containerStyle?: CSSProperties // 自定义弹窗定位层（.modal-container）样式，优先级高于 width / top / zIndex 等内置样式；定制背景 / 圆角 / 阴影等卡片外观请用 bodyClass / bodyStyle
-  zIndex?: number // 模态框层级，遮罩取该值，弹窗取该值 + 10
+  zIndex?: number // 单实例层级，遮罩取该值，弹窗取该值 + 10；未传时回退到组件级 zIndex，再回退到默认层级（1000 / 1010）或 ConfigProvider 的 baseZIndex 分配
   autoFocusButton?: 'ok' | 'cancel'
   focusTriggerAfterClose?: boolean // 关闭后是否将焦点归还给触发元素
   modalRender?: (arg: { originVNode: VNode }) => VNode // 自定义渲染弹窗内容
@@ -212,7 +215,7 @@ const props = withDefaults(defineProps<Props>(), {
   wrapStyle: () => ({}),
   containerClass: undefined,
   containerStyle: () => ({}),
-  zIndex: 1000,
+  zIndex: undefined,
   autoFocusButton: 'ok',
   focusTriggerAfterClose: true,
   modalRender: undefined,
@@ -291,6 +294,18 @@ function setContainerEl(key: string, el: unknown): void {
   }
 }
 const showModalWrap = ref<boolean>(false)
+// 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配，未传则沿用既有默认层级 1000；
+// 本层需连续占用 2 段（遮罩取起始值、弹窗取 +10）
+// 领取时机完全由「出现」驱动（allocateOnMount: false）、层整体隐藏后归还（见 onAfterLeave）：
+// 不可见的层不该持有槽位，否则挂载但未打开的弹窗会持续抬高后续分配点
+const {
+  zIndex: layerZIndex,
+  allocate: allocateZIndex,
+  release: releaseZIndex
+} = useZIndex(FLOATING_LAYER_Z_INDEX.overlay, 2, {
+  allocateOnMount: false
+})
+const modalZIndex = computed(() => props.zIndex ?? layerZIndex.value)
 const { colorPalettes } = useInject('Modal') // 主题色注入
 const emits = defineEmits(['update:open', 'cancel', 'ok', 'know', 'change', 'ready'])
 // 声明式用法下暴露的具名插槽：除 modalRender 外均有模板 <slot> 出口；
@@ -330,7 +345,7 @@ function getComputedValue<K extends keyof Props>(item: ModalItem | undefined, ke
 }
 // 单个实例的层级：遮罩取 zIndex，弹窗取 zIndex + 10，保持两者的层叠关系
 function itemZIndex(item: ModalItem): number {
-  return getComputedValue(item, 'zIndex') ?? props.zIndex
+  return getComputedValue(item, 'zIndex') ?? modalZIndex.value
 }
 function itemStyle(item: ModalItem): CSSProperties {
   const width = getComputedValue(item, 'width')
@@ -537,6 +552,8 @@ function onAfterLeave(el: Element): void {
   // 栈中仍有打开实例时保持显示，否则其余弹窗会被一起隐藏
   if (openCount.value === 0) {
     showModalWrap.value = false
+    // 层整体隐藏后归还槽位：数值随「同时可见层数」增长，不随挂载过的弹窗数增长
+    releaseZIndex()
   }
 }
 function push(modal: ModalOptions, mode: Mode): ModalReactive {
@@ -786,10 +803,23 @@ async function onKnow(key: string, e?: MouseEvent): Promise<void> {
 const baseZIndex = computed(() => {
   const opened = modalList.value.filter((item) => item.open)
   if (opened.length === 0) {
-    return getComputedValue(topItem.value, 'zIndex') ?? props.zIndex
+    return getComputedValue(topItem.value, 'zIndex') ?? modalZIndex.value
   }
   return Math.max(...opened.map((item) => itemZIndex(item)))
 })
+// 每次「出现」重新领取层级：保证重新打开的弹窗位于其它已打开层之上（未注入管理器时为空操作）
+watch(showModalWrap, (show) => {
+  if (show) {
+    allocateZIndex()
+  }
+})
+// 向下注入「本层是否处于打开态」：容器关闭时内部浮层（如已展开的 Select 下拉）需一并收起 ——
+// 内容常驻不卸载，内部浮层不会随容器消失；若保持打开，它会占着层级槽位、被重新打开的弹窗反超
+// （详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）
+provide(
+  Z_INDEX_CONTAINER_OPEN_KEY,
+  computed(() => openCount.value > 0)
+)
 // 向 <ModalProvider> 回传 api，使其无需依赖模板 ref 即可对外提供
 emits('ready', { info, success, error, warning, confirm, erase, create, destroyAll })
 </script>
@@ -845,6 +875,7 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
               v-show="item.open"
               :ref="(el: unknown) => setContainerEl(item.key, el)"
               :data-key="item.key"
+              data-va-floating-mount=""
               class="modal-container"
               :class="[getComputedValue(item, 'containerClass'), { 'is-centered': getComputedValue(item, 'centered') }]"
               :style="[itemStyle(item), getComputedValue(item, 'containerStyle')]"

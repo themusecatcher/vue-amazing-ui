@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, computed, watch, provide } from 'vue'
 import type { VNode } from 'vue'
-import { getColorPalettes, getAlphaColor } from 'components/utils'
+import { getColorPalettes, getAlphaColor, createZIndexManager, Z_INDEX_INJECT_KEY } from 'components/utils'
 export interface Theme {
   common?: {
     // 优先级低于组件配置
@@ -108,6 +108,7 @@ export interface Props {
   theme?: Theme // 主题对象
   abstract?: boolean // 是否不存在 DOM 包裹元素
   tag?: string // ConfigProvider 被渲染成的元素，abstract 为 true 时有效
+  baseZIndex?: number // 浮层起始层级 (z-index)，传入后甲、乙两类浮层按「后出现者在上」自增分配；不传则各组件沿用自身默认层级
 }
 // 声明组件插槽类型
 export interface ConfigProviderSlots {
@@ -116,7 +117,8 @@ export interface ConfigProviderSlots {
 const props = withDefaults(defineProps<Props>(), {
   theme: () => ({}),
   abstract: true,
-  tag: 'div'
+  tag: 'div',
+  baseZIndex: undefined
 })
 defineSlots<ConfigProviderSlots>()
 interface ThemeColor {
@@ -261,6 +263,12 @@ const componentsThemeColor = reactive<Record<string, ThemeColor>>({
 })
 provide('common', commonThemeColor)
 provide('components', componentsThemeColor)
+// 层级管理层：传入 baseZIndex 时建立分配器并向下注入，甲、乙两类浮层据此自增分配；
+// 未传则不注入，各组件回退到自身既有硬编码层级（可关闭开关）。嵌套 ConfigProvider 未传时会继承外层分配器。
+// 注：在 setup 阶段读取一次，运行期改变 baseZIndex 需重新挂载才生效。
+if (typeof props.baseZIndex === 'number') {
+  provide(Z_INDEX_INJECT_KEY, createZIndexManager(props.baseZIndex))
+}
 const commonTheme = computed(() => {
   if ('common' in props.theme) {
     return props.theme.common

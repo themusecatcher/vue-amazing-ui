@@ -140,7 +140,7 @@ const verticalSlide = computed(() => {
 })
 // 每次移动的单位距离
 const moveUnitDistance = computed(() => {
-  // 尺寸未测量时按 0 处理，调用侧以 falsy 判定「尚未就绪」，与原先的 undefined 行为一致
+  // 尺寸未测量时按 0 处理，调用侧以 falsy 判定「尚未就绪」
   if (verticalSlide.value) {
     return imageHeight.value ?? 0
   } else {

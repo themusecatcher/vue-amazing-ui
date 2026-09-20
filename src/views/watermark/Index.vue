@@ -1,13 +1,20 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
 import type { WatermarkProps } from 'vue-amazing-ui'
 const realTime = ref<string>(dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS'))
+let rafId = 0
 const updateTime = () => {
   realTime.value = dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS')
-  requestAnimationFrame(updateTime)
+  rafId = requestAnimationFrame(updateTime)
 }
-requestAnimationFrame(updateTime)
+// SSR（Node）环境无 requestAnimationFrame：挂载后启动，卸载时取消
+onMounted(() => {
+  rafId = requestAnimationFrame(updateTime)
+})
+onBeforeUnmount(() => {
+  cancelAnimationFrame(rafId)
+})
 const show = ref(false)
 const fixed = ref(true)
 const imageModel = reactive({
@@ -83,6 +90,15 @@ const layoutOptions = [
     <h2 class="mt30 mb10">全屏幕水印</h2>
     <Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark>
     <Space align="center"> Fullscreen: <Switch v-model="show" /> Fixed: <Switch v-model="fixed" /> </Space>
+    <h2 class="mt30 mb10">与浮层叠加</h2>
+    <p class="mb10">水印是装饰层（默认 <code>z-index: 90</code>），始终位于 <code>Tooltip</code> 等浮层之下</p>
+    <Watermark content="Vue Amazing UI">
+      <div style="height: 200px; padding: 24px">
+        <Tooltip tooltip="Vue Amazing UI">
+          <Button>Hover me</Button>
+        </Tooltip>
+      </div>
+    </Watermark>
     <h2 class="mt30 mb10">水印配置器</h2>
     <p class="mb10">通过自定义参数配置预览水印效果</p>
     <Row :gutter="24">

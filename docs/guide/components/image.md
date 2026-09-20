@@ -403,6 +403,30 @@ const images = ref<ImageItem[]>([
 
 :::
 
+## 自定义预览层级
+
+*通过 `zIndex` 指定预览遮罩层级（预览容器取该值 `+ 10`），未传入时由 `ConfigProvider` 的 `baseZIndex` 统一分配*
+
+<br/>
+
+<Space>
+  <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg" />
+  <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg" :z-index="3000" />
+</Space>
+
+:::: details Show Code
+
+```vue
+<template>
+  <Space>
+    <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg" />
+    <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg" :z-index="3000" />
+  </Space>
+</template>
+```
+
+::::
+
 ## 下载配置
 
 *通过 `downloadOptions` 配置内置下载策略（`anchor` / `iframe`）与打开方式（`_self` / `_blank`）*
@@ -549,6 +573,7 @@ function customDownload(url: string, fileName?: string) {
 | fit | 图片在容器内的的适应类型，参考 [object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit) | 'contain' &#124; 'fill' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain' |
 | preview | 预览文本 | string | '预览' |
 | previewImageStyle | 自定义预览图片时 `img` 元素的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| zIndex | 预览遮罩层级，预览容器取该值 `+ 10`；未传时使用默认层级（遮罩 `1070` / 预览 `1080` / 操作按钮 `1081`），或由 `ConfigProvider` 的 `baseZIndex` 分配 | number | undefined |
 | spaceProps | `Space` 组件属性配置，参考 [Space Props](./space.md#space)，用于配置多张展示图片时的排列方式 | [SpaceProps](./space.md#space) | {} |
 | spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置图片加载中样式 | [SpinProps](./spin.md#spin) | {} |
 | previewSpinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置预览图片加载中样式 | [SpinProps](./spin.md#spin) | {} |

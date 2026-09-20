@@ -55,7 +55,7 @@ function onShow(show: boolean) {
 
 ```vue
 <script setup lang="ts">
-function onShow (show: boolean) {
+function onShow(show: boolean) {
   console.log('show', show)
 }
 </script>
@@ -192,7 +192,14 @@ import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@
 
 <BackTop :style="defaultCustomStyle" :right="280" :bottom="160" />
 <BackTop :style="primaryCustomStyle" type="primary" shape="square" :right="350" :bottom="160" />
-<BackTop :style="primaryDescCustomStyle" type="primary" shape="square" description="顶部" :right="420" :bottom="160" />
+<BackTop
+  :style="primaryDescCustomStyle"
+  type="primary"
+  shape="square"
+  description="顶部"
+  :right="420"
+  :bottom="160"
+/>
 
 ::: details Show Code
 
@@ -229,7 +236,14 @@ const primaryDescCustomStyle = {
 <template>
   <BackTop :style="defaultCustomStyle" :right="280" :bottom="160" />
   <BackTop :style="primaryCustomStyle" type="primary" shape="square" :right="350" :bottom="160" />
-  <BackTop :style="primaryDescCustomStyle" type="primary" shape="square" description="顶部" :right="420" :bottom="160" />
+  <BackTop
+    :style="primaryDescCustomStyle"
+    type="primary"
+    shape="square"
+    description="顶部"
+    :right="420"
+    :bottom="160"
+  />
 </template>
 ```
 
@@ -276,6 +290,26 @@ const primaryDescCustomStyle = {
 ```
 
 :::
+
+## 自定义层级
+
+*通过 `zIndex` 调整按钮层级；按钮上的气泡为浮层（默认 1070），恒在按钮之上*
+
+<br/>
+
+<BackTop tooltip="回到顶部" :right="280" />
+<BackTop tooltip="回到顶部" :z-index="3000" :right="340" />
+
+:::: details Show Code
+
+```vue
+<template>
+  <BackTop tooltip="回到顶部" :right="280" />
+  <BackTop tooltip="回到顶部" :z-index="3000" :right="340" />
+</template>
+```
+
+::::
 
 ## 自定义监听目标
 
@@ -412,10 +446,10 @@ listenTo | 监听滚动的元素，如果为 `undefined` 会监听距离最近�
 
 名称 | 说明 | 类型
 :-- | :-- | :--
+tooltip | 自定义文字提示内容 | v-slot:tooltip
 default | 自定义按钮 | v-slot:default
 icon | 自定义图标 | v-slot:icon
 description | 自定义文字描述 | v-slot:description
-tooltip | 自定义文字提示内容 | v-slot:tooltip
 
 ## Events
 

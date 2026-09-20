@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
-import { useInject } from 'components/utils'
+import { useInject, useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
 export interface Props {
   containerClass?: string // 加载条容器的类名
   containerStyle?: CSSProperties // 加载条容器的样式
@@ -25,6 +25,21 @@ const props = withDefaults(defineProps<Props>(), {
 defineOptions({ inheritAttrs: false })
 const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const showLoadingBar = ref<boolean>(false) // 加载条是否显示
+// 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配，未传则沿用既有硬编码 9999；
+// 每次开始加载（出现）时重新领取层级，保证加载条位于当前所有已打开层之上；加载结束即归还，
+// 使层级数值随「同时可见的浮层数」增长（未注入管理器时为空操作）
+const {
+  zIndex: layerZIndex,
+  allocate: allocateZIndex,
+  release: releaseZIndex
+} = useZIndex(FLOATING_LAYER_Z_INDEX.loadingBar, undefined, { allocateOnMount: false })
+watch(showLoadingBar, (show) => {
+  if (show) {
+    allocateZIndex()
+  } else {
+    releaseZIndex()
+  }
+})
 const loadingBarRef = ref<HTMLElement | null>(null) // 加载条元素引用
 const transitionDisabled = ref(false) // 是否禁用过渡，表示使用仅由 JavaScript 执行的动画
 const loadingStarted = ref<boolean>(false) // 加载条是否开始
@@ -151,6 +166,7 @@ defineExpose({
         :class="containerClass"
         :style="[
           `
+            --loading-bar-z-index: ${layerZIndex};
             --loading-bar-size: ${loadingBarSize}px;
             --loading-bar-color-loading: ${colorLoadingComputed};
             --loading-bar-color-finish: ${colorFinishComputed};
@@ -180,7 +196,7 @@ defineExpose({
   top: 0;
   left: 0;
   right: 0;
-  z-index: 9999;
+  z-index: var(--loading-bar-z-index, 9999);
   height: var(--loading-bar-size);
   .loading-bar {
     width: 100%;

@@ -13,6 +13,8 @@ node_modules
 dist
 es
 lib
+# unplugin-vue-components 自动生成，dev/build 时会重新生成，且内容随扫描时序抖动
+/components.d.ts
 *.mp4
 dist-ssr
 coverage

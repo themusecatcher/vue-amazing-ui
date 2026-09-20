@@ -249,6 +249,10 @@ export function useSlotsExist<T extends string | string[] = 'default'>(slotsName
  * 如果在组件中使用，则会尝试从组件的依赖注入中获取颜色配置
  * 如果未找到，则回退到全局的默认颜色配置
  *
+ * 组件库内部使用：`key` 为本库组件名（如 `'Button'`），用于命中 `ConfigProvider` 注入的
+ * `components` 表中该组件的主题覆盖，未命中时回退到 `common` 表。因依赖内部注入协议
+ * （注入键名 + 以组件名为分键的表结构），不对外导出、不承诺 API 稳定性。
+ *
  * @param {string} key 组件名，用于在组件的依赖注入中查找颜色配置
  * @returns {{ colorPalettes: Ref<string[]>, shadowColor: Ref<string> }} 返回包含颜色调色板和阴影颜色的主题对象
  */

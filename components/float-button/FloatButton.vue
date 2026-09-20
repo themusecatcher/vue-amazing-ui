@@ -143,7 +143,9 @@ function onClick(e: Event) {
     @mouseenter="menuTrigger === 'hover' ? (showMenu = true) : null"
     @mouseleave="menuTrigger === 'hover' ? (showMenu = false) : null"
   >
-    <Tooltip placement="left" v-bind="tooltipProps" class="float-btn-tooltip">
+    <!-- 触发器包裹元素的类名走 Tooltip 的公开契约下发（contentClass），不依赖 Tooltip 的内部类名；
+         置于 v-bind 之前，允许 tooltipProps 覆盖 -->
+    <Tooltip placement="left" content-class="float-btn-tooltip-content" v-bind="tooltipProps" class="float-btn-tooltip">
       <template v-if="showTooltip" #tooltip>
         <slot name="tooltip">{{ tooltip }}</slot>
       </template>
@@ -239,10 +241,7 @@ function onClick(e: Event) {
   .float-btn-tooltip {
     width: 100%;
     height: 100%;
-    :deep(.tooltip-card-container) {
-      cursor: auto;
-    }
-    :deep(.tooltip-content) {
+    :deep(.float-btn-tooltip-content) {
       width: 100%;
       height: 100%;
       .badge-wrap {

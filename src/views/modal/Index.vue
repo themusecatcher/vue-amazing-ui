@@ -12,7 +12,7 @@ import {
 } from '@ant-design/icons-vue'
 import { format } from 'date-fns'
 import { Button, Modal, ModalProvider, Switch, createDiscreteApi, useMessage, useModal } from 'vue-amazing-ui'
-import type { DiscreteApiInstance, ModalApi, ModalReactive, ModalUpdate } from 'vue-amazing-ui'
+import type { DiscreteApiInstance, ModalApi, ModalReactive, ModalUpdate, SelectOption } from 'vue-amazing-ui'
 // setup 内调用 useModal()：需外层存在 <ModalProvider>（本项目已在 App.vue 入口全局包裹）
 const modal = useModal()
 // 用于把各类回调结果反馈到页面上，避免只能看控制台
@@ -785,6 +785,14 @@ onBeforeUnmount(() => {
     clearInterval(timer)
   })
 })
+const layerOptions = ref<SelectOption[]>([
+  { label: '北京市', value: 1 },
+  { label: '上海市', value: 2 },
+  { label: '纽约市', value: 3 }
+])
+const layerOpen = ref(false)
+const layerSelect = ref<number>(1)
+const layerZIndexOpen = ref(false)
 </script>
 <template>
   <div>
@@ -1058,6 +1066,26 @@ onBeforeUnmount(() => {
       <Button type="primary" @click="onStackModal">开启 3 层弹窗</Button>
       <Button type="danger" @click="onDestroyAllModals">开启 3 层并 2 秒后全部销毁</Button>
     </Space>
+    <h2 class="mt30 mb10">弹窗内浮层</h2>
+    <p class="mb10">
+      弹窗内的 <code>Tooltip</code> / <code>Select</code> 会自动排在遮罩与弹窗之上；也可用 <code>zIndex</code>
+      直接指定弹窗层级（优先级最高）
+    </p>
+    <Space>
+      <Button type="primary" @click="layerOpen = true">Open Modal</Button>
+      <Button type="primary" @click="layerZIndexOpen = true">Custom zIndex</Button>
+    </Space>
+    <Modal v-model:open="layerOpen" title="弹窗内浮层" :width="520">
+      <Space align="center">
+        <Tooltip tooltip="Vue Amazing UI">
+          <Button>Hover me</Button>
+        </Tooltip>
+        <Select :options="layerOptions" v-model="layerSelect" :width="200" />
+      </Space>
+    </Modal>
+    <Modal v-model:open="layerZIndexOpen" title="Custom zIndex" :z-index="3000" :width="520">
+      <p>zIndex 优先级最高，覆盖自动分配结果</p>
+    </Modal>
     <h2 class="mt30 mb10">遮罩、键盘与滚动锁定</h2>
     <p class="mb10">
       命令式调用默认 <code>maskClosable: false</code>、<code>keyboard: true</code>、<code>blockScroll: true</code>；
