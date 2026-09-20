@@ -49,6 +49,23 @@ import { ref } from 'vue'
 - `h2`：按功能分节（`mt30 mb10` 间距类）。
 - 示例用 `<Space>` 等布局组件包裹。
 
+### 状态绑定（每个演示主题独立）
+
+> 每个分节的 demo 必须绑定**自己的**响应式状态，禁止多个主题共用同一个绑定值。
+
+```ts
+// ❌ 基本使用 / 禁用 / 禁用选项 … 共用一个 selectedValue
+// ✅ 各分节独立绑定：避免操作一个用例时其余用例同步联动，便于单独核对每个特性
+const basicValue = ref(5)
+const disabledValue = ref(5)
+const disabledOptionValue = ref(5)
+```
+
+- **为什么**：共用绑定值会让「操作 A 用例时 B / C 用例同步联动」——用户无法逐个核对特性，截图 / 录屏 / 真身对照也会失真。
+- **命名**：与主题语义对齐（`basicValue` / `disabledValue` / `searchableValue` …），多个主题并列时在首个变量前加一行注释说明（见上例）。
+- **例外**：**同一主题内**的成对用例可共用（如「三种尺寸」的多个 Select、「下拉面板弹出位置」的 bottom / top 对照），它们是同一用例的对照展示。
+- **文档页同源**：`docs/guide/components/{组件名}.md` 的页面级 `<script setup>` 需与演示页逐项对应（见「演示与文档的对应」）；`::: details Show Code` 代码块是独立可复制示例，块内用局部命名（如 `selectedValue`）不受此约束。
+
 ### 全局包裹（src/App.vue）
 
 演示应用在根组件做了一层全局包裹，这是演示页里能直接调用 `useMessage()` / `useModal()` 等方法的前提：
@@ -165,6 +182,7 @@ _七种类型_
 - 章节顺序统一为：何时使用 → 基本使用 → APIs → Slots → Methods → Events；参数表采用无首尾竖线的紧凑写法，与 `docs/guide/template.md` 保持一致。
 - `update:xxx` 属于 `v-model` 双向绑定的更新事件，**不写入 Events 表**；双向绑定统一在 APIs 表的参数名后标注 `<Tag color="cyan">v-model</Tag>`（如 `open <Tag color="cyan">v-model</Tag>`），避免同一语义在两处重复维护。
 - APIs / Events / Methods 表中的类型引用一律写**组件入口重命名后的公开导出名**（如 `SliderMarks`、`TabsItem`、`SwiperImage`），确保读者可直接 `import type`，且与 IDE 类型提示一致；类型章节标题保留 SFC 内的定义名（如 `### Marks Type`），锚点 `#marks-type` 不随引用名变更，避免全站链接失效。文档自造的结构性类型（源码中无对应导出，如 ConfigProvider 的 `Config`、Scrollbar 的 `ScrollBehavior`）沿用文档内命名。
+- **表格内禁止裸对象字面量**：APIs / Events 等表格单元格里直接写 `{ label: 'label' }` 会被 markdown 的属性语法当作前一个标签的 HTML 属性（渲染成 `<td ... label:="" ...>`），轻则单元格内容丢失，重则同名属性重复让 `pnpm docs:build` 直接失败（报 `Duplicate attribute`）。对象字面量一律用行内代码包裹：`` `{ label: 'label', value: 'value' }` ``。
 
 ### 内联 demo 机制
 
@@ -223,3 +241,6 @@ _格式化日期为指定格式的工具函数_
 ## 演示与文档的对应
 
 演示页（`src/views/`）与组件文档（`docs/guide/components/`）内容需保持一致：文档中的 demo 通常对应演示页的某个分节，二者共同维护同一组用例。
+
+- 用例标题 / 简介描述：逐字一致（`<code>` ↔ 反引号、docs 补整行斜体）。
+- 分节的状态绑定：演示页的 `ref` 与文档页级 `<script setup>` 的 `ref` **逐项对应**（见「状态绑定（每个演示主题独立）」），改一处必须同步另一处——否则两边联动行为不一致。
