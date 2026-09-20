@@ -258,15 +258,15 @@ const draftOpenCount = ref(0)
 const onceOpenCount = ref(0)
 const afterCloseCount = ref(0)
 const lastAfterCloseTime = ref<string | null>(null)
-// Switch 是受控组件（点击只 emit update:modelValue），需自行持有选中态才能响应点击；
+// Switch 是受控组件（点击只 emit update:value），需自行持有选中态才能响应点击；
 // 状态随组件实例存活：destroyOnClose: false 时实例保留则状态持久化，true 时销毁重建则状态重置
 const SwitchDemo = defineComponent({
   setup() {
     const checked = ref(false)
     return () =>
       h(Switch, {
-        modelValue: checked.value,
-        'onUpdate:modelValue': (value: boolean) => {
+        value: checked.value,
+        'onUpdate:value': (value: boolean) => {
           checked.value = value
         }
       })
@@ -1223,15 +1223,15 @@ const statisticValueStyle: CSSProperties = { fontSize: '20px' }
 let draftModal: ModalReactive | null = null
 const draftOpenCount = ref(0)
 const onceOpenCount = ref(0)
-// Switch 是受控组件（点击只 emit update:modelValue），需自行持有选中态才能响应点击；
+// Switch 是受控组件（点击只 emit update:value），需自行持有选中态才能响应点击；
 // 状态随组件实例存活：destroyOnClose: false 时实例保留则状态持久化，true 时销毁重建则状态重置
 const SwitchDemo = defineComponent({
   setup() {
     const checked = ref(false)
     return () =>
       h(Switch, {
-        modelValue: checked.value,
-        'onUpdate:modelValue': (value: boolean) => {
+        value: checked.value,
+        'onUpdate:value': (value: boolean) => {
           checked.value = value
         }
       })
@@ -2319,7 +2319,7 @@ function onDestroyAllModals() {
     <Tooltip tooltip="Vue Amazing UI">
       <Button>Hover me</Button>
     </Tooltip>
-    <Select :options="layerOptions" v-model="layerSelect" :width="200" />
+    <Select :options="layerOptions" v-model:value="layerSelect" :width="200" />
   </Space>
 </Modal>
 
@@ -2352,7 +2352,7 @@ const layerZIndexOpen = ref(false)
       <Tooltip tooltip="Vue Amazing UI">
         <Button>Hover me</Button>
       </Tooltip>
-      <Select :options="layerOptions" v-model="layerSelect" :width="200" />
+      <Select :options="layerOptions" v-model:value="layerSelect" :width="200" />
     </Space>
   </Modal>
   <Modal v-model:open="layerZIndexOpen" title="Custom zIndex" :z-index="3000" :width="520">
@@ -2848,7 +2848,7 @@ _`update` 可更新的字段为 `ModalOptions` 的全部属性，另支持 `mode
 | default   | 自定义模态框内容 | v-slot:default    |
 | footer    | 自定义底部按钮区 | v-slot:footer     |
 | closeIcon | 自定义关闭图标  | v-slot:closeIcon  |
-| modalRender | 自定义渲染弹窗内容 | v-slot:modalRender |
+| modalRender | 自定义渲染弹窗内容 | v-slot:modalRender="{ originVNode }" |
 
 > `modalRender` 为作用域插槽，可接收 `{ originVNode }` 对弹窗内容做包裹式自定义渲染（常用于拖拽等场景），仅声明式用法下生效；命令式用法请使用同名的 `modalRender` 属性。当属性与该插槽同时配置时，**属性优先级更高**。
 

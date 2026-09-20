@@ -304,8 +304,8 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
         <Button type="primary">Show Confirm</Button>
       </Popconfirm>
       <Radio v-model:checked="radioChecked">Radio</Radio>
-      <Select :options="selectOptions" v-model="selectedValue" />
-      <Switch v-model="switchChecked" />
+      <Select :options="selectOptions" v-model:value="selectedValue" />
+      <Switch v-model:value="switchChecked" />
       <Textarea :width="360" v-model:value="textareaValue" placeholder="custom theme textarea" />
       <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
     </Space>
@@ -625,8 +625,8 @@ function onDecline(scale: number) {
           <Button type="primary">Show Confirm</Button>
         </Popconfirm>
         <Radio v-model:checked="radioChecked">Radio</Radio>
-        <Select :options="selectOptions" v-model="selectedValue" />
-        <Switch v-model="switchChecked" />
+        <Select :options="selectOptions" v-model:value="selectedValue" />
+        <Switch v-model:value="switchChecked" />
         <Textarea :width="360" v-model:value="textareaValue" placeholder="custom theme textarea" />
         <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
       </Space>
@@ -877,8 +877,6 @@ function onDiscreteModal() {
 | `Spin` 局部遮罩 | `9` | 相对自身容器的局部层级，不参与全局分配 |
 | `Badge` / `Watermark` 装饰层 | `9` / `90`（可配 `zIndex`） | 装饰性叠加，不参与全局分配 |
 
-上表的取值与 Ant Design Vue 的族偏移一致（其 `zIndexPopupBase: 1000`，`Tooltip +70`、`Select +50`、`Image +80`、`Affix = zIndexBase + 10`、`FloatButton 99`），因此迁移习惯一致。
-
 反馈层刻意**不占据最高层级** —— 这样在消息 / 通知内容里放 `Select` / `Tooltip` 时，浮层不会被消息框压住。取值 `1030` / `1040` 是为了与 `Modal` 弹窗（`1010`）、`Select` 面板（`1050`）**都不打平**：同层级时上下关系会退化为 `DOM` 顺序（模板源码顺序），顺序不可控。`LoadingBar`（`9999`）始终保持最上。
 
 ### 自动分配（可选）
@@ -901,7 +899,7 @@ function onDiscreteModal() {
       <Tooltip tooltip="Vue Amazing UI">
         <Button>Hover me</Button>
       </Tooltip>
-      <Select :options="selectOptions" v-model="layerSelectedValue" :width="200" />
+      <Select :options="selectOptions" v-model:value="layerSelectedValue" :width="200" />
     </Space>
   </Modal>
 </ConfigProvider>
@@ -933,7 +931,7 @@ const selectOptions: SelectOption[] = [
         <Tooltip tooltip="Vue Amazing UI">
           <Button>Hover me</Button>
         </Tooltip>
-        <Select :options="selectOptions" v-model="layerSelectedValue" :width="200" />
+        <Select :options="selectOptions" v-model:value="layerSelectedValue" :width="200" />
       </Space>
     </Modal>
   </ConfigProvider>

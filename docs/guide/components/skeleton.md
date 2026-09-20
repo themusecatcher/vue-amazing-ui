@@ -174,11 +174,11 @@ const showSkeleton = () => {
     <Space gap="large">
       <Space align="center">
         animated:
-        <Switch v-model="animated" />
+        <Switch v-model:value="animated" />
       </Space>
       <Space align="center">
         Button Block:
-        <Switch v-model="block" />
+        <Switch v-model:value="block" />
       </Space>
     </Space>
     <Space align="center">
@@ -258,11 +258,11 @@ const avatarShapeOptions = ref([
       <Space gap="large">
         <Space align="center">
           animated:
-          <Switch v-model="animated" />
+          <Switch v-model:value="animated" />
         </Space>
         <Space align="center">
           Button Block:
-          <Switch v-model="block" />
+          <Switch v-model:value="block" />
         </Space>
       </Space>
       <Space align="center">

@@ -10,6 +10,11 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-09-20">2.10.0</VersionDateTag>
+
+- ⚠️ **破坏性变更**：统一 [选择器 Select](/guide/components/select.html)、[级联选择 Cascader](/guide/components/cascader.html)、[开关 Switch](/guide/components/switch.html) 的双向绑定为 `v-model:value`，原 `v-model` 用法需改为 `v-model:value`，回写事件由 `update:modelValue` 改为 `update:value`
+- ⚠️ **破坏性变更**：[选择器 Select](/guide/components/select.html) 与 [级联选择 Cascader](/guide/components/cascader.html) 的字段名属性 `label` / `value`（Cascader 另含 `children`）合并为 `fieldNames` 对象，改用 `:field-names="{ label: 'name', value: 'id' }"`，并新增 `SelectFieldNames` / `CascaderFieldNames` 类型导出
+
 ## <VersionDateTag date="2026-09-20">2.9.0</VersionDateTag>
 
 - 重构组件库内部浮层能力，收敛为统一内核与内部宿主，[文字提示 Tooltip](/guide/components/tooltip.html)、[选择器 Select](/guide/components/select.html)、[自动完成 AutoComplete](/guide/components/auto-complete.html)、[滑动输入条 Slider](/guide/components/slider.html) 全部接入 —— 公开 `props` / 事件 / 插槽行为均无变化，仅 [自动完成 AutoComplete](/guide/components/auto-complete.html) 的 `value` 由必填放宽为可选

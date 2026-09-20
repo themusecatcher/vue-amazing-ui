@@ -344,7 +344,7 @@ function onClose() {
       <div class="form-item">
         <span class="form-label">Owner</span>
         <Select
-          v-model="form5.owner"
+          v-model:value="form5.owner"
           :options="ownerOptions"
           placeholder="Please select an owner"
           style="width: 100%"
@@ -355,7 +355,7 @@ function onClose() {
       <div class="form-item">
         <span class="form-label">Type</span>
         <Select
-          v-model="form5.type"
+          v-model:value="form5.type"
           :options="typeOptions"
           placeholder="Please choose the type"
           style="width: 100%"
@@ -368,7 +368,7 @@ function onClose() {
       <div class="form-item">
         <span class="form-label">Approver</span>
         <Select
-          v-model="form5.approver"
+          v-model:value="form5.approver"
           :options="approverOptions"
           placeholder="Please choose the approver"
           style="width: 100%"
@@ -463,7 +463,7 @@ function onClose() {
         <div class="form-item">
           <span class="form-label">Owner</span>
           <Select
-            v-model="form.owner"
+            v-model:value="form.owner"
             :options="ownerOptions"
             placeholder="Please select an owner"
             style="width: 100%"
@@ -474,7 +474,7 @@ function onClose() {
         <div class="form-item">
           <span class="form-label">Type</span>
           <Select
-            v-model="form.type"
+            v-model:value="form.type"
             :options="typeOptions"
             placeholder="Please choose the type"
             style="width: 100%"
@@ -487,7 +487,7 @@ function onClose() {
         <div class="form-item">
           <span class="form-label">Approver</span>
           <Select
-            v-model="form.approver"
+            v-model:value="form.approver"
             :options="approverOptions"
             placeholder="Please choose the approver"
             style="width: 100%"
@@ -597,7 +597,7 @@ function onClose() {
     <Tooltip tooltip="Vue Amazing UI">
       <Button>Hover me</Button>
     </Tooltip>
-    <Select :options="ownerOptions" v-model="layerSelect" :width="160" placeholder="Please select" />
+    <Select :options="ownerOptions" v-model:value="layerSelect" :width="160" placeholder="Please select" />
   </Space>
 </Drawer>
 
@@ -630,7 +630,7 @@ const layerZIndexOpen = ref(false)
       <Tooltip tooltip="Vue Amazing UI">
         <Button>Hover me</Button>
       </Tooltip>
-      <Select :options="ownerOptions" v-model="layerSelect" :width="160" placeholder="Please select" />
+      <Select :options="ownerOptions" v-model:value="layerSelect" :width="160" placeholder="Please select" />
     </Space>
   </Drawer>
   <Drawer v-model:open="layerZIndexOpen" title="Custom zIndex" :z-index="3000" :width="420">

@@ -88,7 +88,7 @@ function onFinish () {
 ## 随时暂停
 
 <Space vertical>
-  <Switch v-model="active" />
+  <Switch v-model:value="active" />
   <Countdown
     :active="active"
     title="Pause at any time"
@@ -107,7 +107,7 @@ const active = ref(true)
 </script>
 <template>
   <Space vertical>
-    <Switch v-model="active" />
+    <Switch v-model:value="active" />
     <Countdown
       :active="active"
       title="Pause at any time"
@@ -201,7 +201,7 @@ const active = ref(true)
 
 <Space vertical>
   <Space align="center">
-    <Switch v-model="resetActive" />
+    <Switch v-model:value="resetActive" />
     <Button type="primary" @click="onReset">Reset</Button>
   </Space>
   <Countdown
@@ -228,7 +228,7 @@ function onReset() {
 <template>
   <Space vertical>
     <Space align="center">
-      <Switch v-model="resetActive" />
+      <Switch v-model:value="resetActive" />
       <Button type="primary" @click="onReset">Reset</Button>
     </Space>
     <Countdown

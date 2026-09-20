@@ -212,7 +212,7 @@ const layoutOptions = [
 
 ## 全屏幕水印
 
-<Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark> <Space align="center"> Fullscreen: <Switch v-model="show" /> Fixed: <Switch v-model="fixed" /> </Space>
+<Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark> <Space align="center"> Fullscreen: <Switch v-model:value="show" /> Fixed: <Switch v-model:value="fixed" /> </Space>
 
 ::: details Show Code
 
@@ -224,7 +224,7 @@ const fixed = ref(true)
 </script>
 <template>
   <Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark>
-  <Space align="center"> Fullscreen: <Switch v-model="show" /> Fixed: <Switch v-model="fixed" /> </Space>
+  <Space align="center"> Fullscreen: <Switch v-model:value="show" /> Fixed: <Switch v-model:value="fixed" /> </Space>
 </template>
 ```
 

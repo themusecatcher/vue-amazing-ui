@@ -140,10 +140,19 @@ const placementOptions = [
   }
 ]
 const size = ref('large')
-const selectedValue = ref<SelectProps['modelValue']>(5)
 const placement = ref('bottom')
+// 各分节独立绑定：避免操作一个用例时其余用例同步联动，便于单独核对每个特性
+const basicValue = ref<SelectProps['value']>(5)
+const disabledValue = ref<SelectProps['value']>(5)
+const disabledOptionValue = ref<SelectProps['value']>(5)
+const fieldNameValue = ref<SelectProps['value']>(5)
+const customStyleValue = ref<SelectProps['value']>(5)
+const clearableValue = ref<SelectProps['value']>(5)
+const searchableValue = ref<SelectProps['value']>(5)
+const filterValue = ref<SelectProps['value']>(5)
+const placementValue = ref<SelectProps['value']>(5)
 watchEffect(() => {
-  console.log('selectedValue', selectedValue.value)
+  console.log('basicValue', basicValue.value)
 })
 function onChange(value: string | number, label: string, index: number) {
   console.log('value', value)
@@ -200,20 +209,20 @@ const optionsLong = ref<SelectOption[]>([
     value: 10
   }
 ])
-const keyboardValue = ref<SelectProps['modelValue']>(5)
-const maxDisplayValue = ref<SelectProps['modelValue']>(5)
-const scrollbarValue = ref<SelectProps['modelValue']>(5)
-const sizeValue = ref<SelectProps['modelValue']>(5)
+const keyboardValue = ref<SelectProps['value']>(5)
+const maxDisplayValue = ref<SelectProps['value']>(5)
+const scrollbarValue = ref<SelectProps['value']>(5)
+const sizeValue = ref<SelectProps['value']>(5)
 // 挂载容器：不传 to 时优先挂到最近的承载层内容容器
-const toValue = ref<SelectProps['modelValue']>(5)
+const toValue = ref<SelectProps['value']>(5)
 // 下拉面板样式的公开入口：popupClassName / dropdownMenuStyle
-const panelValue = ref<SelectProps['modelValue']>(1)
-const panelZIndexValue = ref<SelectProps['modelValue']>(1)
+const panelValue = ref<SelectProps['value']>(1)
+const panelZIndexValue = ref<SelectProps['value']>(1)
 </script>
 
 ## 基本使用
 
-<Select :options="options" v-model="selectedValue" @change="onChange" @openChange="onOpenChange" />
+<Select :options="options" v-model:value="basicValue" @change="onChange" @openChange="onOpenChange" />
 
 ::: details Show Code
 
@@ -255,7 +264,7 @@ const options = ref<SelectOption[]>([
     value: 8
   }
 ])
-const selectedValue = ref<SelectProps['modelValue']>(5)
+const selectedValue = ref<SelectProps['value']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
@@ -269,7 +278,7 @@ function onOpenChange(open: boolean) {
 }
 </script>
 <template>
-  <Select :options="options" v-model="selectedValue" @change="onChange" @openChange="onOpenChange" />
+  <Select :options="options" v-model:value="selectedValue" @change="onChange" @openChange="onOpenChange" />
 </template>
 ```
 
@@ -277,7 +286,7 @@ function onOpenChange(open: boolean) {
 
 ## 禁用
 
-<Select :options="options" v-model="selectedValue" disabled />
+<Select :options="options" v-model:value="disabledValue" disabled />
 
 ::: details Show Code
 
@@ -319,10 +328,10 @@ const options = ref<SelectOption[]>([
     value: 8
   }
 ])
-const selectedValue = ref<SelectProps['modelValue']>(5)
+const selectedValue = ref<SelectProps['value']>(5)
 </script>
 <template>
-  <Select :options="options" v-model="selectedValue" disabled />
+  <Select :options="options" v-model:value="selectedValue" disabled />
 </template>
 ```
 
@@ -330,7 +339,7 @@ const selectedValue = ref<SelectProps['modelValue']>(5)
 
 ## 禁用选项
 
-<Select :options="optionsDisabled" v-model="selectedValue" />
+<Select :options="optionsDisabled" v-model:value="disabledOptionValue" />
 
 ::: details Show Code
 
@@ -373,10 +382,10 @@ const optionsDisabled = ref<SelectOption[]>([
     value: 8
   }
 ])
-const selectedValue = ref<SelectProps['modelValue']>(5)
+const selectedValue = ref<SelectProps['value']>(5)
 </script>
 <template>
-  <Select :options="optionsDisabled" v-model="selectedValue" />
+  <Select :options="optionsDisabled" v-model:value="selectedValue" />
 </template>
 ```
 
@@ -386,9 +395,8 @@ const selectedValue = ref<SelectProps['modelValue']>(5)
 
 <Select
   :options="optionsCustom"
-  label="name"
-  value="id"
-  v-model="selectedValue"
+  :field-names="{ label: 'name', value: 'id' }"
+  v-model:value="fieldNameValue"
 />
 
 ::: details Show Code
@@ -431,13 +439,13 @@ const optionsCustom = ref<SelectOption[]>([
     id: 8
   }
 ])
-const selectedValue = ref<SelectProps['modelValue']>(5)
+const selectedValue = ref<SelectProps['value']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
 </script>
 <template>
-  <Select :options="optionsCustom" label="name" value="id" v-model="selectedValue" />
+  <Select :options="optionsCustom" :field-names="{ label: 'name', value: 'id' }" v-model:value="selectedValue" />
 </template>
 ```
 
@@ -450,7 +458,7 @@ watchEffect(() => {
   :height="36"
   search
   :options="options"
-  v-model="selectedValue"
+  v-model:value="customStyleValue"
 />
 
 ::: details Show Code
@@ -493,13 +501,13 @@ const options = ref<SelectOption[]>([
     value: 8
   }
 ])
-const selectedValue = ref<SelectProps['modelValue']>(5)
+const selectedValue = ref<SelectProps['value']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
 </script>
 <template>
-  <Select :width="150" :height="36" search :options="options" v-model="selectedValue" />
+  <Select :width="150" :height="36" search :options="options" v-model:value="selectedValue" />
 </template>
 ```
 
@@ -512,14 +520,14 @@ watchEffect(() => {
 <Flex gap="large" wrap="wrap">
   <Flex vertical gap="small" align="start">
     <span class="demo-label">默认面板</span>
-    <Select :width="180" :options="options" v-model="panelValue" />
+    <Select :width="180" :options="options" v-model:value="panelValue" />
   </Flex>
   <Flex vertical gap="small" align="start">
     <span class="demo-label">自定义类名与样式</span>
     <Select
       :width="180"
       :options="options"
-      v-model="panelValue"
+      v-model:value="panelValue"
       popup-class-name="custom-select-panel"
       :dropdown-menu-style="{
         background: 'rgba(255, 105, 0, 0.05)',
@@ -531,7 +539,7 @@ watchEffect(() => {
   </Flex>
   <Flex vertical gap="small" align="start">
     <span class="demo-label">自定义层级</span>
-    <Select :width="180" :options="options" v-model="panelZIndexValue" :z-index="1100" />
+    <Select :width="180" :options="options" v-model:value="panelZIndexValue" :z-index="1100" />
   </Flex>
 </Flex>
 
@@ -551,21 +559,21 @@ const options = ref<SelectOption[]>([
   { label: '拜占庭', value: 7 },
   { label: '君士坦丁堡', value: 8 }
 ])
-const panelValue = ref<SelectProps['modelValue']>(1)
-const panelZIndexValue = ref<SelectProps['modelValue']>(1)
+const panelValue = ref<SelectProps['value']>(1)
+const panelZIndexValue = ref<SelectProps['value']>(1)
 </script>
 <template>
   <Flex gap="large" wrap="wrap">
     <Flex vertical gap="small" align="start">
       <span class="demo-label">默认面板</span>
-      <Select :width="180" :options="options" v-model="panelValue" />
+      <Select :width="180" :options="options" v-model:value="panelValue" />
     </Flex>
     <Flex vertical gap="small" align="start">
       <span class="demo-label">自定义类名与样式</span>
       <Select
         :width="180"
         :options="options"
-        v-model="panelValue"
+        v-model:value="panelValue"
         popup-class-name="custom-select-panel"
         :dropdown-menu-style="{
           background: 'rgba(255, 105, 0, 0.05)',
@@ -577,7 +585,7 @@ const panelZIndexValue = ref<SelectProps['modelValue']>(1)
     </Flex>
     <Flex vertical gap="small" align="start">
       <span class="demo-label">自定义层级</span>
-      <Select :width="180" :options="options" v-model="panelZIndexValue" :z-index="1100" />
+      <Select :width="180" :options="options" v-model:value="panelZIndexValue" :z-index="1100" />
     </Flex>
   </Flex>
 </template>
@@ -614,8 +622,8 @@ const panelZIndexValue = ref<SelectProps['modelValue']>(1)
 <Space vertical>
   <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
   <Space align="center" :size="24">
-    <Select :options="options" v-model="sizeValue" :size="size" />
-    <Select :options="options" search allow-clear v-model="sizeValue" :size="size" />
+    <Select :options="options" v-model:value="sizeValue" :size="size" />
+    <Select :options="options" search allow-clear v-model:value="sizeValue" :size="size" />
   </Space>
 </Space>
 
@@ -674,7 +682,7 @@ const sizeOptions = [
   }
 ]
 const size = ref('large')
-const sizeValue = ref<SelectProps['modelValue']>(5)
+const sizeValue = ref<SelectProps['value']>(5)
 watchEffect(() => {
   console.log('sizeValue', sizeValue.value)
 })
@@ -683,8 +691,8 @@ watchEffect(() => {
   <Space vertical>
     <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
     <Space align="center" :size="24">
-      <Select :options="options" v-model="sizeValue" :size="size" />
-      <Select :options="options" search allow-clear v-model="sizeValue" :size="size" />
+      <Select :options="options" v-model:value="sizeValue" :size="size" />
+      <Select :options="options" search allow-clear v-model:value="sizeValue" :size="size" />
     </Space>
   </Space>
 </template>
@@ -694,7 +702,7 @@ watchEffect(() => {
 
 ## 支持清除
 
-<Select :options="options" allow-clear v-model="selectedValue" />
+<Select :options="options" allow-clear v-model:value="clearableValue" />
 
 ::: details Show Code
 
@@ -736,13 +744,13 @@ const options = ref<SelectOption[]>([
     value: 8
   }
 ])
-const selectedValue = ref<SelectProps['modelValue']>(5)
+const selectedValue = ref<SelectProps['value']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
 </script>
 <template>
-  <Select :options="options" allow-clear v-model="selectedValue" />
+  <Select :options="options" allow-clear v-model:value="selectedValue" />
 </template>
 ```
 
@@ -750,7 +758,7 @@ watchEffect(() => {
 
 ## 支持搜索
 
-<Select :options="options" allow-clear search v-model="selectedValue" />
+<Select :options="options" allow-clear search v-model:value="searchableValue" />
 
 ::: details Show Code
 
@@ -792,13 +800,13 @@ const options = ref<SelectOption[]>([
     value: 8
   }
 ])
-const selectedValue = ref<SelectProps['modelValue']>(5)
+const selectedValue = ref<SelectProps['value']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
 </script>
 <template>
-  <Select :options="options" allow-clear search v-model="selectedValue" />
+  <Select :options="options" allow-clear search v-model:value="selectedValue" />
 </template>
 ```
 
@@ -806,7 +814,7 @@ watchEffect(() => {
 
 ## 搜索过滤函数
 
-<Select :options="options" search :filter="filter" v-model="selectedValue" />
+<Select :options="options" search :filter="filter" v-model:value="filterValue" />
 
 ::: details Show Code
 
@@ -848,7 +856,7 @@ const options = ref<SelectOption[]>([
     value: 8
   }
 ])
-const selectedValue = ref<SelectProps['modelValue']>(5)
+const selectedValue = ref<SelectProps['value']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
@@ -858,7 +866,7 @@ function filter(inputValue: string, option: any) {
 }
 </script>
 <template>
-  <Select :options="options" search :filter="filter" v-model="selectedValue" />
+  <Select :options="options" search :filter="filter" v-model:value="selectedValue" />
 </template>
 ```
 
@@ -875,11 +883,9 @@ function filter(inputValue: string, option: any) {
 | `Esc` | 关闭面板，不改变当前选中值 |
 | `Tab` | 焦点移出，面板关闭 |
 
-<br/>
-
 <Space align="start" :size="40">
-  <Select :options="options" v-model="keyboardValue" />
-  <Select :options="optionsDisabled" v-model="keyboardValue" />
+  <Select :options="options" v-model:value="keyboardValue" />
+  <Select :options="optionsDisabled" v-model:value="keyboardValue" />
 </Space>
 
 ::: details Show Code
@@ -957,15 +963,15 @@ const optionsDisabled = ref<SelectOption[]>([
     value: 8
   }
 ])
-const keyboardValue = ref<SelectProps['modelValue']>(5)
+const keyboardValue = ref<SelectProps['value']>(5)
 watchEffect(() => {
   console.log('keyboardValue', keyboardValue.value)
 })
 </script>
 <template>
   <Space align="start" :size="40">
-    <Select :options="options" v-model="keyboardValue" />
-    <Select :options="optionsDisabled" v-model="keyboardValue" />
+    <Select :options="options" v-model:value="keyboardValue" />
+    <Select :options="optionsDisabled" v-model:value="keyboardValue" />
   </Space>
 </template>
 ```
@@ -974,10 +980,12 @@ watchEffect(() => {
 
 ## 下拉面板弹出位置
 
-<Space align="center" :size="24">
+<Space vertical>
   <Radio :options="placementOptions" v-model:value="placement" button button-style="solid" />
-  <Select :options="options" v-model="selectedValue" :placement="placement" />
-  <Select :options="options" search allow-clear v-model="selectedValue" :placement="placement" />
+  <Space align="center" :size="24">
+    <Select :options="options" v-model:value="placementValue" :placement="placement" />
+    <Select :options="options" search allow-clear v-model:value="placementValue" :placement="placement" />
+  </Space>
 </Space>
 
 ::: details Show Code
@@ -1031,16 +1039,18 @@ const placementOptions = [
   }
 ]
 const placement = ref('bottom')
-const selectedValue = ref<SelectProps['modelValue']>(5)
+const selectedValue = ref<SelectProps['value']>(5)
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
 </script>
 <template>
-  <Space align="center" :size="24">
+  <Space vertical>
     <Radio :options="placementOptions" v-model:value="placement" button button-style="solid" />
-    <Select :options="options" v-model="selectedValue" :placement="placement" />
-    <Select :options="options" search allow-clear v-model="selectedValue" :placement="placement" />
+    <Space align="center" :size="24">
+      <Select :options="options" v-model:value="placementValue" :placement="placement" />
+      <Select :options="options" search allow-clear v-model:value="placementValue" :placement="placement" />
+    </Space>
   </Space>
 </template>
 ```
@@ -1054,8 +1064,8 @@ watchEffect(() => {
 <br/>
 
 <Space>
-  <Select :options="options" v-model="toValue" :width="200" />
-  <Select :options="options" v-model="toValue" :to="false" :width="200" />
+  <Select :options="options" v-model:value="toValue" :width="200" />
+  <Select :options="options" v-model:value="toValue" :to="false" :width="200" />
 </Space>
 
 :::: details Show Code
@@ -1074,12 +1084,12 @@ const options = ref<SelectOption[]>([
   { label: '拜占庭', value: 7 },
   { label: '君士坦丁堡', value: 8 }
 ])
-const toValue = ref<SelectProps['modelValue']>(5)
+const toValue = ref<SelectProps['value']>(5)
 </script>
 <template>
   <Space>
-    <Select :options="options" v-model="toValue" :width="200" />
-    <Select :options="options" v-model="toValue" :to="false" :width="200" />
+    <Select :options="options" v-model:value="toValue" :width="200" />
+    <Select :options="options" v-model:value="toValue" :to="false" :width="200" />
   </Space>
 </template>
 ```
@@ -1093,8 +1103,8 @@ const toValue = ref<SelectProps['modelValue']>(5)
 <br/>
 
 <Space align="start" :size="40">
-  <Select :options="optionsLong" v-model="maxDisplayValue" />
-  <Select :options="optionsLong" v-model="maxDisplayValue" :max-display="4" />
+  <Select :options="optionsLong" v-model:value="maxDisplayValue" />
+  <Select :options="optionsLong" v-model:value="maxDisplayValue" :max-display="4" />
 </Space>
 
 ::: details Show Code
@@ -1115,15 +1125,15 @@ const optionsLong = ref<SelectOption[]>([
   { label: '巴黎', value: 9 },
   { label: '里约热内卢', value: 10 }
 ])
-const maxDisplayValue = ref<SelectProps['modelValue']>(5)
+const maxDisplayValue = ref<SelectProps['value']>(5)
 watchEffect(() => {
   console.log('maxDisplayValue', maxDisplayValue.value)
 })
 </script>
 <template>
   <Space align="start" :size="40">
-    <Select :options="optionsLong" v-model="maxDisplayValue" />
-    <Select :options="optionsLong" v-model="maxDisplayValue" :max-display="4" />
+    <Select :options="optionsLong" v-model:value="maxDisplayValue" />
+    <Select :options="optionsLong" v-model:value="maxDisplayValue" :max-display="4" />
   </Space>
 </template>
 ```
@@ -1136,7 +1146,7 @@ watchEffect(() => {
 
 <br/>
 
-<Select :options="optionsLong" v-model="scrollbarValue" :scrollbar-props="{ size: 8, delay: 2000 }" />
+<Select :options="optionsLong" v-model:value="scrollbarValue" :scrollbar-props="{ size: 8, delay: 2000 }" />
 
 ::: details Show Code
 
@@ -1156,13 +1166,13 @@ const optionsLong = ref<SelectOption[]>([
   { label: '巴黎', value: 9 },
   { label: '里约热内卢', value: 10 }
 ])
-const scrollbarValue = ref<SelectProps['modelValue']>(5)
+const scrollbarValue = ref<SelectProps['value']>(5)
 watchEffect(() => {
   console.log('scrollbarValue', scrollbarValue.value)
 })
 </script>
 <template>
-  <Select :options="optionsLong" v-model="scrollbarValue" :scrollbar-props="{ size: 8, delay: 2000 }" />
+  <Select :options="optionsLong" v-model:value="scrollbarValue" :scrollbar-props="{ size: 8, delay: 2000 }" />
 </template>
 ```
 
@@ -1175,8 +1185,7 @@ watchEffect(() => {
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | options | 选项数据 | [SelectOption](#option-type)[] | [] |
-| label | 选项的 `label` 文本字段名 | string | 'label' |
-| value | 选项的 `value` 值字段名 | string | 'value' |
+| fieldNames | 选项的文本 / 值字段名配置 | `{ label?: string, value?: string }` | `{ label: 'label', value: 'value' }` |
 | placeholder | 默认占位文本 | string | '请选择' |
 | disabled | 是否禁用 | boolean | false |
 | width | 选择器宽度，单位 `px` | string &#124; number | 'auto' |
@@ -1190,10 +1199,10 @@ watchEffect(() => {
 | popupClassName | 下拉面板的类名，用于自定义面板样式 | string | undefined |
 | dropdownMenuStyle | 下拉面板自定义样式，可覆盖定位（与 `AutoComplete` 的同名属性语义一致） | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
 | zIndex | 下拉面板层级，优先级最高（覆盖默认层级与 `ConfigProvider` 的 `baseZIndex` 自动分配） | number | undefined |
-| filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含时返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | ((inputValue: string, option: SelectOption) => boolean) &#124; true | true |
+| filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段（`fieldNames.label`，默认 `label`）是否包含输入项，包含时返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | ((inputValue: string, option: SelectOption) => boolean) &#124; true | true |
 | maxDisplay | 下拉面板最多能展示的项数，超过后滚动显示 | number | 8 |
 | scrollbarProps | 下拉面板滚动条 `scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar) | [ScrollbarProps](./scrollbar.md#scrollbar) | {} |
-| modelValue <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值 | number &#124; string | undefined |
+| value <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值 | number &#124; string | undefined |
 
 ### Option Type
 
