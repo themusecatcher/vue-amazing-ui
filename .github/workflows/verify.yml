@@ -1,0 +1,60 @@
+# 持续集成：在 PR 与 main 上自动跑本仓库既有的检查命令（不重复实现任何校验逻辑）
+#
+# 两个 job 刻意并行（二者无耦合，串行会白白多花一倍墙钟时间）：
+#   check  —— 纯静态与单测，不依赖构建产物；
+#   verify —— 产物级链路（构建 → 依赖表 ↔ 产物闭包 → 按需引入端到端 → 产物守卫），必须先构建。
+#
+# 设计取舍（与 naive-ui / ant-design-vue 的对照调研结论一致）：
+#   1. 触发含 pull_request —— 把「消费方静默缺样式」这类问题拦在合并前；原先只有 scripts/publish.sh 会拦，
+#      等于要等到发版才暴露；
+#   2. 不在 CI 里 npm publish —— 两家同类库的发布均为本地脚本 + prepublishOnly 守卫，本仓库沿用 publish.sh 链路；
+#   3. 不跨 job 缓存 es/lib 产物、不做 Node 版本矩阵 —— 全部校验在单个 job 内自洽完成，避免无谓复杂度；
+#   4. 不用 vitest --retry 掩盖用例竞态 —— 竞态应在用例内修（见 tests/select-keyboard.spec.ts 的轮询做法）。
+name: verify
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# 同一分支的新推送取消旧运行，避免队列堆积
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# CI 只需读取代码
+permissions:
+  contents: read
+
+# job 的 name 即分支保护的「必填状态检查」名（精确匹配，见文件头说明）。刻意用短名并与 job id 一致，
+# 且显式声明 name 而非依赖 id 兜底 —— 这样将来重命名 job id 也不会改动检查名（检查名一变，PR 会永久卡在 Expected）。
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # 不写 version：由 package.json 的 packageManager（pnpm@11.24.0）决定，避免版本两处维护
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # runner 默认 UTC：本仓库含 DatePicker / Calendar / Countdown 等时间敏感用例，不锁时区会出现「本地绿、CI 红」
+      - run: sudo timedatectl set-timezone Asia/Shanghai
+      - run: pnpm check
+
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # = build → verify:deps（依赖表 ↔ 产物 chunk 闭包）→ verify:on-demand（临时消费方工程 + canary）→ guard（产物守卫）
+      - run: pnpm verify
