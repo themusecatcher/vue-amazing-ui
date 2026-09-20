@@ -36,11 +36,18 @@ class ImmediateImage {
   }
 }
 
-/** 等待 Waterfall 内部「图片加载 → 布局计算 → 渲染」链路跑完 */
-async function flushWaterfall(): Promise<void> {
+/**
+ * 等待 Waterfall 内部「图片加载 → 布局计算 → 渲染」链路跑完
+ *
+ * 用轮询代替固定等待：`ImmediateImage` 经 `setTimeout(onload, 0)` 回填尺寸，
+ * 全量并行执行（多个 worker 抢 CPU）时该回调可能晚于任何固定时长 → 断言会拿到「尚未渲染」的 DOM。
+ * 改为等到目标数量的图片真正渲染为止：既消除竞态，失败时也能直接指向「渲染未完成」。
+ */
+async function flushWaterfall(expectedImages: number): Promise<void> {
   await nextTick()
-  await new Promise((resolve) => setTimeout(resolve, 10))
-  await nextTick()
+  await vi.waitFor(() => {
+    expect(wrapper?.findAll('img.image-item') ?? []).toHaveLength(expectedImages)
+  })
 }
 
 let wrapper: ReturnType<typeof mount> | null = null
@@ -135,7 +142,7 @@ describe('Waterfall - alt 取自统一后的 getImageName（行为增强点）',
         images: [{ src: 'https://cdn.com/a/one.png?v=2' }, { src: 'https://cdn.com/b/two%20x.png' }]
       }
     })
-    await flushWaterfall()
+    await flushWaterfall(2)
 
     const alts = wrapper.findAll('img.image-item').map((img) => img.attributes('alt'))
     // 抽取前 Waterfall 会得到 'two%20x.png'（不解码），统一后应为 'two x.png'
@@ -147,7 +154,7 @@ describe('Waterfall - alt 取自统一后的 getImageName（行为增强点）',
     wrapper = mount(Waterfall, {
       props: { images: [{ src: 'https://cdn.com/a/one.png', name: '自定义名称' }] }
     })
-    await flushWaterfall()
+    await flushWaterfall(1)
 
     expect(wrapper.find('img.image-item').attributes('alt')).toBe('自定义名称')
   })
