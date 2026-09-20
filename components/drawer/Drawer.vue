@@ -2,7 +2,13 @@
 import { ref, computed, watch, watchEffect, onMounted, onUnmounted, inject, provide, nextTick } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
-import { useSlotsExist, lockScroll } from 'components/utils'
+import {
+  useSlotsExist,
+  lockScroll,
+  useZIndex,
+  Z_INDEX_CONTAINER_OPEN_KEY,
+  FLOATING_LAYER_Z_INDEX
+} from 'components/utils'
 
 // 多层抽屉推动的默认位移距离
 const DEFAULT_PUSH_DISTANCE = 180
@@ -30,7 +36,7 @@ export interface Props {
   rootClassName?: string // 最外层容器的类名
   rootStyle?: CSSProperties // 最外层容器的样式
   to?: string | HTMLElement | false // Drawer 挂载的节点，可选：元素标签名（如 'body'）、元素本身或 false（渲染在当前 DOM）
-  zIndex?: number // 设置 Drawer 的 z-index
+  zIndex?: number // 设置 Drawer 的 z-index；未传时使用默认层级 1000，或由 ConfigProvider 的 baseZIndex 分配
   open?: boolean // (v-model) 抽屉是否可见
   autofocus?: boolean // 抽屉展开后是否将焦点切换至其 DOM 节点
   keyboard?: boolean // 是否支持键盘 esc 关闭
@@ -72,7 +78,7 @@ const props = withDefaults(defineProps<Props>(), {
   rootClassName: undefined,
   rootStyle: () => ({}),
   to: 'body',
-  zIndex: 1000,
+  zIndex: undefined,
   open: false,
   autofocus: true,
   keyboard: true,
@@ -256,8 +262,38 @@ function onKeydown(e: KeyboardEvent) {
   }
 }
 function onAfterOpenChange(open: boolean) {
+  // 离场结束后归还槽位：数值随「同时可见层数」增长，不随挂载过的抽屉数增长
+  if (!open) {
+    releaseZIndex()
+  }
   emits('afterOpenChange', open)
 }
+// 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配，未传则沿用既有默认层级 1000
+// 领取时机完全由「出现」驱动（allocateOnMount: false）、离场后归还（见 onAfterOpenChange）：
+// 不可见的层不该持有槽位，否则挂载但未打开的抽屉会持续抬高后续分配点
+const {
+  zIndex: layerZIndex,
+  allocate: allocateZIndex,
+  release: releaseZIndex
+} = useZIndex(FLOATING_LAYER_Z_INDEX.overlay, undefined, {
+  allocateOnMount: false
+})
+const drawerZIndex = computed(() => props.zIndex ?? layerZIndex.value)
+// 向下注入「本层是否处于打开态」：容器关闭时内部浮层（如已展开的 Select 下拉）需一并收起 ——
+// 内容常驻不卸载，内部浮层不会随容器消失；若保持打开，它会占着层级槽位、被重新打开的抽屉反超
+// （详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）
+provide(Z_INDEX_CONTAINER_OPEN_KEY, drawerOpen)
+// 每次「出现」重新领取层级：保证重新打开的抽屉位于其它已打开层之上（未注入管理器时为空操作）；
+// immediate 覆盖「挂载时即为打开态」的场景（此时 watch 不触发，而挂载已不再自动领取）
+watch(
+  drawerOpen,
+  (open) => {
+    if (open) {
+      allocateZIndex()
+    }
+  },
+  { immediate: true }
+)
 </script>
 <template>
   <Teleport :disabled="to === false" :to="to === false ? null : to">
@@ -267,7 +303,7 @@ function onAfterOpenChange(open: boolean) {
       tabindex="-1"
       class="drawer-wrap"
       :class="[rootClassName, { 'is-inline': teleportDisabled }]"
-      :style="rootStyle"
+      :style="[{ zIndex: drawerZIndex }, rootStyle]"
       @keydown="onKeydown"
     >
       <Transition name="fade">
@@ -280,9 +316,14 @@ function onAfterOpenChange(open: boolean) {
       >
         <div
           v-show="drawerOpen"
+          data-va-floating-mount=""
           class="drawer-container"
           :class="`drawer-${placement}`"
-          :style="[{ zIndex, transform: sPush ? pushTransform : undefined }, contentWrapperStyle, wrapperSizeStyle]"
+          :style="[
+            { zIndex: drawerZIndex, transform: sPush ? pushTransform : undefined },
+            contentWrapperStyle,
+            wrapperSizeStyle
+          ]"
         >
           <div class="drawer-content">
             <div v-if="shouldRenderBody" class="drawer-body-wrapper">
@@ -344,6 +385,7 @@ function onAfterOpenChange(open: boolean) {
 .drawer-wrap {
   position: fixed;
   inset: 0;
+  /* 默认层级与 useZIndex 的回退值一致；ConfigProvider 传入 baseZIndex 时由内联样式覆盖 */
   z-index: 1000;
   pointer-events: none;
   outline: none;

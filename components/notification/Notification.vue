@@ -2,7 +2,13 @@
 import { ref, reactive, onBeforeUnmount, isVNode, watch } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
 import Scrollbar from 'components/scrollbar'
-import { createKeyGenerator, renderContentToVNode, useInject } from 'components/utils'
+import {
+  createKeyGenerator,
+  renderContentToVNode,
+  useInject,
+  useZIndex,
+  FLOATING_LAYER_Z_INDEX
+} from 'components/utils'
 import type { NotificationApi } from './useNotification'
 // 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数
 export type ContentType = string | VNode | (() => VNode)
@@ -71,6 +77,28 @@ interface NotificationGroup {
   data: NotificationItem[]
 }
 const notificationGroups = ref<NotificationGroup[]>([])
+// 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配，未传则使用默认层级 1040。
+// 1040 与 Message 同为「高于承载层、低于甲类浮层」的位置，取 1040 使 通知 > 消息 且与
+// Modal 弹窗（1010）/ Select 面板（1050）/ Tooltip（1070）**均不打平**（同值会退化为 DOM 顺序）
+// 通知容器常驻，故领取时机由「有新通知出现」驱动（挂载时为空操作）、全部关闭后归还 ——
+// 与承载层 / 甲类浮层同一不变量：不可见的层不该占用槽位，否则会持续抬高后续分配点
+const {
+  zIndex: layerZIndex,
+  allocate: allocateZIndex,
+  release: releaseZIndex
+} = useZIndex(FLOATING_LAYER_Z_INDEX.notification, undefined, { allocateOnMount: false })
+watch(
+  // 可见性判据是「是否还有通知内容」而非分组容器数量：分组为保留最后一条的离场动画会延后回收
+  // （LEAVE_DURATION + 100），若以容器数量为准，最后一条关闭后仍会长时间占着槽位
+  () => notificationGroups.value.reduce((total, group) => total + group.data.length, 0),
+  (count) => {
+    if (count > 0) {
+      allocateZIndex()
+    } else {
+      releaseZIndex()
+    }
+  }
+)
 const { colorPalettes } = useInject('Notification') // 主题色注入
 const emits = defineEmits<{
   close: [key: string]
@@ -390,6 +418,7 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
         topStyle(group.placement),
         bottomStyle(group.placement),
         `
+        --notification-z-index: ${layerZIndex};
         --notification-primary-color: ${colorPalettes[5]};
         --notification-success-color: #52c41a;
         --notification-error-color: #ff4d4f;
@@ -597,7 +626,7 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
 }
 .notification-wrap {
   position: fixed;
-  z-index: 2000;
+  z-index: var(--notification-z-index, 1040); // 兜底值需与 FLOATING_LAYER_Z_INDEX.notification 保持一致
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
   line-height: 1.5714285714285714;

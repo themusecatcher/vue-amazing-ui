@@ -51,7 +51,7 @@ const props = withDefaults(defineProps<Props>(), {
   search: false,
   placement: 'bottom',
   flip: true,
-  to: 'body',
+  to: undefined,
   filter: true,
   maxDisplay: 6,
   scrollbarProps: () => ({}),

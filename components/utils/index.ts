@@ -11,5 +11,10 @@ export * from './hooks'
 export * from './observers'
 // 弹出定位相关 composable
 export * from './position'
+// 浮层层级（z-index）管理层
+export * from './z-index'
+
+// 浮层挂载点契约（同域模型：甲类浮层挂进承载层内容容器）
+export * from './floating-mount'
 // 渲染辅助
 export * from './render'
