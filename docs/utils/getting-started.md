@@ -48,7 +48,7 @@ import {
 
 ## 说明
 
-> 下表为对外公开的 `22` 个工具函数；组件库内部工具（`useMounted`、`useSupported`、`getParentElement`、`useInject`、`useWave`、`useWindowWidth`，以及浮层内核相关的 `useFloating`、`useZIndex`、`useFloatingTeleportTarget`、`createZIndexManager`、`raiseFloatingOrder`、`resolveFloatingMount`、`getFloatingBoundaryRect` 等）虽随包导出但不承诺稳定性，故不在此列出。
+> 下表为对外公开的 `22` 个工具函数；组件库内部工具（`useMounted`、`useSupported`、`getParentElement`、`useInject`、`useWave`、`useWindowWidth`，以及浮层内核相关的 `useFloating`、`useZIndex`、`useFloatingTeleportTarget`、`createZIndexManager`、`raiseFloatingOrder`、`resolveFloatingMount`、`getFloatingBoundaryRect` 等）未从主入口导出、不承诺稳定性，故不在此列出。
 
 | Name | Description | Type |
 | :-- | :-- | :-- |

@@ -132,7 +132,12 @@ import {
 
 ## 服务端渲染（SSR）
 
-组件库不依赖浏览器全局对象即可完成 `setup`，可在 `Node` 环境直接渲染。但 [抽屉 Drawer](./components/drawer.md)、[对话框 Modal](./components/modal.md) / [Dialog](./components/dialog.md)、[加载条 LoadingBar](./components/loading-bar.md)、[消息提示 Message](./components/message.md)、[通知提醒 Notification](./components/notification.md) 默认挂载到 `body`（`Teleport`），服务端渲染时其内容会收集到 `ssrContext.teleports`，**需应用侧注入到 HTML**（例如预留 `<div id="teleports"></div>` 并用 `ssrContext.teleports` 的内容替换；`Nuxt` 等框架已自动处理），否则首屏不含浮层内容，且客户端 `hydration` 会提示节点不匹配：
+组件库不依赖浏览器全局对象即可完成 `setup`，可在 `Node` 环境直接渲染。但浮层类组件默认经 `Teleport` 挂载到 `body`：
+
+- 视口固定型直接挂 `body`：[抽屉 Drawer](./components/drawer.md)、[对话框 Modal](./components/modal.md) / [Dialog](./components/dialog.md)、[加载条 LoadingBar](./components/loading-bar.md)、[消息提示 Message](./components/message.md)、[通知提醒 Notification](./components/notification.md)；
+- 锚点跟随型不传 `to` 时优先挂到最近的承载层内容容器；服务端渲染时没有 `DOM`、不存在承载层，因此同样落 `body`：[文字提示 Tooltip](./components/tooltip.md)、[气泡卡片 Popover](./components/popover.md)、[气泡确认框 Popconfirm](./components/popconfirm.md)、[选择器 Select](./components/select.md)、[自动完成 AutoComplete](./components/auto-complete.md)、[级联选择 Cascader](./components/cascader.md) 等。
+
+服务端渲染时其内容会收集到 `ssrContext.teleports`，**需应用侧注入到 HTML**（例如预留 `<div id="teleports"></div>` 并用 `ssrContext.teleports` 的内容替换；`Nuxt` 等框架已自动处理），否则首屏不含浮层内容，且客户端 `hydration` 会提示节点不匹配：
 
 ```ts
 const ssrContext: Record<string, unknown> = {}
@@ -140,4 +145,4 @@ const html = await renderToString(app, ssrContext)
 // ssrContext.teleports.body 即挂载到 body 的浮层内容，需注入到页面
 ```
 
-也可用 `to` 指定其他挂载节点（`Drawer`、`LoadingBar` 等还支持 `to: false`，渲染在当前 DOM）。
+也可用 `to` 指定其他挂载节点；`to: false` 表示就地渲染在当前 `DOM`，锚点跟随型浮层（[文字提示 Tooltip](./components/tooltip.md) / [选择器 Select](./components/select.md) / [自动完成 AutoComplete](./components/auto-complete.md) / [级联选择 Cascader](./components/cascader.md)）与 [抽屉 Drawer](./components/drawer.md) / [加载条 LoadingBar](./components/loading-bar.md) 支持该写法。

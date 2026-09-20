@@ -74,13 +74,21 @@ const imagesRef = ref<HTMLImageElement[]>([]) // 图片 DOM 引用
 const imagesCompleted = ref<boolean[]>([]) // 图片是否加载完成
 // 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配，未传则沿用默认层级
 // （遮罩 1070 / 预览 1080）；本层需连续占用 2 段
-const { zIndex: layerZIndex, allocate: allocateZIndex } = useZIndex(FLOATING_LAYER_Z_INDEX.image, 2)
+// 领取 / 归还由「出现」驱动（allocateOnMount: false）：未打开预览时不占槽位、预览关闭即归还，
+// 使层级数值随「同时可见的浮层数」增长（与 Modal / Select / Message 等持层组件同一不变量）
+const {
+  zIndex: layerZIndex,
+  allocate: allocateZIndex,
+  release: releaseZIndex
+} = useZIndex(FLOATING_LAYER_Z_INDEX.image, 2, { allocateOnMount: false })
 // 显式 zIndex 优先级最高（与 Modal / Dialog / Drawer 等浮层组件一致）
 const previewZIndex = computed(() => props.zIndex ?? layerZIndex.value)
-// 每次「出现」重新领取层级（未注入管理器时为空操作）
+// 每次「出现」重新领取层级、隐藏即归还（未注入管理器时均为空操作）
 watchEffect(() => {
   if (showPreview.value) {
     allocateZIndex()
+  } else {
+    releaseZIndex()
   }
 })
 const previewImagesRef = ref<HTMLImageElement[]>([]) // 预览图片 DOM 引用

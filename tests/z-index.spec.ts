@@ -699,17 +699,24 @@ describe('Image 全屏预览的分层（遮罩 1070 / 预览 1080）', () => {
   })
 
   it('传入 baseZIndex 后由管理层分配，两者仍相差 10', async () => {
+    const imageRef = ref<InstanceType<typeof Image> | null>(null)
     const Host = defineComponent({
       render: () =>
         h(
           ConfigProvider,
           { baseZIndex: 5000 },
           {
-            default: () => h(Image, { src: 'a.png' })
+            default: () => h(Image, { ref: imageRef, src: 'a.png' })
           }
         )
     })
     wrapper = mount(Host, { attachTo: document.body })
+    await nextTick()
+    // 未打开预览：不持有槽位，沿用默认层级（挂载即领取会让未显示的预览无谓抬高后续分配点）
+    expect(readZIndex(wrapper.find('.preview-mask').attributes('style'))).toBe(1070)
+
+    // 打开预览：由管理层分配，遮罩与预览仍相差 10
+    await imageRef.value?.preview(0)
     await nextTick()
     expect(readZIndex(wrapper.find('.preview-mask').attributes('style'))).toBe(5000)
     expect(readZIndex(wrapper.find('.preview-container').attributes('style'))).toBe(5010)

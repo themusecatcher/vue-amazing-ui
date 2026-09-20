@@ -167,7 +167,7 @@ export const withInstall = <T extends Component>(comp: T) => {
 工具函数 / Hooks 涉及「barrel + 入口 + 文档」三处登记，缺一处会导致无法从包总出口引入，或文档站不显示：
 
 1. **建函数**：在 `components/utils/` 的对应分组文件中新增并导出（`format` / `math` / `function` / `dom` / `color` / `hooks` / `observers` / `position` / `z-index` / `floating-mount` / `render`）。
-2. **登记 barrel 与入口**：确认所属分组已被 `components/utils/index.ts` 的 `export *` 覆盖；再到 `components/index.ts` 的导出列表中显式登记函数名（公开类型用 `export type` 一并登记）。仅供组件内部复用的实现细节函数（如 `getParentElement` / `renderContentToVNode` / `createKeyGenerator` / `getFloatingBoundaryRect`）与暂不对外承诺的通用 Hook（如 `useInject` / `useWave` / `useWindowWidth`）不登记入口，仅从 barrel 供组件内部引入，不对外承诺 API 稳定性。
+2. **登记 barrel 与入口**：确认所属分组已被 `components/utils/index.ts` 的 `export *` 覆盖；再到 `components/index.ts` 的导出列表中显式登记函数名（公开类型用 `export type` 一并登记）。仅供组件内部复用的实现细节函数（如 `getParentElement` / `renderContentToVNode` / `createKeyGenerator` / `getFloatingBoundaryRect`）与通用 Hook（如 `useInject` / `useWave` / `useWindowWidth`）**未从主入口导出**（不登记入口，仅从 barrel 供组件内部引入），不承诺 API 稳定性。
 3. **登记文档**：在 `docs/utils/functions/` 新增一篇或归入既有 md；并在 `docs/.vitepress/config.ts` 的 `sidebar['/utils/']` 「工具」分组登记链接。
 
 > 演示页不是必须项：工具函数如需可视化演示，可复用既有 `src/views/<camelCase>/` 页面承载。

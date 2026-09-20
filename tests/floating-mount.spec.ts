@@ -4,6 +4,8 @@ import { mount } from '@vue/test-utils'
 import ConfigProvider from 'components/config-provider'
 import Dialog from 'components/dialog'
 import Drawer from 'components/drawer'
+import Image from 'components/image'
+import LoadingBar from 'components/loading-bar'
 import Message, { type MessageApi } from 'components/message'
 import Modal from 'components/modal'
 import Notification, { type NotificationApi } from 'components/notification'
@@ -454,5 +456,85 @@ describe('浮层挂载点（同域模型）', () => {
     await settle()
     probe.allocate()
     expect(probe.zIndex.value).toBe(5010)
+  })
+
+  it('Image 未预览不占槽位、预览关闭即归还（不被已隐藏的预览抬高分配点）', async () => {
+    let probe!: ReturnType<typeof useZIndex>
+    const imageRef = ref<InstanceType<typeof Image> | null>(null)
+    const Probe = defineComponent({
+      setup() {
+        probe = useZIndex(5000, undefined, { allocateOnMount: false })
+        return () => h('div')
+      }
+    })
+    wrapper = mount(
+      defineComponent({
+        render: () =>
+          h(
+            ConfigProvider,
+            { baseZIndex: 5000 },
+            {
+              default: () => [h(Image, { ref: imageRef, src: 'a.png' }), h(Probe)]
+            }
+          )
+      }),
+      { attachTo: document.body, global: { stubs: { transition: false } } }
+    )
+    await settle()
+    // 挂载但未打开预览：不持有槽位 → 探针拿到起始层（若挂载即领取则会被抬高到 5020）
+    probe.allocate()
+    expect(probe.zIndex.value).toBe(5000)
+
+    // 打开预览：本层连续占 2 段 → 之后领取的层落在预览之上
+    await imageRef.value?.preview(0)
+    await settle()
+    probe.allocate()
+    expect(probe.zIndex.value).toBe(5030)
+
+    // 关闭预览：归还 2 段 → 再次领取回落到起始层（若未归还则会继续停在 5030 之上）
+    document.querySelector<HTMLElement>('.preview-operation')!.click()
+    await settle()
+    probe.allocate()
+    expect(probe.zIndex.value).toBe(5000)
+  })
+
+  it('LoadingBar 未加载不占槽位、加载结束即归还', async () => {
+    let probe!: ReturnType<typeof useZIndex>
+    const loadingBarRef = ref<InstanceType<typeof LoadingBar> | null>(null)
+    const Probe = defineComponent({
+      setup() {
+        probe = useZIndex(5000, undefined, { allocateOnMount: false })
+        return () => h('div')
+      }
+    })
+    wrapper = mount(
+      defineComponent({
+        render: () =>
+          h(
+            ConfigProvider,
+            { baseZIndex: 5000 },
+            {
+              default: () => [h(LoadingBar, { ref: loadingBarRef }), h(Probe)]
+            }
+          )
+      }),
+      { attachTo: document.body, global: { stubs: { transition: false } } }
+    )
+    await settle()
+    // 挂载但未开始加载：不持有槽位 → 探针拿到起始层（若挂载即领取则会被抬高到 5010）
+    probe.allocate()
+    expect(probe.zIndex.value).toBe(5000)
+
+    // 开始加载：占一段 → 之后领取的层落在加载条之上
+    void loadingBarRef.value?.start()
+    await settle()
+    probe.allocate()
+    expect(probe.zIndex.value).toBe(5020)
+
+    // 加载结束：归还 → 再次领取回落到起始层
+    void loadingBarRef.value?.finish()
+    await settle()
+    probe.allocate()
+    expect(probe.zIndex.value).toBe(5000)
   })
 })
