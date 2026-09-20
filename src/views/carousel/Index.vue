@@ -243,7 +243,7 @@ watch(
     <p class="mb10">当焦点在 <code>Arrow</code> 或 <code>Dots</code> 上时，可以通过键盘上、下、左、右按键切换</p>
     <Carousel :images="images" :width="800" :height="450" @click="clickImage" />
     <h2 class="mt30 mb10">箭头</h2>
-    <Space align="center"> showArrow: <Switch v-model="showArrow" /> </Space>
+    <Space align="center"> showArrow: <Switch v-model:value="showArrow" /> </Space>
     <br />
     <br />
     <Carousel :images="images" :width="800" :height="450" :show-arrow="showArrow" @click="clickImage" />
@@ -278,7 +278,7 @@ watch(
       <Select
         v-if="slideEasingType === 'preset'"
         :options="slideEasingPresetOptions"
-        v-model="slideEasingPreset"
+        v-model:value="slideEasingPreset"
         width="200"
         search
       />
@@ -316,7 +316,7 @@ watch(
     />
     <h2 class="mt30 mb10">循环切换</h2>
     <p class="mb10">关闭 <code>loop</code> 后到达首尾时，该方向的切换（箭头、键盘、滚轮、拖拽、自动轮播）均失效</p>
-    <Space align="center"> loop: <Switch v-model="loop" /> </Space>
+    <Space align="center"> loop: <Switch v-model:value="loop" /> </Space>
     <br />
     <br />
     <Carousel :images="images" :width="800" :height="450" :loop="loop" />
@@ -358,7 +358,7 @@ watch(
     <h2 class="mt30 mb10">图片填充方式</h2>
     <p class="mb10">与 CSS 同名属性一致，默认 <code>fill</code> 拉伸填满容器</p>
     <Space align="center">
-      objectFit: <Select :options="objectFitOptions" v-model="objectFit" style="width: 160px" />
+      objectFit: <Select :options="objectFitOptions" v-model:value="objectFit" style="width: 160px" />
     </Space>
     <br />
     <br />
@@ -367,13 +367,13 @@ watch(
     <p class="mb10">
       开启 <code>draggable</code> 后支持鼠标与触摸拖拽，位移超过容器宽度一半或速度超过 <code>0.4px/ms</code> 即翻页
     </p>
-    <Space align="center"> draggable: <Switch v-model="draggable" /> </Space>
+    <Space align="center"> draggable: <Switch v-model:value="draggable" /> </Space>
     <br />
     <br />
     <Carousel :images="images" :width="800" :height="450" :draggable="draggable" />
     <h2 class="mt30 mb10">滚轮切换</h2>
     <p class="mb10">开启 <code>mousewheel</code> 后滚轮切换，单次滚动量需超过 <code>10</code></p>
-    <Space align="center"> mousewheel: <Switch v-model="mousewheel" /> </Space>
+    <Space align="center"> mousewheel: <Switch v-model:value="mousewheel" /> </Space>
     <br />
     <br />
     <Carousel :images="images" :width="800" :height="450" :mousewheel="mousewheel" />
@@ -430,10 +430,10 @@ watch(
           </Flex>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> autoplay：<Switch v-model="state.autoplay" /> </Space>
+          <Space gap="small" vertical> autoplay：<Switch v-model:value="state.autoplay" /> </Space>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> pauseOnMouseEnter：<Switch v-model="state.pauseOnMouseEnter" /> </Space>
+          <Space gap="small" vertical> pauseOnMouseEnter：<Switch v-model:value="state.pauseOnMouseEnter" /> </Space>
         </Col>
         <Col :span="6">
           <Space gap="small" vertical>
@@ -446,7 +446,7 @@ watch(
           </Flex>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> loop：<Switch v-model="state.loop" /> </Space>
+          <Space gap="small" vertical> loop：<Switch v-model:value="state.loop" /> </Space>
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical>
@@ -459,7 +459,7 @@ watch(
           </Flex>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> showArrow：<Switch v-model="state.showArrow" /> </Space>
+          <Space gap="small" vertical> showArrow：<Switch v-model:value="state.showArrow" /> </Space>
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical> arrowColor：<ColorPicker v-model:value="state.arrowColor" /> </Flex>
@@ -468,7 +468,7 @@ watch(
           <Flex gap="small" vertical> arrowSize：<Slider v-model:value="state.arrowSize" :min="1" /> </Flex>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> dots：<Switch v-model="state.dots" /> </Space>
+          <Space gap="small" vertical> dots：<Switch v-model:value="state.dots" /> </Space>
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical> dotSize：<Slider v-model:value="state.dotSize" :min="4" :max="64" /> </Flex>
@@ -482,7 +482,7 @@ watch(
         <Col :span="6">
           <Flex gap="small" vertical>
             dotPosition：
-            <Select :options="positionOptions" v-model="state.dotPosition" />
+            <Select :options="positionOptions" v-model:value="state.dotPosition" />
           </Flex>
         </Col>
         <Col :span="6">
@@ -493,14 +493,14 @@ watch(
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical>
-            objectFit：<Select :options="objectFitOptions" v-model="state.objectFit" />
+            objectFit：<Select :options="objectFitOptions" v-model:value="state.objectFit" />
           </Flex>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> draggable：<Switch v-model="state.draggable" /> </Space>
+          <Space gap="small" vertical> draggable：<Switch v-model:value="state.draggable" /> </Space>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> mousewheel：<Switch v-model="state.mousewheel" /> </Space>
+          <Space gap="small" vertical> mousewheel：<Switch v-model:value="state.mousewheel" /> </Space>
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical>
@@ -509,7 +509,7 @@ watch(
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical>
-            fadeFunction：<Select :options="fadeFunctionOptions" v-model="state.fadeFunction" />
+            fadeFunction：<Select :options="fadeFunctionOptions" v-model:value="state.fadeFunction" />
           </Flex>
         </Col>
         <Col :span="6">
@@ -519,7 +519,7 @@ watch(
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical>
-            slideFunction：<Select :options="slideFunctionOptions" v-model="slideFunctionName" />
+            slideFunction：<Select :options="slideFunctionOptions" v-model:value="slideFunctionName" />
           </Flex>
         </Col>
       </Row>

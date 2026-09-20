@@ -34,7 +34,7 @@ export { default as Card } from './card'
 export type { CarouselProps, CarouselImage, CarouselEasingPreset } from './carousel'
 export { default as Carousel } from './carousel'
 
-export type { CascaderProps, CascaderOption } from './cascader'
+export type { CascaderProps, CascaderOption, CascaderFieldNames } from './cascader'
 export { default as Cascader } from './cascader'
 
 export type { CheckboxProps, CheckboxOption } from './checkbox'
@@ -157,7 +157,7 @@ export { default as Scrollbar } from './scrollbar'
 export type { SegmentedProps, SegmentedOption } from './segmented'
 export { default as Segmented } from './segmented'
 
-export type { SelectProps, SelectOption } from './select'
+export type { SelectProps, SelectOption, SelectFieldNames } from './select'
 export { default as Select } from './select'
 
 export type {

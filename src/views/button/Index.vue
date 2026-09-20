@@ -178,7 +178,7 @@ function onClick(e: Event) {
     </Space>
     <h2 class="mt30 mb10">禁用</h2>
     <Space vertical>
-      <Space align="center"> Disabled state:<Switch v-model="disabled" /> </Space>
+      <Space align="center"> Disabled state:<Switch v-model:value="disabled" /> </Space>
       <Space>
         <Button :disabled="disabled">Default Button</Button>
         <Button :disabled="disabled" type="reverse">Reverse Button</Button>
@@ -306,7 +306,7 @@ function onClick(e: Event) {
     </Space>
     <h2 class="mt30 mb10">自定义颜色</h2>
     <Space vertical>
-      <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
+      <Space align="center"> Loading state:<Switch v-model:value="customLoading" /> </Space>
       <Space>
         <Button type="reverse" color="#d4380d" :loading="customLoading">
           <template #icon>
@@ -355,7 +355,7 @@ function onClick(e: Event) {
     </Space>
     <h2 class="mt30 mb10">加载中状态</h2>
     <Space vertical>
-      <Space align="center"> Loading state:<Switch v-model="loading" /> </Space>
+      <Space align="center"> Loading state:<Switch v-model:value="loading" /> </Space>
       <Space align="center"> Loading type:<Radio :options="loadingOptions" v-model:value="loadingType" /> </Space>
       <Space>
         <Button :loading="loading" :loading-type="loadingType">Default Button</Button>

@@ -9,11 +9,14 @@ export interface Option {
   children?: Option[] // 选项 children 数组
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
+export interface FieldNames {
+  label?: string // 选项的文本字段名
+  value?: string // 选项的值字段名
+  children?: string // 选项的后代字段名
+}
 export interface Props {
   options?: Option[] // 可选项数据源
-  label?: string // 字典项的文本字段名
-  value?: string // 字典项的值字段名
-  children?: string // 字典项的后代字段名
+  fieldNames?: FieldNames // 选项字段名配置，用于自定义选项的文本 / 值 / 后代字段
   placeholder?: string | string[] // 三级选择器各自占位文本
   disabled?: boolean | boolean[] // 是否禁用，可全部禁用或单独禁用某一级选择器
   width?: 'auto' | number | number[] // 三级选择器各自宽度，单位 px
@@ -33,13 +36,11 @@ export interface Props {
   filter?: ((inputValue: string, option: Option) => boolean) | true // 过滤条件函数，仅当支持搜索时生效
   maxDisplay?: number // 下拉面板最多能展示的项数，超过后滚动显示
   scrollbarProps?: ScrollbarProps // 下拉面板滚动条 scrollbar 组件属性配置
-  modelValue?: number[] | string[] //（v-model）级联选中项
+  value?: number[] | string[] // (v-model) 级联选中项
 }
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
-  label: 'label',
-  value: 'value',
-  children: 'children',
+  fieldNames: undefined,
   placeholder: '请选择',
   disabled: false,
   width: 'auto',
@@ -55,14 +56,20 @@ const props = withDefaults(defineProps<Props>(), {
   filter: true,
   maxDisplay: 6,
   scrollbarProps: () => ({}),
-  modelValue: () => []
+  value: () => []
 })
 const values = ref<(string | number)[]>([]) // 级联 value 值数组
 const labels = ref<(string | number)[]>([]) // 级联 label 文本数组
 const firstOptions = ref<Option[]>([])
 const secondOptions = ref<Option[]>([])
 const thirdOptions = ref<Option[]>([])
-const emits = defineEmits(['update:modelValue', 'change'])
+const emits = defineEmits(['update:value', 'change'])
+// 选项字段名配置：未指定（含显式空值）的字段逐一回退默认值
+const mergedFieldNames = computed(() => ({
+  label: props.fieldNames?.label || 'label',
+  value: props.fieldNames?.value || 'value',
+  children: props.fieldNames?.children || 'children'
+}))
 const selectGap = computed(() => {
   const gapMap = {
     small: 4,
@@ -78,7 +85,7 @@ watchEffect(() => {
   firstOptions.value = [...props.options]
 })
 watchEffect(() => {
-  values.value = [...props.modelValue]
+  values.value = [...props.value]
 })
 watchEffect(() => {
   initCascader(values.value)
@@ -87,8 +94,8 @@ watchEffect(() => {
 function findChildren(options: Option[], index: number): Option[] {
   const len = options.length
   for (let i = 0; i < len; i++) {
-    if (options[i][props.value] === values.value[index]) {
-      return options[i][props.children] || []
+    if (options[i][mergedFieldNames.value.value] === values.value[index]) {
+      return options[i][mergedFieldNames.value.children] || []
     }
   }
   return []
@@ -104,8 +111,8 @@ function initCascader(values: (string | number)[]): void {
 function findLabel(options: Option[], index: number): string | number {
   const len = options.length
   for (let i = 0; i < len; i++) {
-    if (options[i][props.value] === values.value[index]) {
-      return options[i][props.label]
+    if (options[i][mergedFieldNames.value.value] === values.value[index]) {
+      return options[i][mergedFieldNames.value.label]
     }
   }
   return values.value[index]
@@ -122,7 +129,7 @@ function initLabels(values: (string | number)[]): void {
 // 一级下拉回调
 function onFirstChange(value: string | number, label: string): void {
   if (props.changeOnSelect) {
-    emits('update:modelValue', [value])
+    emits('update:value', [value])
     emits('change', [value], [label])
   } else {
     values.value = [value]
@@ -132,7 +139,7 @@ function onFirstChange(value: string | number, label: string): void {
 // 二级下拉回调
 function onSecondChange(value: string | number, label: string): void {
   if (props.changeOnSelect) {
-    emits('update:modelValue', [values.value[0], value])
+    emits('update:value', [values.value[0], value])
     emits('change', [values.value[0], value], [labels.value[0], label])
   } else {
     values.value = [values.value[0], value]
@@ -141,7 +148,7 @@ function onSecondChange(value: string | number, label: string): void {
 }
 // 三级下拉回调
 function onThirdChange(value: string | number, label: string): void {
-  emits('update:modelValue', [...values.value.slice(0, 2), value])
+  emits('update:value', [...values.value.slice(0, 2), value])
   emits('change', [...values.value.slice(0, 2), value], [...labels.value.slice(0, 2), label])
 }
 </script>
@@ -149,8 +156,7 @@ function onThirdChange(value: string | number, label: string): void {
   <div class="cascader-wrap" :style="`--cascader-select-gap: ${selectGap};`">
     <Select
       :options="firstOptions"
-      :label="label"
-      :value="value"
+      :field-names="fieldNames"
       :placeholder="Array.isArray(placeholder) ? placeholder[0] : placeholder"
       :disabled="Array.isArray(disabled) ? disabled[0] : disabled"
       :width="Array.isArray(width) ? width[0] : width"
@@ -164,13 +170,12 @@ function onThirdChange(value: string | number, label: string): void {
       :filter="filter"
       :max-display="maxDisplay"
       :scrollbar-props="scrollbarProps"
-      v-model="values[0]"
+      v-model:value="values[0]"
       @change="onFirstChange"
     />
     <Select
       :options="secondOptions"
-      :label="label"
-      :value="value"
+      :field-names="fieldNames"
       :placeholder="Array.isArray(placeholder) ? placeholder[1] : placeholder"
       :disabled="Array.isArray(disabled) ? disabled[1] : disabled"
       :width="Array.isArray(width) ? width[1] : width"
@@ -184,13 +189,12 @@ function onThirdChange(value: string | number, label: string): void {
       :filter="filter"
       :max-display="maxDisplay"
       :scrollbar-props="scrollbarProps"
-      v-model="values[1]"
+      v-model:value="values[1]"
       @change="onSecondChange"
     />
     <Select
       :options="thirdOptions"
-      :label="label"
-      :value="value"
+      :field-names="fieldNames"
       :placeholder="Array.isArray(placeholder) ? placeholder[2] : placeholder"
       :disabled="Array.isArray(disabled) ? disabled[2] : disabled"
       :width="Array.isArray(width) ? width[2] : width"
@@ -204,7 +208,7 @@ function onThirdChange(value: string | number, label: string): void {
       :filter="filter"
       :max-display="maxDisplay"
       :scrollbar-props="scrollbarProps"
-      v-model="values[2]"
+      v-model:value="values[2]"
       @change="onThirdChange"
     />
   </div>

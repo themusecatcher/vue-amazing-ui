@@ -173,20 +173,20 @@ const placementOptions = [
 ]
 const size = ref<SelectProps['size']>('large')
 // 各分节独立绑定：避免操作一个用例时其余用例同步联动，便于单独核对每个特性
-const basicValue = ref<SelectProps['modelValue']>(5)
-const disabledValue = ref<SelectProps['modelValue']>(5)
-const disabledOptionValue = ref<SelectProps['modelValue']>(5)
-const fieldNameValue = ref<SelectProps['modelValue']>(5)
-const customStyleValue = ref<SelectProps['modelValue']>(5)
-const sizeValue = ref<SelectProps['modelValue']>(5)
-const clearableValue = ref<SelectProps['modelValue']>(5)
-const searchableValue = ref<SelectProps['modelValue']>(5)
-const filterValue = ref<SelectProps['modelValue']>(5)
-const keyboardValue = ref<SelectProps['modelValue']>(5)
-const placementValue = ref<SelectProps['modelValue']>(5)
+const basicValue = ref<SelectProps['value']>(5)
+const disabledValue = ref<SelectProps['value']>(5)
+const disabledOptionValue = ref<SelectProps['value']>(5)
+const fieldNameValue = ref<SelectProps['value']>(5)
+const customStyleValue = ref<SelectProps['value']>(5)
+const sizeValue = ref<SelectProps['value']>(5)
+const clearableValue = ref<SelectProps['value']>(5)
+const searchableValue = ref<SelectProps['value']>(5)
+const filterValue = ref<SelectProps['value']>(5)
+const keyboardValue = ref<SelectProps['value']>(5)
+const placementValue = ref<SelectProps['value']>(5)
 // 长列表（10 项）的选中项，用于观察面板滚动与「打开时自动滚到选中项」
-const maxDisplayValue = ref<SelectProps['modelValue']>(5)
-const scrollbarValue = ref<SelectProps['modelValue']>(5)
+const maxDisplayValue = ref<SelectProps['value']>(5)
+const scrollbarValue = ref<SelectProps['value']>(5)
 const placement = ref<SelectProps['placement']>('bottom')
 watchEffect(() => {
   console.log('basicValue', basicValue.value)
@@ -204,24 +204,24 @@ function filter(inputValue: string, option: any) {
   return option.value > inputValue
 }
 // 挂载容器：不传 to 时优先挂到最近的承载层内容容器
-const toValue = ref<SelectProps['modelValue']>(5)
+const toValue = ref<SelectProps['value']>(5)
 // 下拉面板样式的公开入口：popupClassName / dropdownMenuStyle
-const panelValue = ref<SelectProps['modelValue']>(1)
-const panelZIndexValue = ref<SelectProps['modelValue']>(1)
+const panelValue = ref<SelectProps['value']>(1)
+const panelZIndexValue = ref<SelectProps['value']>(1)
 </script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Select :options="options" v-model="basicValue" @change="onChange" @openChange="onOpenChange" />
+    <Select :options="options" v-model:value="basicValue" @change="onChange" @openChange="onOpenChange" />
     <h2 class="mt30 mb10">禁用</h2>
-    <Select :options="options" disabled v-model="disabledValue" />
+    <Select :options="options" disabled v-model:value="disabledValue" />
     <h2 class="mt30 mb10">禁用选项</h2>
-    <Select :options="optionsDisabled" v-model="disabledOptionValue" />
+    <Select :options="optionsDisabled" v-model:value="disabledOptionValue" />
     <h2 class="mt30 mb10">自定义节点字段名</h2>
-    <Select :options="optionsCustom" label="name" value="id" v-model="fieldNameValue" />
+    <Select :options="optionsCustom" :field-names="{ label: 'name', value: 'id' }" v-model:value="fieldNameValue" />
     <h2 class="mt30 mb10">自定义样式</h2>
-    <Select :width="150" :height="36" search :options="options" v-model="customStyleValue" />
+    <Select :width="150" :height="36" search :options="options" v-model:value="customStyleValue" />
     <h2 class="mt30 mb10">自定义下拉面板</h2>
     <p class="mb10">
       通过 <code>popupClassName</code> 自定义面板类名、<code>dropdownMenuStyle</code> 设置面板样式，两者均落在
@@ -230,13 +230,13 @@ const panelZIndexValue = ref<SelectProps['modelValue']>(1)
     <Flex gap="large" wrap="wrap">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">默认面板</span>
-        <Select :options="options" v-model="panelValue" :width="180" />
+        <Select :options="options" v-model:value="panelValue" :width="180" />
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">自定义类名与样式</span>
         <Select
           :options="options"
-          v-model="panelValue"
+          v-model:value="panelValue"
           :width="180"
           popup-class-name="custom-select-panel"
           :dropdown-menu-style="{
@@ -249,38 +249,38 @@ const panelZIndexValue = ref<SelectProps['modelValue']>(1)
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">自定义层级</span>
-        <Select :options="options" v-model="panelZIndexValue" :width="180" :z-index="1100" />
+        <Select :options="options" v-model:value="panelZIndexValue" :width="180" :z-index="1100" />
       </Flex>
     </Flex>
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Space vertical>
       <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Space align="center" :size="24">
-        <Select :options="options" v-model="sizeValue" :size="size" />
-        <Select :options="options" search allow-clear v-model="sizeValue" :size="size" />
+        <Select :options="options" v-model:value="sizeValue" :size="size" />
+        <Select :options="options" search allow-clear v-model:value="sizeValue" :size="size" />
       </Space>
     </Space>
     <h2 class="mt30 mb10">支持清除</h2>
-    <Select :options="options" allow-clear v-model="clearableValue" />
+    <Select :options="options" allow-clear v-model:value="clearableValue" />
     <h2 class="mt30 mb10">支持搜索</h2>
-    <Select :options="options" search allow-clear v-model="searchableValue" />
+    <Select :options="options" search allow-clear v-model:value="searchableValue" />
     <h2 class="mt30 mb10">搜索过滤函数</h2>
-    <Select :options="options" search :filter="filter" v-model="filterValue" />
+    <Select :options="options" search :filter="filter" v-model:value="filterValue" />
     <h2 class="mt30 mb10">键盘操作</h2>
     <p class="mb10">
       聚焦后按 <code>↑</code> <code>↓</code> 移动高亮（自动跳过禁用项、到达列表端点时环形回绕并滚入可视区），按
       <code>Enter</code> 选中，按 <code>Esc</code> 关闭面板；面板收起时按 <code>↑</code> <code>↓</code> 可直接展开
     </p>
     <Space align="start" :size="40">
-      <Select :options="options" v-model="keyboardValue" />
-      <Select :options="optionsDisabled" v-model="keyboardValue" />
+      <Select :options="options" v-model:value="keyboardValue" />
+      <Select :options="optionsDisabled" v-model:value="keyboardValue" />
     </Space>
     <h2 class="mt30 mb10">下拉面板弹出位置</h2>
     <Space vertical>
       <Radio :options="placementOptions" v-model:value="placement" button button-style="solid" />
       <Space align="center" :size="24">
-        <Select :options="options" v-model="placementValue" :placement="placement" />
-        <Select :options="options" search allow-clear v-model="placementValue" :placement="placement" />
+        <Select :options="options" v-model:value="placementValue" :placement="placement" />
+        <Select :options="options" search allow-clear v-model:value="placementValue" :placement="placement" />
       </Space>
     </Space>
     <h2 class="mt30 mb10">下拉面板挂载容器</h2>
@@ -289,18 +289,18 @@ const panelZIndexValue = ref<SelectProps['modelValue']>(1)
       <code>Dialog</code> 卡片或上层浮层面板），无承载层时为 <code>body</code>；设为 <code>false</code> 时面板留在原地
     </p>
     <Space>
-      <Select :options="options" v-model="toValue" :width="200" />
-      <Select :options="options" v-model="toValue" :to="false" :width="200" />
+      <Select :options="options" v-model:value="toValue" :width="200" />
+      <Select :options="options" v-model:value="toValue" :to="false" :width="200" />
     </Space>
     <h2 class="mt30 mb10">下拉面板数</h2>
     <p class="mb10"> 选项较多时面板默认展示 8 项，超出部分通过滚动查看；可通过 <code>maxDisplay</code> 调整展示项数 </p>
     <Space align="start" :size="40">
-      <Select :options="optionsLong" v-model="maxDisplayValue" />
-      <Select :options="optionsLong" v-model="maxDisplayValue" :max-display="4" />
+      <Select :options="optionsLong" v-model:value="maxDisplayValue" />
+      <Select :options="optionsLong" v-model:value="maxDisplayValue" :max-display="4" />
     </Space>
     <h2 class="mt30 mb10">下拉面板滚动条</h2>
     <p class="mb10">通过 <code>scrollbarProps</code> 定制面板内滚动条</p>
-    <Select :options="optionsLong" v-model="scrollbarValue" :scrollbar-props="{ size: 8, delay: 2000 }" />
+    <Select :options="optionsLong" v-model:value="scrollbarValue" :scrollbar-props="{ size: 8, delay: 2000 }" />
   </div>
 </template>
 <style lang="less">

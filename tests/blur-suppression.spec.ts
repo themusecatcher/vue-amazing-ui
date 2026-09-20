@@ -86,7 +86,7 @@ describe('Select 触发焦点保护', () => {
     wrapper = mount(Select, {
       attachTo: document.body,
       global: { stubs: { transition: false } },
-      props: { modelValue: undefined, options: SELECT_OPTIONS, allowClear: true }
+      props: { value: undefined, options: SELECT_OPTIONS, allowClear: true }
     })
     await flush()
     await wrapper.find('.select-wrap').trigger('click')

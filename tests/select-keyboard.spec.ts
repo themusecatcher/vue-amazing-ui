@@ -95,7 +95,7 @@ describe('Select 键盘导航', () => {
 
     await pressKey('Escape')
     expect(isPanelVisible()).toBe(false)
-    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    expect(wrapper.emitted('update:value')).toBeUndefined()
     expect(wrapper.emitted('change')).toBeUndefined()
   })
 
@@ -113,7 +113,7 @@ describe('Select 键盘导航', () => {
     expect(hoverTexts()).toEqual(['上海市'])
     await pressKey('Enter')
 
-    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual(['shanghai'])
+    expect(wrapper.emitted('update:value')?.at(-1)).toEqual(['shanghai'])
     expect(wrapper.emitted('change')?.at(-1)).toEqual(['shanghai', '上海市', 1])
     expect(isPanelVisible()).toBe(false)
   })
@@ -143,6 +143,6 @@ describe('Select 键盘导航', () => {
     await pressKey('ArrowDown')
     expect(hoverTexts()).toEqual(['苹果汁'])
     await pressKey('Enter')
-    expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual(['juice'])
+    expect(wrapper.emitted('update:value')?.at(-1)).toEqual(['juice'])
   })
 })

@@ -19,10 +19,13 @@ export interface Option {
   disabled?: boolean // 是否禁用选项，默认 false
   [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
 }
+export interface FieldNames {
+  label?: string // 选项的文本字段名
+  value?: string // 选项的值字段名
+}
 export interface Props {
   options?: Option[] // 选项数据
-  label?: string // 字典项的文本字段名
-  value?: string // 字典项的值字段名
+  fieldNames?: FieldNames // 选项字段名配置，用于自定义选项的文本 / 值字段
   placeholder?: string // 默认占位文本
   disabled?: boolean // 是否禁用
   width?: string | number // 选择器宽度，单位 px
@@ -43,12 +46,11 @@ export interface Props {
   filter?: ((inputValue: string, option: Option) => boolean) | true // 过滤条件函数，仅当支持搜索时生效
   maxDisplay?: number // 下拉面板最多能展示的项数，超过后滚动显示
   scrollbarProps?: ScrollbarProps // 下拉面板滚动条 scrollbar 组件属性配置
-  modelValue?: number | string // (v-model) 当前选中的 option 条目值
+  value?: number | string // (v-model) 当前选中的 option 条目值
 }
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
-  label: 'label',
-  value: 'value',
+  fieldNames: undefined,
   placeholder: '请选择',
   disabled: false,
   width: 'auto',
@@ -65,7 +67,7 @@ const props = withDefaults(defineProps<Props>(), {
   filter: true,
   maxDisplay: 8,
   scrollbarProps: () => ({}),
-  modelValue: undefined
+  value: undefined
 })
 const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const filterOptions = ref<Option[]>([]) // 过滤后的选项数组
@@ -100,7 +102,12 @@ const resolvedTo = useFloatingTeleportTarget(
   () => selectContentRef.value,
   () => props.to
 )
-const emits = defineEmits(['update:modelValue', 'change', 'openChange'])
+const emits = defineEmits(['update:value', 'change', 'openChange'])
+// 选项字段名配置：未指定（含显式空值）的字段逐一回退默认值
+const mergedFieldNames = computed(() => ({
+  label: props.fieldNames?.label || 'label',
+  value: props.fieldNames?.value || 'value'
+}))
 const selectWidth = computed(() => {
   if (typeof props.width === 'number') {
     return `${props.width}px`
@@ -213,7 +220,7 @@ watchEffect(() => {
         if (typeof props.filter === 'function') {
           return props.filter(keyword, option)
         } else {
-          return option[props.label].includes(keyword)
+          return option[mergedFieldNames.value.label].includes(keyword)
         }
       })
     } else {
@@ -230,7 +237,7 @@ watchEffect(() => {
     // 复位语义：有输入（searchValue 变化）时把悬浮态落到过滤结果首项；
     // 无输入时保持原悬浮项 —— 面板关闭会清空输入，若此处一并复位，关闭前的悬浮态就会丢失
     if (inputValue.value) {
-      hoverValue.value = filterOptions.value.length ? filterOptions.value[0][props.value] : null
+      hoverValue.value = filterOptions.value.length ? filterOptions.value[0][mergedFieldNames.value.value] : null
     }
   } else {
     filterOptions.value = props.options
@@ -266,13 +273,13 @@ async function scrollOptionIntoView(selector: string): Promise<void> {
   }
 }
 function initSelector(): void {
-  if (props.modelValue) {
-    const target = props.options.find((option) => option[props.value] === props.modelValue)
+  if (props.value) {
+    const target = props.options.find((option) => option[mergedFieldNames.value.value] === props.value)
     if (target) {
-      selectedName.value = target[props.label]
-      hoverValue.value = target[props.value]
+      selectedName.value = target[mergedFieldNames.value.label]
+      hoverValue.value = target[mergedFieldNames.value.value]
     } else {
-      selectedName.value = props.modelValue
+      selectedName.value = props.value
       hoverValue.value = null
     }
   } else {
@@ -356,13 +363,15 @@ async function toggleSelect(): Promise<void> {
   // ③ 其余情况保持关闭前的悬浮项
   if (showOptions.value) {
     const selected = selectedName.value
-      ? props.options.find((option) => option[props.label] === selectedName.value)
+      ? props.options.find((option) => option[mergedFieldNames.value.label] === selectedName.value)
       : undefined
     if (selected) {
-      hoverValue.value = selected[props.value]
-    } else if (!props.options.some((option) => !option.disabled && option[props.value] === hoverValue.value)) {
+      hoverValue.value = selected[mergedFieldNames.value.value]
+    } else if (
+      !props.options.some((option) => !option.disabled && option[mergedFieldNames.value.value] === hoverValue.value)
+    ) {
       const firstEnabled = props.options.find((option) => !option.disabled)
-      hoverValue.value = firstEnabled ? firstEnabled[props.value] : null
+      hoverValue.value = firstEnabled ? firstEnabled[mergedFieldNames.value.value] : null
     }
   }
   if (props.search) {
@@ -388,7 +397,9 @@ function onKeydown(e: KeyboardEvent): void {
       return
     }
     const isArrowDown = e.key === 'ArrowDown'
-    const currentIdx = list.findIndex((option) => !option.disabled && option[props.value] === hoverValue.value)
+    const currentIdx = list.findIndex(
+      (option) => !option.disabled && option[mergedFieldNames.value.value] === hoverValue.value
+    )
     // 环形查找下一个未禁用项：从当前项的下一个开始循环一圈；无高亮时向下从第一项、向上从最后一项开始
     let start = 0
     if (isArrowDown) {
@@ -407,17 +418,19 @@ function onKeydown(e: KeyboardEvent): void {
     }
     // 无其他可用项（仅当前项未禁用或全部禁用）时保持原高亮
     if (nextIdx < 0 || nextIdx === currentIdx) return
-    hoverValue.value = list[nextIdx][props.value]
+    hoverValue.value = list[nextIdx][mergedFieldNames.value.value]
     scrollOptionIntoView('.option-hover')
     return
   }
   if (e.key === 'Enter') {
     // 面板打开且有高亮未禁用项时，Enter 确认选中（下标口径与鼠标点击一致，均为过滤后列表的下标）
     if (!showOptions.value) return
-    const index = list.findIndex((option) => !option.disabled && option[props.value] === hoverValue.value)
+    const index = list.findIndex(
+      (option) => !option.disabled && option[mergedFieldNames.value.value] === hoverValue.value
+    )
     if (index < 0) return
     e.preventDefault()
-    onChange(list[index][props.value], list[index][props.label], index)
+    onChange(list[index][mergedFieldNames.value.value], list[index][mergedFieldNames.value.label], index)
     return
   }
   if (e.key === 'Escape' && showOptions.value) {
@@ -436,7 +449,7 @@ function onClear(): void {
   showOptions.value = false
   showSearch.value = false
   showArrow.value = true
-  emits('update:modelValue')
+  emits('update:value')
   emits('change')
 }
 function selectFocus(): void {
@@ -444,10 +457,10 @@ function selectFocus(): void {
 }
 // 选中下拉项后的回调
 function onChange(value: string | number, label: string, index: number): void {
-  if (props.modelValue !== value) {
+  if (props.value !== value) {
     selectedName.value = label
     hoverValue.value = value
-    emits('update:modelValue', value)
+    emits('update:value', value)
     emits('change', value, label, index)
   }
   showCaret.value = false
@@ -589,17 +602,21 @@ function onChange(value: string | number, label: string, index: number): void {
                 :class="[
                   'select-option',
                   {
-                    'option-hover': !option.disabled && option[value] === hoverValue,
-                    'option-selected': option[label] === selectedName,
+                    'option-hover': !option.disabled && option[mergedFieldNames.value] === hoverValue,
+                    'option-selected': option[mergedFieldNames.label] === selectedName,
                     'option-disabled': option.disabled
                   }
                 ]"
-                :title="option[label]"
-                @mouseenter="onHover(option[value])"
+                :title="option[mergedFieldNames.label]"
+                @mouseenter="onHover(option[mergedFieldNames.value])"
                 @mousedown.prevent
-                @click.stop="option.disabled ? selectFocus() : onChange(option[value], option[label], index)"
+                @click.stop="
+                  option.disabled
+                    ? selectFocus()
+                    : onChange(option[mergedFieldNames.value], option[mergedFieldNames.label], index)
+                "
               >
-                {{ option[label] }}
+                {{ option[mergedFieldNames.label] }}
               </p>
             </Scrollbar>
             <div
