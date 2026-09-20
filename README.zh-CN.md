@@ -261,7 +261,7 @@ pnpm docs:dev
 | InputNumber     | 数字输入框 | InputSearch    | 搜索框     |
 | List            | 列表       | LoadingBar     | 加载条     |
 | Message         | 全局提示   | Modal          | 模态框     |
-| Notification    | 通知提醒   | NumberAnimation| 数值动画   |
+| Notification    | 通知提醒   | NumberAnimation | 数值动画   |
 | Pagination      | 分页       | Popconfirm     | 弹出确认   |
 | Popover         | 气泡卡片   | Progress       | 进度条     |
 | QRCode          | 二维码     | Radio          | 单选框     |
