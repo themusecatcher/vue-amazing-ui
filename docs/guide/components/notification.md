@@ -77,13 +77,14 @@ function onClick() {
 <script setup lang="ts">
 import { h, onBeforeUnmount, onMounted, ref } from 'vue'
 import { CloudFilled, FireFilled, SoundFilled } from '@ant-design/icons-vue'
-import { Button, createDiscreteApi, useMessage, useNotification } from 'vue-amazing-ui'
+import { Button, Select, Tooltip, createDiscreteApi, useMessage, useNotification } from 'vue-amazing-ui'
 import type {
   DiscreteApiInstance,
   NotificationApi,
   NotificationOptions,
   NotificationReactive,
-  NotificationUpdate
+  NotificationUpdate,
+  SelectOption
 } from 'vue-amazing-ui'
 // setup 内调用 useNotification()：需外层存在 <NotificationProvider>（docs 站点已在主题层全局包裹）
 const notification = useNotification()
@@ -236,6 +237,33 @@ function onRenderFnContent() {
   notification.info({
     title: () => h('span', { style: 'color: #d4380d; font-weight: 600' }, '渲染函数标题'),
     content: () => h('span', { style: 'color: #389e0d' }, '这是一条渲染函数动态生成的内容')
+  })
+}
+// 与浮层叠加：通知默认层级 1040（高于承载层 Modal 弹窗 1010，低于 Select 面板 1050 / Tooltip 1070），
+// 因此通知内容里的下拉面板与气泡不会被通知框压住
+const layerValue = ref<number>(1)
+const layerOptions: SelectOption[] = [
+  { label: '北京市', value: 1 },
+  { label: '上海市', value: 2 },
+  { label: '纽约市', value: 3 }
+]
+function onLayerNotification() {
+  notification.info({
+    title: '与浮层叠加',
+    content: () =>
+      h('span', { style: 'display: inline-flex; align-items: center; gap: 8px' }, [
+        h('span', '通知内容里的浮层：'),
+        h(Select, {
+          options: layerOptions,
+          modelValue: layerValue.value,
+          'onUpdate:modelValue': (value: number) => {
+            layerValue.value = value
+          },
+          width: 140
+        }),
+        h(Tooltip, { tooltip: 'Vue Amazing UI' }, { default: () => h(Button, null, () => 'Hover me') })
+      ]),
+    duration: null
   })
 }
 // 自定义操作按钮：点击 Confirm 关闭当前通知
@@ -855,6 +883,55 @@ function onRenderFnContent() {
 
 :::
 
+## 与浮层叠加
+
+_通知的默认层级为 `1040`：高于承载层（`Modal` 弹窗 `1010`），低于锚点跟随型浮层（`Select` 面板 `1050` / `Tooltip` `1070`）_
+
+<br/>
+
+<Button type="primary" @click="onLayerNotification">通知内容里的浮层</Button>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { h, ref } from 'vue'
+import { Button, Select, Tooltip, useNotification } from 'vue-amazing-ui'
+const notification = useNotification()
+const layerValue = ref(1)
+const layerOptions = [
+  { label: '北京市', value: 1 },
+  { label: '上海市', value: 2 },
+  { label: '纽约市', value: 3 }
+]
+// 通知默认层级 1040 低于 Select 面板 1050 / Tooltip 1070，故内容里的浮层不会被通知框压住
+function onLayerNotification() {
+  notification.info({
+    title: '与浮层叠加',
+    content: () =>
+      h('span', { style: 'display: inline-flex; align-items: center; gap: 8px' }, [
+        h('span', '通知内容里的浮层：'),
+        h(Select, {
+          options: layerOptions,
+          modelValue: layerValue.value,
+          'onUpdate:modelValue': (value) => {
+            layerValue.value = value
+          },
+          width: 140
+        }),
+        h(Tooltip, { tooltip: 'Vue Amazing UI' }, { default: () => h(Button, null, () => 'Hover me') })
+      ]),
+    duration: null
+  })
+}
+</script>
+<template>
+  <Button type="primary" @click="onLayerNotification">通知内容里的浮层</Button>
+</template>
+```
+
+::::
+
 ## 自定义操作按钮
 
 <Button type="primary" @click="onAction">显示通知</Button>
@@ -1253,14 +1330,14 @@ function onHoverNoPauseNotification() {
 当目标与组件位于同一组件树内时，组件挂载瞬间目标尚未插入文档，需用 `v-if` 将组件延迟到挂载完成后再渲染。
 :::
 
-<div id="notification-to-container" class="notification-to-container"></div>
+<div id="notification-to-container" class="teleport-container"></div>
 
 <NotificationProvider v-if="toReady" to="#notification-to-container" @ready="toNotification = $event" />
 
 <Button type="primary" @click="onToNotification">挂载到指定容器</Button>
 
 <style lang="less" scoped>
-.notification-to-container {
+.teleport-container {
   position: relative;
   transform: translateZ(0); // 建立包含块，使内部 fixed 定位的通知相对该容器定位
   max-width: 800px;
@@ -1294,12 +1371,12 @@ function onToNotification() {
 }
 </script>
 <template>
-  <div id="notification-to-container" class="notification-to-container"></div>
+  <div id="notification-to-container" class="teleport-container"></div>
   <NotificationProvider v-if="toReady" to="#notification-to-container" @ready="toNotification = $event" />
   <Button type="primary" @click="onToNotification">挂载到指定容器</Button>
 </template>
 <style lang="less" scoped>
-.notification-to-container {
+.teleport-container {
   position: relative;
   transform: translateZ(0); // 建立包含块，使内部 fixed 定位的通知相对该容器定位
   max-width: 800px;
@@ -1406,8 +1483,8 @@ _`close` 为 `<Notification>` / `<NotificationProvider>` 组件的事件（需�
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| ready | 实例挂载完成时触发，参数为该实例的 api | (api: [NotificationApi](#methods)) => void |
 | close | 通知提醒关闭时的回调，参数为该条通知的 `key` | (key: string) => void |
+| ready | 实例挂载完成时触发，参数为该实例的 api | (api: [NotificationApi](#methods)) => void |
 
 ## 在 setup 外使用
 

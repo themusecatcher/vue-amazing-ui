@@ -215,9 +215,21 @@ const openControlled = ref(false)
 const valueDefaultOpen = ref('')
 const valueActiveFirst = ref('')
 const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
-// 下拉面板宽度 dropdownMatchSelectWidth（指定为 300）
+// 下拉面板宽度 dropdownMatchSelectWidth 的三态：等宽 / 以触发器宽度为最小宽度（由内容撑开）/ 固定 300
+// 选项文本刻意长于输入框（200px）—— 否则 false 的面板宽度与 true 完全相同，看不出差异
 const valueMatchWidth = ref('')
-const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选项文本 B', '一个较长的选项文本 C']
+const valueMatchWidthTrue = ref('')
+const valueMatchWidthFalse = ref('')
+const optionsMatchWidth = [
+  '一个明显长于输入框宽度的选项文本',
+  '另一个同样明显更长的选项文本',
+  '第三个用于对照的较长选项文本'
+]
+// 挂载容器：不传 to 时优先挂到最近的承载层内容容器
+const toValue = ref('')
+// 下拉面板样式的公开入口：popupClassName / dropdownMenuStyle / zIndex
+const panelValue = ref('')
+const panelZIndexValue = ref('')
 </script>
 
 ## 基本使用
@@ -267,8 +279,8 @@ function onSearch1(searchText: string) {
   @search="onSearch2"
 >
   <template #option="{ value: val }">
-    {{ val.split('@')[0] }} @
-    <span style="font-weight: bold">{{ val.split('@')[1] }}</span>
+    {{ String(val).split('@')[0] }} @
+    <span style="font-weight: bold">{{ String(val).split('@')[1] }}</span>
   </template>
 </AutoComplete>
 
@@ -293,8 +305,8 @@ function onSearch2(val: string) {
     @search="onSearch2"
   >
     <template #option="{ value: val }">
-      {{ val.split('@')[0] }} @
-      <span style="font-weight: bold">{{ val.split('@')[1] }}</span>
+      {{ String(val).split('@')[0] }} @
+      <span style="font-weight: bold">{{ String(val).split('@')[1] }}</span>
     </template>
   </AutoComplete>
 </template>
@@ -394,13 +406,13 @@ function filterOption(input: string, option: unknown): boolean {
     <template v-if="item.options">
       <div style="display: flex; justify-content: space-between; align-items: center">
         <span>{{ item.value }}</span>
-        <a href="https://www.google.com/search?q=vue-amazing-ui" target="_blank" rel="noopener noreferrer">
+        <a href="https://themusecatcher.github.io/vue-amazing-ui/" target="_blank" rel="noopener noreferrer">
           more
         </a>
       </div>
     </template>
     <template v-else-if="item.value === 'all'">
-      <a href="https://www.google.com/search?q=vue-amazing-ui" target="_blank" rel="noopener noreferrer">
+      <a href="https://themusecatcher.github.io/vue-amazing-ui/" target="_blank" rel="noopener noreferrer">
         View all results
       </a>
     </template>
@@ -459,13 +471,13 @@ const options5 = ref([
       <template v-if="item.options">
         <div style="display: flex; justify-content: space-between; align-items: center">
           <span>{{ item.value }}</span>
-          <a href="https://www.google.com/search?q=vue-amazing-ui" target="_blank" rel="noopener noreferrer">
+          <a href="https://themusecatcher.github.io/vue-amazing-ui/" target="_blank" rel="noopener noreferrer">
             more
           </a>
         </div>
       </template>
       <template v-else-if="item.value === 'all'">
-        <a href="https://www.google.com/search?q=vue-amazing-ui" target="_blank" rel="noopener noreferrer">
+        <a href="https://themusecatcher.github.io/vue-amazing-ui/" target="_blank" rel="noopener noreferrer">
           View all results
         </a>
       </template>
@@ -499,7 +511,7 @@ const options5 = ref([
     <div style="display: flex; justify-content: space-between">
       <span>
         Found {{ item.query }} on
-        <a :href="`https://s.taobao.com/search?q=${item.query}`" target="_blank" rel="noopener noreferrer">
+        <a :href="`https://themusecatcher.github.io/vue-amazing-ui/?q=${item.query}`" target="_blank" rel="noopener noreferrer">
           {{ item.category }}
         </a>
       </span>
@@ -555,7 +567,7 @@ function onSearch6(val: string) {
       <div style="display: flex; justify-content: space-between">
         <span>
           Found {{ item.query }} on
-          <a :href="`https://s.taobao.com/search?q=${item.query}`" target="_blank" rel="noopener noreferrer">
+          <a :href="`https://themusecatcher.github.io/vue-amazing-ui/?q=${item.query}`" target="_blank" rel="noopener noreferrer">
             {{ item.category }}
           </a>
         </span>
@@ -677,6 +689,7 @@ function onSearch7(searchText: string) {
     placeholder="border less"
     :bordered="false"
     @search="onSearch7"
+    @select="onSelect7"
   />
 </template>
 ```
@@ -745,6 +758,7 @@ function onSearch7(searchText: string) {
     placeholder="Clearable"
     allow-clear
     @search="onSearch7"
+    @select="onSelect7"
   />
   <br />
   <br />
@@ -755,6 +769,7 @@ function onSearch7(searchText: string) {
     placeholder="Customized clear icon"
     allow-clear
     @search="onSearch7"
+    @select="onSelect7"
   >
     <template #clearIcon>
       <svg
@@ -776,6 +791,216 @@ function onSearch7(searchText: string) {
 ```
 
 :::
+
+## 下拉面板宽度
+
+*通过 `dropdownMatchSelectWidth` 指定面板宽度：`true` 与输入框等宽；`false` 时以输入框宽度为最小宽度、内容更宽则随之撑开；数字则为固定宽度*
+
+<br/>
+
+<Space align="start" :size="40">
+  <AutoComplete
+    v-model:value="valueMatchWidthTrue"
+    :options="optionsMatchWidth"
+    :width="200"
+    placeholder="面板与输入框等宽"
+  />
+  <AutoComplete
+    v-model:value="valueMatchWidthFalse"
+    :options="optionsMatchWidth"
+    :width="200"
+    placeholder="面板由内容撑开"
+    :dropdown-match-select-width="false"
+  />
+  <AutoComplete
+    v-model:value="valueMatchWidth"
+    :options="optionsMatchWidth"
+    :width="200"
+    placeholder="面板宽 300"
+    :dropdown-match-select-width="300"
+  />
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const valueMatchWidth = ref('')
+const valueMatchWidthTrue = ref('')
+const valueMatchWidthFalse = ref('')
+const optionsMatchWidth = [
+  '一个明显长于输入框宽度的选项文本',
+  '另一个同样明显更长的选项文本',
+  '第三个用于对照的较长选项文本'
+]
+</script>
+<template>
+  <Space align="start" :size="40">
+    <AutoComplete
+      v-model:value="valueMatchWidthTrue"
+      :options="optionsMatchWidth"
+      :width="200"
+      placeholder="面板与输入框等宽"
+    />
+    <AutoComplete
+      v-model:value="valueMatchWidthFalse"
+      :options="optionsMatchWidth"
+      :width="200"
+      placeholder="面板由内容撑开"
+      :dropdown-match-select-width="false"
+    />
+    <AutoComplete
+      v-model:value="valueMatchWidth"
+      :options="optionsMatchWidth"
+      :width="200"
+      placeholder="面板宽 300"
+      :dropdown-match-select-width="300"
+    />
+  </Space>
+</template>
+```
+
+:::
+
+## 下拉面板挂载容器
+
+*不传 `to` 时面板优先挂到最近的承载层内容容器（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body`；设为 `false` 时面板留在原地*
+
+<br/>
+
+<Space>
+  <AutoComplete v-model:value="toValue" :options="optionsArr" :width="200" placeholder="默认挂载" />
+  <AutoComplete v-model:value="toValue" :options="optionsArr" :width="200" placeholder="留在原地" :to="false" />
+</Space>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const toValue = ref('')
+const optionsArr = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry', 'Fig', 'Grape']
+</script>
+<template>
+  <Space>
+    <AutoComplete v-model:value="toValue" :options="optionsArr" :width="200" placeholder="默认挂载" />
+    <AutoComplete v-model:value="toValue" :options="optionsArr" :width="200" placeholder="留在原地" :to="false" />
+  </Space>
+</template>
+```
+
+::::
+
+## 自定义下拉面板
+
+*通过 `popupClassName` 自定义面板类名、`dropdownMenuStyle` 设置面板样式，两者均落在 `Teleport` 后的面板上，需写在全局样式中；`zIndex` 用于覆盖面板层级（默认 1050）*
+
+<br/>
+
+<Flex gap="large" wrap="wrap">
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">默认面板</span>
+    <AutoComplete v-model:value="panelValue" :options="options4" :width="180" placeholder="input here" />
+  </Flex>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">自定义类名与样式</span>
+    <AutoComplete
+      v-model:value="panelValue"
+      :options="options4"
+      :width="180"
+      placeholder="input here"
+      popup-class-name="custom-ac-panel"
+      :dropdown-menu-style="{
+        background: 'rgba(255, 105, 0, 0.05)',
+        border: '1px solid #ff6900',
+        borderRadius: '12px',
+        boxShadow: '0 8px 20px rgba(255, 105, 0, 0.25)'
+      }"
+    />
+  </Flex>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">自定义层级</span>
+    <AutoComplete
+      v-model:value="panelZIndexValue"
+      :options="options4"
+      :width="180"
+      placeholder="input here"
+      :z-index="1200"
+    />
+  </Flex>
+</Flex>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const panelValue = ref('')
+const panelZIndexValue = ref('')
+const options4 = ref<{ value: string }[]>([
+  { value: 'Burns Bay Road' },
+  { value: 'Downing Street' },
+  { value: 'Wall Street' }
+])
+</script>
+<template>
+  <Flex gap="large" wrap="wrap">
+    <Flex vertical gap="small" align="start">
+      <span class="demo-label">默认面板</span>
+      <AutoComplete v-model:value="panelValue" :options="options4" :width="180" placeholder="input here" />
+    </Flex>
+    <Flex vertical gap="small" align="start">
+      <span class="demo-label">自定义类名与样式</span>
+      <AutoComplete
+        v-model:value="panelValue"
+        :options="options4"
+        :width="180"
+        placeholder="input here"
+        popup-class-name="custom-ac-panel"
+        :dropdown-menu-style="{
+          background: 'rgba(255, 105, 0, 0.05)',
+          border: '1px solid #ff6900',
+          borderRadius: '12px',
+          boxShadow: '0 8px 20px rgba(255, 105, 0, 0.25)'
+        }"
+      />
+    </Flex>
+    <Flex vertical gap="small" align="start">
+      <span class="demo-label">自定义层级</span>
+      <AutoComplete
+        v-model:value="panelZIndexValue"
+        :options="options4"
+        :width="180"
+        placeholder="input here"
+        :z-index="1200"
+      />
+    </Flex>
+  </Flex>
+</template>
+
+<style lang="less">
+/* 面板经 Teleport 挂载，scoped 样式无法命中，故用 popupClassName 下发类名 + 全局样式；
+   选项规则把类名重复一次以提升特异性，覆盖带 scope 属性的组件内规则 */
+@demo-primary: #ff6900;
+
+.custom-ac-panel {
+  &.custom-ac-panel .auto-complete-options .auto-complete-option {
+    color: darken(@demo-primary, 12%);
+    font-weight: 500;
+  }
+  .auto-complete-options .auto-complete-option.option-hover {
+    background: fade(@demo-primary, 10%);
+  }
+}
+.demo-label {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 13px;
+}
+</style>
+```
+
+::::
 
 ## 三种尺寸
 
@@ -824,6 +1049,26 @@ const optionsD = ref([
   {
     label: '纽约市',
     value: '纽约市'
+  },
+  {
+    label: '旧金山',
+    value: '旧金山'
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: '布宜诺斯艾利斯'
+  },
+  {
+    label: '伊斯坦布尔',
+    value: '伊斯坦布尔'
+  },
+  {
+    label: '拜占庭',
+    value: '拜占庭'
+  },
+  {
+    label: '君士坦丁堡',
+    value: '君士坦丁堡'
   }
 ])
 </script>
@@ -866,6 +1111,26 @@ const optionsD = ref([
   {
     label: '纽约市',
     value: '纽约市'
+  },
+  {
+    label: '旧金山',
+    value: '旧金山'
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: '布宜诺斯艾利斯'
+  },
+  {
+    label: '伊斯坦布尔',
+    value: '伊斯坦布尔'
+  },
+  {
+    label: '拜占庭',
+    value: '拜占庭'
+  },
+  {
+    label: '君士坦丁堡',
+    value: '君士坦丁堡'
   }
 ])
 </script>
@@ -899,6 +1164,26 @@ const optionsD = ref([
   {
     label: '纽约市',
     value: '纽约市'
+  },
+  {
+    label: '旧金山',
+    value: '旧金山'
+  },
+  {
+    label: '布宜诺斯艾利斯',
+    value: '布宜诺斯艾利斯'
+  },
+  {
+    label: '伊斯坦布尔',
+    value: '伊斯坦布尔'
+  },
+  {
+    label: '拜占庭',
+    value: '拜占庭'
+  },
+  {
+    label: '君士坦丁堡',
+    value: '君士坦丁堡'
   }
 ])
 </script>
@@ -1114,65 +1399,31 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 
 :::
 
-## 下拉面板宽度
-
-通过 `dropdownMatchSelectWidth` 指定面板宽度，空间不足时自动调整对齐。
-
-<br/>
-
-<AutoComplete
-  v-model:value="valueMatchWidth"
-  :options="optionsMatchWidth"
-  :width="200"
-  placeholder="面板宽 300"
-  :dropdown-match-select-width="300"
-/>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const valueMatchWidth = ref('')
-const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选项文本 B', '一个较长的选项文本 C']
-</script>
-<template>
-  <AutoComplete
-    v-model:value="valueMatchWidth"
-    :options="optionsMatchWidth"
-    :width="200"
-    placeholder="面板宽 300"
-    :dropdown-match-select-width="300"
-  />
-</template>
-```
-
-:::
-
 ## APIs
 
 ### AutoComplete
 
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| options | 自动完成的数据源 | (string &#124; number &#124; [AutoCompleteOption](#option-type) &#124; [AutoCompleteGroupOption](#groupoption-type))[] | [] |
-| value <Tag color="cyan">v-model</Tag> | 当前输入的值 | string | undefined |
-| placeholder | 默认占位文本 | string | undefined |
-| disabled | 是否禁用 | boolean | false |
-| width | 自动完成宽度，单位 `px` | string &#124; number | '100%' |
-| size | 自动完成大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | allowClear | 是否支持清除，有值时即显示清除图标 | boolean | false |
 | autofocus | 是否自动获取焦点 | boolean | false |
 | backfill | 使用键盘选择选项的时候把选中项回填到输入框中 | boolean | false |
 | bordered | 是否有边框 | boolean | true |
 | defaultActiveFirstOption | 是否默认高亮第一个选项 | boolean | true |
 | defaultOpen | 是否默认展开下拉菜单 | boolean | false |
+| disabled | 是否禁用 | boolean | false |
 | open | 是否展开下拉菜单（受控） | boolean | undefined |
-| status | 设置校验状态 | 'error' &#124; 'warning' | undefined |
+| placeholder | 默认占位文本 | string | undefined |
+| popupClassName | 下拉菜单的 className 属性 | string | undefined |
+| zIndex | 下拉面板层级，优先级最高（覆盖默认层级与 `ConfigProvider` 的 `baseZIndex` 自动分配） | number | undefined |
 | dropdownMatchSelectWidth | 下拉菜单和选择器同宽，为数字时指定下拉菜单宽度（单位 `px`），当左右空间都不足以容纳时面板自动调整对齐 | boolean &#124; number | true |
 | dropdownMenuStyle | 下拉菜单自定义样式 | CSSProperties | undefined |
-| popupClassName | 下拉菜单的 className 属性 | string | undefined |
-| to | 下拉面板挂载的容器节点，可选：元素标签名 (例如 `'body'`) 或者元素本身，`false` 会待在原地 | string &#124; HTMLElement &#124; false | 'body' |
+| to | 下拉面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
+| options | 自动完成的数据源 | (string &#124; number &#124; [AutoCompleteOption](#option-type) &#124; [AutoCompleteGroupOption](#groupoption-type))[] | [] |
+| value <Tag color="cyan">v-model</Tag> | 当前输入的值 | string | undefined |
+| width | 自动完成宽度，单位 `px` | string &#124; number | '100%' |
+| size | 自动完成大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
+| status | 设置校验状态 | 'error' &#124; 'warning' | undefined |
 | filterOption | 根据输入项进行筛选：<li>默认为 `false` 时不筛选，显示全部数据源，由用户在 `search` 事件中远程更新 `options`</li><li>当其为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | boolean &#124; ((inputValue: string, option: AutoCompleteOption) => boolean) | false |
 
 ### Option Type
@@ -1208,9 +1459,9 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
 
 | 名称     | 说明                                   | 参数                   |
 | :-------- | :-------------------------------------- | :--------------------- |
-| option   | 自定义选项内容                         | [AutoCompleteOption](#option-type) |
-| clearIcon | 自定义清除图标                         | -                      |
 | default  | 自定义输入组件（替代原生 `input` 元素） | -                      |
+| clearIcon | 自定义清除图标                         | -                      |
+| option   | 自定义选项内容                         | [AutoCompleteOption](#option-type) |
 
 ## Methods
 

@@ -77,6 +77,10 @@ function showDrawer8(val: 'default' | 'large') {
   size8.value = val
   open8.value = true
 }
+// 抽屉内浮层：Tooltip / Select 会自动排在遮罩与抽屉之上
+const layerOpen = ref<boolean>(false)
+const layerSelect = ref<string | undefined>(undefined)
+const layerZIndexOpen = ref<boolean>(false)
 </script>
 
 ## 基本用法
@@ -577,6 +581,66 @@ function onClose() {
 
 ::::
 
+## 抽屉内浮层
+
+*抽屉内的 `Tooltip` / `Select` 会自动排在遮罩与抽屉之上；也可用 `zIndex` 直接指定抽屉层级（优先级最高）*
+
+<br/>
+
+<Space>
+  <Button type="primary" @click="layerOpen = true">Open Drawer</Button>
+  <Button type="primary" @click="layerZIndexOpen = true">Custom zIndex</Button>
+</Space>
+
+<Drawer v-model:open="layerOpen" title="抽屉内浮层" :width="420">
+  <Space align="center">
+    <Tooltip tooltip="Vue Amazing UI">
+      <Button>Hover me</Button>
+    </Tooltip>
+    <Select :options="ownerOptions" v-model="layerSelect" :width="160" placeholder="Please select" />
+  </Space>
+</Drawer>
+
+<Drawer v-model:open="layerZIndexOpen" title="Custom zIndex" :z-index="3000" :width="420">
+  <p>zIndex 优先级最高，覆盖自动分配结果</p>
+</Drawer>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Drawer, Select, Tooltip } from 'vue-amazing-ui'
+import type { SelectOption } from 'vue-amazing-ui'
+const ownerOptions = ref<SelectOption[]>([
+  { label: 'Xiaoxiao Fu', value: 'xiao' },
+  { label: 'Maomao Zhou', value: 'mao' }
+])
+const layerOpen = ref(false)
+const layerSelect = ref<string | undefined>(undefined)
+const layerZIndexOpen = ref(false)
+</script>
+<template>
+  <Space>
+    <Button type="primary" @click="layerOpen = true">Open Drawer</Button>
+    <Button type="primary" @click="layerZIndexOpen = true">Custom zIndex</Button>
+  </Space>
+  <Drawer v-model:open="layerOpen" title="抽屉内浮层" :width="420">
+    <Space align="center">
+      <Tooltip tooltip="Vue Amazing UI">
+        <Button>Hover me</Button>
+      </Tooltip>
+      <Select :options="ownerOptions" v-model="layerSelect" :width="160" placeholder="Please select" />
+    </Space>
+  </Drawer>
+  <Drawer v-model:open="layerZIndexOpen" title="Custom zIndex" :z-index="3000" :width="420">
+    <p>zIndex 优先级最高，覆盖自动分配结果</p>
+  </Drawer>
+</template>
+```
+
+::::
+
 ## 信息预览抽屉
 
 *需要快速预览对象概要时使用，点击遮罩区关闭*
@@ -844,7 +908,7 @@ const open = ref<boolean>(false)
     v-model:open="open"
     :closable="false"
     title="Basic Drawer"
-    :header-style="{ textAlign: 'center' }"
+    :header-style="{ textAlign: 'center', background: '#e6f4ff' }"
     :body-style="{ textAlign: 'center' }"
   >
     <p>Some contents...</p>
@@ -909,26 +973,26 @@ headerClass | 设置 `Drawer` 头部的类名 | string | undefined
 headerStyle | 设置 `Drawer` 头部的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 bodyClass | 设置 `Drawer` 内容部分的类名 | string | undefined
 bodyStyle | 设置 `Drawer` 内容部分的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar)，用于设置内容滚动条的样式 | [ScrollbarProps](./scrollbar.md#scrollbar) | {}
+extra | 抽屉右上角的操作区域 | string | undefined
 footer | 抽屉的页脚 | string | undefined
 footerClass | 设置 `Drawer` 页脚的类名 | string | undefined
 footerStyle | 设置 `Drawer` 页脚的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-extra | 抽屉右上角的操作区域 | string | undefined
-scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar)，用于设置内容滚动条的样式 | [ScrollbarProps](./scrollbar.md#scrollbar) | {}
 destroyOnClose | 关闭时是否销毁 `Drawer` 里的子元素 | boolean | false
 forceRender | 预渲染 `Drawer` 内元素 | boolean | false
 contentWrapperStyle | 设置 `Drawer` 包裹内容部分的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 rootClassName | 最外层容器的类名 | string | undefined
 rootStyle | 最外层容器的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 to | `Drawer` 挂载的节点，可选：元素标签名（如 `'body'`）、元素本身或 `false`（渲染在当前 `DOM`） | string &#124; HTMLElement &#124; false | 'body'
-zIndex | 设置 `Drawer` 的 `z-index` | number | 1000
+zIndex | 设置 `Drawer` 的 `z-index`；未传时使用默认层级 `1000`，或由 `ConfigProvider` 的 `baseZIndex` 分配 | number | undefined
 open <Tag color="cyan">v-model</Tag> | 抽屉是否可见 | boolean | false
 autofocus | 抽屉展开后是否将焦点切换至其 `DOM` 节点 | boolean | true
 keyboard | 是否支持键盘 `esc` 关闭 | boolean | true
 mask | 是否展示遮罩 | boolean | true
 maskClosable | 点击蒙层是否允许关闭 | boolean | true
 maskStyle | 遮罩样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-blockScroll | 是否在打开时禁用 `body` 滚动 | boolean | true
 push | 用于设置多层 `Drawer` 的推动行为 | boolean &#124; { distance: string &#124; number } | \{ distance: 180 }
+blockScroll | 是否在打开时禁用 `body` 滚动 | boolean | true
 
 > 组件上的 `class` / `style` 透传到最外层容器 `.drawer-wrap`（等价于 `rootClassName` / `rootStyle`）。
 

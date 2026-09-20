@@ -693,6 +693,14 @@ const changeStyle = computed<CSSProperties>(() => ({
 }))
 // Statistic 默认 24px 字号在卡片内偏大，统一收窄
 const statisticValueStyle: CSSProperties = { fontSize: '20px' }
+const dialogLayerOptions = ref([
+  { label: '北京市', value: 1 },
+  { label: '上海市', value: 2 },
+  { label: '纽约市', value: 3 }
+])
+const layerOpen = ref(false)
+const layerSelect = ref<number>(1)
+const layerZIndexOpen = ref(false)
 </script>
 <template>
   <div>
@@ -1034,6 +1042,26 @@ const statisticValueStyle: CSSProperties = { fontSize: '20px' }
       <Button type="primary" @click="onStackDialog">开启 3 层弹窗</Button>
       <Button type="danger" @click="onDestroyAllDialogs">开启 3 层并 2 秒后全部销毁</Button>
     </Space>
+    <h2 class="mt30 mb10">弹窗内浮层</h2>
+    <p class="mb10">
+      弹窗内的 <code>Tooltip</code> / <code>Select</code> 会自动排在遮罩与弹窗之上；也可用 <code>zIndex</code>
+      直接指定弹窗层级（优先级最高）
+    </p>
+    <Space>
+      <Button type="primary" @click="layerOpen = true">Open Dialog</Button>
+      <Button type="primary" @click="layerZIndexOpen = true">Custom zIndex</Button>
+    </Space>
+    <Dialog v-model:open="layerOpen" title="弹窗内浮层" :width="520">
+      <Space align="center">
+        <Tooltip tooltip="Vue Amazing UI">
+          <Button>Hover me</Button>
+        </Tooltip>
+        <Select :options="dialogLayerOptions" v-model="layerSelect" :width="200" />
+      </Space>
+    </Dialog>
+    <Dialog v-model:open="layerZIndexOpen" title="Custom zIndex" :z-index="3000" :width="520">
+      <p>zIndex 优先级最高，覆盖自动分配结果</p>
+    </Dialog>
     <h2 class="mt30 mb10">遮罩、键盘与滚动锁定</h2>
     <Space>
       <Button type="primary" @click="onNoMaskClose">禁止遮罩关闭</Button>

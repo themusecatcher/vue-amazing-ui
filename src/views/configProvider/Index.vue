@@ -241,6 +241,9 @@ function onDiscreteModal() {
     content: '经 configProviderProps 跟随主题色'
   })
 }
+// 浮层层级自动分配：弹窗内嵌套 Tooltip / Select
+const layerModalOpen = ref<boolean>(false)
+const layerSelectedValue = ref<number>(1)
 </script>
 <template>
   <div>
@@ -410,5 +413,21 @@ function onDiscreteModal() {
         <Button type="primary" @click="onDiscreteModal">Discrete Modal</Button>
       </Space>
     </Flex>
+    <h2 class="mt30 mb10">浮层层级管理</h2>
+    <p class="mb10">
+      传入 <code>baseZIndex</code> 后，浮层在出现时向分配器领取层级，分配点恒在当前所有已打开浮层之上（后出现者在上），
+      隐藏后即归还，故层级数值不会随打开次数无限增大；未传入时各组件使用自身默认层级
+    </p>
+    <ConfigProvider :base-z-index="1000">
+      <Button type="primary" @click="layerModalOpen = true">Open Modal</Button>
+      <Modal v-model:open="layerModalOpen" title="弹窗内浮层">
+        <Space align="center">
+          <Tooltip tooltip="Vue Amazing UI">
+            <Button>Hover me</Button>
+          </Tooltip>
+          <Select :options="selectOptions" v-model="layerSelectedValue" :width="200" />
+        </Space>
+      </Modal>
+    </ConfigProvider>
   </div>
 </template>

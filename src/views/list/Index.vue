@@ -349,7 +349,7 @@ const state = reactive({
             class="extra-img"
             width="272"
             alt="extra"
-            src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+            src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
           />
         </template>
       </ListItem>

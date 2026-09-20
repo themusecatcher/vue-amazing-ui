@@ -556,6 +556,50 @@ const cancel = (e: MouseEvent) => {
 
 :::
 
+## 隐藏后卸载
+
+_设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再次显示时重新创建并定位；默认 `false`（元素常驻，仅切换显示）_
+
+<br/>
+
+<Space>
+  <Popconfirm title="Are you sure ?" destroy-on-hide @ok="confirm" @cancel="cancel">
+    <Button type="primary">Click (destroyOnHide)</Button>
+  </Popconfirm>
+  <Popconfirm title="Are you sure ?" @ok="confirm" @cancel="cancel">
+    <Button>Click (default)</Button>
+  </Popconfirm>
+</Space>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { useMessage } from 'vue-amazing-ui'
+const message = useMessage()
+const confirm = (e: MouseEvent) => {
+  console.log('confirm', e)
+  message.success('Click on Yes')
+}
+const cancel = (e: MouseEvent) => {
+  console.log('cancel', e)
+  message.error('Click on No')
+}
+</script>
+<template>
+  <Space>
+    <Popconfirm title="Are you sure ?" destroy-on-hide @ok="confirm" @cancel="cancel">
+      <Button type="primary">Click (destroyOnHide)</Button>
+    </Popconfirm>
+    <Popconfirm title="Are you sure ?" @ok="confirm" @cancel="cancel">
+      <Button>Click (default)</Button>
+    </Popconfirm>
+  </Space>
+</template>
+```
+
+::::
+
 ## 隐藏箭头
 
 <Popconfirm
@@ -628,12 +672,12 @@ showCancel | 是否显示取消按钮 | boolean | true
 
 名称 | 说明 | 类型
 :-- | :-- | :--
+icon | 自定义图标 | v-slot:icon
 title | 自定义弹出确认框的标题 | v-slot:title
 description | 自定义弹出确认框的内容描述 | v-slot:description
-icon | 自定义图标 | v-slot:icon
 cancelText | 自定义取消按钮文字 | v-slot:cancelText
 okText | 自定义确认按钮文字 | v-slot:okText
-default | 自定义内容 | v-solt:default
+default | 自定义内容 | v-slot:default
 
 ## Events
 

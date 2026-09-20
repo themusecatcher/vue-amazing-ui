@@ -831,6 +831,15 @@ function onToDialog(): void {
 }
 // Statistic 默认 24px 字号在卡片内偏大，统一收窄
 const statisticValueStyle: CSSProperties = { fontSize: '20px' }
+// 弹窗内浮层：Tooltip / Select 会自动排在遮罩与弹窗之上
+const dialogLayerOptions = ref([
+  { label: '北京市', value: 1 },
+  { label: '上海市', value: 2 },
+  { label: '纽约市', value: 3 }
+])
+const layerOpen = ref(false)
+const layerSelect = ref<number>(1)
+const layerZIndexOpen = ref(false)
 </script>
 
 ---
@@ -2366,6 +2375,66 @@ function onDestroyAllDialogs() {
 
 :::
 
+## 弹窗内浮层
+
+*弹窗内的 `Tooltip` / `Select` 会自动排在遮罩与弹窗之上；也可用 `zIndex` 直接指定弹窗层级（优先级最高）*
+
+<br/>
+
+<Space>
+  <Button type="primary" @click="layerOpen = true">Open Dialog</Button>
+  <Button type="primary" @click="layerZIndexOpen = true">Custom zIndex</Button>
+</Space>
+
+<Dialog v-model:open="layerOpen" title="弹窗内浮层" :width="520">
+  <Space align="center">
+    <Tooltip tooltip="Vue Amazing UI">
+      <Button>Hover me</Button>
+    </Tooltip>
+    <Select :options="dialogLayerOptions" v-model="layerSelect" :width="200" />
+  </Space>
+</Dialog>
+
+<Dialog v-model:open="layerZIndexOpen" title="Custom zIndex" :z-index="3000" :width="520">
+  <p>zIndex 优先级最高，覆盖自动分配结果</p>
+</Dialog>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Dialog, Select, Tooltip } from 'vue-amazing-ui'
+const dialogLayerOptions = ref([
+  { label: '北京市', value: 1 },
+  { label: '上海市', value: 2 },
+  { label: '纽约市', value: 3 }
+])
+const layerOpen = ref(false)
+const layerSelect = ref<number>(1)
+const layerZIndexOpen = ref(false)
+</script>
+<template>
+  <Space>
+    <Button type="primary" @click="layerOpen = true">Open Dialog</Button>
+    <Button type="primary" @click="layerZIndexOpen = true">Custom zIndex</Button>
+  </Space>
+  <Dialog v-model:open="layerOpen" title="弹窗内浮层" :width="520">
+    <Space align="center">
+      <Tooltip tooltip="Vue Amazing UI">
+        <Button>Hover me</Button>
+      </Tooltip>
+      <Select :options="dialogLayerOptions" v-model="layerSelect" :width="200" />
+    </Space>
+  </Dialog>
+  <Dialog v-model:open="layerZIndexOpen" title="Custom zIndex" :z-index="3000" :width="520">
+    <p>zIndex 优先级最高，覆盖自动分配结果</p>
+  </Dialog>
+</template>
+```
+
+::::
+
 ## 遮罩、键盘与滚动锁定
 
 *命令式与声明式沿用同一套组件 `props` 默认值：`maskClosable: true`、`keyboard: true`、`blockScroll: true`，两种用法行为一致（声明式下直接在 `<Dialog>` 上写同名属性即可）。`maskClosable: false` 后点击遮罩不会关闭（`onMaskClick` 回调仍会触发）；`keyboard: false` 后 `Esc` 不会关闭（`onEsc` 回调仍会触发）；`blockScroll` 控制是否锁定背景滚动*
@@ -2524,7 +2593,7 @@ const open = ref(false)
 
 <br/>
 
-<div id="dialog-to-container" class="dialog-to-container"></div>
+<div id="dialog-to-container" class="teleport-container"></div>
 
 <DialogProvider v-if="toReady" to="#dialog-to-container" @ready="toDialog = $event" />
 
@@ -2533,7 +2602,7 @@ const open = ref(false)
 <Button type="primary" @click="onToDialog">挂载到指定容器</Button>
 
 <style lang="less" scoped>
-.dialog-to-container {
+.teleport-container {
   position: relative;
   transform: translateZ(0); // 建立包含块，使内部 fixed 定位的蒙层与弹窗相对该容器定位
   max-width: 800px;
@@ -2566,17 +2635,17 @@ function onToDialog() {
 }
 </script>
 <template>
-  <div id="dialog-to-container" class="dialog-to-container"></div>
+  <div id="dialog-to-container" class="teleport-container"></div>
   <DialogProvider v-if="toReady" to="#dialog-to-container" @ready="toDialog = $event" />
   <Button type="primary" @click="onToDialog">挂载到指定容器</Button>
 </template>
 <style lang="less" scoped>
-.dialog-to-container {
+.teleport-container {
   position: relative;
   transform: translateZ(0); // 建立包含块，使内部 fixed 定位的蒙层与弹窗相对该容器定位
   max-width: 800px;
   height: 320px;
-  margin-bottom: 0px;
+  margin-bottom: 10px;
   border: 1px dashed #d9d9d9;
   border-radius: 8px;
 }
@@ -2607,9 +2676,9 @@ function onToDialog() {
 | content | 对话框内容，prop 支持 `string` / `VNode` / 渲染函数；插槽形态请用默认插槽 | string &#124; VNode &#124; (() => VNode) | undefined |
 | contentClass | 自定义内容类名 | string | undefined |
 | contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| scrollbarProps | 内容滚动条 `Scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar) | [ScrollbarProps](./scrollbar.md#scrollbar) | {} |
 | bodyClass | 自定义弹窗卡片（`.dialog-body-wrap`）类名，用于定制背景 / 圆角 / 阴影等外观 | string | undefined |
 | bodyStyle | 自定义弹窗卡片（`.dialog-body-wrap`）样式，用于定制背景 / 圆角 / 阴影等外观 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| scrollbarProps | 内容滚动条 `Scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar) | [ScrollbarProps](./scrollbar.md#scrollbar) | {} |
 | cancelText | 取消按钮文字 | string | '取消' |
 | cancelProps | 取消按钮 `props` 配置，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {} |
 | okText | 确定按钮文字 | string | '确定' |
@@ -2632,13 +2701,13 @@ function onToDialog() {
 | maskClosable | 点击蒙层是否允许关闭 | boolean | true |
 | maskClass | 自定义蒙层类名 | string | undefined |
 | maskStyle | 自定义蒙层样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| zIndex | 对话框层级，遮罩取该值，弹窗取该值 `+ 10` | number | 1000 |
+| zIndex | 对话框层级，遮罩取该值，弹窗取该值 `+ 10`；未传时使用默认层级（遮罩 `1000` / 弹窗 `1010`），或由 `ConfigProvider` 的 `baseZIndex` 分配 | number | undefined |
 | wrapClass | 自定义外层容器（`.dialog-wrap`）类名，多实例同时打开时以打开中的实例为准 | string | undefined |
 | wrapStyle | 自定义外层容器（`.dialog-wrap`）样式，多实例同时打开时以打开中的实例为准 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | containerClass | 自定义弹窗定位层（`.dialog-container`）类名，用于覆盖 `width` / `top` / `zIndex` 等定位表现 | string | undefined |
 | containerStyle | 自定义弹窗定位层（`.dialog-container`）样式，优先级高于 `width` / `top` / `zIndex` 等内置样式；卡片外观（背景 / 圆角 / 阴影）请用 `bodyClass` / `bodyStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| autoFocusButton | 打开时自动聚焦的按钮；`undefined`（默认）聚焦内容容器。`Esc` 监听绑定在弹窗主体上，需聚焦到弹窗内才响应 | 'ok' &#124; 'cancel' | undefined |
 | focusTriggerAfterClose | 关闭后是否将焦点归还给触发元素 | boolean | true |
+| autoFocusButton | 打开时自动聚焦的按钮；`undefined`（默认）聚焦内容容器。`Esc` 监听绑定在弹窗主体上，需聚焦到弹窗内才响应 | 'ok' &#124; 'cancel' | undefined |
 | draggable | 是否可拖拽，开启后标题栏为拖拽句柄，`{ bounds: 'none' }` 时不限制边界（默认限制在视口内） | boolean &#124; { bounds?: 'none' &#124; 'window' } | false |
 | afterClose | 完全关闭（离场动画结束）后的回调 | () => void | undefined |
 | onEsc | 按下 `Esc` 键的回调，无论是否允许关闭都会触发 | (e: KeyboardEvent) => void | undefined |
@@ -2664,9 +2733,9 @@ function onToDialog() {
 | content? | 对话框内容 | string &#124; VNode &#124; (() => VNode) | undefined |
 | contentClass? | 自定义内容类名 | string | undefined |
 | contentStyle? | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| scrollbarProps? | 内容滚动条 `Scrollbar` 组件属性配置 | [ScrollbarProps](./scrollbar.md#scrollbar) | undefined |
 | bodyClass? | 自定义弹窗卡片（`.dialog-body-wrap`）类名，用于定制背景 / 圆角 / 阴影等外观 | string | undefined |
 | bodyStyle? | 自定义弹窗卡片（`.dialog-body-wrap`）样式，用于定制背景 / 圆角 / 阴影等外观 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
+| scrollbarProps? | 内容滚动条 `Scrollbar` 组件属性配置 | [ScrollbarProps](./scrollbar.md#scrollbar) | undefined |
 | cancelText? | 取消按钮文字 | string | undefined |
 | cancelProps? | 取消按钮 `props` 配置，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | undefined |
 | okText? | 确定按钮文字 | string | undefined |
@@ -2687,13 +2756,13 @@ function onToDialog() {
 | maskClosable? | 点击蒙层是否允许关闭 | boolean | undefined |
 | maskClass? | 自定义蒙层类名 | string | undefined |
 | maskStyle? | 自定义蒙层样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| zIndex? | 对话框层级，遮罩取该值，弹窗取该值 `+ 10` | number | undefined |
+| zIndex? | 单实例层级，遮罩取该值，弹窗取该值 `+ 10`；未传时回退到组件级 `zIndex`，再回退到默认层级（遮罩 `1000` / 弹窗 `1010`）或由 `ConfigProvider` 的 `baseZIndex` 分配 | number | undefined |
 | wrapClass? | 自定义外层容器（`.dialog-wrap`）类名 | string | undefined |
 | wrapStyle? | 自定义外层容器（`.dialog-wrap`）样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
 | containerClass? | 自定义弹窗定位层（`.dialog-container`）类名，用于覆盖 `width` / `top` / `zIndex` 等定位表现 | string | undefined |
 | containerStyle? | 自定义弹窗定位层（`.dialog-container`）样式；卡片外观（背景 / 圆角 / 阴影）请用 `bodyClass` / `bodyStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| autoFocusButton? | 打开时自动聚焦的按钮；`undefined`（默认）聚焦内容容器 | 'ok' &#124; 'cancel' | undefined |
 | focusTriggerAfterClose? | 关闭后是否将焦点归还给触发元素 | boolean | undefined |
+| autoFocusButton? | 打开时自动聚焦的按钮；`undefined`（默认）聚焦内容容器 | 'ok' &#124; 'cancel' | undefined |
 | draggable? | 是否可拖拽，开启后标题栏为拖拽句柄 | boolean &#124; { bounds?: 'none' &#124; 'window' } | undefined |
 | afterClose? | 完全关闭（离场动画结束）后的回调 | () => void | undefined |
 | onEsc? | 按下 `Esc` 键的回调，无论是否允许关闭都会触发 | (e: KeyboardEvent) => void | undefined |
@@ -2752,10 +2821,10 @@ function onToDialog() {
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| ready | 内部 `Dialog` 挂载完成后派发，参数为该实例的 api，供 `<DialogProvider>` 取用 | (api: { open: (data: [DialogOptions](#dialogoptions-type)) => [DialogReactive](#dialogreactive-type); destroyAll: () => void }) => void |
 | cancel | 点击蒙层或 `Esc` 键或右上角关闭按钮或取消按钮的回调 | (e?: Event) => void |
 | ok | 点击确定按钮的回调；声明式下**不自动关闭**，需自行将 `v-model:open` 置为 `false`；命令式下回调结束后自动关闭 | (e?: MouseEvent) => void |
 | change | 弹窗开关状态变化的回调，命令式与声明式实例均会触发，多实例下携带该实例 `key` | (open: boolean, key: string) => void |
+| ready | 内部 `Dialog` 挂载完成后派发，参数为该实例的 api，供 `<DialogProvider>` 取用 | (api: { open: (data: [DialogOptions](#dialogoptions-type)) => [DialogReactive](#dialogreactive-type); destroyAll: () => void }) => void |
 
 > 点击「确定」只派发 `ok`，关闭与否由 `v-model:open` 决定；点击「取消」/ 遮罩 / `Esc` / 关闭按钮则自动回写 `false`。
 
