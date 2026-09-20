@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch, nextTick, onUnmounted, inject } from 'vue'
-import type { CSSProperties, Ref } from 'vue'
+import { ref, computed, watch, watchEffect, nextTick, onMounted, inject, h, withDirectives, vShow, useSlots } from 'vue'
+import type { CSSProperties, Ref, VNode } from 'vue'
 import Empty from 'components/empty'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import {
@@ -8,6 +8,7 @@ import {
   useFloating,
   useFloatingTeleportTarget,
   useInject,
+  useSlotsExist,
   useZIndex,
   Z_INDEX_CONTAINER_OPEN_KEY,
   FLOATING_LAYER_Z_INDEX
@@ -17,76 +18,166 @@ export interface Option {
   label?: string // 选项名
   value?: string | number // 选项值
   disabled?: boolean // 是否禁用选项，默认 false
-  [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
+  [propName: string]: any // 允许携带任意自定义字段：#option 插槽会透传原始数据对象，便于自定义渲染
 }
 export interface FieldNames {
   label?: string // 选项的文本字段名
   value?: string // 选项的值字段名
+  options?: string // 分组子选项的字段名（分组 / 树形数据，P2 起支持）
 }
+export type SelectValue = string | number
+export type SelectPlacement = 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'
+// dropdownRender 的 menuNode：以函数组件形式提供，模板中可直接 <component :is="menuNode" /> 渲染
+export type SelectMenuNode = () => VNode[]
+export interface DropdownRenderParams {
+  menuNode: SelectMenuNode // 内置下拉菜单节点
+}
+
 export interface Props {
+  // 数据与取值
   options?: Option[] // 选项数据
   fieldNames?: FieldNames // 选项字段名配置，用于自定义选项的文本 / 值字段
-  placeholder?: string // 默认占位文本
-  disabled?: boolean // 是否禁用
+  value?: SelectValue // (v-model:value) 当前选中的 option 条目值
+  optionLabelProp?: string // 回填到选择框的 option 属性值，未指定时取 label 字段
+  // 外观与尺寸
   width?: string | number // 选择器宽度，单位 px
   height?: number // 选择器高度，单位 px
   size?: 'small' | 'middle' | 'large' // 选择器大小
+  placeholder?: string // 默认占位文本
+  bordered?: boolean // 是否有边框
+  status?: 'error' | 'warning' // 设置校验状态
+  // 交互与图标
+  disabled?: boolean // 是否禁用
+  autofocus?: boolean // 是否自动获取焦点
   allowClear?: boolean // 是否支持清除
-  search?: boolean // 是否支持搜索
-  placement?: 'bottom' | 'top' // 下拉面板弹出位置
+  clearIcon?: VNode | (() => VNode) // 自定义清除图标
+  suffixIcon?: VNode | (() => VNode) // 自定义的选择框后缀图标
+  showArrow?: boolean // 是否显示下拉小箭头
+  loading?: boolean // 是否处于加载状态，展开面板时后缀图标变为加载中
+  // 搜索与过滤
+  showSearch?: boolean // 是否支持搜索
+  searchValue?: string // 控制搜索文本（受控）
+  optionFilterProp?: string // 搜索时过滤对应的 option 属性，不支持 children
+  /*
+    根据输入项进行筛选，默认为 true 时，筛选每个选项 optionFilterProp 字段是否包含输入项，包含返回 true，反之返回 false
+    当其为 false 时不筛选，显示全部选项（常用于远程搜索）
+    当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
+  */
+  filterOption?: boolean | ((inputValue: string, option: Option) => boolean) // 过滤条件函数，仅当支持搜索时生效
+  filterSort?: (optionA: Option, optionB: Option) => number // 搜索时对筛选结果项的排序函数
+  // 面板开合与高亮
+  open?: boolean // 是否展开下拉菜单（受控）
+  defaultOpen?: boolean // 是否默认展开下拉菜单
+  defaultActiveFirstOption?: boolean // 是否默认高亮第一个选项
+  firstActiveValue?: SelectValue | SelectValue[] // 默认高亮的选项
+  // 面板内容
+  dropdownRender?: (params: DropdownRenderParams) => VNode // 自定义下拉框内容
+  notFoundContent?: string | VNode | null // 当下拉列表为空时显示的内容，传 null 时不展开空面板
+  menuItemSelectedIcon?: VNode | (() => VNode) // 自定义当前选中的条目图标
+  maxDisplay?: number // 下拉面板最多能展示的项数，超过后滚动显示
+  listHeight?: number // 下拉面板滚动高度，单位 px（未传时回落 maxDisplay × 32）
+  scrollbarProps?: ScrollbarProps // 下拉面板滚动条 scrollbar 组件属性配置
+  // 面板定位与层级
+  placement?: SelectPlacement // 下拉面板弹出位置
   flip?: boolean // 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
   to?: string | HTMLElement | false // 下拉面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   popupClassName?: string // 下拉面板的类名，用于自定义面板样式
   dropdownMenuStyle?: CSSProperties // 下拉面板自定义样式，可覆盖定位（与 AutoComplete 的同名属性语义一致）
+  dropdownMatchSelectWidth?: boolean | number // 下拉菜单和选择器同宽，为数字时指定下拉菜单宽度
   zIndex?: number // 下拉面板层级，优先级最高（未传时使用默认层级或 ConfigProvider 的 baseZIndex 分配）
-  /*
-    根据输入项进行筛选，默认为 true 时，筛选每个选项的文本字段 label 是否包含输入项，包含返回 true，反之返回 false
-    当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
-  */
-  filter?: ((inputValue: string, option: Option) => boolean) | true // 过滤条件函数，仅当支持搜索时生效
-  maxDisplay?: number // 下拉面板最多能展示的项数，超过后滚动显示
-  scrollbarProps?: ScrollbarProps // 下拉面板滚动条 scrollbar 组件属性配置
-  value?: number | string // (v-model) 当前选中的 option 条目值
 }
+// 声明组件插槽类型
+export interface SelectSlots {
+  option?: (props: Option) => VNode[]
+  notFoundContent?: () => VNode[]
+  suffixIcon?: () => VNode[]
+  menuItemSelectedIcon?: (props: { isSelected: boolean }) => VNode[]
+  clearIcon?: (props: { clear: (e?: MouseEvent) => void }) => VNode[]
+  dropdownRender?: (props: DropdownRenderParams) => VNode[]
+  placeholder?: () => VNode[]
+  optionLabel?: (option: Option) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
   fieldNames: undefined,
-  placeholder: '请选择',
-  disabled: false,
+  value: undefined,
+  optionLabelProp: undefined,
   width: 'auto',
   height: undefined,
   size: 'middle',
+  placeholder: '请选择',
+  bordered: true,
+  status: undefined,
+  disabled: false,
+  autofocus: false,
   allowClear: false,
-  search: false,
-  placement: 'bottom',
+  clearIcon: undefined,
+  suffixIcon: undefined,
+  showArrow: undefined,
+  loading: false,
+  showSearch: false,
+  searchValue: undefined,
+  optionFilterProp: undefined,
+  filterOption: true,
+  filterSort: undefined,
+  open: undefined,
+  defaultOpen: false,
+  defaultActiveFirstOption: true,
+  firstActiveValue: undefined,
+  dropdownRender: undefined,
+  notFoundContent: undefined,
+  menuItemSelectedIcon: undefined,
+  maxDisplay: 8,
+  listHeight: undefined,
+  scrollbarProps: () => ({}),
+  placement: 'bottomLeft',
   flip: true,
   to: undefined,
   popupClassName: undefined,
   dropdownMenuStyle: undefined,
-  zIndex: undefined,
-  filter: true,
-  maxDisplay: 8,
-  scrollbarProps: () => ({}),
-  value: undefined
+  dropdownMatchSelectWidth: true,
+  zIndex: undefined
 })
+defineSlots<SelectSlots>()
+const slots = useSlots()
+const slotsExist = useSlotsExist([
+  'option',
+  'notFoundContent',
+  'suffixIcon',
+  'menuItemSelectedIcon',
+  'clearIcon',
+  'dropdownRender',
+  'placeholder'
+])
+const emits = defineEmits([
+  'update:value',
+  'update:searchValue',
+  'change',
+  'search',
+  'select',
+  'clear',
+  'focus',
+  'blur',
+  'openChange',
+  'dropdownVisibleChange',
+  'popupScroll',
+  'mouseenter',
+  'mouseleave',
+  'inputKeyDown'
+])
 const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
-const filterOptions = ref<Option[]>([]) // 过滤后的选项数组
-let filterResetTimer: ReturnType<typeof setTimeout> | null = null // 面板关闭态下延迟重置选项的定时器
-const selectedName = ref<string | number | null>() // 当前选中选项的 label
-const inputRef = ref<HTMLElement | null>(null) // input 元素引用
-const inputValue = ref<string>() // 支持搜索时，用户输入内容
-const hideSelectName = ref<boolean>(false) // 用户输入时，隐藏 selectName 的展示
-const hoverValue = ref<string | number | null>() // 鼠标悬浮项的 value 值
-const showOptions = ref<boolean>(false) // 显示隐藏 options 面板
-const showArrow = ref<boolean>(true) // 剪头图标显隐
-const showClear = ref<boolean>(false) // 清除图标显隐
-const showCaret = ref<boolean>(false) // 支持搜索时，输入光标的显隐
-const showSearch = ref<boolean>(false) // 搜索图标显隐
-const selectFocused = ref<boolean>(false) /// select 是否聚焦
-const { colorPalettes, shadowColor } = useInject('Select') // 主题色注入
+const selectWrapRef = ref<HTMLElement | null>(null) // 组件根元素引用，用于判断焦点是否仍落在本组件内
+const inputRef = ref<HTMLInputElement | null>(null) // input 元素引用
 const selectContentRef = ref<HTMLElement | null>(null) // selectContent 模板引用
 const selectPanelRef = ref<HTMLElement | null>(null) // 下拉面板 selectPanel 模板引用
 const selectPanelWrapperRef = ref<HTMLElement | null>(null) // 定位参照容器：面板 top / left 的坐标原点
+const showOptions = ref<boolean>(false) // 非受控模式下显示隐藏 options 面板
+const innerSearchValue = ref<string>('') // 非受控模式下的搜索文本
+const focused = ref<boolean>(false) // select 是否聚焦
+const isComposing = ref<boolean>(false) // 是否处于输入法(IME)合成中，合成期间不触发 search / 过滤
+const hoverValue = ref<SelectValue | null>(null) // 面板中高亮项的 value
+const { colorPalettes, shadowColor } = useInject('Select') // 主题色注入
 // 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配；未传则沿用默认层级 1050
 // 下拉面板需高于承载它的 Modal / Drawer / Dialog
 // 领取时机由面板「出现」驱动（allocateOnMount: false）：面板首帧才渲染，挂载时不持有槽位，
@@ -102,12 +193,15 @@ const resolvedTo = useFloatingTeleportTarget(
   () => selectContentRef.value,
   () => props.to
 )
-const emits = defineEmits(['update:value', 'change', 'openChange'])
 // 选项字段名配置：未指定（含显式空值）的字段逐一回退默认值
 const mergedFieldNames = computed(() => ({
   label: props.fieldNames?.label || 'label',
   value: props.fieldNames?.value || 'value'
 }))
+const mergedShowSearch = computed(() => props.showSearch ?? false) // 单选模式默认不可搜索，与 antd 一致
+const mergedShowArrow = computed(() => props.showArrow ?? true) // 单选模式默认显示箭头，与 antd 一致
+const mergedOpen = computed(() => (props.open !== undefined ? props.open : showOptions.value))
+const mergedSearchValue = computed(() => (props.searchValue !== undefined ? props.searchValue : innerSearchValue.value))
 const selectWidth = computed(() => {
   if (typeof props.width === 'number') {
     return `${props.width}px`
@@ -125,32 +219,114 @@ const selectHeight = computed(() => {
   }
   return `${heightMap[props.size]}px`
 })
-// 是否存在滚动
-const isScrollable = computed(() => {
-  return props.options.length > props.maxDisplay
-})
+// 选项区最大高度：listHeight 显式指定时优先，否则按 maxDisplay × 单选项高度 32px
+// （面板自身上下 4px 内边距不属于选项区，额外计入会让下一项漏出 8px 的一小条）
 const optionsStyle = computed(() => {
-  // 选项区最大高度 = maxDisplay × 单选项高度 32px，恰好展示 maxDisplay 项后滚动
-  // （面板自身上下 4px 内边距不属于选项区，额外计入会让下一项漏出 8px 的一小条）
+  const maxHeight = props.listHeight !== undefined ? props.listHeight : props.maxDisplay * 32
   const style: CSSProperties = {
-    maxHeight: `${props.maxDisplay * 32}px`
+    maxHeight: `${maxHeight}px`
   }
   return style
 })
+/** 读取选项的 value 字段 */
+function getOptionValue(option: Option): SelectValue | undefined {
+  return option?.[mergedFieldNames.value.value]
+}
+/** 读取选项的 label 字段 */
+function getOptionLabel(option: Option): unknown {
+  return option?.[mergedFieldNames.value.label]
+}
+/** 判断选项是否为当前选中项 */
+function isOptionSelected(option: Option): boolean {
+  if (props.value === undefined || props.value === null) return false
+  return getOptionValue(option) === props.value
+}
+// 当前选中项：value 未指定 / 在选项中查不到时均为 undefined
+const selectedOption = computed<Option | undefined>(() => {
+  if (props.value === undefined || props.value === null) return undefined
+  return props.options.find((option) => getOptionValue(option) === props.value)
+})
+// 回填内容：optionLabelProp 指定的字段优先，未指定时取 label 字段，均缺失时回落 value
+const optionLabelRaw = computed<unknown>(() => {
+  if (props.value === undefined || props.value === null) return undefined
+  const option = selectedOption.value
+  if (props.optionLabelProp && option) {
+    return option[props.optionLabelProp]
+  }
+  return option ? getOptionLabel(option) : undefined
+})
+// 占位判定（antdv 口径）：value 为 undefined，或 value 为 null 且无 label 时视为「无选中值」
+// 其余情况（含 '' / 0）都是有意义的值，不展示占位文本
+const showPlaceholder = computed(() => {
+  if (props.value === undefined) return true
+  if (props.value === null) return optionLabelRaw.value === undefined || optionLabelRaw.value === null
+  return false
+})
+const displayText = computed<unknown>(() => optionLabelRaw.value ?? props.value)
+const itemTitle = computed(() => {
+  const text = displayText.value
+  return typeof text === 'string' || typeof text === 'number' ? String(text) : undefined
+})
+// 过滤后的选项：filterOption 为 false 或搜索文本为空时不过滤
+// 默认过滤字段遵循 antd：optionFilterProp 优先，未指定时按 value 字段匹配（大小写不敏感）
+const filteredOptions = computed<Option[]>(() => {
+  const keyword = mergedSearchValue.value
+  if (!keyword || props.filterOption === false) return props.options
+  const upperKeyword = keyword.toUpperCase()
+  const filterProp = props.optionFilterProp ?? mergedFieldNames.value.value
+  const filterOption = props.filterOption
+  return props.options.filter((option) => {
+    if (typeof filterOption === 'function') {
+      return Boolean(filterOption(keyword, option))
+    }
+    return String(option?.[filterProp] ?? '')
+      .toUpperCase()
+      .includes(upperKeyword)
+  })
+})
+// 展示用选项：传了 filterSort 时对过滤结果排序（antd 语义：仅搜索场景生效）
+const displayOptions = computed<Option[]>(() => {
+  const filterSort = props.filterSort
+  if (!filterSort) return filteredOptions.value
+  return [...filteredOptions.value].sort((optionA, optionB) => filterSort(optionA, optionB))
+})
+// 空态内容是否存在：显式传 null 表示「不提供空态」，此时选项为空不展开面板（antd 口径）
+const hasNotFoundContent = computed(() => props.notFoundContent !== null)
+const emptyListContent = computed(() => !hasNotFoundContent.value && displayOptions.value.length === 0)
+// 面板可见：不仅要打开，还需有空态兜底，否则空列表下会展开一个空壳面板
+const panelVisible = computed(() => mergedOpen.value && !emptyListContent.value)
+// 清除图标可用：开启 allowClear、未禁用，且「有选中值或有搜索文本」
+const canClear = computed(
+  () => props.allowClear && !props.disabled && (!showPlaceholder.value || Boolean(mergedSearchValue.value))
+)
+// 是否处于「有输入文本」状态（antd SingleSelector 口径）：此时隐藏回填内容与占位文本
+const hasTextInput = computed(() => {
+  if (!mergedShowSearch.value && !mergedOpen.value) return false
+  return Boolean(mergedSearchValue.value) || isComposing.value
+})
+// 后缀图标形态：打开且可搜索时显示搜索图标，其余显示箭头（自定义后缀 / loading 分支在模板中优先命中）
+const showSearchIcon = computed(() => mergedOpen.value && mergedShowSearch.value)
 // 定位内核：只做「算 + 输出 + 同步」，本组件不再自研翻转 / 对齐几何
-// 期望方向取 bottomLeft / topLeft：面板与触发器等宽且左对齐，Left 后缀即该对齐口径；
-// 主轴翻转天然只在这两者之间切换，与面板仅支持垂直两向的语义一致
-const floatingPlacement = computed<FloatingPlacement>(() => (props.placement === 'top' ? 'topLeft' : 'bottomLeft'))
+// （须声明在 panelVisible 之后：enabled 会在内核注册时立即求值，前置会命中 const 的暂时性死区）
+const floatingPlacement = computed<FloatingPlacement>(() => props.placement)
+// 面板与触发器的宽度契约：true 等宽、false 仅最小等宽（内容自适应）、number 指定面板宽度
+const matchTriggerWidth = computed<'width' | 'minWidth' | number>(() => {
+  if (typeof props.dropdownMatchSelectWidth === 'number') {
+    return props.dropdownMatchSelectWidth
+  }
+  return props.dropdownMatchSelectWidth ? 'width' : 'minWidth'
+})
 const { panelStyle, transformOrigin } = useFloating(selectPanelRef, {
   anchor: () => selectContentRef.value,
   offsetContainer: selectPanelWrapperRef,
   placement: () => floatingPlacement.value,
   flip: () => props.flip,
-  shift: false, // 次轴不做对齐自适应与微调：面板与触发器等宽，次轴无溢出空间可调
+  // 次轴：dropdownMatchSelectWidth 为 false 时面板按内容自适应，可能横向溢出，故交由内核做对齐自适应与微调
+  shift: true,
   offset: 4, // 主轴间距：面板紧贴锚点外 4px
   boundary: 'scrollParent', // 复用 getFloatingBoundaryRect 口径：仅当浮层真被滚动容器裁剪时才以容器为界
-  matchTriggerWidth: 'width', // 面板与触发器等宽（width 与 minWidth 同值）
-  enabled: () => showOptions.value
+  matchTriggerWidth: () => matchTriggerWidth.value,
+  enabled: () => panelVisible.value
 })
 // 面板层级：显式 zIndex 优先于自动分配 / 默认层级（与乙类组件的 zIndex prop 同一优先级契约）
 const selectPanelZIndex = computed(() => props.zIndex ?? layerZIndex.value)
@@ -163,98 +339,106 @@ const selectPanelStyle = computed<CSSProperties>(() => ({
   zIndex: selectPanelZIndex.value,
   '--select-option-bg-color-active': colorPalettes.value[0]
 }))
-watch(showOptions, async (to) => {
-  // 首次打开时才用 v-if 渲染面板，此后仅由 v-show 控制显隐
-  if (to && !initialDisplay.value) {
-    initialDisplay.value = true
-  }
-  // 每次「出现」重新领取层级（与 Popup / Modal / Drawer 同一语义）：面板关闭后不卸载（仅 v-show），
-  // 若只在挂载时领取一次，则被承载它的 Modal / Drawer 等「重新出现并置顶」后，二次打开的下拉会落到遮罩之下。
-  // 关闭时归还槽位（面板元素保留、内联层级不变）：否则「弹窗 ↔ 下拉」交替出现时两者会互相抬升，层级随开合次数持续增长
-  if (to) {
-    allocateZIndex()
-    // 无分配器时同层级浮层的上下关系由 DOM 顺序决定，故每次展开都把容器移到目标末尾 ——
-    // 使顺序等于「最近一次打开的顺序」（就地渲染时容器在组件自身 DOM 内，不能移动）
-    if (resolvedTo.value !== false) {
-      raiseFloatingOrder(selectPanelWrapperRef.value)
+
+watch(
+  () => props.open,
+  (val) => {
+    if (typeof val === 'boolean') {
+      showOptions.value = val
     }
-  } else {
-    releaseZIndex()
-  }
-  emits('openChange', to)
-  if (props.search && !to) {
-    inputValue.value = undefined
-    hideSelectName.value = false
-  }
-  // 打开面板时把当前选中项滚动到可视区域内
-  if (to) {
-    await scrollOptionIntoView('.option-selected')
+  },
+  { immediate: true }
+)
+// 受控 searchValue：外部变更同步到内部可写目标（v-model 绑定的就是该目标），
+// 呈现层统一读 mergedSearchValue，故受控时内部值仅作镜像、不参与过滤
+watch(
+  () => props.searchValue,
+  (val) => {
+    if (val !== undefined && val !== innerSearchValue.value) {
+      innerSearchValue.value = val
+    }
+  },
+  { immediate: true }
+)
+// 非受控模式下由内部状态变化上报开合事件；
+// 受控模式的事件由 setPanelOpen 在「用户请求变更」时派发，此处必须跳过 ——
+// 否则外部改 open 驱动状态变化也会被回传成一次多余事件，事件方向就反了
+watch(showOptions, (open) => {
+  if (props.open === undefined) {
+    emitPanelChange(open)
   }
 })
+// 面板首次出现时才用 v-if 渲染浮层 DOM；此后由 v-show 控制显隐
+// 每次「出现」重新领取层级（与 Popup / Modal / Drawer 同一语义）：面板关闭后不卸载（仅 v-show），
+// 若只在挂载时领取一次，则被承载它的 Modal / Drawer 等「重新出现并置顶」后，二次打开的下拉会落到遮罩之下。
+// 关闭时归还槽位（面板元素保留、内联层级不变）：否则「弹窗 ↔ 下拉」交替出现时两者会互相抬升，层级随开合次数持续增长
+watch(panelVisible, async (visible) => {
+  if (!visible) {
+    releaseZIndex()
+    return
+  }
+  if (!initialDisplay.value) {
+    initialDisplay.value = true
+  }
+  allocateZIndex()
+  await nextTick()
+  // 无分配器时同层级浮层的上下关系由 DOM 顺序决定，故每次展开都把容器移到目标末尾 ——
+  // 使顺序等于「最近一次打开的顺序」（就地渲染时容器在组件自身 DOM 内，不能移动）
+  if (resolvedTo.value !== false) {
+    raiseFloatingOrder(selectPanelWrapperRef.value)
+  }
+})
+// 打开面板时把高亮项复位到当前选中项并滚入可视区（antd 行为）；无选中项时保持默认高亮
+watch(panelVisible, async (visible) => {
+  if (!visible) return
+  const selected = displayOptions.value.find((option) => !option.disabled && isOptionSelected(option))
+  if (selected) {
+    hoverValue.value = getOptionValue(selected) ?? null
+  }
+  await scrollOptionIntoView('.option-hover')
+})
+// 默认高亮：defaultActiveFirstOption 为 true 时高亮首个可用项，为 false 时清空高亮
+// （依赖为选项列表本身，故面板开合不会重置用户已移动的高亮位置）
+watchEffect(() => {
+  if (!props.defaultActiveFirstOption) {
+    hoverValue.value = null
+    return
+  }
+  const firstEnabled = displayOptions.value.find((option) => !option.disabled)
+  hoverValue.value = firstEnabled ? (getOptionValue(firstEnabled) ?? null) : null
+})
 // 承载层（Modal / Drawer / Dialog）关闭时收起面板并归位聚焦态：容器不卸载内容，本面板也不会随容器消失 ——
-// ① 面板：本组件的关闭依赖 input 的 blur，而容器关闭只是把内容 display:none、不派发 blur，
-//    面板于是停留在打开态：容器已关闭、面板仍悬浮且占着层级槽位，容器再次打开时按「后出现者在上」
-//    重新领取层级会越过它 → 面板反而落到遮罩之下（详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）
-// ② 聚焦态：容器关闭同样不派发 blur（focusTriggerAfterClose 归还焦点时也未必落到本 input 上），
-//    故须在此显式归位，否则容器重开时 `.select-focused` 的描边与阴影仍在
+// ① 面板：停留在打开态会占着层级槽位，被「后出现者在上」重新打开的容器反超（落到遮罩之下），
+//    同时无谓抬高后续分配点（详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）
+// ② 聚焦态：容器关闭不派发 blur（focusTriggerAfterClose 归还焦点时也未必落到本 input 上），
+//    故须在此显式归位，否则容器重开时聚焦描边与阴影仍在
 const containerOpen = inject(Z_INDEX_CONTAINER_OPEN_KEY, null) as Ref<boolean> | null
 if (containerOpen) {
   watch(containerOpen, (open) => {
     if (!open) {
-      closeOptionsPanel()
-      selectFocused.value = false
+      closePanel()
+      focused.value = false
       hoverValue.value = null
     }
   })
 }
-watchEffect(() => {
-  // 重跑前先取消上一次的延迟重置，避免定时器堆积
-  if (filterResetTimer) {
-    clearTimeout(filterResetTimer)
-    filterResetTimer = null
+onMounted(() => {
+  // autofocus：挂载后自动获取焦点
+  if (props.autofocus && !props.disabled) {
+    selectFocus()
   }
-  if (props.search) {
-    if (inputValue.value) {
-      const keyword = inputValue.value
-      filterOptions.value = props.options.filter((option) => {
-        if (typeof props.filter === 'function') {
-          return props.filter(keyword, option)
-        } else {
-          return option[mergedFieldNames.value.label].includes(keyword)
-        }
-      })
-    } else {
-      if (showOptions.value) {
-        filterOptions.value = [...props.options]
-      } else {
-        filterResetTimer = setTimeout(() => {
-          filterOptions.value = [...props.options]
-        }, 200)
-      }
-    }
-    // inputValue 先判空可让本分支短路：否则 filterOptions 会被登记为该 effect 的依赖，
-    // 又被上面的延迟重置定时器写入，形成「写入 → 重跑 → 再排定时器」的自触发循环。
-    // 复位语义：有输入（searchValue 变化）时把悬浮态落到过滤结果首项；
-    // 无输入时保持原悬浮项 —— 面板关闭会清空输入，若此处一并复位，关闭前的悬浮态就会丢失
-    if (inputValue.value) {
-      hoverValue.value = filterOptions.value.length ? filterOptions.value[0][mergedFieldNames.value.value] : null
-    }
-  } else {
-    filterOptions.value = props.options
+  // defaultOpen：非受控时初始展开下拉面板
+  if (props.defaultOpen && props.open === undefined && !props.disabled) {
+    openPanel()
+  }
+  // firstActiveValue：指定默认高亮项（数组取首项）
+  if (props.firstActiveValue !== undefined) {
+    const first = Array.isArray(props.firstActiveValue) ? props.firstActiveValue[0] : props.firstActiveValue
+    hoverValue.value = first ?? null
   }
 })
-// 卸载时取消面板关闭态的延迟重置定时器，避免回调在卸载后仍持有组件作用域并写入状态
-onUnmounted(() => {
-  if (filterResetTimer) {
-    clearTimeout(filterResetTimer)
-    filterResetTimer = null
-  }
-})
-watchEffect(() => {
-  initSelector()
-})
-// 滚动跟随 / 视口 resize / 字体就绪的重对齐由定位内核统一承担（遍历锚点全链滚动祖先 + 帧合并）
-// 将面板内指定选项（当前选中项 / 键盘高亮项）滚动到可视区域内（已可见时不做任何滚动）
+
+/** 将面板内指定选项（当前选中项 / 键盘高亮项）滚动到可视区域内（已可见时不做任何滚动） */
 async function scrollOptionIntoView(selector: string): Promise<void> {
   await nextTick()
   const scrollContainer = selectPanelRef.value?.querySelector<HTMLElement>('.scrollbar-container')
@@ -272,38 +456,79 @@ async function scrollOptionIntoView(selector: string): Promise<void> {
     scrollContainer.scrollTop = optionBottom - clientHeight
   }
 }
-function initSelector(): void {
-  if (props.value) {
-    const target = props.options.find((option) => option[mergedFieldNames.value.value] === props.value)
-    if (target) {
-      selectedName.value = target[mergedFieldNames.value.label]
-      hoverValue.value = target[mergedFieldNames.value.value]
-    } else {
-      selectedName.value = props.value
-      hoverValue.value = null
-    }
-  } else {
-    selectedName.value = null
-    hoverValue.value = null
+/**
+ * 面板开合状态变更 / 用户开合请求的统一上报：
+ * open 为纯受控属性（显隐由外部驱动），组件同时派发 openChange（项目惯例）与 dropdownVisibleChange（antd 同名事件）
+ */
+function emitPanelChange(open: boolean): void {
+  emits('openChange', open)
+  emits('dropdownVisibleChange', open)
+}
+/**
+ * 统一控制面板显隐：
+ * - 非受控：直接改内部状态，事件由 watch(showOptions) 上报
+ * - 受控：不直接改内部状态（实际显隐由外部 open 驱动），但必须把用户的「开合请求」上报出去 ——
+ *   若受控时直接 return，用户交互（点击 / 输入）既打不开面板也不派发任何事件；
+ *   与目标值相同的请求不再重复上报，避免噪声
+ */
+function setPanelOpen(open: boolean): void {
+  if (props.open === undefined) {
+    showOptions.value = open
+  } else if (props.open !== open) {
+    emitPanelChange(open)
   }
+}
+/** 展开面板（禁用态不响应） */
+function openPanel(): void {
+  if (!props.disabled) {
+    setPanelOpen(true)
+  }
+}
+/** 收起面板：同时复位搜索文本（单选模式下重开面板不应残留上次输入） */
+function closePanel(): void {
+  setPanelOpen(false)
+  if (mergedShowSearch.value) {
+    setSearchValue('')
+  }
+}
+/** 设置搜索文本：受控（searchValue）时仅回传事件，非受控时同步内部状态 */
+function setSearchValue(value: string): void {
+  innerSearchValue.value = value
+  if (props.searchValue !== undefined) {
+    emits('update:searchValue', value)
+  }
+}
+/** 搜索文本变更：更新文本、派发 search、并展开面板 */
+function handleSearch(value: string): void {
+  setSearchValue(value)
+  emits('search', value)
+  if (!mergedOpen.value && !props.disabled) {
+    openPanel()
+  }
+}
+function selectFocus(): void {
+  inputRef.value?.focus() // 通过 input 标签聚焦来模拟 select 整体聚焦效果
 }
 function onFocus(): void {
-  selectFocused.value = true
+  focused.value = true
+  emits('focus')
 }
-// 关闭下拉面板，并把与搜索相关的状态归位（聚焦态由调用方自行维护）
-function closeOptionsPanel(): void {
-  if (showOptions.value) {
-    showOptions.value = false
-  }
-  if (props.search) {
-    showSearch.value = false
-    showArrow.value = true
-    hideSelectName.value = false
-  }
-}
-function onBlur(): void {
-  selectFocused.value = false
-  closeOptionsPanel()
+/**
+ * 焦点离开组件（触发器 blur 与面板 focusout 共用）
+ *
+ * 焦点仍在本组件内时（面板内自定义内容之间移动、或回到触发器本身）不收起：
+ * 后者由触发器的 click 统一决定开合，此处若抢先收起会出现「点触发器关不掉 / 打不开」的抖动
+ *
+ * 面板侧的 focusout 是必需的一环：焦点进入面板内的自定义内容（dropdownRender 的输入框等）时
+ * 触发器的 input 已经失焦，此后焦点再离开面板不会再触发它的 blur，仅靠 input 的 blur 面板将无法关闭
+ */
+function onBlur(e?: FocusEvent): void {
+  if (props.disabled) return
+  const related = (e?.relatedTarget as Node | null) ?? null
+  if (related && (selectPanelRef.value?.contains(related) || selectWrapRef.value?.contains(related))) return
+  focused.value = false
+  closePanel()
+  emits('blur')
 }
 /**
  * 触发器 mousedown：阻止输入框以外的区域抢走焦点
@@ -317,95 +542,103 @@ function onMousedown(e: MouseEvent): void {
     e.preventDefault()
   }
 }
-function onEnter(): void {
-  // allowClear 的箭头 / 清除图标切换
-  if (props.allowClear) {
-    if (selectedName.value || (props.search && inputValue.value)) {
-      showArrow.value = false
-      showClear.value = true
-      if (props.search) {
-        showSearch.value = false
-      }
-    }
-  }
+/**
+ * 面板 mousedown：阻止面板内的非输入类区域抢走触发器焦点
+ *
+ * 与触发器同理，不阻止默认行为会让 input 失焦触发 blur 关闭面板；
+ * 但 dropdownRender 等自定义区域内的输入类元素（antd 扩展菜单即此模式）必须拿到焦点，故对其放行 ——
+ * 随之而来的 blur 由 onBlur 的「焦点是否仍在面板内」判定放行，面板保持展开
+ */
+function onPanelMousedown(e: MouseEvent): void {
+  const target = e.target as HTMLElement | null
+  if (target?.closest('input, textarea, select, [contenteditable]')) return
+  e.preventDefault()
 }
-function onLeave(): void {
-  // 还原箭头 / 清除图标与 search 状态，同 onEnter
-  if (props.allowClear && showClear.value) {
-    showClear.value = false
-    if (!props.search) {
-      showArrow.value = true
-    }
-  }
-  if (props.search) {
-    if (showOptions.value) {
-      showSearch.value = true
-      showArrow.value = false
-    } else {
-      showSearch.value = false
-      showArrow.value = true
-    }
-  }
+function onMouseEnter(e: MouseEvent): void {
+  emits('mouseenter', e)
 }
-function onHover(value: string | number): void {
-  hoverValue.value = value
+function onMouseLeave(e: MouseEvent): void {
+  emits('mouseleave', e)
 }
-async function toggleSelect(): Promise<void> {
-  selectFocus()
-  if (!props.search && inputRef.value) {
-    inputRef.value.style.opacity = '0'
-  }
-  // 面板定位由定位内核在 showOptions 翻为 true 时自动执行（enabled 驱动），无需显式重算
-  showOptions.value = !showOptions.value
-  // 打开面板时确定悬浮态：
-  // ① 有选中项 → 悬浮到选中项；
-  // ② 无选中项、或原悬浮项已不在可用选项中（含从未悬浮过）→ 悬浮到首个可用项；
-  // ③ 其余情况保持关闭前的悬浮项
-  if (showOptions.value) {
-    const selected = selectedName.value
-      ? props.options.find((option) => option[mergedFieldNames.value.label] === selectedName.value)
-      : undefined
-    if (selected) {
-      hoverValue.value = selected[mergedFieldNames.value.value]
-    } else if (
-      !props.options.some((option) => !option.disabled && option[mergedFieldNames.value.value] === hoverValue.value)
-    ) {
-      const firstEnabled = props.options.find((option) => !option.disabled)
-      hoverValue.value = firstEnabled ? firstEnabled[mergedFieldNames.value.value] : null
-    }
-  }
-  if (props.search) {
-    if (!showClear.value) {
-      showArrow.value = !showOptions.value
-      showSearch.value = showOptions.value
-    }
-  }
+function onPopupScroll(e: Event): void {
+  emits('popupScroll', e)
 }
 function onSearchInput(e: Event): void {
-  hideSelectName.value = Boolean((e.target as HTMLInputElement)?.value)
+  // 输入法合成中不触发 search / 过滤：以 v-model 在元素上维护的 composing 标记为准
+  // （v-model 会在 compositionend 时先清标记、再补发一次 input，故此处无需自行补触发，且不受监听器顺序影响）
+  const el = e.target as HTMLInputElement & { composing?: boolean }
+  if (el?.composing) return
+  handleSearch(el?.value ?? '')
+}
+function onCompositionStart(): void {
+  isComposing.value = true
+}
+function onCompositionEnd(): void {
+  isComposing.value = false
+}
+/** 点击触发器：开合面板（禁用态不响应） */
+function toggleSelect(): void {
+  if (props.disabled) return
+  if (mergedOpen.value) {
+    closePanel()
+    return
+  }
+  selectFocus()
+  openPanel()
+}
+/** 高亮指定选项（鼠标悬浮） */
+function onHover(option: Option): void {
+  if (option.disabled) return
+  hoverValue.value = getOptionValue(option) ?? null
+}
+/** 选中下拉项 */
+function onSelectOption(option: Option, index: number): void {
+  const value = getOptionValue(option)
+  if (props.value !== value) {
+    emits('update:value', value)
+    emits('change', value, option, index)
+  }
+  emits('select', value, option)
+  hoverValue.value = value ?? null
+  closePanel()
+  selectFocus()
+}
+/** 清除选中值（仅清空自身状态，不做 v-model:value 之外的额外处理） */
+function onClear(e?: MouseEvent): void {
+  e?.stopPropagation()
+  if (props.disabled) return
+  const changed = props.value !== undefined
+  setSearchValue('')
+  hoverValue.value = null
+  closePanel()
+  if (changed) {
+    emits('update:value', undefined)
+    emits('change', undefined, undefined, undefined)
+  }
+  emits('clear')
+  selectFocus()
 }
 // 键盘导航：↑↓ 移动高亮（跳过禁用项、环形，随即滚入可视区）、Enter 选中高亮项、Esc 关闭面板
-// 面板未打开时 ↑↓ 仅打开面板（悬浮态由 toggleSelect 的打开分支确定），与 AutoComplete 的键盘行为保持一致
+// 面板未打开时 ↑↓（或任意可打印字符）打开面板，与 antd 的键盘行为保持一致
 function onKeydown(e: KeyboardEvent): void {
+  emits('inputKeyDown', e)
   if (props.disabled) return
-  const list = filterOptions.value
+  const list = displayOptions.value
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
     if (!list.length) return
     e.preventDefault()
-    if (!showOptions.value) {
-      toggleSelect()
+    if (!mergedOpen.value) {
+      openPanel()
       return
     }
     const isArrowDown = e.key === 'ArrowDown'
-    const currentIdx = list.findIndex(
-      (option) => !option.disabled && option[mergedFieldNames.value.value] === hoverValue.value
-    )
+    const currentIdx = list.findIndex((option) => !option.disabled && getOptionValue(option) === hoverValue.value)
     // 环形查找下一个未禁用项：从当前项的下一个开始循环一圈；无高亮时向下从第一项、向上从最后一项开始
-    let start = 0
-    if (isArrowDown) {
-      start = currentIdx === -1 ? 0 : currentIdx + 1
+    let start: number
+    if (currentIdx === -1) {
+      start = isArrowDown ? 0 : list.length - 1
     } else {
-      start = currentIdx === -1 ? list.length - 1 : currentIdx - 1
+      start = isArrowDown ? currentIdx + 1 : currentIdx - 1
     }
     const direction = isArrowDown ? 1 : -1
     let nextIdx = -1
@@ -418,66 +651,181 @@ function onKeydown(e: KeyboardEvent): void {
     }
     // 无其他可用项（仅当前项未禁用或全部禁用）时保持原高亮
     if (nextIdx < 0 || nextIdx === currentIdx) return
-    hoverValue.value = list[nextIdx][mergedFieldNames.value.value]
+    hoverValue.value = getOptionValue(list[nextIdx]) ?? null
     scrollOptionIntoView('.option-hover')
     return
   }
   if (e.key === 'Enter') {
-    // 面板打开且有高亮未禁用项时，Enter 确认选中（下标口径与鼠标点击一致，均为过滤后列表的下标）
-    if (!showOptions.value) return
-    const index = list.findIndex(
-      (option) => !option.disabled && option[mergedFieldNames.value.value] === hoverValue.value
-    )
+    if (!mergedOpen.value) return
+    const index = list.findIndex((option) => !option.disabled && getOptionValue(option) === hoverValue.value)
     if (index < 0) return
     e.preventDefault()
-    onChange(list[index][mergedFieldNames.value.value], list[index][mergedFieldNames.value.label], index)
+    onSelectOption(list[index], index)
     return
   }
-  if (e.key === 'Escape' && showOptions.value) {
+  if (e.key === 'Escape' && mergedOpen.value) {
     e.preventDefault()
-    closeOptionsPanel()
+    closePanel()
+    return
+  }
+  // 可打印字符（无修饰键）触发面板展开，使非搜索模式也能用键盘唤起下拉
+  if (!mergedOpen.value && !isComposing.value && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    openPanel()
   }
 }
-function onClear(): void {
-  if (selectFocused.value) {
-    selectFocus()
-    showCaret.value = true
+/** 滚动面板选项：传数字按下标定位，传对象按顶部偏移定位 */
+function scrollTo(arg: number | { index?: number; top?: number }): void {
+  const scrollContainer = selectPanelRef.value?.querySelector<HTMLElement>('.scrollbar-container')
+  if (!scrollContainer) return
+  if (typeof arg === 'number') {
+    const option = scrollContainer.querySelectorAll<HTMLElement>('.select-option')[arg]
+    option?.scrollIntoView({ block: 'nearest' })
+    return
   }
-  showClear.value = false
-  selectedName.value = null
-  hoverValue.value = null
-  showOptions.value = false
-  showSearch.value = false
-  showArrow.value = true
-  emits('update:value')
-  emits('change')
-}
-function selectFocus(): void {
-  inputRef.value?.focus() // 通过 input 标签聚焦来模拟 select 整体聚焦效果
-}
-// 选中下拉项后的回调
-function onChange(value: string | number, label: string, index: number): void {
-  if (props.value !== value) {
-    selectedName.value = label
-    hoverValue.value = value
-    emits('update:value', value)
-    emits('change', value, label, index)
+  if (arg?.index !== undefined) {
+    const option = scrollContainer.querySelectorAll<HTMLElement>('.select-option')[arg.index]
+    option?.scrollIntoView({ block: 'nearest' })
+    return
   }
-  showCaret.value = false
-  // 选项的 mousedown 已阻止默认行为（input 不再失焦），故关闭面板不能再依赖 blur 事件，需在此显式关闭
-  closeOptionsPanel()
-  selectFocus()
+  if (arg?.top !== undefined) {
+    scrollContainer.scrollTop = arg.top
+  }
 }
+/** 空态内容：插槽优先（项目约定），其次 prop，最后回落项目 Empty 组件 */
+function renderNotFoundContent(): VNode | string | VNode[] {
+  const notFoundSlot = slots.notFoundContent
+  if (slotsExist.notFoundContent && notFoundSlot) {
+    return notFoundSlot()
+  }
+  if (props.notFoundContent !== undefined && props.notFoundContent !== null) {
+    return props.notFoundContent
+  }
+  return h(Empty, { image: 'outlined' })
+}
+/** 选项选中态图标：仅在提供了 menuItemSelectedIcon（prop 或插槽）时渲染，单选模式默认无该图标（antd 口径） */
+function renderOptionState(option: Option): VNode | null {
+  const icon = props.menuItemSelectedIcon
+  const iconSlot = slots.menuItemSelectedIcon
+  if (!icon && !iconSlot) return null
+  const isSelected = isOptionSelected(option)
+  // 函数 / 插槽形态由使用者按 isSelected 自行决定显隐，故始终渲染
+  const alwaysRender = Boolean(iconSlot) || typeof icon === 'function'
+  if (!alwaysRender && !isSelected) return null
+  const stateNode = iconSlot ? iconSlot({ isSelected }) : typeof icon === 'function' ? (icon as () => VNode)() : icon
+  return h('span', { class: 'select-option-state' }, stateNode as VNode[])
+}
+// 选项节点渲染：默认菜单与 dropdownRender 共用同一实现，避免两处重复
+function renderOptionNode(option: Option, index: number): VNode {
+  const value = getOptionValue(option)
+  const label = getOptionLabel(option)
+  const optionSlot = slots.option
+  return h(
+    'p',
+    {
+      class: [
+        'select-option',
+        {
+          'option-hover': !option.disabled && value === hoverValue.value,
+          'option-selected': isOptionSelected(option),
+          'option-disabled': option.disabled
+        }
+      ],
+      title: label === undefined || label === null ? undefined : String(label),
+      // 选项上按下鼠标时阻止默认行为：否则 mousedown 会让 input 失焦触发 blur 关闭面板，
+      // 而面板在离开动画期间已整体禁用指针事件（见 .select-panel-container.slide-leave-active），
+      // 随后的 mouseup / click 便落不到选项上 —— 表现为「真实鼠标点击选项无任何反应」
+      onMousedown: (e: MouseEvent) => e.preventDefault(),
+      onMouseenter: () => onHover(option),
+      onClick: (e: MouseEvent) => {
+        e.stopPropagation()
+        if (option.disabled) {
+          selectFocus()
+          return
+        }
+        onSelectOption(option, index)
+      }
+    },
+    [
+      // 内容单独包一层：选项为 flex 容器（容纳选中图标），裸文本节点无法直接应用省略号截断
+      h('span', { class: 'select-option-content' }, optionSlot ? optionSlot(option) : String(label ?? value ?? '')),
+      renderOptionState(option)
+    ]
+  )
+}
+// 内置菜单节点（函数组件）：直接渲染选项列表与空态，通过 v-show 切换避免销毁重建
+const menuNode: SelectMenuNode = () => {
+  const optionNodes = displayOptions.value.map((option, index) => renderOptionNode(option, index))
+  const hasOptions = displayOptions.value.length > 0
+  const listNode = h(
+    Scrollbar,
+    {
+      class: 'select-options-panel',
+      style: { ...optionsStyle.value, '--scrollbar-rail-vertical-right': '2px 0 2px auto' },
+      onScroll: onPopupScroll,
+      onClick: (e: MouseEvent) => {
+        e.stopPropagation()
+        selectFocus()
+      },
+      ...props.scrollbarProps
+    },
+    () => optionNodes
+  )
+  const emptyNode = h(
+    'div',
+    {
+      class: 'select-options-panel options-panel-empty',
+      onClick: (e: MouseEvent) => {
+        e.stopPropagation()
+        selectFocus()
+      }
+    },
+    [renderNotFoundContent()]
+  )
+  return [withDirectives(listNode, [[vShow, hasOptions]]), withDirectives(emptyNode, [[vShow, !hasOptions]])]
+}
+// 面板内容：dropdownRender（插槽优先）时由使用者包裹内置菜单，否则直接渲染内置菜单
+// 统一包成函数组件，模板里以 <component :is="panelContent" /> 渲染
+const panelContent = computed<SelectMenuNode>(() => {
+  if (slots.dropdownRender) {
+    const dropdownSlot = slots.dropdownRender
+    return () => dropdownSlot({ menuNode })
+  }
+  if (props.dropdownRender) {
+    const dropdownRender = props.dropdownRender
+    return () => [dropdownRender({ menuNode })]
+  }
+  return menuNode
+})
+// 自定义后缀图标：插槽优先（项目约定），其次 prop；统一包成函数组件便于模板以 <component :is> 渲染
+const customSuffixIcon = computed<SelectMenuNode | null>(() => {
+  if (slotsExist.suffixIcon) {
+    return () => slots.suffixIcon!()
+  }
+  const icon = props.suffixIcon
+  if (!icon) return null
+  return () => [typeof icon === 'function' ? (icon as () => VNode)() : icon]
+})
+defineExpose({
+  focus: selectFocus,
+  blur: () => inputRef.value?.blur(),
+  scrollTo
+})
 </script>
 <template>
   <div
+    ref="selectWrapRef"
     class="select-wrap"
     :class="{
-      'select-focused': selectFocused,
-      'search-select': search,
+      'select-focused': focused,
+      'select-open': mergedOpen,
       'select-small': size === 'small',
       'select-large': size === 'large',
-      'select-disabled': disabled
+      'select-disabled': disabled,
+      'select-borderless': !bordered,
+      'select-status-error': status === 'error',
+      'select-status-warning': status === 'warning',
+      'select-show-arrow': mergedShowArrow,
+      'search-select': mergedShowSearch
     }"
     :style="`
       --select-width: ${selectWidth};
@@ -487,65 +835,102 @@ function onChange(value: string | number, label: string, index: number): void {
       --select-primary-shadow-color: ${shadowColor};
     `"
     @mousedown="onMousedown"
-    @click="disabled ? () => false : toggleSelect()"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
+    @click="toggleSelect"
   >
-    <div ref="selectContentRef" class="select-content-container" @mouseenter="onEnter" @mouseleave="onLeave">
+    <div ref="selectContentRef" class="select-content-container">
       <span class="select-search">
         <input
           ref="inputRef"
           class="search-input"
-          :class="{ 'caret-show': showOptions || showCaret }"
+          :class="{ 'caret-show': mergedOpen }"
           type="text"
           autocomplete="off"
-          :readonly="!search"
+          :readonly="!mergedShowSearch"
           :disabled="disabled"
+          v-model="innerSearchValue"
           @input="onSearchInput"
+          @compositionstart="onCompositionStart"
+          @compositionend="onCompositionEnd"
           @keydown="onKeydown"
-          v-model="inputValue"
-          @blur="!disabled ? onBlur() : () => false"
-          @focus="!disabled ? onFocus() : () => false"
+          @focus="onFocus"
+          @blur="onBlur"
         />
       </span>
+      <!-- 回填内容：搜索框有输入文本时隐藏，避免与输入内容重叠 -->
+      <span v-if="!showPlaceholder && !hasTextInput" class="select-item" :title="itemTitle">
+        <!-- 插槽存在即接管回填渲染：以内容探测判定会误伤「选项字段为空」的自定义插槽（渲染结果为空文本），故直接看插槽是否提供 -->
+        <slot v-if="slots.optionLabel" name="optionLabel" v-bind="selectedOption ?? {}" />
+        <template v-else>{{ displayText }}</template>
+      </span>
+      <!-- 占位文本：有输入文本时保留占位（避免布局跳动）但不可见 -->
       <span
-        class="select-item"
-        :class="{ 'select-placeholder': !selectedName || showOptions, 'select-item-hidden': hideSelectName }"
-        :title="selectedName === null || selectedName === undefined ? undefined : String(selectedName)"
+        v-else-if="showPlaceholder"
+        class="select-item select-placeholder"
+        :class="{ 'select-item-hidden': hasTextInput }"
       >
-        {{ selectedName || placeholder }}
+        <slot v-if="slotsExist.placeholder" name="placeholder" />
+        <template v-else>{{ placeholder }}</template>
+      </span>
+      <!-- 后缀图标：自定义 > 加载中 > 打开且可搜索（搜索图标）> 默认箭头 -->
+      <span v-if="customSuffixIcon" class="icon-svg select-suffix show-svg">
+        <component :is="customSuffixIcon" />
+      </span>
+      <span v-else-if="loading" class="icon-svg select-suffix show-svg loading-svg">
+        <svg focusable="false" width="1em" height="1em" fill="currentColor" aria-hidden="true" viewBox="0 0 1024 1024">
+          <path
+            d="M988 548c-19.9 0-36-16.1-36-36 0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 0 0-94.3-139.9 437.71 437.71 0 0 0-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.3C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3.1 19.9-16 36-35.9 36z"
+          ></path>
+        </svg>
+      </span>
+      <template v-else-if="mergedShowArrow">
+        <!-- 箭头与搜索图标常驻 DOM，只切换 .show-svg 控制透明度：互换用 v-if 会直接卸载 / 挂载元素，
+             开关面板时「箭头 ⇄ 搜索图标」就没有交叉淡入淡出的过渡效果 -->
+        <svg
+          class="icon-svg arrow-svg"
+          :class="{ 'show-svg': !showSearchIcon, 'arrow-rotate': mergedOpen }"
+          focusable="false"
+          data-icon="down"
+          width="1em"
+          height="1em"
+          fill="currentColor"
+          aria-hidden="true"
+          viewBox="64 64 896 896"
+        >
+          <path
+            d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+          ></path>
+        </svg>
+        <svg
+          class="icon-svg search-svg"
+          :class="{ 'show-svg': showSearchIcon }"
+          focusable="false"
+          data-icon="search"
+          width="1em"
+          height="1em"
+          fill="currentColor"
+          aria-hidden="true"
+          viewBox="64 64 896 896"
+        >
+          <path
+            d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"
+          ></path>
+        </svg>
+      </template>
+      <!-- 清除图标：满足清除条件时渲染，hover 触发器时显示（覆盖在箭头之上） -->
+      <span
+        v-if="slotsExist.clearIcon"
+        class="icon-svg clear-svg"
+        :class="{ 'show-svg': canClear }"
+        @click.stop="onClear"
+      >
+        <slot name="clearIcon" :clear="onClear" />
       </span>
       <svg
-        class="arrow-svg"
-        :class="{ 'arrow-rotate': showOptions, 'show-svg': showArrow }"
-        focusable="false"
-        data-icon="down"
-        width="1em"
-        height="1em"
-        fill="currentColor"
-        aria-hidden="true"
-        viewBox="64 64 896 896"
-      >
-        <path
-          d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
-        ></path>
-      </svg>
-      <svg
-        class="search-svg"
-        :class="{ 'show-svg': showSearch }"
-        focusable="false"
-        data-icon="search"
-        width="1em"
-        height="1em"
-        fill="currentColor"
-        aria-hidden="true"
-        viewBox="64 64 896 896"
-      >
-        <path
-          d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"
-        ></path>
-      </svg>
-      <svg
-        class="clear-svg"
-        :class="{ 'show-svg': showClear }"
+        v-else
+        class="icon-svg clear-svg"
+        :class="{ 'show-svg': canClear }"
         focusable="false"
         data-icon="close-circle"
         width="1em"
@@ -579,53 +964,16 @@ function onChange(value: string | number, label: string, index: number): void {
           leave-to-class="slide-leave slide-leave-active"
         >
           <div
-            v-show="showOptions"
+            v-show="panelVisible"
             ref="selectPanelRef"
             class="select-panel-container"
             :class="popupClassName"
             :style="selectPanelStyle"
-            @mousedown.prevent
+            @mousedown="onPanelMousedown"
+            @focusout="onBlur"
+            @click.stop
           >
-            <Scrollbar
-              v-show="filterOptions.length"
-              :style="{ ...optionsStyle, '--scrollbar-rail-vertical-right': '2px 0 2px auto' }"
-              class="select-options-panel"
-              @click.stop="selectFocus"
-              v-bind="scrollbarProps"
-            >
-              <!-- 选项上按下鼠标时阻止默认行为：否则 mousedown 会让 input 失焦触发 blur 关闭面板，
-                   而面板在离开动画期间已整体禁用指针事件（见 .select-panel-container.slide-leave-active），
-                   随后的 mouseup / click 便落不到选项上 —— 表现为「真实鼠标点击选项无任何反应」 -->
-              <p
-                v-for="(option, index) in filterOptions"
-                :key="index"
-                :class="[
-                  'select-option',
-                  {
-                    'option-hover': !option.disabled && option[mergedFieldNames.value] === hoverValue,
-                    'option-selected': option[mergedFieldNames.label] === selectedName,
-                    'option-disabled': option.disabled
-                  }
-                ]"
-                :title="option[mergedFieldNames.label]"
-                @mouseenter="onHover(option[mergedFieldNames.value])"
-                @mousedown.prevent
-                @click.stop="
-                  option.disabled
-                    ? selectFocus()
-                    : onChange(option[mergedFieldNames.value], option[mergedFieldNames.label], index)
-                "
-              >
-                {{ option[mergedFieldNames.label] }}
-              </p>
-            </Scrollbar>
-            <div
-              v-show="!filterOptions.length"
-              class="select-options-panel options-panel-empty"
-              @click.stop="selectFocus"
-            >
-              <Empty image="outlined" />
-            </div>
+            <component :is="panelContent" />
           </div>
         </Transition>
       </div>
@@ -712,6 +1060,7 @@ function onChange(value: string | number, label: string, index: number): void {
     height: 100%;
     outline: none;
     transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    /* 用于与空内容做基线对齐（antd 同款处理：`''` 与 undefined 值的高度一致） */
     &::after {
       display: inline-block;
       width: 0;
@@ -738,6 +1087,10 @@ function onChange(value: string | number, label: string, index: number): void {
         appearance: none;
         opacity: 0;
         cursor: pointer;
+        &::-webkit-search-cancel-button {
+          display: none;
+          -webkit-appearance: none;
+        }
       }
       .caret-show {
         caret-color: auto;
@@ -745,14 +1098,13 @@ function onChange(value: string | number, label: string, index: number): void {
     }
     .select-item {
       position: relative;
-      padding-right: 18px;
       flex: 1;
       line-height: calc(var(--select-height) - 2px);
       user-select: none;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      transition: all 0.3s;
+      transition: color 0.3s;
     }
     .select-placeholder {
       color: rgba(0, 0, 0, 0.25);
@@ -768,16 +1120,24 @@ function onChange(value: string | number, label: string, index: number): void {
       bottom: 0;
       right: 11px;
       margin: auto 0;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 12px;
       font-size: 12px;
       color: rgba(0, 0, 0, 0.25);
       fill: currentColor;
-      opacity: 0;
       user-select: none;
       pointer-events: none;
+      /* 图标默认透明、由 .show-svg 点亮：箭头与搜索图标常驻 DOM，靠透明度交叉淡入淡出。
+         若改用 v-if 互斥渲染，元素会被直接卸载 / 挂载，切换时没有过渡效果 */
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .show-svg {
+      opacity: 1;
     }
     .arrow-svg {
-      .icon-svg();
       transition:
         transform 0.3s,
         opacity 0.3s;
@@ -785,13 +1145,13 @@ function onChange(value: string | number, label: string, index: number): void {
     .arrow-rotate {
       transform: rotate(180deg);
     }
-    .search-svg {
-      .icon-svg();
-      transition: opacity 0.3s;
+    .loading-svg svg {
+      animation: select-loading-spin 1s linear infinite;
     }
+    /* 清除图标覆盖在箭头之上（自带背景遮挡），默认不可见，hover 触发器时显示 */
     .clear-svg {
-      .icon-svg();
       z-index: 1;
+      opacity: 0;
       background: #fff;
       cursor: pointer;
       transition:
@@ -801,10 +1161,20 @@ function onChange(value: string | number, label: string, index: number): void {
         color: rgba(0, 0, 0, 0.45);
       }
     }
-    .show-svg {
-      opacity: 1;
-      pointer-events: auto;
+    /* 清除图标同样带 .show-svg（表示「满足显示条件」），需压回透明，再由 hover 点亮 */
+    .clear-svg.show-svg {
+      opacity: 0;
     }
+  }
+  &:hover .clear-svg.show-svg {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+/* 展开时回填内容降为占位色，与 antd 一致 */
+.select-open:not(.select-disabled) {
+  .select-item {
+    color: rgba(0, 0, 0, 0.25);
   }
 }
 .select-focused:not(.select-disabled) {
@@ -825,6 +1195,12 @@ function onChange(value: string | number, label: string, index: number): void {
     }
   }
 }
+/* 显示箭头时给回填内容预留箭头位置，避免长文本压住图标 */
+.select-show-arrow {
+  .select-item {
+    padding-right: 18px;
+  }
+}
 .select-small {
   font-size: 14px;
   .select-content-container {
@@ -834,8 +1210,10 @@ function onChange(value: string | number, label: string, index: number): void {
       left: 7px;
       right: 28px;
     }
+  }
+  &.select-show-arrow {
     .select-item {
-      padding-right: 22px;
+      padding-right: 21px;
     }
   }
 }
@@ -849,6 +1227,22 @@ function onChange(value: string | number, label: string, index: number): void {
     }
   }
 }
+.select-borderless:not(.select-disabled) {
+  .select-content-container {
+    border-color: transparent;
+    background-color: transparent;
+  }
+  &:hover .select-content-container {
+    border-color: transparent;
+  }
+  &.select-focused .select-content-container {
+    border-color: transparent;
+    box-shadow: none;
+  }
+  .clear-svg {
+    background: transparent;
+  }
+}
 .select-disabled {
   .select-content-container {
     color: rgba(0, 0, 0, 0.25);
@@ -858,6 +1252,33 @@ function onChange(value: string | number, label: string, index: number): void {
     .select-search .search-input {
       cursor: not-allowed;
     }
+  }
+  .select-item {
+    color: rgba(0, 0, 0, 0.25);
+  }
+}
+.select-status-error:not(.select-disabled) {
+  .select-content-container {
+    border-color: #ff7875;
+  }
+  &:hover .select-content-container {
+    border-color: #ff7875;
+  }
+  &.select-focused .select-content-container {
+    border-color: #ff7875;
+    box-shadow: 0 0 0 2px rgba(255, 38, 5, 0.06);
+  }
+}
+.select-status-warning:not(.select-disabled) {
+  .select-content-container {
+    border-color: #ffd666;
+  }
+  &:hover .select-content-container {
+    border-color: #ffd666;
+  }
+  &.select-focused .select-content-container {
+    border-color: #ffd666;
+    box-shadow: 0 0 0 2px rgba(255, 215, 5, 0.1);
   }
 }
 /* 定位参照容器：绝对定位 + 零高度，既不参与布局也不遮挡
@@ -887,11 +1308,21 @@ function onChange(value: string | number, label: string, index: number): void {
     0 6px 16px 0 rgba(0, 0, 0, 0.08),
     0 3px 6px -4px rgba(0, 0, 0, 0.12),
     0 9px 28px 8px rgba(0, 0, 0, 0.05);
-
-  .select-options-panel {
+  /* 菜单内容由内部函数组件经 h() 创建，这些 DOM 不带本组件的 scoped 属性，
+     直接写后代选择器会全部失配（表现为「面板没有样式」），故以 :deep() 命中深层节点 */
+  :deep(.select-options-panel) {
+    /* 关闭滚动越界回弹与滚动链：否则触控板惯性滚动会带着列表冲出滚动区，面板底部露出空白
+       （antd 以 transform 位移实现列表滚动，内容天然不越界，故需在此显式关闭原生回弹）。
+       ⚠️ 必须是 none 而非 contain —— contain 只切断向父级的滚动链，元素自身的弹性回弹照旧发生，
+       用 contain 时「滚到底仍有留白」依旧存在 */
+    .scrollbar-container {
+      overscroll-behavior: none;
+    }
     .select-option {
+      position: relative;
       min-height: 32px;
-      display: block;
+      display: flex;
+      align-items: center;
       padding: 5px 12px;
       border-radius: 4px;
       color: rgba(0, 0, 0, 0.88);
@@ -900,9 +1331,16 @@ function onChange(value: string | number, label: string, index: number): void {
       line-height: 1.5714285714285714;
       cursor: pointer;
       overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
       transition: background 0.3s ease;
+      .select-option-content {
+        flex: auto;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .select-option-state {
+        flex: none;
+      }
     }
     .option-hover {
       background: rgba(0, 0, 0, 0.04);
@@ -911,20 +1349,30 @@ function onChange(value: string | number, label: string, index: number): void {
       font-weight: 600;
       background: var(--select-option-bg-color-active);
     }
+    .option-selected.option-disabled {
+      background: rgba(0, 0, 0, 0.04);
+    }
     .option-disabled {
       color: rgba(0, 0, 0, 0.25);
       cursor: not-allowed;
     }
   }
-  .options-panel-empty {
-    min-width: 112px;
-    padding: 9px 16px;
+  :deep(.options-panel-empty) {
+    /* 不自设 min-width：空态宽度受面板约束，撑破宽度会被 overflow: hidden 裁掉内容（与 antd 的空态一致，随面板换行）。
+       左右内边距取 8px 而非 16px：面板等宽时留给内容的宽度有限，16px 会把「暂无数据」挤成两行 */
+    padding: 9px 8px;
+    text-align: center;
     .empty-wrap {
       margin-block: 8px;
-      :deep(.empty-image-wrap) {
+      .empty-image-wrap {
         height: 35px;
       }
     }
+  }
+}
+@keyframes select-loading-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 </style>

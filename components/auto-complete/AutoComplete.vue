@@ -980,6 +980,12 @@ defineExpose({
     0 3px 6px -4px rgba(0, 0, 0, 0.12),
     0 9px 28px 8px rgba(0, 0, 0, 0.05);
   .auto-complete-options {
+    /* 关闭滚动越界回弹与滚动链：否则触控板惯性滚动会带着列表冲出滚动区，面板底部露出空白
+       （与 Select 面板同一处理；⚠️ 必须是 none 而非 contain —— contain 只切断向父级的滚动链，
+       元素自身的弹性回弹照旧发生） */
+    :deep(.scrollbar-container) {
+      overscroll-behavior: none;
+    }
     .auto-complete-group-title {
       padding: 5px 12px;
       color: rgba(0, 0, 0, 0.45);

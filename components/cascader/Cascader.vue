@@ -58,6 +58,8 @@ const props = withDefaults(defineProps<Props>(), {
   scrollbarProps: () => ({}),
   value: () => []
 })
+// Select 的 placement 已对齐 antd 四向取值，此处把级联自身的两向取值映射过去（左对齐口径，行为与映射前一致）
+const selectPlacement = computed<'bottomLeft' | 'topLeft'>(() => (props.placement === 'top' ? 'topLeft' : 'bottomLeft'))
 const values = ref<(string | number)[]>([]) // 级联 value 值数组
 const labels = ref<(string | number)[]>([]) // 级联 label 文本数组
 const firstOptions = ref<Option[]>([])
@@ -126,8 +128,15 @@ function initLabels(values: (string | number)[]): void {
     labels.value[2] = findLabel(thirdOptions.value, 2)
   }
 }
+// 从 Select 抛出的 option 对象中取出选项文本（Select 的 change 第 2 参是完整 option，不再是 label）
+function getOptionText(option?: Option): string | number | undefined {
+  if (!option) return undefined
+  const text: unknown = option[mergedFieldNames.value.label]
+  return typeof text === 'string' || typeof text === 'number' ? text : undefined
+}
 // 一级下拉回调
-function onFirstChange(value: string | number, label: string): void {
+function onFirstChange(value: string | number, option?: Option): void {
+  const label = getOptionText(option) ?? value
   if (props.changeOnSelect) {
     emits('update:value', [value])
     emits('change', [value], [label])
@@ -137,7 +146,8 @@ function onFirstChange(value: string | number, label: string): void {
   }
 }
 // 二级下拉回调
-function onSecondChange(value: string | number, label: string): void {
+function onSecondChange(value: string | number, option?: Option): void {
+  const label = getOptionText(option) ?? value
   if (props.changeOnSelect) {
     emits('update:value', [values.value[0], value])
     emits('change', [values.value[0], value], [labels.value[0], label])
@@ -147,7 +157,8 @@ function onSecondChange(value: string | number, label: string): void {
   }
 }
 // 三级下拉回调
-function onThirdChange(value: string | number, label: string): void {
+function onThirdChange(value: string | number, option?: Option): void {
+  const label = getOptionText(option) ?? value
   emits('update:value', [...values.value.slice(0, 2), value])
   emits('change', [...values.value.slice(0, 2), value], [...labels.value.slice(0, 2), label])
 }
@@ -163,11 +174,12 @@ function onThirdChange(value: string | number, label: string): void {
       :height="height"
       :size="size"
       :allow-clear="allowClear"
-      :search="search"
-      :placement="placement"
+      :show-search="search"
+      :placement="selectPlacement"
       :flip="flip"
       :to="to"
-      :filter="filter"
+      :filter-option="filter"
+      :option-filter-prop="mergedFieldNames.label"
       :max-display="maxDisplay"
       :scrollbar-props="scrollbarProps"
       v-model:value="values[0]"
@@ -182,11 +194,12 @@ function onThirdChange(value: string | number, label: string): void {
       :height="height"
       :size="size"
       :allow-clear="allowClear"
-      :search="search"
-      :placement="placement"
+      :show-search="search"
+      :placement="selectPlacement"
       :flip="flip"
       :to="to"
-      :filter="filter"
+      :filter-option="filter"
+      :option-filter-prop="mergedFieldNames.label"
       :max-display="maxDisplay"
       :scrollbar-props="scrollbarProps"
       v-model:value="values[1]"
@@ -201,11 +214,12 @@ function onThirdChange(value: string | number, label: string): void {
       :height="height"
       :size="size"
       :allow-clear="allowClear"
-      :search="search"
-      :placement="placement"
+      :show-search="search"
+      :placement="selectPlacement"
       :flip="flip"
       :to="to"
-      :filter="filter"
+      :filter-option="filter"
+      :option-filter-prop="mergedFieldNames.label"
       :max-display="maxDisplay"
       :scrollbar-props="scrollbarProps"
       v-model:value="values[2]"
