@@ -5,7 +5,7 @@ import { defineConfig } from 'vite'
 import type { Plugin, BuildEnvironmentOptions } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import VueDevTools from 'vite-plugin-vue-devtools'
-// 用于在 库模式 中从 .ts(x) 或 .vue 源文件生成类型文件（*.d.ts）的 Vite 插件 https://github.com/qmhc/vite-plugin-dts/tree/main
+// 用于在 库模式 中从 .ts(x) 或 .vue 源文件生成类型文件（*.d.ts）的 Vite 插件 https://github.com/qmhc/unplugin-dts
 import dts from 'vite-plugin-dts'
 // import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -18,7 +18,9 @@ import minimist from 'minimist'
 // 第三方样式依赖清单（单一数据源，与 resolver.ts 共享）
 import { vendorStyles } from './components/utils/vendor-styles'
 // 构建后处理：合并「同一 SFC 多个 <style> 块」产出的编号 CSS，见该文件头部说明
-import { mergeComponentStyles } from './scripts/merge-component-styles'
+import { mergeComponentStyles } from './build/merge-component-styles'
+// 构建后处理：为每个组件生成样式入口 es|lib/<dir>/style/index.{js,cjs}，见该文件头部说明
+import { generateStyleEntries } from './build/generate-style-entries'
 
 // 获取 vite build 构建时，传入的参数：dir f（形如 `vite build -- dir=dist f=iife`）
 // minimist 的 `_` 字段收集所有「非 -x/--x 开头的裸位置参数」，即 `--` 之后的 `dir=dist f=iife` 会被归入 _ 数组
@@ -26,7 +28,8 @@ const { _: args } = minimist(process.argv.slice(2))
 // 从位置参数中按 key=value 形式查找，避免依赖固定索引
 const findArg = (key: string) => {
   const matched = args.find((arg: string) => arg.startsWith(`${key}=`))
-  return matched ? matched.split('=')[1] : undefined
+  // 用 slice 而非 split('=')[1]，避免值本身含 `=` 时被截断（当前值均为 dist/iife，属防御性写法）
+  return matched ? matched.slice(key.length + 1) : undefined
 }
 const dir = findArg('dir')
 const f = findArg('f')
@@ -78,48 +81,45 @@ function generateCssDtsPlugin(): Plugin {
 }
 // 注意：dist（IIFE/UMD 全量构建）的第三方 CSS 已打进 style.css，无需 vendor 目录
 // 将第三方 CSS 复制到产物（es/lib）的 vendor-styles 固定目录，供 resolver 按需引入引用
-function copyVendorStylesPlugin(): Plugin {
-  return {
-    name: 'copy-vendor-styles',
-    apply: 'build',
-    closeBundle() {
-      if (dir === 'dist') return
-      const outDirs = ['es', 'lib']
-      outDirs.forEach((outDir) => {
-        vendorStyles.forEach(({ source, target }) => {
-          const sourcePath = resolve(rootDir, 'node_modules', source)
-          const targetPath = resolve(rootDir, outDir, target)
-          try {
-            // mkdirSync 需要创建的是文件所在目录（父目录）而非文件本身，故用 dirname 取 targetPath 的父目录
-            mkdirSync(dirname(targetPath), { recursive: true })
-            // 读取并剥离 sourceMappingURL 注释，避免消费方因缺失 .map 文件报错
-            const content = readFileSync(sourcePath, 'utf-8').replace(/\/\*#\s*sourceMappingURL=[^*]+\*\//g, '')
-            writeFileSync(targetPath, content, 'utf-8')
-          } catch (error) {
-            console.warn(`[copy-vendor-styles] 复制第三方样式失败: ${source} -> ${target}`, error)
-          }
-        })
-        // 清理 Vite 隐式 emit 到 node_modules/.pnpm 的孤儿 CSS asset（已被 vendor 固定路径取代）
-        try {
-          rmSync(resolve(rootDir, outDir, 'node_modules'), { recursive: true, force: true })
-        } catch (error) {
-          console.warn('[copy-vendor-styles] 清理 node_modules 孤儿 asset 失败', error)
-        }
-      })
+function copyVendorStyles(): void {
+  const outDirs = ['es', 'lib']
+  outDirs.forEach((outDir) => {
+    vendorStyles.forEach(({ source, target }) => {
+      const sourcePath = resolve(rootDir, 'node_modules', source)
+      const targetPath = resolve(rootDir, outDir, target)
+      try {
+        // mkdirSync 需要创建的是文件所在目录（父目录）而非文件本身，故用 dirname 取 targetPath 的父目录
+        mkdirSync(dirname(targetPath), { recursive: true })
+        // 读取并剥离 sourceMappingURL 注释，避免消费方因缺失 .map 文件报错
+        const content = readFileSync(sourcePath, 'utf-8').replace(/\/\*#\s*sourceMappingURL=[^*]+\*\//g, '')
+        writeFileSync(targetPath, content, 'utf-8')
+      } catch (error) {
+        console.warn(`[copy-vendor-styles] 复制第三方样式失败: ${source} -> ${target}`, error)
+      }
+    })
+    // 清理 Vite 隐式 emit 到 node_modules/.pnpm 的孤儿 CSS asset（已被 vendor 固定路径取代）
+    try {
+      rmSync(resolve(rootDir, outDir, 'node_modules'), { recursive: true, force: true })
+    } catch (error) {
+      console.warn('[copy-vendor-styles] 清理 node_modules 孤儿 asset 失败', error)
     }
-  }
+  })
 }
-// 合并「一个组件多份 CSS」为单文件：es/lib 的产物 JS 不 import 任何 CSS，样式全由消费方 resolver 的
-// sideEffects 路径决定，而 resolver 只引用 `es/<dir>/<Component>.css` —— 同一 SFC 的第二个及以后的
-// <style> 块（Vite 产出 Xxx2.css / Xxx3.css）无人引用，按需引入时这部分样式直接缺失
-// （当前仅 Tooltip 命中：面板壳 / 箭头 / 动画全丢）。dist 是单文件全量构建，无需处理
-function mergeComponentStylesPlugin(): Plugin {
+// 按需产物（es/lib）的样式后处理，三步有先后依赖，故合并进同一个 closeBundle 内顺序调用：
+//   ① copyVendorStyles —— 复制第三方 CSS 到 vendor-styles 固定目录（生成样式入口的存在性断言依赖它）
+//   ② mergeComponentStyles —— 合并同一 SFC 多个 <style> 块产出的编号 CSS（Xxx2.css 等），确立「一个组件一个 CSS」
+//   ③ generateStyleEntries —— 生成每组件样式入口，依赖前两步的终态产物
+// 合并为单插件而非三个插件，是因为 Rollup 的 closeBundle 是 parallel hook，多个插件间的顺序不保证；
+// 显式顺序调用让依赖关系自文档化，且不会因未来某步改成异步而错序。dist 是单文件全量构建，无需处理
+function stylePostBuildPlugin(): Plugin {
   return {
-    name: 'merge-component-styles',
+    name: 'style-post-build',
     apply: 'build',
     closeBundle() {
       if (dir === 'dist') return
+      copyVendorStyles()
       mergeComponentStyles({ rootDir })
+      generateStyleEntries({ rootDir })
     }
   }
 }
@@ -190,7 +190,7 @@ const buildESAndLibOptions = {
     // https://cn.rollupjs.org/configuration-options
     // 确保外部化处理那些你不想打包进库的依赖（作为外部依赖）
     external: externalDependencies,
-    input: resolve(rootDir, 'components', 'index.ts'), // 'components/index.ts'
+    // 入口由上方 build.lib.entry 统一声明，无需在此重复 rollupOptions.input（Vite 会以 lib.entry 兜底）
     output: [
       // https://cn.rollupjs.org/javascript-api/#outputoptions-object
       {
@@ -239,49 +239,18 @@ export default defineConfig({
       launchEditor: 'cursor' // code【VSCode】 | cursor【Cursor】 ...
     }),
     generateCssDtsPlugin(),
-    copyVendorStylesPlugin(),
-    mergeComponentStylesPlugin(),
+    stylePostBuildPlugin(),
     dts({
       // 自动生成类型文件
       outDir: ['es', 'lib'], // 指定输出目录，默认为 Vite 配置的 'build.outDir'，使用 Rollup 时为 tsconfig.json 的 `outDir`
       tsconfigPath: './tsconfig.dts.json',
-      cleanVueFileName: true, // 是否将 '.vue.d.ts' 文件名转换为 '.d.ts'，默认 false
+      // 以 components/ 为类型产物根，使 .d.ts 输出路径对齐 JS 产物的 preserveModulesRoot: 'components'
+      // 结构（es/button/index.d.ts 而非 es/components/button/index.d.ts），从根上替代 beforeWriteFile 手动重写
+      entryRoot: resolve(rootDir, 'components'),
+      cleanVueFileName: true // 是否将 '.vue.d.ts' 文件名转换为 '.d.ts'，默认 false
       // insertTypesEntry: true, // 是否生成类型入口文件，默认 false；当为 `true` 时会基于 package.json 的 `types` 字段生成，或者 `${outDir}/index.d.ts`
       // rollupTypes: true // 是否将发出的类型文件打包进单个文件，默认 false
       // copyDtsFiles: true // 是否将源码里的 .d.ts 文件复制到 `outDir`，默认 false
-      // 使用自定义函数来控制每个文件的输出路径
-      beforeWriteFile: (filePath: string, content: string) => {
-        // console.log('filePath', filePath)
-        // 默认生成的文件路径 filePath: es/components/button/index.d.ts
-        // 各个组件需要的文件路径 componentPath: es/button/index.d.ts
-        // [^/]+: 匹配一个或多个除了 / 之外的任何单个字符
-        let targetPath: string
-        // es/components/button/index.d.ts 转换为 es/button/index.d.ts
-        targetPath = filePath.replace(/es\/components\/([^/]+)\/index\.d\.ts$/, 'es/$1/index.d.ts')
-        if (filePath === targetPath) {
-          // 说明文件路径未被匹配，没有任何变动
-          // 将 es/components/button/Button.d.ts 转换为 es/button/Button.d.ts
-          targetPath = filePath.replace(/es\/components\/([^/]+)\/([^/]+)\.d\.ts$/, 'es/$1/$2.d.ts')
-        }
-        if (filePath === targetPath) {
-          // 将 es/components/components.d.ts 转换为 es/components.d.ts
-          // 将 es/components/index.d.ts 转换为 es/index.d.ts
-          targetPath = filePath.replace(/es\/components\/([^/]+)\.d\.ts$/, 'es/$1.d.ts')
-        }
-        if (filePath === targetPath) {
-          // 将 es/components/grid/row/index.d.ts 转换为es/grid/row/index.d.ts
-          targetPath = filePath.replace(/es\/components\/([^/]+)\/([^/]+)\/index\.d\.ts$/, 'es/$1/$2/index.d.ts')
-          if (filePath === targetPath) {
-            // 将 es/components/grid/row/Row.d.ts 转换为 es/grid/row/Row.d.ts
-            targetPath = filePath.replace(/es\/components\/([^/]+)\/([^/]+)\/([^/]+)\.d\.ts$/, 'es/$1/$2/$3.d.ts')
-          }
-        }
-        // console.log('targetPath', targetPath)
-        return {
-          filePath: targetPath,
-          content
-        }
-      }
     }),
     Components({
       resolvers: [
