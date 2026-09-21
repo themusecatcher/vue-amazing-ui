@@ -10,9 +10,41 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-09-15">2.9.0</VersionDateTag>
+## <VersionDateTag date="2026-09-21">2.10.0</VersionDateTag>
 
 - 新增 [评论 Comment](/guide/components/comment.html) 组件
+
+## <VersionDateTag date="2026-09-20">2.9.0</VersionDateTag>
+
+- 重构组件库内部浮层能力，收敛为统一内核与内部宿主，[文字提示 Tooltip](/guide/components/tooltip.html)、[选择器 Select](/guide/components/select.html)、[自动完成 AutoComplete](/guide/components/auto-complete.html)、[滑动输入条 Slider](/guide/components/slider.html) 全部接入 —— 公开 `props` / 事件 / 插槽行为均无变化，仅 [自动完成 AutoComplete](/guide/components/auto-complete.html) 的 `value` 由必填放宽为可选
+- ⚠️ **破坏性变更**：移除 [文字提示 Tooltip](/guide/components/tooltip.html) 与 [文本省略 Ellipsis](/guide/components/ellipsis.html) 上未文档化的 `observeScroll` 方法，滚动跟随改由内部处理
+- ⚠️ **破坏性变更**：公开工具函数由 `24` 个缩减为 `22` 个，移除 `useFloatingPosition` 与 `useInject` —— 浮动定位请改用上述浮层组件
+- 新增 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `baseZIndex` 属性：传入后统一为浮层分配层级（后打开者在上），修复浮层被 [对话框 Modal](/guide/components/modal.html) / [弹窗 Dialog](/guide/components/dialog.html) / [抽屉 Drawer](/guide/components/drawer.html) 遮罩覆盖的问题
+- 默认层级同步收敛：[文字提示 Tooltip](/guide/components/tooltip.html) 族 `999 → 1070`、[选择器 Select](/guide/components/select.html) 与 [自动完成 AutoComplete](/guide/components/auto-complete.html) `1000 → 1050`、[图片 Image](/guide/components/image.html) 预览遮罩 `1000 → 1070`
+- ⚠️ **行为变更**：[全局提示 Message](/guide/components/message.html) / [通知提醒 Notification](/guide/components/notification.html) 默认层级由 `2000` 调整为 `1030` / `1040`，不再高于浮层，修复消息 / 通知内的 [选择器 Select](/guide/components/select.html) / [文字提示 Tooltip](/guide/components/tooltip.html) 被压住的问题
+- 浮层隐藏后归还层级槽位（数值随「同时可见的浮层数」增长），[图片 Image](/guide/components/image.html) 未打开预览、[加载进度条 LoadingBar](/guide/components/loading-bar.html) 未开始加载时不再预先占用
+- ⚠️ **行为变更**：[文字提示 Tooltip](/guide/components/tooltip.html) / [选择器 Select](/guide/components/select.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html) / [级联选择 Cascader](/guide/components/cascader.html) 及内部宿主 `Popup` 的 `to` 不传时不再固定挂 `body`，改为就近挂到承载层内容容器；显式传入 `to`（含 `to: false`）行为不变
+- 补齐浮层定制入口：[文字提示 Tooltip](/guide/components/tooltip.html) 新增 `popupClassName` / `popupStyle` / `zIndex` / `destroyOnHide`（隐藏后卸载浮层 `DOM`），[选择器 Select](/guide/components/select.html) 新增 `popupClassName` / `dropdownMenuStyle` / `zIndex`，[自动完成 AutoComplete](/guide/components/auto-complete.html) 与 [图片 Image](/guide/components/image.html) 新增 `zIndex`，[滑动输入条 Slider](/guide/components/slider.html) 新增 `tooltipClass` / `tooltipPlacement` 与 `tooltip` 插槽
+- 面板改由「参照容器 + 面板」两层组成并新增 `.va-popup-*` 类名，依赖旧 `DOM` 结构的 `:deep()` 选择器需改用上述公开属性；[滑动输入条 Slider](/guide/components/slider.html) 手柄气泡根类名由 `handle-tooltip` 调整为 `slider-tooltip`、箭头类名由 `tooltip-arrow` 调整为 `slider-tooltip-arrow`
+- 新增 [选择器 Select](/guide/components/select.html) 键盘操作：`↑` `↓` 移动高亮项（跳过禁用项、端点回绕）、`Enter` 选中、`Esc` 关闭，面板收起时 `↑` `↓` 可直接展开，与 [自动完成 AutoComplete](/guide/components/auto-complete.html) 行为一致
+- 修复浮层跟随：锚点位于嵌套双层滚动容器内时外层滚动不触发跟随
+- 优化浮层溢出处理：空间不足时改为主动调整对齐侧（原为硬推回边界），箭头随对齐侧同步移动并始终指向触发器
+- 修复承载层内的浮层残留：容器关闭后 [文字提示 Tooltip](/guide/components/tooltip.html) 等会随容器一起收起（此前仅点击容器外区域才会关闭，按 `Esc` 关闭或程序化关闭时残留打开态）
+- 优化同族浮层的层叠顺序：容器改为随首次展示挂载并移到目标末尾，使上下关系始终等于最近一次打开的先后（后打开者在上；此前取决于模板源码顺序）
+- 修复 [自动完成 AutoComplete](/guide/components/auto-complete.html) 受控 `open` 模式下开合事件方向相反的问题
+- 修复 [选择器 Select](/guide/components/select.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html) 容器关闭后残留聚焦边框、按 `Tab` 或点击其他区域切走焦点时面板未关闭
+
+## <VersionDateTag date="2026-09-15">2.8.1</VersionDateTag>
+
+- 新增 [滑动输入条 Slider](/guide/components/slider.html) 的 `SliderMarks` 类型导出，用于标注刻度数据的类型
+- 优化并统一 [图片 Image](/guide/components/image.html) / [轮播图 Swiper](/guide/components/swiper.html) / [瀑布流 Waterfall](/guide/components/waterfall.html) 的图片名称提取：统一从 `src` 解析末段，剥离查询参数与哈希并做 `URL` 解码，`alt` 与下载文件名更准确
+- 修复 [消息提示 Message](/guide/components/message.html) / [通知提醒 Notification](/guide/components/notification.html) 的 `icon` 传入字符串时不显示内容的问题，现统一渲染为文本节点
+- 重构组件库内部公共能力（内容渲染、实例标识生成、焦点锁定、水波纹状态、视口宽度响应等），抽取为公共工具函数与组合式函数
+- 收敛 `createDiscreteApi` 的内部类型导出：`DiscreteApiType` / `MaybeRef` / `DiscreteApi` 不再对外导出，仅影响从深层子路径导入的写法；`DiscreteApiOptions` / `DiscreteApiInstance` 不受影响
+- 优化发布脚本：发版时输出可点击的 `git tag` 链接
+- 优化文档演示：轮播图 `mousewheel` 演示默认开启、数字动画补全精度示例、主题定制与刻度示例改用 `import type` 导入类型
+- 统一各组件文档中的类型引用为公开导出名（如 `TabsItem` / `SwiperImage` / `UploadFileType`），使用时可直接 `import type` 使用
+- 组件库文档优化
 
 ## <VersionDateTag date="2026-09-14">2.8.0</VersionDateTag>
 

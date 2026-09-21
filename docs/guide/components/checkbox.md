@@ -531,7 +531,7 @@ const verticalGap = ref(8)
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-options | 复选框选项数据 | [Option](#option-type)[] | []
+options | 复选框选项数据 | [CheckboxOption](#option-type)[] | []
 disabled | 是否禁用 | boolean | false
 vertical | 是否垂直排列 | boolean | false
 value <Tag color="cyan">v-model</Tag> | 当前选中的值，配合 `options` 使用 | (string &#124; number)[] | []

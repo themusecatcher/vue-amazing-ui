@@ -495,7 +495,7 @@ function onNext() {
 
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| images | 轮播图片数组 | [Image](#image-type)[] | [] |
+| images | 轮播图片数组 | [SwiperImage](#image-type)[] | [] |
 | width | 轮播区域宽度，单位 `px` | number &#124; string | '100%' |
 | height | 轮播区域高度，单位 `px` | number &#124; string | '100%' |
 | mode | `banner`: 轮播图模式; `carousel`: 走马灯模式; `broadcast`: 信息展播模式 | 'banner' &#124; 'carousel' &#124; 'broadcast' | 'banner' |
@@ -512,7 +512,7 @@ function onNext() {
 
 | 名称   | 说明            | 类型                     | 默认值    |
 | :------ | :--------------- | :------------------------ | :-------- |
-| name?  | 图片名称        | string                   | undefined |
+| name?  | 图片名称，未设置时自动从图片地址 `src` 中提取 | string                   | undefined |
 | src    | 图片地址        | string                   | undefined |
 | link?  | 图片跳转链接    | string                   | undefined |
 | target? | 如何打开跳转链接 | '\_self' &#124; '\_blank' | undefined |

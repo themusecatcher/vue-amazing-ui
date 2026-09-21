@@ -29,11 +29,20 @@ if (typeof document !== 'undefined') {
 </script>
 
 <script setup lang="ts">
-import { ref, computed, watch, onUnmounted, nextTick, isVNode, createTextVNode } from 'vue'
+import { ref, computed, watch, onUnmounted, nextTick, createTextVNode, provide } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import Button, { type ButtonProps } from 'components/button'
-import { lockScroll, useSlotsExist } from 'components/utils'
+import {
+  createKeyGenerator,
+  lockScroll,
+  renderContentToVNode,
+  trapTabFocus,
+  useSlotsExist,
+  useZIndex,
+  Z_INDEX_CONTAINER_OPEN_KEY,
+  FLOATING_LAYER_Z_INDEX
+} from 'components/utils'
 import type { DialogApi } from './useDialog'
 /** 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数 */
 export type ContentType = string | VNode | (() => VNode)
@@ -79,7 +88,7 @@ export interface Props {
   maskClosable?: boolean // 点击蒙层是否允许关闭
   maskClass?: string // 自定义蒙层类名
   maskStyle?: CSSProperties // 自定义蒙层样式
-  zIndex?: number // 对话框层级，遮罩取该值，弹窗取该值 + 10
+  zIndex?: number // 对话框层级，遮罩取该值，弹窗取该值 + 10；未传时使用默认层级（遮罩 1000 / 弹窗 1010），或由 ConfigProvider 的 baseZIndex 分配
   wrapClass?: string // 自定义外层容器（.dialog-wrap）类名，多实例同时打开时以打开中的实例为准
   wrapStyle?: CSSProperties // 自定义外层容器（.dialog-wrap）样式，多实例同时打开时以打开中的实例为准
   containerClass?: string // 自定义弹窗定位层（.dialog-container）类名，用于覆盖 width / top / zIndex 等定位表现
@@ -135,7 +144,7 @@ export interface DialogOptions {
   maskClosable?: boolean
   maskClass?: string
   maskStyle?: CSSProperties
-  zIndex?: number
+  zIndex?: number // 单实例层级，遮罩取该值，弹窗取该值 + 10；未传时回退到组件级 zIndex，再回退到默认层级（1000 / 1010）或 ConfigProvider 的 baseZIndex 分配
   wrapClass?: string
   wrapStyle?: CSSProperties
   containerClass?: string // 定位层（.dialog-container）类名，用于覆盖 width / top / zIndex
@@ -211,7 +220,7 @@ const props = withDefaults(defineProps<Props>(), {
   maskClosable: true,
   maskClass: undefined,
   maskStyle: () => ({}),
-  zIndex: 1000,
+  zIndex: undefined,
   wrapClass: undefined,
   wrapStyle: () => ({}),
   containerClass: undefined,
@@ -256,6 +265,18 @@ const cancelBtnEls = new Map<string, HTMLElement>()
 // 各实例的拖拽控制器，实例销毁时需停止监听
 const dragControllers = new Map<string, DragController>()
 const showDialogWrap = ref<boolean>(false)
+// 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配，未传则沿用既有默认层级 1000；
+// 本层需连续占用 2 段（遮罩取起始值、弹窗取 +10）
+// 领取时机完全由「出现」驱动（allocateOnMount: false）、层整体隐藏后归还（见 onAfterLeave）：
+// 不可见的层不该持有槽位，否则挂载但未打开的对话框会持续抬高后续分配点
+const {
+  zIndex: layerZIndex,
+  allocate: allocateZIndex,
+  release: releaseZIndex
+} = useZIndex(FLOATING_LAYER_Z_INDEX.overlay, 2, {
+  allocateOnMount: false
+})
+const dialogZIndex = computed(() => props.zIndex ?? layerZIndex.value)
 const emits = defineEmits<{
   'update:open': [value: boolean]
   cancel: [e?: Event]
@@ -267,11 +288,8 @@ const emits = defineEmits<{
 const dialogList = ref<DialogItem[]>([])
 // 声明式实例的固定标识：由 props.open 驱动，与命令式实例共用同一渲染管线
 const DECLARATIVE_KEY = 'dialog_declarative'
-let seed = 0
-function createKey(): string {
-  seed += 1
-  return `dialog_${Date.now()}_${seed}`
-}
+// 每个对话框实例的唯一标识生成器
+const createKey = createKeyGenerator('dialog')
 // 栈尾实例：可能已关闭（destroyOnClose: false 的实例关闭后会滞留栈中）
 const topItem = computed<DialogItem | undefined>(() => dialogList.value[dialogList.value.length - 1])
 // 栈顶的「打开中」实例：Esc / 遮罩点击 / 焦点锁定必须作用于它；
@@ -296,10 +314,23 @@ const needScrollLock = computed(() =>
 const baseZIndex = computed(() => {
   const opened = dialogList.value.filter((item) => item.open)
   if (opened.length === 0) {
-    return getComputedValue(topItem.value, 'zIndex') ?? props.zIndex
+    return getComputedValue(topItem.value, 'zIndex') ?? dialogZIndex.value
   }
   return Math.max(...opened.map((item) => itemZIndex(item)))
 })
+// 每次「出现」重新领取层级：保证重新打开的对话框位于其它已打开层之上（未注入管理器时为空操作）
+watch(showDialogWrap, (show) => {
+  if (show) {
+    allocateZIndex()
+  }
+})
+// 向下注入「本层是否处于打开态」：容器关闭时内部浮层（如已展开的 Select 下拉）需一并收起 ——
+// 内容常驻不卸载，内部浮层不会随容器消失；若保持打开，它会占着层级槽位、被重新打开的对话框反超
+// （详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）
+provide(
+  Z_INDEX_CONTAINER_OPEN_KEY,
+  computed(() => openCount.value > 0)
+)
 // 本组件持有的滚动锁释放函数：加锁后保存返回值、释放后置空，存在即代表本组件持锁；
 // 多实例共用一个持锁配额，卸载兜底据此精确释放，避免未持锁时误解锁他人
 let scrollLockRelease: (() => void) | null = null
@@ -316,16 +347,6 @@ function getComputedValue<K extends keyof Props>(item: DialogItem | undefined, k
   }
   return props[key]
 }
-// 将内容统一渲染为节点：函数式内容调用一次，VNode 直接透传，字符串转为文本节点
-function renderContent(content: ContentType | undefined): VNode {
-  if (typeof content === 'function') {
-    return content()
-  }
-  if (isVNode(content)) {
-    return content
-  }
-  return createTextVNode(content ?? '')
-}
 // 长度类配置统一转字符串：数字补 px，字符串（含百分比）原样透传
 function resolveSize(value: string | number | undefined): string | undefined {
   if (value === undefined) {
@@ -335,7 +356,7 @@ function resolveSize(value: string | number | undefined): string | undefined {
 }
 // 单个实例的层级：遮罩取 zIndex，弹窗取 zIndex + 10，保持两者的层叠关系
 function itemZIndex(item: DialogItem): number {
-  return getComputedValue(item, 'zIndex') ?? props.zIndex
+  return getComputedValue(item, 'zIndex') ?? dialogZIndex.value
 }
 // 标题元素 id，供 aria-labelledby 关联（无标题时不设置该属性）
 function titleId(item: DialogItem): string {
@@ -415,7 +436,7 @@ function closeIconNode(item: DialogItem): VNode | null {
   if (icon === undefined || icon === null) {
     return null
   }
-  return renderContent(icon)
+  return renderContentToVNode(icon)
 }
 // 确定按钮的 loading：实例内部异步 loading 与受控 confirmLoading 任一为真即展示
 function okLoading(item: DialogItem): boolean {
@@ -704,27 +725,9 @@ function onAfterLeave(el: Element): void {
   // 栈中仍有打开实例时保持显示，否则其余弹窗会被一起隐藏
   if (openCount.value === 0) {
     showDialogWrap.value = false
+    // 层整体隐藏后归还槽位：数值随「同时可见层数」增长，不随挂载过的对话框数增长
+    releaseZIndex()
   }
-}
-// 焦点锁定的可聚焦元素选择器，覆盖常见交互元素与显式 tabindex
-const FOCUSABLE_SELECTOR = [
-  'a[href]',
-  'area[href]',
-  'input:not([disabled]):not([type="hidden"])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
-  'button:not([disabled])',
-  'iframe',
-  'audio[controls]',
-  'video[controls]',
-  '[contenteditable]:not([contenteditable="false"])',
-  '[tabindex]:not([tabindex="-1"])'
-].join(',')
-// 取容器内当前可见的可聚焦元素：隐藏元素（如未展开的面板）不参与循环
-function getFocusableEls(container: HTMLElement): HTMLElement[] {
-  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
-    (el) => el.getClientRects().length > 0
-  )
 }
 /**
  * 弹窗主体的键盘处理：keydown 绑定在弹窗主体上，
@@ -742,33 +745,7 @@ function onKeydown(item: DialogItem, e: KeyboardEvent): void {
 }
 // Tab 焦点锁定：Tab / Shift + Tab 在弹窗内循环，避免键盘焦点跑到背景页面
 function trapTab(item: DialogItem, e: KeyboardEvent): void {
-  const container = containerEls.get(item.key)
-  if (!container) {
-    return
-  }
-  e.preventDefault()
-  const focusable = getFocusableEls(container)
-  if (focusable.length === 0) {
-    // 无可聚焦元素时退回外层容器，焦点不至于跑回背景页面
-    dialogWrapRef.value?.focus({ preventScroll: true })
-    return
-  }
-  const first = focusable[0]
-  const last = focusable[focusable.length - 1]
-  const activeIndex = focusable.indexOf(document.activeElement as HTMLElement)
-  if (activeIndex === -1) {
-    // 焦点已在弹窗外（如点击了背景区域）时，正序回到首个、倒序回到末个
-    const entry = e.shiftKey ? last : first
-    entry.focus({ preventScroll: true })
-    return
-  }
-  if (e.shiftKey) {
-    const prev = activeIndex === 0 ? last : focusable[activeIndex - 1]
-    prev.focus({ preventScroll: true })
-    return
-  }
-  const next = activeIndex === focusable.length - 1 ? first : focusable[activeIndex + 1]
-  next.focus({ preventScroll: true })
+  trapTabFocus(e, containerEls.get(item.key), dialogWrapRef.value)
 }
 // Esc 关闭：stopPropagation 避免冒泡后又被页面其他 Esc 监听处理一次
 function handleEsc(item: DialogItem, e: KeyboardEvent): void {
@@ -1055,6 +1032,7 @@ emits('ready', { open: openDialog, destroyAll })
               v-show="item.open"
               :ref="(el: unknown) => setContainerEl(item.key, el)"
               :data-key="item.key"
+              data-va-floating-mount=""
               class="dialog-container"
               :class="[
                 { 'dialog-with-fullscreen': item.fullscreen, 'is-centered': getComputedValue(item, 'centered') },
@@ -1087,7 +1065,7 @@ emits('ready', { open: openDialog, destroyAll })
                 >
                   <div :id="titleId(item)" :class="getComputedValue(item, 'titleClass')">
                     <slot name="title">
-                      <component :is="renderContent(getComputedValue(item, 'title'))" />
+                      <component :is="renderContentToVNode(getComputedValue(item, 'title'))" />
                     </slot>
                   </div>
                 </div>
@@ -1164,7 +1142,7 @@ emits('ready', { open: openDialog, destroyAll })
                     :style="getComputedValue(item, 'contentStyle')"
                   >
                     <slot>
-                      <component :is="renderContent(getComputedValue(item, 'content'))" />
+                      <component :is="renderContentToVNode(getComputedValue(item, 'content'))" />
                     </slot>
                   </div>
                 </Scrollbar>

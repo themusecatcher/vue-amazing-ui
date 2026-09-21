@@ -353,7 +353,7 @@ const routes = ref<BreadcrumbRoute[]>([
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-routes | 路由数组 | [Route](#route-type)[] | []
+routes | 路由数组 | [BreadcrumbRoute](#route-type)[] | []
 breadcrumbClass | 设置面包屑类名 | string | undefined
 breadcrumbStyle | 设置面包屑样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 maxWidth | 设置文本最大显示宽度，超出后显示省略号，单位 `px` | string &#124; number | '100%'
@@ -367,7 +367,7 @@ target | 如何打开目标URL | '_self' &#124; '_blank' | '_self'
 :-- | :-- | :-- | :--
 name | 路由名称 | string | undefined
 path? | 路由地址 | string | undefined
-query? | 路由查询参数 | [Query](#query-type) | undefined
+query? | 路由查询参数 | [BreadcrumbRouteQuery](#query-type) | undefined
 
 ### Query Type
 

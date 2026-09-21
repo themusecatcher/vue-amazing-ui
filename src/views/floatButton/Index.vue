@@ -189,6 +189,23 @@ function onOpenChange(open: boolean) {
         </template>
       </FloatButton>
     </Card>
+    <h2 class="mt30 mb10">自定义层级</h2>
+    <p class="mb10">
+      通过 <code>zIndex</code> 调整按钮层级（默认 <code>99</code>）；按钮上的气泡是浮层（默认
+      <code>1070</code>），恒在按钮之上
+    </p>
+    <Card width="50%" style="height: 300px; transform: translate(0)">
+      <FloatButton tooltip="Diamond" :right="96">
+        <template #icon>
+          <SketchOutlined />
+        </template>
+      </FloatButton>
+      <FloatButton type="primary" tooltip="Diamond" :z-index="3000">
+        <template #icon>
+          <SketchOutlined />
+        </template>
+      </FloatButton>
+    </Card>
     <h2 class="mt30 mb10">徽标数</h2>
     <Card width="50%" style="height: 300px; transform: translate(0)">
       <FloatButton :badge-props="{ dot: true }" :right="152">

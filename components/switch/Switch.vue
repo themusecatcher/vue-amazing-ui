@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref, nextTick } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { useInject } from 'components/utils'
+import { useInject, useWave } from 'components/utils'
 
 export interface Props {
   checked?: string // 选中时的内容
@@ -35,7 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
   modelValue: false
 })
 defineSlots<SwitchSlots>()
-const wave = ref<boolean>(false)
+const { wave, startWave, endWave } = useWave()
 const { colorPalettes } = useInject('Switch') // 主题色注入
 const emit = defineEmits(['update:modelValue', 'change'])
 function onSwitch(): void {
@@ -46,17 +45,7 @@ function onSwitch(): void {
     emit('update:modelValue', props.checkedValue)
     emit('change', props.checkedValue)
   }
-  if (wave.value) {
-    wave.value = false
-    nextTick(() => {
-      wave.value = true
-    })
-  } else {
-    wave.value = true
-  }
-}
-function onWaveEnd(): void {
-  wave.value = false
+  startWave()
 }
 </script>
 <template>
@@ -90,7 +79,7 @@ function onWaveEnd(): void {
       </svg>
       <slot name="node" :checked="modelValue"></slot>
     </div>
-    <div v-if="!disabled" class="switch-wave" :class="{ 'wave-active': wave }" @animationend="onWaveEnd"></div>
+    <div v-if="!disabled" class="switch-wave" :class="{ 'wave-active': wave }" @animationend="endWave"></div>
   </div>
 </template>
 <style lang="less" scoped>

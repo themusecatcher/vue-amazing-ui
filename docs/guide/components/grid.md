@@ -1024,7 +1024,7 @@ const state = reactive({
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 width | 行宽度，单位 `px` | string &#124; number | 'auto'
-gutter | 栅格间隔，可以写成像素值或支持响应式的对象写法来设置水平间隔 `{ xs: 8, sm: 16, md: 24}`。或者使用数组形式同时设置 `[水平间距, 垂直间距]` | number &#124; [number &#124; [Responsive](#responsive-type), number &#124; [Responsive](#responsive-type)] &#124; [Responsive](#responsive-type) | 0
+gutter | 栅格间隔，可以写成像素值或支持响应式的对象写法来设置水平间隔 `{ xs: 8, sm: 16, md: 24}`。或者使用数组形式同时设置 `[水平间距, 垂直间距]` | number &#124; [number &#124; [RowResponsive](#responsive-type), number &#124; [RowResponsive](#responsive-type)] &#124; [RowResponsive](#responsive-type) | 0
 wrap | 是否自动换行 | boolean | false
 align | 垂直对齐方式 | 'top' &#124; 'middle' &#124; 'bottom' &#124; 'stretch' | 'top'
 justify | 水平排列方式 | 'start' &#124; 'end' &#124; 'center' &#124; 'space-around' &#124; 'space-between' &#124; 'space-evenly' | 'start'

@@ -41,6 +41,21 @@ export interface DownloadOptions {
 }
 
 /**
+ * 对路径段做 URL 解码
+ *
+ * @param rawName 从 URL 路径中切出的原始文件名段
+ * @returns 解码后的文件名；含非法百分号编码导致解码失败时原样返回
+ */
+function decodeFileName(rawName: string): string {
+  try {
+    return decodeURIComponent(rawName)
+  } catch {
+    // 路径段含非法百分号编码时 decodeURIComponent 会抛异常，此时原样返回
+    return rawName
+  }
+}
+
+/**
  * 从已解析的 URL 中提取文件名
  *
  * 直接取 pathname 的最后一段，天然剥离查询参数（?）与哈希（#），
@@ -51,13 +66,7 @@ export interface DownloadOptions {
  */
 function getFileName(parsedUrl: URL): string {
   const segments = parsedUrl.pathname.split('/')
-  const rawName = segments[segments.length - 1] || ''
-  try {
-    return decodeURIComponent(rawName)
-  } catch {
-    // 路径段含非法百分号编码时 decodeURIComponent 会抛异常，此时原样返回
-    return rawName
-  }
+  return decodeFileName(segments[segments.length - 1] || '')
 }
 
 /**
@@ -221,6 +230,32 @@ export function downloadFile(url: string, fileName?: string, options: DownloadOp
   }
   return Promise.resolve()
 }
+
+/**
+ * 从图像对象中获取图像名称
+ *
+ * 优先使用显式传入的 name；未设置时从 src 中提取：以当前页面地址为 base 解析出 pathname
+ * （天然剥离查询参数 ? 与哈希 #），取末段并做 URL 解码（如 a%20b.png → a b.png）；
+ * src 解析失败时降级为手工切分，解码行为保持一致
+ *
+ * @param image 图像对象（src 必填，name 可选），可为 undefined
+ * @returns 图像名称；image 为空时返回空字符串
+ */
+export function getImageName(image: { src: string; name?: string } | undefined): string {
+  if (!image) {
+    return ''
+  }
+  if (image.name) {
+    return image.name
+  }
+  // 以当前页面地址为 base 解析，兼容相对路径
+  try {
+    return getFileName(new URL(image.src, location.href))
+  } catch {
+    const segments = image.src.split('?')[0].split('#')[0].split('/')
+    return decodeFileName(segments[segments.length - 1] || '')
+  }
+}
 /*
   一键切换暗黑模式函数
   在 <html> 根元素上动态切换 dark 模式，在根元素添加 dark 类值，同时样式添加 color-scheme: dark，具体样式需自行添加
@@ -337,4 +372,71 @@ export function lockScroll(): () => void {
       body.style.paddingRight = prevBodyPaddingRight
     }
   }
+}
+
+/** 焦点锁定的可聚焦元素选择器，覆盖常见交互元素与显式 tabindex */
+const FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'area[href]',
+  'input:not([disabled]):not([type="hidden"])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  'button:not([disabled])',
+  'iframe',
+  'audio[controls]',
+  'video[controls]',
+  '[contenteditable]:not([contenteditable="false"])',
+  '[tabindex]:not([tabindex="-1"])'
+].join(',')
+
+/**
+ * 取容器内当前可见的可聚焦元素
+ *
+ * 隐藏元素（如未展开的面板）不参与循环，避免 Tab 落到不可见元素上
+ *
+ * @param container 查询范围容器
+ * @returns 可见的可聚焦元素数组（按文档顺序）
+ */
+function getFocusableEls(container: HTMLElement): HTMLElement[] {
+  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+    (el) => el.getClientRects().length > 0
+  )
+}
+
+/**
+ * Tab 焦点锁定
+ *
+ * 让 Tab / Shift + Tab 在给定容器内循环，避免键盘焦点跑到背景页面，供焦点锁定类弹窗（Modal / Dialog）复用
+ *
+ * @param e 触发锁定的 keydown 事件
+ * @param container 焦点锁定范围的容器；不存在时直接返回（不阻止默认行为）
+ * @param fallbackEl 容器内无可聚焦元素时的焦点兜底元素（通常为弹窗外层容器）
+ */
+export function trapTabFocus(e: KeyboardEvent, container?: HTMLElement, fallbackEl?: HTMLElement | null): void {
+  if (!container) {
+    return
+  }
+  e.preventDefault()
+  const focusable = getFocusableEls(container)
+  if (focusable.length === 0) {
+    // 无可聚焦元素时退回外层容器，焦点不至于跑回背景页面
+    fallbackEl?.focus({ preventScroll: true })
+    return
+  }
+  const first = focusable[0]
+  const last = focusable[focusable.length - 1]
+  const activeIndex = focusable.indexOf(document.activeElement as HTMLElement)
+  if (activeIndex === -1) {
+    // 焦点已在弹窗外（如点击了背景区域）时，正序回到首个、倒序回到末个
+    const entry = e.shiftKey ? last : first
+    entry.focus({ preventScroll: true })
+    return
+  }
+  if (e.shiftKey) {
+    const prev = activeIndex === 0 ? last : focusable[activeIndex - 1]
+    prev.focus({ preventScroll: true })
+    return
+  }
+  const next = activeIndex === focusable.length - 1 ? first : focusable[activeIndex + 1]
+  next.focus({ preventScroll: true })
 }

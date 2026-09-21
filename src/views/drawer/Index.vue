@@ -134,6 +134,10 @@ const open10 = ref<boolean>(false)
 function onClose10() {
   open10.value = false
 }
+
+const layerOpen = ref<boolean>(false)
+const layerSelect = ref<string | undefined>(undefined)
+const layerZIndexOpen = ref<boolean>(false)
 </script>
 <template>
   <div>
@@ -308,7 +312,26 @@ function onClose10() {
         <Button type="primary" @click="onClose6">Submit</Button>
       </template>
     </Drawer>
-
+    <h2 class="mt30 mb10">抽屉内浮层</h2>
+    <p class="mb10">
+      抽屉内的 <code>Tooltip</code> / <code>Select</code> 会自动排在遮罩与抽屉之上；也可用 <code>zIndex</code>
+      直接指定抽屉层级（优先级最高）
+    </p>
+    <Space>
+      <Button type="primary" @click="layerOpen = true">Open Drawer</Button>
+      <Button type="primary" @click="layerZIndexOpen = true">Custom zIndex</Button>
+    </Space>
+    <Drawer v-model:open="layerOpen" title="抽屉内浮层" :width="420">
+      <Space align="center">
+        <Tooltip tooltip="Vue Amazing UI">
+          <Button>Hover me</Button>
+        </Tooltip>
+        <Select :options="ownerOptions" v-model="layerSelect" :width="160" placeholder="Please select" />
+      </Space>
+    </Drawer>
+    <Drawer v-model:open="layerZIndexOpen" title="Custom zIndex" :z-index="3000" :width="420">
+      <p>zIndex 优先级最高，覆盖自动分配结果</p>
+    </Drawer>
     <h2 class="mt30 mb10">信息预览抽屉</h2>
     <p class="mb10">需要快速预览对象概要时使用，点击遮罩区关闭</p>
     <List bordered>

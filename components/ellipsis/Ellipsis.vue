@@ -26,7 +26,6 @@ const props = withDefaults(defineProps<Props>(), {
 })
 defineSlots<EllipsisSlots>()
 const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null) // tooltip 组件引用
-const observeScroll = ref<() => void>() // tooltip 组件暴露的 observeScroll 函数
 const showTooltip = ref(false) // 是否显示提示框
 const showExpand = ref(false) // 是否可以启用点击展开
 const expanded = ref(false) // 启用点击展开时，是否展开
@@ -74,7 +73,6 @@ useResizeObserver(ellipsisRef, () => {
 })
 onMounted(() => {
   updateTooltipShow()
-  observeScroll.value = tooltipRef.value?.observeScroll
 })
 function updateTooltipShow() {
   const el = ellipsisRef.value
@@ -125,9 +123,6 @@ function onAnimationEnd() {
     showTooltip.value = false
   }
 }
-defineExpose({
-  observeScroll
-})
 </script>
 <template>
   <Tooltip

@@ -56,8 +56,9 @@ const selectionTypeOptions = [
     value: 'radio'
   }
 ]
-const rowSelection = reactive<TableSelection>({
-  columnTitle: undefined,
+// columnTitle / columnWidth 收窄为 string / number，便于直接使用 v-model
+const rowSelection = reactive<TableSelection & { columnTitle: string; columnWidth: number }>({
+  columnTitle: '',
   columnWidth: 100,
   fixed: true,
   hideSelectAll: false,
@@ -1180,23 +1181,12 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical>
-            columnTitle:
-            <Input
-              :value="typeof rowSelection.columnTitle === 'string' ? rowSelection.columnTitle : ''"
-              @update:value="rowSelection.columnTitle = $event as string"
-              placeholder="columnTitle"
-            />
+            columnTitle: <Input v-model:value="rowSelection.columnTitle" placeholder="columnTitle" />
           </Flex>
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical>
-            columnWidth:
-            <Slider
-              :value="typeof rowSelection.columnWidth === 'number' ? rowSelection.columnWidth : 32"
-              @update:value="rowSelection.columnWidth = $event as number"
-              :min="32"
-              :max="120"
-            />
+            columnWidth: <Slider v-model:value="rowSelection.columnWidth" :min="32" :max="120" />
           </Flex>
         </Col>
         <Col :span="6">

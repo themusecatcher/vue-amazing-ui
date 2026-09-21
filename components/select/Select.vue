@@ -1,10 +1,18 @@
-​
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch, nextTick, onUnmounted } from 'vue'
-import type { CSSProperties } from 'vue'
+import { ref, computed, watchEffect, watch, nextTick, onUnmounted, inject } from 'vue'
+import type { CSSProperties, Ref } from 'vue'
 import Empty from 'components/empty'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
-import { useInject, useScrollParent, useFloatingPosition } from 'components/utils'
+import {
+  raiseFloatingOrder,
+  useFloating,
+  useFloatingTeleportTarget,
+  useInject,
+  useZIndex,
+  Z_INDEX_CONTAINER_OPEN_KEY,
+  FLOATING_LAYER_Z_INDEX
+} from 'components/utils'
+import type { FloatingPlacement } from 'components/utils'
 export interface Option {
   label?: string // 选项名
   value?: string | number // 选项值
@@ -25,6 +33,9 @@ export interface Props {
   placement?: 'bottom' | 'top' // 下拉面板弹出位置
   flip?: boolean // 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
   to?: string | HTMLElement | false // 下拉面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
+  popupClassName?: string // 下拉面板的类名，用于自定义面板样式
+  dropdownMenuStyle?: CSSProperties // 下拉面板自定义样式，可覆盖定位（与 AutoComplete 的同名属性语义一致）
+  zIndex?: number // 下拉面板层级，优先级最高（未传时使用默认层级或 ConfigProvider 的 baseZIndex 分配）
   /*
     根据输入项进行筛选，默认为 true 时，筛选每个选项的文本字段 label 是否包含输入项，包含返回 true，反之返回 false
     当其为函数 Function 时，接受 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
@@ -47,9 +58,12 @@ const props = withDefaults(defineProps<Props>(), {
   search: false,
   placement: 'bottom',
   flip: true,
-  to: 'body',
+  to: undefined,
+  popupClassName: undefined,
+  dropdownMenuStyle: undefined,
+  zIndex: undefined,
   filter: true,
-  maxDisplay: 6,
+  maxDisplay: 8,
   scrollbarProps: () => ({}),
   modelValue: undefined
 })
@@ -59,7 +73,6 @@ let filterResetTimer: ReturnType<typeof setTimeout> | null = null // 面板关�
 const selectedName = ref<string | number | null>() // 当前选中选项的 label
 const inputRef = ref<HTMLElement | null>(null) // input 元素引用
 const inputValue = ref<string>() // 支持搜索时，用户输入内容
-const disabledBlur = ref<boolean>(false) // 是否禁用 input 标签的 blur 事件
 const hideSelectName = ref<boolean>(false) // 用户输入时，隐藏 selectName 的展示
 const hoverValue = ref<string | number | null>() // 鼠标悬浮项的 value 值
 const showOptions = ref<boolean>(false) // 显示隐藏 options 面板
@@ -69,13 +82,24 @@ const showCaret = ref<boolean>(false) // 支持搜索时，输入光标的显隐
 const showSearch = ref<boolean>(false) // 搜索图标显隐
 const selectFocused = ref<boolean>(false) /// select 是否聚焦
 const { colorPalettes, shadowColor } = useInject('Select') // 主题色注入
-const panelOffset = ref<number>(0) // 下拉面板相对于 selectContent 的垂直偏移距离
-const panelPlace = ref<'bottom' | 'top'>('bottom') // 下拉面板位置
 const selectContentRef = ref<HTMLElement | null>(null) // selectContent 模板引用
 const selectPanelRef = ref<HTMLElement | null>(null) // 下拉面板 selectPanel 模板引用
-const selectPanelHeight = ref<number>() // 下拉面板 selectPanel 的高度
-// 测量定位容器与内容元素矩形
-const { positionedContainerRect, contentRect, measure } = useFloatingPosition(selectContentRef, selectPanelRef)
+const selectPanelWrapperRef = ref<HTMLElement | null>(null) // 定位参照容器：面板 top / left 的坐标原点
+// 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配；未传则沿用默认层级 1050
+// 下拉面板需高于承载它的 Modal / Drawer / Dialog
+// 领取时机由面板「出现」驱动（allocateOnMount: false）：面板首帧才渲染，挂载时不持有槽位，
+// 否则未展开过的下拉会长期占位、抬高后续分配点
+const {
+  zIndex: layerZIndex,
+  allocate: allocateZIndex,
+  release: releaseZIndex
+} = useZIndex(FLOATING_LAYER_Z_INDEX.select, undefined, { allocateOnMount: false })
+// 挂载点：显式 to 优先，否则就近取承载层内容容器（Modal / Drawer / Dialog / 外层 Popup 面板），
+// 都没有则回落 body（见 utils/floating-mount.ts）
+const resolvedTo = useFloatingTeleportTarget(
+  () => selectContentRef.value,
+  () => props.to
+)
 const emits = defineEmits(['update:modelValue', 'change', 'openChange'])
 const selectWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -99,56 +123,56 @@ const isScrollable = computed(() => {
   return props.options.length > props.maxDisplay
 })
 const optionsStyle = computed(() => {
+  // 选项区最大高度 = maxDisplay × 单选项高度 32px，恰好展示 maxDisplay 项后滚动
+  // （面板自身上下 4px 内边距不属于选项区，额外计入会让下一项漏出 8px 的一小条）
   const style: CSSProperties = {
-    maxHeight: `${props.maxDisplay * 32 + 8}px`
+    maxHeight: `${props.maxDisplay * 32}px`
   }
   return style
 })
-const panelPlacement = computed(() => {
-  const contentTop = (contentRect.value as DOMRect)?.top ?? 0
-  const containerTop = (positionedContainerRect.value as DOMRect)?.top ?? 0
-  const offsetTop = contentTop - containerTop
-  const contentBottom = (contentRect.value as DOMRect)?.bottom ?? 0
-  const containerBottom = (positionedContainerRect.value as DOMRect)?.bottom ?? 0
-  const offsetBottom = containerBottom - contentBottom
-  const contentLeft = (contentRect.value as DOMRect)?.left ?? 0
-  const containerLeft = (positionedContainerRect.value as DOMRect)?.left ?? 0
-  const offsetLeft = contentLeft - containerLeft
-  const panelWidth = (contentRect.value as DOMRect)?.width ?? 0
-  switch (panelPlace.value) {
-    case 'bottom':
-      return {
-        transformOrigin: '0 0',
-        top: `${offsetTop + panelOffset.value}px`,
-        left: `${offsetLeft}px`,
-        minWidth: `${panelWidth}px`,
-        width: `${panelWidth}px`
-      }
-    case 'top':
-      return {
-        transformOrigin: '100% 100%',
-        bottom: `${offsetBottom + panelOffset.value}px`,
-        left: `${offsetLeft}px`,
-        minWidth: `${panelWidth}px`,
-        width: `${panelWidth}px`
-      }
-    default:
-      return {
-        transformOrigin: '0 0',
-        top: `${offsetTop + panelOffset.value}px`,
-        left: `${offsetLeft}px`,
-        minWidth: `${panelWidth}px`,
-        width: `${panelWidth}px`
-      }
-  }
+// 定位内核：只做「算 + 输出 + 同步」，本组件不再自研翻转 / 对齐几何
+// 期望方向取 bottomLeft / topLeft：面板与触发器等宽且左对齐，Left 后缀即该对齐口径；
+// 主轴翻转天然只在这两者之间切换，与面板仅支持垂直两向的语义一致
+const floatingPlacement = computed<FloatingPlacement>(() => (props.placement === 'top' ? 'topLeft' : 'bottomLeft'))
+const { panelStyle, transformOrigin } = useFloating(selectPanelRef, {
+  anchor: () => selectContentRef.value,
+  offsetContainer: selectPanelWrapperRef,
+  placement: () => floatingPlacement.value,
+  flip: () => props.flip,
+  shift: false, // 次轴不做对齐自适应与微调：面板与触发器等宽，次轴无溢出空间可调
+  offset: 4, // 主轴间距：面板紧贴锚点外 4px
+  boundary: 'scrollParent', // 复用 getFloatingBoundaryRect 口径：仅当浮层真被滚动容器裁剪时才以容器为界
+  matchTriggerWidth: 'width', // 面板与触发器等宽（width 与 minWidth 同值）
+  enabled: () => showOptions.value
 })
-watch([() => props.placement, () => props.flip], () => {
-  updatePosition()
-})
+// 面板层级：显式 zIndex 优先于自动分配 / 默认层级（与乙类组件的 zIndex prop 同一优先级契约）
+const selectPanelZIndex = computed(() => props.zIndex ?? layerZIndex.value)
+// 面板内联样式：内核输出（定位 + 动画原点）+ 使用者自定义样式 + 层级 + 主题变量
+// 顺序与 AutoComplete 一致：dropdownMenuStyle 可覆盖定位，但层级与主题变量始终由组件接管
+const selectPanelStyle = computed<CSSProperties>(() => ({
+  ...panelStyle.value,
+  transformOrigin: transformOrigin.value,
+  ...props.dropdownMenuStyle,
+  zIndex: selectPanelZIndex.value,
+  '--select-option-bg-color-active': colorPalettes.value[0]
+}))
 watch(showOptions, async (to) => {
   // 首次打开时才用 v-if 渲染面板，此后仅由 v-show 控制显隐
   if (to && !initialDisplay.value) {
     initialDisplay.value = true
+  }
+  // 每次「出现」重新领取层级（与 Popup / Modal / Drawer 同一语义）：面板关闭后不卸载（仅 v-show），
+  // 若只在挂载时领取一次，则被承载它的 Modal / Drawer 等「重新出现并置顶」后，二次打开的下拉会落到遮罩之下。
+  // 关闭时归还槽位（面板元素保留、内联层级不变）：否则「弹窗 ↔ 下拉」交替出现时两者会互相抬升，层级随开合次数持续增长
+  if (to) {
+    allocateZIndex()
+    // 无分配器时同层级浮层的上下关系由 DOM 顺序决定，故每次展开都把容器移到目标末尾 ——
+    // 使顺序等于「最近一次打开的顺序」（就地渲染时容器在组件自身 DOM 内，不能移动）
+    if (resolvedTo.value !== false) {
+      raiseFloatingOrder(selectPanelWrapperRef.value)
+    }
+  } else {
+    releaseZIndex()
   }
   emits('openChange', to)
   if (props.search && !to) {
@@ -157,9 +181,25 @@ watch(showOptions, async (to) => {
   }
   // 打开面板时把当前选中项滚动到可视区域内
   if (to) {
-    await scrollToSelected()
+    await scrollOptionIntoView('.option-selected')
   }
 })
+// 承载层（Modal / Drawer / Dialog）关闭时收起面板并归位聚焦态：容器不卸载内容，本面板也不会随容器消失 ——
+// ① 面板：本组件的关闭依赖 input 的 blur，而容器关闭只是把内容 display:none、不派发 blur，
+//    面板于是停留在打开态：容器已关闭、面板仍悬浮且占着层级槽位，容器再次打开时按「后出现者在上」
+//    重新领取层级会越过它 → 面板反而落到遮罩之下（详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）
+// ② 聚焦态：容器关闭同样不派发 blur（focusTriggerAfterClose 归还焦点时也未必落到本 input 上），
+//    故须在此显式归位，否则容器重开时 `.select-focused` 的描边与阴影仍在
+const containerOpen = inject(Z_INDEX_CONTAINER_OPEN_KEY, null) as Ref<boolean> | null
+if (containerOpen) {
+  watch(containerOpen, (open) => {
+    if (!open) {
+      closeOptionsPanel()
+      selectFocused.value = false
+      hoverValue.value = null
+    }
+  })
+}
 watchEffect(() => {
   // 重跑前先取消上一次的延迟重置，避免定时器堆积
   if (filterResetTimer) {
@@ -186,11 +226,11 @@ watchEffect(() => {
       }
     }
     // inputValue 先判空可让本分支短路：否则 filterOptions 会被登记为该 effect 的依赖，
-    // 又被上面的延迟重置定时器写入，形成「写入 → 重跑 → 再排定时器」的自触发循环
-    if (inputValue.value && filterOptions.value.length) {
-      hoverValue.value = filterOptions.value[0][props.value]
-    } else {
-      hoverValue.value = null
+    // 又被上面的延迟重置定时器写入，形成「写入 → 重跑 → 再排定时器」的自触发循环。
+    // 复位语义：有输入（searchValue 变化）时把悬浮态落到过滤结果首项；
+    // 无输入时保持原悬浮项 —— 面板关闭会清空输入，若此处一并复位，关闭前的悬浮态就会丢失
+    if (inputValue.value) {
+      hoverValue.value = filterOptions.value.length ? filterOptions.value[0][props.value] : null
     }
   } else {
     filterOptions.value = props.options
@@ -206,93 +246,23 @@ onUnmounted(() => {
 watchEffect(() => {
   initSelector()
 })
-// 查询并监听最近可滚动父元素，响应视口 resize
-const { scrollTarget, viewportWidth, viewportHeight } = useScrollParent(selectContentRef, updatePosition)
-// 将面板内当前选中项滚动到可视区域内（已可见时不做任何滚动）
-async function scrollToSelected(): Promise<void> {
+// 滚动跟随 / 视口 resize / 字体就绪的重对齐由定位内核统一承担（遍历锚点全链滚动祖先 + 帧合并）
+// 将面板内指定选项（当前选中项 / 键盘高亮项）滚动到可视区域内（已可见时不做任何滚动）
+async function scrollOptionIntoView(selector: string): Promise<void> {
   await nextTick()
   const scrollContainer = selectPanelRef.value?.querySelector<HTMLElement>('.scrollbar-container')
-  const selectedOption = selectPanelRef.value?.querySelector<HTMLElement>('.option-selected')
-  if (!scrollContainer || !selectedOption) return
+  const option = selectPanelRef.value?.querySelector<HTMLElement>(selector)
+  if (!scrollContainer || !option) return
   // 用 offsetTop / offsetHeight 而非 getBoundingClientRect：
   // 面板打开时正在播放 enter 缩放动画，rect 会被 transform 缩放失真，
-  // 导致误判选中项已可见而跳过滚动；offsetTop 是布局值，不受 transform 影响
-  const optionTop = selectedOption.offsetTop
-  const optionBottom = optionTop + selectedOption.offsetHeight
+  // 导致误判选项已可见而跳过滚动；offsetTop 是布局值，不受 transform 影响
+  const optionTop = option.offsetTop
+  const optionBottom = optionTop + option.offsetHeight
   const { scrollTop, clientHeight } = scrollContainer
   if (optionTop < scrollTop) {
     scrollContainer.scrollTop = optionTop
   } else if (optionBottom > scrollTop + clientHeight) {
     scrollContainer.scrollTop = optionBottom - clientHeight
-  }
-}
-// 更新下拉面板位置
-function updatePosition() {
-  showOptions.value && getPosition()
-}
-// 计算下拉面板位置
-async function getPosition() {
-  await measure()
-  selectPanelHeight.value = selectPanelRef.value?.offsetHeight
-  panelOffset.value = (contentRect.value as DOMRect).height + 4
-  if (props.flip) {
-    panelPlace.value = getPlacement()
-  }
-}
-// 获取可滚动父元素或视口的矩形信息：仅当可滚动父元素真正裁剪面板 (即面板挂载在该容器内) 时，才以其为界，否则以视口为界
-// 修复：面板 Teleport 到 body/具名容器时不受中间滚动容器 overflow 裁剪，flip 边界应为视口，避免空间充足却意外翻转
-function getShelterRect() {
-  const clipByScrollTarget =
-    scrollTarget.value &&
-    scrollTarget.value !== document.documentElement &&
-    scrollTarget.value.contains(selectPanelRef.value)
-  if (scrollTarget.value && clipByScrollTarget) {
-    const scrollTargetRect = scrollTarget.value.getBoundingClientRect()
-    return {
-      top: scrollTargetRect.top < 0 ? 0 : scrollTargetRect.top,
-      bottom: scrollTargetRect.bottom > viewportHeight.value ? viewportHeight.value : scrollTargetRect.bottom
-    }
-  }
-  return {
-    top: 0,
-    bottom: viewportHeight.value
-  }
-}
-// 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
-function getPlacement(): 'bottom' | 'top' {
-  const { top, bottom } = contentRect.value as DOMRect // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
-  const { top: targetTop, bottom: targetBottom } = getShelterRect() // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
-  const topDistance = top - targetTop // 内容元素上边缘距离滚动元素上边缘的距离
-  const bottomDistance = targetBottom - bottom // 内容元素下边缘距离动元素下边缘的距离
-  return findPlace(props.placement, [])
-  // 查询满足条件的 place，如果没有，则返回默认值
-  function findPlace(place: string, disabledPlaces: string[]): 'bottom' | 'top' {
-    if (place === 'bottom') {
-      if (!disabledPlaces.includes('bottom')) {
-        if (bottomDistance < (selectPanelHeight.value as number) + 4) {
-          return findPlace('top', [...disabledPlaces, 'bottom'])
-        } else {
-          return 'bottom'
-        }
-      } else {
-        if (!disabledPlaces.includes('top')) {
-          return findPlace('top', disabledPlaces)
-        }
-      }
-    } else if (place === 'top') {
-      if (!disabledPlaces.includes('top')) {
-        if (topDistance < (selectPanelHeight.value as number) + 4) {
-          return findPlace('bottom', [...disabledPlaces, 'top'])
-        } else {
-          return 'top'
-        }
-      } else {
-        if (!disabledPlaces.includes('bottom')) {
-          return findPlace('bottom', disabledPlaces)
-        }
-      }
-    }
-    return props.placement
   }
 }
 function initSelector(): void {
@@ -313,8 +283,8 @@ function initSelector(): void {
 function onFocus(): void {
   selectFocused.value = true
 }
-function onBlur(): void {
-  selectFocused.value = false
+// 关闭下拉面板，并把与搜索相关的状态归位（聚焦态由调用方自行维护）
+function closeOptionsPanel(): void {
   if (showOptions.value) {
     showOptions.value = false
   }
@@ -324,8 +294,24 @@ function onBlur(): void {
     hideSelectName.value = false
   }
 }
+function onBlur(): void {
+  selectFocused.value = false
+  closeOptionsPanel()
+}
+/**
+ * 触发器 mousedown：阻止输入框以外的区域抢走焦点
+ *
+ * 点击触发器上的非可聚焦部分（文本、箭头、清除图标）会让 input 失焦 → blur 关闭面板，
+ * 随后 click 里的 toggle 又把面板打开，表现为「点触发器关不掉面板」。
+ * 仅当事件目标是输入框本身时放行，以保留浏览器原生的聚焦与光标定位。
+ */
+function onMousedown(e: MouseEvent): void {
+  if (e.target !== inputRef.value) {
+    e.preventDefault()
+  }
+}
 function onEnter(): void {
-  disabledBlur.value = true
+  // allowClear 的箭头 / 清除图标切换
   if (props.allowClear) {
     if (selectedName.value || (props.search && inputValue.value)) {
       showArrow.value = false
@@ -337,7 +323,7 @@ function onEnter(): void {
   }
 }
 function onLeave(): void {
-  disabledBlur.value = false
+  // 还原箭头 / 清除图标与 search 状态，同 onEnter
   if (props.allowClear && showClear.value) {
     showClear.value = false
     if (!props.search) {
@@ -354,8 +340,7 @@ function onLeave(): void {
     }
   }
 }
-function onHover(value: string | number, disabled: boolean | undefined): void {
-  disabledBlur.value = Boolean(disabled)
+function onHover(value: string | number): void {
   hoverValue.value = value
 }
 async function toggleSelect(): Promise<void> {
@@ -363,13 +348,22 @@ async function toggleSelect(): Promise<void> {
   if (!props.search && inputRef.value) {
     inputRef.value.style.opacity = '0'
   }
+  // 面板定位由定位内核在 showOptions 翻为 true 时自动执行（enabled 驱动），无需显式重算
   showOptions.value = !showOptions.value
+  // 打开面板时确定悬浮态：
+  // ① 有选中项 → 悬浮到选中项；
+  // ② 无选中项、或原悬浮项已不在可用选项中（含从未悬浮过）→ 悬浮到首个可用项；
+  // ③ 其余情况保持关闭前的悬浮项
   if (showOptions.value) {
-    getPosition()
-  }
-  if (!hoverValue.value && selectedName.value) {
-    const target = props.options.find((option) => option[props.label] === selectedName.value)
-    hoverValue.value = target ? target[props.value] : null
+    const selected = selectedName.value
+      ? props.options.find((option) => option[props.label] === selectedName.value)
+      : undefined
+    if (selected) {
+      hoverValue.value = selected[props.value]
+    } else if (!props.options.some((option) => !option.disabled && option[props.value] === hoverValue.value)) {
+      const firstEnabled = props.options.find((option) => !option.disabled)
+      hoverValue.value = firstEnabled ? firstEnabled[props.value] : null
+    }
   }
   if (props.search) {
     if (!showClear.value) {
@@ -380,6 +374,56 @@ async function toggleSelect(): Promise<void> {
 }
 function onSearchInput(e: Event): void {
   hideSelectName.value = Boolean((e.target as HTMLInputElement)?.value)
+}
+// 键盘导航：↑↓ 移动高亮（跳过禁用项、环形，随即滚入可视区）、Enter 选中高亮项、Esc 关闭面板
+// 面板未打开时 ↑↓ 仅打开面板（悬浮态由 toggleSelect 的打开分支确定），与 AutoComplete 的键盘行为保持一致
+function onKeydown(e: KeyboardEvent): void {
+  if (props.disabled) return
+  const list = filterOptions.value
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    if (!list.length) return
+    e.preventDefault()
+    if (!showOptions.value) {
+      toggleSelect()
+      return
+    }
+    const isArrowDown = e.key === 'ArrowDown'
+    const currentIdx = list.findIndex((option) => !option.disabled && option[props.value] === hoverValue.value)
+    // 环形查找下一个未禁用项：从当前项的下一个开始循环一圈；无高亮时向下从第一项、向上从最后一项开始
+    let start = 0
+    if (isArrowDown) {
+      start = currentIdx === -1 ? 0 : currentIdx + 1
+    } else {
+      start = currentIdx === -1 ? list.length - 1 : currentIdx - 1
+    }
+    const direction = isArrowDown ? 1 : -1
+    let nextIdx = -1
+    for (let i = 0; i < list.length; i++) {
+      const idx = (start + direction * i + list.length) % list.length
+      if (!list[idx].disabled) {
+        nextIdx = idx
+        break
+      }
+    }
+    // 无其他可用项（仅当前项未禁用或全部禁用）时保持原高亮
+    if (nextIdx < 0 || nextIdx === currentIdx) return
+    hoverValue.value = list[nextIdx][props.value]
+    scrollOptionIntoView('.option-hover')
+    return
+  }
+  if (e.key === 'Enter') {
+    // 面板打开且有高亮未禁用项时，Enter 确认选中（下标口径与鼠标点击一致，均为过滤后列表的下标）
+    if (!showOptions.value) return
+    const index = list.findIndex((option) => !option.disabled && option[props.value] === hoverValue.value)
+    if (index < 0) return
+    e.preventDefault()
+    onChange(list[index][props.value], list[index][props.label], index)
+    return
+  }
+  if (e.key === 'Escape' && showOptions.value) {
+    e.preventDefault()
+    closeOptionsPanel()
+  }
 }
 function onClear(): void {
   if (selectFocused.value) {
@@ -407,6 +451,8 @@ function onChange(value: string | number, label: string, index: number): void {
     emits('change', value, label, index)
   }
   showCaret.value = false
+  // 选项的 mousedown 已阻止默认行为（input 不再失焦），故关闭面板不能再依赖 blur 事件，需在此显式关闭
+  closeOptionsPanel()
   selectFocus()
 }
 </script>
@@ -427,6 +473,7 @@ function onChange(value: string | number, label: string, index: number): void {
       --select-primary-color-focus: ${colorPalettes[4]};
       --select-primary-shadow-color: ${shadowColor};
     `"
+    @mousedown="onMousedown"
     @click="disabled ? () => false : toggleSelect()"
   >
     <div ref="selectContentRef" class="select-content-container" @mouseenter="onEnter" @mouseleave="onLeave">
@@ -440,8 +487,9 @@ function onChange(value: string | number, label: string, index: number): void {
           :readonly="!search"
           :disabled="disabled"
           @input="onSearchInput"
+          @keydown="onKeydown"
           v-model="inputValue"
-          @blur="!disabledBlur && !disabled ? onBlur() : () => false"
+          @blur="!disabled ? onBlur() : () => false"
           @focus="!disabled ? onFocus() : () => false"
         />
       </span>
@@ -500,70 +548,79 @@ function onChange(value: string | number, label: string, index: number): void {
         ></path>
       </svg>
     </div>
-    <Teleport :disabled="to === false" :to="to === false ? null : to">
-      <Transition
-        name="slide"
-        enter-from-class="slide-enter"
-        enter-active-class="slide-enter"
-        enter-to-class="slide-enter slide-enter-active"
-        leave-from-class="slide-leave"
-        leave-active-class="slide-leave slide-leave-active"
-        leave-to-class="slide-leave slide-leave-active"
-      >
-        <div
-          v-if="initialDisplay"
-          v-show="showOptions"
-          ref="selectPanelRef"
-          class="select-panel-container"
-          :style="{
-            ...panelPlacement,
-            '--select-option-bg-color-active': colorPalettes[0]
-          }"
+    <!-- 条件放在 Teleport 上：容器按**打开顺序**追加到目标末尾，同族同层级浮层的上下关系即「后打开者在上」
+         （即「容器在可见时才 appendChild 到父节点」）；若 Teleport 常驻，顺序会退化为模板源码顺序，与打开先后无关 -->
+    <Teleport v-if="initialDisplay" :disabled="resolvedTo === false" :to="resolvedTo === false ? null : resolvedTo">
+      <!-- 两层 DOM：定位参照容器 + 面板。
+           容器的实时矩形即面板 top / left 的坐标原点，故 Teleport 与 to: false 就地渲染共用同一套求解；
+           首帧优化内化在此：首次展示前不渲染任何浮层 DOM，之后由面板上的 v-show 复用同一元素 -->
+      <div ref="selectPanelWrapperRef" class="select-panel-wrapper">
+        <Transition
+          appear
+          name="slide"
+          enter-from-class="slide-enter"
+          enter-active-class="slide-enter"
+          enter-to-class="slide-enter slide-enter-active"
+          leave-from-class="slide-leave"
+          leave-active-class="slide-leave slide-leave-active"
+          leave-to-class="slide-leave slide-leave-active"
         >
-          <Scrollbar
-            v-show="filterOptions.length"
-            :style="{ ...optionsStyle, '--scrollbar-rail-vertical-right': '2px 0 2px auto' }"
-            class="select-options-panel"
-            @click.stop="selectFocus"
-            @mouseenter="disabledBlur = true"
-            @mouseleave="disabledBlur = false"
-            v-bind="scrollbarProps"
-          >
-            <p
-              v-for="(option, index) in filterOptions"
-              :key="index"
-              :class="[
-                'select-option',
-                {
-                  'option-hover': !option.disabled && option[value] === hoverValue,
-                  'option-selected': option[label] === selectedName,
-                  'option-disabled': option.disabled
-                }
-              ]"
-              :title="option[label]"
-              @mouseenter="onHover(option[value], option.disabled)"
-              @click.stop="option.disabled ? selectFocus() : onChange(option[value], option[label], index)"
-            >
-              {{ option[label] }}
-            </p>
-          </Scrollbar>
           <div
-            v-show="!filterOptions.length"
-            class="select-options-panel options-panel-empty"
-            @click.stop="selectFocus"
-            @mouseenter="disabledBlur = true"
-            @mouseleave="disabledBlur = false"
+            v-show="showOptions"
+            ref="selectPanelRef"
+            class="select-panel-container"
+            :class="popupClassName"
+            :style="selectPanelStyle"
+            @mousedown.prevent
           >
-            <Empty image="outlined" />
+            <Scrollbar
+              v-show="filterOptions.length"
+              :style="{ ...optionsStyle, '--scrollbar-rail-vertical-right': '2px 0 2px auto' }"
+              class="select-options-panel"
+              @click.stop="selectFocus"
+              v-bind="scrollbarProps"
+            >
+              <!-- 选项上按下鼠标时阻止默认行为：否则 mousedown 会让 input 失焦触发 blur 关闭面板，
+                   而面板在离开动画期间已整体禁用指针事件（见 .select-panel-container.slide-leave-active），
+                   随后的 mouseup / click 便落不到选项上 —— 表现为「真实鼠标点击选项无任何反应」 -->
+              <p
+                v-for="(option, index) in filterOptions"
+                :key="index"
+                :class="[
+                  'select-option',
+                  {
+                    'option-hover': !option.disabled && option[value] === hoverValue,
+                    'option-selected': option[label] === selectedName,
+                    'option-disabled': option.disabled
+                  }
+                ]"
+                :title="option[label]"
+                @mouseenter="onHover(option[value])"
+                @mousedown.prevent
+                @click.stop="option.disabled ? selectFocus() : onChange(option[value], option[label], index)"
+              >
+                {{ option[label] }}
+              </p>
+            </Scrollbar>
+            <div
+              v-show="!filterOptions.length"
+              class="select-options-panel options-panel-empty"
+              @click.stop="selectFocus"
+            >
+              <Empty image="outlined" />
+            </div>
           </div>
-        </div>
-      </Transition>
+        </Transition>
+      </div>
     </Teleport>
   </div>
 </template>
 <style lang="less" scoped>
+/* 缩放动画只改独立变换属性 scale：定位由内核写在独立属性 `translate` 上（复合链最外层，不受缩放影响）；
+   keyframes 若改写 `transform` 会覆盖使用者经 `dropdownMenuStyle` 等样式 prop 传入的内联 transform
+   （CSS 动画优先级高于内联样式，且 animation-fill-mode: both 在过渡类移除前一直生效） */
 .slide-enter {
-  transform: scale(0);
+  scale: 0;
   opacity: 0;
   animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
   animation-duration: 0.2s;
@@ -575,11 +632,11 @@ function onChange(value: string | number, label: string, index: number): void {
   animation-play-state: running;
   @keyframes slideIn {
     0% {
-      transform: scaleY(0.8);
+      scale: 1 0.8;
       opacity: 0;
     }
     100% {
-      transform: scaleY(1);
+      scale: 1;
       opacity: 1;
     }
   }
@@ -595,14 +652,21 @@ function onChange(value: string | number, label: string, index: number): void {
   animation-play-state: running;
   @keyframes slideOut {
     0% {
-      transform: scaleY(1);
+      scale: 1;
       opacity: 1;
     }
     100% {
-      transform: scaleY(0.8);
+      scale: 1 0.8;
       opacity: 0;
     }
   }
+}
+/* 离开动画期间禁用指针事件
+   必须带上 `.select-panel-container`：单类写法 `.slide-leave-active` 与下方的
+   `.select-panel-container { pointer-events: auto }` 同为「类 + 作用域属性 = 0,2,0」，
+   且本规则声明在**前**，会被后者按源码顺序覆盖而静默失效；带上该类后为 0,3,0，靠**特异性**取胜 */
+.select-panel-container.slide-leave-active {
+  pointer-events: none;
 }
 .select-wrap {
   position: relative;
@@ -779,9 +843,23 @@ function onChange(value: string | number, label: string, index: number): void {
     }
   }
 }
+/* 定位参照容器：绝对定位 + 零高度，既不参与布局也不遮挡
+   页面交互；z-index 保持 auto，避免产生层叠上下文而把面板的层级关在里层 */
+.select-panel-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: auto;
+  height: 0;
+  pointer-events: none;
+}
 .select-panel-container {
   position: absolute;
-  z-index: 1000;
+  /* 容器关闭了指针事件（pointer-events 可继承），面板必须显式恢复，否则选项的 hover / 点击全部失效 */
+  pointer-events: auto;
+  /* 默认层级与 useZIndex 的回退值一致；ConfigProvider 传入 baseZIndex 时由内联样式覆盖 */
+  z-index: 1050;
   padding: 4px;
   border-radius: 8px;
   overflow: hidden;

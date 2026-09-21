@@ -1272,7 +1272,7 @@ const state = reactive<TabsProps>({
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-items | 标签页数组 | [Item](#item-type)[] | []
+items | 标签页数组 | [TabsItem](#item-type)[] | []
 prefix | 标签页前缀 | string | undefined
 suffix | 标签页后缀 | string | undefined
 animated | 是否启用切换动画，在 `tabPosition: 'top' \| 'bottom'` 时有效 | boolean | true

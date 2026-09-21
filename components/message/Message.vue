@@ -1,7 +1,13 @@
 <script setup lang="ts">
-import { ref, computed, onBeforeUnmount, isVNode } from 'vue'
+import { ref, computed, onBeforeUnmount, isVNode, watch } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { useInject } from 'components/utils'
+import {
+  createKeyGenerator,
+  renderContentToVNode,
+  useInject,
+  useZIndex,
+  FLOATING_LAYER_Z_INDEX
+} from 'components/utils'
 import type { MessageApi } from './useMessage'
 // 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数
 export type ContentType = string | VNode | (() => VNode)
@@ -48,6 +54,28 @@ export interface MessageReactive extends MessageOptions {
   update: (options: MessageUpdate) => void // 更新该条消息；mode 可切换内置图标类型
 }
 const messageItems = ref<MessageItem[]>([])
+// 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配，未传则使用默认层级 1030。
+// 1030 是「高于承载层（Modal 弹窗 1010）、低于甲类浮层（Select 面板 1050 / Tooltip 1070）」的位置 ——
+// 「反馈层不占据最高层级」：消息内容里放 Select / Tooltip 时，浮层不会被消息框压住。
+// 取 1030 是为了与 Modal 弹窗（1010）、Select 面板（1050）**都不打平**：
+// 同值时上下关系会退化为 DOM 顺序（源码顺序），顺序不可控
+// 消息容器常驻，故领取时机由「有新消息出现」驱动（挂载时为空操作）、全部关闭后归还 ——
+// 与承载层 / 甲类浮层同一不变量：不可见的层不该占用槽位，否则会持续抬高后续分配点
+const {
+  zIndex: layerZIndex,
+  allocate: allocateZIndex,
+  release: releaseZIndex
+} = useZIndex(FLOATING_LAYER_Z_INDEX.message, undefined, { allocateOnMount: false })
+watch(
+  () => messageItems.value.length,
+  (count) => {
+    if (count > 0) {
+      allocateZIndex()
+    } else {
+      releaseZIndex()
+    }
+  }
+)
 const { colorPalettes } = useInject('Message') // 主题色注入
 // 所有消息共享同一容器位置
 // 既可通过 <MessageProvider top="..."> 透传生效，也可直接设置在 <Message> 组件上
@@ -62,11 +90,8 @@ const emits = defineEmits<{
 }>()
 // 每条消息独立持有自动关闭定时器，按 key 存取，避免多条消息互相干扰
 const closeTimers = new Map<string, ReturnType<typeof setTimeout>>()
-let seed = 0
-function createKey(): string {
-  seed += 1
-  return `message_${Date.now()}_${seed}`
-}
+// 每条消息的唯一标识生成器
+const createKey = createKeyGenerator('message')
 function clearTimer(key: string): void {
   const timer = closeTimers.get(key)
   if (timer) {
@@ -175,10 +200,6 @@ function warning(message: string | MessageOptions): MessageReactive {
 function loading(message: string | MessageOptions): MessageReactive {
   return push(message, 'loading')
 }
-// 将内容归一化为可直接渲染的形态：函数式内容调用后得到 VNode
-function renderContent(content: ContentType): VNode | string {
-  return typeof content === 'function' ? content() : content
-}
 // 向 <MessageProvider> 回传 api，使其无需依赖模板 ref 即可对外提供
 emits('ready', { open, info, success, error, warning, loading, destroyAll })
 onBeforeUnmount(() => {
@@ -195,6 +216,7 @@ onBeforeUnmount(() => {
       class="message-wrap"
       :style="`
       top: ${messageTop};
+      --message-z-index: ${layerZIndex};
       --message-primary-color: ${colorPalettes[5]};
       --message-success-color: #52c41a;
       --message-warning-color: #faad14;
@@ -216,7 +238,7 @@ onBeforeUnmount(() => {
             @mouseleave="onLeave(message.key)"
             @click="onClick($event, message)"
           >
-            <component v-if="message.icon" :is="renderContent(message.icon)" class="icon-svg" />
+            <component v-if="message.icon" :is="renderContentToVNode(message.icon)" class="icon-svg" />
             <svg
               v-else-if="message.mode === 'info'"
               class="icon-svg"
@@ -321,7 +343,7 @@ onBeforeUnmount(() => {
   color: rgba(0, 0, 0, 0.88);
   line-height: 1.5714285714285714;
   position: fixed;
-  z-index: 2000;
+  z-index: var(--message-z-index, 1030); // 兜底值需与 FLOATING_LAYER_Z_INDEX.message 保持一致
   width: 100%;
   left: 0;
   right: 0;

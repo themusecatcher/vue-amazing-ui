@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, nextTick, computed } from 'vue'
+import { computed } from 'vue'
 import type { VNode } from 'vue'
 import { generate } from '@ant-design/colors'
-import { useSlotsExist, useInject } from 'components/utils'
+import { useSlotsExist, useInject, useWave } from 'components/utils'
 
 export interface Props {
   type?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 设置按钮类型
@@ -43,7 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
   block: false
 })
 defineSlots<ButtonSlots>()
-const wave = ref<boolean>(false)
+const { wave, startWave, endWave } = useWave()
 const { colorPalettes } = useInject('Button') // 主题色注入
 const colorPalettesComputed = computed(() => {
   if (props.color !== undefined) {
@@ -72,21 +72,11 @@ const showIconOnly = computed(() => {
   return showIcon.value && !slotsExist.default
 })
 function onClick(e: Event) {
-  if (wave.value) {
-    wave.value = false
-    nextTick(() => {
-      wave.value = true
-    })
-  } else {
-    wave.value = true
-  }
+  startWave()
   emit('click', e)
 }
 function onKeyboard(e: KeyboardEvent) {
   onClick(e)
-}
-function onWaveEnd() {
-  wave.value = false
 }
 </script>
 <template>
@@ -149,7 +139,7 @@ function onWaveEnd() {
     <span v-if="slotsExist.default" class="btn-content">
       <slot></slot>
     </span>
-    <div v-if="!disabled" class="button-wave" :class="{ 'wave-active': wave }" @animationend="onWaveEnd"></div>
+    <div v-if="!disabled" class="button-wave" :class="{ 'wave-active': wave }" @animationend="endWave"></div>
   </component>
 </template>
 <style lang="less" scoped>

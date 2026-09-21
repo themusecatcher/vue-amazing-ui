@@ -11,11 +11,11 @@ import type { ModalApi, ModalProps } from 'components/modal'
 import { DialogProvider, useDialog } from 'components/dialog'
 import type { DialogApi, DialogProps } from 'components/dialog'
 
-export type DiscreteApiType = 'notification' | 'message' | 'modal' | 'dialog'
+type DiscreteApiType = 'notification' | 'message' | 'modal' | 'dialog'
 
-export type MaybeRef<T> = Ref<T> | T
+type MaybeRef<T> = Ref<T> | T
 
-export interface DiscreteApi {
+interface DiscreteApi {
   notification: NotificationApi
   message: MessageApi
   modal: ModalApi

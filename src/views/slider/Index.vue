@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, h, watchEffect, isVNode } from 'vue'
 import { FireFilled } from '@ant-design/icons-vue'
+import type { SliderMarks } from 'vue-amazing-ui'
 const singleValue = ref<number>(20)
 const doubleValue = ref<number[]>([20, 80])
 const disabledSingleValue = ref<number>(20)
@@ -21,7 +22,7 @@ const markVerticalSingleValue = ref<number>(37)
 const markVerticalDoubleValue1 = ref<number[]>([20, 65])
 const markVerticalDoubleValue2 = ref<number[]>([30, 60])
 const markVerticalDoubleValue3 = ref<number[]>([26, 37])
-const marks = ref<Record<number, any>>({
+const marks = ref<SliderMarks>({
   0: '0°C',
   26: '26°C',
   37: '37°C',
@@ -32,7 +33,7 @@ const marks = ref<Record<number, any>>({
     label: '100°C'
   }
 })
-const verticalMarks = ref<Record<number, any>>({
+const verticalMarks = ref<SliderMarks>({
   0: '0°C',
   26: '26°C',
   37: '37°C',
@@ -52,6 +53,11 @@ const hideTooltipSingleValue = ref<number>(20)
 const hideTooltipDoubleValue = ref<number[]>([20, 80])
 const tooltipOpenSingleValue = ref<number>(20)
 const tooltipOpenDoubleValue = ref<number[]>([20, 80])
+const placementTopValue = ref<number>(20)
+const placementBottomValue = ref<number>(80)
+const placementLeftValue = ref<number>(20)
+const placementRightValue = ref<number>(80)
+const customTooltipValue = ref<number>(37)
 const customStyleSingleValue = ref<number>(20)
 const customStyleDoubleValue = ref<number[]>([20, 80])
 const singleCustomStyle = {
@@ -64,21 +70,21 @@ const singleCustomStyle = {
   '--slider-tooltip-bg-color': '#fff'
 }
 const rangeCustomStyle = {
-  '--rail-color': 'rgb(219, 219, 223)',
-  '--rail-color-hover': 'rgb(199, 199, 203)',
+  '--slider-rail-color': 'rgb(219, 219, 223)',
+  '--slider-rail-color-hover': 'rgb(199, 199, 203)',
   '--slider-track-color': '#ffbb96',
   '--slider-track-color-hover': '#d4380d',
   '--slider-handle-color': '#fff2e8',
   '--slider-handle-shadow-color': '#ffbb96',
   '--slider-handle-shadow-color-hover-focus': '#d4380d',
-  '--dot-border-color': 'rgb(219, 219, 223)',
-  '--dot-border-color-hover': 'rgb(199, 199, 203)',
-  '--dot-color-active': '#ffbb96',
+  '--slider-dot-border-color': 'rgb(219, 219, 223)',
+  '--slider-dot-border-color-hover': 'rgb(199, 199, 203)',
+  '--slider-dot-color-active': '#ffbb96',
   '--slider-tooltip-color': 'rgba(0, 0, 0, 0.88)',
   '--slider-tooltip-bg-color': '#fff'
 }
 const tooltipStyle = {
-  top: '-40px',
+  top: '-20px',
   fontSize: '16px',
   fontWeight: 500,
   lineHeight: 1.5,
@@ -163,6 +169,21 @@ watchEffect(() => {
 })
 watchEffect(() => {
   console.log('tooltipOpenDoubleValue', tooltipOpenDoubleValue.value)
+})
+watchEffect(() => {
+  console.log('placementTopValue', placementTopValue.value)
+})
+watchEffect(() => {
+  console.log('placementBottomValue', placementBottomValue.value)
+})
+watchEffect(() => {
+  console.log('placementLeftValue', placementLeftValue.value)
+})
+watchEffect(() => {
+  console.log('placementRightValue', placementRightValue.value)
+})
+watchEffect(() => {
+  console.log('customTooltipValue', customTooltipValue.value)
 })
 watchEffect(() => {
   console.log('customStyleSingleValue', customStyleSingleValue.value)
@@ -304,6 +325,29 @@ function formatter(value: number) {
       <Slider tooltip-open v-model:value="tooltipOpenSingleValue" />
       <Slider range tooltip-open v-model:value="tooltipOpenDoubleValue" />
     </Flex>
+    <h2 class="mt30 mb10">自定义 Tooltip 位置</h2>
+    <p class="mb10"
+      >默认水平模式在滑块上方、垂直模式在滑块右侧，可用
+      <code>tooltipPlacement</code> 指定为四个方向之一；若该方向空间不足会自动翻转到对侧</p
+    >
+    <div class="placement-rect">
+      <Slider :width="488" tooltip-placement="top" v-model:value="placementTopValue" />
+      <div class="rect-body">
+        <Slider vertical :height="120" tooltip-placement="left" v-model:value="placementLeftValue" />
+        <Slider vertical :height="120" tooltip-placement="right" v-model:value="placementRightValue" />
+      </div>
+      <Slider :width="488" tooltip-placement="bottom" v-model:value="placementBottomValue" />
+    </div>
+    <h2 class="mt30 mb10">自定义 Tooltip 内容</h2>
+    <p class="mb10"
+      >通过 <code>tooltip</code> 插槽自定义气泡内容（<code>value</code> 为格式化后的当前值），配合
+      <code>tooltipClass</code> 用外部样式类定制外观</p
+    >
+    <Slider v-model:value="customTooltipValue" tooltip-class="custom-slider-tooltip">
+      <template #tooltip="{ value }">
+        <strong>{{ value }}</strong> °C
+      </template>
+    </Slider>
     <h2 class="mt30 mb10">自定义样式</h2>
     <p class="mb10">通过修改样式变量可以自定义滑动输入条样式、标记样式、<code>Tooltip</code> 样式</p>
     <Flex vertical gap="large">
@@ -318,3 +362,31 @@ function formatter(value: number) {
     </Flex>
   </div>
 </template>
+<style lang="less" scoped>
+/* 四条 Slider 围成大致矩形：上 / 下为水平条（气泡朝上 / 朝下），左 / 右为竖直条（气泡朝左 / 朝右）。
+   水平条取 488px（容器 520 减去两侧竖直条各 16px），两端即落在两侧轨道线上，不追求严格首尾相接 */
+.placement-rect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 520px;
+  /* 左对齐到内容区（不用 auto 居中）；左缩进 64px = 朝左气泡的最小空间（气泡约 40px + 16px 间距），
+     否则 left 方向会被定位内核翻转到右侧；上下留白：上方 40px 容气泡，下方不额外留 */
+  margin: 40px 0 0 64px;
+}
+.rect-body {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+</style>
+<style lang="less">
+/* 全局样式（非 scoped）：气泡位于组件内部，scoped 选择器命中不到 */
+.custom-slider-tooltip {
+  border: 1px solid #ff6900;
+  strong {
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
+</style>

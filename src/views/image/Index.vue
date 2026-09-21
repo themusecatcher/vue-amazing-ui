@@ -107,6 +107,15 @@ function customDownload(url: string, fileName?: string) {
       :max-zoom-scale="2"
       src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg"
     />
+    <h2 class="mt30 mb10">自定义预览层级</h2>
+    <p class="mb10">
+      通过 <code>zIndex</code> 指定预览遮罩层级（预览容器取该值 <code>+ 10</code>），未传入时由
+      <code>ConfigProvider</code> 的 <code>baseZIndex</code> 统一分配
+    </p>
+    <Space>
+      <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/2.jpg" />
+      <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg" :z-index="3000" />
+    </Space>
     <h2 class="mt30 mb10">下载配置</h2>
     <p class="mb10">
       通过 <code>downloadOptions</code> 配置内置下载策略（<code>anchor</code> / <code>iframe</code>）与打开方式 （<code

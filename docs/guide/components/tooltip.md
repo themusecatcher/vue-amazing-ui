@@ -33,16 +33,25 @@ const customColors = ['#f50', '#2db7f5', '#87d068', '#108ee9']
 function openChange(open: boolean) {
   console.log('open', open)
 }
+function onShow() {
+  tooltipRef.value?.show()
+}
+function onHide() {
+  tooltipRef.value?.hide()
+}
+// 受控显示：由 show 驱动
+const controlledShow = ref<boolean>(false)
+const destroyShow = ref(false)
 </script>
 
 ## 基本使用
 
 <Space>
-  <Tooltip tooltip="Tesla" @open-change="openChange">
-    <Button type="primary">特斯拉</Button>
+  <Tooltip tooltip="特斯拉" @open-change="openChange">
+    <Button type="primary">Tesla</Button>
   </Tooltip>
-  <Tooltip tooltip="Godzilla" @open-change="openChange">
-    <Button type="primary">哥斯拉</Button>
+  <Tooltip tooltip="哥斯拉" @open-change="openChange">
+    <Button type="primary">Godzilla</Button>
   </Tooltip>
 </Space>
 
@@ -56,11 +65,11 @@ function openChange(open: boolean) {
 </script>
 <template>
   <Space>
-    <Tooltip tooltip="Tesla" @open-change="openChange">
-      <Button type="primary">特斯拉</Button>
+    <Tooltip tooltip="特斯拉" @open-change="openChange">
+      <Button type="primary">Tesla</Button>
     </Tooltip>
-    <Tooltip tooltip="Godzilla" @open-change="openChange">
-      <Button type="primary">哥斯拉</Button>
+    <Tooltip tooltip="哥斯拉" @open-change="openChange">
+      <Button type="primary">Godzilla</Button>
     </Tooltip>
   </Space>
 </template>
@@ -70,13 +79,15 @@ function openChange(open: boolean) {
 
 ## 自定义样式
 
+*气泡卡片用 `tooltipClass` / `tooltipStyle`，其外层定位面板用 `popupClassName` / `popupStyle`，层级用 `zIndex`*
+
 <Space gap="large">
   <Tooltip :max-width="360" bg-color="#fff" tooltip-class="custom-class">
     <template #tooltip>
-      <p style="text-align: center">Batman VS Superman</p>
-      电影讲述了超人帮助人类解决了很多问题，成为了人类的神，却引起了莱克斯·卢瑟的嫉妒，从而挑拨蝙蝠侠与超人之间战斗的故事
+      <p style="text-align: center">卡片类名</p>
+      通过 tooltipClass 定制气泡卡片的字号、颜色与内边距
     </template>
-    <Button type="primary">蝙蝠侠大战超人</Button>
+    <Button type="primary">Card Class</Button>
   </Tooltip>
   <Tooltip
     :max-width="360"
@@ -89,10 +100,25 @@ function openChange(open: boolean) {
     }"
   >
     <template #tooltip>
-      <h3 style="font-weight: bold; text-align: center; margin: 0 0 8px;">Godzilla VS Kong</h3>
-      电影讲述帝王组织在地心世界找到巨兽起源的线索，与此同时传说中的王者哥斯拉和金刚的对决也将展开的故事
+      <p style="text-align: center">卡片样式</p>
+      通过 tooltipStyle 定制气泡卡片的样式
     </template>
-    <Button type="primary">哥斯拉大战金刚</Button>
+    <Button type="primary">Card Style</Button>
+  </Tooltip>
+  <Tooltip
+    :arrow="false"
+    :max-width="360"
+    bg-color="#fff"
+    :tooltip-style="{ color: 'rgba(0, 0, 0, 0.88)' }"
+    popup-class-name="custom-panel-class"
+    :popup-style="{ filter: 'drop-shadow(0 6px 14px rgba(255, 105, 0, 0.45))' }"
+    :z-index="1200"
+  >
+    <template #tooltip>
+      <p style="text-align: center">定位面板</p>
+      橙色虚线是定位面板（popupClassName），投影来自 popupStyle，层级由 zIndex 指定
+    </template>
+    <Button type="primary">Panel Class / zIndex</Button>
   </Tooltip>
 </Space>
 
@@ -108,6 +134,11 @@ function openChange(open: boolean) {
     font-weight: 600;
   }
 }
+/* 定位面板的类名入口：经公开的 popupClassName 下发（关闭箭头后面板与卡片等大，虚线即面板边界） */
+.custom-panel-class {
+  border-radius: 8px;
+  outline: 1px dashed #ff6900;
+}
 </style>
 
 ::: details Show Code
@@ -117,10 +148,10 @@ function openChange(open: boolean) {
   <Space gap="large">
     <Tooltip :max-width="360" bg-color="#fff" tooltip-class="custom-class">
       <template #tooltip>
-        <p style="text-align: center">Batman VS Superman</p>
-        电影讲述了超人帮助人类解决了很多问题，成为了人类的神，却引起了莱克斯·卢瑟的嫉妒，从而挑拨蝙蝠侠与超人之间战斗的故事
+        <p style="text-align: center">卡片类名</p>
+        通过 tooltipClass 定制气泡卡片的字号、颜色与内边距
       </template>
-      <Button type="primary">蝙蝠侠大战超人</Button>
+      <Button type="primary">Card Class</Button>
     </Tooltip>
     <Tooltip
       :max-width="360"
@@ -133,10 +164,25 @@ function openChange(open: boolean) {
       }"
     >
       <template #tooltip>
-        <h3 style="font-weight: bold; text-align: center; margin: 0 0 8px;">Godzilla VS Kong</h3>
-        电影讲述帝王组织在地心世界找到巨兽起源的线索，与此同时传说中的王者哥斯拉和金刚的对决也将展开的故事
+        <p style="text-align: center">卡片样式</p>
+        通过 tooltipStyle 定制气泡卡片的样式
       </template>
-      <Button type="primary">哥斯拉大战金刚</Button>
+      <Button type="primary">Card Style</Button>
+    </Tooltip>
+    <Tooltip
+      :arrow="false"
+      :max-width="360"
+      bg-color="#fff"
+      :tooltip-style="{ color: 'rgba(0, 0, 0, 0.88)' }"
+      popup-class-name="custom-panel-class"
+      :popup-style="{ filter: 'drop-shadow(0 6px 14px rgba(255, 105, 0, 0.45))' }"
+      :z-index="1200"
+    >
+      <template #tooltip>
+        <p style="text-align: center">定位面板</p>
+        橙色虚线是定位面板（popupClassName），投影来自 popupStyle，层级由 zIndex 指定
+      </template>
+      <Button type="primary">Panel Class / zIndex</Button>
     </Tooltip>
   </Space>
 </template>
@@ -151,6 +197,10 @@ function openChange(open: boolean) {
     font-size: 20px;
     font-weight: 600;
   }
+}
+.custom-panel-class {
+  border-radius: 8px;
+  outline: 1px dashed #ff6900;
 }
 </style>
 ```
@@ -349,13 +399,13 @@ const buttonWidth = 70
 
 <Divider orientation="left">Presets</Divider>
 <Space>
-  <Tooltip v-for="color in presetColors" :key="color" tooltip="prompt text" :bg-color="color">
+  <Tooltip v-for="color in presetColors" :key="color" tooltip="提示文字" :bg-color="color">
     <Button>{{ color }}</Button>
   </Tooltip>
 </Space>
 <Divider orientation="left">Custom</Divider>
 <Space>
-  <Tooltip v-for="color in customColors" :key="color" tooltip="prompt text" :bg-color="color">
+  <Tooltip v-for="color in customColors" :key="color" tooltip="提示文字" :bg-color="color">
     <Button>{{ color }}</Button>
   </Tooltip>
 </Space>
@@ -384,13 +434,13 @@ const customColors = ['#f50', '#2db7f5', '#87d068', '#108ee9']
 <template>
   <Divider orientation="left">Presets</Divider>
   <Space>
-    <Tooltip v-for="color in presetColors" :key="color" tooltip="prompt text" :bg-color="color">
+    <Tooltip v-for="color in presetColors" :key="color" tooltip="提示文字" :bg-color="color">
       <Button>{{ color }}</Button>
     </Tooltip>
   </Space>
   <Divider orientation="left">Custom</Divider>
   <Space>
-    <Tooltip v-for="color in customColors" :key="color" tooltip="prompt text" :bg-color="color">
+    <Tooltip v-for="color in customColors" :key="color" tooltip="提示文字" :bg-color="color">
       <Button>{{ color }}</Button>
     </Tooltip>
   </Space>
@@ -607,8 +657,8 @@ const containerRef = ref<HTMLDivElement>()
   <Tooltip ref="tooltipRef" tooltip="Vue Amazing UI">
     <Button type="primary">Methods Tooltip</Button>
   </Tooltip>
-  <Button type="primary" @click="tooltipRef?.show()">显示</Button>
-  <Button @click="tooltipRef?.hide()">隐藏</Button>
+  <Button type="primary" @click="onShow">显示</Button>
+  <Button @click="onHide">隐藏</Button>
 </Space>
 
 ::: details Show Code
@@ -618,19 +668,103 @@ const containerRef = ref<HTMLDivElement>()
 import { ref } from 'vue'
 import { Tooltip } from 'vue-amazing-ui'
 const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null)
+function onShow() {
+  tooltipRef.value?.show()
+}
+function onHide() {
+  tooltipRef.value?.hide()
+}
 </script>
 <template>
   <Space>
     <Tooltip ref="tooltipRef" tooltip="Vue Amazing UI">
       <Button type="primary">Methods Tooltip</Button>
     </Tooltip>
-    <Button type="primary" @click="tooltipRef?.show()">显示</Button>
-    <Button @click="tooltipRef?.hide()">隐藏</Button>
+    <Button type="primary" @click="onShow">显示</Button>
+    <Button @click="onHide">隐藏</Button>
   </Space>
 </template>
 ```
 
 :::
+
+## 受控显示
+
+*使用 `show` 属性控制浮层的显示与隐藏*
+
+<br/>
+
+<Space>
+  <Tooltip v-model:show="controlledShow" tooltip="Vue Amazing UI">
+    <Button>Controlled: {{ controlledShow }}</Button>
+  </Tooltip>
+  <Button type="primary" @click="controlledShow = !controlledShow">Toggle Show</Button>
+</Space>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Tooltip } from 'vue-amazing-ui'
+const controlledShow = ref<boolean>(false)
+</script>
+<template>
+  <Space>
+    <Tooltip v-model:show="controlledShow" tooltip="Vue Amazing UI">
+      <Button>Controlled: {{ controlledShow }}</Button>
+    </Tooltip>
+    <Button type="primary" @click="controlledShow = !controlledShow">Toggle Show</Button>
+  </Space>
+</template>
+```
+
+::::
+
+## 隐藏后卸载
+
+*设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再次显示时重新创建并定位；默认 `false`（元素常驻，仅切换显示）。基于 `Tooltip` 的 `Popover` / `Popconfirm` 同样支持*
+
+<br/>
+
+<Space wrap>
+  <Tooltip tooltip="Vue Amazing UI" destroy-on-hide>
+    <Button type="primary">Hover (destroyOnHide)</Button>
+  </Tooltip>
+  <Tooltip tooltip="Vue Amazing UI">
+    <Button>Hover (default)</Button>
+  </Tooltip>
+  <Tooltip v-model:show="destroyShow" tooltip="Vue Amazing UI" trigger="click" destroy-on-hide>
+    <Button type="primary">Click: {{ destroyShow }}</Button>
+  </Tooltip>
+  <Button @click="destroyShow = !destroyShow">Toggle Show</Button>
+</Space>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Tooltip } from 'vue-amazing-ui'
+const destroyShow = ref(false)
+</script>
+<template>
+  <Space wrap>
+    <Tooltip tooltip="Vue Amazing UI" destroy-on-hide>
+      <Button type="primary">Hover (destroyOnHide)</Button>
+    </Tooltip>
+    <Tooltip tooltip="Vue Amazing UI">
+      <Button>Hover (default)</Button>
+    </Tooltip>
+    <Tooltip v-model:show="destroyShow" tooltip="Vue Amazing UI" trigger="click" destroy-on-hide>
+      <Button type="primary">Click: {{ destroyShow }}</Button>
+    </Tooltip>
+    <Button @click="destroyShow = !destroyShow">Toggle Show</Button>
+  </Space>
+</template>
+```
+
+::::
 
 ## 隐藏箭头
 
@@ -663,6 +797,9 @@ const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null)
 | tooltip | 文字提示内容 | string | undefined |
 | tooltipClass | 设置文字提示的类名 | string | undefined |
 | tooltipStyle | 设置文字提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| popupClassName | 设置浮层面板（定位盒）的类名，用于自定义面板层样式 | string | undefined |
+| popupStyle | 设置浮层面板（定位盒）的样式，在皮肤变量与动画原点之后合并，可覆盖定位 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| zIndex | 浮层层级，优先级最高（覆盖默认层级与 `ConfigProvider` 的 `baseZIndex` 自动分配） | number | undefined |
 | bgColor | 文字提示框背景颜色，支持预设色 (`pink` &#124; `red` &#124; `yellow` &#124; `orange` &#124; `cyan` &#124; `green` &#124; `blue` &#124; `purple` &#124; `geekblue` &#124; `magenta` &#124; `volcano` &#124; `gold` &#124; `lime`) 或自定义色值 (如 `#f50` / `rgba`) | string | 'rgba(0, 0, 0, 0.85)' |
 | arrow | 是否显示箭头 | boolean | true |
 | arrowPointAtCenter | 箭头是否指向目标元素中心，仅当 `placement` 为复合方向 (如 `topLeft`) 时生效 | boolean | false |
@@ -671,7 +808,8 @@ const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null)
 | trigger | 文字提示触发方式 | 'hover' &#124; 'click' &#124; 'focus' &#124; 'contextmenu' | 'hover' |
 | keyboard | 是否支持按键操作 (`enter` 切换显示；`esc` 关闭)，仅当 `trigger: 'click'` 时生效 | boolean | false |
 | disabled | 是否禁用文字提示，禁用后不响应任何触发 | boolean | false |
-| to | 弹出框挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，`false` 会待在原地 | string &#124; HTMLElement &#124; false | 'body' |
+| to | 弹出框挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 'body') 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
+| destroyOnHide | 隐藏后是否卸载弹出框 `DOM`：离开动画结束后卸载整棵浮层子树，再次显示时重新创建并重新定位（适合浮层内容较重、实例较多的场景） | boolean | false |
 | transitionDuration | 文字提示动画的过渡持续时间，单位 `ms` | number | 100 |
 | showDelay | 文字提示显示的延迟时间，单位 `ms`，仅当 `trigger: hover` 时生效 | number | 100 |
 | hideDelay | 文字提示隐藏的延迟时间，单位 `ms`，仅当 `trigger: hover` 时生效 | number | 100 |

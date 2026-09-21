@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import type { VNode } from 'vue'
-import { useEventListener } from 'components/utils'
+import { useWindowWidth } from 'components/utils'
 export interface Responsive {
   xs?: number // <576px 响应式栅格
   sm?: number // ≥576px 响应式栅格
@@ -36,8 +36,7 @@ const alignProperties = {
   bottom: 'flex-end',
   stretch: 'stretch'
 }
-// SSR（Node）环境无 window，取 0；浏览器端初始值与原来一致
-const viewportWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 0)
+const viewportWidth = useWindowWidth() // 视口宽度，用于按断点切换 gutter
 const xGap = computed(() => {
   if (typeof props.gutter === 'number') {
     return props.gutter
@@ -68,13 +67,6 @@ const rowWidth = computed(() => {
   }
   return props.width
 })
-// 实参 window 在 setup 期求值，SSR（Node）下必须先判断存在性再调用
-if (typeof window !== 'undefined') {
-  useEventListener(window, 'resize', getViewportWidth)
-}
-function getViewportWidth() {
-  viewportWidth.value = window.innerWidth
-}
 function getResponsiveGap(gutter: Responsive) {
   if (viewportWidth.value >= 1600 && gutter.xxl !== undefined) {
     return gutter.xxl

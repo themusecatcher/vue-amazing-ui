@@ -344,7 +344,7 @@ const timelineItems = ref<TimelineItem[]>([
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-items | 时间轴内容数组 | [Item](#item-type)[] | []
+items | 时间轴内容数组 | [TimelineItem](#item-type)[] | []
 width | 时间轴区域总宽度，单位 `px` | number &#124; string | '100%'
 lineStyle | 时间线样式 | 'solid' &#124; 'dashed' &#124; 'dotted' | 'solid'
 mode | 通过设置 `mode` 可以改变时间轴和内容的相对位置 | 'left' &#124; 'center' &#124; 'right' | 'left'

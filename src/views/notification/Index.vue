@@ -1,13 +1,22 @@
 <script setup lang="ts">
 import { h, onBeforeUnmount, onMounted, ref } from 'vue'
 import { CloudFilled, FireFilled, SoundFilled, ExclamationCircleFilled } from '@ant-design/icons-vue'
-import { Button, createDiscreteApi, NotificationProvider, useMessage, useNotification } from 'vue-amazing-ui'
+import {
+  Button,
+  Select,
+  Tooltip,
+  createDiscreteApi,
+  NotificationProvider,
+  useMessage,
+  useNotification
+} from 'vue-amazing-ui'
 import type {
   DiscreteApiInstance,
   NotificationApi,
   NotificationOptions,
   NotificationReactive,
-  NotificationUpdate
+  NotificationUpdate,
+  SelectOption
 } from 'vue-amazing-ui'
 // setup 内调用 useNotification()：需外层存在 <NotificationProvider>（本项目已在 App.vue 入口全局包裹）
 const notification = useNotification()
@@ -134,6 +143,33 @@ function onRenderFnContent() {
   notification.info({
     title: () => h('span', { style: 'color: #d4380d; font-weight: 600' }, '渲染函数标题'),
     content: () => h('span', { style: 'color: #389e0d' }, '这是一条渲染函数动态生成的内容')
+  })
+}
+// 与浮层叠加：通知默认层级 1040（高于承载层 Modal 弹窗 1010，低于 Select 面板 1050 / Tooltip 1070），
+// 因此通知内容里的下拉面板与气泡不会被通知框压住
+const layerValue = ref<number>(1)
+const layerOptions: SelectOption[] = [
+  { label: '北京市', value: 1 },
+  { label: '上海市', value: 2 },
+  { label: '纽约市', value: 3 }
+]
+function onLayerNotification() {
+  notification.info({
+    title: '与浮层叠加',
+    content: () =>
+      h('span', { style: 'display: inline-flex; align-items: center; gap: 8px' }, [
+        h('span', '通知内容里的浮层：'),
+        h(Select, {
+          options: layerOptions,
+          modelValue: layerValue.value,
+          'onUpdate:modelValue': (value: number) => {
+            layerValue.value = value
+          },
+          width: 140
+        }),
+        h(Tooltip, { tooltip: 'Vue Amazing UI' }, { default: () => h(Button, null, () => 'Hover me') })
+      ]),
+    duration: null
   })
 }
 // 自定义按钮：点击 Confirm 关闭当前通知
@@ -424,6 +460,13 @@ function onToNotification() {
       <Button type="primary" @click="onVNodeContent">VNode 内容</Button>
       <Button type="primary" @click="onRenderFnContent">渲染函数内容</Button>
     </Space>
+    <h2 class="mt30 mb10">与浮层叠加</h2>
+    <p class="mb10">
+      通知的默认层级为 <code>1040</code>：高于承载层（<code>Modal</code> 弹窗 <code>1010</code>），低于锚点跟随型浮层
+      （<code>Select</code> 面板 <code>1050</code> / <code>Tooltip</code>
+      <code>1070</code>），因此通知内容里的下拉面板与气泡不会被通知框压住
+    </p>
+    <Button type="primary" @click="onLayerNotification">通知内容里的浮层</Button>
     <h2 class="mt30 mb10">自定义操作按钮</h2>
     <Button type="primary" @click="onAction">显示通知</Button>
     <h2 class="mt30 mb10">点击通知</h2>

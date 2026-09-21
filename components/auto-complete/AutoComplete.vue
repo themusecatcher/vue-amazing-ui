@@ -1,8 +1,17 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch, onMounted } from 'vue'
-import type { CSSProperties, VNode } from 'vue'
+import { ref, computed, watchEffect, watch, onMounted, inject } from 'vue'
+import type { CSSProperties, VNode, Ref } from 'vue'
 import Scrollbar from 'components/scrollbar'
-import { useInject, useScrollParent, useFloatingPosition, useSlotsExist } from 'components/utils'
+import {
+  raiseFloatingOrder,
+  useFloating,
+  useFloatingTeleportTarget,
+  useInject,
+  useSlotsExist,
+  useZIndex,
+  Z_INDEX_CONTAINER_OPEN_KEY,
+  FLOATING_LAYER_Z_INDEX
+} from 'components/utils'
 export interface Option {
   disabled?: boolean // 是否禁用
   value: string | number // 唯一的 value 值
@@ -27,11 +36,12 @@ export interface Props {
   open?: boolean // 是否展开下拉菜单（受控）
   placeholder?: string // 默认占位文本
   popupClassName?: string // 下拉菜单的 className 属性
+  zIndex?: number // 下拉面板层级，优先级最高（未传时使用默认层级或 ConfigProvider 的 baseZIndex 分配）
   dropdownMatchSelectWidth?: boolean | number // 下拉菜单和选择器同宽，为数字时指定下拉菜单宽度
   dropdownMenuStyle?: CSSProperties // 下拉菜单自定义样式
   to?: string | HTMLElement | false // 下拉面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   options?: (string | number | Option | GroupOption)[] // 自动完成的数据源
-  value: string // (v-model) 当前输入的值
+  value?: string // (v-model) 当前输入的值，未受控时按空串处理
   width?: string | number // 自动完成宽度，单位 px
   size?: 'small' | 'middle' | 'large' // 自动完成大小
   status?: 'error' | 'warning' // 设置校验状态
@@ -61,9 +71,10 @@ const props = withDefaults(defineProps<Props>(), {
   open: undefined,
   placeholder: undefined,
   popupClassName: undefined,
+  zIndex: undefined,
   dropdownMatchSelectWidth: true,
   dropdownMenuStyle: undefined,
-  to: 'body',
+  to: undefined,
   options: () => [],
   value: undefined,
   width: '100%',
@@ -87,22 +98,30 @@ const emit = defineEmits([
 const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const inputRef = ref<HTMLInputElement | null>(null) // input 元素引用
 const customInputRef = ref<HTMLElement | null>(null) // 自定义输入组件容器引用
-const disabledBlur = ref<boolean>(false) // 是否禁用 input 标签的 blur 事件
 const isComposing = ref<boolean>(false) // 是否处于输入法(IME)合成中，合成期间不触发 search/filter
 const hoverValue = ref<string | number | null>(null) // 鼠标悬浮项的 value 值
 const lastUserValue = ref<string>('') // 用户原始输入（backfill 时键盘 Esc 还原用，与 onInput 同步更新）
 const showOptions = ref<boolean>(false) // 显示隐藏下拉面板
 const focused = ref<boolean>(false) // 自动完成是否聚焦
 const { colorPalettes, shadowColor } = useInject('AutoComplete') // 主题色注入
-const panelOffset = ref<number>(0) // 下拉面板相对于内容的垂直偏移距离
-const panelPlace = ref<'bottom' | 'top'>('bottom') // 下拉面板垂直位置
-const panelAlign = ref<'left' | 'right' | 'viewport-left'>('left') // 下拉面板水平对齐方向：右侧空间不足时右对齐，超宽时贴视口左边缘
 const contentRef = ref<HTMLElement | null>(null) // 内容模板引用
 const panelRef = ref<HTMLElement | null>(null) // 下拉面板模板引用
-const panelHeight = ref<number>() // 下拉面板的高度
-const panelWidth = ref<number>() // 下拉面板的宽度
-// 测量定位容器与内容元素矩形
-const { positionedContainerRect, contentRect, measure } = useFloatingPosition(contentRef, panelRef)
+const panelWrapperRef = ref<HTMLElement | null>(null) // 定位参照容器：面板 top / left 的坐标原点
+// 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配；未传则沿用默认层级 1050
+// （下拉面板需高于承载它的 Modal / Drawer / Dialog，故取 popupBase + 50）
+// 领取时机由面板「出现」驱动（allocateOnMount: false）：面板首帧才渲染，挂载时不持有槽位，
+// 否则未展开过的下拉会长期占位、抬高后续分配点
+const {
+  zIndex: layerZIndex,
+  allocate: allocateZIndex,
+  release: releaseZIndex
+} = useZIndex(FLOATING_LAYER_Z_INDEX.select, undefined, { allocateOnMount: false })
+// 挂载点：显式 to 优先，否则就近取承载层内容容器（Modal / Drawer / Dialog / 外层 Popup 面板），
+// 都没有则回落 body（见 utils/floating-mount.ts）
+const resolvedTo = useFloatingTeleportTarget(
+  () => contentRef.value,
+  () => props.to
+)
 // 清除图标显隐：开启 allowClear、未禁用且有值时显示（与 Input 组件保持一致，有值即显示，不依赖 hover）
 const showClear = computed<boolean>(() => {
   return props.allowClear && !props.disabled && Boolean(props.value)
@@ -152,14 +171,15 @@ function isDisabled(item: string | number | Option): boolean | undefined {
   }
   return item.disabled
 }
-// 选项过滤是否匹配
+// 选项过滤是否匹配（value 可选，未受控时按空串参与匹配，与「空输入不过滤」的行为一致）
 function matchOption(item: string | number | Option): boolean {
   const label = getLabel(item)
+  const inputValue = props.value ?? ''
   if (typeof props.filterOption === 'function') {
     const option = typeof item === 'object' ? item : { value: getValue(item), label }
-    return Boolean(props.filterOption(props.value, option))
+    return Boolean(props.filterOption(inputValue, option))
   }
-  return label.includes(props.value)
+  return label.includes(inputValue)
 }
 // #option 插槽参数，字符串/数字包装为 Option 结构，对象透传原始数据（保留自定义字段）
 function childSlotProps(item: string | number | Option): Option {
@@ -214,74 +234,91 @@ watch(
   },
   { immediate: true }
 )
-const panelPlacement = computed(() => {
-  const contentTop = (contentRect.value as DOMRect)?.top ?? 0
-  const containerTop = (positionedContainerRect.value as DOMRect)?.top ?? 0
-  const offsetTop = contentTop - containerTop
-  const contentBottom = (contentRect.value as DOMRect)?.bottom ?? 0
-  const containerBottom = (positionedContainerRect.value as DOMRect)?.bottom ?? 0
-  const offsetBottom = containerBottom - contentBottom
-  const contentLeft = (contentRect.value as DOMRect)?.left ?? 0
-  const containerLeft = (positionedContainerRect.value as DOMRect)?.left ?? 0
-  const offsetLeft = contentLeft - containerLeft
-  const contentRight = (contentRect.value as DOMRect)?.right ?? 0
-  const containerRight = (positionedContainerRect.value as DOMRect)?.right ?? 0
-  const offsetRight = containerRight - contentRight
-  // 贴视口左边缘时的水平偏移：使面板左边缘落在视口 x=0 处（相对定位容器左边缘换算）
-  const offsetViewportLeft = -containerLeft
-  const contentWidth = (contentRect.value as DOMRect)?.width ?? 0
-  // dropdownMatchSelectWidth：true 面板与内容同宽（min-width）；number 指定面板宽度；false 面板宽度自适应内容（min-width 兜底）
-  const widthStyle: CSSProperties =
-    typeof props.dropdownMatchSelectWidth === 'number'
-      ? { width: `${props.dropdownMatchSelectWidth}px`, minWidth: `${contentWidth}px` }
-      : { minWidth: `${contentWidth}px`, width: props.dropdownMatchSelectWidth ? `${contentWidth}px` : 'auto' }
-  // 水平定位：right 右对齐（面板右边缘对齐内容右边缘）；viewport-left 贴视口左边缘；否则默认左对齐（面板左边缘对齐内容左边缘）
-  let horizontalStyle: CSSProperties
-  if (panelAlign.value === 'right') {
-    horizontalStyle = { right: `${offsetRight}px` }
-  } else if (panelAlign.value === 'viewport-left') {
-    horizontalStyle = { left: `${offsetViewportLeft}px` }
-  } else {
-    horizontalStyle = { left: `${offsetLeft}px` }
+// 面板与内容（触发器）的尺寸关系：true 等宽、false 仅最小等宽、number 指定面板宽度（最小宽仍为触发器宽）
+const matchTriggerWidth = computed<'width' | 'minWidth' | number>(() => {
+  if (typeof props.dropdownMatchSelectWidth === 'number') {
+    return props.dropdownMatchSelectWidth
   }
-  // transformOrigin 水平锚点跟随对齐方向：右对齐时锚点在右侧，其余在左侧
-  const originX = panelAlign.value === 'right' ? '100%' : '0'
-  switch (panelPlace.value) {
-    case 'top':
-      return {
-        transformOrigin: `${originX} 100%`,
-        bottom: `${offsetBottom + panelOffset.value}px`,
-        ...horizontalStyle,
-        ...widthStyle
-      }
-    case 'bottom':
-    default:
-      return {
-        transformOrigin: `${originX} 0`,
-        top: `${offsetTop + panelOffset.value}px`,
-        ...horizontalStyle,
-        ...widthStyle
-      }
-  }
+  return props.dropdownMatchSelectWidth ? 'width' : 'minWidth'
 })
+// 定位内核：只做「算 + 输出 + 同步」，本组件不再自研翻转与 3 态水平对齐。
+// 期望方向取 bottomLeft（左对齐）：次轴溢出时的对齐自适应与边界位移由内核的次轴处理（shift）承担，
+// 故组件侧不再保留独立的水平对齐判定
+const { panelStyle, transformOrigin } = useFloating(panelRef, {
+  anchor: () => contentRef.value,
+  offsetContainer: panelWrapperRef,
+  placement: 'bottomLeft',
+  flip: true, // 始终按空间翻转（无开关，翻到对侧以保证面板完整可见）
+  shift: true, // 次轴溢出时做对齐自适应与微调
+  offset: 4, // 主轴间距：面板紧贴锚点外 4px
+  boundary: 'scrollParent', // 复用 getFloatingBoundaryRect 口径：仅当浮层真被滚动容器裁剪时才以容器为界
+  matchTriggerWidth: () => matchTriggerWidth.value,
+  enabled: () => panelVisible.value
+})
+// 面板层级：显式 zIndex 优先于自动分配 / 默认层级（与乙类组件的 zIndex prop 同一优先级契约）
+const autoCompletePanelZIndex = computed(() => props.zIndex ?? layerZIndex.value)
+// 面板内联样式：内核输出（定位 + 动画原点）+ 使用者自定义样式 + 层级 + 主题变量
+// 合并顺序：自定义样式可覆盖定位，但层级与主题变量始终由组件接管
+const autoCompletePanelStyle = computed<CSSProperties>(() => ({
+  ...panelStyle.value,
+  transformOrigin: transformOrigin.value,
+  ...props.dropdownMenuStyle,
+  zIndex: autoCompletePanelZIndex.value,
+  '--auto-complete-option-bg-color-active': colorPalettes.value[0]
+}))
 watch(showOptions, (to) => {
-  if (to && !initialDisplay.value) {
+  if (!to) return
+  // 首次展开：容器由 Teleport 追加到目标末尾（天然在末尾），此处无需处理
+  if (!initialDisplay.value) {
     initialDisplay.value = true
+    return
+  }
+  // 再次展开：把容器移到目标末尾 —— 无分配器时同层级浮层的上下关系由 DOM 顺序决定，
+  // 移动后顺序即「最近一次打开的顺序」（就地渲染时容器在组件自身 DOM 内，不能移动）
+  if (resolvedTo.value !== false) {
+    raiseFloatingOrder(panelWrapperRef.value)
   }
 })
+// 每次「出现」重新领取层级（与 Popup / Modal / Drawer 同一语义）：面板关闭后不卸载（仅 v-show），
+// 若只在挂载时领取一次，则被承载它的 Modal / Drawer 等「重新出现并置顶」后，二次打开的下拉会落到遮罩之下。
+// 关闭时归还槽位（面板元素保留、内联层级不变）：否则「弹窗 ↔ 下拉」交替出现时两者会互相抬升，层级随开合次数持续增长
+watch(panelVisible, (visible) => {
+  if (visible) {
+    allocateZIndex()
+  } else {
+    releaseZIndex()
+  }
+})
+// 承载层（Modal / Drawer / Dialog）关闭时收起面板并归位聚焦态：容器不卸载内容，本面板也不会随容器消失 ——
+// ① 面板：停留在打开态会让它占着层级槽位，被「后出现者在上」重新打开的容器反超（落到遮罩之下），
+//    同时无谓抬高后续分配点（详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）
+// ② 聚焦态：容器关闭不派发 blur（focusTriggerAfterClose 归还焦点时也未必落到本 input 上），
+//    故须在此显式归位，否则容器重开时 `.auto-complete-focused` 的描边与阴影仍在
+const containerOpen = inject(Z_INDEX_CONTAINER_OPEN_KEY, null) as Ref<boolean> | null
+if (containerOpen) {
+  watch(containerOpen, (open) => {
+    if (!open) {
+      setPanelOpen(false)
+      focused.value = false
+      hoverValue.value = null
+    }
+  })
+}
 watch(showOptions, (to) => {
-  emit('openChange', to)
-  emit('dropdownVisibleChange', to)
+  // 非受控模式下由内部状态变化上报开合事件；
+  // 受控模式的事件由 setPanelOpen 在「用户请求变更」时派发（见下），此处必须跳过 ——
+  // 否则外部改 open 驱动 showOptions 变化也会被回传成一次多余事件，事件方向就反了
+  if (props.open === undefined) {
+    emitPanelChange(to)
+  }
 })
 // 受控 open：外部传入 open 时，同步到内部面板显隐
 watch(
   () => props.open,
   (val) => {
     if (typeof val === 'boolean') {
+      // 面板定位由定位内核在面板可见时自动执行（enabled 驱动），无需显式重算
       showOptions.value = val
-      if (val) {
-        getPosition()
-      }
     }
   },
   { immediate: true }
@@ -295,21 +332,15 @@ watchEffect(() => {
   const firstEnabled = flattenOptions.value.find((option) => !option.disabled)
   hoverValue.value = firstEnabled ? firstEnabled.value : null
 })
-// 重置 hover 高亮：优先定位到当前选中值对应的选项，否则回退到默认高亮首项逻辑
-function resetHoverValue(): void {
-  const selected = flattenOptions.value.find((option) => !option.disabled && String(option.value) === props.value)
-  if (selected) {
-    hoverValue.value = selected.value
-  } else if (props.defaultActiveFirstOption) {
-    const firstEnabled = flattenOptions.value.find((option) => !option.disabled)
-    hoverValue.value = firstEnabled ? firstEnabled.value : null
-  } else {
-    hoverValue.value = null
+// 打开面板时把悬浮态复位到「当前输入值对应的选项」
+// 输入框无值、或值查不到对应项时**保持关闭前的悬浮项不动**（不回落首项）：否则「输入框为空 → 悬浮某项 → 关闭 → 重开」会丢失上次的悬浮项。
+// 首个可用项的兜底高亮由上方 watchEffect 负责，它只在选项列表变化（含搜索过滤）时触发，与面板开合无关
+watch(showOptions, (to) => {
+  if (!to) return
+  const matched = flattenOptions.value.find((option) => !option.disabled && String(option.value) === props.value)
+  if (matched) {
+    hoverValue.value = matched.value
   }
-}
-// 面板打开或关闭时都重置 hover：关闭时重置确保下次打开定位正确，打开时重置兜底面板未真正关闭的场景
-watch(showOptions, () => {
-  resetHoverValue()
 })
 watchEffect(() => {
   if (focused.value && props.open === undefined) {
@@ -333,107 +364,31 @@ onMounted(() => {
     openPanel()
   }
 })
-// 查询并监听最近可滚动父元素，响应视口 resize
-const { scrollTarget, viewportWidth, viewportHeight } = useScrollParent(contentRef, updatePosition)
-// 更新下拉面板位置
-function updatePosition() {
-  showOptions.value && getPosition()
+// 滚动跟随 / 视口 resize / 字体就绪的重对齐由定位内核统一承担（遍历锚点全链滚动祖先 + 帧合并）
+// 面板开合状态变更 / 用户开合请求的统一上报：
+// open 为纯受控属性（显隐由外部驱动），
+// 组件只通过 openChange / dropdownVisibleChange 通知可见性变更，不做 v-model:open 双向绑定
+function emitPanelChange(open: boolean): void {
+  emit('openChange', open)
+  emit('dropdownVisibleChange', open)
 }
-// 计算下拉面板位置
-async function getPosition() {
-  await measure()
-  panelHeight.value = panelRef.value?.offsetHeight
-  panelWidth.value = panelRef.value?.offsetWidth
-  panelOffset.value = (contentRect.value as DOMRect).height + 4
-  panelPlace.value = getPlacement()
-  panelAlign.value = getAlign()
-}
-// 获取可滚动父元素或视口的矩形信息：仅当可滚动父元素真正裁剪面板 (即面板挂载在该容器内) 时，才以其为界，否则以视口为界
-// 修复：面板 Teleport 到 body/具名容器时不受中间滚动容器 overflow 裁剪，flip 边界应为视口，避免空间充足却意外翻转
-function getShelterRect() {
-  const clipByScrollTarget =
-    scrollTarget.value && scrollTarget.value !== document.documentElement && scrollTarget.value.contains(panelRef.value)
-  if (scrollTarget.value && clipByScrollTarget) {
-    const scrollTargetRect = scrollTarget.value.getBoundingClientRect()
-    return {
-      top: scrollTargetRect.top < 0 ? 0 : scrollTargetRect.top,
-      bottom: scrollTargetRect.bottom > viewportHeight.value ? viewportHeight.value : scrollTargetRect.bottom
-    }
-  }
-  return {
-    top: 0,
-    bottom: viewportHeight.value
-  }
-}
-// 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
-function getPlacement(): 'bottom' | 'top' {
-  const { top, bottom } = contentRect.value as DOMRect // 内容元素各边缘相对于浏览器视口的位置(不包括滚动条)
-  const { top: targetTop, bottom: targetBottom } = getShelterRect() // 滚动元素或视口各边缘相对于浏览器视口的位置(不包括滚动条)
-  const topDistance = top - targetTop // 内容元素上边缘距离滚动元素上边缘的距离
-  const bottomDistance = targetBottom - bottom // 内容元素下边缘距离动元素下边缘的距离
-  return findPlace('bottom', [])
-  // 查询满足条件的 place，如果没有，则返回默认值
-  function findPlace(place: string, disabledPlaces: string[]): 'bottom' | 'top' {
-    if (place === 'bottom') {
-      if (!disabledPlaces.includes('bottom')) {
-        if (bottomDistance < (panelHeight.value as number) + 4) {
-          return findPlace('top', [...disabledPlaces, 'bottom'])
-        } else {
-          return 'bottom'
-        }
-      } else {
-        if (!disabledPlaces.includes('top')) {
-          return findPlace('top', disabledPlaces)
-        }
-      }
-    } else if (place === 'top') {
-      if (!disabledPlaces.includes('top')) {
-        if (topDistance < (panelHeight.value as number) + 4) {
-          return findPlace('bottom', [...disabledPlaces, 'top'])
-        } else {
-          return 'top'
-        }
-      } else {
-        if (!disabledPlaces.includes('bottom')) {
-          return findPlace('bottom', disabledPlaces)
-        }
-      }
-    }
-    return 'bottom'
-  }
-}
-// 下拉面板水平方向被视口遮挡时自动调整对齐方式（基于实际遮挡检测，而非单纯宽度对比）
-// left：默认左对齐（面板左边缘对齐内容左边缘），左对齐不溢出视口右侧时采用
-// right：左对齐会溢出视口右侧、但右对齐不溢出视口左侧时采用（面板右边缘对齐内容右边缘）
-// viewport-left：左右对齐均会溢出视口时，贴视口左边缘兜底，保证从左侧可见内容
-function getAlign(): 'left' | 'right' | 'viewport-left' {
-  const { left, right } = contentRect.value as DOMRect // 内容元素左右边缘相对于视口的位置
-  const width = panelWidth.value ?? 0 // 面板实际宽度
-  // 左对齐：面板左边缘 = 内容左边缘 left，右边缘 = left + width，超过视口右边缘则遮挡
-  const leftAlignOverflow = left + width > viewportWidth.value
-  // 右对齐：面板右边缘 = 内容右边缘 right，左边缘 = right - width，小于 0 则遮挡视口左侧
-  const rightAlignOverflow = right - width < 0
-  // 左对齐不遮挡，直接左对齐
-  if (!leftAlignOverflow) {
-    return 'left'
-  }
-  // 左对齐遮挡但右对齐不遮挡，切换为右对齐
-  if (!rightAlignOverflow) {
-    return 'right'
-  }
-  // 左右对齐都遮挡，贴视口左边缘兜底
-  return 'viewport-left'
-}
-// 统一控制面板显隐：受控 open 模式下不直接修改内部状态，仅由外部 open 驱动（openChange/dropdownVisibleChange 已在 watch 中 emit）
+// 统一控制面板显隐：
+// - 非受控：直接改内部状态，事件由 watch(showOptions) 上报
+// - 受控：不直接改内部状态（实际显隐由外部 open 驱动），但必须把用户的「开合请求」上报出去 ——
+//   若受控时直接 return，用户交互（聚焦 / 点击 / 输入）既打不开面板也不派发任何事件，
+//   而 openChange / dropdownVisibleChange 只在 props 变化时回传，与文档「通过 open 控制面板显隐，
+//   配合 dropdownVisibleChange 事件使用」的用法完全相反；与目标值相同的请求不再重复上报，避免噪声
 function setPanelOpen(open: boolean): void {
   if (props.open === undefined) {
     showOptions.value = open
+  } else if (props.open !== open) {
+    emitPanelChange(open)
   }
 }
 function openPanel(): void {
   if (!props.disabled) {
+    // 面板定位由定位内核在面板可见时自动执行（enabled 驱动），无需显式重算
     setPanelOpen(true)
-    getPosition()
   }
 }
 function onInput(e: Event): void {
@@ -476,11 +431,18 @@ function onBlur(): void {
 function onClick(): void {
   openPanel()
 }
-function onEnter(): void {
-  disabledBlur.value = true
-}
-function onLeave(): void {
-  disabledBlur.value = false
+/**
+ * 触发器 mousedown：阻止输入框以外的区域抢走焦点
+ *
+ * 点击触发器上的非可聚焦部分（清除图标、自定义输入插槽的空白区）会让 input 失焦 → blur 关闭面板。
+ * 仅当事件目标是输入框本身（含自定义输入插槽内的 input / textarea）时放行，
+ * 以保留浏览器原生的聚焦与光标定位。
+ */
+function onMousedown(e: MouseEvent): void {
+  if (e.target === inputRef.value || e.target === getCustomInputEl()) {
+    return
+  }
+  e.preventDefault()
 }
 // 键盘导航：↑↓ 移动高亮（backfill 时回填到输入框），Enter 选中，Esc 还原为用户原始输入
 function onKeydown(e: KeyboardEvent): void {
@@ -540,7 +502,6 @@ function onKeydown(e: KeyboardEvent): void {
   }
 }
 function onHover(value: string | number, disabled: boolean | undefined): void {
-  disabledBlur.value = Boolean(disabled)
   hoverValue.value = value
   // backfill：hover 高亮选项时把选中项 value 回填到输入框（不触发 search）
   if (props.backfill && !disabled) {
@@ -627,8 +588,9 @@ defineExpose({
       --auto-complete-primary-color-focus: ${colorPalettes[4]};
       --auto-complete-primary-shadow-color: ${shadowColor};
     `"
+    @mousedown="onMousedown"
   >
-    <div ref="contentRef" class="auto-complete-content" @mouseenter="onEnter" @mouseleave="onLeave">
+    <div ref="contentRef" class="auto-complete-content">
       <div
         v-if="slotsExist.default"
         ref="customInputRef"
@@ -637,7 +599,7 @@ defineExpose({
         @compositionstart="onCompositionStart"
         @compositionend="onCompositionEnd"
         @focusin="!disabled ? onFocus() : () => false"
-        @focusout="!disabledBlur && !disabled ? onBlur() : () => false"
+        @focusout="!disabled ? onBlur() : () => false"
         @keydown="onKeydown"
         @click="onClick"
       >
@@ -656,7 +618,7 @@ defineExpose({
         @compositionstart="onCompositionStart"
         @compositionend="onCompositionEnd"
         @keydown="onKeydown"
-        @blur="!disabledBlur && !disabled ? onBlur() : () => false"
+        @blur="!disabled ? onBlur() : () => false"
         @focus="!disabled ? onFocus() : () => false"
         @click="onClick"
       />
@@ -682,86 +644,96 @@ defineExpose({
         ></path>
       </svg>
     </div>
-    <Teleport :disabled="to === false" :to="to === false ? null : to">
-      <Transition
-        name="slide"
-        enter-from-class="slide-enter"
-        enter-active-class="slide-enter"
-        enter-to-class="slide-enter slide-enter-active"
-        leave-from-class="slide-leave"
-        leave-active-class="slide-leave slide-leave-active"
-        leave-to-class="slide-leave slide-leave-active"
-      >
-        <div
-          v-if="initialDisplay"
-          v-show="panelVisible"
-          ref="panelRef"
-          class="auto-complete-panel"
-          :class="popupClassName"
-          :style="{
-            ...panelPlacement,
-            ...dropdownMenuStyle,
-            '--auto-complete-option-bg-color-active': colorPalettes[0]
-          }"
+    <!-- 条件放在 Teleport 上：容器按**打开顺序**追加到目标末尾，同族同层级浮层的上下关系即「后打开者在上」
+         （即「容器在可见时才 appendChild 到父节点」）；若 Teleport 常驻，顺序会退化为模板源码顺序，与打开先后无关 -->
+    <Teleport v-if="initialDisplay" :disabled="resolvedTo === false" :to="resolvedTo === false ? null : resolvedTo">
+      <!-- 两层 DOM：定位参照容器 + 面板。
+           容器的实时矩形即面板 top / left 的坐标原点，故 Teleport 与 to: false 就地渲染共用同一套求解；
+           首帧优化内化在此：首次展示前不渲染任何浮层 DOM，之后由面板上的 v-show 复用同一元素 -->
+      <div ref="panelWrapperRef" class="auto-complete-panel-wrapper">
+        <Transition
+          appear
+          name="slide"
+          enter-from-class="slide-enter"
+          enter-active-class="slide-enter"
+          enter-to-class="slide-enter slide-enter-active"
+          leave-from-class="slide-leave"
+          leave-active-class="slide-leave slide-leave-active"
+          leave-to-class="slide-leave slide-leave-active"
         >
-          <Scrollbar
-            :style="{ ...optionsStyle, '--scrollbar-rail-vertical-right': '2px 0 2px auto' }"
-            class="auto-complete-options"
-            @click.stop="inputFocus"
-            @mouseenter="disabledBlur = true"
-            @mouseleave="disabledBlur = false"
+          <div
+            v-show="panelVisible"
+            ref="panelRef"
+            class="auto-complete-panel"
+            :class="popupClassName"
+            :style="autoCompletePanelStyle"
+            @mousedown.prevent
           >
-            <template v-for="(item, index) in displayData" :key="index">
-              <template v-if="isGroup(item)">
-                <p class="auto-complete-group-title">
-                  <slot v-if="slotsExist.option" name="option" v-bind="item" />
-                  <template v-else>{{ item.label ?? item.value }}</template>
-                </p>
+            <Scrollbar
+              :style="{ ...optionsStyle, '--scrollbar-rail-vertical-right': '2px 0 2px auto' }"
+              class="auto-complete-options"
+              @click.stop="inputFocus"
+            >
+              <!-- 选项上按下鼠标时阻止默认行为：否则 mousedown 会让 input 失焦触发 blur 关闭面板，
+                   而面板在离开动画期间已整体禁用指针事件（见 .auto-complete-panel.slide-leave-active），
+                   随后的 mouseup / click 便落不到选项上 —— 表现为「真实鼠标点击选项无任何反应」 -->
+              <template v-for="(item, index) in displayData" :key="index">
+                <template v-if="isGroup(item)">
+                  <p class="auto-complete-group-title">
+                    <slot v-if="slotsExist.option" name="option" v-bind="item" />
+                    <template v-else>{{ item.label ?? item.value }}</template>
+                  </p>
+                  <p
+                    v-for="(child, childIndex) in item.options"
+                    :key="`${index}-${childIndex}`"
+                    :class="[
+                      'auto-complete-option',
+                      'option-grouped',
+                      {
+                        'option-hover': !isDisabled(child) && getValue(child) === hoverValue,
+                        'option-disabled': isDisabled(child)
+                      }
+                    ]"
+                    :title="getLabel(child)"
+                    @mouseenter="onHover(getValue(child), isDisabled(child))"
+                    @mousedown.prevent
+                    @click.stop="isDisabled(child) ? inputFocus() : onSelectOption(child)"
+                  >
+                    <slot v-if="slotsExist.option" name="option" v-bind="childSlotProps(child)" />
+                    <template v-else>{{ getLabel(child) }}</template>
+                  </p>
+                </template>
                 <p
-                  v-for="(child, childIndex) in item.options"
-                  :key="`${index}-${childIndex}`"
+                  v-else
                   :class="[
                     'auto-complete-option',
-                    'option-grouped',
                     {
-                      'option-hover': !isDisabled(child) && getValue(child) === hoverValue,
-                      'option-disabled': isDisabled(child)
+                      'option-hover': !isDisabled(item) && getValue(item) === hoverValue,
+                      'option-disabled': isDisabled(item)
                     }
                   ]"
-                  :title="getLabel(child)"
-                  @mouseenter="onHover(getValue(child), isDisabled(child))"
-                  @click.stop="isDisabled(child) ? inputFocus() : onSelectOption(child)"
+                  :title="getLabel(item)"
+                  @mouseenter="onHover(getValue(item), isDisabled(item))"
+                  @mousedown.prevent
+                  @click.stop="isDisabled(item) ? inputFocus() : onSelectOption(item)"
                 >
-                  <slot v-if="slotsExist.option" name="option" v-bind="childSlotProps(child)" />
-                  <template v-else>{{ getLabel(child) }}</template>
+                  <slot v-if="slotsExist.option" name="option" v-bind="childSlotProps(item)" />
+                  <template v-else>{{ getLabel(item) }}</template>
                 </p>
               </template>
-              <p
-                v-else
-                :class="[
-                  'auto-complete-option',
-                  {
-                    'option-hover': !isDisabled(item) && getValue(item) === hoverValue,
-                    'option-disabled': isDisabled(item)
-                  }
-                ]"
-                :title="getLabel(item)"
-                @mouseenter="onHover(getValue(item), isDisabled(item))"
-                @click.stop="isDisabled(item) ? inputFocus() : onSelectOption(item)"
-              >
-                <slot v-if="slotsExist.option" name="option" v-bind="childSlotProps(item)" />
-                <template v-else>{{ getLabel(item) }}</template>
-              </p>
-            </template>
-          </Scrollbar>
-        </div>
-      </Transition>
+            </Scrollbar>
+          </div>
+        </Transition>
+      </div>
     </Teleport>
   </div>
 </template>
 <style lang="less" scoped>
+/* 缩放动画只改独立变换属性 scale：定位由内核写在独立属性 `translate` 上（复合链最外层，不受缩放影响）；
+   keyframes 若改写 `transform` 会覆盖使用者经 `dropdownMenuStyle` 等样式 prop 传入的内联 transform
+   （CSS 动画优先级高于内联样式，且 animation-fill-mode: both 在过渡类移除前一直生效） */
 .slide-enter {
-  transform: scale(0);
+  scale: 0;
   opacity: 0;
   animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
   animation-duration: 0.2s;
@@ -773,11 +745,11 @@ defineExpose({
   animation-play-state: running;
   @keyframes slideIn {
     0% {
-      transform: scaleY(0.8);
+      scale: 1 0.8;
       opacity: 0;
     }
     100% {
-      transform: scaleY(1);
+      scale: 1;
       opacity: 1;
     }
   }
@@ -793,14 +765,21 @@ defineExpose({
   animation-play-state: running;
   @keyframes slideOut {
     0% {
-      transform: scaleY(1);
+      scale: 1;
       opacity: 1;
     }
     100% {
-      transform: scaleY(0.8);
+      scale: 1 0.8;
       opacity: 0;
     }
   }
+}
+/* 离开动画期间禁用指针事件
+   必须带上 `.auto-complete-panel`：单类写法 `.slide-leave-active` 与下方的
+   `.auto-complete-panel { pointer-events: auto }` 同为「类 + 作用域属性 = 0,2,0」，
+   且本规则声明在**前**，会被后者按源码顺序覆盖而静默失效；带上该类后为 0,3,0，靠**特异性**取胜 */
+.auto-complete-panel.slide-leave-active {
+  pointer-events: none;
 }
 .auto-complete-wrap {
   position: relative;
@@ -973,9 +952,23 @@ defineExpose({
     }
   }
 }
+/* 定位参照容器：绝对定位 + 零高度，既不参与布局也不遮挡
+   页面交互；z-index 保持 auto，避免产生层叠上下文而把面板的层级关在里层 */
+.auto-complete-panel-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: auto;
+  height: 0;
+  pointer-events: none;
+}
 .auto-complete-panel {
   position: absolute;
-  z-index: 1000;
+  /* 容器关闭了指针事件（pointer-events 可继承），面板必须显式恢复，否则选项的 hover / 点击全部失效 */
+  pointer-events: auto;
+  /* 默认层级与 useZIndex 的回退值一致；ConfigProvider 传入 baseZIndex 时由内联样式覆盖 */
+  z-index: 1050;
   padding: 4px;
   border-radius: 8px;
   overflow: hidden;

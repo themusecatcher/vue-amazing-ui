@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, ref, watchEffect, nextTick } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import type { VNode } from 'vue'
-import { useSlotsExist, useInject } from 'components/utils'
+import { useSlotsExist, useInject, useWave } from 'components/utils'
 export interface Option {
   label: string // 选项名
   value: string | number | boolean // 选项值
@@ -39,7 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
 defineSlots<RadioSlots>()
 const radioChecked = ref<boolean>(false)
 const optionsCheckedValue = ref<string | number | boolean>()
-const wave = ref<boolean>(false)
+const { wave, startWave, endWave } = useWave()
 const { colorPalettes } = useInject('Radio') // 主题色注入
 const emits = defineEmits(['update:checked', 'update:value', 'change'])
 const slotsExist = useSlotsExist(['default'])
@@ -86,19 +86,6 @@ function onChecked(): void {
     emits('change', true)
   }
 }
-function startWave(): void {
-  if (wave.value) {
-    wave.value = false
-    nextTick(() => {
-      wave.value = true
-    })
-  } else {
-    wave.value = true
-  }
-}
-function onWaveEnd(): void {
-  wave.value = false
-}
 </script>
 <template>
   <div
@@ -124,7 +111,7 @@ function onWaveEnd(): void {
             v-if="!checkDisabled(option.disabled)"
             class="radio-wave"
             :class="{ 'wave-active': wave && optionsCheckedValue === option.value }"
-            @animationend="onWaveEnd"
+            @animationend="endWave"
           ></span>
         </span>
         <span class="radio-label">
@@ -154,7 +141,7 @@ function onWaveEnd(): void {
           v-if="!checkDisabled(option.disabled)"
           class="radio-wave"
           :class="{ 'wave-active': wave && optionsCheckedValue === option.value }"
-          @animationend="onWaveEnd"
+          @animationend="endWave"
         ></span>
       </div>
     </template>
@@ -173,7 +160,7 @@ function onWaveEnd(): void {
           v-if="!disabled"
           class="radio-wave"
           :class="{ 'wave-active': wave && radioChecked }"
-          @animationend="onWaveEnd"
+          @animationend="endWave"
         ></span>
       </span>
       <span v-if="slotsExist.default" class="radio-label">
@@ -202,7 +189,7 @@ function onWaveEnd(): void {
         v-if="!disabled"
         class="radio-wave"
         :class="{ 'wave-active': wave && radioChecked }"
-        @animationend="onWaveEnd"
+        @animationend="endWave"
       ></span>
     </div>
   </template>

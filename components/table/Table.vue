@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { isVNode, ref, computed, watch, watchEffect, onMounted, onUnmounted, nextTick } from 'vue'
+import { isVNode, ref, computed, watch, watchEffect, onMounted, onUnmounted } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
 import Spin, { type SpinProps } from 'components/spin'
 import Empty, { type EmptyProps } from 'components/empty'
@@ -148,10 +148,6 @@ interface ScrollbarScrollData {
   clientWidth: number
   clientHeight: number
 }
-// Tooltip / Ellipsis 子组件暴露的 observeScroll 最小接口
-interface ObserveScrollExpose {
-  observeScroll?: () => void
-}
 interface Coords {
   row: number // 行索引坐标
   col: number // 列索引坐标
@@ -170,8 +166,6 @@ const selectedRowKeys = ref<string[]>([]) // 已选中行的 key 数组
 const changeRowKeys = ref<string[]>([]) // 变化行的 key 数组
 const selectedRows = ref<Record<string, any>[]>([]) // 已选中行的数组
 const changeRows = ref<Record<string, any>[]>([]) // 变化行的数组
-const tooltipRef = ref<ObserveScrollExpose[] | null>(null) // 排序 tooltip 提示组件模板引用
-const ellipsisRef = ref<ObserveScrollExpose[] | null>(null) // 文本省略组件模板引用
 const scrollbarRef = ref<ScrollbarExpose | null>(null) // 水平滚动容器模板引用
 const scrollLeft = ref<number>(0) // 表格水平滚动时距容器左边位置
 const scrollWidth = ref<number>(0) // 表格水平滚动元素宽度，包括溢出滚动，不包括边框
@@ -558,8 +552,6 @@ watchEffect(() => {
 })
 onMounted(() => {
   getScrollState()
-  tooltipObserveScroll()
-  ellipsisObserveScroll()
 })
 onUnmounted(() => {
   // 卸载时取消未执行的滚动帧回调，避免卸载后继续更新已销毁组件的状态
@@ -667,16 +659,6 @@ function getScrollState(): void {
       clientHeight.value = scrollData.clientHeight
     }
   }
-}
-// 在组件挂载后主动触发 tooltip 组件弹出提示的滚动元素监听
-async function tooltipObserveScroll(): Promise<void> {
-  await nextTick()
-  tooltipRef.value?.forEach((el: ObserveScrollExpose) => el.observeScroll?.())
-}
-// 在组件挂载后主动触发 ellipsis 组件弹出提示的滚动元素监听
-async function ellipsisObserveScroll(): Promise<void> {
-  await nextTick()
-  ellipsisRef.value?.forEach((el: ObserveScrollExpose) => el.observeScroll?.())
 }
 // 检查 children 中是否有固定列
 function checkChildrenFix(columns: Column[] | undefined, fixed: 'left' | 'right'): boolean {
@@ -1238,7 +1220,6 @@ function onPaginationChange(page: number, pageSize: number): void {
                     >
                       <Tooltip
                         v-if="column.sorter"
-                        ref="tooltipRef"
                         style="width: 100%"
                         show-control
                         :show="sortHoverDataIndex === column.dataIndex"
@@ -1250,7 +1231,7 @@ function onPaginationChange(page: number, pageSize: number): void {
                         <div class="table-cell-sorter">
                           <span class="table-cell-title">
                             <slot v-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
-                              <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                              <Ellipsis v-bind="getComputedValue(column, 'ellipsisProps')">
                                 {{ column.title }}
                               </Ellipsis>
                             </slot>
@@ -1284,7 +1265,7 @@ function onPaginationChange(page: number, pageSize: number): void {
                         </div>
                       </Tooltip>
                       <slot v-else-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
-                        <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                        <Ellipsis v-bind="getComputedValue(column, 'ellipsisProps')">
                           {{ column.title }}
                         </Ellipsis>
                       </slot>
@@ -1400,7 +1381,7 @@ function onPaginationChange(page: number, pageSize: number): void {
                           :text="record[column.dataIndex as string]"
                           :index="rowIndex"
                         >
-                          <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                          <Ellipsis v-bind="getComputedValue(column, 'ellipsisProps')">
                             {{ record[column.dataIndex as string] }}
                           </Ellipsis>
                         </slot>
@@ -1527,7 +1508,6 @@ function onPaginationChange(page: number, pageSize: number): void {
                     >
                       <Tooltip
                         v-if="column.sorter"
-                        ref="tooltipRef"
                         style="width: 100%"
                         show-control
                         :show="sortHoverDataIndex === column.dataIndex"
@@ -1539,7 +1519,7 @@ function onPaginationChange(page: number, pageSize: number): void {
                         <div class="table-cell-sorter">
                           <span class="table-cell-title">
                             <slot v-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
-                              <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                              <Ellipsis v-bind="getComputedValue(column, 'ellipsisProps')">
                                 {{ column.title }}
                               </Ellipsis>
                             </slot>
@@ -1573,7 +1553,7 @@ function onPaginationChange(page: number, pageSize: number): void {
                         </div>
                       </Tooltip>
                       <slot v-else-if="column.ellipsis" name="headerCell" :column="column" :title="column.title">
-                        <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                        <Ellipsis v-bind="getComputedValue(column, 'ellipsisProps')">
                           {{ column.title }}
                         </Ellipsis>
                       </slot>
@@ -1707,7 +1687,7 @@ function onPaginationChange(page: number, pageSize: number): void {
                           :text="record[column.dataIndex as string]"
                           :index="rowIndex"
                         >
-                          <Ellipsis ref="ellipsisRef" v-bind="getComputedValue(column, 'ellipsisProps')">
+                          <Ellipsis v-bind="getComputedValue(column, 'ellipsisProps')">
                             {{ record[column.dataIndex as string] }}
                           </Ellipsis>
                         </slot>
@@ -1906,9 +1886,6 @@ function onPaginationChange(page: number, pageSize: number): void {
                 }
               }
             }
-          }
-          :deep(.tooltip-card-container) {
-            cursor: auto;
           }
           .table-cell-sorter {
             display: flex;

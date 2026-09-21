@@ -806,8 +806,8 @@ onmessage = async (e: MessageEvent) => {
 | imageProps | `Image` 组件属性配置，参考 [Image Props](./image.md#image)，用于配置图片预览 | [ImageProps](./image.md#image) | {} |
 | beforeUpload | 上传文件之前的钩子，参数为上传的文件，返回 `false` 则停止上传，返回 `true` 开始上传；支持返回一个 `Promise` 对象（如服务端校验等），`Promise` 对象 `reject` 时停止上传，`resolve` 时开始上传；通常用来校验用户上传的文件格式和大小 | (file: File) => boolean &#124; void &#124; Promise&lt;unknown&gt; | () => true |
 | uploadMode | 上传文件的方式 | 'base64' &#124; 'custom' | 'base64' |
-| customRequest | 自定义上传行为，只有 `uploadMode: custom` 时，才会使用 `customRequest` 自定义上传行为；未配置时默认返回空结果，避免调用 `.then` 报错 | (file: File) => Promise&lt;[FileType](#filetype-type)&gt; | () => Promise.resolve({ url: '' }) |
-| fileList <Tag color="cyan">v-model</Tag> | 已上传的文件列表 | [FileType](#filetype-type)[] | [] |
+| customRequest | 自定义上传行为，只有 `uploadMode: custom` 时，才会使用 `customRequest` 自定义上传行为；未配置时默认返回空结果，避免调用 `.then` 报错 | (file: File) => Promise&lt;[UploadFileType](#filetype-type)&gt; | () => Promise.resolve({ url: '' }) |
+| fileList <Tag color="cyan">v-model</Tag> | 已上传的文件列表 | [UploadFileType](#filetype-type)[] | [] |
 
 ### FileType Type
 
@@ -828,8 +828,8 @@ onmessage = async (e: MessageEvent) => {
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 | drop | 当文件被拖入上传区域时的回调 | (e: [DragEvent](https://developer.mozilla.org/zh-CN/docs/Web/API/DragEvent/DragEvent)) => void |
-| change | 上传文件改变时的回调 | (files: [FileType](#filetype-type)[]) => void |
-| preview | 点击预览时的回调 | (file: [FileType](#filetype-type)) => void |
-| remove | 点击移除文件时的回调 | (file: [FileType](#filetype-type)) => void |
-| success | 上传成功时的回调 | (file: [FileType](#filetype-type), files: [FileType](#filetype-type)[]) => void |
+| change | 上传文件改变时的回调 | (files: [UploadFileType](#filetype-type)[]) => void |
+| preview | 点击预览时的回调 | (file: [UploadFileType](#filetype-type)) => void |
+| remove | 点击移除文件时的回调 | (file: [UploadFileType](#filetype-type)) => void |
+| success | 上传成功时的回调 | (file: [UploadFileType](#filetype-type), files: [UploadFileType](#filetype-type)[]) => void |
 | error | 上传失败时的回调 | (error: any) => void |

@@ -244,6 +244,9 @@ function onDiscreteModal() {
     content: '经 configProviderProps 跟随主题色'
   })
 }
+// 浮层层级管理：自动分配
+const layerOpen = ref(false)
+const layerSelectedValue = ref<number>(1)
 </script>
 
 ## 基本使用
@@ -251,7 +254,8 @@ function onDiscreteModal() {
 _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应用外围包裹一次即可全局生效。_
 
 <br/>
-<Card title="以下示例已包含所有使用主题色的组件" >
+
+<Card title="以下示例已包含所有使用主题色的组件">
   <Space align="center">
     primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
   </Space>
@@ -572,9 +576,13 @@ function onDecline(scale: number) {
 }
 </script>
 <template>
-  <Space align="center"> primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" /> </Space>
-  <br />
-  <br />
+  <Card title="以下示例已包含所有使用主题色的组件">
+    <Space align="center">
+      primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
+    </Space>
+  </Card>
+  <br/>
+  <br/>
   <ConfigProvider :theme="{ common: { primaryColor } }">
     <Flex vertical>
       <Space align="center">
@@ -847,15 +855,103 @@ function onDiscreteModal() {
 
 :::
 
+## 浮层层级管理
+
+### 各组件默认层级
+
+<br/>
+
+浮层按类型划分层级：锚点跟随型浮层（`Tooltip` / `Select` 等）需高于承载它的视口固定型浮层（`Modal` / `Drawer` / `Dialog`），否则会被遮罩盖住：
+
+| 浮层 | 默认层级 | 说明 |
+| :--- | :--- | :--- |
+| `Tooltip`（含 `Popover` / `Popconfirm` / `Ellipsis` / `ColorPicker` / `Rate` / `BackTop` / `FloatButton` 的气泡） | **1070** | 锚点跟随型需高于 `Modal` / `Drawer` / `Dialog` |
+| `Select` / `AutoComplete`（含 `Cascader` / `Pagination` / `Calendar` 的下拉） | **1050** | 同上 |
+| `Modal` / `Dialog` | **1000**（遮罩）/ **1010**（弹窗） | 弹窗在遮罩之上 `+10` |
+| `Drawer` | **1000** | 遮罩在容器内按 DOM 顺序排列 |
+| `Image` 全屏预览 | **1070**（遮罩）/ **1080**（预览）/ `1081`（操作按钮） | 预览高于 `Modal` / `Drawer` |
+| `Message` / `Notification` | **1030** / **1040** | 全局反馈层：**高于承载层**（`Modal` 弹窗 `1010`）、**低于锚点跟随型浮层**（`Select` `1050` / `Tooltip` `1070`） |
+| `LoadingBar` | **9999** | 始终在最上层 |
+| `BackTop` | **9**（可配 `zIndex`） | 页面级控件，需**低于**浮层，不参与自动分配 |
+| `FloatButton` | **99**（可配 `zIndex`） | 同上 |
+| `Spin` 局部遮罩 | `9` | 相对自身容器的局部层级，不参与全局分配 |
+| `Badge` / `Watermark` 装饰层 | `9` / `90`（可配 `zIndex`） | 装饰性叠加，不参与全局分配 |
+
+上表的取值与 Ant Design Vue 的族偏移一致（其 `zIndexPopupBase: 1000`，`Tooltip +70`、`Select +50`、`Image +80`、`Affix = zIndexBase + 10`、`FloatButton 99`），因此迁移习惯一致。
+
+反馈层刻意**不占据最高层级** —— 这样在消息 / 通知内容里放 `Select` / `Tooltip` 时，浮层不会被消息框压住。取值 `1030` / `1040` 是为了与 `Modal` 弹窗（`1010`）、`Select` 面板（`1050`）**都不打平**：同层级时上下关系会退化为 `DOM` 顺序（模板源码顺序），顺序不可控。`LoadingBar`（`9999`）始终保持最上。
+
+### 自动分配（可选）
+
+<br/>
+
+传入 `baseZIndex` 后，`ConfigProvider` 会向下注入层级分配器，锚点跟随型与视口固定型浮层共同消费：
+
+- 浮层在**出现**时领取层级，分配点恒在当前所有已打开浮层之上，即「后出现者在上」—— 该序列只用于**没有承载关系的独立浮层之间**（多个弹窗、多个页面级下拉）；
+- 浮层位于承载层（`Modal` / `Drawer` / `Dialog` / 上层浮层面板）内时，会**挂进该承载层的内容容器**，层叠关系由 `CSS` 的包含关系表达 —— 因此它恒在其承载层之上、随承载层一起显隐与位移，不受层级序列影响；未处于任何承载层内时仍挂 `body`；
+- 层级数值随「**同时可见**的浮层数」增长，不随打开次数无限增大（浮层隐藏后即归还层级）；
+- 承载层关闭时，其内部已打开的浮层（如 `Select` 下拉）会**一并收起**（收起即归还层级）；
+- 各组件自身的 `zIndex` `prop` 优先级最高；
+- **不传 `baseZIndex` 时各组件使用上表的默认层级**，可按需开启。
+
+<ConfigProvider :base-z-index="1000">
+  <Button type="primary" @click="layerOpen = true">Open Modal</Button>
+  <Modal v-model:open="layerOpen" title="弹窗内浮层">
+    <Space align="center">
+      <Tooltip tooltip="Vue Amazing UI">
+        <Button>Hover me</Button>
+      </Tooltip>
+      <Select :options="selectOptions" v-model="layerSelectedValue" :width="200" />
+    </Space>
+  </Modal>
+</ConfigProvider>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { SelectOption } from 'vue-amazing-ui'
+const layerOpen = ref(false)
+const layerSelectedValue = ref<number>(1)
+const selectOptions: SelectOption[] = [
+  { label: '北京市', value: 1 },
+  { label: '上海市', value: 2 },
+  { label: '纽约市', value: 3 },
+  { label: '旧金山', value: 4 },
+  { label: '布宜诺斯艾利斯', value: 5 },
+  { label: '伊斯坦布尔', value: 6 },
+  { label: '拜占庭', value: 7 },
+  { label: '君士坦丁堡', value: 8 }
+]
+</script>
+<template>
+  <ConfigProvider :base-z-index="1000">
+    <Button type="primary" @click="layerOpen = true">Open Modal</Button>
+    <Modal v-model:open="layerOpen" title="弹窗内浮层">
+      <Space align="center">
+        <Tooltip tooltip="Vue Amazing UI">
+          <Button>Hover me</Button>
+        </Tooltip>
+        <Select :options="selectOptions" v-model="layerSelectedValue" :width="200" />
+      </Space>
+    </Modal>
+  </ConfigProvider>
+</template>
+```
+
+:::
+
 ## APIs
 
 ### ConfigProvider
 
 | 参数    | 说明    | 类型                                                        | 默认值 |
 | :------- | :------- | :----------------------------------------------------------- | :----- |
-| theme   | 主题对象 | [Theme](#theme-type)                                        | {}     |
-| abstract | boolean | 是否不存在 `DOM` 包裹元素                                   | true   |
-| tag     | string  | `ConfigProvider` 被渲染成的元素，`abstract` 为 `true` 时有效 | 'div'  |
+| theme   | 主题对象 | [ConfigProviderTheme](#theme-type)                                        | {}     |
+| abstract | 是否不存在 `DOM` 包裹元素                                   | boolean | true   |
+| tag     | `ConfigProvider` 被渲染成的元素，`abstract` 为 `true` 时有效 | string  | 'div'  |
+| baseZIndex | 浮层起始层级（`z-index`），传入后各浮层按「后出现者在上」自增分配；不传则各组件沿用自身默认层级 | number | undefined |
 
 ### Theme Type
 

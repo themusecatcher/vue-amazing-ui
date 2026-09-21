@@ -890,6 +890,15 @@ onBeforeUnmount(() => {
     clearInterval(timer)
   })
 })
+// 弹窗内浮层：Tooltip / Select 会自动排在遮罩与弹窗之上
+const layerOptions = ref([
+  { label: '北京市', value: 1 },
+  { label: '上海市', value: 2 },
+  { label: '纽约市', value: 3 }
+])
+const layerOpen = ref(false)
+const layerSelect = ref<number>(1)
+const layerZIndexOpen = ref(false)
 </script>
 
 ---
@@ -2294,6 +2303,66 @@ function onDestroyAllModals() {
 
 :::
 
+## 弹窗内浮层
+
+*弹窗内的 `Tooltip` / `Select` 会自动排在遮罩与弹窗之上；也可用 `zIndex` 直接指定弹窗层级（优先级最高）*
+
+<br/>
+
+<Space>
+  <Button type="primary" @click="layerOpen = true">Open Modal</Button>
+  <Button type="primary" @click="layerZIndexOpen = true">Custom zIndex</Button>
+</Space>
+
+<Modal v-model:open="layerOpen" title="弹窗内浮层" :width="520">
+  <Space align="center">
+    <Tooltip tooltip="Vue Amazing UI">
+      <Button>Hover me</Button>
+    </Tooltip>
+    <Select :options="layerOptions" v-model="layerSelect" :width="200" />
+  </Space>
+</Modal>
+
+<Modal v-model:open="layerZIndexOpen" title="Custom zIndex" :z-index="3000" :width="520">
+  <p>zIndex 优先级最高，覆盖自动分配结果</p>
+</Modal>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Modal, Select, Tooltip } from 'vue-amazing-ui'
+const layerOptions = ref([
+  { label: '北京市', value: 1 },
+  { label: '上海市', value: 2 },
+  { label: '纽约市', value: 3 }
+])
+const layerOpen = ref(false)
+const layerSelect = ref<number>(1)
+const layerZIndexOpen = ref(false)
+</script>
+<template>
+  <Space>
+    <Button type="primary" @click="layerOpen = true">Open Modal</Button>
+    <Button type="primary" @click="layerZIndexOpen = true">Custom zIndex</Button>
+  </Space>
+  <Modal v-model:open="layerOpen" title="弹窗内浮层" :width="520">
+    <Space align="center">
+      <Tooltip tooltip="Vue Amazing UI">
+        <Button>Hover me</Button>
+      </Tooltip>
+      <Select :options="layerOptions" v-model="layerSelect" :width="200" />
+    </Space>
+  </Modal>
+  <Modal v-model:open="layerZIndexOpen" title="Custom zIndex" :z-index="3000" :width="520">
+    <p>zIndex 优先级最高，覆盖自动分配结果</p>
+  </Modal>
+</template>
+```
+
+::::
+
 ## 遮罩、键盘与滚动锁定
 
 _命令式调用默认 `maskClosable: false`、`keyboard: true`、`blockScroll: true`；`onMaskClick` / `onEsc` 无论是否允许关闭都会触发_
@@ -2578,12 +2647,12 @@ const VNodeRenderer = defineComponent({
 
 <ModalProvider v-if="toReady" to="#modal-to-container" @ready="toModal = $event" />
 
-<div id="modal-to-container" class="modal-to-container"></div>
+<div id="modal-to-container" class="teleport-container"></div>
 
 <Button type="primary" @click="onToModal">挂载到指定容器</Button>
 
 <style lang="less" scoped>
-.modal-to-container {
+.teleport-container {
   position: relative;
   transform: translateZ(0); // 建立包含块，使内部 fixed 定位的蒙层与弹窗相对该容器定位
   max-width: 800px;
@@ -2617,11 +2686,11 @@ function onToModal() {
 </script>
 <template>
   <ModalProvider v-if="toReady" to="#modal-to-container" @ready="toModal = $event" />
-  <div id="modal-to-container" class="modal-to-container"></div>
+  <div id="modal-to-container" class="teleport-container"></div>
   <Button type="primary" @click="onToModal">挂载到指定容器</Button>
 </template>
 <style lang="less" scoped>
-.modal-to-container {
+.teleport-container {
   position: relative;
   transform: translateZ(0); // 建立包含块，使内部 fixed 定位的蒙层与弹窗相对该容器定位
   max-width: 800px;
@@ -2672,8 +2741,8 @@ _每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)
 | closable | 是否显示右上角关闭按钮，默认 `false`，需要时显式开启 | boolean | false |
 | closeIcon | 自定义关闭图标，prop 支持 `VNode` / 渲染函数；插槽形态请用同名 `#closeIcon` 插槽 | VNode &#124; (() => VNode) | undefined |
 | closeFocusable | 关闭按钮是否可聚焦，设为 `false` 后关闭按钮 `tabindex` 为 `-1`，不参与 `Tab` 序列 | boolean | true |
-| destroyOnClose | 关闭时是否销毁 `Modal` 里的子元素，实例栈下关闭即从栈中移除，内容随之销毁 | boolean | false |
 | renderBeforeOpen | 首次打开前是否渲染内容（关闭懒渲染） | boolean | false |
+| destroyOnClose | 关闭时是否销毁 `Modal` 里的子元素，实例栈下关闭即从栈中移除，内容随之销毁 | boolean | false |
 | centered | 是否水平垂直居中，否则固定高度水平居中 | boolean | false |
 | top | 固定高度水平居中时，距顶部高度，仅当 `centered: false` 时生效，单位 `px` | string &#124; number | 100 |
 | transformOrigin | 模态框动画出现的位置 | 'mouse' &#124; 'center' | 'mouse' |
@@ -2688,7 +2757,7 @@ _每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)
 | wrapStyle | 自定义外层容器（`.modal-wrap`）样式，多实例同时打开时以栈顶为准 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | containerClass | 自定义弹窗定位层（`.modal-container`）类名，用于覆盖 `width` / `top` / `zIndex` 等定位表现 | string | undefined |
 | containerStyle | 自定义弹窗定位层（`.modal-container`）样式，优先级高于 `width` / `top` / `zIndex` 等内置样式；卡片外观（背景 / 圆角 / 阴影）请用 `bodyClass` / `bodyStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| zIndex | 模态框层级，遮罩取该值，弹窗取该值 `+ 10` | number | 1000 |
+| zIndex | 模态框层级，遮罩取该值，弹窗取该值 `+ 10`；未传时使用默认层级（遮罩 `1000` / 弹窗 `1010`），或由 `ConfigProvider` 的 `baseZIndex` 分配 | number | undefined |
 | autoFocusButton | 打开时自动聚焦的按钮；`Esc` 监听绑定在弹窗主体上，需聚焦到弹窗内才响应 | 'ok' &#124; 'cancel' | 'ok' |
 | focusTriggerAfterClose | 关闭后是否将焦点归还给触发元素 | boolean | true |
 | modalRender | 自定义渲染弹窗内容，常用于包裹拖拽逻辑；与 [`#modalRender`](#slots) 插槽等价，该属性优先级更高 | (arg: { originVNode: VNode }) => VNode | undefined |
@@ -2746,7 +2815,7 @@ _调用时传入的 `ModalOptions` 类型（`info` / `success` / `error` / `warn
 | wrapStyle? | 自定义外层容器（`.modal-wrap`）样式，多实例同时打开时以栈顶为准 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
 | containerClass? | 自定义弹窗定位层（`.modal-container`）类名，用于覆盖 `width` / `top` / `zIndex` 等定位表现 | string | undefined |
 | containerStyle? | 自定义弹窗定位层（`.modal-container`）样式，优先级高于 `width` / `top` / `zIndex` 等内置样式；卡片外观（背景 / 圆角 / 阴影）请用 `bodyClass` / `bodyStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| zIndex? | 模态框层级，遮罩取该值，弹窗取该值 `+ 10` | number | undefined |
+| zIndex? | 单实例层级，遮罩取该值，弹窗取该值 `+ 10`；未传时回退到组件级 `zIndex`，再回退到默认层级（遮罩 `1000` / 弹窗 `1010`）或由 `ConfigProvider` 的 `baseZIndex` 分配 | number | undefined |
 | autoFocusButton? | 打开时自动聚焦的按钮 | 'ok' &#124; 'cancel' | undefined |
 | focusTriggerAfterClose? | 关闭后是否将焦点归还给触发元素 | boolean | undefined |
 | modalRender? | 自定义渲染弹窗内容，常用于包裹拖拽逻辑 | (arg: { originVNode: VNode }) => VNode | undefined |
@@ -2817,11 +2886,11 @@ _`cancel` / `ok` / `know` / `change` / `ready` 为 `<Modal>` 与 `<ModalProvider
 
 | 名称  | 说明                               | 类型                            |
 | :----- | :---------------------------------- | :------------------------------ |
-| ready | 实例挂载完成时触发，参数为该实例的 api | (api: [ModalApi](#methods)) => void |
 | cancel | 点击蒙层或 `Esc` 键或取消按钮的回调 | (e: Event) => void              |
 | ok    | 点击确定按钮的回调                 | (e: MouseEvent) => void         |
 | know  | 点击知道了按钮的回调               | (e: MouseEvent) => void         |
 | change | 任一弹窗打开 / 关闭时触发，多实例下携带该实例 `key` | (open: boolean, key: string) => void |
+| ready | 实例挂载完成时触发，参数为该实例的 api | (api: [ModalApi](#methods)) => void |
 
 ## 在 setup 外使用
 

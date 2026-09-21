@@ -186,6 +186,8 @@ const sizeOptions = [
 ]
 const size = ref<CascaderProps['size']>('large')
 const selectedValue = ref(['2', '21', '212'])
+// 下拉面板挂载容器：不传 to 时优先挂到最近的承载层内容容器
+const toValue = ref<CascaderProps['modelValue']>(['2', '21', '212'])
 watchEffect(() => {
   console.log('selectedValue', selectedValue.value)
 })
@@ -237,5 +239,14 @@ function filter(inputValue: string, option: any) {
     <Cascader :options="options" v-model="selectedValue" search @change="onChange" />
     <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
     <Cascader :options="options" v-model="selectedValue" allow-clear search :filter="filter" @change="onChange" />
+    <h2 class="mt30 mb10">下拉面板挂载容器</h2>
+    <p class="mb10">
+      不传 <code>to</code> 时面板优先挂到最近的承载层内容容器（<code>Modal</code> / <code>Drawer</code> /
+      <code>Dialog</code> 卡片），无承载层时为 <code>body</code>；设为 <code>false</code> 时面板留在原地
+    </p>
+    <Space>
+      <Cascader :options="options" v-model="toValue" :width="100" @change="onChange" />
+      <Cascader :options="options" v-model="toValue" :width="100" :to="false" @change="onChange" />
+    </Space>
   </div>
 </template>

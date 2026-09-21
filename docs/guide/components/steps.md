@@ -524,7 +524,7 @@ const state = reactive<StepsProps>({
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-items | 步骤数组 | [Item](#item-type)[] | []
+items | 步骤数组 | [StepsItem](#item-type)[] | []
 width | 步骤条总宽度，单位 `px` | number &#124; string | 'auto'
 size | 步骤条大小 | 'default' &#124; 'small' | 'default'
 vertical | 是否使用垂直步骤条，当 `vertical: true` 时，`labelPlacement` 自动设为 `right` | boolean | false

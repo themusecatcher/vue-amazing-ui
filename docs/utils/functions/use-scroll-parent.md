@@ -202,7 +202,7 @@ const scrollTargetName = computed(() => {
 
 ## 注意事项
 
-- 被 `Select`、`AutoComplete`、`Tooltip` 等弹出类组件内部使用，也可脱离组件库独立复用
+- 组件库内部**曾**用它为弹出类组件提供滚动跟随；浮层内核重构后，内部滚动跟随改由内核自带的滚动链监听承担（可覆盖嵌套双层滚动容器），本函数现主要面向外部复用
 - 无滚动祖先（整页滚动）时内部会把 `scroll` 监听绑定到 `window`：视口滚动的事件目标是 `window` / `document`，`documentElement` 收不到 `scroll`
 - 需在组件 `setup` 中调用；内部会在挂载时自动监听、卸载时自动清理，也可手动调用 `observeScroll` / `cleanup`
 - `viewportWidth` / `viewportHeight` 基于 `documentElement` 的 `clientWidth` / `clientHeight`，仅随视口 `resize` 更新

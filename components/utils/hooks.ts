@@ -1,5 +1,6 @@
 import {
   ref,
+  nextTick,
   getCurrentInstance,
   onMounted,
   computed,
@@ -134,6 +135,27 @@ export function useMediaQuery(mediaQuery: string): { match: Ref<boolean> } {
   return { match }
 }
 /**
+ * 组合式函数
+ * 响应式获取当前视口宽度（window.innerWidth）
+ *
+ * 用于按断点切换响应式配置的组件（如 Avatar / Row / Col）：
+ * 初始值在 SSR（Node）环境下取 0，resize 监听在挂载后注册、卸载时移除
+ *
+ * @returns {Ref<number>} 返回视口宽度的 ref 对象
+ */
+export function useWindowWidth(): Ref<number> {
+  // SSR（Node）环境无 window，取 0；浏览器端初始值与原来一致
+  const width = ref<number>(typeof window !== 'undefined' ? window.innerWidth : 0)
+  const updateWidth = (): void => {
+    width.value = window.innerWidth
+  }
+  // 实参 window 在 setup 期求值，SSR（Node）下必须先判断存在性再调用
+  if (typeof window !== 'undefined') {
+    useEventListener(window, 'resize', updateWidth)
+  }
+  return width
+}
+/**
  * 检查浏览器是否支持给定的事件监听器选项
  *
  * @param {'capture' | 'once' | 'passive' | 'signal'} option 一个表示要检查的事件监听器选项的字符串，可选 'capture'、'once'、'passive' 或 'signal'
@@ -227,6 +249,10 @@ export function useSlotsExist<T extends string | string[] = 'default'>(slotsName
  * 如果在组件中使用，则会尝试从组件的依赖注入中获取颜色配置
  * 如果未找到，则回退到全局的默认颜色配置
  *
+ * 组件库内部使用：`key` 为本库组件名（如 `'Button'`），用于命中 `ConfigProvider` 注入的
+ * `components` 表中该组件的主题覆盖，未命中时回退到 `common` 表。因依赖内部注入协议
+ * （注入键名 + 以组件名为分键的表结构），不对外导出、不承诺 API 稳定性。
+ *
  * @param {string} key 组件名，用于在组件的依赖注入中查找颜色配置
  * @returns {{ colorPalettes: Ref<string[]>, shadowColor: Ref<string> }} 返回包含颜色调色板和阴影颜色的主题对象
  */
@@ -248,4 +274,31 @@ export function useInject(key: string): { colorPalettes: Ref<string[]>; shadowCo
     return toRefs(componentsInjectValue[key])
   }
   return toRefs(commonInjectValue)
+}
+/**
+ * 组合式函数
+ * 水波纹动画状态（Material 风格的点击 / 选中涟漪）
+ *
+ * wave 用于驱动 .wave-active 类；startWave 在连点时先复位、下一帧再置位以强制重放动画；
+ * endWave 供模板 @animationend 调用以复位
+ *
+ * @returns {{ wave: Ref<boolean>, startWave: () => void, endWave: () => void }} 波纹标志与启停方法
+ */
+export function useWave(): { wave: Ref<boolean>; startWave: () => void; endWave: () => void } {
+  const wave = ref<boolean>(false)
+  function startWave(): void {
+    if (wave.value) {
+      // 正在播放时先复位、下一帧再置位，强制重新触发 CSS 动画
+      wave.value = false
+      nextTick(() => {
+        wave.value = true
+      })
+    } else {
+      wave.value = true
+    }
+  }
+  function endWave(): void {
+    wave.value = false
+  }
+  return { wave, startWave, endWave }
 }

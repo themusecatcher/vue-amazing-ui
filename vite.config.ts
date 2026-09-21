@@ -17,6 +17,8 @@ import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/r
 import minimist from 'minimist'
 // 第三方样式依赖清单（单一数据源，与 resolver.ts 共享）
 import { vendorStyles } from './components/utils/vendor-styles'
+// 构建后处理：合并「同一 SFC 多个 <style> 块」产出的编号 CSS，见该文件头部说明
+import { mergeComponentStyles } from './scripts/merge-component-styles'
 
 // 获取 vite build 构建时，传入的参数：dir f（形如 `vite build -- dir=dist f=iife`）
 // minimist 的 `_` 字段收集所有「非 -x/--x 开头的裸位置参数」，即 `--` 之后的 `dir=dist f=iife` 会被归入 _ 数组
@@ -104,6 +106,20 @@ function copyVendorStylesPlugin(): Plugin {
           console.warn('[copy-vendor-styles] 清理 node_modules 孤儿 asset 失败', error)
         }
       })
+    }
+  }
+}
+// 合并「一个组件多份 CSS」为单文件：es/lib 的产物 JS 不 import 任何 CSS，样式全由消费方 resolver 的
+// sideEffects 路径决定，而 resolver 只引用 `es/<dir>/<Component>.css` —— 同一 SFC 的第二个及以后的
+// <style> 块（Vite 产出 Xxx2.css / Xxx3.css）无人引用，按需引入时这部分样式直接缺失
+// （当前仅 Tooltip 命中：面板壳 / 箭头 / 动画全丢）。dist 是单文件全量构建，无需处理
+function mergeComponentStylesPlugin(): Plugin {
+  return {
+    name: 'merge-component-styles',
+    apply: 'build',
+    closeBundle() {
+      if (dir === 'dist') return
+      mergeComponentStyles({ rootDir })
     }
   }
 }
@@ -224,6 +240,7 @@ export default defineConfig({
     }),
     generateCssDtsPlugin(),
     copyVendorStylesPlugin(),
+    mergeComponentStylesPlugin(),
     dts({
       // 自动生成类型文件
       outDir: ['es', 'lib'], // 指定输出目录，默认为 Vite 配置的 'build.outDir'，使用 Rollup 时为 tsconfig.json 的 `outDir`

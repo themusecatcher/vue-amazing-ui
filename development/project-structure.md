@@ -67,7 +67,7 @@ components/
 
 ### utils/ 工具目录
 
-`components/utils/` 共 12 个文件，按职责分组：
+`components/utils/` 共 13 个文件，按职责分组：
 
 | 文件 | 职责 |
 | :--- | :--- |
@@ -80,11 +80,12 @@ components/
 | `hooks.ts` | 通用 Hooks（挂载状态 / 插槽检测 / 主题注入等） |
 | `observers.ts` | DOM 观察与滚动监听 Hooks |
 | `position.ts` | 弹出定位 composable |
+| `render.ts` | 内容渲染辅助（统一归一为 VNode） |
 | `type.ts` | `withInstall` 高阶函数 |
 | `resolver.ts` | `unplugin-vue-components` 按需引入 resolver |
 | `vendor-styles.ts` | 第三方样式依赖清单（单一数据源） |
 
-> `index.ts` 是 barrel，只汇总 `format` / `math` / `function` / `dom` / `color` / `hooks` / `observers` / `position` 八组；`type` / `resolver` / `vendor-styles` 不属于 barrel 成员，需从具体文件引入（如 `import { withInstall } from 'components/utils/type'`）。
+> `index.ts` 是 barrel，只汇总 `format` / `math` / `function` / `dom` / `color` / `hooks` / `observers` / `position` / `render` 九组；`type` / `resolver` / `vendor-styles` 不属于 barrel 成员，需从具体文件引入（如 `import { withInstall } from 'components/utils/type'`）。
 > 工具函数的功能与使用说明见官方文档站 `docs/utils/functions/`。
 
 ### style/global.less

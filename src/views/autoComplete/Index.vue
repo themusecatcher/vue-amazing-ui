@@ -202,9 +202,21 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 const valueDefaultOpen = ref('')
 // 关闭默认高亮首项 defaultActiveFirstOption
 const valueActiveFirst = ref('')
-// 下拉面板宽度 dropdownMatchSelectWidth（指定为 300）
+// 下拉面板宽度 dropdownMatchSelectWidth 的三态：等宽 / 以触发器宽度为最小宽度（由内容撑开）/ 固定 300
+// 选项文本刻意长于输入框（200px）—— 否则 false 的面板宽度与 true 完全相同，看不出差异
 const valueMatchWidth = ref('')
-const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选项文本 B', '一个较长的选项文本 C']
+const valueMatchWidthTrue = ref('')
+const valueMatchWidthFalse = ref('')
+const optionsMatchWidth = [
+  '一个明显长于输入框宽度的选项文本',
+  '另一个同样明显更长的选项文本',
+  '第三个用于对照的较长选项文本'
+]
+// 挂载容器：不传 to 时优先挂到最近的承载层内容容器
+const toValue = ref('')
+// 下拉面板样式的公开入口：popupClassName / dropdownMenuStyle / zIndex
+const panelValue = ref('')
+const panelZIndexValue = ref('')
 </script>
 <template>
   <div>
@@ -266,13 +278,13 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
             <template v-if="item.options">
               <div style="display: flex; justify-content: space-between; align-items: center">
                 <span>{{ item.value }}</span>
-                <a href="https://www.google.com/search?q=vue-amazing-ui" target="_blank" rel="noopener noreferrer">
+                <a href="https://themusecatcher.github.io/vue-amazing-ui/" target="_blank" rel="noopener noreferrer">
                   more
                 </a>
               </div>
             </template>
             <template v-else-if="item.value === 'all'">
-              <a href="https://www.google.com/search?q=vue-amazing-ui" target="_blank" rel="noopener noreferrer">
+              <a href="https://themusecatcher.github.io/vue-amazing-ui/" target="_blank" rel="noopener noreferrer">
                 View all results
               </a>
             </template>
@@ -298,7 +310,11 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
             <div style="display: flex; justify-content: space-between">
               <span>
                 Found {{ item.query }} on
-                <a :href="`https://s.taobao.com/search?q=${item.query}`" target="_blank" rel="noopener noreferrer">
+                <a
+                  :href="`https://themusecatcher.github.io/vue-amazing-ui/?q=${item.query}`"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {{ item.category }}
                 </a>
               </span>
@@ -387,6 +403,79 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
         </AutoComplete>
       </Space>
     </Space>
+    <h2 class="mt30 mb10">下拉面板宽度</h2>
+    <p class="mb10">
+      通过 <code>dropdownMatchSelectWidth</code> 指定面板宽度：<code>true</code> 与输入框等宽；<code>false</code>
+      时以输入框宽度为最小宽度、内容更宽则随之撑开；数字则为固定宽度
+    </p>
+    <Space align="start" :size="40">
+      <AutoComplete
+        v-model:value="valueMatchWidthTrue"
+        :options="optionsMatchWidth"
+        :width="200"
+        placeholder="面板与输入框等宽"
+      />
+      <AutoComplete
+        v-model:value="valueMatchWidthFalse"
+        :options="optionsMatchWidth"
+        :width="200"
+        placeholder="面板由内容撑开"
+        :dropdown-match-select-width="false"
+      />
+      <AutoComplete
+        v-model:value="valueMatchWidth"
+        :options="optionsMatchWidth"
+        :width="200"
+        placeholder="面板宽 300"
+        :dropdown-match-select-width="300"
+      />
+    </Space>
+    <h2 class="mt30 mb10">下拉面板挂载容器</h2>
+    <p class="mb10">
+      不传 <code>to</code> 时面板优先挂到最近的承载层内容容器（<code>Modal</code> / <code>Drawer</code> /
+      <code>Dialog</code> 卡片或上层浮层面板），无承载层时为 <code>body</code>；设为 <code>false</code> 时面板留在原地
+    </p>
+    <Space>
+      <AutoComplete v-model:value="toValue" :options="optionsArr" :width="200" placeholder="默认挂载" />
+      <AutoComplete v-model:value="toValue" :options="optionsArr" :width="200" placeholder="留在原地" :to="false" />
+    </Space>
+    <h2 class="mt30 mb10">自定义下拉面板</h2>
+    <p class="mb10">
+      通过 <code>popupClassName</code> 自定义面板类名、<code>dropdownMenuStyle</code> 设置面板样式，两者均落在
+      <code>Teleport</code> 后的面板上，需写在全局样式中；<code>zIndex</code> 用于覆盖面板层级（默认 1050）
+    </p>
+    <Flex gap="large" wrap="wrap">
+      <Flex vertical gap="small" align="start">
+        <span class="demo-label">默认面板</span>
+        <AutoComplete v-model:value="panelValue" :options="options4" :width="180" placeholder="input here" />
+      </Flex>
+      <Flex vertical gap="small" align="start">
+        <span class="demo-label">自定义类名与样式</span>
+        <AutoComplete
+          v-model:value="panelValue"
+          :options="options4"
+          :width="180"
+          placeholder="input here"
+          popup-class-name="custom-ac-panel"
+          :dropdown-menu-style="{
+            background: 'rgba(255, 105, 0, 0.05)',
+            border: '1px solid #ff6900',
+            borderRadius: '12px',
+            boxShadow: '0 8px 20px rgba(255, 105, 0, 0.25)'
+          }"
+        />
+      </Flex>
+      <Flex vertical gap="small" align="start">
+        <span class="demo-label">自定义层级</span>
+        <AutoComplete
+          v-model:value="panelZIndexValue"
+          :options="options4"
+          :width="180"
+          placeholder="input here"
+          :z-index="1200"
+        />
+      </Flex>
+    </Flex>
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Space vertical>
       <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
@@ -476,18 +565,24 @@ const optionsMatchWidth = ['一个较长的选项文本 A', '一个较长的选�
         />
       </Space>
     </Space>
-    <h2 class="mt30 mb10">下拉面板宽度</h2>
-    <p class="mb10">通过 <code>dropdownMatchSelectWidth</code> 指定面板宽度，空间不足时自动调整对齐。</p>
-    <Space align="start" :size="40">
-      <Space vertical>
-        <AutoComplete
-          v-model:value="valueMatchWidth"
-          :options="optionsMatchWidth"
-          :width="200"
-          placeholder="面板宽 300"
-          :dropdown-match-select-width="300"
-        />
-      </Space>
-    </Space>
   </div>
 </template>
+<style lang="less">
+/* 面板经 Teleport 挂载，scoped 样式无法命中，故用 popupClassName 下发类名 + 全局样式；
+   选项规则把类名重复一次以提升特异性，覆盖带 scope 属性的组件内规则 */
+@demo-primary: #ff6900;
+
+.custom-ac-panel {
+  &.custom-ac-panel .auto-complete-options .auto-complete-option {
+    color: darken(@demo-primary, 12%);
+    font-weight: 500;
+  }
+  .auto-complete-options .auto-complete-option.option-hover {
+    background: fade(@demo-primary, 10%);
+  }
+}
+.demo-label {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 13px;
+}
+</style>

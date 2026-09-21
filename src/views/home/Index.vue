@@ -86,10 +86,6 @@ const toolFunctions = [
     description: '监听给定名称或名称数组的插槽是否存在，支持监听单个插槽或一组插槽的存在'
   },
   {
-    name: 'useInject',
-    description: '使用依赖注入的函数，用于获取颜色调色板和阴影颜色'
-  },
-  {
     name: 'useOptionsSupported',
     description: '检查浏览器是否支持给定的事件监听器选项'
   },
@@ -112,10 +108,6 @@ const toolFunctions = [
   {
     name: 'useScrollParent',
     description: '查询并监听最近可滚动父元素，响应视口 resize 的组合式函数'
-  },
-  {
-    name: 'useFloatingPosition',
-    description: '为弹出类组件提供统一测量骨架的组合式函数'
   }
 ]
 const functionItems = [
@@ -139,14 +131,12 @@ import {
   useMediaQuery,
   useResizeObserver,
   useSlotsExist,
-  useInject,
   useOptionsSupported,
   getColorPalettes,
   getAlphaColor,
   getScrollParent,
   lockScroll,
-  useScrollParent,
-  useFloatingPosition
+  useScrollParent
 } from 'vue-amazing-ui'
 <\/script>`
   }

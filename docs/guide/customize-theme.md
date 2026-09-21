@@ -14,7 +14,7 @@
 <!-- App.vue -->
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ConfigProviderTheme } from 'vue-amazing-ui'
+import type { ConfigProviderTheme } from 'vue-amazing-ui'
 const theme = ref<ConfigProviderTheme>({
   common: {
     primaryColor: '#ff6900'
@@ -37,7 +37,7 @@ const theme = ref<ConfigProviderTheme>({
 <!-- App.vue -->
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ConfigProviderTheme } from 'vue-amazing-ui'
+import type { ConfigProviderTheme } from 'vue-amazing-ui'
 const theme = ref<ConfigProviderTheme>({
   common: {
     primaryColor: '#1677ff'

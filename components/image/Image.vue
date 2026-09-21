@@ -3,7 +3,7 @@ import { computed, ref, watchEffect, nextTick } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Space, { type SpaceProps } from 'components/space'
 import Spin, { type SpinProps } from 'components/spin'
-import { add, downloadFile, useInject } from 'components/utils'
+import { add, downloadFile, getImageName, useInject, useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
 export interface Image {
   src: string // 图像地址
   name?: string // 图像名称，未设置时自动从图像地址 src 中提取
@@ -19,6 +19,7 @@ export interface Props {
   fit?: 'contain' | 'fill' | 'cover' | 'none' | 'scale-down' // 图片在容器内的的适应类型
   preview?: string // 预览文本
   previewImageStyle?: CSSProperties // 自定义预览图片时 img 元素的样式
+  zIndex?: number // 预览遮罩层级，预览容器取该值 + 10；不传时由 ConfigProvider 的 baseZIndex 分配（默认遮罩 1070 / 预览 1080）
   spaceProps?: SpaceProps // Space 组件属性配置，用于配置多张展示图片时的排列方式
   spinProps?: SpinProps // Spin 组件属性配置，用于配置图片加载中样式
   previewSpinProps?: SpinProps // Spin 组件属性配置，用于配置预览图片加载中样式
@@ -50,6 +51,7 @@ const props = withDefaults(defineProps<Props>(), {
   fit: 'contain',
   preview: '预览',
   previewImageStyle: () => ({}),
+  zIndex: undefined,
   spaceProps: () => ({}),
   spinProps: () => ({}),
   previewSpinProps: () => ({}),
@@ -70,6 +72,25 @@ const previewIndex = ref<number>(0) // 当前预览的图片索引
 const showPreview = ref<boolean>(false) // 是否显示预览
 const imagesRef = ref<HTMLImageElement[]>([]) // 图片 DOM 引用
 const imagesCompleted = ref<boolean[]>([]) // 图片是否加载完成
+// 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配，未传则沿用默认层级
+// （遮罩 1070 / 预览 1080）；本层需连续占用 2 段
+// 领取 / 归还由「出现」驱动（allocateOnMount: false）：未打开预览时不占槽位、预览关闭即归还，
+// 使层级数值随「同时可见的浮层数」增长（与 Modal / Select / Message 等持层组件同一不变量）
+const {
+  zIndex: layerZIndex,
+  allocate: allocateZIndex,
+  release: releaseZIndex
+} = useZIndex(FLOATING_LAYER_Z_INDEX.image, 2, { allocateOnMount: false })
+// 显式 zIndex 优先级最高（与 Modal / Dialog / Drawer 等浮层组件一致）
+const previewZIndex = computed(() => props.zIndex ?? layerZIndex.value)
+// 每次「出现」重新领取层级、隐藏即归还（未注入管理器时均为空操作）
+watchEffect(() => {
+  if (showPreview.value) {
+    allocateZIndex()
+  } else {
+    releaseZIndex()
+  }
+})
 const previewImagesRef = ref<HTMLImageElement[]>([]) // 预览图片 DOM 引用
 const previewCompleted = ref<boolean[]>([]) // 预览图片是否加载完成
 const rotate = ref<number>(0) // 预览图片旋转角度
@@ -117,35 +138,6 @@ function onImageLoaded(index: number): void {
 // 预览图片加载完成（例如相册模式，可在预览中切换到未加载完成的图片）
 function onPreviewLoaded(index: number): void {
   previewCompleted.value[index] = true
-}
-// 从地址中提取路径末段作为原始文件名
-function getRawNameFromUrl(src: string): string {
-  // 以当前页面地址为 base 解析，兼容相对路径；解析失败时降级为手工切分
-  let pathname = ''
-  try {
-    pathname = new URL(src, location.href).pathname
-  } catch {
-    pathname = src.split('?')[0].split('#')[0]
-  }
-  const segments = pathname.split('/')
-  return segments[segments.length - 1] || ''
-}
-// 从图像地址 src 中获取图像名称
-// 优先使用显式传入的 name，否则从 src 中提取：
-// 用 URL.pathname 天然剥离查询参数（?）与哈希（#），再取末段并做 URL 解码
-function getImageName(image: Image): string | undefined {
-  if (image) {
-    if (image.name) {
-      return image.name
-    }
-    const rawName = getRawNameFromUrl(image.src)
-    try {
-      return decodeURIComponent(rawName)
-    } catch {
-      // 路径段含非法百分号编码时 decodeURIComponent 会抛异常，此时原样返回
-      return rawName
-    }
-  }
 }
 function getImageSize(size: string | number | (string | number)[], index: number): string {
   if (Array.isArray(size)) {
@@ -397,7 +389,7 @@ function onSwitchRight(): void {
       leave-active-class="fade-leave fade-leave-active"
       leave-to-class="fade-leave fade-leave-active"
     >
-      <div v-show="showPreview" class="preview-mask"></div>
+      <div v-show="showPreview" class="preview-mask" :style="{ zIndex: previewZIndex }"></div>
     </Transition>
     <Transition
       name="zoom"
@@ -412,6 +404,7 @@ function onSwitchRight(): void {
         v-show="showPreview"
         ref="previewRef"
         class="preview-container"
+        :style="{ zIndex: previewZIndex + 10 }"
         tabindex="-1"
         @click.self="onClose"
         @wheel.prevent="onWheel"
@@ -811,7 +804,8 @@ function onSwitchRight(): void {
   .preview-mask {
     position: fixed;
     inset: 0;
-    z-index: 1000;
+    /* 默认层级与 useZIndex 的回退值一致；ConfigProvider 传入 baseZIndex 时由内联样式覆盖 */
+    z-index: 1070;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.45);
   }
@@ -823,6 +817,7 @@ function onSwitchRight(): void {
     right: 0;
     overflow: auto;
     outline: none;
+    /* 默认层级为预览层（遮罩 +10）；ConfigProvider 传入 baseZIndex 时由内联样式覆盖 */
     z-index: 1080;
     height: 100%;
     text-align: center;
@@ -920,6 +915,7 @@ function onSwitchRight(): void {
         left: 12px;
         position: fixed;
         top: 50%;
+        /* 预览层操作按钮：位于预览内容之上 +1 */
         z-index: 1081;
         display: flex;
         align-items: center;
@@ -948,6 +944,7 @@ function onSwitchRight(): void {
         right: 12px;
         position: fixed;
         top: 50%;
+        /* 预览层操作按钮：位于预览内容之上 +1 */
         z-index: 1081;
         display: flex;
         align-items: center;
