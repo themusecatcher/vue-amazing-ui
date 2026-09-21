@@ -100,6 +100,10 @@ export function createDiscreteApi<K extends DiscreteApiType>(
     loadingBar: loadingBarProviderProps
   }
   // 提取器：在 Provider 内部的 setup 中取 api，渲染为空
+  // ⚠️ 必须经 hookMap[type]()（即 useMessage() / useLoadingBar() 等）沿「组件实例链」取，
+  // 不能用裸 inject()：在 app.runWithContext() 上下文（如 vue-router 导航守卫）中，
+  // inject() 会改道去翻宿主 app 的 app 级 provides，取不到 Provider 的组件级 provide
+  // （原因详见 utils 的 injectFromChain）
   const extractors = types.map((type) =>
     defineComponent({
       setup() {

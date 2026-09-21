@@ -288,13 +288,49 @@ interface ProvidesChainInstance {
 /**
  * 沿组件实例链解析注入值（不经过 `inject()`）
  *
- * 为什么需要它：Vue 的 `inject()` 在 `currentApp` 存在时（即处于 `app.runWithContext()`
- * 上下文，例如 vue-router 的导航守卫）会**优先读取该 app 的 app 级 `provides` 而绕过组件链**。
- * 而 `createDiscreteApi()` 正是在守卫这类场景中被推荐调用，其内部提取器需命中
- * `<XxxProvider>` 的**组件级** `provide` —— 用 `inject()` 会取不到（返回默认值）。
+ * **为什么不能直接用 `inject()`**
  *
- * 本函数只沿 `instance.provides` 查找（其原型链已包含祖先与 app 级 `provides`），
- * 语义与「`useXxx()` 须在 `<XxxProvider>` 内部使用」的约定一致。
+ * `inject()` 内部是「二选一且不回退」：
+ *
+ * ```js
+ * // @vue/runtime-core: inject()（简化示意）
+ * const provides = currentApp
+ *   ? currentApp._context.provides // currentApp 非空：只翻宿主 app 的 app 级 provides
+ *   : instance.parent.provides     // 否则：沿组件链往上找
+ * if (provides && key in provides) return provides[key]
+ * return defaultValue            // 这条岔路翻不到，就到此为止，不再回头
+ * ```
+ *
+ * 而 `currentApp` 只在 `app.runWithContext(fn)` 执行 `fn` 期间被临时指向该 app；
+ * vue-router 4.6 正是用它执行导航守卫（`beforeEach` / `beforeRouteEnter` / `afterEach`）。
+ * 于是官方推荐在守卫里调用的 `createDiscreteApi()` 踩中此坑：其内部提取器虽位于
+ * `<XxxProvider>` 之内，`inject()` 却因 `currentApp` 非空而改道去翻**宿主 app** 的
+ * **app 级** `provides`；而组件库的注入 key 由各 Provider 在**组件级** `provide`，
+ * 那里没有 → 返回默认值 `null` → `useXxx()` 抛错。
+ *
+ * **为什么「翻错地方」等于「必定找不到」**
+ *
+ * ```text
+ * app._context.provides      ← 全 app 唯一，Object.create(null)，只装 app.provide() 的
+ *         ▲ 原型
+ * 根组件实例.provides
+ *         ▲ 原型
+ * …中间各层组件的 provides…
+ *         ▲ 原型
+ * <XxxProvider>.provides     ← 组件库的注入 key 在这一层
+ *         ▲ 原型
+ * 提取器组件.provides         ← 查找起点
+ * ```
+ *
+ * 组件实例的 `provides` 以 app 级 `provides` 为**最顶层原型**，可见性是单行道：
+ * 组件看得见 app 级，app 级看不见任何组件级。故 `inject()` 一旦被改道到 app 级，
+ * 便无法回头命中组件级 —— 与 `<XxxProvider>` 是否写在 `App.vue` 中无关。
+ *
+ * **本函数的做法**
+ *
+ * 只读 `instance.provides`（原型链已含祖先组件级与 app 级 `provides`，是 `inject()`
+ * 正常路径可见范围的超集），必要时沿 `instance.parent` 兜底上溯，且**完全不看
+ * `currentApp`**，从而始终命中提取器自己那条链上的 `<XxxProvider>`。
  *
  * 组件库内部使用：注入协议属内部实现，不对外导出、不承诺 API 稳定性。
  *
