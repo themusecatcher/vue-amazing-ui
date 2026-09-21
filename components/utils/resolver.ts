@@ -1,174 +1,25 @@
-import { vendorStylesByComponent } from './vendor-styles'
-// 所有组件样式的路径映射
-const componentsMap = {
-  Alert: 'alert',
-  AutoComplete: 'auto-complete',
-  Avatar: 'avatar',
-  BackTop: 'back-top',
-  Badge: 'badge',
-  Breadcrumb: 'breadcrumb',
-  Button: 'button',
-  Calendar: 'calendar',
-  Card: 'card',
-  Carousel: 'carousel',
-  Cascader: 'cascader',
-  Checkbox: 'checkbox',
-  Collapse: 'collapse',
-  ColorPicker: 'color-picker',
-  Comment: 'comment',
-  ConfigProvider: 'config-provider',
-  Countdown: 'countdown',
-  DatePicker: 'date-picker',
-  Descriptions: 'descriptions/descriptions',
-  DescriptionsItem: 'descriptions/descriptions-item',
-  Dialog: 'dialog',
-  Divider: 'divider',
-  Drawer: 'drawer',
-  Ellipsis: 'ellipsis',
-  Empty: 'empty',
-  Flex: 'flex',
-  FloatButton: 'float-button',
-  GradientText: 'gradient-text',
-  Row: 'grid/row',
-  Col: 'grid/col',
-  Highlight: 'highlight',
-  Image: 'image',
-  Input: 'input',
-  InputNumber: 'input-number',
-  InputSearch: 'input-search',
-  List: 'list/list',
-  ListItem: 'list/list-item',
-  LoadingBar: 'loading-bar',
-  Message: 'message',
-  Modal: 'modal',
-  Notification: 'notification',
-  NumberAnimation: 'number-animation',
-  Pagination: 'pagination',
-  Popconfirm: 'popconfirm',
-  Popover: 'popover',
-  Popup: 'popup',
-  Progress: 'progress',
-  QRCode: 'qr-code',
-  Radio: 'radio',
-  Rate: 'rate',
-  Result: 'result',
-  Scrollbar: 'scrollbar',
-  Segmented: 'segmented',
-  Select: 'select',
-  Skeleton: 'skeleton',
-  Slider: 'slider',
-  Space: 'space',
-  Spin: 'spin',
-  Statistic: 'statistic',
-  Steps: 'steps',
-  Swiper: 'swiper',
-  Switch: 'switch',
-  Table: 'table',
-  Tabs: 'tabs',
-  Tag: 'tag',
-  Textarea: 'textarea',
-  TextScroll: 'text-scroll',
-  Timeline: 'timeline',
-  Tooltip: 'tooltip',
-  Upload: 'upload',
-  Video: 'video',
-  Waterfall: 'waterfall',
-  Watermark: 'watermark',
-  // 命令式调用入口组件：与底层组件同目录，自身无独立样式文件
-  MessageProvider: 'message',
-  NotificationProvider: 'notification',
-  ModalProvider: 'modal',
-  DialogProvider: 'dialog'
-}
-/** 已收录的组件名，用于约束下方各映射表的键与值，避免写错组件名生成 undefined 路径 */
-type ComponentName = keyof typeof componentsMap
-/** 类型守卫：判断传入的组件名是否已被 componentsMap 收录 */
-function isComponentName(name: string): name is ComponentName {
-  return name in componentsMap
-}
-// 组件样式的来源表：键为「自身无样式文件的组件」，值为「承载其样式的组件」
-// 两类来源：① 命令式 Provider 复用底层组件的样式；② 子组件样式定义在父组件 SFC 内（如 DescriptionsItem）
-// 用 Partial 表达「可能查不到」，与运行时行为一致；值约束为 ComponentName，拼错即在编译期报错
-const styleSources: Partial<Record<ComponentName, ComponentName>> = {
-  MessageProvider: 'Message',
-  NotificationProvider: 'Notification',
-  ModalProvider: 'Modal',
-  DialogProvider: 'Dialog',
-  DescriptionsItem: 'Descriptions'
-}
-// 定义组件依赖关系（仅声明「除自身外的样式依赖」，自身样式由 styleSources / componentsMap 兜底）
-// 注：Tooltip 的浮层宿主为 Popup，因此 Tooltip 及其全部间接依赖组件都要追加 Popup
-const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
-  AutoComplete: ['Scrollbar'],
-  BackTop: ['Tooltip', 'Popup'],
-  Calendar: ['Radio', 'Select', 'Empty', 'Scrollbar'],
-  Card: ['Skeleton'],
-  Carousel: ['Spin'],
-  Cascader: ['Select', 'Empty', 'Scrollbar'],
-  Collapse: ['Button'],
-  ColorPicker: ['Button', 'Input', 'Tooltip', 'Popup'],
-  Dialog: ['Button', 'Scrollbar'],
-  DialogProvider: ['Button', 'Scrollbar'],
-  Drawer: ['Scrollbar'],
-  Ellipsis: ['Tooltip', 'Popup'],
-  FloatButton: ['Badge', 'Tooltip', 'Popup'],
-  Image: ['Space', 'Spin'],
-  InputSearch: ['Button'],
-  List: ['Empty', 'Pagination', 'Input', 'Select', 'Scrollbar', 'Spin'],
-  ListItem: ['Avatar'],
-  Modal: ['Button', 'Scrollbar'],
-  ModalProvider: ['Button', 'Scrollbar'],
-  Notification: ['Scrollbar'],
-  NotificationProvider: ['Scrollbar'],
-  Pagination: ['Input', 'Select', 'Empty', 'Scrollbar'],
-  Popconfirm: ['Button', 'Tooltip', 'Popup'],
-  Popover: ['Tooltip', 'Popup'],
-  Rate: ['Tooltip', 'Popup'],
-  Select: ['Empty', 'Scrollbar'],
-  Table: [
-    'Checkbox',
-    'Ellipsis',
-    'Empty',
-    'Pagination',
-    'Input',
-    'Select',
-    'Radio',
-    'Scrollbar',
-    'Spin',
-    'Tooltip',
-    'Popup'
-  ],
-  Tag: ['Space'],
-  TextScroll: ['Ellipsis', 'Tooltip', 'Popup'],
-  Tooltip: ['Popup'],
-  Upload: ['Image', 'Space', 'Spin'],
-  Waterfall: ['Spin']
-}
-function getSideEffects(componentName: ComponentName, options?: VueAmazingUIResolverOptions) {
-  if (['ConfigProvider', 'Highlight', 'NumberAnimation', 'Watermark'].includes(componentName)) {
+import { componentsMap, isComponentName, styleSources, stylelessComponents } from './style-deps'
+import type { ComponentName } from './style-deps'
+
+/**
+ * 计算按需引入携带的样式 sideEffects
+ *
+ * D 方案（每组件一个样式入口）后，本函数只回答一个问题：「该组件的样式入口在哪」——
+ * 入口 `es|lib/<dir>/style/index.{js,cjs}` 内部已按「global → 自身 → 依赖 → vendor」的顺序
+ * 引用全部所需 CSS（由构建期 build/generate-style-entries.ts 依据 style-deps.ts 生成）。
+ * 因此这里不再维护依赖表、也不再拼接多条 CSS 路径。
+ */
+function getSideEffects(componentName: ComponentName, options?: VueAmazingUIResolverOptions): string[] {
+  if (stylelessComponents.includes(componentName)) {
     // 无样式文件的组件
     return []
   }
-  // 组件自身无样式文件时，改取其样式来源组件的样式（如 MessageProvider -> Message、DescriptionsItem -> Descriptions）
-  const styleComponent = styleSources[componentName] ?? componentName
-  const sideEffectsComponents: ComponentName[] = [styleComponent] // 组件依赖的所有样式
-  const dependencies = componentDependencies[componentName]
-  if (dependencies) {
-    sideEffectsComponents.push(...dependencies)
-  }
+  // 组件自身无样式文件时，入口落在其样式来源组件的目录（如 MessageProvider -> Message）
+  const source = styleSources[componentName] ?? componentName
   const type = options?.cjs ? 'lib' : 'es'
-  const sideEffects: string[] = [`vue-amazing-ui/${type}/style/global.css`] // 组件库全局默认样式
-  sideEffectsComponents.forEach((component: ComponentName) => {
-    sideEffects.push(`vue-amazing-ui/${type}/${componentsMap[component]}/${component}.css`)
-  })
-  // 第三方样式依赖：从共享清单按组件名查表，追加到 sideEffects（构建时已复制到产物 vendor 固定路径）
-  const vendorTargets = vendorStylesByComponent[componentName]
-  if (vendorTargets) {
-    vendorTargets.forEach((target) => {
-      sideEffects.push(`vue-amazing-ui/${type}/${target}`)
-    })
-  }
-  return sideEffects
+  const ext = options?.cjs ? 'cjs' : 'js'
+  // 显式给出文件名（而非裸目录 `…/style`）：resolver 属自动注入，不依赖消费方工具链的目录索引解析
+  return [`vue-amazing-ui/${type}/${componentsMap[source]}/style/index.${ext}`]
 }
 export interface VueAmazingUIResolverOptions {
   cjs?: boolean // whether use commonjs build, default false
@@ -182,7 +33,7 @@ export function VueAmazingUIResolver(options?: VueAmazingUIResolverOptions) {
         return {
           name: componentName, // 组件名
           from: 'vue-amazing-ui', // 组件库名称
-          sideEffects: getSideEffects(componentName, options) // 组件样式文件
+          sideEffects: getSideEffects(componentName, options) // 组件样式入口
         }
       }
     }

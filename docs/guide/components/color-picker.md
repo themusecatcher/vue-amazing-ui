@@ -107,7 +107,7 @@ function labelFormat(color: string) {
 </script>
 <template>
   <Space :width="360">
-    <ColorPicker :label="labelFormat"/>
+    <ColorPicker :label="labelFormat" />
     <ColorPicker>
       <template #label="{ color }">
         I'm {{ color }}

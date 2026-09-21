@@ -8,7 +8,8 @@
     "playwright.config.*",
     "eslint.config.*",
     "components/utils/vendor-styles.ts",
-    "scripts/**/*.ts"
+    "components/utils/style-deps.ts",
+    "build/**/*.ts"
   ],
   "compilerOptions": {
     "composite": true,

@@ -125,6 +125,17 @@ if ! pnpm build; then
     exit 1
 fi
 
+# 产物级验证（按需引入样式入口方案）：依赖表 ↔ 产物 chunk 闭包一致性 + 按需引入端到端（canary）
+# 与 npm publish 触发的 prepublish-guard.js 形成多重保险：守卫查「产物文件在不在」，这里查「按需引入后样式是否齐全」
+if ! pnpm verify:deps; then
+    echo "❌ 样式依赖一致性校验未通过，请修复后重试"
+    exit 1
+fi
+if ! pnpm verify:on-demand; then
+    echo "❌ 按需引入验证未通过，请修复后重试"
+    exit 1
+fi
+
 # 检查是否有待提交的更改
 if [ -n "$(git status --porcelain)" ]; then
     git add .

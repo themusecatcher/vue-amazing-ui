@@ -149,7 +149,7 @@ const timelineItems = ref<TimelineItem[]>([
   height: 18px;
   border: 4px solid #1677ff;
   border-radius: 50%;
-  background: #FFF;
+  background: #fff;
 }
 .desc {
   font-size: 16px;
@@ -281,7 +281,7 @@ const timelineItems = ref<TimelineItem[]>([
 <template>
   <Timeline :items="timelineItems" mode="center">
     <template #dot="{ index }">
-      <span class="big-dot" v-if="index===2"></span>
+      <span class="big-dot" v-if="index === 2"></span>
     </template>
   </Timeline>
 </template>
@@ -330,7 +330,7 @@ const timelineItems = ref<TimelineItem[]>([
 <template>
   <Timeline :items="timelineItems" mode="center" position="right">
     <template #dot="{ index }">
-      <span class="big-dot" v-if="index===2"></span>
+      <span class="big-dot" v-if="index === 2"></span>
     </template>
   </Timeline>
 </template>

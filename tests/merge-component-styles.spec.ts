@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, relative } from 'node:path'
-import { mergeComponentStyles } from '../scripts/merge-component-styles'
+import { mergeComponentStyles } from '../build/merge-component-styles'
 
 /**
  * 按需产物的样式合并守护

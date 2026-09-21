@@ -41,48 +41,18 @@ app.use(VueAmazingUI)
 app.mount('#app')
 ```
 
-> **全局部分注册**
+> **按需引入（推荐）**
 
-_全局或局部引入部分组件，都只有导入的组件才会被打包_
-
-```ts
-import { createApp } from 'vue'
-import App from './App.vue'
-import { Button, Tag } from 'vue-amazing-ui'
-import 'vue-amazing-ui/es/button/Button.css'
-import 'vue-amazing-ui/es/tag/Tag.css'
-
-const app = createApp(App)
-app.use(Button).use(Tag)
-app.mount('#app')
-```
-
-> **局部注册组件**
-
-_这种情况下，也只有导入的组件才会被打包_
-
-```vue
-<script setup lang="ts">
-import { Button, Tag } from 'vue-amazing-ui'
-import 'vue-amazing-ui/es/button/Button.css'
-import 'vue-amazing-ui/es/tag/Tag.css'
-</script>
-<template>
-  <Button>button</Button>
-  <Tag>tag</Tag>
-</template>
-```
-
-> **全局部分注册和局部注册组件，都需手动引入组件库全局默认样式（推荐使用[自动按需引入](/guide/import-on-demand#自动按需引入-强烈推荐)）**
+_只有导入的组件才会被打包；每个组件一个样式入口，已内含组件库全局默认样式 + 组件自身样式 + 其依赖组件样式_
 
 ```ts
-import { createApp } from 'vue'
-import App from './App.vue'
-import 'vue-amazing-ui/es/style/global.css' // 引入全局默认样式
-
-const app = createApp(App)
-app.mount('#app')
+import { Button, Tag } from 'vue-amazing-ui'
+import 'vue-amazing-ui/es/button/style'
+import 'vue-amazing-ui/es/tag/style'
 ```
+
+- 组件可直接在 `main.ts` 中 `app.use(Button).use(Tag)` 全局注册，也可在 `SFC` 中按需使用；
+- 更省心的是自动按需引入（无需手写样式引入），详见[按需引入](./import-on-demand.md#自动按需引入-强烈推荐)。
 
 ## 使用类型
 
