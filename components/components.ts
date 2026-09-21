@@ -46,6 +46,9 @@ export { default as Collapse } from './collapse'
 export type { ColorPickerProps, ColorPickerMode, ColorPickerAction } from './color-picker'
 export { default as ColorPicker } from './color-picker'
 
+export type { CommentProps } from './comment'
+export { default as Comment } from './comment'
+
 export type { ConfigProviderProps, ConfigProviderTheme } from './config-provider'
 export { default as ConfigProvider } from './config-provider'
 

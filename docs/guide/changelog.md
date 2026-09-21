@@ -10,8 +10,9 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-09-20">2.10.0</VersionDateTag>
+## <VersionDateTag date="2026-09-21">2.10.0</VersionDateTag>
 
+- 新增 [评论 Comment](/guide/components/comment.html) 组件
 - 重构按需引入的样式注入为「每组件一个样式入口」：手动引入可用 `import 'vue-amazing-ui/es/button/style'` 一次引全全局默认样式、组件自身样式与其依赖组件样式，无需再自行列举；原写法 `import 'vue-amazing-ui/es/button/Button.css'` 仍然有效，自动按需引入（`VueAmazingUIResolver`）用法与行为不变
 - 更新 [按需引入](/guide/import-on-demand.html)、[快速上手](/guide/getting-started.html) 与 [特性](/guide/features.html)：手动引入示例统一改用上述样式入口写法并合并重复内容，明确样式入口已内含全局默认样式（旧写法仍需自行引入依赖组件样式与全局默认样式），`README` 同步
 - 更新贡献者文档：`development/` 补充样式入口模型、构建后处理与产物校验说明，并同步「新增组件三步接线」清单；`CONTRIBUTING` 补充 `pnpm verify` 门禁与对应自检提示
@@ -966,7 +967,6 @@
 - 新增 菜单 Menu 组件
 - 新增 穿梭框 Transfer 组件
 - 新增 漫游式引导 Tour 组件
-- 新增 评论 Comment 组件
 - 新增 下拉菜单 Dropdown 组件
 <!-- - 更新 表格 Table 组件，新增虚拟滚动功能
 - 时间轴 Timeline 组件，新增水平时间轴
