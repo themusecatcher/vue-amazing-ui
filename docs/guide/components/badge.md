@@ -317,7 +317,7 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
     <Badge status="processing" ripple />
     <Badge status="warning" ripple />
   </Space>
-  <br/>
+  <br />
   <Space style="margin-top: 10px;" vertical>
     <Badge status="success" text="Success" />
     <Badge status="error" text="Error" />
@@ -363,12 +363,12 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const value = ref(5)
 const dot = ref(true)
-function decline () {
+function decline() {
   if (value.value >= 1) {
     value.value--
   }
 }
-function increase () {
+function increase() {
   value.value++
 }
 </script>

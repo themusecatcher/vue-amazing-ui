@@ -581,8 +581,8 @@ function onDecline(scale: number) {
       primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
     </Space>
   </Card>
-  <br/>
-  <br/>
+  <br />
+  <br />
   <ConfigProvider :theme="{ common: { primaryColor } }">
     <Flex vertical>
       <Space align="center">

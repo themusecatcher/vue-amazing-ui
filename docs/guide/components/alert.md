@@ -117,7 +117,7 @@ function onClose(e: Event) {
 
 ```vue
 <script setup lang="ts">
-function onClose (e: Event) {
+function onClose(e: Event) {
   console.log(e, 'I was closed.')
 }
 </script>
@@ -501,7 +501,7 @@ import { SmileOutlined } from '@ant-design/icons-vue'
 
 ```vue
 <script setup lang="ts">
-function onClose (e: Event) {
+function onClose(e: Event) {
   console.log(e, 'I was closed.')
 }
 </script>
@@ -554,7 +554,7 @@ function onClose (e: Event) {
 
 ```vue
 <script setup lang="ts">
-function onClose (e: Event) {
+function onClose(e: Event) {
   console.log(e, 'I was closed.')
 }
 </script>

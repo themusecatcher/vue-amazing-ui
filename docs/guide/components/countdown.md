@@ -40,7 +40,7 @@ function onReset() {
 
 ```vue
 <script setup lang="ts">
-function onFinish () {
+function onFinish() {
   console.log('countdown finished')
 }
 </script>
