@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onUnmounted, ref, watch } from 'vue'
-// antd 真身：对照期为验收脚手架，阶段 5 与对照一起清除（方式 B 显式 import，避免幽灵声明）
-import { CheckOutlined, MehOutlined, PlusOutlined, SmileOutlined } from '@ant-design/icons-vue'
+import { CheckOutlined, MehOutlined, PlusOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons-vue'
 import type { SelectProps, SelectOption } from 'vue-amazing-ui'
 // 基本使用
 const basicOptions: SelectOption[] = [
@@ -55,6 +54,15 @@ const maxTagTextLengthRadios = [
 // 自动分词
 const tokenValue = ref<SelectProps['value']>([])
 const tokenOptions: SelectOption[] = [{ value: 'a1', label: 'a1' }]
+// 获得选项的文本（labelInValue）
+const labelInValueOptions: SelectOption[] = [
+  { value: 'jack', label: 'Jack (100)' },
+  { value: 'lucy', label: 'Lucy (101)' }
+]
+const labelInValueValue = ref<SelectProps['value']>({ value: 'lucy', label: 'Lucy (101)' })
+function onLabelInValueChange(value: SelectProps['value']) {
+  console.log('labelInValue', value)
+}
 // 多选
 const multipleValue = ref<SelectProps['value']>(['10', '11'])
 // 联动
@@ -70,6 +78,21 @@ const cities = computed(() => cityData[province.value])
 watch(province, (value) => {
   secondCity.value = cityData[value][0]
 })
+// 分组：子组件式（SelectOptGroup + SelectOption）与配置式（options 嵌套）两种写法
+const groupValue = ref<SelectProps['value']>('lucy')
+const groupOptions: SelectOption[] = [
+  {
+    label: 'Manager',
+    options: [
+      { value: 'jack', label: 'Jack' },
+      { value: 'lucy', label: 'Lucy' }
+    ]
+  },
+  {
+    label: 'Engineer',
+    options: [{ value: 'yiminghe', label: 'Yiminghe' }]
+  }
+]
 // 搜索框（远程搜索）
 const remoteValue = ref<SelectProps['value']>()
 const remoteOptions = ref<SelectOption[]>([])
@@ -380,6 +403,19 @@ const emptyOptions: SelectOption[] = []
       :options="tokenOptions"
       :width="300"
     />
+    <h2 class="mt30 mb10">获得选项的文本</h2>
+    <p class="mb10">
+      开启 <code>labelInValue</code> 后 <code>value</code> 变为包含文本的对象：<code
+        >{ label, value, key, originLabel }</code
+      >
+    </p>
+    <Select
+      v-model:value="labelInValueValue"
+      label-in-value
+      :options="labelInValueOptions"
+      :width="120"
+      @change="onLabelInValueChange"
+    />
     <h2 class="mt30 mb10">多选</h2>
     <p class="mb10">从已有条目中选择多个值，下拉列表可滚动查看全部选项</p>
     <Select
@@ -393,6 +429,26 @@ const emptyOptions: SelectOption[] = []
     <Space>
       <Select :options="provinceData.map((pro) => ({ value: pro }))" v-model:value="province" :width="120" />
       <Select :options="cities.map((city) => ({ value: city }))" v-model:value="secondCity" :width="120" />
+    </Space>
+    <h2 class="mt30 mb10">分组</h2>
+    <p class="mb10">
+      用 <code>SelectOptGroup</code> / <code>SelectOption</code> 子组件或 <code>options</code> 的嵌套写法进行选项分组
+    </p>
+    <Space>
+      <Select v-model:value="groupValue" :width="200">
+        <SelectOptGroup>
+          <template #label>
+            <span><UserOutlined /> Manager</span>
+          </template>
+          <SelectOption value="jack">Jack</SelectOption>
+          <SelectOption value="lucy">Lucy</SelectOption>
+        </SelectOptGroup>
+        <SelectOptGroup label="Engineer">
+          <SelectOption value="Yiminghe">yiminghe</SelectOption>
+          <SelectOption value="Yiminghe1">yiminghe1</SelectOption>
+        </SelectOptGroup>
+      </Select>
+      <Select v-model:value="groupValue" :options="groupOptions" :width="200" />
     </Space>
     <h2 class="mt30 mb10">搜索框</h2>
     <Select
@@ -525,7 +581,7 @@ const emptyOptions: SelectOption[] = []
     <p class="mb10">
       通过 <code>fieldNames</code> 指定选项的文本 / 值字段，以及分组子选项的字段（<code>options</code>）
     </p>
-    <Space vertical align="start">
+    <Space align="start">
       <Select :options="fieldOptions" :field-names="fieldNames" v-model:value="fieldValue" :width="200" />
       <Select
         :options="groupFieldOptions"

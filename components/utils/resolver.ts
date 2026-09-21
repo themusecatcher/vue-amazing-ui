@@ -54,6 +54,8 @@ const componentsMap = {
   Scrollbar: 'scrollbar',
   Segmented: 'segmented',
   Select: 'select',
+  SelectOptGroup: 'select/select-optgroup',
+  SelectOption: 'select/select-option',
   Skeleton: 'skeleton',
   Slider: 'slider',
   Space: 'space',
@@ -93,7 +95,9 @@ const styleSources: Partial<Record<ComponentName, ComponentName>> = {
   NotificationProvider: 'Notification',
   ModalProvider: 'Modal',
   DialogProvider: 'Dialog',
-  DescriptionsItem: 'Descriptions'
+  DescriptionsItem: 'Descriptions',
+  SelectOption: 'Select',
+  SelectOptGroup: 'Select'
 }
 // 定义组件依赖关系（仅声明「除自身外的样式依赖」，自身样式由 styleSources / componentsMap 兜底）
 // 注：Tooltip 的浮层宿主为 Popup，因此 Tooltip 及其全部间接依赖组件都要追加 Popup

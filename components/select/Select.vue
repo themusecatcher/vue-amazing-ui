@@ -1,5 +1,19 @@
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect, nextTick, onMounted, inject, h, withDirectives, vShow, useSlots } from 'vue'
+import {
+  ref,
+  computed,
+  watch,
+  watchEffect,
+  nextTick,
+  onMounted,
+  inject,
+  h,
+  withDirectives,
+  vShow,
+  useSlots,
+  Fragment,
+  Text
+} from 'vue'
 import type { CSSProperties, Ref, VNode } from 'vue'
 import Empty from 'components/empty'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
@@ -27,6 +41,13 @@ export interface FieldNames {
   options?: string // 分组子选项的字段名（分组 / 树形数据，P2 起支持）
 }
 export type SelectValue = string | number
+// labelInValue 打开时的 value 对象形态（对齐 antd 的 LabeledValue）
+export interface LabeledValue {
+  label: unknown // 选项文本（子组件式写法下由默认插槽求值而来）
+  value: SelectValue // 选项值
+  key?: string | number // 选项唯一键，缺省时与 value 一致
+  originLabel?: unknown // 原始选项文本（子组件式写法下为默认插槽函数），对齐 antd
+}
 export type SelectPlacement = 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'
 export type SelectMode = 'multiple' | 'tags'
 // dropdownRender 的 menuNode：以函数组件形式提供，模板中可直接 <component :is="menuNode" /> 渲染
@@ -49,7 +70,8 @@ export interface Props {
   options?: Option[] // 选项数据
   fieldNames?: FieldNames // 选项字段名配置，用于自定义选项的文本 / 值字段
   mode?: SelectMode // 设置多选模式，'multiple' 为多选，'tags' 为标签（可输入并创建新条目），不传为单选
-  value?: SelectValue | SelectValue[] // (v-model:value) 当前选中的 option 条目值，mode 为 multiple / tags 时为数组
+  value?: SelectValue | LabeledValue | (SelectValue | LabeledValue)[] // (v-model:value) 当前选中的 option 条目值，mode 为 multiple / tags 时为数组；labelInValue 打开时元素为 { label, value, key, originLabel } 对象
+  labelInValue?: boolean // 是否把每个选项的 label 包装到 value 中，value 类型变为 { label, value, key, originLabel }
   optionLabelProp?: string // 回填到选择框的 option 属性值，未指定时取 label 字段
   // 外观与尺寸
   width?: string | number // 选择器宽度，单位 px
@@ -108,6 +130,7 @@ export interface Props {
 }
 // 声明组件插槽类型
 export interface SelectSlots {
+  default?: () => VNode[] // 子组件式选项（<SelectOption> / <SelectOptGroup>）
   option?: (props: Option) => VNode[]
   notFoundContent?: () => VNode[]
   suffixIcon?: () => VNode[]
@@ -126,6 +149,7 @@ const props = withDefaults(defineProps<Props>(), {
   fieldNames: undefined,
   mode: undefined,
   value: undefined,
+  labelInValue: false,
   optionLabelProp: undefined,
   width: 'auto',
   height: undefined,
@@ -235,9 +259,114 @@ const mergedFieldNames = computed(() => ({
 }))
 // 分组子选项字段名（antd 口径：fieldNames.options，未指定时为 'options'）
 const groupField = computed(() => props.fieldNames?.options || 'options')
+// ==================== 子组件式选项（default 插槽） ====================
+/** 选项 / 分组标记组件的静态标记字段（对齐 antd 的 isSelectOption / isSelectOptGroup） */
+interface OptionMarker {
+  isSelectOption?: boolean
+  isSelectOptGroup?: boolean
+}
+/** 判定 vnode 是否为标记组件：非标记组件（含普通元素 / 文本）返回 null */
+function getMarkerKind(vnode: VNode): 'option' | 'group' | null {
+  const type = vnode.type as OptionMarker | null
+  if (!type) return null
+  if (type.isSelectOptGroup) return 'group'
+  if (type.isSelectOption) return 'option'
+  return null
+}
+/** vnode.key 归一为 string | number（symbol / null 视为未设置） */
+function getVNodeKey(vnode: VNode): string | number | undefined {
+  const { key } = vnode
+  return typeof key === 'string' || typeof key === 'number' ? key : undefined
+}
+/** 插槽返回值归一为数组：数组原样、单节点 / 文本包成数组、空值转空数组（函数式插槽可不返回数组） */
+function toSlotChildren(result: unknown): VNode[] {
+  if (Array.isArray(result)) return result as VNode[]
+  if (result === undefined || result === null) return []
+  return [result as VNode]
+}
+/**
+ * 提取插槽渲染结果中的纯文本：递归进入元素子节点（组件节点取不到渲染结果，跳过）。
+ * 该文本用于 tag / title / 过滤 / maxTagTextLength 截断等文本场景；富内容渲染直接取插槽函数（见 getOptionLabelSlot）
+ */
+function getSlotText(nodes: VNode[] | undefined): string | undefined {
+  if (!nodes?.length) return undefined
+  let text = ''
+  const walk = (list: VNode[]) => {
+    list.forEach((node) => {
+      if (typeof node === 'string' || typeof node === 'number') {
+        text += String(node)
+        return
+      }
+      const children = node?.children
+      if (node?.type === Text || typeof children === 'string') {
+        text += String(children ?? '')
+        return
+      }
+      if (Array.isArray(children)) walk(children as VNode[])
+    })
+  }
+  walk(nodes)
+  return text || undefined
+}
+/**
+ * 子组件式写法下挂载的「标签插槽函数」（选项取默认插槽、分组取 #label 插槽）：富内容（图标 + 文本）由它渲染。
+ * 该字段属内部约定（不外露于公开 Option 类型），缺省时回落 label 字段
+ */
+function getOptionLabelSlot(option: Option | undefined): (() => VNode[]) | undefined {
+  const slot: unknown = option?.children
+  return typeof slot === 'function' ? (slot as () => VNode[]) : undefined
+}
+/**
+ * 解析 default 插槽的 vnode 为选项数据（子组件式写法）：
+ * `<SelectOption>` → 选项对象，`<SelectOptGroup>` → 分组对象（组内子项递归解析），Fragment 展开后继续，其余节点忽略
+ */
+function parseSlotOptions(nodes: VNode[]): Option[] {
+  const { label: labelKey, value: valueKey } = mergedFieldNames.value
+  const items: Option[] = []
+  nodes.forEach((vnode) => {
+    if (vnode.type === Fragment) {
+      items.push(...parseSlotOptions((vnode.children as VNode[] | null) ?? []))
+      return
+    }
+    const kind = getMarkerKind(vnode)
+    if (!kind) return
+    // 组件 vnode 的 props 即传入的属性；插槽内容位于 children（对象形态）
+    const slotProps = (vnode.props ?? {}) as Record<string, unknown>
+    const slotFns = vnode.children as Record<string, (() => VNode[]) | undefined> | null
+    const { label: labelProp, value: valueProp, disabled: disabledProp, ...restProps } = slotProps
+    const optionKey = getVNodeKey(vnode)
+    // label 属性显式非空时优先于插槽文本（antd 口径：props.label 优先）
+    const hasLabelProp = typeof labelProp === 'string' && labelProp !== ''
+    if (kind === 'group') {
+      const labelNodes = toSlotChildren(slotFns?.label?.())
+      items.push({
+        ...restProps,
+        key: optionKey,
+        [labelKey]: hasLabelProp ? labelProp : (getSlotText(labelNodes) ?? String(optionKey ?? '')),
+        [groupField.value]: parseSlotOptions(toSlotChildren(slotFns?.default?.())),
+        // #label 插槽：富内容（图标 + 文本）由它渲染；label 属性已指定时不再渲染（antd 取 props.label）
+        children: hasLabelProp ? undefined : slotFns?.label
+      })
+      return
+    }
+    items.push({
+      ...restProps,
+      key: optionKey,
+      [valueKey]: valueProp ?? optionKey,
+      [labelKey]: hasLabelProp ? labelProp : getSlotText(toSlotChildren(slotFns?.default?.())),
+      // 支持 <SelectOption disabled />：静态属性编译为空串，故空串同样视为禁用（antd 口径）
+      disabled: disabledProp === '' || Boolean(disabledProp),
+      // 默认插槽：富内容由它渲染，labelInValue 的 originLabel 亦取此函数（对齐 antd）
+      children: hasLabelProp ? undefined : slotFns?.default
+    })
+  })
+  return items
+}
+/** 选项数据源：default 插槽（子组件式写法）存在时以插槽为准，否则取 options（本项目「插槽优先于 prop」的统一约定，antd 为 options 优先） */
+const rawOptions = computed<Option[]>(() => (slots.default ? parseSlotOptions(slots.default()) : props.options))
 /** 是否为「分组」形态：任一 option 的分组字段是非空数组即成立 */
 const hasGroupedOptions = computed(() =>
-  props.options.some((option) => {
+  rawOptions.value.some((option) => {
     const children = option?.[groupField.value]
     return Array.isArray(children) && children.length > 0
   })
@@ -248,28 +377,31 @@ const hasGroupedOptions = computed(() =>
  * 分组标题只在渲染时插入、不进索引空间 —— 故 change 第 3 参（展示列表下标）与扁平候选保持一致。
  */
 const flatOptions = computed<Option[]>(() => {
-  if (!hasGroupedOptions.value) return props.options
-  return props.options.flatMap((option) => {
+  if (!hasGroupedOptions.value) return rawOptions.value
+  return rawOptions.value.flatMap((option) => {
     const children = option?.[groupField.value]
-    return Array.isArray(children) && children.length > 0 ? children : [option]
+    return Array.isArray(children) && children.length > 0 ? (children as Option[]) : [option]
   })
 })
-/** 子选项值 → 所属分组标签：渲染分组标题用（跨组时插入一次） */
-const optionGroupLabels = computed(() => {
-  const labels = new Map<string, string>()
-  if (!hasGroupedOptions.value) return labels
-  props.options.forEach((option) => {
+/**
+ * 子选项值 → 所属分组信息：渲染分组标题用。
+ * 同时保存分组键（key 缺省时回落组序号）—— 标题内容可能是 VNode 数组，无法用引用比较判断是否跨组
+ */
+const optionGroups = computed(() => {
+  const groups = new Map<string, { option: Option; groupKey: string | number }>()
+  if (!hasGroupedOptions.value) return groups
+  rawOptions.value.forEach((option, index) => {
     const children = option?.[groupField.value]
     if (!Array.isArray(children) || !children.length) return
-    const groupLabel = String(getOptionLabel(option) ?? '')
-    children.forEach((child) => {
+    const groupKey = getOptionValue(option) ?? index
+    ;(children as Option[]).forEach((child) => {
       const childValue = getOptionValue(child)
       if (childValue !== undefined && childValue !== null) {
-        labels.set(String(childValue), groupLabel)
+        groups.set(String(childValue), { option, groupKey })
       }
     })
   })
-  return labels
+  return groups
 })
 const isMultiple = computed(() => props.mode === 'multiple' || props.mode === 'tags') // 是否多选模式（含标签模式）
 const isTagsMode = computed(() => props.mode === 'tags') // 是否标签模式（输入内容即可创建新条目）
@@ -279,15 +411,72 @@ const mergedShowSearch = computed(() => props.showSearch ?? isMultiple.value)
 const mergedShowArrow = computed(() => props.showArrow ?? (props.loading || !isMultiple.value))
 const mergedOpen = computed(() => (props.open !== undefined ? props.open : showOptions.value))
 const mergedSearchValue = computed(() => (props.searchValue !== undefined ? props.searchValue : innerSearchValue.value))
-// 多选值列表：单选值归一为单元素数组，空值统一为空数组（内部一律按数组处理）
-const valueList = computed<SelectValue[]>(() => {
-  const value = props.value
-  if (Array.isArray(value)) {
-    return value.filter((item) => item !== undefined && item !== null)
-  }
+// ==================== labelInValue ====================
+/** 是否为 labelInValue 对象（antd 口径：非对象 / 数组 / 空值一律视为原始值） */
+function isLabeledValue(value: unknown): value is LabeledValue {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+}
+/** 取 labelInValue 对象的原始选中值（缺省回落 key，antd 口径） */
+function getRawValue(item: SelectValue | LabeledValue): SelectValue | undefined {
+  if (!isLabeledValue(item)) return item
+  return item.value ?? item.key
+}
+/** v-model 入参归一为数组：数组原样、单值包成单元素数组、空值为空数组 */
+function toValueItems(value: Props['value']): (SelectValue | LabeledValue)[] {
+  if (Array.isArray(value)) return value
   if (value === undefined || value === null) return []
   return [value]
+}
+/** 入参 labelInValue 对象携带的 label：回填文本与事件回传时保留调用方传入的文本（antd 口径：入参 label 优先于选项数据） */
+const incomingLabels = computed(() => {
+  const labels = new Map<SelectValue, unknown>()
+  toValueItems(props.value).forEach((item) => {
+    if (!isLabeledValue(item) || item.label === undefined) return
+    const raw = getRawValue(item)
+    if (raw !== undefined) labels.set(raw, item.label)
+  })
+  return labels
 })
+/** 选项展示内容：入参 label 优先 > optionLabelProp 指定字段 > label 字段 > value 兜底（antd 口径） */
+function resolveLabel(value: SelectValue, option: Option | undefined): unknown {
+  const incoming = incomingLabels.value.get(value)
+  if (incoming !== undefined) return incoming
+  if (props.optionLabelProp && option) {
+    return option[props.optionLabelProp] ?? value
+  }
+  return getOptionLabel(option) ?? value
+}
+/** 取选项键：key 缺省时与 value 一致（antd 口径） */
+function getOptionKey(option: Option | undefined, value: SelectValue): string | number {
+  const key: unknown = option?.key
+  return typeof key === 'string' || typeof key === 'number' ? key : value
+}
+/** 原始值 → labelInValue 对象（antd 口径：originLabel 保留子组件式写法下的默认插槽函数） */
+function createLabeledValue(value: SelectValue): LabeledValue {
+  const option = findOption(value)
+  const label = resolveLabel(value, option)
+  return {
+    label,
+    value,
+    key: getOptionKey(option, value),
+    originLabel: getOptionLabelSlot(option) ?? label
+  }
+}
+/** 事件载荷包装：labelInValue 打开时包装为对象，否则原样返回（antd 口径） */
+function wrapValue(value: SelectValue | undefined): SelectValue | LabeledValue | undefined {
+  if (value === undefined || value === null) return value
+  return props.labelInValue ? createLabeledValue(value) : value
+}
+/** 多选事件载荷包装：labelInValue 打开时逐项包装为对象（antd 口径） */
+function wrapValues(values: SelectValue[]): SelectValue[] | LabeledValue[] {
+  return props.labelInValue ? values.map((value) => createLabeledValue(value)) : values
+}
+// 多选值列表：单选值归一为单元素数组，labelInValue 对象取其原始值，空值统一为空数组（内部一律按原始值数组处理）
+const valueList = computed<SelectValue[]>(() =>
+  toValueItems(props.value)
+    .map((item) => getRawValue(item))
+    .filter((item): item is SelectValue => item !== undefined)
+)
 // 输入框展示文本：多选（非 tags）在面板关闭时不展示已输入的搜索文本（antd 口径：重开面板时恢复）
 const inputDisplayValue = computed(() =>
   isMultiple.value && !isTagsMode.value && !mergedOpen.value ? '' : mergedSearchValue.value
@@ -345,8 +534,8 @@ function createFallbackOption(value: SelectValue): Option {
 function getOptionValue(option: Option): SelectValue | undefined {
   return option?.[mergedFieldNames.value.value]
 }
-/** 读取选项的 label 字段 */
-function getOptionLabel(option: Option): unknown {
+/** 读取选项的 label 字段（选项不存在时返回 undefined） */
+function getOptionLabel(option: Option | undefined): unknown {
   return option?.[mergedFieldNames.value.label]
 }
 /** 按值查找选项：优先当前 options，其次历史缓存（options 被清空后 tag / 回填内容仍显示原 label） */
@@ -364,20 +553,19 @@ function isOptionSelected(option: Option): boolean {
   if (value === undefined || value === null) return false
   return valueList.value.includes(value)
 }
-// 当前选中项（单选）：value 未指定 / 在选项中查不到时为 undefined
+// 当前选中项（单选）：value 未指定 / 为数组 / 在选项中查不到时为 undefined
 const selectedOption = computed<Option | undefined>(() => {
   const value = props.value
   if (value === undefined || value === null || Array.isArray(value)) return undefined
-  return findOption(value)
+  const raw = getRawValue(value)
+  return raw === undefined ? undefined : findOption(raw)
 })
-// 回填内容：optionLabelProp 指定的字段优先，未指定时取 label 字段，均缺失时回落 value
+// 回填内容：入参 label 优先，其次 optionLabelProp 指定字段，再取 label 字段，均缺失时回落 value
 const optionLabelRaw = computed<unknown>(() => {
-  if (props.value === undefined || props.value === null) return undefined
-  const option = selectedOption.value
-  if (props.optionLabelProp && option) {
-    return option[props.optionLabelProp]
-  }
-  return option ? getOptionLabel(option) : undefined
+  const value = props.value
+  if (value === undefined || value === null || Array.isArray(value)) return undefined
+  const raw = getRawValue(value)
+  return raw === undefined ? undefined : resolveLabel(raw, findOption(raw))
 })
 // 占位判定：多选在「无已选值且输入框为空（非合成中）」时展示；单选按 antdv 口径（value 为 undefined，
 // 或 value 为 null 且无 label），其余情况（含 '' / 0）都是有意义的值，不展示占位文本
@@ -390,6 +578,11 @@ const showPlaceholder = computed(() => {
   return false
 })
 const displayText = computed<unknown>(() => optionLabelRaw.value ?? props.value)
+/** 回填内容的渲染节点：子组件式写法下由标签插槽渲染富内容，普通选项仍走模板插值的快速路径 */
+const displayLabelContent = computed<SelectMenuNode | null>(() => {
+  const labelSlot = getOptionLabelSlot(selectedOption.value)
+  return labelSlot ? () => labelSlot() : null
+})
 const itemTitle = computed(() => {
   const text = displayText.value
   return typeof text === 'string' || typeof text === 'number' ? String(text) : undefined
@@ -402,8 +595,7 @@ const selectedOptions = computed<Option[]>(() =>
 )
 /** tag 显示文本：optionLabelProp 优先，未指定取 label 字段，均缺失回落 value；超出 maxTagTextLength 时截断 */
 function getTagLabel(option: Option, value: SelectValue): unknown {
-  const raw = props.optionLabelProp ? option?.[props.optionLabelProp] : getOptionLabel(option)
-  const text = raw ?? value
+  const text = resolveLabel(value, option)
   const { maxTagTextLength } = props
   if (typeof maxTagTextLength !== 'number') return text
   if (typeof text !== 'string' && typeof text !== 'number') return text
@@ -457,7 +649,10 @@ const tagItems = computed(() => {
       },
       option
     }
-    return { option, value, label, closable, disabled, hidden: index >= visibleCount, params }
+    // 子组件式写法下由标签插槽渲染富内容，普通选项仍走模板插值的快速路径
+    const labelSlot = getOptionLabelSlot(option)
+    const labelContent: SelectMenuNode | null = labelSlot ? () => labelSlot() : null
+    return { option, value, label, labelContent, closable, disabled, hidden: index >= visibleCount, params }
   })
 })
 // 自定义 tag 移除图标：插槽优先（项目约定），其次 prop；统一包成函数组件便于模板以 <component :is> 渲染
@@ -808,11 +1003,11 @@ function submitSeparatedValues(words: string[]): void {
   const patchValues: SelectValue[] = isTagsMode.value
     ? words
     : words
-        .map((word) => props.options.find((option) => option?.[labelField] === word))
+        .map((word) => flatOptions.value.find((option) => option?.[labelField] === word))
         .map((option) => (option ? getOptionValue(option) : undefined))
         .filter((value): value is SelectValue => value !== undefined)
   emitMultipleChange(Array.from(new Set([...valueList.value, ...patchValues])))
-  patchValues.forEach((value) => emits('select', value, findOption(value) ?? createFallbackOption(value)))
+  patchValues.forEach((value) => emits('select', wrapValue(value), findOption(value) ?? createFallbackOption(value)))
   // 分词完成即收起面板（antd 行为：粘贴 / 输入分隔符视为一轮输入结束）
   setPanelOpen(false)
 }
@@ -939,10 +1134,11 @@ function isValueListChanged(nextValues: SelectValue[]): boolean {
 /** 多选值变更统一出口：同步 v-model 并派发 change（多选下第 3 参 index 不适用，固定传 undefined） */
 function emitMultipleChange(nextValues: SelectValue[]): void {
   if (!isValueListChanged(nextValues)) return
-  emits('update:value', nextValues)
+  const payload = wrapValues(nextValues)
+  emits('update:value', payload)
   emits(
     'change',
-    nextValues,
+    payload,
     nextValues.map((value) => findOption(value) ?? createFallbackOption(value)),
     undefined
   )
@@ -953,7 +1149,7 @@ function removeTag(option: Option): void {
   const value = getOptionValue(option)
   if (value === undefined || value === null) return
   emitMultipleChange(valueList.value.filter((item) => item !== value))
-  emits('deselect', value, option)
+  emits('deselect', wrapValue(value), option)
   selectFocus()
 }
 /** tags 模式：把当前搜索文本提交为新标签（回车 / 失焦时触发，对齐 antd 的 submit 分支） */
@@ -963,18 +1159,23 @@ function submitTag(): void {
   const value: SelectValue = text
   const nextValues = valueList.value.includes(value) ? [...valueList.value] : [...valueList.value, value]
   emitMultipleChange(nextValues)
-  emits('select', value, findOption(value) ?? createFallbackOption(value))
+  emits('select', wrapValue(value), findOption(value) ?? createFallbackOption(value))
   setSearchValue('')
 }
 /** 选中下拉项：单选选中后回填并收起面板；多选切换选中并保持面板展开（antd 口径） */
 function onSelectOption(option: Option, index: number): void {
   const value = getOptionValue(option)
   if (!isMultiple.value) {
-    if (props.value !== value) {
-      emits('update:value', value)
-      emits('change', value, option, index)
+    // 受控比较按原始值进行：labelInValue 打开时 props.value 是对象，直接比较必然不等
+    const current =
+      Array.isArray(props.value) || props.value === undefined || props.value === null
+        ? undefined
+        : getRawValue(props.value)
+    if (current !== value) {
+      emits('update:value', wrapValue(value))
+      emits('change', wrapValue(value), option, index)
     }
-    emits('select', value, option)
+    emits('select', wrapValue(value), option)
     hoverValue.value = value ?? null
     closePanel()
     selectFocus()
@@ -985,9 +1186,9 @@ function onSelectOption(option: Option, index: number): void {
   const selected = valueList.value.includes(value)
   emitMultipleChange(selected ? valueList.value.filter((item) => item !== value) : [...valueList.value, value])
   if (selected) {
-    emits('deselect', value, option)
+    emits('deselect', wrapValue(value), option)
   } else {
-    emits('select', value, option)
+    emits('select', wrapValue(value), option)
     hoverValue.value = value
   }
   // 选中项后清空搜索文本（antd 口径：autoClearSearchValue 为 true 时选中与反选都清空）
@@ -1008,7 +1209,7 @@ function onClear(e?: MouseEvent): void {
     const clearedOptions = selectedOptions.value
     emits('update:value', [])
     emits('change', [], [], undefined)
-    clearedOptions.forEach((option) => emits('deselect', getOptionValue(option), option))
+    clearedOptions.forEach((option) => emits('deselect', wrapValue(getOptionValue(option)), option))
   } else if (changed) {
     emits('update:value', undefined)
     emits('change', undefined, undefined, undefined)
@@ -1171,6 +1372,16 @@ function renderOptionState(option: Option): VNode | null {
       : (icon ?? renderCheckIcon())
   return h('span', { class: 'select-option-state' }, stateNode as VNode[])
 }
+/**
+ * 条目可见内容：子组件式写法（挂载了标签插槽函数）时取插槽渲染结果（支持图标等富内容），
+ * 否则取文本 label，均缺失时回落 fallback
+ */
+function renderItemContent(option: Option, fallback?: unknown): string | VNode[] {
+  const labelSlot = getOptionLabelSlot(option)
+  if (labelSlot) return toSlotChildren(labelSlot())
+  const label = getOptionLabel(option)
+  return label === undefined || label === null ? String(fallback ?? '') : String(label)
+}
 // 选项节点渲染：默认菜单与 dropdownRender 共用同一实现，避免两处重复
 function renderOptionNode(option: Option, index: number): VNode {
   const value = getOptionValue(option)
@@ -1186,10 +1397,11 @@ function renderOptionNode(option: Option, index: number): VNode {
           'option-selected': isOptionSelected(option),
           'option-disabled': option.disabled,
           // 分组子选项：左缩进一级（与 antd 的 -option-grouped 同款）
-          'option-grouped': optionGroupLabels.value.has(String(value))
+          'option-grouped': optionGroups.value.has(String(value))
         }
       ],
-      title: label === undefined || label === null ? undefined : String(label),
+      // 仅文本型 label 设置 title（与回填内容 / tag 的 title 口径一致：VNode 标签无法转为有意义的文本）
+      title: typeof label === 'string' || typeof label === 'number' ? String(label) : undefined,
       // 选项上按下鼠标时阻止默认行为：否则 mousedown 会让 input 失焦触发 blur 关闭面板，
       // 而面板在离开动画期间已整体禁用指针事件（见 .select-panel-container.slide-leave-active），
       // 随后的 mouseup / click 便落不到选项上 —— 表现为「真实鼠标点击选项无任何反应」
@@ -1206,7 +1418,7 @@ function renderOptionNode(option: Option, index: number): VNode {
     },
     [
       // 内容单独包一层：选项为 flex 容器（容纳选中图标），裸文本节点无法直接应用省略号截断
-      h('span', { class: 'select-option-content' }, optionSlot ? optionSlot(option) : String(label ?? value ?? '')),
+      h('span', { class: 'select-option-content' }, optionSlot ? optionSlot(option) : renderItemContent(option, value)),
       renderOptionState(option)
     ]
   )
@@ -1215,13 +1427,13 @@ function renderOptionNode(option: Option, index: number): VNode {
 const menuNode: SelectMenuNode = () => {
   // 分组形态：按当前扁平顺序在跨组处插入分组标题（标题不可选中、不占展示下标）
   const optionNodes: VNode[] = []
-  let lastGroupLabel: string | undefined
+  let lastGroupKey: string | number | undefined
   displayOptions.value.forEach((option, index) => {
-    const groupLabel = optionGroupLabels.value.get(String(getOptionValue(option)))
-    if (groupLabel !== undefined && groupLabel !== lastGroupLabel) {
-      optionNodes.push(h('p', { class: 'select-option-group' }, groupLabel))
+    const group = optionGroups.value.get(String(getOptionValue(option)))
+    if (group && group.groupKey !== lastGroupKey) {
+      optionNodes.push(h('p', { class: 'select-option-group' }, renderItemContent(group.option)))
     }
-    lastGroupLabel = groupLabel
+    lastGroupKey = group?.groupKey
     optionNodes.push(renderOptionNode(option, index))
   })
   const hasOptions = displayOptions.value.length > 0
@@ -1324,7 +1536,10 @@ defineExpose({
           <!-- 插槽存在即接管 tag 渲染：以内容探测判定会误伤「渲染结果取决于选项字段」的插槽，故直接看插槽是否提供 -->
           <slot v-if="slots.tagRender" name="tagRender" v-bind="item.params" />
           <template v-else>
-            <span class="select-selection-item-content">{{ item.label }}</span>
+            <span class="select-selection-item-content">
+              <component :is="item.labelContent" v-if="item.labelContent" />
+              <template v-else>{{ item.label }}</template>
+            </span>
             <span
               v-if="item.closable"
               class="select-selection-item-remove"
@@ -1378,6 +1593,7 @@ defineExpose({
       <span v-if="!isMultiple && !showPlaceholder && !hasTextInput" class="select-item" :title="itemTitle">
         <!-- 插槽存在即接管回填渲染：以内容探测判定会误伤「选项字段为空」的自定义插槽（渲染结果为空文本），故直接看插槽是否提供 -->
         <slot v-if="slots.optionLabel" name="optionLabel" v-bind="selectedOption ?? {}" />
+        <component v-else-if="displayLabelContent" :is="displayLabelContent" />
         <template v-else>{{ displayText }}</template>
       </span>
       <!-- 占位文本：单选下有输入文本时保留占位（避免布局跳动）但不可见；多选下无已选值且输入为空时展示 -->

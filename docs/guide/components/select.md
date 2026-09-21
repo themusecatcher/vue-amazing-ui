@@ -11,7 +11,7 @@ _下拉选择器_
 
 <script setup lang="ts">
 import { computed, onUnmounted, ref, watch } from 'vue'
-import { CheckOutlined, MehOutlined, PlusOutlined, SmileOutlined } from '@ant-design/icons-vue'
+import { CheckOutlined, MehOutlined, PlusOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons-vue'
 import type { SelectProps, SelectOption } from 'vue-amazing-ui'
 // 基本使用
 const basicOptions: SelectOption[] = [
@@ -70,6 +70,15 @@ const maxTagTextLengthRadios = [
 // 自动分词
 const tokenValue = ref<SelectProps['value']>([])
 const tokenOptions: SelectOption[] = [{ value: 'a1', label: 'a1' }]
+// 获得选项的文本（labelInValue）
+const labelInValueOptions: SelectOption[] = [
+  { value: 'jack', label: 'Jack (100)' },
+  { value: 'lucy', label: 'Lucy (101)' }
+]
+const labelInValueValue = ref<SelectProps['value']>({ value: 'lucy', label: 'Lucy (101)' })
+function onLabelInValueChange(value: SelectProps['value']) {
+  console.log('labelInValue', value)
+}
 // 多选
 const multipleValue = ref<SelectProps['value']>(['10', '11'])
 // 联动
@@ -84,6 +93,21 @@ const cities = computed(() => cityData[province.value])
 watch(province, (value) => {
   secondCity.value = cityData[value][0]
 })
+// 分组：子组件式（SelectOptGroup + SelectOption）与配置式（options 嵌套）两种写法
+const groupValue = ref<SelectProps['value']>('lucy')
+const groupOptions: SelectOption[] = [
+  {
+    label: 'Manager',
+    options: [
+      { value: 'jack', label: 'Jack' },
+      { value: 'lucy', label: 'Lucy' }
+    ]
+  },
+  {
+    label: 'Engineer',
+    options: [{ value: 'yiminghe', label: 'Yiminghe' }]
+  }
+]
 // 搜索框（远程搜索）
 const remoteValue = ref<SelectProps['value']>()
 const remoteOptions = ref<SelectOption[]>([])
@@ -564,6 +588,42 @@ const selectedValue = ref<SelectProps['value']>([])
 
 ::::
 
+## 获得选项的文本
+
+_开启 `labelInValue` 后 `value` 变为包含文本的对象：`{ label, value, key, originLabel }`_
+
+<br/>
+
+<Select
+  v-model:value="labelInValueValue"
+  label-in-value
+  :options="labelInValueOptions"
+  :width="120"
+  @change="onLabelInValueChange"
+/>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options: SelectOption[] = [
+  { value: 'jack', label: 'Jack (100)' },
+  { value: 'lucy', label: 'Lucy (101)' }
+]
+const value = ref<SelectProps['value']>({ value: 'lucy', label: 'Lucy (101)' })
+function handleChange(value: SelectProps['value']) {
+  console.log(value) // { label: 'Lucy (101)', value: 'lucy', key: 'lucy', originLabel: 'Lucy (101)' }
+}
+</script>
+<template>
+  <Select v-model:value="value" label-in-value :options="options" :width="120" @change="handleChange" />
+</template>
+```
+
+::::
+
 ## 多选
 
 _从已有条目中选择多个值，下拉列表可滚动查看全部选项_
@@ -619,6 +679,73 @@ watch(province, (value) => {
   <Space>
     <Select :options="provinceData.map((pro) => ({ value: pro }))" v-model:value="province" :width="120" />
     <Select :options="cities.map((city) => ({ value: city }))" v-model:value="secondCity" :width="120" />
+  </Space>
+</template>
+```
+
+::::
+
+## 分组
+
+_用 `SelectOptGroup` / `SelectOption` 子组件或 `options` 的嵌套写法进行选项分组_
+
+<br/>
+
+<Space>
+  <Select v-model:value="groupValue" :width="200">
+    <SelectOptGroup>
+      <template #label>
+        <span><UserOutlined /> Manager</span>
+      </template>
+      <SelectOption value="jack">Jack</SelectOption>
+      <SelectOption value="lucy">Lucy</SelectOption>
+    </SelectOptGroup>
+    <SelectOptGroup label="Engineer">
+      <SelectOption value="Yiminghe">yiminghe</SelectOption>
+      <SelectOption value="Yiminghe1">yiminghe1</SelectOption>
+    </SelectOptGroup>
+  </Select>
+  <Select v-model:value="groupValue" :options="groupOptions" :width="200" />
+</Space>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { UserOutlined } from '@ant-design/icons-vue'
+import type { SelectProps } from 'vue-amazing-ui'
+const value = ref<SelectProps['value']>('lucy')
+const options = [
+  {
+    label: 'Manager',
+    options: [
+      { value: 'jack', label: 'Jack' },
+      { value: 'lucy', label: 'Lucy' }
+    ]
+  },
+  {
+    label: 'Engineer',
+    options: [{ value: 'yiminghe', label: 'Yiminghe' }]
+  }
+]
+</script>
+<template>
+  <Space>
+    <Select v-model:value="value" :width="200">
+      <SelectOptGroup>
+        <template #label>
+          <span><UserOutlined /> Manager</span>
+        </template>
+        <SelectOption value="jack">Jack</SelectOption>
+        <SelectOption value="lucy">Lucy</SelectOption>
+      </SelectOptGroup>
+      <SelectOptGroup label="Engineer">
+        <SelectOption value="Yiminghe">yiminghe</SelectOption>
+        <SelectOption value="Yiminghe1">yiminghe1</SelectOption>
+      </SelectOptGroup>
+    </Select>
+    <Select v-model:value="value" :options="options" :width="200" />
   </Space>
 </template>
 ```
@@ -1055,7 +1182,10 @@ _通过 `fieldNames` 指定选项的文本 / 值字段，以及分组子选项�
 
 <br/>
 
-<Select :options="fieldOptions" :field-names="fieldNames" v-model:value="fieldValue" :width="120" />
+<Space align="start">
+  <Select :options="fieldOptions" :field-names="fieldNames" v-model:value="fieldValue" :width="200" />
+  <Select :options="groupFieldOptions" :field-names="groupFieldNames" v-model:value="groupFieldValue" :width="200" />
+</Space>
 
 :::: details Show Code
 
@@ -1092,7 +1222,7 @@ const groupFieldNames = { label: 'name', value: 'id', options: 'items' }
 const groupValue = ref<SelectProps['value']>('lucy')
 </script>
 <template>
-  <Space vertical align="start">
+  <Space align="start">
     <Select :options="options" :field-names="fieldNames" v-model:value="selectedValue" :width="200" />
     <Select :options="groupOptions" :field-names="groupFieldNames" v-model:value="groupValue" :width="200" />
   </Space>
@@ -1731,6 +1861,7 @@ const options: SelectOption[] = []
 | firstActiveValue | 默认高亮的选项 | string &#124; number &#124; (string &#124; number)[] | undefined |
 | flip | 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true |
 | height | 选择器高度，单位 `px` | number | undefined |
+| labelInValue | 是否把每个选项的 label 包装到 value 中，`value` 由原始值变为 `{ label, value, key, originLabel }` 对象 | boolean | false |
 | listHeight | 下拉面板滚动高度，单位 `px`（未传时回落 `maxDisplay × 32`） | number | undefined |
 | loading | 是否处于加载状态，展开面板时后缀图标变为加载中 | boolean | false |
 | maxDisplay | 下拉面板最多能展示的项数，超过后滚动显示 | number | 8 |
@@ -1754,7 +1885,7 @@ const options: SelectOption[] = []
 | suffixIcon | 自定义的选择框后缀图标 | VNode &#124; (() => VNode) | undefined |
 | to | 下拉面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
 | tokenSeparators | 自动分词的分隔符，输入命中后按分隔符拆分并直接选中 | string[] | [] |
-| value <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值，`mode` 为 `multiple` / `tags` 时为数组 | number &#124; string &#124; (number &#124; string)[] | undefined |
+| value <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值，`mode` 为 `multiple` / `tags` 时为数组；`labelInValue` 开启时为 `{ label, value, key, originLabel }` 对象 | number &#124; string &#124; [SelectLabeledValue](#labeledvalue-type) &#124; (number &#124; string &#124; [SelectLabeledValue](#labeledvalue-type))[] | undefined |
 | width | 选择器宽度，单位 `px` | string &#124; number | 'auto' |
 | zIndex | 下拉面板层级，优先级最高（覆盖默认层级与 `ConfigProvider` 的 `baseZIndex` 自动分配） | number | undefined |
 
@@ -1766,6 +1897,38 @@ const options: SelectOption[] = []
 | value?            | 选项值                        | string &#124; number | undefined |
 | disabled?         | 是否禁用选项                  | boolean             | false     |
 | [propName: string] | 用于包含带有任意数量的其他属性，`#option` 插槽会透传原始数据对象 | any                 | undefined |
+
+### LabeledValue Type
+
+`labelInValue` 开启时 `value` 的元素类型（入口导出名 `SelectLabeledValue`）：
+
+| 名称          | 说明                                                                     | 类型                  | 默认值    |
+| :------------ | :----------------------------------------------------------------------- | :-------------------- | :-------- |
+| label         | 选项文本（子组件式写法下由默认插槽求值而来，可能为 `string` 或 `VNode[]`） | unknown               | undefined |
+| value         | 选项值                                                                   | string &#124; number  | undefined |
+| key?          | 选项唯一键，缺省时与 `value` 一致                                        | string &#124; number  | undefined |
+| originLabel?  | 原始选项文本（子组件式写法下为默认插槽函数）                             | unknown               | undefined |
+
+### SelectOption
+
+`<Select>` 默认插槽中的选项子组件（配置式写法请用 [SelectOption](#option-type) 数据）：
+
+| 参数               | 说明                                                                                                | 类型                 | 默认值    |
+| :----------------- | :-------------------------------------------------------------------------------------------------- | :------------------- | :-------- |
+| value              | 选项值，未传时回落 `<SelectOption>` 的 `key`                                                        | string &#124; number | undefined |
+| label              | 选项文本，优先于默认插槽文本                                                                        | string               | undefined |
+| disabled           | 是否禁用该选项（`<SelectOption disabled />` 亦可）                                                  | boolean              | false     |
+| [propName: string] | 用于包含带有任意数量的其他属性，`#option` 插槽会透传原始数据对象                                    | any                  | undefined |
+
+### SelectOptGroup
+
+`<Select>` 默认插槽中的分组子组件，组内书写 `SelectOption`：
+
+| 参数  | 说明                    | 类型   | 默认值    |
+| :---- | :---------------------- | :----- | :-------- |
+| label | 分组标题，优先于 `#label` 插槽 | string | undefined |
+
+> ⚠️ 与 [Ant Design Vue](https://www.antdv.com/components/select-cn/) 的差异：`options` 与默认插槽（子组件）同时提供时，本库**以子组件为准**（antd 为 `options` 优先），沿用本库「插槽优先于 prop」的统一约定。
 
 ## Events
 
@@ -1790,6 +1953,7 @@ const options: SelectOption[] = []
 
 | 名称                 | 说明                                                                     | 类型                                                |
 | :-------------------- | :------------------------------------------------------------------------ | :-------------------------------------------------- |
+| default              | 子组件式选项，直接书写 `SelectOption` / `SelectOptGroup`；与 `options` 同时提供时以此为准 | v-slot:default                                      |
 | option               | 自定义选项内容，作用域为当前选项数据，[SelectOption](#option-type) 的自定义字段会一并透传 | v-slot:option="{ label, value, ...rest }"           |
 | optionLabel          | 自定义回填到选择框的内容，作用域为当前选中项数据                          | v-slot:optionLabel="{ label, value, ...rest }"      |
 | placeholder          | 自定义占位内容                                                           | v-slot:placeholder                                  |

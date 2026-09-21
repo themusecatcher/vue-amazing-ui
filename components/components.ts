@@ -157,8 +157,16 @@ export { default as Scrollbar } from './scrollbar'
 export type { SegmentedProps, SegmentedOption } from './segmented'
 export { default as Segmented } from './segmented'
 
-export type { SelectProps, SelectOption, SelectFieldNames } from './select'
-export { default as Select } from './select'
+export type {
+  SelectProps,
+  SelectFieldNames,
+  SelectValue,
+  SelectLabeledValue,
+  SelectOptionProps,
+  SelectOptGroupProps
+} from './select'
+// SelectOption 同名承载两种含义：类型位为选项数据对象，值位为选项子组件（由 select/index.ts 聚合）
+export { default as Select, SelectOption, SelectOptGroup } from './select'
 
 export type {
   SkeletonProps,
