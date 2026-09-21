@@ -35,7 +35,7 @@ pnpm docs:dev
 Before writing a component, it is recommended to read the design implementation documents below. They fully describe the **design implementation profile** of the component library — its structure, conventions, and mechanisms — and are the authoritative reference for adding or modifying components. For a component's features and usage, please refer to the official docs site (`docs/`):
 
 | Document | Description |
-| :--- | :--- |
+| :-- | :-- |
 | [`development/project-structure.md`](development/project-structure.md) | Project structure and directory layout |
 | [`development/import-export.md`](development/import-export.md) | Import and export conventions |
 | [`development/component-design.md`](development/component-design.md) | Component design conventions (including the theme system) |
@@ -49,7 +49,7 @@ Before writing a component, it is recommended to read the design implementation 
 Always use the `<type>/<description>` format. The `type` is consistent with the commit convention, and the description must be **all-lowercase kebab-case** (words joined by hyphens).
 
 | Type | Format | Description | Example |
-| :--- | :--- | :--- | :--- |
+| :-- | :-- | :-- | :-- |
 | New feature / component | `feat/<name>` | Develop a new component or feature | `feat/menu`, `feat/dropdown` |
 | Bug fix | `fix/<description>` | Fix a known issue | `fix/inputnumber-empty` |
 | Refactor | `refactor/<scope>` | Code refactoring without behavior change | `refactor/table-split` |
@@ -90,17 +90,17 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 
 ### Supported Types
 
-| type | Description |
-| :--- | :--- |
-| `feat` | New feature or component |
-| `fix` | Bug fix |
-| `docs` | Documentation changes |
-| `style` | Code formatting / style adjustments (no logic impact) |
-| `refactor` | Refactoring (neither a new feature nor a bug fix) |
-| `perf` | Performance optimization |
-| `test` | Testing-related |
-| `chore` | Build process, tooling, configuration and other chores |
-| `revert` | Revert a commit |
+| type       | Description                                            |
+| :--------- | :----------------------------------------------------- |
+| `feat`     | New feature or component                               |
+| `fix`      | Bug fix                                                |
+| `docs`     | Documentation changes                                  |
+| `style`    | Code formatting / style adjustments (no logic impact)  |
+| `refactor` | Refactoring (neither a new feature nor a bug fix)      |
+| `perf`     | Performance optimization                               |
+| `test`     | Testing-related                                        |
+| `chore`    | Build process, tooling, configuration and other chores |
+| `revert`   | Revert a commit                                        |
 
 ### Examples
 
@@ -116,8 +116,8 @@ chore: 补齐 type-check 门禁并强化发布流程
 The project configures three Git hooks via [husky](https://github.com/typicode/husky). Please do not skip them with `--no-verify`.
 
 | Hook | Trigger | Action |
-| :--- | :--- | :--- |
-| `pre-commit` | before `git commit` | `lint-staged`: run Prettier formatting and ESLint auto-fix on staged files |
+| :-- | :-- | :-- |
+| `pre-commit` | before `git commit` | `lint-staged`: run Prettier formatting on staged files, plus ESLint auto-fix for TS / Vue files |
 | `commit-msg` | after the commit message is entered | `commitlint`: validate the commit message format |
 | `pre-push` | before `git push` | `type-check`: run a full `vue-tsc` type check |
 
@@ -129,6 +129,7 @@ pnpm lint:check   # ESLint check only (does not modify files)
 pnpm type-check   # Type checking
 pnpm test         # Unit tests (vitest)
 pnpm check        # Aggregate check: lint:check + format:check + type-check + test
+pnpm verify       # Heavyweight gate: build + dependency consistency + on-demand verification + artifact guard (pre-release / CI)
 ```
 
 Before committing, it is recommended to run `pnpm check` locally and make sure it passes before pushing.
@@ -137,7 +138,7 @@ Before committing, it is recommended to run `pnpm check` locally and make sure i
 
 1. Branch off the latest `main` with a feature branch that follows the naming convention.
 2. Develop the component / feature, and add the corresponding docs and demos under `docs/`.
-3. Run `pnpm check` locally to make sure lint and type checks pass.
+3. Run `pnpm check` locally to make sure lint and type checks pass; run `pnpm verify` as well if you changed style injection or build artifacts.
 4. Commit following the commit convention (the hooks validate automatically).
 5. Push the branch and open a Pull Request describing your changes.
 6. Delete the feature branch after it is merged into `main`.

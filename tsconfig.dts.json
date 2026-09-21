@@ -1,22 +1,14 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": [
-    "components/*.ts",
-    "components/**/*.ts",
-    "components/**/*.vue",
-    "types/*.d.ts",
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-  ],
+  "include": ["components/*.ts", "components/**/*.ts", "components/**/*.vue", "types/*.d.ts"],
+  "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "removeComments": true,
     "isolatedModules": true,
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.dts.tsbuildinfo",
     "paths": {
-      "components/*": ["./components/*"],
+      "components/*": ["./components/*"]
     }
   }
 }

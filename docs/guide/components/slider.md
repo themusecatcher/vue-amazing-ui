@@ -434,7 +434,7 @@ const marks = ref<SliderMarks>({
   37: '37°C',
   100: {
     style: {
-      color: '#f50',
+      color: '#f50'
     },
     label: '100°C'
   }
@@ -556,7 +556,7 @@ const marks = ref<SliderMarks>({
   37: '37°C',
   100: {
     style: {
-      color: '#f50',
+      color: '#f50'
     },
     label: '100°C'
   }
@@ -682,7 +682,7 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('formatDoubleValue', formatDoubleValue.value)
 })
-function formatter (value: number) {
+function formatter(value: number) {
   return `${value}%`
 }
 </script>

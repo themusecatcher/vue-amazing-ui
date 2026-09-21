@@ -84,7 +84,7 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
-function onChange (number: number) {
+function onChange(number: number) {
   console.log('change', number)
 }
 function onEnter(e: KeyboardEvent) {

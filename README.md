@@ -61,8 +61,9 @@ _In this form, only the imported components will be bundled._
 import { createApp } from 'vue'
 import App from './App.vue'
 import { Button, Tag } from 'vue-amazing-ui'
-import 'vue-amazing-ui/es/button/Button.css'
-import 'vue-amazing-ui/es/tag/Tag.css'
+// One style entry per component (recommended form): global default styles + the component's own styles + its dependency components' styles
+import 'vue-amazing-ui/es/button/style'
+import 'vue-amazing-ui/es/tag/style'
 
 const app = createApp(App)
 app.use(Button).use(Tag)
@@ -76,8 +77,9 @@ _In this form, only the imported components will be bundled as well._
 ```vue
 <script setup lang="ts">
 import { Button, Tag } from 'vue-amazing-ui'
-import 'vue-amazing-ui/es/button/Button.css'
-import 'vue-amazing-ui/es/tag/Tag.css'
+// One style entry per component (recommended form): global default styles + the component's own styles + its dependency components' styles
+import 'vue-amazing-ui/es/button/style'
+import 'vue-amazing-ui/es/tag/style'
 </script>
 <template>
   <Button>button</Button>
@@ -85,12 +87,14 @@ import 'vue-amazing-ui/es/tag/Tag.css'
 </template>
 ```
 
-**Both Global Partial Registration and Local Registration require manually importing the global default styles of the component library ([Automatic On-Demand Import](https://themusecatcher.github.io/vue-amazing-ui/guide/import-on-demand.html#%E8%87%AA%E5%8A%A8%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5-%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90) is recommended).**
+> The style entry also supports the more explicit file form `import 'vue-amazing-ui/es/button/style/index.js'`.
+
+**The style entry above already includes the global default styles, so there is no need to import them separately. If you use the old `import 'vue-amazing-ui/es/button/Button.css'` form instead, you must also import its dependency components' styles and the global default styles below ([Automatic On-Demand Import](https://themusecatcher.github.io/vue-amazing-ui/guide/import-on-demand.html#%E8%87%AA%E5%8A%A8%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5-%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90) is recommended).**
 
 ```ts
 import { createApp } from 'vue'
 import App from './App.vue'
-import 'vue-amazing-ui/es/style/global.css' // 引入全局默认样式
+import 'vue-amazing-ui/es/style/global.css' // Import the global default styles
 
 const app = createApp(App)
 app.mount('#app')

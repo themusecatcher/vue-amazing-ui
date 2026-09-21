@@ -351,12 +351,12 @@ const current = ref(2)
 watchEffect(() => {
   console.log('current', current.value)
 })
-function onPrev () {
+function onPrev() {
   if (current.value > 1) {
     current.value--
   }
 }
-function onNext () {
+function onNext() {
   if (steps.value.length >= current.value) {
     current.value++
   }

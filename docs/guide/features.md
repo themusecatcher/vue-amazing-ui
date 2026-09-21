@@ -71,7 +71,7 @@
 
 ## 全局默认样式
 
-_全局部分注册和局部注册组件时，都需手动引入组件库全局默认样式（推荐使用[自动按需引入](/guide/import-on-demand#自动按需引入-强烈推荐)）：_
+_每个组件的样式入口（如 `import 'vue-amazing-ui/es/button/style'`）已内含下面的全局默认样式，无需单独引入；仅当改用旧的 `import 'vue-amazing-ui/es/button/Button.css'` 写法时，才需自行引入（推荐使用[自动按需引入](/guide/import-on-demand#自动按需引入-强烈推荐)）：_
 
 ```less
 // 组件库全局样式定义

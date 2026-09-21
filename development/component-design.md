@@ -199,11 +199,12 @@ components/modal/
 
 | 情况 | 组件 | 处理方式 |
 | :--- | :--- | :--- |
-| 业务组件，自身完全无样式 | `ConfigProvider` / `Highlight` / `NumberAnimation` / `Watermark` | 登记在 `resolver.ts` 的 `getSideEffects` 白名单中，返回空 sideEffects |
-| 命令式 API 的 Provider | `MessageProvider` / `ModalProvider` / `DialogProvider` / `NotificationProvider` | 在 `styleSources` 中登记其底层组件（如 `MessageProvider: 'Message'`），复用底层组件样式 |
-| 子组件，样式定义在父 SFC 内 | `DescriptionsItem`（样式写在 `Descriptions.vue` 的 `<style>` 中） | 在 `styleSources` 中登记父组件（`DescriptionsItem: 'Descriptions'`），否则 resolver 会生成不存在的 CSS 路径 |
+| 业务组件，自身完全无样式 | `ConfigProvider` / `Highlight` / `NumberAnimation` / `Watermark` | 登记在 `style-deps.ts` 的 `stylelessComponents` 白名单中：resolver 返回空 sideEffects，样式入口生成器跳过 |
+| 命令式 API 的 Provider | `MessageProvider` / `ModalProvider` / `DialogProvider` / `NotificationProvider` | 在 `styleSources` 中登记其底层组件（如 `MessageProvider: 'Message'`），与底层组件**共用同一个样式入口** |
+| 子组件，样式定义在父 SFC 内 | `DescriptionsItem`（样式写在 `Descriptions.vue` 的 `<style>` 中） | 在 `styleSources` 中登记父组件（`DescriptionsItem: 'Descriptions'`），否则 resolver 会指向并不存在的入口目录 |
 
-> 新增无 `<style>` 块的 SFC 时，必须同步在 `resolver.ts` 中登记，否则按需引入会引用不存在的 CSS 文件。
+> 新增无 `<style>` 块的 SFC 时，必须同步在 `components/utils/style-deps.ts` 中登记（白名单或 `styleSources`），
+> 否则按需引入会引用不存在的样式入口。`tests/resolver.spec.ts` 会扫描 `components/**/*.vue` 自动校验登记完整性。
 
 ## 主题系统
 

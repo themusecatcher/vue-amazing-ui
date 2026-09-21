@@ -10,6 +10,12 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-09-20">2.10.0</VersionDateTag>
+
+- 重构按需引入的样式注入为「每组件一个样式入口」：手动引入可用 `import 'vue-amazing-ui/es/button/style'` 一次引全全局默认样式、组件自身样式与其依赖组件样式，无需再自行列举；原写法 `import 'vue-amazing-ui/es/button/Button.css'` 仍然有效，自动按需引入（`VueAmazingUIResolver`）用法与行为不变
+- 更新 [按需引入](/guide/import-on-demand.html)、[快速上手](/guide/getting-started.html) 与 [特性](/guide/features.html)：手动引入示例统一改用上述样式入口写法并合并重复内容，明确样式入口已内含全局默认样式（旧写法仍需自行引入依赖组件样式与全局默认样式），`README` 同步
+- 更新贡献者文档：`development/` 补充样式入口模型、构建后处理与产物校验说明，并同步「新增组件三步接线」清单；`CONTRIBUTING` 补充 `pnpm verify` 门禁与对应自检提示
+
 ## <VersionDateTag date="2026-09-20">2.9.0</VersionDateTag>
 
 - 重构组件库内部浮层能力，收敛为统一内核与内部宿主，[文字提示 Tooltip](/guide/components/tooltip.html)、[选择器 Select](/guide/components/select.html)、[自动完成 AutoComplete](/guide/components/auto-complete.html)、[滑动输入条 Slider](/guide/components/slider.html) 全部接入 —— 公开 `props` / 事件 / 插槽行为均无变化，仅 [自动完成 AutoComplete](/guide/components/auto-complete.html) 的 `value` 由必填放宽为可选

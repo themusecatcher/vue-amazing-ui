@@ -264,14 +264,14 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
-function clickImage (image: CarouselImage) {
+function clickImage(image: CarouselImage) {
   console.log('image', image)
 }
 </script>
@@ -315,15 +315,15 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 const showArrow = ref<boolean>(false)
-function clickImage (image: CarouselImage) {
+function clickImage(image: CarouselImage) {
   console.log('image', image)
 }
 </script>
@@ -367,14 +367,14 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
-function clickImage (image: CarouselImage) {
+function clickImage(image: CarouselImage) {
   console.log('image', image)
 }
 </script>
@@ -416,11 +416,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 const positionOptions = [
@@ -445,8 +445,8 @@ const dotPosition = ref<CarouselProps['dotPosition']>('top')
 </script>
 <template>
   <Radio :options="positionOptions" v-model:value="dotPosition" button button-style="solid" />
-  <br/>
-  <br/>
+  <br />
+  <br />
   <Carousel :images="images" :height="450" autoplay :dotPosition="dotPosition" />
 </template>
 ```
@@ -481,11 +481,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 </script>
@@ -524,11 +524,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 </script>
@@ -570,11 +570,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 const effectOptions = [
@@ -630,11 +630,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 const triggerOptions = [
@@ -705,11 +705,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 // 缓动预设名 / 三次贝塞尔控制点数组
@@ -735,8 +735,8 @@ const slideEasing = computed(() => (slideEasingType.value === 'preset' ? slideEa
       search
     />
   </Space>
-  <br/>
-  <br/>
+  <br />
+  <br />
   <Carousel :images="images" :height="450" :slide-duration="800" :slide-function="slideEasing" />
 </template>
 ```
@@ -778,11 +778,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 // fadeFunction 的两种取值形式：四个贝塞尔控制点 / CSS transition-timing-function 写法
@@ -843,11 +843,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 </script>
@@ -902,11 +902,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 const loop = ref<boolean>(true)
@@ -986,11 +986,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 const initialIndex = ref<number>(3)
@@ -1046,11 +1046,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 const controlledIndex = ref<number>(1)
@@ -1104,11 +1104,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 const beforeChangeInfo = ref<string>('-')
@@ -1167,11 +1167,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 const objectFitOptions = [
@@ -1245,11 +1245,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 const draggable = ref<boolean>(true)
@@ -1299,11 +1299,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 const mousewheel = ref<boolean>(true)
@@ -1369,11 +1369,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 </script>
@@ -1459,11 +1459,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 </script>
@@ -1537,17 +1537,17 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 const carousel = ref<InstanceType<typeof Carousel> | null>(null)
 const toIndex = ref(1)
 const currentIndex = ref(1)
-function getCurrentIndex () {
+function getCurrentIndex() {
   currentIndex.value = carousel.value?.getCurrentIndex() ?? currentIndex.value
 }
 </script>
@@ -1721,11 +1721,11 @@ const images = ref<CarouselImage[]>([
   },
   {
     name: 'image-4',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/4.jpg'
   },
   {
     name: 'image-5',
-    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg',
+    src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
 const positionOptions = [
