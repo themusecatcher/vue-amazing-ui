@@ -42,11 +42,41 @@ const sizeValue = ref<SelectProps['value']>('10')
 function onPopupScroll() {
   console.log('popupScroll')
 }
+// 三种大小的多选 / 标签示例段
+const sizeMultipleValue = ref<SelectProps['value']>(['10', '11'])
+const sizeTagsValue = ref<SelectProps['value']>(['10', '11'])
+// 标签
+const tagsValue = ref<SelectProps['value']>([])
+// 最多显示多少个选项及选项最大长度
+const responsiveOptions: SelectOption[] = [...Array(26)].map((_, index) => {
+  const value = `${(index + 10).toString(36)}${index + 10}`
+  return { label: `Long Label: ${value}`, value }
+})
+const responsiveValue = ref<SelectProps['value']>(['a10', 'c12', 'h17', 'j19', 'k20'])
+const maxTagCount = ref<number | 'responsive'>(2)
+const maxTagTextLength = ref(10)
+const maxTagCountRadios = [
+  { label: '1', value: 1 },
+  { label: '2', value: 2 },
+  { label: '3', value: 3 },
+  { label: '5', value: 5 },
+  { label: 'responsive', value: 'responsive' }
+]
+const maxTagTextLengthRadios = [
+  { label: '5', value: 5 },
+  { label: '10', value: 10 },
+  { label: '20', value: 20 }
+]
+// 自动分词
+const tokenValue = ref<SelectProps['value']>([])
+const tokenOptions: SelectOption[] = [{ value: 'a1', label: 'a1' }]
+// 多选
+const multipleValue = ref<SelectProps['value']>(['10', '11'])
 // 联动
-const provinceData = ['Zhejiang', 'Jiangsu']
+const provinceData = ['北京市', '浙江']
 const cityData: Record<string, string[]> = {
-  Zhejiang: ['Hangzhou', 'Ningbo', 'Wenzhou'],
-  Jiangsu: ['Nanjing', 'Suzhou', 'Zhenjiang']
+  北京市: ['东城区', '西城区'],
+  浙江: ['杭州市', '湖州市']
 }
 const province = ref(provinceData[0])
 const secondCity = ref(cityData[province.value][0])
@@ -83,6 +113,45 @@ function filterByValue(input: string, option: SelectOption) {
 function onSearchBlur() {
   console.log('blur')
 }
+// 搜索用户：远程搜索 + 节流控制 + 请求时序控制 + 加载状态（示例以本地数据模拟接口返回）
+const userValue = ref<SelectProps['value']>([])
+const userOptions = ref<SelectOption[]>([])
+const userFetching = ref(false)
+const userPool = [
+  { name: '张伟', account: 'zhangwei' },
+  { name: '王芳', account: 'wangfang' },
+  { name: '李娜', account: 'lina' },
+  { name: '刘洋', account: 'liuyang' },
+  { name: '陈静', account: 'chenjing' },
+  { name: '杨帆', account: 'yangfan' }
+]
+let userFetchId = 0
+let userTimer: ReturnType<typeof setTimeout> | null = null
+function fetchUser(keyword: string) {
+  // 节流：连续输入只在停顿 300ms 后发起一次请求
+  if (userTimer) clearTimeout(userTimer)
+  userTimer = setTimeout(() => {
+    const fetchId = (userFetchId += 1)
+    userOptions.value = []
+    userFetching.value = true
+    // 模拟接口 300ms 后返回；仅最后一次请求的结果生效，避免乱序返回覆盖（请求时序控制）
+    setTimeout(() => {
+      if (fetchId !== userFetchId) return
+      const lowerKeyword = keyword.toLowerCase()
+      userOptions.value = userPool
+        .filter((user) => user.name.includes(keyword) || user.account.includes(lowerKeyword))
+        .map((user) => ({ value: user.account, label: `${user.name}（${user.account}）` }))
+      userFetching.value = false
+    }, 300)
+  }, 300)
+}
+// 选中后仅结束加载态、保留最后一次远程结果（清空 options 会让已选项的标签失去 label 来源）
+watch(userValue, () => {
+  userFetching.value = false
+})
+onUnmounted(() => {
+  if (userTimer) clearTimeout(userTimer)
+})
 // 后缀图标
 const suffixValue = ref<SelectProps['value']>('lucy')
 const suffixOptions: SelectOption[] = [
@@ -91,6 +160,13 @@ const suffixOptions: SelectOption[] = [
   { value: 'disabled', label: 'Disabled', disabled: true },
   { value: 'yiminghe', label: 'Yiminghe' }
 ]
+// 隐藏已选择选项：已选项从下拉列表中移除，标签仍由组件内部的选项缓存保留
+const hideSelectedValue = ref<SelectProps['value']>([])
+const hideSelectedSource = ['Apples', 'Nails', 'Bananas', 'Helicopters']
+const hideSelectedOptions = computed<SelectOption[]>(() => {
+  const selected = Array.isArray(hideSelectedValue.value) ? hideSelectedValue.value : []
+  return hideSelectedSource.filter((item) => !selected.includes(item)).map((item) => ({ value: item }))
+})
 // 扩展菜单
 const addableItems = ref(['jack', 'lucy'])
 const addableValue = ref<SelectProps['value']>()
@@ -108,7 +184,9 @@ const countryOptions: SelectOption[] = [
   { value: 'japan', label: 'Japan (日本)', icon: '🇯🇵' },
   { value: 'korea', label: 'Korea (韩国)', icon: '🇰🇷' }
 ]
-// 自定义字段名
+// 定制回填内容的多选示例段
+const countryMultipleValue = ref<SelectProps['value']>(['china'])
+// 自定义 label、value、options 字段
 const fieldOptions = [
   { id: 'jack', name: 'Jack' },
   { id: 'lucy', name: 'Lucy' },
@@ -117,14 +195,28 @@ const fieldOptions = [
 ]
 const fieldValue = ref<SelectProps['value']>('lucy')
 const fieldNames = { label: 'name', value: 'id' }
-// 弹出位置
-const placement = ref<SelectProps['placement']>('bottomLeft')
-const placementOptions: SelectOption[] = [
-  { value: 'HangZhou', label: 'HangZhou #310000' },
-  { value: 'NingBo', label: 'NingBo #315000' },
-  { value: 'WenZhou', label: 'WenZhou #325000' }
+// 分组子选项：分组字段名同样由 fieldNames.options 指定（此处为 items），组条目自身不可选中
+const groupFieldOptions = [
+  {
+    name: 'Manager',
+    items: [
+      { id: 'jack', name: 'Jack' },
+      { id: 'lucy', name: 'Lucy' }
+    ]
+  },
+  {
+    name: 'Engineer',
+    items: [
+      { id: 'yiminghe', name: 'Yiminghe' },
+      { id: 'yiminghe1', name: 'Yiminghe1' }
+    ]
+  }
 ]
-const placementValue = ref<SelectProps['value']>('HangZhou')
+const groupFieldNames = { label: 'name', value: 'id', options: 'items' }
+const groupFieldValue = ref<SelectProps['value']>('lucy')
+// 下拉面板弹出位置
+const placement = ref<SelectProps['placement']>('bottomLeft')
+const placementValue = ref<SelectProps['value']>(5)
 const placementRadios = [
   { label: 'topLeft', value: 'topLeft' },
   { label: 'topRight', value: 'topRight' },
@@ -149,7 +241,6 @@ const disabledValue = ref<SelectProps['value']>(5)
 const disabledOptionValue = ref<SelectProps['value']>(5)
 const clearableValue = ref<SelectProps['value']>(5)
 const keyboardValue = ref<SelectProps['value']>(5)
-const customSizeValue = ref<SelectProps['value']>(5)
 const stateIconValue = ref<SelectProps['value']>(5)
 // 下拉面板宽度 / 挂载容器 / 面板数 / 滚动条 / 自定义面板 / 无边框 / 受控展开 / 空数据
 const longOptions: SelectOption[] = [...Array(10)].map((_, index) => ({ label: `选项 ${index + 1}`, value: index + 1 }))
@@ -223,11 +314,30 @@ function onFocus() {
 
 ::::
 
-## 三种尺寸
+## 三种大小
 
 <Space vertical>
   <Radio :options="sizeRadios" v-model:value="size" button button-style="solid" />
-  <Select :options="sizeOptions" v-model:value="sizeValue" :size="size" :width="200" @popup-scroll="onPopupScroll" />
+  <Space align="start">
+    <Select :options="sizeOptions" v-model:value="sizeValue" :size="size" :width="200" @popup-scroll="onPopupScroll" />
+    <Select
+      :options="sizeOptions"
+      v-model:value="sizeMultipleValue"
+      mode="multiple"
+      :size="size"
+      placeholder="Please select"
+      :width="200"
+      @popup-scroll="onPopupScroll"
+    />
+    <Select
+      :options="sizeOptions"
+      v-model:value="sizeTagsValue"
+      mode="tags"
+      :size="size"
+      placeholder="Please select"
+      :width="200"
+    />
+  </Space>
 </Space>
 
 :::: details Show Code
@@ -242,6 +352,8 @@ const sizeOptions: SelectOption[] = [...Array(25)].map((_, index) => ({
 }))
 const size = ref<SelectProps['size']>('middle')
 const selectedValue = ref<SelectProps['value']>('10')
+const multipleValue = ref<SelectProps['value']>(['10', '11'])
+const tagsValue = ref<SelectProps['value']>(['10', '11'])
 const sizeRadios = [
   { label: 'large', value: 'large' },
   { label: 'middle', value: 'middle' },
@@ -254,8 +366,226 @@ function onPopupScroll() {
 <template>
   <Space vertical>
     <Radio :options="sizeRadios" v-model:value="size" button button-style="solid" />
-    <Select :options="sizeOptions" v-model:value="selectedValue" :size="size" :width="200" @popup-scroll="onPopupScroll" />
+    <Space align="start">
+      <Select :options="sizeOptions" v-model:value="selectedValue" :size="size" :width="200" @popup-scroll="onPopupScroll" />
+      <Select
+        :options="sizeOptions"
+        v-model:value="multipleValue"
+        mode="multiple"
+        :size="size"
+        placeholder="Please select"
+        :width="200"
+        @popup-scroll="onPopupScroll"
+      />
+      <Select
+        :options="sizeOptions"
+        v-model:value="tagsValue"
+        mode="tags"
+        :size="size"
+        placeholder="Please select"
+        :width="200"
+      />
+    </Space>
   </Space>
+</template>
+```
+
+::::
+
+## 标签
+
+_输入任意内容并回车即可创建为标签，下拉列表可滚动查看全部选项_
+
+<br/>
+
+<Select v-model:value="tagsValue" mode="tags" placeholder="Tags Mode" :options="sizeOptions" :width="300" />
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options: SelectOption[] = [...Array(25)].map((_, index) => ({
+  value: `${index + 10}`,
+  label: `选项 ${index + 1}`
+}))
+const selectedValue = ref<SelectProps['value']>([])
+</script>
+<template>
+  <Select v-model:value="selectedValue" mode="tags" placeholder="Tags Mode" :options="options" :width="300" />
+</template>
+```
+
+::::
+
+## 最多显示多少个选项及选项最大长度
+
+_超出 `maxTagCount` 的标签会折叠为省略提示，`maxTagTextLength` 截断过长的标签文本；`maxTagCount` 设为 `responsive` 时按容器宽度自动折叠（有性能消耗，不建议在大表单场景使用）_
+
+<br/>
+
+<Flex vertical gap="large" align="start">
+  <Flex vertical gap="middle" align="start">
+    <Flex gap="small" align="center" wrap="wrap">
+      <code>maxTagCount</code>
+      <Radio :options="maxTagCountRadios" v-model:value="maxTagCount" button button-style="solid" />
+    </Flex>
+    <Select
+      v-model:value="responsiveValue"
+      mode="multiple"
+      placeholder="Select Item..."
+      :max-tag-count="maxTagCount"
+      :options="responsiveOptions"
+      :width="360"
+    >
+      <template #maxTagPlaceholder="{ omittedValues }">
+        <span style="color: red">+ {{ omittedValues.length }} ...</span>
+      </template>
+    </Select>
+  </Flex>
+  <Flex vertical gap="middle" align="start">
+    <Flex gap="small" align="center" wrap="wrap">
+      <code>maxTagTextLength</code>
+      <Radio :options="maxTagTextLengthRadios" v-model:value="maxTagTextLength" button button-style="solid" />
+    </Flex>
+    <Select
+      v-model:value="responsiveValue"
+      mode="multiple"
+      placeholder="Select Item..."
+      :max-tag-text-length="maxTagTextLength"
+      :options="responsiveOptions"
+      :width="360"
+    />
+  </Flex>
+</Flex>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options: SelectOption[] = [...Array(26)].map((_, index) => {
+  const value = `${(index + 10).toString(36)}${index + 10}`
+  return { label: `Long Label: ${value}`, value }
+})
+const selectedValue = ref<SelectProps['value']>(['a10', 'c12', 'h17', 'j19', 'k20'])
+const maxTagCount = ref<number | 'responsive'>(2)
+const maxTagTextLength = ref(10)
+const maxTagCountRadios = [
+  { label: '1', value: 1 },
+  { label: '2', value: 2 },
+  { label: '3', value: 3 },
+  { label: '5', value: 5 },
+  { label: 'responsive', value: 'responsive' }
+]
+const maxTagTextLengthRadios = [
+  { label: '5', value: 5 },
+  { label: '10', value: 10 },
+  { label: '20', value: 20 }
+]
+</script>
+<template>
+  <Flex vertical gap="large" align="start">
+    <Flex vertical gap="middle" align="start">
+      <Flex gap="small" align="center" wrap="wrap">
+        <code>maxTagCount</code>
+        <Radio :options="maxTagCountRadios" v-model:value="maxTagCount" button button-style="solid" />
+      </Flex>
+      <Select
+        v-model:value="selectedValue"
+        mode="multiple"
+        placeholder="Select Item..."
+        :max-tag-count="maxTagCount"
+        :options="options"
+        :width="360"
+      >
+        <template #maxTagPlaceholder="{ omittedValues }">
+          <span style="color: red">+ {{ omittedValues.length }} ...</span>
+        </template>
+      </Select>
+    </Flex>
+    <Flex vertical gap="middle" align="start">
+      <Flex gap="small" align="center" wrap="wrap">
+        <code>maxTagTextLength</code>
+        <Radio :options="maxTagTextLengthRadios" v-model:value="maxTagTextLength" button button-style="solid" />
+      </Flex>
+      <Select
+        v-model:value="selectedValue"
+        mode="multiple"
+        placeholder="Select Item..."
+        :max-tag-text-length="maxTagTextLength"
+        :options="options"
+        :width="360"
+      />
+    </Flex>
+  </Flex>
+</template>
+```
+
+::::
+
+## 自动分词
+
+_试下复制 `特斯拉,哥斯拉` 到输入框里。只在 `tags` 和 `multiple` 模式下可用_
+
+<br/>
+
+<Select
+  v-model:value="tokenValue"
+  mode="tags"
+  placeholder="Automatic tokenization"
+  :token-separators="[',']"
+  :options="tokenOptions"
+  :width="300"
+/>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options: SelectOption[] = [{ value: 'a1', label: 'a1' }]
+const selectedValue = ref<SelectProps['value']>([])
+</script>
+<template>
+  <Select
+    v-model:value="selectedValue"
+    mode="tags"
+    placeholder="Automatic tokenization"
+    :token-separators="[',']"
+    :options="options"
+    :width="300"
+  />
+</template>
+```
+
+::::
+
+## 多选
+
+_从已有条目中选择多个值，下拉列表可滚动查看全部选项_
+
+<br/>
+
+<Select v-model:value="multipleValue" mode="multiple" placeholder="Please select" :options="sizeOptions" :width="300" />
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options: SelectOption[] = [...Array(25)].map((_, index) => ({
+  value: `${index + 10}`,
+  label: `选项 ${index + 1}`
+}))
+const selectedValue = ref<SelectProps['value']>(['10', '11'])
+</script>
+<template>
+  <Select v-model:value="selectedValue" mode="multiple" placeholder="Please select" :options="options" :width="300" />
 </template>
 ```
 
@@ -273,10 +603,10 @@ function onPopupScroll() {
 ```vue
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-const provinceData = ['Zhejiang', 'Jiangsu']
+const provinceData = ['北京市', '浙江']
 const cityData: Record<string, string[]> = {
-  Zhejiang: ['Hangzhou', 'Ningbo', 'Wenzhou'],
-  Jiangsu: ['Nanjing', 'Suzhou', 'Zhenjiang']
+  北京市: ['东城区', '西城区'],
+  浙江: ['杭州市', '湖州市']
 }
 const province = ref(provinceData[0])
 const secondCity = ref(cityData[province.value][0])
@@ -397,6 +727,89 @@ function onFocus() {
 
 ::::
 
+## 搜索用户
+
+_远程搜索 + 节流控制 + 请求时序控制 + 加载状态的多选示例（示例数据由本地模拟，可输入姓名或账号搜索）_
+
+<br/>
+
+<Select
+  v-model:value="userValue"
+  mode="multiple"
+  placeholder="请选择用户"
+  :filter-option="false"
+  :not-found-content="userFetching ? undefined : null"
+  :options="userOptions"
+  :width="300"
+  @search="fetchUser"
+>
+  <template #notFoundContent>
+    <Spin size="small" />
+  </template>
+</Select>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { onUnmounted, ref } from 'vue'
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const options = ref<SelectOption[]>([])
+const selectedValue = ref<SelectProps['value']>([])
+const fetching = ref(false)
+// 示例用本地数据模拟用户库，实际场景替换为接口请求
+const pool = [
+  { name: '张伟', account: 'zhangwei' },
+  { name: '王芳', account: 'wangfang' },
+  { name: '李娜', account: 'lina' },
+  { name: '刘洋', account: 'liuyang' },
+  { name: '陈静', account: 'chenjing' },
+  { name: '杨帆', account: 'yangfan' }
+]
+let fetchId = 0
+let timer: ReturnType<typeof setTimeout> | null = null
+function onSearch(keyword: string) {
+  // 节流：连续输入只在停顿 300ms 后发起一次请求
+  if (timer) clearTimeout(timer)
+  timer = setTimeout(() => {
+    const currentId = (fetchId += 1)
+    options.value = []
+    fetching.value = true
+    // 模拟接口 300ms 后返回；仅最后一次请求的结果生效，避免乱序返回覆盖（请求时序控制）
+    setTimeout(() => {
+      if (currentId !== fetchId) return
+      const lowerKeyword = keyword.toLowerCase()
+      options.value = pool
+        .filter((user) => user.name.includes(keyword) || user.account.includes(lowerKeyword))
+        .map((user) => ({ value: user.account, label: `${user.name}（${user.account}）` }))
+      fetching.value = false
+    }, 300)
+  }, 300)
+}
+onUnmounted(() => {
+  if (timer) clearTimeout(timer)
+})
+</script>
+<template>
+  <Select
+    v-model:value="selectedValue"
+    mode="multiple"
+    placeholder="请选择用户"
+    :filter-option="false"
+    :not-found-content="fetching ? undefined : null"
+    :options="options"
+    :width="300"
+    @search="onSearch"
+  >
+    <template #notFoundContent>
+      <Spin size="small" />
+    </template>
+  </Select>
+</template>
+```
+
+::::
+
 ## 后缀图标
 
 <Space>
@@ -437,9 +850,49 @@ const selectedValue = ref<SelectProps['value']>('lucy')
 
 ::::
 
+## 隐藏已选择选项
+
+_隐藏下拉列表中已选择的选项，已选项的标签由组件内部的选项缓存保留_
+
+<br/>
+
+<Select
+  v-model:value="hideSelectedValue"
+  mode="multiple"
+  placeholder="Inserted are removed"
+  :options="hideSelectedOptions"
+  :width="300"
+/>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import type { SelectProps, SelectOption } from 'vue-amazing-ui'
+const source = ['Apples', 'Nails', 'Bananas', 'Helicopters']
+const selectedValue = ref<SelectProps['value']>([])
+const options = computed<SelectOption[]>(() => {
+  const selected = Array.isArray(selectedValue.value) ? selectedValue.value : []
+  return source.filter((item) => !selected.includes(item)).map((item) => ({ value: item }))
+})
+</script>
+<template>
+  <Select
+    v-model:value="selectedValue"
+    mode="multiple"
+    placeholder="Inserted are removed"
+    :options="options"
+    :width="300"
+  />
+</template>
+```
+
+::::
+
 ## 扩展菜单
 
-*使用 `dropdownRender` 对下拉菜单自由扩展，`menuNode` 为内置菜单节点*
+_使用 `dropdownRender` 对下拉菜单自由扩展，`menuNode` 为内置菜单节点_
 
 <br/>
 
@@ -504,17 +957,41 @@ function addItem() {
 
 ## 定制回填内容
 
-*使用 `optionLabelProp` 指定回填到选择框的 `option` 字段；`optionLabel` 插槽可完全自定义回填节点*
+_使用 `optionLabelProp` 指定回填到选择框的 `option` 字段；`optionLabel` 插槽可完全自定义回填节点_
 
 <br/>
 
-<Space vertical>
+<Space align="start">
   <Select :options="countryOptions" v-model:value="countryValue" option-label-prop="label" :width="220">
     <template #option="{ icon, label }">{{ icon }} {{ label }}</template>
   </Select>
   <Select :options="countryOptions" v-model:value="countryValue" :width="220">
     <template #option="{ icon, label }">{{ icon }} {{ label }}</template>
     <template #optionLabel="option">{{ option.icon }} {{ option.label }}</template>
+  </Select>
+  <Select
+    :options="countryOptions"
+    v-model:value="countryMultipleValue"
+    mode="multiple"
+    placeholder="select one country"
+    option-label-prop="label"
+    :width="220"
+  >
+    <template #option="{ icon, label }">{{ icon }} {{ label }}</template>
+  </Select>
+  <Select
+    :options="countryOptions"
+    v-model:value="countryMultipleValue"
+    mode="multiple"
+    placeholder="select one country"
+    :width="220"
+  >
+    <template #option="{ icon, label }">{{ icon }} {{ label }}</template>
+    <template #tagRender="{ label, closable, onClose, option }">
+      <Tag :closable="closable" style="margin-right: 3px" @close="onClose">
+        {{ label }}&nbsp;&nbsp;{{ option.icon }}
+      </Tag>
+    </template>
   </Select>
 </Space>
 
@@ -531,9 +1008,10 @@ const options = ref<SelectOption[]>([
   { value: 'korea', label: 'Korea (韩国)', icon: '🇰🇷' }
 ])
 const selectedValue = ref<SelectProps['value']>('china')
+const multipleValue = ref<SelectProps['value']>(['china'])
 </script>
 <template>
-  <Space vertical>
+  <Space align="start">
     <Select :options="options" v-model:value="selectedValue" option-label-prop="label" :width="220">
       <template #option="{ icon, label }">{{ icon }} {{ label }}</template>
     </Select>
@@ -541,15 +1019,39 @@ const selectedValue = ref<SelectProps['value']>('china')
       <template #option="{ icon, label }">{{ icon }} {{ label }}</template>
       <template #optionLabel="option">{{ option.icon }} {{ option.label }}</template>
     </Select>
+    <Select
+      :options="options"
+      v-model:value="multipleValue"
+      mode="multiple"
+      placeholder="select one country"
+      option-label-prop="label"
+      :width="220"
+    >
+      <template #option="{ icon, label }">{{ icon }} {{ label }}</template>
+    </Select>
+    <Select
+      :options="options"
+      v-model:value="multipleValue"
+      mode="multiple"
+      placeholder="select one country"
+      :width="220"
+    >
+      <template #option="{ icon, label }">{{ icon }} {{ label }}</template>
+      <template #tagRender="{ label, closable, onClose, option }">
+        <Tag :closable="closable" style="margin-right: 3px" @close="onClose">
+          {{ label }}&nbsp;&nbsp;{{ option.icon }}
+        </Tag>
+      </template>
+    </Select>
   </Space>
 </template>
 ```
 
 ::::
 
-## 自定义字段名
+## 自定义 label、value、options 字段
 
-*通过 `fieldNames` 指定选项的文本字段与值字段*
+_通过 `fieldNames` 指定选项的文本 / 值字段，以及分组子选项的字段（`options`）_
 
 <br/>
 
@@ -569,24 +1071,58 @@ const options = [
 ]
 const fieldNames = { label: 'name', value: 'id' }
 const selectedValue = ref<SelectProps['value']>('lucy')
+// 分组子选项：由 fieldNames.options 指定分组字段（此处为 items），组条目自身不可选中
+const groupOptions = [
+  {
+    name: 'Manager',
+    items: [
+      { id: 'jack', name: 'Jack' },
+      { id: 'lucy', name: 'Lucy' }
+    ]
+  },
+  {
+    name: 'Engineer',
+    items: [
+      { id: 'yiminghe', name: 'Yiminghe' },
+      { id: 'yiminghe1', name: 'Yiminghe1' }
+    ]
+  }
+]
+const groupFieldNames = { label: 'name', value: 'id', options: 'items' }
+const groupValue = ref<SelectProps['value']>('lucy')
 </script>
 <template>
-  <Select :options="options" :field-names="fieldNames" v-model:value="selectedValue" :width="120" />
+  <Space vertical align="start">
+    <Select :options="options" :field-names="fieldNames" v-model:value="selectedValue" :width="200" />
+    <Select :options="groupOptions" :field-names="groupFieldNames" v-model:value="groupValue" :width="200" />
+  </Space>
 </template>
 ```
 
 ::::
 
-## 弹出位置
+## 下拉面板弹出位置
 
-<Radio :options="placementRadios" v-model:value="placement" button button-style="solid" />
-<Select
-  :options="placementOptions"
-  v-model:value="placementValue"
-  :placement="placement"
-  :dropdown-match-select-width="false"
-  :width="120"
-/>
+<Space vertical>
+  <Radio :options="placementRadios" v-model:value="placement" button button-style="solid" />
+  <Space align="center" :size="24">
+    <Select
+      :options="cityOptions"
+      v-model:value="placementValue"
+      :placement="placement"
+      :dropdown-match-select-width="200"
+    />
+    <Select
+      :options="cityOptions"
+      v-model:value="placementValue"
+      :placement="placement"
+      :dropdown-match-select-width="200"
+      option-filter-prop="label"
+      show-search
+      allow-clear
+    />
+  </Space>
+</Space>
 
 :::: details Show Code
 
@@ -595,9 +1131,12 @@ const selectedValue = ref<SelectProps['value']>('lucy')
 import { ref } from 'vue'
 import type { SelectProps, SelectOption } from 'vue-amazing-ui'
 const options = ref<SelectOption[]>([
-  { value: 'HangZhou', label: 'HangZhou #310000' },
-  { value: 'NingBo', label: 'NingBo #315000' },
-  { value: 'WenZhou', label: 'WenZhou #325000' }
+  { label: '北京市', value: 1 },
+  { label: '上海市', value: 2 },
+  { label: '纽约市', value: 3 },
+  { label: '旧金山', value: 4 },
+  { label: '伊斯坦布尔', value: 5 },
+  { label: '君士坦丁堡', value: 6 }
 ])
 const placement = ref<SelectProps['placement']>('bottomLeft')
 const placementRadios = [
@@ -606,17 +1145,29 @@ const placementRadios = [
   { label: 'bottomLeft', value: 'bottomLeft' },
   { label: 'bottomRight', value: 'bottomRight' }
 ]
-const selectedValue = ref<SelectProps['value']>('HangZhou')
+const placementValue = ref<SelectProps['value']>(5)
 </script>
 <template>
-  <Radio :options="placementRadios" v-model:value="placement" button button-style="solid" />
-  <Select
-    :options="options"
-    v-model:value="selectedValue"
-    :placement="placement"
-    :dropdown-match-select-width="false"
-    :width="120"
-  />
+  <Space vertical>
+    <Radio :options="placementRadios" v-model:value="placement" button button-style="solid" />
+    <Space align="center" :size="24">
+      <Select
+        :options="options"
+        v-model:value="placementValue"
+        :placement="placement"
+        :dropdown-match-select-width="200"
+      />
+      <Select
+        :options="options"
+        v-model:value="placementValue"
+        :placement="placement"
+        :dropdown-match-select-width="200"
+        option-filter-prop="label"
+        show-search
+        allow-clear
+      />
+    </Space>
+  </Space>
 </template>
 ```
 
@@ -624,11 +1175,11 @@ const selectedValue = ref<SelectProps['value']>('HangZhou')
 
 ## 自定义状态
 
-*`status` 可选 `error` 或 `warning`*
+_`status` 可选 `error` 或 `warning`_
 
 <br/>
 
-<Space vertical>
+<Space>
   <Select :options="cityOptions" v-model:value="statusValue" status="error" />
   <Select :options="cityOptions" v-model:value="statusValue" status="warning" />
 </Space>
@@ -650,7 +1201,7 @@ const options = ref<SelectOption[]>([
 const selectedValue = ref<SelectProps['value']>(1)
 </script>
 <template>
-  <Space vertical>
+  <Space>
     <Select :options="options" v-model:value="selectedValue" status="error" />
     <Select :options="options" v-model:value="selectedValue" status="warning" />
   </Space>
@@ -742,7 +1293,7 @@ const selectedValue = ref<SelectProps['value']>(5)
 
 ## 键盘操作
 
-*聚焦后按 `↑` `↓` 移动高亮（自动跳过禁用项、到达列表端点时环形回绕并滚入可视区），按 `Enter` 选中，按 `Esc` 关闭面板；面板收起时按 `↑` `↓` 可直接展开*
+_聚焦后按 `↑` `↓` 移动高亮（自动跳过禁用项、到达列表端点时环形回绕并滚入可视区），按 `Enter` 选中，按 `Esc` 关闭面板；面板收起时按 `↑` `↓` 可直接展开_
 
 <br/>
 
@@ -778,42 +1329,9 @@ const selectedValue = ref<SelectProps['value']>(5)
 
 ::::
 
-## 自定义尺寸
-
-<Space>
-  <Select :options="cityOptions" v-model:value="customSizeValue" :width="150" :height="36" show-search allow-clear />
-  <Select :options="cityOptions" v-model:value="customSizeValue" :width="220" :height="44" />
-</Space>
-
-:::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import type { SelectProps, SelectOption } from 'vue-amazing-ui'
-const options = ref<SelectOption[]>([
-  { label: '北京市', value: 1 },
-  { label: '上海市', value: 2 },
-  { label: '纽约市', value: 3 },
-  { label: '旧金山', value: 4 },
-  { label: '伊斯坦布尔', value: 5 },
-  { label: '君士坦丁堡', value: 6 }
-])
-const selectedValue = ref<SelectProps['value']>(5)
-</script>
-<template>
-  <Space>
-    <Select :options="options" v-model:value="selectedValue" :width="150" :height="36" show-search allow-clear />
-    <Select :options="options" v-model:value="selectedValue" :width="220" :height="44" />
-  </Space>
-</template>
-```
-
-::::
-
 ## 下拉面板宽度
 
-*`dropdownMatchSelectWidth` 为 `true` 时与触发器等宽，为数字时指定面板宽度，为 `false` 时按内容自适应*
+_`dropdownMatchSelectWidth` 为 `true` 时与触发器等宽，为数字时指定面板宽度，为 `false` 时按内容自适应_
 
 <br/>
 
@@ -857,7 +1375,7 @@ const selectedValue = ref<SelectProps['value']>(1)
 
 ## 下拉面板挂载容器
 
-*不传 `to` 时面板优先挂到最近的承载层内容容器（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body`；设为 `false` 时面板留在原地*
+_不传 `to` 时面板优先挂到最近的承载层内容容器（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body`；设为 `false` 时面板留在原地_
 
 <br/>
 
@@ -889,7 +1407,7 @@ const selectedValue = ref<SelectProps['value']>(1)
 
 ## 下拉面板数
 
-*`maxDisplay` 按项数限制面板高度（默认展示 `8` 项），`listHeight` 直接指定像素高度*
+_`maxDisplay` 按项数限制面板高度（默认展示 `8` 项），`listHeight` 直接指定像素高度_
 
 <br/>
 
@@ -923,7 +1441,7 @@ const selectedValue = ref<SelectProps['value']>(1)
 
 ## 下拉面板滚动条
 
-*通过 `scrollbarProps` 定制面板内滚动条*
+_通过 `scrollbarProps` 定制面板内滚动条_
 
 <br/>
 
@@ -949,7 +1467,7 @@ const selectedValue = ref<SelectProps['value']>(1)
 
 ## 自定义下拉面板
 
-*通过 `popupClassName` 自定义面板类名、`dropdownMenuStyle` 设置面板样式，两者均落在 `Teleport` 后的面板上，需写在全局样式中；`zIndex` 用于覆盖面板层级（默认 1050）*
+_通过 `popupClassName` 自定义面板类名、`dropdownMenuStyle` 设置面板样式，两者均落在 `Teleport` 后的面板上，需写在全局样式中；`zIndex` 用于覆盖面板层级（默认 1050）_
 
 <br/>
 
@@ -1028,8 +1546,8 @@ const zIndexValue = ref<SelectProps['value']>(1)
 ## 无边框
 
 <Space>
-  <Select :options="cityOptions" v-model:value="borderlessValue" :bordered="false" />
-  <Select :options="cityOptions" v-model:value="borderlessValue" :bordered="false" disabled />
+  <Select :options="cityOptions" v-model:value="borderlessValue" :bordered="false" :width="120" />
+  <Select :options="cityOptions" v-model:value="borderlessValue" :bordered="false" :width="120" disabled />
 </Space>
 
 :::: details Show Code
@@ -1050,8 +1568,8 @@ const selectedValue = ref<SelectProps['value']>(1)
 </script>
 <template>
   <Space>
-    <Select :options="options" v-model:value="selectedValue" :bordered="false" />
-    <Select :options="options" v-model:value="selectedValue" :bordered="false" disabled />
+    <Select :options="options" v-model:value="selectedValue" :bordered="false" :width="120" />
+    <Select :options="options" v-model:value="selectedValue" :bordered="false" :width="120" disabled />
   </Space>
 </template>
 ```
@@ -1060,7 +1578,7 @@ const selectedValue = ref<SelectProps['value']>(1)
 
 ## 受控展开
 
-*`open` 受控时面板显隐由外部驱动，配合 `dropdownVisibleChange` 同步开合*
+_`open` 受控时面板显隐由外部驱动，配合 `dropdownVisibleChange` 同步开合_
 
 <br/>
 
@@ -1122,7 +1640,7 @@ function onToggleClick() {
 
 ## 自定义选中标识
 
-*通过 `menuItemSelectedIcon` 插槽自定义选中项的标识图标，单选模式默认不展示*
+_通过 `menuItemSelectedIcon` 插槽自定义选中项的标识图标，单选模式默认不展示_
 
 <br/>
 
@@ -1162,14 +1680,14 @@ const selectedValue = ref<SelectProps['value']>(5)
 
 ## 空数据
 
-*选项为空时展示 `notFoundContent`，传 `null` 时不展开面板*
+_选项为空时展示 `notFoundContent`，传 `null` 时不展开面板_
 
 <br/>
 
 <Space>
-  <Select :options="emptyOptions" placeholder="默认空态" />
-  <Select :options="emptyOptions" not-found-content="暂时没有数据" />
-  <Select :options="emptyOptions" :not-found-content="null" placeholder="不展开面板" />
+  <Select :options="emptyOptions" :width="180" placeholder="默认空态" />
+  <Select :options="emptyOptions" :width="180" not-found-content="暂时没有数据" />
+  <Select :options="emptyOptions" :width="180" :not-found-content="null" placeholder="不展开面板" />
 </Space>
 
 :::: details Show Code
@@ -1181,9 +1699,9 @@ const options: SelectOption[] = []
 </script>
 <template>
   <Space>
-    <Select :options="options" placeholder="默认空态" />
-    <Select :options="options" not-found-content="暂时没有数据" />
-    <Select :options="options" :not-found-content="null" placeholder="不展开面板" />
+    <Select :options="options" :width="180" placeholder="默认空态" />
+    <Select :options="options" :width="180" not-found-content="暂时没有数据" />
+    <Select :options="options" :width="180" :not-found-content="null" placeholder="不展开面板" />
   </Space>
 </template>
 ```
@@ -1198,6 +1716,7 @@ const options: SelectOption[] = []
 | :-- | :-- | :-- | :-- |
 | allowClear | 是否支持清除 | boolean | false |
 | autofocus | 是否自动获取焦点 | boolean | false |
+| autoClearSearchValue | 多选模式下选中项后是否清空搜索框 | boolean | true |
 | bordered | 是否有边框 | boolean | true |
 | clearIcon | 自定义清除图标 | VNode &#124; (() => VNode) | undefined |
 | defaultActiveFirstOption | 是否默认高亮第一个选项 | boolean | true |
@@ -1206,7 +1725,7 @@ const options: SelectOption[] = []
 | dropdownMatchSelectWidth | 下拉菜单和选择器同宽，为数字时指定下拉菜单宽度（单位 `px`），为 `false` 时按内容自适应 | boolean &#124; number | true |
 | dropdownMenuStyle | 下拉面板自定义样式，可覆盖定位（与 `AutoComplete` 的同名属性语义一致） | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
 | dropdownRender | 自定义下拉框内容，作用域参数 `menuNode` 为内置菜单节点 | (params: { menuNode: () => VNode[] }) => VNode | undefined |
-| fieldNames | 选项的文本 / 值字段名配置 | `{ label?: string, value?: string, options?: string }` | `{ label: 'label', value: 'value' }` |
+| fieldNames | 选项的文本 / 值字段名配置，`options` 为分组子选项的字段名 | `{ label?: string, value?: string, options?: string }` | `{ label: 'label', value: 'value' }` |
 | filterOption | 根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项 `optionFilterProp` 字段（未传时为 `value`）是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为 `false` 时不筛选，显示全部选项（常用于远程搜索）</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | boolean &#124; ((inputValue: string, option: [SelectOption](#option-type)) => boolean) | true |
 | filterSort | 搜索时对筛选结果项的排序函数 | (optionA: [SelectOption](#option-type), optionB: [SelectOption](#option-type)) => number | undefined |
 | firstActiveValue | 默认高亮的选项 | string &#124; number &#124; (string &#124; number)[] | undefined |
@@ -1216,6 +1735,7 @@ const options: SelectOption[] = []
 | loading | 是否处于加载状态，展开面板时后缀图标变为加载中 | boolean | false |
 | maxDisplay | 下拉面板最多能展示的项数，超过后滚动显示 | number | 8 |
 | menuItemSelectedIcon | 自定义当前选中的条目图标 | VNode &#124; (() => VNode) | undefined |
+| mode | 设置多选模式，`'multiple'` 为多选，`'tags'` 为标签（可输入并创建新条目），不传为单选 | 'multiple' &#124; 'tags' | undefined |
 | notFoundContent | 当下拉列表为空时显示的内容，传 `null` 时不展开空面板 | string &#124; VNode &#124; null | undefined |
 | open | 是否展开下拉菜单（受控） | boolean | undefined |
 | optionFilterProp | 搜索时过滤对应的 `option` 属性，不支持 `children` | string | undefined |
@@ -1224,15 +1744,17 @@ const options: SelectOption[] = []
 | placeholder | 默认占位文本 | string | '请选择' |
 | placement | 下拉面板弹出位置 | 'bottomLeft' &#124; 'bottomRight' &#124; 'topLeft' &#124; 'topRight' | 'bottomLeft' |
 | popupClassName | 下拉面板的类名，用于自定义面板样式 | string | undefined |
+| removeIcon | 自定义 `tag` 的移除图标 | VNode &#124; (() => VNode) | undefined |
 | scrollbarProps | 下拉面板滚动条 `scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar) | [ScrollbarProps](./scrollbar.md#scrollbar) | {} |
 | searchValue | 控制搜索文本（受控） | string | undefined |
 | showArrow | 是否显示下拉小箭头 | boolean | undefined |
-| showSearch | 是否支持搜索 | boolean | false |
+| showSearch | 是否支持搜索；未指定时多选（`multiple` / `tags`）默认开启，单选默认关闭 | boolean | undefined |
 | size | 选择器大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | status | 设置校验状态 | 'error' &#124; 'warning' | undefined |
 | suffixIcon | 自定义的选择框后缀图标 | VNode &#124; (() => VNode) | undefined |
 | to | 下拉面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
-| value <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值 | number &#124; string | undefined |
+| tokenSeparators | 自动分词的分隔符，输入命中后按分隔符拆分并直接选中 | string[] | [] |
+| value <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值，`mode` 为 `multiple` / `tags` 时为数组 | number &#124; string &#124; (number &#124; string)[] | undefined |
 | width | 选择器宽度，单位 `px` | string &#124; number | 'auto' |
 | zIndex | 下拉面板层级，优先级最高（覆盖默认层级与 `ConfigProvider` 的 `baseZIndex` 自动分配） | number | undefined |
 
@@ -1249,7 +1771,8 @@ const options: SelectOption[] = []
 
 | 名称                  | 说明                             | 类型                                                                             |
 | :--------------------- | :-------------------------------- | :------------------------------------------------------------------------------- |
-| change                | 选项值改变后的回调               | (value: string &#124; number, option: [SelectOption](#option-type), index: number) => void |
+| change                | 选项值改变后的回调，多选（`multiple` / `tags`）下 `value` / `option` 为数组且第 3 参为 `undefined` | (value: string &#124; number &#124; (string &#124; number)[], option: [SelectOption](#option-type) &#124; [SelectOption](#option-type)[], index: number &#124; undefined) => void |
+| deselect              | 移除已选项（`tag`）时回调        | (value: string &#124; number, option: [SelectOption](#option-type)) => void      |
 | select                | 选中选项时回调                   | (value: string &#124; number, option: [SelectOption](#option-type)) => void                |
 | clear                 | 清除时的回调                     | () => void                                                                       |
 | search                | 搜索文本变化时回调               | (value: string) => void                                                          |
@@ -1275,6 +1798,9 @@ const options: SelectOption[] = []
 | menuItemSelectedIcon | 自定义当前选中的条目图标，作用域参数 `isSelected` 标识该项是否被选中       | v-slot:menuItemSelectedIcon="{ isSelected }"        |
 | notFoundContent      | 自定义空数据内容                                                         | v-slot:notFoundContent                              |
 | dropdownRender       | 自定义下拉框内容，作用域参数 `menuNode` 为内置菜单节点                     | v-slot:dropdownRender="{ menuNode }"                |
+| tagRender            | 自定义 `tag` 的渲染内容，作用域参数同 `tagRender` 属性                     | v-slot:tagRender="{ label, value, disabled, closable, onClose, option }" |
+| maxTagPlaceholder    | 隐藏 `tag` 时显示的内容，作用域参数 `omittedValues` 为被折叠的选项数组；⚠️ 与 antd 取值形状不同：antd 直接以数组作为插槽作用域（`#maxTagPlaceholder="omittedValues"`），本库统一为具名参数对象 | v-slot:maxTagPlaceholder="{ omittedValues }"        |
+| removeIcon           | 自定义 `tag` 的移除图标                                                   | v-slot:removeIcon                                   |
 
 ## Methods
 

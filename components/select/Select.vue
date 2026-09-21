@@ -8,6 +8,7 @@ import {
   useFloating,
   useFloatingTeleportTarget,
   useInject,
+  useResizeObserver,
   useSlotsExist,
   useZIndex,
   Z_INDEX_CONTAINER_OPEN_KEY,
@@ -27,17 +28,28 @@ export interface FieldNames {
 }
 export type SelectValue = string | number
 export type SelectPlacement = 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'
+export type SelectMode = 'multiple' | 'tags'
 // dropdownRender 的 menuNode：以函数组件形式提供，模板中可直接 <component :is="menuNode" /> 渲染
 export type SelectMenuNode = () => VNode[]
 export interface DropdownRenderParams {
   menuNode: SelectMenuNode // 内置下拉菜单节点
+}
+// tagRender（prop / 插槽）的渲染参数
+export interface TagRenderParams {
+  label: unknown // tag 显示文本（已按 maxTagTextLength 截断）
+  value?: SelectValue // tag 对应的选项值
+  disabled: boolean // tag 是否禁用（禁用项的 tag 不可移除）
+  closable: boolean // tag 是否可移除
+  onClose: (e?: MouseEvent) => void // 移除该 tag
+  option: Option // tag 对应的原始选项数据（tags 模式新建项为伪选项）
 }
 
 export interface Props {
   // 数据与取值
   options?: Option[] // 选项数据
   fieldNames?: FieldNames // 选项字段名配置，用于自定义选项的文本 / 值字段
-  value?: SelectValue // (v-model:value) 当前选中的 option 条目值
+  mode?: SelectMode // 设置多选模式，'multiple' 为多选，'tags' 为标签（可输入并创建新条目），不传为单选
+  value?: SelectValue | SelectValue[] // (v-model:value) 当前选中的 option 条目值，mode 为 multiple / tags 时为数组
   optionLabelProp?: string // 回填到选择框的 option 属性值，未指定时取 label 字段
   // 外观与尺寸
   width?: string | number // 选择器宽度，单位 px
@@ -65,6 +77,14 @@ export interface Props {
   */
   filterOption?: boolean | ((inputValue: string, option: Option) => boolean) // 过滤条件函数，仅当支持搜索时生效
   filterSort?: (optionA: Option, optionB: Option) => number // 搜索时对筛选结果项的排序函数
+  // 多选与标签（mode 为 multiple / tags 时生效）
+  maxTagCount?: number | 'responsive' // 最多显示多少个 tag，为 'responsive' 时按容器宽度自动折叠
+  maxTagPlaceholder?: string | VNode | ((omittedValues: Option[]) => VNode) // 隐藏 tag 时显示的内容
+  maxTagTextLength?: number // tag 上显示文本的最大长度，超出部分以 ... 截断
+  tagRender?: (params: TagRenderParams) => VNode // 自定义 tag 的渲染内容
+  removeIcon?: VNode | (() => VNode) // 自定义 tag 的移除图标
+  tokenSeparators?: string[] // 自动分词的分隔符，输入命中后按分隔符拆分并直接选中
+  autoClearSearchValue?: boolean // 多选模式下选中项后是否清空搜索框
   // 面板开合与高亮
   open?: boolean // 是否展开下拉菜单（受控）
   defaultOpen?: boolean // 是否默认展开下拉菜单
@@ -96,11 +116,15 @@ export interface SelectSlots {
   dropdownRender?: (props: DropdownRenderParams) => VNode[]
   placeholder?: () => VNode[]
   optionLabel?: (option: Option) => VNode[]
+  tagRender?: (params: TagRenderParams) => VNode[]
+  maxTagPlaceholder?: (params: { omittedValues: Option[] }) => VNode[]
+  removeIcon?: () => VNode[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
   fieldNames: undefined,
+  mode: undefined,
   value: undefined,
   optionLabelProp: undefined,
   width: 'auto',
@@ -116,11 +140,18 @@ const props = withDefaults(defineProps<Props>(), {
   suffixIcon: undefined,
   showArrow: undefined,
   loading: false,
-  showSearch: false,
+  showSearch: undefined, // 未指定时按模式兜底（多选默认开启搜索），故不能在此落 false
   searchValue: undefined,
   optionFilterProp: undefined,
   filterOption: true,
   filterSort: undefined,
+  maxTagCount: undefined,
+  maxTagPlaceholder: undefined,
+  maxTagTextLength: undefined,
+  tagRender: undefined,
+  removeIcon: undefined,
+  tokenSeparators: () => [],
+  autoClearSearchValue: true,
   open: undefined,
   defaultOpen: false,
   defaultActiveFirstOption: true,
@@ -164,7 +195,8 @@ const emits = defineEmits([
   'popupScroll',
   'mouseenter',
   'mouseleave',
-  'inputKeyDown'
+  'inputKeyDown',
+  'deselect'
 ])
 const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const selectWrapRef = ref<HTMLElement | null>(null) // 组件根元素引用，用于判断焦点是否仍落在本组件内
@@ -177,6 +209,9 @@ const innerSearchValue = ref<string>('') // 非受控模式下的搜索文本
 const focused = ref<boolean>(false) // select 是否聚焦
 const isComposing = ref<boolean>(false) // 是否处于输入法(IME)合成中，合成期间不触发 search / 过滤
 const hoverValue = ref<SelectValue | null>(null) // 面板中高亮项的 value
+const backspaceLock = ref<boolean>(false) // 退格锁：上一次按键时搜索文本是否非空（避免清空搜索的同一次按键又删掉一个 tag）
+const responsiveTagCount = ref<number>(0) // maxTagCount 为 'responsive' 时按容器宽度算出的可见 tag 数
+const responsiveMeasured = ref<boolean>(false) // 是否已按容器宽度量取过（量取前先全量渲染，避免无布局环境下 tag 全被折叠）
 const { colorPalettes, shadowColor } = useInject('Select') // 主题色注入
 // 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配；未传则沿用默认层级 1050
 // 下拉面板需高于承载它的 Modal / Drawer / Dialog
@@ -198,10 +233,79 @@ const mergedFieldNames = computed(() => ({
   label: props.fieldNames?.label || 'label',
   value: props.fieldNames?.value || 'value'
 }))
-const mergedShowSearch = computed(() => props.showSearch ?? false) // 单选模式默认不可搜索，与 antd 一致
-const mergedShowArrow = computed(() => props.showArrow ?? true) // 单选模式默认显示箭头，与 antd 一致
+// 分组子选项字段名（antd 口径：fieldNames.options，未指定时为 'options'）
+const groupField = computed(() => props.fieldNames?.options || 'options')
+/** 是否为「分组」形态：任一 option 的分组字段是非空数组即成立 */
+const hasGroupedOptions = computed(() =>
+  props.options.some((option) => {
+    const children = option?.[groupField.value]
+    return Array.isArray(children) && children.length > 0
+  })
+)
+/**
+ * 参与选中 / 过滤 / 键盘导航的扁平候选集：
+ * 分组形态取组内子选项（组条目本身不可选中），非分组形态即原始 options。
+ * 分组标题只在渲染时插入、不进索引空间 —— 故 change 第 3 参（展示列表下标）与扁平候选保持一致。
+ */
+const flatOptions = computed<Option[]>(() => {
+  if (!hasGroupedOptions.value) return props.options
+  return props.options.flatMap((option) => {
+    const children = option?.[groupField.value]
+    return Array.isArray(children) && children.length > 0 ? children : [option]
+  })
+})
+/** 子选项值 → 所属分组标签：渲染分组标题用（跨组时插入一次） */
+const optionGroupLabels = computed(() => {
+  const labels = new Map<string, string>()
+  if (!hasGroupedOptions.value) return labels
+  props.options.forEach((option) => {
+    const children = option?.[groupField.value]
+    if (!Array.isArray(children) || !children.length) return
+    const groupLabel = String(getOptionLabel(option) ?? '')
+    children.forEach((child) => {
+      const childValue = getOptionValue(child)
+      if (childValue !== undefined && childValue !== null) {
+        labels.set(String(childValue), groupLabel)
+      }
+    })
+  })
+  return labels
+})
+const isMultiple = computed(() => props.mode === 'multiple' || props.mode === 'tags') // 是否多选模式（含标签模式）
+const isTagsMode = computed(() => props.mode === 'tags') // 是否标签模式（输入内容即可创建新条目）
+// 搜索能力：显式 showSearch 优先；未指定时多选（含 tags）默认可搜索，单选默认不可搜索（antd 口径：showSearch ?? multiple）
+const mergedShowSearch = computed(() => props.showSearch ?? isMultiple.value)
+// 箭头显示：多选默认不显示箭头（antd 口径），loading 时显示（后缀位置由加载中图标接管）
+const mergedShowArrow = computed(() => props.showArrow ?? (props.loading || !isMultiple.value))
 const mergedOpen = computed(() => (props.open !== undefined ? props.open : showOptions.value))
 const mergedSearchValue = computed(() => (props.searchValue !== undefined ? props.searchValue : innerSearchValue.value))
+// 多选值列表：单选值归一为单元素数组，空值统一为空数组（内部一律按数组处理）
+const valueList = computed<SelectValue[]>(() => {
+  const value = props.value
+  if (Array.isArray(value)) {
+    return value.filter((item) => item !== undefined && item !== null)
+  }
+  if (value === undefined || value === null) return []
+  return [value]
+})
+// 输入框展示文本：多选（非 tags）在面板关闭时不展示已输入的搜索文本（antd 口径：重开面板时恢复）
+const inputDisplayValue = computed(() =>
+  isMultiple.value && !isTagsMode.value && !mergedOpen.value ? '' : mergedSearchValue.value
+)
+// 输入框绑定值：仍以内部状态为准（保留 v-model 在元素上维护的 composing 标记，IME 期间不触发 search），
+// 仅在「多选且面板关闭」时展示为空
+const inputModelValue = computed({
+  get: () => inputDisplayValue.value,
+  set: (value: string) => {
+    innerSearchValue.value = value
+  }
+})
+// 输入框可编辑性（antd 口径）：tags 始终可输入；multiple 需开启 showSearch 且面板展开 / 已聚焦；单选仅看 showSearch
+const inputEditable = computed(() => {
+  if (isTagsMode.value) return true
+  if (!isMultiple.value) return mergedShowSearch.value
+  return mergedShowSearch.value && (mergedOpen.value || focused.value)
+})
 const selectWidth = computed(() => {
   if (typeof props.width === 'number') {
     return `${props.width}px`
@@ -228,6 +332,15 @@ const optionsStyle = computed(() => {
   }
   return style
 })
+// 选项缓存：options 动态变化时（远程搜索清空、已选项被移出列表）已选项仍需保留原 label 与原始数据
+const optionCache = new Map<SelectValue, Option>()
+/** 按值兜底生成选项：值不在 options 中时 label 回落 value（对齐 antd） */
+function createFallbackOption(value: SelectValue): Option {
+  return {
+    [mergedFieldNames.value.value]: value,
+    [mergedFieldNames.value.label]: value
+  }
+}
 /** 读取选项的 value 字段 */
 function getOptionValue(option: Option): SelectValue | undefined {
   return option?.[mergedFieldNames.value.value]
@@ -236,15 +349,26 @@ function getOptionValue(option: Option): SelectValue | undefined {
 function getOptionLabel(option: Option): unknown {
   return option?.[mergedFieldNames.value.label]
 }
+/** 按值查找选项：优先当前 options，其次历史缓存（options 被清空后 tag / 回填内容仍显示原 label） */
+function findOption(value: SelectValue): Option | undefined {
+  const current = flatOptions.value.find((option) => getOptionValue(option) === value)
+  if (current) {
+    optionCache.set(value, current)
+    return current
+  }
+  return optionCache.get(value)
+}
 /** 判断选项是否为当前选中项 */
 function isOptionSelected(option: Option): boolean {
-  if (props.value === undefined || props.value === null) return false
-  return getOptionValue(option) === props.value
+  const value = getOptionValue(option)
+  if (value === undefined || value === null) return false
+  return valueList.value.includes(value)
 }
-// 当前选中项：value 未指定 / 在选项中查不到时均为 undefined
+// 当前选中项（单选）：value 未指定 / 在选项中查不到时为 undefined
 const selectedOption = computed<Option | undefined>(() => {
-  if (props.value === undefined || props.value === null) return undefined
-  return props.options.find((option) => getOptionValue(option) === props.value)
+  const value = props.value
+  if (value === undefined || value === null || Array.isArray(value)) return undefined
+  return findOption(value)
 })
 // 回填内容：optionLabelProp 指定的字段优先，未指定时取 label 字段，均缺失时回落 value
 const optionLabelRaw = computed<unknown>(() => {
@@ -255,9 +379,12 @@ const optionLabelRaw = computed<unknown>(() => {
   }
   return option ? getOptionLabel(option) : undefined
 })
-// 占位判定（antdv 口径）：value 为 undefined，或 value 为 null 且无 label 时视为「无选中值」
-// 其余情况（含 '' / 0）都是有意义的值，不展示占位文本
+// 占位判定：多选在「无已选值且输入框为空（非合成中）」时展示；单选按 antdv 口径（value 为 undefined，
+// 或 value 为 null 且无 label），其余情况（含 '' / 0）都是有意义的值，不展示占位文本
 const showPlaceholder = computed(() => {
+  if (isMultiple.value) {
+    return valueList.value.length === 0 && !inputDisplayValue.value && !isComposing.value
+  }
   if (props.value === undefined) return true
   if (props.value === null) return optionLabelRaw.value === undefined || optionLabelRaw.value === null
   return false
@@ -267,15 +394,142 @@ const itemTitle = computed(() => {
   const text = displayText.value
   return typeof text === 'string' || typeof text === 'number' ? String(text) : undefined
 })
+// ==================== 多选 / 标签 ====================
+const TAG_GAP = 4 // tag 右外边距，与 .select-selection-item 的 margin-right 保持一致（用于 responsive 宽度累计）
+// 已选项列表（多选）：按 value 顺序映射，查不到时回落缓存 / value 兜底选项
+const selectedOptions = computed<Option[]>(() =>
+  valueList.value.map((value) => findOption(value) ?? createFallbackOption(value))
+)
+/** tag 显示文本：optionLabelProp 优先，未指定取 label 字段，均缺失回落 value；超出 maxTagTextLength 时截断 */
+function getTagLabel(option: Option, value: SelectValue): unknown {
+  const raw = props.optionLabelProp ? option?.[props.optionLabelProp] : getOptionLabel(option)
+  const text = raw ?? value
+  const { maxTagTextLength } = props
+  if (typeof maxTagTextLength !== 'number') return text
+  if (typeof text !== 'string' && typeof text !== 'number') return text
+  const str = String(text)
+  return str.length > maxTagTextLength ? `${str.slice(0, maxTagTextLength)}...` : text
+}
+/** tag 的 title：仅文本型才设置（与选项 title 口径一致） */
+function getTagTitle(label: unknown): string | undefined {
+  return typeof label === 'string' || typeof label === 'number' ? String(label) : undefined
+}
+// 可见 tag 数：number 直接截断，'responsive' 用实测值（首次量取前先全量展示），未设置时全量展示
+const visibleTagCount = computed(() => {
+  const total = selectedOptions.value.length
+  const { maxTagCount } = props
+  if (maxTagCount === 'responsive') {
+    return responsiveMeasured.value ? Math.min(responsiveTagCount.value, total) : total
+  }
+  if (typeof maxTagCount === 'number') return Math.min(maxTagCount, total)
+  return total
+})
+// 被折叠的 tag（maxTagPlaceholder 的 omittedValues）
+const omittedOptions = computed<Option[]>(() => selectedOptions.value.slice(visibleTagCount.value))
+// 折叠提示默认文案（antd 口径：+ N ...）
+const omittedText = computed(() => `+ ${omittedOptions.value.length} ...`)
+// 折叠提示内容：prop（函数 / 节点 / 文本）优先，未传时用默认文案；插槽在模板中优先于 prop
+const omittedContent = computed<unknown>(() => {
+  const { maxTagPlaceholder } = props
+  if (typeof maxTagPlaceholder === 'function') {
+    return maxTagPlaceholder(omittedOptions.value)
+  }
+  return maxTagPlaceholder ?? omittedText.value
+})
+// tag 渲染数据（模板遍历用）：value / label / 可移除性 / 是否被折叠 / tagRender 参数，避免在模板里反复取值
+const tagItems = computed(() => {
+  const visibleCount = visibleTagCount.value
+  return selectedOptions.value.map((option, index) => {
+    const value = getOptionValue(option) as SelectValue
+    const label = getTagLabel(option, value)
+    const closable = !props.disabled && !option.disabled
+    const disabled = Boolean(option.disabled)
+    const params: TagRenderParams = {
+      label,
+      value,
+      disabled,
+      closable,
+      onClose: (e?: MouseEvent) => {
+        e?.stopPropagation()
+        if (closable) {
+          removeTag(option)
+        }
+      },
+      option
+    }
+    return { option, value, label, closable, disabled, hidden: index >= visibleCount, params }
+  })
+})
+// 自定义 tag 移除图标：插槽优先（项目约定），其次 prop；统一包成函数组件便于模板以 <component :is> 渲染
+const customRemoveIcon = computed<SelectMenuNode | null>(() => {
+  if (slots.removeIcon) {
+    return () => slots.removeIcon!()
+  }
+  const icon = props.removeIcon
+  if (!icon) return null
+  return () => [typeof icon === 'function' ? (icon as () => VNode)() : icon]
+})
+/**
+ * 计算 responsive 模式下的可见 tag 数：
+ * 全部 tag 始终渲染在 DOM 中（被折叠项以绝对定位隐藏，不占位但可量宽），
+ * 因此直接量取每个 tag 的真实宽度（含 tagRender 的自定义渲染），无需额外的镜像节点
+ */
+function measureResponsiveTagCount(): void {
+  const container = selectContentRef.value
+  if (!container || props.maxTagCount !== 'responsive') return
+  const total = selectedOptions.value.length
+  const tagNodes = Array.from(
+    container.querySelectorAll<HTMLElement>('.select-selection-item:not(.select-selection-item-rest)')
+  )
+  const restNode = container.querySelector<HTMLElement>('.select-selection-item-rest')
+  const restWidth = restNode ? restNode.offsetWidth + TAG_GAP : 0
+  const containerStyle = getComputedStyle(container)
+  const available =
+    container.clientWidth - parseFloat(containerStyle.paddingLeft) - parseFloat(containerStyle.paddingRight)
+  let used = 0
+  let count = 0
+  for (let index = 0; index < tagNodes.length; index++) {
+    const width = tagNodes[index].offsetWidth + TAG_GAP
+    // 折叠后还需额外放下「折叠提示」tag，最后一项无需预留
+    const need = width + (index < total - 1 ? restWidth : 0)
+    if (used + need > available) break
+    used += width
+    count = index + 1
+  }
+  if (count !== responsiveTagCount.value) {
+    responsiveTagCount.value = count
+  }
+  responsiveMeasured.value = true
+}
+// responsive 折叠：容器宽度由 ResizeObserver 兜住，tag 数量 / 文本 / 尺寸变化时由 watch 兜住
+useResizeObserver(selectContentRef, () => measureResponsiveTagCount())
+watch(
+  [() => props.maxTagCount, () => props.size, selectedOptions],
+  () => {
+    if (props.maxTagCount === 'responsive') {
+      nextTick(measureResponsiveTagCount)
+    }
+  },
+  { flush: 'post' }
+)
+// tags 模式的选项全集：已选值若不在 options 中，补成伪选项，使新建的标签出现在下拉列表中（antd 口径）
+const filledOptions = computed<Option[]>(() => {
+  if (!isTagsMode.value) return flatOptions.value
+  const existed = new Set(flatOptions.value.map((option) => getOptionValue(option)))
+  const patchValues = valueList.value
+    .filter((value) => !existed.has(value))
+    .sort((valueA, valueB) => (valueA < valueB ? -1 : 1))
+  return [...flatOptions.value, ...patchValues.map((value) => createFallbackOption(value))]
+})
 // 过滤后的选项：filterOption 为 false 或搜索文本为空时不过滤
 // 默认过滤字段遵循 antd：optionFilterProp 优先，未指定时按 value 字段匹配（大小写不敏感）
 const filteredOptions = computed<Option[]>(() => {
   const keyword = mergedSearchValue.value
-  if (!keyword || props.filterOption === false) return props.options
+  if (!keyword || props.filterOption === false) return filledOptions.value
   const upperKeyword = keyword.toUpperCase()
   const filterProp = props.optionFilterProp ?? mergedFieldNames.value.value
   const filterOption = props.filterOption
-  return props.options.filter((option) => {
+  return filledOptions.value.filter((option) => {
     if (typeof filterOption === 'function') {
       return Boolean(filterOption(keyword, option))
     }
@@ -284,11 +538,20 @@ const filteredOptions = computed<Option[]>(() => {
       .includes(upperKeyword)
   })
 })
+// tags 模式：输入内容未命中任何选项时，把它作为「新建标签」伪选项置于列表首位，可直接点击 / 回车选中（antd 口径）
+const searchFilledOptions = computed<Option[]>(() => {
+  if (!isTagsMode.value) return filteredOptions.value
+  const keyword = mergedSearchValue.value
+  if (!keyword) return filteredOptions.value
+  const filterProp = props.optionFilterProp ?? mergedFieldNames.value.value
+  const matched = filteredOptions.value.some((option) => option?.[filterProp] === keyword)
+  return matched ? filteredOptions.value : [createFallbackOption(keyword), ...filteredOptions.value]
+})
 // 展示用选项：传了 filterSort 时对过滤结果排序（antd 语义：仅搜索场景生效）
 const displayOptions = computed<Option[]>(() => {
   const filterSort = props.filterSort
-  if (!filterSort) return filteredOptions.value
-  return [...filteredOptions.value].sort((optionA, optionB) => filterSort(optionA, optionB))
+  if (!filterSort) return searchFilledOptions.value
+  return [...searchFilledOptions.value].sort((optionA, optionB) => filterSort(optionA, optionB))
 })
 // 空态内容是否存在：显式传 null 表示「不提供空态」，此时选项为空不展开面板（antd 口径）
 const hasNotFoundContent = computed(() => props.notFoundContent !== null)
@@ -316,7 +579,11 @@ const matchTriggerWidth = computed<'width' | 'minWidth' | number>(() => {
   }
   return props.dropdownMatchSelectWidth ? 'width' : 'minWidth'
 })
-const { panelStyle, transformOrigin } = useFloating(selectPanelRef, {
+const {
+  panelStyle,
+  transformOrigin,
+  sync: syncFloating
+} = useFloating(selectPanelRef, {
   anchor: () => selectContentRef.value,
   offsetContainer: selectPanelWrapperRef,
   placement: () => floatingPlacement.value,
@@ -328,16 +595,26 @@ const { panelStyle, transformOrigin } = useFloating(selectPanelRef, {
   matchTriggerWidth: () => matchTriggerWidth.value,
   enabled: () => panelVisible.value
 })
+// 触发器「自身尺寸」变化时重算面板位置：内核的 'resize' 只监听视口（window），
+// 锚点自身长高不会触发重算 —— 典型场景是多选标签逐条增多换行，触发器由一行变两行，
+// 面板仍停在旧位置，与触发器互相遮挡错位（如「隐藏已选择选项」用例选到一定条数时）
+useResizeObserver(selectContentRef, () => {
+  if (panelVisible.value) {
+    syncFloating()
+  }
+})
 // 面板层级：显式 zIndex 优先于自动分配 / 默认层级（与乙类组件的 zIndex prop 同一优先级契约）
 const selectPanelZIndex = computed(() => props.zIndex ?? layerZIndex.value)
 // 面板内联样式：内核输出（定位 + 动画原点）+ 使用者自定义样式 + 层级 + 主题变量
 // 顺序与 AutoComplete 一致：dropdownMenuStyle 可覆盖定位，但层级与主题变量始终由组件接管
+// 面板挂载在 Teleport 目标下（可能是 body），拿不到组件根上的 CSS 变量，故面板用到的变量在此重复声明
 const selectPanelStyle = computed<CSSProperties>(() => ({
   ...panelStyle.value,
   transformOrigin: transformOrigin.value,
   ...props.dropdownMenuStyle,
   zIndex: selectPanelZIndex.value,
-  '--select-option-bg-color-active': colorPalettes.value[0]
+  '--select-option-bg-color-active': colorPalettes.value[0],
+  '--select-primary-color': colorPalettes.value[5]
 }))
 
 watch(
@@ -388,13 +665,17 @@ watch(panelVisible, async (visible) => {
     raiseFloatingOrder(selectPanelWrapperRef.value)
   }
 })
-// 打开面板时把高亮项复位到当前选中项并滚入可视区（antd 行为）；无选中项时保持默认高亮
+/**
+ * 打开面板时的高亮 / 滚动处理 —— 逐条对齐 antd（vc-select/OptionList 的 watch([open, searchValue])）：
+ * - **单选模式且已有选中值**：把高亮复位到选中项并滚入可视区；
+ * - 其余情形（多选 / 标签，或单选无值）：**不复位** —— 保留用户上次移动的高亮与滚动位置
+ *   （antd 的复位分支带 `!multiple && rawValues.size === 1` 前置条件，多选下开合不会打断用户已定位的位置）
+ */
 watch(panelVisible, async (visible) => {
-  if (!visible) return
+  if (!visible || isMultiple.value) return
   const selected = displayOptions.value.find((option) => !option.disabled && isOptionSelected(option))
-  if (selected) {
-    hoverValue.value = getOptionValue(selected) ?? null
-  }
+  if (!selected) return
+  hoverValue.value = getOptionValue(selected) ?? null
   await scrollOptionIntoView('.option-hover')
 })
 // 默认高亮：defaultActiveFirstOption 为 true 时高亮首个可用项，为 false 时清空高亮
@@ -436,6 +717,9 @@ onMounted(() => {
     const first = Array.isArray(props.firstActiveValue) ? props.firstActiveValue[0] : props.firstActiveValue
     hoverValue.value = first ?? null
   }
+  // responsive 折叠：挂载时同步量取一次（读布局属性会强制回流拿到真实宽度），
+  // 使首帧就按容器宽度折叠，避免 tag 先铺满再收起的闪烁
+  measureResponsiveTagCount()
 })
 
 /** 将面板内指定选项（当前选中项 / 键盘高亮项）滚动到可视区域内（已可见时不做任何滚动） */
@@ -484,10 +768,10 @@ function openPanel(): void {
     setPanelOpen(true)
   }
 }
-/** 收起面板：同时复位搜索文本（单选模式下重开面板不应残留上次输入） */
+/** 收起面板：单选同时复位搜索文本（重开面板不应残留上次输入）；多选保留（重开面板时恢复，antd 口径） */
 function closePanel(): void {
   setPanelOpen(false)
-  if (mergedShowSearch.value) {
+  if (mergedShowSearch.value && !isMultiple.value) {
     setSearchValue('')
   }
 }
@@ -498,8 +782,56 @@ function setSearchValue(value: string): void {
     emits('update:searchValue', value)
   }
 }
-/** 搜索文本变更：更新文本、派发 search、并展开面板 */
+/**
+ * tokenSeparators 分词：命中分隔符时返回拆分结果（过滤空串），未命中返回 null
+ * （与 antd 的 getSeparatedContent 一致：只输入分隔符会得到空数组，此时清空输入但不产生新值）
+ */
+function splitByTokenSeparators(text: string): string[] | null {
+  const separators = props.tokenSeparators ?? []
+  if (!separators.length) return null
+  let matched = false
+  let result = [text]
+  separators.forEach((separator) => {
+    const next: string[] = []
+    result.forEach((item) => {
+      const parts = item.split(separator)
+      if (parts.length > 1) matched = true
+      next.push(...parts)
+    })
+    result = next
+  })
+  return matched ? result.filter((item) => item) : null
+}
+/** 分词结果转为选中值：tags 模式直接建标签，multiple 模式按 label 匹配已有选项取其 value（antd 口径） */
+function submitSeparatedValues(words: string[]): void {
+  const labelField = mergedFieldNames.value.label
+  const patchValues: SelectValue[] = isTagsMode.value
+    ? words
+    : words
+        .map((word) => props.options.find((option) => option?.[labelField] === word))
+        .map((option) => (option ? getOptionValue(option) : undefined))
+        .filter((value): value is SelectValue => value !== undefined)
+  emitMultipleChange(Array.from(new Set([...valueList.value, ...patchValues])))
+  patchValues.forEach((value) => emits('select', value, findOption(value) ?? createFallbackOption(value)))
+  // 分词完成即收起面板（antd 行为：粘贴 / 输入分隔符视为一轮输入结束）
+  setPanelOpen(false)
+}
+/** 搜索文本变更：多选下先尝试分词，未命中分词时更新文本、派发 search、并展开面板 */
 function handleSearch(value: string): void {
+  if (isMultiple.value) {
+    const words = splitByTokenSeparators(value)
+    if (words) {
+      submitSeparatedValues(words)
+      setSearchValue('')
+      // 同一轮 input 事件里 v-model 已把原文写入内部状态、随后又被上面清回空串，
+      // 该 computed 的净变化为零 → Vue 不触发重渲染（实测 3.5.42）→ 输入框会残留分词前的原文
+      // （面板未开合、无其它状态变化时尤为明显），故在此显式清空输入框的 DOM 值
+      if (inputRef.value) {
+        inputRef.value.value = ''
+      }
+      return
+    }
+  }
   setSearchValue(value)
   emits('search', value)
   if (!mergedOpen.value && !props.disabled) {
@@ -526,6 +858,14 @@ function onBlur(e?: FocusEvent): void {
   if (props.disabled) return
   const related = (e?.relatedTarget as Node | null) ?? null
   if (related && (selectPanelRef.value?.contains(related) || selectWrapRef.value?.contains(related))) return
+  // 多选下焦点真正离开组件时处理残留的搜索文本：tags 提交为新标签，multiple 静默清空（antd 口径）
+  if (isMultiple.value && mergedSearchValue.value) {
+    if (isTagsMode.value) {
+      submitTag()
+    } else {
+      setSearchValue('')
+    }
+  }
   focused.value = false
   closePanel()
   emits('blur')
@@ -591,27 +931,85 @@ function onHover(option: Option): void {
   if (option.disabled) return
   hoverValue.value = getOptionValue(option) ?? null
 }
-/** 选中下拉项 */
-function onSelectOption(option: Option, index: number): void {
+/** 多选值是否发生变化：长度一致且逐项相等时视为未变化（与 antd 的 change 触发条件一致） */
+function isValueListChanged(nextValues: SelectValue[]): boolean {
+  const current = valueList.value
+  return nextValues.length !== current.length || nextValues.some((item, index) => item !== current[index])
+}
+/** 多选值变更统一出口：同步 v-model 并派发 change（多选下第 3 参 index 不适用，固定传 undefined） */
+function emitMultipleChange(nextValues: SelectValue[]): void {
+  if (!isValueListChanged(nextValues)) return
+  emits('update:value', nextValues)
+  emits(
+    'change',
+    nextValues,
+    nextValues.map((value) => findOption(value) ?? createFallbackOption(value)),
+    undefined
+  )
+}
+/** 移除标签（标签上的移除按钮 / 退格键共用）：派发 change + deselect，并保持输入框聚焦 */
+function removeTag(option: Option): void {
+  if (props.disabled) return
   const value = getOptionValue(option)
-  if (props.value !== value) {
-    emits('update:value', value)
-    emits('change', value, option, index)
-  }
-  emits('select', value, option)
-  hoverValue.value = value ?? null
-  closePanel()
+  if (value === undefined || value === null) return
+  emitMultipleChange(valueList.value.filter((item) => item !== value))
+  emits('deselect', value, option)
   selectFocus()
 }
-/** 清除选中值（仅清空自身状态，不做 v-model:value 之外的额外处理） */
+/** tags 模式：把当前搜索文本提交为新标签（回车 / 失焦时触发，对齐 antd 的 submit 分支） */
+function submitTag(): void {
+  const text = (mergedSearchValue.value || '').trim()
+  if (!text) return
+  const value: SelectValue = text
+  const nextValues = valueList.value.includes(value) ? [...valueList.value] : [...valueList.value, value]
+  emitMultipleChange(nextValues)
+  emits('select', value, findOption(value) ?? createFallbackOption(value))
+  setSearchValue('')
+}
+/** 选中下拉项：单选选中后回填并收起面板；多选切换选中并保持面板展开（antd 口径） */
+function onSelectOption(option: Option, index: number): void {
+  const value = getOptionValue(option)
+  if (!isMultiple.value) {
+    if (props.value !== value) {
+      emits('update:value', value)
+      emits('change', value, option, index)
+    }
+    emits('select', value, option)
+    hoverValue.value = value ?? null
+    closePanel()
+    selectFocus()
+    return
+  }
+  // 多选 / 标签：切换选中
+  if (value === undefined || value === null) return
+  const selected = valueList.value.includes(value)
+  emitMultipleChange(selected ? valueList.value.filter((item) => item !== value) : [...valueList.value, value])
+  if (selected) {
+    emits('deselect', value, option)
+  } else {
+    emits('select', value, option)
+    hoverValue.value = value
+  }
+  // 选中项后清空搜索文本（antd 口径：autoClearSearchValue 为 true 时选中与反选都清空）
+  if (props.autoClearSearchValue) {
+    setSearchValue('')
+  }
+  selectFocus()
+}
+/** 清除选中值（仅清空自身状态，不做 v-model:value 之外的额外处理；多选清空为数组并逐个派发 deselect） */
 function onClear(e?: MouseEvent): void {
   e?.stopPropagation()
   if (props.disabled) return
-  const changed = props.value !== undefined
+  const changed = isMultiple.value ? valueList.value.length > 0 : props.value !== undefined
   setSearchValue('')
   hoverValue.value = null
   closePanel()
-  if (changed) {
+  if (isMultiple.value && changed) {
+    const clearedOptions = selectedOptions.value
+    emits('update:value', [])
+    emits('change', [], [], undefined)
+    clearedOptions.forEach((option) => emits('deselect', getOptionValue(option), option))
+  } else if (changed) {
     emits('update:value', undefined)
     emits('change', undefined, undefined, undefined)
   }
@@ -623,7 +1021,24 @@ function onClear(e?: MouseEvent): void {
 function onKeydown(e: KeyboardEvent): void {
   emits('inputKeyDown', e)
   if (props.disabled) return
+  // 输入法组合中的按键全部交由 IME 处理，不驱动面板：Enter 是「确认候选 / 上屏」、↑↓ 是「切换候选页」、
+  // Backspace 是「删除组合文本」——若继续执行，Enter 会误选中当前高亮项（且随后的 compositionend
+  // 又把搜索文本写回输入框，表现为「凭空选中一项 + 输入框残留文本」）。
+  // antd 以 keyCode(which) 判定 Enter，而 Chromium 对「被 IME 消费的按键」给出 keyCode 229，天然规避了
+  // 该问题；antd 在 tags 的提交分支亦显式检查了 !compositionStatus（vc-select/Selector/index.tsx）。
+  if (e.isComposing || isComposing.value) return
+  // 退格锁：记录本次按键前的搜索文本是否非空（上一次按键结束时写入），
+  // 避免「清空搜索文本的同一次按键」紧接着又删掉一个标签（antd 的 useLock 语义）
+  const clearLock = backspaceLock.value
+  backspaceLock.value = Boolean(mergedSearchValue.value)
   const list = displayOptions.value
+  // 退格删除：搜索文本为空时删除最后一个可移除的标签（多选专属，禁用项跳过）
+  if (e.key === 'Backspace' && isMultiple.value && !clearLock && !mergedSearchValue.value && valueList.value.length) {
+    const removable = [...selectedOptions.value].reverse().find((option) => !option.disabled)
+    if (removable) {
+      removeTag(removable)
+    }
+  }
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
     if (!list.length) return
     e.preventDefault()
@@ -656,9 +1071,23 @@ function onKeydown(e: KeyboardEvent): void {
     return
   }
   if (e.key === 'Enter') {
-    if (!mergedOpen.value) return
+    if (!mergedOpen.value) {
+      // tags 模式：面板未展开时回车把输入内容提交为新标签
+      if (isTagsMode.value) {
+        e.preventDefault()
+        submitTag()
+      }
+      return
+    }
     const index = list.findIndex((option) => !option.disabled && getOptionValue(option) === hoverValue.value)
-    if (index < 0) return
+    if (index < 0) {
+      // 无高亮项：tags 模式把输入内容提交为新标签（antd 的 onSearchSubmit 分支）
+      if (isTagsMode.value) {
+        e.preventDefault()
+        submitTag()
+      }
+      return
+    }
     e.preventDefault()
     onSelectOption(list[index], index)
     return
@@ -702,16 +1131,44 @@ function renderNotFoundContent(): VNode | string | VNode[] {
   }
   return h(Empty, { image: 'outlined' })
 }
-/** 选项选中态图标：仅在提供了 menuItemSelectedIcon（prop 或插槽）时渲染，单选模式默认无该图标（antd 口径） */
+/** 多选模式的默认选中图标（对勾，与 antd 的 CheckOutlined 一致） */
+function renderCheckIcon(): VNode {
+  return h(
+    'svg',
+    {
+      class: 'select-option-check',
+      focusable: 'false',
+      'data-icon': 'check',
+      width: '1em',
+      height: '1em',
+      fill: 'currentColor',
+      'aria-hidden': 'true',
+      viewBox: '64 64 896 896'
+    },
+    [
+      h('path', {
+        d: 'M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 00-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z'
+      })
+    ]
+  )
+}
+/**
+ * 选项选中态图标：多选模式默认渲染对勾；单选仅在提供 menuItemSelectedIcon（prop 或插槽）时渲染（antd 口径）
+ */
 function renderOptionState(option: Option): VNode | null {
   const icon = props.menuItemSelectedIcon
   const iconSlot = slots.menuItemSelectedIcon
-  if (!icon && !iconSlot) return null
+  const hasCustomIcon = Boolean(iconSlot) || icon !== undefined
+  if (!hasCustomIcon && !isMultiple.value) return null
   const isSelected = isOptionSelected(option)
   // 函数 / 插槽形态由使用者按 isSelected 自行决定显隐，故始终渲染
   const alwaysRender = Boolean(iconSlot) || typeof icon === 'function'
   if (!alwaysRender && !isSelected) return null
-  const stateNode = iconSlot ? iconSlot({ isSelected }) : typeof icon === 'function' ? (icon as () => VNode)() : icon
+  const stateNode = iconSlot
+    ? iconSlot({ isSelected })
+    : typeof icon === 'function'
+      ? (icon as () => VNode)()
+      : (icon ?? renderCheckIcon())
   return h('span', { class: 'select-option-state' }, stateNode as VNode[])
 }
 // 选项节点渲染：默认菜单与 dropdownRender 共用同一实现，避免两处重复
@@ -727,7 +1184,9 @@ function renderOptionNode(option: Option, index: number): VNode {
         {
           'option-hover': !option.disabled && value === hoverValue.value,
           'option-selected': isOptionSelected(option),
-          'option-disabled': option.disabled
+          'option-disabled': option.disabled,
+          // 分组子选项：左缩进一级（与 antd 的 -option-grouped 同款）
+          'option-grouped': optionGroupLabels.value.has(String(value))
         }
       ],
       title: label === undefined || label === null ? undefined : String(label),
@@ -754,7 +1213,17 @@ function renderOptionNode(option: Option, index: number): VNode {
 }
 // 内置菜单节点（函数组件）：直接渲染选项列表与空态，通过 v-show 切换避免销毁重建
 const menuNode: SelectMenuNode = () => {
-  const optionNodes = displayOptions.value.map((option, index) => renderOptionNode(option, index))
+  // 分组形态：按当前扁平顺序在跨组处插入分组标题（标题不可选中、不占展示下标）
+  const optionNodes: VNode[] = []
+  let lastGroupLabel: string | undefined
+  displayOptions.value.forEach((option, index) => {
+    const groupLabel = optionGroupLabels.value.get(String(getOptionValue(option)))
+    if (groupLabel !== undefined && groupLabel !== lastGroupLabel) {
+      optionNodes.push(h('p', { class: 'select-option-group' }, groupLabel))
+    }
+    lastGroupLabel = groupLabel
+    optionNodes.push(renderOptionNode(option, index))
+  })
   const hasOptions = displayOptions.value.length > 0
   const listNode = h(
     Scrollbar,
@@ -825,7 +1294,10 @@ defineExpose({
       'select-status-error': status === 'error',
       'select-status-warning': status === 'warning',
       'select-show-arrow': mergedShowArrow,
-      'search-select': mergedShowSearch
+      'select-allow-clear': allowClear,
+      'search-select': mergedShowSearch,
+      'select-multiple': isMultiple,
+      'select-tags': isTagsMode
     }"
     :style="`
       --select-width: ${selectWidth};
@@ -840,16 +1312,60 @@ defineExpose({
     @click="toggleSelect"
   >
     <div ref="selectContentRef" class="select-content-container">
-      <span class="select-search">
+      <!-- 多选 / 标签：标签列表。被折叠的 tag 仍渲染在 DOM 中（以绝对定位隐藏），供 responsive 量取真实宽度 -->
+      <template v-if="isMultiple">
+        <span
+          v-for="item in tagItems"
+          :key="String(item.value)"
+          class="select-selection-item"
+          :class="{ 'select-selection-item-disabled': item.disabled, 'select-tag-hidden': item.hidden }"
+          :title="getTagTitle(item.label)"
+        >
+          <!-- 插槽存在即接管 tag 渲染：以内容探测判定会误伤「渲染结果取决于选项字段」的插槽，故直接看插槽是否提供 -->
+          <slot v-if="slots.tagRender" name="tagRender" v-bind="item.params" />
+          <template v-else>
+            <span class="select-selection-item-content">{{ item.label }}</span>
+            <span
+              v-if="item.closable"
+              class="select-selection-item-remove"
+              @mousedown.stop.prevent
+              @click.stop="item.params.onClose($event)"
+            >
+              <slot v-if="slots.removeIcon" name="removeIcon" />
+              <component v-else-if="customRemoveIcon" :is="customRemoveIcon" />
+              <svg
+                v-else
+                focusable="false"
+                data-icon="close"
+                width="1em"
+                height="1em"
+                fill="currentColor"
+                aria-hidden="true"
+                viewBox="64 64 896 896"
+              >
+                <path
+                  d="M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z"
+                ></path>
+              </svg>
+            </span>
+          </template>
+        </span>
+        <!-- 折叠提示：插槽 > prop > 默认文案（+ N ...），插槽作用域为 { omittedValues } -->
+        <span v-if="omittedOptions.length" class="select-selection-item select-selection-item-rest">
+          <slot v-if="slots.maxTagPlaceholder" name="maxTagPlaceholder" :omitted-values="omittedOptions" />
+          <template v-else>{{ omittedContent }}</template>
+        </span>
+      </template>
+      <span class="select-search" :class="{ 'select-search-inline': isMultiple }">
         <input
           ref="inputRef"
           class="search-input"
           :class="{ 'caret-show': mergedOpen }"
           type="text"
           autocomplete="off"
-          :readonly="!mergedShowSearch"
+          :readonly="!inputEditable"
           :disabled="disabled"
-          v-model="innerSearchValue"
+          v-model="inputModelValue"
           @input="onSearchInput"
           @compositionstart="onCompositionStart"
           @compositionend="onCompositionEnd"
@@ -858,17 +1374,17 @@ defineExpose({
           @blur="onBlur"
         />
       </span>
-      <!-- 回填内容：搜索框有输入文本时隐藏，避免与输入内容重叠 -->
-      <span v-if="!showPlaceholder && !hasTextInput" class="select-item" :title="itemTitle">
+      <!-- 回填内容（单选）：搜索框有输入文本时隐藏，避免与输入内容重叠 -->
+      <span v-if="!isMultiple && !showPlaceholder && !hasTextInput" class="select-item" :title="itemTitle">
         <!-- 插槽存在即接管回填渲染：以内容探测判定会误伤「选项字段为空」的自定义插槽（渲染结果为空文本），故直接看插槽是否提供 -->
         <slot v-if="slots.optionLabel" name="optionLabel" v-bind="selectedOption ?? {}" />
         <template v-else>{{ displayText }}</template>
       </span>
-      <!-- 占位文本：有输入文本时保留占位（避免布局跳动）但不可见 -->
+      <!-- 占位文本：单选下有输入文本时保留占位（避免布局跳动）但不可见；多选下无已选值且输入为空时展示 -->
       <span
         v-else-if="showPlaceholder"
         class="select-item select-placeholder"
-        :class="{ 'select-item-hidden': hasTextInput }"
+        :class="{ 'select-item-hidden': !isMultiple && hasTextInput }"
       >
         <slot v-if="slotsExist.placeholder" name="placeholder" />
         <template v-else>{{ placeholder }}</template>
@@ -1227,20 +1743,25 @@ defineExpose({
     }
   }
 }
-.select-borderless:not(.select-disabled) {
-  .select-content-container {
+.select-borderless {
+  /* 无边框覆盖禁用态：antd 的 &-borderless 对背景 / 边框 / 阴影用 !important 覆盖一切（禁用态也不例外），
+     故此处以「根元素双类」提升特异性（高于 .select-disabled .select-content-container），
+     使「无边框 + 禁用」仍是无边框（仅文字转灰 + not-allowed 光标） */
+  &.select-wrap .select-content-container {
     border-color: transparent;
     background-color: transparent;
   }
-  &:hover .select-content-container {
-    border-color: transparent;
-  }
-  &.select-focused .select-content-container {
-    border-color: transparent;
-    box-shadow: none;
-  }
   .clear-svg {
     background: transparent;
+  }
+  &:not(.select-disabled) {
+    &:hover .select-content-container {
+      border-color: transparent;
+    }
+    &.select-focused .select-content-container {
+      border-color: transparent;
+      box-shadow: none;
+    }
   }
 }
 .select-disabled {
@@ -1281,6 +1802,133 @@ defineExpose({
     box-shadow: 0 0 0 2px rgba(255, 215, 5, 0.1);
   }
 }
+/* ==================== 多选 / 标签 ==================== */
+.select-wrap.select-multiple {
+  /* 高度自适应：tag 换行时触发器随之增高（antd 同款） */
+  height: auto;
+  min-height: var(--select-height);
+  /* tag 高度随 size 变化（antd 口径：控件高度 - 8px） */
+  --select-tag-height: calc(var(--select-height) - 8px);
+  .select-content-container {
+    /* 空内容时的基线高度由容器自身保底（替代下方的 \a0 占位） */
+    min-height: var(--select-height);
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 1px 4px;
+    cursor: text;
+    /* 丢弃基线的 \a0 占位：它是 flex 子项，tag 换行时会被带到「输入框所在的那一行」，
+       把该行由 24px 抬到 28px —— 实测 4 标签场景本项目 60px / antd 56px。
+       antd 因 tags 与输入框同处 -selection-overflow（占位与其同级）而不受影响，
+       此处以「容器 min-height 保底」等价达成同一结果 */
+    &::after {
+      content: none;
+    }
+  }
+  /* 显示箭头 / 支持清除时为右侧图标预留宽度（antd 口径：图标 12px + 内边距 12px） */
+  &.select-show-arrow .select-content-container,
+  &.select-allow-clear .select-content-container {
+    padding-right: 24px;
+  }
+  /* 输入框内联在 tag 列表之后（antd 布局：tag 列表 + 输入框）
+     ① 基尺寸取 0：若按内容基宽（auto）参与换行计算，输入框会把首行剩余空间挤满而自身换到第二行，
+        连基线占位一起顶下去 —— 实测触发器高度由 32px 变成 58px（多出一整行）。
+        取 0 后与 antd 行为一致：先按 tag 排布，再把「本行剩余宽度」增长给输入框
+     ② 左间距 8px：仅「搜索框排在标签之前（无标签）」时需要（antd 同款），缺少它时光标会紧贴容器左内边距；
+        跟在标签之后时由标签自身的 margin-right 提供间隔，故紧随其后的规则把非首位的搜索框左间距归零 */
+  .select-content-container .select-search {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    display: inline-flex;
+    flex: 1 1 0;
+    margin-left: 8px;
+    min-width: 4px;
+    max-width: 100%;
+    .search-input {
+      width: 100%;
+      height: var(--select-tag-height);
+      line-height: calc(var(--select-tag-height) - 2px);
+      color: inherit;
+      opacity: 1;
+      cursor: auto;
+      caret-color: auto;
+    }
+  }
+  /* 搜索框前面已有标签时不再叠加左间距：antd 的该间距只服务于「搜索框在最前」的场景，
+     跟在标签之后时拉开距离的是标签自身的 margin-right 4px
+     （实测：本项目 12px / antd 4px → 归零后与 antd 对齐） */
+  .select-content-container .select-search:not(:first-child) {
+    margin-left: 0;
+  }
+  /* 占位文本绝对定位：tag 换行时不影响高度计算 */
+  .select-content-container .select-placeholder {
+    position: absolute;
+    top: 50%;
+    right: 11px;
+    left: 11px;
+    transform: translateY(-50%);
+    line-height: 1.5714285714285714;
+  }
+}
+/* 标签本体：与 antd 的 selection-item 对齐（背景 / 边框 / 内边距 / 圆角） */
+.select-selection-item {
+  display: flex;
+  flex: none;
+  align-items: center;
+  box-sizing: border-box;
+  max-width: 100%;
+  height: var(--select-tag-height);
+  margin: 2px 4px 2px 0;
+  padding-left: 8px;
+  padding-right: 4px;
+  border: 1px solid rgba(5, 5, 5, 0.06);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.06);
+  color: rgba(0, 0, 0, 0.88);
+  font-size: 14px;
+  line-height: calc(var(--select-tag-height) - 2px);
+  cursor: default;
+  user-select: none;
+}
+.select-selection-item-content {
+  display: inline-block;
+  margin-right: 4px;
+  overflow: hidden;
+  white-space: pre;
+  text-overflow: ellipsis;
+}
+.select-selection-item-remove {
+  display: inline-flex;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 10px;
+  font-weight: bold;
+  line-height: inherit;
+  cursor: pointer;
+  transition: color 0.2s;
+  &:hover {
+    color: rgba(0, 0, 0, 0.88);
+  }
+  svg {
+    vertical-align: -0.2em;
+  }
+}
+/* 禁用项的标签：不可移除 */
+.select-selection-item-disabled {
+  border-color: #d9d9d9;
+  color: rgba(0, 0, 0, 0.25);
+  cursor: not-allowed;
+}
+/* 被 responsive 折叠的 tag：绝对定位隐藏，不占位但保留布局以便量取真实宽度 */
+.select-tag-hidden {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
 /* 定位参照容器：绝对定位 + 零高度，既不参与布局也不遮挡
    页面交互；z-index 保持 auto，避免产生层叠上下文而把面板的层级关在里层 */
 .select-panel-wrapper {
@@ -1302,6 +1950,9 @@ defineExpose({
   border-radius: 8px;
   overflow: hidden;
   background-color: #fff;
+  /* 面板基准字号：antd 在下拉根节点声明 fontSize: token.fontSize（14px），
+     本项目原先未声明 → 空态等「非选项」内容会继承页面字号（演示页为 16px，比选项大一号） */
+  font-size: 14px;
   outline: none;
   cursor: auto;
   box-shadow:
@@ -1317,6 +1968,20 @@ defineExpose({
        用 contain 时「滚到底仍有留白」依旧存在 */
     .scrollbar-container {
       overscroll-behavior: none;
+    }
+    /* 分组标题：antd 口径（次级文字色 + 小字号 + 不参与交互）——
+       高度取选项行高控制值 32px、行高取 antd 全局 lineHeight 1.5714，与选项行等高 */
+    .select-option-group {
+      min-height: 32px;
+      padding: 5px 12px;
+      color: rgba(0, 0, 0, 0.45);
+      font-size: 12px;
+      line-height: 1.5714285714285714;
+      cursor: default;
+    }
+    /* 分组子选项左缩进一级：对齐 antd 的 -option-grouped（paddingInlineStart = controlPaddingHorizontal × 2 = 24px） */
+    .select-option.option-grouped {
+      padding-inline-start: 24px;
     }
     .select-option {
       position: relative;
@@ -1348,6 +2013,10 @@ defineExpose({
     .option-selected {
       font-weight: 600;
       background: var(--select-option-bg-color-active);
+      /* 已选项的选中态图标使用主色（antd 口径：colorPrimary） */
+      .select-option-state {
+        color: var(--select-primary-color);
+      }
     }
     .option-selected.option-disabled {
       background: rgba(0, 0, 0, 0.04);
@@ -1359,9 +2028,11 @@ defineExpose({
   }
   :deep(.options-panel-empty) {
     /* 不自设 min-width：空态宽度受面板约束，撑破宽度会被 overflow: hidden 裁掉内容（与 antd 的空态一致，随面板换行）。
-       左右内边距取 8px 而非 16px：面板等宽时留给内容的宽度有限，16px 会把「暂无数据」挤成两行 */
+       左右内边距取 8px 而非 16px：面板等宽时留给内容的宽度有限，16px 会把「暂无数据」挤成两行。
+       不设 text-align: center（antd 同款）：默认空态由 Empty 组件自身 text-align: center 居中；
+       使用者传入的自定义内容（字符串或 VNode，如 notFoundContent 放 Spin / 放文案）一律左对齐，
+       与 antd 的 `&-empty`（仅声明 color）保持一致 */
     padding: 9px 8px;
-    text-align: center;
     .empty-wrap {
       margin-block: 8px;
       .empty-image-wrap {

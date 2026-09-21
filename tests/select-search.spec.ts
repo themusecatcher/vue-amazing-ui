@@ -55,6 +55,57 @@ describe('Select 搜索模式的输入法（IME）合成', () => {
       document.querySelectorAll('.select-panel-wrapper').forEach((el) => el.remove())
     }
   })
+
+  /**
+   * 回归守护：输入法组合期间的 Enter 是「确认候选 / 上屏」，不是「选中高亮项」。
+   *
+   * 浏览器对 IME 消费的按键会派发 `isComposing: true` 的 keydown，antd 因以 keyCode 判定
+   * （组合态下 Chromium 给出 229）而天然忽略；本组件以 `event.key` 判定，若不显式拦截，
+   * 回车确认输入法会误选中当前高亮项，且随后的 compositionend 又把搜索文本写回输入框，
+   * 表现为「凭空选中一项 + 输入框残留搜索文本」。
+   */
+  it('合成期间的 Enter 不选中高亮项，合成结束后的 Enter 仍正常选中', async () => {
+    const wrapper = mount(Select, {
+      attachTo: document.body,
+      props: {
+        mode: 'multiple',
+        filterOption: false,
+        options: [
+          { label: '张伟（zhangwei）', value: 'zhangwei' },
+          { label: '王芳（wangfang）', value: 'wangfang' }
+        ]
+      }
+    })
+    try {
+      await sleep(10)
+      await wrapper.find('.select-wrap').trigger('click')
+      await sleep(10)
+      const input = wrapper.find('.search-input').element as HTMLInputElement
+
+      // 合成中：回车确认输入法 → 不得选中默认高亮项
+      input.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }))
+      input.value = 'z'
+      input.dispatchEvent(new Event('input', { bubbles: true }))
+      await nextTick()
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', isComposing: true, bubbles: true }))
+      await nextTick()
+      expect(wrapper.emitted('change')).toBeUndefined()
+
+      // 合成结束（搜索文本上屏）→ 仍不产生选中
+      input.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: 'z' }))
+      await sleep(10)
+      expect(wrapper.emitted('change')).toBeUndefined()
+
+      // 对照组：非合成态的 Enter 仍按高亮项正常选中
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
+      await sleep(10)
+      expect(wrapper.emitted('change')?.at(-1)?.[0]).toEqual(['zhangwei'])
+      expect(wrapper.emitted('select')?.at(-1)?.[0]).toBe('zhangwei')
+    } finally {
+      wrapper.unmount()
+      document.querySelectorAll('.select-panel-wrapper').forEach((el) => el.remove())
+    }
+  })
 })
 
 /**

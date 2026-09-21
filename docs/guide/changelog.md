@@ -10,12 +10,13 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-09-20">2.10.0</VersionDateTag>
+## <VersionDateTag date="2026-09-21">2.10.0</VersionDateTag>
 
 - ⚠️ **破坏性变更**：统一 [选择器 Select](/guide/components/select.html)、[级联选择 Cascader](/guide/components/cascader.html)、[开关 Switch](/guide/components/switch.html) 的双向绑定为 `v-model:value`，原 `v-model` 用法需改为 `v-model:value`，回写事件由 `update:modelValue` 改为 `update:value`
 - ⚠️ **破坏性变更**：[选择器 Select](/guide/components/select.html) 与 [级联选择 Cascader](/guide/components/cascader.html) 的字段名属性 `label` / `value`（Cascader 另含 `children`）合并为 `fieldNames` 对象，改用 `:field-names="{ label: 'name', value: 'id' }"`，并新增 `SelectFieldNames` / `CascaderFieldNames` 类型导出
 - ⚠️ **破坏性变更**：[选择器 Select](/guide/components/select.html) 属性命名对齐 [Ant Design Vue](https://www.antdv.com/components/select-cn/)：`search` 更名为 `showSearch`、`filter` 更名为 `filterOption`（旧名移除）；`placement` 取值由 `bottom` / `top` 扩展为 `bottomLeft` / `bottomRight` / `topLeft` / `topRight`（默认 `bottomLeft`）；`change` 回调第二参由文本 `label` 改为完整 `option` 对象（签名 `(value, option, index)`）
 - 重构并更新 [选择器 Select](/guide/components/select.html) 组件，单选模式的属性 / 事件 / 插槽 / 方法全量对齐 [Ant Design Vue](https://www.antdv.com/components/select-cn/)：新增 `bordered` / `status` / `loading` / `showArrow` / `autofocus` / `defaultOpen` / `open` / `searchValue` / `optionFilterProp` / `optionLabelProp` / `filterSort` / `dropdownRender` / `dropdownMatchSelectWidth` / `listHeight` / `clearIcon` / `suffixIcon` / `menuItemSelectedIcon` / `notFoundContent` / `firstActiveValue` / `defaultActiveFirstOption` 属性；新增 `select` / `search` / `focus` / `blur` / `clear` / `popupScroll` / `mouseenter` / `mouseleave` / `inputKeyDown` / `dropdownVisibleChange` 事件；新增 `option` / `optionLabel` / `placeholder` / `suffixIcon` / `clearIcon` / `menuItemSelectedIcon` / `notFoundContent` / `dropdownRender` 插槽；新增 `focus()` / `blur()` / `scrollTo()` 方法；默认搜索过滤字段对齐为 `optionFilterProp ?? 'value'`（按选项文本搜索需显式传 `option-filter-prop="label"`）
+- 重构并更新 [选择器 Select](/guide/components/select.html) 组件，补齐多选 / 标签模式：新增 `mode`（`'multiple'` / `'tags'`）与标签体系 `maxTagCount`（含 `'responsive'` 按容器宽度折叠）/ `maxTagPlaceholder` / `maxTagTextLength` / `tagRender` / `removeIcon`，新增 `tokenSeparators` 自动分词与 `autoClearSearchValue` 属性（多选未显式指定 `showSearch` 时默认可搜索）；`value` 在多选下为数组；新增 `deselect` 事件，`change` 在多选下返回数组；新增 `tagRender` / `maxTagPlaceholder` / `removeIcon` 插槽
 
 ## <VersionDateTag date="2026-09-20">2.9.0</VersionDateTag>
 
