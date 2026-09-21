@@ -74,8 +74,14 @@ function onClick() {
 <script setup lang="ts">
 import { h, onBeforeUnmount, onMounted, ref } from 'vue'
 import { SoundFilled, FireFilled } from '@ant-design/icons-vue'
-import { createDiscreteApi, useMessage } from 'vue-amazing-ui'
-import type { DiscreteApiInstance, MessageApi, MessageReactive, MessageUpdate } from 'vue-amazing-ui'
+import { Button, Select, Tooltip, createDiscreteApi, useMessage } from 'vue-amazing-ui'
+import type {
+  DiscreteApiInstance,
+  MessageApi,
+  MessageReactive,
+  MessageUpdate,
+  SelectOption
+} from 'vue-amazing-ui'
 // setup 内调用 useMessage()：需外层存在 <MessageProvider>（docs 站点已在主题层全局包裹）
 const message = useMessage()
 // setup 外调用示例：createDiscreteApi 创建脱离组件树的独立实例
@@ -171,6 +177,41 @@ function onVNodeContent() {
 function onRenderFnContent() {
   message.info({
     content: () => h('span', { style: 'color: #52c41a; font-weight: 600' }, '这是一条渲染函数动态生成的内容')
+  })
+}
+// 与浮层叠加：消息默认层级 1030（高于承载层 Modal 弹窗 1010，低于 Select 面板 1050 / Tooltip 1070），
+// 因此消息内容里的下拉面板与气泡不会被消息框压住
+const layerValue = ref<number>(1)
+const layerOptions: SelectOption[] = [
+  { label: '北京市', value: 1 },
+  { label: '上海市', value: 2 },
+  { label: '纽约市', value: 3 }
+]
+// 常驻消息（duration: null）不会自动关闭，且 Message 自身没有关闭按钮，故在消息内容里提供手动关闭入口
+let layerMessage: MessageReactive | null = null
+function closeLayerMessage() {
+  layerMessage?.destroy()
+  layerMessage = null
+}
+function onLayerMessage() {
+  // 重复点击时先关闭上一条，避免常驻消息堆积
+  closeLayerMessage()
+  layerMessage = message.info({
+    content: () =>
+      h('span', { style: 'display: inline-flex; align-items: center; gap: 8px' }, [
+        h('span', '消息内容里的浮层：'),
+        h(Select, {
+          options: layerOptions,
+          modelValue: layerValue.value,
+          'onUpdate:modelValue': (value: number) => {
+            layerValue.value = value
+          },
+          width: 140
+        }),
+        h(Tooltip, { tooltip: 'Vue Amazing UI' }, { default: () => h(Button, null, () => 'Hover me') }),
+        h(Button, { type: 'link', size: 'small', onClick: closeLayerMessage }, () => 'close')
+      ]),
+    duration: null
   })
 }
 // 手动关闭：保存句柄，通过 destroy() 手动关闭
@@ -529,6 +570,64 @@ function onRenderFnContent() {
 
 :::
 
+## 与浮层叠加
+
+_消息的默认层级为 `1030`：高于承载层（`Modal` 弹窗 `1010`），低于锚点跟随型浮层（`Select` 面板 `1050` / `Tooltip` `1070`）；消息为常驻（`duration: null`），点击内容里的「关闭」按钮手动关闭_
+
+<br/>
+
+<Button type="primary" @click="onLayerMessage">消息内容里的浮层</Button>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { h, ref } from 'vue'
+import { Button, Select, Tooltip, useMessage } from 'vue-amazing-ui'
+import type { MessageReactive } from 'vue-amazing-ui'
+const message = useMessage()
+const layerValue = ref(1)
+const layerOptions = [
+  { label: '北京市', value: 1 },
+  { label: '上海市', value: 2 },
+  { label: '纽约市', value: 3 }
+]
+// 消息默认层级 1030 低于 Select 面板 1050 / Tooltip 1070，故内容里的浮层不会被消息框压住
+// 常驻消息（duration: null）不会自动关闭，且 Message 自身没有关闭按钮，故在消息内容里提供手动关闭入口
+let layerMessage: MessageReactive | null = null
+function closeLayerMessage() {
+  layerMessage?.destroy()
+  layerMessage = null
+}
+function onLayerMessage() {
+  // 重复点击时先关闭上一条，避免常驻消息堆积
+  closeLayerMessage()
+  layerMessage = message.info({
+    content: () =>
+      h('span', { style: 'display: inline-flex; align-items: center; gap: 8px' }, [
+        h('span', '消息内容里的浮层：'),
+        h(Select, {
+          options: layerOptions,
+          modelValue: layerValue.value,
+          'onUpdate:modelValue': (value) => {
+            layerValue.value = value
+          },
+          width: 140
+        }),
+        h(Tooltip, { tooltip: 'Vue Amazing UI' }, { default: () => h(Button, null, () => 'Hover me') }),
+        h(Button, { type: 'link', size: 'small', onClick: closeLayerMessage }, () => 'close')
+      ]),
+    duration: null
+  })
+}
+</script>
+<template>
+  <Button type="primary" @click="onLayerMessage">消息内容里的浮层</Button>
+</template>
+```
+
+::::
+
 ## 手动关闭
 
 <Space>
@@ -756,6 +855,7 @@ function onTopMessage() {
 .message-to-container {
   position: relative;
   transform: translateZ(0); // 建立包含块，使内部 fixed 定位的消息相对该容器定位
+  max-width: 800px;
   height: 240px; // 高度按需设置，保证可容纳多条消息
   margin-bottom: 10px;
   border: 1px dashed #d9d9d9;
@@ -790,6 +890,7 @@ function onToMessage() {
 .message-to-container {
   position: relative;
   transform: translateZ(0); // 建立包含块，使内部 fixed 定位的消息相对该容器定位
+  max-width: 800px;
   height: 240px; // 高度按需设置，保证可容纳多条消息
   margin-bottom: 10px;
   border: 1px dashed #d9d9d9;
@@ -883,9 +984,9 @@ _`click` / `close` 为 `<Message>` / `<MessageProvider>` 组件的原生事件�
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| ready | 实例挂载完成时触发，参数为该实例的 api | (api: [MessageApi](#methods)) => void |
 | click | 点击 `message` 时触发的回调函数 | (e: Event) => void |
 | close | 关闭时触发的回调函数，参数为该条消息的 `key` | (key: string) => void |
+| ready | 实例挂载完成时触发，参数为该实例的 api | (api: [MessageApi](#methods)) => void |
 
 ## 在 setup 外使用
 

@@ -207,6 +207,8 @@ function onChange(values: (number | string)[], labels: string[]) {
 function filter(inputValue: string, option: any) {
   return option.value > inputValue
 }
+// 下拉面板挂载容器：不传 to 时优先挂到最近的承载层内容容器
+const toValue = ref(['2', '21', '212'])
 </script>
 
 ## 基本使用
@@ -1134,6 +1136,94 @@ function filter(inputValue: string, option: any) {
 
 :::
 
+## 下拉面板挂载容器
+
+_不传 `to` 时面板优先挂到最近的承载层内容容器（`Modal` / `Drawer` / `Dialog` 卡片），无承载层时为 `body`；设为 `false` 时面板留在原地_
+
+<br/>
+
+<Space>
+  <Cascader :options="options" v-model="toValue" :width="100" @change="onChange" />
+  <Cascader :options="options" v-model="toValue" :width="100" :to="false" @change="onChange" />
+</Space>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+const options = ref([
+  {
+    value: '1',
+    label: '北京',
+    children: [
+      {
+        value: '11',
+        label: '北京市',
+        children: [
+          {
+            value: '111',
+            label: '东城区'
+          },
+          {
+            value: '112',
+            label: '西城区'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    value: '2',
+    label: '浙江',
+    children: [
+      {
+        value: '21',
+        label: '杭州市',
+        children: [
+          {
+            value: '211',
+            label: '西湖区'
+          },
+          {
+            value: '212',
+            label: '余杭区'
+          }
+        ]
+      },
+      {
+        value: '22',
+        label: '湖州市',
+        children: [
+          {
+            value: '221',
+            label: '吴兴区'
+          },
+          {
+            value: '222',
+            label: '安吉区'
+          }
+        ]
+      }
+    ]
+  }
+])
+const toValue = ref(['2', '21', '212'])
+function onChange(values: (number | string)[], labels: string[]) {
+  console.log('values', values)
+  console.log('labels', labels)
+}
+</script>
+<template>
+  <Space>
+    <Cascader :options="options" v-model="toValue" :width="100" @change="onChange" />
+    <Cascader :options="options" v-model="toValue" :width="100" :to="false" @change="onChange" />
+  </Space>
+</template>
+```
+
+::::
+
 ## APIs
 
 ### Cascader
@@ -1155,7 +1245,7 @@ function filter(inputValue: string, option: any) {
 | search | 是否支持搜索 | boolean | false |
 | placement | 下拉面板弹出位置 | 'bottom' &#124; 'top' | 'bottom' |
 | flip | 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true |
-| to | 下拉面板挂载的容器节点，可选：元素标签名 (例如 `'body'`) 或者元素本身，`false` 会待在原地 | string &#124; HTMLElement &#124; false | 'body' |
+| to | 下拉面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
 | filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | ((inputValue: string, option: CascaderOption) => boolean) &#124; true | true |
 | maxDisplay | 下拉面板最多能展示的项数，超过后滚动显示 | number | 6 |
 | scrollbarProps | 下拉面板滚动条 `scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar) | [ScrollbarProps](./scrollbar.md#scrollbar) | {} |

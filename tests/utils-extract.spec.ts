@@ -1,6 +1,12 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { h, isVNode } from 'vue'
-import { createKeyGenerator, getImageName, getShelterRect, renderContentToVNode, trapTabFocus } from 'components/utils'
+import {
+  createKeyGenerator,
+  getImageName,
+  getFloatingBoundaryRect,
+  renderContentToVNode,
+  trapTabFocus
+} from 'components/utils'
 
 /**
  * 重构抽取单元测试
@@ -9,7 +15,7 @@ import { createKeyGenerator, getImageName, getShelterRect, renderContentToVNode,
  * - `renderContentToVNode`（utils/render.ts）：Message / Notification / Modal / Dialog
  * - `createKeyGenerator`（utils/function.ts）：Message / Notification / Modal / Dialog
  * - `getImageName`（utils/dom.ts）：Image / Swiper / Waterfall
- * - `getShelterRect`（utils/position.ts）：Tooltip / Select / AutoComplete
+ * - `getFloatingBoundaryRect`（utils/position.ts）：Tooltip / Select / AutoComplete
  * - `trapTabFocus`（utils/dom.ts）：Modal / Dialog
  *
  * 这些函数的实现直接决定上层组件行为，且抽取前近乎零测试覆盖，
@@ -151,15 +157,15 @@ describe('getImageName - 从图像对象提取名称', () => {
   })
 })
 
-describe('getShelterRect - 遮挡边界测量', () => {
+describe('getFloatingBoundaryRect - 遮挡边界测量', () => {
   it('无可滚动父元素时应以视口为界', () => {
-    expect(getShelterRect(null, null, 800, 600)).toEqual({ top: 0, left: 0, bottom: 600, right: 800 })
+    expect(getFloatingBoundaryRect(null, null, 800, 600)).toEqual({ top: 0, left: 0, bottom: 600, right: 800 })
   })
 
   it('可滚动父元素即视口根元素时应以视口为界', () => {
     const panel = makeEl({})
     document.documentElement.appendChild(panel)
-    expect(getShelterRect(document.documentElement, panel, 800, 600)).toEqual({
+    expect(getFloatingBoundaryRect(document.documentElement, panel, 800, 600)).toEqual({
       top: 0,
       left: 0,
       bottom: 600,
@@ -173,7 +179,7 @@ describe('getShelterRect - 遮挡边界测量', () => {
     const panel = makeEl({})
     document.body.appendChild(scrollTarget)
     document.body.appendChild(panel)
-    expect(getShelterRect(scrollTarget, panel, 800, 600)).toEqual({
+    expect(getFloatingBoundaryRect(scrollTarget, panel, 800, 600)).toEqual({
       top: 0,
       left: 0,
       bottom: 600,
@@ -186,7 +192,7 @@ describe('getShelterRect - 遮挡边界测量', () => {
     const panel = makeEl({})
     scrollTarget.appendChild(panel)
     document.body.appendChild(scrollTarget)
-    expect(getShelterRect(scrollTarget, panel, 800, 600)).toEqual({
+    expect(getFloatingBoundaryRect(scrollTarget, panel, 800, 600)).toEqual({
       top: 50,
       left: 60,
       bottom: 500,
@@ -199,7 +205,7 @@ describe('getShelterRect - 遮挡边界测量', () => {
     const panel = makeEl({})
     scrollTarget.appendChild(panel)
     document.body.appendChild(scrollTarget)
-    expect(getShelterRect(scrollTarget, panel, 800, 600)).toEqual({
+    expect(getFloatingBoundaryRect(scrollTarget, panel, 800, 600)).toEqual({
       top: 0,
       left: 0,
       bottom: 600,
@@ -210,7 +216,7 @@ describe('getShelterRect - 遮挡边界测量', () => {
   it('panel 为 null 且 scrollTarget 存在时应以视口为界（contains 判定失败不抛错）', () => {
     const scrollTarget = makeEl({ top: 10, left: 10, bottom: 100, right: 100 })
     document.body.appendChild(scrollTarget)
-    expect(getShelterRect(scrollTarget, null, 800, 600)).toEqual({ top: 0, left: 0, bottom: 600, right: 800 })
+    expect(getFloatingBoundaryRect(scrollTarget, null, 800, 600)).toEqual({ top: 0, left: 0, bottom: 600, right: 800 })
   })
 })
 

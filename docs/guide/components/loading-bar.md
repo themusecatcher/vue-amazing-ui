@@ -198,6 +198,6 @@ const customLoadingBarRef = ref<InstanceType<typeof LoadingBar> | null>(null)
 
 | 名称  | 说明              | 类型                        |
 | :----- | :----------------- | :-------------------------- |
-| start | 开始加载的回调函数 | (from = 0, to = 80) => void |
+| start | 开始加载的回调函数 | (from = 0, to = 80, status: 'starting' &#124; 'error' = 'starting') => void |
 | finish | 结束加载的回调函数 | () => void                  |
 | error | 出现错误的回调函数 | () => void                  |

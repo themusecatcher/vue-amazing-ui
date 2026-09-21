@@ -10,7 +10,7 @@
 - 当需要对数据进行排序、搜索、分页、自定义操作等复杂行为时
 
 <script setup lang="ts">
-import { ref, reactive, onBeforeMount, watch, watchEffect, h, computed, unref } from 'vue'
+import { ref, reactive, onBeforeMount, watch, watchEffect, h } from 'vue'
 import { SmileOutlined, PlusOutlined, CheckOutlined, EditOutlined } from '@ant-design/icons-vue'
 import type { TableProps, TableColumn, TableSelection } from 'vue-amazing-ui'
 const loading = ref<boolean>(false)
@@ -67,8 +67,9 @@ const selectionTypeOptions = [
     value: 'radio'
   }
 ]
-const rowSelection = reactive<TableSelection>({
-  columnTitle: undefined,
+// columnTitle / columnWidth 收窄为 string / number，便于直接使用 v-model
+const rowSelection = reactive<TableSelection & { columnTitle: string; columnWidth: number }>({
+  columnTitle: '',
   columnWidth: 100,
   fixed: true,
   hideSelectAll: false,
@@ -1980,7 +1981,7 @@ const dataSourceMerge = ref([
 
 ## 可编辑单元格
 
-<Button style="margin-bottom: 16px" type="primary" :icon="() => h(PlusOutlined)" @click="handleCellAdd">新增</Button>
+<Button style="margin-bottom: 16px" type="primary" :icon="h(PlusOutlined)" @click="handleCellAdd">新增</Button>
 
 <Table :columns="columnsCellEditable" :data-source="dataSourceCellEditable" bordered>
   <template #bodyCell="{ column, text, record }">
@@ -2082,7 +2083,7 @@ const handleCellDelete = (key: string) => {
 }
 </script>
 <template>
-  <Button style="margin-bottom: 16px" type="primary" :icon="() => h(PlusOutlined)" @click="handleCellAdd">新增</Button>
+  <Button style="margin-bottom: 16px" type="primary" :icon="h(PlusOutlined)" @click="handleCellAdd">新增</Button>
   <Table :columns="columnsCellEditable" :data-source="dataSourceCellEditable" bordered>
     <template #bodyCell="{ column, text, record }">
       <template v-if="column.dataIndex === 'name'">
@@ -2952,8 +2953,9 @@ const selectionTypeOptions = [
     value: 'radio'
   }
 ]
-const rowSelection = reactive<TableSelection>({
-  columnTitle: undefined,
+// columnTitle / columnWidth 收窄为 string / number，便于直接使用 v-model
+const rowSelection = reactive<TableSelection & { columnTitle: string; columnWidth: number }>({
+  columnTitle: '',
   columnWidth: 100,
   fixed: true,
   hideSelectAll: false,
@@ -3108,7 +3110,7 @@ watchEffect(() => {
 | dataSource | 表格数据数组 | object[] | [] |
 | bordered | 是否展示外边框和列边框 | boolean | false |
 | rowClassName | 自定义行的类名 | string &#124; ((record: Record<string, any>, rowIndex: number) => string) | undefined |
-| size | 表格大小 | 'large' &#124; 'middle' &#124; small | 'large' |
+| size | 表格大小 | 'large' &#124; 'middle' &#124; 'small' | 'large' |
 | striped | 是否使用斑马条纹 | boolean | false |
 | loading | 是否加载中 | boolean | false |
 | spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置数据加载中 | [SpinProps](./spin.md#spin) | {} |
@@ -3122,14 +3124,14 @@ watchEffect(() => {
 | pagination | `Pagination` 组件属性配置，参考 [Pagination Props](./pagination.md#pagination)，用于配置分页功能 | [PaginationProps](./pagination.md#pagination) | {} |
 | rowKey | 表格内容行的唯一标识 `key`，可以是字符串或一个函数 | string &#124; ((record: Record<string, any>, index?: number) => string) | 'key' |
 | rowSelection | 列表项是否可选择 | [TableSelection](#selection-type) | undefined |
-| scroll | 表格是否可滚动，也可以指定滚动区域的宽、高 | [TableScrollOption](#scrolloption-type) &#124; boolean | undefined |
+| scroll | 表格是否可滚动，也可以指定滚动区域的宽、高 | [TableScrollOption](#scrolloption-type) | undefined |
 | scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar)，用于配置表格滚动条 | [ScrollbarProps](./scrollbar.md#scrollbar) | {} |
 | tableLayout | 表格布局方式，设为 `fixed` 表示内容不会影响列的布局，参考 [table-layout](https://developer.mozilla.org/zh-CN/docs/Web/CSS/table-layout) 属性，固定表头/列或使用了 `column.ellipsis` 时，默认值为 `fixed` | 'auto' &#124; 'fixed' | undefined |
 | showExpandColumn | 是否展示展开列 | boolean | false |
 | expandColumnTitle | 自定义展开列表头 | string | undefined |
 | expandColumnWidth | 展开列的宽度 | string &#124; number | 48 |
 | expandFixed | 是否固定展开列 | boolean | false |
-| expandedRowKeys <Tag color="cyan">v-model</Tag> | 展开行的 `key` 数组，控制展开行的属性；需与 `dataSource` 数据中的 `key` 配合使用 | (string \| number)[] | [] |
+| expandedRowKeys <Tag color="cyan">v-model</Tag> | 展开行的 `key` 数组，控制展开行的属性；需与 `dataSource` 数据中的 `key` 配合使用 | string[] | [] |
 | expandRowByClick | 点击行是否展开 | boolean | false |
 
 ### Column Type
@@ -3183,12 +3185,12 @@ watchEffect(() => {
 | 名称             | 说明                  | 类型                                                   |
 | :---------------- | :--------------------- | :----------------------------------------------------- |
 | header           | 自定义表格标题        | v-slot:header                                          |
-| footer           | 自定义表格尾部        | v-slot:footer                                          |
 | expandColumnTitle | 自定义展开列表头      | v-slot:expandColumnTitle                               |
 | headerCell       | 个性化头部单元格      | v-slot:headerCell="{ column, title }"                  |
 | expandCell       | 自定义展开按钮        | v-slot:expandCell="{ record, index, expanded }"        |
 | bodyCell         | 个性化单元格          | v-slot:bodyCell="{ column, record, text, index }"      |
 | expandedRowRender | 自定义额外的展开行内容 | v-slot:expandedRowRender="{ record, index, expanded }" |
+| footer           | 自定义表格尾部        | v-slot:footer                                          |
 
 ## Events
 
@@ -3196,5 +3198,5 @@ watchEffect(() => {
 | :-- | :-- | :-- |
 | expand | 点击展开图标时的回调 | (expanded: boolean, record: Record<string, any>) => void |
 | expandedRowsChange | 展开的行变化时的回调 | (expandedRows: string[]) => void |
-| sortChange | 排序变化时的回调 | (column: [TableColumn](#column-type), currentDataSource: Record<string, any>[]) => void |
-| change | 分页变化时的回调 | (pager: { page: number, pageSize: number }) => void |
+| sortChange | 排序变化时的回调 | (column: [TableColumn](#column-type) &#124; null, currentDataSource: Record<string, any>[]) => void |
+| change | 分页变化时的回调 | (page: number, pageSize: number) => void |

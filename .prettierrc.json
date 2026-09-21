@@ -4,7 +4,6 @@
   "semi": false,
   "tabWidth": 2,
   "trailingComma": "none",
-  "endOfLine": "auto",
   "printWidth": 120,
   "proseWrap": "never",
   "arrowParens": "always",

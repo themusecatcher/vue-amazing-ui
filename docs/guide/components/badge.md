@@ -317,7 +317,7 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
     <Badge status="processing" ripple />
     <Badge status="warning" ripple />
   </Space>
-  <br/>
+  <br />
   <Space style="margin-top: 10px;" vertical>
     <Badge status="success" text="Success" />
     <Badge status="error" text="Error" />
@@ -363,12 +363,12 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const value = ref(5)
 const dot = ref(true)
-function decline () {
+function decline() {
   if (value.value >= 1) {
     value.value--
   }
 }
-function increase () {
+function increase() {
   value.value++
 }
 </script>
@@ -488,6 +488,32 @@ const colors = [
 }
 </style>
 
+## 与浮层叠加
+
+*徽标是装饰层（默认 `z-index: 9`），始终位于 `Tooltip` 等浮层之下*
+
+<br/>
+
+<Tooltip tooltip="Vue Amazing UI">
+  <Badge :value="5">
+    <Avatar shape="square" size="large" />
+  </Badge>
+</Tooltip>
+
+:::: details Show Code
+
+```vue
+<template>
+  <Tooltip tooltip="Vue Amazing UI">
+    <Badge :value="5">
+      <Avatar shape="square" size="large" />
+    </Badge>
+  </Tooltip>
+</template>
+```
+
+::::
+
 ## APIs
 
 ### Badge
@@ -501,7 +527,7 @@ showZero | 当数值为 `0` 时，是否展示 `Badge` | boolean | false
 dot | 不展示数字，只有一个小红点 | boolean | false
 offset | 设置状态点的位置偏移，距默认位置左侧、上方的偏移量 `[x, y]: [水平偏移, 垂直偏移]` | [number &#124; string, number &#124; string] | undefined
 status | 设置 `Badge` 为状态点 | [BadgeStatus](#status-type) | undefined
-text | 在设置了 `status` 的前提下有效，设置状态点的文本 | string | undefined
+text | 在设置了 `status` 或 `color` 的前提下有效，设置状态点的文本 | string | undefined
 valueStyle | 设置徽标的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 zIndex | 设置徽标的 `z-index` | number | 9
 title | 设置鼠标放在状态点上时显示的文字 | string | undefined

@@ -29,11 +29,20 @@ if (typeof document !== 'undefined') {
 </script>
 
 <script setup lang="ts">
-import { ref, computed, watch, onUnmounted, nextTick, createTextVNode } from 'vue'
+import { ref, computed, watch, onUnmounted, nextTick, createTextVNode, provide } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import Button, { type ButtonProps } from 'components/button'
-import { createKeyGenerator, lockScroll, renderContentToVNode, trapTabFocus, useSlotsExist } from 'components/utils'
+import {
+  createKeyGenerator,
+  lockScroll,
+  renderContentToVNode,
+  trapTabFocus,
+  useSlotsExist,
+  useZIndex,
+  Z_INDEX_CONTAINER_OPEN_KEY,
+  FLOATING_LAYER_Z_INDEX
+} from 'components/utils'
 import type { DialogApi } from './useDialog'
 /** 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数 */
 export type ContentType = string | VNode | (() => VNode)
@@ -79,7 +88,7 @@ export interface Props {
   maskClosable?: boolean // 点击蒙层是否允许关闭
   maskClass?: string // 自定义蒙层类名
   maskStyle?: CSSProperties // 自定义蒙层样式
-  zIndex?: number // 对话框层级，遮罩取该值，弹窗取该值 + 10
+  zIndex?: number // 对话框层级，遮罩取该值，弹窗取该值 + 10；未传时使用默认层级（遮罩 1000 / 弹窗 1010），或由 ConfigProvider 的 baseZIndex 分配
   wrapClass?: string // 自定义外层容器（.dialog-wrap）类名，多实例同时打开时以打开中的实例为准
   wrapStyle?: CSSProperties // 自定义外层容器（.dialog-wrap）样式，多实例同时打开时以打开中的实例为准
   containerClass?: string // 自定义弹窗定位层（.dialog-container）类名，用于覆盖 width / top / zIndex 等定位表现
@@ -135,7 +144,7 @@ export interface DialogOptions {
   maskClosable?: boolean
   maskClass?: string
   maskStyle?: CSSProperties
-  zIndex?: number
+  zIndex?: number // 单实例层级，遮罩取该值，弹窗取该值 + 10；未传时回退到组件级 zIndex，再回退到默认层级（1000 / 1010）或 ConfigProvider 的 baseZIndex 分配
   wrapClass?: string
   wrapStyle?: CSSProperties
   containerClass?: string // 定位层（.dialog-container）类名，用于覆盖 width / top / zIndex
@@ -211,7 +220,7 @@ const props = withDefaults(defineProps<Props>(), {
   maskClosable: true,
   maskClass: undefined,
   maskStyle: () => ({}),
-  zIndex: 1000,
+  zIndex: undefined,
   wrapClass: undefined,
   wrapStyle: () => ({}),
   containerClass: undefined,
@@ -256,6 +265,18 @@ const cancelBtnEls = new Map<string, HTMLElement>()
 // 各实例的拖拽控制器，实例销毁时需停止监听
 const dragControllers = new Map<string, DragController>()
 const showDialogWrap = ref<boolean>(false)
+// 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配，未传则沿用既有默认层级 1000；
+// 本层需连续占用 2 段（遮罩取起始值、弹窗取 +10）
+// 领取时机完全由「出现」驱动（allocateOnMount: false）、层整体隐藏后归还（见 onAfterLeave）：
+// 不可见的层不该持有槽位，否则挂载但未打开的对话框会持续抬高后续分配点
+const {
+  zIndex: layerZIndex,
+  allocate: allocateZIndex,
+  release: releaseZIndex
+} = useZIndex(FLOATING_LAYER_Z_INDEX.overlay, 2, {
+  allocateOnMount: false
+})
+const dialogZIndex = computed(() => props.zIndex ?? layerZIndex.value)
 const emits = defineEmits<{
   'update:open': [value: boolean]
   cancel: [e?: Event]
@@ -293,10 +314,23 @@ const needScrollLock = computed(() =>
 const baseZIndex = computed(() => {
   const opened = dialogList.value.filter((item) => item.open)
   if (opened.length === 0) {
-    return getComputedValue(topItem.value, 'zIndex') ?? props.zIndex
+    return getComputedValue(topItem.value, 'zIndex') ?? dialogZIndex.value
   }
   return Math.max(...opened.map((item) => itemZIndex(item)))
 })
+// 每次「出现」重新领取层级：保证重新打开的对话框位于其它已打开层之上（未注入管理器时为空操作）
+watch(showDialogWrap, (show) => {
+  if (show) {
+    allocateZIndex()
+  }
+})
+// 向下注入「本层是否处于打开态」：容器关闭时内部浮层（如已展开的 Select 下拉）需一并收起 ——
+// 内容常驻不卸载，内部浮层不会随容器消失；若保持打开，它会占着层级槽位、被重新打开的对话框反超
+// （详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）
+provide(
+  Z_INDEX_CONTAINER_OPEN_KEY,
+  computed(() => openCount.value > 0)
+)
 // 本组件持有的滚动锁释放函数：加锁后保存返回值、释放后置空，存在即代表本组件持锁；
 // 多实例共用一个持锁配额，卸载兜底据此精确释放，避免未持锁时误解锁他人
 let scrollLockRelease: (() => void) | null = null
@@ -322,7 +356,7 @@ function resolveSize(value: string | number | undefined): string | undefined {
 }
 // 单个实例的层级：遮罩取 zIndex，弹窗取 zIndex + 10，保持两者的层叠关系
 function itemZIndex(item: DialogItem): number {
-  return getComputedValue(item, 'zIndex') ?? props.zIndex
+  return getComputedValue(item, 'zIndex') ?? dialogZIndex.value
 }
 // 标题元素 id，供 aria-labelledby 关联（无标题时不设置该属性）
 function titleId(item: DialogItem): string {
@@ -691,6 +725,8 @@ function onAfterLeave(el: Element): void {
   // 栈中仍有打开实例时保持显示，否则其余弹窗会被一起隐藏
   if (openCount.value === 0) {
     showDialogWrap.value = false
+    // 层整体隐藏后归还槽位：数值随「同时可见层数」增长，不随挂载过的对话框数增长
+    releaseZIndex()
   }
 }
 /**
@@ -996,6 +1032,7 @@ emits('ready', { open: openDialog, destroyAll })
               v-show="item.open"
               :ref="(el: unknown) => setContainerEl(item.key, el)"
               :data-key="item.key"
+              data-va-floating-mount=""
               class="dialog-container"
               :class="[
                 { 'dialog-with-fullscreen': item.fullscreen, 'is-centered': getComputedValue(item, 'centered') },

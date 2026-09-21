@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { h, onBeforeUnmount, onMounted, ref } from 'vue'
 import { SoundFilled, FireFilled, ExclamationCircleFilled } from '@ant-design/icons-vue'
-import { useMessage, MessageProvider, createDiscreteApi } from 'vue-amazing-ui'
-import type { DiscreteApiInstance, MessageApi, MessageReactive, MessageUpdate } from 'vue-amazing-ui'
+import { Button, Select, Tooltip, useMessage, MessageProvider, createDiscreteApi } from 'vue-amazing-ui'
+import type { DiscreteApiInstance, MessageApi, MessageReactive, MessageUpdate, SelectOption } from 'vue-amazing-ui'
 const message = useMessage()
 // setup 外调用示例：createDiscreteApi 创建脱离组件树的独立实例
 // 惰性单例：仅首次调用时创建，避免重复创建独立实例与挂载 DOM
@@ -97,6 +97,41 @@ function onVNodeContent() {
 function onRenderFnContent() {
   message.info({
     content: () => h('span', { style: 'color: #52c41a; font-weight: 600' }, '这是一条渲染函数动态生成的内容')
+  })
+}
+// 与浮层叠加：消息默认层级 1030（高于承载层 Modal 弹窗 1010，低于 Select 面板 1050 / Tooltip 1070），
+// 因此消息内容里的下拉面板与气泡不会被消息框压住
+const layerValue = ref<number>(1)
+const layerOptions: SelectOption[] = [
+  { label: '北京市', value: 1 },
+  { label: '上海市', value: 2 },
+  { label: '纽约市', value: 3 }
+]
+// 常驻消息（duration: null）不会自动关闭，且 Message 自身没有关闭按钮，故在消息内容里提供手动关闭入口
+let layerMessage: MessageReactive | null = null
+function closeLayerMessage() {
+  layerMessage?.destroy()
+  layerMessage = null
+}
+function onLayerMessage() {
+  // 重复点击时先关闭上一条，避免常驻消息堆积
+  closeLayerMessage()
+  layerMessage = message.info({
+    content: () =>
+      h('span', { style: 'display: inline-flex; align-items: center; gap: 8px' }, [
+        h('span', '消息内容里的浮层：'),
+        h(Select, {
+          options: layerOptions,
+          modelValue: layerValue.value,
+          'onUpdate:modelValue': (value: number) => {
+            layerValue.value = value
+          },
+          width: 140
+        }),
+        h(Tooltip, { tooltip: 'Vue Amazing UI' }, { default: () => h(Button, null, () => 'Hover me') }),
+        h(Button, { type: 'link', size: 'small', onClick: closeLayerMessage }, () => 'close')
+      ]),
+    duration: null
   })
 }
 let messageReactive: MessageReactive | null = null
@@ -250,6 +285,14 @@ function onToMessage() {
       <Button type="primary" @click="onVNodeContent">VNode 内容</Button>
       <Button type="primary" @click="onRenderFnContent">渲染函数内容</Button>
     </Space>
+    <h2 class="mt30 mb10">与浮层叠加</h2>
+    <p class="mb10">
+      消息的默认层级为 <code>1030</code>：高于承载层（<code>Modal</code> 弹窗 <code>1010</code>），低于锚点跟随型浮层
+      （<code>Select</code> 面板 <code>1050</code> / <code>Tooltip</code>
+      <code>1070</code>），因此消息内容里的下拉面板与气泡不会被消息框压住
+    </p>
+    <p class="mb10"> 消息为常驻（<code>duration: null</code>），点击内容里的「关闭」按钮手动关闭 </p>
+    <Button type="primary" @click="onLayerMessage">消息内容里的浮层</Button>
     <h2 class="mt30 mb10">手动关闭</h2>
     <Space>
       <Button type="primary" @click="onOpenMessage">打开</Button>

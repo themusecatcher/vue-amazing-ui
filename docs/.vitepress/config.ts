@@ -202,6 +202,10 @@ export default defineConfig({
               link: '/guide/components/color-picker'
             },
             {
+              text: '评论 Comment',
+              link: '/guide/components/comment'
+            },
+            {
               text: '全局化配置 ConfigProvider',
               link: '/guide/components/config-provider'
             },
@@ -498,10 +502,6 @@ export default defineConfig({
               link: '/utils/functions/use-slots-exist'
             },
             {
-              text: 'useInject 获取注入数据',
-              link: '/utils/functions/use-inject'
-            },
-            {
               text: 'useOptionsSupported 是否支持事件监听器选项',
               link: '/utils/functions/use-options-supported'
             },
@@ -524,10 +524,6 @@ export default defineConfig({
             {
               text: 'useScrollParent 滚动感知',
               link: '/utils/functions/use-scroll-parent'
-            },
-            {
-              text: 'useFloatingPosition 弹出定位测量',
-              link: '/utils/functions/use-floating-position'
             }
           ]
         }

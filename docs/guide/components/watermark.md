@@ -212,7 +212,7 @@ const layoutOptions = [
 
 ## 全屏幕水印
 
-<Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI" :z-index="30"></Watermark> <Space align="center"> Fullscreen: <Switch v-model="show" /> Fixed: <Switch v-model="fixed" /> </Space>
+<Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark> <Space align="center"> Fullscreen: <Switch v-model="show" /> Fixed: <Switch v-model="fixed" /> </Space>
 
 ::: details Show Code
 
@@ -223,12 +223,42 @@ const show = ref(false)
 const fixed = ref(true)
 </script>
 <template>
-  <Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI" :z-index="30"></Watermark>
+  <Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark>
   <Space align="center"> Fullscreen: <Switch v-model="show" /> Fixed: <Switch v-model="fixed" /> </Space>
 </template>
 ```
 
 :::
+
+## 与浮层叠加
+
+*水印是装饰层（默认 `z-index: 90`），始终位于 `Tooltip` 等浮层之下*
+
+<br/>
+
+<Watermark content="Vue Amazing UI">
+  <div style="height: 200px; padding: 24px">
+    <Tooltip tooltip="Vue Amazing UI">
+      <Button>Hover me</Button>
+    </Tooltip>
+  </div>
+</Watermark>
+
+:::: details Show Code
+
+```vue
+<template>
+  <Watermark content="Vue Amazing UI">
+    <div style="height: 200px; padding: 24px">
+      <Tooltip tooltip="Vue Amazing UI">
+        <Button>Hover me</Button>
+      </Tooltip>
+    </div>
+  </Watermark>
+</template>
+```
+
+::::
 
 ## 水印配置器
 

@@ -73,6 +73,19 @@ function openChange(open: boolean) {
         <Button type="primary">Delay 500ms Popover</Button>
       </Popover>
     </Space>
+    <h2 class="mt30 mb10">隐藏后卸载</h2>
+    <p class="mb10">
+      设置 <code>destroyOnHide</code> 后，浮层在离开动画结束时卸载 <code>DOM</code>，再次显示时重新创建并定位；默认
+      <code>false</code>（元素常驻，仅切换显示）
+    </p>
+    <Space>
+      <Popover title="Title" content="Vue Amazing UI" destroy-on-hide>
+        <Button type="primary">Hover (destroyOnHide)</Button>
+      </Popover>
+      <Popover title="Title" content="Vue Amazing UI">
+        <Button>Hover (default)</Button>
+      </Popover>
+    </Space>
     <h2 class="mt30 mb10">隐藏箭头</h2>
     <Popover :arrow="false" title="Title">
       <template #content>

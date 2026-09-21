@@ -251,7 +251,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons-vue'
 
 ```vue
 <script setup lang="ts">
-function formatter (value: string): string {
+function formatter(value: string): string {
   console.log('value', value)
   return '1年有 ' + value + ' 天'
 }

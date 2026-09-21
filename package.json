@@ -1,6 +1,6 @@
 {
   "name": "vue-amazing-ui",
-  "version": "2.8.1",
+  "version": "2.10.0",
   "private": false,
   "type": "module",
   "author": "theMuseCatcher",
@@ -43,11 +43,14 @@
       "types": "./dist/css.d.ts",
       "default": "./dist/style.css"
     },
+    "./es/*/style": "./es/*/style/index.js",
+    "./lib/*/style": "./lib/*/style/index.cjs",
     "./*": "./*"
   },
   "sideEffects": [
     "dist/*.css",
-    "*.css"
+    "*.css",
+    "**/style/*"
   ],
   "scripts": {
     "docs:dev": "vitepress dev docs --port 8000 --open",
@@ -69,6 +72,10 @@
     "lint": "eslint . --fix",
     "lint:check": "eslint .",
     "check": "run-s lint:check format:check type-check test",
+    "verify": "run-s build verify:deps verify:on-demand guard",
+    "verify:deps": "node scripts/verify-style-deps.js",
+    "verify:on-demand": "node scripts/verify-on-demand.js",
+    "guard": "node scripts/prepublish-guard.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepare": "husky"
@@ -125,7 +132,7 @@
     "vitepress": "^1.6.4",
     "vitest": "4.1.11",
     "vue": "^3.5.42",
-    "vue-amazing-ui": "2.8.1",
+    "vue-amazing-ui": "2.10.0",
     "vue-router": "^4.6.4",
     "vue-tsc": "^3.2.5"
   },
@@ -145,15 +152,21 @@
     "not dead"
   ],
   "lint-staged": {
-    "*.{js,ts}": [
+    "*.ts": [
       "prettier --write",
       "eslint --fix"
+    ],
+    "*.js": [
+      "prettier --write"
     ],
     "*.vue": [
       "prettier --parser=vue --write",
       "eslint --fix"
     ],
     "*.{html,css,less}": [
+      "prettier --write"
+    ],
+    "*.json": [
       "prettier --write"
     ]
   }

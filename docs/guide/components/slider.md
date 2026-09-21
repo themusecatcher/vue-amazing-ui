@@ -63,6 +63,11 @@ const hideTooltipSingleValue = ref<number>(20)
 const hideTooltipDoubleValue = ref<number[]>([20, 80])
 const tooltipOpenSingleValue = ref<number>(20)
 const tooltipOpenDoubleValue = ref<number[]>([20, 80])
+const placementTopValue = ref<number>(20)
+const placementBottomValue = ref<number>(80)
+const placementLeftValue = ref<number>(20)
+const placementRightValue = ref<number>(80)
+const customTooltipValue = ref<number>(37)
 const customStyleSingleValue = ref<number>(20)
 const customStyleDoubleValue = ref<number[]>([20, 80])
 const singleCustomStyle = {
@@ -89,7 +94,7 @@ const rangeCustomStyle = {
   '--slider-tooltip-bg-color': '#fff'
 }
 const tooltipStyle = {
-  top: '-40px',
+  top: '-20px',
   fontSize: '16px',
   fontWeight: 500,
   lineHeight: 1.5,
@@ -174,6 +179,21 @@ watchEffect(() => {
 })
 watchEffect(() => {
   console.log('tooltipOpenDoubleValue', tooltipOpenDoubleValue.value)
+})
+watchEffect(() => {
+  console.log('placementTopValue', placementTopValue.value)
+})
+watchEffect(() => {
+  console.log('placementBottomValue', placementBottomValue.value)
+})
+watchEffect(() => {
+  console.log('placementLeftValue', placementLeftValue.value)
+})
+watchEffect(() => {
+  console.log('placementRightValue', placementRightValue.value)
+})
+watchEffect(() => {
+  console.log('customTooltipValue', customTooltipValue.value)
 })
 watchEffect(() => {
   console.log('customStyleSingleValue', customStyleSingleValue.value)
@@ -414,7 +434,7 @@ const marks = ref<SliderMarks>({
   37: '37°C',
   100: {
     style: {
-      color: '#f50',
+      color: '#f50'
     },
     label: '100°C'
   }
@@ -536,7 +556,7 @@ const marks = ref<SliderMarks>({
   37: '37°C',
   100: {
     style: {
-      color: '#f50',
+      color: '#f50'
     },
     label: '100°C'
   }
@@ -662,7 +682,7 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('formatDoubleValue', formatDoubleValue.value)
 })
-function formatter (value: number) {
+function formatter(value: number) {
   return `${value}%`
 }
 </script>
@@ -738,6 +758,128 @@ watchEffect(() => {
 
 :::
 
+## 自定义 Tooltip 位置
+
+*默认水平模式在滑块上方、垂直模式在滑块右侧，可用 `tooltipPlacement` 指定为四个方向之一；若该方向空间不足会自动翻转到对侧*
+
+<div class="placement-rect">
+  <Slider :width="488" tooltip-placement="top" v-model:value="placementTopValue" />
+  <div class="rect-body">
+    <Slider vertical :height="120" tooltip-placement="left" v-model:value="placementLeftValue" />
+    <Slider vertical :height="120" tooltip-placement="right" v-model:value="placementRightValue" />
+  </div>
+  <Slider :width="488" tooltip-placement="bottom" v-model:value="placementBottomValue" />
+</div>
+
+<style lang="less" scoped>
+/* 四条 Slider 围成大致矩形：上 / 下为水平条（气泡朝上 / 朝下），左 / 右为竖直条（气泡朝左 / 朝右）。
+   水平条取 488px（容器 520 减去两侧竖直条各 16px），两端即落在两侧轨道线上，不追求严格首尾相接 */
+.placement-rect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 520px;
+  /* 左对齐到内容区（不用 auto 居中）；左缩进 64px = 朝左气泡的最小空间（气泡约 40px + 16px 间距），
+     否则 left 方向会被定位内核翻转到右侧；上下留白：上方 40px 容气泡，下方不额外留 */
+  margin: 40px 0 0 64px;
+}
+.rect-body {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+</style>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const placementTopValue = ref<number>(20)
+const placementBottomValue = ref<number>(80)
+const placementLeftValue = ref<number>(20)
+const placementRightValue = ref<number>(80)
+</script>
+<template>
+  <div class="placement-rect">
+    <Slider :width="488" tooltip-placement="top" v-model:value="placementTopValue" />
+    <div class="rect-body">
+      <Slider vertical :height="120" tooltip-placement="left" v-model:value="placementLeftValue" />
+      <Slider vertical :height="120" tooltip-placement="right" v-model:value="placementRightValue" />
+    </div>
+    <Slider :width="488" tooltip-placement="bottom" v-model:value="placementBottomValue" />
+  </div>
+</template>
+<style lang="less" scoped>
+/* 四条 Slider 围成大致矩形：上 / 下为水平条（气泡朝上 / 朝下），左 / 右为竖直条（气泡朝左 / 朝右）。
+   水平条取 488px（容器 520 减去两侧竖直条各 16px），两端即落在两侧轨道线上，不追求严格首尾相接 */
+.placement-rect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 520px;
+  /* 左对齐到内容区（不用 auto 居中）；左缩进 64px = 朝左气泡的最小空间（气泡约 40px + 16px 间距），
+     否则 left 方向会被定位内核翻转到右侧；上下留白：上方 40px 容气泡，下方不额外留 */
+  margin: 40px 0 0 64px;
+}
+.rect-body {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+</style>
+```
+
+:::
+
+## 自定义 Tooltip 内容
+
+*通过 `tooltip` 插槽自定义气泡内容（`value` 为格式化后的当前值），配合 `tooltipClass` 用外部样式类定制外观*
+
+<Slider v-model:value="customTooltipValue" tooltip-class="custom-slider-tooltip">
+  <template #tooltip="{ value }">
+    <strong>{{ value }}</strong> °C
+  </template>
+</Slider>
+
+<style lang="less">
+/* 全局样式（非 scoped）：气泡位于组件内部，scoped 选择器命中不到 */
+.custom-slider-tooltip {
+  border: 1px solid #ff6900;
+  strong {
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
+</style>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const customTooltipValue = ref<number>(37)
+</script>
+<template>
+  <Slider v-model:value="customTooltipValue" tooltip-class="custom-slider-tooltip">
+    <template #tooltip="{ value }">
+      <strong>{{ value }}</strong> °C
+    </template>
+  </Slider>
+</template>
+<style lang="less">
+.custom-slider-tooltip {
+  border: 1px solid #ff6900;
+  strong {
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
+</style>
+```
+
+:::
+
 ## 自定义样式
 
 *通过修改样式变量可以自定义滑动输入条样式、标记样式、`Tooltip` 样式*
@@ -778,7 +920,7 @@ const rangeCustomStyle = {
   '--slider-tooltip-bg-color': '#fff'
 }
 const tooltipStyle = {
-  top: '-40px',
+  top: '-20px',
   fontSize: '16px',
   fontWeight: 500,
   lineHeight: 1.5,
@@ -821,6 +963,8 @@ step | 步长，取值必须大于 `0`，并且可被 `(max - min)` 整除；当
 tooltip | 是否展示 `Tooltip` | boolean | true
 tooltipOpen | 是否一直显示 `tooltip` | boolean | false
 tooltipStyle | 自定义 `Tooltip` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+tooltipClass | 自定义 `Tooltip` 类名 | string | -
+tooltipPlacement | `Tooltip` 弹出位置，默认为水平模式 `top`、垂直模式 `right` | 'top' &#124; 'bottom' &#124; 'left' &#124; 'right' | -
 formatTooltip | `Slider` 会把当前值传给 `formatTooltip`，并在 `Tooltip` 中显示 `formatTooltip` 的返回值 | (value: number) => string &#124; number | (value: number) => value
 value <Tag color="cyan">v-model</Tag> | 设置当前取值，`range` 为 `false` 时为单个值，否则为区间值 | number &#124; number[] | 0
 
@@ -835,6 +979,7 @@ Marks | { [markValue: number]: string &#124; VNode &#124; (() => VNode) &#124; {
 名称 | 说明 | 类型
 :-- | :-- | :--
 mark | 自定义刻度标记 | v-slot:mark="{ label, value }"
+tooltip | 自定义 `Tooltip` 内容，`value` 为格式化后的当前值 | v-slot:tooltip="{ value }"
 
 ## Events
 

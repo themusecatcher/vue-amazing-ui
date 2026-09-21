@@ -34,13 +34,13 @@ pnpm docs:dev
 
 在开始编写组件之前，建议先阅读以下设计实现文档。它们完整描述了组件库的**设计实现画像**——组织架构、各类规范与实现机制，是新增 / 修改组件的权威依据；组件的功能与使用说明请查阅官方文档站（`docs/`）：
 
-| 文档 | 说明 |
-| :--- | :--- |
-| [`development/project-structure.md`](development/project-structure.md) | 组织架构与目录结构 |
-| [`development/import-export.md`](development/import-export.md) | 导入导出规范 |
-| [`development/component-design.md`](development/component-design.md) | 组件设计规范（含主题系统） |
-| [`development/demo-doc-guide.md`](development/demo-doc-guide.md) | 演示与文档编写规范 |
-| [`development/build-system.md`](development/build-system.md) | 构建产物体系（含测试） |
+| 文档                                                                   | 说明                       |
+| :--------------------------------------------------------------------- | :------------------------- |
+| [`development/project-structure.md`](development/project-structure.md) | 组织架构与目录结构         |
+| [`development/import-export.md`](development/import-export.md)         | 导入导出规范               |
+| [`development/component-design.md`](development/component-design.md)   | 组件设计规范（含主题系统） |
+| [`development/demo-doc-guide.md`](development/demo-doc-guide.md)       | 演示与文档编写规范         |
+| [`development/build-system.md`](development/build-system.md)           | 构建产物体系（含测试）     |
 
 ## 分支规范
 
@@ -48,14 +48,14 @@ pnpm docs:dev
 
 统一采用 `<type>/<描述>` 格式，`type` 与提交规范保持一致，描述使用**全小写 kebab-case**（短横线连接）。
 
-| 类型 | 格式 | 说明 | 示例 |
-| :--- | :--- | :--- | :--- |
-| 新功能 / 新组件 | `feat/<名称>` | 开发新组件或新功能 | `feat/menu`、`feat/dropdown` |
-| 缺陷修复 | `fix/<描述>` | 修复已知问题 | `fix/inputnumber-empty` |
-| 重构 | `refactor/<范围>` | 不改变行为的代码重构 | `refactor/table-split` |
-| 文档 | `docs/<范围>` | 仅文档改动 | `docs/menu-api` |
-| 样式 | `style/<范围>` | 样式调整 | `style/button-hover` |
-| 性能 | `perf/<范围>` | 性能优化 | `perf/table-scroll` |
+| 类型            | 格式              | 说明                 | 示例                         |
+| :-------------- | :---------------- | :------------------- | :--------------------------- |
+| 新功能 / 新组件 | `feat/<名称>`     | 开发新组件或新功能   | `feat/menu`、`feat/dropdown` |
+| 缺陷修复        | `fix/<描述>`      | 修复已知问题         | `fix/inputnumber-empty`      |
+| 重构            | `refactor/<范围>` | 不改变行为的代码重构 | `refactor/table-split`       |
+| 文档            | `docs/<范围>`     | 仅文档改动           | `docs/menu-api`              |
+| 样式            | `style/<范围>`    | 样式调整             | `style/button-hover`         |
+| 性能            | `perf/<范围>`     | 性能优化             | `perf/table-scroll`          |
 
 > 命名一律使用全小写 kebab-case，例如 `feat/auto-complete` 而非 `feat/autoComplete`。
 
@@ -90,17 +90,17 @@ pnpm docs:dev
 
 ### 支持的 type
 
-| type | 说明 |
-| :--- | :--- |
-| `feat` | 新增功能或组件 |
-| `fix` | 修复缺陷 |
-| `docs` | 文档变更 |
-| `style` | 代码格式 / 样式调整（不影响逻辑） |
-| `refactor` | 重构（既非新增功能也非修复缺陷） |
-| `perf` | 性能优化 |
-| `test` | 测试相关 |
-| `chore` | 构建流程、工具链、配置等杂项 |
-| `revert` | 回滚提交 |
+| type       | 说明                              |
+| :--------- | :-------------------------------- |
+| `feat`     | 新增功能或组件                    |
+| `fix`      | 修复缺陷                          |
+| `docs`     | 文档变更                          |
+| `style`    | 代码格式 / 样式调整（不影响逻辑） |
+| `refactor` | 重构（既非新增功能也非修复缺陷）  |
+| `perf`     | 性能优化                          |
+| `test`     | 测试相关                          |
+| `chore`    | 构建流程、工具链、配置等杂项      |
+| `revert`   | 回滚提交                          |
 
 ### 示例
 
@@ -116,8 +116,8 @@ chore: 补齐 type-check 门禁并强化发布流程
 项目通过 [husky](https://github.com/typicode/husky) 配置了三道 Git 钩子，请勿使用 `--no-verify` 跳过。
 
 | 钩子 | 触发时机 | 执行内容 |
-| :--- | :--- | :--- |
-| `pre-commit` | `git commit` 前 | `lint-staged`：对暂存文件执行 Prettier 格式化与 ESLint 自动修复 |
+| :-- | :-- | :-- |
+| `pre-commit` | `git commit` 前 | `lint-staged`：对暂存文件执行 Prettier 格式化；其中 TS / Vue 文件额外执行 ESLint 自动修复 |
 | `commit-msg` | 输入提交信息后 | `commitlint`：校验提交信息格式 |
 | `pre-push` | `git push` 前 | `type-check`：执行 `vue-tsc` 全量类型检查 |
 
@@ -129,6 +129,7 @@ pnpm lint:check   # ESLint 只读检查（不修改文件）
 pnpm type-check   # 类型检查
 pnpm test         # 单元测试（vitest）
 pnpm check        # 聚合检查：lint:check + format:check + type-check + test
+pnpm verify       # 重量级门禁：build + 依赖一致性 + 按需引入验证 + 产物守卫（发布前 / CI）
 ```
 
 提交前建议先本地运行 `pnpm check`，确保通过后再推送。
@@ -137,7 +138,7 @@ pnpm check        # 聚合检查：lint:check + format:check + type-check + test
 
 1. 从最新 `main` 切出符合命名规范的功能分支。
 2. 开发组件 / 功能，同步补充 `docs/` 下对应的文档与演示。
-3. 本地运行 `pnpm check` 确保 lint 与类型检查通过。
+3. 本地运行 `pnpm check` 确保 lint 与类型检查通过；若改动了样式注入 / 构建产物，再跑一次 `pnpm verify`。
 4. 按提交规范提交（钩子会自动校验）。
 5. 推送分支并发起 Pull Request，描述改动内容。
 6. 合入 `main` 后删除功能分支。

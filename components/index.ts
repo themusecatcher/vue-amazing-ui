@@ -19,14 +19,12 @@ export {
   useMediaQuery,
   useResizeObserver,
   useSlotsExist,
-  useInject,
   useOptionsSupported,
   getColorPalettes,
   getAlphaColor,
   getScrollParent,
   lockScroll,
-  useScrollParent,
-  useFloatingPosition
+  useScrollParent
 } from './utils'
 export type { AnimationFrameID, DownloadOptions, DownloadStrategy, ScrollParentOptions } from './utils'
 export { VueAmazingUIResolver } from './utils/resolver'

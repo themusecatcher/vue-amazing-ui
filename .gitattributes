@@ -1,0 +1,11 @@
+# 仓库级行尾归一：统一使用 LF
+# 与 .prettierrc.json 的 endOfLine 默认值（lf）保持一致，避免 Windows 协作者
+# 提交 CRLF 后与 Prettier 输出互相对抗，产生「改一行、整个文件 diff」的问题。
+* text=auto eol=lf
+
+# 二进制文件不做行尾 / 文本转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.mp4 binary

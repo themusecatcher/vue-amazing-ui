@@ -7,14 +7,9 @@
     "types/*.d.ts",
     "components/*.ts",
     "components/**/*.ts",
-    "components/**/*.vue",
+    "components/**/*.vue"
   ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "es",
-    "lib"
-  ],
+  "exclude": ["node_modules", "dist", "es", "lib"],
   "compilerOptions": {
     "removeComments": true,
     "isolatedModules": true,

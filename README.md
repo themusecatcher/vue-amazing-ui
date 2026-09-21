@@ -16,8 +16,8 @@
 
 ## Features
 
-- The component library is implemented with `Vue@3.5.29`+ `TypeScript@5.9.3` + `Vite@7.3.1` + `Less@4.5.1`.
-- Currently, it includes `69` basic UI components and `24` utility functions, with continuous exploration and updates ongoing...
+- The component library is implemented with `Vue@3.5.42`+ `TypeScript@5.9.3` + `Vite@7.3.1` + `Less@4.5.1`.
+- Currently, it includes `70` basic UI components and `22` utility functions, with continuous exploration and updates ongoing...
 - Theme Customizable, all you need is to provide a theme color, then all the stuffs will be done by me.
 - By the way, they are all treeshakable.
 - All the stuff in Vue Amazing UI is written in TypeScript. It can work with your typescript project seamlessly.
@@ -61,8 +61,9 @@ _In this form, only the imported components will be bundled._
 import { createApp } from 'vue'
 import App from './App.vue'
 import { Button, Tag } from 'vue-amazing-ui'
-import 'vue-amazing-ui/es/button/Button.css'
-import 'vue-amazing-ui/es/tag/Tag.css'
+// One style entry per component (recommended form): global default styles + the component's own styles + its dependency components' styles
+import 'vue-amazing-ui/es/button/style'
+import 'vue-amazing-ui/es/tag/style'
 
 const app = createApp(App)
 app.use(Button).use(Tag)
@@ -76,8 +77,9 @@ _In this form, only the imported components will be bundled as well._
 ```vue
 <script setup lang="ts">
 import { Button, Tag } from 'vue-amazing-ui'
-import 'vue-amazing-ui/es/button/Button.css'
-import 'vue-amazing-ui/es/tag/Tag.css'
+// One style entry per component (recommended form): global default styles + the component's own styles + its dependency components' styles
+import 'vue-amazing-ui/es/button/style'
+import 'vue-amazing-ui/es/tag/style'
 </script>
 <template>
   <Button>button</Button>
@@ -85,16 +87,7 @@ import 'vue-amazing-ui/es/tag/Tag.css'
 </template>
 ```
 
-**Both Global Partial Registration and Local Registration require manually importing the global default styles of the component library ([Automatic On-Demand Import](https://themusecatcher.github.io/vue-amazing-ui/guide/import-on-demand.html#%E8%87%AA%E5%8A%A8%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5-%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90) is recommended).**
-
-```ts
-import { createApp } from 'vue'
-import App from './App.vue'
-import 'vue-amazing-ui/es/style/global.css' // 引入全局默认样式
-
-const app = createApp(App)
-app.mount('#app')
-```
+> The style entry also supports the more explicit file form `import 'vue-amazing-ui/es/button/style/index.js'`.
 
 **Automatic On-Demand Import (Strongly Recommended)**
 
@@ -179,14 +172,12 @@ import {
   useMediaQuery,
   useResizeObserver,
   useSlotsExist,
-  useInject,
   useOptionsSupported,
   getColorPalettes,
   getAlphaColor,
   getScrollParent,
   lockScroll,
-  useScrollParent,
-  useFloatingPosition
+  useScrollParent
 } from 'vue-amazing-ui'
 </script>
 ```
@@ -252,12 +243,12 @@ All sponsors will be listed here, thank you very much for your support and spons
 | Card            | 卡片        | Carousel       | 轮播图      |
 | Cascader        | 级联选择    | Checkbox       | 复选框      |
 | Collapse        | 折叠面板    | ColorPicker    | 颜色选择器  |
-| ConfigProvider  | 全局化配置  | Countdown      | 倒计时      |
-| DatePicker      | 日期选择器  | Descriptions   | 描述列表    |
-| Dialog          | 对话框      | Divider        | 分割线      |
-| Drawer          | 抽屉        | Dropdown       | 下拉菜单    |
-| Ellipsis        | 文本省略    | Empty          | 空状态      |
-| Flex            | 弹性布局    | FloatButton    | 浮动按钮    |
+| Comment         | 评论        | ConfigProvider | 全局化配置  |
+| Countdown       | 倒计时      | DatePicker     | 日期选择器  |
+| Descriptions    | 描述列表    | Dialog         | 对话框      |
+| Divider         | 分割线      | Drawer         | 抽屉        |
+| Dropdown        | 下拉菜单    | Ellipsis       | 文本省略    |
+| Empty           | 空状态      | Flex           | 弹性布局    |
 | FloatButton     | 浮动按钮    | GradientText   | 渐变文字    |
 | Grid            | 栅格        | Highlight      | 高亮文本    |
 | Image           | 图片        | Input          | 输入框      |
@@ -301,11 +292,9 @@ All sponsors will be listed here, thank you very much for your support and spons
 | useMediaQuery | Function to determine if the current environment matches a specified media query condition | (mediaQuery: string) => { match: Ref\<boolean> } |
 | useResizeObserver | Function to observe changes in the dimensions of DOM elements using `ResizeObserver` | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options: object = {}) => { start: \() => void, stop: \() => void } |
 | useSlotsExist | Function to watch for the existence of slots with given names, supporting single slots or an array of slots | <T extends string &#124; string[] = 'default'>(slotsName: T) => T extends string ? ComputedRef\<boolean> : Reactive\<Record\<string, ComputedRef\<boolean>>> |
-| useInject | A function that uses injection to obtain color palettes and shadow color | (key: string) => { colorPalettes: Ref\<string[]>, shadowColor: Ref\<string> } |
 | useOptionsSupported | Checks if the browser supports the given event listener options | (option: 'capture' &#124; 'once' &#124; 'passive' &#124; 'signal') => { isSupported: Ref\<boolean> } |
 | getColorPalettes | Function to generate a color palette from a primary color | (primaryColor: string) => string[] |
 | getAlphaColor | Function to get an alpha color, generally used as a shadow color | (frontColor: string, backgroundColor: string = '#ffffff') => string |
 | getScrollParent | Function to find the nearest scrollable parent element upward | (el: HTMLElement &#124; null) => HTMLElement &#124; null |
 | lockScroll | Function to lock page scrolling and compensate the scrollbar width to prevent horizontal jitter | () => () => void |
 | useScrollParent | Composable to query and watch the nearest scrollable parent element and respond to viewport `resize` | (contentRef: Ref\<HTMLElement &#124; null>, onScroll: () => void, options: object = {}) => { scrollTarget: Ref\<HTMLElement &#124; null>, viewportWidth: Ref\<number>, viewportHeight: Ref\<number>, observeScroll: \() => void, cleanup: \() => void } |
-| useFloatingPosition | Composable that provides a unified measurement skeleton for floating components | (contentRef: Ref\<HTMLElement &#124; null>, panelRef: Ref\<HTMLElement &#124; null>) => { positionedContainerRect: Ref\<DOMRect &#124; undefined>, contentRect: Ref\<DOMRect &#124; undefined>, measure: \() => Promise\<void> } |
