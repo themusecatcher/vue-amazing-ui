@@ -12,7 +12,7 @@ import {
   Text,
   Comment
 } from 'vue'
-import type { Ref, ComputedRef, Reactive, VNode } from 'vue'
+import type { InjectionKey, Ref, ComputedRef, Reactive, VNode } from 'vue'
 import { getColorPalettes, getAlphaColor } from './color'
 /**
  * 用于判断组件是否已挂载的自定义钩子
@@ -274,6 +274,79 @@ export function useInject(key: string): { colorPalettes: Ref<string[]>; shadowCo
     return toRefs(componentsInjectValue[key])
   }
   return toRefs(commonInjectValue)
+}
+/**
+ * 沿组件实例链查找注入值所需的最小字段
+ *
+ * `provides` 属 Vue 内部实现（未出现在公开的 `ComponentInternalInstance` 类型上），
+ * 但自 Vue 3.0 起结构稳定，且 `inject()` 内部正是读取该字段，故此处显式断言。
+ */
+interface ProvidesChainInstance {
+  provides?: Record<PropertyKey, unknown> | null
+  parent: ProvidesChainInstance | null
+}
+/**
+ * 沿组件实例链解析注入值（不经过 `inject()`）
+ *
+ * **为什么不能直接用 `inject()`**
+ *
+ * `inject()` 内部是「二选一且不回退」：
+ *
+ * ```js
+ * // @vue/runtime-core: inject()（简化示意）
+ * const provides = currentApp
+ *   ? currentApp._context.provides // currentApp 非空：只翻宿主 app 的 app 级 provides
+ *   : instance.parent.provides     // 否则：沿组件链往上找
+ * if (provides && key in provides) return provides[key]
+ * return defaultValue            // 这条岔路翻不到，就到此为止，不再回头
+ * ```
+ *
+ * 而 `currentApp` 只在 `app.runWithContext(fn)` 执行 `fn` 期间被临时指向该 app；
+ * vue-router 4.6 正是用它执行导航守卫（`beforeEach` / `beforeRouteEnter` / `afterEach`）。
+ * 于是官方推荐在守卫里调用的 `createDiscreteApi()` 踩中此坑：其内部提取器虽位于
+ * `<XxxProvider>` 之内，`inject()` 却因 `currentApp` 非空而改道去翻**宿主 app** 的
+ * **app 级** `provides`；而组件库的注入 key 由各 Provider 在**组件级** `provide`，
+ * 那里没有 → 返回默认值 `null` → `useXxx()` 抛错。
+ *
+ * **为什么「翻错地方」等于「必定找不到」**
+ *
+ * ```text
+ * app._context.provides      ← 全 app 唯一，Object.create(null)，只装 app.provide() 的
+ *         ▲ 原型
+ * 根组件实例.provides
+ *         ▲ 原型
+ * …中间各层组件的 provides…
+ *         ▲ 原型
+ * <XxxProvider>.provides     ← 组件库的注入 key 在这一层
+ *         ▲ 原型
+ * 提取器组件.provides         ← 查找起点
+ * ```
+ *
+ * 组件实例的 `provides` 以 app 级 `provides` 为**最顶层原型**，可见性是单行道：
+ * 组件看得见 app 级，app 级看不见任何组件级。故 `inject()` 一旦被改道到 app 级，
+ * 便无法回头命中组件级 —— 与 `<XxxProvider>` 是否写在 `App.vue` 中无关。
+ *
+ * **本函数的做法**
+ *
+ * 只读 `instance.provides`（原型链已含祖先组件级与 app 级 `provides`，是 `inject()`
+ * 正常路径可见范围的超集），必要时沿 `instance.parent` 兜底上溯，且**完全不看
+ * `currentApp`**，从而始终命中提取器自己那条链上的 `<XxxProvider>`。
+ *
+ * 组件库内部使用：注入协议属内部实现，不对外导出、不承诺 API 稳定性。
+ *
+ * @param {InjectionKey<T>} key 注入键
+ * @returns {T | undefined} 命中返回注入值，未命中返回 undefined
+ */
+export function injectFromChain<T>(key: InjectionKey<T>): T | undefined {
+  let instance = getCurrentInstance() as unknown as ProvidesChainInstance | null
+  while (instance) {
+    const provides = instance.provides
+    if (provides && key in provides) {
+      return provides[key] as T
+    }
+    instance = instance.parent
+  }
+  return undefined
 }
 /**
  * 组合式函数

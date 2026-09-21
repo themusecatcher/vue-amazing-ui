@@ -109,8 +109,8 @@ export { default as InputSearch } from './input-search'
 export type { ListProps, ListItemProps } from './list'
 export { List, ListItem } from './list'
 
-export type { LoadingBarProps } from './loading-bar'
-export { default as LoadingBar } from './loading-bar'
+export type { LoadingBarProps, LoadingBarApi } from './loading-bar'
+export { LoadingBarProvider, useLoadingBar } from './loading-bar'
 
 export type { MessageProps, MessageOptions, MessageApi, MessageReactive, MessageUpdate } from './message'
 export { default as Message, MessageProvider, useMessage } from './message'

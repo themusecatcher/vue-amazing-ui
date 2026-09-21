@@ -1,5 +1,10 @@
+import { computed } from 'vue'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { createDiscreteApi } from 'vue-amazing-ui'
+import type { DiscreteApiInstance } from 'vue-amazing-ui'
 import GlobalLayout from '@/layouts/GlobalLayout.vue'
+// 与 App.vue 的 ConfigProvider 共用同一份主题，使路由加载条跟随主题变化
+import { theme } from '@/theme'
 
 // export const routes = [
 //   {
@@ -96,25 +101,32 @@ const router = createRouter({
     return { left: 0, top: 0, behavior: 'smooth' }
   }
 })
-export const loadingBarRef: any = {}
+// 路由守卫位于组件树之外（setup 外），改用 createDiscreteApi 获取加载条实例：
+// 惰性单例，首次进入守卫时创建独立应用实例并挂载，之后复用
+let discreteLoadingBar: DiscreteApiInstance<'loadingBar'> | null = null
+function getLoadingBar(): DiscreteApiInstance<'loadingBar'> {
+  if (!discreteLoadingBar) {
+    discreteLoadingBar = createDiscreteApi(['loadingBar'], {
+      // 传 computed 建立响应式依赖：theme 变化时独立实例同步重渲染
+      configProviderProps: computed(() => ({ theme: theme.value }))
+    })
+  }
+  return discreteLoadingBar
+}
 // 注册全局前置守卫
 router.beforeEach((to, from) => {
   const domTitle = to.meta.title
   const appTitle = import.meta.env.VITE_GLOB_APP_TITLE
   document.title = `${domTitle} - ${appTitle}`
   if (!from || to.path !== from.path) {
-    if (loadingBarRef.value) {
-      loadingBarRef.value.start()
-    }
+    getLoadingBar().loadingBar.start()
   }
 })
 router.afterEach((to, from) => {
   if (!from || to.path !== from.path) {
-    if (loadingBarRef.value) {
-      setTimeout(() => {
-        loadingBarRef.value.finish()
-      }, 100)
-    }
+    setTimeout(() => {
+      getLoadingBar().loadingBar.finish()
+    }, 100)
   }
 })
 
