@@ -2,14 +2,19 @@
 #
 # 两个 job 刻意并行（二者无耦合，串行会白白多花一倍墙钟时间）：
 #   check  —— 纯静态与单测，不依赖构建产物；
-#   verify —— 产物级链路（构建 → 依赖表 ↔ 产物闭包 → 按需引入端到端 → 产物守卫），必须先构建。
+#   verify —— 产物级链路（构建 → 依赖表 ↔ 产物闭包 → 按需引入端到端 → 产物守卫 → 文档站构建），必须先构建。
 #
 # 设计取舍（与 naive-ui / ant-design-vue 的对照调研结论一致）：
 #   1. 触发含 pull_request —— 把「消费方静默缺样式」这类问题拦在合并前；原先只有 scripts/publish.sh 会拦，
 #      等于要等到发版才暴露；
 #   2. 不在 CI 里 npm publish —— 两家同类库的发布均为本地脚本 + prepublishOnly 守卫，本仓库沿用 publish.sh 链路；
 #   3. 不跨 job 缓存 es/lib 产物、不做 Node 版本矩阵 —— 全部校验在单个 job 内自洽完成，避免无谓复杂度；
-#   4. 不用 vitest --retry 掩盖用例竞态 —— 竞态应在用例内修（见 tests/select-keyboard.spec.ts 的轮询做法）。
+#   4. 不用 vitest --retry 掩盖用例竞态 —— 竞态应在用例内修（见 tests/select-keyboard.spec.ts 的轮询做法）；
+#   5. docs:build 放在 verify job（而非 check）—— docs 站的组件库来源是 dist 产物：docs/.vitepress/config.ts
+#      用 resolveId 钩子把 'vue-amazing-ui' 指向 ../../dist/index.js（与 scripts/deploy.sh「先 build 再 docs:build」
+#      的顺序一致），因此必须先构建。它同时兜住 docs/**/*.md 作为 VitePress md-as-SFC 的模板/标签结构错误。
+#      注意：这批 md 不可纳入 Prettier 格式化 —— Prettier 按 markdown 语义处理会改写顶层模板，实测会产生
+#      行首 `>`（被解析为引用块）与标签失配，直接导致构建失败。
 name: verify
 
 on:
@@ -58,3 +63,5 @@ jobs:
       - run: pnpm install --frozen-lockfile
       # = build → verify:deps（依赖表 ↔ 产物 chunk 闭包）→ verify:on-demand（临时消费方工程 + canary）→ guard（产物守卫）
       - run: pnpm verify
+      # docs:build —— 必须晚于 build：docs 站的组件库来源是 dist 产物（非 npm 包），并兜住 md-as-SFC 的模板/标签结构错误
+      - run: pnpm docs:build
