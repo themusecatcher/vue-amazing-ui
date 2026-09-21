@@ -89,17 +89,6 @@ import 'vue-amazing-ui/es/tag/style'
 
 > The style entry also supports the more explicit file form `import 'vue-amazing-ui/es/button/style/index.js'`.
 
-**The style entry above already includes the global default styles, so there is no need to import them separately. If you use the old `import 'vue-amazing-ui/es/button/Button.css'` form instead, you must also import its dependency components' styles and the global default styles below ([Automatic On-Demand Import](https://themusecatcher.github.io/vue-amazing-ui/guide/import-on-demand.html#%E8%87%AA%E5%8A%A8%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5-%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90) is recommended).**
-
-```ts
-import { createApp } from 'vue'
-import App from './App.vue'
-import 'vue-amazing-ui/es/style/global.css' // Import the global default styles
-
-const app = createApp(App)
-app.mount('#app')
-```
-
 **Automatic On-Demand Import (Strongly Recommended)**
 
 Use the [`unplugin-vue-components`](https://github.com/unplugin/unplugin-vue-components) plugin to automatically import components on demand. The plugin will automatically parse the components used in the template and import the components and styles.

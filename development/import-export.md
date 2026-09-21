@@ -145,13 +145,12 @@ es/tooltip/style/index.js
 └── import '../../vendor-styles/…'    // 4. 第三方样式（vendorStylesByComponent）
 ```
 
-消费方三种写法：
+消费方两种写法：
 
 | 场景 | 写法 |
 | :--- | :--- |
 | 自动按需引入（推荐） | `VueAmazingUIResolver({ cjs: false })`，由 `sideEffects` 注入上述单条入口 |
 | 手动引入（推荐） | `import 'vue-amazing-ui/es/button/style'` —— **裸目录写法**（`package.json` 的 `exports` 已加 `"./es/*/style"` / `"./lib/*/style"` 映射，Node / 打包器均可解析）；需要完全显式时可用 `…/button/style/index.js` |
-| 旧写法（仍有效） | `import 'vue-amazing-ui/es/button/Button.css'` —— 只含组件自身样式，依赖组件样式与全局默认样式需自行补齐 |
 
 ### 单一数据源：`components/utils/style-deps.ts`
 

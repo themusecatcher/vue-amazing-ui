@@ -113,6 +113,19 @@
     color: var(--vp-c-text-1);
   }
 }
+/* 正文列表：修正 Tag 与正文的基线对齐（Tag 为固定高度的 inline-flex） */
+.vp-doc li .tag-wrap {
+  margin-left: 6px;
+  vertical-align: 1px;
+}
+/* 正文列表内的行内代码与 Tag 统一为同高同圆角的胶囊，避免一行出现两种胶囊样式 */
+.vp-doc li > code {
+  display: inline-block;
+  padding: 1px 7px;
+  font-size: 12px;
+  line-height: 20px;
+  border-radius: 4px;
+}
 /* Transition by color instead of opacity */
 .dark .vp-doc .custom-block a {
   transition: color 0.25s;

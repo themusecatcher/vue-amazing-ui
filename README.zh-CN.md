@@ -89,17 +89,6 @@ import 'vue-amazing-ui/es/tag/style'
 
 > 样式入口也支持（更显式的）文件写法 `import 'vue-amazing-ui/es/button/style/index.js'`。
 
-**上面的样式入口已内含组件库全局默认样式，无需再单独引入；若改用旧的 `import 'vue-amazing-ui/es/button/Button.css'` 写法，则还需自行引入其依赖组件样式与下面的全局默认样式（推荐使用[自动按需引入](https://themusecatcher.github.io/vue-amazing-ui/guide/import-on-demand.html#%E8%87%AA%E5%8A%A8%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5-%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90)）**
-
-```ts
-import { createApp } from 'vue'
-import App from './App.vue'
-import 'vue-amazing-ui/es/style/global.css' // 引入全局默认样式
-
-const app = createApp(App)
-app.mount('#app')
-```
-
 **自动按需引入（强烈推荐）**
 
 使用 [`unplugin-vue-components`](https://github.com/unplugin/unplugin-vue-components) 插件来按需自动加载组件，插件会自动解析模板中的使用到的组件，并导入组件和样式
