@@ -43,7 +43,7 @@ declare module 'vue' {
     InputSearch: typeof VueAmazingUI.InputSearch
     List: typeof VueAmazingUI.List
     ListItem: typeof VueAmazingUI.ListItem
-    LoadingBar: typeof VueAmazingUI.LoadingBar
+    LoadingBarProvider: typeof VueAmazingUI.LoadingBarProvider
     Message: typeof VueAmazingUI.Message
     MessageProvider: typeof VueAmazingUI.MessageProvider
     Modal: typeof VueAmazingUI.Modal

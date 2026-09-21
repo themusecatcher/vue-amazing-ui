@@ -12,7 +12,7 @@ import {
   Text,
   Comment
 } from 'vue'
-import type { Ref, ComputedRef, Reactive, VNode } from 'vue'
+import type { InjectionKey, Ref, ComputedRef, Reactive, VNode } from 'vue'
 import { getColorPalettes, getAlphaColor } from './color'
 /**
  * 用于判断组件是否已挂载的自定义钩子
@@ -274,6 +274,43 @@ export function useInject(key: string): { colorPalettes: Ref<string[]>; shadowCo
     return toRefs(componentsInjectValue[key])
   }
   return toRefs(commonInjectValue)
+}
+/**
+ * 沿组件实例链查找注入值所需的最小字段
+ *
+ * `provides` 属 Vue 内部实现（未出现在公开的 `ComponentInternalInstance` 类型上），
+ * 但自 Vue 3.0 起结构稳定，且 `inject()` 内部正是读取该字段，故此处显式断言。
+ */
+interface ProvidesChainInstance {
+  provides?: Record<PropertyKey, unknown> | null
+  parent: ProvidesChainInstance | null
+}
+/**
+ * 沿组件实例链解析注入值（不经过 `inject()`）
+ *
+ * 为什么需要它：Vue 的 `inject()` 在 `currentApp` 存在时（即处于 `app.runWithContext()`
+ * 上下文，例如 vue-router 的导航守卫）会**优先读取该 app 的 app 级 `provides` 而绕过组件链**。
+ * 而 `createDiscreteApi()` 正是在守卫这类场景中被推荐调用，其内部提取器需命中
+ * `<XxxProvider>` 的**组件级** `provide` —— 用 `inject()` 会取不到（返回默认值）。
+ *
+ * 本函数只沿 `instance.provides` 查找（其原型链已包含祖先与 app 级 `provides`），
+ * 语义与「`useXxx()` 须在 `<XxxProvider>` 内部使用」的约定一致。
+ *
+ * 组件库内部使用：注入协议属内部实现，不对外导出、不承诺 API 稳定性。
+ *
+ * @param {InjectionKey<T>} key 注入键
+ * @returns {T | undefined} 命中返回注入值，未命中返回 undefined
+ */
+export function injectFromChain<T>(key: InjectionKey<T>): T | undefined {
+  let instance = getCurrentInstance() as unknown as ProvidesChainInstance | null
+  while (instance) {
+    const provides = instance.provides
+    if (provides && key in provides) {
+      return provides[key] as T
+    }
+    instance = instance.parent
+  }
+  return undefined
 }
 /**
  * 组合式函数

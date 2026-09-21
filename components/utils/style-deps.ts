@@ -50,6 +50,7 @@ const componentsMap = {
   InputSearch: 'input-search',
   List: 'list/list',
   ListItem: 'list/list-item',
+  // LoadingBar 为 LoadingBarProvider 的渲染内核，不对外导出；保留在此供 styleSources 解析（同 Popup 先例）
   LoadingBar: 'loading-bar',
   Message: 'message',
   Modal: 'modal',
@@ -87,6 +88,7 @@ const componentsMap = {
   Waterfall: 'waterfall',
   Watermark: 'watermark',
   // 命令式调用入口组件：与底层组件同目录，自身无独立样式文件
+  LoadingBarProvider: 'loading-bar',
   MessageProvider: 'message',
   NotificationProvider: 'notification',
   ModalProvider: 'modal',
@@ -102,6 +104,7 @@ function isComponentName(name: string): name is ComponentName {
 // 两类来源：① 命令式 Provider 复用底层组件的样式；② 子组件样式定义在父组件 SFC 内（如 DescriptionsItem）
 // 用 Partial 表达「可能查不到」，与运行时行为一致；值约束为 ComponentName，拼错即在编译期报错
 const styleSources: Partial<Record<ComponentName, ComponentName>> = {
+  LoadingBarProvider: 'LoadingBar',
   MessageProvider: 'Message',
   NotificationProvider: 'Notification',
   ModalProvider: 'Modal',

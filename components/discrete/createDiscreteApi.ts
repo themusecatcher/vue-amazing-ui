@@ -10,8 +10,10 @@ import { ModalProvider, useModal } from 'components/modal'
 import type { ModalApi, ModalProps } from 'components/modal'
 import { DialogProvider, useDialog } from 'components/dialog'
 import type { DialogApi, DialogProps } from 'components/dialog'
+import { LoadingBarProvider, useLoadingBar } from 'components/loading-bar'
+import type { LoadingBarApi, LoadingBarProps } from 'components/loading-bar'
 
-type DiscreteApiType = 'notification' | 'message' | 'modal' | 'dialog'
+type DiscreteApiType = 'notification' | 'message' | 'modal' | 'dialog' | 'loadingBar'
 
 type MaybeRef<T> = Ref<T> | T
 
@@ -20,6 +22,7 @@ interface DiscreteApi {
   message: MessageApi
   modal: ModalApi
   dialog: DialogApi
+  loadingBar: LoadingBarApi
 }
 
 /**
@@ -37,6 +40,7 @@ export interface DiscreteApiOptions {
   dialogProviderProps?: MaybeRef<DialogProps>
   notificationProviderProps?: MaybeRef<NotificationProps>
   modalProviderProps?: MaybeRef<ModalProps>
+  loadingBarProviderProps?: MaybeRef<LoadingBarProps>
 }
 
 // 调用方可按需销毁独立实例
@@ -48,14 +52,16 @@ const providerMap = {
   notification: NotificationProvider,
   message: MessageProvider,
   modal: ModalProvider,
-  dialog: DialogProvider
+  dialog: DialogProvider,
+  loadingBar: LoadingBarProvider
 } as const
 
 const hookMap = {
   notification: useNotification,
   message: useMessage,
   modal: useModal,
-  dialog: useDialog
+  dialog: useDialog,
+  loadingBar: useLoadingBar
 } as const
 
 /**
@@ -76,19 +82,22 @@ export function createDiscreteApi<K extends DiscreteApiType>(
     messageProviderProps,
     dialogProviderProps,
     notificationProviderProps,
-    modalProviderProps
+    modalProviderProps,
+    loadingBarProviderProps
   } = options
   const apis: Record<DiscreteApiType, unknown> = {
     notification: null,
     message: null,
     modal: null,
-    dialog: null
+    dialog: null,
+    loadingBar: null
   }
   const providerPropsMap: Record<DiscreteApiType, MaybeRef<object> | undefined> = {
     notification: notificationProviderProps,
     message: messageProviderProps,
     modal: modalProviderProps,
-    dialog: dialogProviderProps
+    dialog: dialogProviderProps,
+    loadingBar: loadingBarProviderProps
   }
   // 提取器：在 Provider 内部的 setup 中取 api，渲染为空
   const extractors = types.map((type) =>

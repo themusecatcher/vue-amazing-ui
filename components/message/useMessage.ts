@@ -1,5 +1,5 @@
-import { inject } from 'vue'
 import type { InjectionKey } from 'vue'
+import { injectFromChain } from 'components/utils'
 import type { MessageOptions, MessageReactive } from './Message.vue'
 
 export interface MessageApi {
@@ -19,7 +19,7 @@ export const messageApiKey: InjectionKey<MessageApi> = Symbol('messageApi')
  * 脱离组件树的场景请改用 `createDiscreteApi`。
  */
 export function useMessage(): MessageApi {
-  const api = inject(messageApiKey, null)
+  const api = injectFromChain(messageApiKey)
   if (!api) {
     throw new Error('[useMessage] 未获取到 Message api，请在 <MessageProvider> 内部使用，或改用 createDiscreteApi')
   }

@@ -13,8 +13,8 @@ _为组件提供统一的全局化配置_
 import { ref, computed, h, onMounted } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import { ConfigProvider, createDiscreteApi, LoadingBar } from 'vue-amazing-ui'
-import type { ConfigProviderProps, ConfigProviderTheme, CarouselImage, MessageApi, ModalApi, NotificationApi, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
+import { ConfigProvider, LoadingBarProvider, createDiscreteApi } from 'vue-amazing-ui'
+import type { ConfigProviderProps, ConfigProviderTheme, CarouselImage, LoadingBarApi, MessageApi, ModalApi, NotificationApi, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
 const primaryColor = ref<string>('#ff6900')
 const commonPrimaryColor = ref<string>('#1677ff')
 const buttonPrimaryColor = ref<string>('#18a058')
@@ -41,7 +41,8 @@ function onAutoCompleteSearch(searchText: string) {
     : [searchText, `${searchText}${searchText}`, `${searchText}${searchText}${searchText}`]
 }
 const cardRef = ref<HTMLDivElement>()
-const loadingBarRef = ref<InstanceType<typeof LoadingBar> | null>(null)
+// 局部加载条挂载到 cardRef 容器，通过 <LoadingBarProvider> 的 @ready 取到该作用域内的 api
+const localLoadingBar = ref<LoadingBarApi>()
 const messageRef = ref<MessageApi>()
 const modalRef = ref<ModalApi>()
 const notificationRef = ref<NotificationApi>()
@@ -323,15 +324,19 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
         </template>
       </FloatButton>
     </Card>
-    <LoadingBar ref="loadingBarRef" :container-style="{ position: 'absolute' }" :to="cardRef" />
+    <LoadingBarProvider
+      :container-style="{ position: 'absolute' }"
+      :to="cardRef"
+      @ready="localLoadingBar = $event"
+    />
     <div
       ref="cardRef"
       style="position: relative; width: 50%; padding: 48px 36px; border-radius: 4px; border: 1px solid #f0f0f0"
     >
       <Space>
-        <Button type="primary" @click="loadingBarRef?.start()">Start</Button>
-        <Button @click="loadingBarRef?.finish()">Finish</Button>
-        <Button type="danger" @click="loadingBarRef?.error()">Error</Button>
+        <Button type="primary" @click="localLoadingBar?.start()">Start</Button>
+        <Button @click="localLoadingBar?.finish()">Finish</Button>
+        <Button type="danger" @click="localLoadingBar?.error()">Error</Button>
       </Space>
     </div>
     <Pagination v-model:page="page" :total="500" show-quick-jumper />
@@ -387,8 +392,8 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
 import { ref, h } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import { LoadingBar } from 'vue-amazing-ui'
-import type { CarouselImage, MessageApi, ModalApi, NotificationApi, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
+import { LoadingBarProvider } from 'vue-amazing-ui'
+import type { CarouselImage, LoadingBarApi, MessageApi, ModalApi, NotificationApi, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
 const primaryColor = ref<string>('#ff6900')
 const checkboxChecked = ref<boolean>(false)
 const cardDate = ref<number>(Date.now())
@@ -405,7 +410,8 @@ function onAutoCompleteSearch(searchText: string) {
     : [searchText, `${searchText}${searchText}`, `${searchText}${searchText}${searchText}`]
 }
 const cardRef = ref<HTMLDivElement>()
-const loadingBarRef = ref<InstanceType<typeof LoadingBar> | null>(null)
+// 局部加载条挂载到 cardRef 容器，通过 <LoadingBarProvider> 的 @ready 取到该作用域内的 api
+const localLoadingBar = ref<LoadingBarApi>()
 const messageRef = ref<MessageApi>()
 const modalRef = ref<ModalApi>()
 const notificationRef = ref<NotificationApi>()
@@ -644,15 +650,19 @@ function onDecline(scale: number) {
           </template>
         </FloatButton>
       </Card>
-      <LoadingBar ref="loadingBarRef" :container-style="{ position: 'absolute' }" :to="cardRef" />
+      <LoadingBarProvider
+        :container-style="{ position: 'absolute' }"
+        :to="cardRef"
+        @ready="localLoadingBar = $event"
+      />
       <div
         ref="cardRef"
         style="position: relative; width: 50%; padding: 48px 36px; border-radius: 4px; border: 1px solid #f0f0f0"
       >
         <Space>
-          <Button type="primary" @click="loadingBarRef?.start()">Start</Button>
-          <Button @click="loadingBarRef?.finish()">Finish</Button>
-          <Button type="danger" @click="loadingBarRef?.error()">Error</Button>
+          <Button type="primary" @click="localLoadingBar?.start()">Start</Button>
+          <Button @click="localLoadingBar?.finish()">Finish</Button>
+          <Button type="danger" @click="localLoadingBar?.error()">Error</Button>
         </Space>
       </div>
       <Pagination v-model:page="page" :total="500" show-quick-jumper />
