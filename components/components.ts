@@ -46,6 +46,9 @@ export { default as Collapse } from './collapse'
 export type { ColorPickerProps, ColorPickerMode, ColorPickerAction } from './color-picker'
 export { default as ColorPicker } from './color-picker'
 
+export type { CommentProps } from './comment'
+export { default as Comment } from './comment'
+
 export type { ConfigProviderProps, ConfigProviderTheme } from './config-provider'
 export { default as ConfigProvider } from './config-provider'
 
@@ -106,8 +109,8 @@ export { default as InputSearch } from './input-search'
 export type { ListProps, ListItemProps } from './list'
 export { List, ListItem } from './list'
 
-export type { LoadingBarProps } from './loading-bar'
-export { default as LoadingBar } from './loading-bar'
+export type { LoadingBarProps, LoadingBarApi } from './loading-bar'
+export { default as LoadingBar, LoadingBarProvider, useLoadingBar } from './loading-bar'
 
 export type { MessageProps, MessageOptions, MessageApi, MessageReactive, MessageUpdate } from './message'
 export { default as Message, MessageProvider, useMessage } from './message'

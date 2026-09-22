@@ -13,7 +13,8 @@
 | `docs/` | VitePress 文档站（`pnpm docs:dev` 启动） |
 | `types/` | 全局类型声明（`env.d.ts` 环境变量、`global-components.d.ts` 全局组件） |
 | `tests/` | Vitest 测试用例 |
-| `scripts/` | 发布 / 部署脚本（`deploy.sh` / `publish.sh` / `push.sh`，以及 `prepublish-guard.js` 发布前守卫） |
+| `scripts/` | 发布 / 部署脚本（`deploy.sh` / `publish.sh` / `push.sh`）、发布前守卫（`prepublish-guard.js`）与产物级校验脚本（`parse-style-deps.js` / `verify-style-deps.js` / `verify-on-demand.js`） |
+| `build/` | 构建后处理（`merge-component-styles.ts` 合并同一 SFC 的编号 CSS、`generate-style-entries.ts` 生成每组件样式入口），由 `vite.config.ts` 的 `closeBundle` 调用 |
 | `vite.config.ts` | 构建配置（三产物 dist / es / lib） |
 | `tsconfig.*.json` | 各环境 TypeScript 配置 |
 | `vitest.config.ts` | 测试配置（独立于 vite.config.ts） |
@@ -82,10 +83,11 @@ components/
 | `position.ts` | 弹出定位 composable |
 | `render.ts` | 内容渲染辅助（统一归一为 VNode） |
 | `type.ts` | `withInstall` 高阶函数 |
-| `resolver.ts` | `unplugin-vue-components` 按需引入 resolver |
+| `resolver.ts` | `unplugin-vue-components` 按需引入 resolver（返回组件的样式入口路径，见 [import-export.md](import-export.md)） |
+| `style-deps.ts` | 样式依赖表（单一数据源：`componentsMap` / `styleSources` / `componentDependencies` / `stylelessComponents`） |
 | `vendor-styles.ts` | 第三方样式依赖清单（单一数据源） |
 
-> `index.ts` 是 barrel，只汇总 `format` / `math` / `function` / `dom` / `color` / `hooks` / `observers` / `position` / `render` 九组；`type` / `resolver` / `vendor-styles` 不属于 barrel 成员，需从具体文件引入（如 `import { withInstall } from 'components/utils/type'`）。
+> `index.ts` 是 barrel，只汇总 `format` / `math` / `function` / `dom` / `color` / `hooks` / `observers` / `position` / `render` 九组；`type` / `resolver` / `style-deps` / `vendor-styles` 不属于 barrel 成员，需从具体文件引入（如 `import { withInstall } from 'components/utils/type'`）。
 > 工具函数的功能与使用说明见官方文档站 `docs/utils/functions/`。
 
 ### style/global.less
@@ -110,6 +112,7 @@ src/
 ├── router/                 # 自动路由（import.meta.glob）
 ├── layouts/                # 布局组件
 ├── assets/                 # 静态资源
+├── theme.ts                # 演示应用共享主题（App.vue 与 router 的离散实例共用同一份）
 ├── App.vue
 └── main.ts
 ```

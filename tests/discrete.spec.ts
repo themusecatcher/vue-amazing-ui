@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { computed, defineComponent, h, ref } from 'vue'
+import { computed, createApp, defineComponent, h, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import { createDiscreteApi } from 'components/discrete'
+import type { DiscreteApiInstance } from 'components/discrete'
 import { MessageProvider, useMessage } from 'components/message'
 import { getColorPalettes } from 'components/utils'
 
@@ -120,6 +121,40 @@ describe('S4 - useXxx 在 Provider 内部可用', () => {
 
     expect(document.body.textContent).toContain('来自 Provider 的消息')
     wrapper.unmount()
+  })
+})
+
+describe('S4 - createDiscreteApi 在 app.runWithContext 上下文内可用（路由守卫场景）', () => {
+  it('currentApp 存在时仍能取到 <XxxProvider> 组件级 provide 的 api', async () => {
+    // 回归守护：vue-router 4.6 以 app.runWithContext() 执行导航守卫，此时 Vue 的 inject()
+    // 会优先读取 app 级 provides 而绕过组件链，导致离散实例内的提取器取不到 Provider 提供的 api
+    const host = createApp({ render: () => null })
+    host.mount(document.createElement('div'))
+
+    let api!: DiscreteApiInstance<'loadingBar'>
+    host.runWithContext(() => {
+      api = createDiscreteApi(['loadingBar'])
+    })
+
+    api.loadingBar.start()
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(document.querySelector('.loading-bar-wrap')).not.toBeNull()
+
+    api.dispose()
+    host.unmount()
+  })
+})
+
+describe('S4 - createDiscreteApi 支持 loadingBar', () => {
+  it('setup 外调用 loadingBar.start 可渲染，dispose 后应从 DOM 移除', async () => {
+    const { loadingBar, dispose } = createDiscreteApi(['loadingBar'])
+    loadingBar.start()
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(document.querySelector('.loading-bar-wrap')).not.toBeNull()
+
+    dispose()
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    expect(document.querySelector('.loading-bar-wrap')).toBeNull()
   })
 })
 

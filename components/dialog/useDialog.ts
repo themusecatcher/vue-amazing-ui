@@ -1,5 +1,5 @@
-import { inject } from 'vue'
 import type { InjectionKey } from 'vue'
+import { injectFromChain } from 'components/utils'
 import type { DialogOptions, DialogReactive } from './Dialog.vue'
 
 /**
@@ -23,7 +23,7 @@ export const dialogApiKey: InjectionKey<DialogApi> = Symbol('dialogApi')
  * 在 `setup` 内获取 Dialog api，需在 `<DialogProvider>` 内部使用。
  */
 export function useDialog(): DialogApi {
-  const api = inject(dialogApiKey, null)
+  const api = injectFromChain(dialogApiKey)
   if (!api) {
     throw new Error('[useDialog] 未获取到 Dialog api，请在 <DialogProvider> 内部使用')
   }

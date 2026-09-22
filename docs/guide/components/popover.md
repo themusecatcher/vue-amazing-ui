@@ -31,7 +31,7 @@ function openChange(open: boolean) {
 
 ```vue
 <script setup lang="ts">
-function openChange (open: boolean) {
+function openChange(open: boolean) {
   console.log('open', open)
 }
 </script>

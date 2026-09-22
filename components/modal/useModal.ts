@@ -1,5 +1,5 @@
-import { inject } from 'vue'
 import type { InjectionKey } from 'vue'
+import { injectFromChain } from 'components/utils'
 import type { ModalOptions, ModalReactive } from './Modal.vue'
 
 export interface ModalApi {
@@ -20,7 +20,7 @@ export const modalApiKey: InjectionKey<ModalApi> = Symbol('modalApi')
  * 脱离组件树的场景请改用 `createDiscreteApi`。
  */
 export function useModal(): ModalApi {
-  const api = inject(modalApiKey, null)
+  const api = injectFromChain(modalApiKey)
   if (!api) {
     throw new Error('[useModal] 未获取到 Modal api，请在 <ModalProvider> 内部使用，或改用 createDiscreteApi')
   }

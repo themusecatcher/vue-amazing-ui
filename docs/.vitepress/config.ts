@@ -202,6 +202,10 @@ export default defineConfig({
               link: '/guide/components/color-picker'
             },
             {
+              text: '评论 Comment',
+              link: '/guide/components/comment'
+            },
+            {
               text: '全局化配置 ConfigProvider',
               link: '/guide/components/config-provider'
             },

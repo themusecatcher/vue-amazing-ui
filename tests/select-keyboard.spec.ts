@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, afterEach, vi } from 'vitest'
 import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Select from 'components/select/Select.vue'
@@ -28,10 +28,9 @@ afterEach(() => {
   document.querySelectorAll('.select-panel-wrapper').forEach((el) => el.remove())
 })
 
-/** 等待「状态变更 → 面板渲染 → 内核 post flush」 */
+/** 等待「状态变更 → 面板渲染」：Vue 的一次 render + post flush（两次 nextTick），不含任何固定时长等待 */
 async function flush(): Promise<void> {
   await nextTick()
-  await new Promise((resolve) => setTimeout(resolve, 10))
   await nextTick()
 }
 
@@ -48,6 +47,22 @@ function isPanelVisible(): boolean {
   const el = document.querySelector<HTMLElement>('.select-panel-container')
   if (!el) return false
   return el.style.display !== 'none'
+}
+
+/**
+ * 轮询至面板达到期望显隐状态。
+ *
+ * 为什么显隐断言必须轮询而不能用固定等待：面板外层是真实 `<Transition>`（`v-show` + slide 过渡），
+ * **关闭**时 Vue 要等过渡结束才把内联 display 置回 `none`，而 Vue 的 `nextFrame` 内部是「双层
+ * requestAnimationFrame」——happy-dom 下 rAF 实为 `setImmediate`（宏任务）。
+ * 因此「关闭后不可见」这一断言跨越两个宏任务：原先 `flush()` 里的固定 `setTimeout(10)` 与它们处于
+ * 不同事件循环阶段，先后取决于该轮循环耗时，负载下定时器可能先于第二个宏任务触发 → 偶发失败。
+ * 改为条件轮询后不再依赖任何固定时长（与 tests/carousel-*.spec.ts 的既有做法一致）。
+ */
+async function waitForPanel(visible: boolean): Promise<void> {
+  await vi.waitFor(() => {
+    expect(isPanelVisible()).toBe(visible)
+  })
 }
 
 async function pressKey(key: string): Promise<void> {
@@ -87,14 +102,14 @@ describe('Select 键盘导航', () => {
       props: { options: OPTIONS }
     })
     await flush()
-    expect(isPanelVisible()).toBe(false)
+    await waitForPanel(false)
 
     await pressKey('ArrowDown')
-    expect(isPanelVisible()).toBe(true)
+    await waitForPanel(true)
     expect(hoverTexts()).toEqual(['北京市'])
 
     await pressKey('Escape')
-    expect(isPanelVisible()).toBe(false)
+    await waitForPanel(false)
     expect(wrapper.emitted('update:value')).toBeUndefined()
     expect(wrapper.emitted('change')).toBeUndefined()
   })
@@ -117,7 +132,7 @@ describe('Select 键盘导航', () => {
     // change 第 2 参为完整 option 对象，第 3 参为展示列表下标
     expect(wrapper.emitted('change')?.at(-1)).toEqual(['shanghai', { label: '上海市', value: 'shanghai' }, 1])
     expect(wrapper.emitted('select')?.at(-1)).toEqual(['shanghai', { label: '上海市', value: 'shanghai' }])
-    expect(isPanelVisible()).toBe(false)
+    await waitForPanel(false)
   })
 
   it('搜索模式下按过滤结果导航', async () => {

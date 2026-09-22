@@ -68,19 +68,18 @@ const disabledOptionValue = ref(5)
 
 ### 全局包裹（src/App.vue）
 
-演示应用在根组件做了一层全局包裹，这是演示页里能直接调用 `useMessage()` / `useModal()` 等方法的前提：
+演示应用在根组件做了一层全局包裹，这是演示页里能直接调用 `useLoadingBar()` / `useMessage()` / `useModal()` 等方法的前提：
 
 ```text
 ConfigProvider（theme 注入）
-└── MessageProvider → ModalProvider → DialogProvider → NotificationProvider
+└── LoadingBarProvider → MessageProvider → ModalProvider → DialogProvider → NotificationProvider
     ├── RouterView（Watermark 页除外）
-    ├── Watermark（content="Vue Amazing UI"）
-    └── LoadingBar
+    └── Watermark（content="Vue Amazing UI"）
 ```
 
 - `ConfigProvider` 提供主题（`theme` 支持 `common.primaryColor` 与按组件覆盖）。
-- 四个 `XxxProvider` 依次嵌套，使任意演示页内可直接使用对应的 `useXxx()`。
-- 路由切换进度由 `LoadingBar` 与路由守卫（`beforeEach` / `afterEach`）联动。
+- 五个 `XxxProvider` 依次嵌套，使任意演示页内可直接使用对应的 `useXxx()`。
+- 路由切换进度**不**复用上面这个 `LoadingBarProvider`：路由守卫位于组件树之外，改由 `createDiscreteApi(['loadingBar'])` 创建独立实例（`src/router/index.ts` 中惰性单例），并通过 `src/theme.ts` 与根组件共享同一份主题。
 
 > 文档站 `docs/.vitepress/theme/index.ts` 采用同构包裹，且整站组件库统一从构建产物 `dist/index` 引入——theme 以相对路径引入库主体与 `XxxProvider`，页面 demo 的 `import` 经解析钩子指向同一 `dist` 出口，二者共享同一 injection key（详见 [build-system.md](build-system.md) 的「别名与模块解析」）。
 
@@ -183,6 +182,16 @@ _七种类型_
 - `update:xxx` 属于 `v-model` 双向绑定的更新事件，**不写入 Events 表**；双向绑定统一在 APIs 表的参数名后标注 `<Tag color="cyan">v-model</Tag>`（如 `open <Tag color="cyan">v-model</Tag>`），避免同一语义在两处重复维护。
 - APIs / Events / Methods 表中的类型引用一律写**组件入口重命名后的公开导出名**（如 `SliderMarks`、`TabsItem`、`SwiperImage`），确保读者可直接 `import type`，且与 IDE 类型提示一致；类型章节标题保留 SFC 内的定义名（如 `### Marks Type`），锚点 `#marks-type` 不随引用名变更，避免全站链接失效。文档自造的结构性类型（源码中无对应导出，如 ConfigProvider 的 `Config`、Scrollbar 的 `ScrollBehavior`）沿用文档内命名。
 - **表格内禁止裸对象字面量**：APIs / Events 等表格单元格里直接写 `{ label: 'label' }` 会被 markdown 的属性语法当作前一个标签的 HTML 属性（渲染成 `<td ... label:="" ...>`），轻则单元格内容丢失，重则同名属性重复让 `pnpm docs:build` 直接失败（报 `Duplicate attribute`）。对象字面量一律用行内代码包裹：`` `{ label: 'label', value: 'value' }` ``。
+
+### 示例代码风格约定（人工维护）
+
+`docs/**/*.md` 是 VitePress 的 **md-as-SFC**（顶层 `<script setup>` 会被当作真实代码编译），因此**不能纳入 Prettier 格式化**——Prettier 按 markdown 语义处理会改写顶层模板（行首 `>` 被解析为引用块、标签失配），直接导致 `pnpm docs:build` 失败（详见 [build-system.md](build-system.md) 与 `.github/workflows/verify.yml` 文件头）。故示例代码风格由人工约定维持，`::: details Show Code` 折叠块内的代码需与正文 demo 保持同步，并遵循：
+
+- **函数名与括号之间不留空格**：写 `function onClose(e: Event) {`，不写 `function onClose (e: Event) {`。
+- **不使用尾逗号**（与 `.prettierrc.json` 的 `trailingComma: "none"` 一致）：数组 / 对象的最后一项后不加 `,`。
+- **自闭合标签的 `/>` 前留一个空格**：写 `<br />`、`<ColorPicker :label="labelFormat" />`，不写 `<br/>`、`<ColorPicker :label="labelFormat"/>`。
+- **组件属性较多时每行一个属性**，便于阅读与复制（如 `<AutoComplete>` 的多属性写法）。
+- 其余写法与 `.prettierrc.json` 保持一致：二元运算符两侧留空格（`index === 2`）、十六进制颜色用小写（`#fff`）。
 
 ### 内联 demo 机制
 

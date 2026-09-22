@@ -10,7 +10,7 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-09-21">2.10.0</VersionDateTag>
+## <VersionDateTag date="2026-09-22">2.11.0</VersionDateTag>
 
 - ⚠️ **破坏性变更**：统一 [选择器 Select](/guide/components/select.html)、[级联选择 Cascader](/guide/components/cascader.html)、[开关 Switch](/guide/components/switch.html) 的双向绑定为 `v-model:value`，原 `v-model` 用法需改为 `v-model:value`，回写事件由 `update:modelValue` 改为 `update:value`
 - ⚠️ **破坏性变更**：[选择器 Select](/guide/components/select.html) 与 [级联选择 Cascader](/guide/components/cascader.html) 的字段名属性 `label` / `value`（Cascader 另含 `children`）合并为 `fieldNames` 对象，改用 `:field-names="{ label: 'name', value: 'id' }"`，并新增 `SelectFieldNames` / `CascaderFieldNames` 类型导出
@@ -20,16 +20,31 @@
 - 重构并更新 [选择器 Select](/guide/components/select.html) 组件，新增 `labelInValue` 属性（`value` 由原始值变为 `{ label, value, key, originLabel }` 对象，新增 `SelectLabeledValue` 类型导出）与子组件式选项 `SelectOption` / `SelectOptGroup`（均不再产出 `DOM`，仅由 `Select` 从插槽 `vnode` 解析选项数据），新增 `default` 插槽；`options` 与子组件同时提供时以子组件为准
 - 重构并更新 [选择器 Select](/guide/components/select.html) 组件，新增 `virtual`（默认开启，大数据量时仅渲染可视区选项；`dropdownMatchSelectWidth` 为 `false` 时自动关闭）与 `listItemHeight` 属性；补齐无障碍语义（触发器 `role="combobox"` 与 `aria-expanded` / `aria-controls` / `aria-activedescendant`，选项列表 `role="listbox"`、选项 `role="option"` + `aria-selected`，关闭时以 `aria-live` 播报已选项），并新增 `id` 属性用于关联
 
+## <VersionDateTag date="2026-09-22">2.10.1</VersionDateTag>
+
+- 重构为 [加载条 LoadingBar](/guide/components/loading-bar.html) `Provider + Hook `形态：新增 `<LoadingBarProvider>` + `useLoadingBar()` 与 `createDiscreteApi(['loadingBar'])` 两种 `api` 获取方式（形态与 [全局提示 Message](/guide/components/message.html) / [模态框 Modal](/guide/components/modal.html) 等同族组件一致），并新增 `loadingBarStyle` 属性（可按 `loading` / `finish` / `error` 三态注入自定义样式）；`<LoadingBar>` 组件本体继续导出，`props` 与 `start` / `finish` / `error` 方法签名不变，但 `api` 由 `ref` 改为经 `@ready` 回传 —— 原 `<LoadingBar ref="loadingBar">` + `loadingBar.value.start()` 写法需迁移为 `<LoadingBar @ready="api = $event" />` 或改用 `useLoadingBar()`
+- 修复 `createDiscreteApi` 在路由守卫（`app.runWithContext` 上下文）中调用时取不到 `api` 的问题，影响 [加载条 LoadingBar](/guide/components/loading-bar.html) / [对话框 Dialog](/guide/components/dialog.html) / [全局提示 Message](/guide/components/message.html) / [模态框 Modal](/guide/components/modal.html) / [通知提醒 Notification](/guide/components/notification.html)
+- 更新使用者文档：[加载条 LoadingBar](/guide/components/loading-bar.html) 重写演示与 `api` 用法说明（改用 `<LoadingBarProvider>`），[全局化配置 ConfigProvider](/guide/components/config-provider.html) 与 [快速上手](/guide/getting-started.html) 的加载条示例同步迁移
+- 更新贡献者文档：`development/component-design.md` 将 `loading-bar` 纳入「SFC + Hook + Provider」三段式清单并补充 `LoadingBarProvider` 的样式入口登记，`development/demo-doc-guide.md` 的全局包裹写法同步改为 `useLoadingBar()`
+
+## <VersionDateTag date="2026-09-21">2.10.0</VersionDateTag>
+
+- 新增 [评论 Comment](/guide/components/comment.html) 组件
+- 重构按需引入的样式注入为「每组件一个样式入口」：手动引入可用 `import 'vue-amazing-ui/es/button/style'` 一次引全全局默认样式、组件自身样式与其依赖组件样式，无需再自行列举；自动按需引入（`VueAmazingUIResolver`）用法与行为不变
+- 更新使用者文档：[按需引入](/guide/import-on-demand.html)、[快速上手](/guide/getting-started.html) 与 [特性](/guide/features.html) 的手动引入示例统一改用上述样式入口写法并合并重复内容，`README` 同步；组件文档示例风格与文档站正文样式一并订正
+- 更新贡献者文档：`development/` 补充样式入口模型、构建后处理与产物校验说明，并同步「新增组件三步接线」清单；`CONTRIBUTING` 补充 `pnpm verify` 门禁与对应自检提示
+- 工程优化：新增 `GitHub Actions` 门禁、按需引入的产物级校验脚本与发布守卫等
+
 ## <VersionDateTag date="2026-09-20">2.9.0</VersionDateTag>
 
 - 重构组件库内部浮层能力，收敛为统一内核与内部宿主，[文字提示 Tooltip](/guide/components/tooltip.html)、[选择器 Select](/guide/components/select.html)、[自动完成 AutoComplete](/guide/components/auto-complete.html)、[滑动输入条 Slider](/guide/components/slider.html) 全部接入 —— 公开 `props` / 事件 / 插槽行为均无变化，仅 [自动完成 AutoComplete](/guide/components/auto-complete.html) 的 `value` 由必填放宽为可选
-- ⚠️ **破坏性变更**：移除 [文字提示 Tooltip](/guide/components/tooltip.html) 与 [文本省略 Ellipsis](/guide/components/ellipsis.html) 上未文档化的 `observeScroll` 方法，滚动跟随改由内部处理
-- ⚠️ **破坏性变更**：公开工具函数由 `24` 个缩减为 `22` 个，移除 `useFloatingPosition` 与 `useInject` —— 浮动定位请改用上述浮层组件
+- 移除 [文字提示 Tooltip](/guide/components/tooltip.html) 与 [文本省略 Ellipsis](/guide/components/ellipsis.html) 上未文档化的 `observeScroll` 方法，滚动跟随改由内部处理
+- 公开工具函数由 `24` 个缩减为 `22` 个，移除 `useFloatingPosition` 与 `useInject` —— 浮动定位请改用上述浮层组件
 - 新增 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `baseZIndex` 属性：传入后统一为浮层分配层级（后打开者在上），修复浮层被 [对话框 Modal](/guide/components/modal.html) / [弹窗 Dialog](/guide/components/dialog.html) / [抽屉 Drawer](/guide/components/drawer.html) 遮罩覆盖的问题
 - 默认层级同步收敛：[文字提示 Tooltip](/guide/components/tooltip.html) 族 `999 → 1070`、[选择器 Select](/guide/components/select.html) 与 [自动完成 AutoComplete](/guide/components/auto-complete.html) `1000 → 1050`、[图片 Image](/guide/components/image.html) 预览遮罩 `1000 → 1070`
-- ⚠️ **行为变更**：[全局提示 Message](/guide/components/message.html) / [通知提醒 Notification](/guide/components/notification.html) 默认层级由 `2000` 调整为 `1030` / `1040`，不再高于浮层，修复消息 / 通知内的 [选择器 Select](/guide/components/select.html) / [文字提示 Tooltip](/guide/components/tooltip.html) 被压住的问题
+- [全局提示 Message](/guide/components/message.html) / [通知提醒 Notification](/guide/components/notification.html) 默认层级由 `2000` 调整为 `1030` / `1040`，不再高于浮层，修复消息 / 通知内的 [选择器 Select](/guide/components/select.html) / [文字提示 Tooltip](/guide/components/tooltip.html) 被压住的问题
 - 浮层隐藏后归还层级槽位（数值随「同时可见的浮层数」增长），[图片 Image](/guide/components/image.html) 未打开预览、[加载进度条 LoadingBar](/guide/components/loading-bar.html) 未开始加载时不再预先占用
-- ⚠️ **行为变更**：[文字提示 Tooltip](/guide/components/tooltip.html) / [选择器 Select](/guide/components/select.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html) / [级联选择 Cascader](/guide/components/cascader.html) 及内部宿主 `Popup` 的 `to` 不传时不再固定挂 `body`，改为就近挂到承载层内容容器；显式传入 `to`（含 `to: false`）行为不变
+- [文字提示 Tooltip](/guide/components/tooltip.html) / [选择器 Select](/guide/components/select.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html) / [级联选择 Cascader](/guide/components/cascader.html) 及内部宿主 `Popup` 的 `to` 不传时不再固定挂 `body`，改为就近挂到承载层内容容器；显式传入 `to`（含 `to: false`）行为不变
 - 补齐浮层定制入口：[文字提示 Tooltip](/guide/components/tooltip.html) 新增 `popupClassName` / `popupStyle` / `zIndex` / `destroyOnHide`（隐藏后卸载浮层 `DOM`），[选择器 Select](/guide/components/select.html) 新增 `popupClassName` / `dropdownMenuStyle` / `zIndex`，[自动完成 AutoComplete](/guide/components/auto-complete.html) 与 [图片 Image](/guide/components/image.html) 新增 `zIndex`，[滑动输入条 Slider](/guide/components/slider.html) 新增 `tooltipClass` / `tooltipPlacement` 与 `tooltip` 插槽
 - 面板改由「参照容器 + 面板」两层组成并新增 `.va-popup-*` 类名，依赖旧 `DOM` 结构的 `:deep()` 选择器需改用上述公开属性；[滑动输入条 Slider](/guide/components/slider.html) 手柄气泡根类名由 `handle-tooltip` 调整为 `slider-tooltip`、箭头类名由 `tooltip-arrow` 调整为 `slider-tooltip-arrow`
 - 新增 [选择器 Select](/guide/components/select.html) 键盘操作：`↑` `↓` 移动高亮项（跳过禁用项、端点回绕）、`Enter` 选中、`Esc` 关闭，面板收起时 `↑` `↓` 可直接展开，与 [自动完成 AutoComplete](/guide/components/auto-complete.html) 行为一致
@@ -970,7 +985,6 @@
 - 新增 菜单 Menu 组件
 - 新增 穿梭框 Transfer 组件
 - 新增 漫游式引导 Tour 组件
-- 新增 评论 Comment 组件
 - 新增 下拉菜单 Dropdown 组件
 <!-- - 更新 表格 Table 组件，新增虚拟滚动功能
 - 时间轴 Timeline 组件，新增水平时间轴

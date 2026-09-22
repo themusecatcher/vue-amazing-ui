@@ -21,6 +21,7 @@ declare module 'vue' {
     Col: typeof VueAmazingUI.Col
     Collapse: typeof VueAmazingUI.Collapse
     ColorPicker: typeof VueAmazingUI.ColorPicker
+    Comment: typeof VueAmazingUI.Comment
     ConfigProvider: typeof VueAmazingUI.ConfigProvider
     Countdown: typeof VueAmazingUI.Countdown
     DatePicker: typeof VueAmazingUI.DatePicker
@@ -43,6 +44,7 @@ declare module 'vue' {
     List: typeof VueAmazingUI.List
     ListItem: typeof VueAmazingUI.ListItem
     LoadingBar: typeof VueAmazingUI.LoadingBar
+    LoadingBarProvider: typeof VueAmazingUI.LoadingBarProvider
     Message: typeof VueAmazingUI.Message
     MessageProvider: typeof VueAmazingUI.MessageProvider
     Modal: typeof VueAmazingUI.Modal

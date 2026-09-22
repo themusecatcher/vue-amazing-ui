@@ -130,12 +130,12 @@ const showSkeleton = () => {
 </script>
 <template>
   <Button :loading="loading" @click="showSkeleton">Show Skeleton</Button>
-  <br/>
-  <br/>
+  <br />
+  <br />
   <Skeleton :loading="loading">
     <div>
       <h4>Vue Amazing UI, a design language</h4>
-      <br/>
+      <br />
       <p>
         We supply a series of design principles, practical patterns and high quality design
         resources, to help people create their product prototypes beautifully and efficiently.
