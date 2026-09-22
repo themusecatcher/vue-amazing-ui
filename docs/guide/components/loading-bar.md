@@ -31,7 +31,7 @@
 ::: info 关于 `LoadingBarProvider` 与 `LoadingBar`
 
 - `LoadingBarProvider` 内部渲染一个 `LoadingBar` 组件，并通过 `provide/inject` 向下提供 `useLoadingBar()` 所需的 `API`，自身不渲染任何可见内容
-- 加载条的配置属性（`loadingBarSize` / `colorLoading` / `colorFinish` / `colorError` / `loadingBarStyle` / `to` 等）会透传给内部的 `LoadingBar`，因此直接参考下方 [LoadingBarProvider Props](#loadingbarprovider) 设置即可
+- 加载条的配置属性（`loadingBarSize` / `colorLoading` / `colorFinish` / `colorError` / `loadingBarStyle` / `to` 等）会透传给内部的 `LoadingBar`，因此直接参考下方 [LoadingBar Props](#loadingbar) 设置即可
 - 使用 `useLoadingBar()` 时，组件级配置设置在 `<LoadingBarProvider>` 上（无法直接接触内部 `LoadingBar`）；逐次调用的参数差异通过 `start(from, to, status)` 传入
 
 :::
@@ -584,11 +584,11 @@ function onThemeError() {
 
 ## APIs
 
-### LoadingBarProvider
+### LoadingBar
 
 <br/>
 
-*组件级配置属性（`class` / `style` 亦会透传到加载条容器）：会透传给内部的 `LoadingBar`*
+*组件级配置属性（`class` / `style` 亦会透传到加载条容器）：使用 `useLoadingBar()` 时设置在 `<LoadingBarProvider>` 上（会透传给内部 `LoadingBar`），直接使用 `<LoadingBar>` 组件时设置在 `<LoadingBar>` 上，两者等价*
 
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
@@ -605,11 +605,11 @@ function onThemeError() {
 >
 > `colorLoading` / `colorFinish` 默认取 `LoadingBar.primaryColor` 生成的调色板（跟随主题），`colorError` 默认 `#ff4d4f`。
 >
-> `loadingBarStyle` 以内联样式作用于内层进度条：与 `loadingBarSize` / `colorLoading` / `colorFinish` / `colorError` 设置同一属性冲突时，以其为准；未提供 `finish` 时，完成态回落到 `loading` 的样式。
+> `loadingBarStyle` 以内联样式作用于内层进度条：与 `loadingBarSize` / `colorLoading` / `colorFinish` / `colorError` 设置同一属性冲突时，以其为准；未提供 `finish` 时，完成态回落到 `loading` 的样式；`error` 态仅取 `error`，未提供时不注入任何自定义样式。
 
 ## Methods
 
-*`useLoadingBar()` 返回的 `LoadingBarApi`，或通过 `<LoadingBarProvider>` 的 `@ready` 事件获取：*
+*`useLoadingBar()` 返回的 `LoadingBarApi`，或通过 `<LoadingBar>` / `<LoadingBarProvider>` 的 `@ready` 事件获取：*
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |

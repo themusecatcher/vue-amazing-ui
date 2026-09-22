@@ -51,19 +51,18 @@ import { ref } from 'vue'
 
 ### 全局包裹（src/App.vue）
 
-演示应用在根组件做了一层全局包裹，这是演示页里能直接调用 `useMessage()` / `useModal()` 等方法的前提：
+演示应用在根组件做了一层全局包裹，这是演示页里能直接调用 `useLoadingBar()` / `useMessage()` / `useModal()` 等方法的前提：
 
 ```text
 ConfigProvider（theme 注入）
-└── MessageProvider → ModalProvider → DialogProvider → NotificationProvider
+└── LoadingBarProvider → MessageProvider → ModalProvider → DialogProvider → NotificationProvider
     ├── RouterView（Watermark 页除外）
-    ├── Watermark（content="Vue Amazing UI"）
-    └── LoadingBar
+    └── Watermark（content="Vue Amazing UI"）
 ```
 
 - `ConfigProvider` 提供主题（`theme` 支持 `common.primaryColor` 与按组件覆盖）。
-- 四个 `XxxProvider` 依次嵌套，使任意演示页内可直接使用对应的 `useXxx()`。
-- 路由切换进度由 `LoadingBar` 与路由守卫（`beforeEach` / `afterEach`）联动。
+- 五个 `XxxProvider` 依次嵌套，使任意演示页内可直接使用对应的 `useXxx()`。
+- 路由切换进度**不**复用上面这个 `LoadingBarProvider`：路由守卫位于组件树之外，改由 `createDiscreteApi(['loadingBar'])` 创建独立实例（`src/router/index.ts` 中惰性单例），并通过 `src/theme.ts` 与根组件共享同一份主题。
 
 > 文档站 `docs/.vitepress/theme/index.ts` 采用同构包裹，且整站组件库统一从构建产物 `dist/index` 引入——theme 以相对路径引入库主体与 `XxxProvider`，页面 demo 的 `import` 经解析钩子指向同一 `dist` 出口，二者共享同一 injection key（详见 [build-system.md](build-system.md) 的「别名与模块解析」）。
 

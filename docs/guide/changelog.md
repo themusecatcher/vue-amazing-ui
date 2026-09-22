@@ -12,7 +12,7 @@
 
 ## <VersionDateTag date="2026-09-22">2.10.1</VersionDateTag>
 
-- 重构并增强 [加载条 LoadingBar](/guide/components/loading-bar.html)：公开入口改为 `<LoadingBarProvider>` + `useLoadingBar()`，新增 `createDiscreteApi(['loadingBar'])` 脱离组件树调用、`@ready` 回传 `api` 与 `loadingBarStyle`（可按 `loading` / `finish` / `error` 三态注入任意样式）属性。⚠️ **破坏性变更**：`LoadingBar` 组件不再对外导出（降为 `LoadingBarProvider` 的内部实现），原 `<LoadingBar ref>` 写法需迁移为 `<LoadingBarProvider @ready="api = $event" />` 或 `useLoadingBar()`；`props` 与 `start` / `finish` / `error` 方法签名保持不变
+- 重构并增强 [加载条 LoadingBar](/guide/components/loading-bar.html)：新增 `<LoadingBarProvider>` + `useLoadingBar()` 与 `createDiscreteApi(['loadingBar'])` 两种获取 `api` 的方式（与 [全局提示 Message](/guide/components/message.html) 等同族组件形态一致），并新增 `loadingBarStyle`（可按 `loading` / `finish` / `error` 三态注入任意样式）属性；`<LoadingBar>` 组件本体继续导出，`props` 与 `start` / `finish` / `error` 方法签名保持不变。注意：`api` 由 `ref` 改为经 `@ready` 回传，原 `<LoadingBar ref="loadingBar">` + `loadingBar.value.start()` 写法需迁移为 `<LoadingBar @ready="api = $event" />` 或 `useLoadingBar()`
 - 修复 `createDiscreteApi` 在路由守卫（`app.runWithContext` 上下文）中调用时取不到 `api` 的问题，影响 [加载条 LoadingBar](/guide/components/loading-bar.html) / [对话框 Dialog](/guide/components/dialog.html) / [全局提示 Message](/guide/components/message.html) / [模态框 Modal](/guide/components/modal.html) / [通知提醒 Notification](/guide/components/notification.html)
 - 优化并更新 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 与 [快速上手](/guide/getting-started.html) 文档中的加载条示例，同步改用 `<LoadingBarProvider>`
 

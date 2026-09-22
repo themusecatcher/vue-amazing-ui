@@ -50,7 +50,6 @@ const componentsMap = {
   InputSearch: 'input-search',
   List: 'list/list',
   ListItem: 'list/list-item',
-  // LoadingBar 为 LoadingBarProvider 的渲染内核，不对外导出；保留在此供 styleSources 解析（同 Popup 先例）
   LoadingBar: 'loading-bar',
   Message: 'message',
   Modal: 'modal',
