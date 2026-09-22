@@ -160,8 +160,8 @@ function fetchUser(keyword: string) {
     }, 300)
   }, 300)
 }
-// 选中后仅结束加载态、保留最后一次远程结果：antd 没有「已选项标签缓存」，
-// 若清空 options，antd 侧标签文本会退化成 value（本项目的缓存会保留 label），两侧对照便不一致
+// 选中后仅结束加载态、保留最后一次远程结果：
+// 若清空 options，标签文本会退化成 value（本项目的缓存会保留 label）
 watch(userValue, () => {
   userFetching.value = false
 })

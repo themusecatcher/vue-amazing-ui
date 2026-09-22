@@ -52,12 +52,12 @@ export interface FieldNames {
   options?: string // 分组子选项的字段名（分组 / 树形数据，P2 起支持）
 }
 export type SelectValue = string | number
-// labelInValue 打开时的 value 对象形态（对齐 antd 的 LabeledValue）
+// labelInValue 打开时的 value 对象形态（LabeledValue 形态）
 export interface LabeledValue {
   label: unknown // 选项文本（子组件式写法下由默认插槽求值而来）
   value: SelectValue // 选项值
   key?: string | number // 选项唯一键，缺省时与 value 一致
-  originLabel?: unknown // 原始选项文本（子组件式写法下为默认插槽函数），对齐 antd
+  originLabel?: unknown // 原始选项文本（子组件式写法下为默认插槽函数）
 }
 export type SelectPlacement = 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'
 export type SelectMode = 'multiple' | 'tags'
@@ -275,10 +275,10 @@ const mergedFieldNames = computed(() => ({
   label: props.fieldNames?.label || 'label',
   value: props.fieldNames?.value || 'value'
 }))
-// 分组子选项字段名（antd 口径：fieldNames.options，未指定时为 'options'）
+// 分组子选项字段名（约定：fieldNames.options，未指定时为 'options'）
 const groupField = computed(() => props.fieldNames?.options || 'options')
 // ==================== 子组件式选项（default 插槽） ====================
-/** 选项 / 分组标记组件的静态标记字段（对齐 antd 的 isSelectOption / isSelectOptGroup） */
+/** 选项 / 分组标记组件的静态标记字段（静态标记约定） */
 interface OptionMarker {
   isSelectOption?: boolean
   isSelectOptGroup?: boolean
@@ -353,7 +353,7 @@ function parseSlotOptions(nodes: VNode[]): Option[] {
     const slotFns = vnode.children as Record<string, (() => VNode[]) | undefined> | null
     const { label: labelProp, value: valueProp, disabled: disabledProp, ...restProps } = slotProps
     const optionKey = getVNodeKey(vnode)
-    // label 属性显式非空时优先于插槽文本（antd 口径：props.label 优先）
+    // label 属性显式非空时优先于插槽文本（约定：props.label 优先）
     const hasLabelProp = typeof labelProp === 'string' && labelProp !== ''
     if (kind === 'group') {
       const labelNodes = toSlotChildren(slotFns?.label?.())
@@ -362,7 +362,7 @@ function parseSlotOptions(nodes: VNode[]): Option[] {
         key: optionKey,
         [labelKey]: hasLabelProp ? labelProp : (getSlotText(labelNodes) ?? String(optionKey ?? '')),
         [groupField.value]: parseSlotOptions(toSlotChildren(slotFns?.default?.())),
-        // #label 插槽：富内容（图标 + 文本）由它渲染；label 属性已指定时不再渲染（antd 取 props.label）
+        // #label 插槽：富内容（图标 + 文本）由它渲染；label 属性已指定时不再渲染（props.label 优先）
         children: hasLabelProp ? undefined : slotFns?.label
       })
       return
@@ -372,15 +372,15 @@ function parseSlotOptions(nodes: VNode[]): Option[] {
       key: optionKey,
       [valueKey]: valueProp ?? optionKey,
       [labelKey]: hasLabelProp ? labelProp : getSlotText(toSlotChildren(slotFns?.default?.())),
-      // 支持 <SelectOption disabled />：静态属性编译为空串，故空串同样视为禁用（antd 口径）
+      // 支持 <SelectOption disabled />：静态属性编译为空串，故空串同样视为禁用（约定）
       disabled: disabledProp === '' || Boolean(disabledProp),
-      // 默认插槽：富内容由它渲染，labelInValue 的 originLabel 亦取此函数（对齐 antd）
+      // 默认插槽：富内容由它渲染，labelInValue 的 originLabel 亦取此函数
       children: hasLabelProp ? undefined : slotFns?.default
     })
   })
   return items
 }
-/** 选项数据源：default 插槽（子组件式写法）存在时以插槽为准，否则取 options（本项目「插槽优先于 prop」的统一约定，antd 为 options 优先） */
+/** 选项数据源：default 插槽（子组件式写法）存在时以插槽为准，否则取 options（本项目「插槽优先于 prop」的统一约定） */
 const rawOptions = computed<Option[]>(() => (slots.default ? parseSlotOptions(slots.default()) : props.options))
 /** 是否为「分组」形态：任一 option 的分组字段是非空数组即成立 */
 const hasGroupedOptions = computed(() =>
@@ -423,18 +423,18 @@ const optionGroups = computed(() => {
 })
 const isMultiple = computed(() => props.mode === 'multiple' || props.mode === 'tags') // 是否多选模式（含标签模式）
 const isTagsMode = computed(() => props.mode === 'tags') // 是否标签模式（输入内容即可创建新条目）
-// 搜索能力：显式 showSearch 优先；未指定时多选（含 tags）默认可搜索，单选默认不可搜索（antd 口径：showSearch ?? multiple）
+// 搜索能力：显式 showSearch 优先；未指定时多选（含 tags）默认可搜索，单选默认不可搜索（约定：showSearch ?? multiple）
 const mergedShowSearch = computed(() => props.showSearch ?? isMultiple.value)
-// 箭头显示：多选默认不显示箭头（antd 口径），loading 时显示（后缀位置由加载中图标接管）
+// 箭头显示：多选默认不显示箭头（约定），loading 时显示（后缀位置由加载中图标接管）
 const mergedShowArrow = computed(() => props.showArrow ?? (props.loading || !isMultiple.value))
 const mergedOpen = computed(() => (props.open !== undefined ? props.open : showOptions.value))
 const mergedSearchValue = computed(() => (props.searchValue !== undefined ? props.searchValue : innerSearchValue.value))
 // ==================== labelInValue ====================
-/** 是否为 labelInValue 对象（antd 口径：非对象 / 数组 / 空值一律视为原始值） */
+/** 是否为 labelInValue 对象（约定：非对象 / 数组 / 空值一律视为原始值） */
 function isLabeledValue(value: unknown): value is LabeledValue {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
 }
-/** 取 labelInValue 对象的原始选中值（缺省回落 key，antd 口径） */
+/** 取 labelInValue 对象的原始选中值（缺省回落 key） */
 function getRawValue(item: SelectValue | LabeledValue): SelectValue | undefined {
   if (!isLabeledValue(item)) return item
   return item.value ?? item.key
@@ -445,7 +445,7 @@ function toValueItems(value: Props['value']): (SelectValue | LabeledValue)[] {
   if (value === undefined || value === null) return []
   return [value]
 }
-/** 入参 labelInValue 对象携带的 label：回填文本与事件回传时保留调用方传入的文本（antd 口径：入参 label 优先于选项数据） */
+/** 入参 labelInValue 对象携带的 label：回填文本与事件回传时保留调用方传入的文本（约定：入参 label 优先于选项数据） */
 const incomingLabels = computed(() => {
   const labels = new Map<SelectValue, unknown>()
   toValueItems(props.value).forEach((item) => {
@@ -455,7 +455,7 @@ const incomingLabels = computed(() => {
   })
   return labels
 })
-/** 选项展示内容：入参 label 优先 > optionLabelProp 指定字段 > label 字段 > value 兜底（antd 口径） */
+/** 选项展示内容：入参 label 优先 > optionLabelProp 指定字段 > label 字段 > value 兜底（约定） */
 function resolveLabel(value: SelectValue, option: Option | undefined): unknown {
   const incoming = incomingLabels.value.get(value)
   if (incoming !== undefined) return incoming
@@ -464,12 +464,12 @@ function resolveLabel(value: SelectValue, option: Option | undefined): unknown {
   }
   return getOptionLabel(option) ?? value
 }
-/** 取选项键：key 缺省时与 value 一致（antd 口径） */
+/** 取选项键：key 缺省时与 value 一致（约定） */
 function getOptionKey(option: Option | undefined, value: SelectValue): string | number {
   const key: unknown = option?.key
   return typeof key === 'string' || typeof key === 'number' ? key : value
 }
-/** 原始值 → labelInValue 对象（antd 口径：originLabel 保留子组件式写法下的默认插槽函数） */
+/** 原始值 → labelInValue 对象（约定：originLabel 保留子组件式写法下的默认插槽函数） */
 function createLabeledValue(value: SelectValue): LabeledValue {
   const option = findOption(value)
   const label = resolveLabel(value, option)
@@ -480,12 +480,12 @@ function createLabeledValue(value: SelectValue): LabeledValue {
     originLabel: getOptionLabelSlot(option) ?? label
   }
 }
-/** 事件载荷包装：labelInValue 打开时包装为对象，否则原样返回（antd 口径） */
+/** 事件载荷包装：labelInValue 打开时包装为对象，否则原样返回（约定） */
 function wrapValue(value: SelectValue | undefined): SelectValue | LabeledValue | undefined {
   if (value === undefined || value === null) return value
   return props.labelInValue ? createLabeledValue(value) : value
 }
-/** 多选事件载荷包装：labelInValue 打开时逐项包装为对象（antd 口径） */
+/** 多选事件载荷包装：labelInValue 打开时逐项包装为对象（约定） */
 function wrapValues(values: SelectValue[]): SelectValue[] | LabeledValue[] {
   return props.labelInValue ? values.map((value) => createLabeledValue(value)) : values
 }
@@ -495,7 +495,7 @@ const valueList = computed<SelectValue[]>(() =>
     .map((item) => getRawValue(item))
     .filter((item): item is SelectValue => item !== undefined)
 )
-// 输入框展示文本：多选（非 tags）在面板关闭时不展示已输入的搜索文本（antd 口径：重开面板时恢复）
+// 输入框展示文本：多选（非 tags）在面板关闭时不展示已输入的搜索文本（约定：重开面板时恢复）
 const inputDisplayValue = computed(() =>
   isMultiple.value && !isTagsMode.value && !mergedOpen.value ? '' : mergedSearchValue.value
 )
@@ -507,7 +507,7 @@ const inputModelValue = computed({
     innerSearchValue.value = value
   }
 })
-// 输入框可编辑性（antd 口径）：tags 始终可输入；multiple 需开启 showSearch 且面板展开 / 已聚焦；单选仅看 showSearch
+// 输入框可编辑性（约定）：tags 始终可输入；multiple 需开启 showSearch 且面板展开 / 已聚焦；单选仅看 showSearch
 const inputEditable = computed(() => {
   if (isTagsMode.value) return true
   if (!isMultiple.value) return mergedShowSearch.value
@@ -542,7 +542,7 @@ const optionsStyle = computed(() => {
 })
 // 选项缓存：options 动态变化时（远程搜索清空、已选项被移出列表）已选项仍需保留原 label 与原始数据
 const optionCache = new Map<SelectValue, Option>()
-/** 按值兜底生成选项：值不在 options 中时 label 回落 value（对齐 antd） */
+/** 按值兜底生成选项：值不在 options 中时 label 回落 value */
 function createFallbackOption(value: SelectValue): Option {
   return {
     [mergedFieldNames.value.value]: value,
@@ -586,7 +586,7 @@ const optionLabelRaw = computed<unknown>(() => {
   const raw = getRawValue(value)
   return raw === undefined ? undefined : resolveLabel(raw, findOption(raw))
 })
-// 占位判定：多选在「无已选值且输入框为空（非合成中）」时展示；单选按 antdv 口径（value 为 undefined，
+// 占位判定：多选在「无已选值且输入框为空（非合成中）」时展示；单选按取值判定（value 为 undefined，
 // 或 value 为 null 且无 label），其余情况（含 '' / 0）都是有意义的值，不展示占位文本
 const showPlaceholder = computed(() => {
   if (isMultiple.value) {
@@ -637,7 +637,7 @@ const visibleTagCount = computed(() => {
 })
 // 被折叠的 tag（maxTagPlaceholder 的 omittedValues）
 const omittedOptions = computed<Option[]>(() => selectedOptions.value.slice(visibleTagCount.value))
-// 折叠提示默认文案（antd 口径：+ N ...）
+// 折叠提示默认文案（约定：+ N ...）
 const omittedText = computed(() => `+ ${omittedOptions.value.length} ...`)
 // 折叠提示内容：prop（函数 / 节点 / 文本）优先，未传时用默认文案；插槽在模板中优先于 prop
 const omittedContent = computed<unknown>(() => {
@@ -726,7 +726,7 @@ watch(
   },
   { flush: 'post' }
 )
-// tags 模式的选项全集：已选值若不在 options 中，补成伪选项，使新建的标签出现在下拉列表中（antd 口径）
+// tags 模式的选项全集：已选值若不在 options 中，补成伪选项，使新建的标签出现在下拉列表中（约定）
 const filledOptions = computed<Option[]>(() => {
   if (!isTagsMode.value) return flatOptions.value
   const existed = new Set(flatOptions.value.map((option) => getOptionValue(option)))
@@ -736,7 +736,7 @@ const filledOptions = computed<Option[]>(() => {
   return [...flatOptions.value, ...patchValues.map((value) => createFallbackOption(value))]
 })
 // 过滤后的选项：filterOption 为 false 或搜索文本为空时不过滤
-// 默认过滤字段遵循 antd：optionFilterProp 优先，未指定时按 value 字段匹配（大小写不敏感）
+// 默认过滤字段：optionFilterProp 优先，未指定时按 value 字段匹配（大小写不敏感）
 const filteredOptions = computed<Option[]>(() => {
   const keyword = mergedSearchValue.value
   if (!keyword || props.filterOption === false) return filledOptions.value
@@ -752,7 +752,7 @@ const filteredOptions = computed<Option[]>(() => {
       .includes(upperKeyword)
   })
 })
-// tags 模式：输入内容未命中任何选项时，把它作为「新建标签」伪选项置于列表首位，可直接点击 / 回车选中（antd 口径）
+// tags 模式：输入内容未命中任何选项时，把它作为「新建标签」伪选项置于列表首位，可直接点击 / 回车选中（约定）
 const searchFilledOptions = computed<Option[]>(() => {
   if (!isTagsMode.value) return filteredOptions.value
   const keyword = mergedSearchValue.value
@@ -761,7 +761,7 @@ const searchFilledOptions = computed<Option[]>(() => {
   const matched = filteredOptions.value.some((option) => option?.[filterProp] === keyword)
   return matched ? filteredOptions.value : [createFallbackOption(keyword), ...filteredOptions.value]
 })
-// 展示用选项：传了 filterSort 时对过滤结果排序（antd 语义：仅搜索场景生效）
+// 展示用选项：传了 filterSort 时对过滤结果排序（语义：仅搜索场景生效）
 const displayOptions = computed<Option[]>(() => {
   const filterSort = props.filterSort
   if (!filterSort) return searchFilledOptions.value
@@ -775,7 +775,7 @@ const DEFAULT_ROW_HEIGHT = 32
 const VIRTUAL_OVERSCAN = 1
 const rowHeight = computed(() => (props.listItemHeight > 0 ? props.listItemHeight : DEFAULT_ROW_HEIGHT))
 /**
- * 虚拟滚动开关（对齐 antd vc-select/Select.tsx:549）：
+ * 虚拟滚动开关（开关判定）：
  * dropdownMatchSelectWidth 为 false 时面板宽度按内容自适应，须全量渲染才能量出真实宽度，故自动关闭虚拟滚动
  */
 const virtualEnabled = computed(() => props.virtual !== false && props.dropdownMatchSelectWidth !== false)
@@ -811,7 +811,7 @@ const optionRowIndexMap = computed(() => {
   return map
 })
 const totalRowsHeight = computed(() => menuRows.value.length * rowHeight.value)
-/** 是否真正窗口化：开启虚拟滚动且内容高于面板（装得下时全量渲染，与 antd rc-virtual-list 同款判定） */
+/** 是否真正窗口化：开启虚拟滚动且内容高于面板（装得下时全量渲染，虚拟列表同款判定） */
 const virtualActive = computed(() => virtualEnabled.value && totalRowsHeight.value > optionsMaxHeight.value)
 /** 面板可视区高度：内容装不下时即面板最大高度 */
 const virtualViewportHeight = computed(() => Math.min(optionsMaxHeight.value, totalRowsHeight.value))
@@ -853,7 +853,7 @@ const virtualBottomHeight = computed(() =>
 const innerSelectId = nextSelectId()
 const mergedSelectId = computed(() => props.id || innerSelectId)
 const listboxId = computed(() => `${mergedSelectId.value}_list`)
-/** 选项 DOM id：与 antd 同构 `${id}_list_${扁平下标}`，供 aria-activedescendant 指向 */
+/** 选项 DOM id：`${id}_list_${扁平下标}`，供 aria-activedescendant 指向 */
 function optionDomId(optionIndex: number): string {
   return `${listboxId.value}_${optionIndex}`
 }
@@ -863,7 +863,7 @@ const activeDescendantId = computed(() =>
     ? optionDomId(activeOptionIndex.value)
     : undefined
 )
-/** 屏幕阅读器播报文本：面板关闭时聚合已选内容（同 antd BaseSelect 的隐藏 aria-live 节点） */
+/** 屏幕阅读器播报文本：面板关闭时聚合已选内容（隐藏 aria-live 节点同款） */
 const screenReaderText = computed(() => {
   if (mergedOpen.value) return ''
   return selectedOptions.value
@@ -876,7 +876,7 @@ const screenReaderText = computed(() => {
     .filter((text) => text !== '')
     .join(', ')
 })
-// 空态内容是否存在：显式传 null 表示「不提供空态」，此时选项为空不展开面板（antd 口径）
+// 空态内容是否存在：显式传 null 表示「不提供空态」，此时选项为空不展开面板（约定）
 const hasNotFoundContent = computed(() => props.notFoundContent !== null)
 const emptyListContent = computed(() => !hasNotFoundContent.value && displayOptions.value.length === 0)
 // 面板可见：不仅要打开，还需有空态兜底，否则空列表下会展开一个空壳面板
@@ -885,7 +885,7 @@ const panelVisible = computed(() => mergedOpen.value && !emptyListContent.value)
 const canClear = computed(
   () => props.allowClear && !props.disabled && (!showPlaceholder.value || Boolean(mergedSearchValue.value))
 )
-// 是否处于「有输入文本」状态（antd SingleSelector 口径）：此时隐藏回填内容与占位文本
+// 是否处于「有输入文本」状态（既有口径）：此时隐藏回填内容与占位文本
 const hasTextInput = computed(() => {
   if (!mergedShowSearch.value && !mergedOpen.value) return false
   return Boolean(mergedSearchValue.value) || isComposing.value
@@ -989,10 +989,10 @@ watch(panelVisible, async (visible) => {
   }
 })
 /**
- * 打开面板时的高亮 / 滚动处理 —— 逐条对齐 antd（vc-select/OptionList 的 watch([open, searchValue])）：
+ * 打开面板时的高亮 / 滚动处理 —— 逐条对照既有实现：
  * - **单选模式且已有选中值**：把高亮复位到选中项并滚入可视区；
  * - 其余情形（多选 / 标签，或单选无值）：**不复位** —— 保留用户上次移动的高亮与滚动位置
- *   （antd 的复位分支带 `!multiple && rawValues.size === 1` 前置条件，多选下开合不会打断用户已定位的位置）
+ *   （复位分支带 `!multiple && rawValues.size === 1` 前置条件，多选下开合不会打断用户已定位的位置）
  */
 watch(panelVisible, async (visible) => {
   if (!visible) {
@@ -1071,11 +1071,11 @@ function onContainerScroll(): void {
   }
 }
 /**
- * 代理面板滚轮滚动（对齐 antd vc-virtual-list 的 useFrameWheel + useOriginScroll）。
+ * 代理面板滚轮滚动（组件接管 wheel，使滚动位置与渲染窗口同帧生效）。
  * ⚠️ 原生滚动由浏览器合成线程先行应用，而窗口化渲染在主线程计算：快速滚动时渲染窗口追不上滚动位置，
  * 视口下沿会露出一截尚未渲染的占位区 —— 表现为「面板底部先出现空白间距，随后被文本填充」。
  * 故虚拟滚动生效时接管 wheel：阻止原生滚动，按 delta 自行写 scrollTop，
- * 使滚动位置与渲染窗口在同一帧内一起生效（与 antd 同款做法）；
+ * 使滚动位置与渲染窗口在同一帧内一起生效（沿用既有做法）；
  * 已到边界且方向朝外时不拦截，保留原生滚动链（滚动继续交给上层容器 / 页面）。
  */
 function onPanelWheel(e: WheelEvent): void {
@@ -1089,7 +1089,7 @@ function onPanelWheel(e: WheelEvent): void {
   if (nextTop === container.scrollTop) return
   e.preventDefault()
   container.scrollTop = nextTop
-  // 同任务内同步窗口起点，不等 scroll 事件（对齐 antd syncScrollTop 同时改 DOM 与状态）：
+  // 同任务内同步窗口起点，不等 scroll 事件（同步改 DOM 与状态）：
   // 渲染窗口与滚动位置在同一次「事件 → 微任务渲染」内一起生效，帧内不留空隙
   onContainerScroll()
 }
@@ -1114,7 +1114,7 @@ function bindScrollContainer(): void {
     面板用 v-show 复用同一元素，但浏览器在 display:none 期间会把容器 scrollTop 归零且不恢复（Chrome 实测），
     若只回读真实值，关闭前的偏移就丢了 —— 实测表现为面板重开后一片空白
     （渲染窗口仍按旧偏移切片、容器却停在顶部，可视区里只剩上方占位）。
-    故按收起前记录的位置恢复（跨开合保留，与 antd 一致），再回读一次：
+    故按收起前记录的位置恢复（跨开合保留，与既有实现一致），再回读一次：
     偏移超出新的内容高度时由浏览器夹取，容器位置与渲染窗口始终一致
   */
   if (container.scrollTop !== virtualScrollTop.value) {
@@ -1154,7 +1154,7 @@ async function scrollRowIntoView(rowIndex: number): Promise<void> {
 }
 /**
  * 面板开合状态变更 / 用户开合请求的统一上报：
- * open 为纯受控属性（显隐由外部驱动），组件同时派发 openChange（项目惯例）与 dropdownVisibleChange（antd 同名事件）
+ * open 为纯受控属性（显隐由外部驱动），组件同时派发 openChange（项目惯例）与 dropdownVisibleChange（对应的对外事件）
  */
 function emitPanelChange(open: boolean): void {
   emits('openChange', open)
@@ -1180,7 +1180,7 @@ function openPanel(): void {
     setPanelOpen(true)
   }
 }
-/** 收起面板：单选同时复位搜索文本（重开面板不应残留上次输入）；多选保留（重开面板时恢复，antd 口径） */
+/** 收起面板：单选同时复位搜索文本（重开面板不应残留上次输入）；多选保留（重开面板时恢复） */
 function closePanel(): void {
   setPanelOpen(false)
   if (mergedShowSearch.value && !isMultiple.value) {
@@ -1196,7 +1196,7 @@ function setSearchValue(value: string): void {
 }
 /**
  * tokenSeparators 分词：命中分隔符时返回拆分结果（过滤空串），未命中返回 null
- * （与 antd 的 getSeparatedContent 一致：只输入分隔符会得到空数组，此时清空输入但不产生新值）
+ * （分词实现一致：只输入分隔符会得到空数组，此时清空输入但不产生新值）
  */
 function splitByTokenSeparators(text: string): string[] | null {
   const separators = props.tokenSeparators ?? []
@@ -1214,7 +1214,7 @@ function splitByTokenSeparators(text: string): string[] | null {
   })
   return matched ? result.filter((item) => item) : null
 }
-/** 分词结果转为选中值：tags 模式直接建标签，multiple 模式按 label 匹配已有选项取其 value（antd 口径） */
+/** 分词结果转为选中值：tags 模式直接建标签，multiple 模式按 label 匹配已有选项取其 value（约定） */
 function submitSeparatedValues(words: string[]): void {
   const labelField = mergedFieldNames.value.label
   const patchValues: SelectValue[] = isTagsMode.value
@@ -1225,7 +1225,7 @@ function submitSeparatedValues(words: string[]): void {
         .filter((value): value is SelectValue => value !== undefined)
   emitMultipleChange(Array.from(new Set([...valueList.value, ...patchValues])))
   patchValues.forEach((value) => emits('select', wrapValue(value), findOption(value) ?? createFallbackOption(value)))
-  // 分词完成即收起面板（antd 行为：粘贴 / 输入分隔符视为一轮输入结束）
+  // 分词完成即收起面板（行为：粘贴 / 输入分隔符视为一轮输入结束）
   setPanelOpen(false)
 }
 /** 搜索文本变更：多选下先尝试分词，未命中分词时更新文本、派发 search、并展开面板 */
@@ -1270,7 +1270,7 @@ function onBlur(e?: FocusEvent): void {
   if (props.disabled) return
   const related = (e?.relatedTarget as Node | null) ?? null
   if (related && (selectPanelRef.value?.contains(related) || selectWrapRef.value?.contains(related))) return
-  // 多选下焦点真正离开组件时处理残留的搜索文本：tags 提交为新标签，multiple 静默清空（antd 口径）
+  // 多选下焦点真正离开组件时处理残留的搜索文本：tags 提交为新标签，multiple 静默清空（约定）
   if (isMultiple.value && mergedSearchValue.value) {
     if (isTagsMode.value) {
       submitTag()
@@ -1298,7 +1298,7 @@ function onMousedown(e: MouseEvent): void {
  * 面板 mousedown：阻止面板内的非输入类区域抢走触发器焦点
  *
  * 与触发器同理，不阻止默认行为会让 input 失焦触发 blur 关闭面板；
- * 但 dropdownRender 等自定义区域内的输入类元素（antd 扩展菜单即此模式）必须拿到焦点，故对其放行 ——
+ * 但 dropdownRender 等自定义区域内的输入类元素（扩展菜单即此模式）必须拿到焦点，故对其放行 ——
  * 随之而来的 blur 由 onBlur 的「焦点是否仍在面板内」判定放行，面板保持展开
  */
 function onPanelMousedown(e: MouseEvent): void {
@@ -1343,7 +1343,7 @@ function onHover(option: Option): void {
   if (option.disabled) return
   hoverValue.value = getOptionValue(option) ?? null
 }
-/** 多选值是否发生变化：长度一致且逐项相等时视为未变化（与 antd 的 change 触发条件一致） */
+/** 多选值是否发生变化：长度一致且逐项相等时视为未变化（change 触发条件） */
 function isValueListChanged(nextValues: SelectValue[]): boolean {
   const current = valueList.value
   return nextValues.length !== current.length || nextValues.some((item, index) => item !== current[index])
@@ -1369,7 +1369,7 @@ function removeTag(option: Option): void {
   emits('deselect', wrapValue(value), option)
   selectFocus()
 }
-/** tags 模式：把当前搜索文本提交为新标签（回车 / 失焦时触发，对齐 antd 的 submit 分支） */
+/** tags 模式：把当前搜索文本提交为新标签（回车 / 失焦时触发） */
 function submitTag(): void {
   const text = (mergedSearchValue.value || '').trim()
   if (!text) return
@@ -1379,7 +1379,7 @@ function submitTag(): void {
   emits('select', wrapValue(value), findOption(value) ?? createFallbackOption(value))
   setSearchValue('')
 }
-/** 选中下拉项：单选选中后回填并收起面板；多选切换选中并保持面板展开（antd 口径） */
+/** 选中下拉项：单选选中后回填并收起面板；多选切换选中并保持面板展开（约定） */
 function onSelectOption(option: Option, index: number): void {
   const value = getOptionValue(option)
   if (!isMultiple.value) {
@@ -1408,7 +1408,7 @@ function onSelectOption(option: Option, index: number): void {
     emits('select', wrapValue(value), option)
     hoverValue.value = value
   }
-  // 选中项后清空搜索文本（antd 口径：autoClearSearchValue 为 true 时选中与反选都清空）
+  // 选中项后清空搜索文本（约定：autoClearSearchValue 为 true 时选中与反选都清空）
   if (props.autoClearSearchValue) {
     setSearchValue('')
   }
@@ -1435,18 +1435,18 @@ function onClear(e?: MouseEvent): void {
   selectFocus()
 }
 // 键盘导航：↑↓ 移动高亮（跳过禁用项、环形，随即滚入可视区）、Enter 选中高亮项、Esc 关闭面板
-// 面板未打开时 ↑↓（或任意可打印字符）打开面板，与 antd 的键盘行为保持一致
+// 面板未打开时 ↑↓（或任意可打印字符）打开面板，沿用既有的键盘行为
 function onKeydown(e: KeyboardEvent): void {
   emits('inputKeyDown', e)
   if (props.disabled) return
   // 输入法组合中的按键全部交由 IME 处理，不驱动面板：Enter 是「确认候选 / 上屏」、↑↓ 是「切换候选页」、
   // Backspace 是「删除组合文本」——若继续执行，Enter 会误选中当前高亮项（且随后的 compositionend
   // 又把搜索文本写回输入框，表现为「凭空选中一项 + 输入框残留文本」）。
-  // antd 以 keyCode(which) 判定 Enter，而 Chromium 对「被 IME 消费的按键」给出 keyCode 229，天然规避了
-  // 该问题；antd 在 tags 的提交分支亦显式检查了 !compositionStatus（vc-select/Selector/index.tsx）。
+  // 以 keyCode(which) 判定 Enter 可天然规避该问题：Chromium 对「被 IME 消费的按键」给出 keyCode 229，
+  // 且既有实现在 tags 的提交分支亦显式检查了 !compositionStatus。
   if (e.isComposing || isComposing.value) return
   // 退格锁：记录本次按键前的搜索文本是否非空（上一次按键结束时写入），
-  // 避免「清空搜索文本的同一次按键」紧接着又删掉一个标签（antd 的 useLock 语义）
+  // 避免「清空搜索文本的同一次按键」紧接着又删掉一个标签（既有的锁语义）
   const clearLock = backspaceLock.value
   backspaceLock.value = Boolean(mergedSearchValue.value)
   const list = displayOptions.value
@@ -1499,7 +1499,7 @@ function onKeydown(e: KeyboardEvent): void {
     }
     const index = list.findIndex((option) => !option.disabled && getOptionValue(option) === hoverValue.value)
     if (index < 0) {
-      // 无高亮项：tags 模式把输入内容提交为新标签（antd 的 onSearchSubmit 分支）
+      // 无高亮项：tags 模式把输入内容提交为新标签（既有的提交分支）
       if (isTagsMode.value) {
         e.preventDefault()
         submitTag()
@@ -1548,7 +1548,7 @@ function renderNotFoundContent(): VNode | string | VNode[] {
   }
   return h(Empty, { image: 'outlined' })
 }
-/** 多选模式的默认选中图标（对勾，与 antd 的 CheckOutlined 一致） */
+/** 多选模式的默认选中图标（对勾） */
 function renderCheckIcon(): VNode {
   return h(
     'svg',
@@ -1570,7 +1570,7 @@ function renderCheckIcon(): VNode {
   )
 }
 /**
- * 选项选中态图标：多选模式默认渲染对勾；单选仅在提供 menuItemSelectedIcon（prop 或插槽）时渲染（antd 口径）
+ * 选项选中态图标：多选模式默认渲染对勾；单选仅在提供 menuItemSelectedIcon（prop 或插槽）时渲染（约定）
  */
 function renderOptionState(option: Option): VNode | null {
   const icon = props.menuItemSelectedIcon
@@ -1601,7 +1601,7 @@ function renderItemContent(option: Option, fallback?: unknown): string | VNode[]
 // 选项节点渲染：默认菜单与 dropdownRender 共用同一实现，避免两处重复
 // key 必传：虚拟滚动下窗口滑动时，缺 key 会让 Vue 按下标复用 DOM 节点 ——
 // 同一节点被换上别的选项的类名，配合 .select-option 的 background 过渡即表现为「已选项蓝色标记闪动」
-// （对齐 antd vc-virtual-list 的按 key 渲染：窗口滑动只增删两端的行，既有行节点原地保留）
+// （按 key 渲染：窗口滑动只增删两端的行，既有行节点原地保留）
 function renderOptionNode(option: Option, index: number, key: string): VNode {
   const value = getOptionValue(option)
   const label = getOptionLabel(option)
@@ -1617,7 +1617,7 @@ function renderOptionNode(option: Option, index: number, key: string): VNode {
           'option-hover': !option.disabled && value === hoverValue.value,
           'option-selected': selected,
           'option-disabled': option.disabled,
-          // 分组子选项：左缩进一级（与 antd 的 -option-grouped 同款）
+          // 分组子选项：左缩进一级
           'option-grouped': optionGroups.value.has(String(value))
         }
       ],
@@ -1774,7 +1774,7 @@ defineExpose({
     @mouseleave="onMouseLeave"
     @click="toggleSelect"
   >
-    <!-- 屏幕阅读器播报：面板关闭时聚合已选内容（同 antd 隐藏的 aria-live 节点），视觉上不可见 -->
+    <!-- 屏幕阅读器播报：面板关闭时聚合已选内容（隐藏 aria-live 节点），视觉上不可见 -->
     <span v-if="screenReaderText" class="select-sr-only" aria-live="polite">{{ screenReaderText }}</span>
     <div ref="selectContentRef" class="select-content-container">
       <!-- 多选 / 标签：标签列表。被折叠的 tag 仍渲染在 DOM 中（以绝对定位隐藏），供 responsive 量取真实宽度 -->
@@ -2061,7 +2061,7 @@ defineExpose({
     height: 100%;
     outline: none;
     transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-    /* 用于与空内容做基线对齐（antd 同款处理：`''` 与 undefined 值的高度一致） */
+    /* 用于与空内容做基线对齐（`''` 与 undefined 值的高度一致） */
     &::after {
       display: inline-block;
       width: 0;
@@ -2172,7 +2172,7 @@ defineExpose({
     pointer-events: auto;
   }
 }
-/* 展开时回填内容降为占位色，与 antd 一致 */
+/* 展开时回填内容降为占位色，与既有实现一致 */
 .select-open:not(.select-disabled) {
   .select-item {
     color: rgba(0, 0, 0, 0.25);
@@ -2229,7 +2229,7 @@ defineExpose({
   }
 }
 .select-borderless {
-  /* 无边框覆盖禁用态：antd 的 &-borderless 对背景 / 边框 / 阴影用 !important 覆盖一切（禁用态也不例外），
+  /* 无边框覆盖禁用态：无边框态需对背景 / 边框 / 阴影覆盖一切（禁用态也不例外），
      故此处以「根元素双类」提升特异性（高于 .select-disabled .select-content-container），
      使「无边框 + 禁用」仍是无边框（仅文字转灰 + not-allowed 光标） */
   &.select-wrap .select-content-container {
@@ -2289,10 +2289,10 @@ defineExpose({
 }
 /* ==================== 多选 / 标签 ==================== */
 .select-wrap.select-multiple {
-  /* 高度自适应：tag 换行时触发器随之增高（antd 同款） */
+  /* 高度自适应：tag 换行时触发器随之增高 */
   height: auto;
   min-height: var(--select-height);
-  /* tag 高度随 size 变化（antd 口径：控件高度 - 8px） */
+  /* tag 高度随 size 变化（约定：控件高度 - 8px） */
   --select-tag-height: calc(var(--select-height) - 8px);
   .select-content-container {
     /* 空内容时的基线高度由容器自身保底（替代下方的 \a0 占位） */
@@ -2302,23 +2302,23 @@ defineExpose({
     padding: 1px 4px;
     cursor: text;
     /* 丢弃基线的 \a0 占位：它是 flex 子项，tag 换行时会被带到「输入框所在的那一行」，
-       把该行由 24px 抬到 28px —— 实测 4 标签场景本项目 60px / antd 56px。
-       antd 因 tags 与输入框同处 -selection-overflow（占位与其同级）而不受影响，
+       把该行由 24px 抬到 28px —— 实测 4 标签场景触发器高 60px。
+       tags 与输入框同处一个溢出容器（占位与其同级）故不受影响，
        此处以「容器 min-height 保底」等价达成同一结果 */
     &::after {
       content: none;
     }
   }
-  /* 显示箭头 / 支持清除时为右侧图标预留宽度（antd 口径：图标 12px + 内边距 12px） */
+  /* 显示箭头 / 支持清除时为右侧图标预留宽度（约定：图标 12px + 内边距 12px） */
   &.select-show-arrow .select-content-container,
   &.select-allow-clear .select-content-container {
     padding-right: 24px;
   }
-  /* 输入框内联在 tag 列表之后（antd 布局：tag 列表 + 输入框）
+  /* 输入框内联在 tag 列表之后（布局：tag 列表 + 输入框）
      ① 基尺寸取 0：若按内容基宽（auto）参与换行计算，输入框会把首行剩余空间挤满而自身换到第二行，
         连基线占位一起顶下去 —— 实测触发器高度由 32px 变成 58px（多出一整行）。
-        取 0 后与 antd 行为一致：先按 tag 排布，再把「本行剩余宽度」增长给输入框
-     ② 左间距 8px：仅「搜索框排在标签之前（无标签）」时需要（antd 同款），缺少它时光标会紧贴容器左内边距；
+        取 0 后先按 tag 排布，再把「本行剩余宽度」增长给输入框
+     ② 左间距 8px：仅「搜索框排在标签之前（无标签）」时需要，缺少它时光标会紧贴容器左内边距；
         跟在标签之后时由标签自身的 margin-right 提供间隔，故紧随其后的规则把非首位的搜索框左间距归零 */
   .select-content-container .select-search {
     position: relative;
@@ -2341,9 +2341,9 @@ defineExpose({
       caret-color: auto;
     }
   }
-  /* 搜索框前面已有标签时不再叠加左间距：antd 的该间距只服务于「搜索框在最前」的场景，
+  /* 搜索框前面已有标签时不再叠加左间距：该间距只服务于「搜索框在最前」的场景，
      跟在标签之后时拉开距离的是标签自身的 margin-right 4px
-     （实测：本项目 12px / antd 4px → 归零后与 antd 对齐） */
+     （实测：归零后该间距不再叠加） */
   .select-content-container .select-search:not(:first-child) {
     margin-left: 0;
   }
@@ -2357,7 +2357,7 @@ defineExpose({
     line-height: 1.5714285714285714;
   }
 }
-/* 标签本体：与 antd 的 selection-item 对齐（背景 / 边框 / 内边距 / 圆角） */
+/* 标签本体：（背景 / 边框 / 内边距 / 圆角与选中项一致） */
 .select-selection-item {
   display: flex;
   flex: none;
@@ -2435,7 +2435,7 @@ defineExpose({
   border-radius: 8px;
   overflow: hidden;
   background-color: #fff;
-  /* 面板基准字号：antd 在下拉根节点声明 fontSize: token.fontSize（14px），
+  /* 面板基准字号：下拉根节点声明 fontSize: 14px，
      本项目原先未声明 → 空态等「非选项」内容会继承页面字号（演示页为 16px，比选项大一号） */
   font-size: 14px;
   outline: none;
@@ -2448,7 +2448,7 @@ defineExpose({
      直接写后代选择器会全部失配（表现为「面板没有样式」），故以 :deep() 命中深层节点 */
   :deep(.select-options-panel) {
     /* 关闭滚动越界回弹与滚动链：否则触控板惯性滚动会带着列表冲出滚动区，面板底部露出空白
-       （antd 以 transform 位移实现列表滚动，内容天然不越界，故需在此显式关闭原生回弹）。
+       （若以 transform 位移实现列表滚动则内容天然不越界，本库用原生滚动故需在此显式关闭回弹）。
        ⚠️ 必须是 none 而非 contain —— contain 只切断向父级的滚动链，元素自身的弹性回弹照旧发生，
        用 contain 时「滚到底仍有留白」依旧存在 */
     .scrollbar-container {
@@ -2457,8 +2457,8 @@ defineExpose({
          与窗口计算互相追赶形成抖动（本项目的位置由下标算出，不需要浏览器补偿） */
       overflow-anchor: none;
     }
-    /* 分组标题：antd 口径（次级文字色 + 小字号 + 不参与交互）——
-       高度取选项行高控制值 32px、行高取 antd 全局 lineHeight 1.5714，与选项行等高 */
+    /* 分组标题：（次级文字色 + 小字号 + 不参与交互）——
+       高度取选项行高控制值 32px、行高取全局行高 1.5714，与选项行等高 */
     .select-option-group {
       min-height: 32px;
       padding: 5px 12px;
@@ -2467,7 +2467,7 @@ defineExpose({
       line-height: 1.5714285714285714;
       cursor: default;
     }
-    /* 分组子选项左缩进一级：对齐 antd 的 -option-grouped（paddingInlineStart = controlPaddingHorizontal × 2 = 24px） */
+    /* 分组子选项左缩进一级（缩进 24px） */
     .select-option.option-grouped {
       padding-inline-start: 24px;
     }
@@ -2501,7 +2501,7 @@ defineExpose({
     .option-selected {
       font-weight: 600;
       background: var(--select-option-bg-color-active);
-      /* 已选项的选中态图标使用主色（antd 口径：colorPrimary） */
+      /* 已选项的选中态图标使用主色（约定：colorPrimary） */
       .select-option-state {
         color: var(--select-primary-color);
       }
@@ -2515,11 +2515,11 @@ defineExpose({
     }
   }
   :deep(.options-panel-empty) {
-    /* 不自设 min-width：空态宽度受面板约束，撑破宽度会被 overflow: hidden 裁掉内容（与 antd 的空态一致，随面板换行）。
+    /* 不自设 min-width：空态宽度受面板约束，撑破宽度会被 overflow: hidden 裁掉内容（随面板换行）。
        左右内边距取 8px 而非 16px：面板等宽时留给内容的宽度有限，16px 会把「暂无数据」挤成两行。
-       不设 text-align: center（antd 同款）：默认空态由 Empty 组件自身 text-align: center 居中；
+       不设 text-align: center：默认空态由 Empty 组件自身 text-align: center 居中；
        使用者传入的自定义内容（字符串或 VNode，如 notFoundContent 放 Spin / 放文案）一律左对齐，
-       与 antd 的 `&-empty`（仅声明 color）保持一致 */
+       空态仅声明 color */
     padding: 9px 8px;
     .empty-wrap {
       margin-block: 8px;

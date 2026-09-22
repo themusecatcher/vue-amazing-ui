@@ -7,7 +7,7 @@ import type { Option } from 'components/select/Select.vue'
 /**
  * 多选 / 标签模式（P2）的契约回归。
  *
- * 对齐 antd 的关键行为：
+ * 关键行为约定：
  * - 点击选项在 multiple / tags 下为**切换选中**（不关面板），change 返回数组且第 3 参 index 不适用（undefined）
  * - 移除标签（移除按钮 / 退格键 / 清除）逐个派发 `deselect`
  * - tags 模式把输入内容提交为新标签（回车 / 失焦），并把不在 options 中的已选值补成伪选项
@@ -354,8 +354,8 @@ describe('Select 多选模式的标签折叠', () => {
 })
 
 /**
- * 面板开合时的高亮 / 滚动保持 —— 对齐 antd：
- * antd 的「打开即复位到选中项并滚入可视区」带 `!multiple && rawValues.size === 1` 前置条件
+ * 面板开合时的高亮 / 滚动保持 ——
+ * 「打开即复位到选中项并滚入可视区」带 `!multiple && rawValues.size === 1` 前置条件
  * （components/vc-select/OptionList.tsx），故单选复位、多选保留用户上次移动的高亮与滚动位置。
  *
  * 本组用例显式关闭虚拟滚动（virtual: false）：30 项在默认配置下会触发窗口化渲染，
@@ -406,7 +406,7 @@ describe('Select 面板开合时的高亮与滚动保持', () => {
     expect(scrollContainer.scrollTop).toBe(400)
   })
 
-  it('单选：打开时复位到选中项（antd 的 !multiple 分支）', async () => {
+  it('单选：打开时复位到选中项（!multiple 分支）', async () => {
     wrapper = mount(Select, {
       attachTo: document.body,
       global: { stubs: { transition: false } },

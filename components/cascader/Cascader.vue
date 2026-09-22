@@ -58,7 +58,7 @@ const props = withDefaults(defineProps<Props>(), {
   scrollbarProps: () => ({}),
   value: () => []
 })
-// Select 的 placement 已对齐 antd 四向取值，此处把级联自身的两向取值映射过去（左对齐口径，行为与映射前一致）
+// Select 的 placement 已改为四向取值，此处把级联自身的两向取值映射过去（左对齐口径，行为与映射前一致）
 const selectPlacement = computed<'bottomLeft' | 'topLeft'>(() => (props.placement === 'top' ? 'topLeft' : 'bottomLeft'))
 const values = ref<(string | number)[]>([]) // 级联 value 值数组
 const labels = ref<(string | number)[]>([]) // 级联 label 文本数组

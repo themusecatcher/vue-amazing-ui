@@ -7,10 +7,10 @@ import type { Option } from 'components/select/Select.vue'
 /**
  * 虚拟滚动（P4）与 ARIA 语义的契约回归。
  *
- * 对齐 antd 的关键行为：
+ * 关键行为约定：
  * - 开启虚拟滚动（默认）且内容高于面板时**只渲染可视区行**，未渲染区间用等高空占位撑出真实滚动高度
  * - `virtual: false` 全量渲染；`dropdownMatchSelectWidth: false`（面板宽度自适应）时自动关闭虚拟滚动
- *   （antd vc-select/Select.tsx:549 → `virtual !== false && dropdownMatchSelectWidth !== false`）
+ *   （`virtual !== false && dropdownMatchSelectWidth !== false`）
  * - `listItemHeight` 决定行高换算；分组标题同样占一行
  * - 高亮行始终落在渲染窗口内（`aria-activedescendant` 需指向真实存在的节点）
  * - `scrollTo` / 键盘导航按下标定位，虚拟滚动下目标行未渲染同样有效
@@ -184,7 +184,7 @@ describe('Select 虚拟滚动（大数据量窗口化渲染）', () => {
     })
   })
 
-  it('虚拟滚动下 wheel 由组件代理：阻止原生滚动并自行驱动（对齐 antd useFrameWheel）', async () => {
+  it('虚拟滚动下 wheel 由组件代理：阻止原生滚动并自行驱动', async () => {
     await mountAndOpen({ options: BIG_OPTIONS })
     const container = document.querySelector('.scrollbar-container') as HTMLElement
     // happy-dom 无布局：显式给出滚动几何，供 wheel 代理换算可滚动区间
@@ -198,7 +198,7 @@ describe('Select 虚拟滚动（大数据量窗口化渲染）', () => {
     await flush()
     expect(optionTexts()[0]).toBe('选项 10')
 
-    // 已在顶部继续向上滚：不拦截，保留原生滚动链（对齐 antd useOriginScroll）
+    // 已在顶部继续向上滚：不拦截，保留原生滚动链（边界放行）
     container.scrollTop = 0
     await flush()
     const up = new WheelEvent('wheel', { deltaY: -320, cancelable: true, bubbles: true })
@@ -232,7 +232,7 @@ describe('Select 虚拟滚动（大数据量窗口化渲染）', () => {
     expect(placeholderHeights()).toEqual([])
   })
 
-  it('dropdownMatchSelectWidth 为 false 时自动关闭虚拟滚动（对齐 antd）', async () => {
+  it('dropdownMatchSelectWidth 为 false 时自动关闭虚拟滚动', async () => {
     const options = buildOptions(60)
     await mountAndOpen({ options, dropdownMatchSelectWidth: false })
     expect(optionTexts().length).toBe(options.length)

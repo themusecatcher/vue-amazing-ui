@@ -6,11 +6,11 @@ import type { Option } from 'components/select/Select.vue'
 import SelectOption from 'components/select/select-option'
 
 /**
- * labelInValue 契约（对齐 antd）：
+ * labelInValue 契约：
  * - v-model:value 入参可为 `{ label, value, key }` 对象：内部按 `value ?? key` 归一为原始值参与匹配
  * - 回填文本优先取入参 label（远程回显场景：label 可能已不在 options 中）
  * - change / select / deselect 的 value 位在开启时包装为 `{ label, value, key, originLabel }`
- * - 子组件式写法下 originLabel 保留默认插槽函数（antd 文档口径）
+ * - 子组件式写法下 originLabel 保留默认插槽函数（文档口径）
  * - 关闭时行为与既有实现完全一致（回归保障）
  */
 const OPTIONS: Option[] = [

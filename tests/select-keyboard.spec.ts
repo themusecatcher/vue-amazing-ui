@@ -114,7 +114,7 @@ describe('Select 键盘导航', () => {
     await pressKey('Enter')
 
     expect(wrapper.emitted('update:value')?.at(-1)).toEqual(['shanghai'])
-    // change 第 2 参为完整 option 对象（对齐 antd），第 3 参为展示列表下标
+    // change 第 2 参为完整 option 对象，第 3 参为展示列表下标
     expect(wrapper.emitted('change')?.at(-1)).toEqual(['shanghai', { label: '上海市', value: 'shanghai' }, 1])
     expect(wrapper.emitted('select')?.at(-1)).toEqual(['shanghai', { label: '上海市', value: 'shanghai' }])
     expect(isPanelVisible()).toBe(false)
@@ -126,7 +126,7 @@ describe('Select 键盘导航', () => {
       global: { stubs: { transition: false } },
       props: {
         showSearch: true,
-        // 默认按 value 字段过滤（对齐 antd），按文本搜索需显式指定 optionFilterProp
+        // 默认按 value 字段过滤（默认口径），按文本搜索需显式指定 optionFilterProp
         optionFilterProp: 'label',
         options: [
           { label: '苹果', value: 'apple' },

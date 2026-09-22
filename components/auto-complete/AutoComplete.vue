@@ -190,7 +190,7 @@ function childSlotProps(item: string | number | Option): Option {
 }
 // 过滤后的选项数据（保留分组结构，过滤后空组剔除）
 const filteredData = computed<(string | number | Option | GroupOption)[]>(() => {
-  // 输入法合成中不参与本地筛选，显示全部数据源，待合成结束后再按最终输入筛选，与官网行为一致
+  // 输入法合成中不参与本地筛选，显示全部数据源，待合成结束后再按最终输入筛选
   if (props.filterOption === false || isComposing.value) {
     return props.options
   }
@@ -221,7 +221,7 @@ const flattenOptions = computed<Option[]>(() => {
   })
   return result
 })
-// 面板是否可见：打开状态且有可展示的选项（无选项时隐藏，与官网一致），单一布尔驱动 Transition 保证隐藏动画完整
+// 面板是否可见：打开状态且有可展示的选项（无选项时隐藏），单一布尔驱动 Transition 保证隐藏动画完整
 const panelVisible = computed<boolean>(() => showOptions.value && flattenOptions.value.length > 0)
 // 面板渲染用的选项数据（保留态）：有选项时同步 filteredData，选项变空时保留上一次内容，避免面板隐藏动画期间内容突然清空导致高度塌缩打断 leave 动画
 const displayData = ref<(string | number | Option | GroupOption)[]>([])
@@ -397,7 +397,7 @@ function onInput(e: Event): void {
   lastUserValue.value = input
   // 始终同步 value 保证输入框回显（含合成中的拼音）
   emit('update:value', input)
-  // 输入法合成中仅回显，不触发 search/filter，待合成结束(compositionend)统一触发，与官网行为一致
+  // 输入法合成中仅回显，不触发 search/filter，待合成结束(compositionend)统一触发
   if (isComposing.value) {
     return
   }
@@ -458,7 +458,7 @@ function onKeydown(e: KeyboardEvent): void {
     }
     e.preventDefault()
     const currentIdx = list.findIndex((option) => !option.disabled && option.value === hoverValue.value)
-    // 环形查找下一个未禁用项：从当前项的下一个开始循环一圈；无高亮时向下从第一项、向上从最后一项开始（与官网一致）
+    // 环形查找下一个未禁用项：从当前项的下一个开始循环一圈；无高亮时向下从第一项、向上从最后一项开始
     const start =
       e.key === 'ArrowDown'
         ? currentIdx === -1
@@ -1011,7 +1011,7 @@ defineExpose({
       &.option-grouped {
         padding-left: 24px;
       }
-      // 自定义选项内容为 flex 布局时，允许子项收缩并对超宽文本省略号截断，与官网表现一致
+      // 自定义选项内容为 flex 布局时，允许子项收缩并对超宽文本省略号截断
       :deep(> div) {
         min-width: 0;
         > span,

@@ -8,12 +8,12 @@ import SelectOption from 'components/select/select-option'
 import SelectOptGroup from 'components/select/select-optgroup'
 
 /**
- * 子组件式选项契约（对齐 antd 的 `<a-select-option>` / `<a-select-optgroup>`）：
+ * 子组件式选项契约（`SelectOption` / `SelectOptGroup` 标记组件）：
  * - 选项数据由 default 插槽解析而来：值为 value 属性（缺省回落 vnode key），文本为默认插槽内容
  * - 插槽文本同时以「纯文本」形式进入 label 字段，使搜索过滤 / title / tag 截断等文本场景可复用
  * - 富内容（图标 + 文本）由插槽函数原样渲染
  * - 分组以 `<SelectOptGroup>` 承载：标题取 #label 插槽 > label 属性 > key，组内子项递归解析
- * - default 插槽存在时以插槽为准（本项目「插槽优先于 prop」约定，antd 为 options 优先）
+ * - default 插槽存在时以插槽为准（本项目「插槽优先于 prop」约定）
  */
 const BASE_OPTIONS: Option[] = [{ label: 'FromOptions', value: 'from-options' }]
 
@@ -226,7 +226,7 @@ describe('Select 子组件式选项（default 插槽）', () => {
 
     await clickOption(0)
     expect(wrapper.emitted('update:value')?.at(-1)).toEqual([['jack']])
-    // 多选选中后面板保持展开（antd 口径）
+    // 多选选中后面板保持展开（约定）
     expect(document.querySelectorAll('.select-option').length).toBe(2)
   })
 })
@@ -301,7 +301,7 @@ describe('Select 子组件式分组（SelectOptGroup）', () => {
     expect(document.querySelector('.select-option-group')?.textContent?.trim()).toBe('Manager')
   })
 
-  it('label 属性与 #label 插槽同时提供时以 label 属性为准（antd 口径）', async () => {
+  it('label 属性与 #label 插槽同时提供时以 label 属性为准（label 属性优先）', async () => {
     wrapper = mount(Select, {
       attachTo: document.body,
       global: { stubs: { transition: false } },

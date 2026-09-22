@@ -5,7 +5,7 @@ import Select from 'components/select/Select.vue'
 import type { Option } from 'components/select/Select.vue'
 
 /**
- * 分组子选项（`fieldNames.options`）契约（对齐 antd 的 OptGroup / options.options）：
+ * 分组子选项（`fieldNames.options`）契约（分组标题与子选项）：
  * - 分组条目自身不可选中，只渲染标题；组内子选项按扁平常量顺序参与选中 / 键盘导航 / 过滤
  * - 分组标题不占「展示下标」：change 第 3 参仍等于扁平候选中的下标
  * - 过滤时按组内选项命中，未命中的组连同标题整体消失
@@ -74,7 +74,7 @@ describe('Select 分组子选项（fieldNames.options）', () => {
     expect(panelTexts()).toEqual(['Manager', 'Jack', 'Lucy', 'Engineer', 'Yiminghe'])
     // 分组标题不可高亮：默认高亮为第一组的首个子项
     expect(hoverTexts()).toEqual(['Jack'])
-    // 子选项带 option-grouped 类（左缩进一级，对齐 antd 的 -option-grouped），分组标题不带
+    // 子选项带 option-grouped 类（左缩进一级），分组标题不带
     expect(document.querySelectorAll('.select-option.option-grouped')).toHaveLength(3)
     expect(document.querySelector('.select-option-group.option-grouped')).toBeNull()
   })

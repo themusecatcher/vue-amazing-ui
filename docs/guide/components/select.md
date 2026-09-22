@@ -216,7 +216,7 @@ const countryOptions: SelectOption[] = [
 ]
 // 定制回填内容的多选示例段
 const countryMultipleValue = ref<SelectProps['value']>(['china'])
-// 大数据：10 万项验证虚拟滚动（打开面板只渲染可视区选项；与 antd 官网 big-data 用例同规模）
+// 大数据：10 万项验证虚拟滚动（打开面板只渲染可视区选项）
 // label 用「城市 + 6 位序号」而非裸字符串，滚动时更易辨识
 const bigDataCities = ['北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安', '南京', '重庆']
 const bigDataOptions: SelectOption[] = Array.from({ length: 100000 }, (_, index) => ({
@@ -1944,6 +1944,9 @@ const options: SelectOption[] = []
 | listItemHeight | 虚拟滚动的列表项高度，单位 `px`，需与选项实际行高一致（自定义选项高矮时调整） | number | 32 |
 | loading | 是否处于加载状态，展开面板时后缀图标变为加载中 | boolean | false |
 | maxDisplay | 下拉面板最多能展示的项数，超过后滚动显示 | number | 8 |
+| maxTagCount | 最多显示多少个 `tag`，超出后折叠为省略提示；设为 `'responsive'` 时按容器宽度自动折叠（有性能消耗，不建议在大表单场景下使用） | number &#124; 'responsive' | undefined |
+| maxTagPlaceholder | 隐藏 `tag` 时显示的内容，为函数时接收被折叠的选项数组 | string &#124; VNode &#124; ((omittedValues: [SelectOption](#option-type)[]) => VNode) | undefined |
+| maxTagTextLength | `tag` 上显示文本的最大长度，超出部分以 `...` 截断 | number | undefined |
 | menuItemSelectedIcon | 自定义当前选中的条目图标 | VNode &#124; (() => VNode) | undefined |
 | mode | 设置多选模式，`'multiple'` 为多选，`'tags'` 为标签（可输入并创建新条目），不传为单选 | 'multiple' &#124; 'tags' | undefined |
 | notFoundContent | 当下拉列表为空时显示的内容，传 `null` 时不展开空面板 | string &#124; VNode &#124; null | undefined |
@@ -1962,6 +1965,7 @@ const options: SelectOption[] = []
 | size | 选择器大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | status | 设置校验状态 | 'error' &#124; 'warning' | undefined |
 | suffixIcon | 自定义的选择框后缀图标 | VNode &#124; (() => VNode) | undefined |
+| tagRender | 自定义 `tag` 的渲染内容，作用域参数含 `label`（已按 `maxTagTextLength` 截断）/ `value` / `disabled` / `closable` / `onClose` / `option` | (params: { label: unknown, value?: string &#124; number, disabled: boolean, closable: boolean, onClose: (e?: MouseEvent) => void, option: [SelectOption](#option-type) }) => VNode | undefined |
 | to | 下拉面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
 | tokenSeparators | 自动分词的分隔符，输入命中后按分隔符拆分并直接选中 | string[] | [] |
 | value <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值，`mode` 为 `multiple` / `tags` 时为数组；`labelInValue` 开启时为 `{ label, value, key, originLabel }` 对象 | number &#124; string &#124; [SelectLabeledValue](#labeledvalue-type) &#124; (number &#124; string &#124; [SelectLabeledValue](#labeledvalue-type))[] | undefined |
@@ -2008,7 +2012,7 @@ const options: SelectOption[] = []
 | :---- | :---------------------- | :----- | :-------- |
 | label | 分组标题，优先于 `#label` 插槽 | string | undefined |
 
-> ⚠️ 与 [Ant Design Vue](https://www.antdv.com/components/select-cn/) 的差异：`options` 与默认插槽（子组件）同时提供时，本库**以子组件为准**（antd 为 `options` 优先），沿用本库「插槽优先于 prop」的统一约定。
+> ℹ️ `options` 与默认插槽（子组件）同时提供时，本库**以子组件为准**，沿用本库「插槽优先于 `prop`」的统一约定。
 
 ## Events
 
@@ -2043,7 +2047,7 @@ const options: SelectOption[] = []
 | notFoundContent      | 自定义空数据内容                                                         | v-slot:notFoundContent                              |
 | dropdownRender       | 自定义下拉框内容，作用域参数 `menuNode` 为内置菜单节点                     | v-slot:dropdownRender="{ menuNode }"                |
 | tagRender            | 自定义 `tag` 的渲染内容，作用域参数同 `tagRender` 属性                     | v-slot:tagRender="{ label, value, disabled, closable, onClose, option }" |
-| maxTagPlaceholder    | 隐藏 `tag` 时显示的内容，作用域参数 `omittedValues` 为被折叠的选项数组；⚠️ 与 antd 取值形状不同：antd 直接以数组作为插槽作用域（`#maxTagPlaceholder="omittedValues"`），本库统一为具名参数对象 | v-slot:maxTagPlaceholder="{ omittedValues }"        |
+| maxTagPlaceholder    | 隐藏 `tag` 时显示的内容，作用域参数 `omittedValues` 为被折叠的选项数组（本库统一以具名参数对象传参） | v-slot:maxTagPlaceholder="{ omittedValues }"        |
 | removeIcon           | 自定义 `tag` 的移除图标                                                   | v-slot:removeIcon                                   |
 
 ## Methods
