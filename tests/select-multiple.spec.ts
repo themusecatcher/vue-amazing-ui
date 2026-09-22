@@ -357,6 +357,10 @@ describe('Select 多选模式的标签折叠', () => {
  * 面板开合时的高亮 / 滚动保持 —— 对齐 antd：
  * antd 的「打开即复位到选中项并滚入可视区」带 `!multiple && rawValues.size === 1` 前置条件
  * （components/vc-select/OptionList.tsx），故单选复位、多选保留用户上次移动的高亮与滚动位置。
+ *
+ * 本组用例显式关闭虚拟滚动（virtual: false）：30 项在默认配置下会触发窗口化渲染，
+ * 面板 DOM 中不再存在全部选项，而本组用例要断言的是「高亮 / 滚动的保持与复位」这一条契约
+ * （虚拟滚动自身的契约由 select-virtual.spec.ts 覆盖）。
  */
 describe('Select 面板开合时的高亮与滚动保持', () => {
   const LONG_OPTIONS: Option[] = [...Array(30)].map((_, index) => ({ label: `选项 ${index + 1}`, value: index + 1 }))
@@ -381,7 +385,7 @@ describe('Select 面板开合时的高亮与滚动保持', () => {
       attachTo: document.body,
       global: { stubs: { transition: false } },
       // 已选「选项 5」：若沿用旧实现（打开即复位），高亮会被拉回选项 5 且滚动位置归零
-      props: { mode: 'multiple', value: [5], options: LONG_OPTIONS }
+      props: { mode: 'multiple', value: [5], options: LONG_OPTIONS, virtual: false }
     })
     await flush()
     await wrapper.find('.select-wrap').trigger('click')
@@ -406,7 +410,7 @@ describe('Select 面板开合时的高亮与滚动保持', () => {
     wrapper = mount(Select, {
       attachTo: document.body,
       global: { stubs: { transition: false } },
-      props: { value: 25, options: LONG_OPTIONS }
+      props: { value: 25, options: LONG_OPTIONS, virtual: false }
     })
     await flush()
     await wrapper.find('.select-wrap').trigger('click')

@@ -1,3 +1,13 @@
+<script lang="ts">
+// 本块为模块级作用域（仅在模块加载时执行一次）：a11y 关联 id 的自增序号需跨组件实例唯一。
+// ⚠️ 不使用项目既有的 createKeyGenerator（含时间戳）：SSR 与客户端会产出不同 id，触发水合时属性不匹配。
+let selectIdSeed = 0
+function nextSelectId(): string {
+  selectIdSeed += 1
+  return `vui-select-${selectIdSeed}`
+}
+</script>
+
 <script setup lang="ts">
 import {
   ref,
@@ -6,6 +16,7 @@ import {
   watchEffect,
   nextTick,
   onMounted,
+  onBeforeUnmount,
   inject,
   h,
   withDirectives,
@@ -118,6 +129,8 @@ export interface Props {
   menuItemSelectedIcon?: VNode | (() => VNode) // 自定义当前选中的条目图标
   maxDisplay?: number // 下拉面板最多能展示的项数，超过后滚动显示
   listHeight?: number // 下拉面板滚动高度，单位 px（未传时回落 maxDisplay × 32）
+  virtual?: boolean // 是否开启虚拟滚动，大数据量时仅渲染可视区选项
+  listItemHeight?: number // 虚拟滚动的列表项高度，单位 px，需与选项实际行高一致
   scrollbarProps?: ScrollbarProps // 下拉面板滚动条 scrollbar 组件属性配置
   // 面板定位与层级
   placement?: SelectPlacement // 下拉面板弹出位置
@@ -127,6 +140,8 @@ export interface Props {
   dropdownMenuStyle?: CSSProperties // 下拉面板自定义样式，可覆盖定位（与 AutoComplete 的同名属性语义一致）
   dropdownMatchSelectWidth?: boolean | number // 下拉菜单和选择器同宽，为数字时指定下拉菜单宽度
   zIndex?: number // 下拉面板层级，优先级最高（未传时使用默认层级或 ConfigProvider 的 baseZIndex 分配）
+  // 可访问性
+  id?: string // 组件 id，用于 aria-controls / aria-activedescendant 关联，未传时内部生成
 }
 // 声明组件插槽类型
 export interface SelectSlots {
@@ -185,6 +200,8 @@ const props = withDefaults(defineProps<Props>(), {
   menuItemSelectedIcon: undefined,
   maxDisplay: 8,
   listHeight: undefined,
+  virtual: true,
+  listItemHeight: 32,
   scrollbarProps: () => ({}),
   placement: 'bottomLeft',
   flip: true,
@@ -192,7 +209,8 @@ const props = withDefaults(defineProps<Props>(), {
   popupClassName: undefined,
   dropdownMenuStyle: undefined,
   dropdownMatchSelectWidth: true,
-  zIndex: undefined
+  zIndex: undefined,
+  id: undefined
 })
 defineSlots<SelectSlots>()
 const slots = useSlots()
@@ -514,10 +532,11 @@ const selectHeight = computed(() => {
 })
 // 选项区最大高度：listHeight 显式指定时优先，否则按 maxDisplay × 单选项高度 32px
 // （面板自身上下 4px 内边距不属于选项区，额外计入会让下一项漏出 8px 的一小条）
+// 独立成 computed 供虚拟滚动复用，避免「样式」与「窗口换算」两处各算一遍而漂移
+const optionsMaxHeight = computed(() => (props.listHeight !== undefined ? props.listHeight : props.maxDisplay * 32))
 const optionsStyle = computed(() => {
-  const maxHeight = props.listHeight !== undefined ? props.listHeight : props.maxDisplay * 32
   const style: CSSProperties = {
-    maxHeight: `${maxHeight}px`
+    maxHeight: `${optionsMaxHeight.value}px`
   }
   return style
 })
@@ -748,6 +767,115 @@ const displayOptions = computed<Option[]>(() => {
   if (!filterSort) return searchFilledOptions.value
   return [...searchFilledOptions.value].sort((optionA, optionB) => filterSort(optionA, optionB))
 })
+// ==================== 虚拟滚动（大数据量只渲染可视区） ====================
+// 选项行高：与 .select-option / .select-option-group 的实际行高一致（默认 32px），
+// 既是渲染窗口的换算基准，也是上下占位区高度的换算基准
+const DEFAULT_ROW_HEIGHT = 32
+// 可视区上下各多渲染 1 行：快速滚动时内容不落在窗口空隙里
+const VIRTUAL_OVERSCAN = 1
+const rowHeight = computed(() => (props.listItemHeight > 0 ? props.listItemHeight : DEFAULT_ROW_HEIGHT))
+/**
+ * 虚拟滚动开关（对齐 antd vc-select/Select.tsx:549）：
+ * dropdownMatchSelectWidth 为 false 时面板宽度按内容自适应，须全量渲染才能量出真实宽度，故自动关闭虚拟滚动
+ */
+const virtualEnabled = computed(() => props.virtual !== false && props.dropdownMatchSelectWidth !== false)
+/** 渲染行：分组标题行与选项行各占一个行高，故「行下标 × 行高」即可换算任意行的滚动位置 */
+interface MenuRow {
+  key: string // 行唯一键
+  option?: Option // 选项行（与 group 二选一）
+  group?: Option // 分组标题行
+  optionIndex?: number // 该行在 displayOptions 中的扁平下标（分组标题行无此值）
+}
+const menuRows = computed<MenuRow[]>(() => {
+  const rows: MenuRow[] = []
+  let lastGroupKey: string | number | undefined
+  displayOptions.value.forEach((option, index) => {
+    const group = optionGroups.value.get(String(getOptionValue(option)))
+    if (group && group.groupKey !== lastGroupKey) {
+      // key 带上 rows.length：同一分组键在列表中不连续出现两次时也不会撞键
+      rows.push({ key: `group-${String(group.groupKey)}-${rows.length}`, group: group.option })
+    }
+    lastGroupKey = group?.groupKey
+    rows.push({ key: `option-${index}`, option, optionIndex: index })
+  })
+  return rows
+})
+/** 扁平选项下标 → 渲染行下标：键盘导航与滚动定位均按下标换算，与目标行是否已渲染无关 */
+const optionRowIndexMap = computed(() => {
+  const map = new Map<number, number>()
+  menuRows.value.forEach((row, rowIndex) => {
+    if (row.optionIndex !== undefined) {
+      map.set(row.optionIndex, rowIndex)
+    }
+  })
+  return map
+})
+const totalRowsHeight = computed(() => menuRows.value.length * rowHeight.value)
+/** 是否真正窗口化：开启虚拟滚动且内容高于面板（装得下时全量渲染，与 antd rc-virtual-list 同款判定） */
+const virtualActive = computed(() => virtualEnabled.value && totalRowsHeight.value > optionsMaxHeight.value)
+/** 面板可视区高度：内容装不下时即面板最大高度 */
+const virtualViewportHeight = computed(() => Math.min(optionsMaxHeight.value, totalRowsHeight.value))
+const virtualScrollTop = ref(0) // 面板滚动位置（由容器原生 scroll 事件同步），作为渲染窗口起点
+/** 当前高亮项在 displayOptions 中的扁平下标（无高亮时为 -1） */
+const activeOptionIndex = computed(() =>
+  displayOptions.value.findIndex((option) => !option.disabled && getOptionValue(option) === hoverValue.value)
+)
+/** 渲染窗口 [start, end)：滚动位置决定起点，末端一屏 + 上下缓冲行 */
+const renderWindow = computed(() => {
+  const total = menuRows.value.length
+  if (!virtualActive.value) {
+    return { start: 0, end: total }
+  }
+  const height = rowHeight.value
+  const top = virtualScrollTop.value
+  const start = Math.max(0, Math.floor(top / height) - VIRTUAL_OVERSCAN)
+  const end = Math.min(total, Math.ceil((top + virtualViewportHeight.value) / height) + VIRTUAL_OVERSCAN)
+  return { start, end }
+})
+/**
+ * 高亮行的行下标 / 是否落在渲染窗口内。
+ * ⚠️ 不把高亮行强行纳入窗口：鼠标悬浮行与滚动位置是两个独立状态，强制纳入会让「滚动后窗口跳回悬浮行」
+ * （等于与用户滚动对抗）。改为：高亮行不在窗口内时不设置 aria-activedescendant，避免指向不存在的节点。
+ */
+const activeRowIndex = computed(() => optionRowIndexMap.value.get(activeOptionIndex.value))
+const activeRowRendered = computed(() => {
+  const row = activeRowIndex.value
+  return row !== undefined && row >= renderWindow.value.start && row < renderWindow.value.end
+})
+const visibleRows = computed(() => menuRows.value.slice(renderWindow.value.start, renderWindow.value.end))
+// 上下占位高度：未被渲染的区间用等高空 div 撑出，使滚动条长度与全量渲染时等价
+const virtualTopHeight = computed(() => (virtualActive.value ? renderWindow.value.start * rowHeight.value : 0))
+const virtualBottomHeight = computed(() =>
+  virtualActive.value ? (menuRows.value.length - renderWindow.value.end) * rowHeight.value : 0
+)
+// ==================== 可访问性（ARIA） ====================
+// id 在 SSR 与客户端须一致，故用模块级自增序号而非时间戳（见文件顶部 nextSelectId）
+const innerSelectId = nextSelectId()
+const mergedSelectId = computed(() => props.id || innerSelectId)
+const listboxId = computed(() => `${mergedSelectId.value}_list`)
+/** 选项 DOM id：与 antd 同构 `${id}_list_${扁平下标}`，供 aria-activedescendant 指向 */
+function optionDomId(optionIndex: number): string {
+  return `${listboxId.value}_${optionIndex}`
+}
+/** 当前高亮项对应的 DOM id：面板未展开 / 无高亮 / 高亮行不在渲染窗口内时均不设置（避免指向不存在的节点） */
+const activeDescendantId = computed(() =>
+  mergedOpen.value && activeRowRendered.value && activeOptionIndex.value >= 0
+    ? optionDomId(activeOptionIndex.value)
+    : undefined
+)
+/** 屏幕阅读器播报文本：面板关闭时聚合已选内容（同 antd BaseSelect 的隐藏 aria-live 节点） */
+const screenReaderText = computed(() => {
+  if (mergedOpen.value) return ''
+  return selectedOptions.value
+    .map((option) => {
+      const label = getOptionLabel(option)
+      return typeof label === 'string' || typeof label === 'number'
+        ? String(label)
+        : String(getOptionValue(option) ?? '')
+    })
+    .filter((text) => text !== '')
+    .join(', ')
+})
 // 空态内容是否存在：显式传 null 表示「不提供空态」，此时选项为空不展开面板（antd 口径）
 const hasNotFoundContent = computed(() => props.notFoundContent !== null)
 const emptyListContent = computed(() => !hasNotFoundContent.value && displayOptions.value.length === 0)
@@ -867,12 +995,25 @@ watch(panelVisible, async (visible) => {
  *   （antd 的复位分支带 `!multiple && rawValues.size === 1` 前置条件，多选下开合不会打断用户已定位的位置）
  */
 watch(panelVisible, async (visible) => {
-  if (!visible || isMultiple.value) return
-  const selected = displayOptions.value.find((option) => !option.disabled && isOptionSelected(option))
-  if (!selected) return
-  hoverValue.value = getOptionValue(selected) ?? null
-  await scrollOptionIntoView('.option-hover')
+  if (!visible) {
+    // 收起前先记下用户看到的滚动位置：本分支早于 v-show 生效（pre 队列先于渲染副作用），容器此刻仍可见；
+    // 一旦隐藏，浏览器会把容器 scrollTop 归零（Chrome 实测），之后再也读不到关闭前的位置
+    onContainerScroll()
+    return
+  }
+  await nextTick()
+  // 面板 DOM 首次出现时绑定滚动监听；每次展开都恢复并同步一次滚动位置
+  // （面板用 v-show 复用同一元素，滚动位置跨开合保留；详见 bindScrollContainer 注释）
+  bindScrollContainer()
+  if (isMultiple.value) return
+  const selectedIndex = displayOptions.value.findIndex((option) => !option.disabled && isOptionSelected(option))
+  if (selectedIndex < 0) return
+  hoverValue.value = getOptionValue(displayOptions.value[selectedIndex]) ?? null
+  await scrollRowIntoView(optionRowIndexMap.value.get(selectedIndex) ?? -1)
 })
+// 选项列表变化（搜索过滤 / options 更新）后同步滚动位置：浏览器可能已把 scrollTop 夹到新的内容高度，
+// 组件内的镜像值不同步会让渲染窗口落在错误区间（如清空搜索后仍从旧偏移开始渲染）
+watch(menuRows, () => nextTick(onContainerScroll), { flush: 'post' })
 // 默认高亮：defaultActiveFirstOption 为 true 时高亮首个可用项，为 false 时清空高亮
 // （依赖为选项列表本身，故面板开合不会重置用户已移动的高亮位置）
 watchEffect(() => {
@@ -917,23 +1058,99 @@ onMounted(() => {
   measureResponsiveTagCount()
 })
 
-/** 将面板内指定选项（当前选中项 / 键盘高亮项）滚动到可视区域内（已可见时不做任何滚动） */
-async function scrollOptionIntoView(selector: string): Promise<void> {
-  await nextTick()
-  const scrollContainer = selectPanelRef.value?.querySelector<HTMLElement>('.scrollbar-container')
-  const option = selectPanelRef.value?.querySelector<HTMLElement>(selector)
-  if (!scrollContainer || !option) return
-  // 用 offsetTop / offsetHeight 而非 getBoundingClientRect：
-  // 面板打开时正在播放 enter 缩放动画，rect 会被 transform 缩放失真，
-  // 导致误判选项已可见而跳过滚动；offsetTop 是布局值，不受 transform 影响
-  const optionTop = option.offsetTop
-  const optionBottom = optionTop + option.offsetHeight
-  const { scrollTop, clientHeight } = scrollContainer
-  if (optionTop < scrollTop) {
-    scrollContainer.scrollTop = optionTop
-  } else if (optionBottom > scrollTop + clientHeight) {
-    scrollContainer.scrollTop = optionBottom - clientHeight
+/** 面板滚动容器：虚拟滚动的滚动源，也是高亮滚动 / scrollTo 的操作对象 */
+function getScrollContainer(): HTMLElement | null {
+  return selectPanelRef.value?.querySelector<HTMLElement>('.scrollbar-container') ?? null
+}
+const scrollContainerEl = ref<HTMLElement | null>(null) // 已绑定 scroll 监听的容器
+/** 把容器的真实滚动位置同步进组件（滚动事件 / 定位后 / 面板收起前调用） */
+function onContainerScroll(): void {
+  const container = scrollContainerEl.value
+  if (container) {
+    virtualScrollTop.value = container.scrollTop
   }
+}
+/**
+ * 代理面板滚轮滚动（对齐 antd vc-virtual-list 的 useFrameWheel + useOriginScroll）。
+ * ⚠️ 原生滚动由浏览器合成线程先行应用，而窗口化渲染在主线程计算：快速滚动时渲染窗口追不上滚动位置，
+ * 视口下沿会露出一截尚未渲染的占位区 —— 表现为「面板底部先出现空白间距，随后被文本填充」。
+ * 故虚拟滚动生效时接管 wheel：阻止原生滚动，按 delta 自行写 scrollTop，
+ * 使滚动位置与渲染窗口在同一帧内一起生效（与 antd 同款做法）；
+ * 已到边界且方向朝外时不拦截，保留原生滚动链（滚动继续交给上层容器 / 页面）。
+ */
+function onPanelWheel(e: WheelEvent): void {
+  if (!virtualActive.value) return
+  const container = scrollContainerEl.value
+  if (!container) return
+  const maxTop = Math.max(container.scrollHeight - container.clientHeight, 0)
+  // deltaMode 归一：行模式按行高换算（Firefox 鼠标滚轮固定 deltaY=±3，不换算会近乎不动）、页模式按可视区高度
+  const unit = e.deltaMode === 1 ? rowHeight.value : e.deltaMode === 2 ? container.clientHeight : 1
+  const nextTop = Math.min(Math.max(container.scrollTop + e.deltaY * unit, 0), maxTop)
+  if (nextTop === container.scrollTop) return
+  e.preventDefault()
+  container.scrollTop = nextTop
+  // 同任务内同步窗口起点，不等 scroll 事件（对齐 antd syncScrollTop 同时改 DOM 与状态）：
+  // 渲染窗口与滚动位置在同一次「事件 → 微任务渲染」内一起生效，帧内不留空隙
+  onContainerScroll()
+}
+/**
+ * 绑定滚动容器的原生 scroll 监听。
+ * ⚠️ 不能依赖 Scrollbar 的 scroll 事件：它只在「拖拽滚动条」时派发（见 Scrollbar 的 onScroll 分支），
+ * 滚轮 / 触控板 / 程序化滚动都不会派发 —— 而虚拟滚动的窗口起点必须与真实滚动位置实时同步
+ */
+function bindScrollContainer(): void {
+  const container = getScrollContainer()
+  if (!container) return
+  if (container !== scrollContainerEl.value) {
+    scrollContainerEl.value?.removeEventListener('scroll', onContainerScroll)
+    scrollContainerEl.value?.removeEventListener('wheel', onPanelWheel)
+    container.addEventListener('scroll', onContainerScroll, { passive: true })
+    // 须非 passive：wheel 代理要能 preventDefault 掉原生滚动
+    container.addEventListener('wheel', onPanelWheel, { passive: false })
+    scrollContainerEl.value = container
+  }
+  /*
+    先按组件内记录的偏移恢复容器位置，再回读真实值对齐：
+    面板用 v-show 复用同一元素，但浏览器在 display:none 期间会把容器 scrollTop 归零且不恢复（Chrome 实测），
+    若只回读真实值，关闭前的偏移就丢了 —— 实测表现为面板重开后一片空白
+    （渲染窗口仍按旧偏移切片、容器却停在顶部，可视区里只剩上方占位）。
+    故按收起前记录的位置恢复（跨开合保留，与 antd 一致），再回读一次：
+    偏移超出新的内容高度时由浏览器夹取，容器位置与渲染窗口始终一致
+  */
+  if (container.scrollTop !== virtualScrollTop.value) {
+    container.scrollTop = virtualScrollTop.value
+  }
+  onContainerScroll()
+}
+onBeforeUnmount(() => {
+  scrollContainerEl.value?.removeEventListener('scroll', onContainerScroll)
+  scrollContainerEl.value?.removeEventListener('wheel', onPanelWheel)
+})
+/**
+ * 将指定渲染行滚入可视区（已可见时不做任何滚动）。
+ * 按「行下标 × 行高」换算滚动位置，不查目标行的 DOM —— 虚拟滚动下目标行可能尚未渲染；
+ * 且位置由下标算出，天然不受面板 enter 缩放动画（transform）影响
+ */
+function scrollRowIntoViewSync(rowIndex: number): void {
+  if (rowIndex < 0) return
+  const container = getScrollContainer()
+  if (!container) return
+  const height = rowHeight.value
+  const rowTop = rowIndex * height
+  const rowBottom = rowTop + height
+  const { scrollTop, clientHeight } = container
+  if (rowTop < scrollTop) {
+    container.scrollTop = rowTop
+  } else if (rowBottom > scrollTop + clientHeight) {
+    container.scrollTop = rowBottom - clientHeight
+  }
+  onContainerScroll()
+}
+/** 面板首帧渲染前容器 DOM 尚未存在，故等一个 tick 再滚动 */
+async function scrollRowIntoView(rowIndex: number): Promise<void> {
+  if (rowIndex < 0) return
+  await nextTick()
+  scrollRowIntoViewSync(rowIndex)
 }
 /**
  * 面板开合状态变更 / 用户开合请求的统一上报：
@@ -1268,7 +1485,7 @@ function onKeydown(e: KeyboardEvent): void {
     // 无其他可用项（仅当前项未禁用或全部禁用）时保持原高亮
     if (nextIdx < 0 || nextIdx === currentIdx) return
     hoverValue.value = getOptionValue(list[nextIdx]) ?? null
-    scrollOptionIntoView('.option-hover')
+    scrollRowIntoView(optionRowIndexMap.value.get(nextIdx) ?? -1)
     return
   }
   if (e.key === 'Enter') {
@@ -1303,22 +1520,21 @@ function onKeydown(e: KeyboardEvent): void {
     openPanel()
   }
 }
-/** 滚动面板选项：传数字按下标定位，传对象按顶部偏移定位 */
+/** 滚动面板选项：传数字 / index 按「扁平选项下标」定位（虚拟滚动下目标行未渲染同样有效），传 top 按滚动偏移定位 */
 function scrollTo(arg: number | { index?: number; top?: number }): void {
-  const scrollContainer = selectPanelRef.value?.querySelector<HTMLElement>('.scrollbar-container')
-  if (!scrollContainer) return
   if (typeof arg === 'number') {
-    const option = scrollContainer.querySelectorAll<HTMLElement>('.select-option')[arg]
-    option?.scrollIntoView({ block: 'nearest' })
+    scrollRowIntoViewSync(optionRowIndexMap.value.get(arg) ?? -1)
     return
   }
   if (arg?.index !== undefined) {
-    const option = scrollContainer.querySelectorAll<HTMLElement>('.select-option')[arg.index]
-    option?.scrollIntoView({ block: 'nearest' })
+    scrollRowIntoViewSync(optionRowIndexMap.value.get(arg.index) ?? -1)
     return
   }
   if (arg?.top !== undefined) {
+    const scrollContainer = getScrollContainer()
+    if (!scrollContainer) return
     scrollContainer.scrollTop = arg.top
+    onContainerScroll()
   }
 }
 /** 空态内容：插槽优先（项目约定），其次 prop，最后回落项目 Empty 组件 */
@@ -1383,23 +1599,32 @@ function renderItemContent(option: Option, fallback?: unknown): string | VNode[]
   return label === undefined || label === null ? String(fallback ?? '') : String(label)
 }
 // 选项节点渲染：默认菜单与 dropdownRender 共用同一实现，避免两处重复
-function renderOptionNode(option: Option, index: number): VNode {
+// key 必传：虚拟滚动下窗口滑动时，缺 key 会让 Vue 按下标复用 DOM 节点 ——
+// 同一节点被换上别的选项的类名，配合 .select-option 的 background 过渡即表现为「已选项蓝色标记闪动」
+// （对齐 antd vc-virtual-list 的按 key 渲染：窗口滑动只增删两端的行，既有行节点原地保留）
+function renderOptionNode(option: Option, index: number, key: string): VNode {
   const value = getOptionValue(option)
   const label = getOptionLabel(option)
   const optionSlot = slots.option
+  const selected = isOptionSelected(option)
   return h(
     'p',
     {
+      key,
       class: [
         'select-option',
         {
           'option-hover': !option.disabled && value === hoverValue.value,
-          'option-selected': isOptionSelected(option),
+          'option-selected': selected,
           'option-disabled': option.disabled,
           // 分组子选项：左缩进一级（与 antd 的 -option-grouped 同款）
           'option-grouped': optionGroups.value.has(String(value))
         }
       ],
+      // 可访问性：选项角色 + 可被 aria-activedescendant 指向的 id + 选中态
+      role: 'option',
+      id: optionDomId(index),
+      'aria-selected': selected,
       // 仅文本型 label 设置 title（与回填内容 / tag 的 title 口径一致：VNode 标签无法转为有意义的文本）
       title: typeof label === 'string' || typeof label === 'number' ? String(label) : undefined,
       // 选项上按下鼠标时阻止默认行为：否则 mousedown 会让 input 失焦触发 blur 关闭面板，
@@ -1425,17 +1650,42 @@ function renderOptionNode(option: Option, index: number): VNode {
 }
 // 内置菜单节点（函数组件）：直接渲染选项列表与空态，通过 v-show 切换避免销毁重建
 const menuNode: SelectMenuNode = () => {
-  // 分组形态：按当前扁平顺序在跨组处插入分组标题（标题不可选中、不占展示下标）
+  // 分组标题已并入渲染行（见 menuRows，标题不可选中、不占展示下标）；
+  // 虚拟滚动时只渲染窗口内的行，上下用等高空 div 撑出未渲染区，滚动几何与全量渲染等价
   const optionNodes: VNode[] = []
-  let lastGroupKey: string | number | undefined
-  displayOptions.value.forEach((option, index) => {
-    const group = optionGroups.value.get(String(getOptionValue(option)))
-    if (group && group.groupKey !== lastGroupKey) {
-      optionNodes.push(h('p', { class: 'select-option-group' }, renderItemContent(group.option)))
+  if (virtualTopHeight.value > 0) {
+    optionNodes.push(
+      // 纯布局占位：对读屏隐藏，避免 listbox 内出现无角色的空节点
+      h('div', {
+        key: 'placeholder-top',
+        class: 'select-options-placeholder',
+        style: { height: `${virtualTopHeight.value}px` },
+        'aria-hidden': 'true'
+      })
+    )
+  }
+  visibleRows.value.forEach((row) => {
+    if (row.group) {
+      // key 取自渲染行（同一分组的标题行键稳定），窗口滑动时节点原地保留而非按下标改内容
+      optionNodes.push(
+        h('p', { key: row.key, class: 'select-option-group', role: 'presentation' }, renderItemContent(row.group))
+      )
+      return
     }
-    lastGroupKey = group?.groupKey
-    optionNodes.push(renderOptionNode(option, index))
+    if (row.option) {
+      optionNodes.push(renderOptionNode(row.option, row.optionIndex ?? 0, row.key))
+    }
   })
+  if (virtualBottomHeight.value > 0) {
+    optionNodes.push(
+      h('div', {
+        key: 'placeholder-bottom',
+        class: 'select-options-placeholder',
+        style: { height: `${virtualBottomHeight.value}px` },
+        'aria-hidden': 'true'
+      })
+    )
+  }
   const hasOptions = displayOptions.value.length > 0
   const listNode = h(
     Scrollbar,
@@ -1449,7 +1699,8 @@ const menuNode: SelectMenuNode = () => {
       },
       ...props.scrollbarProps
     },
-    () => optionNodes
+    // listbox 容器：角色与 id 落在直接包裹选项行的元素上，与 aria-activedescendant 的 `${id}_list_${index}` 同源
+    () => [h('div', { class: 'select-options-list', role: 'listbox', id: listboxId.value }, optionNodes)]
   )
   const emptyNode = h(
     'div',
@@ -1523,6 +1774,8 @@ defineExpose({
     @mouseleave="onMouseLeave"
     @click="toggleSelect"
   >
+    <!-- 屏幕阅读器播报：面板关闭时聚合已选内容（同 antd 隐藏的 aria-live 节点），视觉上不可见 -->
+    <span v-if="screenReaderText" class="select-sr-only" aria-live="polite">{{ screenReaderText }}</span>
     <div ref="selectContentRef" class="select-content-container">
       <!-- 多选 / 标签：标签列表。被折叠的 tag 仍渲染在 DOM 中（以绝对定位隐藏），供 responsive 量取真实宽度 -->
       <template v-if="isMultiple">
@@ -1578,6 +1831,14 @@ defineExpose({
           :class="{ 'caret-show': mergedOpen }"
           type="text"
           autocomplete="off"
+          role="combobox"
+          :id="mergedSelectId"
+          :aria-expanded="mergedOpen"
+          aria-haspopup="listbox"
+          :aria-controls="listboxId"
+          :aria-owns="listboxId"
+          aria-autocomplete="list"
+          :aria-activedescendant="activeDescendantId"
           :readonly="!inputEditable"
           :disabled="disabled"
           v-model="inputModelValue"
@@ -1764,6 +2025,14 @@ defineExpose({
    且本规则声明在**前**，会被后者按源码顺序覆盖而静默失效；带上该类后为 0,3,0，靠**特异性**取胜 */
 .select-panel-container.slide-leave-active {
   pointer-events: none;
+}
+/* 屏幕阅读器专用文本：可被读屏读取但不参与视觉呈现（绝对定位，不影响触发器布局） */
+.select-sr-only {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
 }
 .select-wrap {
   position: relative;
@@ -2184,6 +2453,9 @@ defineExpose({
        用 contain 时「滚到底仍有留白」依旧存在 */
     .scrollbar-container {
       overscroll-behavior: none;
+      /* 关闭 Chrome 的滚动锚定：虚拟滚动随窗口切换改变上下占位高度，锚定补偿会反向调整 scrollTop，
+         与窗口计算互相追赶形成抖动（本项目的位置由下标算出，不需要浏览器补偿） */
+      overflow-anchor: none;
     }
     /* 分组标题：antd 口径（次级文字色 + 小字号 + 不参与交互）——
        高度取选项行高控制值 32px、行高取 antd 全局 lineHeight 1.5714，与选项行等高 */

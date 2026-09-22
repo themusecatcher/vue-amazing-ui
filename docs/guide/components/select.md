@@ -73,7 +73,13 @@ const tokenOptions: SelectOption[] = [{ value: 'a1', label: 'a1' }]
 // 获得选项的文本（labelInValue）
 const labelInValueOptions: SelectOption[] = [
   { value: 'jack', label: 'Jack (100)' },
-  { value: 'lucy', label: 'Lucy (101)' }
+  { value: 'lucy', label: 'Lucy (101)' },
+  { value: 'tom', label: 'Tom (102)' },
+  { value: 'jerry', label: 'Jerry (103)' },
+  { value: 'bob', label: 'Bob (104)' },
+  { value: 'alice', label: 'Alice (105)' },
+  { value: 'david', label: 'David (106)' },
+  { value: 'eva', label: 'Eva (107)' }
 ]
 const labelInValueValue = ref<SelectProps['value']>({ value: 'lucy', label: 'Lucy (101)' })
 function onLabelInValueChange(value: SelectProps['value']) {
@@ -210,6 +216,15 @@ const countryOptions: SelectOption[] = [
 ]
 // 定制回填内容的多选示例段
 const countryMultipleValue = ref<SelectProps['value']>(['china'])
+// 大数据：10 万项验证虚拟滚动（打开面板只渲染可视区选项；与 antd 官网 big-data 用例同规模）
+// label 用「城市 + 6 位序号」而非裸字符串，滚动时更易辨识
+const bigDataCities = ['北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安', '南京', '重庆']
+const bigDataOptions: SelectOption[] = Array.from({ length: 100000 }, (_, index) => ({
+  value: `item-${index + 1}`,
+  label: `${bigDataCities[index % bigDataCities.length]} ${String(index + 1).padStart(6, '0')}`
+}))
+const bigDataValue = ref<SelectProps['value']>(['item-10', 'item-12'])
+const bigDataVirtual = ref(true)
 // 自定义 label、value、options 字段
 const fieldOptions = [
   { id: 'jack', name: 'Jack' },
@@ -610,7 +625,13 @@ import { ref } from 'vue'
 import type { SelectProps, SelectOption } from 'vue-amazing-ui'
 const options: SelectOption[] = [
   { value: 'jack', label: 'Jack (100)' },
-  { value: 'lucy', label: 'Lucy (101)' }
+  { value: 'lucy', label: 'Lucy (101)' },
+  { value: 'tom', label: 'Tom (102)' },
+  { value: 'jerry', label: 'Jerry (103)' },
+  { value: 'bob', label: 'Bob (104)' },
+  { value: 'alice', label: 'Alice (105)' },
+  { value: 'david', label: 'David (106)' },
+  { value: 'eva', label: 'Eva (107)' }
 ]
 const value = ref<SelectProps['value']>({ value: 'lucy', label: 'Lucy (101)' })
 function handleChange(value: SelectProps['value']) {
@@ -1171,6 +1192,62 @@ const multipleValue = ref<SelectProps['value']>(['china'])
       </template>
     </Select>
   </Space>
+</template>
+```
+
+::::
+
+## 大数据
+
+_`virtual` 默认开启，只渲染可视区选项；关闭开关后渲染全部 `10` 万项，可对比两者的滚动表现（页面会明显变慢）_
+
+<br/>
+
+<Flex vertical gap="middle" align="start">
+  <Flex gap="small" align="center">
+    <code>virtual</code>
+    <Switch v-model:value="bigDataVirtual" />
+  </Flex>
+  <Select
+    v-model:value="bigDataValue"
+    mode="multiple"
+    placeholder="Please select"
+    :options="bigDataOptions"
+    :virtual="bigDataVirtual"
+    :width="300"
+  />
+</Flex>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { SelectProps } from 'vue-amazing-ui'
+// 10 万项数据：label 用「城市 + 6 位序号」而非裸字符串，滚动时更易辨识
+const cities = ['北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安', '南京', '重庆']
+const options = Array.from({ length: 100000 }, (_, index) => ({
+  value: `item-${index + 1}`,
+  label: `${cities[index % cities.length]} ${String(index + 1).padStart(6, '0')}`
+}))
+const value = ref<SelectProps['value']>(['item-10', 'item-12'])
+const virtual = ref(true)
+</script>
+<template>
+  <Flex vertical gap="middle" align="start">
+    <Flex gap="small" align="center">
+      <Switch v-model:value="virtual" />
+      <code>virtual</code>
+    </Flex>
+    <Select
+      v-model:value="value"
+      mode="multiple"
+      placeholder="Please select"
+      :options="options"
+      :virtual="virtual"
+      :width="300"
+    />
+  </Flex>
 </template>
 ```
 
@@ -1861,8 +1938,10 @@ const options: SelectOption[] = []
 | firstActiveValue | 默认高亮的选项 | string &#124; number &#124; (string &#124; number)[] | undefined |
 | flip | 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true |
 | height | 选择器高度，单位 `px` | number | undefined |
+| id | 组件 id，用于 `aria-controls` / `aria-activedescendant` 关联，未传时内部生成 | string | undefined |
 | labelInValue | 是否把每个选项的 label 包装到 value 中，`value` 由原始值变为 `{ label, value, key, originLabel }` 对象 | boolean | false |
 | listHeight | 下拉面板滚动高度，单位 `px`（未传时回落 `maxDisplay × 32`） | number | undefined |
+| listItemHeight | 虚拟滚动的列表项高度，单位 `px`，需与选项实际行高一致（自定义选项高矮时调整） | number | 32 |
 | loading | 是否处于加载状态，展开面板时后缀图标变为加载中 | boolean | false |
 | maxDisplay | 下拉面板最多能展示的项数，超过后滚动显示 | number | 8 |
 | menuItemSelectedIcon | 自定义当前选中的条目图标 | VNode &#124; (() => VNode) | undefined |
@@ -1886,6 +1965,7 @@ const options: SelectOption[] = []
 | to | 下拉面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
 | tokenSeparators | 自动分词的分隔符，输入命中后按分隔符拆分并直接选中 | string[] | [] |
 | value <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值，`mode` 为 `multiple` / `tags` 时为数组；`labelInValue` 开启时为 `{ label, value, key, originLabel }` 对象 | number &#124; string &#124; [SelectLabeledValue](#labeledvalue-type) &#124; (number &#124; string &#124; [SelectLabeledValue](#labeledvalue-type))[] | undefined |
+| virtual | 是否开启虚拟滚动，大数据量时仅渲染可视区选项（`dropdownMatchSelectWidth` 为 `false` 时自动关闭） | boolean | true |
 | width | 选择器宽度，单位 `px` | string &#124; number | 'auto' |
 | zIndex | 下拉面板层级，优先级最高（覆盖默认层级与 `ConfigProvider` 的 `baseZIndex` 自动分配） | number | undefined |
 

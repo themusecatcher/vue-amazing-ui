@@ -57,7 +57,13 @@ const tokenOptions: SelectOption[] = [{ value: 'a1', label: 'a1' }]
 // 获得选项的文本（labelInValue）
 const labelInValueOptions: SelectOption[] = [
   { value: 'jack', label: 'Jack (100)' },
-  { value: 'lucy', label: 'Lucy (101)' }
+  { value: 'lucy', label: 'Lucy (101)' },
+  { value: 'tom', label: 'Tom (102)' },
+  { value: 'jerry', label: 'Jerry (103)' },
+  { value: 'bob', label: 'Bob (104)' },
+  { value: 'alice', label: 'Alice (105)' },
+  { value: 'david', label: 'David (106)' },
+  { value: 'eva', label: 'Eva (107)' }
 ]
 const labelInValueValue = ref<SelectProps['value']>({ value: 'lucy', label: 'Lucy (101)' })
 function onLabelInValueChange(value: SelectProps['value']) {
@@ -196,6 +202,15 @@ const countryOptions: SelectOption[] = [
 ]
 // 定制回填内容的多选示例段
 const countryMultipleValue = ref<SelectProps['value']>(['china'])
+// 大数据：10 万项验证虚拟滚动（打开面板只渲染可视区选项）
+// label 用「城市 + 6 位序号」而非裸字符串，滚动时更易辨识
+const bigDataCities = ['北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安', '南京', '重庆']
+const bigDataOptions: SelectOption[] = Array.from({ length: 100000 }, (_, index) => ({
+  value: `item-${index + 1}`,
+  label: `${bigDataCities[index % bigDataCities.length]} ${String(index + 1).padStart(6, '0')}`
+}))
+const bigDataValue = ref<SelectProps['value']>(['item-10', 'item-12'])
+const bigDataVirtual = ref(true)
 // 自定义 label、value、options 字段
 const fieldOptions = [
   { id: 'jack', name: 'Jack' },
@@ -577,6 +592,25 @@ const emptyOptions: SelectOption[] = []
         </template>
       </Select>
     </Space>
+    <h2 class="mt30 mb10">大数据</h2>
+    <p class="mb10">
+      <code>virtual</code>
+      默认开启，只渲染可视区选项；关闭开关后渲染全部 <code>10</code> 万项，可对比两者的滚动表现（页面会明显变慢）
+    </p>
+    <Flex vertical gap="middle" align="start">
+      <Flex gap="small" align="center">
+        <code>virtual</code>
+        <Switch v-model:value="bigDataVirtual" />
+      </Flex>
+      <Select
+        v-model:value="bigDataValue"
+        mode="multiple"
+        placeholder="Please select"
+        :options="bigDataOptions"
+        :virtual="bigDataVirtual"
+        :width="300"
+      />
+    </Flex>
     <h2 class="mt30 mb10">自定义 label、value、options 字段</h2>
     <p class="mb10">
       通过 <code>fieldNames</code> 指定选项的文本 / 值字段，以及分组子选项的字段（<code>options</code>）
