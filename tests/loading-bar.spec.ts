@@ -100,7 +100,7 @@ describe('LoadingBarProvider', () => {
     await expect(driveTo(loadingBarStyle, (api) => api.error())).resolves.toBe('rgb(3, 3, 3)')
   })
 
-  // 与 naive 的「非错误态取 loading」语义保持一致：未提供 finish 时，完成态沿用 loading 的样式
+  // 未提供 finish 时，完成态沿用 loading 的样式
   it('loadingBarStyle 未提供 finish 时，完成态回落到 loading', async () => {
     const loadingBarStyle: LoadingBarProps['loadingBarStyle'] = {
       loading: { background: 'rgb(1, 1, 1)' },

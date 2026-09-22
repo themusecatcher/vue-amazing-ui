@@ -112,6 +112,7 @@ src/
 ├── router/                 # 自动路由（import.meta.glob）
 ├── layouts/                # 布局组件
 ├── assets/                 # 静态资源
+├── theme.ts                # 演示应用共享主题（App.vue 与 router 的离散实例共用同一份）
 ├── App.vue
 └── main.ts
 ```

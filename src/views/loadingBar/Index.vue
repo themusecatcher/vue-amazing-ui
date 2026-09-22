@@ -5,7 +5,7 @@ import { createDiscreteApi, useLoadingBar } from 'vue-amazing-ui'
 import type { ConfigProviderTheme, DiscreteApiInstance, LoadingBarApi, LoadingBarProps } from 'vue-amazing-ui'
 // 组件树内获取 api：外层 <LoadingBarProvider> 由 App.vue 入口全局包裹
 const loadingBar = useLoadingBar()
-// 各按钮组共享状态：结束按钮仅在「开始」后可用（对齐 naive 示例）
+// 各按钮组共享状态：结束按钮仅在「开始」后可用
 // getApi 返回当前作用域的加载条 api：组件树内由 Provider 的 @ready 回传，setup 外由惰性单例提供
 function createGroup(getApi: () => LoadingBarApi | undefined) {
   const finishDisabled = ref<boolean>(true)

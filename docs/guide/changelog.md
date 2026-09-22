@@ -12,9 +12,10 @@
 
 ## <VersionDateTag date="2026-09-22">2.10.1</VersionDateTag>
 
-- 重构并增强 [加载条 LoadingBar](/guide/components/loading-bar.html)：新增 `<LoadingBarProvider>` + `useLoadingBar()` 与 `createDiscreteApi(['loadingBar'])` 两种获取 `api` 的方式（与 [全局提示 Message](/guide/components/message.html) 等同族组件形态一致），并新增 `loadingBarStyle`（可按 `loading` / `finish` / `error` 三态注入任意样式）属性；`<LoadingBar>` 组件本体继续导出，`props` 与 `start` / `finish` / `error` 方法签名保持不变。注意：`api` 由 `ref` 改为经 `@ready` 回传，原 `<LoadingBar ref="loadingBar">` + `loadingBar.value.start()` 写法需迁移为 `<LoadingBar @ready="api = $event" />` 或 `useLoadingBar()`
+- 重构为 [加载条 LoadingBar](/guide/components/loading-bar.html) `Provider + Hook `形态：新增 `<LoadingBarProvider>` + `useLoadingBar()` 与 `createDiscreteApi(['loadingBar'])` 两种 `api` 获取方式（形态与 [全局提示 Message](/guide/components/message.html) / [模态框 Modal](/guide/components/modal.html) 等同族组件一致），并新增 `loadingBarStyle` 属性（可按 `loading` / `finish` / `error` 三态注入自定义样式）；`<LoadingBar>` 组件本体继续导出，`props` 与 `start` / `finish` / `error` 方法签名不变，但 `api` 由 `ref` 改为经 `@ready` 回传 —— 原 `<LoadingBar ref="loadingBar">` + `loadingBar.value.start()` 写法需迁移为 `<LoadingBar @ready="api = $event" />` 或改用 `useLoadingBar()`
 - 修复 `createDiscreteApi` 在路由守卫（`app.runWithContext` 上下文）中调用时取不到 `api` 的问题，影响 [加载条 LoadingBar](/guide/components/loading-bar.html) / [对话框 Dialog](/guide/components/dialog.html) / [全局提示 Message](/guide/components/message.html) / [模态框 Modal](/guide/components/modal.html) / [通知提醒 Notification](/guide/components/notification.html)
-- 优化并更新 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 与 [快速上手](/guide/getting-started.html) 文档中的加载条示例，同步改用 `<LoadingBarProvider>`
+- 更新使用者文档：[加载条 LoadingBar](/guide/components/loading-bar.html) 重写演示与 `api` 用法说明（改用 `<LoadingBarProvider>`），[全局化配置 ConfigProvider](/guide/components/config-provider.html) 与 [快速上手](/guide/getting-started.html) 的加载条示例同步迁移
+- 更新贡献者文档：`development/component-design.md` 将 `loading-bar` 纳入「SFC + Hook + Provider」三段式清单并补充 `LoadingBarProvider` 的样式入口登记，`development/demo-doc-guide.md` 的全局包裹写法同步改为 `useLoadingBar()`
 
 ## <VersionDateTag date="2026-09-21">2.10.0</VersionDateTag>
 

@@ -15,7 +15,7 @@ export default defineConfigWithVueTs(
 
   {
     name: 'app/files-to-ignore',
-    // docs/.vitepress/** 参与 lint（站点配置与主题组件属项目源码，naive-ui / ant-design-vue 亦不忽略站点源码）。
+    // docs/.vitepress/** 参与 lint
     // 但其下的 cache/ 是 Vite 依赖预构建产物（第三方 bundle），必须排除；dist/ 已由上面的 **/dist/** 覆盖。
     // 另需注意：该目录仍不在任何 tsconfig 的 include 中 —— 项目根用 vite 7、vitepress 依赖 vite 5，二者 Plugin
     // 类型不兼容（给该目录跑 tsc 会报 TS2322 假错误），故 type-check 有意不覆盖它，运行时错误由 pnpm docs:build 兜住。

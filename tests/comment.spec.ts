@@ -10,7 +10,7 @@ import Comment from 'components/comment/Comment.vue'
  *    插槽优先（与 Statistic / Divider 一致）；actions 还会把属性值归一化为
  *    「每项一个 <li>」，字符串项额外包一层 <span> 以命中 `> li > span` 的样式。
  * 2. 头像形态：avatar 属性支持「图片地址 / VNode / 渲染函数」三种形态，仅图片地址
- *    渲染为 <img>，其余原样渲染（对齐 antdv「非字符串原样渲染」的实现，且不内部包 Avatar）。
+ *    渲染为 <img>，其余原样渲染。
  */
 
 describe('Comment 评论组件', () => {

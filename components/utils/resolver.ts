@@ -4,7 +4,7 @@ import type { ComponentName } from './style-deps'
 /**
  * 计算按需引入携带的样式 sideEffects
  *
- * D 方案（每组件一个样式入口）后，本函数只回答一个问题：「该组件的样式入口在哪」——
+ * 每组件一个样式入口后，本函数只回答一个问题：「该组件的样式入口在哪」——
  * 入口 `es|lib/<dir>/style/index.{js,cjs}` 内部已按「global → 自身 → 依赖 → vendor」的顺序
  * 引用全部所需 CSS（由构建期 build/generate-style-entries.ts 依据 style-deps.ts 生成）。
  * 因此这里不再维护依赖表、也不再拼接多条 CSS 路径。
