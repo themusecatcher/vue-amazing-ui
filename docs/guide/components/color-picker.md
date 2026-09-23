@@ -154,7 +154,7 @@ function labelFormat(color: string) {
 <br/>
 
 <Space vertical>
-  <Space align="center"> showAlpha: <Switch v-model="showAlpha"></Switch> </Space>
+  <Space align="center"> showAlpha: <Switch v-model:value="showAlpha"></Switch> </Space>
   <ColorPicker :width="360" :show-alpha="showAlpha" />
 </Space>
 
@@ -167,7 +167,7 @@ const showAlpha = ref(false)
 </script>
 <template>
   <Space vertical>
-    <Space align="center"> showAlpha: <Switch v-model="showAlpha"></Switch> </Space>
+    <Space align="center"> showAlpha: <Switch v-model:value="showAlpha"></Switch> </Space>
     <ColorPicker :width="360" :show-alpha="showAlpha" />
   </Space>
 </template>
@@ -181,7 +181,7 @@ const showAlpha = ref(false)
 <br/>
 
 <Space vertical>
-  <Space align="center"> showPreview: <Switch v-model="showPreview"></Switch> </Space>
+  <Space align="center"> showPreview: <Switch v-model:value="showPreview"></Switch> </Space>
   <ColorPicker :width="360" :show-preview="showPreview" />
 </Space>
 
@@ -194,7 +194,7 @@ const showPreview = ref(true)
 </script>
 <template>
   <Space vertical>
-    <Space align="center"> showPreview: <Switch v-model="showPreview"></Switch> </Space>
+    <Space align="center"> showPreview: <Switch v-model:value="showPreview"></Switch> </Space>
     <ColorPicker :width="360" :show-preview="showPreview" />
   </Space>
 </template>

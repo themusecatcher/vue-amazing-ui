@@ -69,7 +69,7 @@ const loading = ref(true)
     </Card>
     <h2 class="mt30 mb10">预加载卡片</h2>
     <Space vertical>
-      <Space align="center">Loading State:<Switch v-model="loading" /></Space>
+      <Space align="center">Loading State:<Switch v-model:value="loading" /></Space>
       <Card :loading="loading" title="Card title" :width="300">
         <p>Card content</p>
         <p>Card content</p>

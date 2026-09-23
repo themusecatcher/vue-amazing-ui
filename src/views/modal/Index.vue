@@ -157,15 +157,15 @@ const draftOpenCount = ref(0)
 const onceOpenCount = ref(0)
 const afterCloseCount = ref(0)
 const lastAfterCloseTime = ref<string | null>(null)
-// Switch 是受控组件（点击只 emit update:modelValue），需自行持有选中态才能响应点击；
+// Switch 是受控组件（点击只 emit update:value），需自行持有选中态才能响应点击；
 // 状态随组件实例存活：destroyOnClose: false 时实例保留则状态持久化，true 时销毁重建则状态重置
 const SwitchDemo = defineComponent({
   setup() {
     const checked = ref(false)
     return () =>
       h(Switch, {
-        modelValue: checked.value,
-        'onUpdate:modelValue': (value: boolean) => {
+        value: checked.value,
+        'onUpdate:value': (value: boolean) => {
           checked.value = value
         }
       })
@@ -1095,7 +1095,7 @@ const layerZIndexOpen = ref(false)
         <Tooltip tooltip="Vue Amazing UI">
           <Button>Hover me</Button>
         </Tooltip>
-        <Select :options="layerOptions" v-model="layerSelect" :width="200" />
+        <Select :options="layerOptions" v-model:value="layerSelect" :width="200" />
       </Space>
     </Modal>
     <Modal v-model:open="layerZIndexOpen" title="Custom zIndex" :z-index="3000" :width="520">

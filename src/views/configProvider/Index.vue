@@ -4,10 +4,10 @@ import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { createDiscreteApi } from 'vue-amazing-ui'
 import type {
-  CarouselImage,
   ConfigProviderProps,
   ConfigProviderTheme,
-  LoadingBar,
+  CarouselImage,
+  LoadingBarApi,
   MessageApi,
   ModalApi,
   NotificationApi,
@@ -40,7 +40,8 @@ const messageRef = ref<MessageApi>()
 const modalRef = ref<ModalApi>()
 const notificationRef = ref<NotificationApi>()
 const cardRef = ref<HTMLDivElement>()
-const loadingBarRef = ref<InstanceType<typeof LoadingBar> | null>(null)
+// 局部加载条挂载到 cardRef 容器，通过 <LoadingBarProvider> 的 @ready 取到该作用域内的 api
+const localLoadingBar = ref<LoadingBarApi>()
 const page = ref<number>(1)
 const radioChecked = ref<boolean>(false)
 const images = ref<CarouselImage[]>([
@@ -300,8 +301,8 @@ const layerSelectedValue = ref<number>(1)
             <Button type="primary">Show Confirm</Button>
           </Popconfirm>
           <Radio v-model:checked="radioChecked">Radio</Radio>
-          <Select :options="selectOptions" v-model="selectedValue" />
-          <Switch v-model="switchChecked" />
+          <Select :options="selectOptions" v-model:value="selectedValue" />
+          <Switch v-model:value="switchChecked" />
           <Textarea :width="360" v-model:value="textareaValue" placeholder="custom theme textarea" />
           <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
         </Space>
@@ -319,15 +320,19 @@ const layerSelectedValue = ref<number>(1)
             </template>
           </FloatButton>
         </Card>
-        <LoadingBar ref="loadingBarRef" :container-style="{ position: 'absolute' }" :to="cardRef" />
+        <LoadingBarProvider
+          :container-style="{ position: 'absolute' }"
+          :to="cardRef"
+          @ready="localLoadingBar = $event"
+        />
         <div
           ref="cardRef"
           style="position: relative; width: 50%; padding: 48px 36px; border-radius: 4px; border: 1px solid #f0f0f0"
         >
           <Space>
-            <Button type="primary" @click="loadingBarRef?.start()">Start</Button>
-            <Button @click="loadingBarRef?.finish()">Finish</Button>
-            <Button type="danger" @click="loadingBarRef?.error()">Error</Button>
+            <Button type="primary" @click="localLoadingBar?.start()">Start</Button>
+            <Button @click="localLoadingBar?.finish()">Finish</Button>
+            <Button type="danger" @click="localLoadingBar?.error()">Error</Button>
           </Space>
         </div>
         <Pagination v-model:page="page" :total="500" show-quick-jumper />
@@ -426,7 +431,7 @@ const layerSelectedValue = ref<number>(1)
           <Tooltip tooltip="Vue Amazing UI">
             <Button>Hover me</Button>
           </Tooltip>
-          <Select :options="selectOptions" v-model="layerSelectedValue" :width="200" />
+          <Select :options="selectOptions" v-model:value="layerSelectedValue" :width="200" />
         </Space>
       </Modal>
     </ConfigProvider>

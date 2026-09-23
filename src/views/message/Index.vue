@@ -128,8 +128,8 @@ function onLayerMessage() {
         h('span', '消息内容里的浮层：'),
         h(Select, {
           options: layerOptions,
-          modelValue: layerValue.value,
-          'onUpdate:modelValue': (value: number) => {
+          value: layerValue.value,
+          'onUpdate:value': (value: number) => {
             layerValue.value = value
           },
           width: 140

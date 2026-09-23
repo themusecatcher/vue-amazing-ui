@@ -31,7 +31,7 @@
 
 ### 组件目录
 
-每个组件独占一个 kebab-case 目录，基础结构为「SFC + 入口」，可按需增加辅助模块（如 `modal/ModalRenderHost.ts`）：
+每个组件（族）独占一个 kebab-case 目录，基础结构为「SFC + 入口」，可按需增加辅助模块（如 `modal/ModalRenderHost.ts`）：
 
 ```
 components/
@@ -39,7 +39,13 @@ components/
 │   ├── Button.vue          # SFC 组件（PascalCase 文件名）
 │   └── index.ts            # 组件入口（withInstall 默认导出 + 重命名后的 XxxProps）
 ├── auto-complete/
-├── grid/                   # 复合组件：目录下再分 row/ col/ 子目录
+├── descriptions/           # 有主组件：主组件 SFC + index.ts 平铺在族目录顶层
+│   ├── Descriptions.vue    # 主组件（index.ts 默认导出 withInstall 后的它）
+│   ├── index.ts            # 族入口：默认导出主组件，具名导出子组件
+│   └── descriptions-item/  # 子组件各占一个 kebab-case 子目录
+│       ├── DescriptionsItem.vue
+│       └── index.ts
+├── grid/                   # 无主组件（成员平级）：全部成员各占子目录
 │   ├── row/
 │   │   ├── Row.vue
 │   │   └── index.ts
@@ -47,6 +53,34 @@ components/
 │   └── index.ts
 └── ...
 ```
+
+复合目录的两种形态，按「目录内是否存在主组件」区分：
+
+| 形态 | 判据 | 目录顶层 | 示例 |
+| :--- | :--- | :--- | :--- |
+| 主组件平铺 | 目录名即代表某个主组件 | 主组件 SFC + `index.ts` | `descriptions/`、`list/`、`select/` |
+| 成员平级 | 无主组件，成员各自独立 | 仅聚合 `index.ts` | `grid/` |
+
+> 伴生而非父子关系的组件（底层组件 + `Provider` + `useXxx`）平铺在同一族目录顶层，如 `message/`、`modal/`、`dialog/`、`notification/`、`loading-bar/`。
+>
+> 每个「拥有独立样式的可独立引入组件」必须独占一个产物目录：构建期样式入口按组件产物目录聚合（`build/generate-style-entries.ts`），同目录的多个组件会被合并为一个 `style/index.js`，故禁止为减少目录层级而把多个组件平铺到同一目录（会连带引入无关组件的样式）。
+>
+> 聚合入口 `index.ts` 中**任何具名导出都禁止走纯转发**——即导出项直接来自其他模块、入口自身不为它持有运行时绑定（`export { X } from './x'` 或 `import X from './x'; export { X }`）。这类导出会被 Rollup 转发优化剔除，两种表现面：
+>
+> - **表现面 ①：整个入口全是纯转发**（入口自身无任何本地绑定）→ 连该 `index.js` 都不生成，深层路径 `vue-amazing-ui/es|lib/<dir>` 报 `ERR_MODULE_NOT_FOUND`；
+> - **表现面 ②：入口另有本地绑定**（如 `export default withInstall(X)`）、仅个别具名导出是纯转发 → 模块存在，但该具名导出不进 `index.js`，`import { useX } from 'vue-amazing-ui/es/<dir>'` 取到 `undefined`。
+>
+> 两种情况下 `index.d.ts` 都会照常声明，形成「类型有声明、运行时无模块」的错位。须经**本地常量**再导出持有绑定，如 `export const Row = RowComp`、`export const useMessage = useMessageImpl`。
+>
+> 已登记例外：`utils/index.ts` 是 `export * from` 形式的纯 barrel，展开为逐符号本地绑定成本高且无深层导入需求 —— 工具函数请从包根（`vue-amazing-ui`）或具体文件（`vue-amazing-ui/es/utils/format`）导入。该例外已列入 `scripts/prepublish-guard.js` 的 `INDEX_DTS_WHITELIST`。
+>
+> **构建期专用模块**同样会形成空头声明：`utils/vendor-styles.ts` 仅被 `vite.config.ts` / `build/` 与测试引用，不参与运行时模块图，产物中本就没有对应 JS，而 `tsconfig.dts.json` 仍会为它生成 `vendor-styles.d.ts`。处置方式是把它登记进该文件的 `exclude`，使其不产出 `.d.ts`（已登记）—— 新增同类「仅构建期使用」的模块时须同步登记。
+>
+> 校验覆盖（两者都需已构建产物，**不在 `pnpm check` 内**）：
+>
+> - `pnpm guard` 第 ⑤ 项 → **表现面 ①**（`<dir>/index.d.ts` 在、`index.js` 不在），只查目录索引、不查普通文件；
+> - `pnpm verify:deps` 的聚合入口导出一致性校验 → **表现面 ②**（`index.d.ts` 声明的值导出 ↔ 运行时导出的**双向**比对）；
+> - 新增 `useXxx` / 子组件具名导出时仍须按上述本地常量写法自查，不要依赖校验兜底。
 
 命名约定：
 
@@ -112,6 +146,7 @@ src/
 ├── router/                 # 自动路由（import.meta.glob）
 ├── layouts/                # 布局组件
 ├── assets/                 # 静态资源
+├── theme.ts                # 演示应用共享主题（App.vue 与 router 的离散实例共用同一份）
 ├── App.vue
 └── main.ts
 ```

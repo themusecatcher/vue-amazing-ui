@@ -74,7 +74,7 @@ function onThemeChange () {
 
 ## 基本使用
 
-<Switch class="theme-switch" v-model="themeDark" ripple-color="#faad14" :circle-style="{ background: themeDark ? '#001529' : '#fff' }" @change="onThemeChange"> <template #node="{ checked }"> <svg
+<Switch class="theme-switch" v-model:value="themeDark" ripple-color="#faad14" :circle-style="{ background: themeDark ? '#001529' : '#fff' }" @change="onThemeChange"> <template #node="{ checked }"> <svg
       v-if="checked"
       class="svg-dark"
       xmlns="http://www.w3.org/2000/svg"
@@ -125,7 +125,7 @@ function onThemeChange() {
 <template>
   <Switch
     class="theme-switch"
-    v-model="themeDark"
+    v-model:value="themeDark"
     ripple-color="#faad14"
     :circle-style="{ background: themeDark ? '#001529' : '#fff' }"
     @change="onThemeChange"

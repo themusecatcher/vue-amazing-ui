@@ -191,7 +191,7 @@ const size = ref('middle')
 ## 预加载卡片
 
 <Space vertical>
-  <Space align="center">Loading State:<Switch v-model="loading" /></Space>
+  <Space align="center">Loading State:<Switch v-model:value="loading" /></Space>
   <Card :loading="loading" title="Card title" :width="300">
     <p>Card content</p>
     <p>Card content</p>
@@ -208,7 +208,7 @@ const loading = ref(true)
 </script>
 <template>
   <Space vertical>
-    <Space align="center">Loading State:<Switch v-model="loading" /></Space>
+    <Space align="center">Loading State:<Switch v-model:value="loading" /></Space>
     <Card :loading="loading" title="Card title" :width="300">
       <p>Card content</p>
       <p>Card content</p>

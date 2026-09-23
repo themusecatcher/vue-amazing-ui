@@ -1,40 +1,33 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { loadingBarRef } from '@/router'
-import { LoadingBar } from 'vue-amazing-ui'
 import { MessageProvider } from 'components/message'
 import { ModalProvider } from 'components/modal'
 import { DialogProvider } from 'components/dialog'
 import { NotificationProvider } from 'components/notification'
-const theme = ref({
-  // common: {
-  //   primaryColor: '#ff6900'
-  // }
-})
+import { LoadingBarProvider } from 'components/loading-bar'
+// 主题与 router/index.ts 的离散实例共用（见 src/theme.ts）
+import { theme } from '@/theme'
 const route = useRoute()
 const routeName = computed(() => {
   return route.name
 })
-const loadingBar = ref<InstanceType<typeof LoadingBar> | null>(null)
-onMounted(() => {
-  loadingBarRef.value = loadingBar.value
-})
 </script>
 <template>
   <ConfigProvider :theme="theme">
-    <MessageProvider>
-      <ModalProvider>
-        <DialogProvider>
-          <NotificationProvider>
-            <RouterView v-if="routeName === 'Watermark'" />
-            <Watermark v-else content="Vue Amazing UI">
-              <RouterView />
-            </Watermark>
-            <LoadingBar ref="loadingBar" />
-          </NotificationProvider>
-        </DialogProvider>
-      </ModalProvider>
-    </MessageProvider>
+    <LoadingBarProvider>
+      <MessageProvider>
+        <ModalProvider>
+          <DialogProvider>
+            <NotificationProvider>
+              <RouterView v-if="routeName === 'Watermark'" />
+              <Watermark v-else content="Vue Amazing UI">
+                <RouterView />
+              </Watermark>
+            </NotificationProvider>
+          </DialogProvider>
+        </ModalProvider>
+      </MessageProvider>
+    </LoadingBarProvider>
   </ConfigProvider>
 </template>

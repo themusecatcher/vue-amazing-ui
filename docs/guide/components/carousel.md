@@ -285,7 +285,7 @@ function clickImage(image: CarouselImage) {
 ## 箭头
 
 <Space align="center">
-  showArrow: <Switch v-model="showArrow" />
+  showArrow: <Switch v-model:value="showArrow" />
 </Space>
 <br />
 <br />
@@ -329,7 +329,7 @@ function clickImage(image: CarouselImage) {
 </script>
 <template>
   <Space align="center">
-    showArrow: <Switch v-model="showArrow" />
+    showArrow: <Switch v-model:value="showArrow" />
   </Space>
   <br />
   <br />
@@ -670,9 +670,9 @@ const dotTrigger = ref<CarouselProps['dotTrigger']>('hover')
   <Select
     v-if="slideEasingType === 'preset'"
     :options="slideEasingPresetOptions"
-    v-model="slideEasingPreset"
+    v-model:value="slideEasingPreset"
     width="200"
-    search
+    show-search
   />
 </Space>
 <br/>
@@ -730,9 +730,9 @@ const slideEasing = computed(() => (slideEasingType.value === 'preset' ? slideEa
     <Select
       v-if="slideEasingType === 'preset'"
       :options="slideEasingPresetOptions"
-      v-model="slideEasingPreset"
+      v-model:value="slideEasingPreset"
       width="200"
-      search
+      show-search
     />
   </Space>
   <br />
@@ -873,7 +873,7 @@ const images = ref<CarouselImage[]>([
 
 <br/>
 
-<Space align="center"> loop: <Switch v-model="loop" /> </Space>
+<Space align="center"> loop: <Switch v-model:value="loop" /> </Space>
 <br />
 <br />
 <Carousel :images="images" :height="450" :loop="loop" />
@@ -912,7 +912,7 @@ const images = ref<CarouselImage[]>([
 const loop = ref<boolean>(true)
 </script>
 <template>
-  <Space align="center"> loop: <Switch v-model="loop" /> </Space>
+  <Space align="center"> loop: <Switch v-model:value="loop" /> </Space>
   <br />
   <br />
   <Carousel :images="images" :height="450" :loop="loop" />
@@ -1137,7 +1137,7 @@ function onAfterChange(current: number) {
 <br/>
 
 <Space align="center">
-  objectFit: <Select :options="objectFitOptions" v-model="objectFit" style="width: 160px" />
+  objectFit: <Select :options="objectFitOptions" v-model:value="objectFit" style="width: 160px" />
 </Space>
 <br />
 <br />
@@ -1200,7 +1200,7 @@ const objectFit = ref<CarouselProps['objectFit']>('fill')
 </script>
 <template>
   <Space align="center">
-    objectFit: <Select :options="objectFitOptions" v-model="objectFit" style="width: 160px" />
+    objectFit: <Select :options="objectFitOptions" v-model:value="objectFit" style="width: 160px" />
   </Space>
   <br />
   <br />
@@ -1216,7 +1216,7 @@ const objectFit = ref<CarouselProps['objectFit']>('fill')
 
 <br/>
 
-<Space align="center"> draggable: <Switch v-model="draggable" /> </Space>
+<Space align="center"> draggable: <Switch v-model:value="draggable" /> </Space>
 <br />
 <br />
 <Carousel :images="images" :height="450" :draggable="draggable" />
@@ -1255,7 +1255,7 @@ const images = ref<CarouselImage[]>([
 const draggable = ref<boolean>(true)
 </script>
 <template>
-  <Space align="center"> draggable: <Switch v-model="draggable" /> </Space>
+  <Space align="center"> draggable: <Switch v-model:value="draggable" /> </Space>
   <br />
   <br />
   <Carousel :images="images" :height="450" :draggable="draggable" />
@@ -1270,7 +1270,7 @@ const draggable = ref<boolean>(true)
 
 <br/>
 
-<Space align="center"> mousewheel: <Switch v-model="mousewheel" /> </Space>
+<Space align="center"> mousewheel: <Switch v-model:value="mousewheel" /> </Space>
 <br />
 <br />
 <Carousel :images="images" :height="450" :mousewheel="mousewheel" />
@@ -1309,7 +1309,7 @@ const images = ref<CarouselImage[]>([
 const mousewheel = ref<boolean>(true)
 </script>
 <template>
-  <Space align="center"> mousewheel: <Switch v-model="mousewheel" /> </Space>
+  <Space align="center"> mousewheel: <Switch v-model:value="mousewheel" /> </Space>
   <br />
   <br />
   <Carousel :images="images" :height="450" :mousewheel="mousewheel" />
@@ -1586,10 +1586,10 @@ function getCurrentIndex() {
       </Flex>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical> autoplay：<Switch v-model="state.autoplay" /> </Space>
+      <Space gap="small" vertical> autoplay：<Switch v-model:value="state.autoplay" /> </Space>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical> pauseOnMouseEnter：<Switch v-model="state.pauseOnMouseEnter" /> </Space>
+      <Space gap="small" vertical> pauseOnMouseEnter：<Switch v-model:value="state.pauseOnMouseEnter" /> </Space>
     </Col>
     <Col :span="6">
       <Space gap="small" vertical>
@@ -1602,7 +1602,7 @@ function getCurrentIndex() {
       </Flex>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical> loop：<Switch v-model="state.loop" /> </Space>
+      <Space gap="small" vertical> loop：<Switch v-model:value="state.loop" /> </Space>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
@@ -1615,7 +1615,7 @@ function getCurrentIndex() {
       </Flex>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical> showArrow：<Switch v-model="state.showArrow" /> </Space>
+      <Space gap="small" vertical> showArrow：<Switch v-model:value="state.showArrow" /> </Space>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
@@ -1626,7 +1626,7 @@ function getCurrentIndex() {
       <Flex gap="small" vertical> arrowSize：<Slider v-model:value="state.arrowSize" :min="1" /> </Flex>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical> dots：<Switch v-model="state.dots" /> </Space>
+      <Space gap="small" vertical> dots：<Switch v-model:value="state.dots" /> </Space>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
@@ -1646,7 +1646,7 @@ function getCurrentIndex() {
     <Col :span="6">
       <Flex gap="small" vertical>
         dotPosition：
-        <Select :options="positionOptions" v-model="state.dotPosition" />
+        <Select :options="positionOptions" v-model:value="state.dotPosition" />
       </Flex>
     </Col>
     <Col :span="6">
@@ -1657,14 +1657,14 @@ function getCurrentIndex() {
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
-        objectFit：<Select :options="objectFitOptions" v-model="state.objectFit" />
+        objectFit：<Select :options="objectFitOptions" v-model:value="state.objectFit" />
       </Flex>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical> draggable：<Switch v-model="state.draggable" /> </Space>
+      <Space gap="small" vertical> draggable：<Switch v-model:value="state.draggable" /> </Space>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical> mousewheel：<Switch v-model="state.mousewheel" /> </Space>
+      <Space gap="small" vertical> mousewheel：<Switch v-model:value="state.mousewheel" /> </Space>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
@@ -1673,7 +1673,7 @@ function getCurrentIndex() {
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
-        fadeFunction：<Select :options="fadeFunctionOptions" v-model="state.fadeFunction" />
+        fadeFunction：<Select :options="fadeFunctionOptions" v-model:value="state.fadeFunction" />
       </Flex>
     </Col>
     <Col :span="6">
@@ -1683,7 +1683,7 @@ function getCurrentIndex() {
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
-        slideFunction：<Select :options="slideFunctionOptions" v-model="slideFunctionName" />
+        slideFunction：<Select :options="slideFunctionOptions" v-model:value="slideFunctionName" />
       </Flex>
     </Col>
   </Row>
@@ -1879,10 +1879,10 @@ watch(
         </Flex>
       </Col>
       <Col :span="6">
-        <Space gap="small" vertical> autoplay：<Switch v-model="state.autoplay" /> </Space>
+        <Space gap="small" vertical> autoplay：<Switch v-model:value="state.autoplay" /> </Space>
       </Col>
       <Col :span="6">
-        <Space gap="small" vertical> pauseOnMouseEnter：<Switch v-model="state.pauseOnMouseEnter" /> </Space>
+        <Space gap="small" vertical> pauseOnMouseEnter：<Switch v-model:value="state.pauseOnMouseEnter" /> </Space>
       </Col>
       <Col :span="6">
         <Space gap="small" vertical>
@@ -1895,7 +1895,7 @@ watch(
         </Flex>
       </Col>
       <Col :span="6">
-        <Space gap="small" vertical> loop：<Switch v-model="state.loop" /> </Space>
+        <Space gap="small" vertical> loop：<Switch v-model:value="state.loop" /> </Space>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
@@ -1908,7 +1908,7 @@ watch(
         </Flex>
       </Col>
       <Col :span="6">
-        <Space gap="small" vertical> showArrow：<Switch v-model="state.showArrow" /> </Space>
+        <Space gap="small" vertical> showArrow：<Switch v-model:value="state.showArrow" /> </Space>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
@@ -1919,7 +1919,7 @@ watch(
         <Flex gap="small" vertical> arrowSize：<Slider v-model:value="state.arrowSize" :min="1" /> </Flex>
       </Col>
       <Col :span="6">
-        <Space gap="small" vertical> dots：<Switch v-model="state.dots" /> </Space>
+        <Space gap="small" vertical> dots：<Switch v-model:value="state.dots" /> </Space>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
@@ -1939,7 +1939,7 @@ watch(
       <Col :span="6">
         <Flex gap="small" vertical>
           dotPosition：
-          <Select :options="positionOptions" v-model="state.dotPosition" />
+          <Select :options="positionOptions" v-model:value="state.dotPosition" />
         </Flex>
       </Col>
       <Col :span="6">
@@ -1950,14 +1950,14 @@ watch(
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
-          objectFit：<Select :options="objectFitOptions" v-model="state.objectFit" />
+          objectFit：<Select :options="objectFitOptions" v-model:value="state.objectFit" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Space gap="small" vertical> draggable：<Switch v-model="state.draggable" /> </Space>
+        <Space gap="small" vertical> draggable：<Switch v-model:value="state.draggable" /> </Space>
       </Col>
       <Col :span="6">
-        <Space gap="small" vertical> mousewheel：<Switch v-model="state.mousewheel" /> </Space>
+        <Space gap="small" vertical> mousewheel：<Switch v-model:value="state.mousewheel" /> </Space>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
@@ -1966,7 +1966,7 @@ watch(
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
-          fadeFunction：<Select :options="fadeFunctionOptions" v-model="state.fadeFunction" />
+          fadeFunction：<Select :options="fadeFunctionOptions" v-model:value="state.fadeFunction" />
         </Flex>
       </Col>
       <Col :span="6">
@@ -1976,7 +1976,7 @@ watch(
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
-          slideFunction：<Select :options="slideFunctionOptions" v-model="slideFunctionName" />
+          slideFunction：<Select :options="slideFunctionOptions" v-model:value="slideFunctionName" />
         </Flex>
       </Col>
     </Row>

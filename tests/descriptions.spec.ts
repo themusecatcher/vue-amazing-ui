@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick, h } from 'vue'
-import Descriptions from 'components/descriptions/descriptions/Descriptions.vue'
+import Descriptions from 'components/descriptions/Descriptions.vue'
 import DescriptionsItem from 'components/descriptions/descriptions-item'
 
 const makeItems = (configs: { label?: string; span?: number; content: string }[]) =>

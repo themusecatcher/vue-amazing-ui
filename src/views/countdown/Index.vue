@@ -33,7 +33,7 @@ function onReset() {
     />
     <h2 class="mt30 mb10">随时暂停</h2>
     <Space vertical>
-      <Switch v-model="active" />
+      <Switch v-model:value="active" />
       <Countdown
         :active="active"
         title="Pause at any time"
@@ -65,7 +65,7 @@ function onReset() {
     <h2 class="mt30 mb10">重置倒计时</h2>
     <Space vertical>
       <Space align="center">
-        <Switch v-model="resetActive" />
+        <Switch v-model:value="resetActive" />
         <Button type="primary" @click="onReset">Reset</Button>
       </Space>
       <Countdown

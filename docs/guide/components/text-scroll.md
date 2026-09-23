@@ -552,9 +552,9 @@ function onClick(item: TextScrollItem) {
   <Space vertical>
     <Space align="center">
       vertical:
-      <Switch v-model="vertical" />
+      <Switch v-model:value="vertical" />
       ellipsis:
-      <Switch v-model="ellipsis" />
+      <Switch v-model:value="ellipsis" />
     </Space>
     <Space>
       <Button type="primary" :disabled="disabled" @click="handleStart">开始</Button>
@@ -623,9 +623,9 @@ function onClick(item: TextScrollItem) {
     <Space vertical>
       <Space align="center">
         vertical:
-        <Switch v-model="vertical" />
+        <Switch v-model:value="vertical" />
         ellipsis:
-        <Switch v-model="ellipsis" />
+        <Switch v-model:value="ellipsis" />
       </Space>
       <Space>
         <Button type="primary" :disabled="disabled" @click="handleStart">开始</Button>
@@ -701,7 +701,7 @@ function onClick(item: TextScrollItem) {
     <Col :span="6">
       <Space gap="small" vertical>
         vertical:
-        <Switch v-model="state.vertical" />
+        <Switch v-model:value="state.vertical" />
       </Space>
     </Col>
     <Col :span="6">
@@ -719,13 +719,13 @@ function onClick(item: TextScrollItem) {
     <Col :span="6">
       <Space gap="small" vertical>
         ellipsis:
-        <Switch v-model="state.ellipsis" />
+        <Switch v-model:value="state.ellipsis" />
       </Space>
     </Col>
     <Col :span="6">
       <Space gap="small" vertical>
         pauseOnMouseEnter:
-        <Switch v-model="state.pauseOnMouseEnter" />
+        <Switch v-model:value="state.pauseOnMouseEnter" />
       </Space>
     </Col>
   </Row>
@@ -865,7 +865,7 @@ const state = reactive({
       <Col :span="6">
         <Space gap="small" vertical>
           vertical:
-          <Switch v-model="state.vertical" />
+          <Switch v-model:value="state.vertical" />
         </Space>
       </Col>
       <Col :span="6">
@@ -883,13 +883,13 @@ const state = reactive({
       <Col :span="6">
         <Space gap="small" vertical>
           ellipsis:
-          <Switch v-model="state.ellipsis" />
+          <Switch v-model:value="state.ellipsis" />
         </Space>
       </Col>
       <Col :span="6">
         <Space gap="small" vertical>
           pauseOnMouseEnter:
-          <Switch v-model="state.pauseOnMouseEnter" />
+          <Switch v-model:value="state.pauseOnMouseEnter" />
         </Space>
       </Col>
     </Row>

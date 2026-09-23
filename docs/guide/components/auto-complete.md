@@ -798,7 +798,7 @@ _通过 `dropdownMatchSelectWidth` 指定面板宽度：`true` 与输入框等�
 
 <br/>
 
-<Space align="start" :size="40">
+<Space :size="40">
   <AutoComplete
     v-model:value="valueMatchWidthTrue"
     :options="optionsMatchWidth"
@@ -836,7 +836,7 @@ const optionsMatchWidth = [
 ]
 </script>
 <template>
-  <Space align="start" :size="40">
+  <Space :size="40">
     <AutoComplete
       v-model:value="valueMatchWidthTrue"
       :options="optionsMatchWidth"
@@ -1457,11 +1457,11 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 
 ## Slots
 
-| 名称      | 说明                                   | 用法                             |
-| :-------- | :-------------------------------------- | :------------------------------- |
-| default   | 自定义输入组件（替代原生 `input` 元素） | v-slot:default                   |
-| clearIcon | 自定义清除图标                         | v-slot:clearIcon="{ clearIcon }" |
-| option    | 自定义选项内容                         | v-slot:option                    |
+| 名称      | 说明                                                                   | 用法                             |
+| :-------- | :---------------------------------------------------------------------- | :------------------------------- |
+| default   | 自定义输入组件（替代原生 `input` 元素）                                 | v-slot:default                   |
+| clearIcon | 自定义清除图标，作用域参数 `clearIcon` 为清除方法                       | v-slot:clearIcon="{ clearIcon }" |
+| option    | 自定义选项内容，作用域为当前选项数据，[AutoCompleteOption](#option-type) 的自定义字段会一并透传 | v-slot:option                    |
 
 ## Methods
 

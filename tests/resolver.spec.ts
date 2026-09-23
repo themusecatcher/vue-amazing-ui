@@ -57,6 +57,32 @@ function collectVueFiles(dir: string): string[] {
     return entry.name.endsWith('.vue') ? [fullPath] : []
   })
 }
+/** 从 components/components.ts 源码解析公开的运行时导出名（排除 export type），用于与登记名做差集 */
+function parseExportedComponentNames(): string[] {
+  const source = readFileSync(resolve(process.cwd(), 'components/components.ts'), 'utf-8')
+  const names: string[] = []
+  for (const line of source.split('\n')) {
+    if (/^export type/.test(line)) {
+      continue
+    }
+    const def = line.match(/export \{ default as ([A-Za-z0-9]+)/)
+    if (def) {
+      names.push(def[1])
+    }
+    const named = line.match(/^export \{ ([^}]+) \} from/)
+    if (named) {
+      named[1]
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .forEach((n) => {
+          const alias = n.match(/default as ([A-Za-z0-9]+)/)
+          names.push(alias ? alias[1] : n)
+        })
+    }
+  }
+  return names
+}
 
 describe('resolver - 样式入口路径', () => {
   it('已知组件返回单条样式入口', () => {
@@ -76,10 +102,11 @@ describe('resolver - 样式入口路径', () => {
     expect(sideEffectsOf('NotificationProvider')).toEqual(['vue-amazing-ui/es/notification/style/index.js'])
     expect(sideEffectsOf('ModalProvider')).toEqual(['vue-amazing-ui/es/modal/style/index.js'])
     expect(sideEffectsOf('DialogProvider')).toEqual(['vue-amazing-ui/es/dialog/style/index.js'])
+    expect(sideEffectsOf('LoadingBarProvider')).toEqual(['vue-amazing-ui/es/loading-bar/style/index.js'])
   })
 
   it('子组件样式来源落在父组件目录下', () => {
-    expect(sideEffectsOf('DescriptionsItem')).toEqual(['vue-amazing-ui/es/descriptions/descriptions/style/index.js'])
+    expect(sideEffectsOf('DescriptionsItem')).toEqual(['vue-amazing-ui/es/descriptions/style/index.js'])
   })
 
   it('嵌套目录组件的入口路径正确', () => {
@@ -88,17 +115,27 @@ describe('resolver - 样式入口路径', () => {
     expect(sideEffectsOf('ListItem')).toEqual(['vue-amazing-ui/es/list/list-item/style/index.js'])
   })
 
-  it('四个命令式 Provider 均应能被解析', () => {
-    ;['MessageProvider', 'NotificationProvider', 'ModalProvider', 'DialogProvider'].forEach((name) => {
-      const result = VueAmazingUIResolver().resolve(name)
-      expect(result, `${name} 应能被 resolver 解析`).toBeDefined()
-      expect(result?.from).toBe('vue-amazing-ui')
-      expect(result?.name).toBe(name)
-    })
+  it('五个命令式 Provider 均应能被解析', () => {
+    ;['MessageProvider', 'NotificationProvider', 'ModalProvider', 'DialogProvider', 'LoadingBarProvider'].forEach(
+      (name) => {
+        const result = VueAmazingUIResolver().resolve(name)
+        expect(result, `${name} 应能被 resolver 解析`).toBeDefined()
+        expect(result?.from).toBe('vue-amazing-ui')
+        expect(result?.name).toBe(name)
+      }
+    )
   })
 
   it('未收录组件应返回 undefined，交由其它 resolver 处理', () => {
     expect(VueAmazingUIResolver().resolve('NotExistComponent')).toBeUndefined()
+  })
+
+  // 注意：`componentsMap` 收录的是「样式入口可解析」的全部名字，其中内部浮层宿主 `Popup` 为给
+  // `componentDependencies` 提供样式来源而保留，但**未从 `components/components.ts` 导出**。
+  // 因此在模板中直接写 `<Popup>` 时 resolver 仍会返回结果，消费方会得到
+  // 「does not provide an export named …」的构建期报错 —— 未公开的内部组件本就不该被使用者书写，报错越早越明确。
+  it('未公开的内部浮层宿主仍保留样式来源解析', () => {
+    expect(VueAmazingUIResolver().resolve('Popup')?.sideEffects).toEqual(['vue-amazing-ui/es/popup/style/index.js'])
   })
 })
 
@@ -123,6 +160,16 @@ describe('resolver - 全量组件映射', () => {
       expect(sourceDir, `${name} 的样式来源 ${source} 应已收录于 componentsMap`).toBeDefined()
       expect(effects[0], `${name} 的入口路径异常`).toBe(`vue-amazing-ui/es/${sourceDir}/style/index.js`)
     })
+  })
+
+  // 回归守护：`componentsMap` 中登记的名字都会进入 resolver 的解析范围，而 resolver 生成的
+  // `import { X } from 'vue-amazing-ui'` 必须真实可解析 —— 两者一旦出现差集，消费方在模板中写下
+  // 该名字时就会拿到「does not provide an export named …」的构建期报错。
+  // 内部浮层宿主 `Popup` 是唯一的例外：仅为 `componentDependencies` 提供样式来源，不对外导出。
+  it('登记名与公开导出名的差集只应有内部浮层宿主 Popup', () => {
+    const exported = new Set(parseExportedComponentNames())
+    const unexported = entries.map(([name]) => name).filter((name) => !exported.has(name))
+    expect(unexported, `以下登记名未从主入口导出：${unexported.join('、')}`).toEqual(['Popup'])
   })
 })
 

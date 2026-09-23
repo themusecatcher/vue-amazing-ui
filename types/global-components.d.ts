@@ -46,6 +46,7 @@ declare module 'vue' {
     List: typeof VueAmazingUI.List
     ListItem: typeof VueAmazingUI.ListItem
     LoadingBar: typeof VueAmazingUI.LoadingBar
+    LoadingBarProvider: typeof VueAmazingUI.LoadingBarProvider
     Message: typeof VueAmazingUI.Message
     MessageProvider: typeof VueAmazingUI.MessageProvider
     Modal: typeof VueAmazingUI.Modal
@@ -65,6 +66,8 @@ declare module 'vue' {
     Scrollbar: typeof VueAmazingUI.Scrollbar
     Segmented: typeof VueAmazingUI.Segmented
     Select: typeof VueAmazingUI.Select
+    SelectOptGroup: typeof VueAmazingUI.SelectOptGroup
+    SelectOption: typeof VueAmazingUI.SelectOption
     Skeleton: typeof VueAmazingUI.Skeleton
     Slider: typeof VueAmazingUI.Slider
     Space: typeof VueAmazingUI.Space

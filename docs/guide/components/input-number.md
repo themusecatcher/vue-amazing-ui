@@ -258,7 +258,7 @@ watchEffect(() => {
 ## 禁用
 
 <Space vertical>
-  <Space align="center">disabled: <Switch v-model="disabled" /></Space>
+  <Space align="center">disabled: <Switch v-model:value="disabled" /></Space>
   <InputNumber v-model:value="value" :disabled="disabled" />
 </Space>
 
@@ -272,7 +272,7 @@ const disabled = ref(true)
 </script>
 <template>
   <Space vertical>
-    <Space align="center">disabled: <Switch v-model="disabled" /></Space>
+    <Space align="center">disabled: <Switch v-model:value="disabled" /></Space>
     <InputNumber v-model:value="value" :disabled="disabled" />
   </Space>
 </template>

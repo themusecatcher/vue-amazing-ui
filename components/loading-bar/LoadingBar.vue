@@ -2,6 +2,7 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
 import { useInject, useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import type { LoadingBarApi } from './useLoadingBar'
 export interface Props {
   containerClass?: string // 加载条容器的类名
   containerStyle?: CSSProperties // 加载条容器的样式
@@ -9,6 +10,11 @@ export interface Props {
   colorLoading?: string // 加载中颜色
   colorFinish?: string // 加载完成颜色
   colorError?: string // 加载错误颜色
+  loadingBarStyle?: {
+    loading?: string | CSSProperties // 加载中状态下的自定义样式
+    finish?: string | CSSProperties // 加载完成状态下的自定义样式
+    error?: string | CSSProperties // 错误状态下的自定义样式
+  }
   to?: string | HTMLElement | false // 加载条的挂载位置，可选：元素标签名（例如 body）或者元素本身，false 会待在原地
 }
 const props = withDefaults(defineProps<Props>(), {
@@ -18,6 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
   colorLoading: undefined,
   colorFinish: undefined,
   colorError: '#ff4d4f',
+  loadingBarStyle: undefined,
   to: 'body'
 })
 // 根节点是 Teleport，属性无法自动透传（Vue 会对 teleport 根告警并丢弃 class / style），
@@ -59,6 +66,21 @@ const colorFinishComputed = computed(() => {
   } else {
     return props.colorFinish
   }
+})
+// 按状态取自定义样式，作用于内层进度条元素：
+// 错误态取 error；完成态取 finish，未提供 finish 时回落到 loading（保持「非错误态取 loading」的既有语义，只多一层覆盖入口）
+const loadingBarStyleComputed = computed<string | CSSProperties>(() => {
+  const loadingBarStyle = props.loadingBarStyle
+  if (!loadingBarStyle) {
+    return {}
+  }
+  if (loadingErroring.value) {
+    return loadingBarStyle.error ?? {}
+  }
+  if (loadingFinishing.value) {
+    return loadingBarStyle.finish ?? loadingBarStyle.loading ?? {}
+  }
+  return loadingBarStyle.loading ?? {}
 })
 watch(
   showLoadingBar,
@@ -143,11 +165,11 @@ function onAfterEnter(): void {
 async function onAfterLeave(): Promise<void> {
   await init()
 }
-defineExpose({
-  start,
-  finish,
-  error
-})
+const emits = defineEmits<{
+  ready: [api: LoadingBarApi]
+}>()
+// 向 <LoadingBarProvider> 回传 api，使其无需依赖模板 ref 即可对外提供
+emits('ready', { start, finish, error })
 </script>
 <template>
   <Teleport :disabled="to === false" :to="to === false ? null : to">
@@ -175,7 +197,7 @@ defineExpose({
           containerStyle
         ]"
       >
-        <div ref="loadingBarRef" class="loading-bar" style="max-width: 100%"></div>
+        <div ref="loadingBarRef" class="loading-bar" :style="loadingBarStyleComputed"></div>
       </div>
     </Transition>
   </Teleport>
@@ -200,6 +222,9 @@ defineExpose({
   height: var(--loading-bar-size);
   .loading-bar {
     width: 100%;
+    // 初始上限值放在样式表中（而非内联 style）：内联 style 会被 :style 绑定纳入 diff，
+    // 组件重渲染时把进度值重置回 100%，破坏 JavaScript 驱动的进度动画
+    max-width: 100%;
     transition:
       max-width 4s linear,
       background 0.2s linear;

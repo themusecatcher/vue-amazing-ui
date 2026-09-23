@@ -357,10 +357,10 @@ watchEffect(() => {
 
 <Row :gutter="[24, 12]">
   <Col :span="6">
-    <Space vertical> allowClear:<Switch v-model="state.allowClear" /> </Space>
+    <Space vertical> allowClear:<Switch v-model:value="state.allowClear" /> </Space>
   </Col>
   <Col :span="6">
-    <Space vertical> allowHalf:<Switch v-model="state.allowHalf" /> </Space>
+    <Space vertical> allowHalf:<Switch v-model:value="state.allowHalf" /> </Space>
   </Col>
   <Col :span="6">
     <Flex gap="small" vertical> count:<Slider v-model:value="state.count" :min="3" :max="10" /> </Flex>
@@ -375,10 +375,10 @@ watchEffect(() => {
     <Flex gap="small" vertical> gap:<Slider v-model:value="state.gap" :min="0" :max="100" /> </Flex>
   </Col>
   <Col :span="6">
-    <Space vertical> disabled:<Switch v-model="state.disabled" /> </Space>
+    <Space vertical> disabled:<Switch v-model:value="state.disabled" /> </Space>
   </Col>
   <Col :span="6">
-    <Flex gap="small" vertical> effect：<Select :options="characterOptions" v-model="state.character" /> </Flex>
+    <Flex gap="small" vertical> effect：<Select :options="characterOptions" v-model:value="state.character" /> </Flex>
   </Col>
   <Col :span="6" v-if="state.character === 'custom-character'">
     <Flex gap="small" vertical>
@@ -437,10 +437,10 @@ const state = reactive({
 <template>
   <Row :gutter="[24, 12]">
     <Col :span="6">
-      <Space vertical> allowClear:<Switch v-model="state.allowClear" /> </Space>
+      <Space vertical> allowClear:<Switch v-model:value="state.allowClear" /> </Space>
     </Col>
     <Col :span="6">
-      <Space vertical> allowHalf:<Switch v-model="state.allowHalf" /> </Space>
+      <Space vertical> allowHalf:<Switch v-model:value="state.allowHalf" /> </Space>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical> count:<Slider v-model:value="state.count" :min="3" :max="10" /> </Flex>
@@ -455,10 +455,10 @@ const state = reactive({
       <Flex gap="small" vertical> gap:<Slider v-model:value="state.gap" :min="0" :max="100" /> </Flex>
     </Col>
     <Col :span="6">
-      <Space vertical> disabled:<Switch v-model="state.disabled" /> </Space>
+      <Space vertical> disabled:<Switch v-model:value="state.disabled" /> </Space>
     </Col>
     <Col :span="6">
-      <Flex gap="small" vertical> effect：<Select :options="characterOptions" v-model="state.character" /> </Flex>
+      <Flex gap="small" vertical> effect：<Select :options="characterOptions" v-model:value="state.character" /> </Flex>
     </Col>
     <Col :span="6" v-if="state.character === 'custom-character'">
       <Flex gap="small" vertical>

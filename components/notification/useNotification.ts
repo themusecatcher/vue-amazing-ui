@@ -1,5 +1,5 @@
-import { inject } from 'vue'
 import type { InjectionKey } from 'vue'
+import { injectFromChain } from 'components/utils'
 import type { NotificationOptions, NotificationReactive } from './Notification.vue'
 
 export interface NotificationApi {
@@ -19,7 +19,7 @@ export const notificationApiKey: InjectionKey<NotificationApi> = Symbol('notific
  * 脱离组件树的场景请改用 `createDiscreteApi`。
  */
 export function useNotification(): NotificationApi {
-  const api = inject(notificationApiKey, null)
+  const api = injectFromChain(notificationApiKey)
   if (!api) {
     throw new Error(
       '[useNotification] 未获取到 Notification api，请在 <NotificationProvider> 内部使用，或改用 createDiscreteApi'

@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /**
- * 样式依赖表 ↔ 产物 chunk 依赖图 的闭包一致性校验（D-12）
+ * 产物级一致性校验（D-12）：样式依赖闭包 + 聚合入口导出
+ *
+ * ## 一、样式依赖表 ↔ 产物 chunk 依赖图 的闭包一致性
  *
  * 背景：`componentDependencies` 漏写某个「实际用到的依赖组件」时，依赖组件自身的 CSS 依然存在于产物里，
  * 因此「文件存在性断言」（生成器 / 发布守卫）抓不到 —— 只有消费方视觉上才会发现样式缺失。
@@ -16,9 +18,19 @@
  *   - 只校验**依赖集合的完整性**；**顺序与层叠仍由手写表 `componentDependencies` 决定**（生成器按表顺序写入口）；
  *   - 无法从 chunk 图推导的合法依赖（异步 `import()`、条件渲染、跨包耦合）用下方 EXEMPTIONS 显式登记，
  *     每条必须写明原因
- *   - 需要已构建的 `es/` 产物 → 本脚本挂在 `pnpm verify` 链（`verify:deps`），不进 `pnpm check`。
+ *   - 需要已构建的 `es/` + `lib/` 产物 → 本脚本挂在 `pnpm verify` 链（`verify:deps`），不进 `pnpm check`。
+ *
+ * ## 二、聚合入口导出一致性
+ *
+ * 与样式无关，但同属「需产物、写错即静默失败」的一类：
+ * `<dir>/index.d.ts` 声明的值导出必须与产物模块的运行时导出**双向**一致。纯转发的具名导出
+ * （`export { useX } from './useX'`）会被 Rollup 转发优化剔除 —— 入口自身另有本地绑定（如
+ * `export default withInstall(X)`）时模块仍存在、`index.js` 也会生成，只是该具名导出不在其中，
+ * 而 `index.d.ts` 仍照常声明，消费方走深路径 `vue-amazing-ui/es|lib/<dir>` 时取到 `undefined`。
+ * 该类错位对 `pnpm build`、type-check、单测与 `prepublish-guard.js` 第 ⑤ 项（只查模块存在性）均不可见。
  */
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
+import { createRequire } from 'node:module'
 import { dirname, relative, resolve } from 'node:path'
 import { readStyleDeps, rootDir, styleSourceOf } from './parse-style-deps.js'
 
@@ -33,8 +45,8 @@ const esDir = resolve(rootDir, 'es')
 const componentNames = Object.keys(componentsMap)
 const styleless = new Set(stylelessComponents)
 
-if (!existsSync(esDir)) {
-  console.error('❌ 未找到 es/ 产物，请先执行 `pnpm build` 后再运行 `pnpm verify:deps`')
+if (!existsSync(esDir) || !existsSync(resolve(rootDir, 'lib'))) {
+  console.error('❌ 未找到 es/ 或 lib/ 产物，请先执行 `pnpm build` 后再运行 `pnpm verify:deps`')
   process.exit(1)
 }
 
@@ -164,12 +176,139 @@ componentNames.forEach((componentName) => {
   }
 })
 
-if (issues.length > 0) {
-  console.error('❌ 样式依赖一致性校验未通过：')
-  issues.forEach((issue) => console.error(`   ✗ ${issue}`))
-  console.error('   请修改 components/utils/style-deps.ts 的 componentDependencies；确属无法从 chunk 图推导的依赖，')
-  console.error('   在 scripts/verify-style-deps.js 的 EXEMPTIONS 中登记并写明原因')
+/**
+ * ============ 二、聚合入口导出一致性 ============
+ *
+ * 比对 `<dir>/index.d.ts` 声明的**值**导出与产物模块的运行时导出，双向断言：
+ *   - 声明 ⊆ 运行时 → 抓「类型有声明、运行时无导出」（纯转发具名导出被 Rollup 转发优化剔除）；
+ *   - 运行时 ⊆ 声明 → 抓「有导出无声明」（消费方拿不到类型）。
+ *
+ * 只解析携带 `index.d.ts` 且**同时**有运行时入口的目录：整个入口纯转发导致 `index.js` 缺失的情形
+ * 由 `scripts/prepublish-guard.js` 第 ⑤ 项负责，本脚本不重复报错（`utils/` 已登记为例外）。
+ */
+const dtsExportCache = new Map()
+
+/** 解析 `*.d.ts` 声明的值导出：`export type` 为纯类型出口，不参与比对 */
+function collectDeclaredExports(dtsPath) {
+  if (dtsExportCache.has(dtsPath)) {
+    return dtsExportCache.get(dtsPath)
+  }
+  const names = new Set()
+  // 先落缓存再解析：`export *` 形成环时天然截断，不会无限递归
+  dtsExportCache.set(dtsPath, names)
+  if (!existsSync(dtsPath)) {
+    return names
+  }
+  readFileSync(dtsPath, 'utf-8')
+    .split('\n')
+    .forEach((line) => {
+      const starMatched = line.match(/^export \* from '([^']+)'/)
+      if (starMatched) {
+        collectDeclaredExports(resolveDtsSpecifier(dtsPath, starMatched[1])).forEach((name) => names.add(name))
+        return
+      }
+      const namespaceMatched = line.match(/^export \* as (\w+) from/)
+      if (namespaceMatched) {
+        names.add(namespaceMatched[1])
+        return
+      }
+      // `export type { ... }` 不以 `export {` 开头，不会命中此分支
+      const exportMatched = line.match(/^export \{([^}]*)\}/)
+      if (exportMatched) {
+        exportMatched[1].split(',').forEach((item) => {
+          const name = item
+            .trim()
+            .replace(/^default as /, '')
+            .trim()
+          if (name) {
+            names.add(name)
+          }
+        })
+        return
+      }
+      const declaredMatched = line.match(/^export declare (?:const|function|class|let|var) (\w+)/)
+      if (declaredMatched) {
+        names.add(declaredMatched[1])
+        return
+      }
+      if (/^export default\b/.test(line)) {
+        names.add('default')
+      }
+    })
+  return names
+}
+
+/** 把 `*.d.ts` 内的相对模块说明符解析为真实声明文件路径 */
+function resolveDtsSpecifier(fromDts, specifier) {
+  const base = resolve(dirname(fromDts), specifier)
+  const candidates = [`${base}.d.ts`, resolve(base, 'index.d.ts')]
+  return candidates.find((candidate) => existsSync(candidate)) ?? candidates[1]
+}
+
+/** 递归收集「既有 index.d.ts 又有运行时入口」的产物目录 */
+function collectEntryDirs(dir, entryFileName, result = []) {
+  if (!existsSync(dir)) {
+    return result
+  }
+  readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
+    if (!entry.isDirectory() || entry.name === 'style') {
+      return
+    }
+    const fullPath = resolve(dir, entry.name)
+    if (existsSync(resolve(fullPath, 'index.d.ts')) && existsSync(resolve(fullPath, entryFileName))) {
+      result.push(fullPath)
+    }
+    collectEntryDirs(fullPath, entryFileName, result)
+  })
+  return result
+}
+
+const requireCjs = createRequire(import.meta.url)
+const OUT_FORMATS = [
+  { dir: 'es', entryFileName: 'index.js', load: (entryPath) => import(entryPath) },
+  { dir: 'lib', entryFileName: 'index.cjs', load: (entryPath) => requireCjs(entryPath) }
+]
+const entryExportIssues = []
+let checkedEntryCount = 0
+
+for (const { dir, entryFileName, load } of OUT_FORMATS) {
+  const entryDirs = collectEntryDirs(resolve(rootDir, dir), entryFileName)
+  for (const entryDir of entryDirs) {
+    checkedEntryCount += 1
+    const entryPath = relative(rootDir, entryDir).split('\\').join('/')
+    const declaredExports = collectDeclaredExports(resolve(entryDir, 'index.d.ts'))
+    const moduleExports = new Set(Object.keys(await load(resolve(entryDir, entryFileName))))
+    const undeclaredRuntime = [...declaredExports].filter((name) => !moduleExports.has(name)).sort()
+    const missingDeclaration = [...moduleExports].filter((name) => !declaredExports.has(name)).sort()
+    if (undeclaredRuntime.length > 0) {
+      entryExportIssues.push(
+        `${entryPath} 的 index.d.ts 声明了但运行时未导出：${undeclaredRuntime.join('、')}（入口该具名导出被 Rollup 转发优化剔除）`
+      )
+    }
+    if (missingDeclaration.length > 0) {
+      entryExportIssues.push(
+        `${entryPath} 运行时导出了但 index.d.ts 未声明：${missingDeclaration.join('、')}（消费方取不到类型）`
+      )
+    }
+  }
+}
+
+if (issues.length > 0 || entryExportIssues.length > 0) {
+  if (issues.length > 0) {
+    console.error('❌ 样式依赖一致性校验未通过：')
+    issues.forEach((issue) => console.error(`   ✗ ${issue}`))
+    console.error('   请修改 components/utils/style-deps.ts 的 componentDependencies；确属无法从 chunk 图推导的依赖，')
+    console.error('   在 scripts/verify-style-deps.js 的 EXEMPTIONS 中登记并写明原因')
+  }
+  if (entryExportIssues.length > 0) {
+    console.error('❌ 聚合入口导出一致性校验未通过：')
+    entryExportIssues.forEach((issue) => console.error(`   ✗ ${issue}`))
+    console.error('   修法：入口改为经本地常量再导出（如 `export const useMessage = useMessageImpl`），')
+    console.error('   见 development/project-structure.md 的「聚合入口禁止纯转发」')
+  }
   process.exit(1)
 }
 
-console.log(`✅ 样式依赖一致性校验通过：${componentNames.length} 个组件与产物 chunk 依赖图闭包一致`)
+console.log(
+  `✅ 产物一致性校验通过：${componentNames.length} 个组件与 chunk 依赖图闭包一致，${checkedEntryCount} 个聚合入口的类型声明与运行时导出双向一致`
+)

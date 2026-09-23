@@ -166,7 +166,7 @@ function onFinished() {
     </Space>
     <h2 class="mt30 mb10">自动播放</h2>
     <Space vertical>
-      <Space align="center">autoplay：<Switch v-model="autoPlay" /></Space>
+      <Space align="center">autoplay：<Switch v-model:value="autoPlay" /></Space>
       <Statistic title="一个小目标" tabular-nums>
         <NumberAnimation :autoplay="autoPlay" :from="0" :to="value2" />
       </Statistic>
@@ -175,7 +175,13 @@ function onFinished() {
     <Space vertical>
       <Space align="center">
         <Radio v-model:value="easingCategory" :options="easingCategoryOptions" button button-style="solid" />
-        <Select v-if="easingCategory === 'preset'" v-model="easingType" :options="easingOptions" width="200" search />
+        <Select
+          v-if="easingCategory === 'preset'"
+          v-model:value="easingType"
+          :options="easingOptions"
+          width="200"
+          show-search
+        />
         <Button type="primary" @click="easingRef?.play()">播放</Button>
       </Space>
       <Statistic :title="easingLabel" tabular-nums>

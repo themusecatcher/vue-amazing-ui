@@ -89,7 +89,7 @@ const layoutOptions = [
     </Watermark>
     <h2 class="mt30 mb10">全屏幕水印</h2>
     <Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark>
-    <Space align="center"> Fullscreen: <Switch v-model="show" /> Fixed: <Switch v-model="fixed" /> </Space>
+    <Space align="center"> Fullscreen: <Switch v-model:value="show" /> Fixed: <Switch v-model:value="fixed" /> </Space>
     <h2 class="mt30 mb10">与浮层叠加</h2>
     <p class="mb10">水印是装饰层（默认 <code>z-index: 90</code>），始终位于 <code>Tooltip</code> 等浮层之下</p>
     <Watermark content="Vue Amazing UI">

@@ -392,7 +392,7 @@ function onPanelChange(): void {
           :size="display === 'card' ? 'small' : 'middle'"
           :options="yearOptions"
           :max-display="8"
-          v-model="calendarYear"
+          v-model:value="calendarYear"
           @change="onPanelChange"
           v-bind="yearSelectProps"
         />
@@ -402,7 +402,7 @@ function onPanelChange(): void {
           :size="display === 'card' ? 'small' : 'middle'"
           :options="monthOptions"
           :max-display="8"
-          v-model="calendarMonth"
+          v-model:value="calendarMonth"
           @change="onPanelChange"
           v-bind="monthSelectProps"
         />

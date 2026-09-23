@@ -50,30 +50,41 @@ export { default as Button } from './button'
 | Props 类型名 | `<组件名>Props`（`ButtonProps` / `AutoCompleteProps`） |
 | 子类型名 | `<组件名><子类型>`（`AutoCompleteOption` / `CalendarDateItem`） |
 
-复合组件（一个目录多个子组件）先在**目录级 `index.ts`** 收集子组件并重命名，再由 `components.ts` 透传：
+复合组件（一个目录多个子组件）先在**目录级 `index.ts`** 收集子组件并重命名，再由 `components.ts` 透传。
+
+目录内**有主组件**时，主组件 SFC 与 `index.ts` 平铺在目录顶层：`index.ts` 默认导出 `withInstall` 后的主组件，子组件具名导出。**无主组件**（成员平级，如 `grid`）时，成员各占子目录，目录级 `index.ts` 仅作聚合。
+
+> 注意：**子组件之外的具名导出同规则** —— `useMessage` / `useModal` / `useDialog` / `useNotification` / `useLoadingBar` 这类 `useXxx` 也必须经本地常量再导出（`import { useMessage as useMessageImpl } from './useMessage'` + `export const useMessage = useMessageImpl`）。写成 `export { useMessage } from './useMessage'` 时，入口自身另有 `export default withInstall(...)` 之类的本地绑定，**模块会存在**，因此比「整个入口纯转发」更隐蔽：产物不报错、类型不报错，只是深路径 `vue-amazing-ui/es|lib/message` 里取不到 `useMessage`。
 
 ```ts
-// components/descriptions/index.ts
-import Descriptions from './descriptions'
-import DescriptionsItem from './descriptions-item'
-export type { DescriptionsProps, Responsive as DescriptionsResponsive } from './descriptions'
+// components/descriptions/index.ts（主组件平铺，子组件在子目录）
+import Descriptions from './Descriptions.vue'
+import DescriptionsItemComp from './descriptions-item'
+import { withInstall } from '../utils/type'
+export type { Props as DescriptionsProps, Responsive as DescriptionsResponsive } from './Descriptions.vue'
 export type { DescriptionsItemProps } from './descriptions-item'
-export { Descriptions, DescriptionsItem }
+// 子组件经本地常量再导出（同 select）：纯 `export { DescriptionsItem }` 会被 Rollup 转发优化剔除，
+// 致产物 index.js 缺该具名导出，而 index.d.ts 仍有声明（类型与运行时不一致）
+export const DescriptionsItem = DescriptionsItemComp
+export default withInstall(Descriptions)
 ```
 
 ```ts
-// components/grid/index.ts
-import Row from './row'
-import Col from './col'
+// components/grid/index.ts（无主组件，成员平级）
+import RowComp from './row'
+import ColComp from './col'
 export type { RowProps, Responsive as RowResponsive } from './row'
 export type { ColProps } from './col'
-export { Row, Col }
+// 成员经本地常量再导出（同 select）：纯 `export { Row, Col }` 会被 Rollup 转发优化剔除，
+// 致产物 index.js 缺这两个具名导出，而 index.d.ts 仍有声明（类型与运行时不一致）
+export const Row = RowComp
+export const Col = ColComp
 ```
 
 ```ts
 // components/components.ts（透传目录级入口）
 export type { DescriptionsProps, DescriptionsResponsive, DescriptionsItemProps } from './descriptions'
-export { Descriptions, DescriptionsItem } from './descriptions'
+export { default as Descriptions, DescriptionsItem } from './descriptions'
 export type { RowProps, RowResponsive, ColProps } from './grid'
 export { Row, Col } from './grid'
 ```
@@ -156,7 +167,7 @@ es/tooltip/style/index.js
 
 | 表 | 作用 | 谁读 |
 | :--- | :--- | :--- |
-| `componentsMap` | 组件名 → 产物目录（如 `Button: 'button'`；复合组件走子目录，如 `Row: 'grid/row'`、`Descriptions: 'descriptions/descriptions'`、`ListItem: 'list/list-item'`），并收录 Provider 组件 | resolver（拼入口路径）＋ 生成器 |
+| `componentsMap` | 组件名 → 产物目录（如 `Button: 'button'`；主组件平铺的复合目录直接用目录名，如 `Descriptions: 'descriptions'`、`List: 'list'`；成员在子目录时走子目录，如 `Row: 'grid/row'`、`ListItem: 'list/list-item'`），并收录 Provider 组件 | resolver（拼入口路径）＋ 生成器 |
 | `styleSources` | 自身无样式文件的组件 → 承载其样式的组件（如 `MessageProvider: 'Message'`、`DescriptionsItem: 'Descriptions'`） | resolver（决定入口落在哪个目录）＋ 生成器 |
 | `componentDependencies` | 组件的样式依赖（如 `Table` 依赖 `Checkbox` / `Pagination` 等） | 生成器（按表顺序写进入口）＋ `scripts/verify-style-deps.js`（与产物 chunk 闭包双向比对） |
 | `stylelessComponents` | 完全没有样式的组件（`ConfigProvider` / `Highlight` / `NumberAnimation` / `Watermark`） | resolver（返回空）+ 生成器（跳过） |
@@ -173,8 +184,8 @@ es/tooltip/style/index.js
 | 时机 | 落点 | 校验内容 |
 | :--- | :--- | :--- |
 | 库构建 | `build/generate-style-entries.ts`（由 `vite.config.ts` 的 `stylePostBuildPlugin` 在 `mergeComponentStyles()` 之后顺序调用） | ① 入口引用的每个 CSS 都真实存在（表写错 / SFC 漏 `<style>` 块 → 报出「哪个组件缺哪个文件」）；② 组件目录下「与组件同名前缀」的 CSS 恰好 1 份（残留 `Tooltip2.css` → 报错） |
-| 发布前 | `pnpm guard`（`scripts/prepublish-guard.js`） | 毫秒级存在性校验：无编号 CSS、每个组件都有样式入口与 `index.d.ts`、入口内相对路径均可解析 |
-| 发布前 / CI | `pnpm verify:deps`（`scripts/verify-style-deps.js`） | 用产物 chunk 依赖图闭包**双向**校验 `componentDependencies`：`closure ⊆ table` 抓漏写、`table ⊆ closure` 抓 stale |
+| 发布前 | `pnpm guard`（`scripts/prepublish-guard.js`） | 毫秒级存在性校验：无编号 CSS、每个组件都有样式入口与 `index.d.ts`、入口内相对路径均可解析、**每个聚合入口的 `index.d.ts` 都有配对的 `index.js` / `index.cjs`**（纯转发入口被 Rollup 转发优化剔除后，产物只剩类型声明，深层路径报 `ERR_MODULE_NOT_FOUND`；例外 `utils` 已白名单） |
+| 发布前 / CI | `pnpm verify:deps`（`scripts/verify-style-deps.js`） | ① 用产物 chunk 依赖图闭包**双向**校验 `componentDependencies`：`closure ⊆ table` 抓漏写、`table ⊆ closure` 抓 stale；② **聚合入口导出一致性**：`<dir>/index.d.ts` 声明的值导出与 `es\|lib` 运行时导出**双向**比对，抓「类型有声明、运行时无导出」（纯转发的具名导出被 Rollup 转发优化剔除）与「有导出无声明」 |
 
 > 全量扫描与登记完整性由 `tests/resolver.spec.ts` 与 `tests/generate-style-entries.spec.ts` 守护：
 > 前者校验每个组件的入口路径合法（不含 `undefined`）、并扫描 `components/**/*.vue` 中所有不含 `<style>` 块的 SFC 是否已登记；
@@ -188,6 +199,7 @@ es/tooltip/style/index.js
 
 > - 若组件无样式文件，还需登记到 `stylelessComponents` 白名单（见 [component-design.md](component-design.md)）。
 > - 若新增的是全局提示类 Provider 组件，需在 `styleSources` 中登记其底层组件（见上文 resolver 章节）。
+> - **若新增的是子组件**（如 `Select` 的 `SelectOption` / `SelectOptGroup`），除上述三步外还需四处登记：① 组件级 `index.ts` 用**本地常量再导出**持有绑定（`export const SelectOption = SelectOptionComp`），禁止纯转发；② `components/components.ts` 按其自身具名导出追加（`export { default as Select, SelectOption, SelectOptGroup } from './select'`）；③ `style-deps.ts` 的 `componentsMap` 登记其自身样式目录，并在 `styleSources` 登记其样式来源的父组件；④ `types/global-components.d.ts` 的 `GlobalComponents` 登记组件名。目录形态与纯转发成因见 [project-structure.md](project-structure.md)。
 > - 自检：`pnpm check` 全绿后执行 `pnpm verify`（= 构建 → 依赖一致性 → 按需引入验证 → 产物守卫）。
 >   漏填 / 拼错依赖名会在**库构建期**直接失败，不再等消费方发现样式缺失。
 
@@ -196,7 +208,7 @@ es/tooltip/style/index.js
 工具函数 / Hooks 涉及「barrel + 入口 + 文档」三处登记，缺一处会导致无法从包总出口引入，或文档站不显示：
 
 1. **建函数**：在 `components/utils/` 的对应分组文件中新增并导出（`format` / `math` / `function` / `dom` / `color` / `hooks` / `observers` / `position` / `z-index` / `floating-mount` / `render`）。
-2. **登记 barrel 与入口**：确认所属分组已被 `components/utils/index.ts` 的 `export *` 覆盖；再到 `components/index.ts` 的导出列表中显式登记函数名（公开类型用 `export type` 一并登记）。仅供组件内部复用的实现细节函数（如 `getParentElement` / `renderContentToVNode` / `createKeyGenerator` / `getFloatingBoundaryRect`）与通用 Hook（如 `useInject` / `useWave` / `useWindowWidth`）**未从主入口导出**（不登记入口，仅从 barrel 供组件内部引入），不承诺 API 稳定性。
+2. **登记 barrel 与入口**：确认所属分组已被 `components/utils/index.ts` 的 `export *` 覆盖；再到 `components/index.ts` 的导出列表中显式登记函数名（公开类型用 `export type` 一并登记）。仅供组件内部复用的实现细节函数（如 `getParentElement` / `renderContentToVNode` / `createKeyGenerator` / `getFloatingBoundaryRect` / `injectFromChain`）与通用 Hook（如 `useInject` / `useWave` / `useWindowWidth`）**未从主入口导出**（不登记入口，仅从 barrel 供组件内部引入），不承诺 API 稳定性。
 3. **登记文档**：在 `docs/utils/functions/` 新增一篇或归入既有 md；并在 `docs/.vitepress/config.ts` 的 `sidebar['/utils/']` 「工具」分组登记链接。
 
 > 演示页不是必须项：工具函数如需可视化演示，可复用既有 `src/views/<camelCase>/` 页面承载。

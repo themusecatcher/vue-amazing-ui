@@ -100,9 +100,9 @@ pnpm type-check        # vue-tsc 类型检查
 pnpm check             # 聚合检查：lint:check + format:check + type-check + test
 pnpm test              # vitest 运行测试
 pnpm verify            # 重量级门禁：build + verify:deps + verify:on-demand + guard（发布前 / CI 自检）
-pnpm verify:deps       # 依赖表 ↔ 产物 chunk 闭包一致性校验（需已构建产物）
+pnpm verify:deps       # 产物一致性校验：依赖表 ↔ chunk 闭包 + 聚合入口类型声明 ↔ 运行时导出（需已构建产物）
 pnpm verify:on-demand  # 按需引入端到端验证：临时消费方工程 + canary 断言（需已构建产物）
-pnpm guard             # 产物守卫：毫秒级存在性校验（样式入口 / 编号 CSS / 入口内引用）
+pnpm guard             # 产物守卫：毫秒级存在性校验（样式入口 / 编号 CSS / 入口内引用 / 聚合入口类型与运行时配对）
 ```
 
 > `scripts/publish.sh` 也会在构建后强制执行 `verify:deps` 与 `verify:on-demand`。
@@ -124,7 +124,7 @@ pnpm guard             # 产物守卫：毫秒级存在性校验（样式入口 
   - 环境 / 内建：`env.spec.ts`、`internal.spec.ts`、`ssr.spec.ts`
   - 缺陷回归：`bugs.spec.ts`
   - 命令式 API：`discrete.spec.ts`
-  - 组件行为：`carousel-drag.spec.ts`、`carousel-slide.spec.ts`、`carousel-state.spec.ts`、`descriptions.spec.ts`、`dialog.spec.ts`、`drawer.spec.ts`、`modal.spec.ts`、`modal-icon.spec.ts`、`number-animation.spec.ts`、`popover.spec.ts`、`select-search.spec.ts`、`tooltip.spec.ts`、`watermark.spec.ts`
+  - 组件行为：`carousel-drag.spec.ts`、`carousel-slide.spec.ts`、`carousel-state.spec.ts`、`cascader.spec.ts`、`descriptions.spec.ts`、`dialog.spec.ts`、`drawer.spec.ts`、`modal.spec.ts`、`modal-icon.spec.ts`、`number-animation.spec.ts`、`popover.spec.ts`、`select-*.spec.ts`（搜索 / 多选 / 子组件 / 分组 / 标签值 / 虚拟滚动 / 键盘 / 浮层）、`option-click-selection.spec.ts`、`field-names.spec.ts`、`blur-suppression.spec.ts`、`tooltip.spec.ts`、`watermark.spec.ts`
   - 工具函数 / Hooks：`lock-scroll.spec.ts`、`scroll-parent.spec.ts`、`use-scroll.spec.ts`、`use-slots-exist.spec.ts`
   - 资源清理：`raf-cleanup.spec.ts`、`timer-cleanup.spec.ts`
   - 构建产物：`resolver.spec.ts`（样式入口路径）、`generate-style-entries.spec.ts`（入口内容与断言）、`merge-component-styles.spec.ts`（编号 CSS 合并）

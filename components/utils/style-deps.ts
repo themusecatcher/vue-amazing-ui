@@ -31,7 +31,7 @@ const componentsMap = {
   ConfigProvider: 'config-provider',
   Countdown: 'countdown',
   DatePicker: 'date-picker',
-  Descriptions: 'descriptions/descriptions',
+  Descriptions: 'descriptions',
   DescriptionsItem: 'descriptions/descriptions-item',
   Dialog: 'dialog',
   Divider: 'divider',
@@ -50,7 +50,7 @@ const componentsMap = {
   Input: 'input',
   InputNumber: 'input-number',
   InputSearch: 'input-search',
-  List: 'list/list',
+  List: 'list',
   ListItem: 'list/list-item',
   LoadingBar: 'loading-bar',
   Message: 'message',
@@ -69,6 +69,8 @@ const componentsMap = {
   Scrollbar: 'scrollbar',
   Segmented: 'segmented',
   Select: 'select',
+  SelectOptGroup: 'select/select-optgroup',
+  SelectOption: 'select/select-option',
   Skeleton: 'skeleton',
   Slider: 'slider',
   Space: 'space',
@@ -89,6 +91,7 @@ const componentsMap = {
   Waterfall: 'waterfall',
   Watermark: 'watermark',
   // 命令式调用入口组件：与底层组件同目录，自身无独立样式文件
+  LoadingBarProvider: 'loading-bar',
   MessageProvider: 'message',
   NotificationProvider: 'notification',
   ModalProvider: 'modal',
@@ -107,11 +110,14 @@ function isComponentName(name: string): name is ComponentName {
  * 用 Partial 表达「可能查不到」，与运行时行为一致；值约束为 ComponentName，拼错即在编译期报错。
  */
 const styleSources: Partial<Record<ComponentName, ComponentName>> = {
+  LoadingBarProvider: 'LoadingBar',
   MessageProvider: 'Message',
   NotificationProvider: 'Notification',
   ModalProvider: 'Modal',
   DialogProvider: 'Dialog',
-  DescriptionsItem: 'Descriptions'
+  DescriptionsItem: 'Descriptions',
+  SelectOption: 'Select',
+  SelectOptGroup: 'Select'
 }
 /**
  * 组件样式依赖关系（仅声明「除自身外」的样式依赖；自身样式由 styleSources / componentsMap 兜底）

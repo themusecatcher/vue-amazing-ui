@@ -126,7 +126,7 @@ const showIconOnly = computed(() => slotsExist.icon && !slotsExist.default)
 
 ## 函数式 / 全局组件模式
 
-`message` / `modal` / `notification` / `dialog` 四个全局提示类组件采用「SFC + Hook + Provider」三段式，目录结构（以 message 为例，其余三个同构）：
+`message` / `modal` / `notification` / `dialog` / `loading-bar` 五个全局提示类组件采用「SFC + Hook + Provider」三段式，目录结构（以 message 为例，其余四个同构）：
 
 ```
 components/message/
@@ -149,11 +149,14 @@ components/message/
 ```ts
 import Message from './Message.vue'
 import MessageProviderComp from './MessageProvider.vue'
+import { useMessage as useMessageImpl } from './useMessage'
 import { withInstall } from '../utils/type'
 
 export type { Props as MessageProps, MessageOptions, MessageReactive, MessageUpdate } from './Message.vue'
 export type { MessageApi } from './useMessage'
-export { useMessage } from './useMessage'
+// 经本地常量再导出（同 select）：纯 `export { useMessage } from './useMessage'` 会被 Rollup 转发优化
+// 剔除该具名导出，致产物 index.js 缺它、而 index.d.ts 仍有声明（类型与运行时不一致）
+export const useMessage = useMessageImpl
 
 // 与普通组件一致，挂 install 以支持 app.use(MessageProvider) 单组件安装
 export const MessageProvider = withInstall(MessageProviderComp)
@@ -200,7 +203,7 @@ components/modal/
 | 情况 | 组件 | 处理方式 |
 | :--- | :--- | :--- |
 | 业务组件，自身完全无样式 | `ConfigProvider` / `Highlight` / `NumberAnimation` / `Watermark` | 登记在 `style-deps.ts` 的 `stylelessComponents` 白名单中：resolver 返回空 sideEffects，样式入口生成器跳过 |
-| 命令式 API 的 Provider | `MessageProvider` / `ModalProvider` / `DialogProvider` / `NotificationProvider` | 在 `styleSources` 中登记其底层组件（如 `MessageProvider: 'Message'`），与底层组件**共用同一个样式入口** |
+| 命令式 API 的 Provider | `MessageProvider` / `ModalProvider` / `DialogProvider` / `NotificationProvider` / `LoadingBarProvider` | 在 `styleSources` 中登记其底层组件（如 `MessageProvider: 'Message'`、`LoadingBarProvider: 'LoadingBar'`），与底层组件**共用同一个样式入口** |
 | 子组件，样式定义在父 SFC 内 | `DescriptionsItem`（样式写在 `Descriptions.vue` 的 `<style>` 中） | 在 `styleSources` 中登记父组件（`DescriptionsItem: 'Descriptions'`），否则 resolver 会指向并不存在的入口目录 |
 
 > 新增无 `<style>` 块的 SFC 时，必须同步在 `components/utils/style-deps.ts` 中登记（白名单或 `styleSources`），

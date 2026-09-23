@@ -1309,7 +1309,7 @@ const dataSource = ref([
 <br/>
 
 <Flex vertical>
-  <Space align="center"> bordered: <Switch v-model="customStyleBordered" /> </Space>
+  <Space align="center"> bordered: <Switch v-model:value="customStyleBordered" /> </Space>
   <Table
     :columns="columnsCustomStyle"
     :data-source="dataSourceCustomStyle"
@@ -1365,7 +1365,7 @@ const rowClassName = (record: Record<string, any>, rowIndex: number) => {
 </script>
 <template>
   <Flex vertical>
-    <Space align="center"> bordered: <Switch v-model="customStyleBordered" /> </Space>
+    <Space align="center"> bordered: <Switch v-model:value="customStyleBordered" /> </Space>
     <Table
       :columns="columnsCustomStyle"
       :data-source="dataSourceCustomStyle"
@@ -1396,7 +1396,7 @@ const rowClassName = (record: Record<string, any>, rowIndex: number) => {
 <br/>
 
 <Flex vertical>
-  <Space align="center"> bordered: <Switch v-model="sizeBordered" /> </Space>
+  <Space align="center"> bordered: <Switch v-model:value="sizeBordered" /> </Space>
   <Space align="center"> size: <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" /> </Space>
   <Table :columns="columnsSize" :data-source="dataSourceSize" :bordered="sizeBordered" :size="size" />
 </Flex>
@@ -1451,7 +1451,7 @@ const dataSourceSize = ref([
 </script>
 <template>
   <Flex vertical>
-    <Space align="center"> bordered: <Switch v-model="sizeBordered" /> </Space>
+    <Space align="center"> bordered: <Switch v-model:value="sizeBordered" /> </Space>
     <Space align="center">
       size: <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
     </Space>
@@ -1465,7 +1465,7 @@ const dataSourceSize = ref([
 ## 列对齐方式
 
 <Flex vertical>
-  <Space align="center"> bordered: <Switch v-model="alignBordered" /> </Space>
+  <Space align="center"> bordered: <Switch v-model:value="alignBordered" /> </Space>
   <Space align="center"> align: <Radio :options="alignOptions" v-model:value="align" button button-style="solid" /> </Space>
   <Table :columns="columnsAlign" :data-source="dataSourceAlign" :bordered="alignBordered" />
 </Flex>
@@ -1523,7 +1523,7 @@ const dataSourceAlign = ref([
 </script>
 <template>
   <Flex vertical>
-    <Space align="center"> bordered: <Switch v-model="alignBordered" /> </Space>
+    <Space align="center"> bordered: <Switch v-model:value="alignBordered" /> </Space>
     <Space align="center">
       align: <Radio :options="alignOptions" v-model:value="align" button button-style="solid" />
     </Space>
@@ -1537,7 +1537,7 @@ const dataSourceAlign = ref([
 ## 斑马条纹
 
 <Flex vertical>
-  <Space align="center"> bordered: <Switch v-model="stripedBordered" /> </Space>
+  <Space align="center"> bordered: <Switch v-model:value="stripedBordered" /> </Space>
   <Table :columns="columnsStriped" :data-source="dataSourcesStriped" striped :bordered="stripedBordered" />
 </Flex>
 
@@ -1601,7 +1601,7 @@ const dataSourcesStriped = ref([
 </script>
 <template>
   <Flex vertical>
-    <Space align="center"> bordered: <Switch v-model="stripedBordered" /> </Space>
+    <Space align="center"> bordered: <Switch v-model:value="stripedBordered" /> </Space>
     <Table :columns="columnsStriped" :data-source="dataSourcesStriped" striped :bordered="stripedBordered" />
   </Flex>
 </template>
@@ -1612,7 +1612,7 @@ const dataSourcesStriped = ref([
 ## 页头和页脚
 
 <Flex vertical>
-  <Space align="center"> bordered: <Switch v-model="headerFooterbordered" /> </Space>
+  <Space align="center"> bordered: <Switch v-model:value="headerFooterbordered" /> </Space>
   <Table :columns="columns" :data-source="dataSource" :bordered="headerFooterbordered">
     <template #header> Header firstData name: {{ dataSource[0].name }} </template>
     <template #bodyCell="{ column, text }">
@@ -1717,7 +1717,7 @@ const dataSource = ref([
 </script>
 <template>
   <Flex vertical>
-    <Space align="center"> bordered: <Switch v-model="headerFooterbordered" /> </Space>
+    <Space align="center"> bordered: <Switch v-model:value="headerFooterbordered" /> </Space>
     <Table :columns="columns" :data-source="dataSource" :bordered="headerFooterbordered">
       <template #header> Header firstData name: {{ dataSource[0].name }} </template>
       <template #bodyCell="{ column, text }">
@@ -2662,7 +2662,7 @@ const dataSourceFixHeaderAndScrollbar = ref(data)
 <br/>
 
 <Flex vertical>
-  <Space align="center"> bordered: <Switch v-model="groupBordered" /> </Space>
+  <Space align="center"> bordered: <Switch v-model:value="groupBordered" /> </Space>
   <Table
     :columns="columnsHeaderGroup"
     :data-source="dataSourceHeaderGroup"
@@ -2771,7 +2771,7 @@ const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
 </script>
 <template>
   <Flex vertical>
-    <Space align="center"> bordered: <Switch v-model="groupBordered" /> </Space>
+    <Space align="center"> bordered: <Switch v-model:value="groupBordered" /> </Space>
     <Table
       :columns="columnsHeaderGroup"
       :data-source="dataSourceHeaderGroup"
@@ -2787,7 +2787,7 @@ const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
 ## 表格排序
 
 <Flex vertical>
-  <Space align="center"> bordered: <Switch v-model="sortBordered" /> </Space>
+  <Space align="center"> bordered: <Switch v-model:value="sortBordered" /> </Space>
   <Table :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" @sortChange="onSortChange" />
 </Flex>
 
@@ -2851,7 +2851,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
 </script>
 <template>
   <Flex vertical>
-    <Space align="center"> bordered: <Switch v-model="sortBordered" /> </Space>
+    <Space align="center"> bordered: <Switch v-model:value="sortBordered" /> </Space>
     <Table :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" @sortChange="onSortChange" />
   </Flex>
 </template>
@@ -2868,7 +2868,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
 <Flex vertical>
   <Row :gutter="[24, 12]">
     <Col :span="6">
-      <Space gap="small" vertical> bordered: <Switch v-model="selectionBordered" /> </Space>
+      <Space gap="small" vertical> bordered: <Switch v-model:value="selectionBordered" /> </Space>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical>
@@ -2881,10 +2881,10 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
       </Flex>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical> fixed: <Switch v-model="rowSelection.fixed" /> </Space>
+      <Space gap="small" vertical> fixed: <Switch v-model:value="rowSelection.fixed" /> </Space>
     </Col>
     <Col :span="6">
-      <Space gap="small" vertical> hideSelectAll: <Switch v-model="rowSelection.hideSelectAll" /> </Space>
+      <Space gap="small" vertical> hideSelectAll: <Switch v-model:value="rowSelection.hideSelectAll" /> </Space>
     </Col>
     <Col :span="6">
       <Space gap="small" vertical>
@@ -3009,7 +3009,7 @@ watchEffect(() => {
   <Flex vertical>
     <Row :gutter="[24, 12]">
       <Col :span="6">
-        <Space gap="small" vertical> bordered: <Switch v-model="selectionBordered" /> </Space>
+        <Space gap="small" vertical> bordered: <Switch v-model:value="selectionBordered" /> </Space>
       </Col>
       <Col :span="6">
         <Flex gap="small" vertical>
@@ -3022,10 +3022,10 @@ watchEffect(() => {
         </Flex>
       </Col>
       <Col :span="6">
-        <Space gap="small" vertical> fixed: <Switch v-model="rowSelection.fixed" /> </Space>
+        <Space gap="small" vertical> fixed: <Switch v-model:value="rowSelection.fixed" /> </Space>
       </Col>
       <Col :span="6">
-        <Space gap="small" vertical> hideSelectAll: <Switch v-model="rowSelection.hideSelectAll" /> </Space>
+        <Space gap="small" vertical> hideSelectAll: <Switch v-model:value="rowSelection.hideSelectAll" /> </Space>
       </Col>
       <Col :span="6">
         <Space gap="small" vertical>

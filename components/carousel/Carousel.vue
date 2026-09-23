@@ -45,6 +45,7 @@ export interface Props {
   slideDuration?: number // 滑动动画持续时长，单位 ms，仅当 effect 为 'slide' 时生效
   slideFunction?: EasingPreset | CubicBezierPoints | EasingFunction // 滑动动画函数，仅当 effect 为 'slide' 时生效，可传缓动预设名、三次贝塞尔控制点数组或缓动函数，参考 transition 写法：https://vueuse.org/core/useTransition/#usage
 }
+// 声明组件插槽类型
 export interface CarouselSlots {
   prevArrow?: (props: {
     prev: () => void
@@ -103,6 +104,7 @@ const emits = defineEmits<{
   afterChange: [current: number] // 切换结束后触发，参数为当前页，从 1 开始
   'update:currentIndex': [currentIndex: number] // 当前页变更，配合 v-model:current-index 使用，从 1 开始
 }>()
+defineSlots<CarouselSlots>()
 const prevArrowSlotExist = useSlotsExist('prevArrow') // 是否提供了自定义上一张箭头插槽
 const nextArrowSlotExist = useSlotsExist('nextArrow') // 是否提供了自定义下一张箭头插槽
 const offset = ref(0) // 滑动偏移值

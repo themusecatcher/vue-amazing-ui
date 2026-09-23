@@ -10,9 +10,22 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-09-22">2.11.0</VersionDateTag>
+## <VersionDateTag date="2026-09-23">2.11.0</VersionDateTag>
 
 - 新增 [下拉菜单 Dropdown](/guide/components/dropdown.html) 组件
+- 优化统一 [选择器 Select](/guide/components/select.html)、[级联选择 Cascader](/guide/components/cascader.html)、[开关 Switch](/guide/components/switch.html) 的 `API` 形态：双向绑定改用 `v-model:value`（回写事件 `update:value`）；`label` / `value` 字段名属性合并为 `fieldNames` 对象，改用 `:field-names="{ label: 'name', value: 'id' }"`（分组 / 后代子选项字段名分别为 `Select` 的 `options` 与 `Cascader` 的 `children``）；Select` 的 `search` / `filter` 更名为 `showSearch` / `filterOption`（旧名移除）、`placement` 取值扩展为四向（默认 `bottomLeft`）、`change` 回调第二参由文本 `label` 改为完整 `option` 对象，并新增 `SelectValue` / `SelectFieldNames` / `CascaderFieldNames` 类型导出
+- 重构并增强 [选择器 Select](/guide/components/select.html)：单选模式属性 / 事件 / 插槽 / 方法全量补齐（`bordered` / `status` / `loading` / `dropdownRender` / `notFoundContent` 等属性与 `focus()` / `blur()` / `scrollTo()` 等方法），新增多选 / 标签模式（`mode`、标签折叠 `maxTagCount` / `tagRender`、`tokenSeparators` 分词与 `deselect` 事件，多选下 `value` 为数组）、`labelInValue`、子组件式选项 `SelectOption` / `SelectOptGroup`、默认开启的虚拟滚动 `virtual` 与无障碍语义，并优化下拉面板滚动越界回弹；按选项文本搜索需显式传 `option-filter-prop="label"`
+- [描述列表 Descriptions](/guide/components/descriptions.html) 与 [列表 List](/guide/components/list.html) 的主组件上提至组件目录顶层；自动按需引入不受影响，手动引入样式需将 `descriptions/descriptions/style` 改为 `descriptions/style`，`list` 同理
+- 修复聚合入口具名导出在产物 `JS` 中缺失的问题：`Row` / `Col` / `useDialog` / `useMessage` / `useModal` / `useNotification` / `useLoadingBar` / `createDiscreteApi` 此前从包入口具名引入时运行时为 `undefined`，现均可正常引入
+- 补齐 [轮播图 Carousel](/guide/components/carousel.html) 的插槽类型声明（新增 `CarouselSlots` 类型），自定义箭头 / 圆点插槽可获得作用域参数类型提示
+- 组件库及文档代码优化
+
+## <VersionDateTag date="2026-09-22">2.10.1</VersionDateTag>
+
+- 重构 [加载条 LoadingBar](/guide/components/loading-bar.html) 为 `Provider + Hook` 形态：新增 `<LoadingBarProvider>` + `useLoadingBar()` 与 `createDiscreteApi(['loadingBar'])` 两种 `api` 获取方式（形态与 [全局提示 Message](/guide/components/message.html) / [模态框 Modal](/guide/components/modal.html) 等同族组件一致），并新增 `loadingBarStyle` 属性（可按 `loading` / `finish` / `error` 三态注入自定义样式）；`<LoadingBar>` 组件本体继续导出，`props` 与 `start` / `finish` / `error` 方法签名不变，但 `api` 由 `ref` 改为经 `@ready` 回传 —— 原 `<LoadingBar ref="loadingBar">` + `loadingBar.value.start()` 写法需迁移为 `<LoadingBar @ready="api = $event" />` 或改用 `useLoadingBar()`
+- 修复 `createDiscreteApi` 在路由守卫（`app.runWithContext` 上下文）中调用时取不到 `api` 的问题，影响 [加载条 LoadingBar](/guide/components/loading-bar.html) / [对话框 Dialog](/guide/components/dialog.html) / [全局提示 Message](/guide/components/message.html) / [模态框 Modal](/guide/components/modal.html) / [通知提醒 Notification](/guide/components/notification.html)
+- 更新使用者文档：[加载条 LoadingBar](/guide/components/loading-bar.html) 重写演示与 `api` 用法说明（改用 `<LoadingBarProvider>`），[全局化配置 ConfigProvider](/guide/components/config-provider.html) 与 [快速上手](/guide/getting-started.html) 的加载条示例同步迁移
+- 更新贡献者文档：`development/component-design.md` 将 `loading-bar` 纳入「`SFC + Hook + Provider`」三段式清单并补充 `LoadingBarProvider` 的样式入口登记，`development/demo-doc-guide.md` 的全局包裹写法同步改为 `useLoadingBar()`
 
 ## <VersionDateTag date="2026-09-21">2.10.0</VersionDateTag>
 
@@ -56,11 +69,11 @@
 
 ## <VersionDateTag date="2026-09-14">2.8.0</VersionDateTag>
 
-- 重构并增强 [描述列表 Descriptions](/guide/components/descriptions.html)：改为数据驱动渲染，新增 `layout` / `colon` / `labelAlign` 等属性、`#header` 插槽与 `xxxl` 断点，修复子项丢失等问题。⚠️ **破坏性变更**：移除 `vertical` 属性，改用 `layout="vertical"`
-- 增强 [抽屉 Drawer](/guide/components/drawer.html)：新增 `to` / `push` / `size` / `mask` 等属性、`afterOpenChange` 事件与 `#closeIcon` 插槽，支持多层推动与 `class` / `style` 透传，修复打开后页面滚动被永久锁死。⚠️ **破坏性变更**：默认挂载到 `body`，依赖原渲染位置的样式需改用 `to` 或 `rootClassName` 定制
+- 重构并增强 [描述列表 Descriptions](/guide/components/descriptions.html)：改为数据驱动渲染，新增 `layout` / `colon` / `labelAlign` 等属性、`#header` 插槽与 `xxxl` 断点，修复子项丢失等问题。移除 `vertical` 属性，改用 `layout="vertical"`
+- 增强 [抽屉 Drawer](/guide/components/drawer.html)：新增 `to` / `push` / `size` / `mask` 等属性、`afterOpenChange` 事件与 `#closeIcon` 插槽，支持多层推动与 `class` / `style` 透传，修复打开后页面滚动被永久锁死。默认挂载到 `body`，依赖原渲染位置的样式需改用 `to` 或 `rootClassName` 定制
 - 修复 [对话框 Modal](/guide/components/modal.html) / [Dialog](/guide/components/dialog.html) / [加载条 LoadingBar](/guide/components/loading-bar.html) / [消息提示 Message](/guide/components/message.html) / [通知提醒 Notification](/guide/components/notification.html) 的 `class` / `style` 无法透传问题
-- 增强 [轮播图 Carousel](/guide/components/carousel.html)：新增 `loop` / `initialIndex` / 受控 `currentIndex` 等属性、`beforeChange` / `afterChange` 事件与 `#prevArrow` / `#nextArrow` / `#dots` 插槽，修复越界、加载失败、动画中断等交互问题；`fadeFunction` 默认值由 `'cubic-bezier(0.4, 0, 0.2, 1)'` 改为 `[0.4, 0, 0.2, 1]`。⚠️ **破坏性变更**：`dotsTrigger` 更名为 `dotTrigger`；移除 `change` 事件，切换监听改用 `beforeChange` / `afterChange`，当前页同步使用 `v-model:current-index`
-- 增强 [数字动画 NumberAnimation](/guide/components/number-animation.html)：缓动支持传入三次贝塞尔控制点数组与缓动函数，卸载时中止在飞动画。⚠️ **破坏性变更**：`transition` 更名为 `easing`，类型 `NumberAnimationTransitionFunc` 更名为 `NumberAnimationEasingPreset`
+- 增强 [轮播图 Carousel](/guide/components/carousel.html)：新增 `loop` / `initialIndex` / 受控 `currentIndex` 等属性、`beforeChange` / `afterChange` 事件与 `#prevArrow` / `#nextArrow` / `#dots` 插槽，修复越界、加载失败、动画中断等交互问题；`fadeFunction` 默认值由 `'cubic-bezier(0.4, 0, 0.2, 1)'` 改为 `[0.4, 0, 0.2, 1]`。属性 `dotsTrigger` 更名为 `dotTrigger`；移除 `change` 事件，切换监听改用 `beforeChange` / `afterChange`，当前页同步使用 `v-model:current-index`
+- 增强 [数字动画 NumberAnimation](/guide/components/number-animation.html)：缓动支持传入三次贝塞尔控制点数组与缓动函数，卸载时中止在飞动画。属性 `transition` 更名为 `easing`，类型 `NumberAnimationTransitionFunc` 更名为 `NumberAnimationEasingPreset`
 - 优化工具函数文档：改用交互式演示并补充边界说明与可运行 `demo`
 - 修复 [lockScroll](/utils/functions/lock-scroll.html) 在 `SSR` / `Node` 环境调用报错；订正 [useOptionsSupported](/utils/functions/use-options-supported.html) 参数名为 `option`
 - 修复按需引入 `VueAmazingUIResolver` 引用 `DescriptionsItem` 不存在的样式路径
@@ -103,14 +116,14 @@
 
 ## <VersionDateTag date="2026-09-08">2.7.0</VersionDateTag>
 
-- ⚠️ **破坏性变更**：[Message](/guide/components/message.html)、[Notification](/guide/components/notification.html)、[Modal](/guide/components/modal.html) 移除实例 `ref` 上的命令式方法，统一改用 `useXxx()`（需外层 `XxxProvider`）或 `createDiscreteApi()`；[Dialog](/guide/components/dialog.html) 新增 `useDialog()` / `createDiscreteApi()` 命令式入口；`window['$xxx']` 写法改为赋值 `api`；`@ready` 回传 `api`，句柄支持 `destroy()` / `update()`，Notification 额外支持 `destroy(key)` 按 `key` 精确关闭
+- ⚠️ **破坏性变更**：[Message](/guide/components/message.html)、[Notification](/guide/components/notification.html)、[Modal](/guide/components/modal.html) 移除实例 `ref` 上的命令式方法，统一改用 `useXxx()`（需外层 `XxxProvider`）或 `createDiscreteApi()`；[Dialog](/guide/components/dialog.html) 新增 `useDialog()` / `createDiscreteApi()` 命令式入口；`window['$xxx']` 写法改为赋值 `api`；`@ready` 回传 `api`，句柄支持 `destroy()` / `update()`，`Notification` 额外支持 `destroy(key)` 按 `key` 精确关闭
 - ⚠️ **破坏性变更**：上述四组件浮层默认 `Teleport` 到 `body`，新增 `to` 指定挂载节点；依赖原渲染位置的 `scoped` 样式与 `:deep()` 覆写失效，需改为全局样式
-- ⚠️ **破坏性变更**：Notification `description` 更名 `content`、移除组件级 `title` / `description`、`top` / `bottom` 默认 `24` → `16`；Message 单条配置移除 `top`
-- ⚠️ **破坏性变更**：Modal 命令式 `maskClosable` 默认改 `false`（组件级仍为 `true`）、`Esc` 监听改绑弹窗主体（焦点移出弹窗后不再响应）、入口类型导出由 `Props` / `Modal` 调整为 `ModalProps` / `ModalOptions` / `ModalUpdate` / `ModalReactive` / `ModalApi`；[Upload](/guide/components/upload.html) 移除内嵌 Message：`messageProps` / `actionMessage` / `UploadMessageType` 及相关方法移除，改用 `success` / `error` / `remove` 事件
+- ⚠️ **破坏性变更**：`Notification` `description` 更名 `content`、移除组件级 `title` / `description`、`top` / `bottom` 默认 `24` → `16`；Message 单条配置移除 `top`
+- ⚠️ **破坏性变更**：`Modal` 命令式 `maskClosable` 默认改 `false`（组件级仍为 `true`）、`Esc` 监听改绑弹窗主体（焦点移出弹窗后不再响应）、入口类型导出由 `Props` / `Modal` 调整为 `ModalProps` / `ModalOptions` / `ModalUpdate` / `ModalReactive` / `ModalApi`；[Upload](/guide/components/upload.html) 移除内嵌 Message：`messageProps` / `actionMessage` / `UploadMessageType` 及相关方法移除，改用 `success` / `error` / `remove` 事件
 - 重构并增强 [Dialog](/guide/components/dialog.html) / [Modal](/guide/components/modal.html)：改为多实例层叠架构，新增 `mask` / `closable` / `closeIcon`、`wrapClass` / `containerClass` 等分层定制与 `onEsc` / `onMaskClick` / `afterClose` 回调（其中 [Dialog](/guide/components/dialog.html) 额外新增 `draggable` 拖拽），`title` / `content` 支持 `string` / `VNode` / 渲染函数 / 插槽，并补充 `aria-*` 与可聚焦关闭按钮
-- 增强 [Notification](/guide/components/notification.html) / [Message](/guide/components/message.html)：新增 `maxCount` / `keepAliveOnHover` / `to` 等属性，Notification 新增 `key` 与 `placement` 的 `top` / `bottom` 居中位置；定时器改为按 `key` 独立管理，修复多条干扰与常驻消息阻塞回收
-- 新增 [lockScroll](/utils/functions/lock-scroll.html) 工具函数（第 `24` 个），[Drawer](/guide/components/drawer.html) / Modal / Dialog 统一改用并补充卸载兜底释放；修复 [Table](/guide/components/table.html) 就地改写用户 `columns`、空 `columns` 崩溃与 `colspan` 计算错误
-- 优化 `VueAmazingUIResolver` 按需引入：新增四个命令式 `Provider` 组件的自动引入与样式注入，修复 Modal / Notification 缺失 [Scrollbar](/guide/components/scrollbar.html) 样式依赖
+- 增强 [Notification](/guide/components/notification.html) / [Message](/guide/components/message.html) 组件：新增 `maxCount` / `keepAliveOnHover` / `to` 等属性，`Notification` 新增 `key` 与 `placement` 的 `top` / `bottom` 居中位置；定时器改为按 `key` 独立管理，修复多条干扰与常驻消息阻塞回收
+- 新增 [lockScroll](/utils/functions/lock-scroll.html) 工具函数（第 `24` 个），`Drawer` / `Modal` / `Dialog` 统一改用并补充卸载兜底释放；修复 [Table](/guide/components/table.html) 就地改写用户 `columns`、空 `columns` 崩溃与 `colspan` 计算错误
+- 优化 `VueAmazingUIResolver` 按需引入：新增四个命令式 `Provider` 组件的自动引入与样式注入，修复 `Modal` / `Notification` 缺失 [Scrollbar](/guide/components/scrollbar.html) 样式依赖
 - 工程优化：`xxxProps` 类型由 `object` 精确为对应 `Props`；新增 `vitest` 单元测试并纳入 `pnpm check`；新增 `development/` 设计指南
 
 ## <VersionDateTag date="2026-08-30">2.6.2</VersionDateTag>

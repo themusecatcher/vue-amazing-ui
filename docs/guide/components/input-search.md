@@ -503,7 +503,7 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 ## 搜索中
 
 <Space vertical>
-  <Space align="center"> Loading state:<Switch v-model="loading" /> </Space>
+  <Space align="center"> Loading state:<Switch v-model:value="loading" /> </Space>
   <InputSearch
     v-model:value="value"
     :loading="loading"
@@ -549,7 +549,7 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 </script>
 <template>
   <Space vertical>
-    <Space align="center"> Loading state:<Switch v-model="loading" /> </Space>
+    <Space align="center"> Loading state:<Switch v-model:value="loading" /> </Space>
     <InputSearch
       v-model:value="value"
       :loading="loading"
@@ -585,7 +585,7 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 ## 禁用
 
 <Space vertical>
-  <Space align="center"> Disabled state:<Switch v-model="disabled" /> </Space>
+  <Space align="center"> Disabled state:<Switch v-model:value="disabled" /> </Space>
   <InputSearch v-model:value="value" :disabled="disabled" placeholder="input search text" @search="onSearch" />
   <InputSearch
     v-model:value="value"
@@ -632,7 +632,7 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 </script>
 <template>
   <Space vertical>
-    <Space align="center"> Disabled state:<Switch v-model="disabled" /> </Space>
+    <Space align="center"> Disabled state:<Switch v-model:value="disabled" /> </Space>
     <InputSearch v-model:value="value" :disabled="disabled" placeholder="input search text" @search="onSearch" />
     <InputSearch
       v-model:value="value"

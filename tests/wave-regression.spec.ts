@@ -40,7 +40,7 @@ const waveCases = [
     name: 'Switch',
     waveSelector: '.switch-wave',
     clickSelector: '.switch-wrap',
-    mount: () => mount(Switch, { props: { modelValue: false } })
+    mount: () => mount(Switch, { props: { value: false } })
   }
 ] as const
 
@@ -157,7 +157,7 @@ describe('水波纹 - 多选项模式下波纹绑定到被点击的那一项', (
 describe('水波纹 - 兄弟组件互不干扰', () => {
   it('同时挂载 Button 与 Switch，点击其一不影响另一方的波纹状态', async () => {
     const button = mount(Button, { slots: { default: '按钮' } })
-    const sw = mount(Switch, { props: { modelValue: false } })
+    const sw = mount(Switch, { props: { value: false } })
 
     await button.find('.btn-wrap').trigger('click')
     expect(button.find('.button-wave').classes()).toContain('wave-active')

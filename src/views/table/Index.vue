@@ -935,7 +935,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
     <h2 class="mt30 mb10">自定义样式</h2>
     <p class="mb10">使用 <code>rowClassName</code> 和 <code>Column.className</code> 自定义表格样式</p>
     <Flex vertical>
-      <Space align="center"> bordered: <Switch v-model="customStyleBordered" /> </Space>
+      <Space align="center"> bordered: <Switch v-model:value="customStyleBordered" /> </Space>
       <Table
         :columns="columnsCustomStyle"
         :data-source="dataSourceCustomStyle"
@@ -946,7 +946,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
     <h2 class="mt30 mb10">三种尺寸</h2>
     <p class="mb10">另两种紧凑型的列表；小型列表适用于对话框内</p>
     <Flex vertical>
-      <Space align="center"> bordered: <Switch v-model="sizeBordered" /> </Space>
+      <Space align="center"> bordered: <Switch v-model:value="sizeBordered" /> </Space>
       <Space align="center">
         size: <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
       </Space>
@@ -954,7 +954,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
     </Flex>
     <h2 class="mt30 mb10">列对齐方式</h2>
     <Flex vertical>
-      <Space align="center"> bordered: <Switch v-model="alignBordered" /> </Space>
+      <Space align="center"> bordered: <Switch v-model:value="alignBordered" /> </Space>
       <Space align="center">
         align: <Radio :options="alignOptions" v-model:value="align" button button-style="solid" />
       </Space>
@@ -962,12 +962,12 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
     </Flex>
     <h2 class="mt30 mb10">斑马条纹</h2>
     <Flex vertical>
-      <Space align="center"> bordered: <Switch v-model="stripedBordered" /> </Space>
+      <Space align="center"> bordered: <Switch v-model:value="stripedBordered" /> </Space>
       <Table :columns="columnsStriped" :data-source="dataSourcesStriped" striped :bordered="stripedBordered" />
     </Flex>
     <h2 class="mt30 mb10">页头和页脚</h2>
     <Flex vertical>
-      <Space align="center"> bordered: <Switch v-model="headerFooterbordered" /> </Space>
+      <Space align="center"> bordered: <Switch v-model:value="headerFooterbordered" /> </Space>
       <Table :columns="columns" :data-source="dataSource" :bordered="headerFooterbordered">
         <template #header> Header firstData name: {{ dataSource[0].name }} </template>
         <template #bodyCell="{ column, text }">
@@ -1159,7 +1159,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
     <h2 class="mt30 mb10">表头分组</h2>
     <p class="mb10"><code>columns[n]</code> 可以内嵌 <code>children</code>，以渲染分组表头</p>
     <Flex vertical>
-      <Space align="center"> bordered: <Switch v-model="groupBordered" /> </Space>
+      <Space align="center"> bordered: <Switch v-model:value="groupBordered" /> </Space>
       <Table
         :columns="columnsHeaderGroup"
         :data-source="dataSourceHeaderGroup"
@@ -1169,7 +1169,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
     </Flex>
     <h2 class="mt30 mb10">表格排序</h2>
     <Flex vertical>
-      <Space align="center"> bordered: <Switch v-model="sortBordered" /> </Space>
+      <Space align="center"> bordered: <Switch v-model:value="sortBordered" /> </Space>
       <Table :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" @sortChange="onSortChange" />
     </Flex>
     <h2 class="mt30 mb10">可选择</h2>
@@ -1177,7 +1177,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
     <Flex vertical>
       <Row :gutter="[24, 12]">
         <Col :span="6">
-          <Space gap="small" vertical> bordered: <Switch v-model="selectionBordered" /> </Space>
+          <Space gap="small" vertical> bordered: <Switch v-model:value="selectionBordered" /> </Space>
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical>
@@ -1190,10 +1190,10 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
           </Flex>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> fixed: <Switch v-model="rowSelection.fixed" /> </Space>
+          <Space gap="small" vertical> fixed: <Switch v-model:value="rowSelection.fixed" /> </Space>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> hideSelectAll: <Switch v-model="rowSelection.hideSelectAll" /> </Space>
+          <Space gap="small" vertical> hideSelectAll: <Switch v-model:value="rowSelection.hideSelectAll" /> </Space>
         </Col>
         <Col :span="6">
           <Space gap="small" vertical>

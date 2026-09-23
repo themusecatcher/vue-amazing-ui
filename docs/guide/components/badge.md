@@ -352,7 +352,7 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
     <Badge :dot="dot">
       <Avatar shape="square" size="large" />
     </Badge>
-    <Switch v-model="dot" />
+    <Switch v-model:value="dot" />
   </Space>
 </Flex>
 
@@ -389,7 +389,7 @@ function increase() {
       <Badge :dot="dot">
         <Avatar shape="square" size="large" />
       </Badge>
-      <Switch v-model="dot" />
+      <Switch v-model:value="dot" />
     </Space>
   </Flex>
 </template>

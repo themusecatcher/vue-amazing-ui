@@ -49,21 +49,37 @@ import { ref } from 'vue'
 - `h2`：按功能分节（`mt30 mb10` 间距类）。
 - 示例用 `<Space>` 等布局组件包裹。
 
+### 状态绑定（每个演示主题独立）
+
+> 每个分节的 demo 必须绑定**自己的**响应式状态，禁止多个主题共用同一个绑定值。
+
+```ts
+// ❌ 基本使用 / 禁用 / 禁用选项 … 共用一个 selectedValue
+// ✅ 各分节独立绑定：避免操作一个用例时其余用例同步联动，便于单独核对每个特性
+const basicValue = ref(5)
+const disabledValue = ref(5)
+const disabledOptionValue = ref(5)
+```
+
+- **为什么**：共用绑定值会让「操作 A 用例时 B / C 用例同步联动」——用户无法逐个核对特性，截图 / 录屏 / 真身对照也会失真。
+- **命名**：与主题语义对齐（`basicValue` / `disabledValue` / `searchableValue` …），多个主题并列时在首个变量前加一行注释说明（见上例）。
+- **例外**：**同一主题内**的成对用例可共用（如「三种尺寸」的多个 Select、「下拉面板弹出位置」的 bottom / top 对照），它们是同一用例的对照展示。
+- **文档页同源**：`docs/guide/components/{组件名}.md` 的页面级 `<script setup>` 需与演示页逐项对应（见「演示与文档的对应」）；`::: details Show Code` 代码块是独立可复制示例，块内用局部命名（如 `selectedValue`）不受此约束。
+
 ### 全局包裹（src/App.vue）
 
-演示应用在根组件做了一层全局包裹，这是演示页里能直接调用 `useMessage()` / `useModal()` 等方法的前提：
+演示应用在根组件做了一层全局包裹，这是演示页里能直接调用 `useLoadingBar()` / `useMessage()` / `useModal()` 等方法的前提：
 
 ```text
 ConfigProvider（theme 注入）
-└── MessageProvider → ModalProvider → DialogProvider → NotificationProvider
+└── LoadingBarProvider → MessageProvider → ModalProvider → DialogProvider → NotificationProvider
     ├── RouterView（Watermark 页除外）
-    ├── Watermark（content="Vue Amazing UI"）
-    └── LoadingBar
+    └── Watermark（content="Vue Amazing UI"）
 ```
 
 - `ConfigProvider` 提供主题（`theme` 支持 `common.primaryColor` 与按组件覆盖）。
-- 四个 `XxxProvider` 依次嵌套，使任意演示页内可直接使用对应的 `useXxx()`。
-- 路由切换进度由 `LoadingBar` 与路由守卫（`beforeEach` / `afterEach`）联动。
+- 五个 `XxxProvider` 依次嵌套，使任意演示页内可直接使用对应的 `useXxx()`。
+- 路由切换进度**不**复用上面这个 `LoadingBarProvider`：路由守卫位于组件树之外，改由 `createDiscreteApi(['loadingBar'])` 创建独立实例（`src/router/index.ts` 中惰性单例），并通过 `src/theme.ts` 与根组件共享同一份主题。
 
 > 文档站 `docs/.vitepress/theme/index.ts` 采用同构包裹，且整站组件库统一从构建产物 `dist/index` 引入——theme 以相对路径引入库主体与 `XxxProvider`，页面 demo 的 `import` 经解析钩子指向同一 `dist` 出口，二者共享同一 injection key（详见 [build-system.md](build-system.md) 的「别名与模块解析」）。
 
@@ -167,6 +183,7 @@ _七种类型_
 - APIs / Events / Methods 表中的类型引用一律写**组件入口重命名后的公开导出名**（如 `SliderMarks`、`TabsItem`、`SwiperImage`），确保读者可直接 `import type`，且与 IDE 类型提示一致；类型章节标题保留 SFC 内的定义名（如 `### Marks Type`），锚点 `#marks-type` 不随引用名变更，避免全站链接失效。文档自造的结构性类型（源码中无对应导出，如 ConfigProvider 的 `Config`、Scrollbar 的 `ScrollBehavior`）沿用文档内命名。
 - **`## Slots` 表的「用法」列写插槽的实际用法**：默认插槽 `v-slot:default`、具名插槽 `v-slot:xxx`、带作用域参数写 `v-slot:xxx="{ a, b }"`；❌ 不写 `-` / `{ option: T }` 这类「参数」列形态。列头固定为「名称 | 说明 | 用法」，与 `docs/guide/template.md` 一致；该列表达的是插槽**用法**（消费侧语法），不要与 APIs / Methods / Events 表的「类型」列（TS 类型 / 签名）混写。
 - `## Slots` 表需与组件 `defineSlots` 的定义**逐项对应**（名称、是否有作用域参数）；插槽参数由 `v-bind` 动态展开、无法静态收窄时（如 `option`），用法列只写 `v-slot:option`。
+- **表格内禁止裸对象字面量**：APIs / Events 等表格单元格里直接写 `{ label: 'label' }` 会被 markdown 的属性语法当作前一个标签的 HTML 属性（渲染成 `<td ... label:="" ...>`），轻则单元格内容丢失，重则同名属性重复让 `pnpm docs:build` 直接失败（报 `Duplicate attribute`）。对象字面量一律用行内代码包裹：`` `{ label: 'label', value: 'value' }` ``。
 
 ### 示例代码风格约定（人工维护）
 
@@ -235,3 +252,6 @@ _格式化日期为指定格式的工具函数_
 ## 演示与文档的对应
 
 演示页（`src/views/`）与组件文档（`docs/guide/components/`）内容需保持一致：文档中的 demo 通常对应演示页的某个分节，二者共同维护同一组用例。
+
+- 用例标题 / 简介描述：逐字一致（`<code>` ↔ 反引号、docs 补整行斜体）。
+- 分节的状态绑定：演示页的 `ref` 与文档页级 `<script setup>` 的 `ref` **逐项对应**（见「状态绑定（每个演示主题独立）」），改一处必须同步另一处——否则两边联动行为不一致。

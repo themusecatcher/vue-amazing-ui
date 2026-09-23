@@ -190,7 +190,7 @@ function childSlotProps(item: string | number | Option): Option {
 }
 // 过滤后的选项数据（保留分组结构，过滤后空组剔除）
 const filteredData = computed<(string | number | Option | GroupOption)[]>(() => {
-  // 输入法合成中不参与本地筛选，显示全部数据源，待合成结束后再按最终输入筛选，与官网行为一致
+  // 输入法合成中不参与本地筛选，显示全部数据源，待合成结束后再按最终输入筛选
   if (props.filterOption === false || isComposing.value) {
     return props.options
   }
@@ -221,7 +221,7 @@ const flattenOptions = computed<Option[]>(() => {
   })
   return result
 })
-// 面板是否可见：打开状态且有可展示的选项（无选项时隐藏，与官网一致），单一布尔驱动 Transition 保证隐藏动画完整
+// 面板是否可见：打开状态且有可展示的选项（无选项时隐藏），单一布尔驱动 Transition 保证隐藏动画完整
 const panelVisible = computed<boolean>(() => showOptions.value && flattenOptions.value.length > 0)
 // 面板渲染用的选项数据（保留态）：有选项时同步 filteredData，选项变空时保留上一次内容，避免面板隐藏动画期间内容突然清空导致高度塌缩打断 leave 动画
 const displayData = ref<(string | number | Option | GroupOption)[]>([])
@@ -255,7 +255,7 @@ const { panelStyle, transformOrigin } = useFloating(panelRef, {
   matchTriggerWidth: () => matchTriggerWidth.value,
   enabled: () => panelVisible.value
 })
-// 面板层级：显式 zIndex 优先于自动分配 / 默认层级（与乙类组件的 zIndex prop 同一优先级契约）
+// 面板层级：显式 zIndex 优先于自动分配 / 默认层级（与其它浮层组件的 zIndex prop 同一优先级契约）
 const autoCompletePanelZIndex = computed(() => props.zIndex ?? layerZIndex.value)
 // 面板内联样式：内核输出（定位 + 动画原点）+ 使用者自定义样式 + 层级 + 主题变量
 // 合并顺序：自定义样式可覆盖定位，但层级与主题变量始终由组件接管
@@ -397,7 +397,7 @@ function onInput(e: Event): void {
   lastUserValue.value = input
   // 始终同步 value 保证输入框回显（含合成中的拼音）
   emit('update:value', input)
-  // 输入法合成中仅回显，不触发 search/filter，待合成结束(compositionend)统一触发，与官网行为一致
+  // 输入法合成中仅回显，不触发 search/filter，待合成结束(compositionend)统一触发
   if (isComposing.value) {
     return
   }
@@ -458,7 +458,7 @@ function onKeydown(e: KeyboardEvent): void {
     }
     e.preventDefault()
     const currentIdx = list.findIndex((option) => !option.disabled && option.value === hoverValue.value)
-    // 环形查找下一个未禁用项：从当前项的下一个开始循环一圈；无高亮时向下从第一项、向上从最后一项开始（与官网一致）
+    // 环形查找下一个未禁用项：从当前项的下一个开始循环一圈；无高亮时向下从第一项、向上从最后一项开始
     const start =
       e.key === 'ArrowDown'
         ? currentIdx === -1
@@ -980,6 +980,12 @@ defineExpose({
     0 3px 6px -4px rgba(0, 0, 0, 0.12),
     0 9px 28px 8px rgba(0, 0, 0, 0.05);
   .auto-complete-options {
+    /* 关闭滚动越界回弹与滚动链：否则触控板惯性滚动会带着列表冲出滚动区，面板底部露出空白
+       （与 Select 面板同一处理；⚠️ 必须是 none 而非 contain —— contain 只切断向父级的滚动链，
+       元素自身的弹性回弹照旧发生） */
+    :deep(.scrollbar-container) {
+      overscroll-behavior: none;
+    }
     .auto-complete-group-title {
       padding: 5px 12px;
       color: rgba(0, 0, 0, 0.45);
@@ -1005,7 +1011,7 @@ defineExpose({
       &.option-grouped {
         padding-left: 24px;
       }
-      // 自定义选项内容为 flex 布局时，允许子项收缩并对超宽文本省略号截断，与官网表现一致
+      // 自定义选项内容为 flex 布局时，允许子项收缩并对超宽文本省略号截断
       :deep(> div) {
         min-width: 0;
         > span,

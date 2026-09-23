@@ -5,7 +5,7 @@ import ConfigProvider from 'components/config-provider'
 import Dialog from 'components/dialog'
 import Drawer from 'components/drawer'
 import Image from 'components/image'
-import LoadingBar from 'components/loading-bar'
+import { LoadingBarProvider, useLoadingBar, type LoadingBarApi } from 'components/loading-bar'
 import Message, { type MessageApi } from 'components/message'
 import Modal from 'components/modal'
 import Notification, { type NotificationApi } from 'components/notification'
@@ -73,11 +73,7 @@ describe('浮层挂载点（同域模型）', () => {
             { baseZIndex: 5000 },
             {
               default: () =>
-                h(
-                  Modal,
-                  { open: true, title: '层级' },
-                  { default: () => h(Select, { options: OPTIONS, modelValue: 1 }) }
-                )
+                h(Modal, { open: true, title: '层级' }, { default: () => h(Select, { options: OPTIONS, value: 1 }) })
             }
           )
       }),
@@ -102,7 +98,7 @@ describe('浮层挂载点（同域模型）', () => {
             { baseZIndex: 5000 },
             {
               default: () =>
-                h(Drawer, { open: true, to: false }, { default: () => h(Select, { options: OPTIONS, modelValue: 1 }) })
+                h(Drawer, { open: true, to: false }, { default: () => h(Select, { options: OPTIONS, value: 1 }) })
             }
           )
       }),
@@ -126,11 +122,7 @@ describe('浮层挂载点（同域模型）', () => {
             { baseZIndex: 5000 },
             {
               default: () =>
-                h(
-                  Dialog,
-                  { open: true, title: '层级' },
-                  { default: () => h(Select, { options: OPTIONS, modelValue: 1 }) }
-                )
+                h(Dialog, { open: true, title: '层级' }, { default: () => h(Select, { options: OPTIONS, value: 1 }) })
             }
           )
       }),
@@ -162,7 +154,7 @@ describe('浮层挂载点（同域模型）', () => {
                       h(
                         Modal,
                         { open: true, title: '内层' },
-                        { default: () => h(Select, { options: OPTIONS, modelValue: 1 }) }
+                        { default: () => h(Select, { options: OPTIONS, value: 1 }) }
                       )
                   }
                 )
@@ -197,7 +189,7 @@ describe('浮层挂载点（同域模型）', () => {
                   Popover,
                   { trigger: 'click', title: '容器' },
                   {
-                    content: () => h(Select, { options: OPTIONS, modelValue: 1 }),
+                    content: () => h(Select, { options: OPTIONS, value: 1 }),
                     default: () => h('button', 'trigger')
                   }
                 )
@@ -227,8 +219,8 @@ describe('浮层挂载点（同域模型）', () => {
             { baseZIndex: 1000 },
             {
               default: () => [
-                h(Modal, { open: true, title: 'A' }, { default: () => h(Select, { options: OPTIONS, modelValue: 1 }) }),
-                h(Modal, { open: true, title: 'B' }, { default: () => h(Select, { options: OPTIONS, modelValue: 1 }) })
+                h(Modal, { open: true, title: 'A' }, { default: () => h(Select, { options: OPTIONS, value: 1 }) }),
+                h(Modal, { open: true, title: 'B' }, { default: () => h(Select, { options: OPTIONS, value: 1 }) })
               ]
             }
           )
@@ -290,8 +282,8 @@ describe('浮层挂载点（同域模型）', () => {
                   { open: true, title: '层级' },
                   {
                     default: () => [
-                      h(Select, { options: OPTIONS, modelValue: 1, to: 'body' }),
-                      h(Select, { options: OPTIONS, modelValue: 1, to: false })
+                      h(Select, { options: OPTIONS, value: 1, to: 'body' }),
+                      h(Select, { options: OPTIONS, value: 1, to: false })
                     ]
                   }
                 )
@@ -336,7 +328,7 @@ describe('浮层挂载点（同域模型）', () => {
                 h(
                   Modal,
                   { open: open.value, title: '层级' },
-                  { default: () => h(Select, { options: OPTIONS, modelValue: 1 }) }
+                  { default: () => h(Select, { options: OPTIONS, value: 1 }) }
                 ),
                 h(Probe)
               ]
@@ -500,10 +492,12 @@ describe('浮层挂载点（同域模型）', () => {
 
   it('LoadingBar 未加载不占槽位、加载结束即归还', async () => {
     let probe!: ReturnType<typeof useZIndex>
-    const loadingBarRef = ref<InstanceType<typeof LoadingBar> | null>(null)
+    let loadingBar!: LoadingBarApi
     const Probe = defineComponent({
       setup() {
         probe = useZIndex(5000, undefined, { allocateOnMount: false })
+        // api 需在 <LoadingBarProvider> 内部取得，故探针置于 Provider 的插槽中
+        loadingBar = useLoadingBar()
         return () => h('div')
       }
     })
@@ -514,7 +508,7 @@ describe('浮层挂载点（同域模型）', () => {
             ConfigProvider,
             { baseZIndex: 5000 },
             {
-              default: () => [h(LoadingBar, { ref: loadingBarRef }), h(Probe)]
+              default: () => h(LoadingBarProvider, null, { default: () => h(Probe) })
             }
           )
       }),
@@ -526,13 +520,13 @@ describe('浮层挂载点（同域模型）', () => {
     expect(probe.zIndex.value).toBe(5000)
 
     // 开始加载：占一段 → 之后领取的层落在加载条之上
-    void loadingBarRef.value?.start()
+    void loadingBar.start()
     await settle()
     probe.allocate()
     expect(probe.zIndex.value).toBe(5020)
 
     // 加载结束：归还 → 再次领取回落到起始层
-    void loadingBarRef.value?.finish()
+    void loadingBar.finish()
     await settle()
     probe.allocate()
     expect(probe.zIndex.value).toBe(5000)

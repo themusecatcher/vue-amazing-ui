@@ -340,10 +340,10 @@ function onChange(key: string | number) {
           <Space gap="small" vertical> suffix：<Input v-model:value="state.suffix" placeholder="suffix" /> </Space>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> animated：<Switch v-model="state.animated" /> </Space>
+          <Space gap="small" vertical> animated：<Switch v-model:value="state.animated" /> </Space>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> centered：<Switch v-model="state.centered" /> </Space>
+          <Space gap="small" vertical> centered：<Switch v-model:value="state.centered" /> </Space>
         </Col>
         <Col :span="12">
           <Space gap="small" vertical>

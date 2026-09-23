@@ -350,7 +350,7 @@ function onPageSizeChange(pageSize: number): void {
         :height="selectHeight"
         :disabled="disabled"
         :options="selectOptions"
-        v-model="currentPageSize"
+        v-model:value="currentPageSize"
         @change="onPageSizeChange"
         v-bind="changerProps"
       />

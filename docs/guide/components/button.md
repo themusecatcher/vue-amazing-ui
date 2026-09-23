@@ -374,7 +374,7 @@ import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
 ## 禁用
 
 <Space vertical>
-  <Space align="center"> Disabled state:<Switch v-model="disabled" /> </Space>
+  <Space align="center"> Disabled state:<Switch v-model:value="disabled" /> </Space>
   <Space>
     <Button :disabled="disabled">Default Button</Button>
     <Button :disabled="disabled" type="reverse">Reverse Button</Button>
@@ -432,7 +432,7 @@ const disabled = ref(true)
 </script>
 <template>
   <Space vertical>
-    <Space align="center"> Disabled state:<Switch v-model="disabled" /> </Space>
+    <Space align="center"> Disabled state:<Switch v-model:value="disabled" /> </Space>
     <Space>
       <Button :disabled="disabled">Default Button</Button>
       <Button :disabled="disabled" type="reverse">Reverse Button</Button>
@@ -674,7 +674,7 @@ const size = ref('middle')
 ## 自定义颜色
 
 <Space vertical>
-  <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
+  <Space align="center"> Loading state:<Switch v-model:value="customLoading" /> </Space>
   <Space>
     <Button type="reverse" color="#d4380d" :loading="customLoading">
       <template #icon>
@@ -713,7 +713,7 @@ const customLoading = ref(false)
 </script>
 <template>
   <Space vertical>
-    <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
+    <Space align="center"> Loading state:<Switch v-model:value="customLoading" /> </Space>
     <Space>
       <Button type="reverse" color="#d4380d" :loading="customLoading">
         <template #icon>
@@ -800,7 +800,7 @@ const customLoading = ref(false)
 ## 加载中状态
 
 <Space vertical>
-  <Space align="center"> Loading state:<Switch v-model="loading" /> </Space>
+  <Space align="center"> Loading state:<Switch v-model:value="loading" /> </Space>
   <Space align="center"> Loading type:<Radio :options="loadingOptions" v-model:value="loadingType" /> </Space>
   <Space>
     <Button :loading="loading" :loading-type="loadingType">Default Button</Button>
@@ -884,7 +884,7 @@ const loadingType = ref('dynamic')
 </script>
 <template>
   <Space vertical>
-    <Space align="center"> Loading state:<Switch v-model="loading" /> </Space>
+    <Space align="center"> Loading state:<Switch v-model:value="loading" /> </Space>
     <Space align="center"> Loading type:<Radio :options="loadingOptions" v-model:value="loadingType" /> </Space>
     <Space>
       <Button :loading="loading" :loading-type="loadingType">Default Button</Button>
