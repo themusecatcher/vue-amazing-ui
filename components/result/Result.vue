@@ -973,7 +973,6 @@ const showExtra = computed(() => {
       display: inline-block;
       vertical-align: bottom;
       font-size: 72px;
-      fill: currentColor;
     }
     :deep(svg) {
       font-size: 72px;

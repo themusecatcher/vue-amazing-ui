@@ -422,7 +422,6 @@ function onRemove(index: number): void {
         display: inline-block;
         font-size: 14px;
         color: rgba(0, 0, 0, 0.88);
-        fill: currentColor;
       }
       .upload-tip {
         margin-top: 8px;
@@ -473,7 +472,6 @@ function onRemove(index: number): void {
         width: 100%;
         height: 60px;
         color: var(--upload-primary-color);
-        fill: currentColor;
       }
       .file-mask {
         // top right bottom left 简写为 inset: 0
@@ -497,7 +495,6 @@ function onRemove(index: number): void {
             display: inline-block;
             font-size: 16px;
             color: rgba(255, 255, 255, 0.65);
-            fill: currentColor;
             cursor: pointer;
             transition: color 0.3s;
             &:hover {

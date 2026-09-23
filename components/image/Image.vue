@@ -789,7 +789,6 @@ function onSwitchRight(): void {
           margin-right: 4px;
           font-size: 14px;
           color: #fff;
-          fill: currentColor;
         }
         .mask-pre {
           display: inline-block;
@@ -878,7 +877,6 @@ function onSwitchRight(): void {
           .icon-svg {
             font-size: 18px;
             color: #fff;
-            fill: currentColor;
           }
         }
         .operation-disabled {
@@ -937,7 +935,6 @@ function onSwitchRight(): void {
         .switch-svg {
           font-size: 18px;
           color: #fff;
-          fill: currentColor;
         }
       }
       .switch-right {
@@ -965,7 +962,6 @@ function onSwitchRight(): void {
         .switch-svg {
           font-size: 18px;
           color: #fff;
-          fill: currentColor;
         }
       }
       .switch-disabled {

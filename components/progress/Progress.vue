@@ -320,7 +320,6 @@ const showSuccess = computed(() => {
     .icon-svg {
       display: inline-block;
       font-size: var(--progress-font-size);
-      fill: currentColor;
       color: var(--progress-success-color);
     }
     .progress-success-info {
