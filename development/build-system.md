@@ -100,9 +100,9 @@ pnpm type-check        # vue-tsc 类型检查
 pnpm check             # 聚合检查：lint:check + format:check + type-check + test
 pnpm test              # vitest 运行测试
 pnpm verify            # 重量级门禁：build + verify:deps + verify:on-demand + guard（发布前 / CI 自检）
-pnpm verify:deps       # 依赖表 ↔ 产物 chunk 闭包一致性校验（需已构建产物）
+pnpm verify:deps       # 产物一致性校验：依赖表 ↔ chunk 闭包 + 聚合入口类型声明 ↔ 运行时导出（需已构建产物）
 pnpm verify:on-demand  # 按需引入端到端验证：临时消费方工程 + canary 断言（需已构建产物）
-pnpm guard             # 产物守卫：毫秒级存在性校验（样式入口 / 编号 CSS / 入口内引用）
+pnpm guard             # 产物守卫：毫秒级存在性校验（样式入口 / 编号 CSS / 入口内引用 / 聚合入口类型与运行时配对）
 ```
 
 > `scripts/publish.sh` 也会在构建后强制执行 `verify:deps` 与 `verify:on-demand`。

@@ -106,7 +106,7 @@ describe('resolver - 样式入口路径', () => {
   })
 
   it('子组件样式来源落在父组件目录下', () => {
-    expect(sideEffectsOf('DescriptionsItem')).toEqual(['vue-amazing-ui/es/descriptions/descriptions/style/index.js'])
+    expect(sideEffectsOf('DescriptionsItem')).toEqual(['vue-amazing-ui/es/descriptions/style/index.js'])
   })
 
   it('嵌套目录组件的入口路径正确', () => {

@@ -125,7 +125,7 @@ describe('generateStyleEntries - 入口内容与顺序', () => {
     expect(generated.filter((file) => file.includes('/es/')).length).toBe(uniqueDirs.size * 2)
   })
 
-  it('嵌套目录（grid/row、list/list-item、descriptions/descriptions）的相对路径正确', () => {
+  it('嵌套目录（grid/row、list/list-item）的相对路径正确', () => {
     generate()
 
     expect(lines('es/grid/row/style/index.js')).toEqual(["import '../../../style/global.css'", "import '../Row.css'"])
@@ -134,9 +134,24 @@ describe('generateStyleEntries - 入口内容与顺序', () => {
       "import '../ListItem.css'",
       "import '../../../avatar/Avatar.css'"
     ])
-    expect(lines('es/descriptions/descriptions/style/index.js')).toEqual([
-      "import '../../../style/global.css'",
+  })
+
+  it('主组件平铺目录（descriptions、list）的相对路径为一级', () => {
+    generate()
+
+    expect(lines('es/descriptions/style/index.js')).toEqual([
+      "import '../../style/global.css'",
       "import '../Descriptions.css'"
+    ])
+    expect(lines('es/list/style/index.js')).toEqual([
+      "import '../../style/global.css'",
+      "import '../List.css'",
+      "import '../../empty/Empty.css'",
+      "import '../../pagination/Pagination.css'",
+      "import '../../input/Input.css'",
+      "import '../../select/Select.css'",
+      "import '../../scrollbar/Scrollbar.css'",
+      "import '../../spin/Spin.css'"
     ])
   })
 

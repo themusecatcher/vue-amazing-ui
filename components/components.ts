@@ -59,7 +59,7 @@ export type { DatePickerProps } from './date-picker'
 export { default as DatePicker } from './date-picker'
 
 export type { DescriptionsProps, DescriptionsResponsive, DescriptionsItemProps } from './descriptions'
-export { Descriptions, DescriptionsItem } from './descriptions'
+export { default as Descriptions, DescriptionsItem } from './descriptions'
 
 export type { DialogProps, DialogOptions, DialogApi, DialogReactive, DialogUpdate } from './dialog'
 export { default as Dialog, DialogProvider, useDialog } from './dialog'
@@ -107,7 +107,7 @@ export type { InputSearchProps } from './input-search'
 export { default as InputSearch } from './input-search'
 
 export type { ListProps, ListItemProps } from './list'
-export { List, ListItem } from './list'
+export { default as List, ListItem } from './list'
 
 export type { LoadingBarProps, LoadingBarApi } from './loading-bar'
 export { default as LoadingBar, LoadingBarProvider, useLoadingBar } from './loading-bar'

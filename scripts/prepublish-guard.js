@@ -13,6 +13,8 @@
  *    - 每个非无样式组件都有 `es/<dir>/style/index.js`、`lib/<dir>/style/index.cjs` 与两份 `index.d.ts`；
  *    - 每个入口文件中 `import` / `require` 的相对路径都能解析到真实文件；
  *    - `package.json` 的 `sideEffects` 覆盖全部样式产物（CSS 与样式入口 JS/CJS）。
+ * 3. 「类型声明 ↔ 运行时模块」配对：每个存在 `index.d.ts` 的产物目录必须有对应 `index.js` / `index.cjs`
+ *    （详见下文 ⑤ 的说明）。
  *
  * 「按需引入后样式是否真的齐全」由 `pnpm verify:on-demand` 负责（需跑构建），两者互补。
  */
@@ -213,6 +215,58 @@ if (uncoveredStyles.length > 0) {
       (uncoveredStyles.length > 5 ? `\n      …… 共 ${uncoveredStyles.length} 个` : '')
   )
 }
+
+/**
+ * ⑤ 聚合入口的「类型声明 ↔ 运行时模块」必须配对
+ *
+ * 背景：`vite-plugin-dts` 会为每个 `<dir>/index.ts` 生成 `index.d.ts`，但**纯转发**入口
+ * （`export { X } from './x'` / `import X from './x'; export { X }`）会被 Rollup 转发优化：
+ * 产物中其余模块直接指向源模块，**不生成该 `index.js`** → 深层路径 `vue-amazing-ui/es|lib/<dir>`
+ * 报 `ERR_MODULE_NOT_FOUND`，而类型层看不出任何异常。
+ *
+ * 该错位对上游链路整体不可见（`pnpm build` EXIT=0、type-check / 单测 / `verify-style-deps`
+ * 与本守卫其余各项全部通过），只能在消费方运行时暴露，故在此兜住。
+ * 修法：入口改为经**本地常量**再导出，如 `export const Row = RowComp`（见 development/project-structure.md）。
+ */
+const INDEX_DTS_WHITELIST = new Set([
+  // `utils/index.ts` 是 `export * from` 的纯 barrel：展开为逐符号本地绑定成本高且无深层导入需求，
+  // 已登记为已知例外（见 development/project-structure.md）
+  'utils'
+])
+
+/** 递归收集「有类型声明却缺运行时入口」的目录（同目录需存在 entryNames 之一） */
+function findUnpairedIndexDts(dir, entryNames, result = []) {
+  if (!existsSync(dir)) {
+    return result
+  }
+  readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
+    if (!entry.isDirectory()) {
+      return
+    }
+    const fullPath = resolve(dir, entry.name)
+    const hasDts = existsSync(resolve(fullPath, 'index.d.ts'))
+    const hasEntry = entryNames.some((name) => existsSync(resolve(fullPath, name)))
+    if (hasDts && !hasEntry && !INDEX_DTS_WHITELIST.has(entry.name)) {
+      result.push(relative(rootDir, fullPath).split('\\').join('/'))
+    }
+    findUnpairedIndexDts(fullPath, entryNames, result)
+  })
+  return result
+}
+
+outDirs.forEach(({ dir, entryFileName }) => {
+  // es 为 ESM（index.js）、lib 为 CJS（index.cjs）；lib 下若出现 index.js 一并视为已配对
+  const unpaired = findUnpairedIndexDts(resolve(rootDir, dir), [...new Set([entryFileName, 'index.js'])])
+  if (unpaired.length === 0) {
+    return
+  }
+  const sample = unpaired.slice(0, 5).join('\n      ✗ ')
+  failures.push(
+    `以下目录有 index.d.ts 却缺运行时入口（纯转发入口被 Rollup 转发优化剔除，深层路径会报 ERR_MODULE_NOT_FOUND）：\n      ✗ ${sample}` +
+      (unpaired.length > 5 ? `\n      …… 共 ${unpaired.length} 个` : '') +
+      `\n      修法：入口改为经本地常量再导出（如 \`export const Row = RowComp\`），见 development/project-structure.md`
+  )
+})
 
 if (failures.length > 0) {
   console.error('❌ 发布守卫未通过：')
