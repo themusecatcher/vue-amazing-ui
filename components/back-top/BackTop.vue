@@ -49,7 +49,7 @@ const { colorPalettes } = useInject('BackTop') // 主题色注入
 const { isSupported: passiveSupported } = useOptionsSupported('passive')
 let scrollEventTarget: Window | HTMLElement | Document | null = null // 实际承载 scroll 事件的目标，整页滚动时为 window
 const emits = defineEmits(['click', 'show'])
-const slotsExist = useSlotsExist(['tooltip', 'icon', 'description'])
+const slotsExist = useSlotsExist(['tooltip', 'description'])
 const backTopStyle = computed(() => {
   return {
     bottom: typeof props.bottom === 'number' ? `${props.bottom}px` : props.bottom,
