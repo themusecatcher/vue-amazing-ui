@@ -115,20 +115,6 @@ export { default as List, ListItem } from './list'
 export type { LoadingBarProps, LoadingBarApi } from './loading-bar'
 export { default as LoadingBar, LoadingBarProvider, useLoadingBar } from './loading-bar'
 
-export type {
-  MenuProps,
-  ItemType,
-  ItemType as MenuItemType,
-  SubMenuType,
-  MenuItemGroupType,
-  MenuDividerType,
-  MenuItemHoverInfo,
-  MenuItemClickInfo,
-  MenuMotion,
-  MenuItemProps
-} from './menu'
-export { Menu, MenuItem } from './menu'
-
 export type { MessageProps, MessageOptions, MessageApi, MessageReactive, MessageUpdate } from './message'
 export { default as Message, MessageProvider, useMessage } from './message'
 

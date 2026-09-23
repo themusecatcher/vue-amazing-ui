@@ -3,8 +3,7 @@ import { ref, onMounted, h, computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { routes } from '@/router'
 import { toggleDark, useMutationObserver } from 'components/utils'
-import { Menu } from 'components/menu'
-import type { ItemType } from 'components/menu'
+import type { ItemType, MenuProps } from 'ant-design-vue'
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
 const themeDark = ref<boolean>(false)
 const html = document.documentElement
@@ -31,8 +30,9 @@ const menuItems = computed<ItemType[]>(() =>
   }))
 )
 const current = ref<string[]>([route.name as string])
-function onClick(e: { key: string; keyPath: string[]; item: ItemType }): void {
-  console.log(`${(e.item as any)?.title} ${e.key}`)
+const onClick: NonNullable<MenuProps['onClick']> = (e) => {
+  // title 为构造 items 时透传的自定义字段（antdv Menu 未内置）
+  console.log(`${(e.item as { title?: string })?.title} ${e.key}`)
   console.log(route.name)
 }
 const routerViewRef = ref<HTMLDivElement | null>(null)
@@ -91,9 +91,9 @@ const routerViewRef = ref<HTMLDivElement | null>(null)
         </template>
       </Switch>
       <Scrollbar style="height: 100vh">
-        <Menu
+        <a-menu
           style="min-height: 100vh"
-          v-model:selected-keys="current"
+          v-model:selectedKeys="current"
           mode="inline"
           :theme="themeDark ? 'dark' : 'light'"
           :items="menuItems"
