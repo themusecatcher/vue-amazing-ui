@@ -798,7 +798,7 @@ function onSearch7(searchText: string) {
 
 <br/>
 
-<Space align="start" :size="40">
+<Space :size="40">
   <AutoComplete
     v-model:value="valueMatchWidthTrue"
     :options="optionsMatchWidth"
@@ -836,7 +836,7 @@ const optionsMatchWidth = [
 ]
 </script>
 <template>
-  <Space align="start" :size="40">
+  <Space :size="40">
     <AutoComplete
       v-model:value="valueMatchWidthTrue"
       :options="optionsMatchWidth"
