@@ -12,27 +12,23 @@ _如果短时间内大量触发同一事件，那么在函数执行一次之后�
 
 ```ts
 /**
- * 节流函数 throttle
+ * 节流：限制函数在 `delay` 内最多执行一次
  *
- * 该函数用于生成一个节流函数，用于控制某个函数在给定时间间隔内只能被执行一次
- * 主要用于性能优化，例如限制事件处理函数的触发频率
+ * 首次调用立即执行，`delay` 内的后续调用被忽略（非「拖尾执行」）；常用于滚动 / 拖拽等高频事件。
  *
- * @param {Function} fn 要被节流的函数
- * @param {number} [delay = 300] 节流的时间间隔，单位 ms，默认为 300ms
- * @returns {Function} 返回一个新的节流的函数
+ * @param fn - 需要节流的函数
+ * @param delay - 节流间隔（ms），默认 300
+ * @returns 节流后的包装函数；处于节流窗口内被忽略的调用直接返回 false
  */
 export function throttle(fn: Function, delay: number = 300): Function {
-  let valid = true // 用于标记函数是否可以执行
+  let valid = true // 当前是否处于可执行窗口
   return function (...args: any[]) {
-    if (!valid) return false // 返回 false，表示当前不执行函数
-    // 返回一个新的函数，该函数负责执行节流逻辑
-    if (valid) {
-      fn(...args) // 执行原函数
-      valid = false // 将函数置为无效
-      setTimeout(() => {
-        valid = true
-      }, delay)
-    }
+    if (!valid) return false // 处于节流窗口内，直接忽略本次调用
+    fn(...args) // 执行原函数
+    valid = false // 关闭窗口，delay 后重新开启
+    setTimeout(() => {
+      valid = true
+    }, delay)
   }
 }
 ```
@@ -82,4 +78,4 @@ function showPosition() {
 
 | 类型 | 说明 |
 | --- | --- |
-| Function | 节流后的新函数 |
+| Function | 节流后的新函数；处于节流窗口内被忽略的调用返回 `false` |

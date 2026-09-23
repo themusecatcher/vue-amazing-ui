@@ -8,18 +8,17 @@ _消除 `js` 加减精度问题的工具函数_
 
 ```ts
 /**
- * 消除 js 加减精度问题的加法函数
+ * 精确加法，规避 JS 浮点运算误差（如 `0.1 + 0.2 !== 0.3`）
  *
- * 该函数旨在添加两个数字，考虑到它们可能是整数或小数；对于整数，直接返回它们的和
- * 对于小数，为了确保精确计算，将小数转换为相同长度的字符串进行处理，然后将结果转换回小数
+ * 两个整数直接相加；含小数时先按 `toFixed` 对齐到相同的小数位数，转成整数相加后再折算回小数。
  *
- * @param {number} num1 第一个数字
- * @param {number} num2 第二个数字
- * @returns {number} 返回两个数字的和
+ * @param num1 - 第一个加数
+ * @param num2 - 第二个加数
+ * @returns 两个加数的和
+ * @throws 任一入参为 `NaN` 时抛错
  */
 export function add(num1: number, num2: number): number {
-  // 验证输入是否为有效的数字
-  // Number.isNaN() 不会尝试将参数转换为数字；全局 isNaN() 函数会将参数强制转换为数字
+  // 用 Number.isNaN（不做类型转换，区别于全局 isNaN）拦截非法入参
   if (Number.isNaN(num1) || Number.isNaN(num2)) {
     throw new Error('Both num1 and num2 must be valid numbers.')
   }
@@ -89,4 +88,4 @@ const addResult = add(0.1, 0.2)
 
 ## 注意事项
 
-- 入参需为有效数字，传入 `NaN` 或非 `number` 类型时会抛出异常
+- 入参为 `NaN`（经 `Number.isNaN` 判断）时抛出 `Error`；函数不做类型转换，传入非 `number` 类型属未定义行为
