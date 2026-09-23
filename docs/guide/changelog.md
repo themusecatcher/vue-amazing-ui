@@ -10,6 +10,10 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-09-24">2.12.0</VersionDateTag>
+
+- 新增 [下拉菜单 Dropdown](/guide/components/dropdown.html) 组件
+
 ## <VersionDateTag date="2026-09-23">2.11.0</VersionDateTag>
 
 - 优化统一 [选择器 Select](/guide/components/select.html)、[级联选择 Cascader](/guide/components/cascader.html)、[开关 Switch](/guide/components/switch.html) 的 `API` 形态：双向绑定改用 `v-model:value`（回写事件 `update:value`）；`label` / `value` 字段名属性合并为 `fieldNames` 对象，改用 `:field-names="{ label: 'name', value: 'id' }"`（分组 / 后代子选项字段名分别为 `Select` 的 `options` 与 `Cascader` 的 `children``）；Select` 的 `search` / `filter` 更名为 `showSearch` / `filterOption`（旧名移除）、`placement` 取值扩展为四向（默认 `bottomLeft`）、`change` 回调第二参由文本 `label` 改为完整 `option` 对象，并新增 `SelectValue` / `SelectFieldNames` / `CascaderFieldNames` 类型导出
@@ -984,7 +988,6 @@
 - 新增 菜单 Menu 组件
 - 新增 穿梭框 Transfer 组件
 - 新增 漫游式引导 Tour 组件
-- 新增 下拉菜单 Dropdown 组件
 <!-- - 更新 表格 Table 组件，新增虚拟滚动功能
 - 时间轴 Timeline 组件，新增水平时间轴
 - 新增 时间选择器 TimePicker 组件

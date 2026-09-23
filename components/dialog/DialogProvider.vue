@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { provide } from 'vue'
+import type { VNode } from 'vue'
 import Dialog from './Dialog.vue'
 import { dialogApiKey } from './useDialog'
 import type { DialogApi } from './useDialog'
+
+// 默认插槽渲染应用内容（Provider 只做 api 注入 + 内部实例挂载）
+export interface DialogProviderSlots {
+  default?: () => VNode[]
+}
+defineSlots<DialogProviderSlots>()
 
 // 透传属性给内部实例，使 <DialogProvider :width="600"> 等声明式配置继续生效
 defineOptions({ inheritAttrs: false })

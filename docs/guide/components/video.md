@@ -98,7 +98,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/u
 
 :::
 
-## 自动截取视频指定帧作为封面图
+## 自动截取视频指定帧作为视频封面
 
 *在未设置封面时，自动截取视频第 `second` 秒指定帧作为封面图*
 
@@ -330,6 +330,13 @@ iconSize | 暂停图标尺寸，单位 `px` | number | 80
 - `fill`: 不保持原有比例，内容拉伸填充整个内容容器;
 - `contain`: 保存原有比例，内容以包含方式缩放;
 - `cover`: 保存原有比例，内容以覆盖方式缩放
+
+## Methods
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| play | 播放视频，若上次已播放结束则从头播放 | () => void |
+| pause | 暂停视频 | () => void |
 
 ## Events
 

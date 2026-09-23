@@ -151,6 +151,6 @@ deg? | 渐变角度，单位 `deg` | number &#124; string | 252
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 default | 自定义内容 | v-slot:default

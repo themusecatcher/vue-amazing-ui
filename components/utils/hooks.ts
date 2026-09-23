@@ -14,13 +14,20 @@ import {
 } from 'vue'
 import type { InjectionKey, Ref, ComputedRef, Reactive, VNode } from 'vue'
 import { getColorPalettes, getAlphaColor } from './color'
+
 /**
- * 用于判断组件是否已挂载的自定义钩子
+ * 通用组合式函数集合（与具体组件解耦，可独立复用）
  *
- * 在组件的生命周期中，我们经常需要知道组件是否已经挂载，特别是在异步操作或者动态渲染的场景中
- * 此钩子通过在组件挂载时设置一个 Ref 对象的状态来帮助我们进行判断
+ * 覆盖挂载态查询、浏览器能力探测、事件监听托管、FPS / 媒体查询 / 视口宽度、插槽存在性判定、
+ * 注入链解析、主题注入与波纹动画状态；带副作用者均在挂载时注册、卸载时清理。
+ */
+
+/**
+ * 组合式函数：判断组件是否已挂载
  *
- * @returns { Ref<boolean> } 返回一个 Ref 对象，用于指示组件是否已挂载
+ * 用于需要区分「挂载前 / 挂载后」的场景（如依赖真实 DOM 的测量、异步分支）。
+ *
+ * @returns 挂载完成标志（初始 false，`onMounted` 后为 true）
  */
 export function useMounted(): Ref<boolean> {
   const isMounted = ref(false)
@@ -34,12 +41,13 @@ export function useMounted(): Ref<boolean> {
   return isMounted
 }
 /**
- * 检查 api 是否支持
+ * 组合式函数：探测某项能力是否可用（挂载后才求值）
  *
- * 用于检查给定的回调函数是否在组件挂载期间被支持
+ * 在挂载后才执行 `callback`，避免 SSR（Node）期访问浏览器 API 抛错；依赖 `useMounted` 触发重算，
+ * 故 callback 内引用浏览器对象时仍需自行判断存在性。
  *
- * @param {() => unknown} callback 回调函数，用于执行某些操作，并返回用于计算的值
- * @returns {ComputedRef<boolean>} 返回一个计算属性，该属性在组件挂载时会触发回调函数，并根据回调函数的返回值计算支持状态
+ * @param callback - 探测函数，返回是否可用
+ * @returns 探测结果的计算属性
  */
 export function useSupported(callback: () => unknown): ComputedRef<boolean> {
   const isMounted = useMounted()
@@ -50,36 +58,33 @@ export function useSupported(callback: () => unknown): ComputedRef<boolean> {
   })
 }
 /**
- * 组合式函数
- * 使用 Vue 的生命周期钩子添加和移除事件监听器
+ * 组合式函数：随组件生命周期自动挂载 / 卸载事件监听
  *
- * 该函数旨在提供一种优雅的方式来管理事件监听器，避免在组件卸载后仍保留事件监听器，
- * 从而可能导致内存泄漏的问题；通过结合 Vue 的 onMounted 和 onUnmounted 钩子，
- * 在组件挂载时添加事件监听器，并在组件卸载时移除它
+ * 挂载时 `addEventListener`、卸载时 `removeEventListener`，避免监听残留导致内存泄漏。
+ * 注意：入参须为监听目标对象本身，不支持 CSS 选择器字符串。
  *
- * @param {HTMLElement | Window | Document} target 目标元素或对象；可以是 DOM 元素或其他支持 addEventListener 的对象
- * @param {string} event 要监听的事件名称
- * @param {Function} callback 事件被触发时执行的回调函数
+ * @param target - 事件目标（DOM 元素 / Window / Document 等）
+ * @param event - 事件名
+ * @param callback - 事件回调
  */
 export function useEventListener(target: HTMLElement | Window | Document, event: string, callback: Function): void {
-  // 也可以用字符串形式的 CSS 选择器来寻找目标 DOM 元素
   onMounted(() => target.addEventListener(event, callback as EventListenerOrEventListenerObject))
   onUnmounted(() => target.removeEventListener(event, callback as EventListenerOrEventListenerObject))
 }
 /**
- * 组合式函数
- * 实时监测浏览器刷新率FPS
+ * 组合式函数：实时统计浏览器 FPS
  *
- * FPS值可以帮助开发者识别性能瓶颈，以优化应用的性能
+ * 每累计 10 帧计算一次平均帧率；帧循环在挂载后启动（SSR 无 requestAnimationFrame）、
+ * 卸载时取消，避免循环永久自我续期。
  *
- * @returns {{ fps: Ref<number> }} 返回一个包含 FPS 值的 ref 对象
+ * @returns 当前 FPS（初始 0）
  */
 export function useFps(): { fps: Ref<number> } {
   const fps = ref<number>(0)
   const frameCount = ref<number>(0)
   let lastTime = performance.now()
   let rafId: number | null = null // 当前帧请求 ID，用于卸载时取消帧回调
-  const every = 10
+  const every = 10 // 每 10 帧统计一次，避免逐帧计算带来的抖动
   const calculateFrameRate = (currentTime: number) => {
     frameCount.value++
     if (frameCount.value >= every) {
@@ -106,13 +111,10 @@ export function useFps(): { fps: Ref<number> } {
   return { fps }
 }
 /**
- * 组合式函数
- * 使用媒体查询来判断当前环境是否符合指定的媒体查询条件
+ * 组合式函数：响应式媒体查询
  *
- * 该函数提供了一个响应式的媒体查询机制，根据查询的不同结果动态更新响应式变量
- *
- * @param {string} mediaQuery 媒体查询字符串，用于定义要查询的媒体条件
- * @returns {{ match: Ref<boolean> }} 返回一个对象，其中包含一个名为 match 的 ref 对象，表示当前是否为移动设备视口
+ * @param mediaQuery - 媒体查询字符串（如 `'(max-width: 768px)'`），为空或非法时抛错
+ * @returns `match` 表示当前是否命中该查询条件
  */
 export function useMediaQuery(mediaQuery: string): { match: Ref<boolean> } {
   // 检查传入的mediaQuery参数是否为空或非法
@@ -135,13 +137,12 @@ export function useMediaQuery(mediaQuery: string): { match: Ref<boolean> } {
   return { match }
 }
 /**
- * 组合式函数
- * 响应式获取当前视口宽度（window.innerWidth）
+ * 组合式函数：响应式获取视口宽度（`window.innerWidth`）
  *
- * 用于按断点切换响应式配置的组件（如 Avatar / Row / Col）：
- * 初始值在 SSR（Node）环境下取 0，resize 监听在挂载后注册、卸载时移除
+ * 供按断点切换配置的组件（如 Avatar / Row / Col）使用；SSR（Node）下初始值为 0，
+ * resize 监听在挂载后注册、卸载时移除。
  *
- * @returns {Ref<number>} 返回视口宽度的 ref 对象
+ * @returns 视口宽度
  */
 export function useWindowWidth(): Ref<number> {
   // SSR（Node）环境无 window，取 0；浏览器端初始值与原来一致
@@ -156,18 +157,20 @@ export function useWindowWidth(): Ref<number> {
   return width
 }
 /**
- * 检查浏览器是否支持给定的事件监听器选项
+ * 组合式函数：探测浏览器是否支持指定的 addEventListener 选项
  *
- * @param {'capture' | 'once' | 'passive' | 'signal'} option 一个表示要检查的事件监听器选项的字符串，可选 'capture'、'once'、'passive' 或 'signal'
- * @returns {{ isSupported: Ref<boolean> }} 返回一个对象，包含一个 Ref 对象，其值指示浏览器是否支持给定的选项
+ * 原理：在 options 上以 getter 定义目标选项，浏览器读取该项时即置为「支持」
+ * （老浏览器把第三个参数当作布尔值，不会读取选项，故保持 false）。
+ *
+ * @param option - 待探测的选项名：`'capture'` / `'once'` / `'passive'` / `'signal'`
+ * @returns `isSupported` 表示是否支持该选项
  */
 export function useOptionsSupported(option: 'capture' | 'once' | 'passive' | 'signal'): { isSupported: Ref<boolean> } {
-  // 兼容旧版本的浏览器（以及一些相对不算古老的）仍然假定 addEventListener 第三个参数是布尔值的情况
   const isSupported = ref<boolean>(false) // 浏览器是否支持 options 参数
   try {
     const options = {
       get [option]() {
-        // 该函数会在浏览器尝试访问 [option] 值时被调用
+        // 浏览器仅在真正读取该选项时才触发 getter（老浏览器只把它当布尔值），故此处置为支持
         isSupported.value = true
         return false
       }
@@ -180,15 +183,13 @@ export function useOptionsSupported(option: 'capture' | 'once' | 'passive' | 'si
   return { isSupported }
 }
 /**
- * 组合式函数
- * 监听给定名称或名称数组的插槽是否存在，支持监听单个插槽或一组插槽的存在
+ * 组合式函数：判断插槽是否「真的渲染了内容」
  *
  * 判定以「实际调用插槽并检查返回的 vnode」为准，可识别「已提供但渲染为空」的插槽；
- * 探测时以空对象作为作用域参数，插槽内抛错按「已提供」处理
+ * 探测时以空对象作为作用域参数，插槽内抛错按「已提供」处理。
  *
- * @param slotsName - 插槽的名称或名称数组，默认为 'default'
- * @returns 如果是单个插槽名称，则返回一个计算属性，表示该插槽是否存在
- *          如果是插槽名称数组，则返回一个 reactive 对象，其中的每个属性对应该插槽是否存在
+ * @param slotsName - 插槽名或插槽名数组，默认 `'default'`
+ * @returns 单个名称 → 该插槽是否存在的计算属性；名称数组 → 以插槽名为键的 reactive 映射
  */
 type SlotsExistResult<T extends string | string[]> = T extends string
   ? ComputedRef<boolean>
@@ -244,17 +245,16 @@ export function useSlotsExist<T extends string | string[] = 'default'>(slotsName
   }
 }
 /**
- * 使用依赖注入的函数
- * 用于获取颜色调色板和阴影颜色
- * 如果在组件中使用，则会尝试从组件的依赖注入中获取颜色配置
- * 如果未找到，则回退到全局的默认颜色配置
+ * 获取组件主题（颜色调色板 + 阴影色）
  *
- * 组件库内部使用：`key` 为本库组件名（如 `'Button'`），用于命中 `ConfigProvider` 注入的
- * `components` 表中该组件的主题覆盖，未命中时回退到 `common` 表。因依赖内部注入协议
- * （注入键名 + 以组件名为分键的表结构），不对外导出、不承诺 API 稳定性。
+ * 优先命中 `ConfigProvider` 注入的 `components[key]` 覆盖，未命中（或未注入）时回退 `common`，
+ * 再回退到内置默认调色板。
  *
- * @param {string} key 组件名，用于在组件的依赖注入中查找颜色配置
- * @returns {{ colorPalettes: Ref<string[]>, shadowColor: Ref<string> }} 返回包含颜色调色板和阴影颜色的主题对象
+ * 组件库内部使用：`key` 为本库组件名（如 `'Button'`）；因依赖内部注入协议（注入键名 + 以组件名为
+ * 分键的表结构），不对外导出、不承诺 API 稳定性。
+ *
+ * @param key - 组件名，用于在注入表中查找该组件的主题覆盖
+ * @returns 颜色调色板与阴影色的 ref
  */
 export function useInject(key: string): { colorPalettes: Ref<string[]>; shadowColor: Ref<string> } {
   // 获取默认的颜色调色板
@@ -349,13 +349,12 @@ export function injectFromChain<T>(key: InjectionKey<T>): T | undefined {
   return undefined
 }
 /**
- * 组合式函数
- * 水波纹动画状态（Material 风格的点击 / 选中涟漪）
+ * 组合式函数：水波纹动画状态（Material 风格的点击 / 选中涟漪）
  *
- * wave 用于驱动 .wave-active 类；startWave 在连点时先复位、下一帧再置位以强制重放动画；
- * endWave 供模板 @animationend 调用以复位
+ * `wave` 用于驱动 `.wave-active` 类；`startWave` 在连点时先复位、下一帧再置位以强制重放动画；
+ * `endWave` 供模板 `@animationend` 调用以复位。
  *
- * @returns {{ wave: Ref<boolean>, startWave: () => void, endWave: () => void }} 波纹标志与启停方法
+ * @returns 波纹标志与启停方法
  */
 export function useWave(): { wave: Ref<boolean>; startWave: () => void; endWave: () => void } {
   const wave = ref<boolean>(false)

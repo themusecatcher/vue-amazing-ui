@@ -1,5 +1,15 @@
 <script setup lang="ts">
-import { computed, defineComponent, h, onBeforeUnmount, onMounted, reactive, ref, withDirectives } from 'vue'
+import {
+  computed,
+  defineComponent,
+  h,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  withDirectives,
+  resolveComponent
+} from 'vue'
 import type { CSSProperties, Directive, PropType, VNode } from 'vue'
 import {
   CloseCircleFilled,
@@ -11,8 +21,13 @@ import {
   SoundFilled
 } from '@ant-design/icons-vue'
 import { format } from 'date-fns'
-import { Button, Modal, ModalProvider, Switch, createDiscreteApi, useMessage, useModal } from 'vue-amazing-ui'
+import { createDiscreteApi, useMessage, useModal } from 'vue-amazing-ui'
 import type { DiscreteApiInstance, ModalApi, ModalReactive, ModalUpdate, SelectOption } from 'vue-amazing-ui'
+// 以下组件在渲染函数（h）中作编程式引用，需要组件值；组件已由 main.ts 的
+// app.use(VueAmazingUI) 全局注册，故在 setup 期用 resolveComponent 取全局注册组件，
+// 不 import 组件库入口（规范见 checklists.md F8「确需 VNode/编程式引用」条）
+const Button = resolveComponent('Button')
+const Switch = resolveComponent('Switch')
 // setup 内调用 useModal()：需外层存在 <ModalProvider>（本项目已在 App.vue 入口全局包裹）
 const modal = useModal()
 // 用于把各类回调结果反馈到页面上，避免只能看控制台

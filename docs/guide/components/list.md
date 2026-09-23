@@ -1213,7 +1213,7 @@ extraStyle | 设置额外内容的样式 | [CSSProperties](https://cn.vuejs.org/
 
 ### List Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 header | 自定义列表头部 | v-slot:header
 default | 自定义内容 | v-slot:default
@@ -1221,7 +1221,7 @@ footer | 自定义列表底部 | v-slot:footer
 
 ### ListItem Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 avatar | 自定义列表元素的图标 | v-slot:avatar
 title | 自定义列表元素的标题 | v-slot:title

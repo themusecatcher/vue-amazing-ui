@@ -597,7 +597,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
 
 ## Slots
 
-| 名称   | 说明          | 类型                                  |
+| 名称   | 说明          | 用法                                  |
 | :------ | :------------- | :------------------------------------ |
 | icon   | 自定义图标    | v-slot:icon="{ item, icon, index }"   |
 | label  | 自定义标签文本 | v-slot:label="{ item, label, index }" |

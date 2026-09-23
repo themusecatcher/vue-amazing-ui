@@ -523,7 +523,7 @@ _通过 `zIndex` 调整按钮层级（默认 `99`）；按钮上的气泡是浮�
   </FloatButton>
 </Card>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -545,7 +545,7 @@ import { SketchOutlined } from '@ant-design/icons-vue'
 </template>
 ```
 
-::::
+:::
 
 ## 徽标数
 
@@ -632,7 +632,7 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 
 ## Slots
 
-| 名称       | 说明                | 类型               |
+| 名称       | 说明                | 用法               |
 | :---------- | :------------------- | :----------------- |
 | tooltip    | 自定义气泡卡片的内容 | v-slot:tooltip     |
 | icon       | 自定义浮动按钮图标  | v-slot:icon        |

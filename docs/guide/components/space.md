@@ -295,6 +295,6 @@ wrap | 是否自动换行，仅在 `horizontal` 时有效 | boolean | true
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 default | 自定义内容 | v-slot:default

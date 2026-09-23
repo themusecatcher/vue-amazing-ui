@@ -31,6 +31,8 @@ declare module 'vue' {
     DialogProvider: typeof VueAmazingUI.DialogProvider
     Divider: typeof VueAmazingUI.Divider
     Drawer: typeof VueAmazingUI.Drawer
+    Dropdown: typeof VueAmazingUI.Dropdown
+    DropdownButton: typeof VueAmazingUI.DropdownButton
     Ellipsis: typeof VueAmazingUI.Ellipsis
     Empty: typeof VueAmazingUI.Empty
     Flex: typeof VueAmazingUI.Flex

@@ -1,9 +1,12 @@
 /**
- * 格式化日期时间字符串
+ * 格式化日期时间
  *
- * @param {number | string | Date} [value = Date.now()] 待格式化的日期时间值，支持数字、字符串和 Date 类型，默认为当前时间戳
- * @param {string} [format = 'YYYY-MM-DD HH:mm:ss'] 格式化字符串，默认为'YYYY-MM-DD HH:mm:ss'，支持格式化参数：YY：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒
- * @returns {string} 返回格式化后的日期时间字符串
+ * @param value - 待格式化的值，支持数字 / 字符串 / Date，默认当前时间
+ * @param format - 格式化模板，默认 `'YYYY-MM-DD HH:mm:ss'`
+ *                 占位符：`YYYY` / `YY` 年、`M` / `MM` 月、`D` / `DD` 日、`H` / `HH` 时、`m` / `mm` 分、`s` / `ss` 秒、`SSS` 毫秒
+ * @returns 格式化后的字符串；数字 / 字符串无法解析为日期时返回空字符串
+ *
+ * 注意：`Date` 入参不做有效性校验，传入 `Invalid Date` 会得到 `NaN-NaN-NaN …` 而非空字符串。
  */
 export function dateFormat(value: number | string | Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss'): string {
   try {
@@ -59,17 +62,17 @@ export function dateFormat(value: number | string | Date = Date.now(), format: s
   }
 }
 /**
- * 数字格式化函数
+ * 数字格式化
  *
- * 该函数提供了一种灵活的方式将数字格式化为字符串，包括设置精度、千位分隔符、小数点字符、前缀和后缀
+ * 支持精度、千分位分隔符、小数点字符、前后缀的自由组合（如金额 `$1,234.50`）。
  *
- * @param {number | string} value 要格式化的数字或数字字符串
- * @param {number} [precision = 2] 小数点后的位数，默认为 2
- * @param {string} [separator = ','] 千分位分隔符，默认为 ','
- * @param {string} [decimal = '.'] 小数点字符，默认为 '.'
- * @param {string} prefix 数字前的字符串，默认为 undefined
- * @param {string} suffix 数字后的字符串，默认为 undefined
- * @returns {string} 格式化后的字符串；类型不符时仅告警，无法转为有效数字时返回空字符串
+ * @param value - 要格式化的数字或数字字符串
+ * @param precision - 保留的小数位数，默认 2
+ * @param separator - 千分位分隔符，默认 `','`
+ * @param decimal - 小数点字符，默认 `'.'`
+ * @param prefix - 前缀，默认无
+ * @param suffix - 后缀，默认无
+ * @returns 格式化后的字符串；`value` 无法转为有效数字时返回空字符串（类型不符仅告警）
  */
 export function formatNumber(
   value: number | string,
@@ -86,13 +89,13 @@ export function formatNumber(
   if (typeof precision !== 'number') {
     console.warn('Expected precision to be of type number')
   }
-  // 处理非数值或NaN的情况
+  // 转换为数字，非数值 / NaN / Infinity 一律返回空串
   const numValue = Number(value)
   if (isNaN(numValue) || !isFinite(numValue)) {
     return ''
   }
   const [integerPart, decimalPart] = numValue.toFixed(precision).split('.')
-  // 如果 separator 是数值而非字符串，会导致错误，此处进行检查
+  // separator 非字符串或为空串时跳过千分位，避免拼入非法字符
   const formattedInteger =
     typeof separator === 'string' && separator !== ''
       ? integerPart.replace(/(\d)(?=(\d{3})+$)/g, `$1${separator}`)

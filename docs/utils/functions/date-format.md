@@ -8,11 +8,14 @@ _格式化日期为指定格式的工具函数_
 
 ```ts
 /**
- * 格式化日期时间字符串
+ * 格式化日期时间
  *
- * @param {number | string | Date} [value = Date.now()] 待格式化的日期时间值，支持数字、字符串和 Date 类型，默认为当前时间戳
- * @param {string} [format = 'YYYY-MM-DD HH:mm:ss'] 格式化字符串，默认为'YYYY-MM-DD HH:mm:ss'，支持格式化参数：YY：年，M：月，D：日，H：时，m：分钟，s：秒，SSS：毫秒
- * @returns {string} 返回格式化后的日期时间字符串
+ * @param value - 待格式化的值，支持数字 / 字符串 / Date，默认当前时间
+ * @param format - 格式化模板，默认 `'YYYY-MM-DD HH:mm:ss'`
+ *                 占位符：`YYYY` / `YY` 年、`M` / `MM` 月、`D` / `DD` 日、`H` / `HH` 时、`m` / `mm` 分、`s` / `ss` 秒、`SSS` 毫秒
+ * @returns 格式化后的字符串；数字 / 字符串无法解析为日期时返回空字符串
+ *
+ * 注意：`Date` 入参不做有效性校验，传入 `Invalid Date` 会得到 `NaN-NaN-NaN …` 而非空字符串。
  */
 export function dateFormat(value: number | string | Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss'): string {
   try {
@@ -193,4 +196,5 @@ onBeforeUnmount(() => {
 
 ## 注意事项
 
-- 传入无法解析的日期值时返回空字符串 `''`，并在控制台输出错误信息
+- `number` / `string` 类型入参无法解析为日期时返回空字符串 `''`，并在控制台输出错误信息
+- `Date` 类型入参不做有效性校验，传入 `Invalid Date` 不会走降级分支，会得到 `NaN-NaN-NaN …` 形式的结果

@@ -425,7 +425,6 @@ function onPageSizeChange(pageSize: number): void {
       display: inline-block;
       font-size: 12px;
       color: rgba(0, 0, 0, 0.65);
-      fill: currentColor;
       transition: color 0.3s;
     }
     &:hover {

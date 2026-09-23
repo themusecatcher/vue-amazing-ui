@@ -154,7 +154,7 @@ _七种类型_
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 ...
 
@@ -181,6 +181,8 @@ _七种类型_
 - 章节顺序统一为：何时使用 → 基本使用 → APIs → Slots → Methods → Events；参数表采用无首尾竖线的紧凑写法，与 `docs/guide/template.md` 保持一致。
 - `update:xxx` 属于 `v-model` 双向绑定的更新事件，**不写入 Events 表**；双向绑定统一在 APIs 表的参数名后标注 `<Tag color="cyan">v-model</Tag>`（如 `open <Tag color="cyan">v-model</Tag>`），避免同一语义在两处重复维护。
 - APIs / Events / Methods 表中的类型引用一律写**组件入口重命名后的公开导出名**（如 `SliderMarks`、`TabsItem`、`SwiperImage`），确保读者可直接 `import type`，且与 IDE 类型提示一致；类型章节标题保留 SFC 内的定义名（如 `### Marks Type`），锚点 `#marks-type` 不随引用名变更，避免全站链接失效。文档自造的结构性类型（源码中无对应导出，如 ConfigProvider 的 `Config`、Scrollbar 的 `ScrollBehavior`）沿用文档内命名。
+- **`## Slots` 表的「用法」列写插槽的实际用法**：默认插槽 `v-slot:default`、具名插槽 `v-slot:xxx`、带作用域参数写 `v-slot:xxx="{ a, b }"`；❌ 不写 `-` / `{ option: T }` 这类「参数」列形态。列头固定为「名称 | 说明 | 用法」，与 `docs/guide/template.md` 一致；该列表达的是插槽**用法**（消费侧语法），不要与 APIs / Methods / Events 表的「类型」列（TS 类型 / 签名）混写。
+- `## Slots` 表需与组件 `defineSlots` 的定义**逐项对应**（名称、是否有作用域参数）；插槽参数由 `v-bind` 动态展开、无法静态收窄时（如 `option`），用法列只写 `v-slot:option`。
 - **表格内禁止裸对象字面量**：APIs / Events 等表格单元格里直接写 `{ label: 'label' }` 会被 markdown 的属性语法当作前一个标签的 HTML 属性（渲染成 `<td ... label:="" ...>`），轻则单元格内容丢失，重则同名属性重复让 `pnpm docs:build` 直接失败（报 `Duplicate attribute`）。对象字面量一律用行内代码包裹：`` `{ label: 'label', value: 'value' }` ``。
 
 ### 示例代码风格约定（人工维护）

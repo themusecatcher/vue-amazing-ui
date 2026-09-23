@@ -1152,7 +1152,7 @@ function filter(inputValue: string, option: any) {
 
 ## 下拉面板挂载容器
 
-_不传 `to` 时面板优先挂到最近的承载层内容容器（`Modal` / `Drawer` / `Dialog` 卡片），无承载层时为 `body`；设为 `false` 时面板留在原地_
+*不传 `to` 时面板优先挂到最近的承载层内容容器（`Modal` / `Drawer` / `Dialog` 卡片），无承载层时为 `body`；设为 `false` 时面板留在原地*
 
 <br/>
 
@@ -1161,7 +1161,7 @@ _不传 `to` 时面板优先挂到最近的承载层内容容器（`Modal` / `Dr
   <Cascader :options="options" v-model:value="toValue" :width="100" :to="false" @change="onChange" />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1236,7 +1236,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 </template>
 ```
 
-::::
+:::
 
 ## APIs
 
@@ -1275,6 +1275,6 @@ function onChange(values: (number | string)[], labels: string[]) {
 
 ## Events
 
-| 名称  | 说明            | 类型                                                       |
+| 名称 | 说明 | 类型 |
 | :----- | :--------------- | :--------------------------------------------------------- |
 | change | 选择完成后的回调 | (values: (number&#124;string)[], labels: string[]) => void |

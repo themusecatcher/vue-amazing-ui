@@ -1081,7 +1081,7 @@ copiedText? | 已复制按钮文本 | string | undefined
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 header | 自定义面板标题 | v-slot:header="{ item, header, key, active }"
 content | 自定义面板内容 | v-slot:content="{ item, content, key, active }"

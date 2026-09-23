@@ -976,7 +976,7 @@ Marks | { [markValue: number]: string &#124; VNode &#124; (() => VNode) &#124; {
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 mark | 自定义刻度标记 | v-slot:mark="{ label, value }"
 tooltip | 自定义 `Tooltip` 内容，`value` 为格式化后的当前值 | v-slot:tooltip="{ value }"

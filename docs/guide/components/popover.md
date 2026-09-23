@@ -240,7 +240,7 @@ const show = ref(false)
 
 ## 隐藏后卸载
 
-_设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再次显示时重新创建并定位；默认 `false`（元素常驻，仅切换显示）_
+*设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再次显示时重新创建并定位；默认 `false`（元素常驻，仅切换显示）*
 
 <br/>
 
@@ -253,7 +253,7 @@ _设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再�
   </Popover>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <template>
@@ -268,7 +268,7 @@ _设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再�
 </template>
 ```
 
-::::
+:::
 
 ## 隐藏箭头
 
@@ -316,7 +316,7 @@ tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.or
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 title | 自定义卡片标题 | v-slot:title
 content | 自定义卡片内容 | v-slot:content

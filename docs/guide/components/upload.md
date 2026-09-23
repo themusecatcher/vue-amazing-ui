@@ -819,7 +819,7 @@ onmessage = async (e: MessageEvent) => {
 
 ## Slots
 
-| 名称 | 说明              | 类型       |
+| 名称 | 说明              | 用法       |
 | :--- | :----------------- | :--------- |
 | tip | 自定义上传描述文字 | v-slot:tip |
 

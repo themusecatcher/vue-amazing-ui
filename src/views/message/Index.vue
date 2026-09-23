@@ -1,8 +1,14 @@
 <script setup lang="ts">
-import { h, onBeforeUnmount, onMounted, ref } from 'vue'
+import { h, onBeforeUnmount, onMounted, ref, resolveComponent } from 'vue'
 import { SoundFilled, FireFilled, ExclamationCircleFilled } from '@ant-design/icons-vue'
-import { Button, Select, Tooltip, useMessage, MessageProvider, createDiscreteApi } from 'vue-amazing-ui'
+import { useMessage, createDiscreteApi } from 'vue-amazing-ui'
 import type { DiscreteApiInstance, MessageApi, MessageReactive, MessageUpdate, SelectOption } from 'vue-amazing-ui'
+// 以下组件在渲染函数（h）中作编程式引用，需要组件值；组件已由 main.ts 的
+// app.use(VueAmazingUI) 全局注册，故在 setup 期用 resolveComponent 取全局注册组件，
+// 不 import 组件库入口（规范见 checklists.md F8「确需 VNode/编程式引用」条）
+const Button = resolveComponent('Button')
+const Select = resolveComponent('Select')
+const Tooltip = resolveComponent('Tooltip')
 const message = useMessage()
 // setup 外调用示例：createDiscreteApi 创建脱离组件树的独立实例
 // 惰性单例：仅首次调用时创建，避免重复创建独立实例与挂载 DOM

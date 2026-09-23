@@ -244,7 +244,7 @@ const fixed = ref(true)
   </div>
 </Watermark>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <template>
@@ -258,7 +258,7 @@ const fixed = ref(true)
 </template>
 ```
 
-::::
+:::
 
 ## 水印配置器
 
@@ -448,6 +448,6 @@ const layoutOptions = [
 
 ## Slots
 
-| 名称   | 说明      | 类型           |
+| 名称 | 说明 | 用法 |
 | :------ | :--------- | :------------- |
 | default | 自定义内容 | v-slot:default |

@@ -367,7 +367,7 @@ const customValue2 = ref(2)
 
 ## Slots
 
-| 名称     | 说明                | 类型                      |
+| 名称     | 说明                | 用法                      |
 | :-------- | :------------------- | :------------------------ |
 | checked  | 自定义选中时的内容  | v-slot:checked            |
 | unchecked | 自定义未选中时的内容 | v-slot:unchecked          |

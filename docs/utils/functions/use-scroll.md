@@ -8,34 +8,53 @@ _实时监测目标元素滚动位置及状态的组合式函数_
 
 ```ts
 /**
- * 组合式函数
- * 实时监测目标元素滚动位置及状态
+ * 组合式函数：实时监测目标元素的滚动位置与方向状态
  *
- * 自定义钩子用于处理滚动事件和状态
- * @param {Ref | HTMLElement | Window | Document} [target] 滚动目标元素，可以是 Ref、HTMLElement、Window 或 Document，默认为 window
- * @param {number} [throttleDelay = 0] 节流延迟，用于限制滚动事件的触发频率，默认为 0
- * @param {(e: Event) => void} onScroll 滚动事件的回调函数，可选
- * @param {(e: Event) => void} onStop 滚动结束的回调函数，可选
- * @returns {{ x: Ref<number>, xScrollMax: Ref<number>, y: Ref<number>, yScrollMax: Ref<number>, isScrolling: Ref<boolean>, left: Ref<boolean>, right: Ref<boolean>, top: Ref<boolean>, bottom: Ref<boolean> }} 返回一个对象，包含滚动位置和各种状态信息
+ * 优先使用原生 `scrollend` 判定滚动结束，不支持该事件的浏览器以降级定时器兜底
+ * （两条路径靠 `isScrolling` 保证幂等，不会重复回调）。
+ *
+ * @param target - 滚动目标（Ref / HTMLElement / Window / Document），默认整页（window）
+ * @param throttleDelay - 滚动事件节流间隔（ms），默认 0（不做实际节流）
+ * @param onScroll - 滚动中的回调，可选
+ * @param onStop - 滚动结束的回调，可选
+ * @returns 滚动位置、最大可滚距离、是否滚动中与四个方向标志
  */
 import { ref, computed, watch, toValue, onBeforeUnmount } from 'vue'
 import type { Ref } from 'vue'
 import { throttle } from 'vue-amazing-ui'
 type ScrollTarget = HTMLElement | Window | Document
-// 是否为 window / document（视口级滚动目标）
+
+/** 类型守卫：是否为 window（视口级滚动目标） */
 function isWindowTarget(value: unknown): value is Window {
   return typeof window !== 'undefined' && value === window
 }
+/** 类型守卫：是否为 document */
 function isDocumentTarget(value: unknown): value is Document {
   return typeof Document !== 'undefined' && value instanceof Document
 }
-// 解析 scroll 事件的实际监听目标：视口滚动的事件目标为 Window / Document，documentElement 收不到 scroll
+/**
+ * 解析 scroll 事件的实际监听目标
+ *
+ * 视口（页面级）滚动时，scroll 事件派发在 window / document 上，documentElement 收不到
+ * （元素级 scroll 不冒泡，视口滚动的事件目标为 Document / Window）。
+ * 故传入 documentElement 时需改听 window，否则监听恒不触发。
+ *
+ * @param target - 期望的滚动目标
+ * @returns 实际应绑定 scroll 监听的目标
+ */
 function resolveScrollEventTarget(target: ScrollTarget | null): ScrollTarget | null {
   if (!target) return null
   if (typeof document !== 'undefined' && target === document.documentElement) return window
   return target
 }
-// 解析滚动尺寸的测量元素：window / document 自身没有内容尺寸属性，需回退到 documentElement
+/**
+ * 解析滚动尺寸（scrollWidth / scrollHeight 等）的测量元素
+ *
+ * window / document 自身没有内容尺寸属性，需回退到 documentElement 读取。
+ *
+ * @param target - 期望的滚动目标
+ * @returns 用于读取尺寸与滚动位置的元素
+ */
 function resolveScrollMeasureElement(target: ScrollTarget | null): HTMLElement | null {
   if (!target) return null
   if (isWindowTarget(target)) return target.document.documentElement
@@ -115,7 +134,7 @@ export function useScroll(
     }, throttleDelay + 200)
     onScroll && onScroll(e)
   }
-  // 使用节流函数限制滚动事件触发频率
+  // 使用节流函数限制滚动事件触发频率；throttleDelay 为 0 时不做实际节流（每个宏任务放行一次）
   const throttleScroll = throttle(scrollEvent, throttleDelay)
   // 计算滚动目标元素：未传 target 时默认监听整页滚动；SSR（Node）无 window，返回 null
   const scrollTarget = computed<ScrollTarget | null>(() => {

@@ -876,7 +876,7 @@ function onDiscreteModal() {
 | 浮层 | 默认层级 | 说明 |
 | :--- | :--- | :--- |
 | `Tooltip`（含 `Popover` / `Popconfirm` / `Ellipsis` / `ColorPicker` / `Rate` / `BackTop` / `FloatButton` 的气泡） | **1070** | 锚点跟随型需高于 `Modal` / `Drawer` / `Dialog` |
-| `Select` / `AutoComplete`（含 `Cascader` / `Pagination` / `Calendar` 的下拉） | **1050** | 同上 |
+| `Select` / `AutoComplete` / `Dropdown`（含 `Cascader` / `Pagination` / `Calendar` 的下拉） | **1050** | 同上 |
 | `Modal` / `Dialog` | **1000**（遮罩）/ **1010**（弹窗） | 弹窗在遮罩之上 `+10` |
 | `Drawer` | **1000** | 遮罩在容器内按 DOM 顺序排列 |
 | `Image` 全屏预览 | **1070**（遮罩）/ **1080**（预览）/ `1081`（操作按钮） | 预览高于 `Modal` / `Drawer` |
@@ -886,6 +886,10 @@ function onDiscreteModal() {
 | `FloatButton` | **99**（可配 `zIndex`） | 同上 |
 | `Spin` 局部遮罩 | `9` | 相对自身容器的局部层级，不参与全局分配 |
 | `Badge` / `Watermark` 装饰层 | `9` / `90`（可配 `zIndex`） | 装饰性叠加，不参与全局分配 |
+
+上表的取值遵循「基准 `zIndexPopupBase: 1000` + 类别偏移」的规则（`Tooltip +70`、`Select +50`、`Image +80`、`Affix = zIndexBase + 10`、`FloatButton 99`）：同类浮层共用同一偏移量，便于记忆与后续扩展。
+
+<br/>
 
 反馈层刻意**不占据最高层级** —— 这样在消息 / 通知内容里放 `Select` / `Tooltip` 时，浮层不会被消息框压住。取值 `1030` / `1040` 是为了与 `Modal` 弹窗（`1010`）、`Select` 面板（`1050`）**都不打平**：同层级时上下关系会退化为 `DOM` 顺序（模板源码顺序），顺序不可控。`LoadingBar`（`9999`）始终保持最上。
 
@@ -982,6 +986,6 @@ const selectOptions: SelectOption[] = [
 
 ## Slots
 
-| 名称   | 说明 | 类型           |
+| 名称   | 说明 | 用法           |
 | :------ | :--- | :------------- |
 | default | 内容 | v-slot:default |

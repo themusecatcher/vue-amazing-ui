@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { provide } from 'vue'
+import type { VNode } from 'vue'
 import Message from './Message.vue'
 import { messageApiKey } from './useMessage'
 import type { MessageApi } from './useMessage'
+
+// 默认插槽渲染应用内容（Provider 只做 api 注入 + 内部实例挂载）
+export interface MessageProviderSlots {
+  default?: () => VNode[]
+}
+defineSlots<MessageProviderSlots>()
 
 // 透传属性给内部实例，使 <MessageProvider :duration="6000"> 等声明式配置继续生效
 defineOptions({ inheritAttrs: false })

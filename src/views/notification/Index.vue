@@ -1,15 +1,7 @@
 <script setup lang="ts">
-import { h, onBeforeUnmount, onMounted, ref } from 'vue'
+import { h, onBeforeUnmount, onMounted, ref, resolveComponent } from 'vue'
 import { CloudFilled, FireFilled, SoundFilled, ExclamationCircleFilled } from '@ant-design/icons-vue'
-import {
-  Button,
-  Select,
-  Tooltip,
-  createDiscreteApi,
-  NotificationProvider,
-  useMessage,
-  useNotification
-} from 'vue-amazing-ui'
+import { createDiscreteApi, useMessage, useNotification } from 'vue-amazing-ui'
 import type {
   DiscreteApiInstance,
   NotificationApi,
@@ -18,6 +10,12 @@ import type {
   NotificationUpdate,
   SelectOption
 } from 'vue-amazing-ui'
+// 以下组件在渲染函数（h）中作编程式引用，需要组件值；组件已由 main.ts 的
+// app.use(VueAmazingUI) 全局注册，故在 setup 期用 resolveComponent 取全局注册组件，
+// 不 import 组件库入口（规范见 checklists.md F8「确需 VNode/编程式引用」条）
+const Button = resolveComponent('Button')
+const Select = resolveComponent('Select')
+const Tooltip = resolveComponent('Tooltip')
 // setup 内调用 useNotification()：需外层存在 <NotificationProvider>（本项目已在 App.vue 入口全局包裹）
 const notification = useNotification()
 // setup 内调用 useMessage()：需外层存在 <MessageProvider>（本项目已在 App.vue 入口全局包裹）

@@ -255,7 +255,7 @@ tooltip | 是否启用文本提示框，可自定义设置弹出提示内容 | b
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 tooltip | 自定义弹出提示内容 | v-slot:tooltip
 default | 自定义展示内容 | v-slot:default

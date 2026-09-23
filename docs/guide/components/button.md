@@ -45,7 +45,7 @@ function onClick(e: Event) {
 }
 </script>
 
-## 基本使用
+## 按钮类型
 
 _七种类型_
 
@@ -1000,7 +1000,7 @@ const loadingType = ref('dynamic')
 
 ## Slots
 
-| 名称   | 说明          | 类型           |
+| 名称   | 说明          | 用法           |
 | :------ | :------------- | :------------- |
 | default | 自定义按钮内容 | v-slot:default |
 | icon   | 自定义按钮图标 | v-slot:icon    |

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Countdown } from 'vue-amazing-ui'
+import type { Countdown } from 'vue-amazing-ui'
 const active = ref(true)
 const resetActive = ref(true)
 const countdownRef = ref<InstanceType<typeof Countdown> | null>(null)

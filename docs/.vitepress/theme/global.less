@@ -154,7 +154,11 @@ summary {
     color: var(--vp-c-brand-lighter);
   }
 }
-svg {
+// 仅作兜底：未显式声明 fill 的 svg 用主题文本色（svg 默认黑色，在暗色主题下不可见）。
+// 带 fill 属性的 svg 必须放行 —— 作者样式优先级高于表现属性，若一律覆盖，
+// 自带 fill="currentColor" 的图标（如 @ant-design/icons-vue）会被强制成文本色，
+// 无法跟随链接 / 按钮等上下文的文字颜色
+svg:not([fill]) {
   fill: var(--vp-c-text-1);
 }
 h1 {

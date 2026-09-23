@@ -500,7 +500,7 @@ const colors = [
   </Badge>
 </Tooltip>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <template>
@@ -512,7 +512,7 @@ const colors = [
 </template>
 ```
 
-::::
+:::
 
 ## APIs
 
@@ -547,7 +547,7 @@ Status | 'success' &#124; 'processing' &#124; 'default' &#124; 'error' &#124; 'w
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 default | 自定义内容元素 | v-slot:default
 value | 自定义徽标数字或文字 | v-slot:value
