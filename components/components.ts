@@ -76,6 +76,7 @@ export { default as Drawer } from './drawer'
 export type {
   DropdownProps,
   DropdownArrowOptions,
+  DropdownTrigger,
   DropdownButtonProps,
   DropdownMenuOption,
   DropdownKey

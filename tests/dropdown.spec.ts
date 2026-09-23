@@ -3,20 +3,21 @@ import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Dropdown from 'components/dropdown/dropdown'
 import DropdownButton from 'components/dropdown/dropdown-button'
-import Tooltip from 'components/tooltip'
+import Popup from 'components/popup'
+import type { DropdownMenuOption } from 'components/dropdown'
 
 /**
- * Dropdown 契约守护：
- * 1. 配置式 `menus` 各菜单项类型（普通 / 分割线 / 分组 / 禁用 / 危险 / 加载中）的渲染分支；
- * 2. `overlay` 插槽与 `menus` 的双源优先级（本项目统一 **插槽优先**）；
- * 3. 空 `menus` + 无 `overlay` 时不展示浮层；
- * 4. `menuClick` 的触发条件（禁用 / 加载中项不触发）；
- * 5. **受控 `open` 语义**：内部发出的关闭请求不应擅自收起浮层（由外部决定）；
- * 6. `arrow` 对象形态（`pointAtCenter`）与布尔形态的箭头渲染；
- * 7. DropdownButton 的根类名与 `#icon` 插槽优先于 `icon` prop。
+ * Dropdown 契约守护（基于 Popup + useFloating 重建）
  *
- * 注：@vue/test-utils 默认 stub `Transition`，会使挂在 `<Transition>` 上的监听
- * 落到 stub 而非真实元素，故显式关闭（与本仓库 tests/popover.spec.ts 一致）。
+ * 覆盖三类「后续重构容易无声改坏」的行为：
+ * 1. 配置式菜单各类型的渲染分支（普通 / 分割线 / 分组 / 禁用 / 危险 / 加载中 / 递归子菜单）；
+ * 2. 触发语义与展开语义：hover 延迟、click 切换、contextmenu 点位锚定、外部点击 / esc 关闭、
+ *    受控 open 不擅自收起、菜单项点击**不通知 openChange**；
+ * 3. 浮层能力接线：`matchTriggerWidth`（等宽策略）、箭头（含 pointAtCenter 让位）、过渡配置透传、层级。
+ *
+ * 注 1：用例统一使用 `to: false` 就地渲染，按组件根节点收敛查询，避免 Teleport 到 body 的节点跨用例残留。
+ * 注 2：jsdom 无视口尺寸（所有 rect 为 0），定位求解会退化（方向可能被自适应改写），故断言**接线与状态**，
+ *       不断言最终的 top / left 数值 —— 位置正确性由浏览器实测保证。
  */
 const mountOptions = {
   attachTo: document.body,
@@ -29,15 +30,25 @@ const mountOptions = {
 
 const tick = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0))
 
+/** 等待「定时器（delay 0）→ 渲染」两拍 */
 async function flush(): Promise<void> {
   await nextTick()
   await tick()
   await nextTick()
 }
 
-const defaultSlot = () => h('a', { class: 'dropdown-link' }, 'Hover me')
+/** 轮询等待浮层转入隐藏（v-show + 离开过渡），必要时补发 animationend 促使过渡收尾 */
+async function waitHidden(query: () => HTMLElement | null): Promise<void> {
+  for (let i = 0; i < 20; i += 1) {
+    const panel = query()
+    if (!panel || panel.style.display === 'none') return
+    panel.dispatchEvent(new Event('animationend'))
+    await new Promise((resolve) => setTimeout(resolve, 10))
+    await nextTick()
+  }
+}
 
-const menus = [
+const menus: DropdownMenuOption[] = [
   { key: '1', label: '1st menu item' },
   { key: '2', label: '2nd menu item' },
   { type: 'divider' },
@@ -46,13 +57,30 @@ const menus = [
   { key: '5', label: '5th menu item', loading: true }
 ]
 
-const groupMenus = [
+const groupMenus: DropdownMenuOption[] = [
   {
     type: 'group',
     label: 'Group 1',
     children: [
       { key: 'g1', label: 'Option 1-1' },
       { key: 'g2', label: 'Option 1-2' }
+    ]
+  }
+]
+
+/** 三层菜单：用于验证「递归渲染任意层级」 */
+const nestedMenus: DropdownMenuOption[] = [
+  { key: '1', label: '1st menu item' },
+  {
+    key: 'sub1',
+    label: 'sub menu',
+    children: [
+      { key: 'sub1-1', label: '3rd menu item' },
+      {
+        key: 'sub1-2',
+        label: 'nested sub menu',
+        children: [{ key: 'sub1-2-1', label: '5th menu item' }]
+      }
     ]
   }
 ]
@@ -65,76 +93,28 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-function mountDropdown(props: Record<string, unknown>, slots: Record<string, unknown> = {}): ReturnType<typeof mount> {
+function mountDropdown(props: Record<string, unknown> = {}, slots: Record<string, unknown> = {}) {
   wrapper = mount(Dropdown, {
     ...mountOptions,
-    props,
-    slots: { default: defaultSlot, ...slots }
+    props: { to: false, mouseEnterDelay: 0, mouseLeaveDelay: 0, ...props },
+    slots: { default: () => h('a', { class: 'dropdown-link' }, 'Hover me'), ...slots }
   })
   return wrapper
 }
 
-function queryAll(selector: string): NodeListOf<Element> {
-  return document.querySelectorAll(selector)
+function queryAll(selector: string): Element[] {
+  return Array.from(wrapper?.element.querySelectorAll(selector) ?? [])
 }
 
-function rect(left: number, top: number, width: number, height: number): DOMRect {
-  return {
-    left,
-    top,
-    right: left + width,
-    bottom: top + height,
-    width,
-    height,
-    x: left,
-    y: top,
-    toJSON: () => ({})
-  } as DOMRect
+function panelEl(): HTMLElement | null {
+  return wrapper?.element.querySelector('.dropdown-overlay') ?? null
 }
 
-// jsdom 的 getBoundingClientRect 恒返回 0，对齐修正需借助桩数据才能被观测
-function mockRects(): void {
-  vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
-    if (this.classList.contains('dropdown-trigger')) {
-      return rect(200, 100, 100, 30)
-    }
-    if (this.classList.contains('tooltip-card')) {
-      // 真实 DOM 中已叠加的对齐偏移会体现在元素位置上，桩数据需同样跟随 transform，
-      // 否则重复测量会不断累加偏移（被测逻辑依赖「还原基准位置」的算法）
-      const offsetX = Number(/translate\((-?[\d.]+)px/.exec(this.style.transform)?.[1] ?? 0)
-      const offsetY = Number(/translate\(-?[\d.]+px, (-?[\d.]+)px\)/.exec(this.style.transform)?.[1] ?? 0)
-      return rect(offsetX, offsetY, 300, 200)
-    }
-    return rect(0, 0, 0, 0)
-  })
+function submenuPanels(): HTMLElement[] {
+  return queryAll('.dropdown-submenu-overlay') as HTMLElement[]
 }
 
-const wait = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
-
-// jsdom 的 offsetWidth 恒为 0，触发器宽度 / 浮层宽度相关逻辑需借助桩数据观测
-function mockWidths(triggerWidth: number, containerWidth: number, cardWidth = 0, cardHeight = 0): void {
-  vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (this: HTMLElement) {
-    if (this.classList.contains('dropdown-trigger')) {
-      return triggerWidth
-    }
-    if (this.classList.contains('tooltip-card-container')) {
-      return containerWidth
-    }
-    if (this.classList.contains('tooltip-card')) {
-      return cardWidth
-    }
-    return 0
-  })
-  vi.spyOn(HTMLElement.prototype, 'offsetHeight', 'get').mockImplementation(function (this: HTMLElement) {
-    return this.classList.contains('tooltip-card') ? cardHeight : 0
-  })
-}
-
-function queryArrowEl(): HTMLElement | null {
-  return document.querySelector('.tooltip-arrow')
-}
-
-describe('Dropdown 配置式菜单渲染', () => {
+describe('Dropdown · 配置式菜单渲染', () => {
   it('按 type 渲染普通项 / 分割线，并标记禁用、危险、加载中', async () => {
     mountDropdown({ menus, open: true })
     await flush()
@@ -153,11 +133,11 @@ describe('Dropdown 配置式菜单渲染', () => {
     await flush()
 
     expect(queryAll('.dropdown-menu-group').length).toBe(1)
-    expect(document.querySelector('.dropdown-menu-group-title')?.textContent?.trim()).toBe('Group 1')
+    expect(wrapper?.element.querySelector('.dropdown-menu-group-title')?.textContent?.trim()).toBe('Group 1')
     expect(queryAll('.dropdown-menu-group-list .dropdown-menu-item').length).toBe(2)
   })
 
-  it('overlay 插槽优先于 menus（本项目统一插槽优先）', async () => {
+  it('overlay 插槽优先于 menus', async () => {
     mountDropdown({ menus, open: true }, { overlay: () => h('div', { class: 'custom-overlay' }, 'custom') })
     await flush()
 
@@ -165,23 +145,107 @@ describe('Dropdown 配置式菜单渲染', () => {
     expect(queryAll('.dropdown-menu').length).toBe(0)
   })
 
-  it('menus 为空且无 overlay 插槽时，hover 不会展开浮层', async () => {
+  it('menus 为空且无 overlay 插槽时不可展开（无浮层内容时不弹出）', async () => {
     mountDropdown({ menus: [] })
     await flush()
-    ;(document.querySelector('.tooltip-wrap') as HTMLElement).dispatchEvent(new Event('mouseenter'))
+    await wrapper!.find('.dropdown-trigger').trigger('mouseenter')
     await flush()
 
-    // 无内容时不展开（showOverlay 为 false → disableTrigger 拦截 hover 触发）
-    expect(document.querySelector('.tooltip-card-container')).toBeNull()
+    expect(panelEl()).toBeNull()
+  })
+
+  it('label 插槽可自定义菜单项文本，并回退未提供插槽的项', async () => {
+    mountDropdown(
+      { menus: [{ key: '1', label: '1st' }], open: true },
+      { label: ({ option }: { option: DropdownMenuOption }) => h('em', { class: 'custom-label' }, `#${option.key}`) }
+    )
+    await flush()
+
+    expect(wrapper?.element.querySelector('.dropdown-menu-item-label .custom-label')?.textContent).toBe('#1')
   })
 })
 
-describe('Dropdown 菜单项点击', () => {
-  it('点击普通项触发 menuClick 并透出 key 与完整配置', async () => {
+describe('Dropdown · 递归子菜单', () => {
+  it('子菜单标题带展开箭头，hover 后在独立浮层内渲染子项', async () => {
+    mountDropdown({ menus: nestedMenus, open: true })
+    await flush()
+
+    const submenuTitle = wrapper!.element.querySelector('.dropdown-menu-item-submenu .dropdown-menu-item-content')
+    expect(submenuTitle).not.toBeNull()
+    expect(submenuTitle?.querySelector('.dropdown-menu-item-arrow')).not.toBeNull()
+    // 回归守护：标题内容层只有一层（曾误包成两层同 class，导致内边距叠加）
+    expect(wrapper?.element.querySelectorAll('.dropdown-menu-item-submenu > .dropdown-menu-item-content').length).toBe(
+      1
+    )
+    // 未展开时子菜单面板不渲染
+    expect(submenuPanels().length).toBe(0)
+
+    submenuTitle?.dispatchEvent(new MouseEvent('mouseenter', { bubbles: false }))
+    await flush()
+
+    const submenuPanel = submenuPanels()[0]
+    expect(submenuPanel).toBeDefined()
+    expect(submenuPanel.querySelector('.dropdown-menu-item')?.textContent).toContain('3rd menu item')
+  })
+
+  it('递归渲染任意层级：三级子菜单标题出现在二级面板内，展开后生成第三个浮层', async () => {
+    mountDropdown({ menus: nestedMenus, open: true })
+    await flush()
+
+    wrapper?.element
+      .querySelector('.dropdown-menu-item-submenu .dropdown-menu-item-content')
+      ?.dispatchEvent(new MouseEvent('mouseenter'))
+    await flush()
+
+    const nestedTitle = submenuPanels()[0]?.querySelector('.dropdown-menu-item-submenu .dropdown-menu-item-content') as
+      | HTMLElement
+      | undefined
+    expect(nestedTitle?.textContent).toContain('nested sub menu')
+
+    nestedTitle?.dispatchEvent(new MouseEvent('mouseenter'))
+    await flush()
+
+    expect(submenuPanels().length).toBe(2)
+    expect(submenuPanels()[1]?.textContent).toContain('5th menu item')
+  })
+
+  it('禁用子菜单项不响应展开', async () => {
+    mountDropdown({
+      menus: [{ key: 'sub', label: 'disabled sub menu', disabled: true, children: [{ key: 'c', label: 'child' }] }],
+      open: true
+    })
+    await flush()
+
+    wrapper?.element
+      .querySelector('.dropdown-menu-item-submenu .dropdown-menu-item-content')
+      ?.dispatchEvent(new MouseEvent('mouseenter'))
+    await flush()
+
+    expect(submenuPanels().length).toBe(0)
+  })
+
+  it('主浮层收起时同步收起已展开的子菜单', async () => {
+    mountDropdown({ menus: nestedMenus, open: true })
+    await flush()
+    wrapper?.element
+      .querySelector('.dropdown-menu-item-submenu .dropdown-menu-item-content')
+      ?.dispatchEvent(new MouseEvent('mouseenter'))
+    await flush()
+    expect(submenuPanels().length).toBe(1)
+
+    await wrapper!.setProps({ open: false })
+    await flush()
+    await waitHidden(() => submenuPanels()[0] ?? null)
+    expect(submenuPanels()[0]?.style.display).toBe('none')
+  })
+})
+
+describe('Dropdown · 菜单项点击', () => {
+  it('点击普通项触发 menuClick（透出 key 与完整配置）', async () => {
     const onMenuClick = vi.fn()
     mountDropdown({ menus, open: true, onMenuClick })
     await flush()
-    ;(queryAll('.dropdown-menu-item')[0] as HTMLElement).dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    queryAll('.dropdown-menu-item')[0].dispatchEvent(new MouseEvent('click', { bubbles: true }))
     await flush()
 
     expect(onMenuClick).toHaveBeenCalledTimes(1)
@@ -194,173 +258,225 @@ describe('Dropdown 菜单项点击', () => {
     mountDropdown({ menus, open: true, onMenuClick })
     await flush()
 
-    const items = Array.from(queryAll('.dropdown-menu-item')) as HTMLElement[]
-    const disabledItem = items.find((el) => el.classList.contains('dropdown-menu-item-disabled'))
-    const loadingItem = items.find((el) => el.classList.contains('dropdown-menu-item-loading'))
-
-    disabledItem?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
-    loadingItem?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    queryAll('.dropdown-menu-item-disabled')[0].dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    wrapper?.element
+      .querySelector('.dropdown-menu-item-loading')
+      ?.closest('.dropdown-menu-item')
+      ?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
     await flush()
 
     expect(onMenuClick).not.toHaveBeenCalled()
   })
-})
 
-describe('Dropdown 受控 open 语义', () => {
-  it('受控 open 为 true 时点击菜单项仅发出关闭请求，浮层不擅自收起', async () => {
-    const onOpenChange = vi.fn()
-    mountDropdown({ menus, open: true, onOpenChange })
-    await flush()
-    ;(queryAll('.dropdown-menu-item')[0] as HTMLElement).dispatchEvent(new MouseEvent('click', { bubbles: true }))
-    await flush()
-
-    expect(onOpenChange).toHaveBeenCalledWith(false)
-    // 外部未更新 open，浮层应保持展示（回归守护：曾因误触 resetAlign 导致后续定位失效）
-    expect(queryAll('.dropdown-menu').length).toBe(1)
-  })
-
-  it('收起时延迟复位对齐偏移，隐藏过渡期间浮层不跳回默认居中位置', async () => {
-    mockRects()
-    const localWrapper = mountDropdown({ menus, open: true, placement: 'bottomLeft', transitionDuration: 30 })
-    await flush()
-
-    const cardEl = document.querySelector('.tooltip-card') as HTMLElement
-    // 左对齐：浮层左边缘对齐触发器左边缘 → x = 200 - 0
-    expect(cardEl.style.transform).toBe('translate(200px, 0px)')
-
-    await localWrapper.setProps({ open: false })
-    await flush()
-    // 回归守护：隐藏过渡期间不得清零对齐偏移，否则浮层会在淡出动画中跳回居中位置
-    expect(cardEl.style.transform).toBe('translate(200px, 0px)')
-
-    await wait(80)
-    await flush()
-    // 过渡结束后才复位（此刻浮层已隐藏，无视觉影响）
-    expect(cardEl.style.transform).toBe('')
-  })
-
-  it('点击菜单项关闭浮层时 openChange 只通知一次（Tooltip 显隐回调不重复通知）', async () => {
+  it('菜单项点击收起浮层但不通知 openChange', async () => {
     const onOpenChange = vi.fn()
     mountDropdown({ menus, trigger: 'click', onOpenChange })
     await flush()
-    ;(document.querySelector('.tooltip-content') as HTMLElement).dispatchEvent(
-      new MouseEvent('click', { bubbles: true })
-    )
+
+    await wrapper!.find('.dropdown-trigger').trigger('click')
     await flush()
     expect(onOpenChange).toHaveBeenCalledTimes(1)
     expect(onOpenChange).toHaveBeenLastCalledWith(true)
-    ;(queryAll('.dropdown-menu-item')[0] as HTMLElement).dispatchEvent(new MouseEvent('click', { bubbles: true }))
+
+    queryAll('.dropdown-menu-item')[0].dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await flush()
+    // 回归守护：明示「点击菜单项导致的消失不会触发 openChange」，故仍为 1 次
+    expect(onOpenChange).toHaveBeenCalledTimes(1)
+  })
+
+  it('受控 open 为 true 时点击菜单项不擅自收起（展开态归属由使用者决定）', async () => {
+    const onOpenChange = vi.fn()
+    mountDropdown({ menus, open: true, onOpenChange })
+    await flush()
+    queryAll('.dropdown-menu-item')[0].dispatchEvent(new MouseEvent('click', { bubbles: true }))
     await flush()
 
-    // 回归守护：本组件关闭浮层后，Tooltip 关闭回调曾再次通知同一状态导致重复触发
+    expect(onOpenChange).not.toHaveBeenCalled()
+    expect(wrapper?.element.querySelector('.dropdown-menu')).not.toBeNull()
+  })
+})
+
+describe('Dropdown · 触发语义', () => {
+  it('trigger 为 click 时点击触发器切换展开态，并对外通知 openChange', async () => {
+    const onOpenChange = vi.fn()
+    mountDropdown({ menus, trigger: 'click', onOpenChange })
+    await flush()
+
+    await wrapper!.find('.dropdown-trigger').trigger('click')
+    await flush()
+    expect(onOpenChange).toHaveBeenCalledTimes(1)
+    expect(onOpenChange).toHaveBeenLastCalledWith(true)
+
+    await wrapper!.find('.dropdown-trigger').trigger('click')
+    await flush()
     expect(onOpenChange).toHaveBeenCalledTimes(2)
     expect(onOpenChange).toHaveBeenLastCalledWith(false)
   })
+
+  it('trigger 为 click 时点击外部关闭浮层', async () => {
+    const onOpenChange = vi.fn()
+    mountDropdown({ menus, trigger: 'click', onOpenChange })
+    await flush()
+    await wrapper!.find('.dropdown-trigger').trigger('click')
+    await flush()
+
+    document.body.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await flush()
+
+    expect(onOpenChange).toHaveBeenLastCalledWith(false)
+  })
+
+  it('trigger 为 hover 时未到延迟不展开', async () => {
+    const onOpenChange = vi.fn()
+    mountDropdown({ menus, mouseEnterDelay: 40, onOpenChange })
+    await flush()
+    await wrapper!.find('.dropdown-trigger').trigger('mouseenter')
+    await flush()
+
+    expect(onOpenChange).not.toHaveBeenCalled()
+
+    await new Promise((resolve) => setTimeout(resolve, 60))
+    await flush()
+    expect(onOpenChange).toHaveBeenCalledWith(true)
+  })
+
+  it('未展开时移出触发器会取消待展开延迟（回归守护：快速划过不应弹出）', async () => {
+    const onOpenChange = vi.fn()
+    mountDropdown({ menus, trigger: 'hover', mouseEnterDelay: 40, onOpenChange })
+    await flush()
+
+    await wrapper!.find('.dropdown-trigger').trigger('mouseenter')
+    await wrapper!.find('.dropdown-trigger').trigger('mouseleave')
+
+    await new Promise((resolve) => setTimeout(resolve, 60))
+    await flush()
+
+    // 曾经：未展开时早返回导致 clearShowTimer 被跳过，鼠标已离开仍会照常弹出
+    expect(onOpenChange).not.toHaveBeenCalled()
+  })
+
+  it('trigger 支持数组组合（hover 展开 + click 收起）', async () => {
+    const onOpenChange = vi.fn()
+    mountDropdown({ menus, trigger: ['hover', 'click'], onOpenChange })
+    await flush()
+
+    await wrapper!.find('.dropdown-trigger').trigger('mouseenter')
+    await flush()
+    expect(onOpenChange).toHaveBeenLastCalledWith(true)
+
+    await wrapper!.find('.dropdown-trigger').trigger('click')
+    await flush()
+    expect(onOpenChange).toHaveBeenLastCalledWith(false)
+  })
+
+  it('trigger 为 contextmenu 时以鼠标位置为锚点展开并阻止浏览器默认菜单', async () => {
+    const onOpenChange = vi.fn()
+    mountDropdown({ menus, trigger: 'contextmenu', onOpenChange })
+    await flush()
+
+    const event = new MouseEvent('contextmenu', { clientX: 500, clientY: 300, bubbles: true, cancelable: true })
+    wrapper!.find('.dropdown-trigger').element.dispatchEvent(event)
+    await flush()
+
+    expect(event.defaultPrevented).toBe(true)
+    expect(onOpenChange).toHaveBeenLastCalledWith(true)
+    // 点位锚定由内核的 point 承担（jsdom 无视口，不断言求解结果）
+    expect(wrapper!.findComponent(Popup).props('point')).toEqual({ x: 500, y: 300 })
+  })
+
+  it('esc 关闭浮层（click / contextmenu 触发）', async () => {
+    const onOpenChange = vi.fn()
+    mountDropdown({ menus, trigger: 'click', onOpenChange })
+    await flush()
+    await wrapper!.find('.dropdown-trigger').trigger('click')
+    await flush()
+
+    await wrapper!.find('.dropdown-trigger').trigger('keydown', { key: 'Escape' })
+    await flush()
+
+    expect(onOpenChange).toHaveBeenLastCalledWith(false)
+  })
+
+  it('disabled 或无浮层内容时任何触发都不展开', async () => {
+    const onOpenChange = vi.fn()
+    mountDropdown({ menus, disabled: true, trigger: ['click', 'hover', 'contextmenu'], onOpenChange })
+    await flush()
+
+    await wrapper!.find('.dropdown-trigger').trigger('click')
+    await wrapper!.find('.dropdown-trigger').trigger('mouseenter')
+    wrapper!.find('.dropdown-trigger').element.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true }))
+    await flush()
+
+    expect(onOpenChange).not.toHaveBeenCalled()
+    expect(panelEl()).toBeNull()
+  })
 })
 
-describe('Dropdown 浮层宽度与箭头位置', () => {
-  it('浮层最小宽度取触发器宽度；右键菜单跟随鼠标定位故不拉伸', async () => {
-    mockWidths(240, 300)
-    mountDropdown({ menus, open: true, placement: 'bottomLeft' })
-    await flush()
+describe('Dropdown · 浮层能力接线', () => {
+  it('菜单宽度不小于触发器宽度（matchTriggerWidth: minWidth），contextmenu 时不拉伸', async () => {
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+      if (this.classList.contains('dropdown-trigger')) {
+        return { left: 200, top: 100, right: 440, bottom: 130, width: 240, height: 30, x: 200, y: 100 } as DOMRect
+      }
+      return { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0, x: 0, y: 0 } as DOMRect
+    })
 
-    expect((document.querySelector('.tooltip-card') as HTMLElement).style.minWidth).toBe('240px')
+    mountDropdown({ menus, open: true })
+    await flush()
+    expect(panelEl()?.style.minWidth).toBe('240px')
 
     wrapper?.unmount()
     wrapper = null
-    mountDropdown({ menus, open: true, placement: 'bottomLeft', trigger: 'contextMenu' })
+    mountDropdown({ menus, open: true, trigger: 'contextmenu' })
     await flush()
-
-    expect((document.querySelector('.tooltip-card') as HTMLElement).style.minWidth).toBe('')
+    expect(panelEl()?.style.minWidth).toBe('')
   })
 
-  it('箭头跟随对齐方向：左对齐距左 14px、居中方向居中、右对齐距右 14px', async () => {
-    mockWidths(100, 300)
-    mountDropdown({ menus, open: true, placement: 'bottomLeft', arrow: true })
+  it('arrow 为 false 时不渲染箭头，传对象形态时渲染（含 pointAtCenter 的面板让位）', async () => {
+    mountDropdown({ menus, open: true, arrow: false })
     await flush()
-    expect(queryArrowEl()?.style.left).toBe('14px')
+    expect(queryAll('.dropdown-arrow').length).toBe(0)
 
     wrapper?.unmount()
-    wrapper = null
-    mountDropdown({ menus, open: true, placement: 'bottom', arrow: true })
-    await flush()
-    expect(queryArrowEl()?.style.left).toBe('')
-
-    wrapper?.unmount()
-    wrapper = null
-    mountDropdown({ menus, open: true, placement: 'bottomRight', arrow: true })
-    await flush()
-    expect(queryArrowEl()?.style.left).toBe('286px')
-  })
-
-  it('箭头位置换算到容器坐标：叠加浮层的水平对齐偏移量', async () => {
-    mockRects()
-    mockWidths(100, 300)
-    mountDropdown({ menus, open: true, placement: 'bottomLeft', arrow: true })
-    await flush()
-
-    // 桩数据下左对齐偏移为 200px，箭头应落在「卡片左 + 14px」= 容器坐标 214px
-    // （对齐偏移作用在卡片上，箭头定位在容器上，二者相差 alignOffset.x）
-    expect(queryArrowEl()?.style.left).toBe('214px')
-  })
-
-  it('箭头指向中心时，浮层位移让箭头中心精确落在触发器中心（有意修正 antdv 的 6px 偏差）', async () => {
-    mockRects()
-    mockWidths(100, 300)
+    vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (this: HTMLElement) {
+      return this.classList.contains('dropdown-trigger') ? 240 : 0
+    })
     mountDropdown({ menus, open: true, placement: 'bottomLeft', arrow: { pointAtCenter: true } })
     await flush()
 
-    // 触发器 rect(200, 100, 100, 30) 中心为 250；浮层左 = 250 - 箭头中心距边(14) = 236；
-    // 箭头 left = 卡片坐标 14 + 容器坐标换算 236 = 250，即精确指向触发器中心
-    // （antdv 位移固定取历史常量 20，箭头中心为 244，偏离中心 6px —— 本用例守护该有意差异不被改回）
-    expect((document.querySelector('.tooltip-card') as HTMLElement).style.transform).toBe('translate(236px, 0px)')
-    expect(queryArrowEl()?.style.left).toBe('250px')
+    expect(queryAll('.dropdown-arrow').length).toBe(1)
+    // 让位量 = 锚点半宽(120) − 箭头中心距对齐边(14)：面板左边缘内移，使箭头中心落在触发器中心
+    expect(panelEl()?.style.marginLeft).toBe('106px')
   })
 
-  it('右键菜单：缩放原点落在卡片顶部中心，动画不再表现为位移', async () => {
-    mockRects()
-    mockWidths(100, 300, 160, 120)
-    mountDropdown({ menus, open: true, trigger: 'contextMenu', placement: 'bottomLeft' })
+  it('过渡动画配置与面板类名、样式经宿主落到面板上', async () => {
+    mountDropdown({
+      menus,
+      open: true,
+      overlayClassName: 'my-overlay',
+      overlayStyle: { borderRadius: '12px' }
+    })
     await flush()
 
-    const triggerEl = document.querySelector('.dropdown-trigger') as HTMLElement
-    triggerEl.dispatchEvent(new MouseEvent('contextmenu', { clientX: 500, clientY: 300, bubbles: true }))
-    await flush()
-
-    // 卡片被平移到鼠标点 (500, 300)，主轴 bottom 时原点取卡片顶部中心 → (500 + 160/2, 300)
-    const containerEl = document.querySelector('.tooltip-card-container') as HTMLElement
-    expect(containerEl.style.transformOrigin).toBe('580px 300px')
-  })
-})
-
-describe('Dropdown 浮层过渡动画', () => {
-  it('透传 slide 动画名给内层 Tooltip（而非沿用内置 zoom 的双向缩放）', async () => {
-    mountDropdown({ menus, open: true })
-    await flush()
-
-    const tooltipWrapper = wrapper!.findComponent(Tooltip)
-    expect(tooltipWrapper.props('transitionName')).toBe('slide-y')
-  })
-})
-
-describe('Dropdown 箭头', () => {
-  it('arrow 为 false 时不渲染箭头', async () => {
-    mountDropdown({ menus, open: true, arrow: false })
-    await flush()
-
-    expect(queryAll('.tooltip-arrow').length).toBe(0)
+    const popup = wrapper!.findComponent(Popup)
+    expect(popup.props('transitionProps')?.name).toBe('dropdown-slide')
+    expect(popup.props('defaultZIndex')).toBe(1050)
+    const panel = panelEl()
+    expect(panel?.classList.contains('my-overlay')).toBe(true)
+    expect(panel?.style.borderRadius).toBe('12px')
+    expect(panel?.classList.toString()).toContain('va-popup-placement-')
   })
 
-  it('arrow 传对象形态时同样渲染箭头', async () => {
-    mountDropdown({ menus, open: true, arrow: { pointAtCenter: true } })
+  it('zIndex 优先于默认层级 1050', async () => {
+    mountDropdown({ menus, open: true, zIndex: 1200 })
     await flush()
 
-    expect(queryAll('.tooltip-arrow').length).toBe(1)
+    expect(Number(panelEl()?.style.zIndex)).toBe(1200)
   })
 })
 
 describe('DropdownButton', () => {
-  it('渲染根类名 dropdown-button-wrap 与左右两个按钮', async () => {
+  it('渲染根类名与左右按钮，默认图标为省略号', async () => {
     wrapper = mount(DropdownButton, {
       ...mountOptions,
       props: { menus, open: true },
@@ -368,22 +484,11 @@ describe('DropdownButton', () => {
     })
     await flush()
 
-    expect(queryAll('.dropdown-button-wrap').length).toBe(1)
-    expect(queryAll('.dropdown-button-left').length).toBe(1)
-    expect(queryAll('.dropdown-button-right').length).toBe(1)
-    // 默认图标对齐 antdv 的 EllipsisOutlined（未传 icon 时渲染省略号 SVG）
-    expect(queryAll('.dropdown-button-right [data-icon="ellipsis"]').length).toBe(1)
-  })
-
-  it('左按钮 loading 时右按钮同步置灰（对齐 antd 的 loading 联动规则）', async () => {
-    wrapper = mount(DropdownButton, {
-      ...mountOptions,
-      props: { menus, loading: true },
-      slots: { default: () => 'Submit' }
-    })
-    await flush()
-
-    expect(queryAll('.dropdown-button-wrap.dropdown-button-loading').length).toBe(1)
+    // 根类名即 wrapper.element，querySelectorAll 不含自身，故用 find / findAll
+    expect(wrapper.find('.dropdown-button-wrap').exists()).toBe(true)
+    expect(wrapper.findAll('.dropdown-button-left').length).toBe(1)
+    expect(wrapper.findAll('.dropdown-button-right').length).toBe(1)
+    expect(wrapper.findAll('.dropdown-button-right [data-icon="ellipsis"]').length).toBe(1)
   })
 
   it('#icon 插槽优先于 icon prop', async () => {
@@ -396,5 +501,31 @@ describe('DropdownButton', () => {
 
     expect(queryAll('.dropdown-button-right .icon-slot').length).toBe(1)
     expect(queryAll('.dropdown-button-right .icon-prop').length).toBe(0)
+  })
+
+  it('左按钮 loading 时右按钮同步置灰', async () => {
+    wrapper = mount(DropdownButton, {
+      ...mountOptions,
+      props: { menus, loading: true },
+      slots: { default: () => 'Submit' }
+    })
+    await flush()
+
+    expect(wrapper.find('.dropdown-button-wrap.dropdown-button-loading').exists()).toBe(true)
+  })
+
+  it('展开态只透传一次 openChange / update:open（回归守护：曾因同时监听两个事件而重复透传）', async () => {
+    wrapper = mount(DropdownButton, {
+      ...mountOptions,
+      props: { menus, trigger: 'click' },
+      slots: { default: () => 'Dropdown' }
+    })
+    await flush()
+
+    await wrapper.find('.dropdown-trigger').trigger('click')
+    await flush()
+
+    expect(wrapper.emitted('openChange')?.length).toBe(1)
+    expect(wrapper.emitted('update:open')?.length).toBe(1)
   })
 })

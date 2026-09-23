@@ -11,6 +11,7 @@ import Descriptions from 'components/descriptions/descriptions/Descriptions.vue'
 import QRCode from 'components/qr-code/QRCode.vue'
 import Tag from 'components/tag/Tag.vue'
 import Tooltip from 'components/tooltip/Tooltip.vue'
+import Dropdown from 'components/dropdown/dropdown/Dropdown.vue'
 import Select from 'components/select/Select.vue'
 import AutoComplete from 'components/auto-complete/AutoComplete.vue'
 import Popover from 'components/popover/Popover.vue'
@@ -73,6 +74,7 @@ describe('SSR 渲染安全性', () => {
 
   it('依赖共享组合式函数的组件可在 Node 环境渲染', async () => {
     await expect(renderComponent(Tooltip, { content: 'tooltip' })).resolves.toBeTruthy()
+    await expect(renderComponent(Dropdown, { menus: [{ key: '1', label: 'menu' }] })).resolves.toBeTruthy()
     await expect(renderComponent(Select, { options: [{ label: 'a', value: 1 }] })).resolves.toBeTruthy()
     await expect(renderComponent(AutoComplete, { value: '', options: ['a'] })).resolves.toBeTruthy()
     await expect(renderComponent(Popover)).resolves.toBeTruthy()

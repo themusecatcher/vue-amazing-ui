@@ -11,7 +11,7 @@
  * 不会再表现为「消费方运行时静默缺样式」。
  */
 
-// 所有组件样式的路径映射
+/** 组件名 → 组件样式所在目录（相对产物 es|lib 根目录） */
 const componentsMap = {
   Alert: 'alert',
   AutoComplete: 'auto-complete',
@@ -100,9 +100,12 @@ type ComponentName = keyof typeof componentsMap
 function isComponentName(name: string): name is ComponentName {
   return name in componentsMap
 }
-// 组件样式的来源表：键为「自身无样式文件的组件」，值为「承载其样式的组件」
-// 两类来源：① 命令式 Provider 复用底层组件的样式；② 子组件样式定义在父组件 SFC 内（如 DescriptionsItem）
-// 用 Partial 表达「可能查不到」，与运行时行为一致；值约束为 ComponentName，拼错即在编译期报错
+/**
+ * 组件样式的来源表：键为「自身无样式文件的组件」，值为「承载其样式的组件」
+ *
+ * 两类来源：① 命令式 Provider 复用底层组件的样式；② 子组件样式定义在父组件 SFC 内（如 DescriptionsItem）。
+ * 用 Partial 表达「可能查不到」，与运行时行为一致；值约束为 ComponentName，拼错即在编译期报错。
+ */
 const styleSources: Partial<Record<ComponentName, ComponentName>> = {
   MessageProvider: 'Message',
   NotificationProvider: 'Notification',
@@ -110,10 +113,13 @@ const styleSources: Partial<Record<ComponentName, ComponentName>> = {
   DialogProvider: 'Dialog',
   DescriptionsItem: 'Descriptions'
 }
-// 定义组件依赖关系（仅声明「除自身外的样式依赖」，自身样式由 styleSources / componentsMap 兜底）
-// 注：Tooltip 的浮层宿主为 Popup，因此 Tooltip 及其全部间接依赖组件都要追加 Popup
-// 约束：依赖项必须是「有自己 CSS 的组件」，不能是 styleSources 的键（复用他人样式）或 stylelessComponents
-// （无样式）——否则生成器会拼出不存在的 CSS 路径（构建期存在性断言会报错兜底）
+/**
+ * 组件样式依赖关系（仅声明「除自身外」的样式依赖；自身样式由 styleSources / componentsMap 兜底）
+ *
+ * - Tooltip 的浮层宿主为 Popup，故 Tooltip 及其全部间接依赖组件都要追加 Popup；
+ * - 依赖项必须是「有自己 CSS 的组件」，不能是 styleSources 的键（复用他人样式）或 stylelessComponents
+ *   （无样式），否则生成器会拼出不存在的 CSS 路径（构建期有存在性断言兜底）。
+ */
 const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   AutoComplete: ['Scrollbar'],
   BackTop: ['Tooltip', 'Popup'],
@@ -126,8 +132,8 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   Dialog: ['Button', 'Scrollbar'],
   DialogProvider: ['Button', 'Scrollbar'],
   Drawer: ['Scrollbar'],
-  Dropdown: ['Tooltip', 'Popup'],
-  DropdownButton: ['Button', 'Dropdown', 'Tooltip', 'Popup'],
+  Dropdown: ['Popup'],
+  DropdownButton: ['Button', 'Dropdown', 'Popup'],
   Ellipsis: ['Tooltip', 'Popup'],
   FloatButton: ['Badge', 'Tooltip', 'Popup'],
   Image: ['Space', 'Spin'],
@@ -162,8 +168,11 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   Upload: ['Image', 'Space', 'Spin'],
   Waterfall: ['Spin']
 }
-// 完全没有样式的组件（SFC 内不存在 <style> 块，且不复用其它组件的样式）
-// 与 styleSources 的区别：styleSources 是「无样式但有来源」，本表是「无样式且无来源」，按需引入时返回空
+/**
+ * 完全没有样式的组件（SFC 内不存在 <style> 块，且不复用其它组件的样式）
+ *
+ * 与 styleSources 的区别：styleSources 是「无样式但有来源」，本表是「无样式且无来源」，按需引入返回空。
+ */
 const stylelessComponents: ComponentName[] = ['ConfigProvider', 'Highlight', 'NumberAnimation', 'Watermark']
 
 export { componentsMap, styleSources, componentDependencies, stylelessComponents, isComponentName }
