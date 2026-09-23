@@ -16,8 +16,8 @@
 
 ## Features
 
-- The component library is implemented with `Vue@3.5.29`+ `TypeScript@5.9.3` + `Vite@7.3.1` + `Less@4.5.1`.
-- Currently, it includes `67` basic UI components and `18` utility functions, with continuous exploration and updates ongoing...
+- The component library is implemented with `Vue@3.5.42`+ `TypeScript@5.9.3` + `Vite@7.3.1` + `Less@4.5.1`.
+- Currently, it includes `69` basic UI components and `22` utility functions, with continuous exploration and updates ongoing...
 - Theme Customizable, all you need is to provide a theme color, then all the stuffs will be done by me.
 - By the way, they are all treeshakable.
 - All the stuff in Vue Amazing UI is written in TypeScript. It can work with your typescript project seamlessly.
@@ -61,8 +61,9 @@ _In this form, only the imported components will be bundled._
 import { createApp } from 'vue'
 import App from './App.vue'
 import { Button, Tag } from 'vue-amazing-ui'
-import 'vue-amazing-ui/es/button/Button.css'
-import 'vue-amazing-ui/es/tag/Tag.css'
+// One style entry per component (recommended form): global default styles + the component's own styles + its dependency components' styles
+import 'vue-amazing-ui/es/button/style'
+import 'vue-amazing-ui/es/tag/style'
 
 const app = createApp(App)
 app.use(Button).use(Tag)
@@ -76,8 +77,9 @@ _In this form, only the imported components will be bundled as well._
 ```vue
 <script setup lang="ts">
 import { Button, Tag } from 'vue-amazing-ui'
-import 'vue-amazing-ui/es/button/Button.css'
-import 'vue-amazing-ui/es/tag/Tag.css'
+// One style entry per component (recommended form): global default styles + the component's own styles + its dependency components' styles
+import 'vue-amazing-ui/es/button/style'
+import 'vue-amazing-ui/es/tag/style'
 </script>
 <template>
   <Button>button</Button>
@@ -85,16 +87,7 @@ import 'vue-amazing-ui/es/tag/Tag.css'
 </template>
 ```
 
-**Both Global Partial Registration and Local Registration require manually importing the global default styles of the component library ([Automatic On-Demand Import](https://themusecatcher.github.io/vue-amazing-ui/guide/ondemand.html#%E8%87%AA%E5%8A%A8%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5-%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90) is recommended).**
-
-```ts
-import { createApp } from 'vue'
-import App from './App.vue'
-import 'vue-amazing-ui/es/style/global.css' // 引入全局默认样式
-
-const app = createApp(App)
-app.mount('#app')
-```
+> The style entry also supports the more explicit file form `import 'vue-amazing-ui/es/button/style/index.js'`.
 
 **Automatic On-Demand Import (Strongly Recommended)**
 
@@ -179,8 +172,12 @@ import {
   useMediaQuery,
   useResizeObserver,
   useSlotsExist,
-  useInject,
-  useOptionsSupported
+  useOptionsSupported,
+  getColorPalettes,
+  getAlphaColor,
+  getScrollParent,
+  lockScroll,
+  useScrollParent
 } from 'vue-amazing-ui'
 </script>
 ```
@@ -213,6 +210,12 @@ pnpm dev
 pnpm docs:dev
 ```
 
+## Contributing
+
+`Vue Amazing UI` grows together with its community. Whether you are adding a component, fixing a bug, or improving the docs and examples, your contribution is always welcome.
+
+Before submitting code, please read the [Contributing Guide](CONTRIBUTING.md).
+
 ## Blogs
 
 [My CSDN Blogs](https://themusecatcher.blog.csdn.net)
@@ -233,13 +236,14 @@ All sponsors will be listed here, thank you very much for your support and spons
 
 | Name            | Description | Name           | Description |
 | :-------------- | :---------- | :------------- | :---------- |
-| Alert           | 警告提示    | Avatar         | 头像        |
-| BackTop         | 回到顶部    | Badge          | 徽标        |
-| Breadcrumb      | 面包屑      | Button         | 按钮        |
-| Calendar        | 日历        | Card           | 卡片        |
-| Carousel        | 轮播图      | Cascader       | 级联选择    |
-| Checkbox        | 复选框      | Collapse       | 折叠面板    |
-| ColorPicker     | 颜色选择器  | ConfigProvider | 全局化配置  |
+| Alert           | 警告提示    | AutoComplete   | 自动完成    |
+| Avatar          | 头像        | BackTop        | 回到顶部    |
+| Badge           | 徽标        | Breadcrumb     | 面包屑      |
+| Button          | 按钮        | Calendar       | 日历        |
+| Card            | 卡片        | Carousel       | 轮播图      |
+| Cascader        | 级联选择    | Checkbox       | 复选框      |
+| Collapse        | 折叠面板    | ColorPicker    | 颜色选择器  |
+| Comment         | 评论        | ConfigProvider | 全局化配置  |
 | Countdown       | 倒计时      | DatePicker     | 日期选择器  |
 | Descriptions    | 描述列表    | Dialog         | 对话框      |
 | Divider         | 分割线      | Drawer         | 抽屉        |
@@ -266,7 +270,7 @@ All sponsors will be listed here, thank you very much for your support and spons
 | TextScroll      | 文字滚动    | Timeline       | 时间轴      |
 | Tooltip         | 文字提示    | Upload         | 上传        |
 | Video           | 播放器      | Waterfall      | 瀑布流      |
-| Watermark       | 水印        |
+| Watermark       | 水印        |                |             |
 
 ## Functions
 
@@ -274,19 +278,23 @@ All sponsors will be listed here, thank you very much for your support and spons
 | :-- | :-- | :-- |
 | dateFormat | Format date-time string function | (value: number &#124; string &#124; Date = Date.now(), format: string = 'YYYY-MM-DD HH:mm:ss') => string |
 | formatNumber | Number formatting function | (value: number &#124; string, precision: number = 2, separator: string = ',', decimal: string = '.', prefix?: string, suffix?: string) => string |
-| rafTimeout | Function to implement `setTimeout` or `setInterval` using `requestAnimationFrame` | (fn: Function, delay: number = 0, interval: boolean = false) => \{ id: number } |
+| rafTimeout | Delay / interval invocation based on `requestAnimationFrame`; not equivalent to `setTimeout` / `setInterval` | (fn: Function, delay: number = 0, interval: boolean = false) => \{ id: number } |
 | cancelRaf | Function to cancel the `rafTimeout` function | (raf: { id: number }) => void |
 | throttle | Throttle function | (fn: Function, delay: number = 300) => Function |
 | debounce | Debounce function | (fn: Function, delay: number = 300) => Function |
 | add | Addition function that eliminates precision issues in JavaScript arithmetic | (num1: number, num2: number) => number |
-| downloadFile | Function to download a file with a custom filename; if no filename is provided, it extracts the filename from the URL | (url: string, fileName?: string) => void |
+| downloadFile | Function to download a file with a custom filename, with built-in dual download strategies for same-origin `anchor` and cross-origin `iframe`; if no filename is provided, it extracts the filename from the URL | (url: string, fileName?: string, options?: { target?: '_self' &#124; '_blank'; strategy?: 'auto' &#124; 'anchor' &#124; 'iframe' }) => Promise&lt;void&gt; |
 | toggleDark | Function to toggle dark mode | () => void |
 | useEventListener | Function to add and remove event listeners using Vue lifecycle hooks | (target: HTMLElement &#124; Window &#124; Document, event: string, callback: Function) => void |
 | useMutationObserver | Function to observe changes in DOM elements using `MutationObserver` | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: MutationCallback, options: object = {}) => { start: \() => void, stop: \() => void } |
-| useScroll | Function to monitor the scroll position and state of a target element in real time | (target: Ref &#124; HTMLElement &#124; Window &#124; Document = window, throttleDelay: number = 0, onScroll?: (e: Event) => void, onStop?: (e: Event) => void) => { x: Ref\<number>, xScrollMax: Ref\<number>, y: Ref\<number>, yScrollMax: Ref\<number>, isScrolling: Ref\<boolean>, left: Ref\<boolean>, right: Ref\<boolean>, top: Ref\<boolean>, bottom: Ref\<boolean> } |
+| useScroll | Function to monitor the scroll position and state of a target element in real time | (target?: Ref &#124; HTMLElement &#124; Window &#124; Document, throttleDelay: number = 0, onScroll?: (e: Event) => void, onStop?: (e: Event) => void) => { x: Ref\<number>, xScrollMax: Ref\<number>, y: Ref\<number>, yScrollMax: Ref\<number>, isScrolling: Ref\<boolean>, left: Ref\<boolean>, right: Ref\<boolean>, top: Ref\<boolean>, bottom: Ref\<boolean> } |
 | useFps | Function to monitor the browser's refresh rate (FPS) in real time | () => { fps: Ref\<number> } |
 | useMediaQuery | Function to determine if the current environment matches a specified media query condition | (mediaQuery: string) => { match: Ref\<boolean> } |
 | useResizeObserver | Function to observe changes in the dimensions of DOM elements using `ResizeObserver` | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options: object = {}) => { start: \() => void, stop: \() => void } |
 | useSlotsExist | Function to watch for the existence of slots with given names, supporting single slots or an array of slots | <T extends string &#124; string[] = 'default'>(slotsName: T) => T extends string ? ComputedRef\<boolean> : Reactive\<Record\<string, ComputedRef\<boolean>>> |
-| useInject | A function that uses injection to obtain color palettes and shadow color | (key: string) => { colorPalettes: Ref\<string[]>, shadowColor: Ref\<string> } |
-| useOptionsSupported | Checks if the browser supports the given event listener options | (prop: 'capture' &#124; 'once' &#124; 'passive' &#124; 'signal') => { isSupported: Ref\<boolean> } |
+| useOptionsSupported | Checks if the browser supports the given event listener options | (option: 'capture' &#124; 'once' &#124; 'passive' &#124; 'signal') => { isSupported: Ref\<boolean> } |
+| getColorPalettes | Function to generate a color palette from a primary color | (primaryColor: string) => string[] |
+| getAlphaColor | Function to get an alpha color, generally used as a shadow color | (frontColor: string, backgroundColor: string = '#ffffff') => string |
+| getScrollParent | Function to find the nearest scrollable parent element upward | (el: HTMLElement &#124; null) => HTMLElement &#124; null |
+| lockScroll | Function to lock page scrolling and compensate the scrollbar width to prevent horizontal jitter | () => () => void |
+| useScrollParent | Composable to query and watch the nearest scrollable parent element and respond to viewport `resize` | (contentRef: Ref\<HTMLElement &#124; null>, onScroll: () => void, options: object = {}) => { scrollTarget: Ref\<HTMLElement &#124; null>, viewportWidth: Ref\<number>, viewportHeight: Ref\<number>, observeScroll: \() => void, cleanup: \() => void } |

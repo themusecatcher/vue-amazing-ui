@@ -8,7 +8,7 @@
     <h2 class="mt30 mb10">无描述</h2>
     <Empty :description="null" />
     <h2 class="mt30 mb10">自定义风格</h2>
-    <h3 class="mb10">自定义图片地址、描述内容和样式</h3>
+    <p class="mb10">自定义图片地址、描述内容和样式</p>
     <Empty
       image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
       :image-style="{

@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { ref, h } from 'vue'
+import { h } from 'vue'
 import { FireFilled, QuestionCircleFilled, SoundFilled } from '@ant-design/icons-vue'
-const message = ref()
+import { useMessage } from 'components/message'
+const message = useMessage()
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
-  message.value.success('Click on Yes')
+  message.success('Click on Yes')
 }
 const cancel = (e: MouseEvent) => {
   console.log('cancel', e)
-  message.value.error('Click on No')
+  message.error('Click on No')
 }
 const openChange = (open: boolean) => {
   console.log('open', open)
@@ -139,10 +140,22 @@ const openChange = (open: boolean) => {
         <Button type="primary">Delay 500ms Confirm</Button>
       </Popconfirm>
     </Space>
+    <h2 class="mt30 mb10">隐藏后卸载</h2>
+    <p class="mb10">
+      设置 <code>destroyOnHide</code> 后，浮层在离开动画结束时卸载 <code>DOM</code>，再次显示时重新创建并定位；默认
+      <code>false</code>（元素常驻，仅切换显示）
+    </p>
+    <Space>
+      <Popconfirm title="Are you sure ?" destroy-on-hide @ok="confirm" @cancel="cancel">
+        <Button type="primary">Click (destroyOnHide)</Button>
+      </Popconfirm>
+      <Popconfirm title="Are you sure ?" @ok="confirm" @cancel="cancel">
+        <Button>Click (default)</Button>
+      </Popconfirm>
+    </Space>
     <h2 class="mt30 mb10">隐藏箭头</h2>
     <Popconfirm :arrow="false" title="My arrow is hidden" @ok="confirm" @cancel="cancel">
       <Button type="primary">Hide Arrow Confirm</Button>
     </Popconfirm>
-    <Message ref="message" />
   </div>
 </template>

@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-_采用分页的形式分隔长列表，每次只加载一个页面_
+*采用分页的形式分隔长列表，每次只加载一个页面*
 
 ## 何时使用
 
@@ -66,8 +66,7 @@ function pageSizeChange(page: number, pageSize: number) {
 <script setup lang="ts">
 import { ref } from 'vue'
 const page = ref(1)
-function onChange(page: number, pageSize: number) {
-  // 页码 page 或每页条数 pageSize 改变的回调
+function onChange(page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
 }
@@ -109,8 +108,7 @@ const placementOptions = [
   }
 ]
 const placement = ref<PaginationProps['placement']>('left')
-function onChange(page: number, pageSize: number) {
-  // 页码 page 或每页条数 pageSize 改变的回调
+function onChange(page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
 }
@@ -155,8 +153,7 @@ const sizeOptions = [
   }
 ]
 const size = ref<PaginationProps['size']>('middle')
-function onChange(page: number, pageSize: number) {
-  // 页码 page 或每页条数 pageSize 改变的回调
+function onChange(page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
 }
@@ -173,7 +170,14 @@ function onChange(page: number, pageSize: number) {
 
 ## 自定义 pageSize 切换选项
 
-<Pagination v-model:page="page" v-model:page-size="pageSize" :total="total" :page-size-options="[10, 20, 30, 40, 50]" @change="onChange" @pageSizeChange="pageSizeChange" />
+<Pagination
+  v-model:page="page"
+  v-model:page-size="pageSize"
+  :total="total"
+  :page-size-options="[10, 20, 30, 40, 50]"
+  @change="onChange"
+  @pageSizeChange="pageSizeChange"
+/>
 
 ::: details Show Code
 
@@ -183,13 +187,11 @@ import { ref } from 'vue'
 const page = ref(1)
 const pageSize = ref(10)
 const total = ref(500)
-function onChange(page: number, pageSize: number) {
-  // 页码 page 或每页条数 pageSize 改变的回调
+function onChange(page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
 }
-function pageSizeChange(page: number, pageSize: number) {
-  // 每页条数 pageSize 变化的回调
+function pageSizeChange(page: number, pageSize: number) { // 每页条数 pageSize 变化的回调
   console.log('pageSizeChange page', page)
   console.log('pageSizeChange pageSize', pageSize)
 }
@@ -219,8 +221,7 @@ function pageSizeChange(page: number, pageSize: number) {
 import { ref } from 'vue'
 const page = ref(1)
 const total = ref(500)
-function onChange(page: number, pageSize: number) {
-  // 页码 page 或每页条数 pageSize 改变的回调
+function onChange(page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
 }
@@ -243,8 +244,7 @@ function onChange(page: number, pageSize: number) {
 import { ref } from 'vue'
 const page = ref(1)
 const total = ref(500)
-function onChange(page: number, pageSize: number) {
-  // 页码 page 或每页条数 pageSize 改变的回调
+function onChange(page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
 }
@@ -281,8 +281,7 @@ function onChange(page: number, pageSize: number) {
 import { ref } from 'vue'
 const page = ref(1)
 const total = ref(500)
-function onChange(page: number, pageSize: number) {
-  // 页码 page 或每页条数 pageSize 改变的回调
+function onChange(page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
 }
@@ -319,8 +318,7 @@ function onChange(page: number, pageSize: number) {
 import { ref } from 'vue'
 const page = ref(1)
 const total = ref(500)
-function onChange(page: number, pageSize: number) {
-  // 页码 page 或每页条数 pageSize 改变的回调
+function onChange(page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
   console.log('change page', page)
   console.log('change pageSize', pageSize)
 }
@@ -336,26 +334,26 @@ function onChange(page: number, pageSize: number) {
 
 ### Pagination
 
-| 参数 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| page <Tag color="cyan">v-model</Tag> | 当前页数 | number | 1 |
-| pageSize <Tag color="cyan">v-model</Tag> | 每页条数 | number | 10 |
-| total | 数据总数 | number | 0 |
-| disabled | 是否禁用 | boolean | false |
-| pageAmount | 显示的页码数 | number | 5 |
-| hideOnSinglePage | 只有一页时是否隐藏分页 | boolean | false |
-| showQuickJumper | 是否可以快速跳转至某页 | boolean | false |
-| jumperProps | 快速跳转组件 `props`，参考 [Input Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/input.html#input) | object | {} |
-| showSizeChanger | 是否展示 `pageSize` 切换器，当 `total` 大于 `50` 时默认为 `true` | boolean | undefined |
-| changerProps | `pageSize` 切换器组件 `props`，参考 [Select Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/select.html#select) | object | {} |
-| pageSizeOptions | 设置每页可以显示多少条 | string[] &#124; number[] | [10, 20, 50 ,100] |
-| showTotal | 用于显示数据总量和当前数据顺序 | boolean &#124; ((total: number, range: number[]) => string) | false |
-| placement | 分页展示位置 | 'left' &#124; 'center' &#124; 'right' | 'center' |
-| size | 分页按钮大小 | 'large' &#124; 'middle' &#124; 'small' | 'large' |
+参数 | 说明 | 类型 | 默认值
+:-- | :-- | :-- | :--
+page <Tag color="cyan">v-model</Tag> | 当前页数 | number | 1
+pageSize <Tag color="cyan">v-model</Tag> | 每页条数 | number | 10
+total | 数据总数 | number | 0
+disabled | 是否禁用 | boolean | false
+pageAmount | 显示的页码数 | number | 5
+hideOnSinglePage | 只有一页时是否隐藏分页 | boolean | false
+showQuickJumper | 是否可以快速跳转至某页 | boolean | false
+jumperProps | 快速跳转组件 `props`，参考 [Input Props](./input.md#input) | [InputProps](./input.md#input) | {}
+showSizeChanger | 是否展示 `pageSize` 切换器，当 `total` 大于 `50` 时默认为 `true` | boolean | undefined
+changerProps | `pageSize` 切换器组件 `props`，参考 [Select Props](./select.md#select) | [SelectProps](./select.md#select) | {}
+pageSizeOptions | 设置每页可以显示多少条 | string[] &#124; number[] | [10, 20, 50 ,100]
+showTotal | 用于显示数据总量和当前数据顺序 | boolean &#124; ((total: number, range: number[]) => string) | false
+placement | 分页展示位置 | 'left' &#124; 'center' &#124; 'right' | 'center'
+size | 分页按钮大小 | 'large' &#124; 'middle' &#124; 'small' | 'large'
 
 ## Events
 
-| 名称           | 说明                                         | 类型                                     |
-| :------------- | :------------------------------------------- | :--------------------------------------- |
-| change         | 页码 `page` 或每页条数 `pageSize` 改变的回调 | (page: number, pageSize: number) => void |
-| pageSizeChange | 每页条数 `pageSize` 变化的回调               | (page: number, pageSize: number) => void |
+名称 | 说明 | 类型
+:-- | :-- | :--
+change | 页码 `page` 或每页条数 `pageSize` 改变的回调 | (page: number, pageSize: number) => void
+pageSizeChange | 每页条数 `pageSize` 变化的回调 | (page: number, pageSize: number) => void

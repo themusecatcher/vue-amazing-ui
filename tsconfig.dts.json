@@ -1,13 +1,13 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": [
-    "components/*.ts",
-    "components/**/*.ts",
-    "components/**/*.vue",
-  ],
+  "include": ["components/*.ts", "components/**/*.ts", "components/**/*.vue", "types/*.d.ts"],
   "exclude": [
     "node_modules",
     "dist",
+    // 构建期专用数据源：仅被 vite.config.ts / build/ 与测试引用，不参与运行时模块图，
+    // 产物中不会生成对应 JS。若仍生成 d.ts 即形成「类型有声明、运行时无模块」的空头声明，
+    // 故在此排除出类型产物（详见 development/project-structure.md）
+    "components/utils/vendor-styles.ts"
   ],
   "compilerOptions": {
     "removeComments": true,
@@ -15,7 +15,7 @@
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.dts.tsbuildinfo",
     "paths": {
-      "components/*": ["./components/*"],
+      "components/*": ["./components/*"]
     }
   }
 }

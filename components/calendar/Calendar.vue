@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
+import type { VNode } from 'vue'
 import {
   addDays,
   addMonths,
@@ -17,19 +18,20 @@ import {
   startOfYear,
   set
 } from 'date-fns'
-import Select from 'components/select'
-import Radio from 'components/radio'
+import Select, { type SelectProps } from 'components/select'
+import Radio, { type RadioProps } from 'components/radio'
 import { useSlotsExist, useInject } from 'components/utils'
 import type { SelectOption, RadioOption } from 'vue-amazing-ui'
 export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
 export type DefaultWeek = '一' | '二' | '三' | '四' | '五' | '六' | '日'
+
 export interface Props {
   display?: 'panel' | 'card' // 日历展示方式，面板/卡片
   mode?: 'month' | 'year' // 初始模式
-  header?: string // 自定义日历头部内容 string | slot
-  yearSelectProps?: object // 年选择器 props，参考 Select 组件 Props
-  monthSelectProps?: object // 月选择器 props，参考 Select 组件 Props
-  modeRadioProps?: object // 模式切换器 props，参考 Radio 组件 Props
+  header?: string // 自定义日历头部内容
+  yearSelectProps?: SelectProps // 年选择器 props，参考 Select 组件 Props
+  monthSelectProps?: SelectProps // 月选择器 props，参考 Select 组件 Props
+  modeRadioProps?: RadioProps // 模式切换器 props，参考 Radio 组件 Props
   startDayOfWeek?: DayOfWeek // 一周的开始是星期几，0-6，0 是周一
   dateStrip?: boolean // 日历面板默认会显示六周的日期，当最后一周的日期不包含当月日期时，是否去掉
   dateFormat?: (date: number, timestamp: number) => string // 自定义日期展示格式
@@ -38,6 +40,16 @@ export interface Props {
   disabledDate?: (timestamp: number) => boolean // 不可选择的日期
   valueFormat?: string // 被选中日期的格式，默认为时间戳；参考 format https://date-fns.org/v4.1.0/docs/format
 }
+// 声明组件插槽类型
+export interface CalendarSlots {
+  header?: () => VNode[]
+  week?: (props: { defaultWeek: DefaultWeek; week: number; timestamp: number }) => VNode[]
+  dateValue?: (props: DateItem) => VNode[]
+  dateContent?: (props: DateItem) => VNode[]
+  monthValue?: (props: MonthItem) => VNode[]
+  monthContent?: (props: MonthItem) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   display: 'panel',
   mode: 'month',
@@ -53,6 +65,7 @@ const props = withDefaults(defineProps<Props>(), {
   disabledDate: undefined,
   valueFormat: undefined
 })
+defineSlots<CalendarSlots>()
 // (v-model) 当前被选中的日期
 const selectedValue = defineModel<string | number>('value')
 export interface DateItem {
@@ -140,13 +153,12 @@ watch(
   }
 )
 watch(
-  () => [props.startDayOfWeek, props.dateStrip, calendarMonth.value, calendarYear.value],
+  [() => props.startDayOfWeek, () => props.dateStrip, () => calendarMonth.value, () => calendarYear.value],
   () => {
     calendarDates.value = getCalendarDates()
   },
   {
-    immediate: true,
-    deep: true
+    immediate: true
   }
 )
 watch(
@@ -380,7 +392,7 @@ function onPanelChange(): void {
           :size="display === 'card' ? 'small' : 'middle'"
           :options="yearOptions"
           :max-display="8"
-          v-model="calendarYear"
+          v-model:value="calendarYear"
           @change="onPanelChange"
           v-bind="yearSelectProps"
         />
@@ -390,7 +402,7 @@ function onPanelChange(): void {
           :size="display === 'card' ? 'small' : 'middle'"
           :options="monthOptions"
           :max-display="8"
-          v-model="calendarMonth"
+          v-model:value="calendarMonth"
           @change="onPanelChange"
           v-bind="monthSelectProps"
         />

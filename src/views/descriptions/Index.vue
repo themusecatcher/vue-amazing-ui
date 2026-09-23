@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-const size = ref('default')
-const options = [
+import { ref, reactive, computed, onMounted } from 'vue'
+import { useWindowSize } from '@vueuse/core'
+import type { DescriptionsProps } from 'vue-amazing-ui'
+const size = ref<DescriptionsProps['size']>('default')
+const sizeOptions = [
   {
     label: 'default',
     value: 'default'
@@ -15,24 +17,72 @@ const options = [
     value: 'small'
   }
 ]
+const labelAlign = ref<'left' | 'right' | 'center'>('left')
+const labelAlignOptions = [
+  {
+    label: 'left',
+    value: 'left'
+  },
+  {
+    label: 'right',
+    value: 'right'
+  },
+  {
+    label: 'center',
+    value: 'center'
+  }
+]
 const show = ref(true)
 const onClick = () => {
   show.value = false
 }
+// column 断点：与组件 Responsive 断点一一对应，rule 直观标注生效区间，min / max 用于判断当前视口命中项
+type BreakpointKey = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'
+const breakpoints: { key: BreakpointKey; rule: string; min: number; max: number }[] = [
+  { key: 'xs', rule: '<576px', min: 0, max: 575 },
+  { key: 'sm', rule: '≥576px', min: 576, max: 767 },
+  { key: 'md', rule: '≥768px', min: 768, max: 991 },
+  { key: 'lg', rule: '≥992px', min: 992, max: 1199 },
+  { key: 'xl', rule: '≥1200px', min: 1200, max: 1599 },
+  { key: 'xxl', rule: '≥1600px', min: 1600, max: 1999 },
+  { key: 'xxxl', rule: '≥2000px', min: 2000, max: Infinity }
+]
+const columnModeOptions = [
+  { label: '统一列数', value: 'number' },
+  { label: '响应式断点', value: 'responsive' }
+]
+const { width } = useWindowSize()
+// 未挂载前不渲染依赖视口的反馈，避免服务端与客户端首屏输出不一致
+const isMounted = ref(false)
+onMounted(() => {
+  isMounted.value = true
+})
+// 当前视口命中的断点：判定口径与组件一致（从大到小取第一个命中项）
+const currentBreakpoint = computed<BreakpointKey | undefined>(() => {
+  if (!isMounted.value) {
+    return undefined
+  }
+  return breakpoints.find((bp) => width.value >= bp.min && width.value <= bp.max)?.key
+})
 const state = reactive({
   title: 'User Info',
   extra: 'extra',
   bordered: false,
-  vertical: false,
+  layout: 'horizontal' as 'horizontal' | 'vertical',
   size: 'default',
+  colon: true,
+  columnMode: 'number' as 'number' | 'responsive',
+  columnValue: 3,
   column: {
     xs: 1,
     sm: 2,
     md: 3,
     lg: 3,
     xl: 3,
-    xxl: 3
+    xxl: 3,
+    xxxl: 3
   },
+  labelAlign: 'left' as 'left' | 'right' | 'center',
   labelStyle: {
     fontSize: '14px',
     color: '#FF6900',
@@ -44,96 +94,72 @@ const state = reactive({
     fontWeight: 400
   }
 })
+// 配置器最终传给组件的 column：统一列数传数值，响应式断点传对象
+const columnConfig = computed(() => (state.columnMode === 'number' ? state.columnValue : state.column))
+// 实时反馈当前实际生效的列数，帮助理解断点规则
+const activeColumnTip = computed(() => {
+  if (state.columnMode === 'number') {
+    return `所有视口统一为 ${state.columnValue} 列`
+  }
+  const key = currentBreakpoint.value
+  if (!key) {
+    return '正在检测当前视口…'
+  }
+  const rule = breakpoints.find((bp) => bp.key === key)?.rule
+  return `当前视口 ${width.value}px，命中 ${key}（${rule}），实际 ${state.column[key]} 列`
+})
 </script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
-    <h2 class="mt30 mb10">基本使用</h2>
-    <Descriptions title="User Info">
-      <template #extra>
-        <a href="#" @click="onClick">more</a>
-      </template>
-      <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
-      <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
-      <DescriptionsItem label="Live">Hangzhou, Zhejiang</DescriptionsItem>
-      <DescriptionsItem label="Remark">empty</DescriptionsItem>
-      <DescriptionsItem label="Address"
-        >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</DescriptionsItem
-      >
-    </Descriptions>
+    <h2 class="mt30 mb10">基本</h2>
+    <Flex vertical gap="middle">
+      <Descriptions title="User Info">
+        <template #extra>
+          <a href="#" @click="onClick">more</a>
+        </template>
+        <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
+        <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
+        <DescriptionsItem label="Live">Hangzhou, Zhejiang</DescriptionsItem>
+        <DescriptionsItem label="Remark">empty</DescriptionsItem>
+        <DescriptionsItem label="Address"
+          >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
+        </DescriptionsItem>
+      </Descriptions>
+    </Flex>
     <h2 class="mt30 mb10">带边框的</h2>
-    <Descriptions title="User Info" bordered>
-      <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
-      <DescriptionsItem label="Billing Mode">Prepaid</DescriptionsItem>
-      <DescriptionsItem label="Automatic Renewal">YES</DescriptionsItem>
-      <DescriptionsItem label="Order time">2018-04-24 18:00:00</DescriptionsItem>
-      <DescriptionsItem label="Usage Time" :span="2">2030-04-24 18:00:00</DescriptionsItem>
-      <DescriptionsItem label="Status" :span="3">
-        <Badge status="processing" ripple text="Running" />
-      </DescriptionsItem>
-      <DescriptionsItem label="Negotiated Amount">$80.00</DescriptionsItem>
-      <DescriptionsItem label="Discount">$20.00</DescriptionsItem>
-      <DescriptionsItem label="Official Receipts">$60.00</DescriptionsItem>
-      <DescriptionsItem label="Config Info">
-        Data disk type: MongoDB
-        <br />
-        Database version: 3.4
-        <br />
-        Package: dds.mongo.mid
-        <br />
-        Storage space: 10 GB
-        <br />
-        Replication factor: 3
-        <br />
-        Region: East China 1
-        <br />
-      </DescriptionsItem>
-    </Descriptions>
-    <h2 class="mt30 mb10">响应式描述列表</h2>
-    <Descriptions title="Responsive Descriptions" bordered :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }">
-      <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
-      <DescriptionsItem label="Billing">Prepaid</DescriptionsItem>
-      <DescriptionsItem label="Time">18:00:00</DescriptionsItem>
-      <DescriptionsItem label="Amount">$80.00</DescriptionsItem>
-      <DescriptionsItem label="Discount">$20.00</DescriptionsItem>
-      <DescriptionsItem label="Official">$60.00</DescriptionsItem>
-      <DescriptionsItem label="Config Info">
-        Data disk type: MongoDB
-        <br />
-        Database version: 3.4
-        <br />
-        Package: dds.mongo.mid
-        <br />
-        Storage space: 10 GB
-        <br />
-        Replication factor: 3
-        <br />
-        Region: East China 1
-      </DescriptionsItem>
-    </Descriptions>
-    <h2 class="mt30 mb10">垂直列表</h2>
-    <Descriptions title="User Info" vertical>
-      <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
-      <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
-      <DescriptionsItem label="Live">Hangzhou, Zhejiang</DescriptionsItem>
-      <DescriptionsItem label="Address" :span="2">
-        No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
-      </DescriptionsItem>
-      <DescriptionsItem label="Remark">empty</DescriptionsItem>
-    </Descriptions>
-    <h2 class="mt30 mb10">带边框的垂直列表</h2>
-    <Descriptions title="User Info" vertical bordered>
-      <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
-      <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
-      <DescriptionsItem label="Live">Hangzhou, Zhejiang</DescriptionsItem>
-      <DescriptionsItem label="Address" :span="2">
-        No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
-      </DescriptionsItem>
-      <DescriptionsItem label="Remark">empty</DescriptionsItem>
-    </Descriptions>
+    <Flex vertical gap="middle">
+      <Descriptions title="User Info" bordered>
+        <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
+        <DescriptionsItem label="Billing Mode">Prepaid</DescriptionsItem>
+        <DescriptionsItem label="Automatic Renewal">YES</DescriptionsItem>
+        <DescriptionsItem label="Order time">2018-04-24 18:00:00</DescriptionsItem>
+        <DescriptionsItem label="Usage Time" :span="2">2030-10-10 18:00:00</DescriptionsItem>
+        <DescriptionsItem label="Status" :span="3">
+          <Badge status="processing" ripple text="Running" />
+        </DescriptionsItem>
+        <DescriptionsItem label="Negotiated Amount">$80.00</DescriptionsItem>
+        <DescriptionsItem label="Discount">$20.00</DescriptionsItem>
+        <DescriptionsItem label="Official Receipts">$60.00</DescriptionsItem>
+        <DescriptionsItem label="Config Info">
+          Data disk type: MongoDB
+          <br />
+          Database version: 3.4
+          <br />
+          Package: dds.mongo.mid
+          <br />
+          Storage space: 10 GB
+          <br />
+          Replication factor: 3
+          <br />
+          Region: East China 1
+          <br />
+        </DescriptionsItem>
+      </Descriptions>
+    </Flex>
     <h2 class="mt30 mb10">自定义尺寸</h2>
     <Flex vertical gap="middle">
-      <Radio :options="options" v-model:value="size" button button-style="solid" />
+      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Descriptions bordered title="Custom Size" :size="size">
         <template #extra>
           <Button type="primary">Edit</Button>
@@ -171,6 +197,118 @@ const state = reactive({
         <DescriptionsItem label="Official">$60.00</DescriptionsItem>
       </Descriptions>
     </Flex>
+    <h2 class="mt30 mb10">响应式</h2>
+    <Flex vertical gap="middle">
+      <Descriptions title="Responsive Descriptions" bordered :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }">
+        <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
+        <DescriptionsItem label="Billing">Prepaid</DescriptionsItem>
+        <DescriptionsItem label="Time">18:00:00</DescriptionsItem>
+        <DescriptionsItem label="Amount">$80.00</DescriptionsItem>
+        <DescriptionsItem label="Discount">$20.00</DescriptionsItem>
+        <DescriptionsItem label="Official">$60.00</DescriptionsItem>
+        <DescriptionsItem label="Config Info">
+          Data disk type: MongoDB
+          <br />
+          Database version: 3.4
+          <br />
+          Package: dds.mongo.mid
+          <br />
+          Storage space: 10 GB
+          <br />
+          Replication factor: 3
+          <br />
+          Region: East China 1
+        </DescriptionsItem>
+      </Descriptions>
+    </Flex>
+    <h2 class="mt30 mb10">垂直</h2>
+    <Flex vertical gap="middle">
+      <Descriptions title="User Info" layout="vertical">
+        <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
+        <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
+        <DescriptionsItem label="Live">Hangzhou, Zhejiang</DescriptionsItem>
+        <DescriptionsItem label="Address" :span="2">
+          No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
+        </DescriptionsItem>
+        <DescriptionsItem label="Remark">empty</DescriptionsItem>
+      </Descriptions>
+    </Flex>
+    <h2 class="mt30 mb10">垂直带边框的</h2>
+    <Flex vertical gap="middle">
+      <Descriptions title="User Info" layout="vertical" bordered>
+        <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
+        <DescriptionsItem label="Billing Mode">Prepaid</DescriptionsItem>
+        <DescriptionsItem label="Automatic Renewal">YES</DescriptionsItem>
+        <DescriptionsItem label="Order time">2018-04-24 18:00:00</DescriptionsItem>
+        <DescriptionsItem label="Usage Time" :span="2">2030-10-10 18:00:00</DescriptionsItem>
+        <DescriptionsItem label="Status" :span="3">
+          <Badge status="processing" ripple text="Running" />
+        </DescriptionsItem>
+        <DescriptionsItem label="Negotiated Amount">$80.00</DescriptionsItem>
+        <DescriptionsItem label="Discount">$20.00</DescriptionsItem>
+        <DescriptionsItem label="Official Receipts">$60.00</DescriptionsItem>
+        <DescriptionsItem label="Config Info">
+          Data disk type: MongoDB
+          <br />
+          Database version: 3.4
+          <br />
+          Package: dds.mongo.mid
+          <br />
+          Storage space: 10 GB
+          <br />
+          Replication factor: 3
+          <br />
+          Region: East China 1
+          <br />
+        </DescriptionsItem>
+      </Descriptions>
+    </Flex>
+    <h2 class="mt30 mb10">无冒号</h2>
+    <p class="mb10">使用 <code>colon</code> 属性关闭标签后的冒号</p>
+    <Flex vertical gap="middle">
+      <Descriptions title="User Info" :colon="false">
+        <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
+        <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
+        <DescriptionsItem label="Live">Hangzhou, Zhejiang</DescriptionsItem>
+      </Descriptions>
+    </Flex>
+    <h2 class="mt30 mb10">标签对齐</h2>
+    <Flex vertical gap="middle">
+      <Radio :options="labelAlignOptions" v-model:value="labelAlign" button button-style="solid" />
+      <Descriptions title="User Info" bordered :labelAlign="labelAlign">
+        <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
+        <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
+        <DescriptionsItem label="Live">Hangzhou, Zhejiang</DescriptionsItem>
+      </Descriptions>
+    </Flex>
+    <h2 class="mt30 mb10">自定义类名</h2>
+    <Flex vertical gap="middle">
+      <Descriptions
+        bordered
+        title="Custom Class"
+        labelClass="descriptions-demo-label"
+        contentClass="descriptions-demo-content"
+      >
+        <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
+        <DescriptionsItem label="Billing">Prepaid</DescriptionsItem>
+        <DescriptionsItem label="Time">18:00:00</DescriptionsItem>
+      </Descriptions>
+    </Flex>
+    <h2 class="mt30 mb10">自定义头部</h2>
+    <p class="mb10">使用 <code>header</code> 插槽自定义整个头部区域，替代 <code>title</code> 与 <code>extra</code></p>
+    <Flex vertical gap="middle">
+      <Descriptions>
+        <template #header>
+          <Flex gap="middle" align="center" justify="space-between" style="width: 100%">
+            <span style="font-weight: 600; font-size: 16px">Custom Header</span>
+            <Button type="primary">Edit</Button>
+          </Flex>
+        </template>
+        <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
+        <DescriptionsItem label="Billing">Prepaid</DescriptionsItem>
+        <DescriptionsItem label="Time">18:00:00</DescriptionsItem>
+      </Descriptions>
+    </Flex>
     <h2 class="mt30 mb10">自定义内容 & 标签样式</h2>
     <Flex vertical gap="middle">
       <Descriptions
@@ -186,8 +324,8 @@ const state = reactive({
         <DescriptionsItem label="Billing">Prepaid</DescriptionsItem>
         <DescriptionsItem label="Time">18:00:00</DescriptionsItem>
         <DescriptionsItem label="Amount" :labelStyle="{ color: '#52c41a' }" :contentStyle="{ color: '#ff4d4f' }"
-          >$80.00</DescriptionsItem
-        >
+          >$80.00
+        </DescriptionsItem>
         <DescriptionsItem label="Discount">$20.00</DescriptionsItem>
         <DescriptionsItem label="Official">$60.00</DescriptionsItem>
         <DescriptionsItem label="Config Info">
@@ -217,8 +355,8 @@ const state = reactive({
         <DescriptionsItem label="Billing">Prepaid</DescriptionsItem>
         <DescriptionsItem label="Time">18:00:00</DescriptionsItem>
         <DescriptionsItem label="Amount" :labelStyle="{ color: '#52c41a' }" :contentStyle="{ color: '#ff4d4f' }"
-          >$80.00</DescriptionsItem
-        >
+          >$80.00
+        </DescriptionsItem>
         <DescriptionsItem label="Discount">$20.00</DescriptionsItem>
         <DescriptionsItem label="Official">$60.00</DescriptionsItem>
       </Descriptions>
@@ -241,58 +379,59 @@ const state = reactive({
         <Col :span="6">
           <Space gap="small" vertical>
             bordered:
-            <Switch v-model="state.bordered" />
+            <Switch v-model:value="state.bordered" />
           </Space>
         </Col>
         <Col :span="6">
           <Space gap="small" vertical>
-            vertical:
-            <Switch v-model="state.vertical" />
+            layout:
+            <Switch v-model:value="state.layout" checked-value="vertical" un-checked-value="horizontal" />
           </Space>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical>
+          <Flex gap="small" vertical>
             size:
-            <Radio :options="options" v-model:value="state.size" button button-style="solid" />
+            <Select :options="sizeOptions" v-model:value="state.size" />
+          </Flex>
+        </Col>
+        <Col :span="6">
+          <Space gap="small" vertical>
+            colon:
+            <Switch v-model:value="state.colon" />
           </Space>
         </Col>
-        <Col :span="6">
+        <Col :span="24">
           <Flex gap="small" vertical>
-            Column xs:
-            <InputNumber v-model:value="state.column.xs" :min="1" placeholder="xs" />
+            <Flex gap="middle" align="center" wrap="wrap">
+              column:
+              <Segmented v-model:value="state.columnMode" :options="columnModeOptions" />
+              <InputNumber v-if="state.columnMode === 'number'" v-model:value="state.columnValue" :min="1" :max="9" />
+              <span class="descriptions-column-tip">{{ activeColumnTip }}</span>
+            </Flex>
+            <Flex v-if="state.columnMode === 'responsive'" gap="middle" align="flex-start" wrap="wrap">
+              <Flex
+                v-for="bp in breakpoints"
+                :key="bp.key"
+                gap="small"
+                vertical
+                align="center"
+                class="descriptions-column-breakpoint"
+              >
+                <Tag size="small" :color="bp.key === currentBreakpoint ? 'processing' : undefined">
+                  {{ bp.key }}
+                </Tag>
+                <span class="descriptions-column-rule">{{ bp.rule }}</span>
+                <InputNumber v-model:value="state.column[bp.key]" :min="1" :max="9" />
+              </Flex>
+            </Flex>
           </Flex>
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical>
-            Column sm:
-            <InputNumber v-model:value="state.column.sm" :min="1" :max="9" placeholder="sm" />
+            labelAlign:
+            <Select :options="labelAlignOptions" v-model:value="state.labelAlign" />
           </Flex>
         </Col>
-        <Col :span="6">
-          <Flex gap="small" vertical>
-            Column md:
-            <InputNumber v-model:value="state.column.md" :min="1" :max="9" placeholder="md" />
-          </Flex>
-        </Col>
-        <Col :span="6">
-          <Flex gap="small" vertical>
-            Column lg:
-            <InputNumber v-model:value="state.column.lg" :min="1" :max="9" placeholder="lg" />
-          </Flex>
-        </Col>
-        <Col :span="6">
-          <Flex gap="small" vertical>
-            Column xl:
-            <InputNumber v-model:value="state.column.xl" :min="1" :max="9" placeholder="xl" />
-          </Flex>
-        </Col>
-        <Col :span="6">
-          <Flex gap="small" vertical>
-            Column xxl:
-            <InputNumber v-model:value="state.column.xxl" :min="1" :max="9" placeholder="xxl" />
-          </Flex>
-        </Col>
-        <Col :span="6"></Col>
         <Col :span="6">
           <Flex gap="small" vertical>
             labelStyle fontSize:
@@ -317,7 +456,6 @@ const state = reactive({
             />
           </Flex>
         </Col>
-        <Col :span="6"></Col>
         <Col :span="6">
           <Flex gap="small" vertical>
             contentStyle fontSize:
@@ -347,16 +485,11 @@ const state = reactive({
         :title="state.title"
         :extra="state.extra"
         :bordered="state.bordered"
-        :vertical="state.vertical"
-        :size="state.size"
-        :column="{
-          xs: state.column.xs,
-          sm: state.column.sm,
-          md: state.column.md,
-          lg: state.column.lg,
-          xl: state.column.xl,
-          xxl: state.column.xxl
-        }"
+        :layout="state.layout"
+        :size="state.size as DescriptionsProps['size']"
+        :colon="state.colon"
+        :column="columnConfig"
+        :label-align="state.labelAlign"
         :label-style="state.labelStyle"
         :content-style="state.contentStyle"
       >
@@ -371,9 +504,35 @@ const state = reactive({
         </DescriptionsItem>
         <DescriptionsItem label="Usage Time" :span="2">2030-04-24 18:00:00</DescriptionsItem>
         <DescriptionsItem label="Address" :span="3"
-          >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</DescriptionsItem
-        >
+          >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
+        </DescriptionsItem>
       </Descriptions>
     </Flex>
   </div>
 </template>
+<style lang="less">
+/**
+ * 自定义类名用例的演示样式。
+ * 类名落在 Descriptions 内部元素上，而 `:deep()` 编译出的选择器与组件自身样式同优先级（均为 0,2,0），
+ * 胜负取决于样式注入顺序（HMR 下不稳定，实测会被组件样式覆盖）。
+ * 故改用非 scoped + 更高优先级选择器，保证演示效果稳定生效。
+ */
+.descriptions-wrap .descriptions-item-label.descriptions-demo-label {
+  color: #1677ff;
+  font-weight: 600;
+}
+
+.descriptions-wrap .descriptions-item-content.descriptions-demo-content {
+  color: #52c41a;
+}
+
+.descriptions-column-breakpoint {
+  width: 90px;
+}
+
+.descriptions-column-rule,
+.descriptions-column-tip {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+}
+</style>

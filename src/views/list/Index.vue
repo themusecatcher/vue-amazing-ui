@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, h } from 'vue'
+import type { ListProps } from 'vue-amazing-ui'
 import { UserOutlined, StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue'
 const listData = ref([
   {
@@ -67,7 +68,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const size = ref('middle')
+const size = ref<ListProps['size']>('middle')
 const loading = ref(true)
 const allListData = ref<any[]>([])
 for (let i = 1; i <= 8; i++) {
@@ -160,7 +161,7 @@ const state = reactive({
     </List>
     <h2 class="mt30 mb10">带边框列表</h2>
     <Flex vertical>
-      <Space align="center"> bordered:<Switch v-model="bordered" /> </Space>
+      <Space align="center"> bordered:<Switch v-model:value="bordered" /> </Space>
       <List :bordered="bordered">
         <template #header>
           <div>Header</div>
@@ -214,7 +215,7 @@ const state = reactive({
     </Flex>
     <h2 class="mt30 mb10">加载中</h2>
     <Flex vertical>
-      <Space align="center"> Loading state:<Switch v-model="loading" /> </Space>
+      <Space align="center"> Loading state:<Switch v-model:value="loading" /> </Space>
       <Row :gutter="32">
         <Col :span="12">
           <List bordered :loading="loading">
@@ -348,7 +349,7 @@ const state = reactive({
             class="extra-img"
             width="272"
             alt="extra"
-            src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+            src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg"
           />
         </template>
       </ListItem>
@@ -363,13 +364,13 @@ const state = reactive({
     <Flex gap="large" vertical>
       <Row :gutter="[24, 12]">
         <Col :span="6">
-          <Space gap="small" vertical> bordered:<Switch v-model="state.bordered" /> </Space>
+          <Space gap="small" vertical> bordered:<Switch v-model:value="state.bordered" /> </Space>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> vertical:<Switch v-model="state.vertical" /> </Space>
+          <Space gap="small" vertical> vertical:<Switch v-model:value="state.vertical" /> </Space>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> split:<Switch v-model="state.split" /> </Space>
+          <Space gap="small" vertical> split:<Switch v-model:value="state.split" /> </Space>
         </Col>
         <Col :span="6">
           <Space gap="small" vertical>
@@ -377,10 +378,10 @@ const state = reactive({
           </Space>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> loading:<Switch v-model="state.loading" /> </Space>
+          <Space gap="small" vertical> loading:<Switch v-model:value="state.loading" /> </Space>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> hoverable:<Switch v-model="state.hoverable" /> </Space>
+          <Space gap="small" vertical> hoverable:<Switch v-model:value="state.hoverable" /> </Space>
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical> header:<Input v-model:value="state.header" placeholder="header" /> </Flex>
@@ -392,20 +393,24 @@ const state = reactive({
           <Flex gap="small" vertical> extra:<Input v-model:value="state.extra" placeholder="extra" /> </Flex>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> showPagination:<Switch v-model="state.showPagination" /> </Space>
+          <Space gap="small" vertical> showPagination:<Switch v-model:value="state.showPagination" /> </Space>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> showSizeChanger:<Switch v-model="state.pagination.showSizeChanger" /> </Space>
+          <Space gap="small" vertical>
+            showSizeChanger:<Switch v-model:value="state.pagination.showSizeChanger" />
+          </Space>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> showQuickJumper:<Switch v-model="state.pagination.showQuickJumper" /> </Space>
+          <Space gap="small" vertical>
+            showQuickJumper:<Switch v-model:value="state.pagination.showQuickJumper" />
+          </Space>
         </Col>
       </Row>
       <List
         :bordered="state.bordered"
         :vertical="state.vertical"
         :split="state.split"
-        :size="state.size"
+        :size="state.size as ListProps['size']"
         :loading="state.loading"
         :hoverable="state.hoverable"
         :header="state.header"

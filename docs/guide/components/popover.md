@@ -31,7 +31,7 @@ function openChange(open: boolean) {
 
 ```vue
 <script setup lang="ts">
-function openChange (open: boolean) {
+function openChange(open: boolean) {
   console.log('open', open)
 }
 </script>
@@ -145,21 +145,6 @@ function openChange (open: boolean) {
   <Button type="primary">Click Me</Button>
 </Popover>
 
-<style lang="less" scoped>
-.popover-content a {
-  color: #1677ff;
-  text-decoration: none;
-  background-color: transparent;
-  -webkit-tap-highlight-color: transparent;
-  outline: none;
-  cursor: pointer;
-  transition: color 0.3s ease;
-  &:hover {
-    color: #4096ff;
-  }
-}
-</style>
-
 ::: details Show Code
 
 ```vue
@@ -192,10 +177,6 @@ const show = ref(false)
 ::: details Show Code
 
 ```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const show = ref(false)
-</script>
 <template>
   <Popover title="Transition Duration 300ms" :transition-duration="300">
     <template #content>
@@ -257,6 +238,38 @@ const show = ref(false)
 
 :::
 
+## 隐藏后卸载
+
+_设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再次显示时重新创建并定位；默认 `false`（元素常驻，仅切换显示）_
+
+<br/>
+
+<Space>
+  <Popover title="Title" content="Vue Amazing UI" destroy-on-hide>
+    <Button type="primary">Hover (destroyOnHide)</Button>
+  </Popover>
+  <Popover title="Title" content="Vue Amazing UI">
+    <Button>Hover (default)</Button>
+  </Popover>
+</Space>
+
+:::: details Show Code
+
+```vue
+<template>
+  <Space>
+    <Popover title="Title" content="Vue Amazing UI" destroy-on-hide>
+      <Button type="primary">Hover (destroyOnHide)</Button>
+    </Popover>
+    <Popover title="Title" content="Vue Amazing UI">
+      <Button>Hover (default)</Button>
+    </Popover>
+  </Space>
+</template>
+```
+
+::::
+
 ## 隐藏箭头
 
 <Popover :arrow="false" title="Title">
@@ -285,7 +298,7 @@ const show = ref(false)
 
 <br/>
 
-> *更多使用方式请参考 [文字提示 Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html)*
+> *更多使用方式请参考 [文字提示 Tooltip](./tooltip.md)*
 
 ## APIs
 
@@ -293,14 +306,13 @@ const show = ref(false)
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-title | 卡片标题 | string &#124; slot | undefined
+title | 卡片标题 | string | undefined
 titleStyle | 卡片标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-content | 卡片内容 | string &#124; slot | undefined
+content | 卡片内容 | string | undefined
 contentStyle | 卡片内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-keyboard | 是否支持按键操作 (`enter` 显示；`esc` 关闭) | boolean | true
 tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 
-更多属性请参考 [Tooltip](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip)
+更多属性请参考 [Tooltip Props](./tooltip.md#tooltip)
 
 ## Slots
 
@@ -308,7 +320,7 @@ tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.or
 :-- | :-- | :--
 title | 自定义卡片标题 | v-slot:title
 content | 自定义卡片内容 | v-slot:content
-default | 自定义内容 | v-solt:default
+default | 自定义内容 | v-slot:default
 
 ## Events
 

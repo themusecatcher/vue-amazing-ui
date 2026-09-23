@@ -1,26 +1,28 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect, nextTick } from 'vue'
-import type { CSSProperties } from 'vue'
-import Space from 'components/space'
-import Spin from 'components/spin'
-import { add, downloadFile, useInject } from 'components/utils'
+import type { CSSProperties, VNode } from 'vue'
+import Space, { type SpaceProps } from 'components/space'
+import Spin, { type SpinProps } from 'components/spin'
+import { add, downloadFile, getImageName, useInject, useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
 export interface Image {
   src: string // 图像地址
-  name?: string // 图像名称
+  name?: string // 图像名称，未设置时自动从图像地址 src 中提取
 }
+
 export interface Props {
   src?: string | Image[] // 图像地址或图像地址数组
-  name?: string // 图像名称，没有传入图片名时自动从图像地址 src 中读取
+  name?: string // 图像名称，未设置时自动从图像地址 src 中提取
   width?: string | number | (string | number)[] // 图像宽度，单位 px
   height?: string | number | (string | number)[] // 图像高度，单位 px
   disabled?: boolean // 是否禁用图像预览
   bordered?: boolean // 是否显示边框
   fit?: 'contain' | 'fill' | 'cover' | 'none' | 'scale-down' // 图片在容器内的的适应类型
-  preview?: string // 预览文本 string | slot
+  preview?: string // 预览文本
   previewImageStyle?: CSSProperties // 自定义预览图片时 img 元素的样式
-  spaceProps?: object // Space 组件属性配置，用于配置多张展示图片时的排列方式
-  spinProps?: object // Spin 组件属性配置，用于配置图片加载中样式
-  previewSpinProps?: object // Spin 组件属性配置，用于配置预览图片加载中样式
+  zIndex?: number // 预览遮罩层级，预览容器取该值 + 10；不传时由 ConfigProvider 的 baseZIndex 分配（默认遮罩 1070 / 预览 1080）
+  spaceProps?: SpaceProps // Space 组件属性配置，用于配置多张展示图片时的排列方式
+  spinProps?: SpinProps // Spin 组件属性配置，用于配置图片加载中样式
+  previewSpinProps?: SpinProps // Spin 组件属性配置，用于配置预览图片加载中样式
   zoomRatio?: number // 每次缩放比率
   minZoomScale?: number // 最小缩放比例
   maxZoomScale?: number // 最大缩放比例
@@ -28,7 +30,17 @@ export interface Props {
   draggable?: boolean // 是否可以拖动图片
   loop?: boolean // 是否可以循环切换图片
   album?: boolean // 是否相册模式，即从一张展示图片点开相册
+  downloadOptions?: {
+    target?: '_self' | '_blank' // 打开方式
+    strategy?: 'auto' | 'anchor' | 'iframe' // 下载策略
+  } // 图片下载配置，透传给内置 downloadFile 的第三个参数 options；默认 auto 策略（同源 anchor / 跨域 iframe）
+  customDownload?: (url: string, fileName?: string) => void | Promise<void> // 自定义下载方法，提供时优先于内置 downloadFile，用于解决跨域图床下载受限等内置策略无法满足的场景
 }
+// 声明组件插槽类型
+export interface ImageSlots {
+  preview?: () => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   src: undefined,
   name: undefined,
@@ -39,6 +51,7 @@ const props = withDefaults(defineProps<Props>(), {
   fit: 'contain',
   preview: '预览',
   previewImageStyle: () => ({}),
+  zIndex: undefined,
   spaceProps: () => ({}),
   spinProps: () => ({}),
   previewSpinProps: () => ({}),
@@ -48,14 +61,36 @@ const props = withDefaults(defineProps<Props>(), {
   resetOnDbclick: true,
   draggable: false,
   loop: false,
-  album: false
+  album: false,
+  downloadOptions: undefined,
+  customDownload: undefined
 })
+defineSlots<ImageSlots>()
 const images = ref<Image[]>([]) // 图片数组
 const previewRef = ref<HTMLElement | null>(null) // 预览 DOM 引用
 const previewIndex = ref<number>(0) // 当前预览的图片索引
 const showPreview = ref<boolean>(false) // 是否显示预览
 const imagesRef = ref<HTMLImageElement[]>([]) // 图片 DOM 引用
 const imagesCompleted = ref<boolean[]>([]) // 图片是否加载完成
+// 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配，未传则沿用默认层级
+// （遮罩 1070 / 预览 1080）；本层需连续占用 2 段
+// 领取 / 归还由「出现」驱动（allocateOnMount: false）：未打开预览时不占槽位、预览关闭即归还，
+// 使层级数值随「同时可见的浮层数」增长（与 Modal / Select / Message 等持层组件同一不变量）
+const {
+  zIndex: layerZIndex,
+  allocate: allocateZIndex,
+  release: releaseZIndex
+} = useZIndex(FLOATING_LAYER_Z_INDEX.image, 2, { allocateOnMount: false })
+// 显式 zIndex 优先级最高（与 Modal / Dialog / Drawer 等浮层组件一致）
+const previewZIndex = computed(() => props.zIndex ?? layerZIndex.value)
+// 每次「出现」重新领取层级、隐藏即归还（未注入管理器时均为空操作）
+watchEffect(() => {
+  if (showPreview.value) {
+    allocateZIndex()
+  } else {
+    releaseZIndex()
+  }
+})
 const previewImagesRef = ref<HTMLImageElement[]>([]) // 预览图片 DOM 引用
 const previewCompleted = ref<boolean[]>([]) // 预览图片是否加载完成
 const rotate = ref<number>(0) // 预览图片旋转角度
@@ -104,17 +139,6 @@ function onImageLoaded(index: number): void {
 function onPreviewLoaded(index: number): void {
   previewCompleted.value[index] = true
 }
-// 从图像地址 src 中获取图像名称
-function getImageName(image: Image): string | undefined {
-  if (image) {
-    if (image.name) {
-      return image.name
-    } else {
-      const res = image.src.split('?')[0].split('/')
-      return res[res.length - 1]
-    }
-  }
-}
 function getImageSize(size: string | number | (string | number)[], index: number): string {
   if (Array.isArray(size)) {
     if (typeof size[index] === 'number') {
@@ -160,7 +184,13 @@ function onClose(): void {
 // 下载
 function onDownload(): void {
   const image = images.value[previewIndex.value]
-  downloadFile(image.src, image.name)
+  // 提供自定义下载方法时优先使用，绕开内置下载方法
+  if (props.customDownload) {
+    props.customDownload(image.src, getImageName(image))
+    return
+  }
+  // 未自定义时走内置 downloadFile，透传下载配置
+  downloadFile(image.src, getImageName(image), props.downloadOptions)
 }
 // 放大
 function onZoomin(): void {
@@ -350,8 +380,16 @@ function onSwitchRight(): void {
         </div>
       </div>
     </Space>
-    <Transition name="fade">
-      <div v-show="showPreview" class="preview-mask"></div>
+    <Transition
+      name="fade"
+      enter-from-class="fade-enter"
+      enter-active-class="fade-enter"
+      enter-to-class="fade-enter fade-enter-active"
+      leave-from-class="fade-leave"
+      leave-active-class="fade-leave fade-leave-active"
+      leave-to-class="fade-leave fade-leave-active"
+    >
+      <div v-show="showPreview" class="preview-mask" :style="{ zIndex: previewZIndex }"></div>
     </Transition>
     <Transition
       name="zoom"
@@ -366,6 +404,7 @@ function onSwitchRight(): void {
         v-show="showPreview"
         ref="previewRef"
         class="preview-container"
+        :style="{ zIndex: previewZIndex + 10 }"
         tabindex="-1"
         @click.self="onClose"
         @wheel.prevent="onWheel"
@@ -622,18 +661,48 @@ function onSwitchRight(): void {
   </div>
 </template>
 <style lang="less" scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s linear;
-}
-.fade-enter-from,
-.fade-leave-to {
+.fade-enter {
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
   opacity: 0;
+  animation-timing-function: linear;
+}
+.fade-enter-active {
+  animation-name: fadeIn;
+  animation-play-state: running;
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}
+.fade-leave {
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+  animation-timing-function: linear;
+}
+.fade-leave-active {
+  animation-name: fadeOut;
+  animation-play-state: running;
+  pointer-events: none;
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
 }
 .zoom-enter {
-  transform: none;
+  transform: scale(0);
   opacity: 0;
-  animation-duration: 0.3s;
+  animation-duration: 0.2s;
   animation-fill-mode: both;
   animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1);
   animation-play-state: paused;
@@ -665,7 +734,6 @@ function onSwitchRight(): void {
   @keyframes zoomOut {
     0% {
       transform: scale(1);
-      opacity: 1;
     }
     100% {
       transform: scale(0.2);
@@ -736,7 +804,8 @@ function onSwitchRight(): void {
   .preview-mask {
     position: fixed;
     inset: 0;
-    z-index: 1000;
+    /* 默认层级与 useZIndex 的回退值一致；ConfigProvider 传入 baseZIndex 时由内联样式覆盖 */
+    z-index: 1070;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.45);
   }
@@ -748,6 +817,7 @@ function onSwitchRight(): void {
     right: 0;
     overflow: auto;
     outline: none;
+    /* 默认层级为预览层（遮罩 +10）；ConfigProvider 传入 baseZIndex 时由内联样式覆盖 */
     z-index: 1080;
     height: 100%;
     text-align: center;
@@ -845,6 +915,7 @@ function onSwitchRight(): void {
         left: 12px;
         position: fixed;
         top: 50%;
+        /* 预览层操作按钮：位于预览内容之上 +1 */
         z-index: 1081;
         display: flex;
         align-items: center;
@@ -873,6 +944,7 @@ function onSwitchRight(): void {
         right: 12px;
         position: fixed;
         top: 50%;
+        /* 预览层操作按钮：位于预览内容之上 +1 */
         z-index: 1081;
         display: flex;
         align-items: center;

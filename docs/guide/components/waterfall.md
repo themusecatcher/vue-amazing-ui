@@ -184,19 +184,19 @@ onBeforeMount(() => {
 
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| images | 图片数组 | [Image](#image-type)[] | [] |
+| images | 图片数组 | [WaterfallImage](#image-type)[] | [] |
 | columnCount | 要划分的列数 | number | 3 |
 | columnGap | 各列之间的间隙，单位 `px` | number | 20 |
 | width | 瀑布流区域的总宽度 | string &#124; number | '100%' |
 | borderRadius | 瀑布流区域和图片圆角，单位 `px` | number | 8 |
 | backgroundColor | 瀑布流区域背景填充色 | string | '#F2F4F8' |
-| spinProps | `Spin` 组件属性配置，参考 [Spin Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/spin.html#spin)，用于配置图片加载中样式 | object | {} |
+| spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置图片加载中样式 | [SpinProps](./spin.md#spin) | {} |
 
 ### Image Type
 
-| 名称    | 说明             | 类型                      | 默认值    |
+| 名称   | 说明            | 类型                     | 默认值    |
 | :------ | :--------------- | :------------------------ | :-------- |
-| name?   | 图片名称         | string                    | undefined |
-| src     | 图片地址         | string                    | undefined |
-| link?   | 图片跳转链接     | string                    | undefined |
+| name?  | 图片名称，未设置时自动从图片地址 `src` 中提取 | string                   | undefined |
+| src    | 图片地址        | string                   | undefined |
+| link?  | 图片跳转链接    | string                   | undefined |
 | target? | 如何打开跳转链接 | '\_self' &#124; '\_blank' | undefined |

@@ -149,7 +149,7 @@ const timelineItems = ref<TimelineItem[]>([
   height: 18px;
   border: 4px solid #1677ff;
   border-radius: 50%;
-  background: #FFF;
+  background: #fff;
 }
 .desc {
   font-size: 16px;
@@ -281,7 +281,7 @@ const timelineItems = ref<TimelineItem[]>([
 <template>
   <Timeline :items="timelineItems" mode="center">
     <template #dot="{ index }">
-      <span class="big-dot" v-if="index===2"></span>
+      <span class="big-dot" v-if="index === 2"></span>
     </template>
   </Timeline>
 </template>
@@ -330,7 +330,7 @@ const timelineItems = ref<TimelineItem[]>([
 <template>
   <Timeline :items="timelineItems" mode="center" position="right">
     <template #dot="{ index }">
-      <span class="big-dot" v-if="index===2"></span>
+      <span class="big-dot" v-if="index === 2"></span>
     </template>
   </Timeline>
 </template>
@@ -344,7 +344,7 @@ const timelineItems = ref<TimelineItem[]>([
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-items | 时间轴内容数组 | [Item](#item-type)[] | []
+items | 时间轴内容数组 | [TimelineItem](#item-type)[] | []
 width | 时间轴区域总宽度，单位 `px` | number &#124; string | '100%'
 lineStyle | 时间线样式 | 'solid' &#124; 'dashed' &#124; 'dotted' | 'solid'
 mode | 通过设置 `mode` 可以改变时间轴和内容的相对位置 | 'left' &#124; 'center' &#124; 'right' | 'left'
@@ -354,7 +354,7 @@ position | 当 `mode` 为 `center` 时，内容交替展现，内容从左边（
 
 名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-desc | 文字描述 | string &#124; slot | undefined
+desc | 文字描述 | string | undefined
 color? | 圆圈颜色 | 'blue' &#124; 'green' &#124; 'red' &#124; 'gray' &#124; string | 'blue'
 
 ## Slots

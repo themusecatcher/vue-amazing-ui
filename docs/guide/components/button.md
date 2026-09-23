@@ -9,7 +9,7 @@ _按钮用于开始一个即时操作_
 - 响应用户点击行为，触发相应的业务逻辑
 
 <script setup lang="ts">
-import { h, ref } from 'vue'
+import { ref, h } from 'vue'
 import { SearchOutlined, DownloadOutlined, CrownOutlined } from '@ant-design/icons-vue'
 const disabled = ref(true)
 const sizeOptions = [
@@ -89,22 +89,22 @@ function onClick(e: Event) {
 <Space vertical>
   <Space>
     <Tooltip tooltip="search">
-      <Button type="primary" shape="circle" :icon="() => h(SearchOutlined)" />
+      <Button type="primary" shape="circle" :icon="h(SearchOutlined)" />
     </Tooltip>
     <Button type="primary" shape="circle">A</Button>
-    <Button type="primary" shape="round" :icon="() => h(SearchOutlined)">
+    <Button type="primary" shape="round" :icon="h(SearchOutlined)">
       Search
     </Button>
     <Tooltip tooltip="search">
-      <Button type="primary" shape="round" :icon="() => h(SearchOutlined)" />
+      <Button type="primary" shape="round" :icon="h(SearchOutlined)" />
     </Tooltip>
-    <Button type="primary" :icon="() => h(SearchOutlined)">
+    <Button type="primary" :icon="h(SearchOutlined)">
       Search
     </Button>
   </Space>
   <Space>
     <Tooltip tooltip="search">
-      <Button href="https://blog.csdn.net/Dandrose" target="_blank">
+      <Button href="https://themusecatcher.blog.csdn.net" target="_blank">
         <template #icon>
           <SearchOutlined />
         </template>
@@ -192,18 +192,18 @@ import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
   <Space vertical>
     <Space>
       <Tooltip tooltip="search">
-        <Button type="primary" shape="circle" :icon="() => h(SearchOutlined)" />
+        <Button type="primary" shape="circle" :icon="h(SearchOutlined)" />
       </Tooltip>
       <Button type="primary" shape="circle">A</Button>
-      <Button type="primary" shape="round" :icon="() => h(SearchOutlined)"> Search </Button>
+      <Button type="primary" shape="round" :icon="h(SearchOutlined)"> Search </Button>
       <Tooltip tooltip="search">
-        <Button type="primary" shape="round" :icon="() => h(SearchOutlined)" />
+        <Button type="primary" shape="round" :icon="h(SearchOutlined)" />
       </Tooltip>
-      <Button type="primary" :icon="() => h(SearchOutlined)"> Search </Button>
+      <Button type="primary" :icon="h(SearchOutlined)"> Search </Button>
     </Space>
     <Space>
       <Tooltip tooltip="search">
-        <Button href="https://blog.csdn.net/Dandrose" target="_blank">
+        <Button href="https://themusecatcher.blog.csdn.net" target="_blank">
           <template #icon>
             <SearchOutlined />
           </template>
@@ -374,7 +374,7 @@ import { SearchOutlined, DownloadOutlined } from '@ant-design/icons-vue'
 ## 禁用
 
 <Space vertical>
-  <Space align="center"> Disabled state:<Switch v-model="disabled" /> </Space>
+  <Space align="center"> Disabled state:<Switch v-model:value="disabled" /> </Space>
   <Space>
     <Button :disabled="disabled">Default Button</Button>
     <Button :disabled="disabled" type="reverse">Reverse Button</Button>
@@ -432,7 +432,7 @@ const disabled = ref(true)
 </script>
 <template>
   <Space vertical>
-    <Space align="center"> Disabled state:<Switch v-model="disabled" /> </Space>
+    <Space align="center"> Disabled state:<Switch v-model:value="disabled" /> </Space>
     <Space>
       <Button :disabled="disabled">Default Button</Button>
       <Button :disabled="disabled" type="reverse">Reverse Button</Button>
@@ -674,7 +674,7 @@ const size = ref('middle')
 ## 自定义颜色
 
 <Space vertical>
-  <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
+  <Space align="center"> Loading state:<Switch v-model:value="customLoading" /> </Space>
   <Space>
     <Button type="reverse" color="#d4380d" :loading="customLoading">
       <template #icon>
@@ -713,7 +713,7 @@ const customLoading = ref(false)
 </script>
 <template>
   <Space vertical>
-    <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
+    <Space align="center"> Loading state:<Switch v-model:value="customLoading" /> </Space>
     <Space>
       <Button type="reverse" color="#d4380d" :loading="customLoading">
         <template #icon>
@@ -765,7 +765,7 @@ const customLoading = ref(false)
   >
     Button Component
   </Button>
-  <Button type="primary" ghost shape="round" href="https://blog.csdn.net/Dandrose" target="_blank">
+  <Button type="primary" ghost shape="round" href="https://themusecatcher.blog.csdn.net" target="_blank">
     My CSDN Blogs
   </Button>
 </Space>
@@ -788,7 +788,7 @@ const customLoading = ref(false)
     >
       Button Component
     </Button>
-    <Button type="primary" ghost shape="round" href="https://blog.csdn.net/Dandrose" target="_blank">
+    <Button type="primary" ghost shape="round" href="https://themusecatcher.blog.csdn.net" target="_blank">
       My CSDN Blogs
     </Button>
   </Space>
@@ -800,7 +800,7 @@ const customLoading = ref(false)
 ## 加载中状态
 
 <Space vertical>
-  <Space align="center"> Loading state:<Switch v-model="loading" /> </Space>
+  <Space align="center"> Loading state:<Switch v-model:value="loading" /> </Space>
   <Space align="center"> Loading type:<Radio :options="loadingOptions" v-model:value="loadingType" /> </Space>
   <Space>
     <Button :loading="loading" :loading-type="loadingType">Default Button</Button>
@@ -884,7 +884,7 @@ const loadingType = ref('dynamic')
 </script>
 <template>
   <Space vertical>
-    <Space align="center"> Loading state:<Switch v-model="loading" /> </Space>
+    <Space align="center"> Loading state:<Switch v-model:value="loading" /> </Space>
     <Space align="center"> Loading type:<Radio :options="loadingOptions" v-model:value="loadingType" /> </Space>
     <Space>
       <Button :loading="loading" :loading-type="loadingType">Default Button</Button>
@@ -985,7 +985,7 @@ const loadingType = ref('dynamic')
 | :-- | :-- | :-- | :-- |
 | type | 设置按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default' |
 | shape | 设置按钮形状 | 'default' &#124; 'circle' &#124; 'round' | 'default' |
-| icon | 设置按钮图标 | VNode &#124; Slot | undefined |
+| icon | 设置按钮图标，prop 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | VNode &#124; (() => VNode) | undefined |
 | size | 设置按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | ghost | 按钮背景是否透明，仅当 `type: 'primary' \| 'danger'` 时生效 | boolean | false |
 | buttonClass | 设置按钮类名 | string | undefined |
@@ -1000,13 +1000,13 @@ const loadingType = ref('dynamic')
 
 ## Slots
 
-| 名称    | 说明           | 类型           |
+| 名称   | 说明          | 类型           |
 | :------ | :------------- | :------------- |
 | default | 自定义按钮内容 | v-slot:default |
-| icon    | 自定义按钮图标 | v-slot:icon    |
+| icon   | 自定义按钮图标 | v-slot:icon    |
 
 ## Events
 
-| 名称  | 说明             | 类型               |
+| 名称 | 说明            | 类型               |
 | :---- | :--------------- | :----------------- |
 | click | 点击按钮时的回调 | (e: Event) => void |

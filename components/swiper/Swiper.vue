@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useInject } from 'components/utils'
+import { getImageName, useInject } from 'components/utils'
 import type { Swiper as SwiperTypes } from 'swiper/types'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import {
@@ -117,15 +117,6 @@ function onSwiper(swiper: SwiperTypes) {
 }
 function onSlideChange(swiper: SwiperTypes) {
   emits('change', swiper)
-}
-function getImageName(image: Image) {
-  // 从图片地址 src 中获取图片名称
-  if (image.name) {
-    return image.name
-  } else {
-    const res = image.src.split('?')[0].split('/')
-    return res[res.length - 1]
-  }
 }
 </script>
 <template>

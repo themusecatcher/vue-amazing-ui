@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 import { SearchOutlined, DownloadOutlined, CrownOutlined } from '@ant-design/icons-vue'
+import type { ButtonProps } from 'vue-amazing-ui'
 const disabled = ref(true)
 const sizeOptions = [
   {
@@ -16,7 +17,7 @@ const sizeOptions = [
     value: 'large'
   }
 ]
-const size = ref('middle')
+const size = ref<ButtonProps['size']>('middle')
 const customLoading = ref(false)
 const loading = ref(true)
 const loadingOptions = [
@@ -29,7 +30,7 @@ const loadingOptions = [
     value: 'dynamic'
   }
 ]
-const loadingType = ref('dynamic')
+const loadingType = ref<ButtonProps['loadingType']>('dynamic')
 function onClick(e: Event) {
   console.log('click', e)
 }
@@ -51,14 +52,14 @@ function onClick(e: Event) {
     <Space vertical>
       <Space>
         <Tooltip tooltip="search">
-          <Button type="primary" shape="circle" :icon="SearchOutlined" />
+          <Button type="primary" shape="circle" :icon="h(SearchOutlined)" />
         </Tooltip>
         <Button type="primary" shape="circle">A</Button>
-        <Button type="primary" shape="round" :icon="SearchOutlined"> Search </Button>
+        <Button type="primary" shape="round" :icon="h(SearchOutlined)"> Search </Button>
         <Tooltip tooltip="search">
-          <Button type="primary" shape="round" :icon="SearchOutlined" />
+          <Button type="primary" shape="round" :icon="h(SearchOutlined)" />
         </Tooltip>
-        <Button type="primary" :icon="SearchOutlined"> Search </Button>
+        <Button type="primary" :icon="h(SearchOutlined)"> Search </Button>
       </Space>
       <Space>
         <Tooltip tooltip="search">
@@ -177,7 +178,7 @@ function onClick(e: Event) {
     </Space>
     <h2 class="mt30 mb10">禁用</h2>
     <Space vertical>
-      <Space align="center"> Disabled state:<Switch v-model="disabled" /> </Space>
+      <Space align="center"> Disabled state:<Switch v-model:value="disabled" /> </Space>
       <Space>
         <Button :disabled="disabled">Default Button</Button>
         <Button :disabled="disabled" type="reverse">Reverse Button</Button>
@@ -305,7 +306,7 @@ function onClick(e: Event) {
     </Space>
     <h2 class="mt30 mb10">自定义颜色</h2>
     <Space vertical>
-      <Space align="center"> Loading state:<Switch v-model="customLoading" /> </Space>
+      <Space align="center"> Loading state:<Switch v-model:value="customLoading" /> </Space>
       <Space>
         <Button type="reverse" color="#d4380d" :loading="customLoading">
           <template #icon>
@@ -354,7 +355,7 @@ function onClick(e: Event) {
     </Space>
     <h2 class="mt30 mb10">加载中状态</h2>
     <Space vertical>
-      <Space align="center"> Loading state:<Switch v-model="loading" /> </Space>
+      <Space align="center"> Loading state:<Switch v-model:value="loading" /> </Space>
       <Space align="center"> Loading type:<Radio :options="loadingOptions" v-model:value="loadingType" /> </Space>
       <Space>
         <Button :loading="loading" :loading-type="loadingType">Default Button</Button>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
-import Spin from 'components/spin'
-import { useResizeObserver } from 'components/utils'
+import Spin, { type SpinProps } from 'components/spin'
+import { getImageName, useResizeObserver } from 'components/utils'
 /*
   宽度固定，图片等比例缩放；使用JS获取每张图片宽度和高度，结合 `relative` 和 `absolute` 定位
   计算每个图片的位置 `top`，`left`，保证每张新的图片都追加在当前高度最小的那列末尾
@@ -19,7 +19,7 @@ export interface Props {
   width?: string | number // 瀑布流区域的总宽度，单位 px
   borderRadius?: number // 瀑布流区域和图片圆角，单位 px
   backgroundColor?: string // 瀑布流区域背景填充色
-  spinProps?: object // Spin 组件属性配置，参考 Spin Props，用于配置图片加载中样式
+  spinProps?: SpinProps // Spin 组件属性配置，参考 Spin Props，用于配置图片加载中样式
 }
 const props = withDefaults(defineProps<Props>(), {
   images: () => [],
@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
   backgroundColor: '#F2F4F8',
   spinProps: () => ({})
 })
-const waterfallRef = ref() // 瀑布流容器引用
+const waterfallRef = ref<HTMLElement | null>(null) // 瀑布流容器引用
 const waterfallWidth = ref<number>(0) // 瀑布流区域宽度
 const imagesLoaded = ref<boolean[]>([]) // 图片是否加载完成
 const imagesSize = ref<{ width: number; height: number }[]>([]) // 所有图片原始尺寸
@@ -72,12 +72,11 @@ watch(
   }
 )
 watch(
-  () => [props.columnCount, props.columnGap, props.width],
+  [() => props.columnCount, () => props.columnGap, () => props.width],
   () => {
     initWaterfall()
   },
   {
-    deep: true,
     flush: 'post'
   }
 )
@@ -86,7 +85,7 @@ onMounted(() => {
 })
 // 窗口宽度改变时重新计算瀑布流布局
 useResizeObserver(waterfallRef, () => {
-  const currentWidth = waterfallRef.value.offsetWidth
+  const currentWidth = waterfallRef.value?.offsetWidth
   if (props.images.length && currentWidth !== waterfallWidth.value) {
     initWaterfall()
   }
@@ -177,18 +176,6 @@ function getPosition(i: number, height: number): { top: number; left: number } {
 }
 function onLoaded(index: number): void {
   imagesLoaded.value[index] = true
-}
-// 从图像地址 src 中获取图像名称
-function getImageName(image: Image): string {
-  if (image) {
-    if (image.name) {
-      return image.name
-    } else {
-      const res = image.src.split('?')[0].split('/')
-      return res[res.length - 1]
-    }
-  }
-  return ''
 }
 </script>
 <template>

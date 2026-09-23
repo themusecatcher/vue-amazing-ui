@@ -1,19 +1,26 @@
 <script setup lang="ts">
-import { ref, nextTick } from 'vue'
-import type { CSSProperties } from 'vue'
-import { useInject } from 'components/utils'
+import type { CSSProperties, VNode } from 'vue'
+import { useInject, useWave } from 'components/utils'
+
 export interface Props {
-  checked?: string // 选中时的内容 string | slot
+  checked?: string // 选中时的内容
   checkedValue?: boolean | string | number // 选中时的值
-  unchecked?: string // 未选中时的内容 string | slot
+  unchecked?: string // 未选中时的内容
   uncheckedValue?: boolean | string | number // 未选中时的值
   loading?: boolean // 是否加载中
   disabled?: boolean // 是否禁用
   size?: 'small' | 'middle' | 'large' // 开关大小
   rippleColor?: string // 点击时的波纹颜色，当自定义选中颜色时需要设置
   circleStyle?: CSSProperties // 圆点样式
-  modelValue?: boolean | string | number // (v-model) 指定当前是否选中
+  value?: boolean | string | number // (v-model) 指定当前是否选中
 }
+// 声明组件插槽类型
+export interface SwitchSlots {
+  checked?: () => VNode[]
+  unchecked?: () => VNode[]
+  node?: (props: { checked: boolean | string | number }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   checked: undefined,
   checkedValue: true,
@@ -24,30 +31,21 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'middle',
   rippleColor: undefined,
   circleStyle: () => ({}),
-  modelValue: false
+  value: false
 })
-const wave = ref<boolean>(false)
+defineSlots<SwitchSlots>()
+const { wave, startWave, endWave } = useWave()
 const { colorPalettes } = useInject('Switch') // 主题色注入
-const emit = defineEmits(['update:modelValue', 'change'])
+const emit = defineEmits(['update:value', 'change'])
 function onSwitch(): void {
-  if (props.modelValue === props.checkedValue) {
-    emit('update:modelValue', props.uncheckedValue)
+  if (props.value === props.checkedValue) {
+    emit('update:value', props.uncheckedValue)
     emit('change', props.uncheckedValue)
   } else {
-    emit('update:modelValue', props.checkedValue)
+    emit('update:value', props.checkedValue)
     emit('change', props.checkedValue)
   }
-  if (wave.value) {
-    wave.value = false
-    nextTick(() => {
-      wave.value = true
-    })
-  } else {
-    wave.value = true
-  }
-}
-function onWaveEnd(): void {
-  wave.value = false
+  startWave()
 }
 </script>
 <template>
@@ -57,7 +55,7 @@ function onWaveEnd(): void {
       'switch-loading': loading,
       'switch-small': size === 'small',
       'switch-large': size === 'large',
-      'switch-checked': modelValue === checkedValue,
+      'switch-checked': value === checkedValue,
       'switch-disabled': disabled
     }"
     :style="`
@@ -79,9 +77,9 @@ function onWaveEnd(): void {
       <svg v-if="loading" class="circular" viewBox="0 0 50 50">
         <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
       </svg>
-      <slot name="node" :checked="modelValue"></slot>
+      <slot name="node" :checked="value"></slot>
     </div>
-    <div v-if="!disabled" class="switch-wave" :class="{ 'wave-active': wave }" @animationend="onWaveEnd"></div>
+    <div v-if="!disabled" class="switch-wave" :class="{ 'wave-active': wave }" @animationend="endWave"></div>
   </div>
 </template>
 <style lang="less" scoped>

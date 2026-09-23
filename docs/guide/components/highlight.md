@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-_用过搜索引擎的都知道我是做什么的_
+*用过搜索引擎的都知道我是做什么的*
 
 ## 何时使用
 
@@ -128,12 +128,12 @@ const patterns = ref(['Vue Amazing UI', 'Vue3', 'TypeScript', 'SFC', 'tree shaki
 
 ### Highlight
 
-| 参数 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| text | 文本 | string | undefined |
-| patterns | 需要高亮的文本内容 | string[] | [] |
-| autoEscape | 自动转义。默认情况下，`patterns` 中的元素会被转化为正则表达式进行匹配，这个过程中需要进行自动转义，正则表达式最终匹配的是元素的字面内容，例如 `\(` 匹配的就是 `\(`。如果你需要 `Highlight` 组件去匹配使用 `patterns` 中元素本身构造的正则表达式，例如 `\(` 匹配的是 `(`，则可以设为 `false`。如果你看不懂这些，不要改这个设置。 | boolean | true |
-| caseSensitive | 区分大小写 | boolean | false |
-| highlightTag | 高亮内容的 `HTML` 元素类型 | string | 'mark' |
-| highlightClass | 高亮内容的类名 | string | undefined |
-| highlightStyle | 高亮内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+参数 | 说明 | 类型 | 默认值
+:-- | :-- | :-- | :--
+text | 文本 | string | undefined
+patterns | 需要高亮的文本内容 | string[] | []
+autoEscape | 自动转义。默认情况下，`patterns` 中的元素会被转化为正则表达式进行匹配，这个过程中需要进行自动转义，正则表达式最终匹配的是元素的字面内容，例如 `\(` 匹配的就是 `\(`。如果你需要 `Highlight` 组件去匹配使用 `patterns` 中元素本身构造的正则表达式，例如 `\(` 匹配的是 `(`，则可以设为 `false`。如果你看不懂这些，不要改这个设置。 | boolean | true
+caseSensitive | 区分大小写 | boolean | false
+highlightTag | 高亮内容的 `HTML` 元素类型 | string | 'mark'
+highlightClass | 高亮内容的类名 | string | undefined
+highlightStyle | 高亮内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}

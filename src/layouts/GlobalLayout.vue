@@ -35,14 +35,14 @@ function onClick(e: { key: string; keyPath: string[]; item: ItemType }): void {
   console.log(`${(e.item as any)?.title} ${e.key}`)
   console.log(route.name)
 }
-const routerViewRef = ref()
+const routerViewRef = ref<HTMLDivElement | null>(null)
 </script>
 <template>
   <Row style="width: 100%">
     <Col :xs="5" :xl="4" style="position: relative">
       <Switch
         class="switch-theme"
-        v-model="themeDark"
+        v-model:value="themeDark"
         ripple-color="#faad14"
         :circle-style="{ background: themeDark ? '#001529' : '#fff' }"
         @change="toggleDark"

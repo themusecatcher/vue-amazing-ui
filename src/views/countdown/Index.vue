@@ -1,20 +1,21 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { Countdown } from 'vue-amazing-ui'
 const active = ref(true)
 const resetActive = ref(true)
-const countdownRef = ref()
+const countdownRef = ref<InstanceType<typeof Countdown> | null>(null)
 function onFinish() {
   console.log('countdown finished')
 }
 function onReset() {
-  countdownRef.value.reset()
+  countdownRef.value?.reset()
 }
 </script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <h3 class="mb10">format: MM月 DD天 HH:mm:ss</h3>
+    <p class="mb10"><code>format</code>: <code>MM月 DD天 HH:mm:ss</code></p>
     <Countdown
       title="Countdown 1年"
       :value="12 * 30 * 24 * 60 * 60 * 1000"
@@ -23,7 +24,7 @@ function onReset() {
       @finish="onFinish"
     />
     <h2 class="mt30 mb10">毫秒倒计时</h2>
-    <h3 class="mb10">format: Y 年 M 月 D 天 H 时 m 分 s 秒 SSS 毫秒</h3>
+    <p class="mb10"><code>format</code>: <code>Y 年 M 月 D 天 H 时 m 分 s 秒 SSS 毫秒</code></p>
     <Countdown
       title="Million Seconds"
       :value="12 * 30 * 24 * 60 * 60 * 1000"
@@ -32,7 +33,7 @@ function onReset() {
     />
     <h2 class="mt30 mb10">随时暂停</h2>
     <Space vertical>
-      <Switch v-model="active" />
+      <Switch v-model:value="active" />
       <Countdown
         :active="active"
         title="Pause at any time"
@@ -64,7 +65,7 @@ function onReset() {
     <h2 class="mt30 mb10">重置倒计时</h2>
     <Space vertical>
       <Space align="center">
-        <Switch v-model="resetActive" />
+        <Switch v-model:value="resetActive" />
         <Button type="primary" @click="onReset">Reset</Button>
       </Space>
       <Countdown

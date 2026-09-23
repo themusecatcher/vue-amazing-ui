@@ -2,7 +2,7 @@
 
 <GlobalElement hide-watermark />
 
-_给页面的某个区域加上水印_
+*给页面的某个区域加上水印*
 
 ## 何时使用
 
@@ -10,14 +10,21 @@ _给页面的某个区域加上水印_
 - 适用于防止信息盗用
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted, onBeforeUnmount } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
 const realTime = ref<string>(dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS'))
+let rafId = 0
 const updateTime = () => {
   realTime.value = dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS')
-  requestAnimationFrame(updateTime)
+  rafId = requestAnimationFrame(updateTime)
 }
-requestAnimationFrame(updateTime)
+// SSR（Node）环境无 requestAnimationFrame：挂载后启动，卸载时取消
+onMounted(() => {
+  rafId = requestAnimationFrame(updateTime)
+})
+onBeforeUnmount(() => {
+  cancelAnimationFrame(rafId)
+})
 const show = ref(false)
 const fixed = ref(true)
 const imageModel = reactive({
@@ -87,7 +94,7 @@ const layoutOptions = [
 
 ## 多行水印
 
-_通过 `content` 设置字符串数组，指定多行文字水印内容_
+*通过 `content` 设置字符串数组，指定多行文字水印内容*
 
 <Watermark :content="['Vue Amazing UI', 'Hello World']">
   <div style="height: 400px" />
@@ -115,14 +122,21 @@ _通过 `content` 设置字符串数组，指定多行文字水印内容_
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
 const realTime = ref<string>(dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS'))
+let rafId = 0
 const updateTime = () => {
   realTime.value = dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS')
-  requestAnimationFrame(updateTime)
+  rafId = requestAnimationFrame(updateTime)
 }
-requestAnimationFrame(updateTime)
+// SSR（Node）环境无 requestAnimationFrame：挂载后启动，卸载时取消
+onMounted(() => {
+  rafId = requestAnimationFrame(updateTime)
+})
+onBeforeUnmount(() => {
+  cancelAnimationFrame(rafId)
+})
 </script>
 <template>
   <Watermark :content="realTime" :text-style="{ fontFamily: 'Helvetica Neue' }">
@@ -135,7 +149,7 @@ requestAnimationFrame(updateTime)
 
 ## 图片水印
 
-_通过 `image` 指定图片地址；为保证图片高清且不被拉伸，请设置 `width` 和 `height`；另支持设置图片布局方式 `layout` 和旋转角度 `rotate` 等_
+*通过 `image` 指定图片地址；为保证图片高清且不被拉伸，请设置 `width` 和 `height`；另支持设置图片布局方式 `layout` 和旋转角度 `rotate` 等*
 
 <Flex>
   <Flex vertical :gap="8">
@@ -198,7 +212,7 @@ const layoutOptions = [
 
 ## 全屏幕水印
 
-<Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI" :z-index="30"></Watermark> <Space align="center"> Fullscreen: <Switch v-model="show" /> Fixed: <Switch v-model="fixed" /> </Space>
+<Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark> <Space align="center"> Fullscreen: <Switch v-model:value="show" /> Fixed: <Switch v-model:value="fixed" /> </Space>
 
 ::: details Show Code
 
@@ -209,16 +223,46 @@ const show = ref(false)
 const fixed = ref(true)
 </script>
 <template>
-  <Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI" :z-index="30"></Watermark>
-  <Space align="center"> Fullscreen: <Switch v-model="show" /> Fixed: <Switch v-model="fixed" /> </Space>
+  <Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark>
+  <Space align="center"> Fullscreen: <Switch v-model:value="show" /> Fixed: <Switch v-model:value="fixed" /> </Space>
 </template>
 ```
 
 :::
 
+## 与浮层叠加
+
+*水印是装饰层（默认 `z-index: 90`），始终位于 `Tooltip` 等浮层之下*
+
+<br/>
+
+<Watermark content="Vue Amazing UI">
+  <div style="height: 200px; padding: 24px">
+    <Tooltip tooltip="Vue Amazing UI">
+      <Button>Hover me</Button>
+    </Tooltip>
+  </div>
+</Watermark>
+
+:::: details Show Code
+
+```vue
+<template>
+  <Watermark content="Vue Amazing UI">
+    <div style="height: 200px; padding: 24px">
+      <Tooltip tooltip="Vue Amazing UI">
+        <Button>Hover me</Button>
+      </Tooltip>
+    </div>
+  </Watermark>
+</template>
+```
+
+::::
+
 ## 水印配置器
 
-_通过自定义参数配置预览水印效果_
+*通过自定义参数配置预览水印效果*
 
 <Row :gutter="24">
   <Col :span="18">
@@ -388,22 +432,22 @@ const layoutOptions = [
 | content | 水印文字内容 | string &#124; string[] | undefined |
 | fullscreen | 是否启用全屏水印 | boolean | false |
 | fixed | 是否固定水印，仅当启用全屏水印时生效 | boolean | true |
-| textStyle | 水印文字样式 | [Font](#font-type) | {<br/>&nbsp;&nbsp;color: 'rgba(0, 0, 0, 0.15)',<br/>&nbsp;&nbsp;fontSize: 16,<br/>&nbsp;&nbsp;fontWeight: 'normal',<br/>&nbsp;&nbsp;fontFamily: 'sans-serif',<br/>&nbsp;&nbsp;fontStyle: 'normal' <br/>} |
+| textStyle | 水印文字样式 | [WatermarkFont](#font-type) | {<br/>&nbsp;&nbsp;color: 'rgba(0, 0, 0, 0.15)',<br/>&nbsp;&nbsp;fontSize: 16,<br/>&nbsp;&nbsp;fontWeight: 'normal',<br/>&nbsp;&nbsp;fontFamily: 'sans-serif',<br/>&nbsp;&nbsp;fontStyle: 'normal' <br/>} |
 | gap | 水印之间的间距 | [number, number] | [100, 100] |
 | offset | 水印距离容器左上角的偏移量，默认为 `gap/2` | [number, number] | [50, 50] |
 
 ### Font Type
 
-| 名称       | 说明                | 类型                                                    | 默认值                |
+| 名称      | 说明               | 类型                                                   | 默认值                |
 | :--------- | :------------------ | :------------------------------------------------------ | :-------------------- |
-| color      | 字体颜色            | string                                                  | 'rgba(0, 0, 0, 0.15)' |
-| fontSize   | 字体大小，单位 `px` | number                                                  | 16                    |
-| fontWeight | 字体粗细            | 'normal' &#124; 'light' &#124; 'weight' &#124; number   | 'normal'              |
-| fontFamily | 字体类型            | string                                                  | 'sans-serif'          |
-| fontStyle  | 字体样式            | 'none' &#124; 'normal' &#124; 'italic' &#124; 'oblique' | 'normal'              |
+| color     | 字体颜色           | string                                                 | 'rgba(0, 0, 0, 0.15)' |
+| fontSize  | 字体大小，单位 `px` | number                                                 | 16                    |
+| fontWeight | 字体粗细           | 'normal' &#124; 'light' &#124; 'weight' &#124; number  | 'normal'              |
+| fontFamily | 字体类型           | string                                                 | 'sans-serif'          |
+| fontStyle | 字体样式           | 'none' &#124; 'normal' &#124; 'italic' &#124; 'oblique' | 'normal'              |
 
 ## Slots
 
-| 名称    | 说明       | 类型           |
+| 名称   | 说明      | 类型           |
 | :------ | :--------- | :------------- |
 | default | 自定义内容 | v-slot:default |

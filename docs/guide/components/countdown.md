@@ -10,14 +10,15 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { Countdown } from 'vue-amazing-ui'
 const active = ref(true)
 const resetActive = ref(true)
-const countdownRef = ref()
+const countdownRef = ref<InstanceType<typeof Countdown> | null>(null)
 function onFinish() {
   console.log('countdown finished')
 }
 function onReset() {
-  countdownRef.value.reset()
+  countdownRef.value?.reset()
 }
 </script>
 
@@ -39,7 +40,7 @@ function onReset() {
 
 ```vue
 <script setup lang="ts">
-function onFinish () {
+function onFinish() {
   console.log('countdown finished')
 }
 </script>
@@ -58,7 +59,7 @@ function onFinish () {
 
 ## 毫秒倒计时
 
-*`format`: `Y 年 M 月 D 天 H 时 m 分 s 秒 SSS`*
+*`format`: `Y 年 M 月 D 天 H 时 m 分 s 秒 SSS 毫秒`*
 
 <br/>
 
@@ -87,7 +88,7 @@ function onFinish () {
 ## 随时暂停
 
 <Space vertical>
-  <Switch v-model="active" />
+  <Switch v-model:value="active" />
   <Countdown
     :active="active"
     title="Pause at any time"
@@ -106,7 +107,7 @@ const active = ref(true)
 </script>
 <template>
   <Space vertical>
-    <Switch v-model="active" />
+    <Switch v-model:value="active" />
     <Countdown
       :active="active"
       title="Pause at any time"
@@ -200,7 +201,7 @@ const active = ref(true)
 
 <Space vertical>
   <Space align="center">
-    <Switch v-model="resetActive" />
+    <Switch v-model:value="resetActive" />
     <Button type="primary" @click="onReset">Reset</Button>
   </Space>
   <Countdown
@@ -217,16 +218,17 @@ const active = ref(true)
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { Countdown } from 'vue-amazing-ui'
 const resetActive = ref(true)
-const countdownRef = ref()
+const countdownRef = ref<InstanceType<typeof Countdown> | null>(null)
 function onReset() {
-  countdownRef.value.reset()
+  countdownRef.value?.reset()
 }
 </script>
 <template>
   <Space vertical>
     <Space align="center">
-      <Switch v-model="resetActive" />
+      <Switch v-model:value="resetActive" />
       <Button type="primary" @click="onReset">Reset</Button>
     </Space>
     <Countdown
@@ -248,11 +250,11 @@ function onReset() {
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-title | 倒计时标题 | string &#124; slot | undefined
+title | 倒计时标题 | string | undefined
 titleStyle | 设置标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-prefix | 倒计时的前缀 | string &#124; slot | undefined
-suffix | 倒计时的后缀 | string &#124; slot | undefined
-finish | 倒计时完成后的展示文本 | string &#124; slot | undefined
+prefix | 倒计时的前缀 | string | undefined
+suffix | 倒计时的后缀 | string | undefined
+finish | 倒计时完成后的展示文本 | string | undefined
 future | `value` 是否为未来某时刻的时间戳；为 `false` 表示相对剩余时间戳 | boolean | true
 format | 倒计时展示格式，(`Y/YY`：年，`M/MM`：月，`D/DD`：日，`H/HH`：时，`m/mm`：分钟，`s/ss`：秒，`SSS`：毫秒) | string | 'HH:mm:ss'
 value | 倒计时数值，支持设置未来某时刻的时间戳或相对剩余时间，单位 `ms` | number | 0

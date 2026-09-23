@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-_看起来好看点，但是我能保证这个没有原生滚动条可靠_
+*看起来好看点，但是我能保证这个没有原生滚动条可靠*
 
 <script setup lang="ts">
 function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
@@ -241,7 +241,7 @@ function onScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
 
 ## 自定义样式
 
-_可通过设置 `size` 属性，自定义相关 `--scrollbar` 变量进行各种样式自定义_
+*可通过设置 `size` 属性，自定义相关 `--scrollbar` 变量进行各种样式自定义*
 
 <br/>
 
@@ -402,7 +402,7 @@ _可通过设置 `size` 属性，自定义相关 `--scrollbar` 变量进行各�
 
 ## Slots
 
-| 名称    | 说明       | 类型           |
+| 名称   | 说明      | 类型           |
 | :------ | :--------- | :------------- |
 | default | 自定义内容 | v-slot:default |
 
@@ -416,15 +416,15 @@ _可通过设置 `size` 属性，自定义相关 `--scrollbar` 变量进行各�
 
 ### ScrollBehavior Type
 
-| 值      | 说明                                         |
+| 值     | 说明                                         |
 | :------ | :------------------------------------------- |
-| smooth  | 平滑滚动并产生过渡效果                       |
+| smooth | 平滑滚动并产生过渡效果                       |
 | instant | 滚动会直接跳转到目标位置，没有过渡效果       |
-| auto    | 或缺省值表示浏览器会自动选择滚动时的过渡效果 |
+| auto   | 或缺省值表示浏览器会自动选择滚动时的过渡效果 |
 
 ## Events
 
-| 名称      | 说明           | 类型                                                                  |
+| 名称     | 说明          | 类型                                                                  |
 | :-------- | :------------- | :-------------------------------------------------------------------- |
-| scroll    | 滚动的回调     | (e: Event, direction: 'left' \| 'right' \| 'top' \| 'bottom') => void |
+| scroll   | 滚动的回调    | (e: Event, direction: 'left' \| 'right' \| 'top' \| 'bottom') => void |
 | scrollend | 滚动结束的回调 | (e: Event, direction: 'left' \| 'right' \| 'top' \| 'bottom') => void |

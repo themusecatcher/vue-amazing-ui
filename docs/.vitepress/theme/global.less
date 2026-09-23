@@ -113,6 +113,20 @@
     color: var(--vp-c-text-1);
   }
 }
+/* 正文中的 Tag 与相邻文字垂直居中对齐（Tag 为固定高度的 inline-flex，默认按基线对齐会偏低） */
+.vp-doc .tag-wrap {
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+/* 正文列表内的行内代码与 Tag 统一为同高同圆角的胶囊，避免一行出现两种胶囊样式 */
+.vp-doc li > code {
+  display: inline-block;
+  padding: 1px 7px;
+  font-size: 12px;
+  line-height: 20px;
+  border-radius: 4px;
+}
 /* Transition by color instead of opacity */
 .dark .vp-doc .custom-block a {
   transition: color 0.25s;
@@ -333,13 +347,34 @@ h1 {
         border-radius: 12px !important;
       }
       .VPButton.brand {
+        position: relative;
+        isolation: isolate;
         font-weight: 700;
         border: none;
-        background: linear-gradient(to right, #09c8ce, #eb2f96);
-        transition: all 0.25s;
+        background-color: transparent;
+        background-image: linear-gradient(to right, #09c8ce, #eb2f96);
+        transition: box-shadow 0.25s;
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          z-index: -1;
+          border-radius: inherit;
+          background-image: linear-gradient(to right, #eb2f96, #09c8ce);
+          opacity: 0;
+          transition: opacity 0.25s;
+        }
+
         &:hover {
-          background: linear-gradient(to right, #eb2f96, #09c8ce);
           box-shadow: 0 0 3px 3px rgba(65, 209, 255, 0.12);
+        }
+
+        &:hover::after {
+          opacity: 1;
         }
       }
     }

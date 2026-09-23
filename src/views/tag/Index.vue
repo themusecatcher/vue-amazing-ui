@@ -154,11 +154,11 @@ const onDynamicClose = (item: TagItem, index: number) => {
       </Tag>
     </Space>
     <h2 class="mt30 mb10">动态添加和删除</h2>
-    <h3 class="mb10">使用字符串格式数组</h3>
+    <p class="mb10">使用字符串格式数组</p>
     <Tag dynamic v-model:value="strTags" @dynamic-close="onDynamicClose" />
     <br />
     <br />
-    <h3 class="mb10">使用对象格式数组</h3>
+    <p class="mb10">使用对象格式数组</p>
     <Space>
       <Tag dynamic v-model:value="objTags">
         <template #label="{ label, index }">

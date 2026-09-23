@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { computed, ref, watchEffect, nextTick } from 'vue'
-import { useSlotsExist, useInject } from 'components/utils'
+import { computed, ref, watchEffect } from 'vue'
+import type { VNode } from 'vue'
+import { useSlotsExist, useInject, useWave } from 'components/utils'
 export interface Option {
   label: string // 选项名
   value: string | number | boolean // 选项值
   disabled?: boolean // 是否禁用选项
 }
+
 export interface Props {
   options?: Option[] // 单选框选项数据
   disabled?: boolean // 是否禁用
@@ -17,6 +19,12 @@ export interface Props {
   buttonSize?: 'small' | 'middle' | 'large' // 按钮大小；仅当 button: true 时生效
   value?: string | number | boolean // (v-model) 当前选中的值
 }
+// 声明组件插槽类型
+export interface RadioSlots {
+  // options / button 模式下为每个选项提供作用域参数；children 透传模式下无真实数据，参数为 undefined
+  default?: (props: { option?: Option; label?: string; index?: number }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
   disabled: false,
@@ -28,9 +36,10 @@ const props = withDefaults(defineProps<Props>(), {
   buttonSize: 'middle',
   value: undefined
 })
+defineSlots<RadioSlots>()
 const radioChecked = ref<boolean>(false)
 const optionsCheckedValue = ref<string | number | boolean>()
-const wave = ref<boolean>(false)
+const { wave, startWave, endWave } = useWave()
 const { colorPalettes } = useInject('Radio') // 主题色注入
 const emits = defineEmits(['update:checked', 'update:value', 'change'])
 const slotsExist = useSlotsExist(['default'])
@@ -77,19 +86,6 @@ function onChecked(): void {
     emits('change', true)
   }
 }
-function startWave(): void {
-  if (wave.value) {
-    wave.value = false
-    nextTick(() => {
-      wave.value = true
-    })
-  } else {
-    wave.value = true
-  }
-}
-function onWaveEnd(): void {
-  wave.value = false
-}
 </script>
 <template>
   <div
@@ -115,7 +111,7 @@ function onWaveEnd(): void {
             v-if="!checkDisabled(option.disabled)"
             class="radio-wave"
             :class="{ 'wave-active': wave && optionsCheckedValue === option.value }"
-            @animationend="onWaveEnd"
+            @animationend="endWave"
           ></span>
         </span>
         <span class="radio-label">
@@ -145,7 +141,7 @@ function onWaveEnd(): void {
           v-if="!checkDisabled(option.disabled)"
           class="radio-wave"
           :class="{ 'wave-active': wave && optionsCheckedValue === option.value }"
-          @animationend="onWaveEnd"
+          @animationend="endWave"
         ></span>
       </div>
     </template>
@@ -164,7 +160,7 @@ function onWaveEnd(): void {
           v-if="!disabled"
           class="radio-wave"
           :class="{ 'wave-active': wave && radioChecked }"
-          @animationend="onWaveEnd"
+          @animationend="endWave"
         ></span>
       </span>
       <span v-if="slotsExist.default" class="radio-label">
@@ -193,7 +189,7 @@ function onWaveEnd(): void {
         v-if="!disabled"
         class="radio-wave"
         :class="{ 'wave-active': wave && radioChecked }"
-        @animationend="onWaveEnd"
+        @animationend="endWave"
       ></span>
     </div>
   </template>
@@ -264,7 +260,7 @@ function onWaveEnd(): void {
     }
   }
   .radio-label {
-    word-break: break-all;
+    word-break: break-word;
     padding: 0 8px;
     line-height: 1.5714285714285714;
   }

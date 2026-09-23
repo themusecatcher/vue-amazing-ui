@@ -3,42 +3,241 @@
 # 确保脚本抛出遇到的错误
 set -e
 
-commitDesc=$1
+# ============ 终端彩色输出与超链接（非 TTY 环境如 CI 日志自动降级为纯文本） ============
+if [ -t 1 ]; then
+    c_bold=$'\033[1m'
+    c_green=$'\033[32m'
+    c_link=$'\033[1;34m'
+    c_reset=$'\033[0m'
 
-# 强制要求传入语义化的提交描述，避免产生无信息量的 commit
-if [ -z "$commitDesc" ]; then
-    echo "❌ 缺少提交描述。用法: pnpm pub \"<type>: <描述>\"（如 pnpm pub \"fix: correct InputNumber empty value\"）"
+    # OSC 8 终端超链接：把 URL 包裹在 OSC 8 序列中，支持的终端
+    # （iTerm2 / VSCode / WezTerm / GNOME Terminal 3.26+ / macOS Terminal 13+）会渲染为可点击链接；
+    # 不被支持的终端按 OSC 规范自动忽略控制序列，无副作用
+    # 同时套用加粗蓝色，避免链接在终端里以默认前景色（白色）显示
+    osc8_start() { printf '%s\033]8;;%s\033\\' "${c_link}" "$1"; }
+    osc8_end() { printf '\033]8;;\033\\%s' "${c_reset}"; }
+else
+    # CI 环境无 TTY 时降级为 noop，避免控制序列污染日志
+    c_link=""
+    c_reset=""
+    osc8_start() { :; }
+    osc8_end() { :; }
+fi
+
+# 打印组件库发布成功横幅
+# 设计要点：
+# 1. 去掉上下两条绿色横线（═ × N）与绿底色块（bg_green），整体更清爽
+# 2. URL 用 OSC 8 序列包裹，并以加粗蓝色渲染
+# 3. 标题用绿色加粗作视觉锚点，标签行用 emoji + 缩进对齐，无多余装饰
+print_publish_success_banner() {
+    local pkg="vue-amazing-ui"
+    local npm_url="https://www.npmjs.com/package/${pkg}/v/${version}"
+    local publish_time=$(date '+%Y-%m-%d %H:%M:%S')
+
+    echo ""
+    # 标题行：绿色加粗，醒目但不过度装饰
+    printf '%s%s🎉 发布成功！%s@%s 已发布到 npm%s\n' \
+        "${c_green}" "${c_bold}" "${pkg}" "${version}" "${c_reset}"
+
+    # 标签行：emoji + 缩进对齐，纯文本输出（避免背景色块视觉噪声）
+    printf '   📦 版本号    %s（git tag: %s）\n' "${version}" "${tag}"
+    printf '   ⏰ 发布时间  %s\n' "${publish_time}"
+
+    # URL 行：OSC 8 包裹的 npm 详情链接（加粗蓝色，终端支持时显示为可点击）
+    printf '   🔗 npm 详情  '
+    osc8_start "${npm_url}"
+    printf '%s' "${npm_url}"
+    osc8_end
+    echo ""
+    echo ""
+}
+
+commitMessage=$1
+
+# 读取 package.json 中的 version（用 node 读取，避免引入 jq 依赖）
+version=$(node -p "require('./package.json').version")
+
+# 未传入提交描述时使用默认语义化描述（版本号动态拼接），传入则以传入为准
+if [ -z "$commitMessage" ]; then
+    commitMessage="feat: 发布 $version 版本"
+fi
+# 版本 tag（提前定义，供前置校验与后续打 tag / 建 release 复用）
+tag="v$version"
+
+# ============ 发布前置校验（避免构建完成后才发现发布条件不满足） ============
+# 1. 校验 node 已安装（读取版本号、执行构建均依赖）
+if ! command -v node >/dev/null 2>&1; then
+    echo "❌ 未检测到 node，无法执行发布流程"
+    echo "   请先安装 Node.js >= 20.19.0"
+    exit 1
+fi
+echo "✅ node 已安装: $(node -v)"
+
+# 2. 校验 registry 源是否为官方 npm 源（发布必须走官方源）
+registry=$(npm config get registry)
+if [ "$registry" != "https://registry.npmjs.org/" ] && [ "$registry" != "https://registry.npmjs.org" ]; then
+    echo "❌ 当前 npm registry 源为: $registry，非官方源 https://registry.npmjs.org"
+    echo "   请先切换: npm config set registry https://registry.npmjs.org/"
+    exit 1
+fi
+echo "✅ registry 源校验通过: $registry"
+
+# 3. 校验 npm 登录态
+npm_username=$(npm whoami 2>/dev/null) || {
+    echo "❌ npm 未登录，请先执行: npm login"
+    exit 1
+}
+echo "✅ npm 登录校验通过: $npm_username"
+
+# 4. 校验版本号未在 npm 上重复发布
+if npm view "vue-amazing-ui@$version" version >/dev/null 2>&1; then
+    echo "❌ 版本 $version 已存在于 npm，请先升级 package.json 的 version 字段"
+    exit 1
+fi
+echo "✅ 版本 $version 未发布，校验通过"
+
+# 5. 校验 gh CLI 已安装（后续创建 GitHub Release 依赖）
+if ! command -v gh >/dev/null 2>&1; then
+    echo "❌ 未检测到 gh CLI，无法自动创建 GitHub Release"
+    echo "   请安装: brew install gh"
+    exit 1
+fi
+echo "✅ gh CLI 已安装"
+
+# 6. 校验 gh CLI 已登录（未登录则后续 release 创建会失败）
+if ! gh auth status >/dev/null 2>&1; then
+    echo "❌ gh CLI 未登录，无法自动创建 GitHub Release"
+    echo "   请先执行: gh auth login"
+    exit 1
+fi
+echo "✅ gh CLI 登录态校验通过"
+# ============ 校验结束 ============
+
+# 发布前门禁：lint + type-check，失败则中止（早于 build 失败，信息更清晰）
+if ! pnpm check; then
+    echo "❌ 发布前检查（lint + type-check）未通过，请修复后重试"
     exit 1
 fi
 
-# 读取 package.json 中的 version
-version=$(jq -r .version package.json)
-
-# 发布前门禁：lint + type-check，失败则中止（早于 build 失败，信息更清晰）
-pnpm check
-
 # 打包构建
-pnpm build
+if ! pnpm build; then
+    echo "❌ 构建失败，请根据上方报错修复后重试"
+    exit 1
+fi
+
+# 产物级验证（按需引入样式入口）：依赖表 ↔ 产物 chunk 闭包一致性 + 按需引入端到端（canary）
+# 与 npm publish 触发的 prepublish-guard.js 形成多重保险：守卫查「产物文件在不在」，这里查「按需引入后样式是否齐全」
+if ! pnpm verify:deps; then
+    echo "❌ 样式依赖一致性校验未通过，请修复后重试"
+    exit 1
+fi
+if ! pnpm verify:on-demand; then
+    echo "❌ 按需引入验证未通过，请修复后重试"
+    exit 1
+fi
 
 # 检查是否有待提交的更改
 if [ -n "$(git status --porcelain)" ]; then
     git add .
-    git commit -m "$commitDesc"
+    git commit -m "$commitMessage"
     git push
 else
     echo "No changes to commit. Skipping git commit and push."
 fi
 
 # 发布到 npm
+# 发布后若后续步骤失败，提示当前可能处于「npm 已发布但 git 未同步」的状态
+trap "echo \"⚠️ 发布流程中断：npm 可能已发布 $version，但后续 git 提交/tag/release/文档部署可能未完成，请检查状态并手动补全\"" ERR
 npm publish
 
-# 升级 vue-amazing-ui 依赖版本
-pnpm up vue-amazing-ui@$version
+# 发布成功：npm publish 正常返回后立即输出醒目横幅，便于核对版本与分享链接
+print_publish_success_banner
+
+# 升级 vue-amazing-ui 依赖版本（npm publish 后 registry 存在同步延迟，失败则等待重试）
+retry=0
+until pnpm up vue-amazing-ui@$version; do
+  retry=$((retry + 1))
+  if [ $retry -ge 10 ]; then
+    echo "❌ pnpm up 重试 10 次仍失败，请稍后手动执行: pnpm up vue-amazing-ui@$version"
+    exit 1
+  fi
+  printf "⏳ registry 可能尚未同步 vue-amazing-ui 版本 %s，30 秒后重试 (%s/10)...\n" "$version" "$retry"
+  sleep 30
+done
 
 # 提交版本更新代码到 github
 git add .
-git commit -m "feat: update $version"
+if [ -n "$(git status --porcelain)" ]; then
+  git commit -m "chore: update vue-amazing-ui@$version"
+else
+  echo "No changes to commit. Skipping git commit."
+fi
 git push
 
-# 重新部署文档
-pnpm docs:deploy "$commitDesc"
+# 打版本 tag（确保指向最终发布状态的 commit），并推送
+# 覆盖边界：本地/远程均无 → 新建；本地有但远程缺 → 补推；本地 tag 指向旧 commit → 中止并提示人工决策
+local_tag_commit=""
+if git rev-parse -q --verify "refs/tags/$tag" >/dev/null 2>&1; then
+    local_tag_commit=$(git rev-parse "refs/tags/$tag")
+fi
+remote_has_tag=false
+if git ls-remote --tags origin "refs/tags/$tag" | grep -q "refs/tags/$tag"; then
+    remote_has_tag=true
+fi
+
+if [ -z "$local_tag_commit" ]; then
+    # 本地无 tag：直接新建并推送
+    git tag -a "$tag" -m "release: $version"
+    git push origin "$tag"
+    echo "✅ 已生成并推送 git tag: $tag"
+elif [ "$local_tag_commit" != "$(git rev-parse HEAD)" ]; then
+    # 本地 tag 存在但指向旧 commit（版本号复用但代码已变）：异常状态，中止并提示人工决策，避免误覆盖远程 tag
+    echo "❌ 本地 git tag $tag 指向 commit $local_tag_commit，与当前 HEAD 不一致"
+    echo "   该场景通常意味着版本号复用但代码已更新，请人工确认："
+    echo "   1. 确认是否应升级 package.json 的 version 字段后重新发布"
+    echo "   2. 或手动处理 tag: git tag -d $tag && git push origin :refs/tags/$tag"
+    exit 1
+elif [ "$remote_has_tag" = false ]; then
+    # 本地 tag 正确但远程缺失：补推
+    echo "⚠️ git tag $tag 本地已存在但远程缺失，将推送本地 tag 到远程"
+    git push origin "$tag"
+    echo "✅ 已推送 git tag: $tag 到远程"
+else
+    echo "⚠️ git tag $tag 已存在（本地与远程一致），跳过打 tag"
+fi
+
+# 输出可点击的 git tag 链接（OSC 8 包裹，与上方 npm 链接、下方 Release 链接样式一致）
+# 覆盖本地新建 / 远程补推 / 已存在三种分支，失败分支已 exit 不会走到这里
+tag_url="https://github.com/themusecatcher/vue-amazing-ui/releases/tag/$tag"
+printf '   🔗 Tag: '
+osc8_start "${tag_url}"
+printf '%s' "${tag_url}"
+osc8_end
+echo ""
+
+# 自动创建 GitHub Release（与 tag 同名，正文统一引用 CHANGELOG）
+# 依赖 gh CLI；gh 安装与登录态已在前置校验区检查，此处仅处理创建逻辑
+releaseBody="Please refer to [CHANGELOG.md](https://github.com/themusecatcher/vue-amazing-ui/blob/main/docs/guide/changelog.md) for details."
+if gh release view "$tag" >/dev/null 2>&1; then
+    echo "⚠️ GitHub Release $tag 已存在，跳过创建"
+else
+    # stdout 丢弃：gh 成功后会自行打印一版无样式（不可点击）的 release 链接，改用下方 OSC 8 样式的链接输出
+    gh release create "$tag" --title "$tag" --notes "$releaseBody" >/dev/null
+    echo "✅ 已创建 GitHub Release: $tag"
+fi
+
+# 输出可点击的 GitHub Release 链接（OSC 8 包裹，覆盖新建/已存在两种分支）
+release_url=$(gh release view "$tag" --json url -q '.url' 2>/dev/null || true)
+if [ -n "${release_url}" ]; then
+    printf '   🔗 Release: '
+    osc8_start "${release_url}"
+    printf '%s' "${release_url}"
+    osc8_end
+    echo ""
+fi
+
+# release 已就绪，清除 npm 发布后的中断提示（后续文档部署失败不再提示「npm 已发布」）
+trap - ERR
+
+# 重新部署文档（组件库已构建过，跳过重复构建；skipBuild=1 时 commitMessage 用不上，传空占位）
+pnpm docs:deploy "" 1

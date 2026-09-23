@@ -1,0 +1,331 @@
+# 监听DOM尺寸 useResizeObserver
+
+<GlobalElement />
+
+_使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化的组合式函数_
+
+::: details Show Source Code
+
+```ts
+/**
+ * 组合式函数
+ * 使用 ResizeObserver 观察 DOM 元素尺寸变化
+ *
+ * 该函数提供了一种方便的方式来观察一个或多个元素的尺寸变化，并在变化时执行指定的回调函数
+ *
+ * @param {Ref | Ref[] | HTMLElement | HTMLElement[]} target 要观察的目标，可以是 Ref 对象、Ref 数组、HTMLElement 或 HTMLElement 数组
+ * @param {ResizeObserverCallback} callback 当元素尺寸变化时调用的回调函数
+ * @param {object} [options = {}] ResizeObserver 选项，用于定制观察行为
+ * @returns {{ start: () => void, stop: () => void }} 返回一个对象，包含停止和开始观察的方法，使用者可以调用 start 方法开始观察，调用 stop 方法停止观察
+ */
+import { ref, toValue, computed, watch, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
+import type { Ref, ComputedRef } from 'vue'
+/**
+ * 归一化观察目标为 HTMLElement 数组
+ *
+ * 兼容 Ref / Ref[] / HTMLElement / HTMLElement[] 四种入参：先解包 Ref，再过滤空值，
+ * 保证后续 observe 调用拿到的都是可用元素。
+ */
+function resolveTargetElements(target: Ref | Ref[] | HTMLElement | HTMLElement[]): HTMLElement[] {
+  const targetValue = toValue(target) as Ref | Ref[] | HTMLElement | HTMLElement[] | null | undefined
+  if (!targetValue) return []
+  const list = Array.isArray(targetValue) ? targetValue : [targetValue]
+  return list
+    .map((item) => toValue(item) as HTMLElement | null | undefined)
+    .filter((element): element is HTMLElement => Boolean(element))
+}
+export function useResizeObserver(
+  target: Ref | Ref[] | HTMLElement | HTMLElement[],
+  callback: ResizeObserverCallback,
+  options: object = {}
+): { start: () => void; stop: () => void } {
+  // 用 typeof 判断而非裸 window：SSR（Node）下裸引用会直接抛 ReferenceError
+  const isSupported = useSupported(() => typeof window !== 'undefined' && 'ResizeObserver' in window)
+  let observer: ResizeObserver | undefined
+  const stopObservation = ref(false)
+  const targets = computed(() => resolveTargetElements(target))
+  // 定义清理函数，用于断开 ResizeObserver 的连接
+  const cleanup = () => {
+    if (observer) {
+      observer.disconnect()
+      observer = undefined
+    }
+  }
+  // 初始化 ResizeObserver，开始观察目标元素
+  const observeElements = () => {
+    if (isSupported.value && targets.value.length && !stopObservation.value) {
+      observer = new ResizeObserver(callback)
+      targets.value.forEach((element: HTMLElement) => observer!.observe(element, options))
+    }
+  }
+  // 监听 targets 的变化，当 targets 变化时，重新建立 ResizeObserver 观察
+  watch(
+    () => targets.value,
+    () => {
+      cleanup()
+      observeElements()
+    },
+    {
+      immediate: true, // 立即触发回调，以便初始状态也被观察
+      flush: 'post'
+    }
+  )
+  const start = () => {
+    stopObservation.value = false
+    observeElements()
+  }
+  const stop = () => {
+    stopObservation.value = true
+    cleanup()
+  }
+  // 在组件卸载前清理 ResizeObserver
+  onBeforeUnmount(() => cleanup())
+  return {
+    start,
+    stop
+  }
+}
+export function useSupported(callback: () => unknown): ComputedRef<boolean> {
+  const isMounted = useMounted()
+  return computed(() => {
+    // to trigger the ref
+    isMounted.value
+    return Boolean(callback())
+  })
+}
+export function useMounted(): Ref<boolean> {
+  const isMounted = ref(false)
+  // 获取当前组件的实例
+  const instance = getCurrentInstance()
+  if (instance) {
+    onMounted(() => {
+      isMounted.value = true
+    }, instance)
+  }
+  return isMounted
+}
+```
+
+:::
+
+<script setup lang="ts">
+import { reactive, ref } from 'vue'
+import { useResizeObserver } from 'vue-amazing-ui'
+const el = ref(null)
+const state = reactive({
+  borderBlockSize: null,
+  borderInlineSize: null,
+  contentBlockSize: null,
+  contentInlineSize: null,
+  x: null,
+  y: null,
+  width: null,
+  height: null,
+  top: null,
+  bottom: null,
+  right: null,
+  left: null,
+  devicePixelContentBlockSize: null,
+  devicePixelContentInlineSize: null
+})
+useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver) => {
+  console.log('entries', entries)
+  console.log('observer', observer)
+  const entry = entries[0]
+  state.borderBlockSize = entry.borderBoxSize[0].blockSize
+  state.borderInlineSize = entry.borderBoxSize[0].inlineSize
+  state.contentBlockSize = entry.contentBoxSize[0].blockSize
+  state.contentInlineSize = entry.contentBoxSize[0].inlineSize
+  state.x = entry.contentRect.x
+  state.y = entry.contentRect.y
+  state.width = entry.contentRect.width
+  state.height = entry.contentRect.height
+  state.top = entry.contentRect.top
+  state.bottom = entry.contentRect.bottom
+  state.right = entry.contentRect.right
+  state.left = entry.contentRect.left
+  state.devicePixelContentBlockSize = entry.devicePixelContentBoxSize[0].blockSize
+  state.devicePixelContentInlineSize = entry.devicePixelContentBoxSize[0].inlineSize
+})
+</script>
+
+## 基本使用
+
+_请缩放下面的盒子来观察变化_
+
+<br/>
+
+<div class="size-wrap">
+  <textarea ref="el" class="resizer" disabled />
+  <div class="size-container">
+    <p>borderBlockSize: {{ state.borderBlockSize }}</p>
+    <p>borderInlineSize: {{ state.borderInlineSize }}</p>
+    <p>contentBlockSize: {{ state.contentBlockSize }}</p>
+    <p>contentInlineSize: {{ state.contentInlineSize }}</p>
+    <h3>contentRect：</h3>
+    <p>x: {{ state.x }}</p>
+    <p>y: {{ state.y }}</p>
+    <p>width: {{ state.width }}</p>
+    <p>height: {{ state.height }}</p>
+    <p>top: {{ state.top }}</p>
+    <p>bottom: {{ state.bottom }}</p>
+    <p>right: {{ state.right }}</p>
+    <p>left: {{ state.left }}</p>
+    <p>devicePixelContentBlockSize: {{ state.devicePixelContentBlockSize }}</p>
+    <p>devicePixelContentInlineSize: {{ state.devicePixelContentInlineSize }}</p>
+  </div>
+</div>
+
+<style lang="less" scoped>
+.size-wrap {
+  position: relative;
+  .resizer {
+    background: #222;
+    color: #fff;
+    resize: both;
+    padding: 16px;
+    min-width: 500px;
+    min-height: 480px;
+    max-width: 688px;
+    border: 1px solid #2e2e32;
+    border-radius: 4px;
+    outline: none;
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow: hidden;
+    display: block;
+    font-size: 16px;
+    box-shadow: #2e2e32 0 0 0 1px;
+    margin: 8px 0;
+    background: #1b1b1f;
+    touch-action: manipulation;
+  }
+  .size-container {
+    top: 12px;
+    left: 16px;
+    position: absolute;
+    color: #fff;
+    font-size: 16px;
+    h3 {
+      margin-top: 0;
+    }
+  }
+}
+</style>
+
+```vue
+<script setup lang="ts">
+import { ref, reactive } from 'vue'
+import { useResizeObserver } from 'vue-amazing-ui'
+const el = ref(null)
+const state = reactive({
+  borderBlockSize: null,
+  borderInlineSize: null,
+  contentBlockSize: null,
+  contentInlineSize: null,
+  x: null,
+  y: null,
+  width: null,
+  height: null,
+  top: null,
+  bottom: null,
+  right: null,
+  left: null,
+  devicePixelContentBlockSize: null,
+  devicePixelContentInlineSize: null
+})
+useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver) => {
+  console.log('entries', entries)
+  console.log('observer', observer)
+  const entry = entries[0]
+  state.borderBlockSize = entry.borderBoxSize[0].blockSize
+  state.borderInlineSize = entry.borderBoxSize[0].inlineSize
+  state.contentBlockSize = entry.contentBoxSize[0].blockSize
+  state.contentInlineSize = entry.contentBoxSize[0].inlineSize
+  state.x = entry.contentRect.x
+  state.y = entry.contentRect.y
+  state.width = entry.contentRect.width
+  state.height = entry.contentRect.height
+  state.top = entry.contentRect.top
+  state.bottom = entry.contentRect.bottom
+  state.right = entry.contentRect.right
+  state.left = entry.contentRect.left
+  state.devicePixelContentBlockSize = entry.devicePixelContentBoxSize[0].blockSize
+  state.devicePixelContentInlineSize = entry.devicePixelContentBoxSize[0].inlineSize
+})
+</script>
+<template>
+  <h3>Resize the box to see changes</h3>
+  <div class="size-wrap">
+    <textarea ref="el" class="resizer" disabled />
+    <div class="size-container">
+      <p>borderBlockSize: {{ state.borderBlockSize }}</p>
+      <p>borderInlineSize: {{ state.borderInlineSize }}</p>
+      <p>contentBlockSize: {{ state.contentBlockSize }}</p>
+      <p>contentInlineSize: {{ state.contentInlineSize }}</p>
+      <h3>contentRect：</h3>
+      <p>x: {{ state.x }}</p>
+      <p>y: {{ state.y }}</p>
+      <p>width: {{ state.width }}</p>
+      <p>height: {{ state.height }}</p>
+      <p>top: {{ state.top }}</p>
+      <p>bottom: {{ state.bottom }}</p>
+      <p>right: {{ state.right }}</p>
+      <p>left: {{ state.left }}</p>
+      <p>devicePixelContentBlockSize: {{ state.devicePixelContentBlockSize }}</p>
+      <p>devicePixelContentInlineSize: {{ state.devicePixelContentInlineSize }}</p>
+    </div>
+  </div>
+</template>
+<style lang="less" scoped>
+.size-wrap {
+  position: relative;
+  .resizer {
+    background: #222;
+    color: #fff;
+    resize: both;
+    padding: 16px;
+    min-width: 500px;
+    min-height: 480px;
+    max-width: 688px;
+    border: 1px solid #2e2e32;
+    border-radius: 4px;
+    outline: none;
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow: hidden;
+    display: block;
+    font-size: 16px;
+    box-shadow: #2e2e32 0 0 0 1px;
+    margin: 8px 0;
+    background: #1b1b1f;
+    touch-action: manipulation;
+  }
+  .size-container {
+    top: 12px;
+    left: 16px;
+    position: absolute;
+    color: #fff;
+    font-size: 16px;
+    h3 {
+      margin-top: 0;
+    }
+  }
+}
+</style>
+```
+
+## Params
+
+| 参数 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| target | 要观察的目标，可以是 `Ref` 对象、`Ref` 数组、`HTMLElement` 或 `HTMLElement` 数组 | Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[] | undefined |
+| callback | 当元素尺寸变化时调用的回调函数 | ResizeObserverCallback | undefined |
+| options | `ResizeObserver` 选项，用于定制观察行为，[参考文档](https://developer.mozilla.org/zh-CN/docs/Web/API/ResizeObserver/observe#options) | object | {} |
+
+## Return
+
+| 名称 | 说明 | 类型 |
+| --- | --- | --- |
+| start | 开始观察目标元素 | () => void |
+| stop | 停止观察并断开与目标元素的连接 | () => void |

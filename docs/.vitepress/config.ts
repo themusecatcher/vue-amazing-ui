@@ -1,6 +1,26 @@
+import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vitepress'
+import type { Plugin } from 'vite'
+
+// 文档站统一从构建产物 dist 引入组件库（demo 说明符仍写作 'vue-amazing-ui'，展示真实用法）。
+// 项目根 vite.config.ts 的同名 alias 指向源码出口（供 pnpm dev 演示环境热更新），
+// 故用 enforce: 'pre' 的 resolveId 钩子先行拦截，使 docs 站解析到 dist 而非源码。
+function docsResolveLibraryToDist(): Plugin {
+  const distEntry = fileURLToPath(new URL('../../dist/index.js', import.meta.url))
+  return {
+    name: 'docs-resolve-library-to-dist',
+    enforce: 'pre',
+    resolveId(source) {
+      return source === 'vue-amazing-ui' ? distEntry : null
+    }
+  }
+}
 
 export default defineConfig({
+  vite: {
+    plugins: [docsResolveLibraryToDist()]
+  },
+
   title: `Vue Amazing UI`,
   description: 'Amazing UI 组件库',
   base: '/vue-amazing-ui/',
@@ -54,13 +74,14 @@ export default defineConfig({
 
     nav: [
       { text: '🔥 组件', link: '/guide/features', activeMatch: '/guide/' },
-      { text: '🛠️ 工具', link: '/utils/started', activeMatch: '/utils/' },
+      { text: '🛠️ 工具', link: '/utils/getting-started', activeMatch: '/utils/' },
       { text: '✨ 赞助', link: '/sponsor/charge', activeMatch: '/sponsor/' },
       {
         text: '🔗 链接',
         items: [
           { text: 'Github', link: 'https://github.com/themusecatcher' },
           { text: 'CSDN', link: 'https://themusecatcher.blog.csdn.net' },
+          { text: 'AI Coding Kit', link: 'https://themusecatcher.github.io/ai-coding-kit/' },
           { text: 'Front-end Notes', link: 'https://themusecatcher.github.io/front-end-notes/' },
           {
             items: [
@@ -105,15 +126,15 @@ export default defineConfig({
             },
             {
               text: '快速上手',
-              link: '/guide/started'
+              link: '/guide/getting-started'
             },
             {
               text: '按需引入',
-              link: '/guide/ondemand'
+              link: '/guide/import-on-demand'
             },
             {
               text: '定制主题',
-              link: '/guide/customize'
+              link: '/guide/customize-theme'
             },
             {
               text: '更新日志',
@@ -129,12 +150,16 @@ export default defineConfig({
               link: '/guide/components/alert'
             },
             {
+              text: '自动完成 AutoComplete',
+              link: '/guide/components/auto-complete'
+            },
+            {
               text: '头像 Avatar',
               link: '/guide/components/avatar'
             },
             {
               text: '回到顶部 BackTop',
-              link: '/guide/components/backtop'
+              link: '/guide/components/back-top'
             },
             {
               text: '徽标 Badge',
@@ -174,11 +199,15 @@ export default defineConfig({
             },
             {
               text: '颜色选择器 ColorPicker',
-              link: '/guide/components/colorpicker'
+              link: '/guide/components/color-picker'
+            },
+            {
+              text: '评论 Comment',
+              link: '/guide/components/comment'
             },
             {
               text: '全局化配置 ConfigProvider',
-              link: '/guide/components/configprovider'
+              link: '/guide/components/config-provider'
             },
             {
               text: '倒计时 Countdown',
@@ -186,7 +215,7 @@ export default defineConfig({
             },
             {
               text: '日期选择 DatePicker',
-              link: '/guide/components/datepicker'
+              link: '/guide/components/date-picker'
             },
             {
               text: '描述列表 Descriptions',
@@ -218,11 +247,11 @@ export default defineConfig({
             },
             {
               text: '浮动按钮 FloatButton',
-              link: '/guide/components/floatbutton'
+              link: '/guide/components/float-button'
             },
             {
               text: '渐变文字 GradientText',
-              link: '/guide/components/gradienttext'
+              link: '/guide/components/gradient-text'
             },
             {
               text: '栅格 Grid',
@@ -242,11 +271,11 @@ export default defineConfig({
             },
             {
               text: '数字输入框 InputNumber',
-              link: '/guide/components/inputnumber'
+              link: '/guide/components/input-number'
             },
             {
               text: '搜索框 InputSearch',
-              link: '/guide/components/inputsearch'
+              link: '/guide/components/input-search'
             },
             {
               text: '列表 List',
@@ -254,7 +283,7 @@ export default defineConfig({
             },
             {
               text: '加载条 LoadingBar',
-              link: '/guide/components/loadingbar'
+              link: '/guide/components/loading-bar'
             },
             {
               text: '菜单 Menu',
@@ -274,7 +303,7 @@ export default defineConfig({
             },
             {
               text: '数值动画 NumberAnimation',
-              link: '/guide/components/numberanimation'
+              link: '/guide/components/number-animation'
             },
             {
               text: '分页 Pagination',
@@ -294,7 +323,7 @@ export default defineConfig({
             },
             {
               text: '二维码 QRCode',
-              link: '/guide/components/qrcode'
+              link: '/guide/components/qr-code'
             },
             {
               text: '单选框 Radio',
@@ -370,7 +399,7 @@ export default defineConfig({
             },
             {
               text: '文字滚动 TextScroll',
-              link: '/guide/components/textscroll'
+              link: '/guide/components/text-scroll'
             },
             {
               text: '时间轴 Timeline',
@@ -405,7 +434,7 @@ export default defineConfig({
           items: [
             {
               text: '快速上手',
-              link: '/utils/started'
+              link: '/utils/getting-started'
             }
           ]
         },
@@ -421,7 +450,7 @@ export default defineConfig({
               link: '/utils/functions/format-number'
             },
             {
-              text: 'rafTimeout 定时器',
+              text: 'rafTimeout/cancelRaf 定时器',
               link: '/utils/functions/raf-timeout'
             },
             {
@@ -446,39 +475,55 @@ export default defineConfig({
             },
             {
               text: 'useEventListener 事件监听',
-              link: '/utils/functions/event-listener'
+              link: '/utils/functions/use-event-listener'
             },
             {
               text: 'useMutationObserver DOM监听',
-              link: '/utils/functions/mutation-observer'
+              link: '/utils/functions/use-mutation-observer'
             },
             {
               text: 'useScroll 滚动监测',
-              link: '/utils/functions/scroll'
+              link: '/utils/functions/use-scroll'
             },
             {
               text: 'useFps 刷新率',
-              link: '/utils/functions/fps'
+              link: '/utils/functions/use-fps'
             },
             {
               text: 'useMediaQuery 媒体查询',
-              link: '/utils/functions/media-query'
+              link: '/utils/functions/use-media-query'
             },
             {
               text: 'useResizeObserver 监听DOM尺寸',
-              link: '/utils/functions/resize-observer'
+              link: '/utils/functions/use-resize-observer'
             },
             {
               text: 'useSlotsExist 监听插槽存在',
-              link: '/utils/functions/slots-exist'
+              link: '/utils/functions/use-slots-exist'
             },
             {
-              text: 'useInject 获取注入数据',
-              link: '/utils/functions/injection'
+              text: 'useOptionsSupported 是否支持事件监听器选项',
+              link: '/utils/functions/use-options-supported'
             },
             {
-              text: 'useOptionsSupported 否支持事件监听器选项',
-              link: '/utils/functions/options-supported'
+              text: 'getColorPalettes 获取颜色调色板',
+              link: '/utils/functions/get-color-palettes'
+            },
+            {
+              text: 'getAlphaColor 获取透明度颜色',
+              link: '/utils/functions/get-alpha-color'
+            },
+            {
+              text: 'getScrollParent 查找可滚动父元素',
+              link: '/utils/functions/get-scroll-parent'
+            },
+            {
+              text: 'lockScroll 页面滚动锁',
+              link: '/utils/functions/lock-scroll'
+            },
+            {
+              text: 'useScrollParent 滚动感知',
+              link: '/utils/functions/use-scroll-parent'
             }
           ]
         }

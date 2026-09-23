@@ -54,7 +54,7 @@ const sizeOptions = [
     value: 'small'
   }
 ]
-const size = ref('small')
+const size = ref<StepsProps['size']>('small')
 const placeOptions = [
   {
     label: 'right',
@@ -65,7 +65,7 @@ const placeOptions = [
     value: 'bottom'
   }
 ]
-const place = ref('bottom')
+const place = ref<StepsProps['labelPlacement']>('bottom')
 function onChange(index: number) {
   // 父组件获取切换后的选中步骤
   console.log('change', index)
@@ -114,7 +114,7 @@ const state = reactive<StepsProps>({
       <Steps :items="stepsItems" vertical dotted v-model:current="current" />
     </Space>
     <h2 class="mt30 mb10">可点击</h2>
-    <h3 class="mb10">设置 v-model:current 后即可点击</h3>
+    <p class="mb10">设置 <code>v-model:current</code> 后即可点击</p>
     <Flex vertical>
       <Space>
         <Button @click="onPrev">Prev</Button>
@@ -134,7 +134,7 @@ const state = reactive<StepsProps>({
       <Col :span="6">
         <Space gap="small" vertical>
           vertical:
-          <Switch v-model="state.vertical" />
+          <Switch v-model:value="state.vertical" />
         </Space>
       </Col>
       <Col :span="6">
@@ -146,7 +146,7 @@ const state = reactive<StepsProps>({
       <Col :span="6">
         <Space gap="small" vertical>
           dotted:
-          <Switch v-model="state.dotted" />
+          <Switch v-model:value="state.dotted" />
         </Space>
       </Col>
     </Row>

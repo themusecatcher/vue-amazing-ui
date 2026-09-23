@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-_警告提示，展现需要关注的信息_
+*警告提示，展现需要关注的信息*
 
 ## 何时使用
 
@@ -316,8 +316,18 @@ import { AlertFilled, AlertOutlined } from '@ant-design/icons-vue'
       type="info"
       show-icon
     />
-    <Alert message="Warning" description="This is a warning notice about copywriting." type="warning" show-icon />
-    <Alert message="Error" description="This is an error message about copywriting." type="error" show-icon />
+    <Alert
+      message="Warning"
+      description="This is a warning notice about copywriting."
+      type="warning"
+      show-icon
+    />
+    <Alert
+      message="Error"
+      description="This is an error message about copywriting."
+      type="error"
+      show-icon
+    />
   </Flex>
 </template>
 ```
@@ -593,30 +603,30 @@ function onClose(e: Event) {
 
 ### Alert
 
-| 参数 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| message | 警告提示内容 | string &#124; slot | undefined |
-| description | 警告提示的辅助性文字介绍 | string &#124; slot | undefined |
-| type | 警告提示的类型 | 'default' &#124; 'success' &#124; 'info' &#124; 'warning' &#124; 'error' | 'default' |
-| bordered | 是否显示边框 | boolean | true |
-| closable | 是否显示关闭按钮 | boolean | false |
-| closeText | 自定义关闭按钮 | string &#124; slot | undefined |
-| icon | 自定义图标，`showIcon` 为 `true` 时有效 | string &#124; slot | undefined |
-| showIcon | 是否显示辅助图标 | boolean | false |
-| actions | 自定义操作项 | slot | undefined |
+参数 | 说明 | 类型 | 默认值
+:-- | :-- | :-- | :--
+message | 警告提示内容 | string | undefined
+description | 警告提示的辅助性文字介绍 | string | undefined
+type | 警告提示的类型 | 'default' &#124; 'success' &#124; 'info' &#124; 'warning' &#124; 'error' | 'default'
+bordered | 是否显示边框 | boolean | true
+closable | 是否显示关闭按钮 | boolean | false
+closeText | 自定义关闭按钮 | string | undefined
+icon | 自定义图标，`showIcon` 为 `true` 时有效 | string | undefined
+showIcon | 是否显示辅助图标 | boolean | false
 
 ## Slots
 
-| 名称        | 说明                     | 类型               |
-| :---------- | :----------------------- | :----------------- |
-| message     | 警告提示内容             | v-slot:default     |
-| description | 警告提示的辅助性文字介绍 | v-slot:description |
-| closeText   | 自定义关闭按钮           | v-slot:closeText   |
-| icon        | 自定义图标               | v-slot:icon        |
-| actions     | 自定义操作项             | v-slot:actions     |
+名称 | 说明 | 类型
+:-- | :-- | :--
+default | 警告提示内容 | v-slot:default
+description | 警告提示的辅助性文字介绍 | v-slot:description
+closeText | 自定义关闭按钮 | v-slot:closeText
+icon | 自定义图标 | v-slot:icon
+actions | 自定义操作项 | v-slot:actions
 
 ## Events
 
-| 名称  | 说明                 | 类型               |
-| :---- | :------------------- | :----------------- |
-| close | 关闭时触发的回调函数 | (e: Event) => void |
+名称 | 说明 | 类型
+:-- | :-- | :--
+close | 关闭时触发的回调函数 | (e: Event) => void
+afterClose | 离场动画结束后触发的回调函数 | () => void

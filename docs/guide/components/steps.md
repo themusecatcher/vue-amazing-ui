@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-_引导用户按照流程完成任务的导航条_
+*引导用户按照流程完成任务的导航条*
 
 ## 何时使用
 
@@ -314,7 +314,7 @@ watchEffect(() => {
 
 ## 可点击
 
-_设置 `v-model:current` 后即可点击_
+*设置 `v-model:current` 后即可点击*
 
 <br/>
 
@@ -388,7 +388,7 @@ function onNext() {
   <Col :span="6">
     <Space gap="small" vertical>
       vertical:
-      <Switch v-model="state.vertical" />
+      <Switch v-model:value="state.vertical" />
     </Space>
   </Col>
   <Col :span="6">
@@ -400,7 +400,7 @@ function onNext() {
   <Col :span="6">
     <Space gap="small" vertical>
       dotted:
-      <Switch v-model="state.dotted" />
+      <Switch v-model:value="state.dotted" />
     </Space>
   </Col>
 </Row>
@@ -477,7 +477,7 @@ const state = reactive<StepsProps>({
     <Col :span="6">
       <Space gap="small" vertical>
         vertical:
-        <Switch v-model="state.vertical" />
+        <Switch v-model:value="state.vertical" />
       </Space>
     </Col>
     <Col :span="6">
@@ -489,7 +489,7 @@ const state = reactive<StepsProps>({
     <Col :span="6">
       <Space gap="small" vertical>
         dotted:
-        <Switch v-model="state.dotted" />
+        <Switch v-model:value="state.dotted" />
       </Space>
     </Col>
   </Row>
@@ -522,25 +522,25 @@ const state = reactive<StepsProps>({
 
 ### Steps
 
-| 参数 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| items | 步骤数组 | [Item](#item-type)[] | [] |
-| width | 步骤条总宽度，单位 `px` | number &#124; string | 'auto' |
-| size | 步骤条大小 | 'default' &#124; 'small' | 'default' |
-| vertical | 是否使用垂直步骤条，当 `vertical: true` `时，labelPlacement` 自动设为 `right` | boolean | false |
-| labelPlacement | 标签放置位置，默认放图标右侧，可选 `bottom` 放图标下方 | 'right' &#124; 'bottom' | 'right' |
-| dotted | 是否使用点状步骤条，当 `dotted: true` 且 `vertical: false` 时，`labelPlacement` 将自动设为 `bottom` | boolean | false |
-| current <Tag color="cyan">v-model</Tag> | 当前选中的步骤，设置 `v-model` 后，`Steps` 变为可点击状态。从 `1` 开始计数 | number | 1 |
+参数 | 说明 | 类型 | 默认值
+:-- | :-- | :-- | :--
+items | 步骤数组 | [StepsItem](#item-type)[] | []
+width | 步骤条总宽度，单位 `px` | number &#124; string | 'auto'
+size | 步骤条大小 | 'default' &#124; 'small' | 'default'
+vertical | 是否使用垂直步骤条，当 `vertical: true` 时，`labelPlacement` 自动设为 `right` | boolean | false
+labelPlacement | 标签放置位置 | 'right' &#124; 'bottom' | 'right'
+dotted | 是否使用点状步骤条，当 `dotted: true` 且 `vertical: false` 时，`labelPlacement` 将自动设为 `bottom` | boolean | false
+current <Tag color="cyan">v-model</Tag> | 当前选中的步骤，设置 `v-model` 后，`Steps` 变为可点击状态。从 `1` 开始计数 | number | 1
 
 ### Item Type
 
-| 名称         | 说明 | 类型   | 默认值    |
-| :----------- | :--- | :----- | :-------- |
-| title?       | 标题 | string | undefined |
-| description? | 描述 | string | undefined |
+名称 | 说明 | 类型 | 默认值
+:-- | :-- | :-- | :--
+title? | 标题 | string | undefined
+description? | 描述 | string | undefined
 
 ## Events
 
-| 名称   | 说明               | 类型                    |
-| :----- | :----------------- | :---------------------- |
-| change | 点击切换步骤时触发 | (index: number) => void |
+名称 | 说明 | 类型
+:-- | :-- | :--
+change | 点击切换步骤时触发 | (index: number) => void

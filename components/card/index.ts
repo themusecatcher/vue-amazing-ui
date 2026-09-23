@@ -1,5 +1,5 @@
 import Card from './Card.vue'
-export type { Props } from './Card.vue'
+export type { Props as CardProps } from './Card.vue'
 import { withInstall } from '../utils/type'
 
 export default withInstall(Card)

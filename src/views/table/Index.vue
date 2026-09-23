@@ -56,8 +56,9 @@ const selectionTypeOptions = [
     value: 'radio'
   }
 ]
-const rowSelection = reactive<TableSelection>({
-  columnTitle: undefined,
+// columnTitle / columnWidth 收窄为 string / number，便于直接使用 v-model
+const rowSelection = reactive<TableSelection & { columnTitle: string; columnWidth: number }>({
+  columnTitle: '',
   columnWidth: 100,
   fixed: true,
   hideSelectAll: false,
@@ -932,9 +933,9 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
       </template>
     </Table>
     <h2 class="mt30 mb10">自定义样式</h2>
-    <h3 class="mb10">使用 rowClassName 和 Column.className 自定义表格样式</h3>
+    <p class="mb10">使用 <code>rowClassName</code> 和 <code>Column.className</code> 自定义表格样式</p>
     <Flex vertical>
-      <Space align="center"> bordered: <Switch v-model="customStyleBordered" /> </Space>
+      <Space align="center"> bordered: <Switch v-model:value="customStyleBordered" /> </Space>
       <Table
         :columns="columnsCustomStyle"
         :data-source="dataSourceCustomStyle"
@@ -943,9 +944,9 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
       />
     </Flex>
     <h2 class="mt30 mb10">三种尺寸</h2>
-    <h3 class="mb10">另两种紧凑型的列表；小型列表适用于对话框内</h3>
+    <p class="mb10">另两种紧凑型的列表；小型列表适用于对话框内</p>
     <Flex vertical>
-      <Space align="center"> bordered: <Switch v-model="sizeBordered" /> </Space>
+      <Space align="center"> bordered: <Switch v-model:value="sizeBordered" /> </Space>
       <Space align="center">
         size: <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
       </Space>
@@ -953,7 +954,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
     </Flex>
     <h2 class="mt30 mb10">列对齐方式</h2>
     <Flex vertical>
-      <Space align="center"> bordered: <Switch v-model="alignBordered" /> </Space>
+      <Space align="center"> bordered: <Switch v-model:value="alignBordered" /> </Space>
       <Space align="center">
         align: <Radio :options="alignOptions" v-model:value="align" button button-style="solid" />
       </Space>
@@ -961,12 +962,12 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
     </Flex>
     <h2 class="mt30 mb10">斑马条纹</h2>
     <Flex vertical>
-      <Space align="center"> bordered: <Switch v-model="stripedBordered" /> </Space>
+      <Space align="center"> bordered: <Switch v-model:value="stripedBordered" /> </Space>
       <Table :columns="columnsStriped" :data-source="dataSourcesStriped" striped :bordered="stripedBordered" />
     </Flex>
     <h2 class="mt30 mb10">页头和页脚</h2>
     <Flex vertical>
-      <Space align="center"> bordered: <Switch v-model="headerFooterbordered" /> </Space>
+      <Space align="center"> bordered: <Switch v-model:value="headerFooterbordered" /> </Space>
       <Table :columns="columns" :data-source="dataSource" :bordered="headerFooterbordered">
         <template #header> Header firstData name: {{ dataSource[0].name }} </template>
         <template #bodyCell="{ column, text }">
@@ -989,7 +990,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
       </Table>
     </Flex>
     <h2 class="mt30 mb10">单元格自动省略</h2>
-    <h3 class="mb10">设置 column.ellipsis 可以让单元格内容根据宽度自动省略</h3>
+    <p class="mb10">设置 <code>column.ellipsis</code> 可以让单元格内容根据宽度自动省略</p>
     <Table :columns="columnsEllipsis" :data-source="dataSource">
       <template #bodyCell="{ column, text }">
         <template v-if="column.dataIndex === 'name'">
@@ -998,10 +999,11 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
       </template>
     </Table>
     <h2 class="mt30 mb10">合并单元格</h2>
-    <h3 class="mb10"
-      >表头只支持列合并，使用 column 里的 colSpan 进行设置；表格支持行/列合并，使用 customCell 将单元格属性 colSpan
-      或rowSpan 设为 0 时，设置的表格不会渲染</h3
-    >
+    <p class="mb10">
+      表头只支持列合并，使用 <code>column</code> 里的 <code>colSpan</code> 进行设置；表格支持行/列合并，使用
+      <code>customCell</code> 将单元格属性 <code>colSpan</code> 或 <code>rowSpan</code> 设为
+      <code>0</code> 时，设置的表格不会渲染
+    </p>
     <Table :columns="columnsMerge" :data-source="dataSourceMerge" bordered>
       <template #bodyCell="{ column, text }">
         <template v-if="column.dataIndex === 'name'">
@@ -1010,7 +1012,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
       </template>
     </Table>
     <h2 class="mt30 mb10">可编辑单元格</h2>
-    <Button style="margin-bottom: 16px" type="primary" :icon="PlusOutlined" @click="handleCellAdd">新增</Button>
+    <Button style="margin-bottom: 16px" type="primary" :icon="h(PlusOutlined)" @click="handleCellAdd">新增</Button>
     <Table :columns="columnsCellEditable" :data-source="dataSourceCellEditable" bordered>
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">
@@ -1080,7 +1082,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
       </template>
     </Table>
     <h2 class="mt30 mb10">可展开</h2>
-    <h3 class="mb10">当表格内容较多不能一次性完全展示时</h3>
+    <p class="mb10">当表格内容较多不能一次性完全展示时</p>
     <Table
       :columns="columnsExpandable"
       :data-source="dataSourceExpandable"
@@ -1106,8 +1108,13 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
       </template>
     </Table>
     <h2 class="mt30 mb10">固定列</h2>
-    <h3 class="mb10">对于列数很多的数据，可以固定前后的列，横向滚动查看其它数据，需要和 scroll.x 配合使用</h3>
-    <h3 class="mb10">建议指定 scroll.x 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过 scroll.x</h3>
+    <p class="mb10"
+      >对于列数很多的数据，可以固定前后的列，横向滚动查看其它数据，需要和 <code>scroll.x</code> 配合使用</p
+    >
+    <p class="mb10"
+      >建议指定 <code>scroll.x</code> 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过
+      <code>scroll.x</code></p
+    >
     <Table :columns="columnsFixColumn" :data-source="dataSourceFixColumn" :scroll="{ x: 1600 }">
       <template #bodyCell="{ column }">
         <template v-if="column.key === 'action'">
@@ -1116,11 +1123,14 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
       </template>
     </Table>
     <h2 class="mt30 mb10">固定表头</h2>
-    <h3 class="mb10">方便一页内展示大量数据</h3>
+    <p class="mb10">方便一页内展示大量数据</p>
     <Table :columns="columnsFixHeader" :data-source="dataSourceFixHeader" :scroll="{ y: 240 }" />
     <h2 class="mt30 mb10">固定头和列</h2>
-    <h3 class="mb10">适合同时展示有大量数据和数据列</h3>
-    <h3 class="mb10">建议指定 scroll.x 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过 scroll.x</h3>
+    <p class="mb10">适合同时展示有大量数据和数据列</p>
+    <p class="mb10"
+      >建议指定 <code>scroll.x</code> 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过
+      <code>scroll.x</code></p
+    >
     <Table
       :columns="columnsFixHeaderAndColumn"
       :data-source="dataSourceFixHeaderAndColumn"
@@ -1133,7 +1143,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
       </template>
     </Table>
     <h2 class="mt30 mb10">随页面滚动的固定表头和滚动条</h2>
-    <h3 class="mb10">对于长表格，可以设置跟随页面固定表头和滚动条，方便查看表头和使用滚动条</h3>
+    <p class="mb10">对于长表格，可以设置跟随页面固定表头和滚动条，方便查看表头和使用滚动条</p>
     <Table
       :columns="columnsFixHeaderAndScrollbar"
       :data-source="dataSourceFixHeaderAndScrollbar"
@@ -1147,9 +1157,9 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
       </template>
     </Table>
     <h2 class="mt30 mb10">表头分组</h2>
-    <h3 class="mb10">columns[n] 可以内嵌 children，以渲染分组表头</h3>
+    <p class="mb10"><code>columns[n]</code> 可以内嵌 <code>children</code>，以渲染分组表头</p>
     <Flex vertical>
-      <Space align="center"> bordered: <Switch v-model="groupBordered" /> </Space>
+      <Space align="center"> bordered: <Switch v-model:value="groupBordered" /> </Space>
       <Table
         :columns="columnsHeaderGroup"
         :data-source="dataSourceHeaderGroup"
@@ -1159,15 +1169,15 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
     </Flex>
     <h2 class="mt30 mb10">表格排序</h2>
     <Flex vertical>
-      <Space align="center"> bordered: <Switch v-model="sortBordered" /> </Space>
+      <Space align="center"> bordered: <Switch v-model:value="sortBordered" /> </Space>
       <Table :columns="columnsSort" :data-source="dataSourceSort" :bordered="sortBordered" @sortChange="onSortChange" />
     </Flex>
     <h2 class="mt30 mb10">可选择</h2>
-    <h3 class="mb10">可通过 rowSelection 属性来自定义选择功能</h3>
+    <p class="mb10">可通过 <code>rowSelection</code> 属性来自定义选择功能</p>
     <Flex vertical>
       <Row :gutter="[24, 12]">
         <Col :span="6">
-          <Space gap="small" vertical> bordered: <Switch v-model="selectionBordered" /> </Space>
+          <Space gap="small" vertical> bordered: <Switch v-model:value="selectionBordered" /> </Space>
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical>
@@ -1180,10 +1190,10 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
           </Flex>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> fixed: <Switch v-model="rowSelection.fixed" /> </Space>
+          <Space gap="small" vertical> fixed: <Switch v-model:value="rowSelection.fixed" /> </Space>
         </Col>
         <Col :span="6">
-          <Space gap="small" vertical> hideSelectAll: <Switch v-model="rowSelection.hideSelectAll" /> </Space>
+          <Space gap="small" vertical> hideSelectAll: <Switch v-model:value="rowSelection.hideSelectAll" /> </Space>
         </Col>
         <Col :span="6">
           <Space gap="small" vertical>

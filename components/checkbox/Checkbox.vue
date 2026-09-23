@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, nextTick } from 'vue'
-import { useSlotsExist, useInject } from 'components/utils'
+import type { VNode } from 'vue'
+import { useSlotsExist, useInject, useWave } from 'components/utils'
 export interface Option {
   label: string // 选项名
   value: string | number // 选项值
   disabled?: boolean // 是否禁用选项
 }
+
 export interface Props {
   options?: Option[] // 复选框选项数据
   disabled?: boolean // 是否禁用
@@ -15,6 +17,12 @@ export interface Props {
   indeterminate?: boolean // 全选时的样式控制
   checked?: boolean // (v-model) 当前是否选中
 }
+// 声明组件插槽类型
+export interface CheckboxSlots {
+  // options 模式下为每个选项提供作用域参数；children 透传模式下无真实数据，参数为 undefined
+  default?: (props: { option?: Option; label?: string; index?: number }) => VNode[]
+}
+
 const props = withDefaults(defineProps<Props>(), {
   options: () => [],
   disabled: false,
@@ -24,9 +32,10 @@ const props = withDefaults(defineProps<Props>(), {
   indeterminate: false,
   checked: false
 })
+defineSlots<CheckboxSlots>()
 const checkboxChecked = ref<boolean>(false) // v-model:checked 是否选中标志
 const optionsCheckedValue = ref<(string | number)[]>([]) // v-model:value 已选中的选项值
-const wave = ref<boolean>(false) // 使用 v-model:checked 时的复选框动画选中效果标志
+const { wave, startWave, endWave } = useWave() // 使用 v-model:checked 时的复选框动画选中效果标志
 const waveOptionsValue = ref<(string | number)[]>([]) // 使用 v-model:value 时的复选框动画选中效果标志
 const { colorPalettes } = useInject('Checkbox') // 主题色注入
 const emits = defineEmits(['update:value', 'update:checked', 'change'])
@@ -75,19 +84,6 @@ function onClick(value: string | number): void {
     emits('update:value', newVal)
     emits('change', newVal)
   }
-}
-function startWave(): void {
-  if (wave.value) {
-    wave.value = false
-    nextTick(() => {
-      wave.value = true
-    })
-  } else {
-    wave.value = true
-  }
-}
-function onWaveEnd(): void {
-  wave.value = false
 }
 function startOptionWave(value: string | number): void {
   if (waveOptionsValue.value.includes(value)) {
@@ -146,7 +142,7 @@ function onWaveOptionEnd(value: string | number): void {
         'checkbox-indeterminate': indeterminate
       }"
     >
-      <span v-if="!disabled" class="checkbox-wave" :class="{ 'wave-active': wave }" @animationend="onWaveEnd"></span>
+      <span v-if="!disabled" class="checkbox-wave" :class="{ 'wave-active': wave }" @animationend="endWave"></span>
     </span>
     <span v-if="slotsExist.default" class="checkbox-label">
       <slot></slot>
@@ -261,7 +257,7 @@ function onWaveOptionEnd(value: string | number): void {
     }
   }
   .checkbox-label {
-    word-break: break-all;
+    word-break: break-word;
     padding: 0 8px;
   }
 }

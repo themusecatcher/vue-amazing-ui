@@ -357,10 +357,10 @@ watchEffect(() => {
 
 <Row :gutter="[24, 12]">
   <Col :span="6">
-    <Space vertical> allowClear:<Switch v-model="state.allowClear" /> </Space>
+    <Space vertical> allowClear:<Switch v-model:value="state.allowClear" /> </Space>
   </Col>
   <Col :span="6">
-    <Space vertical> allowHalf:<Switch v-model="state.allowHalf" /> </Space>
+    <Space vertical> allowHalf:<Switch v-model:value="state.allowHalf" /> </Space>
   </Col>
   <Col :span="6">
     <Flex gap="small" vertical> count:<Slider v-model:value="state.count" :min="3" :max="10" /> </Flex>
@@ -375,10 +375,10 @@ watchEffect(() => {
     <Flex gap="small" vertical> gap:<Slider v-model:value="state.gap" :min="0" :max="100" /> </Flex>
   </Col>
   <Col :span="6">
-    <Space vertical> disabled:<Switch v-model="state.disabled" /> </Space>
+    <Space vertical> disabled:<Switch v-model:value="state.disabled" /> </Space>
   </Col>
   <Col :span="6">
-    <Flex gap="small" vertical> effect：<Select :options="characterOptions" v-model="state.character" /> </Flex>
+    <Flex gap="small" vertical> effect：<Select :options="characterOptions" v-model:value="state.character" /> </Flex>
   </Col>
   <Col :span="6" v-if="state.character === 'custom-character'">
     <Flex gap="small" vertical>
@@ -437,10 +437,10 @@ const state = reactive({
 <template>
   <Row :gutter="[24, 12]">
     <Col :span="6">
-      <Space vertical> allowClear:<Switch v-model="state.allowClear" /> </Space>
+      <Space vertical> allowClear:<Switch v-model:value="state.allowClear" /> </Space>
     </Col>
     <Col :span="6">
-      <Space vertical> allowHalf:<Switch v-model="state.allowHalf" /> </Space>
+      <Space vertical> allowHalf:<Switch v-model:value="state.allowHalf" /> </Space>
     </Col>
     <Col :span="6">
       <Flex gap="small" vertical> count:<Slider v-model:value="state.count" :min="3" :max="10" /> </Flex>
@@ -455,10 +455,10 @@ const state = reactive({
       <Flex gap="small" vertical> gap:<Slider v-model:value="state.gap" :min="0" :max="100" /> </Flex>
     </Col>
     <Col :span="6">
-      <Space vertical> disabled:<Switch v-model="state.disabled" /> </Space>
+      <Space vertical> disabled:<Switch v-model:value="state.disabled" /> </Space>
     </Col>
     <Col :span="6">
-      <Flex gap="small" vertical> effect：<Select :options="characterOptions" v-model="state.character" /> </Flex>
+      <Flex gap="small" vertical> effect：<Select :options="characterOptions" v-model:value="state.character" /> </Flex>
     </Col>
     <Col :span="6" v-if="state.character === 'custom-character'">
       <Flex gap="small" vertical>
@@ -487,13 +487,13 @@ const state = reactive({
 allowClear | 是否允许再次点击后清除 | boolean | true
 allowHalf | 是否允许半选 | boolean | false
 count | `star` 总数 | number | 5
-character | 字符或图标，预置四种图标 | 'star-outlined' &#124; 'star-filled' &#124; 'heart-outlined' &#124; 'heart-filled' &#124; string &#124; slot | 'star-filled'
+character | 字符或图标，预置四种图标 | 'star-outlined' &#124; 'star-filled' &#124; 'heart-outlined' &#124; 'heart-filled' &#124; string | 'star-filled'
 size | 字符大小，单位 `px` | number | 20
 color | 字符选中颜色 | string | '#fadb14'
 gap | 字符间距，单位 `px` | number | 8
 disabled | 只读，无法进行交互 | boolean | false
 tooltips | 自定义每项的提示信息 | string[] | []
-tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](https://themusecatcher.github.io/vue-amazing-ui/guide/components/tooltip.html#tooltip) | object | {}
+tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip) | [TooltipProps](./tooltip.md#tooltip) | {}
 value <Tag color="cyan">v-model</Tag> | 当前数，受控值 `0,1,2,3...` | number | 0
 
 ## Slots

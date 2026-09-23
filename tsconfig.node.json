@@ -6,7 +6,10 @@
     "cypress.config.*",
     "nightwatch.conf.*",
     "playwright.config.*",
-    "eslint.config.*"
+    "eslint.config.*",
+    "components/utils/vendor-styles.ts",
+    "components/utils/style-deps.ts",
+    "build/**/*.ts"
   ],
   "compilerOptions": {
     "composite": true,

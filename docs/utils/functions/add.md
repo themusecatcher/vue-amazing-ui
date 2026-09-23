@@ -43,14 +43,35 @@ export function add(num1: number, num2: number): number {
 
 :::
 
+<script setup lang="ts">
+import { add } from 'vue-amazing-ui'
+const rawResult = 0.1 + 0.2
+const addResult = add(0.1, 0.2)
+</script>
+
 ## 基本使用
+
+_消除 `js` 浮点数计算精度问题_
+
+<br/>
+
+<Space vertical align="stretch" :gap="8">
+  <Alert type="warning" :message="`js 直接计算 0.1 + 0.2 = ${rawResult}`" />
+  <Alert type="success" :message="`使用 add 计算 add(0.1, 0.2) = ${addResult}`" />
+</Space>
 
 ```vue
 <script setup lang="ts">
 import { add } from 'vue-amazing-ui'
-console.log(0.1 + 0.2) // js直接计算结果: 0.30000000000000004
-add(0.1, 0.2) // 0.3
+const rawResult = 0.1 + 0.2
+const addResult = add(0.1, 0.2)
 </script>
+<template>
+  <Space vertical align="stretch" :gap="8">
+    <Alert type="warning" :message="`js 直接计算 0.1 + 0.2 = ${rawResult}`" />
+    <Alert type="success" :message="`使用 add 计算 add(0.1, 0.2) = ${addResult}`" />
+  </Space>
+</template>
 ```
 
 ## Params
@@ -59,3 +80,13 @@ add(0.1, 0.2) // 0.3
 | ---- | ----- | ------ | --------- |
 | num1 | 加数1 | number | undefined |
 | num2 | 加数2 | number | undefined |
+
+## Return
+
+| 类型 | 说明 |
+| --- | --- |
+| number | 两个数字的和 |
+
+## 注意事项
+
+- 入参需为有效数字，传入 `NaN` 或非 `number` 类型时会抛出异常

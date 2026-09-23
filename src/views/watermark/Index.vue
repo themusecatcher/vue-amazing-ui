@@ -1,12 +1,20 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
+import type { WatermarkProps } from 'vue-amazing-ui'
 const realTime = ref<string>(dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS'))
+let rafId = 0
 const updateTime = () => {
   realTime.value = dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS')
-  requestAnimationFrame(updateTime)
+  rafId = requestAnimationFrame(updateTime)
 }
-requestAnimationFrame(updateTime)
+// SSR（Node）环境无 requestAnimationFrame：挂载后启动，卸载时取消
+onMounted(() => {
+  rafId = requestAnimationFrame(updateTime)
+})
+onBeforeUnmount(() => {
+  cancelAnimationFrame(rafId)
+})
 const show = ref(false)
 const fixed = ref(true)
 const imageModel = reactive({
@@ -49,7 +57,7 @@ const layoutOptions = [
       <div style="height: 360px" />
     </Watermark>
     <h2 class="mt30 mb10">多行水印</h2>
-    <h3 class="mb10">通过 content 设置 字符串数组 指定多行文字水印内容。</h3>
+    <p class="mb10">通过 <code>content</code> 设置字符串数组，指定多行文字水印内容</p>
     <Watermark :content="['Vue Amazing UI', 'Hello World']">
       <div style="height: 400px" />
     </Watermark>
@@ -58,10 +66,10 @@ const layoutOptions = [
       <div style="height: 360px" />
     </Watermark>
     <h2 class="mt30 mb10">图片水印</h2>
-    <h3 class="mb10"
-      >通过 image 指定图片地址；为保证图片高清且不被拉伸，请设置 width 和 height；另支持设置图片布局方式 layout
-      和旋转角度 rotate 等</h3
-    >
+    <p class="mb10">
+      通过 <code>image</code> 指定图片地址；为保证图片高清且不被拉伸，请设置 <code>width</code> 和
+      <code>height</code>；另支持设置图片布局方式 <code>layout</code> 和旋转角度 <code>rotate</code> 等
+    </p>
     <Flex>
       <Flex vertical :gap="8">
         Layout: <Radio :options="layoutOptions" v-model:value="imageModel.layout" button />
@@ -73,7 +81,7 @@ const layoutOptions = [
     <Watermark
       :height="48"
       :width="48"
-      :layout="imageModel.layout"
+      :layout="imageModel.layout as WatermarkProps['layout']"
       :rotate="imageModel.rotate"
       image="https://avatars.githubusercontent.com/u/46012811?v=4"
     >
@@ -81,12 +89,21 @@ const layoutOptions = [
     </Watermark>
     <h2 class="mt30 mb10">全屏幕水印</h2>
     <Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark>
-    <Space align="center"> Fullscreen: <Switch v-model="show" /> Fixed: <Switch v-model="fixed" /> </Space>
+    <Space align="center"> Fullscreen: <Switch v-model:value="show" /> Fixed: <Switch v-model:value="fixed" /> </Space>
+    <h2 class="mt30 mb10">与浮层叠加</h2>
+    <p class="mb10">水印是装饰层（默认 <code>z-index: 90</code>），始终位于 <code>Tooltip</code> 等浮层之下</p>
+    <Watermark content="Vue Amazing UI">
+      <div style="height: 200px; padding: 24px">
+        <Tooltip tooltip="Vue Amazing UI">
+          <Button>Hover me</Button>
+        </Tooltip>
+      </div>
+    </Watermark>
     <h2 class="mt30 mb10">水印配置器</h2>
-    <h3 class="mb10">通过自定义参数配置预览水印效果</h3>
+    <p class="mb10">通过自定义参数配置预览水印效果</p>
     <Row :gutter="24">
       <Col :span="18">
-        <Watermark v-bind="model">
+        <Watermark v-bind="model as WatermarkProps">
           <p class="paragraph-text">
             《麦田里的守望者》（英语：The Catcher in the
             Rye），为美国作家J.D.塞林格于1951年发表的长篇小说。这部有争议的作品原本是面向成年读者的，但迅速因其青春期焦虑和隔绝的主题而在青少年读者中流行。
