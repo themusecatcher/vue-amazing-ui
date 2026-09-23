@@ -2,7 +2,7 @@
 import { ref, reactive, computed, watch } from 'vue'
 import { TransitionPresets } from '@vueuse/core'
 import type { CubicBezierPoints } from '@vueuse/core'
-import { Carousel, type CarouselProps, type CarouselImage, type CarouselEasingPreset } from 'vue-amazing-ui'
+import type { Carousel, CarouselEasingPreset, CarouselImage, CarouselProps } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
     name: 'image-1',

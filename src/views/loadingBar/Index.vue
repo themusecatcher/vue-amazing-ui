@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { LoadingBar } from 'vue-amazing-ui'
+import type { LoadingBar } from 'vue-amazing-ui'
 const loadingBarRef = ref<InstanceType<typeof LoadingBar> | null>(null)
 const disabled = ref(true)
 const localCardRef = ref<HTMLDivElement>()

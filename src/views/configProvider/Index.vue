@@ -2,11 +2,12 @@
 import { ref, computed, h } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import { createDiscreteApi, LoadingBar } from 'vue-amazing-ui'
+import { createDiscreteApi } from 'vue-amazing-ui'
 import type {
+  CarouselImage,
   ConfigProviderProps,
   ConfigProviderTheme,
-  CarouselImage,
+  LoadingBar,
   MessageApi,
   ModalApi,
   NotificationApi,
