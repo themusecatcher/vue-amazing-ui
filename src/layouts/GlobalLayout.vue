@@ -12,7 +12,7 @@ onMounted(() => {
   themeDark.value = html.classList.contains('dark')
   if (!themeDark.value) {
     // 默认开启暗黑模式
-    toggleDark()
+    // toggleDark()
   }
 })
 useMutationObserver(
