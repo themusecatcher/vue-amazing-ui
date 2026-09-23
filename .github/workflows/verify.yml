@@ -4,7 +4,7 @@
 #   check  —— 纯静态与单测，不依赖构建产物；
 #   verify —— 产物级链路（构建 → 依赖表 ↔ 产物闭包 → 按需引入端到端 → 产物守卫 → 文档站构建），必须先构建。
 #
-# 设计取舍（与 naive-ui / ant-design-vue 的对照调研结论一致）：
+# 设计取舍：
 #   1. 触发含 pull_request —— 把「消费方静默缺样式」这类问题拦在合并前；原先只有 scripts/publish.sh 会拦，
 #      等于要等到发版才暴露；
 #   2. 不在 CI 里 npm publish —— 两家同类库的发布均为本地脚本 + prepublishOnly 守卫，本仓库沿用 publish.sh 链路；

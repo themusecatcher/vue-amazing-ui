@@ -8,7 +8,7 @@ import { componentsMap, styleSources, componentDependencies, stylelessComponents
 import { vendorStylesByComponent } from 'components/utils/vendor-styles'
 
 /**
- * 每组件样式入口（D 方案）生成器的守护
+ * 每组件样式入口生成器的守护
  *
  * 背景：产物 JS 不 import 任何 CSS，组件样式由消费方 resolver 的 sideEffects 决定。生成器把
  * 「组件 → 样式依赖」固化成 `es|lib/<dir>/style/index.{js,cjs}` 入口后，resolver 只需返回单条路径，

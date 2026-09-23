@@ -78,7 +78,7 @@ export default defineConfig({
 `
 
 // 演示组件刻意保持「每组 canary 只有一个来源」：Tooltip 是 Popup 样式的唯一引入者，
-// 故 `.va-popup-arrow` 命中即证明「入口替消费方注入了依赖组件样式」（D 方案的核心价值）
+// 故 `.va-popup-arrow` 命中即证明「入口替消费方注入了依赖组件样式」
 const CONSUMER_APP = `<template>
   <div class="page">
     <Tooltip tooltip="按需引入的箭头">

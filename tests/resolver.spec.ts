@@ -5,7 +5,7 @@ import { VueAmazingUIResolver } from 'components/utils/resolver'
 import type { VueAmazingUIResolverOptions } from 'components/utils/resolver'
 
 /**
- * 按需引入 resolver 的回归防护（D 方案：每组件一个样式入口）
+ * 按需引入 resolver 的回归防护（每组件一个样式入口）
  *
  * 背景：resolver 现在只回答一个问题「该组件的样式入口在哪」——返回**单条**
  * `es|lib/<dir>/style/index.{js,cjs}`。入口内部的 CSS 顺序（global → 自身 → 依赖 → vendor）由构建期

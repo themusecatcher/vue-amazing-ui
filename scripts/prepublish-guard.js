@@ -75,7 +75,7 @@ if (missing.length > 0) {
   )
 }
 
-// 以下为「每组件样式入口」的产物契约（D 方案）
+// 以下为「每组件样式入口」的产物契约
 const { componentsMap, styleSources, stylelessComponents } = readStyleDeps()
 const styleless = new Set(stylelessComponents)
 const outDirs = [
