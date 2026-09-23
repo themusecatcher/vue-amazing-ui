@@ -2,7 +2,7 @@
 import { computed, createTextVNode, isVNode, useSlots, Comment, Fragment, Text } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import { useMediaQuery, useMounted, useSlotsExist } from 'components/utils'
-import DescriptionsItem from '../descriptions-item'
+import DescriptionsItem from './descriptions-item'
 export interface Responsive {
   xs?: number // <576px 响应式栅格
   sm?: number // ≥576px 响应式栅格

@@ -195,9 +195,20 @@ const sizeOptions = [
   }
 ]
 const size = ref('large')
-const selectedValue = ref(['2', '21', '212'])
+// 各分节独立绑定：避免操作一个用例时其余用例同步联动，便于单独核对每个特性
+const basicValue = ref(['2', '21', '212'])
+const disabledValue = ref(['2', '21', '212'])
+const disabledLevelValue = ref(['2', '21', '212'])
+const disabledOptionValue = ref(['2', '21', '212'])
+const fieldNameValue = ref(['2', '21', '212'])
+const customStyleValue = ref(['2', '21', '212'])
+const sizeValue = ref(['2', '21', '212'])
+const changeOnSelectValue = ref(['2', '21', '212'])
+const clearableValue = ref(['2', '21', '212'])
+const searchableValue = ref(['2', '21', '212'])
+const filterValue = ref(['2', '21', '212'])
 watchEffect(() => {
-  console.log('selectedValue', selectedValue.value)
+  console.log('basicValue', basicValue.value)
 })
 function onChange(values: (number | string)[], labels: string[]) {
   console.log('values', values)
@@ -213,7 +224,7 @@ const toValue = ref(['2', '21', '212'])
 
 ## 基本使用
 
-<Cascader :options="options" v-model="selectedValue" />
+<Cascader :options="options" v-model:value="basicValue" />
 
 ::: details Show Code
 
@@ -282,7 +293,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Cascader :options="options" v-model="selectedValue" />
+  <Cascader :options="options" v-model:value="selectedValue" />
 </template>
 ```
 
@@ -290,7 +301,7 @@ watchEffect(() => {
 
 ## 禁用
 
-<Cascader :options="options" v-model="selectedValue" disabled />
+<Cascader :options="options" v-model:value="disabledValue" disabled />
 
 ::: details Show Code
 
@@ -356,7 +367,7 @@ const options = ref([
 const selectedValue = ref(['2', '21', '212'])
 </script>
 <template>
-  <Cascader :options="options" v-model="selectedValue" disabled />
+  <Cascader :options="options" v-model:value="selectedValue" disabled />
 </template>
 ```
 
@@ -370,7 +381,7 @@ const selectedValue = ref(['2', '21', '212'])
 
 <br/>
 
-<Cascader :options="options" v-model="selectedValue" :disabled="[true]" @change="onChange" />
+<Cascader :options="options" v-model:value="disabledLevelValue" :disabled="[true]" @change="onChange" />
 
 ::: details Show Code
 
@@ -443,7 +454,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 }
 </script>
 <template>
-  <Cascader :options="options" v-model="selectedValue" :disabled="[true]" @change="onChange" />
+  <Cascader :options="options" v-model:value="selectedValue" :disabled="[true]" @change="onChange" />
 </template>
 ```
 
@@ -455,7 +466,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 
 <br/>
 
-<Cascader :options="optionsDisabled" v-model="selectedValue" @change="onChange" />
+<Cascader :options="optionsDisabled" v-model:value="disabledOptionValue" @change="onChange" />
 
 ::: details Show Code
 
@@ -529,7 +540,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 }
 </script>
 <template>
-  <Cascader :options="optionsDisabled" v-model="selectedValue" @change="onChange" />
+  <Cascader :options="optionsDisabled" v-model:value="selectedValue" @change="onChange" />
 </template>
 ```
 
@@ -537,7 +548,12 @@ function onChange(values: (number | string)[], labels: string[]) {
 
 ## 自定义字段名
 
-<Cascader :options="optionsCustom" v-model="selectedValue" label="name" value="code" children="items" @change="onChange" />
+<Cascader
+  :options="optionsCustom"
+  v-model:value="fieldNameValue"
+  :field-names="{ label: 'name', value: 'code', children: 'items' }"
+  @change="onChange"
+/>
 
 ::: details Show Code
 
@@ -612,10 +628,8 @@ function onChange(values: (number | string)[], labels: string[]) {
 <template>
   <Cascader
     :options="optionsCustom"
-    v-model="selectedValue"
-    label="name"
-    value="code"
-    children="items"
+    v-model:value="selectedValue"
+    :field-names="{ label: 'name', value: 'code', children: 'items' }"
     @change="onChange"
   />
 </template>
@@ -625,7 +639,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 
 ## 自定义样式
 
-<Cascader :options="options" v-model="selectedValue" :width="100" :height="36" :gap="12" @change="onChange" />
+<Cascader :options="options" v-model:value="customStyleValue" :width="100" :height="36" :gap="12" @change="onChange" />
 
 ::: details Show Code
 
@@ -698,7 +712,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 }
 </script>
 <template>
-  <Cascader :options="options" v-model="selectedValue" :width="100" :height="36" :gap="12" @change="onChange" />
+  <Cascader :options="options" v-model:value="selectedValue" :width="100" :height="36" :gap="12" @change="onChange" />
 </template>
 ```
 
@@ -708,8 +722,8 @@ function onChange(values: (number | string)[], labels: string[]) {
 
 <Space vertical>
   <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
-  <Cascader :options="options" v-model="selectedValue" :size="size" @change="onChange" />
-  <Cascader :options="options" v-model="selectedValue" :size="size" allow-clear search @change="onChange" />
+  <Cascader :options="options" v-model:value="sizeValue" :size="size" @change="onChange" />
+  <Cascader :options="options" v-model:value="sizeValue" :size="size" allow-clear search @change="onChange" />
 </Space>
 
 ::: details Show Code
@@ -800,8 +814,8 @@ function onChange(values: (number | string)[], labels: string[]) {
 <template>
   <Space vertical>
     <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
-    <Cascader :options="options" v-model="selectedValue" :size="size" @change="onChange" />
-    <Cascader :options="options" v-model="selectedValue" :size="size" allow-clear search @change="onChange" />
+    <Cascader :options="options" v-model:value="selectedValue" :size="size" @change="onChange" />
+    <Cascader :options="options" v-model:value="selectedValue" :size="size" allow-clear search @change="onChange" />
   </Space>
 </template>
 ```
@@ -810,7 +824,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 
 ## 选择即改变
 
-<Cascader :options="options" v-model="selectedValue" change-on-select @change="onChange" />
+<Cascader :options="options" v-model:value="changeOnSelectValue" change-on-select @change="onChange" />
 
 ::: details Show Code
 
@@ -883,7 +897,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 }
 </script>
 <template>
-  <Cascader :options="options" v-model="selectedValue" change-on-select @change="onChange" />
+  <Cascader :options="options" v-model:value="selectedValue" change-on-select @change="onChange" />
 </template>
 ```
 
@@ -891,7 +905,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 
 ## 支持清除
 
-<Cascader :options="options" v-model="selectedValue" allow-clear @change="onChange" />
+<Cascader :options="options" v-model:value="clearableValue" allow-clear @change="onChange" />
 
 ::: details Show Code
 
@@ -964,7 +978,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 }
 </script>
 <template>
-  <Cascader :options="options" v-model="selectedValue" allow-clear @change="onChange" />
+  <Cascader :options="options" v-model:value="selectedValue" allow-clear @change="onChange" />
 </template>
 ```
 
@@ -972,7 +986,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 
 ## 支持搜索
 
-<Cascader :options="options" v-model="selectedValue" search @change="onChange" />
+<Cascader :options="options" v-model:value="searchableValue" search @change="onChange" />
 
 ::: details Show Code
 
@@ -1045,7 +1059,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 }
 </script>
 <template>
-  <Cascader :options="options" v-model="selectedValue" search @change="onChange" />
+  <Cascader :options="options" v-model:value="selectedValue" search @change="onChange" />
 </template>
 ```
 
@@ -1053,7 +1067,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 
 ## 自定义搜索过滤函数
 
-<Cascader :options="options" v-model="selectedValue" allow-clear search :filter="filter" @change="onChange" />
+<Cascader :options="options" v-model:value="filterValue" allow-clear search :filter="filter" @change="onChange" />
 
 ::: details Show Code
 
@@ -1130,7 +1144,7 @@ function filter(inputValue: string, option: any) {
 }
 </script>
 <template>
-  <Cascader :options="options" v-model="selectedValue" allow-clear search :filter="filter" @change="onChange" />
+  <Cascader :options="options" v-model:value="selectedValue" allow-clear search :filter="filter" @change="onChange" />
 </template>
 ```
 
@@ -1143,8 +1157,8 @@ _不传 `to` 时面板优先挂到最近的承载层内容容器（`Modal` / `Dr
 <br/>
 
 <Space>
-  <Cascader :options="options" v-model="toValue" :width="100" @change="onChange" />
-  <Cascader :options="options" v-model="toValue" :width="100" :to="false" @change="onChange" />
+  <Cascader :options="options" v-model:value="toValue" :width="100" @change="onChange" />
+  <Cascader :options="options" v-model:value="toValue" :width="100" :to="false" @change="onChange" />
 </Space>
 
 :::: details Show Code
@@ -1216,8 +1230,8 @@ function onChange(values: (number | string)[], labels: string[]) {
 </script>
 <template>
   <Space>
-    <Cascader :options="options" v-model="toValue" :width="100" @change="onChange" />
-    <Cascader :options="options" v-model="toValue" :width="100" :to="false" @change="onChange" />
+    <Cascader :options="options" v-model:value="toValue" :width="100" @change="onChange" />
+    <Cascader :options="options" v-model:value="toValue" :width="100" :to="false" @change="onChange" />
   </Space>
 </template>
 ```
@@ -1231,9 +1245,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | options | 可选项数据源 | [CascaderOption](#option-type)[] | [] |
-| label | 字典项的文本字段名 | string | 'label' |
-| value | 字典项的值字段名 | string | 'value' |
-| children | 字典项的后代字段名 | string | 'children' |
+| fieldNames | 选项的文本 / 值 / 后代字段名配置 | `{ label?: string, value?: string, children?: string }` | `{ label: 'label', value: 'value', children: 'children' }` |
 | placeholder | 三级选择器各自占位文本 | string &#124; string[] | '请选择' |
 | disabled | 是否禁用，可全部禁用或单独禁用某一级选择器 | boolean &#124; boolean[] | false |
 | width | 三级选择器各自宽度，单位 `px` | 'auto' &#124; number &#124; number[] | 'auto' |
@@ -1246,10 +1258,10 @@ function onChange(values: (number | string)[], labels: string[]) {
 | placement | 下拉面板弹出位置 | 'bottom' &#124; 'top' | 'bottom' |
 | flip | 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true |
 | to | 下拉面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
-| filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | ((inputValue: string, option: CascaderOption) => boolean) &#124; true | true |
+| filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段（`fieldNames.label`，默认 `label`）是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | ((inputValue: string, option: CascaderOption) => boolean) &#124; true | true |
 | maxDisplay | 下拉面板最多能展示的项数，超过后滚动显示 | number | 6 |
 | scrollbarProps | 下拉面板滚动条 `scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar) | [ScrollbarProps](./scrollbar.md#scrollbar) | {} |
-| modelValue <Tag color="cyan">v-model</Tag> | 级联选中项 | number[] &#124; string[] | [] |
+| value <Tag color="cyan">v-model</Tag> | 级联选中项 | number[] &#124; string[] | [] |
 
 ### Option Type
 

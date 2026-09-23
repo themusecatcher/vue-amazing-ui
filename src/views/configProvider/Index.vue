@@ -301,8 +301,8 @@ const layerSelectedValue = ref<number>(1)
             <Button type="primary">Show Confirm</Button>
           </Popconfirm>
           <Radio v-model:checked="radioChecked">Radio</Radio>
-          <Select :options="selectOptions" v-model="selectedValue" />
-          <Switch v-model="switchChecked" />
+          <Select :options="selectOptions" v-model:value="selectedValue" />
+          <Switch v-model:value="switchChecked" />
           <Textarea :width="360" v-model:value="textareaValue" placeholder="custom theme textarea" />
           <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
         </Space>
@@ -431,7 +431,7 @@ const layerSelectedValue = ref<number>(1)
           <Tooltip tooltip="Vue Amazing UI">
             <Button>Hover me</Button>
           </Tooltip>
-          <Select :options="selectOptions" v-model="layerSelectedValue" :width="200" />
+          <Select :options="selectOptions" v-model:value="layerSelectedValue" :width="200" />
         </Space>
       </Modal>
     </ConfigProvider>

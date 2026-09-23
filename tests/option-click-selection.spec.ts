@@ -10,7 +10,7 @@ import Select from 'components/select/Select.vue'
  * 背景（真实浏览器 + CDP 实测的事件序列：`mousedown@选项 → blur@input → mouseup@面板后方元素 → click@body`）：
  * 面板在 input 失焦时会立即关闭，而关闭态的离开动画期间面板整体 `pointer-events: none`
  * （见 `.auto-complete-panel.slide-leave-active` / `.select-panel-container.slide-leave-active`），
- * 于是 mouseup / click 落不到选项上 —— `select` / `update:value` / `update:modelValue` 全部不触发，
+ * 于是 mouseup / click 落不到选项上 —— `select` / `update:value`（AutoComplete 与 Select 的同名事件）全部不触发，
  * 表现为「点击选项无任何反应」。修法是选项按下鼠标时阻止默认行为，使 input 不失焦。
  *
  * 另：打开面板时，仅当「当前输入值能查到对应选项」才把悬浮态复位到该项；输入框无值或值查不到对应项时
@@ -145,7 +145,7 @@ describe('Select 选项点击选中', () => {
     wrapper = mount(Select, {
       attachTo: document.body,
       global: { stubs: { transition: false } },
-      props: { modelValue: undefined, options: SELECT_OPTIONS }
+      props: { value: undefined, options: SELECT_OPTIONS }
     })
     await flush()
     // 点击触发器展开面板
@@ -159,7 +159,7 @@ describe('Select 选项点击选中', () => {
 
     options[2].dispatchEvent(new MouseEvent('click', { bubbles: true }))
     await flush()
-    expect(wrapper.emitted('update:modelValue')?.at(-1)?.[0]).toBe('newyork')
+    expect(wrapper.emitted('update:value')?.at(-1)?.[0]).toBe('newyork')
     expect((document.querySelector('.select-panel-container') as HTMLElement).style.display).toBe('none')
   })
 })
@@ -169,7 +169,7 @@ describe('Select 打开面板的默认悬浮态', () => {
     wrapper = mount(Select, {
       attachTo: document.body,
       global: { stubs: { transition: false } },
-      props: { modelValue: undefined, options: SELECT_OPTIONS }
+      props: { value: undefined, options: SELECT_OPTIONS }
     })
     await flush()
     await wrapper.find('.select-wrap').trigger('click')
@@ -193,7 +193,7 @@ describe('Select 打开面板的默认悬浮态', () => {
       attachTo: document.body,
       global: { stubs: { transition: false } },
       props: {
-        modelValue: undefined,
+        value: undefined,
         options: [
           { label: '北京市', value: 'beijing', disabled: true },
           { label: '上海市', value: 'shanghai' }
@@ -210,7 +210,7 @@ describe('Select 打开面板的默认悬浮态', () => {
     wrapper = mount(Select, {
       attachTo: document.body,
       global: { stubs: { transition: false } },
-      props: { modelValue: 'newyork', options: SELECT_OPTIONS }
+      props: { value: 'newyork', options: SELECT_OPTIONS }
     })
     await flush()
     await wrapper.find('.select-wrap').trigger('click')

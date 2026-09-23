@@ -385,7 +385,7 @@ function onFinished() {
 ## 自动播放
 
 <Space vertical>
-  <Space align="center">autoplay：<Switch v-model="autoPlay" /></Space>
+  <Space align="center">autoplay：<Switch v-model:value="autoPlay" /></Space>
   <Statistic title="一个小目标" tabular-nums>
     <NumberAnimation :autoplay="autoPlay" :from="0" :to="value2" />
   </Statistic>
@@ -401,7 +401,7 @@ const value = ref(100000000)
 </script>
 <template>
   <Space vertical>
-    <Space align="center">autoplay：<Switch v-model="autoPlay" /></Space>
+    <Space align="center">autoplay：<Switch v-model:value="autoPlay" /></Space>
     <Statistic title="一个小目标" tabular-nums>
       <NumberAnimation :autoplay="autoPlay" :from="0" :to="value" />
     </Statistic>
@@ -416,7 +416,7 @@ const value = ref(100000000)
 <Space vertical>
   <Space align="center">
     <Radio v-model:value="easingCategory" :options="easingCategoryOptions" button button-style="solid" />
-    <Select v-if="easingCategory === 'preset'" v-model="easingType" :options="easingOptions" width="200" search />
+    <Select v-if="easingCategory === 'preset'" v-model:value="easingType" :options="easingOptions" width="200" search />
     <Button type="primary" @click="easingRef?.play()">播放</Button>
   </Space>
   <Statistic :title="easingLabel" tabular-nums>
@@ -477,7 +477,7 @@ const easingKey = computed(() => `${easingCategory.value}-${easingType.value}`)
   <Space vertical>
     <Space align="center">
       <Radio v-model:value="easingCategory" :options="easingCategoryOptions" button button-style="solid" />
-      <Select v-if="easingCategory === 'preset'" v-model="easingType" :options="easingOptions" width="200" search />
+      <Select v-if="easingCategory === 'preset'" v-model:value="easingType" :options="easingOptions" width="200" search />
       <Button type="primary" @click="easingRef?.play()">播放</Button>
     </Space>
     <Statistic :title="easingLabel" tabular-nums>

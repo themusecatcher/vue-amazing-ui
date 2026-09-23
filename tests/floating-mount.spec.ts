@@ -73,11 +73,7 @@ describe('浮层挂载点（同域模型）', () => {
             { baseZIndex: 5000 },
             {
               default: () =>
-                h(
-                  Modal,
-                  { open: true, title: '层级' },
-                  { default: () => h(Select, { options: OPTIONS, modelValue: 1 }) }
-                )
+                h(Modal, { open: true, title: '层级' }, { default: () => h(Select, { options: OPTIONS, value: 1 }) })
             }
           )
       }),
@@ -102,7 +98,7 @@ describe('浮层挂载点（同域模型）', () => {
             { baseZIndex: 5000 },
             {
               default: () =>
-                h(Drawer, { open: true, to: false }, { default: () => h(Select, { options: OPTIONS, modelValue: 1 }) })
+                h(Drawer, { open: true, to: false }, { default: () => h(Select, { options: OPTIONS, value: 1 }) })
             }
           )
       }),
@@ -126,11 +122,7 @@ describe('浮层挂载点（同域模型）', () => {
             { baseZIndex: 5000 },
             {
               default: () =>
-                h(
-                  Dialog,
-                  { open: true, title: '层级' },
-                  { default: () => h(Select, { options: OPTIONS, modelValue: 1 }) }
-                )
+                h(Dialog, { open: true, title: '层级' }, { default: () => h(Select, { options: OPTIONS, value: 1 }) })
             }
           )
       }),
@@ -162,7 +154,7 @@ describe('浮层挂载点（同域模型）', () => {
                       h(
                         Modal,
                         { open: true, title: '内层' },
-                        { default: () => h(Select, { options: OPTIONS, modelValue: 1 }) }
+                        { default: () => h(Select, { options: OPTIONS, value: 1 }) }
                       )
                   }
                 )
@@ -197,7 +189,7 @@ describe('浮层挂载点（同域模型）', () => {
                   Popover,
                   { trigger: 'click', title: '容器' },
                   {
-                    content: () => h(Select, { options: OPTIONS, modelValue: 1 }),
+                    content: () => h(Select, { options: OPTIONS, value: 1 }),
                     default: () => h('button', 'trigger')
                   }
                 )
@@ -227,8 +219,8 @@ describe('浮层挂载点（同域模型）', () => {
             { baseZIndex: 1000 },
             {
               default: () => [
-                h(Modal, { open: true, title: 'A' }, { default: () => h(Select, { options: OPTIONS, modelValue: 1 }) }),
-                h(Modal, { open: true, title: 'B' }, { default: () => h(Select, { options: OPTIONS, modelValue: 1 }) })
+                h(Modal, { open: true, title: 'A' }, { default: () => h(Select, { options: OPTIONS, value: 1 }) }),
+                h(Modal, { open: true, title: 'B' }, { default: () => h(Select, { options: OPTIONS, value: 1 }) })
               ]
             }
           )
@@ -290,8 +282,8 @@ describe('浮层挂载点（同域模型）', () => {
                   { open: true, title: '层级' },
                   {
                     default: () => [
-                      h(Select, { options: OPTIONS, modelValue: 1, to: 'body' }),
-                      h(Select, { options: OPTIONS, modelValue: 1, to: false })
+                      h(Select, { options: OPTIONS, value: 1, to: 'body' }),
+                      h(Select, { options: OPTIONS, value: 1, to: false })
                     ]
                   }
                 )
@@ -336,7 +328,7 @@ describe('浮层挂载点（同域模型）', () => {
                 h(
                   Modal,
                   { open: open.value, title: '层级' },
-                  { default: () => h(Select, { options: OPTIONS, modelValue: 1 }) }
+                  { default: () => h(Select, { options: OPTIONS, value: 1 }) }
                 ),
                 h(Probe)
               ]

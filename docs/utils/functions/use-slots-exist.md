@@ -102,7 +102,7 @@ _通过开关控制 `header` 插槽是否渲染内容，实时查看检测结果
 
 <Space :gap="8">
   <span>header 插槽内容</span>
-  <Switch v-model="showHeader" />
+  <Switch v-model:value="showHeader" />
 </Space>
 
 <br/>
@@ -134,7 +134,7 @@ const SlotChecker = {
 <template>
   <Space :gap="8">
     <span>header 插槽内容</span>
-    <Switch v-model="showHeader" />
+    <Switch v-model:value="showHeader" />
   </Space>
   <SlotChecker>
     <template #header>

@@ -34,7 +34,7 @@ export { default as Card } from './card'
 export type { CarouselProps, CarouselImage, CarouselEasingPreset } from './carousel'
 export { default as Carousel } from './carousel'
 
-export type { CascaderProps, CascaderOption } from './cascader'
+export type { CascaderProps, CascaderOption, CascaderFieldNames } from './cascader'
 export { default as Cascader } from './cascader'
 
 export type { CheckboxProps, CheckboxOption } from './checkbox'
@@ -59,7 +59,7 @@ export type { DatePickerProps } from './date-picker'
 export { default as DatePicker } from './date-picker'
 
 export type { DescriptionsProps, DescriptionsResponsive, DescriptionsItemProps } from './descriptions'
-export { Descriptions, DescriptionsItem } from './descriptions'
+export { default as Descriptions, DescriptionsItem } from './descriptions'
 
 export type { DialogProps, DialogOptions, DialogApi, DialogReactive, DialogUpdate } from './dialog'
 export { default as Dialog, DialogProvider, useDialog } from './dialog'
@@ -107,7 +107,7 @@ export type { InputSearchProps } from './input-search'
 export { default as InputSearch } from './input-search'
 
 export type { ListProps, ListItemProps } from './list'
-export { List, ListItem } from './list'
+export { default as List, ListItem } from './list'
 
 export type { LoadingBarProps, LoadingBarApi } from './loading-bar'
 export { default as LoadingBar, LoadingBarProvider, useLoadingBar } from './loading-bar'
@@ -160,8 +160,16 @@ export { default as Scrollbar } from './scrollbar'
 export type { SegmentedProps, SegmentedOption } from './segmented'
 export { default as Segmented } from './segmented'
 
-export type { SelectProps, SelectOption } from './select'
-export { default as Select } from './select'
+export type {
+  SelectProps,
+  SelectFieldNames,
+  SelectValue,
+  SelectLabeledValue,
+  SelectOptionProps,
+  SelectOptGroupProps
+} from './select'
+// SelectOption 同名承载两种含义：类型位为选项数据对象，值位为选项子组件（由 select/index.ts 聚合）
+export { default as Select, SelectOption, SelectOptGroup } from './select'
 
 export type {
   SkeletonProps,

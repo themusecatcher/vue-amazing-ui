@@ -161,8 +161,8 @@ function onLayerNotification() {
         h('span', '通知内容里的浮层：'),
         h(Select, {
           options: layerOptions,
-          modelValue: layerValue.value,
-          'onUpdate:modelValue': (value: number) => {
+          value: layerValue.value,
+          'onUpdate:value': (value: number) => {
             layerValue.value = value
           },
           width: 140

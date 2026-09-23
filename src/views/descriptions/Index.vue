@@ -379,25 +379,25 @@ const activeColumnTip = computed(() => {
         <Col :span="6">
           <Space gap="small" vertical>
             bordered:
-            <Switch v-model="state.bordered" />
+            <Switch v-model:value="state.bordered" />
           </Space>
         </Col>
         <Col :span="6">
           <Space gap="small" vertical>
             layout:
-            <Switch v-model="state.layout" checked-value="vertical" un-checked-value="horizontal" />
+            <Switch v-model:value="state.layout" checked-value="vertical" un-checked-value="horizontal" />
           </Space>
         </Col>
         <Col :span="6">
           <Flex gap="small" vertical>
             size:
-            <Select :options="sizeOptions" v-model="state.size" />
+            <Select :options="sizeOptions" v-model:value="state.size" />
           </Flex>
         </Col>
         <Col :span="6">
           <Space gap="small" vertical>
             colon:
-            <Switch v-model="state.colon" />
+            <Switch v-model:value="state.colon" />
           </Space>
         </Col>
         <Col :span="24">
@@ -429,7 +429,7 @@ const activeColumnTip = computed(() => {
         <Col :span="6">
           <Flex gap="small" vertical>
             labelAlign:
-            <Select :options="labelAlignOptions" v-model="state.labelAlign" />
+            <Select :options="labelAlignOptions" v-model:value="state.labelAlign" />
           </Flex>
         </Col>
         <Col :span="6">

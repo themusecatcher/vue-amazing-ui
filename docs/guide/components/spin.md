@@ -31,7 +31,7 @@ const size = ref('middle')
 ## 基本使用
 
 <Flex align="center">
-  Loading state:<Switch v-model="spinning" />
+  Loading state:<Switch v-model:value="spinning" />
 </Flex>
 
 <br/>

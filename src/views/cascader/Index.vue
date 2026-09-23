@@ -185,11 +185,22 @@ const sizeOptions = [
   }
 ]
 const size = ref<CascaderProps['size']>('large')
-const selectedValue = ref(['2', '21', '212'])
+// 各分节独立绑定：避免操作一个用例时其余用例同步联动，便于单独核对每个特性
+const basicValue = ref(['2', '21', '212'])
+const disabledValue = ref(['2', '21', '212'])
+const disabledLevelValue = ref(['2', '21', '212'])
+const disabledOptionValue = ref(['2', '21', '212'])
+const fieldNameValue = ref(['2', '21', '212'])
+const customStyleValue = ref(['2', '21', '212'])
+const sizeValue = ref(['2', '21', '212'])
+const changeOnSelectValue = ref(['2', '21', '212'])
+const clearableValue = ref(['2', '21', '212'])
+const searchableValue = ref(['2', '21', '212'])
+const filterValue = ref(['2', '21', '212'])
 // 下拉面板挂载容器：不传 to 时优先挂到最近的承载层内容容器
-const toValue = ref<CascaderProps['modelValue']>(['2', '21', '212'])
+const toValue = ref<CascaderProps['value']>(['2', '21', '212'])
 watchEffect(() => {
-  console.log('selectedValue', selectedValue.value)
+  console.log('basicValue', basicValue.value)
 })
 function onChange(values: (number | string)[], labels: string[]) {
   console.log('values', values)
@@ -204,49 +215,54 @@ function filter(inputValue: string, option: any) {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Cascader :options="options" v-model="selectedValue" />
+    <Cascader :options="options" v-model:value="basicValue" />
     <h2 class="mt30 mb10">禁用</h2>
-    <Cascader :options="options" v-model="selectedValue" disabled />
+    <Cascader :options="options" v-model:value="disabledValue" disabled />
     <h2 class="mt30 mb10">禁用某一级</h2>
     <p class="mb10">只禁用第一级：<code>disabled: [true]</code></p>
     <p class="mb10">禁用前两级：<code>disabled: [true, true]</code></p>
-    <Cascader :options="options" v-model="selectedValue" :disabled="[true]" @change="onChange" />
+    <Cascader :options="options" v-model:value="disabledLevelValue" :disabled="[true]" @change="onChange" />
     <h2 class="mt30 mb10">禁用选项</h2>
     <p class="mb10">只需指定 <code>options</code> 里的 <code>disabled</code> 字段</p>
-    <Cascader :options="optionsDisabled" v-model="selectedValue" @change="onChange" />
+    <Cascader :options="optionsDisabled" v-model:value="disabledOptionValue" @change="onChange" />
     <h2 class="mt30 mb10">自定义字段名</h2>
     <Cascader
       :options="optionsCustom"
-      v-model="selectedValue"
-      label="name"
-      value="code"
-      children="items"
+      v-model:value="fieldNameValue"
+      :field-names="{ label: 'name', value: 'code', children: 'items' }"
       @change="onChange"
     />
     <h2 class="mt30 mb10">自定义样式</h2>
-    <Cascader :options="options" v-model="selectedValue" :width="100" :height="36" :gap="12" @change="onChange" />
+    <Cascader
+      :options="options"
+      v-model:value="customStyleValue"
+      :width="100"
+      :height="36"
+      :gap="12"
+      @change="onChange"
+    />
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Space vertical>
       <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
-      <Cascader :options="options" v-model="selectedValue" :size="size" @change="onChange" />
-      <Cascader :options="options" v-model="selectedValue" :size="size" allow-clear search @change="onChange" />
+      <Cascader :options="options" v-model:value="sizeValue" :size="size" @change="onChange" />
+      <Cascader :options="options" v-model:value="sizeValue" :size="size" allow-clear search @change="onChange" />
     </Space>
     <h2 class="mt30 mb10">选择即改变</h2>
-    <Cascader :options="options" v-model="selectedValue" change-on-select @change="onChange" />
+    <Cascader :options="options" v-model:value="changeOnSelectValue" change-on-select @change="onChange" />
     <h2 class="mt30 mb10">支持清除</h2>
-    <Cascader :options="options" v-model="selectedValue" allow-clear @change="onChange" />
+    <Cascader :options="options" v-model:value="clearableValue" allow-clear @change="onChange" />
     <h2 class="mt30 mb10">支持搜索</h2>
-    <Cascader :options="options" v-model="selectedValue" search @change="onChange" />
+    <Cascader :options="options" v-model:value="searchableValue" search @change="onChange" />
     <h2 class="mt30 mb10">自定义搜索过滤函数</h2>
-    <Cascader :options="options" v-model="selectedValue" allow-clear search :filter="filter" @change="onChange" />
+    <Cascader :options="options" v-model:value="filterValue" allow-clear search :filter="filter" @change="onChange" />
     <h2 class="mt30 mb10">下拉面板挂载容器</h2>
     <p class="mb10">
       不传 <code>to</code> 时面板优先挂到最近的承载层内容容器（<code>Modal</code> / <code>Drawer</code> /
       <code>Dialog</code> 卡片），无承载层时为 <code>body</code>；设为 <code>false</code> 时面板留在原地
     </p>
     <Space>
-      <Cascader :options="options" v-model="toValue" :width="100" @change="onChange" />
-      <Cascader :options="options" v-model="toValue" :width="100" :to="false" @change="onChange" />
+      <Cascader :options="options" v-model:value="toValue" :width="100" @change="onChange" />
+      <Cascader :options="options" v-model:value="toValue" :width="100" :to="false" @change="onChange" />
     </Space>
   </div>
 </template>

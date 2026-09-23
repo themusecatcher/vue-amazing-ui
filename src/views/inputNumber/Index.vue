@@ -74,7 +74,7 @@ function onEnter(e: KeyboardEvent) {
     <InputNumber prefix="$" v-model:value="value" />
     <h2 class="mt30 mb10">禁用</h2>
     <Space vertical>
-      <Space align="center">disabled: <Switch v-model="disabled" /></Space>
+      <Space align="center">disabled: <Switch v-model:value="disabled" /></Space>
       <InputNumber v-model:value="value" :disabled="disabled" />
     </Space>
   </div>

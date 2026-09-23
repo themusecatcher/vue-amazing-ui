@@ -159,8 +159,8 @@ describe('Select 定位内核接入（L1 旁路）', () => {
     expect(panel.style.translate).toBe('0 -100%')
   })
 
-  it('placement 为 top 时向上展开', async () => {
-    await mountAndOpen({ placement: 'top' })
+  it('placement 为 topLeft 时向上展开', async () => {
+    await mountAndOpen({ placement: 'topLeft' })
     const panel = queryPanel() as HTMLElement
     expect(panel.style.top).toBe('296px')
     expect(panel.style.translate).toBe('0 -100%')

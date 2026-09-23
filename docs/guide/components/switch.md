@@ -10,20 +10,26 @@ _开关选择器_
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const checked = ref(true)
+// 各分节独立绑定：避免操作一个用例时其余用例同步联动，便于单独核对每个特性
+const basicValue = ref(true)
+const disabledValue = ref(true)
+const sizeValue = ref(true)
+const loadingValue = ref(true)
+const textValue = ref(true)
+const themeValue = ref(true)
 const customValue1 = ref('no')
 const customValue2 = ref(2)
 watchEffect(() => {
-  console.log('checked', checked.value)
+  console.log('basicValue', basicValue.value)
 })
-function onChange(checked: boolean) {
+function onChange(checked: boolean | string | number) {
   console.log('checked', checked)
 }
 </script>
 
 ## 基本使用
 
-<Switch v-model="checked" />
+<Switch v-model:value="basicValue" />
 
 ::: details Show Code
 
@@ -36,7 +42,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <Switch v-model="checked" />
+  <Switch v-model:value="checked" />
 </template>
 ```
 
@@ -44,7 +50,7 @@ watchEffect(() => {
 
 ## 禁用开关
 
-<Switch v-model="checked" disabled />
+<Switch v-model:value="disabledValue" disabled />
 
 ::: details Show Code
 
@@ -54,7 +60,7 @@ import { ref } from 'vue'
 const checked = ref(true)
 </script>
 <template>
-  <Switch v-model="checked" disabled />
+  <Switch v-model:value="checked" disabled />
 </template>
 ```
 
@@ -63,9 +69,9 @@ const checked = ref(true)
 ## 三种大小
 
 <Space>
-  <Switch v-model="checked" size="small" />
-  <Switch v-model="checked" />
-  <Switch v-model="checked" size="large" />
+  <Switch v-model:value="sizeValue" size="small" />
+  <Switch v-model:value="sizeValue" />
+  <Switch v-model:value="sizeValue" size="large" />
 </Space>
 
 ::: details Show Code
@@ -80,9 +86,9 @@ watchEffect(() => {
 </script>
 <template>
   <Space>
-    <Switch v-model="checked" size="small" />
-    <Switch v-model="checked" />
-    <Switch v-model="checked" size="large" />
+    <Switch v-model:value="checked" size="small" />
+    <Switch v-model:value="checked" />
+    <Switch v-model:value="checked" size="large" />
   </Space>
 </template>
 ```
@@ -92,9 +98,9 @@ watchEffect(() => {
 ## 加载中
 
 <Space>
-  <Switch v-model="checked" size="small" loading />
-  <Switch v-model="checked" loading />
-  <Switch v-model="checked" size="large" loading />
+  <Switch v-model:value="loadingValue" size="small" loading />
+  <Switch v-model:value="loadingValue" loading />
+  <Switch v-model:value="loadingValue" size="large" loading />
 </Space>
 
 ::: details Show Code
@@ -106,9 +112,9 @@ const checked = ref(true)
 </script>
 <template>
   <Space>
-    <Switch v-model="checked" size="small" loading />
-    <Switch v-model="checked" loading />
-    <Switch v-model="checked" size="large" loading />
+    <Switch v-model:value="checked" size="small" loading />
+    <Switch v-model:value="checked" loading />
+    <Switch v-model:value="checked" size="large" loading />
   </Space>
 </template>
 ```
@@ -118,9 +124,9 @@ const checked = ref(true)
 ## 带 文字 / 数字 / 字母 的开关
 
 <Space>
-  <Switch v-model="checked" checked="开" unchecked="关" />
-  <Switch v-model="checked" checked="1" unchecked="0" />
-  <Switch v-model="checked" checked="yes" unchecked="no" />
+  <Switch v-model:value="textValue" checked="开" unchecked="关" />
+  <Switch v-model:value="textValue" checked="1" unchecked="0" />
+  <Switch v-model:value="textValue" checked="yes" unchecked="no" />
 </Space>
 
 ::: details Show Code
@@ -135,9 +141,9 @@ watchEffect(() => {
 </script>
 <template>
   <Space>
-    <Switch v-model="checked" checked="开" unchecked="关" />
-    <Switch v-model="checked" checked="1" unchecked="0" />
-    <Switch v-model="checked" checked="yes" unchecked="no" />
+    <Switch v-model:value="checked" checked="开" unchecked="关" />
+    <Switch v-model:value="checked" checked="1" unchecked="0" />
+    <Switch v-model:value="checked" checked="yes" unchecked="no" />
   </Space>
 </template>
 ```
@@ -146,7 +152,7 @@ watchEffect(() => {
 
 ## 自定义图标和样式
 
-<Switch class="theme-switch" v-model="checked" ripple-color="#faad14" :circle-style="{ background: checked ? '#001529' : '#fff' }">
+<Switch class="theme-switch" v-model:value="themeValue" ripple-color="#faad14" :circle-style="{ background: themeValue ? '#001529' : '#fff' }">
   <template #node="{ checked }">
     <svg
       v-if="checked"
@@ -223,7 +229,7 @@ watchEffect(() => {
 <template>
   <Switch
     class="theme-switch"
-    v-model="checked"
+    v-model:value="checked"
     ripple-color="#faad14"
     :circle-style="{ background: checked ? '#001529' : '#fff' }"
   >
@@ -297,14 +303,14 @@ watchEffect(() => {
 
 <Space gap="large">
   <Space vertical align="center">
-    <Switch v-model="customValue1" checked-value="on" unchecked-value="off">
+    <Switch v-model:value="customValue1" checked-value="on" unchecked-value="off">
       <template #checked>on</template>
       <template #unchecked>off</template>
     </Switch>
     Current Value: {{ customValue1 }}
   </Space>
   <Space vertical align="center">
-    <Switch v-model="customValue2" :checked-value="1" :unchecked-value="2">
+    <Switch v-model:value="customValue2" :checked-value="1" :unchecked-value="2">
       <template #checked>yes</template>
       <template #unchecked>no</template>
     </Switch>
@@ -323,14 +329,14 @@ const customValue2 = ref(2)
 <template>
   <Space gap="large">
     <Space vertical align="center">
-      <Switch v-model="customValue1" checked-value="on" unchecked-value="off">
+      <Switch v-model:value="customValue1" checked-value="on" unchecked-value="off">
         <template #checked>on</template>
         <template #unchecked>off</template>
       </Switch>
       Current Value: {{ customValue1 }}
     </Space>
     <Space vertical align="center">
-      <Switch v-model="customValue2" :checked-value="1" :unchecked-value="2">
+      <Switch v-model:value="customValue2" :checked-value="1" :unchecked-value="2">
         <template #checked>yes</template>
         <template #unchecked>no</template>
       </Switch>
@@ -357,7 +363,7 @@ const customValue2 = ref(2)
 | size | 开关大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | rippleColor | 点击时的波纹颜色，当自定义选中颜色时需要设置 | string | undefined |
 | circleStyle | 圆点样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| modelValue <Tag color="cyan">v-model</Tag> | 指定当前是否选中 | boolean &#124; string &#124; number | false |
+| value <Tag color="cyan">v-model</Tag> | 指定当前是否选中 | boolean &#124; string &#124; number | false |
 
 ## Slots
 
@@ -371,4 +377,4 @@ const customValue2 = ref(2)
 
 | 名称  | 说明        | 类型                       |
 | :----- | :----------- | :------------------------- |
-| change | 变化时的回调 | (checked: boolean) => void |
+| change | 变化时的回调 | (checked: boolean &#124; string &#124; number) => void |

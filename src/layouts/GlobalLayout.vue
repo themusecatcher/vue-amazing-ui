@@ -35,7 +35,7 @@ const routerViewRef = ref<HTMLDivElement | null>(null)
     <Col :xs="5" :xl="4" style="position: relative">
       <Switch
         class="switch-theme"
-        v-model="themeDark"
+        v-model:value="themeDark"
         ripple-color="#faad14"
         :circle-style="{ background: themeDark ? '#001529' : '#fff' }"
         @change="toggleDark"

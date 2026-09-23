@@ -78,7 +78,7 @@ function handleClear() {
     <h2 class="mt30 mb10">不透明度</h2>
     <p class="mb10"><code>show-alpha</code> 控制是否可调节 <code>alpha</code> 通道</p>
     <Space vertical>
-      <Space align="center"> showAlpha: <Switch v-model="showAlpha"></Switch> </Space>
+      <Space align="center"> showAlpha: <Switch v-model:value="showAlpha"></Switch> </Space>
       <ColorPicker :width="360" :show-alpha="showAlpha" />
     </Space>
     <h2 class="mt30 mb10">颜色预览块</h2>
@@ -86,7 +86,7 @@ function handleClear() {
       >使用 <code>showPreview</code> 控制是否展示颜色预览块；点击颜色预览块可以触发浏览器原生的颜色选择器</p
     >
     <Space vertical>
-      <Space align="center"> showPreview: <Switch v-model="showPreview"></Switch> </Space>
+      <Space align="center"> showPreview: <Switch v-model:value="showPreview"></Switch> </Space>
       <ColorPicker :width="360" :show-preview="showPreview" />
     </Space>
     <h2 class="mt30 mb10">尺寸</h2>

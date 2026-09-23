@@ -222,7 +222,7 @@ const panelZIndexValue = ref('')
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Space vertical>
         <AutoComplete
           v-model:value="value1"
@@ -234,7 +234,7 @@ const panelZIndexValue = ref('')
       </Space>
     </Space>
     <h2 class="mt30 mb10">自定义选项</h2>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Space vertical>
         <AutoComplete
           v-model:value="value2"
@@ -251,7 +251,7 @@ const panelZIndexValue = ref('')
       </Space>
     </Space>
     <h2 class="mt30 mb10">自定义输入组件</h2>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Space vertical>
         <AutoComplete v-model:value="value3" :options="options3" :width="200" @search="onSearch3" @select="onSelect3">
           <Textarea placeholder="input here" style="height: 50px" />
@@ -259,7 +259,7 @@ const panelZIndexValue = ref('')
       </Space>
     </Space>
     <h2 class="mt30 mb10">不区分大小写</h2>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Space vertical>
         <AutoComplete
           v-model:value="value4"
@@ -271,7 +271,7 @@ const panelZIndexValue = ref('')
       </Space>
     </Space>
     <h2 class="mt30 mb10">查询模式 - 确定类目</h2>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Space vertical>
         <AutoComplete v-model:value="value5" :options="options5" :width="250" :dropdown-match-select-width="500">
           <template #option="item">
@@ -303,7 +303,7 @@ const panelZIndexValue = ref('')
       </Space>
     </Space>
     <h2 class="mt30 mb10">查询模式 - 不确定类目</h2>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Space vertical>
         <AutoComplete v-model:value="value6" :options="options6" :width="300" @select="onSelect6" @search="onSearch6">
           <template #option="item">
@@ -326,7 +326,7 @@ const panelZIndexValue = ref('')
       </Space>
     </Space>
     <h2 class="mt30 mb10">自定义状态</h2>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Space vertical>
         <AutoComplete
           v-model:value="value7"
@@ -351,7 +351,7 @@ const panelZIndexValue = ref('')
       </Space>
     </Space>
     <h2 class="mt30 mb10">无边框</h2>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Space vertical>
         <AutoComplete
           v-model:value="value9"
@@ -365,7 +365,7 @@ const panelZIndexValue = ref('')
       </Space>
     </Space>
     <h2 class="mt30 mb10">自定义清除按钮</h2>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Space vertical>
         <AutoComplete
           v-model:value="value10"
@@ -408,7 +408,7 @@ const panelZIndexValue = ref('')
       通过 <code>dropdownMatchSelectWidth</code> 指定面板宽度：<code>true</code> 与输入框等宽；<code>false</code>
       时以输入框宽度为最小宽度、内容更宽则随之撑开；数字则为固定宽度
     </p>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <AutoComplete
         v-model:value="valueMatchWidthTrue"
         :options="optionsMatchWidth"
@@ -479,32 +479,32 @@ const panelZIndexValue = ref('')
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Space vertical>
       <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
-      <Space align="start" :size="40">
+      <Space :size="40">
         <Space vertical>
           <AutoComplete v-model:value="valueS" :options="optionsD" :width="200" placeholder="input here" :size="size" />
         </Space>
       </Space>
     </Space>
     <h2 class="mt30 mb10">禁用</h2>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Space vertical>
         <AutoComplete v-model:value="valueD" :options="optionsD" :width="200" placeholder="input here" disabled />
       </Space>
     </Space>
     <h2 class="mt30 mb10">禁用选项</h2>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Space vertical>
         <AutoComplete v-model:value="valueDD" :options="optionsD" :width="200" placeholder="input here" />
       </Space>
     </Space>
     <h2 class="mt30 mb10">字符串数组数据源</h2>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Space vertical>
         <AutoComplete v-model:value="valueArr" :options="optionsArr" :width="200" placeholder="input here" />
       </Space>
     </Space>
     <h2 class="mt30 mb10">分组数据源</h2>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Space vertical>
         <AutoComplete v-model:value="valueGroup" :options="optionsGroup" :width="200" placeholder="input here" />
       </Space>
@@ -514,7 +514,7 @@ const panelZIndexValue = ref('')
       >键盘 <code>↑</code> <code>↓</code> 导航选项时会回填选中项到输入框中，按 <code>Enter</code> 确认选中，按
       <code>Esc</code> 还原输入，悬浮选项同样会回填。</p
     >
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Space vertical>
         <AutoComplete
           v-model:value="valueBackfill"
@@ -542,7 +542,7 @@ const panelZIndexValue = ref('')
     </Space>
     <h2 class="mt30 mb10">默认展开</h2>
     <p class="mb10">初始即展开面板，区别于受控的 <code>open</code>，初始值生效后不受外部状态控制。</p>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Space vertical>
         <AutoComplete
           v-model:value="valueDefaultOpen"
@@ -554,7 +554,7 @@ const panelZIndexValue = ref('')
       </Space>
     </Space>
     <h2 class="mt30 mb10">关闭默认高亮首项</h2>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Space vertical>
         <AutoComplete
           v-model:value="valueActiveFirst"

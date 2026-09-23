@@ -327,7 +327,7 @@ describe('嵌套浮层层级：承载层内嵌 Select', () => {
                 Drawer,
                 { open: true, to: false },
                 {
-                  default: () => h(Select, { options: [{ label: 'apple', value: 1 }], modelValue: 1 })
+                  default: () => h(Select, { options: [{ label: 'apple', value: 1 }], value: 1 })
                 }
               ),
               h(LaterLayer)
@@ -395,7 +395,7 @@ describe('承载层关闭时内部浮层收起（Modal 内嵌 Select）', () => 
                   }
                 },
                 {
-                  default: () => h(Select, { options: [{ label: '北京', value: 1 }], modelValue: 1 })
+                  default: () => h(Select, { options: [{ label: '北京', value: 1 }], value: 1 })
                 }
               )
           }
@@ -631,7 +631,7 @@ describe('承载层关闭时内部组件的聚焦态归位', () => {
               open.value = value
             }
           },
-          { default: () => h(Select, { options: [{ label: '苹果', value: 1 }], modelValue: 1 }) }
+          { default: () => h(Select, { options: [{ label: '苹果', value: 1 }], value: 1 }) }
         )
     })
     wrapper = mount(Host, { attachTo: document.body, global: { stubs: { transition: false } } })

@@ -134,7 +134,7 @@ const state = reactive<StepsProps>({
       <Col :span="6">
         <Space gap="small" vertical>
           vertical:
-          <Switch v-model="state.vertical" />
+          <Switch v-model:value="state.vertical" />
         </Space>
       </Col>
       <Col :span="6">
@@ -146,7 +146,7 @@ const state = reactive<StepsProps>({
       <Col :span="6">
         <Space gap="small" vertical>
           dotted:
-          <Switch v-model="state.dotted" />
+          <Switch v-model:value="state.dotted" />
         </Space>
       </Col>
     </Row>
