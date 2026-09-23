@@ -10,9 +10,12 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-09-23">2.11.0</VersionDateTag>
+## <VersionDateTag date="2026-09-24">2.12.0</VersionDateTag>
 
 - 新增 [下拉菜单 Dropdown](/guide/components/dropdown.html) 组件
+
+## <VersionDateTag date="2026-09-23">2.11.0</VersionDateTag>
+
 - 优化统一 [选择器 Select](/guide/components/select.html)、[级联选择 Cascader](/guide/components/cascader.html)、[开关 Switch](/guide/components/switch.html) 的 `API` 形态：双向绑定改用 `v-model:value`（回写事件 `update:value`）；`label` / `value` 字段名属性合并为 `fieldNames` 对象，改用 `:field-names="{ label: 'name', value: 'id' }"`（分组 / 后代子选项字段名分别为 `Select` 的 `options` 与 `Cascader` 的 `children``）；Select` 的 `search` / `filter` 更名为 `showSearch` / `filterOption`（旧名移除）、`placement` 取值扩展为四向（默认 `bottomLeft`）、`change` 回调第二参由文本 `label` 改为完整 `option` 对象，并新增 `SelectValue` / `SelectFieldNames` / `CascaderFieldNames` 类型导出
 - 重构并增强 [选择器 Select](/guide/components/select.html)：单选模式属性 / 事件 / 插槽 / 方法全量补齐（`bordered` / `status` / `loading` / `dropdownRender` / `notFoundContent` 等属性与 `focus()` / `blur()` / `scrollTo()` 等方法），新增多选 / 标签模式（`mode`、标签折叠 `maxTagCount` / `tagRender`、`tokenSeparators` 分词与 `deselect` 事件，多选下 `value` 为数组）、`labelInValue`、子组件式选项 `SelectOption` / `SelectOptGroup`、默认开启的虚拟滚动 `virtual` 与无障碍语义，并优化下拉面板滚动越界回弹；按选项文本搜索需显式传 `option-filter-prop="label"`
 - [描述列表 Descriptions](/guide/components/descriptions.html) 与 [列表 List](/guide/components/list.html) 的主组件上提至组件目录顶层；自动按需引入不受影响，手动引入样式需将 `descriptions/descriptions/style` 改为 `descriptions/style`，`list` 同理

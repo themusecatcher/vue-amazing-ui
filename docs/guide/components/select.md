@@ -341,7 +341,7 @@ const emptyOptions: SelectOption[] = []
 
 <Select :options="basicOptions" v-model:value="basicValue" :width="120" @change="onBasicChange" @focus="onBasicFocus" />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -366,7 +366,7 @@ function onFocus() {
 </template>
 ```
 
-::::
+:::
 
 ## 三种大小
 
@@ -394,7 +394,7 @@ function onFocus() {
   </Space>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -444,7 +444,7 @@ function onPopupScroll() {
 </template>
 ```
 
-::::
+:::
 
 ## 无边框
 
@@ -453,7 +453,7 @@ function onPopupScroll() {
   <Select :options="cityOptions" v-model:value="borderlessValue" :bordered="false" :width="120" disabled />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -477,13 +477,13 @@ const selectedValue = ref<SelectProps['value']>(1)
 </template>
 ```
 
-::::
+:::
 
 ## 禁用
 
 <Select :options="cityOptions" v-model:value="disabledValue" disabled />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -504,13 +504,13 @@ const selectedValue = ref<SelectProps['value']>(5)
 </template>
 ```
 
-::::
+:::
 
 ## 禁用选项
 
 <Select :options="cityOptionsDisabled" v-model:value="disabledOptionValue" />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -531,7 +531,7 @@ const selectedValue = ref<SelectProps['value']>(5)
 </template>
 ```
 
-::::
+:::
 
 ## 自定义状态
 
@@ -544,7 +544,7 @@ _`status` 可选 `error` 或 `warning`_
   <Select :options="cityOptions" v-model:value="statusValue" status="warning" />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -568,7 +568,7 @@ const selectedValue = ref<SelectProps['value']>(1)
 </template>
 ```
 
-::::
+:::
 
 ## 多选
 
@@ -578,7 +578,7 @@ _从已有条目中选择多个值，下拉列表可滚动查看全部选项_
 
 <Select v-model:value="multipleValue" mode="multiple" placeholder="Please select" :options="sizeOptions" :width="300" />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -595,7 +595,7 @@ const selectedValue = ref<SelectProps['value']>(['10', '11'])
 </template>
 ```
 
-::::
+:::
 
 ## 标签
 
@@ -605,7 +605,7 @@ _输入任意内容并回车即可创建为标签，下拉列表可滚动查看�
 
 <Select v-model:value="tagsValue" mode="tags" placeholder="Tags Mode" :options="sizeOptions" :width="300" />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -622,7 +622,7 @@ const selectedValue = ref<SelectProps['value']>([])
 </template>
 ```
 
-::::
+:::
 
 ## 最多显示多少个选项及选项最大长度
 
@@ -665,7 +665,7 @@ _超出 `maxTagCount` 的标签会折叠为省略提示，`maxTagTextLength` 截
   </Flex>
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -729,7 +729,7 @@ const maxTagTextLengthRadios = [
 </template>
 ```
 
-::::
+:::
 
 ## 隐藏已选择选项
 
@@ -745,7 +745,7 @@ _隐藏下拉列表中已选择的选项，已选项的标签由组件内部的�
   :width="300"
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -769,7 +769,7 @@ const options = computed<SelectOption[]>(() => {
 </template>
 ```
 
-::::
+:::
 
 ## 自动分词
 
@@ -786,7 +786,7 @@ _试下复制 `特斯拉,哥斯拉` 到输入框里。只在 `tags` 和 `multipl
   :width="300"
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -807,7 +807,7 @@ const selectedValue = ref<SelectProps['value']>([])
 </template>
 ```
 
-::::
+:::
 
 ## 获得选项的文本
 
@@ -823,7 +823,7 @@ _开启 `labelInValue` 后 `value` 变为包含文本的对象：`{ label, value
   @change="onLabelInValueChange"
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -849,7 +849,7 @@ function handleChange(value: SelectProps['value']) {
 </template>
 ```
 
-::::
+:::
 
 ## 分组
 
@@ -874,7 +874,7 @@ _用 `SelectOptGroup` / `SelectOption` 子组件或 `options` 的嵌套写法进
   <Select v-model:value="groupValue" :options="groupOptions" :width="200" />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -916,7 +916,7 @@ const options = [
 </template>
 ```
 
-::::
+:::
 
 ## 自定义 label、value、options 字段
 
@@ -929,7 +929,7 @@ _通过 `fieldNames` 指定选项的文本 / 值字段，以及分组子选项�
   <Select :options="groupFieldOptions" :field-names="groupFieldNames" v-model:value="groupFieldValue" :width="200" />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -971,7 +971,7 @@ const groupValue = ref<SelectProps['value']>('lucy')
 </template>
 ```
 
-::::
+:::
 
 ## 搜索框
 
@@ -988,7 +988,7 @@ const groupValue = ref<SelectProps['value']>('lucy')
   @search="onRemoteSearch"
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1021,7 +1021,7 @@ function onSearch(keyword: string) {
 </template>
 ```
 
-::::
+:::
 
 ## 带搜索框
 
@@ -1036,7 +1036,7 @@ function onSearch(keyword: string) {
   @focus="onBasicFocus"
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1073,7 +1073,7 @@ function onFocus() {
 </template>
 ```
 
-::::
+:::
 
 ## 搜索用户
 
@@ -1096,7 +1096,7 @@ _远程搜索 + 节流控制 + 请求时序控制 + 加载状态的多选示例�
   </template>
 </Select>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1156,7 +1156,7 @@ onUnmounted(() => {
 </template>
 ```
 
-::::
+:::
 
 ## 联动
 
@@ -1165,7 +1165,7 @@ onUnmounted(() => {
   <Select :options="cities.map((city) => ({ value: city }))" v-model:value="secondCity" :width="120" />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1190,13 +1190,13 @@ watch(province, (value) => {
 </template>
 ```
 
-::::
+:::
 
 ## 支持清除
 
 <Select :options="cityOptions" v-model:value="clearableValue" allow-clear />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1217,7 +1217,7 @@ const selectedValue = ref<SelectProps['value']>(5)
 </template>
 ```
 
-::::
+:::
 
 ## 键盘操作
 
@@ -1234,7 +1234,7 @@ _聚焦后按 `↑` `↓` 移动高亮（自动跳过禁用项、到达列表端
 
 <Select :options="cityOptionsDisabled" v-model:value="keyboardValue" />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1255,7 +1255,7 @@ const selectedValue = ref<SelectProps['value']>(5)
 </template>
 ```
 
-::::
+:::
 
 ## 受控展开
 
@@ -1275,7 +1275,7 @@ _`open` 受控时面板显隐由外部驱动，配合 `dropdownVisibleChange` �
   />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1317,7 +1317,7 @@ function onToggleClick() {
 </template>
 ```
 
-::::
+:::
 
 ## 后缀图标
 
@@ -1330,7 +1330,7 @@ function onToggleClick() {
   </Select>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1357,7 +1357,7 @@ const selectedValue = ref<SelectProps['value']>('lucy')
 </template>
 ```
 
-::::
+:::
 
 ## 自定义选中标识
 
@@ -1371,7 +1371,7 @@ _通过 `menuItemSelectedIcon` 插槽自定义选中项的标识图标，单选�
   </template>
 </Select>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1397,7 +1397,7 @@ const selectedValue = ref<SelectProps['value']>(5)
 </template>
 ```
 
-::::
+:::
 
 ## 定制回填内容
 
@@ -1445,7 +1445,7 @@ _使用 `optionLabelProp` 指定回填到选择框的 `option` 字段；`optionL
   </Space>
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1503,7 +1503,7 @@ const multipleValue = ref<SelectProps['value']>(['china'])
 </template>
 ```
 
-::::
+:::
 
 ## 下拉面板弹出位置
 
@@ -1528,7 +1528,7 @@ const multipleValue = ref<SelectProps['value']>(['china'])
   </Space>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1575,7 +1575,7 @@ const placementValue = ref<SelectProps['value']>(5)
 </template>
 ```
 
-::::
+:::
 
 ## 下拉面板宽度
 
@@ -1594,7 +1594,7 @@ _`dropdownMatchSelectWidth` 为 `true` 时与触发器等宽，为数字时指�
   />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1619,7 +1619,7 @@ const selectedValue = ref<SelectProps['value']>(1)
 </template>
 ```
 
-::::
+:::
 
 ## 下拉面板挂载容器
 
@@ -1632,7 +1632,7 @@ _不传 `to` 时面板优先挂到最近的承载层内容容器（`Modal` / `Dr
   <Select :options="longOptions" v-model:value="mountValue" :to="false" :width="200" />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1651,7 +1651,7 @@ const selectedValue = ref<SelectProps['value']>(1)
 </template>
 ```
 
-::::
+:::
 
 ## 下拉面板数
 
@@ -1665,7 +1665,7 @@ _`maxDisplay` 按项数限制面板高度（默认展示 `8` 项），`listHeigh
   <Select :options="longOptions" v-model:value="listHeightValue" :list-height="160" />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1685,7 +1685,7 @@ const selectedValue = ref<SelectProps['value']>(1)
 </template>
 ```
 
-::::
+:::
 
 ## 下拉面板滚动条
 
@@ -1695,7 +1695,7 @@ _通过 `scrollbarProps` 定制面板内滚动条_
 
 <Select :options="longOptions" v-model:value="scrollbarValue" :scrollbar-props="{ size: 8, delay: 2000 }" />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1711,7 +1711,7 @@ const selectedValue = ref<SelectProps['value']>(1)
 </template>
 ```
 
-::::
+:::
 
 ## 自定义下拉面板
 
@@ -1731,7 +1731,7 @@ _通过 `popupClassName` 自定义面板类名、`dropdownMenuStyle` 设置面�
   <Select :options="cityOptions" v-model:value="panelZIndexValue" :width="180" :z-index="1100" />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1789,7 +1789,7 @@ const zIndexValue = ref<SelectProps['value']>(1)
 </style>
 ```
 
-::::
+:::
 
 ## 扩展菜单
 
@@ -1816,7 +1816,7 @@ _使用 `dropdownRender` 对下拉菜单自由扩展，`menuNode` 为内置菜�
   </template>
 </Select>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1854,7 +1854,7 @@ function addItem() {
 </template>
 ```
 
-::::
+:::
 
 ## 大数据
 
@@ -1877,7 +1877,7 @@ _`virtual` 默认开启，只渲染可视区选项；关闭开关后渲染全部
   />
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1910,7 +1910,7 @@ const virtual = ref(true)
 </template>
 ```
 
-::::
+:::
 
 ## 空数据
 
@@ -1924,7 +1924,7 @@ _选项为空时展示 `notFoundContent`，传 `null` 时不展开面板_
   <Select :options="emptyOptions" :width="180" :not-found-content="null" placeholder="不展开面板" />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1940,7 +1940,7 @@ const options: SelectOption[] = []
 </template>
 ```
 
-::::
+:::
 
 ## APIs
 
