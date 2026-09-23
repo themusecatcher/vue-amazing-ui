@@ -10,6 +10,10 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-09-22">2.11.0</VersionDateTag>
+
+- 新增 [下拉菜单 Dropdown](/guide/components/dropdown.html) 组件
+
 ## <VersionDateTag date="2026-09-21">2.10.0</VersionDateTag>
 
 - 新增 [评论 Comment](/guide/components/comment.html) 组件
@@ -157,10 +161,6 @@
 - 优化并更新 [颜色选择器 ColorPicker](/guide/components/color-picker.html) 组件和文档，优化弹层定位与显隐行为：弹层定位由 `bottom` 调整为 `bottomLeft`，避免面板与触发元素错位；新增 `keyboard` 键盘支持；`showDelay` / `hideDelay` 调整为立即显示与隐藏
 - 优化并更新 [文本省略 Ellipsis](/guide/components/ellipsis.html) 组件，过渡动画时长由 `200ms` 对齐为默认 `100ms`
 - 组件库及文档代码优化
-
-## <VersionDateTag date="2026-08-20">2.6.0</VersionDateTag>
-
-- 新增 [下拉菜单 Dropdown](https://themusecatcher.github.io/vue-amazing-ui/guide/components/dropdown.html) 组件
 
 ## <VersionDateTag date="2026-08-19">2.5.0</VersionDateTag>
 
@@ -972,7 +972,6 @@
 - 新增 菜单 Menu 组件
 - 新增 穿梭框 Transfer 组件
 - 新增 漫游式引导 Tour 组件
-- 新增 下拉菜单 Dropdown 组件
 <!-- - 更新 表格 Table 组件，新增虚拟滚动功能
 - 时间轴 Timeline 组件，新增水平时间轴
 - 新增 时间选择器 TimePicker 组件
