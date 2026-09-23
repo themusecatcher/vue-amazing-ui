@@ -672,7 +672,7 @@ const dotTrigger = ref<CarouselProps['dotTrigger']>('hover')
     :options="slideEasingPresetOptions"
     v-model:value="slideEasingPreset"
     width="200"
-    search
+    show-search
   />
 </Space>
 <br/>
@@ -732,7 +732,7 @@ const slideEasing = computed(() => (slideEasingType.value === 'preset' ? slideEa
       :options="slideEasingPresetOptions"
       v-model:value="slideEasingPreset"
       width="200"
-      search
+      show-search
     />
   </Space>
   <br />

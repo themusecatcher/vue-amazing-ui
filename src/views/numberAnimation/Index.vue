@@ -181,7 +181,7 @@ function onFinished() {
           v-model:value="easingType"
           :options="easingOptions"
           width="200"
-          search
+          show-search
         />
         <Button type="primary" @click="easingRef?.play()">播放</Button>
       </Space>

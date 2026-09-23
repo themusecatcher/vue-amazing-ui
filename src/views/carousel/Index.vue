@@ -280,7 +280,7 @@ watch(
         :options="slideEasingPresetOptions"
         v-model:value="slideEasingPreset"
         width="200"
-        search
+        show-search
       />
     </Space>
     <br />

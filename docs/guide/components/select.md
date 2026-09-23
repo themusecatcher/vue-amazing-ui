@@ -1715,7 +1715,7 @@ const selectedValue = ref<SelectProps['value']>(1)
 
 ## 自定义下拉面板
 
-_通过 `popupClassName` 自定义面板类名、`dropdownMenuStyle` 设置面板样式，两者均落在 `Teleport` 后的面板上，需写在全局样式中；`zIndex` 用于覆盖面板层级（默认 1050）_
+_通过 `popupClassName` 自定义面板类名、`dropdownMenuStyle` 设置面板样式，两者均落在 `Teleport` 后的面板上，需写在全局样式中；`zIndex` 用于覆盖面板层级（默认 `1050`）_
 
 <br/>
 
@@ -1952,7 +1952,7 @@ const options: SelectOption[] = []
 | open | 是否展开下拉菜单（受控，不传时由组件内部维护） | boolean | undefined |
 | searchValue | 搜索文本（受控，配对 `update:searchValue`） | string | undefined |
 | options | 选项数据 | [SelectOption](#option-type)[] | [] |
-| fieldNames | 选项的文本 / 值字段名配置，`options` 为分组子选项的字段名 | `{ label?: string, value?: string, options?: string }` | `{ label: 'label', value: 'value' }` |
+| fieldNames | 选项的文本 / 值字段名配置，`options` 为分组子选项的字段名 | `{ label?: string, value?: string, options?: string }` | `{ label: 'label', value: 'value', options: 'options' }` |
 | mode | 设置多选模式，`'multiple'` 为多选，`'tags'` 为标签（可输入并创建新条目），不传为单选 | 'multiple' &#124; 'tags' | undefined |
 | labelInValue | 是否把每个选项的 label 包装到 value 中，`value` 由原始值变为 `{ label, value, key, originLabel }` 对象 | boolean | false |
 | optionLabelProp | 回填到选择框的 `option` 属性值，未指定时取 `label` 字段 | string | undefined |
@@ -2011,6 +2011,8 @@ const options: SelectOption[] = []
 
 ### LabeledValue Type
 
+<br/>
+
 `labelInValue` 开启时 `value` 的元素类型（入口导出名 `SelectLabeledValue`）：
 
 | 名称          | 说明                                                                     | 类型                  | 默认值    |
@@ -2022,6 +2024,8 @@ const options: SelectOption[] = []
 
 ### SelectOption
 
+<br/>
+
 `<Select>` 默认插槽中的选项子组件（配置式写法请用 [SelectOption](#option-type) 数据）：
 
 | 参数               | 说明                                                                                                | 类型                 | 默认值    |
@@ -2032,6 +2036,8 @@ const options: SelectOption[] = []
 | [propName: string] | 用于包含带有任意数量的其他属性，`#option` 插槽会透传原始数据对象                                    | any                  | undefined |
 
 ### SelectOptGroup
+
+<br/>
 
 `<Select>` 默认插槽中的分组子组件，组内书写 `SelectOption`：
 
@@ -2049,14 +2055,14 @@ const options: SelectOption[] = []
 | deselect              | 移除已选项（`tag`）时回调        | (value: string &#124; number, option: [SelectOption](#option-type)) => void      |
 | select                | 选中选项时回调                   | (value: string &#124; number, option: [SelectOption](#option-type)) => void                |
 | clear                 | 清除时的回调                     | () => void                                                                       |
-| search                | 搜索文本变化时回调               | (value: string) => void                                                          |
+| search                | 搜索文本变化时回调（`tokenSeparators` 分词命中后清空输入不触发） | (value: string) => void                                                          |
 | focus                 | 获得焦点时的回调                 | () => void                                                                       |
 | blur                  | 失去焦点时的回调                 | () => void                                                                       |
-| openChange            | 下拉菜单展开收起的回调           | (open: boolean) => void                                                          |
-| dropdownVisibleChange | 下拉菜单展开收起的回调           | (open: boolean) => void                                                          |
-| popupScroll           | 下拉列表滚动时的回调             | () => void                                                                       |
-| mouseenter            | 鼠标移入时的回调                 | () => void                                                                       |
-| mouseleave            | 鼠标移出时的回调                 | () => void                                                                       |
+| openChange            | 下拉菜单展开收起的回调（与 `dropdownVisibleChange` 为同一事件的两个名称，同参同时派发） | (open: boolean) => void                                                          |
+| dropdownVisibleChange | 下拉菜单展开收起的回调，`openChange` 的别名 | (open: boolean) => void                                                          |
+| popupScroll           | 下拉列表滚动时的回调             | (e: Event) => void                                                               |
+| mouseenter            | 鼠标移入时的回调                 | (e: MouseEvent) => void                                                          |
+| mouseleave            | 鼠标移出时的回调                 | (e: MouseEvent) => void                                                          |
 | inputKeyDown          | 输入框按下键时的回调             | (e: KeyboardEvent) => void                                                       |
 | update:searchValue    | 搜索文本变化时同步（配合 `searchValue` 受控） | (value: string) => void                                              |
 
