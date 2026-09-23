@@ -1,4 +1,6 @@
 <script lang="ts">
+// 选择器 Select：数据源支持配置式 options 与子组件式（SelectOption / SelectOptGroup）双模式，
+// 覆盖单选 / 多选 / 标签 / labelInValue / 虚拟滚动，并提供搜索过滤、tag 折叠与无障碍语义。
 // 本块为模块级作用域（仅在模块加载时执行一次）：a11y 关联 id 的自增序号需跨组件实例唯一。
 // ⚠️ 不使用项目既有的 createKeyGenerator（含时间戳）：SSR 与客户端会产出不同 id，触发水合时属性不匹配。
 let selectIdSeed = 0
@@ -77,11 +79,14 @@ export interface TagRenderParams {
 }
 
 export interface Props {
-  // 数据与取值
+  // 双向绑定与受控核心
+  value?: SelectValue | LabeledValue | (SelectValue | LabeledValue)[] // (v-model:value) 当前选中的 option 条目值，mode 为 multiple / tags 时为数组；labelInValue 打开时元素为 { label, value, key, originLabel } 对象
+  open?: boolean // 是否展开下拉菜单（受控，不传时由组件内部维护）
+  searchValue?: string // 搜索文本（受控，配对 update:searchValue；不传时由组件内部维护）
+  // 内容与数据源
   options?: Option[] // 选项数据
   fieldNames?: FieldNames // 选项字段名配置，用于自定义选项的文本 / 值字段
   mode?: SelectMode // 设置多选模式，'multiple' 为多选，'tags' 为标签（可输入并创建新条目），不传为单选
-  value?: SelectValue | LabeledValue | (SelectValue | LabeledValue)[] // (v-model:value) 当前选中的 option 条目值，mode 为 multiple / tags 时为数组；labelInValue 打开时元素为 { label, value, key, originLabel } 对象
   labelInValue?: boolean // 是否把每个选项的 label 包装到 value 中，value 类型变为 { label, value, key, originLabel }
   optionLabelProp?: string // 回填到选择框的 option 属性值，未指定时取 label 字段
   // 外观与尺寸
@@ -89,19 +94,19 @@ export interface Props {
   height?: number // 选择器高度，单位 px
   size?: 'small' | 'middle' | 'large' // 选择器大小
   placeholder?: string // 默认占位文本
+  // 状态与反馈
   bordered?: boolean // 是否有边框
   status?: 'error' | 'warning' // 设置校验状态
-  // 交互与图标
   disabled?: boolean // 是否禁用
-  autofocus?: boolean // 是否自动获取焦点
+  loading?: boolean // 是否处于加载状态，展开面板时后缀图标变为加载中
+  // 图标与清除
   allowClear?: boolean // 是否支持清除
   clearIcon?: VNode | (() => VNode) // 自定义清除图标
   suffixIcon?: VNode | (() => VNode) // 自定义的选择框后缀图标
   showArrow?: boolean // 是否显示下拉小箭头
-  loading?: boolean // 是否处于加载状态，展开面板时后缀图标变为加载中
+  menuItemSelectedIcon?: VNode | (() => VNode) // 自定义当前选中的条目图标
   // 搜索与过滤
-  showSearch?: boolean // 是否支持搜索
-  searchValue?: string // 控制搜索文本（受控）
+  showSearch?: boolean // 是否支持搜索，未指定时多选（multiple / tags）默认开启、单选默认关闭
   optionFilterProp?: string // 搜索时过滤对应的 option 属性，不支持 children
   /*
     根据输入项进行筛选，默认为 true 时，筛选每个选项 optionFilterProp 字段是否包含输入项，包含返回 true，反之返回 false
@@ -118,15 +123,14 @@ export interface Props {
   removeIcon?: VNode | (() => VNode) // 自定义 tag 的移除图标
   tokenSeparators?: string[] // 自动分词的分隔符，输入命中后按分隔符拆分并直接选中
   autoClearSearchValue?: boolean // 多选模式下选中项后是否清空搜索框
-  // 面板开合与高亮
-  open?: boolean // 是否展开下拉菜单（受控）
-  defaultOpen?: boolean // 是否默认展开下拉菜单
+  // 初始与开合高亮（挂载时一次性生效）
+  autofocus?: boolean // 是否自动获取焦点
+  defaultOpen?: boolean // 是否默认展开下拉菜单（非受控）
   defaultActiveFirstOption?: boolean // 是否默认高亮第一个选项
   firstActiveValue?: SelectValue | SelectValue[] // 默认高亮的选项
   // 面板内容
   dropdownRender?: (params: DropdownRenderParams) => VNode // 自定义下拉框内容
   notFoundContent?: string | VNode | null // 当下拉列表为空时显示的内容，传 null 时不展开空面板
-  menuItemSelectedIcon?: VNode | (() => VNode) // 自定义当前选中的条目图标
   maxDisplay?: number // 下拉面板最多能展示的项数，超过后滚动显示
   listHeight?: number // 下拉面板滚动高度，单位 px（未传时回落 maxDisplay × 32）
   virtual?: boolean // 是否开启虚拟滚动，大数据量时仅渲染可视区选项
@@ -143,27 +147,29 @@ export interface Props {
   // 可访问性
   id?: string // 组件 id，用于 aria-controls / aria-activedescendant 关联，未传时内部生成
 }
-// 声明组件插槽类型
+// 声明组件插槽类型（顺序与文档 `## Slots` 表一致）
 export interface SelectSlots {
   default?: () => VNode[] // 子组件式选项（<SelectOption> / <SelectOptGroup>）
-  option?: (props: Option) => VNode[]
-  notFoundContent?: () => VNode[]
-  suffixIcon?: () => VNode[]
-  menuItemSelectedIcon?: (props: { isSelected: boolean }) => VNode[]
-  clearIcon?: (props: { clear: (e?: MouseEvent) => void }) => VNode[]
-  dropdownRender?: (props: DropdownRenderParams) => VNode[]
-  placeholder?: () => VNode[]
-  optionLabel?: (option: Option) => VNode[]
-  tagRender?: (params: TagRenderParams) => VNode[]
-  maxTagPlaceholder?: (params: { omittedValues: Option[] }) => VNode[]
-  removeIcon?: () => VNode[]
+  option?: (props: Option) => VNode[] // 自定义选项内容，作用域为当前选项数据
+  optionLabel?: (option: Option) => VNode[] // 自定义回填到选择框的内容，作用域为当前选中项数据
+  placeholder?: () => VNode[] // 自定义占位内容
+  suffixIcon?: () => VNode[] // 自定义选择框后缀图标
+  clearIcon?: (props: { clear: (e?: MouseEvent) => void }) => VNode[] // 自定义清除图标，作用域参数 clear 为清除方法
+  menuItemSelectedIcon?: (props: { isSelected: boolean }) => VNode[] // 自定义选中项图标，作用域参数 isSelected 标识该项是否被选中
+  notFoundContent?: () => VNode[] // 自定义空数据内容
+  dropdownRender?: (props: DropdownRenderParams) => VNode[] // 自定义下拉框内容，作用域参数 menuNode 为内置菜单节点
+  tagRender?: (params: TagRenderParams) => VNode[] // 自定义 tag 渲染内容，作用域参数同 tagRender 属性
+  maxTagPlaceholder?: (params: { omittedValues: Option[] }) => VNode[] // tag 被折叠时显示的内容，作用域参数 omittedValues 为被折叠的选项数组
+  removeIcon?: () => VNode[] // 自定义 tag 的移除图标
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  value: undefined,
+  open: undefined,
+  searchValue: undefined,
   options: () => [],
   fieldNames: undefined,
   mode: undefined,
-  value: undefined,
   labelInValue: false,
   optionLabelProp: undefined,
   width: 'auto',
@@ -173,14 +179,13 @@ const props = withDefaults(defineProps<Props>(), {
   bordered: true,
   status: undefined,
   disabled: false,
-  autofocus: false,
+  loading: false,
   allowClear: false,
   clearIcon: undefined,
   suffixIcon: undefined,
   showArrow: undefined,
-  loading: false,
+  menuItemSelectedIcon: undefined,
   showSearch: undefined, // 未指定时按模式兜底（多选默认开启搜索），故不能在此落 false
-  searchValue: undefined,
   optionFilterProp: undefined,
   filterOption: true,
   filterSort: undefined,
@@ -191,13 +196,12 @@ const props = withDefaults(defineProps<Props>(), {
   removeIcon: undefined,
   tokenSeparators: () => [],
   autoClearSearchValue: true,
-  open: undefined,
+  autofocus: false,
   defaultOpen: false,
   defaultActiveFirstOption: true,
   firstActiveValue: undefined,
   dropdownRender: undefined,
   notFoundContent: undefined,
-  menuItemSelectedIcon: undefined,
   maxDisplay: 8,
   listHeight: undefined,
   virtual: true,
@@ -223,13 +227,14 @@ const slotsExist = useSlotsExist([
   'dropdownRender',
   'placeholder'
 ])
+// 声明组件事件（顺序与文档 `## Events` 表一致；update:value 即 v-model:value 回写，随 value 属性一并说明）
 const emits = defineEmits([
   'update:value',
-  'update:searchValue',
   'change',
-  'search',
+  'deselect',
   'select',
   'clear',
+  'search',
   'focus',
   'blur',
   'openChange',
@@ -238,27 +243,25 @@ const emits = defineEmits([
   'mouseenter',
   'mouseleave',
   'inputKeyDown',
-  'deselect'
+  'update:searchValue'
 ])
 const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const selectWrapRef = ref<HTMLElement | null>(null) // 组件根元素引用，用于判断焦点是否仍落在本组件内
-const inputRef = ref<HTMLInputElement | null>(null) // input 元素引用
-const selectContentRef = ref<HTMLElement | null>(null) // selectContent 模板引用
-const selectPanelRef = ref<HTMLElement | null>(null) // 下拉面板 selectPanel 模板引用
+const inputRef = ref<HTMLInputElement | null>(null) // 搜索输入框
+const selectContentRef = ref<HTMLElement | null>(null) // 触发器内容容器（面板定位锚点 + tag 宽度量取对象）
+const selectPanelRef = ref<HTMLElement | null>(null) // 面板根元素（滚动容器查找 / 焦点归属判定）
 const selectPanelWrapperRef = ref<HTMLElement | null>(null) // 定位参照容器：面板 top / left 的坐标原点
-const showOptions = ref<boolean>(false) // 非受控模式下显示隐藏 options 面板
+const showOptions = ref<boolean>(false) // 非受控模式下的面板显隐
 const innerSearchValue = ref<string>('') // 非受控模式下的搜索文本
-const focused = ref<boolean>(false) // select 是否聚焦
+const focused = ref<boolean>(false) // 是否聚焦（决定描边 / 阴影与多选输入框的可编辑性）
 const isComposing = ref<boolean>(false) // 是否处于输入法(IME)合成中，合成期间不触发 search / 过滤
-const hoverValue = ref<SelectValue | null>(null) // 面板中高亮项的 value
+const hoverValue = ref<SelectValue | null>(null) // 键盘 / 悬浮高亮项的 value
 const backspaceLock = ref<boolean>(false) // 退格锁：上一次按键时搜索文本是否非空（避免清空搜索的同一次按键又删掉一个 tag）
 const responsiveTagCount = ref<number>(0) // maxTagCount 为 'responsive' 时按容器宽度算出的可见 tag 数
 const responsiveMeasured = ref<boolean>(false) // 是否已按容器宽度量取过（量取前先全量渲染，避免无布局环境下 tag 全被折叠）
 const { colorPalettes, shadowColor } = useInject('Select') // 主题色注入
-// 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配；未传则沿用默认层级 1050
-// 下拉面板需高于承载它的 Modal / Drawer / Dialog
-// 领取时机由面板「出现」驱动（allocateOnMount: false）：面板首帧才渲染，挂载时不持有槽位，
-// 否则未展开过的下拉会长期占位、抬高后续分配点
+// 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配，未传则沿用默认 1050（面板需高于承载它的 Modal / Drawer / Dialog）；
+// 领取时机由面板「出现」驱动（allocateOnMount: false）—— 挂载时不持有槽位，否则未展开过的下拉会长期占位、抬高后续分配点
 const {
   zIndex: layerZIndex,
   allocate: allocateZIndex,
@@ -277,7 +280,7 @@ const mergedFieldNames = computed(() => ({
 }))
 // 分组子选项字段名（约定：fieldNames.options，未指定时为 'options'）
 const groupField = computed(() => props.fieldNames?.options || 'options')
-// ==================== 子组件式选项（default 插槽） ====================
+// 子组件式选项（default 插槽）
 /** 选项 / 分组标记组件的静态标记字段（静态标记约定） */
 interface OptionMarker {
   isSelectOption?: boolean
@@ -429,7 +432,7 @@ const mergedShowSearch = computed(() => props.showSearch ?? isMultiple.value)
 const mergedShowArrow = computed(() => props.showArrow ?? (props.loading || !isMultiple.value))
 const mergedOpen = computed(() => (props.open !== undefined ? props.open : showOptions.value))
 const mergedSearchValue = computed(() => (props.searchValue !== undefined ? props.searchValue : innerSearchValue.value))
-// ==================== labelInValue ====================
+// labelInValue
 /** 是否为 labelInValue 对象（约定：非对象 / 数组 / 空值一律视为原始值） */
 function isLabeledValue(value: unknown): value is LabeledValue {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
@@ -606,8 +609,10 @@ const itemTitle = computed(() => {
   const text = displayText.value
   return typeof text === 'string' || typeof text === 'number' ? String(text) : undefined
 })
-// ==================== 多选 / 标签 ====================
-const TAG_GAP = 4 // tag 右外边距，与 .select-selection-item 的 margin-right 保持一致（用于 responsive 宽度累计）
+// 多选 / 标签
+const TAG_GAP = 4 // 默认标签的右外边距（与 .select-selection-item 的 margin-right 一致），用于 responsive 宽度累计
+// tagRender 接管后外层不再提供外边距、标签间距由自定义内容承担，量宽时不再额外累加间距
+const tagGap = computed(() => (slots.tagRender ? 0 : TAG_GAP))
 // 已选项列表（多选）：按 value 顺序映射，查不到时回落缓存 / value 兜底选项
 const selectedOptions = computed<Option[]>(() =>
   valueList.value.map((value) => findOption(value) ?? createFallbackOption(value))
@@ -696,14 +701,14 @@ function measureResponsiveTagCount(): void {
     container.querySelectorAll<HTMLElement>('.select-selection-item:not(.select-selection-item-rest)')
   )
   const restNode = container.querySelector<HTMLElement>('.select-selection-item-rest')
-  const restWidth = restNode ? restNode.offsetWidth + TAG_GAP : 0
+  const restWidth = restNode ? restNode.offsetWidth + tagGap.value : 0
   const containerStyle = getComputedStyle(container)
   const available =
     container.clientWidth - parseFloat(containerStyle.paddingLeft) - parseFloat(containerStyle.paddingRight)
   let used = 0
   let count = 0
   for (let index = 0; index < tagNodes.length; index++) {
-    const width = tagNodes[index].offsetWidth + TAG_GAP
+    const width = tagNodes[index].offsetWidth + tagGap.value
     // 折叠后还需额外放下「折叠提示」tag，最后一项无需预留
     const need = width + (index < total - 1 ? restWidth : 0)
     if (used + need > available) break
@@ -767,7 +772,7 @@ const displayOptions = computed<Option[]>(() => {
   if (!filterSort) return searchFilledOptions.value
   return [...searchFilledOptions.value].sort((optionA, optionB) => filterSort(optionA, optionB))
 })
-// ==================== 虚拟滚动（大数据量只渲染可视区） ====================
+// 虚拟滚动（大数据量只渲染可视区）
 // 选项行高：与 .select-option / .select-option-group 的实际行高一致（默认 32px），
 // 既是渲染窗口的换算基准，也是上下占位区高度的换算基准
 const DEFAULT_ROW_HEIGHT = 32
@@ -848,7 +853,7 @@ const virtualTopHeight = computed(() => (virtualActive.value ? renderWindow.valu
 const virtualBottomHeight = computed(() =>
   virtualActive.value ? (menuRows.value.length - renderWindow.value.end) * rowHeight.value : 0
 )
-// ==================== 可访问性（ARIA） ====================
+// 可访问性（ARIA）
 // id 在 SSR 与客户端须一致，故用模块级自增序号而非时间戳（见文件顶部 nextSelectId）
 const innerSelectId = nextSelectId()
 const mergedSelectId = computed(() => props.id || innerSelectId)
@@ -989,10 +994,8 @@ watch(panelVisible, async (visible) => {
   }
 })
 /**
- * 打开面板时的高亮 / 滚动处理 —— 逐条对照既有实现：
- * - **单选模式且已有选中值**：把高亮复位到选中项并滚入可视区；
- * - 其余情形（多选 / 标签，或单选无值）：**不复位** —— 保留用户上次移动的高亮与滚动位置
- *   （复位分支带 `!multiple && rawValues.size === 1` 前置条件，多选下开合不会打断用户已定位的位置）
+ * 打开面板时的高亮 / 滚动处理：仅「单选且已有选中值」把高亮复位到选中项并滚入可视区；
+ * 其余情形（多选 / 标签 / 单选无值）保留用户上次移动的高亮与滚动位置，避免打断已定位的位置
  */
 watch(panelVisible, async (visible) => {
   if (!visible) {
@@ -1024,11 +1027,9 @@ watchEffect(() => {
   const firstEnabled = displayOptions.value.find((option) => !option.disabled)
   hoverValue.value = firstEnabled ? (getOptionValue(firstEnabled) ?? null) : null
 })
-// 承载层（Modal / Drawer / Dialog）关闭时收起面板并归位聚焦态：容器不卸载内容，本面板也不会随容器消失 ——
-// ① 面板：停留在打开态会占着层级槽位，被「后出现者在上」重新打开的容器反超（落到遮罩之下），
-//    同时无谓抬高后续分配点（详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）
-// ② 聚焦态：容器关闭不派发 blur（focusTriggerAfterClose 归还焦点时也未必落到本 input 上），
-//    故须在此显式归位，否则容器重开时聚焦描边与阴影仍在
+// 承载层（Modal / Drawer / Dialog）关闭时收起面板并归位聚焦态（容器不卸载内容，面板不会随容器消失）：
+// ① 面板停留打开态会占着层级槽位、被重新打开的容器反超（详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）；
+// ② 容器关闭不派发 blur，不显式归位则容器重开时仍残留聚焦描边与阴影
 const containerOpen = inject(Z_INDEX_CONTAINER_OPEN_KEY, null) as Ref<boolean> | null
 if (containerOpen) {
   watch(containerOpen, (open) => {
@@ -1071,12 +1072,9 @@ function onContainerScroll(): void {
   }
 }
 /**
- * 代理面板滚轮滚动（组件接管 wheel，使滚动位置与渲染窗口同帧生效）。
- * ⚠️ 原生滚动由浏览器合成线程先行应用，而窗口化渲染在主线程计算：快速滚动时渲染窗口追不上滚动位置，
- * 视口下沿会露出一截尚未渲染的占位区 —— 表现为「面板底部先出现空白间距，随后被文本填充」。
- * 故虚拟滚动生效时接管 wheel：阻止原生滚动，按 delta 自行写 scrollTop，
- * 使滚动位置与渲染窗口在同一帧内一起生效（沿用既有做法）；
- * 已到边界且方向朝外时不拦截，保留原生滚动链（滚动继续交给上层容器 / 页面）。
+ * 代理面板滚轮滚动：原生滚动由合成线程先行、窗口化渲染在主线程计算，快速滚动时渲染窗口追不上，
+ * 视口下沿会露出未渲染的占位区（面板底部先空白、随后被文本填充）→ 虚拟滚动生效时接管 wheel，
+ * 阻止原生滚动并按 delta 自行写 scrollTop，使滚动位置与渲染窗口同帧生效（到边界且方向朝外时不拦截，保留滚动链）
  */
 function onPanelWheel(e: WheelEvent): void {
   if (!virtualActive.value) return
@@ -1110,12 +1108,9 @@ function bindScrollContainer(): void {
     scrollContainerEl.value = container
   }
   /*
-    先按组件内记录的偏移恢复容器位置，再回读真实值对齐：
-    面板用 v-show 复用同一元素，但浏览器在 display:none 期间会把容器 scrollTop 归零且不恢复（Chrome 实测），
-    若只回读真实值，关闭前的偏移就丢了 —— 实测表现为面板重开后一片空白
-    （渲染窗口仍按旧偏移切片、容器却停在顶部，可视区里只剩上方占位）。
-    故按收起前记录的位置恢复（跨开合保留，与既有实现一致），再回读一次：
-    偏移超出新的内容高度时由浏览器夹取，容器位置与渲染窗口始终一致
+    先按组件内记录的偏移恢复容器位置，再回读真实值对齐：display:none 期间浏览器会把容器 scrollTop
+    归零且不恢复（Chrome 实测），只回读会丢掉关闭前的偏移 → 面板重开后一片空白（渲染窗口仍按旧偏移
+    切片、容器停在顶部）；偏移超出新内容高度时由浏览器夹取，容器位置与渲染窗口始终一致
   */
   if (container.scrollTop !== virtualScrollTop.value) {
     container.scrollTop = virtualScrollTop.value
@@ -1161,11 +1156,9 @@ function emitPanelChange(open: boolean): void {
   emits('dropdownVisibleChange', open)
 }
 /**
- * 统一控制面板显隐：
- * - 非受控：直接改内部状态，事件由 watch(showOptions) 上报
- * - 受控：不直接改内部状态（实际显隐由外部 open 驱动），但必须把用户的「开合请求」上报出去 ——
- *   若受控时直接 return，用户交互（点击 / 输入）既打不开面板也不派发任何事件；
- *   与目标值相同的请求不再重复上报，避免噪声
+ * 统一控制面板显隐：非受控直接改内部状态（事件由 watch(showOptions) 上报）；
+ * 受控不改内部状态，但必须把用户的「开合请求」上报（直接 return 会让点击 / 输入既不开面板也不派发事件），
+ * 与目标值相同的请求不重复上报
  */
 function setPanelOpen(open: boolean): void {
   if (props.open === undefined) {
@@ -1295,11 +1288,9 @@ function onMousedown(e: MouseEvent): void {
   }
 }
 /**
- * 面板 mousedown：阻止面板内的非输入类区域抢走触发器焦点
- *
- * 与触发器同理，不阻止默认行为会让 input 失焦触发 blur 关闭面板；
- * 但 dropdownRender 等自定义区域内的输入类元素（扩展菜单即此模式）必须拿到焦点，故对其放行 ——
- * 随之而来的 blur 由 onBlur 的「焦点是否仍在面板内」判定放行，面板保持展开
+ * 面板 mousedown：阻止面板内的非输入类区域抢走触发器焦点（否则 input 失焦 → blur 关闭面板）；
+ * dropdownRender 等自定义区域内的输入类元素必须拿到焦点，故对其放行 —— 随之而来的 blur
+ * 由 onBlur 的「焦点是否仍在面板内」判定放行，面板保持展开
  */
 function onPanelMousedown(e: MouseEvent): void {
   const target = e.target as HTMLElement | null
@@ -1779,11 +1770,16 @@ defineExpose({
     <div ref="selectContentRef" class="select-content-container">
       <!-- 多选 / 标签：标签列表。被折叠的 tag 仍渲染在 DOM 中（以绝对定位隐藏），供 responsive 量取真实宽度 -->
       <template v-if="isMultiple">
+        <!-- tagRender 接管渲染时外层不再提供标签视觉（背景 / 边框 / 内边距 / 固定高度），否则与自定义内容叠成双层标签 -->
         <span
           v-for="item in tagItems"
           :key="String(item.value)"
           class="select-selection-item"
-          :class="{ 'select-selection-item-disabled': item.disabled, 'select-tag-hidden': item.hidden }"
+          :class="{
+            'select-tag-render': Boolean(slots.tagRender),
+            'select-selection-item-disabled': item.disabled,
+            'select-tag-hidden': item.hidden
+          }"
           :title="getTagTitle(item.label)"
         >
           <!-- 插槽存在即接管 tag 渲染：以内容探测判定会误伤「渲染结果取决于选项字段」的插槽，故直接看插槽是否提供 -->
@@ -2019,10 +2015,6 @@ defineExpose({
     }
   }
 }
-/* 离开动画期间禁用指针事件
-   必须带上 `.select-panel-container`：单类写法 `.slide-leave-active` 与下方的
-   `.select-panel-container { pointer-events: auto }` 同为「类 + 作用域属性 = 0,2,0」，
-   且本规则声明在**前**，会被后者按源码顺序覆盖而静默失效；带上该类后为 0,3,0，靠**特异性**取胜 */
 .select-panel-container.slide-leave-active {
   pointer-events: none;
 }
@@ -2229,9 +2221,6 @@ defineExpose({
   }
 }
 .select-borderless {
-  /* 无边框覆盖禁用态：无边框态需对背景 / 边框 / 阴影覆盖一切（禁用态也不例外），
-     故此处以「根元素双类」提升特异性（高于 .select-disabled .select-content-container），
-     使「无边框 + 禁用」仍是无边框（仅文字转灰 + not-allowed 光标） */
   &.select-wrap .select-content-container {
     border-color: transparent;
     background-color: transparent;
@@ -2287,7 +2276,7 @@ defineExpose({
     box-shadow: 0 0 0 2px rgba(255, 215, 5, 0.1);
   }
 }
-/* ==================== 多选 / 标签 ==================== */
+/* 多选 / 标签 */
 .select-wrap.select-multiple {
   /* 高度自适应：tag 换行时触发器随之增高 */
   height: auto;
@@ -2301,10 +2290,6 @@ defineExpose({
     align-items: center;
     padding: 1px 4px;
     cursor: text;
-    /* 丢弃基线的 \a0 占位：它是 flex 子项，tag 换行时会被带到「输入框所在的那一行」，
-       把该行由 24px 抬到 28px —— 实测 4 标签场景触发器高 60px。
-       tags 与输入框同处一个溢出容器（占位与其同级）故不受影响，
-       此处以「容器 min-height 保底」等价达成同一结果 */
     &::after {
       content: none;
     }
@@ -2314,12 +2299,6 @@ defineExpose({
   &.select-allow-clear .select-content-container {
     padding-right: 24px;
   }
-  /* 输入框内联在 tag 列表之后（布局：tag 列表 + 输入框）
-     ① 基尺寸取 0：若按内容基宽（auto）参与换行计算，输入框会把首行剩余空间挤满而自身换到第二行，
-        连基线占位一起顶下去 —— 实测触发器高度由 32px 变成 58px（多出一整行）。
-        取 0 后先按 tag 排布，再把「本行剩余宽度」增长给输入框
-     ② 左间距 8px：仅「搜索框排在标签之前（无标签）」时需要，缺少它时光标会紧贴容器左内边距；
-        跟在标签之后时由标签自身的 margin-right 提供间隔，故紧随其后的规则把非首位的搜索框左间距归零 */
   .select-content-container .select-search {
     position: relative;
     top: auto;
@@ -2341,9 +2320,6 @@ defineExpose({
       caret-color: auto;
     }
   }
-  /* 搜索框前面已有标签时不再叠加左间距：该间距只服务于「搜索框在最前」的场景，
-     跟在标签之后时拉开距离的是标签自身的 margin-right 4px
-     （实测：归零后该间距不再叠加） */
   .select-content-container .select-search:not(:first-child) {
     margin-left: 0;
   }
@@ -2376,6 +2352,15 @@ defineExpose({
   line-height: calc(var(--select-tag-height) - 2px);
   cursor: default;
   user-select: none;
+}
+/* tagRender 接管渲染：外层只保留排布职责，间距与标签视觉（外边距 / 背景 / 边框 / 内边距 / 固定高度）
+   全部交给自定义内容，否则会与自定义内容（如带边框的标签组件）叠成双层标签 */
+.select-selection-item.select-tag-render {
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
 }
 .select-selection-item-content {
   display: inline-block;
@@ -2435,8 +2420,6 @@ defineExpose({
   border-radius: 8px;
   overflow: hidden;
   background-color: #fff;
-  /* 面板基准字号：下拉根节点声明 fontSize: 14px，
-     本项目原先未声明 → 空态等「非选项」内容会继承页面字号（演示页为 16px，比选项大一号） */
   font-size: 14px;
   outline: none;
   cursor: auto;
@@ -2444,8 +2427,6 @@ defineExpose({
     0 6px 16px 0 rgba(0, 0, 0, 0.08),
     0 3px 6px -4px rgba(0, 0, 0, 0.12),
     0 9px 28px 8px rgba(0, 0, 0, 0.05);
-  /* 菜单内容由内部函数组件经 h() 创建，这些 DOM 不带本组件的 scoped 属性，
-     直接写后代选择器会全部失配（表现为「面板没有样式」），故以 :deep() 命中深层节点 */
   :deep(.select-options-panel) {
     /* 关闭滚动越界回弹与滚动链：否则触控板惯性滚动会带着列表冲出滚动区，面板底部露出空白
        （若以 transform 位移实现列表滚动则内容天然不越界，本库用原生滚动故需在此显式关闭回弹）。
@@ -2457,8 +2438,6 @@ defineExpose({
          与窗口计算互相追赶形成抖动（本项目的位置由下标算出，不需要浏览器补偿） */
       overflow-anchor: none;
     }
-    /* 分组标题：（次级文字色 + 小字号 + 不参与交互）——
-       高度取选项行高控制值 32px、行高取全局行高 1.5714，与选项行等高 */
     .select-option-group {
       min-height: 32px;
       padding: 5px 12px;
@@ -2467,7 +2446,6 @@ defineExpose({
       line-height: 1.5714285714285714;
       cursor: default;
     }
-    /* 分组子选项左缩进一级（缩进 24px） */
     .select-option.option-grouped {
       padding-inline-start: 24px;
     }
@@ -2501,7 +2479,6 @@ defineExpose({
     .option-selected {
       font-weight: 600;
       background: var(--select-option-bg-color-active);
-      /* 已选项的选中态图标使用主色（约定：colorPrimary） */
       .select-option-state {
         color: var(--select-primary-color);
       }
@@ -2515,11 +2492,6 @@ defineExpose({
     }
   }
   :deep(.options-panel-empty) {
-    /* 不自设 min-width：空态宽度受面板约束，撑破宽度会被 overflow: hidden 裁掉内容（随面板换行）。
-       左右内边距取 8px 而非 16px：面板等宽时留给内容的宽度有限，16px 会把「暂无数据」挤成两行。
-       不设 text-align: center：默认空态由 Empty 组件自身 text-align: center 居中；
-       使用者传入的自定义内容（字符串或 VNode，如 notFoundContent 放 Spin / 放文案）一律左对齐，
-       空态仅声明 color */
     padding: 9px 8px;
     .empty-wrap {
       margin-block: 8px;

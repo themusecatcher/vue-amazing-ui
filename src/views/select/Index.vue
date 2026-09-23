@@ -17,6 +17,11 @@ function onBasicFocus() {
   console.log('focus')
 }
 // 三种大小
+const sizeRadios = [
+  { label: 'large', value: 'large' },
+  { label: 'middle', value: 'middle' },
+  { label: 'small', value: 'small' }
+]
 const size = ref<SelectProps['size']>('middle')
 const sizeOptions: SelectOption[] = [...Array(25)].map((_, index) => ({
   value: `${index + 10}`,
@@ -29,6 +34,28 @@ function onPopupScroll() {
 // 三种大小的多选 / 标签示例段
 const sizeMultipleValue = ref<SelectProps['value']>(['10', '11'])
 const sizeTagsValue = ref<SelectProps['value']>(['10', '11'])
+// 城市选项数据：无边框 / 禁用 / 禁用选项 / 自定义状态 / 支持清除 / 键盘操作 / 自定义选中标识 / 下拉面板 / 受控展开 共用
+const cityOptions: SelectOption[] = [
+  { label: '北京市', value: 1 },
+  { label: '上海市', value: 2 },
+  { label: '纽约市', value: 3 },
+  { label: '旧金山', value: 4 },
+  { label: '伊斯坦布尔', value: 5 },
+  { label: '君士坦丁堡', value: 6 }
+]
+// 无边框
+const borderlessValue = ref<SelectProps['value']>(1)
+// 禁用
+const disabledValue = ref<SelectProps['value']>(5)
+// 禁用选项
+const cityOptionsDisabled: SelectOption[] = cityOptions.map((option, index) =>
+  index === 1 ? { ...option, disabled: true } : option
+)
+const disabledOptionValue = ref<SelectProps['value']>(5)
+// 自定义状态
+const statusValue = ref<SelectProps['value']>(1)
+// 多选
+const multipleValue = ref<SelectProps['value']>(['10', '11'])
 // 标签（复用 25 项数据：数量足够撑出面板滚动）
 const tagsValue = ref<SelectProps['value']>([])
 // 最多显示多少个选项及选项最大长度
@@ -51,6 +78,13 @@ const maxTagTextLengthRadios = [
   { label: '10', value: 10 },
   { label: '20', value: 20 }
 ]
+// 隐藏已选择选项：已选项从下拉列表中移除，标签仍由组件内部的选项缓存保留
+const hideSelectedValue = ref<SelectProps['value']>([])
+const hideSelectedSource = ['Apples', 'Nails', 'Bananas', 'Helicopters']
+const hideSelectedOptions = computed<SelectOption[]>(() => {
+  const selected = Array.isArray(hideSelectedValue.value) ? hideSelectedValue.value : []
+  return hideSelectedSource.filter((item) => !selected.includes(item)).map((item) => ({ value: item }))
+})
 // 自动分词
 const tokenValue = ref<SelectProps['value']>([])
 const tokenOptions: SelectOption[] = [{ value: 'a1', label: 'a1' }]
@@ -69,21 +103,6 @@ const labelInValueValue = ref<SelectProps['value']>({ value: 'lucy', label: 'Luc
 function onLabelInValueChange(value: SelectProps['value']) {
   console.log('labelInValue', value)
 }
-// 多选
-const multipleValue = ref<SelectProps['value']>(['10', '11'])
-// 联动
-// 省市数据取自 Cascader 用例的同一份中文数据（北京市 / 浙江）
-const provinceData = ['北京市', '浙江']
-const cityData: Record<string, string[]> = {
-  北京市: ['东城区', '西城区'],
-  浙江: ['杭州市', '湖州市']
-}
-const province = ref(provinceData[0])
-const secondCity = ref(cityData[province.value][0])
-const cities = computed(() => cityData[province.value])
-watch(province, (value) => {
-  secondCity.value = cityData[value][0]
-})
 // 分组：子组件式（SelectOptGroup + SelectOption）与配置式（options 嵌套）两种写法
 const groupValue = ref<SelectProps['value']>('lucy')
 const groupOptions: SelectOption[] = [
@@ -99,6 +118,34 @@ const groupOptions: SelectOption[] = [
     options: [{ value: 'yiminghe', label: 'Yiminghe' }]
   }
 ]
+// 自定义 label、value、options 字段
+const fieldOptions = [
+  { id: 'jack', name: 'Jack' },
+  { id: 'lucy', name: 'Lucy' },
+  { id: 'disabled', name: 'Disabled', disabled: true },
+  { id: 'yiminghe', name: 'Yiminghe' }
+]
+const fieldValue = ref<SelectProps['value']>('lucy')
+const fieldNames = { label: 'name', value: 'id' }
+// 分组子选项：分组字段名同样由 fieldNames.options 指定（此处为 items），组条目自身不可选中
+const groupFieldOptions = [
+  {
+    name: 'Manager',
+    items: [
+      { id: 'jack', name: 'Jack' },
+      { id: 'lucy', name: 'Lucy' }
+    ]
+  },
+  {
+    name: 'Engineer',
+    items: [
+      { id: 'yiminghe', name: 'Yiminghe' },
+      { id: 'yiminghe1', name: 'Yiminghe1' }
+    ]
+  }
+]
+const groupFieldNames = { label: 'name', value: 'id', options: 'items' }
+const groupFieldValue = ref<SelectProps['value']>('lucy')
 // 搜索框（远程搜索）
 const remoteValue = ref<SelectProps['value']>()
 const remoteOptions = ref<SelectOption[]>([])
@@ -168,128 +215,24 @@ watch(userValue, () => {
 onUnmounted(() => {
   if (userTimer) clearTimeout(userTimer)
 })
-// 后缀图标
-const suffixValue = ref<SelectProps['value']>('lucy')
-const suffixOptions: SelectOption[] = [
-  { value: 'jack', label: 'Jack' },
-  { value: 'lucy', label: 'Lucy' },
-  { value: 'disabled', label: 'Disabled', disabled: true },
-  { value: 'yiminghe', label: 'Yiminghe' }
-]
-// 隐藏已选择选项：已选项从下拉列表中移除，标签仍由组件内部的选项缓存保留
-const hideSelectedValue = ref<SelectProps['value']>([])
-const hideSelectedSource = ['Apples', 'Nails', 'Bananas', 'Helicopters']
-const hideSelectedOptions = computed<SelectOption[]>(() => {
-  const selected = Array.isArray(hideSelectedValue.value) ? hideSelectedValue.value : []
-  return hideSelectedSource.filter((item) => !selected.includes(item)).map((item) => ({ value: item }))
+// 联动
+// 省市数据取自 Cascader 用例的同一份中文数据（北京市 / 浙江）
+const provinceData = ['北京市', '浙江']
+const cityData: Record<string, string[]> = {
+  北京市: ['东城区', '西城区'],
+  浙江: ['杭州市', '湖州市']
+}
+const province = ref(provinceData[0])
+const secondCity = ref(cityData[province.value][0])
+const cities = computed(() => cityData[province.value])
+watch(province, (value) => {
+  secondCity.value = cityData[value][0]
 })
-// 扩展菜单
-const addableItems = ref(['jack', 'lucy'])
-const addableValue = ref<SelectProps['value']>()
-const addableName = ref('')
-let addableIndex = 0
-function addItem() {
-  addableItems.value = [...addableItems.value, addableName.value || `New item ${(addableIndex += 1)}`]
-  addableName.value = ''
-}
-// 定制回填内容
-const countryValue = ref<SelectProps['value']>('china')
-const countryOptions: SelectOption[] = [
-  { value: 'china', label: 'China (中国)', icon: '🇨🇳' },
-  { value: 'usa', label: 'USA (美国)', icon: '🇺🇸' },
-  { value: 'japan', label: 'Japan (日本)', icon: '🇯🇵' },
-  { value: 'korea', label: 'Korea (韩国)', icon: '🇰🇷' }
-]
-// 定制回填内容的多选示例段
-const countryMultipleValue = ref<SelectProps['value']>(['china'])
-// 大数据：10 万项验证虚拟滚动（打开面板只渲染可视区选项）
-// label 用「城市 + 6 位序号」而非裸字符串，滚动时更易辨识
-const bigDataCities = ['北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安', '南京', '重庆']
-const bigDataOptions: SelectOption[] = Array.from({ length: 100000 }, (_, index) => ({
-  value: `item-${index + 1}`,
-  label: `${bigDataCities[index % bigDataCities.length]} ${String(index + 1).padStart(6, '0')}`
-}))
-const bigDataValue = ref<SelectProps['value']>(['item-10', 'item-12'])
-const bigDataVirtual = ref(true)
-// 自定义 label、value、options 字段
-const fieldOptions = [
-  { id: 'jack', name: 'Jack' },
-  { id: 'lucy', name: 'Lucy' },
-  { id: 'disabled', name: 'Disabled', disabled: true },
-  { id: 'yiminghe', name: 'Yiminghe' }
-]
-const fieldValue = ref<SelectProps['value']>('lucy')
-const fieldNames = { label: 'name', value: 'id' }
-// 分组子选项：分组字段名同样由 fieldNames.options 指定（此处为 items），组条目自身不可选中
-const groupFieldOptions = [
-  {
-    name: 'Manager',
-    items: [
-      { id: 'jack', name: 'Jack' },
-      { id: 'lucy', name: 'Lucy' }
-    ]
-  },
-  {
-    name: 'Engineer',
-    items: [
-      { id: 'yiminghe', name: 'Yiminghe' },
-      { id: 'yiminghe1', name: 'Yiminghe1' }
-    ]
-  }
-]
-const groupFieldNames = { label: 'name', value: 'id', options: 'items' }
-const groupFieldValue = ref<SelectProps['value']>('lucy')
-// 下拉面板弹出位置
-const placement = ref<SelectProps['placement']>('bottomLeft')
-const placementValue = ref<SelectProps['value']>(5)
-// 面板宽度取固定值（200），使面板宽于触发器：否则四个方位宽度一致、看不出差异
-const placementRadios = [
-  { label: 'topLeft', value: 'topLeft' },
-  { label: 'topRight', value: 'topRight' },
-  { label: 'bottomLeft', value: 'bottomLeft' },
-  { label: 'bottomRight', value: 'bottomRight' }
-]
-// 自定义状态
-const statusValue = ref<SelectProps['value']>(1)
-// 禁用 / 禁用选项 / 支持清除 / 键盘操作 / 自定义尺寸 / 自定义选中标识
-const cityOptions: SelectOption[] = [
-  { label: '北京市', value: 1 },
-  { label: '上海市', value: 2 },
-  { label: '纽约市', value: 3 },
-  { label: '旧金山', value: 4 },
-  { label: '伊斯坦布尔', value: 5 },
-  { label: '君士坦丁堡', value: 6 }
-]
-const cityOptionsDisabled: SelectOption[] = cityOptions.map((option, index) =>
-  index === 1 ? { ...option, disabled: true } : option
-)
-const disabledValue = ref<SelectProps['value']>(5)
-const disabledOptionValue = ref<SelectProps['value']>(5)
+// 支持清除
 const clearableValue = ref<SelectProps['value']>(5)
+// 键盘操作
 const keyboardValue = ref<SelectProps['value']>(5)
-const stateIconValue = ref<SelectProps['value']>(5)
-// 下拉面板宽度 / 挂载容器 / 面板数 / 滚动条 / 自定义面板 / 无边框 / 受控展开 / 空数据
-const longOptions: SelectOption[] = [...Array(10)].map((_, index) => ({ label: `选项 ${index + 1}`, value: index + 1 }))
-// 选项文本长短不一，用于验证 dropdownMatchSelectWidth 为 false 时面板按内容自适应
-const adaptiveOptions: SelectOption[] = [
-  { label: '短', value: 1 },
-  { label: '中等长度选项', value: 2 },
-  { label: '一段明显更长的选项文本', value: 3 }
-]
-const matchWidthValue = ref<SelectProps['value']>(1)
-const mountValue = ref<SelectProps['value']>(1)
-const listHeightValue = ref<SelectProps['value']>(1)
-const scrollbarValue = ref<SelectProps['value']>(1)
-const panelValue = ref<SelectProps['value']>(1)
-const panelZIndexValue = ref<SelectProps['value']>(1)
-// 自定义面板外观：经 dropdownMenuStyle 传入
-const customPanelStyle = {
-  background: 'rgba(255, 105, 0, 0.05)',
-  border: '1px solid #ff6900',
-  borderRadius: '12px',
-  boxShadow: '0 8px 20px rgba(255, 105, 0, 0.25)'
-}
-const borderlessValue = ref<SelectProps['value']>(1)
+// 受控展开
 const controlledOpen = ref(false)
 const controlledOpenValue = ref<SelectProps['value']>(1)
 function onControlledVisibleChange(open: boolean) {
@@ -305,12 +248,80 @@ function onToggleMousedown() {
 function onToggleClick() {
   controlledOpen.value = !openBeforeToggle
 }
-// 三种大小 / 弹出位置的切换项
-const sizeRadios = [
-  { label: 'large', value: 'large' },
-  { label: 'middle', value: 'middle' },
-  { label: 'small', value: 'small' }
+// 后缀图标
+const suffixValue = ref<SelectProps['value']>('lucy')
+const suffixOptions: SelectOption[] = [
+  { value: 'jack', label: 'Jack' },
+  { value: 'lucy', label: 'Lucy' },
+  { value: 'disabled', label: 'Disabled', disabled: true },
+  { value: 'yiminghe', label: 'Yiminghe' }
 ]
+// 自定义选中标识
+const stateIconValue = ref<SelectProps['value']>(5)
+// 定制回填内容
+const countryValue = ref<SelectProps['value']>('china')
+const countryOptions: SelectOption[] = [
+  { value: 'china', label: 'China (中国)', icon: '🇨🇳' },
+  { value: 'usa', label: 'USA (美国)', icon: '🇺🇸' },
+  { value: 'japan', label: 'Japan (日本)', icon: '🇯🇵' },
+  { value: 'korea', label: 'Korea (韩国)', icon: '🇰🇷' }
+]
+// 定制回填内容的多选示例段
+const countryMultipleValue = ref<SelectProps['value']>(['china'])
+// 下拉面板弹出位置
+const placement = ref<SelectProps['placement']>('bottomLeft')
+const placementValue = ref<SelectProps['value']>(5)
+// 面板宽度取固定值（200），使面板宽于触发器：否则四个方位宽度一致、看不出差异
+const placementRadios = [
+  { label: 'topLeft', value: 'topLeft' },
+  { label: 'topRight', value: 'topRight' },
+  { label: 'bottomLeft', value: 'bottomLeft' },
+  { label: 'bottomRight', value: 'bottomRight' }
+]
+// 下拉面板各用例共用数据（宽度 / 挂载容器 / 面板数 / 滚动条）
+const longOptions: SelectOption[] = [...Array(10)].map((_, index) => ({ label: `选项 ${index + 1}`, value: index + 1 }))
+// 下拉面板宽度
+// 选项文本长短不一，用于验证 dropdownMatchSelectWidth 为 false 时面板按内容自适应
+const adaptiveOptions: SelectOption[] = [
+  { label: '短', value: 1 },
+  { label: '中等长度选项', value: 2 },
+  { label: '一段明显更长的选项文本', value: 3 }
+]
+const matchWidthValue = ref<SelectProps['value']>(1)
+// 下拉面板挂载容器
+const mountValue = ref<SelectProps['value']>(1)
+// 下拉面板数
+const listHeightValue = ref<SelectProps['value']>(1)
+// 下拉面板滚动条
+const scrollbarValue = ref<SelectProps['value']>(1)
+// 自定义下拉面板
+const panelValue = ref<SelectProps['value']>(1)
+const panelZIndexValue = ref<SelectProps['value']>(1)
+// 自定义面板外观：经 dropdownMenuStyle 传入
+const customPanelStyle = {
+  background: 'rgba(255, 105, 0, 0.05)',
+  border: '1px solid #ff6900',
+  borderRadius: '12px',
+  boxShadow: '0 8px 20px rgba(255, 105, 0, 0.25)'
+}
+// 扩展菜单
+const addableItems = ref(['jack', 'lucy'])
+const addableValue = ref<SelectProps['value']>()
+const addableName = ref('')
+let addableIndex = 0
+function addItem() {
+  addableItems.value = [...addableItems.value, addableName.value || `New item ${(addableIndex += 1)}`]
+  addableName.value = ''
+}
+// 大数据：10 万项验证虚拟滚动（打开面板只渲染可视区选项）
+// label 用「城市 + 6 位序号」而非裸字符串，滚动时更易辨识
+const bigDataCities = ['北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安', '南京', '重庆']
+const bigDataOptions: SelectOption[] = Array.from({ length: 100000 }, (_, index) => ({
+  value: `item-${index + 1}`,
+  label: `${bigDataCities[index % bigDataCities.length]} ${String(index + 1).padStart(6, '0')}`
+}))
+const bigDataValue = ref<SelectProps['value']>(['item-10', 'item-12'])
+const bigDataVirtual = ref(true)
 // 空数据
 const emptyOptions: SelectOption[] = []
 </script>
@@ -333,7 +344,7 @@ const emptyOptions: SelectOption[] = []
     <Flex vertical gap="middle" align="start">
       <Radio :options="sizeRadios" v-model:value="size" button button-style="solid" />
       <!-- 单选 / 多选 / 标签三条同行展示 -->
-      <Space align="start">
+      <Space>
         <Select
           :options="sizeOptions"
           v-model:value="sizeValue"
@@ -360,6 +371,30 @@ const emptyOptions: SelectOption[] = []
         />
       </Space>
     </Flex>
+    <h2 class="mt30 mb10">无边框</h2>
+    <Space>
+      <Select :options="cityOptions" v-model:value="borderlessValue" :bordered="false" :width="120" />
+      <Select :options="cityOptions" v-model:value="borderlessValue" :bordered="false" :width="120" disabled />
+    </Space>
+    <h2 class="mt30 mb10">禁用</h2>
+    <Select :options="cityOptions" v-model:value="disabledValue" disabled />
+    <h2 class="mt30 mb10">禁用选项</h2>
+    <Select :options="cityOptionsDisabled" v-model:value="disabledOptionValue" />
+    <h2 class="mt30 mb10">自定义状态</h2>
+    <p class="mb10"><code>status</code> 可选 <code>error</code> 或 <code>warning</code></p>
+    <Space>
+      <Select :options="cityOptions" v-model:value="statusValue" status="error" />
+      <Select :options="cityOptions" v-model:value="statusValue" status="warning" />
+    </Space>
+    <h2 class="mt30 mb10">多选</h2>
+    <p class="mb10">从已有条目中选择多个值，下拉列表可滚动查看全部选项</p>
+    <Select
+      v-model:value="multipleValue"
+      mode="multiple"
+      placeholder="Please select"
+      :options="sizeOptions"
+      :width="300"
+    />
     <h2 class="mt30 mb10">标签</h2>
     <p class="mb10">输入任意内容并回车即可创建为标签，下拉列表可滚动查看全部选项</p>
     <Select v-model:value="tagsValue" mode="tags" placeholder="Tags Mode" :options="sizeOptions" :width="300" />
@@ -406,6 +441,15 @@ const emptyOptions: SelectOption[] = []
         />
       </Flex>
     </Flex>
+    <h2 class="mt30 mb10">隐藏已选择选项</h2>
+    <p class="mb10">隐藏下拉列表中已选择的选项，已选项的标签由组件内部的选项缓存保留</p>
+    <Select
+      v-model:value="hideSelectedValue"
+      mode="multiple"
+      placeholder="Inserted are removed"
+      :options="hideSelectedOptions"
+      :width="300"
+    />
     <h2 class="mt30 mb10">自动分词</h2>
     <p class="mb10">
       试下复制 <code>特斯拉,哥斯拉</code> 到输入框里。只在 <code>tags</code> 和 <code>multiple</code> 模式下可用
@@ -431,20 +475,6 @@ const emptyOptions: SelectOption[] = []
       :width="120"
       @change="onLabelInValueChange"
     />
-    <h2 class="mt30 mb10">多选</h2>
-    <p class="mb10">从已有条目中选择多个值，下拉列表可滚动查看全部选项</p>
-    <Select
-      v-model:value="multipleValue"
-      mode="multiple"
-      placeholder="Please select"
-      :options="sizeOptions"
-      :width="300"
-    />
-    <h2 class="mt30 mb10">联动</h2>
-    <Space>
-      <Select :options="provinceData.map((pro) => ({ value: pro }))" v-model:value="province" :width="120" />
-      <Select :options="cities.map((city) => ({ value: city }))" v-model:value="secondCity" :width="120" />
-    </Space>
     <h2 class="mt30 mb10">分组</h2>
     <p class="mb10">
       用 <code>SelectOptGroup</code> / <code>SelectOption</code> 子组件或 <code>options</code> 的嵌套写法进行选项分组
@@ -464,6 +494,19 @@ const emptyOptions: SelectOption[] = []
         </SelectOptGroup>
       </Select>
       <Select v-model:value="groupValue" :options="groupOptions" :width="200" />
+    </Space>
+    <h2 class="mt30 mb10">自定义 label、value、options 字段</h2>
+    <p class="mb10">
+      通过 <code>fieldNames</code> 指定选项的文本 / 值字段，以及分组子选项的字段（<code>options</code>）
+    </p>
+    <Space>
+      <Select :options="fieldOptions" :field-names="fieldNames" v-model:value="fieldValue" :width="200" />
+      <Select
+        :options="groupFieldOptions"
+        :field-names="groupFieldNames"
+        v-model:value="groupFieldValue"
+        :width="200"
+      />
     </Space>
     <h2 class="mt30 mb10">搜索框</h2>
     <Select
@@ -509,6 +552,32 @@ const emptyOptions: SelectOption[] = []
         </span>
       </template>
     </Select>
+    <h2 class="mt30 mb10">联动</h2>
+    <Space>
+      <Select :options="provinceData.map((pro) => ({ value: pro }))" v-model:value="province" :width="120" />
+      <Select :options="cities.map((city) => ({ value: city }))" v-model:value="secondCity" :width="120" />
+    </Space>
+    <h2 class="mt30 mb10">支持清除</h2>
+    <Select :options="cityOptions" v-model:value="clearableValue" allow-clear />
+    <h2 class="mt30 mb10">键盘操作</h2>
+    <p class="mb10">
+      聚焦后按 <code>↑</code> <code>↓</code> 移动高亮（自动跳过禁用项、到达列表端点时环形回绕并滚入可视区），按
+      <code>Enter</code> 选中，按 <code>Esc</code> 关闭面板；面板收起时按 <code>↑</code> <code>↓</code> 可直接展开
+    </p>
+    <Select :options="cityOptionsDisabled" v-model:value="keyboardValue" />
+    <h2 class="mt30 mb10">受控展开</h2>
+    <p class="mb10"><code>open</code> 受控时面板显隐由外部驱动，配合 <code>dropdownVisibleChange</code> 同步开合</p>
+    <Space>
+      <Select
+        :options="cityOptions"
+        v-model:value="controlledOpenValue"
+        :open="controlledOpen"
+        @dropdown-visible-change="onControlledVisibleChange"
+      />
+      <Button type="primary" @mousedown="onToggleMousedown" @click="onToggleClick">
+        {{ controlledOpen ? '关闭面板' : '展开面板' }}
+      </Button>
+    </Space>
     <h2 class="mt30 mb10">后缀图标</h2>
     <Space>
       <Select :options="suffixOptions" v-model:value="suffixValue" :width="120">
@@ -522,35 +591,11 @@ const emptyOptions: SelectOption[] = []
         </template>
       </Select>
     </Space>
-    <h2 class="mt30 mb10">隐藏已选择选项</h2>
-    <p class="mb10">隐藏下拉列表中已选择的选项，已选项的标签由组件内部的选项缓存保留</p>
-    <Select
-      v-model:value="hideSelectedValue"
-      mode="multiple"
-      placeholder="Inserted are removed"
-      :options="hideSelectedOptions"
-      :width="300"
-    />
-    <h2 class="mt30 mb10">扩展菜单</h2>
-    <p class="mb10">使用 <code>dropdownRender</code> 对下拉菜单自由扩展，<code>menuNode</code> 为内置菜单节点</p>
-    <Select
-      v-model:value="addableValue"
-      placeholder="custom dropdown render"
-      :width="300"
-      :options="addableItems.map((item) => ({ value: item }))"
-    >
-      <template #dropdownRender="{ menuNode }">
-        <component :is="menuNode" />
-        <Divider style="margin: 4px 0" />
-        <Space style="padding: 4px 8px">
-          <Input v-model:value="addableName" placeholder="Please enter item" />
-          <Button type="text" @click="addItem">
-            <template #icon>
-              <PlusOutlined />
-            </template>
-            Add item
-          </Button>
-        </Space>
+    <h2 class="mt30 mb10">自定义选中标识</h2>
+    <p class="mb10">通过 <code>menuItemSelectedIcon</code> 插槽自定义选中项的标识图标，单选模式默认不展示</p>
+    <Select :options="cityOptions" v-model:value="stateIconValue" :width="180">
+      <template #menuItemSelectedIcon="{ isSelected }">
+        <CheckOutlined v-if="isSelected" style="color: #ff6900" />
       </template>
     </Select>
     <h2 class="mt30 mb10">定制回填内容</h2>
@@ -558,76 +603,49 @@ const emptyOptions: SelectOption[] = []
       使用 <code>optionLabelProp</code> 指定回填到选择框的 <code>option</code> 字段；<code>optionLabel</code>
       插槽可完全自定义回填节点
     </p>
-    <Space align="start">
-      <Select :options="countryOptions" v-model:value="countryValue" option-label-prop="label" :width="220">
-        <template #option="{ icon, label }">{{ icon }} {{ label }}</template>
-      </Select>
-      <Select :options="countryOptions" v-model:value="countryValue" :width="220">
-        <template #option="{ icon, label }">{{ icon }} {{ label }}</template>
-        <template #optionLabel="option">{{ option.icon }} {{ option.label }}</template>
-      </Select>
-      <!-- 多选示例段：回填 optionLabelProp 指定字段 + tagRender 自定义标签（P2 新增） -->
-      <Select
-        :options="countryOptions"
-        v-model:value="countryMultipleValue"
-        mode="multiple"
-        placeholder="select one country"
-        option-label-prop="label"
-        :width="220"
-      >
-        <template #option="{ icon, label }">{{ icon }} {{ label }}</template>
-      </Select>
-      <Select
-        :options="countryOptions"
-        v-model:value="countryMultipleValue"
-        mode="multiple"
-        placeholder="select one country"
-        :width="220"
-      >
-        <template #option="{ icon, label }">{{ icon }} {{ label }}</template>
-        <template #tagRender="{ label, closable, onClose, option }">
-          <Tag :closable="closable" style="margin-right: 3px" @close="onClose">
-            {{ label }}&nbsp;&nbsp;{{ option.icon }}
-          </Tag>
-        </template>
-      </Select>
-    </Space>
-    <h2 class="mt30 mb10">大数据</h2>
-    <p class="mb10">
-      <code>virtual</code>
-      默认开启，只渲染可视区选项；关闭开关后渲染全部 <code>10</code> 万项，可对比两者的滚动表现（页面会明显变慢）
-    </p>
     <Flex vertical gap="middle" align="start">
-      <Flex gap="small" align="center">
-        <code>virtual</code>
-        <Switch v-model:value="bigDataVirtual" />
-      </Flex>
-      <Select
-        v-model:value="bigDataValue"
-        mode="multiple"
-        placeholder="Please select"
-        :options="bigDataOptions"
-        :virtual="bigDataVirtual"
-        :width="300"
-      />
+      <!-- 单选：optionLabelProp 指定回填字段 vs optionLabel 插槽完全自定义回填节点 -->
+      <Space>
+        <Select :options="countryOptions" v-model:value="countryValue" option-label-prop="label" :width="220">
+          <template #option="{ icon, label }">{{ icon }} {{ label }}</template>
+        </Select>
+        <Select :options="countryOptions" v-model:value="countryValue" :width="220">
+          <template #option="{ icon, label }">{{ icon }} {{ label }}</template>
+          <template #optionLabel="option">{{ option.icon }} {{ option.label }}</template>
+        </Select>
+      </Space>
+      <!-- 多选：optionLabelProp 指定字段 + tagRender 自定义标签 -->
+      <Space>
+        <Select
+          :options="countryOptions"
+          v-model:value="countryMultipleValue"
+          mode="multiple"
+          placeholder="select one country"
+          option-label-prop="label"
+          :width="320"
+        >
+          <template #option="{ icon, label }">{{ icon }} {{ label }}</template>
+        </Select>
+        <Select
+          :options="countryOptions"
+          v-model:value="countryMultipleValue"
+          mode="multiple"
+          placeholder="select one country"
+          :width="320"
+        >
+          <template #option="{ icon, label }">{{ icon }} {{ label }}</template>
+          <template #tagRender="{ label, closable, onClose, option }">
+            <Tag :closable="closable" color="volcano" style="margin: 2px 3px 2px 0" @close="onClose">
+              {{ label }}&nbsp;&nbsp;{{ option.icon }}
+            </Tag>
+          </template>
+        </Select>
+      </Space>
     </Flex>
-    <h2 class="mt30 mb10">自定义 label、value、options 字段</h2>
-    <p class="mb10">
-      通过 <code>fieldNames</code> 指定选项的文本 / 值字段，以及分组子选项的字段（<code>options</code>）
-    </p>
-    <Space align="start">
-      <Select :options="fieldOptions" :field-names="fieldNames" v-model:value="fieldValue" :width="200" />
-      <Select
-        :options="groupFieldOptions"
-        :field-names="groupFieldNames"
-        v-model:value="groupFieldValue"
-        :width="200"
-      />
-    </Space>
     <h2 class="mt30 mb10">下拉面板弹出位置</h2>
     <Space vertical>
       <Radio :options="placementRadios" v-model:value="placement" button button-style="solid" />
-      <Space align="center" :size="24">
+      <Space :size="24">
         <Select
           :options="cityOptions"
           v-model:value="placementValue"
@@ -645,30 +663,12 @@ const emptyOptions: SelectOption[] = []
         />
       </Space>
     </Space>
-    <h2 class="mt30 mb10">自定义状态</h2>
-    <p class="mb10"><code>status</code> 可选 <code>error</code> 或 <code>warning</code></p>
-    <Space>
-      <Select :options="cityOptions" v-model:value="statusValue" status="error" />
-      <Select :options="cityOptions" v-model:value="statusValue" status="warning" />
-    </Space>
-    <h2 class="mt30 mb10">禁用</h2>
-    <Select :options="cityOptions" v-model:value="disabledValue" disabled />
-    <h2 class="mt30 mb10">禁用选项</h2>
-    <Select :options="cityOptionsDisabled" v-model:value="disabledOptionValue" />
-    <h2 class="mt30 mb10">支持清除</h2>
-    <Select :options="cityOptions" v-model:value="clearableValue" allow-clear />
-    <h2 class="mt30 mb10">键盘操作</h2>
-    <p class="mb10">
-      聚焦后按 <code>↑</code> <code>↓</code> 移动高亮（自动跳过禁用项、到达列表端点时环形回绕并滚入可视区），按
-      <code>Enter</code> 选中，按 <code>Esc</code> 关闭面板；面板收起时按 <code>↑</code> <code>↓</code> 可直接展开
-    </p>
-    <Select :options="cityOptionsDisabled" v-model:value="keyboardValue" />
     <h2 class="mt30 mb10">下拉面板宽度</h2>
     <p class="mb10">
       <code>dropdownMatchSelectWidth</code> 为 <code>true</code> 时与触发器等宽，为数字时指定面板宽度，为
       <code>false</code> 时按内容自适应
     </p>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Select :options="longOptions" v-model:value="matchWidthValue" :width="160" />
       <Select :options="longOptions" v-model:value="matchWidthValue" :width="160" :dropdown-match-select-width="240" />
       <Select
@@ -691,7 +691,7 @@ const emptyOptions: SelectOption[] = []
     <p class="mb10">
       <code>maxDisplay</code> 按项数限制面板高度（默认展示 <code>8</code> 项），<code>listHeight</code> 直接指定像素高度
     </p>
-    <Space align="start" :size="40">
+    <Space :size="40">
       <Select :options="longOptions" v-model:value="listHeightValue" />
       <Select :options="longOptions" v-model:value="listHeightValue" :max-display="4" />
       <Select :options="longOptions" v-model:value="listHeightValue" :list-height="160" />
@@ -715,31 +715,47 @@ const emptyOptions: SelectOption[] = []
       />
       <Select :options="cityOptions" v-model:value="panelZIndexValue" :width="180" :z-index="1100" />
     </Space>
-    <h2 class="mt30 mb10">无边框</h2>
-    <Space>
-      <Select :options="cityOptions" v-model:value="borderlessValue" :bordered="false" :width="120" />
-      <Select :options="cityOptions" v-model:value="borderlessValue" :bordered="false" :width="120" disabled />
-    </Space>
-    <h2 class="mt30 mb10">受控展开</h2>
-    <p class="mb10"><code>open</code> 受控时面板显隐由外部驱动，配合 <code>dropdownVisibleChange</code> 同步开合</p>
-    <Space>
-      <Select
-        :options="cityOptions"
-        v-model:value="controlledOpenValue"
-        :open="controlledOpen"
-        @dropdown-visible-change="onControlledVisibleChange"
-      />
-      <Button type="primary" @mousedown="onToggleMousedown" @click="onToggleClick">
-        {{ controlledOpen ? '关闭面板' : '展开面板' }}
-      </Button>
-    </Space>
-    <h2 class="mt30 mb10">自定义选中标识</h2>
-    <p class="mb10">通过 <code>menuItemSelectedIcon</code> 插槽自定义选中项的标识图标，单选模式默认不展示</p>
-    <Select :options="cityOptions" v-model:value="stateIconValue" :width="180">
-      <template #menuItemSelectedIcon="{ isSelected }">
-        <CheckOutlined v-if="isSelected" style="color: #ff6900" />
+    <h2 class="mt30 mb10">扩展菜单</h2>
+    <p class="mb10">使用 <code>dropdownRender</code> 对下拉菜单自由扩展，<code>menuNode</code> 为内置菜单节点</p>
+    <Select
+      v-model:value="addableValue"
+      placeholder="custom dropdown render"
+      :width="300"
+      :options="addableItems.map((item) => ({ value: item }))"
+    >
+      <template #dropdownRender="{ menuNode }">
+        <component :is="menuNode" />
+        <Divider style="margin: 4px 0" />
+        <Space style="padding: 4px 8px">
+          <Input v-model:value="addableName" placeholder="Please enter item" />
+          <Button type="text" @click="addItem">
+            <template #icon>
+              <PlusOutlined />
+            </template>
+            Add item
+          </Button>
+        </Space>
       </template>
     </Select>
+    <h2 class="mt30 mb10">大数据</h2>
+    <p class="mb10">
+      <code>virtual</code>
+      默认开启，只渲染可视区选项；关闭开关后渲染全部 <code>10</code> 万项，可对比两者的滚动表现（页面会明显变慢）
+    </p>
+    <Flex vertical gap="middle">
+      <Flex gap="small" align="center">
+        <code>virtual</code>
+        <Switch v-model:value="bigDataVirtual" />
+      </Flex>
+      <Select
+        v-model:value="bigDataValue"
+        mode="multiple"
+        placeholder="Please select"
+        :options="bigDataOptions"
+        :virtual="bigDataVirtual"
+        :width="300"
+      />
+    </Flex>
     <h2 class="mt30 mb10">空数据</h2>
     <p class="mb10">选项为空时展示 <code>notFoundContent</code>，传 <code>null</code> 时不展开面板</p>
     <Space>
