@@ -104,7 +104,6 @@ const emits = defineEmits<{
   afterChange: [current: number] // 切换结束后触发，参数为当前页，从 1 开始
   'update:currentIndex': [currentIndex: number] // 当前页变更，配合 v-model:current-index 使用，从 1 开始
 }>()
-defineSlots<CarouselSlots>()
 const prevArrowSlotExist = useSlotsExist('prevArrow') // 是否提供了自定义上一张箭头插槽
 const nextArrowSlotExist = useSlotsExist('nextArrow') // 是否提供了自定义下一张箭头插槽
 const offset = ref(0) // 滑动偏移值
