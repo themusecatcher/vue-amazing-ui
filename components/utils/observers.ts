@@ -3,14 +3,22 @@ import type { Ref } from 'vue'
 import { useSupported, useOptionsSupported, useEventListener } from './hooks'
 import { throttle } from './function'
 import { getScrollParent } from './dom'
+
+/**
+ * 基于观察者（Observer）的组合式函数集合
+ *
+ * 统一处理三类观察目标：DOM 变更（MutationObserver）、尺寸变化（ResizeObserver）、滚动位置
+ * （scroll 事件）；观察目标均支持 Ref / 元素 / 数组，且随组件卸载自动清理。
+ */
+
 /**
  * 归一化观察目标为 HTMLElement 数组
  *
  * 兼容 Ref / Ref[] / HTMLElement / HTMLElement[] 四种入参：先解包 Ref，再过滤空值，
  * 保证后续 observe 调用拿到的都是可用元素。
  *
- * @param {Ref | Ref[] | HTMLElement | HTMLElement[]} target 观察目标
- * @returns {HTMLElement[]} 解包并过滤后的元素数组
+ * @param target - 观察目标
+ * @returns 解包并过滤后的元素数组
  */
 function resolveTargetElements(target: Ref | Ref[] | HTMLElement | HTMLElement[]): HTMLElement[] {
   const targetValue = toValue(target) as Ref | Ref[] | HTMLElement | HTMLElement[] | null | undefined
@@ -21,20 +29,15 @@ function resolveTargetElements(target: Ref | Ref[] | HTMLElement | HTMLElement[]
     .filter((element): element is HTMLElement => Boolean(element))
 }
 /**
- * 组合式函数
- * 使用 MutationObserver 观察 DOM 元素的变化
+ * 组合式函数：用 MutationObserver 观察 DOM 变化
  *
- * 该函数提供了一个便捷的方式来订阅 DOM 元素的变动，当元素发生指定的变化时，调用提供的回调函数
- * 使用者可以指定要观察的一个或多个 DOM 元素，以及观察的选项和回调函数
+ * 支持 Ref / 元素 / 元素数组作为目标；目标变化时自动重建观察，组件卸载时自动断开（避免内存泄漏）。
+ * SSR（Node）下自动跳过。
  *
- * @param {Ref | Ref[] | HTMLElement | HTMLElement[]} target 要观察的目标，可以是 Ref 对象、Ref 数组、HTMLElement 或 HTMLElement 数组
- * @param {MutationCallback} callback 当观察到变化时调用的回调函数
- * @param {object} [options = {}] MutationObserver 的观察选项，默认为空对象；例如:
- *          subtree: 是否监听以 target 为根节点的整个子树，包括子树中所有节点的属性
- *          childList: 是否监听 target 节点中发生的节点的新增与删除
- *          attributes: 是否观察所有监听的节点属性值的变化
- *          attributeFilter: 声明哪些属性名会被监听的数组；如果不声明该属性，所有属性的变化都将触发通知
- * @returns {start: () => void, stop: () => void} 返回一个对象，包含停止和开始观察的方法，使用者可以调用 start 方法开始观察，调用 stop 方法停止观察
+ * @param target - 观察目标（单个或数组，元素可为 Ref）
+ * @param callback - 观察到变化时的回调
+ * @param options - MutationObserver 观察选项，如 `{ subtree, childList, attributes, attributeFilter }`，默认 `{}`
+ * @returns `start` / `stop` 用于手动开始与停止观察
  */
 export function useMutationObserver(
   target: Ref | Ref[] | HTMLElement | HTMLElement[],
@@ -88,15 +91,15 @@ export function useMutationObserver(
   }
 }
 /**
- * 组合式函数
- * 使用 ResizeObserver 观察 DOM 元素尺寸变化
+ * 组合式函数：用 ResizeObserver 观察元素尺寸变化
  *
- * 该函数提供了一种方便的方式来观察一个或多个元素的尺寸变化，并在变化时执行指定的回调函数
+ * 支持 Ref / 元素 / 元素数组作为目标；目标变化时自动重建观察，组件卸载时自动断开（避免内存泄漏）。
+ * SSR（Node）下自动跳过。
  *
- * @param {Ref | Ref[] | HTMLElement | HTMLElement[]} target 要观察的目标，可以是 Ref 对象、Ref 数组、HTMLElement 或 HTMLElement 数组
- * @param {ResizeObserverCallback} callback 当元素尺寸变化时调用的回调函数
- * @param {object} [options = {}] ResizeObserver 选项，用于定制观察行为
- * @returns {{ start: () => void, stop: () => void }} 返回一个对象，包含停止和开始观察的方法，使用者可以调用 start 方法开始观察，调用 stop 方法停止观察
+ * @param target - 观察目标（单个或数组，元素可为 Ref）
+ * @param callback - 尺寸变化时的回调
+ * @param options - ResizeObserver 选项，默认 `{}`
+ * @returns `start` / `stop` 用于手动开始与停止观察
  */
 export function useResizeObserver(
   target: Ref | Ref[] | HTMLElement | HTMLElement[],
@@ -150,10 +153,12 @@ export function useResizeObserver(
   }
 }
 type ScrollTarget = HTMLElement | Window | Document
-// 是否为 window / document（视口级滚动目标）
+
+/** 类型守卫：是否为 window（视口级滚动目标） */
 function isWindowTarget(value: unknown): value is Window {
   return typeof window !== 'undefined' && value === window
 }
+/** 类型守卫：是否为 document */
 function isDocumentTarget(value: unknown): value is Document {
   return typeof Document !== 'undefined' && value instanceof Document
 }
@@ -164,8 +169,8 @@ function isDocumentTarget(value: unknown): value is Document {
  * （元素级 scroll 不冒泡，视口滚动的事件目标为 Document / Window）。
  * 故传入 documentElement 时需改听 window，否则监听恒不触发。
  *
- * @param {ScrollTarget | null} target 期望的滚动目标
- * @returns {ScrollTarget | null} 实际应绑定 scroll 监听的目标
+ * @param target - 期望的滚动目标
+ * @returns 实际应绑定 scroll 监听的目标
  */
 function resolveScrollEventTarget(target: ScrollTarget | null): ScrollTarget | null {
   if (!target) return null
@@ -177,8 +182,8 @@ function resolveScrollEventTarget(target: ScrollTarget | null): ScrollTarget | n
  *
  * window / document 自身没有内容尺寸属性，需回退到 documentElement 读取。
  *
- * @param {ScrollTarget | null} target 期望的滚动目标
- * @returns {HTMLElement | null} 用于读取尺寸与滚动位置的元素
+ * @param target - 期望的滚动目标
+ * @returns 用于读取尺寸与滚动位置的元素
  */
 function resolveScrollMeasureElement(target: ScrollTarget | null): HTMLElement | null {
   if (!target) return null
@@ -187,15 +192,16 @@ function resolveScrollMeasureElement(target: ScrollTarget | null): HTMLElement |
   return target
 }
 /**
- * 组合式函数
- * 实时监测目标元素滚动位置及状态
+ * 组合式函数：实时监测目标元素的滚动位置与方向状态
  *
- * 自定义钩子用于处理滚动事件和状态
- * @param {Ref | HTMLElement | Window | Document} [target] 滚动目标元素，可以是 Ref、HTMLElement、Window 或 Document，默认为 window
- * @param {number} [throttleDelay = 0] 节流延迟，用于限制滚动事件的触发频率，默认为 0
- * @param {(e: Event) => void} onScroll 滚动事件的回调函数，可选
- * @param {(e: Event) => void} onStop 滚动结束的回调函数，可选
- * @returns {{ x: Ref<number>, xScrollMax: Ref<number>, y: Ref<number>, yScrollMax: Ref<number>, isScrolling: Ref<boolean>, left: Ref<boolean>, right: Ref<boolean>, top: Ref<boolean>, bottom: Ref<boolean> }} 返回一个对象，包含滚动位置和各种状态信息
+ * 优先使用原生 `scrollend` 判定滚动结束，不支持该事件的浏览器以降级定时器兜底
+ * （两条路径靠 `isScrolling` 保证幂等，不会重复回调）。
+ *
+ * @param target - 滚动目标（Ref / HTMLElement / Window / Document），默认整页（window）
+ * @param throttleDelay - 滚动事件节流间隔（ms），默认 0（不做实际节流）
+ * @param onScroll - 滚动中的回调，可选
+ * @param onStop - 滚动结束的回调，可选
+ * @returns 滚动位置、最大可滚距离、是否滚动中与四个方向标志
  */
 export function useScroll(
   target?: Ref | HTMLElement | Window | Document,
@@ -314,24 +320,26 @@ export function useScroll(
   // 返回滚动位置和各种状态信息
   return { x, xScrollMax, y, yScrollMax, isScrolling, left, right, top, bottom }
 }
-/**
- * 组合式函数
- * 查询并监听最近可滚动父元素，响应视口 resize，维护滚动位置与视口尺寸状态
- *
- * 与定位算法解耦，任何需要滚动感知的组件均可复用。滚动父元素查找（getScrollParent）、
- * 滚动监听（observeScroll）、清理（cleanup）等逻辑在此收敛。
- * 整页滚动（无滚动祖先，scrollTarget 为 documentElement）时自动改听 window 的 scroll，
- * 因为该场景下 scroll 事件派发在 window 上，documentElement 收不到。
- *
- * @param {Ref<HTMLElement | null>} contentRef 触发器内容元素（用于向上查找可滚动父元素）
- * @param {() => void} onScroll 滚动/resize 触发的回调（组件侧传入 updatePosition）
- * @param {ScrollParentOptions} [options] 配置项
- * @returns {{ scrollTarget: Ref<HTMLElement | null>, viewportWidth: Ref<number>, viewportHeight: Ref<number>, observeScroll: () => void, cleanup: () => void }} 返回滚动目标、视口尺寸与生命周期方法
- */
+/** `useScrollParent` 的选项 */
 export interface ScrollParentOptions {
-  passive?: boolean // 是否使用 passive 滚动监听，默认跟随浏览器支持情况
-  onCleanup?: () => void // 附加清理：组件自身需在 cleanup 时执行的逻辑（如 Tooltip 取消位置更新帧）
+  /** 是否以 passive 方式监听 scroll；默认跟随浏览器的支持情况 */
+  passive?: boolean
+  /** 附加清理：组件自身需要在 cleanup 时执行的逻辑（如 Tooltip 取消位置更新帧） */
+  onCleanup?: () => void
 }
+
+/**
+ * 组合式函数：监听最近的可滚动父元素，并维护滚动位置与视口尺寸
+ *
+ * 与定位算法解耦，任何需要滚动感知的组件均可复用：滚动父元素查找（`getScrollParent`）、
+ * 滚动监听（`observeScroll`）、清理（`cleanup`）在此收敛。整页滚动（无滚动祖先，`scrollTarget`
+ * 为 documentElement）时自动改听 window 的 scroll —— 该场景下事件派发在 window 上，documentElement 收不到。
+ *
+ * @param contentRef - 触发内容元素，用于向上查找可滚动父元素
+ * @param onScroll - 滚动 / resize 触发的回调（组件侧传入 updatePosition）
+ * @param options - 配置项
+ * @returns 滚动目标、视口尺寸与生命周期方法
+ */
 export function useScrollParent(
   contentRef: Ref<HTMLElement | null>,
   onScroll: () => void,
