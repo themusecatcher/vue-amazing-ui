@@ -255,7 +255,7 @@ const { panelStyle, transformOrigin } = useFloating(panelRef, {
   matchTriggerWidth: () => matchTriggerWidth.value,
   enabled: () => panelVisible.value
 })
-// 面板层级：显式 zIndex 优先于自动分配 / 默认层级（与乙类组件的 zIndex prop 同一优先级契约）
+// 面板层级：显式 zIndex 优先于自动分配 / 默认层级（与其它浮层组件的 zIndex prop 同一优先级契约）
 const autoCompletePanelZIndex = computed(() => props.zIndex ?? layerZIndex.value)
 // 面板内联样式：内核输出（定位 + 动画原点）+ 使用者自定义样式 + 层级 + 主题变量
 // 合并顺序：自定义样式可覆盖定位，但层级与主题变量始终由组件接管

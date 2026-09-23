@@ -51,7 +51,7 @@ export interface Option {
 export interface FieldNames {
   label?: string // 选项的文本字段名
   value?: string // 选项的值字段名
-  options?: string // 分组子选项的字段名（分组 / 树形数据，P2 起支持）
+  options?: string // 分组子选项的字段名（对应分组 / 树形数据的下级选项数组）
 }
 export type SelectValue = string | number
 // labelInValue 打开时的 value 对象形态（LabeledValue 形态）
@@ -721,9 +721,16 @@ function measureResponsiveTagCount(): void {
   responsiveMeasured.value = true
 }
 // responsive 折叠：容器宽度由 ResizeObserver 兜住，tag 数量 / 文本 / 尺寸变化时由 watch 兜住
+// （maxTagTextLength / optionLabelProp 直接决定 tag 文本宽度，但不改变选中项引用与容器宽度，故须显式纳入依赖）
 useResizeObserver(selectContentRef, () => measureResponsiveTagCount())
 watch(
-  [() => props.maxTagCount, () => props.size, selectedOptions],
+  [
+    () => props.maxTagCount,
+    () => props.size,
+    () => props.maxTagTextLength,
+    () => props.optionLabelProp,
+    selectedOptions
+  ],
   () => {
     if (props.maxTagCount === 'responsive') {
       nextTick(measureResponsiveTagCount)
@@ -931,7 +938,7 @@ useResizeObserver(selectContentRef, () => {
     syncFloating()
   }
 })
-// 面板层级：显式 zIndex 优先于自动分配 / 默认层级（与乙类组件的 zIndex prop 同一优先级契约）
+// 面板层级：显式 zIndex 优先于自动分配 / 默认层级（与其它浮层组件的 zIndex prop 同一优先级契约）
 const selectPanelZIndex = computed(() => props.zIndex ?? layerZIndex.value)
 // 面板内联样式：内核输出（定位 + 动画原点）+ 使用者自定义样式 + 层级 + 主题变量
 // 顺序与 AutoComplete 一致：dropdownMenuStyle 可覆盖定位，但层级与主题变量始终由组件接管
@@ -1093,8 +1100,8 @@ function onPanelWheel(e: WheelEvent): void {
 }
 /**
  * 绑定滚动容器的原生 scroll 监听。
- * ⚠️ 不能依赖 Scrollbar 的 scroll 事件：它只在「拖拽滚动条」时派发（见 Scrollbar 的 onScroll 分支），
- * 滚轮 / 触控板 / 程序化滚动都不会派发 —— 而虚拟滚动的窗口起点必须与真实滚动位置实时同步
+ * 虚拟滚动的窗口起点必须与真实滚动位置实时同步，直接监听容器原生 scroll 可让滚轮 / 触控板 /
+ * 程序化滚动等全部来源都同步（不依赖 Scrollbar 组件事件的派发条件与方向判定）
  */
 function bindScrollContainer(): void {
   const container = getScrollContainer()
@@ -1433,8 +1440,8 @@ function onKeydown(e: KeyboardEvent): void {
   // 输入法组合中的按键全部交由 IME 处理，不驱动面板：Enter 是「确认候选 / 上屏」、↑↓ 是「切换候选页」、
   // Backspace 是「删除组合文本」——若继续执行，Enter 会误选中当前高亮项（且随后的 compositionend
   // 又把搜索文本写回输入框，表现为「凭空选中一项 + 输入框残留文本」）。
-  // 以 keyCode(which) 判定 Enter 可天然规避该问题：Chromium 对「被 IME 消费的按键」给出 keyCode 229，
-  // 且既有实现在 tags 的提交分支亦显式检查了 !compositionStatus。
+  // 判定依据：KeyboardEvent.isComposing（标准属性，IME 组合中的按键为 true）+ 组件自身维护的
+  // isComposing 标记（覆盖 compositionstart ~ compositionend 整段过程，不依赖浏览器是否置位前者）
   if (e.isComposing || isComposing.value) return
   // 退格锁：记录本次按键前的搜索文本是否非空（上一次按键结束时写入），
   // 避免「清空搜索文本的同一次按键」紧接着又删掉一个标签（既有的锁语义）

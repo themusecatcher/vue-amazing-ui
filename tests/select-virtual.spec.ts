@@ -12,7 +12,7 @@ import type { Option } from 'components/select/Select.vue'
  * - `virtual: false` 全量渲染；`dropdownMatchSelectWidth: false`（面板宽度自适应）时自动关闭虚拟滚动
  *   （`virtual !== false && dropdownMatchSelectWidth !== false`）
  * - `listItemHeight` 决定行高换算；分组标题同样占一行
- * - 高亮行始终落在渲染窗口内（`aria-activedescendant` 需指向真实存在的节点）
+ * - 高亮行不强制纳入渲染窗口；不在窗口内时不设置 `aria-activedescendant`（避免指向不存在的节点）
  * - `scrollTo` / 键盘导航按下标定位，虚拟滚动下目标行未渲染同样有效
  * - ARIA：输入框为 `combobox`，`aria-controls` / `aria-owns` 指向 listbox，选项为 `role="option"` +
  *   `${id}_list_${扁平下标}`，面板关闭时以隐藏的 `aria-live` 节点播报已选内容
