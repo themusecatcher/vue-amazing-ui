@@ -342,7 +342,7 @@ xxl | `≥1600px` 响应式栅格 | number | undefined
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 default | 字符类型的头像内容 | v-slot:default
 icon | 自定义头像图标 | v-slot:icon

@@ -300,7 +300,7 @@ const primaryDescCustomStyle = {
 <BackTop tooltip="回到顶部" :right="280" />
 <BackTop tooltip="回到顶部" :z-index="3000" :right="340" />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <template>
@@ -309,7 +309,7 @@ const primaryDescCustomStyle = {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义监听目标
 
@@ -444,7 +444,7 @@ listenTo | 监听滚动的元素，如果为 `undefined` 会监听距离最近�
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 tooltip | 自定义文字提示内容 | v-slot:tooltip
 default | 自定义按钮 | v-slot:default

@@ -8,9 +8,7 @@
 
 - 当没有数据时，用于显式的用户提示
 
-## 基本使用
-
-*预置风格: `filled`*
+## 预置风格: filled
 
 <Empty />
 
@@ -24,7 +22,7 @@
 
 :::
 
-*预置风格: `outlined`*
+## 预置风格: outlined
 
 <Empty image="outlined" />
 
@@ -179,7 +177,7 @@ footer | 设置底部内容 | string | undefined
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 description | 自定义描述内容 | v-slot:description
 default | 自定义图片 | v-slot:default

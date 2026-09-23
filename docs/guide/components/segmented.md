@@ -398,7 +398,7 @@ payload? | 自定义数据载体 | any | undefined
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 label | 自定义图标 | v-slot:label="{ option, label, index, payload }"
 

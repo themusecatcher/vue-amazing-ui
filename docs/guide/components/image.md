@@ -151,7 +151,6 @@ const images = ref<ImageItem[]>([
   </template>
 </Image>
 
-
 <style lang="less" scoped>
 .preview-txt {
   display: inline-block;
@@ -414,7 +413,7 @@ const images = ref<ImageItem[]>([
   <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg" :z-index="3000" />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <template>
@@ -425,7 +424,7 @@ const images = ref<ImageItem[]>([
 </template>
 ```
 
-::::
+:::
 
 ## 下载配置
 
@@ -589,19 +588,19 @@ function customDownload(url: string, fileName?: string) {
 
 ### Image Type
 
-| 名称 | 说明    | 类型  | 默认值    |
+| 名称 | 说明 | 类型 | 默认值 |
 | :---- | :------- | :----- | :-------- |
-| src  | 图像地址 | string | undefined |
+| src | 图像地址 | string | undefined |
 | name? | 图像名称，未设置时自动从图像地址 `src` 中提取 | string | undefined |
 
 ## Slots
 
-| 名称   | 说明          | 类型           |
+| 名称 | 说明 | 用法 |
 | :------ | :------------- | :------------- |
 | preview | 自定义预览文本 | v-slot:preview |
 
 ## Methods
 
-| 名称   | 说明                                  | 类型                    |
+| 名称 | 说明 | 类型 |
 | :------ | :------------------------------------- | :---------------------- |
 | preview | 预览索引为 `index` 的图片，从 `0` 开始 | (index: number) => void |

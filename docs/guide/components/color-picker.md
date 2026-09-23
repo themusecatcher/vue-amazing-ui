@@ -464,7 +464,7 @@ ColorPickerAction | 'confirm' &#124; 'clear'
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 label | 自定义展示的内容 | v-slot:label="{ color }"
 footer | 自定义底部额外的页脚内容 | v-slot:footer

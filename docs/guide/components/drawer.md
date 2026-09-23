@@ -106,7 +106,7 @@ const layerZIndexOpen = ref<boolean>(false)
   <p>Some contents...</p>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -139,7 +139,7 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义位置
 
@@ -155,7 +155,7 @@ function onClose() {
   <p>Some contents...</p>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -184,7 +184,7 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 额外操作
 
@@ -204,7 +204,7 @@ function onClose() {
   <p>Some contents...</p>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -237,7 +237,7 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 渲染在当前 DOM
 
@@ -263,7 +263,7 @@ function onClose() {
   </Drawer>
 </div>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -305,7 +305,7 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 抽屉表单
 
@@ -398,7 +398,7 @@ function onClose() {
   </template>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -519,7 +519,7 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 多层抽屉
 
@@ -546,7 +546,7 @@ function onClose() {
   </template>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -579,7 +579,7 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 抽屉内浮层
 
@@ -605,7 +605,7 @@ function onClose() {
   <p>zIndex 优先级最高，覆盖自动分配结果</p>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -639,7 +639,7 @@ const layerZIndexOpen = ref(false)
 </template>
 ```
 
-::::
+:::
 
 ## 信息预览抽屉
 
@@ -697,7 +697,7 @@ const layerZIndexOpen = ref(false)
   </Descriptions>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -762,7 +762,7 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 预设宽度
 
@@ -782,7 +782,7 @@ function onClose() {
   <p>Some contents...</p>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -813,7 +813,7 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 抽屉页脚
 
@@ -835,7 +835,7 @@ function onClose() {
   </template>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -874,7 +874,7 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义 header & body 样式
 
@@ -895,7 +895,7 @@ function onClose() {
   <p>Some contents...</p>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -918,7 +918,7 @@ const open = ref<boolean>(false)
 </template>
 ```
 
-::::
+:::
 
 <style lang="less" scoped>
 p {
@@ -1005,7 +1005,7 @@ afterOpenChange | 切换抽屉时动画结束后的回调 | (open: boolean) => v
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 title | 自定义标题 | v-slot:title
 extra | 自定义抽屉右上角的操作区域 | v-slot:extra

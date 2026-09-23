@@ -507,7 +507,7 @@ watchEffect(() => {
 
 ## 自定义下拉面板
 
-*通过 `popupClassName` 自定义面板类名、`dropdownMenuStyle` 设置面板样式，两者均落在 `Teleport` 后的面板上，需写在全局样式中；`zIndex` 用于覆盖面板层级（默认 1050）*
+_通过 `popupClassName` 自定义面板类名、`dropdownMenuStyle` 设置面板样式，两者均落在 `Teleport` 后的面板上，需写在全局样式中；`zIndex` 用于覆盖面板层级（默认 1050）_
 
 <Flex gap="large" wrap="wrap">
   <Flex vertical gap="small" align="start">
@@ -1049,7 +1049,7 @@ watchEffect(() => {
 
 ## 下拉面板挂载容器
 
-*不传 `to` 时面板优先挂到最近的承载层内容容器（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body`；设为 `false` 时面板留在原地*
+_不传 `to` 时面板优先挂到最近的承载层内容容器（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body`；设为 `false` 时面板留在原地_
 
 <br/>
 
@@ -1058,7 +1058,7 @@ watchEffect(() => {
   <Select :options="options" v-model="toValue" :to="false" :width="200" />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1084,11 +1084,11 @@ const toValue = ref<SelectProps['modelValue']>(5)
 </template>
 ```
 
-::::
+:::
 
 ## 下拉面板数
 
-*选项较多时面板默认展示 8 项，超出部分通过滚动查看；可通过 `maxDisplay` 调整展示项数*
+_选项较多时面板默认展示 8 项，超出部分通过滚动查看；可通过 `maxDisplay` 调整展示项数_
 
 <br/>
 
@@ -1132,7 +1132,7 @@ watchEffect(() => {
 
 ## 下拉面板滚动条
 
-*通过 `scrollbarProps` 定制面板内滚动条*
+_通过 `scrollbarProps` 定制面板内滚动条_
 
 <br/>
 

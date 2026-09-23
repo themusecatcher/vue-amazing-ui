@@ -1059,12 +1059,12 @@ xxl | `≥1600px` 响应式栅格 | number &#124; {span?: number&#44; offset?: n
 
 ### Row Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 default | 自定义行内容 | v-slot:default
 
 ### Col Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 default | 自定义列内容 | v-slot:default

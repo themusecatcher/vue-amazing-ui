@@ -377,6 +377,6 @@ query? | 路由查询参数 | [BreadcrumbRouteQuery](#query-type) | undefined
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 separator | 自定义分隔符 | v-slot:separator="{ route, index }"

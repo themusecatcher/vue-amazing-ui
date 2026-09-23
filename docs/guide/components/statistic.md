@@ -217,7 +217,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons-vue'
 
 :::
 
-## 自定义分隔符
+## 自定义千分位标识符
 
 <Statistic
   title="Precision"
@@ -339,7 +339,7 @@ tabularNums | 是否使用等宽数字，避免数值变化时宽度抖动 | boo
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 title | 自定义数值的标题 | v-slot:title
 default | 自定义数值的内容 | v-slot:default

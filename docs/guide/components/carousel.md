@@ -2051,7 +2051,7 @@ target? | 如何打开跳转链接 | '_self' &#124; '_blank' | undefined
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 prevArrow | 自定义上一张箭头，点击切换由组件接管 | v-slot:prevArrow="{ prev, next, to, total, currentIndex, isPrevDisabled, isNextDisabled }"
 nextArrow | 自定义下一张箭头，点击切换由组件接管 | v-slot:nextArrow="{ prev, next, to, total, currentIndex, isPrevDisabled, isNextDisabled }"

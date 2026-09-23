@@ -2399,7 +2399,7 @@ function onDestroyAllDialogs() {
   <p>zIndex 优先级最高，覆盖自动分配结果</p>
 </Dialog>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -2433,7 +2433,7 @@ const layerZIndexOpen = ref(false)
 </template>
 ```
 
-::::
+:::
 
 ## 遮罩、键盘与滚动锁定
 
@@ -2786,7 +2786,7 @@ function onToDialog() {
 
 ## Slots
 
-| 名称 | 说明 | 类型 |
+| 名称 | 说明 | 用法 |
 | :-- | :-- | :-- |
 | title | 自定义标题 | v-slot:title |
 | default | 自定义内容 | v-slot:default |

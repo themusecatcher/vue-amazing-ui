@@ -113,7 +113,7 @@ function onEnter(e: KeyboardEvent) {
 
 :::
 
-## 步长为小数
+## 步数为小数
 
 <InputNumber :step="0.1" v-model:value="value" />
 
@@ -234,7 +234,7 @@ watchEffect(() => {
 
 :::
 
-## 添加前缀图标
+## 添加前缀图标 $
 
 <InputNumber prefix="$" v-model:value="value" />
 
@@ -301,7 +301,7 @@ value <Tag color="cyan">v-model</Tag> | 当前值 | number | undefined
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 prefix | 自定义前缀图标 | v-slot:prefix
 

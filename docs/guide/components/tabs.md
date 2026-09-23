@@ -1297,7 +1297,7 @@ disabled? | 是否禁用页签 | boolean | false
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 tab | 自定义页签显示文字 | v-slot:tab="{ item, tab, key }"
 content | 自定义标签页内容 | v-slot:content="{ item, content, key }"

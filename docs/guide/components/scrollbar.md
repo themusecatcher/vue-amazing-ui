@@ -402,7 +402,7 @@ function onScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
 
 ## Slots
 
-| 名称   | 说明      | 类型           |
+| 名称   | 说明      | 用法           |
 | :------ | :--------- | :------------- |
 | default | 自定义内容 | v-slot:default |
 

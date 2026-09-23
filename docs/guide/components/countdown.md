@@ -263,7 +263,7 @@ active | 是否处于计时状态，仅当 `future: false` 时生效 | boolean |
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 title | 自定义倒计时标题 | v-slot:title
 prefix | 自定义倒计时的前缀 | v-slot:prefix

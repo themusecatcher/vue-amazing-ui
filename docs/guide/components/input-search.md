@@ -677,10 +677,10 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 | search | 搜索按钮，默认时为搜索图标 | string | undefined |
 | searchProps | 设置搜索按钮的属性，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {} |
 | size | 搜索框大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
+| allowClear | 可以点击清除图标删除搜索框内容 | boolean | false |
 | addonBefore | 设置前置标签 | string | undefined |
 | prefix | 前缀图标 | string | undefined |
 | suffix | 后缀图标 | string | undefined |
-| allowClear | 可以点击清除图标删除搜索框内容 | boolean | false |
 | loading | 是否搜索中 | boolean | false |
 | disabled | 是否禁用 | boolean | false |
 | placeholder | 搜索框输入的占位符 | string | undefined |
@@ -690,7 +690,7 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 
 ## Slots
 
-| 名称       | 说明          | 类型               |
+| 名称       | 说明          | 用法               |
 | :---------- | :------------- | :----------------- |
 | icon       | 自定义搜索图标 | v-slot:icon        |
 | search     | 自定义搜索按钮 | v-slot:search      |

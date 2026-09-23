@@ -498,7 +498,7 @@ value <Tag color="cyan">v-model</Tag> | 当前数，受控值 `0,1,2,3...` | num
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 character | 自定义字符或图标 | v-slot:character="{ value }"
 tooltip | 自定义每项的提示信息 | v-slot:tooltip="{ tooltip, value }"

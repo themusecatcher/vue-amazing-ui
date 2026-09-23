@@ -497,7 +497,7 @@ datetime | 展示时间描述 | string | undefined
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 actions | 在评论内容下面呈现的操作项列表 | v-slot:actions
 author | 要显示为评论作者的元素 | v-slot:author

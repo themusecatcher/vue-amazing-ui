@@ -276,7 +276,7 @@ extra | 额外内容 | string | undefined
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 icon | 自定义图标 | v-slot:icon
 title | 自定义标题文字 | v-slot:title

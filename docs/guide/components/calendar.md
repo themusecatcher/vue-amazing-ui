@@ -785,7 +785,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ## Slots
 
-| 名称 | 说明 | 类型 |
+| 名称 | 说明 | 用法 |
 | :-- | :-- | :-- |
 | header | 自定义日历头部内容 | v-slot:header |
 | week | 自定义周展示 | v-slot:week="{ defaultWeek, week, timestamp }" |

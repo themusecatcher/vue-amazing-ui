@@ -550,7 +550,7 @@ function onDecline(scale: number) {
 
 ## Slots
 
-| 名称   | 说明                  | 类型                        |
+| 名称   | 说明                  | 用法                        |
 | :------ | :--------------------- | :-------------------------- |
 | success | 自定义进度完成时的信息 | v-slot:success              |
 | format | 自定义格式化内容      | v-slot:format="{ percent }" |
