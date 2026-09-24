@@ -13,6 +13,8 @@
 ## <VersionDateTag date="2026-09-24">2.12.0</VersionDateTag>
 
 - 新增 [下拉菜单 Dropdown](/guide/components/dropdown.html) 组件
+- 补齐 [对话框 Dialog](/guide/components/dialog.html) / [全局提示 Message](/guide/components/message.html) / [模态框 Modal](/guide/components/modal.html) / [通知提醒 Notification](/guide/components/notification.html) 的 `Provider` 默认插槽类型声明
+- 组件库及文档优化
 
 ## <VersionDateTag date="2026-09-23">2.11.0</VersionDateTag>
 
