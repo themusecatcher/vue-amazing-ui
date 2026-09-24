@@ -2,7 +2,7 @@
 import { ref, h } from 'vue'
 import type { Ref } from 'vue'
 import { DownOutlined, UserOutlined, SmileOutlined } from '@ant-design/icons-vue'
-import type { DropdownMenuOption, DropdownKey } from 'components/dropdown'
+import type { DropdownMenuOption, DropdownKey } from 'vue-amazing-ui'
 // 共用菜单数据（多个分区复用）
 const basicMenus: DropdownMenuOption[] = [
   { key: '1', label: '1st menu item' },

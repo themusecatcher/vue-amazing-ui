@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
-import Dropdown from 'components/dropdown/dropdown'
+import Dropdown from 'components/dropdown/Dropdown.vue'
 import DropdownButton from 'components/dropdown/dropdown-button'
 import Popup from 'components/popup'
 import type { DropdownMenuOption } from 'components/dropdown'

@@ -179,7 +179,7 @@ describe('浮层默认层级：组件调用点必须引用 FLOATING_LAYER_Z_INDE
         'auto-complete/AutoComplete.vue',
         'dialog/Dialog.vue',
         'drawer/Drawer.vue',
-        'dropdown/dropdown/Dropdown.vue',
+        'dropdown/Dropdown.vue',
         'image/Image.vue',
         'loading-bar/LoadingBar.vue',
         'message/Message.vue',

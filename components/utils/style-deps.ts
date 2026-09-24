@@ -36,7 +36,7 @@ const componentsMap = {
   Dialog: 'dialog',
   Divider: 'divider',
   Drawer: 'drawer',
-  Dropdown: 'dropdown/dropdown',
+  Dropdown: 'dropdown',
   DropdownButton: 'dropdown/dropdown-button',
   Ellipsis: 'ellipsis',
   Empty: 'empty',

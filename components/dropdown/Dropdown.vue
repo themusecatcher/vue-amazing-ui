@@ -214,8 +214,7 @@ function clearTimers(): void {
 /**
  * 请求变更展开态
  *
- * @param {boolean} val 目标展开态
- * @param {boolean} [notify = true] 是否对外通知：菜单项点击导致的收起不通知
+ * notify 为假时只改状态、不对外通知 —— 菜单项点击导致的收起走此路径（onMenuSelect）
  */
 function requestOpen(val: boolean, notify = true): void {
   if (val && !canOpen.value) {
@@ -358,10 +357,6 @@ if (containerOpen) {
 onBeforeUnmount(() => {
   clearTimers()
   removeDocumentListener()
-})
-defineExpose({
-  triggerRef,
-  popupRef
 })
 </script>
 <template>

@@ -5,8 +5,8 @@
  */
 import { computed } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import Dropdown from '../dropdown/Dropdown.vue'
-import type { MenuOption, Key, DropdownArrowOptions, DropdownTrigger } from '../dropdown/Dropdown.vue'
+import Dropdown from '../Dropdown.vue'
+import type { MenuOption, Key, DropdownArrowOptions, DropdownTrigger } from '../Dropdown.vue'
 import Button from 'components/button'
 export interface Props {
   open?: boolean // (v-model) 下拉菜单是否展开

@@ -81,7 +81,7 @@ export type {
   DropdownMenuOption,
   DropdownKey
 } from './dropdown'
-export { Dropdown, DropdownButton } from './dropdown'
+export { default as Dropdown, DropdownButton } from './dropdown'
 
 export type { EllipsisProps } from './ellipsis'
 export { default as Ellipsis } from './ellipsis'
