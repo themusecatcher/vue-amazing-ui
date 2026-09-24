@@ -502,7 +502,9 @@ export function getPlacementAndOffsetOfFollower(
     return { left, top }
   }
   const offsetVertically = position === 'left' || position === 'right'
-  if (properAlign !== 'center') {
+  // 次轴自适应整体受 `shift` 门控：`shift: false` 的语义是「次轴完全不做调整」，方向与位置都按期望
+  // 方向原样呈现（此类调用方以「浮层相对锚点的位置恒定」为视觉契约，如 Slider 气泡居中于手柄）
+  if (shift && properAlign !== 'center') {
     // 复合方向：按「当前对齐侧」与「对侧」的可用空间，决定是否换对齐侧或退化为居中
     const oppositeAlignCssPositionProp = oppositeAlignCssPositionProps[`${position}-${properAlign}`]
     const currentAlignCssPositionProp = oppositionPositions[oppositeAlignCssPositionProp]
@@ -538,7 +540,7 @@ export function getPlacementAndOffsetOfFollower(
         properAlign = oppositeAligns[properAlign]
       }
     }
-  } else {
+  } else if (shift) {
     // 居中方向：居中放不下时退化为 start / end 对齐
     const alternativeAlignCssPositionProp1: AxisPlacement = position === 'bottom' || position === 'top' ? 'left' : 'top'
     const alternativeAlignCssPositionProp2 = oppositionPositions[alternativeAlignCssPositionProp1]

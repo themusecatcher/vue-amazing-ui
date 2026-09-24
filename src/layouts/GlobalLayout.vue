@@ -3,7 +3,7 @@ import { ref, onMounted, h, computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { routes } from '@/router'
 import { toggleDark, useMutationObserver } from 'components/utils'
-import type { ItemType, MenuProps } from 'ant-design-vue'
+import type { ItemType, MenuInfo } from 'vue-amazing-ui'
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
 const themeDark = ref<boolean>(false)
 const html = document.documentElement
@@ -30,8 +30,8 @@ const menuItems = computed<ItemType[]>(() =>
   }))
 )
 const current = ref<string[]>([route.name as string])
-const onClick: NonNullable<MenuProps['onClick']> = (e) => {
-  // title 为构造 items 时透传的自定义字段（antdv Menu 未内置）
+const onClick = (e: MenuInfo) => {
+  // title 为构造 items 时透传的自定义字段
   console.log(`${(e.item as { title?: string })?.title} ${e.key}`)
   console.log(route.name)
 }
@@ -91,7 +91,7 @@ const routerViewRef = ref<HTMLDivElement | null>(null)
         </template>
       </Switch>
       <Scrollbar style="height: 100vh">
-        <a-menu
+        <Menu
           style="min-height: 100vh"
           v-model:selectedKeys="current"
           mode="inline"

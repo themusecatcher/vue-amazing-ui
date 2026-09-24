@@ -45,6 +45,7 @@ declare module 'vue' {
     ListItem: typeof VueAmazingUI.ListItem
     LoadingBar: typeof VueAmazingUI.LoadingBar
     LoadingBarProvider: typeof VueAmazingUI.LoadingBarProvider
+    Menu: typeof VueAmazingUI.Menu
     Message: typeof VueAmazingUI.Message
     MessageProvider: typeof VueAmazingUI.MessageProvider
     Modal: typeof VueAmazingUI.Modal
