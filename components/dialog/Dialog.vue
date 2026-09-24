@@ -559,11 +559,9 @@ async function onBeforeEnter(el: Element) {
  * 2. rAF 节流写入位置，避免 mousemove 高频触发多次响应式更新
  * 3. 支持窗口边界钳制，防止弹窗被拖出视口不可见
  *
- * 本库 Dialog 是多实例栈，故状态直接写入实例对象，由调用方按 key 管理控制器生命周期。
- *
- * @param {DragTarget} target 拖拽状态载体，拖拽过程中直接改写其 dragX / dragY
- * @param {boolean | DialogDraggableOptions} draggable 拖拽配置，false 时 start 为空操作
- * @returns {DragController} 控制器，需在实例销毁时调用 stop
+ * 本库 Dialog 是多实例栈，故状态直接写入实例对象（`target` 的 dragX / dragY 在拖拽过程中被改写），
+ * 由调用方按 key 管理控制器生命周期；`draggable` 为 false 时 start 为空操作，返回的控制器需在
+ * 实例销毁时调用 stop。
  */
 function createDragController(target: DragTarget, draggable: boolean | DialogDraggableOptions): DragController {
   let cleanup: (() => void) | undefined

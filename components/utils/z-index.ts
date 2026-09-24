@@ -43,7 +43,7 @@ export const FLOATING_LAYER_Z_INDEX = {
 /**
  * 层级步长
  *
- * 同一层内部还会再分层（如 Modal 的遮罩与弹窗相差 10、Image 的遮罩与预览相差 80），
+ * 同一层内部还会再分层（如 Modal 的遮罩与弹窗、Image 的遮罩与预览均相差 10），
  * 故槽位按 10 递增，并用 `span` 表达「本层需要连续占用几段」。
  */
 const Z_INDEX_STEP = 10

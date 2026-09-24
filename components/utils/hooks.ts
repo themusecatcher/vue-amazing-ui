@@ -334,8 +334,8 @@ interface ProvidesChainInstance {
  *
  * 组件库内部使用：注入协议属内部实现，不对外导出、不承诺 API 稳定性。
  *
- * @param {InjectionKey<T>} key 注入键
- * @returns {T | undefined} 命中返回注入值，未命中返回 undefined
+ * @param key - 注入键
+ * @returns 命中返回注入值，未命中返回 undefined
  */
 export function injectFromChain<T>(key: InjectionKey<T>): T | undefined {
   let instance = getCurrentInstance() as unknown as ProvidesChainInstance | null

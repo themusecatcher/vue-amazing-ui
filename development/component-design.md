@@ -49,6 +49,12 @@ const props = withDefaults(defineProps<Props>(), {
 - 主类型：`interface Props`，导出后由 `components.ts` 重命名为 `<组件名>Props`。
 - 子类型：命名 `<组件名><语义>`，如 `AutoCompleteOption`、`CalendarDateItem`，在 SFC 内定义并 `export`。
 
+## 注释规范
+
+- **组件 SFC（`.vue`）内的函数**：用中文块注释描述「做什么 / 为什么」，**不写 `@param` / `@returns`** —— 私有函数的参数语义由签名与函数名表达，注释里再写一遍只会与签名漂移；需要补充某入参语义时写进描述句或调用点行内注释。
+- **`components/utils/` 的导出函数**：按 TSDoc 写 `@param name - 说明` / `@returns 说明`，**类型由签名承接，禁止 `@param {type}` 这类重复标注**。
+- 字段注释：`interface Props` 的每个字段、`{组件名}Slots` 的每个插槽必须带中文注释（见上文「Props 定义规范」「插槽类型」）。
+
 ## 事件（emit）
 
 用 `defineEmits` 声明事件，必要时带类型：
