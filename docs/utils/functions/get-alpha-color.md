@@ -8,7 +8,6 @@ _根据前景色计算透明度颜色的工具函数，一般用作阴影色_
 
 ```ts
 import { TinyColor } from '@ctrl/tinycolor'
-import { TinyColor } from '@ctrl/tinycolor'
 
 /**
  * 判断 RGB 单通道值是否落在合法区间

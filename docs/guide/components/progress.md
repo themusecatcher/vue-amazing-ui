@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*展示操作的当前进度*
+_展示操作的当前进度_
 
 ## 何时使用
 
@@ -132,7 +132,7 @@ function onDecline(scale: number) {
 
 ## 渐变进度条
 
-*`strokeColor`: `{ '0%': '#108ee9', '100%': '#87d068', direction: 'right' }` 或 `{ from: '#108ee9', to: '#87d068', direction: 'right' }`*
+_`strokeColor`: `{ '0%': '#108ee9', '100%': '#87d068', direction: 'right' }` 或 `{ from: '#108ee9', to: '#87d068', direction: 'right' }`_
 
 <br/>
 

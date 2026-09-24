@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*倒计时*
+_倒计时_
 
 ## 何时使用
 
@@ -24,7 +24,7 @@ function onReset() {
 
 ## 基本使用
 
-*`format`: `MM月 DD天 HH:mm:ss`*
+_`format`: `MM月 DD天 HH:mm:ss`_
 
 <br/>
 
@@ -59,7 +59,7 @@ function onFinish() {
 
 ## 毫秒倒计时
 
-*`format`: `Y 年 M 月 D 天 H 时 m 分 s 秒 SSS 毫秒`*
+_`format`: `Y 年 M 月 D 天 H 时 m 分 s 秒 SSS 毫秒`_
 
 <br/>
 

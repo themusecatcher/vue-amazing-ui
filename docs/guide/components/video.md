@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*简易封装的播放器*
+_简易封装的播放器_
 
 ## 何时使用
 
@@ -100,7 +100,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/u
 
 ## 自动截取视频指定帧作为视频封面
 
-*在未设置封面时，自动截取视频第 `second` 秒指定帧作为封面图*
+_在未设置封面时，自动截取视频第 `second` 秒指定帧作为封面图_
 
 <br/>
 
@@ -151,7 +151,7 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/u
 
 ## 自动循环播放
 
-*据一般规则，媒体内容将在满足以下至少一个的条件下[自动播放](https://developer.mozilla.org/zh-CN/docs/Web/Media/Autoplay_guide)：*
+_据一般规则，媒体内容将在满足以下至少一个的条件下[自动播放](https://developer.mozilla.org/zh-CN/docs/Web/Media/Autoplay_guide)：_
 
 1. 音频被静音或其音量设置为 `0`
 2. 用户和网页已有交互行为（包括点击、触摸、按下某个键等等）
@@ -318,13 +318,13 @@ preload | 是否在页面加载后载入视频，如果设置了 `autoplay` 属�
 playIcon | 播放暂停时是否显示播放器中间的暂停图标 | boolean | true
 iconSize | 暂停图标尺寸，单位 `px` | number | 80
 
-*`preload` 可选属性：*
+_`preload` 可选属性：_
 
 - `auto`: 一旦页面加载，则开始加载视频;
 - `metadata`: 当页面加载后仅加载视频的元数据（例如长度），建议使用 `metadata`，以便视频自动获取第一帧作为封面 `poster`
 - `none`: 页面加载后不应加载视频
 
-*`fit` 可选属性：*
+_`fit` 可选属性：_
 
 - `none`: 保存原有内容，不进行缩放;
 - `fill`: 不保持原有比例，内容拉伸填充整个内容容器;

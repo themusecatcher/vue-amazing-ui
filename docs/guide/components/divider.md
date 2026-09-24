@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*区隔内容的分割线*
+_区隔内容的分割线_
 
 ## 何时使用
 
@@ -61,7 +61,7 @@
 
 ## 自定义文字边距
 
-*文字居左(右)并距左(右)边 `120px`*
+_文字居左(右)并距左(右)边 `120px`_
 
 <Divider orientation="left" :orientation-margin="120">Left Text</Divider>
 <Divider orientation="right" :orientation-margin="120">Right Text</Divider>

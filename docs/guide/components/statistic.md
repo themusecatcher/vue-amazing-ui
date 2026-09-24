@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*展示统计数值*
+_展示统计数值_
 
 ## 何时使用
 
@@ -269,7 +269,7 @@ function formatter(value: string): string {
 
 ## 等宽数字
 
-*使用 `tabularNums` 使数值滚动时宽度保持稳定*
+_使用 `tabularNums` 使数值滚动时宽度保持稳定_
 
 <br/>
 

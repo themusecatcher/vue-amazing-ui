@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*垂直展示的时间流信息*
+_垂直展示的时间流信息_
 
 ## 何时使用
 
@@ -240,7 +240,7 @@ const timelineItems = ref<TimelineItem[]>([
 
 ## 中间时间轴点
 
-*内容从左边开始交替展现*
+_内容从左边开始交替展现_
 
 <br/>
 
@@ -289,7 +289,7 @@ const timelineItems = ref<TimelineItem[]>([
 
 :::
 
-*内容从右边开始交替展现*
+_内容从右边开始交替展现_
 
 <br/>
 

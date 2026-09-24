@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*成组展示多个只读字段*
+_成组展示多个只读字段_
 
 ## 何时使用
 
@@ -493,7 +493,7 @@ const options = [
 
 ## 无冒号
 
-*使用 `colon` 属性关闭标签后的冒号*
+_使用 `colon` 属性关闭标签后的冒号_
 
 <br/>
 
@@ -620,7 +620,7 @@ const labelAlignOptions = [
 
 ## 自定义头部
 
-*使用 `header` 插槽自定义整个头部区域，替代 `title` 与 `extra`*
+_使用 `header` 插槽自定义整个头部区域，替代 `title` 与 `extra`_
 
 <br/>
 

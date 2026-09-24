@@ -1028,8 +1028,8 @@ children | 子菜单（多级菜单）或分组子项，支持任意层级递归
 :-- | :-- | :-- | :--
 open <Tag color="cyan">v-model</Tag> | 下拉菜单是否展开 | boolean | undefined
 menus | 菜单项配置数据 (配置式)，与 `overlay` 插槽二选一 | [MenuOption](#menuoption-type)[] | []
-type | 按钮类型，同 [Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | 'default' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default'
-size | 按钮尺寸，同 [Button](https://themusecatcher.github.io/vue-amazing-ui/guide/components/button.html#button) | 'small' &#124; 'middle' &#124; 'large' | 'middle'
+type | 按钮类型，同 [Button](/guide/components/button.html#button) | 'default' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default'
+size | 按钮尺寸，同 [Button](/guide/components/button.html#button) | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 icon | 右侧下拉按钮图标（默认为省略号），插槽形态请用 `#icon` 插槽 | VNode | undefined
 placement | 下拉菜单弹出位置 | 'topLeft' &#124; 'top' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottom' &#124; 'bottomRight' | 'bottomRight'
 arrow | 是否显示下拉箭头；传 `{ pointAtCenter: true }` 时箭头指向触发器中心 | boolean &#124; [DropdownArrowOptions](#dropdownarrowoptions-type) | false
@@ -1050,7 +1050,6 @@ overlayStyle | 下拉菜单根元素的样式 | [CSSProperties](https://cn.vuejs
 名称 | 说明 | 类型
 :-- | :-- | :--
 openChange | 下拉菜单展开收起时的回调（点击菜单项导致的收起不触发） | (open: boolean) => void
-update:open | 下拉菜单展开收起时的回调（点击菜单项导致的收起不触发） | (open: boolean) => void
 menuClick | 点击菜单项时的回调（`disabled`、`loading` 项不触发） | (key: string &#124; number &#124; undefined, option: [MenuOption](#menuoption-type)) => void
 
 ### DropdownButton
@@ -1059,7 +1058,6 @@ menuClick | 点击菜单项时的回调（`disabled`、`loading` 项不触发）
 :-- | :-- | :--
 click | 点击左侧按钮时的回调 | (e: MouseEvent) => void
 openChange | 下拉菜单展开收起时的回调（点击菜单项导致的收起不触发） | (open: boolean) => void
-update:open | 下拉菜单展开收起时的回调（点击菜单项导致的收起不触发） | (open: boolean) => void
 menuClick | 点击菜单项时的回调（`disabled`、`loading` 项不触发） | (key: string &#124; number &#124; undefined, option: [MenuOption](#menuoption-type)) => void
 
 ## Slots

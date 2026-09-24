@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*展示行列数据*
+_展示行列数据_
 
 ## 何时使用
 
@@ -1304,7 +1304,7 @@ const dataSource = ref([
 
 ## 自定义样式
 
-*使用 `rowClassName` 和 `TableColumn.className` 自定义表格样式*
+_使用 `rowClassName` 和 `TableColumn.className` 自定义表格样式_
 
 <br/>
 
@@ -1391,7 +1391,7 @@ const rowClassName = (record: Record<string, any>, rowIndex: number) => {
 
 ## 三种尺寸
 
-*另两种紧凑型的列表；小型列表适用于对话框内*
+_另两种紧凑型的列表；小型列表适用于对话框内_
 
 <br/>
 
@@ -1746,7 +1746,7 @@ const dataSource = ref([
 
 ## 单元格自动省略
 
-*设置 `column.ellipsis` 可以让单元格内容根据宽度自动省略*
+_设置 `column.ellipsis` 可以让单元格内容根据宽度自动省略_
 
 <br/>
 
@@ -1848,7 +1848,7 @@ const dataSource = ref([
 
 ## 合并单元格
 
-*表头只支持列合并，使用 `column` 里的 `colSpan` 进行设置；表格支持行/列合并，使用 `customCell` 将单元格属性 `colSpan` 或 `rowSpan` 设为 `0` 时，设置的表格不会渲染*
+_表头只支持列合并，使用 `column` 里的 `colSpan` 进行设置；表格支持行/列合并，使用 `customCell` 将单元格属性 `colSpan` 或 `rowSpan` 设为 `0` 时，设置的表格不会渲染_
 
 <br/>
 
@@ -2289,7 +2289,7 @@ const handleTableChange = (page: number, pageSize: number) => {
 
 ## 可展开
 
-*当表格内容较多不能一次性完全展示时*
+_当表格内容较多不能一次性完全展示时_
 
 <br/>
 
@@ -2397,9 +2397,9 @@ const handleExpandedRowsChange = (expandedRows: string[]) => {
 
 ## 固定列
 
-*对于列数很多的数据，可以固定前后的列，横向滚动查看其它数据，需要和 `scroll.x` 配合使用*
+_对于列数很多的数据，可以固定前后的列，横向滚动查看其它数据，需要和 `scroll.x` 配合使用_
 
-*建议指定 `scroll.x` 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过 `scroll.x`*
+_建议指定 `scroll.x` 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过 `scroll.x`_
 
 <br/>
 
@@ -2471,7 +2471,7 @@ const dataSourceFixColumn = ref([
 
 ## 固定表头
 
-*方便一页内展示大量数据*
+_方便一页内展示大量数据_
 
 <br/>
 
@@ -2517,9 +2517,9 @@ const dataSourceFixHeader = ref(data)
 
 ## 固定头和列
 
-*适合同时展示有大量数据和数据列*
+_适合同时展示有大量数据和数据列_
 
-*建议指定 `scroll.x` 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过 `scroll.x`*
+_建议指定 `scroll.x` 为大于表格宽度的固定值或百分比，且非固定列宽度之和不要超过 `scroll.x`_
 
 <br/>
 
@@ -2585,7 +2585,7 @@ const dataSourceFixHeaderAndColumn = ref(data)
 
 ## 随页面滚动的固定表头和滚动条
 
-*对于长表格，可以设置跟随页面固定表头和滚动条，方便查看表头和使用滚动条*
+_对于长表格，可以设置跟随页面固定表头和滚动条，方便查看表头和使用滚动条_
 
 <br/>
 
@@ -2657,7 +2657,7 @@ const dataSourceFixHeaderAndScrollbar = ref(data)
 
 ## 表头分组
 
-*`columns[n]` 可以内嵌 `children`，以渲染分组表头*
+_`columns[n]` 可以内嵌 `children`，以渲染分组表头_
 
 <br/>
 
@@ -2861,7 +2861,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
 
 ## 可选择
 
-*可通过 `rowSelection` 属性来自定义选择功能*
+_可通过 `rowSelection` 属性来自定义选择功能_
 
 <br/>
 

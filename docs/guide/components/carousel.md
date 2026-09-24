@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*一组轮播的区域*
+_一组轮播的区域_
 
 ## 何时使用
 
@@ -234,7 +234,7 @@ watch(
 
 ## 基本使用
 
-*当焦点在 `Arrow` 或 `Dots` 上时，可以通过键盘上、下、左、右按键切换*
+_当焦点在 `Arrow` 或 `Dots` 上时，可以通过键盘上、下、左、右按键切换_
 
 <br>
 
@@ -661,7 +661,7 @@ const dotTrigger = ref<CarouselProps['dotTrigger']>('hover')
 
 ## 自定义滑动动画
 
-*`slideFunction` 支持缓动预设名、三次贝塞尔控制点数组与缓动函数，预设名与 `@vueuse/core` 的 `TransitionPresets` 一致*
+_`slideFunction` 支持缓动预设名、三次贝塞尔控制点数组与缓动函数，预设名与 `@vueuse/core` 的 `TransitionPresets` 一致_
 
 <br/>
 
@@ -745,7 +745,7 @@ const slideEasing = computed(() => (slideEasingType.value === 'preset' ? slideEa
 
 ## 自定义渐变动画
 
-*`fadeFunction` 可传四个三次贝塞尔控制点（自动转为 CSS `cubic-bezier()` 写法），也可直接传 CSS `transition-timing-function` 写法*
+_`fadeFunction` 可传四个三次贝塞尔控制点（自动转为 CSS `cubic-bezier()` 写法），也可直接传 CSS `transition-timing-function` 写法_
 
 <br/>
 
@@ -869,7 +869,7 @@ const images = ref<CarouselImage[]>([
 
 ## 循环切换
 
-*关闭 `loop` 后到达首尾时，该方向的切换（箭头、键盘、滚轮、拖拽、自动轮播）均失效*
+_关闭 `loop` 后到达首尾时，该方向的切换（箭头、键盘、滚轮、拖拽、自动轮播）均失效_
 
 <br/>
 
@@ -923,7 +923,7 @@ const loop = ref<boolean>(true)
 
 ## 单张图片
 
-*图片只有一张时不渲染箭头，也不会自动轮播或响应键盘、滚轮、拖拽切换（指示点仍显示）*
+_图片只有一张时不渲染箭头，也不会自动轮播或响应键盘、滚轮、拖拽切换（指示点仍显示）_
 
 <br/>
 
@@ -951,7 +951,7 @@ const singleImage = ref<CarouselImage[]>([
 
 ## 初始展示页
 
-*通过 `initial-index` 指定初始展示的图片下标，仅在初始化时生效*
+_通过 `initial-index` 指定初始展示的图片下标，仅在初始化时生效_
 
 <br/>
 
@@ -1009,7 +1009,7 @@ const initialIndex = ref<number>(3)
 
 ## 受控当前页
 
-*通过 `v-model:current-index` 双向绑定当前页：外部改值即可跳转，点击指示点或箭头切换也会实时回写*
+_通过 `v-model:current-index` 双向绑定当前页：外部改值即可跳转，点击指示点或箭头切换也会实时回写_
 
 <br/>
 
@@ -1071,7 +1071,7 @@ const controlledIndex = ref<number>(1)
 
 ## 切换回调
 
-*`beforeChange` 在切换开始时触发，`afterChange` 在切换结束后触发*
+_`beforeChange` 在切换开始时触发，`afterChange` 在切换结束后触发_
 
 <br/>
 
@@ -1132,7 +1132,7 @@ function onAfterChange(current: number) {
 
 ## 图片填充方式
 
-*与 CSS 同名属性一致，默认 `fill` 拉伸填满容器*
+_与 CSS 同名属性一致，默认 `fill` 拉伸填满容器_
 
 <br/>
 
@@ -1212,7 +1212,7 @@ const objectFit = ref<CarouselProps['objectFit']>('fill')
 
 ## 拖拽切换
 
-*开启 `draggable` 后支持鼠标与触摸拖拽，位移超过容器宽度一半或速度超过 `0.4px/ms` 即翻页*
+_开启 `draggable` 后支持鼠标与触摸拖拽，位移超过容器宽度一半或速度超过 `0.4px/ms` 即翻页_
 
 <br/>
 
@@ -1266,7 +1266,7 @@ const draggable = ref<boolean>(true)
 
 ## 滚轮切换
 
-*开启 `mousewheel` 后滚轮切换，单次滚动量需超过 `10`*
+_开启 `mousewheel` 后滚轮切换，单次滚动量需超过 `10`_
 
 <br/>
 
@@ -1320,7 +1320,7 @@ const mousewheel = ref<boolean>(true)
 
 ## 自定义箭头
 
-*通过 `prevArrow`、`nextArrow` 插槽自定义箭头，插槽内容仅负责外观，点击切换由组件接管*
+_通过 `prevArrow`、`nextArrow` 插槽自定义箭头，插槽内容仅负责外观，点击切换由组件接管_
 
 <br/>
 
@@ -1404,7 +1404,7 @@ const images = ref<CarouselImage[]>([
 
 ## 自定义指示点
 
-*通过 `dots` 插槽自定义指示点，需自行调用 `to(n)` 切换*
+_通过 `dots` 插槽自定义指示点，需自行调用 `to(n)` 切换_
 
 <br/>
 
@@ -1570,7 +1570,7 @@ function getCurrentIndex() {
 
 ## 轮播图配置器
 
-*`currentIndex` 为受控属性，留空时由组件自行维护当前页，设置后进入受控模式*
+_`currentIndex` 为受控属性，留空时由组件自行维护当前页，设置后进入受控模式_
 
 <Flex gap="large" vertical>
   <Row :gutter="[24, 12]">

@@ -297,4 +297,4 @@ pnpm docs:dev
 | getAlphaColor | 获取透明度颜色函数，一般用作阴影色 | (frontColor: string, backgroundColor: string = '#ffffff') => string |
 | getScrollParent | 向上查找元素最近的可滚动父元素函数 | (el: HTMLElement &#124; null) => HTMLElement &#124; null |
 | lockScroll | 锁定页面滚动并补偿滚动条宽度，防止页面横向抖动函数 | () => () => void |
-| useScrollParent | 查询并监听最近可滚动父元素，响应视口 `resize` 的组合式函数 | (contentRef: Ref\<HTMLElement &#124; null>, onScroll: () => void, options: object = {}) => { scrollTarget: Ref\<HTMLElement &#124; null>, viewportWidth: Ref\<number>, viewportHeight: Ref\<number>, observeScroll: \() => void, cleanup: \() => void } |
+| useScrollParent | 查询并监听最近可滚动父元素，响应视口 `resize` 的组合式函数 | (contentRef: Ref\<HTMLElement &#124; null>, onScroll: () => void, options: ScrollParentOptions = {}) => { scrollTarget: Ref\<HTMLElement &#124; null>, viewportWidth: Ref\<number>, viewportHeight: Ref\<number>, observeScroll: \() => void, cleanup: \() => void } |

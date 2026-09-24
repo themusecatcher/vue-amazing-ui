@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*级联选择框*
+_级联选择框_
 
 ## 何时使用
 
@@ -375,9 +375,9 @@ const selectedValue = ref(['2', '21', '212'])
 
 ## 禁用某一级
 
-*只禁用第一级：`disabled: [true]`*
+_只禁用第一级：`disabled: [true]`_
 
-*禁用前两级：`disabled: [true, true]`*
+_禁用前两级：`disabled: [true, true]`_
 
 <br/>
 
@@ -462,7 +462,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 
 ## 禁用选项
 
-*只需指定 `options` 里的 `disabled` 字段*
+_只需指定 `options` 里的 `disabled` 字段_
 
 <br/>
 
@@ -1152,7 +1152,7 @@ function filter(inputValue: string, option: any) {
 
 ## 下拉面板挂载容器
 
-*不传 `to` 时面板优先挂到最近的承载层内容容器（`Modal` / `Drawer` / `Dialog` 卡片），无承载层时为 `body`；设为 `false` 时面板留在原地*
+_不传 `to` 时面板优先挂到最近的承载层内容容器（`Modal` / `Drawer` / `Dialog` 卡片），无承载层时为 `body`；设为 `false` 时面板留在原地_
 
 <br/>
 

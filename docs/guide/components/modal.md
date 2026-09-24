@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*模态对话框*
+_模态对话框_
 
 ## 何时使用
 
@@ -25,7 +25,7 @@
 
 <br/>
 
-*适用于命令式调用：先在应用根节点放置一次 `<ModalProvider>`，之后任意层级组件均可通过 `useModal()` 取得同一实例*
+_适用于命令式调用：先在应用根节点放置一次 `<ModalProvider>`，之后任意层级组件均可通过 `useModal()` 取得同一实例_
 
 ::: info 关于 `ModalProvider` 与 `Modal`
 
@@ -84,7 +84,7 @@ function onClick() {
 
 <br/>
 
-*适用于内容需要用插槽自定义的场景：由 `v-model:open` 驱动显隐，标题、内容、底部均可交由插槽接管*
+_适用于内容需要用插槽自定义的场景：由 `v-model:open` 驱动显隐，标题、内容、底部均可交由插槽接管_
 
 ::: tip XXX.vue
 
@@ -907,7 +907,7 @@ const layerZIndexOpen = ref(false)
 
 ## 基本使用
 
-*共有六种内置形态：`info` / `success` / `error` / `warning` 为单按钮（知道了），`confirm` / `erase` 为双按钮（取消 + 确定）*
+_共有六种内置形态：`info` / `success` / `error` / `warning` 为单按钮（知道了），`confirm` / `erase` 为双按钮（取消 + 确定）_
 
 <br/>
 
@@ -991,7 +991,7 @@ function onErase() {
 
 ## 声明式用法
 
-*用 `v-model:open` 控制显隐，标题、内容、底部均可用插槽自定义；`change` 事件在每次开关时触发，并携带该实例的 `key`*
+_用 `v-model:open` 控制显隐，标题、内容、底部均可用插槽自定义；`change` 事件在每次开关时触发，并携带该实例的 `key`_
 
 <br/>
 
@@ -1079,7 +1079,7 @@ function onSlotOk() {
 
 ## 内容保留、预渲染与关闭回调
 
-*命令式弹窗默认 `destroyOnClose: true`，关闭即销毁；声明式弹窗默认 `false`，关闭后保留内容。下面分三组演示内容保留、预渲染与关闭回调的差异*
+_命令式弹窗默认 `destroyOnClose: true`，关闭即销毁；声明式弹窗默认 `false`，关闭后保留内容。下面分三组演示内容保留、预渲染与关闭回调的差异_
 
 <br/>
 
@@ -1562,7 +1562,7 @@ function onPercentWidthModal() {
 
 ## 自定义图标
 
-*`icon` 与 `closeIcon` 属性支持 `VNode` / 渲染函数（命令式与声明式一致）；插槽形态仅声明式用法下可用，通过 `#icon` / `#closeIcon` 插槽接管默认图标*
+_`icon` 与 `closeIcon` 属性支持 `VNode` / 渲染函数（命令式与声明式一致）；插槽形态仅声明式用法下可用，通过 `#icon` / `#closeIcon` 插槽接管默认图标_
 
 <br/>
 
@@ -1873,7 +1873,7 @@ function onFooterlessModal() {
 
 ## 完全自定义
 
-*`create()` 不渲染内置图标与按钮组，图标、内容、底部均由 `icon` / `content` / `footer` 自行组合*
+_`create()` 不渲染内置图标与按钮组，图标、内容、底部均由 `icon` / `content` / `footer` 自行组合_
 
 <br/>
 
@@ -1924,7 +1924,7 @@ function onCreateModal() {
 
 ## 关闭按钮
 
-*命令式弹窗默认不显示右上角关闭按钮，`closable: true` 时显示；`closeIcon` 支持 `VNode` 与渲染函数两种形态；`closeFocusable: false` 让关闭按钮不参与 `Tab` 序列*
+_命令式弹窗默认不显示右上角关闭按钮，`closable: true` 时显示；`closeIcon` 支持 `VNode` 与渲染函数两种形态；`closeFocusable: false` 让关闭按钮不参与 `Tab` 序列_
 
 <br/>
 
@@ -2073,7 +2073,7 @@ function onCenterOriginModal() {
 
 ## 异步关闭与阻止关闭
 
-*`onOk` / `onKnow` / `onCancel` 返回 `false` 或 `Promise` `reject` 时阻止关闭，其余情况（含 `Promise` `resolve`）自动关闭；返回 `Promise` 期间按钮保持 `loading`*
+_`onOk` / `onKnow` / `onCancel` 返回 `false` 或 `Promise` `reject` 时阻止关闭，其余情况（含 `Promise` `resolve`）自动关闭；返回 `Promise` 期间按钮保持 `loading`_
 
 <br/>
 
@@ -2168,7 +2168,7 @@ function onPreventCancelModal() {
 
 ## 原地更新
 
-*`update` 可更新 `ModalOptions` 的全部属性，另支持 `mode`（切换弹窗类型与内置按钮组）与 `loading`（手动驱动按钮 `loading`）*
+_`update` 可更新 `ModalOptions` 的全部属性，另支持 `mode`（切换弹窗类型与内置按钮组）与 `loading`（手动驱动按钮 `loading`）_
 
 <br/>
 
@@ -2251,7 +2251,7 @@ onBeforeUnmount(() => {
 
 ## 多实例层叠
 
-*连续调用依次入栈，各实例按自身 `zIndex` 分层（遮罩取 `zIndex`，弹窗取 `zIndex + 10`）；点击遮罩只关闭栈顶，`destroyAll()` 关闭并销毁全部*
+_连续调用依次入栈，各实例按自身 `zIndex` 分层（遮罩取 `zIndex`，弹窗取 `zIndex + 10`）；点击遮罩只关闭栈顶，`destroyAll()` 关闭并销毁全部_
 
 <br/>
 
@@ -2305,7 +2305,7 @@ function onDestroyAllModals() {
 
 ## 弹窗内浮层
 
-*弹窗内的 `Tooltip` / `Select` 会自动排在遮罩与弹窗之上；也可用 `zIndex` 直接指定弹窗层级（优先级最高）*
+_弹窗内的 `Tooltip` / `Select` 会自动排在遮罩与弹窗之上；也可用 `zIndex` 直接指定弹窗层级（优先级最高）_
 
 <br/>
 
@@ -2365,7 +2365,7 @@ const layerZIndexOpen = ref(false)
 
 ## 遮罩、键盘与滚动锁定
 
-*命令式调用默认 `maskClosable: false`、`keyboard: true`、`blockScroll: true`；`onMaskClick` / `onEsc` 无论是否允许关闭都会触发*
+_命令式调用默认 `maskClosable: false`、`keyboard: true`、`blockScroll: true`；`onMaskClick` / `onEsc` 无论是否允许关闭都会触发_
 
 <br/>
 
@@ -2453,7 +2453,7 @@ function onNoBlockScrollModal() {
 
 ## 焦点管理
 
-*`autoFocusButton` 控制入场后自动聚焦的按钮（默认确定按钮），`Tab` 焦点锁定在弹窗内循环；`focusTriggerAfterClose` 控制关闭后是否把焦点归还触发元素。注意：`Esc` 监听绑定在弹窗主体上，焦点移出弹窗（如 `mask: false` 时点击背景）后不再响应*
+_`autoFocusButton` 控制入场后自动聚焦的按钮（默认确定按钮），`Tab` 焦点锁定在弹窗内循环；`focusTriggerAfterClose` 控制关闭后是否把焦点归还触发元素。注意：`Esc` 监听绑定在弹窗主体上，焦点移出弹窗（如 `mask: false` 时点击背景）后不再响应_
 
 <br/>
 
@@ -2508,7 +2508,7 @@ function onNoFocusRestoreModal() {
 
 ## 自定义渲染
 
-*`modalRender` 可拿到默认内容节点 `originVNode`，包一层自定义容器即可叠加拖拽等增强能力；声明式用法下也可使用同名的 `#modalRender` 作用域插槽，属性优先级更高*
+_`modalRender` 可拿到默认内容节点 `originVNode`，包一层自定义容器即可叠加拖拽等增强能力；声明式用法下也可使用同名的 `#modalRender` 作用域插槽，属性优先级更高_
 
 <br/>
 
@@ -2710,11 +2710,11 @@ function onToModal() {
 
 <br/>
 
-*组件级配置属性：使用 `useModal()` 时设置在 `<ModalProvider>` 上（会透传给内部 `Modal`），直接使用 `<Modal>` 组件时设置在 `<Modal>` 上，两者等价。*
+_组件级配置属性：使用 `useModal()` 时设置在 `<ModalProvider>` 上（会透传给内部 `Modal`），直接使用 `<Modal>` 组件时设置在 `<Modal>` 上，两者等价。_
 
 <br/>
 
-*每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)*
+_每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)_
 
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
@@ -2773,7 +2773,7 @@ function onToModal() {
 
 <br/>
 
-*调用时传入的 `ModalOptions` 类型（`info` / `success` / `error` / `warning` / `confirm` / `erase` / `create` 的参数），以下属性均具有更高优先级（覆盖组件级配置）*
+_调用时传入的 `ModalOptions` 类型（`info` / `success` / `error` / `warning` / `confirm` / `erase` / `create` 的参数），以下属性均具有更高优先级（覆盖组件级配置）_
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
@@ -2830,7 +2830,7 @@ function onToModal() {
 
 <br/>
 
-*`update` 可更新的字段为 `ModalOptions` 的全部属性，另支持 `mode` 用于切换弹窗类型，进而决定内置图标与按钮组。*
+_`update` 可更新的字段为 `ModalOptions` 的全部属性，另支持 `mode` 用于切换弹窗类型，进而决定内置图标与按钮组。_
 
 > 注意：若该弹窗设置了自定义 `icon`，图标不随 `mode` 切换。
 
@@ -2854,7 +2854,7 @@ function onToModal() {
 
 ## Methods
 
-*`useModal()` 返回的 `ModalApi`，或通过 `<Modal>` / `<ModalProvider>` 的 `@ready` 事件获取：*
+_`useModal()` 返回的 `ModalApi`，或通过 `<Modal>` / `<ModalProvider>` 的 `@ready` 事件获取：_
 
 | 名称 | 说明 | 类型 |
 | :--------- | :------------- | :-------------------------------------------------------------------------------- |
@@ -2871,7 +2871,7 @@ function onToModal() {
 
 <br/>
 
-*单个模态框的句柄，由 `info` / `success` 等方法调用后返回：*
+_单个模态框的句柄，由 `info` / `success` 等方法调用后返回：_
 
 | 名称   | 说明                                           | 类型                                                     |
 | :------ | :---------------------------------------------- | :------------------------------------------------------- |
@@ -2882,7 +2882,7 @@ function onToModal() {
 
 ## Events
 
-*`cancel` / `ok` / `know` / `change` / `ready` 为 `<Modal>` 与 `<ModalProvider>` 组件的事件（需通过组件标签监听）；使用 `useModal()` 时，请在调用参数中使用 `onOk` / `onCancel` / `onKnow` 等回调。*
+_`cancel` / `ok` / `know` / `change` / `ready` 为 `<Modal>` 与 `<ModalProvider>` 组件的事件（需通过组件标签监听）；使用 `useModal()` 时，请在调用参数中使用 `onOk` / `onCancel` / `onKnow` 等回调。_
 
 | 名称 | 说明 | 类型 |
 | :----- | :---------------------------------- | :------------------------------ |
@@ -2898,7 +2898,7 @@ function onToModal() {
 
 <br/>
 
-*适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：内部会创建一个独立的应用实例，因此可在任意位置调用，无需外层 `ModalProvider`*
+_适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：内部会创建一个独立的应用实例，因此可在任意位置调用，无需外层 `ModalProvider`_
 
 ::: tip 注意
 
@@ -2911,7 +2911,7 @@ function onToModal() {
 
 ::: tip 独立实例的复用与销毁（dispose）
 
-*独立实例创建后不会随组件卸载自动销毁，也不会因内部弹窗全部关闭而回收，需根据使用场景决定是否手动 `dispose()`：*
+_独立实例创建后不会随组件卸载自动销毁，也不会因内部弹窗全部关闭而回收，需根据使用场景决定是否手动 `dispose()`：_
 
 **场景 A · 全局单例，缓存复用（推荐）**：适用于 `axios` 拦截器、路由守卫、`Pinia action` 等常驻场景，整个应用生命周期内复用同一实例：
 

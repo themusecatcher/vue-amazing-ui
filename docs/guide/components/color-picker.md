@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*用于选择和展示颜色*
+_用于选择和展示颜色_
 
 ## 何时使用
 
@@ -149,7 +149,7 @@ function labelFormat(color: string) {
 
 ## 不透明度
 
-*`show-alpha` 控制是否可调节 `alpha` 通道*
+_`show-alpha` 控制是否可调节 `alpha` 通道_
 
 <br/>
 
@@ -177,7 +177,7 @@ const showAlpha = ref(false)
 
 ## 颜色预览块
 
-*使用 `showPreview` 控制是否展示颜色预览块；点击颜色预览块可以触发浏览器原生的颜色选择器*
+_使用 `showPreview` 控制是否展示颜色预览块；点击颜色预览块可以触发浏览器原生的颜色选择器_
 <br/>
 
 <Space vertical>
@@ -242,7 +242,7 @@ const showPreview = ref(true)
 
 ## 设定模式
 
-*使用 `modes` 设定可选模式*
+_使用 `modes` 设定可选模式_
 
 <br/>
 
@@ -327,7 +327,7 @@ const modes = ref(['rgb'])
 
 ## 显示按钮
 
-*通过在 `actions` 属性中添加 `confirm` `clear`，来显示确认/清除按钮*
+_通过在 `actions` 属性中添加 `confirm` `clear`，来显示确认/清除按钮_
 
 <br/>
 
@@ -393,7 +393,7 @@ function handleClear() {
 
 ## 使用按钮控制面板
 
-*使用 `Tooltip` 组件的 `show` 属性控制面板显隐*
+_使用 `Tooltip` 组件的 `show` 属性控制面板显隐_
 
 <br/>
 

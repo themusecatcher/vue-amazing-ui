@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*滑动型输入器，展示当前值和可选范围*
+_滑动型输入器，展示当前值和可选范围_
 
 ## 何时使用
 
@@ -346,7 +346,7 @@ watchEffect(() => {
 
 ## 自定义刻度标记
 
-*使用 `marks` 属性可以添加刻度标记*
+_使用 `marks` 属性可以添加刻度标记_
 
 <br/>
 
@@ -369,7 +369,7 @@ watchEffect(() => {
   </Slider>
 </Flex>
 
-*同时设置 `marks` & `step` 属性*
+_同时设置 `marks` & `step` 属性_
 
 <br/>
 
@@ -392,7 +392,7 @@ watchEffect(() => {
   </Slider>
 </Flex>
 
-*设置 `step` 为 `'mark'`，此时 `Slider` 的可选值仅有 `marks` 标记的部分*
+_设置 `step` 为 `'mark'`，此时 `Slider` 的可选值仅有 `marks` 标记的部分_
 
 <br/>
 
@@ -760,7 +760,7 @@ watchEffect(() => {
 
 ## 自定义 Tooltip 位置
 
-*默认水平模式在滑块上方、垂直模式在滑块右侧，可用 `tooltipPlacement` 指定为四个方向之一；若该方向空间不足会自动翻转到对侧*
+_默认水平模式在滑块上方、垂直模式在滑块右侧，可用 `tooltipPlacement` 指定为四个方向之一；若该方向空间不足会自动翻转到对侧_
 
 <div class="placement-rect">
   <Slider :width="488" tooltip-placement="top" v-model:value="placementTopValue" />
@@ -834,7 +834,7 @@ const placementRightValue = ref<number>(80)
 
 ## 自定义 Tooltip 内容
 
-*通过 `tooltip` 插槽自定义气泡内容（`value` 为格式化后的当前值），配合 `tooltipClass` 用外部样式类定制外观*
+_通过 `tooltip` 插槽自定义气泡内容（`value` 为格式化后的当前值），配合 `tooltipClass` 用外部样式类定制外观_
 
 <Slider v-model:value="customTooltipValue" tooltip-class="custom-slider-tooltip">
   <template #tooltip="{ value }">
@@ -882,7 +882,7 @@ const customTooltipValue = ref<number>(37)
 
 ## 自定义样式
 
-*通过修改样式变量可以自定义滑动输入条样式、标记样式、`Tooltip` 样式*
+_通过修改样式变量可以自定义滑动输入条样式、标记样式、`Tooltip` 样式_
 
 <Flex vertical gap="large">
   <Slider :style="singleCustomStyle" v-model:value="customStyleSingleValue" />

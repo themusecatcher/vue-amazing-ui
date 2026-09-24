@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*可以折叠/展开的内容区域*
+_可以折叠/展开的内容区域_
 
 ## 何时使用
 
@@ -229,7 +229,7 @@ function handleClick(key: string | number) {
 
 ## 基本使用
 
-*`activeKey` 传入 `number[]` | `string[]`，所有面板可同时展开*
+_`activeKey` 传入 `number[]` | `string[]`，所有面板可同时展开_
 
 <br/>
 
@@ -278,7 +278,7 @@ function onChange(key: number | string) {
 
 ## 手风琴
 
-*只允许单个内容区域展开，只需 `activeKey` 传入 `number` | `string` 即可*
+_只允许单个内容区域展开，只需 `activeKey` 传入 `number` | `string` 即可_
 
 <br/>
 
@@ -543,7 +543,7 @@ watchEffect(() => {
 
 ## 自定义面板
 
-*自定义各个面板的背景色、圆角、边距*
+_自定义各个面板的背景色、圆角、边距_
 
 <br/>
 
@@ -1057,7 +1057,7 @@ copiedText | 已复制按钮文本 | string | 'Copied'
 
 <br/>
 
-*以下属性均具有更高优先级*
+_以下属性均具有更高优先级_
 
 名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--

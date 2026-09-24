@@ -887,7 +887,7 @@ function onDiscreteModal() {
 | `Spin` 局部遮罩 | `9` | 相对自身容器的局部层级，不参与全局分配 |
 | `Badge` / `Watermark` 装饰层 | `9` / `90`（可配 `zIndex`） | 装饰性叠加，不参与全局分配 |
 
-上表的取值遵循「基准 `zIndexPopupBase: 1000` + 类别偏移」的规则（`Tooltip +70`、`Select +50`、`Image +80`、`Affix = zIndexBase + 10`、`FloatButton 99`）：同类浮层共用同一偏移量，便于记忆与后续扩展。
+上表的取值遵循「基准 `1000` + 类别偏移」的规则（`Tooltip` / `Image +70`、`Select +50`、`Message +30`、`Notification +40`）：同类浮层共用同一偏移量；同一层内部再按 `10` 为步长细分（如 `Modal` / `Dialog` 的遮罩 `1000` / 弹窗 `1010`，`Image` 的遮罩 `1070` / 预览 `1080`）。`BackTop`（`9`）与 `FloatButton`（`99`）为页面级控件，不参与该序列。
 
 <br/>
 

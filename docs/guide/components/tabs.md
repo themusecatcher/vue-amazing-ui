@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*选项卡切换组件*
+_选项卡切换组件_
 
 ## 何时使用
 
@@ -346,7 +346,7 @@ function onChange(key: string | number) {
 
 ## 禁用某一项
 
-*禁用 `key: 3` 标签页*
+_禁用 `key: 3` 标签页_
 
 <br/>
 

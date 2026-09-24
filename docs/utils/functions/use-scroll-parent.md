@@ -12,7 +12,23 @@ _查询并监听最近可滚动父元素，响应视口 `resize` 的组合式函
 import { ref, computed, watch, onBeforeUnmount, onMounted } from 'vue'
 import type { Ref } from 'vue'
 import { useOptionsSupported, useEventListener, getScrollParent } from 'vue-amazing-ui'
-// 注：ScrollTarget / resolveScrollEventTarget 为组件库内部共用的滚动目标解析工具（详见 useScroll 源码）
+// 注：以下两个符号为组件库内部共用的滚动目标解析工具（未对外导出），此处按 useScroll 源码内联，使片段可独立运行
+type ScrollTarget = HTMLElement | Window | Document
+/**
+ * 解析 scroll 事件的实际监听目标
+ *
+ * 视口（页面级）滚动时，scroll 事件派发在 window / document 上，documentElement 收不到
+ * （元素级 scroll 不冒泡，视口滚动的事件目标为 Document / Window）。
+ * 故传入 documentElement 时需改听 window，否则监听恒不触发。
+ *
+ * @param target - 期望的滚动目标
+ * @returns 实际应绑定 scroll 监听的目标
+ */
+function resolveScrollEventTarget(target: ScrollTarget | null): ScrollTarget | null {
+  if (!target) return null
+  if (typeof document !== 'undefined' && target === document.documentElement) return window
+  return target
+}
 /** `useScrollParent` 的选项 */
 export interface ScrollParentOptions {
   /** 是否以 passive 方式监听 scroll；默认跟随浏览器的支持情况 */

@@ -2,7 +2,7 @@
 
 <GlobalElement hide-back-top />
 
-*返回页面顶部的操作按钮*
+_返回页面顶部的操作按钮_
 
 ## 何时使用
 
@@ -47,7 +47,7 @@ function onShow(show: boolean) {
 
 ## 基本使用
 
-*`BackTop` 会找到首个可滚动的祖先元素并且监听它的滚动事件*
+_`BackTop` 会找到首个可滚动的祖先元素并且监听它的滚动事件_
 
 <BackTop @show="onShow" />
 
@@ -251,7 +251,7 @@ const primaryDescCustomStyle = {
 
 ## 自定义可视高度
 
-*自定义滚动时触发显示回到顶部的高度*
+_自定义滚动时触发显示回到顶部的高度_
 
 <BackTop :bottom="280" :visibility-height="300">
   <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
@@ -293,7 +293,7 @@ const primaryDescCustomStyle = {
 
 ## 自定义层级
 
-*通过 `zIndex` 调整按钮层级；按钮上的气泡为浮层（默认 1070），恒在按钮之上*
+_通过 `zIndex` 调整按钮层级；按钮上的气泡为浮层（默认 1070），恒在按钮之上_
 
 <br/>
 
@@ -313,7 +313,7 @@ const primaryDescCustomStyle = {
 
 ## 自定义监听目标
 
-*自定义设定监听哪个元素来触发 `BackTop`*
+_自定义设定监听哪个元素来触发 `BackTop`_
 
 <br/>
 
@@ -335,7 +335,7 @@ const primaryDescCustomStyle = {
 
 <br/>
 
-*自动监听 `Scrollbar` 来触发 `BackTop`*
+_自动监听 `Scrollbar` 来触发 `BackTop`_
 
 <br/>
 

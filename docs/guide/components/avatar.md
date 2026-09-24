@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*用来代表用户或事物，支持图片、图标或字符展示*
+_用来代表用户或事物，支持图片、图标或字符展示_
 
 <script setup lang="ts">
 import { ref, h } from 'vue'
@@ -12,7 +12,7 @@ const color = ref('#87d068')
 
 ## 基本使用
 
-*三种尺寸，两种形状可选*
+_三种尺寸，两种形状可选_
 
 <br/>
 

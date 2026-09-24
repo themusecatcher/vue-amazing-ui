@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*悬浮提示，展现需要关注的信息*
+_悬浮提示，展现需要关注的信息_
 
 ## 何时使用
 
@@ -79,7 +79,7 @@ function openChange(open: boolean) {
 
 ## 自定义样式
 
-*气泡卡片用 `tooltipClass` / `tooltipStyle`，其外层定位面板用 `popupClassName` / `popupStyle`，层级用 `zIndex`*
+_气泡卡片用 `tooltipClass` / `tooltipStyle`，其外层定位面板用 `popupClassName` / `popupStyle`，层级用 `zIndex`_
 
 <Space gap="large">
   <Tooltip :max-width="360" bg-color="#fff" tooltip-class="custom-class">
@@ -373,7 +373,7 @@ const buttonWidth = 70
 
 ## 自动调整位置
 
-*请滚动或缩放浏览器窗口来查看自适应调整弹出位置的效果*
+_请滚动或缩放浏览器窗口来查看自适应调整弹出位置的效果_
 
 <br/>
 
@@ -521,7 +521,7 @@ const customColors = ['#f50', '#2db7f5', '#87d068', '#108ee9']
 
 ## 按键控制
 
-*`enter` 切换显示；`esc` 关闭，仅当 `trigger: 'click'` 时生效*
+_`enter` 切换显示；`esc` 关闭，仅当 `trigger: 'click'` 时生效_
 
 <br/>
 
@@ -690,7 +690,7 @@ function onHide() {
 
 ## 受控显示
 
-*使用 `show` 属性控制浮层的显示与隐藏*
+_使用 `show` 属性控制浮层的显示与隐藏_
 
 <br/>
 
@@ -723,7 +723,7 @@ const controlledShow = ref<boolean>(false)
 
 ## 隐藏后卸载
 
-*设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再次显示时重新创建并定位；默认 `false`（元素常驻，仅切换显示）。基于 `Tooltip` 的 `Popover` / `Popconfirm` 同样支持*
+_设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再次显示时重新创建并定位；默认 `false`（元素常驻，仅切换显示）。基于 `Tooltip` 的 `Popover` / `Popconfirm` 同样支持_
 
 <br/>
 
