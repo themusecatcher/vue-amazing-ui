@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { reactive, computed, watch, provide } from 'vue'
+import { reactive, computed, watch, watchEffect, provide, inject, onUnmounted } from 'vue'
+import { SKIP_LINK_CSS_VARS_KEY } from './context'
 import type { VNode } from 'vue'
 import { getColorPalettes, getAlphaColor, createZIndexManager, Z_INDEX_INJECT_KEY } from 'components/utils'
 export interface Theme {
@@ -263,6 +264,29 @@ const componentsThemeColor = reactive<Record<string, ThemeColor>>({
 })
 provide('common', commonThemeColor)
 provide('components', componentsThemeColor)
+// 链接基座联动：common 主色变化时把对应色阶写入 CSS 变量，供全局 `:where(a)` 消费（见 components/style/global.less）。
+// 仅最外层实例写入（嵌套实例沿用外层变量），卸载时移除，使样式表内的默认值（fallback）重新生效。
+// 离散实例（createDiscreteApi 内部挂载的 ConfigProvider）显式跳过：避免覆盖主应用写入的值、
+// 并在其 dispose() 时把这些变量误清除（主应用不会重跑写入）
+if (!inject(SKIP_LINK_CSS_VARS_KEY, false) && inject('common', null) === null && typeof document !== 'undefined') {
+  const LINK_CSS_VARS = ['--link-color', '--link-color-hover', '--link-color-active']
+  // 主色 / 悬停 / 按下 依次取色阶第 6 / 4 / 7 级（与 antd 的 colorLink / colorLinkHover / colorLinkActive 同源）
+  const LINK_PALETTE_INDEXES = [5, 3, 6]
+  const rootStyle = document.documentElement.style
+  watchEffect(() => {
+    // 不解构：色阶数组会被整体替换，解构取值会丢失响应性追踪
+    const palettes = commonThemeColor.colorPalettes
+    if (!palettes.length) {
+      return
+    }
+    LINK_CSS_VARS.forEach((name, index) => {
+      rootStyle.setProperty(name, palettes[LINK_PALETTE_INDEXES[index]] ?? palettes[0])
+    })
+  })
+  onUnmounted(() => {
+    LINK_CSS_VARS.forEach((name) => rootStyle.removeProperty(name))
+  })
+}
 // 层级管理层：传入 baseZIndex 时建立分配器并向下注入，甲、乙两类浮层据此自增分配；
 // 未传则不注入，各组件回退到自身既有硬编码层级（可关闭开关）。嵌套 ConfigProvider 未传时会继承外层分配器。
 // 注：在 setup 阶段读取一次，运行期改变 baseZIndex 需重新挂载才生效。

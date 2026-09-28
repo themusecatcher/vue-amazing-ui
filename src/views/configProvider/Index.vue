@@ -20,6 +20,7 @@ import type {
 const primaryColor = ref<string>('#ff6900')
 const commonPrimaryColor = ref<string>('#1677ff')
 const buttonPrimaryColor = ref<string>('#18a058')
+const linkPrimaryColor = ref<string>('#1677ff')
 const theme = computed<ConfigProviderTheme>(() => ({
   common: {
     primaryColor: commonPrimaryColor.value
@@ -396,6 +397,25 @@ const layerSelectedValue = ref<number>(1)
           <Alert style="width: 200px" message="Info Text" type="info" show-icon />
           <Button type="primary">Primary Button</Button>
         </Space>
+      </ConfigProvider>
+    </Flex>
+    <h2 class="mt30 mb10">链接颜色跟随主题</h2>
+    <p class="mb10">
+      修改主题色后，派生色阶会写入 <code>--link-color</code> / <code>--link-color-hover</code> /
+      <code>--link-color-active</code>，页面链接（含组件内插槽中的链接）随之变化
+    </p>
+    <Flex vertical>
+      <Space align="center">
+        linkPrimaryColor:
+        <ColorPicker style="width: 200px" v-model:value="linkPrimaryColor" />
+      </Space>
+      <ConfigProvider :theme="{ common: { primaryColor: linkPrimaryColor } }">
+        <Card width="50%" title="链接颜色跟随主题">
+          <template #extra>
+            <a href="#">more</a>
+          </template>
+          <p> 页面链接：<a href="#">Link 1</a> 与 <a href="#">Link 2</a> </p>
+        </Card>
       </ConfigProvider>
     </Flex>
     <h2 class="mt30 mb10">自定义包裹元素</h2>

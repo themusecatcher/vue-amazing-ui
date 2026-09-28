@@ -18,6 +18,7 @@ import type { ConfigProviderProps, ConfigProviderTheme, CarouselImage, LoadingBa
 const primaryColor = ref<string>('#ff6900')
 const commonPrimaryColor = ref<string>('#1677ff')
 const buttonPrimaryColor = ref<string>('#18a058')
+const linkPrimaryColor = ref<string>('#1677ff')
 const theme = computed<ConfigProviderTheme>(() => ({
   common: {
     primaryColor: commonPrimaryColor.value
@@ -769,6 +770,83 @@ const theme = computed<ConfigProviderTheme>(() => ({
 ```
 
 :::
+
+## 链接颜色跟随主题
+
+`common.primaryColor` 变化时，由它派生的色阶会同步写入 `--link-color` / `--link-color-hover` / `--link-color-active` 三个 CSS 变量，全局链接基座（`:where(a)`）据此渲染 —— 因此**页面链接颜色会随主题色一并变化**，无需额外配置；未使用 `ConfigProvider` 时回退到默认色阶。
+
+<!-- 文档站正文的 `.vp-doc a`（特异性 0,1,1）会覆盖库的全局链接基座（特异性 0），此处为演示单独引用 CSS 变量以便观察；实际项目无需此处理 -->
+<style>
+  .link-theme-demo a {
+    color: var(--link-color, #1677ff);
+    text-decoration: none;
+  }
+
+  .link-theme-demo a:hover {
+    color: var(--link-color-hover, #69b1ff);
+  }
+
+  .link-theme-demo a:active {
+    color: var(--link-color-active, #0958d9);
+  }
+</style>
+
+<div class="link-theme-demo">
+
+<Flex vertical>
+  <Space align="center">
+    linkPrimaryColor:<ColorPicker style="width: 200px" v-model:value="linkPrimaryColor" />
+  </Space>
+  <ConfigProvider :theme="{ common: { primaryColor: linkPrimaryColor } }">
+    <Card width="50%" title="链接颜色跟随主题">
+      <template #extra>
+        <a href="#">more</a>
+      </template>
+      <p>页面链接：<a href="#">Link 1</a> 与 <a href="#">Link 2</a></p>
+    </Card>
+  </ConfigProvider>
+</Flex>
+
+</div>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const linkPrimaryColor = ref<string>('#1677ff')
+</script>
+<template>
+  <Flex vertical>
+    <Space align="center">
+      linkPrimaryColor:<ColorPicker style="width: 200px" v-model:value="linkPrimaryColor" />
+    </Space>
+    <ConfigProvider :theme="{ common: { primaryColor: linkPrimaryColor } }">
+      <Card width="50%" title="链接颜色跟随主题">
+        <template #extra>
+          <a href="#">more</a>
+        </template>
+        <p>页面链接：<a href="#">Link 1</a> 与 <a href="#">Link 2</a></p>
+      </Card>
+    </ConfigProvider>
+  </Flex>
+</template>
+```
+
+::::
+
+若需单独定制链接颜色，直接在自己的页面样式中覆盖即可（链接基座特异性为 `0`，任何链接规则都能覆盖它）：
+
+```css
+a {
+  color: #f5222d;
+}
+
+a:hover {
+  color: #ff7875;
+}
+```
 
 ## 自定义包裹元素
 
