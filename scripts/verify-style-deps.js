@@ -38,7 +38,15 @@ import { readStyleDeps, rootDir, styleSourceOf } from './parse-style-deps.js'
  * 豁免清单：chunk 图推导不出、但确属合法的样式依赖。
  * 结构：{ <组件名>: { deps: string[], reason: string } }
  */
-const EXEMPTIONS = {}
+const EXEMPTIONS = {
+  LayoutSider: {
+    deps: ['Layout'],
+    reason:
+      'LayoutSider 与 Layout 共用 components/layout/siderHook.ts（纯 JS、无样式）做子级登记；' +
+      'chunk 图按「目录」判定依赖，会把该 import 的父目录 layout/ 误判为样式依赖，' +
+      '而两者样式入口各自独立（LayoutSider 的 style 入口不含 Layout 的 CSS）'
+  }
+}
 
 const { componentsMap, styleSources, componentDependencies, stylelessComponents } = readStyleDeps()
 const esDir = resolve(rootDir, 'es')

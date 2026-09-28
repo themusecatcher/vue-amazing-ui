@@ -278,6 +278,10 @@ export default defineConfig({
               link: '/guide/components/input-search'
             },
             {
+              text: '布局 Layout',
+              link: '/guide/components/layout'
+            },
+            {
               text: '列表 List',
               link: '/guide/components/list'
             },

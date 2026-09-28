@@ -1,24 +1,26 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { h, ref } from 'vue'
 import type { CSSProperties } from 'vue'
 import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-  PieChartOutlined,
-  DesktopOutlined,
-  TeamOutlined,
-  FileOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
+  AppstoreOutlined,
   BarChartOutlined,
   CloudOutlined,
-  AppstoreOutlined,
-  ShopOutlined
+  DesktopOutlined,
+  FileOutlined,
+  LaptopOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  NotificationOutlined,
+  PieChartOutlined,
+  ShopOutlined,
+  TeamOutlined,
+  UploadOutlined,
+  UserOutlined,
+  VideoCameraOutlined
 } from '@ant-design/icons-vue'
-import type { BreadcrumbRoute } from 'vue-amazing-ui'
+import type { BreadcrumbRoute, ItemType, MenuKey } from 'vue-amazing-ui'
+
+// 共用数据：示例内联样式与面包屑数据
 const headerStyle: CSSProperties = {
   textAlign: 'center',
   color: '#fff',
@@ -45,48 +47,142 @@ const footerStyle: CSSProperties = {
   color: '#fff',
   backgroundColor: '#7dbcea'
 }
-const routes = ref<BreadcrumbRoute[]>([
+const routes = ref<BreadcrumbRoute[]>([{ name: 'Home' }, { name: 'List' }, { name: 'App' }])
+
+// 菜单配置：顶部导航（上中下布局 / 顶部-侧边布局-通栏 / 顶部-侧边布局 / 固定头部 共用）
+const headerItems: ItemType[] = [
+  { key: '1', label: 'nav 1' },
+  { key: '2', label: 'nav 2' },
+  { key: '3', label: 'nav 3' }
+]
+// 菜单配置：侧边子菜单（顶部-侧边布局-通栏 / 顶部-侧边布局 共用）
+const subnavItems: ItemType[] = [
   {
-    name: 'Home'
+    key: 'sub1',
+    icon: () => h(UserOutlined),
+    label: 'subnav 1',
+    children: [
+      { key: '1', label: 'option1' },
+      { key: '2', label: 'option2' },
+      { key: '3', label: 'option3' },
+      { key: '4', label: 'option4' }
+    ]
   },
   {
-    name: 'List'
+    key: 'sub2',
+    icon: () => h(LaptopOutlined),
+    label: 'subnav 2',
+    children: [
+      { key: '5', label: 'option5' },
+      { key: '6', label: 'option6' },
+      { key: '7', label: 'option7' },
+      { key: '8', label: 'option8' }
+    ]
   },
   {
-    name: 'App'
+    key: 'sub3',
+    icon: () => h(NotificationOutlined),
+    label: 'subnav 3',
+    children: [
+      { key: '9', label: 'option9' },
+      { key: '10', label: 'option10' },
+      { key: '11', label: 'option11' },
+      { key: '12', label: 'option12' }
+    ]
   }
-])
-const routes1 = ref<BreadcrumbRoute[]>([
+]
+// 菜单配置：侧边菜单（响应式布局 / 响应式收起宽度 共用）
+const responsiveItems: ItemType[] = [
+  { key: '1', icon: () => h(UserOutlined), label: 'nav 1' },
+  { key: '2', icon: () => h(VideoCameraOutlined), label: 'nav 2' },
+  { key: '3', icon: () => h(UploadOutlined), label: 'nav 3' },
+  { key: '4', icon: () => h(UserOutlined), label: 'nav 4' }
+]
+
+// 各用例的状态独立持有：同页多个用例共用会互相串联
+// 上中下布局
+const topNavKeys = ref<MenuKey[]>(['2'])
+
+// 顶部-侧边布局-通栏
+const topSide2NavKeys = ref<MenuKey[]>(['2'])
+const topSide2SiderKeys = ref<MenuKey[]>(['1'])
+const topSide2OpenKeys = ref<MenuKey[]>(['sub1'])
+
+// 顶部-侧边布局
+const topSideNavKeys = ref<MenuKey[]>(['2'])
+const topSideSiderKeys = ref<MenuKey[]>(['1'])
+const topSideOpenKeys = ref<MenuKey[]>(['sub1'])
+
+// 侧边布局
+const collapsedSide = ref(false)
+const sideSelectedKeys = ref<MenuKey[]>(['1'])
+const sideItems: ItemType[] = [
+  { key: '1', icon: () => h(PieChartOutlined), label: 'Option 1' },
+  { key: '2', icon: () => h(DesktopOutlined), label: 'Option 2' },
   {
-    name: 'User'
+    key: 'sub1',
+    icon: () => h(UserOutlined),
+    label: 'User',
+    children: [
+      { key: '3', label: 'Tom' },
+      { key: '4', label: 'Bill' },
+      { key: '5', label: 'Alex' }
+    ]
   },
   {
-    name: 'Curry'
-  }
-])
-const selectedKeys = ref<string[]>(['2'])
-const selectedKeys1 = ref<string[]>(['2'])
-const selectedKeys2 = ref<string[]>(['1'])
-const selectedKeys3 = ref<string[]>(['2'])
-const selectedKeys4 = ref<string[]>(['1'])
-const selectedKeys5 = ref<string[]>(['1'])
-const selectedKeys6 = ref<string[]>(['1'])
-const selectedKeys7 = ref<string[]>(['4'])
-const selectedKeys8 = ref<string[]>(['4'])
-const selectedKeys9 = ref<string[]>(['2'])
-const openKeys = ref<string[]>(['sub1'])
-const collapsed = ref<boolean>(true)
-const onCollapse = (collapsed: boolean, type: 'responsiveBreakpoint' | 'clickTrigger') => {
+    key: 'sub2',
+    icon: () => h(TeamOutlined),
+    label: 'Team',
+    children: [
+      { key: '6', label: 'Team 1' },
+      { key: '8', label: 'Team 2' }
+    ]
+  },
+  { key: '9', icon: () => h(FileOutlined), label: 'File' }
+]
+const onCollapse = (collapsed: boolean, type: 'clickTrigger' | 'responsive') => {
   console.log('collapse', collapsed, type)
 }
+
+// 自定义触发器
+const collapsedCustom = ref(false)
+const customTriggerSelectedKeys = ref<MenuKey[]>(['1'])
+const customTriggerItems: ItemType[] = [
+  { key: '1', icon: () => h(UserOutlined), label: 'nav 1' },
+  { key: '2', icon: () => h(VideoCameraOutlined), label: 'nav 2' },
+  { key: '3', icon: () => h(UploadOutlined), label: 'nav 3' }
+]
+
+// 响应式布局
+const responsiveSelectedKeys = ref<MenuKey[]>(['4'])
 const onBreakpoint = (broken: boolean) => {
   console.log('breakpoint', broken)
 }
+
+// 固定侧边栏
+const fixedSiderSelectedKeys = ref<MenuKey[]>(['4'])
+const fixedSiderItems: ItemType[] = [
+  { key: '1', icon: () => h(UserOutlined), label: 'nav 1' },
+  { key: '2', icon: () => h(VideoCameraOutlined), label: 'nav 2' },
+  { key: '3', icon: () => h(UploadOutlined), label: 'nav 3' },
+  { key: '4', icon: () => h(BarChartOutlined), label: 'nav 4' },
+  { key: '5', icon: () => h(CloudOutlined), label: 'nav 5' },
+  { key: '6', icon: () => h(AppstoreOutlined), label: 'nav 6' },
+  { key: '7', icon: () => h(TeamOutlined), label: 'nav 7' },
+  { key: '8', icon: () => h(ShopOutlined), label: 'nav 8' }
+]
+
+// 固定头部
+const fixedNavKeys = ref<MenuKey[]>(['2'])
+
+// 响应式收起宽度
+const collapsedResponsiveWidth = ref(true)
+const responsiveWidthSelectedKeys = ref<MenuKey[]>(['4'])
 </script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
-    <h2 class="mt30 mb10">基本使用</h2>
+    <h2 class="mt30 mb10">基本结构</h2>
     <Flex vertical :gap="48">
       <Layout>
         <LayoutHeader :style="headerStyle">Header</LayoutHeader>
@@ -97,7 +193,7 @@ const onBreakpoint = (broken: boolean) => {
       <Layout>
         <LayoutHeader :style="headerStyle">Header</LayoutHeader>
         <Layout>
-          <LayoutSider :width="300" :style="siderStyle">Sider</LayoutSider>
+          <LayoutSider :style="siderStyle">Sider</LayoutSider>
           <LayoutContent :style="contentStyle">Content</LayoutContent>
         </Layout>
         <LayoutFooter :style="footerStyle">Footer</LayoutFooter>
@@ -122,494 +218,248 @@ const onBreakpoint = (broken: boolean) => {
       </Layout>
     </Flex>
     <h2 class="mt30 mb10">上中下布局</h2>
-    <h3 class="mb10">最基本的『上-中-下』布局</h3>
-    <h3 class="mb10"
-      >一般主导航放置于页面的顶端，从左自右依次为：logo、一级导航项、辅助菜单（用户、设置、通知等）。通常将内容放在固定尺寸（例如：1200px）内，整个页面排版稳定，不受用户终端显示器影响；上下级的结构符合用户上下浏览的习惯，也是较为经典的网站导航模式。页面上下切分的方式提高了主工作区域的信息展示效率，但在纵向空间上会有一些牺牲。此外，由于导航栏水平空间的限制，不适合那些一级导航项很多的信息结构。</h3
-    >
-    <Layout class="layout">
+    <Layout>
       <LayoutHeader>
         <div class="logo" />
-        <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
-          <a-menu-item key="1">nav 1</a-menu-item>
-          <a-menu-item key="2">nav 2</a-menu-item>
-          <a-menu-item key="3">nav 3</a-menu-item>
-        </a-menu>
+        <Menu
+          v-model:selectedKeys="topNavKeys"
+          style="line-height: 64px"
+          mode="horizontal"
+          theme="dark"
+          :items="headerItems"
+        />
       </LayoutHeader>
       <LayoutContent style="padding: 0 50px">
         <Breadcrumb :routes="routes" style="margin: 16px 0" />
-        <div :style="{ background: '#fff', padding: '24px', minHeight: '280px' }">Content</div>
+        <div class="demo-content">Content</div>
       </LayoutContent>
-      <LayoutFooter style="text-align: center"> Vue Amazing UI ©2023 Created by the Muse Catcher </LayoutFooter>
+      <LayoutFooter style="text-align: center">Vue Amazing UI ©2023 Created by the Muse Catcher</LayoutFooter>
     </Layout>
-    <h2 class="mt30 mb10">顶部-侧边栏布局-通栏</h2>
-    <h3 class="mb10">同样拥有顶部导航及侧边栏，区别是两边未留边距，多用于应用型的网站</h3>
+    <h2 class="mt30 mb10">顶部-侧边布局-通栏</h2>
+    <p class="mb10">同样拥有顶部导航及侧边栏，区别是两边未留边距，多用于应用型的网站</p>
     <Layout>
-      <LayoutHeader class="header">
+      <LayoutHeader>
         <div class="logo" />
-        <a-menu v-model:selectedKeys="selectedKeys1" theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
-          <a-menu-item key="1">nav 1</a-menu-item>
-          <a-menu-item key="2">nav 2</a-menu-item>
-          <a-menu-item key="3">nav 3</a-menu-item>
-        </a-menu>
+        <Menu
+          v-model:selectedKeys="topSide2NavKeys"
+          style="line-height: 64px"
+          mode="horizontal"
+          theme="dark"
+          :items="headerItems"
+        />
       </LayoutHeader>
       <Layout>
         <LayoutSider width="200" style="background: #fff">
-          <a-menu
-            v-model:selectedKeys="selectedKeys2"
-            v-model:openKeys="openKeys"
+          <Menu
+            v-model:selectedKeys="topSide2SiderKeys"
+            v-model:openKeys="topSide2OpenKeys"
+            style="height: 100%; border-right: 0"
             mode="inline"
-            :style="{ height: '100%', borderRight: 0 }"
-          >
-            <a-sub-menu key="sub1">
-              <template #title>
-                <span>
-                  <user-outlined />
-                  subnav 1
-                </span>
-              </template>
-              <a-menu-item key="1">option1</a-menu-item>
-              <a-menu-item key="2">option2</a-menu-item>
-              <a-menu-item key="3">option3</a-menu-item>
-              <a-menu-item key="4">option4</a-menu-item>
-            </a-sub-menu>
-            <a-sub-menu key="sub2">
-              <template #title>
-                <span>
-                  <laptop-outlined />
-                  subnav 2
-                </span>
-              </template>
-              <a-menu-item key="5">option5</a-menu-item>
-              <a-menu-item key="6">option6</a-menu-item>
-              <a-menu-item key="7">option7</a-menu-item>
-              <a-menu-item key="8">option8</a-menu-item>
-            </a-sub-menu>
-            <a-sub-menu key="sub3">
-              <template #title>
-                <span>
-                  <notification-outlined />
-                  subnav 3
-                </span>
-              </template>
-              <a-menu-item key="9">option9</a-menu-item>
-              <a-menu-item key="10">option10</a-menu-item>
-              <a-menu-item key="11">option11</a-menu-item>
-              <a-menu-item key="12">option12</a-menu-item>
-            </a-sub-menu>
-          </a-menu>
+            :items="subnavItems"
+          />
         </LayoutSider>
         <Layout style="padding: 0 24px 24px">
           <Breadcrumb :routes="routes" style="margin: 16px 0" />
-          <LayoutContent :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }">
-            Content
-          </LayoutContent>
+          <LayoutContent style="background: #fff; padding: 24px; min-height: 280px">Content</LayoutContent>
         </Layout>
       </Layout>
     </Layout>
     <h2 class="mt30 mb10">顶部-侧边布局</h2>
-    <h3 class="mb10">拥有顶部导航及侧边栏的页面，多用于展示类网站</h3>
+    <p class="mb10">拥有顶部导航及侧边栏的页面，多用于展示类网站</p>
     <Layout>
-      <LayoutHeader class="header">
+      <LayoutHeader>
         <div class="logo" />
-        <a-menu v-model:selectedKeys="selectedKeys3" theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
-          <a-menu-item key="1">nav 1</a-menu-item>
-          <a-menu-item key="2">nav 2</a-menu-item>
-          <a-menu-item key="3">nav 3</a-menu-item>
-        </a-menu>
+        <Menu
+          v-model:selectedKeys="topSideNavKeys"
+          style="line-height: 64px"
+          mode="horizontal"
+          theme="dark"
+          :items="headerItems"
+        />
       </LayoutHeader>
       <LayoutContent style="padding: 0 50px">
         <Breadcrumb :routes="routes" style="margin: 16px 0" />
         <Layout style="padding: 24px 0; background: #fff">
           <LayoutSider width="200" style="background: #fff">
-            <a-menu v-model:selectedKeys="selectedKeys4" v-model:openKeys="openKeys" mode="inline" style="height: 100%">
-              <a-sub-menu key="sub1">
-                <template #title>
-                  <span>
-                    <user-outlined />
-                    subnav 1
-                  </span>
-                </template>
-                <a-menu-item key="1">option1</a-menu-item>
-                <a-menu-item key="2">option2</a-menu-item>
-                <a-menu-item key="3">option3</a-menu-item>
-                <a-menu-item key="4">option4</a-menu-item>
-              </a-sub-menu>
-              <a-sub-menu key="sub2">
-                <template #title>
-                  <span>
-                    <laptop-outlined />
-                    subnav 2
-                  </span>
-                </template>
-                <a-menu-item key="5">option5</a-menu-item>
-                <a-menu-item key="6">option6</a-menu-item>
-                <a-menu-item key="7">option7</a-menu-item>
-                <a-menu-item key="8">option8</a-menu-item>
-              </a-sub-menu>
-              <a-sub-menu key="sub3">
-                <template #title>
-                  <span>
-                    <notification-outlined />
-                    subnav 3
-                  </span>
-                </template>
-                <a-menu-item key="9">option9</a-menu-item>
-                <a-menu-item key="10">option10</a-menu-item>
-                <a-menu-item key="11">option11</a-menu-item>
-                <a-menu-item key="12">option12</a-menu-item>
-              </a-sub-menu>
-            </a-menu>
+            <Menu
+              v-model:selectedKeys="topSideSiderKeys"
+              v-model:openKeys="topSideOpenKeys"
+              style="height: 100%"
+              mode="inline"
+              :items="subnavItems"
+            />
           </LayoutSider>
-          <LayoutContent :style="{ padding: '0 24px', minHeight: '280px' }"> Content </LayoutContent>
+          <LayoutContent style="padding: 0 24px; min-height: 280px">Content</LayoutContent>
         </Layout>
       </LayoutContent>
-      <LayoutFooter style="text-align: center"> Vue Amazing UI ©2023 Created by the Muse Catcher </LayoutFooter>
+      <LayoutFooter style="text-align: center">Vue Amazing UI ©2023 Created by the Muse Catcher</LayoutFooter>
     </Layout>
     <h2 class="mt30 mb10">侧边布局</h2>
-    <h3 class="mb10">侧边两列式布局。页面横向空间有限时，侧边导航可收起</h3>
-    <h3 class="mb10"
-      >侧边导航在页面布局上采用的是左右的结构，一般主导航放置于页面的左侧固定位置，辅助菜单放置于工作区顶部。内容根据浏览器终端进行自适应，能提高横向空间的使用率，但是整个页面排版不稳定。侧边导航的模式层级扩展性强，一、二、三级导航项目可以更为顺畅且具关联性的被展示，同时侧边导航可以固定，使得用户在操作和浏览中可以快速的定位和切换当前位置，有很高的操作效率。但这类导航横向页面内容的空间会被牺牲一部份</h3
-    >
-    <div style="height: 360px; overflow: auto; border-radius: 6px; box-shadow: 0 2px 8px #00000047">
+    <p class="mb10">侧边两列式布局。页面横向空间有限时，侧边导航可收起</p>
+    <div class="demo-container">
       <Layout>
         <LayoutSider
           :style="{ height: '360px', position: 'sticky', left: 0, top: 0, bottom: 0 }"
-          v-model:collapsed="collapsed"
+          v-model:collapsed="collapsedSide"
           collapsible
           @collapse="onCollapse"
         >
           <div class="logo-1" />
-          <a-menu v-model:selectedKeys="selectedKeys5" theme="dark" mode="inline" :inline-collapsed="collapsed">
-            <a-menu-item key="1">
-              <pie-chart-outlined />
-              <span>Option 1</span>
-            </a-menu-item>
-            <a-menu-item key="2">
-              <desktop-outlined />
-              <span>Option 2</span>
-            </a-menu-item>
-            <a-sub-menu key="sub1">
-              <template #title>
-                <span>
-                  <user-outlined />
-                  <span>User</span>
-                </span>
-              </template>
-              <a-menu-item key="3">Tom</a-menu-item>
-              <a-menu-item key="4">Bill</a-menu-item>
-              <a-menu-item key="5">Alex</a-menu-item>
-            </a-sub-menu>
-            <a-sub-menu key="sub2">
-              <template #title>
-                <span>
-                  <team-outlined />
-                  <span>Team</span>
-                </span>
-              </template>
-              <a-menu-item key="6">Team 1</a-menu-item>
-              <a-menu-item key="8">Team 2</a-menu-item>
-            </a-sub-menu>
-            <a-menu-item key="9">
-              <file-outlined />
-              <span>File</span>
-            </a-menu-item>
-          </a-menu>
+          <Menu
+            v-model:selectedKeys="sideSelectedKeys"
+            theme="dark"
+            mode="inline"
+            :inline-collapsed="collapsedSide"
+            :items="sideItems"
+          />
         </LayoutSider>
         <Layout>
           <LayoutHeader style="background: #fff; padding: 0" />
           <LayoutContent style="margin: 0 16px">
-            <Breadcrumb :routes="routes1" style="margin: 16px 0" />
-            <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">
-              Curry is a basketball player.
-            </div>
+            <Breadcrumb :routes="routes" style="margin: 16px 0" />
+            <div class="demo-content">Curry is a basketball player.</div>
           </LayoutContent>
-          <LayoutFooter style="text-align: center"> Vue Amazing UI ©2023 Created by the Muse Catcher </LayoutFooter>
+          <LayoutFooter style="text-align: center">Vue Amazing UI ©2023 Created by the Muse Catcher</LayoutFooter>
         </Layout>
       </Layout>
     </div>
-    <h2 class="mt30 mb10">自定义收起展开触发器</h2>
-    <h3 class="mb10">要使用自定义触发器，可以设置 :trigger="null" 来隐藏默认设定</h3>
-    <Layout style="border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px #00000047">
-      <LayoutSider v-model:collapsed="collapsed" :trigger="null" collapsible>
+    <h2 class="mt30 mb10">自定义触发器</h2>
+    <p class="mb10">要使用自定义触发器，可以设置 <code>:trigger="null"</code> 来隐藏默认设定</p>
+    <Layout class="demo-shadow">
+      <LayoutSider v-model:collapsed="collapsedCustom" :trigger="null" collapsible>
         <div class="logo-1" />
-        <a-menu v-model:selectedKeys="selectedKeys6" theme="dark" mode="inline" :inline-collapsed="collapsed">
-          <a-menu-item key="1">
-            <user-outlined />
-            <span>nav 1</span>
-          </a-menu-item>
-          <a-menu-item key="2">
-            <video-camera-outlined />
-            <span>nav 2</span>
-          </a-menu-item>
-          <a-menu-item key="3">
-            <upload-outlined />
-            <span>nav 3</span>
-          </a-menu-item>
-        </a-menu>
+        <Menu
+          v-model:selectedKeys="customTriggerSelectedKeys"
+          theme="dark"
+          mode="inline"
+          :inline-collapsed="collapsedCustom"
+          :items="customTriggerItems"
+        />
       </LayoutSider>
       <Layout>
         <LayoutHeader style="background: #fff; padding: 0">
-          <menu-unfold-outlined v-if="collapsed" class="trigger" @click="() => (collapsed = !collapsed)" />
-          <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
+          <MenuUnfoldOutlined v-if="collapsedCustom" class="trigger" @click="collapsedCustom = !collapsedCustom" />
+          <MenuFoldOutlined v-else class="trigger" @click="collapsedCustom = !collapsedCustom" />
         </LayoutHeader>
-        <LayoutContent :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
+        <LayoutContent style="margin: 24px 16px; padding: 24px; background: #fff; min-height: 280px">
           Content
         </LayoutContent>
       </Layout>
     </Layout>
+    <h2 class="mt30 mb10">响应式布局</h2>
+    <p class="mb10">
+      配置 <code>breakpoint</code> 属性即生效，视窗宽度小于 <code>breakpoint</code> 时 Sider 缩小为
+      <code>collapsedWidth</code> 宽度，若将 <code>collapsedWidth</code> 设置为零，会出现特殊 trigger
+    </p>
+    <Layout class="demo-shadow">
+      <LayoutSider collapsible breakpoint="lg" :collapsed-width="0" @collapse="onCollapse" @breakpoint="onBreakpoint">
+        <div class="logo-1" />
+        <Menu v-model:selectedKeys="responsiveSelectedKeys" theme="dark" mode="inline" :items="responsiveItems" />
+      </LayoutSider>
+      <Layout>
+        <LayoutHeader style="background: #fff; padding: 0" />
+        <LayoutContent style="margin: 24px 16px 0">
+          <div class="demo-content tall">content</div>
+        </LayoutContent>
+        <LayoutFooter style="text-align: center">Vue Amazing UI ©2023 Created by the Muse Catcher</LayoutFooter>
+      </Layout>
+    </Layout>
+    <h2 class="mt30 mb10">固定侧边栏</h2>
+    <p class="mb10">当内容较长时，使用固定侧边栏可以提供更好的体验</p>
+    <div class="demo-container">
+      <Layout has-sider>
+        <LayoutSider :style="{ overflow: 'auto', height: '360px', position: 'sticky', left: 0, top: 0, bottom: 0 }">
+          <div class="logo-1" />
+          <Menu v-model:selectedKeys="fixedSiderSelectedKeys" theme="dark" mode="inline" :items="fixedSiderItems" />
+        </LayoutSider>
+        <Layout>
+          <LayoutHeader style="background: #fff; padding: 0" />
+          <LayoutContent style="margin: 24px 16px 0">
+            <div class="demo-content long">
+              <p v-for="n in 30" :key="n">...</p>
+              <p>Really long content</p>
+            </div>
+          </LayoutContent>
+          <LayoutFooter style="text-align: center">Vue Amazing UI ©2023 Created by the Muse Catcher</LayoutFooter>
+        </Layout>
+      </Layout>
+    </div>
+    <h2 class="mt30 mb10">固定头部</h2>
+    <p class="mb10">一般用于固定顶部导航，方便页面切换</p>
+    <div class="demo-container">
+      <Layout>
+        <LayoutHeader :style="{ position: 'sticky', zIndex: 1, top: 0, width: '100%' }">
+          <div class="logo" />
+          <Menu
+            v-model:selectedKeys="fixedNavKeys"
+            style="line-height: 64px"
+            mode="horizontal"
+            theme="dark"
+            :items="headerItems"
+          />
+        </LayoutHeader>
+        <LayoutContent style="padding: 0 50px">
+          <Breadcrumb :routes="routes" style="margin: 16px 0" />
+          <div class="demo-content tall">Content</div>
+        </LayoutContent>
+        <LayoutFooter style="text-align: center">Vue Amazing UI ©2023 Created by the Muse Catcher</LayoutFooter>
+      </Layout>
+    </div>
     <h2 class="mt30 mb10">响应式收起宽度</h2>
-    <h3 class="mb10">collapsedWidth 支持响应式宽度，根据不同的视窗宽度可以设置不同的收起宽度</h3>
-    <Layout style="border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px #00000047">
+    <p class="mb10"> <code>collapsedWidth</code> 支持响应式宽度，根据不同的视窗宽度可以设置不同的收起宽度 </p>
+    <Layout class="demo-shadow">
       <LayoutSider
-        v-model:collapsed="collapsed"
+        v-model:collapsed="collapsedResponsiveWidth"
         collapsible
         :collapsed-width="{ lg: 80, xl: 120 }"
         @collapse="onCollapse"
       >
         <div class="logo-1" />
-        <a-menu v-model:selectedKeys="selectedKeys7" theme="dark" mode="inline" :inline-collapsed="collapsed">
-          <a-menu-item key="1">
-            <user-outlined />
-            <span class="nav-text">nav 1</span>
-          </a-menu-item>
-          <a-menu-item key="2">
-            <video-camera-outlined />
-            <span class="nav-text">nav 2</span>
-          </a-menu-item>
-          <a-menu-item key="3">
-            <upload-outlined />
-            <span class="nav-text">nav 3</span>
-          </a-menu-item>
-          <a-menu-item key="4">
-            <user-outlined />
-            <span class="nav-text">nav 4</span>
-          </a-menu-item>
-        </a-menu>
+        <Menu
+          v-model:selectedKeys="responsiveWidthSelectedKeys"
+          theme="dark"
+          mode="inline"
+          :inline-collapsed="collapsedResponsiveWidth"
+          :items="responsiveItems"
+        />
       </LayoutSider>
       <Layout>
-        <LayoutHeader :style="{ background: '#fff', padding: 0 }" />
-        <LayoutContent :style="{ margin: '24px 16px 0' }">
-          <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">content</div>
+        <LayoutHeader style="background: #fff; padding: 0" />
+        <LayoutContent style="margin: 24px 16px 0">
+          <div class="demo-content tall">content</div>
         </LayoutContent>
-        <LayoutFooter style="text-align: center"> Vue Amazing UI ©2023 Created by the Muse Catcher </LayoutFooter>
+        <LayoutFooter style="text-align: center">Vue Amazing UI ©2023 Created by the Muse Catcher</LayoutFooter>
       </Layout>
     </Layout>
-    <h2 class="mt30 mb10">响应式触发收起</h2>
-    <h3 class="mb10"
-      >通过配置 breakpoint 属性，当视窗宽度小于 breakpoint 时 Sider 缩小为对应的 collapsedWidth 宽度，若将
-      collapsedWidth 设置为 0，会出现特殊 trigger</h3
-    >
-    <Layout style="border-radius: 6px; overflow: hidden; box-shadow: 0 2px 8px #00000047">
-      <LayoutSider
-        v-model:collapsed="collapsed"
-        collapsible
-        breakpoint="xl"
-        :collapsed-width="0"
-        @collapse="onCollapse"
-        @breakpoint="onBreakpoint"
-      >
-        <div class="logo-1" />
-        <a-menu v-model:selectedKeys="selectedKeys7" theme="dark" mode="inline" :inline-collapsed="collapsed">
-          <a-menu-item key="1">
-            <user-outlined />
-            <span class="nav-text">nav 1</span>
-          </a-menu-item>
-          <a-menu-item key="2">
-            <video-camera-outlined />
-            <span class="nav-text">nav 2</span>
-          </a-menu-item>
-          <a-menu-item key="3">
-            <upload-outlined />
-            <span class="nav-text">nav 3</span>
-          </a-menu-item>
-          <a-menu-item key="4">
-            <user-outlined />
-            <span class="nav-text">nav 4</span>
-          </a-menu-item>
-        </a-menu>
-      </LayoutSider>
-      <Layout>
-        <LayoutHeader :style="{ background: '#fff', padding: 0 }" />
-        <LayoutContent :style="{ margin: '24px 16px 0' }">
-          <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">content</div>
-        </LayoutContent>
-        <LayoutFooter style="text-align: center"> Vue Amazing UI ©2023 Created by the Muse Catcher </LayoutFooter>
-      </Layout>
-    </Layout>
-    <h2 class="mt30 mb10">固定侧边栏</h2>
-    <h3 class="mb10">当内容较长时，使用固定侧边栏可以提供更好的体验</h3>
-    <div style="height: 360px; overflow: auto; border-radius: 6px; box-shadow: 0 2px 8px #00000047">
-      <Layout>
-        <LayoutSider :style="{ overflow: 'auto', height: '360px', position: 'sticky', left: 0, top: 0, bottom: 0 }">
-          <div class="logo-1" />
-          <a-menu v-model:selectedKeys="selectedKeys8" theme="dark" mode="inline">
-            <a-menu-item key="1">
-              <user-outlined />
-              <span class="nav-text">nav 1</span>
-            </a-menu-item>
-            <a-menu-item key="2">
-              <video-camera-outlined />
-              <span class="nav-text">nav 2</span>
-            </a-menu-item>
-            <a-menu-item key="3">
-              <upload-outlined />
-              <span class="nav-text">nav 3</span>
-            </a-menu-item>
-            <a-menu-item key="4">
-              <bar-chart-outlined />
-              <span class="nav-text">nav 4</span>
-            </a-menu-item>
-            <a-menu-item key="5">
-              <cloud-outlined />
-              <span class="nav-text">nav 5</span>
-            </a-menu-item>
-            <a-menu-item key="6">
-              <appstore-outlined />
-              <span class="nav-text">nav 6</span>
-            </a-menu-item>
-            <a-menu-item key="7">
-              <team-outlined />
-              <span class="nav-text">nav 7</span>
-            </a-menu-item>
-            <a-menu-item key="8">
-              <shop-outlined />
-              <span class="nav-text">nav 8</span>
-            </a-menu-item>
-          </a-menu>
-        </LayoutSider>
-        <Layout>
-          <LayoutHeader :style="{ background: '#fff', padding: 0 }" />
-          <LayoutContent :style="{ margin: '24px 16px 0', overflow: 'visible' }">
-            <div :style="{ padding: '24px', background: '#fff', textAlign: 'center' }">
-              ...
-              <br />
-              Really
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              long
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              content
-            </div>
-          </LayoutContent>
-          <LayoutFooter :style="{ textAlign: 'center' }">
-            Vue Amazing UI ©2023 Created by the Muse Catcher
-          </LayoutFooter>
-        </Layout>
-      </Layout>
-    </div>
-    <h2 class="mt30 mb10">固定头部</h2>
-    <h3 class="mb10">一般用于固定顶部导航，方便页面切换</h3>
-    <div style="height: 360px; overflow: auto; border-radius: 6px; box-shadow: 0 2px 8px #00000047">
-      <Layout>
-        <LayoutHeader :style="{ position: 'sticky', zIndex: 1, top: 0, width: '100%' }">
-          <div class="logo" />
-          <a-menu v-model:selectedKeys="selectedKeys9" theme="dark" mode="horizontal" :style="{ lineHeight: '64px' }">
-            <a-menu-item key="1">nav 1</a-menu-item>
-            <a-menu-item key="2">nav 2</a-menu-item>
-            <a-menu-item key="3">nav 3</a-menu-item>
-          </a-menu>
-        </LayoutHeader>
-        <LayoutContent :style="{ padding: '0 50px' }">
-          <Breadcrumb :routes="routes" style="margin: 16px 0" />
-          <div :style="{ background: '#fff', padding: '24px', minHeight: '380px' }">Content</div>
-        </LayoutContent>
-        <LayoutFooter :style="{ textAlign: 'center' }"> Vue Amazing UI ©2023 Created by the Muse Catcher </LayoutFooter>
-      </Layout>
-    </div>
   </div>
 </template>
 <style lang="less" scoped>
-.site-layout-content {
-  min-height: 280px;
+.demo-content {
   padding: 24px;
   background: #fff;
+  min-height: 280px;
+}
+.demo-content.tall {
+  min-height: 360px;
+}
+.demo-content.long {
+  text-align: center;
+  // 内容足够长，滚动容器才会出现滚动条，从而体现固定侧边栏的效果
+  p {
+    line-height: 24px;
+  }
+}
+// 承载「整页」形态的用例，限高并允许内部滚动，避免撑高文档页面
+.demo-container {
+  height: 360px;
+  overflow: auto;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px #00000047;
+}
+.demo-shadow {
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px #00000047;
 }
 .logo {
   float: left;
@@ -630,7 +480,7 @@ const onBreakpoint = (broken: boolean) => {
   cursor: pointer;
   transition: color 0.3s;
   &:hover {
-    color: #1890ff;
+    color: var(--primary-color);
   }
 }
 </style>
