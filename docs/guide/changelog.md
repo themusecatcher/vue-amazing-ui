@@ -10,6 +10,19 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-09-24">2.13.0</VersionDateTag>
+
+- 新增 [导航菜单 Menu](/guide/components/menu.html) 组件：以 `items` 配置描述菜单结构（`children` 表示子菜单、`type: 'group'` 表示分组、`type: 'divider'` 表示分割线），支持 `horizontal` / `vertical` / `inline` 三种菜单类型与 `light` / `dark` 主题，展开与选中状态可受控（`v-model:openKeys` / `v-model:selectedKeys`）或非受控，`inline` 模式下支持收起（`inlineCollapsed`）与自定义缩进（`inlineIndent`），水平菜单空间不足时自动将放不下的项收进省略子菜单
+- 修复全局默认样式中 `* { caret-color: transparent }` 导致使用方页面内 `contenteditable` 富文本区域的插入光标不可见的问题（配套的 `input, textarea { caret-color: auto }` 一并移除，组件自身的光标行为不受影响）
+- 新增链接颜色随主题联动：[全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `common.primaryColor` 变化时，派生色阶会同步写入 `--link-color` / `--link-color-hover` / `--link-color-active` 三个 CSS 变量，全局链接基座据此渲染，页面链接颜色随主题色一并变化（未使用 `ConfigProvider` 时回退默认色阶）
+- ⚠️ **破坏性变更**：全局默认样式的 `<a>` 规则重构为以 `:where()` 包裹的低特异性链接基座（对标 `antd` 的 `genLinkStyle`）：配色对齐 `antd` token（默认 `#1677ff`、悬停 `#69b1ff`、按下 `#0958d9`、禁用态 `rgba(0, 0, 0, 0.25)`，原悬停色为 `#4096ff`），不再移除链接的焦点轮廓，特异性降为 `0` 使使用方任意链接样式均可覆盖；同时移除 `--primary-color` / `--primary-color-hover` 主题变量（主题色请使用 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme`）
+- 更新使用者文档：[特性](/guide/features.html) 的「全局默认样式」内容同步订正，并补充主题色定制入口（`ConfigProvider` 的 `theme`）
+- 更新贡献者文档：`development/project-structure.md` 与 `development/component-design.md` 的全局样式说明同步为「组件样式基座 + 主题色由 `ConfigProvider` 提供」
+
+## <VersionDateTag date="2026-09-23">2.12.0</VersionDateTag>
+
+- 新增 [布局 Layout](/guide/components/layout.html) 组件：提供 `Layout` / `LayoutHeader` / `LayoutContent` / `LayoutFooter` / `LayoutSider` 五个组件，支持侧边栏收起（`v-model:collapsed` / `collapsible` / `defaultCollapsed`）、响应式断点收起（`breakpoint` / `collapsedWidth`，`collapsedWidth` 为 `0` 时出现特殊触发器）、自定义触发器（`trigger` 属性与同名插槽）、`light` / `dark` 主题，并提供 `--layout-*` CSS 变量用于主题定制
+
 ## <VersionDateTag date="2026-09-23">2.11.0</VersionDateTag>
 
 - 优化统一 [选择器 Select](/guide/components/select.html)、[级联选择 Cascader](/guide/components/cascader.html)、[开关 Switch](/guide/components/switch.html) 的 `API` 形态：双向绑定改用 `v-model:value`（回写事件 `update:value`）；`label` / `value` 字段名属性合并为 `fieldNames` 对象，改用 `:field-names="{ label: 'name', value: 'id' }"`（分组 / 后代子选项字段名分别为 `Select` 的 `options` 与 `Cascader` 的 `children``）；Select` 的 `search` / `filter` 更名为 `showSearch` / `filterOption`（旧名移除）、`placement` 取值扩展为四向（默认 `bottomLeft`）、`change` 回调第二参由文本 `label` 改为完整 `option` 对象，并新增 `SelectValue` / `SelectFieldNames` / `CascaderFieldNames` 类型导出
@@ -980,8 +993,6 @@
 
 ## future
 
-- 新增 布局 Layout 组件
-- 新增 菜单 Menu 组件
 - 新增 穿梭框 Transfer 组件
 - 新增 漫游式引导 Tour 组件
 - 新增 下拉菜单 Dropdown 组件
