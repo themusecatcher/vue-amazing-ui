@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*警告提示，展现需要关注的信息*
+_警告提示，展现需要关注的信息_
 
 ## 何时使用
 
@@ -616,7 +616,7 @@ showIcon | 是否显示辅助图标 | boolean | false
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 default | 警告提示内容 | v-slot:default
 description | 警告提示的辅助性文字介绍 | v-slot:description

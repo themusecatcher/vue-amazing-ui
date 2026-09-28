@@ -287,7 +287,7 @@ function onClick(item: TextScrollItem) {
 
 :::
 
-## 链接悬浮样式
+## 链接悬浮色
 
 <TextScroll :items="scrollItems" href-hover-color="#ff6900" @click="onClick" />
 

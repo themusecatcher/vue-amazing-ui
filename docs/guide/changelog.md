@@ -12,6 +12,7 @@
 
 ## <VersionDateTag date="2026-09-24">2.13.0</VersionDateTag>
 
+- 新增 [布局 Layout](/guide/components/layout.html) 组件：提供 `Layout` / `LayoutHeader` / `LayoutContent` / `LayoutFooter` / `LayoutSider` 五个组件，支持侧边栏收起（`v-model:collapsed` / `collapsible` / `defaultCollapsed`）、响应式断点收起（`breakpoint` / `collapsedWidth`，`collapsedWidth` 为 `0` 时出现特殊触发器）、自定义触发器（`trigger` 属性与同名插槽）、`light` / `dark` 主题，并提供 `--layout-*` CSS 变量用于主题定制
 - 新增 [导航菜单 Menu](/guide/components/menu.html) 组件：以 `items` 配置描述菜单结构（`children` 表示子菜单、`type: 'group'` 表示分组、`type: 'divider'` 表示分割线），支持 `horizontal` / `vertical` / `inline` 三种菜单类型与 `light` / `dark` 主题，展开与选中状态可受控（`v-model:openKeys` / `v-model:selectedKeys`）或非受控，`inline` 模式下支持收起（`inlineCollapsed`）与自定义缩进（`inlineIndent`），水平菜单空间不足时自动将放不下的项收进省略子菜单
 - 修复全局默认样式中 `* { caret-color: transparent }` 导致使用方页面内 `contenteditable` 富文本区域的插入光标不可见的问题（配套的 `input, textarea { caret-color: auto }` 一并移除，组件自身的光标行为不受影响）
 - 新增链接颜色随主题联动：[全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `common.primaryColor` 变化时，派生色阶会同步写入 `--link-color` / `--link-color-hover` / `--link-color-active` 三个 CSS 变量，全局链接基座据此渲染，页面链接颜色随主题色一并变化（未使用 `ConfigProvider` 时回退默认色阶）
@@ -19,9 +20,11 @@
 - 更新使用者文档：[特性](/guide/features.html) 的「全局默认样式」内容同步订正，并补充主题色定制入口（`ConfigProvider` 的 `theme`）
 - 更新贡献者文档：`development/project-structure.md` 与 `development/component-design.md` 的全局样式说明同步为「组件样式基座 + 主题色由 `ConfigProvider` 提供」
 
-## <VersionDateTag date="2026-09-23">2.12.0</VersionDateTag>
+## <VersionDateTag date="2026-09-24">2.12.0</VersionDateTag>
 
-- 新增 [布局 Layout](/guide/components/layout.html) 组件：提供 `Layout` / `LayoutHeader` / `LayoutContent` / `LayoutFooter` / `LayoutSider` 五个组件，支持侧边栏收起（`v-model:collapsed` / `collapsible` / `defaultCollapsed`）、响应式断点收起（`breakpoint` / `collapsedWidth`，`collapsedWidth` 为 `0` 时出现特殊触发器）、自定义触发器（`trigger` 属性与同名插槽）、`light` / `dark` 主题，并提供 `--layout-*` CSS 变量用于主题定制
+- 新增 [下拉菜单 Dropdown](/guide/components/dropdown.html) 组件
+- 补齐 [对话框 Dialog](/guide/components/dialog.html) / [全局提示 Message](/guide/components/message.html) / [模态框 Modal](/guide/components/modal.html) / [通知提醒 Notification](/guide/components/notification.html) 的 `Provider` 默认插槽类型声明
+- 组件库及文档优化
 
 ## <VersionDateTag date="2026-09-23">2.11.0</VersionDateTag>
 
@@ -995,7 +998,6 @@
 
 - 新增 穿梭框 Transfer 组件
 - 新增 漫游式引导 Tour 组件
-- 新增 下拉菜单 Dropdown 组件
 <!-- - 更新 表格 Table 组件，新增虚拟滚动功能
 - 时间轴 Timeline 组件，新增水平时间轴
 - 新增 时间选择器 TimePicker 组件

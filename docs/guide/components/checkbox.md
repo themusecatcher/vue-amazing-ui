@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*复选框*
+_复选框_
 
 ## 何时使用
 
@@ -549,7 +549,7 @@ disabled? | 是否禁用选项 | boolean | undefined
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 default | 自定义选项名 | v-slot:default="{ option, label, index }"
 

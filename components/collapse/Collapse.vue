@@ -154,7 +154,7 @@ function onCopy(index: number, key: string | number) {
     },
     (err) => {
       /* clipboard write failed */
-      console.log('copy failed', err)
+      console.warn('copy failed', err)
     }
   )
 }

@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { provide } from 'vue'
+import type { VNode } from 'vue'
 import Notification from './Notification.vue'
 import { notificationApiKey } from './useNotification'
 import type { NotificationApi } from './useNotification'
+
+// 默认插槽渲染应用内容（Provider 只做 api 注入 + 内部实例挂载）
+export interface NotificationProviderSlots {
+  default?: () => VNode[]
+}
+defineSlots<NotificationProviderSlots>()
 
 // 透传属性给内部实例，使 <NotificationProvider :duration="6000"> 等声明式配置继续生效
 defineOptions({ inheritAttrs: false })

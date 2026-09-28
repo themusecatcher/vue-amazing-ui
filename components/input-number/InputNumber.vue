@@ -344,7 +344,6 @@ function onDown(): void {
       .icon-svg {
         font-size: 7px;
         color: rgba(0, 0, 0, 0.45);
-        fill: currentColor;
         user-select: none;
         transition: color 0.2s;
       }

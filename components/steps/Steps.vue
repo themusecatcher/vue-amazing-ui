@@ -190,7 +190,6 @@ function onChange(index: number): void {
           display: inline-block;
           font-size: 16px;
           color: var(--steps-primary-color);
-          fill: currentColor;
           transition: all 0.3s;
         }
         .steps-dot {

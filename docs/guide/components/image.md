@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*可预览的图片*
+_可预览的图片_
 
 ## 何时使用
 
@@ -83,7 +83,7 @@ function customDownload(url: string, fileName?: string) {
 
 ## 多张图片预览
 
-*可循环切换图片，并支持键盘 (`left` / `right` / `up` / `down`) 按键切换*
+_可循环切换图片，并支持键盘 (`left` / `right` / `up` / `down`) 按键切换_
 
 <br/>
 
@@ -141,7 +141,7 @@ const images = ref<ImageItem[]>([
 
 ## 自定义样式
 
-*自定义宽高；同时图片覆盖容器；预览文本设为 `preview`*
+_自定义宽高；同时图片覆盖容器；预览文本设为 `preview`_
 
 <br/>
 
@@ -150,7 +150,6 @@ const images = ref<ImageItem[]>([
     <p class="preview-txt">preview</p>
   </template>
 </Image>
-
 
 <style lang="less" scoped>
 .preview-txt {
@@ -377,7 +376,7 @@ const images = ref<ImageItem[]>([
 
 ## 自定义预览配置
 
-*更改缩放比率和最大最小缩放比例*
+_更改缩放比率和最大最小缩放比例_
 
 <br/>
 
@@ -405,7 +404,7 @@ const images = ref<ImageItem[]>([
 
 ## 自定义预览层级
 
-*通过 `zIndex` 指定预览遮罩层级（预览容器取该值 `+ 10`），未传入时由 `ConfigProvider` 的 `baseZIndex` 统一分配*
+_通过 `zIndex` 指定预览遮罩层级（预览容器取该值 `+ 10`），未传入时由 `ConfigProvider` 的 `baseZIndex` 统一分配_
 
 <br/>
 
@@ -414,7 +413,7 @@ const images = ref<ImageItem[]>([
   <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/3.jpg" :z-index="3000" />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <template>
@@ -425,13 +424,13 @@ const images = ref<ImageItem[]>([
 </template>
 ```
 
-::::
+:::
 
 ## 下载配置
 
-*通过 `downloadOptions` 配置内置下载策略（`anchor` / `iframe`）与打开方式（`_self` / `_blank`）*
+_通过 `downloadOptions` 配置内置下载策略（`anchor` / `iframe`）与打开方式（`_self` / `_blank`）_
 
-*下方示例强制 `anchor` 策略并设 `target="_blank"`，跨域下 `download` 属性失效，点击后在新窗口打开图片*
+_下方示例强制 `anchor` 策略并设 `target="_blank"`，跨域下 `download` 属性失效，点击后在新窗口打开图片_
 
 <br/>
 
@@ -485,9 +484,9 @@ const images = ref<ImageItem[]>([
 
 ## 自定义下载
 
-*跨域图床（如设置 `X-Frame-Options` 拒绝 `iframe` 的 CDN）下载受限时，内置 `downloadFile` 可能无法满足：可通过 `downloadOptions` 调整内置下载策略，或通过 `customDownload` 提供完全自定义的下载方法*
+_跨域图床（如设置 `X-Frame-Options` 拒绝 `iframe` 的 CDN）下载受限时，内置 `downloadFile` 可能无法满足：可通过 `downloadOptions` 调整内置下载策略，或通过 `customDownload` 提供完全自定义的下载方法_
 
-*下方示例演示了用 `XHR + Blob` 绕过 `X-Frame-Options` 限制下载跨域图床图片*
+_下方示例演示了用 `XHR + Blob` 绕过 `X-Frame-Options` 限制下载跨域图床图片_
 
 <br/>
 
@@ -589,19 +588,19 @@ function customDownload(url: string, fileName?: string) {
 
 ### Image Type
 
-| 名称 | 说明    | 类型  | 默认值    |
+| 名称 | 说明 | 类型 | 默认值 |
 | :---- | :------- | :----- | :-------- |
-| src  | 图像地址 | string | undefined |
+| src | 图像地址 | string | undefined |
 | name? | 图像名称，未设置时自动从图像地址 `src` 中提取 | string | undefined |
 
 ## Slots
 
-| 名称   | 说明          | 类型           |
+| 名称 | 说明 | 用法 |
 | :------ | :------------- | :------------- |
 | preview | 自定义预览文本 | v-slot:preview |
 
 ## Methods
 
-| 名称   | 说明                                  | 类型                    |
+| 名称 | 说明 | 类型 |
 | :------ | :------------------------------------- | :---------------------- |
 | preview | 预览索引为 `index` 的图片，从 `0` 开始 | (index: number) => void |

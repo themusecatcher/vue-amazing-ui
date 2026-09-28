@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*图标右上角的圆形徽标数字或文本前的状态小圆点*
+_图标右上角的圆形徽标数字或文本前的状态小圆点_
 
 ## 何时使用
 
@@ -332,7 +332,7 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 
 ## 动态
 
-*数值变化时数字逐位上下滚动，隐藏前保留最后一次展示的数值*
+_数值变化时数字逐位上下滚动，隐藏前保留最后一次展示的数值_
 
 <br/>
 
@@ -490,7 +490,7 @@ const colors = [
 
 ## 与浮层叠加
 
-*徽标是装饰层（默认 `z-index: 9`），始终位于 `Tooltip` 等浮层之下*
+_徽标是装饰层（默认 `z-index: 9`），始终位于 `Tooltip` 等浮层之下_
 
 <br/>
 
@@ -500,7 +500,7 @@ const colors = [
   </Badge>
 </Tooltip>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <template>
@@ -512,7 +512,7 @@ const colors = [
 </template>
 ```
 
-::::
+:::
 
 ## APIs
 
@@ -547,7 +547,7 @@ Status | 'success' &#124; 'processing' &#124; 'default' &#124; 'error' &#124; 'w
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 default | 自定义内容元素 | v-slot:default
 value | 自定义徽标数字或文字 | v-slot:value

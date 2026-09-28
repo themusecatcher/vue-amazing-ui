@@ -374,7 +374,7 @@ const value = ref('')
 
 ## Slots
 
-| 名称       | 说明          | 类型               |
+| 名称       | 说明          | 用法               |
 | :---------- | :------------- | :----------------- |
 | addonBefore | 自定义前置标签 | v-slot:addonBefore |
 | addonAfter | 自定义后置标签 | v-slot:addonAfter  |

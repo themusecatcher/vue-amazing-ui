@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*点击/鼠标移入元素，弹出气泡式的卡片浮层。*
+_点击/鼠标移入元素，弹出气泡式的卡片浮层。_
 
 ## 何时使用
 
@@ -134,7 +134,7 @@ function openChange(open: boolean) {
 
 ## 从浮层内关闭
 
-*使用 `show` 属性控制显示隐藏*
+_使用 `show` 属性控制显示隐藏_
 
 <br/>
 
@@ -253,7 +253,7 @@ _设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再�
   </Popover>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <template>
@@ -268,7 +268,7 @@ _设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再�
 </template>
 ```
 
-::::
+:::
 
 ## 隐藏箭头
 
@@ -316,7 +316,7 @@ tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.or
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 title | 自定义卡片标题 | v-slot:title
 content | 自定义卡片内容 | v-slot:content

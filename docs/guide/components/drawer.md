@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*屏幕边缘滑出的浮层面板*
+_屏幕边缘滑出的浮层面板_
 
 ## 何时使用
 
@@ -85,7 +85,7 @@ const layerZIndexOpen = ref<boolean>(false)
 
 ## 基本用法
 
-*基础抽屉，点击触发按钮抽屉从右滑出，点击遮罩区关闭*
+_基础抽屉，点击触发按钮抽屉从右滑出，点击遮罩区关闭_
 
 <br/>
 
@@ -106,7 +106,7 @@ const layerZIndexOpen = ref<boolean>(false)
   <p>Some contents...</p>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -139,11 +139,11 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义位置
 
-*自定义位置，点击触发按钮抽屉从相应的位置滑出，点击遮罩区关闭*
+_自定义位置，点击触发按钮抽屉从相应的位置滑出，点击遮罩区关闭_
 
 <br/>
 
@@ -155,7 +155,7 @@ function onClose() {
   <p>Some contents...</p>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -184,11 +184,11 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 额外操作
 
-*操作按钮建议放在抽屉的右上角，可以使用 `extra` 属性来实现*
+_操作按钮建议放在抽屉的右上角，可以使用 `extra` 属性来实现_
 
 <br/>
 
@@ -204,7 +204,7 @@ function onClose() {
   <p>Some contents...</p>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -237,11 +237,11 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 渲染在当前 DOM
 
-*渲染在当前 DOM 里。自定义容器，查看 `to`*
+_渲染在当前 DOM 里。自定义容器，查看 `to`_
 
 <br/>
 
@@ -263,7 +263,7 @@ function onClose() {
   </Drawer>
 </div>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -305,11 +305,11 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 抽屉表单
 
-*在抽屉中使用表单*
+_在抽屉中使用表单_
 
 <br/>
 
@@ -398,7 +398,7 @@ function onClose() {
   </template>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -519,11 +519,11 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 多层抽屉
 
-*在抽屉内打开新的抽屉，用以解决多分支任务的复杂状况*
+_在抽屉内打开新的抽屉，用以解决多分支任务的复杂状况_
 
 <br/>
 
@@ -546,7 +546,7 @@ function onClose() {
   </template>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -579,11 +579,11 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 抽屉内浮层
 
-*抽屉内的 `Tooltip` / `Select` 会自动排在遮罩与抽屉之上；也可用 `zIndex` 直接指定抽屉层级（优先级最高）*
+_抽屉内的 `Tooltip` / `Select` 会自动排在遮罩与抽屉之上；也可用 `zIndex` 直接指定抽屉层级（优先级最高）_
 
 <br/>
 
@@ -605,7 +605,7 @@ function onClose() {
   <p>zIndex 优先级最高，覆盖自动分配结果</p>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -639,11 +639,11 @@ const layerZIndexOpen = ref(false)
 </template>
 ```
 
-::::
+:::
 
 ## 信息预览抽屉
 
-*需要快速预览对象概要时使用，点击遮罩区关闭*
+_需要快速预览对象概要时使用，点击遮罩区关闭_
 
 <br/>
 
@@ -697,7 +697,7 @@ const layerZIndexOpen = ref(false)
   </Descriptions>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -762,11 +762,11 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 预设宽度
 
-*抽屉的默认宽度为 `378px`，另外还提供一个大号抽屉 `736px`，可以用 `size` 属性来设置*
+_抽屉的默认宽度为 `378px`，另外还提供一个大号抽屉 `736px`，可以用 `size` 属性来设置_
 
 <br/>
 
@@ -782,7 +782,7 @@ function onClose() {
   <p>Some contents...</p>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -813,7 +813,7 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 抽屉页脚
 
@@ -835,7 +835,7 @@ function onClose() {
   </template>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -874,11 +874,11 @@ function onClose() {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义 header & body 样式
 
-*通过 `header-style` 与 `body-style` 自定义抽屉头部与内容区域样式，并设置背景色便于观察*
+_通过 `header-style` 与 `body-style` 自定义抽屉头部与内容区域样式，并设置背景色便于观察_
 
 <br/>
 
@@ -895,7 +895,7 @@ function onClose() {
   <p>Some contents...</p>
 </Drawer>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -918,7 +918,7 @@ const open = ref<boolean>(false)
 </template>
 ```
 
-::::
+:::
 
 <style lang="less" scoped>
 p {
@@ -1005,7 +1005,7 @@ afterOpenChange | 切换抽屉时动画结束后的回调 | (open: boolean) => v
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 title | 自定义标题 | v-slot:title
 extra | 自定义抽屉右上角的操作区域 | v-slot:extra

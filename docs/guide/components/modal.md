@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*模态对话框*
+_模态对话框_
 
 ## 何时使用
 
@@ -2305,7 +2305,7 @@ function onDestroyAllModals() {
 
 ## 弹窗内浮层
 
-*弹窗内的 `Tooltip` / `Select` 会自动排在遮罩与弹窗之上；也可用 `zIndex` 直接指定弹窗层级（优先级最高）*
+_弹窗内的 `Tooltip` / `Select` 会自动排在遮罩与弹窗之上；也可用 `zIndex` 直接指定弹窗层级（优先级最高）_
 
 <br/>
 
@@ -2327,7 +2327,7 @@ function onDestroyAllModals() {
   <p>zIndex 优先级最高，覆盖自动分配结果</p>
 </Modal>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -2361,7 +2361,7 @@ const layerZIndexOpen = ref(false)
 </template>
 ```
 
-::::
+:::
 
 ## 遮罩、键盘与滚动锁定
 
@@ -2841,7 +2841,7 @@ _`update` 可更新的字段为 `ModalOptions` 的全部属性，另支持 `mode
 
 ## Slots
 
-| 名称      | 说明            | 类型              |
+| 名称      | 说明            | 用法              |
 | :--------- | :--------------- | :---------------- |
 | icon      | 自定义图标      | v-slot:icon       |
 | title     | 自定义模态框标题 | v-slot:title      |
@@ -2856,16 +2856,16 @@ _`update` 可更新的字段为 `ModalOptions` 的全部属性，另支持 `mode
 
 _`useModal()` 返回的 `ModalApi`，或通过 `<Modal>` / `<ModalProvider>` 的 `@ready` 事件获取：_
 
-| 名称      | 说明          | 类型                                                                              |
+| 名称 | 说明 | 类型 |
 | :--------- | :------------- | :-------------------------------------------------------------------------------- |
-| info      | 信息提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
-| success   | 成功提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
-| error     | 错误提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
-| warning   | 警告提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
-| confirm   | 确认提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
-| erase     | 删除提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
-| create    | 完全自定义模态框（不渲染内置图标与按钮组，顶部图标与底部区域由 `icon` / `footer` 自行组合） | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
-| destroyAll | 关闭并销毁所有模态框，逐实例走正常关闭流程以保留离场动画 | () => void                                                                        |
+| info | 信息提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
+| success | 成功提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
+| error | 错误提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
+| warning | 警告提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
+| confirm | 确认提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
+| erase | 删除提示模态框 | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
+| create | 完全自定义模态框（不渲染内置图标与按钮组，顶部图标与底部区域由 `icon` / `footer` 自行组合） | (data: [ModalOptions](#modaloptions-type)) => [ModalReactive](#modalreactive-type) |
+| destroyAll | 关闭并销毁所有模态框，逐实例走正常关闭流程以保留离场动画 | () => void |
 
 ### ModalReactive Type
 
@@ -2884,11 +2884,11 @@ _单个模态框的句柄，由 `info` / `success` 等方法调用后返回：_
 
 _`cancel` / `ok` / `know` / `change` / `ready` 为 `<Modal>` 与 `<ModalProvider>` 组件的事件（需通过组件标签监听）；使用 `useModal()` 时，请在调用参数中使用 `onOk` / `onCancel` / `onKnow` 等回调。_
 
-| 名称  | 说明                               | 类型                            |
+| 名称 | 说明 | 类型 |
 | :----- | :---------------------------------- | :------------------------------ |
-| cancel | 点击蒙层或 `Esc` 键或取消按钮的回调 | (e: Event) => void              |
-| ok    | 点击确定按钮的回调                 | (e: MouseEvent) => void         |
-| know  | 点击知道了按钮的回调               | (e: MouseEvent) => void         |
+| cancel | 点击蒙层或 `Esc` 键或取消按钮的回调 | (e: Event) => void |
+| ok | 点击确定按钮的回调 | (e: MouseEvent) => void |
+| know | 点击知道了按钮的回调 | (e: MouseEvent) => void |
 | change | 任一弹窗打开 / 关闭时触发，多实例下携带该实例 `key` | (open: boolean, key: string) => void |
 | ready | 实例挂载完成时触发，参数为该实例的 api | (api: [ModalApi](#methods)) => void |
 

@@ -8,15 +8,15 @@ _使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化的组合式函数_
 
 ```ts
 /**
- * 组合式函数
- * 使用 ResizeObserver 观察 DOM 元素尺寸变化
+ * 组合式函数：用 ResizeObserver 观察元素尺寸变化
  *
- * 该函数提供了一种方便的方式来观察一个或多个元素的尺寸变化，并在变化时执行指定的回调函数
+ * 支持 Ref / 元素 / 元素数组作为目标；目标变化时自动重建观察，组件卸载时自动断开（避免内存泄漏）。
+ * SSR（Node）下自动跳过。
  *
- * @param {Ref | Ref[] | HTMLElement | HTMLElement[]} target 要观察的目标，可以是 Ref 对象、Ref 数组、HTMLElement 或 HTMLElement 数组
- * @param {ResizeObserverCallback} callback 当元素尺寸变化时调用的回调函数
- * @param {object} [options = {}] ResizeObserver 选项，用于定制观察行为
- * @returns {{ start: () => void, stop: () => void }} 返回一个对象，包含停止和开始观察的方法，使用者可以调用 start 方法开始观察，调用 stop 方法停止观察
+ * @param target - 观察目标（单个或数组，元素可为 Ref）
+ * @param callback - 尺寸变化时的回调
+ * @param options - ResizeObserver 选项，默认 `{}`
+ * @returns `start` / `stop` 用于手动开始与停止观察
  */
 import { ref, toValue, computed, watch, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
 import type { Ref, ComputedRef } from 'vue'
@@ -25,6 +25,9 @@ import type { Ref, ComputedRef } from 'vue'
  *
  * 兼容 Ref / Ref[] / HTMLElement / HTMLElement[] 四种入参：先解包 Ref，再过滤空值，
  * 保证后续 observe 调用拿到的都是可用元素。
+ *
+ * @param target - 观察目标
+ * @returns 解包并过滤后的元素数组
  */
 function resolveTargetElements(target: Ref | Ref[] | HTMLElement | HTMLElement[]): HTMLElement[] {
   const targetValue = toValue(target) as Ref | Ref[] | HTMLElement | HTMLElement[] | null | undefined
@@ -85,6 +88,15 @@ export function useResizeObserver(
     stop
   }
 }
+/**
+ * 组合式函数：探测某项能力是否可用（挂载后才求值）
+ *
+ * 在挂载后才执行 `callback`，避免 SSR（Node）期访问浏览器 API 抛错；依赖 `useMounted` 触发重算，
+ * 故 callback 内引用浏览器对象时仍需自行判断存在性。
+ *
+ * @param callback - 探测函数，返回是否可用
+ * @returns 探测结果的计算属性
+ */
 export function useSupported(callback: () => unknown): ComputedRef<boolean> {
   const isMounted = useMounted()
   return computed(() => {
@@ -93,6 +105,13 @@ export function useSupported(callback: () => unknown): ComputedRef<boolean> {
     return Boolean(callback())
   })
 }
+/**
+ * 组合式函数：判断组件是否已挂载
+ *
+ * 用于需要区分「挂载前 / 挂载后」的场景（如依赖真实 DOM 的测量、异步分支）。
+ *
+ * @returns 挂载完成标志（初始 false，`onMounted` 后为 true）
+ */
 export function useMounted(): Ref<boolean> {
   const isMounted = ref(false)
   // 获取当前组件的实例

@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*加载进度条*
+_加载进度条_
 
 ## 何时使用
 
@@ -26,7 +26,7 @@
 
 <br/>
 
-*适用于组件内部调用：先在应用根节点放置一次 `<LoadingBarProvider>`，之后任意层级组件均可通过 `useLoadingBar()` 取得同一实例*
+_适用于组件内部调用：先在应用根节点放置一次 `<LoadingBarProvider>`，之后任意层级组件均可通过 `useLoadingBar()` 取得同一实例_
 
 ::: info 关于 `LoadingBarProvider` 与 `LoadingBar`
 
@@ -204,7 +204,7 @@ function onDiscreteError() {
 
 ## 基本使用
 
-*点击「开始」后加载条出现在页面顶部*
+_点击「开始」后加载条出现在页面顶部_
 
 <br/>
 
@@ -248,7 +248,7 @@ function onError() {
 
 ## 局部加载条
 
-*通过 `to` 指定加载条的挂载位置，配合 `container-style` 让它落在局部容器内；容器内的按钮通过 `<LoadingBarProvider>` 的 `@ready` 事件取到该作用域内的 api*
+_通过 `to` 指定加载条的挂载位置，配合 `container-style` 让它落在局部容器内；容器内的按钮通过 `<LoadingBarProvider>` 的 `@ready` 事件取到该作用域内的 api_
 
 <br/>
 
@@ -347,7 +347,7 @@ function onLocalError() {
 
 ## 自定义加载条样式
 
-*通过 `loading-bar-size` / `color-loading` / `color-finish` / `color-error` 自定义加载条的高度与各状态颜色*
+_通过 `loading-bar-size` / `color-loading` / `color-finish` / `color-error` 自定义加载条的高度与各状态颜色_
 
 <br/>
 
@@ -419,7 +419,7 @@ function onCustomError() {
 
 ## 按状态自定义样式
 
-*`loading-bar-style` 按状态（`loading` / `finish` / `error`）给进度条注入任意样式，可实现渐变、阴影等 `color-loading` / `color-finish` / `color-error` 无法表达的定制；与颜色属性设置同名样式时，以内联样式为准*
+_`loading-bar-style` 按状态（`loading` / `finish` / `error`）给进度条注入任意样式，可实现渐变、阴影等 `color-loading` / `color-finish` / `color-error` 无法表达的定制；与颜色属性设置同名样式时，以内联样式为准_
 
 <br/>
 
@@ -498,7 +498,7 @@ function onStateError() {
 
 ## 主题跟随
 
-*加载条默认取 `ConfigProvider` 中 `LoadingBar.primaryColor` 生成的调色板，改变主色即可让加载中 / 加载完成颜色同步跟随*
+_加载条默认取 `ConfigProvider` 中 `LoadingBar.primaryColor` 生成的调色板，改变主色即可让加载中 / 加载完成颜色同步跟随_
 
 <br/>
 
@@ -588,7 +588,7 @@ function onThemeError() {
 
 <br/>
 
-*组件级配置属性（`class` / `style` 亦会透传到加载条容器）：使用 `useLoadingBar()` 时设置在 `<LoadingBarProvider>` 上（会透传给内部 `LoadingBar`），直接使用 `<LoadingBar>` 组件时设置在 `<LoadingBar>` 上，两者等价*
+_组件级配置属性（`class` / `style` 亦会透传到加载条容器）：使用 `useLoadingBar()` 时设置在 `<LoadingBarProvider>` 上（会透传给内部 `LoadingBar`），直接使用 `<LoadingBar>` 组件时设置在 `<LoadingBar>` 上，两者等价_
 
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
@@ -609,7 +609,7 @@ function onThemeError() {
 
 ## Methods
 
-*`useLoadingBar()` 返回的 `LoadingBarApi`，或通过 `<LoadingBar>` / `<LoadingBarProvider>` 的 `@ready` 事件获取：*
+_`useLoadingBar()` 返回的 `LoadingBarApi`，或通过 `<LoadingBar>` / `<LoadingBarProvider>` 的 `@ready` 事件获取：_
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
@@ -629,7 +629,7 @@ function onThemeError() {
 
 <br/>
 
-*适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：内部会创建一个独立的应用实例，因此可在任意位置调用，无需外层 `LoadingBarProvider`*
+_适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：内部会创建一个独立的应用实例，因此可在任意位置调用，无需外层 `LoadingBarProvider`_
 
 ::: tip 注意
 

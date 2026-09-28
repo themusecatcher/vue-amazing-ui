@@ -97,13 +97,13 @@ const props = withDefaults(defineProps<Props>(), {
   slideDuration: 800,
   slideFunction: () => [0.65, 0, 0.35, 1] as CubicBezierPoints
 })
+defineSlots<CarouselSlots>()
 const emits = defineEmits<{
   click: [image: Image] // 点击图片时的回调
   beforeChange: [from: number, to: number] // 切换开始时触发，from 为当前页、to 为目标页，均从 1 开始
   afterChange: [current: number] // 切换结束后触发，参数为当前页，从 1 开始
   'update:currentIndex': [currentIndex: number] // 当前页变更，配合 v-model:current-index 使用，从 1 开始
 }>()
-defineSlots<CarouselSlots>()
 const prevArrowSlotExist = useSlotsExist('prevArrow') // 是否提供了自定义上一张箭头插槽
 const nextArrowSlotExist = useSlotsExist('nextArrow') // 是否提供了自定义下一张箭头插槽
 const offset = ref(0) // 滑动偏移值

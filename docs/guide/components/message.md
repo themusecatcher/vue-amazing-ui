@@ -578,7 +578,7 @@ _消息的默认层级为 `1030`：高于承载层（`Modal` 弹窗 `1010`），
 
 <Button type="primary" @click="onLayerMessage">消息内容里的浮层</Button>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -626,7 +626,7 @@ function onLayerMessage() {
 </template>
 ```
 
-::::
+:::
 
 ## 手动关闭
 

@@ -300,7 +300,6 @@ function onKeyboard(e: KeyboardEvent) {
     align-items: center;
     font-size: 14px;
     color: rgba(0, 0, 0, 0.88);
-    fill: currentColor;
     font-style: normal;
     line-height: 0;
     text-align: center;
@@ -321,7 +320,6 @@ function onKeyboard(e: KeyboardEvent) {
       display: inline-block;
       font-size: 12px;
       color: rgba(0, 0, 0, 0.45);
-      fill: currentColor;
       transition: all 0.2s;
       &:hover {
         color: rgba(0, 0, 0, 0.88);

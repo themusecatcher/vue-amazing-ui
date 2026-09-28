@@ -8,12 +8,12 @@ _实时监测浏览器刷新率 `FPS` 的组合式函数_
 
 ```ts
 /**
- * 组合式函数
- * 实时监测浏览器刷新率FPS
+ * 组合式函数：实时统计浏览器 FPS
  *
- * FPS值可以帮助开发者识别性能瓶颈，以优化应用的性能
+ * 每累计 10 帧计算一次平均帧率；帧循环在挂载后启动（SSR 无 requestAnimationFrame）、
+ * 卸载时取消，避免循环永久自我续期。
  *
- * @returns {{ fps: Ref<number> }} 返回一个包含 FPS 值的 ref 对象
+ * @returns 当前 FPS（初始 0）
  */
 import { ref, onMounted, onUnmounted } from 'vue'
 import type { Ref } from 'vue'
@@ -22,7 +22,7 @@ export function useFps(): { fps: Ref<number> } {
   const frameCount = ref<number>(0)
   let lastTime = performance.now()
   let rafId: number | null = null // 当前帧请求 ID，用于卸载时取消帧回调
-  const every = 10
+  const every = 10 // 每 10 帧统计一次，避免逐帧计算带来的抖动
   const calculateFrameRate = (currentTime: number) => {
     frameCount.value++
     if (frameCount.value >= every) {

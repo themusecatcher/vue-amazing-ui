@@ -43,7 +43,7 @@ export interface DownloadOptions {
 /**
  * 对路径段做 URL 解码
  *
- * @param rawName 从 URL 路径中切出的原始文件名段
+ * @param rawName - 从 URL 路径中切出的原始文件名段
  * @returns 解码后的文件名；含非法百分号编码导致解码失败时原样返回
  */
 function decodeFileName(rawName: string): string {
@@ -61,7 +61,7 @@ function decodeFileName(rawName: string): string {
  * 直接取 pathname 的最后一段，天然剥离查询参数（?）与哈希（#），
  * 无需手动切分。
  *
- * @param parsedUrl 已解析成功的 URL 对象
+ * @param parsedUrl - 已解析成功的 URL 对象
  * @returns 提取的文件名；无有效路径段时返回空字符串
  */
 function getFileName(parsedUrl: URL): string {
@@ -78,9 +78,9 @@ function getFileName(parsedUrl: URL): string {
  *
  * 局限：仅同源地址生效；跨域地址下浏览器会忽略 download 属性。
  *
- * @param parsedUrl 已解析的 URL 对象（用于兜底提取文件名）
- * @param target 打开方式
- * @param fileName 期望文件名，未传则从 URL 提取
+ * @param parsedUrl - 已解析的 URL 对象（用于兜底提取文件名）
+ * @param target - 打开方式
+ * @param fileName - 期望文件名，未传则从 URL 提取
  */
 function downloadViaAnchor(parsedUrl: URL, target: '_self' | '_blank', fileName?: string): void {
   const url = parsedUrl.href
@@ -120,8 +120,8 @@ function downloadViaAnchor(parsedUrl: URL, target: '_self' | '_blank', fileName?
  *    inline 类型（如未设置 Content-Disposition 的 PDF）会在 iframe 内预览而非下载
  * 2. 跨域限制导致前端无法读取 iframe 内容，下载失败只能依赖 checkIframeError 尽力检测
  *
- * @param parsedUrl 已解析的 URL 对象（用于兜底提取文件名）
- * @param fileName 期望文件名，未传则从 URL 提取
+ * @param parsedUrl - 已解析的 URL 对象（用于兜底提取文件名）
+ * @param fileName - 期望文件名，未传则从 URL 提取
  */
 function downloadViaIframe(parsedUrl: URL, fileName?: string): void {
   const url = parsedUrl.href
@@ -160,9 +160,10 @@ function downloadViaIframe(parsedUrl: URL, fileName?: string): void {
 /**
  * 尽力检测 iframe 下载是否失败
  *
- * 原理：下载失败时服务端通常返回错误页面（HTML 内容），
- * 此时 iframe 的 body 有内容；下载成功时 body 为空。
- * 局限：跨域场景下浏览器禁止读取 iframe 内容，检测会抛异常而失效。
+ * 原理：下载失败时服务端通常返回错误页面（HTML 内容），此时 iframe 的 body 有内容；成功时 body 为空。
+ * 局限：跨域下浏览器禁止读取 iframe 内容，检测会抛异常而失效。
+ *
+ * @param iframe - 触发下载的隐藏 iframe
  */
 function checkIframeError(iframe: HTMLIFrameElement): void {
   try {
@@ -192,11 +193,11 @@ function checkIframeError(iframe: HTMLIFrameElement): void {
  * 说明：仅负责「触发」下载。iframe 跨域场景下浏览器禁止读取内容，前端无法可靠
  * 判断下载成败，故返回值不携带成败信息，触发成功即 resolve。
  *
- * @param url 下载地址，支持绝对 URL 与同源相对路径
- * @param fileName 期望的下载文件名；未传时两种策略均从 URL 中提取。anchor 策略纯前端生效，
- *                 iframe 策略通过 response-content-disposition 参数传递给服务端（仅 COS/OSS 识别）
- * @param options 下载配置（打开方式、下载策略）
- * @returns Promise<void>，resolve 表示已触发下载；URL 非法时 reject
+ * @param url - 下载地址，支持绝对 URL 与同源相对路径
+ * @param fileName - 期望的下载文件名；未传时两种策略均从 URL 中提取。anchor 策略纯前端生效，
+ *                    iframe 策略通过 response-content-disposition 参数传递给服务端（仅 COS/OSS 识别）
+ * @param options - 下载配置（打开方式、下载策略）
+ * @returns resolve 表示已触发下载；URL 非法时 reject
  *
  * @example
  * // 自动分流：同源走 anchor，跨域走 iframe
@@ -238,7 +239,7 @@ export function downloadFile(url: string, fileName?: string, options: DownloadOp
  * （天然剥离查询参数 ? 与哈希 #），取末段并做 URL 解码（如 a%20b.png → a b.png）；
  * src 解析失败时降级为手工切分，解码行为保持一致
  *
- * @param image 图像对象（src 必填，name 可选），可为 undefined
+ * @param image - 图像对象（src 必填，name 可选），可为 undefined
  * @returns 图像名称；image 为空时返回空字符串
  */
 export function getImageName(image: { src: string; name?: string } | undefined): string {
@@ -256,22 +257,18 @@ export function getImageName(image: { src: string; name?: string } | undefined):
     return decodeFileName(segments[segments.length - 1] || '')
   }
 }
-/*
-  一键切换暗黑模式函数
-  在 <html> 根元素上动态切换 dark 模式，在根元素添加 dark 类值，同时样式添加 color-scheme: dark，具体样式需自行添加
-  // dark 主题样式参考如下：
-  html {
-    transition: filter .3s ease-in-out;
-  }
-  · invert(): 反转输入图像，1表示完全反转
-  · hue-rotate(): 在输入图像上应用色相旋转
-  html.dark { // 暗黑模式
-    filter: invert(1) hue-rotate(180deg);
-    img, video { // 将图片和视频再次反转以恢复原本的颜色
-      filter: invert(1) hue-rotate(180deg);
-    }
-  }
-*/
+/**
+ * 一键切换暗黑模式
+ *
+ * 在 `<html>` 根元素上切换 `dark` 类并同步 `color-scheme`；具体暗色样式需使用方自行编写。
+ *
+ * @example
+ * // 需自行补充的样式（以 filter 反色方案为例）：
+ * // html { transition: filter .3s ease-in-out; }
+ * // html.dark { filter: invert(1) hue-rotate(180deg); }
+ * // html.dark img, html.dark video { filter: invert(1) hue-rotate(180deg); } // 二次反色还原本色
+ * toggleDark()
+ */
 export function toggleDark(): void {
   const html = document.documentElement
   // 如果 <html> 上 dark 类值已存在，则移除它，否则添加它
@@ -287,11 +284,10 @@ export function toggleDark(): void {
  *
  * 向上查找元素的直接父元素，若元素已是 documentElement 则返回 null
  *
- * @param {HTMLElement} el 待查询的 DOM 元素
- * @returns {HTMLElement | null} 返回父元素，若传入的是 documentElement 或无父元素则返回 null
+ * @param el - 待查询的 DOM 元素
+ * @returns 返回父元素，若传入的是 documentElement 或无父元素则返回 null
  */
 export function getParentElement(el: HTMLElement): HTMLElement | null {
-  // Document
   if (el === document.documentElement) return null
   return el.parentElement
 }
@@ -301,20 +297,18 @@ export function getParentElement(el: HTMLElement): HTMLElement | null {
  * 从给定元素出发，沿父链向上递归查找第一个 overflow 为 auto/scroll/overlay 的可滚动元素，
  * 若一路查到 documentElement 则返回 documentElement（视口滚动），找不到返回 null
  *
- * @param {HTMLElement | null} el 起始元素，可为 null
- * @returns {HTMLElement | null} 返回最近的可滚动父元素或 documentElement，无则返回 null
+ * @param el - 起始元素，可为 null
+ * @returns 返回最近的可滚动父元素或 documentElement，无则返回 null
  */
 export function getScrollParent(el: HTMLElement | null): HTMLElement | null {
   if (el === null) return null
   const parentElement = getParentElement(el)
   if (parentElement === null) return null
-  // Document
   if (parentElement === document.documentElement) return document.documentElement
   const isScrollable = (el: HTMLElement): boolean => {
     const { overflow, overflowX, overflowY } = getComputedStyle(el)
     return /(auto|scroll|overlay)/.test(overflow + overflowY + overflowX)
   }
-  // Element
   if (isScrollable(parentElement)) return parentElement
   return getScrollParent(parentElement)
 }
@@ -338,7 +332,7 @@ let prevBodyPaddingRight = ''
  * 每个调用需与返回的释放函数严格配对；仅当所有来源均已释放时才会真正还原页面滚动，
  * 可安全用于多弹窗 / 多抽屉并存场景。
  *
- * @returns {() => void} 本次锁定的释放函数（幂等）：从全局计数中移除本次锁定，重复调用无副作用
+ * @returns 本次锁定的释放函数（幂等）：从全局计数中移除本次锁定，重复调用无副作用
  */
 export function lockScroll(): () => void {
   // SSR / Node 环境无 DOM 可锁：返回空释放函数，保证调用方「加锁即拿到释放句柄」的配对语义不变
@@ -394,7 +388,7 @@ const FOCUSABLE_SELECTOR = [
  *
  * 隐藏元素（如未展开的面板）不参与循环，避免 Tab 落到不可见元素上
  *
- * @param container 查询范围容器
+ * @param container - 查询范围容器
  * @returns 可见的可聚焦元素数组（按文档顺序）
  */
 function getFocusableEls(container: HTMLElement): HTMLElement[] {
@@ -408,9 +402,9 @@ function getFocusableEls(container: HTMLElement): HTMLElement[] {
  *
  * 让 Tab / Shift + Tab 在给定容器内循环，避免键盘焦点跑到背景页面，供焦点锁定类弹窗（Modal / Dialog）复用
  *
- * @param e 触发锁定的 keydown 事件
- * @param container 焦点锁定范围的容器；不存在时直接返回（不阻止默认行为）
- * @param fallbackEl 容器内无可聚焦元素时的焦点兜底元素（通常为弹窗外层容器）
+ * @param e - 触发锁定的 keydown 事件
+ * @param container - 焦点锁定范围的容器；不存在时直接返回（不阻止默认行为）
+ * @param fallbackEl - 容器内无可聚焦元素时的焦点兜底元素（通常为弹窗外层容器）
  */
 export function trapTabFocus(e: KeyboardEvent, container?: HTMLElement, fallbackEl?: HTMLElement | null): void {
   if (!container) {

@@ -8,11 +8,12 @@ _根据主色生成颜色调色板的工具函数_
 
 ```ts
 import { generate } from '@ant-design/colors'
+
 /**
- * 获取颜色调色板
+ * 获取主色对应的调色板
  *
- * @param {string} primaryColor 主色
- * @returns {string[]} 返回颜色调色板
+ * @param primaryColor - 主色（如 `#1677ff`）
+ * @returns 由浅到深共 10 个色值的数组（@ant-design/colors 生成）
  */
 export function getColorPalettes(primaryColor: string): string[] {
   return generate(primaryColor)

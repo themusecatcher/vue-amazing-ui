@@ -891,7 +891,7 @@ _通知的默认层级为 `1040`：高于承载层（`Modal` 弹窗 `1010`），
 
 <Button type="primary" @click="onLayerNotification">通知内容里的浮层</Button>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -930,7 +930,7 @@ function onLayerNotification() {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义操作按钮
 

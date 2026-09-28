@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, h } from 'vue'
-import { QRCode, type QRCodeProps } from 'vue-amazing-ui'
+import type { QRCode, QRCodeProps } from 'vue-amazing-ui'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 const qrcodeRef = ref<InstanceType<typeof QRCode> | null>(null)
 const size = ref(160)

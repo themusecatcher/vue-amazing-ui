@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { TextScroll, type TextScrollItem } from 'vue-amazing-ui'
+import type { TextScroll, TextScrollItem } from 'vue-amazing-ui'
 const scrollItems = ref<TextScrollItem[]>([
   {
     title: '美国作家杰罗姆·大卫·塞林格创作的唯一一部长篇小说',

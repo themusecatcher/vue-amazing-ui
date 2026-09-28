@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*显示当前页面在系统层级结构中的位置，并能向上返回*
+_显示当前页面在系统层级结构中的位置，并能向上返回_
 
 ## 何时使用
 
@@ -377,6 +377,6 @@ query? | 路由查询参数 | [BreadcrumbRouteQuery](#query-type) | undefined
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 separator | 自定义分隔符 | v-slot:separator="{ route, index }"

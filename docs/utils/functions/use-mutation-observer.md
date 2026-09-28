@@ -8,20 +8,15 @@ _使用 `MutationObserver` 观察 `DOM` 元素的变化的组合式函数_
 
 ```ts
 /**
- * 组合式函数
- * 使用 MutationObserver 观察 DOM 元素的变化
+ * 组合式函数：用 MutationObserver 观察 DOM 变化
  *
- * 该函数提供了一个便捷的方式来订阅 DOM 元素的变动，当元素发生指定的变化时，调用提供的回调函数
- * 使用者可以指定要观察的一个或多个 DOM 元素，以及观察的选项和回调函数
+ * 支持 Ref / 元素 / 元素数组作为目标；目标变化时自动重建观察，组件卸载时自动断开（避免内存泄漏）。
+ * SSR（Node）下自动跳过。
  *
- * @param {Ref | Ref[] | HTMLElement | HTMLElement[]} target 要观察的目标，可以是 Ref 对象、Ref 数组、HTMLElement 或 HTMLElement 数组
- * @param {MutationCallback} callback 当观察到变化时调用的回调函数
- * @param {object} [options = {}] MutationObserver 的观察选项，默认为空对象；例如:
- *          subtree: 是否监听以 target 为根节点的整个子树，包括子树中所有节点的属性
- *          childList: 是否监听 target 节点中发生的节点的新增与删除
- *          attributes: 是否观察所有监听的节点属性值的变化
- *          attributeFilter: 声明哪些属性名会被监听的数组；如果不声明该属性，所有属性的变化都将触发通知
- * @returns {start: () => void, stop: () => void} 返回一个对象，包含停止和开始观察的方法，使用者可以调用 start 方法开始观察，调用 stop 方法停止观察
+ * @param target - 观察目标（单个或数组，元素可为 Ref）
+ * @param callback - 观察到变化时的回调
+ * @param options - MutationObserver 观察选项，如 `{ subtree, childList, attributes, attributeFilter }`，默认 `{}`
+ * @returns `start` / `stop` 用于手动开始与停止观察
  */
 import { ref, toValue, computed, watch, onBeforeUnmount, onMounted, getCurrentInstance } from 'vue'
 import type { Ref, ComputedRef } from 'vue'
@@ -30,6 +25,9 @@ import type { Ref, ComputedRef } from 'vue'
  *
  * 兼容 Ref / Ref[] / HTMLElement / HTMLElement[] 四种入参：先解包 Ref，再过滤空值，
  * 保证后续 observe 调用拿到的都是可用元素。
+ *
+ * @param target - 观察目标
+ * @returns 解包并过滤后的元素数组
  */
 function resolveTargetElements(target: Ref | Ref[] | HTMLElement | HTMLElement[]): HTMLElement[] {
   const targetValue = toValue(target) as Ref | Ref[] | HTMLElement | HTMLElement[] | null | undefined
@@ -90,6 +88,15 @@ export function useMutationObserver(
     stop
   }
 }
+/**
+ * 组合式函数：探测某项能力是否可用（挂载后才求值）
+ *
+ * 在挂载后才执行 `callback`，避免 SSR（Node）期访问浏览器 API 抛错；依赖 `useMounted` 触发重算，
+ * 故 callback 内引用浏览器对象时仍需自行判断存在性。
+ *
+ * @param callback - 探测函数，返回是否可用
+ * @returns 探测结果的计算属性
+ */
 export function useSupported(callback: () => unknown): ComputedRef<boolean> {
   const isMounted = useMounted()
   return computed(() => {
@@ -98,6 +105,13 @@ export function useSupported(callback: () => unknown): ComputedRef<boolean> {
     return Boolean(callback())
   })
 }
+/**
+ * 组合式函数：判断组件是否已挂载
+ *
+ * 用于需要区分「挂载前 / 挂载后」的场景（如依赖真实 DOM 的测量、异步分支）。
+ *
+ * @returns 挂载完成标志（初始 false，`onMounted` 后为 true）
+ */
 export function useMounted(): Ref<boolean> {
   const isMounted = ref(false)
   // 获取当前组件的实例

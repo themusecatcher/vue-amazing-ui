@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*级联选择框*
+_级联选择框_
 
 ## 何时使用
 
@@ -375,9 +375,9 @@ const selectedValue = ref(['2', '21', '212'])
 
 ## 禁用某一级
 
-*只禁用第一级：`disabled: [true]`*
+_只禁用第一级：`disabled: [true]`_
 
-*禁用前两级：`disabled: [true, true]`*
+_禁用前两级：`disabled: [true, true]`_
 
 <br/>
 
@@ -462,7 +462,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 
 ## 禁用选项
 
-*只需指定 `options` 里的 `disabled` 字段*
+_只需指定 `options` 里的 `disabled` 字段_
 
 <br/>
 
@@ -1161,7 +1161,7 @@ _不传 `to` 时面板优先挂到最近的承载层内容容器（`Modal` / `Dr
   <Cascader :options="options" v-model:value="toValue" :width="100" :to="false" @change="onChange" />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1236,7 +1236,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 </template>
 ```
 
-::::
+:::
 
 ## APIs
 
@@ -1275,6 +1275,6 @@ function onChange(values: (number | string)[], labels: string[]) {
 
 ## Events
 
-| 名称  | 说明            | 类型                                                       |
+| 名称 | 说明 | 类型 |
 | :----- | :--------------- | :--------------------------------------------------------- |
 | change | 选择完成后的回调 | (values: (number&#124;string)[], labels: string[]) => void |

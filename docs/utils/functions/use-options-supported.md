@@ -8,20 +8,22 @@ _检查浏览器是否支持给定的事件监听器选项_
 
 ```ts
 /**
- * 检查浏览器是否支持给定的事件监听器选项
+ * 组合式函数：探测浏览器是否支持指定的 addEventListener 选项
  *
- * @param {'capture' | 'once' | 'passive' | 'signal'} option 一个表示要检查的事件监听器选项的字符串，可选 'capture'、'once'、'passive' 或 'signal'
- * @returns {{ isSupported: Ref<boolean> }} 返回一个对象，包含一个 Ref 对象，其值指示浏览器是否支持给定的选项
+ * 原理：在 options 上以 getter 定义目标选项，浏览器读取该项时即置为「支持」
+ * （老浏览器把第三个参数当作布尔值，不会读取选项，故保持 false）。
+ *
+ * @param option - 待探测的选项名：`'capture'` / `'once'` / `'passive'` / `'signal'`
+ * @returns `isSupported` 表示是否支持该选项
  */
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 export function useOptionsSupported(option: 'capture' | 'once' | 'passive' | 'signal'): { isSupported: Ref<boolean> } {
-  // 兼容旧版本的浏览器（以及一些相对不算古老的）仍然假定 addEventListener 第三个参数是布尔值的情况
   const isSupported = ref<boolean>(false) // 浏览器是否支持 options 参数
   try {
     const options = {
       get [option]() {
-        // 该函数会在浏览器尝试访问 [option] 值时被调用
+        // 浏览器仅在真正读取该选项时才触发 getter（老浏览器只把它当布尔值），故此处置为支持
         isSupported.value = true
         return false
       }

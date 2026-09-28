@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*成组展示多个只读字段*
+_成组展示多个只读字段_
 
 ## 何时使用
 
@@ -493,7 +493,7 @@ const options = [
 
 ## 无冒号
 
-*使用 `colon` 属性关闭标签后的冒号*
+_使用 `colon` 属性关闭标签后的冒号_
 
 <br/>
 
@@ -505,7 +505,7 @@ const options = [
   </Descriptions>
 </ClientOnly>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <template>
@@ -517,7 +517,7 @@ const options = [
 </template>
 ```
 
-::::
+:::
 
 ## 标签对齐
 
@@ -532,7 +532,7 @@ const options = [
   </Flex>
 </ClientOnly>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -565,7 +565,7 @@ const labelAlignOptions = [
 </template>
 ```
 
-::::
+:::
 
 ## 自定义类名
 
@@ -582,7 +582,7 @@ const labelAlignOptions = [
   </Descriptions>
 </ClientOnly>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <template>
@@ -616,11 +616,11 @@ const labelAlignOptions = [
 </style>
 ```
 
-::::
+:::
 
 ## 自定义头部
 
-*使用 `header` 插槽自定义整个头部区域，替代 `title` 与 `extra`*
+_使用 `header` 插槽自定义整个头部区域，替代 `title` 与 `extra`_
 
 <br/>
 
@@ -638,7 +638,7 @@ const labelAlignOptions = [
   </Descriptions>
 </ClientOnly>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <template>
@@ -656,7 +656,7 @@ const labelAlignOptions = [
 </template>
 ```
 
-::::
+:::
 
 ## 自定义内容 & 标签样式
 
@@ -1275,7 +1275,7 @@ contentClass | 内容自定义类名，与 `Descriptions` 的 `contentClass` 叠
 
 ### Descriptions Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 default | 自定义描述列表内容 | v-slot:default
 header | 自定义整个头部区域，存在时替代 `title` 与 `extra` | v-slot:header
@@ -1284,7 +1284,7 @@ extra | 自定义描述列表的操作区域 | v-slot:extra
 
 ### DescriptionsItem Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 label | 自定义描述标签 | v-slot:label
 default | 自定义内容 | v-slot:default

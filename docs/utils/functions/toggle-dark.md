@@ -7,22 +7,18 @@ _在 `<html>` 根元素上切换 `dark` 类值并同步 `color-scheme` 的工具
 ::: details Show Source Code
 
 ```ts
-/*
-  一键切换暗黑模式函数
-  在 <html> 根元素上动态切换 dark 模式，在根元素添加 dark 类值，同时样式添加 color-scheme: dark，具体样式需自行添加
-  // dark 主题样式参考如下：
-  html {
-    transition: filter .3s ease-in-out;
-  }
-  · invert(): 反转输入图像，1表示完全反转
-  · hue-rotate(): 在输入图像上应用色相旋转
-  html.dark { // 暗黑模式
-    filter: invert(1) hue-rotate(180deg);
-    img, video { // 将图片和视频再次反转以恢复原本的颜色
-      filter: invert(1) hue-rotate(180deg);
-    }
-  }
-*/
+/**
+ * 一键切换暗黑模式
+ *
+ * 在 `<html>` 根元素上切换 `dark` 类并同步 `color-scheme`；具体暗色样式需使用方自行编写。
+ *
+ * @example
+ * // 需自行补充的样式（以 filter 反色方案为例）：
+ * // html { transition: filter .3s ease-in-out; }
+ * // html.dark { filter: invert(1) hue-rotate(180deg); }
+ * // html.dark img, html.dark video { filter: invert(1) hue-rotate(180deg); } // 二次反色还原本色
+ * toggleDark()
+ */
 export function toggleDark(): void {
   const html = document.documentElement
   // 如果 <html> 上 dark 类值已存在，则移除它，否则添加它

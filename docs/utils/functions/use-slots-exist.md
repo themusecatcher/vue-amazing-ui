@@ -8,15 +8,13 @@ _监听给定名称或名称数组的插槽是否存在，支持监听单个插�
 
 ```ts
 /**
- * 组合式函数
- * 监听给定名称或名称数组的插槽是否存在，支持监听单个插槽或一组插槽的存在
+ * 组合式函数：判断插槽是否「真的渲染了内容」
  *
  * 判定以「实际调用插槽并检查返回的 vnode」为准，可识别「已提供但渲染为空」的插槽；
- * 探测时以空对象作为作用域参数，插槽内抛错按「已提供」处理
+ * 探测时以空对象作为作用域参数，插槽内抛错按「已提供」处理。
  *
- * @param slotsName - 插槽的名称或名称数组，默认为 'default'
- * @returns 如果是单个插槽名称，则返回一个计算属性，表示该插槽是否存在
- *          如果是插槽名称数组，则返回一个 reactive 对象，其中的每个属性对应该插槽是否存在
+ * @param slotsName - 插槽名或插槽名数组，默认 `'default'`
+ * @returns 单个名称 → 该插槽是否存在的计算属性；名称数组 → 以插槽名为键的 reactive 映射
  */
 import { useSlots, reactive, computed, Comment, Text } from 'vue'
 import type { ComputedRef, Reactive, VNode } from 'vue'

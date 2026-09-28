@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*点击元素，弹出气泡式的确认框*
+_点击元素，弹出气泡式的确认框_
 
 ## 何时使用
 
@@ -571,7 +571,7 @@ _设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再�
   </Popconfirm>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -598,7 +598,7 @@ const cancel = (e: MouseEvent) => {
 </template>
 ```
 
-::::
+:::
 
 ## 隐藏箭头
 
@@ -670,7 +670,7 @@ showCancel | 是否显示取消按钮 | boolean | true
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 icon | 自定义图标 | v-slot:icon
 title | 自定义弹出确认框的标题 | v-slot:title

@@ -1,24 +1,23 @@
-/**
- * 基于 requestAnimationFrame 实现的延时 / 间歇调用函数
- *
- * 注意：回调与渲染帧绑定 —— 页面不可见时会暂停、实际延迟比 delay 多出至多一帧，
- * 与 setTimeout / setInterval 不等价，仅适用于需要与动画帧同步的场景
- *
- * @param {Function} fn 要执行的函数
- * @param {number} [delay = 0] 延迟的时间，单位为 ms，默认为 0，表示不延迟立即执行
- * @param {boolean} [interval = false] 是否间隔执行，如果为 true，则在首次执行后，以 delay 为间隔持续执行
- * @returns {{ id: number }} 返回一个对象，包含一个 id 属性，该 id 为 requestAnimationFrame 的调用 ID，可用于取消动画帧
- */
+/** `rafTimeout` 返回的句柄：`id` 为当前挂起帧的 requestAnimationFrame ID，供 `cancelRaf` 取消 */
 export type AnimationFrameID = { id: number }
+
+/**
+ * 基于 requestAnimationFrame 的延时 / 间歇调用
+ *
+ * ⚠️ 与 setTimeout / setInterval 不等价：回调与渲染帧绑定，页面不可见时会暂停，
+ * 实际延迟比 `delay` 多出至多一帧；仅适用于需与动画帧同步的场景。
+ *
+ * @param fn - 到点后执行的函数
+ * @param delay - 延时时长（ms），默认 0（下一帧立即执行）
+ * @param interval - 是否持续执行；为 true 时在首次执行后以 `delay` 为间隔重复触发，默认 false
+ * @returns 可用 `cancelRaf` 取消的句柄
+ */
 export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = false): AnimationFrameID {
-  let start: number | null = null // 记录动画开始的时间戳
+  let start: number | null = null // 本轮计时的起点时间戳
+  // 帧回调：timestamp 与 performance.now() 同源，即本帧开始执行的时刻
   function timeElapse(timestamp: number) {
-    // 定义动画帧回调函数
-    /*
-      timestamp参数：与 performance.now() 的返回值相同，它表示 requestAnimationFrame() 开始去执行回调函数的时刻
-    */
     if (!start) {
-      // 如果还没有开始时间，则以当前时间为开始时间
+      // 首帧尚未记录起点，以本帧时间为起点
       start = timestamp
     }
     const elapsed = timestamp - start
@@ -29,7 +28,7 @@ export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = 
         console.error('Error executing rafTimeout function:', error)
       }
       if (interval) {
-        // 如果需要间隔执行，则重置开始时间并继续安排下一次动画帧
+        // 间隔模式：以本帧为下一轮起点，继续排帧
         start = timestamp
         raf.id = requestAnimationFrame(timeElapse)
       }
@@ -37,18 +36,16 @@ export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = 
       raf.id = requestAnimationFrame(timeElapse)
     }
   }
-  // 创建一个对象用于存储动画帧的 ID，并初始化动画帧
+  // 句柄需在回调前建立，便于回调内更新同一对象的 id
   const raf: AnimationFrameID = {
     id: requestAnimationFrame(timeElapse)
   }
   return raf
 }
 /**
- * 用于取消 rafTimeout 函数
+ * 取消 `rafTimeout` 排下的帧回调
  *
- * @param {{ id: number }} raf - 包含请求动画帧 ID 的对象；该 ID 是由 requestAnimationFrame 返回的
- *              该函数旨在取消之前通过 requestAnimationFrame 请求的动画帧
- *              如果传入的 raf 对象或其 id 无效，则会打印警告
+ * @param raf - `rafTimeout` 返回的句柄；句柄或其 id 无效时仅打印警告，不抛错
  */
 export function cancelRaf(raf: AnimationFrameID): void {
   if (raf && typeof raf?.id === 'number') {
@@ -58,48 +55,42 @@ export function cancelRaf(raf: AnimationFrameID): void {
   }
 }
 /**
- * 节流函数 throttle
+ * 节流：限制函数在 `delay` 内最多执行一次
  *
- * 该函数用于生成一个节流函数，用于控制某个函数在给定时间间隔内只能被执行一次
- * 主要用于性能优化，例如限制事件处理函数的触发频率
+ * 首次调用立即执行，`delay` 内的后续调用被忽略（非「拖尾执行」）；常用于滚动 / 拖拽等高频事件。
  *
- * @param {Function} fn 要被节流的函数
- * @param {number} [delay = 300] 节流的时间间隔，单位 ms，默认为 300ms
- * @returns {Function} 返回一个新的节流的函数
+ * @param fn - 需要节流的函数
+ * @param delay - 节流间隔（ms），默认 300
+ * @returns 节流后的包装函数；处于节流窗口内被忽略的调用直接返回 false
  */
 export function throttle(fn: Function, delay: number = 300): Function {
-  let valid = true // 用于标记函数是否可以执行
+  let valid = true // 当前是否处于可执行窗口
   return function (...args: any[]) {
-    if (!valid) return false // 返回 false，表示当前不执行函数
-    // 返回一个新的函数，该函数负责执行节流逻辑
-    if (valid) {
-      fn(...args) // 执行原函数
-      valid = false // 将函数置为无效
-      setTimeout(() => {
-        valid = true
-      }, delay)
-    }
+    if (!valid) return false // 处于节流窗口内，直接忽略本次调用
+    fn(...args) // 执行原函数
+    valid = false // 关闭窗口，delay 后重新开启
+    setTimeout(() => {
+      valid = true
+    }, delay)
   }
 }
 /**
- * 防抖函数 debounce
+ * 防抖：在最后一次触发后延迟 `delay` 再执行一次
  *
- * 主要用于限制函数调用的频率，当频繁触发某个函数时，实际上只需要在最后一次触发后的一段时间内执行一次即可
- * 这对于诸如输入事件处理函数、窗口大小调整事件处理函数等可能会频繁触发的函数非常有用
+ * 触发期间不断重置计时器，故连续高频触发只会执行最后一次；常用于输入、窗口 resize 等场景。
  *
- * @param {Function} fn 要执行的函数
- * @param {number} [delay = 300] 防抖的时间期限，单位 ms，默认为 300ms
- * @returns {Function} 返回一个新的防抖的函数
+ * @param fn - 需要防抖的函数
+ * @param delay - 防抖等待时长（ms），默认 300
+ * @returns 防抖后的包装函数
  */
 export function debounce(fn: Function, delay: number = 300): Function {
-  let timer: any = null // 使用闭包保存定时器的引用
+  let timer: any = null // 闭包持有定时器引用，便于重置
   return function (...args: any[]) {
-    // 返回一个包装函数
     if (timer) {
-      // 如果定时器存在，则清除之前的定时器
+      // 已有待执行任务则重置计时
       clearTimeout(timer)
     }
-    // 设置新的定时器，延迟执行原函数
+    // 重新计时，只有最后一次触发会真正执行
     timer = setTimeout(() => {
       fn(...args)
     }, delay)
@@ -108,11 +99,11 @@ export function debounce(fn: Function, delay: number = 300): Function {
 /**
  * 唯一标识生成器工厂
  *
- * 生成 `${prefix}_${时间戳}_${自增序号}` 形式的唯一 key，供以 key 标识实例的组件（Message / Notification /
- * Modal / Dialog 等）复用；自增序号由各自闭包独立维护，故同一毫秒内连续生成也不会重复
+ * 生成 `${prefix}_${时间戳}_${自增序号}` 形式的 key，供以 key 标识实例的组件（Message / Notification /
+ * Modal / Dialog 等）复用；自增序号由各自闭包独立维护，故同一毫秒内连续生成也不会重复。
  *
- * @param {string} prefix 前缀，用于区分来源组件，如 'message'、'dialog'；不含分隔符，下划线由本函数补齐
- * @returns {() => string} 返回一个每次调用都产出新 key 的函数
+ * @param prefix - 前缀，用于区分来源组件（如 `'message'`、`'dialog'`），不含分隔符
+ * @returns 每次调用都产出新 key 的函数
  */
 export function createKeyGenerator(prefix: string): () => string {
   let seed = 0

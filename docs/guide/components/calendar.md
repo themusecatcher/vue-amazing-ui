@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*按照日历形式展示数据的容器*
+_按照日历形式展示数据的容器_
 
 ## 何时使用
 
@@ -364,7 +364,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ## 自定义展示格式
 
-*使用 `weekFormat` / `dateFormat` / `monthFormat` 自定义日期/星期/月的展示格式*
+_使用 `weekFormat` / `dateFormat` / `monthFormat` 自定义日期/星期/月的展示格式_
 
 <br/>
 
@@ -785,7 +785,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ## Slots
 
-| 名称 | 说明 | 类型 |
+| 名称 | 说明 | 用法 |
 | :-- | :-- | :-- |
 | header | 自定义日历头部内容 | v-slot:header |
 | week | 自定义周展示 | v-slot:week="{ defaultWeek, week, timestamp }" |

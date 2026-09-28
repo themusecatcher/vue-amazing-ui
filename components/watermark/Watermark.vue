@@ -75,7 +75,7 @@ const fullscreenFixed = computed(() => {
 })
 const markStyle = computed(() => {
   const markStyle: CSSProperties = {
-    zIndex: props.zIndex ?? 9,
+    zIndex: props.zIndex,
     position: fullscreenFixed.value ? 'fixed' : 'absolute',
     left: 0,
     top: 0,

@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*垂直展示的时间流信息*
+_垂直展示的时间流信息_
 
 ## 何时使用
 
@@ -240,7 +240,7 @@ const timelineItems = ref<TimelineItem[]>([
 
 ## 中间时间轴点
 
-*内容从左边开始交替展现*
+_内容从左边开始交替展现_
 
 <br/>
 
@@ -289,7 +289,7 @@ const timelineItems = ref<TimelineItem[]>([
 
 :::
 
-*内容从右边开始交替展现*
+_内容从右边开始交替展现_
 
 <br/>
 
@@ -359,7 +359,7 @@ color? | 圆圈颜色 | 'blue' &#124; 'green' &#124; 'red' &#124; 'gray' &#124; 
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 dot | 自定义时间轴点 | v-slot:dot="{ item, index }"
 desc | 自定义文字描述 | v-slot:desc="{ item, index }"

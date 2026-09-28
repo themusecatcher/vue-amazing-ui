@@ -12,27 +12,26 @@ _基于 `requestAnimationFrame` 实现的延时/间歇调用，配套提供取�
 ::: details Show Source Code
 
 ```ts
-/**
- * 基于 requestAnimationFrame 实现的延时 / 间歇调用函数
- *
- * 注意：回调与渲染帧绑定 —— 页面不可见时会暂停、实际延迟比 delay 多出至多一帧，
- * 与 setTimeout / setInterval 不等价，仅适用于需要与动画帧同步的场景
- *
- * @param {Function} fn 要执行的函数
- * @param {number} [delay = 0] 延迟的时间，单位为 ms，默认为 0，表示不延迟立即执行
- * @param {boolean} [interval = false] 是否间隔执行，如果为 true，则在首次执行后，以 delay 为间隔持续执行
- * @returns {{ id: number }} 返回一个对象，包含一个 id 属性，该 id 为 requestAnimationFrame 的调用 ID，可用于取消动画帧
- */
+/** `rafTimeout` 返回的句柄：`id` 为当前挂起帧的 requestAnimationFrame ID，供 `cancelRaf` 取消 */
 export type AnimationFrameID = { id: number }
+
+/**
+ * 基于 requestAnimationFrame 的延时 / 间歇调用
+ *
+ * ⚠️ 与 setTimeout / setInterval 不等价：回调与渲染帧绑定，页面不可见时会暂停，
+ * 实际延迟比 `delay` 多出至多一帧；仅适用于需与动画帧同步的场景。
+ *
+ * @param fn - 到点后执行的函数
+ * @param delay - 延时时长（ms），默认 0（下一帧立即执行）
+ * @param interval - 是否持续执行；为 true 时在首次执行后以 `delay` 为间隔重复触发，默认 false
+ * @returns 可用 `cancelRaf` 取消的句柄
+ */
 export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = false): AnimationFrameID {
-  let start: number | null = null // 记录动画开始的时间戳
+  let start: number | null = null // 本轮计时的起点时间戳
+  // 帧回调：timestamp 与 performance.now() 同源，即本帧开始执行的时刻
   function timeElapse(timestamp: number) {
-    // 定义动画帧回调函数
-    /*
-      timestamp参数：与 performance.now() 的返回值相同，它表示 requestAnimationFrame() 开始去执行回调函数的时刻
-    */
     if (!start) {
-      // 如果还没有开始时间，则以当前时间为开始时间
+      // 首帧尚未记录起点，以本帧时间为起点
       start = timestamp
     }
     const elapsed = timestamp - start
@@ -43,7 +42,7 @@ export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = 
         console.error('Error executing rafTimeout function:', error)
       }
       if (interval) {
-        // 如果需要间隔执行，则重置开始时间并继续安排下一次动画帧
+        // 间隔模式：以本帧为下一轮起点，继续排帧
         start = timestamp
         raf.id = requestAnimationFrame(timeElapse)
       }
@@ -51,18 +50,16 @@ export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = 
       raf.id = requestAnimationFrame(timeElapse)
     }
   }
-  // 创建一个对象用于存储动画帧的 ID，并初始化动画帧
+  // 句柄需在回调前建立，便于回调内更新同一对象的 id
   const raf: AnimationFrameID = {
     id: requestAnimationFrame(timeElapse)
   }
   return raf
 }
 /**
- * 用于取消 rafTimeout 函数
+ * 取消 `rafTimeout` 排下的帧回调
  *
- * @param {{ id: number }} raf - 包含请求动画帧 ID 的对象；该 ID 是由 requestAnimationFrame 返回的
- *              该函数旨在取消之前通过 requestAnimationFrame 请求的动画帧
- *              如果传入的 raf 对象或其 id 无效，则会打印警告
+ * @param raf - `rafTimeout` 返回的句柄；句柄或其 id 无效时仅打印警告，不抛错
  */
 export function cancelRaf(raf: AnimationFrameID): void {
   if (raf && typeof raf?.id === 'number') {

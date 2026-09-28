@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*进行标记和分类的小标签*
+_进行标记和分类的小标签_
 
 ## 何时使用
 
@@ -329,7 +329,7 @@ import { AppleOutlined, TwitterOutlined, YoutubeOutlined, InstagramOutlined } fr
 
 ## 动态添加和删除
 
-*使用字符串格式数组*
+_使用字符串格式数组_
 
 <br/>
 
@@ -361,7 +361,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
 
 :::
 
-*使用对象格式数组*
+_使用对象格式数组_
 
 <br/>
 
@@ -597,7 +597,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
 
 ## Slots
 
-| 名称   | 说明          | 类型                                  |
+| 名称   | 说明          | 用法                                  |
 | :------ | :------------- | :------------------------------------ |
 | icon   | 自定义图标    | v-slot:icon="{ item, icon, index }"   |
 | label  | 自定义标签文本 | v-slot:label="{ item, label, index }" |

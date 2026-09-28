@@ -17,7 +17,7 @@
 ## Features
 
 - The component library is implemented with `Vue@3.5.42`+ `TypeScript@5.9.3` + `Vite@7.3.1` + `Less@4.5.1`.
-- Currently, it includes `71` basic UI components and `22` utility functions, with continuous exploration and updates ongoing...
+- Currently, it includes `72` basic UI components and `22` utility functions, with continuous exploration and updates ongoing...
 - Theme Customizable, all you need is to provide a theme color, then all the stuffs will be done by me.
 - By the way, they are all treeshakable.
 - All the stuff in Vue Amazing UI is written in TypeScript. It can work with your typescript project seamlessly.
@@ -247,31 +247,31 @@ All sponsors will be listed here, thank you very much for your support and spons
 | Countdown       | 倒计时      | DatePicker     | 日期选择器  |
 | Descriptions    | 描述列表    | Dialog         | 对话框      |
 | Divider         | 分割线      | Drawer         | 抽屉        |
-| Ellipsis        | 文本省略    | Empty          | 空状态      |
-| Flex            | 弹性布局    | FloatButton    | 浮动按钮    |
-| GradientText    | 渐变文字    | Grid           | 栅格        |
-| Highlight       | 高亮文本    | Image          | 图片        |
-| Input           | 输入框      | InputNumber    | 数字输入框  |
-| InputSearch     | 搜索框      | Layout          | 布局        |
-| List            | 列表        | LoadingBar      | 加载条      |
-| Menu            | 导航菜单    | Message         | 全局提示    |
-| Modal           | 模态框      | Notification    | 通知提醒    |
-| NumberAnimation | 数值动画    | Pagination      | 分页        |
-| Popconfirm      | 弹出确认    | Popover         | 气泡卡片    |
-| Progress        | 进度条      | QRCode          | 二维码      |
-| Radio           | 单选框      | Rate            | 评分        |
-| Result          | 结果        | Scrollbar       | 滚动条      |
-| Segmented       | 分段控制器  | Select          | 选择器      |
-| Skeleton        | 骨架屏      | Slider          | 滑动输入条  |
-| Space           | 间距        | Spin            | 加载中      |
-| Statistic       | 统计数值    | Steps           | 步骤条      |
-| Swiper          | 触摸滑动    | Switch          | 开关        |
-| Table           | 表格        | Tabs            | 标签页      |
-| Tag             | 标签        | Textarea        | 文本域      |
-| TextScroll      | 文字滚动    | Timeline        | 时间轴      |
-| Tooltip         | 文字提示    | Upload          | 上传        |
-| Video           | 播放器      | Waterfall       | 瀑布流      |
-| Watermark       | 水印        |                 |             |
+| Dropdown        | 下拉菜单    | Ellipsis       | 文本省略    |
+| Empty           | 空状态      | Flex           | 弹性布局    |
+| FloatButton     | 浮动按钮    | GradientText   | 渐变文字    |
+| Grid            | 栅格        | Highlight      | 高亮文本    |
+| Image           | 图片        | Input          | 输入框      |
+| InputNumber     | 数字输入框  | InputSearch    | 搜索框      |
+| Layout          | 布局        | List           | 列表        |
+| LoadingBar      | 加载条      | Menu           | 导航菜单    |
+| Message         | 全局提示    | Modal          | 模态框      |
+| Notification    | 通知提醒    | NumberAnimation| 数值动画    |
+| Pagination      | 分页        | Popconfirm     | 弹出确认    |
+| Popover         | 气泡卡片    | Progress       | 进度条      |
+| QRCode          | 二维码      | Radio          | 单选框      |
+| Rate            | 评分        | Result         | 结果        |
+| Scrollbar       | 滚动条      | Segmented      | 分段控制器  |
+| Select          | 选择器      | Skeleton       | 骨架屏      |
+| Slider          | 滑动输入条  | Space          | 间距        |
+| Spin            | 加载中      | Statistic      | 统计数值    |
+| Steps           | 步骤条      | Swiper         | 触摸滑动    |
+| Switch          | 开关        | Table          | 表格        |
+| Tabs            | 标签页      | Tag            | 标签        |
+| Textarea        | 文本域      | TextScroll     | 文字滚动    |
+| Timeline        | 时间轴      | Tooltip        | 文字提示    |
+| Upload          | 上传        | Video          | 播放器      |
+| Waterfall       | 瀑布流      | Watermark      | 水印        |
 
 ## Functions
 
@@ -298,4 +298,4 @@ All sponsors will be listed here, thank you very much for your support and spons
 | getAlphaColor | Function to get an alpha color, generally used as a shadow color | (frontColor: string, backgroundColor: string = '#ffffff') => string |
 | getScrollParent | Function to find the nearest scrollable parent element upward | (el: HTMLElement &#124; null) => HTMLElement &#124; null |
 | lockScroll | Function to lock page scrolling and compensate the scrollbar width to prevent horizontal jitter | () => () => void |
-| useScrollParent | Composable to query and watch the nearest scrollable parent element and respond to viewport `resize` | (contentRef: Ref\<HTMLElement &#124; null>, onScroll: () => void, options: object = {}) => { scrollTarget: Ref\<HTMLElement &#124; null>, viewportWidth: Ref\<number>, viewportHeight: Ref\<number>, observeScroll: \() => void, cleanup: \() => void } |
+| useScrollParent | Composable to query and watch the nearest scrollable parent element and respond to viewport `resize` | (contentRef: Ref\<HTMLElement &#124; null>, onScroll: () => void, options: ScrollParentOptions = {}) => { scrollTarget: Ref\<HTMLElement &#124; null>, viewportWidth: Ref\<number>, viewportHeight: Ref\<number>, observeScroll: \() => void, cleanup: \() => void } |

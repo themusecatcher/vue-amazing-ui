@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*引导用户按照流程完成任务的导航条*
+_引导用户按照流程完成任务的导航条_
 
 ## 何时使用
 
@@ -314,7 +314,7 @@ watchEffect(() => {
 
 ## 可点击
 
-*设置 `v-model:current` 后即可点击*
+_设置 `v-model:current` 后即可点击_
 
 <br/>
 

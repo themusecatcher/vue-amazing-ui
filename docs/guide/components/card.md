@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*通用卡片容器*
+_通用卡片容器_
 
 ## 何时使用
 
@@ -367,7 +367,7 @@ bodyStyle | 自定义内容区域样式 | [CSSProperties](https://cn.vuejs.org/a
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 title | 自定义卡片标题 | v-slot:title
 extra | 自定义右上角的操作区域 | v-slot:extra

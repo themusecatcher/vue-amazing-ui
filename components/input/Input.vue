@@ -397,7 +397,6 @@ function onPassword(): void {
           display: inline-block;
           font-size: 12px;
           color: rgba(0, 0, 0, 0.25);
-          fill: currentColor;
           transition: color 0.3s;
           &:hover {
             color: rgba(0, 0, 0, 0.45);
@@ -407,7 +406,6 @@ function onPassword(): void {
           display: inline-block;
           font-size: 14px;
           color: rgba(0, 0, 0, 0.45);
-          fill: currentColor;
           transition: color 0.3s;
           &:hover {
             color: rgba(0, 0, 0, 0.85);

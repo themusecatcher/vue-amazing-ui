@@ -794,7 +794,7 @@ function onSearch7(searchText: string) {
 
 ## 下拉面板宽度
 
-*通过 `dropdownMatchSelectWidth` 指定面板宽度：`true` 与输入框等宽；`false` 时以输入框宽度为最小宽度、内容更宽则随之撑开；数字则为固定宽度*
+_通过 `dropdownMatchSelectWidth` 指定面板宽度：`true` 与输入框等宽；`false` 时以输入框宽度为最小宽度、内容更宽则随之撑开；数字则为固定宽度_
 
 <br/>
 
@@ -865,7 +865,7 @@ const optionsMatchWidth = [
 
 ## 下拉面板挂载容器
 
-*不传 `to` 时面板优先挂到最近的承载层内容容器（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body`；设为 `false` 时面板留在原地*
+_不传 `to` 时面板优先挂到最近的承载层内容容器（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body`；设为 `false` 时面板留在原地_
 
 <br/>
 
@@ -874,7 +874,7 @@ const optionsMatchWidth = [
   <AutoComplete v-model:value="toValue" :options="optionsArr" :width="200" placeholder="留在原地" :to="false" />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -890,11 +890,11 @@ const optionsArr = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry', 'Fig', 
 </template>
 ```
 
-::::
+:::
 
 ## 自定义下拉面板
 
-*通过 `popupClassName` 自定义面板类名、`dropdownMenuStyle` 设置面板样式，两者均落在 `Teleport` 后的面板上，需写在全局样式中；`zIndex` 用于覆盖面板层级（默认 1050）*
+_通过 `popupClassName` 自定义面板类名、`dropdownMenuStyle` 设置面板样式，两者均落在 `Teleport` 后的面板上，需写在全局样式中；`zIndex` 用于覆盖面板层级（默认 1050）_
 
 <br/>
 
@@ -931,7 +931,7 @@ const optionsArr = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry', 'Fig', 
   </Flex>
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1000,7 +1000,7 @@ const options4 = ref<{ value: string }[]>([
 </style>
 ```
 
-::::
+:::
 
 ## 三种尺寸
 
@@ -1457,15 +1457,15 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 
 ## Slots
 
-| 名称     | 说明                                                                   | 类型                                      |
-| :-------- | :---------------------------------------------------------------------- | :---------------------------------------- |
-| default  | 自定义输入组件（替代原生 `input` 元素）                                 | v-slot:default                            |
-| clearIcon | 自定义清除图标，作用域参数 `clearIcon` 为清除方法                       | v-slot:clearIcon="{ clearIcon }"          |
-| option   | 自定义选项内容，作用域为当前选项数据，[AutoCompleteOption](#option-type) 的自定义字段会一并透传 | v-slot:option="{ value, label, ...rest }" |
+| 名称      | 说明                                                                   | 用法                             |
+| :-------- | :---------------------------------------------------------------------- | :------------------------------- |
+| default   | 自定义输入组件（替代原生 `input` 元素）                                 | v-slot:default                   |
+| clearIcon | 自定义清除图标，作用域参数 `clearIcon` 为清除方法                       | v-slot:clearIcon="{ clearIcon }" |
+| option    | 自定义选项内容，作用域为当前选项数据，[AutoCompleteOption](#option-type) 的自定义字段会一并透传 | v-slot:option                    |
 
 ## Methods
 
-| 名称 | 说明              | 类型       |
+| 名称 | 说明 | 类型 |
 | :---- | :----------------- | :--------- |
-| focus | 获取输入框焦点    | () => void |
-| blur | 使输入框失去焦点  | () => void |
+| focus | 获取输入框焦点 | () => void |
+| blur | 使输入框失去焦点 | () => void |

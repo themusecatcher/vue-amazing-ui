@@ -50,23 +50,32 @@ export interface DownloadOptions {
 }
 
 /**
- * 从已解析的 URL 中提取文件名
+ * 对路径段做 URL 解码
  *
- * 直接取 pathname 的最后一段，天然剥离查询参数（?）与哈希（#），
- * 无需手动切分。
- *
- * @param parsedUrl 已解析成功的 URL 对象
- * @returns 提取的文件名；无有效路径段时返回空字符串
+ * @param rawName - 从 URL 路径中切出的原始文件名段
+ * @returns 解码后的文件名；含非法百分号编码导致解码失败时原样返回
  */
-function getFileName(parsedUrl: URL): string {
-  const segments = parsedUrl.pathname.split('/')
-  const rawName = segments[segments.length - 1] || ''
+function decodeFileName(rawName: string): string {
   try {
     return decodeURIComponent(rawName)
   } catch {
     // 路径段含非法百分号编码时 decodeURIComponent 会抛异常，此时原样返回
     return rawName
   }
+}
+
+/**
+ * 从已解析的 URL 中提取文件名
+ *
+ * 直接取 pathname 的最后一段，天然剥离查询参数（?）与哈希（#），
+ * 无需手动切分。
+ *
+ * @param parsedUrl - 已解析成功的 URL 对象
+ * @returns 提取的文件名；无有效路径段时返回空字符串
+ */
+function getFileName(parsedUrl: URL): string {
+  const segments = parsedUrl.pathname.split('/')
+  return decodeFileName(segments[segments.length - 1] || '')
 }
 
 /**
@@ -78,9 +87,9 @@ function getFileName(parsedUrl: URL): string {
  *
  * 局限：仅同源地址生效；跨域地址下浏览器会忽略 download 属性。
  *
- * @param parsedUrl 已解析的 URL 对象（用于兜底提取文件名）
- * @param target 打开方式
- * @param fileName 期望文件名，未传则从 URL 提取
+ * @param parsedUrl - 已解析的 URL 对象（用于兜底提取文件名）
+ * @param target - 打开方式
+ * @param fileName - 期望文件名，未传则从 URL 提取
  */
 function downloadViaAnchor(parsedUrl: URL, target: '_self' | '_blank', fileName?: string): void {
   const url = parsedUrl.href
@@ -120,8 +129,8 @@ function downloadViaAnchor(parsedUrl: URL, target: '_self' | '_blank', fileName?
  *    inline 类型（如未设置 Content-Disposition 的 PDF）会在 iframe 内预览而非下载
  * 2. 跨域限制导致前端无法读取 iframe 内容，下载失败只能依赖 checkIframeError 尽力检测
  *
- * @param parsedUrl 已解析的 URL 对象（用于兜底提取文件名）
- * @param fileName 期望文件名，未传则从 URL 提取
+ * @param parsedUrl - 已解析的 URL 对象（用于兜底提取文件名）
+ * @param fileName - 期望文件名，未传则从 URL 提取
  */
 function downloadViaIframe(parsedUrl: URL, fileName?: string): void {
   const url = parsedUrl.href
@@ -160,9 +169,10 @@ function downloadViaIframe(parsedUrl: URL, fileName?: string): void {
 /**
  * 尽力检测 iframe 下载是否失败
  *
- * 原理：下载失败时服务端通常返回错误页面（HTML 内容），
- * 此时 iframe 的 body 有内容；下载成功时 body 为空。
- * 局限：跨域场景下浏览器禁止读取 iframe 内容，检测会抛异常而失效。
+ * 原理：下载失败时服务端通常返回错误页面（HTML 内容），此时 iframe 的 body 有内容；成功时 body 为空。
+ * 局限：跨域下浏览器禁止读取 iframe 内容，检测会抛异常而失效。
+ *
+ * @param iframe - 触发下载的隐藏 iframe
  */
 function checkIframeError(iframe: HTMLIFrameElement): void {
   try {
@@ -192,11 +202,11 @@ function checkIframeError(iframe: HTMLIFrameElement): void {
  * 说明：仅负责「触发」下载。iframe 跨域场景下浏览器禁止读取内容，前端无法可靠
  * 判断下载成败，故返回值不携带成败信息，触发成功即 resolve。
  *
- * @param url 下载地址，支持绝对 URL 与同源相对路径
- * @param fileName 期望的下载文件名；未传时两种策略均从 URL 中提取。anchor 策略纯前端生效，
- *                 iframe 策略通过 response-content-disposition 参数传递给服务端（仅 COS/OSS 识别）
- * @param options 下载配置（打开方式、下载策略）
- * @returns Promise<void>，resolve 表示已触发下载；URL 非法时 reject
+ * @param url - 下载地址，支持绝对 URL 与同源相对路径
+ * @param fileName - 期望的下载文件名；未传时两种策略均从 URL 中提取。anchor 策略纯前端生效，
+ *                    iframe 策略通过 response-content-disposition 参数传递给服务端（仅 COS/OSS 识别）
+ * @param options - 下载配置（打开方式、下载策略）
+ * @returns resolve 表示已触发下载；URL 非法时 reject
  *
  * @example
  * // 自动分流：同源走 anchor，跨域走 iframe
@@ -262,10 +272,6 @@ function handleDownload() {
   <Button type="primary" @click="handleDownload">下载同源示例文件</Button>
 </template>
 ```
-
-::: warning
-注：上方地址仅用于演示跨域调用方式。`cdn.jsdelivr.net` 不识别 `response-content-disposition` 参数，实际不会触发下载，详见下方「注意事项」。
-:::
 
 ## 强制 `iframe` 策略
 

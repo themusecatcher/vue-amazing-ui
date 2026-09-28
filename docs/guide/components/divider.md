@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*区隔内容的分割线*
+_区隔内容的分割线_
 
 ## 何时使用
 
@@ -61,7 +61,7 @@
 
 ## 自定义文字边距
 
-*文字居左(右)并距左(右)边 `120px`*
+_文字居左(右)并距左(右)边 `120px`_
 
 <Divider orientation="left" :orientation-margin="120">Left Text</Divider>
 <Divider orientation="right" :orientation-margin="120">Right Text</Divider>
@@ -160,10 +160,11 @@ orientationMargin | 标题和最近 `left` / `right` 边框之间的距离，去
 borderWidth | 分割线宽度，单位 `px` | number | 1
 borderStyle | 分割线样式 | 'solid' &#124; 'dashed' &#124; 'dotted' &#124; 'double' &#124; 'groove' &#124; 'ridge' &#124; 'inset' &#124; 'outset' | 'solid'
 borderColor | 分割线颜色 | string | 'rgba(5, 5, 5, 0.06)'
-vertical | 垂直分割线高度，仅当 `vertical: true` 时生效 | string &#124; number | '0.9em'
+vertical | 是否垂直分割 | boolean | false
+height | 垂直分割线高度，仅当 `vertical: true` 时生效 | string &#124; number | '0.9em'
 
 ## Slots
 
-名称 | 说明 | 类型
+名称 | 说明 | 用法
 :-- | :-- | :--
 default | 自定义内容 | v-slot:default

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { LikeOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons-vue'
-import { NumberAnimation } from 'vue-amazing-ui'
+import type { NumberAnimation } from 'vue-amazing-ui'
 const defaultNumsRef = ref<InstanceType<typeof NumberAnimation> | null>(null)
 const tabularNumsRef = ref<InstanceType<typeof NumberAnimation> | null>(null)
 function formatter(value: string): string {
