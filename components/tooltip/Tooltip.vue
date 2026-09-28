@@ -500,7 +500,6 @@ defineExpose({
   color: #fff;
   line-height: 1.5714285714285714;
   text-align: justify;
-  text-decoration: none;
   word-break: break-word;
   background-color: var(--tooltip-background-color);
   border-radius: 6px;

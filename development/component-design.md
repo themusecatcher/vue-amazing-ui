@@ -215,4 +215,5 @@ components/modal/
 - **调色板**：`getColorPalettes(primaryColor)` → `@ant-design/colors` 的 `generate`，返回 10 级色阶。
 - **阴影色**：`getAlphaColor(frontColor, bg)` → 基于 `@ctrl/tinycolor` 计算。
 - **暗黑模式**：`toggleDark()` 工具函数一键切换。
-- **全局变量**：`components/style/global.less` 定义 `--primary-color` 等基础变量。
+- **主题色来源**：组件经 `useInject(组件名)` 读取 JS 调色板（`components/utils/hooks.ts`），默认主色 `#1677ff` 定义在 `useInject` 内；`components/style/global.less` 不定义全局主题变量，主题色统一由 `ConfigProvider` 的 `theme` 定制。
+- **CSS 变量输出**：最外层 `ConfigProvider` 会把 `common` 主色的色阶写入 `--link-color` / `--link-color-hover` / `--link-color-active`（取色阶第 6 / 4 / 7 级，与 antd 的 `colorLink` / `colorLinkHover` / `colorLinkActive` 同源），供全局链接基座 `:where(a)` 消费；嵌套实例不写入，卸载时移除变量。

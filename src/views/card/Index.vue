@@ -35,6 +35,14 @@ const loading = ref(true)
       <p>card content</p>
       <p>card content</p>
     </Card>
+    <a-card title="Default size card" style="width: 300px">
+      <template #extra>
+        <a href="#">more</a>
+      </template>
+      <p>card content</p>
+      <p>card content</p>
+      <p>card content</p>
+    </a-card>
     <h2 class="mt30 mb10">在灰色背景上使用无边框的卡片</h2>
     <div style="display: inline-block; background: #ececec; padding: 30px; border-radius: 8px">
       <Card title="Card title" :bordered="false" :width="300">

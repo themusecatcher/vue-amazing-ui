@@ -1,15 +1,12 @@
 // 组件库全局样式定义
+// 只放组件自身依赖的基座样式（盒模型重置、字体基线、移动端点击高亮抑制）与低特异性的链接基座；
+// 页面级样式（插入光标 caret-color、主题变量、链接配色）不在此定义，交由使用方页面样式或 ConfigProvider 主题处理
 *,
 *::before,
 *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  caret-color: transparent; // 消除 win 系统点击后出现插入光标闪烁的问题
-}
-:root {
-  --primary-color: #1677ff;
-  --primary-color-hover: #4096ff;
 }
 body {
   font-family:
@@ -25,20 +22,25 @@ body {
     'Droid Sans',
     'Helvetica Neue',
     sans-serif;
+  -webkit-tap-highlight-color: transparent;
 }
-input,
-textarea {
-  caret-color: auto;
-}
-a {
-  color: var(--primary-color);
+/* 颜色取 ConfigProvider 按 common 主题色阶写入的 `--link-*`（fallback 即默认色阶，未使用 ConfigProvider 时同样成立）；
+   `:where()` 使特异性为 0，使用方任意链接样式均可覆盖 */
+:where(a) {
+  color: var(--link-color, #1677ff);
   text-decoration: none;
   background-color: transparent;
-  -webkit-tap-highlight-color: transparent;
-  outline: none;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: color 0.3s;
+  -webkit-text-decoration-skip: objects;
   &:hover {
-    color: var(--primary-color-hover);
+    color: var(--link-color-hover, #69b1ff);
+  }
+  &:active {
+    color: var(--link-color-active, #0958d9);
+  }
+  &[disabled] {
+    color: rgba(0, 0, 0, 0.25);
+    cursor: not-allowed;
   }
 }
