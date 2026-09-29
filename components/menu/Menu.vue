@@ -3,7 +3,7 @@ import { computed, inject, onBeforeUnmount, onMounted, provide, ref, useSlots, w
 import type { CSSProperties, VNode, VNodeChild } from 'vue'
 import { FLOATING_LAYER_Z_INDEX, siderCollapsedKey, useInject } from 'components/utils'
 import MenuNodes from './MenuNodes'
-import { menuContextKey } from './context'
+import { getItemKey, menuContextKey } from './context'
 import type { MenuContext } from './context'
 import { splitOverflowItems } from './overflow'
 import { parseSlotItems } from './slotItems'
@@ -141,7 +141,7 @@ const displayItems = computed<ItemType[]>(() =>
 const keyMetaMap = computed(() => {
   const map = new Map<MenuKey, { parents: MenuKey[]; isSubMenu: boolean }>()
   const walk = (nodes: ItemType[], parents: MenuKey[]): void => {
-    nodes.forEach((node) => {
+    nodes.forEach((node, index) => {
       if (!node || ('type' in node && node.type === 'divider')) {
         return
       }
@@ -150,9 +150,12 @@ const keyMetaMap = computed(() => {
         return
       }
       const isSubMenu = 'children' in node && Array.isArray(node.children)
-      map.set(node.key, { parents, isSubMenu })
+      // key 的取法与渲染内核同源（`getItemKey`）：配置未提供 key 时同样按下标兜底，
+      // 否则本索引存下的 key 与内核渲染出的 key 对不上，父级高亮与后代收起都会失准
+      const key = getItemKey(node, index)
+      map.set(key, { parents, isSubMenu })
       if (isSubMenu) {
-        walk((node as SubMenuType).children, [...parents, node.key])
+        walk((node as SubMenuType).children, [...parents, key])
       }
     })
   }

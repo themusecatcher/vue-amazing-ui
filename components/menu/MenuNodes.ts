@@ -158,6 +158,24 @@ export default defineComponent({
       return isVNode(node) || Array.isArray(node) ? withNodeClassAll(node, 'menu-item-icon') : null
     }
 
+    /**
+     * 标题内容的渲染单元
+     *
+     * 收起态只保留图标：无图标的一级项以标题首字兜底，避免整项只剩空白（更深层级在收起态改为浮层呈现，
+     * 不参与该兜底）。菜单项与子菜单标题同口径，两处共用本函数。
+     */
+    function renderTitleContent(
+      label: MenuNode | undefined,
+      iconNode: VNodeChild,
+      level: number,
+      collapsed: boolean
+    ): VNodeChild {
+      const showNoIcon = collapsed && level === 1 && !iconNode && typeof label === 'string'
+      return showNoIcon
+        ? h('div', { class: 'menu-inline-collapsed-noicon' }, (label as string).charAt(0))
+        : h('span', { class: 'menu-title-content' }, [renderValue(label)])
+    }
+
     /** inline 模式按层级缩进；其余模式的间距由样式表统一给出 */
     function indentStyle(level: number): CSSProperties | undefined {
       return menu.mode.value === 'inline' ? { paddingLeft: `${level * menu.inlineIndent.value}px` } : undefined
@@ -354,11 +372,7 @@ export default defineComponent({
       const disabled = menu.disabled.value || !!node.disabled
       const collapsed = menu.inlineCollapsed.value
       const iconNode = renderIcon(node.icon, node)
-      // 收起态只保留图标；无图标时以标题首字兜底，避免整项只剩空白
-      const showNoIcon = collapsed && level === 1 && !iconNode && typeof node.label === 'string'
-      const content = showNoIcon
-        ? h('div', { class: 'menu-inline-collapsed-noicon' }, (node.label as string).charAt(0))
-        : h('span', { class: 'menu-title-content' }, [renderValue(node.label)])
+      const content = renderTitleContent(node.label, iconNode, level, collapsed)
       // 收起态的悬浮标题（与参考实现同口径）：一级项缺省 `title` 时以标签内容兜底，更深层级只认显式 `title`；
       // `title` 显式 false 表示不展示。收起态下更深层级的项在浮层里呈现，故提示同样要覆盖到
       const tipSource = node.title
@@ -448,10 +462,7 @@ export default defineComponent({
       const collapsed = menu.inlineCollapsed.value
       const theme = node.theme ?? menu.theme.value
       const iconNode = renderIcon(node.icon, node)
-      const showNoIcon = collapsed && level === 1 && !iconNode && typeof node.label === 'string'
-      const titleContent = showNoIcon
-        ? h('div', { class: 'menu-inline-collapsed-noicon' }, (node.label as string).charAt(0))
-        : h('span', { class: 'menu-title-content' }, [renderValue(node.label)])
+      const titleContent = renderTitleContent(node.label, iconNode, level, collapsed)
       // 水平模式的箭头由样式表隐藏：与其它模式保持同一结构，避免结构差异带来额外的分支
       // 子菜单级 expandIcon 优先于 Menu 级
       const expandIcon = node.expandIcon ?? menu.expandIcon.value

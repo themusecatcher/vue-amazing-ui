@@ -10,8 +10,14 @@ import type { ItemType, MenuKey, SubMenuType } from './interface'
  * 供根组件（切分配置树，使 key 索引与渲染结果同源）与渲染内核（测量、按同构探针取宽度）共用。
  */
 
-/** 溢出子菜单的固定 key：由内核合成，不参与用户配置 */
-export const MENU_OVERFLOW_KEY: MenuKey = 'menu-overflow'
+/**
+ * 溢出子菜单的固定 key
+ *
+ * 由内核合成、不参与用户配置，但会随 `keyPath` 与展开集合（`openKeys` / `openChange`）暴露给消费方，
+ * 故取哨兵形态而非可读单词：与用户手写的 key 不存在撞名可能，无需再靠文档约定（命名同参考实现的
+ * `OVERFLOW_KEY = '$$__vc-menu-more__key'`）。
+ */
+export const MENU_OVERFLOW_KEY: MenuKey = '$$__va-menu-overflow__key'
 
 /** 溢出指示图标：三点省略号，尺寸随字号以 `1em` 表达 */
 export function renderOverflowIndicator(): VNode {
