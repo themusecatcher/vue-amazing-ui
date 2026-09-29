@@ -476,7 +476,7 @@ const onBreakpoint = (broken: boolean) => {
 
     <h2 class="mt30 mb10">自定义滚动条</h2>
     <p class="mb10">侧边栏与内容区的滚动条改用 Scrollbar 组件，滚动样式与交互由组件统一提供</p>
-    <div class="demo-container">
+    <div class="demo-container demo-container-lg">
       <Layout style="height: 100%">
         <LayoutSider>
           <Scrollbar style="height: 100%">
@@ -514,15 +514,36 @@ const onBreakpoint = (broken: boolean) => {
                 <template #icon><ShopOutlined /></template>
                 nav 8
               </MenuItem>
+              <MenuItem key="9">
+                <template #icon><DesktopOutlined /></template>
+                nav 9
+              </MenuItem>
+              <MenuItem key="10">
+                <template #icon><LaptopOutlined /></template>
+                nav 10
+              </MenuItem>
+              <MenuItem key="11">
+                <template #icon><NotificationOutlined /></template>
+                nav 11
+              </MenuItem>
+              <MenuItem key="12">
+                <template #icon><PieChartOutlined /></template>
+                nav 12
+              </MenuItem>
             </Menu>
           </Scrollbar>
         </LayoutSider>
         <Layout>
           <LayoutHeader style="background: #fff; padding: 0" />
-          <LayoutContent style="margin: 24px 16px 0">
+          <LayoutContent>
             <Scrollbar style="height: 100%">
               <div style="padding: 24px; background: #fff">
-                ...<br />Really<br />...<br />...<br />...<br />...<br />...<br />...<br />long<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...content
+                <template v-for="i in 12" :key="i">
+                  <h3 style="margin: 0 0 8px; font-size: 16px">Section {{ i }}</h3>
+                  <p style="margin: 0 0 24px; color: rgba(0, 0, 0, 0.45)">
+                    Sider 与内容区各自独立滚动，滚动条均由 Scrollbar 组件提供
+                  </p>
+                </template>
               </div>
             </Scrollbar>
           </LayoutContent>
@@ -538,6 +559,10 @@ const onBreakpoint = (broken: boolean) => {
   overflow: auto;
   border-radius: 6px;
   box-shadow: 0 2px 8px #00000047;
+}
+// 自定义滚动条用例的承载盒：加高以放大滚动区域，滚动条的滚动幅度更易观察
+.demo-container-lg {
+  height: 480px;
 }
 .logo {
   float: left;
