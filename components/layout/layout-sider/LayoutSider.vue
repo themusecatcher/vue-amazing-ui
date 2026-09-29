@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { renderContentToVNode, useWindowWidth } from 'components/utils'
+import { renderContentToVNode, siderCollapsedKey, useWindowWidth } from 'components/utils'
 import { getSiderId, siderHookKey } from '../siderHook'
 
 /** 断点对应的视窗宽度（单位 px），用于 collapsedWidth 的响应式取值 */
@@ -24,7 +24,7 @@ type CollapseType = 'clickTrigger' | 'responsive'
 export interface Props {
   collapsed?: boolean // (v-model) 当前收起状态，不传时为非受控
   defaultCollapsed?: boolean // 是否默认收起，仅非受控时生效
-  width?: number | string // 宽度，数字按 px 处理
+  width?: number | string // 宽度，数字与数字字符串按 px 处理
   collapsedWidth?: number | LayoutSiderResponsive // 收起时的宽度；数字按 px 处理，传对象时按视窗宽度取档位，设为 0 会出现特殊触发器
   theme?: 'light' | 'dark' // 侧边栏主题色
   collapsible?: boolean // 是否可收起
@@ -81,6 +81,8 @@ siderHook?.addSider(siderId)
 onBeforeUnmount(() => {
   siderHook?.removeSider(siderId)
 })
+// 下发收起态给内部菜单：菜单自身不再需要绑定 inlineCollapsed
+provide(siderCollapsedKey, innerCollapsed)
 const collapsedSiderWidth = computed(() => {
   if (typeof props.collapsedWidth === 'number') {
     return props.collapsedWidth
@@ -94,16 +96,27 @@ const breakpointBroken = computed(() => {
   }
   return viewportWidth.value < responsiveSize[props.breakpoint]
 })
+/** 宽度归一：数字与纯数字字符串按 px 处理，已带单位的字符串原样保留 */
+function toLength(value: number | string): string {
+  const text = String(value)
+  return text !== '' && Number.isFinite(Number(text)) ? `${text}px` : text
+}
+// 宽度只取决于当前收起状态：断点响应式收起同样生效（与 collapsible 无关，后者仅决定是否渲染点击触发器）
 const siderWidth = computed(() => {
-  const rawWidth = props.collapsible && innerCollapsed.value ? collapsedSiderWidth.value : props.width
-  return typeof rawWidth === 'number' ? `${rawWidth}px` : rawWidth
+  const rawWidth = innerCollapsed.value ? collapsedSiderWidth.value : props.width
+  return toLength(rawWidth)
 })
-const siderStyle = computed<CSSProperties>(() => ({
-  flex: `0 0 ${siderWidth.value}`,
-  maxWidth: siderWidth.value,
-  minWidth: siderWidth.value,
-  width: siderWidth.value
-}))
+// --layout-sider-width 经 CSS 变量继承链下发给内部菜单：菜单收起态宽度跟随侧边栏实际宽度（如 80/120/0）
+const siderStyle = computed<CSSProperties>(
+  () =>
+    ({
+      '--layout-sider-width': siderWidth.value,
+      flex: `0 0 ${siderWidth.value}`,
+      maxWidth: siderWidth.value,
+      minWidth: siderWidth.value,
+      width: siderWidth.value
+    }) as CSSProperties
+)
 const zeroWidth = computed(() => collapsedSiderWidth.value === 0)
 // trigger 显式传 null 表示隐藏触发器；传入内容（插槽优先）时替换默认图标
 const showTrigger = computed(() => props.trigger !== null)
@@ -249,6 +262,9 @@ function getResponsiveCollapsedWidth(collapsedWidth: LayoutSiderResponsive) {
   position: relative;
   // Firefox 无法把 flex item 的宽度压到内容宽度以下，需显式清掉最小宽度
   min-width: 0;
+  // 纵向弹性布局：内容区自适应剩余高度、触发器在侧边栏高度内占位（不额外撑高侧边栏）
+  display: flex;
+  flex-direction: column;
   background: var(--layout-sider-background, #001529);
   transition:
     all 0.2s,
@@ -267,17 +283,20 @@ function getResponsiveCollapsedWidth(collapsedWidth: LayoutSiderResponsive) {
     border-inline-start: 0;
   }
 }
-.layout-sider-has-trigger {
-  .layout-sider-children {
-    padding-bottom: 48px;
-  }
-}
 .layout-sider-children {
-  overflow: auto;
-  height: 100%;
+  // 自适应剩余高度：触发器存在时自动让出 48px（无需再用 padding 预留）
+  flex: 1 1 auto;
+  // Firefox 无法把 flex item 的高度压到内容高度以下，需显式清掉最小高度
+  min-height: 0;
   // 规避首个子元素 margin 折叠后露出的 0.1px 缝隙
   margin-top: -0.1px;
   padding-top: 0.1px;
+}
+.layout-sider-zero-width {
+  // 零宽时兜住自定义内容的横向溢出（零宽触发器为绝对定位，不受影响）
+  > * {
+    overflow: hidden;
+  }
 }
 .layout-sider-zero-width-trigger {
   position: absolute;
@@ -321,9 +340,11 @@ function getResponsiveCollapsedWidth(collapsedWidth: LayoutSiderResponsive) {
   border-end-start-radius: 6px;
 }
 .layout-sider-trigger {
+  // sticky 相对滚动容器贴底（整页滚动时即为视口底），flex: none 使其在侧边栏高度内占位
   position: sticky;
   bottom: 0;
   z-index: 1;
+  flex: none;
   display: flex;
   align-items: center;
   justify-content: center;

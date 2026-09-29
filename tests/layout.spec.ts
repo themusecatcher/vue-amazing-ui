@@ -6,6 +6,7 @@ import LayoutContent from 'components/layout/layout-content'
 import LayoutFooter from 'components/layout/layout-footer'
 import LayoutHeader from 'components/layout/layout-header'
 import LayoutSider from 'components/layout/layout-sider'
+import Menu from 'components/menu'
 
 /**
  * Layout 复合组件回归守护
@@ -97,6 +98,11 @@ describe('LayoutSider - 宽度与收起状态', () => {
     wrapper = mount(LayoutSider, { props: { width: '20%', theme: 'light' } })
     expect(wrapper.attributes('style')).toContain('width: 20%')
     expect(wrapper.classes()).toContain('layout-sider-light')
+  })
+
+  it('width 传纯数字字符串时按 px 处理', () => {
+    wrapper = mount(LayoutSider, { props: { width: '200' } })
+    expect(wrapper.attributes('style')).toContain('width: 200px')
   })
 
   it('非受控时点击触发器自持收起状态', async () => {
@@ -203,5 +209,59 @@ describe('LayoutSider - 断点响应式', () => {
     wrapper = mount(LayoutSider, { props: { collapsible: true } })
     expect(wrapper.emitted('breakpoint')).toBeUndefined()
     expect(wrapper.attributes('style')).toContain('width: 200px')
+  })
+
+  it('未开启 collapsible 时断点收起同样收窄到 collapsedWidth', async () => {
+    setWindowWidth(800)
+    // 宽度只由收起状态决定，与「是否可点击收起」无关（响应式用例即此形态）
+    wrapper = mount(LayoutSider, { props: { breakpoint: 'lg', collapsedWidth: 0 } })
+    await nextTick()
+    expect(wrapper.classes()).toContain('layout-sider-below')
+    expect(wrapper.attributes('style')).toContain('width: 0px')
+    expect(wrapper.find('.layout-sider-zero-width-trigger').exists()).toBe(true)
+  })
+})
+
+describe('LayoutSider - 与 Menu 的收起联动', () => {
+  it('侧边栏收起时内嵌 Menu 同步收起，无需显式 inlineCollapsed', () => {
+    wrapper = mount(LayoutSider, {
+      props: { collapsed: true },
+      slots: { default: () => h(Menu, { mode: 'inline' }) }
+    })
+    expect(wrapper.findComponent(Menu).classes()).toContain('menu-inline-collapsed')
+  })
+
+  it('侧边栏展开时覆盖 Menu 自身的 inlineCollapsed', () => {
+    wrapper = mount(LayoutSider, {
+      props: { collapsed: false },
+      slots: { default: () => h(Menu, { mode: 'inline', inlineCollapsed: true }) }
+    })
+    expect(wrapper.findComponent(Menu).classes()).not.toContain('menu-inline-collapsed')
+  })
+
+  it('点击触发器收起后内嵌 Menu 跟随', async () => {
+    wrapper = mount(LayoutSider, {
+      props: { collapsible: true },
+      slots: { default: () => h(Menu, { mode: 'inline' }) }
+    })
+    expect(wrapper.findComponent(Menu).classes()).not.toContain('menu-inline-collapsed')
+
+    await wrapper.find('.layout-sider-trigger').trigger('click')
+    expect(wrapper.findComponent(Menu).classes()).toContain('menu-inline-collapsed')
+  })
+
+  it('断点触发收起时内嵌 Menu 同步收起', async () => {
+    setWindowWidth(800)
+    wrapper = mount(LayoutSider, {
+      props: { breakpoint: 'lg' },
+      slots: { default: () => h(Menu, { mode: 'inline' }) }
+    })
+    await nextTick()
+    expect(wrapper.findComponent(Menu).classes()).toContain('menu-inline-collapsed')
+  })
+
+  it('侧边栏之外的 Menu 仍以自身 inlineCollapsed 为准', () => {
+    wrapper = mount(Menu, { props: { mode: 'inline', inlineCollapsed: true } })
+    expect(wrapper.classes()).toContain('menu-inline-collapsed')
   })
 })
