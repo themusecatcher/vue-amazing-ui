@@ -101,17 +101,17 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 :where(a) {
-  color: var(--link-color, #1677ff);
+  color: var(--va-link-color, #1677ff);
   text-decoration: none;
   background-color: transparent;
   cursor: pointer;
   transition: color 0.3s;
   -webkit-text-decoration-skip: objects;
   &:hover {
-    color: var(--link-color-hover, #69b1ff);
+    color: var(--va-link-color-hover, #69b1ff);
   }
   &:active {
-    color: var(--link-color-active, #0958d9);
+    color: var(--va-link-color-active, #0958d9);
   }
   &[disabled] {
     color: rgba(0, 0, 0, 0.25);
@@ -120,7 +120,7 @@ body {
 }
 ```
 
-`:where(a)` 是全库唯一的链接基座，默认链接配色取值对齐 `antd` 的 `colorLink` / `colorLinkHover` / `colorLinkActive`；因外层包裹 `:where()` 而特异性为 `0`，使用方的任意链接样式都能覆盖它。主题色请通过 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme` 定制，插入光标等页面级样式由使用方在自己的页面样式中定义。
+`:where(a)` 是全库唯一的链接基座，默认链接配色取自主色色阶（常态 / 悬停 / 按下依次取第 `6` / `4` / `7` 级）；因外层包裹 `:where()` 而特异性为 `0`，使用方的任意链接样式都能覆盖它。主题色请通过 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme` 定制，插入光标等页面级样式由使用方在自己的页面样式中定义。
 
 <script setup lang="ts">
 import { TeamOutlined } from '@ant-design/icons-vue'

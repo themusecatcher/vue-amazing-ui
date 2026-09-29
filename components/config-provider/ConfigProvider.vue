@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, computed, watch, watchEffect, provide, inject, onUnmounted } from 'vue'
 import { SKIP_LINK_CSS_VARS_KEY } from './context'
-import type { VNode } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
 import { getColorPalettes, getAlphaColor, createZIndexManager, Z_INDEX_INJECT_KEY } from 'components/utils'
 export interface Theme {
   common?: {
@@ -51,6 +51,9 @@ export interface Theme {
     primaryColor?: string
   }
   LoadingBar?: {
+    primaryColor?: string
+  }
+  Menu?: {
     primaryColor?: string
   }
   Message?: {
@@ -108,7 +111,7 @@ export interface Theme {
 export interface Props {
   theme?: Theme // 主题对象
   abstract?: boolean // 是否不存在 DOM 包裹元素
-  tag?: string // ConfigProvider 被渲染成的元素，abstract 为 true 时有效
+  tag?: string // ConfigProvider 被渲染成的元素，abstract 为 false 时有效
   baseZIndex?: number // 浮层起始层级 (z-index)，传入后甲、乙两类浮层按「后出现者在上」自增分配；不传则各组件沿用自身默认层级
 }
 // 声明组件插槽类型
@@ -193,6 +196,10 @@ const componentsThemeColor = reactive<Record<string, ThemeColor>>({
     colorPalettes: [],
     shadowColor: ''
   },
+  Menu: {
+    colorPalettes: [],
+    shadowColor: ''
+  },
   Message: {
     colorPalettes: [],
     shadowColor: ''
@@ -264,14 +271,32 @@ const componentsThemeColor = reactive<Record<string, ThemeColor>>({
 })
 provide('common', commonThemeColor)
 provide('components', componentsThemeColor)
-// 链接基座联动：common 主色变化时把对应色阶写入 CSS 变量，供全局 `:where(a)` 消费（见 components/style/global.less）。
-// 仅最外层实例写入（嵌套实例沿用外层变量），卸载时移除，使样式表内的默认值（fallback）重新生效。
-// 离散实例（createDiscreteApi 内部挂载的 ConfigProvider）显式跳过：避免覆盖主应用写入的值、
+// 链接基座联动：common 主色变化时把对应色阶写入 CSS 变量，供 `:where(a)` 消费（见 components/style/global.less）。
+// 变量按作用域分两处写入：最外层实例写 `:root`（全局生效，卸载时移除，使样式表内的 fallback 默认值重新生效）；
+// 带包裹元素（`abstract` 为 false）的实例写自身包裹元素 —— `:where(a)` 逐级向上取值，故本子树内就近生效，
+// 嵌套实例因此也能在自身范围内改变链接配色，而不影响外层。
+// 离散实例（createDiscreteApi 内部挂载的 ConfigProvider）显式跳过 `:root` 写入：避免覆盖主应用写入的值、
 // 并在其 dispose() 时把这些变量误清除（主应用不会重跑写入）
+// 变量名 → 色阶级位：主色 / 悬停 / 按下 依次取色阶第 6 / 4 / 7 级
+const LINK_CSS_VARS: ReadonlyArray<readonly [`--${string}`, number]> = [
+  ['--va-link-color', 5],
+  ['--va-link-color-hover', 3],
+  ['--va-link-color-active', 6]
+]
+// 包裹元素上的链接色变量：仅非 abstract 形态需要（abstract 无 DOM 节点可承载）
+const linkVarStyle = computed<CSSProperties>(() => {
+  // 不解构：色阶数组会被整体替换，解构取值会丢失响应性追踪
+  const palettes = commonThemeColor.colorPalettes
+  if (props.abstract || !palettes.length) {
+    return {}
+  }
+  const style: CSSProperties = {}
+  LINK_CSS_VARS.forEach(([name, index]) => {
+    style[name] = palettes[index] ?? palettes[0]
+  })
+  return style
+})
 if (!inject(SKIP_LINK_CSS_VARS_KEY, false) && inject('common', null) === null && typeof document !== 'undefined') {
-  const LINK_CSS_VARS = ['--link-color', '--link-color-hover', '--link-color-active']
-  // 主色 / 悬停 / 按下 依次取色阶第 6 / 4 / 7 级（与 antd 的 colorLink / colorLinkHover / colorLinkActive 同源）
-  const LINK_PALETTE_INDEXES = [5, 3, 6]
   const rootStyle = document.documentElement.style
   watchEffect(() => {
     // 不解构：色阶数组会被整体替换，解构取值会丢失响应性追踪
@@ -279,12 +304,12 @@ if (!inject(SKIP_LINK_CSS_VARS_KEY, false) && inject('common', null) === null &&
     if (!palettes.length) {
       return
     }
-    LINK_CSS_VARS.forEach((name, index) => {
-      rootStyle.setProperty(name, palettes[LINK_PALETTE_INDEXES[index]] ?? palettes[0])
+    LINK_CSS_VARS.forEach(([name, index]) => {
+      rootStyle.setProperty(name, palettes[index] ?? palettes[0])
     })
   })
   onUnmounted(() => {
-    LINK_CSS_VARS.forEach((name) => rootStyle.removeProperty(name))
+    LINK_CSS_VARS.forEach(([name]) => rootStyle.removeProperty(name))
   })
 }
 // 层级管理层：传入 baseZIndex 时建立分配器并向下注入，甲、乙两类浮层据此自增分配；
@@ -336,7 +361,7 @@ watch(
 </script>
 <template>
   <slot v-if="abstract"></slot>
-  <component v-else :is="tag" class="config-provider-wrap">
+  <component v-else :is="tag" class="config-provider-wrap" :style="linkVarStyle">
     <slot></slot>
   </component>
 </template>

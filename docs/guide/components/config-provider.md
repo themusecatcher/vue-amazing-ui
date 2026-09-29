@@ -14,7 +14,7 @@ import { ref, computed, h, onMounted } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { ConfigProvider, LoadingBarProvider, createDiscreteApi } from 'vue-amazing-ui'
-import type { ConfigProviderProps, ConfigProviderTheme, CarouselImage, LoadingBarApi, MessageApi, ModalApi, NotificationApi, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
+import type { ConfigProviderProps, ConfigProviderTheme, CarouselImage, ItemType, LoadingBarApi, MenuKey, MessageApi, ModalApi, NotificationApi, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
 const primaryColor = ref<string>('#ff6900')
 const commonPrimaryColor = ref<string>('#1677ff')
 const buttonPrimaryColor = ref<string>('#18a058')
@@ -74,6 +74,21 @@ const images = ref<CarouselImage[]>([
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
+const menuItems = ref<ItemType[]>([
+  {
+    key: '1',
+    label: 'Navigation One'
+  },
+  {
+    key: '2',
+    label: 'Navigation Two'
+  },
+  {
+    key: '3',
+    label: 'Navigation Three'
+  }
+])
+const menuSelectedKeys = ref<MenuKey[]>(['1'])
 const selectOptions = ref<SelectOption[]>([
   {
     label: '北京市',
@@ -257,7 +272,7 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
 
 <br/>
 
-<Card title="以下示例已包含所有使用主题色的组件">
+<Card title="修改主题色，以下组件配色实时联动">
   <Space align="center">
     primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
   </Space>
@@ -313,6 +328,13 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
     </Space>
     <Calendar v-model:value="cardDate" display="card" />
     <Carousel style="margin-left: 0" :images="images" :height="450" />
+    <Card>
+      <Menu
+        mode="horizontal"
+        v-model:selectedKeys="menuSelectedKeys"
+        :items="menuItems"
+      />
+    </Card>
     <Card style="height: 300px; transform: translate(0)">
       <FloatButton type="primary" :right="96">
         <template #icon>
@@ -394,7 +416,7 @@ import { ref, h } from 'vue'
 import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { LoadingBarProvider } from 'vue-amazing-ui'
-import type { CarouselImage, LoadingBarApi, MessageApi, ModalApi, NotificationApi, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
+import type { CarouselImage, ItemType, LoadingBarApi, MenuKey, MessageApi, ModalApi, NotificationApi, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
 const primaryColor = ref<string>('#ff6900')
 const checkboxChecked = ref<boolean>(false)
 const cardDate = ref<number>(Date.now())
@@ -443,6 +465,21 @@ const images = ref<CarouselImage[]>([
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
+const menuItems = ref<ItemType[]>([
+  {
+    key: '1',
+    label: 'Navigation One'
+  },
+  {
+    key: '2',
+    label: 'Navigation Two'
+  },
+  {
+    key: '3',
+    label: 'Navigation Three'
+  }
+])
+const menuSelectedKeys = ref<MenuKey[]>(['1'])
 const selectOptions = ref<SelectOption[]>([
   {
     label: '北京市',
@@ -583,7 +620,7 @@ function onDecline(scale: number) {
 }
 </script>
 <template>
-  <Card title="以下示例已包含所有使用主题色的组件">
+  <Card title="修改主题色，以下组件配色实时联动">
     <Space align="center">
       primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" />
     </Space>
@@ -639,6 +676,13 @@ function onDecline(scale: number) {
       </Space>
       <Calendar v-model:value="cardDate" display="card" />
       <Carousel style="margin-left: 0" :images="images" :height="450" />
+      <Card>
+        <Menu
+          mode="horizontal"
+          v-model:selectedKeys="menuSelectedKeys"
+          :items="menuItems"
+        />
+      </Card>
       <Card style="height: 300px; transform: translate(0)">
         <FloatButton type="primary" :right="96">
           <template #icon>
@@ -773,21 +817,23 @@ const theme = computed<ConfigProviderTheme>(() => ({
 
 ## 链接颜色跟随主题
 
-`common.primaryColor` 变化时，由它派生的色阶会同步写入 `--link-color` / `--link-color-hover` / `--link-color-active` 三个 CSS 变量，全局链接基座（`:where(a)`）据此渲染 —— 因此**页面链接颜色会随主题色一并变化**，无需额外配置；未使用 `ConfigProvider` 时回退到默认色阶。
+`common.primaryColor` 变化时，由它派生的色阶会写入 `--va-link-color` / `--va-link-color-hover` / `--va-link-color-active` 三个 CSS 变量，链接基座（`:where(a)`）据此渲染 —— 因此**页面链接颜色会随主题色一并变化**，无需额外配置；未使用 `ConfigProvider` 时回退到默认色阶。
+
+写入位置随实例形态而定：**最外层**实例写 `:root`（全局生效，卸载后回退默认色阶）；**带包裹元素**（`:abstract="false"`）的实例写自身包裹元素 —— 链接基座逐级向上取值，故本子树内的链接就近跟随。因此**嵌套 `ConfigProvider` 需采用带包裹元素的形态**，才能在自己的范围内改变链接配色（下方示例所在页面的根节点即为更外层 `ConfigProvider`，故采用该形态）。
 
 <!-- 文档站正文的 `.vp-doc a`（特异性 0,1,1）会覆盖库的全局链接基座（特异性 0），此处为演示单独引用 CSS 变量以便观察；实际项目无需此处理 -->
 <style>
   .link-theme-demo a {
-    color: var(--link-color, #1677ff);
+    color: var(--va-link-color, #1677ff);
     text-decoration: none;
   }
 
   .link-theme-demo a:hover {
-    color: var(--link-color-hover, #69b1ff);
+    color: var(--va-link-color-hover, #69b1ff);
   }
 
   .link-theme-demo a:active {
-    color: var(--link-color-active, #0958d9);
+    color: var(--va-link-color-active, #0958d9);
   }
 </style>
 
@@ -797,7 +843,7 @@ const theme = computed<ConfigProviderTheme>(() => ({
   <Space align="center">
     linkPrimaryColor:<ColorPicker style="width: 200px" v-model:value="linkPrimaryColor" />
   </Space>
-  <ConfigProvider :theme="{ common: { primaryColor: linkPrimaryColor } }">
+  <ConfigProvider :abstract="false" :theme="{ common: { primaryColor: linkPrimaryColor } }">
     <Card width="50%" title="链接颜色跟随主题">
       <template #extra>
         <a href="#">more</a>
@@ -822,7 +868,7 @@ const linkPrimaryColor = ref<string>('#1677ff')
     <Space align="center">
       linkPrimaryColor:<ColorPicker style="width: 200px" v-model:value="linkPrimaryColor" />
     </Space>
-    <ConfigProvider :theme="{ common: { primaryColor: linkPrimaryColor } }">
+    <ConfigProvider :abstract="false" :theme="{ common: { primaryColor: linkPrimaryColor } }">
       <Card width="50%" title="链接颜色跟随主题">
         <template #extra>
           <a href="#">more</a>
@@ -1040,7 +1086,7 @@ const selectOptions: SelectOption[] = [
 | :------- | :------- | :----------------------------------------------------------- | :----- |
 | theme   | 主题对象 | [ConfigProviderTheme](#theme-type)                                        | {}     |
 | abstract | 是否不存在 `DOM` 包裹元素                                   | boolean | true   |
-| tag     | `ConfigProvider` 被渲染成的元素，`abstract` 为 `true` 时有效 | string  | 'div'  |
+| tag     | `ConfigProvider` 被渲染成的元素，`abstract` 为 `false` 时有效 | string  | 'div'  |
 | baseZIndex | 浮层起始层级（`z-index`），传入后各浮层按「后出现者在上」自增分配；不传则各组件沿用自身默认层级 | number | undefined |
 
 ### Theme Type
@@ -1060,7 +1106,7 @@ const selectOptions: SelectOption[] = [
 
 | 名称 | 值 |
 | :-- | :-- |
-| ComponentName | 'Alert' &#124; 'AutoComplete' &#124; 'BackTop' &#124; 'Button' &#124; 'Calendar' &#124; 'Carousel' &#124; 'Checkbox' &#124; 'ColorPicker' &#124; 'DatePicker' &#124; 'FloatButton' &#124; 'Image' &#124; 'Input' &#124; 'InputNumber' &#124; 'InputSearch' &#124; 'LoadingBar' &#124; 'Message' &#124; 'Modal' &#124; 'Notification' &#124; 'Pagination' &#124; 'Popconfirm' &#124; 'Progress' &#124; 'Radio' &#124; 'Select' &#124; 'Slider' &#124; 'Spin' &#124; 'Steps' &#124; 'Swiper' &#124; 'Switch' &#124; 'Tabs' &#124; 'Textarea' &#124; 'TextScroll' &#124; 'Upload' |
+| ComponentName | 'Alert' &#124; 'AutoComplete' &#124; 'BackTop' &#124; 'Button' &#124; 'Calendar' &#124; 'Carousel' &#124; 'Checkbox' &#124; 'ColorPicker' &#124; 'DatePicker' &#124; 'FloatButton' &#124; 'Image' &#124; 'Input' &#124; 'InputNumber' &#124; 'InputSearch' &#124; 'LoadingBar' &#124; 'Menu' &#124; 'Message' &#124; 'Modal' &#124; 'Notification' &#124; 'Pagination' &#124; 'Popconfirm' &#124; 'Progress' &#124; 'Radio' &#124; 'Select' &#124; 'Slider' &#124; 'Spin' &#124; 'Steps' &#124; 'Swiper' &#124; 'Switch' &#124; 'Tabs' &#124; 'Textarea' &#124; 'TextScroll' &#124; 'Upload' |
 
 ## Slots
 

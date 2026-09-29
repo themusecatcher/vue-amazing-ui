@@ -24,20 +24,21 @@ body {
     sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
-/* 颜色取 ConfigProvider 按 common 主题色阶写入的 `--link-*`（fallback 即默认色阶，未使用 ConfigProvider 时同样成立）；
+/* 颜色取 ConfigProvider 按 common 主题色阶写入的 `--va-link-*`（fallback 即默认色阶，未使用 ConfigProvider 时同样成立）；
+   `va-` 前缀与库其它对外暴露的全局命名（`va-popup-*` 等）一致，避免与宿主页面同名变量互相覆盖；
    `:where()` 使特异性为 0，使用方任意链接样式均可覆盖 */
 :where(a) {
-  color: var(--link-color, #1677ff);
+  color: var(--va-link-color, #1677ff);
   text-decoration: none;
   background-color: transparent;
   cursor: pointer;
   transition: color 0.3s;
   -webkit-text-decoration-skip: objects;
   &:hover {
-    color: var(--link-color-hover, #69b1ff);
+    color: var(--va-link-color-hover, #69b1ff);
   }
   &:active {
-    color: var(--link-color-active, #0958d9);
+    color: var(--va-link-color-active, #0958d9);
   }
   &[disabled] {
     color: rgba(0, 0, 0, 0.25);

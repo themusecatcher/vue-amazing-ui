@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { nextTick } from 'vue'
+import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import ConfigProvider from 'components/config-provider/ConfigProvider.vue'
 import { createDiscreteApi } from 'components/discrete'
@@ -25,9 +25,9 @@ describe('ConfigProvider 链接色 CSS 变量', () => {
     await nextTick()
 
     const palettes = getColorPalettes(RED)
-    expect(readVar('--link-color')).toBe(palettes[5])
-    expect(readVar('--link-color-hover')).toBe(palettes[3])
-    expect(readVar('--link-color-active')).toBe(palettes[6])
+    expect(readVar('--va-link-color')).toBe(palettes[5])
+    expect(readVar('--va-link-color-hover')).toBe(palettes[3])
+    expect(readVar('--va-link-color-active')).toBe(palettes[6])
 
     wrapper.unmount()
   })
@@ -35,11 +35,11 @@ describe('ConfigProvider 链接色 CSS 变量', () => {
   it('主色变化时同步更新变量', async () => {
     const wrapper = mount(ConfigProvider, { props: { theme: { common: { primaryColor: '#1677ff' } } } })
     await nextTick()
-    expect(readVar('--link-color')).toBe(getColorPalettes('#1677ff')[5])
+    expect(readVar('--va-link-color')).toBe(getColorPalettes('#1677ff')[5])
 
     await wrapper.setProps({ theme: { common: { primaryColor: RED } } })
     await nextTick()
-    expect(readVar('--link-color')).toBe(getColorPalettes(RED)[5])
+    expect(readVar('--va-link-color')).toBe(getColorPalettes(RED)[5])
 
     wrapper.unmount()
   })
@@ -47,18 +47,18 @@ describe('ConfigProvider 链接色 CSS 变量', () => {
   it('卸载后移除变量，使样式表默认值重新生效', async () => {
     const wrapper = mount(ConfigProvider, { props: { theme: { common: { primaryColor: RED } } } })
     await nextTick()
-    expect(readVar('--link-color')).not.toBe('')
+    expect(readVar('--va-link-color')).not.toBe('')
 
     wrapper.unmount()
-    expect(readVar('--link-color')).toBe('')
-    expect(readVar('--link-color-hover')).toBe('')
+    expect(readVar('--va-link-color')).toBe('')
+    expect(readVar('--va-link-color-hover')).toBe('')
   })
 
   it('离散实例既不覆盖也不清除主应用写入的变量', async () => {
     // 主应用最外层写入
     const wrapper = mount(ConfigProvider, { props: { theme: { common: { primaryColor: '#1677ff' } } } })
     await nextTick()
-    const appValue = readVar('--link-color')
+    const appValue = readVar('--va-link-color')
     expect(appValue).toBe(getColorPalettes('#1677ff')[5])
 
     // 离散实例即使传入不同主题色，也不应写全局变量（其内部 ConfigProvider 带跳过标记）
@@ -66,11 +66,45 @@ describe('ConfigProvider 链接色 CSS 变量', () => {
       configProviderProps: { theme: { common: { primaryColor: RED } } }
     })
     await nextTick()
-    expect(readVar('--link-color')).toBe(appValue)
+    expect(readVar('--va-link-color')).toBe(appValue)
 
     // dispose 只清理自身，主应用写入的值不受影响
     dispose()
-    expect(readVar('--link-color')).toBe(appValue)
+    expect(readVar('--va-link-color')).toBe(appValue)
+
+    wrapper.unmount()
+  })
+
+  it('带包裹元素的实例把色阶写在包裹元素上', async () => {
+    const wrapper = mount(ConfigProvider, {
+      props: { abstract: false, theme: { common: { primaryColor: RED } } }
+    })
+    await nextTick()
+
+    const palettes = getColorPalettes(RED)
+    const wrap = wrapper.find('.config-provider-wrap')
+    expect(wrap.element.style.getPropertyValue('--va-link-color')).toBe(palettes[5])
+    expect(wrap.element.style.getPropertyValue('--va-link-color-hover')).toBe(palettes[3])
+    expect(wrap.element.style.getPropertyValue('--va-link-color-active')).toBe(palettes[6])
+
+    wrapper.unmount()
+  })
+
+  it('嵌套实例只在自身包裹元素上生效，不改写 :root', async () => {
+    const wrapper = mount(ConfigProvider, {
+      props: { theme: { common: { primaryColor: '#1677ff' } } },
+      slots: {
+        default: () => h(ConfigProvider, { abstract: false, theme: { common: { primaryColor: RED } } })
+      }
+    })
+    await nextTick()
+
+    const rootValue = getColorPalettes('#1677ff')[5]
+    expect(readVar('--va-link-color')).toBe(rootValue)
+    expect(wrapper.find('.config-provider-wrap').element.style.getPropertyValue('--va-link-color')).toBe(
+      getColorPalettes(RED)[5]
+    )
+    expect(readVar('--va-link-color')).toBe(rootValue)
 
     wrapper.unmount()
   })
