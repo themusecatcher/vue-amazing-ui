@@ -222,4 +222,4 @@ components/modal/
 - **阴影色**：`getAlphaColor(frontColor, bg)` → 基于 `@ctrl/tinycolor` 计算。
 - **暗黑模式**：`toggleDark()` 工具函数一键切换。
 - **主题色来源**：组件经 `useInject(组件名)` 读取 JS 调色板（`components/utils/hooks.ts`），默认主色 `#1677ff` 定义在 `useInject` 内；`components/style/global.less` 不定义全局主题变量，主题色统一由 `ConfigProvider` 的 `theme` 定制。
-- **CSS 变量输出**：`common` 主色的色阶写入 `--va-link-color` / `--va-link-color-hover` / `--va-link-color-active`（取色阶第 6 / 4 / 7 级，与 antd 的 `colorLink` / `colorLinkHover` / `colorLinkActive` 同源），供链接基座 `:where(a)` 消费。写入位置分两处：**最外层**实例写 `:root`（全局生效，卸载时移除变量，回落样式表内的 fallback 默认值）；**带包裹元素**（`abstract` 为 `false`）的实例写自身包裹元素 —— 链接基座逐级向上取值，故本子树内就近生效，嵌套实例据此可在自己的范围内改变链接配色而不影响外层。
+- **CSS 变量输出**：`common` 主色的色阶写入 `--va-link-color` / `--va-link-color-hover` / `--va-link-color-active`（取色阶第 6 / 4 / 7 级），供链接基座 `:where(a)` 消费。写入位置分两处：**最外层**实例写 `:root`（全局生效，卸载时移除变量，回落样式表内的 fallback 默认值）；**带包裹元素**（`abstract` 为 `false`）的实例写自身包裹元素 —— 链接基座逐级向上取值，故本子树内就近生效，嵌套实例据此可在自己的范围内改变链接配色而不影响外层。

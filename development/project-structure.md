@@ -126,9 +126,9 @@ components/
 
 ### style/global.less
 
-组件样式基座，只放「组件自身依赖」的声明：盒模型重置（`*` 的 `box-sizing` / `margin` / `padding`）、`body` 字体基线与移动端点击高亮抑制（`-webkit-tap-highlight-color`，属性可继承、向下发）、`:where(a)` 低特异性链接基座（对标 antd 的 `genLinkStyle`）。组件按需引入时都会携带此样式。
+组件样式基座，只放「组件自身依赖」的声明：盒模型重置（`*` 的 `box-sizing` / `margin` / `padding`）、`body` 字体基线与移动端点击高亮抑制（`-webkit-tap-highlight-color`，属性可继承、向下发）、`:where(a)` 低特异性链接基座。组件按需引入时都会携带此样式。
 
-`:where(a)` 提供与 `antd` 的 `genLinkStyle` 对齐的链接基座（配色取 `antd` 的 `colorLink` / `colorLinkHover` / `colorLinkActive`），因 `:where()` 包裹而特异性为 `0`，使用方任意链接样式都能覆盖 —— 它保证组件内（含插槽内容）的链接「引入即协调」。其中三个颜色读 `--va-link-*` 变量（由最外层 `ConfigProvider` 按 `common` 主题色阶写入，fallback 为默认色阶），因此链接颜色随主题色联动。页面级样式（插入光标 `caret-color`、主题变量）不在此定义：由使用方页面样式或 `ConfigProvider` 的 `theme` 负责（见 [component-design.md](component-design.md) 的主题系统一节）；组件自带链接若需与基座不同的配色，由各组件在自己的类名下声明。
+`:where()` 包裹而特异性为 `0`，使用方任意链接样式都能覆盖 —— 它保证组件内（含插槽内容）的链接「引入即协调」。其中三个颜色读 `--va-link-*` 变量（由最外层 `ConfigProvider` 按 `common` 主题色阶写入，fallback 为默认色阶），因此链接颜色随主题色联动。页面级样式（插入光标 `caret-color`、主题变量）不在此定义：由使用方页面样式或 `ConfigProvider` 的 `theme` 负责（见 [component-design.md](component-design.md) 的主题系统一节）；组件自带链接若需与基座不同的配色，由各组件在自己的类名下声明。
 
 ## src/ 演示环境
 
