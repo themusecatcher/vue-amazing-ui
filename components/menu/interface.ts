@@ -33,7 +33,7 @@ export interface MenuItemType extends ItemSharedProps {
   disabled?: boolean // 是否禁用
   danger?: boolean // 是否展示错误状态样式
   icon?: MenuIcon // 菜单图标
-  title?: string // 收起时展示的悬浮标题
+  title?: MenuNode // 收起时展示的悬浮标题（显式 false 表示不展示）
 }
 
 /** 子菜单配置项 */
@@ -43,8 +43,9 @@ export interface SubMenuType extends ItemSharedProps {
   children: ItemType[] // 子菜单的菜单项
   disabled?: boolean // 是否禁用
   icon?: MenuIcon // 菜单图标
+  expandIcon?: (info: MenuExpandIconInfo) => VNodeChild // 子菜单级展开收起图标，优先于 Menu 的 expandIcon
   theme?: MenuTheme // 子菜单主题，不传则继承 Menu 的 theme
-  title?: string // 收起时展示的悬浮标题
+  title?: MenuNode // 收起时展示的悬浮标题（显式 false 表示不展示）
   popupClassName?: string // 弹出子菜单的自定义类名，inline 模式下无效
   popupOffset?: [number, number] // 弹出子菜单与锚点的偏移，inline 模式下无效
   onTitleClick?: (info: MenuTitleInfo) => void // 点击子菜单标题

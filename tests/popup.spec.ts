@@ -5,6 +5,7 @@ import { mount } from '@vue/test-utils'
 import Popup from 'components/popup'
 import type { PopupBodyBindings } from 'components/popup'
 import ConfigProvider from 'components/config-provider'
+import { flushTransition } from './helpers'
 
 /**
  * `<Popup>` 浮层宿主回归守护
@@ -46,11 +47,9 @@ let anchorRect = domRect(400, 300, 100, 40)
 /** 面板桩**布局**尺寸（内核按 offsetWidth / offsetHeight 测量浮层） */
 const panelSize = { width: 200, height: 80 }
 
-/** 一个 tick 的等待：让内核的 post flush 与 Transition 归位 */
+/** 一个 tick 的等待：让内核的 post flush 与 Transition 归位（公共等待见 tests/helpers.ts） */
 async function flush(): Promise<void> {
-  await nextTick()
-  await new Promise((resolve) => setTimeout(resolve, 10))
-  await nextTick()
+  await flushTransition()
 }
 
 const queryContainer = (): HTMLElement | null => document.querySelector('.va-popup-container')

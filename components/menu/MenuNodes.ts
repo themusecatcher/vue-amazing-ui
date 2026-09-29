@@ -18,7 +18,16 @@ import type { CSSProperties, ComponentPublicInstance, PropType, TransitionProps,
 import Popup from 'components/popup'
 import { useResizeObserver } from 'components/utils'
 import { getItemKey, menuContextKey } from './context'
-import type { ItemType, MenuIcon, MenuItemGroupType, MenuItemType, MenuKey, MenuNode, SubMenuType } from './interface'
+import type {
+  ItemType,
+  MenuExpandIconInfo,
+  MenuIcon,
+  MenuItemGroupType,
+  MenuItemType,
+  MenuKey,
+  MenuNode,
+  SubMenuType
+} from './interface'
 import { flattenOverflowItems, renderOverflowIndicator } from './overflow'
 
 /**
@@ -47,8 +56,13 @@ const GROUP_TITLE_INDENT = 16
  */
 const POPUP_GAP = { horizontal: 8, vertical: 10 } as const
 
-/** 收起态标题提示与锚点之间的距离 */
-const TOOLTIP_GAP = 10
+/**
+ * 收起态标题提示的面板盒外间距
+ *
+ * 面板为箭头预留 12px 槽位（见 `.menu-tooltip-popup` 的方向类），故可见卡片距锚点 16px ——
+ * 与参考实现的 tooltip 同口径（`mainAxisGap` 4px + 箭头槽 12px）
+ */
+const TOOLTIP_GAP = 4
 
 /**
  * 弹出浮层的过渡
@@ -135,17 +149,13 @@ export default defineComponent({
     }
 
     /** 渲染图标：渲染函数入参为所在项的配置；图标类名挂在传入节点上，不额外包一层元素 */
-    function renderIcon(icon: MenuIcon | undefined, item: MenuItemType | SubMenuType): VNode | null {
+    function renderIcon(icon: MenuIcon | undefined, item: MenuItemType | SubMenuType): VNodeChild {
       if (icon === undefined || icon === null || icon === false) {
         return null
       }
+      // 组件式写法下图标来自插槽，编译产物是数组（可能含多个节点）；配置式则是单个节点或渲染函数
       const node = typeof icon === 'function' ? icon(item) : icon
-      if (!isVNode(node)) {
-        return null
-      }
-      const base = node.props?.class
-      const merged = typeof base === 'string' && base ? `${base} menu-item-icon` : 'menu-item-icon'
-      return cloneVNode(node, { class: merged })
+      return isVNode(node) || Array.isArray(node) ? withNodeClassAll(node, 'menu-item-icon') : null
     }
 
     /** inline 模式按层级缩进；其余模式的间距由样式表统一给出 */
@@ -201,6 +211,28 @@ export default defineComponent({
         '--menu-primary-color': menu.primaryColor.value,
         '--menu-primary-palette-1': menu.primaryPalette.value
       } as CSSProperties
+    }
+
+    /** 在调用方传入的节点上补类名（不额外包一层元素）；非 VNode 原样返回 */
+    function withNodeClass(node: VNodeChild, className: string): VNodeChild {
+      if (!isVNode(node)) {
+        return node
+      }
+      const base = node.props?.class
+      return cloneVNode(node, { class: typeof base === 'string' && base ? `${base} ${className}` : className })
+    }
+
+    /** 逐节点补类名：插槽形态返回的是节点数组，需逐项处理 */
+    function withNodeClassAll(node: VNodeChild, className: string): VNodeChild {
+      return Array.isArray(node) ? node.map((item) => withNodeClass(item, className)) : withNodeClass(node, className)
+    }
+
+    /** 求值展开图标：类名与图标同源，使自定义图标继承默认箭头的尺寸与旋转 */
+    function renderExpandIcon(
+      expandIcon: ((info: MenuExpandIconInfo) => VNodeChild) | undefined,
+      info: MenuExpandIconInfo
+    ): VNodeChild {
+      return withNodeClassAll(expandIcon?.(info), 'menu-submenu-expand-icon')
     }
 
     function clearCloseTimer(key: MenuKey): void {
@@ -327,11 +359,16 @@ export default defineComponent({
       const content = showNoIcon
         ? h('div', { class: 'menu-inline-collapsed-noicon' }, (node.label as string).charAt(0))
         : h('span', { class: 'menu-title-content' }, [renderValue(node.label)])
-      const tipText = collapsed && level === 1 ? (node.title ?? (typeof node.label === 'string' ? node.label : '')) : ''
-      const itemEl = tipText ? itemEls.get(key) : undefined
+      // 收起态的悬浮标题（与参考实现同口径）：一级项缺省 `title` 时以标签内容兜底，更深层级只认显式 `title`；
+      // `title` 显式 false 表示不展示。收起态下更深层级的项在浮层里呈现，故提示同样要覆盖到
+      const tipSource = node.title
+      const showTip = collapsed && tipSource !== false && (level === 1 || tipSource !== undefined)
+      const tipContent: VNodeChild = showTip ? renderValue(tipSource ?? node.label ?? '') : ''
+      const hasTip = Array.isArray(tipContent) ? tipContent.length > 0 : !!tipContent
+      const itemEl = hasTip ? itemEls.get(key) : undefined
       // 锚点未登记时先不渲染：提示浮层以锚点定位，无锚点会被定位到页面原点
       const tooltip =
-        tipText && itemEl
+        hasTip && itemEl
           ? h(
               Popup,
               {
@@ -339,12 +376,15 @@ export default defineComponent({
                 anchor: itemEl,
                 placement: 'right',
                 offset: TOOLTIP_GAP,
+                // 箭头与参考实现的 tooltip 同款：几何由 `.menu-tooltip-popup` 的方向类驱动
+                arrow: true,
+                arrowClass: 'menu-tooltip-arrow',
                 panelClass: 'menu-tooltip-popup',
                 panelStyle: panelStyle(),
                 defaultZIndex: menu.subMenuZIndex,
                 transitionProps: POPUP_TRANSITION
               },
-              { default: () => h('div', { class: 'menu-tooltip-card' }, tipText) }
+              { default: () => h('div', { class: 'menu-tooltip-card' }, [tipContent]) }
             )
           : null
       return h(
@@ -363,7 +403,8 @@ export default defineComponent({
           style: { ...(node.style ?? {}), ...indentStyle(level) },
           role: 'menuitem',
           tabindex: disabled ? undefined : -1,
-          title: node.title,
+          // 原生 title 属性只接受字符串：富内容标题仅经提示浮层表达
+          title: typeof tipSource === 'string' ? tipSource : undefined,
           'data-menu-id': key,
           'aria-disabled': disabled || undefined,
           ref: (el: Element | ComponentPublicInstance | null) => setItemEl(key, el),
@@ -412,9 +453,11 @@ export default defineComponent({
         ? h('div', { class: 'menu-inline-collapsed-noicon' }, (node.label as string).charAt(0))
         : h('span', { class: 'menu-title-content' }, [renderValue(node.label)])
       // 水平模式的箭头由样式表隐藏：与其它模式保持同一结构，避免结构差异带来额外的分支
+      // 子菜单级 expandIcon 优先于 Menu 级
+      const expandIcon = node.expandIcon ?? menu.expandIcon.value
       const arrow =
-        !horizontal && menu.expandIcon.value
-          ? menu.expandIcon.value({ ...node, isOpen: open })
+        !horizontal && expandIcon
+          ? renderExpandIcon(expandIcon, { ...node, isOpen: open })
           : h('i', { class: 'menu-submenu-arrow', 'aria-hidden': 'true' })
       const titleNode = h(
         'div',

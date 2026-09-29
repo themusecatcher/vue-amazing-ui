@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { cloneVNode, computed, isVNode, onBeforeUnmount, onMounted, provide, ref, useSlots, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, provide, ref, useSlots, watch } from 'vue'
 import type { CSSProperties, VNode, VNodeChild } from 'vue'
-import { FLOATING_LAYER_Z_INDEX, useInject } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, siderCollapsedKey, useInject } from 'components/utils'
 import MenuNodes from './MenuNodes'
 import { menuContextKey } from './context'
 import type { MenuContext } from './context'
 import { splitOverflowItems } from './overflow'
+import { parseSlotItems } from './slotItems'
 import type {
   ItemType,
   MenuExpandIconInfo,
@@ -24,28 +25,29 @@ import type {
  * 展开与选中状态受控（`v-model:openKeys` / `v-model:selectedKeys`）与非受控均可使用。
  */
 export interface Props {
-  // >>>>> 双向绑定
+  // 双向绑定
   openKeys?: MenuKey[] // 当前展开的子菜单 key 数组
   selectedKeys?: MenuKey[] // 当前选中的菜单项 key 数组
-  // >>>>> 内容数据
+  // 内容数据
   items?: ItemType[] // 菜单内容
-  // >>>>> 形态外观
+  // 形态外观
   mode?: MenuMode // 菜单类型
   theme?: MenuTheme // 主题颜色
-  inlineCollapsed?: boolean // inline 模式下是否收起（收起时子菜单改为浮层展开）
+  inlineCollapsed?: boolean // inline 模式下是否收起（收起时子菜单改为浮层展开）；外层为 LayoutSider 时以其收起态为准
   inlineIndent?: number // inline 模式每一级菜单项的缩进宽度
   expandIcon?: (info: MenuExpandIconInfo) => VNodeChild // 自定义子菜单的展开收起图标
-  // >>>>> 状态反馈
+  // 状态反馈
   disabled?: boolean // 是否禁用整个菜单
   selectable?: boolean // 是否允许选中
   multiple?: boolean // 是否允许多选
-  // >>>>> 行为交互
+  // 行为交互
   triggerSubMenuAction?: 'click' | 'hover' // 子菜单的展开触发方式
   subMenuOpenDelay?: number // 鼠标进入子菜单后开启的延时，单位秒
   subMenuCloseDelay?: number // 鼠标离开子菜单后关闭的延时，单位秒
 }
 
 export interface MenuSlots {
+  default?: () => VNode[] // 子组件式菜单内容（MenuItem / MenuSubMenu / MenuItemGroup / MenuDivider）
   expandIcon?: (info: MenuExpandIconInfo) => VNode[]
 }
 
@@ -77,7 +79,9 @@ const emit = defineEmits<{
 }>()
 
 const EMPTY_KEYS: MenuKey[] = [] // 稳定的空数组：避免每次渲染都产生新引用而触发子组件更新
-const slots = useSlots()
+// 显式标注插槽类型：`useSlots()` 的返回值参与 `menuItems` / `displayItems` 的推导，构成推断环
+// （构建期的 dts 程序会报 TS7022 / TS7024），标注后即断开；类型与 `defineSlots<MenuSlots>()` 一致
+const slots: MenuSlots = useSlots()
 const { colorPalettes } = useInject('Menu')
 // 强调色与选中底色取自组件主题（可在 ConfigProvider 中按 Menu 覆盖）
 const primaryColor = computed(() => colorPalettes.value[5] ?? colorPalettes.value[0])
@@ -90,7 +94,7 @@ const rootStyle = computed<CSSProperties>(
     }) as CSSProperties
 )
 
-// >>>>> 受控 / 非受控：传入即为受控，内部副本随外部同步
+// 受控 / 非受控：传入即为受控，内部副本随外部同步
 const innerOpenKeys = ref<MenuKey[]>(Array.isArray(props.openKeys) ? [...props.openKeys] : [])
 const innerSelectedKeys = ref<MenuKey[]>(Array.isArray(props.selectedKeys) ? [...props.selectedKeys] : [])
 watch(
@@ -112,21 +116,27 @@ watch(
   { deep: true }
 )
 
-// >>>>> 模式归一：inline 收起后菜单退化为 vertical（子菜单改用浮层承载），样式与布局随之为同一套
-const collapsed = computed(() => !!props.inlineCollapsed)
+// 模式归一：inline 收起后菜单退化为 vertical（子菜单改用浮层承载），样式与布局随之为同一套
+// 外层侧边栏下发的收起态优先：此时菜单宽度由侧边栏决定，自身 inlineCollapsed 不再参与
+const siderCollapsed = inject(siderCollapsedKey, null)
+const collapsed = computed(() => Boolean(siderCollapsed?.value ?? props.inlineCollapsed))
 const mergedInlineCollapsed = computed(() => (props.mode === 'inline' || props.mode === 'vertical') && collapsed.value)
 const mergedMode = computed<MenuMode>(() => (mergedInlineCollapsed.value ? 'vertical' : props.mode))
 const isInlineMode = computed(() => mergedMode.value === 'inline')
 const theme = computed(() => props.theme)
 
-// >>>>> 水平溢出：放不下的菜单项收进「…」子菜单。起点由内核测量后回传，切分后的配置树参与
+// 菜单内容：组件式写法（default 插槽）存在时以插槽为准，否则取 items（项目统一约定：插槽优先于 prop）
+// 子组件只承载配置描述，这里读回为与 items 同构的配置树，两条数据源因此共用后续全部逻辑
+const menuItems = computed<ItemType[]>(() => (slots.default ? parseSlotItems(slots.default()) : props.items))
+
+// 水平溢出：放不下的菜单项收进「…」子菜单。起点由内核测量后回传，切分后的配置树参与
 // 渲染与下方索引，故溢出子菜单对 keyPath、父级高亮、后代收起也与用户配置等价
 const overflowStart = ref<number>(Number.POSITIVE_INFINITY)
 const displayItems = computed<ItemType[]>(() =>
-  props.mode === 'horizontal' ? splitOverflowItems(props.items, overflowStart.value) : props.items
+  props.mode === 'horizontal' ? splitOverflowItems(menuItems.value, overflowStart.value) : menuItems.value
 )
 
-// >>>>> 结构索引：key → 祖先链与是否为子菜单，供 keyPath、父级高亮、后代收起使用
+// 结构索引：key → 祖先链与是否为子菜单，供 keyPath、父级高亮、后代收起使用
 // 索引建立在切分后的配置树上：溢出子菜单合成于根组件，其子项因此与平铺时同源
 const keyMetaMap = computed(() => {
   const map = new Map<MenuKey, { parents: MenuKey[]; isSubMenu: boolean }>()
@@ -244,7 +254,7 @@ watch(
   },
   { immediate: true }
 )
-// >>>>> 收起瞬间保留内嵌渲染：子菜单列表的收起动画要一个动画时长才播完，若当即换成浮层形态，
+// 收起瞬间保留内嵌渲染：子菜单列表的收起动画要一个动画时长才播完，若当即换成浮层形态，
 // 列表会整块消失、收起过程少一段「内容收拢」的动作（时长与样式表里的折叠过渡同源）
 const INLINE_COLLAPSE_DURATION = 200
 const retainingInline = ref(false)
@@ -282,26 +292,14 @@ watch(
   { immediate: true }
 )
 
+// 展开图标：插槽优先于属性（项目统一约定）；图标类名由渲染内核统一补，与子菜单级 expandIcon 同源
 const expandIcon = computed<MenuContext['expandIcon']['value']>(() => {
   const fromSlot = slots.expandIcon
   const fromProp = props.expandIcon
   if (!fromSlot && !fromProp) {
     return undefined
   }
-  // 插槽形态可能返回多个节点，故逐个补类名；类名挂在调用方传入的节点上，不额外包一层元素
-  const withIconClass = (node: VNode): VNode => {
-    const base = node.props?.class
-    return cloneVNode(node, {
-      class: typeof base === 'string' && base ? `${base} menu-submenu-expand-icon` : 'menu-submenu-expand-icon'
-    })
-  }
-  return (info: MenuExpandIconInfo) => {
-    const node = fromSlot ? fromSlot(info) : fromProp?.(info)
-    if (Array.isArray(node)) {
-      return node.map((item) => (isVNode(item) ? withIconClass(item) : item))
-    }
-    return isVNode(node) ? withIconClass(node) : (node as VNodeChild)
-  }
+  return (info: MenuExpandIconInfo): VNodeChild => (fromSlot ? fromSlot(info) : fromProp?.(info))
 })
 
 // 点击触发模式下，浮层需在点击菜单外部时收起
@@ -380,6 +378,12 @@ provide<MenuContext>(menuContextKey, {
   --menu-item-selected-color: var(--menu-primary-color);
   /* 选中态底色取主色的最浅一阶，由根组件按组件主题注入 */
   --menu-item-selected-background: var(--menu-primary-palette-1);
+  /* 水平菜单：浅色由下划线表达选中，故不着底色 */
+  --menu-horizontal-selected-background: transparent;
+  /* 水平菜单状态条（下划线）粗细 */
+  --menu-horizontal-active-bar-height: 2px;
+  /* 水平菜单容器下边界的厚度：浅色有一条边界，水平项需上移同量，状态条才压在边界上 */
+  --menu-horizontal-active-bar-border-size: 1px;
   --menu-item-danger-color: #ff4d4f;
   /* 危险项的悬浮字色：浅色下与常态同色 */
   --menu-item-danger-hover-color: #ff4d4f;
@@ -399,6 +403,11 @@ provide<MenuContext>(menuContextKey, {
   --menu-item-hover-background: rgba(0, 0, 0, 0.06);
   --menu-item-selected-color: #fff;
   --menu-item-selected-background: var(--menu-primary-color);
+  /* 水平菜单：深色改由主色填充表达选中，状态条宽度归零（沿用浅色那套下划线会与填充叠加） */
+  --menu-horizontal-selected-background: var(--menu-primary-color);
+  --menu-horizontal-active-bar-height: 0;
+  /* 深色既无状态条也无容器下边界，上移量随之归零 */
+  --menu-horizontal-active-bar-border-size: 0px;
   --menu-item-danger-color: #ff4d4f;
   /* 危险项的悬浮字色：深色下提亮一阶 */
   --menu-item-danger-hover-color: #ff7875;
@@ -423,6 +432,14 @@ provide<MenuContext>(menuContextKey, {
   outline: none;
   /* 收起态的宽度变化做过渡：内嵌菜单收起后靠「容器百分比」把内容居中，宽度若突变，图标会在一帧内瞬移 */
   transition: width 0.3s cubic-bezier(0.2, 0, 0, 1);
+}
+/* 根列表的盒模型复位：宿主页面几乎都会给 `ul` 加列表缩进（如文档站的 `.vp-doc ul { padding-left: 20px }`），
+   其特异性高于单类名，会把整个菜单推离原位（内嵌菜单收起态的 80px 还会被挤掉 20px）；
+   这里用「根列表类 + 根标记类」把 margin / padding / list-style 锁住，使组件在任意宿主页里都保持自身盒模型 */
+.menu-wrap.menu-root {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 .menu-wrap.menu-horizontal {
   display: flex;
@@ -472,7 +489,24 @@ provide<MenuContext>(menuContextKey, {
 }
 /* 收起态的标题提示：只做信息补足，故不接管指针事件，避免遮挡相邻菜单项的悬浮判定 */
 .menu-tooltip-popup {
+  /* 卡片与箭头取自同一份底色，避免两处各写一遍色值后走样 */
+  --menu-tooltip-background: rgba(0, 0, 0, 0.85);
+  /* 面板宽度取内容宽度：浮层内的项也有提示，此时面板挂在子菜单浮层的容器内（宽度为浮层宽度），
+     若交由「收缩适应」计算，可用宽度不足会把提示挤成竖排 */
+  width: max-content;
   pointer-events: none;
+  /* 箭头槽：面板为箭头预留 12px（与参考实现的 tooltip 同口径），箭头与卡片相切不重叠 ——
+     重叠会让半透明底色在拼接处叠出深色细缝 */
+  &.va-popup-placement-right,
+  &.va-popup-placement-rightTop,
+  &.va-popup-placement-rightBottom {
+    padding-left: 12px;
+  }
+  &.va-popup-placement-left,
+  &.va-popup-placement-leftTop,
+  &.va-popup-placement-leftBottom {
+    padding-right: 12px;
+  }
   .menu-tooltip-card {
     max-width: 250px;
     min-height: 32px;
@@ -481,12 +515,98 @@ provide<MenuContext>(menuContextKey, {
     line-height: 1.5714285714285714;
     color: #fff;
     word-break: break-word;
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: var(--menu-tooltip-background);
     border-radius: 6px;
     box-shadow:
       0 6px 16px 0 rgba(0, 0, 0, 0.08),
       0 3px 6px -4px rgba(0, 0, 0, 0.12),
       0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  }
+  /* 箭头：收起态提示的箭头在参考实现里由 `Tooltip` 组件自带，本组件自绘浮层（不引入 `<Tooltip>`，
+     以免在 `<ul>` 内插入额外 DOM），故按提示组件的同一配方重建几何（16px 盒 + 圆角三角 + 投影层） */
+  .menu-tooltip-arrow {
+    position: absolute;
+    /* 必须绘制在卡片**之上**：卡片自带向下扩散的 box-shadow，若箭头置于其下会被阴影染出暗带 */
+    z-index: 9;
+    display: block;
+    pointer-events: none;
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+    /* 位置切换（面板居中 ↔ 边界带内对齐锚点）走过渡：placement 随滚动在 `right` / `rightTop` /
+       `rightBottom` 之间变化时，`top` 平滑插值，避免箭头瞬跳 —— 因此各放置一律只用 `top` 表达，
+       不混用 `bottom` 与 `translateY(-50%)`（后两者无法参与插值） */
+    transition: top 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    &::before {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 16px;
+      height: 8px;
+      background-color: var(--menu-tooltip-background);
+      clip-path: path(
+        'M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z'
+      );
+      content: '';
+    }
+    &::after {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      width: 8.970562748477143px;
+      height: 8.970562748477143px;
+      margin: auto;
+      border-radius: 0 0 2px 0;
+      transform: translateY(50%) rotate(-135deg);
+      box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.1);
+      /* 置于三角形**之下**：这层只负责延续投影，压在三角形之上会把箭头染灰 */
+      z-index: -1;
+      background: transparent;
+      content: '';
+    }
+  }
+  /* 主轴右：箭头贴面板左边缘、指向左（提示浮层固定向右弹出，翻转到左侧时取下一组几何）。
+     垂直位置统一用 `top` 表达：居中态 = `calc(50% - 8px)`（等价于 `top: 50%` + `translateY(-50%)`），
+     这样 `right` ↔ `*Top` / `*Bottom` 之间的切换才能被 `transition: top` 平滑插值（见上） */
+  &.va-popup-placement-right .menu-tooltip-arrow,
+  &.va-popup-placement-rightTop .menu-tooltip-arrow,
+  &.va-popup-placement-rightBottom .menu-tooltip-arrow {
+    top: calc(50% - 8px);
+    left: 12px;
+    transform: translateX(-100%) rotate(-90deg);
+  }
+  /* 主轴左：箭头贴面板右边缘、指向右 */
+  &.va-popup-placement-left .menu-tooltip-arrow,
+  &.va-popup-placement-leftTop .menu-tooltip-arrow,
+  &.va-popup-placement-leftBottom .menu-tooltip-arrow {
+    top: calc(50% - 8px);
+    right: 12px;
+    transform: translateX(100%) rotate(90deg);
+  }
+  /* 对齐型（`*Top` / `*Bottom`）：面板主轴方向余量不足时会被内推，placement 随之退化为「与锚点同端
+     对齐」，菜单项也贴在面板的同一端 —— 箭头须指向该项的居中位置（收起态下即图标中心），否则会停在
+     面板中心指向项外的空白（提示面板高于菜单项时最明显）。
+     偏移量 12px = 项高 40px 的一半（20px）− 箭头盒半高（8px）；该位置同时避开卡片 6px 圆角 ——
+     箭头盒（12~28）完全落在卡片侧边的直线段上，若贴顶（1px）则盒顶部 1~6px 会骑在圆角圆弧外，
+     视觉上出现「箭头与卡片之间的缝」。
+     `*Bottom` 组同样改用 `top`（`calc(100% - 28px)` = 盒底距面板底 12px），否则 `bottom` 与
+     `top` 无法互相插值，切换时仍会瞬跳 */
+  &.va-popup-placement-rightTop .menu-tooltip-arrow {
+    top: 12px;
+    transform: translateX(-100%) rotate(-90deg);
+  }
+  &.va-popup-placement-rightBottom .menu-tooltip-arrow {
+    top: calc(100% - 28px);
+    transform: translateX(-100%) rotate(-90deg);
+  }
+  &.va-popup-placement-leftTop .menu-tooltip-arrow {
+    top: 12px;
+    transform: translateX(100%) rotate(90deg);
+  }
+  &.va-popup-placement-leftBottom .menu-tooltip-arrow {
+    top: calc(100% - 28px);
+    transform: translateX(100%) rotate(90deg);
   }
 }
 /* ============ 列表与菜单项（根列表、弹出面板内的列表共用同一套） ============ */
@@ -503,6 +623,13 @@ provide<MenuContext>(menuContextKey, {
     transition:
       background-color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
       padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  /* 子菜单与分组容器只作定位盒，间距由标题 / 列表自身承担，容器不加外边距。
+     显式声明（而非依赖初始值）是为了挡住宿主页面的列表项规则（如文档站 `.vp-doc li+li { margin-top: 8px }`）
+     插进菜单自身的间距体系 —— 菜单项与分隔线同理，各自在自己的规则里声明了外边距 */
+  .menu-submenu,
+  .menu-item-group {
+    margin: 0;
   }
   /* 分组列表内的项比分组标题（左内边距 16px）再进一档：取两倍字号，使两者形成层次 */
   .menu-item-group-list {
@@ -667,6 +794,11 @@ provide<MenuContext>(menuContextKey, {
   .menu-submenu-selected > .menu-submenu-title {
     color: var(--menu-item-selected-color);
   }
+  /* 悬浮态压过「已选中」：已选中的子菜单标题悬浮时同样换用悬浮字色（箭头与图标取 currentColor，一并跟随）。
+     菜单项不参与这条：选中项自身悬浮时字色与底色都保持选中口径 */
+  .menu-submenu:not(.menu-submenu-disabled) > .menu-submenu-title:hover {
+    color: var(--menu-item-hover-color);
+  }
   .menu-submenu-disabled > .menu-submenu-title {
     color: var(--menu-item-disabled-color);
     cursor: not-allowed;
@@ -801,8 +933,9 @@ provide<MenuContext>(menuContextKey, {
     flex: none;
     /* 不锁高：高度随行高（根列表的 line-height，可被消费方内联覆盖）推导 */
     height: auto;
-    /* 上移 1px：使选中态的 2px 下划线正好压在容器底边上 */
-    margin: -1px 0 0;
+    /* 上移「容器下边界厚度」的量：浅色下状态条正好压在容器底边上；深色既无状态条也无下边界，
+       上移量归零，免得选中底色从容器顶边溢出一线 */
+    margin: calc(-1 * var(--menu-horizontal-active-bar-border-size)) 0 0;
     padding: 0 16px;
     line-height: inherit;
     width: auto;
@@ -817,7 +950,7 @@ provide<MenuContext>(menuContextKey, {
       right: 16px;
       bottom: 0;
       left: 16px;
-      border-bottom: 2px solid transparent;
+      border-bottom: var(--menu-horizontal-active-bar-height) solid transparent;
       transition: border-color 0.3s;
       content: '';
     }
@@ -828,14 +961,19 @@ provide<MenuContext>(menuContextKey, {
   > .menu-submenu-selected::after {
     border-bottom-color: var(--menu-item-selected-color);
   }
-  > .menu-item-selected::after {
-    border-bottom-color: var(--menu-item-selected-color);
-  }
-  /* 水平模式不用底色表达状态：悬浮态由下划线承接，选中态由下划线 + 字色承接 */
-  > .menu-item-selected,
+  /* 悬浮态只画状态条、不换底色（水平模式的悬浮反馈由状态条与字色承接） */
   > .menu-item:hover,
   > .menu-submenu > .menu-submenu-title:hover {
     background-color: transparent;
+  }
+  /* 选中态是否着底色由主题变量决定：浅色透明（由下划线表达）、深色主色填充。与上方悬浮规则取同特异性
+     并置于其后，使「悬浮已选中项」仍保留底色（参考实现同样靠这条先后顺序压过悬浮） */
+  > .menu-item.menu-item-selected,
+  > .menu-submenu.menu-submenu-selected {
+    background-color: var(--menu-horizontal-selected-background);
+  }
+  > .menu-item-selected::after {
+    border-bottom-color: var(--menu-item-selected-color);
   }
   > .menu-submenu > .menu-submenu-title {
     height: 100%;
@@ -854,6 +992,10 @@ provide<MenuContext>(menuContextKey, {
     display: none;
   }
 }
+/* 深色水平菜单不画根下边界：底色已由自身填充区分，再描边会与容器底色叠出一条脏线 */
+.menu-wrap.menu-dark.menu-horizontal {
+  border-bottom: 0;
+}
 /* ============ 水平溢出 ============ */
 /* 测量探针：与真实菜单项同构（同图标、同标题内容、同内边距），脱离文档流且不可见，仅用于按内容宽度
    判定溢出。绝对定位使宽度取内容宽度，与不参与伸缩的菜单项口径一致 */
@@ -865,13 +1007,17 @@ provide<MenuContext>(menuContextKey, {
   pointer-events: none;
 }
 .menu-overflow-indicator {
+  /* 显式声明行内盒：宿主页面常带 `svg { display: block }` 这类全局重置（如文档站），
+     会把指示器摘出行内流 —— 换行盒不再按行高居中，整个「…」会被顶到行顶 */
+  display: inline-block;
   vertical-align: -0.125em;
 }
 /* ============ inline 收起态 ============ */
 /* 收起后内容盒按「容器一半 − 半个图标盒」留白，图标落在容器中线上；标题与箭头改为淡出而非移除 ——
    两者保留占位，由菜单项的 overflow 裁切，宽度收窄时会呈现「内容被裁切滑出」的观感（直接移除是瞬跳） */
 .menu-wrap.menu-inline-collapsed {
-  width: 80px;
+  /* 侧边栏内经 --layout-sider-width 跟随侧边栏实际宽度（80/120/0），非 sider 场景回退 80px */
+  width: var(--layout-sider-width, 80px);
   /* 只处理一级项（含分组内的一级项）：更深层级在收起态不会内嵌呈现，其间距由浮层自行承担 */
   > .menu-item,
   > .menu-item-group > .menu-item-group-list > .menu-item,
@@ -880,7 +1026,9 @@ provide<MenuContext>(menuContextKey, {
     padding: 0 calc(50% - 12px);
     /* 收起态只做裁切、不出省略号：内容本身就是「离心」的，省略号会浮在图标旁显得脏 */
     text-overflow: clip;
-    .menu-submenu-arrow {
+    /* 收起态不呈现展开图标：默认箭头与自定义展开图标（`expandIcon`）一并隐藏，与参考实现同口径 */
+    .menu-submenu-arrow,
+    .menu-submenu-expand-icon {
       opacity: 0;
     }
     .menu-item-icon {

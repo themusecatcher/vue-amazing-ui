@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest'
-import { defineComponent, h, nextTick, ref } from 'vue'
+import { Fragment, createTextVNode, defineComponent, h, nextTick, ref } from 'vue'
 import { mount } from '@vue/test-utils'
-import Menu from 'components/menu'
+import Menu, { MenuDivider, MenuItem, MenuItemGroup, MenuSubMenu } from 'components/menu'
 import type { ItemType, MenuKey } from 'components/menu'
 import { MENU_OVERFLOW_KEY, flattenOverflowItems, splitOverflowItems } from 'components/menu/overflow'
 
@@ -257,5 +257,161 @@ describe('Menu - 事件参数', () => {
     })
     await wrapper.find('.menu-submenu-title').trigger('click')
     expect(onTitleClick).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('Menu - 组件式写法（default 插槽）', () => {
+  /**
+   * 组件式用例：四类子组件各一，覆盖图标插槽、分组标题插槽与虚线分割线
+   *
+   * ⚠️ 插槽一律按**模板编译产物**构造（插槽返回节点数组、纯文本用 `createTextVNode`）：
+   * 用 `h()` 的宽松形态（单节点 / 裸字符串）会绕过真实路径 —— 真实浏览器首次实测即因此漏掉「图标插槽不渲染」。
+   */
+  const componentSlots = () => ({
+    default: () => [
+      h(
+        MenuItem,
+        { key: 'mail' },
+        { default: () => [createTextVNode('Navigation One')], icon: () => [h('span', { class: 'custom-icon' })] }
+      ),
+      h(
+        MenuSubMenu,
+        { key: 'sub1', title: 'Navigation Two' },
+        { default: () => [h(MenuItem, { key: 'opt1' }, { default: () => [createTextVNode('Option 1')] })] }
+      ),
+      h(MenuDivider, { dashed: true }),
+      h(
+        MenuItemGroup,
+        { key: 'group' },
+        {
+          title: () => [h('strong', { class: 'group-title' }, 'Group')],
+          default: () => [h(MenuItem, { key: 'g1' }, { default: () => [createTextVNode('Option 3')] })]
+        }
+      )
+    ]
+  })
+
+  it('四类子组件转换为配置树，渲染出与配置式等价的结构', () => {
+    wrapper = mount(Menu, { props: { mode: 'inline' }, slots: componentSlots() })
+    expect(wrapper.classes()).toContain('menu-wrap')
+    expect(wrapper.findAll('.menu-item')).toHaveLength(3)
+    expect(wrapper.findAll('.menu-submenu')).toHaveLength(1)
+    expect(wrapper.findAll('.menu-item-group')).toHaveLength(1)
+    expect(wrapper.find('.menu-item-divider').classes()).toContain('menu-item-divider-dashed')
+    expect(wrapper.find('[data-menu-id="mail"]').text()).toContain('Navigation One')
+    // 图标与分组标题插槽渲染出的节点带上组件约定的类名
+    expect(wrapper.find('.custom-icon').classes()).toContain('menu-item-icon')
+    expect(wrapper.find('.group-title').text()).toBe('Group')
+  })
+
+  it('default 插槽优先于 items', () => {
+    wrapper = mount(Menu, { props: { mode: 'inline', items }, slots: componentSlots() })
+    expect(wrapper.find('[data-menu-id="mail"]').exists()).toBe(true)
+    expect(wrapper.find('[data-menu-id="disabled"]').exists()).toBe(false)
+  })
+
+  it('未设置 key 的子组件按下标兜底 key', () => {
+    wrapper = mount(Menu, {
+      props: { mode: 'inline' },
+      slots: { default: () => [h(MenuItem, null, { default: () => 'A' }), h(MenuItem, null, { default: () => 'B' })] }
+    })
+    const ids = wrapper.findAll('.menu-item').map((item) => item.attributes('data-menu-id'))
+    expect(ids).toEqual(['menu-item-0', 'menu-item-1'])
+  })
+
+  it('v-for / Fragment 展开后继续解析', () => {
+    wrapper = mount(Menu, {
+      props: { mode: 'inline' },
+      slots: {
+        default: () => [
+          h(Fragment, null, [
+            h(MenuItem, { key: 'a' }, { default: () => 'A' }),
+            h(MenuItem, { key: 'b' }, { default: () => 'B' })
+          ])
+        ]
+      }
+    })
+    expect(wrapper.findAll('.menu-item')).toHaveLength(2)
+  })
+
+  it('点击组件式菜单项触发选中与 select 事件', async () => {
+    wrapper = mount(Menu, { props: { mode: 'inline' }, slots: componentSlots() })
+    await wrapper.find('[data-menu-id="mail"]').trigger('click')
+    const payload = wrapper.emitted('select')?.[0]?.[0] as { key: MenuKey; keyPath: MenuKey[] }
+    expect(payload.key).toBe('mail')
+    expect(payload.keyPath).toEqual(['mail'])
+  })
+
+  it('子菜单级 expandIcon 优先于 Menu 级，且带上展开图标类名', () => {
+    wrapper = mount(Menu, {
+      props: { mode: 'inline' },
+      slots: {
+        expandIcon: () => [h('span', { class: 'menu-level-arrow' })],
+        default: () => [
+          h(
+            MenuSubMenu,
+            { key: 'sub1', title: 'Sub' },
+            {
+              expandIcon: () => [h('span', { class: 'item-level-arrow' })],
+              default: () => [h(MenuItem, { key: 'opt1' }, { default: () => 'Option 1' })]
+            }
+          )
+        ]
+      }
+    })
+    expect(wrapper.find('.item-level-arrow').classes()).toContain('menu-submenu-expand-icon')
+    expect(wrapper.find('.menu-level-arrow').exists()).toBe(false)
+  })
+
+  it('子菜单 titleClick 事件带子菜单 key 与原生事件', async () => {
+    const onTitleClick = vi.fn()
+    wrapper = mount(Menu, {
+      props: { mode: 'inline' },
+      slots: {
+        default: () => [
+          h(
+            MenuSubMenu,
+            { key: 'sub1', title: 'Sub', onTitleClick },
+            {
+              default: () => [h(MenuItem, { key: 'opt1' }, { default: () => 'Option 1' })]
+            }
+          )
+        ]
+      }
+    })
+    await wrapper.find('.menu-submenu-title').trigger('click')
+    expect(onTitleClick).toHaveBeenCalledTimes(1)
+    const info = onTitleClick.mock.calls[0][0] as { key: MenuKey; domEvent: MouseEvent }
+    expect(info.key).toBe('sub1')
+    expect(info.domEvent).toBeInstanceOf(Event)
+  })
+
+  it('纯文本标签归一为字符串（收起态首字兜底），富内容标签保留节点', () => {
+    wrapper = mount(Menu, {
+      props: { mode: 'inline', inlineCollapsed: true },
+      slots: {
+        default: () => [
+          // 模板里直接书写的文本会被编译成 Text vnode，此处按编译形态构造
+          h(MenuItem, { key: 'plain' }, { default: () => [createTextVNode('Plain')] }),
+          h(MenuItem, { key: 'rich' }, { default: () => h('span', { class: 'rich-label' }, 'Rich') })
+        ]
+      }
+    })
+    expect(wrapper.find('[data-menu-id="plain"] .menu-inline-collapsed-noicon').text()).toBe('P')
+    expect(wrapper.find('.rich-label').exists()).toBe(true)
+  })
+
+  it('字符串悬浮标题落原生 title 属性，富内容悬浮标题不落该属性', () => {
+    wrapper = mount(Menu, {
+      props: { mode: 'inline' },
+      slots: {
+        default: () => [
+          h(MenuItem, { key: 'a', title: 'Tip A' }, { default: () => 'A' }),
+          h(MenuItem, { key: 'b' }, { title: () => h('span', { class: 'tip' }, 'Tip B'), default: () => 'B' })
+        ]
+      }
+    })
+    expect(wrapper.find('[data-menu-id="a"]').attributes('title')).toBe('Tip A')
+    expect(wrapper.find('[data-menu-id="b"]').attributes('title')).toBeUndefined()
   })
 })

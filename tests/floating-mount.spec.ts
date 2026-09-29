@@ -14,6 +14,7 @@ import Popup from 'components/popup'
 import Select from 'components/select'
 import Tooltip from 'components/tooltip'
 import { FLOATING_MOUNT_ATTR, useZIndex } from 'components/utils'
+import { flushTransition } from './helpers'
 
 /**
  * 浮层挂载点契约（同域模型）回归守护
@@ -26,11 +27,10 @@ import { FLOATING_MOUNT_ATTR, useZIndex } from 'components/utils'
  * - 可见即持有：隐藏的浮层归还槽位，不抬高后续分配点。
  */
 
-/** 等待离场动画结束：v-show + Transition 要等到 leave 完成才落下 display: none */
+/** 等待离场动画结束：v-show + Transition 要等到 leave 完成才落下 display: none（公共等待见 tests/helpers.ts） */
 async function settle(): Promise<void> {
   for (let index = 0; index < 4; index += 1) {
-    await nextTick()
-    await new Promise((resolve) => setTimeout(resolve, 10))
+    await flushTransition()
   }
 }
 

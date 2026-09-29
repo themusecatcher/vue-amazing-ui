@@ -4,12 +4,13 @@ import {
   AppstoreOutlined,
   CalendarOutlined,
   DesktopOutlined,
-  DownOutlined,
   InboxOutlined,
   MailOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  MinusOutlined,
   PieChartOutlined,
+  PlusOutlined,
   RightOutlined,
   SettingOutlined
 } from '@ant-design/icons-vue'
@@ -140,6 +141,60 @@ const collapsedItems: ItemType[] = [
       { key: '7', label: 'Option 7', title: 'Option 7' },
       { key: '8', label: 'Option 8', title: 'Option 8' }
     ]
+  },
+  {
+    key: 'sub2',
+    icon: () => h(AppstoreOutlined),
+    label: 'Navigation Two',
+    title: 'Navigation Two',
+    children: [
+      { key: '9', label: 'Option 9', title: 'Option 9' },
+      { key: '10', label: 'Option 10', title: 'Option 10' },
+      {
+        key: 'sub3',
+        label: 'Submenu',
+        title: 'Submenu',
+        children: [
+          { key: '11', label: 'Option 11', title: 'Option 11' },
+          { key: '12', label: 'Option 12', title: 'Option 12' }
+        ]
+      }
+    ]
+  }
+]
+
+// 收起态长标题提示：标题长到换行 ⇒ 提示面板比菜单项更高
+const longTitleSelected = ref<MenuKey[]>(['1'])
+const longTitleItems: ItemType[] = [
+  {
+    key: '1',
+    icon: () => h(PieChartOutlined),
+    label: '很长的标题 One：这段文案刻意写长，用于让收起态的悬浮提示折成多行，展示提示内容超出菜单项时的换行效果',
+    title: '很长的标题 One：这段文案刻意写长，用于让收起态的悬浮提示折成多行，展示提示内容超出菜单项时的换行效果'
+  },
+  {
+    key: '2',
+    icon: () => h(DesktopOutlined),
+    label: '较长的标题 Two：这段文案也写得较长，悬浮提示会折成多行，展示提示折成两行时的形态',
+    title: '较长的标题 Two：这段文案也写得较长，悬浮提示会折成多行，展示提示折成两行时的形态'
+  },
+  {
+    key: '3',
+    icon: () => h(InboxOutlined),
+    label: '很长的标题 Three：这段文案刻意写长，用于让收起态的悬浮提示折成多行，展示提示内容超出菜单项时的换行效果',
+    title: '很长的标题 Three：这段文案刻意写长，用于让收起态的悬浮提示折成多行，展示提示内容超出菜单项时的换行效果'
+  },
+  {
+    key: '4',
+    icon: () => h(MailOutlined),
+    label: '较长的标题 Four：这段文案也写得较长，悬浮提示会折成多行，展示提示折成两行时的形态',
+    title: '较长的标题 Four：这段文案也写得较长，悬浮提示会折成多行，展示提示折成两行时的形态'
+  },
+  {
+    key: '5',
+    icon: () => h(AppstoreOutlined),
+    label: '很长的标题 Five：这段文案刻意写长，用于让收起态的悬浮提示折成多行，展示提示内容超出菜单项时的换行效果',
+    title: '很长的标题 Five：这段文案刻意写长，用于让收起态的悬浮提示折成多行，展示提示内容超出菜单项时的换行效果'
   }
 ]
 
@@ -277,6 +332,14 @@ const submenuItems = computed<ItemType[]>(() => [
   { key: '5', label: 'Option 5', title: 'Option 5' },
   { key: '6', label: 'Option 6', title: 'Option 6' }
 ])
+
+// 组件式用法：以子组件描述菜单结构
+const componentSelected = ref<MenuKey[]>(['1'])
+const componentOpenKeys = ref<MenuKey[]>(['sub2'])
+
+// 组件式自定义展开图标：子菜单级 expandIcon 优先，未提供的子菜单回落 Menu 级
+const componentExpandIconSelected = ref<MenuKey[]>(['1'])
+const componentExpandIconOpenKeys = ref<MenuKey[]>(['sub1'])
 </script>
 <template>
   <div>
@@ -322,20 +385,36 @@ const submenuItems = computed<ItemType[]>(() => [
 
     <h2 class="mt30 mb10">缩起内嵌菜单</h2>
     <p class="mb10">收起时只显示图标，子菜单以浮层展示，悬浮菜单项可查看完整标题</p>
-    <Button type="primary" class="mb10" @click="collapsed = !collapsed">
-      <MenuUnfoldOutlined v-if="collapsed" />
-      <MenuFoldOutlined v-else />
-    </Button>
-    <Menu
-      v-model:openKeys="collapsedOpenKeys"
-      v-model:selectedKeys="collapsedSelected"
-      style="width: 256px"
-      mode="inline"
-      theme="dark"
-      :inline-collapsed="collapsed"
-      :items="collapsedItems"
-    />
-
+    <!-- 宽度交给外层容器：内嵌菜单收起后自身宽度收到 80px，若把宽度写在菜单上会把它钉死在展开宽度 -->
+    <Space vertical style="width: 256px">
+      <Button type="primary" @click="collapsed = !collapsed">
+        <MenuUnfoldOutlined v-if="collapsed" />
+        <MenuFoldOutlined v-else />
+      </Button>
+      <Menu
+        v-model:openKeys="collapsedOpenKeys"
+        v-model:selectedKeys="collapsedSelected"
+        mode="inline"
+        theme="dark"
+        :inline-collapsed="collapsed"
+        :items="collapsedItems"
+      />
+    </Space>
+    <h2 class="mt30 mb10">收起态长标题提示</h2>
+    <p class="mb10"
+      >提示取
+      <code>title</code
+      >，长标题会让提示折成多行（面板高于菜单项）；把某项滚动到窗口上/下缘附近再悬浮，提示面板会贴边完整显示，箭头依然对准该项</p
+    >
+    <div style="width: 256px">
+      <Menu
+        v-model:selectedKeys="longTitleSelected"
+        mode="inline"
+        theme="dark"
+        :inline-collapsed="true"
+        :items="longTitleItems"
+      />
+    </div>
     <h2 class="mt30 mb10">只展开当前父级菜单</h2>
     <p class="mb10">点击菜单时收起其他已展开的菜单，保持菜单聚焦简洁</p>
     <Menu
@@ -379,9 +458,72 @@ const submenuItems = computed<ItemType[]>(() => [
       :items="expandIconItems"
     >
       <template #expandIcon="{ isOpen }">
-        <DownOutlined v-if="isOpen" />
-        <RightOutlined v-else />
+        <RightOutlined class="demo-expand-icon" :class="{ 'demo-expand-icon-open': isOpen }" />
       </template>
+    </Menu>
+
+    <h2 class="mt30 mb10">组件式用法</h2>
+    <p class="mb10">
+      以 <code>MenuItem</code> / <code>MenuSubMenu</code> / <code>MenuItemGroup</code> /
+      <code>MenuDivider</code> 子组件描述菜单结构，与 <code>items</code> 配置等价；两者同时提供时以子组件为准
+    </p>
+    <Menu
+      v-model:openKeys="componentOpenKeys"
+      v-model:selectedKeys="componentSelected"
+      style="width: 256px"
+      mode="inline"
+    >
+      <MenuItem key="1">
+        <template #icon><MailOutlined /></template>
+        Option 1
+      </MenuItem>
+      <MenuSubMenu key="sub2">
+        <template #icon><AppstoreOutlined /></template>
+        <template #title>Navigation Two</template>
+        <MenuItem key="2">Option 2</MenuItem>
+        <MenuItem key="3">Option 3</MenuItem>
+        <MenuSubMenu key="sub2-1" title="Submenu">
+          <MenuItem key="4">Option 4</MenuItem>
+          <MenuItem key="5">Option 5</MenuItem>
+        </MenuSubMenu>
+      </MenuSubMenu>
+      <MenuDivider />
+      <MenuItemGroup title="Group">
+        <MenuItem key="6">Option 6</MenuItem>
+        <MenuItem key="7">Option 7</MenuItem>
+      </MenuItemGroup>
+      <MenuItem key="8" disabled>Option 8</MenuItem>
+    </Menu>
+
+    <h2 class="mt30 mb10">组件式自定义展开图标</h2>
+    <p class="mb10">
+      子菜单的 <code>expandIcon</code> 插槽优先于 <code>Menu</code> 的同名插槽，未提供时回落到 <code>Menu</code> 级图标
+    </p>
+    <Menu
+      v-model:openKeys="componentExpandIconOpenKeys"
+      v-model:selectedKeys="componentExpandIconSelected"
+      style="width: 256px"
+      mode="inline"
+    >
+      <template #expandIcon="{ isOpen }">
+        <RightOutlined class="demo-expand-icon" :class="{ 'demo-expand-icon-open': isOpen }" />
+      </template>
+      <MenuSubMenu key="sub1" title="Navigation One">
+        <template #icon><MailOutlined /></template>
+        <template #expandIcon="{ isOpen }">
+          <span class="demo-expand-switch">
+            <PlusOutlined :class="{ 'demo-expand-switch-hidden': isOpen }" />
+            <MinusOutlined :class="{ 'demo-expand-switch-hidden': !isOpen }" />
+          </span>
+        </template>
+        <MenuItem key="1">Option 1</MenuItem>
+        <MenuItem key="2">Option 2</MenuItem>
+      </MenuSubMenu>
+      <MenuSubMenu key="sub3" title="Navigation Three">
+        <template #icon><SettingOutlined /></template>
+        <MenuItem key="3">Option 3</MenuItem>
+        <MenuItem key="4">Option 4</MenuItem>
+      </MenuSubMenu>
     </Menu>
 
     <h2 class="mt30 mb10">主题</h2>
@@ -412,5 +554,31 @@ const submenuItems = computed<ItemType[]>(() => [
 <style lang="less" scoped>
 .demo-divider {
   margin: 0 1em;
+}
+/* 展开图标用「单个箭头旋转 90°」表达展开态：直接切换图标会有一次瞬跳，旋转则连续过渡 */
+.demo-expand-icon {
+  transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  &.demo-expand-icon-open {
+    transform: rotate(90deg);
+  }
+}
+/* 加号 / 减号叠放在同一位置，靠「旋转 + 淡出」互换：若并列放置，过渡期间会同时出现两个图标并把标题挤动 */
+.demo-expand-switch {
+  position: relative;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition:
+      opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+      transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    &.demo-expand-switch-hidden {
+      opacity: 0;
+      transform: rotate(-90deg);
+    }
+  }
 }
 </style>

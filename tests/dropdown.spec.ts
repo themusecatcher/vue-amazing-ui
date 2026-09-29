@@ -5,6 +5,7 @@ import Dropdown from 'components/dropdown/Dropdown.vue'
 import DropdownButton from 'components/dropdown/dropdown-button'
 import Popup from 'components/popup'
 import type { DropdownMenuOption } from 'components/dropdown'
+import { flushTransition } from './helpers'
 
 /**
  * Dropdown 契约守护（基于 Popup + useFloating 重建）
@@ -28,13 +29,9 @@ const mountOptions = {
   }
 }
 
-const tick = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0))
-
-/** 等待「定时器（delay 0）→ 渲染」两拍 */
+/** 等待「定时器（delay 0）→ 渲染 → 浮层显隐落定」（公共等待见 tests/helpers.ts） */
 async function flush(): Promise<void> {
-  await nextTick()
-  await tick()
-  await nextTick()
+  await flushTransition()
 }
 
 /** 轮询等待浮层转入隐藏（v-show + 离开过渡），必要时补发 animationend 促使过渡收尾 */
@@ -43,8 +40,7 @@ async function waitHidden(query: () => HTMLElement | null): Promise<void> {
     const panel = query()
     if (!panel || panel.style.display === 'none') return
     panel.dispatchEvent(new Event('animationend'))
-    await new Promise((resolve) => setTimeout(resolve, 10))
-    await nextTick()
+    await flushTransition()
   }
 }
 

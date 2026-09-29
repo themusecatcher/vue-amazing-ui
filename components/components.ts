@@ -127,6 +127,10 @@ export { default as LoadingBar, LoadingBarProvider, useLoadingBar } from './load
 
 export type {
   MenuProps,
+  MenuDividerProps,
+  MenuItemProps,
+  MenuItemGroupProps,
+  MenuSubMenuProps,
   ItemType,
   MenuKey,
   MenuMode,
@@ -143,7 +147,7 @@ export type {
   MenuDividerType,
   SelectInfo
 } from './menu'
-export { default as Menu } from './menu'
+export { default as Menu, MenuDivider, MenuItem, MenuItemGroup, MenuSubMenu } from './menu'
 
 export type { MessageProps, MessageOptions, MessageApi, MessageReactive, MessageUpdate } from './message'
 export { default as Message, MessageProvider, useMessage } from './message'

@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach, beforeEach } from 'vitest'
 import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import AutoComplete from 'components/auto-complete/AutoComplete.vue'
+import { flushTransition } from './helpers'
 
 /**
  * AutoComplete 走 L1 旁路接入定位内核后的契约回归
@@ -42,11 +43,9 @@ let anchorRect = domRect(400, 300, 100, 40)
 const panelSize = { width: 100, height: 80 }
 const TRIGGER_WIDTH = 100
 
-/** 等待「打开 → 渲染 → 内核 post flush 落位」 */
+/** 等待「打开 → 渲染 → 内核 post flush 落位」（公共等待见 tests/helpers.ts） */
 async function flush(): Promise<void> {
-  await nextTick()
-  await new Promise((resolve) => setTimeout(resolve, 10))
-  await nextTick()
+  await flushTransition()
 }
 
 const queryWrapperEl = (): HTMLElement | null => document.querySelector('.auto-complete-panel-wrapper')

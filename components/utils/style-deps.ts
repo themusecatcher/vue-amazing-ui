@@ -59,6 +59,10 @@ const componentsMap = {
   ListItem: 'list/list-item',
   LoadingBar: 'loading-bar',
   Menu: 'menu',
+  MenuDivider: 'menu/menu-divider',
+  MenuItem: 'menu/menu-item',
+  MenuItemGroup: 'menu/menu-item-group',
+  MenuSubMenu: 'menu/menu-sub-menu',
   Message: 'message',
   Modal: 'modal',
   Notification: 'notification',
@@ -122,6 +126,10 @@ const styleSources: Partial<Record<ComponentName, ComponentName>> = {
   ModalProvider: 'Modal',
   DialogProvider: 'Dialog',
   DescriptionsItem: 'Descriptions',
+  MenuDivider: 'Menu',
+  MenuItem: 'Menu',
+  MenuItemGroup: 'Menu',
+  MenuSubMenu: 'Menu',
   SelectOption: 'Select',
   SelectOptGroup: 'Select'
 }
