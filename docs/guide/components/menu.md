@@ -15,6 +15,7 @@ import {
   AppstoreOutlined,
   CalendarOutlined,
   DesktopOutlined,
+  DownOutlined,
   InboxOutlined,
   MailOutlined,
   MenuFoldOutlined,
@@ -354,6 +355,41 @@ const componentOpenKeys = ref<MenuKey[]>(['sub2'])
 // 组件式自定义展开图标：子菜单级 expandIcon 优先，未提供的子菜单回落 Menu 级
 const componentExpandIconSelected = ref<MenuKey[]>(['1'])
 const componentExpandIconOpenKeys = ref<MenuKey[]>(['sub1'])
+
+// 水平溢出指示器：容器放不下的项收进省略子菜单，其指示器由 overflowedIndicator 插槽自定义
+const overflowItems: ItemType[] = [
+  { key: 'mail', label: 'Navigation One', title: 'Navigation One' },
+  { key: 'app', label: 'Navigation Two', title: 'Navigation Two' },
+  { key: 'calendar', label: 'Navigation Three', title: 'Navigation Three' },
+  { key: 'setting', label: 'Navigation Four', title: 'Navigation Four' },
+  { key: 'desktop', label: 'Navigation Five', title: 'Navigation Five' }
+]
+
+// 子菜单预渲染：开启后子菜单面板在首次展开前就已渲染进 DOM（保持不可见）
+const forceRenderEnabled = ref(false)
+const forceRenderItems: ItemType[] = [
+  { key: '1', icon: () => h(MailOutlined), label: 'Navigation One', title: 'Navigation One' },
+  {
+    key: 'sub1',
+    icon: () => h(AppstoreOutlined),
+    label: 'Navigation Two',
+    title: 'Navigation Two',
+    children: [
+      { key: '2', label: 'Option 2', title: 'Option 2' },
+      { key: '3', label: 'Option 3', title: 'Option 3' }
+    ]
+  },
+  {
+    key: 'sub2',
+    icon: () => h(SettingOutlined),
+    label: 'Navigation Three',
+    title: 'Navigation Three',
+    children: [
+      { key: '4', label: 'Option 4', title: 'Option 4' },
+      { key: '5', label: 'Option 5', title: 'Option 5' }
+    ]
+  }
+]
 </script>
 
 ## 顶部导航
@@ -1192,6 +1228,115 @@ const componentExpandIconOpenKeys = ref<MenuKey[]>(['sub1'])
 
 ::::::
 
+## 水平溢出指示器
+
+_水平空间不足时，放不下的菜单项会收进省略子菜单；其指示器由 `overflowedIndicator` 插槽自定义（未提供时使用内置三点图标）_
+
+<br/>
+
+<div class="demo-overflow-box">
+  <Menu mode="horizontal" :items="overflowItems">
+    <template #overflowedIndicator>
+      <DownOutlined />
+    </template>
+  </Menu>
+</div>
+
+:::::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { DownOutlined } from '@ant-design/icons-vue'
+import type { ItemType } from 'vue-amazing-ui'
+
+const overflowItems: ItemType[] = [
+  { key: 'mail', label: 'Navigation One', title: 'Navigation One' },
+  { key: 'app', label: 'Navigation Two', title: 'Navigation Two' },
+  { key: 'calendar', label: 'Navigation Three', title: 'Navigation Three' },
+  { key: 'setting', label: 'Navigation Four', title: 'Navigation Four' },
+  { key: 'desktop', label: 'Navigation Five', title: 'Navigation Five' }
+]
+</script>
+<template>
+  <div class="demo-overflow-box">
+    <Menu mode="horizontal" :items="overflowItems">
+      <template #overflowedIndicator>
+        <DownOutlined />
+      </template>
+    </Menu>
+  </div>
+</template>
+<style lang="less" scoped>
+/* 限宽容器：宽度不足以容纳全部菜单项时才会触发溢出省略 */
+.demo-overflow-box {
+  width: 480px;
+  max-width: 100%;
+}
+</style>
+```
+
+::::::
+
+## 子菜单预渲染
+
+_开启 `forceSubMenuRender` 后，子菜单面板在首次展开前就已渲染进 DOM（保持不可见），首次展开因此无需等待挂载；可用开发者工具查看未展开的子菜单下是否已存在 `.menu-submenu-popup` 面板_
+
+<br/>
+
+<Switch v-model:value="forceRenderEnabled" checked="On" unchecked="Off" />
+<Menu
+  style="width: 256px; margin-top: 16px"
+  mode="vertical"
+  :force-sub-menu-render="forceRenderEnabled"
+  :items="forceRenderItems"
+/>
+
+:::::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { h, ref } from 'vue'
+import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons-vue'
+import type { ItemType } from 'vue-amazing-ui'
+
+const forceRenderEnabled = ref(false)
+const forceRenderItems: ItemType[] = [
+  { key: '1', icon: () => h(MailOutlined), label: 'Navigation One', title: 'Navigation One' },
+  {
+    key: 'sub1',
+    icon: () => h(AppstoreOutlined),
+    label: 'Navigation Two',
+    title: 'Navigation Two',
+    children: [
+      { key: '2', label: 'Option 2', title: 'Option 2' },
+      { key: '3', label: 'Option 3', title: 'Option 3' }
+    ]
+  },
+  {
+    key: 'sub2',
+    icon: () => h(SettingOutlined),
+    label: 'Navigation Three',
+    title: 'Navigation Three',
+    children: [
+      { key: '4', label: 'Option 4', title: 'Option 4' },
+      { key: '5', label: 'Option 5', title: 'Option 5' }
+    ]
+  }
+]
+</script>
+<template>
+  <Switch v-model:value="forceRenderEnabled" checked="On" unchecked="Off" />
+  <Menu
+    style="width: 256px; margin-top: 16px"
+    mode="vertical"
+    :force-sub-menu-render="forceRenderEnabled"
+    :items="forceRenderItems"
+  />
+</template>
+```
+
+::::::
+
 ## 主题
 
 _内建 `light` 与 `dark` 两套主题，默认为 `light`_
@@ -1349,6 +1494,7 @@ const submenuItems = computed<ItemType[]>(() => [
 | triggerSubMenuAction | 子菜单的展开触发方式 | 'click' &#124; 'hover' | 'hover' |
 | subMenuOpenDelay | 鼠标进入子菜单后开启的延时，单位秒 | number | 0 |
 | subMenuCloseDelay | 鼠标离开子菜单后关闭的延时，单位秒 | number | 0.1 |
+| forceSubMenuRender | 是否在子菜单展示之前就渲染进 DOM（首次展开因而无需等待挂载） | boolean | false |
 
 ### MenuKey Type
 
@@ -1504,6 +1650,7 @@ const submenuItems = computed<ItemType[]>(() => [
 | :-- | :-- | :-- |
 | default | 子组件式菜单内容，直接书写 `MenuItem` / `MenuSubMenu` / `MenuItemGroup` / `MenuDivider`；与 `items` 同时提供时以此为准 | v-slot:default |
 | expandIcon | 自定义子菜单的展开收起图标，存在时优先于 `expandIcon` 属性 | v-slot:expandIcon="{ isOpen, ...item }" |
+| overflowedIndicator | 水平空间不足时收进省略子菜单的指示器，缺省为内置三点图标 | v-slot:overflowedIndicator |
 
 ### MenuItem Slots
 
@@ -1542,6 +1689,11 @@ const submenuItems = computed<ItemType[]>(() => [
 <style lang="less" scoped>
 .demo-divider {
   margin: 0 1em;
+}
+/* 水平溢出用例的限宽容器：宽度不足以容纳全部菜单项时才会触发溢出省略 */
+.demo-overflow-box {
+  width: 480px;
+  max-width: 100%;
 }
 /* 展开图标用「单个箭头旋转 90°」表达展开态：直接切换图标会有一次瞬跳，旋转则连续过渡 */
 .demo-expand-icon {

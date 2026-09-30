@@ -19,8 +19,12 @@ export interface MenuContext {
   subMenuCloseDelay: ComputedRef<number> // 鼠标离开子菜单后的关闭延时，单位秒
   openKeys: Ref<MenuKey[]> // 已展开的子菜单 key
   selectedKeys: Ref<MenuKey[]> // 已选中的菜单项 key
+  activeKeys: Ref<MenuKey[]> // 当前激活路径：悬浮或焦点所在项的完整 key 链（含祖先，故可跨浮层边界高亮父级标题）
+  changeActiveKeys: (keys: MenuKey[]) => void // 更新激活路径（菜单项与子菜单标题的悬浮 / 焦点入口共用）
   overflowStart: Ref<number> // 水平模式下收进溢出子菜单的起始下标（`Infinity` 表示未溢出）
   onOverflowChange: (start: number) => void // 汇报溢出起点，由根组件切分菜单配置
+  overflowedIndicator: ComputedRef<(() => VNodeChild) | undefined> // 自定义溢出指示器，缺省用内置三点图标
+  forceSubMenuRender: ComputedRef<boolean> // 子菜单弹层是否在首次展开前就渲染进 DOM
   selectedSubMenuKeys: ComputedRef<MenuKey[]> // 含选中项的子菜单 key，用于父级高亮
   subMenuZIndex: number // 弹出子菜单的默认层级
   primaryColor: ComputedRef<string> // 主题强调色：浮层面板脱离根节点，需随面板样式一并带入

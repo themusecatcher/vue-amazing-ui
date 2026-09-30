@@ -44,11 +44,13 @@ export interface Props {
   triggerSubMenuAction?: 'click' | 'hover' // 子菜单的展开触发方式
   subMenuOpenDelay?: number // 鼠标进入子菜单后开启的延时，单位秒
   subMenuCloseDelay?: number // 鼠标离开子菜单后关闭的延时，单位秒
+  forceSubMenuRender?: boolean // 是否在子菜单展示之前就渲染进 DOM（首次展开因而无需等待挂载）
 }
 
 export interface MenuSlots {
   default?: () => VNode[] // 子组件式菜单内容（MenuItem / MenuSubMenu / MenuItemGroup / MenuDivider）
   expandIcon?: (info: MenuExpandIconInfo) => VNode[]
+  overflowedIndicator?: () => VNode[] // 水平空间不足时收进省略子菜单的指示器，缺省为内置三点图标
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -65,7 +67,8 @@ const props = withDefaults(defineProps<Props>(), {
   multiple: false,
   triggerSubMenuAction: 'hover',
   subMenuOpenDelay: 0,
-  subMenuCloseDelay: 0.1
+  subMenuCloseDelay: 0.1,
+  forceSubMenuRender: false
 })
 defineSlots<MenuSlots>()
 
@@ -116,6 +119,13 @@ watch(
   { deep: true }
 )
 
+// 当前激活路径：悬浮或焦点所在项的完整 key 链（含祖先）。子菜单浮层经 Teleport 脱离 DOM 树，
+// 浮层内的项被悬浮时父级标题无法用 `:hover` 感知，故统一由这条路径驱动高亮
+const activeKeys = ref<MenuKey[]>([])
+function changeActiveKeys(keys: MenuKey[]): void {
+  activeKeys.value = keys
+}
+
 // 模式归一：inline 收起后菜单退化为 vertical（子菜单改用浮层承载），样式与布局随之为同一套
 // 外层侧边栏下发的收起态优先：此时菜单宽度由侧边栏决定，自身 inlineCollapsed 不再参与
 const siderCollapsed = inject(siderCollapsedKey, null)
@@ -133,7 +143,9 @@ const menuItems = computed<ItemType[]>(() => (slots.default ? parseSlotItems(slo
 // 渲染与下方索引，故溢出子菜单对 keyPath、父级高亮、后代收起也与用户配置等价
 const overflowStart = ref<number>(Number.POSITIVE_INFINITY)
 const displayItems = computed<ItemType[]>(() =>
-  props.mode === 'horizontal' ? splitOverflowItems(menuItems.value, overflowStart.value) : menuItems.value
+  props.mode === 'horizontal'
+    ? splitOverflowItems(menuItems.value, overflowStart.value, slots.overflowedIndicator)
+    : menuItems.value
 )
 
 // 结构索引：key → 祖先链与是否为子菜单，供 keyPath、父级高亮、后代收起使用
@@ -343,10 +355,14 @@ provide<MenuContext>(menuContextKey, {
   subMenuCloseDelay: computed(() => props.subMenuCloseDelay),
   openKeys: innerOpenKeys,
   selectedKeys: innerSelectedKeys,
+  activeKeys,
+  changeActiveKeys,
   overflowStart,
   onOverflowChange: (start: number) => {
     overflowStart.value = start
   },
+  overflowedIndicator: computed(() => slots.overflowedIndicator),
+  forceSubMenuRender: computed(() => props.forceSubMenuRender),
   selectedSubMenuKeys,
   subMenuZIndex: FLOATING_LAYER_Z_INDEX.select,
   primaryColor,
@@ -664,7 +680,9 @@ provide<MenuContext>(menuContextKey, {
       background-color 0.3s,
       border-color 0.3s,
       padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-    &:hover {
+    /* 激活态与悬浮态同款：激活由 JS 驱动（悬浮 / 焦点），故辅助工具编程聚焦时无需另写 `:focus` 规则 */
+    &:hover,
+    &.menu-item-active {
       color: var(--menu-item-hover-color);
       background-color: var(--menu-item-hover-background);
     }
@@ -706,7 +724,8 @@ provide<MenuContext>(menuContextKey, {
     color: var(--menu-item-danger-color);
   }
   /* 危险项悬浮：字色单独取色（仅非选中态；深色下比常态更亮） */
-  .menu-item-danger:not(.menu-item-selected):not(.menu-item-disabled):hover {
+  .menu-item-danger:not(.menu-item-selected):not(.menu-item-disabled):hover,
+  .menu-item-danger:not(.menu-item-selected):not(.menu-item-disabled).menu-item-active {
     color: var(--menu-item-danger-hover-color);
   }
   /* 危险项选中：底色取错误色系，不与普通项的选中底色同色（禁用项不参与，仍走禁用口径） */
@@ -730,6 +749,11 @@ provide<MenuContext>(menuContextKey, {
     &.menu-item-divider-dashed {
       border-bottom-style: dashed;
     }
+  }
+  /* 字色过渡挂在内容盒上而非标题上：标题自身的字色切换即时生效，盒内的文字与图标（图标取
+     `currentColor`，随盒子的动画值一并渐变）仍平滑过渡；纯图标标题（如溢出指示器）也走同一条 */
+  .menu-title-content {
+    transition: color 0.3s;
   }
   .menu-item-icon {
     /* 图标盒按内容取高：若退化为行内块，收起态的行高会把图标盒撑到 40px，图标因此比同行的文字低 2px */
@@ -783,9 +807,9 @@ provide<MenuContext>(menuContextKey, {
     color: var(--menu-color);
     border-radius: 8px;
     cursor: pointer;
-    /* 与菜单项同口径 */
+    /* 字色不参与过渡：标题自身的字色切换即时生效，可见内容的渐变由内容盒承接（见 `.menu-title-content`）；
+       背景色 / 边框 / 内边距仍过渡 */
     transition:
-      color 0.3s,
       background-color 0.3s,
       border-color 0.3s,
       padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
@@ -798,9 +822,13 @@ provide<MenuContext>(menuContextKey, {
     color: var(--menu-item-selected-color);
   }
   /* 悬浮态压过「已选中」：已选中的子菜单标题悬浮时同样换用悬浮字色（箭头与图标取 currentColor，一并跟随）。
-     菜单项不参与这条：选中项自身悬浮时字色与底色都保持选中口径 */
-  .menu-submenu:not(.menu-submenu-disabled) > .menu-submenu-title:hover {
+     菜单项不参与这条：选中项自身悬浮时字色与底色都保持选中口径。
+     子菜单的激活态同款：浮层经 Teleport 脱离 DOM 树，浮层内的项被悬浮时标题无法用 `:hover` 感知，
+     故改由激活路径驱动，底色一并在此补齐（不依赖标题自身的悬浮） */
+  .menu-submenu:not(.menu-submenu-disabled) > .menu-submenu-title:hover,
+  .menu-submenu-active:not(.menu-submenu-disabled) > .menu-submenu-title {
     color: var(--menu-item-hover-color);
+    background-color: var(--menu-item-hover-background);
   }
   .menu-submenu-disabled > .menu-submenu-title {
     color: var(--menu-item-disabled-color);
@@ -954,19 +982,25 @@ provide<MenuContext>(menuContextKey, {
       bottom: 0;
       left: 16px;
       border-bottom: var(--menu-horizontal-active-bar-height) solid transparent;
-      transition: border-color 0.3s;
+      /* 缓动与项目其余颜色过渡同款：状态条的显隐与同元素上的底色 / 字色变化保持同一节奏 */
+      transition: border-color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       content: '';
     }
   }
   > .menu-item:hover::after,
+  > .menu-item-active::after,
   > .menu-submenu:hover::after,
+  > .menu-submenu-active::after,
   > .menu-submenu-open::after,
   > .menu-submenu-selected::after {
     border-bottom-color: var(--menu-item-selected-color);
   }
-  /* 悬浮态只画状态条、不换底色（水平模式的悬浮反馈由状态条与字色承接） */
+  /* 悬浮 / 激活态只画状态条、不换底色（水平模式的反馈由状态条与字色承接）；
+     激活态覆盖「浮层内的项被悬浮」——此时一级子菜单标题仍在根列表内，只能由激活路径命中 */
   > .menu-item:hover,
-  > .menu-submenu > .menu-submenu-title:hover {
+  > .menu-item-active,
+  > .menu-submenu > .menu-submenu-title:hover,
+  > .menu-submenu-active > .menu-submenu-title {
     background-color: transparent;
   }
   /* 选中态是否着底色由主题变量决定：浅色透明（由下划线表达）、深色主色填充。与上方悬浮规则取同特异性
@@ -1073,6 +1107,72 @@ provide<MenuContext>(menuContextKey, {
   animation-duration: 0.2s;
   animation-fill-mode: both;
   animation-play-state: paused;
+}
+/* 收起态悬浮标题提示：与浮层提示同款缩放，时长取「快档」0.1s，故复用同一组关键帧 */
+.menu-zoom-fast-enter,
+.menu-zoom-fast-leave {
+  animation-duration: 0.1s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+}
+.menu-zoom-fast-enter {
+  scale: none;
+  opacity: 0;
+  animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1);
+}
+.menu-zoom-fast-enter-active {
+  animation-name: menu-zoom-in;
+  animation-play-state: running;
+}
+.menu-zoom-fast-leave {
+  animation-timing-function: cubic-bezier(0.78, 0.14, 0.15, 0.86);
+}
+.menu-zoom-fast-leave-active {
+  animation-name: menu-zoom-out;
+  animation-play-state: running;
+}
+/* 水平菜单一级子菜单的浮层：自顶边纵向展开（`transform-origin` 由浮层内核按方向给出，此处为顶边） */
+.menu-slide-enter,
+.menu-slide-leave {
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+}
+.menu-slide-enter {
+  scale: 1 0.8;
+  opacity: 0;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+.menu-slide-enter-active {
+  animation-name: menu-slide-in;
+  animation-play-state: running;
+}
+.menu-slide-leave {
+  animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+}
+.menu-slide-leave-active {
+  animation-name: menu-slide-out;
+  animation-play-state: running;
+}
+@keyframes menu-slide-in {
+  0% {
+    scale: 1 0.8;
+    opacity: 0;
+  }
+  100% {
+    scale: 1;
+    opacity: 1;
+  }
+}
+@keyframes menu-slide-out {
+  0% {
+    scale: 1;
+    opacity: 1;
+  }
+  100% {
+    scale: 1 0.8;
+    opacity: 0;
+  }
 }
 .menu-zoom-enter {
   scale: none;

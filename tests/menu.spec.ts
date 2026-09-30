@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest'
 import { Fragment, createTextVNode, defineComponent, h, nextTick, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import Menu, { MenuDivider, MenuItem, MenuItemGroup, MenuSubMenu } from 'components/menu'
-import type { ItemType, MenuKey } from 'components/menu'
+import type { ItemType, MenuKey, SubMenuType } from 'components/menu'
 import { MENU_OVERFLOW_KEY, flattenOverflowItems, splitOverflowItems } from 'components/menu/overflow'
 
 /**
@@ -413,5 +413,127 @@ describe('Menu - 组件式写法（default 插槽）', () => {
     })
     expect(wrapper.find('[data-menu-id="a"]').attributes('title')).toBe('Tip A')
     expect(wrapper.find('[data-menu-id="b"]').attributes('title')).toBeUndefined()
+  })
+})
+
+describe('Menu - 激活路径（悬浮 / 焦点）', () => {
+  it('悬浮菜单项时该项与祖先子菜单一并进入激活路径，移出后清空', async () => {
+    wrapper = mount(Menu, { props: { items, mode: 'inline', openKeys: ['sub1'] } })
+    await nextTick()
+    const item = wrapper.find('[data-menu-id="opt1"]')
+    const submenu = wrapper.find('.menu-submenu')
+    expect(item.classes()).not.toContain('menu-item-active')
+
+    await item.trigger('mouseenter')
+    expect(item.classes()).toContain('menu-item-active')
+    // 祖先一并激活：浮层经 Teleport 脱离 DOM 树，纯 `:hover` 覆盖不到这条链路
+    expect(submenu.classes()).toContain('menu-submenu-active')
+
+    await item.trigger('mouseleave')
+    expect(item.classes()).not.toContain('menu-item-active')
+    expect(submenu.classes()).not.toContain('menu-submenu-active')
+  })
+
+  it('焦点进入激活路径（辅助工具编程聚焦时的视觉反馈）', async () => {
+    wrapper = mount(Menu, { props: { items } })
+    const item = wrapper.find('[data-menu-id="mail"]')
+    await item.trigger('focus')
+    expect(item.classes()).toContain('menu-item-active')
+  })
+
+  it('禁用项既不进入激活路径，也不响应 Enter', async () => {
+    wrapper = mount(Menu, { props: { items } })
+    const item = wrapper.find('[data-menu-id="disabled"]')
+    await item.trigger('mouseenter')
+    expect(item.classes()).not.toContain('menu-item-active')
+
+    await item.trigger('keydown', { key: 'Enter' })
+    expect(wrapper.emitted('select')).toBeUndefined()
+    expect(wrapper.emitted('update:selectedKeys')).toBeUndefined()
+  })
+
+  it('按 Enter 与点击同义：回传 click / select 与 update:selectedKeys', async () => {
+    wrapper = mount(Menu, { props: { items } })
+    const item = wrapper.find('[data-menu-id="mail"]')
+    await item.trigger('keydown', { key: 'Enter' })
+
+    expect(wrapper.emitted('click')?.[0]?.[0]).toMatchObject({ key: 'mail' })
+    expect(wrapper.emitted('select')?.[0]?.[0]).toMatchObject({ key: 'mail' })
+    expect(wrapper.emitted('update:selectedKeys')?.[0]?.[0]).toEqual(['mail'])
+  })
+})
+
+describe('Menu - 溢出指示器插槽', () => {
+  it('切分时用传入的渲染函数合成溢出子菜单标题', () => {
+    const indicator = () => h('i', { class: 'my-indicator' })
+    const result = splitOverflowItems(items, 1, indicator)
+    const overflow = result[1] as SubMenuType
+
+    expect(overflow.key).toBe(MENU_OVERFLOW_KEY)
+    expect(overflow.label).toBe(indicator)
+    // 被收起的项仍是溢出子菜单的子项，还原后数量与原始配置一致
+    expect(flattenOverflowItems(result)).toHaveLength(items.length)
+  })
+
+  it('未传渲染函数时用内置三点图标', () => {
+    const overflow = splitOverflowItems(items, 1)[1] as SubMenuType
+    expect(typeof overflow.label).toBe('function')
+    expect(overflow.label).not.toBe(undefined)
+  })
+})
+
+describe('Menu - forceSubMenuRender', () => {
+  it('为真时未展开的子菜单浮层面板已渲染进 DOM，缺省则不渲染', async () => {
+    wrapper = mount(Menu, { props: { items, mode: 'vertical' } })
+    await nextTick()
+    await nextTick()
+    expect(document.querySelectorAll('.menu-submenu-popup')).toHaveLength(0)
+
+    wrapper.unmount()
+    document.body.innerHTML = ''
+    wrapper = mount(Menu, { props: { items, mode: 'vertical', forceSubMenuRender: true } })
+    await nextTick()
+    await nextTick()
+    expect(document.querySelectorAll('.menu-submenu-popup')).toHaveLength(1)
+  })
+})
+
+describe('Menu - 收起态标题提示的显隐延时', () => {
+  it('显隐各延时一档；延时内反向操作会取消对应计时，提示不残留', async () => {
+    vi.useFakeTimers()
+    try {
+      wrapper = mount(Menu, { props: { items, mode: 'inline', inlineCollapsed: true }, attachTo: document.body })
+      await nextTick()
+      const item = wrapper.find('[data-menu-id="mail"]')
+
+      // 延时未到：提示不出现（光标扫过菜单时不逐项闪烁）
+      await item.trigger('mouseenter')
+      expect(document.querySelectorAll('.menu-tooltip-popup')).toHaveLength(0)
+
+      // 延时未到即移出：待显示的计时被取消，提示始终不出现
+      await item.trigger('mouseleave')
+      vi.advanceTimersByTime(200)
+      await nextTick()
+      expect(document.querySelectorAll('.menu-tooltip-popup')).toHaveLength(0)
+
+      // 停留满一档延时：提示出现
+      await item.trigger('mouseenter')
+      vi.advanceTimersByTime(100)
+      await nextTick()
+      await nextTick()
+      const shown = document.querySelector('.menu-tooltip-popup') as HTMLElement | null
+      expect(shown).not.toBeNull()
+      expect(shown?.style.display).not.toBe('none')
+
+      // 移出后延时内仍显示，满一档延时才隐藏
+      await item.trigger('mouseleave')
+      await nextTick()
+      expect((document.querySelector('.menu-tooltip-popup') as HTMLElement).style.display).not.toBe('none')
+      vi.advanceTimersByTime(100)
+      await nextTick()
+      expect((document.querySelector('.menu-tooltip-popup') as HTMLElement).style.display).toBe('none')
+    } finally {
+      vi.useRealTimers()
+    }
   })
 })

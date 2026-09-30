@@ -1,5 +1,5 @@
 import { h } from 'vue'
-import type { VNode } from 'vue'
+import type { VNode, VNodeChild } from 'vue'
 import type { ItemType, MenuKey, SubMenuType } from './interface'
 
 /**
@@ -40,9 +40,14 @@ export function renderOverflowIndicator(): VNode {
   )
 }
 
-/** 合成溢出子菜单：被收起的菜单项原样成为其子项，展开后与平铺时表现一致 */
-export function createOverflowNode(children: ItemType[]): SubMenuType {
-  return { key: MENU_OVERFLOW_KEY, label: renderOverflowIndicator, children }
+/**
+ * 合成溢出子菜单：被收起的菜单项原样成为其子项，展开后与平铺时表现一致
+ *
+ * @param {ItemType[]} children 被收起的菜单项
+ * @param {() => VNodeChild} [indicator] 溢出指示器的渲染函数，缺省用内置三点图标
+ */
+export function createOverflowNode(children: ItemType[], indicator?: () => VNodeChild): SubMenuType {
+  return { key: MENU_OVERFLOW_KEY, label: indicator ?? renderOverflowIndicator, children }
 }
 
 /**
@@ -53,13 +58,14 @@ export function createOverflowNode(children: ItemType[]): SubMenuType {
  *
  * @param {ItemType[]} items 原始菜单配置
  * @param {number} start 溢出起点（`Infinity` 表示未溢出）
+ * @param {() => VNodeChild} [indicator] 溢出指示器的渲染函数，缺省用内置三点图标
  * @returns {ItemType[]} 可直接渲染的菜单配置
  */
-export function splitOverflowItems(items: ItemType[], start: number): ItemType[] {
+export function splitOverflowItems(items: ItemType[], start: number, indicator?: () => VNodeChild): ItemType[] {
   if (!Number.isFinite(start) || start >= items.length) {
     return items
   }
-  return [...items.slice(0, start), createOverflowNode(items.slice(start))]
+  return [...items.slice(0, start), createOverflowNode(items.slice(start), indicator)]
 }
 
 /**

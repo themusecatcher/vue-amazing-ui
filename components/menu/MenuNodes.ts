@@ -65,6 +65,13 @@ const POPUP_GAP = { horizontal: 8, vertical: 10 } as const
 const TOOLTIP_GAP = 4
 
 /**
+ * 收起态标题提示的显隐延时（毫秒）
+ *
+ * 显示与隐藏各取一段，与浮层提示族同口径：菜单项可被快速扫过，即时显隐会让提示持续闪烁。
+ */
+const TIP_DELAY = 100
+
+/**
  * 弹出浮层的过渡
  *
  * 类名与关键帧统一带 `menu-` 前缀：过渡类由浮层宿主落在面板上（无法用选择器作用域收口），
@@ -78,6 +85,33 @@ const POPUP_TRANSITION: TransitionProps = {
   leaveFromClass: 'menu-zoom-leave',
   leaveActiveClass: 'menu-zoom-leave menu-zoom-leave-active',
   leaveToClass: 'menu-zoom-leave menu-zoom-leave-active'
+}
+
+/** 收起态悬浮标题提示的浮层过渡：与浮层提示同口径（缩放 0.8 起步、时长 0.1s），复用同一组关键帧 */
+const TOOLTIP_TRANSITION: TransitionProps = {
+  name: 'menu-zoom-fast',
+  enterFromClass: 'menu-zoom-fast-enter',
+  enterActiveClass: 'menu-zoom-fast-enter',
+  enterToClass: 'menu-zoom-fast-enter menu-zoom-fast-enter-active',
+  leaveFromClass: 'menu-zoom-fast-leave',
+  leaveActiveClass: 'menu-zoom-fast-leave menu-zoom-fast-leave-active',
+  leaveToClass: 'menu-zoom-fast-leave menu-zoom-fast-leave-active'
+}
+
+/**
+ * 水平菜单一级子菜单的浮层过渡：纵向展开（顶边为原点做纵向缩放）
+ *
+ * 与纵向浮层的等比缩放分开：纵向浮层从锚点侧向外等比铺开，水平一级子菜单则自顶边向下展开，
+ * 浮层内的更深层级仍走等比缩放（见 `popupHorizontal` 的判定）。
+ */
+const POPUP_SLIDE_TRANSITION: TransitionProps = {
+  name: 'menu-slide',
+  enterFromClass: 'menu-slide-enter',
+  enterActiveClass: 'menu-slide-enter',
+  enterToClass: 'menu-slide-enter menu-slide-enter-active',
+  leaveFromClass: 'menu-slide-leave',
+  leaveActiveClass: 'menu-slide-leave menu-slide-leave-active',
+  leaveToClass: 'menu-slide-leave menu-slide-leave-active'
 }
 
 /** 内嵌子菜单展开收起：先落定像素高度，再由过渡推进到目标高度（`auto` 无法参与过渡） */
@@ -131,6 +165,7 @@ export default defineComponent({
     const titleEls = shallowReactive(new Map<MenuKey, HTMLElement>()) // 子菜单标题元素：弹出浮层的定位锚点
     const itemEls = shallowReactive(new Map<MenuKey, HTMLElement>()) // 菜单项元素：收起态标题提示的定位锚点
     const closeTimers = new Map<MenuKey, ReturnType<typeof setTimeout>>() // 子菜单延时开合计时器
+    const tipTimers = new Map<MenuKey, ReturnType<typeof setTimeout>>() // 收起态标题提示的显隐计时器
     const hoverKey = ref<MenuKey | null>(null) // 当前悬浮的菜单项（仅收起态用于标题提示）
     // >>>>> 水平溢出省略（仅根列表生效）
     const overflowEnabled = computed(() => props.isRoot && menu.mode.value === 'horizontal')
@@ -141,6 +176,8 @@ export default defineComponent({
     onBeforeUnmount(() => {
       closeTimers.forEach((timer) => clearTimeout(timer))
       closeTimers.clear()
+      tipTimers.forEach((timer) => clearTimeout(timer))
+      tipTimers.clear()
     })
 
     /** 渲染标题 / 文本配置：渲染函数直接求值，其余形态原样交给 Vue */
@@ -203,6 +240,12 @@ export default defineComponent({
       ])
     }
 
+    /** 溢出指示器内容：消费方提供时用其渲染结果，缺省为内置三点图标 */
+    function renderIndicatorContent(): VNodeChild {
+      const custom = menu.overflowedIndicator.value
+      return custom ? custom() : renderOverflowIndicator()
+    }
+
     /** 溢出指示项的探针：判定溢出时需为其预留宽度 */
     function renderIndicatorProbe(): VNode {
       return renderProbeShell(
@@ -210,7 +253,7 @@ export default defineComponent({
         (el) => {
           indicatorEl = el instanceof HTMLElement ? el : null
         },
-        [h('span', { class: 'menu-title-content' }, [renderOverflowIndicator()])]
+        [h('span', { class: 'menu-title-content' }, [renderIndicatorContent()])]
       )
     }
 
@@ -287,6 +330,31 @@ export default defineComponent({
       closeTimers.set(
         key,
         setTimeout(() => menu.onOpenChange(key, false), menu.subMenuCloseDelay.value * 1000)
+      )
+    }
+
+    /**
+     * 收起态标题提示的显隐：两侧各延时 `TIP_DELAY`
+     *
+     * 同一项的显隐互斥，故共用一个计时位 —— 移入会取消「待隐藏」、移出会取消「待显示」，
+     * 光标快速扫过菜单时不会留下已离开项的提示。菜单项的悬浮高亮不经过这里（走激活路径与样式），
+     * 故高亮仍是即时的。
+     */
+    function scheduleTip(key: MenuKey, visible: boolean): void {
+      const timer = tipTimers.get(key)
+      if (timer !== undefined) {
+        clearTimeout(timer)
+      }
+      tipTimers.set(
+        key,
+        setTimeout(() => {
+          tipTimers.delete(key)
+          if (visible) {
+            hoverKey.value = key
+          } else if (hoverKey.value === key) {
+            hoverKey.value = null
+          }
+        }, TIP_DELAY)
       )
     }
 
@@ -371,6 +439,7 @@ export default defineComponent({
       const keyPath = [...parentKeys, key]
       const disabled = menu.disabled.value || !!node.disabled
       const collapsed = menu.inlineCollapsed.value
+      const active = menu.activeKeys.value.includes(key)
       const iconNode = renderIcon(node.icon, node)
       const content = renderTitleContent(node.label, iconNode, level, collapsed)
       // 收起态的悬浮标题（与参考实现同口径）：一级项缺省 `title` 时以标签内容兜底，更深层级只认显式 `title`；
@@ -396,7 +465,7 @@ export default defineComponent({
                 panelClass: 'menu-tooltip-popup',
                 panelStyle: panelStyle(),
                 defaultZIndex: menu.subMenuZIndex,
-                transitionProps: POPUP_TRANSITION
+                transitionProps: TOOLTIP_TRANSITION
               },
               { default: () => h('div', { class: 'menu-tooltip-card' }, [tipContent]) }
             )
@@ -408,6 +477,7 @@ export default defineComponent({
           class: [
             'menu-item',
             {
+              'menu-item-active': active,
               'menu-item-selected': menu.selectedKeys.value.includes(key),
               'menu-item-disabled': disabled,
               'menu-item-danger': !!node.danger
@@ -427,15 +497,33 @@ export default defineComponent({
               menu.onItemClick({ key, keyPath, item: node, domEvent: event })
             }
           },
-          // 收起态才需要感知悬浮（承载标题提示），避免常态下每次悬浮都重渲染整个列表
+          // 悬浮与焦点共用同一条激活路径，写入的是完整 key 链（含祖先），父级子菜单标题据此高亮
           onMouseenter: () => {
+            if (!disabled) {
+              menu.changeActiveKeys(keyPath)
+            }
+            // 收起态才需要感知悬浮（承载标题提示），避免常态下每次悬浮都重渲染整个列表
             if (collapsed) {
-              hoverKey.value = key
+              scheduleTip(key, true)
             }
           },
           onMouseleave: () => {
-            if (hoverKey.value === key) {
-              hoverKey.value = null
+            if (!disabled) {
+              menu.changeActiveKeys([])
+            }
+            if (collapsed) {
+              scheduleTip(key, false)
+            }
+          },
+          onFocus: () => {
+            if (!disabled) {
+              menu.changeActiveKeys(keyPath)
+            }
+          },
+          // 键盘确认与点击同义：辅助工具经编程聚焦后按 Enter 即选中
+          onKeydown: (event: KeyboardEvent) => {
+            if (event.key === 'Enter' && !disabled) {
+              menu.onItemClick({ key, keyPath, item: node, domEvent: event })
             }
           }
         },
@@ -460,6 +548,7 @@ export default defineComponent({
       const popupOffsetPair =
         node.popupOffset ?? (popupHorizontal ? [0, POPUP_GAP.horizontal] : [POPUP_GAP.vertical, 0])
       const collapsed = menu.inlineCollapsed.value
+      const active = menu.activeKeys.value.includes(key)
       const theme = node.theme ?? menu.theme.value
       const iconNode = renderIcon(node.icon, node)
       const titleContent = renderTitleContent(node.label, iconNode, level, collapsed)
@@ -485,6 +574,11 @@ export default defineComponent({
           onClick: (event: MouseEvent) => {
             if (!disabled) {
               menu.onTitleClick(node, event)
+            }
+          },
+          onFocus: () => {
+            if (!disabled) {
+              menu.changeActiveKeys(keyPath)
             }
           }
         },
@@ -529,7 +623,9 @@ export default defineComponent({
             panelClass: popupClass,
             panelStyle: panelStyle(),
             defaultZIndex: menu.subMenuZIndex,
-            transitionProps: POPUP_TRANSITION,
+            transitionProps: popupHorizontal ? POPUP_SLIDE_TRANSITION : POPUP_TRANSITION,
+            // 提前渲染面板 DOM（关闭态不测量、不可见），首次展开因而无需等待挂载
+            forceRender: menu.forceSubMenuRender.value,
             // 移入浮层即取消收起计时：光标穿过锚点与面板之间的间隙时不应关闭
             onMouseenter: () => clearCloseTimer(key),
             onMouseleave: () => scheduleClose(key, disabled)
@@ -545,6 +641,7 @@ export default defineComponent({
             'menu-submenu',
             `menu-submenu-${menu.mode.value}`,
             {
+              'menu-submenu-active': active,
               'menu-submenu-open': open,
               'menu-submenu-selected': menu.selectedSubMenuKeys.value.includes(key),
               'menu-submenu-disabled': disabled
@@ -553,8 +650,19 @@ export default defineComponent({
           ],
           style: node.style,
           role: 'none',
-          onMouseenter: () => scheduleOpen(key, disabled),
-          onMouseleave: () => scheduleClose(key, disabled)
+          onMouseenter: () => {
+            scheduleOpen(key, disabled)
+            // 悬浮标题即进入本子菜单的激活路径；浮层内的项悬浮时由项自身写入完整路径
+            if (!disabled) {
+              menu.changeActiveKeys(keyPath)
+            }
+          },
+          onMouseleave: () => {
+            scheduleClose(key, disabled)
+            if (!disabled) {
+              menu.changeActiveKeys([])
+            }
+          }
         },
         [titleNode, childrenNode]
       )
