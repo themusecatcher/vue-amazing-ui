@@ -129,6 +129,11 @@ const showIconOnly = computed(() => slotsExist.icon && !slotsExist.default)
 ```
 
 - 嵌套不超过 3 层。
+- 字体口径（2026-09-30 定，两处落地文件：`components/style/global.less` + 各组件样式）：
+  - **字体族**：库**不**在 `body` / `html` 上声明字体（字体归宿主，「谁提供字体谁声明」），组件内禁止新增页面级字体声明；内置组件自身也不得依赖库级字体声明。原生表单控件因浏览器 UA 样式**不继承**页面字体，统一由 `components/style/global.less` 的 `input, textarea, select, button { font-family: inherit }` 兜底（该规则为库级全局规则，会作用于宿主页面上的同名原生控件）。
+  - **字号**：**呈现型文本必须显式声明 `font-size`**（组件根给出该组件的默认字号，逐元素按需覆盖），**禁止依赖宿主继承**；由使用者传入文本的内容型 / 行内型组件（`Highlight` / `Ellipsis` / `NumberAnimation` / 各容器的插槽内容）必须显式写 `font-size: inherit`，以表明「跟随上下文」的设计意图。
+  - 审计口径（抽查新增组件时可用）：把宿主 `body` 的字号扰动为 `20px`，组件内自绘文本的计算字号**不得变化**；字体族同理（扰动宿主字体，库内自绘文本随宿主变化是预期行为）。
+  - 字体的「可配置性」由宿主的页面字体声明提供，**不进 `ConfigProvider.theme`**（该通道只承载颜色，见「主题系统」）。
 
 ## 函数式 / 全局组件模式
 

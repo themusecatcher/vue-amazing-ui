@@ -1,7 +1,7 @@
 /**
  * 第三方样式依赖清单（单一数据源）
  *
- * 部分组件依赖第三方库的独立 CSS（DatePicker → @vuepic/vue-datepicker、Swiper → swiper），
+ * 部分组件依赖第三方库的独立 CSS（Swiper → swiper），
  * 它们无法被组件自身的 <style scoped> 覆盖，需在构建期复制进产物后再由样式入口按需引用。
  *
  * `target` 采用「镜像原包结构」约定：`vendorStylesDir/<包名>/<原包内相对路径>`，
@@ -33,10 +33,6 @@ const swiperModules = [
 /** 第三方样式依赖清单 */
 export const vendorStyles: VendorStyle[] = [
   {
-    source: '@vuepic/vue-datepicker/dist/main.css',
-    target: `${vendorStylesDir}/vue-datepicker/main.css`
-  },
-  {
     source: 'swiper/swiper.css',
     target: `${vendorStylesDir}/swiper/swiper.css`
   },
@@ -53,6 +49,5 @@ export const vendorStyles: VendorStyle[] = [
  * 按组件名查表写入样式入口。
  */
 export const vendorStylesByComponent: Record<string, string[]> = {
-  DatePicker: vendorStyles.filter(({ source }) => source.startsWith('@vuepic/')).map(({ target }) => target),
   Swiper: vendorStyles.filter(({ source }) => source.startsWith('swiper/')).map(({ target }) => target)
 }

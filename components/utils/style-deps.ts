@@ -30,6 +30,7 @@ const componentsMap = {
   Comment: 'comment',
   ConfigProvider: 'config-provider',
   Countdown: 'countdown',
+  DatePanel: 'picker',
   DatePicker: 'date-picker',
   Descriptions: 'descriptions',
   DescriptionsItem: 'descriptions/descriptions-item',
@@ -58,6 +59,9 @@ const componentsMap = {
   Notification: 'notification',
   NumberAnimation: 'number-animation',
   Pagination: 'pagination',
+  PickerIcon: 'picker',
+  PickerPanel: 'picker',
+  PickerTrigger: 'picker',
   Popconfirm: 'popconfirm',
   Popover: 'popover',
   Popup: 'popup',
@@ -134,6 +138,8 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   Carousel: ['Spin'],
   Cascader: ['Select', 'Empty', 'Scrollbar'],
   Collapse: ['Button'],
+  DatePicker: ['DatePanel', 'PickerPanel', 'PickerTrigger'],
+  DatePanel: ['PickerPanel'],
   ColorPicker: ['Button', 'Input', 'Tooltip', 'Popup'],
   Dialog: ['Button', 'Scrollbar'],
   DialogProvider: ['Button', 'Scrollbar'],
@@ -179,7 +185,13 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
  *
  * 与 styleSources 的区别：styleSources 是「无样式但有来源」，本表是「无样式且无来源」，按需引入返回空。
  */
-const stylelessComponents: ComponentName[] = ['ConfigProvider', 'Highlight', 'NumberAnimation', 'Watermark']
+const stylelessComponents: ComponentName[] = [
+  'ConfigProvider',
+  'Highlight',
+  'NumberAnimation',
+  'PickerIcon',
+  'Watermark'
+]
 
 export { componentsMap, styleSources, componentDependencies, stylelessComponents, isComponentName }
 export type { ComponentName }

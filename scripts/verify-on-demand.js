@@ -44,7 +44,6 @@ const CANARIES = [
   { pattern: /\.va-popup-arrow/, label: 'Popup 作用域样式（Tooltip 的依赖组件）' },
   { pattern: /\.select-panel/, label: 'Select 自身样式' },
   { pattern: /\.swiper/, label: '第三方样式 swiper（vendor-styles）' },
-  { pattern: /\.dp__/, label: '第三方样式 @vuepic/vue-datepicker（vendor-styles）' },
   { pattern: /\.tag-wrap/, label: "手动裸目录引入的 Tag 样式（单段目录：import 'vue-amazing-ui/es/tag/style'）" },
   {
     pattern: /\.grid-row-wrap/,

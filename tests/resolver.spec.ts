@@ -165,11 +165,18 @@ describe('resolver - 全量组件映射', () => {
   // 回归守护：`componentsMap` 中登记的名字都会进入 resolver 的解析范围，而 resolver 生成的
   // `import { X } from 'vue-amazing-ui'` 必须真实可解析 —— 两者一旦出现差集，消费方在模板中写下
   // 该名字时就会拿到「does not provide an export named …」的构建期报错。
-  // 内部浮层宿主 `Popup` 是唯一的例外：仅为 `componentDependencies` 提供样式来源，不对外导出。
-  it('登记名与公开导出名的差集只应有内部浮层宿主 Popup', () => {
+  // 例外只有内部组件：浮层宿主 `Popup` 与日期选择内核（`picker/`）——
+  // 它们仅为 `componentDependencies` 提供样式来源，不对外导出。
+  it('登记名与公开导出名的差集只应有内部组件（浮层宿主与选择器内核）', () => {
     const exported = new Set(parseExportedComponentNames())
     const unexported = entries.map(([name]) => name).filter((name) => !exported.has(name))
-    expect(unexported, `以下登记名未从主入口导出：${unexported.join('、')}`).toEqual(['Popup'])
+    expect(unexported, `以下登记名未从主入口导出：${unexported.join('、')}`).toEqual([
+      'DatePanel',
+      'PickerIcon',
+      'PickerPanel',
+      'PickerTrigger',
+      'Popup'
+    ])
   })
 })
 

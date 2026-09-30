@@ -155,13 +155,15 @@ describe('generateStyleEntries - 入口内容与顺序', () => {
     ])
   })
 
-  it('vendor：DatePicker / Swiper 的入口含第三方样式行', () => {
+  it('vendor：Swiper 的入口含第三方样式行（DatePicker 已为内核实现，无第三方样式）', () => {
     generate()
 
     expect(lines('es/date-picker/style/index.js')).toEqual([
       "import '../../style/global.css'",
       "import '../DatePicker.css'",
-      "import '../../vendor-styles/vue-datepicker/main.css'"
+      "import '../../picker/DatePanel.css'",
+      "import '../../picker/PickerPanel.css'",
+      "import '../../picker/PickerTrigger.css'"
     ])
     const swiper = lines('es/swiper/style/index.js')
     expect(swiper).toContain("import '../../vendor-styles/swiper/swiper.css'")
@@ -171,11 +173,16 @@ describe('generateStyleEntries - 入口内容与顺序', () => {
 })
 
 describe('generateStyleEntries - 断言与格式', () => {
-  it('无样式组件不生成入口', () => {
+  it('无样式组件不产出自身样式入口', () => {
     generate()
 
     stylelessComponents.forEach((name) => {
-      expect(existsSync(join(rootDir, 'es', compMap[name], 'style', 'index.js')), `${name} 不应生成入口`).toBe(false)
+      // 与有样式组件共用目录时（如 PickerIcon 与 picker 内核同处 picker/）目录入口仍会产出，
+      // 其中不得出现该组件自身的样式引用
+      const dir = compMap[name]
+      const entry = join(rootDir, 'es', dir, 'style', 'index.js')
+      const content = existsSync(entry) ? read(`es/${dir}/style/index.js`) : ''
+      expect(content, `${name} 不应被生成入口引用`).not.toContain(`${dir}/${name}.css`)
     })
   })
 

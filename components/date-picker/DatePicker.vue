@@ -1,467 +1,377 @@
 <script setup lang="ts">
-import { VueDatePicker } from '@vuepic/vue-datepicker'
-import '@vuepic/vue-datepicker/dist/main.css'
-import { computed, ref, watch } from 'vue'
-import { useInject } from 'components/utils'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import type { CSSProperties, TransitionProps, VNode } from 'vue'
+import Popup from 'components/popup'
+import DatePanel from 'components/picker/DatePanel.vue'
+import PickerTrigger from 'components/picker/PickerTrigger.vue'
+import { formatTimestamp, getDefaultFormat, getInputSize, parseTimestamp } from 'components/picker/date-utils'
+import type { StartDayOfWeek } from 'components/picker/date-utils'
+import type {
+  PickerFormattedValue,
+  PickerPanelMode,
+  PickerSize,
+  PickerStatus,
+  PickerType,
+  PickerValue
+} from 'components/picker'
+import type { FloatingPlacement } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, useInject } from 'components/utils'
 export interface Props {
-  width?: string | number // 日期选择器宽度，单位 px
-  size?: 'small' | 'middle' | 'large' // 日期选择器大小
-  mode?: 'time' | 'date' | 'week' | 'month' | 'year' // 选择器模式
-  format?: string | ((date: Date) => string) | ((dates: Date[]) => string) // 日期展示格式，(yy: 年, M: 月, d: 天, H: 时, m: 分, s: 秒, w: 周)
-  showTime?: boolean // 是否增加时间选择
-  showToday?: boolean // 是否展示”今天“按钮
-  range?: boolean // 是否使用范围选择器
-  maxRange?: number // 范围选择器最长日期可选择范围，单位天，仅当 range: true 时生效
-  // multiCalendars?: boolean // 范围选择器是否使用双日期面板
-  // flow?: any[] // 定义选择顺序 ("calendar" | "time" | "month" | "year" | "minutes" | "hours" | "seconds")[]
-  // dark?: boolean // 样式主题是否使用黑色
-  modelType?: 'timestamp' | 'format' // v-model 值类型，timestamp 为时间戳、format 为格式化字符串，mode 为 week 或 year 时，该配置不生效
+  // 内容数据
+  type?: PickerType // 选择形态
+  format?: string // 展示格式，date-fns 占位符，默认随 type 变化
+  valueFormat?: string // 绑定值格式，默认与 format 相同
+  placeholder?: string // 输入框提示文字
+  defaultPickerValue?: number // 面板初始日期（时间戳），默认取 value 或今天
+  startDayOfWeek?: StartDayOfWeek // 一周起始日，0 为周一
+  disabledDate?: (timestamp: number) => boolean // 不可选择的日期
+  // 形态外观
+  width?: string | number // 选择器宽度，不传时随内容自适应
+  size?: PickerSize // 选择器大小
+  status?: PickerStatus // 校验状态
+  bordered?: boolean // 是否展示边框
+  // 状态反馈
+  disabled?: boolean // 是否禁用
+  allowClear?: boolean // 是否展示清除按钮
+  inputReadOnly?: boolean // 输入框是否只读（避免移动端唤起键盘）
+  // 行为交互
+  to?: string | HTMLElement | false // 面板挂载的容器节点，不传时就近挂载到承载层内容容器
+  placement?: 'topLeft' | 'top' | 'topRight' | 'bottomLeft' | 'bottom' | 'bottomRight' // 面板弹出位置
+  showToday?: boolean // 是否展示面板底部的「今天」快捷，面板切到月/年视图时隐藏
+  // 进阶透传
+  suffixIcon?: VNode | (() => VNode) // 自定义选择框后缀图标
+  panelClass?: string // 面板额外类名
+  panelStyle?: CSSProperties // 面板额外样式
+  zIndex?: number // 面板层级，优先级最高
 }
+/**
+ * 组件对外 props 类型
+ *
+ * `value` / `formattedValue` / `open` 由 `defineModel` 声明（同名出现在 `defineProps` 中会与
+ * 模型绑定冲突），此处合并回对外类型，保证使用方获得完整的 props 提示
+ */
+export type DatePickerProps = Props & {
+  value?: PickerValue
+  formattedValue?: PickerFormattedValue
+  open?: boolean
+}
+// value / formattedValue / open 三个双向绑定项的默认值由 defineModel 声明，此处不重复
 const props = withDefaults(defineProps<Props>(), {
-  width: 150,
-  size: 'middle',
-  mode: 'date',
-  /* format default
-    Date picker: 'MM/dd/yyyy HH:mm'
-    Range picker: 'MM/dd/yyyy HH:mm - MM/dd/yyyy HH:mm'
-    Month picker: 'MM/yyyy'
-    Time picker: 'HH:mm'
-    Time picker range: 'HH:mm - HH:mm'
-    Week picker: 'RR-yyyy' | 'ww-yyyy' (depends on week numbering)
-  */
+  type: 'date',
   format: undefined,
-  showTime: false,
-  showToday: false,
-  range: false,
-  maxRange: undefined,
-  // multiCalendars: false,
-  // flow: () => [],
-  // dark: false,
-  modelType: 'format'
+  valueFormat: undefined,
+  placeholder: '',
+  defaultPickerValue: undefined,
+  startDayOfWeek: 0,
+  disabledDate: undefined,
+  width: undefined,
+  size: 'middle',
+  status: undefined,
+  bordered: true,
+  disabled: false,
+  allowClear: true,
+  inputReadOnly: false,
+  to: false,
+  placement: 'bottomLeft',
+  showToday: true,
+  suffixIcon: undefined,
+  panelClass: '',
+  panelStyle: undefined,
+  zIndex: undefined
 })
+const emits = defineEmits<{
+  change: [value: PickerValue, formattedValue: PickerFormattedValue]
+  openChange: [open: boolean]
+  panelChange: [value: number, mode: PickerPanelMode]
+  focus: [event: FocusEvent]
+  blur: [event: FocusEvent]
+}>()
+const value = defineModel<PickerValue>('value', { default: null })
+const formattedValue = defineModel<PickerFormattedValue>('formattedValue')
+const open = defineModel<boolean>('open', { default: false })
 const { colorPalettes, shadowColor } = useInject('DatePicker') // 主题色注入
-const datepickerWidth = computed(() => {
-  if (typeof props.width === 'number') {
-    return `${props.width}px`
+const triggerRef = ref<InstanceType<typeof PickerTrigger> | null>(null)
+const popupRef = ref<InstanceType<typeof Popup> | null>(null)
+const wrapperRef = ref<HTMLElement | null>(null)
+// 主题变量随组件壳下发，浮层经 Teleport 后不在壳内，需同样注入到面板上
+const themeVars = computed(() => ({
+  '--picker-primary-color': colorPalettes.value[5],
+  '--picker-primary-color-hover': colorPalettes.value[4],
+  '--picker-primary-shadow-color': shadowColor.value
+}))
+const wrapperStyle = computed(() => {
+  const width =
+    props.width === undefined ? undefined : typeof props.width === 'number' ? `${props.width}px` : props.width
+  return { ...themeVars.value, '--datepicker-width': width ?? 'auto' } as CSSProperties
+})
+const mergedPanelClass = computed(() => ['datepicker-panel-container', props.panelClass].filter(Boolean).join(' '))
+/** 展示与回写共用的格式：`valueFormat` 优先，未指定时跟随展示格式 */
+const mergedValueFormat = computed(() => props.valueFormat ?? props.format ?? getDefaultFormat(props.type))
+/** 输入框按格式长度估宽，避免浏览器按 20 字符默认估宽导致触发器明显偏宽 */
+const inputSize = computed(() => getInputSize(mergedValueFormat.value))
+/** 字符串轨道受控：传入 `formattedValue` 时以它为准，与主轨道解耦 */
+const formattedControlled = computed(() => formattedValue.value !== undefined)
+const innerValue = computed<number | null>(() => {
+  if (formattedControlled.value) {
+    return typeof formattedValue.value === 'string'
+      ? parseTimestamp(formattedValue.value, mergedValueFormat.value)
+      : null
   }
-  return props.width
+  return typeof value.value === 'number' ? value.value : null
 })
-const time = computed(() => {
-  return props.mode === 'time'
+// 受控字符串解析失败时原样展示，避免用户输入被静默丢弃
+const displayText = computed(() => {
+  if (formattedControlled.value) {
+    return typeof formattedValue.value === 'string' ? formattedValue.value : ''
+  }
+  return innerValue.value === null ? '' : formatTimestamp(innerValue.value, mergedValueFormat.value)
 })
-const week = computed(() => {
-  return props.mode === 'week'
-})
-const month = computed(() => {
-  return props.mode === 'month'
-})
-const year = computed(() => {
-  return props.mode === 'year'
-})
-// const format = (date: Date) => {
-//   const day = date.getDate()
-//   const month = date.getMonth() + 1
-//   const year = date.getFullYear()
-//   return `${year}-${month}-${day}`
-// }
-const startTs = ref<number | null>(null) // 范围选择器的开始时间戳
-const rangeTs = computed(() => {
-  return (props.maxRange ?? 0) * 24 * 60 * 60 * 1000
-})
+const showClear = computed(() => props.allowClear && !props.disabled && innerValue.value !== null)
+// 实际方向：定位内核翻转 / 次轴自适应后的结果（宿主未挂载时退回期望方向）
+const actualPlacement = computed<FloatingPlacement>(() => popupRef.value?.actualPlacement ?? props.placement)
+// 动效按**实际**方向取：面板在上方时从下边缘收起（scaleY 原点 100% 100%），在下方时从上边缘收起；
+// 仅给 name，类名走 Vue 默认派生（-enter-from/-enter-active/…）
+const panelTransitionProps = computed<TransitionProps>(() => ({
+  name: actualPlacement.value.startsWith('top') ? 'datepicker-slide-down' : 'datepicker-slide-up'
+}))
+let documentListenerAttached = false // 外部点击监听是否已注册，确保注册与移除一一对应
+function attachDocumentListener() {
+  if (documentListenerAttached || typeof document === 'undefined') return
+  document.addEventListener('click', handleDocumentClick, true)
+  documentListenerAttached = true
+}
+function detachDocumentListener() {
+  if (!documentListenerAttached || typeof document === 'undefined') return
+  document.removeEventListener('click', handleDocumentClick, true)
+  documentListenerAttached = false
+}
+// 点击触发器与面板内部都不关闭，其余位置视为外部点击
+function handleDocumentClick(event: MouseEvent) {
+  const target = event.target as Node | null
+  if (!target) return
+  if (wrapperRef.value?.contains(target) || popupRef.value?.panelRef?.contains(target)) return
+  requestOpen(false)
+}
 watch(
-  () => props.maxRange,
-  () => {
-    startTs.value = null
-  }
+  () => open.value,
+  (next) => {
+    if (next) {
+      attachDocumentListener()
+      return
+    }
+    detachDocumentListener()
+  },
+  { immediate: true }
 )
-function onClosed() {
-  startTs.value = null
+onBeforeUnmount(detachDocumentListener)
+function requestOpen(next: boolean) {
+  if (props.disabled || open.value === next) return
+  open.value = next
+  emits('openChange', next)
 }
-function rangeStart(date: Date) {
-  startTs.value = date.getTime()
+// 点击触发器只负责展开：展开态点击不收起（与参考实现同口径，收起由外部点击 / Esc / 选中值触发）
+function onTriggerClick() {
+  if (!open.value) {
+    requestOpen(true)
+  }
 }
-function maxRangeDisabledDates(date: Date): boolean {
-  const current = date.getTime()
-  if (startTs.value && Math.abs(current - startTs.value) >= rangeTs.value) return true
-  return false
+/** 回写两条轨道：主轨道始终同步，字符串轨道按同一格式生成 */
+function commit(timestamp: number | null) {
+  const nextFormatted = timestamp === null ? null : formatTimestamp(timestamp, mergedValueFormat.value)
+  value.value = timestamp
+  formattedValue.value = nextFormatted
+  emits('change', timestamp, nextFormatted)
 }
+function onSelect(timestamp: number) {
+  commit(timestamp)
+  requestOpen(false)
+}
+function onClear() {
+  commit(null)
+  requestOpen(false)
+}
+// 手输文本：解析成功才提交，失败时由触发器回滚为当前合法文本
+function onTextConfirm(text: string) {
+  const timestamp = parseTimestamp(text, mergedValueFormat.value)
+  if (timestamp === null) return
+  commit(timestamp)
+}
+function onEscKeydown() {
+  if (open.value) {
+    requestOpen(false)
+  }
+}
+function onPanelChange(timestamp: number, mode: PickerPanelMode) {
+  emits('panelChange', timestamp, mode)
+}
+function focus() {
+  triggerRef.value?.focus()
+}
+function blur() {
+  triggerRef.value?.blur()
+}
+defineExpose({ focus, blur })
 </script>
 <template>
-  <VueDatePicker
-    class="datepicker-wrap"
-    :class="{
-      'datepicker-small': size === 'small',
-      'datepicker-large': size === 'large'
-    }"
-    :style="`
-      --datepicker-width: ${datepickerWidth};
-      --datepicker-primary-color: ${colorPalettes[5]};
-      --datepicker-primary-color-hover: ${colorPalettes[4]};
-      --datepicker-primary-color-focus: ${colorPalettes[4]};
-      --datepicker-primary-shadow-color: ${shadowColor};
-    `"
-    position="left"
-    :month-change-on-scroll="false"
-    :enable-time-picker="showTime"
-    :time-picker="time"
-    :week-picker="week"
-    :month-picker="month"
-    :year-picker="year"
-    :range="range"
-    now-button-label="今天"
-    :show-now-button="showToday"
-    auto-apply
-    text-input
-    :model-type="modelType"
-    :formats="{ input: format }"
-    :day-names="['一', '二', '三', '四', '五', '六', '七']"
-    :disabled-dates="range && maxRange ? maxRangeDisabledDates : []"
-    @range-start="rangeStart"
-    @closed="onClosed"
-  />
+  <div ref="wrapperRef" class="datepicker-wrap" :style="wrapperStyle" @keydown.esc="onEscKeydown" @keydown.enter.stop>
+    <PickerTrigger
+      ref="triggerRef"
+      :text="displayText"
+      :placeholder="placeholder"
+      :size="size"
+      :status="status"
+      :bordered="bordered"
+      :disabled="disabled"
+      :input-read-only="inputReadOnly"
+      :allow-clear="allowClear && showClear"
+      :open="open"
+      :input-size="inputSize"
+      :suffix-icon="suffixIcon"
+      @click="onTriggerClick"
+      @clear="onClear"
+      @text-confirm="onTextConfirm"
+      @focus="emits('focus', $event)"
+      @blur="emits('blur', $event)"
+    >
+      <template #suffix>
+        <slot name="suffixIcon">
+          <component :is="suffixIcon" v-if="suffixIcon" />
+        </slot>
+      </template>
+    </PickerTrigger>
+    <Popup
+      ref="popupRef"
+      :show="open && !disabled"
+      :to="to"
+      :anchor="wrapperRef"
+      :placement="placement"
+      :offset="4"
+      :panel-class="mergedPanelClass"
+      :panel-style="{ ...panelStyle, ...themeVars }"
+      :z-index="zIndex"
+      :default-z-index="FLOATING_LAYER_Z_INDEX.select"
+      :transition-props="panelTransitionProps"
+      @keydown.esc="onEscKeydown"
+    >
+      <DatePanel
+        :value="innerValue"
+        :start-day-of-week="startDayOfWeek"
+        :disabled-date="disabledDate"
+        :default-picker-value="defaultPickerValue"
+        :show-today="showToday"
+        @select="onSelect"
+        @panel-change="onPanelChange"
+      />
+    </Popup>
+  </div>
 </template>
 <style lang="less" scoped>
 .datepicker-wrap {
-  display: inline-block;
-  width: var(--datepicker-width);
-  :deep(.dp__input_wrap) {
-    svg {
-      fill: currentColor;
-    }
-    .dp__input {
-      line-height: 1.5714285714285714;
-    }
-    :deep(.dp__input:hover:not(.dp__disabled)) {
-      border-color: var(--dp-border-color-hover);
-    }
-    .dp__disabled {
-      color: rgba(0, 0, 0, 0.25);
-      cursor: not-allowed;
-      &:hover {
-        border-color: var(--dp-border-color);
-      }
-    }
-    .dp__input_focus {
-      box-shadow: 0 0 0 2px var(--datepicker-primary-shadow-color);
-    }
-  }
-  :deep(.dp__outer_menu_wrap) {
-    .dp__menu {
-      overflow: hidden;
-      border: none;
-      border-radius: 8px;
-      box-shadow:
-        0 6px 16px 0 rgba(0, 0, 0, 0.08),
-        0 3px 6px -4px rgba(0, 0, 0, 0.12),
-        0 9px 28px 8px rgba(0, 0, 0, 0.05);
-      .dp__arrow_top,
-      .dp__arrow_bottom {
-        display: none;
-      }
-      .dp__overlay {
-        padding-top: 8px;
-        .dp__overlay_container::-webkit-scrollbar-thumb {
-          border-radius: 5px;
-          cursor: pointer;
-          background-color: var(--dp-scroll-bar-color);
-          transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-          &:hover {
-            background-color: rgba(0, 0, 0, 0.4);
-          }
-        }
-      }
-      .dp__cell_offset.dp__range_start {
-        color: var(--dp-primary-text-color);
-      }
-      .dp__cell_disabled.dp__date_hover {
-        &:hover {
-          background: transparent;
-          color: var(--dp-secondary-color);
-        }
-      }
-      .dp__cell_disabled.dp__today {
-        background: transparent;
-        border: 1px solid var(--dp-secondary-color);
-      }
-      .dp__cell_disabled.dp__active_date {
-        color: rgba(0, 0, 0, 0.45);
-        border-color: var(--dp-secondary-color);
-      }
-      .dp__range_between {
-        &:not(.dp__today) {
-          border-color: transparent;
-        }
-        &.dp__cell_disabled {
-          background: transparent;
-          color: var(--dp-secondary-color);
-        }
-      }
-    }
+  // 行内弹性容器：未传 width 时收缩为内容宽，不被父容器拉伸
+  display: inline-flex;
+  width: var(--datepicker-width, auto);
+  :deep(.picker-trigger) {
+    flex: auto;
+    min-width: 0;
   }
 }
-// CSS variables
-.datepicker-wrap {
-  /*General*/
-  --dp-font-family:
-    -apple-system, blinkmacsystemfont, 'Segoe UI', roboto, oxygen, ubuntu, cantarell, 'Open Sans', 'Helvetica Neue',
-    sans-serif;
-  --dp-border-radius: 6px; /*Configurable border-radius*/
-  --dp-cell-border-radius: 4px; /*Specific border radius for the calendar cell*/
-  // --dp-common-transition: all 0.1s ease-in; /*Generic transition applied on buttons and calendar cells*/
-  --dp-common-transition: all 0.2s ease; /*Generic transition applied on buttons and calendar cells*/
-  /*Sizing*/
-  --dp-button-height: 35px; /*Size for buttons in overlays*/
-  --dp-month-year-row-height: 35px; /*Height of the month-year select row*/
-  --dp-month-year-row-button-size: 35px; /*Specific height for the next/previous buttons*/
-  --dp-button-icon-height: 20px; /*Icon sizing in buttons*/
-  --dp-cell-size: 35px; /*Width and height of calendar cell*/
-  --dp-cell-padding: 5px; /*Padding in the cell*/
-  --dp-common-padding: 10px; /*Common padding used*/
-  --dp-input-icon-padding: 35px; /*Padding on the left side of the input if icon is present*/
-  --dp-input-padding: 4px 30px 4px 12px; /*Padding in the input*/
-  --dp-menu-min-width: 260px; /*Adjust the min width of the menu*/
-  --dp-action-buttons-padding: 2px 5px; /*Adjust padding for the action buttons in action row*/
-  --dp-row-margin: 5px 0; /*Adjust the spacing between rows in the calendar*/
-  --dp-calendar-header-cell-padding: 0.5rem; /*Adjust padding in calendar header cells*/
-  --dp-two-calendars-spacing: 10px; /*Space between multiple calendars*/
-  --dp-overlay-col-padding: 3px; /*Padding in the overlay column*/
-  --dp-time-inc-dec-button-size: 32px; /*Sizing for arrow buttons in the time picker*/
-  --dp-menu-padding: 6px 8px; /*Menu padding*/
-  /*Font sizes*/
-  --dp-font-size: 14px; /*Default font-size*/
-  --dp-preview-font-size: 12px; /*Font size of the date preview in the action row*/
-  --dp-time-font-size: 28px; /*Font size in the time picker*/
-  /*Transitions*/
-  --dp-animation-duration: 0.2s; /*Transition duration*/
-  --dp-menu-appear-transition-timing: cubic-bezier(0.4, 0, 0.2, 1); /*Timing on menu appear animation*/
-  --dp-transition-timing: ease-in-out; /*Timing on slide animations*/
-  // 向下弹出时的过渡效果
-  .slide-down-enter {
-    transform: scale(0);
+</style>
+<style lang="less">
+/* 以下两类规则必须留在全局：它们作用于 <Popup> 宿主编译出的面板节点（scope id 属宿主），
+   且 Teleport 到 body 后不在本组件 DOM 子树内，scoped 与 :deep() 均选不中。
+   收口口径：① 面板几何以 .datepicker-panel-container 收口；② 动画类与关键帧统一加 `datepicker-` 前缀，避免与宿主页面撞名 */
+.datepicker-panel-container {
+  width: max-content;
+  outline: none;
+}
+/* 收起过程中选中格直接落色：参考实现的收起会把容器隐藏一帧，令选中格的 0.2s 过渡被浏览器取消，
+   故此处显式复刻该观感（仅收起期间抑制格子过渡；面板保持展开时选中/悬浮过渡照常）。
+   多带一层 .picker-panel-body 是为了稳定压过日期格 scoped 规则里的过渡声明（同特异性下不依赖源码顺序） */
+.datepicker-panel-container.va-popup-leaving .picker-panel-body .picker-panel-cell-inner {
+  transition: none;
+}
+// 面板在触发器下方：从上方边缘展开 / 收起（参考实现 slideUp 动效：缩放原点 0% 0%）
+.datepicker-slide-up-enter-active,
+.datepicker-slide-up-leave-active {
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+}
+.datepicker-slide-up-enter-active {
+  animation-name: datepickerSlideUpIn;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+.datepicker-slide-up-leave-active {
+  animation-name: datepickerSlideUpOut;
+  animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+}
+.datepicker-slide-up-enter-from,
+.datepicker-slide-up-leave-to {
+  opacity: 0;
+}
+@keyframes datepickerSlideUpIn {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.8);
     transform-origin: 0% 0%;
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+    transform-origin: 0% 0%;
+  }
+}
+@keyframes datepickerSlideUpOut {
+  0% {
+    opacity: 1;
+    transform: scaleY(1);
+    transform-origin: 0% 0%;
+  }
+  100% {
     opacity: 0;
-    animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
-    animation-duration: 0.2s;
-    animation-fill-mode: both;
-    animation-play-state: paused;
+    transform: scaleY(0.8);
+    transform-origin: 0% 0%;
   }
-  .slide-down-enter-active {
-    animation-name: slideDownIn;
-    animation-play-state: running;
-    @keyframes slideDownIn {
-      0% {
-        transform: scaleY(0.8);
-        transform-origin: 0% 0%;
-        opacity: 0;
-      }
-      100% {
-        transform: scaleY(1);
-        transform-origin: 0% 0%;
-        opacity: 1;
-      }
-    }
-  }
-  .slide-down-leave {
-    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
-    animation-duration: 0.2s;
-    animation-fill-mode: both;
-    animation-play-state: paused;
-  }
-  .slide-down-leave-active {
-    animation-name: slideDownOut;
-    animation-play-state: running;
-    @keyframes slideDownOut {
-      0% {
-        transform: scaleY(1);
-        transform-origin: 0% 0%;
-        opacity: 1;
-      }
-      100% {
-        transform: scaleY(0.8);
-        transform-origin: 0% 0%;
-        opacity: 0;
-      }
-    }
-  }
-  :deep(.dp-menu-appear-bottom-enter-active, .dp-slide-down-enter-active) {
-    .slide-down-enter();
-  }
-  :deep(.dp-menu-appear-bottom-leave-active, .dp-slide-down-leave-active) {
-    .slide-down-leave();
-    .slide-down-leave-active();
-  }
-  :deep(.dp-menu-appear-bottom-enter-from, .dp-slide-down-enter-from) {
-    .slide-down-enter();
-  }
-  :deep(.dp-menu-appear-bottom-enter-to, .dp-slide-down-enter-to) {
-    .slide-down-enter();
-    .slide-down-enter-active();
-  }
-  :deep(.dp-menu-appear-bottom-leave-from, .dp-slide-down-leave-from) {
-    .slide-down-leave();
-  }
-  :deep(.dp-menu-appear-bottom-leave-to, .dp-slide-down-leave-to) {
-    .slide-down-leave();
-    .slide-down-leave-active();
-  }
-  // 向上弹出时的过渡效果
-  .slide-up-enter {
-    transform: scale(0);
-    transform-origin: bottom left;
+}
+// 面板在触发器上方：从下方边缘展开 / 收起（参考实现 slideDown 动效：缩放原点 100% 100%）
+.datepicker-slide-down-enter-active,
+.datepicker-slide-down-leave-active {
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+}
+.datepicker-slide-down-enter-active {
+  animation-name: datepickerSlideDownIn;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+.datepicker-slide-down-leave-active {
+  animation-name: datepickerSlideDownOut;
+  animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+}
+.datepicker-slide-down-enter-from,
+.datepicker-slide-down-leave-to {
+  opacity: 0;
+}
+@keyframes datepickerSlideDownIn {
+  0% {
     opacity: 0;
-    animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
-    animation-duration: 0.2s;
-    animation-fill-mode: both;
-    animation-play-state: paused;
+    transform: scaleY(0.8);
+    transform-origin: 100% 100%;
   }
-  .slide-up-enter-active {
-    animation-name: slideUpIn;
-    animation-play-state: running;
-    @keyframes slideUpIn {
-      0% {
-        transform: scaleY(0.8);
-        transform-origin: bottom left;
-        opacity: 0;
-      }
-      100% {
-        transform: scaleY(1);
-        transform-origin: bottom left;
-        opacity: 1;
-      }
-    }
-  }
-  .slide-up-leave {
-    animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
-    animation-duration: 0.2s;
-    animation-fill-mode: both;
-    animation-play-state: paused;
-  }
-  .slide-up-leave-active {
-    animation-name: slideUpOut;
-    animation-play-state: running;
-    @keyframes slideUpOut {
-      0% {
-        transform: scaleY(1);
-        transform-origin: bottom left;
-        opacity: 1;
-      }
-      100% {
-        transform: scaleY(0.8);
-        transform-origin: bottom left;
-        opacity: 0;
-      }
-    }
-  }
-  :deep(.dp-menu-appear-top-enter-active, .dp-slide-up-enter-active) {
-    .slide-up-enter();
-  }
-  :deep(.dp-menu-appear-top-leave-active, .dp-slide-up-leave-active) {
-    .slide-up-leave();
-    .slide-up-leave-active();
-  }
-  :deep(.dp-menu-appear-top-enter-from, .dp-slide-up-enter-from) {
-    .slide-up-enter();
-  }
-  :deep(.dp-menu-appear-top-enter-to, .dp-slide-up-enter-to) {
-    .slide-up-enter();
-    .slide-up-enter-active();
-  }
-  :deep(.dp-menu-appear-top-leave-from, .dp-slide-up-leave-from) {
-    .slide-up-leave();
-  }
-  :deep(.dp-menu-appear-top-leave-to, .dp-slide-up-leave-to) {
-    .slide-up-leave();
-    .slide-up-leave-active();
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+    transform-origin: 100% 100%;
   }
 }
-.datepicker-small {
-  --dp-input-padding: 0px 30px 0px 12px;
-}
-.datepicker-large {
-  --dp-font-size: 16px;
-  :deep(.dp__input_wrap) {
-    .dp__input {
-      height: 40px;
-    }
+@keyframes datepickerSlideDownOut {
+  0% {
+    opacity: 1;
+    transform: scaleY(1);
+    transform-origin: 100% 100%;
   }
-}
-// dark theme configuration
-.dp__theme_dark,
-:deep(.dp__theme_dark) {
-  --dp-background-color: #212121;
-  --dp-text-color: #fff;
-  --dp-hover-color: #484848;
-  --dp-hover-text-color: #fff;
-  --dp-hover-icon-color: #959595;
-  // --dp-primary-color: #005cb2;
-  --dp-primary-color: #1668dc;
-  --dp-primary-disabled-color: #61a8ea;
-  --dp-primary-text-color: #fff;
-  --dp-secondary-color: #a9a9a9;
-  --dp-border-color: #2d2d2d;
-  --dp-menu-border-color: #2d2d2d;
-  --dp-border-color-hover: #aaaeb7;
-  --dp-border-color-focus: #aaaeb7;
-  --dp-disabled-color: #737373;
-  --dp-disabled-color-text: #d0d0d0;
-  --dp-scroll-bar-background: #212121;
-  --dp-scroll-bar-color: #484848;
-  --dp-success-color: #00701a;
-  --dp-success-color-disabled: #428f59;
-  --dp-icon-color: #959595;
-  --dp-danger-color: #e53935;
-  --dp-marker-color: #e53935;
-  --dp-tooltip-color: #3e3e3e;
-  --dp-highlight-color: rgb(0 92 178 / 20%);
-  --dp-range-between-dates-background-color: var(--dp-hover-color, #484848);
-  --dp-range-between-dates-text-color: var(--dp-hover-text-color, #fff);
-  --dp-range-between-border-color: var(--dp-hover-color, #fff);
-}
-// light theme configuration
-.dp__theme_light,
-:deep(.dp__theme_light) {
-  --dp-background-color: #fff;
-  // --dp-text-color: #212121;
-  --dp-text-color: rgba(0, 0, 0, 0.88);
-  // --dp-hover-color: #f3f3f3;
-  --dp-hover-color: rgba(0, 0, 0, 0.04);
-  // --dp-hover-text-color: #212121;
-  --dp-hover-text-color: rgba(0, 0, 0, 0.88);
-  --dp-hover-icon-color: #959595;
-  // --dp-primary-color: #1976d2;
-  --dp-primary-color: var(--datepicker-primary-color);
-  --dp-primary-disabled-color: #6bacea;
-  // --dp-primary-text-color: #f8f5f5;
-  --dp-primary-text-color: #fff;
-  // --dp-secondary-color: #c0c4cc;
-  --dp-secondary-color: rgba(0, 0, 0, 0.25);
-  // --dp-border-color: #ddd;
-  --dp-border-color: #d9d9d9;
-  // --dp-menu-border-color: #ddd;
-  --dp-menu-border-color: #d9d9d9;
-  // --dp-border-color-hover: #aaaeb7;
-  --dp-border-color-hover: var(--datepicker-primary-color-hover);
-  // --dp-border-color-focus: #aaaeb7;
-  --dp-border-color-focus: var(--datepicker-primary-color-focus);
-  // --dp-disabled-color: #f6f6f6;
-  --dp-disabled-color: rgba(0, 0, 0, 0.04);
-  // --dp-scroll-bar-background: #f3f3f3;
-  --dp-scroll-bar-background: transparent;
-  // --dp-scroll-bar-color: #959595;
-  --dp-scroll-bar-color: rgba(0, 0, 0, 0.25);
-  --dp-success-color: #76d275;
-  --dp-success-color-disabled: #a3d9b1;
-  --dp-icon-color: #959595;
-  --dp-danger-color: #ff6f60;
-  --dp-marker-color: #ff6f60;
-  --dp-tooltip-color: #fafafa;
-  --dp-disabled-color-text: #8e8e8e;
-  --dp-highlight-color: rgb(25 118 210 / 10%);
-  // --dp-range-between-dates-background-color: var(--dp-hover-color, #f3f3f3);
-  --dp-range-between-dates-background-color: rgba(0, 0, 0, 0.04);
-  // --dp-range-between-dates-text-color: var(--dp-hover-text-color, #212121);
-  --dp-range-between-dates-text-color: rgba(0, 0, 0, 0.88);
-  // --dp-range-between-border-color: var(--dp-hover-color, #f3f3f3);
-  --dp-range-between-border-color: rgba(0, 0, 0, 0.04);
+  100% {
+    opacity: 0;
+    transform: scaleY(0.8);
+    transform-origin: 100% 100%;
+  }
 }
 </style>

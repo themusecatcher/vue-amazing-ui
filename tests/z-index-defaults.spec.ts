@@ -177,6 +177,7 @@ describe('浮层默认层级：组件调用点必须引用 FLOATING_LAYER_Z_INDE
     expect(consumers.sort()).toEqual(
       [
         'auto-complete/AutoComplete.vue',
+        'date-picker/DatePicker.vue',
         'dialog/Dialog.vue',
         'drawer/Drawer.vue',
         'dropdown/Dropdown.vue',

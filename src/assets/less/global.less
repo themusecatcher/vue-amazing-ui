@@ -37,19 +37,11 @@ body {
   min-height: 100vh;
   background: #fff;
   color: rgba(0, 0, 0, 0.88);
+  // 演示站自身声明页面字体（库不再声明字体，见 components/style/global.less）；
+  // 不写 Inter：演示站不加载任何 webfont，写了也只会落到下一顺位，声明即失真
   font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue', sans-serif;
 }
 h1 {
   // h1 标签渐变色文本

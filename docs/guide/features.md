@@ -89,20 +89,13 @@ _每个组件的样式入口（如 `import 'vue-amazing-ui/es/button/style'`）�
   --primary-color: #1677ff;
   --primary-color-hover: #4096ff;
 }
-body {
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
+// 字体归位：库不在 body 上声明字体，字体由宿主决定（谁提供字体谁声明）；
+// 库只兜底原生表单控件 —— 它们的字体不受继承影响（UA 样式强制 Arial / monospace 等），必须显式 inherit
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
 }
 input,
 textarea {

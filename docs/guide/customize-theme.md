@@ -57,3 +57,19 @@ const theme = ref<ConfigProviderTheme>({
 </template>
 
 ```
+
+## 字体
+
+_组件库不声明页面字体，字体跟随宿主（谁提供字体谁声明）_
+
+- 库的样式产物**不含 `body` / `html` 字体声明**，也不自带字体文件；组件内文字继承宿主页面字体，避免组件库覆盖宿主已有排版。
+- 需要统一调整库组件字体时，在宿主页面声明即可（组件内的原生输入框 `input` / `textarea` / `select` / `button` 已由库统一 `font-family: inherit`，同样跟随）：
+
+```css
+body {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+```
+
+- 字号：组件内部字号由组件自身声明（正文基准 14px），**不随宿主 `font-size` 变化**；由使用者传入文本的组件（如 `Highlight`、`Ellipsis`、`NumberAnimation` 等行内组件）按设计跟随上下文。
+- 字体不走 `ConfigProvider` 主题（该通道只承载颜色）：如需按区域分别设置，用宿主 CSS 作用域即可。

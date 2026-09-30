@@ -81,7 +81,7 @@
 
 ## 第三方样式处理（vendor-styles）
 
-部分组件依赖第三方库的独立 CSS（`DatePicker` → `@vuepic/vue-datepicker`、`Swiper` → `swiper`），无法被组件 `<style scoped>` 覆盖：
+部分组件依赖第三方库的独立 CSS（`Swiper` → `swiper`），无法被组件 `<style scoped>` 覆盖：
 
 - `components/utils/vendor-styles.ts` 是**单一数据源**，定义 `source`（node_modules 源路径）与 `target`（产物内路径）。
 - `stylePostBuildPlugin` 内的 `copyVendorStyles()`（vite.config.ts）：构建时把第三方 CSS 复制到产物的 `vendor-styles/` 目录，并清理 Vite 隐式 emit 到 `node_modules` 的孤儿 CSS asset（已被固定路径取代）。

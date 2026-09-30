@@ -83,7 +83,6 @@
   "dependencies": {
     "@ant-design/colors": "^8.0.1",
     "@ctrl/tinycolor": "^4.2.0",
-    "@vuepic/vue-datepicker": "^12.1.0",
     "@vueuse/core": "^14.2.1",
     "csstype": "^3.2.3",
     "date-fns": "^4.1.0",
@@ -110,6 +109,7 @@
     "@vue/tsconfig": "^0.7.0",
     "ant-design-vue": "^4.2.6",
     "autoprefixer": "^10.5.5",
+    "dayjs": "^1.11.18",
     "eslint": "^9.39.4",
     "eslint-plugin-vue": "^10.8.0",
     "happy-dom": "^20.11.15",
