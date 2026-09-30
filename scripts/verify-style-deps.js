@@ -9,8 +9,8 @@
  * 反向也一样：组件改造后不再依赖某组件、但表里的条目没删（stale），同样不会报错。
  * 历史同类问题：`Upload` 移除内嵌 `Message` 后，样式依赖未同步移除。
  *
- * 做法：产物 chunk（`es/<dir>/<Comp>.vue2.js`）之间的 `from "../<other>/index.js"` 是**编译期事实**，
- * 可机读。以它为边求传递闭包，与手写表做**双向断言**：
+ * 做法：产物 chunk（`es/<dir>/*.js`，排除 `style/` 生成的样式入口）之间的 `from "../<other>/index.js"`
+ * 是**编译期事实**，可机读。以它为边求传递闭包，与手写表做**双向断言**：
  *   - closure ⊆ table → 抓「漏写依赖」；
  *   - table ⊆ closure → 抓「写了但已不再依赖」（stale）。
  *
@@ -73,15 +73,44 @@ componentNames.forEach((name) => {
   }
 })
 
-/** 递归收集产物 chunk（`<Comp>.vue2.js`） */
+/**
+ * 递归收集产物 chunk（`es/` 下全部 `.js`）
+ *
+ * 刻意不按 SFC 产物文件名（如 `*.vue2.js`）筛选：`preserveModules` 下同名 chunk 的编号后缀取决于
+ * Rollup 创建模块的顺序（受 SFC 是否 scoped 等影响），同一份源码在不同组件上会落到 `X.vue.js` /
+ * `X.vue2.js` / `X.vue3.js` 这类不同名字上 —— 按名筛选会让整个组件在图中消失（Menu 即此例）。
+ *
+ * 必须排除 `style/`：该目录由 generate-style-entries 按手写依赖表生成，其 import 与表同源，
+ * 收进图里会让「表 ⊆ 闭包」自证成立，掩盖真实的漏写/残留。
+ */
 function collectChunks(dir) {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const fullPath = resolve(dir, entry.name)
     if (entry.isDirectory()) {
-      return collectChunks(fullPath)
+      return entry.name === 'style' ? [] : collectChunks(fullPath)
     }
-    return /\.vue2\.js$/.test(entry.name) ? [fullPath] : []
+    return entry.name.endsWith('.js') ? [fullPath] : []
   })
+}
+
+/**
+ * chunk 所属组件名：先按 chunk 文件名认，认不出再按「目录 → 组件」映射兜底
+ *
+ * - 文件名认得出（`Popup.vue2.js` → `Popup`、`DialogProvider.vue.js` → `DialogProvider`）：同目录的
+ *   Provider / 子组件各有自己的节点，不能一律按目录归并；
+ * - 认不出（`Menu.vue.js` 这类 SFC 门面、`MenuNodes.js` / `useModal.js` 这类同目录支撑模块）：
+ *   `preserveModules` 下 chunk 路径与源码路径同构，同目录即同组件 —— 组件经 `.ts` 内核模块
+ *   转出去的 import（如 Menu 的浮层宿主 `Popup`）只有这样才进得了闭包。
+ * 目录与文件名都不对应组件（`utils/`、`_virtual/`、`index.js` 等）时返回 undefined，调用方跳过。
+ */
+function componentOfChunk(chunkFile) {
+  const fileName = chunkFile.slice(chunkFile.lastIndexOf('/') + 1)
+  const namedByFile = fileName.replace(/\..*$/, '')
+  if (componentsMap[namedByFile] !== undefined) {
+    return namedByFile
+  }
+  const dir = relative(esDir, dirname(chunkFile)).split('\\').join('/')
+  return dirToComponent.get(dir)
 }
 
 /** 该组件是否有「自己的一份 CSS」——无自身 CSS 的组件（Provider / 子组件 / 无样式组件）不构成样式依赖 */
@@ -89,18 +118,21 @@ function hasOwnCss(componentName) {
   return styleSources[componentName] === undefined && !styleless.has(componentName)
 }
 
-/** 组件 chunk 的依赖边：指向其它组件「有自己 CSS」的公共入口 `../<dir>/index.js`（同目录兄弟模块不算组件依赖） */
+/**
+ * 组件 chunk 的依赖边：指向其它组件「有自己 CSS」的公共入口 `../<dir>/index.js`
+ *
+ * 边按 chunk 归属组件汇总（见 `componentOfChunk`）：同目录兄弟模块不作为判定目标（`./Xxx.js` 不算跨组件），
+ * 但它的跨目录 import 会算作所在组件的依赖。
+ */
 function buildGraph() {
   const graph = new Map()
   collectChunks(esDir).forEach((chunkFile) => {
-    const componentName = chunkFile
-      .replace(/\.vue2\.js$/, '')
-      .split('/')
-      .pop()
-    if (componentsMap[componentName] === undefined) {
+    const componentName = componentOfChunk(chunkFile)
+    if (componentName === undefined) {
       return
     }
-    const dependencies = new Set()
+    // 一个组件可能由多个 chunk 承载（SFC 门面 + 同目录支撑模块），边取并集
+    const dependencies = graph.get(componentName) ?? new Set()
     const specifiers = [...readFileSync(chunkFile, 'utf-8').matchAll(/from\s+"([^"]+)"/g)].map((matched) => matched[1])
     specifiers.forEach((specifier) => {
       // 只看跨目录的组件入口（`./Xxx.vue.js` 这类同目录兄弟模块不参与组件依赖判定）
