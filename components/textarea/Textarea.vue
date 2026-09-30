@@ -49,15 +49,13 @@ const autoSizeStyle = computed(() => {
     }
     return style
   }
-  if (typeof props.autoSize === 'boolean') {
-    if (props.autoSize) {
-      return {
-        height: `${areaHeight.value}px`,
-        resize: 'none'
-      }
+  if (typeof props.autoSize === 'boolean' && props.autoSize) {
+    return {
+      height: `${areaHeight.value}px`,
+      resize: 'none'
     }
-    return {}
   }
+  return {}
 })
 const showClear = computed(() => {
   return !props.disabled && props.allowClear && textareaValue.value

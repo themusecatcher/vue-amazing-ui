@@ -7,7 +7,9 @@ import type {
   ConfigProviderProps,
   ConfigProviderTheme,
   CarouselImage,
+  ItemType,
   LoadingBarApi,
+  MenuKey,
   MessageApi,
   ModalApi,
   NotificationApi,
@@ -20,6 +22,7 @@ import type {
 const primaryColor = ref<string>('#ff6900')
 const commonPrimaryColor = ref<string>('#1677ff')
 const buttonPrimaryColor = ref<string>('#18a058')
+const linkPrimaryColor = ref<string>('#1677ff')
 const theme = computed<ConfigProviderTheme>(() => ({
   common: {
     primaryColor: commonPrimaryColor.value
@@ -69,6 +72,21 @@ const images = ref<CarouselImage[]>([
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
+const menuItems = ref<ItemType[]>([
+  {
+    key: '1',
+    label: 'Navigation One'
+  },
+  {
+    key: '2',
+    label: 'Navigation Two'
+  },
+  {
+    key: '3',
+    label: 'Navigation Three'
+  }
+])
+const menuSelectedKeys = ref<MenuKey[]>(['1'])
 const selectOptions = ref<SelectOption[]>([
   {
     label: '北京市',
@@ -251,7 +269,7 @@ const layerSelectedValue = ref<number>(1)
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Card width="50%" title="以下示例已包含所有使用主题色的组件">
+    <Card width="50%" title="修改主题色，以下组件配色实时联动">
       <Space align="center">
         primaryColor:
         <ColorPicker style="width: 200px" v-model:value="primaryColor" />
@@ -308,6 +326,9 @@ const layerSelectedValue = ref<number>(1)
         </Space>
         <Calendar v-model:value="cardDate" display="card" />
         <Carousel style="margin-left: 0" :images="images" :width="800" :height="450" />
+        <Card width="50%">
+          <Menu mode="horizontal" :items="menuItems" v-model:selectedKeys="menuSelectedKeys" />
+        </Card>
         <Card width="50%" style="height: 300px; transform: translate(0)">
           <FloatButton type="primary" :right="96">
             <template #icon>
@@ -396,6 +417,26 @@ const layerSelectedValue = ref<number>(1)
           <Alert style="width: 200px" message="Info Text" type="info" show-icon />
           <Button type="primary">Primary Button</Button>
         </Space>
+      </ConfigProvider>
+    </Flex>
+    <h2 class="mt30 mb10">链接颜色跟随主题</h2>
+    <p class="mb10">
+      修改主题色后，派生色阶会写入 <code>--va-link-color</code> / <code>--va-link-color-hover</code> /
+      <code>--va-link-color-active</code>，页面链接（含组件内插槽中的链接）随之变化；演示应用根节点已有更外层
+      <code>ConfigProvider</code>，故此处用带包裹元素的形态让变量在本子树内就近生效
+    </p>
+    <Flex vertical>
+      <Space align="center">
+        linkPrimaryColor:
+        <ColorPicker style="width: 200px" v-model:value="linkPrimaryColor" />
+      </Space>
+      <ConfigProvider :abstract="false" :theme="{ common: { primaryColor: linkPrimaryColor } }">
+        <Card width="50%" title="链接颜色跟随主题">
+          <template #extra>
+            <a href="#">more</a>
+          </template>
+          <p> 页面链接：<a href="#">Link 1</a> 与 <a href="#">Link 2</a> </p>
+        </Card>
       </ConfigProvider>
     </Flex>
     <h2 class="mt30 mb10">自定义包裹元素</h2>

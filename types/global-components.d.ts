@@ -43,10 +43,20 @@ declare module 'vue' {
     Input: typeof VueAmazingUI.Input
     InputNumber: typeof VueAmazingUI.InputNumber
     InputSearch: typeof VueAmazingUI.InputSearch
+    Layout: typeof VueAmazingUI.Layout
+    LayoutContent: typeof VueAmazingUI.LayoutContent
+    LayoutFooter: typeof VueAmazingUI.LayoutFooter
+    LayoutHeader: typeof VueAmazingUI.LayoutHeader
+    LayoutSider: typeof VueAmazingUI.LayoutSider
     List: typeof VueAmazingUI.List
     ListItem: typeof VueAmazingUI.ListItem
     LoadingBar: typeof VueAmazingUI.LoadingBar
     LoadingBarProvider: typeof VueAmazingUI.LoadingBarProvider
+    Menu: typeof VueAmazingUI.Menu
+    MenuDivider: typeof VueAmazingUI.MenuDivider
+    MenuItem: typeof VueAmazingUI.MenuItem
+    MenuItemGroup: typeof VueAmazingUI.MenuItemGroup
+    MenuSubMenu: typeof VueAmazingUI.MenuSubMenu
     Message: typeof VueAmazingUI.Message
     MessageProvider: typeof VueAmazingUI.MessageProvider
     Modal: typeof VueAmazingUI.Modal

@@ -83,6 +83,7 @@ const customStyle = computed(() => {
       }
     }
   }
+  return {}
 })
 const presetClass = computed(() => {
   if (props.color) {
@@ -101,7 +102,7 @@ const presetClass = computed(() => {
       return `status-${props.status}`
     }
   }
-  return
+  return undefined
 })
 const showContent = computed(() => {
   if (props.value !== undefined || props.dot || (!props.color && !props.status)) {

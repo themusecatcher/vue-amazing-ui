@@ -182,8 +182,8 @@ function onClick(e: Event) {
         </div>
       </Badge>
     </Tooltip>
-    <Transition v-show="showMenu" name="move">
-      <div class="float-btn-menu">
+    <Transition name="move">
+      <div v-show="showMenu" class="float-btn-menu">
         <slot name="menu"></slot>
       </div>
     </Transition>

@@ -17,10 +17,10 @@ import type { FloatingBoundary, FloatingPlacement, FloatingPoint, FloatingVirtua
  * - **两层 DOM**：定位参照容器（`absolute` + 零高度 + `pointer-events: none`，不参与布局、不产生层叠
  *   上下文，只作面板 `top` / `left` 的坐标原点）+ 面板（定位样式落点）。容器按实时测量，故 Teleport
  *   到 body 与 `to: false` 就地渲染共用同一套求解；
- * - **渲染与卸载**：首次展示前不渲染 DOM，之后 `v-show` 复用同一元素、动画期间不卸载。`destroyOnHide`
- *   为真时改在离开过渡结束后卸载整棵子树（含 `renderBody` 的面板，其内部组件状态随之重置），重新展示
- *   按「首次展示」路径重建；`show` 变假的当帧不卸载（否则离开动画会直接消失），离开被打断时 Vue 不发
- *   `afterLeave`，同样不卸载；
+ * - **渲染与卸载**：首次展示前不渲染 DOM（`forceRender` 为真时改为挂载即渲染，面板保持不可见），
+ *   之后 `v-show` 复用同一元素、动画期间不卸载。`destroyOnHide` 为真时改在离开过渡结束后卸载整棵子树
+ *   （含 `renderBody` 的面板，其内部组件状态随之重置），重新展示按「首次展示」路径重建；`show` 变假的
+ *   当帧不卸载（否则离开动画会直接消失），离开被打断时 Vue 不发 `afterLeave`，同样不卸载；
  * - **Teleport**：`to === false` 就地渲染（picker 面板的内层浮层需要），否则挂到 `to` 或就近的承载层；
  * - **Transition**：动画配置由皮肤层经 `transitionProps` 传入，缓动 / 关键帧属皮肤层（Tooltip 的 zoom）；
  * - **触发语义留在消费组件**：宿主只按 `show` 渲染，动画结束发 `animationend` / `afterLeave`，
@@ -53,6 +53,10 @@ export interface Props {
   /* 隐藏后是否卸载浮层 DOM：true 时在离开过渡结束后卸载整棵子树（含 renderBody 的面板），重新展示时
      元素与内部状态均为新建；false（默认）时元素常驻、仅切换 display。运行中切换只影响其后发生的隐藏 */
   destroyOnHide?: boolean
+  /* 是否在首次展示前就渲染面板 DOM：true 时面板随组件挂载即创建（保持不可见，与 `show` 无关），供需要
+     弹层 DOM 提前存在的场景使用（如子菜单的预热渲染）；false（默认）时按首次展示懒渲染。与
+     `destroyOnHide` 组合时后者仍生效（离开过渡结束后照样卸载） */
+  forceRender?: boolean
   to?: string | HTMLElement | false // 面板挂载的容器节点：元素标签名（如 body）或元素本身；false 则在原地渲染
   // 锚点三选一，同时传入时按 point → virtualAnchor → anchor 取第一个可用者：
   anchor?: HTMLElement | null // DOM 锚点
@@ -87,6 +91,7 @@ export interface Props {
 const props = withDefaults(defineProps<Props>(), {
   show: false,
   destroyOnHide: false,
+  forceRender: false,
   to: undefined,
   anchor: null,
   virtualAnchor: null,
@@ -114,8 +119,9 @@ const emits = defineEmits<{
 }>()
 const initialDisplay = ref<boolean>(props.show) // 首帧优化：首次展示前不渲染，之后用 v-show 复用
 const destroyed = ref<boolean>(false) // 面板子树已被卸载（仅 destroyOnHide 模式会置真；重新展示时复位）
-// 面板子树是否存在：默认模式首次展示后常驻，销毁模式在离开过渡结束后移除整棵子树
-const shouldRender = computed<boolean>(() => initialDisplay.value && !destroyed.value)
+// 面板子树是否存在：默认模式首次展示后常驻，销毁模式在离开过渡结束后移除整棵子树；
+// forceRender 时与「是否展示过」解耦（挂载即渲染，面板由 v-show 保持不可见）
+const shouldRender = computed<boolean>(() => (initialDisplay.value || props.forceRender) && !destroyed.value)
 // 离开动画进行中：此间面板不接管指针事件。该状态由宿主自持（面板的 pointer-events 同样由宿主声明，
 // 见文件尾样式块），皮肤层无需为表达状态再提高选择器优先级
 const leaving = ref<boolean>(false)

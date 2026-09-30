@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach } from 'vitest'
 import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import AutoComplete from 'components/auto-complete/AutoComplete.vue'
+import { flushTransition } from './helpers'
 
 /**
  * 回归守护：AutoComplete 的 `open` 受控语义。
@@ -25,10 +26,9 @@ afterEach(() => {
   document.querySelectorAll('.auto-complete-panel-wrapper').forEach((el) => el.remove())
 })
 
+/** 等待受控显隐落定（公共等待见 tests/helpers.ts —— 即从该用例抽出的实现） */
 async function flush(): Promise<void> {
-  await nextTick()
-  await new Promise((resolve) => setTimeout(resolve, 10))
-  await nextTick()
+  await flushTransition()
 }
 
 function panelVisible(): boolean {

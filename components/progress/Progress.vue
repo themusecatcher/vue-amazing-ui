@@ -127,7 +127,7 @@ const circleColorFrom = computed(() => {
       return gradientColor['100%'] || gradientColor.to
     }
   }
-  return
+  return undefined
 })
 const circleColorTo = computed(() => {
   if (isGradientColor.value) {
@@ -138,7 +138,7 @@ const circleColorTo = computed(() => {
       return gradientColor['0%'] || gradientColor.from
     }
   }
-  return
+  return undefined
 })
 const showPercent = computed(() => {
   return props.format(props.percent > 100 ? 100 : props.percent)
@@ -206,8 +206,8 @@ const showSuccess = computed(() => {
     <svg class="progress-circle" viewBox="0 0 100 100">
       <defs v-if="isGradientColor">
         <linearGradient :id="`${circleGradient}`" x1="100%" y1="0%" x2="0%" y2="0%">
-          <stop offset="0%" :stop-color="circleColorFrom as string"></stop>
-          <stop offset="100%" :stop-color="circleColorTo as string"></stop>
+          <stop offset="0%" :stop-color="circleColorFrom"></stop>
+          <stop offset="100%" :stop-color="circleColorTo"></stop>
         </linearGradient>
       </defs>
       <path

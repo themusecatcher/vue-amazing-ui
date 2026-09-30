@@ -5,6 +5,7 @@ import { mount } from '@vue/test-utils'
 import Popup from 'components/popup'
 import type { PopupBodyBindings } from 'components/popup'
 import ConfigProvider from 'components/config-provider'
+import { flushTransition } from './helpers'
 
 /**
  * `<Popup>` 浮层宿主回归守护
@@ -12,6 +13,7 @@ import ConfigProvider from 'components/config-provider'
  * 锁定的是**宿主契约**，而非求解结果（求解层已由
  * `floating-position.spec.ts` 逐项自证）：
  * - **首帧优化**：未展示前不渲染任何 DOM，首次展示后转入 `v-show`（动画期间不卸载，元素复用）；
+ *   `forceRender` 为真时改为挂载即渲染（面板保持不可见），只改变首次渲染时机；
  * - **两层 DOM + 方向类契约**：定位参照容器 + 面板；面板上落 `va-popup-placement-{方向}`，值取
  *   `actualPlacement` 的**对外命名**（kebab 命名仅内核内部使用），箭头只由该方向类选择器驱动；
  * - **层级**：未注入管理器时用 `defaultZIndex`，注入后按「后出现者在上」分配，显式 `zIndex` 优先；
@@ -46,11 +48,9 @@ let anchorRect = domRect(400, 300, 100, 40)
 /** 面板桩**布局**尺寸（内核按 offsetWidth / offsetHeight 测量浮层） */
 const panelSize = { width: 200, height: 80 }
 
-/** 一个 tick 的等待：让内核的 post flush 与 Transition 归位 */
+/** 一个 tick 的等待：让内核的 post flush 与 Transition 归位（公共等待见 tests/helpers.ts） */
 async function flush(): Promise<void> {
-  await nextTick()
-  await new Promise((resolve) => setTimeout(resolve, 10))
-  await nextTick()
+  await flushTransition()
 }
 
 const queryContainer = (): HTMLElement | null => document.querySelector('.va-popup-container')
@@ -622,5 +622,44 @@ describe('Popup · destroyOnHide（隐藏后卸载）', () => {
     expect(Number(secondPanel.style.zIndex)).toBe(1070)
     expect(secondPanel.getAttribute('data-va-floating-mount')).toBe('')
     expect(secondPanel.querySelector('.custom-arrow')).not.toBeNull()
+  })
+})
+
+describe('Popup · forceRender（首次展示前渲染）', () => {
+  it('为真时未展示即渲染面板 DOM（保持不可见），首次展示复用同一元素', async () => {
+    const host = mountPopup({ show: false, props: { forceRender: true } })
+    wrapper = host.wrapper
+    await flush()
+
+    // 与首帧优化相反：面板随组件挂载即创建
+    expect(queryContainer()).not.toBeNull()
+    const panel = queryPanel() as HTMLElement
+    expect(panel).not.toBeNull()
+    // 未展示：元素存在但不可见（显隐仍由 show 决定）
+    expect(panel.style.display).toBe('none')
+
+    // 首次展示复用同一个元素 —— 这正是不预先渲染时无法避免的首次挂载开销
+    host.show.value = true
+    await flush()
+    expect(queryPanel()).toBe(panel)
+    expect(panel.style.display).not.toBe('none')
+  })
+
+  it('为假（默认）时保持首帧优化：未展示前不渲染任何 DOM', async () => {
+    const host = mountPopup({ show: false, props: { forceRender: false } })
+    wrapper = host.wrapper
+    await flush()
+    expect(queryContainer()).toBeNull()
+  })
+
+  it('与 destroyOnHide 组合：离开过渡结束后仍按 destroyOnHide 卸载', async () => {
+    const host = mountPopup({ props: { forceRender: true, destroyOnHide: true } })
+    wrapper = host.wrapper
+    await flush()
+    const panel = queryPanel() as HTMLElement
+
+    await hide(host, panel)
+    // forceRender 只决定首次渲染时机，不改变「隐藏后是否卸载」的生命周期策略
+    expect(queryContainer()).toBeNull()
   })
 })

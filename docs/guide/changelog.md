@@ -10,6 +10,19 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-09-24">2.13.0</VersionDateTag>
+
+- 新增 [布局 Layout](/guide/components/layout.html) 组件：提供 `Layout` / `LayoutHeader` / `LayoutContent` / `LayoutFooter` / `LayoutSider` 五个组件，支持侧边栏收起（`v-model:collapsed` / `collapsible` / `defaultCollapsed`）、响应式断点收起（`breakpoint` / `collapsedWidth`，`collapsedWidth` 为 `0` 时出现特殊触发器）、自定义触发器（`trigger` 属性与同名插槽）、`light` / `dark` 主题，并提供 `--layout-*` CSS 变量用于主题定制
+- 新增 [导航菜单 Menu](/guide/components/menu.html) 组件：菜单结构支持 `items` 配置（`children` 表示子菜单、`type: 'group'` 表示分组、`type: 'divider'` 表示分割线）与子组件（`MenuItem` / `MenuSubMenu` / `MenuItemGroup` / `MenuDivider`，两者同时提供时以子组件为准）两种写法，支持 `horizontal` / `vertical` / `inline` 三种菜单类型与 `light` / `dark` 主题，展开与选中状态可受控（`v-model:openKeys` / `v-model:selectedKeys`）或非受控，`inline` 模式下支持收起（`inlineCollapsed`）与自定义缩进（`inlineIndent`），展开收起图标可在 `Menu` 与子菜单两级自定义（`expandIcon`），水平菜单空间不足时自动将放不下的项收进省略子菜单（指示器可通过 `overflowedIndicator` 插槽自定义），支持子菜单面板预渲染（`forceSubMenuRender`），位于 [布局 Layout](/guide/components/layout.html) 的侧边栏内时自动跟随侧边栏收起状态（无需再绑定 `inlineCollapsed`），并纳入 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的主题体系（支持在 `theme` 中按 `Menu` 覆盖主题色）
+- 优化 [导航菜单 Menu](/guide/components/menu.html) 组件的水平形态：深色主题的选中态改用主题色底色表达（浅色仍是下划线 + 主色字），并按主题去除深色水平菜单的根下边界
+- 优化 [全局提示 Message](/guide/components/message.html) 的进出场动效：时长由 `0.3s` 收敛为 `0.2s`，进场与离场改用各自的缓动曲线（进场更快落位、离场收拢更稳）
+- 更新 [布局 Layout](/guide/components/layout.html) 的演示与文档：各用例补齐简介描述，侧边栏内嵌导航、固定头部、固定侧边栏等用例的展示细节同步完善（演示与文档中的菜单统一改用子组件写法）
+- 修复全局默认样式中 `* { caret-color: transparent }` 导致使用方页面内 `contenteditable` 富文本区域的插入光标不可见的问题（配套的 `input, textarea { caret-color: auto }` 一并移除，组件自身的光标行为不受影响）
+- 新增链接颜色随主题联动：[全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `common.primaryColor` 变化时，派生色阶会同步写入 `--va-link-color` / `--va-link-color-hover` / `--va-link-color-active` 三个 CSS 变量，全局链接基座据此渲染，页面链接颜色随主题色一并变化（未使用 `ConfigProvider` 时回退默认色阶）；变量由最外层实例写入 `:root` 全局生效，带包裹元素（`:abstract="false"`）的实例则写入自身包裹元素，使嵌套 `ConfigProvider` 也能在子树内改变链接配色
+- ⚠️ **破坏性变更**：全局默认样式的 `<a>` 规则重构为以 `:where()` 包裹的低特异性链接基座：配色取自主色色阶（默认主题下为常态 `#1677ff`、悬停 `#69b1ff`、按下 `#0958d9`，禁用态 `rgba(0, 0, 0, 0.25)`，原悬停色为 `#4096ff`），不再移除链接的焦点轮廓，特异性降为 `0` 使使用方任意链接样式均可覆盖；同时移除 `--primary-color` / `--primary-color-hover` 主题变量（主题色请使用 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme`）
+- 更新使用者文档：[特性](/guide/features.html) 的「全局默认样式」内容同步订正，并补充主题色定制入口（`ConfigProvider` 的 `theme`）；[全局化配置 ConfigProvider](/guide/components/config-provider.html) 补充 `Menu` 的主题色用例与链接色变量的作用域说明（最外层实例写 `:root`、带包裹元素的实例写自身包裹元素），并订正 `tag` 属性的生效条件为 `abstract` 为 `false` 时有效
+- 更新贡献者文档：`development/project-structure.md` 与 `development/component-design.md` 的全局样式说明同步为「组件样式基座 + 主题色由 `ConfigProvider` 提供」，并在主题系统一节补充链接色变量的双作用域写入规则
+
 ## <VersionDateTag date="2026-09-24">2.12.0</VersionDateTag>
 
 - 新增 [下拉菜单 Dropdown](/guide/components/dropdown.html) 组件
@@ -986,8 +999,6 @@
 
 ## future
 
-- 新增 布局 Layout 组件
-- 新增 菜单 Menu 组件
 - 新增 穿梭框 Transfer 组件
 - 新增 漫游式引导 Tour 组件
 <!-- - 更新 表格 Table 组件，新增虚拟滚动功能

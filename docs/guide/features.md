@@ -53,7 +53,7 @@
 ## 简要介绍
 
 - 组件库采用 `Vue@{{ getVersion('vue') }}` + `TypeScript@{{ getVersion('typescript') }}` + `Vite@{{ getVersion('vite') }}` + `Less@{{ getVersion('less') }}` 实现！
-- 目前共包含 `70` 个基础 `UI` 组件以及 `22` 个工具函数，并且持续探索更新中...
+- 目前共包含 `72` 个基础 `UI` 组件以及 `22` 个工具函数，并且持续探索更新中...
 - 主题可调，你只需提供一个主题色，剩下的都交给我
 - 顺便一提，它们全都可以 `treeshaking`
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
@@ -83,11 +83,6 @@ _每个组件的样式入口（如 `import 'vue-amazing-ui/es/button/style'`）�
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  caret-color: transparent; // 消除 win 系统点击后出现插入光标闪烁的问题
-}
-:root {
-  --primary-color: #1677ff;
-  --primary-color-hover: #4096ff;
 }
 body {
   font-family:
@@ -103,24 +98,29 @@ body {
     'Droid Sans',
     'Helvetica Neue',
     sans-serif;
+  -webkit-tap-highlight-color: transparent;
 }
-input,
-textarea {
-  caret-color: auto;
-}
-a {
-  color: var(--primary-color);
+:where(a) {
+  color: var(--va-link-color, #1677ff);
   text-decoration: none;
   background-color: transparent;
-  -webkit-tap-highlight-color: transparent;
-  outline: none;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: color 0.3s;
+  -webkit-text-decoration-skip: objects;
   &:hover {
-    color: var(--primary-color-hover);
+    color: var(--va-link-color-hover, #69b1ff);
+  }
+  &:active {
+    color: var(--va-link-color-active, #0958d9);
+  }
+  &[disabled] {
+    color: rgba(0, 0, 0, 0.25);
+    cursor: not-allowed;
   }
 }
 ```
+
+`:where(a)` 是全库唯一的链接基座，默认链接配色取自主色色阶（常态 / 悬停 / 按下依次取第 `6` / `4` / `7` 级）；因外层包裹 `:where()` 而特异性为 `0`，使用方的任意链接样式都能覆盖它。主题色请通过 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme` 定制，插入光标等页面级样式由使用方在自己的页面样式中定义。
 
 <script setup lang="ts">
 import { TeamOutlined } from '@ant-design/icons-vue'

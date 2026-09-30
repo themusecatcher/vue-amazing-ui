@@ -3,6 +3,7 @@ import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Popconfirm from 'components/popconfirm'
 import Button from 'components/button'
+import { flushTransition } from './helpers'
 
 /**
  * Popconfirm 落在 `<Popup>` 浮层链上的回归守护
@@ -25,11 +26,9 @@ const mountOptions = {
   }
 }
 
-/** 等待「定时器（delay 0）→ 渲染 → 离开过渡归位」：测试环境无 CSS，过渡由双 rAF 驱动，故等足 10ms */
+/** 等待「定时器（delay 0）→ 渲染 → 离开过渡归位」（公共等待见 tests/helpers.ts） */
 async function flush(): Promise<void> {
-  await nextTick()
-  await new Promise((resolve) => setTimeout(resolve, 10))
-  await nextTick()
+  await flushTransition()
 }
 
 const queryPanel = (): HTMLElement | null => document.querySelector('.tooltip-card-container')

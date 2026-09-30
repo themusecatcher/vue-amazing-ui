@@ -1,3 +1,6 @@
+:root {
+  --primary-color: #1677ff;
+}
 *,
 *::before,
 *::after {
@@ -20,9 +23,16 @@ html.dark {
     // 将图片和视频再次反转以恢复原本的颜色
     filter: invert(1) hue-rotate(180deg);
   }
-  .watermark,
-  .ant-menu,
-  .m-switch-wrap {
+  /*
+    再反相一次 = 保持「本身按暗色绘制」的元素的原貌（否则深色会被反成浅底深字）：
+    · 深色菜单（侧边栏 `theme="dark"`、主题用例的深色列）与其浮层面板；
+    · 主题开关（原清单里的 `m-switch-wrap` 为组件旧类名，已失效，改为当前的 `switch-wrap`）。
+    浅色菜单不列入：让它们随页面一起反相，正好呈现暗色观感。
+  */
+  .menu-wrap.menu-dark,
+  .menu-submenu-popup.menu-dark,
+  .menu-tooltip-popup.menu-dark,
+  .switch-wrap {
     filter: invert(1) hue-rotate(180deg);
   }
 }
