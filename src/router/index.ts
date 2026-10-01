@@ -50,6 +50,10 @@ const modules = import.meta.glob('../views/**/index.ts', {
   import: 'default' // 设置 import 为 default 可以加载默认导出
 })
 // console.log('modules', modules)
+// 将驼峰目录名转换为短横线命名（如 datePicker → date-picker），用于生成路由路径
+function toKebabCase(word: string): string {
+  return word.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+}
 export const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -67,16 +71,14 @@ export const routes: RouteRecordRaw[] = [
         .filter(([path, _]) => !path.includes('home') && !path.includes('exception'))
         .map(([path, meta]) => {
           const componentPath = path.replace('index.ts', 'Index.vue') // 打包过后，目录结构是不存在的，不能直接用该变量作为组件导入的路径
-          path = path.replace('../views', '').replace('/index.ts', '') || '/'
-          // 将路径转换为所有首字母大写的 name；filter(Boolean) 去掉空字符串，即去掉多余的斜杠导致的空字符串
-          const name =
-            path
-              .split('/')
-              .filter(Boolean)
-              .map((word: string) => word[0].toUpperCase() + word.slice(1))
-              .join('') || 'Index'
+          // 目录名片段；filter(Boolean) 去掉空字符串，即去掉多余的斜杠导致的空字符串
+          const segments = path.replace('../views', '').replace('/index.ts', '').split('/').filter(Boolean)
+          // 路由路径统一使用短横线连接（如 /date-picker）
+          const routePath = segments.length > 0 ? `/${segments.map(toKebabCase).join('/')}` : '/'
+          // 将路径转换为所有首字母大写的 name
+          const name = segments.map((word: string) => word[0].toUpperCase() + word.slice(1)).join('') || 'Index'
           return {
-            path,
+            path: routePath,
             name,
             meta,
             component: components[componentPath]
