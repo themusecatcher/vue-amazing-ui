@@ -1,4 +1,5 @@
-import { createApp, defineComponent, h, unref } from 'vue'
+import { createApp, defineComponent, h, provide, unref } from 'vue'
+import { SKIP_LINK_CSS_VARS_KEY } from 'components/config-provider/context'
 import type { Ref } from 'vue'
 import ConfigProvider from 'components/config-provider'
 import type { ConfigProviderProps } from 'components/config-provider'
@@ -125,10 +126,13 @@ export function createDiscreteApi<K extends DiscreteApiType>(
   const container = document.createElement('div')
   document.body.appendChild(container)
   const app = createApp({
-    render() {
-      return h(ConfigProvider, unref(configProviderProps ?? {}), {
-        default: () => buildProviders(0)
-      })
+    setup() {
+      // 离散实例不参与「主题色阶写入全局 CSS 变量」：避免覆盖主应用写入的值，并在 dispose 时误清除
+      provide(SKIP_LINK_CSS_VARS_KEY, true)
+      return () =>
+        h(ConfigProvider, unref(configProviderProps ?? {}), {
+          default: () => buildProviders(0)
+        })
     }
   })
   app.mount(container)

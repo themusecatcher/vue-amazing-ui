@@ -215,7 +215,7 @@ components/modal/
 | :--- | :--- | :--- |
 | 业务组件，自身完全无样式 | `ConfigProvider` / `Highlight` / `NumberAnimation` / `Watermark` | 登记在 `style-deps.ts` 的 `stylelessComponents` 白名单中：resolver 返回空 sideEffects，样式入口生成器跳过 |
 | 命令式 API 的 Provider | `MessageProvider` / `ModalProvider` / `DialogProvider` / `NotificationProvider` / `LoadingBarProvider` | 在 `styleSources` 中登记其底层组件（如 `MessageProvider: 'Message'`、`LoadingBarProvider: 'LoadingBar'`），与底层组件**共用同一个样式入口** |
-| 子组件，样式定义在父 SFC 内 | `DescriptionsItem`（样式写在 `Descriptions.vue` 的 `<style>` 中） | 在 `styleSources` 中登记父组件（`DescriptionsItem: 'Descriptions'`），否则 resolver 会指向并不存在的入口目录 |
+| 子组件，样式定义在父 SFC 内 | `DescriptionsItem`（`Descriptions.vue`）、`SelectOption` / `SelectOptGroup`（`Select.vue`）、`MenuItem` / `MenuSubMenu` / `MenuItemGroup` / `MenuDivider`（`Menu.vue`） | 在 `styleSources` 中登记父组件（如 `DescriptionsItem: 'Descriptions'`、`MenuItem: 'Menu'`），否则 resolver 会指向并不存在的入口目录 |
 
 > 新增无 `<style>` 块的 SFC 时，必须同步在 `components/utils/style-deps.ts` 中登记（白名单或 `styleSources`），
 > 否则按需引入会引用不存在的样式入口。`tests/resolver.spec.ts` 会扫描 `components/**/*.vue` 自动校验登记完整性。
@@ -226,4 +226,5 @@ components/modal/
 - **调色板**：`getColorPalettes(primaryColor)` → `@ant-design/colors` 的 `generate`，返回 10 级色阶。
 - **阴影色**：`getAlphaColor(frontColor, bg)` → 基于 `@ctrl/tinycolor` 计算。
 - **暗黑模式**：`toggleDark()` 工具函数一键切换。
-- **全局变量**：`components/style/global.less` 定义 `--primary-color` 等基础变量。
+- **主题色来源**：组件经 `useInject(组件名)` 读取 JS 调色板（`components/utils/hooks.ts`），默认主色 `#1677ff` 定义在 `useInject` 内；`components/style/global.less` 不定义全局主题变量，主题色统一由 `ConfigProvider` 的 `theme` 定制。
+- **CSS 变量输出**：`common` 主色的色阶写入 `--va-link-color` / `--va-link-color-hover` / `--va-link-color-active`（取色阶第 6 / 4 / 7 级），供链接基座 `:where(a)` 消费。**默认全局生效**：最外层实例（父链上没有其他 `ConfigProvider` 注入过 `common`）把色阶写到 `:root`，页面所有链接随主题色一并变化，卸载时移除变量、回落样式表内的 fallback 默认值；**嵌套实例只在自身子树内生效**：带包裹元素（`abstract` 为 `false`）的实例把色阶写到自身包裹元素上，链接基座逐级向上取值、就近命中 —— 因此嵌套实例想在自己的范围内改变链接配色需采用该形态，且不影响外层。

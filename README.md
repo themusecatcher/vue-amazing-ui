@@ -17,7 +17,7 @@
 ## Features
 
 - The component library is implemented with `Vue@3.5.42`+ `TypeScript@5.9.3` + `Vite@7.3.1` + `Less@4.5.1`.
-- Currently, it includes `70` basic UI components and `22` utility functions, with continuous exploration and updates ongoing...
+- Currently, it includes `72` basic UI components and `22` utility functions, with continuous exploration and updates ongoing...
 - Theme Customizable, all you need is to provide a theme color, then all the stuffs will be done by me.
 - By the way, they are all treeshakable.
 - All the stuff in Vue Amazing UI is written in TypeScript. It can work with your typescript project seamlessly.
@@ -253,7 +253,8 @@ All sponsors will be listed here, thank you very much for your support and spons
 | Grid            | 栅格        | Highlight      | 高亮文本    |
 | Image           | 图片        | Input          | 输入框      |
 | InputNumber     | 数字输入框  | InputSearch    | 搜索框      |
-| List            | 列表        | LoadingBar     | 加载条      |
+| Layout          | 布局        | List           | 列表        |
+| LoadingBar      | 加载条      | Menu           | 导航菜单    |
 | Message         | 全局提示    | Modal          | 模态框      |
 | Notification    | 通知提醒    | NumberAnimation| 数值动画    |
 | Pagination      | 分页        | Popconfirm     | 弹出确认    |

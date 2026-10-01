@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, onMounted, h, computed } from 'vue'
+import { useRoute, RouterLink } from 'vue-router'
 import { routes } from '@/router'
 import { toggleDark, useMutationObserver } from 'components/utils'
+import type { ItemType, MenuInfo } from 'vue-amazing-ui'
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
-// const router = useRouter() // 返回router实例，相当于在模板中使用$router
 const themeDark = ref<boolean>(false)
 const html = document.documentElement
 onMounted(() => {
   themeDark.value = html.classList.contains('dark')
-  // if (!themeDark.value) {
-  //   // 默认开启暗黑模式
-  //   toggleDark()
-  // }
+  if (!themeDark.value) {
+    // 默认开启暗黑模式
+    // toggleDark()
+  }
 })
 useMutationObserver(
   html,
@@ -22,10 +22,17 @@ useMutationObserver(
   { attributes: true }
 )
 const menus = ref<any>(routes[0].children)
+const menuItems = computed<ItemType[]>(() =>
+  menus.value.map((menu: any) => ({
+    key: menu.name,
+    label: h(RouterLink, { to: menu.path }, () => `${menu.meta.title} ${menu.name}`),
+    title: menu.meta.title
+  }))
+)
 const current = ref<string[]>([route.name as string])
-function onClick(e: any): void {
-  console.log(`${e.item.title} ${e.key}`)
-  // console.log(e.keyPath)
+const onClick = (e: MenuInfo) => {
+  // title 为构造 items 时透传的自定义字段
+  console.log(`${(e.item as { title?: string })?.title} ${e.key}`)
   console.log(route.name)
 }
 const routerViewRef = ref<HTMLDivElement | null>(null)
@@ -84,17 +91,14 @@ const routerViewRef = ref<HTMLDivElement | null>(null)
         </template>
       </Switch>
       <Scrollbar style="height: 100vh">
-        <a-menu
+        <Menu
           style="min-height: 100vh"
           v-model:selectedKeys="current"
           mode="inline"
           :theme="themeDark ? 'dark' : 'light'"
+          :items="menuItems"
           @click="onClick"
-        >
-          <a-menu-item v-for="menu in menus" :key="menu.name" :title="menu.meta.title">
-            <router-link :to="menu.path">{{ menu.meta.title }} {{ menu.name }}</router-link>
-          </a-menu-item>
-        </a-menu>
+        />
       </Scrollbar>
     </Col>
     <Col :xs="19" :xl="20">

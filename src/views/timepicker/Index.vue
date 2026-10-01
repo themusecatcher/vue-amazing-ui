@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import { ref } from 'vue'
-</script>
+<script setup lang="ts"></script>
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>

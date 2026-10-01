@@ -69,9 +69,7 @@ const fontSize = computed(() => {
   if (typeof props.size === 'number') {
     return `${props.size}px`
   }
-  if (typeof props.size === 'string') {
-    return props.size
-  }
+  return props.size
 })
 function isNumber(value: string | number): boolean {
   return typeof value === 'number'

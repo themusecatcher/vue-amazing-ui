@@ -116,11 +116,38 @@ export { default as InputNumber } from './input-number'
 export type { InputSearchProps } from './input-search'
 export { default as InputSearch } from './input-search'
 
+export type { LayoutProps, LayoutSiderProps, LayoutSiderResponsive } from './layout'
+export { default as Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider } from './layout'
+
 export type { ListProps, ListItemProps } from './list'
 export { default as List, ListItem } from './list'
 
 export type { LoadingBarProps, LoadingBarApi } from './loading-bar'
 export { default as LoadingBar, LoadingBarProvider, useLoadingBar } from './loading-bar'
+
+export type {
+  MenuProps,
+  MenuDividerProps,
+  MenuItemProps,
+  MenuItemGroupProps,
+  MenuSubMenuProps,
+  ItemType,
+  MenuKey,
+  MenuMode,
+  MenuTheme,
+  MenuNode,
+  MenuIcon,
+  MenuInfo,
+  MenuTitleInfo,
+  MenuExpandIconInfo,
+  MenuTriggerAction,
+  MenuItemType,
+  SubMenuType,
+  MenuItemGroupType,
+  MenuDividerType,
+  SelectInfo
+} from './menu'
+export { default as Menu, MenuDivider, MenuItem, MenuItemGroup, MenuSubMenu } from './menu'
 
 export type { MessageProps, MessageOptions, MessageApi, MessageReactive, MessageUpdate } from './message'
 export { default as Message, MessageProvider, useMessage } from './message'

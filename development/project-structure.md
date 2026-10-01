@@ -102,7 +102,7 @@ components/
 
 ### utils/ 工具目录
 
-`components/utils/` 共 13 个文件，按职责分组：
+`components/utils/` 共 17 个文件，按职责分组：
 
 | 文件 | 职责 |
 | :--- | :--- |
@@ -115,18 +115,23 @@ components/
 | `hooks.ts` | 通用 Hooks（挂载状态 / 插槽检测 / 主题注入等） |
 | `observers.ts` | DOM 观察与滚动监听 Hooks |
 | `position.ts` | 弹出定位 composable |
+| `z-index.ts` | 浮层层级（z-index）管理层（`useZIndex` / `createZIndexManager` 与注入键） |
+| `floating-mount.ts` | 浮层挂载点契约（同域模型：甲类浮层挂进承载层内容容器） |
+| `sider-collapsed.ts` | 侧边栏收起态契约（跨组件：`LayoutSider` 下发、`Menu` 消费的注入键） |
 | `render.ts` | 内容渲染辅助（统一归一为 VNode） |
 | `type.ts` | `withInstall` 高阶函数 |
 | `resolver.ts` | `unplugin-vue-components` 按需引入 resolver（返回组件的样式入口路径，见 [import-export.md](import-export.md)） |
 | `style-deps.ts` | 样式依赖表（单一数据源：`componentsMap` / `styleSources` / `componentDependencies` / `stylelessComponents`） |
 | `vendor-styles.ts` | 第三方样式依赖清单（单一数据源） |
 
-> `index.ts` 是 barrel，只汇总 `format` / `math` / `function` / `dom` / `color` / `hooks` / `observers` / `position` / `render` 九组；`type` / `resolver` / `style-deps` / `vendor-styles` 不属于 barrel 成员，需从具体文件引入（如 `import { withInstall } from 'components/utils/type'`）。
+> `index.ts` 是 barrel，只汇总 `format` / `math` / `function` / `dom` / `color` / `hooks` / `observers` / `position` / `z-index` / `floating-mount` / `sider-collapsed` / `render` 十二组；`type` / `resolver` / `style-deps` / `vendor-styles` 不属于 barrel 成员，需从具体文件引入（如 `import { withInstall } from 'components/utils/type'`）。
 > 工具函数的功能与使用说明见官方文档站 `docs/utils/functions/`。
 
 ### style/global.less
 
-全局默认样式，定义通用 reset、`--primary-color` CSS 变量与基础字体。组件按需引入时都会携带此样式。
+组件样式基座，只放「组件自身依赖」的声明：盒模型重置（`*` 的 `box-sizing` / `margin` / `padding`）、移动端点击高亮抑制（`body` 的 `-webkit-tap-highlight-color`，属性可继承、向下发）、原生表单控件字体兜底（`input` / `textarea` / `select` / `button` 的 `font-family: inherit`，见 [component-design.md](component-design.md) 的字体口径）、`:where(a)` 低特异性链接基座。组件按需引入时都会携带此样式。
+
+`:where()` 包裹而特异性为 `0`，使用方任意链接样式都能覆盖 —— 它保证组件内（含插槽内容）的链接「引入即协调」。其中三个颜色读 `--va-link-*` 变量（由 `ConfigProvider` 按 `common` 主题色阶写入：默认全局生效，嵌套实例改用 `:abstract="false"` 时只在自身子树内生效；fallback 为默认色阶），因此链接颜色随主题色联动。页面级样式（插入光标 `caret-color`、主题变量）不在此定义：由使用方页面样式或 `ConfigProvider` 的 `theme` 负责（见 [component-design.md](component-design.md) 的主题系统一节）；组件自带链接若需与基座不同的配色，由各组件在自己的类名下声明。
 
 ## src/ 演示环境
 

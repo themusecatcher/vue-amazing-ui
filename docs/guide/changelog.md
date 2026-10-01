@@ -10,12 +10,25 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-01">2.13.0</VersionDateTag>
+## <VersionDateTag date="2026-10-01">2.14.0</VersionDateTag>
 
 - 重构 [日期选择器 DatePicker](/guide/components/date-picker.html) 为自研实现：不再依赖第三方日期选择库，改为内置选择器内核（日期面板 / 时间面板 / 触发器 / 浮层 / 主题），产物不再包含该库的脚本与样式
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 破坏性变更：双向绑定由 `v-model` 改为 `v-model:value`（值为毫秒时间戳，回写事件 `update:value`），并新增 `v-model:formatted-value`（字符串轨道，传入时以它为准）与 `v-model:open`；`modelType` 移除，改用 `valueFormat`（采用 `date-fns` 占位符，如 `yyyy-MM-dd HH:mm:ss`）；`mode` 移除，改用 `type`（`date` / `datetime` / `week` / `month` / `quarter` / `year` 及各范围形态）；`range` 移除，范围形态由 `type` 承担；`showTime` 移除，时间形态由 `type="datetime"` 承担；`maxRange` 移除；`format` 不再支持函数形态；`showToday` 默认值由 `false` 改为 `true`，`width` 不传时随内容自适应
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="datetime"` 日期时间形态：日期与时间面板并列展示，展开期间的选择只落在草稿值上，点「确定」或「此刻」才提交，关闭面板则丢弃草稿；同时新增 `timePickerProps`（时间面板步长 / 12 小时制 / 隐藏禁用项）、`disabledTime`、`defaultTime`、`showNow`、`inputReadOnly`、`panelClass`、`panelStyle`、`zIndex` 等属性与 `ok` / `openChange` / `panelChange` / `focus` / `blur` 事件
 - 移除 `@vuepic/vue-datepicker` 依赖
+- 全局默认样式的字体口径调整：库不再在 `body` 上声明字体族，字体归宿主（「谁提供字体谁声明」），组件与插槽内容一律继承宿主页面字体；原生表单控件因浏览器 `UA` 样式不继承页面字体，统一由 `input` / `textarea` / `select` / `button` 的 `font-family: inherit` 兜底
+
+## <VersionDateTag date="2026-09-30">2.13.0</VersionDateTag>
+
+- 新增 [布局 Layout](/guide/components/layout.html) 组件：含 `Layout` / `LayoutHeader` / `LayoutContent` / `LayoutFooter` / `LayoutSider`，支持侧边栏收起与 `light` / `dark` 主题
+- 新增 [导航菜单 Menu](/guide/components/menu.html) 组件：支持 `items` 配置与 `MenuItem` / `MenuSubMenu` / `MenuItemGroup` / `MenuDivider` 子组件两种写法，含 `horizontal` / `vertical` / `inline` 三种菜单类型与 `light` / `dark` 主题，展开与选中可受控、可多选，`inline` 支持收起与缩进，水平溢出收进省略子菜单
+- 增强 [全局化配置 ConfigProvider](/guide/components/config-provider.html)：`theme` 新增 `Menu` 键（可按 `Menu` 覆盖主题色）；`common.primaryColor` 派生的色阶写入 `--va-link-color` / `--va-link-color-hover` / `--va-link-color-active`，页面链接颜色随主题色一并变化 —— 默认写到 `:root` 全局生效，`:abstract="false"` 的嵌套实例只在自身子树内生效
+- 优化 [全局提示 Message](/guide/components/message.html) 的进出场动效：时长由 `0.3s` 收敛为 `0.2s`，进场与离场各用一条缓动曲线
+- 修复 [滑动输入条 Slider](/guide/components/slider.html) 手柄气泡在贴近容器边缘时不再居中的问题
+- 全局默认样式的 `<a>` 重构为 `:where()` 包裹的低特异性链接基座，配色改由主色色阶决定（常态 / 悬停 / 按下为 `#1677ff` / `#69b1ff` / `#0958d9`，原悬停色 `#4096ff`），且不再移除焦点轮廓；同时移除 `--primary-color` / `--primary-color-hover` 主题变量，主题色请改用 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme`
+- 更新 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 文档：新增「链接颜色跟随主题」章节（变量、作用域与自定义覆盖写法），主题示例与 `ComponentName` 类型补 `Menu`，并订正 `tag` 属性的生效条件为 `abstract` 为 `false` 时有效
+- 更新贡献者文档：`development/` 的全局样式说明改为「组件样式基座 + 主题色由 `ConfigProvider` 提供」，并补充链接色变量的双作用域写入规则
+- 组件库及文档优化
 
 ## <VersionDateTag date="2026-09-24">2.12.0</VersionDateTag>
 
@@ -993,8 +1006,6 @@
 
 ## future
 
-- 新增 布局 Layout 组件
-- 新增 菜单 Menu 组件
 - 新增 穿梭框 Transfer 组件
 - 新增 漫游式引导 Tour 组件
 <!-- - 更新 表格 Table 组件，新增虚拟滚动功能

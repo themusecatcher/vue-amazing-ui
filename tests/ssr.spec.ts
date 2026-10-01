@@ -25,6 +25,9 @@ import Ellipsis from 'components/ellipsis/Ellipsis.vue'
 import Rate from 'components/rate/Rate.vue'
 import Tabs from 'components/tabs/Tabs.vue'
 import Drawer from 'components/drawer/Drawer.vue'
+import Layout from 'components/layout/Layout.vue'
+import LayoutSider from 'components/layout/layout-sider/LayoutSider.vue'
+import Menu from 'components/menu/Menu.vue'
 
 /**
  * 回归守护：`SSR` / `Node` 环境下组件不得在 `setup` 阶段裸访问 `window` / `document` /
@@ -87,6 +90,9 @@ describe('SSR 渲染安全性', () => {
     await expect(renderComponent(Ellipsis, { content: 'text' })).resolves.toBeTruthy()
     await expect(renderComponent(Rate)).resolves.toBeTruthy()
     await expect(renderComponent(Tabs)).resolves.toBeTruthy()
+    await expect(renderComponent(Layout, { hasSider: true })).resolves.toBeTruthy()
+    await expect(renderComponent(LayoutSider, { collapsible: true, breakpoint: 'lg' })).resolves.toBeTruthy()
+    await expect(renderComponent(Menu, { mode: 'inline', items: [{ key: 'a', label: 'A' }] })).resolves.toBeTruthy()
   })
 })
 

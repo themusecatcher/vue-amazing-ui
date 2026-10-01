@@ -36,6 +36,16 @@ const sloganItemStyle: CSSProperties = {
   fontWeight: 500,
   color: 'var(--vp-c-text-1)'
 }
+// 移动端标语卡片：内边距与文本样式一律通过 Card 的 bodyStyle 属性注入，
+// 不再为文字单独挂类名；Card 默认正文内边距 24px，此处收紧到 16px 与页面其它块留白一致
+const sloganBodyStyle: CSSProperties = {
+  padding: '16px',
+  fontSize: '17px',
+  fontWeight: 500,
+  lineHeight: 1.7,
+  color: 'var(--vp-c-text-1)',
+  textAlign: 'center'
+}
 // 赞助渠道：标签颜色、图标、收款码集中一处，供移动端切换器与两端二维码渲染复用
 const sponsorPlatforms = [
   { name: 'WeChat', color: '#07c160', icon: WechatOutlined, src: WeChat },
@@ -50,9 +60,7 @@ const sponsorType = ref('WeChat')
 // 无头像的赞助者，统一以默认用户图标占位
 const userIcon = () => h(UserOutlined)
 const qrcodeSize = computed(() => (isMobile.value ? 200 : 240))
-// 移动端单列固定宽度居中 = 二维码 200 + 内边距 24 * 2 + 边框 1 * 2；桌面端拉通全宽
-// （box-sizing: border-box 下内边距与边框都从 width 中扣除，需一并计入）
-const cardWidth = computed(() => (isMobile.value ? 250 : 'auto'))
+// 卡片两端均拉通全宽（Card 默认 width: auto），二维码由 .qrcode-list 的 space-evenly 居中/均分
 const cardSize = computed(() => (isMobile.value ? 'middle' : 'large'))
 // 移动端只展示当前选中的收款码，桌面端并排展示全部
 const visiblePlatforms = computed(() => {
@@ -82,64 +90,64 @@ const sponsors: Sponsor[] = [
 
 ## 赞助
 
-<TextScroll
-  v-if="!isMobile"
-  class="sponsor-slogan-scroll"
-  :items="sloganItem"
-  single
-  :gap="12"
-  :item-style="sloganItemStyle"
-  pause-on-mouse-enter
-/>
-<div v-else class="sponsor-slogan">
-  {{ sloganItem.title }}
-</div>
-
-<Segmented
-  v-if="isMobile"
-  class="sponsor-segmented"
-  v-model:value="sponsorType"
-  size="large"
-  block
-  :options="sponsorOptions"
->
-  <template #label="{ label, payload }">
-    <span class="segmented-label" :style="{ color: payload.color }">
-      <component :is="payload.icon" />
-      {{ label }}
-    </span>
-  </template>
-</Segmented>
-
-<Card class="sponsor-card" :size="cardSize" :width="cardWidth" style="background: transparent;">
-  <div class="qrcode-list">
-    <div class="qrcode-item" v-for="platform in visiblePlatforms" :key="platform.name">
-      <Tag v-if="!isMobile" class="qrcode-tag" :color="platform.color" size="large" :bordered="false">
-        <template #icon>
-          <component :is="platform.icon" />
-        </template>
-        {{ platform.name }}
-      </Tag>
-      <Image :src="platform.src" :width="qrcodeSize" :height="qrcodeSize" :name="platform.name" :bordered="false" />
-    </div>
-  </div>
-</Card>
-
-<Alert class="sponsor-tips" type="info" :bordered="false" show-icon>
-  <template #icon>
-    <HeartFilled class="tips-icon" />
-  </template>
-  <GradientText :size="24" :weight="700" :gradient="tipsGradient">
-    Vue Amazing UI to YOU：
-  </GradientText>
-  <template #description>
-    <ul class="tips-list">
-      <li>您的支持和赞助对我来说至关重要！</li>
-      <li>真诚感谢每一位现有的和未来的支持者和赞助者！</li>
-      <li>生命不息，迭代不止！未来，我将继续努力！</li>
-    </ul>
-  </template>
-</Alert>
+<Flex vertical gap="large">
+  <ClientOnly>
+    <TextScroll
+      v-if="!isMobile"
+      class="sponsor-slogan-scroll"
+      :items="sloganItem"
+      single
+      :gap="12"
+      :item-style="sloganItemStyle"
+      pause-on-mouse-enter
+    />
+    <Card v-else class="sponsor-card" :body-style="sloganBodyStyle">
+      {{ sloganItem.title }}
+    </Card>
+    <Segmented
+      v-if="isMobile"
+      v-model:value="sponsorType"
+      size="large"
+      block
+      :options="sponsorOptions"
+    >
+      <template #label="{ label, payload }">
+        <span class="segmented-label" :style="{ color: payload.color }">
+          <component :is="payload.icon" />
+          {{ label }}
+        </span>
+      </template>
+    </Segmented>
+    <Card class="sponsor-card" :size="cardSize">
+      <div class="qrcode-list">
+        <div class="qrcode-item" v-for="platform in visiblePlatforms" :key="platform.name">
+          <Tag v-if="!isMobile" class="qrcode-tag" :color="platform.color" size="large" :bordered="false">
+            <template #icon>
+              <component :is="platform.icon" />
+            </template>
+            {{ platform.name }}
+          </Tag>
+          <Image :src="platform.src" :width="qrcodeSize" :height="qrcodeSize" :name="platform.name" :bordered="false" />
+        </div>
+      </div>
+    </Card>
+  </ClientOnly>
+  <Alert class="sponsor-tips" type="info" :bordered="false" show-icon>
+    <template #icon>
+      <HeartFilled class="tips-icon" />
+    </template>
+    <GradientText :size="24" :weight="700" :gradient="tipsGradient">
+      Vue Amazing UI to YOU：
+    </GradientText>
+    <template #description>
+      <ul class="tips-list">
+        <li>您的支持和赞助对我来说至关重要！</li>
+        <li>真诚感谢每一位现有的和未来的支持者和赞助者！</li>
+        <li>生命不息，迭代不止！未来，我将继续努力！</li>
+      </ul>
+    </template>
+  </Alert>
+</Flex>
 
 ## 赞助者 🫡
 
@@ -171,32 +179,16 @@ _可自定义展示个人头像、名称以及主页的跳转地址（只需将�
 </Space>
 
 <style scoped lang="less">
-// 标语：移动端静态展示；桌面端 TextScroll 的背景色与阴影由组件内联样式写死，无对应 API，只能以 !important 跟随主题
-.sponsor-slogan {
-  // 与下方 Segmented 拉开距离：Segmented 自带 #f5f5f5 背景，若与本块相邻且同为浅灰会粘成一块
-  margin-bottom: 24px;
-  padding: 16px;
-  font-size: 17px;
-  font-weight: 500;
-  line-height: 1.7;
-  color: var(--vp-c-text-1);
-  text-align: center;
-  background-color: var(--vp-c-bg);
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 8px;
+// 标语与二维码卡片都复用 Card：Card 的背景色与边框色是写死的浅色值、不跟随主题，
+// 这里统一覆盖为跟随主题；页面样式在组件库样式之后加载，单类名即可覆盖，无需提升特异性
+.sponsor-card {
+  background: transparent;
+  border-color: var(--vp-c-divider);
 }
+// 桌面端标语滚动组件：背景色与阴影由组件内联样式写死，无对应 API，只能以 !important 跟随主题
 .sponsor-slogan-scroll {
   background-color: var(--vp-c-bg) !important;
   box-shadow: 0 0 5px var(--vp-c-divider) !important;
-}
-// 二维码
-.sponsor-card {
-  // 拉通全宽布局，两列二维码由 .qrcode-list 的 space-evenly 均分排布
-  margin: 24px auto 40px;
-  border-color: var(--vp-c-divider);
-}
-.sponsor-segmented {
-  padding: 4px;
 }
 .segmented-label {
   font-weight: 500;

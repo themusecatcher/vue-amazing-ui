@@ -282,12 +282,20 @@ export default defineConfig({
               link: '/guide/components/input-search'
             },
             {
+              text: '布局 Layout',
+              link: '/guide/components/layout'
+            },
+            {
               text: '列表 List',
               link: '/guide/components/list'
             },
             {
               text: '加载条 LoadingBar',
               link: '/guide/components/loading-bar'
+            },
+            {
+              text: '导航菜单 Menu',
+              link: '/guide/components/menu'
             },
             {
               text: '全局提示 Message',
