@@ -434,12 +434,24 @@ export default defineComponent({
     })
     onUpdated(() => measureOverflow())
 
+    /**
+     * 激活判定：把节点自身的完整路径与「激活路径」按层级比对
+     *
+     * 只比裸 key 会让不同层级的同名 key 一起点亮（`items` 里顶层项与深层项都取 `2` 时会同时呈现
+     * 悬浮态）。按路径比对同时覆盖两种身份：与激活路径相等即当前项，是其前缀即为路径上的祖先
+     * （浮层跨 DOM 高亮依赖后者）。
+     */
+    function isActivePath(keyPath: MenuKey[]): boolean {
+      const activePath = menu.activeKeys.value
+      return keyPath.every((key, index) => activePath[index] === key)
+    }
+
     function renderMenuItem(node: MenuItemType, index: number, level: number, parentKeys: MenuKey[]): VNode {
       const key = getItemKey(node, index)
       const keyPath = [...parentKeys, key]
       const disabled = menu.disabled.value || !!node.disabled
       const collapsed = menu.inlineCollapsed.value
-      const active = menu.activeKeys.value.includes(key)
+      const active = isActivePath(keyPath)
       const iconNode = renderIcon(node.icon, node)
       const content = renderTitleContent(node.label, iconNode, level, collapsed)
       // 收起态的悬浮标题（与参考实现同口径）：一级项缺省 `title` 时以标签内容兜底，更深层级只认显式 `title`；
@@ -548,7 +560,7 @@ export default defineComponent({
       const popupOffsetPair =
         node.popupOffset ?? (popupHorizontal ? [0, POPUP_GAP.horizontal] : [POPUP_GAP.vertical, 0])
       const collapsed = menu.inlineCollapsed.value
-      const active = menu.activeKeys.value.includes(key)
+      const active = isActivePath(keyPath)
       const theme = node.theme ?? menu.theme.value
       const iconNode = renderIcon(node.icon, node)
       const titleContent = renderTitleContent(node.label, iconNode, level, collapsed)

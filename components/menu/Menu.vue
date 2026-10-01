@@ -752,8 +752,8 @@ provide<MenuContext>(menuContextKey, {
   .menu-submenu-selected > .menu-submenu-title {
     color: var(--menu-item-selected-color);
   }
-  .menu-submenu:not(.menu-submenu-disabled) > .menu-submenu-title:hover,
-  .menu-submenu-active:not(.menu-submenu-disabled) > .menu-submenu-title {
+  /* 悬浮到标题本身：任何模式都铺悬浮底色（禁用态的排除见下方 `.menu-submenu-disabled`） */
+  .menu-submenu:not(.menu-submenu-disabled) > .menu-submenu-title:hover {
     color: var(--menu-item-hover-color);
     background-color: var(--menu-item-hover-background);
   }
@@ -805,6 +805,15 @@ provide<MenuContext>(menuContextKey, {
   .menu-submenu:not(.menu-submenu-disabled) > .menu-submenu-title:active {
     background-color: var(--menu-item-selected-background);
   }
+}
+/* 祖先子菜单的激活底色只服务「浮层」：浮层脱离标题所在的 DOM 树，光标移入面板后标题自身不再
+   `:hover`，只能由「激活路径」维持高亮 —— 纵向菜单弹出的面板、以及浮层面板内的子菜单都属于此列。
+   inline 下子列表内嵌常显、祖先只是被光标路过的中间节点，跟着点亮会同屏串出好几处悬浮色，故不纳入
+   （对齐 Ant Design：底色只表达光标是否真正落在标题上）；横向菜单顶层另有透明规则单独收口 */
+.menu-wrap.menu-vertical .menu-submenu-active:not(.menu-submenu-disabled) > .menu-submenu-title,
+.menu-submenu-popup .menu-submenu-active:not(.menu-submenu-disabled) > .menu-submenu-title {
+  color: var(--menu-item-hover-color);
+  background-color: var(--menu-item-hover-background);
 }
 .menu-wrap.menu-inline {
   .menu-item,
