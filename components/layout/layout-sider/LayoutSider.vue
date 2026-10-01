@@ -25,13 +25,13 @@ export interface Props {
   collapsed?: boolean // (v-model) 当前收起状态，不传时为非受控
   defaultCollapsed?: boolean // 是否默认收起，仅非受控时生效
   width?: number | string // 宽度，数字与数字字符串按 px 处理
-  collapsedWidth?: number | LayoutSiderResponsive // 收起时的宽度；数字按 px 处理，传对象时按视窗宽度取档位，设为 0 会出现特殊触发器
+  collapsedWidth?: number | LayoutSiderResponsive // 收起时的宽度；数字按 px 处理，传对象时按视窗宽度取档位；收起宽度为 0 时改用悬浮在侧边栏外沿的方形按钮
   theme?: 'light' | 'dark' // 侧边栏主题色
   collapsible?: boolean // 是否可收起
   breakpoint?: keyof LayoutSiderResponsive // 触发响应式收起的断点，视窗宽度低于该断点时收起
   trigger?: VNode | string | null // 自定义收起触发器；传 null 隐藏触发器
   reverseArrow?: boolean // 翻转折叠箭头方向，Sider 在右侧时使用
-  zeroWidthTriggerStyle?: CSSProperties // collapsedWidth 为 0 时特殊触发器的样式
+  zeroWidthTriggerStyle?: CSSProperties // 收起宽度为 0 时，悬浮在侧边栏外沿的方形按钮的样式
 }
 export interface LayoutSiderSlots {
   default?: () => VNode[]
@@ -55,9 +55,9 @@ const emits = defineEmits<{
   (e: 'collapse', collapsed: boolean, type: CollapseType): void
   (e: 'breakpoint', broken: boolean): void
 }>()
-// 断点阈值（px）：与 Grid 断点表一致
+// 断点阈值（px）：与 Grid 断点表一致（取各档的下边界，`xs` 即 `<576`）
 const responsiveSize = {
-  xs: 480,
+  xs: 576,
   sm: 576,
   md: 768,
   lg: 992,

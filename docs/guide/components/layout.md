@@ -79,6 +79,7 @@ const fixedSiderSelectedKeys = ref<MenuKey[]>(['4'])
 const fixedNavKeys = ref<MenuKey[]>(['2'])
 const collapsedResponsiveWidth = ref(true)
 const responsiveWidthSelectedKeys = ref<MenuKey[]>(['4'])
+const customScrollbarSelectedKeys = ref<MenuKey[]>(['1'])
 const onCollapse = (collapsed: boolean, type: 'clickTrigger' | 'responsive') => {
   console.log('collapse', collapsed, type)
 }
@@ -733,7 +734,7 @@ const customTriggerSelectedKeys = ref<MenuKey[]>(['1'])
 
 ## 响应式布局
 
-*视窗宽度低于 `breakpoint` 时侧边栏自动收起到 `collapsedWidth`；`collapsedWidth` 为 `0` 时改用悬浮于侧边栏之外的特殊触发器*
+*视窗宽度低于 `breakpoint` 时侧边栏自动收起到 `collapsedWidth`；收起宽度为 `0` 时侧边栏完全收起，改用悬浮在侧边栏外沿的方形按钮展开 —— 未开启 `collapsible` 时，该按钮同样会随响应式收起出现*
 
 <br/>
 
@@ -1302,13 +1303,13 @@ hasSider | 表示子元素里有 `Sider`，一般不用指定；子级存在 `La
 collapsed <Tag color="cyan">v-model</Tag> | 当前收起状态，不传时为非受控 | boolean | undefined
 defaultCollapsed | 是否默认收起，仅非受控时生效 | boolean | false
 width | 宽度，数字与数字字符串按 `px` 处理 | number &#124; string | 200
-collapsedWidth | 收缩宽度，数字按 `px` 处理，设置为 `0` 会出现特殊 trigger；传响应式对象时按视窗宽度取对应档位 | number &#124; [LayoutSiderResponsive](#layoutsiderresponsive-type) | 80
+collapsedWidth | 收起时的宽度，数字按 `px` 处理；传响应式对象时按视窗宽度取对应档位。收起宽度为 `0` 时侧边栏收起后完全不可见，底部内嵌的收起条无处安放，改用悬浮在侧边栏外沿的方形按钮承担展开 / 收起（样式可由 `zeroWidthTriggerStyle` 定制） | number &#124; [LayoutSiderResponsive](#layoutsiderresponsive-type) | 80
 theme | 主题颜色 | 'light' &#124; 'dark' | 'dark'
 collapsible | 是否可收起 | boolean | false
-breakpoint | 触发响应式布局的断点，视窗宽度低于该断点时收起 | 'xs' &#124; 'sm' &#124; 'md' &#124; 'lg' &#124; 'xl' &#124; 'xxl' &#124; 'xxxl' | undefined
+breakpoint | 触发响应式布局的断点，视窗宽度低于该断点时收起（各档阈值见下方 [LayoutSiderResponsive Type](#layoutsiderresponsive-type)） | 'xs' &#124; 'sm' &#124; 'md' &#124; 'lg' &#124; 'xl' &#124; 'xxl' &#124; 'xxxl' | undefined
 trigger | 自定义收起触发器，设置为 `null` 时隐藏触发器；插槽形态请用同名 `#trigger` 插槽 | VNode &#124; string &#124; null | undefined
 reverseArrow | 翻转折叠提示箭头的方向，当 `Sider` 在右边时可以使用 | boolean | false
-zeroWidthTriggerStyle | 指定当 `collapsedWidth` 为 `0` 时出现的特殊 trigger 的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
+zeroWidthTriggerStyle | 指定收起宽度为 `0` 时，悬浮在侧边栏外沿的方形按钮的样式（如位置 / 尺寸 / 配色） | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
 
 ### LayoutSiderResponsive Type
 
@@ -1397,7 +1398,7 @@ breakpoint | 触发响应式布局断点时的回调，`broken` 为 `true` 表�
   cursor: pointer;
   transition: color 0.3s;
   &:hover {
-    color: var(--primary-color);
+    color: var(--va-link-color, #1677ff);
   }
 }
 </style>

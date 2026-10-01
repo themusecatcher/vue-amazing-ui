@@ -817,9 +817,15 @@ const theme = computed<ConfigProviderTheme>(() => ({
 
 ## 链接颜色跟随主题
 
-`common.primaryColor` 变化时，由它派生的色阶会写入 `--va-link-color` / `--va-link-color-hover` / `--va-link-color-active` 三个 CSS 变量，链接基座（`:where(a)`）据此渲染 —— 因此**页面链接颜色会随主题色一并变化**，无需额外配置；未使用 `ConfigProvider` 时回退到默认色阶。
+<br/>
 
-写入位置随实例形态而定：**最外层**实例写 `:root`（全局生效，卸载后回退默认色阶）；**带包裹元素**（`:abstract="false"`）的实例写自身包裹元素 —— 链接基座逐级向上取值，故本子树内的链接就近跟随。因此**嵌套 `ConfigProvider` 需采用带包裹元素的形态**，才能在自己的范围内改变链接配色（下方示例所在页面的根节点即为更外层 `ConfigProvider`，故采用该形态）。
+`common.primaryColor` 变化时，由它派生的色阶会写入 `--va-link-color` / `--va-link-color-hover` / `--va-link-color-active` 三个 `CSS` 变量，链接基座（`:where(a)`）据此渲染 —— 因此**页面链接颜色会随主题色一并变化**，无需额外配置；未使用 `ConfigProvider` 时回退到默认色阶。
+
+<br/>
+
+**默认全局生效**：最外层 `ConfigProvider` 把色阶写到 `:root`，页面所有链接随主题色一并变化，卸载后回退默认色阶；若只想让某块区域（嵌套 `ConfigProvider`）跟着改，需采用**带包裹元素**的形态（`:abstract="false"`）—— 此时色阶写到该实例自身的包裹元素上，只在子树内生效（下方示例所在页面的根节点已有更外层 `ConfigProvider`，故采用该形态）。
+
+<br/>
 
 <!-- 文档站正文的 `.vp-doc a`（特异性 0,1,1）会覆盖库的全局链接基座（特异性 0），此处为演示单独引用 CSS 变量以便观察；实际项目无需此处理 -->
 <style>
@@ -837,9 +843,7 @@ const theme = computed<ConfigProviderTheme>(() => ({
   }
 </style>
 
-<div class="link-theme-demo">
-
-<Flex vertical>
+<Flex vertical class="link-theme-demo">
   <Space align="center">
     linkPrimaryColor:<ColorPicker style="width: 200px" v-model:value="linkPrimaryColor" />
   </Space>
@@ -852,8 +856,6 @@ const theme = computed<ConfigProviderTheme>(() => ({
     </Card>
   </ConfigProvider>
 </Flex>
-
-</div>
 
 ::: details Show Code
 

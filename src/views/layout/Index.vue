@@ -334,8 +334,9 @@ const onBreakpoint = (broken: boolean) => {
 
     <h2 class="mt30 mb10">响应式布局</h2>
     <p class="mb10">
-      视窗宽度低于 <code>breakpoint</code> 时侧边栏自动收起到 <code>collapsedWidth</code>；
-      <code>collapsedWidth</code> 为 <code>0</code> 时改用悬浮于侧边栏之外的特殊触发器
+      视窗宽度低于 <code>breakpoint</code> 时侧边栏自动收起到 <code>collapsedWidth</code>；收起宽度为
+      <code>0</code> 时侧边栏完全收起，改用悬浮在侧边栏外沿的方形按钮展开 —— 未开启
+      <code>collapsible</code> 时，该按钮同样会随响应式收起出现
     </p>
     <Layout>
       <LayoutSider breakpoint="lg" :collapsed-width="0" @collapse="onCollapse" @breakpoint="onBreakpoint">
@@ -587,7 +588,7 @@ const onBreakpoint = (broken: boolean) => {
   cursor: pointer;
   transition: color 0.3s;
   &:hover {
-    color: var(--primary-color);
+    color: var(--va-link-color, #1677ff);
   }
 }
 </style>
