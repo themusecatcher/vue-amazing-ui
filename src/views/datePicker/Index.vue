@@ -25,6 +25,14 @@ function createValuePair(offsetDays: number = 0): ValuePair {
     compare: ref<string | null>(format(timestamp, 'yyyy-MM-dd'))
   }
 }
+/** 日期时间用例的值对：初始值含时分秒，对照侧按展示格式降为字符串 */
+function createDateTimePair(): ValuePair {
+  const timestamp = new Date().getTime()
+  return {
+    ours: ref<number | null>(timestamp),
+    compare: ref<string | null>(format(timestamp, 'yyyy-MM-dd HH:mm:ss'))
+  }
+}
 const { ours: basicValue, compare: basicCompareValue } = createValuePair()
 const { ours: slashValue, compare: slashCompareValue } = createValuePair()
 const { ours: chineseValue, compare: chineseCompareValue } = createValuePair()
@@ -41,6 +49,16 @@ const { ours: placementBottomLeftValue, compare: placementBottomLeftCompareValue
 const { ours: placementBottomRightValue, compare: placementBottomRightCompareValue } = createValuePair()
 const { ours: placementTopLeftValue, compare: placementTopLeftCompareValue } = createValuePair()
 const { ours: placementTopRightValue, compare: placementTopRightCompareValue } = createValuePair()
+// 日期时间用例：主用例（官网 time）+ 时间面板选项 / 12 小时制 / 隐藏「此刻」三个细项
+const { ours: datetimeValue, compare: datetimeCompareValue } = createDateTimePair()
+const { ours: minuteStepValue, compare: minuteStepCompareValue } = createDateTimePair()
+const { ours: twelveHourValue, compare: twelveHourCompareValue } = createDateTimePair()
+const { ours: showNowValue, compare: showNowCompareValue } = createDateTimePair()
+// 不可选择日期和时间用例：初始为空值，与官网 disabled-date 用例一致
+const disabledDateTimeValue = ref<number | null>(null)
+const disabledDateTimeCompareValue = ref<string | null>(null)
+// 选中日期时的默认时分秒（官网用例经 showTime.defaultValue 传入 00:00:00）
+const defaultTime = startOfDay(new Date()).getTime()
 const sizeValue = ref<DatePickerProps['size']>('middle')
 const sizeOptions: Array<{ label: string; value: NonNullable<DatePickerProps['size']> }> = [
   { label: 'small', value: 'small' },
@@ -74,6 +92,29 @@ function compareDisabledDateAfter(current: ComparableDate): boolean {
 function compareDisabledWeekendDate(current: ComparableDate): boolean {
   return current.day() === 0 || current.day() === 6
 }
+/** 半开区间 [start, end) 的整数序列 */
+function range(start: number, end: number): number[] {
+  return Array.from({ length: end - start }, (_, index) => index + start)
+}
+/** 不可选择今天及之前（官网「不可选择日期和时间」用例同口径） */
+function disabledDateTodayOrBefore(timestamp: number): boolean {
+  return endOfDay(timestamp).getTime() <= endOfDay(new Date()).getTime()
+}
+function compareDisabledDateTodayOrBefore(current: ComparableDate): boolean {
+  return endOfDay(current.valueOf()).getTime() <= endOfDay(new Date()).getTime()
+}
+/**
+ * 禁用的时间区间（与官网用例同一组：4-23 时 / 30-59 分 / 55-56 秒）
+ *
+ * 两侧共用：本项目的 `disabledTime` 入参为时间戳、官网组件入参为日期库实例，两者均未使用该入参。
+ */
+function disabledDateTimeUnits() {
+  return {
+    disabledHours: () => range(4, 24),
+    disabledMinutes: () => range(30, 60),
+    disabledSeconds: () => [55, 56]
+  }
+}
 </script>
 <template>
   <a-config-provider :locale="zhCN">
@@ -91,6 +132,7 @@ function compareDisabledWeekendDate(current: ComparableDate): boolean {
         </div>
       </div>
       <h2 class="mt30 mb10">日期格式</h2>
+      <p class="mb10">使用 <code>format</code> 定制展示格式</p>
       <div class="demo-compare">
         <div class="demo-compare-item">
           <p class="demo-compare-label">本项目组件</p>
@@ -117,6 +159,87 @@ function compareDisabledWeekendDate(current: ComparableDate): boolean {
           </Space>
         </div>
       </div>
+      <h2 class="mt30 mb10">日期时间选择</h2>
+      <p class="mb10">
+        <code>type="datetime"</code> 增加选择时间功能，时间面板选项经 <code>timePickerProps</code>
+        透传；展开期间的选择只落在草稿值上，点「确定」或「此刻」才提交，关闭面板则丢弃草稿
+      </p>
+      <div class="demo-compare">
+        <div class="demo-compare-item">
+          <p class="demo-compare-label">本项目组件</p>
+          <DatePicker v-model:value="datetimeValue" type="datetime" placeholder="请选择日期时间" />
+        </div>
+        <div class="demo-compare-item">
+          <p class="demo-compare-label">antd 官网组件</p>
+          <a-date-picker
+            v-model:value="datetimeCompareValue"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            show-time
+            placeholder="请选择日期时间"
+          />
+        </div>
+      </div>
+      <p class="mt20 mb10">分钟按 5 分钟步长选择</p>
+      <div class="demo-compare">
+        <div class="demo-compare-item">
+          <p class="demo-compare-label">本项目组件</p>
+          <DatePicker
+            v-model:value="minuteStepValue"
+            type="datetime"
+            :time-picker-props="{ minuteStep: 5 }"
+            placeholder="请选择日期时间"
+          />
+        </div>
+        <div class="demo-compare-item">
+          <p class="demo-compare-label">antd 官网组件</p>
+          <a-date-picker
+            v-model:value="minuteStepCompareValue"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            :show-time="{ minuteStep: 5 }"
+            placeholder="请选择日期时间"
+          />
+        </div>
+      </div>
+      <p class="mt20 mb10">12 小时制：<code>use12Hours</code> 与 12 小时制格式（<code>hh</code>）配合使用</p>
+      <div class="demo-compare">
+        <div class="demo-compare-item">
+          <p class="demo-compare-label">本项目组件</p>
+          <DatePicker
+            v-model:value="twelveHourValue"
+            type="datetime"
+            format="yyyy-MM-dd hh:mm:ss"
+            :time-picker-props="{ use12Hours: true }"
+            placeholder="请选择日期时间"
+          />
+        </div>
+        <div class="demo-compare-item">
+          <p class="demo-compare-label">antd 官网组件</p>
+          <a-date-picker
+            v-model:value="twelveHourCompareValue"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            format="YYYY-MM-DD hh:mm:ss"
+            :show-time="{ use12Hours: true }"
+            placeholder="请选择日期时间"
+          />
+        </div>
+      </div>
+      <p class="mt20 mb10">隐藏「此刻」快捷</p>
+      <div class="demo-compare">
+        <div class="demo-compare-item">
+          <p class="demo-compare-label">本项目组件</p>
+          <DatePicker v-model:value="showNowValue" type="datetime" :show-now="false" placeholder="请选择日期时间" />
+        </div>
+        <div class="demo-compare-item">
+          <p class="demo-compare-label">antd 官网组件</p>
+          <a-date-picker
+            v-model:value="showNowCompareValue"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            show-time
+            :show-now="false"
+            placeholder="请选择日期时间"
+          />
+        </div>
+      </div>
       <h2 class="mt30 mb10">禁用</h2>
       <div class="demo-compare">
         <div class="demo-compare-item">
@@ -133,8 +256,37 @@ function compareDisabledWeekendDate(current: ComparableDate): boolean {
           />
         </div>
       </div>
-      <h2 class="mt30 mb10">不可选择日期</h2>
-      <p class="mb10">不可选择今天之后的日期</p>
+      <h2 class="mt30 mb10">不可选择日期和时间</h2>
+      <p class="mb10">
+        <code>disabledDate</code> 与 <code>disabledTime</code> 分别禁止选择部分日期与时间，<code>disabledTime</code>
+        需与带时间的形态配合使用
+      </p>
+      <div class="demo-compare">
+        <div class="demo-compare-item">
+          <p class="demo-compare-label">本项目组件</p>
+          <DatePicker
+            v-model:value="disabledDateTimeValue"
+            type="datetime"
+            :disabled-date="disabledDateTodayOrBefore"
+            :disabled-time="disabledDateTimeUnits"
+            :default-time="defaultTime"
+            placeholder="请选择日期时间"
+          />
+        </div>
+        <div class="demo-compare-item">
+          <p class="demo-compare-label">antd 官网组件</p>
+          <a-date-picker
+            v-model:value="disabledDateTimeCompareValue"
+            format="YYYY-MM-DD HH:mm:ss"
+            value-format="YYYY-MM-DD HH:mm:ss"
+            :disabled-date="compareDisabledDateTodayOrBefore"
+            :disabled-time="disabledDateTimeUnits"
+            :show-time="{ defaultValue: dayjs('00:00:00', 'HH:mm:ss') }"
+            placeholder="请选择日期时间"
+          />
+        </div>
+      </div>
+      <p class="mt20 mb10">不可选择今天之后的日期</p>
       <div class="demo-compare">
         <div class="demo-compare-item">
           <p class="demo-compare-label">本项目组件</p>
