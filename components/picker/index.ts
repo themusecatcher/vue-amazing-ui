@@ -6,7 +6,11 @@
  */
 
 export { default as PickerPanel } from './PickerPanel.vue'
+export { default as PickerPanelHeader } from './PickerPanelHeader.vue'
 export { default as PickerTrigger } from './PickerTrigger.vue'
 export { default as DatePanel } from './DatePanel.vue'
+export { default as DatetimePanel } from './DatetimePanel.vue'
+export { default as TimePanel } from './TimePanel.vue'
+export { default as TimeUnitColumn } from './TimeUnitColumn.vue'
 export * from './types'
 export * from './date-utils'

@@ -172,10 +172,14 @@ describe('resolver - 全量组件映射', () => {
     const unexported = entries.map(([name]) => name).filter((name) => !exported.has(name))
     expect(unexported, `以下登记名未从主入口导出：${unexported.join('、')}`).toEqual([
       'DatePanel',
+      'DatetimePanel',
       'PickerIcon',
       'PickerPanel',
+      'PickerPanelHeader',
       'PickerTrigger',
-      'Popup'
+      'Popup',
+      'TimePanel',
+      'TimeUnitColumn'
     ])
   })
 })

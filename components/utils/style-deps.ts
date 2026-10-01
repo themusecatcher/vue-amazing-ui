@@ -32,6 +32,7 @@ const componentsMap = {
   Countdown: 'countdown',
   DatePanel: 'picker',
   DatePicker: 'date-picker',
+  DatetimePanel: 'picker',
   Descriptions: 'descriptions',
   DescriptionsItem: 'descriptions/descriptions-item',
   Dialog: 'dialog',
@@ -61,6 +62,7 @@ const componentsMap = {
   Pagination: 'pagination',
   PickerIcon: 'picker',
   PickerPanel: 'picker',
+  PickerPanelHeader: 'picker',
   PickerTrigger: 'picker',
   Popconfirm: 'popconfirm',
   Popover: 'popover',
@@ -88,6 +90,8 @@ const componentsMap = {
   Tag: 'tag',
   Textarea: 'textarea',
   TextScroll: 'text-scroll',
+  TimePanel: 'picker',
+  TimeUnitColumn: 'picker',
   Timeline: 'timeline',
   Tooltip: 'tooltip',
   Upload: 'upload',
@@ -127,6 +131,8 @@ const styleSources: Partial<Record<ComponentName, ComponentName>> = {
  * 组件样式依赖关系（仅声明「除自身外」的样式依赖；自身样式由 styleSources / componentsMap 兜底）
  *
  * - Tooltip 的浮层宿主为 Popup，故 Tooltip 及其全部间接依赖组件都要追加 Popup；
+ * - 生成器只展开一层依赖，不追溯间接依赖，因此「间接用到的有样式组件」须由各组件自行摊平登记
+ *   （如日期时间形态的 `DatePicker` 需一并登记 `Button` 与全部 picker 内核组件）；
  * - 依赖项必须是「有自己 CSS 的组件」，不能是 styleSources 的键（复用他人样式）或 stylelessComponents
  *   （无样式），否则生成器会拼出不存在的 CSS 路径（构建期有存在性断言兜底）。
  */
@@ -138,8 +144,27 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   Carousel: ['Spin'],
   Cascader: ['Select', 'Empty', 'Scrollbar'],
   Collapse: ['Button'],
-  DatePicker: ['DatePanel', 'PickerPanel', 'PickerTrigger'],
-  DatePanel: ['PickerPanel'],
+  DatePicker: [
+    'DatetimePanel',
+    'DatePanel',
+    'TimePanel',
+    'TimeUnitColumn',
+    'PickerPanel',
+    'PickerPanelHeader',
+    'PickerTrigger',
+    'Button',
+    'Scrollbar'
+  ],
+  DatePanel: ['PickerPanel', 'PickerPanelHeader'],
+  DatetimePanel: [
+    'DatePanel',
+    'TimePanel',
+    'TimeUnitColumn',
+    'PickerPanel',
+    'PickerPanelHeader',
+    'Button',
+    'Scrollbar'
+  ],
   ColorPicker: ['Button', 'Input', 'Tooltip', 'Popup'],
   Dialog: ['Button', 'Scrollbar'],
   DialogProvider: ['Button', 'Scrollbar'],
@@ -176,6 +201,8 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   ],
   Tag: ['Space'],
   TextScroll: ['Ellipsis', 'Tooltip', 'Popup'],
+  TimePanel: ['TimeUnitColumn', 'Scrollbar'],
+  TimeUnitColumn: ['Scrollbar'],
   Tooltip: ['Popup'],
   Upload: ['Image', 'Space', 'Spin'],
   Waterfall: ['Spin']

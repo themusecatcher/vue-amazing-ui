@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import type { VNode } from 'vue'
 import PickerPanel from './PickerPanel.vue'
+import PickerPanelHeader from './PickerPanelHeader.vue'
 import {
   addMonthTimestamp,
   addYearTimestamp,
@@ -27,14 +29,21 @@ export interface DatePanelProps {
   disabledDate?: (timestamp: number) => boolean // 不可选择的日期
   defaultPickerValue?: number // 面板初始日期
   showToday?: boolean // 是否展示「今天」快捷
+  datetime?: boolean // 日期时间形态：主体右侧并排时间面板，底部改由 footer 插槽提供（「此刻 / 确定」）
+}
+export interface DatePanelSlots {
+  aside?: () => VNode[] // 主体右侧的附加面板（日期时间形态的时间面板）
+  footer?: () => VNode[] // 底部内容，默认「今天」
 }
 const props = withDefaults(defineProps<DatePanelProps>(), {
   value: null,
   startDayOfWeek: 0,
   disabledDate: undefined,
   defaultPickerValue: undefined,
-  showToday: true
+  showToday: true,
+  datetime: false
 })
+defineSlots<DatePanelSlots>()
 const emits = defineEmits<{
   select: [timestamp: number]
   panelChange: [value: number, mode: PickerPanelMode]
@@ -97,6 +106,8 @@ function isYearInView(timestamp: number): boolean {
   const startYear = getYearNumber(getYearTimestamps(viewDate.value)[0])
   return year >= startYear && year < startYear + 10
 }
+/** 底部可见性：日期时间形态的底部即「此刻 / 确定」，与「今天」的视图条件无关 */
+const footerVisible = computed(() => props.datetime || (props.showToday && panelMode.value === 'date'))
 /** 月面板格代表整月：月内每一天都不可选时才禁用（与日期格的「按天判定」区分） */
 function isMonthDisabled(timestamp: number): boolean {
   return props.disabledDate ? isMonthFullyDisabled(timestamp, props.disabledDate) : false
@@ -176,121 +187,141 @@ function onNext() {
 }
 </script>
 <template>
-  <PickerPanel
-    :show-single-nav="panelMode === 'date'"
-    :show-footer="showToday && panelMode === 'date'"
-    @super-prev="onSuperPrev"
-    @super-next="onSuperNext"
-    @prev="onPrev"
-    @next="onNext"
-  >
-    <template #header>
-      <template v-if="panelMode === 'date'">
-        <button type="button" tabindex="-1" class="picker-panel-year-btn" @click="changePanel('year')"
-          >{{ viewYear }}年</button
+  <PickerPanel :show-footer="footerVisible">
+    <div class="picker-date-panel-body">
+      <div class="picker-date-panel-main">
+        <PickerPanelHeader
+          :show-single-nav="panelMode === 'date'"
+          @super-prev="onSuperPrev"
+          @super-next="onSuperNext"
+          @prev="onPrev"
+          @next="onNext"
         >
-        <button type="button" tabindex="-1" class="picker-panel-month-btn" @click="changePanel('month')"
-          >{{ viewMonth }}月</button
-        >
-      </template>
-      <button
-        v-else-if="panelMode === 'month'"
-        type="button"
-        tabindex="-1"
-        class="picker-panel-year-btn"
-        @click="changePanel('year')"
-        >{{ viewYear }}年</button
-      >
-      <span v-else>{{ decadeYears }}</span>
-    </template>
-    <div v-if="panelMode === 'date'" class="picker-panel-content picker-panel-date-content">
-      <table>
-        <thead>
-          <tr>
-            <th v-for="(label, index) in weekLabels" :key="index">{{ label }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(row, rowIndex) in dateRows" :key="rowIndex">
-            <td
-              v-for="(timestamp, cellIndex) in row"
-              :key="cellIndex"
-              class="picker-panel-cell"
-              :class="{
-                'picker-panel-cell-in-view': isInView(timestamp),
-                'picker-panel-cell-today': isToday(timestamp),
-                'picker-panel-cell-selected': isSelected(timestamp),
-                'picker-panel-cell-disabled': disabledDate && disabledDate(timestamp)
-              }"
-              :title="formatTimestamp(timestamp, 'yyyy-MM-dd')"
-              @click="onDateSelect(timestamp)"
-            >
-              <div class="picker-panel-cell-inner">{{ getDayOfMonth(timestamp) }}</div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div v-else-if="panelMode === 'month'" class="picker-panel-content picker-panel-month-content">
-      <table>
-        <tbody>
-          <tr v-for="(row, rowIndex) in monthRows" :key="rowIndex">
-            <td
-              v-for="(timestamp, cellIndex) in row"
-              :key="cellIndex"
-              class="picker-panel-cell picker-panel-cell-in-view"
-              :class="{
-                'picker-panel-cell-selected': isSelectedMonth(timestamp),
-                'picker-panel-cell-disabled': isMonthDisabled(timestamp)
-              }"
-              :title="formatTimestamp(timestamp, 'yyyy-MM')"
-              @click="onMonthSelect(timestamp)"
-            >
-              <div class="picker-panel-cell-inner">{{ getMonthNumber(timestamp) }}月</div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div v-else class="picker-panel-content picker-panel-year-content">
-      <table>
-        <tbody>
-          <tr v-for="(row, rowIndex) in yearRows" :key="rowIndex">
-            <td
-              v-for="(timestamp, cellIndex) in row"
-              :key="cellIndex"
-              class="picker-panel-cell picker-panel-cell-in-view"
-              :class="{
-                'picker-panel-cell-selected': isSelectedYear(timestamp),
-                'picker-panel-cell-disabled': isYearDisabled(timestamp)
-              }"
-              :title="formatTimestamp(timestamp, 'yyyy')"
-              @click="onYearSelect(timestamp)"
-            >
-              <div
-                class="picker-panel-cell-inner picker-panel-cell-inner-year"
-                :class="{ 'picker-panel-cell-out-view': !isYearInView(timestamp) }"
+          <template #view>
+            <template v-if="panelMode === 'date'">
+              <button type="button" tabindex="-1" class="picker-panel-year-btn" @click="changePanel('year')"
+                >{{ viewYear }}年</button
               >
-                {{ getYearNumber(timestamp) }}
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              <button type="button" tabindex="-1" class="picker-panel-month-btn" @click="changePanel('month')"
+                >{{ viewMonth }}月</button
+              >
+            </template>
+            <button
+              v-else-if="panelMode === 'month'"
+              type="button"
+              tabindex="-1"
+              class="picker-panel-year-btn"
+              @click="changePanel('year')"
+              >{{ viewYear }}年</button
+            >
+            <span v-else>{{ decadeYears }}</span>
+          </template>
+        </PickerPanelHeader>
+        <div v-if="panelMode === 'date'" class="picker-panel-content picker-panel-date-content">
+          <table>
+            <thead>
+              <tr>
+                <th v-for="(label, index) in weekLabels" :key="index">{{ label }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(row, rowIndex) in dateRows" :key="rowIndex">
+                <td
+                  v-for="(timestamp, cellIndex) in row"
+                  :key="cellIndex"
+                  class="picker-panel-cell"
+                  :class="{
+                    'picker-panel-cell-in-view': isInView(timestamp),
+                    'picker-panel-cell-today': isToday(timestamp),
+                    'picker-panel-cell-selected': isSelected(timestamp),
+                    'picker-panel-cell-disabled': disabledDate && disabledDate(timestamp)
+                  }"
+                  :title="formatTimestamp(timestamp, 'yyyy-MM-dd')"
+                  @click="onDateSelect(timestamp)"
+                >
+                  <div class="picker-panel-cell-inner">{{ getDayOfMonth(timestamp) }}</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div v-else-if="panelMode === 'month'" class="picker-panel-content picker-panel-month-content">
+          <table>
+            <tbody>
+              <tr v-for="(row, rowIndex) in monthRows" :key="rowIndex">
+                <td
+                  v-for="(timestamp, cellIndex) in row"
+                  :key="cellIndex"
+                  class="picker-panel-cell picker-panel-cell-in-view"
+                  :class="{
+                    'picker-panel-cell-selected': isSelectedMonth(timestamp),
+                    'picker-panel-cell-disabled': isMonthDisabled(timestamp)
+                  }"
+                  :title="formatTimestamp(timestamp, 'yyyy-MM')"
+                  @click="onMonthSelect(timestamp)"
+                >
+                  <div class="picker-panel-cell-inner">{{ getMonthNumber(timestamp) }}月</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div v-else class="picker-panel-content picker-panel-year-content">
+          <table>
+            <tbody>
+              <tr v-for="(row, rowIndex) in yearRows" :key="rowIndex">
+                <td
+                  v-for="(timestamp, cellIndex) in row"
+                  :key="cellIndex"
+                  class="picker-panel-cell picker-panel-cell-in-view"
+                  :class="{
+                    'picker-panel-cell-selected': isSelectedYear(timestamp),
+                    'picker-panel-cell-disabled': isYearDisabled(timestamp)
+                  }"
+                  :title="formatTimestamp(timestamp, 'yyyy')"
+                  @click="onYearSelect(timestamp)"
+                >
+                  <div
+                    class="picker-panel-cell-inner picker-panel-cell-inner-year"
+                    :class="{ 'picker-panel-cell-out-view': !isYearInView(timestamp) }"
+                  >
+                    {{ getYearNumber(timestamp) }}
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <slot name="aside" />
     </div>
     <template #footer>
-      <a
-        class="picker-panel-today-btn"
-        :class="{ 'picker-panel-today-btn-disabled': isTodayDisabled() }"
-        :aria-disabled="isTodayDisabled()"
-        @click="onTodaySelect"
-      >
-        今天
-      </a>
+      <slot name="footer">
+        <a
+          class="picker-panel-today-btn"
+          :class="{ 'picker-panel-today-btn-disabled': isTodayDisabled() }"
+          :aria-disabled="isTodayDisabled()"
+          @click="onTodaySelect"
+        >
+          今天
+        </a>
+      </slot>
     </template>
   </PickerPanel>
 </template>
 <style lang="less" scoped>
+// 日期时间形态：日期列与时间列并排，两列各带自己的头部（与参考实现同构，
+// 头部导航因此只覆盖日期列而非整个面板）
+// 形态类由 `DatetimePanel` 透传到面板根上，须与之一致
+.picker-datetime-panel {
+  .picker-date-panel-body {
+    display: flex;
+  }
+  .picker-date-panel-main {
+    flex: none;
+    width: 280px;
+  }
+}
 .picker-panel-content {
   width: 100%;
   // 表格布局属性须落在 table 上：写在包裹层不生效，会退回 auto + separate，

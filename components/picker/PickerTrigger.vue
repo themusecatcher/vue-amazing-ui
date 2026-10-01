@@ -37,7 +37,7 @@ const emits = defineEmits<{
   click: []
   focus: [event: FocusEvent]
   blur: [event: FocusEvent]
-  textConfirm: [text: string]
+  textConfirm: [text: string, source: 'enter' | 'blur'] // 提交来源：回车 / 失焦，宿主据此决定是否真的提交
 }>()
 const inputRef = ref<HTMLInputElement | null>(null)
 const inputText = ref('')
@@ -57,9 +57,9 @@ const showClear = computed(() => {
 function onInput(event: Event) {
   inputText.value = (event.target as HTMLInputElement).value
 }
-// 输入回车时交给宿主解析，随后先回滚为当前合法文本，解析失败即自然保持原值
-function onEnter() {
-  emits('textConfirm', inputText.value)
+// 提交输入文本时交给宿主解析，随后先回滚为当前合法文本，解析失败即自然保持原值
+function onTextSubmit(source: 'enter' | 'blur') {
+  emits('textConfirm', inputText.value, source)
   inputText.value = props.text
 }
 function onFocus(event: FocusEvent) {
@@ -69,7 +69,7 @@ function onFocus(event: FocusEvent) {
 function onBlur(event: FocusEvent) {
   focused.value = false
   emits('blur', event)
-  onEnter()
+  onTextSubmit('blur')
 }
 function focus() {
   inputRef.value?.focus()
@@ -109,7 +109,7 @@ defineExpose({ focus, blur })
         @input="onInput"
         @focus="onFocus"
         @blur="onBlur"
-        @keydown.enter="onEnter"
+        @keydown.enter="onTextSubmit('enter')"
       />
       <span class="picker-trigger-suffix">
         <slot name="suffix">

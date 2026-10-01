@@ -10,19 +10,23 @@ import {
   format,
   getDate,
   getDaysInMonth,
+  getHours,
+  getMinutes,
   getMonth,
   getQuarter,
+  getSeconds,
   getYear,
   isMatch,
   isValid,
   parse,
+  set,
   startOfDay,
   startOfMonth,
   startOfQuarter,
   startOfWeek,
   startOfYear
 } from 'date-fns'
-import type { PickerPanelMode, PickerType } from './types'
+import type { PickerPanelMode, PickerTimePanelLayout, PickerTimeUnit, PickerType } from './types'
 
 /** 周起始日：0 为周一，6 为周日（与 `Calendar` 的 startDayOfWeek 口径一致） */
 export type StartDayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -246,4 +250,144 @@ export function getYearNumber(reference: number): number {
 /** 季度（1-4） */
 export function getQuarterNumber(reference: number): number {
   return getQuarter(reference)
+}
+
+/* ================================ 时间 ================================ */
+
+/** 时间面板的三类单位 */
+export type PickerTimeUnitName = 'hour' | 'minute' | 'second'
+
+/** 各时间单位的取值上限（时 0-23，分 / 秒 0-59） */
+export const TIME_UNIT_MAX: Record<PickerTimeUnitName, number> = { hour: 23, minute: 59, second: 59 }
+/** 列文本不足两位时补零的长度 */
+const UNIT_LABEL_LENGTH = 2
+/** 12 小时制的半天小时数 */
+export const HALF_DAY_HOURS = 12
+
+/** 小时（24 小时制） */
+export function getHourNumber(reference: number): number {
+  return getHours(reference)
+}
+
+/** 分钟 */
+export function getMinuteNumber(reference: number): number {
+  return getMinutes(reference)
+}
+
+/** 秒 */
+export function getSecondNumber(reference: number): number {
+  return getSeconds(reference)
+}
+
+/** 替换时间戳的时分秒（毫秒归零），日期部分保持不变 */
+export function setTimeTimestamp(reference: number, hour: number, minute: number, second: number): number {
+  return set(reference, { hours: hour, minutes: minute, seconds: second, milliseconds: 0 }).getTime()
+}
+
+/**
+ * 归一化时间步长
+ *
+ * 步长必须能整除该单位的刻度总数（时 24 / 分 60 / 秒 60），否则末位会留下除不尽的零头
+ * （如 5 小时步长会得到 0,5,…,20 而丢掉 21-23），此时退回 1（与参考实现的 `isHourStepValid` 同口径）。
+ */
+export function mergeTimeStep(name: PickerTimeUnitName, step: number | undefined): number {
+  const mergedStep = step ?? 1
+  if (mergedStep < 1 || (TIME_UNIT_MAX[name] + 1) % mergedStep !== 0) {
+    return 1
+  }
+  return mergedStep
+}
+
+/** 生成某一时间单位的候选列（`disabledUnits` 为按 24 小时制取值标记的禁用项） */
+export function generateTimeUnits(
+  name: PickerTimeUnitName,
+  step: number | undefined,
+  disabledUnits?: number[]
+): PickerTimeUnit[] {
+  const mergedStep = mergeTimeStep(name, step)
+  const units: PickerTimeUnit[] = []
+  for (let value = 0; value <= TIME_UNIT_MAX[name]; value += mergedStep) {
+    units.push({
+      label: String(value).padStart(UNIT_LABEL_LENGTH, '0'),
+      value,
+      disabled: disabledUnits?.includes(value) ?? false
+    })
+  }
+  return units
+}
+
+/** 12 小时制下小时列的取值（0-11） */
+export function toHourColumnValue(hour: number): number {
+  return hour % HALF_DAY_HOURS
+}
+
+/** 由「上午 / 下午 + 小时列取值」还原 24 小时制小时 */
+export function toHour24(columnHour: number, isPM: boolean): number {
+  return isPM ? columnHour + HALF_DAY_HOURS : columnHour
+}
+
+/** 12 小时制下小时列的文本（0 点展示为 12） */
+export function getHourColumnLabel(columnHour: number): string {
+  return columnHour === 0 ? String(HALF_DAY_HOURS) : String(columnHour).padStart(UNIT_LABEL_LENGTH, '0')
+}
+
+/**
+ * 按展示格式解析时间面板的列显隐与 12 小时制
+ *
+ * 与参考实现同口径：格式中含 `s` / `m` / `H`·`h` 才展示对应列，含 `a`·`A` 则启用 12 小时制；
+ * 未传格式时三列全展示。显式传入的 `use12Hours` 优先于格式推导。
+ */
+export function resolveTimePanelLayout(formatStr?: string, use12Hours?: boolean): PickerTimePanelLayout {
+  const placeholders = formatStr ?? ''
+  const is12Hours = use12Hours ?? /[aA]/.test(placeholders)
+  if (!placeholders) {
+    return { use12Hours: is12Hours, showHour: true, showMinute: true, showSecond: true }
+  }
+  return {
+    use12Hours: is12Hours,
+    showHour: /[Hh]/.test(placeholders),
+    showMinute: placeholders.includes('m'),
+    showSecond: placeholders.includes('s')
+  }
+}
+
+/** 时间面板头部的文本格式（由列显隐推导，避免出现没有对应列的刻度） */
+export function getTimeTextFormat(layout: PickerTimePanelLayout): string {
+  const parts: string[] = []
+  if (layout.showHour) {
+    parts.push(layout.use12Hours ? 'hh' : 'HH')
+  }
+  if (layout.showMinute) {
+    parts.push('mm')
+  }
+  if (layout.showSecond) {
+    parts.push('ss')
+  }
+  return parts.join(':')
+}
+
+/**
+ * 「此刻」按钮的取整结果
+ *
+ * 当前时分秒按步长向下取整；若被取整到更早的刻度，则其后的分 / 秒取该单位的最大合法刻度
+ * （如步长 5 时 12:03:07 → 12:00:55），避免落在一个不存在的刻度上（与参考实现同算法）。
+ */
+export function getLowerBoundTime(
+  hour: number,
+  minute: number,
+  second: number,
+  hourStep: number,
+  minuteStep: number,
+  secondStep: number
+): [number, number, number] {
+  const lowerBoundHour = Math.floor(hour / hourStep) * hourStep
+  if (lowerBoundHour < hour) {
+    return [lowerBoundHour, TIME_UNIT_MAX.minute - minuteStep + 1, TIME_UNIT_MAX.second - secondStep + 1]
+  }
+  const lowerBoundMinute = Math.floor(minute / minuteStep) * minuteStep
+  if (lowerBoundMinute < minute) {
+    return [lowerBoundHour, lowerBoundMinute, TIME_UNIT_MAX.second - secondStep + 1]
+  }
+  const lowerBoundSecond = Math.floor(second / secondStep) * secondStep
+  return [lowerBoundHour, lowerBoundMinute, lowerBoundSecond]
 }

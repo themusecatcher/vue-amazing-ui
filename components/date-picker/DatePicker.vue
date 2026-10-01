@@ -3,20 +3,25 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Popup from 'components/popup'
 import DatePanel from 'components/picker/DatePanel.vue'
+import DatetimePanel from 'components/picker/DatetimePanel.vue'
 import PickerTrigger from 'components/picker/PickerTrigger.vue'
 import { formatTimestamp, getDefaultFormat, getInputSize, parseTimestamp } from 'components/picker/date-utils'
 import type { StartDayOfWeek } from 'components/picker/date-utils'
 import type {
+  PickerDisabledTime,
   PickerFormattedValue,
   PickerPanelMode,
   PickerSize,
   PickerStatus,
+  PickerTimePanelProps,
   PickerType,
   PickerValue
 } from 'components/picker'
 import type { FloatingPlacement } from 'components/utils'
 import { FLOATING_LAYER_Z_INDEX, useInject } from 'components/utils'
 export interface Props {
+  // 双向绑定
+  formattedValue?: PickerFormattedValue // 字符串轨道值：父组件传入时以它为准（受控），随选择经 update 事件回写
   // 内容数据
   type?: PickerType // 选择形态
   format?: string // 展示格式，date-fns 占位符，默认随 type 变化
@@ -25,6 +30,9 @@ export interface Props {
   defaultPickerValue?: number // 面板初始日期（时间戳），默认取 value 或今天
   startDayOfWeek?: StartDayOfWeek // 一周起始日，0 为周一
   disabledDate?: (timestamp: number) => boolean // 不可选择的日期
+  disabledTime?: PickerDisabledTime // 不可选择的时间，仅带时间形态生效
+  defaultTime?: number // 选中日期时的默认时分秒（只取其中的时分秒）
+  timePickerProps?: PickerTimePanelProps // 时间面板选项（步长 / 12 小时制 / 隐藏禁用项）
   // 形态外观
   width?: string | number // 选择器宽度，不传时随内容自适应
   size?: PickerSize // 选择器大小
@@ -38,6 +46,7 @@ export interface Props {
   to?: string | HTMLElement | false // 面板挂载的容器节点，不传时就近挂载到承载层内容容器
   placement?: 'topLeft' | 'top' | 'topRight' | 'bottomLeft' | 'bottom' | 'bottomRight' // 面板弹出位置
   showToday?: boolean // 是否展示面板底部的「今天」快捷，面板切到月/年视图时隐藏
+  showNow?: boolean // 是否展示面板底部的「此刻」快捷，仅带时间形态生效
   // 进阶透传
   suffixIcon?: VNode | (() => VNode) // 自定义选择框后缀图标
   panelClass?: string // 面板额外类名
@@ -47,16 +56,17 @@ export interface Props {
 /**
  * 组件对外 props 类型
  *
- * `value` / `formattedValue` / `open` 由 `defineModel` 声明（同名出现在 `defineProps` 中会与
- * 模型绑定冲突），此处合并回对外类型，保证使用方获得完整的 props 提示
+ * `value` / `open` 由 `defineModel` 声明（同名出现在 `defineProps` 中会与模型绑定冲突），此处合并回对外
+ * 类型，保证使用方获得完整的 props 提示。`formattedValue` 例外：它必须由 `defineProps` 声明，才能从
+ * 「父组件是否传入」判定字符串轨道是否受控（模型值无法区分父组件写入与本组件回写）
  */
 export type DatePickerProps = Props & {
   value?: PickerValue
-  formattedValue?: PickerFormattedValue
   open?: boolean
 }
-// value / formattedValue / open 三个双向绑定项的默认值由 defineModel 声明，此处不重复
+// value / open 两个双向绑定项的默认值由 defineModel 声明，此处不重复
 const props = withDefaults(defineProps<Props>(), {
+  formattedValue: undefined,
   type: 'date',
   format: undefined,
   valueFormat: undefined,
@@ -64,6 +74,9 @@ const props = withDefaults(defineProps<Props>(), {
   defaultPickerValue: undefined,
   startDayOfWeek: 0,
   disabledDate: undefined,
+  disabledTime: undefined,
+  defaultTime: undefined,
+  timePickerProps: undefined,
   width: undefined,
   size: 'middle',
   status: undefined,
@@ -74,6 +87,7 @@ const props = withDefaults(defineProps<Props>(), {
   to: false,
   placement: 'bottomLeft',
   showToday: true,
+  showNow: true,
   suffixIcon: undefined,
   panelClass: '',
   panelStyle: undefined,
@@ -81,13 +95,14 @@ const props = withDefaults(defineProps<Props>(), {
 })
 const emits = defineEmits<{
   change: [value: PickerValue, formattedValue: PickerFormattedValue]
+  ok: [value: PickerValue, formattedValue: PickerFormattedValue]
+  'update:formattedValue': [value: PickerFormattedValue]
   openChange: [open: boolean]
   panelChange: [value: number, mode: PickerPanelMode]
   focus: [event: FocusEvent]
   blur: [event: FocusEvent]
 }>()
 const value = defineModel<PickerValue>('value', { default: null })
-const formattedValue = defineModel<PickerFormattedValue>('formattedValue')
 const open = defineModel<boolean>('open', { default: false })
 const { colorPalettes, shadowColor } = useInject('DatePicker') // 主题色注入
 const triggerRef = ref<InstanceType<typeof PickerTrigger> | null>(null)
@@ -105,26 +120,38 @@ const wrapperStyle = computed(() => {
   return { ...themeVars.value, '--datepicker-width': width ?? 'auto' } as CSSProperties
 })
 const mergedPanelClass = computed(() => ['datepicker-panel-container', props.panelClass].filter(Boolean).join(' '))
+/** 是否为带时间面板的形态：日期与时间并排，选择只改草稿，点「确定」才提交 */
+const isDateTime = computed(() => props.type === 'datetime')
+/** 展示格式：未指定时随形态取默认值；面板的时间列显隐也按它推导（与参考实现的 `format` 口径一致） */
+const mergedFormat = computed(() => props.format ?? getDefaultFormat(props.type))
 /** 展示与回写共用的格式：`valueFormat` 优先，未指定时跟随展示格式 */
-const mergedValueFormat = computed(() => props.valueFormat ?? props.format ?? getDefaultFormat(props.type))
+const mergedValueFormat = computed(() => props.valueFormat ?? mergedFormat.value)
 /** 输入框按格式长度估宽，避免浏览器按 20 字符默认估宽导致触发器明显偏宽 */
 const inputSize = computed(() => getInputSize(mergedValueFormat.value))
-/** 字符串轨道受控：传入 `formattedValue` 时以它为准，与主轨道解耦 */
-const formattedControlled = computed(() => formattedValue.value !== undefined)
+/** 字符串轨道受控：父组件传入 `formattedValue` 时以它为准，与主轨道解耦 */
+const formattedControlled = computed(() => props.formattedValue !== undefined)
 const innerValue = computed<number | null>(() => {
   if (formattedControlled.value) {
-    return typeof formattedValue.value === 'string'
-      ? parseTimestamp(formattedValue.value, mergedValueFormat.value)
+    return typeof props.formattedValue === 'string'
+      ? parseTimestamp(props.formattedValue, mergedValueFormat.value)
       : null
   }
   return typeof value.value === 'number' ? value.value : null
 })
+/** 草稿值：带时间形态在面板展开期间只把选择落在草稿上，点「确定」才提交，关闭即丢弃 */
+const draftValue = ref<number | null>(null)
+/** 面板展示值：带时间形态展开期间取草稿，其余情况跟随已提交值 */
+const panelTimestamp = computed(() => {
+  const drafting = isDateTime.value && open.value && draftValue.value !== null
+  return drafting ? draftValue.value : innerValue.value
+})
 // 受控字符串解析失败时原样展示，避免用户输入被静默丢弃
+// （字符串轨道受管时展示以受管文本为准，草稿不回写展示，避免与应用层持有的文本脱节）
 const displayText = computed(() => {
   if (formattedControlled.value) {
-    return typeof formattedValue.value === 'string' ? formattedValue.value : ''
+    return typeof props.formattedValue === 'string' ? props.formattedValue : ''
   }
-  return innerValue.value === null ? '' : formatTimestamp(innerValue.value, mergedValueFormat.value)
+  return panelTimestamp.value === null ? '' : formatTimestamp(panelTimestamp.value, mergedValueFormat.value)
 })
 const showClear = computed(() => props.allowClear && !props.disabled && innerValue.value !== null)
 // 实际方向：定位内核翻转 / 次轴自适应后的结果（宿主未挂载时退回期望方向）
@@ -160,6 +187,7 @@ watch(
       return
     }
     detachDocumentListener()
+    draftValue.value = null // 收起即丢弃草稿，未点「确定」的选择不生效
   },
   { immediate: true }
 )
@@ -175,26 +203,57 @@ function onTriggerClick() {
     requestOpen(true)
   }
 }
-/** 回写两条轨道：主轨道始终同步，字符串轨道按同一格式生成 */
-function commit(timestamp: number | null) {
+/** 回写两条轨道：主轨道始终同步，字符串轨道按同一格式生成；返回回写的字符串，供「确定」事件复用 */
+function commit(timestamp: number | null): PickerFormattedValue {
   const nextFormatted = timestamp === null ? null : formatTimestamp(timestamp, mergedValueFormat.value)
   value.value = timestamp
-  formattedValue.value = nextFormatted
+  emits('update:formattedValue', nextFormatted)
   emits('change', timestamp, nextFormatted)
+  return nextFormatted
 }
 function onSelect(timestamp: number) {
   commit(timestamp)
   requestOpen(false)
 }
+/** 草稿变更：只更新面板草稿，不提交（带时间形态的选择由「确定」统一提交） */
+function onDraftChange(timestamp: number) {
+  draftValue.value = timestamp
+}
+/**
+ * 「确定」/「此刻」的提交：都回写双轨、派发 `change` 并收起面板（与参考实现同口径：
+ * 两者都走 `triggerSelect(..., 'submit')` → `triggerOpen(false)`），收起时草稿由 `open` 的监听统一丢弃。
+ *
+ * 差异仅在事件：`ok` 只由「确定」派发，「此刻」是「跳到当前时刻」的快捷入口、不派发 `ok`。
+ */
+function onConfirm(timestamp: number, source: 'ok' | 'now') {
+  const nextFormatted = commit(timestamp)
+  requestOpen(false)
+  if (source === 'ok') {
+    emits('ok', timestamp, nextFormatted)
+  }
+}
 function onClear() {
   commit(null)
   requestOpen(false)
 }
-// 手输文本：解析成功才提交，失败时由触发器回滚为当前合法文本
-function onTextConfirm(text: string) {
+/**
+ * 手输文本：解析成功才提交，失败时由触发器回滚为当前合法文本
+ *
+ * 带时间形态的提交口径与参考实现一致：失焦即取消（丢弃草稿、不提交），回车与「确定」同径（提交并收起）
+ * —— 面板展开期间输入框展示的是草稿，若失焦时按手输提交，会把未确认的草稿当成用户输入落值。
+ */
+function onTextConfirm(text: string, source: 'enter' | 'blur') {
+  if (isDateTime.value && source === 'blur') {
+    draftValue.value = null
+    return
+  }
   const timestamp = parseTimestamp(text, mergedValueFormat.value)
   if (timestamp === null) return
   commit(timestamp)
+  if (isDateTime.value) {
+    draftValue.value = null
+    requestOpen(false)
+  }
 }
 function onEscKeydown() {
   if (open.value) {
@@ -253,7 +312,25 @@ defineExpose({ focus, blur })
       :transition-props="panelTransitionProps"
       @keydown.esc="onEscKeydown"
     >
+      <DatetimePanel
+        v-if="isDateTime"
+        :value="panelTimestamp"
+        :format="mergedFormat"
+        :header-format="format"
+        :time-props="timePickerProps"
+        :disabled-date="disabledDate"
+        :disabled-time="disabledTime"
+        :default-time="defaultTime"
+        :default-picker-value="defaultPickerValue"
+        :start-day-of-week="startDayOfWeek"
+        :show-now="showNow"
+        :active="open"
+        @change="onDraftChange"
+        @confirm="onConfirm"
+        @panel-change="onPanelChange"
+      />
       <DatePanel
+        v-else
         :value="innerValue"
         :start-day-of-week="startDayOfWeek"
         :disabled-date="disabledDate"

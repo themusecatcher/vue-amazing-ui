@@ -161,9 +161,15 @@ describe('generateStyleEntries - 入口内容与顺序', () => {
     expect(lines('es/date-picker/style/index.js')).toEqual([
       "import '../../style/global.css'",
       "import '../DatePicker.css'",
+      "import '../../picker/DatetimePanel.css'",
       "import '../../picker/DatePanel.css'",
+      "import '../../picker/TimePanel.css'",
+      "import '../../picker/TimeUnitColumn.css'",
       "import '../../picker/PickerPanel.css'",
-      "import '../../picker/PickerTrigger.css'"
+      "import '../../picker/PickerPanelHeader.css'",
+      "import '../../picker/PickerTrigger.css'",
+      "import '../../button/Button.css'",
+      "import '../../scrollbar/Scrollbar.css'"
     ])
     const swiper = lines('es/swiper/style/index.js')
     expect(swiper).toContain("import '../../vendor-styles/swiper/swiper.css'")

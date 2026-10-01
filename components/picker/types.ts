@@ -32,14 +32,14 @@ export type PickerStatus = 'warning' | 'error'
 /** 禁用日期判定，入参为当日零点的时间戳 */
 export type PickerDisabledDate = (timestamp: number) => boolean
 
-/** 时间面板中按单位禁用的时间值（空数组表示该单位全部可选） */
+/** 时间面板中按单位禁用的时间值（未声明或空数组表示该单位全部可选） */
 export interface PickerDisabledTimeUnits {
-  hours?: () => number[]
-  minutes?: (hour: number) => number[]
-  seconds?: (hour: number, minute: number) => number[]
+  disabledHours?: () => number[]
+  disabledMinutes?: (hour: number) => number[]
+  disabledSeconds?: (hour: number, minute: number) => number[]
 }
 
-/** 禁用时间判定，入参为当前日期零点的时间戳 */
+/** 禁用时间判定，入参为当前面板草稿值的时间戳 */
 export type PickerDisabledTime = (timestamp: number) => PickerDisabledTimeUnits
 /** 范围形态的禁用时间判定，`type` 区分起点与终点 */
 export type PickerRangeDisabledTime = (timestamp: number, type: 'start' | 'end') => PickerDisabledTimeUnits
@@ -48,4 +48,28 @@ export type PickerRangeDisabledTime = (timestamp: number, type: 'start' | 'end')
 export interface PickerPreset {
   label: string
   value: [number, number]
+}
+
+/** 时间面板选项：`DatePicker.timePickerProps` 与未来 `TimePicker` 共用同一份口径 */
+export interface PickerTimePanelProps {
+  hourStep?: number
+  minuteStep?: number
+  secondStep?: number
+  use12Hours?: boolean
+  hideDisabledOptions?: boolean
+}
+
+/** 时间面板列中的一格 */
+export interface PickerTimeUnit {
+  label: string
+  value: number
+  disabled: boolean
+}
+
+/** 时间面板列显隐与 12 小时制的解析结果 */
+export interface PickerTimePanelLayout {
+  use12Hours: boolean
+  showHour: boolean
+  showMinute: boolean
+  showSecond: boolean
 }
