@@ -320,13 +320,18 @@ export function getScrollParent(el: HTMLElement | null): HTMLElement | null {
 let bodyLockCount = 0
 // 首个锁设置前 documentElement / body 的原内联样式，归零释放时精确还原，避免误删调用方预设
 let prevHtmlOverflowY = ''
+let prevHtmlScrollbarGutter = ''
 let prevBodyOverflowY = ''
 let prevBodyPaddingRight = ''
 /**
  * 锁定页面滚动，并返回本次锁定的释放函数
  *
- * 隐藏 html/body 的垂直滚动条，并补偿滚动条宽度到 body 的 padding-right，
- * 避免滚动条消失导致内容可用宽度突变、页面横向抖动。
+ * 隐藏 html/body 的垂直滚动条，同时保住滚动条原本占用的布局宽度，避免可用宽度突变
+ * 导致背景页面与浮层横向抖动（Windows 经典滚动条场景尤其明显）。
+ * 优先用 `scrollbar-gutter: stable` 让槽位在滚动条隐藏后依然占位：视口宽度不变，
+ * `position: fixed` 元素（Modal / Dialog / Drawer 的遮罩、弹窗、抽屉）与普通流内容
+ * 都不会位移，可彻底消除抖动；槽位未被保留时（浏览器不支持 `scrollbar-gutter`）
+ * 回退为 body 的 `padding-right` 补偿，至少保证普通流内容宽度不变。
  * 需先测量滚动条宽度再隐藏滚动条（顺序不可颠倒，否则差值恒为 0）。
  *
  * 每个调用需与返回的释放函数严格配对；仅当所有来源均已释放时才会真正还原页面滚动，
@@ -343,13 +348,20 @@ export function lockScroll(): () => void {
   const body = document.body
   if (bodyLockCount === 0) {
     prevHtmlOverflowY = html.style.overflowY
+    prevHtmlScrollbarGutter = html.style.scrollbarGutter
     prevBodyOverflowY = body.style.overflowY
     prevBodyPaddingRight = body.style.paddingRight
     const scrollbarWidth = window.innerWidth - html.clientWidth
     html.style.overflowY = 'hidden'
     body.style.overflowY = 'hidden'
     if (scrollbarWidth > 0) {
-      body.style.paddingRight = `${scrollbarWidth}px`
+      // 先尝试保留滚动条槽位：保留成功后视口宽度不变，无需再做 padding 补偿
+      html.style.scrollbarGutter = 'stable'
+      if (window.innerWidth - html.clientWidth !== scrollbarWidth) {
+        // 槽位未被保留（浏览器不支持 scrollbar-gutter）：回退到 body 的 padding-right 补偿
+        html.style.scrollbarGutter = ''
+        body.style.paddingRight = `${scrollbarWidth}px`
+      }
     }
   }
   bodyLockCount += 1
@@ -362,6 +374,7 @@ export function lockScroll(): () => void {
     bodyLockCount -= 1
     if (bodyLockCount === 0) {
       html.style.overflowY = prevHtmlOverflowY
+      html.style.scrollbarGutter = prevHtmlScrollbarGutter
       body.style.overflowY = prevBodyOverflowY
       body.style.paddingRight = prevBodyPaddingRight
     }
