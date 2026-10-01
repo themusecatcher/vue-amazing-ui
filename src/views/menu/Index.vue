@@ -15,7 +15,7 @@ import {
   RightOutlined,
   SettingOutlined
 } from '@ant-design/icons-vue'
-import type { ItemType, MenuIcon, MenuKey } from 'vue-amazing-ui'
+import type { ItemType, MenuExpandIconInfo, MenuIcon, MenuKey } from 'vue-amazing-ui'
 
 // 演示数据构造：图标以渲染函数给出
 function getItem(label: string, key: string, icon?: MenuIcon, children?: ItemType[], type?: 'group'): ItemType {
@@ -108,19 +108,45 @@ const switchTheme = ref(false)
 const switchSelected = ref<MenuKey[]>(['1'])
 const switchOpenKeys = ref<MenuKey[]>(['sub1'])
 const switchItems: ItemType[] = [
-  getItem('Navigation One', '1', h(MailOutlined)),
-  getItem('Navigation Two', '2', h(CalendarOutlined)),
-  getItem('Navigation Three', 'sub1', h(AppstoreOutlined), [
+  getItem('Navigation One', '1', () => h(MailOutlined)),
+  getItem('Navigation Two', '2', () => h(CalendarOutlined)),
+  getItem('Navigation Three', 'sub1', () => h(AppstoreOutlined), [
     getItem('Option 3', '3'),
     getItem('Option 4', '4'),
     getItem('Submenu', 'sub1-2', undefined, [getItem('Option 5', '5'), getItem('Option 6', '6')])
   ]),
-  getItem('Navigation Four', 'sub2', h(SettingOutlined), [
+  getItem('Navigation Four', 'sub2', () => h(SettingOutlined), [
     getItem('Option 7', '7'),
     getItem('Option 8', '8'),
     getItem('Option 9', '9'),
     getItem('Option 10', '10')
   ])
+]
+
+// 子菜单展开触发方式与开合延时
+const triggerHover = ref(true)
+const triggerDelaySelected = ref<MenuKey[]>(['1'])
+const triggerDelayItems: ItemType[] = [
+  getItem('Navigation One', '1', () => h(MailOutlined)),
+  getItem('Navigation Two', 'sub1', () => h(AppstoreOutlined), [
+    getItem('Option 1', '1-1'),
+    getItem('Option 2', '1-2')
+  ]),
+  getItem('Navigation Three', 'sub2', () => h(SettingOutlined), [
+    getItem('Option 3', '2-1'),
+    getItem('Option 4', '2-2')
+  ])
+]
+
+// 自定义缩进：同一份层级结构并排对比默认 24 与 32，两个实例各自持展开状态
+const indentDefaultOpenKeys = ref<MenuKey[]>(['sub1', 'sub1-2'])
+const indentWideOpenKeys = ref<MenuKey[]>(['sub1', 'sub1-2'])
+const indentItems: ItemType[] = [
+  getItem('Navigation One', 'sub1', () => h(MailOutlined), [
+    getItem('Option 1', '1'),
+    getItem('Submenu', 'sub1-2', undefined, [getItem('Option 2', '2')])
+  ]),
+  getItem('Navigation Two', '2', () => h(AppstoreOutlined))
 ]
 
 // 缩起内嵌菜单
@@ -272,6 +298,10 @@ const expandIconItems: ItemType[] = [
   ]),
   getItem('Navigation Two', 'sub3', () => h(AppstoreOutlined), [getItem('Option 5', '5'), getItem('Option 6', '6')])
 ]
+// 属性形态的展开图标：与插槽形态等价，渲染函数入参含所在子菜单配置与 isOpen
+const expandIconByProp = (info: MenuExpandIconInfo) =>
+  h(RightOutlined, { class: ['demo-expand-icon', { 'demo-expand-icon-open': info.isOpen }] })
+const expandIconPropOpenKeys = ref<MenuKey[]>(['sub1'])
 
 // 主题
 const themeDark = ref(true)
@@ -334,7 +364,7 @@ const submenuItems = computed<ItemType[]>(() => [
   { key: '6', label: 'Option 6', title: 'Option 6' }
 ])
 
-// 组件式用法：以子组件描述菜单结构
+// 组件式用法
 const componentSelected = ref<MenuKey[]>(['1'])
 const componentOpenKeys = ref<MenuKey[]>(['sub2'])
 
@@ -419,6 +449,39 @@ const forceRenderItems: ItemType[] = [
       :items="switchItems"
     />
 
+    <h2 class="mt30 mb10">子菜单展开触发与延时</h2>
+    <p class="mb10"
+      >切换子菜单的展开触发方式；<code>hover</code> 触发时，<code>subMenuOpenDelay</code> /
+      <code>subMenuCloseDelay</code> 分别决定展开与收起的延时</p
+    >
+    <Switch v-model:value="triggerHover" checked="hover" unchecked="click" />
+    <span class="demo-divider" />
+    <Menu
+      v-model:selectedKeys="triggerDelaySelected"
+      style="width: 256px; margin-top: 16px"
+      mode="vertical"
+      :trigger-sub-menu-action="triggerHover ? 'hover' : 'click'"
+      :sub-menu-open-delay="0.3"
+      :sub-menu-close-delay="0.8"
+      :items="triggerDelayItems"
+    />
+
+    <h2 class="mt30 mb10">自定义缩进</h2>
+    <p class="mb10"
+      ><code>inline</code> 模式下 <code>inlineIndent</code> 决定每一级菜单项的缩进宽度，左侧为默认
+      <code>24</code>、右侧为 <code>32</code></p
+    >
+    <Flex wrap="wrap" :gap="24">
+      <Menu v-model:openKeys="indentDefaultOpenKeys" style="width: 256px" mode="inline" :items="indentItems" />
+      <Menu
+        v-model:openKeys="indentWideOpenKeys"
+        style="width: 256px"
+        mode="inline"
+        :inline-indent="32"
+        :items="indentItems"
+      />
+    </Flex>
+
     <h2 class="mt30 mb10">缩起内嵌菜单</h2>
     <p class="mb10">收起时只显示图标，子菜单以浮层展示，悬浮菜单项可查看完整标题</p>
     <!-- 宽度交给外层容器：内嵌菜单收起后自身宽度收到 80px，若把宽度写在菜单上会把它钉死在展开宽度 -->
@@ -442,6 +505,7 @@ const forceRenderItems: ItemType[] = [
       <code>title</code
       >，长标题会让提示折成多行（面板高于菜单项）；把某项滚动到窗口上/下缘附近再悬浮，提示面板会贴边完整显示，箭头依然对准该项</p
     >
+    <!-- 标题写长使提示折成多行：提示面板高于菜单项，箭头仍指向该项 -->
     <div style="width: 256px">
       <Menu
         v-model:selectedKeys="longTitleSelected"
@@ -485,7 +549,10 @@ const forceRenderItems: ItemType[] = [
     <Menu style="width: 256px" mode="inline" :items="emptyItems" />
 
     <h2 class="mt30 mb10">自定义展开图标</h2>
-    <p class="mb10">通过 <code>expandIcon</code> 属性或同名插槽自定义子菜单的展开收起图标</p>
+    <p class="mb10"
+      >通过
+      <code>expandIcon</code> 属性或同名插槽自定义子菜单的展开收起图标：上方为插槽形态、下方为属性形态，两者等价</p
+    >
     <Menu
       v-model:openKeys="expandIconOpenKeys"
       v-model:selectedKeys="expandIconSelected"
@@ -497,6 +564,13 @@ const forceRenderItems: ItemType[] = [
         <RightOutlined class="demo-expand-icon" :class="{ 'demo-expand-icon-open': isOpen }" />
       </template>
     </Menu>
+    <Menu
+      v-model:openKeys="expandIconPropOpenKeys"
+      style="width: 256px; margin-top: 16px"
+      mode="inline"
+      :items="expandIconItems"
+      :expand-icon="expandIconByProp"
+    />
 
     <h2 class="mt30 mb10">组件式用法</h2>
     <p class="mb10">
