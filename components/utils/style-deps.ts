@@ -80,6 +80,7 @@ const componentsMap = {
   Progress: 'progress',
   QRCode: 'qr-code',
   Radio: 'radio',
+  RangePanel: 'picker',
   Rate: 'rate',
   Result: 'result',
   Scrollbar: 'scrollbar',
@@ -161,6 +162,7 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   DatePicker: [
     'DatetimePanel',
     'DatePanel',
+    'RangePanel',
     'TimePanel',
     'TimeUnitColumn',
     'PickerPanel',
@@ -179,6 +181,7 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
     'Button',
     'Scrollbar'
   ],
+  RangePanel: ['DatePanel', 'PickerPanel'],
   ColorPicker: ['Button', 'Input', 'Tooltip', 'Popup'],
   Dialog: ['Button', 'Scrollbar'],
   DialogProvider: ['Button', 'Scrollbar'],

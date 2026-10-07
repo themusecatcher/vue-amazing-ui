@@ -11,10 +11,12 @@ import {
   getMonthGrid,
   getMonthNumber,
   getMonthTimestamps,
+  getRangeCellClassNames,
   getWeekLabels,
   getYearNumber,
   getYearPanelGrid,
   getYearTimestamps,
+  isLastDayOfMonthTimestamp,
   isMonthFullyDisabled,
   isSameDayTimestamp,
   isSameMonthTimestamp,
@@ -22,14 +24,19 @@ import {
   startOfDayTimestamp
 } from './date-utils'
 import type { StartDayOfWeek } from './date-utils'
-import type { PickerPanelMode } from './types'
+import type { PickerPanelMode, PickerRangeSide, PickerRangeValue } from './types'
 export interface DatePanelProps {
   value?: number | null // 当前选中日期（当日零点时间戳）
   startDayOfWeek?: StartDayOfWeek // 一周起始日
   disabledDate?: (timestamp: number) => boolean // 不可选择的日期
   defaultPickerValue?: number // 面板初始日期
+  panelValue?: number // 受控的面板展示日期（范围形态由容器统一驱动，不传时面板自持）
   showToday?: boolean // 是否展示「今天」快捷
   datetime?: boolean // 日期时间形态：主体右侧并排时间面板，底部改由 footer 插槽提供（「此刻 / 确定」）
+  range?: boolean // 范围形态：日期格叠加区间高亮，并在悬浮时上报日期
+  rangeValue?: PickerRangeValue | null // 范围形态的已选区间
+  hoverValue?: PickerRangeValue | null // 范围形态的悬浮预览区间
+  side?: PickerRangeSide // 范围形态的面板位置：左面板省略「下一」、右面板省略「上一」
 }
 export interface DatePanelSlots {
   aside?: () => VNode[] // 主体右侧的附加面板（日期时间形态的时间面板）
@@ -40,13 +47,21 @@ const props = withDefaults(defineProps<DatePanelProps>(), {
   startDayOfWeek: 0,
   disabledDate: undefined,
   defaultPickerValue: undefined,
+  panelValue: undefined,
   showToday: true,
-  datetime: false
+  datetime: false,
+  range: false,
+  rangeValue: null,
+  hoverValue: null,
+  side: undefined
 })
 defineSlots<DatePanelSlots>()
 const emits = defineEmits<{
   select: [timestamp: number]
   panelChange: [value: number, mode: PickerPanelMode]
+  panelValueChange: [value: number]
+  cellHover: [timestamp: number]
+  cellLeave: []
 }>()
 /** 月/年面板的列数（行数由格数除以列数得出） */
 const MONTH_COL_COUNT = 3
@@ -60,21 +75,35 @@ function chunk<T>(list: T[], size: number): T[][] {
 const panelMode = ref<PickerPanelMode>('date')
 // 进入当前视图前的视图（选完年份后回到来源视图：日期面板进来回日期面板，月面板进来回月面板）
 const sourceMode = ref<PickerPanelMode>('date')
-const viewDate = ref<number>(props.value ?? props.defaultPickerValue ?? Date.now())
-// 选中值变化时把面板带过去；清空时保留当前视图，避免面板跳回今天
+const innerViewDate = ref<number>(props.panelValue ?? props.value ?? props.defaultPickerValue ?? Date.now())
+const viewDate = computed(() => props.panelValue ?? innerViewDate.value)
+/**
+ * 切换面板展示日期
+ *
+ * 受控时（传了 `panelValue`）只上报变更、等宿主回传，使范围形态的左右面板能由同一个视图驱动；
+ * 非受控时直接更新自身状态。
+ */
+function setViewDate(next: number) {
+  if (props.panelValue === undefined) {
+    innerViewDate.value = next
+    return
+  }
+  emits('panelValueChange', next)
+}
+// 选中值变化时把面板带过去；清空时保留当前视图，避免面板跳回今天（受控时视图归容器管理）
 watch(
   () => props.value,
   (value) => {
-    if (value) {
-      viewDate.value = value
+    if (value && props.panelValue === undefined) {
+      innerViewDate.value = value
     }
   }
 )
 watch(
   () => props.defaultPickerValue,
   (value) => {
-    if (value) {
-      viewDate.value = value
+    if (value && props.panelValue === undefined) {
+      innerViewDate.value = value
     }
   }
 )
@@ -88,6 +117,17 @@ const decadeYears = computed(() => {
   const years = getYearTimestamps(viewDate.value)
   return `${getYearNumber(years[0])}-${getYearNumber(years[years.length - 1])}`
 })
+/** 范围形态的日期格类名（非范围形态返回空对象，省去逐格的类名求值） */
+function getCellRangeClasses(timestamp: number): Record<string, boolean> {
+  if (!props.range) {
+    return {}
+  }
+  return getRangeCellClassNames(timestamp, {
+    value: props.rangeValue,
+    hoverValue: props.hoverValue,
+    viewDate: viewDate.value
+  })
+}
 /** 当前视图是否为今天 */
 function isToday(timestamp: number): boolean {
   return isSameDayTimestamp(timestamp, Date.now())
@@ -108,6 +148,9 @@ function isYearInView(timestamp: number): boolean {
 }
 /** 底部可见性：日期时间形态的底部即「此刻 / 确定」，与「今天」的视图条件无关 */
 const footerVisible = computed(() => props.datetime || (props.showToday && panelMode.value === 'date'))
+// 范围形态两个面板并排：左面板的「下一」与右面板的「上一」指向同一个相邻月份，故各自省略
+const showPrevNav = computed(() => props.side !== 'end')
+const showNextNav = computed(() => props.side !== 'start')
 /** 月面板格代表整月：月内每一天都不可选时才禁用（与日期格的「按天判定」区分） */
 function isMonthDisabled(timestamp: number): boolean {
   return props.disabledDate ? isMonthFullyDisabled(timestamp, props.disabledDate) : false
@@ -132,14 +175,31 @@ function onDateSelect(timestamp: number) {
   if (props.disabledDate?.(timestamp)) {
     return
   }
+  // 选中跨月补齐日时把面板视图带到该月（与参考实现的 `onSelect → setViewDate` 同口径；
+  // 范围形态下视图由容器统一驱动，两侧面板因此一起翻页）
+  if (!isInView(timestamp)) {
+    setViewDate(timestamp)
+  }
   emits('select', timestamp)
+}
+/** 悬浮到日期格：范围形态下由容器据此换算预览区间 */
+function onCellHover(timestamp: number) {
+  if (props.range) {
+    emits('cellHover', timestamp)
+  }
+}
+/** 移出面板：清除预览区间 */
+function onCellLeave() {
+  if (props.range) {
+    emits('cellLeave')
+  }
 }
 // 选择月份与年份只切换面板视图，不直接提交值（与日期面板的层级递进一致）
 function onMonthSelect(timestamp: number) {
   if (isMonthDisabled(timestamp)) {
     return
   }
-  viewDate.value = timestamp
+  setViewDate(timestamp)
   changePanel('date', timestamp)
 }
 /**
@@ -152,7 +212,7 @@ function onYearSelect(timestamp: number) {
   if (isYearDisabled(timestamp)) {
     return
   }
-  viewDate.value = addYearTimestamp(viewDate.value, getYearNumber(timestamp) - viewYear.value)
+  setViewDate(addYearTimestamp(viewDate.value, getYearNumber(timestamp) - viewYear.value))
   changePanel(sourceMode.value === 'date' ? 'date' : 'month')
 }
 /** 「今天」快捷：与日期格选中同径（当日零点），由宿主提交并收起面板 */
@@ -167,31 +227,36 @@ function changePanel(mode: PickerPanelMode, timestamp: number = viewDate.value) 
   panelMode.value = mode
   emits('panelChange', timestamp, mode)
 }
+// 翻页后的视图日期先落入局部变量再上报：受控模式下 viewDate 要等宿主回传才更新，不能读回自身
 function onSuperPrev() {
-  const diff = panelMode.value === 'year' ? -10 : -1
-  viewDate.value = addYearTimestamp(viewDate.value, diff)
-  emits('panelChange', viewDate.value, panelMode.value)
+  const next = addYearTimestamp(viewDate.value, panelMode.value === 'year' ? -10 : -1)
+  setViewDate(next)
+  emits('panelChange', next, panelMode.value)
 }
 function onSuperNext() {
-  const diff = panelMode.value === 'year' ? 10 : 1
-  viewDate.value = addYearTimestamp(viewDate.value, diff)
-  emits('panelChange', viewDate.value, panelMode.value)
+  const next = addYearTimestamp(viewDate.value, panelMode.value === 'year' ? 10 : 1)
+  setViewDate(next)
+  emits('panelChange', next, panelMode.value)
 }
 function onPrev() {
-  viewDate.value = addMonthTimestamp(viewDate.value, -1)
-  emits('panelChange', viewDate.value, panelMode.value)
+  const next = addMonthTimestamp(viewDate.value, -1)
+  setViewDate(next)
+  emits('panelChange', next, panelMode.value)
 }
 function onNext() {
-  viewDate.value = addMonthTimestamp(viewDate.value, 1)
-  emits('panelChange', viewDate.value, panelMode.value)
+  const next = addMonthTimestamp(viewDate.value, 1)
+  setViewDate(next)
+  emits('panelChange', next, panelMode.value)
 }
 </script>
 <template>
-  <PickerPanel :show-footer="footerVisible">
+  <PickerPanel :show-footer="footerVisible" @mouseleave="onCellLeave">
     <div class="picker-date-panel-body">
       <div class="picker-date-panel-main">
         <PickerPanelHeader
           :show-single-nav="panelMode === 'date'"
+          :show-prev="showPrevNav"
+          :show-next="showNextNav"
           @super-prev="onSuperPrev"
           @super-next="onSuperNext"
           @prev="onPrev"
@@ -230,14 +295,21 @@ function onNext() {
                   v-for="(timestamp, cellIndex) in row"
                   :key="cellIndex"
                   class="picker-panel-cell"
-                  :class="{
-                    'picker-panel-cell-in-view': isInView(timestamp),
-                    'picker-panel-cell-today': isToday(timestamp),
-                    'picker-panel-cell-selected': isSelected(timestamp),
-                    'picker-panel-cell-disabled': disabledDate && disabledDate(timestamp)
-                  }"
+                  :class="[
+                    {
+                      'picker-panel-cell-in-view': isInView(timestamp),
+                      'picker-panel-cell-today': isToday(timestamp),
+                      // 月首 / 月末标记：范围预览在跨月边界处据此收边（与参考实现同口径）
+                      'picker-panel-cell-start': getDayOfMonth(timestamp) === 1,
+                      'picker-panel-cell-end': isLastDayOfMonthTimestamp(timestamp),
+                      'picker-panel-cell-selected': isSelected(timestamp),
+                      'picker-panel-cell-disabled': Boolean(disabledDate?.(timestamp))
+                    },
+                    getCellRangeClasses(timestamp)
+                  ]"
                   :title="formatTimestamp(timestamp, 'yyyy-MM-dd')"
                   @click="onDateSelect(timestamp)"
+                  @mouseenter="onCellHover(timestamp)"
                 >
                   <div class="picker-panel-cell-inner">{{ getDayOfMonth(timestamp) }}</div>
                 </td>
@@ -388,7 +460,11 @@ function onNext() {
       background 0.2s,
       border 0.2s;
   }
-  &:hover:not(.picker-panel-cell-selected) .picker-panel-cell-inner {
+  // 已选端点与预览端点不吃普通悬浮底色（与参考实现的排除列表同口径）
+  &:hover:not(.picker-panel-cell-selected):not(.picker-panel-cell-range-start):not(.picker-panel-cell-range-end):not(
+      .picker-panel-cell-range-hover-start
+    ):not(.picker-panel-cell-range-hover-end)
+    .picker-panel-cell-inner {
     background: rgba(0, 0, 0, 0.04);
   }
   &.picker-panel-cell-in-view {
@@ -405,6 +481,137 @@ function onNext() {
   &.picker-panel-cell-in-view.picker-panel-cell-selected .picker-panel-cell-inner {
     color: #fff;
     background: var(--picker-primary-color, #1677ff);
+  }
+  // ===== 范围形态 =====
+  // 以下范围规则一律限定在本月格（`-in-view`）内：跨月补齐日虽会命中范围类名，
+  // 但不参与区间底色与预览虚线的渲染（与参考实现同口径）
+  // 区间底色由 ::before 承载；端点格只铺内侧半边，与外层底色拼成连续色带
+  &.picker-panel-cell-in-view.picker-panel-cell-in-range::before,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-start:not(.picker-panel-cell-range-start-single)::before,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-end:not(.picker-panel-cell-range-end-single)::before {
+    background: var(--picker-primary-color-bg, #e6f4ff);
+  }
+  &.picker-panel-cell-in-view.picker-panel-cell-range-start::before {
+    left: 50%;
+  }
+  &.picker-panel-cell-in-view.picker-panel-cell-range-end::before {
+    right: 50%;
+  }
+  // 端点实心主色：与单选的选中态同款，但圆角只留在区间外侧
+  &.picker-panel-cell-in-view.picker-panel-cell-range-start .picker-panel-cell-inner,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-end .picker-panel-cell-inner {
+    color: #fff;
+    background: var(--picker-primary-color, #1677ff);
+  }
+  &.picker-panel-cell-in-view.picker-panel-cell-range-start:not(.picker-panel-cell-range-start-single):not(
+      .picker-panel-cell-range-end
+    )
+    .picker-panel-cell-inner {
+    border-radius: 4px 0 0 4px;
+  }
+  &.picker-panel-cell-in-view.picker-panel-cell-range-end:not(.picker-panel-cell-range-end-single):not(
+      .picker-panel-cell-range-start
+    )
+    .picker-panel-cell-inner {
+    border-radius: 0 4px 4px 0;
+  }
+  // 悬浮预览：预览区间与已选区间重合处的底色加深（端点格同样只加深内侧半边）
+  &.picker-panel-cell-in-view.picker-panel-cell-in-range.picker-panel-cell-range-hover::before,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-start.picker-panel-cell-range-hover::before,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-end.picker-panel-cell-range-hover::before,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-start:not(
+      .picker-panel-cell-range-start-single
+    ).picker-panel-cell-range-hover-start::before,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-end:not(
+      .picker-panel-cell-range-end-single
+    ).picker-panel-cell-range-hover-end::before {
+    background: var(--picker-primary-color-bg-hover, #c8dfff);
+  }
+  // 悬浮预览：预览区间的上下虚线边界（端点与已选端点重合的组合不再单独绘制）
+  &.picker-panel-cell-in-view.picker-panel-cell-range-hover-start:not(.picker-panel-cell-in-range):not(
+      .picker-panel-cell-range-start
+    ):not(.picker-panel-cell-range-end)::after,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-hover-end:not(.picker-panel-cell-in-range):not(
+      .picker-panel-cell-range-start
+    ):not(.picker-panel-cell-range-end)::after,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-hover-start.picker-panel-cell-range-start-single::after,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-hover-start.picker-panel-cell-range-start.picker-panel-cell-range-end.picker-panel-cell-range-end-near-hover::after,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-hover-end.picker-panel-cell-range-start.picker-panel-cell-range-end.picker-panel-cell-range-start-near-hover::after,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-hover-end.picker-panel-cell-range-end-single::after,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-hover:not(.picker-panel-cell-in-range)::after {
+    position: absolute;
+    top: 50%;
+    z-index: 0;
+    height: 24px;
+    content: '';
+    border-top: 1px dashed var(--picker-hover-border-color, #7cb3ff);
+    border-bottom: 1px dashed var(--picker-hover-border-color, #7cb3ff);
+    transform: translateY(-50%);
+    // 只过渡左右边界：`all` 会把后补上的 border-left / border-right 从 currentColor（近黑）与 medium（3px）补间，
+    // 观感即「预览边界移动时先出现一条深色粗线、再变成浅蓝虚线」
+    transition:
+      left 0.3s,
+      right 0.3s;
+  }
+  &.picker-panel-cell-range-hover::after,
+  &.picker-panel-cell-range-hover-start::after,
+  &.picker-panel-cell-range-hover-end::after {
+    right: 0;
+    left: 2px;
+  }
+  // 预览端点落在已选端点上时，该侧虚线收齐到中线
+  &.picker-panel-cell-range-hover.picker-panel-cell-range-end::after {
+    left: 50%;
+  }
+  &.picker-panel-cell-range-hover.picker-panel-cell-range-start::after {
+    right: 50%;
+  }
+  // 预览区间左侧边界：行首格与月首（`-start`）格向内收半个格宽差
+  tr > &.picker-panel-cell-in-view.picker-panel-cell-range-hover:first-child::after,
+  tr > &.picker-panel-cell-in-view.picker-panel-cell-range-hover-end:first-child::after,
+  &.picker-panel-cell-in-view.picker-panel-cell-start.picker-panel-cell-range-hover-edge-start.picker-panel-cell-range-hover-edge-start-near-range::after,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-hover-edge-start:not(
+      .picker-panel-cell-range-hover-edge-start-near-range
+    )::after,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-hover-start::after {
+    left: 6px;
+    border-left: 1px dashed var(--picker-hover-border-color, #7cb3ff);
+    border-radius: 1px 0 0 1px;
+  }
+  // 预览区间右侧边界：行末格与月末（`-end`）格向内收半个格宽差
+  tr > &.picker-panel-cell-in-view.picker-panel-cell-range-hover:last-child::after,
+  tr > &.picker-panel-cell-in-view.picker-panel-cell-range-hover-start:last-child::after,
+  &.picker-panel-cell-in-view.picker-panel-cell-end.picker-panel-cell-range-hover-edge-end.picker-panel-cell-range-hover-edge-end-near-range::after,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-hover-edge-end:not(
+      .picker-panel-cell-range-hover-edge-end-near-range
+    )::after,
+  &.picker-panel-cell-in-view.picker-panel-cell-range-hover-end::after {
+    right: 6px;
+    border-right: 1px dashed var(--picker-hover-border-color, #7cb3ff);
+    border-radius: 0 1px 1px 0;
+  }
+  // 预览端点落在已选区间内部时，格内剩余半边由内层补一段加深底色（区间底色只铺内侧半边）
+  &.picker-panel-cell-in-view.picker-panel-cell-in-range.picker-panel-cell-range-hover-start
+    .picker-panel-cell-inner::after,
+  &.picker-panel-cell-in-view.picker-panel-cell-in-range.picker-panel-cell-range-hover-end
+    .picker-panel-cell-inner::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    content: '';
+    background: var(--picker-primary-color-bg-hover, #c8dfff);
+    transition: all 0.3s;
+  }
+  &.picker-panel-cell-in-view.picker-panel-cell-in-range.picker-panel-cell-range-hover-start
+    .picker-panel-cell-inner::after {
+    right: -6px;
+    left: 0;
+  }
+  &.picker-panel-cell-in-view.picker-panel-cell-in-range.picker-panel-cell-range-hover-end
+    .picker-panel-cell-inner::after {
+    right: 0;
+    left: -6px;
   }
   &.picker-panel-cell-disabled {
     color: rgba(0, 0, 0, 0.25);

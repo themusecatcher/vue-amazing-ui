@@ -5,6 +5,7 @@
  * 字符串解析与格式化统一使用 date-fns 占位符（如 `yyyy-MM-dd`），内核中不出现 `Date` 对象。
  */
 import {
+  addDays,
   addMonths,
   addYears,
   format,
@@ -26,7 +27,7 @@ import {
   startOfWeek,
   startOfYear
 } from 'date-fns'
-import type { PickerPanelMode, PickerTimePanelLayout, PickerTimeUnit, PickerType } from './types'
+import type { PickerPanelMode, PickerRangeValue, PickerTimePanelLayout, PickerTimeUnit, PickerType } from './types'
 
 /** 周起始日：0 为周一，6 为周日（与 `Calendar` 的 startDayOfWeek 口径一致） */
 export type StartDayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -109,14 +110,21 @@ export function getDefaultFormat(type: PickerType): string {
   return DEFAULT_FORMATS[type]
 }
 
+/** 是否为全角字符：中文格式里的「年」「月」「日」等在字体中约占两个半角字符的宽度 */
+function isFullWidth(char: string): boolean {
+  return char.charCodeAt(0) > 0xff
+}
+
 /**
  * 输入框原生 `size` 属性（字符数）
  *
  * 浏览器对未声明 `size` 的输入框按 20 字符估宽，远大于实际展示格式所需宽度，会让触发器明显偏宽；
- * 这里按展示格式长度推算（不足下限时取下限），使宽度随格式自适应，并与参考实现的口径一致
+ * 这里按展示格式宽度推算（不足下限时取下限），使宽度随格式自适应，并与参考实现的口径一致。
+ * 全角字符按 2 个字符计入 —— 参考实现只数字符个数，中文格式（如 `yyyy年MM月dd日`）下文本会超出输入框约 4px 被裁掉
  */
 export function getInputSize(format: string, minSize: number = 10): number {
-  return Math.max(minSize, format.length) + 2
+  const width = Array.from(format).reduce((total, char) => total + (isFullWidth(char) ? 2 : 1), 0)
+  return Math.max(minSize, width) + 2
 }
 
 /** 形态是否为范围形态 */
@@ -207,6 +215,11 @@ export function isYearFullyDisabled(timestamp: number, disabledDate: (timestamp:
   return true
 }
 
+/** 平移若干天（负数向前），结果归一到当日零点 */
+export function addDayTimestamp(reference: number, diff: number): number {
+  return startOfDayTimestamp(addDays(reference, diff).getTime())
+}
+
 /** 平移若干月（负数向前） */
 export function addMonthTimestamp(reference: number, diff: number): number {
   return addMonths(reference, diff).getTime()
@@ -242,6 +255,15 @@ export function getDayOfMonth(reference: number): number {
   return getDate(reference)
 }
 
+/**
+ * 是否为当月最后一天
+ *
+ * 供日期格的 `-end` 标记使用：范围预览在跨月边界处需要据此收边（与参考实现同口径）
+ */
+export function isLastDayOfMonthTimestamp(reference: number): boolean {
+  return getDaysInMonth(reference) === getDate(reference)
+}
+
 /** 年份 */
 export function getYearNumber(reference: number): number {
   return getYear(reference)
@@ -250,6 +272,83 @@ export function getYearNumber(reference: number): number {
 /** 季度（1-4） */
 export function getQuarterNumber(reference: number): number {
   return getQuarter(reference)
+}
+
+/* ============================== 范围形态 ============================== */
+
+/** 范围格类名判定的上下文 */
+export interface RangeCellContext {
+  /** 已选区间：两端都存在时才产生区间底色与端点样式 */
+  value?: PickerRangeValue | null
+  /** 悬浮预览区间：起止齐全且有序时才生效 */
+  hoverValue?: PickerRangeValue | null
+  /** 当前面板的展示日期：判定相邻格是否已跨出本面板视图 */
+  viewDate: number
+}
+
+/** 时间戳是否落在区间**内部**（不含两端：端点由 `-range-start` / `-range-end` 表达） */
+export function isInRangeTimestamp(start: number | null, end: number | null, target: number): boolean {
+  if (start === null || end === null) {
+    return false
+  }
+  const day = startOfDayTimestamp(target)
+  return day > startOfDayTimestamp(start) && day < startOfDayTimestamp(end)
+}
+
+/**
+ * 范围形态的越界判定
+ *
+ * 与参考实现 `useRangeDisabled` 同口径：已选起点时段不能早于起点、已选终点时段不能晚于终点。
+ * 两侧都归一到当日零点比较，同日不算越界（否则带时分秒的宿主值会把当天也置灰）。
+ */
+export function isOutOfRangeBoundary(target: number, boundary: number, boundaryIsStart: boolean): boolean {
+  const targetDay = startOfDayTimestamp(target)
+  const boundaryDay = startOfDayTimestamp(boundary)
+  return boundaryIsStart ? targetDay < boundaryDay : targetDay > boundaryDay
+}
+
+/**
+ * 范围形态的日期格类名
+ *
+ * 与参考实现的分支口径一致：区间底色只覆盖**严格内部**的日期；悬浮预览（`-range-hover*`）
+ * 要求预览区间起止齐全且有序；`-edge-*` / `-near-hover` 用于在面板首末格与已选端点相邻处收边。
+ */
+export function getRangeCellClassNames(timestamp: number, context: RangeCellContext): Record<string, boolean> {
+  const { value, hoverValue, viewDate } = context
+  const rangeStart = value?.[0] ?? null
+  const rangeEnd = value?.[1] ?? null
+  const hoverStart = hoverValue?.[0] ?? null
+  const hoverEnd = hoverValue?.[1] ?? null
+  const prevDate = addDayTimestamp(timestamp, -1)
+  const nextDate = addDayTimestamp(timestamp, 1)
+  const isSameAs = (date: number, target: number | null) => target !== null && isSameDayTimestamp(date, target)
+  const isInView = (date: number) => isSameMonthTimestamp(date, viewDate)
+  const isRangeStart = (date: number) => isSameAs(date, rangeStart)
+  const isRangeEnd = (date: number) => isSameAs(date, rangeEnd)
+  const isRangeHovered = isInRangeTimestamp(hoverStart, hoverEnd, timestamp)
+  const isHoverStart = isSameAs(timestamp, hoverStart)
+  const isHoverEnd = isSameAs(timestamp, hoverEnd)
+  // 面板首 / 末格（或紧邻已选端点）需要向该侧收边，避免区间底色溢出面板边界
+  const isHoverEdgeStart = (isRangeHovered || isHoverEnd) && (!isInView(prevDate) || isRangeEnd(prevDate))
+  const isHoverEdgeEnd = (isRangeHovered || isHoverStart) && (!isInView(nextDate) || isRangeStart(nextDate))
+  return {
+    'picker-panel-cell-in-range': isInRangeTimestamp(rangeStart, rangeEnd, timestamp),
+    'picker-panel-cell-range-start': isRangeStart(timestamp),
+    'picker-panel-cell-range-end': isRangeEnd(timestamp),
+    'picker-panel-cell-range-start-single': isRangeStart(timestamp) && rangeEnd === null,
+    'picker-panel-cell-range-end-single': isRangeEnd(timestamp) && rangeStart === null,
+    'picker-panel-cell-range-start-near-hover':
+      isRangeStart(timestamp) && (isSameAs(prevDate, hoverStart) || isInRangeTimestamp(hoverStart, hoverEnd, prevDate)),
+    'picker-panel-cell-range-end-near-hover':
+      isRangeEnd(timestamp) && (isSameAs(nextDate, hoverEnd) || isInRangeTimestamp(hoverStart, hoverEnd, nextDate)),
+    'picker-panel-cell-range-hover': isRangeHovered,
+    'picker-panel-cell-range-hover-start': isHoverStart,
+    'picker-panel-cell-range-hover-end': isHoverEnd,
+    'picker-panel-cell-range-hover-edge-start': isHoverEdgeStart,
+    'picker-panel-cell-range-hover-edge-end': isHoverEdgeEnd,
+    'picker-panel-cell-range-hover-edge-start-near-range': isHoverEdgeStart && isSameAs(prevDate, rangeEnd),
+    'picker-panel-cell-range-hover-edge-end-near-range': isHoverEdgeEnd && isSameAs(nextDate, rangeStart)
+  }
 }
 
 /* ================================ 时间 ================================ */

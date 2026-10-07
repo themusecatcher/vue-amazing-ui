@@ -6,10 +6,18 @@
  * 内核不感知 `Date` 对象，避免可变引用在多层之间来回拷贝。
  */
 
-/** 主轨道值：单选为毫秒时间戳，范围形态为 `[开始时间戳, 结束时间戳]`，空值为 `null` */
-export type PickerValue = number | [number, number] | null
-/** 字符串轨道值：由 `format` / `valueFormat` 解析与回写，范围形态为 `[开始, 结束]` */
-export type PickerFormattedValue = string | [string, string] | null
+/** 范围形态的两段值：某段被单独清空（含「先选终点再选更晚起点」产生的中间态）时该段为 `null` */
+export type PickerRangeValue = [number | null, number | null]
+/** 范围形态的两段文本：与 `PickerRangeValue` 逐段对应，该段未选时为空字符串 */
+export type PickerRangeFormattedValue = [string, string]
+
+/** 主轨道值：单选为毫秒时间戳，范围形态为两段元组，整体为空时为 `null` */
+export type PickerValue = number | PickerRangeValue | null
+/** 字符串轨道值：由 `format` / `valueFormat` 解析与回写，整体为空时为 `null` */
+export type PickerFormattedValue = string | PickerRangeFormattedValue | null
+
+/** 范围形态的两段标识，用于按段传入的判定与回写 */
+export type PickerRangeSide = 'start' | 'end'
 
 /** 范围形态：值形态为两元组，面板为双列 */
 export type PickerRangeType = 'daterange' | 'datetimerange' | 'monthrange' | 'yearrange' | 'quarterrange'
@@ -41,13 +49,13 @@ export interface PickerDisabledTimeUnits {
 
 /** 禁用时间判定，入参为当前面板草稿值的时间戳 */
 export type PickerDisabledTime = (timestamp: number) => PickerDisabledTimeUnits
-/** 范围形态的禁用时间判定，`type` 区分起点与终点 */
-export type PickerRangeDisabledTime = (timestamp: number, type: 'start' | 'end') => PickerDisabledTimeUnits
+/** 范围形态的禁用时间判定，`side` 区分起点与终点 */
+export type PickerRangeDisabledTime = (timestamp: number, side: PickerRangeSide) => PickerDisabledTimeUnits
 
-/** 预设范围选项 */
+/** 预设范围选项：值为两段元组，或返回元组的函数（惰性求值，用于依赖当前时刻的预设如「近 7 天」） */
 export interface PickerPreset {
   label: string
-  value: [number, number]
+  value: [number, number] | (() => [number, number])
 }
 
 /** 时间面板选项：`DatePicker.timePickerProps` 与未来 `TimePicker` 共用同一份口径 */

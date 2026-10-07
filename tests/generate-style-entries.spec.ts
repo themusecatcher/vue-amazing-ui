@@ -163,6 +163,7 @@ describe('generateStyleEntries - 入口内容与顺序', () => {
       "import '../DatePicker.css'",
       "import '../../picker/DatetimePanel.css'",
       "import '../../picker/DatePanel.css'",
+      "import '../../picker/RangePanel.css'",
       "import '../../picker/TimePanel.css'",
       "import '../../picker/TimeUnitColumn.css'",
       "import '../../picker/PickerPanel.css'",

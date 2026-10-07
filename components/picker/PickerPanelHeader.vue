@@ -1,15 +1,23 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { VNode } from 'vue'
 export interface PickerPanelHeaderProps {
   showSingleNav?: boolean // 是否展示「上一/下一」单步按钮（月、年面板只保留跨单位跳转）
+  showPrev?: boolean // 是否展示「上一」单步按钮（范围形态下左面板保留、右面板省略）
+  showNext?: boolean // 是否展示「下一」单步按钮（范围形态下右面板保留、左面板省略）
 }
 export interface PickerPanelHeaderSlots {
   view?: () => VNode[] // 头部中间的视图内容（如「2026年 9月」按钮组）
 }
-withDefaults(defineProps<PickerPanelHeaderProps>(), {
-  showSingleNav: true
+const props = withDefaults(defineProps<PickerPanelHeaderProps>(), {
+  showSingleNav: true,
+  showPrev: true,
+  showNext: true
 })
 defineSlots<PickerPanelHeaderSlots>()
+// 单步按钮的显隐由「是否单步导航」与「左右面板位置」共同决定
+const mergedShowPrev = computed(() => props.showSingleNav && props.showPrev)
+const mergedShowNext = computed(() => props.showSingleNav && props.showNext)
 const emits = defineEmits<{
   superPrev: []
   prev: []
@@ -22,13 +30,13 @@ const emits = defineEmits<{
     <button type="button" tabindex="-1" class="picker-panel-super-prev" @click="emits('superPrev')">
       <span class="picker-panel-nav-icon picker-panel-nav-icon-super picker-panel-nav-icon-prev" />
     </button>
-    <button v-if="showSingleNav" type="button" tabindex="-1" class="picker-panel-prev" @click="emits('prev')">
+    <button v-if="mergedShowPrev" type="button" tabindex="-1" class="picker-panel-prev" @click="emits('prev')">
       <span class="picker-panel-nav-icon picker-panel-nav-icon-prev" />
     </button>
     <div class="picker-panel-view">
       <slot name="view" />
     </div>
-    <button v-if="showSingleNav" type="button" tabindex="-1" class="picker-panel-next" @click="emits('next')">
+    <button v-if="mergedShowNext" type="button" tabindex="-1" class="picker-panel-next" @click="emits('next')">
       <span class="picker-panel-nav-icon picker-panel-nav-icon-next" />
     </button>
     <button type="button" tabindex="-1" class="picker-panel-super-next" @click="emits('superNext')">
