@@ -1037,15 +1037,15 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
         opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       .slider-tooltip-arrow {
         /* 箭头尺寸：元素尺寸与「贴到气泡外的偏移」共用同一变量，避免两处硬编码 */
-        --arrow-size: 16px;
+        --slider-arrow-size: 16px;
         position: absolute;
         /* 必须绘制在气泡**之上**：气泡自带 box-shadow，若箭头置于其下会被阴影染出一条暗带。
            拼接处（相切）的淡色细缝由内核把浮层位置取整到整数像素消除，此处无需重叠补偿 */
         z-index: 9;
         display: block;
         pointer-events: none;
-        width: var(--arrow-size);
-        height: var(--arrow-size);
+        width: var(--slider-arrow-size);
+        height: var(--slider-arrow-size);
         overflow: hidden;
         &::before {
           position: absolute;
@@ -1083,25 +1083,25 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
          形状与 Tooltip 的箭头同源，仅贴边距离不同：气泡没有「箭头槽」，箭头紧贴气泡边缘相切 */
       &.slider-tooltip-top .slider-tooltip-arrow {
         left: 50%;
-        bottom: calc(var(--arrow-size) * -1);
+        bottom: calc(var(--slider-arrow-size) * -1);
         translate: -50%;
         rotate: 180deg;
       }
       &.slider-tooltip-bottom .slider-tooltip-arrow {
         left: 50%;
-        top: calc(var(--arrow-size) * -1);
+        top: calc(var(--slider-arrow-size) * -1);
         translate: -50%;
         rotate: 0deg;
       }
       &.slider-tooltip-left .slider-tooltip-arrow {
         top: 50%;
-        right: calc(var(--arrow-size) * -1);
+        right: calc(var(--slider-arrow-size) * -1);
         translate: 0 -50%;
         rotate: 90deg;
       }
       &.slider-tooltip-right .slider-tooltip-arrow {
         top: 50%;
-        left: calc(var(--arrow-size) * -1);
+        left: calc(var(--slider-arrow-size) * -1);
         translate: 0 -50%;
         rotate: -90deg;
       }

@@ -1,7 +1,5 @@
-// 组件库全局样式定义
-// 只放组件自身依赖的基座样式（盒模型重置、移动端点击高亮抑制、原生表单控件字体兜底）与低特异性的链接基座；
-// 链接配色的取值（`--va-link-*`）由 ConfigProvider 写入，页面级样式（插入光标 caret-color、主题变量）也不在此定义，
-// 交由使用方页面样式或 ConfigProvider 主题处理
+// 组件库全局样式：仅含基座样式（盒模型重置、移动端点击高亮抑制、表单控件字体兜底）与低特异性链接基座。
+// 链接取色变量由 ConfigProvider 写入；页面级样式（caret-color、主题变量）不在此定义。
 *,
 *::before,
 *::after {
@@ -12,15 +10,14 @@
 body {
   -webkit-tap-highlight-color: transparent;
 }
-input,
-textarea,
-select,
-button {
+/* 表单控件字体兜底：UA 样式对原生控件显式指定字体，须 inherit 才能跟随宿主。
+   `:where()` 特异性为 0，使用方任意同名规则均可覆盖，且不受加载顺序影响 */
+:where(input, textarea, select, button) {
   font-family: inherit;
 }
-/* 颜色取 ConfigProvider 按 common 主题色阶写入的 `--va-link-*`（fallback 即默认色阶，未使用 ConfigProvider 时同样成立）；
-   `va-` 前缀与库其它对外暴露的全局命名（`va-popup-*` 等）一致，避免与宿主页面同名变量互相覆盖；
-   `:where()` 使特异性为 0，使用方任意链接样式均可覆盖 */
+/* 颜色取 ConfigProvider 按 common 主题色阶写入的 `--va-link-*`（fallback 为默认色阶，未用 ConfigProvider 时亦成立）；
+   `va-` 前缀与库其它全局命名（`va-popup-*`）一致，避免与宿主同名变量互相覆盖；
+   `:where()` 特异性为 0，使用方任意链接样式均可覆盖 */
 :where(a) {
   color: var(--va-link-color, #1677ff);
   text-decoration: none;

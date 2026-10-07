@@ -129,9 +129,18 @@ const showIconOnly = computed(() => slotsExist.icon && !slotsExist.default)
 ```
 
 - 嵌套不超过 3 层。
-- 字体口径（2026-09-30 定，两处落地文件：`components/style/global.less` + 各组件样式）：
-  - **字体族**：库**不**在 `body` / `html` 上声明字体（字体归宿主，「谁提供字体谁声明」），组件内禁止新增页面级字体声明；内置组件自身也不得依赖库级字体声明。原生表单控件因浏览器 UA 样式**不继承**页面字体，统一由 `components/style/global.less` 的 `input, textarea, select, button { font-family: inherit }` 兜底（该规则为库级全局规则，会作用于宿主页面上的同名原生控件）。
-  - **字号**：**呈现型文本必须显式声明 `font-size`**（组件根给出该组件的默认字号，逐元素按需覆盖），**禁止依赖宿主继承**；由使用者传入文本的内容型 / 行内型组件（`Highlight` / `Ellipsis` / `NumberAnimation` / 各容器的插槽内容）必须显式写 `font-size: inherit`，以表明「跟随上下文」的设计意图。
+- 组件内的 CSS 变量必须带**组件名前缀**（如 `--divider-border-color`、`--flex-align`；允许组件名的稳定缩写，如 `--float-btn-*`），避免与其它组件或宿主页面的同名变量相互污染；`va-` 前缀只用于 `components/style/global.less` 中对外暴露的全局命名（`--va-link-*`）。
+- **厂商前缀（2026-10-01 定）**：源码中手写的 `-webkit-` / `-moz-` / `-ms-` 前缀是**有意保留**的，禁止以「去冗余」「消除 IDE 的 `vendorPrefix` 提示」为由批量删除：
+  - 本库以 SFC 形态分发，组件文件可能被使用方**单独复制**到自己的项目中使用，此时样式由**使用方的构建链**编译。`autoprefixer` 在 Vite 生态中并非默认必备（需使用方自行安装并配置 `postcss.config.js`），其 `browserslist` 也未必与本库（见 `package.json`）一致 —— 手写前缀是这条「源码分发」路径上唯一的兼容兜底。
+  - `autoprefixer` 只补齐它认识的属性：`-webkit-box-orient`、`display: -webkit-inline-box`、`-webkit-tap-highlight-color`、`::-webkit-scrollbar*`、`-webkit-line-clamp` 均不在其处理范围内，删除即等于放弃对应兼容（如 `Ellipsis` 的多行截断会在 Safari < 18.2 失效）。这类**无标准等价物**的前缀属不可替代写法，保持原样。
+  - 库构建时 `autoprefixer` 的角色是「补齐」而非「清理」：按 `package.json` 的 `browserslist` 实测，产物会在手写的 `-webkit-user-select` 之外补出 `-moz-user-select`；而在「标准属性在前、前缀属性在后」的书写顺序下，手写的 `-webkit-animation` 等会原样保留进 `es` / `lib` 产物。手写前缀与构建期前缀是**互补**关系，不是重复。
+  - 新增样式时：**有标准等价物的一律成对写**，标准属性在前（如 `line-clamp: 3;` + `-webkit-line-clamp: 3;`）；没有标准等价物的（如 `-webkit-box-orient`）保持现状，并保证配套依赖完整（`display: -webkit-inline-box` + `-webkit-box-orient: vertical` + `-webkit-line-clamp` 三者必须同时存在）。
+  - IDE 报 `Also define the standard property 'line-clamp' for compatibility` 时，正确处置是**补上标准属性**，而不是删掉前缀。
+- 字体口径（2026-09-30 定，2026-10-01 补齐承接与档位；落地文件：`components/style/global.less` + `components/utils/inherit-font.ts` + 各组件样式）：
+  - **字体族**：库**不**在 `body` / `html` 上声明字体，组件内也**不声明字体族**（字体归宿主，「谁提供字体谁声明」），内置组件不得依赖库级字体声明；确因字形需要写死的（如 `Pagination` 的省略号装饰字符），必须就地注释说明依据。原生表单控件因浏览器 UA 样式**不继承**页面字体，统一由 `components/style/global.less` 的 `:where(input, textarea, select, button) { font-family: inherit }` 兜底（该规则为库级全局规则，会作用于宿主页面上的同名原生控件；`:where()` 使特异性为 0 —— 库只提供默认值，使用方任何同名规则均可覆盖，避免「库规则与宿主规则同特异性、胜负取决于加载顺序」）。
+  - **浮层承接**：既然库不声明字体族，`Teleport` 到 `body` 的浮层（未命中承载层时）便脱离宿主字体继承链 → 由 `components/utils/inherit-font.ts` 的 `useInheritAnchorFont(anchor, container, visible)` 在每次「出现」时把**锚点的计算字体族**复制到浮层容器上（只承接 `font-family`，不承接字号；写在容器而非面板，面板自身的字体声明仍可覆盖它）。新增**带锚点的浮层容器**（现已覆盖 `Popup` / `Select` / `AutoComplete`）时须调用它一并承接；无锚点的容器（`Modal` / `Drawer` / `Dialog`）没有可靠的字体来源，改用 `to` 指向宿主字体容器（见 `docs/guide/customize-theme.md`）。
+  - **字号**：**呈现型文本必须显式声明 `font-size`**（组件根给出该组件的默认字号，逐元素按需覆盖），**禁止依赖宿主继承**。内容归属判定：文本由使用者传入、且组件**未为其提供视觉规格**的纯文本包装组件（如 `Ellipsis`）必须显式写 `font-size: inherit`；而容器类组件（`Card` / `Alert` / `Descriptions` / `Timeline` / `Collapse`）与**浮层面板内的内容**（如 `Popover`，字号由面板规格决定）已提供视觉规格，由容器根声明字号，**不**改为 `inherit`。⚠️ `Highlight` / `NumberAnimation` 属**无样式组件**（`tests/resolver.spec.ts` 有断言守护），不得为其新增 `<style>` 块，其隐式继承即为正确行为。
+  - **字号档位**：正文基准 `14px`；辅助 `12px`；组件标题 / `large` 尺寸 `16px`（`16px` 不得用于正文）；展示型大标题 `20px` / `24px`；装饰性字号（图标微调 `10px`、`font-size: 0` 消隙）必须注释用途。**同一 `size` 档位（`small` / `middle` / `large`）在同类语义下必须取同值**。
   - 审计口径（抽查新增组件时可用）：把宿主 `body` 的字号扰动为 `20px`，组件内自绘文本的计算字号**不得变化**；字体族同理（扰动宿主字体，库内自绘文本随宿主变化是预期行为）。
   - 字体的「可配置性」由宿主的页面字体声明提供，**不进 `ConfigProvider.theme`**（该通道只承载颜色，见「主题系统」）。
 

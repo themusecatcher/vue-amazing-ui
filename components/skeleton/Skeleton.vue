@@ -121,7 +121,7 @@ const paragraphWidth = computed(() => {
     v-if="loading"
     class="skeleton-wrap"
     :class="{ 'skeleton-avatar': avatar, 'skeleton-animated': animated }"
-    :style="`--button-size: ${buttonSize}px; --title-top: ${titleTop}px;`"
+    :style="`--skeleton-button-size: ${buttonSize}px; --skeleton-title-top: ${titleTop}px;`"
   >
     <span
       v-if="button"
@@ -198,11 +198,11 @@ const paragraphWidth = computed(() => {
     line-height: 40px;
   }
   .button-round {
-    border-radius: var(--button-size);
+    border-radius: var(--skeleton-button-size);
   }
   .button-circle {
-    width: var(--button-size);
-    min-width: var(--button-size);
+    width: var(--skeleton-button-size);
+    min-width: var(--skeleton-button-size);
     border-radius: 50%;
   }
   .button-block {
@@ -316,7 +316,7 @@ const paragraphWidth = computed(() => {
 .skeleton-avatar {
   .skeleton-content {
     .skeleton-title {
-      margin-top: var(--title-top);
+      margin-top: var(--skeleton-title-top);
     }
   }
 }

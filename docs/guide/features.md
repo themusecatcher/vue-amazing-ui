@@ -88,11 +88,9 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 // 字体归位：库不在 body 上声明字体，字体由宿主决定（谁提供字体谁声明）；
-// 库只兜底原生表单控件 —— 它们的字体不受继承影响（UA 样式强制 Arial / monospace 等），必须显式 inherit
-input,
-textarea,
-select,
-button {
+// 库只兜底原生表单控件 —— 它们的字体不受继承影响（UA 样式强制 Arial / monospace 等），必须显式 inherit；
+// 用 :where() 包裹使特异性为 0，使用方任意同名规则均可覆盖（不受样式加载顺序影响）
+:where(input, textarea, select, button) {
   font-family: inherit;
 }
 :where(a) {

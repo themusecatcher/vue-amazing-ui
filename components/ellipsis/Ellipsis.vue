@@ -154,10 +154,12 @@ function onAnimationEnd() {
   overflow: hidden;
   cursor: text;
   max-width: var(--ellipsis-max-width);
+  font-size: inherit; // 文本由使用者传入，字号跟随上下文
 }
 .ellipsis-line {
   display: -webkit-inline-box;
   -webkit-box-orient: vertical;
+  line-clamp: var(--ellipsis-line);
   -webkit-line-clamp: var(--ellipsis-line);
 }
 .not-ellipsis-line {

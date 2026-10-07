@@ -576,14 +576,14 @@ const showTip = computed(() => {
       }
     }
     .spin-line-items {
-      --line-length: 8px;
-      width: calc(var(--line-length) * 3);
-      height: calc(var(--line-length) * 3);
+      --spin-line-length: 8px;
+      width: calc(var(--spin-line-length) * 3);
+      height: calc(var(--spin-line-length) * 3);
       .line-item {
-        transform-origin: 50% calc(var(--line-length) * 1.5);
-        border-radius: var(--line-length);
-        width: calc(var(--line-length) / 2.5);
-        height: var(--line-length);
+        transform-origin: 50% calc(var(--spin-line-length) * 1.5);
+        border-radius: var(--spin-line-length);
+        width: calc(var(--spin-line-length) / 2.5);
+        height: var(--spin-line-length);
       }
     }
     .spin-ring-circle,
@@ -639,14 +639,14 @@ const showTip = computed(() => {
       }
     }
     .spin-line-items {
-      --line-length: 12px;
-      width: calc(var(--line-length) * 3);
-      height: calc(var(--line-length) * 3);
+      --spin-line-length: 12px;
+      width: calc(var(--spin-line-length) * 3);
+      height: calc(var(--spin-line-length) * 3);
       .line-item {
-        transform-origin: 50% calc(var(--line-length) * 1.5);
-        border-radius: var(--line-length);
-        width: calc(var(--line-length) / 3);
-        height: var(--line-length);
+        transform-origin: 50% calc(var(--spin-line-length) * 1.5);
+        border-radius: var(--spin-line-length);
+        width: calc(var(--spin-line-length) / 3);
+        height: var(--spin-line-length);
       }
     }
     .spin-ring-circle,
@@ -702,14 +702,14 @@ const showTip = computed(() => {
       }
     }
     .spin-line-items {
-      --line-length: 16px;
-      width: calc(var(--line-length) * 3);
-      height: calc(var(--line-length) * 3);
+      --spin-line-length: 16px;
+      width: calc(var(--spin-line-length) * 3);
+      height: calc(var(--spin-line-length) * 3);
       .line-item {
-        transform-origin: 50% calc(var(--line-length) * 1.5);
-        border-radius: var(--line-length);
-        width: calc(var(--line-length) / 3);
-        height: var(--line-length);
+        transform-origin: 50% calc(var(--spin-line-length) * 1.5);
+        border-radius: var(--spin-line-length);
+        width: calc(var(--spin-line-length) / 3);
+        height: var(--spin-line-length);
       }
     }
     .spin-ring-circle,

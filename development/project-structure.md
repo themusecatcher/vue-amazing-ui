@@ -18,7 +18,7 @@
 | `vite.config.ts` | 构建配置（三产物 dist / es / lib） |
 | `tsconfig.*.json` | 各环境 TypeScript 配置 |
 | `vitest.config.ts` | 测试配置（独立于 vite.config.ts） |
-| `postcss.config.js` | PostCSS 配置（autoprefixer 依据 `package.json` 的 browserslist 自动补厂商前缀） |
+| `postcss.config.js` | PostCSS 配置（autoprefixer 依据 `package.json` 的 browserslist **补齐**厂商前缀；注意这是「补齐」而非「清理」，源码中手写的厂商前缀仍需保留，理由见 [component-design.md](component-design.md) 的「样式规范」） |
 | `eslint.config.js` | ESLint 配置 |
 | `commitlint.config.js` | 提交信息校验配置 |
 | `pnpm-workspace.yaml` | pnpm 工作区配置（受信依赖放行、自引用安装白名单） |

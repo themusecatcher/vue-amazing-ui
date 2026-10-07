@@ -18,6 +18,8 @@
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="daterange"` 范围形态：左右两个日期面板并排、双段输入与区间悬浮预览，值为两段毫秒时间戳（某段可为 `null`，由 `allowEmpty` 决定该段是否可单独对外提交），并新增 `calendarChange` 事件、`showArrow` 属性与 `separator` 插槽
 - 移除 `@vuepic/vue-datepicker` 依赖
 - 全局默认样式的字体口径调整：库不再在 `body` 上声明字体族，字体归宿主（「谁提供字体谁声明」），组件与插槽内容一律继承宿主页面字体；原生表单控件因浏览器 `UA` 样式不继承页面字体，统一由 `input` / `textarea` / `select` / `button` 的 `font-family: inherit` 兜底
+- 浮层字体承接：库不声明字体族，浮层 `Teleport` 到 `body` 后会脱离页面字体继承链，现由浮层宿主自动承接**触发位置的字体族**（只承接字体族，字号仍由组件声明），修复宿主把字体声明在非 `body` 容器时浮层字体与页面不一致的问题
+- 字体口径收口：[倒计时 Countdown](/guide/components/countdown.html) 的数字等宽改用 `font-variant-numeric: tabular-nums` 而非写死字体族；[文字省略 Ellipsis](/guide/components/ellipsis.html) 的内容显式声明 `font-size: inherit`；原生表单控件的字体兜底规则改用 `:where()` 包裹（特异性降为 `0`），宿主任意同名规则均可覆盖，不再受样式加载顺序影响；组件内部样式变量统一添加**组件名前缀**（覆盖 9 个组件 / 23 个变量，如 `--border-color` → `--divider-border-color`、`--align` → `--flex-align`、`--font-size` → `--gradient-text-font-size`），避免与其它组件或宿主页面的同名变量相互污染；如曾用这些内部变量做过外部覆盖，请同步改名
 
 ## <VersionDateTag date="2026-09-30">2.13.0</VersionDateTag>
 

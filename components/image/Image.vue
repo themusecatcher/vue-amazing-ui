@@ -594,7 +594,7 @@ function onSwitchRight(): void {
             :key="index"
             v-show="previewIndex === index"
             class="preview-image-container"
-            :style="`--drag-transition-duration: ${dragTransitionDuration}; transform: translate3d(${dragX}px, ${dragY}px, 0px);`"
+            :style="`--image-drag-transition-duration: ${dragTransitionDuration}; transform: translate3d(${dragX}px, ${dragY}px, 0px);`"
           >
             <Spin
               :spinning="!(previewCompleted[index] || previewImagesRef[index]?.naturalWidth)"
@@ -891,7 +891,7 @@ function onSwitchRight(): void {
         position: absolute;
         z-index: 3;
         inset: 0;
-        transition: transform var(--drag-transition-duration) cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
+        transition: transform var(--image-drag-transition-duration) cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
         :deep(.spin-content) {
           display: flex;
           justify-content: center;

@@ -68,14 +68,14 @@ describe('Col - 栅格断点随视口宽度切换', () => {
 })
 
 describe('Row - gutter 响应式配置随视口宽度切换', () => {
-  it('resize 后 --xGap 应切换为对应断点的间距', async () => {
+  it('resize 后 --grid-gap-x 应切换为对应断点的间距', async () => {
     setWindowWidth(1000)
     wrapper = mount(Row, { props: { gutter: { xs: 8, md: 24 } } })
     // 模板写入的是 xGap / 2
-    expect(wrapper.attributes('style')).toContain('--xGap: 12px')
+    expect(wrapper.attributes('style')).toContain('--grid-gap-x: 12px')
 
     await resizeTo(500)
-    expect(wrapper.attributes('style')).toContain('--xGap: 4px')
+    expect(wrapper.attributes('style')).toContain('--grid-gap-x: 4px')
   })
 })
 

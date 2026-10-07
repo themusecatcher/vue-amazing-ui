@@ -587,8 +587,8 @@ defineExpose({
       content: '';
     }
   }
-  // 复合方向箭头次轴对齐：--arrow-edge = 箭头中心距卡片边(13px) - 箭头视觉半宽(8px)
-  --arrow-edge: 5px;
+  // 复合方向箭头次轴对齐：--tooltip-arrow-edge = 箭头中心距卡片边(13px) - 箭头视觉半宽(8px)
+  --tooltip-arrow-edge: 5px;
   // 主轴槽位：面板为箭头预留的距离，箭头与卡片**相切（不重叠）**
   // 说明：重叠会让半透明背景两层叠加，在拼接处显出一条更深的线，故不做重叠补偿；
   // 相切时卡片边缘可能落在亚像素上，露出的淡色细缝由内核消除 —— 浮层最终位置取整到整数像素，
@@ -668,12 +668,12 @@ defineExpose({
   // 水平主轴 (top/bottom)：箭头沿水平方向靠边
   &.va-popup-placement-topLeft .tooltip-arrow,
   &.va-popup-placement-bottomLeft .tooltip-arrow {
-    left: var(--arrow-edge);
+    left: var(--tooltip-arrow-edge);
   }
   &.va-popup-placement-topRight .tooltip-arrow,
   &.va-popup-placement-bottomRight .tooltip-arrow {
     left: auto;
-    right: var(--arrow-edge);
+    right: var(--tooltip-arrow-edge);
   }
   &.va-popup-placement-topLeft .tooltip-arrow,
   &.va-popup-placement-topRight .tooltip-arrow {
@@ -686,12 +686,12 @@ defineExpose({
   // 垂直主轴 (left/right)：箭头沿垂直方向靠边
   &.va-popup-placement-leftTop .tooltip-arrow,
   &.va-popup-placement-rightTop .tooltip-arrow {
-    top: var(--arrow-edge);
+    top: var(--tooltip-arrow-edge);
   }
   &.va-popup-placement-leftBottom .tooltip-arrow,
   &.va-popup-placement-rightBottom .tooltip-arrow {
     top: auto;
-    bottom: var(--arrow-edge);
+    bottom: var(--tooltip-arrow-edge);
   }
   &.va-popup-placement-leftTop .tooltip-arrow,
   &.va-popup-placement-leftBottom .tooltip-arrow {
