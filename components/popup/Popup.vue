@@ -6,6 +6,7 @@ import {
   raiseFloatingOrder,
   useFloating,
   useFloatingTeleportTarget,
+  useInheritAnchorFont,
   useZIndex
 } from 'components/utils'
 import type { FloatingBoundary, FloatingPlacement, FloatingPoint, FloatingVirtualAnchor } from 'components/utils'
@@ -212,6 +213,12 @@ const bodyBindings = computed<PopupBodyBindings>(() => ({
  * 否则其上的 ref 会成为「无主的 hoisted vnode」（Vue 告警并跳过 setRef）。
  */
 const RenderBody: FunctionalComponent = () => (props.renderBody ? props.renderBody(bodyBindings.value) : null)
+// 浮层字体承接：Teleport 到 body 后脱离宿主字体继承链，把锚点字体族复制到容器（见 utils/inherit-font.ts）
+useInheritAnchorFont(
+  () => props.anchor,
+  () => containerRef.value,
+  () => props.show
+)
 watch(
   () => props.show,
   (show) => {

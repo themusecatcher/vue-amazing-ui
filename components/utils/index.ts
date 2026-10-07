@@ -23,6 +23,8 @@ export * from './z-index'
 
 // 浮层挂载点契约（同域模型：甲类浮层挂进承载层内容容器）
 export * from './floating-mount'
+// 浮层字体承接（库不声明字体，Teleport 后需显式承接锚点字体族）
+export * from './inherit-font'
 // 侧边栏收起态契约（跨组件：LayoutSider 下发、Menu 消费）
 export * from './sider-collapsed'
 // 渲染辅助

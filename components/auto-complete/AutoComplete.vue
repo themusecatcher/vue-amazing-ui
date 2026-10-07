@@ -6,6 +6,7 @@ import {
   raiseFloatingOrder,
   useFloating,
   useFloatingTeleportTarget,
+  useInheritAnchorFont,
   useInject,
   useSlotsExist,
   useZIndex,
@@ -121,6 +122,12 @@ const {
 const resolvedTo = useFloatingTeleportTarget(
   () => contentRef.value,
   () => props.to
+)
+// 浮层字体承接：Teleport 到 body 后脱离宿主字体继承链，把锚点字体族复制到容器（见 utils/inherit-font.ts）
+useInheritAnchorFont(
+  () => contentRef.value,
+  () => panelWrapperRef.value,
+  () => showOptions.value
 )
 // 清除图标显隐：开启 allowClear、未禁用且有值时显示（与 Input 组件保持一致，有值即显示，不依赖 hover）
 const showClear = computed<boolean>(() => {
