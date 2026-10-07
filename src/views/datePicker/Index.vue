@@ -33,6 +33,19 @@ function createDateTimePair(): ValuePair {
     compare: ref<string | null>(format(timestamp, 'yyyy-MM-dd HH:mm:ss'))
   }
 }
+interface RangeValuePair {
+  ours: Ref<[number, number] | null> // 本项目组件：两段毫秒时间戳
+  compare: Ref<[string, string] | null> // 对照组件：经 value-format 降为格式化字符串
+}
+/** 范围用例的值对：两端都归一到当日零点，与面板按天选择的粒度一致 */
+function createRangePair(startOffset: number = 0, endOffset: number = 7): RangeValuePair {
+  const start = startOfDay(addDays(new Date(), startOffset)).getTime()
+  const end = startOfDay(addDays(new Date(), endOffset)).getTime()
+  return {
+    ours: ref<[number, number] | null>([start, end]),
+    compare: ref<[string, string] | null>([format(start, 'yyyy-MM-dd'), format(end, 'yyyy-MM-dd')])
+  }
+}
 const { ours: basicValue, compare: basicCompareValue } = createValuePair()
 const { ours: slashValue, compare: slashCompareValue } = createValuePair()
 const { ours: chineseValue, compare: chineseCompareValue } = createValuePair()
@@ -49,6 +62,13 @@ const { ours: placementBottomLeftValue, compare: placementBottomLeftCompareValue
 const { ours: placementBottomRightValue, compare: placementBottomRightCompareValue } = createValuePair()
 const { ours: placementTopLeftValue, compare: placementTopLeftCompareValue } = createValuePair()
 const { ours: placementTopRightValue, compare: placementTopRightCompareValue } = createValuePair()
+// 范围用例：主用例（官网 range-picker 的日期范围形态）
+const { ours: rangeValue, compare: rangeCompareValue } = createRangePair()
+const { ours: sizeRangeValue, compare: sizeRangeCompareValue } = createRangePair()
+const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
+// 禁用日期用例的范围变体：初始为空值，与官网 disabled-date 用例一致
+const disabledRangeValue = ref<[number, number] | null>(null)
+const disabledRangeCompareValue = ref<[string, string] | null>(null)
 // 日期时间用例：主用例（官网 time）+ 时间面板选项 / 12 小时制 / 隐藏「此刻」三个细项
 const { ours: datetimeValue, compare: datetimeCompareValue } = createDateTimePair()
 const { ours: minuteStepValue, compare: minuteStepCompareValue } = createDateTimePair()
@@ -157,6 +177,18 @@ function disabledDateTimeUnits() {
               placeholder="请选择日期"
             />
           </Space>
+        </div>
+      </div>
+      <h2 class="mt30 mb10">范围选择器</h2>
+      <p class="mb10">通过设置 <code>type</code> 属性，指定范围选择器类型</p>
+      <div class="demo-compare">
+        <div class="demo-compare-item">
+          <p class="demo-compare-label">本项目组件</p>
+          <DatePicker v-model:value="rangeValue" type="daterange" :placeholder="rangePlaceholder" />
+        </div>
+        <div class="demo-compare-item">
+          <p class="demo-compare-label">antd 官网组件</p>
+          <a-range-picker v-model:value="rangeCompareValue" value-format="YYYY-MM-DD" />
         </div>
       </div>
       <h2 class="mt30 mb10">日期时间选择</h2>
@@ -318,6 +350,26 @@ function disabledDateTimeUnits() {
           />
         </div>
       </div>
+      <p class="mt20 mb10">日期范围不可选择今天及之前（<code>disabledDate</code> 同时作用于两个面板）</p>
+      <div class="demo-compare">
+        <div class="demo-compare-item">
+          <p class="demo-compare-label">本项目组件</p>
+          <DatePicker
+            v-model:value="disabledRangeValue"
+            type="daterange"
+            :disabled-date="disabledDateTodayOrBefore"
+            :placeholder="rangePlaceholder"
+          />
+        </div>
+        <div class="demo-compare-item">
+          <p class="demo-compare-label">antd 官网组件</p>
+          <a-range-picker
+            v-model:value="disabledRangeCompareValue"
+            value-format="YYYY-MM-DD"
+            :disabled-date="compareDisabledDateTodayOrBefore"
+          />
+        </div>
+      </div>
       <p class="mt20 mb10">不可选择周六与周日</p>
       <div class="demo-compare">
         <div class="demo-compare-item">
@@ -339,16 +391,27 @@ function disabledDateTimeUnits() {
       <div class="demo-compare mt10">
         <div class="demo-compare-item">
           <p class="demo-compare-label">本项目组件</p>
-          <DatePicker v-model:value="sizeCaseValue" :size="sizeValue" placeholder="请选择日期" />
+          <Space vertical>
+            <DatePicker v-model:value="sizeCaseValue" :size="sizeValue" placeholder="请选择日期" />
+            <DatePicker
+              v-model:value="sizeRangeValue"
+              type="daterange"
+              :size="sizeValue"
+              :placeholder="rangePlaceholder"
+            />
+          </Space>
         </div>
         <div class="demo-compare-item">
           <p class="demo-compare-label">antd 官网组件</p>
-          <a-date-picker
-            v-model:value="sizeCaseCompareValue"
-            value-format="YYYY-MM-DD"
-            :size="sizeValue"
-            placeholder="请选择日期"
-          />
+          <Space vertical>
+            <a-date-picker
+              v-model:value="sizeCaseCompareValue"
+              value-format="YYYY-MM-DD"
+              :size="sizeValue"
+              placeholder="请选择日期"
+            />
+            <a-range-picker v-model:value="sizeRangeCompareValue" value-format="YYYY-MM-DD" :size="sizeValue" />
+          </Space>
         </div>
       </div>
       <h2 class="mt30 mb10">后缀图标</h2>

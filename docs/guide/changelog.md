@@ -15,6 +15,7 @@
 - 重构 [日期选择器 DatePicker](/guide/components/date-picker.html) 为自研实现：不再依赖第三方日期选择库，改为内置选择器内核（日期面板 / 时间面板 / 触发器 / 浮层 / 主题），产物不再包含该库的脚本与样式
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 破坏性变更：双向绑定由 `v-model` 改为 `v-model:value`（值为毫秒时间戳，回写事件 `update:value`），并新增 `v-model:formatted-value`（字符串轨道，传入时以它为准）与 `v-model:open`；`modelType` 移除，改用 `valueFormat`（采用 `date-fns` 占位符，如 `yyyy-MM-dd HH:mm:ss`）；`mode` 移除，改用 `type`（`date` / `datetime` / `week` / `month` / `quarter` / `year` 及各范围形态）；`range` 移除，范围形态由 `type` 承担；`showTime` 移除，时间形态由 `type="datetime"` 承担；`maxRange` 移除；`format` 不再支持函数形态；`showToday` 默认值由 `false` 改为 `true`，`width` 不传时随内容自适应
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="datetime"` 日期时间形态：日期与时间面板并列展示，展开期间的选择只落在草稿值上，点「确定」或「此刻」才提交，关闭面板则丢弃草稿；同时新增 `timePickerProps`（时间面板步长 / 12 小时制 / 隐藏禁用项）、`disabledTime`、`defaultTime`、`showNow`、`inputReadOnly`、`panelClass`、`panelStyle`、`zIndex` 等属性与 `ok` / `openChange` / `panelChange` / `focus` / `blur` 事件
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="daterange"` 范围形态：左右两个日期面板并排、双段输入与区间悬浮预览，值为两段毫秒时间戳（某段可为 `null`，由 `allowEmpty` 决定该段是否可单独对外提交），并新增 `calendarChange` 事件、`showArrow` 属性与 `separator` 插槽
 - 移除 `@vuepic/vue-datepicker` 依赖
 - 全局默认样式的字体口径调整：库不再在 `body` 上声明字体族，字体归宿主（「谁提供字体谁声明」），组件与插槽内容一律继承宿主页面字体；原生表单控件因浏览器 `UA` 样式不继承页面字体，统一由 `input` / `textarea` / `select` / `button` 的 `font-family: inherit` 兜底
 

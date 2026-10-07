@@ -38,6 +38,20 @@ function createDateTimePair(): ValuePair {
     compare: ref<string | null>(format(timestamp, 'yyyy-MM-dd HH:mm:ss'))
   }
 }
+interface RangeValuePair {
+  ours: Ref<[number, number] | null> // 两段毫秒时间戳
+}
+/** 范围用例的值对：两端都归一到当日零点，与面板按天选择的粒度一致 */
+function createRangePair(startOffset: number = 0, endOffset: number = 7): RangeValuePair {
+  const start = startOfDay(addDays(new Date(), startOffset)).getTime()
+  const end = startOfDay(addDays(new Date(), endOffset)).getTime()
+  return { ours: ref<[number, number] | null>([start, end]) }
+}
+const { ours: rangeValue } = createRangePair()
+const { ours: sizeRangeValue } = createRangePair()
+const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
+// 禁用日期用例的范围变体：初始为空值
+const disabledRangeValue = ref<[number, number] | null>(null)
 const { ours: basicValue } = createValuePair()
 const { ours: slashValue } = createValuePair()
 const { ours: chineseValue } = createValuePair()
@@ -147,6 +161,29 @@ const chineseValue = ref<number | null>(new Date().getTime())
 ```
 
 ::::
+
+## 范围选择器
+
+_通过设置 `type` 属性，指定范围选择器类型_
+
+<br/>
+
+<DatePicker v-model:value="rangeValue" type="daterange" :placeholder="rangePlaceholder" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const rangeValue = ref<[number, number] | null>(null)
+const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
+</script>
+<template>
+  <DatePicker v-model:value="rangeValue" type="daterange" :placeholder="rangePlaceholder" />
+</template>
+```
+
+:::
 
 ## 日期时间选择
 
@@ -265,6 +302,17 @@ _只能选择未来七天内的日期_
 
 <DatePicker v-model:value="afterTodayValue" :disabled-date="disabledDateAfter" placeholder="请选择日期" />
 
+_日期范围不可选择今天及之前（`disabledDate` 同时作用于两个面板）_
+
+<br/>
+
+<DatePicker
+  v-model:value="disabledRangeValue"
+  type="daterange"
+  :disabled-date="disabledDateTodayOrBefore"
+  :placeholder="rangePlaceholder"
+/>
+
 _不可选择周六与周日_
 
 <br/>
@@ -278,6 +326,8 @@ _不可选择周六与周日_
 import { ref } from 'vue'
 import { addDays, endOfDay, getDay, startOfDay } from 'date-fns'
 const disabledDateTimeValue = ref<number | null>(null)
+const disabledRangeValue = ref<[number, number] | null>(null)
+const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 const beforeTodayValue = ref<number | null>(new Date().getTime())
 const afterTodayValue = ref<number | null>(new Date().getTime())
 const weekendValue = ref<number | null>(new Date().getTime())
@@ -321,6 +371,12 @@ function disabledDateTimeUnits() {
     />
     <DatePicker v-model:value="beforeTodayValue" :disabled-date="disabledDateBefore" placeholder="请选择日期" />
     <DatePicker v-model:value="afterTodayValue" :disabled-date="disabledDateAfter" placeholder="请选择日期" />
+    <DatePicker
+      v-model:value="disabledRangeValue"
+      type="daterange"
+      :disabled-date="disabledDateTodayOrBefore"
+      :placeholder="rangePlaceholder"
+    />
     <DatePicker v-model:value="weekendValue" :disabled-date="disabledWeekendDate" placeholder="请选择日期" />
   </Space>
 </template>
@@ -334,7 +390,15 @@ function disabledDateTimeUnits() {
 
 <Radio v-model:value="sizeValue" :options="sizeOptions" button button-style="solid" />
 <div class="mt10">
-  <DatePicker v-model:value="sizeCaseValue" :size="sizeValue" placeholder="请选择日期" />
+  <Space vertical>
+    <DatePicker v-model:value="sizeCaseValue" :size="sizeValue" placeholder="请选择日期" />
+    <DatePicker
+      v-model:value="sizeRangeValue"
+      type="daterange"
+      :size="sizeValue"
+      :placeholder="rangePlaceholder"
+    />
+  </Space>
 </div>
 
 ::: details Show Code
@@ -344,6 +408,8 @@ function disabledDateTimeUnits() {
 import { ref } from 'vue'
 import type { DatePickerProps } from 'vue-amazing-ui'
 const sizeCaseValue = ref<number | null>(new Date().getTime())
+const sizeRangeValue = ref<[number, number] | null>(null)
+const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 const sizeValue = ref<DatePickerProps['size']>('middle')
 const sizeOptions: Array<{ label: string; value: NonNullable<DatePickerProps['size']> }> = [
   { label: 'small', value: 'small' },
@@ -354,7 +420,15 @@ const sizeOptions: Array<{ label: string; value: NonNullable<DatePickerProps['si
 <template>
   <Radio v-model:value="sizeValue" :options="sizeOptions" button button-style="solid" />
   <div class="mt10">
-    <DatePicker v-model:value="sizeCaseValue" :size="sizeValue" placeholder="请选择日期" />
+    <Space vertical>
+      <DatePicker v-model:value="sizeCaseValue" :size="sizeValue" placeholder="请选择日期" />
+      <DatePicker
+        v-model:value="sizeRangeValue"
+        type="daterange"
+        :size="sizeValue"
+        :placeholder="rangePlaceholder"
+      />
+    </Space>
   </div>
 </template>
 ```
@@ -496,13 +570,13 @@ const topRightValue = ref<number | null>(new Date().getTime())
 
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| value <Tag color="cyan">v-model</Tag> | 双向绑定值，毫秒时间戳 | number &#124; [number, number] &#124; null | null |
+| value <Tag color="cyan">v-model</Tag> | 双向绑定值，毫秒时间戳；范围形态为两段元组，某段可为 `null` | number &#124; [number &#124; null, number &#124; null] &#124; null | null |
 | formattedValue <Tag color="cyan">v-model</Tag> | 字符串轨道的双向绑定值，传入时以它为准（受控）；显示格式由 `format` / `valueFormat` 决定 | string &#124; [string, string] &#124; null | null |
 | open <Tag color="cyan">v-model</Tag> | 面板是否展开 | boolean | false |
 | type | 选择形态 | [DatePickerType](#datepickertype-type) | 'date' |
 | format | 日期展示格式，参考 [format](https://date-fns.org/v4.1.0/docs/format) | string | [DefaultFormat](#defaultformat-value) |
 | valueFormat | 绑定值格式，默认与 `format` 相同 | string | undefined |
-| placeholder | 输入框提示文字 | string | '' |
+| placeholder | 输入框提示文字，范围形态可传入两段文案 | string &#124; [string, string] | '' |
 | defaultPickerValue | 面板初始日期（毫秒时间戳），默认取 `value` 或今天 | number | undefined |
 | startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一 | 0 &#124; 1 &#124; 2 &#124; 3 &#124; 4 &#124; 5 &#124; 6 | 0 |
 | disabledDate | 不可选择的日期，入参为「当日零点」的毫秒时间戳 | (timestamp: number) => boolean | undefined |
@@ -515,9 +589,11 @@ const topRightValue = ref<number | null>(new Date().getTime())
 | bordered | 是否展示边框 | boolean | true |
 | disabled | 是否禁用 | boolean | false |
 | allowClear | 是否展示清除按钮 | boolean | true |
+| allowEmpty | 范围形态各段是否允许为空，为空时该段可被单独清空并对外提交 | [boolean, boolean] | [false, false] |
 | inputReadOnly | 输入框是否只读（避免移动端唤起键盘） | boolean | false |
 | to | 面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 'body') 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | false |
 | placement | 面板弹出位置 | 'topLeft' &#124; 'top' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottom' &#124; 'bottomRight' | 'bottomLeft' |
+| showArrow | 范围形态的面板指示箭头是否展示，不传时跟随弹出方位（仅左侧对齐的 `bottomLeft` / `topLeft` 展示） | boolean | undefined |
 | showToday | 是否展示面板底部的「今天」快捷，面板切到月/年视图时隐藏 | boolean | true |
 | showNow | 是否展示面板底部的「此刻」快捷，仅带时间的形态生效 | boolean | true |
 | suffixIcon | 自定义选择框后缀图标 | VNode &#124; (() => VNode) | undefined |
@@ -598,6 +674,7 @@ const topRightValue = ref<number | null>(new Date().getTime())
 | 名称 | 说明 | 用法 |
 | :-- | :-- | :-- |
 | suffixIcon | 自定义选择框后缀图标 | v-slot:suffixIcon |
+| separator | 范围形态两段之间的分隔符 | v-slot:separator |
 
 ## Methods
 
@@ -610,8 +687,9 @@ const topRightValue = ref<number | null>(new Date().getTime())
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| change | 值变化时的回调 | (value: number &#124; [number, number] &#124; null, formattedValue: string &#124; [string, string] &#124; null) => void |
-| ok | 带时间的形态点击「确定」时的回调 | (value: number &#124; [number, number] &#124; null, formattedValue: string &#124; [string, string] &#124; null) => void |
+| change | 值变化时的回调 | (value: number &#124; [number &#124; null, number &#124; null] &#124; null, formattedValue: string &#124; [string, string] &#124; null) => void |
+| calendarChange | 范围形态待选区间变化时的回调，`info.range` 标识本次改动落在哪一段 | (value: [number &#124; null, number &#124; null] &#124; null, formattedValue: [string, string] &#124; null, info: { range: 'start' &#124; 'end' }) => void |
+| ok | 带时间的形态点击「确定」时的回调 | (value: number &#124; [number &#124; null, number &#124; null] &#124; null, formattedValue: string &#124; [string, string] &#124; null) => void |
 | openChange | 面板展开收起时的回调 | (open: boolean) => void |
 | panelChange | 面板视图切换时的回调 | (value: number, mode: string) => void |
 | focus | 输入框获取焦点时的回调 | (event: FocusEvent) => void |
