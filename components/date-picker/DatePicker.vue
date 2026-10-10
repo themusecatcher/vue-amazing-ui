@@ -7,6 +7,7 @@ import DatePanel from 'components/picker/DatePanel.vue'
 import DatetimePanel from 'components/picker/DatetimePanel.vue'
 import PickerIcon from 'components/picker/PickerIcon.vue'
 import PickerTrigger from 'components/picker/PickerTrigger.vue'
+import PresetPanel from 'components/picker/PresetPanel.vue'
 import RangePanel from 'components/picker/RangePanel.vue'
 import {
   formatTimestamp,
@@ -21,6 +22,9 @@ import type {
   PickerDisabledTime,
   PickerFormattedValue,
   PickerPanelMode,
+  PickerPreset,
+  PickerPresetValue,
+  PickerRangeDisabledTime,
   PickerRangeFormattedValue,
   PickerRangeSide,
   PickerRangeValue,
@@ -43,9 +47,10 @@ export interface Props {
   defaultPickerValue?: number // 面板初始日期（时间戳），默认取 value 或今天
   startDayOfWeek?: StartDayOfWeek // 一周起始日，0 为周一
   disabledDate?: (timestamp: number) => boolean // 不可选择的日期
-  disabledTime?: PickerDisabledTime // 不可选择的时间，仅带时间形态生效
+  disabledTime?: PickerDisabledTime | PickerRangeDisabledTime // 不可选择的时间，仅带时间形态生效（范围形态额外接收段标识）
   defaultTime?: number // 选中日期时的默认时分秒（只取其中的时分秒）
   timePickerProps?: PickerTimePanelProps // 时间面板选项（步长 / 12 小时制 / 隐藏禁用项）
+  presets?: PickerPreset[] // 预设选项，点击即提交并收起；范围为两段元组，值可为惰性求值的函数
   // 形态外观
   width?: string | number // 选择器宽度，不传时随内容自适应
   size?: PickerSize // 选择器大小
@@ -59,7 +64,7 @@ export interface Props {
   // 行为交互
   to?: string | HTMLElement | false // 面板挂载的容器节点，不传时就近挂载到承载层内容容器
   placement?: 'topLeft' | 'top' | 'topRight' | 'bottomLeft' | 'bottom' | 'bottomRight' // 面板弹出位置
-  // 范围形态的面板指示箭头：不传时跟随弹出方位（仅左侧对齐的 bottomLeft / topLeft 展示，与参考实现同口径），
+  // 范围形态的面板指示箭头：不传时跟随弹出方位（仅左侧对齐的 bottomLeft / topLeft 展示），
   // 传 true 始终展示、传 false 始终隐藏，仅范围形态生效
   showArrow?: boolean
   showToday?: boolean // 是否展示面板底部的「今天」快捷，面板切到月/年视图时隐藏
@@ -102,6 +107,7 @@ const props = withDefaults(defineProps<Props>(), {
   disabledTime: undefined,
   defaultTime: undefined,
   timePickerProps: undefined,
+  presets: () => [],
   width: undefined,
   size: 'middle',
   status: undefined,
@@ -148,11 +154,11 @@ const RANGE_ARROW_SIZE = 16
 /**
  * 范围形态的浮层间距
  *
- * 需额外留出箭头所在的一段空白（与参考实现给范围下拉加 `箭头尺寸 × 2 / 3` 上下内边距同口径），
+ * 需额外留出箭头所在的一段空白（箭头尺寸的 2 / 3），
  * 否则 16px 的箭头会压住触发器的底边、盖掉输入区下沿。
  */
 const RANGE_POPUP_OFFSET = POPUP_OFFSET + (RANGE_ARROW_SIZE * 2) / 3
-/** 带面板指示箭头的弹出方位（与参考实现同口径：仅左侧对齐的两个方位，其余方位只展示面板） */
+/** 带面板指示箭头的弹出方位（仅左侧对齐的两个方位，其余方位只展示面板） */
 const ARROW_PLACEMENTS: FloatingPlacement[] = ['bottomLeft', 'topLeft']
 // 主题变量随组件壳下发，浮层经 Teleport 后不在壳内，需同样注入到面板上
 const themeVars = computed(() => {
@@ -162,10 +168,9 @@ const themeVars = computed(() => {
     '--picker-primary-color': primary,
     '--picker-primary-color-hover': colorPalettes.value[4],
     '--picker-primary-shadow-color': shadowColor.value,
-    // 区间底色取色板最浅一级（与参考实现的 controlItemBgActive 同值）
+    // 区间底色取色板最浅一级
     '--picker-primary-color-bg': colorPalettes.value[0],
-    // 悬浮预览的底色与虚线边界由主色提亮派生（色板中无对应级，与参考实现的
-    // pickerBasicCellHoverWithRangeColor / pickerDateHoverRangeBorderColor 逐值同口径）
+    // 悬浮预览的底色与虚线边界由主色提亮派生（色板中无对应级）
     '--picker-primary-color-bg-hover': primaryTone.lighten(35).toHexString(),
     '--picker-hover-border-color': primaryTone.lighten(20).toHexString()
   }
@@ -180,9 +185,13 @@ const mergedPanelClass = computed(() => ['datepicker-panel-container', props.pan
 const isDateTime = computed(() => props.type === 'datetime')
 /** 是否为范围形态：双面板、双段输入、值为两段元组 */
 const isRange = computed(() => isRangeType(props.type))
+/** 是否为日期时间范围形态：单个日期时间面板，两段靠「确定」切换编辑 */
+const isDateTimeRange = computed(() => props.type === 'datetimerange')
+/** 是否为需点「确定」才提交的形态（含时间面板）：面板内的选择只落草稿，失焦按取消处理 */
+const needConfirm = computed(() => isDateTime.value || isDateTimeRange.value)
 /** 浮层与触发器的间距：范围形态额外预留箭头的高度 */
 const popupOffset = computed(() => (isRange.value ? RANGE_POPUP_OFFSET : POPUP_OFFSET))
-/** 展示格式：未指定时随形态取默认值；面板的时间列显隐也按它推导（与参考实现的 `format` 口径一致） */
+/** 展示格式：未指定时随形态取默认值；面板的时间列显隐也按它推导 */
 const mergedFormat = computed(() => props.format ?? getDefaultFormat(props.type))
 /** 展示与回写共用的格式：`valueFormat` 优先，未指定时跟随展示格式 */
 const mergedValueFormat = computed(() => props.valueFormat ?? mergedFormat.value)
@@ -231,7 +240,9 @@ const activeSide = ref<PickerRangeSide>('start')
 const activeTriggerIndex = computed(() => (activeSide.value === 'start' ? 0 : 1))
 /** 面板上悬浮的日期：范围形态展开期间在当前激活段显示该日期的预览文本 */
 const hoverTimestamp = ref<number | null>(null)
-/** 当前展示预览文本（悬浮面板日期产生的临时值）的段：该段文字取提示色（与参考实现同口径） */
+/** 预设悬浮产生的预览区间：范围形态据此在面板上预览该区间（不改变已选值） */
+const presetPreview = ref<PickerRangeValue | null>(null)
+/** 当前展示预览文本（悬浮面板日期产生的临时值）的段：该段文字取提示色 */
 const hoverPreviewIndex = computed<0 | 1 | null>(() => {
   // 依赖需先读取：条件短路会让后续依赖在首轮求值时不被收集，之后悬浮变化便不再触发重算
   const hovered = hoverTimestamp.value
@@ -244,14 +255,14 @@ const hoverPreviewIndex = computed<0 | 1 | null>(() => {
 })
 /** 面板指示箭头相对输入区左边缘的偏移：与激活段下划线同源、随激活段平移（范围形态专用） */
 const rangeArrowLeft = ref(0)
-/** 本次展开期间被激活过的段：决定对侧越界日期的禁用（与参考实现的 `openRecords` 同口径，收起即清空） */
+/** 本次展开期间被激活过的段：决定对侧越界日期的禁用（收起即清空） */
 const activatedSides = ref<Record<PickerRangeSide, boolean>>({ start: false, end: false })
 /** 激活某段：面板展开、选完一段后切换、聚焦某段输入框都算一次激活 */
 function activateSide(side: PickerRangeSide) {
   activeSide.value = side
   activatedSides.value[side] = true
 }
-/** 清空段激活记录（收起面板时调用，与参考实现收起后异步清空同口径） */
+/** 清空段激活记录（收起面板时调用） */
 function resetActivatedSides() {
   activatedSides.value = { start: false, end: false }
 }
@@ -268,7 +279,7 @@ const panelRangeValue = computed<PickerRangeValue | null>(() => {
 /**
  * 范围形态的面板禁用判定
  *
- * 与参考实现 `useRangeDisabled` 同口径：激活段为起点时，本次展开中终点段被激活过且有值 → 禁用「晚于
+ * 激活段为起点时，本次展开中终点段被激活过且有值 → 禁用「晚于
  * 终点」的日期；激活段为终点时同理禁用「早于起点」的日期。用户传入的 `disabledDate` 始终优先。
  */
 const mergedRangeDisabledDate = computed<((timestamp: number) => boolean) | undefined>(() => {
@@ -290,6 +301,16 @@ const mergedRangeDisabledDate = computed<((timestamp: number) => boolean) | unde
     return isOutOfRangeBoundary(timestamp, boundary, !isStartSide)
   }
 })
+/** 单选形态的禁用时间：对外口径兼容两种签名，此处只透传时间戳 */
+const singleDisabledTime = computed<PickerDisabledTime | undefined>(() => {
+  const disabledTime = props.disabledTime
+  return disabledTime ? (timestamp) => (disabledTime as PickerDisabledTime)(timestamp) : undefined
+})
+/** 日期时间范围形态的禁用时间：段标识由面板容器按当前激活段注入 */
+const rangeDisabledTime = computed<PickerRangeDisabledTime | undefined>(() => {
+  const disabledTime = props.disabledTime
+  return isDateTimeRange.value && disabledTime ? (disabledTime as PickerRangeDisabledTime) : undefined
+})
 // 受控字符串解析失败时原样展示，避免用户输入被静默丢弃
 // （字符串轨道受管时展示以受管文本为准，草稿不回写展示，避免与应用层持有的文本脱节）
 const displayText = computed(() => {
@@ -308,7 +329,7 @@ const displayRangeTexts = computed<[string, string]>(() => {
     const current = panelRangeValue.value
     texts = [formatSideTimestamp(current?.[0]), formatSideTimestamp(current?.[1])]
   }
-  // 悬浮面板日期时，当前激活段显示该日期的预览文本（与参考实现的输入框悬浮预览同口径）
+  // 悬浮面板日期时，当前激活段显示该日期的预览文本
   // ⚠️ 依赖先读取：条件短路会让 `hoverTimestamp` 在首轮求值时不被收集，之后悬浮不再触发重算
   const hovered = hoverTimestamp.value
   const isRangeType = isRange.value
@@ -342,7 +363,7 @@ const actualPlacement = computed<FloatingPlacement>(() => popupRef.value?.actual
 /**
  * 是否展示面板指示箭头
  *
- * 不传 `showArrow` 时按「实际方位」判定（翻转后仍与参考实现一致），传值则以显式开关为准。
+ * 不传 `showArrow` 时按「实际方位」判定，传值则以显式开关为准。
  */
 const showRangeArrow = computed(() => {
   if (!isRange.value || props.showArrow === false) return false
@@ -376,8 +397,8 @@ watch(
     if (next) {
       attachDocumentListener()
       draftRange.value = rangeValue.value // 展开时以已提交区间为草稿起点
-      // 展开即视为激活当前段（与参考实现 triggerOpen(true, index) 同口径）：段由点击的输入框决定，
-      // 不强制回到起点段，以免「点第二段却被拉回第一段」
+      // 展开即视为激活当前段：段由点击的输入框决定，不强制回到起点段，
+      // 以免「点第二段却被拉回第一段」
       activateSide(activeSide.value)
       return
     }
@@ -385,7 +406,8 @@ watch(
     draftValue.value = null // 收起即丢弃草稿，未点「确定」的选择不生效
     draftRange.value = null
     resetActivatedSides() // 段激活记录只在本次展开期间有效
-    hoverTimestamp.value = null // 收起不重置激活段：参考实现同样保留 activeIndex，下划线因而停在原段
+    hoverTimestamp.value = null // 收起不重置激活段：下划线因而停在原段
+    presetPreview.value = null // 预设悬浮预览同样只在本次展开期间有效
   },
   { immediate: true }
 )
@@ -396,9 +418,9 @@ function requestOpen(next: boolean) {
   emits('openChange', next)
 }
 /**
- * 点击触发器只负责展开：展开态点击不收起（与参考实现同口径，收起由外部点击 / Esc / 选中值触发）。
+ * 点击触发器只负责展开：展开态点击不收起（收起由外部点击 / Esc / 选中值触发）。
  *
- * 展开时按落点确定本次会话的激活段（与参考实现一致：点终点段即激活终点段，点空白区落到起点段），
+ * 展开时按落点确定本次会话的激活段（点终点段即激活终点段，点空白区落到起点段），
  * 并把焦点移到该段输入框 —— 聚焦态因此由 focus 驱动，面板收起后下划线不会随之淡出。
  */
 function onTriggerClick(index: 0 | 1 = 0) {
@@ -443,8 +465,10 @@ function canTriggerSide(timestamp: number | null, index: 0 | 1): boolean {
 /**
  * 写入范围形态的某一段（面板选择与手输提交共用）
  *
- * 与参考实现同口径：起点晚于终点时丢弃另一端、只保留本次写入；两段齐全（或未选段声明可为空）
+ * 起点晚于终点时丢弃另一端、只保留本次写入；两段齐全（或未选段声明可为空）
  * 才对外提交；只写到一段时保持展开，并由调用场景决定是否把激活段切到另一端。
+ *
+ * @returns 写入后的区间与其文本（未提交时即为草稿），供 `ok` 事件复用
  */
 function applyRangeSide(timestamp: number, side: PickerRangeSide, switchSide: boolean) {
   const current = draftRange.value ?? rangeValue.value ?? [null, null]
@@ -452,13 +476,14 @@ function applyRangeSide(timestamp: number, side: PickerRangeSide, switchSide: bo
   if (next[0] !== null && next[1] !== null && next[0] > next[1]) {
     next = side === 'start' ? [timestamp, null] : [null, timestamp]
   }
+  const nextFormatted = formatRangeValue(next)
   const canCommit = canTriggerSide(next[0], 0) && canTriggerSide(next[1], 1)
   draftRange.value = next
-  emits('calendarChange', next, formatRangeValue(next), { range: side })
+  emits('calendarChange', next, nextFormatted, { range: side })
   if (canCommit) {
     commitRange(next)
   }
-  // 与参考实现同口径：另一端「本次展开中尚未激活」或「尚无值」时，切到该端继续选并保持展开；
+  // 另一端「本次展开中尚未激活」或「尚无值」时，切到该端继续选并保持展开；
   // 否则视为本次区间已选完 → 收起
   const otherSide: PickerRangeSide = side === 'start' ? 'end' : 'start'
   const currentIndex = side === 'start' ? 0 : 1
@@ -467,16 +492,32 @@ function applyRangeSide(timestamp: number, side: PickerRangeSide, switchSide: bo
     switchSide && next[currentIndex] !== null && (!activatedSides.value[otherSide] || next[otherIndex] === null)
   if (keepOpen) {
     activateSide(otherSide)
-    // 与参考实现同口径：切到另一端时把焦点一并挪过去（等 DOM 更新后再聚焦），
+    // 切到另一端时把焦点一并挪过去（等 DOM 更新后再聚焦），
     // 否则下划线已落到另一端、输入光标还留在原段，接着输入会写进错误的一段
     nextTick(() => triggerRef.value?.focus(otherIndex))
-    return
+    return { value: next, formatted: nextFormatted }
   }
   requestOpen(false)
+  return { value: next, formatted: nextFormatted }
 }
 /** 面板选择日期：写入当前激活段，并把激活段切到另一端以接着选第二段 */
 function onRangeSelect(timestamp: number, side: PickerRangeSide) {
   applyRangeSide(timestamp, side, true)
+}
+/**
+ * 日期时间范围的面板草稿变更
+ *
+ * 与单选日期时间形态同口径：面板内的选择（日期或时间）只落在草稿上，点「确定」才提交；
+ * 此处不做「起点晚于终点丢弃另一端」的纠正，纠正发生在提交时（与 `applyRangeSide` 同径）。
+ */
+function onRangeDraftChange(timestamp: number, side: PickerRangeSide) {
+  const current = draftRange.value ?? rangeValue.value ?? [null, null]
+  draftRange.value = side === 'start' ? [timestamp, current[1]] : [current[0], timestamp]
+}
+/** 日期时间范围的「确定」：并入当前激活段并按面板选择同径提交，派发 `ok` */
+function onRangeConfirm(timestamp: number, side: PickerRangeSide) {
+  const { value: range, formatted } = applyRangeSide(timestamp, side, true)
+  emits('ok', range, formatted)
 }
 /** 悬浮日期变更：仅在激活段输入框做预览展示，不改变已选值 */
 function onRangeHover(timestamp: number | null) {
@@ -491,8 +532,8 @@ function onDraftChange(timestamp: number) {
   draftValue.value = timestamp
 }
 /**
- * 「确定」/「此刻」的提交：都回写双轨、派发 `change` 并收起面板（与参考实现同口径：
- * 两者都走 `triggerSelect(..., 'submit')` → `triggerOpen(false)`），收起时草稿由 `open` 的监听统一丢弃。
+ * 「确定」/「此刻」的提交：都回写双轨、派发 `change` 并收起面板（两者走同一条提交路径），
+ * 收起时草稿由 `open` 的监听统一丢弃。
  *
  * 差异仅在事件：`ok` 只由「确定」派发，「此刻」是「跳到当前时刻」的快捷入口、不派发 `ok`。
  */
@@ -512,22 +553,46 @@ function onClear() {
   requestOpen(false)
 }
 /**
+ * 点击预设：立即提交并收起
+ *
+ * 范围形态提交整个区间、单选形态提交单个时间戳；值与形态不匹配的预设项忽略，
+ * 避免把单个时间戳写进两段元组（反之亦然）。
+ */
+function onPresetSelect(presetValue: PickerPresetValue) {
+  if (isRange.value) {
+    if (!Array.isArray(presetValue)) return
+    commitRange([presetValue[0], presetValue[1]])
+  } else {
+    if (Array.isArray(presetValue)) return
+    commit(presetValue)
+  }
+  requestOpen(false)
+}
+/** 悬浮预设：范围形态在面板上预览该区间（单选形态无预览口径） */
+function onPresetHover(presetValue: PickerPresetValue | null) {
+  if (presetValue === null || !Array.isArray(presetValue)) {
+    presetPreview.value = null
+    return
+  }
+  presetPreview.value = [presetValue[0], presetValue[1]]
+}
+/**
  * 手输文本：解析成功才提交，失败时由触发器回滚为当前合法文本
  *
- * 带时间形态的提交口径与参考实现一致：失焦即取消（丢弃草稿、不提交），回车与「确定」同径（提交并收起）
+ * 需点「确定」的形态（含时间面板）失焦即取消（丢弃草稿、不提交），回车与「确定」同径（提交并收起）
  * —— 面板展开期间输入框展示的是草稿，若失焦时按手输提交，会把未确认的草稿当成用户输入落值。
  */
 function onTextConfirm(text: string, source: 'enter' | 'blur', index: 0 | 1) {
+  if (needConfirm.value && source === 'blur') {
+    draftValue.value = null
+    return
+  }
   if (isRange.value) {
     const rangeTimestamp = parseTimestamp(text, mergedValueFormat.value)
     if (rangeTimestamp !== null) {
       // 回车的提交语义与面板选择同径（写入激活段并切到另一端），失焦只落值不切段
       applyRangeSide(rangeTimestamp, index === 0 ? 'start' : 'end', source === 'enter')
     }
-    return
-  }
-  if (isDateTime.value && source === 'blur') {
-    draftValue.value = null
     return
   }
   const timestamp = parseTimestamp(text, mergedValueFormat.value)
@@ -610,14 +675,28 @@ defineExpose({ focus, blur })
       <RangePanel
         v-if="isRange"
         :value="panelRangeValue"
+        :active="open"
         :active-side="activeSide"
         :start-day-of-week="startDayOfWeek"
         :disabled-date="mergedRangeDisabledDate"
         :default-picker-value="defaultPickerValue"
+        :datetime="isDateTimeRange"
+        :format="mergedFormat"
+        :header-format="format"
+        :time-props="timePickerProps"
+        :disabled-time="rangeDisabledTime"
+        :default-time="defaultTime"
+        :preview-value="presetPreview"
         @select="onRangeSelect"
+        @draft-change="onRangeDraftChange"
+        @confirm="onRangeConfirm"
         @panel-change="onPanelChange"
         @hover-change="onRangeHover"
-      />
+      >
+        <template #presets>
+          <PresetPanel v-if="presets.length" :presets="presets" @select="onPresetSelect" @hover="onPresetHover" />
+        </template>
+      </RangePanel>
       <!-- 范围形态的面板指示箭头：与激活段下划线同源平移、随弹出方位上下翻转，展示时机由 showArrow 与方位共同决定 -->
       <div v-if="showRangeArrow" class="datepicker-range-arrow" :style="{ left: `${rangeArrowLeft}px` }" />
       <DatetimePanel
@@ -627,7 +706,7 @@ defineExpose({ focus, blur })
         :header-format="format"
         :time-props="timePickerProps"
         :disabled-date="disabledDate"
-        :disabled-time="disabledTime"
+        :disabled-time="singleDisabledTime"
         :default-time="defaultTime"
         :default-picker-value="defaultPickerValue"
         :start-day-of-week="startDayOfWeek"
@@ -636,17 +715,26 @@ defineExpose({ focus, blur })
         @change="onDraftChange"
         @confirm="onConfirm"
         @panel-change="onPanelChange"
-      />
+      >
+        <template #presets>
+          <PresetPanel v-if="presets.length" :presets="presets" @select="onPresetSelect" @hover="onPresetHover" />
+        </template>
+      </DatetimePanel>
       <DatePanel
         v-else
         :value="innerValue"
+        :active="open"
         :start-day-of-week="startDayOfWeek"
         :disabled-date="disabledDate"
         :default-picker-value="defaultPickerValue"
         :show-today="showToday"
         @select="onSelect"
         @panel-change="onPanelChange"
-      />
+      >
+        <template #presets>
+          <PresetPanel v-if="presets.length" :presets="presets" @select="onPresetSelect" @hover="onPresetHover" />
+        </template>
+      </DatePanel>
     </Popup>
   </div>
 </template>
@@ -668,7 +756,7 @@ defineExpose({ focus, blur })
   z-index: 1;
   width: 16px;
   height: 16px;
-  // 与参考实现的 inputPaddingHorizontal * 1.5 同值
+  // 取触发器水平内边距的 1.5 倍
   margin-left: 16.5px;
   overflow: hidden;
   pointer-events: none;
@@ -727,14 +815,14 @@ defineExpose({ focus, blur })
   bottom: 0;
   transform: translateY(100%) rotate(180deg);
 }
-/* 收起过程中选中格直接落色：参考实现的收起会把容器隐藏一帧，令选中格的 0.2s 过渡被浏览器取消，
+/* 收起过程中选中格直接落色：收起时容器会被隐藏一帧，令选中格的 0.2s 过渡被浏览器取消，
    故此处显式复刻该观感（仅收起期间抑制格子过渡；面板保持展开时选中/悬浮过渡照常）。
    多带一层 .picker-panel-body 是为了稳定压过日期格 scoped 规则里的过渡声明（同特异性下不依赖源码顺序） */
 .datepicker-panel-container.va-popup-leaving .picker-panel-body .picker-panel-cell-inner {
   transition: none;
 }
-/* 展开 / 收起的缩放原点由 <Popup> 按实际方位写在面板上（面板在下方从自身顶边展开、在上方从自身底边展开，
-   与参考实现 slideUp / slideDown 同口径），故这里只保留一条与方位无关的动效：
+/* 展开 / 收起的缩放原点由 <Popup> 按实际方位写在面板上（面板在下方从自身顶边展开、在上方从自身底边展开），
+   故这里只保留一条与方位无关的动效：
    按方位取名会让首帧取到兜底方向（实际方位到插入首帧才回填），首次展开方向就反了 */
 .datepicker-zoom-enter-active,
 .datepicker-zoom-leave-active {

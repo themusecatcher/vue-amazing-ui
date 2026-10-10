@@ -119,8 +119,8 @@ function isFullWidth(char: string): boolean {
  * 输入框原生 `size` 属性（字符数）
  *
  * 浏览器对未声明 `size` 的输入框按 20 字符估宽，远大于实际展示格式所需宽度，会让触发器明显偏宽；
- * 这里按展示格式宽度推算（不足下限时取下限），使宽度随格式自适应，并与参考实现的口径一致。
- * 全角字符按 2 个字符计入 —— 参考实现只数字符个数，中文格式（如 `yyyy年MM月dd日`）下文本会超出输入框约 4px 被裁掉
+ * 这里按展示格式宽度推算（不足下限时取下限），使宽度随格式自适应。
+ * 全角字符按 2 个字符计入 —— 只数字符个数会让中文格式（如 `yyyy年MM月dd日`）的文本超出输入框约 4px 被裁掉
  */
 export function getInputSize(format: string, minSize: number = 10): number {
   const width = Array.from(format).reduce((total, char) => total + (isFullWidth(char) ? 2 : 1), 0)
@@ -258,7 +258,7 @@ export function getDayOfMonth(reference: number): number {
 /**
  * 是否为当月最后一天
  *
- * 供日期格的 `-end` 标记使用：范围预览在跨月边界处需要据此收边（与参考实现同口径）
+ * 供日期格的 `-end` 标记使用：范围预览在跨月边界处需要据此收边
  */
 export function isLastDayOfMonthTimestamp(reference: number): boolean {
   return getDaysInMonth(reference) === getDate(reference)
@@ -298,7 +298,7 @@ export function isInRangeTimestamp(start: number | null, end: number | null, tar
 /**
  * 范围形态的越界判定
  *
- * 与参考实现 `useRangeDisabled` 同口径：已选起点时段不能早于起点、已选终点时段不能晚于终点。
+ * 已选起点时段不能早于起点、已选终点时段不能晚于终点。
  * 两侧都归一到当日零点比较，同日不算越界（否则带时分秒的宿主值会把当天也置灰）。
  */
 export function isOutOfRangeBoundary(target: number, boundary: number, boundaryIsStart: boolean): boolean {
@@ -310,7 +310,7 @@ export function isOutOfRangeBoundary(target: number, boundary: number, boundaryI
 /**
  * 范围形态的日期格类名
  *
- * 与参考实现的分支口径一致：区间底色只覆盖**严格内部**的日期；悬浮预览（`-range-hover*`）
+ * 区间底色只覆盖**严格内部**的日期；悬浮预览（`-range-hover*`）
  * 要求预览区间起止齐全且有序；`-edge-*` / `-near-hover` 用于在面板首末格与已选端点相邻处收边。
  */
 export function getRangeCellClassNames(timestamp: number, context: RangeCellContext): Record<string, boolean> {
@@ -387,7 +387,7 @@ export function setTimeTimestamp(reference: number, hour: number, minute: number
  * 归一化时间步长
  *
  * 步长必须能整除该单位的刻度总数（时 24 / 分 60 / 秒 60），否则末位会留下除不尽的零头
- * （如 5 小时步长会得到 0,5,…,20 而丢掉 21-23），此时退回 1（与参考实现的 `isHourStepValid` 同口径）。
+ * （如 5 小时步长会得到 0,5,…,20 而丢掉 21-23），此时退回 1。
  */
 export function mergeTimeStep(name: PickerTimeUnitName, step: number | undefined): number {
   const mergedStep = step ?? 1
@@ -433,7 +433,7 @@ export function getHourColumnLabel(columnHour: number): string {
 /**
  * 按展示格式解析时间面板的列显隐与 12 小时制
  *
- * 与参考实现同口径：格式中含 `s` / `m` / `H`·`h` 才展示对应列，含 `a`·`A` 则启用 12 小时制；
+ * 格式中含 `s` / `m` / `H`·`h` 才展示对应列，含 `a`·`A` 则启用 12 小时制；
  * 未传格式时三列全展示。显式传入的 `use12Hours` 优先于格式推导。
  */
 export function resolveTimePanelLayout(formatStr?: string, use12Hours?: boolean): PickerTimePanelLayout {
@@ -469,7 +469,7 @@ export function getTimeTextFormat(layout: PickerTimePanelLayout): string {
  * 「此刻」按钮的取整结果
  *
  * 当前时分秒按步长向下取整；若被取整到更早的刻度，则其后的分 / 秒取该单位的最大合法刻度
- * （如步长 5 时 12:03:07 → 12:00:55），避免落在一个不存在的刻度上（与参考实现同算法）。
+ * （如步长 5 时 12:03:07 → 12:00:55），避免落在一个不存在的刻度上。
  */
 export function getLowerBoundTime(
   hour: number,

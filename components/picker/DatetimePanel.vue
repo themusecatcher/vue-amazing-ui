@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { VNode } from 'vue'
 import Button from 'components/button'
 import DatePanel from './DatePanel.vue'
 import TimePanel from './TimePanel.vue'
@@ -12,7 +13,13 @@ import {
   setTimeTimestamp
 } from './date-utils'
 import type { StartDayOfWeek } from './date-utils'
-import type { PickerDisabledTime, PickerDisabledTimeUnits, PickerPanelMode, PickerTimePanelProps } from './types'
+import type {
+  PickerDisabledTime,
+  PickerDisabledTimeUnits,
+  PickerPanelMode,
+  PickerRangeValue,
+  PickerTimePanelProps
+} from './types'
 export interface DatetimePanelProps {
   value?: number | null // 草稿值：面板内的选择只更新草稿，「确定」才提交
   format?: string // 展示格式：推导时间列显隐与 12 小时制
@@ -25,6 +32,13 @@ export interface DatetimePanelProps {
   startDayOfWeek?: StartDayOfWeek // 一周起始日
   showNow?: boolean // 是否展示「此刻」快捷
   active?: boolean // 面板是否展开（时间列据此把选中项滚到列顶部）
+  range?: boolean // 日期时间范围形态：日期格叠加区间高亮（`value` 为该形态下激活段的值）
+  fallbackValue?: number | null // 激活段为空时的取值基准（范围形态传另一端，供时间面板展示）
+  rangeValue?: PickerRangeValue | null // 范围形态的当前区间
+  hoverValue?: PickerRangeValue | null // 范围形态的悬浮预览区间
+}
+export interface DatetimePanelSlots {
+  presets?: () => VNode[] // 日期列左侧的预设侧栏
 }
 const props = withDefaults(defineProps<DatetimePanelProps>(), {
   value: null,
@@ -37,27 +51,54 @@ const props = withDefaults(defineProps<DatetimePanelProps>(), {
   defaultPickerValue: undefined,
   startDayOfWeek: 0,
   showNow: true,
-  active: false
+  active: false,
+  range: false,
+  fallbackValue: null,
+  rangeValue: null,
+  hoverValue: null
 })
+defineSlots<DatetimePanelSlots>()
 const emits = defineEmits<{
   change: [timestamp: number]
   confirm: [timestamp: number, source: 'ok' | 'now'] // 提交来源：确定按钮 / 此刻快捷
   panelChange: [value: number, mode: PickerPanelMode]
+  cellHover: [timestamp: number] // 范围形态：悬浮日期格（供宿主预览区间）
+  cellLeave: [] // 范围形态：移出面板
 }>()
-/** 禁用时间的判定基准：草稿值优先，空草稿时退回默认时分秒 / 当前时刻 */
-const disabledBase = computed(() => props.value ?? props.defaultTime ?? Date.now())
+/**
+ * 禁用时间的判定基准：与时间面板的展示值同源
+ *
+ * 顺序为「草稿值 → 另一端值 → 默认时分秒 → 当前时刻」：范围形态激活段为空时，判定落在另一端
+ * 那一日，否则同一天内的时分秒约束会因基准日不同而整段失效。范围面板传入的 `value`
+ * 即 `value ?? 另一端值`，`disabledTime` 因而以另一端时刻为入参。
+ */
+const disabledBase = computed(() => props.value ?? props.fallbackValue ?? props.defaultTime ?? Date.now())
+/**
+ * 时间面板的展示值：草稿值优先，激活段为空时退回 `fallbackValue`
+ *
+ * 起点段尚未选时，时间列以另一端（终点）的时刻为基准，时间区不再空着。
+ * 仅影响时间面板的展示与滚动定位，不改变日期格的选中态。
+ */
+const timePanelValue = computed(() => props.value ?? props.fallbackValue ?? null)
 const disabledUnits = computed<PickerDisabledTimeUnits>(() => props.disabledTime?.(disabledBase.value) ?? {})
 const steps = computed(() => ({
   hour: mergeTimeStep('hour', props.timeProps?.hourStep),
   minute: mergeTimeStep('minute', props.timeProps?.minuteStep),
   second: mergeTimeStep('second', props.timeProps?.secondStep)
 }))
-/** 「确定」是否禁用：无草稿或草稿日已被禁用（与参考实现同口径） */
+/**
+ * 「确定」是否禁用：无草稿或草稿日被禁用
+ *
+ * 草稿的时分秒即使落在 `disabledTime` 的禁用区间内也不据此禁用「确定」——
+ * 禁用项只表达「时间列的不可选」。
+ */
 const okDisabled = computed(() => props.value === null || (props.disabledDate?.(props.value) ?? false))
 /**
- * 选择日期：保留当前草稿的时分秒（与参考实现同口径）
+ * 选择日期：保留当前草稿的时分秒
  *
  * 空草稿时取默认时分秒，未声明则取当前时刻的时分秒——不退回 0 点，避免选日期时把时间重置。
+ * 保留的时分秒若已被 `disabledTime` 禁用（典型：终点先选好时刻、再选回起点所在日）**不做校正**：
+ * 禁用项只体现为「时间列的不可选」，已落定的越界值原样保留并可提交。
  */
 function onDateSelect(timestamp: number): void {
   const base = props.value ?? props.defaultTime ?? Date.now()
@@ -66,13 +107,19 @@ function onDateSelect(timestamp: number): void {
 function onTimeChange(timestamp: number): void {
   emits('change', timestamp)
 }
+function onCellHover(timestamp: number): void {
+  emits('cellHover', timestamp)
+}
+function onCellLeave(): void {
+  emits('cellLeave')
+}
 function onPanelChange(timestamp: number, mode: PickerPanelMode): void {
   emits('panelChange', timestamp, mode)
 }
 /**
  * 「此刻」：取当前时刻并按步长向下取整后即提交
  *
- * 不判当日是否被 `disabledDate` 禁用（与参考实现同口径）：此刻是「跳到当前时刻」的快捷入口，
+ * 不判当日是否被 `disabledDate` 禁用：此刻是「跳到当前时刻」的快捷入口，
  * 与「今天」的禁用判定不同径——被禁用的日期仍可点此提交，是否接受交由使用方决定。
  */
 function onNow(): void {
@@ -97,17 +144,26 @@ function onOk(): void {
   <DatePanel
     class="picker-datetime-panel"
     :value="value"
+    :active="active"
     :start-day-of-week="startDayOfWeek"
     :disabled-date="disabledDate"
     :default-picker-value="defaultPickerValue"
     :datetime="true"
     :show-today="false"
+    :range="range"
+    :range-value="rangeValue"
+    :hover-value="hoverValue"
     @select="onDateSelect"
     @panel-change="onPanelChange"
+    @cell-hover="onCellHover"
+    @cell-leave="onCellLeave"
   >
+    <template #presets>
+      <slot name="presets" />
+    </template>
     <template #aside>
       <TimePanel
-        :value="value"
+        :value="timePanelValue"
         :format="format"
         :header-format="headerFormat"
         :time-props="timeProps"
@@ -132,7 +188,7 @@ function onOk(): void {
 // 日期时间形态：日期与时间两列并排，面板宽度随内容自适应（日期 280 + 时间列 168 + 两列间分隔线 1）
 .picker-panel.picker-datetime-panel {
   width: auto;
-  // 日期列与时间列之间的分隔线由时间面板的左边框提供（与参考实现同构）
+  // 日期列与时间列之间的分隔线由时间面板的左边框提供
   .picker-time-panel {
     border-left: 1px solid rgba(5, 5, 5, 0.06);
   }
@@ -148,9 +204,9 @@ function onOk(): void {
   > li {
     display: inline-block;
   }
-  // 隐藏「此刻」时底部只剩「确定」，靠自身外边距顶到行尾（与参考实现的 -ok 声明同款）；
+  // 隐藏「此刻」时底部只剩「确定」，靠自身外边距顶到行尾；
   // 高度取页脚行高（display: flex 后行高不再参与内在高度，不声明则页脚矮 10px），
-  // 弹性居中补偿按钮根节点为 inline-block div 的基线偏移（参考实现用原生 button，按基线排布即居中）
+  // 弹性居中补偿按钮根节点为 inline-block div 的基线偏移（原生 button 按基线排布即居中）
   .picker-panel-ok {
     display: flex;
     align-items: center;

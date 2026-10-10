@@ -163,6 +163,7 @@ describe('generateStyleEntries - 入口内容与顺序', () => {
       "import '../DatePicker.css'",
       "import '../../picker/DatetimePanel.css'",
       "import '../../picker/DatePanel.css'",
+      "import '../../picker/PresetPanel.css'",
       "import '../../picker/RangePanel.css'",
       "import '../../picker/TimePanel.css'",
       "import '../../picker/TimeUnitColumn.css'",
@@ -170,7 +171,8 @@ describe('generateStyleEntries - 入口内容与顺序', () => {
       "import '../../picker/PickerPanelHeader.css'",
       "import '../../picker/PickerTrigger.css'",
       "import '../../button/Button.css'",
-      "import '../../scrollbar/Scrollbar.css'"
+      "import '../../scrollbar/Scrollbar.css'",
+      "import '../../popup/Popup.css'"
     ])
     const swiper = lines('es/swiper/style/index.js')
     expect(swiper).toContain("import '../../vendor-styles/swiper/swiper.css'")

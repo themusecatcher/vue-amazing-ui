@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { VNode } from 'vue'
 export interface PickerPanelHeaderProps {
-  showSingleNav?: boolean // 是否展示「上一/下一」单步按钮（月、年面板只保留跨单位跳转）
-  showPrev?: boolean // 是否展示「上一」单步按钮（范围形态下左面板保留、右面板省略）
-  showNext?: boolean // 是否展示「下一」单步按钮（范围形态下右面板保留、左面板省略）
+  showSingleNav?: boolean // 是否渲染「上一/下一」单步按钮（月、年面板只保留跨单位跳转）
+  showPrev?: boolean // 「上一」导航组是否可见（范围形态下右面板隐去，占位保留）
+  showNext?: boolean // 「下一」导航组是否可见（范围形态下左面板隐去，占位保留）
 }
 export interface PickerPanelHeaderSlots {
   view?: () => VNode[] // 头部中间的视图内容（如「2026年 9月」按钮组）
@@ -15,9 +14,6 @@ const props = withDefaults(defineProps<PickerPanelHeaderProps>(), {
   showNext: true
 })
 defineSlots<PickerPanelHeaderSlots>()
-// 单步按钮的显隐由「是否单步导航」与「左右面板位置」共同决定
-const mergedShowPrev = computed(() => props.showSingleNav && props.showPrev)
-const mergedShowNext = computed(() => props.showSingleNav && props.showNext)
 const emits = defineEmits<{
   superPrev: []
   prev: []
@@ -27,19 +23,45 @@ const emits = defineEmits<{
 </script>
 <template>
   <div class="picker-panel-header">
-    <button type="button" tabindex="-1" class="picker-panel-super-prev" @click="emits('superPrev')">
+    <button
+      type="button"
+      tabindex="-1"
+      class="picker-panel-super-prev"
+      :class="{ 'picker-panel-nav-hidden': !showPrev }"
+      @click="emits('superPrev')"
+    >
       <span class="picker-panel-nav-icon picker-panel-nav-icon-super picker-panel-nav-icon-prev" />
     </button>
-    <button v-if="mergedShowPrev" type="button" tabindex="-1" class="picker-panel-prev" @click="emits('prev')">
+    <button
+      v-if="showSingleNav"
+      type="button"
+      tabindex="-1"
+      class="picker-panel-prev"
+      :class="{ 'picker-panel-nav-hidden': !showPrev }"
+      @click="emits('prev')"
+    >
       <span class="picker-panel-nav-icon picker-panel-nav-icon-prev" />
     </button>
     <div class="picker-panel-view">
       <slot name="view" />
     </div>
-    <button v-if="mergedShowNext" type="button" tabindex="-1" class="picker-panel-next" @click="emits('next')">
+    <button
+      v-if="showSingleNav"
+      type="button"
+      tabindex="-1"
+      class="picker-panel-next"
+      :class="{ 'picker-panel-nav-hidden': !showNext }"
+      @click="emits('next')"
+    >
       <span class="picker-panel-nav-icon picker-panel-nav-icon-next" />
     </button>
-    <button type="button" tabindex="-1" class="picker-panel-super-next" @click="emits('superNext')">
+    <button
+      type="button"
+      tabindex="-1"
+      class="picker-panel-super-next"
+      :class="{ 'picker-panel-nav-hidden': !showNext }"
+      @click="emits('superNext')"
+    >
       <span class="picker-panel-nav-icon picker-panel-nav-icon-super picker-panel-nav-icon-next" />
     </button>
   </div>
@@ -67,7 +89,11 @@ const emits = defineEmits<{
       color: rgba(0, 0, 0, 0.88);
     }
   }
-  // V 形箭头：7px 盒 + 1.5px 上 / 左边框，旋转 45° / 135°（与参考实现同构，含描边宽度与基线定位口径）
+  // 隐去的导航按钮保留自身占位：两个面板的头部因此结构相同，视图区落在同一水平位置
+  .picker-panel-nav-hidden {
+    visibility: hidden;
+  }
+  // V 形箭头：7px 盒 + 1.5px 上 / 左边框，旋转 45° / 135°，随行内基线定位
   .picker-panel-nav-icon {
     position: relative;
     display: inline-block;
@@ -107,8 +133,8 @@ const emits = defineEmits<{
   }
   .picker-panel-view {
     flex: auto;
-    // 视图文字取浏览器默认按钮字号（13.3333px）：参考实现的年份 / 月份按钮未声明字号，
-    // 实际渲染即为该值，此处对齐其视觉尺寸而非沿用面板的 14px
+    // 视图文字取浏览器默认按钮字号（13.3333px）：该按钮未声明字号，实际渲染即为该值，
+    // 此处取其视觉尺寸而非沿用面板的 14px
     font-size: 13.3333px;
     font-weight: 600;
     line-height: 40px;

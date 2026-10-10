@@ -178,6 +178,7 @@ describe('resolver - 全量组件映射', () => {
       'PickerPanelHeader',
       'PickerTrigger',
       'Popup',
+      'PresetPanel',
       'RangePanel',
       'TimePanel',
       'TimeUnitColumn'

@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<TimeUnitColumnProps>(), {
 const emits = defineEmits<{
   select: [value: number]
 }>()
-/** 选中项滚到列顶部的动画时长（与参考实现同值） */
+/** 选中项滚到列顶部的动画时长 */
 const SCROLL_DURATION = 120
 /** 面板展开后等待可见的最大帧数（浮层首帧可能仍在 display: none） */
 const MAX_VISIBLE_FRAMES = 20
@@ -52,7 +52,7 @@ function scrollToOffset(to: number, duration: number): void {
     scroller.scrollTop = to
     return
   }
-  // 每帧移动「剩余距离 ÷ 剩余时长 × 10」并递减剩余时长：与参考实现同算法，收尾自动吸附到目标
+  // 每帧移动「剩余距离 ÷ 剩余时长 × 10」并递减剩余时长，收尾自动吸附到目标
   const step = (remaining: number) => {
     const difference = to - scroller.scrollTop
     if (Math.abs(difference) < 1 || remaining <= 0) {
@@ -72,7 +72,12 @@ function scrollToOffset(to: number, duration: number): void {
  * 矩形差会被同比缩放，量出的滚动量偏小（实测入场中 448 被量成 358）。
  */
 function scrollToSelected(duration: number): void {
-  if (props.value === null || !isColumnVisible()) return
+  if (!isColumnVisible()) return
+  // 空值不选中任何项：把列带回顶部（清掉上一次选择留下的滚动位置，否则初始态会停在旧时刻）
+  if (props.value === null) {
+    scrollToOffset(0, duration)
+    return
+  }
   const target = cellRefs.get(props.value)
   if (!target) return
   scrollToOffset(target.offsetTop, duration)
@@ -129,10 +134,9 @@ function onCellClick(unit: PickerTimeUnit): void {
 .picker-time-column {
   flex: 1 0 auto;
   width: 56px;
-  // 上下留白在滚动容器之外，列高因此等于内容高减 8px（与参考实现同构）
+  // 上下留白在滚动容器之外，列高因此等于内容高减 8px
   margin: 4px 0;
   // 让 Scrollbar 的滚动容器成为列的定位祖先：候选项的 offsetTop 才是「距滚动容器的偏移」
-  // （与参考实现给滚动列加 position: relative 同口径）
   :deep(.scrollbar-container) {
     position: relative;
   }
@@ -145,8 +149,8 @@ function onCellClick(unit: PickerTimeUnit): void {
     text-align: start;
     list-style: none;
     transition: background 0.2s;
-    // 尾随占位：「最后几项」也能滚到列顶部（高度 = 内容高 224 - 格高 28 + 上下留白 4 × 2，
-    // 与参考实现同值；独立时间选择器形态若复用本列，该值需随面板高度改回 196px）
+    // 尾随占位：「最后几项」也能滚到列顶部（高度 = 内容高 224 - 格高 28 + 上下留白 4 × 2；
+    // 独立时间选择器形态若复用本列，该值需随面板高度改回 196px）
     &::after {
       display: block;
       height: 204px;

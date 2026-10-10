@@ -36,10 +36,12 @@ export interface DatePanelProps {
   range?: boolean // 范围形态：日期格叠加区间高亮，并在悬浮时上报日期
   rangeValue?: PickerRangeValue | null // 范围形态的已选区间
   hoverValue?: PickerRangeValue | null // 范围形态的悬浮预览区间
-  side?: PickerRangeSide // 范围形态的面板位置：左面板省略「下一」、右面板省略「上一」
+  side?: PickerRangeSide // 范围形态的面板位置：左面板隐去「下一」组、右面板隐去「上一」组
+  active?: boolean // 面板是否展开：展开时把展示日期带回当前值
 }
 export interface DatePanelSlots {
   aside?: () => VNode[] // 主体右侧的附加面板（日期时间形态的时间面板）
+  presets?: () => VNode[] // 主体左侧的预设侧栏
   footer?: () => VNode[] // 底部内容，默认「今天」
 }
 const props = withDefaults(defineProps<DatePanelProps>(), {
@@ -53,7 +55,8 @@ const props = withDefaults(defineProps<DatePanelProps>(), {
   range: false,
   rangeValue: null,
   hoverValue: null,
-  side: undefined
+  side: undefined,
+  active: false
 })
 defineSlots<DatePanelSlots>()
 const emits = defineEmits<{
@@ -96,6 +99,20 @@ watch(
   (value) => {
     if (value && props.panelValue === undefined) {
       innerViewDate.value = value
+    }
+  }
+)
+/**
+ * 展开时把展示日期带回当前值
+ *
+ * 面板在浮层收起后并不销毁，若不在展开时重置，上一次翻页到别的月份会一直留在视图里，
+ * 与触发器上显示的值对不上（受控时视图归容器管理，此处不介入）。
+ */
+watch(
+  () => props.active,
+  (active) => {
+    if (active && props.panelValue === undefined) {
+      innerViewDate.value = props.value ?? props.defaultPickerValue ?? Date.now()
     }
   }
 )
@@ -148,7 +165,8 @@ function isYearInView(timestamp: number): boolean {
 }
 /** 底部可见性：日期时间形态的底部即「此刻 / 确定」，与「今天」的视图条件无关 */
 const footerVisible = computed(() => props.datetime || (props.showToday && panelMode.value === 'date'))
-// 范围形态两个面板并排：左面板的「下一」与右面板的「上一」指向同一个相邻月份，故各自省略
+// 范围形态两个面板并排：左面板的「下一」与右面板的「上一」指向同一个相邻月份，故各自隐去；
+// 隐去仅隐本体、留占位，两个面板头部的视图区才会落在同一水平位置
 const showPrevNav = computed(() => props.side !== 'end')
 const showNextNav = computed(() => props.side !== 'start')
 /** 月面板格代表整月：月内每一天都不可选时才禁用（与日期格的「按天判定」区分） */
@@ -175,8 +193,7 @@ function onDateSelect(timestamp: number) {
   if (props.disabledDate?.(timestamp)) {
     return
   }
-  // 选中跨月补齐日时把面板视图带到该月（与参考实现的 `onSelect → setViewDate` 同口径；
-  // 范围形态下视图由容器统一驱动，两侧面板因此一起翻页）
+  // 选中跨月补齐日时把面板视图带到该月（范围形态下视图由容器统一驱动，两侧面板因此一起翻页）
   if (!isInView(timestamp)) {
     setViewDate(timestamp)
   }
@@ -188,7 +205,12 @@ function onCellHover(timestamp: number) {
     emits('cellHover', timestamp)
   }
 }
-/** 移出面板：清除预览区间 */
+/**
+ * 移出日期格：清除预览区间
+ *
+ * 逐格 mouseleave：离开被悬浮的那一格即取消预览
+ * 即撤预览——鼠标停在本面板的内边距、或两面板之间的空隙时，同样会先离开该格，预览不会滞留。
+ */
 function onCellLeave() {
   if (props.range) {
     emits('cellLeave')
@@ -205,7 +227,7 @@ function onMonthSelect(timestamp: number) {
 /**
  * 选择年份：只平移视图年份（保留当前月日）并回到来源视图
  *
- * 与参考实现同口径：从日期面板进入年面板时，选完年直接回日期面板；从月面板进入时回月面板。
+ * 从日期面板进入年面板时，选完年直接回日期面板；从月面板进入时回月面板。
  * 年份格本身是「1 月 1 日」，若直接把格时间戳写入视图会把月日重置为 1 月，故按年份差平移。
  */
 function onYearSelect(timestamp: number) {
@@ -250,8 +272,14 @@ function onNext() {
 }
 </script>
 <template>
-  <PickerPanel :show-footer="footerVisible" @mouseleave="onCellLeave">
+  <PickerPanel :show-footer="footerVisible">
+    <template #presets>
+      <slot name="presets" />
+    </template>
     <div class="picker-date-panel-body">
+      <!-- 悬浮预览只在日期格内有效：清除挂在**日期格自身**的 mouseleave 上（见下方格上的
+           `@mouseleave`），移出该格即取消。挂在面板主体上的话，鼠标停在本面板的内边距
+           （或两面板之间的空隙）时仍处于主体内，预览不会撤、输入框会一直显示悬浮日期 -->
       <div class="picker-date-panel-main">
         <PickerPanelHeader
           :show-single-nav="panelMode === 'date'"
@@ -299,7 +327,7 @@ function onNext() {
                     {
                       'picker-panel-cell-in-view': isInView(timestamp),
                       'picker-panel-cell-today': isToday(timestamp),
-                      // 月首 / 月末标记：范围预览在跨月边界处据此收边（与参考实现同口径）
+                      // 月首 / 月末标记：范围预览在跨月边界处据此收边
                       'picker-panel-cell-start': getDayOfMonth(timestamp) === 1,
                       'picker-panel-cell-end': isLastDayOfMonthTimestamp(timestamp),
                       'picker-panel-cell-selected': isSelected(timestamp),
@@ -310,6 +338,7 @@ function onNext() {
                   :title="formatTimestamp(timestamp, 'yyyy-MM-dd')"
                   @click="onDateSelect(timestamp)"
                   @mouseenter="onCellHover(timestamp)"
+                  @mouseleave="onCellLeave()"
                 >
                   <div class="picker-panel-cell-inner">{{ getDayOfMonth(timestamp) }}</div>
                 </td>
@@ -382,17 +411,17 @@ function onNext() {
   </PickerPanel>
 </template>
 <style lang="less" scoped>
-// 日期时间形态：日期列与时间列并排，两列各带自己的头部（与参考实现同构，
-// 头部导航因此只覆盖日期列而非整个面板）
+// 日期时间形态：日期列与时间列并排，两列各带自己的头部，头部导航因此只覆盖日期列而非整个面板
 // 形态类由 `DatetimePanel` 透传到面板根上，须与之一致
 .picker-datetime-panel {
   .picker-date-panel-body {
     display: flex;
   }
-  .picker-date-panel-main {
-    flex: none;
-    width: 280px;
-  }
+}
+// 日期列固定 280px（日期 / 月 / 年三种视图共用）：面板宽度改由内容决定时（如带预设侧栏）不收缩
+.picker-date-panel-main {
+  flex: none;
+  width: 280px;
 }
 .picker-panel-content {
   width: 100%;
@@ -460,7 +489,7 @@ function onNext() {
       background 0.2s,
       border 0.2s;
   }
-  // 已选端点与预览端点不吃普通悬浮底色（与参考实现的排除列表同口径）
+  // 已选端点与预览端点不吃普通悬浮底色
   &:hover:not(.picker-panel-cell-selected):not(.picker-panel-cell-range-start):not(.picker-panel-cell-range-end):not(
       .picker-panel-cell-range-hover-start
     ):not(.picker-panel-cell-range-hover-end)
@@ -484,7 +513,7 @@ function onNext() {
   }
   // ===== 范围形态 =====
   // 以下范围规则一律限定在本月格（`-in-view`）内：跨月补齐日虽会命中范围类名，
-  // 但不参与区间底色与预览虚线的渲染（与参考实现同口径）
+  // 但不参与区间底色与预览虚线的渲染
   // 区间底色由 ::before 承载；端点格只铺内侧半边，与外层底色拼成连续色带
   &.picker-panel-cell-in-view.picker-panel-cell-in-range::before,
   &.picker-panel-cell-in-view.picker-panel-cell-range-start:not(.picker-panel-cell-range-start-single)::before,
@@ -566,9 +595,8 @@ function onNext() {
   &.picker-panel-cell-range-hover.picker-panel-cell-range-start::after {
     right: 50%;
   }
-  // 预览区间左侧边界：行首格与月首（`-start`）格向内收半个格宽差
-  tr > &.picker-panel-cell-in-view.picker-panel-cell-range-hover:first-child::after,
-  tr > &.picker-panel-cell-in-view.picker-panel-cell-range-hover-end:first-child::after,
+  // 预览区间左侧边界：只画「预览起点」与「跨面板时本月的月首格」两处竖线
+  // 行首 / 行末格不画竖线，中间各行因此只有上下虚线、不闭合（按渲染结果对齐，不自补行边竖线）
   &.picker-panel-cell-in-view.picker-panel-cell-start.picker-panel-cell-range-hover-edge-start.picker-panel-cell-range-hover-edge-start-near-range::after,
   &.picker-panel-cell-in-view.picker-panel-cell-range-hover-edge-start:not(
       .picker-panel-cell-range-hover-edge-start-near-range
@@ -578,9 +606,7 @@ function onNext() {
     border-left: 1px dashed var(--picker-hover-border-color, #7cb3ff);
     border-radius: 1px 0 0 1px;
   }
-  // 预览区间右侧边界：行末格与月末（`-end`）格向内收半个格宽差
-  tr > &.picker-panel-cell-in-view.picker-panel-cell-range-hover:last-child::after,
-  tr > &.picker-panel-cell-in-view.picker-panel-cell-range-hover-start:last-child::after,
+  // 预览区间右侧边界：只画「预览终点」与「跨面板时本月的月末格」两处竖线（同上，行末格不画）
   &.picker-panel-cell-in-view.picker-panel-cell-end.picker-panel-cell-range-hover-edge-end.picker-panel-cell-range-hover-edge-end-near-range::after,
   &.picker-panel-cell-in-view.picker-panel-cell-range-hover-edge-end:not(
       .picker-panel-cell-range-hover-edge-end-near-range

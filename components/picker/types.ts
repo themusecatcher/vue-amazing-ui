@@ -5,6 +5,7 @@
  * `disabledDate(timestamp)` / `valueFormat` 一致），字符串展示只在组件壳层经 `format` 转换，
  * 内核不感知 `Date` 对象，避免可变引用在多层之间来回拷贝。
  */
+import type { VNode } from 'vue'
 
 /** 范围形态的两段值：某段被单独清空（含「先选终点再选更晚起点」产生的中间态）时该段为 `null` */
 export type PickerRangeValue = [number | null, number | null]
@@ -52,10 +53,13 @@ export type PickerDisabledTime = (timestamp: number) => PickerDisabledTimeUnits
 /** 范围形态的禁用时间判定，`side` 区分起点与终点 */
 export type PickerRangeDisabledTime = (timestamp: number, side: PickerRangeSide) => PickerDisabledTimeUnits
 
-/** 预设范围选项：值为两段元组，或返回元组的函数（惰性求值，用于依赖当前时刻的预设如「近 7 天」） */
+/** 预设选项的值：单选形态为一个时间戳，范围形态为两段元组 */
+export type PickerPresetValue = number | [number, number]
+
+/** 预设选项：值为预设值或返回预设值的函数（惰性求值，用于依赖当前时刻的预设如「近 7 天」） */
 export interface PickerPreset {
-  label: string
-  value: [number, number] | (() => [number, number])
+  label: string | VNode
+  value: PickerPresetValue | (() => PickerPresetValue)
 }
 
 /** 时间面板选项：`DatePicker.timePickerProps` 与未来 `TimePicker` 共用同一份口径 */

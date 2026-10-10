@@ -35,7 +35,7 @@ const props = withDefaults(defineProps<TimePanelProps>(), {
 const emits = defineEmits<{
   change: [timestamp: number]
 }>()
-/** 空草稿时以当前时刻为基准合成时分秒（与参考实现的 `value || getNow()` 同口径） */
+/** 空草稿时以当前时刻为基准合成时分秒 */
 const baseTimestamp = computed(() => props.value ?? Date.now())
 const layout = computed(() => resolveTimePanelLayout(props.format, props.timeProps?.use12Hours))
 const hour24 = computed(() => (props.value === null ? null : getHourNumber(props.value)))
@@ -73,7 +73,7 @@ const secondUnits = computed(() =>
     props.disabledUnits?.disabledSeconds?.(hour24.value ?? -1, minute.value ?? -1)
   )
 )
-/** 上下午列：该半天内所有小时均禁用时才禁用（与参考实现同口径） */
+/** 上下午列：该半天内所有小时均禁用时才禁用 */
 const periodUnits = computed<PickerTimeUnit[]>(() => {
   const units = generateTimeUnits('hour', props.timeProps?.hourStep, props.disabledUnits?.disabledHours?.())
   const isHalfDisabled = (isPMHalf: boolean) =>
@@ -83,14 +83,14 @@ const periodUnits = computed<PickerTimeUnit[]>(() => {
     { label: 'PM', value: 1, disabled: isHalfDisabled(true) }
   ]
 })
-/** 头部文本格式：显式传入时原样使用（与参考实现把 `showTime.format` 交给时间面板同口径），否则按列显隐推导 */
+/** 头部文本格式：显式传入时原样使用，否则按列显隐推导 */
 const headerTextFormat = computed(() => props.headerFormat || getTimeTextFormat(layout.value))
 const headerText = computed(() => {
   if (props.value === null) return ''
   const textFormat = headerTextFormat.value
   return textFormat ? formatTimestamp(props.value, textFormat) : ''
 })
-/** 合成新的时间戳：未选中的分钟 / 秒按 0 计（与参考实现的空值兜底一致） */
+/** 合成新的时间戳：未选中的分钟 / 秒按 0 计 */
 function emitTime(hour: number, minuteValue: number | null, secondValue: number | null): void {
   emits(
     'change',
@@ -167,6 +167,10 @@ function onPeriodSelect(value: number): void {
     border-bottom: 1px solid rgba(5, 5, 5, 0.06);
     .picker-time-panel-view {
       flex: auto;
+      // 头部恒定占一行：草稿为空时头部文本为空串，内部没有行盒会让 `line-height` 失效、头部塌成 1px，
+      // 时间列随即顶到面板顶边、与日期列表体错位。此处由 `min-height` 撑出这一行盒，
+      // 头部因此恒为 41px（40 + 1px 下边框），与日期列头部对齐。
+      min-height: 40px;
       font-weight: 600;
       line-height: 40px;
     }

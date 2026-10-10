@@ -60,7 +60,7 @@ const startItemRef = ref<HTMLElement | null>(null)
 const separatorRef = ref<HTMLElement | null>(null)
 const endItemRef = ref<HTMLElement | null>(null)
 const activeBarStyle = ref<CSSProperties>({ left: '0px', width: '0px' })
-const focused = ref(false) // 输入框是否聚焦：面板收起后仍保留聚焦态样式（与参考实现的 focus 驱动口径一致）
+const focused = ref(false) // 输入框是否聚焦：面板收起后仍保留聚焦态样式
 // 输入框内容跟随外部文本，保证受控展示始终与值一致
 watch(
   () => props.text,
@@ -79,7 +79,7 @@ watch(
 /**
  * 按激活段测量下划线
  *
- * 定位基准是触发器根（与参考实现同构）：起点段自输入区左边缘起；终点段自「起点段宽 + 分隔符一半」起
+ * 定位基准是触发器根：起点段自输入区左边缘起；终点段自「起点段宽 + 分隔符一半」起
  * （下划线从分隔符中心开始，而非终点段左边缘），宽度取对应段的宽度。
  */
 function measureActiveBar() {
@@ -112,7 +112,7 @@ watch(
   },
   { flush: 'post', immediate: true }
 )
-// 挂载后立即测量一次：下划线在展开前就位，展开时只走透明度淡入（与参考实现一致），
+// 挂载后立即测量一次：下划线在展开前就位，展开时只走透明度淡入，
 // 否则首次展开会出现「自左向右拉长」的宽度过渡
 onMounted(() => {
   if (props.range) {
@@ -146,8 +146,8 @@ function onFocus(event: FocusEvent, index: 0 | 1 = 0) {
   emits('focus', event)
 }
 function onBlur(event: FocusEvent, index: 0 | 1 = 0) {
-  // 焦点只是挪到了触发器内部（范围形态在两段输入框之间切换）时不算失焦，与参考实现的
-  // `!isClickOutside(document.activeElement)` 同口径：否则会把「切段」当成手输提交，
+  // 焦点只是挪到了触发器内部（范围形态在两段输入框之间切换）时不算失焦
+  // 判定落点是否仍在触发器内部：否则会把「切段」当成手输提交，
   // 两段都有值时随即收起面板，紧接着的那次点击又把它重新展开（观感为面板一闪一现）。
   // 落点优先取 `relatedTarget`（浏览器在失焦那一刻已把 `document.activeElement` 置为 `body`，
   // 判不出落点），拿不到时退回 `activeElement` 兜底
@@ -169,7 +169,7 @@ function onClear(event: MouseEvent) {
   event.stopPropagation()
   emits('clear')
 }
-/** 点击触发器：范围形态按落点属于哪一段上报（单段形态恒为 0），与参考实现的输入框驱动同口径 */
+/** 点击触发器：范围形态按落点属于哪一段上报（单段形态恒为 0） */
 function onTriggerClick(event: MouseEvent) {
   const eventTarget = event.target as Node | null
   const hitEndSide = Boolean(props.range && eventTarget && endItemRef.value?.contains(eventTarget))
@@ -280,12 +280,12 @@ defineExpose({ focus, blur })
   line-height: 1;
   border: 1px solid #d9d9d9;
   border-radius: 6px;
-  // 内边距一并过渡：尺寸切换时内边距（0 / 4px / 6.5px）不参与过渡会让整块在首帧瞬跳（参考实现即如此，此处优化为全程平滑）
+  // 内边距一并过渡：尺寸切换时内边距（0 / 4px / 6.5px）不参与过渡会让整块在首帧瞬跳，故统一为全程平滑
   transition:
     border 0.2s,
     box-shadow 0.2s,
     padding 0.2s;
-  // 指针样式交还浏览器默认（与参考实现一致）：触发器空白区为箭头，文本输入区为文本光标
+  // 指针样式交还浏览器默认：触发器空白区为箭头，文本输入区为文本光标
   cursor: auto;
   &:hover {
     border-color: var(--picker-primary-color-hover, #4096ff);
@@ -348,7 +348,7 @@ defineExpose({ focus, blur })
       background: transparent;
       border: 0;
       outline: none;
-      // 尺寸切换时宽度 / 行高 / 字号随过渡变化（与参考实现一致）
+      // 尺寸切换时宽度 / 行高 / 字号随过渡变化
       transition: all 0.2s;
       &::placeholder {
         color: rgba(0, 0, 0, 0.25);
@@ -359,7 +359,7 @@ defineExpose({ focus, blur })
       }
     }
   }
-  // 展示预览文本（悬浮面板日期时该段的临时值）的段取提示色，与参考实现的 `-input-placeholder` 同口径
+  // 展示预览文本（悬浮面板日期时该段的临时值）的段取提示色
   .picker-trigger-input-placeholder .picker-trigger-input-inner {
     color: rgba(0, 0, 0, 0.25);
   }
@@ -376,7 +376,7 @@ defineExpose({ focus, blur })
     display: flex;
     flex: none;
     align-items: center;
-    // 图标 16px + 左右各 8px 内边距：两段之间的间距因此为 32px（与参考实现逐值一致）
+    // 图标 16px + 左右各 8px 内边距：两段之间的间距因此为 32px
     padding: 0 8px;
     font-size: 16px;
     color: rgba(0, 0, 0, 0.25);
@@ -385,11 +385,13 @@ defineExpose({ focus, blur })
     transition: all 0.2s;
   }
   // 激活段下划线：位置与宽度按激活段测量，仅在聚焦 / 展开时可见
-  // 定位基准取触发器根（与参考实现同构）：bottom 贴住底边框，而非浮在输入区下方
+  // 定位基准取触发器根：bottom 贴住底边框，而非浮在输入区下方
   .picker-trigger-range-active-bar {
     position: absolute;
     bottom: -1px;
     height: 2px;
+    // 圆角为观感优化：直角在大尺寸下显得生硬，加 2px 与面板的圆角语言一致
+    border-radius: 2px;
     background: var(--picker-primary-color, #1677ff);
     opacity: 0;
     transition:

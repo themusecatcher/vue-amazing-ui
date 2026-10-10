@@ -77,6 +77,7 @@ const componentsMap = {
   Popconfirm: 'popconfirm',
   Popover: 'popover',
   Popup: 'popup',
+  PresetPanel: 'picker',
   Progress: 'progress',
   QRCode: 'qr-code',
   Radio: 'radio',
@@ -162,6 +163,7 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   DatePicker: [
     'DatetimePanel',
     'DatePanel',
+    'PresetPanel',
     'RangePanel',
     'TimePanel',
     'TimeUnitColumn',
@@ -169,7 +171,8 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
     'PickerPanelHeader',
     'PickerTrigger',
     'Button',
-    'Scrollbar'
+    'Scrollbar',
+    'Popup'
   ],
   DatePanel: ['PickerPanel', 'PickerPanelHeader'],
   DatetimePanel: [
@@ -181,7 +184,16 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
     'Button',
     'Scrollbar'
   ],
-  RangePanel: ['DatePanel', 'PickerPanel'],
+  RangePanel: [
+    'DatetimePanel',
+    'DatePanel',
+    'TimePanel',
+    'TimeUnitColumn',
+    'PickerPanel',
+    'PickerPanelHeader',
+    'Button',
+    'Scrollbar'
+  ],
   ColorPicker: ['Button', 'Input', 'Tooltip', 'Popup'],
   Dialog: ['Button', 'Scrollbar'],
   DialogProvider: ['Button', 'Scrollbar'],
