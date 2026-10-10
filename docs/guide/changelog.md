@@ -17,6 +17,9 @@
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="datetime"` 日期时间形态：日期与时间面板并列展示，展开期间的选择只落在草稿值上，点「确定」或「此刻」才提交，关闭面板则丢弃草稿；同时新增 `timePickerProps`（时间面板步长 / 12 小时制 / 隐藏禁用项）、`disabledTime`、`defaultTime`、`showNow`、`inputReadOnly`、`panelClass`、`panelStyle`、`zIndex` 等属性与 `ok` / `openChange` / `panelChange` / `focus` / `blur` 事件
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="daterange"` 范围形态：左右两个日期面板并排、双段输入与区间悬浮预览，值为两段毫秒时间戳（某段可为 `null`，由 `allowEmpty` 决定该段是否可单独对外提交），并新增 `calendarChange` 事件、`showArrow` 属性与 `separator` 插槽
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="datetimerange"` 日期时间范围形态与 `presets` 预设范围属性：前者两段共用一个日期时间面板，点「确定」提交当前段并自动切到另一端，两段都确定后才收起；后者支持单选 / 日期范围 / 日期时间范围三种预设，点击即填入并收起，预设值可为时间戳或返回时间戳的函数；范围形态下 `disabledTime` 额外接收段标识（`side`）
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="month"` / `"quarter"` / `"year"` 月、季、年形态：展开即落在对应层级，点格即提交；面板头部的年份按钮可在年 / 月 / 季之间切换视图，切换期间只平移视图、不提交
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="monthrange"` / `"quarterrange"` / `"yearrange"` 月、季、年范围形态：两个面板恒相差一格（月 / 季相差一年、年相差十年），切换视图时收成单面板并在选完年份后回到双面板；`disabledDate` 在月 / 季 / 年形态下按整段判定（整段都不可选该格才禁用）；季度默认展示格式为 `yyyy-QQQ`（如 `2026-Q4`）
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 优化范围形态的区间悬浮预览：预览端与已选端重合时，区间虚线收到端点实心块以内，不再穿过实心块并在块外露出生硬断点（日期 / 月 / 季 / 年各形态口径一致）
 - 移除 `@vuepic/vue-datepicker` 依赖
 - 全局默认样式的字体口径调整：库不再在 `body` 上声明字体族，字体归宿主（「谁提供字体谁声明」），组件与插槽内容一律继承宿主页面字体；原生表单控件因浏览器 `UA` 样式不继承页面字体，统一由 `input` / `textarea` / `select` / `button` 的 `font-family: inherit` 兜底
 - 浮层字体承接：库不声明字体族，浮层 `Teleport` 到 `body` 后会脱离页面字体继承链，现由浮层宿主自动承接**触发位置的字体族**（只承接字体族，字号仍由组件声明），修复宿主把字体声明在非 `body` 容器时浮层字体与页面不一致的问题

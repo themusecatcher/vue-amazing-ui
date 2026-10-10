@@ -14,15 +14,20 @@ import { ref } from 'vue'
 import {
   addDays,
   addMonths,
+  addYears,
   differenceInCalendarDays,
   endOfDay,
+  format,
   getDay,
   getHours,
   getMinutes,
   getSeconds,
   isSameDay,
   setHours,
-  startOfDay
+  startOfDay,
+  startOfMonth,
+  startOfQuarter,
+  startOfYear
 } from 'date-fns'
 import type { DatePickerProps } from 'vue-amazing-ui'
 /** 单日期用例的初始值：当天（`offsetDays` 可偏移） */
@@ -62,6 +67,51 @@ const placementBottomLeftValue = ref<number | null>(initialDate())
 const placementBottomRightValue = ref<number | null>(initialDate())
 const placementTopLeftValue = ref<number | null>(initialDate())
 const placementTopRightValue = ref<number | null>(initialDate())
+// 月 / 季 / 年形态用例：初始值取当前月首日 / 季首日 / 年首日，与形态的粒度一致
+const monthValue = ref<number | null>(startOfMonth(new Date()).getTime())
+const quarterValue = ref<number | null>(startOfQuarter(new Date()).getTime())
+const yearValue = ref<number | null>(startOfYear(new Date()).getTime())
+const monthFormatValue = ref<number | null>(startOfMonth(new Date()).getTime())
+const disabledMonthValue = ref<number | null>(startOfMonth(new Date()).getTime())
+const disabledMonthBeforeValue = ref<number | null>(startOfMonth(new Date()).getTime())
+const sizeMonthValue = ref<number | null>(startOfMonth(new Date()).getTime())
+// 月 / 季 / 年范围用例：起点取过去、终点取未来，使区间跨越多个格
+const monthRangeValue = ref<[number, number] | null>([
+  startOfMonth(addMonths(new Date(), -2)).getTime(),
+  startOfMonth(addMonths(new Date(), 2)).getTime()
+])
+const quarterRangeValue = ref<[number, number] | null>([
+  startOfQuarter(addMonths(new Date(), -3)).getTime(),
+  startOfQuarter(addMonths(new Date(), 3)).getTime()
+])
+const yearRangeValue = ref<[number, number] | null>([
+  startOfYear(addYears(new Date(), -1)).getTime(),
+  startOfYear(addYears(new Date(), 1)).getTime()
+])
+const presetMonthRangeValue = ref<[number, number] | null>(null)
+// 无边框用例的月 / 季 / 年形态：各持一组值，不与其它用例联动
+const borderlessMonthValue = ref<number | null>(startOfMonth(new Date()).getTime())
+const borderlessQuarterValue = ref<number | null>(startOfQuarter(new Date()).getTime())
+const borderlessYearValue = ref<number | null>(startOfYear(new Date()).getTime())
+const borderlessMonthRangeValue = ref<[number, number] | null>([
+  startOfMonth(addMonths(new Date(), -1)).getTime(),
+  startOfMonth(addMonths(new Date(), 1)).getTime()
+])
+const borderlessYearRangeValue = ref<[number, number] | null>([
+  startOfYear(addYears(new Date(), -1)).getTime(),
+  startOfYear(addYears(new Date(), 1)).getTime()
+])
+// 月范围用例的预设：值同样支持时间戳与函数（此处为「近 N 个月」两个区间）
+const monthRangePresets: NonNullable<DatePickerProps['presets']> = [
+  {
+    label: '近 3 个月',
+    value: () => [startOfMonth(addMonths(new Date(), -2)).getTime(), startOfMonth(new Date()).getTime()]
+  },
+  {
+    label: '近半年',
+    value: () => [startOfMonth(addMonths(new Date(), -5)).getTime(), startOfMonth(new Date()).getTime()]
+  }
+]
 // 范围用例：主用例的日期范围形态
 const rangeValue = ref<[number, number] | null>(initialRange())
 const sizeRangeValue = ref<[number, number] | null>(initialRange())
@@ -90,6 +140,10 @@ function disabledDateAfter(timestamp: number): boolean {
 function disabledWeekendDate(timestamp: number): boolean {
   const day = getDay(timestamp)
   return day === 0 || day === 6
+}
+/** 不可选择今天之前的月份（粒度为整月：整月都早于今天才算禁用） */
+function disabledMonthBefore(timestamp: number): boolean {
+  return endOfDay(timestamp).getTime() < startOfDay(new Date()).getTime()
 }
 /** 半开区间 [start, end) 的整数序列 */
 function range(start: number, end: number): number[] {
@@ -243,17 +297,31 @@ function onStartOpenChange(open: boolean): void {
 
 <br/>
 
-<DatePicker v-model:value="basicValue" placeholder="请选择日期" />
+<Space vertical>
+  <DatePicker v-model:value="basicValue" placeholder="请选择日期" />
+  <DatePicker v-model:value="monthValue" type="month" placeholder="请选择月份" />
+  <DatePicker v-model:value="quarterValue" type="quarter" placeholder="请选择季度" />
+  <DatePicker v-model:value="yearValue" type="year" placeholder="请选择年份" />
+</Space>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { startOfMonth, startOfQuarter, startOfYear } from 'date-fns'
 const basicValue = ref<number | null>(new Date().getTime())
+const monthValue = ref<number | null>(startOfMonth(new Date()).getTime())
+const quarterValue = ref<number | null>(startOfQuarter(new Date()).getTime())
+const yearValue = ref<number | null>(startOfYear(new Date()).getTime())
 </script>
 <template>
-  <DatePicker v-model:value="basicValue" placeholder="请选择日期" />
+  <Space vertical>
+    <DatePicker v-model:value="basicValue" placeholder="请选择日期" />
+    <DatePicker v-model:value="monthValue" type="month" placeholder="请选择月份" />
+    <DatePicker v-model:value="quarterValue" type="quarter" placeholder="请选择季度" />
+    <DatePicker v-model:value="yearValue" type="year" placeholder="请选择年份" />
+  </Space>
 </template>
 ```
 
@@ -268,6 +336,7 @@ _使用 `format` 定制展示格式_
 <Space vertical>
   <DatePicker v-model:value="slashValue" format="yyyy/MM/dd" placeholder="请选择日期" />
   <DatePicker v-model:value="chineseValue" format="yyyy年MM月dd日" placeholder="请选择日期" />
+  <DatePicker v-model:value="monthFormatValue" type="month" format="yyyy年MM月" placeholder="请选择月份" />
 </Space>
 
 ::: details Show Code
@@ -275,13 +344,16 @@ _使用 `format` 定制展示格式_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { startOfMonth } from 'date-fns'
 const slashValue = ref<number | null>(new Date().getTime())
 const chineseValue = ref<number | null>(new Date().getTime())
+const monthFormatValue = ref<number | null>(startOfMonth(new Date()).getTime())
 </script>
 <template>
   <Space vertical>
     <DatePicker v-model:value="slashValue" format="yyyy/MM/dd" placeholder="请选择日期" />
     <DatePicker v-model:value="chineseValue" format="yyyy年MM月dd日" placeholder="请选择日期" />
+    <DatePicker v-model:value="monthFormatValue" type="month" format="yyyy年MM月" placeholder="请选择月份" />
   </Space>
 </template>
 ```
@@ -294,18 +366,41 @@ _通过设置 `type` 属性，指定范围选择器类型_
 
 <br/>
 
-<DatePicker v-model:value="rangeValue" type="daterange" :placeholder="rangePlaceholder" />
+<Space vertical>
+  <DatePicker v-model:value="rangeValue" type="daterange" :placeholder="rangePlaceholder" />
+  <DatePicker v-model:value="monthRangeValue" type="monthrange" :placeholder="rangePlaceholder" />
+  <DatePicker v-model:value="quarterRangeValue" type="quarterrange" :placeholder="rangePlaceholder" />
+  <DatePicker v-model:value="yearRangeValue" type="yearrange" :placeholder="rangePlaceholder" />
+</Space>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { addMonths, addYears, startOfMonth, startOfQuarter, startOfYear } from 'date-fns'
 const rangeValue = ref<[number, number] | null>(null)
+const monthRangeValue = ref<[number, number] | null>([
+  startOfMonth(addMonths(new Date(), -2)).getTime(),
+  startOfMonth(addMonths(new Date(), 2)).getTime()
+])
+const quarterRangeValue = ref<[number, number] | null>([
+  startOfQuarter(addMonths(new Date(), -3)).getTime(),
+  startOfQuarter(addMonths(new Date(), 3)).getTime()
+])
+const yearRangeValue = ref<[number, number] | null>([
+  startOfYear(addYears(new Date(), -1)).getTime(),
+  startOfYear(addYears(new Date(), 1)).getTime()
+])
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 </script>
 <template>
-  <DatePicker v-model:value="rangeValue" type="daterange" :placeholder="rangePlaceholder" />
+  <Space vertical>
+    <DatePicker v-model:value="rangeValue" type="daterange" :placeholder="rangePlaceholder" />
+    <DatePicker v-model:value="monthRangeValue" type="monthrange" :placeholder="rangePlaceholder" />
+    <DatePicker v-model:value="quarterRangeValue" type="quarterrange" :placeholder="rangePlaceholder" />
+    <DatePicker v-model:value="yearRangeValue" type="yearrange" :placeholder="rangePlaceholder" />
+  </Space>
 </template>
 ```
 
@@ -469,17 +564,25 @@ const showNowValue = ref<number | null>(new Date().getTime())
 
 <br/>
 
-<DatePicker disabled v-model:value="disabledValue" placeholder="请选择日期" />
+<Space vertical>
+  <DatePicker disabled v-model:value="disabledValue" placeholder="请选择日期" />
+  <DatePicker disabled v-model:value="disabledMonthValue" type="month" placeholder="请选择月份" />
+</Space>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { startOfMonth } from 'date-fns'
 const disabledValue = ref<number | null>(new Date().getTime())
+const disabledMonthValue = ref<number | null>(startOfMonth(new Date()).getTime())
 </script>
 <template>
-  <DatePicker disabled v-model:value="disabledValue" placeholder="请选择日期" />
+  <Space vertical>
+    <DatePicker disabled v-model:value="disabledValue" placeholder="请选择日期" />
+    <DatePicker disabled v-model:value="disabledMonthValue" type="month" placeholder="请选择月份" />
+  </Space>
 </template>
 ```
 
@@ -529,14 +632,26 @@ _不可选择周六与周日_
 
 <DatePicker v-model:value="weekendValue" :disabled-date="disabledWeekendDate" placeholder="请选择日期" />
 
+_月形态不可选择今天之前的月份（`disabledDate` 的粒度为整月，整月都不可选该格才禁用）_
+
+<br/>
+
+<DatePicker
+  v-model:value="disabledMonthBeforeValue"
+  type="month"
+  :disabled-date="disabledMonthBefore"
+  placeholder="请选择月份"
+/>
+
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { addDays, endOfDay, getDay, startOfDay } from 'date-fns'
+import { addDays, endOfDay, getDay, startOfDay, startOfMonth } from 'date-fns'
 const disabledDateTimeValue = ref<number | null>(null)
 const disabledRangeValue = ref<[number, number] | null>(null)
+const disabledMonthBeforeValue = ref<number | null>(startOfMonth(new Date()).getTime())
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 const beforeTodayValue = ref<number | null>(new Date().getTime())
 const afterTodayValue = ref<number | null>(new Date().getTime())
@@ -560,6 +675,9 @@ function disabledDateAfter(timestamp: number): boolean {
 function disabledWeekendDate(timestamp: number): boolean {
   const day = getDay(timestamp)
   return day === 0 || day === 6
+}
+function disabledMonthBefore(timestamp: number): boolean {
+  return endOfDay(timestamp).getTime() < startOfDay(new Date()).getTime()
 }
 function disabledDateTimeUnits() {
   return {
@@ -588,6 +706,12 @@ function disabledDateTimeUnits() {
       :placeholder="rangePlaceholder"
     />
     <DatePicker v-model:value="weekendValue" :disabled-date="disabledWeekendDate" placeholder="请选择日期" />
+    <DatePicker
+      v-model:value="disabledMonthBeforeValue"
+      type="month"
+      :disabled-date="disabledMonthBefore"
+      placeholder="请选择月份"
+    />
   </Space>
 </template>
 ```
@@ -668,6 +792,12 @@ _用 `presets` 预设常用日期与区间，点击即填入并收起；值可�
     :placeholder="rangePlaceholder"
   />
   <DatePicker
+    v-model:value="presetMonthRangeValue"
+    type="monthrange"
+    :presets="monthRangePresets"
+    :placeholder="rangePlaceholder"
+  />
+  <DatePicker
     v-model:value="presetDateTimeRangeValue"
     type="datetimerange"
     format="yyyy/MM/dd HH:mm:ss"
@@ -682,10 +812,11 @@ _用 `presets` 预设常用日期与区间，点击即填入并收起；值可�
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { addDays, addMonths, startOfDay } from 'date-fns'
+import { addDays, addMonths, startOfDay, startOfMonth } from 'date-fns'
 import type { DatePickerProps } from 'vue-amazing-ui'
 const presetValue = ref<number | null>(null)
 const presetRangeValue = ref<[number, number] | null>(null)
+const presetMonthRangeValue = ref<[number, number] | null>(null)
 const presetDateTimeRangeValue = ref<[number, number] | null>(null)
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 /** 近 N 天区间：起点取 N 天前的零点、终点取当前时刻 */
@@ -704,6 +835,16 @@ const rangePresets: NonNullable<DatePickerProps['presets']> = [
   { label: '近 30 天', value: () => recentDaysRange(30) },
   { label: '近 90 天', value: () => recentDaysRange(90) }
 ]
+const monthRangePresets: NonNullable<DatePickerProps['presets']> = [
+  {
+    label: '近 3 个月',
+    value: () => [startOfMonth(addMonths(new Date(), -2)).getTime(), startOfMonth(new Date()).getTime()]
+  },
+  {
+    label: '近半年',
+    value: () => [startOfMonth(addMonths(new Date(), -5)).getTime(), startOfMonth(new Date()).getTime()]
+  }
+]
 </script>
 <template>
   <Space vertical>
@@ -712,6 +853,12 @@ const rangePresets: NonNullable<DatePickerProps['presets']> = [
       v-model:value="presetRangeValue"
       type="daterange"
       :presets="rangePresets"
+      :placeholder="rangePlaceholder"
+    />
+    <DatePicker
+      v-model:value="presetMonthRangeValue"
+      type="monthrange"
+      :presets="monthRangePresets"
       :placeholder="rangePlaceholder"
     />
     <DatePicker
@@ -732,26 +879,27 @@ const rangePresets: NonNullable<DatePickerProps['presets']> = [
 
 <br/>
 
-<Radio v-model:value="sizeValue" :options="sizeOptions" button button-style="solid" />
-<div class="mt10">
-  <Space vertical>
-    <DatePicker v-model:value="sizeCaseValue" :size="sizeValue" placeholder="请选择日期" />
-    <DatePicker
-      v-model:value="sizeRangeValue"
-      type="daterange"
-      :size="sizeValue"
-      :placeholder="rangePlaceholder"
-    />
-  </Space>
-</div>
+<Space vertical>
+  <Radio v-model:value="sizeValue" :options="sizeOptions" button button-style="solid" />
+  <DatePicker v-model:value="sizeCaseValue" :size="sizeValue" placeholder="请选择日期" />
+  <DatePicker v-model:value="sizeMonthValue" type="month" :size="sizeValue" placeholder="请选择月份" />
+  <DatePicker
+    v-model:value="sizeRangeValue"
+    type="daterange"
+    :size="sizeValue"
+    :placeholder="rangePlaceholder"
+  />
+</Space>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { startOfMonth } from 'date-fns'
 import type { DatePickerProps } from 'vue-amazing-ui'
 const sizeCaseValue = ref<number | null>(new Date().getTime())
+const sizeMonthValue = ref<number | null>(startOfMonth(new Date()).getTime())
 const sizeRangeValue = ref<[number, number] | null>(null)
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 const sizeValue = ref<DatePickerProps['size']>('middle')
@@ -762,18 +910,17 @@ const sizeOptions: Array<{ label: string; value: NonNullable<DatePickerProps['si
 ]
 </script>
 <template>
-  <Radio v-model:value="sizeValue" :options="sizeOptions" button button-style="solid" />
-  <div class="mt10">
-    <Space vertical>
-      <DatePicker v-model:value="sizeCaseValue" :size="sizeValue" placeholder="请选择日期" />
-      <DatePicker
-        v-model:value="sizeRangeValue"
-        type="daterange"
-        :size="sizeValue"
-        :placeholder="rangePlaceholder"
-      />
-    </Space>
-  </div>
+  <Space vertical>
+    <Radio v-model:value="sizeValue" :options="sizeOptions" button button-style="solid" />
+    <DatePicker v-model:value="sizeCaseValue" :size="sizeValue" placeholder="请选择日期" />
+    <DatePicker v-model:value="sizeMonthValue" type="month" :size="sizeValue" placeholder="请选择月份" />
+    <DatePicker
+      v-model:value="sizeRangeValue"
+      type="daterange"
+      :size="sizeValue"
+      :placeholder="rangePlaceholder"
+    />
+  </Space>
 </template>
 ```
 
@@ -983,17 +1130,64 @@ const errorValue = ref<number | null>(new Date().getTime())
 
 <br/>
 
-<DatePicker v-model:value="borderlessValue" :bordered="false" placeholder="请选择日期" />
+<Space vertical>
+  <DatePicker v-model:value="borderlessValue" :bordered="false" placeholder="请选择日期" />
+  <DatePicker v-model:value="borderlessMonthValue" type="month" :bordered="false" placeholder="请选择月份" />
+  <DatePicker v-model:value="borderlessQuarterValue" type="quarter" :bordered="false" placeholder="请选择季度" />
+  <DatePicker v-model:value="borderlessYearValue" type="year" :bordered="false" placeholder="请选择年份" />
+  <DatePicker
+    v-model:value="borderlessMonthRangeValue"
+    type="monthrange"
+    :bordered="false"
+    :placeholder="rangePlaceholder"
+  />
+  <DatePicker
+    v-model:value="borderlessYearRangeValue"
+    type="yearrange"
+    :bordered="false"
+    :placeholder="rangePlaceholder"
+  />
+</Space>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { addMonths, addYears, startOfMonth, startOfQuarter, startOfYear } from 'date-fns'
 const borderlessValue = ref<number | null>(new Date().getTime())
+const borderlessMonthValue = ref<number | null>(startOfMonth(new Date()).getTime())
+const borderlessQuarterValue = ref<number | null>(startOfQuarter(new Date()).getTime())
+const borderlessYearValue = ref<number | null>(startOfYear(new Date()).getTime())
+const borderlessMonthRangeValue = ref<[number, number] | null>([
+  startOfMonth(addMonths(new Date(), -1)).getTime(),
+  startOfMonth(addMonths(new Date(), 1)).getTime()
+])
+const borderlessYearRangeValue = ref<[number, number] | null>([
+  startOfYear(addYears(new Date(), -1)).getTime(),
+  startOfYear(addYears(new Date(), 1)).getTime()
+])
+const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 </script>
 <template>
-  <DatePicker v-model:value="borderlessValue" :bordered="false" placeholder="请选择日期" />
+  <Space vertical>
+    <DatePicker v-model:value="borderlessValue" :bordered="false" placeholder="请选择日期" />
+    <DatePicker v-model:value="borderlessMonthValue" type="month" :bordered="false" placeholder="请选择月份" />
+    <DatePicker v-model:value="borderlessQuarterValue" type="quarter" :bordered="false" placeholder="请选择季度" />
+    <DatePicker v-model:value="borderlessYearValue" type="year" :bordered="false" placeholder="请选择年份" />
+    <DatePicker
+      v-model:value="borderlessMonthRangeValue"
+      type="monthrange"
+      :bordered="false"
+      :placeholder="rangePlaceholder"
+    />
+    <DatePicker
+      v-model:value="borderlessYearRangeValue"
+      type="yearrange"
+      :bordered="false"
+      :placeholder="rangePlaceholder"
+    />
+  </Space>
 </template>
 ```
 
@@ -1047,7 +1241,7 @@ const topRightValue = ref<number | null>(new Date().getTime())
 | placeholder | 输入框提示文字，范围形态可传入两段文案 | string &#124; [string, string] | '' |
 | defaultPickerValue | 面板初始日期（毫秒时间戳），默认取 `value` 或今天 | number | undefined |
 | startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一 | 0 &#124; 1 &#124; 2 &#124; 3 &#124; 4 &#124; 5 &#124; 6 | 0 |
-| disabledDate | 不可选择的日期，入参为「当日零点」的毫秒时间戳 | (timestamp: number) => boolean | undefined |
+| disabledDate | 不可选择的日期，入参为「当日零点」的毫秒时间戳；月 / 季 / 年形态下按整段判定（整段都不可选该格才禁用） | (timestamp: number) => boolean | undefined |
 | disabledTime | 不可选择的时间，仅带时间的形态生效；入参为当前面板草稿值的时间戳，范围形态额外接收段标识 | [DatePickerDisabledTime](#datepickerdisabledtime-type) &#124; [DatePickerRangeDisabledTime](#datepickerragedisabledtime-type) | undefined |
 | defaultTime | 选中日期时的默认时分秒（只取其中的时分秒），毫秒时间戳 | number | undefined |
 | timePickerProps | 时间面板选项（步长 / 12 小时制 / 隐藏禁用项） | [DatePickerTimeProps](#datepickertimeprops-type) | undefined |
@@ -1063,7 +1257,7 @@ const topRightValue = ref<number | null>(new Date().getTime())
 | to | 面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 'body') 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | false |
 | placement | 面板弹出位置 | 'topLeft' &#124; 'top' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottom' &#124; 'bottomRight' | 'bottomLeft' |
 | showArrow | 范围形态的面板指示箭头是否展示，不传时跟随弹出方位（仅左侧对齐的 `bottomLeft` / `topLeft` 展示） | boolean | undefined |
-| showToday | 是否展示面板底部的「今天」快捷，面板切到月/年视图时隐藏 | boolean | true |
+| showToday | 是否展示面板底部的「今天」快捷，面板切到月 / 季 / 年视图时隐藏 | boolean | true |
 | showNow | 是否展示面板底部的「此刻」快捷，仅带时间的形态生效 | boolean | true |
 | suffixIcon | 自定义选择框后缀图标 | VNode &#124; (() => VNode) | undefined |
 | panelClass | 面板额外类名 | string | '' |
@@ -1121,12 +1315,12 @@ const topRightValue = ref<number | null>(new Date().getTime())
 | datetime | 'yyyy-MM-dd HH:mm:ss' |
 | week | 'yyyy-ww' |
 | month | 'yyyy-MM' |
-| quarter | 'yyyy-QQ' |
+| quarter | 'yyyy-QQQ' |
 | year | 'yyyy' |
 | daterange | 'yyyy-MM-dd' |
 | datetimerange | 'yyyy-MM-dd HH:mm:ss' |
 | monthrange | 'yyyy-MM' |
-| quarterrange | 'yyyy-QQ' |
+| quarterrange | 'yyyy-QQQ' |
 | yearrange | 'yyyy' |
 
 ### format 支持的格式化占位符列表
@@ -1139,6 +1333,8 @@ const topRightValue = ref<number | null>(new Date().getTime())
 | yyyy | 2026 | 年，四位数 |
 | M | 1-12 | 月 |
 | MM | 01-12 | 月，两位数 |
+| Q | 1-4 | 季度 |
+| QQQ | Q1-Q4 | 季度，带 `Q` 前缀 |
 | d | 1-31 | 日 |
 | dd | 01-31 | 日，两位数 |
 | h | 1-12 | 小时，12 小时制 |
