@@ -1364,7 +1364,7 @@ collapse | 展开-收起时的回调函数，点击 trigger 与响应式反馈�
 breakpoint | 触发响应式布局断点时的回调，`broken` 为 `true` 表示视窗宽度已低于断点 | (broken: boolean) => void
 
 <style lang="less" scoped>
-// 承载「整页」形态的用例（对应官网 iframe 承载），限高并允许内部滚动，避免撑高文档页面
+// 承载「整页」形态的用例，限高并允许内部滚动，避免撑高文档页面
 .demo-container {
   height: 360px;
   overflow: auto;
@@ -1387,7 +1387,7 @@ breakpoint | 触发响应式布局断点时的回调，`broken` 为 `true` 表�
   margin: 16px;
   background: rgba(255, 255, 255, 0.3);
 }
-// 占位块更淡的用例（与官网各用例取值一致）
+// 占位块更淡的用例
 .faint {
   background: rgba(255, 255, 255, 0.2);
 }

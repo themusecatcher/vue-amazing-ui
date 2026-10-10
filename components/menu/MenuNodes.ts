@@ -59,8 +59,7 @@ const POPUP_GAP = { horizontal: 8, vertical: 10 } as const
 /**
  * 收起态标题提示的面板盒外间距
  *
- * 面板为箭头预留 12px 槽位（见 `.menu-tooltip-popup` 的方向类），故可见卡片距锚点 16px ——
- * 与参考实现的 tooltip 同口径（`mainAxisGap` 4px + 箭头槽 12px）
+ * 面板为箭头预留 12px 槽位（见 `.menu-tooltip-popup` 的方向类），故可见卡片距锚点 16px
  */
 const TOOLTIP_GAP = 4
 
@@ -454,7 +453,7 @@ export default defineComponent({
       const active = isActivePath(keyPath)
       const iconNode = renderIcon(node.icon, node)
       const content = renderTitleContent(node.label, iconNode, level, collapsed)
-      // 收起态的悬浮标题（与参考实现同口径）：一级项缺省 `title` 时以标签内容兜底，更深层级只认显式 `title`；
+      // 收起态的悬浮标题：一级项缺省 `title` 时以标签内容兜底，更深层级只认显式 `title`；
       // `title` 显式 false 表示不展示。收起态下更深层级的项在浮层里呈现，故提示同样要覆盖到
       const tipSource = node.title
       const showTip = collapsed && tipSource !== false && (level === 1 || tipSource !== undefined)
@@ -471,7 +470,7 @@ export default defineComponent({
                 anchor: itemEl,
                 placement: 'right',
                 offset: TOOLTIP_GAP,
-                // 箭头与参考实现的 tooltip 同款：几何由 `.menu-tooltip-popup` 的方向类驱动
+                // 开启箭头：几何由 `.menu-tooltip-popup` 的方向类驱动
                 arrow: true,
                 arrowClass: 'menu-tooltip-arrow',
                 panelClass: 'menu-tooltip-popup',
