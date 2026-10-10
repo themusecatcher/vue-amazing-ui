@@ -13,6 +13,7 @@ import {
   formatTimestamp,
   getDefaultFormat,
   getInputSize,
+  getPanelModeOf,
   isOutOfRangeBoundary,
   isRangeType,
   parseTimestamp
@@ -187,6 +188,15 @@ const isDateTime = computed(() => props.type === 'datetime')
 const isRange = computed(() => isRangeType(props.type))
 /** 是否为日期时间范围形态：单个日期时间面板，两段靠「确定」切换编辑 */
 const isDateTimeRange = computed(() => props.type === 'datetimerange')
+/**
+ * 形态对应的面板层级：月 / 季 / 年形态直接落在对应层级，日期与周形态落在日期层级
+ *
+ * 周形态的面板同样是日期网格（仅整行选中与值粒度不同），故面板层级取日期。
+ */
+const panelBaseMode = computed<PickerPanelMode>(() => {
+  const mode = getPanelModeOf(props.type)
+  return mode === 'week' ? 'date' : mode
+})
 /** 是否为需点「确定」才提交的形态（含时间面板）：面板内的选择只落草稿，失焦按取消处理 */
 const needConfirm = computed(() => isDateTime.value || isDateTimeRange.value)
 /** 浮层与触发器的间距：范围形态额外预留箭头的高度 */
@@ -238,7 +248,7 @@ const draftRange = ref<PickerRangeValue | null>(null)
 const activeSide = ref<PickerRangeSide>('start')
 /** 触发器上的激活段下标（0 为起点段） */
 const activeTriggerIndex = computed(() => (activeSide.value === 'start' ? 0 : 1))
-/** 面板上悬浮的日期：范围形态展开期间在当前激活段显示该日期的预览文本 */
+/** 面板上悬浮的日期：范围形态在当前激活段、单选形态在输入框显示该日期的预览文本 */
 const hoverTimestamp = ref<number | null>(null)
 /** 预设悬浮产生的预览区间：范围形态据此在面板上预览该区间（不改变已选值） */
 const presetPreview = ref<PickerRangeValue | null>(null)
@@ -252,6 +262,14 @@ const hoverPreviewIndex = computed<0 | 1 | null>(() => {
     return null
   }
   return activeTriggerIndex.value
+})
+/** 单选形态下正在预览的时间戳（面板展开且悬浮了日期格），无预览为 null */
+const singlePreviewTimestamp = computed<number | null>(() => {
+  // 依赖需先读取：条件短路会让后续依赖在首轮求值时不被收集，之后悬浮变化便不再触发重算
+  const hovered = hoverTimestamp.value
+  const isRangeType = isRange.value
+  const isPanelOpen = open.value
+  return !isRangeType && isPanelOpen ? hovered : null
 })
 /** 面板指示箭头相对输入区左边缘的偏移：与激活段下划线同源、随激活段平移（范围形态专用） */
 const rangeArrowLeft = ref(0)
@@ -316,6 +334,11 @@ const rangeDisabledTime = computed<PickerRangeDisabledTime | undefined>(() => {
 const displayText = computed(() => {
   if (formattedControlled.value) {
     return typeof props.formattedValue === 'string' ? props.formattedValue : ''
+  }
+  // 悬浮面板日期时改为展示该日期的预览文本（与展示格式同口径，不写值）
+  const preview = singlePreviewTimestamp.value
+  if (preview !== null) {
+    return formatTimestamp(preview, mergedValueFormat.value)
   }
   return panelTimestamp.value === null ? '' : formatTimestamp(panelTimestamp.value, mergedValueFormat.value)
 })
@@ -523,6 +546,10 @@ function onRangeConfirm(timestamp: number, side: PickerRangeSide) {
 function onRangeHover(timestamp: number | null) {
   hoverTimestamp.value = timestamp
 }
+/** 单选形态的悬浮日期变更：在输入框做预览展示，不改变已选值 */
+function onSingleHover(timestamp: number | null) {
+  hoverTimestamp.value = timestamp
+}
 /** 聚焦某一段输入框即把激活段切过去（后续面板选择与悬浮预览都作用于该段） */
 function onSideFocus(index: 0 | 1) {
   activateSide(index === 0 ? 'start' : 'end')
@@ -609,6 +636,8 @@ function onEscKeydown() {
   }
 }
 function onPanelChange(timestamp: number, mode: PickerPanelMode) {
+  // 翻页 / 钻取后面板内容整体更换，鼠标已不再对应原来那一格，先撤掉输入框的悬浮预览
+  hoverTimestamp.value = null
   emits('panelChange', timestamp, mode)
 }
 function focus() {
@@ -628,6 +657,7 @@ defineExpose({ focus, blur })
       :range="isRange"
       :active-index="activeTriggerIndex"
       :preview-index="hoverPreviewIndex"
+      :preview="singlePreviewTimestamp !== null"
       :placeholder="singlePlaceholder"
       :placeholders="mergedPlaceholders"
       :size="size"
@@ -675,6 +705,7 @@ defineExpose({ focus, blur })
       <RangePanel
         v-if="isRange"
         :value="panelRangeValue"
+        :base-mode="panelBaseMode"
         :active="open"
         :active-side="activeSide"
         :start-day-of-week="startDayOfWeek"
@@ -715,6 +746,8 @@ defineExpose({ focus, blur })
         @change="onDraftChange"
         @confirm="onConfirm"
         @panel-change="onPanelChange"
+        @cell-hover="onSingleHover($event)"
+        @cell-leave="onSingleHover(null)"
       >
         <template #presets>
           <PresetPanel v-if="presets.length" :presets="presets" @select="onPresetSelect" @hover="onPresetHover" />
@@ -723,6 +756,7 @@ defineExpose({ focus, blur })
       <DatePanel
         v-else
         :value="innerValue"
+        :base-mode="panelBaseMode"
         :active="open"
         :start-day-of-week="startDayOfWeek"
         :disabled-date="disabledDate"
@@ -730,6 +764,8 @@ defineExpose({ focus, blur })
         :show-today="showToday"
         @select="onSelect"
         @panel-change="onPanelChange"
+        @cell-hover="onSingleHover($event)"
+        @cell-leave="onSingleHover(null)"
       >
         <template #presets>
           <PresetPanel v-if="presets.length" :presets="presets" @select="onPresetSelect" @hover="onPresetHover" />

@@ -12,6 +12,7 @@ export interface PickerTriggerProps {
   range?: boolean // 是否为范围形态（两段输入）
   activeIndex?: 0 | 1 // 范围形态下当前激活的段
   previewIndex?: 0 | 1 | null // 范围形态下当前展示预览文本（非真实值）的段
+  preview?: boolean // 单选形态下当前文本是否为悬浮预览（非真实值），预览文本取提示色
   size?: PickerSize
   status?: PickerStatus
   bordered?: boolean
@@ -31,6 +32,7 @@ const props = withDefaults(defineProps<PickerTriggerProps>(), {
   range: false,
   activeIndex: 0,
   previewIndex: null,
+  preview: false,
   size: 'middle',
   status: undefined,
   bordered: true,
@@ -192,7 +194,10 @@ defineExpose({ focus, blur })
     }"
     @click="onTriggerClick"
   >
-    <div class="picker-trigger-input" :class="{ 'picker-trigger-input-placeholder': !range && inputText === '' }">
+    <div
+      class="picker-trigger-input"
+      :class="{ 'picker-trigger-input-placeholder': !range && (inputText === '' || preview) }"
+    >
       <template v-if="range">
         <span
           ref="startItemRef"

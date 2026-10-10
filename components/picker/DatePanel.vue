@@ -11,6 +11,8 @@ import {
   getMonthGrid,
   getMonthNumber,
   getMonthTimestamps,
+  getQuarterNumber,
+  getQuarterTimestamps,
   getRangeCellClassNames,
   getWeekLabels,
   getYearNumber,
@@ -18,8 +20,10 @@ import {
   getYearTimestamps,
   isLastDayOfMonthTimestamp,
   isMonthFullyDisabled,
+  isQuarterFullyDisabled,
   isSameDayTimestamp,
   isSameMonthTimestamp,
+  isSameQuarterTimestamp,
   isYearFullyDisabled,
   startOfDayTimestamp
 } from './date-utils'
@@ -27,13 +31,14 @@ import type { StartDayOfWeek } from './date-utils'
 import type { PickerPanelMode, PickerRangeSide, PickerRangeValue } from './types'
 export interface DatePanelProps {
   value?: number | null // 当前选中日期（当日零点时间戳）
+  baseMode?: PickerPanelMode // 形态对应的面板层级：决定初始层级与「选中即提交」的层级
   startDayOfWeek?: StartDayOfWeek // 一周起始日
   disabledDate?: (timestamp: number) => boolean // 不可选择的日期
   defaultPickerValue?: number // 面板初始日期
   panelValue?: number // 受控的面板展示日期（范围形态由容器统一驱动，不传时面板自持）
   showToday?: boolean // 是否展示「今天」快捷
   datetime?: boolean // 日期时间形态：主体右侧并排时间面板，底部改由 footer 插槽提供（「此刻 / 确定」）
-  range?: boolean // 范围形态：日期格叠加区间高亮，并在悬浮时上报日期
+  range?: boolean // 范围形态：日期格叠加区间高亮
   rangeValue?: PickerRangeValue | null // 范围形态的已选区间
   hoverValue?: PickerRangeValue | null // 范围形态的悬浮预览区间
   side?: PickerRangeSide // 范围形态的面板位置：左面板隐去「下一」组、右面板隐去「上一」组
@@ -46,6 +51,7 @@ export interface DatePanelSlots {
 }
 const props = withDefaults(defineProps<DatePanelProps>(), {
   value: null,
+  baseMode: 'date',
   startDayOfWeek: 0,
   disabledDate: undefined,
   defaultPickerValue: undefined,
@@ -63,11 +69,13 @@ const emits = defineEmits<{
   select: [timestamp: number]
   panelChange: [value: number, mode: PickerPanelMode]
   panelValueChange: [value: number]
-  cellHover: [timestamp: number]
-  cellLeave: []
+  cellHover: [timestamp: number] // 悬浮日期格：范围形态据此换算预览区间，单选形态据此在输入框展示预览文本
+  cellLeave: [] // 移出日期格：清除预览
 }>()
-/** 月/年面板的列数（行数由格数除以列数得出） */
+/** 月面板格的列数（行数由格数除以列数得出） */
 const MONTH_COL_COUNT = 3
+/** 季面板格的列数：4 格 1 行 */
+const QUARTER_COL_COUNT = 4
 const YEAR_COL_COUNT = 3
 /** 按列数切分为矩阵，供表格逐行渲染 */
 function chunk<T>(list: T[], size: number): T[][] {
@@ -75,9 +83,9 @@ function chunk<T>(list: T[], size: number): T[][] {
     list.slice(index * size, index * size + size)
   )
 }
-const panelMode = ref<PickerPanelMode>('date')
-// 进入当前视图前的视图（选完年份后回到来源视图：日期面板进来回日期面板，月面板进来回月面板）
-const sourceMode = ref<PickerPanelMode>('date')
+const panelMode = ref<PickerPanelMode>(props.baseMode)
+// 进入当前视图前的视图（选完年份后回到来源视图：日期面板进来回日期面板，月 / 季面板进来回原面板）
+const sourceMode = ref<PickerPanelMode>(props.baseMode)
 const innerViewDate = ref<number>(props.panelValue ?? props.value ?? props.defaultPickerValue ?? Date.now())
 const viewDate = computed(() => props.panelValue ?? innerViewDate.value)
 /**
@@ -103,17 +111,30 @@ watch(
   }
 )
 /**
- * 展开时把展示日期带回当前值
+ * 展开时把展示日期带回当前值，并回到形态基准层级
  *
- * 面板在浮层收起后并不销毁，若不在展开时重置，上一次翻页到别的月份会一直留在视图里，
- * 与触发器上显示的值对不上（受控时视图归容器管理，此处不介入）。
+ * 面板在浮层收起后并不销毁，若不在展开时重置，上一次翻页到别的月份、或钻取到年 / 月 / 季面板
+ * 都会一直留在视图里，与触发器上显示的值对不上（受控时视图归容器管理，此处不介入视图）。
  */
 watch(
   () => props.active,
   (active) => {
-    if (active && props.panelValue === undefined) {
+    if (!active) {
+      return
+    }
+    panelMode.value = props.baseMode
+    sourceMode.value = props.baseMode
+    if (props.panelValue === undefined) {
       innerViewDate.value = props.value ?? props.defaultPickerValue ?? Date.now()
     }
+  }
+)
+/** 形态变化（宿主动态切换 type）时回到形态基准层级 */
+watch(
+  () => props.baseMode,
+  (mode) => {
+    panelMode.value = mode
+    sourceMode.value = mode
   }
 )
 watch(
@@ -127,6 +148,7 @@ watch(
 const weekLabels = computed(() => getWeekLabels(props.startDayOfWeek))
 const dateRows = computed(() => chunk(getMonthGrid(viewDate.value, props.startDayOfWeek), 7))
 const monthRows = computed(() => chunk(getMonthTimestamps(viewDate.value), MONTH_COL_COUNT))
+const quarterRows = computed(() => chunk(getQuarterTimestamps(viewDate.value), QUARTER_COL_COUNT))
 const yearRows = computed(() => chunk(getYearPanelGrid(viewDate.value), YEAR_COL_COUNT))
 const viewYear = computed(() => getYearNumber(viewDate.value))
 const viewMonth = computed(() => getMonthNumber(viewDate.value))
@@ -134,7 +156,7 @@ const decadeYears = computed(() => {
   const years = getYearTimestamps(viewDate.value)
   return `${getYearNumber(years[0])}-${getYearNumber(years[years.length - 1])}`
 })
-/** 范围形态的日期格类名（非范围形态返回空对象，省去逐格的类名求值） */
+/** 范围形态的格类名（非范围形态返回空对象，省去逐格的类名求值）；粒度随当前面板层级 */
 function getCellRangeClasses(timestamp: number): Record<string, boolean> {
   if (!props.range) {
     return {}
@@ -142,7 +164,8 @@ function getCellRangeClasses(timestamp: number): Record<string, boolean> {
   return getRangeCellClassNames(timestamp, {
     value: props.rangeValue,
     hoverValue: props.hoverValue,
-    viewDate: viewDate.value
+    viewDate: viewDate.value,
+    mode: panelMode.value
   })
 }
 /** 当前视图是否为今天 */
@@ -177,6 +200,10 @@ function isMonthDisabled(timestamp: number): boolean {
 function isYearDisabled(timestamp: number): boolean {
   return props.disabledDate ? isYearFullyDisabled(timestamp, props.disabledDate) : false
 }
+/** 季面板格代表整季：季内 3 个月都不可选时才禁用 */
+function isQuarterDisabled(timestamp: number): boolean {
+  return props.disabledDate ? isQuarterFullyDisabled(timestamp, props.disabledDate) : false
+}
 /** 是否为当前选中的月份（月面板格的比较粒度为月） */
 function isSelectedMonth(timestamp: number): boolean {
   return props.value !== null && isSameMonthTimestamp(timestamp, props.value)
@@ -184,6 +211,10 @@ function isSelectedMonth(timestamp: number): boolean {
 /** 是否为当前选中的年份（年面板格的比较粒度为年） */
 function isSelectedYear(timestamp: number): boolean {
   return props.value !== null && getYearNumber(timestamp) === getYearNumber(props.value)
+}
+/** 是否为当前选中的季度（季面板格的比较粒度为季） */
+function isSelectedQuarter(timestamp: number): boolean {
+  return props.value !== null && isSameQuarterTimestamp(timestamp, props.value)
 }
 /** 「今天」是否不可选（与日期格同为当日零点口径） */
 function isTodayDisabled(): boolean {
@@ -199,43 +230,61 @@ function onDateSelect(timestamp: number) {
   }
   emits('select', timestamp)
 }
-/** 悬浮到日期格：范围形态下由容器据此换算预览区间 */
+/** 悬浮到日期格：范围形态由容器据此换算预览区间，单选形态由宿主据此预览文本 */
 function onCellHover(timestamp: number) {
-  if (props.range) {
-    emits('cellHover', timestamp)
-  }
+  emits('cellHover', timestamp)
 }
 /**
- * 移出日期格：清除预览区间
+ * 移出日期格：清除预览
  *
  * 逐格 mouseleave：离开被悬浮的那一格即取消预览
  * 即撤预览——鼠标停在本面板的内边距、或两面板之间的空隙时，同样会先离开该格，预览不会滞留。
  */
 function onCellLeave() {
-  if (props.range) {
-    emits('cellLeave')
-  }
+  emits('cellLeave')
 }
-// 选择月份与年份只切换面板视图，不直接提交值（与日期面板的层级递进一致）
+/**
+ * 选择月份
+ *
+ * 形态即为月（`type="month"`）时点格即提交；其余情况（从日期面板钻取上来）只切换面板视图、
+ * 不直接提交值（与日期面板的层级递进一致）。
+ */
 function onMonthSelect(timestamp: number) {
   if (isMonthDisabled(timestamp)) {
     return
   }
   setViewDate(timestamp)
+  if (panelMode.value === props.baseMode) {
+    emits('select', timestamp)
+    return
+  }
   changePanel('date', timestamp)
 }
+/** 选择季度：季面板只作为形态基准层级出现（不能从其他层级钻取进来），故点格即提交 */
+function onQuarterSelect(timestamp: number) {
+  if (isQuarterDisabled(timestamp)) {
+    return
+  }
+  setViewDate(timestamp)
+  emits('select', timestamp)
+}
 /**
- * 选择年份：只平移视图年份（保留当前月日）并回到来源视图
+ * 选择年份
  *
- * 从日期面板进入年面板时，选完年直接回日期面板；从月面板进入时回月面板。
+ * 面板层级即形态层级（`type="year"`）时点格即提交；其余情况只平移视图年份（保留当前月日）
+ * 并回到来源视图——从日期面板进入年面板时选完年直接回日期面板，从月 / 季面板进入时回原面板。
  * 年份格本身是「1 月 1 日」，若直接把格时间戳写入视图会把月日重置为 1 月，故按年份差平移。
  */
 function onYearSelect(timestamp: number) {
   if (isYearDisabled(timestamp)) {
     return
   }
+  if (panelMode.value === props.baseMode) {
+    emits('select', timestamp)
+    return
+  }
   setViewDate(addYearTimestamp(viewDate.value, getYearNumber(timestamp) - viewYear.value))
-  changePanel(sourceMode.value === 'date' ? 'date' : 'month')
+  changePanel(sourceMode.value)
 }
 /** 「今天」快捷：与日期格选中同径（当日零点），由宿主提交并收起面板 */
 function onTodaySelect() {
@@ -300,7 +349,7 @@ function onNext() {
               >
             </template>
             <button
-              v-else-if="panelMode === 'month'"
+              v-else-if="panelMode === 'month' || panelMode === 'quarter'"
               type="button"
               tabindex="-1"
               class="picker-panel-year-btn"
@@ -354,14 +403,45 @@ function onNext() {
                   v-for="(timestamp, cellIndex) in row"
                   :key="cellIndex"
                   class="picker-panel-cell picker-panel-cell-in-view"
-                  :class="{
-                    'picker-panel-cell-selected': isSelectedMonth(timestamp),
-                    'picker-panel-cell-disabled': isMonthDisabled(timestamp)
-                  }"
+                  :class="[
+                    {
+                      'picker-panel-cell-selected': isSelectedMonth(timestamp),
+                      'picker-panel-cell-disabled': isMonthDisabled(timestamp)
+                    },
+                    getCellRangeClasses(timestamp)
+                  ]"
                   :title="formatTimestamp(timestamp, 'yyyy-MM')"
                   @click="onMonthSelect(timestamp)"
+                  @mouseenter="onCellHover(timestamp)"
+                  @mouseleave="onCellLeave()"
                 >
                   <div class="picker-panel-cell-inner">{{ getMonthNumber(timestamp) }}月</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div v-else-if="panelMode === 'quarter'" class="picker-panel-content picker-panel-quarter-content">
+          <table>
+            <tbody>
+              <tr v-for="(row, rowIndex) in quarterRows" :key="rowIndex">
+                <td
+                  v-for="(timestamp, cellIndex) in row"
+                  :key="cellIndex"
+                  class="picker-panel-cell picker-panel-cell-in-view"
+                  :class="[
+                    {
+                      'picker-panel-cell-selected': isSelectedQuarter(timestamp),
+                      'picker-panel-cell-disabled': isQuarterDisabled(timestamp)
+                    },
+                    getCellRangeClasses(timestamp)
+                  ]"
+                  :title="formatTimestamp(timestamp, 'yyyy-QQQ')"
+                  @click="onQuarterSelect(timestamp)"
+                  @mouseenter="onCellHover(timestamp)"
+                  @mouseleave="onCellLeave()"
+                >
+                  <div class="picker-panel-cell-inner">Q{{ getQuarterNumber(timestamp) }}</div>
                 </td>
               </tr>
             </tbody>
@@ -375,12 +455,22 @@ function onNext() {
                   v-for="(timestamp, cellIndex) in row"
                   :key="cellIndex"
                   class="picker-panel-cell picker-panel-cell-in-view"
-                  :class="{
-                    'picker-panel-cell-selected': isSelectedYear(timestamp),
-                    'picker-panel-cell-disabled': isYearDisabled(timestamp)
-                  }"
+                  :class="[
+                    {
+                      // 十年区间的首 / 末格：范围预览据此收边，避免虚线溢出到相邻十年
+                      'picker-panel-cell-start': getYearNumber(timestamp) % 10 === 0,
+                      'picker-panel-cell-end': getYearNumber(timestamp) % 10 === 9,
+                      'picker-panel-cell-selected': isSelectedYear(timestamp),
+                      'picker-panel-cell-disabled': isYearDisabled(timestamp)
+                    },
+                    // 十年代外的年格不参与区间底色：此格的 `-in-view` 恒真（承载选中态与文案色），
+                    // 无法像日期格那样靠它在 CSS 层收边，故在类名层直接拦掉
+                    isYearInView(timestamp) ? getCellRangeClasses(timestamp) : {}
+                  ]"
                   :title="formatTimestamp(timestamp, 'yyyy')"
                   @click="onYearSelect(timestamp)"
+                  @mouseenter="onCellHover(timestamp)"
+                  @mouseleave="onCellLeave()"
                 >
                   <div
                     class="picker-panel-cell-inner picker-panel-cell-inner-year"
@@ -460,6 +550,13 @@ function onNext() {
   padding: 0 8px;
   table {
     height: 264px;
+  }
+}
+.picker-panel-quarter-content {
+  // 季面板只有 1 行（4 格）
+  padding: 0 8px;
+  table {
+    height: 56px;
   }
 }
 .picker-panel-cell {
@@ -604,7 +701,19 @@ function onNext() {
   &.picker-panel-cell-in-view.picker-panel-cell-range-hover-start::after {
     left: 6px;
     border-left: 1px dashed var(--picker-hover-border-color, #7cb3ff);
-    border-radius: 1px 0 0 1px;
+    border-radius: 4px 0 0 4px;
+  }
+  // 预览端点与已选端点重合（起点已选待选终点 / 终点已选待选起点）：该侧已由已选端点的实心块收口，
+  // 虚线收到实心块以内（中线），避免虚线穿过实心块、在块外圆角处露出生硬的断点
+  &.picker-panel-cell-in-view.picker-panel-cell-range-hover-start.picker-panel-cell-range-start::after {
+    left: 50%;
+    border-left: 0;
+    border-radius: 0;
+  }
+  &.picker-panel-cell-in-view.picker-panel-cell-range-hover-end.picker-panel-cell-range-end::after {
+    right: 50%;
+    border-right: 0;
+    border-radius: 0;
   }
   // 预览区间右侧边界：只画「预览终点」与「跨面板时本月的月末格」两处竖线（同上，行末格不画）
   &.picker-panel-cell-in-view.picker-panel-cell-end.picker-panel-cell-range-hover-edge-end.picker-panel-cell-range-hover-edge-end-near-range::after,
@@ -614,7 +723,7 @@ function onNext() {
   &.picker-panel-cell-in-view.picker-panel-cell-range-hover-end::after {
     right: 6px;
     border-right: 1px dashed var(--picker-hover-border-color, #7cb3ff);
-    border-radius: 0 1px 1px 0;
+    border-radius: 0 6px 6px 0;
   }
   // 预览端点落在已选区间内部时，格内剩余半边由内层补一段加深底色（区间底色只铺内侧半边）
   &.picker-panel-cell-in-view.picker-panel-cell-in-range.picker-panel-cell-range-hover-start
@@ -653,9 +762,33 @@ function onNext() {
     border-color: rgba(0, 0, 0, 0.25);
   }
 }
+// 月 / 季 / 年面板的格比日期格宽（格内块宽 60px）：预览端点竖线随之对齐格内块的边缘内侧（+2px），
+// 与日期面板「24px 块 + 6px 偏移」同一口径；圆角与上下虚线由上方通用规则给出，此处只管偏移
+.picker-panel-month-content,
+.picker-panel-quarter-content,
+.picker-panel-year-content {
+  .picker-panel-cell.picker-panel-cell-in-view.picker-panel-cell-range-hover-start::after {
+    left: calc(50% - 28px);
+  }
+  .picker-panel-cell.picker-panel-cell-in-view.picker-panel-cell-range-hover-end::after {
+    right: calc(50% - 28px);
+  }
+  // 与日期面板同口径：预览端点与已选端点重合时收到实心块以内
+  .picker-panel-cell.picker-panel-cell-in-view.picker-panel-cell-range-hover-start.picker-panel-cell-range-start::after {
+    left: 50%;
+  }
+  .picker-panel-cell.picker-panel-cell-in-view.picker-panel-cell-range-hover-end.picker-panel-cell-range-end::after {
+    right: 50%;
+  }
+}
 .picker-panel-month-content .picker-panel-cell .picker-panel-cell-inner,
 .picker-panel-year-content .picker-panel-cell .picker-panel-cell-inner {
   // 固定宽度，使三个月格 / 年格等宽且居中（与日期格 24px 的自适应宽度区分）
+  width: 60px;
+  padding: 0 8px;
+}
+.picker-panel-quarter-content .picker-panel-cell .picker-panel-cell-inner {
+  // 与月 / 年格同宽（border-box：60px 含左右内边距，落在 4 列约 66px 的列宽内）
   width: 60px;
   padding: 0 8px;
 }

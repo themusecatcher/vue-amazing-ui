@@ -40,6 +40,8 @@ const WEEK_COUNT = 6
 const DAYS_PER_WEEK = 7
 /** 一年中的月份数 */
 const MONTH_COUNT = 12
+/** 一个季度包含的月份数 */
+const QUARTER_MONTH_COUNT = 3
 /** 年面板一次展示的年数 */
 const YEAR_COUNT = 10
 /** 年面板网格格数：3 列 × 4 行（比十年区间多出的两格用于展示相邻年份） */
@@ -50,13 +52,13 @@ const DEFAULT_FORMATS: Record<PickerType, string> = {
   date: 'yyyy-MM-dd',
   week: 'yyyy-ww',
   month: 'yyyy-MM',
-  quarter: 'yyyy-QQ',
+  quarter: 'yyyy-QQQ',
   year: 'yyyy',
   datetime: 'yyyy-MM-dd HH:mm:ss',
   daterange: 'yyyy-MM-dd',
   datetimerange: 'yyyy-MM-dd HH:mm:ss',
   monthrange: 'yyyy-MM',
-  quarterrange: 'yyyy-QQ',
+  quarterrange: 'yyyy-QQQ',
   yearrange: 'yyyy'
 }
 
@@ -103,6 +105,16 @@ export function isSameDayTimestamp(a: number, b: number): boolean {
 /** 是否为同一月 */
 export function isSameMonthTimestamp(a: number, b: number): boolean {
   return startOfMonth(a).getTime() === startOfMonth(b).getTime()
+}
+
+/** 是否为同一季度 */
+export function isSameQuarterTimestamp(a: number, b: number): boolean {
+  return startOfQuarter(a).getTime() === startOfQuarter(b).getTime()
+}
+
+/** 是否为同一年 */
+export function isSameYearTimestamp(a: number, b: number): boolean {
+  return getYear(a) === getYear(b)
 }
 
 /** 取出形态对应的默认展示格式 */
@@ -225,9 +237,36 @@ export function addMonthTimestamp(reference: number, diff: number): number {
   return addMonths(reference, diff).getTime()
 }
 
+/** 整季是否都不可选（季面板格的禁用判定：季内 3 个月逐月判定，月内全不可选才算禁用） */
+export function isQuarterFullyDisabled(timestamp: number, disabledDate: (timestamp: number) => boolean): boolean {
+  const quarterStart = startOfQuarterTimestamp(timestamp)
+  for (let index = 0; index < QUARTER_MONTH_COUNT; index += 1) {
+    if (!isMonthFullyDisabled(addMonthTimestamp(quarterStart, index), disabledDate)) {
+      return false
+    }
+  }
+  return true
+}
+
 /** 平移若干年（负数向前） */
 export function addYearTimestamp(reference: number, diff: number): number {
   return addYears(reference, diff).getTime()
+}
+
+/**
+ * 范围形态另一侧面板的视图日期
+ *
+ * 两面板相差「一格」，而一格的粒度随形态变化：日期形态差 1 个月、月 / 季形态差 1 年、年形态差一个
+ * 十年区间；`direction` 为 -1 时按同一粒度反推（右面板翻页后据此回推左面板）。
+ */
+export function getClosingViewTimestamp(reference: number, mode: PickerPanelMode, direction: number = 1): number {
+  if (mode === 'year') {
+    return addYearTimestamp(reference, YEAR_COUNT * direction)
+  }
+  if (mode === 'month' || mode === 'quarter') {
+    return addYearTimestamp(reference, direction)
+  }
+  return addMonthTimestamp(reference, direction)
 }
 
 /** 当前月首日时间戳 */
@@ -284,6 +323,56 @@ export interface RangeCellContext {
   hoverValue?: PickerRangeValue | null
   /** 当前面板的展示日期：判定相邻格是否已跨出本面板视图 */
   viewDate: number
+  /** 面板层级：决定一格的粒度（日期格按天、月格按月、季格按季、年格按年） */
+  mode?: PickerPanelMode
+}
+
+/** 某层级下的相邻格时间戳（前一格 / 后一格），用于收边判定 */
+function getRangeCellNeighbours(timestamp: number, mode: PickerPanelMode): [number, number] {
+  if (mode === 'year') {
+    return [addYearTimestamp(timestamp, -1), addYearTimestamp(timestamp, 1)]
+  }
+  if (mode === 'quarter') {
+    return [addMonthTimestamp(timestamp, -QUARTER_MONTH_COUNT), addMonthTimestamp(timestamp, QUARTER_MONTH_COUNT)]
+  }
+  if (mode === 'month') {
+    return [addMonthTimestamp(timestamp, -1), addMonthTimestamp(timestamp, 1)]
+  }
+  return [addDayTimestamp(timestamp, -1), addDayTimestamp(timestamp, 1)]
+}
+
+/** 两个时间戳是否代表同一格（按时段比较：月格同月、季格同季、年格同年） */
+function isSameRangeCell(a: number, b: number, mode: PickerPanelMode): boolean {
+  if (mode === 'year') {
+    return isSameYearTimestamp(a, b)
+  }
+  if (mode === 'quarter') {
+    return isSameQuarterTimestamp(a, b)
+  }
+  if (mode === 'month') {
+    return isSameMonthTimestamp(a, b)
+  }
+  return isSameDayTimestamp(a, b)
+}
+
+/**
+ * 该格是否落在本面板的视图范围内
+ *
+ * 判据是「格是否属于本面板的周期」：日期面板为展示月、年面板为当前十年；月 / 季面板的格与视图
+ * 一一对应（不渲染周期外的格），故恒为真。该判定同时用于探测相邻格：只有年面板会渲染十年之外
+ * 的前后各一格，预览延伸到十年边界时相邻格落在周期外，区间虚线在该处收边（而不是悬空断掉）；
+ * 月 / 季面板没有周期外的格，因而不会在面板交界处收边。
+ */
+function isInRangeView(timestamp: number, viewDate: number, mode: PickerPanelMode): boolean {
+  if (mode === 'year') {
+    const startYear = getYearNumber(getYearTimestamps(viewDate)[0])
+    const year = getYearNumber(timestamp)
+    return year >= startYear && year < startYear + YEAR_COUNT
+  }
+  if (mode === 'month' || mode === 'quarter') {
+    return true
+  }
+  return isSameMonthTimestamp(timestamp, viewDate)
 }
 
 /** 时间戳是否落在区间**内部**（不含两端：端点由 `-range-start` / `-range-end` 表达） */
@@ -308,21 +397,23 @@ export function isOutOfRangeBoundary(target: number, boundary: number, boundaryI
 }
 
 /**
- * 范围形态的日期格类名
+ * 范围形态的格类名
  *
- * 区间底色只覆盖**严格内部**的日期；悬浮预览（`-range-hover*`）
+ * 区间底色只覆盖**严格内部**的格；悬浮预览（`-range-hover*`）
  * 要求预览区间起止齐全且有序；`-edge-*` / `-near-hover` 用于在面板首末格与已选端点相邻处收边。
+ *
+ * 面板层级决定「一格代表多长时间」：相邻格推算、同格判定与视图范围据此切换，
+ * 日期 / 月 / 季 / 年四种层级共用同一套类名口径。
  */
 export function getRangeCellClassNames(timestamp: number, context: RangeCellContext): Record<string, boolean> {
-  const { value, hoverValue, viewDate } = context
+  const { value, hoverValue, viewDate, mode = 'date' } = context
   const rangeStart = value?.[0] ?? null
   const rangeEnd = value?.[1] ?? null
   const hoverStart = hoverValue?.[0] ?? null
   const hoverEnd = hoverValue?.[1] ?? null
-  const prevDate = addDayTimestamp(timestamp, -1)
-  const nextDate = addDayTimestamp(timestamp, 1)
-  const isSameAs = (date: number, target: number | null) => target !== null && isSameDayTimestamp(date, target)
-  const isInView = (date: number) => isSameMonthTimestamp(date, viewDate)
+  const [prevDate, nextDate] = getRangeCellNeighbours(timestamp, mode)
+  const isSameAs = (date: number, target: number | null) => target !== null && isSameRangeCell(date, target, mode)
+  const isInView = (date: number) => isInRangeView(date, viewDate, mode)
   const isRangeStart = (date: number) => isSameAs(date, rangeStart)
   const isRangeEnd = (date: number) => isSameAs(date, rangeEnd)
   const isRangeHovered = isInRangeTimestamp(hoverStart, hoverEnd, timestamp)

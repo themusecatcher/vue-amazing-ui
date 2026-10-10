@@ -4,7 +4,7 @@ import type { VNode } from 'vue'
 import DatePanel from './DatePanel.vue'
 import DatetimePanel from './DatetimePanel.vue'
 import PickerPanel from './PickerPanel.vue'
-import { addMonthTimestamp } from './date-utils'
+import { getClosingViewTimestamp } from './date-utils'
 import type { StartDayOfWeek } from './date-utils'
 import type {
   PickerDisabledTime,
@@ -16,6 +16,7 @@ import type {
 } from './types'
 export interface RangePanelProps {
   value?: PickerRangeValue | null // 当前区间（含只选中一段的中间态）
+  baseMode?: PickerPanelMode // 形态对应的面板层级：决定两面板的视图粒度与「选中即提交」的层级
   activeSide?: PickerRangeSide // 当前激活的段：悬浮预览与下一次选择都作用于该端
   startDayOfWeek?: StartDayOfWeek // 一周起始日
   disabledDate?: (timestamp: number) => boolean // 不可选择的日期
@@ -36,6 +37,7 @@ export interface RangePanelSlots {
 }
 const props = withDefaults(defineProps<RangePanelProps>(), {
   value: null,
+  baseMode: 'date',
   activeSide: 'start',
   startDayOfWeek: 0,
   disabledDate: undefined,
@@ -59,15 +61,36 @@ const emits = defineEmits<{
   hoverChange: [timestamp: number | null] // 悬浮的日期，供触发器在该段显示预览文本
 }>()
 /**
- * 左右面板共用一份视图日期：右面板固定为左面板的下一月，任一侧翻页都带动另一侧
+ * 左右面板共用一份视图日期：右面板固定为左面板的相邻一格，任一侧翻页都带动另一侧
  *
- * `manualViewDate` 只承载「用户翻页 / 选到补齐月」产生的手动视图；未手动翻页时视图直接由当前区间
+ * 「一格」的粒度随形态变化（日期形态为 1 个月、月 / 季形态为 1 年、年形态为一个十年区间）。
+ * `manualViewDate` 只承载「用户翻页 / 选到补齐格」产生的手动视图；未手动翻页时视图直接由当前区间
  * 起点派生——
  * 预设填入 / 外部改值后，展开中的面板视图会立刻跟到新区间，而不是等下次展开才对齐。
  */
 const manualViewDate = ref<number | null>(null)
 const viewDate = computed(() => manualViewDate.value ?? props.value?.[0] ?? props.defaultPickerValue ?? Date.now())
-const endViewDate = computed(() => addMonthTimestamp(viewDate.value, 1))
+const endViewDate = computed(() => getClosingViewTimestamp(viewDate.value, props.baseMode))
+/** 两侧面板当前的面板层级：与 `baseMode` 不一致即表示该侧已钻取（如月面板点「年」进年面板） */
+const startMode = ref<PickerPanelMode | null>(null)
+const endMode = ref<PickerPanelMode | null>(null)
+/**
+ * 正在钻取的一侧
+ *
+ * 钻取时收成单面板：两个面板并排展示不同层级（一侧年面板、一侧月面板）会读不出对应关系。
+ */
+const drillSide = computed<PickerRangeSide | null>(() => {
+  if (startMode.value !== null && startMode.value !== props.baseMode) {
+    return 'start'
+  }
+  if (endMode.value !== null && endMode.value !== props.baseMode) {
+    return 'end'
+  }
+  return null
+})
+/** 钻取时只留该侧面板（其视图由自身的关系决定：左面板用左视图、右面板用右视图） */
+const startPanelVisible = computed(() => drillSide.value !== 'end')
+const endPanelVisible = computed(() => drillSide.value !== 'start')
 /**
  * 展开时清掉手动视图
  *
@@ -79,6 +102,8 @@ watch(
   (active) => {
     if (active) {
       manualViewDate.value = null
+      startMode.value = null
+      endMode.value = null
     }
   }
 )
@@ -127,9 +152,9 @@ function onCellLeave() {
 function onStartViewChange(next: number) {
   manualViewDate.value = next
 }
-/** 右面板翻页：以其为准反推左面板，保持两面板始终相差一个月 */
+/** 右面板翻页：以其为准反推左面板，保持两面板始终相差一格（粒度随形态） */
 function onEndViewChange(next: number) {
-  manualViewDate.value = addMonthTimestamp(next, -1)
+  manualViewDate.value = getClosingViewTimestamp(next, props.baseMode, -1)
 }
 /**
  * 面板选中日期：写入**当前激活段**（与面板左右位置无关）
@@ -154,9 +179,11 @@ function onDatetimeConfirm(timestamp: number) {
 }
 /** 左右面板各带自己的头部导航，翻页时需带上来源段（面板切换事件按段上报） */
 function onStartPanelChange(value: number, mode: PickerPanelMode) {
+  startMode.value = mode
   emits('panelChange', value, mode, 'start')
 }
 function onEndPanelChange(value: number, mode: PickerPanelMode) {
+  endMode.value = mode
   emits('panelChange', value, mode, 'end')
 }
 function onDatetimePanelChange(value: number, mode: PickerPanelMode) {
@@ -196,8 +223,10 @@ function onDatetimePanelChange(value: number, mode: PickerPanelMode) {
       />
       <template v-else>
         <DatePanel
+          v-if="startPanelVisible"
           class="picker-range-panel"
           :panel-value="viewDate"
+          :base-mode="baseMode"
           :start-day-of-week="startDayOfWeek"
           :disabled-date="disabledDate"
           :default-picker-value="defaultPickerValue"
@@ -205,7 +234,8 @@ function onDatetimePanelChange(value: number, mode: PickerPanelMode) {
           :range="true"
           :range-value="rangedValue"
           :hover-value="hoverRangedValue"
-          side="start"
+          :active="active"
+          :side="drillSide === null ? 'start' : undefined"
           @select="onPanelSelect"
           @panel-change="onStartPanelChange"
           @panel-value-change="onStartViewChange"
@@ -213,8 +243,10 @@ function onDatetimePanelChange(value: number, mode: PickerPanelMode) {
           @cell-leave="onCellLeave"
         />
         <DatePanel
+          v-if="endPanelVisible"
           class="picker-range-panel"
           :panel-value="endViewDate"
+          :base-mode="baseMode"
           :start-day-of-week="startDayOfWeek"
           :disabled-date="disabledDate"
           :default-picker-value="defaultPickerValue"
@@ -222,7 +254,8 @@ function onDatetimePanelChange(value: number, mode: PickerPanelMode) {
           :range="true"
           :range-value="rangedValue"
           :hover-value="hoverRangedValue"
-          side="end"
+          :active="active"
+          :side="drillSide === null ? 'end' : undefined"
           @select="onPanelSelect"
           @panel-change="onEndPanelChange"
           @panel-value-change="onEndViewChange"

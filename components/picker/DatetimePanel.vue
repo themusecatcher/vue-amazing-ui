@@ -62,8 +62,8 @@ const emits = defineEmits<{
   change: [timestamp: number]
   confirm: [timestamp: number, source: 'ok' | 'now'] // 提交来源：确定按钮 / 此刻快捷
   panelChange: [value: number, mode: PickerPanelMode]
-  cellHover: [timestamp: number] // 范围形态：悬浮日期格（供宿主预览区间）
-  cellLeave: [] // 范围形态：移出面板
+  cellHover: [timestamp: number] // 悬浮日期格：范围形态据此预览区间，单选形态据此预览文本
+  cellLeave: [] // 移出日期格：清除预览
 }>()
 /**
  * 禁用时间的判定基准：与时间面板的展示值同源
