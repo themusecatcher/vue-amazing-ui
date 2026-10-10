@@ -102,7 +102,7 @@ components/
 
 ### utils/ 工具目录
 
-`components/utils/` 共 17 个文件，按职责分组：
+`components/utils/` 共 18 个文件，按职责分组：
 
 | 文件 | 职责 |
 | :--- | :--- |
@@ -117,6 +117,7 @@ components/
 | `position.ts` | 弹出定位 composable |
 | `z-index.ts` | 浮层层级（z-index）管理层（`useZIndex` / `createZIndexManager` 与注入键） |
 | `floating-mount.ts` | 浮层挂载点契约（同域模型：甲类浮层挂进承载层内容容器） |
+| `inherit-font.ts` | 浮层字体承接（库不声明字体，`Teleport` 后显式承接锚点字体族） |
 | `sider-collapsed.ts` | 侧边栏收起态契约（跨组件：`LayoutSider` 下发、`Menu` 消费的注入键） |
 | `render.ts` | 内容渲染辅助（统一归一为 VNode） |
 | `type.ts` | `withInstall` 高阶函数 |
@@ -124,7 +125,7 @@ components/
 | `style-deps.ts` | 样式依赖表（单一数据源：`componentsMap` / `styleSources` / `componentDependencies` / `stylelessComponents`） |
 | `vendor-styles.ts` | 第三方样式依赖清单（单一数据源） |
 
-> `index.ts` 是 barrel，只汇总 `format` / `math` / `function` / `dom` / `color` / `hooks` / `observers` / `position` / `z-index` / `floating-mount` / `sider-collapsed` / `render` 十二组；`type` / `resolver` / `style-deps` / `vendor-styles` 不属于 barrel 成员，需从具体文件引入（如 `import { withInstall } from 'components/utils/type'`）。
+> `index.ts` 是 barrel，只汇总 `format` / `math` / `function` / `dom` / `color` / `hooks` / `observers` / `position` / `z-index` / `floating-mount` / `inherit-font` / `sider-collapsed` / `render` 十三组；`type` / `resolver` / `style-deps` / `vendor-styles` 不属于 barrel 成员，需从具体文件引入（如 `import { withInstall } from 'components/utils/type'`）。
 > 工具函数的功能与使用说明见官方文档站 `docs/utils/functions/`。
 
 ### style/global.less
