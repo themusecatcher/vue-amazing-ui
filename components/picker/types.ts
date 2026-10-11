@@ -53,6 +53,14 @@ export type PickerDisabledTime = (timestamp: number) => PickerDisabledTimeUnits
 /** 范围形态的禁用时间判定，`side` 区分起点与终点 */
 export type PickerRangeDisabledTime = (timestamp: number, side: PickerRangeSide) => PickerDisabledTimeUnits
 
+/** 日期格的渲染入参：`current` 为该格日期的零点时间戳（与 `disabledDate` 入参同口径），`today` 为当前时刻时间戳 */
+export interface PickerDateRenderParams {
+  current: number
+  today: number
+}
+/** 日期单元格内容定制：返回值替换单元格的日号（单元格容器与选中 / 悬浮 / 区间底色仍由组件提供） */
+export type PickerDateRender = (params: PickerDateRenderParams) => VNode[]
+
 /** 预设选项的值：单选形态为一个时间戳，范围形态为两段元组 */
 export type PickerPresetValue = number | [number, number]
 

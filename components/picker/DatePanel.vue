@@ -40,13 +40,15 @@ import {
   YEAR_COUNT
 } from './date-utils'
 import type { StartDayOfWeek } from './date-utils'
-import type { PickerPanelMode, PickerRangeSide, PickerRangeValue } from './types'
+import type { PickerDateRender, PickerPanelMode, PickerRangeSide, PickerRangeValue } from './types'
 export interface DatePanelProps {
   value?: number | null // 当前选中日期（当日零点时间戳）
   baseMode?: PickerPanelMode // 形态对应的面板层级：决定初始层级与「选中即提交」的层级
   startDayOfWeek?: StartDayOfWeek // 一周起始日
   disabledDate?: (timestamp: number) => boolean // 不可选择的日期
+  dateRender?: PickerDateRender // 日期单元格内容定制：替换日号，单元格容器与各状态底色仍由面板提供
   defaultPickerValue?: number // 面板初始日期
+  extraFooter?: () => VNode[] // 面板底部的额外页脚：渲染在操作行之上
   panelValue?: number // 受控的面板展示日期（范围形态由容器统一驱动，不传时面板自持）
   showToday?: boolean // 是否展示「今天」快捷
   datetime?: boolean // 日期时间形态：主体右侧并排时间面板，底部改由 footer 插槽提供（「此刻 / 确定」）
@@ -66,7 +68,9 @@ const props = withDefaults(defineProps<DatePanelProps>(), {
   baseMode: 'date',
   startDayOfWeek: 0,
   disabledDate: undefined,
+  dateRender: undefined,
   defaultPickerValue: undefined,
+  extraFooter: undefined,
   panelValue: undefined,
   showToday: true,
   datetime: false,
@@ -207,6 +211,15 @@ function getCellRangeClasses(timestamp: number): Record<string, boolean> {
 /** 当前视图是否为今天 */
 function isToday(timestamp: number): boolean {
   return isSameDayTimestamp(timestamp, Date.now())
+}
+/**
+ * 日期格的内层内容节点
+ *
+ * 声明 `dateRender` 时以它的返回值替换日号；未声明时返回空数组，模板渲染默认日号。
+ * 返回值渲染在内层容器**之内**，故选中 / 悬浮 / 区间底色、今天圆点等既有状态样式不受影响。
+ */
+function getDateRenderNodes(timestamp: number): VNode[] {
+  return props.dateRender ? props.dateRender({ current: timestamp, today: Date.now() }) : []
 }
 /** 是否为当前选中的日期 */
 function isSelected(timestamp: number): boolean {
@@ -464,7 +477,7 @@ function onNext() {
 }
 </script>
 <template>
-  <PickerPanel :show-footer="footerVisible">
+  <PickerPanel :show-footer="footerVisible" :extra-footer="extraFooter">
     <template #presets>
       <slot name="presets" />
     </template>
@@ -541,7 +554,10 @@ function onNext() {
                   @mouseenter="onCellHover(timestamp)"
                   @mouseleave="onCellLeave()"
                 >
-                  <div class="picker-panel-cell-inner">{{ getDayOfMonth(timestamp) }}</div>
+                  <div class="picker-panel-cell-inner">
+                    <component v-for="(node, index) in getDateRenderNodes(timestamp)" :key="index" :is="node" />
+                    <template v-if="!dateRender">{{ getDayOfMonth(timestamp) }}</template>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -578,7 +594,10 @@ function onNext() {
                   @mouseenter="onCellHover(timestamp)"
                   @mouseleave="onCellLeave()"
                 >
-                  <div class="picker-panel-cell-inner">{{ getDayOfMonth(timestamp) }}</div>
+                  <div class="picker-panel-cell-inner">
+                    <component v-for="(node, index) in getDateRenderNodes(timestamp)" :key="index" :is="node" />
+                    <template v-if="!dateRender">{{ getDayOfMonth(timestamp) }}</template>
+                  </div>
                 </td>
               </tr>
             </tbody>

@@ -7,6 +7,7 @@ import PickerPanel from './PickerPanel.vue'
 import { getClosingViewTimestamp } from './date-utils'
 import type { StartDayOfWeek } from './date-utils'
 import type {
+  PickerDateRender,
   PickerDisabledTime,
   PickerPanelMode,
   PickerRangeDisabledTime,
@@ -20,7 +21,9 @@ export interface RangePanelProps {
   activeSide?: PickerRangeSide // 当前激活的段：悬浮预览与下一次选择都作用于该端
   startDayOfWeek?: StartDayOfWeek // 一周起始日
   disabledDate?: (timestamp: number) => boolean // 不可选择的日期
+  dateRender?: PickerDateRender // 日期单元格内容定制：透传给两侧日期面板
   defaultPickerValue?: number // 面板初始日期
+  extraFooter?: () => VNode[] // 面板底部的额外页脚：渲染在操作行之上
   showFooter?: boolean // 是否展示跨两个面板的底部
   datetime?: boolean // 日期时间范围：单个日期时间面板，两段靠「确定」切换编辑
   format?: string // 展示格式：推导时间列显隐与 12 小时制
@@ -41,7 +44,9 @@ const props = withDefaults(defineProps<RangePanelProps>(), {
   activeSide: 'start',
   startDayOfWeek: 0,
   disabledDate: undefined,
+  dateRender: undefined,
   defaultPickerValue: undefined,
+  extraFooter: undefined,
   showFooter: false,
   datetime: false,
   format: undefined,
@@ -108,6 +113,13 @@ watch(
   }
 )
 const hoverValue = ref<PickerRangeValue | null>(null)
+/**
+ * 额外页脚的落点
+ *
+ * 日期时间范围的操作行（「确定」）由内层日期时间面板给出，额外页脚须落在同一个页脚内才排在其上方；
+ * 其余范围形态没有操作行，额外页脚落在跨两个面板的页脚上。
+ */
+const panelExtraFooter = computed(() => (props.datetime ? undefined : props.extraFooter))
 /** 当前激活段的值：日期时间范围的面板以此为展示值（决定选中格与面板视图） */
 const activeValue = computed<number | null>(() => props.value?.[props.activeSide === 'start' ? 0 : 1] ?? null)
 /** 另一端的值：激活段为空时作为时间面板的展示基准 */
@@ -191,7 +203,7 @@ function onDatetimePanelChange(value: number, mode: PickerPanelMode) {
 }
 </script>
 <template>
-  <PickerPanel class="picker-range-panel-layout" :show-footer="showFooter">
+  <PickerPanel class="picker-range-panel-layout" :show-footer="showFooter" :extra-footer="panelExtraFooter">
     <template #presets>
       <slot name="presets" />
     </template>
@@ -206,7 +218,9 @@ function onDatetimePanelChange(value: number, mode: PickerPanelMode) {
         :time-props="timeProps"
         :disabled-date="disabledDate"
         :disabled-time="activeDisabledTime"
+        :date-render="dateRender"
         :default-time="defaultTime"
+        :extra-footer="extraFooter"
         :default-picker-value="defaultPickerValue"
         :start-day-of-week="startDayOfWeek"
         :range="true"
@@ -229,6 +243,7 @@ function onDatetimePanelChange(value: number, mode: PickerPanelMode) {
           :base-mode="baseMode"
           :start-day-of-week="startDayOfWeek"
           :disabled-date="disabledDate"
+          :date-render="dateRender"
           :default-picker-value="defaultPickerValue"
           :show-today="false"
           :range="true"
@@ -249,6 +264,7 @@ function onDatetimePanelChange(value: number, mode: PickerPanelMode) {
           :base-mode="baseMode"
           :start-day-of-week="startDayOfWeek"
           :disabled-date="disabledDate"
+          :date-render="dateRender"
           :default-picker-value="defaultPickerValue"
           :show-today="false"
           :range="true"

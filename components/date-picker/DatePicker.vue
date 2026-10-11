@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, useSlots, watch } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import { TinyColor } from '@ctrl/tinycolor'
 import Popup from 'components/popup'
@@ -20,6 +20,8 @@ import {
 } from 'components/picker/date-utils'
 import type { StartDayOfWeek } from 'components/picker/date-utils'
 import type {
+  PickerDateRender,
+  PickerDateRenderParams,
   PickerDisabledTime,
   PickerFormattedValue,
   PickerPanelMode,
@@ -36,7 +38,7 @@ import type {
   PickerValue
 } from 'components/picker'
 import type { FloatingPlacement } from 'components/utils'
-import { FLOATING_LAYER_Z_INDEX, useInject } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, useInject, useSlotsExist } from 'components/utils'
 export interface Props {
   // 双向绑定
   formattedValue?: PickerFormattedValue // 字符串轨道值：父组件传入时以它为准（受控），随选择经 update 事件回写
@@ -71,6 +73,8 @@ export interface Props {
   showToday?: boolean // 是否展示面板底部的「今天」快捷，面板切到周 / 月 / 季 / 年视图时隐藏
   showNow?: boolean // 是否展示面板底部的「此刻」快捷，仅带时间形态生效
   // 进阶透传
+  dateRender?: (params: PickerDateRenderParams) => VNode | VNode[] // 自定义日期单元格内容（替换日号），入参 current 为该格日期的零点时间戳
+  renderExtraFooter?: () => VNode | VNode[] // 面板底部的额外页脚，渲染在操作行之上
   suffixIcon?: VNode | (() => VNode) // 自定义选择框后缀图标
   panelClass?: string // 面板额外类名
   panelStyle?: CSSProperties // 面板额外样式
@@ -94,6 +98,8 @@ export interface DatePickerRangeInfo {
 export interface DatePickerSlots {
   suffixIcon?: () => VNode[] // 自定义选择框后缀图标，优先于同名 prop
   separator?: () => VNode[] // 范围形态两段之间的分隔符，默认右向箭头
+  dateRender?: (params: PickerDateRenderParams) => VNode[] // 自定义日期单元格内容（替换日号），优先于同名 prop期单元格内容（替换日号），优先于同名 prop
+  renderExtraFooter?: () => VNode[] // 面板底部的额外页脚，优先于同名 prop
 }
 // value / open 两个双向绑定项的默认值由 defineModel 声明，此处不重复
 const props = withDefaults(defineProps<Props>(), {
@@ -122,6 +128,8 @@ const props = withDefaults(defineProps<Props>(), {
   showArrow: undefined,
   showToday: true,
   showNow: true,
+  dateRender: undefined,
+  renderExtraFooter: undefined,
   suffixIcon: undefined,
   panelClass: '',
   panelStyle: undefined,
@@ -182,6 +190,41 @@ const wrapperStyle = computed(() => {
   return { ...themeVars.value, '--datepicker-width': width ?? 'auto' } as CSSProperties
 })
 const mergedPanelClass = computed(() => ['datepicker-panel-container', props.panelClass].filter(Boolean).join(' '))
+const slots = useSlots()
+const slotsExist = useSlotsExist(['dateRender', 'renderExtraFooter'])
+/**
+ * 日期单元格内容定制
+ *
+ * 同名插槽优先于 prop；两轨统一为「入参 → VNode[]」的函数下发给内核 —— 内核只收函数，
+ * VNode 由内核在各自的渲染上下文内创建（在 `computed` 里直接求值会产生「无主的 hoisted vnode」）。
+ */
+const mergedDateRender = computed<PickerDateRender | undefined>(() => {
+  if (slotsExist.dateRender) {
+    return (params) => slots.dateRender?.(params) ?? []
+  }
+  const render = props.dateRender
+  if (!render) {
+    return undefined
+  }
+  return (params) => {
+    const node = render(params)
+    return Array.isArray(node) ? node : [node]
+  }
+})
+/** 面板底部的额外页脚：同名插槽优先于 prop，同样以渲染函数下发 */
+const mergedExtraFooter = computed<(() => VNode[]) | undefined>(() => {
+  if (slotsExist.renderExtraFooter) {
+    return () => slots.renderExtraFooter?.() ?? []
+  }
+  const render = props.renderExtraFooter
+  if (!render) {
+    return undefined
+  }
+  return () => {
+    const node = render()
+    return Array.isArray(node) ? node : [node]
+  }
+})
 /** 是否为带时间面板的形态：日期与时间并排，选择只改草稿，点「确定」才提交 */
 const isDateTime = computed(() => props.type === 'datetime')
 /** 是否为范围形态：双面板、双段输入、值为两段元组 */
@@ -703,7 +746,9 @@ defineExpose({ focus, blur })
         :active-side="activeSide"
         :start-day-of-week="startDayOfWeek"
         :disabled-date="mergedRangeDisabledDate"
+        :date-render="mergedDateRender"
         :default-picker-value="defaultPickerValue"
+        :extra-footer="mergedExtraFooter"
         :datetime="isDateTimeRange"
         :format="mergedFormat"
         :header-format="format"
@@ -731,8 +776,10 @@ defineExpose({ focus, blur })
         :time-props="timePickerProps"
         :disabled-date="disabledDate"
         :disabled-time="singleDisabledTime"
+        :date-render="mergedDateRender"
         :default-time="defaultTime"
         :default-picker-value="defaultPickerValue"
+        :extra-footer="mergedExtraFooter"
         :start-day-of-week="startDayOfWeek"
         :show-now="showNow"
         :active="open"
@@ -753,7 +800,9 @@ defineExpose({ focus, blur })
         :active="open"
         :start-day-of-week="startDayOfWeek"
         :disabled-date="disabledDate"
+        :date-render="mergedDateRender"
         :default-picker-value="defaultPickerValue"
+        :extra-footer="mergedExtraFooter"
         :show-today="showToday"
         @select="onSelect"
         @panel-change="onPanelChange"

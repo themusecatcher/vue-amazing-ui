@@ -14,6 +14,7 @@ import {
 } from './date-utils'
 import type { StartDayOfWeek } from './date-utils'
 import type {
+  PickerDateRender,
   PickerDisabledTime,
   PickerDisabledTimeUnits,
   PickerPanelMode,
@@ -27,8 +28,10 @@ export interface DatetimePanelProps {
   timeProps?: PickerTimePanelProps // 时间面板选项（步长 / 12 小时制 / 隐藏禁用项）
   disabledDate?: (timestamp: number) => boolean // 不可选择的日期
   disabledTime?: PickerDisabledTime // 不可选择的时间
+  dateRender?: PickerDateRender // 日期单元格内容定制：透传给日期列
   defaultTime?: number // 选中日期时的默认时分秒（只取其中的时分秒）
   defaultPickerValue?: number // 面板初始日期
+  extraFooter?: () => VNode[] // 面板底部的额外页脚：渲染在「此刻 / 确定」之上
   startDayOfWeek?: StartDayOfWeek // 一周起始日
   showNow?: boolean // 是否展示「此刻」快捷
   active?: boolean // 面板是否展开（时间列据此把选中项滚到列顶部）
@@ -47,8 +50,10 @@ const props = withDefaults(defineProps<DatetimePanelProps>(), {
   timeProps: undefined,
   disabledDate: undefined,
   disabledTime: undefined,
+  dateRender: undefined,
   defaultTime: undefined,
   defaultPickerValue: undefined,
+  extraFooter: undefined,
   startDayOfWeek: 0,
   showNow: true,
   active: false,
@@ -147,7 +152,9 @@ function onOk(): void {
     :active="active"
     :start-day-of-week="startDayOfWeek"
     :disabled-date="disabledDate"
+    :date-render="dateRender"
     :default-picker-value="defaultPickerValue"
+    :extra-footer="extraFooter"
     :datetime="true"
     :show-today="false"
     :range="range"
