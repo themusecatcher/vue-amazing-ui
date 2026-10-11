@@ -21,6 +21,8 @@
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="monthrange"` / `"quarterrange"` / `"yearrange"` 月、季、年范围形态：两个面板恒相差一格（月 / 季相差一年、年相差十年），切换视图时收成单面板并在选完年份后回到双面板；`disabledDate` 在月 / 季 / 年形态下按整段判定（整段都不可选该格才禁用）；季度默认展示格式为 `yyyy-QQQ`（如 `2026-Q4`）
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="week"` / `"weekrange"` 周与周范围形态：日期面板每行前置周序号，选中周整行高亮；周范围按周粒度渲染区间端点与内部底色（跨月的一周会在左右两块面板各出现一次 —— 端点只在承载该端点日期的面板上实心，另一块里的同周行并入区间内部；区间内部底色只落在展示月内的日期格上，跨月补齐日与周序号格不着色，与日期范围的格口径一致，避免同一周在两块面板各亮起一块色带）。周形态采用 ISO 周口径（周一起始，默认展示格式 `RRRR-II周`，如 `2026-41周`），`startDayOfWeek` 对周形态不生效
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 年形态面板头部的十年区间改为下钻入口：点开为十年面板（世纪区间 + 12 格，窗外的相邻十年灰显），点格只平移视图并回到年面板，不提交值
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `dateRender` 属性与同名插槽：自定义日期单元格的内容与样式（入参 `current` 为该格日期的零点时间戳、`today` 为当前时刻时间戳），内容渲染在单元格内层，选中 / 悬浮 / 区间底色与今天标记不受影响
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `renderExtraFooter` 属性与同名插槽：在面板底部追加额外内容，渲染在「今天」「确定」等操作行之上；没有操作行的形态（月 / 季 / 年面板、日期 / 周 / 月 / 季 / 年范围）由额外页脚独占页脚区
 - 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 在 `format` / `valueFormat` 传入非法占位符组合（如 `yyyy-ww`）时解析抛错、导致组件渲染与输入提交中断的问题
 - 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 范围形态下悬浮跨月补齐日期（面板上属于相邻月份的日期格）时没有悬浮底色的问题：现在与展示月内的日期格同口径，悬浮即显底色
 - 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 周形态的整行样式问题：周序号改用与日期格一致的纯白；行高亮的两端补上圆角（悬浮与选中周 / 区间端点周同口径，区间内部与预览周仍保持方角以拼成连续色带）；悬浮已带底色的行（选中周 / 区间端点 / 区间内部 / 预览周）时底色不再被普通悬浮底色冲淡

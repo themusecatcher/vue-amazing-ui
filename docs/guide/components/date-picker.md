@@ -18,6 +18,7 @@ import {
   differenceInCalendarDays,
   endOfDay,
   format,
+  getDate,
   getDay,
   getHours,
   getMinutes,
@@ -29,6 +30,7 @@ import {
   startOfQuarter,
   startOfYear
 } from 'date-fns'
+import type { CSSProperties } from 'vue'
 import type { DatePickerProps } from 'vue-amazing-ui'
 /** 单日期用例的初始值：当天（`offsetDays` 可偏移） */
 function initialDate(offsetDays: number = 0): number {
@@ -240,6 +242,14 @@ const sizeOptions: Array<{ label: string; value: NonNullable<DatePickerProps['si
   { label: 'middle', value: 'middle' },
   { label: 'large', value: 'large' }
 ]
+// 定制日期单元格用例：单日期与日期范围各持一组值
+const dateRenderValue = ref<number | null>(initialDate())
+const dateRenderRangeValue = ref<[number, number] | null>(initialRange())
+/** 定制日期单元格：每月 1 号描一圈边框（单元格内层块高 24px，自定义节点须按 border-box 等高，否则外框会把圆圈撑高 2px） */
+function firstDayCellStyle(dayOfMonth: number): CSSProperties {
+  const cellStyle: CSSProperties = { boxSizing: 'border-box', height: '24px' }
+  return dayOfMonth === 1 ? { ...cellStyle, border: '1px solid #1677ff', borderRadius: '50%' } : cellStyle
+}
 /** 起点不得晚于终点的「整日」：同一天仍可选，越界的时间点交给 disabledTime */
 function disabledStartDate(timestamp: number): boolean {
   const end = endValue.value
@@ -949,6 +959,79 @@ const monthRangePresets: NonNullable<DatePickerProps['presets']> = [
 
 ::::
 
+## 额外的页脚
+
+_用 `renderExtraFooter` 在面板底部追加额外内容，渲染在「今天」「确定」等操作行之上_
+
+<br/>
+
+<Space vertical>
+  <DatePicker placeholder="请选择日期">
+    <template #renderExtraFooter>
+      <span>extra footer</span>
+    </template>
+  </DatePicker>
+  <DatePicker type="datetime" placeholder="请选择日期时间">
+    <template #renderExtraFooter>
+      <span>extra footer</span>
+    </template>
+  </DatePicker>
+  <DatePicker type="daterange" :placeholder="rangePlaceholder">
+    <template #renderExtraFooter>
+      <span>extra footer</span>
+    </template>
+  </DatePicker>
+  <DatePicker type="datetimerange" :placeholder="rangePlaceholder">
+    <template #renderExtraFooter>
+      <span>extra footer</span>
+    </template>
+  </DatePicker>
+  <DatePicker type="month" placeholder="请选择月份">
+    <template #renderExtraFooter>
+      <span>extra footer</span>
+    </template>
+  </DatePicker>
+</Space>
+
+::: details Show Code
+
+```vue
+<template>
+  <Space vertical>
+    <DatePicker placeholder="请选择日期">
+      <template #renderExtraFooter>
+        <span>extra footer</span>
+      </template>
+    </DatePicker>
+    <DatePicker type="datetime" placeholder="请选择日期时间">
+      <template #renderExtraFooter>
+        <span>extra footer</span>
+      </template>
+    </DatePicker>
+    <DatePicker type="daterange" :placeholder="rangePlaceholder">
+      <template #renderExtraFooter>
+        <span>extra footer</span>
+      </template>
+    </DatePicker>
+    <DatePicker type="datetimerange" :placeholder="rangePlaceholder">
+      <template #renderExtraFooter>
+        <span>extra footer</span>
+      </template>
+    </DatePicker>
+    <DatePicker type="month" placeholder="请选择月份">
+      <template #renderExtraFooter>
+        <span>extra footer</span>
+      </template>
+    </DatePicker>
+  </Space>
+</template>
+<script setup lang="ts">
+const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
+</script>
+```
+
+:::::
+
 ## 三种大小
 
 <br/>
@@ -1001,6 +1084,59 @@ const sizeOptions: Array<{ label: string; value: NonNullable<DatePickerProps['si
 ```
 
 ::::
+
+## 定制日期单元格
+
+_用 `dateRender` 自定义日期单元格的内容与样式，入参 `current` 为该格日期的零点时间戳_
+
+<br/>
+
+<Space vertical>
+  <DatePicker v-model:value="dateRenderValue">
+    <template #dateRender="{ current }">
+      <div :style="firstDayCellStyle(getDate(current))">{{ getDate(current) }}</div>
+    </template>
+  </DatePicker>
+  <DatePicker v-model:value="dateRenderRangeValue" type="daterange" :placeholder="rangePlaceholder">
+    <template #dateRender="{ current }">
+      <div :style="firstDayCellStyle(getDate(current))">{{ getDate(current) }}</div>
+    </template>
+  </DatePicker>
+</Space>
+
+::: details Show Code
+
+```vue
+<template>
+  <Space vertical>
+    <DatePicker v-model:value="dateRenderValue">
+      <template #dateRender="{ current }">
+        <div :style="firstDayCellStyle(getDate(current))">{{ getDate(current) }}</div>
+      </template>
+    </DatePicker>
+    <DatePicker v-model:value="dateRenderRangeValue" type="daterange" :placeholder="rangePlaceholder">
+      <template #dateRender="{ current }">
+        <div :style="firstDayCellStyle(getDate(current))">{{ getDate(current) }}</div>
+      </template>
+    </DatePicker>
+  </Space>
+</template>
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { CSSProperties } from 'vue'
+import { addDays, getDate } from 'date-fns'
+/** 定制日期单元格：每月 1 号描一圈边框（单元格内层块高 24px，自定义节点须按 border-box 等高，否则外框会把圆圈撑高 2px） */
+function firstDayCellStyle(dayOfMonth: number): CSSProperties {
+  const cellStyle: CSSProperties = { boxSizing: 'border-box', height: '24px' }
+  return dayOfMonth === 1 ? { ...cellStyle, border: '1px solid #1677ff', borderRadius: '50%' } : cellStyle
+}
+const dateRenderValue = ref<number | null>(addDays(new Date(), 0).getTime())
+const dateRenderRangeValue = ref<[number, number] | null>(null)
+const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
+</script>
+```
+
+:::::
 
 ## 自定义日期范围选择
 
@@ -1349,6 +1485,8 @@ const topRightValue = ref<number | null>(new Date().getTime())
 | showArrow | 范围形态的面板指示箭头是否展示，不传时跟随弹出方位（仅左侧对齐的 `bottomLeft` / `topLeft` 展示） | boolean | undefined |
 | showToday | 是否展示面板底部的「今天」快捷，面板切到周 / 月 / 季 / 年视图时隐藏 | boolean | true |
 | showNow | 是否展示面板底部的「此刻」快捷，仅带时间的形态生效 | boolean | true |
+| dateRender | 自定义日期单元格的内容与样式（替换日号），单元格容器与选中 / 悬浮 / 区间底色仍由组件提供；入参 `current` 为该格日期的零点时间戳、`today` 为当前时刻时间戳 | (params: { current: number; today: number }) => VNode &#124; VNode[] | undefined |
+| renderExtraFooter | 面板底部的额外页脚，渲染在「今天」「确定」等操作行之上 | () => VNode &#124; VNode[] | undefined |
 | suffixIcon | 自定义选择框后缀图标 | VNode &#124; (() => VNode) | undefined |
 | panelClass | 面板额外类名 | string | '' |
 | panelStyle | 面板额外样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
@@ -1446,6 +1584,8 @@ const topRightValue = ref<number | null>(new Date().getTime())
 
 | 名称 | 说明 | 用法 |
 | :-- | :-- | :-- |
+| dateRender | 自定义日期单元格的内容与样式（替换日号），优先于同名属性 | v-slot:dateRender |
+| renderExtraFooter | 面板底部的额外页脚，优先于同名属性 | v-slot:renderExtraFooter |
 | suffixIcon | 自定义选择框后缀图标 | v-slot:suffixIcon |
 | separator | 范围形态两段之间的分隔符 | v-slot:separator |
 

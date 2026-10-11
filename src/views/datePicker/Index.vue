@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { CSSProperties } from 'vue'
 import {
   addDays,
   addMonths,
   addYears,
   differenceInCalendarDays,
   endOfDay,
+  getDate,
   getDay,
   getHours,
   getMinutes,
@@ -227,6 +229,14 @@ const rangePresets: NonNullable<DatePickerProps['presets']> = [
   { label: '近 30 天', value: () => recentDaysRange(30) },
   { label: '近 90 天', value: () => recentDaysRange(90) }
 ]
+// 定制日期单元格用例：单日期与日期范围各持一组值
+const dateRenderValue = ref<number | null>(initialDate())
+const dateRenderRangeValue = ref<[number, number] | null>(initialRange())
+/** 定制日期单元格：每月 1 号描一圈边框（单元格内层块高 24px，自定义节点须按 border-box 等高，否则外框会把圆圈撑高 2px） */
+function firstDayCellStyle(dayOfMonth: number): CSSProperties {
+  const cellStyle: CSSProperties = { boxSizing: 'border-box', height: '24px' }
+  return dayOfMonth === 1 ? { ...cellStyle, border: '1px solid #1677ff', borderRadius: '50%' } : cellStyle
+}
 // 自定义日期范围选择用例：两个独立选择器经 disabledDate / disabledTime 与展开状态互相约束
 const startValue = ref<number | null>(null)
 const endValue = ref<number | null>(null)
@@ -478,6 +488,35 @@ function onStartOpenChange(open: boolean): void {
         :placeholder="rangePlaceholder"
       />
     </Space>
+    <h2 class="mt30 mb10">额外的页脚</h2>
+    <p class="mb10">用 <code>renderExtraFooter</code> 在面板底部追加额外内容，渲染在「今天」「确定」等操作行之上</p>
+    <Space vertical>
+      <DatePicker placeholder="请选择日期">
+        <template #renderExtraFooter>
+          <span>extra footer</span>
+        </template>
+      </DatePicker>
+      <DatePicker type="datetime" placeholder="请选择日期时间">
+        <template #renderExtraFooter>
+          <span>extra footer</span>
+        </template>
+      </DatePicker>
+      <DatePicker type="daterange" :placeholder="rangePlaceholder">
+        <template #renderExtraFooter>
+          <span>extra footer</span>
+        </template>
+      </DatePicker>
+      <DatePicker type="datetimerange" :placeholder="rangePlaceholder">
+        <template #renderExtraFooter>
+          <span>extra footer</span>
+        </template>
+      </DatePicker>
+      <DatePicker type="month" placeholder="请选择月份">
+        <template #renderExtraFooter>
+          <span>extra footer</span>
+        </template>
+      </DatePicker>
+    </Space>
     <h2 class="mt30 mb10">三种大小</h2>
     <Space vertical>
       <Radio v-model:value="sizeValue" :options="sizeOptions" button button-style="solid" />
@@ -485,6 +524,22 @@ function onStartOpenChange(open: boolean): void {
       <DatePicker v-model:value="sizeMonthValue" type="month" :size="sizeValue" placeholder="请选择月份" />
       <DatePicker v-model:value="sizeRangeValue" type="daterange" :size="sizeValue" :placeholder="rangePlaceholder" />
       <DatePicker v-model:value="sizeWeekValue" type="week" :size="sizeValue" placeholder="请选择周" />
+    </Space>
+    <h2 class="mt30 mb10">定制日期单元格</h2>
+    <p class="mb10"
+      >用 <code>dateRender</code> 自定义日期单元格的内容与样式，入参 <code>current</code> 为该格日期的零点时间戳</p
+    >
+    <Space vertical>
+      <DatePicker v-model:value="dateRenderValue">
+        <template #dateRender="{ current }">
+          <div :style="firstDayCellStyle(getDate(current))">{{ getDate(current) }}</div>
+        </template>
+      </DatePicker>
+      <DatePicker v-model:value="dateRenderRangeValue" type="daterange" :placeholder="rangePlaceholder">
+        <template #dateRender="{ current }">
+          <div :style="firstDayCellStyle(getDate(current))">{{ getDate(current) }}</div>
+        </template>
+      </DatePicker>
     </Space>
     <h2 class="mt30 mb10">自定义日期范围选择</h2>
     <p class="mb10">
