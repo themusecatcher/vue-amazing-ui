@@ -40,6 +40,11 @@ function onPanelMousedown(event: MouseEvent): void {
   flex-direction: column;
   box-sizing: border-box;
   width: 280px;
+  // 字号：面板属「浮层面板」容器，文字规格由面板自身给定 —— 面板根按项目正文基准声明默认字号
+  // （见 development/component-design.md §字体口径），面板内自绘文本一律继承此值。
+  // 不声明则会跟随宿主页面字号：文档站 `html` 为 16px（面板整体被放大），而演示站被 `Row` / `Col`
+  // 的 14px 压住，同一组件在两处呈现不同字号
+  font-size: 14px;
   text-align: center;
   background: var(--picker-panel-bg-color, #fff);
   // 面板自身不画边框：外边界由圆角 + 阴影提供，overflow 负责裁掉内容在圆角处的溢出

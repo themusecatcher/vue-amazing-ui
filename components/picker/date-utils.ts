@@ -14,6 +14,7 @@ import {
   getHours,
   getMinutes,
   getMonth,
+  getISOWeek,
   getQuarter,
   getSeconds,
   getYear,
@@ -22,6 +23,7 @@ import {
   parse,
   set,
   startOfDay,
+  startOfISOWeek,
   startOfMonth,
   startOfQuarter,
   startOfWeek,
@@ -42,21 +44,33 @@ const DAYS_PER_WEEK = 7
 const MONTH_COUNT = 12
 /** 一个季度包含的月份数 */
 const QUARTER_MONTH_COUNT = 3
-/** 年面板一次展示的年数 */
-const YEAR_COUNT = 10
+/** 年面板一次展示的年数（一个十年区间的年数） */
+export const YEAR_COUNT = 10
 /** 年面板网格格数：3 列 × 4 行（比十年区间多出的两格用于展示相邻年份） */
 const YEAR_PANEL_SIZE = 12
+/** 世纪年数：十年面板的翻页步长与头部区间宽度 */
+export const CENTURY_YEAR_COUNT = 100
+/** 十年面板网格格数：3 列 × 4 行（比世纪区间多出的两格用于展示相邻十年） */
+const DECADE_PANEL_SIZE = 12
 
-/** 形态 → 默认展示格式（date-fns 占位符） */
+/**
+ * 形态 → 默认展示格式（date-fns 占位符）
+ *
+ * 周形态取 ISO 周口径（`RRRR-II`）并带「周」字后缀（如 `2026-41周`，中文语境下「42」不足以自证是周序号）：
+ * `parse` / `isMatch` 不允许「日历周年 + 本地周序号」共存（`yyyy` 与 `ww` 同串直接抛 RangeError），
+ * 而 date-fns v4 的 `format` 又不支持本地周年占位符（`g` / `gggg`）——能与周序号配对且
+ * 可格式化 + 可解析的只有 ISO 组（`RRRR` / `II`）。
+ */
 const DEFAULT_FORMATS: Record<PickerType, string> = {
   date: 'yyyy-MM-dd',
-  week: 'yyyy-ww',
+  week: 'RRRR-II周',
   month: 'yyyy-MM',
   quarter: 'yyyy-QQQ',
   year: 'yyyy',
   datetime: 'yyyy-MM-dd HH:mm:ss',
   daterange: 'yyyy-MM-dd',
   datetimerange: 'yyyy-MM-dd HH:mm:ss',
+  weekrange: 'RRRR-II周',
   monthrange: 'yyyy-MM',
   quarterrange: 'yyyy-QQQ',
   yearrange: 'yyyy'
@@ -70,6 +84,16 @@ export function toWeekStartsOn(startDayOfWeek: StartDayOfWeek): 0 | 1 | 2 | 3 | 
 /** 按起始日轮转周标题（如 startDayOfWeek 为 0 时返回 一…日） */
 export function getWeekLabels(startDayOfWeek: StartDayOfWeek): string[] {
   return Array.from({ length: DAYS_PER_WEEK }, (_, index) => WEEK_LABELS[(startDayOfWeek + index) % DAYS_PER_WEEK])
+}
+
+/** 周序号（ISO 周口径，与 `RRRR-II周` 展示格式同源） */
+export function getWeekNumber(reference: number): number {
+  return getISOWeek(reference)
+}
+
+/** 所在 ISO 周的周首日（周一）零点时间戳：周面板的「一行」即由此起点加 0-6 天构成 */
+export function getWeekStartTimestamp(reference: number): number {
+  return startOfDay(startOfISOWeek(reference)).getTime()
 }
 
 /** 取当日零点时间戳（面板按天比较与取值均以零点为准） */
@@ -90,11 +114,20 @@ export function formatTimestamp(timestamp: number, formatStr: string): string {
  * 产出「看似合法」的时间；无法解析或结果非法时返回 null，由调用方按空值处理。
  */
 export function parseTimestamp(text: string, formatStr: string): number | null {
-  if (!text || !isMatch(text, formatStr)) {
+  if (!text) {
     return null
   }
-  const date = parse(text, formatStr, new Date())
-  return isValid(date) ? date.getTime() : null
+  // 占位符组合非法时 `isMatch` / `parse` 会直接抛 RangeError（如 `yyyy` 与 `ww` 同串）：
+  // 这是调用方的格式串问题而非值问题，按「无法解析」处理，交由调用方按空值走兜底
+  try {
+    if (!isMatch(text, formatStr)) {
+      return null
+    }
+    const date = parse(text, formatStr, new Date())
+    return isValid(date) ? date.getTime() : null
+  } catch {
+    return null
+  }
 }
 
 /** 是否为同一天 */
@@ -115,6 +148,21 @@ export function isSameQuarterTimestamp(a: number, b: number): boolean {
 /** 是否为同一年 */
 export function isSameYearTimestamp(a: number, b: number): boolean {
   return getYear(a) === getYear(b)
+}
+
+/**
+ * 是否为同一周
+ *
+ * 以「ISO 周首日」为比较口径（而非周序号）：同一周的两天必然落在同一个周首日，
+ * 跨年时周序号会回绕而周首日不会。
+ */
+export function isSameWeekTimestamp(a: number, b: number): boolean {
+  return getWeekStartTimestamp(a) === getWeekStartTimestamp(b)
+}
+
+/** 是否为同一个十年（十年面板格的比较粒度） */
+export function isSameDecadeTimestamp(a: number, b: number): boolean {
+  return Math.floor(getYear(a) / YEAR_COUNT) === Math.floor(getYear(b) / YEAR_COUNT)
 }
 
 /** 取出形态对应的默认展示格式 */
@@ -155,7 +203,7 @@ export function getPanelModeOf(type: PickerType): PickerPanelMode {
   if (type === 'quarter' || type === 'quarterrange') {
     return 'quarter'
   }
-  if (type === 'week') {
+  if (type === 'week' || type === 'weekrange') {
     return 'week'
   }
   return 'date'
@@ -197,6 +245,37 @@ export function getYearPanelGrid(reference: number): number[] {
   return Array.from({ length: YEAR_PANEL_SIZE }, (_, index) => new Date(firstYear + index, 0, 1).getTime())
 }
 
+/** 十年区间文本（如 2020-2029），供十年面板格使用 */
+export function getDecadeLabel(reference: number): string {
+  const startYear = Math.floor(getYear(reference) / YEAR_COUNT) * YEAR_COUNT
+  return `${startYear}-${startYear + YEAR_COUNT - 1}`
+}
+
+/**
+ * 世纪区间（如 2000-2099）：十年面板的头部文本与翻页粒度
+ *
+ * 与年面板的十年区间对齐——年面板的 super 翻页跨十年、十年面板的 super 翻页跨世纪。
+ */
+export function getCenturyRange(reference: number): [number, number] {
+  const startYear = Math.floor(getYear(reference) / CENTURY_YEAR_COUNT) * CENTURY_YEAR_COUNT
+  return [startYear, startYear + CENTURY_YEAR_COUNT - 1]
+}
+
+/** 十年面板网格：世纪区间居中，前后各补一格相邻十年，共 12 格（与年面板网格同构） */
+export function getDecadePanelGrid(reference: number): number[] {
+  const firstDecadeYear = getCenturyRange(reference)[0] - YEAR_COUNT
+  return Array.from({ length: DECADE_PANEL_SIZE }, (_, index) =>
+    new Date(firstDecadeYear + index * YEAR_COUNT, 0, 1).getTime()
+  )
+}
+
+/** 十年（整体）是否落在当前展示的世纪区间内：世纪之外的前后各一格据此灰显 */
+export function isDecadeInCentury(timestamp: number, reference: number): boolean {
+  const [startYear, endYear] = getCenturyRange(reference)
+  const decadeStart = Math.floor(getYear(timestamp) / YEAR_COUNT) * YEAR_COUNT
+  return decadeStart >= startYear && decadeStart + YEAR_COUNT - 1 <= endYear
+}
+
 /**
  * 整月是否都不可选（月面板格的禁用判定）
  *
@@ -221,6 +300,28 @@ export function isYearFullyDisabled(timestamp: number, disabledDate: (timestamp:
   const year = getYear(timestamp)
   for (let month = 0; month < MONTH_COUNT; month += 1) {
     if (!isMonthFullyDisabled(new Date(year, month, 1).getTime(), disabledDate)) {
+      return false
+    }
+  }
+  return true
+}
+
+/** 整周是否都不可选（周面板行的禁用判定：ISO 周内 7 天逐天判定） */
+export function isWeekFullyDisabled(timestamp: number, disabledDate: (timestamp: number) => boolean): boolean {
+  const weekStart = getWeekStartTimestamp(timestamp)
+  for (let index = 0; index < DAYS_PER_WEEK; index += 1) {
+    if (!disabledDate(addDayTimestamp(weekStart, index))) {
+      return false
+    }
+  }
+  return true
+}
+
+/** 整个十年是否都不可选（十年面板格的禁用判定：十年内 10 年逐年判定） */
+export function isDecadeFullyDisabled(timestamp: number, disabledDate: (timestamp: number) => boolean): boolean {
+  const startYear = Math.floor(getYear(timestamp) / YEAR_COUNT) * YEAR_COUNT
+  for (let index = 0; index < YEAR_COUNT; index += 1) {
+    if (!isYearFullyDisabled(new Date(startYear + index, 0, 1).getTime(), disabledDate)) {
       return false
     }
   }

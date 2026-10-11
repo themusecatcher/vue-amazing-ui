@@ -105,6 +105,24 @@ describe('范围格类名', () => {
     expect(isInRangeTimestamp(START, null, MIDDLE)).toBe(false)
   })
 
+  it('跨月补齐日的区间与悬浮类名与本月格同口径', () => {
+    // 视图停在 2026-01，该格属于下一月补齐日（不在视图月内）
+    const outOfView = new Date(2026, 1, 1).getTime()
+    const hovered = getRangeCellClassNames(outOfView, {
+      value: [START, null],
+      hoverValue: [START, outOfView],
+      viewDate: VIEW_DATE
+    })
+    // 悬浮端点类名照常落在跨月格上：面板的悬浮底色规则据此判定该格是否吃底色
+    expect(hovered['picker-panel-cell-range-hover-end']).toBe(true)
+
+    const inRange = getRangeCellClassNames(outOfView, {
+      value: [START, new Date(2026, 1, 10).getTime()],
+      viewDate: VIEW_DATE
+    })
+    expect(inRange['picker-panel-cell-in-range']).toBe(true)
+  })
+
   it('越界判定以边界当日为零点比较，同日不算越界', () => {
     const dayBefore = new Date(2026, 0, 9).getTime()
     const dayAfter = new Date(2026, 0, 11).getTime()
@@ -438,6 +456,24 @@ describe('范围形态的双段输入', () => {
     findCell('2026-01-20')?.dispatchEvent(new MouseEvent('mouseenter'))
     await flush()
     expect(rangeInputs()[0]?.value).toBe('2026-01-20')
+  })
+
+  it('悬浮下一月补齐日时该格带悬浮端类名', async () => {
+    await mountRange({ value: [START, null] })
+    // 激活终点段：悬浮的日期成为预览终点，跨月补齐日据此拿到悬浮端类名
+    document.querySelectorAll<HTMLInputElement>('.picker-trigger-input-inner')[1]?.focus()
+    await flush()
+
+    const leftPanel = document.querySelectorAll('.picker-range-panel')[0]
+    const cell = Array.from(leftPanel.querySelectorAll<HTMLElement>('.picker-panel-cell')).find(
+      (item) => item.getAttribute('title') === '2026-02-01'
+    )
+    // 左面板视图为 2026-01：该格是下一月补齐日，不属于视图月
+    expect(cell?.classList.contains('picker-panel-cell-in-view')).toBe(false)
+
+    cell?.dispatchEvent(new MouseEvent('mouseenter'))
+    await flush()
+    expect(cell?.classList.contains('picker-panel-cell-range-hover-end')).toBe(true)
   })
 
   it('下划线挂在触发器根下，定位基准为触发器而非输入区', async () => {

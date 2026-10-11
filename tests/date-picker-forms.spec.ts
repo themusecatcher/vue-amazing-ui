@@ -78,11 +78,13 @@ async function mountPicker(props: Record<string, unknown> = {}) {
 }
 
 describe('形态 → 面板层级', () => {
-  it('形态到面板层级的映射：月 / 季 / 年各归其位，日期与周归日期', () => {
+  it('形态到面板层级的映射：周 / 月 / 季 / 年各归其位，日期归日期', () => {
     expect(getPanelModeOf('date')).toBe('date')
+    expect(getPanelModeOf('week')).toBe('week')
     expect(getPanelModeOf('month')).toBe('month')
     expect(getPanelModeOf('quarter')).toBe('quarter')
     expect(getPanelModeOf('year')).toBe('year')
+    expect(getPanelModeOf('weekrange')).toBe('week')
     expect(getPanelModeOf('monthrange')).toBe('month')
     expect(getPanelModeOf('quarterrange')).toBe('quarter')
     expect(getPanelModeOf('yearrange')).toBe('year')
@@ -119,11 +121,134 @@ describe('形态 → 面板层级', () => {
     expect(findCell('2030')).not.toBeUndefined()
   })
 
-  it('周形态仍落在日期面板（面板层级取日期）', async () => {
-    await mountPicker({ type: 'week' })
+  it('周形态展开即周面板：周序号首列 + 6 行 × 7 天，选中周整行高亮', async () => {
+    // 2026-01-07（周三）落在 ISO 第 2 周（2026-01-05 起）
+    await mountPicker({ type: 'week', value: new Date(2026, 0, 7).getTime() })
 
     expect(viewHeaders()).toEqual(['2026年1月'])
-    expect(document.querySelectorAll('.picker-panel-date-content .picker-panel-cell')).toHaveLength(42)
+    // 每周一行、行首为周序号格，故每行 8 格（周序号 + 7 天）
+    expect(document.querySelectorAll('.picker-panel-week-content tbody tr')).toHaveLength(6)
+    expect(document.querySelectorAll('.picker-panel-week-content .picker-panel-cell-week')).toHaveLength(6)
+    expect(document.querySelectorAll('.picker-panel-week-content .picker-panel-cell-week-day')).toHaveLength(42)
+    // 周序号随行首日所在 ISO 周：1 月网格首行为 2025-12-29 → 第 1 周
+    const weekNumbers = Array.from(document.querySelectorAll('.picker-panel-week-content .picker-panel-cell-week')).map(
+      (cell) => cell.textContent?.trim()
+    )
+    expect(weekNumbers).toEqual(['1', '2', '3', '4', '5', '6'])
+    const selectedRows = document.querySelectorAll('.picker-panel-week-row-selected')
+    expect(selectedRows).toHaveLength(1)
+    expect(selectedRows[0].querySelector('.picker-panel-cell-week')?.textContent?.trim()).toBe('2')
+  })
+
+  it('周范围按周粒度高亮：端点周实心、区间内的周铺底色', async () => {
+    // 起点取第 2 周（2026-01-05 起）、终点取第 4 周（2026-01-19 起）→ 第 3 周整周落在区间内部
+    await mountPicker({
+      type: 'weekrange',
+      value: [new Date(2026, 0, 5).getTime(), new Date(2026, 0, 19).getTime()]
+    })
+
+    expect(viewHeaders()).toEqual(['2026年1月', '2026年2月'])
+    const left = rangePanels()[0]
+    const weekNumberOf = (selector: string) =>
+      left.querySelector(`${selector} .picker-panel-cell-week`)?.textContent?.trim()
+    expect(left.querySelectorAll('.picker-panel-week-row-range-start')).toHaveLength(1)
+    expect(left.querySelectorAll('.picker-panel-week-row-in-range')).toHaveLength(1)
+    expect(left.querySelectorAll('.picker-panel-week-row-range-end')).toHaveLength(1)
+    expect(weekNumberOf('.picker-panel-week-row-range-start')).toBe('2')
+    expect(weekNumberOf('.picker-panel-week-row-in-range')).toBe('3')
+    expect(weekNumberOf('.picker-panel-week-row-range-end')).toBe('4')
+  })
+
+  it('周形态默认展示格式带「周」字后缀', async () => {
+    // 2026-01-07（周三）落在 ISO 第 2 周
+    await mountPicker({ type: 'week', value: new Date(2026, 0, 7).getTime() })
+
+    expect(singleInput()?.value).toBe('2026-02周')
+  })
+
+  it('周范围的跨月周：端点只在承载端点日期的面板上实心，另一块按区间内部处理', async () => {
+    // 起点 2026-01-05（第 2 周）、终点 2026-02-05（第 6 周）：第 6 周（02-02 起）同时出现在两块面板
+    await mountPicker({
+      type: 'weekrange',
+      value: [new Date(2026, 0, 5).getTime(), new Date(2026, 1, 5).getTime()]
+    })
+
+    expect(viewHeaders()).toEqual(['2026年1月', '2026年2月'])
+    const [left, right] = rangePanels()
+    const weekNumbers = (panel: Element, selector: string) =>
+      Array.from(panel.querySelectorAll(`${selector} .picker-panel-cell-week`)).map((cell) => cell.textContent?.trim())
+    // 左（1 月）面板：起点周实心；第 6 周含终点日期但落在 2 月，故只算区间内部
+    expect(weekNumbers(left, '.picker-panel-week-row-range-start')).toEqual(['2'])
+    expect(left.querySelectorAll('.picker-panel-week-row-range-end')).toHaveLength(0)
+    expect(weekNumbers(left, '.picker-panel-week-row-in-range')).toEqual(['3', '4', '5', '6'])
+    // 右（2 月）面板：终点周实心，起点周不在该面板
+    expect(right.querySelectorAll('.picker-panel-week-row-range-start')).toHaveLength(0)
+    expect(weekNumbers(right, '.picker-panel-week-row-range-end')).toEqual(['6'])
+    expect(weekNumbers(right, '.picker-panel-week-row-in-range')).toEqual(['5'])
+  })
+
+  it('同一周内的范围：整行同时带起止两个端点类名，不产生区间内部行', async () => {
+    // 2026-01-06 与 2026-01-08 同属 ISO 第 2 周
+    await mountPicker({
+      type: 'weekrange',
+      value: [new Date(2026, 0, 6).getTime(), new Date(2026, 0, 8).getTime()]
+    })
+
+    const row = document.querySelector('.picker-panel-week-row-range-start')
+    expect(row?.classList.contains('picker-panel-week-row-range-end')).toBe(true)
+    expect(document.querySelectorAll('.picker-panel-week-row-in-range')).toHaveLength(0)
+  })
+
+  it('中途选终点：起点行不与待选行重叠（起点行保持整行实心端点）', async () => {
+    await mountPicker({ type: 'weekrange' })
+    // 点第 2 周的某天作为起点 → 激活段切到终点
+    findCell('2026-01-07')?.click()
+    await flush()
+    // 悬浮第 4 周进入待选：此时区间只有一端，isInRange 为假，端点须被显式排除
+    findCell('2026-01-21')?.dispatchEvent(new MouseEvent('mouseenter'))
+    await flush()
+
+    const startRow = document.querySelector('.picker-panel-week-row-range-start')
+    expect(startRow?.classList.contains('picker-panel-week-row-range-hover')).toBe(false)
+    const hoverRows = Array.from(document.querySelectorAll('.picker-panel-week-row-range-hover')).map((row) =>
+      row.querySelector('.picker-panel-cell-week')?.textContent?.trim()
+    )
+    expect(hoverRows).toEqual(['3', '4'])
+  })
+
+  it('年面板头部的十年代是下钻入口：点开为十年面板（世纪区间 + 12 格），点格回年面板', async () => {
+    await mountPicker({ type: 'year', value: new Date(2026, 0, 1).getTime() })
+
+    const decadeBtn = document.querySelector<HTMLElement>('.picker-panel-decade-btn')
+    expect(decadeBtn?.textContent?.trim()).toBe('2020-2029')
+    decadeBtn?.click()
+    await flush()
+
+    // 十年面板头部换为世纪区间，窗内 10 格可选、前后各 1 格灰显
+    expect(viewHeaders()).toEqual(['2000-2099'])
+    const decadeCells = Array.from(document.querySelectorAll('.picker-panel-decade-content .picker-panel-cell'))
+    expect(decadeCells).toHaveLength(12)
+    expect(decadeCells.map((cell) => cell.textContent?.trim())).toEqual([
+      '1990-1999',
+      '2000-2009',
+      '2010-2019',
+      '2020-2029',
+      '2030-2039',
+      '2040-2049',
+      '2050-2059',
+      '2060-2069',
+      '2070-2079',
+      '2080-2089',
+      '2090-2099',
+      '2100-2109'
+    ])
+    expect(document.querySelectorAll('.picker-panel-decade-content .picker-panel-cell-out-view')).toHaveLength(2)
+    expect(document.querySelectorAll('.picker-panel-decade-content .picker-panel-cell-selected')).toHaveLength(1)
+
+    // 点格只把视图平移到该十年并回年面板，不提交值（十年不是可选值粒度）
+    findCell('2030-2039')?.click()
+    await flush()
+    expect(viewHeaders()).toEqual(['2030-2039'])
   })
 })
 

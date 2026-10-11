@@ -6,8 +6,12 @@ import PickerPanelHeader from './PickerPanelHeader.vue'
 import {
   addMonthTimestamp,
   addYearTimestamp,
+  CENTURY_YEAR_COUNT,
   formatTimestamp,
+  getCenturyRange,
   getDayOfMonth,
+  getDecadeLabel,
+  getDecadePanelGrid,
   getMonthGrid,
   getMonthNumber,
   getMonthTimestamps,
@@ -15,17 +19,25 @@ import {
   getQuarterTimestamps,
   getRangeCellClassNames,
   getWeekLabels,
+  getWeekNumber,
+  getWeekStartTimestamp,
   getYearNumber,
   getYearPanelGrid,
   getYearTimestamps,
+  isDecadeFullyDisabled,
+  isDecadeInCentury,
   isLastDayOfMonthTimestamp,
   isMonthFullyDisabled,
   isQuarterFullyDisabled,
   isSameDayTimestamp,
+  isSameDecadeTimestamp,
   isSameMonthTimestamp,
   isSameQuarterTimestamp,
+  isSameWeekTimestamp,
+  isWeekFullyDisabled,
   isYearFullyDisabled,
-  startOfDayTimestamp
+  startOfDayTimestamp,
+  YEAR_COUNT
 } from './date-utils'
 import type { StartDayOfWeek } from './date-utils'
 import type { PickerPanelMode, PickerRangeSide, PickerRangeValue } from './types'
@@ -77,6 +89,8 @@ const MONTH_COL_COUNT = 3
 /** 季面板格的列数：4 格 1 行 */
 const QUARTER_COL_COUNT = 4
 const YEAR_COL_COUNT = 3
+/** 十年面板格的列数（与年面板同构：3 列 × 4 行） */
+const DECADE_COL_COUNT = 3
 /** 按列数切分为矩阵，供表格逐行渲染 */
 function chunk<T>(list: T[], size: number): T[][] {
   return Array.from({ length: Math.ceil(list.length / size) }, (_, index) =>
@@ -84,7 +98,8 @@ function chunk<T>(list: T[], size: number): T[][] {
   )
 }
 const panelMode = ref<PickerPanelMode>(props.baseMode)
-// 进入当前视图前的视图（选完年份后回到来源视图：日期面板进来回日期面板，月 / 季面板进来回原面板）
+// 进入当前视图前的视图：选完该层的值后回到来源视图（日期 / 周 / 月 / 季 / 年面板各自回原面板；
+// 十年面板的进出不记录来源，见 switchPanel）
 const sourceMode = ref<PickerPanelMode>(props.baseMode)
 const innerViewDate = ref<number>(props.panelValue ?? props.value ?? props.defaultPickerValue ?? Date.now())
 const viewDate = computed(() => props.panelValue ?? innerViewDate.value)
@@ -145,17 +160,38 @@ watch(
     }
   }
 )
+/** 周形态恒按 ISO 周（周一起始）排布：周序号与 `RRRR-II周` 展示格式同源，不随 `startDayOfWeek` 变化 */
+const ISO_START_DAY_OF_WEEK: StartDayOfWeek = 0
 const weekLabels = computed(() => getWeekLabels(props.startDayOfWeek))
+const weekPanelLabels = computed(() => getWeekLabels(ISO_START_DAY_OF_WEEK))
 const dateRows = computed(() => chunk(getMonthGrid(viewDate.value, props.startDayOfWeek), 7))
 const monthRows = computed(() => chunk(getMonthTimestamps(viewDate.value), MONTH_COL_COUNT))
 const quarterRows = computed(() => chunk(getQuarterTimestamps(viewDate.value), QUARTER_COL_COUNT))
 const yearRows = computed(() => chunk(getYearPanelGrid(viewDate.value), YEAR_COL_COUNT))
+const decadeRows = computed(() => chunk(getDecadePanelGrid(viewDate.value), DECADE_COL_COUNT))
 const viewYear = computed(() => getYearNumber(viewDate.value))
 const viewMonth = computed(() => getMonthNumber(viewDate.value))
 const decadeYears = computed(() => {
   const years = getYearTimestamps(viewDate.value)
   return `${getYearNumber(years[0])}-${getYearNumber(years[years.length - 1])}`
 })
+/** 十年面板的头部：世纪区间（如 2000-2099） */
+const centuryText = computed(() => {
+  const [startYear, endYear] = getCenturyRange(viewDate.value)
+  return `${startYear}-${endYear}`
+})
+/**
+ * 周面板的日期行：除 7 个日期格外，额外携带该行的周序号（由行首日所在周得出）
+ *
+ * 周形态恒按 ISO 周排布（周一起始）：周序号与 `RRRR-II周` 展示格式同源，故不随 `startDayOfWeek` 变化。
+ */
+const weekPanelRows = computed(() =>
+  chunk(getMonthGrid(viewDate.value, ISO_START_DAY_OF_WEEK), 7).map((row) => ({
+    weekStart: row[0],
+    weekNumber: getWeekNumber(row[0]),
+    days: row
+  }))
+)
 /** 范围形态的格类名（非范围形态返回空对象，省去逐格的类名求值）；粒度随当前面板层级 */
 function getCellRangeClasses(timestamp: number): Record<string, boolean> {
   if (!props.range) {
@@ -185,6 +221,83 @@ function isYearInView(timestamp: number): boolean {
   const year = getYearNumber(timestamp)
   const startYear = getYearNumber(getYearTimestamps(viewDate.value)[0])
   return year >= startYear && year < startYear + 10
+}
+/* ============================== 周形态 ============================== */
+/** 比较两个时间戳所在 ISO 周的前后（-1 在前 / 0 同周 / 1 在后） */
+function compareWeek(a: number, b: number): number {
+  const weekA = getWeekStartTimestamp(a)
+  const weekB = getWeekStartTimestamp(b)
+  if (weekA === weekB) {
+    return 0
+  }
+  return weekA < weekB ? -1 : 1
+}
+/** 某周是否与目标时间戳落在同一周 */
+function isSameWeekAs(weekStart: number, target: number | null): boolean {
+  return target !== null && compareWeek(weekStart, target) === 0
+}
+/** 该周是否整周不可选：整周都禁用时才降级（与月 / 季 / 年格「整段判定」口径一致） */
+function isWeekRowDisabled(weekStart: number): boolean {
+  return props.disabledDate ? isWeekFullyDisabled(weekStart, props.disabledDate) : false
+}
+/**
+ * 周面板行的类名
+ *
+ * 周面板以「行」为选择单位（日期面板则以「格」为单位）：单选形态高亮选中周，范围形态按周粒度叠加
+ * 区间端点、区间内部与悬浮预览。行内日期格只表达「是否在本月 / 是否今天 / 是否禁用」，选中与区间
+ * 一律由行承载（行底色取代格内块的底色）。
+ *
+ * 跨月的一周会同时出现在左右两块面板里，端点因此只在「承载该端点日期的面板」上实心（`isInView`），
+ * 另一块面板里的同周行归入区间内部底色——否则同一周会亮起两处实心端点，读不出区间端点落在哪。
+ */
+function getWeekRowClasses(weekStart: number): Record<string, boolean> {
+  const rowDisabled = isWeekRowDisabled(weekStart)
+  const rangeStart = props.rangeValue?.[0] ?? null
+  const rangeEnd = props.rangeValue?.[1] ?? null
+  if (!props.range) {
+    return {
+      'picker-panel-week-row-selected': isSameWeekAs(weekStart, props.value),
+      'picker-panel-week-row-disabled': rowDisabled
+    }
+  }
+  const isRangeStart = rangeStart !== null && isInView(rangeStart) && isSameWeekAs(weekStart, rangeStart)
+  const isRangeEnd = rangeEnd !== null && isInView(rangeEnd) && isSameWeekAs(weekStart, rangeEnd)
+  // 含两端（端点周在另一块面板里按区间内部处理），故「实心端点」需从区间中剔除
+  const isInRange =
+    rangeStart !== null &&
+    rangeEnd !== null &&
+    compareWeek(weekStart, rangeStart) >= 0 &&
+    compareWeek(weekStart, rangeEnd) <= 0
+  const hoverStart = props.hoverValue?.[0] ?? null
+  const hoverEnd = props.hoverValue?.[1] ?? null
+  const isHovered =
+    hoverStart !== null &&
+    hoverEnd !== null &&
+    compareWeek(weekStart, hoverStart) >= 0 &&
+    compareWeek(weekStart, hoverEnd) <= 0
+  return {
+    'picker-panel-week-row-disabled': rowDisabled,
+    'picker-panel-week-row-range-start': isRangeStart,
+    'picker-panel-week-row-range-end': isRangeEnd,
+    'picker-panel-week-row-in-range': isInRange && !isRangeStart && !isRangeEnd,
+    // 端点周与区间内的周不再叠悬浮底色：端点已有实心底色，区间内已有静态的加深底色。
+    // 端点必须显式排除：区间只有一端时 `isInRange` 为假（它要求两端都存在），
+    // 否则正在待选的那一端所在行会被叠上格级浅蓝、盖掉实心底色（渲染成「周序号实心 + 日期格浅蓝」）
+    'picker-panel-week-row-range-hover': isHovered && !isInRange && !isRangeStart && !isRangeEnd
+  }
+}
+/* ============================== 十年面板 ============================== */
+/** 十年格是否落在当前世纪区间内：世纪之外的前后各一格据此灰显 */
+function isDecadeInView(timestamp: number): boolean {
+  return isDecadeInCentury(timestamp, viewDate.value)
+}
+/** 是否为当前选中的十年（十年面板格的比较粒度为十年） */
+function isSelectedDecade(timestamp: number): boolean {
+  return props.value !== null && isSameDecadeTimestamp(timestamp, props.value)
+}
+/** 十年格代表整个十年：10 年都不可选时才禁用 */
+function isDecadeDisabled(timestamp: number): boolean {
+  return props.disabledDate ? isDecadeFullyDisabled(timestamp, props.disabledDate) : false
 }
 /** 底部可见性：日期时间形态的底部即「此刻 / 确定」，与「今天」的视图条件无关 */
 const footerVisible = computed(() => props.datetime || (props.showToday && panelMode.value === 'date'))
@@ -258,7 +371,7 @@ function onMonthSelect(timestamp: number) {
     emits('select', timestamp)
     return
   }
-  changePanel('date', timestamp)
+  changePanel(sourceMode.value, timestamp)
 }
 /** 选择季度：季面板只作为形态基准层级出现（不能从其他层级钻取进来），故点格即提交 */
 function onQuarterSelect(timestamp: number) {
@@ -286,6 +399,20 @@ function onYearSelect(timestamp: number) {
   setViewDate(addYearTimestamp(viewDate.value, getYearNumber(timestamp) - viewYear.value))
   changePanel(sourceMode.value)
 }
+/**
+ * 选择十年
+ *
+ * 十年不是可选值粒度：点格只把视图平移到该十年（按年份差平移以保留月日）并回到年面板，
+ * 不提交值。回层同样走 {@link switchPanel}，以保留最初钻取进来的层级记录。
+ */
+function onDecadeSelect(timestamp: number) {
+  if (isDecadeDisabled(timestamp)) {
+    return
+  }
+  const next = addYearTimestamp(viewDate.value, getYearNumber(timestamp) - viewYear.value)
+  setViewDate(next)
+  switchPanel('year', next)
+}
 /** 「今天」快捷：与日期格选中同径（当日零点），由宿主提交并收起面板 */
 function onTodaySelect() {
   if (isTodayDisabled()) {
@@ -293,19 +420,35 @@ function onTodaySelect() {
   }
   emits('select', startOfDayTimestamp(Date.now()))
 }
-function changePanel(mode: PickerPanelMode, timestamp: number = viewDate.value) {
-  sourceMode.value = panelMode.value
+function switchPanel(mode: PickerPanelMode, timestamp: number = viewDate.value) {
   panelMode.value = mode
   emits('panelChange', timestamp, mode)
 }
+/**
+ * 切换面板层级并记录来源层级
+ *
+ * 记录的来源层级供「选完该层的值后回到哪一层」使用；十年面板的进出走 {@link switchPanel}
+ * 不记录，因此从年面板下钻十年再回来，仍能回到最初钻取进年面板的那一层。
+ */
+function changePanel(mode: PickerPanelMode, timestamp: number = viewDate.value) {
+  sourceMode.value = panelMode.value
+  switchPanel(mode, timestamp)
+}
+/** super 导航（跨单位翻页）的年数步长：十年面板跨世纪、年面板跨十年、其余跨一年 */
+function getSuperStepYears(): number {
+  if (panelMode.value === 'decade') {
+    return CENTURY_YEAR_COUNT
+  }
+  return panelMode.value === 'year' ? YEAR_COUNT : 1
+}
 // 翻页后的视图日期先落入局部变量再上报：受控模式下 viewDate 要等宿主回传才更新，不能读回自身
 function onSuperPrev() {
-  const next = addYearTimestamp(viewDate.value, panelMode.value === 'year' ? -10 : -1)
+  const next = addYearTimestamp(viewDate.value, -getSuperStepYears())
   setViewDate(next)
   emits('panelChange', next, panelMode.value)
 }
 function onSuperNext() {
-  const next = addYearTimestamp(viewDate.value, panelMode.value === 'year' ? 10 : 1)
+  const next = addYearTimestamp(viewDate.value, getSuperStepYears())
   setViewDate(next)
   emits('panelChange', next, panelMode.value)
 }
@@ -331,7 +474,7 @@ function onNext() {
            （或两面板之间的空隙）时仍处于主体内，预览不会撤、输入框会一直显示悬浮日期 -->
       <div class="picker-date-panel-main">
         <PickerPanelHeader
-          :show-single-nav="panelMode === 'date'"
+          :show-single-nav="panelMode === 'date' || panelMode === 'week'"
           :show-prev="showPrevNav"
           :show-next="showNextNav"
           @super-prev="onSuperPrev"
@@ -340,7 +483,7 @@ function onNext() {
           @next="onNext"
         >
           <template #view>
-            <template v-if="panelMode === 'date'">
+            <template v-if="panelMode === 'date' || panelMode === 'week'">
               <button type="button" tabindex="-1" class="picker-panel-year-btn" @click="changePanel('year')"
                 >{{ viewYear }}年</button
               >
@@ -356,7 +499,16 @@ function onNext() {
               @click="changePanel('year')"
               >{{ viewYear }}年</button
             >
-            <span v-else>{{ decadeYears }}</span>
+            <!-- 年面板的十年区间是进入十年面板的入口；十年面板自身是最高层级，头部只展示世纪区间 -->
+            <button
+              v-else-if="panelMode === 'year'"
+              type="button"
+              tabindex="-1"
+              class="picker-panel-decade-btn"
+              @click="switchPanel('decade')"
+              >{{ decadeYears }}</button
+            >
+            <span v-else>{{ centuryText }}</span>
           </template>
         </PickerPanelHeader>
         <div v-if="panelMode === 'date'" class="picker-panel-content picker-panel-date-content">
@@ -384,6 +536,43 @@ function onNext() {
                     },
                     getCellRangeClasses(timestamp)
                   ]"
+                  :title="formatTimestamp(timestamp, 'yyyy-MM-dd')"
+                  @click="onDateSelect(timestamp)"
+                  @mouseenter="onCellHover(timestamp)"
+                  @mouseleave="onCellLeave()"
+                >
+                  <div class="picker-panel-cell-inner">{{ getDayOfMonth(timestamp) }}</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div v-else-if="panelMode === 'week'" class="picker-panel-content picker-panel-week-content">
+          <table>
+            <thead>
+              <tr>
+                <!-- 周序号列表头留空，与下方每行首格对齐 -->
+                <th aria-label="周序号" />
+                <th v-for="(label, index) in weekPanelLabels" :key="index">{{ label }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(row, rowIndex) in weekPanelRows"
+                :key="rowIndex"
+                class="picker-panel-week-row"
+                :class="getWeekRowClasses(row.weekStart)"
+              >
+                <td class="picker-panel-cell picker-panel-cell-week">{{ row.weekNumber }}</td>
+                <td
+                  v-for="(timestamp, cellIndex) in row.days"
+                  :key="cellIndex"
+                  class="picker-panel-cell picker-panel-cell-week-day"
+                  :class="{
+                    'picker-panel-cell-in-view': isInView(timestamp),
+                    'picker-panel-cell-today': isToday(timestamp),
+                    'picker-panel-cell-disabled': Boolean(disabledDate?.(timestamp))
+                  }"
                   :title="formatTimestamp(timestamp, 'yyyy-MM-dd')"
                   @click="onDateSelect(timestamp)"
                   @mouseenter="onCellHover(timestamp)"
@@ -447,7 +636,7 @@ function onNext() {
             </tbody>
           </table>
         </div>
-        <div v-else class="picker-panel-content picker-panel-year-content">
+        <div v-else-if="panelMode === 'year'" class="picker-panel-content picker-panel-year-content">
           <table>
             <tbody>
               <tr v-for="(row, rowIndex) in yearRows" :key="rowIndex">
@@ -483,6 +672,32 @@ function onNext() {
             </tbody>
           </table>
         </div>
+        <div v-else class="picker-panel-content picker-panel-decade-content">
+          <table>
+            <tbody>
+              <tr v-for="(row, rowIndex) in decadeRows" :key="rowIndex">
+                <td
+                  v-for="(timestamp, cellIndex) in row"
+                  :key="cellIndex"
+                  class="picker-panel-cell picker-panel-cell-in-view"
+                  :class="{
+                    'picker-panel-cell-selected': isSelectedDecade(timestamp),
+                    'picker-panel-cell-disabled': isDecadeDisabled(timestamp)
+                  }"
+                  :title="getDecadeLabel(timestamp)"
+                  @click="onDecadeSelect(timestamp)"
+                >
+                  <div
+                    class="picker-panel-cell-inner picker-panel-cell-inner-year"
+                    :class="{ 'picker-panel-cell-out-view': !isDecadeInView(timestamp) }"
+                  >
+                    {{ getDecadeLabel(timestamp) }}
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <slot name="aside" />
     </div>
@@ -508,28 +723,50 @@ function onNext() {
     display: flex;
   }
 }
-// 日期列固定 280px（日期 / 月 / 年三种视图共用）：面板宽度改由内容决定时（如带预设侧栏）不收缩
+// 日期列固定 280px（日期 / 周 / 月 / 季 / 年 / 十年各视图共用）：面板宽度改由内容决定时（如带预设侧栏）不收缩
 .picker-date-panel-main {
   flex: none;
   width: 280px;
 }
 .picker-panel-content {
   width: 100%;
-  // 表格布局属性须落在 table 上：写在包裹层不生效，会退回 auto + separate，
-  // 默认 border-spacing（2px）会挤占格宽并露出格间缝隙
+  // 面板就地渲染（`to` 默认 false，见 DatePicker），会落在宿主文档的内容区内：宿主若按 markdown
+  // 表格排版（如 VitePress 的 `.vp-doc table / th / td / tr`），会用元素选择器给表格补
+  // `display: block`、外边距、单元格边框与内边距、行底色 —— 这些属性组件原先未声明，会被宿主接管，
+  // 表现为日期格被撑宽后溢出面板、格间出现边框与灰底。故把「会被宿主接管的表格属性」逐一显式声明
   table {
+    display: table;
     width: 100%;
+    margin: 0;
+    // 表格布局属性须落在 table 上：写在包裹层不生效，会退回 auto + separate，
+    // 默认 border-spacing（2px）会挤占格宽并露出格间缝隙
     table-layout: fixed;
     border-collapse: collapse;
+    overflow: visible;
   }
+  // 行底色与行边框：宿主常用伪类承载斑马纹（如 `.vp-doc tr:nth-child(2n)`），伪类计入类列，
+  // 与本组同特异性、只能靠加载顺序取胜，故加一层 `:nth-child(n)`（匹配全部行）稳定压过
+  tr:nth-child(n) {
+    border: none;
+    background-color: transparent;
+  }
+  // 单元格只重置「宿主会补、组件不再覆盖」的属性：内边距不在此列 —— 格内边距一律由
+  // `.picker-panel-cell` 给出（其特异性本就压得过宿主的 `.vp-doc td`，在此归零反而会把格压扁）
   th,
   td {
     position: relative;
     min-width: 24px;
+    font-size: inherit;
     font-weight: normal;
+    background-color: transparent;
+    border: none;
   }
   th {
+    // 表头只作列名、自身无内边距需求，而宿主会给 th 补 16px 左右内边距（足以把 7 列撑破面板）
+    padding: 0;
     height: 32px;
+    // 面板整体居中排布，宿主会把 th 改回左对齐
+    text-align: center;
     color: rgba(0, 0, 0, 0.88);
     vertical-align: middle;
   }
@@ -544,12 +781,116 @@ function onNext() {
     width: 36px;
   }
 }
+.picker-panel-week-content {
+  padding: 8px 12px;
+  table {
+    // 8 列（周序号 + 7 天）：总宽与日期面板一致，列宽相应收窄
+    width: 252px;
+    // 行底色要能收圆角：折叠边框模型下 td 的 border-radius 不生效，故改用分离模型并把间距归零
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  // 周面板以「行」为选择单位：格内块不吃底色，底色与端点圆角一律由行承载
+  .picker-panel-cell {
+    &::before {
+      content: none;
+    }
+  }
+  .picker-panel-cell-week {
+    // 周序号只作参照，不响应点击
+    cursor: default;
+  }
+  .picker-panel-week-row {
+    td {
+      transition: background 0.2s;
+      // 行首 / 行尾格恒带圆角：底色由「整行」承载，圆角是这一行作为独立视觉单位的收边，
+      // 悬浮高亮因此与选中周同口径
+      &:first-child {
+        border-radius: 4px 0 0 4px;
+      }
+      &:last-child {
+        border-radius: 0 4px 4px 0;
+      }
+    }
+    // 区间色带要连续：端点周朝向区间内侧的一侧、区间内部周与悬浮预览周一律去圆角，
+    // 相邻多周才拼成一条不断开的色带；恰好只占一周的区间（两个端点类名同落一行）两端都要留圆角
+    &.picker-panel-week-row-range-start:not(.picker-panel-week-row-range-end) td:last-child,
+    &.picker-panel-week-row-range-end:not(.picker-panel-week-row-range-start) td:first-child,
+    &.picker-panel-week-row-in-range td,
+    &.picker-panel-week-row-range-hover td {
+      border-radius: 0;
+    }
+    // 整周不可选的行不响应悬浮，避免给「点不动」的行亮起可点反馈；
+    // 已带状态底色的行（选中周 / 区间端点 / 区间内部 / 悬浮预览）同样不吃普通悬浮底色：
+    // 本规则的 :not() 链令其权重高于下方状态规则，不排除会把实心主色行染灰、把行级色带打断
+    &:not(.picker-panel-week-row-disabled):not(.picker-panel-week-row-selected):not(
+        .picker-panel-week-row-range-start
+      ):not(.picker-panel-week-row-range-end):not(.picker-panel-week-row-in-range):not(
+        .picker-panel-week-row-range-hover
+      ):hover
+      td {
+      background: rgba(0, 0, 0, 0.04);
+    }
+    &.picker-panel-week-row-selected td,
+    &.picker-panel-week-row-range-start td,
+    &.picker-panel-week-row-range-end td {
+      background: var(--picker-primary-color, #1677ff);
+    }
+    &.picker-panel-week-row-selected .picker-panel-cell-inner,
+    &.picker-panel-week-row-range-start .picker-panel-cell-inner,
+    &.picker-panel-week-row-range-end .picker-panel-cell-inner {
+      color: #fff;
+    }
+    // 周序号与日期格同取纯白（周序号直接落在 td 上，不继承格内块的白色）
+    &.picker-panel-week-row-selected .picker-panel-cell-week,
+    &.picker-panel-week-row-range-start .picker-panel-cell-week,
+    &.picker-panel-week-row-range-end .picker-panel-cell-week {
+      color: #fff;
+    }
+    // 选中周里的「今天」圈线改为白色，否则白底蓝框叠在主色行上读不出边界
+    &.picker-panel-week-row-selected .picker-panel-cell-today .picker-panel-cell-inner::before,
+    &.picker-panel-week-row-range-start .picker-panel-cell-today .picker-panel-cell-inner::before,
+    &.picker-panel-week-row-range-end .picker-panel-cell-today .picker-panel-cell-inner::before {
+      border-color: #fff;
+    }
+    // 范围形态：区间内部底色只落在「展示月内的日期格」上（跨月补齐日与周序号格不着色）。
+    // 一行（一周）跨月时会在左右两块面板各出现一次，整行着色会让同一周出现两处色带，
+    // 且跨月补齐日被连带染色——与日期范围的格口径不一致（底色的作用域见 .picker-panel-week-content）
+    &.picker-panel-week-row-in-range .picker-panel-cell-in-view {
+      background: var(--picker-primary-color-bg, #e6f4ff);
+    }
+    // 悬浮预览（待选区间）与区间内部同色：整段连成一条「待选色带」，读作"改选后会变成这样"；
+    // 若整段都用更深一档的底色，悬浮时会出现一大块深蓝，看起来像"多选了一段"
+    &.picker-panel-week-row-range-hover .picker-panel-cell-in-view {
+      background: var(--picker-primary-color-bg, #e6f4ff);
+    }
+    // 鼠标所在的那一周 = 待选端点（新落点）：取普通悬浮的灰底，与未进入待选段时的悬浮观感一致；
+    // 行级灰底的权重高于上面的格级浅蓝，故整行覆盖（含周序号格与跨月补齐日）
+    &.picker-panel-week-row-range-hover:hover td {
+      background: rgba(0, 0, 0, 0.04);
+    }
+  }
+}
 .picker-panel-month-content,
 .picker-panel-year-content {
   // 月 / 年面板上下不留内边距，高度由表格自身决定（4 行 × 66px）
   padding: 0 8px;
   table {
     height: 264px;
+  }
+}
+.picker-panel-decade-content {
+  // 十年面板左右不缩进：格宽取满 280px 三等分
+  padding: 0;
+  table {
+    height: 264px;
+  }
+  // 十年文本（2010-2019）比年月文本宽：内边距收窄且不设固定宽，随文本自适应，不参与范围形态故不画底色层
+  .picker-panel-cell-inner {
+    padding: 0 4px;
+  }
+  .picker-panel-cell::before {
+    content: none;
   }
 }
 .picker-panel-quarter-content {
@@ -586,10 +927,12 @@ function onNext() {
       background 0.2s,
       border 0.2s;
   }
-  // 已选端点与预览端点不吃普通悬浮底色
+  // 已选端点与预览端点不吃普通悬浮底色；周面板的格由行承载底色，格内块同样不吃（见 .picker-panel-week-content）
+  // 跨月补齐日不参与区间渲染（见上方范围规则说明），其区间端点类名不构成排除依据：只要悬浮即吃同一底色
+  &:hover:not(.picker-panel-cell-in-view):not(.picker-panel-cell-week-day) .picker-panel-cell-inner,
   &:hover:not(.picker-panel-cell-selected):not(.picker-panel-cell-range-start):not(.picker-panel-cell-range-end):not(
       .picker-panel-cell-range-hover-start
-    ):not(.picker-panel-cell-range-hover-end)
+    ):not(.picker-panel-cell-range-hover-end):not(.picker-panel-cell-week-day)
     .picker-panel-cell-inner {
     background: rgba(0, 0, 0, 0.04);
   }
@@ -796,7 +1139,10 @@ function onNext() {
   color: rgba(0, 0, 0, 0.25);
 }
 .picker-panel-today-btn {
+  // 就地渲染时会被宿主文档的链接样式接管（如 `.vp-doc a` 的下划线与 500 字重），此处还原为面板自身口径
   color: var(--picker-primary-color, #1677ff);
+  font-weight: normal;
+  text-decoration: none;
   cursor: pointer;
   &:hover {
     color: var(--picker-primary-color-hover, #4096ff);

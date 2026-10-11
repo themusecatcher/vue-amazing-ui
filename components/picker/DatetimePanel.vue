@@ -203,6 +203,9 @@ function onOk(): void {
   list-style: none;
   > li {
     display: inline-block;
+    // 面板就地渲染（`to` 默认 false）会落在宿主文档的内容区内，宿主会给相邻 li 补外边距（如
+    // VitePress 的 `.vp-doc li + li`），使「确定」相对「此刻」下沉；此处归零，间距由本组件自行掌控
+    margin: 0;
   }
   // 隐藏「此刻」时底部只剩「确定」，靠自身外边距顶到行尾；
   // 高度取页脚行高（display: flex 后行高不再参与内在高度，不声明则页脚矮 10px），
@@ -215,7 +218,10 @@ function onOk(): void {
   }
 }
 .picker-panel-now-btn {
+  // 同 `.picker-panel-today-btn`：还原被宿主文档链接样式接管的字重与下划线
   color: var(--picker-primary-color, #1677ff);
+  font-weight: normal;
+  text-decoration: none;
   cursor: pointer;
   &:hover {
     color: var(--picker-primary-color-hover, #4096ff);

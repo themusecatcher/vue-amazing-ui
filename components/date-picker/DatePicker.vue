@@ -68,7 +68,7 @@ export interface Props {
   // 范围形态的面板指示箭头：不传时跟随弹出方位（仅左侧对齐的 bottomLeft / topLeft 展示），
   // 传 true 始终展示、传 false 始终隐藏，仅范围形态生效
   showArrow?: boolean
-  showToday?: boolean // 是否展示面板底部的「今天」快捷，面板切到月/年视图时隐藏
+  showToday?: boolean // 是否展示面板底部的「今天」快捷，面板切到周 / 月 / 季 / 年视图时隐藏
   showNow?: boolean // 是否展示面板底部的「此刻」快捷，仅带时间形态生效
   // 进阶透传
   suffixIcon?: VNode | (() => VNode) // 自定义选择框后缀图标
@@ -188,15 +188,8 @@ const isDateTime = computed(() => props.type === 'datetime')
 const isRange = computed(() => isRangeType(props.type))
 /** 是否为日期时间范围形态：单个日期时间面板，两段靠「确定」切换编辑 */
 const isDateTimeRange = computed(() => props.type === 'datetimerange')
-/**
- * 形态对应的面板层级：月 / 季 / 年形态直接落在对应层级，日期与周形态落在日期层级
- *
- * 周形态的面板同样是日期网格（仅整行选中与值粒度不同），故面板层级取日期。
- */
-const panelBaseMode = computed<PickerPanelMode>(() => {
-  const mode = getPanelModeOf(props.type)
-  return mode === 'week' ? 'date' : mode
-})
+/** 形态对应的面板层级：周 / 月 / 季 / 年形态直接落在对应层级，日期与带时间形态落在日期层级 */
+const panelBaseMode = computed<PickerPanelMode>(() => getPanelModeOf(props.type))
 /** 是否为需点「确定」才提交的形态（含时间面板）：面板内的选择只落草稿，失焦按取消处理 */
 const needConfirm = computed(() => isDateTime.value || isDateTimeRange.value)
 /** 浮层与触发器的间距：范围形态额外预留箭头的高度 */

@@ -21,7 +21,7 @@ export type PickerFormattedValue = string | PickerRangeFormattedValue | null
 export type PickerRangeSide = 'start' | 'end'
 
 /** 范围形态：值形态为两元组，面板为双列 */
-export type PickerRangeType = 'daterange' | 'datetimerange' | 'monthrange' | 'yearrange' | 'quarterrange'
+export type PickerRangeType = 'daterange' | 'datetimerange' | 'weekrange' | 'monthrange' | 'yearrange' | 'quarterrange'
 /** 选择形态：决定面板组合与值形态（`datetime` / `datetimerange` 为带时间面板的形态） */
 export type PickerType = 'date' | 'week' | 'month' | 'quarter' | 'year' | 'datetime' | PickerRangeType
 
@@ -31,7 +31,7 @@ export type PickerSingleType = Exclude<PickerType, PickerRangeType>
 export type PickerDateTimeType = 'datetime' | 'datetimerange'
 
 /** 面板展示模式：由形态推导，决定当前渲染哪一块面板 */
-export type PickerPanelMode = 'date' | 'week' | 'month' | 'quarter' | 'year' | 'time'
+export type PickerPanelMode = 'date' | 'week' | 'month' | 'quarter' | 'year' | 'decade' | 'time'
 
 /** 组件尺寸 */
 export type PickerSize = 'small' | 'middle' | 'large'
