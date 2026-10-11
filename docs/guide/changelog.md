@@ -19,6 +19,11 @@
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="datetimerange"` 日期时间范围形态与 `presets` 预设范围属性：前者两段共用一个日期时间面板，点「确定」提交当前段并自动切到另一端，两段都确定后才收起；后者支持单选 / 日期范围 / 日期时间范围三种预设，点击即填入并收起，预设值可为时间戳或返回时间戳的函数；范围形态下 `disabledTime` 额外接收段标识（`side`）
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="month"` / `"quarter"` / `"year"` 月、季、年形态：展开即落在对应层级，点格即提交；面板头部的年份按钮可在年 / 月 / 季之间切换视图，切换期间只平移视图、不提交
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="monthrange"` / `"quarterrange"` / `"yearrange"` 月、季、年范围形态：两个面板恒相差一格（月 / 季相差一年、年相差十年），切换视图时收成单面板并在选完年份后回到双面板；`disabledDate` 在月 / 季 / 年形态下按整段判定（整段都不可选该格才禁用）；季度默认展示格式为 `yyyy-QQQ`（如 `2026-Q4`）
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="week"` / `"weekrange"` 周与周范围形态：日期面板每行前置周序号，选中周整行高亮；周范围按周粒度渲染区间端点与内部底色（跨月的一周会在左右两块面板各出现一次 —— 端点只在承载该端点日期的面板上实心，另一块里的同周行并入区间内部；区间内部底色只落在展示月内的日期格上，跨月补齐日与周序号格不着色，与日期范围的格口径一致，避免同一周在两块面板各亮起一块色带）。周形态采用 ISO 周口径（周一起始，默认展示格式 `RRRR-II周`，如 `2026-41周`），`startDayOfWeek` 对周形态不生效
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 年形态面板头部的十年区间改为下钻入口：点开为十年面板（世纪区间 + 12 格，窗外的相邻十年灰显），点格只平移视图并回到年面板，不提交值
+- 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 在 `format` / `valueFormat` 传入非法占位符组合（如 `yyyy-ww`）时解析抛错、导致组件渲染与输入提交中断的问题
+- 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 范围形态下悬浮跨月补齐日期（面板上属于相邻月份的日期格）时没有悬浮底色的问题：现在与展示月内的日期格同口径，悬浮即显底色
+- 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 周形态的整行样式问题：周序号改用与日期格一致的纯白；行高亮的两端补上圆角（悬浮与选中周 / 区间端点周同口径，区间内部与预览周仍保持方角以拼成连续色带）；悬浮已带底色的行（选中周 / 区间端点 / 区间内部 / 预览周）时底色不再被普通悬浮底色冲淡
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 优化范围形态的区间悬浮预览：预览端与已选端重合时，区间虚线收到端点实心块以内，不再穿过实心块并在块外露出生硬断点（日期 / 月 / 季 / 年各形态口径一致）
 - 移除 `@vuepic/vue-datepicker` 依赖
 - 全局默认样式的字体口径调整：库不再在 `body` 上声明字体族，字体归宿主（「谁提供字体谁声明」），组件与插槽内容一律继承宿主页面字体；原生表单控件因浏览器 `UA` 样式不继承页面字体，统一由 `input` / `textarea` / `select` / `button` 的 `font-family: inherit` 兜底

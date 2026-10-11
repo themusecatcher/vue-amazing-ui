@@ -66,14 +66,19 @@ const placementBottomLeftValue = ref<number | null>(initialDate())
 const placementBottomRightValue = ref<number | null>(initialDate())
 const placementTopLeftValue = ref<number | null>(initialDate())
 const placementTopRightValue = ref<number | null>(initialDate())
+// 周形态用例：初始值取当天（面板按 ISO 周成行高亮，展示格式为 ISO 周年 + 周序号，带「周」字后缀）
+const weekValue = ref<number | null>(initialDate())
 // 月 / 季 / 年形态用例：初始值取当前月首日 / 季首日 / 年首日，与形态的粒度一致
 const monthValue = ref<number | null>(startOfMonth(new Date()).getTime())
 const quarterValue = ref<number | null>(startOfQuarter(new Date()).getTime())
 const yearValue = ref<number | null>(startOfYear(new Date()).getTime())
 const monthFormatValue = ref<number | null>(startOfMonth(new Date()).getTime())
+// 周格式用例：周年占位符只能取 ISO 口径（RRRR）——与周序号（II）配对才可解析，详见下方 format 用例说明
+const weekFormatValue = ref<number | null>(initialDate())
 const disabledMonthValue = ref<number | null>(startOfMonth(new Date()).getTime())
 const disabledMonthBeforeValue = ref<number | null>(startOfMonth(new Date()).getTime())
 const sizeMonthValue = ref<number | null>(startOfMonth(new Date()).getTime())
+const sizeWeekValue = ref<number | null>(initialDate())
 // 月 / 季 / 年范围用例：起点取过去、终点取未来，使区间跨越多个格
 const monthRangeValue = ref<[number, number] | null>([
   startOfMonth(addMonths(new Date(), -2)).getTime(),
@@ -87,6 +92,8 @@ const yearRangeValue = ref<[number, number] | null>([
   startOfYear(addYears(new Date(), -1)).getTime(),
   startOfYear(addYears(new Date(), 1)).getTime()
 ])
+// 周范围用例：起点取两周前、终点取今天，使区间横跨数周
+const weekRangeValue = ref<[number, number] | null>(initialRange(-14, 0))
 const presetMonthRangeValue = ref<[number, number] | null>(null)
 // 无边框用例的月 / 季 / 年形态：各持一组值，不与其它用例联动
 const borderlessMonthValue = ref<number | null>(startOfMonth(new Date()).getTime())
@@ -100,6 +107,8 @@ const borderlessYearRangeValue = ref<[number, number] | null>([
   startOfYear(addYears(new Date(), -1)).getTime(),
   startOfYear(addYears(new Date(), 1)).getTime()
 ])
+const borderlessWeekValue = ref<number | null>(initialDate())
+const borderlessWeekRangeValue = ref<[number, number] | null>(initialRange(-14, 0))
 // 月范围用例的预设：值同样支持时间戳与函数（此处为「近 N 个月」两个区间）
 const monthRangePresets: NonNullable<DatePickerProps['presets']> = [
   {
@@ -115,6 +124,17 @@ const monthRangePresets: NonNullable<DatePickerProps['presets']> = [
 const rangeValue = ref<[number, number] | null>(initialRange())
 const sizeRangeValue = ref<[number, number] | null>(initialRange())
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
+// 切换不同的选择器用例：分段控件切换形态，各形态共用同一个绑定值
+type SwitchableType = 'date' | 'week' | 'month' | 'quarter' | 'year'
+const switchableType = ref<SwitchableType>('date')
+const switchableValue = ref<number | null>(initialDate())
+const switchableOptions: { label: string; value: SwitchableType }[] = [
+  { label: '日期', value: 'date' },
+  { label: '周', value: 'week' },
+  { label: '月份', value: 'month' },
+  { label: '季度', value: 'quarter' },
+  { label: '年份', value: 'year' }
+]
 // 日期时间范围用例：单个日期时间面板 + 两段切换
 const dateTimeRangeValue = ref<[number, number] | null>(initialDateTimeRange())
 // 禁用日期用例的范围变体：初始为空值
@@ -229,8 +249,40 @@ function disabledEndDate(timestamp: number): boolean {
   const start = startValue.value
   return start !== null && differenceInCalendarDays(timestamp, start) < 0
 }
+/** 时间面板的禁用单位 */
+interface DisabledTimeUnits {
+  disabledHours: () => number[]
+  disabledMinutes: (currentHour: number) => number[]
+  disabledSeconds: (currentHour: number, currentMinute: number) => number[]
+}
 /**
- * 同一天内的时间约束：逐级判定（只有高一级与边界相同，下一级才有额外禁用项），边界时刻本身视为越界
+ * 由边界时刻的时分秒构造禁用单位：逐级判定（只有高一级与边界相同，下一级才有额外禁用项），边界时刻本身视为越界
+ *
+ * @param direction `notLaterThan` 禁用早于等于边界的时刻（终点侧用）、`notEarlierThan` 禁用晚于等于边界的时刻（起点侧用）
+ */
+function disabledTimeUnitsByBoundary(
+  hour: number,
+  minute: number,
+  second: number,
+  direction: 'notLaterThan' | 'notEarlierThan'
+): DisabledTimeUnits {
+  if (direction === 'notLaterThan') {
+    return {
+      disabledHours: () => range(0, hour),
+      disabledMinutes: (currentHour: number) => (currentHour === hour ? range(0, minute) : []),
+      disabledSeconds: (currentHour: number, currentMinute: number) =>
+        currentHour === hour && currentMinute === minute ? range(0, second + 1) : []
+    }
+  }
+  return {
+    disabledHours: () => range(hour + 1, 24),
+    disabledMinutes: (currentHour: number) => (currentHour === hour ? range(minute + 1, 60) : []),
+    disabledSeconds: (currentHour: number, currentMinute: number) =>
+      currentHour === hour && currentMinute === minute ? range(second + 1, 60) : []
+  }
+}
+/**
+ * 同一天内的时间约束：跨天则无额外禁用项（整日越界由内核按激活段禁用）
  *
  * @param boundary 约束边界的时刻（终点侧为起点、起点侧为终点）
  * @param timestamp 面板当前所编辑的时刻
@@ -239,30 +291,14 @@ function disabledUnitsNotLaterThan(boundary: number, timestamp: number) {
   if (!isSameDay(timestamp, boundary)) {
     return {}
   }
-  const hour = getHours(boundary)
-  const minute = getMinutes(boundary)
-  const second = getSeconds(boundary)
-  return {
-    disabledHours: () => range(0, hour),
-    disabledMinutes: (currentHour: number) => (currentHour === hour ? range(0, minute) : []),
-    disabledSeconds: (currentHour: number, currentMinute: number) =>
-      currentHour === hour && currentMinute === minute ? range(0, second + 1) : []
-  }
+  return disabledTimeUnitsByBoundary(getHours(boundary), getMinutes(boundary), getSeconds(boundary), 'notLaterThan')
 }
 /** 同 disabledUnitsNotLaterThan，方向相反：禁用晚于边界时刻的时间单位 */
 function disabledUnitsNotEarlierThan(boundary: number, timestamp: number) {
   if (!isSameDay(timestamp, boundary)) {
     return {}
   }
-  const hour = getHours(boundary)
-  const minute = getMinutes(boundary)
-  const second = getSeconds(boundary)
-  return {
-    disabledHours: () => range(hour + 1, 24),
-    disabledMinutes: (currentHour: number) => (currentHour === hour ? range(minute + 1, 60) : []),
-    disabledSeconds: (currentHour: number, currentMinute: number) =>
-      currentHour === hour && currentMinute === minute ? range(second + 1, 60) : []
-  }
+  return disabledTimeUnitsByBoundary(getHours(boundary), getMinutes(boundary), getSeconds(boundary), 'notEarlierThan')
 }
 /** 终点侧：同一天只允许选择晚于起点时刻的时间 */
 function disabledEndTime(timestamp: number) {
@@ -297,6 +333,7 @@ function onStartOpenChange(open: boolean): void {
     <h2 class="mt30 mb10">基本使用</h2>
     <Space vertical>
       <DatePicker v-model:value="basicValue" placeholder="请选择日期" />
+      <DatePicker v-model:value="weekValue" type="week" placeholder="请选择周" />
       <DatePicker v-model:value="monthValue" type="month" placeholder="请选择月份" />
       <DatePicker v-model:value="quarterValue" type="quarter" placeholder="请选择季度" />
       <DatePicker v-model:value="yearValue" type="year" placeholder="请选择年份" />
@@ -307,11 +344,14 @@ function onStartOpenChange(open: boolean): void {
       <DatePicker v-model:value="slashValue" format="yyyy/MM/dd" placeholder="请选择日期" />
       <DatePicker v-model:value="chineseValue" format="yyyy年MM月dd日" placeholder="请选择日期" />
       <DatePicker v-model:value="monthFormatValue" type="month" format="yyyy年MM月" placeholder="请选择月份" />
+      <!-- 周形态的周年占位符取 ISO 口径（RRRR），与周序号（II）配对才可解析 -->
+      <DatePicker v-model:value="weekFormatValue" type="week" format="RRRR年第II周" placeholder="请选择周" />
     </Space>
     <h2 class="mt30 mb10">范围选择器</h2>
     <p class="mb10">通过设置 <code>type</code> 属性，指定范围选择器类型</p>
     <Space vertical>
       <DatePicker v-model:value="rangeValue" type="daterange" :placeholder="rangePlaceholder" />
+      <DatePicker v-model:value="weekRangeValue" type="weekrange" :placeholder="rangePlaceholder" />
       <DatePicker v-model:value="monthRangeValue" type="monthrange" :placeholder="rangePlaceholder" />
       <DatePicker v-model:value="quarterRangeValue" type="quarterrange" :placeholder="rangePlaceholder" />
       <DatePicker v-model:value="yearRangeValue" type="yearrange" :placeholder="rangePlaceholder" />
@@ -327,20 +367,31 @@ function onStartOpenChange(open: boolean): void {
       :disabled-time="disabledDateTimeRangeTime"
       :placeholder="rangePlaceholder"
     />
+    <h2 class="mt30 mb10">切换不同的选择器</h2>
+    <p class="mb10">
+      提供选择器，自由切换不同类型的日期选择器，常用于日期筛选场合；时间选择由 <code>TimePicker</code>
+      组件承担，故分段项不含「时间」项
+    </p>
+    <Space vertical>
+      <Segmented v-model:value="switchableType" :options="switchableOptions" />
+      <DatePicker v-model:value="switchableValue" :type="switchableType" />
+    </Space>
     <h2 class="mt30 mb10">日期时间选择</h2>
     <p class="mb10">
       <code>type="datetime"</code> 增加选择时间功能，时间面板选项经 <code>timePickerProps</code>
       透传；展开期间的选择只落在草稿值上，点「确定」或「此刻」才提交，关闭面板则丢弃草稿
     </p>
     <DatePicker v-model:value="datetimeValue" type="datetime" placeholder="请选择日期时间" />
-    <p class="mt30 mb10">分钟按 5 分钟步长选择</p>
+    <p class="mt30 mb10">分钟按 <code>5</code> 分钟步长选择</p>
     <DatePicker
       v-model:value="minuteStepValue"
       type="datetime"
       :time-picker-props="{ minuteStep: 5 }"
       placeholder="请选择日期时间"
     />
-    <p class="mt30 mb10">12 小时制：<code>use12Hours</code> 与 12 小时制格式（<code>hh</code>）配合使用</p>
+    <p class="mt30 mb10"
+      ><code>12</code> 小时制：<code>use12Hours</code> 与 <code>12</code> 小时制格式（<code>hh</code>）配合使用</p
+    >
     <DatePicker
       v-model:value="twelveHourValue"
       type="datetime"
@@ -433,6 +484,7 @@ function onStartOpenChange(open: boolean): void {
       <DatePicker v-model:value="sizeCaseValue" :size="sizeValue" placeholder="请选择日期" />
       <DatePicker v-model:value="sizeMonthValue" type="month" :size="sizeValue" placeholder="请选择月份" />
       <DatePicker v-model:value="sizeRangeValue" type="daterange" :size="sizeValue" :placeholder="rangePlaceholder" />
+      <DatePicker v-model:value="sizeWeekValue" type="week" :size="sizeValue" placeholder="请选择周" />
     </Space>
     <h2 class="mt30 mb10">自定义日期范围选择</h2>
     <p class="mb10">
@@ -479,9 +531,16 @@ function onStartOpenChange(open: boolean): void {
     <h2 class="mt30 mb10">无边框</h2>
     <Space vertical>
       <DatePicker v-model:value="borderlessValue" :bordered="false" placeholder="请选择日期" />
+      <DatePicker v-model:value="borderlessWeekValue" type="week" :bordered="false" placeholder="请选择周" />
       <DatePicker v-model:value="borderlessMonthValue" type="month" :bordered="false" placeholder="请选择月份" />
       <DatePicker v-model:value="borderlessQuarterValue" type="quarter" :bordered="false" placeholder="请选择季度" />
       <DatePicker v-model:value="borderlessYearValue" type="year" :bordered="false" placeholder="请选择年份" />
+      <DatePicker
+        v-model:value="borderlessWeekRangeValue"
+        type="weekrange"
+        :bordered="false"
+        :placeholder="rangePlaceholder"
+      />
       <DatePicker
         v-model:value="borderlessMonthRangeValue"
         type="monthrange"
