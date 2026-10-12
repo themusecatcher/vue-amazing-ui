@@ -373,8 +373,8 @@ const layerSelectedValue = ref<number>(1)
         <Card width="50%">
           <Flex style="height: 60px">
             <Spin spinning />
-            <Spin spinning indicator="spin-dot" />
-            <Spin spinning indicator="spin-line" />
+            <Spin spinning indicator="dot-wheel" />
+            <Spin spinning indicator="line-wheel" />
             <Spin spinning :spin-circle-percent="50" indicator="ring-circle" />
             <Spin spinning :spin-circle-percent="50" indicator="ring-rail" />
             <Spin spinning indicator="dynamic-circle" />

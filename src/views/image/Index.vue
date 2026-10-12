@@ -92,7 +92,7 @@ function customDownload(url: string, fileName?: string) {
     <Image
       :src="images"
       :space-props="{ width: 332, gap: 16 }"
-      :spin-props="{ tip: 'loading', indicator: 'spin-line', color: '#fadb14' }"
+      :spin-props="{ tip: 'loading', indicator: 'line-wheel', color: '#fadb14' }"
       loop
     />
     <h2 class="mt30 mb10">无边框</h2>
