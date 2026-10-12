@@ -8,12 +8,14 @@ export interface TimeUnitColumnProps {
   value?: number | null // 当前选中项（空值时不选中任何项，列停在顶部）
   hideDisabledOptions?: boolean // 是否隐藏禁用项
   active?: boolean // 面板是否展开：展开时把选中项滚到列顶部
+  columnActive?: boolean // 是否为键盘操作当前所在的列（该列加底色以示目标）
 }
 const props = withDefaults(defineProps<TimeUnitColumnProps>(), {
   units: () => [],
   value: null,
   hideDisabledOptions: false,
-  active: false
+  active: false,
+  columnActive: false
 })
 const emits = defineEmits<{
   select: [value: number]
@@ -109,9 +111,9 @@ function onCellClick(unit: PickerTimeUnit): void {
 }
 </script>
 <template>
-  <div ref="columnRef" class="picker-time-column">
+  <div ref="columnRef" class="picker-time-column" :class="{ 'picker-time-column-active': columnActive }">
     <Scrollbar>
-      <ul class="picker-time-list">
+      <ul class="picker-time-list" role="listbox">
         <template v-for="unit in units" :key="unit.value">
           <li
             v-if="!(hideDisabledOptions && unit.disabled)"
@@ -121,6 +123,9 @@ function onCellClick(unit: PickerTimeUnit): void {
               'picker-time-cell-selected': unit.value === value,
               'picker-time-cell-disabled': unit.disabled
             }"
+            role="option"
+            :aria-selected="unit.value === value"
+            :aria-disabled="unit.disabled"
             @click="onCellClick(unit)"
           >
             <div class="picker-time-cell-inner">{{ unit.label }}</div>
@@ -142,6 +147,10 @@ function onCellClick(unit: PickerTimeUnit): void {
   }
   &:not(:first-child) {
     border-left: 1px solid rgba(5, 5, 5, 0.06);
+  }
+  // 键盘操作当前所在的列：加一层主色底纹标示目标（透明度随主题色）
+  &.picker-time-column-active {
+    background: var(--picker-time-column-active-bg, rgba(230, 244, 255, 0.2));
   }
   .picker-time-list {
     margin: 0;
@@ -175,7 +184,7 @@ function onCellClick(unit: PickerTimeUnit): void {
       }
     }
     &.picker-time-cell-selected .picker-time-cell-inner {
-      background: var(--picker-primary-bg-color, #e6f4ff);
+      background: var(--picker-primary-color-bg, #e6f4ff);
     }
     &.picker-time-cell-disabled {
       pointer-events: none;

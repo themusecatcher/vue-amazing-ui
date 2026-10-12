@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { VNode } from 'vue'
 import Button from 'components/button'
 import DatePanel from './DatePanel.vue'
@@ -14,6 +14,7 @@ import {
 } from './date-utils'
 import type { StartDayOfWeek } from './date-utils'
 import type {
+  PickerActiveSection,
   PickerDateRender,
   PickerDisabledTime,
   PickerDisabledTimeUnits,
@@ -39,6 +40,7 @@ export interface DatetimePanelProps {
   fallbackValue?: number | null // 激活段为空时的取值基准（范围形态传另一端，供时间面板展示）
   rangeValue?: PickerRangeValue | null // 范围形态的当前区间
   hoverValue?: PickerRangeValue | null // 范围形态的悬浮预览区间
+  activeSection?: PickerActiveSection // 键盘操作当前所在的区：非活动区在键盘操作期间淡化
 }
 export interface DatetimePanelSlots {
   presets?: () => VNode[] // 日期列左侧的预设侧栏
@@ -60,7 +62,8 @@ const props = withDefaults(defineProps<DatetimePanelProps>(), {
   range: false,
   fallbackValue: null,
   rangeValue: null,
-  hoverValue: null
+  hoverValue: null,
+  activeSection: null
 })
 defineSlots<DatetimePanelSlots>()
 const emits = defineEmits<{
@@ -144,12 +147,31 @@ function onOk(): void {
     emits('confirm', props.value, 'ok')
   }
 }
+/* ============================== 键盘导航 ============================== */
+const datePanelRef = ref<InstanceType<typeof DatePanel> | null>(null)
+const timePanelRef = ref<InstanceType<typeof TimePanel> | null>(null)
+/**
+ * 把导航按键转给当前活动区
+ *
+ * 活动区由宿主（组件壳层）持有：它同时负责 Tab 在「日期 / 时间」之间循环，此处只按该状态转发。
+ * 未指定活动区时按日期区处理（首个方向键把焦点交给日期列）。
+ */
+function handleKeydown(event: KeyboardEvent): boolean {
+  if (props.activeSection === 'time') {
+    return timePanelRef.value?.handleKeydown(event) ?? false
+  }
+  return datePanelRef.value?.handleKeydown(event) ?? false
+}
+defineExpose({ handleKeydown })
 </script>
 <template>
   <DatePanel
+    ref="datePanelRef"
     class="picker-datetime-panel"
+    :class="{ 'picker-datetime-panel-active': activeSection !== null }"
     :value="value"
     :active="active"
+    :panel-active="activeSection === 'date'"
     :start-day-of-week="startDayOfWeek"
     :disabled-date="disabledDate"
     :date-render="dateRender"
@@ -170,12 +192,14 @@ function onOk(): void {
     </template>
     <template #aside>
       <TimePanel
+        ref="timePanelRef"
         :value="timePanelValue"
         :format="format"
         :header-format="headerFormat"
         :time-props="timeProps"
         :disabled-units="disabledUnits"
         :active="active"
+        :panel-active="activeSection === 'time'"
         @change="onTimeChange"
       />
     </template>
@@ -198,6 +222,16 @@ function onOk(): void {
   // 日期列与时间列之间的分隔线由时间面板的左边框提供
   .picker-time-panel {
     border-left: 1px solid rgba(5, 5, 5, 0.06);
+  }
+  // 键盘操作期间非活动列淡化（活动列保持原透明度）。时间面板由本组件渲染，作用域样式可直接命中；
+  // 日期列的透明度由其自身承载（其内部节点不在本组件的样式作用域内）
+  &.picker-datetime-panel-active {
+    .picker-time-panel {
+      opacity: 0.3;
+      &.picker-time-panel-active {
+        opacity: 1;
+      }
+    }
   }
 }
 .picker-panel-ranges {

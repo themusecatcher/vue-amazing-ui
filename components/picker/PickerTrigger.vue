@@ -16,7 +16,8 @@ export interface PickerTriggerProps {
   size?: PickerSize
   status?: PickerStatus
   bordered?: boolean
-  disabled?: boolean
+  disabled?: boolean // 是否整体禁用（范围形态两段都禁用时为真）
+  disabledSides?: [boolean, boolean] // 范围形态两段各自的禁用状态，不传时两段随 `disabled`
   inputReadOnly?: boolean
   allowClear?: boolean
   open?: boolean // 面板是否展开，决定聚焦态样式
@@ -37,6 +38,7 @@ const props = withDefaults(defineProps<PickerTriggerProps>(), {
   status: undefined,
   bordered: true,
   disabled: false,
+  disabledSides: undefined,
   inputReadOnly: false,
   allowClear: true,
   open: false,
@@ -213,7 +215,7 @@ defineExpose({ focus, blur })
             :value="inputTexts[0]"
             :size="inputSize"
             :placeholder="placeholders?.[0] ?? ''"
-            :disabled="disabled"
+            :disabled="disabledSides?.[0] ?? disabled"
             :readonly="inputReadOnly"
             @input="onRangeInput($event, 0)"
             @focus="onFocus($event, 0)"
@@ -238,7 +240,7 @@ defineExpose({ focus, blur })
             :value="inputTexts[1]"
             :size="inputSize"
             :placeholder="placeholders?.[1] ?? ''"
-            :disabled="disabled"
+            :disabled="disabledSides?.[1] ?? disabled"
             :readonly="inputReadOnly"
             @input="onRangeInput($event, 1)"
             @focus="onFocus($event, 1)"
@@ -310,6 +312,10 @@ defineExpose({ focus, blur })
       color: rgba(0, 0, 0, 0.25);
       cursor: not-allowed;
     }
+  }
+  // 逐段禁用：被禁用的那一段单独取「不可用」光标（整体禁用时由上方规则统一覆盖）
+  .picker-trigger-input-inner:disabled {
+    cursor: not-allowed;
   }
   &.picker-trigger-borderless {
     background: transparent;

@@ -7,12 +7,14 @@ import PickerPanel from './PickerPanel.vue'
 import { getClosingViewTimestamp } from './date-utils'
 import type { StartDayOfWeek } from './date-utils'
 import type {
+  PickerActiveSection,
   PickerDateRender,
   PickerDisabledTime,
   PickerPanelMode,
   PickerRangeDisabledTime,
   PickerRangeSide,
   PickerRangeValue,
+  PickerSelectSource,
   PickerTimePanelProps
 } from './types'
 export interface RangePanelProps {
@@ -33,6 +35,7 @@ export interface RangePanelProps {
   defaultTime?: number // 选中日期时的默认时分秒（只取其中的时分秒）
   previewValue?: PickerRangeValue | null // 外部预览区间（预设悬浮），与面板内悬浮同为预览来源
   active?: boolean // 面板是否展开：展开时把展示日期带回当前区间起点
+  activeSection?: PickerActiveSection // 键盘操作当前所在的区（仅日期时间范围有两个区）
 }
 export interface RangePanelSlots {
   presets?: () => VNode[] // 两个面板左侧的预设侧栏
@@ -55,11 +58,12 @@ const props = withDefaults(defineProps<RangePanelProps>(), {
   disabledTime: undefined,
   defaultTime: undefined,
   previewValue: null,
-  active: false
+  active: false,
+  activeSection: null
 })
 defineSlots<RangePanelSlots>()
 const emits = defineEmits<{
-  select: [timestamp: number, side: PickerRangeSide] // 日期时间范围以外的形态：选中即提交该段
+  select: [timestamp: number, side: PickerRangeSide, source: PickerSelectSource] // 非日期时间形态：选中即提交该段（键盘只移动光标）
   draftChange: [timestamp: number, side: PickerRangeSide] // 日期时间范围：面板内的选择只更新草稿
   confirm: [timestamp: number, side: PickerRangeSide] // 日期时间范围：点「确定」提交当前激活段
   panelChange: [value: number, mode: PickerPanelMode, side: PickerRangeSide]
@@ -174,10 +178,10 @@ function onEndViewChange(next: number) {
  * 两个面板共用同一份视图与区间，用户从左面板选完起点后激活段切到终点，
  * 此后在任一面板点选都作用于终点段。
  */
-function onPanelSelect(timestamp: number) {
+function onPanelSelect(timestamp: number, source: PickerSelectSource) {
   hoverValue.value = null
   emits('hoverChange', null)
-  emits('select', timestamp, props.activeSide)
+  emits('select', timestamp, props.activeSide, source)
 }
 /** 日期时间范围：面板内的选择（日期或时间）只更新激活段的草稿，待「确定」统一提交 */
 function onDatetimeChange(timestamp: number) {
@@ -201,6 +205,25 @@ function onEndPanelChange(value: number, mode: PickerPanelMode) {
 function onDatetimePanelChange(value: number, mode: PickerPanelMode) {
   emits('panelChange', value, mode, props.activeSide)
 }
+/* ============================== 键盘导航 ============================== */
+const startPanelRef = ref<InstanceType<typeof DatePanel> | null>(null)
+const endPanelRef = ref<InstanceType<typeof DatePanel> | null>(null)
+const datetimePanelRef = ref<InstanceType<typeof DatetimePanel> | null>(null)
+/**
+ * 把导航按键转给当前可见的面板
+ *
+ * 日期形态只有一块日期面板处于「当前操作对象」——两块面板共用同一份视图日期，任一侧翻页都带动
+ * 另一侧，故统一交给可见的那一块处理即可（钻取到某一侧时交给那一块，与其鼠标操作同径）。
+ * 日期时间范围只有一个日期时间面板，直接转给它，日期 / 时间的分工由其中的活动区决定。
+ */
+function handleKeydown(event: KeyboardEvent): boolean {
+  if (props.datetime) {
+    return datetimePanelRef.value?.handleKeydown(event) ?? false
+  }
+  const target = startPanelVisible.value ? startPanelRef.value : endPanelRef.value
+  return target?.handleKeydown(event) ?? false
+}
+defineExpose({ handleKeydown })
 </script>
 <template>
   <PickerPanel class="picker-range-panel-layout" :show-footer="showFooter" :extra-footer="panelExtraFooter">
@@ -211,7 +234,9 @@ function onDatetimePanelChange(value: number, mode: PickerPanelMode) {
       <!-- 日期时间范围：单个日期时间面板，激活段由宿主按下划线所在段切换 -->
       <DatetimePanel
         v-if="datetime"
+        ref="datetimePanelRef"
         class="picker-range-panel picker-datetime-panel"
+        :active-section="activeSection"
         :value="activeValue"
         :format="format"
         :header-format="headerFormat"
@@ -238,6 +263,7 @@ function onDatetimePanelChange(value: number, mode: PickerPanelMode) {
       <template v-else>
         <DatePanel
           v-if="startPanelVisible"
+          ref="startPanelRef"
           class="picker-range-panel"
           :panel-value="viewDate"
           :base-mode="baseMode"
@@ -259,6 +285,7 @@ function onDatetimePanelChange(value: number, mode: PickerPanelMode) {
         />
         <DatePanel
           v-if="endPanelVisible"
+          ref="endPanelRef"
           class="picker-range-panel"
           :panel-value="endViewDate"
           :base-mode="baseMode"

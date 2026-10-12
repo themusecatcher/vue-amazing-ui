@@ -4,6 +4,7 @@ import type { VNode } from 'vue'
 import PickerPanel from './PickerPanel.vue'
 import PickerPanelHeader from './PickerPanelHeader.vue'
 import {
+  addDayTimestamp,
   addMonthTimestamp,
   addYearTimestamp,
   CENTURY_YEAR_COUNT,
@@ -40,7 +41,9 @@ import {
   YEAR_COUNT
 } from './date-utils'
 import type { StartDayOfWeek } from './date-utils'
-import type { PickerDateRender, PickerPanelMode, PickerRangeSide, PickerRangeValue } from './types'
+import { handlePanelKeydown } from './keyboard'
+import type { PickerKeydownHandlers } from './keyboard'
+import type { PickerDateRender, PickerPanelMode, PickerRangeSide, PickerRangeValue, PickerSelectSource } from './types'
 export interface DatePanelProps {
   value?: number | null // 当前选中日期（当日零点时间戳）
   baseMode?: PickerPanelMode // 形态对应的面板层级：决定初始层级与「选中即提交」的层级
@@ -57,6 +60,7 @@ export interface DatePanelProps {
   hoverValue?: PickerRangeValue | null // 范围形态的悬浮预览区间
   side?: PickerRangeSide // 范围形态的面板位置：左面板隐去「下一」组、右面板隐去「上一」组
   active?: boolean // 面板是否展开：展开时把展示日期带回当前值
+  panelActive?: boolean // 是否为日期时间面板的当前活动列：活动列在键盘操作期间保持原透明度
 }
 export interface DatePanelSlots {
   aside?: () => VNode[] // 主体右侧的附加面板（日期时间形态的时间面板）
@@ -78,11 +82,12 @@ const props = withDefaults(defineProps<DatePanelProps>(), {
   rangeValue: null,
   hoverValue: null,
   side: undefined,
-  active: false
+  active: false,
+  panelActive: false
 })
 defineSlots<DatePanelSlots>()
 const emits = defineEmits<{
-  select: [timestamp: number]
+  select: [timestamp: number, source: PickerSelectSource] // 选择来源：鼠标点击落值，键盘导航只移动光标
   panelChange: [value: number, mode: PickerPanelMode]
   panelValueChange: [value: number]
   cellHover: [timestamp: number] // 悬浮日期格：范围形态据此换算预览区间，单选形态据此在输入框展示预览文本
@@ -95,6 +100,10 @@ const QUARTER_COL_COUNT = 4
 const YEAR_COL_COUNT = 3
 /** 十年面板格的列数（与年面板同构：3 列 × 4 行） */
 const DECADE_COL_COUNT = 3
+/** 一周天数：日期面板「上下」键的步长 */
+const DAYS_PER_WEEK = 7
+/** 一个季度的月份数：季面板「左右」键的步长 */
+const QUARTER_MONTH_COUNT = 3
 /** 按列数切分为矩阵，供表格逐行渲染 */
 function chunk<T>(list: T[], size: number): T[][] {
   return Array.from({ length: Math.ceil(list.length / size) }, (_, index) =>
@@ -354,8 +363,72 @@ function onDateSelect(timestamp: number) {
   if (!isInView(timestamp)) {
     setViewDate(timestamp)
   }
-  emits('select', timestamp)
+  emits('select', timestamp, 'mouse')
 }
+/**
+ * 键盘导航选中：只把光标与视图带过去，不落值
+ *
+ * 与鼠标选择分径的原因：键按一次即落值会让单选形态「按一下方向键就选完并收起」；键盘的光标
+ * 与「已选值」不是一回事，落值统一交给回车或「确定」。禁用格不拦——光标可以停在禁用格上
+ * （光标本身不代表已选值），与鼠标点击的「禁用即不可选」区分。
+ */
+function selectByKey(timestamp: number) {
+  setViewDate(timestamp)
+  emits('select', timestamp, 'key')
+}
+/** 键盘导航的起点：当前值优先，为空时取面板视图日期（与鼠标操作的「从当前视图出发」一致） */
+function getKeyStepBase(): number {
+  return props.value ?? viewDate.value
+}
+/**
+ * 面板导航键位表：一步的粒度随当前面板层级变化
+ *
+ * 键位粒度：日期 / 周面板左右为一天、上下为一周、翻页为一月、Ctrl 为一年；月面板上下
+ * 为三个月；季面板左右为一个季度（三个月）、上下为一年；年面板上下为三年、Ctrl 为十年；十年面板
+ * 左右为十年、上下为三十年、Ctrl 为百年。月 / 季 / 年 / 十年面板不响应翻页键——未声明的意图即
+ * 不消费该键，按键交还浏览器。
+ */
+function getKeydownHandlers(): PickerKeydownHandlers {
+  const base = getKeyStepBase()
+  switch (panelMode.value) {
+    case 'month':
+      return {
+        onLeftRight: (step) => selectByKey(addMonthTimestamp(base, step)),
+        onCtrlLeftRight: (step) => selectByKey(addYearTimestamp(base, step)),
+        onUpDown: (step) => selectByKey(addMonthTimestamp(base, step * MONTH_COL_COUNT))
+      }
+    case 'quarter':
+      return {
+        onLeftRight: (step) => selectByKey(addMonthTimestamp(base, step * QUARTER_MONTH_COUNT)),
+        onCtrlLeftRight: (step) => selectByKey(addYearTimestamp(base, step)),
+        onUpDown: (step) => selectByKey(addYearTimestamp(base, step))
+      }
+    case 'year':
+      return {
+        onLeftRight: (step) => selectByKey(addYearTimestamp(base, step)),
+        onCtrlLeftRight: (step) => selectByKey(addYearTimestamp(base, step * YEAR_COUNT)),
+        onUpDown: (step) => selectByKey(addYearTimestamp(base, step * YEAR_COL_COUNT))
+      }
+    case 'decade':
+      return {
+        onLeftRight: (step) => selectByKey(addYearTimestamp(viewDate.value, step * YEAR_COUNT)),
+        onCtrlLeftRight: (step) => selectByKey(addYearTimestamp(viewDate.value, step * CENTURY_YEAR_COUNT)),
+        onUpDown: (step) => selectByKey(addYearTimestamp(viewDate.value, step * YEAR_COL_COUNT * YEAR_COUNT))
+      }
+    default:
+      return {
+        onLeftRight: (step) => selectByKey(addDayTimestamp(base, step)),
+        onCtrlLeftRight: (step) => selectByKey(addYearTimestamp(base, step)),
+        onUpDown: (step) => selectByKey(addDayTimestamp(base, step * DAYS_PER_WEEK)),
+        onPageUpDown: (step) => selectByKey(addMonthTimestamp(base, step))
+      }
+  }
+}
+/** 处理一次面板导航按键：消费时已阻止默认行为，避免输入框光标随之移动 */
+function handleKeydown(event: KeyboardEvent): boolean {
+  return handlePanelKeydown(event, getKeydownHandlers())
+}
+defineExpose({ handleKeydown })
 /** 悬浮到日期格：范围形态由容器据此换算预览区间，单选形态由宿主据此预览文本 */
 function onCellHover(timestamp: number) {
   emits('cellHover', timestamp)
@@ -381,7 +454,7 @@ function onMonthSelect(timestamp: number) {
   }
   setViewDate(timestamp)
   if (panelMode.value === props.baseMode) {
-    emits('select', timestamp)
+    emits('select', timestamp, 'mouse')
     return
   }
   changePanel(sourceMode.value, timestamp)
@@ -392,7 +465,7 @@ function onQuarterSelect(timestamp: number) {
     return
   }
   setViewDate(timestamp)
-  emits('select', timestamp)
+  emits('select', timestamp, 'mouse')
 }
 /**
  * 选择年份
@@ -406,7 +479,7 @@ function onYearSelect(timestamp: number) {
     return
   }
   if (panelMode.value === props.baseMode) {
-    emits('select', timestamp)
+    emits('select', timestamp, 'mouse')
     return
   }
   setViewDate(addYearTimestamp(viewDate.value, getYearNumber(timestamp) - viewYear.value))
@@ -431,7 +504,7 @@ function onTodaySelect() {
   if (isTodayDisabled()) {
     return
   }
-  emits('select', startOfDayTimestamp(Date.now()))
+  emits('select', startOfDayTimestamp(Date.now()), 'mouse')
 }
 function switchPanel(mode: PickerPanelMode, timestamp: number = viewDate.value) {
   panelMode.value = mode
@@ -485,7 +558,8 @@ function onNext() {
       <!-- 悬浮预览只在日期格内有效：清除挂在**日期格自身**的 mouseleave 上（见下方格上的
            `@mouseleave`），移出该格即取消。挂在面板主体上的话，鼠标停在本面板的内边距
            （或两面板之间的空隙）时仍处于主体内，预览不会撤、输入框会一直显示悬浮日期 -->
-      <div class="picker-date-panel-main">
+      <!-- 键盘操作期间非活动列淡化：透明度由日期列自身承载（其内部节点不在容器组件的样式作用域内） -->
+      <div class="picker-date-panel-main" :class="{ 'picker-date-panel-main-active': panelActive }">
         <PickerPanelHeader
           :show-single-nav="panelMode === 'date' || panelMode === 'week'"
           :show-prev="showPrevNav"
@@ -525,7 +599,7 @@ function onNext() {
           </template>
         </PickerPanelHeader>
         <div v-if="panelMode === 'date'" class="picker-panel-content picker-panel-date-content">
-          <table>
+          <table role="grid">
             <thead>
               <tr>
                 <th v-for="(label, index) in weekLabels" :key="index">{{ label }}</th>
@@ -549,6 +623,8 @@ function onNext() {
                     },
                     getCellRangeClasses(timestamp)
                   ]"
+                  :aria-selected="isSelected(timestamp)"
+                  :aria-disabled="Boolean(disabledDate?.(timestamp))"
                   :title="formatTimestamp(timestamp, 'yyyy-MM-dd')"
                   @click="onDateSelect(timestamp)"
                   @mouseenter="onCellHover(timestamp)"
@@ -564,7 +640,7 @@ function onNext() {
           </table>
         </div>
         <div v-else-if="panelMode === 'week'" class="picker-panel-content picker-panel-week-content">
-          <table>
+          <table role="grid">
             <thead>
               <tr>
                 <!-- 周序号列表头留空，与下方每行首格对齐 -->
@@ -578,6 +654,7 @@ function onNext() {
                 :key="rowIndex"
                 class="picker-panel-week-row"
                 :class="getWeekRowClasses(row.weekStart)"
+                :aria-selected="isSameWeekAs(row.weekStart, value)"
               >
                 <td class="picker-panel-cell picker-panel-cell-week">{{ row.weekNumber }}</td>
                 <td
@@ -589,6 +666,7 @@ function onNext() {
                     'picker-panel-cell-today': isToday(timestamp),
                     'picker-panel-cell-disabled': Boolean(disabledDate?.(timestamp))
                   }"
+                  :aria-disabled="Boolean(disabledDate?.(timestamp))"
                   :title="formatTimestamp(timestamp, 'yyyy-MM-dd')"
                   @click="onDateSelect(timestamp)"
                   @mouseenter="onCellHover(timestamp)"
@@ -604,7 +682,7 @@ function onNext() {
           </table>
         </div>
         <div v-else-if="panelMode === 'month'" class="picker-panel-content picker-panel-month-content">
-          <table>
+          <table role="grid">
             <tbody>
               <tr v-for="(row, rowIndex) in monthRows" :key="rowIndex">
                 <td
@@ -618,6 +696,8 @@ function onNext() {
                     },
                     getCellRangeClasses(timestamp)
                   ]"
+                  :aria-selected="isSelectedMonth(timestamp)"
+                  :aria-disabled="isMonthDisabled(timestamp)"
                   :title="formatTimestamp(timestamp, 'yyyy-MM')"
                   @click="onMonthSelect(timestamp)"
                   @mouseenter="onCellHover(timestamp)"
@@ -630,7 +710,7 @@ function onNext() {
           </table>
         </div>
         <div v-else-if="panelMode === 'quarter'" class="picker-panel-content picker-panel-quarter-content">
-          <table>
+          <table role="grid">
             <tbody>
               <tr v-for="(row, rowIndex) in quarterRows" :key="rowIndex">
                 <td
@@ -644,6 +724,8 @@ function onNext() {
                     },
                     getCellRangeClasses(timestamp)
                   ]"
+                  :aria-selected="isSelectedQuarter(timestamp)"
+                  :aria-disabled="isQuarterDisabled(timestamp)"
                   :title="formatTimestamp(timestamp, 'yyyy-QQQ')"
                   @click="onQuarterSelect(timestamp)"
                   @mouseenter="onCellHover(timestamp)"
@@ -656,7 +738,7 @@ function onNext() {
           </table>
         </div>
         <div v-else-if="panelMode === 'year'" class="picker-panel-content picker-panel-year-content">
-          <table>
+          <table role="grid">
             <tbody>
               <tr v-for="(row, rowIndex) in yearRows" :key="rowIndex">
                 <td
@@ -675,6 +757,8 @@ function onNext() {
                     // 无法像日期格那样靠它在 CSS 层收边，故在类名层直接拦掉
                     isYearInView(timestamp) ? getCellRangeClasses(timestamp) : {}
                   ]"
+                  :aria-selected="isSelectedYear(timestamp)"
+                  :aria-disabled="isYearDisabled(timestamp)"
                   :title="formatTimestamp(timestamp, 'yyyy')"
                   @click="onYearSelect(timestamp)"
                   @mouseenter="onCellHover(timestamp)"
@@ -692,7 +776,7 @@ function onNext() {
           </table>
         </div>
         <div v-else class="picker-panel-content picker-panel-decade-content">
-          <table>
+          <table role="grid">
             <tbody>
               <tr v-for="(row, rowIndex) in decadeRows" :key="rowIndex">
                 <td
@@ -703,6 +787,8 @@ function onNext() {
                     'picker-panel-cell-selected': isSelectedDecade(timestamp),
                     'picker-panel-cell-disabled': isDecadeDisabled(timestamp)
                   }"
+                  :aria-selected="isSelectedDecade(timestamp)"
+                  :aria-disabled="isDecadeDisabled(timestamp)"
                   :title="getDecadeLabel(timestamp)"
                   @click="onDecadeSelect(timestamp)"
                 >
@@ -746,6 +832,16 @@ function onNext() {
 .picker-date-panel-main {
   flex: none;
   width: 280px;
+  // 键盘操作期间在 0.3 / 1 之间切换透明度（见下方 `.picker-datetime-panel-active`）
+  transition: opacity 0.3s;
+}
+// 键盘操作期间非活动列淡化（活动列保持原透明度）。透明度写在日期列自身而非容器组件里：
+// 日期列的内部节点由本组件渲染，不带容器组件的作用域标记，容器组件的样式选不中它们
+.picker-datetime-panel-active .picker-date-panel-main {
+  opacity: 0.3;
+  &.picker-date-panel-main-active {
+    opacity: 1;
+  }
 }
 .picker-panel-content {
   width: 100%;

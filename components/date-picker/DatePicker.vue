@@ -19,7 +19,9 @@ import {
   parseTimestamp
 } from 'components/picker/date-utils'
 import type { StartDayOfWeek } from 'components/picker/date-utils'
+import { PANEL_NAV_KEYS } from 'components/picker/keyboard'
 import type {
+  PickerActiveSection,
   PickerDateRender,
   PickerDateRenderParams,
   PickerDisabledTime,
@@ -31,6 +33,7 @@ import type {
   PickerRangeFormattedValue,
   PickerRangeSide,
   PickerRangeValue,
+  PickerSelectSource,
   PickerSize,
   PickerStatus,
   PickerTimePanelProps,
@@ -60,7 +63,7 @@ export interface Props {
   status?: PickerStatus // 校验状态
   bordered?: boolean // 是否展示边框
   // 状态反馈
-  disabled?: boolean // 是否禁用
+  disabled?: boolean | [boolean, boolean] // 是否禁用，范围形态可传两段元组逐段禁用
   allowClear?: boolean // 是否展示清除按钮
   allowEmpty?: [boolean, boolean] // 范围形态各段是否允许为空，为空时该段可被单独清空并对外提交
   inputReadOnly?: boolean // 输入框是否只读（避免移动端唤起键盘）
@@ -179,6 +182,8 @@ const themeVars = computed(() => {
     '--picker-primary-shadow-color': shadowColor.value,
     // 区间底色取色板最浅一级
     '--picker-primary-color-bg': colorPalettes.value[0],
+    // 键盘活动列的底纹：取区间底色的 20% 透明度（浅到不抢格内容，暗色主题下同样成立）
+    '--picker-time-column-active-bg': new TinyColor(colorPalettes.value[0]).setAlpha(0.2).toRgbString(),
     // 悬浮预览的底色与虚线边界由主色提亮派生（色板中无对应级）
     '--picker-primary-color-bg-hover': primaryTone.lighten(35).toHexString(),
     '--picker-hover-border-color': primaryTone.lighten(20).toHexString()
@@ -229,6 +234,21 @@ const mergedExtraFooter = computed<(() => VNode[]) | undefined>(() => {
 const isDateTime = computed(() => props.type === 'datetime')
 /** 是否为范围形态：双面板、双段输入、值为两段元组 */
 const isRange = computed(() => isRangeType(props.type))
+/**
+ * 逐段禁用状态
+ *
+ * 范围形态支持两段元组逐段禁用；单选形态只接受布尔值，传数组时任一项为真即视为整体禁用
+ * （避免「传了数组却被静默当成启用」这类歧义）。
+ */
+const disabledSides = computed<[boolean, boolean]>(() => {
+  const { disabled } = props
+  if (Array.isArray(disabled)) {
+    return isRange.value ? [disabled[0], disabled[1]] : [disabled[0] || disabled[1], disabled[0] || disabled[1]]
+  }
+  return [disabled, disabled]
+})
+/** 是否整体禁用：范围形态两段都禁用、单选形态同段状态 */
+const fullyDisabled = computed(() => disabledSides.value[0] && disabledSides.value[1])
 /** 是否为日期时间范围形态：单个日期时间面板，两段靠「确定」切换编辑 */
 const isDateTimeRange = computed(() => props.type === 'datetimerange')
 /** 形态对应的面板层级：周 / 月 / 季 / 年形态直接落在对应层级，日期与带时间形态落在日期层级 */
@@ -320,9 +340,14 @@ function activateSide(side: PickerRangeSide) {
 function resetActivatedSides() {
   activatedSides.value = { start: false, end: false }
 }
-/** 面板展示值：带时间形态展开期间取草稿，其余情况跟随已提交值 */
+/**
+ * 面板展示值：展开期间有草稿则取草稿，其余情况跟随已提交值
+ *
+ * 草稿对**所有形态**生效（不限于带时间形态）：鼠标选择在单选形态下即时提交并收起、不会留下草稿，
+ * 唯一会产生草稿的是键盘导航——它只把光标落在草稿上（连同输入框文本），由回车或「确定」落值。
+ */
 const panelTimestamp = computed(() => {
-  const drafting = isDateTime.value && open.value && draftValue.value !== null
+  const drafting = open.value && draftValue.value !== null
   return drafting ? draftValue.value : innerValue.value
 })
 /** 面板展示区间：范围形态展开期间取草稿，其余情况跟随已提交值 */
@@ -345,7 +370,10 @@ const mergedRangeDisabledDate = computed<((timestamp: number) => boolean) | unde
   const isStartSide = activeSide.value === 'start'
   const boundary = (isStartSide ? current?.[1] : current?.[0]) ?? null
   const otherSideActivated = isStartSide ? activatedSides.value.end : activatedSides.value.start
-  if (boundary === null || !otherSideActivated) {
+  // 对端整体禁用时该段被对端的值锁死（起点不得晚于已禁用的终点，反之亦然）：对端不会再被激活，
+  // 约束因此直接生效，不以上述「已激活过」为前提
+  const otherSideDisabled = isStartSide ? disabledSides.value[1] : disabledSides.value[0]
+  if (boundary === null || (!otherSideActivated && !otherSideDisabled)) {
     return userDisabledDate
   }
   return (timestamp: number) => {
@@ -409,7 +437,7 @@ const mergedPlaceholders = computed<[string, string]>(() => {
 /** 单段输入的提示文字（范围形态由 `placeholders` 承担，此处传空） */
 const singlePlaceholder = computed(() => (Array.isArray(props.placeholder) ? '' : props.placeholder))
 const showClear = computed(() => {
-  if (!props.allowClear || props.disabled) {
+  if (!props.allowClear || fullyDisabled.value) {
     return false
   }
   if (isRange.value) {
@@ -472,7 +500,7 @@ watch(
 )
 onBeforeUnmount(detachDocumentListener)
 function requestOpen(next: boolean) {
-  if (props.disabled || open.value === next) return
+  if (fullyDisabled.value || open.value === next) return
   open.value = next
   emits('openChange', next)
 }
@@ -483,7 +511,14 @@ function requestOpen(next: boolean) {
  * 并把焦点移到该段输入框 —— 聚焦态因此由 focus 驱动，面板收起后下划线不会随之淡出。
  */
 function onTriggerClick(index: 0 | 1 = 0) {
+  // 面板操作态下输入框是只读的，点击输入区即把键盘收回文本输入态，恢复手输
+  if (keyboardPanelMode.value) {
+    keyboardPanelMode.value = false
+    activeSection.value = null
+  }
   if (open.value) return
+  // 该段被禁用时不展开：禁用段不可编辑，展开后也没有可选的段
+  if (disabledSides.value[index]) return
   activateSide(index === 0 ? 'start' : 'end')
   requestOpen(true)
   nextTick(() => {
@@ -498,7 +533,16 @@ function commit(timestamp: number | null): PickerFormattedValue {
   emits('change', timestamp, nextFormatted)
   return nextFormatted
 }
-function onSelect(timestamp: number) {
+/**
+ * 面板选择：鼠标点击即落值并收起；键盘导航只把光标落在草稿上
+ *
+ * 键盘若也即时落值，单选形态会「按一下方向键就选完并收起」，用户无法连续移动光标。
+ */
+function onSelect(timestamp: number, source: PickerSelectSource = 'mouse') {
+  if (source === 'key') {
+    draftValue.value = timestamp
+    return
+  }
   commit(timestamp)
   requestOpen(false)
 }
@@ -542,13 +586,17 @@ function applyRangeSide(timestamp: number, side: PickerRangeSide, switchSide: bo
   if (canCommit) {
     commitRange(next)
   }
-  // 另一端「本次展开中尚未激活」或「尚无值」时，切到该端继续选并保持展开；
-  // 否则视为本次区间已选完 → 收起
+  // 另一端「本次展开中尚未激活」或「尚无值」且未被禁用时，切到该端继续选并保持展开；
+  // 否则视为本次区间已选完 → 收起（对端被禁用即属此类：它没有可继续选的段）
   const otherSide: PickerRangeSide = side === 'start' ? 'end' : 'start'
   const currentIndex = side === 'start' ? 0 : 1
   const otherIndex = side === 'start' ? 1 : 0
+  const otherSideDisabled = disabledSides.value[otherIndex]
   const keepOpen =
-    switchSide && next[currentIndex] !== null && (!activatedSides.value[otherSide] || next[otherIndex] === null)
+    switchSide &&
+    !otherSideDisabled &&
+    next[currentIndex] !== null &&
+    (!activatedSides.value[otherSide] || next[otherIndex] === null)
   if (keepOpen) {
     activateSide(otherSide)
     // 切到另一端时把焦点一并挪过去（等 DOM 更新后再聚焦），
@@ -559,8 +607,17 @@ function applyRangeSide(timestamp: number, side: PickerRangeSide, switchSide: bo
   requestOpen(false)
   return { value: next, formatted: nextFormatted }
 }
-/** 面板选择日期：写入当前激活段，并把激活段切到另一端以接着选第二段 */
-function onRangeSelect(timestamp: number, side: PickerRangeSide) {
+/**
+ * 面板选择日期：写入当前激活段，并把激活段切到另一端以接着选第二段
+ *
+ * 键盘导航同 {@link onSelect}：只把该段的草稿设为光标所在日期，不落值、不切段。
+ */
+function onRangeSelect(timestamp: number, side: PickerRangeSide, source: PickerSelectSource = 'mouse') {
+  if (source === 'key') {
+    const current = draftRange.value ?? rangeValue.value ?? [null, null]
+    draftRange.value = side === 'start' ? [timestamp, current[1]] : [current[0], timestamp]
+    return
+  }
   applyRangeSide(timestamp, side, true)
 }
 /**
@@ -642,12 +699,14 @@ function onPresetHover(presetValue: PickerPresetValue | null) {
 /**
  * 手输文本：解析成功才提交，失败时由触发器回滚为当前合法文本
  *
- * 需点「确定」的形态（含时间面板）失焦即取消（丢弃草稿、不提交），回车与「确定」同径（提交并收起）
- * —— 面板展开期间输入框展示的是草稿，若失焦时按手输提交，会把未确认的草稿当成用户输入落值。
+ * 面板展开期间输入框展示的可能不是用户键入的内容：需点「确定」的形态展示面板草稿、键盘操作态
+ * 展示方向键的光标日期。这两类失焦都视同取消（丢弃草稿、不落值），否则未确认的选择会被当成
+ * 用户输入落值；回车与「确定」同径（提交并收起）。
  */
 function onTextConfirm(text: string, source: 'enter' | 'blur', index: 0 | 1) {
-  if (needConfirm.value && source === 'blur') {
+  if (source === 'blur' && (needConfirm.value || keyboardPanelMode.value)) {
     draftValue.value = null
+    draftRange.value = null
     return
   }
   if (isRange.value) {
@@ -661,10 +720,8 @@ function onTextConfirm(text: string, source: 'enter' | 'blur', index: 0 | 1) {
   const timestamp = parseTimestamp(text, mergedValueFormat.value)
   if (timestamp === null) return
   commit(timestamp)
-  if (isDateTime.value) {
-    draftValue.value = null
-    requestOpen(false)
-  }
+  // 回车即提交并收起（与面板选择同径）：带时间形态的草稿由收起时的监听统一丢弃
+  requestOpen(false)
 }
 function onEscKeydown() {
   if (open.value) {
@@ -676,6 +733,115 @@ function onPanelChange(timestamp: number, mode: PickerPanelMode) {
   hoverTimestamp.value = null
   emits('panelChange', timestamp, mode)
 }
+/* ============================== 键盘导航 ============================== */
+/** 面板的键盘入口：各面板经 `defineExpose` 暴露，组件壳层按当前形态把按键转给对应的面板 */
+interface PanelKeydownTarget {
+  handleKeydown: (event: KeyboardEvent) => boolean
+}
+/**
+ * 键盘归属
+ *
+ * `false` 为文本输入态（方向键移动输入光标），`true` 为面板操作态（方向键操作面板光标）。两态之间
+ * 由 Tab 切换：输入态下 Tab 只把键盘交给面板、焦点不动（否则第一下 Tab 就移出组件、面板失去键盘
+ * 入口）；面板操作态下 Tab 才在两个区之间循环，循环到头交还浏览器移出焦点。输入字符、点击输入区
+ * 或重新聚焦即回到输入态——否则用户无法再用方向键在输入框里移动光标。
+ *
+ * 面板操作态同时把输入框置为只读：插入光标不应再提示「可直接输入」，此刻键盘归面板所有。
+ */
+const keyboardPanelMode = ref(false)
+/** 键盘操作当前所在的区：仅带时间形态有两个区可取，其余形态恒为日期区（面板内部按该状态转发） */
+const activeSection = ref<PickerActiveSection>(null)
+/** 是否具备「日期 / 时间」两个可切换的区 */
+const hasTimeSection = computed(() => isDateTime.value || isDateTimeRange.value)
+/** 唤起面板的按键中不作数的一类：修饰键不是输入意图，Esc / 回车另有既有语义 */
+const PANEL_OPEN_IGNORED_KEYS = ['Shift', 'Control', 'Alt', 'Meta', 'Escape', 'Enter']
+const rangePanelRef = ref<PanelKeydownTarget | null>(null)
+const datetimePanelRef = ref<PanelKeydownTarget | null>(null)
+const datePanelRef = ref<PanelKeydownTarget | null>(null)
+// 面板展开状态变化即重置键盘状态：收起后不再保留上一次的键盘归属与活动区
+watch(open, () => {
+  keyboardPanelMode.value = false
+  activeSection.value = null
+})
+// 切换激活段即重置活动区：Tab 的循环从「未指定」重新开始，与换手后的鼠标操作起点一致
+watch(activeSide, () => {
+  activeSection.value = null
+})
+/** 当前渲染的面板（三种形态三选一） */
+function getRenderedPanel(): PanelKeydownTarget | null {
+  if (isRange.value) {
+    return rangePanelRef.value
+  }
+  return isDateTime.value ? datetimePanelRef.value : datePanelRef.value
+}
+/** 输入框内容被改动：键盘归属收回文本输入态，方向键随之回到输入光标 */
+function onTriggerInput(): void {
+  keyboardPanelMode.value = false
+  activeSection.value = null
+}
+function onTriggerFocus(event: FocusEvent): void {
+  onTriggerInput()
+  emits('focus', event)
+}
+/**
+ * 把一次按键转给面板
+ *
+ * 未指定活动区时首个导航键只把日期区设为活动区（不移动光标）——先让用户看清键盘落在哪一列，
+ * 下一键才真正移动。
+ */
+function forwardKeydown(event: KeyboardEvent): boolean {
+  if (hasTimeSection.value && activeSection.value === null) {
+    activeSection.value = 'date'
+    event.preventDefault()
+    return true
+  }
+  return getRenderedPanel()?.handleKeydown(event) ?? false
+}
+const SECTION_CYCLE: PickerActiveSection[] = [null, 'date', 'time']
+/** 取循环中的下一个区（越界即回到「未指定」） */
+function getNextSection(current: PickerActiveSection, backward: boolean): PickerActiveSection {
+  const index = SECTION_CYCLE.indexOf(current)
+  return SECTION_CYCLE[backward ? index - 1 : index + 1] ?? null
+}
+/**
+ * Tab：切换键盘归属，并在面板内的两个区之间循环
+ *
+ * 循环到头（回到「无活动区」）时不阻止默认行为，交还浏览器把焦点移出组件。
+ */
+function onTabKeydown(event: KeyboardEvent): void {
+  if (!keyboardPanelMode.value) {
+    keyboardPanelMode.value = true
+    event.preventDefault()
+    return
+  }
+  if (!hasTimeSection.value) {
+    return
+  }
+  const nextSection = getNextSection(activeSection.value, event.shiftKey)
+  activeSection.value = nextSection
+  if (nextSection !== null) {
+    event.preventDefault()
+  }
+}
+/** 触发器的按键入口：面板未展开时任意输入键唤起面板，展开后按键盘归属决定是否操作面板 */
+function onWrapperKeydown(event: KeyboardEvent): void {
+  if (event.key === 'Tab') {
+    if (open.value && !fullyDisabled.value) {
+      onTabKeydown(event)
+    }
+    return
+  }
+  if (!open.value) {
+    if (!PANEL_OPEN_IGNORED_KEYS.includes(event.key)) {
+      requestOpen(true)
+    }
+    return
+  }
+  if (!keyboardPanelMode.value || !PANEL_NAV_KEYS.includes(event.key)) {
+    return
+  }
+  forwardKeydown(event)
+}
 function focus() {
   triggerRef.value?.focus()
 }
@@ -685,7 +851,15 @@ function blur() {
 defineExpose({ focus, blur })
 </script>
 <template>
-  <div ref="wrapperRef" class="datepicker-wrap" :style="wrapperStyle" @keydown.esc="onEscKeydown" @keydown.enter.stop>
+  <div
+    ref="wrapperRef"
+    class="datepicker-wrap"
+    :style="wrapperStyle"
+    @keydown="onWrapperKeydown"
+    @keydown.esc="onEscKeydown"
+    @keydown.enter.stop
+    @input="onTriggerInput"
+  >
     <PickerTrigger
       ref="triggerRef"
       :text="displayText"
@@ -699,8 +873,9 @@ defineExpose({ focus, blur })
       :size="size"
       :status="status"
       :bordered="bordered"
-      :disabled="disabled"
-      :input-read-only="inputReadOnly"
+      :disabled="fullyDisabled"
+      :disabled-sides="disabledSides"
+      :input-read-only="inputReadOnly || keyboardPanelMode"
       :allow-clear="allowClear && showClear"
       :open="open"
       :input-size="inputSize"
@@ -710,7 +885,7 @@ defineExpose({ focus, blur })
       @arrow-change="rangeArrowLeft = $event"
       @side-focus="onSideFocus"
       @text-confirm="onTextConfirm"
-      @focus="emits('focus', $event)"
+      @focus="onTriggerFocus"
       @blur="emits('blur', $event)"
     >
       <template #suffix>
@@ -726,7 +901,7 @@ defineExpose({ focus, blur })
     </PickerTrigger>
     <Popup
       ref="popupRef"
-      :show="open && !disabled"
+      :show="open && !fullyDisabled"
       :to="to"
       :anchor="wrapperRef"
       :placement="placement"
@@ -740,9 +915,11 @@ defineExpose({ focus, blur })
     >
       <RangePanel
         v-if="isRange"
+        ref="rangePanelRef"
         :value="panelRangeValue"
         :base-mode="panelBaseMode"
         :active="open"
+        :active-section="activeSection"
         :active-side="activeSide"
         :start-day-of-week="startDayOfWeek"
         :disabled-date="mergedRangeDisabledDate"
@@ -770,7 +947,9 @@ defineExpose({ focus, blur })
       <div v-if="showRangeArrow" class="datepicker-range-arrow" :style="{ left: `${rangeArrowLeft}px` }" />
       <DatetimePanel
         v-else-if="isDateTime"
+        ref="datetimePanelRef"
         :value="panelTimestamp"
+        :active-section="activeSection"
         :format="mergedFormat"
         :header-format="format"
         :time-props="timePickerProps"
@@ -795,7 +974,8 @@ defineExpose({ focus, blur })
       </DatetimePanel>
       <DatePanel
         v-else
-        :value="innerValue"
+        ref="datePanelRef"
+        :value="panelTimestamp"
         :base-mode="panelBaseMode"
         :active="open"
         :start-day-of-week="startDayOfWeek"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import TimeUnitColumn from './TimeUnitColumn.vue'
 import {
   formatTimestamp,
@@ -15,6 +15,8 @@ import {
   toHour24,
   toHourColumnValue
 } from './date-utils'
+import { handlePanelKeydown } from './keyboard'
+import type { PickerKeyStep } from './keyboard'
 import type { PickerDisabledTimeUnits, PickerTimePanelProps, PickerTimeUnit } from './types'
 export interface TimePanelProps {
   value?: number | null // 当前草稿值（空值时不选中任何项，列停在顶部）
@@ -23,6 +25,7 @@ export interface TimePanelProps {
   timeProps?: PickerTimePanelProps // 时间面板选项（步长 / 12 小时制 / 隐藏禁用项）
   disabledUnits?: PickerDisabledTimeUnits // 按单位声明的禁用时间
   active?: boolean // 面板是否展开（展开时把选中项滚到列顶部）
+  panelActive?: boolean // 是否为日期时间面板的当前活动列：活动列在键盘操作期间保持原透明度
 }
 const props = withDefaults(defineProps<TimePanelProps>(), {
   value: null,
@@ -30,11 +33,14 @@ const props = withDefaults(defineProps<TimePanelProps>(), {
   headerFormat: undefined,
   timeProps: undefined,
   disabledUnits: undefined,
-  active: false
+  active: false,
+  panelActive: false
 })
 const emits = defineEmits<{
   change: [timestamp: number]
 }>()
+/** 当前活动的时间列下标：-1 表示尚未指定（由首次左右键或上下键确定） */
+const activeColumnIndex = ref(-1)
 /** 空草稿时以当前时刻为基准合成时分秒 */
 const baseTimestamp = computed(() => props.value ?? Date.now())
 const layout = computed(() => resolveTimePanelLayout(props.format, props.timeProps?.use12Hours))
@@ -111,9 +117,94 @@ function onSecondSelect(value: number): void {
 function onPeriodSelect(value: number): void {
   emitTime(toHour24(hourColumnValue.value ?? 0, value === 1), minute.value, second.value)
 }
+/* ============================== 键盘导航 ============================== */
+/**
+ * 时间列清单：顺序即左右键的遍历顺序（与渲染顺序一致）
+ *
+ * 列清单按 props 推导而非从 DOM 取：禁用项过滤与 12 小时制重映射都发生在候选项生成阶段，
+ * DOM 里读不到这份语义。隐藏的列不参与构表，其候选项也就不会被求值。
+ */
+const columns = computed(() => {
+  const list: Array<{
+    name: string
+    units: PickerTimeUnit[]
+    value: number | null
+    select: (value: number) => void
+  }> = []
+  if (layout.value.showHour) {
+    list.push({ name: 'hour', units: hourUnits.value, value: hourColumnValue.value, select: onHourSelect })
+  }
+  if (layout.value.showMinute) {
+    list.push({ name: 'minute', units: minuteUnits.value, value: minute.value, select: onMinuteSelect })
+  }
+  if (layout.value.showSecond) {
+    list.push({ name: 'second', units: secondUnits.value, value: second.value, select: onSecondSelect })
+  }
+  if (layout.value.use12Hours) {
+    list.push({ name: 'period', units: periodUnits.value, value: periodValue.value, select: onPeriodSelect })
+  }
+  return list
+})
+/** 活动列名：供各列判定自身是否为键盘操作的目标（无活动列时为 null） */
+const activeColumnName = computed(() => columns.value[activeColumnIndex.value]?.name ?? null)
+/** 面板不再是活动列时清掉列下标：下次激活从「未指定」重新开始，不接着上一次的列 */
+watch(
+  () => props.panelActive,
+  (active) => {
+    if (!active) {
+      activeColumnIndex.value = -1
+    }
+  }
+)
+/**
+ * 在活动列内移动取值
+ *
+ * 从当前值出发按步长找第一个可选项（跳过禁用项）。该列尚无选中项时（下标为 -1）按步长取模——
+ * 正向落到首项、反向落到倒数第二项。
+ */
+function moveActiveColumn(step: PickerKeyStep): void {
+  const column = columns.value[activeColumnIndex.value]
+  if (!column) {
+    return
+  }
+  const { units } = column
+  const currentIndex = units.findIndex((unit) => unit.value === column.value)
+  for (let offset = 1; offset < units.length; offset += 1) {
+    const next = units[(currentIndex + step * offset + units.length) % units.length]
+    if (next && !next.disabled) {
+      column.select(next.value)
+      return
+    }
+  }
+}
+/**
+ * 处理一次时间面板的导航按键
+ *
+ * 左右键在列之间循环移动；上下键改当前列的值，尚未指定列时首键只落到第一列（不在该键上取值）。
+ * 回车不在此处理：它由触发器的文本提交消费，与「回车提交」的既有口径一致。
+ */
+function handleKeydown(event: KeyboardEvent): boolean {
+  const count = columns.value.length
+  if (count === 0) {
+    return false
+  }
+  return handlePanelKeydown(event, {
+    onLeftRight: (step) => {
+      activeColumnIndex.value = (activeColumnIndex.value + step + count) % count
+    },
+    onUpDown: (step) => {
+      if (activeColumnIndex.value === -1) {
+        activeColumnIndex.value = 0
+        return
+      }
+      moveActiveColumn(step)
+    }
+  })
+}
+defineExpose({ handleKeydown })
 </script>
 <template>
-  <div class="picker-time-panel">
+  <div class="picker-time-panel" :class="{ 'picker-time-panel-active': panelActive }">
     <div class="picker-time-panel-header">
       <div class="picker-time-panel-view">{{ headerText }}</div>
     </div>
@@ -124,6 +215,7 @@ function onPeriodSelect(value: number): void {
         :value="hourColumnValue"
         :hide-disabled-options="timeProps?.hideDisabledOptions"
         :active="active"
+        :column-active="activeColumnName === 'hour'"
         @select="onHourSelect"
       />
       <TimeUnitColumn
@@ -132,6 +224,7 @@ function onPeriodSelect(value: number): void {
         :value="minute"
         :hide-disabled-options="timeProps?.hideDisabledOptions"
         :active="active"
+        :column-active="activeColumnName === 'minute'"
         @select="onMinuteSelect"
       />
       <TimeUnitColumn
@@ -140,6 +233,7 @@ function onPeriodSelect(value: number): void {
         :value="second"
         :hide-disabled-options="timeProps?.hideDisabledOptions"
         :active="active"
+        :column-active="activeColumnName === 'second'"
         @select="onSecondSelect"
       />
       <TimeUnitColumn
@@ -148,6 +242,7 @@ function onPeriodSelect(value: number): void {
         :value="periodValue"
         :hide-disabled-options="timeProps?.hideDisabledOptions"
         :active="active"
+        :column-active="activeColumnName === 'period'"
         @select="onPeriodSelect"
       />
     </div>
@@ -159,6 +254,8 @@ function onPeriodSelect(value: number): void {
   flex-direction: column;
   width: auto;
   min-width: auto;
+  // 键盘操作期间在 0.3 / 1 之间切换透明度（见 `.picker-datetime-panel` 的淡化规则）
+  transition: opacity 0.3s;
   // 头部只展示已选时间的文本、不带导航按钮，故不复用面板头部的导航结构
   .picker-time-panel-header {
     display: flex;

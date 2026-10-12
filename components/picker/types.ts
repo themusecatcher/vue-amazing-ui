@@ -20,6 +20,12 @@ export type PickerFormattedValue = string | PickerRangeFormattedValue | null
 /** 范围形态的两段标识，用于按段传入的判定与回写 */
 export type PickerRangeSide = 'start' | 'end'
 
+/** 面板选择的来源：鼠标点击会落值，键盘导航只移动面板内的光标（落值须再按回车或点「确定」） */
+export type PickerSelectSource = 'mouse' | 'key'
+
+/** 日期时间面板内的活动区：键盘操作作用于活动区，未指定时不淡化任何一区 */
+export type PickerActiveSection = 'date' | 'time' | null
+
 /** 范围形态：值形态为两元组，面板为双列 */
 export type PickerRangeType = 'daterange' | 'datetimerange' | 'weekrange' | 'monthrange' | 'yearrange' | 'quarterrange'
 /** 选择形态：决定面板组合与值形态（`datetime` / `datetimerange` 为带时间面板的形态） */
