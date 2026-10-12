@@ -68,6 +68,13 @@ const placementBottomLeftValue = ref<number | null>(initialDate())
 const placementBottomRightValue = ref<number | null>(initialDate())
 const placementTopLeftValue = ref<number | null>(initialDate())
 const placementTopRightValue = ref<number | null>(initialDate())
+// 键盘操作用例：日期 / 范围 / 日期时间各一，初始值便于展开面板后立刻用方向键移动光标
+const keyboardInitDate = initialDate()
+const keyboardInitRange = initialRange(-3, 0)
+const keyboardInitDateTime = initialDateTime()
+const keyboardValue = ref<number | null>(keyboardInitDate)
+const keyboardRangeValue = ref<[number, number] | null>(keyboardInitRange)
+const keyboardDateTimeValue = ref<number | null>(keyboardInitDateTime)
 // 周形态用例：初始值取当天（面板按 ISO 周成行高亮，展示格式为 ISO 周年 + 周序号，带「周」字后缀）
 const weekValue = ref<number | null>(initialDate())
 // 月 / 季 / 年形态用例：初始值取当前月首日 / 季首日 / 年首日，与形态的粒度一致
@@ -141,6 +148,9 @@ const switchableOptions: { label: string; value: SwitchableType }[] = [
 const dateTimeRangeValue = ref<[number, number] | null>(initialDateTimeRange())
 // 禁用日期用例的范围变体：初始为空值
 const disabledRangeValue = ref<[number, number] | null>(null)
+// 逐段禁用用例：起点段禁用且持有值（起点不可输入但值仍展示）、终点段可编辑；被禁用段有值才能展示其日期约束
+const disabledSideRangeInit = initialRange(-3, 0)
+const disabledSideRangeValue = ref<[number, number] | null>(disabledSideRangeInit)
 // 日期时间用例：主用例 + 时间面板选项 / 12 小时制 / 隐藏「此刻」三个细项
 const datetimeValue = ref<number | null>(initialDateTime())
 const minuteStepValue = ref<number | null>(initialDateTime())
@@ -416,6 +426,15 @@ function onStartOpenChange(open: boolean): void {
       <DatePicker disabled v-model:value="disabledValue" placeholder="请选择日期" />
       <DatePicker disabled v-model:value="disabledMonthValue" type="month" placeholder="请选择月份" />
     </Space>
+    <p class="mt30 mb10">
+      范围形态的 <code>disabled</code> 可传两段元组逐段禁用，被禁用的段不可输入、面板也不整体置灰
+    </p>
+    <DatePicker
+      v-model:value="disabledSideRangeValue"
+      type="daterange"
+      :disabled="[true, false]"
+      :placeholder="rangePlaceholder"
+    />
     <h2 class="mt30 mb10">不可选择日期和时间</h2>
     <p class="mb10">
       <code>disabledDate</code> 与 <code>disabledTime</code> 分别禁止选择部分日期与时间，<code>disabledTime</code>
@@ -615,6 +634,16 @@ function onStartOpenChange(open: boolean): void {
       <DatePicker v-model:value="placementBottomRightValue" placement="bottomRight" placeholder="右下" />
       <DatePicker v-model:value="placementTopLeftValue" placement="topLeft" placeholder="左上" />
       <DatePicker v-model:value="placementTopRightValue" placement="topRight" placeholder="右上" />
+    </Space>
+    <h2 class="mt30 mb10">键盘操作</h2>
+    <p class="mb10">
+      面板展开后按 <code>Tab</code> 把键盘交给面板，方向键按当前面板层级的粒度移动光标、<code>Enter</code>
+      提交；带时间的形态下 <code>Tab</code> 在日期与时间两列之间切换，非活动列淡化
+    </p>
+    <Space vertical>
+      <DatePicker v-model:value="keyboardValue" placeholder="请选择日期" />
+      <DatePicker v-model:value="keyboardRangeValue" type="daterange" :placeholder="rangePlaceholder" />
+      <DatePicker v-model:value="keyboardDateTimeValue" type="datetime" placeholder="请选择日期时间" />
     </Space>
   </div>
 </template>

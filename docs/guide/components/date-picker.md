@@ -69,6 +69,10 @@ const placementBottomLeftValue = ref<number | null>(initialDate())
 const placementBottomRightValue = ref<number | null>(initialDate())
 const placementTopLeftValue = ref<number | null>(initialDate())
 const placementTopRightValue = ref<number | null>(initialDate())
+// 键盘操作用例：日期 / 范围 / 日期时间各一，初始值便于展开面板后立刻用方向键移动光标
+const keyboardValue = ref<number | null>(initialDate())
+const keyboardRangeValue = ref<[number, number] | null>(initialRange(-3, 0))
+const keyboardDateTimeValue = ref<number | null>(initialDateTime())
 // 周形态用例：初始值取当天（面板按 ISO 周成行高亮，展示格式为 ISO 周年 + 周序号，带「周」字后缀）
 const weekValue = ref<number | null>(initialDate())
 // 月 / 季 / 年形态用例：初始值取当前月首日 / 季首日 / 年首日，与形态的粒度一致
@@ -142,6 +146,8 @@ const switchableOptions: { label: string; value: SwitchableType }[] = [
 const dateTimeRangeValue = ref<[number, number] | null>(initialDateTimeRange())
 // 禁用日期用例的范围变体：初始为空值
 const disabledRangeValue = ref<[number, number] | null>(null)
+// 逐段禁用用例：起点段禁用且持有值（起点不可输入但值仍展示）、终点段可编辑
+const disabledSideRangeValue = ref<[number, number] | null>(initialRange(-3, 0))
 // 日期时间用例：主用例 + 时间面板选项 / 12 小时制 / 隐藏「此刻」三个细项
 const datetimeValue = ref<number | null>(initialDateTime())
 const minuteStepValue = ref<number | null>(initialDateTime())
@@ -653,20 +659,43 @@ const showNowValue = ref<number | null>(new Date().getTime())
   <DatePicker disabled v-model:value="disabledMonthValue" type="month" placeholder="请选择月份" />
 </Space>
 
+_范围形态的 `disabled` 可传两段元组逐段禁用，被禁用的段不可输入、面板也不整体置灰_
+
+<br/>
+
+<DatePicker
+  v-model:value="disabledSideRangeValue"
+  type="daterange"
+  :disabled="[true, false]"
+  :placeholder="rangePlaceholder"
+/>
+
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { startOfMonth } from 'date-fns'
+import { startOfDay, startOfMonth, subDays } from 'date-fns'
 const disabledValue = ref<number | null>(new Date().getTime())
 const disabledMonthValue = ref<number | null>(startOfMonth(new Date()).getTime())
+// 起点段禁用且持有值：起点不可输入但值仍展示
+const disabledSideRangeValue = ref<[number, number] | null>([
+  startOfDay(subDays(new Date(), 3)).getTime(),
+  startOfDay(new Date()).getTime()
+])
+const rangePlaceholder = ['开始日期', '结束日期']
 </script>
 <template>
   <Space vertical>
     <DatePicker disabled v-model:value="disabledValue" placeholder="请选择日期" />
     <DatePicker disabled v-model:value="disabledMonthValue" type="month" placeholder="请选择月份" />
   </Space>
+  <DatePicker
+    v-model:value="disabledSideRangeValue"
+    type="daterange"
+    :disabled="[true, false]"
+    :placeholder="rangePlaceholder"
+  />
 </template>
 ```
 
@@ -1452,6 +1481,40 @@ const topRightValue = ref<number | null>(new Date().getTime())
 
 ::::
 
+## 键盘操作
+
+_面板展开后按 `Tab` 把键盘交给面板，方向键按当前面板层级的粒度移动光标、`Enter` 提交；带时间的形态下 `Tab` 在日期与时间两列之间切换，非活动列淡化_
+
+<br/>
+
+<Space vertical>
+  <DatePicker v-model:value="keyboardValue" placeholder="请选择日期" />
+  <DatePicker v-model:value="keyboardRangeValue" type="daterange" :placeholder="rangePlaceholder" />
+  <DatePicker v-model:value="keyboardDateTimeValue" type="datetime" placeholder="请选择日期时间" />
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { subDays } from 'date-fns'
+const keyboardValue = ref<number | null>(new Date().getTime())
+const keyboardRangeValue = ref<[number, number] | null>([subDays(new Date(), 3).getTime(), new Date().getTime()])
+const keyboardDateTimeValue = ref<number | null>(new Date().getTime())
+const rangePlaceholder = ['开始日期', '结束日期']
+</script>
+<template>
+  <Space vertical>
+    <DatePicker v-model:value="keyboardValue" placeholder="请选择日期" />
+    <DatePicker v-model:value="keyboardRangeValue" type="daterange" :placeholder="rangePlaceholder" />
+    <DatePicker v-model:value="keyboardDateTimeValue" type="datetime" placeholder="请选择日期时间" />
+  </Space>
+</template>
+```
+
+:::
+
 ## APIs
 
 ### DatePicker
@@ -1476,7 +1539,7 @@ const topRightValue = ref<number | null>(new Date().getTime())
 | size | 选择器大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | status | 校验状态 | 'warning' &#124; 'error' | undefined |
 | bordered | 是否展示边框 | boolean | true |
-| disabled | 是否禁用 | boolean | false |
+| disabled | 是否禁用；范围形态可传两段元组逐段禁用（被禁用的段不可输入，且该段日期被对端的值锁死） | boolean &#124; [boolean, boolean] | false |
 | allowClear | 是否展示清除按钮 | boolean | true |
 | allowEmpty | 范围形态各段是否允许为空，为空时该段可被单独清空并对外提交 | [boolean, boolean] | [false, false] |
 | inputReadOnly | 输入框是否只读（避免移动端唤起键盘） | boolean | false |
