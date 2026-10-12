@@ -10,7 +10,7 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-01">2.14.0</VersionDateTag>
+## <VersionDateTag date="2026-10-13">2.14.0</VersionDateTag>
 
 - 新增 [时间选择器 TimePicker](/guide/components/time-picker.html) 组件：时分秒三列滚动面板（列滚动吸附 / 键盘导航 / 主题），面板内的选择只落在草稿值上、点「确定」才提交并收起，收起则丢弃未确认的选择；支持 `use12Hours` 12 小时制（追加上午 / 下午列）、`hourStep` / `minuteStep` / `secondStep` 步长、`hideDisabledOptions` 隐藏禁用项、`disabledTime` 按单位禁用时间、`showNow` 「此刻」快捷（取当前时刻并按步长向下取整后提交），以及 `format` / `valueFormat` 控制面板列显隐与绑定值格式；双向绑定为 `v-model:value`（毫秒时间戳）与 `v-model:formatted-value`（字符串轨道）双轨
 - 重构 [日期选择器 DatePicker](/guide/components/date-picker.html) 为自研实现：不再依赖第三方日期选择库，改为内置选择器内核（日期面板 / 时间面板 / 触发器 / 浮层 / 主题），产物不再包含该库的脚本与样式
