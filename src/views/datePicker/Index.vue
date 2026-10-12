@@ -146,6 +146,13 @@ const switchableOptions: { label: string; value: SwitchableType }[] = [
 ]
 // 日期时间范围用例：单个日期时间面板 + 两段切换
 const dateTimeRangeValue = ref<[number, number] | null>(initialDateTimeRange())
+// 按段默认时刻用例：范围形态按段指定（起点当日 0 点、终点当日 23:59:59）
+const defaultTimeRangeValue = ref<[number, number] | null>(null)
+/** 起点取当日 0 点、终点取当日 23:59:59（只取其中的时分秒，日期部分不参与落值） */
+const rangeDefaultTime: NonNullable<DatePickerProps['defaultTime']> = [
+  startOfDay(new Date()).getTime(),
+  endOfDay(new Date()).getTime()
+]
 // 禁用日期用例的范围变体：初始为空值
 const disabledRangeValue = ref<[number, number] | null>(null)
 // 逐段禁用用例：起点段禁用且持有值（起点不可输入但值仍展示）、终点段可编辑；被禁用段有值才能展示其日期约束
@@ -645,5 +652,16 @@ function onStartOpenChange(open: boolean): void {
       <DatePicker v-model:value="keyboardRangeValue" type="daterange" :placeholder="rangePlaceholder" />
       <DatePicker v-model:value="keyboardDateTimeValue" type="datetime" placeholder="请选择日期时间" />
     </Space>
+    <h2 class="mt30 mb10">按段默认时刻</h2>
+    <p class="mb10">
+      <code>defaultTime</code> 指定空草稿时的默认时分秒，范围形态可传两段元组按段指定（起点 <code>00:00:00</code>、终点
+      <code>23:59:59</code>）；某段为 <code>undefined</code> 时该段退回当前时刻
+    </p>
+    <DatePicker
+      v-model:value="defaultTimeRangeValue"
+      type="datetimerange"
+      :default-time="rangeDefaultTime"
+      :placeholder="rangePlaceholder"
+    />
   </div>
 </template>

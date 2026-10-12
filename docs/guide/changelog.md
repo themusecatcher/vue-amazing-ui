@@ -27,6 +27,7 @@
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增带时间形态的键盘分区操作：`Tab` 在日期与时间两列之间循环切换，非活动列淡化；时间面板左右键切换活动列、上下键改当前列的值（自动跳过禁用项）
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增无障碍语义：日期 / 周 / 月 / 季 / 年 / 十年各面板的表格声明 `role="grid"`，单元格标注 `aria-selected` 与 `aria-disabled`；时间面板的列声明 `role="listbox"`、候选项声明 `role="option"`
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 的 `disabled` 支持两段元组（`[boolean, boolean]`）：范围形态可逐段禁用起点 / 终点，被禁用的段不可输入且整体不置灰，该段可选日期同时被对端的值锁死（如禁用起点后，终点的可选范围仍不早于起点的值）
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 的 `defaultTime` 支持按段指定：范围形态可传两段元组（某段为 `undefined` 时该段退回当前时刻），如起点 `00:00:00`、终点 `23:59:59`；空值展开面板时时间列与头部留空、不预选，选中日期时的时分秒取该段默认时刻（未设置则取当前时刻）
 - 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 时间面板选中项的底色取错了主题变量名，导致该底色恒为固定浅蓝、不随主题色变化的问题
 - 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 在 `format` / `valueFormat` 传入非法占位符组合（如 `yyyy-ww`）时解析抛错、导致组件渲染与输入提交中断的问题
 - 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 范围形态下悬浮跨月补齐日期（面板上属于相邻月份的日期格）时没有悬浮底色的问题：现在与展示月内的日期格同口径，悬浮即显底色

@@ -144,6 +144,13 @@ const switchableOptions: { label: string; value: SwitchableType }[] = [
 ]
 // 日期时间范围用例：单个日期时间面板 + 两段切换
 const dateTimeRangeValue = ref<[number, number] | null>(initialDateTimeRange())
+// 按段默认时刻用例：范围形态按段指定（起点当日 0 点、终点当日 23:59:59）
+const defaultTimeRangeValue = ref<[number, number] | null>(null)
+/** 起点取当日 0 点、终点取当日 23:59:59（只取其中的时分秒，日期部分不参与落值） */
+const rangeDefaultTime: NonNullable<DatePickerProps['defaultTime']> = [
+  startOfDay(new Date()).getTime(),
+  endOfDay(new Date()).getTime()
+]
 // 禁用日期用例的范围变体：初始为空值
 const disabledRangeValue = ref<[number, number] | null>(null)
 // 逐段禁用用例：起点段禁用且持有值（起点不可输入但值仍展示）、终点段可编辑
@@ -1515,6 +1522,41 @@ const rangePlaceholder = ['开始日期', '结束日期']
 
 :::
 
+## 按段默认时刻
+
+_`defaultTime` 指定空草稿时的默认时分秒，范围形态可传两段元组按段指定（起点 `00:00:00`、终点 `23:59:59`）；某段为 `undefined` 时该段退回当前时刻_
+
+<br/>
+
+<DatePicker
+  v-model:value="defaultTimeRangeValue"
+  type="datetimerange"
+  :default-time="rangeDefaultTime"
+  :placeholder="rangePlaceholder"
+/>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { endOfDay, startOfDay } from 'date-fns'
+const defaultTimeRangeValue = ref<[number, number] | null>(null)
+const rangeDefaultTime = [startOfDay(new Date()).getTime(), endOfDay(new Date()).getTime()]
+const rangePlaceholder = ['开始日期', '结束日期']
+</script>
+<template>
+  <DatePicker
+    v-model:value="defaultTimeRangeValue"
+    type="datetimerange"
+    :default-time="rangeDefaultTime"
+    :placeholder="rangePlaceholder"
+  />
+</template>
+```
+
+::::
+
 ## APIs
 
 ### DatePicker
@@ -1532,7 +1574,7 @@ const rangePlaceholder = ['开始日期', '结束日期']
 | startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一；周形态恒按 ISO 周（周一起始），该属性对周形态不生效 | 0 &#124; 1 &#124; 2 &#124; 3 &#124; 4 &#124; 5 &#124; 6 | 0 |
 | disabledDate | 不可选择的日期，入参为「当日零点」的毫秒时间戳；月 / 季 / 年形态下按整段判定（整段都不可选该格才禁用） | (timestamp: number) => boolean | undefined |
 | disabledTime | 不可选择的时间，仅带时间的形态生效；入参为当前面板草稿值的时间戳，范围形态额外接收段标识 | [DatePickerDisabledTime](#datepickerdisabledtime-type) &#124; [DatePickerRangeDisabledTime](#datepickerragedisabledtime-type) | undefined |
-| defaultTime | 选中日期时的默认时分秒（只取其中的时分秒），毫秒时间戳 | number | undefined |
+| defaultTime | 选中日期时的默认时分秒（只取其中的时分秒，不参与时间面板的预选展示）；范围形态可按段传入两段元组，某段为 `undefined` 时该段退回当前时刻 | number &#124; [number &#124; undefined, number &#124; undefined] | undefined |
 | timePickerProps | 时间面板选项（步长 / 12 小时制 / 隐藏禁用项） | [DatePickerTimeProps](#datepickertimeprops-type) | undefined |
 | presets | 预设选项，点击即提交并收起 | [DatePickerPreset](#datepickerpreset-type)[] | [] |
 | width | 选择器宽度，单位 `px`，不传时随内容自适应 | string &#124; number | undefined |
