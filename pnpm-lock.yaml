@@ -78,9 +78,6 @@ importers:
       autoprefixer:
         specifier: ^10.5.5
         version: 10.5.5(postcss@8.5.28)
-      dayjs:
-        specifier: ^1.11.18
-        version: 1.11.18
       eslint:
         specifier: ^9.39.4
         version: 9.39.4(jiti@2.6.1)(supports-color@8.1.1)

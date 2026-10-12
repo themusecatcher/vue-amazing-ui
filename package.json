@@ -109,7 +109,6 @@
     "@vue/tsconfig": "^0.7.0",
     "ant-design-vue": "^4.2.6",
     "autoprefixer": "^10.5.5",
-    "dayjs": "^1.11.18",
     "eslint": "^9.39.4",
     "eslint-plugin-vue": "^10.8.0",
     "happy-dom": "^20.11.15",
