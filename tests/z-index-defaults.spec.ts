@@ -188,6 +188,7 @@ describe('浮层默认层级：组件调用点必须引用 FLOATING_LAYER_Z_INDE
         'notification/Notification.vue',
         'popup/Popup.vue',
         'select/Select.vue',
+        'time-picker/TimePicker.vue',
         'tooltip/Tooltip.vue'
       ].sort()
     )

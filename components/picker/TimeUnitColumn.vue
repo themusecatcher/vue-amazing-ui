@@ -158,11 +158,14 @@ function onCellClick(unit: PickerTimeUnit): void {
     text-align: start;
     list-style: none;
     transition: background 0.2s;
-    // 尾随占位：「最后几项」也能滚到列顶部（高度 = 内容高 224 - 格高 28 + 上下留白 4 × 2；
-    // 独立时间选择器形态若复用本列，该值需随面板高度改回 196px）
+    // 尾随占位：留出「把最后几项滚到列顶部」的滚动量，缺了它末几项永远到不了顶。
+    // 取值 = 列可视高 - 格高。两种形态共用同一口径、列的视高各不相同：日期时间形态的列被日期列撑到
+    // 232px（→ 204px），独立时间选择器形态为 216px（→ 188px，由组件壳层以
+    // `--picker-time-column-trailing-height` 覆盖）。取值偏大会把末项顶出视口（滚到底只剩残边、
+    // 末项悬浮不到），偏小则末几项滚不到顶，故按形态分别给定
     &::after {
       display: block;
-      height: 204px;
+      height: var(--picker-time-column-trailing-height, 204px);
       content: '';
     }
   }

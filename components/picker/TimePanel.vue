@@ -27,6 +27,7 @@ export interface TimePanelProps {
   disabledUnits?: PickerDisabledTimeUnits // 按单位声明的禁用时间
   active?: boolean // 面板是否展开（展开时把选中项滚到列顶部）
   panelActive?: boolean // 是否为日期时间面板的当前活动列：活动列在键盘操作期间保持原透明度
+  hideHeader?: boolean // 是否隐藏头部：独立时间选择器形态没有头部的时间文本行
 }
 const props = withDefaults(defineProps<TimePanelProps>(), {
   value: null,
@@ -36,7 +37,8 @@ const props = withDefaults(defineProps<TimePanelProps>(), {
   timeProps: undefined,
   disabledUnits: undefined,
   active: false,
-  panelActive: false
+  panelActive: false,
+  hideHeader: false
 })
 const emits = defineEmits<{
   change: [timestamp: number]
@@ -60,7 +62,13 @@ const hourColumnValue = computed(() => {
   if (hour24.value === null) return null
   return layout.value.use12Hours ? toHourColumnValue(hour24.value) : hour24.value
 })
-const periodValue = computed(() => (hour24.value === null ? null : isPM.value ? 1 : 0))
+/**
+ * 上下午列取值：空值时按上午选中
+ *
+ * 小时列的候选按 {@link isPM} 取半（空值即上午半天），上下午列若在空值时无选中，两列会自相矛盾 ——
+ * 小时列列的是上午刻度、上下午列却什么都没选。故空值同样落在上午，点选后由 `onPeriodSelect` 补齐落值。
+ */
+const periodValue = computed(() => (isPM.value ? 1 : 0))
 /** 小时列：12 小时制按上下午过滤后重映射取值与文本（0 点展示为 12） */
 const hourUnits = computed<PickerTimeUnit[]>(() => {
   const units = generateTimeUnits('hour', props.timeProps?.hourStep, props.disabledUnits?.disabledHours?.())
@@ -216,7 +224,7 @@ defineExpose({ handleKeydown })
 </script>
 <template>
   <div class="picker-time-panel" :class="{ 'picker-time-panel-active': panelActive }">
-    <div class="picker-time-panel-header">
+    <div v-if="!hideHeader" class="picker-time-panel-header">
       <div class="picker-time-panel-view">{{ headerText }}</div>
     </div>
     <div class="picker-time-panel-content">
