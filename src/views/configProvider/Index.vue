@@ -31,6 +31,24 @@ const theme = computed<ConfigProviderTheme>(() => ({
     primaryColor: buttonPrimaryColor.value
   }
 }))
+const overrideEnabled = ref<boolean>(false)
+// 运行期切换用的两个主题预设：不含组件级覆盖 / 含 Button 覆盖
+const themeWithoutOverride: ConfigProviderTheme = {
+  common: {
+    primaryColor: '#1677ff'
+  }
+}
+const themeWithOverride: ConfigProviderTheme = {
+  common: {
+    primaryColor: '#1677ff'
+  },
+  Button: {
+    primaryColor: '#18a058'
+  }
+}
+const overrideTheme = computed<ConfigProviderTheme>(() =>
+  overrideEnabled.value ? themeWithOverride : themeWithoutOverride
+)
 const autoCompleteValue = ref<string>('')
 const autoCompleteOptions = ref<string[]>([])
 const checkboxChecked = ref<boolean>(false)
@@ -413,6 +431,19 @@ const layerSelectedValue = ref<number>(1)
         <ColorPicker style="width: 200px" v-model:value="buttonPrimaryColor" />
       </Space>
       <ConfigProvider :theme="theme">
+        <Space align="center">
+          <Alert style="width: 200px" message="Info Text" type="info" show-icon />
+          <Button type="primary">Primary Button</Button>
+        </Space>
+      </ConfigProvider>
+    </Flex>
+    <h2 class="mt30 mb10">运行期切换组件级主题</h2>
+    <Flex vertical>
+      <Space align="center">
+        <Switch v-model:value="overrideEnabled" />
+        <span>启用 Button 组件级主题覆盖</span>
+      </Space>
+      <ConfigProvider :theme="overrideTheme">
         <Space align="center">
           <Alert style="width: 200px" message="Info Text" type="info" show-icon />
           <Button type="primary">Primary Button</Button>

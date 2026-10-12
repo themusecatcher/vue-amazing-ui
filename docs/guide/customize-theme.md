@@ -8,30 +8,30 @@
 
 ## 动态切换主题
 
-_配置的全局主题色会注入后代组件，如果要动态切换主题色，只需要修改 `theme` 对象即可_
+_配置的全局主题色会注入后代组件；切换主题色只需修改主色字段（整体替换 `theme` 对象、就地改写其内的主色、运行期增删组件键均可），推荐用 `computed` 派生_
 
 ```vue
 <!-- App.vue -->
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { ConfigProviderTheme } from 'vue-amazing-ui'
-const theme = ref<ConfigProviderTheme>({
+const primaryColor = ref<string>('#ff6900')
+const theme = computed<ConfigProviderTheme>(() => ({
   common: {
-    primaryColor: '#ff6900'
+    primaryColor: primaryColor.value
   }
-})
+}))
 </script>
 <template>
   <ConfigProvider :theme="theme">
     <RouterView />
   </ConfigProvider>
 </template>
-
 ```
 
 ## 定制组件主题
 
-_组件主题配置方法同全局主题配置方法，并且组件主题色会覆盖全局主题色_
+_组件主题配置方法同全局主题配置方法，键名为组件名（`PascalCase`），组件主题色会覆盖 `common` 全局主题色；未单独配置的组件沿用 `common`，`common` 未配置时回退内置默认色阶_
 
 ```vue
 <!-- App.vue -->
@@ -55,5 +55,6 @@ const theme = ref<ConfigProviderTheme>({
     <RouterView />
   </ConfigProvider>
 </template>
-
 ```
+
+主题配置目前仅支持 `primaryColor` 一个字段
