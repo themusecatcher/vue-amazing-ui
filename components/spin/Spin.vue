@@ -23,7 +23,7 @@ export interface Props {
   delay?: number // 延迟显示加载效果的时间（ms）；0 表示不延迟，可避免请求过快时 loading 一闪而过；仅在显示方向生效，隐藏始终立即
   indicator?: SpinIndicator // 加载指示符：7 种内置枚举（四点闪烁 / 八点轮 / 八线轮 / 圆环 / 圆环轨道 / 动态圆环 / 翻转双环，取值见 BuiltinIndicator）/ 自定义 VNode 或渲染函数（插槽形态请用 #indicator）/ null 不渲染
   color?: string // 指示符颜色；indicator 为 magic-ring 时表示外环颜色
-  spinCircleWidth?: number // 圆环宽度（指示符宽度的百分比；magic-ring 收敛到 1～26 以保证内环仍呈环形）；仅 ring-circle / ring-rail / magic-ring 生效
+  spinCircleWidth?: number // 圆环宽度（指示符宽度的百分比；magic-ring 收敛到 6～26 以保证两环定位与翻面动效有效）；仅 ring-circle / ring-rail / magic-ring 生效
   spinCirclePercent?: number // 圆环弧长（0～100，圆环周长的百分比）；仅 ring-circle / ring-rail 生效
   ringRailColor?: string // 圆环轨道颜色；仅 ring-rail 生效
   magicRingColor?: string // 内环颜色；仅 magic-ring 生效
@@ -98,12 +98,15 @@ const speedComputed = computed(() => {
 // 圆环宽度是「占指示符宽度的百分比」：需落在 (0, 100) 开区间，否则圆环半径为 0 或负值（path 非法、不渲染）
 // 不传时按指示符取默认：单环（ring-circle / ring-rail）12；翻转双环的两环紧贴叠合，
 // 自外缘到内洞要连穿 4 道环宽，同样的百分比会让环带明显厚重，故取 13 使环带与内洞在各档尺寸下接近均分
-// magic-ring 上限收敛到 26：内洞直径 = 直径 - 4 × 环宽 + 2，越过该值内环会实心化、失去「环」的形态
+// 翻转双环下界收敛到 6：内环按「外环内缘回退 1px」定位、侧视最窄处按 2 倍环宽取宽，
+// 环宽低于 1.25px 时定位会反向、最窄处宽度本身成为负值（关键帧失效、翻面动效停摆），故按最苛刻的 small 档（24px）反推
+// 翻转双环上限收敛到 26：内洞直径 = 直径 - 4 × 环宽 + 2，越过该值内环会实心化、失去「环」的形态
 const circleWidth = computed(() => {
   const width =
     props.spinCircleWidth === undefined ? (builtinIndicator.value === 'magic-ring' ? 13 : 12) : props.spinCircleWidth
+  const min = builtinIndicator.value === 'magic-ring' ? 6 : 1
   const max = builtinIndicator.value === 'magic-ring' ? 26 : 99
-  return Math.min(Math.max(width, 1), max)
+  return Math.min(Math.max(width, min), max)
 })
 // 圆环长度是「占圆环周长的百分比」，文档约定 0～100
 const circlePercent = computed(() => {

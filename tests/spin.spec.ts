@@ -127,12 +127,16 @@ describe('Spin - 动画周期与配色默认值', () => {
     expect(spinStyleVar(custom, '--spin-magic-ring-color')).toBe('#123456')
   })
 
-  it('spinCircleWidth 不传时按指示符派生：翻转双环 13、单环 12；翻转双环上限收敛到 26（保证内环仍呈环形）', () => {
+  it('spinCircleWidth 派生与收敛：不传时翻转双环 13 / 单环 12；翻转双环收敛到 6～26（保证内环仍呈环形）', () => {
     expect(spinStyleVar(mount(Spin, { props: { indicator: 'magic-ring' } }), '--spin-circle-width')).toBe('13')
     expect(spinStyleVar(mount(Spin, { props: { indicator: 'ring-circle' } }), '--spin-circle-width')).toBe('12')
     expect(
       spinStyleVar(mount(Spin, { props: { indicator: 'magic-ring', spinCircleWidth: 40 } }), '--spin-circle-width')
     ).toBe('26')
+    // 下界：内环按「外环内缘回退 1px」定位、侧视最窄处按 2 倍环宽取宽，环宽低于 1.25px 时两者都会失效
+    expect(
+      spinStyleVar(mount(Spin, { props: { indicator: 'magic-ring', spinCircleWidth: 1 } }), '--spin-circle-width')
+    ).toBe('6')
   })
 })
 
