@@ -224,7 +224,7 @@ export { default as Slider } from './slider'
 export type { SpaceProps } from './space'
 export { default as Space } from './space'
 
-export type { SpinProps } from './spin'
+export type { SpinProps, SpinBuiltinIndicator, SpinIndicator } from './spin'
 export { default as Spin } from './spin'
 
 export type { StatisticProps } from './statistic'
