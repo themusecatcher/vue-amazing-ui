@@ -307,7 +307,7 @@ function onRemove(index: number): void {
             class="spin-uploading"
             tip="uploading"
             size="small"
-            indicator="spin-line"
+            indicator="line-wheel"
             color="var(--upload-primary-color)"
             v-bind="spinProps"
           />

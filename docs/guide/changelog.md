@@ -39,6 +39,11 @@
 - 浮层字体承接：库不声明字体族，浮层 `Teleport` 到 `body` 后会脱离页面字体继承链，现由浮层宿主自动承接**触发位置的字体族**（只承接字体族，字号仍由组件声明），修复宿主把字体声明在非 `body` 容器时浮层字体与页面不一致的问题
 - 字体口径收口：[倒计时 Countdown](/guide/components/countdown.html) 的数字等宽改用 `font-variant-numeric: tabular-nums` 而非写死字体族；[文字省略 Ellipsis](/guide/components/ellipsis.html) 的内容显式声明 `font-size: inherit`；原生表单控件的字体兜底规则改用 `:where()` 包裹（特异性降为 `0`），宿主任意同名规则均可覆盖，不再受样式加载顺序影响；组件内部样式变量统一添加**组件名前缀**（覆盖 9 个组件 / 23 个变量，如 `--border-color` → `--divider-border-color`、`--align` → `--flex-align`、`--font-size` → `--gradient-text-font-size`），避免与其它组件或宿主页面的同名变量相互污染；如曾用这些内部变量做过外部覆盖，请同步改名
 
+## <VersionDateTag date="2026-10-12">2.13.1</VersionDateTag>
+
+- 优化并增强 [加载中 Spin](/guide/components/spin.html)：新增 `delay` / `fitContent` 属性与自定义指示符（`indicator` 属性 / `#indicator` 插槽，含 `SpinIndicator` / `SpinBuiltinIndicator` 类型导出）；重做点阵 / 线阵与 `magic-ring` 翻面动效，`speed` / `spinCircleWidth` 现同时支持 `magic-ring`；指示符进出淡入淡出；修复 `spinCircleWidth` / `spinCirclePercent` 越界值导致指示符消失
+- 重命名 [加载中 Spin](/guide/components/spin.html) 组件属性 `indicator` 取值：`spin-dot` → `dot-wheel`、`spin-line` → `line-wheel`（旧值已移除）
+
 ## <VersionDateTag date="2026-09-30">2.13.0</VersionDateTag>
 
 - 新增 [布局 Layout](/guide/components/layout.html) 组件：含 `Layout` / `LayoutHeader` / `LayoutContent` / `LayoutFooter` / `LayoutSider`，支持侧边栏收起与 `light` / `dark` 主题

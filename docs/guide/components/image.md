@@ -249,7 +249,7 @@ const images = ref<ImageItem[]>([
 <Image
   :src="images"
   :space-props="{ width: 332, gap: 16 }"
-  :spin-props="{ tip: 'loading', indicator: 'spin-line', color: '#fadb14' }"
+  :spin-props="{ tip: 'loading', indicator: 'line-wheel', color: '#fadb14' }"
   loop
 />
 
@@ -286,7 +286,7 @@ const images = ref<ImageItem[]>([
   <Image
     :src="images"
     :space-props="{ width: 332, gap: 16 }"
-    :spin-props="{ tip: 'loading', indicator: 'spin-line', color: '#fadb14' }"
+    :spin-props="{ tip: 'loading', indicator: 'line-wheel', color: '#fadb14' }"
     loop
   />
 </template>

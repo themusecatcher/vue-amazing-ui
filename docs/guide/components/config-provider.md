@@ -379,8 +379,8 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
     <Card>
       <Flex style="height: 60px">
         <Spin spinning />
-        <Spin spinning indicator="spin-dot" />
-        <Spin spinning indicator="spin-line" />
+        <Spin spinning indicator="dot-wheel" />
+        <Spin spinning indicator="line-wheel" />
         <Spin spinning :spin-circle-percent="50" indicator="ring-circle" />
         <Spin spinning :spin-circle-percent="50" indicator="ring-rail" />
         <Spin spinning indicator="dynamic-circle" />
@@ -727,8 +727,8 @@ function onDecline(scale: number) {
       <Card>
         <Flex style="height: 60px">
           <Spin spinning />
-          <Spin spinning indicator="spin-dot" />
-          <Spin spinning indicator="spin-line" />
+          <Spin spinning indicator="dot-wheel" />
+          <Spin spinning indicator="line-wheel" />
           <Spin spinning :spin-circle-percent="50" indicator="ring-circle" />
           <Spin spinning :spin-circle-percent="50" indicator="ring-rail" />
           <Spin spinning indicator="dynamic-circle" />

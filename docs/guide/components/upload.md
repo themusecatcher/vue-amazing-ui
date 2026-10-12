@@ -310,7 +310,7 @@ _排列间距使用：`'middle'`；自定义上传 `uploading` 动画样式_
 
 <Upload
   :space-props="{ gap: 'middle' }"
-  :spin-props="{ indicator: 'spin-dot', color: '#ff6900', tip: '上传中...' }"
+  :spin-props="{ indicator: 'dot-wheel', color: '#ff6900', tip: '上传中...' }"
   v-model:fileList="fileList"
 />
 
@@ -337,7 +337,7 @@ watchEffect(() => {
 <template>
   <Upload
     :space-props="{ gap: 'middle' }"
-    :spin-props="{ indicator: 'spin-dot', color: '#ff6900', tip: '上传中...' }"
+    :spin-props="{ indicator: 'dot-wheel', color: '#ff6900', tip: '上传中...' }"
     v-model:fileList="fileList"
   />
 </template>

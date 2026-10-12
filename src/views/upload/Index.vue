@@ -175,7 +175,7 @@ function onUploadFailRequest(file: File): Promise<UploadFileType> {
     <h3 class="mt30 mb10">排列间距使用：'middle'；自定义上传 uploading 动画样式</h3>
     <Upload
       :space-props="{ gap: 'middle' }"
-      :spin-props="{ indicator: 'spin-dot', color: '#ff6900', tip: '上传中...' }"
+      :spin-props="{ indicator: 'dot-wheel', color: '#ff6900', tip: '上传中...' }"
       v-model:fileList="fileList"
     />
     <h2 class="mt30 mb10">操作完成的消息提示</h2>
