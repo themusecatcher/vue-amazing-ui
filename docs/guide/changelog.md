@@ -10,6 +10,20 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-11">2.13.1</VersionDateTag>
+
+- 新增 [加载中 Spin](/guide/components/spin.html) 的 `delay` 属性：设置后延迟显示加载中效果，避免请求过快时加载状态一闪而过；仅在显示方向生效（隐藏始终立即），首次挂载即处于加载中状态时同样遵守
+- 新增 [加载中 Spin](/guide/components/spin.html) 的 `fitContent` 属性：内容比父容器窄时，遮罩与加载效果一起按内容宽度居中（默认关闭，保持原先铺满父容器的行为）
+- 新增 [加载中 Spin](/guide/components/spin.html) 的自定义指示符：`indicator` 可传入 `VNode` 或渲染函数，也可用 `#indicator` 插槽，替换内置指示符（传入 `null` 时不渲染）
+- 修复 [加载中 Spin](/guide/components/spin.html) 的 `spinCircleWidth` / `spinCirclePercent` 传入越界值时指示符整体消失的问题，取值现自动收敛到有效区间
+- 优化 [加载中 Spin](/guide/components/spin.html) 的 `indicator` 取值命名：`spin-dot` 更名为 `dot-wheel`、`spin-line` 更名为 `line-wheel`（旧值移除），与 `ring-circle` / `ring-rail` / `magic-ring` 统一为「形状 + 排布」命名维度
+- 重构 [加载中 Spin](/guide/components/spin.html) 的点阵 / 线阵指示符：元素位置与亮度相位由同一索引推导，单层结构取代原先的两层旋转拼接，元素数量、角度与相位天然自洽
+- 优化 [加载中 Spin](/guide/components/spin.html) 的翻转双环 `magic-ring` 指示符：改为绕轴翻面动效，翻到侧面时前后两段环带重叠为一条实心带，避免塌成细线或裂成两条线；两环紧贴、内环取更深一档色阶，默认环宽收敛到使环带与内洞均分
+- 优化 [加载中 Spin](/guide/components/spin.html) 的 `speed` 与 `spinCircleWidth` 生效范围：两者现同时支持 `magic-ring`，可分别控制翻转双环的翻面周期与环宽
+- 优化 [加载中 Spin](/guide/components/spin.html) 的可访问性与动效：根节点补 `aria-busy`，带描述文案时遮罩作为状态区域供读屏播报、无描述文案时指示符作为图片并带「加载中」名称；指示符出现与消失增加淡入淡出，系统开启「减弱动态效果」时以静态形态呈现并瞬时切换
+- 优化 [加载中 Spin](/guide/components/spin.html) 的尺寸样式：三档尺寸收敛为一份变量表与一份布局，默认档不再重复声明
+- 组件库及文档优化
+
 ## <VersionDateTag date="2026-09-30">2.13.0</VersionDateTag>
 
 - 新增 [布局 Layout](/guide/components/layout.html) 组件：含 `Layout` / `LayoutHeader` / `LayoutContent` / `LayoutFooter` / `LayoutSider`，支持侧边栏收起与 `light` / `dark` 主题
