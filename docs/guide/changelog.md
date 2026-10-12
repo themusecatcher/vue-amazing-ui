@@ -12,6 +12,7 @@
 
 ## <VersionDateTag date="2026-10-01">2.14.0</VersionDateTag>
 
+- 新增 [时间选择器 TimePicker](/guide/components/time-picker.html) 组件：时分秒三列滚动面板（列滚动吸附 / 键盘导航 / 主题），面板内的选择只落在草稿值上、点「确定」才提交并收起，收起则丢弃未确认的选择；支持 `use12Hours` 12 小时制（追加上午 / 下午列）、`hourStep` / `minuteStep` / `secondStep` 步长、`hideDisabledOptions` 隐藏禁用项、`disabledTime` 按单位禁用时间、`showNow` 「此刻」快捷（取当前时刻并按步长向下取整后提交），以及 `format` / `valueFormat` 控制面板列显隐与绑定值格式；双向绑定为 `v-model:value`（毫秒时间戳）与 `v-model:formatted-value`（字符串轨道）双轨
 - 重构 [日期选择器 DatePicker](/guide/components/date-picker.html) 为自研实现：不再依赖第三方日期选择库，改为内置选择器内核（日期面板 / 时间面板 / 触发器 / 浮层 / 主题），产物不再包含该库的脚本与样式
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 破坏性变更：双向绑定由 `v-model` 改为 `v-model:value`（值为毫秒时间戳，回写事件 `update:value`），并新增 `v-model:formatted-value`（字符串轨道，传入时以它为准）与 `v-model:open`；`modelType` 移除，改用 `valueFormat`（采用 `date-fns` 占位符，如 `yyyy-MM-dd HH:mm:ss`）；`mode` 移除，改用 `type`（`date` / `datetime` / `week` / `month` / `quarter` / `year` 及各范围形态）；`range` 移除，范围形态由 `type` 承担；`showTime` 移除，时间形态由 `type="datetime"` 承担；`maxRange` 移除；`format` 不再支持函数形态；`showToday` 默认值由 `false` 改为 `true`，`width` 不传时随内容自适应
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="datetime"` 日期时间形态：日期与时间面板并列展示，展开期间的选择只落在草稿值上，点「确定」或「此刻」才提交，关闭面板则丢弃草稿；同时新增 `timePickerProps`（时间面板步长 / 12 小时制 / 隐藏禁用项）、`disabledTime`、`defaultTime`、`showNow`、`inputReadOnly`、`panelClass`、`panelStyle`、`zIndex` 等属性与 `ok` / `openChange` / `panelChange` / `focus` / `blur` 事件
@@ -1030,5 +1031,4 @@
 - 新增 漫游式引导 Tour 组件
 <!-- - 更新 表格 Table 组件，新增虚拟滚动功能
 - 时间轴 Timeline 组件，新增水平时间轴
-- 新增 时间选择器 TimePicker 组件
 - 重构级联选择 Cascader 组件 -->
