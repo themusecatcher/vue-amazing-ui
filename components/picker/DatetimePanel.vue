@@ -30,14 +30,14 @@ export interface DatetimePanelProps {
   disabledDate?: (timestamp: number) => boolean // 不可选择的日期
   disabledTime?: PickerDisabledTime // 不可选择的时间
   dateRender?: PickerDateRender // 日期单元格内容定制：透传给日期列
-  defaultTime?: number // 选中日期时的默认时分秒（只取其中的时分秒）
+  defaultTime?: number // 空草稿时点日期的默认时分秒（只取其中的时分秒）；时间列不据此预选
   defaultPickerValue?: number // 面板初始日期
   extraFooter?: () => VNode[] // 面板底部的额外页脚：渲染在「此刻 / 确定」之上
   startDayOfWeek?: StartDayOfWeek // 一周起始日
   showNow?: boolean // 是否展示「此刻」快捷
   active?: boolean // 面板是否展开（时间列据此把选中项滚到列顶部）
   range?: boolean // 日期时间范围形态：日期格叠加区间高亮（`value` 为该形态下激活段的值）
-  fallbackValue?: number | null // 激活段为空时的取值基准（范围形态传另一端，供时间面板展示）
+  fallbackValue?: number | null // 激活段为空时的日期基准（范围形态传另一端）：点时间的落值日期与禁用时间判定据此
   rangeValue?: PickerRangeValue | null // 范围形态的当前区间
   hoverValue?: PickerRangeValue | null // 范围形态的悬浮预览区间
   activeSection?: PickerActiveSection // 键盘操作当前所在的区：非活动区在键盘操作期间淡化
@@ -74,20 +74,20 @@ const emits = defineEmits<{
   cellLeave: [] // 移出日期格：清除预览
 }>()
 /**
- * 禁用时间的判定基准：与时间面板的展示值同源
+ * 禁用时间的判定基准：取「锚点链」——草稿值 → 另一端值 → 默认时分秒 → 当前时刻
  *
- * 顺序为「草稿值 → 另一端值 → 默认时分秒 → 当前时刻」：范围形态激活段为空时，判定落在另一端
- * 那一日，否则同一天内的时分秒约束会因基准日不同而整段失效。范围面板传入的 `value`
- * 即 `value ?? 另一端值`，`disabledTime` 因而以另一端时刻为入参。
+ * 范围形态激活段为空时判定落在另一端那一日，否则同一天内的时分秒约束会因基准日不同而整段失效；
+ * 范围面板传入的 `value` 即 `value ?? 另一端值`，`disabledTime` 因而以另一端时刻为入参。
  */
 const disabledBase = computed(() => props.value ?? props.fallbackValue ?? props.defaultTime ?? Date.now())
 /**
- * 时间面板的展示值：草稿值优先，激活段为空时退回 `fallbackValue`
+ * 点时间的落值日期基准：与 {@link disabledBase} 同属锚点链
  *
- * 起点段尚未选时，时间列以另一端（终点）的时刻为基准，时间区不再空着。
- * 仅影响时间面板的展示与滚动定位，不改变日期格的选中态。
+ * 时间面板的展示值只认草稿值 —— 空草稿时不预选任何项、头部留空（不显示即不承诺，选中日期时
+ * 时间列不产生跳变）；但合成新值的日期部分仍取另一端那一日，故单列一个基准输入：
+ * 两者若共用一个输入，点时间的落值日期会跟着展示值一起落到当前时刻。
  */
-const timePanelValue = computed(() => props.value ?? props.fallbackValue ?? null)
+const timeAnchorValue = computed(() => props.value ?? props.fallbackValue ?? Date.now())
 const disabledUnits = computed<PickerDisabledTimeUnits>(() => props.disabledTime?.(disabledBase.value) ?? {})
 const steps = computed(() => ({
   hour: mergeTimeStep('hour', props.timeProps?.hourStep),
@@ -105,6 +105,8 @@ const okDisabled = computed(() => props.value === null || (props.disabledDate?.(
  * 选择日期：保留当前草稿的时分秒
  *
  * 空草稿时取默认时分秒，未声明则取当前时刻的时分秒——不退回 0 点，避免选日期时把时间重置。
+ * 时间列此时并不预选（见 {@link timeAnchorValue}），落值仍取默认时分秒 ——
+ * 面板不显示即不承诺，展示与落值因此不构成分叉。
  * 保留的时分秒若已被 `disabledTime` 禁用（典型：终点先选好时刻、再选回起点所在日）**不做校正**：
  * 禁用项只体现为「时间列的不可选」，已落定的越界值原样保留并可提交。
  */
@@ -193,7 +195,8 @@ defineExpose({ handleKeydown })
     <template #aside>
       <TimePanel
         ref="timePanelRef"
-        :value="timePanelValue"
+        :value="value"
+        :base-timestamp="timeAnchorValue"
         :format="format"
         :header-format="headerFormat"
         :time-props="timeProps"

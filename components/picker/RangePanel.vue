@@ -4,11 +4,12 @@ import type { VNode } from 'vue'
 import DatePanel from './DatePanel.vue'
 import DatetimePanel from './DatetimePanel.vue'
 import PickerPanel from './PickerPanel.vue'
-import { getClosingViewTimestamp } from './date-utils'
+import { getClosingViewTimestamp, getDefaultTime } from './date-utils'
 import type { StartDayOfWeek } from './date-utils'
 import type {
   PickerActiveSection,
   PickerDateRender,
+  PickerDefaultTime,
   PickerDisabledTime,
   PickerPanelMode,
   PickerRangeDisabledTime,
@@ -32,7 +33,7 @@ export interface RangePanelProps {
   headerFormat?: string // 时间面板头部的文本格式
   timeProps?: PickerTimePanelProps // 时间面板选项（步长 / 12 小时制 / 隐藏禁用项）
   disabledTime?: PickerRangeDisabledTime // 不可选择的时间（按段判定）
-  defaultTime?: number // 选中日期时的默认时分秒（只取其中的时分秒）
+  defaultTime?: PickerDefaultTime // 空草稿时的默认时分秒（只取其中的时分秒），可按段指定（仅日期时间范围形态生效）
   previewValue?: PickerRangeValue | null // 外部预览区间（预设悬浮），与面板内悬浮同为预览来源
   active?: boolean // 面板是否展开：展开时把展示日期带回当前区间起点
   activeSection?: PickerActiveSection // 键盘操作当前所在的区（仅日期时间范围有两个区）
@@ -126,8 +127,10 @@ const hoverValue = ref<PickerRangeValue | null>(null)
 const panelExtraFooter = computed(() => (props.datetime ? undefined : props.extraFooter))
 /** 当前激活段的值：日期时间范围的面板以此为展示值（决定选中格与面板视图） */
 const activeValue = computed<number | null>(() => props.value?.[props.activeSide === 'start' ? 0 : 1] ?? null)
-/** 另一端的值：激活段为空时作为时间面板的展示基准 */
+/** 另一端的值：激活段为空时作为时间面板的日期基准 */
 const otherSideValue = computed<number | null>(() => props.value?.[props.activeSide === 'start' ? 1 : 0] ?? null)
+/** 激活段的默认时分秒：按段指定时取该段，单值时两段共用 */
+const activeDefaultTime = computed(() => getDefaultTime(props.defaultTime, props.activeSide))
 /** 激活段的禁用时间：把段标识注入判定函数（对外口径为 `(timestamp, side)`） */
 const activeDisabledTime = computed<PickerDisabledTime | undefined>(() => {
   const disabledTime = props.disabledTime
@@ -244,7 +247,7 @@ defineExpose({ handleKeydown })
         :disabled-date="disabledDate"
         :disabled-time="activeDisabledTime"
         :date-render="dateRender"
-        :default-time="defaultTime"
+        :default-time="activeDefaultTime"
         :extra-footer="extraFooter"
         :default-picker-value="defaultPickerValue"
         :start-day-of-week="startDayOfWeek"

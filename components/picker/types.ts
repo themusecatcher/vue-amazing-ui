@@ -20,6 +20,13 @@ export type PickerFormattedValue = string | PickerRangeFormattedValue | null
 /** 范围形态的两段标识，用于按段传入的判定与回写 */
 export type PickerRangeSide = 'start' | 'end'
 
+/**
+ * 默认时分秒：单值为两段共用的毫秒时间戳（只取其中的时分秒），两元组为按段指定
+ *
+ * 元组中某段为 `undefined` 表示该段不设默认时刻，退回当前时刻。
+ */
+export type PickerDefaultTime = number | [number | undefined, number | undefined]
+
 /** 面板选择的来源：鼠标点击会落值，键盘导航只移动面板内的光标（落值须再按回车或点「确定」） */
 export type PickerSelectSource = 'mouse' | 'key'
 

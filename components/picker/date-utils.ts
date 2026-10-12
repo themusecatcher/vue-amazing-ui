@@ -29,7 +29,15 @@ import {
   startOfWeek,
   startOfYear
 } from 'date-fns'
-import type { PickerPanelMode, PickerRangeValue, PickerTimePanelLayout, PickerTimeUnit, PickerType } from './types'
+import type {
+  PickerDefaultTime,
+  PickerPanelMode,
+  PickerRangeSide,
+  PickerRangeValue,
+  PickerTimePanelLayout,
+  PickerTimeUnit,
+  PickerType
+} from './types'
 
 /** 周起始日：0 为周一，6 为周日（与 `Calendar` 的 startDayOfWeek 口径一致） */
 export type StartDayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
@@ -190,6 +198,22 @@ export function getInputSize(format: string, minSize: number = 10): number {
 /** 形态是否为范围形态 */
 export function isRangeType(type: PickerType): boolean {
   return type.endsWith('range')
+}
+
+/**
+ * 取某一段的默认时分秒
+ *
+ * 单值时两段共用；按段指定时取对应段，该段未声明则返回 `undefined`，由调用方退回当前时刻。
+ * `side` 省略时取首项 —— 单选形态只有一段。
+ */
+export function getDefaultTime(
+  defaultTime: PickerDefaultTime | undefined,
+  side: PickerRangeSide = 'start'
+): number | undefined {
+  if (!Array.isArray(defaultTime)) {
+    return defaultTime
+  }
+  return defaultTime[side === 'start' ? 0 : 1]
 }
 
 /** 形态对应的初始面板模式（`datetime` / 范围形态以日期面板开局，时间面板与日期面板并存） */

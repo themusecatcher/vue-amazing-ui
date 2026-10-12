@@ -12,6 +12,7 @@ import RangePanel from 'components/picker/RangePanel.vue'
 import {
   formatTimestamp,
   getDefaultFormat,
+  getDefaultTime,
   getInputSize,
   getPanelModeOf,
   isOutOfRangeBoundary,
@@ -24,6 +25,7 @@ import type {
   PickerActiveSection,
   PickerDateRender,
   PickerDateRenderParams,
+  PickerDefaultTime,
   PickerDisabledTime,
   PickerFormattedValue,
   PickerPanelMode,
@@ -54,7 +56,7 @@ export interface Props {
   startDayOfWeek?: StartDayOfWeek // 一周起始日，0 为周一
   disabledDate?: (timestamp: number) => boolean // 不可选择的日期
   disabledTime?: PickerDisabledTime | PickerRangeDisabledTime // 不可选择的时间，仅带时间形态生效（范围形态额外接收段标识）
-  defaultTime?: number // 选中日期时的默认时分秒（只取其中的时分秒）
+  defaultTime?: PickerDefaultTime // 空草稿时的默认时分秒（只取其中的时分秒），范围形态可按段指定
   timePickerProps?: PickerTimePanelProps // 时间面板选项（步长 / 12 小时制 / 隐藏禁用项）
   presets?: PickerPreset[] // 预设选项，点击即提交并收起；范围为两段元组，值可为惰性求值的函数
   // 形态外观
@@ -393,6 +395,8 @@ const rangeDisabledTime = computed<PickerRangeDisabledTime | undefined>(() => {
   const disabledTime = props.disabledTime
   return isDateTimeRange.value && disabledTime ? (disabledTime as PickerRangeDisabledTime) : undefined
 })
+/** 单选形态的默认时分秒：按段指定时取首项（单选只有一段），范围形态由范围面板按激活段取 */
+const singleDefaultTime = computed(() => getDefaultTime(props.defaultTime))
 // 受控字符串解析失败时原样展示，避免用户输入被静默丢弃
 // （字符串轨道受管时展示以受管文本为准，草稿不回写展示，避免与应用层持有的文本脱节）
 const displayText = computed(() => {
@@ -956,7 +960,7 @@ defineExpose({ focus, blur })
         :disabled-date="disabledDate"
         :disabled-time="singleDisabledTime"
         :date-render="mergedDateRender"
-        :default-time="defaultTime"
+        :default-time="singleDefaultTime"
         :default-picker-value="defaultPickerValue"
         :extra-footer="mergedExtraFooter"
         :start-day-of-week="startDayOfWeek"

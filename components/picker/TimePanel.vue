@@ -20,6 +20,7 @@ import type { PickerKeyStep } from './keyboard'
 import type { PickerDisabledTimeUnits, PickerTimePanelProps, PickerTimeUnit } from './types'
 export interface TimePanelProps {
   value?: number | null // 当前草稿值（空值时不选中任何项，列停在顶部）
+  baseTimestamp?: number // 合成新值的日期基准：范围形态取另一端，不传时退回 value
   format?: string // 展示格式：决定列显隐与 12 小时制
   headerFormat?: string // 头部的文本格式，使用方显式传入 format 时原样展示（含日期部分的占位符）
   timeProps?: PickerTimePanelProps // 时间面板选项（步长 / 12 小时制 / 隐藏禁用项）
@@ -29,6 +30,7 @@ export interface TimePanelProps {
 }
 const props = withDefaults(defineProps<TimePanelProps>(), {
   value: null,
+  baseTimestamp: undefined,
   format: undefined,
   headerFormat: undefined,
   timeProps: undefined,
@@ -41,8 +43,13 @@ const emits = defineEmits<{
 }>()
 /** 当前活动的时间列下标：-1 表示尚未指定（由首次左右键或上下键确定） */
 const activeColumnIndex = ref(-1)
-/** 空草稿时以当前时刻为基准合成时分秒 */
-const baseTimestamp = computed(() => props.value ?? Date.now())
+/**
+ * 合成新时间戳的基准：提供新值的日期部分，未传时退回展示值
+ *
+ * 展示值只认草稿值（空草稿即 `null`），拿它当基准会在空草稿时退回当前时刻，
+ * 使点时间的落值日期从「另一端那一日」漂到今天，故单列一个基准输入。
+ */
+const synthesisBase = computed(() => props.baseTimestamp ?? props.value ?? Date.now())
 const layout = computed(() => resolveTimePanelLayout(props.format, props.timeProps?.use12Hours))
 const hour24 = computed(() => (props.value === null ? null : getHourNumber(props.value)))
 const minute = computed(() => (props.value === null ? null : getMinuteNumber(props.value)))
@@ -89,7 +96,11 @@ const periodUnits = computed<PickerTimeUnit[]>(() => {
     { label: 'PM', value: 1, disabled: isHalfDisabled(true) }
   ]
 })
-/** 头部文本格式：显式传入时原样使用，否则按列显隐推导 */
+/**
+ * 头部文本格式：使用方**显式传入** format 时原样使用（含日期部分则一并展示），否则按列显隐推导纯时刻
+ *
+ * 形态的默认展示格式不参与头部 —— 头部展示的是「时间」这一列的取值，而非整个值的展示格式。
+ */
 const headerTextFormat = computed(() => props.headerFormat || getTimeTextFormat(layout.value))
 const headerText = computed(() => {
   if (props.value === null) return ''
@@ -100,7 +111,7 @@ const headerText = computed(() => {
 function emitTime(hour: number, minuteValue: number | null, secondValue: number | null): void {
   emits(
     'change',
-    setTimeTimestamp(baseTimestamp.value, hour, Math.max(0, minuteValue ?? 0), Math.max(0, secondValue ?? 0))
+    setTimeTimestamp(synthesisBase.value, hour, Math.max(0, minuteValue ?? 0), Math.max(0, secondValue ?? 0))
   )
 }
 function onHourSelect(columnHour: number): void {

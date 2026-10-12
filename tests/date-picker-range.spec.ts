@@ -27,6 +27,9 @@ const DEFAULT_TIME = new Date(2026, 0, 1, 8, 30, 0).getTime()
 /** 空草稿选中的日期会带上 `defaultTime` 的时分秒 */
 const START_WITH_TIME = new Date(2026, 0, 10, 8, 30, 0).getTime()
 const END_WITH_TIME = new Date(2026, 0, 20, 8, 30, 0).getTime()
+/** 头部文本用例的确定性时分秒：起点 09:30:15、终点 18:45:05 */
+const START_AT_NINE = new Date(2026, 0, 10, 9, 30, 15).getTime()
+const END_AT_EIGHTEEN = new Date(2026, 0, 20, 18, 45, 5).getTime()
 
 let wrapper: ReturnType<typeof mount> | null = null
 
@@ -554,6 +557,28 @@ describe('日期时间范围形态', () => {
       ['2026-01-10 00:00:00', '2026-01-20 08:30:00']
     ])
     expect(range.emitted('update:open')?.at(-1)).toEqual([false])
+  })
+
+  it('时间面板头部未传 format 时只展示时刻（形态默认格式不参与头部）', async () => {
+    await mountRange({ type: 'datetimerange', value: [START_AT_NINE, END_AT_EIGHTEEN] })
+
+    const header = () => document.querySelector('.picker-time-panel-view')?.textContent?.trim()
+    expect(header()).toBe('09:30:15')
+
+    // 切到终点段：头部随该段的值变化
+    document.querySelectorAll<HTMLInputElement>('.picker-trigger-input-inner')[1]?.focus()
+    await flush()
+    expect(header()).toBe('18:45:05')
+  })
+
+  it('时间面板头部显式传入 format 时按该格式展示（含日期部分）', async () => {
+    await mountRange({
+      type: 'datetimerange',
+      value: [START_AT_NINE, END_AT_EIGHTEEN],
+      format: 'yyyy-MM-dd HH:mm:ss'
+    })
+
+    expect(document.querySelector('.picker-time-panel-view')?.textContent?.trim()).toBe('2026-01-10 09:30:15')
   })
 
   it('禁用时间按当前激活段注入（disabledTime 接收段标识）', async () => {
