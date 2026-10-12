@@ -1,12 +1,11 @@
 # 组织架构 Project Structure
 
-> 本文档描述 Vue Amazing UI 的目录结构与命名规范，是理解代码库全貌的入口。
-> 本系列 `development/` 文档聚焦组件库的**设计实现画像**（架构、机制、规范）；组件的功能与使用说明请查阅官方文档站（`docs/`）。
+> 本文档描述 Vue Amazing UI 的目录结构与命名规范，是理解代码库全貌的入口。本系列 `development/` 文档聚焦组件库的**设计实现画像**（架构、机制、规范）；组件的功能与使用说明请查阅官方文档站（`docs/`）。
 
 ## 顶层目录
 
 | 目录 / 文件 | 职责 |
-| :--- | :--- |
+| :-- | :-- |
 | `components/` | 组件库源码（核心），所有组件、工具函数、样式均在此 |
 | `src/` | 组件开发演示环境（`pnpm dev` 启动） |
 | `index.html` | 演示环境的 HTML 入口 |
@@ -56,10 +55,10 @@ components/
 
 复合目录的两种形态，按「目录内是否存在主组件」区分：
 
-| 形态 | 判据 | 目录顶层 | 示例 |
-| :--- | :--- | :--- | :--- |
+| 形态       | 判据                   | 目录顶层                | 示例                                |
+| :--------- | :--------------------- | :---------------------- | :---------------------------------- |
 | 主组件平铺 | 目录名即代表某个主组件 | 主组件 SFC + `index.ts` | `descriptions/`、`list/`、`select/` |
-| 成员平级 | 无主组件，成员各自独立 | 仅聚合 `index.ts` | `grid/` |
+| 成员平级   | 无主组件，成员各自独立 | 仅聚合 `index.ts`       | `grid/`                             |
 
 > 伴生而非父子关系的组件（底层组件 + `Provider` + `useXxx`）平铺在同一族目录顶层，如 `message/`、`modal/`、`dialog/`、`notification/`、`loading-bar/`。
 >
@@ -84,28 +83,28 @@ components/
 
 命名约定：
 
-| 对象 | 约定 | 示例 |
-| :--- | :--- | :--- |
-| 组件目录名 | kebab-case | `auto-complete`、`input-number` |
-| SFC 文件名 | PascalCase | `Button.vue`、`AutoComplete.vue` |
-| 入口文件 | 统一 `index.ts` | `button/index.ts` |
+| 对象       | 约定            | 示例                             |
+| :--------- | :-------------- | :------------------------------- |
+| 组件目录名 | kebab-case      | `auto-complete`、`input-number`  |
+| SFC 文件名 | PascalCase      | `Button.vue`、`AutoComplete.vue` |
+| 入口文件   | 统一 `index.ts` | `button/index.ts`                |
 
 ### 公共模块
 
-| 目录 / 文件 | 职责 |
-| :--- | :--- |
-| `components/utils/` | 共享工具与 Hooks（详见下文） |
-| `components/style/global.less` | 组件库全局默认样式 |
-| `components/discrete/` | `createDiscreteApi` 命令式 API |
-| `components/components.ts` | 组件汇总导出（命名约定集中处） |
-| `components/index.ts` | 库入口（install + 工具函数导出） |
+| 目录 / 文件                    | 职责                             |
+| :----------------------------- | :------------------------------- |
+| `components/utils/`            | 共享工具与 Hooks（详见下文）     |
+| `components/style/global.less` | 组件库全局默认样式               |
+| `components/discrete/`         | `createDiscreteApi` 命令式 API   |
+| `components/components.ts`     | 组件汇总导出（命名约定集中处）   |
+| `components/index.ts`          | 库入口（install + 工具函数导出） |
 
 ### utils/ 工具目录
 
 `components/utils/` 共 18 个文件，按职责分组：
 
 | 文件 | 职责 |
-| :--- | :--- |
+| :-- | :-- |
 | `index.ts` | barrel 汇总，按分组 `export *` |
 | `format.ts` | 日期 / 数字格式化 |
 | `math.ts` | 精度计算 |
@@ -125,8 +124,7 @@ components/
 | `style-deps.ts` | 样式依赖表（单一数据源：`componentsMap` / `styleSources` / `componentDependencies` / `stylelessComponents`） |
 | `vendor-styles.ts` | 第三方样式依赖清单（单一数据源） |
 
-> `index.ts` 是 barrel，只汇总 `format` / `math` / `function` / `dom` / `color` / `hooks` / `observers` / `position` / `z-index` / `floating-mount` / `inherit-font` / `sider-collapsed` / `render` 十三组；`type` / `resolver` / `style-deps` / `vendor-styles` 不属于 barrel 成员，需从具体文件引入（如 `import { withInstall } from 'components/utils/type'`）。
-> 工具函数的功能与使用说明见官方文档站 `docs/utils/functions/`。
+> `index.ts` 是 barrel，只汇总 `format` / `math` / `function` / `dom` / `color` / `hooks` / `observers` / `position` / `z-index` / `floating-mount` / `inherit-font` / `sider-collapsed` / `render` 十三组；`type` / `resolver` / `style-deps` / `vendor-styles` 不属于 barrel 成员，需从具体文件引入（如 `import { withInstall } from 'components/utils/type'`）。工具函数的功能与使用说明见官方文档站 `docs/utils/functions/`。
 
 ### style/global.less
 
@@ -141,11 +139,11 @@ components/
 ```
 src/
 ├── views/                  # 演示页（每个组件一个目录）
-│   ├── button/             # 演示目录（camelCase）
+│   ├── button/             # 演示目录（kebab-case）
 │   │   ├── Index.vue       # 演示页面
 │   │   └── index.ts        # 路由 meta（title）
 │   ├── layout/             # 布局演示页
-│   ├── timepicker/         # 纯演示页：无对应 components/ 组件，复用 DatePicker 能力展示
+│   ├── time-picker/        # 纯演示页：无对应 components/ 组件，复用 DatePicker 能力展示
 │   ├── home/
 │   ├── exception/
 │   └── ...
@@ -157,7 +155,7 @@ src/
 └── main.ts
 ```
 
-> 演示目录使用 **camelCase** 命名（`autoComplete`、`inputNumber`），与 `components/` 的 kebab-case 不同，注意区分。
+> 演示目录使用 **kebab-case** 命名（`auto-complete`、`input-number`），与 `components/` 的目录命名保持一致。
 
 ## docs/ 文档站
 
@@ -186,11 +184,11 @@ docs/
 
 ## 命名规范速查
 
-| 场景 | 约定 | 示例 |
-| :--- | :--- | :--- |
-| 组件目录 | kebab-case | `auto-complete` |
-| SFC 组件文件 | PascalCase | `AutoComplete.vue` |
-| 组件入口 | `index.ts` | `auto-complete/index.ts` |
-| 演示目录 | camelCase | `autoComplete` |
-| 组件文档 | kebab-case `.md` | `auto-complete.md` |
-| 工具函数文档 | kebab-case `.md` | `date-format.md` |
+| 场景         | 约定             | 示例                     |
+| :----------- | :--------------- | :----------------------- |
+| 组件目录     | kebab-case       | `auto-complete`          |
+| SFC 组件文件 | PascalCase       | `AutoComplete.vue`       |
+| 组件入口     | `index.ts`       | `auto-complete/index.ts` |
+| 演示目录     | kebab-case       | `auto-complete`          |
+| 组件文档     | kebab-case `.md` | `auto-complete.md`       |
+| 工具函数文档 | kebab-case `.md` | `date-format.md`         |

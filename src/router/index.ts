@@ -50,9 +50,17 @@ const modules = import.meta.glob('../views/**/index.ts', {
   import: 'default' // 设置 import 为 default 可以加载默认导出
 })
 // console.log('modules', modules)
-// 将驼峰目录名转换为短横线命名（如 datePicker → date-picker），用于生成路由路径
+// 将目录名统一为短横线命名（如 datePicker → date-picker），已是短横线则原样返回，用于生成路由路径
 function toKebabCase(word: string): string {
   return word.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+}
+// 将短横线目录名片段转换为 PascalCase（如 date-picker → DatePicker），用于生成路由 name
+function toPascalCase(word: string): string {
+  return word
+    .split('-')
+    .filter(Boolean)
+    .map((part) => part[0].toUpperCase() + part.slice(1))
+    .join('')
 }
 export const routes: RouteRecordRaw[] = [
   {
@@ -75,8 +83,8 @@ export const routes: RouteRecordRaw[] = [
           const segments = path.replace('../views', '').replace('/index.ts', '').split('/').filter(Boolean)
           // 路由路径统一使用短横线连接（如 /date-picker）
           const routePath = segments.length > 0 ? `/${segments.map(toKebabCase).join('/')}` : '/'
-          // 将路径转换为所有首字母大写的 name
-          const name = segments.map((word: string) => word[0].toUpperCase() + word.slice(1)).join('') || 'Index'
+          // 将路径片段转 PascalCase 拼接为路由 name（如 date-picker → DatePicker）
+          const name = segments.map(toPascalCase).join('') || 'Index'
           return {
             path: routePath,
             name,
