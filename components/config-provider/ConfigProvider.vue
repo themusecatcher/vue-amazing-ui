@@ -269,6 +269,9 @@ const componentsThemeColor = reactive<Record<string, ThemeColor>>({
     shadowColor: ''
   }
 })
+// 登记键集合：主题表只登记本库消费主题色的组件（其与 `useInject` 消费方的一致性由测试守护）。
+// 用集合判定而不用 `key in componentsThemeColor`：后者对 `__proto__` / `constructor` 等原型链属性同样成立
+const registeredThemeKeys = new Set(Object.keys(componentsThemeColor))
 provide('common', commonThemeColor)
 provide('components', componentsThemeColor)
 // 链接基座联动：common 主色变化时把对应色阶写入 CSS 变量，供 `:where(a)` 消费（见 components/style/global.less）。
@@ -318,24 +321,20 @@ if (!inject(SKIP_LINK_CSS_VARS_KEY, false) && inject('common', null) === null &&
 if (typeof props.baseZIndex === 'number') {
   provide(Z_INDEX_INJECT_KEY, createZIndexManager(props.baseZIndex))
 }
-const commonTheme = computed(() => {
-  if ('common' in props.theme) {
-    return props.theme.common
-  }
-  return null
-})
-const componentsTheme = computed(() => {
-  const themes = { ...props.theme }
-  if ('common' in themes) {
-    delete themes.common
-  }
-  return themes
-})
+// 主题依赖签名：`ConfigProvider` 仅由主色派生色阶（`getColorPalettes` 的唯一入参），故依赖收敛到「键名 + 主色值」
+// 这一层叶子 —— 主色读取发生在 computed 内，主题整体替换与就地改写都能命中；返回值是原始字符串，值未变时不触发重算
+// （同一主题反复传入新对象的情况）。签名含 `common`：未单独配置的组件沿用 `common` 主色，common 变化时组件色阶需一并重算。
+const themePrimaryColorsSignature = computed(() =>
+  Object.keys(props.theme)
+    .sort() // 签名与键顺序无关：仅调整键顺序（如对象字面量重排）不触发重算
+    .map((key) => `${key}:${props.theme[key as keyof Theme]?.primaryColor ?? ''}`)
+    .join(',')
+)
 // 监听 common 主题变化
 watch(
-  commonTheme,
-  (to) => {
-    const colorPalettes = getColorPalettes(to?.primaryColor || '#1677ff')
+  () => props.theme.common?.primaryColor,
+  (primaryColor) => {
+    const colorPalettes = getColorPalettes(primaryColor || '#1677ff')
     commonThemeColor.colorPalettes = colorPalettes
     commonThemeColor.shadowColor = getAlphaColor(colorPalettes[0])
   },
@@ -343,16 +342,53 @@ watch(
     immediate: true
   }
 )
+// 组件级主题的写入收敛为「唯二出口」：主题表与主色记录只在这两处被改，避免两处状态失步
+// 主色记录用于跳过等值重写 —— 色阶数组是整体替换的，等值替换会让消费组件的 computed 白跑一次重渲染
+const appliedPrimaryColors = new Map<string, string>()
+// 写入某个组件键的主题色阶；主色未变则跳过
+function applyComponentTheme(key: string, primaryColor: string): void {
+  if (appliedPrimaryColors.get(key) === primaryColor) {
+    return
+  }
+  const colorPalettes = getColorPalettes(primaryColor)
+  componentsThemeColor[key].colorPalettes = colorPalettes
+  componentsThemeColor[key].shadowColor = getAlphaColor(colorPalettes[0])
+  appliedPrimaryColors.set(key, primaryColor)
+}
+// 复位为「未配置」，使 `useInject` 回退 common；同步清除主色记录，
+// 否则之后重新写入相同主色会被「主色未变」误判为无需写入
+function resetComponentTheme(key: string): void {
+  componentsThemeColor[key].colorPalettes = []
+  componentsThemeColor[key].shadowColor = ''
+  appliedPrimaryColors.delete(key)
+}
+// 上一次写入过组件级覆盖的键：覆盖被移除时要复位为「未配置」，否则会残留上一次的色阶
+let componentOverrideKeys: string[] = []
 // 监听各个组件主题变化
 watch(
-  componentsTheme,
-  (to) => {
-    Object.keys(to).forEach((key: string) => {
-      const primaryColor = to[key as keyof Theme]?.primaryColor || commonTheme.value?.primaryColor || '#1677ff'
-      const colorPalettes = getColorPalettes(primaryColor)
-      componentsThemeColor[key].colorPalettes = colorPalettes
-      componentsThemeColor[key].shadowColor = getAlphaColor(colorPalettes[0])
+  themePrimaryColorsSignature,
+  () => {
+    // 未单独配置主色的组件沿用 common：common 变化时它们的实际主色随之变化，故不会被跳过重写
+    const commonPrimaryColor = props.theme.common?.primaryColor || '#1677ff'
+    const currentKeys = Object.keys(props.theme).filter((key) => key !== 'common')
+    // 已从主题中移除的组件键复位为「未配置」，使 `useInject` 回退 common
+    componentOverrideKeys.forEach((key) => {
+      if (!currentKeys.includes(key)) {
+        resetComponentTheme(key)
+      }
     })
+    currentKeys.forEach((key) => {
+      // 主题表只登记本库组件：使用方写入库内不存在的键（拼写错误等）时跳过并提示，
+      // 避免一个坏键中断整个回调，导致其余组件的主题色不再更新
+      if (!registeredThemeKeys.has(key)) {
+        if (import.meta.env.DEV) {
+          console.warn(`[vue-amazing-ui] ConfigProvider 的 theme 中存在非本库组件键：${key}，已忽略`)
+        }
+        return
+      }
+      applyComponentTheme(key, props.theme[key as keyof Theme]?.primaryColor || commonPrimaryColor)
+    })
+    componentOverrideKeys = currentKeys
   },
   {
     immediate: true
