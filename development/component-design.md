@@ -95,6 +95,7 @@ const { colorPalettes, shadowColor } = useInject('Button') // 组件名作为 ke
 - `colorPalettes`：由主色生成的 10 级调色板（`@ant-design/colors` 的 `generate`）。
 - `shadowColor`：由主色派生的阴影色。
 - `key` 传组件名，用于匹配 `ConfigProvider` 中该组件的个性化主题。
+- 取值来源（该组件的覆盖 / `common`）经 `computed` 选择而非 `setup` 阶段固化：`ConfigProvider` 运行期新增或移除某组件的覆盖，已挂载组件即时切换来源；组件侧无需处理「覆盖何时出现」，只读这两个 ref 即可。
 
 ## 插槽检测 useSlotsExist
 
