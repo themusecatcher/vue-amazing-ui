@@ -8,7 +8,7 @@ import Spin from 'components/spin'
  * `<Spin>` 回归守护
  *
  * - **点阵族几何**：离散元素的位置（角度）与相位（时间）同源于索引 k，一层 DOM 即生成均匀点阵 ——
- *   不存在「两层拼凑」与「对齐补偿类」，`--spin-point-index` 缺失即整套点阵失效；
+ *   无需分层拼接与对齐补偿，`--spin-point-index` 缺失即整套点阵失效；
  * - **文案两条路径同构**：`tip` 属性与 `tip` 插槽只影响文案来源，渲染结果完全一致；
  * - **圆环参数钳制**：`spinCircleWidth` 收敛到 (0, 100)、`spinCirclePercent` 收敛到 [0, 100]，
  *   越界值不得产出非法 path（负半径）或非法 dasharray；

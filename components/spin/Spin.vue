@@ -84,7 +84,7 @@ const pointCount = computed(() => {
 const isBoxRotate = computed(() => {
   return props.rotate && (builtinIndicator.value === 'dot-wheel' || builtinIndicator.value === 'line-wheel')
 })
-// 文案与指示符的间距：dot 的四点轮盘留白不同于点轮 / 线轮，间距单独放宽
+// 文案与指示符的间距：dot / dot-wheel 的点阵盒留白大于线阵与圆环，间距单独放宽
 const isDotTip = computed(() => {
   return builtinIndicator.value === 'dot' || builtinIndicator.value === 'dot-wheel'
 })
@@ -295,8 +295,9 @@ onBeforeUnmount(clearDelayTimer)
   // 翻到侧面（|cosθ| 最小）时的投影宽度：立体环的前后两段环带在侧视时正好重叠 → 2 倍环宽。
   // 再减 1.5px 冗余：border-width 会被浏览器向下取整（最多损失 1px），若按理论值取宽，
   // 左右边框填不满这条 2 倍环宽，中间会露出细缝（侧视裂成两条平行线）—— 留冗余即可重叠成实心
+  // （spinCircleWidth 的下界收敛已保证该值不小于 1px，不会出现无效的负宽度）
   --spin-magic-narrow-width: calc(var(--spin-magic-border-width) * 2 - 1.5px);
-  // 翻转双环自转周期：维持「自转 2.5s : 翻面 1.5s」即 5 : 3 的比例，随 speed 同步缩放（陀螺姿态不漂移）
+  // 翻转双环自转周期：自转与翻面按 5 : 3 配比（默认即 2.5s : 1.5s），并随 speed 同步缩放，避免陀螺姿态漂移
   --spin-magic-rotate-duration: calc(var(--spin-speed) * 5 / 3);
   --spin-tip-font-size: 14px;
   --spin-tip-font-weight: 500;
@@ -339,7 +340,7 @@ onBeforeUnmount(clearDelayTimer)
         点轮 / 线轮的「旋转」并非元素在移动，而是亮度波峰沿固定位置循环 ——
         故元素的位置（角度）与相位（时间）由同一索引 k 决定，二者步长成对声明：
           角度 = 角步长 × (k - 1)    相位延迟 = -周期 × 相位步长 × (k - 1)
-        一层 DOM 即可生成 N 个均匀元素，位置与相位天然对齐（不存在「两层拼凑」与对齐补偿类）。
+        一层 DOM 即可生成 N 个均匀元素，位置与相位天然对齐，无需分层拼接与对齐补偿。
       */
       .spin-points-box {
         position: relative;
@@ -367,8 +368,8 @@ onBeforeUnmount(clearDelayTimer)
           --spin-points-radius: calc((var(--spin-dot-box) - var(--spin-dot-size)) * 0.7071);
           width: var(--spin-dot-box);
           height: var(--spin-dot-box);
-          // 原实现以「容器 45° 起始 + 点位于四角」表达四方分布，此处交由索引直接给出角度，
-          // 二者逐帧等价（45° + 四角 ≡ 0° + 上下左右），故容器只需旋转一整圈
+          // 四点分布在内切正方形的四角：45° + 四角 ≡ 0° + 上下左右（两种表达逐帧等价），
+          // 故容器只需旋转一整圈，点的角度完全由索引给出
           animation: spinDotRotate 1.2s linear infinite;
           .point {
             width: var(--spin-dot-size);
@@ -381,7 +382,7 @@ onBeforeUnmount(clearDelayTimer)
         }
         // dot-wheel：八点等距成轮，亮度梯度沿圆周扫过
         &.spin-points-dot-wheel {
-          // 角度与相位成对反向：负延迟令相位「超前」，故角度取负，亮度波峰才沿顺时针移动（与原实现一致）
+          // 角度与相位成对反向：负延迟令相位「超前」，故角度取负，亮度波峰才沿顺时针移动
           --spin-points-angle: -45deg;
           --spin-points-phase: 0.125;
           --spin-points-radius: calc((var(--spin-points-box) - var(--spin-points-size)) * 0.7071);
@@ -397,7 +398,7 @@ onBeforeUnmount(clearDelayTimer)
           --spin-points-angle: -45deg; // 同 dot-wheel：角度与相位成对反向，保证波峰顺时针移动
           --spin-points-phase: 0.125;
           // 线中心位于半径 = 线长处 → 线自身覆盖 L/2 ~ 1.5L（与外层盒半径 1.5L 对齐）：
-          // 内端不触及圆心，整体成「中空环带」，与原实现的 transform-origin: 50% 1.5L 等价
+          // 内端不触及圆心，整体成「中空环带」
           --spin-points-radius: var(--spin-line-length);
           --spin-points-fade-step: 0.0875; // 同 dot-wheel：静态兜底与动画首帧一致
           width: calc(var(--spin-line-length) * 3);
