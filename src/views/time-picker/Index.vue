@@ -28,6 +28,9 @@ const suffixValue = ref<number | null>(null)
 const controlledValue = ref<number | null>(null)
 const fixedValue = ref<number | null>(fixedSnapshot.getTime())
 const rangePickerValue = ref<[number | null, number | null] | null>(null)
+// 事件用例：单选 / 范围各一，绑定后可在控制台查看各事件的触发时机与参数
+const eventValue = ref<number | null>(initialTime(8))
+const eventRangeValue = ref<[number | null, number | null] | null>(null)
 const borderedValue = ref<number | null>(null)
 const borderedRangeValue = ref<[number | null, number | null] | null>(null)
 const errorValue = ref<number | null>(null)
@@ -61,6 +64,40 @@ function onControlledChange(
 ): void {
   console.log('onChange', value, formattedValue)
   controlledValue.value = typeof value === 'number' ? value : null
+}
+/** 值变化时的回调：值与格式化值双轨 */
+function onEventChange(
+  value: number | [number | null, number | null] | null,
+  formattedValue: string | [string | null, string | null] | null
+): void {
+  console.log('change', value, formattedValue)
+}
+/** 范围形态待选段变化时的回调：`info.range` 标识本次改动落在哪一段 */
+function onEventCalendarChange(
+  value: number | [number | null, number | null] | null,
+  formattedValue: string | [string | null, string | null] | null,
+  info: { range: 'start' | 'end' }
+): void {
+  console.log('calendarChange', value, formattedValue, info)
+}
+/** 点击「确定」时的回调（「此刻」是快捷入口，不派发） */
+function onEventOk(
+  value: number | [number | null, number | null] | null,
+  formattedValue: string | [string | null, string | null] | null
+): void {
+  console.log('ok', value, formattedValue)
+}
+/** 面板展开收起时的回调 */
+function onEventOpenChange(open: boolean): void {
+  console.log('openChange', open)
+}
+/** 输入框获取焦点时的回调 */
+function onEventFocus(event: FocusEvent): void {
+  console.log('focus', event)
+}
+/** 输入框失去焦点时的回调 */
+function onEventBlur(event: FocusEvent): void {
+  console.log('blur', event)
 }
 </script>
 <template>
@@ -140,11 +177,11 @@ function onControlledChange(
     <h2 class="mt30 mb10">受控组件</h2>
     <p class="mb10"><code>value</code> 和 <code>@change</code> 需要配合使用，也可以直接使用 <code>v-model</code></p>
     <Space vertical>
-      <p class="mb10">use value and @change</p>
+      <p class="mb10">使用 <code>value</code> 和 <code>@change</code></p>
       <TimePicker :value="controlledValue" placeholder="请选择时间" @change="onControlledChange" />
-      <p class="mb10">v-model</p>
+      <p class="mb10">使用 <code>v-model</code></p>
       <TimePicker v-model:value="controlledValue" placeholder="请选择时间" />
-      <p class="mb10">Do not change</p>
+      <p class="mb10">只传 <code>value</code> 不回写（不响应变更）</p>
       <TimePicker :value="fixedValue" placeholder="请选择时间" />
     </Space>
     <h2 class="mt30 mb10">范围选择器</h2>
@@ -154,6 +191,31 @@ function onControlledChange(
       范围形态的两段共用同一个时间面板，点「确定」提交当前段并自动切到另一端，两段都确定后才收起；展开期间的选择只落在草稿上，关闭面板则丢弃草稿。起点晚于终点时丢弃另一端；配合
       <code>allowEmpty</code> 可放行单段区间，配合 <code>disabledTime</code> 可按段禁用时分秒
     </p>
+    <h2 class="mt30 mb10">事件</h2>
+    <p class="mb10">
+      单选形态绑定 <code>change</code> <code>ok</code> <code>openChange</code> <code>focus</code>
+      <code>blur</code>，范围形态绑定 <code>change</code> <code>calendarChange</code>；各事件的参数都会打印到控制台
+    </p>
+    <Space vertical>
+      <TimePicker
+        v-model:value="eventValue"
+        placeholder="请选择时间"
+        @change="onEventChange"
+        @ok="onEventOk"
+        @open-change="onEventOpenChange"
+        @focus="onEventFocus"
+        @blur="onEventBlur"
+      />
+      <TimePicker
+        v-model:value="eventRangeValue"
+        type="timerange"
+        :placeholder="rangePlaceholder"
+        @change="onEventChange"
+        @calendar-change="onEventCalendarChange"
+        @ok="onEventOk"
+        @open-change="onEventOpenChange"
+      />
+    </Space>
     <h2 class="mt30 mb10">无边框</h2>
     <Space vertical>
       <TimePicker v-model:value="borderedValue" :bordered="false" placeholder="请选择时间" />

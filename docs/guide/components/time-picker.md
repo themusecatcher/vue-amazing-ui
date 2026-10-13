@@ -37,6 +37,9 @@ const suffixValue = ref<number | null>(null)
 const controlledValue = ref<number | null>(null)
 const fixedValue = ref<number | null>(fixedSnapshot.getTime())
 const rangePickerValue = ref<[number | null, number | null] | null>(null)
+// 事件用例：单选 / 范围各一，绑定后可在控制台查看各事件的触发时机与参数
+const eventValue = ref<number | null>(initialTime(8))
+const eventRangeValue = ref<[number | null, number | null] | null>(null)
 const borderedValue = ref<number | null>(null)
 const borderedRangeValue = ref<[number | null, number | null] | null>(null)
 const errorValue = ref<number | null>(null)
@@ -70,6 +73,40 @@ function onControlledChange(
 ): void {
   console.log('onChange', value, formattedValue)
   controlledValue.value = typeof value === 'number' ? value : null
+}
+/** 值变化时的回调：值与格式化值双轨 */
+function onEventChange(
+  value: number | [number | null, number | null] | null,
+  formattedValue: string | [string | null, string | null] | null
+): void {
+  console.log('change', value, formattedValue)
+}
+/** 范围形态待选段变化时的回调：`info.range` 标识本次改动落在哪一段 */
+function onEventCalendarChange(
+  value: number | [number | null, number | null] | null,
+  formattedValue: string | [string | null, string | null] | null,
+  info: { range: 'start' | 'end' }
+): void {
+  console.log('calendarChange', value, formattedValue, info)
+}
+/** 点击「确定」时的回调（「此刻」是快捷入口，不派发） */
+function onEventOk(
+  value: number | [number | null, number | null] | null,
+  formattedValue: string | [string | null, string | null] | null
+): void {
+  console.log('ok', value, formattedValue)
+}
+/** 面板展开收起时的回调 */
+function onEventOpenChange(open: boolean): void {
+  console.log('openChange', open)
+}
+/** 输入框获取焦点时的回调 */
+function onEventFocus(event: FocusEvent): void {
+  console.log('focus', event)
+}
+/** 输入框失去焦点时的回调 */
+function onEventBlur(event: FocusEvent): void {
+  console.log('blur', event)
 }
 </script>
 
@@ -132,7 +169,7 @@ _在 `TimePicker` 选择框底部显示自定义的内容_
   </TimePicker>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -167,15 +204,13 @@ function onOpenChange(openState: boolean) {
 </template>
 ```
 
-::::
+:::
 
 _额外内容渲染在操作行之上、位于同一块面板区域内，因此不会横跨面板；页脚按钮由使用方自行控制浮层的展开与收起_
 
-<br/>
-
 ## 12 小时制
 
-_`use12Hours` 启用 12 小时制，默认的 `format` 为 `hh:mm:ss a`_
+_`use12Hours` 启用 `12` 小时制，默认的 `format` 为 `hh:mm:ss a`_
 
 <br/>
 
@@ -212,8 +247,6 @@ const h12ShortValue = ref<number | null>(new Date().getTime())
 :::
 
 ## 禁用
-
-<br/>
 
 <TimePicker v-model:value="disabledValue" disabled placeholder="请选择时间" />
 
@@ -329,7 +362,7 @@ _通过 `suffixIcon` 插槽自定义选择框后缀图标_
   </template>
 </TimePicker>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -346,7 +379,7 @@ const suffixValue = ref<number | null>(null)
 </template>
 ```
 
-::::
+:::
 
 ## 受控组件
 
@@ -355,15 +388,15 @@ _`value` 和 `@change` 需要配合使用，也可以直接使用 `v-model`_
 <br/>
 
 <Space vertical>
-  <p class="mb10">use value and @change</p>
+  <p class="mb10">使用 <code>value</code> 和 <code>@change</code></p>
   <TimePicker :value="controlledValue" placeholder="请选择时间" @change="onControlledChange" />
-  <p class="mb10">v-model</p>
+  <p class="mb10">使用 <code>v-model</code></p>
   <TimePicker v-model:value="controlledValue" placeholder="请选择时间" />
-  <p class="mb10">Do not change</p>
+  <p class="mb10">只传 <code>value</code> 不回写（不响应变更）</p>
   <TimePicker :value="fixedValue" placeholder="请选择时间" />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -377,17 +410,17 @@ function onControlledChange(value: number | [number | null, number | null] | nul
 </script>
 <template>
   <Space vertical>
-    <p class="mb10">use value and @change</p>
+    <p class="mb10">使用 <code>value</code> 和 <code>@change</code></p>
     <TimePicker :value="controlledValue" placeholder="请选择时间" @change="onControlledChange" />
-    <p class="mb10">v-model</p>
+    <p class="mb10">使用 <code>v-model</code></p>
     <TimePicker v-model:value="controlledValue" placeholder="请选择时间" />
-    <p class="mb10">Do not change</p>
+    <p class="mb10">只传 <code>value</code> 不回写（不响应变更）</p>
     <TimePicker :value="fixedValue" placeholder="请选择时间" />
   </Space>
 </template>
 ```
 
-::::
+:::
 
 ## 范围选择器
 
@@ -397,7 +430,7 @@ _`type` 为 `timerange` 时使用时间范围选择器_
 
 <TimePicker v-model:value="rangePickerValue" type="timerange" :placeholder="rangePlaceholder" />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -410,15 +443,107 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 </template>
 ```
 
-::::
+:::
 
 _范围形态的两段共用同一个时间面板，点「确定」提交当前段并自动切到另一端，两段都确定后才收起；展开期间的选择只落在草稿上，关闭面板则丢弃草稿。起点晚于终点时丢弃另一端；配合 `allowEmpty` 可放行单段区间，配合 `disabledTime` 可按段禁用时分秒_
 
+## 事件
+
+_单选形态绑定 `change` `ok` `openChange` `focus` `blur`，范围形态绑定 `change` `calendarChange`；各事件的参数都会打印到控制台_
+
 <br/>
+
+<Space vertical>
+  <TimePicker
+    v-model:value="eventValue"
+    placeholder="请选择时间"
+    @change="onEventChange"
+    @ok="onEventOk"
+    @open-change="onEventOpenChange"
+    @focus="onEventFocus"
+    @blur="onEventBlur"
+  />
+  <TimePicker
+    v-model:value="eventRangeValue"
+    type="timerange"
+    :placeholder="rangePlaceholder"
+    @change="onEventChange"
+    @calendar-change="onEventCalendarChange"
+    @ok="onEventOk"
+    @open-change="onEventOpenChange"
+  />
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const eventValue = ref<number | null>(new Date().getTime())
+const eventRangeValue = ref<[number | null, number | null] | null>(null)
+const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
+/** 值变化时的回调：值与格式化值双轨 */
+function onEventChange(
+  value: number | [number | null, number | null] | null,
+  formattedValue: string | [string | null, string | null] | null
+): void {
+  console.log('change', value, formattedValue)
+}
+/** 范围形态待选段变化时的回调：`info.range` 标识本次改动落在哪一段 */
+function onEventCalendarChange(
+  value: number | [number | null, number | null] | null,
+  formattedValue: string | [string | null, string | null] | null,
+  info: { range: 'start' | 'end' }
+): void {
+  console.log('calendarChange', value, formattedValue, info)
+}
+/** 点击「确定」时的回调（「此刻」是快捷入口，不派发） */
+function onEventOk(
+  value: number | [number | null, number | null] | null,
+  formattedValue: string | [string | null, string | null] | null
+): void {
+  console.log('ok', value, formattedValue)
+}
+/** 面板展开收起时的回调 */
+function onEventOpenChange(open: boolean): void {
+  console.log('openChange', open)
+}
+/** 输入框获取焦点时的回调 */
+function onEventFocus(event: FocusEvent): void {
+  console.log('focus', event)
+}
+/** 输入框失去焦点时的回调 */
+function onEventBlur(event: FocusEvent): void {
+  console.log('blur', event)
+}
+</script>
+<template>
+  <Space vertical>
+    <TimePicker
+      v-model:value="eventValue"
+      placeholder="请选择时间"
+      @change="onEventChange"
+      @ok="onEventOk"
+      @open-change="onEventOpenChange"
+      @focus="onEventFocus"
+      @blur="onEventBlur"
+    />
+    <TimePicker
+      v-model:value="eventRangeValue"
+      type="timerange"
+      :placeholder="rangePlaceholder"
+      @change="onEventChange"
+      @calendar-change="onEventCalendarChange"
+      @ok="onEventOk"
+      @open-change="onEventOpenChange"
+    />
+  </Space>
+</template>
+```
+
+:::
 
 ## 无边框
-
-<br/>
 
 <Space vertical>
   <TimePicker v-model:value="borderedValue" :bordered="false" placeholder="请选择时间" />
@@ -579,7 +704,7 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 | hourStep | 「时」的步长，须能整除 `24`，否则按 `1` 处理 | number | 1 |
 | minuteStep | 「分」的步长，须能整除 `60`，否则按 `1` 处理 | number | 1 |
 | secondStep | 「秒」的步长，须能整除 `60`，否则按 `1` 处理 | number | 1 |
-| use12Hours | 是否使用 12 小时制，启用后面板追加上午 / 下午列，默认 `format` 为 `hh:mm:ss a` | boolean | false |
+| use12Hours | 是否使用 `12` 小时制，启用后面板追加上午 / 下午列，默认 `format` 为 `hh:mm:ss a` | boolean | false |
 | hideDisabledOptions | 是否隐藏禁用的选项 | boolean | false |
 | width | 选择器宽度，单位 `px`，不传时随内容自适应 | string &#124; number | undefined |
 | size | 选择器大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
@@ -649,8 +774,8 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 
 | 类型 | 值 |
 | :-- | :-- |
-| 24 小时制 | 'HH:mm:ss' |
-| 12 小时制（`use12Hours`） | 'hh:mm:ss a' |
+| `24` 小时制 | 'HH:mm:ss' |
+| `12` 小时制（`use12Hours`） | 'hh:mm:ss a' |
 
 ### format 支持的格式化占位符列表
 
@@ -658,8 +783,8 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 
 | 标识 | 示例 | 描述 |
 | :-- | :-- | :-- |
-| h | 1-12 | 小时，12 小时制 |
-| hh | 01-12 | 小时，12 小时制，两位数 |
+| h | 1-12 | 小时，`12` 小时制 |
+| hh | 01-12 | 小时，`12` 小时制，两位数 |
 | H | 0-23 | 小时 |
 | HH | 00-23 | 小时，两位数 |
 | m | 0-59 | 分钟 |
@@ -668,7 +793,7 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 | ss | 00-59 | 秒，两位数 |
 | a | AM | 上午 / 下午标记 |
 
-> 面板列的显隐由 `format` 推导：格式中含 `s` / `m` / `H`·`h` 才展示对应列，含 `a` 则启用 12 小时制（显式传入的 `use12Hours` 优先）。
+> 面板列的显隐由 `format` 推导：格式中含 `s` / `m` / `H`·`h` 才展示对应列，含 `a` 则启用 `12` 小时制（显式传入的 `use12Hours` 优先）。
 
 ## Slots
 
