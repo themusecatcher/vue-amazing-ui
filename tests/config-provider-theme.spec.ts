@@ -318,6 +318,24 @@ describe('ConfigProvider 对非本库组件键的容错', () => {
     expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('非本库组件键：Foo'))
     warnSpy.mockRestore()
   })
+
+  it('移除先前的非本库组件键不会中断其余键的更新', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const theme = reactive<Record<string, { primaryColor: string }>>({
+      Foo: { primaryColor: BLUE },
+      Menu: { primaryColor: RED }
+    })
+    const wrapper = mount(createMenuHost(theme))
+    await nextTick()
+    expect(menuPrimaryColorVar(wrapper)).toBe(getColorPalettes(RED)[5])
+
+    // 删除坏键的同时改写 Menu 主色：坏键的复位不得抛错并中断 Menu 的更新
+    delete theme.Foo
+    theme.Menu.primaryColor = BLUE
+    await nextTick()
+    expect(menuPrimaryColorVar(wrapper)).toBe(getColorPalettes(BLUE)[5])
+    warnSpy.mockRestore()
+  })
 })
 
 describe('useInject 的内置默认主题', () => {

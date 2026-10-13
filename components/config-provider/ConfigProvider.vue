@@ -362,7 +362,7 @@ function resetComponentTheme(key: string): void {
   componentsThemeColor[key].shadowColor = ''
   appliedPrimaryColors.delete(key)
 }
-// 上一次写入过组件级覆盖的键：覆盖被移除时要复位为「未配置」，否则会残留上一次的色阶
+// 上一次实际写入过组件级覆盖的键（仅登记键）：覆盖被移除时要复位为「未配置」，否则会残留上一次的色阶
 let componentOverrideKeys: string[] = []
 // 监听各个组件主题变化
 watch(
@@ -371,9 +371,11 @@ watch(
     // 未单独配置主色的组件沿用 common：common 变化时它们的实际主色随之变化，故不会被跳过重写
     const commonPrimaryColor = props.theme.common?.primaryColor || '#1677ff'
     const currentKeys = Object.keys(props.theme).filter((key) => key !== 'common')
+    // 本轮实际生效的键：非本库键从未写入主题表，纳入复位会命中不存在的表项而抛错
+    const appliedKeys = currentKeys.filter((key) => registeredThemeKeys.has(key))
     // 已从主题中移除的组件键复位为「未配置」，使 `useInject` 回退 common
     componentOverrideKeys.forEach((key) => {
-      if (!currentKeys.includes(key)) {
+      if (!appliedKeys.includes(key)) {
         resetComponentTheme(key)
       }
     })
@@ -388,7 +390,7 @@ watch(
       }
       applyComponentTheme(key, props.theme[key as keyof Theme]?.primaryColor || commonPrimaryColor)
     })
-    componentOverrideKeys = currentKeys
+    componentOverrideKeys = appliedKeys
   },
   {
     immediate: true
