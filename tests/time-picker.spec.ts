@@ -1,5 +1,5 @@
-import { describe, it, expect, afterEach } from 'vitest'
-import { nextTick } from 'vue'
+import { describe, it, expect, afterEach, vi } from 'vitest'
+import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import TimePicker from 'components/time-picker/TimePicker.vue'
 import { flushTransition } from './helpers'
@@ -273,5 +273,209 @@ describe('触发器文本与估宽', () => {
 
     // 下限沿用日期形态的 10 会让触发器凭空宽出约 14px（时间格式短于日期格式）
     expect((document.querySelector('.picker-trigger-input-inner') as HTMLInputElement).getAttribute('size')).toBe('10')
+  })
+})
+
+describe('范围形态', () => {
+  const START = new Date(2026, 9, 15, 8, 0, 0).getTime()
+  const END = new Date(2026, 9, 15, 18, 0, 0).getTime()
+  /** 触发器的两段输入框 */
+  function sideInputs(): HTMLInputElement[] {
+    return Array.from(
+      document.querySelectorAll<HTMLInputElement>('.picker-trigger-range-item .picker-trigger-input-inner')
+    )
+  }
+  /** 聚焦某一段：范围形态下即把激活段切过去（面板展示值与「确定」随之作用于该段） */
+  async function focusSide(index: 0 | 1): Promise<void> {
+    sideInputs()[index].dispatchEvent(new FocusEvent('focus'))
+    await flush()
+  }
+  /** 点面板底部的「确定」（无值可提交时按钮处于禁用态） */
+  async function confirm(): Promise<void> {
+    ;(document.querySelector('.timepicker-panel-ok .btn-wrap') as HTMLElement).click()
+    await flush()
+  }
+
+  it('双段输入按展示格式生成文本', async () => {
+    wrapper = mount(TimePicker, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { type: 'timerange', value: [START, END] }
+    })
+    await flush()
+
+    const inputs = sideInputs()
+    expect(inputs.length).toBe(2)
+    expect(inputs[0].value).toBe('08:00:00')
+    expect(inputs[1].value).toBe('18:00:00')
+  })
+
+  it('面板只有「确定」，且仍由单一时间列组承载', async () => {
+    wrapper = mount(TimePicker, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { type: 'timerange', value: [START, END], open: true }
+    })
+    await flush()
+
+    // 范围形态的提交落在单段上，无「此刻」可落值
+    expect(document.querySelector('.timepicker-panel-now')).toBeNull()
+    expect(document.querySelector('.timepicker-panel-ok')).not.toBeNull()
+    expect(document.querySelectorAll('.picker-time-column').length).toBe(3)
+  })
+
+  it('「确定」提交激活段并切到另一端：两段都选过后才收起', async () => {
+    wrapper = mount(TimePicker, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { type: 'timerange', value: [START, END], open: true }
+    })
+    await flush()
+
+    // 小时列第 10 项 → 起点段草稿 10:00:00
+    cells()[10].click()
+    await flush()
+    expect(sideInputs()[0].value).toBe('10:00:00')
+    expect(wrapper.emitted('change')).toBeUndefined()
+
+    await confirm()
+    const changed = wrapper.emitted('change')
+    expect(changed?.length).toBe(1)
+    expect(changed?.[0][0]).toEqual([new Date(2026, 9, 15, 10, 0, 0).getTime(), END])
+    expect(wrapper.emitted('calendarChange')?.[0][2]).toEqual({ range: 'start' })
+    expect(wrapper.emitted('ok')?.length).toBe(1)
+    // 终点段本次展开中尚未激活 → 继续编辑另一端，不收起
+    expect(wrapper.emitted('update:open')).toBeUndefined()
+    const items = document.querySelectorAll('.picker-trigger-range-item')
+    expect(items[1].classList.contains('picker-trigger-range-item-active')).toBe(true)
+
+    await confirm()
+    expect(wrapper.emitted('update:open')?.pop()).toEqual([false])
+  })
+
+  it('起点晚于终点时丢弃另一端，且不对外提交半截区间', async () => {
+    wrapper = mount(TimePicker, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { type: 'timerange', value: [START, END], open: true }
+    })
+    await flush()
+
+    // 起点段选 20:00（晚于终点的 18:00）
+    cells()[20].click()
+    await flush()
+    await confirm()
+
+    expect(sideInputs()[0].value).toBe('20:00:00')
+    expect(sideInputs()[1].value).toBe('')
+    // 半截区间不落值：终点段未选，且未声明 allowEmpty
+    expect(wrapper.emitted('change')).toBeUndefined()
+    expect(wrapper.emitted('update:open')).toBeUndefined()
+  })
+
+  it('allowEmpty 声明后单段区间可对外提交', async () => {
+    wrapper = mount(TimePicker, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { type: 'timerange', value: [START, END], open: true, allowEmpty: [false, true] }
+    })
+    await flush()
+
+    cells()[20].click()
+    await flush()
+    await confirm()
+
+    expect(wrapper.emitted('change')?.[0][0]).toEqual([new Date(2026, 9, 15, 20, 0, 0).getTime(), null])
+  })
+
+  it('聚焦另一段即切换激活段，禁用时间随之按段透传', async () => {
+    const disabledTime = vi.fn(() => ({}))
+    wrapper = mount(TimePicker, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { type: 'timerange', value: [START, END], open: true, disabledTime }
+    })
+    await flush()
+
+    expect(disabledTime.mock.calls[0][1]).toBe('start')
+    await focusSide(1)
+    expect(disabledTime.mock.calls.at(-1)?.[1]).toBe('end')
+  })
+
+  it('清除按钮落空区间', async () => {
+    wrapper = mount(TimePicker, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { type: 'timerange', value: [START, END], open: true }
+    })
+    await flush()
+    ;(document.querySelector('.picker-trigger-clear') as HTMLElement).click()
+    await flush()
+
+    const changed = wrapper.emitted('change')
+    expect(changed?.length).toBe(1)
+    expect(changed?.[0][0]).toBeNull()
+  })
+
+  it('面板指示箭头：默认方位展示，showArrow 关闭即隐藏', async () => {
+    wrapper = mount(TimePicker, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { type: 'timerange', value: [START, END], open: true }
+    })
+    await flush()
+    expect(document.querySelector('.timepicker-range-arrow')).not.toBeNull()
+
+    wrapper.unmount()
+    document.querySelectorAll('.va-popup-container').forEach((el) => el.remove())
+    wrapper = mount(TimePicker, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { type: 'timerange', value: [START, END], open: true, showArrow: false }
+    })
+    await flush()
+    expect(document.querySelector('.timepicker-range-arrow')).toBeNull()
+  })
+
+  it('字符串轨道为元组时以它为准', async () => {
+    wrapper = mount(TimePicker, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { type: 'timerange', formattedValue: ['07:00:00', '09:30:00'] }
+    })
+    await flush()
+
+    expect(sideInputs()[0].value).toBe('07:00:00')
+    expect(sideInputs()[1].value).toBe('09:30:00')
+  })
+})
+
+describe('进阶能力', () => {
+  it('后缀图标插槽优先于同名 prop', async () => {
+    wrapper = mount(TimePicker, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { value: BASE, suffixIcon: () => h('i', { class: 'prop-suffix' }) },
+      slots: { suffixIcon: () => h('i', { class: 'slot-suffix' }) }
+    })
+    await flush()
+
+    expect(document.querySelector('.slot-suffix')).not.toBeNull()
+    expect(document.querySelector('.prop-suffix')).toBeNull()
+  })
+
+  it('renderExtraFooter 渲染在操作行之上，并与面板主体分隔', async () => {
+    wrapper = mount(TimePicker, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { open: true, value: BASE },
+      slots: { renderExtraFooter: () => h('span', { class: 'extra-footer' }, '附加内容') }
+    })
+    await flush()
+
+    const extra = document.querySelector('.picker-panel-footer-extra')
+    expect(extra?.querySelector('.extra-footer')).not.toBeNull()
+    // 额外页脚落在操作行之前：页脚容器内，紧邻「确定」所在的操作行
+    expect(extra?.nextElementSibling?.querySelector('.timepicker-panel-ok')).not.toBeNull()
   })
 })
