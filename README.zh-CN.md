@@ -269,9 +269,10 @@ pnpm docs:dev
 | Switch          | 开关       | Table          | 表格       |
 | Tabs            | 标签页     | Tag            | 标签       |
 | Textarea        | 文本域     | TextScroll     | 文字滚动   |
-| Timeline        | 时间轴     | Tooltip        | 文字提示   |
-| Upload          | 上传       | Video          | 播放器     |
-| Waterfall       | 瀑布流     | Watermark      | 水印       |
+| Timeline        | 时间轴     | TimePicker     | 时间选择器 |
+| Tooltip         | 文字提示   | Upload         | 上传       |
+| Video           | 播放器     | Waterfall      | 瀑布流     |
+| Watermark       | 水印       |                |            |
 
 ## 工具函数
 
