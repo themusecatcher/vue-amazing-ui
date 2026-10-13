@@ -95,6 +95,9 @@ function onControlledChange(
         </template>
       </TimePicker>
     </Space>
+    <p class="mt30 mb10">
+      额外内容渲染在操作行之上、位于同一块面板区域内，因此不会横跨面板；页脚按钮由使用方自行控制浮层的展开与收起
+    </p>
     <h2 class="mt30 mb10">12 小时制</h2>
     <p class="mb10"><code>use12Hours</code> 启用 12 小时制，默认的 <code>format</code> 为 <code>hh:mm:ss a</code></p>
     <Space vertical>
@@ -147,6 +150,10 @@ function onControlledChange(
     <h2 class="mt30 mb10">范围选择器</h2>
     <p class="mb10"><code>type</code> 为 <code>timerange</code> 时使用时间范围选择器</p>
     <TimePicker v-model:value="rangePickerValue" type="timerange" :placeholder="rangePlaceholder" />
+    <p class="mt30 mb10">
+      范围形态的两段共用同一个时间面板，点「确定」提交当前段并自动切到另一端，两段都确定后才收起；展开期间的选择只落在草稿上，关闭面板则丢弃草稿。起点晚于终点时丢弃另一端；配合
+      <code>allowEmpty</code> 可放行单段区间，配合 <code>disabledTime</code> 可按段禁用时分秒
+    </p>
     <h2 class="mt30 mb10">无边框</h2>
     <Space vertical>
       <TimePicker v-model:value="borderedValue" :bordered="false" placeholder="请选择时间" />
