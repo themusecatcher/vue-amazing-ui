@@ -184,7 +184,7 @@ es/tooltip/style/index.js
 | 时机 | 落点 | 校验内容 |
 | :-- | :-- | :-- |
 | 库构建 | `build/generate-style-entries.ts`（由 `vite.config.ts` 的 `stylePostBuildPlugin` 在 `mergeComponentStyles()` 之后顺序调用） | ① 入口引用的每个 CSS 都真实存在（表写错 / SFC 漏 `<style>` 块 → 报出「哪个组件缺哪个文件」）；② 组件目录下「与组件同名前缀」的 CSS 恰好 1 份（残留 `Tooltip2.css` → 报错） |
-| 发布前 | `pnpm guard`（`scripts/prepublish-guard.js`） | 毫秒级存在性校验：无编号 CSS、每个组件都有样式入口与 `index.d.ts`、入口内相对路径均可解析、**每个聚合入口的 `index.d.ts` 都有配对的 `index.js` / `index.cjs`**（纯转发入口被 Rollup 转发优化剔除后，产物只剩类型声明，深层路径报 `ERR_MODULE_NOT_FOUND`；例外 `utils` 已白名单） |
+| 发布前 | `pnpm guard`（`scripts/prepublish-guard.js`） | 毫秒级存在性校验：无编号 CSS、每个组件都有样式入口与 `index.d.ts`、入口内相对路径均可解析、**每个聚合入口的 `index.d.ts` 都有配对的 `index.js` / `index.cjs`**（纯转发入口被 Rollup 转发优化剔除后，产物只剩类型声明，深层路径报 `ERR_MODULE_NOT_FOUND`；例外见 `INDEX_DTS_WHITELIST`：`utils`、`picker` 两个内部共用 barrel） |
 | 发布前 / CI | `pnpm verify:deps`（`scripts/verify-style-deps.js`） | ① 用产物 chunk 依赖图闭包**双向**校验 `componentDependencies`：`closure ⊆ table` 抓漏写、`table ⊆ closure` 抓 stale；② **聚合入口导出一致性**：`<dir>/index.d.ts` 声明的值导出与 `es\|lib` 运行时导出**双向**比对，抓「类型有声明、运行时无导出」（纯转发的具名导出被 Rollup 转发优化剔除）与「有导出无声明」 |
 
 > 全量扫描与登记完整性由 `tests/resolver.spec.ts` 与 `tests/generate-style-entries.spec.ts` 守护：前者校验每个组件的入口路径合法（不含 `undefined`）、并扫描 `components/**/*.vue` 中所有不含 `<style>` 块的 SFC 是否已登记；后者直接断言入口内的 CSS 顺序、依赖摊平结果与 vendor 行。

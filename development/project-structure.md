@@ -62,6 +62,8 @@ components/
 
 > 伴生而非父子关系的组件（底层组件 + `Provider` + `useXxx`）平铺在同一族目录顶层，如 `message/`、`modal/`、`dialog/`、`notification/`、`loading-bar/`。
 >
+> 库内共用内核同样平铺：多个「有自身样式、但仅库内引用、不对外开放」的组件共处一个目录，如 `picker/`（`DatePicker` / `TimePicker` 共用的 9 个面板）—— 未进 `components.ts`、也不在 `GlobalComponents` 中。它不受下一段「必须独占产物目录」的约束：该约束的主语是「可独立引入组件」，内核面板不是；它们的样式只聚合进 `picker/style` 一处。
+>
 > 每个「拥有独立样式的可独立引入组件」必须独占一个产物目录：构建期样式入口按组件产物目录聚合（`build/generate-style-entries.ts`），同目录的多个组件会被合并为一个 `style/index.js`，故禁止为减少目录层级而把多个组件平铺到同一目录（会连带引入无关组件的样式）。
 >
 > 聚合入口 `index.ts` 中**任何具名导出都禁止走纯转发**——即导出项直接来自其他模块、入口自身不为它持有运行时绑定（`export { X } from './x'` 或 `import X from './x'; export { X }`）。这类导出会被 Rollup 转发优化剔除，两种表现面：
@@ -143,7 +145,7 @@ src/
 │   │   ├── Index.vue       # 演示页面
 │   │   └── index.ts        # 路由 meta（title）
 │   ├── layout/             # 布局演示页
-│   ├── time-picker/        # 纯演示页：无对应 components/ 组件，复用 DatePicker 能力展示
+│   ├── time-picker/        # 时间选择器演示页
 │   ├── home/
 │   ├── exception/
 │   └── ...
