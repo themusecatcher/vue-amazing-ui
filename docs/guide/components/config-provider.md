@@ -859,7 +859,7 @@ _`theme` 支持运行期增删组件键：切换预设后，已挂载组件的�
 import { ref, computed } from 'vue'
 import type { ConfigProviderTheme } from 'vue-amazing-ui'
 const overrideEnabled = ref<boolean>(false)
-// 两个主题预设：不含组件级覆盖 / 含 Button 覆盖
+// 运行期切换用的两个主题预设：不含组件级覆盖 / 含 Button 覆盖
 const themeWithoutOverride: ConfigProviderTheme = {
   common: {
     primaryColor: '#1677ff'

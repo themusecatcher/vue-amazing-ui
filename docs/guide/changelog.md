@@ -10,6 +10,14 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-13">2.13.2</VersionDateTag>
+
+- 修复 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 组件级主题：运行期增删组件键即时生效（新增覆盖生效、移除覆盖回退 `common`），`theme` 中的非本库组件键改为忽略并告警
+- 修复 [文本省略 Ellipsis](/guide/components/ellipsis.html) 的 `tooltipMaxWidth` 属性不生效的问题
+- 更新 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 与 [定制主题](/guide/customize-theme.html) 文档：新增「运行期切换组件级主题」示例，补充 `theme` 的运行期用法与组件主题键名 / 回退顺序说明
+- 更新 [日历 Calendar](/guide/components/calendar.html) 文档演示：通知事项改用 [文本省略 Ellipsis](/guide/components/ellipsis.html) 截断并悬浮展示完整内容
+- 优化更新贡献者文档和 `README` 文档
+
 ## <VersionDateTag date="2026-10-12">2.13.1</VersionDateTag>
 
 - 优化并增强 [加载中 Spin](/guide/components/spin.html)：新增 `delay` / `fitContent` 属性与自定义指示符（`indicator` 属性 / `#indicator` 插槽，含 `SpinIndicator` / `SpinBuiltinIndicator` 类型导出）；重做点阵 / 线阵与 `magic-ring` 翻面动效，`speed` / `spinCircleWidth` 现同时支持 `magic-ring`；指示符进出淡入淡出；修复 `spinCircleWidth` / `spinCirclePercent` 越界值导致指示符消失
