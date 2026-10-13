@@ -632,7 +632,7 @@ _打开开关后，加载效果需等 `delay` 时长才出现，从而避免请�
   </p>
 </Spin>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -662,7 +662,7 @@ const delay = ref(500)
 </style>
 ```
 
-::::
+:::
 
 ## 自定义指示符
 
@@ -680,7 +680,7 @@ _通过 `indicator` 传入 `VNode` 或渲染函数，或用 `#indicator` 插槽�
   </Spin>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -714,7 +714,7 @@ div.spin-wrap.spin-item {
 </style>
 ```
 
-::::
+:::
 
 ## 宽度贴合内容
 
@@ -741,7 +741,7 @@ _内容比父容器窄时，`fitContent` 让遮罩与加载效果一起按内容
   </Flex>
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -789,7 +789,7 @@ const spinning = ref(true)
 </style>
 ```
 
-::::
+:::
 
 ## 动画速度、环宽与配色
 
@@ -833,7 +833,7 @@ _通过 `speed` 调节动画周期（值越小越快），`spinCircleWidth` 调�
   </Space>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -891,7 +891,7 @@ div.spin-wrap.spin-item {
 </style>
 ```
 
-::::
+:::
 
 ## APIs
 
