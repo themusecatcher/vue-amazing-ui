@@ -61,8 +61,10 @@ const afterTodayValue = ref<number | null>(initialDate(3))
 const weekendValue = ref<number | null>(initialWeekday())
 const sizeCaseValue = ref<number | null>(initialDate())
 const suffixValue = ref<number | null>(initialDate())
-const warningValue = ref<number | null>(initialDate())
 const errorValue = ref<number | null>(initialDate())
+const warningValue = ref<number | null>(initialDate())
+const errorRangeValue = ref<[number, number] | null>(initialRange())
+const warningRangeValue = ref<[number, number] | null>(initialRange())
 const borderlessValue = ref<number | null>(initialDate())
 const placementBottomLeftValue = ref<number | null>(initialDate())
 const placementBottomRightValue = ref<number | null>(initialDate())
@@ -606,8 +608,10 @@ function onStartOpenChange(open: boolean): void {
     </DatePicker>
     <h2 class="mt30 mb10">自定义状态</h2>
     <Space vertical>
-      <DatePicker v-model:value="warningValue" status="warning" placeholder="请选择日期" />
       <DatePicker v-model:value="errorValue" status="error" placeholder="请选择日期" />
+      <DatePicker v-model:value="warningValue" status="warning" placeholder="请选择日期" />
+      <DatePicker v-model:value="errorRangeValue" type="daterange" status="error" :placeholder="rangePlaceholder" />
+      <DatePicker v-model:value="warningRangeValue" type="daterange" status="warning" :placeholder="rangePlaceholder" />
     </Space>
     <h2 class="mt30 mb10">无边框</h2>
     <Space vertical>

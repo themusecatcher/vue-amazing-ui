@@ -1352,8 +1352,10 @@ const suffixValue = ref<number | null>(new Date().getTime())
 <br/>
 
 <Space vertical>
-  <DatePicker v-model:value="warningValue" status="warning" placeholder="请选择日期" />
   <DatePicker v-model:value="errorValue" status="error" placeholder="请选择日期" />
+  <DatePicker v-model:value="warningValue" status="warning" placeholder="请选择日期" />
+  <DatePicker v-model:value="errorRangeValue" type="daterange" status="error" :placeholder="rangePlaceholder" />
+  <DatePicker v-model:value="warningRangeValue" type="daterange" status="warning" :placeholder="rangePlaceholder" />
 </Space>
 
 ::: details Show Code
@@ -1361,13 +1363,25 @@ const suffixValue = ref<number | null>(new Date().getTime())
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const warningValue = ref<number | null>(new Date().getTime())
+import { addDays, startOfDay } from 'date-fns'
 const errorValue = ref<number | null>(new Date().getTime())
+const warningValue = ref<number | null>(new Date().getTime())
+const errorRangeValue = ref<[number, number] | null>([
+  startOfDay(new Date()).getTime(),
+  startOfDay(addDays(new Date(), 7)).getTime()
+])
+const warningRangeValue = ref<[number, number] | null>([
+  startOfDay(new Date()).getTime(),
+  startOfDay(addDays(new Date(), 7)).getTime()
+])
+const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 </script>
 <template>
   <Space vertical>
-    <DatePicker v-model:value="warningValue" status="warning" placeholder="请选择日期" />
     <DatePicker v-model:value="errorValue" status="error" placeholder="请选择日期" />
+    <DatePicker v-model:value="warningValue" status="warning" placeholder="请选择日期" />
+    <DatePicker v-model:value="errorRangeValue" type="daterange" status="error" :placeholder="rangePlaceholder" />
+    <DatePicker v-model:value="warningRangeValue" type="daterange" status="warning" :placeholder="rangePlaceholder" />
   </Space>
 </template>
 ```
