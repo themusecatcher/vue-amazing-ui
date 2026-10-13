@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-*协助进行页面级整体布局*
+_协助进行页面级整体布局_
 
 ## 何时使用
 
@@ -90,7 +90,7 @@ const onBreakpoint = (broken: boolean) => {
 
 ## 基本结构
 
-*四种典型页面框架：仅上中下、含侧边栏、侧边栏在右、侧边栏在左*
+_四种典型页面框架：仅上中下、含侧边栏、侧边栏在右、侧边栏在左_
 
 <br/>
 
@@ -197,7 +197,7 @@ const footerStyle: CSSProperties = {
 
 ## 上中下布局
 
-*内容集中在定宽区域内，页面结构稳定，不受浏览区域宽度影响*
+_内容集中在定宽区域内，页面结构稳定，不受浏览区域宽度影响_
 
 <br/>
 
@@ -249,7 +249,7 @@ const topNavKeys = ref<MenuKey[]>(['2'])
 
 ## 顶部-侧边布局-通栏
 
-*顶部导航与侧边栏贴合页面边缘、不留外边距，适合信息密度高的应用型页面*
+_顶部导航与侧边栏贴合页面边缘、不留外边距，适合信息密度高的应用型页面_
 
 <br/>
 
@@ -396,7 +396,7 @@ const topSide2OpenKeys = ref<MenuKey[]>(['sub1'])
 
 ## 顶部-侧边布局
 
-*相比通栏形态，内容区两侧留出边距，多用于展示类页面*
+_相比通栏形态，内容区两侧留出边距，多用于展示类页面_
 
 <br/>
 
@@ -545,7 +545,7 @@ const topSideOpenKeys = ref<MenuKey[]>(['sub1'])
 
 ## 侧边布局
 
-*侧边导航可收起，横向空间有限时能腾出内容区宽度；如需定制滚动条，可搭配 Scrollbar 组件*
+_侧边导航可收起，横向空间有限时能腾出内容区宽度；如需定制滚动条，可搭配 Scrollbar 组件_
 
 <br/>
 
@@ -649,7 +649,7 @@ const sideRoutes = ref<BreadcrumbRoute[]>([{ name: 'User' }, { name: 'Bill' }])
 
 ## 自定义触发器
 
-*设置 `:trigger="null"` 隐藏默认触发器，改用头部图标控制侧边栏开合*
+_设置 `:trigger="null"` 隐藏默认触发器，改用头部图标控制侧边栏开合_
 
 <br/>
 
@@ -734,7 +734,7 @@ const customTriggerSelectedKeys = ref<MenuKey[]>(['1'])
 
 ## 响应式布局
 
-*视窗宽度低于 `breakpoint` 时侧边栏自动收起到 `collapsedWidth`；收起宽度为 `0` 时侧边栏完全收起，改用悬浮在侧边栏外沿的方形按钮展开 —— 未开启 `collapsible` 时，该按钮同样会随响应式收起出现*
+_视窗宽度低于 `breakpoint` 时侧边栏自动收起到 `collapsedWidth`；收起宽度为 `0` 时侧边栏完全收起，改用悬浮在侧边栏外沿的方形按钮展开 —— 未开启 `collapsible` 时，该按钮同样会随响应式收起出现_
 
 <br/>
 
@@ -822,7 +822,7 @@ const onBreakpoint = (broken: boolean) => {
 
 ## 固定侧边栏
 
-*内容超过一屏时侧边栏保持固定，滚动浏览时不会移出视口；如需定制滚动条，可搭配 Scrollbar 组件*
+_内容超过一屏时侧边栏保持固定，滚动浏览时不会移出视口；如需定制滚动条，可搭配 Scrollbar 组件_
 
 <br/>
 
@@ -953,7 +953,7 @@ const fixedSiderSelectedKeys = ref<MenuKey[]>(['4'])
 
 ## 固定头部
 
-*顶部导航固定在顶部，长页面滚动时仍可随时切换*
+_顶部导航固定在顶部，长页面滚动时仍可随时切换_
 
 <br/>
 
@@ -1009,7 +1009,7 @@ const fixedNavKeys = ref<MenuKey[]>(['2'])
 
 ## 响应式收起宽度
 
-*`collapsedWidth` 支持响应式宽度，按不同视窗宽度设置不同的收起宽度*
+_`collapsedWidth` 支持响应式宽度，按不同视窗宽度设置不同的收起宽度_
 
 <br/>
 
@@ -1095,7 +1095,7 @@ const onCollapse = (collapsed: boolean, type: 'clickTrigger' | 'responsive') => 
 
 ## 自定义滚动条
 
-*侧边栏与内容区的滚动条改用 Scrollbar 组件，滚动样式与交互由组件统一提供*
+_侧边栏与内容区的滚动条改用 Scrollbar 组件，滚动样式与交互由组件统一提供_
 
 <br/>
 
