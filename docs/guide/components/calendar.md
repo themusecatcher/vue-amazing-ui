@@ -476,7 +476,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ## 通知事项日历
 
-<Calendar v-model:value="noticeDate" @panelChange="onPanelChange"> <template #dateValue="{ dateObject, timestamp }"> <span v-if="[8, 12, 16].includes(dateObject.date)">{{ dateObject.date }}日</span> </template> <template #dateContent="{ dateObject, timestamp }"> <template v-if="[8, 12, 16].includes(dateObject.date)"> <Badge status="warning" text="This is warning event." /> <Badge status="success" text="This is usual event." /> <Badge color="volcano" text="This is volcano event" /> </template> </template> <template #monthValue="{ monthObject, timestamp }"> <template v-if="[1, 7].includes(monthObject.month)"> <template v-if="monthObject.month === 1">二月</template> <template v-if="monthObject.month === 7">八月</template> </template> </template> <template #monthContent="{ monthObject, timestamp }"> <template v-if="[1, 7].includes(monthObject.month)"> <Badge status="warning" text="This is warning event." /> <Badge status="success" text="This is usual event." /> <Badge color="volcano" text="This is volcano event" /> </template> </template> </Calendar>
+<Calendar v-model:value="noticeDate" @panelChange="onPanelChange"> <template #dateValue="{ dateObject, timestamp }"> <span v-if="[8, 12, 16].includes(dateObject.date)">{{ dateObject.date }}日</span> </template> <template #dateContent="{ dateObject, timestamp }"> <template v-if="[8, 12, 16].includes(dateObject.date)"> <div class="notice-item"> <Badge status="warning" /> <Ellipsis class="notice-text" :tooltip-max-width="240">This is warning event.</Ellipsis> </div> <div class="notice-item"> <Badge status="success" /> <Ellipsis class="notice-text" :tooltip-max-width="240">This is usual event.</Ellipsis> </div> <div class="notice-item"> <Badge color="volcano" /> <Ellipsis class="notice-text" :tooltip-max-width="240">This is volcano event</Ellipsis> </div> </template> </template> <template #monthValue="{ monthObject, timestamp }"> <template v-if="[1, 7].includes(monthObject.month)"> <template v-if="monthObject.month === 1">二月</template> <template v-if="monthObject.month === 7">八月</template> </template> </template> <template #monthContent="{ monthObject, timestamp }"> <template v-if="[1, 7].includes(monthObject.month)"> <div class="notice-item"> <Badge status="warning" /> <Ellipsis class="notice-text" :tooltip-max-width="240">This is warning event.</Ellipsis> </div> <div class="notice-item"> <Badge status="success" /> <Ellipsis class="notice-text" :tooltip-max-width="240">This is usual event.</Ellipsis> </div> <div class="notice-item"> <Badge color="volcano" /> <Ellipsis class="notice-text" :tooltip-max-width="240">This is volcano event</Ellipsis> </div> </template> </template> </Calendar>
 
 ::: details Show Code
 
@@ -498,9 +498,18 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
     </template>
     <template #dateContent="{ dateObject, timestamp }">
       <template v-if="[8, 12, 16].includes(dateObject.date)">
-        <Badge status="warning" text="This is warning event." />
-        <Badge status="success" text="This is usual event." />
-        <Badge color="volcano" text="This is volcano event" />
+        <div class="notice-item">
+          <Badge status="warning" />
+          <Ellipsis class="notice-text" :tooltip-max-width="240">This is warning event.</Ellipsis>
+        </div>
+        <div class="notice-item">
+          <Badge status="success" />
+          <Ellipsis class="notice-text" :tooltip-max-width="240">This is usual event.</Ellipsis>
+        </div>
+        <div class="notice-item">
+          <Badge color="volcano" />
+          <Ellipsis class="notice-text" :tooltip-max-width="240">This is volcano event</Ellipsis>
+        </div>
       </template>
     </template>
     <template #monthValue="{ monthObject, timestamp }">
@@ -511,19 +520,32 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
     </template>
     <template #monthContent="{ monthObject, timestamp }">
       <template v-if="[1, 7].includes(monthObject.month)">
-        <Badge status="warning" text="This is warning event." />
-        <Badge status="success" text="This is usual event." />
-        <Badge color="volcano" text="This is volcano event" />
+        <div class="notice-item">
+          <Badge status="warning" />
+          <Ellipsis class="notice-text" :tooltip-max-width="240">This is warning event.</Ellipsis>
+        </div>
+        <div class="notice-item">
+          <Badge status="success" />
+          <Ellipsis class="notice-text" :tooltip-max-width="240">This is usual event.</Ellipsis>
+        </div>
+        <div class="notice-item">
+          <Badge color="volcano" />
+          <Ellipsis class="notice-text" :tooltip-max-width="240">This is volcano event</Ellipsis>
+        </div>
       </template>
     </template>
   </Calendar>
 </template>
 <style lang="less" scoped>
-.badge-wrap {
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+/* 每条通知事项独占一行：状态圆点固定宽度，文本交给 Ellipsis 截断并悬浮提示 */
+.notice-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.notice-text {
+  flex: 1;
+  min-width: 0;
 }
 </style>
 ```
@@ -723,11 +745,15 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 :::
 
 <style lang="less" scoped>
-.badge-wrap {
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+/* 每条通知事项独占一行：状态圆点固定宽度，文本交给 Ellipsis 截断并悬浮提示 */
+.notice-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.notice-text {
+  flex: 1;
+  min-width: 0;
 }
 </style>
 

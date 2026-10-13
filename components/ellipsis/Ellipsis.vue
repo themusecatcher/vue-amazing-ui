@@ -54,7 +54,7 @@ watch(
   }
 )
 watch(
-  [() => props.maxWidth, () => props.line, () => props.tooltip],
+  [() => props.maxWidth, () => props.line, () => props.tooltip, () => props.tooltipMaxWidth],
   () => {
     updateTooltipShow()
   },
@@ -81,8 +81,7 @@ function updateTooltipShow() {
   const scrollHeight = el.scrollHeight
   const clientWidth = el.clientWidth
   const clientHeight = el.clientHeight
-  const offsetWidth = el.offsetWidth
-  computedTooltipMaxWidth.value = `${offsetWidth + 24}px`
+  computedTooltipMaxWidth.value = resolveTooltipMaxWidth(el.offsetWidth)
   if (scrollWidth > clientWidth || scrollHeight > clientHeight) {
     if (props.expand) {
       showExpand.value = true
@@ -98,6 +97,14 @@ function updateTooltipShow() {
       showTooltip.value = false
     }
   }
+}
+// 弹出提示最大宽度：未传入 tooltipMaxWidth 时跟随文本宽度（+ 24 预留内边距），传入时以其为准
+function resolveTooltipMaxWidth(offsetWidth: number): string {
+  const { tooltipMaxWidth } = props
+  if (tooltipMaxWidth === undefined) {
+    return `${offsetWidth + 24}px`
+  }
+  return typeof tooltipMaxWidth === 'number' ? `${tooltipMaxWidth}px` : tooltipMaxWidth
 }
 function onExpand() {
   stopObservation.value = true
