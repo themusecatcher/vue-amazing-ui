@@ -166,7 +166,8 @@ const { colorPalettes, shadowColor } = useInject('TimePicker') // 主题色注�
 const triggerRef = ref<InstanceType<typeof PickerTrigger> | null>(null)
 const popupRef = ref<InstanceType<typeof Popup> | null>(null)
 const wrapperRef = ref<HTMLElement | null>(null)
-const slots = useSlots()
+// 显式标注插槽类型：`useSlots()` 的返回值参与 `mergedExtraFooter` 的推导，构成推断环
+const slots: TimePickerSlots = useSlots()
 const slotsExist = useSlotsExist(['renderExtraFooter'])
 /** 面板的键盘入口：由 `TimePanel` 经 `defineExpose` 暴露 */
 interface PanelKeydownTarget {

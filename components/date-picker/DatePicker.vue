@@ -103,7 +103,7 @@ export interface DatePickerRangeInfo {
 export interface DatePickerSlots {
   suffixIcon?: () => VNode[] // 自定义选择框后缀图标，优先于同名 prop
   separator?: () => VNode[] // 范围形态两段之间的分隔符，默认右向箭头
-  dateRender?: (params: PickerDateRenderParams) => VNode[] // 自定义日期单元格内容（替换日号），优先于同名 prop期单元格内容（替换日号），优先于同名 prop
+  dateRender?: (params: PickerDateRenderParams) => VNode[] // 自定义日期单元格内容（替换日号），优先于同名 prop
   renderExtraFooter?: () => VNode[] // 面板底部的额外页脚，优先于同名 prop
 }
 // value / open 两个双向绑定项的默认值由 defineModel 声明，此处不重复
@@ -197,7 +197,8 @@ const wrapperStyle = computed(() => {
   return { ...themeVars.value, '--datepicker-width': width ?? 'auto' } as CSSProperties
 })
 const mergedPanelClass = computed(() => ['datepicker-panel-container', props.panelClass].filter(Boolean).join(' '))
-const slots = useSlots()
+// 显式标注插槽类型：`useSlots()` 的返回值参与 `mergedDateRender` / `mergedExtraFooter` 的推导，构成推断环
+const slots: DatePickerSlots = useSlots()
 const slotsExist = useSlotsExist(['dateRender', 'renderExtraFooter'])
 /**
  * 日期单元格内容定制
