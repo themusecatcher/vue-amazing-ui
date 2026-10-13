@@ -1,4 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { h } from 'vue'
 import { mount } from '@vue/test-utils'
 import DatePicker from 'components/date-picker/DatePicker.vue'
@@ -186,6 +188,22 @@ describe('范围形态的面板结构', () => {
     const inputs = trigger?.querySelectorAll<HTMLInputElement>('.picker-trigger-input-inner')
     expect(inputs?.[0]?.value).toBe('2026-01-10')
     expect(inputs?.[1]?.value).toBe('2026-01-20')
+  })
+
+  it('校验态下范围激活条随状态取色', async () => {
+    await mountRange({ value: [START, END], status: 'error' })
+    const trigger = document.querySelector('.picker-trigger')
+    expect(trigger?.classList.contains('picker-trigger-status-error')).toBe(true)
+    expect(trigger?.querySelector('.picker-trigger-range-active-bar')).not.toBeNull()
+
+    // 底色由样式声明承载、DOM 断言不到 → 直接核对源码：两个校验态分支都覆盖了激活条颜色
+    const source = readFileSync(join(process.cwd(), 'components', 'picker', 'PickerTrigger.vue'), 'utf8')
+    const errorBlock = source.match(/&\.picker-trigger-status-error \{[\s\S]*?\n  \}/)?.[0] ?? ''
+    const warningBlock = source.match(/&\.picker-trigger-status-warning \{[\s\S]*?\n  \}/)?.[0] ?? ''
+    expect(errorBlock).toContain('.picker-trigger-range-active-bar')
+    expect(errorBlock).toContain('background: #ff4d4f')
+    expect(warningBlock).toContain('.picker-trigger-range-active-bar')
+    expect(warningBlock).toContain('background: #faad14')
   })
 
   it('面板上渲染随激活段移动的指示箭头', async () => {

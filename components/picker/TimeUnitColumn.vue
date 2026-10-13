@@ -5,7 +5,7 @@ import Scrollbar from 'components/scrollbar'
 import type { PickerTimeUnit } from './types'
 export interface TimeUnitColumnProps {
   units?: PickerTimeUnit[] // 该列的候选项
-  value?: number | null // 当前选中项（空值时不选中任何项，列停在顶部）
+  value?: number | null // 当前选中项（空值时不选中任何项，且保持当前滚动位置）
   hideDisabledOptions?: boolean // 是否隐藏禁用项
   active?: boolean // 面板是否展开：展开时把选中项滚到列顶部
   columnActive?: boolean // 是否为键盘操作当前所在的列（该列加底色以示目标）
@@ -75,11 +75,9 @@ function scrollToOffset(to: number, duration: number): void {
  */
 function scrollToSelected(duration: number): void {
   if (!isColumnVisible()) return
-  // 空值不选中任何项：把列带回顶部（清掉上一次选择留下的滚动位置，否则初始态会停在旧时刻）
-  if (props.value === null) {
-    scrollToOffset(0, duration)
-    return
-  }
+  // 空值只清掉选中态、不动滚动位置：范围形态切换激活段时对端常为空值，回到列顶会让面板「看着被重置」，
+  // 而列在面板收起后仍保留原滚动位置（同参照实现：空值段沿用上一次选择的列位置）
+  if (props.value === null) return
   const target = cellRefs.get(props.value)
   if (!target) return
   scrollToOffset(target.offsetTop, duration)

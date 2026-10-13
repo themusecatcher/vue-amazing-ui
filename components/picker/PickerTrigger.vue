@@ -331,6 +331,10 @@ defineExpose({ focus, blur })
       border-color: #ff4d4f;
       box-shadow: 0 0 0 2px rgba(255, 38, 5, 0.06);
     }
+    // 范围激活条随状态取色：与边框同色，否则校验态下红框配蓝线会割裂
+    .picker-trigger-range-active-bar {
+      background: #ff4d4f;
+    }
   }
   &.picker-trigger-status-warning {
     border-color: #faad14;
@@ -340,6 +344,10 @@ defineExpose({ focus, blur })
     &.picker-trigger-focused {
       border-color: #faad14;
       box-shadow: 0 0 0 2px rgba(255, 215, 5, 0.1);
+    }
+    // 同上：范围激活条与状态边框同色
+    .picker-trigger-range-active-bar {
+      background: #faad14;
     }
   }
   .picker-trigger-input {

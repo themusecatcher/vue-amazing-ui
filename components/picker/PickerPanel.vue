@@ -87,10 +87,15 @@ function onPanelMousedown(event: MouseEvent): void {
     text-align: center;
     border-top: 1px solid rgba(5, 5, 5, 0.06);
   }
-  // 额外页脚左对齐（与居中的操作行区分），水平内边距与面板头部 / 内容一致
+  // 额外页脚左对齐（与居中的操作行区分），水平内边距与面板头部 / 内容一致；
+  // 纵向用 flex 居中承载用户内容：内容多为按钮（本库 Button 根为 inline-flex），
+  // 若沿用行盒基线对齐，按钮会被压在行盒基线上、在页脚内偏高（实测顶部 5px / 底部 10px）
   .picker-panel-footer-extra {
+    display: flex;
+    align-items: center;
+    // 高度沿用行盒口径（页脚行高 38px 含内联内容时实测行盒 39px），保持与操作行同一行高
+    min-height: 39px;
     padding: 0 8px;
-    line-height: 38px;
     text-align: start;
     // 之后还有操作行时补一道分隔线，额外页脚落在页脚末尾则不补（避免底部多出一道线）
     &:not(:last-child) {
