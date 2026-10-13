@@ -7,7 +7,6 @@ import {
   onUnmounted,
   reactive,
   inject,
-  toRefs,
   useSlots,
   Text,
   Comment
@@ -244,36 +243,50 @@ export function useSlotsExist<T extends string | string[] = 'default'>(slotsName
     return computed(() => checkSlotsExist(slotsName)) as SlotsExistResult<T>
   }
 }
+// 默认主色 `#1677ff` 的色阶：模块级只算一次，避免每个消费组件各算一遍
+const defaultColorPalettes = getColorPalettes('#1677ff')
+/**
+ * 未使用 `ConfigProvider` 时的内置默认主题
+ *
+ * 模块级共享且只读：库内组件仅从 `useInject` 读取它，不会写入。
+ */
+const defaultThemeColor = reactive({
+  colorPalettes: defaultColorPalettes,
+  shadowColor: getAlphaColor(defaultColorPalettes[0])
+})
 /**
  * 获取组件主题（颜色调色板 + 阴影色）
  *
  * 优先命中 `ConfigProvider` 注入的 `components[key]` 覆盖，未命中（或未注入）时回退 `common`，
  * 再回退到内置默认调色板。
  *
+ * 取值来源经 `computed` 选择，而非在 `setup` 阶段固化为某个 ref：`ConfigProvider` 运行期新增/移除
+ * 某组件的覆盖后，已挂载组件需即时切换来源，固化会带来「新增覆盖不生效、移除覆盖不撤销」。
+ *
  * 组件库内部使用：`key` 为本库组件名（如 `'Button'`）；因依赖内部注入协议（注入键名 + 以组件名为
  * 分键的表结构），不对外导出、不承诺 API 稳定性。
  *
  * @param key - 组件名，用于在注入表中查找该组件的主题覆盖
- * @returns 颜色调色板与阴影色的 ref
+ * @returns 颜色调色板与阴影色的只读 ref（随 `ConfigProvider` 的主题变化自动更新）
  */
-export function useInject(key: string): { colorPalettes: Ref<string[]>; shadowColor: Ref<string> } {
-  // 获取默认的颜色调色板
-  const colorPalettes = getColorPalettes('#1677ff')
-  // 获取 common 的依赖注入
-  const commonInjectValue = inject('common', reactive({ colorPalettes, shadowColor: getAlphaColor(colorPalettes[0]) }))
+export function useInject(key: string): { colorPalettes: ComputedRef<string[]>; shadowColor: ComputedRef<string> } {
+  // 获取 common 的依赖注入（未提供时回退模块级默认主题）
+  const commonInjectValue = inject('common', defaultThemeColor)
   // 获取组件的依赖注入
   const componentsInjectValue = inject('components', null) as Record<
     string,
     { colorPalettes: string[]; shadowColor: string }
   > | null
-  if (
-    componentsInjectValue !== null &&
-    key in componentsInjectValue &&
-    componentsInjectValue[key].colorPalettes.length
-  ) {
-    return toRefs(componentsInjectValue[key])
+  // 该组件的独立覆盖：色阶非空即视为 `ConfigProvider` 已写入 —— 空数组是它的「未配置」初始态，
+  // 覆盖被移除时 `ConfigProvider` 会复位到此态。须在每个 computed 内读取以建立各自依赖。
+  function ownOverride(): { colorPalettes: string[]; shadowColor: string } | null {
+    const themeColor = componentsInjectValue?.[key]
+    return themeColor && themeColor.colorPalettes.length ? themeColor : null
   }
-  return toRefs(commonInjectValue)
+  return {
+    colorPalettes: computed(() => ownOverride()?.colorPalettes ?? commonInjectValue.colorPalettes),
+    shadowColor: computed(() => ownOverride()?.shadowColor ?? commonInjectValue.shadowColor)
+  }
 }
 /**
  * 沿组件实例链查找注入值所需的最小字段

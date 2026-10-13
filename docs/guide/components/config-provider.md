@@ -27,6 +27,24 @@ const theme = computed<ConfigProviderTheme>(() => ({
     primaryColor: buttonPrimaryColor.value
   }
 }))
+const overrideEnabled = ref<boolean>(false)
+// 运行期切换用的两个主题预设：不含组件级覆盖 / 含 Button 覆盖
+const themeWithoutOverride: ConfigProviderTheme = {
+  common: {
+    primaryColor: '#1677ff'
+  }
+}
+const themeWithOverride: ConfigProviderTheme = {
+  common: {
+    primaryColor: '#1677ff'
+  },
+  Button: {
+    primaryColor: '#18a058'
+  }
+}
+const overrideTheme = computed<ConfigProviderTheme>(() =>
+  overrideEnabled.value ? themeWithOverride : themeWithoutOverride
+)
 const checkboxChecked = ref<boolean>(false)
 const cardDate = ref<number>(Date.now())
 const dateValue = ref<string>(format(new Date(), 'yyyy-MM-dd'))
@@ -815,6 +833,68 @@ const theme = computed<ConfigProviderTheme>(() => ({
 
 :::
 
+## 运行期切换组件级主题
+
+_`theme` 支持运行期增删组件键：切换预设后，已挂载组件的取色来源即时切换（关闭覆盖即回退 `common`）_
+
+<br/>
+
+<Flex vertical>
+  <Space align="center">
+    <Switch v-model:value="overrideEnabled" />
+    <span>启用 Button 组件级主题覆盖</span>
+  </Space>
+  <ConfigProvider :theme="overrideTheme">
+    <Space align="center">
+      <Alert style="width: 200px" message="Info Text" type="info" show-icon />
+      <Button type="primary">Primary Button</Button>
+    </Space>
+  </ConfigProvider>
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import type { ConfigProviderTheme } from 'vue-amazing-ui'
+const overrideEnabled = ref<boolean>(false)
+// 运行期切换用的两个主题预设：不含组件级覆盖 / 含 Button 覆盖
+const themeWithoutOverride: ConfigProviderTheme = {
+  common: {
+    primaryColor: '#1677ff'
+  }
+}
+const themeWithOverride: ConfigProviderTheme = {
+  common: {
+    primaryColor: '#1677ff'
+  },
+  Button: {
+    primaryColor: '#18a058'
+  }
+}
+const overrideTheme = computed<ConfigProviderTheme>(() =>
+  overrideEnabled.value ? themeWithOverride : themeWithoutOverride
+)
+</script>
+<template>
+  <Flex vertical>
+    <Space align="center">
+      <Switch v-model:value="overrideEnabled" />
+      <span>启用 Button 组件级主题覆盖</span>
+    </Space>
+    <ConfigProvider :theme="overrideTheme">
+      <Space align="center">
+        <Alert style="width: 200px" message="Info Text" type="info" show-icon />
+        <Button type="primary">Primary Button</Button>
+      </Space>
+    </ConfigProvider>
+  </Flex>
+</template>
+```
+
+:::
+
 ## 链接颜色跟随主题
 
 <br/>
@@ -1097,6 +1177,8 @@ const selectOptions: SelectOption[] = [
 | :------------------------------------ | :------------------------------- | :--------------------- | :-------- |
 | common?                              | 全局通用配置，优先级低于组件配置 | [Config](#config-type) | undefined |
 | [ComponentName?](#componentname-type) | 组件自定义配置                  | [Config](#config-type) | undefined |
+
+> `theme` 支持整体替换、就地改写主色与运行期增删组件键，详见[定制主题](/guide/customize-theme.html)；未登记的组件键会被忽略，并在开发环境输出告警。
 
 ### Config Type
 

@@ -8,30 +8,30 @@
 
 ## 动态切换主题
 
-_配置的全局主题色会注入后代组件，如果要动态切换主题色，只需要修改 `theme` 对象即可_
+_配置的全局主题色会注入后代组件；切换主题色只需修改主色字段（整体替换 `theme` 对象、就地改写其内的主色、运行期增删组件键均可），推荐用 `computed` 派生_
 
 ```vue
 <!-- App.vue -->
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { ConfigProviderTheme } from 'vue-amazing-ui'
-const theme = ref<ConfigProviderTheme>({
+const primaryColor = ref<string>('#ff6900')
+const theme = computed<ConfigProviderTheme>(() => ({
   common: {
-    primaryColor: '#ff6900'
+    primaryColor: primaryColor.value
   }
-})
+}))
 </script>
 <template>
   <ConfigProvider :theme="theme">
     <RouterView />
   </ConfigProvider>
 </template>
-
 ```
 
 ## 定制组件主题
 
-_组件主题配置方法同全局主题配置方法，并且组件主题色会覆盖全局主题色_
+_组件主题配置方法同全局主题配置方法，键名为组件名（`PascalCase`），组件主题色会覆盖 `common` 全局主题色；未单独配置的组件沿用 `common`，`common` 未配置时回退内置默认色阶_
 
 ```vue
 <!-- App.vue -->
@@ -55,8 +55,9 @@ const theme = ref<ConfigProviderTheme>({
     <RouterView />
   </ConfigProvider>
 </template>
-
 ```
+
+主题配置目前仅支持 `primaryColor` 一个字段
 
 ## 字体
 
@@ -75,3 +76,4 @@ body {
 - 字号：组件内部字号由组件自身声明（正文基准 14px），**不随宿主 `font-size` 变化**；由使用者传入文本、且组件未为其提供视觉规格的内容型组件（如 `Ellipsis`）按设计跟随上下文。
 - 浮层（下拉面板 / 提示 / 弹窗等）：库不声明字体族，而浮层内容会 `Teleport` 到 `body` 从而脱离页面继承链，故浮层会自动承接**触发位置的字体族**（字号仍由组件自身声明）。若需浮层使用特定字体，把 `font-family` 声明在触发元素所在的祖先容器上即可。
 - 字体不走 `ConfigProvider` 主题（该通道只承载颜色）：如需按区域分别设置，用宿主 CSS 作用域即可。
+
