@@ -1,0 +1,200 @@
+<script setup lang="ts">
+import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
+import Scrollbar from 'components/scrollbar'
+import type { PickerTimeUnit } from './types'
+export interface TimeUnitColumnProps {
+  units?: PickerTimeUnit[] // 该列的候选项
+  value?: number | null // 当前选中项（空值时不选中任何项，且保持当前滚动位置）
+  hideDisabledOptions?: boolean // 是否隐藏禁用项
+  active?: boolean // 面板是否展开：展开时把选中项滚到列顶部
+  columnActive?: boolean // 是否为键盘操作当前所在的列（该列加底色以示目标）
+}
+const props = withDefaults(defineProps<TimeUnitColumnProps>(), {
+  units: () => [],
+  value: null,
+  hideDisabledOptions: false,
+  active: false,
+  columnActive: false
+})
+const emits = defineEmits<{
+  select: [value: number]
+}>()
+/** 选中项滚到列顶部的动画时长 */
+const SCROLL_DURATION = 120
+/** 面板展开后等待可见的最大帧数（浮层首帧可能仍在 display: none） */
+const MAX_VISIBLE_FRAMES = 20
+const columnRef = ref<HTMLElement | null>(null)
+const cellRefs = new Map<number, HTMLElement>()
+let frameId = 0
+function setCellRef(value: number, element: Element | ComponentPublicInstance | null): void {
+  if (element instanceof HTMLElement) {
+    cellRefs.set(value, element)
+    return
+  }
+  cellRefs.delete(value)
+}
+/**
+ * 列的滚动容器：滚动量写入与滚动条轨道都由 Scrollbar 组件作用在它上面
+ *
+ * 取组件内部容器的方式与 `Select` 面板一致（Scrollbar 未对外暴露元素引用，只暴露 scrollTo 等命令）。
+ */
+function getScroller(): HTMLElement | null {
+  return columnRef.value?.querySelector<HTMLElement>('.scrollbar-container') ?? null
+}
+/** 列是否可见：隐藏时（display: none）取不到客户端矩形，元素偏移也不可信 */
+function isColumnVisible(): boolean {
+  return (getScroller()?.getClientRects().length ?? 0) > 0
+}
+function scrollToOffset(to: number, duration: number): void {
+  const scroller = getScroller()
+  if (!scroller) return
+  cancelAnimationFrame(frameId)
+  if (duration <= 0) {
+    scroller.scrollTop = to
+    return
+  }
+  // 每帧移动「剩余距离 ÷ 剩余时长 × 10」并递减剩余时长，收尾自动吸附到目标
+  const step = (remaining: number) => {
+    const difference = to - scroller.scrollTop
+    if (Math.abs(difference) < 1 || remaining <= 0) {
+      scroller.scrollTop = to
+      return
+    }
+    scroller.scrollTop += (difference / remaining) * 10
+    frameId = requestAnimationFrame(() => step(remaining - 10))
+  }
+  frameId = requestAnimationFrame(() => step(duration))
+}
+/**
+ * 把选中项滚到列顶部（无选中项或列不可见时保持原位）
+ *
+ * 偏移量取选中项的 `offsetTop`：样式里已让滚动容器成为列的定位祖先（`position: relative`），
+ * 该值即「距滚动容器的偏移」。不可改用矩形差——浮层入场 / 收起期间面板带 `scaleY` 变换，
+ * 矩形差会被同比缩放，量出的滚动量偏小（实测入场中 448 被量成 358）。
+ */
+function scrollToSelected(duration: number): void {
+  if (!isColumnVisible()) return
+  // 空值只清掉选中态、不动滚动位置：范围形态切换激活段时对端常为空值，回到列顶会让面板「看着被重置」，
+  // 而列在面板收起后仍保留原滚动位置（同参照实现：空值段沿用上一次选择的列位置）
+  if (props.value === null) return
+  const target = cellRefs.get(props.value)
+  if (!target) return
+  scrollToOffset(target.offsetTop, duration)
+}
+function scrollToSelectedWhenVisible(attempt: number = 0): void {
+  if (isColumnVisible() || attempt >= MAX_VISIBLE_FRAMES) {
+    scrollToSelected(0)
+    return
+  }
+  frameId = requestAnimationFrame(() => scrollToSelectedWhenVisible(attempt + 1))
+}
+watch(
+  () => props.value,
+  () => scrollToSelected(SCROLL_DURATION)
+)
+watch(
+  () => props.active,
+  (active) => {
+    if (!active) return
+    // 展开首帧面板可能尚未可见，须等渲染完成后再量取元素位置
+    nextTick(() => scrollToSelectedWhenVisible())
+  },
+  { immediate: true, flush: 'post' }
+)
+onBeforeUnmount(() => cancelAnimationFrame(frameId))
+function onCellClick(unit: PickerTimeUnit): void {
+  if (unit.disabled) return
+  emits('select', unit.value)
+}
+</script>
+<template>
+  <div ref="columnRef" class="picker-time-column" :class="{ 'picker-time-column-active': columnActive }">
+    <Scrollbar>
+      <ul class="picker-time-list" role="listbox">
+        <template v-for="unit in units" :key="unit.value">
+          <li
+            v-if="!(hideDisabledOptions && unit.disabled)"
+            :ref="(element) => setCellRef(unit.value, element)"
+            class="picker-time-cell"
+            :class="{
+              'picker-time-cell-selected': unit.value === value,
+              'picker-time-cell-disabled': unit.disabled
+            }"
+            role="option"
+            :aria-selected="unit.value === value"
+            :aria-disabled="unit.disabled"
+            @click="onCellClick(unit)"
+          >
+            <div class="picker-time-cell-inner">{{ unit.label }}</div>
+          </li>
+        </template>
+      </ul>
+    </Scrollbar>
+  </div>
+</template>
+<style lang="less" scoped>
+.picker-time-column {
+  flex: 1 0 auto;
+  width: 56px;
+  // 上下留白在滚动容器之外，列高因此等于内容高减 8px
+  margin: 4px 0;
+  // 让 Scrollbar 的滚动容器成为列的定位祖先：候选项的 offsetTop 才是「距滚动容器的偏移」
+  :deep(.scrollbar-container) {
+    position: relative;
+  }
+  &:not(:first-child) {
+    border-left: 1px solid rgba(5, 5, 5, 0.06);
+  }
+  // 键盘操作当前所在的列：加一层主色底纹标示目标（透明度随主题色）
+  &.picker-time-column-active {
+    background: var(--picker-time-column-active-bg, rgba(230, 244, 255, 0.2));
+  }
+  .picker-time-list {
+    margin: 0;
+    padding: 0;
+    text-align: start;
+    list-style: none;
+    transition: background 0.2s;
+    // 尾随占位：留出「把最后几项滚到列顶部」的滚动量，缺了它末几项永远到不了顶。
+    // 取值 = 列可视高 - 格高。两种形态共用同一口径、列的视高各不相同：日期时间形态的列被日期列撑到
+    // 232px（→ 204px），独立时间选择器形态为 216px（→ 188px，由组件壳层以
+    // `--picker-time-column-trailing-height` 覆盖）。取值偏大会把末项顶出视口（滚到底只剩残边、
+    // 末项悬浮不到），偏小则末几项滚不到顶，故按形态分别给定
+    &::after {
+      display: block;
+      height: var(--picker-time-column-trailing-height, 204px);
+      content: '';
+    }
+  }
+  .picker-time-cell {
+    margin: 0 4px;
+    padding: 0;
+    .picker-time-cell-inner {
+      display: block;
+      width: 48px;
+      height: 28px;
+      padding-left: 14px;
+      color: rgba(0, 0, 0, 0.88);
+      line-height: 28px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+      &:hover {
+        background: rgba(0, 0, 0, 0.04);
+      }
+    }
+    &.picker-time-cell-selected .picker-time-cell-inner {
+      background: var(--picker-primary-color-bg, #e6f4ff);
+    }
+    &.picker-time-cell-disabled {
+      pointer-events: none;
+      .picker-time-cell-inner {
+        color: rgba(0, 0, 0, 0.25);
+        background: transparent;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+</style>

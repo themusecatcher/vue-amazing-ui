@@ -10,6 +10,34 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-13">2.14.0</VersionDateTag>
+
+- 新增 [时间选择器 TimePicker](/guide/components/time-picker.html) 组件：时分秒三列滚动面板（列滚动吸附 / 键盘导航 / 主题），面板内的选择只落在草稿值上、点「确定」才提交并收起，收起则丢弃未确认的选择；支持 `use12Hours` 12 小时制（追加上午 / 下午列）、`hourStep` / `minuteStep` / `secondStep` 步长、`hideDisabledOptions` 隐藏禁用项、`disabledTime` 按单位禁用时间、`showNow` 「此刻」快捷（取当前时刻并按步长向下取整后提交），以及 `format` / `valueFormat` 控制面板列显隐与绑定值格式；双向绑定为 `v-model:value`（毫秒时间戳）与 `v-model:formatted-value`（字符串轨道）双轨；`type` 为 `timerange` 时切换为范围形态（两段输入共用同一个时间面板，点「确定」提交当前段并自动切到另一端，`allowEmpty` 可放行单段区间，`disabledTime` 按段禁用，面板指示箭头随激活段平移）；面板底部支持 `renderExtraFooter` 额外页脚，选择框支持 `suffixIcon` 自定义后缀图标，范围形态两段之间支持 `separator` 自定义分隔符
+- 重构 [日期选择器 DatePicker](/guide/components/date-picker.html) 为自研实现：不再依赖第三方日期选择库，改为内置选择器内核（日期面板 / 时间面板 / 触发器 / 浮层 / 主题），产物不再包含该库的脚本与样式
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 破坏性变更：双向绑定由 `v-model` 改为 `v-model:value`（值为毫秒时间戳，回写事件 `update:value`），并新增 `v-model:formatted-value`（字符串轨道，传入时以它为准）与 `v-model:open`；`modelType` 移除，改用 `valueFormat`（采用 `date-fns` 占位符，如 `yyyy-MM-dd HH:mm:ss`）；`mode` 移除，改用 `type`（`date` / `datetime` / `week` / `month` / `quarter` / `year` 及各范围形态）；`range` 移除，范围形态由 `type` 承担；`showTime` 移除，时间形态由 `type="datetime"` 承担；`maxRange` 移除；`format` 不再支持函数形态；`showToday` 默认值由 `false` 改为 `true`，`width` 不传时随内容自适应
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="datetime"` 日期时间形态：日期与时间面板并列展示，展开期间的选择只落在草稿值上，点「确定」或「此刻」才提交，关闭面板则丢弃草稿；同时新增 `timePickerProps`（时间面板步长 / 12 小时制 / 隐藏禁用项）、`disabledTime`、`defaultTime`、`showNow`、`inputReadOnly`、`panelClass`、`panelStyle`、`zIndex` 等属性与 `ok` / `openChange` / `panelChange` / `focus` / `blur` 事件
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="daterange"` 范围形态：左右两个日期面板并排、双段输入与区间悬浮预览，值为两段毫秒时间戳（某段可为 `null`，由 `allowEmpty` 决定该段是否可单独对外提交），并新增 `calendarChange` 事件、`showArrow` 属性与 `separator` 插槽
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="datetimerange"` 日期时间范围形态与 `presets` 预设范围属性：前者两段共用一个日期时间面板，点「确定」提交当前段并自动切到另一端，两段都确定后才收起；后者支持单选 / 日期范围 / 日期时间范围三种预设，点击即填入并收起，预设值可为时间戳或返回时间戳的函数；范围形态下 `disabledTime` 额外接收段标识（`side`）
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="month"` / `"quarter"` / `"year"` 月、季、年形态：展开即落在对应层级，点格即提交；面板头部的年份按钮可在年 / 月 / 季之间切换视图，切换期间只平移视图、不提交
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="monthrange"` / `"quarterrange"` / `"yearrange"` 月、季、年范围形态：两个面板恒相差一格（月 / 季相差一年、年相差十年），切换视图时收成单面板并在选完年份后回到双面板；`disabledDate` 在月 / 季 / 年形态下按整段判定（整段都不可选该格才禁用）；季度默认展示格式为 `yyyy-QQQ`（如 `2026-Q4`）
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `type="week"` / `"weekrange"` 周与周范围形态：日期面板每行前置周序号，选中周整行高亮；周范围按周粒度渲染区间端点与内部底色（跨月的一周会在左右两块面板各出现一次 —— 端点只在承载该端点日期的面板上实心，另一块里的同周行并入区间内部；区间内部底色只落在展示月内的日期格上，跨月补齐日与周序号格不着色，与日期范围的格口径一致，避免同一周在两块面板各亮起一块色带）。周形态采用 ISO 周口径（周一起始，默认展示格式 `RRRR-II周`，如 `2026-41周`），`startDayOfWeek` 对周形态不生效
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 年形态面板头部的十年区间改为下钻入口：点开为十年面板（世纪区间 + 12 格，窗外的相邻十年灰显），点格只平移视图并回到年面板，不提交值
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `dateRender` 属性与同名插槽：自定义日期单元格的内容与样式（入参 `current` 为该格日期的零点时间戳、`today` 为当前时刻时间戳），内容渲染在单元格内层，选中 / 悬浮 / 区间底色与今天标记不受影响
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `renderExtraFooter` 属性与同名插槽：在面板底部追加额外内容，渲染在「今天」「确定」等操作行之上；没有操作行的形态（月 / 季 / 年面板、日期 / 周 / 月 / 季 / 年范围）由额外页脚独占页脚区
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增面板键盘导航：面板展开后按 `Tab` 把键盘交给面板（焦点留在输入框），方向键按当前面板层级的粒度移动光标（日期 / 周面板为一天与一周、月面板为三个月、季面板为一个季度与一年、年面板为一年与三年、十年面板为十年与三十年），`Ctrl`（macOS 为 `Cmd`）加左右键跨更大单位，`PageUp` / `PageDown` 按月翻页，`Enter` 提交；键盘移动只改变光标与草稿、不落值，`Enter` 或「确定」才提交；面板未展开时按任意输入键即可唤起面板
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增带时间形态的键盘分区操作：`Tab` 在日期与时间两列之间循环切换，非活动列淡化；时间面板左右键切换活动列、上下键改当前列的值（自动跳过禁用项）
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增无障碍语义：日期 / 周 / 月 / 季 / 年 / 十年各面板的表格声明 `role="grid"`，单元格标注 `aria-selected` 与 `aria-disabled`；时间面板的列声明 `role="listbox"`、候选项声明 `role="option"`
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 的 `disabled` 支持两段元组（`[boolean, boolean]`）：范围形态可逐段禁用起点 / 终点，被禁用的段不可输入且整体不置灰，该段可选日期同时被对端的值锁死（如禁用起点后，终点的可选范围仍不早于起点的值）
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 的 `defaultTime` 支持按段指定：范围形态可传两段元组（某段为 `undefined` 时该段退回当前时刻），如起点 `00:00:00`、终点 `23:59:59`；空值展开面板时时间列与头部留空、不预选，选中日期时的时分秒取该段默认时刻（未设置则取当前时刻）
+- 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 时间面板选中项的底色取错了主题变量名，导致该底色恒为固定浅蓝、不随主题色变化的问题
+- 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 在 `format` / `valueFormat` 传入非法占位符组合（如 `yyyy-ww`）时解析抛错、导致组件渲染与输入提交中断的问题
+- 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 范围形态下悬浮跨月补齐日期（面板上属于相邻月份的日期格）时没有悬浮底色的问题：现在与展示月内的日期格同口径，悬浮即显底色
+- 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 周形态的整行样式问题：周序号改用与日期格一致的纯白；行高亮的两端补上圆角（悬浮与选中周 / 区间端点周同口径，区间内部与预览周仍保持方角以拼成连续色带）；悬浮已带底色的行（选中周 / 区间端点 / 区间内部 / 预览周）时底色不再被普通悬浮底色冲淡
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 优化范围形态的区间悬浮预览：预览端与已选端重合时，区间虚线收到端点实心块以内，不再穿过实心块并在块外露出生硬断点（日期 / 月 / 季 / 年各形态口径一致）
+- 移除 `@vuepic/vue-datepicker` 依赖
+- 全局默认样式的字体口径调整：库不再在 `body` 上声明字体族，字体归宿主（「谁提供字体谁声明」），组件与插槽内容一律继承宿主页面字体；原生表单控件因浏览器 `UA` 样式不继承页面字体，统一由 `input` / `textarea` / `select` / `button` 的 `font-family: inherit` 兜底
+- 浮层字体承接：库不声明字体族，浮层 `Teleport` 到 `body` 后会脱离页面字体继承链，现由浮层宿主自动承接**触发位置的字体族**（只承接字体族，字号仍由组件声明），修复宿主把字体声明在非 `body` 容器时浮层字体与页面不一致的问题
+- 字体口径收口：[倒计时 Countdown](/guide/components/countdown.html) 的数字等宽改用 `font-variant-numeric: tabular-nums` 而非写死字体族；[文字省略 Ellipsis](/guide/components/ellipsis.html) 的内容显式声明 `font-size: inherit`；原生表单控件的字体兜底规则改用 `:where()` 包裹（特异性降为 `0`），宿主任意同名规则均可覆盖，不再受样式加载顺序影响；组件内部样式变量统一添加**组件名前缀**（覆盖 9 个组件 / 23 个变量，如 `--border-color` → `--divider-border-color`、`--align` → `--flex-align`、`--font-size` → `--gradient-text-font-size`），避免与其它组件或宿主页面的同名变量相互污染；如曾用这些内部变量做过外部覆盖，请同步改名
 ## <VersionDateTag date="2026-10-13">2.13.2</VersionDateTag>
 
 - 修复 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 组件级主题：运行期增删组件键即时生效（新增覆盖生效、移除覆盖回退 `common`），`theme` 中的非本库组件键改为忽略并告警
@@ -1015,5 +1043,4 @@
 - 新增 漫游式引导 Tour 组件
 <!-- - 更新 表格 Table 组件，新增虚拟滚动功能
 - 时间轴 Timeline 组件，新增水平时间轴
-- 新增 时间选择器 TimePicker 组件
 - 重构级联选择 Cascader 组件 -->

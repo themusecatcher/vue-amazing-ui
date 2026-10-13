@@ -56,9 +56,9 @@ const gapValue = computed(() => {
       width: ${flexWidth};
       gap: ${gapValue};
       margin-bottom: -${Array.isArray(props.gap) && wrap ? props.gap[1] : 0}px;
-      --wrap: ${wrap};
-      --justify: ${justify};
-      --align: ${align};
+      --flex-wrap: ${wrap};
+      --flex-justify: ${justify};
+      --flex-align: ${align};
     `"
   >
     <slot></slot>
@@ -67,9 +67,9 @@ const gapValue = computed(() => {
 <style lang="less" scoped>
 .flex-wrap {
   display: flex;
-  flex-wrap: var(--wrap);
-  justify-content: var(--justify);
-  align-items: var(--align);
+  flex-wrap: var(--flex-wrap);
+  justify-content: var(--flex-justify);
+  align-items: var(--flex-align);
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);
   transition: all 0.3s;

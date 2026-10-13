@@ -425,7 +425,7 @@ _水平的顶部导航菜单_
 
 <Menu v-model:selectedKeys="horizontalSelected" mode="horizontal" :items="horizontalItems" />
 
-::::: details Show Code
+:::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -458,7 +458,7 @@ const horizontalItems: ItemType[] = [
 </template>
 ```
 
-:::::
+::::
 
 ## 内嵌菜单
 
@@ -474,7 +474,7 @@ _子菜单内嵌在菜单区域内，可逐级展开_
   :items="inlineItems"
 />
 
-::::: details Show Code
+:::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -518,7 +518,7 @@ const inlineItems: ItemType[] = [
 </template>
 ```
 
-:::::
+::::
 
 ## 垂直菜单
 
@@ -534,7 +534,7 @@ _子菜单以弹出形式展示，支持多级嵌套_
   :items="verticalItems"
 />
 
-::::: details Show Code
+:::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -591,7 +591,7 @@ const verticalItems: ItemType[] = [
 </template>
 ```
 
-:::::
+::::
 
 ## 切换菜单类型
 
@@ -611,7 +611,7 @@ _动态切换菜单模式与主题_
   :items="switchItems"
 />
 
-::::: details Show Code
+:::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -657,7 +657,7 @@ const switchItems: ItemType[] = [
 </template>
 ```
 
-:::::
+::::
 
 ## 子菜单展开触发与延时
 
@@ -677,7 +677,7 @@ _切换子菜单的展开触发方式；`hover` 触发时，`subMenuOpenDelay` /
   :items="triggerDelayItems"
 />
 
-:::::: details Show Code
+::::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -717,7 +717,7 @@ const triggerDelayItems: ItemType[] = [
 </template>
 ```
 
-::::::
+:::::
 
 ## 自定义缩进
 
@@ -741,7 +741,7 @@ _`inline` 模式下 `inlineIndent` 决定每一级菜单项的缩进宽度，左
   />
 </Flex>
 
-:::::: details Show Code
+::::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -776,7 +776,7 @@ const indentItems: ItemType[] = [
 </template>
 ```
 
-::::::
+:::::
 
 ## 缩起内嵌菜单
 
@@ -797,7 +797,7 @@ _收起时只显示图标，子菜单以浮层展示，悬浮菜单项可查看�
   />
 </Space>
 
-::::: details Show Code
+:::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -871,7 +871,7 @@ const collapsedItems: ItemType[] = [
 </template>
 ```
 
-:::::
+::::
 
 ## 收起态长标题提示
 
@@ -890,7 +890,7 @@ _提示取 `title`，长标题会让提示折成多行（面板高于菜单项�
   />
 </div>
 
-::::: details Show Code
+:::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -945,7 +945,7 @@ const longTitleItems: ItemType[] = [
 </template>
 ```
 
-:::::
+::::
 
 ## 只展开当前父级菜单
 
@@ -962,7 +962,7 @@ _点击菜单时收起其他已展开的菜单，保持菜单聚焦简洁_
   @open-change="onParentOpenChange"
 />
 
-::::: details Show Code
+:::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1017,7 +1017,7 @@ function onParentOpenChange(openKeys: MenuKey[]) {
 </template>
 ```
 
-:::::
+::::
 
 ## 多选
 
@@ -1027,7 +1027,7 @@ _通过 `multiple` 允许多选，再次点击已选中项会触发取消选中_
 
 <Menu v-model:selectedKeys="multipleSelected" style="width: 256px" mode="inline" multiple :items="multipleItems" />
 
-::::: details Show Code
+:::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1054,7 +1054,7 @@ const multipleItems: ItemType[] = [
 </template>
 ```
 
-:::::
+::::
 
 ## 禁用
 
@@ -1071,7 +1071,7 @@ _通过 `disabled` 禁用整个菜单；菜单项自身的 `disabled` 只禁用�
   :items="disabledItems"
 />
 
-::::: details Show Code
+:::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1099,7 +1099,7 @@ const disabledItems: ItemType[] = [
 </template>
 ```
 
-:::::
+::::
 
 ## 空数据
 
@@ -1109,7 +1109,7 @@ _菜单内容为空时渲染空列表，不报错也不残留占位_
 
 <Menu style="width: 256px" mode="inline" :items="emptyItems" />
 
-::::: details Show Code
+:::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1122,7 +1122,7 @@ const emptyItems: ItemType[] = []
 </template>
 ```
 
-:::::
+::::
 
 ## 自定义展开图标
 
@@ -1150,7 +1150,7 @@ _通过 `expandIcon` 属性或同名插槽自定义子菜单的展开收起图�
   :expand-icon="expandIconByProp"
 />
 
-::::: details Show Code
+:::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1207,7 +1207,7 @@ const expandIconPropOpenKeys = ref<MenuKey[]>(['sub1'])
 </style>
 ```
 
-:::::
+::::
 
 ## 组件式用法
 
@@ -1243,7 +1243,7 @@ _以 `MenuItem` / `MenuSubMenu` / `MenuItemGroup` / `MenuDivider` 子组件描�
   <MenuItem key="8" disabled>Option 8</MenuItem>
 </Menu>
 
-:::::: details Show Code
+::::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1286,7 +1286,7 @@ const componentOpenKeys = ref<MenuKey[]>(['sub2'])
 </template>
 ```
 
-::::::
+:::::
 
 ## 组件式自定义展开图标
 
@@ -1321,7 +1321,7 @@ _子菜单的 `expandIcon` 插槽优先于 `Menu` 的同名插槽，未提供时
   </MenuSubMenu>
 </Menu>
 
-:::::: details Show Code
+::::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1389,7 +1389,7 @@ const componentExpandIconOpenKeys = ref<MenuKey[]>(['sub1'])
 </style>
 ```
 
-::::::
+:::::
 
 ## 水平溢出指示器
 
@@ -1405,7 +1405,7 @@ _水平空间不足时，放不下的菜单项会收进省略子菜单；其指�
   </Menu>
 </div>
 
-:::::: details Show Code
+::::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1438,7 +1438,7 @@ const overflowItems: ItemType[] = [
 </style>
 ```
 
-::::::
+:::::
 
 ## 子菜单预渲染
 
@@ -1454,7 +1454,7 @@ _开启 `forceSubMenuRender` 后，子菜单面板在首次展开前就已渲染
   :items="forceRenderItems"
 />
 
-:::::: details Show Code
+::::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1498,7 +1498,7 @@ const forceRenderItems: ItemType[] = [
 </template>
 ```
 
-::::::
+:::::
 
 ## 主题
 
@@ -1516,7 +1516,7 @@ _内建 `light` 与 `dark` 两套主题，默认为 `light`_
   :items="themeItems"
 />
 
-::::: details Show Code
+:::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1576,7 +1576,7 @@ const themeItems: ItemType[] = [
 </template>
 ```
 
-:::::
+::::
 
 ## 子菜单主题
 
@@ -1594,7 +1594,7 @@ _通过子菜单的 `theme` 属性设置其主题，可实现根目录深色、�
   :items="submenuItems"
 />
 
-::::: details Show Code
+:::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1635,7 +1635,7 @@ const submenuItems = computed<ItemType[]>(() => [
 </template>
 ```
 
-:::::
+::::
 
 ## APIs
 

@@ -17,7 +17,7 @@
 ## 特性
 
 - 组件库采用 `Vue@3.5.42` + `TypeScript@5.9.3` + `Vite@7.3.1` + `Less@4.5.1` 实现
-- 目前共包含 `72` 个基础 `UI` 组件以及 `22` 个工具函数，并且持续探索更新中...
+- 目前共包含 `73` 个基础 `UI` 组件以及 `22` 个工具函数，并且持续探索更新中...
 - 主题可调，你只需提供一个主题色，剩下的都交给我
 - 顺便一提，它们全都可以 `treeshaking`
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
@@ -255,11 +255,12 @@ pnpm docs:dev
 | Countdown       | 倒计时     | Notification    | 通知提醒   | Textarea        | 文本域     |
 | DatePicker      | 日期选择器 | NumberAnimation | 数值动画   | TextScroll      | 文字滚动   |
 | Descriptions    | 描述列表   | Pagination      | 分页       | Timeline        | 时间轴     |
-| Dialog          | 对话框     | Popconfirm      | 弹出确认   | Tooltip         | 文字提示   |
-| Divider         | 分割线     | Popover         | 气泡卡片   | Upload          | 上传       |
-| Drawer          | 抽屉       | Progress        | 进度条     | Video           | 播放器     |
-| Dropdown        | 下拉菜单   | QRCode          | 二维码     | Waterfall       | 瀑布流     |
-| Ellipsis        | 文本省略   | Radio           | 单选框     | Watermark       | 水印       |
+| Dialog          | 对话框     | Popconfirm      | 弹出确认   | TimePicker      | 时间选择器 |
+| Divider         | 分割线     | Popover         | 气泡卡片   | Tooltip         | 文字提示   |
+| Drawer          | 抽屉       | Progress        | 进度条     | Upload          | 上传       |
+| Dropdown        | 下拉菜单   | QRCode          | 二维码     | Video           | 播放器     |
+| Ellipsis        | 文本省略   | Radio           | 单选框     | Waterfall       | 瀑布流     |
+|                 |            |                 |            | Watermark       | 水印       |
 
 ## 工具函数
 

@@ -14,13 +14,18 @@ _锁定页面滚动并补偿滚动条宽度、防止页面横向抖动的工具�
 let bodyLockCount = 0
 // 首个锁设置前 documentElement / body 的原内联样式，归零释放时精确还原，避免误删调用方预设
 let prevHtmlOverflowY = ''
+let prevHtmlScrollbarGutter = ''
 let prevBodyOverflowY = ''
 let prevBodyPaddingRight = ''
 /**
  * 锁定页面滚动，并返回本次锁定的释放函数
  *
- * 隐藏 html/body 的垂直滚动条，并补偿滚动条宽度到 body 的 padding-right，
- * 避免滚动条消失导致内容可用宽度突变、页面横向抖动。
+ * 隐藏 html/body 的垂直滚动条，同时保住滚动条原本占用的布局宽度，避免可用宽度突变
+ * 导致背景页面与浮层横向抖动（Windows 经典滚动条场景尤其明显）。
+ * 优先用 `scrollbar-gutter: stable` 让槽位在滚动条隐藏后依然占位：视口宽度不变，
+ * `position: fixed` 元素（Modal / Dialog / Drawer 的遮罩、弹窗、抽屉）与普通流内容
+ * 都不会位移，可彻底消除抖动；槽位未被保留时（浏览器不支持 `scrollbar-gutter`）
+ * 回退为 body 的 `padding-right` 补偿，至少保证普通流内容宽度不变。
  * 需先测量滚动条宽度再隐藏滚动条（顺序不可颠倒，否则差值恒为 0）。
  *
  * 每个调用需与返回的释放函数严格配对；仅当所有来源均已释放时才会真正还原页面滚动，
@@ -37,13 +42,20 @@ export function lockScroll(): () => void {
   const body = document.body
   if (bodyLockCount === 0) {
     prevHtmlOverflowY = html.style.overflowY
+    prevHtmlScrollbarGutter = html.style.scrollbarGutter
     prevBodyOverflowY = body.style.overflowY
     prevBodyPaddingRight = body.style.paddingRight
     const scrollbarWidth = window.innerWidth - html.clientWidth
     html.style.overflowY = 'hidden'
     body.style.overflowY = 'hidden'
     if (scrollbarWidth > 0) {
-      body.style.paddingRight = `${scrollbarWidth}px`
+      // 先尝试保留滚动条槽位：保留成功后视口宽度不变，无需再做 padding 补偿
+      html.style.scrollbarGutter = 'stable'
+      if (window.innerWidth - html.clientWidth !== scrollbarWidth) {
+        // 槽位未被保留（浏览器不支持 scrollbar-gutter）：回退到 body 的 padding-right 补偿
+        html.style.scrollbarGutter = ''
+        body.style.paddingRight = `${scrollbarWidth}px`
+      }
     }
   }
   bodyLockCount += 1
@@ -56,6 +68,7 @@ export function lockScroll(): () => void {
     bodyLockCount -= 1
     if (bodyLockCount === 0) {
       html.style.overflowY = prevHtmlOverflowY
+      html.style.scrollbarGutter = prevHtmlScrollbarGutter
       body.style.overflowY = prevBodyOverflowY
       body.style.paddingRight = prevBodyPaddingRight
     }
@@ -200,7 +213,7 @@ _内部基于引用计数实现，可多入口并存；锁定时会补偿滚动�
 
 - **调用与释放严格配对**：每次调用 `lockScroll` 使全局计数加一，仅首个调用真正设置样式、最后一个释放时才真正还原页面。因此返回的释放函数必须与本次调用配对使用（重复调用无副作用）。
 - **多入口并存安全**：多个入口（如 `Modal` / `Dialog` / `Drawer` 及多 `Provider` 并存）各自锁定互不覆盖，任一入口提前释放也不会误还原其它入口仍持有的锁。
-- **滚动条宽度补偿**：为避免滚动条消失导致页面横向抖动，内部会先测量滚动条宽度（`window.innerWidth - document.documentElement.clientWidth`），再隐藏滚动条并等量补偿到 `body` 的 `padding-right`（顺序不可颠倒，否则差值恒为 `0`）；`macOS` 触控板默认的 `overlay` 滚动条不占布局宽度，此时宽度为 `0`，不会额外添加 `padding`。
+- **滚动条占位补偿**：为避免滚动条消失导致背景与浮层横向抖动，内部会先测量滚动条宽度（`window.innerWidth - document.documentElement.clientWidth`），再隐藏滚动条并用 `scrollbar-gutter: stable` 保留槽位——视口宽度不变，`position: fixed` 的遮罩 / 弹窗 / 抽屉与普通流内容都不会发生位移；浏览器未保留槽位时回退为等量补偿到 `body` 的 `padding-right`（顺序不可颠倒，否则差值恒为 `0`）；`macOS` 触控板默认的 `overlay` 滚动条不占布局宽度，此时宽度为 `0`，不会做任何补偿。
 
 ## Return
 

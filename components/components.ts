@@ -254,6 +254,9 @@ export { default as Textarea } from './textarea'
 export type { TextScrollProps, TextScrollItem } from './text-scroll'
 export { default as TextScroll } from './text-scroll'
 
+export type { TimePickerProps } from './time-picker'
+export { default as TimePicker } from './time-picker'
+
 export type { TimelineProps, TimelineItem } from './timeline'
 export { default as Timeline } from './timeline'
 

@@ -962,7 +962,7 @@ const linkPrimaryColor = ref<string>('#1677ff')
 </template>
 ```
 
-::::
+:::
 
 若需单独定制链接颜色，直接在自己的页面样式中覆盖即可（链接基座特异性为 `0`，任何链接规则都能覆盖它）：
 
@@ -1164,25 +1164,25 @@ const selectOptions: SelectOption[] = [
 
 ### ConfigProvider
 
-| 参数    | 说明    | 类型                                                        | 默认值 |
+| 参数 | 说明 | 类型 | 默认值 |
 | :------- | :------- | :----------------------------------------------------------- | :----- |
-| theme   | 主题对象 | [ConfigProviderTheme](#theme-type)                                        | {}     |
-| abstract | 是否不存在 `DOM` 包裹元素                                   | boolean | true   |
-| tag     | `ConfigProvider` 被渲染成的元素，`abstract` 为 `false` 时有效 | string  | 'div'  |
+| theme | 主题对象 | [ConfigProviderTheme](#theme-type) | {} |
+| abstract | 是否不存在 `DOM` 包裹元素 | boolean | true |
+| tag | `ConfigProvider` 被渲染成的元素，`abstract` 为 `false` 时有效 | string | 'div' |
 | baseZIndex | 浮层起始层级（`z-index`），传入后各浮层按「后出现者在上」自增分配；不传则各组件沿用自身默认层级 | number | undefined |
 
 ### Theme Type
 
-| 名称                                 | 说明                            | 类型                  | 默认值    |
+| 名称 | 说明 | 类型 | 默认值 |
 | :------------------------------------ | :------------------------------- | :--------------------- | :-------- |
-| common?                              | 全局通用配置，优先级低于组件配置 | [Config](#config-type) | undefined |
-| [ComponentName?](#componentname-type) | 组件自定义配置                  | [Config](#config-type) | undefined |
+| common? | 全局通用配置，优先级低于组件配置 | [Config](#config-type) | undefined |
+| [ComponentName?](#componentname-type) | 组件自定义配置 | [Config](#config-type) | undefined |
 
 > `theme` 支持整体替换、就地改写主色与运行期增删组件键，详见[定制主题](/guide/customize-theme.html)；未登记的组件键会被忽略，并在开发环境输出告警。
 
 ### Config Type
 
-| 名称         | 说明  | 类型  | 默认值    |
+| 名称 | 说明 | 类型 | 默认值 |
 | :------------ | :----- | :----- | :-------- |
 | primaryColor? | 主题色 | string | undefined |
 
@@ -1194,6 +1194,6 @@ const selectOptions: SelectOption[] = [
 
 ## Slots
 
-| 名称   | 说明 | 用法           |
+| 名称 | 说明 | 用法 |
 | :------ | :--- | :------------- |
 | default | 内容 | v-slot:default |

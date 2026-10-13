@@ -53,7 +53,7 @@
 ## 简要介绍
 
 - 组件库采用 `Vue@{{ getVersion('vue') }}` + `TypeScript@{{ getVersion('typescript') }}` + `Vite@{{ getVersion('vite') }}` + `Less@{{ getVersion('less') }}` 实现！
-- 目前共包含 `72` 个基础 `UI` 组件以及 `22` 个工具函数，并且持续探索更新中...
+- 目前共包含 `73` 个基础 `UI` 组件以及 `22` 个工具函数，并且持续探索更新中...
 - 主题可调，你只需提供一个主题色，剩下的都交给我
 - 顺便一提，它们全都可以 `treeshaking`
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
@@ -85,20 +85,13 @@ _每个组件的样式入口（如 `import 'vue-amazing-ui/es/button/style'`）�
   padding: 0;
 }
 body {
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
   -webkit-tap-highlight-color: transparent;
+}
+// 字体归位：库不在 body 上声明字体，字体由宿主决定（谁提供字体谁声明）；
+// 库只兜底原生表单控件 —— 它们的字体不受继承影响（UA 样式强制 Arial / monospace 等），必须显式 inherit；
+// 用 :where() 包裹使特异性为 0，使用方任意同名规则均可覆盖（不受样式加载顺序影响）
+:where(input, textarea, select, button) {
+  font-family: inherit;
 }
 :where(a) {
   color: var(--va-link-color, #1677ff);

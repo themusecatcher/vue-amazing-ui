@@ -1,0 +1,332 @@
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue'
+import type { VNode } from 'vue'
+import DatePanel from './DatePanel.vue'
+import DatetimePanel from './DatetimePanel.vue'
+import PickerPanel from './PickerPanel.vue'
+import { getClosingViewTimestamp, getDefaultTime } from './date-utils'
+import type { StartDayOfWeek } from './date-utils'
+import type {
+  PickerActiveSection,
+  PickerDateRender,
+  PickerDefaultTime,
+  PickerDisabledTime,
+  PickerPanelMode,
+  PickerRangeDisabledTime,
+  PickerRangeSide,
+  PickerRangeValue,
+  PickerSelectSource,
+  PickerTimePanelProps
+} from './types'
+export interface RangePanelProps {
+  value?: PickerRangeValue | null // 当前区间（含只选中一段的中间态）
+  baseMode?: PickerPanelMode // 形态对应的面板层级：决定两面板的视图粒度与「选中即提交」的层级
+  activeSide?: PickerRangeSide // 当前激活的段：悬浮预览与下一次选择都作用于该端
+  startDayOfWeek?: StartDayOfWeek // 一周起始日
+  disabledDate?: (timestamp: number) => boolean // 不可选择的日期
+  dateRender?: PickerDateRender // 日期单元格内容定制：透传给两侧日期面板
+  defaultPickerValue?: number // 面板初始日期
+  extraFooter?: () => VNode[] // 面板底部的额外页脚：渲染在操作行之上
+  showFooter?: boolean // 是否展示跨两个面板的底部
+  datetime?: boolean // 日期时间范围：单个日期时间面板，两段靠「确定」切换编辑
+  format?: string // 展示格式：推导时间列显隐与 12 小时制
+  headerFormat?: string // 时间面板头部的文本格式
+  timeProps?: PickerTimePanelProps // 时间面板选项（步长 / 12 小时制 / 隐藏禁用项）
+  disabledTime?: PickerRangeDisabledTime // 不可选择的时间（按段判定）
+  defaultTime?: PickerDefaultTime // 空草稿时的默认时分秒（只取其中的时分秒），可按段指定（仅日期时间范围形态生效）
+  previewValue?: PickerRangeValue | null // 外部预览区间（预设悬浮），与面板内悬浮同为预览来源
+  active?: boolean // 面板是否展开：展开时把展示日期带回当前区间起点
+  activeSection?: PickerActiveSection // 键盘操作当前所在的区（仅日期时间范围有两个区）
+}
+export interface RangePanelSlots {
+  presets?: () => VNode[] // 两个面板左侧的预设侧栏
+  footer?: () => VNode[] // 跨两个面板的底部内容
+}
+const props = withDefaults(defineProps<RangePanelProps>(), {
+  value: null,
+  baseMode: 'date',
+  activeSide: 'start',
+  startDayOfWeek: 0,
+  disabledDate: undefined,
+  dateRender: undefined,
+  defaultPickerValue: undefined,
+  extraFooter: undefined,
+  showFooter: false,
+  datetime: false,
+  format: undefined,
+  headerFormat: undefined,
+  timeProps: undefined,
+  disabledTime: undefined,
+  defaultTime: undefined,
+  previewValue: null,
+  active: false,
+  activeSection: null
+})
+defineSlots<RangePanelSlots>()
+const emits = defineEmits<{
+  select: [timestamp: number, side: PickerRangeSide, source: PickerSelectSource] // 非日期时间形态：选中即提交该段（键盘只移动光标）
+  draftChange: [timestamp: number, side: PickerRangeSide] // 日期时间范围：面板内的选择只更新草稿
+  confirm: [timestamp: number, side: PickerRangeSide] // 日期时间范围：点「确定」提交当前激活段
+  panelChange: [value: number, mode: PickerPanelMode, side: PickerRangeSide]
+  hoverChange: [timestamp: number | null] // 悬浮的日期，供触发器在该段显示预览文本
+}>()
+/**
+ * 左右面板共用一份视图日期：右面板固定为左面板的相邻一格，任一侧翻页都带动另一侧
+ *
+ * 「一格」的粒度随形态变化（日期形态为 1 个月、月 / 季形态为 1 年、年形态为一个十年区间）。
+ * `manualViewDate` 只承载「用户翻页 / 选到补齐格」产生的手动视图；未手动翻页时视图直接由当前区间
+ * 起点派生——
+ * 预设填入 / 外部改值后，展开中的面板视图会立刻跟到新区间，而不是等下次展开才对齐。
+ */
+const manualViewDate = ref<number | null>(null)
+const viewDate = computed(() => manualViewDate.value ?? props.value?.[0] ?? props.defaultPickerValue ?? Date.now())
+const endViewDate = computed(() => getClosingViewTimestamp(viewDate.value, props.baseMode))
+/** 两侧面板当前的面板层级：与 `baseMode` 不一致即表示该侧已钻取（如月面板点「年」进年面板） */
+const startMode = ref<PickerPanelMode | null>(null)
+const endMode = ref<PickerPanelMode | null>(null)
+/**
+ * 正在钻取的一侧
+ *
+ * 钻取时收成单面板：两个面板并排展示不同层级（一侧年面板、一侧月面板）会读不出对应关系。
+ */
+const drillSide = computed<PickerRangeSide | null>(() => {
+  if (startMode.value !== null && startMode.value !== props.baseMode) {
+    return 'start'
+  }
+  if (endMode.value !== null && endMode.value !== props.baseMode) {
+    return 'end'
+  }
+  return null
+})
+/** 钻取时只留该侧面板（其视图由自身的关系决定：左面板用左视图、右面板用右视图） */
+const startPanelVisible = computed(() => drillSide.value !== 'end')
+const endPanelVisible = computed(() => drillSide.value !== 'start')
+/**
+ * 展开时清掉手动视图
+ *
+ * 浮层收起后两个面板并不销毁，若不在展开时重置，上一次翻页留下的月份会一直留在视图里，
+ * 与触发器上显示的区间对不上。
+ */
+watch(
+  () => props.active,
+  (active) => {
+    if (active) {
+      manualViewDate.value = null
+      startMode.value = null
+      endMode.value = null
+    }
+  }
+)
+const hoverValue = ref<PickerRangeValue | null>(null)
+/**
+ * 额外页脚的落点
+ *
+ * 日期时间范围的操作行（「确定」）由内层日期时间面板给出，额外页脚须落在同一个页脚内才排在其上方；
+ * 其余范围形态没有操作行，额外页脚落在跨两个面板的页脚上。
+ */
+const panelExtraFooter = computed(() => (props.datetime ? undefined : props.extraFooter))
+/** 当前激活段的值：日期时间范围的面板以此为展示值（决定选中格与面板视图） */
+const activeValue = computed<number | null>(() => props.value?.[props.activeSide === 'start' ? 0 : 1] ?? null)
+/** 另一端的值：激活段为空时作为时间面板的日期基准 */
+const otherSideValue = computed<number | null>(() => props.value?.[props.activeSide === 'start' ? 1 : 0] ?? null)
+/** 激活段的默认时分秒：按段指定时取该段，单值时两段共用 */
+const activeDefaultTime = computed(() => getDefaultTime(props.defaultTime, props.activeSide))
+/** 激活段的禁用时间：把段标识注入判定函数（对外口径为 `(timestamp, side)`） */
+const activeDisabledTime = computed<PickerDisabledTime | undefined>(() => {
+  const disabledTime = props.disabledTime
+  if (!disabledTime) {
+    return undefined
+  }
+  return (timestamp) => disabledTime(timestamp, props.activeSide)
+})
+/**
+ * 悬浮预览区间（格子悬浮产生）：两段齐全且终点晚于起点时才生效，否则不产生任何预览类名
+ *
+ * 只承载「格子悬浮」这一路；预设悬浮走 {@link rangedValue}。
+ */
+const hoverRangedValue = computed<PickerRangeValue | null>(() => {
+  const source = hoverValue.value
+  if (!source || source[0] === null || source[1] === null || source[1] <= source[0]) {
+    return null
+  }
+  return source
+})
+/**
+ * 面板的区间取值：预设悬浮预览优先于已选值
+ *
+ * 预设悬浮时面板按「已选区间」渲染，
+ * 因而呈现与真实区间一致的底色与端点，而非格子悬浮的虚线框。
+ */
+const rangedValue = computed<PickerRangeValue | null>(() => props.previewValue ?? props.value ?? null)
+/** 悬浮日期写入当前激活段，形成「以该日期为一端」的预览区间，并上报给触发器做同段文本预览 */
+function onCellHover(timestamp: number) {
+  const current = props.value ?? [null, null]
+  hoverValue.value = props.activeSide === 'start' ? [timestamp, current[1]] : [current[0], timestamp]
+  emits('hoverChange', timestamp)
+}
+function onCellLeave() {
+  hoverValue.value = null
+  emits('hoverChange', null)
+}
+function onStartViewChange(next: number) {
+  manualViewDate.value = next
+}
+/** 右面板翻页：以其为准反推左面板，保持两面板始终相差一格（粒度随形态） */
+function onEndViewChange(next: number) {
+  manualViewDate.value = getClosingViewTimestamp(next, props.baseMode, -1)
+}
+/**
+ * 面板选中日期：写入**当前激活段**（与面板左右位置无关）
+ *
+ * 两个面板共用同一份视图与区间，用户从左面板选完起点后激活段切到终点，
+ * 此后在任一面板点选都作用于终点段。
+ */
+function onPanelSelect(timestamp: number, source: PickerSelectSource) {
+  hoverValue.value = null
+  emits('hoverChange', null)
+  emits('select', timestamp, props.activeSide, source)
+}
+/** 日期时间范围：面板内的选择（日期或时间）只更新激活段的草稿，待「确定」统一提交 */
+function onDatetimeChange(timestamp: number) {
+  // 与日期形态同口径：落值即清掉悬浮预览（否则点击后鼠标仍停在格子上，输入框会继续显示悬浮日期）
+  hoverValue.value = null
+  emits('hoverChange', null)
+  emits('draftChange', timestamp, props.activeSide)
+}
+function onDatetimeConfirm(timestamp: number) {
+  emits('confirm', timestamp, props.activeSide)
+}
+/** 左右面板各带自己的头部导航，翻页时需带上来源段（面板切换事件按段上报） */
+function onStartPanelChange(value: number, mode: PickerPanelMode) {
+  startMode.value = mode
+  emits('panelChange', value, mode, 'start')
+}
+function onEndPanelChange(value: number, mode: PickerPanelMode) {
+  endMode.value = mode
+  emits('panelChange', value, mode, 'end')
+}
+function onDatetimePanelChange(value: number, mode: PickerPanelMode) {
+  emits('panelChange', value, mode, props.activeSide)
+}
+/* ============================== 键盘导航 ============================== */
+const startPanelRef = ref<InstanceType<typeof DatePanel> | null>(null)
+const endPanelRef = ref<InstanceType<typeof DatePanel> | null>(null)
+const datetimePanelRef = ref<InstanceType<typeof DatetimePanel> | null>(null)
+/**
+ * 把导航按键转给当前可见的面板
+ *
+ * 日期形态只有一块日期面板处于「当前操作对象」——两块面板共用同一份视图日期，任一侧翻页都带动
+ * 另一侧，故统一交给可见的那一块处理即可（钻取到某一侧时交给那一块，与其鼠标操作同径）。
+ * 日期时间范围只有一个日期时间面板，直接转给它，日期 / 时间的分工由其中的活动区决定。
+ */
+function handleKeydown(event: KeyboardEvent): boolean {
+  if (props.datetime) {
+    return datetimePanelRef.value?.handleKeydown(event) ?? false
+  }
+  const target = startPanelVisible.value ? startPanelRef.value : endPanelRef.value
+  return target?.handleKeydown(event) ?? false
+}
+defineExpose({ handleKeydown })
+</script>
+<template>
+  <PickerPanel class="picker-range-panel-layout" :show-footer="showFooter" :extra-footer="panelExtraFooter">
+    <template #presets>
+      <slot name="presets" />
+    </template>
+    <div class="picker-range-panels">
+      <!-- 日期时间范围：单个日期时间面板，激活段由宿主按下划线所在段切换 -->
+      <DatetimePanel
+        v-if="datetime"
+        ref="datetimePanelRef"
+        class="picker-range-panel picker-datetime-panel"
+        :active-section="activeSection"
+        :value="activeValue"
+        :format="format"
+        :header-format="headerFormat"
+        :time-props="timeProps"
+        :disabled-date="disabledDate"
+        :disabled-time="activeDisabledTime"
+        :date-render="dateRender"
+        :default-time="activeDefaultTime"
+        :extra-footer="extraFooter"
+        :default-picker-value="defaultPickerValue"
+        :start-day-of-week="startDayOfWeek"
+        :range="true"
+        :fallback-value="otherSideValue"
+        :range-value="rangedValue"
+        :hover-value="hoverRangedValue"
+        :show-now="false"
+        :active="true"
+        @change="onDatetimeChange"
+        @confirm="onDatetimeConfirm"
+        @panel-change="onDatetimePanelChange"
+        @cell-hover="onCellHover"
+        @cell-leave="onCellLeave"
+      />
+      <template v-else>
+        <DatePanel
+          v-if="startPanelVisible"
+          ref="startPanelRef"
+          class="picker-range-panel"
+          :panel-value="viewDate"
+          :base-mode="baseMode"
+          :start-day-of-week="startDayOfWeek"
+          :disabled-date="disabledDate"
+          :date-render="dateRender"
+          :default-picker-value="defaultPickerValue"
+          :show-today="false"
+          :range="true"
+          :range-value="rangedValue"
+          :hover-value="hoverRangedValue"
+          :active="active"
+          :side="drillSide === null ? 'start' : undefined"
+          @select="onPanelSelect"
+          @panel-change="onStartPanelChange"
+          @panel-value-change="onStartViewChange"
+          @cell-hover="onCellHover"
+          @cell-leave="onCellLeave"
+        />
+        <DatePanel
+          v-if="endPanelVisible"
+          ref="endPanelRef"
+          class="picker-range-panel"
+          :panel-value="endViewDate"
+          :base-mode="baseMode"
+          :start-day-of-week="startDayOfWeek"
+          :disabled-date="disabledDate"
+          :date-render="dateRender"
+          :default-picker-value="defaultPickerValue"
+          :show-today="false"
+          :range="true"
+          :range-value="rangedValue"
+          :hover-value="hoverRangedValue"
+          :active="active"
+          :side="drillSide === null ? 'end' : undefined"
+          @select="onPanelSelect"
+          @panel-change="onEndPanelChange"
+          @panel-value-change="onEndViewChange"
+          @cell-hover="onCellHover"
+          @cell-leave="onCellLeave"
+        />
+      </template>
+    </div>
+    <template #footer>
+      <slot name="footer" />
+    </template>
+  </PickerPanel>
+</template>
+<style lang="less" scoped>
+// 容器宽度随面板展开（内层日期面板各自 280px / 日期时间面板更宽），不能沿用单选面板的固定 280px
+.picker-panel.picker-range-panel-layout {
+  width: auto;
+}
+.picker-range-panels {
+  display: flex;
+}
+// 面板外观（圆角 / 阴影 / 裁切）由外层容器统一提供，内层面板只保留头部与内容
+.picker-range-panel.picker-panel {
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+</style>

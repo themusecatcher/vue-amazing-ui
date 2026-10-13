@@ -9,8 +9,8 @@
  * 反向也一样：组件改造后不再依赖某组件、但表里的条目没删（stale），同样不会报错。
  * 历史同类问题：`Upload` 移除内嵌 `Message` 后，样式依赖未同步移除。
  *
- * 做法：产物 chunk（`es/<dir>/*.js`，排除 `style/` 生成的样式入口）之间的 `from "../<other>/index.js"`
- * 是**编译期事实**，可机读。以它为边求传递闭包，与手写表做**双向断言**：
+ * 做法：产物 chunk（`es/<dir>/*.js`，排除 `style/` 生成的样式入口）之间的 import 是**编译期事实**，
+ * 可机读（组件归属与边的解析规则见 `buildGraph`）。以它为边求传递闭包，与手写表做**双向断言**：
  *   - closure ⊆ table → 抓「漏写依赖」；
  *   - table ⊆ closure → 抓「写了但已不再依赖」（stale）。
  *
@@ -58,20 +58,32 @@ if (!existsSync(esDir) || !existsSync(resolve(rootDir, 'lib'))) {
   process.exit(1)
 }
 
-/** 产物目录 → 该目录承载的组件名（Provider 与底层组件同目录，优先取「非样式来源」的那个作为规范名） */
-const dirToComponent = new Map()
+/** 产物目录 → 该目录下「有自己的一份 CSS」的组件集合 */
+const ownCssComponentsByDir = new Map()
 componentNames.forEach((name) => {
-  const dir = componentsMap[name]
-  const current = dirToComponent.get(dir)
-  if (current === undefined) {
-    dirToComponent.set(dir, name)
+  if (!hasOwnCss(name)) {
     return
   }
-  // 同目录多个组件名时，取「不在 styleSources 中」的组件作为规范名（Message 优先于 MessageProvider）
-  if (styleSources[current] !== undefined && styleSources[name] === undefined) {
-    dirToComponent.set(dir, name)
-  }
+  const dir = componentsMap[name]
+  const set = ownCssComponentsByDir.get(dir) ?? new Set()
+  set.add(name)
+  ownCssComponentsByDir.set(dir, set)
 })
+
+/**
+ * 目录兜底：把「认不出组件名的产物模块」归并到所在目录的组件
+ *
+ * 仅当该目录**唯一**归属一个「有自己 CSS」的组件时才归并。Provider 与底层组件同目录时
+ * （Message + MessageProvider），Provider 的样式由底层组件承载，集合里只剩底层组件，结果与旧版一致。
+ *
+ * 多组件共享目录（picker 内核：9 个有自身 CSS 的面板同处 components/picker/）下不存在唯一归属，
+ * 返回 undefined —— 否则 `date-utils.js` / `keyboard.js` 这类公共模块会被硬折成目录里的某个
+ * 具体组件，既在闭包里造出伪边，又掩盖真实依赖。
+ */
+function componentByDirFallback(dir) {
+  const set = ownCssComponentsByDir.get(dir)
+  return set !== undefined && set.size === 1 ? [...set][0] : undefined
+}
 
 /**
  * 递归收集产物 chunk（`es/` 下全部 `.js`）
@@ -99,9 +111,9 @@ function collectChunks(dir) {
  * - 文件名认得出（`Popup.vue2.js` → `Popup`、`DialogProvider.vue.js` → `DialogProvider`）：同目录的
  *   Provider / 子组件各有自己的节点，不能一律按目录归并；
  * - 认不出（`Menu.vue.js` 这类 SFC 门面、`MenuNodes.js` / `useModal.js` 这类同目录支撑模块）：
- *   `preserveModules` 下 chunk 路径与源码路径同构，同目录即同组件 —— 组件经 `.ts` 内核模块
- *   转出去的 import（如 Menu 的浮层宿主 `Popup`）只有这样才进得了闭包。
- * 目录与文件名都不对应组件（`utils/`、`_virtual/`、`index.js` 等）时返回 undefined，调用方跳过。
+ *   `preserveModules` 下 chunk 路径与源码路径同构，且该目录唯一归属一个组件时按目录归并 ——
+ *   组件经 `.ts` 内核模块转出去的 import（如 Menu 的浮层宿主 `Popup`）只有这样才进得了闭包。
+ * 目录与文件名都不对应组件（`utils/`、`_virtual/`、`index.js`、多组件共享目录等）时返回 undefined，调用方跳过。
  */
 function componentOfChunk(chunkFile) {
   const fileName = chunkFile.slice(chunkFile.lastIndexOf('/') + 1)
@@ -110,7 +122,7 @@ function componentOfChunk(chunkFile) {
     return namedByFile
   }
   const dir = relative(esDir, dirname(chunkFile)).split('\\').join('/')
-  return dirToComponent.get(dir)
+  return componentByDirFallback(dir)
 }
 
 /** 该组件是否有「自己的一份 CSS」——无自身 CSS 的组件（Provider / 子组件 / 无样式组件）不构成样式依赖 */
@@ -119,10 +131,19 @@ function hasOwnCss(componentName) {
 }
 
 /**
- * 组件 chunk 的依赖边：指向其它组件「有自己 CSS」的公共入口 `../<dir>/index.js`
+ * 组件 chunk 的依赖边：指向另一个「有自己 CSS」的组件
  *
- * 边按 chunk 归属组件汇总（见 `componentOfChunk`）：同目录兄弟模块不作为判定目标（`./Xxx.js` 不算跨组件），
- * 但它的跨目录 import 会算作所在组件的依赖。
+ * 目标组件解析顺序：
+ *   1. 被引用文件名直接命中组件名（`PickerPanel.vue.js` → PickerPanel、`Popup.vue2.js` → Popup）；
+ *   2. 否则按所在目录兜底（`../popup/index.js` → 目录 popup → Popup），见 `componentByDirFallback`。
+ *
+ * 起点按 chunk 归属组件汇总（见 `componentOfChunk`）。参与判定的说明符两类：
+ *   - 跨目录 `../<dir>/...`：常规跨组件依赖；
+ *   - 同目录单文件 `./<Comp>.vue.js`：多组件共享目录（picker 内核）里面板之间正是这样互引 ——
+ *     被引用文件名命中另一个组件才算依赖边；同目录支撑模块（`./date-utils.js`）命中不了组件，
+ *     经目录兜底后与自身组件同名而被过滤，不会产生伪边。
+ * 嵌套同目录 `./<subdir>/...`（复合组件范式：layout/ → layout-sider/、dropdown/ → dropdown-button/）
+ * 中的子组件由组件入口聚合导出引入、各有独立样式入口，不属于父组件的样式依赖，故不计边。
  */
 function buildGraph() {
   const graph = new Map()
@@ -135,14 +156,19 @@ function buildGraph() {
     const dependencies = graph.get(componentName) ?? new Set()
     const specifiers = [...readFileSync(chunkFile, 'utf-8').matchAll(/from\s+"([^"]+)"/g)].map((matched) => matched[1])
     specifiers.forEach((specifier) => {
-      // 只看跨目录的组件入口（`./Xxx.vue.js` 这类同目录兄弟模块不参与组件依赖判定）
-      if (!specifier.startsWith('..')) {
+      if (!specifier.startsWith('.')) {
         return
       }
-      const targetDir = relative(esDir, dirname(resolve(dirname(chunkFile), specifier)))
-        .split('\\')
-        .join('/')
-      const targetComponent = dirToComponent.get(targetDir)
+      // 同目录的嵌套子目录归属另一个组件（复合组件范式），不计边
+      if (specifier.startsWith('./') && specifier.slice(2).includes('/')) {
+        return
+      }
+      const targetModule = resolve(dirname(chunkFile), specifier)
+      const namedByFile = targetModule.slice(targetModule.lastIndexOf('/') + 1).replace(/\..*$/, '')
+      const targetComponent =
+        componentsMap[namedByFile] !== undefined
+          ? namedByFile
+          : componentByDirFallback(relative(esDir, dirname(targetModule)).split('\\').join('/'))
       if (targetComponent === undefined || targetComponent === componentName) {
         return
       }

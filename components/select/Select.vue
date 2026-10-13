@@ -34,6 +34,7 @@ import {
   raiseFloatingOrder,
   useFloating,
   useFloatingTeleportTarget,
+  useInheritAnchorFont,
   useInject,
   useResizeObserver,
   useSlotsExist,
@@ -431,6 +432,12 @@ const mergedShowSearch = computed(() => props.showSearch ?? isMultiple.value)
 // 箭头显示：多选默认不显示箭头（约定），loading 时显示（后缀位置由加载中图标接管）
 const mergedShowArrow = computed(() => props.showArrow ?? (props.loading || !isMultiple.value))
 const mergedOpen = computed(() => (props.open !== undefined ? props.open : showOptions.value))
+// 浮层字体承接：Teleport 到 body 后脱离宿主字体继承链，把锚点字体族复制到容器（见 utils/inherit-font.ts）
+useInheritAnchorFont(
+  () => selectContentRef.value,
+  () => selectPanelWrapperRef.value,
+  () => mergedOpen.value
+)
 const mergedSearchValue = computed(() => (props.searchValue !== undefined ? props.searchValue : innerSearchValue.value))
 // labelInValue
 /** 是否为 labelInValue 对象（约定：非对象 / 数组 / 空值一律视为原始值） */

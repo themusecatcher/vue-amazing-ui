@@ -56,7 +56,7 @@ const showText = computed(() => {
         'divider-orientation-margin-right': showText && orientation === 'right' && orientationMargin !== undefined
       }
     ]"
-    :style="`--border-width: ${borderWidth}px; --border-style: ${borderStyle}; --border-color: ${borderColor}; --margin: ${margin}; --line-height: ${lineHeight};`"
+    :style="`--divider-border-width: ${borderWidth}px; --divider-border-style: ${borderStyle}; --divider-border-color: ${borderColor}; --divider-margin: ${margin}; --divider-line-height: ${lineHeight};`"
   >
     <span v-if="showText" class="divider-text">
       <slot></slot>
@@ -68,7 +68,7 @@ const showText = computed(() => {
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
   line-height: 1.5714285714285714;
-  border-top: var(--border-width) var(--border-style) var(--border-color);
+  border-top: var(--divider-border-width) var(--divider-border-style) var(--divider-border-color);
   .divider-text {
     display: inline-block;
     padding: 0 1em;
@@ -85,11 +85,11 @@ const showText = computed(() => {
   position: relative;
   top: -0.06em;
   display: inline-block;
-  height: var(--line-height);
+  height: var(--divider-line-height);
   margin: 0 8px;
   vertical-align: middle;
   border-top: 0;
-  border-left: var(--border-width) var(--border-style) var(--border-color);
+  border-left: var(--divider-border-width) var(--divider-border-style) var(--divider-border-color);
 }
 .divider-with-text {
   display: flex;
@@ -100,13 +100,13 @@ const showText = computed(() => {
   font-size: 16px;
   white-space: nowrap;
   text-align: center;
-  border-top: 0 var(--border-color);
+  border-top: 0 var(--divider-border-color);
   &::before,
   &::after {
     position: relative;
     width: 50%;
-    border-top-width: var(--border-width);
-    border-top-style: var(--border-style);
+    border-top-width: var(--divider-border-width);
+    border-top-style: var(--divider-border-style);
     border-top-color: inherit;
     transform: translateY(50%);
     content: '';
@@ -136,7 +136,7 @@ const showText = computed(() => {
     width: 100%;
   }
   .divider-text {
-    margin-left: var(--margin);
+    margin-left: var(--divider-margin);
     padding-left: 0;
   }
 }
@@ -148,7 +148,7 @@ const showText = computed(() => {
     width: 0;
   }
   .divider-text {
-    margin-right: var(--margin);
+    margin-right: var(--divider-margin);
     padding-right: 0;
   }
 }

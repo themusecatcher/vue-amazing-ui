@@ -17,7 +17,7 @@
 ## Features
 
 - The component library is implemented with `Vue@3.5.42` + `TypeScript@5.9.3` + `Vite@7.3.1` + `Less@4.5.1`.
-- Currently, it includes `72` basic UI components and `22` utility functions, with continuous exploration and updates ongoing...
+- Currently, it includes `73` basic UI components and `22` utility functions, with continuous exploration and updates ongoing...
 - Theme Customizable, all you need is to provide a theme color, then all the stuffs will be done by me.
 - By the way, they are all treeshakable.
 - All the stuff in Vue Amazing UI is written in TypeScript. It can work with your typescript project seamlessly.
@@ -255,11 +255,12 @@ All sponsors will be listed here, thank you very much for your support and spons
 | Countdown       | Countdown        | Notification    | Notification     | Textarea        | Textarea         |
 | DatePicker      | Date Picker      | NumberAnimation | Number Animation | TextScroll      | Text Scroll      |
 | Descriptions    | Descriptions     | Pagination      | Pagination       | Timeline        | Timeline         |
-| Dialog          | Dialog           | Popconfirm      | Popconfirm       | Tooltip         | Tooltip          |
-| Divider         | Divider          | Popover         | Popover          | Upload          | Upload           |
-| Drawer          | Drawer           | Progress        | Progress         | Video           | Video Player     |
-| Dropdown        | Dropdown         | QRCode          | QR Code          | Waterfall       | Waterfall        |
-| Ellipsis        | Text Ellipsis    | Radio           | Radio            | Watermark       | Watermark        |
+| Dialog          | Dialog           | Popconfirm      | Popconfirm       | TimePicker      | Time Picker      |
+| Divider         | Divider          | Popover         | Popover          | Tooltip         | Tooltip          |
+| Drawer          | Drawer           | Progress        | Progress         | Upload          | Upload           |
+| Dropdown        | Dropdown         | QRCode          | QR Code          | Video           | Video Player     |
+| Ellipsis        | Text Ellipsis    | Radio           | Radio            | Waterfall       | Waterfall        |
+|                 |                  |                 |                  | Watermark       | Watermark        |
 
 ## Functions
 

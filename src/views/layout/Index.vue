@@ -554,7 +554,7 @@ const onBreakpoint = (broken: boolean) => {
   </div>
 </template>
 <style lang="less" scoped>
-// 承载「整页」形态的用例（对应官网 iframe 承载），限高并允许内部滚动，避免撑高文档页面
+// 承载「整页」形态的用例，限高并允许内部滚动，避免撑高文档页面
 .demo-container {
   height: 360px;
   overflow: auto;
@@ -577,7 +577,7 @@ const onBreakpoint = (broken: boolean) => {
   margin: 16px;
   background: rgba(255, 255, 255, 0.3);
 }
-// 占位块更淡的用例（与官网各用例取值一致）
+// 占位块更淡的用例
 .faint {
   background: rgba(255, 255, 255, 0.2);
 }

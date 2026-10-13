@@ -179,3 +179,41 @@ describe('AutoComplete 定位内核接入（L1 旁路）', () => {
     expect(Number((queryPanel() as HTMLElement).style.zIndex)).toBe(3000)
   })
 })
+
+describe('AutoComplete · 浮层字体承接', () => {
+  it('展开时把锚点的计算字体族复制到浮层容器', async () => {
+    const localWrapper = mount(AutoComplete, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { value: '', open: false, options: [{ label: 'apple', value: 1 }] }
+    })
+    wrapper = localWrapper
+    await flush()
+
+    const anchor = document.querySelector('.auto-complete-content') as HTMLElement
+    anchor.style.fontFamily = 'Georgia'
+    await localWrapper.setProps({ open: true })
+    await flush()
+
+    expect(queryWrapperEl()?.style.fontFamily).toBe('Georgia')
+  })
+
+  it('每次重新展开都刷新承接值（锚点字体可变）', async () => {
+    const localWrapper = mount(AutoComplete, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { value: '', open: true, options: [{ label: 'apple', value: 1 }] }
+    })
+    wrapper = localWrapper
+    await flush()
+
+    const anchor = document.querySelector('.auto-complete-content') as HTMLElement
+    anchor.style.fontFamily = 'monospace'
+    await localWrapper.setProps({ open: false })
+    await flush()
+    await localWrapper.setProps({ open: true })
+    await flush()
+
+    expect(queryWrapperEl()?.style.fontFamily).toBe('monospace')
+  })
+})

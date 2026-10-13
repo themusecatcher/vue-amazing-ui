@@ -727,7 +727,7 @@ _设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再�
 
 <br/>
 
-<Space wrap>
+<Space>
   <Tooltip tooltip="Vue Amazing UI" destroy-on-hide>
     <Button type="primary">Hover (destroyOnHide)</Button>
   </Tooltip>
@@ -749,7 +749,7 @@ import { Tooltip } from 'vue-amazing-ui'
 const destroyShow = ref(false)
 </script>
 <template>
-  <Space wrap>
+  <Space>
     <Tooltip tooltip="Vue Amazing UI" destroy-on-hide>
       <Button type="primary">Hover (destroyOnHide)</Button>
     </Tooltip>
