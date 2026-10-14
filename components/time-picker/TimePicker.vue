@@ -360,10 +360,8 @@ const showClear = computed(() => {
 /** 「确定」是否可点：激活段（单选形态即该段自身）没有可提交的时间 */
 const okDisabled = computed(() => panelTimestamp.value === null)
 /**
- * 面板底部的额外页脚
- *
- * 同名插槽优先于 prop；两轨统一为「入参 → VNode[]」的函数下发给内核 —— 内核只收函数，
- * VNode 由内核在渲染上下文内创建（在 `computed` 里直接求值会产生「无主的 hoisted vnode」）。
+ * 面板底部的额外页脚：同名插槽优先于 prop，两轨统一为「入参 → VNode[]」的函数下发给内核
+ * （内核只收函数：VNode 需在其渲染上下文内创建，`computed` 里直接求值会产生「无主的 hoisted vnode」）
  */
 const mergedExtraFooter = computed<(() => VNode[]) | undefined>(() => {
   if (slotsExist.renderExtraFooter) {
@@ -432,9 +430,8 @@ function requestOpen(next: boolean) {
   emits('openChange', next)
 }
 /**
- * 点击触发器只负责展开（展开态点击不收起，收起由外部点击 / Esc / 提交触发）
- *
- * 展开时按落点确定本次会话的激活段（点终点段即激活终点段），并把焦点移到该段输入框。
+ * 点击触发器只负责展开（展开态点击不收起，收起由外部点击 / Esc / 提交触发）：
+ * 按落点确定本次会话的激活段（点终点段即激活终点段），并把焦点移到该段输入框
  */
 function onTriggerClick(index: 0 | 1 = 0) {
   // 面板操作态下输入框是只读的，点击输入区即把键盘收回文本输入态，恢复手输
@@ -482,10 +479,8 @@ function canTriggerSide(timestamp: number | null, index: 0 | 1): boolean {
   return timestamp !== null || (props.allowEmpty[index] ?? false)
 }
 /**
- * 写入范围形态的某一段（「确定」与手输提交共用）
- *
- * 起点晚于终点时丢弃另一端、只保留本次写入；两段齐全（或未选段声明可为空）才对外提交；
- * 只写到一段时保持展开，并把激活段切到另一端继续选。
+ * 写入范围形态的某一段（「确定」与手输提交共用）：起点晚于终点时丢弃另一端、只保留本次写入，
+ * 两段齐全（或未选段声明可为空）才对外提交；只写到一段时保持展开，并把激活段切到另一端继续选
  *
  * @returns 写入后的区间与其文本（未提交时即为草稿），供 `ok` 事件复用
  */
@@ -547,9 +542,9 @@ function onOk() {
   emits('ok', timestamp, nextFormatted)
 }
 /**
- * 「此刻」：取当前时刻并按步长向下取整后即提交
+ * 「此刻」：取当前时刻并按步长向下取整后即提交，与既有带时间形态同口径
  *
- * 与既有带时间形态同口径 —— 快捷入口直接落值，不派发「确定」语义之外的事件。
+ * 快捷入口直接落值，不派发「确定」语义之外的事件。
  */
 function onNow() {
   const now = Date.now()
@@ -573,10 +568,8 @@ function onClear() {
   requestOpen(false)
 }
 /**
- * 手输文本：解析成功才提交，失败时由触发器回滚为当前合法文本
- *
- * 失焦按取消处理 —— 此刻输入框展示的可能是面板草稿（非用户键入内容），
- * 否则未点「确定」的选择会被当成用户输入落值。
+ * 手输文本：解析成功才提交，失败时由触发器回滚为当前合法文本；失焦按取消处理 —— 此刻输入框展示的
+ * 可能是面板草稿（非用户键入内容），否则未点「确定」的选择会被当成用户输入落值
  */
 function onTextConfirm(text: string, source: 'enter' | 'blur', index: 0 | 1 = 0) {
   if (source === 'blur') {
@@ -613,9 +606,8 @@ function onTriggerInput(): void {
   keyboardPanelMode.value = false
 }
 /**
- * 触发器的按键入口：面板未展开时任意输入键唤起面板，展开后按键盘归属把导航键转给时间面板
- *
- * 回车不在此处理：它由触发器的文本提交消费，与「回车提交」的既有口径一致。
+ * 触发器的按键入口：面板未展开时任意输入键唤起面板，展开后按键盘归属把导航键转给时间面板；
+ * 回车不在此处理（由触发器的文本提交消费，与「回车提交」的既有口径一致）
  */
 function onWrapperKeydown(event: KeyboardEvent): void {
   if (event.key === 'Tab') {
@@ -794,9 +786,8 @@ defineExpose({ focus, blur })
     content: '';
   }
 }
-// 面板宽度交给时间列内容：内核面板默认 280px（日期列宽度）。
-// 时间列的尾随占位与日期时间形态同口径（列可视高 - 格高）：本形态列可视高 216px → 188px，
-// 末项滚到底时正好落在列顶、完整可悬浮；内核默认值 204px 属日期时间形态（其列被日期列撑到 232px）
+// 面板宽度交给时间列内容（内核面板默认 280px 是日期列宽度）；尾随占位取「列可视高 - 格高」：本形态
+// 216px → 188px，末项滚到底正好落在列顶、完整可悬浮（内核默认 204px 属日期时间形态，其列被撑到 232px）
 .picker-panel.timepicker-panel {
   width: auto;
   --picker-time-column-trailing-height: 188px;
@@ -815,9 +806,8 @@ defineExpose({ focus, blur })
     // VitePress 的 `.vp-doc li + li`），使「确定」相对「此刻」下沉；此处归零，间距由本组件自行掌控
     margin: 0;
   }
-  // 隐藏「此刻」时底部只剩「确定」，靠自身外边距顶到行尾；
-  // 高度取页脚行高（display: flex 后行高不再参与内在高度，不声明则页脚矮 10px），
-  // 弹性居中补偿按钮根节点为 inline-block div 的基线偏移（原生 button 按基线排布即居中）
+  // 隐藏「此刻」时底部只剩「确定」，靠自身外边距顶到行尾；高度须显式取页脚行高（flex 后行高不再参与
+  // 内在高度，不声明则页脚矮 10px），弹性居中用于补偿按钮根节点为 inline-block div 的基线偏移
   .timepicker-panel-ok {
     display: flex;
     align-items: center;

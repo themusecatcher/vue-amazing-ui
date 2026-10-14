@@ -3,7 +3,7 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import type { VNode } from 'vue'
 import { useSlotsExist, useInject } from 'components/utils'
 
-// 内置指示符：字符串取值即内置枚举；VNode / 渲染函数为自定义指示符（插槽形态请用 #indicator）；null 表示不渲染
+// 内置指示符枚举（字符串取值即内置；各形态说明见行尾）
 export type BuiltinIndicator =
   | 'dot' // 四点闪烁：四点整体旋转 + 逐点闪烁
   | 'dot-wheel' // 八点轮：八点等距成轮，亮度沿圆周扫过（支持 speed / rotate）
@@ -21,7 +21,7 @@ export interface Props {
   fitContent?: boolean // 根节点宽度是否贴合内容宽度（内容比父容器窄时，遮罩与加载效果一起按内容宽度居中）；无内容时不生效
   tip?: string // 描述文案
   delay?: number // 延迟显示加载效果的时间（ms）；0 表示不延迟，可避免请求过快时 loading 一闪而过；仅在显示方向生效，隐藏始终立即
-  indicator?: SpinIndicator // 加载指示符：7 种内置枚举（四点闪烁 / 八点轮 / 八线轮 / 圆环 / 圆环轨道 / 动态圆环 / 翻转双环，取值见 BuiltinIndicator）/ 自定义 VNode 或渲染函数（插槽形态请用 #indicator）/ null 不渲染
+  indicator?: SpinIndicator // 加载指示符：内置枚举（7 种，见 BuiltinIndicator）/ 自定义 VNode 或渲染函数（插槽形态用 #indicator）/ null 不渲染
   color?: string // 指示符颜色；indicator 为 magic-ring 时表示外环颜色
   spinCircleWidth?: number // 圆环宽度（指示符宽度的百分比；magic-ring 收敛到 6～26 以保证两环定位与翻面动效有效）；仅 ring-circle / ring-rail / magic-ring 生效
   spinCirclePercent?: number // 圆环弧长（0～100，圆环周长的百分比）；仅 ring-circle / ring-rail 生效
@@ -62,8 +62,7 @@ const customIndicator = computed(() => {
 const showCustomIndicator = computed(() => {
   return slotsExist.indicator || (customIndicator.value !== undefined && customIndicator.value !== null)
 })
-// 内置指示符：字符串取值即内置枚举；自定义指示符一旦生效即整体替代内置，故此时不产出内置值
-// （否则 #indicator 插槽会与 indicator 的默认值 'dot' 同时渲染，两套指示符叠在一起）
+// 自定义指示符生效时不再产出内置值：否则 #indicator 插槽会与 indicator 的默认值 'dot' 同时渲染
 const builtinIndicator = computed<BuiltinIndicator | undefined>(() => {
   if (showCustomIndicator.value) {
     return undefined
@@ -88,19 +87,17 @@ const isBoxRotate = computed(() => {
 const isDotTip = computed(() => {
   return builtinIndicator.value === 'dot' || builtinIndicator.value === 'dot-wheel'
 })
-// 动画周期（ms）：点轮 / 线轮为亮度扫过一圈的周期，翻转双环为绕轴翻面一圈的周期
-// 二者节奏不同，故不传时按指示符取默认值（点轮 / 线轮 800，翻转双环 1500，与各自原实现一致）；
-// 下界收敛到 1，避免非正数产出无效的 animation-duration（浏览器会静默丢弃，动画停摆）
+// 动画周期（ms）：点轮 / 线轮为亮度扫过一圈、翻转双环为翻面一圈，节奏不同，故不传时按指示符取默认
+// （800 / 1500）；下界收敛到 1，避免非正数产出无效的 animation-duration（浏览器静默丢弃，动画停摆）
 const speedComputed = computed(() => {
   const speed = props.speed === undefined ? (builtinIndicator.value === 'magic-ring' ? 1500 : 800) : props.speed
   return Math.max(speed, 1)
 })
-// 圆环宽度是「占指示符宽度的百分比」：需落在 (0, 100) 开区间，否则圆环半径为 0 或负值（path 非法、不渲染）
-// 不传时按指示符取默认：单环（ring-circle / ring-rail）12；翻转双环的两环紧贴叠合，
-// 自外缘到内洞要连穿 4 道环宽，同样的百分比会让环带明显厚重，故取 13 使环带与内洞在各档尺寸下接近均分
-// 翻转双环下界收敛到 6：内环按「外环内缘回退 1px」定位、侧视最窄处按 2 倍环宽取宽，
-// 环宽低于 1.25px 时定位会反向、最窄处宽度本身成为负值（关键帧失效、翻面动效停摆），故按最苛刻的 small 档（24px）反推
-// 翻转双环上限收敛到 26：内洞直径 = 直径 - 4 × 环宽 + 2，越过该值内环会实心化、失去「环」的形态
+// 圆环宽度是「占指示符宽度的百分比」，需落在 (0, 100) 开区间，否则半径为 0 或负值（path 非法、不渲染）。
+// 默认按指示符取：单环（ring-circle / ring-rail）12；翻转双环 13 —— 两环紧贴叠合，自外缘到内洞连穿
+// 4 道环宽，同一百分比会让环带明显厚重。翻转双环再收敛到 6～26：下界按最苛刻的 small 档（24px）反推，
+// 环宽不足 1.25px 时内环定位反向、侧视最窄处宽度转负（关键帧失效）；上界处内洞直径（直径 - 4 × 环宽 + 2）
+// 转负，内环实心化、失去「环」的形态
 const circleWidth = computed(() => {
   const width =
     props.spinCircleWidth === undefined ? (builtinIndicator.value === 'magic-ring' ? 13 : 12) : props.spinCircleWidth
@@ -134,7 +131,7 @@ const primaryColor = computed(() => {
     return props.color
   }
 })
-// 翻转双环的内环默认取「深一档」色阶：与 3D 化后的环面呼应（内环作内壁暗面），比外环更有纵深感
+// 内环默认取深一档色阶：内环作内壁暗面，与 3D 化后的环面呼应
 const magicRingColorComputed = computed(() => {
   if (props.magicRingColor === undefined) {
     return colorPalettes.value[6]
@@ -149,9 +146,8 @@ const showTip = computed(() => {
 const showFitContent = computed(() => {
   return props.fitContent && slotsExist.default
 })
-// 注：系统「减弱动态效果」偏好由样式内的媒体查询统一处理（见 <style> 末尾）。
-// 不能把动画名交给 JS 注入的 CSS 变量：scoped 样式会把 @keyframes 重命名为 `名字-<hash>`，
-// 而变量值不会被重写，导致 animation-name 指向不存在的动画而静默失效。
+// 注：系统「减弱动态效果」偏好由样式内的媒体查询统一处理（见 <style> 末尾）；动画名不能交给 JS 注入的
+// CSS 变量 —— scoped 会把 @keyframes 重命名为 `名字-<hash>`，变量值却不重写，animation-name 静默失效
 // 实际展示态：spinning 为真且超过 delay 后展示，为假时立即隐藏（避免遮罩残留）。
 // 初值取 false，由下方 immediate 首次同步决定：挂载时若已处于 spinning 且设了 delay，同样要等满延迟才展示
 const spinningShow = ref(false)
@@ -289,13 +285,11 @@ onBeforeUnmount(clearDelayTimer)
   --spin-magic-size: 36px; // magic-ring 的直径
   // 翻转双环环宽沿用 spinCircleWidth 百分比口径（占指示符宽度），三档尺寸按比例派生，无需分档声明
   --spin-magic-border-width: calc(var(--spin-magic-size) * var(--spin-circle-width) / 100);
-  // 内环相对外环的内缩量：目标是与外环内缘相切（两环紧贴）。外环 border 会被浏览器向下取整到整数像素
-  // （如 4.32px 实渲染 4px），而缩进按理论环宽算会多出 <1px，形成一圈细缝 —— 故回退 1px 抵消该误差
+  // 内环相对外环的内缩量：目标是与外环内缘相切（两环紧贴）。border 会被浏览器向下取整到整数像素
+  // （如 4.32px 实渲染 4px），按理论环宽算会多出 <1px 形成细缝 —— 故回退 1px 抵消
   --spin-magic-inset: calc(var(--spin-magic-border-width) - 1px);
-  // 翻到侧面（|cosθ| 最小）时的投影宽度：立体环的前后两段环带在侧视时正好重叠 → 2 倍环宽。
-  // 再减 1.5px 冗余：border-width 会被浏览器向下取整（最多损失 1px），若按理论值取宽，
-  // 左右边框填不满这条 2 倍环宽，中间会露出细缝（侧视裂成两条平行线）—— 留冗余即可重叠成实心
-  // （spinCircleWidth 的下界收敛已保证该值不小于 1px，不会出现无效的负宽度）
+  // 侧视（|cosθ| 最小）时的投影宽度：前后两段环带正好重叠 → 2 倍环宽。再减 1.5px 冗余抵消 border
+  // 取整（最多损失 1px），否则左右边框填不满、中间露出细缝（侧视裂成两条平行线）；下界收敛已保证该值 ≥ 1px
   --spin-magic-narrow-width: calc(var(--spin-magic-border-width) * 2 - 1.5px);
   // 翻转双环自转周期：自转与翻面按 5 : 3 配比（默认即 2.5s : 1.5s），并随 speed 同步缩放，避免陀螺姿态漂移
   --spin-magic-rotate-duration: calc(var(--spin-speed) * 5 / 3);
@@ -336,11 +330,10 @@ onBeforeUnmount(clearDelayTimer)
         line-height: normal;
       }
       /*
-        离散点阵族（dot / dot-wheel / line-wheel）的统一模型：
-        点轮 / 线轮的「旋转」并非元素在移动，而是亮度波峰沿固定位置循环 ——
-        故元素的位置（角度）与相位（时间）由同一索引 k 决定，二者步长成对声明：
+        离散点阵族（dot / dot-wheel / line-wheel）的统一模型：点轮 / 线轮的「旋转」并非元素在移动，
+        而是亮度波峰沿固定位置循环 —— 故位置（角度）与相位（时间）同源于索引 k，步长成对声明：
           角度 = 角步长 × (k - 1)    相位延迟 = -周期 × 相位步长 × (k - 1)
-        一层 DOM 即可生成 N 个均匀元素，位置与相位天然对齐，无需分层拼接与对齐补偿。
+        一层 DOM 即可生成 N 个均匀元素，位置与相位天然对齐，无需分层拼接与补偿。
       */
       .spin-points-box {
         position: relative;
@@ -502,11 +495,10 @@ onBeforeUnmount(clearDelayTimer)
           }
         }
         /*
-          翻转双环的「绕轴翻面」用投影宽度表达：环绕竖直轴旋转时投影 = 满宽 × |cosθ|。
-          平面圆环在 90° 处会压成零宽直线（纸片翻面，会彻底消失），故宽度保底 2 倍环宽 ——
-          立体环的前后两段环带在侧视时正好重叠，呈现有厚度的侧壁而不塌成细线
-          （保底另留冗余抵消 border-width 取整，见 --spin-magic-narrow-width）；
-          最窄区间显式声明为平台（20.5%～29.5% 周期），模拟「厚度被托住」的停留。
+          绕轴翻面用投影宽度表达：投影 = 满宽 × |cosθ|。平面圆环在 90° 处会压成零宽直线（纸片翻面、
+          彻底消失），故宽度保底 2 倍环宽 —— 前后两段环带侧视正好重叠，呈现有厚度的侧壁而不塌成细线
+          （冗余抵消 border 取整见 --spin-magic-narrow-width）；最窄区间显式声明为平台（20.5%～29.5% 周期），
+          模拟「厚度被托住」的停留。
         */
         .outer-ring,
         .inner-ring {
