@@ -1082,7 +1082,7 @@ function onDiscreteModal() {
 | 浮层 | 默认层级 | 说明 |
 | :--- | :--- | :--- |
 | `Tooltip`（含 `Popover` / `Popconfirm` / `Ellipsis` / `ColorPicker` / `Rate` / `BackTop` / `FloatButton` 的气泡） | **1070** | 锚点跟随型需高于 `Modal` / `Drawer` / `Dialog` |
-| `Select` / `AutoComplete` / `Dropdown`（含 `Cascader` / `Pagination` / `Calendar` 的下拉） | **1050** | 同上 |
+| `Select` / `AutoComplete` / `Dropdown` / `DatePicker` / `TimePicker`（含 `Cascader` / `Pagination` / `Calendar` 的下拉） | **1050** | 同上 |
 | `Modal` / `Dialog` | **1000**（遮罩）/ **1010**（弹窗） | 弹窗在遮罩之上 `+10` |
 | `Drawer` | **1000** | 遮罩在容器内按 DOM 顺序排列 |
 | `Image` 全屏预览 | **1070**（遮罩）/ **1080**（预览）/ `1081`（操作按钮） | 预览高于 `Modal` / `Drawer` |

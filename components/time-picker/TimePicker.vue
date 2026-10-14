@@ -138,7 +138,7 @@ const props = withDefaults(defineProps<Props>(), {
   inputReadOnly: false,
   showArrow: undefined,
   showNow: true,
-  to: false,
+  to: undefined,
   placement: 'bottomLeft',
   renderExtraFooter: undefined,
   suffixIcon: undefined,

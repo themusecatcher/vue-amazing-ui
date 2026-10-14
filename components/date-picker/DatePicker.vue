@@ -128,7 +128,7 @@ const props = withDefaults(defineProps<Props>(), {
   allowClear: true,
   allowEmpty: () => [false, false],
   inputReadOnly: false,
-  to: false,
+  to: undefined,
   placement: 'bottomLeft',
   showArrow: undefined,
   showToday: true,
