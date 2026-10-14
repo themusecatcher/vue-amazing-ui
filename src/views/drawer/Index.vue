@@ -89,7 +89,7 @@ const form5 = reactive({
   owner: undefined as string | undefined,
   type: undefined as string | undefined,
   approver: undefined as string | undefined,
-  dateTime: '',
+  dateTime: undefined as number | undefined,
   description: ''
 })
 function onClose5() {
@@ -272,7 +272,7 @@ const layerZIndexOpen = ref<boolean>(false)
         <Col :span="12">
           <div class="form-item">
             <span class="form-label">DateTime</span>
-            <DatePicker v-model="form5.dateTime" placeholder="Please choose the dateTime" style="width: 100%" />
+            <DatePicker v-model:value="form5.dateTime" placeholder="Please choose the dateTime" style="width: 100%" />
           </div>
         </Col>
       </Row>

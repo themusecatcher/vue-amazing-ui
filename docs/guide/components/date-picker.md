@@ -1815,7 +1815,7 @@ const rangePlaceholder = ['开始日期', '结束日期']
 | defaultPickerValue | 面板初始日期（毫秒时间戳），默认取 `value` 或今天 | number | undefined |
 | startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一；周形态恒按 `ISO` 周（周一起始），该属性对周形态不生效 | 0 &#124; 1 &#124; 2 &#124; 3 &#124; 4 &#124; 5 &#124; 6 | 0 |
 | disabledDate | 不可选择的日期，入参为「当日零点」的毫秒时间戳；月 / 季 / 年形态下按整段判定（整段都不可选该格才禁用） | (timestamp: number) => boolean | undefined |
-| disabledTime | 不可选择的时间，仅带时间的形态生效；入参为当前面板草稿值的时间戳，范围形态额外接收段标识 | [DatePickerDisabledTime](#datepickerdisabledtime-type) &#124; [DatePickerRangeDisabledTime](#datepickerragedisabledtime-type) | undefined |
+| disabledTime | 不可选择的时间，仅带时间的形态生效；入参为当前面板草稿值的时间戳，范围形态额外接收段标识 | [DatePickerDisabledTime](#datepickerdisabledtime-type) &#124; [DatePickerRangeDisabledTime](#datepickerrangedisabledtime-type) | undefined |
 | defaultTime | 选中日期时的默认时分秒（只取其中的时分秒，不参与时间面板的预选展示）；范围形态可按段传入两段元组，某段为 `undefined` 时该段退回当前时刻 | number &#124; [number &#124; undefined, number &#124; undefined] | undefined |
 | timePickerProps | 时间面板选项（步长 / `12` 小时制 / 隐藏禁用项） | [DatePickerTimeProps](#datepickertimeprops-type) | undefined |
 | presets | 预设选项，点击即提交并收起 | [DatePickerPreset](#datepickerpreset-type)[] | [] |
@@ -1881,6 +1881,12 @@ const rangePlaceholder = ['开始日期', '结束日期']
 | :-- | :-- | :-- | :-- |
 | label | 预设名称 | string &#124; VNode | - |
 | value | 预设值：单选形态为一个时间戳，范围形态为两段元组；可为返回预设值的函数（点击时才求值） | number &#124; [number, number] &#124; (() => number &#124; [number, number]) | - |
+
+### DatePickerRangeInfo Type
+
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| DatePickerRangeInfo | 范围形态草稿变更的来源信息 | { range: 'start' &#124; 'end' } | undefined |
 
 ### DefaultFormat Value
 
@@ -1950,7 +1956,7 @@ const rangePlaceholder = ['开始日期', '结束日期']
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 | change | 值变化时的回调 | (value: number &#124; [number &#124; null, number &#124; null] &#124; null, formattedValue: string &#124; [string, string] &#124; null) => void |
-| calendarChange | 范围形态待选区间变化时的回调，`info.range` 标识本次改动落在哪一段 | (value: [number &#124; null, number &#124; null] &#124; null, formattedValue: [string, string] &#124; null, info: { range: 'start' &#124; 'end' }) => void |
+| calendarChange | 范围形态待选区间变化时的回调，`info.range` 标识本次改动落在哪一段 | (value: [number &#124; null, number &#124; null] &#124; null, formattedValue: [string, string] &#124; null, info: [DatePickerRangeInfo](#datepickerrangeinfo-type)) => void |
 | ok | 带时间的形态点击「确定」时的回调 | (value: number &#124; [number &#124; null, number &#124; null] &#124; null, formattedValue: string &#124; [string, string] &#124; null) => void |
 | openChange | 面板展开收起时的回调 | (open: boolean) => void |
 | panelChange | 面板视图切换时的回调 | (value: number, mode: string) => void |

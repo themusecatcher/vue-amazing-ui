@@ -60,7 +60,7 @@ function onAddonOpenChange(open: boolean) {
 /** 受控组件用例：`value` 与 `change` 配合使用时由使用方回写（该用例为单选形态，范围形态的元组不回写） */
 function onControlledChange(
   value: number | [number | null, number | null] | null,
-  formattedValue: string | [string | null, string | null] | null
+  formattedValue: string | [string, string] | null
 ): void {
   console.log('onChange', value, formattedValue)
   controlledValue.value = typeof value === 'number' ? value : null
@@ -68,14 +68,14 @@ function onControlledChange(
 /** 值变化时的回调：值与格式化值双轨 */
 function onEventChange(
   value: number | [number | null, number | null] | null,
-  formattedValue: string | [string | null, string | null] | null
+  formattedValue: string | [string, string] | null
 ): void {
   console.log('change', value, formattedValue)
 }
 /** 范围形态待选段变化时的回调：`info.range` 标识本次改动落在哪一段 */
 function onEventCalendarChange(
   value: number | [number | null, number | null] | null,
-  formattedValue: string | [string | null, string | null] | null,
+  formattedValue: string | [string, string] | null,
   info: { range: 'start' | 'end' }
 ): void {
   console.log('calendarChange', value, formattedValue, info)
@@ -83,7 +83,7 @@ function onEventCalendarChange(
 /** 点击「确定」时的回调（「此刻」是快捷入口，不派发） */
 function onEventOk(
   value: number | [number | null, number | null] | null,
-  formattedValue: string | [string | null, string | null] | null
+  formattedValue: string | [string, string] | null
 ): void {
   console.log('ok', value, formattedValue)
 }

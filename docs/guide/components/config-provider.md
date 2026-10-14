@@ -11,7 +11,6 @@ _为组件提供统一的全局化配置_
 
 <script setup lang="ts">
 import { ref, computed, h, onMounted } from 'vue'
-import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { ConfigProvider, LoadingBarProvider, createDiscreteApi } from 'vue-amazing-ui'
 import type { ConfigProviderProps, ConfigProviderTheme, CarouselImage, ItemType, LoadingBarApi, MenuKey, MessageApi, ModalApi, NotificationApi, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
@@ -47,7 +46,7 @@ const overrideTheme = computed<ConfigProviderTheme>(() =>
 )
 const checkboxChecked = ref<boolean>(false)
 const cardDate = ref<number>(Date.now())
-const dateValue = ref<string>(format(new Date(), 'yyyy-MM-dd'))
+const dateValue = ref<number>(Date.now())
 const inputValue = ref<string>('')
 const inputNumberValue = ref<number>(3)
 const inputSearchValue = ref<string>('')
@@ -312,7 +311,7 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
       <Button type="primary">Primary Button</Button>
       <Checkbox v-model:checked="checkboxChecked">Checkbox</Checkbox>
       <ColorPicker :width="200" />
-      <DatePicker v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
+      <DatePicker v-model:value="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
       <Input :width="200" v-model:value="inputValue" placeholder="please input" />
       <InputNumber :width="120" v-model:value="inputNumberValue" placeholder="please input" />
       <InputSearch
@@ -431,14 +430,13 @@ _`ConfigProvider` 使用 `Vue3` 的 `provide` / `inject` 特性，只需在应�
 ```vue
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { LoadingBarProvider } from 'vue-amazing-ui'
 import type { CarouselImage, ItemType, LoadingBarApi, MenuKey, MessageApi, ModalApi, NotificationApi, SelectOption, StepsItem, TabsItem, TextScrollItem, UploadFileType } from 'vue-amazing-ui'
 const primaryColor = ref<string>('#ff6900')
 const checkboxChecked = ref<boolean>(false)
 const cardDate = ref<number>(Date.now())
-const dateValue = ref<string>(format(new Date(), 'yyyy-MM-dd'))
+const dateValue = ref<number>(Date.now())
 const inputValue = ref<string>('')
 const inputNumberValue = ref<number>(3)
 const inputSearchValue = ref<string>('')
@@ -660,7 +658,7 @@ function onDecline(scale: number) {
         <Button type="primary">Primary Button</Button>
         <Checkbox v-model:checked="checkboxChecked">Checkbox</Checkbox>
         <ColorPicker :width="200" />
-        <DatePicker v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
+        <DatePicker v-model:value="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
         <Input :width="200" v-model:value="inputValue" placeholder="please input" />
         <InputNumber :width="120" v-model:value="inputNumberValue" placeholder="please input" />
         <InputSearch

@@ -69,7 +69,7 @@ function onAddonOpenChange(open: boolean) {
 /** 受控组件用例：`value` 与 `change` 配合使用时由使用方回写（该用例为单选形态，范围形态的元组不回写） */
 function onControlledChange(
   value: number | [number | null, number | null] | null,
-  formattedValue: string | [string | null, string | null] | null
+  formattedValue: string | [string, string] | null
 ): void {
   console.log('onChange', value, formattedValue)
   controlledValue.value = typeof value === 'number' ? value : null
@@ -77,14 +77,14 @@ function onControlledChange(
 /** 值变化时的回调：值与格式化值双轨 */
 function onEventChange(
   value: number | [number | null, number | null] | null,
-  formattedValue: string | [string | null, string | null] | null
+  formattedValue: string | [string, string] | null
 ): void {
   console.log('change', value, formattedValue)
 }
 /** 范围形态待选段变化时的回调：`info.range` 标识本次改动落在哪一段 */
 function onEventCalendarChange(
   value: number | [number | null, number | null] | null,
-  formattedValue: string | [string | null, string | null] | null,
+  formattedValue: string | [string, string] | null,
   info: { range: 'start' | 'end' }
 ): void {
   console.log('calendarChange', value, formattedValue, info)
@@ -92,7 +92,7 @@ function onEventCalendarChange(
 /** 点击「确定」时的回调（「此刻」是快捷入口，不派发） */
 function onEventOk(
   value: number | [number | null, number | null] | null,
-  formattedValue: string | [string | null, string | null] | null
+  formattedValue: string | [string, string] | null
 ): void {
   console.log('ok', value, formattedValue)
 }
@@ -411,8 +411,11 @@ _`value` 和 `@change` 需要配合使用，也可以直接使用 `v-model`_
 import { ref } from 'vue'
 const controlledValue = ref<number | null>(null)
 const fixedValue = ref<number | null>(new Date().getTime())
-function onControlledChange(value: number | [number | null, number | null] | null) {
-  console.log('onChange', value)
+function onControlledChange(
+  value: number | [number | null, number | null] | null,
+  formattedValue: string | [string, string] | null
+): void {
+  console.log('onChange', value, formattedValue)
   controlledValue.value = typeof value === 'number' ? value : null
 }
 </script>
@@ -457,7 +460,7 @@ _范围形态的两段共用同一个时间面板，点「确定」提交当前�
 
 ## 事件
 
-_单选形态绑定 `change` `ok` `openChange` `focus` `blur`，范围形态绑定 `change` `calendarChange`；各事件的参数都会打印到控制台_
+_单选形态绑定 `change` `ok` `openChange` `focus` `blur`，范围形态绑定 `change` `calendarChange` `ok` `openChange`；各事件的参数都会打印到控制台_
 
 <br/>
 
@@ -493,14 +496,14 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 /** 值变化时的回调：值与格式化值双轨 */
 function onEventChange(
   value: number | [number | null, number | null] | null,
-  formattedValue: string | [string | null, string | null] | null
+  formattedValue: string | [string, string] | null
 ): void {
   console.log('change', value, formattedValue)
 }
 /** 范围形态待选段变化时的回调：`info.range` 标识本次改动落在哪一段 */
 function onEventCalendarChange(
   value: number | [number | null, number | null] | null,
-  formattedValue: string | [string | null, string | null] | null,
+  formattedValue: string | [string, string] | null,
   info: { range: 'start' | 'end' }
 ): void {
   console.log('calendarChange', value, formattedValue, info)
@@ -508,7 +511,7 @@ function onEventCalendarChange(
 /** 点击「确定」时的回调（「此刻」是快捷入口，不派发） */
 function onEventOk(
   value: number | [number | null, number | null] | null,
-  formattedValue: string | [string | null, string | null] | null
+  formattedValue: string | [string, string] | null
 ): void {
   console.log('ok', value, formattedValue)
 }
@@ -750,7 +753,7 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| TimePickerFormattedValue | 字符串轨道的双向绑定值，格式由 `valueFormat` 决定 | string &#124; [string &#124; null, string &#124; null] &#124; null | null |
+| TimePickerFormattedValue | 字符串轨道的双向绑定值，格式由 `valueFormat` 决定；范围形态两段未选时分别为空字符串 | string &#124; [string, string] &#124; null | null |
 
 ### TimePickerDisabledTime Type
 
