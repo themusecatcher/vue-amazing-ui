@@ -46,7 +46,6 @@ const externalDependencies = [
   '@vuepic/vue-datepicker',
   '@vueuse/core',
   'seemly',
-  'qrcode',
   '@ant-design/colors',
   '@ctrl/tinycolor'
 ]
@@ -59,7 +58,6 @@ const externalGlobals: Record<string, string> = {
   '@vuepic/vue-datepicker': 'VueDatePicker',
   '@vueuse/core': 'Core',
   seemly: 'seemly',
-  qrcode: 'QRCode',
   '@ant-design/colors': 'Colors',
   '@ctrl/tinycolor': 'TinyColor'
 }

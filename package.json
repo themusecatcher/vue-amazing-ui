@@ -87,7 +87,6 @@
     "@vueuse/core": "^14.2.1",
     "csstype": "^3.2.3",
     "date-fns": "^4.1.0",
-    "qrcode": "^1.5.4",
     "seemly": "^0.3.10",
     "swiper": "^12.1.2"
   },
@@ -101,7 +100,6 @@
     "@tsconfig/node22": "^22.0.5",
     "@types/minimist": "^1.2.5",
     "@types/node": "^24.12.0",
-    "@types/qrcode": "^1.5.6",
     "@types/spark-md5": "^3.0.5",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/eslint-config-prettier": "^10.2.0",

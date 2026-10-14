@@ -1,143 +1,419 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watchEffect, onMounted, shallowRef } from 'vue'
 import type { CSSProperties } from 'vue'
-import QRCode from 'qrcode'
+import qrcodegen from './qrcodegen'
+import Spin from 'components/spin'
+import Button from 'components/button'
+
 export interface Props {
-  value?: string // 扫描后的文本或地址
-  type?: 'svg' | 'canvas' | 'image' // 二维码的渲染类型
-  icon?: string // 二维码中图片的地址
-  size?: number // 二维码大小，单位 px
-  iconSize?: number // 二维码中图片的大小，单位 px
-  color?: string // 二维码颜色，Value must be in hex format (十六进制颜色值)
-  bgColor?: string // 二维码背景色，Value must be in hex format (十六进制颜色值)
-  bordered?: boolean // 是否有边框
-  borderColor?: string // 边框颜色
-  scale?: number // 缩放因子，每个 black dots 占用多少像素
-  /*
-    纠错等级也叫纠错率，就是指二维码可以被遮挡后还能正常扫描，而这个能被遮挡的最大面积就是纠错率。
-    通常情况下二维码分为 4 个纠错级别：L级 可纠正约 7% 错误、M级 可纠正约 15% 错误、Q级 可纠正约 25% 错误、H级 可纠正约30% 错误。
-    并不是所有位置都可以缺损，像最明显的三个角上的方框，直接影响初始定位。中间零散的部分是内容编码，可以容忍缺损。
-    当二维码的内容编码携带信息比较少的时候，也就是链接比较短的时候，设置不同的纠错等级，生成的图片不会发生变化。
-  */
-  errorLevel?: 'L' | 'M' | 'Q' | 'H' // 二维码纠错等级
+  value?: string // 需要编码为二维码的文本或地址
+  title?: string // 无障碍文本：svg 类型输出为 <title>，canvas / image 类型输出为 aria-label / alt
+  type?: 'svg' | 'canvas' | 'image' // 渲染类型：矢量 / 位图 / 图片
+  size?: number // 二维码整体大小（含内边距与外边框），单位 px
+  padding?: number // 容器内边距，二维码绘制区为 size 减去两侧内边距与外边框
+  color?: string // 二维码前景色，CSS 颜色值
+  bgColor?: string // 二维码背景色，CSS 颜色值
+  icon?: string // 二维码中央图标的地址
+  iconSize?: number // 中央图标的大小，单位 px
+  iconBackgroundColor?: string // 中央图标的底色，用于压盖点阵、凸显图标
+  iconBorderRadius?: number // 中央图标底色的圆角，单位 px
+  bordered?: boolean // 是否展示外边框
+  borderColor?: string // 外边框颜色
+  status?: 'active' | 'expired' | 'loading' | 'scanned' // 二维码状态
+  expiredText?: string // status 为 expired 时的提示文案
+  refreshText?: string // status 为 expired 时刷新按钮的文案
+  scannedText?: string // status 为 scanned 时的提示文案
+  errorLevel?: 'L' | 'M' | 'Q' | 'H' // 纠错等级（最低保障，容量允许时会自动提升到更高等级）
+  scale?: number // 每个二维码点占用的最小像素数（屏幕像素密度更高时自动提升），同时决定导出图片的分辨率
 }
 const props = withDefaults(defineProps<Props>(), {
   value: undefined,
+  title: undefined,
   type: 'svg',
-  icon: undefined,
   size: 160,
-  iconSize: 40,
+  padding: 12,
   color: '#000',
   bgColor: '#FFF',
+  icon: undefined,
+  iconSize: 40,
+  iconBackgroundColor: '#FFF',
+  iconBorderRadius: 4,
   bordered: true,
   borderColor: 'rgba(5, 5, 5, 0.06)',
-  scale: 8,
-  errorLevel: 'H'
+  status: 'active',
+  expiredText: '二维码已过期',
+  refreshText: '点击刷新',
+  scannedText: '已扫描',
+  // 默认 M：内容较少时编码器仍会自动提升实际纠错等级
+  errorLevel: 'M',
+  scale: 8
 })
-const qrcodeSVGRef = ref<HTMLElement | null>(null)
-const qrcodeCanvasRef = ref<HTMLElement | null>(null)
-const qrcode = ref<HTMLCanvasElement | string>('')
+const emit = defineEmits<{
+  (e: 'refresh', event: MouseEvent): void
+}>()
+/** 外边框宽度：边框常驻，bordered 为 false 时仅隐去颜色，绘制区两侧恒定占用 1px */
+const BORDER_WIDTH = 1
+/** 纠错等级映射：传入等级为最低保障，容量允许时编码器会自动提升到更高等级 */
+const ERROR_LEVEL_MAP = {
+  L: qrcodegen.QrCode.Ecc.LOW,
+  M: qrcodegen.QrCode.Ecc.MEDIUM,
+  Q: qrcodegen.QrCode.Ecc.QUARTILE,
+  H: qrcodegen.QrCode.Ecc.HIGH
+}
+const canvasRef = ref<HTMLCanvasElement | null>(null)
+const imageRef = ref<HTMLImageElement | null>(null)
+const imageDataURL = ref('')
+const iconImage = shallowRef<HTMLImageElement | null>(null)
+/** 二维码绘制区边长（px），扣除容器内边距与外边框 */
+const innerSize = computed(() => Math.max(props.size - props.padding * 2 - BORDER_WIDTH * 2, 0))
+/** 二维码模块矩阵：size 为每边模块数，data 按行优先存储明暗（1 为暗点） */
+const modules = computed(() => {
+  if (!props.value) return null
+  const qr = qrcodegen.QrCode.encodeText(props.value, ERROR_LEVEL_MAP[props.errorLevel])
+  const numCells = qr.size
+  const rows = qr.getModules()
+  const data = new Uint8Array(numCells * numCells)
+  for (let y = 0; y < numCells; y++) {
+    const row = rows[y] ?? []
+    for (let x = 0; x < numCells; x++) {
+      data[y * numCells + x] = row[x] ? 1 : 0
+    }
+  }
+  return { size: numCells, data }
+})
+/** 每边模块数，供 svg 模板使用 */
+const moduleCount = computed(() => modules.value?.size ?? 0)
+/** svg 背景路径（整块底色） */
+const backgroundPath = computed(() => `M0 0h${moduleCount.value}v${moduleCount.value}H0z`)
+/**
+ * 图标覆盖的模块矩形（半开区间）：图标区域的点阵需挖空，
+ * 否则图标压住点阵会显著降低识别率；由图标显示尺寸换算到模块坐标并居中
+ */
+const iconExcavation = computed(() => {
+  if (!props.icon || !modules.value || !innerSize.value) return null
+  const numCells = modules.value.size
+  const covered = (props.iconSize / innerSize.value) * numCells
+  const start = Math.max(Math.floor((numCells - covered) / 2), 0)
+  const end = Math.min(Math.ceil((numCells + covered) / 2), numCells)
+  return end > start ? { start, end } : null
+})
+/** 前景暗点路径（合并同行的连续暗点为单条子路径，大幅压缩节点数） */
+const foregroundPath = computed(() => {
+  const matrix = modules.value
+  if (!matrix) return ''
+  const { size: numCells, data } = matrix
+  const box = iconExcavation.value
+  const ops: string[] = []
+  for (let y = 0; y < numCells; y++) {
+    let start: number | null = null
+    for (let x = 0; x < numCells; x++) {
+      const inExcavation = box !== null && y >= box.start && y < box.end && x >= box.start && x < box.end
+      const dark = Boolean(data[y * numCells + x]) && !inExcavation
+      if (dark && start === null) {
+        start = x
+      } else if (!dark && start !== null) {
+        ops.push(`M${start} ${y}h${x - start}v1H${start}z`)
+        start = null
+      }
+    }
+    if (start !== null) ops.push(`M${start} ${y}h${numCells - start}v1H${start}z`)
+  }
+  return ops.join('')
+})
 const qrcodeStyle = computed(() => {
   const style: CSSProperties = {
     width: `${props.size}px`,
     height: `${props.size}px`,
+    padding: `${props.padding}px`,
     backgroundColor: `${props.bgColor}`,
-    borderColor: `${props.borderColor}`
+    // 边框常驻、仅切换颜色，避免 bordered 变化时绘制区尺寸跳动
+    borderColor: props.bordered ? `${props.borderColor}` : 'transparent'
   }
   return style
 })
-const iconStyle = computed(() => {
-  const style: CSSProperties = {
-    width: `${props.iconSize}px`,
-    height: `${props.iconSize}px`,
-    backgroundColor: `${props.bgColor}`
-  }
-  return style
-})
-const qrcodeOptions = computed(() => {
+/**
+ * 图标几何信息（模块坐标系）：底色块的位置尺寸与圆角，
+ * 以及保持原始宽高比并在底色块内居中后的图片绘制矩形；canvas 与 svg 共用同一份
+ */
+const iconPlacement = computed(() => {
+  const icon = iconImage.value
+  const numCells = modules.value?.size ?? 0
+  if (!icon || !numCells || !innerSize.value) return null
+  const ratio = numCells / innerSize.value
+  const side = props.iconSize * ratio
+  const radius = props.iconBorderRadius * ratio
+  const x = (numCells - side) / 2
+  const y = (numCells - side) / 2
+  const aspect = icon.height ? icon.width / icon.height : 1
+  const width = aspect >= 1 ? side : side * aspect
+  const height = aspect <= 1 ? side : side / aspect
   return {
-    quality: 1, // 0 <= quality <= 1，仅在 type 为 'image/jpeg' 或 'image/webp' 时有效
-    margin: 0, // 边距大小，单位 px
-    scale: props.scale, // 缩放因子，1 即 1px per module（黑点）
-    color: {
-      dark: props.color, // 像素点颜色
-      light: '#00000000' // 背景色
-    },
-    errorCorrectionLevel: props.errorLevel
+    icon,
+    side,
+    radius,
+    x,
+    y,
+    width,
+    height,
+    imageX: x + (side - width) / 2,
+    imageY: y + (side - height) / 2
   }
 })
-watch(
-  () => [props.value, props.type, qrcodeOptions.value],
-  async () => {
-    if (props.value) {
-      if (props.type === 'svg') {
-        qrcode.value = await QRCode.toString(props.value, qrcodeOptions.value)
-        if (qrcodeSVGRef.value) {
-          qrcodeSVGRef.value.innerHTML = qrcode.value
-        }
-      } else if (props.type === 'canvas') {
-        // SSR（Node）下无 canvas 元素，qrcode 库会抛错，判空后再绘制
-        if (qrcodeCanvasRef.value) {
-          qrcode.value = await QRCode.toCanvas(props.value, qrcodeOptions.value)
-          qrcodeCanvasRef.value.appendChild(qrcode.value)
-        }
-      } else {
-        qrcode.value = await QRCode.toDataURL(props.value, qrcodeOptions.value)
-      }
+/**
+ * 每个二维码点的绘制像素数：以 scale 为下限，
+ * 并按绘制区在当前屏幕像素密度下的实际所需自动提升，避免高分辨率屏下位图被放大而发虚
+ */
+const unitPixels = computed(() => {
+  const numCells = modules.value?.size ?? 0
+  const base = Math.max(Math.floor(props.scale), 1)
+  if (!numCells || !innerSize.value) return base
+  const dpr = typeof window === 'undefined' ? 1 : window.devicePixelRatio || 1
+  return Math.max(base, Math.ceil((innerSize.value * dpr) / numCells))
+})
+/** 将二维码绘制到目标 canvas：屏幕渲染与导出共用，保证「所见即所得」 */
+const paint = (canvas: HTMLCanvasElement) => {
+  const matrix = modules.value
+  if (!matrix) return
+  const numCells = matrix.size
+  const unit = unitPixels.value
+  const pixelSize = numCells * unit
+  canvas.width = pixelSize
+  canvas.height = pixelSize
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
+  const { data } = matrix
+  const box = iconExcavation.value
+  ctx.clearRect(0, 0, pixelSize, pixelSize)
+  ctx.fillStyle = props.bgColor
+  ctx.fillRect(0, 0, pixelSize, pixelSize)
+  ctx.fillStyle = props.color
+  for (let y = 0; y < numCells; y++) {
+    for (let x = 0; x < numCells; x++) {
+      const inExcavation = box !== null && y >= box.start && y < box.end && x >= box.start && x < box.end
+      if (data[y * numCells + x] && !inExcavation) ctx.fillRect(x * unit, y * unit, unit, unit)
     }
-  },
-  {
-    immediate: true,
-    deep: true,
-    flush: 'post'
   }
+  const placement = iconPlacement.value
+  if (!placement) return
+  // 图标底色：圆角块压盖点阵；部分环境不支持 roundRect 时退化为直角块
+  const { icon, side, radius, x, y, width, height, imageX, imageY } = placement
+  ctx.fillStyle = props.iconBackgroundColor
+  ctx.beginPath()
+  if (typeof ctx.roundRect === 'function') {
+    ctx.roundRect(x * unit, y * unit, side * unit, side * unit, radius * unit)
+    ctx.fill()
+  } else {
+    ctx.fillRect(x * unit, y * unit, side * unit, side * unit)
+  }
+  ctx.drawImage(icon, imageX * unit, imageY * unit, width * unit, height * unit)
+}
+const renderCanvas = () => {
+  const canvas = canvasRef.value
+  if (canvas) paint(canvas)
+}
+const renderImage = () => {
+  const canvas = document.createElement('canvas')
+  paint(canvas)
+  imageDataURL.value = canvas.toDataURL('image/png')
+}
+/**
+ * 统一绘制入口：canvas 与 image 类型共用同一份模块矩阵与图标信息
+ * （svg 类型由模板声明式渲染，服务端也不依赖挂载）。
+ * 绘制失败（如色值非法）时保留既有内容并通过控制台告警，不静默失败也不中断组件
+ */
+const renderQRCode = () => {
+  if (!props.value || props.type === 'svg') return
+  try {
+    if (props.type === 'canvas') {
+      renderCanvas()
+    } else {
+      renderImage()
+    }
+  } catch (error) {
+    console.warn('[QRCode] 二维码绘制失败：', error)
+  }
+}
+// 绘制依赖由 renderQRCode 内部读取的响应式数据自动追踪；type 需显式读取以覆盖类型切换
+watchEffect(
+  () => {
+    void props.type
+    renderQRCode()
+  },
+  { flush: 'post' }
 )
+if (import.meta.env.DEV && props.icon && props.errorLevel === 'L') {
+  console.warn('[vue-amazing-ui] QRCode 同时使用 icon 与 L 纠错等级会明显降低识别率，建议将 errorLevel 设为 M 及以上')
+}
+onMounted(() => {
+  renderQRCode()
+  if (imageRef.value) imageRef.value.addEventListener('load', renderQRCode)
+})
+// 图标需先加载完成才能绘制与挖空：以加载态触发重绘，并在地址变更时中止上一次加载
+watchEffect((onCleanup) => {
+  const src = props.icon
+  if (!src) {
+    iconImage.value = null
+    return
+  }
+  let aborted = false
+  const image = new Image()
+  image.onload = () => {
+    if (aborted) return
+    iconImage.value = image
+    renderQRCode()
+  }
+  image.onerror = () => {
+    if (aborted) return
+    iconImage.value = null
+    renderQRCode()
+  }
+  image.src = src
+  onCleanup(() => {
+    aborted = true
+  })
+})
+/** 点击刷新：仅转发事件，状态由使用方控制 */
+const onRefresh = (event: MouseEvent) => {
+  emit('refresh', event)
+}
 defineExpose({
-  getQRCodeImage: () => props.value && QRCode.toDataURL(props.value, qrcodeOptions.value)
+  /** 导出当前二维码图片（dataURL），内容与屏幕渲染一致（含中央图标）；可传入 MIME 类型与质量参数 */
+  toDataURL: (type = 'image/png', quality?: number): string => {
+    if (!props.value) return ''
+    try {
+      const canvas = document.createElement('canvas')
+      paint(canvas)
+      return canvas.toDataURL(type, quality)
+    } catch (error) {
+      console.warn('[QRCode] 二维码导出失败：', error)
+      return ''
+    }
+  }
 })
 </script>
 <template>
-  <div class="qrcode-wrap" :class="{ 'qrcode-bordered': bordered }" :style="qrcodeStyle">
-    <span v-if="type === 'svg'" ref="qrcodeSVGRef" class="qrcode-svg"></span>
-    <span v-if="type === 'canvas'" ref="qrcodeCanvasRef" class="qrcode-canvas"></span>
-    <img v-if="type === 'image'" :src="qrcode as string" class="qrcode-image" alt="QR Code" />
-    <img v-if="icon" :src="icon" :style="iconStyle" class="qrcode-icon" alt="QR Code Icon" />
+  <div class="qr-code-wrap" :style="qrcodeStyle">
+    <svg
+      v-if="type === 'svg'"
+      class="qr-code-svg"
+      :viewBox="`0 0 ${moduleCount} ${moduleCount}`"
+      width="100%"
+      height="100%"
+      shape-rendering="crispEdges"
+      role="img"
+      :aria-label="title"
+    >
+      <title v-if="title">{{ title }}</title>
+      <path :fill="bgColor" :d="backgroundPath" />
+      <path :fill="color" :d="foregroundPath" />
+      <template v-if="iconPlacement">
+        <rect
+          :fill="iconBackgroundColor"
+          :x="iconPlacement.x"
+          :y="iconPlacement.y"
+          :width="iconPlacement.side"
+          :height="iconPlacement.side"
+          :rx="iconPlacement.radius"
+          :ry="iconPlacement.radius"
+        />
+        <image
+          :href="iconPlacement.icon.src"
+          :x="iconPlacement.imageX"
+          :y="iconPlacement.imageY"
+          :width="iconPlacement.width"
+          :height="iconPlacement.height"
+          preserveAspectRatio="none"
+        />
+      </template>
+    </svg>
+    <canvas
+      v-else-if="type === 'canvas'"
+      ref="canvasRef"
+      class="qr-code-canvas"
+      role="img"
+      :aria-label="title"
+    ></canvas>
+    <img v-else ref="imageRef" :src="imageDataURL" class="qr-code-image" :alt="title || 'QR Code'" />
+    <div v-if="status !== 'active'" class="qr-code-mask">
+      <Spin v-if="status === 'loading'" />
+      <template v-else-if="status === 'expired'">
+        <p class="qr-code-expired">{{ expiredText }}</p>
+        <Button type="link" @click="onRefresh">
+          <template #icon>
+            <svg class="qr-code-refresh-icon" viewBox="0 0 16 16" aria-hidden="true">
+              <path
+                d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+              <path
+                d="M12.6 1.6v3h-3"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </template>
+          {{ refreshText }}
+        </Button>
+      </template>
+      <p v-else class="qr-code-scanned">{{ scannedText }}</p>
+    </div>
   </div>
 </template>
 <style lang="less" scoped>
-.qrcode-wrap {
+.qr-code-wrap {
+  // 状态遮罩配色，可在外部（祖先元素或 :root）重新声明同名变量覆盖
+  --qr-code-mask-bg: rgba(255, 255, 255, 0.96);
+  --qr-code-mask-color: rgba(0, 0, 0, 0.88);
   position: relative;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  padding: 12px;
+  // 边框常驻（颜色由内联样式在透明间切换），保证 bordered 变化时绘制区尺寸不跳动
+  border-width: 1px;
+  border-style: solid;
   border-radius: 8px;
   overflow: hidden;
-  .qrcode-svg,
-  .qrcode-canvas,
-  .qrcode-image {
+  .qr-code-svg,
+  .qr-code-canvas,
+  .qr-code-image {
+    display: block;
     width: 100%;
     height: 100%;
   }
-  .qrcode-canvas {
-    :deep(canvas) {
-      max-width: 100%;
-      max-height: 100%;
+  .qr-code-mask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    color: var(--qr-code-mask-color);
+    text-align: center;
+    background: var(--qr-code-mask-bg);
+    .qr-code-expired,
+    .qr-code-scanned {
+      margin: 0;
+      color: inherit;
+    }
+    .qr-code-expired {
+      margin-bottom: 4px;
     }
   }
-  .qrcode-icon {
-    position: absolute;
-    z-index: 1;
-    right: 0;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-    pointer-events: none;
+  .qr-code-refresh-icon {
+    width: 14px;
+    height: 14px;
   }
-}
-.qrcode-bordered {
-  border-width: 1px;
-  border-style: solid;
 }
 </style>

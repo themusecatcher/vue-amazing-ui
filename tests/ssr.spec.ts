@@ -71,8 +71,17 @@ describe('SSR 渲染安全性', () => {
     await expect(renderComponent(Col)).resolves.toBeTruthy()
     await expect(renderComponent(Descriptions)).resolves.toBeTruthy()
     await expect(renderComponent(QRCode, { value: 'https://example.com' })).resolves.toBeTruthy()
+    // canvas 类型：Node 下无 document，不得调用依赖 canvas 的 qrcode.toCanvas
+    await expect(renderComponent(QRCode, { value: 'https://example.com', type: 'canvas' })).resolves.toBeTruthy()
     await expect(renderComponent(Tag, { value: ['tag'] })).resolves.toBeTruthy()
     await expect(renderComponent(HookProbe)).resolves.toBeTruthy()
+  })
+
+  it('svg 类型在服务端输出完整矢量结构（不依赖挂载）', async () => {
+    const html = await renderComponent(QRCode, { value: 'https://example.com' })
+    expect(html).toContain('qr-code-svg')
+    // 背景 + 前景两条 path 均由服务端产出，客户端首屏无需二次绘制
+    expect(html.match(/<path/g)).toHaveLength(2)
   })
 
   it('依赖共享组合式函数的组件可在 Node 环境渲染', async () => {
