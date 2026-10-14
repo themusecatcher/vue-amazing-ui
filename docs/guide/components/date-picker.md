@@ -10,42 +10,25 @@ _输入或选择日期的控件_
 - 需要输入或选择日期与时间时
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import {
   addDays,
   addMonths,
-  addYears,
   differenceInCalendarDays,
   endOfDay,
-  format,
   getDate,
   getDay,
   getHours,
   getMinutes,
   getSeconds,
   isSameDay,
-  setHours,
   startOfDay,
-  startOfMonth,
-  startOfQuarter,
-  startOfYear
+  startOfMonth
 } from 'date-fns'
 import type { CSSProperties } from 'vue'
 import type { DatePickerProps } from 'vue-amazing-ui'
-/** 单日期用例的初始值：当天（`offsetDays` 可偏移） */
-function initialDate(offsetDays: number = 0): number {
-  return addDays(new Date(), offsetDays).getTime()
-}
-/** 日期时间用例的初始值：当前时刻（含时分秒） */
-function initialDateTime(): number {
-  return new Date().getTime()
-}
-/** 日期时间范围用例的初始值：起点取当日 09:00、终点取七天后 18:00 */
-function initialDateTimeRange(): [number, number] {
-  const start = setHours(startOfDay(new Date()), 9).getTime()
-  const end = setHours(addDays(startOfDay(new Date()), 7), 18).getTime()
-  return [start, end]
-}
+/** 演示用例的固定值：与 antd 官方一致取固定日期（不随当天变化），便于截图与文档展示 */
+const fixedDate = new Date(2026, 9, 10).getTime()
 /** 范围用例的初始值：两端都归一到当日零点，与面板按天选择的粒度一致 */
 function initialRange(startOffset: number = 0, endOffset: number = 7): [number, number] {
   const start = startOfDay(addDays(new Date(), startOffset)).getTime()
@@ -53,80 +36,63 @@ function initialRange(startOffset: number = 0, endOffset: number = 7): [number, 
   return [start, end]
 }
 // 各用例独立持有一组值，避免在一个用例里选日期影响到其它用例
-const basicValue = ref<number | null>(initialDate())
-const slashValue = ref<number | null>(initialDate())
-const chineseValue = ref<number | null>(initialDate())
-const rangeFormatValue = ref<[number, number] | null>(initialRange())
-const disabledValue = ref<number | null>(initialDate())
-const beforeTodayValue = ref<number | null>(initialDate(-3))
-const afterTodayValue = ref<number | null>(initialDate(3))
-const weekendValue = ref<number | null>(initialDate())
-const sizeCaseValue = ref<number | null>(initialDate())
-const suffixValue = ref<number | null>(initialDate())
-const warningValue = ref<number | null>(initialDate())
-const errorValue = ref<number | null>(initialDate())
-const errorRangeValue = ref<[number, number] | null>(initialRange())
-const warningRangeValue = ref<[number, number] | null>(initialRange())
-const borderlessValue = ref<number | null>(initialDate())
-const placementBottomLeftValue = ref<number | null>(initialDate())
-const placementBottomRightValue = ref<number | null>(initialDate())
-const placementTopLeftValue = ref<number | null>(initialDate())
-const placementTopRightValue = ref<number | null>(initialDate())
-const placementRangeBottomLeftValue = ref<[number, number] | null>(initialRange())
-const placementRangeTopLeftValue = ref<[number, number] | null>(initialRange())
-// 键盘操作用例：日期 / 范围 / 日期时间各一，初始值便于展开面板后立刻用方向键移动光标
-const keyboardValue = ref<number | null>(initialDate())
-const keyboardRangeValue = ref<[number, number] | null>(initialRange(-3, 0))
-const keyboardDateTimeValue = ref<number | null>(initialDateTime())
-// 周形态用例：初始值取当天（面板按 ISO 周成行高亮，展示格式为 ISO 周年 + 周序号，带「周」字后缀）
-const weekValue = ref<number | null>(initialDate())
-// 月 / 季 / 年形态用例：初始值取当前月首日 / 季首日 / 年首日，与形态的粒度一致
-const monthValue = ref<number | null>(startOfMonth(new Date()).getTime())
-const quarterValue = ref<number | null>(startOfQuarter(new Date()).getTime())
-const yearValue = ref<number | null>(startOfYear(new Date()).getTime())
-const monthFormatValue = ref<number | null>(startOfMonth(new Date()).getTime())
-// 周格式用例：周年占位符只能取 ISO 口径（RRRR）——与周序号（II）配对才可解析
-const weekFormatValue = ref<number | null>(initialDate())
-const disabledMonthValue = ref<number | null>(startOfMonth(new Date()).getTime())
-const disabledFullRangeValue = ref<[number, number] | null>(initialRange())
-const disabledMonthBeforeValue = ref<number | null>(startOfMonth(new Date()).getTime())
-const sizeMonthValue = ref<number | null>(startOfMonth(new Date()).getTime())
-const sizeWeekValue = ref<number | null>(initialDate())
-// 月 / 季 / 年范围用例：起点取过去、终点取未来，使区间跨越多个格
-const monthRangeValue = ref<[number, number] | null>([
-  startOfMonth(addMonths(new Date(), -2)).getTime(),
-  startOfMonth(addMonths(new Date(), 2)).getTime()
-])
-const quarterRangeValue = ref<[number, number] | null>([
-  startOfQuarter(addMonths(new Date(), -3)).getTime(),
-  startOfQuarter(addMonths(new Date(), 3)).getTime()
-])
-const yearRangeValue = ref<[number, number] | null>([
-  startOfYear(addYears(new Date(), -1)).getTime(),
-  startOfYear(addYears(new Date(), 1)).getTime()
-])
-// 周范围用例：起点取两周前、终点取今天，使区间横跨数周
-const weekRangeValue = ref<[number, number] | null>(initialRange(-14, 0))
+// 与 antd 官方对齐：除「日期格式」「禁用」等少数需要展示已选值的用例外，其余均不设初始值
+const basicValue = ref<number | null>(null)
+const slashValue = ref<number | null>(fixedDate)
+const chineseValue = ref<number | null>(fixedDate)
+const rangeFormatValue = ref<[number, number] | null>([fixedDate, addDays(fixedDate, 5).getTime()])
+const disabledValue = ref<number | null>(fixedDate)
+const beforeTodayValue = ref<number | null>(null)
+const afterTodayValue = ref<number | null>(null)
+const weekendValue = ref<number | null>(null)
+const sizeCaseValue = ref<number | null>(null)
+const suffixValue = ref<number | null>(null)
+const warningValue = ref<number | null>(null)
+const errorValue = ref<number | null>(null)
+const errorRangeValue = ref<[number, number] | null>(null)
+const warningRangeValue = ref<[number, number] | null>(null)
+const borderlessValue = ref<number | null>(null)
+const placementBottomLeftValue = ref<number | null>(null)
+const placementBottomRightValue = ref<number | null>(null)
+const placementTopLeftValue = ref<number | null>(null)
+const placementTopRightValue = ref<number | null>(null)
+const placementRangeBottomLeftValue = ref<[number, number] | null>(null)
+const placementRangeTopLeftValue = ref<[number, number] | null>(null)
+// 键盘操作用例：日期 / 范围 / 日期时间各一；无初始值时光标以面板视图日期（当天）为起点，方向键同样可操作
+const keyboardValue = ref<number | null>(null)
+const keyboardRangeValue = ref<[number, number] | null>(null)
+const keyboardDateTimeValue = ref<number | null>(null)
+// 周形态用例：面板按 ISO 周成行高亮，展示格式为 ISO 周年 + 周序号，带「周」字后缀
+const weekValue = ref<number | null>(null)
+// 月 / 季 / 年形态用例：初始值为空
+const monthValue = ref<number | null>(null)
+const quarterValue = ref<number | null>(null)
+const yearValue = ref<number | null>(null)
+const monthFormatValue = ref<number | null>(startOfMonth(fixedDate).getTime())
+// 周格式用例：周年占位符只能取 ISO 口径（RRRR）——与周序号（II）配对才可解析；该用例与官方一致取当天值
+const weekFormatValue = ref<number | null>(Date.now())
+const disabledMonthValue = ref<number | null>(startOfMonth(fixedDate).getTime())
+const disabledFullRangeValue = ref<[number, number] | null>([fixedDate, fixedDate])
+const disabledMonthBeforeValue = ref<number | null>(null)
+const sizeMonthValue = ref<number | null>(null)
+const sizeWeekValue = ref<number | null>(null)
+// 月 / 季 / 年范围用例：初始值为空
+const monthRangeValue = ref<[number, number] | null>(null)
+const quarterRangeValue = ref<[number, number] | null>(null)
+const yearRangeValue = ref<[number, number] | null>(null)
+// 周范围用例：初始值为空
+const weekRangeValue = ref<[number, number] | null>(null)
 const presetMonthRangeValue = ref<[number, number] | null>(null)
-// 无边框用例的月 / 季 / 年形态：各持一组值，不与其它用例联动
-const borderlessMonthValue = ref<number | null>(startOfMonth(new Date()).getTime())
-const borderlessQuarterValue = ref<number | null>(startOfQuarter(new Date()).getTime())
-const borderlessYearValue = ref<number | null>(startOfYear(new Date()).getTime())
-const borderlessMonthRangeValue = ref<[number, number] | null>([
-  startOfMonth(addMonths(new Date(), -1)).getTime(),
-  startOfMonth(addMonths(new Date(), 1)).getTime()
-])
-const borderlessYearRangeValue = ref<[number, number] | null>([
-  startOfYear(addYears(new Date(), -1)).getTime(),
-  startOfYear(addYears(new Date(), 1)).getTime()
-])
-const borderlessWeekValue = ref<number | null>(initialDate())
-const borderlessWeekRangeValue = ref<[number, number] | null>(initialRange(-14, 0))
-const borderlessDateRangeValue = ref<[number, number] | null>(initialRange())
-const borderlessQuarterRangeValue = ref<[number, number] | null>([
-  startOfQuarter(addMonths(new Date(), -3)).getTime(),
-  startOfQuarter(addMonths(new Date(), 3)).getTime()
-])
+// 无边框用例的月 / 季 / 年形态：各持一组值，不与其它用例联动；初始值均为空
+const borderlessMonthValue = ref<number | null>(null)
+const borderlessQuarterValue = ref<number | null>(null)
+const borderlessYearValue = ref<number | null>(null)
+const borderlessMonthRangeValue = ref<[number, number] | null>(null)
+const borderlessYearRangeValue = ref<[number, number] | null>(null)
+const borderlessWeekValue = ref<number | null>(null)
+const borderlessWeekRangeValue = ref<[number, number] | null>(null)
+const borderlessDateRangeValue = ref<[number, number] | null>(null)
+const borderlessQuarterRangeValue = ref<[number, number] | null>(null)
 // 月范围用例的预设：值同样支持时间戳与函数（此处为「近 N 个月」两个区间）
 const monthRangePresets: NonNullable<DatePickerProps['presets']> = [
   {
@@ -138,14 +104,14 @@ const monthRangePresets: NonNullable<DatePickerProps['presets']> = [
     value: () => [startOfMonth(addMonths(new Date(), -5)).getTime(), startOfMonth(new Date()).getTime()]
   }
 ]
-// 范围用例：主用例的日期范围形态
-const rangeValue = ref<[number, number] | null>(initialRange())
-const sizeRangeValue = ref<[number, number] | null>(initialRange())
+// 范围用例：主用例的日期范围形态，初始值为空
+const rangeValue = ref<[number, number] | null>(null)
+const sizeRangeValue = ref<[number, number] | null>(null)
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 // 切换不同的选择器用例：分段控件切换形态，各形态共用同一个绑定值
 type SwitchableType = 'date' | 'week' | 'month' | 'quarter' | 'year'
 const switchableType = ref<SwitchableType>('date')
-const switchableValue = ref<number | null>(initialDate())
+const switchableValue = ref<number | null>(null)
 const switchableOptions: { label: string; value: SwitchableType }[] = [
   { label: '日期', value: 'date' },
   { label: '周', value: 'week' },
@@ -153,8 +119,19 @@ const switchableOptions: { label: string; value: SwitchableType }[] = [
   { label: '季度', value: 'quarter' },
   { label: '年份', value: 'year' }
 ]
-// 日期时间范围用例：单个日期时间面板 + 两段切换
-const dateTimeRangeValue = ref<[number, number] | null>(initialDateTimeRange())
+/** 切换选择器的提示文字：随形态切换，与各形态基本用例的提示保持一致 */
+const switchablePlaceholder = computed(() => {
+  const placeholderMap: Record<SwitchableType, string> = {
+    date: '请选择日期',
+    week: '请选择周',
+    month: '请选择月份',
+    quarter: '请选择季度',
+    year: '请选择年份'
+  }
+  return placeholderMap[switchableType.value]
+})
+// 日期时间范围用例：单个日期时间面板 + 两段切换，初始值为空
+const dateTimeRangeValue = ref<[number, number] | null>(null)
 // 按段默认时刻用例：范围形态按段指定（起点当日 0 点、终点当日 23:59:59）
 const defaultTimeRangeValue = ref<[number, number] | null>(null)
 /** 起点取当日 0 点、终点取当日 23:59:59（只取其中的时分秒，日期部分不参与落值） */
@@ -166,15 +143,15 @@ const rangeDefaultTime: NonNullable<DatePickerProps['defaultTime']> = [
 const disabledRangeValue = ref<[number, number] | null>(null)
 // 逐段禁用用例：起点段禁用且持有值（起点不可输入但值仍展示）、终点段可编辑
 const disabledSideRangeValue = ref<[number, number] | null>(initialRange(-3, 0))
-// 日期时间用例：主用例 + 时间面板选项 / 12 小时制 / 隐藏「此刻」三个细项
-const datetimeValue = ref<number | null>(initialDateTime())
-const minuteStepValue = ref<number | null>(initialDateTime())
-const twelveHourValue = ref<number | null>(initialDateTime())
-const showNowValue = ref<number | null>(initialDateTime())
-// 事件用例：单选 / 范围 / 日期时间各一，绑定后可在控制台查看各事件的触发时机与参数
-const eventValue = ref<number | null>(initialDate())
-const eventRangeValue = ref<[number, number] | null>(initialRange())
-const eventDateTimeValue = ref<number | null>(initialDateTime())
+// 日期时间用例：主用例 + 时间面板选项 / 12 小时制 / 隐藏「此刻」三个细项，初始值均为空
+const datetimeValue = ref<number | null>(null)
+const minuteStepValue = ref<number | null>(null)
+const twelveHourValue = ref<number | null>(null)
+const showNowValue = ref<number | null>(null)
+// 事件用例：单选 / 范围 / 日期时间各一，绑定后可在控制台查看各事件的触发时机与参数；初始值均为空
+const eventValue = ref<number | null>(null)
+const eventRangeValue = ref<[number, number] | null>(null)
+const eventDateTimeValue = ref<number | null>(null)
 /** 值变化时的回调：值与格式化值双轨 */
 function onEventChange(
   value: number | [number | null, number | null] | null,
@@ -310,9 +287,9 @@ const sizeOptions: Array<{ label: string; value: NonNullable<DatePickerProps['si
   { label: 'middle', value: 'middle' },
   { label: 'large', value: 'large' }
 ]
-// 定制日期单元格用例：单日期与日期范围各持一组值
-const dateRenderValue = ref<number | null>(initialDate())
-const dateRenderRangeValue = ref<[number, number] | null>(initialRange())
+// 定制日期单元格用例：单日期与日期范围各持一组值，初始值均为空
+const dateRenderValue = ref<number | null>(null)
+const dateRenderRangeValue = ref<[number, number] | null>(null)
 /** 定制日期单元格：每月 1 号描一圈边框（单元格内层块高 24px，自定义节点须按 border-box 等高，否则外框会把圆圈撑高 2px） */
 function firstDayCellStyle(dayOfMonth: number): CSSProperties {
   const cellStyle: CSSProperties = { boxSizing: 'border-box', height: '24px' }
@@ -406,11 +383,11 @@ function onStartOpenChange(open: boolean): void {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { startOfMonth, startOfQuarter, startOfYear } from 'date-fns'
-const basicValue = ref<number | null>(new Date().getTime())
-const monthValue = ref<number | null>(startOfMonth(new Date()).getTime())
-const quarterValue = ref<number | null>(startOfQuarter(new Date()).getTime())
-const yearValue = ref<number | null>(startOfYear(new Date()).getTime())
+const basicValue = ref<number | null>(null)
+const weekValue = ref<number | null>(null)
+const monthValue = ref<number | null>(null)
+const quarterValue = ref<number | null>(null)
+const yearValue = ref<number | null>(null)
 </script>
 <template>
   <Space vertical>
@@ -446,11 +423,12 @@ _使用 `format` 定制展示格式_
 <script setup lang="ts">
 import { ref } from 'vue'
 import { addDays, startOfMonth } from 'date-fns'
-const slashValue = ref<number | null>(new Date().getTime())
-const chineseValue = ref<number | null>(new Date().getTime())
-const monthFormatValue = ref<number | null>(startOfMonth(new Date()).getTime())
-const weekFormatValue = ref<number | null>(new Date().getTime())
-const rangeFormatValue = ref<[number, number] | null>([new Date().getTime(), addDays(new Date(), 7).getTime()])
+const fixedDate = new Date(2026, 9, 10).getTime()
+const slashValue = ref<number | null>(fixedDate)
+const chineseValue = ref<number | null>(fixedDate)
+const monthFormatValue = ref<number | null>(startOfMonth(fixedDate).getTime())
+const weekFormatValue = ref<number | null>(Date.now())
+const rangeFormatValue = ref<[number, number] | null>([fixedDate, addDays(fixedDate, 5).getTime()])
 const rangePlaceholder = ['开始日期', '结束日期']
 </script>
 <template>
@@ -486,20 +464,11 @@ _通过设置 `type` 属性，指定范围选择器类型_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { addMonths, addYears, startOfMonth, startOfQuarter, startOfYear } from 'date-fns'
 const rangeValue = ref<[number, number] | null>(null)
-const monthRangeValue = ref<[number, number] | null>([
-  startOfMonth(addMonths(new Date(), -2)).getTime(),
-  startOfMonth(addMonths(new Date(), 2)).getTime()
-])
-const quarterRangeValue = ref<[number, number] | null>([
-  startOfQuarter(addMonths(new Date(), -3)).getTime(),
-  startOfQuarter(addMonths(new Date(), 3)).getTime()
-])
-const yearRangeValue = ref<[number, number] | null>([
-  startOfYear(addYears(new Date(), -1)).getTime(),
-  startOfYear(addYears(new Date(), 1)).getTime()
-])
+const weekRangeValue = ref<[number, number] | null>(null)
+const monthRangeValue = ref<[number, number] | null>(null)
+const quarterRangeValue = ref<[number, number] | null>(null)
+const yearRangeValue = ref<[number, number] | null>(null)
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 </script>
 <template>
@@ -531,10 +500,8 @@ _`type="datetimerange"` 在范围形态上叠加时间面板：两段共用同�
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { addDays, getHours, getMinutes, getSeconds, isSameDay, setHours, startOfDay } from 'date-fns'
-const start = setHours(startOfDay(new Date()), 9).getTime()
-const end = setHours(addDays(startOfDay(new Date()), 7), 18).getTime()
-const dateTimeRangeValue = ref<[number, number] | null>([start, end])
+import { getHours, getMinutes, getSeconds, isSameDay } from 'date-fns'
+const dateTimeRangeValue = ref<[number, number] | null>(null)
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 /** 半开区间 [start, end) 的整数序列 */
 function range(start: number, end: number): number[] {
@@ -607,17 +574,17 @@ _提供选择器，自由切换不同类型的日期选择器，常用于日期�
 
 <Space vertical>
   <Segmented v-model:value="switchableType" :options="switchableOptions" />
-  <DatePicker v-model:value="switchableValue" :type="switchableType" />
+  <DatePicker v-model:value="switchableValue" :type="switchableType" :placeholder="switchablePlaceholder" />
 </Space>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 type SwitchableType = 'date' | 'week' | 'month' | 'quarter' | 'year'
 const switchableType = ref<SwitchableType>('date')
-const switchableValue = ref<number | null>(new Date().getTime())
+const switchableValue = ref<number | null>(null)
 const switchableOptions: { label: string; value: SwitchableType }[] = [
   { label: '日期', value: 'date' },
   { label: '周', value: 'week' },
@@ -625,11 +592,22 @@ const switchableOptions: { label: string; value: SwitchableType }[] = [
   { label: '季度', value: 'quarter' },
   { label: '年份', value: 'year' }
 ]
+/** 切换选择器的提示文字：随形态切换，与各形态基本用例的提示保持一致 */
+const switchablePlaceholder = computed(() => {
+  const placeholderMap: Record<SwitchableType, string> = {
+    date: '请选择日期',
+    week: '请选择周',
+    month: '请选择月份',
+    quarter: '请选择季度',
+    year: '请选择年份'
+  }
+  return placeholderMap[switchableType.value]
+})
 </script>
 <template>
   <Space vertical>
     <Segmented v-model:value="switchableType" :options="switchableOptions" />
-    <DatePicker v-model:value="switchableValue" :type="switchableType" />
+    <DatePicker v-model:value="switchableValue" :type="switchableType" :placeholder="switchablePlaceholder" />
   </Space>
 </template>
 ```
@@ -687,10 +665,10 @@ _隐藏「此刻」快捷_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const datetimeValue = ref<number | null>(new Date().getTime())
-const minuteStepValue = ref<number | null>(new Date().getTime())
-const twelveHourValue = ref<number | null>(new Date().getTime())
-const showNowValue = ref<number | null>(new Date().getTime())
+const datetimeValue = ref<number | null>(null)
+const minuteStepValue = ref<number | null>(null)
+const twelveHourValue = ref<number | null>(null)
+const showNowValue = ref<number | null>(null)
 </script>
 <template>
   <Space vertical>
@@ -755,10 +733,9 @@ _单选形态绑定 `change` `openChange` `panelChange` `focus` `blur`，范围�
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { subDays } from 'date-fns'
-const eventValue = ref<number | null>(new Date().getTime())
-const eventRangeValue = ref<[number, number] | null>([subDays(new Date(), 7).getTime(), new Date().getTime()])
-const eventDateTimeValue = ref<number | null>(new Date().getTime())
+const eventValue = ref<number | null>(null)
+const eventRangeValue = ref<[number, number] | null>(null)
+const eventDateTimeValue = ref<number | null>(null)
 const rangePlaceholder = ['开始日期', '结束日期']
 /** 值变化时的回调：值与格式化值双轨 */
 function onEventChange(
@@ -861,12 +838,10 @@ _范围形态的 `disabled` 可传两段元组逐段禁用，被禁用的段不�
 <script setup lang="ts">
 import { ref } from 'vue'
 import { startOfDay, startOfMonth, subDays } from 'date-fns'
-const disabledValue = ref<number | null>(new Date().getTime())
-const disabledMonthValue = ref<number | null>(startOfMonth(new Date()).getTime())
-const disabledFullRangeValue = ref<[number, number] | null>([
-  startOfDay(subDays(new Date(), 3)).getTime(),
-  startOfDay(new Date()).getTime()
-])
+const fixedDate = new Date(2026, 9, 10).getTime()
+const disabledValue = ref<number | null>(fixedDate)
+const disabledMonthValue = ref<number | null>(startOfMonth(fixedDate).getTime())
+const disabledFullRangeValue = ref<[number, number] | null>([fixedDate, fixedDate])
 // 起点段禁用且持有值：起点不可输入但值仍展示
 const disabledSideRangeValue = ref<[number, number] | null>([
   startOfDay(subDays(new Date(), 3)).getTime(),
@@ -982,15 +957,15 @@ _用 `time-picker-props` 的 `hideDisabledOptions` 把禁用的时分秒从面�
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { addDays, endOfDay, getDay, startOfDay, startOfMonth } from 'date-fns'
+import { addDays, endOfDay, getDay, startOfDay } from 'date-fns'
 const disabledDateTimeValue = ref<number | null>(null)
 const hideDisabledOptionsValue = ref<number | null>(null)
 const disabledRangeValue = ref<[number, number] | null>(null)
-const disabledMonthBeforeValue = ref<number | null>(startOfMonth(new Date()).getTime())
+const disabledMonthBeforeValue = ref<number | null>(null)
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
-const beforeTodayValue = ref<number | null>(new Date().getTime())
-const afterTodayValue = ref<number | null>(new Date().getTime())
-const weekendValue = ref<number | null>(new Date().getTime())
+const beforeTodayValue = ref<number | null>(null)
+const afterTodayValue = ref<number | null>(null)
+const weekendValue = ref<number | null>(null)
 // 选中日期时的默认时分秒
 const defaultTime = startOfDay(new Date()).getTime()
 /** 半开区间 [start, end) 的整数序列 */
@@ -1311,11 +1286,11 @@ const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { startOfMonth } from 'date-fns'
 import type { DatePickerProps } from 'vue-amazing-ui'
-const sizeCaseValue = ref<number | null>(new Date().getTime())
-const sizeMonthValue = ref<number | null>(startOfMonth(new Date()).getTime())
+const sizeCaseValue = ref<number | null>(null)
+const sizeMonthValue = ref<number | null>(null)
 const sizeRangeValue = ref<[number, number] | null>(null)
+const sizeWeekValue = ref<number | null>(null)
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 const sizeValue = ref<DatePickerProps['size']>('middle')
 const sizeOptions: Array<{ label: string; value: NonNullable<DatePickerProps['size']> }> = [
@@ -1349,7 +1324,7 @@ _用 `dateRender` 自定义日期单元格的内容与样式，入参 `current` 
 <br/>
 
 <Space vertical>
-  <DatePicker v-model:value="dateRenderValue">
+  <DatePicker v-model:value="dateRenderValue" placeholder="请选择日期">
     <template #dateRender="{ current }">
       <div :style="firstDayCellStyle(getDate(current))">{{ getDate(current) }}</div>
     </template>
@@ -1366,7 +1341,7 @@ _用 `dateRender` 自定义日期单元格的内容与样式，入参 `current` 
 ```vue
 <template>
   <Space vertical>
-    <DatePicker v-model:value="dateRenderValue">
+    <DatePicker v-model:value="dateRenderValue" placeholder="请选择日期">
       <template #dateRender="{ current }">
         <div :style="firstDayCellStyle(getDate(current))">{{ getDate(current) }}</div>
       </template>
@@ -1381,13 +1356,13 @@ _用 `dateRender` 自定义日期单元格的内容与样式，入参 `current` 
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { CSSProperties } from 'vue'
-import { addDays, getDate } from 'date-fns'
+import { getDate } from 'date-fns'
 /** 定制日期单元格：每月 1 号描一圈边框（单元格内层块高 24px，自定义节点须按 border-box 等高，否则外框会把圆圈撑高 2px） */
 function firstDayCellStyle(dayOfMonth: number): CSSProperties {
   const cellStyle: CSSProperties = { boxSizing: 'border-box', height: '24px' }
   return dayOfMonth === 1 ? { ...cellStyle, border: '1px solid #1677ff', borderRadius: '50%' } : cellStyle
 }
-const dateRenderValue = ref<number | null>(addDays(new Date(), 0).getTime())
+const dateRenderValue = ref<number | null>(null)
 const dateRenderRangeValue = ref<[number, number] | null>(null)
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 </script>
@@ -1546,7 +1521,7 @@ function onStartOpenChange(open: boolean): void {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const suffixValue = ref<number | null>(new Date().getTime())
+const suffixValue = ref<number | null>(null)
 </script>
 <template>
   <DatePicker v-model:value="suffixValue" placeholder="请选择日期">
@@ -1580,17 +1555,10 @@ const suffixValue = ref<number | null>(new Date().getTime())
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { addDays, startOfDay } from 'date-fns'
-const errorValue = ref<number | null>(new Date().getTime())
-const warningValue = ref<number | null>(new Date().getTime())
-const errorRangeValue = ref<[number, number] | null>([
-  startOfDay(new Date()).getTime(),
-  startOfDay(addDays(new Date(), 7)).getTime()
-])
-const warningRangeValue = ref<[number, number] | null>([
-  startOfDay(new Date()).getTime(),
-  startOfDay(addDays(new Date(), 7)).getTime()
-])
+const errorValue = ref<number | null>(null)
+const warningValue = ref<number | null>(null)
+const errorRangeValue = ref<[number, number] | null>(null)
+const warningRangeValue = ref<[number, number] | null>(null)
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 </script>
 <template>
@@ -1650,32 +1618,16 @@ const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { addDays, addMonths, addYears, startOfMonth, startOfQuarter, startOfYear, subDays } from 'date-fns'
-const borderlessValue = ref<number | null>(new Date().getTime())
-const borderlessWeekValue = ref<number | null>(new Date().getTime())
-const borderlessMonthValue = ref<number | null>(startOfMonth(new Date()).getTime())
-const borderlessQuarterValue = ref<number | null>(startOfQuarter(new Date()).getTime())
-const borderlessYearValue = ref<number | null>(startOfYear(new Date()).getTime())
-const borderlessDateRangeValue = ref<[number, number] | null>([
-  new Date().getTime(),
-  addDays(new Date(), 7).getTime()
-])
-const borderlessWeekRangeValue = ref<[number, number] | null>([
-  subDays(new Date(), 14).getTime(),
-  new Date().getTime()
-])
-const borderlessMonthRangeValue = ref<[number, number] | null>([
-  startOfMonth(addMonths(new Date(), -1)).getTime(),
-  startOfMonth(addMonths(new Date(), 1)).getTime()
-])
-const borderlessQuarterRangeValue = ref<[number, number] | null>([
-  startOfQuarter(addMonths(new Date(), -3)).getTime(),
-  startOfQuarter(addMonths(new Date(), 3)).getTime()
-])
-const borderlessYearRangeValue = ref<[number, number] | null>([
-  startOfYear(addYears(new Date(), -1)).getTime(),
-  startOfYear(addYears(new Date(), 1)).getTime()
-])
+const borderlessValue = ref<number | null>(null)
+const borderlessWeekValue = ref<number | null>(null)
+const borderlessMonthValue = ref<number | null>(null)
+const borderlessQuarterValue = ref<number | null>(null)
+const borderlessYearValue = ref<number | null>(null)
+const borderlessDateRangeValue = ref<[number, number] | null>(null)
+const borderlessWeekRangeValue = ref<[number, number] | null>(null)
+const borderlessMonthRangeValue = ref<[number, number] | null>(null)
+const borderlessQuarterRangeValue = ref<[number, number] | null>(null)
+const borderlessYearRangeValue = ref<[number, number] | null>(null)
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 </script>
 <template>
@@ -1747,12 +1699,12 @@ const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const bottomLeftValue = ref<number | null>(new Date().getTime())
-const bottomRightValue = ref<number | null>(new Date().getTime())
-const topLeftValue = ref<number | null>(new Date().getTime())
-const topRightValue = ref<number | null>(new Date().getTime())
-const rangeBottomLeftValue = ref<[number, number] | null>([new Date().getTime(), new Date().getTime()])
-const rangeTopLeftValue = ref<[number, number] | null>([new Date().getTime(), new Date().getTime()])
+const bottomLeftValue = ref<number | null>(null)
+const bottomRightValue = ref<number | null>(null)
+const topLeftValue = ref<number | null>(null)
+const topRightValue = ref<number | null>(null)
+const rangeBottomLeftValue = ref<[number, number] | null>(null)
+const rangeTopLeftValue = ref<[number, number] | null>(null)
 const rangePlaceholder = ['开始日期', '结束日期']
 </script>
 <template>
@@ -1796,10 +1748,9 @@ _面板展开后按 `Tab` 把键盘交给面板，方向键按当前面板层级
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { subDays } from 'date-fns'
-const keyboardValue = ref<number | null>(new Date().getTime())
-const keyboardRangeValue = ref<[number, number] | null>([subDays(new Date(), 3).getTime(), new Date().getTime()])
-const keyboardDateTimeValue = ref<number | null>(new Date().getTime())
+const keyboardValue = ref<number | null>(null)
+const keyboardRangeValue = ref<[number, number] | null>(null)
+const keyboardDateTimeValue = ref<number | null>(null)
 const rangePlaceholder = ['开始日期', '结束日期']
 </script>
 <template>
@@ -1878,7 +1829,7 @@ const rangePlaceholder = ['开始日期', '结束日期']
 | inputReadOnly | 输入框是否只读（避免移动端唤起键盘） | boolean | false |
 | to | 面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 'body') 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | false |
 | placement | 面板弹出位置 | 'topLeft' &#124; 'top' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottom' &#124; 'bottomRight' | 'bottomLeft' |
-| showArrow | 范围形态的面板指示箭头是否展示，不传时跟随弹出方位（仅左侧对齐的 `bottomLeft` / `topLeft` 展示） | boolean | undefined |
+| showArrow | 范围形态的面板指示箭头是否展示：不传时跟随弹出方位（仅左侧对齐的 `bottomLeft` / `topLeft` 展示），`true` 始终展示、`false` 始终隐藏 | boolean | undefined |
 | showToday | 是否展示面板底部的「今天」快捷，面板切到周 / 月 / 季 / 年视图时隐藏 | boolean | true |
 | showNow | 是否展示面板底部的「此刻」快捷，仅带时间的形态生效 | boolean | true |
 | dateRender | 自定义日期单元格的内容与样式（替换日号），单元格容器与选中 / 悬浮 / 区间底色仍由组件提供；入参 `current` 为该格日期的零点时间戳、`today` 为当前时刻时间戳 | (params: { current: number; today: number }) => VNode &#124; VNode[] | undefined |

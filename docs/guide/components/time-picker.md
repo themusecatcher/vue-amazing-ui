@@ -25,10 +25,10 @@ const addonValue = ref<number | null>(null)
 const addonValue2 = ref<number | null>(null)
 const addonOpen = ref(false)
 const addonOpen2 = ref(false)
-// 12 小时制用例：三只各带同一个已选值（09:05:03），「补零 / 不补零 / 只到分」三种 format 的差异因此直接可见
-const h12Value = ref<number | null>(initialTime(9, 5, 3))
-const h12FormatValue = ref<number | null>(initialTime(9, 5, 3))
-const h12ShortValue = ref<number | null>(initialTime(9, 5, 3))
+// 12 小时制用例：三只各持一个空值，选中后「补零 / 不补零 / 只到分」三种 format 的差异才直接可见
+const h12Value = ref<number | null>(null)
+const h12FormatValue = ref<number | null>(null)
+const h12ShortValue = ref<number | null>(null)
 const disabledValue = ref<number | null>(initialTime(12, 8, 23))
 const hourMinuteValue = ref<number | null>(initialTime(12, 8))
 const intervalValue = ref<number | null>(null)
@@ -37,8 +37,8 @@ const suffixValue = ref<number | null>(null)
 const controlledValue = ref<number | null>(null)
 const fixedValue = ref<number | null>(fixedSnapshot.getTime())
 const rangePickerValue = ref<[number | null, number | null] | null>(null)
-// 事件用例：单选 / 范围各一，绑定后可在控制台查看各事件的触发时机与参数
-const eventValue = ref<number | null>(initialTime(8))
+// 事件用例：单选 / 范围各一，绑定后可在控制台查看各事件的触发时机与参数；初始值均为空
+const eventValue = ref<number | null>(null)
 const eventRangeValue = ref<[number | null, number | null] | null>(null)
 const borderedValue = ref<number | null>(null)
 const borderedRangeValue = ref<[number | null, number | null] | null>(null)
@@ -128,7 +128,12 @@ _点击 `TimePicker` 后可在浮层中选择或输入某一时间_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const basicValue = ref<number | null>(new Date().getTime())
+import { set } from 'date-fns'
+/** 用例初始值：当日指定时刻的时间戳（毫秒） */
+function initialTime(hour: number, minute: number = 0, second: number = 0): number {
+  return set(new Date(), { hours: hour, minutes: minute, seconds: second, milliseconds: 0 }).getTime()
+}
+const basicValue = ref<number | null>(initialTime(8))
 const basicFixedTextValue = ref<string | null>('09:00:00')
 </script>
 <template>
@@ -228,9 +233,9 @@ _`use12Hours` 启用 `12` 小时制，默认的 `format` 为 `hh:mm:ss a`_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const h12Value = ref<number | null>(new Date().getTime())
-const h12FormatValue = ref<number | null>(new Date().getTime())
-const h12ShortValue = ref<number | null>(new Date().getTime())
+const h12Value = ref<number | null>(null)
+const h12FormatValue = ref<number | null>(null)
+const h12ShortValue = ref<number | null>(null)
 </script>
 <template>
   <Space vertical>
@@ -255,7 +260,8 @@ const h12ShortValue = ref<number | null>(new Date().getTime())
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const disabledValue = ref<number | null>(new Date().getTime())
+import { set } from 'date-fns'
+const disabledValue = ref<number | null>(set(new Date(), { hours: 12, minutes: 8, seconds: 23, milliseconds: 0 }).getTime())
 </script>
 <template>
   <TimePicker v-model:value="disabledValue" disabled placeholder="请选择时间" />
@@ -277,7 +283,8 @@ _浮层中的列随 `format` 变化，略去其中某一部分时对应的列随
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const hourMinuteValue = ref<number | null>(new Date().getTime())
+import { set } from 'date-fns'
+const hourMinuteValue = ref<number | null>(set(new Date(), { hours: 12, minutes: 8, seconds: 0, milliseconds: 0 }).getTime())
 </script>
 <template>
   <TimePicker v-model:value="hourMinuteValue" format="HH:mm" placeholder="请选择时间" />
@@ -337,7 +344,8 @@ _三种大小的输入框，大的用在表单中，中的为默认_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const sizeValue = ref<number | null>(new Date().getTime())
+import { set } from 'date-fns'
+const sizeValue = ref<number | null>(set(new Date(), { hours: 12, minutes: 8, seconds: 23, milliseconds: 0 }).getTime())
 </script>
 <template>
   <Space vertical>
@@ -479,7 +487,7 @@ _单选形态绑定 `change` `ok` `openChange` `focus` `blur`，范围形态绑�
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const eventValue = ref<number | null>(new Date().getTime())
+const eventValue = ref<number | null>(null)
 const eventRangeValue = ref<[number | null, number | null] | null>(null)
 const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 /** 值变化时的回调：值与格式化值双轨 */
@@ -716,7 +724,7 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 | inputReadOnly | 输入框是否只读（避免移动端唤起键盘） | boolean | false |
 | to | 面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 'body') 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | false |
 | placement | 面板弹出位置 | 'topLeft' &#124; 'top' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottom' &#124; 'bottomRight' | 'bottomLeft' |
-| showArrow | 范围形态的面板指示箭头：不传时跟随弹出方位（仅左侧对齐的 `bottomLeft` / `topLeft` 展示） | boolean | undefined |
+| showArrow | 范围形态的面板指示箭头是否展示：不传时跟随弹出方位（仅左侧对齐的 `bottomLeft` / `topLeft` 展示），`true` 始终展示、`false` 始终隐藏 | boolean | undefined |
 | showNow | 是否展示面板底部的「此刻」快捷，仅单选形态生效 | boolean | true |
 | renderExtraFooter | 面板底部的额外页脚，渲染在操作行之上 | () => VNode &#124; VNode[] | undefined |
 | suffixIcon | 自定义选择框后缀图标 | VNode &#124; (() => VNode) | undefined |
