@@ -9,11 +9,28 @@ _用于选择和展示颜色_
 - 当需要选择颜色或展示颜色时
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, h } from 'vue'
+import { BgColorsOutlined } from '@ant-design/icons-vue'
 import type { CheckboxOption } from 'vue-amazing-ui'
 const colorValue = ref('rgba(0, 0, 0, 1)')
 const showAlpha = ref(false)
+const modes = ref(['rgb', 'hex'])
+const actions = ref(['confirm', 'clear'])
+const swatches = [
+  '#FFFFFF',
+  '#F0A020',
+  '#1677ff',
+  '#ff6900',
+  '#722ed1',
+  '#13c2c2',
+  'rgba(0, 0, 0, 0.88)',
+  'rgba(208, 48, 80, 1)'
+]
+const triggerColor1 = ref('#ff6900')
+const triggerColor2 = ref('#1677ff')
+const triggerColor3 = ref('#722ed1')
 const showPreview = ref(true)
+const labelValue = ref('#ff6900')
 const show = ref(false)
 const modeOptions: CheckboxOption[] = [
   {
@@ -33,7 +50,6 @@ const modeOptions: CheckboxOption[] = [
     value: 'hsv'
   }
 ]
-const modes = ref(['rgb', 'hex'])
 const actionOptions: CheckboxOption[] = [
   {
     label: 'confirm',
@@ -44,7 +60,6 @@ const actionOptions: CheckboxOption[] = [
     value: 'clear'
   }
 ]
-const actions = ref(['confirm', 'clear'])
 watchEffect(() => {
   console.log('colorValue', colorValue.value)
 })
@@ -53,6 +68,9 @@ watchEffect(() => {
 })
 function labelFormat(color: string) {
   return `hello ${color}`
+}
+function labelRender(color: string) {
+  return h('span', { style: 'font-weight: 600' }, `HELLO ${color}`)
 }
 function handleComplele(color: string) {
   console.log('complete', color)
@@ -67,9 +85,9 @@ function handleClear() {
 
 ## 基本使用
 
-<ColorPicker :width="360" v-model:value="colorValue" />
+<ColorPicker :width="240" v-model:value="colorValue" />
 
-::: details Show Code
+:::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -80,72 +98,11 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <ColorPicker :width="360" v-model:value="colorValue" />
+  <ColorPicker :width="240" v-model:value="colorValue" />
 </template>
 ```
 
-:::
-
-## 自定义展示内容
-
-<Space :width="360">
-  <ColorPicker :label="labelFormat"/>
-  <ColorPicker>
-    <template #label="{ color }">
-      I'm {{ color }}
-    </template>
-  </ColorPicker>
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-function labelFormat(color: string) {
-  return `hello ${color}`
-}
-</script>
-<template>
-  <Space :width="360">
-    <ColorPicker :label="labelFormat" />
-    <ColorPicker>
-      <template #label="{ color }">
-        I'm {{ color }}
-      </template>
-    </ColorPicker>
-  </Space>
-</template>
-```
-
-:::
-
-## 自定义面板样式
-
-<ColorPicker
-  :width="360"
-  :tooltip-style="{
-    width: '280px',
-    padding: '4px',
-    borderRadius: '8px'
-  }"
-/>
-
-::: details Show Code
-
-```vue
-<template>
-  <ColorPicker
-    :width="360"
-    :tooltip-style="{
-      width: '280px',
-      padding: '4px',
-      borderRadius: '8px'
-    }"
-  />
-</template>
-```
-
-:::
+::::
 
 ## 不透明度
 
@@ -155,90 +112,61 @@ _`show-alpha` 控制是否可调节 `alpha` 通道_
 
 <Space vertical>
   <Space align="center"> showAlpha: <Switch v-model:value="showAlpha"></Switch> </Space>
-  <ColorPicker :width="360" :show-alpha="showAlpha" />
+  <ColorPicker :width="240" default-value="#ff6900" :show-alpha="showAlpha" />
 </Space>
 
-::: details Show Code
+:::: details Show Code
 
 ```vue
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 const showAlpha = ref(false)
 </script>
 <template>
   <Space vertical>
     <Space align="center"> showAlpha: <Switch v-model:value="showAlpha"></Switch> </Space>
-    <ColorPicker :width="360" :show-alpha="showAlpha" />
+    <ColorPicker :width="240" default-value="#ff6900" :show-alpha="showAlpha" />
   </Space>
 </template>
 ```
 
-:::
-
-## 颜色预览块
-
-_使用 `showPreview` 控制是否展示颜色预览块；点击颜色预览块可以触发浏览器原生的颜色选择器_
-<br/>
-
-<Space vertical>
-  <Space align="center"> showPreview: <Switch v-model:value="showPreview"></Switch> </Space>
-  <ColorPicker :width="360" :show-preview="showPreview" />
-</Space>
-
-::: details Show Code
-
-```vue
-<script lang="ts" setup>
-import { ref } from 'vue'
-const showPreview = ref(true)
-</script>
-<template>
-  <Space vertical>
-    <Space align="center"> showPreview: <Switch v-model:value="showPreview"></Switch> </Space>
-    <ColorPicker :width="360" :show-preview="showPreview" />
-  </Space>
-</template>
-```
-
-:::
+::::
 
 ## 尺寸
 
-<Space :width="360">
-  <ColorPicker size="small" />
-  <ColorPicker />
-  <ColorPicker size="large" />
+<Space vertical>
+  <ColorPicker :width="240" size="small" />
+  <ColorPicker :width="240" />
+  <ColorPicker :width="240" size="large" />
 </Space>
 
-::: details Show Code
+:::: details Show Code
 
 ```vue
 <template>
-  <Space :width="360">
-    <ColorPicker size="small" />
-    <ColorPicker />
-    <ColorPicker size="large" />
+  <Space vertical>
+    <ColorPicker :width="240" size="small" />
+    <ColorPicker :width="240" />
+    <ColorPicker :width="240" size="large" />
   </Space>
 </template>
 ```
 
-:::
+::::
 
 ## 禁用
 
-<ColorPicker :width="360" disabled />
+<ColorPicker :width="240" default-value="#ff6900" disabled />
 
-::: details Show Code
+:::: details Show Code
 
 ```vue
 <template>
-  <Space :width="360">
-    <ColorPicker disabled />
-  </Space>
+  <ColorPicker :width="240" default-value="#ff6900" disabled />
 </template>
 ```
 
-:::
+::::
 
 ## 设定模式
 
@@ -248,13 +176,13 @@ _使用 `modes` 设定可选模式_
 
 <Space vertical>
   <Space align="center"> modes: <Checkbox :options="modeOptions" v-model:value="modes" /> </Space>
-  <ColorPicker :width="360" :modes="modes" />
+  <ColorPicker :width="240" default-value="#ff6900" :modes="modes" />
 </Space>
 
-::: details Show Code
+:::: details Show Code
 
 ```vue
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import type { CheckboxOption } from 'vue-amazing-ui'
 const modeOptions: CheckboxOption[] = [
@@ -275,55 +203,17 @@ const modeOptions: CheckboxOption[] = [
     value: 'hsv'
   }
 ]
-const modes = ref(['rgb'])
+const modes = ref(['rgb', 'hex'])
 </script>
 <template>
   <Space vertical>
     <Space align="center"> modes: <Checkbox :options="modeOptions" v-model:value="modes" /> </Space>
-    <ColorPicker :width="360" :modes="modes" />
+    <ColorPicker :width="240" default-value="#ff6900" :modes="modes" />
   </Space>
 </template>
 ```
 
-:::
-
-## 预设色板
-
-<ColorPicker
-  :width="360"
-  :swatches="[
-    '#FFFFFF',
-    '#18A058',
-    '#2080F0',
-    '#F0A020',
-    '#1677ff',
-    '#ff6900',
-    'rgba(0, 0, 0, 0.88)',
-    'rgba(208, 48, 80, 1)'
-  ]"
-/>
-
-::: details Show Code
-
-```vue
-<template>
-  <ColorPicker
-    :width="360"
-    :swatches="[
-      '#FFFFFF',
-      '#18A058',
-      '#2080F0',
-      '#F0A020',
-      '#1677ff',
-      '#ff6900',
-      'rgba(0, 0, 0, 0.88)',
-      'rgba(208, 48, 80, 1)'
-    ]"
-  />
-</template>
-```
-
-:::
+::::
 
 ## 显示按钮
 
@@ -333,13 +223,20 @@ _通过在 `actions` 属性中添加 `confirm` `clear`，来显示确认/清除�
 
 <Space vertical>
   <Space align="center"> actions: <Checkbox :options="actionOptions" v-model:value="actions" /> </Space>
-  <ColorPicker :width="360" :actions="actions" @confirm="handleConfirm" @clear="handleClear" />
+  <ColorPicker
+    :width="240"
+    default-value="#ff6900"
+    :actions="actions"
+    @complete="handleComplele"
+    @confirm="handleConfirm"
+    @clear="handleClear"
+  />
 </Space>
 
-::: details Show Code
+:::: details Show Code
 
 ```vue
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import type { CheckboxOption } from 'vue-amazing-ui'
 const actionOptions: CheckboxOption[] = [
@@ -366,30 +263,259 @@ function handleClear() {
 <template>
   <Space vertical>
     <Space align="center"> actions: <Checkbox :options="actionOptions" v-model:value="actions" /> </Space>
-    <ColorPicker :width="360" :actions="actions" @complete="handleComplele" @confirm="handleConfirm" @clear="handleClear" />
+    <ColorPicker
+      :width="240"
+      default-value="#ff6900"
+      :actions="actions"
+      @complete="handleComplele"
+      @confirm="handleConfirm"
+      @clear="handleClear"
+    />
   </Space>
 </template>
 ```
 
-:::
+::::
 
-## 额外页脚
+## 预设色板
 
-<ColorPicker :width="360">
-  <template #footer> extra footer </template>
-</ColorPicker>
+<ColorPicker :width="240" default-value="#ff6900" :swatches="swatches" @complete="handleComplele" />
 
-::: details Show Code
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+const swatches = [
+  '#FFFFFF',
+  '#F0A020',
+  '#1677ff',
+  '#ff6900',
+  '#722ed1',
+  '#13c2c2',
+  'rgba(0, 0, 0, 0.88)',
+  'rgba(208, 48, 80, 1)'
+]
+function handleComplele(color: string) {
+  console.log('complete', color)
+}
+</script>
+<template>
+  <ColorPicker :width="240" default-value="#ff6900" :swatches="swatches" @complete="handleComplele" />
+</template>
+```
+
+::::
+
+## 自定义触发器
+
+_使用 `trigger` 插槽自定义触发器_
+
+<br/>
+
+<Space align="center">
+  <ColorPicker v-model:value="triggerColor1" @complete="handleComplele">
+    <template #trigger="{ value, onClick }">
+      <Button shape="circle" type="text" @click="onClick">
+        <template #icon>
+          <BgColorsOutlined :style="{ color: value }" />
+        </template>
+      </Button>
+    </template>
+  </ColorPicker>
+  <ColorPicker v-model:value="triggerColor2" @complete="handleComplele">
+    <template #trigger="{ value, onClick }">
+      <span class="trigger-dot" :style="`background-color: ${value || '#000000'}`" @click="onClick"></span>
+    </template>
+  </ColorPicker>
+  <ColorPicker v-model:value="triggerColor3" @complete="handleComplele">
+    <template #trigger="{ value, onClick }">
+      <span class="trigger-text" :style="`color: ${value}`" @click="onClick">{{ value }}</span>
+    </template>
+  </ColorPicker>
+</Space>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { BgColorsOutlined } from '@ant-design/icons-vue'
+const triggerColor1 = ref('#ff6900')
+const triggerColor2 = ref('#1677ff')
+const triggerColor3 = ref('#722ed1')
+function handleComplele(color: string) {
+  console.log('complete', color)
+}
+</script>
+<template>
+  <Space align="center">
+    <ColorPicker v-model:value="triggerColor1" @complete="handleComplele">
+      <template #trigger="{ value, onClick }">
+        <Button shape="circle" type="text" @click="onClick">
+          <template #icon>
+            <BgColorsOutlined :style="{ color: value }" />
+          </template>
+        </Button>
+      </template>
+    </ColorPicker>
+    <ColorPicker v-model:value="triggerColor2" @complete="handleComplele">
+      <template #trigger="{ value, onClick }">
+        <span
+          class="trigger-dot"
+          :style="`background-color: ${value || '#000000'}`"
+          @click="onClick"
+        ></span>
+      </template>
+    </ColorPicker>
+    <ColorPicker v-model:value="triggerColor3" @complete="handleComplele">
+      <template #trigger="{ value, onClick }">
+        <span class="trigger-text" :style="`color: ${value}`" @click="onClick">{{ value }}</span>
+      </template>
+    </ColorPicker>
+  </Space>
+</template>
+```
+
+::::
+
+## 颜色预览块
+
+_使用 `showPreview` 控制是否展示颜色预览块；点击颜色预览块可以触发浏览器原生的颜色选择器_
+
+<br/>
+
+<Space vertical>
+  <Space align="center"> showPreview: <Switch v-model:value="showPreview"></Switch> </Space>
+  <ColorPicker :width="240" default-value="#ff6900" :show-preview="showPreview" @complete="handleComplele" />
+</Space>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const showPreview = ref(true)
+function handleComplele(color: string) {
+  console.log('complete', color)
+}
+</script>
+<template>
+  <Space vertical>
+    <Space align="center"> showPreview: <Switch v-model:value="showPreview"></Switch> </Space>
+    <ColorPicker :width="240" default-value="#ff6900" :show-preview="showPreview" @complete="handleComplele" />
+  </Space>
+</template>
+```
+
+::::
+
+## 默认值
+
+_未受控时使用 `default-value` 设置初始颜色_
+
+<br/>
+
+<ColorPicker :width="240" default-value="#ff6900" />
+
+:::: details Show Code
 
 ```vue
 <template>
-  <ColorPicker :width="360">
+  <ColorPicker :width="240" default-value="#ff6900" />
+</template>
+```
+
+::::
+
+## 自定义展示内容
+
+_通过 `label` 属性（可返回字符串或 VNode）或 `label` 插槽自定义展示内容_
+
+<br/>
+
+<Space vertical>
+  <ColorPicker :width="240" v-model:value="labelValue" :label="labelFormat" />
+  <ColorPicker :width="240" v-model:value="labelValue" :label="labelRender" />
+  <ColorPicker :width="240" v-model:value="labelValue">
+    <template #label="{ color }">
+      I'm {{ color }}
+    </template>
+  </ColorPicker>
+</Space>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, h } from 'vue'
+const labelValue = ref('#ff6900')
+function labelFormat(color: string) {
+  return `hello ${color}`
+}
+function labelRender(color: string) {
+  return h('span', { style: 'font-weight: 600' }, `HELLO ${color}`)
+}
+</script>
+<template>
+  <Space vertical>
+    <ColorPicker :width="240" v-model:value="labelValue" :label="labelFormat" />
+    <ColorPicker :width="240" v-model:value="labelValue" :label="labelRender" />
+    <ColorPicker :width="240" v-model:value="labelValue">
+      <template #label="{ color }">
+        I'm {{ color }}
+      </template>
+    </ColorPicker>
+  </Space>
+</template>
+```
+
+::::
+
+## 自定义面板样式
+
+<ColorPicker
+  :width="240"
+  :tooltip-style="{
+    width: '280px',
+    padding: '4px',
+    borderRadius: '8px'
+  }"
+/>
+
+:::: details Show Code
+
+```vue
+<template>
+  <ColorPicker
+    :width="240"
+    :tooltip-style="{
+      width: '280px',
+      padding: '4px',
+      borderRadius: '8px'
+    }"
+  />
+</template>
+```
+
+::::
+
+## 额外页脚
+
+<ColorPicker :width="240">
+  <template #footer> extra footer </template>
+</ColorPicker>
+
+:::: details Show Code
+
+```vue
+<template>
+  <ColorPicker :width="240">
     <template #footer> extra footer </template>
   </ColorPicker>
 </template>
 ```
 
-:::
+::::
 
 ## 使用按钮控制面板
 
@@ -398,15 +524,15 @@ _使用 `Tooltip` 组件的 `show` 属性控制面板显隐_
 <br/>
 
 <Space>
-  <ColorPicker :width="360" v-model:show="show" />
+  <ColorPicker :width="240" default-value="#ff6900" v-model:show="show" />
   <Button type="primary" @click="show = true">显示</Button>
   <Button @click="show = false">隐藏</Button>
 </Space>
 
-::: details Show Code
+:::: details Show Code
 
 ```vue
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const show = ref(false)
 watchEffect(() => {
@@ -415,14 +541,14 @@ watchEffect(() => {
 </script>
 <template>
   <Space>
-    <ColorPicker :width="360" v-model:show="show" />
+    <ColorPicker :width="240" default-value="#ff6900" v-model:show="show" />
     <Button type="primary" @click="show = true">显示</Button>
     <Button @click="show = false">隐藏</Button>
   </Space>
 </template>
 ```
 
-:::
+::::
 
 <br/>
 
@@ -434,19 +560,22 @@ watchEffect(() => {
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-width | 颜色选择器的宽度，单位 `px` | string &#124; number | '100%'
-label | 展示的内容 | (color: string) => string | undefined
-tooltipStyle | 设置弹出面板的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-inputProps | 输入框组件 `props`，参考 [Input Props](./input.md#input) | [InputProps](./input.md#input) | {}
+value <Tag color="cyan">v-model</Tag> | 颜色选择器的值 | string | undefined
+defaultValue | 未受控时的初始颜色值 | string | undefined
+label | 展示的内容，返回值同时支持字符串与 VNode | (color: string) => VNodeChild | undefined
+swatches | 色板的值 | string[] | []
+footer | 底部额外的页脚内容 | string | undefined
+modes | 颜色选择器支持颜色的格式 | [ColorPickerMode](#colorpickermode-type)[] | ['rgb', 'hex', 'hsl']
+width | 颜色选择器的宽度，单位 `px`；仅内置触发器生效，使用 `trigger` 插槽自定义触发器时容器随触发器内容自适应 | string &#124; number | '100%'
+size | 颜色选择器的尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 showAlpha | 是否可调节 `alpha` 通道 | boolean | true
 showPreview | 是否展示颜色预览块 | boolean | false
-size | 颜色选择器的尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
+placement | 弹出面板的位置 | 'top' &#124; 'topLeft' &#124; 'topRight' &#124; 'bottom' &#124; 'bottomLeft' &#124; 'bottomRight' &#124; 'left' &#124; 'leftTop' &#124; 'leftBottom' &#124; 'right' &#124; 'rightTop' &#124; 'rightBottom' | 'bottomLeft'
 disabled | 是否禁用 | boolean | false
-value <Tag color="cyan">v-model</Tag> | 颜色选择器的值 | string | undefined
-modes | 颜色选择器支持颜色的格式 | [ColorPickerMode](#colorpickermode-type)[] | ['rgb', 'hex', 'hsl']
-swatches | 色板的值 | string[] | []
 actions | 显示按钮 | [ColorPickerAction](#colorpickeraction-type)[] | []
-footer | 底部额外的页脚内容 | string | undefined
+tooltipStyle | 设置弹出面板的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+inputProps | 输入框组件 `props`，参考 [Input Props](./input.md#input) | [InputProps](./input.md#input) | {}
+to | 弹出面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地 | string &#124; HTMLElement &#124; false | undefined
 
 更多属性请参考 [Tooltip Props](./tooltip.md#tooltip)
 
@@ -468,11 +597,28 @@ ColorPickerAction | 'confirm' &#124; 'clear'
 :-- | :-- | :--
 label | 自定义展示的内容 | v-slot:label="{ color }"
 footer | 自定义底部额外的页脚内容 | v-slot:footer
+trigger | 自定义触发器 | v-slot:trigger="{ value, onClick, ref }"
 
 ## Events
 
 名称 | 说明 | 类型
 :-- | :-- | :--
-complete | 颜色完成改变后的回调（在鼠标拖动时候不会调用） | (color: string) => void
+complete | 颜色完成改变后的回调（输入框提交和鼠标拖动结束时触发；点击色板、点击清除不触发） | (color: string) => void
 confirm | 点击确认按钮的回调 | (color: string) => void
 clear | 点击清除按钮的回调 | () => void
+
+<style lang="less" scoped>
+.trigger-dot {
+  /* 保持块级：行内元素会生成行盒，圆点被行盒支柱按基线对齐顶偏；块级则让宿主高度恰为圆点高度 */
+  display: block;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+.trigger-text {
+  cursor: pointer;
+}
+</style>

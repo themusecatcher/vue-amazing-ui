@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect } from 'vue'
-import type { CSSProperties, VNode } from 'vue'
+import { ref, computed, watch, watchEffect, onBeforeUnmount } from 'vue'
+import type { ComponentPublicInstance, CSSProperties, VNode, VNodeChild } from 'vue'
 import {
   hsla,
   hsva,
@@ -21,7 +21,9 @@ import {
   toHexString
 } from 'seemly'
 import type { HSVA, RGBA, HSLA, HSV, RGB, HSL } from 'seemly'
+import { TinyColor, isReadable } from '@ctrl/tinycolor'
 import Tooltip from 'components/tooltip'
+import type { TooltipProps } from 'components/tooltip'
 import Input, { type InputProps } from 'components/input'
 import Button from 'components/button'
 import { useSlotsExist, useInject } from 'components/utils'
@@ -29,46 +31,88 @@ export type ColorPickerMode = 'rgb' | 'hsl' | 'hsv' | 'hex'
 export type ColorPickerAction = 'confirm' | 'clear'
 
 export interface Props {
+  // 双向绑定与受控核心
+  value?: string // (v-model) 颜色选择器的值
+  defaultValue?: string // 未受控时颜色选择器的初始值
+  // 内容与数据源
+  label?: (color: string) => VNodeChild // 展示的内容，返回值同时支持字符串与 VNode
+  swatches?: string[] // 色板的值
+  footer?: string // 底部额外的页脚内容
+  // 外观与尺寸
+  modes?: ColorPickerMode[] // 颜色选择器支持颜色的格式
   width?: string | number // 颜色选择器的宽度，单位 px
-  label?: (color: string) => string // 展示的内容
-  tooltipStyle?: CSSProperties // 设置弹出面板的样式
-  inputProps?: InputProps // 输入框组件 props，参考 Input 组件 Props
+  size?: 'small' | 'middle' | 'large' // 颜色选择器的尺寸
   showAlpha?: boolean // 是否可调节 alpha 通道
   showPreview?: boolean // 是否展示颜色预览块
-  size?: 'small' | 'middle' | 'large' // 颜色选择器的尺寸
+  placement?: TooltipProps['placement'] // 弹出面板的位置
+  // 状态与反馈
   disabled?: boolean // 是否禁用
-  value?: string // (v-model) 颜色选择器的值
-  modes?: ColorPickerMode[] // 颜色选择器支持颜色的格式
-  swatches?: string[] // 色板的值
+  // 行为与交互
   actions?: ColorPickerAction[] // 显示按钮
-  footer?: string // 底部额外的页脚内容
+  // 进阶与透传
+  tooltipStyle?: CSSProperties // 设置弹出面板的样式
+  inputProps?: InputProps // 输入框组件 props，透传给内部 Input 组件
+  to?: TooltipProps['to'] // 弹出面板挂载的容器节点
 }
-// 声明组件插槽类型
+// 自定义触发器的插槽参数：值由使用方渲染，展开与 ref 由组件提供
+export interface ColorPickerTriggerSlotProps {
+  value: string | undefined
+  onClick: () => void
+  ref: (el: Element | ComponentPublicInstance | null) => void
+}
 export interface ColorPickerSlots {
-  footer?: () => VNode[]
   label?: (props: { color: string | undefined }) => VNode[]
+  footer?: () => VNode[]
+  trigger?: (props: ColorPickerTriggerSlotProps) => VNode[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  width: '100%',
-  label: undefined,
-  tooltipStyle: () => ({}),
-  inputProps: () => ({}),
-  showAlpha: true,
-  showPreview: false,
-  size: 'middle',
-  disabled: false,
   value: undefined,
+  defaultValue: undefined,
+  label: undefined,
   modes: () => ['rgb', 'hex', 'hsl'],
   swatches: () => [],
   actions: () => [],
-  footer: undefined
+  footer: undefined,
+  width: '100%',
+  size: 'middle',
+  showAlpha: true,
+  showPreview: false,
+  tooltipStyle: () => ({}),
+  disabled: false,
+  inputProps: () => ({}),
+  placement: 'bottomLeft',
+  to: undefined
 })
 defineSlots<ColorPickerSlots>()
 const HANDLE_SIZE = '12px'
 const HANDLE_SIZE_NUM = 12
 const BORDER_RADIUS = '6px'
 const BORDER_RADIUS_NUM = 6
+// 浮层专属属性：由 Tooltip 承接，不再重复绑定到触发器元素
+const TOOLTIP_ATTRS = [
+  'maxWidth',
+  'content',
+  'contentClass',
+  'contentStyle',
+  'tooltip',
+  'tooltipClass',
+  'popupClassName',
+  'popupStyle',
+  'zIndex',
+  'bgColor',
+  'arrow',
+  'arrowPointAtCenter',
+  'flip',
+  'trigger',
+  'keyboard',
+  'destroyOnHide',
+  'transitionDuration',
+  'showDelay',
+  'hideDelay',
+  'show',
+  'showControl'
+]
 const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null) // tooltip 模板引用
 const palleteRef = ref<HTMLElement | null>(null) // pallete 调色板模板引用
 const hueRailRef = ref<HTMLElement | null>(null) // hue 轨道条模板引用
@@ -77,16 +121,25 @@ const displayedHue = ref<number>(0)
 const displayedAlpha = ref<number>(1)
 const displayedSv = ref<[number, number]>([0, 0])
 const upcomingValue = ref<string | undefined>()
-const displayedValue = ref<string | undefined>(props.value) // 展示的值
+const displayedValue = ref<string | undefined>(props.value ?? props.defaultValue) // 展示的值
 const displayedMode = ref<ColorPickerMode>(getModeFromValue(displayedValue.value) || props.modes[0] || 'rgb') // 当前展示的 mode
 const hexValue = ref<string>() // hex 模式下输入框的绑定值
 const inputValueArr = ref<string[]>([]) // 非 hex 模式下多个输入框的绑定值
+const inputRefreshKey = ref<number>(0) // 输入框重建令牌：非法输入后强制其回滚到组件内部值
 const { colorPalettes, shadowColor } = useInject('ColorPicker') // 主题色注入
 const emits = defineEmits(['update:value', 'complete', 'confirm', 'clear'])
-const slotsFooterExist = useSlotsExist('footer')
+const slotsExist = useSlotsExist(['footer', 'trigger'])
 const showFooter = computed(() => {
-  return slotsFooterExist.value || props.footer
+  return slotsExist.footer || props.footer
 })
+const showTrigger = computed(() => {
+  return slotsExist.trigger
+})
+const triggerSlotProps = computed<ColorPickerTriggerSlotProps>(() => ({
+  value: displayedValue.value,
+  onClick: handleTriggerClick,
+  ref: setTriggerRef
+}))
 const layerHandleStyle = computed(() => {
   const style: CSSProperties = {
     width: HANDLE_SIZE,
@@ -173,6 +226,16 @@ const sliderAlphaHandleFillStyle = computed(() => {
 const circleColor = computed(() => {
   return rgbaComputed.value && toHexString(rgbaComputed.value)
 })
+// 触发器标签文字颜色：半透明色先与白色底板（棋盘格底色）合成，再按 WCAG AA 对比度取黑 / 白
+// （亮度阈值在中间色上给出的对比度不足，故走 WCAG）
+const labelColor = computed(() => {
+  const hslaValue = hslaComputed.value
+  if (!hslaValue) return undefined
+  const { r, g, b, a } = new TinyColor(toHslaString(hslaValue)).toRgb()
+  const blendChannel = (channel: number): number => Math.round(channel * a + 255 * (1 - a))
+  const blendedColor = { r: blendChannel(r), g: blendChannel(g), b: blendChannel(b) }
+  return isReadable(blendedColor, '#ffffff', { level: 'AA', size: 'small' }) ? 'white' : 'black'
+})
 const colorPickerWidth = computed(() => {
   if (typeof props.width === 'number') {
     return `${props.width}px`
@@ -186,6 +249,13 @@ const colorPickerHeight = computed(() => {
     large: 40
   }
   return `${heightMap[props.size]}px`
+})
+// 浮层宿主样式：内置触发器按 width / height 撑满展示区，自定义触发器时容器随内容自适应
+// （100% 宽度会撑成整行）。用 inline-flex 是为了避开行盒支柱把块级触发器（如色块圆点）
+// 顶偏的问题——flex 下宿主高度即内容高度，且不预设对齐，靠上/靠下由使用方决定
+const triggerHostStyle = computed(() => {
+  if (showTrigger.value) return 'display: inline-flex;'
+  return `width: ${colorPickerWidth.value}; height: ${colorPickerHeight.value};`
 })
 const colorPickerBlockSize = computed(() => {
   const gapMap = {
@@ -213,46 +283,58 @@ let _h: number, // avoid conflict with render function's
   b: number,
   a: number
 const hsvaComputed = computed<HSVA | null>(() => {
-  if (!displayedValue.value) return null
-  switch (valueMode.value!) {
-    case 'hsv':
-      return hsva(displayedValue.value)
-    case 'hsl':
-      ;[_h, s, l, a] = hsla(displayedValue.value)
-      return [...hsl2hsv(_h, s, l), a]
-    case 'rgb':
-    case 'hex':
-      ;[r, g, b, a] = rgba(displayedValue.value)
-      return [...rgb2hsv(r, g, b), a]
-  }
+  const currentValue = displayedValue.value
+  const currentMode = valueMode.value
+  if (!currentValue || !currentMode) return null
+  return safeParseColor(() => {
+    switch (currentMode) {
+      case 'hsv':
+        return hsva(currentValue)
+      case 'hsl':
+        ;[_h, s, l, a] = hsla(currentValue)
+        return [...hsl2hsv(_h, s, l), a]
+      case 'rgb':
+      case 'hex':
+        ;[r, g, b, a] = rgba(currentValue)
+        return [...rgb2hsv(r, g, b), a]
+    }
+  })
 })
 const rgbaComputed = computed<RGBA | null>(() => {
-  if (!displayedValue.value) return null
-  switch (valueMode.value!) {
-    case 'rgb':
-    case 'hex':
-      return rgba(displayedValue.value)
-    case 'hsv':
-      ;[_h, s, v, a] = hsva(displayedValue.value)
-      return [...hsv2rgb(_h, s, v), a]
-    case 'hsl':
-      ;[_h, s, l, a] = hsla(displayedValue.value)
-      return [...hsl2rgb(_h, s, l), a]
-  }
+  const currentValue = displayedValue.value
+  const currentMode = valueMode.value
+  if (!currentValue || !currentMode) return null
+  return safeParseColor(() => {
+    switch (currentMode) {
+      case 'rgb':
+      case 'hex':
+        return rgba(currentValue)
+      case 'hsv':
+        ;[_h, s, v, a] = hsva(currentValue)
+        return [...hsv2rgb(_h, s, v), a]
+      case 'hsl':
+        ;[_h, s, l, a] = hsla(currentValue)
+        return [...hsl2rgb(_h, s, l), a]
+    }
+  })
 })
 const hslaComputed = computed<HSLA | null>(() => {
-  if (!displayedValue.value) return null
-  switch (valueMode.value!) {
-    case 'hsl':
-      return hsla(displayedValue.value)
-    case 'hsv':
-      ;[_h, s, v, a] = hsva(displayedValue.value)
-      return [...hsv2hsl(_h, s, v), a]
-    case 'rgb':
-    case 'hex':
-      ;[r, g, b, a] = rgba(displayedValue.value)
-      return [...rgb2hsl(r, g, b), a]
-  }
+  const currentValue = displayedValue.value
+  const currentMode = valueMode.value
+  if (!currentValue || !currentMode) return null
+  return safeParseColor(() => {
+    switch (currentMode) {
+      case 'hsl':
+        return hsla(currentValue)
+      case 'hsv':
+        ;[_h, s, v, a] = hsva(currentValue)
+        return [...hsv2hsl(_h, s, v), a]
+      case 'rgb':
+      case 'hex':
+        ;[r, g, b, a] = rgba(currentValue)
+        return [...rgb2hsl(r, g, b), a]
+    }
+  })
 })
 const displayedValueArr = computed(() => {
   switch (displayedMode.value) {
@@ -290,22 +372,9 @@ watch(
   () => [displayedMode.value, displayedValueArr.value],
   () => {
     if (displayedMode.value === 'hex') {
-      hexValue.value =
-        displayedValueArr.value === null
-          ? undefined
-          : (props.showAlpha ? toHexaString : toHexString)(displayedValueArr.value as RGBA)
+      hexValue.value = formatHexValue()
     } else {
-      if (displayedValueArr.value === null) {
-        inputValueArr.value = new Array(props.showAlpha ? 4 : 3).fill(undefined)
-      } else {
-        inputValueArr.value = displayedValueArr.value.map((value: number, index: number) => {
-          if (props.showAlpha && index === 3) {
-            return `${Math.floor(value * 100)}%`
-          } else {
-            return `${Math.floor(value)}`
-          }
-        })
-      }
+      inputValueArr.value = formatInputValueArr()
     }
   },
   {
@@ -331,9 +400,6 @@ function onUpdateValue(value: string | undefined, updateSource: 'cursor' | 'inpu
   }
   displayedValue.value = value
   emits('update:value', value)
-  if (updateSource === 'input') {
-    emits('complete', value)
-  }
 }
 function handleUpdateSv(s: number, v: number): void {
   const alpha = hsvaComputed.value ? hsvaComputed.value[3] : 1
@@ -362,10 +428,9 @@ function handleUpdateSv(s: number, v: number): void {
       break
   }
 }
-// pallete pointer down
 function handlePalletePointerDown(e: PointerEvent): void {
   if (!palleteRef.value) return
-  // 捕获指针，确保即使移出元素也能继续跟踪
+  // 捕获指针：移出元素后仍继续跟踪
   palleteRef.value.setPointerCapture(e.pointerId)
   document.addEventListener('pointermove', handlePalletePointerMove)
   document.addEventListener('pointerup', handlePalletePointerUp)
@@ -389,10 +454,8 @@ function handlePalletePointerUp(): void {
 }
 function handleUpdateHue(hue: number): void {
   displayedHue.value = hue
-  if (!hsvaComputed.value) {
-    return
-  }
-  const [, s, v, a] = hsvaComputed.value
+  // 无值时按纯色兜底，保证空值状态下色相同样可调
+  const [, s, v, a] = hsvaComputed.value ?? [hue, 100, 100, 1]
   switch (displayedMode.value) {
     case 'hsv':
       onUpdateValue((props.showAlpha ? toHsvaString : toHsvString)([hue, s, v, a]), 'cursor')
@@ -408,10 +471,9 @@ function handleUpdateHue(hue: number): void {
       break
   }
 }
-// hue slider pointer down
 function handleHueSliderPointerDown(e: PointerEvent): void {
   if (!hueRailRef.value) return
-  // 捕获指针，确保即使移出元素也能继续跟踪
+  // 捕获指针：移出元素后仍继续跟踪
   hueRailRef.value.setPointerCapture(e.pointerId)
   document.addEventListener('pointermove', handleHueSliderPointerMove)
   document.addEventListener('pointerup', handleHueSliderPointerUp)
@@ -455,10 +517,11 @@ function handleUpdateAlpha(alpha: number): void {
   }
   displayedAlpha.value = alpha
 }
-// alpha slider pointer down
 function handleAlphaSliderPointerDown(e: PointerEvent): void {
   if (!alphaRailRef.value) return
-  // 捕获指针，确保即使移出元素也能继续跟踪
+  // 空值态无颜色可调（也无手柄可拖），忽略指针事件：既不改值、也不在抬起时补发 complete
+  if (!rgbaComputed.value) return
+  // 捕获指针：移出元素后仍继续跟踪
   alphaRailRef.value.setPointerCapture(e.pointerId)
   document.addEventListener('pointermove', handleAlphaSliderPointerMove)
   document.addEventListener('pointerup', handleAlphaSliderPointerUp)
@@ -481,6 +544,18 @@ function handleAlphaSliderPointerUp(): void {
   document.removeEventListener('pointercancel', handleAlphaSliderPointerUp)
   emits('complete', displayedValue.value)
 }
+// 卸载时统一清理拖拽残留的全局指针监听
+onBeforeUnmount(() => {
+  document.removeEventListener('pointermove', handlePalletePointerMove)
+  document.removeEventListener('pointerup', handlePalletePointerUp)
+  document.removeEventListener('pointercancel', handlePalletePointerUp)
+  document.removeEventListener('pointermove', handleHueSliderPointerMove)
+  document.removeEventListener('pointerup', handleHueSliderPointerUp)
+  document.removeEventListener('pointercancel', handleHueSliderPointerUp)
+  document.removeEventListener('pointermove', handleAlphaSliderPointerMove)
+  document.removeEventListener('pointerup', handleAlphaSliderPointerUp)
+  document.removeEventListener('pointercancel', handleAlphaSliderPointerUp)
+})
 function getModeFromValue(color: string | undefined): ColorPickerMode | undefined {
   if (color === undefined) return undefined
   if (/^ *#/.test(color)) return 'hex'
@@ -488,6 +563,36 @@ function getModeFromValue(color: string | undefined): ColorPickerMode | undefine
   if (color.includes('hsl')) return 'hsl'
   if (color.includes('hsv')) return 'hsv'
   return undefined
+}
+// 解析失败的色值（如 CSS4 带 alpha 的 hsl()）会抛错：兜底为 null，让调用方按「空值」降级
+function safeParseColor<T>(parse: () => T): T | null {
+  try {
+    return parse()
+  } catch {
+    return null
+  }
+}
+// 触发器元素的透传属性：剔除事件监听（由浮层宿主承接，避免重复触发）与浮层专属属性
+function filterAttrs(attrs: Record<string, unknown>): Record<string, unknown> {
+  const result: Record<string, unknown> = {}
+  Object.keys(attrs).forEach((key) => {
+    if (key.startsWith('on') || TOOLTIP_ATTRS.includes(key)) return
+    result[key] = attrs[key]
+  })
+  return result
+}
+// 自定义触发器时由使用方按需调用，主动展开面板
+function handleTriggerClick(): void {
+  tooltipRef.value?.show()
+}
+// 触发器元素引用交由使用方持有，组件内部无需使用
+function setTriggerRef(): void {}
+// 触发器展示内容：label 函数可返回字符串或 VNode，未提供时直接展示颜色值
+function renderLabelContent(): VNodeChild {
+  const { label } = props
+  const color = displayedValue.value
+  if (label && color !== undefined) return label(color)
+  return color ?? ''
 }
 function onUpdateMode(): void {
   const currentModeIndex = props.modes.findIndex((mode) => mode === displayedMode.value)
@@ -500,6 +605,8 @@ function onUpdateMode(): void {
 function handleColorInputChange(e: Event): void {
   const target = e.target as HTMLInputElement
   const color = convertColor(target.value.toUpperCase(), displayedMode.value, 'hex')
+  // 原生取色器只会给出合法 hex：转换失败时忽略本次变更，不写入组件值
+  if (color === undefined) return
   onUpdateValue(color, 'input')
 }
 function normalizeHexaUnit(value: string): boolean {
@@ -523,10 +630,10 @@ function normalizeSlvUnit(value: string): number | false {
   }
   return false
 }
-// 0 - 100%
+// 0 - 100%，换算为 0 - 1
 function normalizeAlphaUnit(value: string): number | false {
   if (/^\d{1,3}\.?\d*%$/.test(value.trim())) {
-    return Math.max(0, Math.min(Number.parseInt(value) / 100, 100))
+    return Math.max(0, Math.min(Number.parseInt(value) / 100, 1))
   }
   return false
 }
@@ -537,72 +644,70 @@ function normalizeRgbUnit(value: string): number | false {
   }
   return false
 }
-function getInputString(value: string | undefined, mode: string): string {
-  if (value === undefined) return ''
-  if (mode === 'HEX' || mode === 'HEXA') {
-    return value as string
-  }
-  if (mode === 'A') {
-    return `${Math.floor(Number(value) * 100)}%`
-  }
-  return String(Math.floor(Number(value)))
+// 组件内部值 → 输入框显示串（alpha 通道按百分比显示）
+function formatInputValueArr(): string[] {
+  const valueArr = displayedValueArr.value
+  if (!valueArr) return new Array(props.showAlpha ? 4 : 3).fill(undefined)
+  return valueArr.map((value: number, index: number) =>
+    props.showAlpha && index === 3 ? `${Math.floor(value * 100)}%` : `${Math.floor(value)}`
+  )
+}
+// 组件内部值 → hex 输入框显示串
+function formatHexValue(): string | undefined {
+  const valueArr = displayedValueArr.value
+  return valueArr ? (props.showAlpha ? toHexaString : toHexString)(valueArr as RGBA) : undefined
+}
+// 非法输入：回滚为组件内部值，并重建输入框以清掉其自身状态
+function restoreInput(): void {
+  hexValue.value = formatHexValue()
+  inputValueArr.value = formatInputValueArr()
+  inputRefreshKey.value += 1
 }
 function handleInputUpdateValue(value: string): void {
+  const previousValue = displayedValue.value
   onUpdateValue(value, 'input')
+  emits('complete', value)
+  // 收敛后的值可能与原值相同（如 alpha 输入 300% → 100%），输入框收不到新 props 不会刷新，
+  // 故主动回滚文本，保证「输入框文本 ≡ 内部值」
+  if (displayedValue.value === previousValue) restoreInput()
 }
 function handleUnitUpdateValue(index: number, value: number | string) {
   if (displayedMode.value === 'hex') {
     handleInputUpdateValue((props.showAlpha ? toHexaString : toHexString)(value as string))
     return
   }
-  let nextValueArr: any
-  if (displayedValueArr.value === null) {
-    nextValueArr = [0, 0, 0, 0]
-  } else {
-    nextValueArr = [...displayedValueArr.value]
-  }
+  const nextValueArr: number[] = displayedValueArr.value ? [...displayedValueArr.value] : [0, 0, 0, 0]
+  nextValueArr[index] = value as number
   switch (displayedMode.value) {
     case 'hsv':
-      nextValueArr[index] = value
       handleInputUpdateValue((props.showAlpha ? toHsvaString : toHsvString)(nextValueArr as HSVA | HSV))
       break
     case 'rgb':
-      nextValueArr[index] = value
       handleInputUpdateValue((props.showAlpha ? toRgbaString : toRgbString)(nextValueArr as RGBA | RGB))
       break
     case 'hsl':
-      nextValueArr[index] = value
       handleInputUpdateValue((props.showAlpha ? toHslaString : toHslString)(nextValueArr as HSLA | HSL))
       break
   }
 }
 function handleInputChange(e: Event, index: number): void {
   const target = e.target as HTMLInputElement
-  let unit: number | false
-  let valid: boolean
-  let originValue
   const value = target.value
-  if (index === undefined) {
-    // hex
-    originValue = displayedValueArr.value === null ? undefined : displayedValueArr.value
-  } else {
-    originValue =
-      displayedValueArr.value?.[index] === undefined ? undefined : displayedValueArr.value?.[index].toString()
-  }
   const mode = index === undefined ? displayedModeComputed.value : displayedModeComputed.value[index]
+  let unit: number | false
   switch (mode) {
     case 'HEX':
     case 'HEXA':
-      valid = normalizeHexaUnit(value)
-      if (valid) {
+      if (normalizeHexaUnit(value)) {
         handleUnitUpdateValue(0, value)
+      } else {
+        restoreInput()
       }
-      hexValue.value = getInputString(value, mode)
       break
     case 'H':
       unit = normalizeHueUnit(value)
       if (unit === false) {
-        inputValueArr.value[index] = getInputString(originValue as string, mode)
+        restoreInput()
       } else {
         handleUnitUpdateValue(index, unit)
       }
@@ -612,7 +717,7 @@ function handleInputChange(e: Event, index: number): void {
     case 'V':
       unit = normalizeSlvUnit(value)
       if (unit === false) {
-        inputValueArr.value[index] = getInputString(originValue as string, mode)
+        restoreInput()
       } else {
         handleUnitUpdateValue(index, unit)
       }
@@ -620,7 +725,7 @@ function handleInputChange(e: Event, index: number): void {
     case 'A':
       unit = normalizeAlphaUnit(value)
       if (unit === false) {
-        inputValueArr.value[index] = getInputString(originValue as string, mode)
+        restoreInput()
       } else {
         handleUnitUpdateValue(index, unit)
       }
@@ -630,22 +735,23 @@ function handleInputChange(e: Event, index: number): void {
     case 'B':
       unit = normalizeRgbUnit(value)
       if (unit === false) {
-        inputValueArr.value[index] = getInputString(originValue as string, mode)
+        restoreInput()
       } else {
         handleUnitUpdateValue(index, unit)
       }
       break
   }
 }
-// Try to normalize the color values to ensure that they are valid CSS colors
+// 色板底色归一化：hsv 预设不是浏览器可识别的 CSS 颜色，转为等价的 rgba 串；
+// 其余模式与颜色名本身合法，保持原值（输出时再按当前模式格式化）
 function normalizeColor(color: string, mode: ColorPickerMode | undefined): string {
   if (mode === 'hsv') {
-    const [h, s, v, a] = hsva(color)
+    const hsvValue = safeParseColor(() => hsva(color))
+    // 无法解析时保留原值：底色交给浏览器按非法 CSS 处理，点击该色板也不会写入组件值
+    if (!hsvValue) return color
+    const [h, s, v, a] = hsvValue
     return toRgbaString([...hsv2rgb(h, s, v), a])
   }
-  // For the mode that is not in preset, we keep the original value.
-  // For color names, they are legal to CSS, so we don’t deal with them,
-  // and only standardize them when outputting.
   return color
 }
 function getHexFromName(color: string): string {
@@ -720,28 +826,32 @@ function convertColor(
       }
     }
   }
-  const conversions = convert[originalMode]
-  return (conversions as any)[mode](value)
+  const conversions = convert[originalMode] as Record<string, (value: string) => string>
+  // 非法色值会让转换抛错：兜底为 undefined（调用方按「无法转换」处理）
+  return safeParseColor(() => conversions[mode](value)) ?? undefined
 }
 function normalizeOutput(parsed: ParsedColor): string | undefined {
   let { value, mode: swatchColorMode } = parsed
-  // color name is converted to hex
+  // 色板未标注模式：按 hex 处理，颜色名（如 red）先换算为等价的 hex
   if (!swatchColorMode) {
     swatchColorMode = 'hex'
     if (/^[a-zA-Z]+$/.test(value)) {
       value = getHexFromName(value)
     } else {
-      // for invalid color, make it black
+      // 非法色值兜底为黑色，并提示使用方
       console.warn('color-picker', `color ${value} in swatches is invalid.`)
       value = '#000000'
     }
   }
   if (swatchColorMode === displayedMode.value) return value
-  // swatch value to current mode value
+  // 色板值与该模式不同源，转换为当前模式的输出
   return convertColor(value, displayedMode.value, swatchColorMode)
 }
 function onSwatch(swatch: ParsedColor): void {
-  onUpdateValue(normalizeOutput(swatch), 'input')
+  const swatchValue = normalizeOutput(swatch)
+  // 无法转换的色板（非法色值）忽略本次选择，不写入组件值
+  if (swatchValue === undefined) return
+  onUpdateValue(swatchValue, 'input')
 }
 function onConfirm() {
   emits('confirm', displayedValue.value)
@@ -756,10 +866,12 @@ function onClear() {
 <template>
   <Tooltip
     ref="tooltipRef"
-    :style="`width: ${colorPickerWidth}; height: ${colorPickerHeight};`"
+    :style="triggerHostStyle"
     max-width="none"
     :arrow="false"
-    placement="bottomLeft"
+    :placement="placement"
+    :to="to"
+    :disabled="disabled"
     bg-color="#fff"
     :tooltip-style="{
       width: '240px',
@@ -806,6 +918,7 @@ function onClear() {
                 v-if="showAlpha"
                 ref="alphaRailRef"
                 class="color-picker-slider"
+                :class="{ 'slider-empty': !rgbaComputed }"
                 :style="sliderStyle"
                 @pointerdown="handleAlphaSliderPointerDown"
               >
@@ -855,6 +968,7 @@ function onClear() {
               <template v-if="displayedMode === 'hex'">
                 <Input
                   size="small"
+                  :key="`hex-${inputRefreshKey}`"
                   :placeholder="displayedModeComputed"
                   v-model:value.lazy="hexValue"
                   @change="handleInputChange"
@@ -866,7 +980,7 @@ function onClear() {
                   size="small"
                   :style="`${val === 'A' ? 'flex-grow: 1.25' : ''}`"
                   v-for="(val, index) in displayedModeComputedArr"
-                  :key="index"
+                  :key="`${index}-${inputRefreshKey}`"
                   :placeholder="val"
                   v-model:value.lazy="inputValueArr[index]"
                   @change="handleInputChange($event, index)"
@@ -896,8 +1010,10 @@ function onClear() {
         </div>
       </template>
     </template>
+    <slot v-if="showTrigger" name="trigger" v-bind="triggerSlotProps" />
     <div
-      tabindex="1"
+      v-else
+      tabindex="0"
       class="color-picker-display"
       :class="[`color-picker-${size}`, { 'color-picker-disabled': disabled }]"
       :style="`
@@ -908,7 +1024,7 @@ function onClear() {
         --color-picker-primary-color-focus: ${colorPalettes[4]};
         --color-picker-primary-shadow-color: ${shadowColor};
       `"
-      v-bind="$attrs"
+      v-bind="filterAttrs($attrs)"
     >
       <div class="color-picker-wrap">
         <div class="color-picker-fill">
@@ -916,12 +1032,10 @@ function onClear() {
           <div
             :style="`position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: ${hslaComputed ? toHslaString(hslaComputed) : ''};`"
           ></div>
-          <div
-            v-if="displayedValue && hslaComputed"
-            class="color-picker-value"
-            :style="{ color: hslaComputed[2] > 50 || hslaComputed[3] < 0.5 ? 'black' : 'white' }"
-          >
-            <slot name="label" :color="displayedValue">{{ label ? label(displayedValue) : displayedValue }}</slot>
+          <div v-if="displayedValue && hslaComputed" class="color-picker-value" :style="{ color: labelColor }">
+            <slot name="label" :color="displayedValue">
+              <component :is="renderLabelContent" />
+            </slot>
           </div>
         </div>
       </div>
@@ -957,6 +1071,10 @@ function onClear() {
         position: relative;
         cursor: pointer;
         touch-action: none;
+        // 空值态不可交互的轨道（alpha）回落为默认箭头，避免误示「可拖动」
+        &.slider-empty {
+          cursor: default;
+        }
         &::after {
           content: '';
           position: absolute;
@@ -1101,6 +1219,19 @@ function onClear() {
         box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;
         cursor: pointer;
       }
+      &:focus {
+        outline: none;
+        .color-picker-swatch-fill::after {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background: inherit;
+          filter: blur(2px);
+          content: '';
+        }
+      }
     }
   }
 }
@@ -1152,9 +1283,6 @@ function onClear() {
       align-items: center;
       justify-content: center;
       .color-picker-checkboard {
-        width: 100%;
-        height: 100%;
-        position: relative;
         background: white;
         position: absolute;
         left: 0;
@@ -1218,5 +1346,9 @@ function onClear() {
 }
 .color-picker-disabled {
   cursor: not-allowed;
+  // 内层 wrap 铺满整个展示区且自带 pointer，需一并覆盖，否则悬浮在内层仍是小手
+  .color-picker-wrap {
+    cursor: not-allowed;
+  }
 }
 </style>
