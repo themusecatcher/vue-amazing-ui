@@ -23,6 +23,7 @@ const innerHeightDescriptor = Object.getOwnPropertyDescriptor(window, 'innerHeig
 function resetStyles(): void {
   html.style.overflowX = ''
   html.style.overflowY = ''
+  // 「释放后应精确还原调用方预设的内联样式」用例会预设 scrollbarGutter，需一并清理避免残留
   html.style.scrollbarGutter = ''
   html.style.removeProperty(SCROLLBAR_WIDTH_VAR)
   body.style.overflowX = ''

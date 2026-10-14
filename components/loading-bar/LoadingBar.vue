@@ -217,8 +217,7 @@ emits('ready', { start, finish, error })
   position: fixed;
   top: 0;
   left: 0;
-  // 锁定页面滚动时视口变宽，收回被回收的滚动条宽度，保持与锁定前一致
-  right: var(--va-scrollbar-width, 0px);
+  right: 0;
   z-index: var(--loading-bar-z-index, 9999);
   height: var(--loading-bar-size);
   .loading-bar {

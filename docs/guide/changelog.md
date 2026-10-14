@@ -15,11 +15,12 @@
 - 新增 [时间选择器 TimePicker](/guide/components/time-picker.html) 组件：时 / 分 / 秒三列滚动面板，支持 `type="timerange"` 范围形态、`12` 小时制与步长等配置；[全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme` 同步新增 `TimePicker` 键
 - 重构 [日期选择器 DatePicker](/guide/components/date-picker.html) 为自研实现、移除 `@vuepic/vue-datepicker` 依赖：双向绑定改用 `v-model:value` / `v-model:formatted-value`；`modelType` 改用 `valueFormat`，`mode` / `range` / `showTime` / `maxRange` 移除、形态改由 `type` 承担；`format` 不再支持函数形态（非法占位符不再中断渲染）；`showToday` 默认值由 `false` 改为 `true`
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增日期时间、周、月 / 季 / 年及各自的范围形态（含 `presets` 预设范围与按段配置），以及面板定制（`dateRender` / `renderExtraFooter`）、键盘导航与无障碍语义
-- 修复 [lockScroll](/utils/functions/lock-scroll.html) 锁定页面滚动时背景与浮层横向抖动、且页面仍可横向推移的问题：锁定期间本库浮层与页面内容都不位移，横向滚动一并禁用，被回收的滚动条宽度等量补偿；补全库内浮层补偿范围（[回到顶部 BackTop](/guide/components/back-top.html)、[浮动按钮 FloatButton](/guide/components/float-button.html)、[消息提示 Message](/guide/components/message.html) 与居中形态的 [通知提醒 Notification](/guide/components/notification.html) 锁定期间不再位移），宿主自有固定定位元素可用 `--va-scrollbar-width` 自行补偿
-- 优化 [图片 Image](/guide/components/image.html) 预览交互：打开预览时锁定页面滚动，背景页不再能被滚轮 / 键盘 / 拖动滚动条带走；预览与 [模态框 Modal](/guide/components/modal.html)、[对话框 Dialog](/guide/components/dialog.html)、[抽屉 Drawer](/guide/components/drawer.html) 的整屏浮层一并改为铺满窗口、与遮罩同宽（修复 Windows 经典滚动条下浮层相对遮罩偏移、预览右侧留缝的问题）
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 与 [时间选择器 TimePicker](/guide/components/time-picker.html) 的面板统一经 `to` 挂载，默认口径与 `Select` / `Tooltip` 等锚点跟随型浮层一致：不传 `to` 时优先挂到最近的承载层内容容器（`Modal` / `Drawer` / `Dialog` 卡片），无承载层时为 `body`
+- 修复锁定页面滚动时背景页面与浮层横向抖动、且页面仍可横向推移的问题：锁定期间横向滚动一并禁用、被回收的滚动条宽度等量补偿，库内常驻的 [回到顶部 BackTop](/guide/components/back-top.html) 与 [浮动按钮 FloatButton](/guide/components/float-button.html) 一并补偿
+- 组件库不再对外导出 `lockScroll` 工具函数
 - 全局字体口径调整：库不再声明字体族，组件与内容继承宿主字体（原生表单控件由 `font-family: inherit` 兜底），浮层改为承接触发位置的字体族
 - 组件库所有组件内部样式变量统一加组件名前缀；如曾用它做过外部覆盖，请同步改名
-- 更新使用者文档与贡献者文档：补齐时间选择器与重构后日期选择器的文档，补充字体口径与组件样式变量前缀规范，以及页面滚动锁的补偿策略与图片预览滚动锁说明
+- 更新使用者文档与贡献者文档：补齐时间选择器与重构后日期选择器的文档，补充字体口径与组件样式变量前缀规范，并同步移除页面滚动锁工具函数说明
 
 ## <VersionDateTag date="2026-10-13">2.13.2</VersionDateTag>
 
@@ -116,7 +117,7 @@
 - 增强 [轮播图 Carousel](/guide/components/carousel.html)：新增 `loop` / `initialIndex` / 受控 `currentIndex` 等属性、`beforeChange` / `afterChange` 事件与 `#prevArrow` / `#nextArrow` / `#dots` 插槽，修复越界、加载失败、动画中断等交互问题；`fadeFunction` 默认值由 `'cubic-bezier(0.4, 0, 0.2, 1)'` 改为 `[0.4, 0, 0.2, 1]`。属性 `dotsTrigger` 更名为 `dotTrigger`；移除 `change` 事件，切换监听改用 `beforeChange` / `afterChange`，当前页同步使用 `v-model:current-index`
 - 增强 [数字动画 NumberAnimation](/guide/components/number-animation.html)：缓动支持传入三次贝塞尔控制点数组与缓动函数，卸载时中止在飞动画。属性 `transition` 更名为 `easing`，类型 `NumberAnimationTransitionFunc` 更名为 `NumberAnimationEasingPreset`
 - 优化工具函数文档：改用交互式演示并补充边界说明与可运行 `demo`
-- 修复 [lockScroll](/utils/functions/lock-scroll.html) 在 `SSR` / `Node` 环境调用报错；订正 [useOptionsSupported](/utils/functions/use-options-supported.html) 参数名为 `option`
+- 修复 `lockScroll` 在 `SSR` / `Node` 环境调用报错；订正 [useOptionsSupported](/utils/functions/use-options-supported.html) 参数名为 `option`
 - 修复按需引入 `VueAmazingUIResolver` 引用 `DescriptionsItem` 不存在的样式路径
 
 ## <VersionDateTag date="2026-09-12">2.7.4</VersionDateTag>
@@ -163,7 +164,7 @@
 - ⚠️ **破坏性变更**：`Modal` 命令式 `maskClosable` 默认改 `false`（组件级仍为 `true`）、`Esc` 监听改绑弹窗主体（焦点移出弹窗后不再响应）、入口类型导出由 `Props` / `Modal` 调整为 `ModalProps` / `ModalOptions` / `ModalUpdate` / `ModalReactive` / `ModalApi`；[Upload](/guide/components/upload.html) 移除内嵌 Message：`messageProps` / `actionMessage` / `UploadMessageType` 及相关方法移除，改用 `success` / `error` / `remove` 事件
 - 重构并增强 [Dialog](/guide/components/dialog.html) / [Modal](/guide/components/modal.html)：改为多实例层叠架构，新增 `mask` / `closable` / `closeIcon`、`wrapClass` / `containerClass` 等分层定制与 `onEsc` / `onMaskClick` / `afterClose` 回调（其中 [Dialog](/guide/components/dialog.html) 额外新增 `draggable` 拖拽），`title` / `content` 支持 `string` / `VNode` / 渲染函数 / 插槽，并补充 `aria-*` 与可聚焦关闭按钮
 - 增强 [Notification](/guide/components/notification.html) / [Message](/guide/components/message.html) 组件：新增 `maxCount` / `keepAliveOnHover` / `to` 等属性，`Notification` 新增 `key` 与 `placement` 的 `top` / `bottom` 居中位置；定时器改为按 `key` 独立管理，修复多条干扰与常驻消息阻塞回收
-- 新增 [lockScroll](/utils/functions/lock-scroll.html) 工具函数（第 `24` 个），`Drawer` / `Modal` / `Dialog` 统一改用并补充卸载兜底释放；修复 [Table](/guide/components/table.html) 就地改写用户 `columns`、空 `columns` 崩溃与 `colspan` 计算错误
+- 新增 `lockScroll` 工具函数（第 `24` 个），`Drawer` / `Modal` / `Dialog` 统一改用并补充卸载兜底释放；修复 [Table](/guide/components/table.html) 就地改写用户 `columns`、空 `columns` 崩溃与 `colspan` 计算错误
 - 优化 `VueAmazingUIResolver` 按需引入：新增四个命令式 `Provider` 组件的自动引入与样式注入，修复 `Modal` / `Notification` 缺失 [Scrollbar](/guide/components/scrollbar.html) 样式依赖
 - 工程优化：`xxxProps` 类型由 `object` 精确为对应 `Props`；新增 `vitest` 单元测试并纳入 `pnpm check`；新增 `development/` 设计指南
 

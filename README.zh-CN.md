@@ -17,7 +17,7 @@
 ## 特性
 
 - 组件库采用 `Vue@3.5.42` + `TypeScript@5.9.3` + `Vite@7.3.1` + `Less@4.5.1` 实现
-- 目前共包含 `73` 个基础 `UI` 组件以及 `22` 个工具函数，并且持续探索更新中...
+- 目前共包含 `73` 个基础 `UI` 组件以及 `21` 个工具函数，并且持续探索更新中...
 - 主题可调，你只需提供一个主题色，剩下的都交给我
 - 顺便一提，它们全都可以 `treeshaking`
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
@@ -176,7 +176,6 @@ import {
   getColorPalettes,
   getAlphaColor,
   getScrollParent,
-  lockScroll,
   useScrollParent
 } from 'vue-amazing-ui'
 </script>
@@ -286,5 +285,4 @@ pnpm docs:dev
 | getColorPalettes | 根据主色生成颜色调色板函数 | (primaryColor: string) => string[] |
 | getAlphaColor | 获取透明度颜色函数，一般用作阴影色 | (frontColor: string, backgroundColor: string = '#ffffff') => string |
 | getScrollParent | 向上查找元素最近的可滚动父元素函数 | (el: HTMLElement &#124; null) => HTMLElement &#124; null |
-| lockScroll | 锁定页面滚动并等量补偿被回收的滚动条宽度，防止页面横向抖动函数 | () => () => void |
 | useScrollParent | 查询并监听最近可滚动父元素，响应视口 `resize` 的组合式函数 | (contentRef: Ref\<HTMLElement &#124; null>, onScroll: () => void, options: ScrollParentOptions = {}) => { scrollTarget: Ref\<HTMLElement &#124; null>, viewportWidth: Ref\<number>, viewportHeight: Ref\<number>, observeScroll: \() => void, cleanup: \() => void } |

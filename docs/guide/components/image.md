@@ -9,9 +9,6 @@ _可预览的图片_
 - 需要展示图片和预览时
 - 加载图片时显示 `loading`
 
-> [!TIP]
-> 预览是整屏浮层：打开时会锁定页面滚动（隐藏滚动条并按被回收的宽度等量补偿，与 [模态框 Modal](./modal.md)、[抽屉 Drawer](./drawer.md) 行为一致），预览内容的缩放 / 拖动 / 切换不受影响。宿主自有的视口锚定固定元素（非 `sticky`）在锁定期间会有最多一个滚动条宽度的位移，可读 `--va-scrollbar-width` 自行补偿，细节见 [页面滚动锁 lockScroll](/utils/functions/lock-scroll.html)。
-
 > [!WARNING]
 > 下方示例图片以 `cdn.jsdelivr.net` 为入口，默认的「下载」按钮会失效，原因如下：
 >

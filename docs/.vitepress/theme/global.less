@@ -321,14 +321,6 @@ h1 {
     display: none;
   }
 }
-/*
-  页面滚动锁：顶栏为 fixed 定位，宽度随布局视口变化；锁定期间收回被回收的滚动条宽度，
-  使右对齐的菜单 / 搜索框不随遮罩打开而右移（属固定定位元素的宿主侧补偿，见 lockScroll 文档）。
-  选择器取「.Layout 的直接子级 header」以高于 VitePress 主题的 .VPNav[data-v-*] 作用域规则
-*/
-.Layout > header.VPNav {
-  width: calc(100% - var(--va-scrollbar-width, 0px));
-}
 .VPNavBarTitle .title {
   color: rgba(0, 0, 0, 0.72);
   transition: all 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);

@@ -739,15 +739,13 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
 }
 .notification-top,
 .notification-bottom {
-  // 锁定页面滚动时视口变宽，居中锚点按补偿量的一半左移，使居中位置与锁定前一致
-  left: calc(50% - var(--va-scrollbar-width, 0px) / 2);
+  left: 50%;
   right: auto;
   transform: translateX(-50%);
 }
 .notification-topRight,
 .notification-bottomRight {
-  // 锁定页面滚动时视口变宽，收回被回收的滚动条宽度，保持与锁定前一致
-  right: var(--va-scrollbar-width, 0px);
+  right: 0;
 }
 .notification-topLeft,
 .notification-bottomLeft {

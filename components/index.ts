@@ -23,7 +23,6 @@ export {
   getColorPalettes,
   getAlphaColor,
   getScrollParent,
-  lockScroll,
   useScrollParent
 } from './utils'
 export type { AnimationFrameID, DownloadOptions, DownloadStrategy, ScrollParentOptions } from './utils'
