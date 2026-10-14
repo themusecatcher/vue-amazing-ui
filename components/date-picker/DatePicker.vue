@@ -106,6 +106,22 @@ export interface DatePickerSlots {
   dateRender?: (params: PickerDateRenderParams) => VNode[] // 自定义日期单元格内容（替换日号），优先于同名 prop
   renderExtraFooter?: () => VNode[] // 面板底部的额外页脚，优先于同名 prop
 }
+/**
+ * 对外公开的值与配置类型
+ *
+ * 选择器内核（`components/picker`）不对外导出，这里按本组件文档所引用的类型名逐个别名转出，
+ * 使用方 `import type { DatePickerXxx } from 'vue-amazing-ui'` 即可获得对应提示
+ */
+export type {
+  PickerValue as DatePickerValue,
+  PickerFormattedValue as DatePickerFormattedValue,
+  PickerType as DatePickerType,
+  PickerDisabledTime as DatePickerDisabledTime,
+  PickerRangeDisabledTime as DatePickerRangeDisabledTime,
+  PickerDisabledTimeUnits as DatePickerDisabledTimeUnits,
+  PickerTimePanelProps as DatePickerTimeProps,
+  PickerPreset as DatePickerPreset
+} from 'components/picker'
 // value / open 两个双向绑定项的默认值由 defineModel 声明，此处不重复
 const props = withDefaults(defineProps<Props>(), {
   formattedValue: undefined,

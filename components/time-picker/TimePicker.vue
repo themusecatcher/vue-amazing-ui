@@ -116,6 +116,20 @@ export interface TimePickerSlots {
   separator?: () => VNode[] // 范围形态两段之间的分隔符，默认右向箭头
   renderExtraFooter?: () => VNode[] // 面板底部的额外页脚，优先于同名 prop
 }
+/**
+ * 对外公开的值与配置类型
+ *
+ * 选择器内核（`components/picker`）不对外导出，这里按本组件文档所引用的类型名逐个别名转出，
+ * 使用方 `import type { TimePickerXxx } from 'vue-amazing-ui'` 即可获得对应提示
+ */
+export type {
+  PickerValue as TimePickerValue,
+  PickerFormattedValue as TimePickerFormattedValue,
+  PickerDisabledTime as TimePickerDisabledTime,
+  PickerRangeDisabledTime as TimePickerRangeDisabledTime,
+  PickerDisabledTimeUnits as TimePickerDisabledTimeUnits,
+  PickerRangeSide as TimePickerRangeSide
+} from 'components/picker'
 const props = withDefaults(defineProps<Props>(), {
   formattedValue: undefined,
   type: 'time',
