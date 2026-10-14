@@ -336,7 +336,7 @@ _自定义设定监听哪个元素来触发 `BackTop`_
 <BackTop :listen-to="scrollContainer" :bottom="340" :visibility-height="10">
   <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px"> 指定目标 </div>
 </BackTop>
-<div ref="scrollContainer" style="width: 600px; overflow: auto; height: 100px; line-height: 1.57">
+<div ref="scrollContainer" style="width: 100%; overflow: auto; height: 100px; line-height: 1.57">
   这块应该写一个有意思的笑话。<br />
   这块应该写一个有意思的笑话。<br />
   这块应该写一个有意思的笑话。<br />
@@ -355,7 +355,7 @@ _自动监听 `Scrollbar` 来触发 `BackTop`_
 
 <br/>
 
-<Scrollbar style="width: 600px; height: 100px">
+<Scrollbar style="width: 100%; height: 100px">
   <BackTop :bottom="340" :right="260" :visibility-height="10">
     <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
       监听 Scrollbar
@@ -394,7 +394,7 @@ const scrollContainer = ref<HTMLDivElement>()
   <BackTop :listen-to="scrollContainer" :bottom="340" :visibility-height="10">
     <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px"> 指定目标 </div>
   </BackTop>
-  <div ref="scrollContainer" style="width: 600px; overflow: auto; height: 100px; line-height: 1.57">
+  <div ref="scrollContainer" style="width: 100%; overflow: auto; height: 100px; line-height: 1.57">
     这块应该写一个有意思的笑话。<br />
     这块应该写一个有意思的笑话。<br />
     这块应该写一个有意思的笑话。<br />
@@ -407,7 +407,7 @@ const scrollContainer = ref<HTMLDivElement>()
     这块应该写一个有意思的笑话。<br />
   </div>
   <br />
-  <Scrollbar style="width: 600px; height: 100px">
+  <Scrollbar style="width: 100%; height: 100px">
     <BackTop :bottom="340" :right="260" :visibility-height="10">
       <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
         监听 Scrollbar
