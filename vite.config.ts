@@ -45,7 +45,6 @@ const externalDependencies = [
   'swiper/vue',
   '@vueuse/core',
   'seemly',
-  'qrcode',
   '@ant-design/colors',
   '@ctrl/tinycolor'
 ]
@@ -57,7 +56,6 @@ const externalGlobals: Record<string, string> = {
   'swiper/vue': 'SwiperVue',
   '@vueuse/core': 'Core',
   seemly: 'seemly',
-  qrcode: 'QRCode',
   '@ant-design/colors': 'Colors',
   '@ctrl/tinycolor': 'TinyColor'
 }
