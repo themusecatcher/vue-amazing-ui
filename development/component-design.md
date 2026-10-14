@@ -130,7 +130,7 @@ const showIconOnly = computed(() => slotsExist.icon && !slotsExist.default)
 ```
 
 - 嵌套不超过 3 层。
-- 组件内的 CSS 变量必须带**组件名前缀**（如 `--divider-border-color`、`--flex-align`；允许组件名的稳定缩写，如 `--float-btn-*`），避免与其它组件或宿主页面的同名变量相互污染；`va-` 前缀只用于 `components/style/global.less` 中对外暴露的全局命名（`--va-link-*`）。
+- 组件内的 CSS 变量必须带**组件名前缀**（如 `--divider-border-color`、`--flex-align`；允许组件名的稳定缩写，如 `--float-btn-*`），避免与其它组件或宿主页面的同名变量相互污染；`va-` 前缀只用于对外暴露的全局命名（`components/style/global.less` 的 `--va-link-*` 与页面滚动锁写入 `<html>` 的 `--va-scrollbar-width`，后者由 `components/utils/dom.ts` 经 `html.style` 设置、消费方带 `0px` 兜底读取）。
 - **厂商前缀（2026-10-01 定）**：源码中手写的 `-webkit-` / `-moz-` / `-ms-` 前缀是**有意保留**的，禁止以「去冗余」「消除 IDE 的 `vendorPrefix` 提示」为由批量删除：
   - 本库以 SFC 形态分发，组件文件可能被使用方**单独复制**到自己的项目中使用，此时样式由**使用方的构建链**编译。`autoprefixer` 在 Vite 生态中并非默认必备（需使用方自行安装并配置 `postcss.config.js`），其 `browserslist` 也未必与本库（见 `package.json`）一致 —— 手写前缀是这条「源码分发」路径上唯一的兼容兜底。
   - `autoprefixer` 只补齐它认识的属性：`-webkit-box-orient`、`display: -webkit-inline-box`、`-webkit-tap-highlight-color`、`::-webkit-scrollbar*`、`-webkit-line-clamp` 均不在其处理范围内，删除即等于放弃对应兼容（如 `Ellipsis` 的多行截断会在 Safari < 18.2 失效）。这类**无标准等价物**的前缀属不可替代写法，保持原样。
