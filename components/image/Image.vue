@@ -848,8 +848,7 @@ function onSwitchRight(): void {
     top: 0;
     left: 0;
     bottom: 0;
-    // 锁定页面滚动时视口变宽，收回被回收的滚动条宽度，保持与锁定前一致
-    right: var(--va-scrollbar-width, 0px);
+    right: 0;
     overflow: auto;
     outline: none;
     /* 默认层级为预览层（遮罩 +10）；ConfigProvider 传入 baseZIndex 时由内联样式覆盖 */
@@ -863,9 +862,7 @@ function onSwitchRight(): void {
       pointer-events: none;
       .preview-operations {
         position: fixed;
-        // 同 .preview-container：宽度改用 left/right 表达才能随补偿量收窄（width: 100% 会与 right 冲突被忽略）
-        left: 0;
-        right: var(--va-scrollbar-width, 0px);
+        width: 100%;
         z-index: 9;
         display: flex;
         flex-direction: row-reverse;
@@ -976,8 +973,7 @@ function onSwitchRight(): void {
         }
       }
       .switch-right {
-        // 12px 为固有间距，叠加补偿量后仍与锁定前对齐
-        right: calc(12px + var(--va-scrollbar-width, 0px));
+        right: 12px;
         position: fixed;
         top: 50%;
         /* 预览层操作按钮：位于预览内容之上 +1 */

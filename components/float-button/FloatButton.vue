@@ -222,7 +222,9 @@ function onClick(e: Event) {
 .float-btn-wrap {
   position: fixed;
   left: var(--float-btn-left);
-  right: var(--float-btn-right);
+  // 页面滚动锁：右对齐偏移叠加被回收的滚动条宽度（属性单位约定为 px），锁定期间位置与锁定前一致；
+  // 左对齐时 --float-btn-right 为空值，本声明计算失败回退 right: auto，与原先取值一致
+  right: calc(var(--float-btn-right) + var(--va-scrollbar-width, 0px));
   top: var(--float-btn-top);
   bottom: var(--float-btn-bottom);
   z-index: var(--float-btn-z-index);

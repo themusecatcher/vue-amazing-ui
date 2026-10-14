@@ -354,7 +354,8 @@ onBeforeUnmount(() => {
   line-height: 1.5714285714285714;
   position: fixed;
   z-index: var(--message-z-index, 1030); // 兜底值需与 FLOATING_LAYER_Z_INDEX.message 保持一致
-  width: 100%;
+  // 页面滚动锁：容器按被回收的滚动条宽度收窄，容器内居中显示的消息与锁定前位置一致
+  width: calc(100% - var(--va-scrollbar-width, 0px));
   left: 0;
   right: 0;
   pointer-events: none; // 保证整个 message 区域不遮挡背后元素响应鼠标事件

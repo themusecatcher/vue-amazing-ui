@@ -1146,8 +1146,6 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
 .modal-layer {
   position: fixed;
   inset: 0;
-  // 槽位未保住时收回被腾出的滚动条宽度，使弹窗几何与锁定前一致；槽位保住时为 0
-  right: var(--va-scrollbar-width, 0px);
   overflow: auto;
   outline: 0;
   display: flex;

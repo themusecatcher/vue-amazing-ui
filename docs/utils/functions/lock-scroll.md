@@ -20,7 +20,8 @@ let prevBodyOverflowY = ''
 let prevBodyPaddingRight = ''
 let prevScrollbarWidthVar = ''
 // 补偿量变量名：锁定期间写入 html，值等于本次被回收的滚动条宽度（未回收时为 0px）。
-// 本库浮层内容层据此从右侧内缩；宿主自有固定定位元素（固定头尾、右侧栏等）也可据此自行补偿
+// 由「跨锁定状态存续的视口锚定浮层」（右对齐 Notification、LoadingBar）据此从右侧内缩，
+// 保证开关锁前后视觉位置一致；宿主自有固定定位元素（固定头尾、右侧栏等）也可据此自行补偿
 const SCROLLBAR_WIDTH_VAR = '--va-scrollbar-width'
 // 布局尺寸比较容差：几何读数返回亚像素值，取整最多带来 1px 抖动，低于该值视为未变宽 / 无占位
 const LAYOUT_SIZE_TOLERANCE = 1
@@ -65,9 +66,15 @@ function restoreCssVar(name: string, prevValue: string): void {
  * 叠加在宿主已有 padding 之上），不依赖浏览器对 `scrollbar-gutter` 的支持情况。
  *
  * 锁定期间在 html 上写入 `--va-scrollbar-width`（恒有值，未回收时为 0px）：本次被回收的
- * 滚动条宽度，由本库浮层内容层（`.modal-layer` / `.dialog-layer` / `.drawer-container`）
- * 从右侧内缩消费，使弹窗 / 抽屉 / 对话框几何与锁定前一致；宿主自有固定定位元素可读同一变量
- * 自行补偿。
+ * 滚动条宽度。本库视口锚定的浮层都据此补偿、使锁定前后位置一致，按锚定方式分三类：
+ * - 整屏 / 整宽层（弹窗 / 抽屉 / 对话框 / 图片预览，含各自遮罩）**不**消费该变量：它们与遮罩
+ *   同时出现、本就铺满窗口，若按补偿量收窄会比遮罩窄一个滚动条宽度，表现为弹窗居中偏移、
+ *   预览右侧留缝；
+ * - 右对齐层（右对齐 `Notification`、`LoadingBar`、`BackTop`、`FloatButton`）在偏移上叠加补偿量；
+ * - 居中层（`Message`、居中 `Notification`）按补偿量的一半左移。
+ *
+ * 宿主自有的视口锚定固定定位元素（固定头尾、右侧栏等，非 `sticky`）不在本库补偿范围内，
+ * 会随布局视口变宽而位移，可读同一变量自行补偿。
  *
  * 只隐藏垂直滚动条会让 `overflow-x: visible` 计算为 `auto`，锁定期间页面仍可横向推移，
  * 故一并锁定横向轴；但页面本来就有横向滚动条时不能隐藏它（移除占位会抬高布局视口，
@@ -264,13 +271,14 @@ onUnmounted(() => {
 
 ## 注意事项
 
-_内部基于引用计数实现，可多入口并存；锁定时等量补偿被回收的滚动条宽度，页面内容与本库浮层都不位移_
+_内部基于引用计数实现，可多入口并存；锁定时等量补偿被回收的滚动条宽度，背景页面内容不位移_
 
 - **调用与释放严格配对**：每次调用 `lockScroll` 使全局计数加一，仅首个调用真正设置样式、最后一个释放时才真正还原页面。因此返回的释放函数必须与本次调用配对使用（重复调用无副作用）。
 - **多入口并存安全**：多个入口（如 `Modal` / `Dialog` / `Drawer` 及多 `Provider` 并存）各自锁定互不覆盖，任一入口提前释放也不会误还原其它入口仍持有的锁。
-- **不保留滚动条槽位，改为等量补偿**：内部先量出布局视口宽度（`documentElement.getBoundingClientRect().width`），隐藏滚动条后再量一次，用两者的差值同时作为判据与补偿量——差值原样补回 `body` 的 `padding-right`（叠加在宿主已有 padding 之上），并由本库浮层内容层（`.modal-layer` / `.dialog-layer` / `.drawer-container`）从右侧内缩，**页面内容与本库浮层的几何都与锁定前一致**。
+- **不保留滚动条槽位，改为等量补偿**：内部先量出布局视口宽度（`documentElement.getBoundingClientRect().width`），隐藏滚动条后再量一次，用两者的差值同时作为判据与补偿量——差值原样补回 `body` 的 `padding-right`（叠加在宿主已有 padding 之上），**锁定期间背景页面内容的几何与锁定前一致**。
 - **为什么不保留槽位（如 `scrollbar-gutter: stable`）**：实测（Windows / macOS Chrome）槽位保住后，窗口右侧会留下一条与滚动条等宽的带子；它由系统滚动条层绘制、位于所有页面内容之上——加宽遮罩、挂 `z-index` 拉满的固定元素、改根元素背景色都盖不住，唯一结果就是多出一条亮带，因此本库不再主动保留槽位。宿主若**自行声明** `scrollbar-gutter`（写在样式表里）则被尊重：此时回收宽度为 `0`，不会重复补偿，那条带子也由宿主自行承担。`macOS` 触控板默认的 `overlay` 滚动条不占布局宽度，差值为 `0`，天然不会抖动。
-- **`--va-scrollbar-width`（写在 `html` 上，锁定期间恒有值，未回收时为 `0px`）**：本次被回收的滚动条宽度，即需要补回的补偿量。本库参与滚动补偿的浮层已自动收回右边界（遮罩 / 弹窗 / 抽屉 / 对话框、图片预览的操作层、右对齐的 `Notification`、`LoadingBar`）；**未处理**的固定定位层（`Message` 居中提示、`BackTop`、`FloatButton`、居中的 `Notification`）会随之位移。**宿主自有**的视口锚定固定定位元素（固定头尾、右侧栏等，非 `sticky`）同样会位移，可读该变量自行补偿：与视口右边缘对齐的用 `right: var(--va-scrollbar-width)`，铺满整屏的用 `right` / `padding-right`。
+- **`--va-scrollbar-width`（写在 `html` 上，锁定期间恒有值，未回收时为 `0px`）**：本次被回收的滚动条宽度，即需要补回的补偿量。本库视口锚定的浮层都据此补偿、锁定前后位置一致：右对齐的 `Notification` / `LoadingBar` / `BackTop` / `FloatButton` 在偏移上叠加该值，居中的 `Message` / `Notification` 按该值的一半左移。**宿主自有**的视口锚定固定定位元素（固定头尾、右侧栏等，非 `sticky`）不在本库补偿范围内，会随之位移，可读该变量自行补偿：与视口右边缘对齐的用 `right: var(--va-scrollbar-width)`，铺满整屏的用 `right` / `padding-right`，水平居中的用 `left: calc(50% - var(--va-scrollbar-width) / 2)`。
+- **随锁定出现的整屏浮层不参与内缩**：弹窗 / 对话框 / 抽屉 / 图片预览（`.modal-layer` / `.dialog-layer` / `.drawer-container` / `.preview-container` 与预览操作层）一律铺满窗口、与遮罩同宽——它们与遮罩同时出现，不需要保持锁定前的位置；若按补偿量内缩，内容层会比遮罩窄一个滚动条宽度，表现为弹窗居中偏移、预览右侧留缝。
 - **横向轴一并锁定**：只隐藏垂直滚动条会让 `overflow-x: visible` 计算为 `auto`，锁定期间页面仍可横向推移，故同时把 `html` / `body` 的 `overflow-x` 设为 `hidden`；页面本来就有横向滚动条时跳过该步（移除其占位会抬高布局视口，反而引起纵向位移）。
 - **仅作用于页面级滚动**：隐藏的是 `html` / `body` 的滚动条，宿主自有的滚动容器（如 `#app { overflow: auto }`）内部滚动不受影响，也不会产生补偿。
 - **如何判断是否做了补偿**：锁定期间读 `html` 上的 `--va-scrollbar-width`，`0px` 表示没有回收宽度（系统 `overlay` 滚动条，或宿主自行保留了槽位）、未做补偿；非 `0` 表示已回收并补偿。建议在真机上覆盖：Windows Chrome / Edge / Firefox（经典滚动条）、macOS Chrome（默认 overlay / 系统「总是显示滚动条」/ 页面自定义 `::-webkit-scrollbar` 三种）、Safari、以及 `125%` 系统缩放。

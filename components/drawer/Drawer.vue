@@ -511,13 +511,6 @@ watch(
       3px 0 6px -4px rgba(0, 0, 0, 0.12),
       9px 0 28px 8px rgba(0, 0, 0, 0.05);
   }
-  // 页面滚动锁：内容层收回被回收的滚动条宽度（右 / 上 / 下三个方向都会随布局视口变宽而位移，
-  // 左抽屉贴左边缘不受影响）；内联形态（to: false）的坐标系不是视口，不做处理
-  &:not(.is-inline) {
-    .drawer-container:not(.drawer-left) {
-      right: var(--va-scrollbar-width, 0px);
-    }
-  }
   // 面板位移动画：enter 起点与 leave 终点分别落在 enter-from / leave-active 上；
   // transition: none 须置于 active 规则之后，才能覆盖常驻 transition，保证 enter 起始态不产生过渡
   .motion-top-enter-active,

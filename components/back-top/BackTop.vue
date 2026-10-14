@@ -50,10 +50,14 @@ const { isSupported: passiveSupported } = useOptionsSupported('passive')
 let scrollEventTarget: Window | HTMLElement | Document | null = null // 实际承载 scroll 事件的目标，整页滚动时为 window
 const emits = defineEmits(['click', 'show'])
 const slotsExist = useSlotsExist(['tooltip', 'description'])
+// 页面滚动锁：右对齐偏移叠加被回收的滚动条宽度（属性单位约定为 px），锁定期间位置与锁定前一致；
+// 未锁定时变量缺失，`var()` 回退为 0px，取值与原先完全相同
+const lockScrollOffset = 'var(--va-scrollbar-width, 0px)'
 const backTopStyle = computed(() => {
+  const right = typeof props.right === 'number' ? `${props.right}px` : props.right
   return {
     bottom: typeof props.bottom === 'number' ? `${props.bottom}px` : props.bottom,
-    right: typeof props.right === 'number' ? `${props.right}px` : props.right
+    right: `calc(${right} + ${lockScrollOffset})`
   }
 })
 const backTopShow = computed(() => {
