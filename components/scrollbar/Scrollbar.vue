@@ -362,10 +362,13 @@ function getScrollData(): object {
     clientHeight: containerClientHeight.value
   }
 }
+// 暴露内部滚动容器元素，供需要指定监听目标（如 BackTop 的 listenTo）或直接操作容器的场景使用
+const scrollElement = computed(() => containerRef.value)
 defineExpose({
   scrollTo,
   scrollBy,
-  getScrollData
+  getScrollData,
+  scrollElement
 })
 </script>
 <template>
