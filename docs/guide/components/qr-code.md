@@ -42,7 +42,7 @@ const refreshStatus = () => {
     status.value = 'active'
   }, 1500)
 }
-const dowloadQRCode = () => {
+const downloadQRCode = () => {
   const url = qrcodeRef.value?.toDataURL()
   if (!url) return
   const a = document.createElement('a')
@@ -256,7 +256,7 @@ const bgColor = ref('#00000030')
 
 <Space vertical>
   <QRCode ref="qrcodeRef" value="https://themusecatcher.blog.csdn.net" />
-  <Button type="primary" @click="dowloadQRCode">Downlaod</Button>
+  <Button type="primary" @click="downloadQRCode">Download</Button>
 </Space>
 
 ::: details Show Code
@@ -266,7 +266,7 @@ const bgColor = ref('#00000030')
 import { ref } from 'vue'
 import { QRCode } from 'vue-amazing-ui'
 const qrcodeRef = ref<InstanceType<typeof QRCode> | null>(null)
-const dowloadQRCode = () => {
+const downloadQRCode = () => {
   const url = qrcodeRef.value?.toDataURL()
   if (!url) return
   const a = document.createElement('a')
@@ -280,7 +280,7 @@ const dowloadQRCode = () => {
 <template>
   <Space vertical>
     <QRCode ref="qrcodeRef" value="https://themusecatcher.blog.csdn.net" />
-    <Button type="primary" @click="dowloadQRCode">Downlaod</Button>
+    <Button type="primary" @click="downloadQRCode">Download</Button>
   </Space>
 </template>
 ```
