@@ -10,7 +10,16 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-14">2.14.1</VersionDateTag>
+## <VersionDateTag date="2026-10-16">2.14.2</VersionDateTag>
+
+- 优化 [回到顶部 BackTop](/guide/components/back-top.html) 的 `listenTo` 属性：字符串参数改为按 CSS 选择器解析（元素标签名本身就是合法选择器，原写法仍然有效）
+- 新增 [滚动条 Scrollbar](/guide/components/scrollbar.html) 实例属性 `scrollElement`，可获取内部滚动容器元素（便于为 `BackTop` 等指定滚动监听目标）
+- 更新 [布局 Layout](/guide/components/layout.html) 文档：补充 CSS 变量清单与浅色侧边栏底色的覆盖示例
+- 更新 [栅格 Grid](/guide/components/grid.html) 文档：补充固定高度容器下 `align="stretch"` 的生效边界与正确写法
+- 更新 [回到顶部 BackTop](/guide/components/back-top.html) 文档：补充与容器内滚动组合时的监听目标选取说明
+- 更新贡献者文档：补充演示页路由 `meta.backTop` 关闭外壳回到顶部的约定
+
+## <VersionDateTag date="2026-10-15">2.14.1</VersionDateTag>
 
 - 修复 [二维码 QRCode](/guide/components/qr-code.html) 的 `canvas` 渲染类型不渲染、重复更新时容器内累积多个画布的问题
 - 新增 [二维码 QRCode](/guide/components/qr-code.html) `status` 属性与 `refresh` 事件，支持 `active` / `expired` / `loading` / `scanned` 四种状态（含状态遮罩与「点击刷新」交互），状态文案可用 `expiredText` / `refreshText` / `scannedText` 自定义
