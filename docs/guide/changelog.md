@@ -10,17 +10,17 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-13">2.14.0</VersionDateTag>
+## <VersionDateTag date="2026-10-14">2.14.0</VersionDateTag>
 
-- 新增 [时间选择器 TimePicker](/guide/components/time-picker.html) 组件：时 / 分 / 秒三列滚动面板，支持 `type="timerange"` 范围形态、`12` 小时制与步长等配置；[全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme` 同步新增 `TimePicker` 键
-- 重构 [日期选择器 DatePicker](/guide/components/date-picker.html) 为自研实现、移除 `@vuepic/vue-datepicker` 依赖：双向绑定改用 `v-model:value` / `v-model:formatted-value`；`modelType` 改用 `valueFormat`，`mode` / `range` / `showTime` / `maxRange` 移除、形态改由 `type` 承担；`format` 不再支持函数形态（非法占位符不再中断渲染）；`showToday` 默认值由 `false` 改为 `true`
-- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增日期时间、周、月 / 季 / 年及各自的范围形态（含 `presets` 预设范围与按段配置），以及面板定制（`dateRender` / `renderExtraFooter`）、键盘导航与无障碍语义
-- [日期选择器 DatePicker](/guide/components/date-picker.html) 与 [时间选择器 TimePicker](/guide/components/time-picker.html) 的面板统一经 `to` 挂载，默认口径与 `Select` / `Tooltip` 等锚点跟随型浮层一致：不传 `to` 时优先挂到最近的承载层内容容器（`Modal` / `Drawer` / `Dialog` 卡片），无承载层时为 `body`
-- 修复锁定页面滚动时背景页面与浮层横向抖动、且页面仍可横向推移的问题：锁定期间横向滚动一并禁用、被回收的滚动条宽度等量补偿，库内常驻的 [回到顶部 BackTop](/guide/components/back-top.html) 与 [浮动按钮 FloatButton](/guide/components/float-button.html) 一并补偿
+- 新增 [时间选择器 TimePicker](/guide/components/time-picker.html) 组件：时分秒三列滚动面板，支持 `type="timerange"` 范围形态、`12` 小时制与步长配置；[全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme` 同步新增 `TimePicker` 键
+- 重构 [日期选择器 DatePicker](/guide/components/date-picker.html) 为自研实现并移除 `@vuepic/vue-datepicker` 依赖：`v-model` 改用 `v-model:value` / `v-model:formatted-value`（毫秒时间戳 / 字符串双轨），`modelType` 改用 `valueFormat`，`mode` / `range` / `showTime` / `maxRange` 移除（形态改由 `type` 承担），`format` 不再支持函数形态，`showToday` 默认值由 `false` 改为 `true`
+- 增强 [日期选择器 DatePicker](/guide/components/date-picker.html)：新增日期时间、周、月 / 季 / 年及各自的范围形态（含 `presets` 预设范围与按段配置），以及面板定制（`dateRender` / `renderExtraFooter`）、键盘导航与无障碍语义，并新增 `defaultTime` / `allowEmpty` / `showNow` / `showArrow` / `inputReadOnly` / `panelClass` / `panelStyle` / `zIndex` 等属性与 `panelChange` 事件
+- 修复锁定页面滚动时背景页面与浮层横向抖动、且页面仍可横向推移的问题：锁定期间横向滚动一并禁用，被回收的滚动条宽度等量补偿，库内常驻的 [回到顶部 BackTop](/guide/components/back-top.html) 与 [浮动按钮 FloatButton](/guide/components/float-button.html) 一并补偿（宿主自有固定定位元素可用 `--va-scrollbar-width` 自行补偿）
 - 组件库不再对外导出 `lockScroll` 工具函数
 - 全局字体口径调整：库不再声明字体族，组件与内容继承宿主字体（原生表单控件由 `font-family: inherit` 兜底），浮层改为承接触发位置的字体族
-- 组件库所有组件内部样式变量统一加组件名前缀；如曾用它做过外部覆盖，请同步改名
-- 更新使用者文档与贡献者文档：补齐时间选择器与重构后日期选择器的文档，补充字体口径与组件样式变量前缀规范，并同步移除页面滚动锁工具函数说明
+- 组件库所有组件内部样式变量统一加组件名前缀，如曾用它做过外部覆盖，请同步改名
+- 更新使用者文档与贡献者文档
+- 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-10-13">2.13.2</VersionDateTag>
 
