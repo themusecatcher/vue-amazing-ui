@@ -745,7 +745,8 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
 }
 .notification-topRight,
 .notification-bottomRight {
-  right: 0;
+  // 锁定页面滚动时视口变宽，收回被回收的滚动条宽度，保持与锁定前一致
+  right: var(--va-scrollbar-width, 0px);
 }
 .notification-topLeft,
 .notification-bottomLeft {

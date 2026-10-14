@@ -15,7 +15,7 @@
 - 新增 [时间选择器 TimePicker](/guide/components/time-picker.html) 组件：时 / 分 / 秒三列滚动面板，支持 `type="timerange"` 范围形态、`12` 小时制与步长等配置；[全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme` 同步新增 `TimePicker` 键
 - 重构 [日期选择器 DatePicker](/guide/components/date-picker.html) 为自研实现、移除 `@vuepic/vue-datepicker` 依赖：双向绑定改用 `v-model:value` / `v-model:formatted-value`；`modelType` 改用 `valueFormat`，`mode` / `range` / `showTime` / `maxRange` 移除、形态改由 `type` 承担；`format` 不再支持函数形态（非法占位符不再中断渲染）；`showToday` 默认值由 `false` 改为 `true`
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增日期时间、周、月 / 季 / 年及各自的范围形态（含 `presets` 预设范围与按段配置），以及面板定制（`dateRender` / `renderExtraFooter`）、键盘导航与无障碍语义
-- 修复 [lockScroll](/utils/functions/lock-scroll.html) 锁定页面滚动时背景与浮层横向抖动、且页面仍可横向推移的问题：锁定期间遮罩 / 弹窗 / 抽屉与页面内容都不位移，横向滚动一并禁用，被回收的滚动条宽度等量补偿（宿主自有固定定位元素可用 `--va-scrollbar-width` 自行补偿）
+- 修复 [lockScroll](/utils/functions/lock-scroll.html) 锁定页面滚动时背景与浮层横向抖动、且页面仍可横向推移的问题：锁定期间本库浮层与页面内容都不位移，横向滚动一并禁用，被回收的滚动条宽度等量补偿（宿主自有固定定位元素可用 `--va-scrollbar-width` 自行补偿）
 - 全局字体口径调整：库不再声明字体族，组件与内容继承宿主字体（原生表单控件由 `font-family: inherit` 兜底），浮层改为承接触发位置的字体族
 - 组件库所有组件内部样式变量统一加组件名前缀；如曾用它做过外部覆盖，请同步改名
 - 更新使用者文档与贡献者文档：补齐时间选择器与重构后日期选择器的文档，补充字体口径与组件样式变量前缀规范，以及页面滚动锁的补偿策略说明
