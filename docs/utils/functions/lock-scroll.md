@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-_锁定页面滚动并保留滚动条占位宽度、防止页面横向抖动的工具函数_
+_锁定页面滚动并等量补偿被回收的滚动条宽度、防止页面横向抖动的工具函数_
 
 ::: details Show Source Code
 
@@ -15,18 +15,13 @@ let bodyLockCount = 0
 // 首个锁设置前 documentElement / body 的原内联样式，归零释放时精确还原，避免误删调用方预设
 let prevHtmlOverflowX = ''
 let prevHtmlOverflowY = ''
-let prevHtmlScrollbarGutter = ''
 let prevBodyOverflowX = ''
 let prevBodyOverflowY = ''
 let prevBodyPaddingRight = ''
 let prevScrollbarWidthVar = ''
-let prevScrollbarSlotWidthVar = ''
-// 补偿量变量名：锁定期间写入 html，值等于本次被腾出的滚动条宽度（槽位保住时为 0px）。
+// 补偿量变量名：锁定期间写入 html，值等于本次被回收的滚动条宽度（未回收时为 0px）。
 // 本库浮层内容层据此从右侧内缩；宿主自有固定定位元素（固定头尾、右侧栏等）也可据此自行补偿
 const SCROLLBAR_WIDTH_VAR = '--va-scrollbar-width'
-// 槽位带宽度变量名：锁定期间写入 html，值等于窗口右侧布局视口之外的宽度（回退路径下为 0px）。
-// 由本库遮罩向右扩展消费，用于盖住滚动条隐藏后露出的空槽位，属库内部变量
-const SCROLLBAR_SLOT_WIDTH_VAR = '--va-scrollbar-slot-width'
 // 布局尺寸比较容差：几何读数返回亚像素值，取整最多带来 1px 抖动，低于该值视为未变宽 / 无占位
 const LAYOUT_SIZE_TOLERANCE = 1
 /**
@@ -56,22 +51,23 @@ function restoreCssVar(name: string, prevValue: string): void {
 /**
  * 锁定页面滚动，并返回本次锁定的释放函数
  *
- * 隐藏 html/body 的滚动条，同时保住滚动条原本占用的布局宽度，避免布局视口宽度突变
+ * 隐藏 html/body 的滚动条，并把被回收的滚动条宽度等量补偿回页面，避免布局视口宽度突变
  * 导致背景页面与浮层横向抖动（Windows 经典滚动条场景尤其明显）。
- * 优先用 `scrollbar-gutter: stable` 让槽位在滚动条隐藏后依然占位：布局视口宽度不变，
- * `position: fixed` 元素（Modal / Dialog / Drawer 的遮罩、弹窗、抽屉）与普通流内容都不位移。
- * 槽位未被保留时（浏览器不支持 `scrollbar-gutter`，或 overlay 滚动条模式下宿主用
- * `::-webkit-scrollbar` 自定义了占位滚动条）回退为 `body` 的 `padding-right` 补偿：
- * 普通流内容宽度保持不变，同时把补偿量写入 `--va-scrollbar-width`，由本库浮层内容层
- * （`.modal-layer` / `.dialog-layer` / `.drawer-container`）从右侧内缩，浮层几何与锁定前一致。
  *
- * 判据统一取「隐藏滚动条前后布局视口宽度的差值」：差值归零即槽位已保住，无需补偿；
- * 差值仍在时即槽位未保住，用同一差值做等量补偿，不依赖浏览器对 `scrollbar-gutter` 的支持情况。
+ * 为什么不保留滚动条槽位（如 `scrollbar-gutter: stable`）：实测（Windows / macOS Chrome）
+ * 槽位保住后，窗口右侧会留下一条与滚动条等宽的带子，该带子由系统滚动条层绘制、位于所有页面
+ * 内容之上——加宽遮罩、挂 z-index 拉满的固定元素、改根元素背景色都盖不住它，唯一结果就是多出
+ * 一条亮带；因此库不再主动保留槽位，改为等量补偿。宿主若自行声明 `scrollbar-gutter`（写在
+ * 样式表里）则尊重其声明：此时回收宽度为 0，本函数不会重复补偿。
  *
- * 锁定期间在 html 上恒有两个宽度变量（无对应宽度时为 0px，避免使用方读到空值）：
- * - `--va-scrollbar-width`：本次被腾出的滚动条宽度，即需要从右侧补回的补偿量；
- * - `--va-scrollbar-slot-width`：窗口右侧布局视口之外的槽位带宽度，供遮罩向右扩展，
- *   盖住滚动条隐藏后露出的空槽位（该区域只由画布绘制，元素的盒模型覆盖不到）。
+ * 判据统一取「隐藏滚动条前后布局视口宽度的差值」：差值归零（系统为 overlay 滚动条，或宿主
+ * 自行保留了槽位）即无需补偿；差值仍在时用同一差值做等量补偿（写入 `body` 的 `padding-right`，
+ * 叠加在宿主已有 padding 之上），不依赖浏览器对 `scrollbar-gutter` 的支持情况。
+ *
+ * 锁定期间在 html 上写入 `--va-scrollbar-width`（恒有值，未回收时为 0px）：本次被回收的
+ * 滚动条宽度，由本库浮层内容层（`.modal-layer` / `.dialog-layer` / `.drawer-container`）
+ * 从右侧内缩消费，使弹窗 / 抽屉 / 对话框几何与锁定前一致；宿主自有固定定位元素可读同一变量
+ * 自行补偿。
  *
  * 只隐藏垂直滚动条会让 `overflow-x: visible` 计算为 `auto`，锁定期间页面仍可横向推移，
  * 故一并锁定横向轴；但页面本来就有横向滚动条时不能隐藏它（移除占位会抬高布局视口，
@@ -92,42 +88,28 @@ export function lockScroll(): () => void {
   if (bodyLockCount === 0) {
     prevHtmlOverflowX = html.style.overflowX
     prevHtmlOverflowY = html.style.overflowY
-    prevHtmlScrollbarGutter = html.style.scrollbarGutter
     prevBodyOverflowX = body.style.overflowX
     prevBodyOverflowY = body.style.overflowY
     prevBodyPaddingRight = body.style.paddingRight
     prevScrollbarWidthVar = html.style.getPropertyValue(SCROLLBAR_WIDTH_VAR)
-    prevScrollbarSlotWidthVar = html.style.getPropertyValue(SCROLLBAR_SLOT_WIDTH_VAR)
-    // 横向滚动条是否占用布局高度：scrollbar-gutter 只保留 inline 轴槽位，不影响该读数
+    // 横向滚动条是否占用布局高度：仅用于决定是否一并锁定横向轴，与垂直方向互不影响
     const horizontalScrollbarHeight = window.innerHeight - html.clientHeight
-    // 隐藏滚动条后可用宽度变宽多少，就是本次要补偿（或靠保留槽位省掉）的量
+    // 隐藏滚动条后可用宽度变宽多少，就是本次要补偿的量（宿主自行保留槽位或 overlay 滚动条时为 0）
     const layoutWidth = getLayoutViewportWidth()
     html.style.overflowY = 'hidden'
     body.style.overflowY = 'hidden'
-    // 本次需要从右侧补回的宽度：槽位保住时为 0，回退为等量补偿时等于被腾出的宽度
-    let compensation = 0
-    let growth = getLayoutViewportWidth() - layoutWidth
-    if (growth > LAYOUT_SIZE_TOLERANCE) {
-      // 先尝试保留滚动条槽位：宿主已声明 both-edges 时保持其对称语义
-      const currentGutter = html.style.scrollbarGutter || getComputedStyle(html).scrollbarGutter || ''
-      html.style.scrollbarGutter = currentGutter.includes('both-edges') ? 'stable both-edges' : 'stable'
-      growth = getLayoutViewportWidth() - layoutWidth
-      if (growth > LAYOUT_SIZE_TOLERANCE) {
-        // 槽位未被保留（浏览器不支持，或自定义占位滚动条）：清掉本次临时样式，回退为等量补偿
-        html.style.scrollbarGutter = prevHtmlScrollbarGutter
-        const basePaddingRight = Number.parseFloat(getComputedStyle(body).paddingRight) || 0
-        body.style.paddingRight = `${basePaddingRight + growth}px`
-        compensation = growth
-      }
+    const growth = getLayoutViewportWidth() - layoutWidth
+    const compensation = growth > LAYOUT_SIZE_TOLERANCE ? growth : 0
+    if (compensation > 0) {
+      const basePaddingRight = Number.parseFloat(getComputedStyle(body).paddingRight) || 0
+      body.style.paddingRight = `${basePaddingRight + compensation}px`
     }
     if (horizontalScrollbarHeight <= LAYOUT_SIZE_TOLERANCE) {
       html.style.overflowX = 'hidden'
       body.style.overflowX = 'hidden'
     }
-    // 槽位带宽度：非零说明锁定后窗口右侧留有一条空槽位（含宿主自行声明 scrollbar-gutter 的情况）
-    const slotWidth = Math.max(window.innerWidth - getLayoutViewportWidth(), 0)
+    // 变量恒有值，避免使用方读到空值导致 var() 失效
     html.style.setProperty(SCROLLBAR_WIDTH_VAR, `${compensation}px`)
-    html.style.setProperty(SCROLLBAR_SLOT_WIDTH_VAR, `${slotWidth}px`)
   }
   bodyLockCount += 1
   let released = false
@@ -140,12 +122,10 @@ export function lockScroll(): () => void {
     if (bodyLockCount === 0) {
       html.style.overflowX = prevHtmlOverflowX
       html.style.overflowY = prevHtmlOverflowY
-      html.style.scrollbarGutter = prevHtmlScrollbarGutter
       body.style.overflowX = prevBodyOverflowX
       body.style.overflowY = prevBodyOverflowY
       body.style.paddingRight = prevBodyPaddingRight
       restoreCssVar(SCROLLBAR_WIDTH_VAR, prevScrollbarWidthVar)
-      restoreCssVar(SCROLLBAR_SLOT_WIDTH_VAR, prevScrollbarSlotWidthVar)
     }
   }
 }
@@ -284,15 +264,16 @@ onUnmounted(() => {
 
 ## 注意事项
 
-_内部基于引用计数实现，可多入口并存；锁定时保留滚动条占位宽度，页面内容与本库浮层都不位移_
+_内部基于引用计数实现，可多入口并存；锁定时等量补偿被回收的滚动条宽度，页面内容与本库浮层都不位移_
 
 - **调用与释放严格配对**：每次调用 `lockScroll` 使全局计数加一，仅首个调用真正设置样式、最后一个释放时才真正还原页面。因此返回的释放函数必须与本次调用配对使用（重复调用无副作用）。
 - **多入口并存安全**：多个入口（如 `Modal` / `Dialog` / `Drawer` 及多 `Provider` 并存）各自锁定互不覆盖，任一入口提前释放也不会误还原其它入口仍持有的锁。
-- **滚动条占位保留与补偿（两条路径下本库浮层都不位移）**：为避免滚动条消失导致背景与浮层横向抖动，内部先量出布局视口宽度（`documentElement.getBoundingClientRect().width`），隐藏滚动条后再量一次，用两者的差值同时作为判据与补偿量：差值归零说明 `scrollbar-gutter: stable` 的槽位已保住——布局视口宽度不变，`position: fixed` 的遮罩 / 弹窗 / 抽屉、宿主自有固定元素与普通流内容都不位移；差值仍在（浏览器不支持 `scrollbar-gutter` —— 该属性为 `Baseline 2024`，即 Chrome / Edge `94+`、Firefox `97+`、Safari `18.2+`；或 `overlay` 滚动条模式下宿主用 `::-webkit-scrollbar` 自定义了占位滚动条）则回退为 `body` 的 `padding-right` 等量补偿（叠加在宿主已有 padding 之上），同时由本库浮层内容层（`.modal-layer` / `.dialog-layer` / `.drawer-container`）按补偿量从右侧内缩，**本库浮层的几何在两条路径下都与锁定前一致**；只有**宿主自有的**固定定位元素在回退路径下仍会横移，可按下面的变量自行补偿（本库其它不参与滚动锁的固定定位层，如图片预览遮罩、通知 / 消息 / 回到顶部等，同样会随之位移）。`macOS` 触控板默认的 `overlay` 滚动条不占布局宽度，此时差值为 `0`，不会做任何补偿；宿主已声明 `scrollbar-gutter: stable both-edges` 时不会被覆盖。
-- **锁定期间的宽度变量（写在 `html` 上，锁定期间恒有值）**：`--va-scrollbar-width` 为本次被腾出的滚动条宽度，即需要从右侧补回的补偿量（槽位保住时为 `0px`）；`--va-scrollbar-slot-width` 为窗口右侧布局视口之外的槽位带宽度（回退路径下为 `0px`），由本库遮罩向右扩展消费，用于盖住滚动条隐藏后露出的空槽位——该区域只由画布（根元素背景）绘制，元素的盒模型覆盖不到，只能靠遮罩自身扩展，因此不再提供「改根元素背景色」的做法。补偿宿主自有固定元素时：与视口右边缘对齐的 `position: fixed` 元素用 `right: var(--va-scrollbar-width)`，铺满整屏的用 `right` 或 `padding-right`。
+- **不保留滚动条槽位，改为等量补偿**：内部先量出布局视口宽度（`documentElement.getBoundingClientRect().width`），隐藏滚动条后再量一次，用两者的差值同时作为判据与补偿量——差值原样补回 `body` 的 `padding-right`（叠加在宿主已有 padding 之上），并由本库浮层内容层（`.modal-layer` / `.dialog-layer` / `.drawer-container`）从右侧内缩，**页面内容与本库浮层的几何都与锁定前一致**。
+- **为什么不保留槽位（如 `scrollbar-gutter: stable`）**：实测（Windows / macOS Chrome）槽位保住后，窗口右侧会留下一条与滚动条等宽的带子；它由系统滚动条层绘制、位于所有页面内容之上——加宽遮罩、挂 `z-index` 拉满的固定元素、改根元素背景色都盖不住，唯一结果就是多出一条亮带，因此本库不再主动保留槽位。宿主若**自行声明** `scrollbar-gutter`（写在样式表里）则被尊重：此时回收宽度为 `0`，不会重复补偿，那条带子也由宿主自行承担。`macOS` 触控板默认的 `overlay` 滚动条不占布局宽度，差值为 `0`，天然不会抖动。
+- **`--va-scrollbar-width`（写在 `html` 上，锁定期间恒有值，未回收时为 `0px`）**：本次被回收的滚动条宽度，即需要补回的补偿量。**宿主自有**的视口锚定固定定位元素（固定头尾、右侧栏等，非 `sticky`）会随布局视口变宽而位移，可读该变量自行补偿：与视口右边缘对齐的用 `right: var(--va-scrollbar-width)`，铺满整屏的用 `right` / `padding-right`。本库其它不参与滚动锁的固定定位层（图片预览遮罩、通知 / 消息 / 回到顶部等）同样会随之位移。
 - **横向轴一并锁定**：只隐藏垂直滚动条会让 `overflow-x: visible` 计算为 `auto`，锁定期间页面仍可横向推移，故同时把 `html` / `body` 的 `overflow-x` 设为 `hidden`；页面本来就有横向滚动条时跳过该步（移除其占位会抬高布局视口，反而引起纵向位移）。
 - **仅作用于页面级滚动**：隐藏的是 `html` / `body` 的滚动条，宿主自有的滚动容器（如 `#app { overflow: auto }`）内部滚动不受影响，也不会产生补偿。
-- **如何判断走了哪条路径**：锁定期间读 `html` 上的 `--va-scrollbar-width`，`0px` 即槽位已保住、非 `0` 即走了回退补偿。建议在真机上覆盖：Windows Chrome / Edge / Firefox（经典滚动条）、macOS Chrome（系统「总是显示滚动条」/ 页面自定义 `::-webkit-scrollbar` / 默认 overlay 三种）、Safari `17` 与 `18.2+`、以及 `125%` 系统缩放。
+- **如何判断是否做了补偿**：锁定期间读 `html` 上的 `--va-scrollbar-width`，`0px` 表示没有回收宽度（系统 `overlay` 滚动条，或宿主自行保留了槽位）、未做补偿；非 `0` 表示已回收并补偿。建议在真机上覆盖：Windows Chrome / Edge / Firefox（经典滚动条）、macOS Chrome（默认 overlay / 系统「总是显示滚动条」/ 页面自定义 `::-webkit-scrollbar` 三种）、Safari、以及 `125%` 系统缩放。
 
 ## Return
 

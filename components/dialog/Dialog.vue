@@ -1249,8 +1249,7 @@ emits('ready', { open: openDialog, destroyAll })
 .dialog-mask {
   position: fixed;
   inset: 0;
-  // 锁定页面滚动时向右扩展，盖住滚动条隐藏后露出的空槽位；无槽位时为 0
-  right: calc(-1 * var(--va-scrollbar-slot-width, 0px));
+  width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.45);
   pointer-events: auto; // 遮罩可见时接收点击（遮罩关闭 / 阻断背景交互）

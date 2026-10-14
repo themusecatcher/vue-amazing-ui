@@ -286,5 +286,5 @@ All sponsors will be listed here, thank you very much for your support and spons
 | getColorPalettes | Function to generate a color palette from a primary color | (primaryColor: string) => string[] |
 | getAlphaColor | Function to get an alpha color, generally used as a shadow color | (frontColor: string, backgroundColor: string = '#ffffff') => string |
 | getScrollParent | Function to find the nearest scrollable parent element upward | (el: HTMLElement &#124; null) => HTMLElement &#124; null |
-| lockScroll | Function to lock page scrolling and keep the scrollbar placeholder width (with equal compensation when needed) to prevent horizontal jitter | () => () => void |
+| lockScroll | Function to lock page scrolling and equally compensate the reclaimed scrollbar width to prevent horizontal jitter | () => () => void |
 | useScrollParent | Composable to query and watch the nearest scrollable parent element and respond to viewport `resize` | (contentRef: Ref\<HTMLElement &#124; null>, onScroll: () => void, options: ScrollParentOptions = {}) => { scrollTarget: Ref\<HTMLElement &#124; null>, viewportWidth: Ref\<number>, viewportHeight: Ref\<number>, observeScroll: \() => void, cleanup: \() => void } |
