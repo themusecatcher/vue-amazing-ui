@@ -13,31 +13,31 @@ _返回页面顶部的操作按钮_
 import { h, ref } from 'vue'
 import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@ant-design/icons-vue'
 const defaultCustomStyle = {
-  '--backtop-width': '54px',
-  '--backtop-height': '54px',
-  '--backtop-icon-size': '32px',
-  '--backtop-default-color-hover': '#d4380d'
+  '--back-top-width': '54px',
+  '--back-top-height': '54px',
+  '--back-top-icon-size': '32px',
+  '--back-top-default-color-hover': '#d4380d'
 }
 const primaryCustomStyle = {
-  '--backtop-width': '54px',
-  '--backtop-height': '54px',
-  '--backtop-icon-size': '32px',
-  '--backtop-primary-bg-color': '#d4380d',
-  '--backtop-primary-bg-color-hover': '#dd6747',
-  '--backtop-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
-  '--backtop-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
-  '--backtop-square-border-radius': '18px'
+  '--back-top-width': '54px',
+  '--back-top-height': '54px',
+  '--back-top-icon-size': '32px',
+  '--back-top-primary-bg-color': '#d4380d',
+  '--back-top-primary-bg-color-hover': '#dd6747',
+  '--back-top-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
+  '--back-top-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
+  '--back-top-square-border-radius': '18px'
 }
 const primaryDescCustomStyle = {
-  '--backtop-width': '54px',
-  '--backtop-height': '54px',
-  '--backtop-icon-with-desc-size': '30px',
-  '--backtop-desc-font-size': '16px',
-  '--backtop-primary-bg-color': '#d4380d',
-  '--backtop-primary-bg-color-hover': '#dd6747',
-  '--backtop-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
-  '--backtop-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
-  '--backtop-square-border-radius': '18px'
+  '--back-top-width': '54px',
+  '--back-top-height': '54px',
+  '--back-top-icon-with-description-size': '30px',
+  '--back-top-description-font-size': '16px',
+  '--back-top-primary-bg-color': '#d4380d',
+  '--back-top-primary-bg-color-hover': '#dd6747',
+  '--back-top-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
+  '--back-top-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
+  '--back-top-square-border-radius': '18px'
 }
 const scrollContainer = ref<HTMLDivElement>()
 function onShow(show: boolean) {
@@ -206,31 +206,31 @@ import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@
 ```vue
 <script setup lang="ts">
 const defaultCustomStyle = {
-  '--backtop-width': '54px',
-  '--backtop-height': '54px',
-  '--backtop-icon-size': '32px',
-  '--backtop-default-color-hover': '#d4380d'
+  '--back-top-width': '54px',
+  '--back-top-height': '54px',
+  '--back-top-icon-size': '32px',
+  '--back-top-default-color-hover': '#d4380d'
 }
 const primaryCustomStyle = {
-  '--backtop-width': '54px',
-  '--backtop-height': '54px',
-  '--backtop-icon-size': '32px',
-  '--backtop-primary-bg-color': '#d4380d',
-  '--backtop-primary-bg-color-hover': '#dd6747',
-  '--backtop-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
-  '--backtop-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
-  '--backtop-square-border-radius': '18px'
+  '--back-top-width': '54px',
+  '--back-top-height': '54px',
+  '--back-top-icon-size': '32px',
+  '--back-top-primary-bg-color': '#d4380d',
+  '--back-top-primary-bg-color-hover': '#dd6747',
+  '--back-top-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
+  '--back-top-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
+  '--back-top-square-border-radius': '18px'
 }
 const primaryDescCustomStyle = {
-  '--backtop-width': '54px',
-  '--backtop-height': '54px',
-  '--backtop-icon-with-desc-size': '30px',
-  '--backtop-desc-font-size': '16px',
-  '--backtop-primary-bg-color': '#d4380d',
-  '--backtop-primary-bg-color-hover': '#dd6747',
-  '--backtop-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
-  '--backtop-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
-  '--backtop-square-border-radius': '18px'
+  '--back-top-width': '54px',
+  '--back-top-height': '54px',
+  '--back-top-icon-with-description-size': '30px',
+  '--back-top-description-font-size': '16px',
+  '--back-top-primary-bg-color': '#d4380d',
+  '--back-top-primary-bg-color-hover': '#dd6747',
+  '--back-top-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
+  '--back-top-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
+  '--back-top-square-border-radius': '18px'
 }
 </script>
 <template>

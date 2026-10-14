@@ -28,7 +28,7 @@ export const FLOATING_LAYER_Z_INDEX = {
   tooltip: 1070,
   /** 全屏预览族：`Image`（与气泡族同值，需高于承载层） */
   image: 1070,
-  /** 下拉面板族：`Select` / `AutoComplete` / `Dropdown` / `Cascader` */
+  /** 下拉面板族：`Select` / `AutoComplete` / `Dropdown` / `Cascader` / `DatePicker` / `TimePicker` */
   select: 1050,
   /** 承载层族：`Modal` / `Dialog` / `Drawer`（遮罩取该值，弹窗 / 卡片取 +10） */
   overlay: 1000,

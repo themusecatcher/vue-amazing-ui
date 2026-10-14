@@ -231,7 +231,11 @@ if (uncoveredStyles.length > 0) {
 const INDEX_DTS_WHITELIST = new Set([
   // `utils/index.ts` 是 `export * from` 的纯 barrel：展开为逐符号本地绑定成本高且无深层导入需求，
   // 已登记为已知例外（见 development/project-structure.md）
-  'utils'
+  'utils',
+  // `picker/index.ts` 是库内共用的选择器内核出口（9 个面板 + `export *` 的 types/date-utils/keyboard）：
+  // 同上，逐符号展开成本高；且它被聚合依赖绑定后会让产物 import 改指该 barrel、扰动 chunk 依赖图，
+  // 而该目录本就没有对外深层导入需求（类型侧仍由 `es|lib/picker/index.d.ts` 提供）
+  'picker'
 ])
 
 /** 递归收集「有类型声明却缺运行时入口」的目录（同目录需存在 entryNames 之一） */

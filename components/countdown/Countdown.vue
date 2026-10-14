@@ -228,7 +228,7 @@ defineExpose({
   .countdown-time {
     color: rgba(0, 0, 0, 0.88);
     font-size: 24px;
-    font-family: 'Helvetica Neue'; // 保证数字等宽显示
+    font-variant-numeric: tabular-nums; // 数字等宽
     .time-prefix {
       display: inline-block;
       margin-right: 4px;

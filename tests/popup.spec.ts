@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest'
-import { defineComponent, h, nextTick, ref } from 'vue'
+import { defineComponent, h, nextTick, onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import Popup from 'components/popup'
@@ -661,5 +661,87 @@ describe('Popup · forceRender（首次展示前渲染）', () => {
     await hide(host, panel)
     // forceRender 只决定首次渲染时机，不改变「隐藏后是否卸载」的生命周期策略
     expect(queryContainer()).toBeNull()
+  })
+})
+
+describe('Popup · 浮层字体承接', () => {
+  it('展开时把锚点的计算字体族复制到浮层容器', async () => {
+    const host = mountPopup({ show: false })
+    wrapper = host.wrapper
+    await flush()
+
+    const anchor = document.querySelector('.host-anchor') as HTMLElement
+    anchor.style.fontFamily = 'Georgia'
+
+    host.show.value = true
+    await flush()
+
+    expect((queryContainer() as HTMLElement).style.fontFamily).toBe('Georgia')
+  })
+
+  it('每次重新展开都刷新承接值（锚点字体可变）', async () => {
+    const host = mountPopup()
+    wrapper = host.wrapper
+    await flush()
+    await hide(host, queryPanel() as HTMLElement)
+
+    const anchor = document.querySelector('.host-anchor') as HTMLElement
+    anchor.style.fontFamily = 'monospace'
+    host.show.value = true
+    await flush()
+
+    expect((queryContainer() as HTMLElement).style.fontFamily).toBe('monospace')
+  })
+
+  it('承接写在容器而非面板：面板自身的字体声明优先于该继承来源', async () => {
+    const host = mountPopup({ show: false })
+    wrapper = host.wrapper
+    await flush()
+
+    const anchor = document.querySelector('.host-anchor') as HTMLElement
+    anchor.style.fontFamily = 'Georgia'
+    host.show.value = true
+    await flush()
+
+    const panel = queryPanel() as HTMLElement
+    panel.style.fontFamily = 'serif'
+    // 容器只作继承来源，不覆盖面板自身声明
+    expect((queryContainer() as HTMLElement).style.fontFamily).toBe('Georgia')
+    expect(panel.style.fontFamily).toBe('serif')
+  })
+
+  it('未传锚点时不做任何声明（保持原继承行为）', async () => {
+    const Host = defineComponent({
+      setup() {
+        return () =>
+          h(Popup, { defaultZIndex: 1070, show: true }, { default: () => h('div', { class: 'popup-body' }, 'content') })
+      }
+    })
+    wrapper = mount(Host, { attachTo: document.body, global: { stubs: { transition: false } } })
+    await flush()
+
+    expect((queryContainer() as HTMLElement).style.fontFamily).toBe('')
+  })
+
+  it('锚点晚于展示就绪时补承接（受控展开 + 锚点挂载后赋值）', async () => {
+    const anchor = ref<HTMLElement | null>(null)
+    const Host = defineComponent({
+      setup() {
+        // 模拟消费组件在 onMounted 里才拿到锚点元素（如 Tooltip 的 measureAnchor）
+        onMounted(() => {
+          anchor.value = document.querySelector('.late-anchor') as HTMLElement
+        })
+        return () =>
+          h('div', { class: 'host' }, [
+            h('span', { class: 'late-anchor', style: { fontFamily: 'Georgia' } }, 'anchor'),
+            h(Popup, { defaultZIndex: 1070, show: true, anchor: anchor.value }, { default: () => h('div', 'content') })
+          ])
+      }
+    })
+    wrapper = mount(Host, { attachTo: document.body, global: { stubs: { transition: false } } })
+    await flush()
+    await flush()
+
+    expect((queryContainer() as HTMLElement).style.fontFamily).toBe('Georgia')
   })
 })

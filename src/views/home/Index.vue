@@ -102,10 +102,6 @@ const toolFunctions = [
     description: '向上查找元素最近的可滚动父元素函数'
   },
   {
-    name: 'lockScroll',
-    description: '锁定页面滚动并补偿滚动条宽度，防止页面横向抖动函数'
-  },
-  {
     name: 'useScrollParent',
     description: '查询并监听最近可滚动父元素，响应视口 resize 的组合式函数'
   }
@@ -135,23 +131,23 @@ import {
   getColorPalettes,
   getAlphaColor,
   getScrollParent,
-  lockScroll,
   useScrollParent
 } from 'vue-amazing-ui'
 <\/script>`
   }
 ]
 const activeKey = ref(0)
+// 路由 children 为「首页 + 全部组件演示页」，减去首页自身即为组件总数
 const componentsTotal = computed(() => {
-  return (routes[0].children as Array<any>).length - 3
+  return (routes[0].children as Array<any>).length - 1
 })
 function onOpenWindow() {
   // 打开一个新的窗口，并导航到指定的URL
   // const newWindow = window.open() // 在当前浏览器窗口中打开一个空的标签页
-  // const newWindow = window.open('http://localhost:9000/backtop') // 在当前浏览器窗口中打开新的标签页
-  // const newWindow = window.open('http://localhost:9000/backtop', 'Backtop') // 在当前浏览器窗口中打开新的标签页
+  // const newWindow = window.open('http://localhost:9000/back-top') // 在当前浏览器窗口中打开新的标签页
+  // const newWindow = window.open('http://localhost:9000/back-top', 'Backtop') // 在当前浏览器窗口中打开新的标签页
   // 使用弹窗形式打开新的标签页，不指定 left，top 时，默认紧靠电脑桌面左上角
-  const newWindow = window.open('http://localhost:9000/backtop', '_blank', 'popup,width=800,height=600')
+  const newWindow = window.open('http://localhost:9000/back-top', '_blank', 'popup,width=800,height=600')
   // newWindow?.resizeTo(800, 600)
   // newWindow?.moveTo(100, 100)
 }

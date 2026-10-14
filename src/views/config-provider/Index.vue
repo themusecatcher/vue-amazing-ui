@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, computed, h } from 'vue'
-import { format } from 'date-fns'
 import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { createDiscreteApi } from 'vue-amazing-ui'
 import type {
@@ -53,7 +52,7 @@ const autoCompleteValue = ref<string>('')
 const autoCompleteOptions = ref<string[]>([])
 const checkboxChecked = ref<boolean>(false)
 const cardDate = ref<number>(Date.now())
-const dateValue = ref<string>(format(new Date(), 'yyyy-MM-dd'))
+const dateValue = ref<number>(Date.now())
 const inputValue = ref<string>('')
 const inputNumberValue = ref<number>(3)
 const inputSearchValue = ref<string>('')
@@ -310,7 +309,7 @@ const layerSelectedValue = ref<number>(1)
           <Button type="primary">Primary Button</Button>
           <Checkbox v-model:checked="checkboxChecked">Checkbox</Checkbox>
           <ColorPicker :width="200" />
-          <DatePicker v-model="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
+          <DatePicker v-model:value="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
           <Input :width="200" v-model:value="inputValue" placeholder="please input" />
           <InputNumber :width="120" v-model:value="inputNumberValue" placeholder="please input" />
           <InputSearch

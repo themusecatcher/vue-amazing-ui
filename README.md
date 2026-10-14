@@ -17,7 +17,7 @@
 ## Features
 
 - The component library is implemented with `Vue@3.5.42` + `TypeScript@5.9.3` + `Vite@7.3.1` + `Less@4.5.1`.
-- Currently, it includes `72` basic UI components and `22` utility functions, with continuous exploration and updates ongoing...
+- Currently, it includes `73` basic UI components and `21` utility functions, with continuous exploration and updates ongoing...
 - Theme Customizable, all you need is to provide a theme color, then all the stuffs will be done by me.
 - By the way, they are all treeshakable.
 - All the stuff in Vue Amazing UI is written in TypeScript. It can work with your typescript project seamlessly.
@@ -176,7 +176,6 @@ import {
   getColorPalettes,
   getAlphaColor,
   getScrollParent,
-  lockScroll,
   useScrollParent
 } from 'vue-amazing-ui'
 </script>
@@ -236,30 +235,31 @@ All sponsors will be listed here, thank you very much for your support and spons
 
 | Name            | Description      | Name            | Description      | Name            | Description      |
 | :-------------- | :--------------- | :-------------- | :--------------- | :-------------- | :--------------- |
-| Alert           | Alert            | Empty           | Empty State      | Rate            | Rating           |
-| AutoComplete    | Auto Complete    | Flex            | Flex Layout      | Result          | Result           |
-| Avatar          | Avatar           | FloatButton     | Float Button     | Scrollbar       | Scrollbar        |
-| BackTop         | Back to Top      | GradientText    | Gradient Text    | Segmented       | Segmented        |
-| Badge           | Badge            | Grid            | Grid             | Select          | Select           |
-| Breadcrumb      | Breadcrumb       | Highlight       | Highlight Text   | Skeleton        | Skeleton         |
-| Button          | Button           | Image           | Image            | Slider          | Slider           |
-| Calendar        | Calendar         | Input           | Input            | Space           | Spacing          |
-| Card            | Card             | InputNumber     | Number Input     | Spin            | Loading          |
-| Carousel        | Carousel         | InputSearch     | Search Input     | Statistic       | Statistic        |
-| Cascader        | Cascader         | Layout          | Layout           | Steps           | Steps            |
-| Checkbox        | Checkbox         | List            | List             | Swiper          | Swiper           |
-| Collapse        | Collapse         | LoadingBar      | Loading Bar      | Switch          | Switch           |
-| ColorPicker     | Color Picker     | Menu            | Menu             | Table           | Table            |
-| Comment         | Comment          | Message         | Global Message   | Tabs            | Tabs             |
-| ConfigProvider  | Global Config    | Modal           | Modal            | Tag             | Tag              |
-| Countdown       | Countdown        | Notification    | Notification     | Textarea        | Textarea         |
-| DatePicker      | Date Picker      | NumberAnimation | Number Animation | TextScroll      | Text Scroll      |
-| Descriptions    | Descriptions     | Pagination      | Pagination       | Timeline        | Timeline         |
-| Dialog          | Dialog           | Popconfirm      | Popconfirm       | Tooltip         | Tooltip          |
-| Divider         | Divider          | Popover         | Popover          | Upload          | Upload           |
-| Drawer          | Drawer           | Progress        | Progress         | Video           | Video Player     |
-| Dropdown        | Dropdown         | QRCode          | QR Code          | Waterfall       | Waterfall        |
-| Ellipsis        | Text Ellipsis    | Radio           | Radio            | Watermark       | Watermark        |
+| Alert           | Alert            | AutoComplete    | Auto Complete    | Avatar          | Avatar           |
+| BackTop         | Back to Top      | Badge           | Badge            | Breadcrumb      | Breadcrumb       |
+| Button          | Button           | Calendar        | Calendar         | Card            | Card             |
+| Carousel        | Carousel         | Cascader        | Cascader         | Checkbox        | Checkbox         |
+| Collapse        | Collapse         | ColorPicker     | Color Picker     | Comment         | Comment          |
+| ConfigProvider  | Global Config    | Countdown       | Countdown        | DatePicker      | Date Picker      |
+| Descriptions    | Descriptions     | Dialog          | Dialog           | Divider         | Divider          |
+| Drawer          | Drawer           | Dropdown        | Dropdown         | Ellipsis        | Text Ellipsis    |
+| Empty           | Empty State      | Flex            | Flex Layout      | FloatButton     | Float Button     |
+| GradientText    | Gradient Text    | Grid            | Grid             | Highlight       | Highlight Text   |
+| Image           | Image            | Input           | Input            | InputNumber     | Number Input     |
+| InputSearch     | Search Input     | Layout          | Layout           | List            | List             |
+| LoadingBar      | Loading Bar      | Menu            | Menu             | Message         | Global Message   |
+| Modal           | Modal            | Notification    | Notification     | NumberAnimation | Number Animation |
+| Pagination      | Pagination       | Popconfirm      | Popconfirm       | Popover         | Popover          |
+| Progress        | Progress         | QRCode          | QR Code          | Radio           | Radio            |
+| Rate            | Rating           | Result          | Result           | Scrollbar       | Scrollbar        |
+| Segmented       | Segmented        | Select          | Select           | Skeleton        | Skeleton         |
+| Slider          | Slider           | Space           | Spacing          | Spin            | Loading          |
+| Statistic       | Statistic        | Steps           | Steps            | Swiper          | Swiper           |
+| Switch          | Switch           | Table           | Table            | Tabs            | Tabs             |
+| Tag             | Tag              | Textarea        | Textarea         | TextScroll      | Text Scroll      |
+| Timeline        | Timeline         | TimePicker      | Time Picker      | Tooltip         | Tooltip          |
+| Upload          | Upload           | Video           | Video Player     | Waterfall       | Waterfall        |
+| Watermark       | Watermark        |                 |                  |                 |                  |
 
 ## Functions
 
@@ -285,5 +285,4 @@ All sponsors will be listed here, thank you very much for your support and spons
 | getColorPalettes | Function to generate a color palette from a primary color | (primaryColor: string) => string[] |
 | getAlphaColor | Function to get an alpha color, generally used as a shadow color | (frontColor: string, backgroundColor: string = '#ffffff') => string |
 | getScrollParent | Function to find the nearest scrollable parent element upward | (el: HTMLElement &#124; null) => HTMLElement &#124; null |
-| lockScroll | Function to lock page scrolling and compensate the scrollbar width to prevent horizontal jitter | () => () => void |
 | useScrollParent | Composable to query and watch the nearest scrollable parent element and respond to viewport `resize` | (contentRef: Ref\<HTMLElement &#124; null>, onScroll: () => void, options: ScrollParentOptions = {}) => { scrollTarget: Ref\<HTMLElement &#124; null>, viewportWidth: Ref\<number>, viewportHeight: Ref\<number>, observeScroll: \() => void, cleanup: \() => void } |

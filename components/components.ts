@@ -55,7 +55,18 @@ export { default as ConfigProvider } from './config-provider'
 export type { CountdownProps } from './countdown'
 export { default as Countdown } from './countdown'
 
-export type { DatePickerProps } from './date-picker'
+export type {
+  DatePickerProps,
+  DatePickerValue,
+  DatePickerFormattedValue,
+  DatePickerType,
+  DatePickerDisabledTime,
+  DatePickerRangeDisabledTime,
+  DatePickerDisabledTimeUnits,
+  DatePickerTimeProps,
+  DatePickerPreset,
+  DatePickerRangeInfo
+} from './date-picker'
 export { default as DatePicker } from './date-picker'
 
 export type { DescriptionsProps, DescriptionsResponsive, DescriptionsItemProps } from './descriptions'
@@ -253,6 +264,19 @@ export { default as Textarea } from './textarea'
 
 export type { TextScrollProps, TextScrollItem } from './text-scroll'
 export { default as TextScroll } from './text-scroll'
+
+export type {
+  TimePickerProps,
+  TimePickerType,
+  TimePickerValue,
+  TimePickerFormattedValue,
+  TimePickerDisabledTime,
+  TimePickerRangeDisabledTime,
+  TimePickerDisabledTimeUnits,
+  TimePickerRangeSide,
+  TimePickerRangeInfo
+} from './time-picker'
+export { default as TimePicker } from './time-picker'
 
 export type { TimelineProps, TimelineItem } from './timeline'
 export { default as Timeline } from './timeline'

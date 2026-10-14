@@ -202,3 +202,36 @@ describe('Select 面板的公开覆盖入口（popupClassName / dropdownMenuStyl
     expect(Number((queryPanel() as HTMLElement).style.zIndex)).toBe(3000)
   })
 })
+
+describe('Select · 浮层字体承接', () => {
+  it('展开时把锚点的计算字体族复制到浮层容器', async () => {
+    const localWrapper = mount(Select, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { options: [{ label: 'apple', value: 1 }] }
+    })
+    wrapper = localWrapper
+    await flush()
+
+    const anchor = document.querySelector('.select-content-container') as HTMLElement
+    anchor.style.fontFamily = 'Georgia'
+    await localWrapper.find('.select-wrap').trigger('click')
+    await flush()
+
+    expect(queryWrapperEl()?.style.fontFamily).toBe('Georgia')
+  })
+
+  it('每次重新展开都刷新承接值（锚点字体可变）', async () => {
+    await mountAndOpen()
+    const anchor = document.querySelector('.select-content-container') as HTMLElement
+    anchor.style.fontFamily = 'monospace'
+    const trigger = document.querySelector('.select-wrap') as HTMLElement
+
+    trigger.click() // 关闭
+    await flush()
+    trigger.click() // 重新展开：承接在每次「出现」时刷新
+    await flush()
+
+    expect(queryWrapperEl()?.style.fontFamily).toBe('monospace')
+  })
+})

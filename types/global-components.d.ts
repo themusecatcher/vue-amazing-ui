@@ -91,6 +91,7 @@ declare module 'vue' {
     Tag: typeof VueAmazingUI.Tag
     TextScroll: typeof VueAmazingUI.TextScroll
     Textarea: typeof VueAmazingUI.Textarea
+    TimePicker: typeof VueAmazingUI.TimePicker
     Timeline: typeof VueAmazingUI.Timeline
     Tooltip: typeof VueAmazingUI.Tooltip
     Upload: typeof VueAmazingUI.Upload

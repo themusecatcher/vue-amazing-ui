@@ -43,10 +43,8 @@ const externalDependencies = [
   'date-fns',
   'swiper/modules',
   'swiper/vue',
-  '@vuepic/vue-datepicker',
   '@vueuse/core',
   'seemly',
-  'qrcode',
   '@ant-design/colors',
   '@ctrl/tinycolor'
 ]
@@ -56,10 +54,8 @@ const externalGlobals: Record<string, string> = {
   'date-fns': 'dateFns',
   'swiper/modules': 'SwiperModules',
   'swiper/vue': 'SwiperVue',
-  '@vuepic/vue-datepicker': 'VueDatePicker',
   '@vueuse/core': 'Core',
   seemly: 'seemly',
-  qrcode: 'QRCode',
   '@ant-design/colors': 'Colors',
   '@ctrl/tinycolor': 'TinyColor'
 }

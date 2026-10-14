@@ -319,15 +319,68 @@ export function getScrollParent(el: HTMLElement | null): HTMLElement | null {
 // 任一入口提前释放也不会误还原其它入口仍持有的锁。
 let bodyLockCount = 0
 // 首个锁设置前 documentElement / body 的原内联样式，归零释放时精确还原，避免误删调用方预设
+let prevHtmlOverflowX = ''
 let prevHtmlOverflowY = ''
+let prevBodyOverflowX = ''
 let prevBodyOverflowY = ''
 let prevBodyPaddingRight = ''
+let prevScrollbarWidthVar = ''
+// 补偿量变量名：锁定期间写入 html，值等于本次被回收的滚动条宽度（未回收时为 0px）。
+// 仅由常驻的右下角悬浮元素（BackTop / FloatButton）消费，从右侧内缩，保证开关锁前后位置一致
+const SCROLLBAR_WIDTH_VAR = '--va-scrollbar-width'
+// 布局尺寸比较容差：几何读数返回亚像素值，取整最多带来 1px 抖动，低于该值视为未变宽 / 无占位
+const LAYOUT_SIZE_TOLERANCE = 1
+/**
+ * 测量布局视口宽度（`documentElement` 的 border box 宽度，即 `position: fixed` 元素的包含块宽度）
+ *
+ * 不可用 `window.innerWidth - documentElement.clientWidth` 代替：槽位保留生效时 `clientWidth`
+ * 会把预留的槽位算进 padding edge（实测占位 15px 时读数即 `innerWidth`，与槽位未保留时完全相同），
+ * 据此判断会把「槽位已保留」误判为「槽位未保留」。同时 overlay 滚动条模式下自定义的占位滚动条
+ * 也不计入 `clientWidth`（实测锁定前读数同样为 `innerWidth`），无法用于判断是否存在滚动条占位。
+ */
+function getLayoutViewportWidth(): number {
+  return Math.round(document.documentElement.getBoundingClientRect().width)
+}
+/**
+ * 还原 html 上的宽度类 CSS 变量：原本不存在则移除，避免给宿主留下无用声明
+ *
+ * @param name - CSS 变量名
+ * @param prevValue - 锁定前该变量的内联值，为空表示原本不存在
+ */
+function restoreCssVar(name: string, prevValue: string): void {
+  if (prevValue) {
+    document.documentElement.style.setProperty(name, prevValue)
+    return
+  }
+  document.documentElement.style.removeProperty(name)
+}
 /**
  * 锁定页面滚动，并返回本次锁定的释放函数
  *
- * 隐藏 html/body 的垂直滚动条，并补偿滚动条宽度到 body 的 padding-right，
- * 避免滚动条消失导致内容可用宽度突变、页面横向抖动。
- * 需先测量滚动条宽度再隐藏滚动条（顺序不可颠倒，否则差值恒为 0）。
+ * 隐藏 html/body 的滚动条，并把被回收的滚动条宽度等量补偿回页面，避免布局视口宽度突变
+ * 导致背景页面与浮层横向抖动（Windows 经典滚动条场景尤其明显）。
+ *
+ * 为什么不保留滚动条槽位（如 `scrollbar-gutter: stable`）：实测（Windows / macOS Chrome）
+ * 槽位保住后，窗口右侧会留下一条与滚动条等宽的带子，该带子由系统滚动条层绘制、位于所有页面
+ * 内容之上——加宽遮罩、挂 z-index 拉满的固定元素、改根元素背景色都盖不住它，唯一结果就是多出
+ * 一条亮带；因此库不再主动保留槽位，改为等量补偿。宿主若自行声明 `scrollbar-gutter`（写在
+ * 样式表里）则尊重其声明：此时回收宽度为 0，本函数不会重复补偿。
+ *
+ * 判据统一取「隐藏滚动条前后布局视口宽度的差值」：差值归零（系统为 overlay 滚动条，或宿主
+ * 自行保留了槽位）即无需补偿；差值仍在时用同一差值做等量补偿（写入 `body` 的 `padding-right`，
+ * 叠加在宿主已有 padding 之上），不依赖浏览器对 `scrollbar-gutter` 的支持情况。
+ *
+ * 锁定期间在 html 上写入 `--va-scrollbar-width`（恒有值，未回收时为 0px）：本次被回收的
+ * 滚动条宽度。库内只有常驻的右下角悬浮元素（`BackTop` / `FloatButton`）据此从右侧内缩，
+ * 使锁定前后位置一致；整屏浮层（弹窗 / 对话框 / 抽屉 / 图片预览）与遮罩同时出现、本就铺满
+ * 窗口，若按补偿量内缩会比遮罩窄一个滚动条宽度，故不消费该变量。
+ *
+ * 宿主自有的视口锚定固定定位元素（固定头尾、右侧栏等，非 `sticky`）不在本库补偿范围内，
+ * 会随布局视口变宽而位移。
+ *
+ * 只隐藏垂直滚动条会让 `overflow-x: visible` 计算为 `auto`，锁定期间页面仍可横向推移，
+ * 故一并锁定横向轴；但页面本来就有横向滚动条时不能隐藏它（移除占位会抬高布局视口，
+ * 反而引起纵向位移），此时跳过横向锁定。
  *
  * 每个调用需与返回的释放函数严格配对；仅当所有来源均已释放时才会真正还原页面滚动，
  * 可安全用于多弹窗 / 多抽屉并存场景。
@@ -342,15 +395,30 @@ export function lockScroll(): () => void {
   const html = document.documentElement
   const body = document.body
   if (bodyLockCount === 0) {
+    prevHtmlOverflowX = html.style.overflowX
     prevHtmlOverflowY = html.style.overflowY
+    prevBodyOverflowX = body.style.overflowX
     prevBodyOverflowY = body.style.overflowY
     prevBodyPaddingRight = body.style.paddingRight
-    const scrollbarWidth = window.innerWidth - html.clientWidth
+    prevScrollbarWidthVar = html.style.getPropertyValue(SCROLLBAR_WIDTH_VAR)
+    // 横向滚动条是否占用布局高度：仅用于决定是否一并锁定横向轴，与垂直方向互不影响
+    const horizontalScrollbarHeight = window.innerHeight - html.clientHeight
+    // 隐藏滚动条后可用宽度变宽多少，就是本次要补偿的量（宿主自行保留槽位或 overlay 滚动条时为 0）
+    const layoutWidth = getLayoutViewportWidth()
     html.style.overflowY = 'hidden'
     body.style.overflowY = 'hidden'
-    if (scrollbarWidth > 0) {
-      body.style.paddingRight = `${scrollbarWidth}px`
+    const growth = getLayoutViewportWidth() - layoutWidth
+    const compensation = growth > LAYOUT_SIZE_TOLERANCE ? growth : 0
+    if (compensation > 0) {
+      const basePaddingRight = Number.parseFloat(getComputedStyle(body).paddingRight) || 0
+      body.style.paddingRight = `${basePaddingRight + compensation}px`
     }
+    if (horizontalScrollbarHeight <= LAYOUT_SIZE_TOLERANCE) {
+      html.style.overflowX = 'hidden'
+      body.style.overflowX = 'hidden'
+    }
+    // 变量恒有值，避免使用方读到空值导致 var() 失效
+    html.style.setProperty(SCROLLBAR_WIDTH_VAR, `${compensation}px`)
   }
   bodyLockCount += 1
   let released = false
@@ -361,9 +429,12 @@ export function lockScroll(): () => void {
     released = true
     bodyLockCount -= 1
     if (bodyLockCount === 0) {
+      html.style.overflowX = prevHtmlOverflowX
       html.style.overflowY = prevHtmlOverflowY
+      body.style.overflowX = prevBodyOverflowX
       body.style.overflowY = prevBodyOverflowY
       body.style.paddingRight = prevBodyPaddingRight
+      restoreCssVar(SCROLLBAR_WIDTH_VAR, prevScrollbarWidthVar)
     }
   }
 }

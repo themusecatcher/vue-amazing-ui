@@ -43,8 +43,9 @@ const CANARIES = [
   },
   { pattern: /\.va-popup-arrow/, label: 'Popup 作用域样式（Tooltip 的依赖组件）' },
   { pattern: /\.select-panel/, label: 'Select 自身样式' },
+  { pattern: /\.datepicker-panel-container/, label: 'DatePicker 自身样式（含内联的 picker 内核面板样式）' },
+  { pattern: /\.timepicker-panel-container/, label: 'TimePicker 自身样式（含内联的 picker 内核面板样式）' },
   { pattern: /\.swiper/, label: '第三方样式 swiper（vendor-styles）' },
-  { pattern: /\.dp__/, label: '第三方样式 @vuepic/vue-datepicker（vendor-styles）' },
   { pattern: /\.tag-wrap/, label: "手动裸目录引入的 Tag 样式（单段目录：import 'vue-amazing-ui/es/tag/style'）" },
   {
     pattern: /\.grid-row-wrap/,
@@ -77,8 +78,9 @@ export default defineConfig({
 })
 `
 
-// 演示组件刻意保持「每组 canary 只有一个来源」：Tooltip 是 Popup 样式的唯一引入者，
-// 故 `.va-popup-arrow` 命中即证明「入口替消费方注入了依赖组件样式」
+// 演示组件刻意保持「canary 只可能来自依赖注入」：`.va-popup-arrow` 是 Popup 自身的样式，
+// 而 demo 中没有任何组件是 Popup 本身（Tooltip / DatePicker / TimePicker 都只是依赖它），
+// 故该 canary 命中即证明「入口替消费方注入了依赖组件样式」
 const CONSUMER_APP = `<template>
   <div class="page">
     <Tooltip tooltip="按需引入的箭头">
@@ -87,6 +89,7 @@ const CONSUMER_APP = `<template>
     <Select :options="[{ label: 'apple', value: 1 }]" :model-value="1" />
     <Swiper />
     <DatePicker />
+    <TimePicker />
   </div>
 </template>
 `

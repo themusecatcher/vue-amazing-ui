@@ -410,6 +410,10 @@ export default defineConfig({
               link: '/guide/components/text-scroll'
             },
             {
+              text: '时间选择器 TimePicker',
+              link: '/guide/components/time-picker'
+            },
+            {
               text: '时间轴 Timeline',
               link: '/guide/components/timeline'
             },
@@ -524,10 +528,6 @@ export default defineConfig({
             {
               text: 'getScrollParent 查找可滚动父元素',
               link: '/utils/functions/get-scroll-parent'
-            },
-            {
-              text: 'lockScroll 页面滚动锁',
-              link: '/utils/functions/lock-scroll'
             },
             {
               text: 'useScrollParent 滚动感知',

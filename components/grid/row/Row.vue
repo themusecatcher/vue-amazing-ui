@@ -93,7 +93,7 @@ function getResponsiveGap(gutter: Responsive) {
   <div
     class="grid-row-wrap"
     :class="{ 'gutter-row': gutter }"
-    :style="`--xGap: ${(xGap as number) / 2}px; --justify: ${justify}; --align: ${alignProperties[align]}; width: ${rowWidth}; margin-left: -${(xGap as number) / 2}px; margin-right: -${(xGap as number) / 2}px; row-gap: ${yGap}px;`"
+    :style="`--grid-gap-x: ${(xGap as number) / 2}px; --grid-justify: ${justify}; --grid-align: ${alignProperties[align]}; width: ${rowWidth}; margin-left: -${(xGap as number) / 2}px; margin-right: -${(xGap as number) / 2}px; row-gap: ${yGap}px;`"
   >
     <slot></slot>
   </div>
@@ -102,8 +102,8 @@ function getResponsiveGap(gutter: Responsive) {
 .grid-row-wrap {
   display: flex;
   flex-flow: row wrap;
-  justify-content: var(--justify);
-  align-items: var(--align);
+  justify-content: var(--grid-justify);
+  align-items: var(--grid-align);
   min-width: 0;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.88);

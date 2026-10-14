@@ -104,6 +104,9 @@ export interface Theme {
   TextScroll?: {
     primaryColor?: string
   }
+  TimePicker?: {
+    primaryColor?: string
+  }
   Upload?: {
     primaryColor?: string
   }
@@ -261,6 +264,10 @@ const componentsThemeColor = reactive<Record<string, ThemeColor>>({
     shadowColor: ''
   },
   TextScroll: {
+    colorPalettes: [],
+    shadowColor: ''
+  },
+  TimePicker: {
     colorPalettes: [],
     shadowColor: ''
   },

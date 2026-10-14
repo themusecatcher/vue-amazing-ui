@@ -481,7 +481,7 @@ function onPageSizeChange(pageSize: number): void {
       right: 0;
       margin: auto;
       color: rgba(0, 0, 0, 0.25);
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: Arial, Helvetica, sans-serif; // 省略号圆点字形所需（库内唯一的字体族例外）
       line-height: 32px;
       letter-spacing: 2px;
       text-align: center;

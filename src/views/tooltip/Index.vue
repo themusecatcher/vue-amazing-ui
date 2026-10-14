@@ -257,7 +257,7 @@ const destroyShow = ref(false)
       <code>false</code> 时元素常驻、仅切换显隐。基于 <code>Tooltip</code> 的 <code>Popover</code> /
       <code>Popconfirm</code> 同样支持
     </p>
-    <Space wrap>
+    <Space>
       <Tooltip tooltip="Vue Amazing UI" destroy-on-hide>
         <Button type="primary">Hover (destroyOnHide)</Button>
       </Tooltip>

@@ -10,6 +10,24 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-15">2.14.1</VersionDateTag>
+
+- 重构并增强 [二维码 QRCode](/guide/components/qr-code.html)：编码改为内置实现（移除第三方编码包，体积减小），`svg` 改为声明式渲染，`canvas` / `image` 高清屏清晰度提升；修复 `canvas` 不渲染、重复更新累积画布、`svg` 中央图标缺底色块 / 被拉伸、`bordered` 绘制区尺寸偏差与跳动等问题；新增 `status` 属性与 `refresh` 事件（`active` / `expired` / `loading` / `scanned` 四种状态，含遮罩与点击刷新）、`iconBackgroundColor` / `iconBorderRadius` / `title` / `padding` 属性与 `--qr-code-mask-bg` / `--qr-code-mask-color` 遮罩变量，中央图标绘入二维码本体（导出图片同样包含）
+- [二维码 QRCode](/guide/components/qr-code.html) 的 `errorLevel` 改为「最低等级」且默认值由 `'H'` 改为 `'M'`（需保留原行为可显式设置 `errorLevel="H"`）、`scale` 改为「最小像素倍率下限」，实例方法 `getQRCodeImage` 更名为 `toDataURL` 并改为同步返回 `string`（`await ref.getQRCodeImage()` 改为 `ref.toDataURL()`）；[二维码 QRCode](/guide/components/qr-code.html) 与 [回到顶部 BackTop](/guide/components/back-top.html) 的根类名与 `CSS` 变量前缀统一为组件目录名的短横线形式（`qrcode-wrap` → `qr-code-wrap`、`backtop-wrap` → `back-top-wrap`，`--qrcode-*` / `--backtop-*` → `--qr-code-*` / `--back-top-*`，[回到顶部 BackTop](/guide/components/back-top.html) 的 `desc` → `description`），依赖旧 `API` / 类名 / 变量的自定义用法需同步调整
+- 优化并更新 [二维码 QRCode](/guide/components/qr-code.html) 组件文档演示：覆盖渲染类型 / 状态 / 图标 / 属性 / 下载等新增用法
+
+## <VersionDateTag date="2026-10-14">2.14.0</VersionDateTag>
+
+- 新增 [时间选择器 TimePicker](/guide/components/time-picker.html) 组件：时分秒三列滚动面板，支持 `type="timerange"` 范围形态、`12` 小时制与步长配置；[全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme` 同步新增 `TimePicker` 键
+- 重构 [日期选择器 DatePicker](/guide/components/date-picker.html) 为自研实现并移除 `@vuepic/vue-datepicker` 依赖：`v-model` 改用 `v-model:value` / `v-model:formatted-value`（毫秒时间戳 / 字符串双轨），`modelType` 改用 `valueFormat`，`mode` / `range` / `showTime` / `maxRange` 移除（形态改由 `type` 承担），`format` 不再支持函数形态，`showToday` 默认值由 `false` 改为 `true`
+- 增强 [日期选择器 DatePicker](/guide/components/date-picker.html)：新增日期时间、周、月 / 季 / 年及各自的范围形态（含 `presets` 预设范围与按段配置），以及面板定制（`dateRender` / `renderExtraFooter`）、键盘导航与无障碍语义，并新增 `defaultTime` / `allowEmpty` / `showNow` / `showArrow` / `inputReadOnly` / `panelClass` / `panelStyle` / `zIndex` 等属性与 `panelChange` 事件
+- 修复锁定页面滚动时背景页面与浮层横向抖动、且页面仍可横向推移的问题：锁定期间横向滚动一并禁用，被回收的滚动条宽度等量补偿，库内常驻的 [回到顶部 BackTop](/guide/components/back-top.html) 与 [浮动按钮 FloatButton](/guide/components/float-button.html) 一并补偿（宿主自有固定定位元素可用 `--va-scrollbar-width` 自行补偿）
+- 组件库不再对外导出 `lockScroll` 工具函数
+- 全局字体口径调整：库不再声明字体族，组件与内容继承宿主字体（原生表单控件由 `font-family: inherit` 兜底），浮层改为承接触发位置的字体族
+- 组件库所有组件内部样式变量统一加组件名前缀，如曾用它做过外部覆盖，请同步改名
+- 更新使用者文档与贡献者文档
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-10-13">2.13.2</VersionDateTag>
 
 - 修复 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 组件级主题：运行期增删组件键即时生效（新增覆盖生效、移除覆盖回退 `common`），`theme` 中的非本库组件键改为忽略并告警
@@ -105,7 +123,7 @@
 - 增强 [轮播图 Carousel](/guide/components/carousel.html)：新增 `loop` / `initialIndex` / 受控 `currentIndex` 等属性、`beforeChange` / `afterChange` 事件与 `#prevArrow` / `#nextArrow` / `#dots` 插槽，修复越界、加载失败、动画中断等交互问题；`fadeFunction` 默认值由 `'cubic-bezier(0.4, 0, 0.2, 1)'` 改为 `[0.4, 0, 0.2, 1]`。属性 `dotsTrigger` 更名为 `dotTrigger`；移除 `change` 事件，切换监听改用 `beforeChange` / `afterChange`，当前页同步使用 `v-model:current-index`
 - 增强 [数字动画 NumberAnimation](/guide/components/number-animation.html)：缓动支持传入三次贝塞尔控制点数组与缓动函数，卸载时中止在飞动画。属性 `transition` 更名为 `easing`，类型 `NumberAnimationTransitionFunc` 更名为 `NumberAnimationEasingPreset`
 - 优化工具函数文档：改用交互式演示并补充边界说明与可运行 `demo`
-- 修复 [lockScroll](/utils/functions/lock-scroll.html) 在 `SSR` / `Node` 环境调用报错；订正 [useOptionsSupported](/utils/functions/use-options-supported.html) 参数名为 `option`
+- 修复 `lockScroll` 在 `SSR` / `Node` 环境调用报错；订正 [useOptionsSupported](/utils/functions/use-options-supported.html) 参数名为 `option`
 - 修复按需引入 `VueAmazingUIResolver` 引用 `DescriptionsItem` 不存在的样式路径
 
 ## <VersionDateTag date="2026-09-12">2.7.4</VersionDateTag>
@@ -152,7 +170,7 @@
 - ⚠️ **破坏性变更**：`Modal` 命令式 `maskClosable` 默认改 `false`（组件级仍为 `true`）、`Esc` 监听改绑弹窗主体（焦点移出弹窗后不再响应）、入口类型导出由 `Props` / `Modal` 调整为 `ModalProps` / `ModalOptions` / `ModalUpdate` / `ModalReactive` / `ModalApi`；[Upload](/guide/components/upload.html) 移除内嵌 Message：`messageProps` / `actionMessage` / `UploadMessageType` 及相关方法移除，改用 `success` / `error` / `remove` 事件
 - 重构并增强 [Dialog](/guide/components/dialog.html) / [Modal](/guide/components/modal.html)：改为多实例层叠架构，新增 `mask` / `closable` / `closeIcon`、`wrapClass` / `containerClass` 等分层定制与 `onEsc` / `onMaskClick` / `afterClose` 回调（其中 [Dialog](/guide/components/dialog.html) 额外新增 `draggable` 拖拽），`title` / `content` 支持 `string` / `VNode` / 渲染函数 / 插槽，并补充 `aria-*` 与可聚焦关闭按钮
 - 增强 [Notification](/guide/components/notification.html) / [Message](/guide/components/message.html) 组件：新增 `maxCount` / `keepAliveOnHover` / `to` 等属性，`Notification` 新增 `key` 与 `placement` 的 `top` / `bottom` 居中位置；定时器改为按 `key` 独立管理，修复多条干扰与常驻消息阻塞回收
-- 新增 [lockScroll](/utils/functions/lock-scroll.html) 工具函数（第 `24` 个），`Drawer` / `Modal` / `Dialog` 统一改用并补充卸载兜底释放；修复 [Table](/guide/components/table.html) 就地改写用户 `columns`、空 `columns` 崩溃与 `colspan` 计算错误
+- 新增 `lockScroll` 工具函数（第 `24` 个），`Drawer` / `Modal` / `Dialog` 统一改用并补充卸载兜底释放；修复 [Table](/guide/components/table.html) 就地改写用户 `columns`、空 `columns` 崩溃与 `colspan` 计算错误
 - 优化 `VueAmazingUIResolver` 按需引入：新增四个命令式 `Provider` 组件的自动引入与样式注入，修复 `Modal` / `Notification` 缺失 [Scrollbar](/guide/components/scrollbar.html) 样式依赖
 - 工程优化：`xxxProps` 类型由 `object` 精确为对应 `Props`；新增 `vitest` 单元测试并纳入 `pnpm check`；新增 `development/` 设计指南
 
@@ -1015,5 +1033,4 @@
 - 新增 漫游式引导 Tour 组件
 <!-- - 更新 表格 Table 组件，新增虚拟滚动功能
 - 时间轴 Timeline 组件，新增水平时间轴
-- 新增 时间选择器 TimePicker 组件
 - 重构级联选择 Cascader 组件 -->

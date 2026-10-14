@@ -91,7 +91,7 @@ const responsiveValue = computed(() => {
 <template>
   <div
     :class="`grid-col col-${responsiveValue.span} offset-${responsiveValue.offset}`"
-    style="padding-left: var(--xGap); padding-right: var(--xGap)"
+    style="padding-left: var(--grid-gap-x); padding-right: var(--grid-gap-x)"
     :style="`flex: ${flexValue}; order: ${order};`"
   >
     <slot></slot>

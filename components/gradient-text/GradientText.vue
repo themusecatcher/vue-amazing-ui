@@ -79,7 +79,7 @@ function isNumber(value: string | number): boolean {
   <span
     class="gradient-text-wrap"
     :style="[
-      `--rotate: ${rotate}; --color-start: ${colorStart}; --color-end: ${colorEnd}; --font-size: ${fontSize}; --font-weight: ${weight};`,
+      `--gradient-text-rotate: ${rotate}; --gradient-text-color-start: ${colorStart}; --gradient-text-color-end: ${colorEnd}; --gradient-text-font-size: ${fontSize}; --gradient-text-font-weight: ${weight};`,
       gradientText
     ]"
   >
@@ -89,14 +89,18 @@ function isNumber(value: string | number): boolean {
 <style lang="less" scoped>
 .gradient-text-wrap {
   display: inline-block;
-  font-size: var(--font-size);
-  font-weight: var(--font-weight);
+  font-size: var(--gradient-text-font-size);
+  font-weight: var(--gradient-text-font-weight);
   line-height: 1.5714285714285714;
   -webkit-background-clip: text;
   background-clip: text;
   color: #0000;
   white-space: nowrap;
-  background-image: linear-gradient(var(--rotate), var(--color-start) 0%, var(--color-end) 100%);
+  background-image: linear-gradient(
+    var(--gradient-text-rotate),
+    var(--gradient-text-color-start) 0%,
+    var(--gradient-text-color-end) 100%
+  );
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 </style>
