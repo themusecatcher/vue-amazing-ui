@@ -1131,7 +1131,8 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
 .modal-mask {
   position: fixed;
   inset: 0;
-  width: 100%;
+  // 锁定页面滚动时向右扩展，盖住滚动条隐藏后露出的空槽位；无槽位时为 0
+  right: calc(-1 * var(--va-scrollbar-slot-width, 0px));
   height: 100%;
   background: rgba(0, 0, 0, 0.45);
   pointer-events: auto;
@@ -1146,6 +1147,8 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
 .modal-layer {
   position: fixed;
   inset: 0;
+  // 槽位未保住时收回被腾出的滚动条宽度，使弹窗几何与锁定前一致；槽位保住时为 0
+  right: var(--va-scrollbar-width, 0px);
   overflow: auto;
   outline: 0;
   display: flex;
