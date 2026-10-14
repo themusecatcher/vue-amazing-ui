@@ -150,6 +150,21 @@ describe('QRCode canvas 渲染', () => {
     const padded = await getWidth(60)
     expect(padded).toBeLessThan(base)
   })
+
+  it('value 清空后应清空画布，避免残留上一次的二维码', async () => {
+    const wrapper = mount(QRCode, {
+      props: { value: 'https://a.example.com', type: 'canvas' }
+    })
+    await flushPromises()
+    const canvas = wrapper.find('.qr-code-canvas').element as HTMLCanvasElement
+    expect(canvas.width).toBeGreaterThan(0)
+
+    await wrapper.setProps({ value: '' })
+    await flushPromises()
+    expect(canvas.width).toBe(0)
+
+    wrapper.unmount()
+  })
 })
 
 describe('QRCode svg 渲染', () => {
@@ -262,6 +277,47 @@ describe('QRCode image 渲染', () => {
     await flushPromises()
 
     expect(wrapper.find('.qr-code-image').attributes('src')).toMatch(/^data:image\/png/)
+
+    wrapper.unmount()
+  })
+
+  it('value 清空后应回落为空 DataURL，与 svg 的空渲染一致', async () => {
+    const wrapper = mount(QRCode, {
+      props: { value: 'https://a.example.com', type: 'image' }
+    })
+    await flushPromises()
+    expect(wrapper.find('.qr-code-image').attributes('src')).toMatch(/^data:image\/png/)
+
+    await wrapper.setProps({ value: '' })
+    await flushPromises()
+    expect(wrapper.find('.qr-code-image').attributes('src')).toBe('')
+
+    wrapper.unmount()
+  })
+})
+
+describe('QRCode 编码异常', () => {
+  it('内容超出容量时应告警并降级为空渲染', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const wrapper = mount(QRCode, { props: { value: 'a'.repeat(3000) } })
+    await flushPromises()
+
+    expect(warnSpy).toHaveBeenCalled()
+    // 编码失败：svg 空渲染（前景路径为空），且不得向渲染层抛错
+    const svg = wrapper.find('svg.qr-code-svg')
+    expect(svg.exists()).toBe(true)
+    expect(svg.find('path').attributes('d')).toBe('M0 0h0v0H0z')
+
+    wrapper.unmount()
+  })
+
+  it('内容超出容量时 toDataURL 应返回空字符串', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const wrapper = mount(QRCode, { props: { value: 'a'.repeat(3000), type: 'canvas' } })
+    await flushPromises()
+
+    const url = (wrapper.vm as unknown as { toDataURL: () => string }).toDataURL()
+    expect(url).toBe('')
 
     wrapper.unmount()
   })

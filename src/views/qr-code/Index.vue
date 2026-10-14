@@ -29,7 +29,7 @@ const refreshStatus = () => {
     status.value = 'active'
   }, 1500)
 }
-const downloadQRCode = () => {
+const dowloadQRCode = () => {
   const url = qrcodeRef.value?.toDataURL()
   if (!url) return
   const a = document.createElement('a')
@@ -107,7 +107,7 @@ const downloadQRCode = () => {
     <h2 class="mt30 mb10">下载二维码</h2>
     <Space vertical>
       <QRCode ref="qrcodeRef" value="https://themusecatcher.blog.csdn.net" />
-      <Button type="primary" @click="downloadQRCode">Download</Button>
+      <Button type="primary" @click="dowloadQRCode">Downlaod</Button>
     </Space>
     <h2 class="mt30 mb10">纠错比例</h2>
     <Space>
