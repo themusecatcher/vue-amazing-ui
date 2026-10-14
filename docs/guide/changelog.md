@@ -10,6 +10,27 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-13">2.13.3</VersionDateTag>
+
+- 修复 [二维码 QRCode](/guide/components/qr-code.html) 的 `canvas` 渲染类型不渲染、重复更新时容器内累积多个画布的问题
+- 新增 [二维码 QRCode](/guide/components/qr-code.html) `status` 属性与 `refresh` 事件，支持 `active` / `expired` / `loading` / `scanned` 四种状态（含状态遮罩与「点击刷新」交互），状态文案可用 `expiredText` / `refreshText` / `scannedText` 自定义
+- 增强 [二维码 QRCode](/guide/components/qr-code.html) 中央图标：改为绘入二维码本体并挖空点阵，导出图片同样包含图标；新增 `iconBackgroundColor` / `iconBorderRadius` 属性
+- 优化 [二维码 QRCode](/guide/components/qr-code.html) 实例方法 `toDataURL`：导出内容与屏幕渲染一致（含中央图标），支持传入 MIME 类型与质量参数，缺少 `value` 时返回空字符串
+- 修复 [二维码 QRCode](/guide/components/qr-code.html) 的 `svg` 渲染类型中央图标缺少底色块、图标被拉伸的问题，现与 `canvas` / `image` 渲染保持一致
+- 优化 [二维码 QRCode](/guide/components/qr-code.html) `canvas` / `image` 渲染清晰度：位图像素密度按绘制区所需的屏幕像素自动提升（`scale` 作为最小像素倍率下限），高分屏下不再发虚
+- 修复 [二维码 QRCode](/guide/components/qr-code.html) 的 `bordered` 为 `true` 时绘制区未扣除外边框宽度、中央图标挖空与尺寸存在约 `2px` 偏差的问题
+- 优化 [二维码 QRCode](/guide/components/qr-code.html) 编码内核：改为内置二维码编码库，不再引入第三方编码包，组件体积显著减小；`errorLevel` 语义调整为「最低等级」，内容较少时会自动提升到更高纠错等级
+- 优化 [二维码 QRCode](/guide/components/qr-code.html) 的 `svg` 渲染类型：改为声明式渲染，服务端渲染可直接输出矢量二维码，首屏不再依赖挂载后绘制
+- 新增 [二维码 QRCode](/guide/components/qr-code.html) 的 `title` 属性（无障碍文本，`svg` 输出为 `title` 元素、`canvas` / `image` 输出为 `aria-label` / `alt`）与 `padding` 属性（容器内边距）
+- 优化 [二维码 QRCode](/guide/components/qr-code.html) 的外边框与遮罩样式：边框常驻避免切换 `bordered` 时绘制区尺寸跳动；遮罩配色提为 CSS 变量 `--qr-code-mask-bg` / `--qr-code-mask-color`，可随主题覆盖
+- 增强 [二维码 QRCode](/guide/components/qr-code.html) 开发环境提示：同时使用 `icon` 与 `errorLevel="L"` 时提示识别率风险
+- 更新 [二维码 QRCode](/guide/components/qr-code.html) 文档演示：用例对齐渲染类型 / 状态 / 图标 / 尺寸 / 颜色 / 内边距 / 下载 / 纠错 / 气泡卡片
+- ⚠️ **破坏性变更**：[二维码 QRCode](/guide/components/qr-code.html) 编码内核更换为内置实现，`errorLevel` 语义调整为「最低等级」（内容较少时自动提升，同一取值下的图案与纠错能力可能变化），`scale` 语义调整为「最小像素倍率下限」（高密度屏下导出图片分辨率随之提升）
+- ⚠️ **破坏性变更**：[二维码 QRCode](/guide/components/qr-code.html) 实例方法 `getQRCodeImage` 更名为 `toDataURL`，返回类型由 `Promise<string>` 改为同步 `string`（`await ref.getQRCodeImage()` 改为 `ref.toDataURL()`）
+- ⚠️ **破坏性变更**：[二维码 QRCode](/guide/components/qr-code.html) 的根类名与 CSS 变量前缀统一为组件目录名的短横线形式：`qrcode-wrap` → `qr-code-wrap`、`--qrcode-*` → `--qr-code-*`，依赖旧类名 / 变量的自定义样式需同步调整
+- ⚠️ **破坏性变更**：[回到顶部 BackTop](/guide/components/back-top.html) 的根类名与 CSS 变量前缀统一为组件目录名的短横线形式（`backtop-wrap` → `back-top-wrap`、`--backtop-*` → `--back-top-*`），并将 `desc` 缩写统一为 `description`（`--back-top-desc-font-size` → `--back-top-description-font-size`、`--back-top-icon-with-desc-size` → `--back-top-icon-with-description-size`），依赖旧类名 / 变量的自定义样式需同步调整
+- ⚠️ **破坏性变更**：[二维码 QRCode](/guide/components/qr-code.html) 的 `errorLevel` 默认值由 `'H'` 调整为 `'M'`，未显式传入时生成的二维码图案与纠错能力会变化，需保留原行为可显式设置 `errorLevel="H"`
+
 ## <VersionDateTag date="2026-10-13">2.13.2</VersionDateTag>
 
 - 修复 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 组件级主题：运行期增删组件键即时生效（新增覆盖生效、移除覆盖回退 `common`），`theme` 中的非本库组件键改为忽略并告警
