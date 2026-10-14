@@ -215,6 +215,7 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   Pagination: ['Input', 'Select', 'Empty', 'Scrollbar'],
   Popconfirm: ['Button', 'Tooltip', 'Popup'],
   Popover: ['Tooltip', 'Popup'],
+  QRCode: ['Button', 'Spin'],
   Rate: ['Tooltip', 'Popup'],
   Select: ['Empty', 'Scrollbar'],
   Table: [
