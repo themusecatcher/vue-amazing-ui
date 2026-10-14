@@ -73,7 +73,7 @@ components/
 >
 > 两种情况下 `index.d.ts` 都会照常声明，形成「类型有声明、运行时无模块」的错位。须经**本地常量**再导出持有绑定，如 `export const Row = RowComp`、`export const useMessage = useMessageImpl`。
 >
-> 已登记例外：`utils/index.ts` 是 `export * from` 形式的纯 barrel，展开为逐符号本地绑定成本高且无深层导入需求 —— 工具函数请从包根（`vue-amazing-ui`）或具体文件（`vue-amazing-ui/es/utils/format`）导入。该例外已列入 `scripts/prepublish-guard.js` 的 `INDEX_DTS_WHITELIST`。
+> 已登记例外：`utils/index.ts` 是 `export * from` 形式的纯 barrel，展开为逐符号本地绑定成本高且无深层导入需求 —— 工具函数请从包根（`vue-amazing-ui`）或具体文件（`vue-amazing-ui/es/utils/format`）导入；`picker/index.ts`（`DatePicker` / `TimePicker` 共用的选择器内核出口）同理，内核本就无对外深层导入需求。两个例外均已列入 `scripts/prepublish-guard.js` 的 `INDEX_DTS_WHITELIST`。
 >
 > **构建期专用模块**同样会形成空头声明：`utils/vendor-styles.ts` 仅被 `vite.config.ts` / `build/` 与测试引用，不参与运行时模块图，产物中本就没有对应 JS，而 `tsconfig.dts.json` 仍会为它生成 `vendor-styles.d.ts`。处置方式是把它登记进该文件的 `exclude`，使其不产出 `.d.ts`（已登记）—— 新增同类「仅构建期使用」的模块时须同步登记。
 >

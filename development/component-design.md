@@ -223,7 +223,7 @@ components/modal/
 
 | 情况 | 组件 | 处理方式 |
 | :--- | :--- | :--- |
-| 业务组件，自身完全无样式 | `ConfigProvider` / `Highlight` / `NumberAnimation` / `Watermark` | 登记在 `style-deps.ts` 的 `stylelessComponents` 白名单中：resolver 返回空 sideEffects，样式入口生成器跳过 |
+| 业务组件，自身完全无样式 | `ConfigProvider` / `Highlight` / `NumberAnimation` / `PickerIcon` / `Watermark` | 登记在 `style-deps.ts` 的 `stylelessComponents` 白名单中：resolver 返回空 sideEffects，样式入口生成器跳过（自身样式入口不生成，但**与有自身 CSS 的组件共用产物目录**时，该目录的入口仍会产出，其中不得引用它的 `Xxx.css`） |
 | 命令式 API 的 Provider | `MessageProvider` / `ModalProvider` / `DialogProvider` / `NotificationProvider` / `LoadingBarProvider` | 在 `styleSources` 中登记其底层组件（如 `MessageProvider: 'Message'`、`LoadingBarProvider: 'LoadingBar'`），与底层组件**共用同一个样式入口** |
 | 子组件，样式定义在父 SFC 内 | `DescriptionsItem`（`Descriptions.vue`）、`SelectOption` / `SelectOptGroup`（`Select.vue`）、`MenuItem` / `MenuSubMenu` / `MenuItemGroup` / `MenuDivider`（`Menu.vue`） | 在 `styleSources` 中登记父组件（如 `DescriptionsItem: 'Descriptions'`、`MenuItem: 'Menu'`），否则 resolver 会指向并不存在的入口目录 |
 

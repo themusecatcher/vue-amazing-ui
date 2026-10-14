@@ -167,10 +167,10 @@ es/tooltip/style/index.js
 
 | 表 | 作用 | 谁读 |
 | :-- | :-- | :-- |
-| `componentsMap` | 组件名 → 产物目录（如 `Button: 'button'`；主组件平铺的复合目录直接用目录名，如 `Descriptions: 'descriptions'`、`List: 'list'`；成员在子目录时走子目录，如 `Row: 'grid/row'`、`ListItem: 'list/list-item'`），并收录 Provider 组件 | resolver（拼入口路径）＋ 生成器 |
+| `componentsMap` | 组件名 → 产物目录（如 `Button: 'button'`；主组件平铺的复合目录直接用目录名，如 `Descriptions: 'descriptions'`、`List: 'list'`；成员在子目录时走子目录，如 `Row: 'grid/row'`、`ListItem: 'list/list-item'`），并收录 Provider 组件与**库内共用的选择器内核**（`picker/`：`DatePicker` / `TimePicker` 的面板与触发器，不对外导出，仅为 `componentDependencies` 提供样式来源） | resolver（拼入口路径）＋ 生成器 |
 | `styleSources` | 自身无样式文件的组件 → 承载其样式的组件（如 `MessageProvider: 'Message'`、`DescriptionsItem: 'Descriptions'`） | resolver（决定入口落在哪个目录）＋ 生成器 |
 | `componentDependencies` | 组件的样式依赖（如 `Table` 依赖 `Checkbox` / `Pagination` 等） | 生成器（按表顺序写进入口）＋ `scripts/verify-style-deps.js`（与产物 chunk 闭包双向比对） |
-| `stylelessComponents` | 完全没有样式的组件（`ConfigProvider` / `Highlight` / `NumberAnimation` / `Watermark`） | resolver（返回空）+ 生成器（跳过） |
+| `stylelessComponents` | 完全没有样式的组件（`ConfigProvider` / `Highlight` / `NumberAnimation` / `PickerIcon` / `Watermark`） | resolver（返回空）+ 生成器（跳过） |
 
 表结构带类型约束，组件名写错会在编译期报错，而非静默生成 `undefined` 路径：
 

@@ -43,7 +43,7 @@
 - `externalGlobals`：IIFE / UMD 构建的外部依赖全局变量名。
 - `generateCssDtsPlugin`：`dir=dist` 时生成 `dist/css.d.ts`，供 `package.json` 的 `exports['./css'].types` 指向，解决 `import 'vue-amazing-ui/css'` 的 TS 报错。
 - `stylePostBuildPlugin` 在 `closeBundle` 内**顺序**执行三步后处理（`dir=dist` 时整体跳过），共同确立「样式与 JS 分离」下的产物契约：
-  `copyVendorStyles()`（复制第三方样式到 `vendor-styles/`）→ `mergeComponentStyles()`（合并同一 SFC 的编号 CSS，一个组件一个 CSS）→ `generateStyleEntries()`（生成每组件样式入口 `es|lib/<dir>/style/index.{js,cjs}`）。
+  `copyVendorStyles()`（复制第三方样式到 `vendor-styles/`）→ `mergeComponentStyles()`（合并同一 SFC 的编号 CSS，一个组件一个 CSS）→ `generateStyleEntries()`（生成样式入口 `es|lib/<dir>/style/index.{js,cjs}`，**按产物目录聚合**：同目录的多个组件合并为同一个入口，如库内共用的 `picker/`，见 [project-structure.md](project-structure.md)）。
   **顺序不可调换**：生成器需要读到合并后的终态 CSS 与已复制的 vendor 样式。三步合并为单个插件而非三个插件，是因为 Rollup 的 `closeBundle` 是 parallel hook，多插件之间的执行顺序不保证。
 
 以下两项有「不能凭直觉改」的原因，调整前需先确认：
