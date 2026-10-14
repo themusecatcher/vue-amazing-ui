@@ -16,6 +16,9 @@ _可预览的图片_
 >
 > 下方的「自定义下载」小节演示了可用的 `XHR + Blob` 方案：以二进制流读取图片（需图床开启 `CORS`，本示例图床返回 `Access-Control-Allow-Origin: *`）后转 Blob URL，再用 `a` 标签 `download` 属性强制下载，不受上述限制。
 
+> [!TIP]
+> 预览是整屏浮层：打开时会锁定页面滚动（隐藏滚动条并按被回收的宽度等量补偿，与 [模态框 Modal](./modal.md)、[抽屉 Drawer](./drawer.md) 行为一致），预览内容的缩放 / 拖动 / 切换不受影响。宿主自有的视口锚定固定元素（非 `sticky`）在锁定期间会有最多一个滚动条宽度的位移，可读 `--va-scrollbar-width` 自行补偿，细节见 [页面滚动锁 lockScroll](/utils/functions/lock-scroll.html)。
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { ImageItem } from 'vue-amazing-ui'

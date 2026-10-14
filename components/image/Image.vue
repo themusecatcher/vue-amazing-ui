@@ -1,9 +1,17 @@
 <script setup lang="ts">
-import { computed, ref, watchEffect, nextTick } from 'vue'
+import { computed, ref, watch, watchEffect, nextTick, onUnmounted } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Space, { type SpaceProps } from 'components/space'
 import Spin, { type SpinProps } from 'components/spin'
-import { add, downloadFile, getImageName, useInject, useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import {
+  add,
+  downloadFile,
+  getImageName,
+  useInject,
+  useZIndex,
+  lockScroll,
+  FLOATING_LAYER_Z_INDEX
+} from 'components/utils'
 export interface Image {
   src: string // 图像地址
   name?: string // 图像名称，未设置时自动从图像地址 src 中提取
@@ -90,6 +98,33 @@ watchEffect(() => {
   } else {
     releaseZIndex()
   }
+})
+// 滚动锁：预览是整屏层，打开时锁住页面滚动，否则滚轮 / 键盘 / 拖滚动条仍会把背景页带走。
+// 加锁与释放必须落在同一条同步路径上：不引入 await / nextTick，
+// 否则「等待期间组件被卸载、恢复执行后仍加锁」会让页面滚动永久锁死
+let scrollLockRelease: (() => void) | null = null
+watch(
+  showPreview,
+  (to) => {
+    if (!to) {
+      // 无需锁时释放本组件持有的锁（未持锁时为空调用，幂等无副作用）
+      scrollLockRelease?.()
+      scrollLockRelease = null
+      return
+    }
+    if (scrollLockRelease) {
+      return
+    }
+    scrollLockRelease = lockScroll()
+  },
+  {
+    immediate: true,
+    flush: 'post'
+  }
+)
+onUnmounted(() => {
+  // 卸载兜底：本组件仍持锁时释放，否则滚动锁随组件销毁而残留，页面滚动永久锁死
+  scrollLockRelease?.()
 })
 const previewImagesRef = ref<HTMLImageElement[]>([]) // 预览图片 DOM 引用
 const previewCompleted = ref<boolean[]>([]) // 预览图片是否加载完成
@@ -813,7 +848,8 @@ function onSwitchRight(): void {
     top: 0;
     left: 0;
     bottom: 0;
-    right: 0;
+    // 锁定页面滚动时视口变宽，收回被回收的滚动条宽度，保持与锁定前一致
+    right: var(--va-scrollbar-width, 0px);
     overflow: auto;
     outline: none;
     /* 默认层级为预览层（遮罩 +10）；ConfigProvider 传入 baseZIndex 时由内联样式覆盖 */
@@ -827,7 +863,9 @@ function onSwitchRight(): void {
       pointer-events: none;
       .preview-operations {
         position: fixed;
-        width: 100%;
+        // 同 .preview-container：宽度改用 left/right 表达才能随补偿量收窄（width: 100% 会与 right 冲突被忽略）
+        left: 0;
+        right: var(--va-scrollbar-width, 0px);
         z-index: 9;
         display: flex;
         flex-direction: row-reverse;
@@ -938,7 +976,8 @@ function onSwitchRight(): void {
         }
       }
       .switch-right {
-        right: 12px;
+        // 12px 为固有间距，叠加补偿量后仍与锁定前对齐
+        right: calc(12px + var(--va-scrollbar-width, 0px));
         position: fixed;
         top: 50%;
         /* 预览层操作按钮：位于预览内容之上 +1 */
