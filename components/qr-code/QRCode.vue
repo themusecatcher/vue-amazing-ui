@@ -69,17 +69,23 @@ const innerSize = computed(() => Math.max(props.size - props.padding * 2 - BORDE
 /** 二维码模块矩阵：size 为每边模块数，data 按行优先存储明暗（1 为暗点） */
 const modules = computed(() => {
   if (!props.value) return null
-  const qr = qrcodegen.QrCode.encodeText(props.value, ERROR_LEVEL_MAP[props.errorLevel])
-  const numCells = qr.size
-  const rows = qr.getModules()
-  const data = new Uint8Array(numCells * numCells)
-  for (let y = 0; y < numCells; y++) {
-    const row = rows[y] ?? []
-    for (let x = 0; x < numCells; x++) {
-      data[y * numCells + x] = row[x] ? 1 : 0
+  try {
+    const qr = qrcodegen.QrCode.encodeText(props.value, ERROR_LEVEL_MAP[props.errorLevel])
+    const numCells = qr.size
+    const rows = qr.getModules()
+    const data = new Uint8Array(numCells * numCells)
+    for (let y = 0; y < numCells; y++) {
+      const row = rows[y] ?? []
+      for (let x = 0; x < numCells; x++) {
+        data[y * numCells + x] = row[x] ? 1 : 0
+      }
     }
+    return { size: numCells, data }
+  } catch (error) {
+    // 内容超出二维码容量或纠错等级非法时降级为空渲染，避免 computed 抛错冒泡至渲染层导致整树崩溃
+    console.warn('[QRCode] 二维码编码失败：', error)
+    return null
   }
-  return { size: numCells, data }
 })
 /** 每边模块数，供 svg 模板使用 */
 const moduleCount = computed(() => modules.value?.size ?? 0)
@@ -173,14 +179,19 @@ const unitPixels = computed(() => {
 /** 将二维码绘制到目标 canvas：屏幕渲染与导出共用，保证「所见即所得」 */
 const paint = (canvas: HTMLCanvasElement) => {
   const matrix = modules.value
-  if (!matrix) return
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
+  // 无编码内容（value 为空或编码失败）时清空画布，避免残留上一次的二维码
+  if (!matrix) {
+    canvas.width = 0
+    canvas.height = 0
+    return
+  }
   const numCells = matrix.size
   const unit = unitPixels.value
   const pixelSize = numCells * unit
   canvas.width = pixelSize
   canvas.height = pixelSize
-  const ctx = canvas.getContext('2d')
-  if (!ctx) return
   const { data } = matrix
   const box = iconExcavation.value
   ctx.clearRect(0, 0, pixelSize, pixelSize)
@@ -212,6 +223,11 @@ const renderCanvas = () => {
   if (canvas) paint(canvas)
 }
 const renderImage = () => {
+  // 无编码内容时回落为空 DataURL，与 svg 的空渲染保持一致
+  if (!modules.value) {
+    imageDataURL.value = ''
+    return
+  }
   const canvas = document.createElement('canvas')
   paint(canvas)
   imageDataURL.value = canvas.toDataURL('image/png')
@@ -222,7 +238,8 @@ const renderImage = () => {
  * 绘制失败（如色值非法）时保留既有内容并通过控制台告警，不静默失败也不中断组件
  */
 const renderQRCode = () => {
-  if (!props.value || props.type === 'svg') return
+  // svg 由模板声明式渲染；canvas / image 在无内容时走清空分支，与 svg 的空渲染保持一致
+  if (props.type === 'svg') return
   try {
     if (props.type === 'canvas') {
       renderCanvas()
@@ -279,7 +296,7 @@ const onRefresh = (event: MouseEvent) => {
 defineExpose({
   /** 导出当前二维码图片（dataURL），内容与屏幕渲染一致（含中央图标）；可传入 MIME 类型与质量参数 */
   toDataURL: (type = 'image/png', quality?: number): string => {
-    if (!props.value) return ''
+    if (!props.value || !modules.value) return ''
     try {
       const canvas = document.createElement('canvas')
       paint(canvas)
