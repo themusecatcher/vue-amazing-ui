@@ -142,8 +142,9 @@ import {
   }
 ]
 const activeKey = ref(0)
+// 路由 children 为「首页 + 全部组件演示页」，减去首页自身即为组件总数
 const componentsTotal = computed(() => {
-  return (routes[0].children as Array<any>).length - 3
+  return (routes[0].children as Array<any>).length - 1
 })
 function onOpenWindow() {
   // 打开一个新的窗口，并导航到指定的URL

@@ -95,7 +95,7 @@ const modules = import.meta.glob('../views/**/index.ts', {
 ```
 
 - 路由 `path` 由目录路径推导（`/views/button/` → `/button`）。
-- 路由 `name` 由路径转 PascalCase 拼接（`button` → `Button`）。
+- 路由 `name` 由路径转 PascalCase 拼接（`button` → `Button`；缩写词片段整体大写，如 `qr-code` → `QRCode`，与组件对外名一致）。
 - `meta.title` 取自 `index.ts` 的默认导出。
 
 > 因此新增演示只需在 `src/views/<kebab-case>/` 下放 `Index.vue` + `index.ts` 两个文件，路由自动生效。

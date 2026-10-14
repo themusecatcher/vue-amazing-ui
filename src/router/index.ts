@@ -54,12 +54,14 @@ const modules = import.meta.glob('../views/**/index.ts', {
 function toKebabCase(word: string): string {
   return word.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
 }
-// 将短横线目录名片段转换为 PascalCase（如 date-picker → DatePicker），用于生成路由 name
+// 缩写词片段：整体大写，使路由 name 与组件对外名一致（qr-code → QRCode）
+const acronyms = new Set(['qr'])
+// 将短横线目录名片段转换为 PascalCase（如 date-picker → DatePicker、qr-code → QRCode），用于生成路由 name
 function toPascalCase(word: string): string {
   return word
     .split('-')
     .filter(Boolean)
-    .map((part) => part[0].toUpperCase() + part.slice(1))
+    .map((part) => (acronyms.has(part) ? part.toUpperCase() : part[0].toUpperCase() + part.slice(1)))
     .join('')
 }
 export const routes: RouteRecordRaw[] = [
