@@ -24,7 +24,8 @@ export type {
   CalendarDayOfWeek,
   CalendarDefaultWeek,
   CalendarDateItem,
-  CalendarMonthItem
+  CalendarMonthItem,
+  CalendarSelectInfo
 } from './calendar'
 export { default as Calendar } from './calendar'
 
