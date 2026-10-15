@@ -24,6 +24,15 @@ export default {
 }
 ```
 
+可选 `backTop: false`：关闭外壳（`src/layouts/GlobalLayout.vue`）自带的 `BackTop`，用于页面内自带回到顶部的演示（如 `back-top`、`config-provider` 两个页面）；字段类型见 `types/router.d.ts`。
+
+```ts
+export default {
+  title: '回到顶部',
+  backTop: false
+}
+```
+
 ### Index.vue
 
 演示页面结构约定：

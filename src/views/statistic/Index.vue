@@ -43,7 +43,7 @@ function playNumsCompare() {
       </Col>
     </Row>
     <h2 class="mt30 mb10">在卡片中使用</h2>
-    <div style="width: 425px; background: #ececec; padding: 30px; border-radius: 8px">
+    <div style="width: 100%; background: #ececec; padding: 30px; border-radius: 8px">
       <Row :gutter="16">
         <Col :span="12">
           <Card>

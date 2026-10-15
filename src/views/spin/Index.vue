@@ -42,7 +42,7 @@ const rotate = ref(false)
     <h2 class="mt30 mb10">基本使用</h2>
     <Flex align="center"> Loading state:<Switch v-model:value="spinning" /> </Flex>
     <br />
-    <Spin style="width: 800px" :spinning="spinning">
+    <Spin style="width: 100%" :spinning="spinning">
       <p class="spin-content">
         当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
         描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
@@ -51,7 +51,7 @@ const rotate = ref(false)
     </Spin>
     <h2 class="mt30 mb10">八点轮</h2>
     <p class="mb10"><code>indicator</code> 取值 <code>dot-wheel</code></p>
-    <Spin style="width: 800px" :spinning="spinning" indicator="dot-wheel">
+    <Spin style="width: 100%" :spinning="spinning" indicator="dot-wheel">
       <p class="spin-content">
         当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
         描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
@@ -60,7 +60,7 @@ const rotate = ref(false)
     </Spin>
     <h2 class="mt30 mb10">八线轮</h2>
     <p class="mb10"><code>indicator</code> 取值 <code>line-wheel</code></p>
-    <Spin style="width: 800px" :spinning="spinning" indicator="line-wheel">
+    <Spin style="width: 100%" :spinning="spinning" indicator="line-wheel">
       <p class="spin-content">
         当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
         描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
@@ -69,7 +69,7 @@ const rotate = ref(false)
     </Spin>
     <h2 class="mt30 mb10">圆环</h2>
     <p class="mb10"><code>indicator</code> 取值 <code>ring-circle</code></p>
-    <Spin style="width: 800px" :spinning="spinning" indicator="ring-circle">
+    <Spin style="width: 100%" :spinning="spinning" indicator="ring-circle">
       <p class="spin-content">
         当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
         描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
@@ -78,7 +78,7 @@ const rotate = ref(false)
     </Spin>
     <h2 class="mt30 mb10">圆环轨道</h2>
     <p class="mb10"><code>indicator</code> 取值 <code>ring-rail</code></p>
-    <Spin style="width: 800px" :spinning="spinning" indicator="ring-rail">
+    <Spin style="width: 100%" :spinning="spinning" indicator="ring-rail">
       <p class="spin-content">
         当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
         描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
@@ -87,7 +87,7 @@ const rotate = ref(false)
     </Spin>
     <h2 class="mt30 mb10">动态圆环</h2>
     <p class="mb10"><code>indicator</code> 取值 <code>dynamic-circle</code></p>
-    <Spin style="width: 800px" :spinning="spinning" indicator="dynamic-circle">
+    <Spin style="width: 100%" :spinning="spinning" indicator="dynamic-circle">
       <p class="spin-content">
         当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
         描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
@@ -96,7 +96,7 @@ const rotate = ref(false)
     </Spin>
     <h2 class="mt30 mb10">翻转双环</h2>
     <p class="mb10"><code>indicator</code> 取值 <code>magic-ring</code></p>
-    <Spin style="width: 800px" :spinning="spinning" indicator="magic-ring">
+    <Spin style="width: 100%" :spinning="spinning" indicator="magic-ring">
       <p class="spin-content">
         当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
         描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
@@ -189,7 +189,7 @@ const rotate = ref(false)
     <br />
     <Flex align="center"> delay:<InputNumber v-model:value="delay" :min="0" /> ms </Flex>
     <br />
-    <Spin style="width: 800px" :spinning="delaySpinning" :delay="delay" tip="加载中...">
+    <Spin style="width: 100%" :spinning="delaySpinning" :delay="delay" tip="加载中...">
       <p class="spin-content spin-content-fixed">
         请求进行中时，此区域会变淡且不可交互；若在这段时间内请求已经结束（再次关闭开关），加载效果不会出现。
       </p>

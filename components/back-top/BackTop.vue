@@ -15,8 +15,8 @@ export interface Props {
   right?: number | string // BackTop 距离页面右侧的宽度，单位 px
   zIndex?: number // 设置 BackTop 的 z-index
   visibilityHeight?: number // 滚动时触发显示回到顶部按钮的高度，单位 px
-  to?: string | HTMLElement // BackTop 渲染的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，下同
-  listenTo?: string | HTMLElement | Document | (() => HTMLElement | Document) // 监听滚动的元素，如果为 undefined 会监听距离最近的一个可滚动的祖先节点；支持标签名、元素、Document 或返回目标的函数
+  to?: string | HTMLElement // BackTop 渲染的容器节点，可选：CSS 选择器（例如 'body'）或者元素本身
+  listenTo?: string | HTMLElement | Document | (() => HTMLElement | Document) // 监听滚动的元素，如果为 undefined 会监听距离最近的一个可滚动的祖先节点；支持 CSS 选择器、元素、Document 或返回目标的函数
 }
 // 声明组件插槽类型
 export interface BackTopSlots {
@@ -98,15 +98,21 @@ onMounted(() => {
 onBeforeUnmount(() => {
   cleanup()
 })
-// 解析 listenTo 指定的滚动目标：标签名、元素、Document 或返回目标的函数
+// 解析 listenTo 指定的滚动目标：CSS 选择器、元素、Document 或返回目标的函数
 function resolveListenTarget(): HTMLElement | Document | null {
   const { listenTo } = props
   if (typeof listenTo === 'function') {
     return listenTo() ?? null
   }
   if (typeof listenTo === 'string') {
-    const element = document.getElementsByTagName(listenTo)[0] as HTMLElement | undefined
-    return element ?? null
+    // 按 CSS 选择器解析：标签名（如 'body'）本身也是合法选择器，历史写法不受影响；
+    // 非法选择器会让 querySelector 抛出 SyntaxError，此处按「找不到目标」处理，交由下方统一告警
+    try {
+      return document.querySelector<HTMLElement>(listenTo)
+    } catch {
+      // 非法选择器：不中断组件，按未找到目标处理
+      return null
+    }
   }
   if (listenTo instanceof Document || listenTo instanceof HTMLElement) {
     return listenTo

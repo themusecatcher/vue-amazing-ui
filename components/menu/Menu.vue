@@ -13,8 +13,8 @@ import type {
   MenuInfo,
   MenuKey,
   MenuMode,
+  MenuSelectInfo,
   MenuTheme,
-  SelectInfo,
   SubMenuType
 } from './interface'
 
@@ -74,9 +74,9 @@ defineSlots<MenuSlots>()
 
 const emit = defineEmits<{
   click: [info: MenuInfo] // 点击菜单项时调用
-  deselect: [info: SelectInfo] // 取消选中时调用，仅在 multiple 生效
+  deselect: [info: MenuSelectInfo] // 取消选中时调用，仅在 multiple 生效
   openChange: [openKeys: MenuKey[]] // 子菜单展开 / 收起时调用
-  select: [info: SelectInfo] // 被选中时调用
+  select: [info: MenuSelectInfo] // 被选中时调用
   'update:openKeys': [openKeys: MenuKey[]] // 展开的子菜单 key 数组变化
   'update:selectedKeys': [selectedKeys: MenuKey[]] // 选中的菜单项 key 数组变化
 }>()
@@ -232,12 +232,12 @@ function handleItemClick(info: MenuInfo): void {
       if (props.selectedKeys === undefined) {
         innerSelectedKeys.value = nextKeys
       }
-      const selectInfo: SelectInfo = { ...info, selectedKeys: nextKeys }
+      const menuSelectInfo: MenuSelectInfo = { ...info, selectedKeys: nextKeys }
       emit('update:selectedKeys', nextKeys)
       if (existed && props.multiple) {
-        emit('deselect', selectInfo)
+        emit('deselect', menuSelectInfo)
       } else {
-        emit('select', selectInfo)
+        emit('select', menuSelectInfo)
       }
     }
   }

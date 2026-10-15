@@ -107,11 +107,10 @@ export const routes: RouteRecordRaw[] = [
 ]
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), // 使用 history 模式，hash 模式：createWebHashHistory
-  routes,
-  scrollBehavior(to, from, savedPosition) {
-    // 滚动行为
-    return { left: 0, top: 0, behavior: 'smooth' }
-  }
+  routes
+  // 不配置 scrollBehavior：本站内容区的滚动由 GlobalLayout 的 Scrollbar 容器承载，
+  // 该容器在路由切换间复用，而 scrollBehavior 只作用于 window，在此不适用；
+  // 内容区回到顶部由 GlobalLayout 中监听 route.fullPath 的 watch 负责
 })
 // 路由守卫位于组件树之外（setup 外），改用 createDiscreteApi 获取加载条实例：
 // 惰性单例，首次进入守卫时创建独立应用实例并挂载，之后复用
