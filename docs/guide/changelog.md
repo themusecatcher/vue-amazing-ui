@@ -10,6 +10,13 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-18">2.14.2</VersionDateTag>
+
+- 修复并增强 [日历 Calendar](/guide/components/calendar.html)：修复重复点击已选中日期不发 `select`、`startDayOfWeek` 越界导致死循环、字符串 `value` 且未指定 `valueFormat` 时挂载失败、选中值归一化双路径不一致、月面板跨月选中溢出到次月、仅配置 `validRange` 时月份面板区间外的月份仍可选中并写回区间外值等问题；修正面板形态「今天」标记撑高所在行（同排悬浮 / 选中底色底部露缝）、卡片形态日期相对禁用底色未垂直居中、卡片形态不可选的「今天」描边与文字未退中性色等视觉错漏；补齐 grid 语义（`role="grid"` / `role="gridcell"` / `aria-selected` / `aria-disabled`）
+- 增强 [日历 Calendar](/guide/components/calendar.html)：新增 `defaultValue`（非受控初始值）、`validRange`（可选日期区间，同时收窄年 / 月选项）、`headerFull`（整体替换头部，插槽提供当前选中值、写回选中值与切换面板模式的回调）、`dateFull` / `monthFull`（整格替换）插槽，键盘导航（方向键 / 翻页键），整月禁用态，窄屏响应式头部，面板「今天」跨零点自动刷新；今天态按形态区分（面板形态为实心主色标记，日面板为圆形、月面板为两端半圆的胶囊形，均为白字；卡片形态为主色描边方块），面板形态选中格的网格线取主色
+- **不兼容变更**：[日历 Calendar](/guide/components/calendar.html) 的 `select` 事件第二参由字符串改为 `{ source }`（`'year' | 'month' | 'date' | 'customize'`）；年 / 月选择器变更现在会写回选中值并触发 `change` / `select`（此前仅触发 `panelChange`）；卡片模式宽度改为 `300px` 基准、容器更窄时自适应收缩（日期面板内容高度固定 `256px`）
+- 补充 [日历 Calendar](/guide/components/calendar.html) 单元测试
+
 ## <VersionDateTag date="2026-10-15">2.14.1</VersionDateTag>
 
 - 重构并增强 [二维码 QRCode](/guide/components/qr-code.html)：编码改为内置实现（移除第三方编码包，体积减小），`svg` 改为声明式渲染，`canvas` / `image` 高清屏清晰度提升；修复 `canvas` 不渲染、重复更新累积画布、`svg` 中央图标缺底色块 / 被拉伸、`bordered` 绘制区尺寸偏差与跳动等问题；新增 `status` 属性与 `refresh` 事件（`active` / `expired` / `loading` / `scanned` 四种状态，含遮罩与点击刷新）、`iconBackgroundColor` / `iconBorderRadius` / `title` / `padding` 属性与 `--qr-code-mask-bg` / `--qr-code-mask-color` 遮罩变量，中央图标绘入二维码本体（导出图片同样包含）
