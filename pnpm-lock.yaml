@@ -139,8 +139,8 @@ importers:
         specifier: ^3.5.42
         version: 3.5.42(typescript@5.9.3)
       vue-amazing-ui:
-        specifier: 2.14.0
-        version: 2.14.0(vue@3.5.42(typescript@5.9.3))
+        specifier: 2.14.1
+        version: 2.14.1(vue@3.5.42(typescript@5.9.3))
       vue-router:
         specifier: ^4.6.4
         version: 4.6.4(vue@3.5.42(typescript@5.9.3))
@@ -3531,8 +3531,8 @@ packages:
   vscode-uri@3.1.0:
     resolution: {integrity: sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==}
 
-  vue-amazing-ui@2.14.0:
-    resolution: {integrity: sha512-eK6Ft/W0XtGtoEt8GmY53iCuhK8GQNmfmtfKbDvn3ZfgkC46yjL9/kRAaB7xkaybWyU1HqHX5LFyhXcF1Bwk7Q==}
+  vue-amazing-ui@2.14.1:
+    resolution: {integrity: sha512-JZDbL6xzVNJ0MOfI4ijSDNC9QRgE2OBXDDcHt2a3ykL6G8RcpcjFWTl2xOvIm/2AbwoIzOOUUpCH+TKk4KkL4w==}
     engines: {node: ^20.19.0 || >=22.12.0, pnpm: '>=11'}
     peerDependencies:
       vue: ^3.4.0
@@ -5388,7 +5388,8 @@ snapshots:
 
   callsites@3.1.0: {}
 
-  camelcase@5.3.1: {}
+  camelcase@5.3.1:
+    optional: true
 
   caniuse-lite@1.0.30001755: {}
 
@@ -5425,6 +5426,7 @@ snapshots:
       string-width: 4.2.3
       strip-ansi: 6.0.1
       wrap-ansi: 6.2.0
+    optional: true
 
   cliui@8.0.1:
     dependencies:
@@ -5545,7 +5547,8 @@ snapshots:
     optionalDependencies:
       supports-color: 8.1.1
 
-  decamelize@1.2.0: {}
+  decamelize@1.2.0:
+    optional: true
 
   deep-is@0.1.4: {}
 
@@ -5564,7 +5567,8 @@ snapshots:
     dependencies:
       dequal: 2.0.3
 
-  dijkstrajs@1.0.3: {}
+  dijkstrajs@1.0.3:
+    optional: true
 
   dom-align@1.12.4: {}
 
@@ -5819,6 +5823,7 @@ snapshots:
     dependencies:
       locate-path: 5.0.0
       path-exists: 4.0.0
+    optional: true
 
   find-up@5.0.0:
     dependencies:
@@ -6099,6 +6104,7 @@ snapshots:
   locate-path@5.0.0:
     dependencies:
       p-locate: 4.1.0
+    optional: true
 
   locate-path@6.0.0:
     dependencies:
@@ -6336,6 +6342,7 @@ snapshots:
   p-limit@2.3.0:
     dependencies:
       p-try: 2.2.0
+    optional: true
 
   p-limit@3.1.0:
     dependencies:
@@ -6344,12 +6351,14 @@ snapshots:
   p-locate@4.1.0:
     dependencies:
       p-limit: 2.3.0
+    optional: true
 
   p-locate@5.0.0:
     dependencies:
       p-limit: 3.1.0
 
-  p-try@2.2.0: {}
+  p-try@2.2.0:
+    optional: true
 
   package-json-from-dist@1.0.1: {}
 
@@ -6408,7 +6417,8 @@ snapshots:
       exsolve: 1.0.7
       pathe: 2.0.3
 
-  pngjs@5.0.0: {}
+  pngjs@5.0.0:
+    optional: true
 
   postcss-selector-parser@7.1.1:
     dependencies:
@@ -6447,6 +6457,7 @@ snapshots:
       dijkstrajs: 1.0.3
       pngjs: 5.0.0
       yargs: 15.4.1
+    optional: true
 
   quansync@0.2.11: {}
 
@@ -6473,7 +6484,8 @@ snapshots:
 
   require-from-string@2.0.2: {}
 
-  require-main-filename@2.0.0: {}
+  require-main-filename@2.0.0:
+    optional: true
 
   resize-observer-polyfill@1.5.1: {}
 
@@ -6592,7 +6604,8 @@ snapshots:
 
   semver@7.8.5: {}
 
-  set-blocking@2.0.0: {}
+  set-blocking@2.0.0:
+    optional: true
 
   shallow-equal@1.2.1: {}
 
@@ -7083,14 +7096,13 @@ snapshots:
 
   vscode-uri@3.1.0: {}
 
-  vue-amazing-ui@2.14.0(vue@3.5.42(typescript@5.9.3)):
+  vue-amazing-ui@2.14.1(vue@3.5.42(typescript@5.9.3)):
     dependencies:
       '@ant-design/colors': 8.0.1
       '@ctrl/tinycolor': 4.2.0
       '@vueuse/core': 14.2.1(vue@3.5.42(typescript@5.9.3))
       csstype: 3.2.3
       date-fns: 4.1.0
-      qrcode: 1.5.4
       seemly: 0.3.10
       swiper: 12.1.2
       vue: 3.5.42(typescript@5.9.3)
@@ -7154,7 +7166,8 @@ snapshots:
 
   whatwg-mimetype@3.0.0: {}
 
-  which-module@2.0.1: {}
+  which-module@2.0.1:
+    optional: true
 
   which@2.0.2:
     dependencies:
@@ -7176,6 +7189,7 @@ snapshots:
       ansi-styles: 4.3.0
       string-width: 4.2.3
       strip-ansi: 6.0.1
+    optional: true
 
   wrap-ansi@7.0.0:
     dependencies:
@@ -7197,7 +7211,8 @@ snapshots:
 
   xml-name-validator@4.0.0: {}
 
-  y18n@4.0.3: {}
+  y18n@4.0.3:
+    optional: true
 
   y18n@5.0.8: {}
 
@@ -7211,6 +7226,7 @@ snapshots:
     dependencies:
       camelcase: 5.3.1
       decamelize: 1.2.0
+    optional: true
 
   yargs-parser@21.1.1: {}
 
@@ -7227,6 +7243,7 @@ snapshots:
       which-module: 2.0.1
       y18n: 4.0.3
       yargs-parser: 18.1.3
+    optional: true
 
   yargs@17.7.2:
     dependencies:
