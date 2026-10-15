@@ -10,6 +10,11 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-17">2.14.3</VersionDateTag>
+
+- 重构并增强 [颜色选择器 ColorPicker](/guide/components/color-picker.html)：新增 `defaultValue` 属性（未受控时的初始颜色）、`placement` / `to` 属性（面板弹出位置与挂载容器）与 `trigger` 插槽（自定义触发器，宿主容器随触发器内容自适应），空值态下色相条可按纯色兜底调节，色板支持键盘 `Enter` 选色；修复非法色值导致渲染或点击色板崩溃（降级为空值态 / 忽略该色板）、空值态下 `alpha` 轨道可拖空色、`alpha` 百分比输入越界不收敛、标签文字在中间色下对比度不足、非法输入后输入框不回滚、拖拽中途卸载残留全局指针监听、内置触发器上事件监听重复触发、`modes` 运行时移除当前模式后模式切换失灵等问题；使用者文档与组件演示同步更新
+- 优化[颜色选择器 ColorPicker](/guide/components/color-picker.html) 组件的 `complete` 事件，改为仅在输入框提交与鼠标拖动结束时触发，点击色板 / 点击清除 / 原生取色器选色不再触发（依赖「选色即完成」的用法请改用 `update:value`）
+
 ## <VersionDateTag date="2026-10-16">2.14.2</VersionDateTag>
 
 - 优化 [回到顶部 BackTop](/guide/components/back-top.html) 的 `listenTo` 属性：字符串参数改为按 `CSS` 选择器解析（元素标签名本身就是合法选择器，原写法仍然有效）
