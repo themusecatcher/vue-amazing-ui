@@ -461,7 +461,7 @@ function onToNotification() {
     <h2 class="mt30 mb10">与浮层叠加</h2>
     <p class="mb10">
       通知的默认层级为 <code>1040</code>：高于承载层（<code>Modal</code> 弹窗 <code>1010</code>），低于锚点跟随型浮层
-      （<code>Select</code> 面板 <code>1050</code> / <code>Tooltip</code>
+      （<code>Select</code> 面板 <code>1050</code> / <code>Tooltip</code> 气泡
       <code>1070</code>），因此通知内容里的下拉面板与气泡不会被通知框压住
     </p>
     <Button type="primary" @click="onLayerNotification">通知内容里的浮层</Button>

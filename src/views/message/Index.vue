@@ -294,7 +294,7 @@ function onToMessage() {
     <h2 class="mt30 mb10">与浮层叠加</h2>
     <p class="mb10">
       消息的默认层级为 <code>1030</code>：高于承载层（<code>Modal</code> 弹窗 <code>1010</code>），低于锚点跟随型浮层
-      （<code>Select</code> 面板 <code>1050</code> / <code>Tooltip</code>
+      （<code>Select</code> 面板 <code>1050</code> / <code>Tooltip</code> 气泡
       <code>1070</code>），因此消息内容里的下拉面板与气泡不会被消息框压住
     </p>
     <p class="mb10"> 消息为常驻（<code>duration: null</code>），点击内容里的「关闭」按钮手动关闭 </p>

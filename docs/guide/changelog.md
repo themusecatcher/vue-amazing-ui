@@ -21,9 +21,9 @@
 
 ## <VersionDateTag date="2026-10-15">2.14.1</VersionDateTag>
 
-- 重构并增强 [二维码 QRCode](/guide/components/qr-code.html)：编码改为内置实现（移除第三方编码包，体积减小），`svg` 改为声明式渲染，`canvas` / `image` 高清屏清晰度提升；修复 `canvas` 不渲染、重复更新累积画布、`svg` 中央图标缺底色块 / 被拉伸、`bordered` 绘制区尺寸偏差与跳动等问题；新增 `status` 属性与 `refresh` 事件（`active` / `expired` / `loading` / `scanned` 四种状态，含遮罩与点击刷新）、`iconBackgroundColor` / `iconBorderRadius` / `title` / `padding` 属性与 `--qr-code-mask-bg` / `--qr-code-mask-color` 遮罩变量，中央图标绘入二维码本体（导出图片同样包含）
-- [二维码 QRCode](/guide/components/qr-code.html) 的 `errorLevel` 改为「最低等级」且默认值由 `'H'` 改为 `'M'`（需保留原行为可显式设置 `errorLevel="H"`）、`scale` 改为「最小像素倍率下限」，实例方法 `getQRCodeImage` 更名为 `toDataURL` 并改为同步返回 `string`（`await ref.getQRCodeImage()` 改为 `ref.toDataURL()`）；[二维码 QRCode](/guide/components/qr-code.html) 与 [回到顶部 BackTop](/guide/components/back-top.html) 的根类名与 `CSS` 变量前缀统一为组件目录名的短横线形式（`qrcode-wrap` → `qr-code-wrap`、`backtop-wrap` → `back-top-wrap`，`--qrcode-*` / `--backtop-*` → `--qr-code-*` / `--back-top-*`，[回到顶部 BackTop](/guide/components/back-top.html) 的 `desc` → `description`），依赖旧 `API` / 类名 / 变量的自定义用法需同步调整
-- 优化并更新 [二维码 QRCode](/guide/components/qr-code.html) 组件文档演示：覆盖渲染类型 / 状态 / 图标 / 属性 / 下载等新增用法
+- 重构并增强 [二维码 QRCode](/guide/components/qr-code.html)：编码改为内置实现（移除第三方编码包，体积减小），`svg` 改为声明式渲染，`canvas` / `image` 高清屏清晰度提升；修复 `canvas` 不渲染、重复更新累积画布、`svg` 中央图标缺底色块 / 被拉伸、`bordered` 绘制区尺寸偏差与跳动等问题；新增 `status` 属性与 `refresh` 事件（`active` / `expired` / `loading` / `scanned` 四种状态，含遮罩与点击刷新）、`iconBackgroundColor` / `iconBorderRadius` / `title` / `padding` 属性与 `--qr-code-mask-bg-color` / `--qr-code-mask-text-color` 遮罩变量，中央图标绘入二维码本体（导出图片同样包含）
+- [二维码 QRCode](/guide/components/qr-code.html) 组件的 `errorLevel` 改为「最低等级」且默认值由 `'H'` 改为 `'M'`（需保留原行为可显式设置 `errorLevel="H"`）、`scale` 改为「最小像素倍率下限」，实例方法 `getQRCodeImage` 更名为 `toDataURL` 并改为同步返回 `string`（`await ref.getQRCodeImage()` 改为 `ref.toDataURL()`）；[二维码 QRCode](/guide/components/qr-code.html) 与 [回到顶部 BackTop](/guide/components/back-top.html) 的根类名与 `CSS` 变量前缀统一为组件目录名的短横线形式（`qrcode-wrap` → `qr-code-wrap`、`backtop-wrap` → `back-top-wrap`，`--qrcode-*` / `--backtop-*` → `--qr-code-*` / `--back-top-*`，[回到顶部 BackTop](/guide/components/back-top.html) 的 `desc` → `description`），依赖旧 `API` / 类名 / 变量的自定义用法需同步调整
+- 优化并更新 [二维码 QRCode](/guide/components/qr-code.html) 组件文档演示
 
 ## <VersionDateTag date="2026-10-14">2.14.0</VersionDateTag>
 
