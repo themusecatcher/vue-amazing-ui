@@ -193,8 +193,9 @@ function onEventBlur(event: FocusEvent): void {
     </p>
     <h2 class="mt30 mb10">事件</h2>
     <p class="mb10">
-      单选形态绑定 <code>change</code> <code>ok</code> <code>openChange</code> <code>focus</code>
-      <code>blur</code>，范围形态绑定 <code>change</code> <code>calendarChange</code>；各事件的参数都会打印到控制台
+      单选形态绑定
+      <code>change</code>、<code>ok</code>、<code>openChange</code>、<code>focus</code>、<code>blur</code>，范围形态绑定
+      <code>change</code>、<code>calendarChange</code>；各事件的参数都会打印到控制台
     </p>
     <Space vertical>
       <TimePicker

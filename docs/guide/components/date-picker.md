@@ -695,7 +695,7 @@ const showNowValue = ref<number | null>(null)
 
 ## 事件
 
-_单选形态绑定 `change` `openChange` `panelChange` `focus` `blur`，范围形态绑定 `change` `calendarChange`，带时间的形态还可绑定 `ok`；各事件的参数都会打印到控制台_
+_单选形态绑定 `change`、`openChange`、`panelChange`、`focus`、`blur`，范围形态绑定 `change`、`calendarChange`，带时间的形态还可绑定 `ok`；各事件的参数都会打印到控制台_
 
 <br/>
 

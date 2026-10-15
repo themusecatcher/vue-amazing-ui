@@ -460,7 +460,7 @@ _范围形态的两段共用同一个时间面板，点「确定」提交当前�
 
 ## 事件
 
-_单选形态绑定 `change` `ok` `openChange` `focus` `blur`，范围形态绑定 `change` `calendarChange` `ok` `openChange`；各事件的参数都会打印到控制台_
+_单选形态绑定 `change`、`ok`、`openChange`、`focus`、`blur`，范围形态绑定 `change`、`calendarChange`、`ok`、`openChange`；各事件的参数都会打印到控制台_
 
 <br/>
 
