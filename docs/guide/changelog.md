@@ -10,18 +10,28 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-18">2.14.2</VersionDateTag>
+## <VersionDateTag date="2026-10-18">2.14.3</VersionDateTag>
 
 - 修复并增强 [日历 Calendar](/guide/components/calendar.html)：修复重复点击已选中日期不发 `select`、`startDayOfWeek` 越界导致死循环、字符串 `value` 且未指定 `valueFormat` 时挂载失败、选中值归一化双路径不一致、月面板跨月选中溢出到次月、仅配置 `validRange` 时月份面板区间外的月份仍可选中并写回区间外值等问题；修正面板形态「今天」标记撑高所在行（同排悬浮 / 选中底色底部露缝）、卡片形态日期相对禁用底色未垂直居中、卡片形态不可选的「今天」描边与文字未退中性色等视觉错漏；补齐 grid 语义（`role="grid"` / `role="gridcell"` / `aria-selected` / `aria-disabled`）
 - 增强 [日历 Calendar](/guide/components/calendar.html)：新增 `defaultValue`（非受控初始值）、`validRange`（可选日期区间，同时收窄年 / 月选项）、`headerFull`（整体替换头部，插槽提供当前选中值、写回选中值与切换面板模式的回调）、`dateFull` / `monthFull`（整格替换）插槽，键盘导航（方向键 / 翻页键），整月禁用态，窄屏响应式头部，面板「今天」跨零点自动刷新；今天态按形态区分（面板形态为实心主色标记，日面板为圆形、月面板为两端半圆的胶囊形，均为白字；卡片形态为主色描边方块），面板形态选中格的网格线取主色
 - **不兼容变更**：[日历 Calendar](/guide/components/calendar.html) 的 `select` 事件第二参由字符串改为 `{ source }`（`'year' | 'month' | 'date' | 'customize'`）；年 / 月选择器变更现在会写回选中值并触发 `change` / `select`（此前仅触发 `panelChange`）；卡片模式宽度改为 `300px` 基准、容器更窄时自适应收缩（日期面板内容高度固定 `256px`）
 - 补充 [日历 Calendar](/guide/components/calendar.html) 单元测试
 
+## <VersionDateTag date="2026-10-16">2.14.2</VersionDateTag>
+
+- 优化 [回到顶部 BackTop](/guide/components/back-top.html) 的 `listenTo` 属性：字符串参数改为按 `CSS` 选择器解析（元素标签名本身就是合法选择器，原写法仍然有效）
+- 新增 [滚动条 Scrollbar](/guide/components/scrollbar.html) 实例属性 `scrollElement`，可获取内部滚动容器元素（便于为 `BackTop` 等指定滚动监听目标）；文档同步修正 `getScrollData` 的类型签名（补全漏标的 `scrollTop`）
+- 优化 [菜单 Menu](/guide/components/menu.html) 组件，将 `select` / `deselect` 事件参数类型 `SelectInfo` 调整为 `MenuSelectInfo`
+- 更新 [布局 Layout](/guide/components/layout.html) 文档：补充 `CSS` 变量清单与浅色侧边栏底色的覆盖示例
+- 更新 [栅格 Grid](/guide/components/grid.html) 文档：补充固定高度容器下 `align="stretch"` 的生效边界与正确写法
+- 更新 [回到顶部 BackTop](/guide/components/back-top.html) 文档：补充与容器内滚动组合时的监听目标选取说明
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-10-15">2.14.1</VersionDateTag>
 
-- 重构并增强 [二维码 QRCode](/guide/components/qr-code.html)：编码改为内置实现（移除第三方编码包，体积减小），`svg` 改为声明式渲染，`canvas` / `image` 高清屏清晰度提升；修复 `canvas` 不渲染、重复更新累积画布、`svg` 中央图标缺底色块 / 被拉伸、`bordered` 绘制区尺寸偏差与跳动等问题；新增 `status` 属性与 `refresh` 事件（`active` / `expired` / `loading` / `scanned` 四种状态，含遮罩与点击刷新）、`iconBackgroundColor` / `iconBorderRadius` / `title` / `padding` 属性与 `--qr-code-mask-bg` / `--qr-code-mask-color` 遮罩变量，中央图标绘入二维码本体（导出图片同样包含）
-- [二维码 QRCode](/guide/components/qr-code.html) 的 `errorLevel` 改为「最低等级」且默认值由 `'H'` 改为 `'M'`（需保留原行为可显式设置 `errorLevel="H"`）、`scale` 改为「最小像素倍率下限」，实例方法 `getQRCodeImage` 更名为 `toDataURL` 并改为同步返回 `string`（`await ref.getQRCodeImage()` 改为 `ref.toDataURL()`）；[二维码 QRCode](/guide/components/qr-code.html) 与 [回到顶部 BackTop](/guide/components/back-top.html) 的根类名与 `CSS` 变量前缀统一为组件目录名的短横线形式（`qrcode-wrap` → `qr-code-wrap`、`backtop-wrap` → `back-top-wrap`，`--qrcode-*` / `--backtop-*` → `--qr-code-*` / `--back-top-*`，[回到顶部 BackTop](/guide/components/back-top.html) 的 `desc` → `description`），依赖旧 `API` / 类名 / 变量的自定义用法需同步调整
-- 优化并更新 [二维码 QRCode](/guide/components/qr-code.html) 组件文档演示：覆盖渲染类型 / 状态 / 图标 / 属性 / 下载等新增用法
+- 重构并增强 [二维码 QRCode](/guide/components/qr-code.html)：编码改为内置实现（移除第三方编码包，体积减小），`svg` 改为声明式渲染，`canvas` / `image` 高清屏清晰度提升；修复 `canvas` 不渲染、重复更新累积画布、`svg` 中央图标缺底色块 / 被拉伸、`bordered` 绘制区尺寸偏差与跳动等问题；新增 `status` 属性与 `refresh` 事件（`active` / `expired` / `loading` / `scanned` 四种状态，含遮罩与点击刷新）、`iconBackgroundColor` / `iconBorderRadius` / `title` / `padding` 属性与 `--qr-code-mask-bg-color` / `--qr-code-mask-text-color` 遮罩变量，中央图标绘入二维码本体（导出图片同样包含）
+- [二维码 QRCode](/guide/components/qr-code.html) 组件的 `errorLevel` 改为「最低等级」且默认值由 `'H'` 改为 `'M'`（需保留原行为可显式设置 `errorLevel="H"`）、`scale` 改为「最小像素倍率下限」，实例方法 `getQRCodeImage` 更名为 `toDataURL` 并改为同步返回 `string`（`await ref.getQRCodeImage()` 改为 `ref.toDataURL()`）；[二维码 QRCode](/guide/components/qr-code.html) 与 [回到顶部 BackTop](/guide/components/back-top.html) 的根类名与 `CSS` 变量前缀统一为组件目录名的短横线形式（`qrcode-wrap` → `qr-code-wrap`、`backtop-wrap` → `back-top-wrap`，`--qrcode-*` / `--backtop-*` → `--qr-code-*` / `--back-top-*`，[回到顶部 BackTop](/guide/components/back-top.html) 的 `desc` → `description`），依赖旧 `API` / 类名 / 变量的自定义用法需同步调整
+- 优化并更新 [二维码 QRCode](/guide/components/qr-code.html) 组件文档演示
 
 ## <VersionDateTag date="2026-10-14">2.14.0</VersionDateTag>
 
@@ -225,7 +235,7 @@
 
 ## <VersionDateTag date="2026-08-24">2.5.1</VersionDateTag>
 
-- 优化并增强 [文字提示 Tooltip](/guide/components/tooltip.html) 组件和文档，`placement`  属性新增支持 `12` 个方向；新增 `arrowPointAtCenter` 属性使箭头指向目标元素中心；`bgColor` 支持多种预设色彩；`trigger` 新增 `focus` / `contextmenu` 触发方式；新增 `disabled` 属性支持禁用；`showDelay` / `hideDelay` 属性调整为仅在 `trigger: hover` 时生效，`click` / `focus` / `contextmenu` 等触发方式立即显示与隐藏；修复弹出框挂载到 `body` 时被中间可滚动容器边界误判导致意外翻转的问题；使用 `requestAnimationFrame` 合并同帧内的多次位置重算，减少滚动时的强制重排
+- 优化并增强 [文字提示 Tooltip](/guide/components/tooltip.html) 组件和文档，`placement` 属性新增支持 `12` 个方向；新增 `arrowPointAtCenter` 属性使箭头指向目标元素中心；`bgColor` 支持多种预设色彩；`trigger` 新增 `focus` / `contextmenu` 触发方式；新增 `disabled` 属性支持禁用；`showDelay` / `hideDelay` 属性调整为仅在 `trigger: hover` 时生效，`click` / `focus` / `contextmenu` 等触发方式立即显示与隐藏；修复弹出框挂载到 `body` 时被中间可滚动容器边界误判导致意外翻转的问题；使用 `requestAnimationFrame` 合并同帧内的多次位置重算，减少滚动时的强制重排
 - 优化并更新 [颜色选择器 ColorPicker](/guide/components/color-picker.html) 组件和文档，优化弹层定位与显隐行为：弹层定位由 `bottom` 调整为 `bottomLeft`，避免面板与触发元素错位；新增 `keyboard` 键盘支持；`showDelay` / `hideDelay` 调整为立即显示与隐藏
 - 优化并更新 [文本省略 Ellipsis](/guide/components/ellipsis.html) 组件，过渡动画时长由 `200ms` 对齐为默认 `100ms`
 - 组件库及文档代码优化

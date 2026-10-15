@@ -266,9 +266,10 @@ onMounted(() => {
   if (imageRef.value) imageRef.value.addEventListener('load', renderQRCode)
 })
 // 图标需先加载完成才能绘制与挖空：以加载态触发重绘，并在地址变更时中止上一次加载
+// 服务端无 Image 全局，跳过加载（图标节点由客户端挂载后补齐，与首帧渲染一致，不会引起水合失配）
 watchEffect((onCleanup) => {
   const src = props.icon
-  if (!src) {
+  if (!src || typeof window === 'undefined') {
     iconImage.value = null
     return
   }
@@ -384,9 +385,11 @@ defineExpose({
 </template>
 <style lang="less" scoped>
 .qr-code-wrap {
-  // 状态遮罩配色，可在外部（祖先元素或 :root）重新声明同名变量覆盖
-  --qr-code-mask-bg: rgba(255, 255, 255, 0.96);
-  --qr-code-mask-color: rgba(0, 0, 0, 0.88);
+  // 状态遮罩配色：底色作用于整个遮罩（可为半透明色，让二维码在遮罩下隐约透出），文案色仅作用于 expiredText / scannedText
+  // （loading 指示符与「点击刷新」按钮为 Spin / Button，沿用各自主题色）
+  // 变量声明在组件根元素上，祖先元素的同名声明会被遮蔽，覆盖需作用于组件自身（如内联样式）
+  --qr-code-mask-bg-color: rgba(255, 255, 255, 0.96);
+  --qr-code-mask-text-color: rgba(0, 0, 0, 0.88);
   position: relative;
   display: inline-flex;
   justify-content: center;
@@ -416,9 +419,9 @@ defineExpose({
     align-items: center;
     width: 100%;
     height: 100%;
-    color: var(--qr-code-mask-color);
+    color: var(--qr-code-mask-text-color);
     text-align: center;
-    background: var(--qr-code-mask-bg);
+    background: var(--qr-code-mask-bg-color);
     .qr-code-expired,
     .qr-code-scanned {
       margin: 0;

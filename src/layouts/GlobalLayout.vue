@@ -1,45 +1,56 @@
 <script setup lang="ts">
-import { ref, onMounted, h, computed } from 'vue'
-import { useRoute, RouterLink } from 'vue-router'
-import { routes } from '@/router'
-import { toggleDark, useMutationObserver } from 'components/utils'
-import type { ItemType, MenuInfo } from 'vue-amazing-ui'
-const route = useRoute() // 返回当前路由地址，相当于在模板中使用$route
+import { ref, onMounted, watch, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { toggleDark, useMutationObserver, useWindowWidth } from 'components/utils'
+import SideMenu from './components/SideMenu.vue'
+import type { SideMenuSize } from './components/SideMenu.vue'
+import type { Scrollbar } from 'vue-amazing-ui'
+const route = useRoute() // 返回当前路由地址，相当于在模板中使用 $route
 const themeDark = ref<boolean>(false)
 const html = document.documentElement
 onMounted(() => {
   themeDark.value = html.classList.contains('dark')
-  if (!themeDark.value) {
-    // 默认开启暗黑模式
-    // toggleDark()
-  }
 })
+// 只关心主题类名的变化：toggleDark 还会同时改写 html.style.colorScheme，
+// 不限定属性名会让每次主题切换触发两次回调
 useMutationObserver(
   html,
   () => {
     themeDark.value = html.classList.contains('dark')
   },
-  { attributes: true }
+  { attributeFilter: ['class'] }
 )
-const menus = ref<any>(routes[0].children)
-const menuItems = computed<ItemType[]>(() =>
-  menus.value.map((menu: any) => ({
-    key: menu.name,
-    label: h(RouterLink, { to: menu.path }, () => `${menu.meta.title} ${menu.name}`),
-    title: menu.meta.title
-  }))
+const contentScrollRef = ref<InstanceType<typeof Scrollbar> | null>(null)
+// 路由变化后把内容区滚动位置复位：滚动由内容区的 Scrollbar 容器承载，
+// router 的 scrollBehavior 只作用于 window，管不到它
+watch(
+  () => route.fullPath,
+  () => {
+    contentScrollRef.value?.scrollTo({ top: 0 })
+  },
+  { flush: 'post' }
 )
-const current = ref<string[]>([route.name as string])
-const onClick = (e: MenuInfo) => {
-  // title 为构造 items 时透传的自定义字段
-  console.log(`${(e.item as { title?: string })?.title} ${e.key}`)
-  console.log(route.name)
-}
-const routerViewRef = ref<HTMLDivElement | null>(null)
+// 侧栏分档：档位与库内 Col 断点口径一致（xl ≥1200 / lg ≥992 / md ≥768 / sm 更窄），
+// 宽度与菜单密度（字号、行高、内边距、文案详略）一起变化，取值见 SideMenu.vue
+const ASIDE_WIDTH: Record<SideMenuSize, number> = { xl: 232, lg: 204, md: 176, sm: 152 }
+const viewportWidth = useWindowWidth()
+const asideSize = computed<SideMenuSize>(() => {
+  const width = viewportWidth.value
+  if (width >= 1200) return 'xl'
+  if (width >= 992) return 'lg'
+  if (width >= 768) return 'md'
+  return 'sm'
+})
+const asideWidth = computed<number>(() => ASIDE_WIDTH[asideSize.value])
 </script>
 <template>
   <Row style="width: 100%">
-    <Col :xs="5" :xl="4" style="position: relative">
+    <!--
+      侧栏宽度按视口分档（232 / 204 / 176 / 152），档位随菜单密度一起变化，见上方 asideSize。
+      宽度写在 `width` 上、flex-basis 交由 `0 0 auto` 遵循：flex-basis 直接写像素值会被 min-width: auto
+      的 min-content（菜单最长项）撑开，`width` 则能提供 specified size suggestion 解除该限制
+    -->
+    <Col :flex="'0 0 auto'" :style="{ position: 'relative', width: `${asideWidth}px` }">
       <Switch
         class="switch-theme"
         v-model:value="themeDark"
@@ -90,26 +101,22 @@ const routerViewRef = ref<HTMLDivElement | null>(null)
           </svg>
         </template>
       </Switch>
-      <Scrollbar style="height: 100vh">
-        <Menu
-          style="min-height: 100vh"
-          v-model:selectedKeys="current"
-          mode="inline"
-          :theme="themeDark ? 'dark' : 'light'"
-          :items="menuItems"
-          @click="onClick"
-        />
-      </Scrollbar>
+      <SideMenu :theme="themeDark ? 'dark' : 'light'" :size="asideSize" />
     </Col>
-    <Col :xs="19" :xl="20">
-      <Scrollbar style="height: 100vh">
-        <div class="router-view" ref="routerViewRef">
+    <Col :flex="'1 1 0%'" style="min-width: 0">
+      <!--
+        不开 x-scrollable：该模式下 Scrollbar 会把内容层内联设为 `width: fit-content`，
+        内容比容器宽时按 max-content 撑开（无上限），页面内所有 `width: 100%` 的组件会跟着变宽。
+        这里要求内容宽度始终限制在内容区宽度内（溢出由容器自身承载），故保持默认
+      -->
+      <Scrollbar ref="contentScrollRef" style="height: 100vh">
+        <div class="router-view">
           <RouterView v-slot="{ Component }">
             <Transition name="fade" mode="out-in">
               <component :is="Component" />
             </Transition>
           </RouterView>
-          <BackTop v-if="!['BackTop', 'ConfigProvider'].includes(route.name as string)" />
+          <BackTop v-if="route.meta.backTop !== false" />
         </div>
       </Scrollbar>
     </Col>

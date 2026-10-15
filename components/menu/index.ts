@@ -25,7 +25,7 @@ export type {
   SubMenuType,
   MenuItemGroupType,
   MenuDividerType,
-  SelectInfo
+  MenuSelectInfo
 } from './interface'
 
 // 子组件经本地常量再导出（同 layout/index.ts）：直接写 `export { MenuItem }` 属纯 re-export，

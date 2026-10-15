@@ -689,6 +689,104 @@ const state = reactive({
 
 :::
 
+## 固定高度下的等高
+
+`align="stretch"` 把**同一行内**的列拉齐（交叉轴 `align-items: stretch`），拉的是「行内最高内容」的高度而不是容器高度：各列内容都不超过容器高时，它们一起等于容器高度；一旦有一列内容超过容器高，各列会被它拉高并**溢出容器**：
+
+<br/>
+
+<Row class="row" align="stretch" justify="space-around" style="height: 160px; background: rgba(128, 128, 128, 0.08);">
+  <Col :span="4">
+    <p>col-4</p>
+  </Col>
+  <Col :span="4">
+    <p class="height-80">col-4</p>
+  </Col>
+  <Col :span="4">
+    <p>col-4</p>
+  </Col>
+</Row>
+
+<br/>
+
+_↑ 三列内容都未超过容器高：各列等高_
+
+<br/>
+
+<Row class="row" align="stretch" justify="space-around" style="height: 160px; margin-bottom: 88px; background: rgba(128, 128, 128, 0.08);">
+  <Col :span="4">
+    <p>col-4</p>
+  </Col>
+  <Col :span="4">
+    <p class="height-200">col-4</p>
+  </Col>
+  <Col :span="4">
+    <p>col-4</p>
+  </Col>
+</Row>
+
+<br/>
+
+_↑ 中间列内容超过容器高：该列把同行其余列一并拉高，并溢出容器（灰色区域即容器高度）_
+
+::: tip 提示
+要让列内元素填满**固定高度**的容器，不要依赖 `stretch` 从容器高度向下传导：给列显式高度（`height: 100%`），或把滚动容器放进列内部 —— 由列承担高度、由滚动容器承担溢出。
+:::
+
+::: details Show Code
+
+```vue
+<template>
+  <Row class="row" align="stretch" justify="space-around" style="height: 160px; background: rgba(128, 128, 128, 0.08);">
+    <Col :span="4">
+      <p>col-4</p>
+    </Col>
+    <Col :span="4">
+      <p class="height-80">col-4</p>
+    </Col>
+    <Col :span="4">
+      <p>col-4</p>
+    </Col>
+  </Row>
+  <Row class="row" align="stretch" justify="space-around" style="height: 160px; margin-bottom: 88px; background: rgba(128, 128, 128, 0.08);">
+    <Col :span="4">
+      <p>col-4</p>
+    </Col>
+    <Col :span="4">
+      <p class="height-200">col-4</p>
+    </Col>
+    <Col :span="4">
+      <p>col-4</p>
+    </Col>
+  </Row>
+</template>
+<style lang="less" scoped>
+.row {
+  .grid-col {
+    min-height: 30px;
+    color: #fff;
+    text-align: center;
+    border-radius: 0;
+    padding: 16px 0;
+    background: #1677ff;
+  }
+  :deep(> :nth-child(2n + 1)) {
+    background: #1677ffbf;
+  }
+}
+.height-80 {
+  height: 80px;
+  line-height: 80px;
+}
+.height-200 {
+  height: 200px;
+  line-height: 200px;
+}
+</style>
+```
+
+:::
+
 ## flex 填充
 
 <Divider orientation="left">Percentage columns</Divider>
@@ -1014,6 +1112,10 @@ const state = reactive({
 .height-120 {
   height: 120px;
   line-height: 120px;
+}
+.height-200 {
+  height: 200px;
+  line-height: 200px;
 }
 </style>
 

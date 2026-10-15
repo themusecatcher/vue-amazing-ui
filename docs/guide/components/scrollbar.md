@@ -412,7 +412,8 @@ _可通过设置 `size` 属性，自定义相关 `--scrollbar` 变量进行各�
 | :-- | :-- | :-- |
 | scrollTo | 滚动到指定坐标位置 | (options: { left?: number, top?: number, behavior?: [ScrollBehavior](#scrollbehavior-type) })=> void \| (x: number, y: number) => void |
 | scrollBy | 滚动一段特定距离 | (options: { left?: number, top?: number, behavior?: [ScrollBehavior](#scrollbehavior-type) })=> void \| (x: number, y: number) => void |
-| getScrollData | 获取滚动元素数据 | () => { scrollWidth: number\, clientWidth: number, scrollHeight: number\, clientHeight: number } |
+| getScrollData | 获取滚动元素数据 | () => { scrollTop: number\, scrollWidth: number\, clientWidth: number, scrollHeight: number\, clientHeight: number } |
+| scrollElement | 内部滚动容器元素，可用于指定需要监听滚动的容器（如 `BackTop` 的 `listenTo`）等场景 | HTMLElement \| null |
 
 ### ScrollBehavior Type
 

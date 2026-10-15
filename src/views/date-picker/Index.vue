@@ -455,8 +455,10 @@ function onStartOpenChange(open: boolean): void {
     <DatePicker v-model:value="showNowValue" type="datetime" :show-now="false" placeholder="请选择日期时间" />
     <h2 class="mt30 mb10">事件</h2>
     <p class="mb10">
-      单选形态绑定 <code>change</code> <code>openChange</code> <code>panelChange</code> <code>focus</code>
-      <code>blur</code>，范围形态绑定 <code>change</code> <code>calendarChange</code>，带时间的形态还可绑定
+      单选形态绑定
+      <code>change</code
+      >、<code>openChange</code>、<code>panelChange</code>、<code>focus</code>、<code>blur</code>，范围形态绑定
+      <code>change</code>、<code>calendarChange</code>，带时间的形态还可绑定
       <code>ok</code>；各事件的参数都会打印到控制台
     </p>
     <Space vertical>

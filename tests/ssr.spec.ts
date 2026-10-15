@@ -73,6 +73,10 @@ describe('SSR 渲染安全性', () => {
     await expect(renderComponent(QRCode, { value: 'https://example.com' })).resolves.toBeTruthy()
     // canvas 类型：Node 下无 document，不得调用依赖 canvas 的 qrcode.toCanvas
     await expect(renderComponent(QRCode, { value: 'https://example.com', type: 'canvas' })).resolves.toBeTruthy()
+    // icon 类型：Node 下无 Image 全局，不得在 setup 阶段构造 Image（图标加载交由客户端进行）
+    await expect(
+      renderComponent(QRCode, { value: 'https://example.com', icon: 'https://example.com/logo.svg' })
+    ).resolves.toBeTruthy()
     await expect(renderComponent(Tag, { value: ['tag'] })).resolves.toBeTruthy()
     await expect(renderComponent(HookProbe)).resolves.toBeTruthy()
   })

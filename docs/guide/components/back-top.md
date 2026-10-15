@@ -311,7 +311,23 @@ _通过 `zIndex` 调整按钮层级；按钮上的气泡为浮层（默认 1070�
 
 :::
 
-## 自定义监听目标
+## 监听目标
+
+_不指定 `listenTo` 时，`BackTop` 会自动查找距离它最近的可滚动祖先元素，并监听其滚动_
+
+监听目标在组件**挂载时解析一次**（显式传入的 `listenTo` 属性值变化时会重新解析），之后不会因为容器滚动能力变化而重新绑定。
+
+<br/>
+
+按 `BackTop` 与滚动容器的**相对位置**，分三种情况：
+
+- **`BackTop` 位于滚动容器的内容区内**：无需任何配置，会自动命中该滚动祖先（下方「监听 `Scrollbar`」用例即此形态）；
+- **`BackTop` 位于滚动容器之外（如兄弟节点）**：必须显式传入 `listenTo`，否则会沿祖先链向上找到页面滚动（`window`），或找不到目标而告警；
+- **页面由 `window` 滚动**：保持默认即可；若页面中存在实际不产生滚动的容器，建议显式指定 `listenTo`。
+
+::: warning 注意
+显式传入的 `listenTo` 在挂载时必须已经存在；未传时若命中的容器当下并不产生滚动（内容不足、高度为 `auto` 等）而页面实际由 `window` 滚动，按钮也不会显示 —— 这两种情况请显式传入确实可滚动的目标（也可用函数形式延迟取目标，或取 [滚动条 Scrollbar](./scrollbar.md) 实例的 `scrollElement`）。
+:::
 
 _自定义设定监听哪个元素来触发 `BackTop`_
 
@@ -320,7 +336,7 @@ _自定义设定监听哪个元素来触发 `BackTop`_
 <BackTop :listen-to="scrollContainer" :bottom="340" :visibility-height="10">
   <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px"> 指定目标 </div>
 </BackTop>
-<div ref="scrollContainer" style="width: 600px; overflow: auto; height: 100px; line-height: 1.57">
+<div ref="scrollContainer" style="width: 100%; overflow: auto; height: 100px; line-height: 1.57">
   这块应该写一个有意思的笑话。<br />
   这块应该写一个有意思的笑话。<br />
   这块应该写一个有意思的笑话。<br />
@@ -339,7 +355,7 @@ _自动监听 `Scrollbar` 来触发 `BackTop`_
 
 <br/>
 
-<Scrollbar style="width: 600px; height: 100px">
+<Scrollbar style="width: 100%; height: 100px">
   <BackTop :bottom="340" :right="260" :visibility-height="10">
     <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
       监听 Scrollbar
@@ -378,7 +394,7 @@ const scrollContainer = ref<HTMLDivElement>()
   <BackTop :listen-to="scrollContainer" :bottom="340" :visibility-height="10">
     <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px"> 指定目标 </div>
   </BackTop>
-  <div ref="scrollContainer" style="width: 600px; overflow: auto; height: 100px; line-height: 1.57">
+  <div ref="scrollContainer" style="width: 100%; overflow: auto; height: 100px; line-height: 1.57">
     这块应该写一个有意思的笑话。<br />
     这块应该写一个有意思的笑话。<br />
     这块应该写一个有意思的笑话。<br />
@@ -391,7 +407,7 @@ const scrollContainer = ref<HTMLDivElement>()
     这块应该写一个有意思的笑话。<br />
   </div>
   <br />
-  <Scrollbar style="width: 600px; height: 100px">
+  <Scrollbar style="width: 100%; height: 100px">
     <BackTop :bottom="340" :right="260" :visibility-height="10">
       <div style="width: 200px; height: 40px; line-height: 40px; text-align: center; font-size: 14px">
         监听 Scrollbar
@@ -439,8 +455,8 @@ bottom | `BackTop` 距离页面底部的高度，单位 `px` | number &#124; str
 right | `BackTop` 距离页面右侧的宽度，单位 `px` | number &#124; string | 40
 zIndex | 设置 `BackTop` 的 `z-index` | number | 9
 visibilityHeight | 滚动时触发显示回到顶部的高度，单位 `px` | number | 180
-to | `BackTop` 渲染的容器节点，可选：元素标签名（例如 `body`）或者元素本身，下同 | string &#124; HTMLElement | 'body'
-listenTo | 监听滚动的元素，如果为 `undefined` 会监听距离最近的一个可滚动的祖先节点；支持标签名、元素、`Document` 或返回目标的函数 | string &#124; HTMLElement &#124; Document &#124; (() => HTMLElement &#124; Document) | undefined
+to | `BackTop` 渲染的容器节点，可选：CSS 选择器（例如 `body`）或者元素本身 | string &#124; HTMLElement | 'body'
+listenTo | 监听滚动的元素，如果为 `undefined` 会监听距离最近的一个可滚动的祖先节点；支持 CSS 选择器、元素、`Document` 或返回目标的函数 | string &#124; HTMLElement &#124; Document &#124; (() => HTMLElement &#124; Document) | undefined
 
 ## Slots
 

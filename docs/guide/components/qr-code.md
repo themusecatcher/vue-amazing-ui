@@ -18,12 +18,18 @@ import { QRCode } from 'vue-amazing-ui'
 import { MinusOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons-vue'
 const qrcodeRef = ref<InstanceType<typeof QRCode> | null>(null)
 const size = ref(160)
+const padding = ref(12)
+const formatPadding = (value: number) => `${value}px`
 const value = ref('hello world')
 const color = ref('#FF6900')
 const bgColor = ref('#00000030')
 const segmentedOptions = ['L', 'M', 'Q', 'H']
 const level = ref('L')
 const status = ref('expired')
+const maskStyle = {
+  '--qr-code-mask-bg-color': 'rgba(255, 255, 255, 0.88)',
+  '--qr-code-mask-text-color': '#faad14'
+}
 const decline = () => {
   size.value = size.value - 10
   if (size.value < 48) {
@@ -102,7 +108,7 @@ const value = ref('hello world')
 
 ## 不同的状态
 
-_通过 `status` 控制二维码状态，可选 `active` `expired` `loading` `scanned` 四个取值；`expired` 状态点击「点击刷新」时触发 `refresh` 事件_
+_通过 `status` 控制二维码状态，可选 `active`、`expired`、`loading`、`scanned` 四个取值；`expired` 状态点击「点击刷新」时触发 `refresh` 事件_
 
 <br/>
 
@@ -144,9 +150,41 @@ const refreshStatus = () => {
 
 :::
 
+## 自定义遮罩配色
+
+_状态遮罩的配色由 `CSS` 变量 `--qr-code-mask-bg-color`（遮罩底色）和 `--qr-code-mask-text-color`（遮罩内文案颜色）控制，在组件上重新声明同名变量即可覆盖_
+
+`--qr-code-mask-text-color` 只作用于 `expiredText` / `scannedText` 文案；`loading` 指示符与「点击刷新」按钮是 `Spin` / `Button` 组件，沿用各自主题色。遮罩底色支持半透明色，可让二维码在遮罩下隐约透出（透明度越高，遮罩内文案的可读性越低）。
+
+<br/>
+
+<Space>
+  <QRCode value="https://themusecatcher.blog.csdn.net" status="expired" />
+  <QRCode :style="maskStyle" value="https://themusecatcher.blog.csdn.net" status="expired" />
+</Space>
+
+::: details Show Code
+
+```vue
+<script lang="ts" setup>
+const maskStyle = {
+  '--qr-code-mask-bg-color': 'rgba(255, 255, 255, 0.88)',
+  '--qr-code-mask-text-color': '#faad14'
+}
+</script>
+<template>
+  <Space>
+    <QRCode value="https://themusecatcher.blog.csdn.net" status="expired" />
+    <QRCode :style="maskStyle" value="https://themusecatcher.blog.csdn.net" status="expired" />
+  </Space>
+</template>
+```
+
+:::
+
 ## 自定义渲染类型
 
-_通过设置 `type` 自定义渲染结果，可选 `svg` `canvas` `image` 三种类型_
+_通过设置 `type` 自定义渲染结果，可选 `svg`、`canvas`、`image` 三种类型_
 
 <br/>
 
@@ -289,7 +327,26 @@ const downloadQRCode = () => {
 
 ## 纠错比例
 
-<Space>
+_纠错等级也叫纠错率，就是指二维码可以被遮挡后还能正常扫描，而这个能被遮挡的最大面积就是纠错率。_
+
+_通常情况下二维码分为 `4` 个纠错级别：_
+
+- **L级** 可纠正约 `7%` 错误
+- **M级** 可纠正约 `15%` 错误
+- **Q级** 可纠正约 `25%` 错误
+- **H级** 可纠正约 `30%` 错误
+
+并不是所有位置都可以缺损，像最明显的三个角上的方框，直接影响初始定位。中间零散的部分是内容编码，可以容忍缺损。当内容很少、最低版本即可容纳最高等级时，四个等级会生成完全相同的图案；内容增多后，选用不同等级生成的图案会有所不同。
+
+传入的 `errorLevel` 是**最低等级**：当内容较少、提升等级不会增大二维码尺寸时，编码器会自动使用更高的纠错等级，因此内容越短实际纠错能力通常越强。
+
+设置 `icon` 时建议使用 `M` 及以上等级（开发环境会对 `L` 等级给出提示），避免图标遮挡点阵后影响识别。
+
+> 有关更多信息，可参阅相关资料：[https://www.qrcode.com/zh/about/error_correction](https://www.qrcode.com/zh/about/error_correction.html)
+
+<br/>
+
+<Space vertical>
   <QRCode value="https://themusecatcher.blog.csdn.net" :error-level="level" />
   <Segmented v-model:value="level" :options="segmentedOptions" />
 </Space>
@@ -303,7 +360,7 @@ const segmentedOptions = ['L', 'M', 'Q', 'H']
 const level = ref('L')
 </script>
 <template>
-  <Space>
+  <Space vertical>
     <QRCode value="https://themusecatcher.blog.csdn.net" :error-level="level" />
     <Segmented v-model:value="level" :options="segmentedOptions" />
   </Space>
@@ -362,14 +419,10 @@ _通过设置 `padding` 调整容器内边距，二维码绘制区随内边距�
 
 <Space vertical>
   <Space align="center">
-    <Slider v-model:value="padding" :min="0" :max="48" :step="4" :width="260" />
-    <span>padding = {{ padding }} px</span>
+    <span>padding</span>
+    <Slider v-model:value="padding" :min="0" :max="48" :step="4" :width="260" :format-tooltip="formatPadding" />
   </Space>
-  <Space>
-    <QRCode value="https://themusecatcher.blog.csdn.net" :padding="0" />
-    <QRCode value="https://themusecatcher.blog.csdn.net" :padding="padding" />
-    <QRCode value="https://themusecatcher.blog.csdn.net" :padding="48" />
-  </Space>
+  <QRCode value="https://themusecatcher.blog.csdn.net" :padding="padding" />
 </Space>
 
 :::: details Show Code
@@ -378,18 +431,15 @@ _通过设置 `padding` 调整容器内边距，二维码绘制区随内边距�
 <script lang="ts" setup>
 import { ref } from 'vue'
 const padding = ref(12)
+const formatPadding = (value: number) => `${value}px`
 </script>
 <template>
   <Space vertical>
     <Space align="center">
-      <Slider v-model:value="padding" :min="0" :max="48" :step="4" :width="260" />
-      <span>padding = {{ padding }} px</span>
+      <span>padding</span>
+      <Slider v-model:value="padding" :min="0" :max="48" :step="4" :width="260" :format-tooltip="formatPadding" />
     </Space>
-    <Space>
-      <QRCode value="https://themusecatcher.blog.csdn.net" :padding="0" />
-      <QRCode value="https://themusecatcher.blog.csdn.net" :padding="padding" />
-      <QRCode value="https://themusecatcher.blog.csdn.net" :padding="48" />
-    </Space>
+    <QRCode value="https://themusecatcher.blog.csdn.net" :padding="padding" />
   </Space>
 </template>
 ```
@@ -457,28 +507,3 @@ const value = ref('hello world')
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 | toDataURL | 获取二维码图片（`dataURL`），可传入 `type` 与 `quality` 参数（如 `toDataURL('image/jpeg', 0.8)`） | (type?: string, quality?: number) => string |
-
-## FAQ
-
-### 关于纠错等级
-
-纠错等级也叫纠错率，就是指二维码可以被遮挡后还能正常扫描，而这个能被遮挡的最大面积就是纠错率。
-
-通常情况下二维码分为 `4` 个纠错级别：`L级` 可纠正约 `7%` 错误、`M级` 可纠正约 `15%` 错误、`Q级` 可纠正约 `25%` 错误、`H级` 可纠正约 `30%` 错误。并不是所有位置都可以缺损，像最明显的三个角上的方框，直接影响初始定位。中间零散的部分是内容编码，可以容忍缺损。当内容很少、最低版本即可容纳最高等级时，四个等级会生成完全相同的图案；内容增多后，选用不同等级生成的图案会有所不同。
-
-传入的 `errorLevel` 是**最低等级**：当内容较少、提升等级不会增大二维码尺寸时，编码器会自动使用更高的纠错等级，因此内容越短实际纠错能力通常越强。
-
-设置 `icon` 时建议使用 `M` 及以上等级（开发环境会对 `L` 等级给出提示），避免图标遮挡点阵后影响识别。
-
-> 有关更多信息，可参阅相关资料：[https://www.qrcode.com/zh/about/error_correction](https://www.qrcode.com/zh/about/error_correction.html)
-
-### 自定义遮罩配色
-
-状态遮罩的配色由 CSS 变量控制，在祖先元素（如 `:root`）重新声明同名变量即可覆盖：
-
-```css
-:root {
-  --qr-code-mask-bg: rgba(0, 0, 0, 0.06);
-  --qr-code-mask-color: #1677ff;
-}
-```
