@@ -12,12 +12,13 @@
 
 ## <VersionDateTag date="2026-10-16">2.14.2</VersionDateTag>
 
-- 优化 [回到顶部 BackTop](/guide/components/back-top.html) 的 `listenTo` 属性：字符串参数改为按 CSS 选择器解析（元素标签名本身就是合法选择器，原写法仍然有效）
-- 新增 [滚动条 Scrollbar](/guide/components/scrollbar.html) 实例属性 `scrollElement`，可获取内部滚动容器元素（便于为 `BackTop` 等指定滚动监听目标）
-- 更新 [布局 Layout](/guide/components/layout.html) 文档：补充 CSS 变量清单与浅色侧边栏底色的覆盖示例
+- 优化 [回到顶部 BackTop](/guide/components/back-top.html) 的 `listenTo` 属性：字符串参数改为按 `CSS` 选择器解析（元素标签名本身就是合法选择器，原写法仍然有效）
+- 新增 [滚动条 Scrollbar](/guide/components/scrollbar.html) 实例属性 `scrollElement`，可获取内部滚动容器元素（便于为 `BackTop` 等指定滚动监听目标）；文档同步修正 `getScrollData` 的类型签名（补全漏标的 `scrollTop`）
+- 优化 [菜单 Menu](/guide/components/menu.html) 组件，将 `select` / `deselect` 事件参数类型 `SelectInfo` 调整为 `MenuSelectInfo`
+- 更新 [布局 Layout](/guide/components/layout.html) 文档：补充 `CSS` 变量清单与浅色侧边栏底色的覆盖示例
 - 更新 [栅格 Grid](/guide/components/grid.html) 文档：补充固定高度容器下 `align="stretch"` 的生效边界与正确写法
 - 更新 [回到顶部 BackTop](/guide/components/back-top.html) 文档：补充与容器内滚动组合时的监听目标选取说明
-- 更新贡献者文档：补充演示页路由 `meta.backTop` 关闭外壳回到顶部的约定
+- 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-10-15">2.14.1</VersionDateTag>
 
