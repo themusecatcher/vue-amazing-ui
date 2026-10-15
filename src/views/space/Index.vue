@@ -86,7 +86,7 @@ const customGapSize = ref(16)
       </div>
     </div>
     <h2 class="mt30 mb10">自动换行</h2>
-    <Space :gap="[8, 16]" style="width: 600px">
+    <Space :gap="[8, 16]" style="width: 100%">
       <template v-for="n in 16" :key="n">
         <Button type="primary">Button</Button>
       </template>

@@ -1363,6 +1363,34 @@ trigger | 自定义收起触发器，存在时优先于 `trigger` 属性 | v-slo
 collapse | 展开-收起时的回调函数，点击 trigger 与响应式反馈均可触发 | (collapsed: boolean, type: 'clickTrigger' &#124; 'responsive') => void
 breakpoint | 触发响应式布局断点时的回调，`broken` 为 `true` 表示视窗宽度已低于断点 | (broken: boolean) => void
 
+## CSS 变量
+
+各布局组件的外观由下述 `CSS` 变量控制，在组件或其祖先元素上重新声明同名变量即可覆盖：
+
+| 变量 | 说明 | 默认值 |
+| :-- | :-- | :-- |
+| `--layout-background` | `Layout` 背景色 | `#f5f5f5` |
+| `--layout-color` | `Layout` 文本颜色 | `rgba(0, 0, 0, 0.88)` |
+| `--layout-header-background` | `LayoutHeader` 背景色 | `#001529` |
+| `--layout-header-color` | `LayoutHeader` 文本颜色 | `rgba(0, 0, 0, 0.88)` |
+| `--layout-footer-background` | `LayoutFooter` 背景色 | `#f5f5f5` |
+| `--layout-footer-color` | `LayoutFooter` 文本颜色 | `rgba(0, 0, 0, 0.88)` |
+| `--layout-sider-background` | `LayoutSider` 深色主题背景色 | `#001529` |
+| `--layout-sider-light-background` | `LayoutSider` 浅色主题背景色 | `#fff` |
+| `--layout-sider-trigger-color` | `LayoutSider` 深色主题收起触发器的图标颜色 | `#fff` |
+| `--layout-sider-trigger-background` | `LayoutSider` 深色主题收起触发器的背景色 | `#002140` |
+| `--layout-sider-light-trigger-color` | `LayoutSider` 浅色主题收起触发器的图标颜色 | `rgba(0, 0, 0, 0.88)` |
+| `--layout-sider-light-trigger-background` | `LayoutSider` 浅色主题收起触发器的背景色 | `#fff` |
+
+**关于「浅色侧边栏是白底、`Layout` 是浅灰底」**：`Layout` 默认底色为 `#f5f5f5`，而 `theme="light"` 的 `LayoutSider` 默认底色为 `#fff`，两者并不相同。若需要视觉上完全统一，可覆盖其中一侧：
+
+```css
+/* 让浅色侧边栏跟随 Layout 的底色 */
+.layout-sider-wrap.layout-sider-light {
+  --layout-sider-light-background: #f5f5f5;
+}
+```
+
 <style lang="less" scoped>
 // 承载「整页」形态的用例，限高并允许内部滚动，避免撑高文档页面
 .demo-container {

@@ -5,7 +5,7 @@ function onClose(e: Event) {
 }
 </script>
 <template>
-  <div style="width: 425px">
+  <div style="width: 100%">
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Alert message="Default Text" />
