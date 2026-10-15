@@ -82,6 +82,6 @@ export interface MenuTitleInfo {
 }
 
 /** 选中回调携带的信息 */
-export interface SelectInfo extends MenuInfo {
+export interface MenuSelectInfo extends MenuInfo {
   selectedKeys: MenuKey[] // 变化后的选中项 key 数组
 }

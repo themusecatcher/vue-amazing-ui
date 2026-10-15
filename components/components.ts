@@ -156,7 +156,7 @@ export type {
   SubMenuType,
   MenuItemGroupType,
   MenuDividerType,
-  SelectInfo
+  MenuSelectInfo
 } from './menu'
 export { default as Menu, MenuDivider, MenuItem, MenuItemGroup, MenuSubMenu } from './menu'
 

@@ -1752,7 +1752,7 @@ const submenuItems = computed<ItemType[]>(() => [
 | item | 触发项的原始配置 | [SubMenuType](#submenutype-type) &#124; [MenuItemType](#menuitemtype-type) | — |
 | domEvent | 触发的原生事件 | MouseEvent &#124; KeyboardEvent | — |
 
-### SelectInfo Type
+### MenuSelectInfo Type
 
 <br/>
 
@@ -1856,8 +1856,8 @@ const submenuItems = computed<ItemType[]>(() => [
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 | click | 点击菜单项时调用 | (info: [MenuInfo](#menuinfo-type)) => void |
-| select | 被选中时调用 | (info: [SelectInfo](#selectinfo-type)) => void |
-| deselect | 取消选中时调用，仅在 `multiple` 生效 | (info: [SelectInfo](#selectinfo-type)) => void |
+| select | 被选中时调用 | (info: [MenuSelectInfo](#menuselectinfo-type)) => void |
+| deselect | 取消选中时调用，仅在 `multiple` 生效 | (info: [MenuSelectInfo](#menuselectinfo-type)) => void |
 | openChange | 子菜单展开 / 收起时调用 | (openKeys: [MenuKey](#menukey-type)[]) => void |
 | titleClick | 点击子菜单标题时调用（`MenuSubMenu` 的事件，需在 `<MenuSubMenu>` 上监听，而非 `<Menu>`） | (info: [MenuTitleInfo](#menutitleinfo-type)) => void |
 
