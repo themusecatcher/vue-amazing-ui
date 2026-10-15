@@ -368,6 +368,15 @@ watch(
     displayedValue.value = to
   }
 )
+// modes 运行时变动使当前模式失效时，收敛到首个可用模式：否则面板会停留在已被移除的模式上
+// （输入框组与模式标签都还是旧模式）。空列表无可收敛目标，保持现状
+watch(
+  () => props.modes,
+  (modes) => {
+    if (!modes.length || modes.includes(displayedMode.value)) return
+    displayedMode.value = modes[0]
+  }
+)
 watch(
   () => [displayedMode.value, displayedValueArr.value],
   () => {
@@ -595,12 +604,13 @@ function renderLabelContent(): VNodeChild {
   return color ?? ''
 }
 function onUpdateMode(): void {
-  const currentModeIndex = props.modes.findIndex((mode) => mode === displayedMode.value)
-  if (currentModeIndex !== -1) {
-    displayedMode.value = props.modes[(currentModeIndex + 1) % props.modes.length]
-  } else {
-    displayedMode.value = 'rgb'
-  }
+  const { modes } = props
+  // 无可切换的模式：保持现状
+  if (!modes.length) return
+  const currentModeIndex = modes.findIndex((mode) => mode === displayedMode.value)
+  // 当前模式不在 modes 中时索引为 -1，取模后正好落到首个可用模式；
+  // 若写死 'rgb'，使用方自定义 modes 不含 rgb 时切换器会停在不可用模式上、点击无反应
+  displayedMode.value = modes[(currentModeIndex + 1) % modes.length]
 }
 function handleColorInputChange(e: Event): void {
   const target = e.target as HTMLInputElement
@@ -959,7 +969,7 @@ function onClear() {
           <div class="color-picker-input">
             <div
               class="color-picker-input-mode"
-              :style="{ cursor: modes.length === 1 ? '' : 'pointer' }"
+              :style="{ cursor: modes.length <= 1 ? '' : 'pointer' }"
               @click="onUpdateMode"
             >
               {{ displayedModeComputed }}
@@ -990,12 +1000,14 @@ function onClear() {
             </div>
           </div>
           <div v-if="parsedSwatches.length" class="color-picker-swatches">
+            <!-- 色板可聚焦：Enter 选色与鼠标点击等效，保证键盘可达 -->
             <div
               tabindex="0"
               class="color-picker-swatch"
               v-for="(swatch, index) in parsedSwatches"
               :key="index"
               @click="onSwatch(swatch)"
+              @keydown.enter="onSwatch(swatch)"
             >
               <div class="color-picker-swatch-fill" :style="`background: ${swatch.legalValue};`"></div>
             </div>

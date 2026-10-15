@@ -13,7 +13,9 @@ import ColorPicker from 'components/color-picker/ColorPicker.vue'
  * - alpha 百分比输入越界时收敛到 `0 - 1`；
  * - 禁用态不展开面板；
  * - 自定义触发器插槽；
- * - 触发器元素的属性透传（浮层专属属性与事件不重复绑定）。
+ * - 触发器元素的属性透传（浮层专属属性与事件不重复绑定）；
+ * - 色板支持键盘 Enter 选色；
+ * - 动态 `modes` 下的模式切换与收敛（当前模式被移除时回落到首个可用模式）。
  *
  * 环境说明：happy-dom 无布局引擎，滑动条拖拽依赖的矩形测量与指针捕获需要桩。
  */
@@ -37,6 +39,16 @@ function stubRail(el: HTMLElement, rect: { left: number; width: number; height: 
 async function openPanel(): Promise<void> {
   document.querySelector<HTMLElement>('.color-picker-display')?.click()
   await wait(80)
+}
+
+/** 读取面板中的当前模式标签文字（如 RGB / HEXA） */
+function readModeLabel(): string {
+  return document.querySelector<HTMLElement>('.color-picker-input-mode')?.textContent?.trim() ?? ''
+}
+
+/** 点击模式标签，切换到下一个模式 */
+function clickModeLabel(): void {
+  document.querySelector<HTMLElement>('.color-picker-input-mode')?.click()
 }
 
 describe('ColorPicker', () => {
@@ -148,6 +160,119 @@ describe('ColorPicker', () => {
     swatches[2].click()
     await wait()
     expect(wrapper.emitted('update:value')?.slice(-1)[0]?.[0]).toBe('rgba(24, 160, 88, 1)')
+    wrapper.unmount()
+  })
+
+  it('色板支持键盘 Enter 选色（其他按键不选色）', async () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(ColorPicker, {
+      props: { value: 'rgba(0, 0, 0, 1)', swatches: ['#18A058'], showAlpha: false },
+      attachTo: document.body
+    })
+    await wait()
+    await openPanel()
+    const swatch = document.querySelector<HTMLElement>('.color-picker-swatch')
+    expect(swatch?.getAttribute('tabindex')).toBe('0')
+    // 非 Enter 按键不触发选色
+    swatch?.dispatchEvent(new KeyboardEvent('keydown', { key: 'a', bubbles: true }))
+    await wait()
+    expect(wrapper.emitted('update:value')).toBeUndefined()
+    // Enter 选色：与鼠标点击走同一写入路径
+    swatch?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
+    await wait()
+    expect(wrapper.emitted('update:value')?.slice(-1)[0]?.[0]).toBe('rgba(24, 160, 88, 1)')
+    wrapper.unmount()
+  })
+
+  it('当前模式在 modes 中时按列表循环切换', async () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(ColorPicker, {
+      props: { value: '#18A058', modes: ['rgb', 'hex', 'hsl'], showAlpha: false },
+      attachTo: document.body
+    })
+    await wait()
+    await openPanel()
+    // 初始模式由值的格式决定
+    expect(readModeLabel()).toBe('HEX')
+    clickModeLabel()
+    await wait()
+    expect(readModeLabel()).toBe('HSL')
+    clickModeLabel()
+    await wait()
+    expect(readModeLabel()).toBe('RGB')
+    clickModeLabel()
+    await wait()
+    // 走完一轮回绕到首个模式
+    expect(readModeLabel()).toBe('HEX')
+    wrapper.unmount()
+  })
+
+  it('当前模式被移出 modes 后，切换器落到首个可用模式', async () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(ColorPicker, {
+      // 值的格式为 rgb，而 modes 不含 rgb：初始按值的格式展示，点击切换器必须能脱离该模式
+      props: { value: 'rgba(0, 0, 0, 1)', modes: ['hex', 'hsl'], showAlpha: false },
+      attachTo: document.body
+    })
+    await wait()
+    await openPanel()
+    expect(readModeLabel()).toBe('RGB')
+    clickModeLabel()
+    await wait()
+    // 落到首个可用模式，而不是停在不存在的 rgb 上（否则切换器对该值完全失灵）
+    expect(readModeLabel()).toBe('HEX')
+    clickModeLabel()
+    await wait()
+    expect(readModeLabel()).toBe('HSL')
+    wrapper.unmount()
+  })
+
+  it('modes 运行时移除当前模式时自动收敛到首个可用模式', async () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(ColorPicker, {
+      props: { value: '#18A058', modes: ['rgb', 'hex'], showAlpha: false },
+      attachTo: document.body
+    })
+    await wait()
+    await openPanel()
+    expect(readModeLabel()).toBe('HEX')
+    // 移除当前模式：面板不应停留在已被移除的模式上
+    await wrapper.setProps({ modes: ['rgb', 'hsl'] })
+    await wait()
+    expect(readModeLabel()).toBe('RGB')
+    wrapper.unmount()
+  })
+
+  it('modes 变动但当前模式仍可用时保持当前模式', async () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(ColorPicker, {
+      props: { value: '#18A058', modes: ['rgb', 'hex'], showAlpha: false },
+      attachTo: document.body
+    })
+    await wait()
+    await openPanel()
+    expect(readModeLabel()).toBe('HEX')
+    // 增删其他模式不应打断用户当前所处的模式
+    await wrapper.setProps({ modes: ['hex', 'hsl'] })
+    await wait()
+    expect(readModeLabel()).toBe('HEX')
+    wrapper.unmount()
+  })
+
+  it('modes 为空数组时切换器保持现状且不崩溃', async () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(ColorPicker, {
+      props: { value: '#18A058', modes: [], showAlpha: false },
+      attachTo: document.body
+    })
+    await wait()
+    await openPanel()
+    expect(readModeLabel()).toBe('HEX')
+    clickModeLabel()
+    await wait()
+    // 无可切换目标：维持当前模式，不产生空模式
+    expect(readModeLabel()).toBe('HEX')
+    expect(document.querySelector<HTMLElement>('.color-picker-input-mode')?.style.cursor).toBe('')
     wrapper.unmount()
   })
 

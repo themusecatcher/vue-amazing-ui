@@ -113,6 +113,7 @@ function handleClear() {
       />
     </Space>
     <h2 class="mt30 mb10">预设色板</h2>
+    <p class="mb10">使用 <code>swatches</code> 设置预设色板，色板支持鼠标点击与键盘 <code>Enter</code> 选色</p>
     <ColorPicker :width="240" default-value="#ff6900" :swatches="swatches" @complete="handleComplele" />
     <h2 class="mt30 mb10">自定义触发器</h2>
     <p class="mb10">使用 <code>trigger</code> 插槽自定义触发器</p>

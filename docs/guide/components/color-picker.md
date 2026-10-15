@@ -279,6 +279,10 @@ function handleClear() {
 
 ## 预设色板
 
+_`swatches` 设置预设色板，色板支持鼠标点击与键盘 `Enter` 选色_
+
+<br/>
+
 <ColorPicker :width="240" default-value="#ff6900" :swatches="swatches" @complete="handleComplele" />
 
 :::: details Show Code
@@ -603,7 +607,7 @@ trigger | 自定义触发器 | v-slot:trigger="{ value, onClick, ref }"
 
 名称 | 说明 | 类型
 :-- | :-- | :--
-complete | 颜色完成改变后的回调（输入框提交和鼠标拖动结束时触发；点击色板、点击清除不触发） | (color: string) => void
+complete | 颜色完成改变后的回调（输入框提交和鼠标拖动结束时触发；点击色板、点击清除、原生取色器选色不触发） | (color: string) => void
 confirm | 点击确认按钮的回调 | (color: string) => void
 clear | 点击清除按钮的回调 | () => void
 
