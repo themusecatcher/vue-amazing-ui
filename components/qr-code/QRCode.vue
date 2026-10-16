@@ -4,6 +4,7 @@ import type { CSSProperties } from 'vue'
 import qrcodegen from './qrcodegen'
 import Spin from 'components/spin'
 import Button from 'components/button'
+import { warnUsage } from 'components/utils'
 
 export interface Props {
   value?: string // 需要编码为二维码的文本或地址
@@ -83,7 +84,7 @@ const modules = computed(() => {
     return { size: numCells, data }
   } catch (error) {
     // 内容超出二维码容量或纠错等级非法时降级为空渲染，避免 computed 抛错冒泡至渲染层导致整树崩溃
-    console.warn('[QRCode] 二维码编码失败：', error)
+    console.warn('[vue-amazing-ui] QRCode: 二维码编码失败', error)
     return null
   }
 })
@@ -247,7 +248,7 @@ const renderQRCode = () => {
       renderImage()
     }
   } catch (error) {
-    console.warn('[QRCode] 二维码绘制失败：', error)
+    console.warn('[vue-amazing-ui] QRCode: 二维码绘制失败', error)
   }
 }
 // 绘制依赖由 renderQRCode 内部读取的响应式数据自动追踪；type 需显式读取以覆盖类型切换
@@ -258,8 +259,8 @@ watchEffect(
   },
   { flush: 'post' }
 )
-if (import.meta.env.DEV && props.icon && props.errorLevel === 'L') {
-  console.warn('[vue-amazing-ui] QRCode 同时使用 icon 与 L 纠错等级会明显降低识别率，建议将 errorLevel 设为 M 及以上')
+if (props.icon && props.errorLevel === 'L') {
+  warnUsage('QRCode', '同时使用 icon 与 L 纠错等级会明显降低识别率，建议将 errorLevel 设为 M 及以上')
 }
 onMounted(() => {
   renderQRCode()
@@ -303,7 +304,7 @@ defineExpose({
       paint(canvas)
       return canvas.toDataURL(type, quality)
     } catch (error) {
-      console.warn('[QRCode] 二维码导出失败：', error)
+      console.warn('[vue-amazing-ui] QRCode: 二维码导出失败', error)
       return ''
     }
   }

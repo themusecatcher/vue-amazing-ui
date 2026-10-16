@@ -747,7 +747,7 @@ async function onCancel(key: string, e?: Event): Promise<void> {
       return
     }
   } catch (err) {
-    console.error('[Modal] onCancel error:', err) // 避免 unhandled rejection 导致取消流程静默中断
+    console.error('[vue-amazing-ui] Modal: onCancel 执行出错', err) // 避免 unhandled rejection 导致取消流程静默中断
     return
   }
   closeItem(key)
@@ -765,7 +765,7 @@ async function onOK(key: string, e?: MouseEvent): Promise<void> {
       return
     }
   } catch (err) {
-    console.error('[Modal] onOk error:', err) // 避免 unhandled rejection 导致 loading 卡死
+    console.error('[vue-amazing-ui] Modal: onOk 执行出错', err) // 避免 unhandled rejection 导致 loading 卡死
     return
   } finally {
     item.loading = false
@@ -788,7 +788,7 @@ async function onKnow(key: string, e?: MouseEvent): Promise<void> {
       return
     }
   } catch (err) {
-    console.error('[Modal] onKnow error:', err)
+    console.error('[vue-amazing-ui] Modal: onKnow 执行出错', err)
     return
   } finally {
     item.loading = false

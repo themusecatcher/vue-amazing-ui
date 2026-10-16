@@ -1,4 +1,7 @@
+import { warnUsage } from './warn'
+
 /** `rafTimeout` 返回的句柄：`id` 为当前挂起帧的 requestAnimationFrame ID，供 `cancelRaf` 取消 */
+
 export type AnimationFrameID = { id: number }
 
 /**
@@ -25,7 +28,7 @@ export function rafTimeout(fn: Function, delay: number = 0, interval: boolean = 
       try {
         fn() // 执行目标函数
       } catch (error) {
-        console.error('Error executing rafTimeout function:', error)
+        console.error('[vue-amazing-ui] rafTimeout: 回调执行出错', error)
       }
       if (interval) {
         // 间隔模式：以本帧为下一轮起点，继续排帧
@@ -51,7 +54,7 @@ export function cancelRaf(raf: AnimationFrameID): void {
   if (raf && typeof raf?.id === 'number') {
     cancelAnimationFrame(raf.id)
   } else {
-    console.warn('cancelRaf received an invalid id:', raf)
+    warnUsage('cancelRaf', `收到无效的 id：${raf}`)
   }
 }
 /**

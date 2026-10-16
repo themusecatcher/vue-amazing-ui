@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, createTextVNode, isVNode, useSlots, Comment, Fragment, Text } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { useMediaQuery, useMounted, useSlotsExist } from 'components/utils'
+import { useMediaQuery, useMounted, useSlotsExist, warnUsage } from 'components/utils'
 import DescriptionsItem from './descriptions-item'
 export interface Responsive {
   xs?: number // <576px 响应式栅格
@@ -181,8 +181,8 @@ const cells = computed<CellData[]>(() => {
   // 消费者在默认插槽中书写的注释节点不参与渲染，也不应触发「存在非 DescriptionsItem」的误告警
   const childNodes = flattenChildren(slots.default?.()).filter((node) => node.type !== Comment)
   const itemNodes = childNodes.filter((node) => node.type === DescriptionsItem)
-  if (import.meta.env.DEV && itemNodes.length !== childNodes.length) {
-    console.warn('[vue-amazing-ui] Descriptions 仅支持 DescriptionsItem 作为子节点，其余节点已被忽略')
+  if (itemNodes.length !== childNodes.length) {
+    warnUsage('Descriptions', '仅支持 DescriptionsItem 作为子节点，其余节点已被忽略')
   }
   return itemNodes.map((node, index) => {
     const itemProps = (node.props ?? {}) as Record<string, unknown>
@@ -223,8 +223,8 @@ const cells = computed<CellData[]>(() => {
 // 行末收口：未显式设置 span、或 span 超出本行剩余列数时，按本行剩余列数渲染；显式 span 未超出时保持原值
 function fillSpan(cell: CellData, restCol: number): CellData {
   if (cell.rawSpan === undefined || cell.span > restCol) {
-    if (import.meta.env.DEV && cell.rawSpan !== undefined && cell.span > restCol) {
-      console.warn('[vue-amazing-ui] Descriptions 中同一行 span 之和超过 column，已自动收缩为剩余列数')
+    if (cell.rawSpan !== undefined && cell.span > restCol) {
+      warnUsage('Descriptions', '同一行 span 之和超过 column，已自动收缩为剩余列数')
     }
     return { ...cell, span: restCol }
   }

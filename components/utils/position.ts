@@ -367,7 +367,8 @@ function getPanelBorderBoxSize(
         toPx(style.borderBottomWidth)
     }
   } catch (err) {
-    console.debug('浮层精确尺寸测量失败，跳过位移取整：', err)
+    // 测量失败只影响位移取整（1px 内偏差），属预期内降级：用 debug 级别，避免污染业务方控制台
+    console.debug('[vue-amazing-ui] position: 浮层精确尺寸测量失败，跳过位移取整', err)
     return fallback
   }
 }
@@ -799,12 +800,22 @@ function getMainAxisOverflowOffset(
 }
 
 /**
+ * 内核曾写过尺寸的面板（按元素跟踪）
+ *
+ * `matchTriggerWidth` 为假时**不能**无条件 `style.width = ''`：那会擦掉皮肤层 / 使用方经
+ * 样式绑定（`panelStyle`）设置的宽度，且 Vue 后续重新 patch 样式时又把值还回来，表现为
+ * 「首次展开宽、再次展开窄、关闭时又变宽」的宽度三连跳。故 false 分支只清理内核自己写过的值。
+ */
+const KERNEL_SIZED_PANELS = new WeakSet<HTMLElement>()
+
+/**
  * 写入浮层的尺寸关系（等宽 / 最小等宽 / 固定宽度）
  *
  * **必须直接写在元素上而不是走样式绑定**：尺寸会参与紧随其后的浮层测量，
  * 若等下一帧由模板更新，本次求解读到的仍是旧尺寸（等宽场景下偏差极大）。
  *
- * 该写入是内核唯一的 DOM 写操作，且仅当调用方显式传入 `matchTriggerWidth` 时才发生。
+ * 该写入是内核唯一的 DOM 写操作：写只发生在调用方显式传入 `matchTriggerWidth` 时，
+ * 对应的清理也只清理内核自己写入的值（见 `KERNEL_SIZED_PANELS`）。
  *
  * @param panel - 浮层元素
  * @param triggerWidth - 锚点宽度（px）
@@ -820,21 +831,27 @@ function applyMatchTriggerWidth(
     // 等宽：宽与最小宽都跟随触发器，内容超宽时也不会被压窄
     style.width = `${triggerWidth}px`
     style.minWidth = `${triggerWidth}px`
+    KERNEL_SIZED_PANELS.add(panel)
     return
   }
   if (match === 'minWidth') {
     // 最小等宽：宽由内容决定，仅保证不窄于触发器
     style.width = ''
     style.minWidth = `${triggerWidth}px`
+    KERNEL_SIZED_PANELS.add(panel)
     return
   }
   if (typeof match === 'number') {
     style.width = `${match}px`
     style.minWidth = `${triggerWidth}px`
+    KERNEL_SIZED_PANELS.add(panel)
     return
   }
+  // 未开启尺寸跟随：只回收内核此前的写入，绝不碰皮肤层 / 使用方的宽度
+  if (!KERNEL_SIZED_PANELS.has(panel)) return
   style.width = ''
   style.minWidth = ''
+  KERNEL_SIZED_PANELS.delete(panel)
 }
 
 // ── 同步层 ────────────────────────────────────────────────────────────────────────────────────
@@ -1128,7 +1145,8 @@ export function useFloating(panelRef: Ref<HTMLElement | null>, options: UseFloat
         .then(() => {
           if (!disposed && toValue(enabled)) applyPosition()
         })
-        .catch((err) => console.debug('字体就绪检测失败，跳过字体触发的重对齐：', err))
+        // 检测失败只影响「字体加载后的重对齐」，属预期内降级：用 debug 级别，避免污染业务方控制台
+        .catch((err) => console.debug('[vue-amazing-ui] useFloating: 字体就绪检测失败，跳过字体触发的重对齐', err))
     }
   }
 
