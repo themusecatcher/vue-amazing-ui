@@ -239,7 +239,7 @@ describe('甲类浮层接入（Tooltip / Select / AutoComplete）', () => {
     // 甲类浮层必须高于承载它的 Modal / Drawer / Dialog（1010），否则会被遮罩盖住
     const tooltipWrapper = mount(Tooltip, {
       attachTo: document.body,
-      props: { tooltip: 'hi', show: true },
+      props: { tooltip: 'hi', open: true },
       global: { stubs: { transition: false } }
     })
     await flush()
@@ -259,7 +259,7 @@ describe('甲类浮层接入（Tooltip / Select / AutoComplete）', () => {
     // 未注入分配器：prop 覆盖默认层级（Tooltip 默认 1070）
     wrapper = mount(Tooltip, {
       attachTo: document.body,
-      props: { tooltip: 'hi', show: true, zIndex: 3000 },
+      props: { tooltip: 'hi', open: true, zIndex: 3000 },
       global: { stubs: { transition: false } }
     })
     await flush()
@@ -273,7 +273,7 @@ describe('甲类浮层接入（Tooltip / Select / AutoComplete）', () => {
           ConfigProvider,
           { baseZIndex: 5000 },
           {
-            default: () => h(Tooltip, { tooltip: 'hi', show: true, zIndex: 3000 })
+            default: () => h(Tooltip, { tooltip: 'hi', open: true, zIndex: 3000 })
           }
         )
     })
@@ -289,7 +289,7 @@ describe('甲类浮层接入（Tooltip / Select / AutoComplete）', () => {
           ConfigProvider,
           { baseZIndex: 5000 },
           {
-            default: () => h(Tooltip, { tooltip: 'hi', show: true })
+            default: () => h(Tooltip, { tooltip: 'hi', open: true })
           }
         )
     })
@@ -497,8 +497,8 @@ describe('同层级浮层的上下关系（未注入分配器时）', () => {
       render: () =>
         h('div', [
           // 源码顺序：A 在前，B 在后 —— 顺序不应由它决定
-          h(Tooltip, { tooltip: 'A', show: showA.value, to: target }),
-          h(Tooltip, { tooltip: 'B', show: showB.value, to: target })
+          h(Tooltip, { tooltip: 'A', open: showA.value, to: target }),
+          h(Tooltip, { tooltip: 'B', open: showB.value, to: target })
         ])
     })
     /** 目标容器内各面板的文本，按 DOM 顺序（靠后者在上层） */

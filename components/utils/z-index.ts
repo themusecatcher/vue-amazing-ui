@@ -24,11 +24,11 @@ import type { Ref } from 'vue'
  * 故改动此处必须同步文档，新增族也必须一并登记到该测试。
  */
 export const FLOATING_LAYER_Z_INDEX = {
-  /** 锚点跟随型气泡族：`Tooltip` 及其派生的 `Popover` / `Popconfirm` / `Ellipsis` / `ColorPicker` / `Rate` / `BackTop` / `FloatButton` 气泡 */
+  /** 锚点跟随型气泡族：`Tooltip` 及其派生的 `Popover` / `Popconfirm` / `Ellipsis` / `Rate` / `BackTop` / `FloatButton` 气泡 */
   tooltip: 1070,
   /** 全屏预览族：`Image`（与气泡族同值，需高于承载层） */
   image: 1070,
-  /** 下拉面板族：`Select` / `AutoComplete` / `Dropdown` / `Cascader` / `DatePicker` / `TimePicker` */
+  /** 下拉面板族：`Select` / `AutoComplete` / `Dropdown` / `Cascader` / `DatePicker` / `TimePicker` / `ColorPicker` */
   select: 1050,
   /** 承载层族：`Modal` / `Dialog` / `Drawer`（遮罩取该值，弹窗 / 卡片取 +10） */
   overlay: 1000,

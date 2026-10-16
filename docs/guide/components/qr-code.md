@@ -425,7 +425,7 @@ _通过设置 `padding` 调整容器内边距，二维码绘制区随内边距�
   <QRCode value="https://themusecatcher.blog.csdn.net" :padding="padding" />
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -444,7 +444,7 @@ const formatPadding = (value: number) => `${value}px`
 </template>
 ```
 
-::::
+:::
 
 ## 自定义生成二维码
 

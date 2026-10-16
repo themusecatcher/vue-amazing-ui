@@ -29,9 +29,9 @@ function onShow() {
 function onHide() {
   tooltipRef.value?.hide()
 }
-// 受控显示：由 show 驱动
-const controlledShow = ref<boolean>(false)
-const destroyShow = ref(false)
+// 受控显示：由 open 驱动
+const controlledOpen = ref<boolean>(false)
+const destroyOpen = ref(false)
 </script>
 <template>
   <div>
@@ -244,12 +244,12 @@ const destroyShow = ref(false)
       <Button @click="onHide">隐藏</Button>
     </Space>
     <h2 class="mt30 mb10">受控显示</h2>
-    <p class="mb10">使用 <code>show</code> 属性控制浮层的显示与隐藏</p>
+    <p class="mb10">使用 <code>open</code> 属性控制浮层的显示与隐藏</p>
     <Space>
-      <Tooltip v-model:show="controlledShow" tooltip="Vue Amazing UI">
-        <Button>Controlled: {{ controlledShow }}</Button>
+      <Tooltip v-model:open="controlledOpen" tooltip="Vue Amazing UI">
+        <Button>Controlled: {{ controlledOpen }}</Button>
       </Tooltip>
-      <Button type="primary" @click="controlledShow = !controlledShow">Toggle Show</Button>
+      <Button type="primary" @click="controlledOpen = !controlledOpen">Toggle Open</Button>
     </Space>
     <h2 class="mt30 mb10">隐藏后卸载</h2>
     <p class="mb10">
@@ -264,10 +264,10 @@ const destroyShow = ref(false)
       <Tooltip tooltip="Vue Amazing UI">
         <Button>Hover (default)</Button>
       </Tooltip>
-      <Tooltip v-model:show="destroyShow" tooltip="Vue Amazing UI" trigger="click" destroy-on-hide>
-        <Button type="primary">Click: {{ destroyShow }}</Button>
+      <Tooltip v-model:open="destroyOpen" tooltip="Vue Amazing UI" trigger="click" destroy-on-hide>
+        <Button type="primary">Click: {{ destroyOpen }}</Button>
       </Tooltip>
-      <Button @click="destroyShow = !destroyShow">Toggle Show</Button>
+      <Button @click="destroyOpen = !destroyOpen">Toggle Open</Button>
     </Space>
     <h2 class="mt30 mb10">隐藏箭头</h2>
     <Tooltip :arrow="false" tooltip="Vue Amazing UI">

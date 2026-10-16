@@ -134,11 +134,11 @@ function openChange(open: boolean) {
 
 ## 从浮层内关闭
 
-_使用 `show` 属性控制显示隐藏_
+_使用 `open` 属性控制显示隐藏_
 
 <br/>
 
-<Popover v-model:show="show" title="Click Title" trigger="click">
+<Popover v-model:open="show" title="Click Title" trigger="click">
   <template #content>
     <a @click="show = false">Close</a>
   </template>
@@ -153,7 +153,7 @@ import { ref } from 'vue'
 const show = ref(false)
 </script>
 <template>
-  <Popover v-model:show="show" title="Click Title" trigger="click">
+  <Popover v-model:open="show" title="Click Title" trigger="click">
     <template #content>
       <a @click="show = false">Close</a>
     </template>

@@ -1221,8 +1221,8 @@ function onPaginationChange(page: number, pageSize: number): void {
                       <Tooltip
                         v-if="column.sorter"
                         style="width: 100%"
-                        show-control
-                        :show="sortHoverDataIndex === column.dataIndex"
+                        open-control
+                        :open="sortHoverDataIndex === column.dataIndex"
                         :content-style="{ width: '100%' }"
                         :tooltip="getComputedValue(column, 'showSorterTooltip') ? getSortTooltip(column) : undefined"
                         :tooltip-style="{ fontWeight: 'normal' }"
@@ -1509,8 +1509,8 @@ function onPaginationChange(page: number, pageSize: number): void {
                       <Tooltip
                         v-if="column.sorter"
                         style="width: 100%"
-                        show-control
-                        :show="sortHoverDataIndex === column.dataIndex"
+                        open-control
+                        :open="sortHoverDataIndex === column.dataIndex"
                         :content-style="{ width: '100%' }"
                         :tooltip="getComputedValue(column, 'showSorterTooltip') ? getSortTooltip(column) : undefined"
                         :tooltip-style="{ fontWeight: 'normal' }"

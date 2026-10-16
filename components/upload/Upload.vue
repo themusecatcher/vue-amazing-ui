@@ -131,9 +131,15 @@ function onUpload(e: any, index: number): void {
     uploadInputRef.value[index].value = ''
   }
 }
+// 使用方返回 false 表示主动拒绝该文件：以带标记的 Error 承载这一信号，
+// 与真实异常区分（靠消息字符串判定太脆弱，使用方抛同名消息会被误判静默）
+function createBeforeUploadRejected(): Error {
+  const error = new Error('beforeUpload returned false')
+  error.name = 'BeforeUploadRejected'
+  return error
+}
 // 统一上传文件方法
 function uploadFile(file: File, index: number): void {
-  // console.log('开始上传 upload-event files:', file)
   function promiseFunction() {
     return new Promise((resolve, reject) => {
       try {
@@ -147,7 +153,7 @@ function uploadFile(file: File, index: number): void {
           // 检查返回值是否为布尔值
           if (typeof result === 'boolean') {
             // 如果是布尔值，根据值 resolve 或 reject
-            result ? resolve(result) : reject(new Error('Function returned false'))
+            result ? resolve(result) : reject(createBeforeUploadRejected())
           } else {
             // 否则，直接 resolve 返回值
             resolve(result)
@@ -176,8 +182,11 @@ function uploadFile(file: File, index: number): void {
         customUpload(file, index)
       }
     })
-    .catch((error: any) => {
-      console.warn('beforeUpload error:', error)
+    .catch((error: unknown) => {
+      // beforeUpload 返回 false 表示使用方主动拒绝该文件（内部以带标记的 Error 承载这一信号），属预期业务流，不告警；
+      // 其余抛错才是使用方回调异常 —— 与 Dialog / Modal 的回调出错同级，用 error 便于线上排查
+      if (error instanceof Error && error.name === 'BeforeUploadRejected') return
+      console.error('[vue-amazing-ui] Upload: beforeUpload 执行出错', error)
     })
 }
 function base64Upload(file: File, index: number): void {
@@ -186,20 +195,15 @@ function base64Upload(file: File, index: number): void {
   reader.onloadstart = function (e) {
     // 当读取操作开始时触发
     // reader.abort() // 取消上传
-    // console.log('开始读取 onloadstart:', e)
   }
   reader.onabort = function (e) {
     // 当读取操作被中断时触发
-    // console.log('读取中止 onabort:', e)
   }
   reader.onerror = function (e) {
     // 当读取操作发生错误时触发
-    // console.log('读取错误 onerror:', e)
   }
   reader.onprogress = function (e) {
     // 在读取 Blob 时触发，读取上传进度，50ms 左右调用一次
-    // console.log('读取中 onprogress:', e)
-    // console.log('已读取:', Math.ceil(e.loaded / e.total * 100))
     if (e.loaded === e.total) {
       // 上传完成
       uploading.value[index] = false // 隐藏 loading 状态
@@ -207,7 +211,6 @@ function base64Upload(file: File, index: number): void {
   }
   reader.onload = function (e) {
     // 当读取操作成功完成时调用
-    // console.log('读取成功 onload:', e)
     // 该文件的 base64 数据，如果是图片，则前端可直接用来展示图片
     uploadedFiles.value[index] = {
       name: file.name,
@@ -219,7 +222,6 @@ function base64Upload(file: File, index: number): void {
   }
   reader.onloadend = function (e) {
     // 当读取操作结束时触发（要么成功，要么失败）触发
-    // console.log('读取结束 onloadend:', e)
   }
 }
 function customUpload(file: File, index: number): void {

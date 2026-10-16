@@ -2,7 +2,7 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { VNode } from 'vue'
 import Tooltip, { type TooltipProps } from 'components/tooltip'
-import { useSlotsExist, useInject, useOptionsSupported, getScrollParent } from 'components/utils'
+import { useSlotsExist, useInject, useOptionsSupported, getScrollParent, warnUsage } from 'components/utils'
 
 export interface Props {
   icon?: VNode | (() => VNode) // 自定义图标，支持 VNode / 渲染函数；插槽形态请用 #icon
@@ -128,7 +128,7 @@ function observeScroll(): void {
     scrollTarget.value = resolveListenTarget()
   }
   if (!scrollTarget.value) {
-    console.warn('Container of back-top element is not found.')
+    warnUsage('BackTop', '未找到容器元素，滚动监听未启用')
   }
   scrollEventTarget = getScrollEventTarget()
   scrollEventTarget?.addEventListener('scroll', updateScrollTop, passiveSupported.value ? { passive: true } : undefined)

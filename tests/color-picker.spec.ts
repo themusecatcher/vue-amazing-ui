@@ -1,7 +1,11 @@
 import { describe, it, expect, vi } from 'vitest'
-import { h } from 'vue'
+import { defineComponent, h, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import ColorPicker from 'components/color-picker/ColorPicker.vue'
+import type { ColorPickerMode } from 'components/color-picker/ColorPicker.vue'
+import ConfigProvider from 'components/config-provider'
+import Modal from 'components/modal'
+import { FLOATING_LAYER_Z_INDEX } from 'components/utils'
 
 /**
  * ColorPicker 回归
@@ -11,11 +15,13 @@ import ColorPicker from 'components/color-picker/ColorPicker.vue'
  * - `defaultValue` 作为未受控初始值；
  * - 空值态下色相条兜底可用；
  * - alpha 百分比输入越界时收敛到 `0 - 1`；
- * - 禁用态不展开面板；
- * - 自定义触发器插槽；
- * - 触发器元素的属性透传（浮层专属属性与事件不重复绑定）；
+ * - 面板底座为 `Popup`：触发区（外壳）自持点击开合 / 外点关闭 / Esc / 禁用态 / 键盘可达；
+ * - 自定义触发器插槽只回传 `{ value }`（点击开合、锚点与外点判定均由外壳接管）；
+ * - 透传属性只落外壳一处（面板定制走 `panelClass` / `panelStyle`）；
+ * - 面板层级：默认取下拉面板族，`zIndex` 显式覆盖，`ConfigProvider.baseZIndex` 由层级管理器分配；
+ * - 面板挂载点跟随承载层（`Modal` 内不直挂 `body`）；
  * - 色板支持键盘 Enter 选色；
- * - 动态 `modes` 下的模式切换与收敛（当前模式被移除时回落到首个可用模式）。
+ * - 动态 `modes` 下的模式切换与收敛（当前模式被移除时回落到首个可用模式，含原地增删）。
  *
  * 环境说明：happy-dom 无布局引擎，滑动条拖拽依赖的矩形测量与指针捕获需要桩。
  */
@@ -243,6 +249,23 @@ describe('ColorPicker', () => {
     wrapper.unmount()
   })
 
+  it('modes 原地增删（splice）时同样收敛到首个可用模式', async () => {
+    document.body.innerHTML = ''
+    // 使用方原地修改数组（不换引用）时，浅监听拿不到通知，当前模式会停在已被移除的模式上
+    const modes = ref<ColorPickerMode[]>(['rgb', 'hex'])
+    const wrapper = mount(ColorPicker, {
+      props: { value: '#18A058', modes: modes.value, showAlpha: false },
+      attachTo: document.body
+    })
+    await wait()
+    await openPanel()
+    expect(readModeLabel()).toBe('HEX')
+    modes.value.splice(1, 1)
+    await wait()
+    expect(readModeLabel()).toBe('RGB')
+    wrapper.unmount()
+  })
+
   it('modes 变动但当前模式仍可用时保持当前模式', async () => {
     document.body.innerHTML = ''
     const wrapper = mount(ColorPicker, {
@@ -292,26 +315,30 @@ describe('ColorPicker', () => {
     wrapper.unmount()
   })
 
-  it('禁用态不展开面板', async () => {
+  it('禁用态下点击与键盘都不展开面板', async () => {
     document.body.innerHTML = ''
     const wrapper = mount(ColorPicker, {
       props: { value: '#18A058', disabled: true },
       attachTo: document.body
     })
     await wait()
-    document.querySelector<HTMLElement>('.color-picker-display')?.click()
+    const host = wrapper.find('.color-picker').element as HTMLElement
+    host.click()
+    host.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
     await wait(80)
     expect(document.querySelector('.color-picker-panel')).toBeNull()
+    // 禁用拦截发生在显隐状态机入口：既不展开也不派发开合事件
+    expect(wrapper.emitted('openChange')).toBeUndefined()
     wrapper.unmount()
   })
 
-  it('自定义触发器插槽渲染并可展开面板', async () => {
+  it('自定义触发器插槽渲染并可展开面板（插槽参数可完全不消费）', async () => {
     document.body.innerHTML = ''
     const wrapper = mount(ColorPicker, {
       props: { value: '#18A058' },
       slots: {
-        trigger: (slotProps: { value?: string; onClick?: () => void }) =>
-          h('button', { class: 'custom-trigger', onClick: slotProps.onClick }, slotProps.value ?? '')
+        // 只消费 value：点击开合由外壳接管（不再回传 onClick / ref）
+        trigger: (slotProps: { value?: string }) => h('button', { class: 'custom-trigger' }, slotProps.value ?? '')
       },
       attachTo: document.body
     })
@@ -326,43 +353,41 @@ describe('ColorPicker', () => {
     wrapper.unmount()
   })
 
-  it('自定义触发器时容器随内容自适应，内置触发器仍按 width / height 撑满', async () => {
+  it('自定义触发器时外壳随内容自适应，内置触发器按 width / height 撑满', async () => {
     document.body.innerHTML = ''
     const custom = mount(ColorPicker, {
       props: { value: '#ff6900' },
       slots: {
-        trigger: (slotProps: { value?: string; onClick?: () => void }) =>
-          h('button', { class: 'custom-trigger', onClick: slotProps.onClick }, slotProps.value ?? '')
+        trigger: (slotProps: { value?: string }) => h('button', { class: 'custom-trigger' }, slotProps.value ?? '')
       },
       attachTo: document.body
     })
     await wait()
-    const customHost = document.querySelector('.tooltip-wrap')
-    const customHostStyle = customHost?.getAttribute('style') ?? ''
-    expect(customHostStyle).toContain('display: inline-flex')
-    expect(customHostStyle).not.toContain('width:')
-    // 计算样式兜底：display 由组件内联样式跨层覆盖 Tooltip 根节点，
-    // 该透传链路若被改动，触发器会静默退回 inline-block（行盒支柱把块级触发器顶偏）
-    expect(customHost ? getComputedStyle(customHost).display : '').toBe('inline-flex')
+    const customHost = custom.find('.color-picker').element as HTMLElement
+    // 自定义触发器：外壳不预设宽高（内联 width 会撑成整行），改用 inline-flex 随内容自适应
+    expect(customHost.getAttribute('style') ?? '').not.toContain('width:')
+    expect(customHost.classList.contains('color-picker-custom-trigger')).toBe(true)
     custom.unmount()
 
     document.body.innerHTML = ''
-    const builtin = mount(ColorPicker, { props: { value: '#ff6900' }, attachTo: document.body })
+    const builtin = mount(ColorPicker, { props: { value: '#ff6900', width: 200 }, attachTo: document.body })
     await wait()
-    const builtinHostStyle = document.querySelector('.tooltip-wrap')?.getAttribute('style') ?? ''
-    expect(builtinHostStyle).toContain('width:')
-    expect(builtinHostStyle).toContain('height:')
+    const builtinHostStyle = document.querySelector('.color-picker')?.getAttribute('style') ?? ''
+    // 内置触发器：尺寸由外壳承担（展示区按 100% 跟随），否则 style="width: 200px" 之类用法会失效
+    expect(builtinHostStyle).toContain('width: 200px')
+    expect(builtinHostStyle).toContain('height: 32px')
     builtin.unmount()
   })
 
-  it('触发器不透传浮层专属属性与事件（避免重复触发）', async () => {
+  it('透传属性只落外壳一处（不在触发区重复绑定）', async () => {
     document.body.innerHTML = ''
     let clickCount = 0
     const wrapper = mount(ColorPicker, {
       props: { value: '#18A058' },
       attrs: {
         class: 'my-picker',
-        show: false,
+        id: 'my-picker-id',
+        style: 'width: 200px',
         onClick: () => {
           clickCount += 1
         }
@@ -370,10 +395,84 @@ describe('ColorPicker', () => {
       attachTo: document.body
     })
     await wait()
+    const host = document.querySelector<HTMLElement>('.color-picker')
     const display = document.querySelector<HTMLElement>('.color-picker-display')
-    expect(display?.getAttribute('show')).toBeNull()
-    expect(display?.classList.contains('my-picker')).toBe(true)
+    // 属性只落外壳一处：重复绑定会让 id 重复、style 成倍生效
+    expect(host?.classList.contains('my-picker')).toBe(true)
+    expect(host?.id).toBe('my-picker-id')
+    expect(document.querySelectorAll('#my-picker-id')).toHaveLength(1)
+    expect(display?.classList.contains('my-picker')).toBe(false)
+    expect(display?.id).toBe('')
+    // style 也必须留在外壳上：外壳宽高即布局盒，展示区按 100% 跟随
+    expect(host?.getAttribute('style')).toContain('width: 200px')
     display?.click()
+    await wait(80)
+    expect(clickCount).toBe(1)
+    wrapper.unmount()
+  })
+
+  it('面板定制与开合事件走组件自有 API（panelClass / panelStyle / openChange）', async () => {
+    document.body.innerHTML = ''
+    const onOpenChange = vi.fn()
+    const wrapper = mount(ColorPicker, {
+      props: { value: '#18A058', panelClass: 'my-panel', panelStyle: { width: '280px' }, onOpenChange },
+      attachTo: document.body
+    })
+    await wait()
+    document.querySelector<HTMLElement>('.color-picker-display')?.click()
+    await wait(120)
+    const panel = document.querySelector<HTMLElement>('.va-popup-panel')
+    // 面板皮肤挂载点：宿主面板类 + 使用者自定义类，panelStyle 在定位 / 层级之后合并
+    expect(panel?.classList.contains('color-picker-panel-container')).toBe(true)
+    expect(panel?.classList.contains('my-panel')).toBe(true)
+    expect(panel?.style.width).toBe('280px')
+    expect(onOpenChange).toHaveBeenCalledWith(true)
+    wrapper.unmount()
+  })
+
+  it('panelStyle 的宽度不被浮层内核擦除（未开启 matchTriggerWidth 时不得清理使用方宽度）', async () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(ColorPicker, {
+      props: { value: '#18A058', panelStyle: { width: '280px', minWidth: '200px' } },
+      attachTo: document.body
+    })
+    await wait()
+    document.querySelector<HTMLElement>('.color-picker-display')?.click()
+    await wait(120)
+    const panel = document.querySelector<HTMLElement>('.va-popup-panel')
+    // 回归守护：定位内核曾在 matchTriggerWidth 为 false 时也执行 style.width = ''，
+    // 把皮肤层 / 使用方的内联宽度擦掉，表现为「首次展开宽、再次展开窄、关闭时又变宽」
+    expect(panel?.style.width).toBe('280px')
+    expect(panel?.style.minWidth).toBe('200px')
+    // 收起后重新展开，宽度应保持（不因内核清理而回落到 CSS 默认值）
+    document.querySelector<HTMLElement>('.color-picker-display')?.click()
+    await wait(120)
+    document.querySelector<HTMLElement>('.color-picker-display')?.click()
+    await wait(120)
+    expect(document.querySelector<HTMLElement>('.va-popup-panel')?.style.width).toBe('280px')
+    wrapper.unmount()
+  })
+
+  it('自定义触发器时透传属性落外壳（不丢失）', async () => {
+    document.body.innerHTML = ''
+    let clickCount = 0
+    const wrapper = mount(ColorPicker, {
+      props: { value: '#18A058' },
+      attrs: {
+        class: 'my-picker',
+        onClick: () => {
+          clickCount += 1
+        }
+      },
+      slots: {
+        trigger: (slotProps: { value?: string }) => h('button', { class: 'custom-trigger' }, slotProps.value ?? '')
+      },
+      attachTo: document.body
+    })
+    await wait()
+    // 组件没有自己的触发器元素，属性落外壳，不能丢
+    expect(document.querySelector('.color-picker')?.classList.contains('my-picker')).toBe(true)
+    await wrapper.find('.custom-trigger').trigger('click')
     await wait(80)
     expect(clickCount).toBe(1)
     wrapper.unmount()
@@ -425,46 +524,260 @@ describe('ColorPicker', () => {
     wrapper.unmount()
   })
 
-  it('受控 show 重复置真幂等（不重复展开、不重复派发）', async () => {
+  it('空值态下原生取色器的 value 保持合法颜色（不触发浏览器格式告警）', async () => {
     document.body.innerHTML = ''
-    const onUpdateShow = vi.fn()
+    const wrapper = mount(ColorPicker, { props: { showPreview: true }, attachTo: document.body })
+    await wait()
+    document.querySelector<HTMLElement>('.color-picker-display')?.click()
+    await wait(120)
+    // type=color 的 value 不接受空串（浏览器会报 "does not conform to the required format"），故空值态兜底为 #000000
+    expect(document.querySelector<HTMLInputElement>('.color-picker-circle-input')?.value).toBe('#000000')
+    wrapper.unmount()
+  })
+
+  it('受控 open 重复置真幂等（不重复展开、不重复派发），且外部改值同样派发 openChange', async () => {
+    document.body.innerHTML = ''
+    const onUpdateOpen = vi.fn()
+    const onOpenChange = vi.fn()
     const wrapper = mount(ColorPicker, {
-      props: { value: '#18A058' },
-      attrs: { show: false, 'onUpdate:show': onUpdateShow },
+      props: { value: '#18A058', open: false, 'onUpdate:open': onUpdateOpen, onOpenChange },
       attachTo: document.body
     })
     await wait()
     expect(document.querySelector('.color-picker-panel')).toBeNull()
-    await wrapper.setProps({ show: true })
+    expect(onOpenChange).not.toHaveBeenCalled()
+    await wrapper.setProps({ open: true })
     await wait(120)
     expect(document.querySelectorAll('.color-picker-panel')).toHaveLength(1)
-    const emitCount = onUpdateShow.mock.calls.length
+    // 受控值由外部置真也是「展开状态变化」，应派发一次 openChange(true)
+    expect(onOpenChange).toHaveBeenCalledTimes(1)
+    expect(onOpenChange).toHaveBeenCalledWith(true)
+    const emitCount = onUpdateOpen.mock.calls.length
     // 模拟「显示」按钮连点：已展开时再次置真不再重复展开 / 不再重复派发
-    await wrapper.setProps({ show: true })
-    await wrapper.setProps({ show: true })
+    await wrapper.setProps({ open: true })
+    await wrapper.setProps({ open: true })
     await wait(120)
     expect(document.querySelectorAll('.color-picker-panel')).toHaveLength(1)
-    expect(onUpdateShow.mock.calls.length).toBe(emitCount)
+    expect(onUpdateOpen.mock.calls.length).toBe(emitCount)
+    expect(onOpenChange).toHaveBeenCalledTimes(1)
+    // 外部置假同样派发一次 false（状态未变时不派发）
+    await wrapper.setProps({ open: false })
+    await wait(120)
+    expect(onOpenChange).toHaveBeenCalledTimes(2)
+    expect(onOpenChange).toHaveBeenLastCalledWith(false)
     wrapper.unmount()
   })
 
-  it('受控展开时点击面板内部不关闭面板', async () => {
+  it('非受控时 defaultOpen 决定初始显隐（受控 open 优先、disabled 拦截）', async () => {
     document.body.innerHTML = ''
-    const shows: boolean[] = []
+    const onOpenChange = vi.fn()
     const wrapper = mount(ColorPicker, {
-      props: { value: 'hsla(148, 73%, 36%, 1)', modes: ['hsl'], showAlpha: true },
-      attrs: { show: true, 'onUpdate:show': (value: boolean) => shows.push(value) },
+      props: { value: '#18A058', defaultOpen: true, onOpenChange },
       attachTo: document.body
     })
-    await wait(120)
+    await wait()
+    const display = wrapper.find('.color-picker-display')
+    // 挂载即展开（首次渲染前即生效，无「先关后开」的过渡）
+    expect(display.attributes('aria-expanded')).toBe('true')
     expect(document.querySelectorAll('.color-picker-panel')).toHaveLength(1)
-    // 面板内点击（输入框聚焦）：属于面板内部，不应触发隐藏
+    // 初始展开上报一次 openChange(true)：与库内 Select / AutoComplete 的 defaultOpen 口径一致
+    // （二者在 onMounted 里驱动内部展开态，同样由状态 watch 上报一次）
+    expect(onOpenChange).toHaveBeenCalledTimes(1)
+    expect(onOpenChange).toHaveBeenCalledWith(true)
+    // 点击触发器收起（toggle）→ 再派发一次 false
+    await display.trigger('click')
+    await wait(120)
+    expect(display.attributes('aria-expanded')).toBe('false')
+    expect(onOpenChange).toHaveBeenCalledTimes(2)
+    expect(onOpenChange).toHaveBeenLastCalledWith(false)
+    wrapper.unmount()
+
+    document.body.innerHTML = ''
+    // 受控 open 优先于 defaultOpen：父组件显式传 false 时不套用默认显隐
+    const controlled = mount(ColorPicker, {
+      props: { value: '#18A058', open: false, defaultOpen: true },
+      attachTo: document.body
+    })
+    await wait()
+    expect(controlled.find('.color-picker-display').attributes('aria-expanded')).toBe('false')
+    controlled.unmount()
+
+    document.body.innerHTML = ''
+    // 禁用态不套用 defaultOpen（不可交互的组件不应自带展开面板）
+    const disabled = mount(ColorPicker, {
+      props: { value: '#18A058', defaultOpen: true, disabled: true },
+      attachTo: document.body
+    })
+    await wait()
+    expect(disabled.find('.color-picker-display').attributes('aria-expanded')).toBe('false')
+    disabled.unmount()
+  })
+
+  it('点击触发器 toggle 开合；点击面板内部不关闭；点击外部关闭', async () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(ColorPicker, { props: { value: '#18A058' }, attachTo: document.body })
+    await wait()
+    const display = wrapper.find('.color-picker-display')
+    await display.trigger('click')
+    await wait(120)
+    expect(display.attributes('aria-expanded')).toBe('true')
+    // 再点一次收起（toggle：与库内 Select / Dropdown 的点击开合同手感）
+    await display.trigger('click')
+    await wait(120)
+    expect(display.attributes('aria-expanded')).toBe('false')
+    // 重新展开后点击面板内部：属面板内部，不应关闭
+    await display.trigger('click')
+    await wait(120)
     const input = document.querySelector<HTMLInputElement>('.color-picker-input-group .input-item')
     input?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
-    input?.focus()
     await wait(120)
-    expect(document.querySelectorAll('.color-picker-panel')).toHaveLength(1)
-    expect(shows).not.toContain(false)
+    expect(display.attributes('aria-expanded')).toBe('true')
+    // 点击外部关闭
+    document.body.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await wait(120)
+    expect(display.attributes('aria-expanded')).toBe('false')
+    wrapper.unmount()
+  })
+
+  it('Esc 关闭面板并把焦点交还触发区', async () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(ColorPicker, { props: { value: '#18A058' }, attachTo: document.body })
+    await wait()
+    const display = wrapper.find('.color-picker-display')
+    await display.trigger('click')
+    await wait(120)
+    expect(display.attributes('aria-expanded')).toBe('true')
+    // 展开后焦点在面板容器上，Esc 自面板发出（面板级监听经宿主落到面板节点）
+    document
+      .querySelector<HTMLElement>('.color-picker-panel')
+      ?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    await wait(120)
+    expect(display.attributes('aria-expanded')).toBe('false')
+    expect(document.activeElement).toBe(wrapper.find('.color-picker').element)
+    wrapper.unmount()
+  })
+
+  it('Enter / Space 与点击同语义（开合），Esc 收起（键盘可达）', async () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(ColorPicker, { props: { value: '#18A058' }, attachTo: document.body })
+    await wait()
+    const display = wrapper.find('.color-picker-display')
+    await display.trigger('keydown', { key: 'Enter' })
+    await wait(120)
+    expect(display.attributes('aria-expanded')).toBe('true')
+    // 再按一次收起：键盘与鼠标点击保持同一套开合语义
+    await display.trigger('keydown', { key: 'Enter' })
+    await wait(120)
+    expect(display.attributes('aria-expanded')).toBe('false')
+    await display.trigger('keydown', { key: ' ' })
+    await wait(120)
+    expect(display.attributes('aria-expanded')).toBe('true')
+    await display.trigger('keydown', { key: ' ' })
+    await wait(120)
+    expect(display.attributes('aria-expanded')).toBe('false')
+    // Esc 自面板发出同样收起
+    await display.trigger('keydown', { key: 'Enter' })
+    await wait(120)
+    document
+      .querySelector<HTMLElement>('.color-picker-panel')
+      ?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    await wait(120)
+    expect(display.attributes('aria-expanded')).toBe('false')
+    wrapper.unmount()
+  })
+
+  it('无障碍语义：触发区为 button 语义、面板为 dialog 语义（不再借用 tooltip 语义）', async () => {
+    document.body.innerHTML = ''
+    const builtin = mount(ColorPicker, { props: { value: '#18A058' }, attachTo: document.body })
+    await wait()
+    const display = document.querySelector<HTMLElement>('.color-picker-display')
+    expect(display?.getAttribute('role')).toBe('button')
+    expect(display?.getAttribute('aria-haspopup')).toBe('dialog')
+    expect(display?.getAttribute('aria-expanded')).toBe('false')
+    display?.click()
+    await wait(120)
+    const panel = document.querySelector<HTMLElement>('.color-picker-panel')
+    expect(panel?.getAttribute('role')).toBe('dialog')
+    expect(panel?.getAttribute('aria-label')).toBe('颜色选择器')
+    // 面板底座已不再借用 Tooltip 皮肤：不存在 tooltip 语义与描述关联
+    expect(document.querySelector('[role="tooltip"]')).toBeNull()
+    expect(display?.getAttribute('aria-describedby')).toBeNull()
+    builtin.unmount()
+
+    document.body.innerHTML = ''
+    const custom = mount(ColorPicker, {
+      props: { value: '#18A058' },
+      slots: {
+        trigger: (slotProps: { value?: string }) => h('button', { class: 'custom-trigger' }, slotProps.value ?? '')
+      },
+      attachTo: document.body
+    })
+    await wait()
+    // 自定义触发器时由外壳承担触发区语义，两形态下 aria-expanded 都反映真实显隐
+    const host = document.querySelector<HTMLElement>('.color-picker')
+    expect(host?.getAttribute('role')).toBe('button')
+    expect(host?.getAttribute('aria-expanded')).toBe('false')
+    await custom.find('.custom-trigger').trigger('click')
+    await wait(120)
+    expect(host?.getAttribute('aria-expanded')).toBe('true')
+    custom.unmount()
+  })
+
+  it('面板层级默认取下拉面板族（未传 zIndex），传入 zIndex 时以其为准', async () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(ColorPicker, { props: { value: '#18A058' }, attachTo: document.body })
+    await wait()
+    document.querySelector<HTMLElement>('.color-picker-display')?.click()
+    await wait(120)
+    const panel = document.querySelector<HTMLElement>('.va-popup-panel')
+    expect(panel?.style.zIndex).toBe(String(FLOATING_LAYER_Z_INDEX.select))
+    await wrapper.setProps({ zIndex: 2000 })
+    await wait(120)
+    expect(document.querySelector<HTMLElement>('.va-popup-panel')?.style.zIndex).toBe('2000')
+    wrapper.unmount()
+  })
+
+  it('ConfigProvider 传入 baseZIndex 时面板层级由分配器给出（不再取下拉面板族默认值）', async () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(
+      defineComponent({
+        render: () => h(ConfigProvider, { baseZIndex: 5000 }, { default: () => h(ColorPicker, { value: '#18A058' }) })
+      }),
+      { attachTo: document.body }
+    )
+    await wait()
+    await openPanel()
+    // 首个出现的浮层从 baseZIndex 起分配
+    const panel = document.querySelector<HTMLElement>('.va-popup-panel')
+    expect(panel?.style.zIndex).toBe('5000')
+    expect(panel?.style.zIndex).not.toBe(String(FLOATING_LAYER_Z_INDEX.select))
+    wrapper.unmount()
+  })
+
+  it('面板挂载在 Modal 内时跟随承载层（不直挂 body）', async () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(
+      defineComponent({
+        render: () =>
+          h(
+            ConfigProvider,
+            { baseZIndex: 5000 },
+            {
+              default: () =>
+                h(Modal, { open: true, title: '承载层' }, { default: () => h(ColorPicker, { value: '#18A058' }) })
+            }
+          )
+      }),
+      { attachTo: document.body }
+    )
+    await wait(80)
+    const card = document.querySelector<HTMLElement>('.modal-container')
+    expect(card).not.toBeNull()
+    card?.querySelector<HTMLElement>('.color-picker-display')?.click()
+    await wait(160)
+    // 未显式传 to 时面板就近挂进承载层内容容器，且不在 body 下另起挂载点
+    expect(card?.querySelector('.va-popup-panel')).not.toBeNull()
+    expect(Array.from(document.body.children).some((el) => el.classList.contains('va-popup-container'))).toBe(false)
     wrapper.unmount()
   })
 
@@ -497,7 +810,7 @@ describe('ColorPicker', () => {
     darkTone.unmount()
   })
 
-  it('卸载时移除全局指针监听', async () => {
+  it('卸载时移除全局指针监听与外点监听', async () => {
     document.body.innerHTML = ''
     const removeSpy = vi.spyOn(document, 'removeEventListener')
     const wrapper = mount(ColorPicker, { props: { value: '#18A058' }, attachTo: document.body })
@@ -506,5 +819,24 @@ describe('ColorPicker', () => {
     const pointerRemovals = removeSpy.mock.calls.filter(([type]) => String(type).startsWith('pointer'))
     expect(pointerRemovals.length).toBeGreaterThanOrEqual(9)
     removeSpy.mockRestore()
+  })
+
+  it('展开期间注册外点监听、收起后移除（注册与移除一一对应）', async () => {
+    document.body.innerHTML = ''
+    const addSpy = vi.spyOn(document, 'addEventListener')
+    const removeSpy = vi.spyOn(document, 'removeEventListener')
+    const wrapper = mount(ColorPicker, { props: { value: '#18A058' }, attachTo: document.body })
+    await wait()
+    const display = wrapper.find('.color-picker-display')
+    await display.trigger('click')
+    await wait(120)
+    expect(addSpy.mock.calls.filter(([type]) => type === 'click')).toHaveLength(1)
+    // 收起即移除：隐藏态不得继续监听全局点击
+    await display.trigger('click')
+    await wait(120)
+    expect(removeSpy.mock.calls.filter(([type]) => type === 'click')).toHaveLength(1)
+    addSpy.mockRestore()
+    removeSpy.mockRestore()
+    wrapper.unmount()
   })
 })
