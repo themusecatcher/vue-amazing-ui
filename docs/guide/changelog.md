@@ -10,10 +10,13 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-17">2.14.3</VersionDateTag>
+## <VersionDateTag date="2026-10-17">2.15.0</VersionDateTag>
 
-- 重构并增强 [颜色选择器 ColorPicker](/guide/components/color-picker.html)：新增 `defaultValue` 属性（未受控时的初始颜色）、`placement` / `to` 属性（面板弹出位置与挂载容器）与 `trigger` 插槽（自定义触发器，宿主容器随触发器内容自适应），空值态下色相条可按纯色兜底调节，色板支持键盘 `Enter` 选色；修复非法色值导致渲染或点击色板崩溃（降级为空值态 / 忽略该色板）、空值态下 `alpha` 轨道可拖空色、`alpha` 百分比输入越界不收敛、标签文字在中间色下对比度不足、非法输入后输入框不回滚、拖拽中途卸载残留全局指针监听、内置触发器上事件监听重复触发、`modes` 运行时移除当前模式后模式切换失灵等问题；使用者文档与组件演示同步更新
-- 优化[颜色选择器 ColorPicker](/guide/components/color-picker.html) 组件的 `complete` 事件，改为仅在输入框提交与鼠标拖动结束时触发，点击色板 / 点击清除 / 原生取色器选色不再触发
+- ⚠️ **破坏性变更**：重写 [颜色选择器 ColorPicker](/guide/components/color-picker.html) 的浮层底座（由派生自 [文字提示 Tooltip](/guide/components/tooltip.html) 改为直接使用 `Popup` 宿主）—— 显隐改用 `v-model:open`（原 `v-model:show`）、面板样式改用 `panelStyle` / `panelClass`（原 `tooltipStyle`）、`trigger` 插槽回传值简化为 `{ value }`（原 `onClick` / `ref` 已移除，点击开合、面板定位与外点判定均由组件接管，程序化开合请改用 `v-model:open`），原 Tooltip 派生属性（`showDelay` / `hideDelay` / `showControl` / `arrow` / `arrowPointAtCenter` / `trigger` / `keyboard` / `bgColor` / `content` / `contentClass` / `contentStyle` / `tooltip` / `tooltipClass` / `maxWidth` / `flip` / `transitionDuration`）已移除；面板层级由锚点气泡族（`1070`）归入下拉面板族（`1050`，与 `Select` / `DatePicker` / `TimePicker` 一致）
+- 重构并增强 [颜色选择器 ColorPicker](/guide/components/color-picker.html)：触发语义（点击开合、点击外部关闭、`Esc` 收起并把焦点交还触发区、`Enter` / `Space` 展开）与无障碍语义（触发区 `button`、面板 `dialog`）改为组件自持，新增 `openChange` / `defaultOpen` / `panelClass` / `panelStyle` / `zIndex` / `offset` / `destroyOnHide` 属性与事件，并新增 `defaultValue` / `placement` / `to` 属性与 `trigger` 插槽（自定义触发器宿主容器随内容自适应）、`label` 展示内容支持返回 `VNode`；空值态下色相条可按纯色兜底调节，色板支持键盘 `Enter` 选色；修复非法色值导致渲染或点击色板崩溃（降级为空值态 / 忽略该色板）、空值态下 `alpha` 轨道可拖空色、`alpha` 百分比输入越界不收敛、标签文字在中间色下对比度不足、非法输入后输入框不回滚、拖拽中途卸载残留全局指针监听、`class` / `style` / `id` 等透传属性重复绑到浮层宿主与触发器（`id` 重复、`style` 成倍生效）、禁用态仍可展开面板、`modes` 运行时移除当前模式后模式切换失灵等问题
+- 优化 [颜色选择器 ColorPicker](/guide/components/color-picker.html) 的 `complete` 事件：改为仅在输入框提交与鼠标拖动结束时触发（点击色板、点击清除、原生取色器选色不再触发），依赖「选色即完成」的用法请改用 `update:value`
+- ⚠️ **破坏性变更**：[文字提示 Tooltip](/guide/components/tooltip.html)（含派生的 [气泡卡片 Popover](/guide/components/popover.html) / [气泡确认框 Popconfirm](/guide/components/popconfirm.html)）的显隐双向绑定统一为 `v-model:open`（原 `v-model:show`），`showControl` 改名为 `openControl`，与库内其余组件的命名保持一致
+- 更新使用者文档：[颜色选择器 ColorPicker](/guide/components/color-picker.html) 的 API 表与自定义触发器 / 面板样式示例、[文字提示 Tooltip](/guide/components/tooltip.html) 与 [气泡卡片 Popover](/guide/components/popover.html) 的受控示例、[全局化配置 ConfigProvider](/guide/components/config-provider.html) 的浮层层级表同步更新
 
 ## <VersionDateTag date="2026-10-16">2.14.2</VersionDateTag>
 
