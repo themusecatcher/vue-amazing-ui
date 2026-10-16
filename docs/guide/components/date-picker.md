@@ -1264,7 +1264,7 @@ const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 </script>
 ```
 
-::::
+:::
 
 ## 三种大小
 
@@ -1368,7 +1368,7 @@ const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 </script>
 ```
 
-::::
+:::
 
 ## 自定义日期范围选择
 
@@ -1797,7 +1797,7 @@ const rangePlaceholder = ['开始日期', '结束日期']
 </template>
 ```
 
-::::
+:::
 
 ## APIs
 
