@@ -49,8 +49,8 @@ function openChange(open: boolean) {
       </Popover>
     </Space>
     <h2 class="mt30 mb10">从浮层内关闭</h2>
-    <p class="mb10">使用 <code>show</code> 属性控制显示隐藏</p>
-    <Popover v-model:show="show" title="Click Title" trigger="click">
+    <p class="mb10">使用 <code>open</code> 属性控制显示隐藏</p>
+    <Popover v-model:open="show" title="Click Title" trigger="click">
       <template #content>
         <a @click="show = false">Close</a>
       </template>
