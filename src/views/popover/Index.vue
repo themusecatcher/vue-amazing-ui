@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const show = ref(false)
+const open = ref(false)
 function openChange(open: boolean) {
   console.log('open', open)
 }
@@ -50,9 +50,9 @@ function openChange(open: boolean) {
     </Space>
     <h2 class="mt30 mb10">从浮层内关闭</h2>
     <p class="mb10">使用 <code>open</code> 属性控制显示隐藏</p>
-    <Popover v-model:open="show" title="Click Title" trigger="click">
+    <Popover v-model:open="open" title="Click Title" trigger="click">
       <template #content>
-        <a @click="show = false">Close</a>
+        <a @click="open = false">Close</a>
       </template>
       <Button type="primary">Click Me</Button>
     </Popover>

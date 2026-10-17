@@ -106,6 +106,9 @@ function handleConfirm(color: string) {
 function handleClear() {
   console.log('clear')
 }
+function handleOpenChange(value: boolean) {
+  console.log('openChange', value)
+}
 </script>
 <template>
   <div>
@@ -229,10 +232,10 @@ function handleClear() {
     <h2 class="mt30 mb10">受控展开</h2>
     <p class="mb10"
       >使用 <code>v-model:open</code> 控制面板显隐；点击触发器、点击外部与 <code>Esc</code> 收起都会写回
-      <code>open</code></p
+      <code>open</code>，<code>openChange</code> 同步派发展开状态的变化</p
     >
     <Space align="center">
-      <ColorPicker :width="240" default-value="#ff6900" v-model:open="open" />
+      <ColorPicker :width="240" default-value="#ff6900" v-model:open="open" @open-change="handleOpenChange" />
       <Button type="primary" :disabled="open" @click="open = true">显示</Button>
       <Button :disabled="!open" @click="open = false">隐藏</Button>
     </Space>

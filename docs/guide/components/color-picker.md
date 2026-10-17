@@ -116,6 +116,9 @@ function handleConfirm(color: string) {
 function handleClear() {
   console.log('clear')
 }
+function handleOpenChange(value: boolean) {
+  console.log('openChange', value)
+}
 </script>
 
 ## 基本使用
@@ -623,12 +626,12 @@ _通过 `panelStyle` 设置面板样式、`panelClass` 自定义面板类名，�
 
 ## 受控展开
 
-_使用 `v-model:open` 控制面板显隐；点击触发器、点击外部与 `Esc` 收起都会写回 `open`_
+_使用 `v-model:open` 控制面板显隐；点击触发器、点击外部与 `Esc` 收起都会写回 `open`，`openChange` 同步派发展开状态的变化_
 
 <br/>
 
 <Space align="center">
-  <ColorPicker :width="240" default-value="#ff6900" v-model:open="open" />
+  <ColorPicker :width="240" default-value="#ff6900" v-model:open="open" @open-change="handleOpenChange" />
   <Button type="primary" :disabled="open" @click="open = true">显示</Button>
   <Button :disabled="!open" @click="open = false">隐藏</Button>
 </Space>
@@ -639,10 +642,13 @@ _使用 `v-model:open` 控制面板显隐；点击触发器、点击外部与 `E
 <script setup lang="ts">
 import { ref } from 'vue'
 const open = ref(false)
+function handleOpenChange(value: boolean) {
+  console.log('openChange', value)
+}
 </script>
 <template>
   <Space align="center">
-    <ColorPicker :width="240" default-value="#ff6900" v-model:open="open" />
+    <ColorPicker :width="240" default-value="#ff6900" v-model:open="open" @open-change="handleOpenChange" />
     <Button type="primary" :disabled="open" @click="open = true">显示</Button>
     <Button :disabled="!open" @click="open = false">隐藏</Button>
   </Space>
@@ -713,7 +719,7 @@ const panelTo = computed(() => {
 :-- | :-- | :-- | :--
 value <Tag color="cyan">v-model</Tag> | 颜色选择器的值 | string | undefined
 defaultValue | 未受控时的初始颜色值 | string | undefined
-open <Tag color="cyan">v-model</Tag> | 面板是否展开（受控，不传时由组件内部维护） | boolean | false
+open <Tag color="cyan">v-model</Tag> | 面板是否展开（受控，不传时由组件内部维护） | boolean | undefined
 defaultOpen | 未受控时面板的初始显隐 | boolean | false
 label | 展示的内容，返回值同时支持字符串与 VNode | (color: string) => VNodeChild | undefined
 swatches | 色板的值 | string[] | []

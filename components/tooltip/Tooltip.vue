@@ -292,7 +292,7 @@ function clearTooltipTimer(): void {
     tooltipTimer.value = null
   }
 }
-// immediate 为 true 时跳过 hover 延迟（用于受控 show 需立即生效的场景）
+// immediate 为 true 时跳过 hover 延迟（用于受控 open 需立即生效的场景）
 function onShow(immediate = false): void {
   if (props.disabled) return
   clearTooltipTimer()
