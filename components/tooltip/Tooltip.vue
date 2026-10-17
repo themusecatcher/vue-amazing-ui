@@ -46,8 +46,8 @@ export interface Props {
   transitionDuration?: number // 文字提示动画的过渡持续时间，单位 ms
   showDelay?: number // 文字提示显示的延迟时间，单位 ms，仅当 trigger: hover 时生效
   hideDelay?: number // 文字提示隐藏的延迟时间，单位 ms，仅当 trigger: hover 时生效
-  show?: boolean // (v-model) 文字提示是否显示
-  showControl?: boolean // 只使用 show 属性控制显示隐藏，仅当 trigger: hover 时生效，此时移入移出将不会触发显示隐藏，全部由 show 属性控制
+  open?: boolean // (v-model) 文字提示是否显示
+  openControl?: boolean // 只使用 open 属性控制显示隐藏，仅当 trigger: hover 时生效，此时移入移出将不会触发显示隐藏，全部由 open 属性控制
 }
 // 声明组件插槽类型
 export interface TooltipSlots {
@@ -79,8 +79,8 @@ const props = withDefaults(defineProps<Props>(), {
   transitionDuration: 100,
   showDelay: 100,
   hideDelay: 100,
-  show: false,
-  showControl: false
+  open: false,
+  openControl: false
 })
 defineSlots<TooltipSlots>()
 const tooltipShow = ref<boolean>(false) // tooltip 显示隐藏标识
@@ -99,7 +99,7 @@ const anchorSize = ref<{ width: number; height: number }>({ width: 0, height: 0 
 // 卡片布局尺寸 (取 offset 尺寸)：仅用于识别「尺寸真的变了」的重复回调，避免无谓重算
 const cardSize = ref<{ width: number; height: number }>({ width: 0, height: 0 })
 const { isSupported: captureSupported } = useOptionsSupported('capture')
-const emits = defineEmits(['update:show', 'openChange', 'animationend'])
+const emits = defineEmits(['update:open', 'openChange', 'animationend'])
 const slotsExist = useSlotsExist(['tooltip'])
 // 预设色板：色名 → 色值
 const presetColors: Record<string, string> = {
@@ -213,7 +213,7 @@ const tooltipTransitionProps: TransitionProps = {
   leaveActiveClass: 'tooltip-zoom-leave tooltip-zoom-leave-active',
   leaveToClass: 'tooltip-zoom-leave tooltip-zoom-leave-active'
 }
-// 受控 show 初始为真时，可见性 watcher 在 setup 阶段执行（此时模板引用尚未就绪），故挂载后补测一次
+// 受控 open 初始为真时，可见性 watcher 在 setup 阶段执行（此时模板引用尚未就绪），故挂载后补测一次
 onMounted(measureAnchor)
 watch(
   () => showTooltip.value && tooltipShow.value,
@@ -227,9 +227,9 @@ watch(
   }
 )
 watch(
-  () => props.show,
+  () => props.open,
   (to) => {
-    // 受控 show 需立即同步（跳过 hover 延迟）
+    // 受控 open 需立即同步（跳过 hover 延迟）
     if (to && !tooltipShow.value) {
       onShow(true)
     }
@@ -292,7 +292,7 @@ function clearTooltipTimer(): void {
     tooltipTimer.value = null
   }
 }
-// immediate 为 true 时跳过 hover 延迟（用于受控 show 需立即生效的场景）
+// immediate 为 true 时跳过 hover 延迟（用于受控 open 需立即生效的场景）
 function onShow(immediate = false): void {
   if (props.disabled) return
   clearTooltipTimer()
@@ -301,7 +301,7 @@ function onShow(immediate = false): void {
     const delay = props.trigger === 'hover' && !immediate ? props.showDelay : 0
     tooltipTimer.value = setTimeout(() => {
       tooltipShow.value = true
-      emits('update:show', true)
+      emits('update:open', true)
       emits('openChange', true)
       if (showTooltip.value && (props.trigger === 'click' || props.trigger === 'contextmenu')) {
         addDocumentListener()
@@ -316,7 +316,7 @@ function onHide(immediate = false): void {
     const delay = props.trigger === 'hover' && !immediate ? props.hideDelay : 0
     tooltipTimer.value = setTimeout(() => {
       tooltipShow.value = false
-      emits('update:show', false)
+      emits('update:open', false)
       emits('openChange', false)
       removeDocumentListener()
     }, delay)
@@ -347,12 +347,12 @@ function removeDocumentListener(): void {
   documentListenerAttached.value = false
 }
 function onEnterWrap() {
-  if (showTooltip.value && props.trigger === 'hover' && !props.showControl) {
+  if (showTooltip.value && props.trigger === 'hover' && !props.openControl) {
     onShow()
   }
 }
 function onLeaveWrap() {
-  if (showTooltip.value && props.trigger === 'hover' && !props.showControl) {
+  if (showTooltip.value && props.trigger === 'hover' && !props.openControl) {
     onHide()
   }
 }
@@ -361,12 +361,12 @@ function onAnimationEnd() {
   emits('animationend', tooltipShow.value)
 }
 function onEnterTooltip() {
-  if (props.trigger === 'hover' && !props.showControl) {
+  if (props.trigger === 'hover' && !props.openControl) {
     onShow()
   }
 }
 function onLeaveTooltip() {
-  if (props.trigger === 'hover' && !props.showControl) {
+  if (props.trigger === 'hover' && !props.openControl) {
     onHide()
   }
 }

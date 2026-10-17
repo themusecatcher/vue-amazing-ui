@@ -126,7 +126,7 @@ _四种典型页面框架：仅上中下、含侧边栏、侧边栏在右、侧�
   </Layout>
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -193,7 +193,7 @@ const footerStyle: CSSProperties = {
 </template>
 ```
 
-::::
+:::
 
 ## 上中下布局
 
@@ -217,7 +217,7 @@ _内容集中在定宽区域内，页面结构稳定，不受浏览区域宽度�
   <LayoutFooter style="text-align: center">Vue Amazing UI ©2023 Created by the Muse Catcher</LayoutFooter>
 </Layout>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -245,7 +245,7 @@ const topNavKeys = ref<MenuKey[]>(['2'])
 </template>
 ```
 
-::::
+:::
 
 ## 顶部-侧边布局-通栏
 
@@ -315,7 +315,7 @@ _顶部导航与侧边栏贴合页面边缘、不留外边距，适合信息密�
   </Layout>
 </Layout>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -392,7 +392,7 @@ const topSide2OpenKeys = ref<MenuKey[]>(['sub1'])
 </template>
 ```
 
-::::
+:::
 
 ## 顶部-侧边布局
 
@@ -463,7 +463,7 @@ _相比通栏形态，内容区两侧留出边距，多用于展示类页面_
   <LayoutFooter style="text-align: center">Vue Amazing UI ©2023 Created by the Muse Catcher</LayoutFooter>
 </Layout>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -541,7 +541,7 @@ const topSideOpenKeys = ref<MenuKey[]>(['sub1'])
 </template>
 ```
 
-::::
+:::
 
 ## 侧边布局
 
@@ -590,7 +590,7 @@ _侧边导航可收起，横向空间有限时能腾出内容区宽度；如需�
   </Layout>
 </div>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -645,7 +645,7 @@ const sideRoutes = ref<BreadcrumbRoute[]>([{ name: 'User' }, { name: 'Bill' }])
 </template>
 ```
 
-::::
+:::
 
 ## 自定义触发器
 
@@ -682,7 +682,7 @@ _设置 `:trigger="null"` 隐藏默认触发器，改用头部图标控制侧边
   </Layout>
 </Layout>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -730,7 +730,7 @@ const customTriggerSelectedKeys = ref<MenuKey[]>(['1'])
 </template>
 ```
 
-::::
+:::
 
 ## 响应式布局
 
@@ -769,7 +769,7 @@ _视窗宽度低于 `breakpoint` 时侧边栏自动收起到 `collapsedWidth`；
   </Layout>
 </Layout>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -818,7 +818,7 @@ const onBreakpoint = (broken: boolean) => {
 </template>
 ```
 
-::::
+:::
 
 ## 固定侧边栏
 
@@ -877,7 +877,7 @@ _内容超过一屏时侧边栏保持固定，滚动浏览时不会移出视口�
   </Layout>
 </div>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -949,7 +949,7 @@ const fixedSiderSelectedKeys = ref<MenuKey[]>(['4'])
 </template>
 ```
 
-::::
+:::
 
 ## 固定头部
 
@@ -975,7 +975,7 @@ _顶部导航固定在顶部，长页面滚动时仍可随时切换_
   </Layout>
 </div>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1005,7 +1005,7 @@ const fixedNavKeys = ref<MenuKey[]>(['2'])
 </template>
 ```
 
-::::
+:::
 
 ## 响应式收起宽度
 
@@ -1044,7 +1044,7 @@ _`collapsedWidth` 支持响应式宽度，按不同视窗宽度设置不同的�
   </Layout>
 </Layout>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1091,7 +1091,7 @@ const onCollapse = (collapsed: boolean, type: 'clickTrigger' | 'responsive') => 
 </template>
 ```
 
-::::
+:::
 
 ## 自定义滚动条
 
@@ -1174,7 +1174,7 @@ _侧边栏与内容区的滚动条改用 Scrollbar 组件，滚动样式与交�
   </Layout>
 </div>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1274,7 +1274,7 @@ const customScrollbarSelectedKeys = ref<MenuKey[]>(['1'])
 </template>
 ```
 
-::::
+:::
 
 ## APIs
 

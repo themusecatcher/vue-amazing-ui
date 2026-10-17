@@ -894,7 +894,7 @@ const optionsArr = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry', 'Fig', 
 
 ## 自定义下拉面板
 
-_通过 `popupClassName` 自定义面板类名、`dropdownMenuStyle` 设置面板样式，两者均落在 `Teleport` 后的面板上，需写在全局样式中；`zIndex` 用于覆盖面板层级（默认 1050）_
+_通过 `popupClassName` 自定义面板类名、`dropdownMenuStyle` 设置面板样式，两者均落在 `Teleport` 后的面板上；`popupClassName` 的样式需写在全局样式中（`scoped` 样式无法命中），`zIndex` 用于覆盖面板层级（默认 `1050`）_
 
 <br/>
 

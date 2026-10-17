@@ -131,9 +131,15 @@ function onUpload(e: any, index: number): void {
     uploadInputRef.value[index].value = ''
   }
 }
+// 使用方返回 false 表示主动拒绝该文件：以带标记的 Error 承载这一信号，
+// 与真实异常区分（靠消息字符串判定太脆弱，使用方抛同名消息会被误判静默）
+function createBeforeUploadRejected(): Error {
+  const error = new Error('beforeUpload returned false')
+  error.name = 'BeforeUploadRejected'
+  return error
+}
 // 统一上传文件方法
 function uploadFile(file: File, index: number): void {
-  // console.log('开始上传 upload-event files:', file)
   function promiseFunction() {
     return new Promise((resolve, reject) => {
       try {
@@ -147,7 +153,7 @@ function uploadFile(file: File, index: number): void {
           // 检查返回值是否为布尔值
           if (typeof result === 'boolean') {
             // 如果是布尔值，根据值 resolve 或 reject
-            result ? resolve(result) : reject(new Error('Function returned false'))
+            result ? resolve(result) : reject(createBeforeUploadRejected())
           } else {
             // 否则，直接 resolve 返回值
             resolve(result)
@@ -176,38 +182,41 @@ function uploadFile(file: File, index: number): void {
         customUpload(file, index)
       }
     })
-    .catch((error: any) => {
-      console.warn('beforeUpload error:', error)
+    .catch((error: unknown) => {
+      // beforeUpload 返回 false 表示使用方主动拒绝该文件（内部以带标记的 Error 承载这一信号），属预期业务流，不告警；
+      // 其余抛错才是使用方回调异常 —— 与 Dialog / Modal 的回调出错同级，用 error 便于线上排查
+      if (error instanceof Error && error.name === 'BeforeUploadRejected') return
+      console.error('[vue-amazing-ui] Upload: beforeUpload 执行出错', error)
     })
 }
 function base64Upload(file: File, index: number): void {
   const reader = new FileReader()
   reader.readAsDataURL(file) // 以 base64 方式读取文件
   reader.onloadstart = function (e) {
-    // 当读取操作开始时触发
-    // reader.abort() // 取消上传
-    // console.log('开始读取 onloadstart:', e)
+    // 当读取操作开始时触发：loading 已在 uploadFile 中置位，此处无需再处理
   }
   reader.onabort = function (e) {
-    // 当读取操作被中断时触发
-    // console.log('读取中止 onabort:', e)
+    // 当读取操作被中断时触发：库内未开放取消能力（无 reader.abort() 调用）；
+    // 若将来支持，loading 复位同样由 onloadend 统一承担，无需在此重复
   }
   reader.onerror = function (e) {
-    // 当读取操作发生错误时触发
-    // console.log('读取错误 onerror:', e)
+    // 当读取操作发生错误时触发：读取失败不会有 onload，需补上可观测日志与失败事件；
+    // loading 由 onloadend 兜底复位（error 之后必然触发）
+    console.error('[vue-amazing-ui] Upload: 文件读取失败', e, reader.error)
+    emits('error', reader.error)
   }
   reader.onprogress = function (e) {
     // 在读取 Blob 时触发，读取上传进度，50ms 左右调用一次
-    // console.log('读取中 onprogress:', e)
-    // console.log('已读取:', Math.ceil(e.loaded / e.total * 100))
     if (e.loaded === e.total) {
-      // 上传完成
+      // 上传完成：进度读满即隐藏 loading（原有提前收口行为，保留）
+      // 代价：此刻 uploadedFiles[index] 尚未写入（要到 onload 才赋值），模板的「上传框」
+      // （v-show="!uploading[n-1] && !uploadedFiles[n-1]"）与「loading」（v-if="uploading[n-1]"）
+      // 会同时为假，该槽位理论上存在一帧空窗；失败 / 中断 / progress 未报满的复位由 onloadend 兜底
       uploading.value[index] = false // 隐藏 loading 状态
     }
   }
   reader.onload = function (e) {
     // 当读取操作成功完成时调用
-    // console.log('读取成功 onload:', e)
     // 该文件的 base64 数据，如果是图片，则前端可直接用来展示图片
     uploadedFiles.value[index] = {
       name: file.name,
@@ -218,8 +227,11 @@ function base64Upload(file: File, index: number): void {
     emits('change', uploadedFiles.value)
   }
   reader.onloadend = function (e) {
-    // 当读取操作结束时触发（要么成功，要么失败）触发
-    // console.log('读取结束 onloadend:', e)
+    // 当读取操作结束时触发（成功 / 失败 / 中断都会触发）：作为 loading 的兜底复位。
+    // onprogress 只在进度读满（`loaded === total`）时收口，而规范中 progress 属于「可以派发」，
+    // 读到结束不保证派发一次相等的 progress（失败 / 中断更必然没有），故这里再兜一层；
+    // 与 onprogress 的复位互为幂等，不会造成重复渲染。
+    uploading.value[index] = false
   }
 }
 function customUpload(file: File, index: number): void {

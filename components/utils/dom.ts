@@ -170,11 +170,11 @@ function checkIframeError(iframe: HTMLIFrameElement): void {
     const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
     const bodyContent = iframeDoc?.body?.innerHTML
     if (bodyContent) {
-      console.error(`文件下载失败：服务器返回错误url: ${iframe.src}`)
+      console.error(`[vue-amazing-ui] checkIframeError: 文件下载失败，服务器返回错误 url：${iframe.src}`)
     }
   } catch (err) {
     // 跨域限制导致无法读取 iframe 内容，检测失效属预期行为，用 debug 级别避免污染业务方控制台
-    console.debug('无法检查 iframe 内容（通常为跨域限制，可忽略）：', err)
+    console.debug('[vue-amazing-ui] checkIframeError: 无法检查 iframe 内容（通常为跨域限制，可忽略）', err)
   }
 }
 
@@ -217,7 +217,7 @@ export function downloadFile(url: string, fileName?: string, options: DownloadOp
   try {
     parsedUrl = new URL(url, location.href)
   } catch (err) {
-    console.error(`下载地址解析失败：${url}`, err)
+    console.error(`[vue-amazing-ui] downloadFile: 下载地址解析失败：${url}`, err)
     return Promise.reject(err)
   }
 

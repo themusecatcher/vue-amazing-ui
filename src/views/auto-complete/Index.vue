@@ -442,7 +442,8 @@ const panelZIndexValue = ref('')
     <h2 class="mt30 mb10">自定义下拉面板</h2>
     <p class="mb10">
       通过 <code>popupClassName</code> 自定义面板类名、<code>dropdownMenuStyle</code> 设置面板样式，两者均落在
-      <code>Teleport</code> 后的面板上，需写在全局样式中；<code>zIndex</code> 用于覆盖面板层级（默认 1050）
+      <code>Teleport</code> 后的面板上；<code>popupClassName</code> 的样式需写在全局样式中（<code>scoped</code>
+      样式无法命中），<code>zIndex</code> 用于覆盖面板层级（默认 <code>1050</code>）
     </p>
     <Flex gap="large" wrap="wrap">
       <Flex vertical gap="small" align="start">

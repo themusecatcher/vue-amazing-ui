@@ -11,7 +11,7 @@ _点击/鼠标移入元素，弹出气泡式的卡片浮层。_
 
 <script setup lang="ts">
 import { ref } from 'vue'
-const show = ref(false)
+const open = ref(false)
 function openChange(open: boolean) {
   console.log('open', open)
 }
@@ -134,13 +134,13 @@ function openChange(open: boolean) {
 
 ## 从浮层内关闭
 
-_使用 `show` 属性控制显示隐藏_
+_使用 `open` 属性控制显示隐藏_
 
 <br/>
 
-<Popover v-model:show="show" title="Click Title" trigger="click">
+<Popover v-model:open="open" title="Click Title" trigger="click">
   <template #content>
-    <a @click="show = false">Close</a>
+    <a @click="open = false">Close</a>
   </template>
   <Button type="primary">Click Me</Button>
 </Popover>
@@ -150,12 +150,12 @@ _使用 `show` 属性控制显示隐藏_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const show = ref(false)
+const open = ref(false)
 </script>
 <template>
-  <Popover v-model:show="show" title="Click Title" trigger="click">
+  <Popover v-model:open="open" title="Click Title" trigger="click">
     <template #content>
-      <a @click="show = false">Close</a>
+      <a @click="open = false">Close</a>
     </template>
     <Button type="primary">Click Me</Button>
   </Popover>

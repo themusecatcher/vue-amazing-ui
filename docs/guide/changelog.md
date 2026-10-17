@@ -10,12 +10,20 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-18">2.14.3</VersionDateTag>
+## <VersionDateTag date="2026-10-18">2.15.1</VersionDateTag>
 
 - 修复并增强 [日历 Calendar](/guide/components/calendar.html)：修复重复点击已选中日期不发 `select`、`startDayOfWeek` 越界导致死循环、字符串 `value` 且未指定 `valueFormat` 时挂载失败、选中值归一化双路径不一致、月面板跨月选中溢出到次月、仅配置 `validRange` 时月份面板区间外的月份仍可选中并写回区间外值等问题；修正面板形态「今天」标记撑高所在行（同排悬浮 / 选中底色底部露缝）、卡片形态日期相对禁用底色未垂直居中、卡片形态不可选的「今天」描边与文字未退中性色等视觉错漏；补齐 grid 语义（`role="grid"` / `role="gridcell"` / `aria-selected` / `aria-disabled`）
 - 增强 [日历 Calendar](/guide/components/calendar.html)：新增 `defaultValue`（非受控初始值）、`validRange`（可选日期区间，同时收窄年 / 月选项）、`headerFull`（整体替换头部，插槽提供当前选中值、写回选中值与切换面板模式的回调）、`dateFull` / `monthFull`（整格替换）插槽，键盘导航（方向键 / 翻页键），整月禁用态，窄屏响应式头部，面板「今天」跨零点自动刷新；今天态按形态区分（面板形态为实心主色标记，日面板为圆形、月面板为两端半圆的胶囊形，均为白字；卡片形态为主色描边方块），面板形态选中格的网格线取主色
 - **不兼容变更**：[日历 Calendar](/guide/components/calendar.html) 的 `select` 事件第二参由字符串改为 `{ source }`（`'year' | 'month' | 'date' | 'customize'`）；年 / 月选择器变更现在会写回选中值并触发 `change` / `select`（此前仅触发 `panelChange`）；卡片模式宽度改为 `300px` 基准、容器更窄时自适应收缩（日期面板内容高度固定 `256px`）
 - 补充 [日历 Calendar](/guide/components/calendar.html) 单元测试
+
+## <VersionDateTag date="2026-10-17">2.15.0</VersionDateTag>
+
+- 重构并增强 [颜色选择器 ColorPicker](/guide/components/color-picker.html)：浮层改为组件自持，显隐改用 `v-model:open`（原 `v-model:show`），面板样式改用 `panelStyle` / `panelClass`（原 `tooltipStyle`），原 [文字提示 Tooltip](/guide/components/tooltip.html) 派生属性（延迟、箭头等）与 `trigger` 插槽旧回传值一并移除（现回传 `{ value }`，程序化开合请用 `v-model:open`），并新增 `defaultOpen` / `openChange` / `destroyOnHide` / `placement` / `to` / `zIndex` / `offset` 属性；`complete` 事件改为仅在输入框提交或拖动结束时触发（依赖「选色即完成」请改用 `update:value`）；同时修复非法色值与越界输入导致崩溃、禁用态仍可展开、`panelStyle` 宽度反复展开跳变等问题
+- [文字提示 Tooltip](/guide/components/tooltip.html)（含派生的 [气泡卡片 Popover](/guide/components/popover.html) / [气泡确认框 Popconfirm](/guide/components/popconfirm.html)）的显隐双向绑定统一为 `v-model:open`（原 `v-model:show`），`showControl` 改名为 `openControl`
+- 修正告警输出：[上传 Upload](/guide/components/upload.html) 的 `beforeUpload` 返回 `false` 时不再误报为「执行出错」，回调异常改走 `error` 级；开发期告警统一为 `[vue-amazing-ui] {组件名}: {说明}` 并修复其在库构建下永不输出的问题（现随使用方构建环境生效），运行时错误与降级日志同样加前缀
+- 更新使用者文档与贡献者文档
+- 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-10-16">2.14.2</VersionDateTag>
 

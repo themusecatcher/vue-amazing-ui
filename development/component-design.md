@@ -106,6 +106,19 @@ const slotsExist = useSlotsExist(['icon', 'default'])
 const showIconOnly = computed(() => slotsExist.icon && !slotsExist.default)
 ```
 
+## 开发期告警 warnUsage
+
+对「调用方式有误、入参被忽略、配置不生效」等**只在开发期需要提醒**的情况，统一走 `warnUsage` 输出，不要在组件里另写 `console.warn` 或 `import.meta.env.DEV`：
+
+```ts
+import { warnUsage } from 'components/utils'
+warnUsage('BackTop', '未找到容器元素，滚动监听未启用')
+```
+
+- 输出结构固定为 `[vue-amazing-ui] {组件名或工具名}: {中文说明}`，便于使用方在控制台过滤定位。
+- **环境判定必须经 `components/utils/warn.ts`（内部用 `process.env.NODE_ENV`），禁止手写 `import.meta.env.DEV`**：后者在库构建中会被内联为 `false`，导致使用方任何环境都收不到告警；前者原样保留在产物中，由使用方的打包工具按其自身环境替换。
+- 运行时失败（异步报错、`DOM` 操作失败等）不走本工具，直接用 `console.error` / `console.warn` 并带 `[vue-amazing-ui]` 前缀，保持线上可观测。
+
 ## 样式规范
 
 - Less + scoped，类名采用 BEM 风格前缀（如 `btn-wrap` / `btn-primary` / `btn-icon-only`）。

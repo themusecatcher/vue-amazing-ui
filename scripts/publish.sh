@@ -157,11 +157,11 @@ print_publish_success_banner
 retry=0
 until pnpm up vue-amazing-ui@$version; do
   retry=$((retry + 1))
-  if [ $retry -ge 10 ]; then
-    echo "❌ pnpm up 重试 10 次仍失败，请稍后手动执行: pnpm up vue-amazing-ui@$version"
+  if [ $retry -ge 20 ]; then
+    echo "❌ pnpm up 重试 20 次仍失败，请稍后手动执行: pnpm up vue-amazing-ui@$version"
     exit 1
   fi
-  printf "⏳ registry 可能尚未同步 vue-amazing-ui 版本 %s，30 秒后重试 (%s/10)...\n" "$version" "$retry"
+  printf "⏳ registry 可能尚未同步 vue-amazing-ui 版本 %s，30 秒后重试 (%s/20)...\n" "$version" "$retry"
   sleep 30
 done
 
