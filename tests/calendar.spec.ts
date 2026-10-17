@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest'
 import { h } from 'vue'
 import { mount } from '@vue/test-utils'
-import { format } from 'date-fns'
+import { format, getMonth, getYear } from 'date-fns'
 import Calendar from 'components/calendar/Calendar.vue'
 import type { DayOfWeek, HeaderFullSlotProps } from 'components/calendar/Calendar.vue'
 import Select from 'components/select'
@@ -114,6 +114,48 @@ describe('对外取值口径', () => {
     await flush()
 
     expect(lastEmittedValue()).toBe(new Date(2026, 10, 30).getTime())
+  })
+})
+
+describe('面板定位与 panelChange', () => {
+  it('无选中值时切换年选择器：面板跳转同样补发 panelChange', async () => {
+    wrapper = mount(Calendar, { attachTo: document.body })
+    await flush()
+
+    const targetYear = getYear(Date.now()) + 3
+    wrapper.findAllComponents(Select)[0].vm.$emit('change', targetYear)
+    await flush()
+
+    const panelChangeEvents = wrapper.emitted('panelChange')
+    expect(panelChangeEvents?.length).toBe(1)
+    expect(panelChangeEvents?.[0]?.[1]).toEqual({ year: targetYear, month: getMonth(Date.now()) + 1 })
+    expect(panelChangeEvents?.[0]?.[2]).toBe('month')
+  })
+
+  it('无选中值时切换月选择器：面板跳转同样补发 panelChange', async () => {
+    wrapper = mount(Calendar, { attachTo: document.body })
+    await flush()
+
+    // 取一个与当前月不同的月份
+    const targetMonth = ((getMonth(Date.now()) + 1) % 12) + 1
+    wrapper.findAllComponents(Select)[1].vm.$emit('change', targetMonth)
+    await flush()
+
+    const panelChangeEvents = wrapper.emitted('panelChange')
+    expect(panelChangeEvents?.length).toBe(1)
+    expect(panelChangeEvents?.[0]?.[1]).toEqual({ year: getYear(Date.now()), month: targetMonth })
+  })
+
+  it('同月内换日不补发 panelChange', async () => {
+    wrapper = mount(Calendar, { attachTo: document.body, props: { value: new Date(2026, 9, 15).getTime() } })
+    await flush()
+
+    const cell = currentMonthCells().find((item) => item.attributes('title') !== '2026-10-15')
+    await cell!.trigger('click')
+    await flush()
+
+    expect(wrapper.emitted('change')?.length).toBe(1)
+    expect(wrapper.emitted('panelChange')).toBeUndefined()
   })
 })
 
@@ -331,6 +373,141 @@ describe('增强能力', () => {
     expect(format(lastEmittedValue(), 'yyyy-MM-dd')).toBe('2026-09-23')
   })
 
+  it('年面板键盘导航：左右一月、上下一行（三个月），来源为 month', async () => {
+    wrapper = mount(Calendar, {
+      attachTo: document.body,
+      props: { mode: 'year', value: new Date(2026, 9, 15).getTime() }
+    })
+    await flush()
+
+    const panel = wrapper.find('.calendar-display-wrap')
+    await panel.trigger('keydown', { key: 'ArrowRight' })
+    await flush()
+    expect(format(lastEmittedValue(), 'yyyy-MM-dd')).toBe('2026-11-15')
+    const selectEvents = wrapper.emitted('select')
+    expect(selectEvents?.[selectEvents.length - 1]?.[1]).toEqual({ source: 'month' })
+
+    await panel.trigger('keydown', { key: 'ArrowDown' })
+    await flush()
+    expect(format(lastEmittedValue(), 'yyyy-MM-dd')).toBe('2027-02-15')
+
+    await panel.trigger('keydown', { key: 'ArrowRight', ctrlKey: true })
+    await flush()
+    expect(format(lastEmittedValue(), 'yyyy-MM-dd')).toBe('2028-02-15')
+  })
+
+  it('年面板键盘导航：翻页键不响应', async () => {
+    wrapper = mount(Calendar, {
+      attachTo: document.body,
+      props: { mode: 'year', value: new Date(2026, 9, 15).getTime() }
+    })
+    await flush()
+
+    await wrapper.find('.calendar-display-wrap').trigger('keydown', { key: 'PageUp' })
+    await flush()
+
+    expect(wrapper.emitted('update:value')).toBeUndefined()
+  })
+
+  it('validRange 字符串入参按 valueFormat 解析', async () => {
+    wrapper = mount(Calendar, {
+      attachTo: document.body,
+      props: {
+        value: '2026-10-15',
+        valueFormat: 'yyyy-MM-dd',
+        validRange: ['2026-10-10', '2026-10-20']
+      }
+    })
+    await flush()
+
+    expect(wrapper.findAll('.calendar-date-cell[aria-disabled="true"]').length).toBeGreaterThan(0)
+    const inRangeCell = wrapper.findAll('.calendar-date-cell').find((cell) => cell.attributes('title') === '2026-10-15')
+    expect(inRangeCell?.classes()).not.toContain('date-cell-disabled')
+  })
+
+  it('validRange 字符串无法解析时忽略该区间，不阻断渲染', async () => {
+    wrapper = mount(Calendar, {
+      attachTo: document.body,
+      props: {
+        value: new Date(2026, 9, 15).getTime(),
+        validRange: ['2026-10-10', '2026-10-20']
+      }
+    })
+    await flush()
+
+    expect(wrapper.findAll('.calendar-date-cell[aria-disabled="true"]').length).toBe(0)
+  })
+
+  it('validRange 下月份面板：保留的「日」落在区间外时收敛到区间端点', async () => {
+    wrapper = mount(Calendar, {
+      attachTo: document.body,
+      props: {
+        mode: 'year',
+        value: new Date(2026, 9, 22).getTime(),
+        validRange: [new Date(2026, 9, 20).getTime(), new Date(2026, 10, 5).getTime()]
+      }
+    })
+    await flush()
+
+    // 11 月仅 1-5 日可选：原「日」为 22，写回时收敛到区间终点
+    const november = wrapper
+      .findAll('.calendar-month-panel .calendar-date-cell')
+      .find((cell) => cell.attributes('title') === '2026-11')
+    await november!.trigger('click')
+    await flush()
+
+    expect(format(lastEmittedValue(), 'yyyy-MM-dd')).toBe('2026-11-05')
+    // 来源为月：change 第二参保持月份对象口径
+    expect(wrapper.emitted('change')?.[0]?.[1]).toEqual({ month: 10, year: 2026 })
+  })
+
+  it('validRange 下月选择器：保留的「日」落在区间外时收敛到区间端点', async () => {
+    wrapper = mount(Calendar, {
+      attachTo: document.body,
+      props: {
+        value: new Date(2026, 9, 22).getTime(),
+        validRange: [new Date(2026, 9, 20).getTime(), new Date(2026, 10, 5).getTime()]
+      }
+    })
+    await flush()
+
+    wrapper.findAllComponents(Select)[1].vm.$emit('change', 11)
+    await flush()
+
+    expect(format(lastEmittedValue(), 'yyyy-MM-dd')).toBe('2026-11-05')
+  })
+
+  it('选中值为 0（1970-01-01）时同样定位面板，不视作无选中值', async () => {
+    wrapper = mount(Calendar, {
+      attachTo: document.body,
+      props: { value: new Date(2026, 9, 15).getTime() }
+    })
+    await flush()
+
+    await wrapper.setProps({ value: 0 })
+    await flush()
+
+    const selected = wrapper.findAll('.calendar-date-cell.date-cell-selected')
+    expect(selected.length).toBe(1)
+    expect(selected[0].attributes('title')).toBe(format(0, 'yyyy-MM-dd'))
+  })
+
+  it('键盘移动与年选择器的 change 均携带日期对象', async () => {
+    wrapper = mount(Calendar, {
+      attachTo: document.body,
+      props: { value: new Date(2026, 9, 15).getTime() }
+    })
+    await flush()
+
+    await wrapper.find('.calendar-display-wrap').trigger('keydown', { key: 'ArrowRight' })
+    await flush()
+    expect(wrapper.emitted('change')?.[0]?.[1]).toEqual({ date: 16, month: 9, year: 2026 })
+
+    wrapper.findAllComponents(Select)[0].vm.$emit('change', 2027)
+    await flush()
+    expect(wrapper.emitted('change')?.[1]?.[1]).toEqual({ date: 16, month: 9, year: 2027 })
+  })
+
   it('卡片形态固定渲染六周（末行补齐下月日期），不留空白', async () => {
     wrapper = mount(Calendar, {
       attachTo: document.body,
@@ -367,6 +544,43 @@ describe('增强能力', () => {
     const firstCell = wrapper.find('.calendar-date-panel .calendar-date-cell')
     expect(firstCell.attributes('title')).toBe('2027-02-01')
     expect(wrapper.findAll('.calendar-date-panel .calendar-date-cell').length).toBe(42)
+  })
+
+  it('月选择器切到禁用日时收敛到同月最近的可用日', async () => {
+    wrapper = mount(Calendar, {
+      attachTo: document.body,
+      props: {
+        value: new Date(2026, 10, 5).getTime(),
+        disabledDate: (timestamp: number) => ['6', '7'].includes(format(timestamp, 'i'))
+      }
+    })
+    await flush()
+
+    // 12-05 为周六（禁用），同月最近可用日为 12-04（周五）
+    wrapper.findAllComponents(Select)[1].vm.$emit('change', 12)
+    await flush()
+
+    expect(format(lastEmittedValue(), 'yyyy-MM-dd')).toBe('2026-12-04')
+  })
+
+  it('月格点击同样不写回禁用日期', async () => {
+    wrapper = mount(Calendar, {
+      attachTo: document.body,
+      props: {
+        mode: 'year',
+        value: new Date(2026, 10, 5).getTime(),
+        disabledDate: (timestamp: number) => ['6', '7'].includes(format(timestamp, 'i'))
+      }
+    })
+    await flush()
+
+    const december = wrapper
+      .findAll('.calendar-month-panel .calendar-date-cell')
+      .find((cell) => cell.attributes('title') === '2026-12')
+    await december!.trigger('click')
+    await flush()
+
+    expect(format(lastEmittedValue(), 'yyyy-MM-dd')).toBe('2026-12-04')
   })
 
   it('dateFull 插槽替换整格内容', async () => {
