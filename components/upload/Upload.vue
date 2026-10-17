@@ -193,19 +193,25 @@ function base64Upload(file: File, index: number): void {
   const reader = new FileReader()
   reader.readAsDataURL(file) // 以 base64 方式读取文件
   reader.onloadstart = function (e) {
-    // 当读取操作开始时触发
-    // reader.abort() // 取消上传
+    // 当读取操作开始时触发：loading 已在 uploadFile 中置位，此处无需再处理
   }
   reader.onabort = function (e) {
-    // 当读取操作被中断时触发
+    // 当读取操作被中断时触发：库内未开放取消能力（无 reader.abort() 调用）；
+    // 若将来支持，loading 复位同样由 onloadend 统一承担，无需在此重复
   }
   reader.onerror = function (e) {
-    // 当读取操作发生错误时触发
+    // 当读取操作发生错误时触发：读取失败不会有 onload，需补上可观测日志与失败事件；
+    // loading 由 onloadend 兜底复位（error 之后必然触发）
+    console.error('[vue-amazing-ui] Upload: 文件读取失败', e, reader.error)
+    emits('error', reader.error)
   }
   reader.onprogress = function (e) {
     // 在读取 Blob 时触发，读取上传进度，50ms 左右调用一次
     if (e.loaded === e.total) {
-      // 上传完成
+      // 上传完成：进度读满即隐藏 loading（原有提前收口行为，保留）
+      // 代价：此刻 uploadedFiles[index] 尚未写入（要到 onload 才赋值），模板的「上传框」
+      // （v-show="!uploading[n-1] && !uploadedFiles[n-1]"）与「loading」（v-if="uploading[n-1]"）
+      // 会同时为假，该槽位理论上存在一帧空窗；失败 / 中断 / progress 未报满的复位由 onloadend 兜底
       uploading.value[index] = false // 隐藏 loading 状态
     }
   }
@@ -221,7 +227,11 @@ function base64Upload(file: File, index: number): void {
     emits('change', uploadedFiles.value)
   }
   reader.onloadend = function (e) {
-    // 当读取操作结束时触发（要么成功，要么失败）触发
+    // 当读取操作结束时触发（成功 / 失败 / 中断都会触发）：作为 loading 的兜底复位。
+    // onprogress 只在进度读满（`loaded === total`）时收口，而规范中 progress 属于「可以派发」，
+    // 读到结束不保证派发一次相等的 progress（失败 / 中断更必然没有），故这里再兜一层；
+    // 与 onprogress 的复位互为幂等，不会造成重复渲染。
+    uploading.value[index] = false
   }
 }
 function customUpload(file: File, index: number): void {
