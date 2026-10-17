@@ -27,7 +27,22 @@ export default defineConfig({
 
   head: [
     // 网站图标
-    ['link', { rel: 'icon', href: '/vue-amazing-ui/amazing-icon.svg' }]
+    ['link', { rel: 'icon', href: '/vue-amazing-ui/amazing-icon.svg' }],
+    // Open Graph / social preview tags
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:site_name', content: 'Vue Amazing UI' }],
+    ['meta', { property: 'og:title', content: 'Vue Amazing UI | Amazing UI Components Library' }],
+    ['meta', { property: 'og:description', content: 'Amazing UI 组件库 — theme-able Vue3 + TypeScript + Vite components with tree-shaking support.' }],
+    ['meta', { property: 'og:url', content: 'https://themusecatcher.github.io/vue-amazing-ui/' }],
+    ['meta', { property: 'og:image', content: 'https://themusecatcher.github.io/vue-amazing-ui/og-image.png' }],
+    ['meta', { property: 'og:image:width', content: '1200' }],
+    ['meta', { property: 'og:image:height', content: '630' }],
+    ['meta', { property: 'og:image:alt', content: 'Vue Amazing UI — Amazing UI Components Library' }],
+    ['meta', { property: 'og:locale', content: 'zh_CN' }],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:title', content: 'Vue Amazing UI | Amazing UI Components Library' }],
+    ['meta', { name: 'twitter:description', content: 'Amazing UI 组件库 — theme-able Vue3 + TypeScript + Vite components with tree-shaking support.' }],
+    ['meta', { name: 'twitter:image', content: 'https://themusecatcher.github.io/vue-amazing-ui/og-image.png' }]
   ],
   appearance: true, // 默认 true，设为 false 则无法切换 dark/light 主题，可选 'dark' true false
   markdown: {
