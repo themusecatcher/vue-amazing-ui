@@ -41,7 +41,6 @@ export interface Props {
   display?: 'panel' | 'card' // 日历展示方式，面板 / 卡片
   mode?: 'month' | 'year' // 面板模式（受控）：月 / 年
   startDayOfWeek?: DayOfWeek // 一周的开始是星期几，0-6，0 是周一
-  dateStrip?: boolean // 日历面板默认会显示六周的日期，当最后一周的日期不包含当月日期时，是否去掉
   disabledDate?: (timestamp: number) => boolean // 不可选择的日期
   validRange?: [string | number, string | number] // 可选日期区间，区间外的日期不可选，同时收窄年 / 月选项
   dateFormat?: (date: number, timestamp: number) => string // 自定义日期展示格式
@@ -80,7 +79,6 @@ const props = withDefaults(defineProps<Props>(), {
   display: 'panel',
   mode: 'month',
   startDayOfWeek: 0,
-  dateStrip: true,
   disabledDate: undefined,
   validRange: undefined,
   dateFormat: undefined,
@@ -304,36 +302,26 @@ function getDateItem(time: number, monthTs: number, currentTs: number): DateItem
     isCurrentDate: isSameDayTimestamp(currentTs, time)
   }
 }
-// dateStrip 时按实际格数收敛到 4 / 5 / 6 行三档，避免末尾多出一整行与当月无关的日期
-function getStripEndIndex(length: number): number {
-  if (length <= 28) return 28
-  if (length <= 35) return 35
-  return 42
-}
-function getDates(monthTs: number, currentTs: number, startDay: DayOfWeek, strip: boolean = false): DateItem[] {
-  const displayMonth = getMonth(monthTs)
+// 日期网格格数：恒定六周（42 格）。行数固定，面板 / 卡片形态都不会因月份在 4 / 5 / 6 行之间
+// 切换而跳动，也不会在固定高度里留下空白末行
+const DATE_GRID_SIZE = 42
+function getDates(monthTs: number, currentTs: number, startDay: DayOfWeek): DateItem[] {
   let displayMonthIterator = getTime(startOfMonth(monthTs))
   let lastMonthIterator = getTime(addDays(displayMonthIterator, -1))
   const calendarDays: DateItem[] = []
-  let protectLastMonthDateIsShownFlag = !strip
-  while (getDay(lastMonthIterator) !== startDay || protectLastMonthDateIsShownFlag) {
+  // 补到「起始日的前一天」为止：1 号本身即为起始日时不补任何上月日期
+  while (getDay(lastMonthIterator) !== startDay) {
     calendarDays.unshift(getDateItem(lastMonthIterator, monthTs, currentTs))
     lastMonthIterator = getTime(addDays(lastMonthIterator, -1))
-    protectLastMonthDateIsShownFlag = false
   }
-  while (getMonth(displayMonthIterator) === displayMonth) {
-    calendarDays.push(getDateItem(displayMonthIterator, monthTs, currentTs))
-    displayMonthIterator = getTime(addDays(displayMonthIterator, 1))
-  }
-  const endIndex = strip ? getStripEndIndex(calendarDays.length) : 42
-  while (calendarDays.length < endIndex) {
+  while (calendarDays.length < DATE_GRID_SIZE) {
     calendarDays.push(getDateItem(displayMonthIterator, monthTs, currentTs))
     displayMonthIterator = getTime(addDays(displayMonthIterator, 1))
   }
   return calendarDays
 }
 function getCalendarDates(): DateItem[][] {
-  const dates = getDates(startOfMonthTimestamp.value, todayTimestamp.value, normalizedStartDay.value, props.dateStrip)
+  const dates = getDates(startOfMonthTimestamp.value, todayTimestamp.value, normalizedStartDay.value)
   const chunkSize = 7
   const chunkCount = dates.length / chunkSize
   const result: DateItem[][] = []
@@ -996,9 +984,8 @@ function onKeydown(event: KeyboardEvent): void {
       }
     }
     .calendar-date-panel {
+      // 日期区恒定六周，行高固定即可保证卡片高度稳定，无需再写死内容区高度
       .calendar-body {
-        // 固定内容区高度：日期行数自适应（4/5/6 行）时卡片高度不跳动
-        height: 256px;
         .calendar-table {
           .calendar-date-cell {
             height: 40px;

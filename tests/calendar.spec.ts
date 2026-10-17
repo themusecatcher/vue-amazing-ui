@@ -331,6 +331,44 @@ describe('增强能力', () => {
     expect(format(lastEmittedValue(), 'yyyy-MM-dd')).toBe('2026-09-23')
   })
 
+  it('卡片形态固定渲染六周（末行补齐下月日期），不留空白', async () => {
+    wrapper = mount(Calendar, {
+      attachTo: document.body,
+      props: { display: 'card', value: new Date(2026, 9, 17).getTime() }
+    })
+    await flush()
+
+    const rows = wrapper.findAll('.calendar-date-panel tbody tr')
+    expect(rows.length).toBe(6)
+    expect(wrapper.findAll('.calendar-date-panel .calendar-date-cell').length).toBe(42)
+    // 末行来自下个月：10 月 5 行的月份补齐 11-02 ~ 11-08
+    expect(rows[5].findAll('.calendar-date-cell')[0].attributes('title')).toBe('2026-11-02')
+  })
+
+  it('面板形态同样恒定六周（与卡片一致）', async () => {
+    wrapper = mount(Calendar, {
+      attachTo: document.body,
+      props: { value: new Date(2026, 9, 17).getTime() }
+    })
+    await flush()
+
+    expect(wrapper.findAll('.calendar-date-panel tbody tr').length).toBe(6)
+    expect(wrapper.findAll('.calendar-date-panel .calendar-date-cell').length).toBe(42)
+  })
+
+  it('1 号恰为周起始日时不多补上月日期（首格即当月 1 号）', async () => {
+    // 2027-02-01 为周一，默认 startDayOfWeek 为 0（周一）
+    wrapper = mount(Calendar, {
+      attachTo: document.body,
+      props: { value: new Date(2027, 1, 10).getTime() }
+    })
+    await flush()
+
+    const firstCell = wrapper.find('.calendar-date-panel .calendar-date-cell')
+    expect(firstCell.attributes('title')).toBe('2027-02-01')
+    expect(wrapper.findAll('.calendar-date-panel .calendar-date-cell').length).toBe(42)
+  })
+
   it('dateFull 插槽替换整格内容', async () => {
     wrapper = mount(Calendar, {
       attachTo: document.body,
