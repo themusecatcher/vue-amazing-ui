@@ -25,6 +25,7 @@ const componentsMap = {
   Carousel: 'carousel',
   Cascader: 'cascader',
   Checkbox: 'checkbox',
+  CheckboxGroup: 'checkbox/checkbox-group',
   Collapse: 'collapse',
   ColorPicker: 'color-picker',
   Comment: 'comment',
@@ -163,6 +164,7 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   Card: ['Skeleton'],
   Carousel: ['Spin'],
   Cascader: ['Select', 'Empty', 'Scrollbar'],
+  CheckboxGroup: ['Checkbox'],
   Collapse: ['Button'],
   DatePicker: [
     'DatetimePanel',

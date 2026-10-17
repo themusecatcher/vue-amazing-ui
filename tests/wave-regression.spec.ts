@@ -27,7 +27,8 @@ const waveCases = [
   {
     name: 'Checkbox',
     waveSelector: '.checkbox-wave',
-    clickSelector: '.checkbox-container',
+    // 交互统一由原生 input 的 change 承载（鼠标经 label 转发），故触发点为 input 而非容器
+    clickSelector: '.checkbox-input',
     mount: () => mount(Checkbox, { slots: { default: '复选' } })
   },
   {
@@ -110,7 +111,7 @@ describe('水波纹 - 多选项模式下波纹绑定到被点击的那一项', (
       }
     })
     const containers = wrapper.findAll('.checkbox-container')
-    await containers[1].trigger('click')
+    await containers[1].find('.checkbox-input').trigger('click')
 
     const waves = wrapper.findAll('.checkbox-wave')
     expect(waves[0].classes()).not.toContain('wave-active')

@@ -37,8 +37,8 @@ export { default as Carousel } from './carousel'
 export type { CascaderProps, CascaderOption, CascaderFieldNames } from './cascader'
 export { default as Cascader } from './cascader'
 
-export type { CheckboxProps, CheckboxOption } from './checkbox'
-export { default as Checkbox } from './checkbox'
+export type { CheckboxProps, CheckboxOption, CheckboxGroupProps, CheckboxGroupOption } from './checkbox'
+export { default as Checkbox, CheckboxGroup } from './checkbox'
 
 export type { CollapseProps, CollapseItem } from './collapse'
 export { default as Collapse } from './collapse'

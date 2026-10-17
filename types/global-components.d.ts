@@ -18,6 +18,7 @@ declare module 'vue' {
     Carousel: typeof VueAmazingUI.Carousel
     Cascader: typeof VueAmazingUI.Cascader
     Checkbox: typeof VueAmazingUI.Checkbox
+    CheckboxGroup: typeof VueAmazingUI.CheckboxGroup
     Col: typeof VueAmazingUI.Col
     Collapse: typeof VueAmazingUI.Collapse
     ColorPicker: typeof VueAmazingUI.ColorPicker
