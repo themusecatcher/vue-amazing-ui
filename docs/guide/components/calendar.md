@@ -41,6 +41,7 @@ const slotDate = ref(Date.now())
 const selectDate = ref(new Date('2030-10-06').getTime())
 const disableDate = ref(Date.now())
 const disableWeekendDate = ref(Date.now())
+const wholeMonthDate = ref(Date.now())
 const dateStr = ref(format(Date.now(), 'yyyy-MM-dd'))
 const fullCellDate = ref(new Date(2026, 9, 15).getTime())
 const fullMonthDate = ref(new Date(2026, 9, 15).getTime())
@@ -154,7 +155,7 @@ function disabledDate(timestamp: number): boolean {
 function disabledWeekend(timestamp: number): boolean {
   return ['6', '7'].includes(format(timestamp, 'i'))
 }
-// 整层禁用用例：整个 2026-03 都不可选（年面板的月份格应呈禁用态）
+// 整层禁用用例：整个 2026-03 都不可选（月份面板的月份格应呈禁用态）
 function disabledMarch(timestamp: number): boolean {
   return format(timestamp, 'yyyy-MM') === '2026-03'
 }
@@ -187,6 +188,10 @@ function onPanelChange(
 
 ## 基本使用
 
+_日期区固定渲染六周（42 格），末行补齐相邻月份日期，面板 / 卡片形态一致_
+
+<br/>
+
 <Calendar v-model:value="date" @change="onChange" @panelChange="onPanelChange" />
 
 ::: details Show Code
@@ -217,6 +222,10 @@ function onPanelChange(
 :::
 
 ## 卡片模式
+
+_卡片模式以 `300px` 为宽度基准，容器更窄时自适应收缩_
+
+<br/>
 
 <Calendar v-model:value="cardDate" display="card" @change="onChange" @panelChange="onPanelChange" />
 
@@ -249,7 +258,7 @@ function onPanelChange(
 
 ## 初始模式
 
-_`mode` 指定初始面板模式（月 / 年），面板内切换模式不会回写该属性_
+_`mode` 指定面板模式（月 / 年）：外部变更会同步到面板，面板内切换模式不会回写该属性_
 
 <br/>
 
@@ -1020,7 +1029,7 @@ function onPanelChange(
 
 ## 禁用日期
 
-_`disabledDate` 入参为时间戳，返回 `true` 表示该日期不可选_
+_`disabledDate` 入参为时间戳，返回 `true` 表示该日期不可选；年 / 月选择器与月格只替换年月、保留原「日」，该日不可选（命中 `disabledDate` 或落在 `validRange` 外）时收敛到同月最近的可用日_
 
 <br/>
 
@@ -1117,11 +1126,14 @@ function onPanelChange(
 
 ## 可选日期区间
 
-_`validRange` 限定可选区间，区间外的日期不可选，年 / 月选择器的可选项一并收窄_
+_`validRange` 限定可选区间，区间外的日期不可选，年 / 月选择器的可选项一并收窄；字符串入参按 `valueFormat` 解析_
 
 <br/>
 
-<Calendar v-model:value="rangeDate" :valid-range="validRangeValue" @select="onSelect" @panelChange="onPanelChange" />
+<Flex vertical>
+  <Alert type="info" message="仅允许选择 2026-10-10 ~ 2026-10-20，区间外的日期不可选" />
+  <Calendar v-model:value="rangeDate" :valid-range="validRangeValue" @select="onSelect" @panelChange="onPanelChange" />
+</Flex>
 
 :::: details Show Code
 
@@ -1132,7 +1144,10 @@ const rangeDate = ref(new Date(2026, 9, 15).getTime())
 const validRangeValue: [number, number] = [new Date(2026, 9, 10).getTime(), new Date(2026, 9, 20).getTime()]
 </script>
 <template>
-  <Calendar v-model:value="rangeDate" :valid-range="validRangeValue" />
+  <Flex vertical>
+    <Alert type="info" message="仅允许选择 2026-10-10 ~ 2026-10-20，区间外的日期不可选" />
+    <Calendar v-model:value="rangeDate" :valid-range="validRangeValue" />
+  </Flex>
 </template>
 ```
 
@@ -1161,11 +1176,11 @@ const defaultDate = new Date(2026, 4, 20).getTime()
 
 ## 整层禁用
 
-_整月都被 `disabledDate` 禁用时，年面板的月份格与年 / 月选择器的对应项一并禁用_
+_整月都被 `disabledDate` 禁用时，月份面板（`mode="year"`）的月份格与年 / 月选择器的对应项一并禁用_
 
 <br/>
 
-<Calendar v-model:value="disableDate" mode="year" :disabled-date="disabledMarch" @panelChange="onPanelChange" />
+<Calendar v-model:value="wholeMonthDate" mode="year" :disabled-date="disabledMarch" @panelChange="onPanelChange" />
 
 :::: details Show Code
 
@@ -1173,13 +1188,13 @@ _整月都被 `disabledDate` 禁用时，年面板的月份格与年 / 月选择
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { format } from 'date-fns'
-const disableDate = ref(Date.now())
+const wholeMonthDate = ref(Date.now())
 function disabledMarch(timestamp: number) {
   return format(timestamp, 'yyyy-MM') === '2026-03'
 }
 </script>
 <template>
-  <Calendar v-model:value="disableDate" mode="year" :disabled-date="disabledMarch" />
+  <Calendar v-model:value="wholeMonthDate" mode="year" :disabled-date="disabledMarch" />
 </template>
 ```
 
@@ -1187,15 +1202,13 @@ function disabledMarch(timestamp: number) {
 
 ## 键盘导航
 
-_面板可聚焦，方向键直接移动选中日期_
+_面板可聚焦，键盘直接移动选中日期；日期面板按日粒度移动，月份面板（`mode="year"`）按月粒度移动；目标不可选时该次移动不生效_
 
 <br/>
 
 <ul class="keyboard-tips mb10">
-  <li>← / →：向前 / 向后一天</li>
-  <li>↑ / ↓：向前 / 向后一周</li>
-  <li>PageUp / PageDown：向前 / 向后一月</li>
-  <li>Ctrl（macOS 为 Cmd）+ ← / →：向前 / 向后一年</li>
+  <li>日期面板：← / → 一天、↑ / ↓ 一周、PageUp / PageDown 一月、Ctrl（macOS 为 Cmd）+ ← / → 一年</li>
+  <li>月份面板：← / → 一月、↑ / ↓ 一行（三个月）、Ctrl（macOS 为 Cmd）+ ← / → 一年（翻页键不响应）</li>
 </ul>
 
 <Calendar v-model:value="keyboardDate" @panelChange="onPanelChange" />
@@ -1216,10 +1229,8 @@ function onPanelChange(
 </script>
 <template>
   <ul class="keyboard-tips mb10">
-    <li>← / →：向前 / 向后一天</li>
-    <li>↑ / ↓：向前 / 向后一周</li>
-    <li>PageUp / PageDown：向前 / 向后一月</li>
-    <li>Ctrl（macOS 为 Cmd）+ ← / →：向前 / 向后一年</li>
+    <li>日期面板：← / → 一天、↑ / ↓ 一周、PageUp / PageDown 一月、Ctrl（macOS 为 Cmd）+ ← / → 一年</li>
+    <li>月份面板：← / → 一月、↑ / ↓ 一行（三个月）、Ctrl（macOS 为 Cmd）+ ← / → 一年（翻页键不响应）</li>
   </ul>
   <Calendar v-model:value="keyboardDate" @panelChange="onPanelChange" />
 </template>
@@ -1310,10 +1321,9 @@ function onPanelChange(
 | header | 自定义日历头部内容 | string | undefined |
 | display | 日历展示方式，面板 / 卡片 | 'panel' &#124; 'card' | 'panel' |
 | mode | 面板模式（受控）：月 / 年 | 'month' &#124; 'year' | 'month' |
-| startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一 | [CalendarDayOfWeek](#dayofweek-type) | 0 |
-| dateStrip | 日历面板默认会显示六周的日期，当最后一周的日期不包含当月日期时，是否去掉 | boolean | true |
+| startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一（越界值按 `7` 取模收敛） | [CalendarDayOfWeek](#dayofweek-type) | 0 |
 | disabledDate | 不可选择的日期 | (timestamp: number) => boolean | undefined |
-| validRange | 可选日期区间，区间外的日期不可选，同时收窄年 / 月选择器的可选项 | [string &#124; number, string &#124; number] | undefined |
+| validRange | 可选日期区间，区间外的日期不可选，同时收窄年 / 月选择器的可选项；字符串入参按 `valueFormat` 解析（未指定时按时间戳数字串解析，无法解析则忽略该区间） | [string &#124; number, string &#124; number] | undefined |
 | dateFormat | 自定义日期展示格式 | (date: number, timestamp: number) => string | undefined |
 | weekFormat | 自定义星期展示格式 | (defaultWeek: [CalendarDefaultWeek](#defaultweek-type), week: number, timestamp: number) => string | undefined |
 | monthFormat | 自定义月展示格式 | (month: number, timestamp: number) => string | undefined |

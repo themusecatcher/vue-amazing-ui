@@ -27,6 +27,7 @@ const slotDate = ref(Date.now())
 const selectDate = ref(new Date('2030-10-06').getTime())
 const disableDate = ref(Date.now())
 const disableWeekendDate = ref(Date.now())
+const wholeMonthDate = ref(Date.now())
 const dateStr = ref(format(Date.now(), 'yyyy-MM-dd'))
 const fullCellDate = ref(new Date(2026, 9, 15).getTime())
 const fullMonthDate = ref(new Date(2026, 9, 15).getTime())
@@ -179,11 +180,13 @@ function onPanelChange(
       </li>
     </ul>
     <h2 class="mt30 mb10">基本使用</h2>
+    <p class="mb10">日期区固定渲染六周（42 格），末行补齐相邻月份日期，面板 / 卡片形态一致</p>
     <Calendar v-model:value="date" @change="onChange" @panelChange="onPanelChange" />
     <h2 class="mt30 mb10">卡片模式</h2>
+    <p class="mb10">卡片模式以 <code>300px</code> 为宽度基准，容器更窄时自适应收缩</p>
     <Calendar v-model:value="cardDate" display="card" @change="onChange" @panelChange="onPanelChange" />
     <h2 class="mt30 mb10">初始模式</h2>
-    <p class="mb10"><code>mode</code> 指定初始面板模式（月 / 年），面板内切换模式不会回写该属性</p>
+    <p class="mb10"><code>mode</code> 指定面板模式（月 / 年）：外部变更会同步到面板，面板内切换模式不会回写该属性</p>
     <Flex vertical>
       <Space align="center">
         display:<Radio :options="displayOptions" v-model:value="modeDisplay" button button-style="solid" />
@@ -380,7 +383,11 @@ function onPanelChange(
       <Calendar v-model:value="selectDate" @select="onSelect" @panelChange="onPanelChange" />
     </Flex>
     <h2 class="mt30 mb10">禁用日期</h2>
-    <p class="mb10"><code>disabledDate</code> 入参为时间戳，返回 <code>true</code> 表示该日期不可选</p>
+    <p class="mb10"
+      ><code>disabledDate</code> 入参为时间戳，返回 <code>true</code> 表示该日期不可选；年 /
+      月选择器与月格只替换年月、保留原「日」，该日不可选（命中 <code>disabledDate</code> 或落在
+      <code>validRange</code> 外）时收敛到同月最近的可用日</p
+    >
     <Flex vertical>
       <Space align="center">
         display:<Radio :options="displayOptions" v-model:value="disabledDisplay" button button-style="solid" />
@@ -409,7 +416,10 @@ function onPanelChange(
       </Space>
     </Flex>
     <h2 class="mt30 mb10">可选日期区间</h2>
-    <p class="mb10"><code>validRange</code> 限定可选区间，区间外的日期不可选，年 / 月选择器的可选项一并收窄</p>
+    <p class="mb10"
+      ><code>validRange</code> 限定可选区间，区间外的日期不可选，年 / 月选择器的可选项一并收窄；字符串入参按
+      <code>valueFormat</code> 解析</p
+    >
     <Flex vertical>
       <Alert type="info" message="仅允许选择 2026-10-10 ~ 2026-10-20，区间外的日期不可选" />
       <Calendar
@@ -426,15 +436,18 @@ function onPanelChange(
     >
     <Calendar :default-value="defaultDate" @panelChange="onPanelChange" />
     <h2 class="mt30 mb10">整层禁用</h2>
-    <p class="mb10">整月都被 <code>disabledDate</code> 禁用时，年面板的月份格与年 / 月选择器的对应项一并禁用</p>
-    <Calendar v-model:value="disableDate" mode="year" :disabled-date="disabledMarch" @panelChange="onPanelChange" />
+    <p class="mb10"
+      >整月都被 <code>disabledDate</code> 禁用时，月份面板（<code>mode="year"</code>）的月份格与年 /
+      月选择器的对应项一并禁用</p
+    >
+    <Calendar v-model:value="wholeMonthDate" mode="year" :disabled-date="disabledMarch" @panelChange="onPanelChange" />
     <h2 class="mt30 mb10">键盘导航</h2>
-    <p class="mb10">面板可聚焦，方向键直接移动选中日期</p>
+    <p class="mb10"
+      >面板可聚焦，键盘直接移动选中日期；日期面板按日粒度移动，月份面板（<code>mode="year"</code>）按月粒度移动；目标不可选时该次移动不生效</p
+    >
     <ul class="keyboard-tips mb10">
-      <li>← / →：向前 / 向后一天</li>
-      <li>↑ / ↓：向前 / 向后一周</li>
-      <li>PageUp / PageDown：向前 / 向后一月</li>
-      <li>Ctrl（macOS 为 Cmd）+ ← / →：向前 / 向后一年</li>
+      <li>日期面板：← / → 一天、↑ / ↓ 一周、PageUp / PageDown 一月、Ctrl（macOS 为 Cmd）+ ← / → 一年</li>
+      <li>月份面板：← / → 一月、↑ / ↓ 一行（三个月）、Ctrl（macOS 为 Cmd）+ ← / → 一年（翻页键不响应）</li>
     </ul>
     <Calendar v-model:value="keyboardDate" @panelChange="onPanelChange" />
   </div>
