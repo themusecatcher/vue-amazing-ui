@@ -130,6 +130,10 @@ const showIconOnly = computed(() => slotsExist.icon && !slotsExist.default)
 ```
 
 - 嵌套不超过 3 层。
+- **行内控件与文字混排（2026-10-17 定）**：需要「文字 + 控件（`Input` / `Select` 等行内元素）」同处一行且位置稳定时，该行容器必须用**盒对齐**并固定行高，禁止用基线对齐：
+  - 写法：容器 `display: flex; align-items: center;`，行高取控件高度（`small` 24 / `middle` 32 / `large` 40）；不得矮于控件，否则控件从行底溢出。
+  - 原因：控件是行内元素，出现 / 消失会改变所在行盒的基线，`align-items: baseline` 的容器会因此产生 1px 级整行位移（原生控件同样如此，属 CSS 固有行为）。
+  - 禁止用改控件自身 `vertical-align` 的方式消除该位移：那只是在「参与基线（与文字对齐最好、但会带动整行）」与「不参与基线（不带动整行、但控件内文字与相邻文字错开约 5px）」之间换一种缺陷，两者不可兼得。控件保持与原生输入框同口径的基线对齐。
 - 组件内的 CSS 变量必须带**组件名前缀**（如 `--divider-border-color`、`--flex-align`；允许组件名的稳定缩写，如 `--float-btn-*`），避免与其它组件或宿主页面的同名变量相互污染；`va-` 前缀只用于对外暴露的全局命名（`components/style/global.less` 的 `--va-link-*` 与页面滚动锁写入 `<html>` 的 `--va-scrollbar-width`，后者由 `components/utils/dom.ts` 经 `html.style` 设置、消费方带 `0px` 兜底读取）。
 - **厂商前缀（2026-10-01 定）**：源码中手写的 `-webkit-` / `-moz-` / `-ms-` 前缀是**有意保留**的，禁止以「去冗余」「消除 IDE 的 `vendorPrefix` 提示」为由批量删除：
   - 本库以 SFC 形态分发，组件文件可能被使用方**单独复制**到自己的项目中使用，此时样式由**使用方的构建链**编译。`autoprefixer` 在 Vite 生态中并非默认必备（需使用方自行安装并配置 `postcss.config.js`），其 `browserslist` 也未必与本库（见 `package.json`）一致 —— 手写前缀是这条「源码分发」路径上唯一的兼容兜底。
