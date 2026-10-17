@@ -514,7 +514,7 @@ _未受控时使用 `defaultValue` 设置初始颜色_
 
 ## 自定义展示内容
 
-_通过 `label` 属性（可返回字符串或 VNode）或 `label` 插槽自定义展示内容_
+_通过 `label` 属性（可返回字符串或 `VNode`）或 `label` 插槽自定义展示内容_
 
 <br/>
 
@@ -721,7 +721,7 @@ value <Tag color="cyan">v-model</Tag> | 颜色选择器的值 | string | undefin
 defaultValue | 未受控时的初始颜色值 | string | undefined
 open <Tag color="cyan">v-model</Tag> | 面板是否展开（受控，不传时由组件内部维护） | boolean | undefined
 defaultOpen | 未受控时面板的初始显隐 | boolean | false
-label | 展示的内容，返回值同时支持字符串与 VNode | (color: string) => VNodeChild | undefined
+label | 展示的内容，返回值同时支持字符串与 `VNode` | (color: string) => VNodeChild | undefined
 swatches | 色板的值 | string[] | []
 footer | 底部额外的页脚内容 | string | undefined
 modes | 颜色选择器支持颜色的格式 | [ColorPickerMode](#colorpickermode-type)[] | ['rgb', 'hex', 'hsl']
@@ -737,7 +737,7 @@ panelStyle | 面板样式，在定位与层级之后合并 | [CSSProperties](htt
 zIndex | 面板层级，优先级最高（未传时使用默认层级或 `ConfigProvider` 的 `baseZIndex` 分配） | number | undefined
 offset | 面板与触发器的主轴间距，单位 `px` | number | 6
 destroyOnHide | 隐藏后是否卸载面板 `DOM`，再次展开时重新创建并重新定位 | boolean | false
-to | 弹出面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地 | string &#124; HTMLElement &#124; false | undefined
+to | 弹出面板挂载的容器节点，可选：元素标签名 (例如 `'body'`) 或者元素本身，`false` 会待在原地 | string &#124; HTMLElement &#124; false | undefined
 inputProps | 输入框组件 `props`，参考 [Input Props](./input.md#input) | [InputProps](./input.md#input) | {}
 
 ### ColorPickerMode Type
