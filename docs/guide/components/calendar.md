@@ -38,7 +38,7 @@ const monthFormatValue = ref(Date.now())
 const panelFormatValue = ref(Date.now())
 const noticeDate = ref(Date.now())
 const slotDate = ref(Date.now())
-const selectDate = ref(new Date('2030-10-06').getTime())
+const selectDate = ref(new Date(2030, 9, 6).getTime())
 const disableDate = ref(Date.now())
 const disableWeekendDate = ref(Date.now())
 const wholeMonthDate = ref(Date.now())
@@ -188,7 +188,7 @@ function onPanelChange(
 
 ## 基本使用
 
-_日期区固定渲染六周（42 格），末行补齐相邻月份日期，面板 / 卡片形态一致_
+_日期区固定渲染六周（`42` 格），末行补齐相邻月份日期，面板 / 卡片形态一致_
 
 <br/>
 
@@ -348,7 +348,7 @@ _`#headerFull` 插槽接管整行头部：使用后默认的年 / 月选择器�
 
 <br/>
 
-<Calendar v-model:value="headerFullDate" display="card">
+<Calendar v-model:value="headerFullDate" display="card" @panelChange="onPanelChange">
   <template #headerFull="{ year, month, mode, value, onChange, onTypeChange }">
     <div class="header-full">
       <div class="header-full-title">自定义头部：{{ year }} 年 {{ month }} 月 {{ getHeaderFullDay(value) }} 日</div>
@@ -420,9 +420,16 @@ function getHeaderFullDay(value: string | number | undefined): string {
   const timestamp = Number(value)
   return Number.isFinite(timestamp) ? format(timestamp, 'd') : '--'
 }
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+): void {
+  console.log('panelChange', value, info, mode)
+}
 </script>
 <template>
-  <Calendar v-model:value="headerFullDate" display="card">
+  <Calendar v-model:value="headerFullDate" display="card" @panelChange="onPanelChange">
     <template #headerFull="{ year, month, mode, value, onChange, onTypeChange }">
       <div class="header-full">
         <div class="header-full-title">自定义头部：{{ year }} 年 {{ month }} 月 {{ getHeaderFullDay(value) }} 日</div>
@@ -921,9 +928,16 @@ function isFullCellSelected(timestamp: number): boolean {
 function isFullMonthSelected(timestamp: number): boolean {
   return format(timestamp, 'yyyy-MM') === format(fullMonthDate.value, 'yyyy-MM')
 }
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+): void {
+  console.log('panelChange', value, info, mode)
+}
 </script>
 <template>
-  <Calendar v-model:value="fullCellDate">
+  <Calendar v-model:value="fullCellDate" @panelChange="onPanelChange">
     <template #dateFull="{ dateObject, timestamp, isCurrentDate }">
       <div
         class="full-cell"
@@ -936,7 +950,7 @@ function isFullMonthSelected(timestamp: number): boolean {
       </div>
     </template>
   </Calendar>
-  <Calendar v-model:value="fullMonthDate" mode="year">
+  <Calendar v-model:value="fullMonthDate" mode="year" @panelChange="onPanelChange">
     <template #monthFull="{ monthObject, timestamp, isCurrent }">
       <div
         class="full-cell"
@@ -1003,7 +1017,7 @@ _`select` 事件第二参为 `{ source }`，区分为年 / 月 / 日 / 头部自
 import { ref } from 'vue'
 import { format } from 'date-fns'
 import { useMessage } from 'vue-amazing-ui'
-const selectDate = ref(new Date('2030-10-06').getTime())
+const selectDate = ref(new Date(2030, 9, 6).getTime())
 const message = useMessage()
 function onSelect(value: string | number | undefined, info: { source: 'year' | 'month' | 'date' | 'customize' }) {
   console.log('select', value, info)
@@ -1039,7 +1053,7 @@ _`disabledDate` 入参为时间戳，返回 `true` 表示该日期不可选；�
   </Space>
   <Space align="start" class="mt10">
     <Flex vertical>
-      <Alert type="info" message="禁用指定日期 (以今天为准的前三天和后三天)" />
+      <Alert type="info" message="禁用指定日期 (以今天为准的前三天至后三天，含当天)" />
       <Calendar v-model:value="disableDate" :disabled-date="disabledDate" :display="disabledDisplay" @select="onSelect" @panelChange="onPanelChange" />
     </Flex>
     <Flex vertical>
@@ -1098,7 +1112,7 @@ function onPanelChange(
     </Space>
     <Space>
       <Flex vertical>
-        <Alert type="info" message="禁用指定日期 (以今天为准的前三天和后三天)" />
+        <Alert type="info" message="禁用指定日期 (以今天为准的前三天至后三天，含当天)" />
         <Calendar
           v-model:value="disableDate"
           :disabled-date="disabledDate"
@@ -1140,13 +1154,27 @@ _`validRange` 限定可选区间，区间外的日期不可选，年 / 月选择
 ```vue
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { format } from 'date-fns'
+import { useMessage } from 'vue-amazing-ui'
 const rangeDate = ref(new Date(2026, 9, 15).getTime())
 const validRangeValue: [number, number] = [new Date(2026, 9, 10).getTime(), new Date(2026, 9, 20).getTime()]
+const message = useMessage()
+function onSelect(value: string | number | undefined, info: { source: 'year' | 'month' | 'date' | 'customize' }) {
+  console.log('select', value, info)
+  if (typeof value === 'number') message.success(format(value, 'yyyy-MM-dd'))
+}
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+): void {
+  console.log('panelChange', value, info, mode)
+}
 </script>
 <template>
   <Flex vertical>
     <Alert type="info" message="仅允许选择 2026-10-10 ~ 2026-10-20，区间外的日期不可选" />
-    <Calendar v-model:value="rangeDate" :valid-range="validRangeValue" />
+    <Calendar v-model:value="rangeDate" :valid-range="validRangeValue" @select="onSelect" @panelChange="onPanelChange" />
   </Flex>
 </template>
 ```
@@ -1166,9 +1194,16 @@ _`defaultValue` 同时决定初始面板日期与初始选中值；绑定 `value
 ```vue
 <script lang="ts" setup>
 const defaultDate = new Date(2026, 4, 20).getTime()
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+): void {
+  console.log('panelChange', value, info, mode)
+}
 </script>
 <template>
-  <Calendar :default-value="defaultDate" />
+  <Calendar :default-value="defaultDate" @panelChange="onPanelChange" />
 </template>
 ```
 
@@ -1192,9 +1227,16 @@ const wholeMonthDate = ref(Date.now())
 function disabledMarch(timestamp: number) {
   return format(timestamp, 'yyyy-MM') === '2026-03'
 }
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+): void {
+  console.log('panelChange', value, info, mode)
+}
 </script>
 <template>
-  <Calendar v-model:value="wholeMonthDate" mode="year" :disabled-date="disabledMarch" />
+  <Calendar v-model:value="wholeMonthDate" mode="year" :disabled-date="disabledMarch" @panelChange="onPanelChange" />
 </template>
 ```
 
@@ -1363,6 +1405,12 @@ function onPanelChange(
 | timestamp  | 当月开始的时间戳 | number                          | undefined |
 | isCurrent  | 是否为当前月    | boolean                         | undefined |
 
+### SelectInfo Type
+
+| 名称     | 说明                                      | 类型                                                     |
+| :----- | :-------------------------------------- | :----------------------------------------------------- |
+| source | 选择来源：年选择器 / 月（选择器或月面板格）/ 日期面板格 / 头部整体替换 | 'year' &#124; 'month' &#124; 'date' &#124; 'customize' |
+
 ## Slots
 
 | 名称 | 说明 | 用法 |
@@ -1383,4 +1431,4 @@ function onPanelChange(
 | :-- | :-- | :-- |
 | change | 日期变化时的回调（重复点击已选中的日期不触发） | (value: string &#124; number, dateObject?: [CalendarDateItem](#dateitem-type)['dateObject'] &#124; [CalendarMonthItem](#monthitem-type)['monthObject']) => void |
 | panelChange | 面板定位变化时的回调（切换年 / 月选择器、切换模式、跨月选择均会触发） | (value: string &#124; number &#124; undefined, info: { year: number, month?: number }, mode: 'month' &#124; 'year') => void |
-| select | 选择日期回调，第二参携带来源信息 | (value: string &#124; number &#124; undefined, info: { source: 'year' &#124; 'month' &#124; 'date' &#124; 'customize' }) => void |
+| select | 选择日期回调，第二参携带来源信息 | (value: string &#124; number &#124; undefined, info: [CalendarSelectInfo](#selectinfo-type)) => void |

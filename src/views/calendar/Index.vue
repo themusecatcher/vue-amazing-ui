@@ -24,7 +24,7 @@ const monthFormatValue = ref(Date.now())
 const panelFormatValue = ref(Date.now())
 const noticeDate = ref(Date.now())
 const slotDate = ref(Date.now())
-const selectDate = ref(new Date('2030-10-06').getTime())
+const selectDate = ref(new Date(2030, 9, 6).getTime())
 const disableDate = ref(Date.now())
 const disableWeekendDate = ref(Date.now())
 const wholeMonthDate = ref(Date.now())
@@ -141,7 +141,7 @@ function disabledDate(timestamp: number): boolean {
 function disabledWeekend(timestamp: number): boolean {
   return ['6', '7'].includes(format(timestamp, 'i'))
 }
-// 整层禁用用例：整个 2026-03 都不可选（年面板的月份格应呈禁用态）
+// 整层禁用用例：整个 2026-03 都不可选（月份面板的月份格应呈禁用态）
 function disabledMarch(timestamp: number): boolean {
   return format(timestamp, 'yyyy-MM') === '2026-03'
 }
@@ -394,7 +394,7 @@ function onPanelChange(
       </Space>
       <Space align="start" class="mt10">
         <Flex vertical>
-          <Alert type="info" message="禁用指定日期 (以今天为准的前三天和后三天)" />
+          <Alert type="info" message="禁用指定日期 (以今天为准的前三天至后三天，含当天)" />
           <Calendar
             v-model:value="disableDate"
             :disabled-date="disabledDate"
