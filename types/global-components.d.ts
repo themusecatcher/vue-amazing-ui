@@ -70,6 +70,8 @@ declare module 'vue' {
     Progress: typeof VueAmazingUI.Progress
     QRCode: typeof VueAmazingUI.QRCode
     Radio: typeof VueAmazingUI.Radio
+    RadioButton: typeof VueAmazingUI.RadioButton
+    RadioGroup: typeof VueAmazingUI.RadioGroup
     Rate: typeof VueAmazingUI.Rate
     Result: typeof VueAmazingUI.Result
     Row: typeof VueAmazingUI.Row

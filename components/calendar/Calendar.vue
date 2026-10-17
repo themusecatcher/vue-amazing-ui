@@ -408,7 +408,7 @@ function onPanelChange(): void {
         />
         <Radio
           class="calendar-mode-radio"
-          :button-size="display === 'card' ? 'small' : 'middle'"
+          :size="display === 'card' ? 'small' : 'middle'"
           :options="modeOptions"
           v-model:value="calendarMode"
           button

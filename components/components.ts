@@ -193,8 +193,8 @@ export { default as Progress } from './progress'
 export type { QRCodeProps } from './qr-code'
 export { default as QRCode } from './qr-code'
 
-export type { RadioProps, RadioOption } from './radio'
-export { default as Radio } from './radio'
+export type { RadioProps, RadioOption, RadioButtonProps, RadioGroupProps, RadioGroupOption } from './radio'
+export { default as Radio, RadioButton, RadioGroup } from './radio'
 
 export type { RateProps } from './rate'
 export { default as Rate } from './rate'
