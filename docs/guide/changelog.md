@@ -12,10 +12,11 @@
 
 ## <VersionDateTag date="2026-10-18">2.15.1</VersionDateTag>
 
-- 修复并增强 [日历 Calendar](/guide/components/calendar.html)：修复重复点击已选中日期不发 `select`、`startDayOfWeek` 越界导致死循环、字符串 `value` 且未指定 `valueFormat` 时挂载失败、选中值归一化双路径不一致、月面板跨月选中溢出到次月、仅配置 `validRange` 时月份面板区间外的月份仍可选中并写回区间外值等问题；修正面板形态「今天」标记撑高所在行（同排悬浮 / 选中底色底部露缝）、卡片形态日期相对禁用底色未垂直居中、卡片形态不可选的「今天」描边与文字未退中性色等视觉错漏；补齐 `grid` 语义（`role="grid"` / `role="gridcell"` / `aria-selected` / `aria-disabled`）
-- 增强 [日历 Calendar](/guide/components/calendar.html)：新增 `defaultValue`（非受控初始值）、`validRange`（可选日期区间，同时收窄年 / 月选项）、`headerFull`（整体替换头部，插槽提供当前选中值、写回选中值与切换面板模式的回调）、`dateFull` / `monthFull`（整格替换）插槽，键盘导航（方向键 / 翻页键），整月禁用态，窄屏响应式头部，面板「今天」跨零点自动刷新；今天态按形态区分（面板形态为实心主色标记，日面板为圆形、月面板为两端半圆的胶囊形，均为白字；卡片形态为主色描边方块），面板形态选中格的网格线取主色
-- [日历 Calendar](/guide/components/calendar.html) 的 `select` 事件第二参由字符串改为 `{ source }`（`'year' | 'month' | 'date' | 'customize'`）；年 / 月选择器变更现在会写回选中值并触发 `change` / `select`（此前仅触发 `panelChange`）；卡片模式宽度改为 `300px` 基准、容器更窄时自适应收缩（日期面板内容高度固定 `256px`）
-- 补充 [日历 Calendar](/guide/components/calendar.html) 单元测试
+- 增强 [日历 Calendar](/guide/components/calendar.html)：新增 `defaultValue`、`validRange`（字符串按 `valueFormat` 解析、区间外的年 / 月选项一并收窄）与 `headerFull` / `dateFull` / `monthFull` 插槽，`mode` 改为受控（外部变更同步到面板），并补齐键盘导航（月份面板按月步进）、`grid` 无障碍语义、整月 / 整年禁用与窄屏头部
+- 重构 [日历 Calendar](/guide/components/calendar.html) 的对外接口：`select` 每次选中都触发（含重复点击已选中日期），第二参改为 `{ source }`（新增 `year` / `customize` 来源），年 / 月选择器与键盘操作同样写回选中值并触发 `change` / `select`，`panelChange` 在跨月 / 跨年时补发；移除 `dateStrip` 属性，日期区恒定渲染六周，新增 `CalendarSelectInfo` 类型导出
+- 优化修复 [日历 Calendar](/guide/components/calendar.html) 的取值与显示
+- 更新补充 [日历 Calendar](/guide/components/calendar.html) 演示文档
+- 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-10-17">2.15.0</VersionDateTag>
 
