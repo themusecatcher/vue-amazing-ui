@@ -839,4 +839,51 @@ describe('ColorPicker', () => {
     removeSpy.mockRestore()
     wrapper.unmount()
   })
+
+  it('无法识别的色名色板被忽略（不再静默落为黑色）', async () => {
+    document.body.innerHTML = ''
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const wrapper = mount(ColorPicker, {
+      props: {
+        value: 'rgba(0, 0, 0, 1)',
+        // 拼错的色名：没有模式前缀，无法按「颜色名」换算
+        swatches: ['notacolor', '#18A058'],
+        showAlpha: false
+      },
+      attachTo: document.body
+    })
+    await wait()
+    await openPanel()
+    const swatches = Array.from(document.querySelectorAll<HTMLElement>('.color-picker-swatch'))
+    swatches[0].click()
+    await wait()
+    // 非法色板不写入组件值，且提示使用方
+    expect(wrapper.emitted('update:value')).toBeUndefined()
+    expect(warnSpy).toHaveBeenCalledWith('[vue-amazing-ui] ColorPicker: 色板中的颜色 notacolor 无效，已忽略该色板')
+    // 合法色板不受影响
+    swatches[1].click()
+    await wait()
+    expect(wrapper.emitted('update:value')?.slice(-1)[0]?.[0]).toBe('rgba(24, 160, 88, 1)')
+    warnSpy.mockRestore()
+    wrapper.unmount()
+  })
+
+  it('alpha 拖拽途中值被清空时忽略本次变更、不抛错', async () => {
+    document.body.innerHTML = ''
+    const wrapper = mount(ColorPicker, { props: { value: 'rgba(0, 0, 0, 1)' }, attachTo: document.body })
+    await wait()
+    await openPanel()
+    const alphaRail = Array.from(document.querySelectorAll<HTMLElement>('.color-picker-slider'))[1]
+    stubRail(alphaRail, { left: 0, width: 100, height: 12 })
+    alphaRail.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: 6, clientY: 6, pointerId: 5 }))
+    await wait()
+    // 拖拽期间父组件清空色值：后续 pointermove 无颜色可写，应忽略而不是解构 null 抛错
+    await wrapper.setProps({ value: '' })
+    expect(() =>
+      document.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: 60, clientY: 6, pointerId: 5 }))
+    ).not.toThrow()
+    await wait()
+    document.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 5 }))
+    wrapper.unmount()
+  })
 })

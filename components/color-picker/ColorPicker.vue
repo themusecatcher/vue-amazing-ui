@@ -527,21 +527,27 @@ function handleHueSliderPointerUp(): void {
   emits('complete', displayedValue.value)
 }
 function handleUpdateAlpha(alpha: number): void {
+  // 拖拽期间父组件可能把值清空或改成非法色值：此时各解析结果均为 null，无颜色可写，忽略本次变更
+  // （不能沿用非空断言，否则 pointermove 解构 null 会直接抛错）
+  const hsvaValue = hsvaComputed.value
+  const rgbaValue = rgbaComputed.value
+  const hslaValue = hslaComputed.value
+  if (!hsvaValue || !rgbaValue || !hslaValue) return
   switch (displayedMode.value) {
     case 'hsv':
-      ;[_h, s, v] = hsvaComputed.value!
+      ;[_h, s, v] = hsvaValue
       onUpdateValue(toHsvaString([_h, s, v, alpha]), 'cursor')
       break
     case 'rgb':
-      ;[r, g, b] = rgbaComputed.value!
+      ;[r, g, b] = rgbaValue
       onUpdateValue(toRgbaString([r, g, b, alpha]), 'cursor')
       break
     case 'hex':
-      ;[r, g, b] = rgbaComputed.value!
+      ;[r, g, b] = rgbaValue
       onUpdateValue(toHexaString([r, g, b, alpha]), 'cursor')
       break
     case 'hsl':
-      ;[_h, s, l] = hslaComputed.value!
+      ;[_h, s, l] = hslaValue
       onUpdateValue(toHslaString([_h, s, l, alpha]), 'cursor')
       break
   }
@@ -920,12 +926,13 @@ function normalizeOutput(parsed: ParsedColor): string | undefined {
   // 色板未标注模式：按 hex 处理，颜色名（如 red）先换算为等价的 hex
   if (!swatchColorMode) {
     swatchColorMode = 'hex'
-    if (/^[a-zA-Z]+$/.test(value)) {
+    // 颜色名未必合法（如拼错的色名）：canvas 对非法值会静默沿用默认黑色，
+    // 故先用 tinycolor 判合法，非法色板一律忽略并提示使用方（与文档口径一致）
+    if (/^[a-zA-Z]+$/.test(value) && new TinyColor(value).isValid) {
       value = getHexFromName(value)
     } else {
-      // 非法色值兜底为黑色，并提示使用方
-      warnUsage('ColorPicker', `色板中的颜色 ${value} 无效，已忽略`)
-      value = '#000000'
+      warnUsage('ColorPicker', `色板中的颜色 ${value} 无效，已忽略该色板`)
+      return undefined
     }
   }
   if (swatchColorMode === displayedMode.value) return value
@@ -1090,9 +1097,12 @@ function onClear() {
           </div>
         </div>
         <div v-if="parsedSwatches.length" class="color-picker-swatches">
-          <!-- 色板可聚焦：Enter 选色与鼠标点击等效，保证键盘可达 -->
+          <!-- 色板可聚焦：Enter 选色与鼠标点击等效，保证键盘可达；
+               role / aria-label 让读屏器把色板识别为按钮并播报其色值 -->
           <div
             tabindex="0"
+            role="button"
+            :aria-label="swatch.value"
             class="color-picker-swatch"
             v-for="(swatch, index) in parsedSwatches"
             :key="index"
