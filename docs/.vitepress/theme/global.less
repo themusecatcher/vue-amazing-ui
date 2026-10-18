@@ -320,6 +320,14 @@ h1 {
   .divider {
     display: none;
   }
+  /* 主题开关与社交图标之间不再画竖线：二者同属右侧功能区（开关 / 外链 / 版本），靠间距分组即可。
+     用 [class] 提升特异性，覆盖 VitePress scoped 的 .appearance + .social-links::before */
+  .appearance[class] + .social-links[class]::before {
+    display: none;
+  }
+  .appearance[class] + .social-links[class] {
+    margin-left: 12px;
+  }
 }
 .VPNavBarTitle .title {
   color: rgba(0, 0, 0, 0.72);
