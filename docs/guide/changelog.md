@@ -10,13 +10,13 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-15">2.15.0</VersionDateTag>
+## <VersionDateTag date="2026-10-19">2.15.2</VersionDateTag>
 
 - 新增 [单选框 Radio](/guide/components/radio.html) 组合式用法：`RadioGroup` 统一下发选中值与禁用态、承载组内选项，配套 `RadioButton` 提供按钮形态；组内 `Radio` 以 `value` 标识自身，退出组后仍走自身受控逻辑，既有 `options` 配置式用法保持不变
 - 新增 [单选框 Radio](/guide/components/radio.html) 的原生 `input` 承载：各项渲染视觉隐藏的原生 `input`（`Radio` 新增 `autofocus` / `name` / `id`，`RadioGroup` 新增 `name` 并下发到组内各项），补齐键盘操作、表单字段名与屏幕阅读器语义，并新增 `focus` / `blur` 方法
 - 新增 [单选框 Radio](/guide/components/radio.html) 选项名的富内容支持：`options` 的 `label` 支持传入 `VNode` 并原样渲染
 - 优化 [单选框 Radio](/guide/components/radio.html) 的 `change` 事件：在原有「新值」首参之后追加事件对象（含 `target` 状态快照、`nativeEvent` 与 `stopPropagation` / `preventDefault`），原有首参用法不受影响
-- 破坏性变更：[单选框 Radio](/guide/components/radio.html) 的 `buttonSize` 属性更名为 `size`，`RadioGroup` 的同名属性一并更名，且未指定时不再向组内下发尺寸（由各项回落自身尺寸）；旧属性名不再生效，升级后需同步改名
+- 将 [单选框 Radio](/guide/components/radio.html) 的 `buttonSize` 属性更名为 `size`（`RadioGroup` 同名属性一并更名，未指定时不再向组内下发尺寸，由各项回落自身尺寸）；旧属性名不再生效，升级后需同步改名
 - 新增 [复选框 Checkbox](/guide/components/checkbox.html) 组合式用法：`CheckboxGroup` 统一维护选中值与禁用态、承载组内选项（`options` 配置式或默认插槽），并支持 `name` 下发到组内各项；组内 `Checkbox` 以 `value` 标识自身，退出组后仍走自身受控逻辑，既有 `options` 配置式用法保持不变
 - 新增 [复选框 Checkbox](/guide/components/checkbox.html) 的原生 `input` 承载：各项渲染视觉隐藏的原生 `input`（`Checkbox` 新增 `autofocus` / `name` / `id`，`CheckboxGroup` 新增 `name` 并下发到组内各项），补齐键盘操作、表单字段名与屏幕阅读器语义，并新增 `focus` / `blur` 方法
 - 新增 [复选框 Checkbox](/guide/components/checkbox.html) 选项名的富内容支持：`options` 的 `label` 支持传入 `VNode` 并原样渲染
@@ -25,6 +25,23 @@
 - 修复 [单选框 Radio](/guide/components/radio.html) 的行内对齐：行高声明由选项名元素上移至根元素（由选项名继承），为所在行指定行高时（如定高行内混排输入框），文字与控件恢复同一基线且不再溢出行盒
 - 修复 [输入框 Input](/guide/components/input.html) 未绑定 `v-model` 时输入内容会丢失的问题：各输入路径（含输入法合成的文本）统一回写内部值，文本不再因组件重渲染（悬浮 / 聚焦态变化等）被写回旧值
 - 修复 [输入框 Input](/guide/components/input.html) 的行内基线对齐：根元素与内层容器改回基线对齐，与文字混排时不再连带把所在行的文字基线压低 1px
+
+## <VersionDateTag date="2026-10-18">2.15.1</VersionDateTag>
+
+- 增强 [日历 Calendar](/guide/components/calendar.html)：新增 `defaultValue`、`validRange`（字符串按 `valueFormat` 解析、区间外的年 / 月选项一并收窄）与 `headerFull` / `dateFull` / `monthFull` 插槽，`mode` 改为受控（外部变更同步到面板），并补齐键盘导航（月份面板按月步进）、`grid` 无障碍语义、整月 / 整年禁用与窄屏头部
+- 重构 [日历 Calendar](/guide/components/calendar.html) 的对外接口：`select` 每次选中都触发（含重复点击已选中日期），第二参改为 `{ source }`（新增 `year` / `customize` 来源），年 / 月选择器与键盘操作同样写回选中值并触发 `change` / `select`，`panelChange` 在跨月 / 跨年时补发；移除 `dateStrip` 属性，日期区恒定渲染六周，新增 `CalendarSelectInfo` 类型导出
+- 优化修复 [日历 Calendar](/guide/components/calendar.html) 的取值与显示
+- 更新补充 [日历 Calendar](/guide/components/calendar.html) 演示文档
+- 更新组件库文档：文档站补充社交分享卡片的标签与分享封面图，页面链接分享到社交平台时可显示标题、描述与封面图
+- 组件库及文档代码优化
+
+## <VersionDateTag date="2026-10-17">2.15.0</VersionDateTag>
+
+- 重构并增强 [颜色选择器 ColorPicker](/guide/components/color-picker.html)：浮层改为组件自持，显隐改用 `v-model:open`（原 `v-model:show`），面板样式改用 `panelStyle` / `panelClass`（原 `tooltipStyle`），原 [文字提示 Tooltip](/guide/components/tooltip.html) 派生属性（延迟、箭头等）与 `trigger` 插槽旧回传值一并移除（现回传 `{ value }`，程序化开合请用 `v-model:open`），并新增 `defaultOpen` / `openChange` / `destroyOnHide` / `placement` / `to` / `zIndex` / `offset` 属性；`complete` 事件改为仅在输入框提交或拖动结束时触发（依赖「选色即完成」请改用 `update:value`）；同时修复非法色值与越界输入导致崩溃、禁用态仍可展开、`panelStyle` 宽度反复展开跳变等问题
+- [文字提示 Tooltip](/guide/components/tooltip.html)（含派生的 [气泡卡片 Popover](/guide/components/popover.html) / [气泡确认框 Popconfirm](/guide/components/popconfirm.html)）的显隐双向绑定统一为 `v-model:open`（原 `v-model:show`），`showControl` 改名为 `openControl`
+- 修正告警输出：[上传 Upload](/guide/components/upload.html) 的 `beforeUpload` 返回 `false` 时不再误报为「执行出错」，回调异常改走 `error` 级；开发期告警统一为 `[vue-amazing-ui] {组件名}: {说明}` 并修复其在库构建下永不输出的问题（现随使用方构建环境生效），运行时错误与降级日志同样加前缀
+- 更新使用者文档与贡献者文档
+- 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-10-16">2.14.2</VersionDateTag>
 

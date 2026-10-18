@@ -13,25 +13,77 @@ _按照日历形式展示数据的容器_
 - [date-fns](https://date-fns.org/)
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import { CalendarOutlined } from '@ant-design/icons-vue'
 import { format, subDays, addDays } from 'date-fns'
+import type {
+  CalendarProps,
+  CalendarDayOfWeek,
+  CalendarDefaultWeek,
+  CalendarDateItem,
+  CalendarMonthItem,
+  CalendarSelectInfo
+} from 'vue-amazing-ui'
 import { useMessage } from 'vue-amazing-ui'
-import type { CalendarDayOfWeek, CalendarDefaultWeek, CalendarDateItem, CalendarMonthItem } from 'vue-amazing-ui'
 const date = ref(Date.now())
 const cardDate = ref(Date.now())
 const modeDate = ref(Date.now())
-const customCardStyleDate = ref(Date.now())
 const headerDate = ref(Date.now())
+const headerSlotDate = ref(Date.now())
+const headerFullDate = ref(new Date(2026, 9, 15).getTime())
 const startDayOfWeekDate = ref(Date.now())
-const formatDate = ref(Date.now())
+const dateFormatValue = ref(Date.now())
+const weekFormatValue = ref(Date.now())
+const monthFormatValue = ref(Date.now())
+const panelFormatValue = ref(Date.now())
 const noticeDate = ref(Date.now())
 const slotDate = ref(Date.now())
-const selectDate = ref(new Date('2030-10-06').getTime())
+const selectDate = ref(new Date(2030, 9, 6).getTime())
 const disableDate = ref(Date.now())
+const disableWeekendDate = ref(Date.now())
+const wholeMonthDate = ref(Date.now())
 const dateStr = ref(format(Date.now(), 'yyyy-MM-dd'))
-const customThemeDate = ref(Date.now())
+const fullCellDate = ref(new Date(2026, 9, 15).getTime())
+const fullMonthDate = ref(new Date(2026, 9, 15).getTime())
+const rangeDate = ref(new Date(2026, 9, 15).getTime())
+const keyboardDate = ref(new Date(2026, 9, 15).getTime())
+// 可选区间用例：入参为时间戳
+const validRangeValue: [number, number] = [new Date(2026, 9, 10).getTime(), new Date(2026, 9, 20).getTime()]
+// 非受控初值用例：仅作为 defaultValue 传入，不参与 v-model
+const defaultDate = new Date(2026, 4, 20).getTime()
 const message = useMessage()
+// 头部整体替换用例：插槽不提供选项数据，年月选项由使用方自行构造
+const headerFullModeOptions = [
+  { label: '月', value: 'month' },
+  { label: '年', value: 'year' }
+]
+const headerFullMonthOptions = Array.from({ length: 12 }, (_, index) => ({
+  label: `${index + 1}月`,
+  value: index + 1
+}))
+function getHeaderFullYearOptions(year: number): { label: string; value: number }[] {
+  const options: { label: string; value: number }[] = []
+  for (let value = year - 10; value < year + 10; value++) {
+    options.push({ label: `${value}年`, value })
+  }
+  return options
+}
+// 插槽参数只读：模式与年月变更经回调写回，年月变更以当月 15 日为代表日
+function onHeaderFullTypeChange(value: unknown, onTypeChange: (mode: 'month' | 'year') => void): void {
+  if (value === 'month' || value === 'year') onTypeChange(value)
+}
+function onHeaderFullYearChange(value: unknown, month: number, onChange: (value: string | number) => void): void {
+  onChange(new Date(Number(value), month - 1, 15).getTime())
+}
+function onHeaderFullMonthChange(value: unknown, year: number, onChange: (value: string | number) => void): void {
+  onChange(new Date(year, Number(value) - 1, 15).getTime())
+}
+// 头部标题里的「日」取自插槽 value（与 v-model 同源），无法解析时占位
+function getHeaderFullDay(value: string | number | undefined): string {
+  if (value === undefined || value === '') return '--'
+  const timestamp = Number(value)
+  return Number.isFinite(timestamp) ? format(timestamp, 'd') : '--'
+}
 const displayOptions = [
   {
     label: 'panel',
@@ -42,8 +94,8 @@ const displayOptions = [
     value: 'card'
   }
 ]
-const modeDisplay = ref('card')
-const disabledDisplay = ref('panel')
+const modeDisplay = ref<CalendarProps['display']>('card')
+const disabledDisplay = ref<CalendarProps['display']>('panel')
 const weekOptions = [
   {
     label: '周一',
@@ -75,49 +127,10 @@ const weekOptions = [
   }
 ]
 const startDayOfWeek = ref<CalendarDayOfWeek>(6)
-watchEffect(() => {
-  console.log('date', date.value)
-})
-watchEffect(() => {
-  console.log('cardDate', cardDate.value)
-})
-watchEffect(() => {
-  console.log('modeDate', modeDate.value)
-})
-watchEffect(() => {
-  console.log('customCardStyleDate', customCardStyleDate.value)
-})
-watchEffect(() => {
-  console.log('headerDate', headerDate.value)
-})
-watchEffect(() => {
-  console.log('startDayOfWeekDate', startDayOfWeekDate.value)
-})
-watchEffect(() => {
-  console.log('formatDate', formatDate.value)
-})
-watchEffect(() => {
-  console.log('noticeDate', noticeDate.value)
-})
-watchEffect(() => {
-  console.log('slotDate', slotDate.value)
-})
-watchEffect(() => {
-  console.log('selectDate', selectDate.value)
-})
-watchEffect(() => {
-  console.log('disableDate', disableDate.value)
-})
-watchEffect(() => {
-  console.log('dateStr', dateStr.value)
-})
-watchEffect(() => {
-  console.log('customThemeDate', customThemeDate.value)
-})
 function cardDateFormat(date: number, timestamp: number) {
   return String(date).padStart(2, '0')
 }
-function cardWeekFormat(defaultWeek: CalendarDefaultWeek, week: CalendarDayOfWeek) {
+function cardWeekFormat(defaultWeek: CalendarDefaultWeek, week: number) {
   return `周${defaultWeek}`
 }
 function cardMonthFormat(month: number, timestamp: number) {
@@ -127,7 +140,7 @@ function cardMonthFormat(month: number, timestamp: number) {
 function panelDateFormat(date: number, timestamp: number) {
   return format(timestamp, 'do')
 }
-function panelWeekFormat(defaultWeek: CalendarDefaultWeek, week: CalendarDayOfWeek, timestamp: number) {
+function panelWeekFormat(defaultWeek: CalendarDefaultWeek, week: number, timestamp: number) {
   return format(timestamp, 'EEEE')
 }
 function panelMonthFormat(month: number, timestamp: number) {
@@ -142,22 +155,42 @@ function disabledDate(timestamp: number): boolean {
 function disabledWeekend(timestamp: number): boolean {
   return ['6', '7'].includes(format(timestamp, 'i'))
 }
-function onSelect(date: string | number, source: 'date' | 'month') {
-  console.log('select', date, source)
-  message.success(format(date, 'yyyy-MM-dd'))
+// 整层禁用用例：整个 2026-03 都不可选（月份面板的月份格应呈禁用态）
+function disabledMarch(timestamp: number): boolean {
+  return format(timestamp, 'yyyy-MM') === '2026-03'
+}
+// 整格替换用例：#dateFull 替换后组件不再注入选中样式，示例按选中值自行判断
+function isFullCellSelected(timestamp: number): boolean {
+  return format(timestamp, 'yyyy-MM-dd') === format(fullCellDate.value, 'yyyy-MM-dd')
+}
+// 整格替换用例：#monthFull 同理由业务自绘，按「年 + 月」判断选中态
+function isFullMonthSelected(timestamp: number): boolean {
+  return format(timestamp, 'yyyy-MM') === format(fullMonthDate.value, 'yyyy-MM')
+}
+function onSelect(value: string | number | undefined, info: CalendarSelectInfo) {
+  console.log('select', value, info)
+  if (typeof value === 'number') message.success(format(value, 'yyyy-MM-dd'))
 }
 function onChange(
-  date: string | number,
-  dateOrMonth: CalendarDateItem['dateObject'] | CalendarMonthItem['monthObject']
+  value: string | number,
+  dateOrMonth?: CalendarDateItem['dateObject'] | CalendarMonthItem['monthObject']
 ) {
-  console.log('change', date, dateOrMonth)
+  console.log('change', value, dateOrMonth)
 }
-function onPanelChange(date: string | number, info: { year: number; month?: number }, mode: 'month' | 'year') {
-  console.log('panelChange', date, info, mode)
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+) {
+  console.log('panelChange', value, info, mode)
 }
 </script>
 
 ## 基本使用
+
+_日期区固定渲染六周（`42` 格），末行补齐相邻月份日期，面板 / 卡片形态一致_
+
+<br/>
 
 <Calendar v-model:value="date" @change="onChange" @panelChange="onPanelChange" />
 
@@ -165,19 +198,20 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ```vue
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 const date = ref(Date.now())
-watchEffect(() => {
-  console.log('date', date.value)
-})
 function onChange(
-  date: string | number,
-  dateOrMonth: CalendarDateItem['dateObject'] | CalendarMonthItem['monthObject']
+  value: string | number,
+  dateOrMonth?: CalendarDateItem['dateObject'] | CalendarMonthItem['monthObject']
 ) {
-  console.log('change', date, dateOrMonth)
+  console.log('change', value, dateOrMonth)
 }
-function onPanelChange(date: string | number, info: { year: number; month?: number }, mode: 'month' | 'year') {
-  console.log('panelChange', date, info, mode)
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+) {
+  console.log('panelChange', value, info, mode)
 }
 </script>
 <template>
@@ -189,25 +223,30 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ## 卡片模式
 
+_卡片模式以 `300px` 为宽度基准，容器更窄时自适应收缩_
+
+<br/>
+
 <Calendar v-model:value="cardDate" display="card" @change="onChange" @panelChange="onPanelChange" />
 
 ::: details Show Code
 
 ```vue
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 const cardDate = ref(Date.now())
-watchEffect(() => {
-  console.log('cardDate', cardDate.value)
-})
 function onChange(
-  date: string | number,
-  dateOrMonth: CalendarDateItem['dateObject'] | CalendarMonthItem['monthObject']
+  value: string | number,
+  dateOrMonth?: CalendarDateItem['dateObject'] | CalendarMonthItem['monthObject']
 ) {
-  console.log('change', date, dateOrMonth)
+  console.log('change', value, dateOrMonth)
 }
-function onPanelChange(date: string | number, info: { year: number; month?: number }, mode: 'month' | 'year') {
-  console.log('panelChange', date, info, mode)
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+) {
+  console.log('panelChange', value, info, mode)
 }
 </script>
 <template>
@@ -218,6 +257,10 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 :::
 
 ## 初始模式
+
+_`mode` 指定面板模式（月 / 年）：外部变更会同步到面板，面板内切换模式不会回写该属性_
+
+<br/>
 
 <Flex vertical>
   <Space align="center">
@@ -230,7 +273,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ```vue
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 const modeDate = ref(Date.now())
 const displayOptions = [
   {
@@ -243,9 +286,6 @@ const displayOptions = [
   }
 ]
 const modeDisplay = ref('card')
-watchEffect(() => {
-  console.log('modeDate', modeDate.value)
-})
 </script>
 <template>
   <Flex vertical>
@@ -261,9 +301,13 @@ watchEffect(() => {
 
 ## 自定义头部内容
 
+_头部内容行由 `header` 属性或 `#header` 插槽替换_
+
+<br/>
+
 <Space>
   <Calendar v-model:value="headerDate" header="Custom header" display="card" @panelChange="onPanelChange" />
-  <Calendar v-model:value="headerDate" display="card" @panelChange="onPanelChange">
+  <Calendar v-model:value="headerSlotDate" display="card" @panelChange="onPanelChange">
     <template #header>
       <CalendarOutlined /> 日历
     </template>
@@ -274,20 +318,22 @@ watchEffect(() => {
 
 ```vue
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import { CalendarOutlined } from '@ant-design/icons-vue'
 const headerDate = ref(Date.now())
-watchEffect(() => {
-  console.log('headerDate', headerDate.value)
-})
-function onPanelChange(date: string | number, info: { year: number; month?: number }, mode: 'month' | 'year') {
-  console.log('panelChange', date, info, mode)
+const headerSlotDate = ref(Date.now())
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+) {
+  console.log('panelChange', value, info, mode)
 }
 </script>
 <template>
   <Space>
     <Calendar v-model:value="headerDate" header="Custom header" display="card" @panelChange="onPanelChange" />
-    <Calendar v-model:value="headerDate" display="card" @panelChange="onPanelChange">
+    <Calendar v-model:value="headerSlotDate" display="card" @panelChange="onPanelChange">
       <template #header> <CalendarOutlined /> 日历 </template>
     </Calendar>
   </Space>
@@ -296,7 +342,150 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 :::
 
+## 头部整体替换
+
+_`#headerFull` 插槽接管整行头部：使用后默认的年 / 月选择器与模式切换不再渲染_
+
+<br/>
+
+<Calendar v-model:value="headerFullDate" display="card" @panelChange="onPanelChange">
+  <template #headerFull="{ year, month, mode, value, onChange, onTypeChange }">
+    <div class="header-full">
+      <div class="header-full-title">自定义头部：{{ year }} 年 {{ month }} 月 {{ getHeaderFullDay(value) }} 日</div>
+      <div class="header-full-actions">
+        <Radio
+          :options="headerFullModeOptions"
+          :value="mode"
+          button
+          button-size="small"
+          button-style="solid"
+          @change="(value) => onHeaderFullTypeChange(value, onTypeChange)"
+        />
+        <Select
+          size="small"
+          :options="getHeaderFullYearOptions(year)"
+          :value="year"
+          :max-display="8"
+          @change="(value) => onHeaderFullYearChange(value, month, onChange)"
+        />
+        <Select
+          size="small"
+          :options="headerFullMonthOptions"
+          :value="month"
+          :max-display="8"
+          @change="(value) => onHeaderFullMonthChange(value, year, onChange)"
+        />
+      </div>
+    </div>
+  </template>
+</Calendar>
+
+:::: details Show Code
+
+```vue
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { format } from 'date-fns'
+
+const headerFullDate = ref(new Date(2026, 9, 15).getTime())
+// 插槽不提供选项数据，年月选项由使用方自行构造
+const headerFullModeOptions = [
+  { label: '月', value: 'month' },
+  { label: '年', value: 'year' }
+]
+const headerFullMonthOptions = Array.from({ length: 12 }, (_, index) => ({
+  label: `${index + 1}月`,
+  value: index + 1
+}))
+function getHeaderFullYearOptions(year: number): { label: string; value: number }[] {
+  const options: { label: string; value: number }[] = []
+  for (let value = year - 10; value < year + 10; value++) {
+    options.push({ label: `${value}年`, value })
+  }
+  return options
+}
+// 插槽参数只读：模式与年月变更经回调写回，年月变更以当月 15 日为代表日
+function onHeaderFullTypeChange(value: unknown, onTypeChange: (mode: 'month' | 'year') => void): void {
+  if (value === 'month' || value === 'year') onTypeChange(value)
+}
+function onHeaderFullYearChange(value: unknown, month: number, onChange: (value: string | number) => void): void {
+  onChange(new Date(Number(value), month - 1, 15).getTime())
+}
+function onHeaderFullMonthChange(value: unknown, year: number, onChange: (value: string | number) => void): void {
+  onChange(new Date(year, Number(value) - 1, 15).getTime())
+}
+// 标题里的「日」取自插槽 value（与 v-model 同源），无法解析时占位
+function getHeaderFullDay(value: string | number | undefined): string {
+  if (value === undefined || value === '') return '--'
+  const timestamp = Number(value)
+  return Number.isFinite(timestamp) ? format(timestamp, 'd') : '--'
+}
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+): void {
+  console.log('panelChange', value, info, mode)
+}
+</script>
+<template>
+  <Calendar v-model:value="headerFullDate" display="card" @panelChange="onPanelChange">
+    <template #headerFull="{ year, month, mode, value, onChange, onTypeChange }">
+      <div class="header-full">
+        <div class="header-full-title">自定义头部：{{ year }} 年 {{ month }} 月 {{ getHeaderFullDay(value) }} 日</div>
+        <div class="header-full-actions">
+          <Radio
+            :options="headerFullModeOptions"
+            :value="mode"
+            button
+            button-size="small"
+            button-style="solid"
+            @change="(value) => onHeaderFullTypeChange(value, onTypeChange)"
+          />
+          <Select
+            size="small"
+            :options="getHeaderFullYearOptions(year)"
+            :value="year"
+            :max-display="8"
+            @change="(value) => onHeaderFullYearChange(value, month, onChange)"
+          />
+          <Select
+            size="small"
+            :options="headerFullMonthOptions"
+            :value="month"
+            :max-display="8"
+            @change="(value) => onHeaderFullMonthChange(value, year, onChange)"
+          />
+        </div>
+      </div>
+    </template>
+  </Calendar>
+</template>
+<style lang="less" scoped>
+/* 头部整体替换用例：标题行 + 操作行，两端分布 */
+.header-full {
+  padding: 10px;
+  .header-full-title {
+    margin-bottom: 10px;
+  }
+  .header-full-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+}
+
+</style>
+```
+
+::::
+
 ## 自定义一周的开始
+
+_取值 `0-6`，`0` 为周一_
+
+<br/>
 
 <Flex vertical>
   <Space align="center">
@@ -309,7 +498,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ```vue
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import type { CalendarDayOfWeek } from 'vue-amazing-ui'
 const startDayOfWeekDate = ref(Date.now())
 const weekOptions = [
@@ -343,11 +532,12 @@ const weekOptions = [
   }
 ]
 const startDayOfWeek = ref<CalendarDayOfWeek>(6)
-watchEffect(() => {
-  console.log('startDayOfWeekDate', startDayOfWeekDate.value)
-})
-function onPanelChange(date: string | number, info: { year: number; month?: number }, mode: 'month' | 'year') {
-  console.log('panelChange', date, info, mode)
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+) {
+  console.log('panelChange', value, info, mode)
 }
 </script>
 <template>
@@ -364,7 +554,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ## 自定义展示格式
 
-_使用 `weekFormat` / `dateFormat` / `monthFormat` 自定义日期/星期/月的展示格式_
+_使用 `dateFormat` / `weekFormat` / `monthFormat` 自定义日期 / 星期 / 月的展示格式_
 
 <br/>
 
@@ -373,14 +563,14 @@ _使用 `weekFormat` / `dateFormat` / `monthFormat` 自定义日期/星期/月�
     <Calendar
       header="Date format"
       display="card"
-      v-model:value="formatDate"
+      v-model:value="dateFormatValue"
       :date-format="cardDateFormat"
       @panelChange="onPanelChange"
     />
     <Calendar
       header="Week format"
       display="card"
-      v-model:value="formatDate"
+      v-model:value="weekFormatValue"
       :week-format="cardWeekFormat"
       @panelChange="onPanelChange"
     />
@@ -388,13 +578,13 @@ _使用 `weekFormat` / `dateFormat` / `monthFormat` 自定义日期/星期/月�
       header="Month format"
       mode="year"
       display="card"
-      v-model:value="formatDate"
+      v-model:value="monthFormatValue"
       :month-format="cardMonthFormat"
       @panelChange="onPanelChange"
     />
   </Space>
   <Calendar
-    v-model:value="formatDate"
+    v-model:value="panelFormatValue"
     :date-format="panelDateFormat"
     :week-format="panelWeekFormat"
     :month-format="panelMonthFormat"
@@ -406,16 +596,16 @@ _使用 `weekFormat` / `dateFormat` / `monthFormat` 自定义日期/星期/月�
 
 ```vue
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import { format } from 'date-fns'
-const formatDate = ref(Date.now())
-watchEffect(() => {
-  console.log('formatDate', formatDate.value)
-})
+const dateFormatValue = ref(Date.now())
+const weekFormatValue = ref(Date.now())
+const monthFormatValue = ref(Date.now())
+const panelFormatValue = ref(Date.now())
 function cardDateFormat(date: number, timestamp: number) {
   return String(date).padStart(2, '0')
 }
-function cardWeekFormat(defaultWeek: CalendarDefaultWeek, week: CalendarDayOfWeek) {
+function cardWeekFormat(defaultWeek: CalendarDefaultWeek, week: number) {
   return `周${defaultWeek}`
 }
 function cardMonthFormat(month: number, timestamp: number) {
@@ -425,14 +615,18 @@ function cardMonthFormat(month: number, timestamp: number) {
 function panelDateFormat(date: number, timestamp: number) {
   return format(timestamp, 'do')
 }
-function panelWeekFormat(defaultWeek: CalendarDefaultWeek, week: CalendarDayOfWeek, timestamp: number) {
+function panelWeekFormat(defaultWeek: CalendarDefaultWeek, week: number, timestamp: number) {
   return format(timestamp, 'EEEE')
 }
 function panelMonthFormat(month: number, timestamp: number) {
   return format(timestamp, 'MMM')
 }
-function onPanelChange(date: string | number, info: { year: number; month?: number }, mode: 'month' | 'year') {
-  console.log('panelChange', date, info, mode)
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+) {
+  console.log('panelChange', value, info, mode)
 }
 </script>
 <template>
@@ -441,14 +635,14 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
       <Calendar
         header="Date format"
         display="card"
-        v-model:value="formatDate"
+        v-model:value="dateFormatValue"
         :date-format="cardDateFormat"
         @panelChange="onPanelChange"
       />
       <Calendar
         header="Week format"
         display="card"
-        v-model:value="formatDate"
+        v-model:value="weekFormatValue"
         :week-format="cardWeekFormat"
         @panelChange="onPanelChange"
       />
@@ -456,13 +650,13 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
         header="Month format"
         mode="year"
         display="card"
-        v-model:value="formatDate"
+        v-model:value="monthFormatValue"
         :month-format="cardMonthFormat"
         @panelChange="onPanelChange"
       />
     </Space>
     <Calendar
-      v-model:value="formatDate"
+      v-model:value="panelFormatValue"
       :date-format="panelDateFormat"
       :week-format="panelWeekFormat"
       :month-format="panelMonthFormat"
@@ -474,21 +668,104 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 :::
 
+## 自定义日期格式
+
+_指定 `valueFormat` 后，`v-model` 的值为按该格式表达的字符串_
+
+<br/>
+
+<Flex vertical>
+  <Alert type="info" :message="`You selected date: ${dateStr}`" />
+  <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
+</Flex>
+
+:::: details Show Code
+
+```vue
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { format } from 'date-fns'
+const dateStr = ref(format(Date.now(), 'yyyy-MM-dd'))
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+) {
+  console.log('panelChange', value, info, mode)
+}
+</script>
+<template>
+  <Flex vertical>
+    <Alert type="info" :message="`You selected date: ${dateStr}`" />
+    <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
+  </Flex>
+</template>
+```
+
+::::
+
 ## 通知事项日历
 
-<Calendar v-model:value="noticeDate" @panelChange="onPanelChange"> <template #dateValue="{ dateObject, timestamp }"> <span v-if="[8, 12, 16].includes(dateObject.date)">{{ dateObject.date }}日</span> </template> <template #dateContent="{ dateObject, timestamp }"> <template v-if="[8, 12, 16].includes(dateObject.date)"> <div class="notice-item"> <Badge status="warning" /> <Ellipsis class="notice-text" :tooltip-max-width="240">This is warning event.</Ellipsis> </div> <div class="notice-item"> <Badge status="success" /> <Ellipsis class="notice-text" :tooltip-max-width="240">This is usual event.</Ellipsis> </div> <div class="notice-item"> <Badge color="volcano" /> <Ellipsis class="notice-text" :tooltip-max-width="240">This is volcano event</Ellipsis> </div> </template> </template> <template #monthValue="{ monthObject, timestamp }"> <template v-if="[1, 7].includes(monthObject.month)"> <template v-if="monthObject.month === 1">二月</template> <template v-if="monthObject.month === 7">八月</template> </template> </template> <template #monthContent="{ monthObject, timestamp }"> <template v-if="[1, 7].includes(monthObject.month)"> <div class="notice-item"> <Badge status="warning" /> <Ellipsis class="notice-text" :tooltip-max-width="240">This is warning event.</Ellipsis> </div> <div class="notice-item"> <Badge status="success" /> <Ellipsis class="notice-text" :tooltip-max-width="240">This is usual event.</Ellipsis> </div> <div class="notice-item"> <Badge color="volcano" /> <Ellipsis class="notice-text" :tooltip-max-width="240">This is volcano event</Ellipsis> </div> </template> </template> </Calendar>
+_使用 `#dateValue` 替换日号、`#dateContent` 在日号下追加内容_
+
+<br/>
+
+<Calendar v-model:value="noticeDate" @panelChange="onPanelChange">
+  <template #dateValue="{ dateObject, timestamp }">
+    <span v-if="[8, 12, 16].includes(dateObject.date)">{{ dateObject.date }}日</span>
+  </template>
+  <template #dateContent="{ dateObject, timestamp }">
+    <template v-if="[8, 12, 16].includes(dateObject.date)">
+      <div class="notice-item">
+        <Badge status="warning" />
+        <Ellipsis class="notice-text" :tooltip-max-width="240">This is warning event.</Ellipsis>
+      </div>
+      <div class="notice-item">
+        <Badge status="success" />
+        <Ellipsis class="notice-text" :tooltip-max-width="240">This is usual event.</Ellipsis>
+      </div>
+      <div class="notice-item">
+        <Badge color="volcano" />
+        <Ellipsis class="notice-text" :tooltip-max-width="240">This is volcano event</Ellipsis>
+      </div>
+    </template>
+  </template>
+  <template #monthValue="{ monthObject, timestamp }">
+    <template v-if="[1, 7].includes(monthObject.month)">
+      <template v-if="monthObject.month === 1">二月</template>
+      <template v-if="monthObject.month === 7">八月</template>
+    </template>
+  </template>
+  <template #monthContent="{ monthObject, timestamp }">
+    <template v-if="[1, 7].includes(monthObject.month)">
+      <div class="notice-item">
+        <Badge status="warning" />
+        <Ellipsis class="notice-text" :tooltip-max-width="240">This is warning event.</Ellipsis>
+      </div>
+      <div class="notice-item">
+        <Badge status="success" />
+        <Ellipsis class="notice-text" :tooltip-max-width="240">This is usual event.</Ellipsis>
+      </div>
+      <div class="notice-item">
+        <Badge color="volcano" />
+        <Ellipsis class="notice-text" :tooltip-max-width="240">This is volcano event</Ellipsis>
+      </div>
+    </template>
+  </template>
+</Calendar>
 
 ::: details Show Code
 
 ```vue
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 const noticeDate = ref(Date.now())
-watchEffect(() => {
-  console.log('noticeDate', noticeDate.value)
-})
-function onPanelChange(date: string | number, info: { year: number; month?: number }, mode: 'month' | 'year') {
-  console.log('panelChange', date, info, mode)
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+) {
+  console.log('panelChange', value, info, mode)
 }
 </script>
 <template>
@@ -541,12 +818,12 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 .notice-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  .notice-text {
+    flex: 1;
+    min-width: 0;
+  }
 }
-.notice-text {
-  flex: 1;
-  min-width: 0;
-}
+
 </style>
 ```
 
@@ -554,20 +831,33 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ## 自定义插槽
 
-<Calendar v-model:value="slotDate" @panelChange="onPanelChange"> <template #week="{ defaultWeek, week, timestamp }"> {{ format(timestamp, 'EEE') }} </template> <template #dateValue="{ dateObject, timestamp }"> {{ dateObject.date }}日 </template> <template #monthValue="{ monthObject, timestamp }"> {{ format(timestamp, 'MMMM') }} </template> </Calendar>
+_使用 `#week` 插槽替换星期标题_
+
+<br/>
+
+<Calendar v-model:value="slotDate" @panelChange="onPanelChange">
+  <template #week="{ defaultWeek, week, timestamp }">
+    {{ format(timestamp, 'EEE') }}
+  </template>
+  <template #dateValue="{ dateObject, timestamp }"> {{ dateObject.date }}日 </template>
+  <template #monthValue="{ monthObject, timestamp }">
+    {{ format(timestamp, 'MMMM') }}
+  </template>
+</Calendar>
 
 ::: details Show Code
 
 ```vue
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import { format } from 'date-fns'
 const slotDate = ref(Date.now())
-watchEffect(() => {
-  console.log('slotDate', slotDate.value)
-})
-function onPanelChange(date: string | number, info: { year: number; month?: number }, mode: 'month' | 'year') {
-  console.log('panelChange', date, info, mode)
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+) {
+  console.log('panelChange', value, info, mode)
 }
 </script>
 <template>
@@ -585,7 +875,135 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 :::
 
+## 整格替换
+
+_使用 `#dateFull` / `#monthFull` 替换整个单元格；整格由业务自绘，选中 / 今天等状态需在插槽内自行表达_
+
+<br/>
+
+<Calendar v-model:value="fullCellDate" @panelChange="onPanelChange">
+  <template #dateFull="{ dateObject, timestamp, isCurrentDate }">
+    <div
+      class="full-cell"
+      :class="{
+        'full-cell-today': isCurrentDate,
+        'full-cell-selected': isFullCellSelected(timestamp)
+      }"
+    >
+      {{ dateObject.date }}
+    </div>
+  </template>
+</Calendar>
+
+<br/>
+
+<Calendar v-model:value="fullMonthDate" mode="year" @panelChange="onPanelChange">
+  <template #monthFull="{ monthObject, timestamp, isCurrent }">
+    <div
+      class="full-cell"
+      :class="{
+        'full-cell-today': isCurrent,
+        'full-cell-selected': isFullMonthSelected(timestamp)
+      }"
+    >
+      {{ monthObject.month + 1 }}月
+    </div>
+  </template>
+</Calendar>
+
+:::: details Show Code
+
+```vue
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { format } from 'date-fns'
+
+const fullCellDate = ref(new Date(2026, 9, 15).getTime())
+const fullMonthDate = ref(new Date(2026, 9, 15).getTime())
+// 整格替换后组件不再注入选中样式，示例按选中值自行判断
+function isFullCellSelected(timestamp: number): boolean {
+  return format(timestamp, 'yyyy-MM-dd') === format(fullCellDate.value, 'yyyy-MM-dd')
+}
+// 月份整格改为按年月粒度判断
+function isFullMonthSelected(timestamp: number): boolean {
+  return format(timestamp, 'yyyy-MM') === format(fullMonthDate.value, 'yyyy-MM')
+}
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+): void {
+  console.log('panelChange', value, info, mode)
+}
+</script>
+<template>
+  <Calendar v-model:value="fullCellDate" @panelChange="onPanelChange">
+    <template #dateFull="{ dateObject, timestamp, isCurrentDate }">
+      <div
+        class="full-cell"
+        :class="{
+          'full-cell-today': isCurrentDate,
+          'full-cell-selected': isFullCellSelected(timestamp)
+        }"
+      >
+        {{ dateObject.date }}
+      </div>
+    </template>
+  </Calendar>
+  <Calendar v-model:value="fullMonthDate" mode="year" @panelChange="onPanelChange">
+    <template #monthFull="{ monthObject, timestamp, isCurrent }">
+      <div
+        class="full-cell"
+        :class="{
+          'full-cell-today': isCurrent,
+          'full-cell-selected': isFullMonthSelected(timestamp)
+        }"
+      >
+        {{ monthObject.month + 1 }}月
+      </div>
+    </template>
+  </Calendar>
+</template>
+<style lang="less" scoped>
+/* 整格替换用例的单元格：整格由业务自绘（浅底圆角块） */
+.full-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  margin: 0 4px;
+  color: rgba(0, 0, 0, 0.88);
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+  &:hover {
+    background: rgba(0, 0, 0, 0.06);
+  }
+}
+/* 今天：主色描边；选中：主色实心 + 白字（整格替换下由插槽内容自行表达） */
+.full-cell-today {
+  color: var(--calendar-primary-color);
+  box-shadow: inset 0 0 0 1px var(--calendar-primary-color);
+}
+.full-cell-selected {
+  color: #ffffff;
+  background: var(--calendar-primary-color);
+  &:hover {
+    background: var(--calendar-primary-color);
+  }
+}
+
+</style>
+```
+
+::::
+
 ## 选择功能
+
+_`select` 事件第二参为 `{ source }`，区分为年 / 月 / 日 / 头部自定义四种来源_
+
+<br/>
 
 <Flex vertical>
   <Alert type="info" :message="`You selected date: ${format(selectDate, 'yyyy-MM-dd')}`" />
@@ -596,20 +1014,21 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ```vue
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import { format } from 'date-fns'
 import { useMessage } from 'vue-amazing-ui'
-const selectDate = ref(new Date('2030-10-06').getTime())
+const selectDate = ref(new Date(2030, 9, 6).getTime())
 const message = useMessage()
-watchEffect(() => {
-  console.log('selectDate', selectDate.value)
-})
-function onSelect(date: string | number, source: 'date' | 'month') {
-  console.log('select', date, source)
-  message.success(format(date, 'yyyy-MM-dd'))
+function onSelect(value: string | number | undefined, info: { source: 'year' | 'month' | 'date' | 'customize' }) {
+  console.log('select', value, info)
+  if (typeof value === 'number') message.success(format(value, 'yyyy-MM-dd'))
 }
-function onPanelChange(date: string | number, info: { year: number; month?: number }, mode: 'month' | 'year') {
-  console.log('panelChange', date, info, mode)
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+) {
+  console.log('panelChange', value, info, mode)
 }
 </script>
 <template>
@@ -624,18 +1043,22 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ## 禁用日期
 
+_`disabledDate` 入参为时间戳，返回 `true` 表示该日期不可选；年 / 月选择器与月格只替换年月、保留原「日」，该日不可选（命中 `disabledDate` 或落在 `validRange` 外）时收敛到同月最近的可用日_
+
+<br/>
+
 <Flex vertical>
   <Space align="center">
     display:<Radio :options="displayOptions" v-model:value="disabledDisplay" button button-style="solid" />
   </Space>
-  <Space>
+  <Space align="start" class="mt10">
     <Flex vertical>
-      <Alert type="info" message="禁用指定日期 (以今天为准的前三天和后三天)" />
+      <Alert type="info" message="禁用指定日期 (以今天为准的前三天至后三天，含当天)" />
       <Calendar v-model:value="disableDate" :disabled-date="disabledDate" :display="disabledDisplay" @select="onSelect" @panelChange="onPanelChange" />
     </Flex>
     <Flex vertical>
       <Alert type="info" message="禁用所有周末 (星期六 & 星期日)" />
-      <Calendar v-model:value="disableDate" :disabled-date="disabledWeekend" :display="disabledDisplay" @select="onSelect" @panelChange="onPanelChange" />
+      <Calendar v-model:value="disableWeekendDate" :disabled-date="disabledWeekend" :display="disabledDisplay" @select="onSelect" @panelChange="onPanelChange" />
     </Flex>
   </Space>
 </Flex>
@@ -644,10 +1067,11 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 ```vue
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import { format, subDays, addDays } from 'date-fns'
 import { useMessage } from 'vue-amazing-ui'
 const disableDate = ref(Date.now())
+const disableWeekendDate = ref(Date.now())
 const message = useMessage()
 const displayOptions = [
   {
@@ -660,9 +1084,6 @@ const displayOptions = [
   }
 ]
 const disabledDisplay = ref('panel')
-watchEffect(() => {
-  console.log('disableDate', disableDate.value)
-})
 function disabledDate(timestamp: number): boolean {
   if (subDays(Date.now(), 4).getTime() < timestamp && timestamp < addDays(Date.now(), 3).getTime()) {
     return true
@@ -672,12 +1093,16 @@ function disabledDate(timestamp: number): boolean {
 function disabledWeekend(timestamp: number): boolean {
   return ['6', '7'].includes(format(timestamp, 'i'))
 }
-function onSelect(date: string | number, source: 'date' | 'month') {
-  console.log('select', date, source)
-  message.success(format(date, 'yyyy-MM-dd'))
+function onSelect(value: string | number | undefined, info: { source: 'year' | 'month' | 'date' | 'customize' }) {
+  console.log('select', value, info)
+  if (typeof value === 'number') message.success(format(value, 'yyyy-MM-dd'))
 }
-function onPanelChange(date: string | number, info: { year: number; month?: number }, mode: 'month' | 'year') {
-  console.log('panelChange', date, info, mode)
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+) {
+  console.log('panelChange', value, info, mode)
 }
 </script>
 <template>
@@ -687,7 +1112,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
     </Space>
     <Space>
       <Flex vertical>
-        <Alert type="info" message="禁用指定日期 (以今天为准的前三天和后三天)" />
+        <Alert type="info" message="禁用指定日期 (以今天为准的前三天至后三天，含当天)" />
         <Calendar
           v-model:value="disableDate"
           :disabled-date="disabledDate"
@@ -699,7 +1124,7 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
       <Flex vertical>
         <Alert type="info" message="禁用所有周末 (星期六 & 星期日)" />
         <Calendar
-          v-model:value="disableDate"
+          v-model:value="disableWeekendDate"
           :disabled-date="disabledWeekend"
           :display="disabledDisplay"
           @select="onSelect"
@@ -713,47 +1138,217 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 :::
 
-## 自定义日期格式
+## 可选日期区间
+
+_`validRange` 限定可选区间，区间外的日期不可选，年 / 月选择器的可选项一并收窄；字符串入参按 `valueFormat` 解析_
+
+<br/>
 
 <Flex vertical>
-  <Alert type="info" :message="`You selected date: ${dateStr}`" />
-  <Calendar v-model:value="dateStr" value-format="T" @panelChange="onPanelChange" @change="onChange" @select="onSelect" />
+  <Alert type="info" message="仅允许选择 2026-10-10 ~ 2026-10-20，区间外的日期不可选" />
+  <Calendar v-model:value="rangeDate" :valid-range="validRangeValue" @select="onSelect" @panelChange="onPanelChange" />
 </Flex>
 
-::: details Show Code
+:::: details Show Code
 
 ```vue
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 import { format } from 'date-fns'
-const dateStr = ref(format(Date.now(), 'yyyy-MM-dd'))
-watchEffect(() => {
-  console.log('dateStr', dateStr.value)
-})
-function onPanelChange(date: string | number, info: { year: number; month?: number }, mode: 'month' | 'year') {
-  console.log('panelChange', date, info, mode)
+import { useMessage } from 'vue-amazing-ui'
+const rangeDate = ref(new Date(2026, 9, 15).getTime())
+const validRangeValue: [number, number] = [new Date(2026, 9, 10).getTime(), new Date(2026, 9, 20).getTime()]
+const message = useMessage()
+function onSelect(value: string | number | undefined, info: { source: 'year' | 'month' | 'date' | 'customize' }) {
+  console.log('select', value, info)
+  if (typeof value === 'number') message.success(format(value, 'yyyy-MM-dd'))
+}
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+): void {
+  console.log('panelChange', value, info, mode)
 }
 </script>
 <template>
   <Flex vertical>
-    <Alert type="info" :message="`You selected date: ${dateStr}`" />
-    <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
+    <Alert type="info" message="仅允许选择 2026-10-10 ~ 2026-10-20，区间外的日期不可选" />
+    <Calendar v-model:value="rangeDate" :valid-range="validRangeValue" @select="onSelect" @panelChange="onPanelChange" />
   </Flex>
 </template>
 ```
 
-:::
+::::
+
+## 非受控初值
+
+_`defaultValue` 同时决定初始面板日期与初始选中值；绑定 `value` 时以 `value` 为准_
+
+<br/>
+
+<Calendar :default-value="defaultDate" @panelChange="onPanelChange" />
+
+:::: details Show Code
+
+```vue
+<script lang="ts" setup>
+const defaultDate = new Date(2026, 4, 20).getTime()
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+): void {
+  console.log('panelChange', value, info, mode)
+}
+</script>
+<template>
+  <Calendar :default-value="defaultDate" @panelChange="onPanelChange" />
+</template>
+```
+
+::::
+
+## 整层禁用
+
+_整月都被 `disabledDate` 禁用时，月份面板（`mode="year"`）的月份格与年 / 月选择器的对应项一并禁用_
+
+<br/>
+
+<Calendar v-model:value="wholeMonthDate" mode="year" :disabled-date="disabledMarch" @panelChange="onPanelChange" />
+
+:::: details Show Code
+
+```vue
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { format } from 'date-fns'
+const wholeMonthDate = ref(Date.now())
+function disabledMarch(timestamp: number) {
+  return format(timestamp, 'yyyy-MM') === '2026-03'
+}
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+): void {
+  console.log('panelChange', value, info, mode)
+}
+</script>
+<template>
+  <Calendar v-model:value="wholeMonthDate" mode="year" :disabled-date="disabledMarch" @panelChange="onPanelChange" />
+</template>
+```
+
+::::
+
+## 键盘导航
+
+_面板可聚焦，键盘直接移动选中日期；日期面板按日粒度移动，月份面板（`mode="year"`）按月粒度移动；目标不可选时该次移动不生效_
+
+<br/>
+
+<ul class="keyboard-tips mb10">
+  <li>日期面板：← / → 一天、↑ / ↓ 一周、PageUp / PageDown 一月、Ctrl（macOS 为 Cmd）+ ← / → 一年</li>
+  <li>月份面板：← / → 一月、↑ / ↓ 一行（三个月）、Ctrl（macOS 为 Cmd）+ ← / → 一年（翻页键不响应）</li>
+</ul>
+
+<Calendar v-model:value="keyboardDate" @panelChange="onPanelChange" />
+
+:::: details Show Code
+
+```vue
+<script lang="ts" setup>
+import { ref } from 'vue'
+const keyboardDate = ref(new Date(2026, 9, 15).getTime())
+function onPanelChange(
+  value: string | number | undefined,
+  info: { year: number; month?: number },
+  mode: 'month' | 'year'
+) {
+  console.log('panelChange', value, info, mode)
+}
+</script>
+<template>
+  <ul class="keyboard-tips mb10">
+    <li>日期面板：← / → 一天、↑ / ↓ 一周、PageUp / PageDown 一月、Ctrl（macOS 为 Cmd）+ ← / → 一年</li>
+    <li>月份面板：← / → 一月、↑ / ↓ 一行（三个月）、Ctrl（macOS 为 Cmd）+ ← / → 一年（翻页键不响应）</li>
+  </ul>
+  <Calendar v-model:value="keyboardDate" @panelChange="onPanelChange" />
+</template>
+<style lang="less" scoped>
+.keyboard-tips {
+  margin: 0;
+  padding-left: 20px;
+  color: rgba(0, 0, 0, 0.65);
+  li {
+    line-height: 1.8;
+  }
+}
+</style>
+```
+
+::::
 
 <style lang="less" scoped>
 /* 每条通知事项独占一行：状态圆点固定宽度，文本交给 Ellipsis 截断并悬浮提示 */
 .notice-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  .notice-text {
+    flex: 1;
+    min-width: 0;
+  }
 }
-.notice-text {
-  flex: 1;
-  min-width: 0;
+/* 头部整体替换用例：标题行 + 操作行，两端分布 */
+.header-full {
+  padding: 10px;
+  .header-full-title {
+    margin-bottom: 10px;
+  }
+  .header-full-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+}
+/* 整格替换用例的单元格：整格由业务自绘（浅底圆角块） */
+.full-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  margin: 0 4px;
+  color: rgba(0, 0, 0, 0.88);
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+  &:hover {
+    background: rgba(0, 0, 0, 0.06);
+  }
+}
+/* 今天：主色描边；选中：主色实心 + 白字（整格替换下由插槽内容自行表达） */
+.full-cell-today {
+  color: var(--calendar-primary-color);
+  box-shadow: inset 0 0 0 1px var(--calendar-primary-color);
+}
+.full-cell-selected {
+  color: #ffffff;
+  background: var(--calendar-primary-color);
+  &:hover {
+    background: var(--calendar-primary-color);
+  }
+}
+/* 键盘导航用例的键位说明列表 */
+.keyboard-tips {
+  margin: 0;
+  padding-left: 20px;
+  color: rgba(0, 0, 0, 0.65);
+  li {
+    line-height: 1.8;
+  }
 }
 </style>
 
@@ -763,19 +1358,20 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 
 | 参数 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| display | 日历展示方式，面板/卡片 | 'panel' &#124; 'card' | 'panel' |
-| mode | 初始模式 | 'month' &#124; 'year' | 'month' |
+| defaultValue | 非受控初始值：同时决定初始面板日期与初始选中值，受控 `value` 优先 | string &#124; number | undefined |
+| valueFormat | 被选中日期的格式，默认为时间戳；参考 [format](https://date-fns.org/v4.1.0/docs/format) | string | undefined |
 | header | 自定义日历头部内容 | string | undefined |
+| display | 日历展示方式，面板 / 卡片 | 'panel' &#124; 'card' | 'panel' |
+| mode | 面板模式（受控）：月 / 年 | 'month' &#124; 'year' | 'month' |
+| startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一（越界值按 `7` 取模收敛） | [CalendarDayOfWeek](#dayofweek-type) | 0 |
+| disabledDate | 不可选择的日期 | (timestamp: number) => boolean | undefined |
+| validRange | 可选日期区间，区间外的日期不可选，同时收窄年 / 月选择器的可选项；字符串入参按 `valueFormat` 解析（未指定时按时间戳数字串解析，无法解析则忽略该区间） | [string &#124; number, string &#124; number] | undefined |
+| dateFormat | 自定义日期展示格式 | (date: number, timestamp: number) => string | undefined |
+| weekFormat | 自定义星期展示格式 | (defaultWeek: [CalendarDefaultWeek](#defaultweek-type), week: number, timestamp: number) => string | undefined |
+| monthFormat | 自定义月展示格式 | (month: number, timestamp: number) => string | undefined |
 | yearSelectProps | 年选择器 `props`，参考 [Select Props](./select.md#select) | [SelectProps](./select.md#select) | {} |
 | monthSelectProps | 月选择器 `props`，参考 [Select Props](./select.md#select) | [SelectProps](./select.md#select) | {} |
 | modeRadioProps | 模式切换器 `props`，参考 [Radio Props](./radio.md#radio) | [RadioProps](./radio.md#radio) | {} |
-| startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一 | [CalendarDayOfWeek](#dayofweek-type) | 0 |
-| dateStrip | 日历面板默认会显示六周的日期，当最后一周的日期不包含当月日期时，是否去掉 | boolean | true |
-| dateFormat | 自定义日期展示格式 | (date: number, timestamp: number) => string | undefined |
-| weekFormat | 自定义星期展示格式 (defaultWeek: [CalendarDefaultWeek](#defaultweek-type), week: number, timestamp: number) => string | undefined |
-| monthFormat | 自定义月展示格式 | (month: number, timestamp: number) => string | undefined |
-| disabledDate | 不可选择的日期 | (timestamp: number) => boolean | undefined |
-| valueFormat | 被选中日期的格式，默认为时间戳；参考 [format](https://date-fns.org/v4.1.0/docs/format) | string | undefined |
 | value <Tag color="cyan">v-model</Tag> | 当前被选中的日期 | string &#124; number | undefined |
 
 ### DayOfWeek Type
@@ -809,21 +1405,30 @@ function onPanelChange(date: string | number, info: { year: number; month?: numb
 | timestamp  | 当月开始的时间戳 | number                          | undefined |
 | isCurrent  | 是否为当前月    | boolean                         | undefined |
 
+### SelectInfo Type
+
+| 名称     | 说明                                      | 类型                                                     |
+| :----- | :-------------------------------------- | :----------------------------------------------------- |
+| source | 选择来源：年选择器 / 月（选择器或月面板格）/ 日期面板格 / 头部整体替换 | 'year' &#124; 'month' &#124; 'date' &#124; 'customize' |
+
 ## Slots
 
 | 名称 | 说明 | 用法 |
 | :-- | :-- | :-- |
 | header | 自定义日历头部内容 | v-slot:header |
+| headerFull | 替换整个头部：使用后默认的年 / 月选择器与模式切换不再渲染，插槽提供当前面板年月 / 模式、当前选中值与写回回调 | v-slot:headerFull="{ year, month, mode, value, onChange, onTypeChange }" |
 | week | 自定义周展示 | v-slot:week="{ defaultWeek, week, timestamp }" |
 | dateValue | 自定义日期展示 | v-slot:dateValue="{ type, dateObject, timestamp, inCurrentMonth, isCurrentDate }" |
 | dateContent | 自定义日期内容展示 | v-slot:dateContent="{ type, dateObject, timestamp, inCurrentMonth, isCurrentDate }" |
+| dateFull | 替换整个日期单元格，插槽参数为 [CalendarDateItem](#dateitem-type) | v-slot:dateFull="{ type, dateObject, timestamp, inCurrentMonth, isCurrentDate }" |
 | monthValue | 自定义月份展示 | v-slot:monthValue="{ type, monthObject, timestamp, isCurrent }" |
 | monthContent | 自定义月份内容展示 | v-slot:monthContent="{ type, monthObject, timestamp, isCurrent }" |
+| monthFull | 替换整个月份单元格，插槽参数为 [CalendarMonthItem](#monthitem-type) | v-slot:monthFull="{ type, monthObject, timestamp, isCurrent }" |
 
 ## Events
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| change | 日期变化时的回调 | (date: string &#124; number, dateOrMonth: [CalendarDateItem](#dateitem-type)['dateObject'] &#124; [CalendarMonthItem](#monthitem-type)['monthObject']) => void |
-| panelChange | 日期面板变化的回调 | (date: string &#124; number, info: { year: number, month?: number }, mode: 'month' &#124; 'year') => void |
-| select | 选择日期回调，包含来源信息 | (date: string &#124; number, source: 'date' &#124; 'month') => void |
+| change | 日期变化时的回调（重复点击已选中的日期不触发） | (value: string &#124; number, dateObject?: [CalendarDateItem](#dateitem-type)['dateObject'] &#124; [CalendarMonthItem](#monthitem-type)['monthObject']) => void |
+| panelChange | 面板定位变化时的回调（切换年 / 月选择器、切换模式、跨月选择均会触发） | (value: string &#124; number &#124; undefined, info: { year: number, month?: number }, mode: 'month' &#124; 'year') => void |
+| select | 选择日期回调，第二参携带来源信息 | (value: string &#124; number &#124; undefined, info: [CalendarSelectInfo](#selectinfo-type)) => void |

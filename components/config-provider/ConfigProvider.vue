@@ -2,7 +2,7 @@
 import { reactive, computed, watch, watchEffect, provide, inject, onUnmounted } from 'vue'
 import { SKIP_LINK_CSS_VARS_KEY } from './context'
 import type { CSSProperties, VNode } from 'vue'
-import { getColorPalettes, getAlphaColor, createZIndexManager, Z_INDEX_INJECT_KEY } from 'components/utils'
+import { getColorPalettes, getAlphaColor, createZIndexManager, Z_INDEX_INJECT_KEY, warnUsage } from 'components/utils'
 export interface Theme {
   common?: {
     // 优先级低于组件配置
@@ -390,9 +390,7 @@ watch(
       // 主题表只登记本库组件：使用方写入库内不存在的键（拼写错误等）时跳过并提示，
       // 避免一个坏键中断整个回调，导致其余组件的主题色不再更新
       if (!registeredThemeKeys.has(key)) {
-        if (import.meta.env.DEV) {
-          console.warn(`[vue-amazing-ui] ConfigProvider 的 theme 中存在非本库组件键：${key}，已忽略`)
-        }
+        warnUsage('ConfigProvider', `theme 中存在非本库组件键：${key}，已忽略`)
         return
       }
       applyComponentTheme(key, props.theme[key as keyof Theme]?.primaryColor || commonPrimaryColor)

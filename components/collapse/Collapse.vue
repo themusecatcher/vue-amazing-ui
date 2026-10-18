@@ -154,7 +154,7 @@ function onCopy(index: number, key: string | number) {
     },
     (err) => {
       /* clipboard write failed */
-      console.warn('copy failed', err)
+      console.warn('[vue-amazing-ui] Collapse: 复制失败', err)
     }
   )
 }

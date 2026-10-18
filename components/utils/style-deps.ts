@@ -200,7 +200,7 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
     'Button',
     'Scrollbar'
   ],
-  ColorPicker: ['Button', 'Input', 'Tooltip', 'Popup'],
+  ColorPicker: ['Button', 'Input', 'Popup'],
   Dialog: ['Button', 'Scrollbar'],
   DialogProvider: ['Button', 'Scrollbar'],
   Drawer: ['Scrollbar'],

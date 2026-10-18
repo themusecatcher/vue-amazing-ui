@@ -50,7 +50,7 @@ describe('BackTop 的 listenTo 解析', () => {
       wrapper = mount(BackTop, { props: { listenTo: '.not-exist' } })
     }).not.toThrow()
 
-    expect(warn).toHaveBeenCalledWith('Container of back-top element is not found.')
+    expect(warn).toHaveBeenCalledWith('[vue-amazing-ui] BackTop: 未找到容器元素，滚动监听未启用')
   })
 
   it('非法选择器按「找不到目标」处理，不抛错', () => {
@@ -60,7 +60,7 @@ describe('BackTop 的 listenTo 解析', () => {
       wrapper = mount(BackTop, { props: { listenTo: '.[' } })
     }).not.toThrow()
 
-    expect(warn).toHaveBeenCalledWith('Container of back-top element is not found.')
+    expect(warn).toHaveBeenCalledWith('[vue-amazing-ui] BackTop: 未找到容器元素，滚动监听未启用')
   })
 
   it('未传 listenTo 时命中最近的可滚动祖先（内联 overflow: auto）', () => {

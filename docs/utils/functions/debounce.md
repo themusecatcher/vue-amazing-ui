@@ -2,23 +2,25 @@
 
 <GlobalElement />
 
-_对于短时间内连续触发的事件，防抖保证在停止触发 `delay` `ms` 后才执行一次_
+_对于短时间内连续触发的事件，防抖只在停止触发 `delay` `ms` 后执行最后一次调用，触发期间不会执行_
 
 ## 何时使用
 
-- 对于短时间内连续触发的事件，停止触发 `delay` `ms` 后函数才执行一次
+- 输入框实时搜索 / 联想：避免每次按键都发起请求，只在用户停止输入后请求一次
+- 窗口 `resize`、滚动结束后的布局测量与重算：只在用户停止操作后重算一次
+- 只关心高频事件的「最终状态」而非过程中的每一次变化时（需要过程中也持续响应，应改用 [节流 throttle](/utils/functions/throttle.html)）
 
 ::: details Show Source Code
 
 ```ts
 /**
- * 防抖：在最后一次触发后延迟 `delay` 再执行一次
+ * 防抖：连续触发时只保留最后一次调用，待停止触发满 `delay` 毫秒后执行
  *
  * 触发期间不断重置计时器，故连续高频触发只会执行最后一次；常用于输入、窗口 resize 等场景。
  *
  * @param fn - 需要防抖的函数
  * @param delay - 防抖等待时长（ms），默认 300
- * @returns 防抖后的包装函数
+ * @returns 防抖后的包装函数；任何情况下都不返回值（原函数的返回值不向外传递）
  */
 export function debounce(fn: Function, delay: number = 300): Function {
   let timer: any = null // 闭包持有定时器引用，便于重置
@@ -81,4 +83,4 @@ function showPosition() {
 
 | 类型 | 说明 |
 | --- | --- |
-| Function | 防抖后的新函数 |
+| Function | 防抖后的新函数；任何情况下都不返回值（原函数的返回值不向外传递） |

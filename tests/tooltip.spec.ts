@@ -9,7 +9,7 @@ import Tooltip from 'components/tooltip'
  * 三处断言都对应「容易被后续重构无声改坏、且已有消费方依赖」的行为：
  * - `animationend` 由 `Ellipsis` 消费（用于收起后复位），不能被子节点嵌套动画误触发；
  * - `role` / `aria-describedby` 是无障碍读屏链路；
- * - 受控 `show` 必须立即生效，不能套用 hover 的 `showDelay`；
+ * - 受控 `open` 必须立即生效，不能套用 hover 的 `showDelay`；
  * - `destroyOnHide` 须原样透传给浮层宿主：关闭后在**离开过渡结束**时卸载，再次显示重新创建。
  *
  * 注意：@vue/test-utils 默认会把 `Transition` 替换为 `<transition-stub>`，
@@ -74,10 +74,10 @@ afterEach(() => {
 })
 
 describe('Tooltip 行为回归', () => {
-  it('受控 show 应立即显示，不套用 hover 的 showDelay', async () => {
+  it('受控 open 应立即显示，不套用 hover 的 showDelay', async () => {
     wrapper = mount(Tooltip, {
       ...mountOptions,
-      props: { tooltip: 'hi', show: true, showDelay: 5000 }
+      props: { tooltip: 'hi', open: true, showDelay: 5000 }
     })
     await flush()
 
@@ -89,7 +89,7 @@ describe('Tooltip 行为回归', () => {
   it('卡片带 role="tooltip"，且与触发器经 aria-describedby 关联', async () => {
     wrapper = mount(Tooltip, {
       ...mountOptions,
-      props: { tooltip: 'hi', show: true }
+      props: { tooltip: 'hi', open: true }
     })
     await flush()
 
@@ -106,7 +106,7 @@ describe('Tooltip 行为回归', () => {
   it('仅响应卡片容器自身的 animationend，忽略子节点嵌套动画冒泡', async () => {
     wrapper = mount(Tooltip, {
       ...mountOptions,
-      props: { tooltip: 'hi', show: true }
+      props: { tooltip: 'hi', open: true }
     })
     await flush()
 
@@ -130,7 +130,7 @@ describe('Tooltip · 面板的公开覆盖入口（tooltipClass / popupClassName
   it('tooltipClass 落在气泡卡片上，popupClassName 落在面板（定位盒）上', async () => {
     wrapper = mount(Tooltip, {
       ...mountOptions,
-      props: { tooltip: 'hi', show: true, tooltipClass: 'my-card', popupClassName: 'my-panel' }
+      props: { tooltip: 'hi', open: true, tooltipClass: 'my-card', popupClassName: 'my-panel' }
     })
     await flush()
 
@@ -145,7 +145,7 @@ describe('Tooltip · 面板的公开覆盖入口（tooltipClass / popupClassName
   it('popupStyle 在皮肤变量与动画原点之后合并，可覆盖面板样式但不接管层级', async () => {
     wrapper = mount(Tooltip, {
       ...mountOptions,
-      props: { tooltip: 'hi', show: true, popupStyle: { filter: 'blur(1px)', zIndex: 9999 } }
+      props: { tooltip: 'hi', open: true, popupStyle: { filter: 'blur(1px)', zIndex: 9999 } }
     })
     await flush()
     const panel = document.querySelector('.tooltip-card-container') as HTMLElement
@@ -159,7 +159,7 @@ describe('Tooltip · 面板的公开覆盖入口（tooltipClass / popupClassName
   it('zIndex 优先于默认层级 1070', async () => {
     wrapper = mount(Tooltip, {
       ...mountOptions,
-      props: { tooltip: 'hi', show: true, zIndex: 1200 }
+      props: { tooltip: 'hi', open: true, zIndex: 1200 }
     })
     await flush()
     const panel = document.querySelector('.tooltip-card-container') as HTMLElement
@@ -171,13 +171,13 @@ describe('Tooltip · destroyOnHide（透传给浮层宿主）', () => {
   it('未传时元素常驻：关闭后仅 display: none，元素复用', async () => {
     wrapper = mount(Tooltip, {
       ...mountOptions,
-      props: { tooltip: 'hi', show: true, to: false }
+      props: { tooltip: 'hi', open: true, to: false }
     })
     await flush()
     const panel = panelOf(wrapper)
     expect(panel).not.toBeNull()
 
-    await wrapper.setProps({ show: false })
+    await wrapper.setProps({ open: false })
     await waitHidden(() => panelOf(wrapper))
     expect(panelOf(wrapper)).toBe(panel)
     expect(panel?.style.display).toBe('none')
@@ -186,19 +186,19 @@ describe('Tooltip · destroyOnHide（透传给浮层宿主）', () => {
   it('为 true 时关闭后卸载整棵浮层子树，再次显示重新创建且契约齐全', async () => {
     wrapper = mount(Tooltip, {
       ...mountOptions,
-      props: { tooltip: 'hi', show: true, to: false, destroyOnHide: true }
+      props: { tooltip: 'hi', open: true, to: false, destroyOnHide: true }
     })
     await flush()
     const first = panelOf(wrapper)
     expect(first).not.toBeNull()
 
-    await wrapper.setProps({ show: false })
+    await wrapper.setProps({ open: false })
     await waitUnmounted(first)
     // 卸载发生在离开过渡结束之后，故断言的是「元素已脱离文档」而非「查不到」
     expect(first?.isConnected).toBe(false)
     expect(wrapper.element.querySelector('.va-popup-container')).toBeNull()
 
-    await wrapper.setProps({ show: true })
+    await wrapper.setProps({ open: true })
     await flush()
     const recreated = panelOf(wrapper)
     expect(recreated).not.toBeNull()

@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import Popover from 'components/popover'
 
 /**
- * 回归守护：Popover 未声明 `trigger` / `keyboard`（以及 `show`），
+ * 回归守护：Popover 未声明 `trigger` / `keyboard`（以及 `open`），
  * 这些能力**依赖 Vue 的属性透传**落到内层 Tooltip 上。
  *
  * 因此一旦有人给 Popover 加 `inheritAttrs: false`、或把 `trigger` 声明为
@@ -76,12 +76,12 @@ describe('Popover 依赖属性透传到内层 Tooltip', () => {
   })
 
   it('destroyOnHide 透传生效：关闭后卸载面板，再次显示重新创建', async () => {
-    mountPopover({ title: 't', content: 'c', show: true, destroyOnHide: true })
+    mountPopover({ title: 't', content: 'c', open: true, destroyOnHide: true })
     await flush()
     const first = document.querySelector('.tooltip-card-container') as HTMLElement
     expect(first).not.toBeNull()
 
-    await wrapper?.setProps({ show: false })
+    await wrapper?.setProps({ open: false })
     // 卸载发生在离开过渡结束之后，故轮询「元素脱离文档」而非「查不到」
     for (let i = 0; i < 20 && first.isConnected; i += 1) {
       first.dispatchEvent(new Event('animationend'))
@@ -90,7 +90,7 @@ describe('Popover 依赖属性透传到内层 Tooltip', () => {
     expect(first.isConnected).toBe(false)
     expect(isShown()).toBe(false)
 
-    await wrapper?.setProps({ show: true })
+    await wrapper?.setProps({ open: true })
     await flush()
     const recreated = document.querySelector('.tooltip-card-container') as HTMLElement
     expect(recreated).not.toBeNull()
@@ -112,7 +112,7 @@ describe('Popover 落在 Popup 浮层链上', () => {
   const queryPanel = (): HTMLElement => document.querySelector('.tooltip-card-container') as HTMLElement
 
   it('面板由 <Popup> 宿主渲染：落方向类、渲染箭头、层级取浮层默认值', async () => {
-    mountPopover({ title: 't', content: 'c', show: true })
+    mountPopover({ title: 't', content: 'c', open: true })
     await flush()
 
     const panel = queryPanel()
@@ -126,7 +126,7 @@ describe('Popover 落在 Popup 浮层链上', () => {
   })
 
   it('内容仍由 Popover 提供：标题 / 内容渲染在宿主面板内', async () => {
-    mountPopover({ title: 't', content: 'c', show: true })
+    mountPopover({ title: 't', content: 'c', open: true })
     await flush()
 
     const panel = queryPanel()
@@ -135,7 +135,7 @@ describe('Popover 落在 Popup 浮层链上', () => {
   })
 
   it('arrow=false 时不渲染箭头 DOM，面板也不保留箭头槽', async () => {
-    mountPopover({ title: 't', content: 'c', show: true, arrow: false })
+    mountPopover({ title: 't', content: 'c', open: true, arrow: false })
     await flush()
 
     const panel = queryPanel()

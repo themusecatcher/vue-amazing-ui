@@ -16,6 +16,10 @@ function docsResolveLibraryToDist(): Plugin {
   }
 }
 
+// 文档站对外地址（GitHub Pages）。社交卡片（Open Graph / Twitter Card）要求绝对地址
+const SITE_URL = 'https://themusecatcher.github.io/vue-amazing-ui/'
+const OG_IMAGE_URL = `${SITE_URL}og-image.png`
+
 export default defineConfig({
   vite: {
     plugins: [docsResolveLibraryToDist()]
@@ -27,8 +31,36 @@ export default defineConfig({
 
   head: [
     // 网站图标
-    ['link', { rel: 'icon', href: '/vue-amazing-ui/amazing-icon.svg' }]
+    ['link', { rel: 'icon', href: '/vue-amazing-ui/amazing-icon.svg' }],
+    // 社交分享卡片：图片类字段各页一致，写在站点级 head；标题/描述/链接随页面变化，见 transformHead
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:site_name', content: 'Vue Amazing UI' }],
+    ['meta', { property: 'og:image', content: OG_IMAGE_URL }],
+    ['meta', { property: 'og:image:type', content: 'image/png' }],
+    ['meta', { property: 'og:image:width', content: '1200' }],
+    ['meta', { property: 'og:image:height', content: '630' }],
+    ['meta', { property: 'og:image:alt', content: 'Vue Amazing UI — Amazing UI 组件库' }],
+    ['meta', { property: 'og:locale', content: 'zh_CN' }],
+    // 卡片协议沿用 twitter: 前缀，X 更名后未改（不存在 x:card，改写会失效）
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:image', content: OG_IMAGE_URL }],
+    ['meta', { name: 'twitter:image:alt', content: 'Vue Amazing UI — Amazing UI 组件库' }]
   ],
+
+  // 页面级分享信息：站点级 head 会把同一份标题/链接注入所有页面，分享子页面时会显示首页卡片，
+  // 故按页面生成 og:title / og:description / og:url
+  transformHead({ pageData, title, description }) {
+    // relativePath: 'index.md' → ''；'guide/components/button.md' → 'guide/components/button.html'
+    const pagePath = (pageData.relativePath ?? 'index.md').replace(/(^|\/)index\.md$/, '$1').replace(/\.md$/, '.html')
+    return [
+      ['meta', { property: 'og:title', content: title }],
+      ['meta', { property: 'og:description', content: description }],
+      ['meta', { property: 'og:url', content: `${SITE_URL}${pagePath}` }],
+      ['meta', { name: 'twitter:title', content: title }],
+      ['meta', { name: 'twitter:description', content: description }]
+    ]
+  },
+
   appearance: true, // 默认 true，设为 false 则无法切换 dark/light 主题，可选 'dark' true false
   markdown: {
     lineNumbers: false // 是否显示行数，默认 false

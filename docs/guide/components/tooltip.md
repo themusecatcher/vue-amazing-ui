@@ -39,9 +39,9 @@ function onShow() {
 function onHide() {
   tooltipRef.value?.hide()
 }
-// 受控显示：由 show 驱动
-const controlledShow = ref<boolean>(false)
-const destroyShow = ref(false)
+// 受控显示：由 open 驱动
+const controlledOpen = ref<boolean>(false)
+const destroyOpen = ref(false)
 </script>
 
 ## 基本使用
@@ -690,15 +690,15 @@ function onHide() {
 
 ## 受控显示
 
-_使用 `show` 属性控制浮层的显示与隐藏_
+_使用 `open` 属性控制浮层的显示与隐藏_
 
 <br/>
 
 <Space>
-  <Tooltip v-model:show="controlledShow" tooltip="Vue Amazing UI">
-    <Button>Controlled: {{ controlledShow }}</Button>
+  <Tooltip v-model:open="controlledOpen" tooltip="Vue Amazing UI">
+    <Button>Controlled: {{ controlledOpen }}</Button>
   </Tooltip>
-  <Button type="primary" @click="controlledShow = !controlledShow">Toggle Show</Button>
+  <Button type="primary" @click="controlledOpen = !controlledOpen">Toggle Open</Button>
 </Space>
 
 ::: details Show Code
@@ -707,14 +707,14 @@ _使用 `show` 属性控制浮层的显示与隐藏_
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Tooltip } from 'vue-amazing-ui'
-const controlledShow = ref<boolean>(false)
+const controlledOpen = ref<boolean>(false)
 </script>
 <template>
   <Space>
-    <Tooltip v-model:show="controlledShow" tooltip="Vue Amazing UI">
-      <Button>Controlled: {{ controlledShow }}</Button>
+    <Tooltip v-model:open="controlledOpen" tooltip="Vue Amazing UI">
+      <Button>Controlled: {{ controlledOpen }}</Button>
     </Tooltip>
-    <Button type="primary" @click="controlledShow = !controlledShow">Toggle Show</Button>
+    <Button type="primary" @click="controlledOpen = !controlledOpen">Toggle Open</Button>
   </Space>
 </template>
 ```
@@ -734,10 +734,10 @@ _设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再�
   <Tooltip tooltip="Vue Amazing UI">
     <Button>Hover (default)</Button>
   </Tooltip>
-  <Tooltip v-model:show="destroyShow" tooltip="Vue Amazing UI" trigger="click" destroy-on-hide>
-    <Button type="primary">Click: {{ destroyShow }}</Button>
+  <Tooltip v-model:open="destroyOpen" tooltip="Vue Amazing UI" trigger="click" destroy-on-hide>
+    <Button type="primary">Click: {{ destroyOpen }}</Button>
   </Tooltip>
-  <Button @click="destroyShow = !destroyShow">Toggle Show</Button>
+  <Button @click="destroyOpen = !destroyOpen">Toggle Open</Button>
 </Space>
 
 ::: details Show Code
@@ -746,7 +746,7 @@ _设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再�
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Tooltip } from 'vue-amazing-ui'
-const destroyShow = ref(false)
+const destroyOpen = ref(false)
 </script>
 <template>
   <Space>
@@ -756,10 +756,10 @@ const destroyShow = ref(false)
     <Tooltip tooltip="Vue Amazing UI">
       <Button>Hover (default)</Button>
     </Tooltip>
-    <Tooltip v-model:show="destroyShow" tooltip="Vue Amazing UI" trigger="click" destroy-on-hide>
-      <Button type="primary">Click: {{ destroyShow }}</Button>
+    <Tooltip v-model:open="destroyOpen" tooltip="Vue Amazing UI" trigger="click" destroy-on-hide>
+      <Button type="primary">Click: {{ destroyOpen }}</Button>
     </Tooltip>
-    <Button @click="destroyShow = !destroyShow">Toggle Show</Button>
+    <Button @click="destroyOpen = !destroyOpen">Toggle Open</Button>
   </Space>
 </template>
 ```
@@ -813,8 +813,8 @@ const destroyShow = ref(false)
 | transitionDuration | 文字提示动画的过渡持续时间，单位 `ms` | number | 100 |
 | showDelay | 文字提示显示的延迟时间，单位 `ms`，仅当 `trigger: hover` 时生效 | number | 100 |
 | hideDelay | 文字提示隐藏的延迟时间，单位 `ms`，仅当 `trigger: hover` 时生效 | number | 100 |
-| show <Tag color="cyan">v-model</Tag> | 文字提示是否显示 | boolean | false |
-| showControl | 只使用 `show` 属性控制显示隐藏，仅当 `trigger: hover` 时生效，此时移入移出将不会触发显示隐藏，全部由 `show` 属性控制 | boolean | false |
+| open <Tag color="cyan">v-model</Tag> | 文字提示是否显示 | boolean | false |
+| openControl | 只使用 `open` 属性控制显示隐藏，仅当 `trigger: hover` 时生效，此时移入移出将不会触发显示隐藏，全部由 `open` 属性控制 | boolean | false |
 
 ## Slots
 

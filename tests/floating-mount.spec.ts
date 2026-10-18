@@ -255,7 +255,7 @@ describe('浮层挂载点（同域模型）', () => {
                   Modal,
                   { open: true, title: '层级' },
                   {
-                    default: () => h(Tooltip, { tooltip: 'hi', show: true }, { default: () => h('button', 'hover') })
+                    default: () => h(Tooltip, { tooltip: 'hi', open: true }, { default: () => h('button', 'hover') })
                   }
                 )
             }
