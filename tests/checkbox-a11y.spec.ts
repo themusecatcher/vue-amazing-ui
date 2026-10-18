@@ -60,6 +60,14 @@ describe('Checkbox 原生 input 承载', () => {
     wrapper = mount(Checkbox, { props: { options: checkboxOptions } })
     expect(wrapper.findAll('input[type="checkbox"]').every((input) => input.attributes('id') === undefined)).toBe(true)
   })
+
+  it('options 模式 autofocus 只落在第一项，避免多个 autofocus 元素竞争', () => {
+    wrapper = mount(Checkbox, { props: { options: checkboxOptions, autofocus: true } })
+    const autofocused = wrapper
+      .findAll('input[type="checkbox"]')
+      .map((input) => input.attributes('autofocus') !== undefined)
+    expect(autofocused).toEqual([true, false, false])
+  })
 })
 
 describe('Checkbox change 事件对象', () => {

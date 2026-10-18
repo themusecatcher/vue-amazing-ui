@@ -52,6 +52,14 @@ describe('Radio 原生 input 承载', () => {
     wrapper = mount(Radio, { props: { options: radioOptions } })
     expect(wrapper.findAll('input[type="radio"]').every((input) => input.attributes('id') === undefined)).toBe(true)
   })
+
+  it('options 模式 autofocus 只落在第一项，避免多个 autofocus 元素竞争', () => {
+    wrapper = mount(Radio, { props: { options: radioOptions, autofocus: true } })
+    const autofocused = wrapper
+      .findAll('input[type="radio"]')
+      .map((input) => input.attributes('autofocus') !== undefined)
+    expect(autofocused).toEqual([true, false, false])
+  })
 })
 
 describe('Radio change 事件对象', () => {

@@ -265,7 +265,7 @@ defineExpose({ focus, blur })
         :name="mergedName"
         :checked="optionsCheckedValue.includes(option.value)"
         :disabled="checkDisabled(option.disabled)"
-        :autofocus="autofocus"
+        :autofocus="index === 0 && autofocus"
         @click.prevent="onClick(option, $event)"
         @blur="clearExposedFocus"
       />
