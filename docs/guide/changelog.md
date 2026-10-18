@@ -12,19 +12,14 @@
 
 ## <VersionDateTag date="2026-10-19">2.16.0</VersionDateTag>
 
-- 新增 [单选框 Radio](/guide/components/radio.html) 组合式用法：`RadioGroup` 统一下发选中值与禁用态、承载组内选项，配套 `RadioButton` 提供按钮形态；组内 `Radio` 以 `value` 标识自身，退出组后仍走自身受控逻辑，既有 `options` 配置式用法保持不变
-- 新增 [单选框 Radio](/guide/components/radio.html) 的原生 `input` 承载：各项渲染视觉隐藏的原生 `input`（`Radio` 新增 `autofocus` / `name` / `id`，`RadioGroup` 新增 `name` 并下发到组内各项），补齐键盘操作、表单字段名与屏幕阅读器语义，并新增 `focus` / `blur` 方法
-- 新增 [单选框 Radio](/guide/components/radio.html) 选项名的富内容支持：`options` 的 `label` 支持传入 `VNode` 并原样渲染
-- 优化 [单选框 Radio](/guide/components/radio.html) 的 `change` 事件：在原有「新值」首参之后追加事件对象（含 `target` 状态快照、`nativeEvent` 与 `stopPropagation` / `preventDefault`），原有首参用法不受影响
-- 将 [单选框 Radio](/guide/components/radio.html) 的 `buttonSize` 属性更名为 `size`（`RadioGroup` 同名属性一并更名，未指定时不再向组内下发尺寸，由各项回落自身尺寸）；旧属性名不再生效，升级后需同步改名
-- 新增 [复选框 Checkbox](/guide/components/checkbox.html) 组合式用法：`CheckboxGroup` 统一维护选中值与禁用态、承载组内选项（`options` 配置式或默认插槽），并支持 `name` 下发到组内各项；组内 `Checkbox` 以 `value` 标识自身，退出组后仍走自身受控逻辑，既有 `options` 配置式用法保持不变
-- 新增 [复选框 Checkbox](/guide/components/checkbox.html) 的原生 `input` 承载：各项渲染视觉隐藏的原生 `input`（`Checkbox` 新增 `autofocus` / `name` / `id`，`CheckboxGroup` 新增 `name` 并下发到组内各项），补齐键盘操作、表单字段名与屏幕阅读器语义，并新增 `focus` / `blur` 方法
-- 新增 [复选框 Checkbox](/guide/components/checkbox.html) 选项名的富内容支持：`options` 的 `label` 支持传入 `VNode` 并原样渲染
-- 优化 [复选框 Checkbox](/guide/components/checkbox.html) 的 `change` 事件：在原有「新值」首参之后追加事件对象（含 `target` 状态快照、`nativeEvent` 与 `stopPropagation` / `preventDefault`），原有首参用法不受影响
-- 优化 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html) 的聚焦表现：调用 `focus` 方法时同样显示焦点环（原先仅在键盘聚焦时显示）
-- 修复 [单选框 Radio](/guide/components/radio.html) 的行内对齐：行高声明由选项名元素上移至根元素（由选项名继承），为所在行指定行高时（如定高行内混排输入框），文字与控件恢复同一基线且不再溢出行盒
-- 修复 [输入框 Input](/guide/components/input.html) 未绑定 `v-model` 时输入内容会丢失的问题：各输入路径（含输入法合成的文本）统一回写内部值，文本不再因组件重渲染（悬浮 / 聚焦态变化等）被写回旧值
-- 修复 [输入框 Input](/guide/components/input.html) 的行内基线对齐：根元素与内层容器改回基线对齐，与文字混排时不再连带把所在行的文字基线压低 1px
+- 新增 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html) 的组合式用法：`RadioGroup` / `CheckboxGroup` 统一下发选中值与禁用态、承载组内选项，组内项以 `value` 标识自身，`Radio` 另有 `RadioButton` 提供按钮形态
+- 新增 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html) 的原生 `input` 承载：新增 `autofocus` / `name` / `id`（组组件 `name` 下发到组内各项），补齐键盘操作与屏幕阅读器语义，并新增 `focus` / `blur` 方法（调用 `focus` 时同样显示焦点环，原仅在键盘聚焦时显示）
+- 新增 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html) 的选项与事件接口：`options` 的 `label` 支持传入 `VNode` 并原样渲染，`change` 事件在「新值」首参之后追加事件对象（含状态快照与原始事件，原有首参用法不受影响）
+- 将 [单选框 Radio](/guide/components/radio.html) 的 `buttonSize` 属性更名为 `size`（`RadioGroup` 同名属性一并更名，未指定时不再向组内下发尺寸、改由各项回落自身尺寸）；旧属性名不再生效，升级后需同步改名
+- 修复 [单选框 Radio](/guide/components/radio.html) 在定高行内与输入框混排时文字与控件基线错位、内容溢出行盒的问题
+- 修复 [输入框 Input](/guide/components/input.html)：未绑定 `v-model` 时输入内容（含输入法合成文本）会因悬浮 / 聚焦等状态变化丢失，与文字混排时会把所在行文字基线压低 `1px`
+- 更新使用者文档：[单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html) 补充组合式用法与原生 `input` 用法，[输入框 Input](/guide/components/input.html) 补充未受控输入与行内混排说明
+- 更新贡献者文档：补充行内控件与文字混排的对齐约定
 
 ## <VersionDateTag date="2026-10-18">2.15.1</VersionDateTag>
 
