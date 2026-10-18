@@ -167,8 +167,8 @@ src/
 ```
 docs/
 ├── .vitepress/             # VitePress 配置与主题
-│   ├── config.ts           # 站点配置（sidebar / nav / algolia）、组件库解析到 dist 的 resolveId 钩子
-│   └── theme/              # 主题（GlobalElement 等全局组件、Provider 同构包裹）
+│   ├── config.ts           # 站点配置（sidebar / nav / algolia / 版本号）、组件库解析到 dist 的 resolveId 钩子
+│   └── theme/              # 主题（GlobalElement / VersionBadge 等全局组件、Provider 同构包裹）
 ├── guide/                  # 指引 + 组件文档
 │   ├── components/         # 每个组件一篇 md（kebab-case）
 │   ├── features.md         # 组件总览页

@@ -2,6 +2,7 @@ import DefaultTheme from 'vitepress/theme'
 import { defineComponent, h } from 'vue'
 import './global.less' // global less
 import GlobalElement from './components/GlobalElement.vue'
+import VersionBadge from './components/VersionBadge.vue'
 import VersionDateTag from './components/VersionDateTag.vue'
 // 组件库统一从构建产物 dist 引入，不使用 'vue-amazing-ui' 说明符（该说明符在 src 演示环境指向源码出口）
 import VueAmazingUI, {
@@ -16,6 +17,12 @@ import VueAmazingUI, {
 // 的 resolveId 钩子同样指向 dist 产物，二者 Symbol 同源，inject 方可命中。
 import '../../../dist/style.css'
 
+// 版本号常驻展示：桌面/中屏在导航栏右侧，<768px 隐藏导航栏徽标、由移动端菜单承载
+const layoutSlots = {
+  'nav-bar-content-after': () => h(VersionBadge),
+  'nav-screen-content-after': () => h(VersionBadge, { screen: true })
+}
+
 // 全局包裹各 Provider，使 docs 页面内可直接使用 useLoadingBar / useMessage / useModal / useNotification / useDialog（与 demo 应用 App.vue 保持一致）
 const Layout = defineComponent({
   setup() {
@@ -29,7 +36,7 @@ const Layout = defineComponent({
                   h(DialogProvider, null, {
                     default: () =>
                       h(NotificationProvider, null, {
-                        default: () => h(DefaultTheme.Layout)
+                        default: () => h(DefaultTheme.Layout, null, layoutSlots)
                       })
                   })
               })
