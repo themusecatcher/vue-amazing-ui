@@ -1,3 +1,7 @@
+---
+description: 组件库的按需引入（Tree Shaking）用法与手动引入写法
+---
+
 # 按需引入（Tree Shaking）
 
 `vue-amazing-ui` 默认支持基于 `ES modules` 的 `tree shaking`

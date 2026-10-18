@@ -1,3 +1,7 @@
+---
+description: 安装并快速上手 Amazing UI 组件库
+---
+
 # 快速上手
 
 <GlobalElement />

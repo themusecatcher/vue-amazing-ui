@@ -1,3 +1,7 @@
+---
+description: Amazing UI 组件库的核心特性——主题可调、按需引入、全量 TypeScript 与最新技术栈
+---
+
 # 特性
 
 <GlobalElement />

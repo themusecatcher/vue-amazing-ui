@@ -3,6 +3,7 @@ layout: home
 
 title: Vue Amazing UI
 titleTemplate: Amazing UI Components Library
+description: 基于 Vue3 + TypeScript + Vite 开发的 Amazing UI 组件库，主题可调、支持按需引入
 
 hero:
   name: Vue Amazing UI
