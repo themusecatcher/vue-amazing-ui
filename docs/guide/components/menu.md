@@ -677,7 +677,7 @@ _切换子菜单的展开触发方式；`hover` 触发时，`subMenuOpenDelay` /
   :items="triggerDelayItems"
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -717,7 +717,7 @@ const triggerDelayItems: ItemType[] = [
 </template>
 ```
 
-::::
+:::
 
 ## 自定义缩进
 
@@ -741,7 +741,7 @@ _`inline` 模式下 `inlineIndent` 决定每一级菜单项的缩进宽度，左
   />
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -776,7 +776,7 @@ const indentItems: ItemType[] = [
 </template>
 ```
 
-::::
+:::
 
 ## 缩起内嵌菜单
 
@@ -1243,7 +1243,7 @@ _以 `MenuItem` / `MenuSubMenu` / `MenuItemGroup` / `MenuDivider` 子组件描�
   <MenuItem key="8" disabled>Option 8</MenuItem>
 </Menu>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1286,7 +1286,7 @@ const componentOpenKeys = ref<MenuKey[]>(['sub2'])
 </template>
 ```
 
-::::
+:::
 
 ## 组件式自定义展开图标
 
@@ -1321,7 +1321,7 @@ _子菜单的 `expandIcon` 插槽优先于 `Menu` 的同名插槽，未提供时
   </MenuSubMenu>
 </Menu>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1389,7 +1389,7 @@ const componentExpandIconOpenKeys = ref<MenuKey[]>(['sub1'])
 </style>
 ```
 
-::::
+:::
 
 ## 水平溢出指示器
 
@@ -1405,7 +1405,7 @@ _水平空间不足时，放不下的菜单项会收进省略子菜单；其指�
   </Menu>
 </div>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1438,7 +1438,7 @@ const overflowItems: ItemType[] = [
 </style>
 ```
 
-::::
+:::
 
 ## 子菜单预渲染
 
@@ -1454,7 +1454,7 @@ _开启 `forceSubMenuRender` 后，子菜单面板在首次展开前就已渲染
   :items="forceRenderItems"
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1498,7 +1498,7 @@ const forceRenderItems: ItemType[] = [
 </template>
 ```
 
-::::
+:::
 
 ## 主题
 

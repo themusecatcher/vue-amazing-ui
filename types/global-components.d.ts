@@ -18,6 +18,7 @@ declare module 'vue' {
     Carousel: typeof VueAmazingUI.Carousel
     Cascader: typeof VueAmazingUI.Cascader
     Checkbox: typeof VueAmazingUI.Checkbox
+    CheckboxGroup: typeof VueAmazingUI.CheckboxGroup
     Col: typeof VueAmazingUI.Col
     Collapse: typeof VueAmazingUI.Collapse
     ColorPicker: typeof VueAmazingUI.ColorPicker
@@ -70,6 +71,8 @@ declare module 'vue' {
     Progress: typeof VueAmazingUI.Progress
     QRCode: typeof VueAmazingUI.QRCode
     Radio: typeof VueAmazingUI.Radio
+    RadioButton: typeof VueAmazingUI.RadioButton
+    RadioGroup: typeof VueAmazingUI.RadioGroup
     Rate: typeof VueAmazingUI.Rate
     Result: typeof VueAmazingUI.Result
     Row: typeof VueAmazingUI.Row
