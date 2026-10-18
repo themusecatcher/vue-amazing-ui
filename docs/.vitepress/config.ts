@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vitepress'
 import type { Plugin } from 'vite'
@@ -19,6 +21,28 @@ function docsResolveLibraryToDist(): Plugin {
 // 文档站对外地址（GitHub Pages）。社交卡片（Open Graph / Twitter Card）要求绝对地址
 const SITE_URL = 'https://themusecatcher.github.io/vue-amazing-ui/'
 const OG_IMAGE_URL = `${SITE_URL}og-image.png`
+
+// 组件文档在 H1 后统一写有一行斜体说明（如 `_按钮用于开始一个即时操作_`），取它作为页面描述。
+// 页面级 description 会同时用于 <meta name="description"> 与社交卡片的 og:description
+function extractPageSummary(filePath: string): string | undefined {
+  let raw = ''
+  try {
+    raw = readFileSync(filePath, 'utf-8')
+  } catch {
+    // 仅虚拟页面（如 404）没有真实文件，取不到就回退站点描述
+    return undefined
+  }
+  // 只看正文前言（首个二级标题之前），避开正文里零散的斜体行
+  const intro = raw.replace(/^---[\s\S]*?\n---\n/, '').split(/^## /m)[0] ?? ''
+  const summaryLine = intro.split('\n').find((line) => /^_[^_].*_$/.test(line.trim()))
+  if (!summaryLine) return undefined
+  return summaryLine
+    .trim()
+    .replace(/^_|_$/g, '')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/`/g, '')
+    .trim()
+}
 
 export default defineConfig({
   vite: {
@@ -46,6 +70,14 @@ export default defineConfig({
     ['meta', { name: 'twitter:image', content: OG_IMAGE_URL }],
     ['meta', { name: 'twitter:image:alt', content: 'Vue Amazing UI — Amazing UI 组件库' }]
   ],
+
+  // 页面级描述：frontmatter 手写优先，缺省时从文档正文提取，都取不到则由 VitePress 回退站点描述
+  transformPageData(pageData, { siteConfig }) {
+    if (pageData.frontmatter?.description || !pageData.filePath) return
+    // pageData.filePath 是相对 srcDir 的路径（如 'guide/components/button.md'）
+    const summary = extractPageSummary(resolve(siteConfig.srcDir, pageData.filePath))
+    if (summary) return { description: summary }
+  },
 
   // 页面级分享信息：站点级 head 会把同一份标题/链接注入所有页面，分享子页面时会显示首页卡片，
   // 故按页面生成 og:title / og:description / og:url

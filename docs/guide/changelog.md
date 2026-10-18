@@ -27,7 +27,7 @@
 - 重构 [日历 Calendar](/guide/components/calendar.html) 的对外接口：`select` 每次选中都触发（含重复点击已选中日期），第二参改为 `{ source }`（新增 `year` / `customize` 来源），年 / 月选择器与键盘操作同样写回选中值并触发 `change` / `select`，`panelChange` 在跨月 / 跨年时补发；移除 `dateStrip` 属性，日期区恒定渲染六周，新增 `CalendarSelectInfo` 类型导出
 - 优化修复 [日历 Calendar](/guide/components/calendar.html) 的取值与显示
 - 更新补充 [日历 Calendar](/guide/components/calendar.html) 演示文档
-- 更新组件库文档：文档站补充社交分享卡片的标签与分享封面图，页面链接分享到社交平台时可显示标题、描述与封面图
+- 更新组件库文档：文档站补充社交分享卡片的标签与分享封面图，页面链接分享到社交平台时可显示该页标题、描述与封面图
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-10-17">2.15.0</VersionDateTag>

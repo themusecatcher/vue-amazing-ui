@@ -1,3 +1,7 @@
+---
+description: '通过 ConfigProvider 定制组件库主题，默认主题色为 #1677ff'
+---
+
 # 定制主题
 
 <GlobalElement />
