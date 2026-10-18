@@ -11,10 +11,13 @@ _复选框_
 
 <script setup lang="ts">
 import { computed, h, ref, watch, watchEffect } from 'vue'
-import type { CheckboxOption } from 'vue-amazing-ui'
+import type { Checkbox, CheckboxOption, CheckboxGroupOption } from 'vue-amazing-ui'
 // 基本使用
 const checked = ref<boolean>(false)
-// 受控
+const onChange = (value: boolean | (string | number)[]) => {
+  console.log('change', value)
+}
+// 受控：选中与禁用均由外部状态驱动
 const controlled = ref<boolean>(false)
 const controlledDisabled = ref<boolean>(false)
 const controlledLabel = computed(
@@ -26,7 +29,7 @@ const toggleControlled = () => {
 const toggleControlledDisabled = () => {
   controlledDisabled.value = !controlledDisabled.value
 }
-// 全选
+// 全选：全选框的三态由子项已选数量推导
 const plainOptions: string[] = ['Apple', 'Pear', 'Orange']
 const checkedList = ref<string[]>(['Apple', 'Orange'])
 const checkAll = ref<boolean>(false)
@@ -43,27 +46,38 @@ const onCheckAllChange = (value: boolean) => {
   checkedList.value = value ? [...plainOptions] : []
 }
 // 复选框组
-const groupOptions: CheckboxOption[] = [
+const groupOptions: CheckboxGroupOption[] = [
   { label: 'Apple', value: 'Apple' },
   { label: 'Pear', value: 'Pear' },
   { label: 'Orange', value: 'Orange' }
 ]
-const groupOptionsWithDisabled: CheckboxOption[] = [
-  { label: 'Apple', value: 'Apple' },
-  { label: 'Pear', value: 'Pear' },
-  { label: 'Orange', value: 'Orange', disabled: false }
-]
-const groupOptionsRedLabel: CheckboxOption[] = groupOptionsWithDisabled.map((option) => ({
-  ...option,
-  label: h('span', { style: 'color: red' }, option.label)
-}))
 const groupPlainValue = ref<string[]>([])
 const groupSelectedValue = ref<string[]>(['Apple'])
 const groupObjectValue = ref<string[]>(['Pear'])
-const groupDisabledValue = ref<string[]>(['Apple'])
 // 与栅格配合
 const gridItems = ['A', 'B', 'C', 'D', 'E']
 const gridValue = ref<string[]>([])
+// 选项列表 / 垂直排列 / 禁用选项 / 自定义选项名：城市选项，长短混排便于观察换行与间距
+const options = ref<CheckboxOption[]>([
+  { label: '拜占庭', value: 1 },
+  { label: '君士坦丁堡', value: 2 },
+  { label: '伊斯坦布尔', value: 3 },
+  { label: '布宜诺斯艾利斯', value: 4 }
+])
+const optionsDisabled = ref<CheckboxOption[]>([
+  { label: '拜占庭', value: 1 },
+  { label: '君士坦丁堡', value: 2, disabled: true },
+  { label: '伊斯坦布尔', value: 3 },
+  { label: '布宜诺斯艾利斯', value: 4 }
+])
+const groupOptionsDisabled: CheckboxGroupOption[] = [
+  { label: 'Apple', value: 'Apple' },
+  { label: 'Pear', value: 'Pear', disabled: true },
+  { label: 'Orange', value: 'Orange' }
+]
+const listValue = ref<(string | number)[]>([2])
+const verticalValue = ref<(string | number)[]>([1, 2])
+const verticalGroupValue = ref<(string | number)[]>([1, 2])
 // 禁用
 const disabled = ref<boolean>(true)
 const toggleDisabled = () => {
@@ -71,127 +85,75 @@ const toggleDisabled = () => {
 }
 const disabledChecked = ref<boolean>(true)
 const disabledUnchecked = ref<boolean>(false)
-// 选项列表 / 禁用选项 / 垂直排列 / 自定义选项名
-const options = ref<CheckboxOption[]>([
-  {
-    label: '北京市',
-    value: 1
-  },
-  {
-    label: '纽约市',
-    value: 2
-  },
-  {
-    label: '布宜诺斯艾利斯',
-    value: 3
-  },
-  {
-    label: '伊斯坦布尔',
-    value: 4
-  },
-  {
-    label: '拜占庭',
-    value: 5
-  },
-  {
-    label: '君士坦丁堡',
-    value: 6
-  }
-])
-const optionsDisabled = ref<CheckboxOption[]>([
-  {
-    label: '北京市',
-    value: 1
-  },
-  {
-    label: '纽约市',
-    value: 2,
-    disabled: true
-  },
-  {
-    label: '布宜诺斯艾利斯',
-    value: 3
-  },
-  {
-    label: '伊斯坦布尔',
-    value: 4
-  },
-  {
-    label: '拜占庭',
-    value: 5
-  },
-  {
-    label: '君士坦丁堡',
-    value: 6
-  }
-])
+const disabledListValue = ref<(string | number)[]>([2])
+const disabledGroupValue = ref<string[]>(['Apple'])
+// 禁用选项
+const optionDisabledListValue = ref<(string | number)[]>([1])
+const optionDisabledGroupValue = ref<string[]>(['Apple'])
+// 自定义选项名
+const customSlotValue = ref<(string | number)[]>([2])
+const customSlotGroupValue = ref<(string | number)[]>([1])
+// 非字符串选项名：label 直接传入 VNode
 const vnodeOptions: CheckboxOption[] = [
-  { label: '北京市', value: 1 },
-  { label: h('span', { style: 'color: #ff6900' }, '纽约市'), value: 2 },
-  { label: '布宜诺斯艾利斯', value: 3 }
+  { label: '拜占庭', value: 1 },
+  { label: h('span', { style: 'color: #ff6900' }, '君士坦丁堡'), value: 2 },
+  { label: '伊斯坦布尔', value: 3 }
 ]
-const selectedOptions = ref<(string | number)[]>([2])
+const vnodeGroupOptions: CheckboxGroupOption[] = [
+  { label: '拜占庭', value: 1 },
+  { label: h('span', { style: 'color: #1677ff' }, '君士坦丁堡'), value: 2 },
+  { label: '伊斯坦布尔', value: 3 }
+]
 const vnodeValue = ref<(string | number)[]>([2])
-const groupValue = ref<(string | number)[]>([1])
-const groupVerticalValue = ref<(string | number)[]>([1, 2])
+const vnodeGroupValue = ref<(string | number)[]>([2])
+// 自定义间距 / 复选框组间距
 const horizontalGap = ref(16)
 const verticalGap = ref(8)
+const gapValue = ref<(string | number)[]>([2])
 const groupGap = ref(16)
 const groupVertical = ref<boolean>(true)
+const groupGapValue = ref<(string | number)[]>([1, 2])
 // 聚焦方法
 const focusChecked = ref<boolean>(false)
 const focusFocused = ref<boolean>(false)
-const focusCheckboxRef = ref<{ focus: () => void; blur: () => void } | null>(null)
+const focusCheckboxRef = ref<InstanceType<typeof Checkbox> | null>(null)
 watchEffect(() => {
   console.log('checked', checked.value)
 })
-watchEffect(() => {
-  console.log('selectedOptions', selectedOptions.value)
-})
-const onChange = (value: boolean | (string | number)[]) => {
-  console.log('change', value)
-}
 </script>
 
 ## 基本使用
 
-<Checkbox v-model:checked="checked" @change="onChange">Checkbox</Checkbox>
+_独立用法：`v-model:checked` 双向绑定选中态；「受控」示例由外部状态驱动选中与禁用_
 
-::: details Show Code
+<br/>
 
-```vue
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-const checked = ref<boolean>(false)
-watchEffect(() => {
-  console.log('checked', checked.value)
-})
-const onChange = (value: boolean) => {
-  console.log('change', value)
-}
-</script>
-<template>
-  <Checkbox v-model:checked="checked" @change="onChange">Checkbox</Checkbox>
-</template>
-```
-
-:::
-
-受控：选中与禁用均由外部状态驱动
-
-<Flex class="mb20" gap="small">
-  <Button type="primary" size="small" @click="toggleControlled">{{ controlled ? 'Uncheck' : 'Check' }}</Button>
-  <Button type="primary" size="small" @click="toggleControlledDisabled">
-    {{ controlledDisabled ? 'Enable' : 'Disable' }}
-  </Button>
+<Flex vertical gap="middle" align="start">
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">基础</span>
+    <Checkbox v-model:checked="checked" @change="onChange">Checkbox</Checkbox>
+  </Flex>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">受控</span>
+    <Flex gap="small" align="center">
+      <Checkbox v-model:checked="controlled" :disabled="controlledDisabled">{{ controlledLabel }}</Checkbox>
+      <Button size="small" type="primary" @click="toggleControlled">{{ controlled ? 'Uncheck' : 'Check' }}</Button>
+      <Button size="small" type="primary" @click="toggleControlledDisabled">
+        {{ controlledDisabled ? 'Enable' : 'Disable' }}
+      </Button>
+    </Flex>
+  </Flex>
 </Flex>
-<Checkbox v-model:checked="controlled" :disabled="controlledDisabled">{{ controlledLabel }}</Checkbox>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+const checked = ref<boolean>(false)
+const onChange = (value: boolean) => {
+  console.log('change', value)
+}
 const controlled = ref<boolean>(false)
 const controlledDisabled = ref<boolean>(false)
 const controlledLabel = computed(
@@ -205,15 +167,12 @@ const toggleControlledDisabled = () => {
 }
 </script>
 <template>
-  <Flex class="mb20" gap="small">
-    <Button type="primary" size="small" @click="toggleControlled">
-      {{ controlled ? 'Uncheck' : 'Check' }}
-    </Button>
-    <Button type="primary" size="small" @click="toggleControlledDisabled">
-      {{ controlledDisabled ? 'Enable' : 'Disable' }}
-    </Button>
-  </Flex>
+  <Checkbox v-model:checked="checked" @change="onChange">Checkbox</Checkbox>
   <Checkbox v-model:checked="controlled" :disabled="controlledDisabled">{{ controlledLabel }}</Checkbox>
+  <Button size="small" type="primary" @click="toggleControlled">{{ controlled ? 'Uncheck' : 'Check' }}</Button>
+  <Button size="small" type="primary" @click="toggleControlledDisabled">
+    {{ controlledDisabled ? 'Enable' : 'Disable' }}
+  </Button>
 </template>
 ```
 
@@ -221,10 +180,20 @@ const toggleControlledDisabled = () => {
 
 ## 全选
 
-在实现全选效果时，你可能会用到 `indeterminate` 属性
+_`indeterminate` 用于表达「部分选中」：全选框的半选态由子项已选数量推导_
 
-<Checkbox :indeterminate="indeterminate" v-model:checked="checkAll" @change="onCheckAllChange">Check all</Checkbox>
-<CheckboxGroup v-model:value="checkedList" :options="plainOptions" />
+<br/>
+
+<Flex vertical gap="middle" align="start">
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">全选</span>
+    <Checkbox :indeterminate="indeterminate" v-model:checked="checkAll" @change="onCheckAllChange">Check all</Checkbox>
+  </Flex>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">子项</span>
+    <CheckboxGroup v-model:value="checkedList" :options="plainOptions" />
+  </Flex>
+</Flex>
 
 ::: details Show Code
 
@@ -257,43 +226,24 @@ const onCheckAllChange = (value: boolean) => {
 
 ## 复选框组
 
-选中值由 `CheckboxGroup` 统一维护，组内 `Checkbox` 以 `value` 标识自身
+_选中值由 `CheckboxGroup` 统一维护，组内 `Checkbox` 用 `value` 标识自身_
 
-<CheckboxGroup v-model:value="groupPlainValue" :options="plainOptions" name="checkboxgroup" />
+<br/>
 
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const plainOptions: string[] = ['Apple', 'Pear', 'Orange']
-const groupPlainValue = ref<string[]>([])
-</script>
-<template>
-  <CheckboxGroup v-model:value="groupPlainValue" :options="plainOptions" name="checkboxgroup" />
-</template>
-```
-
-:::
-
-<CheckboxGroup v-model:value="groupSelectedValue" :options="plainOptions" />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const plainOptions: string[] = ['Apple', 'Pear', 'Orange']
-const groupSelectedValue = ref<string[]>(['Apple'])
-</script>
-<template>
-  <CheckboxGroup v-model:value="groupSelectedValue" :options="plainOptions" />
-</template>
-```
-
-:::
-
-<CheckboxGroup v-model:value="groupObjectValue" :options="groupOptions" />
+<Flex vertical gap="middle" align="start">
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">默认</span>
+    <CheckboxGroup v-model:value="groupPlainValue" :options="plainOptions" name="checkboxGroup" />
+  </Flex>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">默认选中</span>
+    <CheckboxGroup v-model:value="groupSelectedValue" :options="plainOptions" />
+  </Flex>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">对象选项</span>
+    <CheckboxGroup v-model:value="groupObjectValue" :options="groupOptions" />
+  </Flex>
+</Flex>
 
 ::: details Show Code
 
@@ -301,42 +251,17 @@ const groupSelectedValue = ref<string[]>(['Apple'])
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { CheckboxGroupOption } from 'vue-amazing-ui'
+const plainOptions: string[] = ['Apple', 'Pear', 'Orange']
 const groupOptions: CheckboxGroupOption[] = [
   { label: 'Apple', value: 'Apple' },
   { label: 'Pear', value: 'Pear' },
   { label: 'Orange', value: 'Orange' }
 ]
-const groupObjectValue = ref<string[]>(['Pear'])
+const value = ref<string[]>(['Apple'])
 </script>
 <template>
-  <CheckboxGroup v-model:value="groupObjectValue" :options="groupOptions" />
-</template>
-```
-
-:::
-
-<CheckboxGroup v-model:value="groupDisabledValue" :options="groupOptionsRedLabel" disabled />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { h, ref } from 'vue'
-import type { CheckboxGroupOption } from 'vue-amazing-ui'
-const groupOptions: CheckboxGroupOption[] = [
-  { label: 'Apple', value: 'Apple' },
-  { label: 'Pear', value: 'Pear' },
-  { label: 'Orange', value: 'Orange', disabled: false }
-]
-// 选项名直接传入 VNode
-const groupOptionsRedLabel: CheckboxGroupOption[] = groupOptions.map((option) => ({
-  ...option,
-  label: h('span', { style: 'color: red' }, option.label)
-}))
-const groupDisabledValue = ref<string[]>(['Apple'])
-</script>
-<template>
-  <CheckboxGroup v-model:value="groupDisabledValue" :options="groupOptionsRedLabel" disabled />
+  <CheckboxGroup v-model:value="value" :options="plainOptions" name="checkboxGroup" />
+  <CheckboxGroup v-model:value="value" :options="groupOptions" />
 </template>
 ```
 
@@ -344,15 +269,19 @@ const groupDisabledValue = ref<string[]>(['Apple'])
 
 ## 与栅格配合
 
-`CheckboxGroup` 内嵌 `Checkbox` 并与栅格组件一起使用，可以实现灵活的布局
+_`CheckboxGroup` 内嵌 `Checkbox` 并与栅格组合，可实现多列对齐布局_
 
-<CheckboxGroup v-model:value="gridValue" style="width: 100%">
-  <Row>
-    <Col v-for="item in gridItems" :key="item" :span="8">
-      <Checkbox :value="item">{{ item }}</Checkbox>
-    </Col>
-  </Row>
-</CheckboxGroup>
+<br/>
+
+<Flex vertical gap="small" align="start" width="100%">
+  <CheckboxGroup v-model:value="gridValue" style="width: 100%">
+    <Row>
+      <Col v-for="item in gridItems" :key="item" :span="8">
+        <Checkbox :value="item">{{ item }}</Checkbox>
+      </Col>
+    </Row>
+  </CheckboxGroup>
+</Flex>
 
 ::: details Show Code
 
@@ -360,10 +289,10 @@ const groupDisabledValue = ref<string[]>(['Apple'])
 <script setup lang="ts">
 import { ref } from 'vue'
 const gridItems = ['A', 'B', 'C', 'D', 'E']
-const gridValue = ref<string[]>([])
+const value = ref<string[]>([])
 </script>
 <template>
-  <CheckboxGroup v-model:value="gridValue" style="width: 100%">
+  <CheckboxGroup v-model:value="value" style="width: 100%">
     <Row>
       <Col v-for="item in gridItems" :key="item" :span="8">
         <Checkbox :value="item">{{ item }}</Checkbox>
@@ -375,112 +304,13 @@ const gridValue = ref<string[]>([])
 
 :::
 
-## 禁用
-
-<Flex class="mb20" gap="small">
-  <Button type="primary" @click="toggleDisabled">Toggle disabled</Button>
-</Flex>
-<Checkbox v-model:checked="disabledChecked" :disabled="disabled">Disabled</Checkbox>
-<Checkbox v-model:checked="disabledUnchecked" :disabled="disabled">Disabled</Checkbox>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const disabled = ref<boolean>(true)
-const toggleDisabled = () => {
-  disabled.value = !disabled.value
-}
-const disabledChecked = ref<boolean>(true)
-const disabledUnchecked = ref<boolean>(false)
-</script>
-<template>
-  <Flex class="mb20" gap="small">
-    <Button type="primary" @click="toggleDisabled">Toggle disabled</Button>
-  </Flex>
-  <Checkbox v-model:checked="disabledChecked" :disabled="disabled">Disabled</Checkbox>
-  <Checkbox v-model:checked="disabledUnchecked" :disabled="disabled">Disabled</Checkbox>
-</template>
-```
-
-:::
-
-配置式写法
-
-<Checkbox :options="options" v-model:value="selectedOptions" disabled />
-<CheckboxGroup v-model:value="groupValue" :options="groupOptions" disabled />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import type { CheckboxGroupOption, CheckboxOption } from 'vue-amazing-ui'
-const options = ref<CheckboxOption[]>([
-  { label: '北京市', value: 1 },
-  { label: '纽约市', value: 2 },
-  { label: '布宜诺斯艾利斯', value: 3 },
-  { label: '伊斯坦布尔', value: 4 },
-  { label: '拜占庭', value: 5 },
-  { label: '君士坦丁堡', value: 6 }
-])
-const groupOptions: CheckboxGroupOption[] = [
-  { label: 'Apple', value: 'Apple' },
-  { label: 'Pear', value: 'Pear' },
-  { label: 'Orange', value: 'Orange' }
-]
-const selectedOptions = ref<(string | number)[]>([2])
-const groupValue = ref<(string | number)[]>([1])
-</script>
-<template>
-  <Checkbox :options="options" v-model:value="selectedOptions" disabled />
-  <CheckboxGroup v-model:value="groupValue" :options="groupOptions" disabled />
-</template>
-```
-
-:::
-
-## 禁用选项
-
-<Checkbox :options="optionsDisabled" v-model:value="selectedOptions" />
-<CheckboxGroup v-model:value="groupValue" :options="groupOptionsWithDisabled" />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import type { CheckboxGroupOption, CheckboxOption } from 'vue-amazing-ui'
-const optionsDisabled = ref<CheckboxOption[]>([
-  { label: '北京市', value: 1 },
-  { label: '纽约市', value: 2, disabled: true },
-  { label: '布宜诺斯艾利斯', value: 3 },
-  { label: '伊斯坦布尔', value: 4 },
-  { label: '拜占庭', value: 5 },
-  { label: '君士坦丁堡', value: 6 }
-])
-const groupOptionsWithDisabled: CheckboxGroupOption[] = [
-  { label: 'Apple', value: 'Apple' },
-  { label: 'Pear', value: 'Pear' },
-  { label: 'Orange', value: 'Orange', disabled: false }
-]
-const selectedOptions = ref<(string | number)[]>([2])
-const groupValue = ref<(string | number)[]>([1])
-</script>
-<template>
-  <Checkbox :options="optionsDisabled" v-model:value="selectedOptions" />
-  <CheckboxGroup v-model:value="groupValue" :options="groupOptionsWithDisabled" />
-</template>
-```
-
-:::
-
 ## 选项列表
 
-单组件传入 `options`，选中值为数组，配合 `v-model:value` 使用
+_配置式写法：传入 `options` 数组即可渲染整组选项，选中值为数组_
 
-<Checkbox :options="options" v-model:value="selectedOptions" @change="onChange" />
+<br/>
+
+<Checkbox :options="options" v-model:value="listValue" @change="onChange" />
 
 ::: details Show Code
 
@@ -489,20 +319,15 @@ const groupValue = ref<(string | number)[]>([1])
 import { ref } from 'vue'
 import type { CheckboxOption } from 'vue-amazing-ui'
 const options = ref<CheckboxOption[]>([
-  { label: '北京市', value: 1 },
-  { label: '纽约市', value: 2 },
-  { label: '布宜诺斯艾利斯', value: 3 },
-  { label: '伊斯坦布尔', value: 4 },
-  { label: '拜占庭', value: 5 },
-  { label: '君士坦丁堡', value: 6 }
+  { label: '拜占庭', value: 1 },
+  { label: '君士坦丁堡', value: 2 },
+  { label: '伊斯坦布尔', value: 3 },
+  { label: '布宜诺斯艾利斯', value: 4 }
 ])
-const selectedOptions = ref<(string | number)[]>([2])
-const onChange = (value: (string | number)[]) => {
-  console.log('change', value)
-}
+const value = ref<(string | number)[]>([2])
 </script>
 <template>
-  <Checkbox :options="options" v-model:value="selectedOptions" @change="onChange" />
+  <Checkbox :options="options" v-model:value="value" />
 </template>
 ```
 
@@ -510,10 +335,18 @@ const onChange = (value: (string | number)[]) => {
 
 ## 垂直排列
 
-<Checkbox :options="options" vertical v-model:value="selectedOptions" />
-<CheckboxGroup v-model:value="groupVerticalValue" vertical>
-  <Checkbox v-for="item in options" :key="item.value" :value="item.value">{{ item.label }}</Checkbox>
-</CheckboxGroup>
+<Flex vertical gap="middle" align="start">
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">配置式</span>
+    <Checkbox :options="options" v-model:value="verticalValue" vertical />
+  </Flex>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">组合式</span>
+    <CheckboxGroup v-model:value="verticalGroupValue" vertical>
+      <Checkbox v-for="item in options" :key="item.value" :value="item.value">{{ item.label }}</Checkbox>
+    </CheckboxGroup>
+  </Flex>
+</Flex>
 
 ::: details Show Code
 
@@ -522,19 +355,16 @@ const onChange = (value: (string | number)[]) => {
 import { ref } from 'vue'
 import type { CheckboxOption } from 'vue-amazing-ui'
 const options = ref<CheckboxOption[]>([
-  { label: '北京市', value: 1 },
-  { label: '纽约市', value: 2 },
-  { label: '布宜诺斯艾利斯', value: 3 },
-  { label: '伊斯坦布尔', value: 4 },
-  { label: '拜占庭', value: 5 },
-  { label: '君士坦丁堡', value: 6 }
+  { label: '拜占庭', value: 1 },
+  { label: '君士坦丁堡', value: 2 },
+  { label: '伊斯坦布尔', value: 3 },
+  { label: '布宜诺斯艾利斯', value: 4 }
 ])
-const selectedOptions = ref<(string | number)[]>([2])
-const groupVerticalValue = ref<(string | number)[]>([1, 2])
+const value = ref<(string | number)[]>([1, 2])
 </script>
 <template>
-  <Checkbox :options="options" vertical v-model:value="selectedOptions" />
-  <CheckboxGroup v-model:value="groupVerticalValue" vertical>
+  <Checkbox :options="options" v-model:value="value" vertical />
+  <CheckboxGroup v-model:value="value" vertical>
     <Checkbox v-for="item in options" :key="item.value" :value="item.value">{{ item.label }}</Checkbox>
   </CheckboxGroup>
 </template>
@@ -542,20 +372,123 @@ const groupVerticalValue = ref<(string | number)[]>([1, 2])
 
 :::
 
+## 禁用
+
+_开关演示禁用态：禁用后不可聚焦、不可切换，组的 `disabled` 会叠加到组内各项_
+
+<br/>
+
+<Flex vertical gap="middle" align="start">
+  <Button type="primary" @click="toggleDisabled">Toggle disabled</Button>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">复选框</span>
+    <Flex gap="small" align="center">
+      <Checkbox v-model:checked="disabledChecked" :disabled="disabled">Disabled</Checkbox>
+      <Checkbox v-model:checked="disabledUnchecked" :disabled="disabled">Disabled</Checkbox>
+    </Flex>
+  </Flex>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">配置式</span>
+    <Checkbox :options="options" v-model:value="disabledListValue" disabled />
+  </Flex>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">复选框组</span>
+    <CheckboxGroup v-model:value="disabledGroupValue" :options="groupOptions" disabled />
+  </Flex>
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const disabled = ref<boolean>(true)
+const checked1 = ref<boolean>(true)
+const checked2 = ref<boolean>(false)
+const toggleDisabled = () => {
+  disabled.value = !disabled.value
+}
+</script>
+<template>
+  <Button type="primary" @click="toggleDisabled">Toggle disabled</Button>
+  <Checkbox v-model:checked="checked1" :disabled="disabled">Disabled</Checkbox>
+  <Checkbox v-model:checked="checked2" :disabled="disabled">Disabled</Checkbox>
+</template>
+```
+
+:::
+
+## 禁用选项
+
+_在选项数据里给单项设置 `disabled: true`，仅该项不可选，其余选项不受影响_
+
+<br/>
+
+<Flex vertical gap="middle" align="start">
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">配置式</span>
+    <Checkbox :options="optionsDisabled" v-model:value="optionDisabledListValue" />
+  </Flex>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">复选框组</span>
+    <CheckboxGroup v-model:value="optionDisabledGroupValue" :options="groupOptionsDisabled" />
+  </Flex>
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { CheckboxOption, CheckboxGroupOption } from 'vue-amazing-ui'
+const options: CheckboxOption[] = [
+  { label: '拜占庭', value: 1 },
+  { label: '君士坦丁堡', value: 2, disabled: true },
+  { label: '伊斯坦布尔', value: 3 },
+  { label: '布宜诺斯艾利斯', value: 4 }
+]
+const groupOptions: CheckboxGroupOption[] = [
+  { label: 'Apple', value: 'Apple' },
+  { label: 'Pear', value: 'Pear', disabled: true },
+  { label: 'Orange', value: 'Orange' }
+]
+const value = ref<(string | number)[]>([1])
+const groupValue = ref<string[]>(['Apple'])
+</script>
+<template>
+  <Checkbox :options="options" v-model:value="value" />
+  <CheckboxGroup v-model:value="groupValue" :options="groupOptions" />
+</template>
+```
+
+:::
+
 ## 自定义选项名
 
-<Checkbox :options="options" v-model:value="selectedOptions">
-  <template #default="{ option, label, index }">
-    <span v-if="index === 1" style="color: #ff6900">{{ label }}</span>
-    <span v-if="index === 3" style="color: #1677ff">{{ option?.label }}</span>
-  </template>
-</Checkbox>
-<CheckboxGroup v-model:value="groupValue">
-  <Checkbox :value="1">北京市</Checkbox>
-  <Checkbox :value="2"><span style="color: #ff6900">纽约市</span></Checkbox>
-  <Checkbox :value="3">布宜诺斯艾利斯</Checkbox>
-  <Checkbox :value="4"><span style="color: #1677ff">伊斯坦布尔</span></Checkbox>
-</CheckboxGroup>
+_`options` 模式的默认插槽提供 `option` / `label` / `index`，可自行渲染选项名_
+
+<br/>
+
+<Flex vertical gap="middle" align="start">
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">插槽 · 配置式</span>
+    <Checkbox :options="options" v-model:value="customSlotValue">
+      <template #default="{ option, label, index }">
+        <span v-if="index === 1" style="color: #ff6900">{{ label }}</span>
+        <span v-if="index === 3" style="color: #1677ff">{{ option?.label }}</span>
+      </template>
+    </Checkbox>
+  </Flex>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">插槽 · 组合式</span>
+    <CheckboxGroup v-model:value="customSlotGroupValue">
+      <Checkbox :value="1">拜占庭</Checkbox>
+      <Checkbox :value="2"><span style="color: #ff6900">君士坦丁堡</span></Checkbox>
+      <Checkbox :value="3">伊斯坦布尔</Checkbox>
+      <Checkbox :value="4"><span style="color: #1677ff">布宜诺斯艾利斯</span></Checkbox>
+    </CheckboxGroup>
+  </Flex>
+</Flex>
 
 ::: details Show Code
 
@@ -564,38 +497,39 @@ const groupVerticalValue = ref<(string | number)[]>([1, 2])
 import { ref } from 'vue'
 import type { CheckboxOption } from 'vue-amazing-ui'
 const options = ref<CheckboxOption[]>([
-  { label: '北京市', value: 1 },
-  { label: '纽约市', value: 2 },
-  { label: '布宜诺斯艾利斯', value: 3 },
-  { label: '伊斯坦布尔', value: 4 },
-  { label: '拜占庭', value: 5 },
-  { label: '君士坦丁堡', value: 6 }
+  { label: '拜占庭', value: 1 },
+  { label: '君士坦丁堡', value: 2 },
+  { label: '伊斯坦布尔', value: 3 },
+  { label: '布宜诺斯艾利斯', value: 4 }
 ])
-const selectedOptions = ref<(string | number)[]>([2])
-const groupValue = ref<(string | number)[]>([1])
+const value = ref<(string | number)[]>([2])
 </script>
 <template>
-  <Checkbox :options="options" v-model:value="selectedOptions">
+  <Checkbox :options="options" v-model:value="value">
     <template #default="{ option, label, index }">
       <span v-if="index === 1" style="color: #ff6900">{{ label }}</span>
       <span v-if="index === 3" style="color: #1677ff">{{ option?.label }}</span>
     </template>
   </Checkbox>
-  <CheckboxGroup v-model:value="groupValue">
-    <Checkbox :value="1">北京市</Checkbox>
-    <Checkbox :value="2"><span style="color: #ff6900">纽约市</span></Checkbox>
-    <Checkbox :value="3">布宜诺斯艾利斯</Checkbox>
-    <Checkbox :value="4"><span style="color: #1677ff">伊斯坦布尔</span></Checkbox>
-  </CheckboxGroup>
 </template>
 ```
 
 :::
 
-选项名直接传入 VNode
+_也可以直接把 `VNode` 作为选项 `label` 传入，适用于图标、富文本等场景_
 
-<Checkbox :options="vnodeOptions" v-model:value="vnodeValue" />
-<CheckboxGroup v-model:value="vnodeValue" :options="vnodeOptions" />
+<br/>
+
+<Flex vertical gap="middle" align="start">
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">VNode · 配置式</span>
+    <Checkbox :options="vnodeOptions" v-model:value="vnodeValue" />
+  </Flex>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">VNode · 组合式</span>
+    <CheckboxGroup v-model:value="vnodeGroupValue" :options="vnodeGroupOptions" />
+  </Flex>
+</Flex>
 
 ::: details Show Code
 
@@ -603,17 +537,22 @@ const groupValue = ref<(string | number)[]>([1])
 <script setup lang="ts">
 import { h, ref } from 'vue'
 import type { CheckboxGroupOption, CheckboxOption } from 'vue-amazing-ui'
-// 选项名直接传入 VNode
 const vnodeOptions: CheckboxOption[] = [
-  { label: '北京市', value: 1 },
-  { label: h('span', { style: 'color: #ff6900' }, '纽约市'), value: 2 },
-  { label: '布宜诺斯艾利斯', value: 3 }
+  { label: '拜占庭', value: 1 },
+  { label: h('span', { style: 'color: #ff6900' }, '君士坦丁堡'), value: 2 },
+  { label: '伊斯坦布尔', value: 3 }
 ]
-const vnodeValue = ref<(string | number)[]>([2])
+const vnodeGroupOptions: CheckboxGroupOption[] = [
+  { label: '拜占庭', value: 1 },
+  { label: h('span', { style: 'color: #1677ff' }, '君士坦丁堡'), value: 2 },
+  { label: '伊斯坦布尔', value: 3 }
+]
+const value = ref<(string | number)[]>([2])
+const groupValue = ref<(string | number)[]>([2])
 </script>
 <template>
-  <Checkbox :options="vnodeOptions" v-model:value="vnodeValue" />
-  <CheckboxGroup v-model:value="vnodeValue" :options="vnodeOptions" />
+  <Checkbox :options="vnodeOptions" v-model:value="value" />
+  <CheckboxGroup v-model:value="groupValue" :options="vnodeGroupOptions" />
 </template>
 ```
 
@@ -621,20 +560,28 @@ const vnodeValue = ref<(string | number)[]>([2])
 
 ## 自定义间距
 
-单组件 `gap` 传数组时为「水平间距, 垂直间距」；垂直间距仅在水平方向放不下、选项换行时才生效
+_`gap` 传数组时为「水平间距, 垂直间距」；垂直间距仅在选项换行时才生效，此处用窄容器触发换行_
 
-<Flex :gap="24" class="mb20">
-  <Flex gap="small" vertical style="flex: 1">
-    <span>horizontal gap: {{ horizontalGap }}px</span>
-    <Slider v-model:value="horizontalGap" />
+<br/>
+
+<Flex vertical gap="middle" align="start">
+  <Flex gap="large">
+    <Flex gap="small" vertical>
+      <span>水平间距 {{ horizontalGap }}px</span>
+      <Slider v-model:value="horizontalGap" :width="200" />
+    </Flex>
+    <Flex gap="small" vertical>
+      <span>垂直间距 {{ verticalGap }}px</span>
+      <Slider v-model:value="verticalGap" :width="200" />
+    </Flex>
   </Flex>
-  <Flex gap="small" vertical style="flex: 1">
-    <span>vertical gap: {{ verticalGap }}px</span>
-    <Slider v-model:value="verticalGap" />
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">窄容器</span>
+    <div style="width: 240px">
+      <Checkbox :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="gapValue" />
+    </div>
   </Flex>
 </Flex>
-
-<Checkbox :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="selectedOptions" />
 
 ::: details Show Code
 
@@ -643,52 +590,54 @@ const vnodeValue = ref<(string | number)[]>([2])
 import { ref } from 'vue'
 import type { CheckboxOption } from 'vue-amazing-ui'
 const options = ref<CheckboxOption[]>([
-  { label: '北京市', value: 1 },
-  { label: '纽约市', value: 2 },
-  { label: '布宜诺斯艾利斯', value: 3 },
-  { label: '伊斯坦布尔', value: 4 },
-  { label: '拜占庭', value: 5 },
-  { label: '君士坦丁堡', value: 6 }
+  { label: '拜占庭', value: 1 },
+  { label: '君士坦丁堡', value: 2 },
+  { label: '伊斯坦布尔', value: 3 },
+  { label: '布宜诺斯艾利斯', value: 4 }
 ])
-const selectedOptions = ref<(string | number)[]>([2])
 const horizontalGap = ref(16)
 const verticalGap = ref(8)
+const value = ref<(string | number)[]>([2])
 </script>
 <template>
-  <Flex :gap="24" class="mb20">
-    <Flex gap="small" vertical style="flex: 1">
-      <span>horizontal gap: {{ horizontalGap }}px</span>
-      <Slider v-model:value="horizontalGap" />
-    </Flex>
-    <Flex gap="small" vertical style="flex: 1">
-      <span>vertical gap: {{ verticalGap }}px</span>
-      <Slider v-model:value="verticalGap" />
-    </Flex>
+  <Flex gap="small" vertical>
+    <span>水平间距 {{ horizontalGap }}px</span>
+    <Slider v-model:value="horizontalGap" />
   </Flex>
-  <Checkbox :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="selectedOptions" />
+  <Flex gap="small" vertical>
+    <span>垂直间距 {{ verticalGap }}px</span>
+    <Slider v-model:value="verticalGap" />
+  </Flex>
+  <!-- 容器宽度不足时选项换行，此时垂直间距生效 -->
+  <div style="width: 240px">
+    <Checkbox :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="value" />
+  </div>
 </template>
 ```
 
 :::
 
-## 单选组间距
+## 复选框组间距
 
-单选组 `gap` 传数字为统一间距；开关切换水平 / 垂直布局，垂直布局时 `gap` 即行间距
+_组的 `gap` 传数字即统一间距；打开「垂直排列」后 `gap` 转为行间距_
 
-<Flex :gap="24" class="mb20">
-  <Flex gap="small" vertical style="flex: 1">
-    <span>group gap: {{ groupGap }}px</span>
-    <Slider v-model:value="groupGap" />
+<br/>
+
+<Flex vertical gap="middle" align="start">
+  <Flex gap="large">
+    <Flex gap="small" vertical>
+      <span>选项间距 {{ groupGap }}px</span>
+      <Slider v-model:value="groupGap" :width="200" />
+    </Flex>
+    <Flex gap="small" vertical align="flex-start">
+      <span>垂直排列</span>
+      <Switch v-model:value="groupVertical" />
+    </Flex>
   </Flex>
-  <Flex gap="small" vertical align="flex-start" style="flex: 1">
-    <span>vertical layout</span>
-    <Switch v-model:value="groupVertical" />
-  </Flex>
+  <CheckboxGroup v-model:value="groupGapValue" :gap="groupGap" :vertical="groupVertical">
+    <Checkbox v-for="item in options" :key="item.value" :value="item.value">{{ item.label }}</Checkbox>
+  </CheckboxGroup>
 </Flex>
-
-<CheckboxGroup v-model:value="groupVerticalValue" :gap="groupGap" :vertical="groupVertical">
-  <Checkbox v-for="item in options" :key="item.value" :value="item.value">{{ item.label }}</Checkbox>
-</CheckboxGroup>
 
 ::: details Show Code
 
@@ -697,29 +646,25 @@ const verticalGap = ref(8)
 import { ref } from 'vue'
 import type { CheckboxOption } from 'vue-amazing-ui'
 const options = ref<CheckboxOption[]>([
-  { label: '北京市', value: 1 },
-  { label: '纽约市', value: 2 },
-  { label: '布宜诺斯艾利斯', value: 3 },
-  { label: '伊斯坦布尔', value: 4 },
-  { label: '拜占庭', value: 5 },
-  { label: '君士坦丁堡', value: 6 }
+  { label: '拜占庭', value: 1 },
+  { label: '君士坦丁堡', value: 2 },
+  { label: '伊斯坦布尔', value: 3 },
+  { label: '布宜诺斯艾利斯', value: 4 }
 ])
-const groupValue = ref<(string | number)[]>([1, 2])
 const groupGap = ref(16)
 const groupVertical = ref<boolean>(true)
+const value = ref<(string | number)[]>([1, 2])
 </script>
 <template>
-  <Flex :gap="24" class="mb20">
-    <Flex gap="small" vertical style="flex: 1">
-      <span>group gap: {{ groupGap }}px</span>
-      <Slider v-model:value="groupGap" />
-    </Flex>
-    <Flex gap="small" vertical align="flex-start" style="flex: 1">
-      <span>vertical layout</span>
-      <Switch v-model:value="groupVertical" />
-    </Flex>
+  <Flex gap="small" vertical>
+    <span>选项间距 {{ groupGap }}px</span>
+    <Slider v-model:value="groupGap" />
   </Flex>
-  <CheckboxGroup v-model:value="groupValue" :gap="groupGap" :vertical="groupVertical">
+  <Flex gap="small" vertical align="flex-start">
+    <span>垂直排列</span>
+    <Switch v-model:value="groupVertical" />
+  </Flex>
+  <CheckboxGroup v-model:value="value" :gap="groupGap" :vertical="groupVertical">
     <Checkbox v-for="item in options" :key="item.value" :value="item.value">{{ item.label }}</Checkbox>
   </CheckboxGroup>
 </template>
@@ -729,33 +674,33 @@ const groupVertical = ref<boolean>(true)
 
 ## 聚焦方法
 
-_组件暴露 `focus` / `blur` 方法，可聚焦或失焦原生 `input`；调用 `focus` 时同样显示焦点环_
+_组件暴露 `focus` / `blur` 方法操作原生 `input`，程序化聚焦同样会显示焦点环_
 
 <br/>
 
-<Checkbox
-  ref="focusCheckboxRef"
-  v-model:checked="focusChecked"
-  @focusin="focusFocused = true"
-  @focusout="focusFocused = false"
->
-  Checkbox
-</Checkbox>
-
-<Button @click="focusCheckboxRef?.focus()">focus</Button>
-
-<Button @click="focusCheckboxRef?.blur()">blur</Button>
-
-<span>{{ focusFocused ? '已聚焦' : '未聚焦' }}</span>
+<Flex gap="small" align="center">
+  <Checkbox
+    ref="focusCheckboxRef"
+    v-model:checked="focusChecked"
+    @focusin="focusFocused = true"
+    @focusout="focusFocused = false"
+  >
+    Checkbox
+  </Checkbox>
+  <Button @click="focusCheckboxRef?.focus()">focus</Button>
+  <Button @click="focusCheckboxRef?.blur()">blur</Button>
+  <span>{{ focusFocused ? '已聚焦' : '未聚焦' }}</span>
+</Flex>
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { Checkbox } from 'vue-amazing-ui'
 const checked = ref<boolean>(false)
 const focused = ref<boolean>(false)
-const checkboxRef = ref<{ focus: () => void; blur: () => void } | null>(null)
+const checkboxRef = ref<InstanceType<typeof Checkbox> | null>(null)
 </script>
 <template>
   <Checkbox ref="checkboxRef" v-model:checked="checked" @focusin="focused = true" @focusout="focused = false">
@@ -801,7 +746,7 @@ name | 表单字段名，下发到组内每个原生 `input` | string | undefine
 
 名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-label | 选项名，传入 VNode 时原样渲染 | string &#124; number &#124; VNode | undefined
+label | 选项名，传入 `VNode` 时原样渲染 | string &#124; number &#124; VNode | undefined
 value | 选项值 | string &#124; number | undefined
 disabled? | 是否禁用选项 | boolean | undefined
 
@@ -809,7 +754,7 @@ disabled? | 是否禁用选项 | boolean | undefined
 
 名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-label? | 选项名，未提供时以选项值展示；传入 VNode 时原样渲染 | string &#124; number &#124; VNode | undefined
+label? | 选项名，未提供时以选项值展示；传入 `VNode` 时原样渲染 | string &#124; number &#124; VNode | undefined
 value | 选项值 | string &#124; number | undefined
 disabled? | 是否禁用选项 | boolean | undefined
 
@@ -835,7 +780,7 @@ default | 组内选项，用于放置 `Checkbox` | v-slot:default
 :-- | :-- | :--
 change | 变化时的回调函数 | (value: boolean \| (string \| number)[], event: CheckboxChangeEvent) => void
 
-`event` 为与原生 `input` 的 change 同形态的事件对象，含 `target`（`checked` / `value` / `name` / `disabled` 状态快照）、`nativeEvent` 与 `stopPropagation` / `preventDefault`
+`event` 为与原生 `input` 的 `change` 同形态的事件对象，含 `target`（`checked` / `value` / `name` / `disabled` 状态快照）、`nativeEvent` 与 `stopPropagation` / `preventDefault`
 
 ### CheckboxGroup Events
 
