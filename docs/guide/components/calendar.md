@@ -380,7 +380,7 @@ _`#headerFull` 插槽接管整行头部：使用后默认的年 / 月选择器�
   </template>
 </Calendar>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -479,7 +479,7 @@ function onPanelChange(
 </style>
 ```
 
-::::
+:::
 
 ## 自定义一周的开始
 
@@ -679,7 +679,7 @@ _指定 `valueFormat` 后，`v-model` 的值为按该格式表达的字符串_
   <Calendar v-model:value="dateStr" value-format="yyyy-MM-dd" @panelChange="onPanelChange" />
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -702,7 +702,7 @@ function onPanelChange(
 </template>
 ```
 
-::::
+:::
 
 ## 通知事项日历
 
@@ -911,7 +911,7 @@ _使用 `#dateFull` / `#monthFull` 替换整个单元格；整格由业务自绘
   </template>
 </Calendar>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -997,7 +997,7 @@ function onPanelChange(
 </style>
 ```
 
-::::
+:::
 
 ## 选择功能
 
@@ -1149,7 +1149,7 @@ _`validRange` 限定可选区间，区间外的日期不可选，年 / 月选择
   <Calendar v-model:value="rangeDate" :valid-range="validRangeValue" @select="onSelect" @panelChange="onPanelChange" />
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -1179,7 +1179,7 @@ function onPanelChange(
 </template>
 ```
 
-::::
+:::
 
 ## 非受控初值
 
@@ -1189,7 +1189,7 @@ _`defaultValue` 同时决定初始面板日期与初始选中值；绑定 `value
 
 <Calendar :default-value="defaultDate" @panelChange="onPanelChange" />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -1207,7 +1207,7 @@ function onPanelChange(
 </template>
 ```
 
-::::
+:::
 
 ## 整层禁用
 
@@ -1217,7 +1217,7 @@ _整月都被 `disabledDate` 禁用时，月份面板（`mode="year"`）的月�
 
 <Calendar v-model:value="wholeMonthDate" mode="year" :disabled-date="disabledMarch" @panelChange="onPanelChange" />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -1240,7 +1240,7 @@ function onPanelChange(
 </template>
 ```
 
-::::
+:::
 
 ## 键盘导航
 
@@ -1255,7 +1255,7 @@ _面板可聚焦，键盘直接移动选中日期；日期面板按日粒度移�
 
 <Calendar v-model:value="keyboardDate" @panelChange="onPanelChange" />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script lang="ts" setup>
@@ -1288,7 +1288,7 @@ function onPanelChange(
 </style>
 ```
 
-::::
+:::
 
 <style lang="less" scoped>
 /* 每条通知事项独占一行：状态圆点固定宽度，文本交给 Ellipsis 截断并悬浮提示 */
@@ -1376,13 +1376,13 @@ function onPanelChange(
 
 ### DayOfWeek Type
 
-| 名称     | 值                                                      |
+| 名称 | 值 |
 | :-------- | :------------------------------------------------------ |
 | DayOfWeek | 0 &#124; 1 &#124; 2 &#124; 3 &#124; 4 &#124; 5 &#124; 6 |
 
 ### DefaultWeek Type
 
-| 名称       | 值                                                                           |
+| 名称 | 值 |
 | :---------- | :--------------------------------------------------------------------------- |
 | DefaultWeek | '一' &#124; '二' &#124; '三' &#124; '四' &#124; '五' &#124; '六' &#124; '日' |
 
@@ -1407,7 +1407,7 @@ function onPanelChange(
 
 ### SelectInfo Type
 
-| 名称     | 说明                                      | 类型                                                     |
+| 名称 | 说明 | 类型 |
 | :----- | :-------------------------------------- | :----------------------------------------------------- |
 | source | 选择来源：年选择器 / 月（选择器或月面板格）/ 日期面板格 / 头部整体替换 | 'year' &#124; 'month' &#124; 'date' &#124; 'customize' |
 
