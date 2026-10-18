@@ -10,7 +10,7 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-19">2.15.2</VersionDateTag>
+## <VersionDateTag date="2026-10-19">2.16.0</VersionDateTag>
 
 - 新增 [单选框 Radio](/guide/components/radio.html) 组合式用法：`RadioGroup` 统一下发选中值与禁用态、承载组内选项，配套 `RadioButton` 提供按钮形态；组内 `Radio` 以 `value` 标识自身，退出组后仍走自身受控逻辑，既有 `options` 配置式用法保持不变
 - 新增 [单选框 Radio](/guide/components/radio.html) 的原生 `input` 承载：各项渲染视觉隐藏的原生 `input`（`Radio` 新增 `autofocus` / `name` / `id`，`RadioGroup` 新增 `name` 并下发到组内各项），补齐键盘操作、表单字段名与屏幕阅读器语义，并新增 `focus` / `blur` 方法
