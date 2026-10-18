@@ -1108,7 +1108,7 @@ change | 选项变化时的回调函数 | (value: string \| number \| boolean, e
 
 名称 | 说明 | 类型
 :-- | :-- | :--
-change | 选项变化时的回调函数 | (value: string \| number \| boolean, event: RadioChangeEvent) => void
+change | 选项变化时的回调函数；脱离组单独使用时触发，置于 `RadioGroup` 内时不触发（组内选中变更由 `RadioGroup` 的 `change` 统一出口） | (checked: boolean, event: RadioChangeEvent) => void
 
 ## Methods
 

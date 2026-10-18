@@ -357,7 +357,7 @@ _`#headerFull` 插槽接管整行头部：使用后默认的年 / 月选择器�
           :options="headerFullModeOptions"
           :value="mode"
           button
-          button-size="small"
+          size="small"
           button-style="solid"
           @change="(value) => onHeaderFullTypeChange(value, onTypeChange)"
         />
@@ -438,7 +438,7 @@ function onPanelChange(
             :options="headerFullModeOptions"
             :value="mode"
             button
-            button-size="small"
+            size="small"
             button-style="solid"
             @change="(value) => onHeaderFullTypeChange(value, onTypeChange)"
           />

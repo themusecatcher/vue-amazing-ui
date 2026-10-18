@@ -212,7 +212,7 @@ function onPanelChange(
               :options="headerFullModeOptions"
               :value="mode"
               button
-              button-size="small"
+              size="small"
               button-style="solid"
               @change="(value) => onHeaderFullTypeChange(value, onTypeChange)"
             />
