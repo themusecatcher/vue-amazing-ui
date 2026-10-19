@@ -30,19 +30,19 @@ onBeforeMount(() => {
     <h2 class="mt30 mb10">瀑布流配置器</h2>
     <Row :gutter="24">
       <Col :span="6">
-        <Flex vertical gap="middle">
+        <Flex vertical>
           columnCount:
           <Slider :min="1" :max="6" v-model:value="state.columnCount" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical gap="middle">
+        <Flex vertical>
           columnGap:
           <Slider :min="10" :max="100" v-model:value="state.columnGap" />
         </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical gap="middle">
+        <Flex vertical>
           borderRadius:
           <Slider :min="0" :max="100" v-model:value="state.borderRadius" />
         </Flex>

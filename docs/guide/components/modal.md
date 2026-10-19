@@ -1183,7 +1183,7 @@ _命令式弹窗默认 `destroyOnClose: true`，关闭即销毁；声明式弹�
         <Button type="primary" @click="onAfterCloseModal">打开弹窗</Button>
       </template>
       <p class="demo-variant-desc">适合做资源清理或路由跳转</p>
-      <Space :gap="32" wrap>
+      <Space :gap="32">
         <Statistic title="触发次数" :value="afterCloseCount" :value-style="statisticValueStyle" />
         <Statistic title="最近触发" :value-style="statisticValueStyle">
           {{ lastAfterCloseTime ?? '—' }}
@@ -1428,7 +1428,7 @@ function onAfterCloseModal() {
           <Button type="primary" @click="onAfterCloseModal">打开弹窗</Button>
         </template>
         <p class="demo-variant-desc">适合做资源清理或路由跳转</p>
-        <Space :gap="32" wrap>
+        <Space :gap="32">
           <Statistic title="触发次数" :value="afterCloseCount" :value-style="statisticValueStyle" />
           <Statistic title="最近触发" :value-style="statisticValueStyle">
             {{ lastAfterCloseTime ?? '—' }}

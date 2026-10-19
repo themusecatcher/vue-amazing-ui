@@ -176,7 +176,7 @@ function onNext() {
     <h2 class="mt30 mb10">走马灯</h2>
     <Swiper :images="images" mode="carousel" :height="240" :slides-per-view="3" :space-between="20" :speed="2500" />
     <h2 class="mt30 mb10">信息展播</h2>
-    <Flex vertical gap="middle">
+    <Flex vertical>
       <Space>
         <Button type="primary" @click="onPrev">Prev</Button>
         <Button type="primary" @click="onNext">Next</Button>

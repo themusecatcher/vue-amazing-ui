@@ -880,7 +880,7 @@ _添加 `loading` 属性即可让按钮处于加载状态，最后两个按钮�
 
 <br/>
 
-<Space direction="vertical">
+<Space vertical>
   <DropdownButton :menus="buttonMenus" type="primary" loading>Submit</DropdownButton>
   <DropdownButton :menus="buttonMenus" type="primary" size="small" loading>Submit</DropdownButton>
   <DropdownButton :menus="buttonMenus" type="primary" :loading="loading1" @click="enterLoading1">
@@ -918,7 +918,7 @@ function enterLoading2() {
 }
 </script>
 <template>
-  <Space direction="vertical">
+  <Space vertical>
     <DropdownButton :menus="buttonMenus" type="primary" loading>Submit</DropdownButton>
     <DropdownButton :menus="buttonMenus" type="primary" size="small" loading>Submit</DropdownButton>
     <DropdownButton :menus="buttonMenus" type="primary" :loading="loading1" @click="enterLoading1">
