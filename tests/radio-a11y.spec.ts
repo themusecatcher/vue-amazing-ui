@@ -1,7 +1,8 @@
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Radio from 'components/radio/Radio.vue'
+import RadioButton from 'components/radio/radio-button/RadioButton.vue'
 import RadioGroup from 'components/radio/radio-group/RadioGroup.vue'
 
 /**
@@ -168,5 +169,59 @@ describe('Radio 实例方法', () => {
     instance.blur()
     await nextTick()
     expect(wrapper.find('.radio-container').classes()).not.toContain('radio-focused')
+  })
+})
+
+describe('RadioButton 实例方法', () => {
+  it('暴露的 focus / blur 转发到内部原生 input 上', async () => {
+    // 需挂载进真实文档：脱离文档的节点调用 focus() 不会成为 activeElement
+    wrapper = mount(RadioButton, { attachTo: document.body, slots: { default: 'Radio Button' } })
+    const instance = wrapper.vm as unknown as { focus: () => void; blur: () => void }
+    expect(typeof instance.focus).toBe('function')
+    expect(typeof instance.blur).toBe('function')
+    const input = wrapper.find('input[type="radio"]').element
+    instance.focus()
+    await nextTick()
+    expect(document.activeElement).toBe(input)
+    instance.blur()
+    await nextTick()
+    expect(document.activeElement).not.toBe(input)
+  })
+
+  it('按钮形态的脚本聚焦与键盘聚焦均显示焦点环，鼠标按下撤销', async () => {
+    wrapper = mount(RadioButton, { slots: { default: 'Radio Button' } })
+    const instance = wrapper.vm as unknown as { focus: () => void; blur: () => void }
+    const label = wrapper.find('label.radio-button-wrap')
+    const input = wrapper.find('input[type="radio"]')
+    const focusRing = async () => label.classes().includes('radio-focused')
+
+    // 脚本 focus()：不匹配 :focus-visible，由 .radio-focused 兜底显示焦点环
+    instance.focus()
+    await nextTick()
+    expect(await focusRing()).toBe(true)
+
+    // 键盘聚焦（:focus-visible 命中）：focus 事件当下置位
+    instance.blur()
+    await nextTick()
+    expect(await focusRing()).toBe(false)
+    vi.spyOn(input.element as HTMLInputElement, 'matches').mockReturnValue(true)
+    await input.trigger('focus')
+    expect(await focusRing()).toBe(true)
+
+    // 鼠标按下：浏览器不再给 :focus-visible，焦点环随之撤销（Tab 聚焦后点鼠标的场景）
+    await label.trigger('mousedown')
+    expect(await focusRing()).toBe(false)
+    vi.restoreAllMocks()
+  })
+
+  it('圆点形态的焦点环规则与按钮形态一致', async () => {
+    wrapper = mount(Radio, { slots: { default: 'Radio' } })
+    const instance = wrapper.vm as unknown as { focus: () => void; blur: () => void }
+    const label = wrapper.find('label.radio-container')
+    instance.focus()
+    await nextTick()
+    expect(label.classes()).toContain('radio-focused')
+    await label.trigger('mousedown')
+    expect(label.classes()).not.toContain('radio-focused')
   })
 })

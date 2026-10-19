@@ -87,9 +87,9 @@ function buildChangeEvent(nativeEvent: Event, checked: boolean, value?: Checkbox
 }
 // 受控模式下浏览器已先行切换原生选中态，需按组件状态回写，避免二者不一致
 function syncInputChecked(event: Event, checked: boolean): void {
-  const input = event.target as HTMLInputElement | null
-  if (input) {
-    input.checked = checked
+  const { target } = event
+  if (target instanceof HTMLInputElement) {
+    target.checked = checked
   }
 }
 // 组外单项切换：自身受控，取消选中同样上报
@@ -121,6 +121,19 @@ function onSingleClick(event: Event): void {
 function clearExposedFocus(): void {
   exposedSingleFocused.value = false
 }
+// 键盘聚焦：:focus-visible 无 JS 可读状态，在 focus 事件当下用 matches 判定后置位；
+// 鼠标点击与脚本调用 focus() 均不匹配该伪类，与容器上 :focus-visible 的 CSS 路径同口径
+function onInputFocus(event: Event): void {
+  const { target } = event
+  if (target instanceof HTMLInputElement && target.matches(':focus-visible')) {
+    exposedSingleFocused.value = true
+  }
+}
+// 鼠标按下即撤销焦点环：浏览器对鼠标按下（含已聚焦元素被再次点击）不再给 :focus-visible，
+// 纯 CSS 方案下焦点环随之消失，class 方案需对齐该行为，避免 Tab 聚焦后点鼠标残留焦点环
+function onMouseDown(): void {
+  clearExposedFocus()
+}
 // 聚焦原生 input
 function focus(): void {
   singleInput.value?.focus()
@@ -138,6 +151,7 @@ defineExpose({ focus, blur })
     class="checkbox-container"
     :class="{ 'checkbox-disabled': mergedDisabled, 'checkbox-focused': exposedSingleFocused }"
     :style="`--checkbox-primary-color: ${colorPalettes[5]}; --checkbox-primary-shadow-color: ${shadowColor};`"
+    @mousedown="onMouseDown"
     v-bind="$attrs"
   >
     <input
@@ -151,6 +165,7 @@ defineExpose({ focus, blur })
       :disabled="mergedDisabled"
       :autofocus="autofocus"
       @click.prevent="onSingleClick($event)"
+      @focus="onInputFocus"
       @blur="clearExposedFocus"
     />
     <span
@@ -200,7 +215,7 @@ defineExpose({ focus, blur })
     overflow: hidden;
     content: '\a0';
   }
-  /* 键盘聚焦走 :focus-visible；脚本调用 focus() 不匹配该伪类，由容器自身的 .checkbox-focused 兜底显示焦点环 */
+  /* 键盘聚焦走 :focus-visible（input 的 focus 事件同步置位 .checkbox-focused，双路径兜底）；脚本调用 focus() 不匹配该伪类，由容器自身的 .checkbox-focused 兜底显示焦点环 */
   .checkbox-input:focus-visible + .checkbox-box,
   &.checkbox-focused .checkbox-box {
     box-shadow: 0 0 0 2px var(--checkbox-primary-shadow-color);

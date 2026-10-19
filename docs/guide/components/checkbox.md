@@ -763,6 +763,15 @@ default | 选项名 | v-slot:default
 :-- | :-- | :--
 default | `options` 模式下为每个选项提供作用域参数；未提供 `options` 时用于放置 `Checkbox` | v-slot:default="{ option, label, index }"
 
+## Methods
+
+### Checkbox Methods
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+focus | 聚焦组件的原生 `input` | () => void
+blur | 使组件的原生 `input` 失焦 | () => void
+
 ## Events
 
 ### Checkbox Events
@@ -781,11 +790,3 @@ change | 组内选项变化时的回调函数 | (value: (string \| number)[], ev
 
 `event.target.value` 为变更后的组内已选值数组，`event.target.checked` 表示变更后组内是否仍有选中项（非「全选」语义）。
 
-## Methods
-
-### Checkbox Methods
-
-名称 | 说明 | 类型
-:-- | :-- | :--
-focus | 聚焦组件的原生 `input` | () => void
-blur | 使组件的原生 `input` 失焦 | () => void

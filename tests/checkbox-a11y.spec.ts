@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Checkbox from 'components/checkbox/Checkbox.vue'
@@ -181,5 +181,19 @@ describe('Checkbox 实例方法', () => {
     instance.blur()
     await nextTick()
     expect(wrapper.find('.checkbox-container').classes()).not.toContain('checkbox-focused')
+  })
+
+  it('键盘聚焦显示焦点环、鼠标按下撤销（Tab 聚焦后点鼠标不残留焦点环）', async () => {
+    wrapper = mount(Checkbox, { slots: { default: 'Checkbox' } })
+    const label = wrapper.find('label.checkbox-container')
+    const input = wrapper.find('input[type="checkbox"]')
+    // 键盘聚焦（:focus-visible 命中）：focus 事件当下置位
+    vi.spyOn(input.element as HTMLInputElement, 'matches').mockReturnValue(true)
+    await input.trigger('focus')
+    expect(label.classes()).toContain('checkbox-focused')
+    // 鼠标按下：浏览器不再给 :focus-visible，焦点环随之撤销
+    await label.trigger('mousedown')
+    expect(label.classes()).not.toContain('checkbox-focused')
+    vi.restoreAllMocks()
   })
 })

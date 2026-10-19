@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import type { VNode } from 'vue'
 import Radio from '../Radio.vue'
 import type { RadioChangeEvent, RadioValue } from '../context'
@@ -31,15 +32,26 @@ const props = withDefaults(defineProps<Props>(), {
 })
 defineSlots<RadioButtonSlots>()
 const emits = defineEmits(['update:checked', 'change'])
+// 内部 Radio 的实例引用：focus / blur 需转发到它承载的原生 input 上
+const radioRef = ref<InstanceType<typeof Radio>>()
 function onCheckedChange(checked: boolean): void {
   emits('update:checked', checked)
 }
 function onChange(value: boolean | RadioValue, event: RadioChangeEvent): void {
   emits('change', value, event)
 }
+// 聚焦 / 失焦原生 input，与 Radio 同口径（调用 focus 时同样显示焦点环）
+function focus(): void {
+  radioRef.value?.focus()
+}
+function blur(): void {
+  radioRef.value?.blur()
+}
+defineExpose({ focus, blur })
 </script>
 <template>
   <Radio
+    ref="radioRef"
     button
     :value="props.value"
     :disabled="props.disabled"
