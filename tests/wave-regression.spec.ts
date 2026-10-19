@@ -157,6 +157,42 @@ describe('水波纹 - 配置式模式下波纹绑定到被点击的那一项', (
   })
 })
 
+describe('水波纹 - 由选中态驱动（非点击来源同样播放）', () => {
+  it('Checkbox：外部把 checked 置为 true 时置位波纹', async () => {
+    wrapper = mount(Checkbox, { props: { checked: false }, slots: { default: '复选' } })
+    await wrapper.setProps({ checked: true })
+    expect(wrapper.find('.checkbox-wave').classes()).toContain('wave-active')
+  })
+
+  it('Checkbox：外部把 checked 置回 false 时不播放波纹', async () => {
+    wrapper = mount(Checkbox, { props: { checked: true }, slots: { default: '复选' } })
+    await wrapper.setProps({ checked: false })
+    expect(wrapper.find('.checkbox-wave').classes()).not.toContain('wave-active')
+  })
+
+  it('Radio：外部把 checked 置为 true 时置位波纹', async () => {
+    wrapper = mount(Radio, { props: { checked: false }, slots: { default: '单选' } })
+    await wrapper.setProps({ checked: true })
+    expect(wrapper.find('.radio-wave').classes()).toContain('wave-active')
+  })
+
+  it('RadioGroup：组内选中值变化时，新选中项置位波纹', async () => {
+    wrapper = mount(RadioGroup, {
+      props: {
+        value: 'a',
+        options: [
+          { label: 'A', value: 'a' },
+          { label: 'B', value: 'b' }
+        ]
+      }
+    })
+    await wrapper.setProps({ value: 'b' })
+    const waves = wrapper.findAll('.radio-wave')
+    expect(waves[0].classes()).not.toContain('wave-active')
+    expect(waves[1].classes()).toContain('wave-active')
+  })
+})
+
 describe('水波纹 - 兄弟组件互不干扰', () => {
   it('同时挂载 Button 与 Switch，点击其一不影响另一方的波纹状态', async () => {
     const button = mount(Button, { slots: { default: '按钮' } })

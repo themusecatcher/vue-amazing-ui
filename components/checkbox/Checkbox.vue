@@ -71,6 +71,12 @@ watch(
   },
   { flush: 'post' }
 )
+// 选中扩散环由选中态驱动：程序化改变选中值（受控回写 / 组内切换）同样播放，与点击来源无关
+watch(mergedChecked, (checked) => {
+  if (checked) {
+    startWave()
+  }
+})
 // 状态快照取本组件 props，原生事件与方法附在其上，与原生 input 的 change 同形态
 function buildChangeEvent(nativeEvent: Event, checked: boolean, value?: CheckboxValue): CheckboxChangeEvent {
   return {
@@ -95,7 +101,6 @@ function syncInputChecked(event: Event, checked: boolean): void {
 // 组外单项切换：自身受控，取消选中同样上报
 function onCheckedChange(event: Event): void {
   const nextChecked = !checkboxChecked.value
-  startWave()
   checkboxChecked.value = nextChecked
   emits('update:checked', nextChecked)
   emits('change', nextChecked, buildChangeEvent(event, nextChecked, props.value))
@@ -113,7 +118,6 @@ function onSingleClick(event: Event): void {
     return
   }
   const nextChecked = !groupChecked.value
-  startWave()
   groupContext?.onChange(nextChecked, target, event)
   syncInputChecked(event, nextChecked)
 }
@@ -150,7 +154,7 @@ defineExpose({ focus, blur })
   <label
     class="checkbox-container"
     :class="{ 'checkbox-disabled': mergedDisabled, 'checkbox-focused': exposedSingleFocused }"
-    :style="`--checkbox-primary-color: ${colorPalettes[5]}; --checkbox-primary-shadow-color: ${shadowColor};`"
+    :style="`--checkbox-primary-color: ${colorPalettes[5]}; --checkbox-primary-color-hover: ${colorPalettes[4]}; --checkbox-primary-shadow-color: ${shadowColor};`"
     @mousedown="onMouseDown"
     v-bind="$attrs"
   >
@@ -178,7 +182,7 @@ defineExpose({ focus, blur })
       <span
         v-if="!mergedDisabled"
         class="checkbox-wave"
-        :class="{ 'wave-active': wave }"
+        :class="{ 'wave-active': wave && mergedChecked }"
         @animationend="endWave"
       ></span>
     </span>
@@ -224,6 +228,11 @@ defineExpose({ focus, blur })
     .checkbox-box {
       border-color: var(--checkbox-primary-color);
     }
+    /* 选中态 hover：底色浅一档、边框转透明，由实心色块铺满整块 */
+    .checkbox-checked {
+      background-color: var(--checkbox-primary-color-hover);
+      border-color: transparent;
+    }
   }
   .checkbox-box {
     /*
@@ -256,38 +265,42 @@ defineExpose({ focus, blur })
         all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6),
         opacity 0.1s;
     }
+    /* 选中扩散外环：1.6 倍外扩的描边环，扩散同时淡出 */
     .checkbox-wave {
       position: absolute;
       pointer-events: none;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+      top: -1px;
+      right: -1px;
+      bottom: -1px;
+      left: -1px;
+      box-sizing: border-box;
       animation-iteration-count: 1;
-      animation-duration: 0.6s;
-      animation-timing-function: cubic-bezier(0, 0, 0.2, 1), cubic-bezier(0, 0, 0.2, 1);
+      animation-duration: 0.3s;
+      animation-timing-function: ease-in-out;
       border-radius: inherit;
     }
     .wave-active {
       z-index: 1;
-      animation-name: waveSpread, waveOpacity;
-      @keyframes waveSpread {
+      /* 默认不可见：环由选中态驱动，程序化选中时鼠标未必在项上 */
+      visibility: hidden;
+      border: 2px solid var(--checkbox-primary-color);
+      animation-name: antCheckboxEffect;
+      animation-fill-mode: backwards;
+      @keyframes antCheckboxEffect {
         from {
-          box-shadow: 0 0 0.5px 0 var(--checkbox-primary-color);
+          transform: scale(1);
+          opacity: 0.5;
         }
         to {
-          box-shadow: 0 0 0.5px 5px var(--checkbox-primary-color);
-        }
-      }
-      @keyframes waveOpacity {
-        from {
-          opacity: 0.6;
-        }
-        to {
+          transform: scale(1.6);
           opacity: 0;
         }
       }
     }
+  }
+  /* 悬停时环可见：点击导致的选中必然伴随悬停，日常表现与直接播放一致 */
+  &:hover .checkbox-box .wave-active {
+    visibility: visible;
   }
   .checkbox-checked {
     background-color: var(--checkbox-primary-color);

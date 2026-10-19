@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject, ref, watchEffect } from 'vue'
+import { computed, inject, ref, watch, watchEffect } from 'vue'
 import type { VNode } from 'vue'
 import { useSlotsExist, useInject, useWave } from 'components/utils'
 import { radioGroupContextKey } from './context'
@@ -70,6 +70,12 @@ const mergedName = computed(() => (groupContext ? groupContext.name.value : prop
 watchEffect(() => {
   radioChecked.value = props.checked
 })
+// 选中扩散环由选中态驱动：程序化改变选中值（受控回写 / 组内切换）同样播放，与点击来源无关
+watch(mergedChecked, (checked) => {
+  if (checked) {
+    startWave()
+  }
+})
 // 状态快照取本组件 props，原生事件与方法附在其上，与原生 input 的 change 同形态
 function buildChangeEvent(nativeEvent: Event, checked: boolean, value?: RadioValue): RadioChangeEvent {
   return {
@@ -95,7 +101,6 @@ function syncInputChecked(event: Event, checked: boolean): void {
 // 组外单选：已选中时不再重复上报
 function onChecked(event: Event): void {
   if (!radioChecked.value) {
-    startWave()
     radioChecked.value = true
     emits('update:checked', true)
     emits('change', true, buildChangeEvent(event, true, props.value))
@@ -195,7 +200,7 @@ defineExpose({ focus, blur })
       'radio-button-large': mergedSize === 'large',
       'radio-focused': exposedSingleFocused
     }"
-    :style="`--radio-primary-color: ${colorPalettes[5]}; --radio-primary-shadow-color: ${shadowColor};`"
+    :style="`--radio-primary-color: ${colorPalettes[5]}; --radio-primary-color-hover: ${colorPalettes[4]}; --radio-primary-color-active: ${colorPalettes[6]}; --radio-primary-shadow-color: ${shadowColor};`"
     @click="onSingleClick($event)"
     @mousedown="onMouseDown"
     v-bind="$attrs"
@@ -298,6 +303,37 @@ defineExpose({ focus, blur })
       transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
       content: '';
     }
+    /* 选中扩散外环：1.6 倍外扩的描边环，扩散同时淡出（按钮形态仍沿用光晕） */
+    .radio-wave {
+      top: -1px;
+      right: -1px;
+      bottom: -1px;
+      left: -1px;
+      box-sizing: border-box;
+      animation-duration: 0.3s;
+      animation-timing-function: ease-in-out;
+    }
+    .wave-active {
+      /* 默认不可见：环由选中态驱动，程序化选中时鼠标未必在项上 */
+      visibility: hidden;
+      border: 2px solid var(--radio-primary-color);
+      animation-name: antRadioEffect;
+      animation-fill-mode: both;
+      @keyframes antRadioEffect {
+        from {
+          transform: scale(1);
+          opacity: 0.5;
+        }
+        to {
+          transform: scale(1.6);
+          opacity: 0;
+        }
+      }
+    }
+  }
+  /* 悬停时环可见：点击导致的选中必然伴随悬停，日常表现与直接播放一致 */
+  &:hover .radio-handle .wave-active {
+    visibility: visible;
   }
   .radio-checked {
     border-color: var(--radio-primary-color);
@@ -394,6 +430,22 @@ defineExpose({ focus, blur })
     background-color: var(--radio-primary-color);
   }
 }
+/* 选中态 hover：文字 / 边框 / 相邻分隔线统一转为浅一档主色 */
+.radio-button-wrap.radio-button-checked:not(.radio-button-disabled):hover {
+  color: var(--radio-primary-color-hover);
+  border-color: var(--radio-primary-color-hover);
+  &::before {
+    background-color: var(--radio-primary-color-hover);
+  }
+}
+/* 选中态按下：主色深一档 */
+.radio-button-wrap.radio-button-checked:not(.radio-button-disabled):active {
+  color: var(--radio-primary-color-active);
+  border-color: var(--radio-primary-color-active);
+  &::before {
+    background-color: var(--radio-primary-color-active);
+  }
+}
 .radio-button-disabled {
   color: rgba(0, 0, 0, 0.25);
   background-color: rgba(0, 0, 0, 0.04);
@@ -407,8 +459,17 @@ defineExpose({ focus, blur })
   color: #fff;
   background-color: var(--radio-primary-color);
   border-color: var(--radio-primary-color);
+  /* 选中态 hover：实心底色浅一档 */
   &:hover {
     color: #fff;
+    background-color: var(--radio-primary-color-hover);
+    border-color: var(--radio-primary-color-hover);
+  }
+  /* 选中态按下：实心底色深一档 */
+  &:active {
+    color: #fff;
+    background-color: var(--radio-primary-color-active);
+    border-color: var(--radio-primary-color-active);
   }
 }
 .radio-button-small {
