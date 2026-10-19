@@ -16,8 +16,8 @@
  *
  * ⚠️ 边界（不改变 D1 的分工）：
  *   - 只校验**依赖集合的完整性**；**顺序与层叠仍由手写表 `componentDependencies` 决定**（生成器按表顺序写入口）；
- *   - 无法从 chunk 图推导的合法依赖（异步 `import()`、条件渲染、跨包耦合）用下方 EXEMPTIONS 显式登记，
- *     每条必须写明原因
+ *   - 无法从 chunk 图推导的合法依赖（异步 `import()`、条件渲染、跨包耦合，以及同目录共享纯 JS 模块
+ *     被目录兜底误判）用下方 EXEMPTIONS 显式登记，每条必须写明原因
  *   - 需要已构建的 `es/` + `lib/` 产物 → 本脚本挂在 `pnpm verify` 链（`verify:deps`），不进 `pnpm check`。
  *
  * ## 二、聚合入口导出一致性
@@ -130,12 +130,179 @@ function hasOwnCss(componentName) {
   return styleSources[componentName] === undefined && !styleless.has(componentName)
 }
 
+/** 解析 chunk 的 import 语句：说明符 + 具名导入的**原始导出名**（默认导入记 `default`、命名空间记 `*`） */
+function parseImports(code) {
+  return [...code.matchAll(/import\s+([^;]+?)\s+from\s+"([^"]+)"/g)].map((matched) => {
+    const [, clause, specifier] = matched
+    const imported = []
+    const named = clause.match(/\{([^}]*)\}/)
+    if (named) {
+      splitTopLevel(named[1], ',').forEach((item) => {
+        const name = item.trim().split(/\s+as\s+/)[0]
+        if (name) {
+          imported.push(name)
+        }
+      })
+    }
+    if (/\*\s+as\s+[\w$]+/.test(clause)) {
+      imported.push('*')
+    }
+    // 具名导入之外仍有裸标识符（`import X from` / `import X, { ... } from`）→ 默认导入
+    const withoutNamed = clause.replace(/\{[^}]*\}/, '').replace(/\*\s+as\s+[\w$]+/, '')
+    if (withoutNamed.split(',').some((part) => /^[\w$]+$/.test(part.trim()))) {
+      imported.push('default')
+    }
+    return { specifier, imported }
+  })
+}
+
+/** 按顶层分隔符切分（忽略括号内的逗号，如 `const f = r(o)` 的参数） */
+function splitTopLevel(text, separator) {
+  const items = []
+  let depth = 0
+  let current = ''
+  for (const char of text) {
+    if (char === '(' || char === '{' || char === '[') {
+      depth += 1
+    } else if (char === ')' || char === '}' || char === ']') {
+      depth -= 1
+    } else if (char === separator && depth === 0) {
+      items.push(current)
+      current = ''
+      continue
+    }
+    current += char
+  }
+  if (current.trim()) {
+    items.push(current)
+  }
+  return items
+}
+
+/**
+ * 解析目录聚合入口（`<dir>/index.js`）的三张映射表
+ *
+ * `preserveModules` 产物保留了导出名，但本地变量被重命名（如
+ * `const n = t, R = i, f = r(o); export { n as RadioButton, R as RadioGroup, f as default }`），
+ * 因此需要还原 `导出名 → 本地变量 → import 源模块` 的链路，才能把「经 barrel 引入」
+ * 还原成「实际依赖哪个组件」。
+ */
+const barrelCache = new Map()
+function parseBarrel(entryFile) {
+  if (barrelCache.has(entryFile)) {
+    return barrelCache.get(entryFile)
+  }
+  const barrel = { imports: new Map(), aliases: new Map(), exports: new Map(), stars: [] }
+  barrelCache.set(entryFile, barrel)
+  // `export *` 的目标可能是纯类型模块（产物中无对应 JS），不存在时按空入口处理
+  if (!existsSync(entryFile)) {
+    return barrel
+  }
+  const code = readFileSync(entryFile, 'utf-8')
+  // import 本地名 → 源模块（默认 / 具名 / 命名空间）
+  for (const matched of code.matchAll(/import\s+([^;]+?)\s+from\s+"([^"]+)"/g)) {
+    const [, clause, specifier] = matched
+    const source = resolve(dirname(entryFile), specifier)
+    const named = clause.match(/\{([^}]*)\}/)
+    if (named) {
+      splitTopLevel(named[1], ',').forEach((item) => {
+        const [imported, local = imported] = item.trim().split(/\s+as\s+/)
+        const localName = local.trim()
+        if (localName) {
+          barrel.imports.set(localName, { source, imported: imported.trim() })
+        }
+      })
+    }
+    const namespace = clause.match(/\*\s+as\s+([\w$]+)/)
+    if (namespace) {
+      barrel.imports.set(namespace[1], { source, imported: '*' })
+    }
+    const withoutNamed = clause.replace(/\{[^}]*\}/, '').replace(/\*\s+as\s+[\w$]+/, '')
+    withoutNamed.split(',').forEach((part) => {
+      const localName = part.trim()
+      if (/^[\w$]+$/.test(localName)) {
+        barrel.imports.set(localName, { source, imported: 'default' })
+      }
+    })
+  }
+  // 本地常量别名（Rollup 会把多个声明合并为 `const a = x, b = y;`）
+  for (const matched of code.matchAll(/(?:const|let|var)\s+([^;]+);/g)) {
+    splitTopLevel(matched[1], ',').forEach((declaration) => {
+      const [local, expression = ''] = declaration.split('=')
+      const localName = local.trim()
+      if (/^[\w$]+$/.test(localName)) {
+        barrel.aliases.set(localName, expression)
+      }
+    })
+  }
+  // 导出名 → 本地名
+  for (const matched of code.matchAll(/export\s*\{([^}]*)\}/g)) {
+    splitTopLevel(matched[1], ',').forEach((item) => {
+      const [local, exported = local] = item.trim().split(/\s+as\s+/)
+      const localName = local.trim()
+      if (localName) {
+        barrel.exports.set(exported.trim(), localName)
+      }
+    })
+  }
+  for (const matched of code.matchAll(/export\s+\*\s+from\s+"([^"]+)"/g)) {
+    barrel.stars.push(resolve(dirname(entryFile), matched[1]))
+  }
+  for (const matched of code.matchAll(/export\s+(?:const|let|var|function|class)\s+([\w$]+)/g)) {
+    barrel.exports.set(matched[1], matched[1])
+  }
+  return barrel
+}
+
+/** 本地名 → 实际源模块：import 直接返回；常量别名展开其表达式中的标识符（如 `f = r(o)` 中的 `r` / `o`） */
+function resolveBarrelLocal(entryFile, local, barrel, visited) {
+  const key = `${entryFile}#local#${local}`
+  if (visited.has(key)) {
+    return []
+  }
+  visited.add(key)
+  const imported = barrel.imports.get(local)
+  if (imported !== undefined) {
+    return [imported.source]
+  }
+  const expression = barrel.aliases.get(local)
+  if (expression === undefined) {
+    return []
+  }
+  const sources = []
+  ;[...expression.matchAll(/\b([A-Za-z_$][\w$]*)\b/g)].forEach((matched) => {
+    const identifier = matched[1]
+    if (barrel.imports.has(identifier)) {
+      sources.push(barrel.imports.get(identifier).source)
+    } else if (barrel.aliases.has(identifier)) {
+      sources.push(...resolveBarrelLocal(entryFile, identifier, barrel, visited))
+    }
+  })
+  return sources
+}
+
+/** 导出名 → 实际源模块（未命中显式导出时沿 `export *` 继续找） */
+function resolveBarrelExport(entryFile, exportedName, visited = new Set()) {
+  const key = `${entryFile}#${exportedName}`
+  if (visited.has(key)) {
+    return []
+  }
+  visited.add(key)
+  const barrel = parseBarrel(entryFile)
+  const local = barrel.exports.get(exportedName)
+  const sources = local === undefined ? [] : resolveBarrelLocal(entryFile, local, barrel, visited)
+  barrel.stars.forEach((source) => sources.push(...resolveBarrelExport(source, exportedName, visited)))
+  return sources
+}
+
 /**
  * 组件 chunk 的依赖边：指向另一个「有自己 CSS」的组件
  *
  * 目标组件解析顺序：
- *   1. 被引用文件名直接命中组件名（`PickerPanel.vue.js` → PickerPanel、`Popup.vue2.js` → Popup）；
- *   2. 否则按所在目录兜底（`../popup/index.js` → 目录 popup → Popup），见 `componentByDirFallback`。
+ *   1. 目录聚合入口（`<dir>/index.js`）按 import 的**具名符号**展开到实际源模块
+ *      （`import { RadioGroup } from "../radio/index.js"` → `radio/radio-group/index.js` → RadioGroup）；
+ *   2. 被引用文件名直接命中组件名（`PickerPanel.vue.js` → PickerPanel、`Popup.vue2.js` → Popup）；
+ *   3. 否则按所在目录兜底（`../popup/index.js` → 目录 popup → Popup），见 `componentByDirFallback`。
  *
  * 起点按 chunk 归属组件汇总（见 `componentOfChunk`）。参与判定的说明符两类：
  *   - 跨目录 `../<dir>/...`：常规跨组件依赖；
@@ -154,8 +321,8 @@ function buildGraph() {
     }
     // 一个组件可能由多个 chunk 承载（SFC 门面 + 同目录支撑模块），边取并集
     const dependencies = graph.get(componentName) ?? new Set()
-    const specifiers = [...readFileSync(chunkFile, 'utf-8').matchAll(/from\s+"([^"]+)"/g)].map((matched) => matched[1])
-    specifiers.forEach((specifier) => {
+    const targetModules = new Set()
+    parseImports(readFileSync(chunkFile, 'utf-8')).forEach(({ specifier, imported }) => {
       if (!specifier.startsWith('.')) {
         return
       }
@@ -164,6 +331,27 @@ function buildGraph() {
         return
       }
       const targetModule = resolve(dirname(chunkFile), specifier)
+      if (targetModule.endsWith('/index.js') && existsSync(targetModule)) {
+        const importedNames = imported.length > 0 ? imported : ['*']
+        const expanded = []
+        importedNames.forEach((name) => {
+          if (name !== '*') {
+            expanded.push(...resolveBarrelExport(targetModule, name))
+            return
+          }
+          // 命名空间导入无法分辨成员：保守展开该入口的全部导出
+          parseBarrel(targetModule).exports.forEach((_, exportedName) => {
+            expanded.push(...resolveBarrelExport(targetModule, exportedName))
+          })
+        })
+        if (expanded.length > 0) {
+          expanded.forEach((source) => targetModules.add(source))
+          return
+        }
+      }
+      targetModules.add(targetModule)
+    })
+    targetModules.forEach((targetModule) => {
       const namedByFile = targetModule.slice(targetModule.lastIndexOf('/') + 1).replace(/\..*$/, '')
       const targetComponent =
         componentsMap[namedByFile] !== undefined
