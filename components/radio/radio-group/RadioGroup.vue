@@ -18,22 +18,21 @@ interface NormalizedOption extends Option {
 
 export interface Props {
   value?: RadioValue // (v-model) 组内当前选中的值
-
   options?: (string | number | Option)[] // 单选框选项数据；提供后组内默认插槽不生效
-
   optionType?: RadioGroupOptionType // 组内选项的呈现形态：default 为圆点，button 为按钮
   buttonStyle?: RadioButtonStyle // 按钮形态的风格，仅当 optionType 为 button 时生效
   size?: RadioSize // 尺寸，仅作用于按钮形态；未指定时组内各项回落自身尺寸
   vertical?: boolean // 是否垂直排列，仅当 optionType 为 default 时生效
   gap?: number | number[] // 选项间距，单位 px；垂直排列时即垂直间距；数组用于水平排列折行时：[水平间距, 垂直间距]
-
   disabled?: boolean // 是否禁用整组，组内单项自身的 disabled 在此基础上叠加
-
   name?: string // 表单字段名，下发到组内每个原生 input
+  id?: string // 原生 input 的 id 前缀，options 模式下实际 id 追加选项下标
+  autofocus?: boolean // 是否自动聚焦首项，仅 options 模式生效
 }
 // 声明组件插槽类型
 export interface RadioGroupSlots {
-  default?: () => VNode[] // 组内选项，用于放置 Radio 或 RadioButton
+  // options 模式下为每个选项提供作用域参数；组合式用法无参数
+  default?: (props: { option?: Option; label?: string | number | VNode; index?: number }) => VNode[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -45,7 +44,9 @@ const props = withDefaults(defineProps<Props>(), {
   vertical: false,
   gap: 8,
   disabled: false,
-  name: undefined
+  name: undefined,
+  id: undefined,
+  autofocus: false
 })
 defineSlots<RadioGroupSlots>()
 const emits = defineEmits(['update:value', 'change'])
@@ -65,10 +66,12 @@ const gapValue = computed(() => {
   if (props.optionType === 'button') {
     return 0
   }
-  if (!props.vertical && Array.isArray(props.gap)) {
-    return `${props.gap[1]}px ${props.gap[0]}px`
+  const { gap } = props
+  if (!Array.isArray(gap)) {
+    return `${gap}px`
   }
-  return `${props.gap}px`
+  // 数组为「水平间距, 垂直间距」：垂直排列时只有垂直间距有意义，直接展开数组会产出非法 CSS
+  return props.vertical ? `${gap[1]}px` : `${gap[1]}px ${gap[0]}px`
 })
 // 供组内按钮抵消的水平间距：按钮形态的组已无间距，纵向排列亦无水平间距可言
 const buttonOverlap = computed(() => {
@@ -109,10 +112,14 @@ provide(radioGroupContextKey, {
       <Radio
         v-for="(option, index) in normalizedOptions"
         :key="index"
+        :id="id ? `${id}-${index}` : undefined"
+        :autofocus="index === 0 && autofocus"
         :value="option.value"
         :disabled="option.disabled || disabled"
       >
-        <component :is="renderOptionLabel(option.label)" />
+        <slot :option="option" :label="option.label" :index="index">
+          <component :is="renderOptionLabel(option.label)" />
+        </slot>
       </Radio>
     </template>
     <slot v-else></slot>

@@ -51,7 +51,7 @@ const loading = ref(true)
     </Card>
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Space vertical>
-      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
       <Card :size="size" :title="`${size.toUpperCase()} size card`" :width="cardWidth[size as keyof typeof cardWidth]">
         <template #extra>
           <a href="#">more</a>

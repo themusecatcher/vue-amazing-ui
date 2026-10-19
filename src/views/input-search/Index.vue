@@ -113,7 +113,7 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
     </Space>
     <h2 class="mt30 mb10">三种大小</h2>
     <Space vertical>
-      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
       <InputSearch
         v-model:value="value"
         :size="size"

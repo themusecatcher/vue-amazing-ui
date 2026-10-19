@@ -10,12 +10,15 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-19">2.16.0</VersionDateTag>
+## <VersionDateTag date="2026-10-19">2.15.2</VersionDateTag>
 
-- 重构并增强 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html)：新增组合式用法（`RadioGroup` / `CheckboxGroup` 统一下发选中值与禁用态并承载组内选项，组内项以 `value` 标识自身，`Radio` 另有 `RadioButton` 提供按钮形态）、原生 `input` 承载（`autofocus` / `name` / `id`，组组件 `name` 下发到组内各项，补齐键盘操作与屏幕阅读器语义）与 `focus` / `blur` 方法（调用 `focus` 时同样显示焦点环，原仅在键盘聚焦时显示），`options` 的 `label` 支持传入 `VNode` 原样渲染，`change` 事件在「新值」首参之后追加事件对象（含状态快照与原始事件，原有首参用法不受影响，类型 `RadioChangeEvent` / `CheckboxChangeEvent` 随组件一并导出）；并修复 [单选框 Radio](/guide/components/radio.html) 在定高行内与输入框混排时文字与控件基线错位、内容溢出行盒的问题
-- 将 [单选框 Radio](/guide/components/radio.html) 的 `buttonSize` 属性更名为 `size`（`RadioGroup` 同名属性一并更名，未指定时不再向组内下发尺寸、改由各项回落自身尺寸）；旧属性名不再生效，升级后需同步改名
+- 重构并增强 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html)：新增组合式用法（`RadioGroup` / `CheckboxGroup` 统一下发选中值与禁用态并承载组内选项，组内项以 `value` 标识自身，`Radio` 另有 `RadioButton` 提供按钮形态）、原生 `input` 承载（`autofocus` / `name` / `id`，组组件 `name` / `id` / `autofocus` 下发到组内各项，补齐键盘操作与屏幕阅读器语义）与 `focus` / `blur` 方法（调用 `focus` 时同样显示焦点环，原仅在键盘聚焦时显示），`options` 支持字符串 / 数字简写与 `VNode` 选项名，`change` 事件在「新值」首参之后追加事件对象（含状态快照与原始事件，原有首参用法不受影响，类型 `RadioChangeEvent` / `CheckboxChangeEvent` 随组件一并导出）；并修复 [单选框 Radio](/guide/components/radio.html) 在定高行内与输入框混排时文字与控件基线错位、内容溢出行盒的问题
+- **破坏性变更**：移除 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html) 的 `options` / `vertical` / `gap` 属性，配置式写法统一由 `RadioGroup` / `CheckboxGroup` 承载——`<Radio :options="list" button>` 请改为 `<RadioGroup :options="list" option-type="button">`；自定义选项名插槽、每项 `id` 前缀、首项 `autofocus` 均由组提供。[复选框 Checkbox](/guide/components/checkbox.html) 的 `value` 不再接受数组；选项类型统一为 `RadioGroupOption` / `CheckboxGroupOption`，旧的 `RadioOption` / `CheckboxOption` 不再导出
+- 将 [单选框 Radio](/guide/components/radio.html) 的 `buttonSize` 属性更名为 `size`；置入 `RadioGroup` 内时尺寸由组的 `size` 下发，组未指定时各项回落自身尺寸。旧属性名不再生效，升级后需同步改名
+- [日历 Calendar](/guide/components/calendar.html) 的模式切换器改用 `RadioGroup`，`modeRadioProps` 类型同步改为 `RadioGroupProps`
+- [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html) 内部改为原生 `input` 承载，视觉结构随之调整；如自定义样式依赖内部节点层级，升级后需同步核对
 - 修复 [输入框 Input](/guide/components/input.html)：未绑定 `v-model` 时输入内容（含输入法合成文本）会因悬浮 / 聚焦等状态变化丢失，与文字混排时会把所在行文字基线压低 `1px`
-- 更新使用者文档与贡献者文档
+- 更新使用者文档与贡献者文档：配置式示例统一迁移到 `RadioGroup` / `CheckboxGroup`，文档站补充页面级描述（标题 / 描述 / 链接随页面生成），并规范文档内的容器围栏与表格写法
 
 ## <VersionDateTag date="2026-10-18">2.15.1</VersionDateTag>
 

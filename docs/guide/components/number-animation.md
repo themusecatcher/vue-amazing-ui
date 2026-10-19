@@ -9,7 +9,7 @@ import { ref, computed } from 'vue'
 import { TransitionPresets } from '@vueuse/core'
 import type { CubicBezierPoints } from '@vueuse/core'
 import { NumberAnimation } from 'vue-amazing-ui'
-import type { NumberAnimationEasingPreset, RadioOption, SelectOption } from 'vue-amazing-ui'
+import type { NumberAnimationEasingPreset, RadioGroupOption, SelectOption } from 'vue-amazing-ui'
 // 各示例独立的组件实例，用于单独触发播放
 type NumberAnimationInstance = InstanceType<typeof NumberAnimation> | null
 const basicRef = ref<NumberAnimationInstance>(null)
@@ -31,7 +31,7 @@ const bezierEasing: CubicBezierPoints = [0.4, 0, 0.2, 1]
 const customEasing = (t: number) => t * t
 // easing 的三种取值形式
 const easingCategory = ref<'preset' | 'bezier' | 'function'>('preset')
-const easingCategoryOptions: RadioOption[] = [
+const easingCategoryOptions: RadioGroupOption[] = [
   { label: '预置曲线', value: 'preset' },
   { label: '贝塞尔控制点', value: 'bezier' },
   { label: '缓动函数', value: 'function' }
@@ -415,7 +415,7 @@ const value = ref(100000000)
 
 <Space vertical>
   <Space align="center">
-    <Radio v-model:value="easingCategory" :options="easingCategoryOptions" button button-style="solid" />
+    <RadioGroup v-model:value="easingCategory" :options="easingCategoryOptions" option-type="button" button-style="solid" />
     <Select v-if="easingCategory === 'preset'" v-model:value="easingType" :options="easingOptions" width="200" show-search />
     <Button type="primary" @click="easingRef?.play()">播放</Button>
   </Space>
@@ -439,13 +439,13 @@ import { ref, computed } from 'vue'
 import { TransitionPresets } from '@vueuse/core'
 import type { CubicBezierPoints } from '@vueuse/core'
 import { NumberAnimation } from 'vue-amazing-ui'
-import type { NumberAnimationEasingPreset, RadioOption, SelectOption } from 'vue-amazing-ui'
+import type { NumberAnimationEasingPreset, RadioGroupOption, SelectOption } from 'vue-amazing-ui'
 const easingRef = ref<InstanceType<typeof NumberAnimation> | null>(null)
 const bezierEasing: CubicBezierPoints = [0.4, 0, 0.2, 1]
 const customEasing = (t: number) => t * t
 // easing 的三种取值形式
 const easingCategory = ref<'preset' | 'bezier' | 'function'>('preset')
-const easingCategoryOptions: RadioOption[] = [
+const easingCategoryOptions: RadioGroupOption[] = [
   { label: '预置曲线', value: 'preset' },
   { label: '贝塞尔控制点', value: 'bezier' },
   { label: '缓动函数', value: 'function' }
@@ -476,7 +476,7 @@ const easingKey = computed(() => `${easingCategory.value}-${easingType.value}`)
 <template>
   <Space vertical>
     <Space align="center">
-      <Radio v-model:value="easingCategory" :options="easingCategoryOptions" button button-style="solid" />
+      <RadioGroup v-model:value="easingCategory" :options="easingCategoryOptions" option-type="button" button-style="solid" />
       <Select v-if="easingCategory === 'preset'" v-model:value="easingType" :options="easingOptions" width="200" show-search />
       <Button type="primary" @click="easingRef?.play()">播放</Button>
     </Space>

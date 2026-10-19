@@ -5,11 +5,11 @@ import Radio from 'components/radio/Radio.vue'
 import RadioGroup from 'components/radio/radio-group/RadioGroup.vue'
 
 /**
- * 单选组件「原生 input 承载」与「change 事件对象」的契约回归
+ * 单选组件「原生 input 承载」「change 事件对象」与「组级配置下发」的契约回归
  *
  * 每一项都渲染视觉隐藏的 `input[type=radio]`：键盘操作、表单字段名与屏幕阅读器语义均落在它上面，
- * 组级配置（`name` / `size`）由 `RadioGroup` 下发给组内各项；`change` 在原有的「新值」首参之后追加事件对象，
- * 使按原生事件写法编写的代码可直接迁移。这些均为不可见契约，故用测试固化。
+ * 组级配置（`name` / `id` / `size` 等）由 `RadioGroup` 下发给组内各项；`change` 在原有的「新值」首参之后
+ * 追加事件对象，使按原生事件写法编写的代码可直接迁移。这些均为不可见契约，故用测试固化。
  */
 
 const OPTIONS = ['Apple', 'Pear', 'Orange']
@@ -39,27 +39,6 @@ describe('Radio 原生 input 承载', () => {
     wrapper = mount(Radio, { props: { disabled: true } })
     expect(wrapper.find('input[type="radio"]').attributes('disabled')).toBeDefined()
   })
-
-  it('options 模式每项各有独立 input，id 以传入值为前缀追加下标', () => {
-    wrapper = mount(Radio, { props: { options: radioOptions, value: 'Apple', id: 'fruit' } })
-    const inputs = wrapper.findAll('input[type="radio"]')
-    expect(inputs).toHaveLength(OPTIONS.length)
-    expect(inputs.map((input) => input.attributes('id'))).toEqual(['fruit-0', 'fruit-1', 'fruit-2'])
-    expect((inputs[0].element as HTMLInputElement).checked).toBe(true)
-  })
-
-  it('未提供 id 时不产出 id，避免同页多个实例互相串值', () => {
-    wrapper = mount(Radio, { props: { options: radioOptions } })
-    expect(wrapper.findAll('input[type="radio"]').every((input) => input.attributes('id') === undefined)).toBe(true)
-  })
-
-  it('options 模式 autofocus 只落在第一项，避免多个 autofocus 元素竞争', () => {
-    wrapper = mount(Radio, { props: { options: radioOptions, autofocus: true } })
-    const autofocused = wrapper
-      .findAll('input[type="radio"]')
-      .map((input) => input.attributes('autofocus') !== undefined)
-    expect(autofocused).toEqual([true, false, false])
-  })
 })
 
 describe('Radio change 事件对象', () => {
@@ -75,23 +54,13 @@ describe('Radio change 事件对象', () => {
     expect(typeof event.preventDefault).toBe('function')
   })
 
-  it('options 模式点击未选中项时，事件对象带出新值与字段名', async () => {
-    wrapper = mount(Radio, { props: { options: radioOptions, value: 'Apple', name: 'fruit' } })
-    await wrapper.findAll('label')[1].trigger('click')
-    const [value, event] = (wrapper.emitted('change')?.[0] ?? []) as [string, Record<string, never>]
-    expect(value).toBe('Pear')
-    expect(event.target.value).toBe('Pear')
-    expect(event.target.name).toBe('fruit')
-  })
-
   it('键盘触发的原生 input change 与鼠标点击共用同一选中路径', async () => {
-    wrapper = mount(Radio, { props: { options: radioOptions, value: 'Apple' } })
-    const secondInput = wrapper.findAll('input[type="radio"]')[1]
-    await secondInput.trigger('change')
-    const [value] = (wrapper.emitted('change')?.[0] ?? []) as [string, unknown]
-    expect(value).toBe('Pear')
+    wrapper = mount(Radio, { props: { checked: false } })
+    const input = wrapper.find('input[type="radio"]')
+    await input.trigger('change')
+    expect(wrapper.emitted('change')?.[0]?.[0]).toBe(true)
     // 受控回写：组件状态与原生选中态保持一致
-    expect((secondInput.element as HTMLInputElement).checked).toBe(true)
+    expect((input.element as HTMLInputElement).checked).toBe(true)
   })
 })
 
@@ -100,6 +69,45 @@ describe('RadioGroup 下发组级配置', () => {
     wrapper = mount(RadioGroup, { props: { options: OPTIONS, value: 'Apple', name: 'fruit' } })
     const names = wrapper.findAll('input[type="radio"]').map((input) => input.attributes('name'))
     expect(names).toEqual(OPTIONS.map(() => 'fruit'))
+  })
+
+  it('id 前缀下发到组内每个原生 input', () => {
+    wrapper = mount(RadioGroup, { props: { options: OPTIONS, id: 'fruit' } })
+    const ids = wrapper.findAll('input[type="radio"]').map((input) => input.attributes('id'))
+    expect(ids).toEqual(OPTIONS.map((_, index) => `fruit-${index}`))
+  })
+
+  it('autofocus 只落在 options 模式首项，避免多个元素竞争', () => {
+    wrapper = mount(RadioGroup, { props: { options: OPTIONS, autofocus: true } })
+    const autofocused = wrapper
+      .findAll('input[type="radio"]')
+      .map((input) => input.attributes('autofocus') !== undefined)
+    expect(autofocused).toEqual([true, false, false])
+  })
+
+  it('options 模式默认插槽提供 option / label / index，可自定义选项名', () => {
+    wrapper = mount(RadioGroup, {
+      props: { options: OPTIONS },
+      slots: {
+        default: ({ label, index }: { label?: string | number; index?: number }) =>
+          h('span', { class: 'custom-option-label' }, `${index}-${label}`)
+      }
+    })
+    const labels = wrapper.findAll('.custom-option-label').map((node) => node.text())
+    expect(labels).toEqual(['0-Apple', '1-Pear', '2-Orange'])
+  })
+
+  it('选项名可传 VNode 并原样渲染', () => {
+    wrapper = mount(RadioGroup, {
+      props: { options: [{ label: h('span', { class: 'vnode-label' }, 'Pear'), value: 'Pear' }] }
+    })
+    expect(wrapper.find('.vnode-label').text()).toBe('Pear')
+  })
+
+  it('选项缺省 label 时回落到选项值，不渲染 undefined', () => {
+    const optionsWithoutLabel = [{ value: 'Pear' }] as unknown as { label: string; value: string }[]
+    wrapper = mount(RadioGroup, { props: { options: optionsWithoutLabel } })
+    expect(wrapper.find('.radio-label').text()).toBe('Pear')
   })
 
   it('按钮形态下 size 下发到组内各项', () => {
@@ -128,19 +136,17 @@ describe('RadioGroup 下发组级配置', () => {
     expect(wrapper.emitted('change')).toHaveLength(1)
     expect((wrapper.emitted('change')?.[0] as string[])[0]).toBe('Pear')
   })
+
+  it('垂直排列时数组间距取垂直间距，不产出非法 CSS', () => {
+    wrapper = mount(RadioGroup, { props: { options: OPTIONS, vertical: true, gap: [8, 16] } })
+    expect(wrapper.find('.radio-group-wrap').attributes('style')).toContain('--radio-group-gap: 16px')
+  })
 })
 
-describe('Radio 选项名与实例方法', () => {
-  it('选项名可传 VNode 并原样渲染', () => {
-    wrapper = mount(Radio, {
-      props: { options: [{ label: h('span', { class: 'vnode-label' }, 'Pear'), value: 'Pear' }] }
-    })
-    expect(wrapper.find('.vnode-label').text()).toBe('Pear')
-  })
-
+describe('Radio 实例方法', () => {
   it('暴露 focus / blur 并作用在原生 input 上', async () => {
     // 需挂载进真实文档：脱离文档的节点调用 focus() 不会成为 activeElement
-    wrapper = mount(Radio, { props: { options: radioOptions, value: 'Apple' }, attachTo: document.body })
+    wrapper = mount(Radio, { attachTo: document.body })
     const instance = wrapper.vm as unknown as { focus: () => void; blur: () => void }
     expect(typeof instance.focus).toBe('function')
     expect(typeof instance.blur).toBe('function')

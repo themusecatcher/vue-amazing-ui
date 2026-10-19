@@ -7,7 +7,7 @@ import {
   StarOutlined,
   StarFilled
 } from '@ant-design/icons-vue'
-import type { CollapseProps, CollapseItem, RadioOption } from 'vue-amazing-ui'
+import type { CollapseProps, CollapseItem, RadioGroupOption } from 'vue-amazing-ui'
 const collapseItems = ref<CollapseItem[]>([
   {
     key: '1',
@@ -130,7 +130,7 @@ const extraCollapseItems = ref<CollapseItem[]>([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const positionOptions = ref<RadioOption[]>([
+const positionOptions = ref<RadioGroupOption[]>([
   {
     label: 'left',
     value: 'left'
@@ -286,7 +286,7 @@ function handleClick(key: string | number) {
     <Collapse :items="collapseItems" v-model:active-key="hideArrowActiveKey" :show-arrow="false" />
     <h2 class="mt30 mb10">箭头位置</h2>
     <Flex vertical>
-      <Radio :options="positionOptions" v-model:value="arrowPlacement" button button-style="solid" />
+      <RadioGroup :options="positionOptions" v-model:value="arrowPlacement" option-type="button" button-style="solid" />
       <Collapse :items="collapseItems" v-model:active-key="arrowPlaceActiveKey" :arrow-placement="arrowPlacement" />
     </Flex>
     <h2 class="mt30 mb10">面板额外内容</h2>

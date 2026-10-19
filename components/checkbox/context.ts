@@ -7,7 +7,9 @@ export type CheckboxValue = string | number
 export interface CheckboxChangeTarget {
   /** 变化后的选中态 */
   checked: boolean
-  /** 该复选框当前生效的值：options 模式为已选值数组，组内单项为自身标识值 */
+  /**
+   * 该复选框当前生效的值：单项为自身标识值；组级 change 事件中为组内已选值数组
+   */
   value?: CheckboxValue | CheckboxValue[]
   /** 生效的表单字段名，组内由组下发 */
   name?: string

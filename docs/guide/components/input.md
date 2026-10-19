@@ -120,7 +120,7 @@ _与文字混排时按基线对齐，与原生 `input` 同口径_
 控件与文字同处一行时按基线对齐（与原生 `input` 同口径）。若该行还会有其它行内控件动态出现 / 消失，行容器必须改用**盒对齐并固定行高**（如 `display: flex; align-items: center;`，行高取控件高度且不得矮于控件）：行内元素的出现 / 消失会改变所在行盒的基线，仅靠基线对齐的容器会产生约 `1px` 的整行位移（原生控件同样如此，属 `CSS` 固有行为）。
 :::
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <template>
@@ -134,7 +134,7 @@ _与文字混排时按基线对齐，与原生 `input` 同口径_
 </template>
 ```
 
-::::
+:::
 
 ## 前缀和后缀
 
@@ -226,7 +226,7 @@ watchEffect(() => {
 ## 三种大小
 
 <Space gap="small" vertical :width="240">
-  <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
   <Input v-model:value="value" :size="size" placeholder="Basic usage" />
   <Input
     v-model:value="value"
@@ -282,7 +282,7 @@ watchEffect(() => {
 </script>
 <template>
   <Space gap="small" vertical :width="240">
-    <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
     <Input v-model:value="value" :size="size" placeholder="Basic usage" />
     <Input v-model:value="value" :size="size" placeholder="Basic usage">
       <template #prefix>

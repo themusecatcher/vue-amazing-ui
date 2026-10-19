@@ -1,7 +1,6 @@
 import { createApp, defineComponent, h, provide, unref } from 'vue'
-import { SKIP_LINK_CSS_VARS_KEY } from 'components/config-provider/context'
 import type { Ref } from 'vue'
-import ConfigProvider from 'components/config-provider'
+import ConfigProvider, { SKIP_LINK_CSS_VARS_KEY } from 'components/config-provider'
 import type { ConfigProviderProps } from 'components/config-provider'
 import { NotificationProvider, useNotification } from 'components/notification'
 import type { NotificationApi, NotificationProps } from 'components/notification'

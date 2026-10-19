@@ -948,7 +948,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
     <Flex vertical>
       <Space align="center"> bordered: <Switch v-model:value="sizeBordered" /> </Space>
       <Space align="center">
-        size: <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+        size: <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
       </Space>
       <Table :columns="columnsSize" :data-source="dataSourceSize" :bordered="sizeBordered" :size="size" />
     </Flex>
@@ -956,7 +956,7 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
     <Flex vertical>
       <Space align="center"> bordered: <Switch v-model:value="alignBordered" /> </Space>
       <Space align="center">
-        align: <Radio :options="alignOptions" v-model:value="align" button button-style="solid" />
+        align: <RadioGroup :options="alignOptions" v-model:value="align" option-type="button" button-style="solid" />
       </Space>
       <Table :columns="columnsAlign" :data-source="dataSourceAlign" :bordered="alignBordered" />
     </Flex>
@@ -1198,7 +1198,12 @@ function onSortChange(column: TableColumn, currentDataSource: Record<string, any
         <Col :span="6">
           <Space gap="small" vertical>
             type:
-            <Radio :options="selectionTypeOptions" v-model:value="rowSelection.type" button button-style="solid" />
+            <RadioGroup
+              :options="selectionTypeOptions"
+              v-model:value="rowSelection.type"
+              option-type="button"
+              button-style="solid"
+            />
           </Space>
         </Col>
       </Row>

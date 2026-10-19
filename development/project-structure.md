@@ -66,6 +66,10 @@ components/
 >
 > 每个「拥有独立样式的可独立引入组件」必须独占一个产物目录：构建期样式入口按组件产物目录聚合（`build/generate-style-entries.ts`），同目录的多个组件会被合并为一个 `style/index.js`，故禁止为减少目录层级而把多个组件平铺到同一目录（会连带引入无关组件的样式）。
 >
+> **库内引入路径**：目录入口 `index.ts` 是该目录的唯一汇总出口，**跨目录**引用一律走目标目录入口（如 `components/radio`、`components/picker`），禁止 `components/<dir>/<子目录>` / `components/<dir>/<文件>` 与相对文件写法 `../<dir>/<文件>` / `./<子目录>/<文件>`。跨目录需要目录内的辅助模块（如 `picker/date-utils.ts`、`picker/keyboard.ts`）时，须由该目录 `index.ts` 先汇总再引入。**同一目录/同一族内部不受此限**：兄弟文件（`./date-utils`）、族内父目录辅助模块（`../siderHook`）与子目录入口（`./descriptions-item`）可直接引 —— 经 `index.ts` 中转会形成循环依赖。仅两类例外可直接引具体文件：① `utils/type`（组件入口装配函数）与 `utils/resolver`（按需引入专用，包根已单独导出），另放行 `components/index.ts` 的 `./style/global.less` 副作用引入；② 测试用例直引被测实现文件（便于锁定单个 SFC / 纯函数）。上述约束由 `eslint.config.js` 的 `custom/no-deep-component-imports` 强制（别名深引入 + 两个方向的相对文件深引入；同目录兄弟、父目录辅助模块、目录入口不拦）。`utils/style-deps` / `utils/vendor-styles` 是构建期 SSOT，只允许 `vite.config.ts` / `build/` / 测试引用，**组件内禁止引入**（不设 ESLint 例外）；其中 `vendor-styles` 还被 `tsconfig.dts.json` 排除、无 d.ts，纳入 `utils/index.ts` 会让 `utils/index.d.ts` 引用不存在的模块，属硬性约束。
+>
+> 三级路径收敛对产物的影响：**纯转发**入口（`picker/index.ts`）会被 Rollup 穿透，产物 import 直接改指源模块、不生成 `picker/index.js`，按需体积不变；**带本地绑定**的族入口（如 `radio/index.ts` 的 `withInstall` 默认导出）会保留为 `index.js`，产物中 `import { RadioGroup } from '../radio/index.js'` 仍保留具名符号 —— `pnpm verify:deps` 会读取该入口的导出映射，把具名导入还原到实际源模块后再推导依赖边，因此不需要在 `EXEMPTIONS` 中登记（该清单只保留 chunk 图原理上无法表达的合法依赖：异步 `import()`、条件渲染、跨包耦合，以及同目录共享纯 JS 模块被目录兜底误判 —— 如 `LayoutSider` 与 `Layout` 共用 `layout/siderHook.ts`）。
+>
 > 聚合入口 `index.ts` 中**任何具名导出都禁止走纯转发**——即导出项直接来自其他模块、入口自身不为它持有运行时绑定（`export { X } from './x'` 或 `import X from './x'; export { X }`）。这类导出会被 Rollup 转发优化剔除，两种表现面：
 >
 > - **表现面 ①：整个入口全是纯转发**（入口自身无任何本地绑定）→ 连该 `index.js` 都不生成，深层路径 `vue-amazing-ui/es|lib/<dir>` 报 `ERR_MODULE_NOT_FOUND`；

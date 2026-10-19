@@ -298,7 +298,7 @@ const state = reactive({
       <Col :span="8">
         <Flex vertical align="flex-start">
           Col Count:
-          <Radio :options="colCountOptions" v-model:value="state.colCount" button />
+          <RadioGroup :options="colCountOptions" v-model:value="state.colCount" option-type="button" />
         </Flex>
       </Col>
     </Row>

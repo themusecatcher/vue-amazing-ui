@@ -721,7 +721,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 ## 三种尺寸
 
 <Space vertical>
-  <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
   <Cascader :options="options" v-model:value="sizeValue" :size="size" @change="onChange" />
   <Cascader :options="options" v-model:value="sizeValue" :size="size" allow-clear search @change="onChange" />
 </Space>
@@ -813,7 +813,7 @@ function onChange(values: (number | string)[], labels: string[]) {
 </script>
 <template>
   <Space vertical>
-    <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
     <Cascader :options="options" v-model:value="selectedValue" :size="size" @change="onChange" />
     <Cascader :options="options" v-model:value="selectedValue" :size="size" allow-clear search @change="onChange" />
   </Space>

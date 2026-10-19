@@ -406,7 +406,7 @@ onBeforeMount(() => {
 
 ## 信息展播
 
-<Flex vertical gap="middle">
+<Flex vertical>
   <Space>
     <Button type="primary" @click="onPrev">Prev</Button>
     <Button type="primary" @click="onNext">Next</Button>
@@ -463,7 +463,7 @@ function onNext() {
 }
 </script>
 <template>
-  <Flex vertical gap="middle">
+  <Flex vertical>
     <Space>
       <Button type="primary" @click="onPrev">Prev</Button>
       <Button type="primary" @click="onNext">Next</Button>

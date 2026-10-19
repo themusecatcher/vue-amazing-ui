@@ -52,12 +52,12 @@ function pageSizeChange(page: number, pageSize: number) {
     <Pagination v-model:page="page" :total="50" @change="onChange" />
     <h2 class="mt30 mb10">自定义位置</h2>
     <Flex vertical>
-      <Radio :options="placementOptions" v-model:value="placement" button button-style="solid" />
+      <RadioGroup :options="placementOptions" v-model:value="placement" option-type="button" button-style="solid" />
       <Pagination v-model:page="page" :total="total" :placement="placement" @change="onChange" />
     </Flex>
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Flex vertical>
-      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
       <Pagination v-model:page="page" :size="size" :total="total" show-quick-jumper @change="onChange" />
     </Flex>
     <h2 class="mt30 mb10">自定义 pageSize 切换选项</h2>

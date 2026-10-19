@@ -371,7 +371,7 @@ function onFocus() {
 ## 三种大小
 
 <Space vertical>
-  <Radio :options="sizeRadios" v-model:value="size" button button-style="solid" />
+  <RadioGroup :options="sizeRadios" v-model:value="size" option-type="button" button-style="solid" />
   <Space>
     <Select :options="sizeOptions" v-model:value="sizeValue" :size="size" :width="200" @popup-scroll="onPopupScroll" />
     <Select
@@ -419,7 +419,7 @@ function onPopupScroll() {
 </script>
 <template>
   <Space vertical>
-    <Radio :options="sizeRadios" v-model:value="size" button button-style="solid" />
+    <RadioGroup :options="sizeRadios" v-model:value="size" option-type="button" button-style="solid" />
     <Space>
       <Select :options="sizeOptions" v-model:value="selectedValue" :size="size" :width="200" @popup-scroll="onPopupScroll" />
       <Select
@@ -631,10 +631,10 @@ _超出 `maxTagCount` 的标签会折叠为省略提示，`maxTagTextLength` 截
 <br/>
 
 <Flex vertical gap="large" align="start">
-  <Flex vertical gap="middle" align="start">
+  <Flex vertical align="start">
     <Flex gap="small" align="center" wrap="wrap">
       <code>maxTagCount</code>
-      <Radio :options="maxTagCountRadios" v-model:value="maxTagCount" button button-style="solid" />
+      <RadioGroup :options="maxTagCountRadios" v-model:value="maxTagCount" option-type="button" button-style="solid" />
     </Flex>
     <Select
       v-model:value="responsiveValue"
@@ -649,10 +649,10 @@ _超出 `maxTagCount` 的标签会折叠为省略提示，`maxTagTextLength` 截
       </template>
     </Select>
   </Flex>
-  <Flex vertical gap="middle" align="start">
+  <Flex vertical align="start">
     <Flex gap="small" align="center" wrap="wrap">
       <code>maxTagTextLength</code>
-      <Radio :options="maxTagTextLengthRadios" v-model:value="maxTagTextLength" button button-style="solid" />
+      <RadioGroup :options="maxTagTextLengthRadios" v-model:value="maxTagTextLength" option-type="button" button-style="solid" />
     </Flex>
     <Select
       v-model:value="responsiveValue"
@@ -693,10 +693,10 @@ const maxTagTextLengthRadios = [
 </script>
 <template>
   <Flex vertical gap="large" align="start">
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex gap="small" align="center" wrap="wrap">
         <code>maxTagCount</code>
-        <Radio :options="maxTagCountRadios" v-model:value="maxTagCount" button button-style="solid" />
+        <RadioGroup :options="maxTagCountRadios" v-model:value="maxTagCount" option-type="button" button-style="solid" />
       </Flex>
       <Select
         v-model:value="selectedValue"
@@ -711,10 +711,10 @@ const maxTagTextLengthRadios = [
         </template>
       </Select>
     </Flex>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex gap="small" align="center" wrap="wrap">
         <code>maxTagTextLength</code>
-        <Radio :options="maxTagTextLengthRadios" v-model:value="maxTagTextLength" button button-style="solid" />
+        <RadioGroup :options="maxTagTextLengthRadios" v-model:value="maxTagTextLength" option-type="button" button-style="solid" />
       </Flex>
       <Select
         v-model:value="selectedValue"
@@ -1405,7 +1405,7 @@ _使用 `optionLabelProp` 指定回填到选择框的 `option` 字段；`optionL
 
 <br/>
 
-<Flex vertical gap="middle" align="start">
+<Flex vertical align="start">
   <!-- 单选：optionLabelProp 指定回填字段 vs optionLabel 插槽完全自定义回填节点 -->
   <Space>
     <Select :options="countryOptions" v-model:value="countryValue" option-label-prop="label" :width="220">
@@ -1461,7 +1461,7 @@ const selectedValue = ref<SelectProps['value']>('china')
 const multipleValue = ref<SelectProps['value']>(['china'])
 </script>
 <template>
-  <Flex vertical gap="middle" align="start">
+  <Flex vertical align="start">
     <!-- 单选：optionLabelProp 指定回填字段 vs optionLabel 插槽完全自定义回填节点 -->
     <Space>
       <Select :options="options" v-model:value="selectedValue" option-label-prop="label" :width="220">
@@ -1508,8 +1508,8 @@ const multipleValue = ref<SelectProps['value']>(['china'])
 ## 下拉面板弹出位置
 
 <Space vertical>
-  <Radio :options="placementRadios" v-model:value="placement" button button-style="solid" />
-  <Space align="center" :size="24">
+  <RadioGroup :options="placementRadios" v-model:value="placement" option-type="button" button-style="solid" />
+  <Space align="center" :gap="24">
     <Select
       :options="cityOptions"
       v-model:value="placementValue"
@@ -1553,8 +1553,8 @@ const placementValue = ref<SelectProps['value']>(5)
 </script>
 <template>
   <Space vertical>
-    <Radio :options="placementRadios" v-model:value="placement" button button-style="solid" />
-    <Space align="center" :size="24">
+    <RadioGroup :options="placementRadios" v-model:value="placement" option-type="button" button-style="solid" />
+    <Space align="center" :gap="24">
       <Select
         :options="options"
         v-model:value="placementValue"
@@ -1583,7 +1583,7 @@ _`dropdownMatchSelectWidth` 为 `true` 时与触发器等宽，为数字时指�
 
 <br/>
 
-<Space :size="40">
+<Space :gap="40">
   <Select :options="longOptions" v-model:value="matchWidthValue" :width="160" />
   <Select :options="longOptions" v-model:value="matchWidthValue" :width="160" :dropdown-match-select-width="240" />
   <Select
@@ -1611,7 +1611,7 @@ const longOptions = ref<SelectOption[]>(
 const selectedValue = ref<SelectProps['value']>(1)
 </script>
 <template>
-  <Space :size="40">
+  <Space :gap="40">
     <Select :options="longOptions" v-model:value="selectedValue" :width="160" />
     <Select :options="longOptions" v-model:value="selectedValue" :width="160" :dropdown-match-select-width="240" />
     <Select :options="options" v-model:value="selectedValue" :width="160" :dropdown-match-select-width="false" />
@@ -1659,7 +1659,7 @@ _`maxDisplay` 按项数限制面板高度（默认展示 `8` 项），`listHeigh
 
 <br/>
 
-<Space :size="40">
+<Space :gap="40">
   <Select :options="longOptions" v-model:value="listHeightValue" />
   <Select :options="longOptions" v-model:value="listHeightValue" :max-display="4" />
   <Select :options="longOptions" v-model:value="listHeightValue" :list-height="160" />
@@ -1677,7 +1677,7 @@ const options = ref<SelectOption[]>(
 const selectedValue = ref<SelectProps['value']>(1)
 </script>
 <template>
-  <Space :size="40">
+  <Space :gap="40">
     <Select :options="options" v-model:value="selectedValue" />
     <Select :options="options" v-model:value="selectedValue" :max-display="4" />
     <Select :options="options" v-model:value="selectedValue" :list-height="160" />
@@ -1862,7 +1862,7 @@ _`virtual` 默认开启，只渲染可视区选项；关闭开关后渲染全部
 
 <br/>
 
-<Flex vertical gap="middle" align="start">
+<Flex vertical align="start">
   <Flex gap="small" align="center">
     <code>virtual</code>
     <Switch v-model:value="bigDataVirtual" />
@@ -1893,7 +1893,7 @@ const value = ref<SelectProps['value']>(['item-10', 'item-12'])
 const virtual = ref(true)
 </script>
 <template>
-  <Flex vertical gap="middle" align="start">
+  <Flex vertical align="start">
     <Flex gap="small" align="center">
       <Switch v-model:value="virtual" />
       <code>virtual</code>

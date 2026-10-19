@@ -106,7 +106,7 @@ function onDecline(scale: number) {
     </Flex>
     <h2 class="mt30 mb10">自定义边缘形状</h2>
     <Flex vertical>
-      <Radio :options="lineCapOptions" v-model:value="lineCap" button button-style="solid" />
+      <RadioGroup :options="lineCapOptions" v-model:value="lineCap" option-type="button" button-style="solid" />
       <Progress
         :line-size="20"
         :line-color="{

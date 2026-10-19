@@ -3,7 +3,7 @@ import RadioButtonComp from './radio-button'
 import RadioGroupComp from './radio-group'
 import { withInstall } from '../utils/type'
 
-export type { Props as RadioProps, Option as RadioOption } from './Radio.vue'
+export type { Props as RadioProps } from './Radio.vue'
 export type { RadioButtonProps } from './radio-button'
 export type { RadioGroupProps, RadioGroupOption } from './radio-group'
 export type {

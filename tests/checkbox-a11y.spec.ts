@@ -8,10 +8,9 @@ import type { CheckboxChangeEvent } from 'components/checkbox/context'
 /**
  * 多选组件「原生 input 承载」「change 事件对象」与「组内受控」的契约回归
  *
- * 复用单选组件本轮确立的范式：每项渲染视觉隐藏的 `input[type=checkbox]` 承载键盘操作、表单字段名与
- * 屏幕阅读器语义（组级 `name` 由 `CheckboxGroup` 下发）；交互统一由原生 `click` 收口（鼠标经外层
- * `label` 转发后事件目标仍是本 input），故不会出现鼠标与键盘两条路径重复触发。`value` 承载两种语义
- * （options 模式为已选值数组、组内单项为身份标识）无法用类型完全区分，故用测试固化分流结果。
+ * 每项渲染视觉隐藏的 `input[type=checkbox]` 承载键盘操作、表单字段名与屏幕阅读器语义
+ * （组级 `name` / `id` 由 `CheckboxGroup` 下发）；交互统一由原生 `click` 收口（鼠标经外层
+ * `label` 转发后事件目标仍是本 input），故不会出现鼠标与键盘两条路径重复触发。
  */
 
 const OPTIONS = ['Apple', 'Pear', 'Orange']
@@ -47,27 +46,6 @@ describe('Checkbox 原生 input 承载', () => {
     wrapper = mount(Checkbox, { props: { disabled: true } })
     expect(wrapper.find('input[type="checkbox"]').attributes('disabled')).toBeDefined()
   })
-
-  it('options 模式每项各有独立 input，id 以传入值为前缀追加下标', () => {
-    wrapper = mount(Checkbox, { props: { options: checkboxOptions, value: ['Apple'], id: 'fruit' } })
-    const inputs = wrapper.findAll('input[type="checkbox"]')
-    expect(inputs).toHaveLength(OPTIONS.length)
-    expect(inputs.map((input) => input.attributes('id'))).toEqual(['fruit-0', 'fruit-1', 'fruit-2'])
-    expect((inputs[0].element as HTMLInputElement).checked).toBe(true)
-  })
-
-  it('未提供 id 时不产出 id，避免同页多个实例互相串值', () => {
-    wrapper = mount(Checkbox, { props: { options: checkboxOptions } })
-    expect(wrapper.findAll('input[type="checkbox"]').every((input) => input.attributes('id') === undefined)).toBe(true)
-  })
-
-  it('options 模式 autofocus 只落在第一项，避免多个 autofocus 元素竞争', () => {
-    wrapper = mount(Checkbox, { props: { options: checkboxOptions, autofocus: true } })
-    const autofocused = wrapper
-      .findAll('input[type="checkbox"]')
-      .map((input) => input.attributes('autofocus') !== undefined)
-    expect(autofocused).toEqual([true, false, false])
-  })
 })
 
 describe('Checkbox change 事件对象', () => {
@@ -88,23 +66,6 @@ describe('Checkbox change 事件对象', () => {
     const [checked] = (wrapper.emitted('change')?.[0] ?? []) as [boolean, CheckboxChangeEvent]
     expect(checked).toBe(false)
   })
-
-  it('options 模式点击未选中项时，首参为新的已选值数组、事件对象带出被点击项快照', async () => {
-    wrapper = mount(Checkbox, { props: { options: checkboxOptions, value: ['Apple'], name: 'fruit' } })
-    await wrapper.findAll('input[type="checkbox"]')[1].trigger('click')
-    const [value, event] = (wrapper.emitted('change')?.[0] ?? []) as [string[], CheckboxChangeEvent]
-    expect(value).toEqual(['Apple', 'Pear'])
-    expect(event.target.checked).toBe(true)
-    expect(event.target.value).toBe('Pear')
-    expect(event.target.name).toBe('fruit')
-  })
-
-  it('options 模式点击已选中项时，该项从数组中移除', async () => {
-    wrapper = mount(Checkbox, { props: { options: checkboxOptions, value: ['Apple', 'Pear'] } })
-    await wrapper.findAll('input[type="checkbox"]')[0].trigger('click')
-    const [value] = (wrapper.emitted('change')?.[0] ?? []) as [string[], CheckboxChangeEvent]
-    expect(value).toEqual(['Pear'])
-  })
 })
 
 describe('CheckboxGroup 下发组级配置与组内受控', () => {
@@ -112,6 +73,45 @@ describe('CheckboxGroup 下发组级配置与组内受控', () => {
     wrapper = mount(CheckboxGroup, { props: { options: OPTIONS, value: ['Apple'], name: 'fruit' } })
     const names = wrapper.findAll('input[type="checkbox"]').map((input) => input.attributes('name'))
     expect(names).toEqual(OPTIONS.map(() => 'fruit'))
+  })
+
+  it('id 前缀下发到组内每个原生 input', () => {
+    wrapper = mount(CheckboxGroup, { props: { options: OPTIONS, id: 'fruit' } })
+    const ids = wrapper.findAll('input[type="checkbox"]').map((input) => input.attributes('id'))
+    expect(ids).toEqual(OPTIONS.map((_, index) => `fruit-${index}`))
+  })
+
+  it('autofocus 只落在 options 模式首项，避免多个元素竞争', () => {
+    wrapper = mount(CheckboxGroup, { props: { options: OPTIONS, autofocus: true } })
+    const autofocused = wrapper
+      .findAll('input[type="checkbox"]')
+      .map((input) => input.attributes('autofocus') !== undefined)
+    expect(autofocused).toEqual([true, false, false])
+  })
+
+  it('options 模式默认插槽提供 option / label / index，可自定义选项名', () => {
+    wrapper = mount(CheckboxGroup, {
+      props: { options: OPTIONS },
+      slots: {
+        default: ({ label, index }: { label?: string | number; index?: number }) =>
+          h('span', { class: 'custom-option-label' }, `${index}-${label}`)
+      }
+    })
+    const labels = wrapper.findAll('.custom-option-label').map((node) => node.text())
+    expect(labels).toEqual(['0-Apple', '1-Pear', '2-Orange'])
+  })
+
+  it('选项名可传 VNode 并原样渲染', () => {
+    wrapper = mount(CheckboxGroup, {
+      props: { options: [{ label: h('span', { class: 'vnode-label' }, 'Pear'), value: 'Pear' }] }
+    })
+    expect(wrapper.find('.vnode-label').text()).toBe('Pear')
+  })
+
+  it('选项缺省 label 时回落到选项值，不渲染 undefined', () => {
+    const optionsWithoutLabel = [{ value: 'Pear' }] as unknown as { label: string; value: string }[]
+    wrapper = mount(CheckboxGroup, { props: { options: optionsWithoutLabel } })
+    expect(wrapper.find('.checkbox-label').text()).toBe('Pear')
   })
 
   it('组整组禁用时组内各项一并禁用', () => {
@@ -149,24 +149,21 @@ describe('CheckboxGroup 下发组级配置与组内受控', () => {
     await inputs[2].trigger('click')
     expect((wrapper.emitted('change')?.[2]?.[0] as string[]) ?? []).toEqual(['Apple'])
   })
+
+  it('垂直排列时数组间距取垂直间距，不产出非法 CSS', () => {
+    wrapper = mount(CheckboxGroup, { props: { options: OPTIONS, vertical: true, gap: [8, 16] } })
+    expect(wrapper.find('.checkbox-group-wrap').attributes('style')).toContain('--checkbox-group-gap: 16px')
+  })
 })
 
-describe('Checkbox 选项名与实例方法', () => {
-  it('选项名可传 VNode 并原样渲染', () => {
-    wrapper = mount(Checkbox, {
-      props: { options: [{ label: h('span', { class: 'vnode-label' }, 'Pear'), value: 'Pear' }] }
-    })
-    expect(wrapper.find('.vnode-label').text()).toBe('Pear')
-  })
-
+describe('Checkbox 实例方法', () => {
   it('暴露 focus / blur 并作用在原生 input 上', async () => {
     // 需挂载进真实文档：脱离文档的节点调用 focus() 不会成为 activeElement
-    wrapper = mount(Checkbox, { props: { options: checkboxOptions, value: ['Apple'] }, attachTo: document.body })
+    wrapper = mount(Checkbox, { attachTo: document.body })
     const instance = wrapper.vm as unknown as { focus: () => void; blur: () => void }
     expect(typeof instance.focus).toBe('function')
     expect(typeof instance.blur).toBe('function')
-    // options 模式下优先聚焦当前选中项
-    const input = wrapper.findAll('input[type="checkbox"]')[0].element
+    const input = wrapper.find('input[type="checkbox"]').element
     instance.focus()
     await nextTick()
     expect(document.activeElement).toBe(input)

@@ -3,13 +3,13 @@ import { computed, nextTick, onBeforeUnmount, ref, useSlots, watch } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import { TinyColor } from '@ctrl/tinycolor'
 import Popup from 'components/popup'
-import DatePanel from 'components/picker/DatePanel.vue'
-import DatetimePanel from 'components/picker/DatetimePanel.vue'
-import PickerIcon from 'components/picker/PickerIcon.vue'
-import PickerTrigger from 'components/picker/PickerTrigger.vue'
-import PresetPanel from 'components/picker/PresetPanel.vue'
-import RangePanel from 'components/picker/RangePanel.vue'
 import {
+  DatePanel,
+  DatetimePanel,
+  PickerIcon,
+  PickerTrigger,
+  PresetPanel,
+  RangePanel,
   formatTimestamp,
   getDefaultFormat,
   getDefaultTime,
@@ -17,30 +17,28 @@ import {
   getPanelModeOf,
   isOutOfRangeBoundary,
   isRangeType,
-  parseTimestamp
-} from 'components/picker/date-utils'
-import type { StartDayOfWeek } from 'components/picker/date-utils'
-import { PANEL_NAV_KEYS } from 'components/picker/keyboard'
-import type {
-  PickerActiveSection,
-  PickerDateRender,
-  PickerDateRenderParams,
-  PickerDefaultTime,
-  PickerDisabledTime,
-  PickerFormattedValue,
-  PickerPanelMode,
-  PickerPreset,
-  PickerPresetValue,
-  PickerRangeDisabledTime,
-  PickerRangeFormattedValue,
-  PickerRangeSide,
-  PickerRangeValue,
-  PickerSelectSource,
-  PickerSize,
-  PickerStatus,
-  PickerTimePanelProps,
-  PickerType,
-  PickerValue
+  PANEL_NAV_KEYS,
+  parseTimestamp,
+  type PickerActiveSection,
+  type PickerDateRender,
+  type PickerDateRenderParams,
+  type PickerDefaultTime,
+  type PickerDisabledTime,
+  type PickerFormattedValue,
+  type PickerPanelMode,
+  type PickerPreset,
+  type PickerPresetValue,
+  type PickerRangeDisabledTime,
+  type PickerRangeFormattedValue,
+  type PickerRangeSide,
+  type PickerRangeValue,
+  type PickerSelectSource,
+  type PickerSize,
+  type PickerStatus,
+  type PickerTimePanelProps,
+  type PickerType,
+  type PickerValue,
+  type StartDayOfWeek
 } from 'components/picker'
 import type { FloatingPlacement } from 'components/utils'
 import { FLOATING_LAYER_Z_INDEX, useInject, useSlotsExist } from 'components/utils'
