@@ -97,9 +97,9 @@ const customGapSize = ref(16)
     <h2 class="mt30 mb10">对齐方式</h2>
     <Flex align="start" vertical>
       <p>Select justify :</p>
-      <RadioGroup v-model:value="justify" option-type="button" :options="justifyOptions" />
+      <RadioGroup v-model:value="justify" button :options="justifyOptions" />
       <p>Select align :</p>
-      <RadioGroup v-model:value="alignItems" option-type="button" :options="alignOptions" />
+      <RadioGroup v-model:value="alignItems" button :options="alignOptions" />
       <Flex :style="{ ...boxStyle }" :justify="justify" :align="alignItems">
         <Button type="primary">Primary</Button>
         <Button type="primary">Primary</Button>

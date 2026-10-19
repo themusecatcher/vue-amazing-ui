@@ -665,7 +665,7 @@ function onKeydown(event: KeyboardEvent): void {
           :size="display === 'card' ? 'small' : 'middle'"
           :options="modeOptions"
           v-model:value="calendarMode"
-          option-type="button"
+          button
           @change="onPanelChange"
           v-bind="modeRadioProps"
         />

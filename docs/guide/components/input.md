@@ -226,7 +226,7 @@ watchEffect(() => {
 ## 三种大小
 
 <Space gap="small" vertical :width="240">
-  <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
+  <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
   <Input v-model:value="value" :size="size" placeholder="Basic usage" />
   <Input
     v-model:value="value"
@@ -282,7 +282,7 @@ watchEffect(() => {
 </script>
 <template>
   <Space gap="small" vertical :width="240">
-    <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
+    <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
     <Input v-model:value="value" :size="size" placeholder="Basic usage" />
     <Input v-model:value="value" :size="size" placeholder="Basic usage">
       <template #prefix>

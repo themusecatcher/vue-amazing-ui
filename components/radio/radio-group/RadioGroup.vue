@@ -3,7 +3,7 @@ import { computed, provide, ref, watchEffect } from 'vue'
 import type { VNode } from 'vue'
 import Radio from '../Radio.vue'
 import { radioGroupContextKey } from '../context'
-import type { RadioGroupOptionType, RadioButtonStyle, RadioSize, RadioValue } from '../context'
+import type { RadioButtonStyle, RadioSize, RadioValue } from '../context'
 import { renderOptionLabel } from '../render'
 
 export interface Option {
@@ -19,10 +19,10 @@ interface NormalizedOption extends Option {
 export interface Props {
   value?: RadioValue // (v-model) 组内当前选中的值
   options?: (string | number | Option)[] // 单选框选项数据；提供后组内默认插槽不生效
-  optionType?: RadioGroupOptionType // 组内选项的呈现形态：default 为圆点，button 为按钮
-  buttonStyle?: RadioButtonStyle // 按钮形态的风格，仅当 optionType 为 button 时生效
+  button?: boolean // 是否启用按钮样式；组内选项随之以按钮形态呈现
+  buttonStyle?: RadioButtonStyle // 按钮形态的风格，仅按钮形态生效
   size?: RadioSize // 尺寸，仅作用于按钮形态；未指定时组内各项回落自身尺寸
-  vertical?: boolean // 是否垂直排列，仅当 optionType 为 default 时生效
+  vertical?: boolean // 是否垂直排列，仅非按钮形态生效
   gap?: number | number[] // 选项间距，单位 px；垂直排列时即垂直间距；数组用于水平排列折行时：[水平间距, 垂直间距]
   disabled?: boolean // 是否禁用整组，组内单项自身的 disabled 在此基础上叠加
   name?: string // 表单字段名，下发到组内每个原生 input
@@ -38,7 +38,7 @@ export interface RadioGroupSlots {
 const props = withDefaults(defineProps<Props>(), {
   value: undefined,
   options: () => [],
-  optionType: 'default',
+  button: false,
   buttonStyle: 'outline',
   size: undefined,
   vertical: false,
@@ -63,7 +63,7 @@ const normalizedOptions = computed<NormalizedOption[]>(() => {
 })
 // 选项间距：按钮形态下相邻项需贴合成一整条，故不留间距
 const gapValue = computed(() => {
-  if (props.optionType === 'button') {
+  if (props.button) {
     return 0
   }
   const { gap } = props
@@ -75,7 +75,7 @@ const gapValue = computed(() => {
 })
 // 供组内按钮抵消的水平间距：按钮形态的组已无间距，纵向排列亦无水平间距可言
 const buttonOverlap = computed(() => {
-  if (props.vertical || props.optionType === 'button') {
+  if (props.vertical || props.button) {
     return 0
   }
   return Array.isArray(props.gap) ? props.gap[0] : props.gap
@@ -86,7 +86,7 @@ watchEffect(() => {
 provide(radioGroupContextKey, {
   value: groupValue,
   disabled: computed(() => props.disabled),
-  optionType: computed(() => props.optionType),
+  button: computed(() => props.button),
   buttonStyle: computed(() => props.buttonStyle),
   size: computed(() => props.size),
   name: computed(() => props.name),
@@ -103,7 +103,7 @@ provide(radioGroupContextKey, {
 <template>
   <div
     class="radio-group-wrap"
-    :class="{ 'radio-group-vertical': vertical && optionType !== 'button' }"
+    :class="{ 'radio-group-vertical': vertical && !button }"
     :style="`--radio-group-gap: ${gapValue};
       --radio-group-button-overlap: ${buttonOverlap}px;`"
     v-bind="$attrs"

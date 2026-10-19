@@ -3,14 +3,14 @@ import { computed, inject, ref, watchEffect } from 'vue'
 import type { VNode } from 'vue'
 import { useSlotsExist, useInject, useWave } from 'components/utils'
 import { radioGroupContextKey } from './context'
-import type { RadioChangeEvent, RadioValue } from './context'
+import type { RadioButtonStyle, RadioChangeEvent, RadioSize, RadioValue } from './context'
 
 export interface Props {
   checked?: boolean // (v-model) 当前是否选中
   value?: RadioValue // 本项的值；脱离组时随 change 事件回传，置于 RadioGroup 内时作为本项的身份标识，与组内当前值比较得出选中态
-  button?: boolean // 是否启用按钮样式；置于 RadioGroup 内时该形态由组的 optionType 决定
-  buttonStyle?: 'outline' | 'solid' // 按钮样式风格；置于 RadioGroup 内时以组的配置为准
-  size?: 'small' | 'middle' | 'large' // 尺寸，仅当按钮形态时生效；置于 RadioGroup 内时以组的配置为准
+  button?: boolean // 是否启用按钮样式；置于 RadioGroup 内时该形态由组的 button 决定
+  buttonStyle?: RadioButtonStyle // 按钮样式风格；置于 RadioGroup 内时以组的配置为准
+  size?: RadioSize // 尺寸，仅当按钮形态时生效；置于 RadioGroup 内时以组的配置为准，组未指定时回落自身尺寸
   disabled?: boolean // 是否禁用
   autofocus?: boolean // 是否自动聚焦原生 input
   name?: string // 原生 input 的表单字段名；置于 RadioGroup 内时以组的配置为准
@@ -59,7 +59,7 @@ const mergedButton = computed(() => {
   if (props.button) {
     return true
   }
-  return groupContext ? groupContext.optionType.value === 'button' : false
+  return groupContext ? groupContext.button.value : false
 })
 // 按钮风格与尺寸：组内以组的配置为准，保证同组外观统一
 const mergedButtonStyle = computed(() => (groupContext ? groupContext.buttonStyle.value : props.buttonStyle))
@@ -122,6 +122,19 @@ function onSingleClick(event: Event): void {
 function clearExposedFocus(): void {
   exposedSingleFocused.value = false
 }
+// 键盘聚焦：:focus-visible 无 JS 可读状态，在 focus 事件当下用 matches 判定后置位；
+// 鼠标点击与脚本调用 focus() 均不匹配该伪类，与 CSS 路径同口径（圆点形态另有一条 :focus-visible CSS 兜底）
+function onInputFocus(event: Event): void {
+  const { target } = event
+  if (target instanceof HTMLInputElement && target.matches(':focus-visible')) {
+    exposedSingleFocused.value = true
+  }
+}
+// 鼠标按下即撤销焦点环：浏览器对鼠标按下（含已聚焦元素被再次点击）不再给 :focus-visible，
+// 纯 CSS 方案下焦点环随之消失，class 方案需对齐该行为，避免 Tab 聚焦后点鼠标残留焦点环
+function onMouseDown(): void {
+  clearExposedFocus()
+}
 // 聚焦原生 input
 function focus(): void {
   singleInput.value?.focus()
@@ -141,6 +154,7 @@ defineExpose({ focus, blur })
     :class="{ 'radio-disabled': mergedDisabled, 'radio-focused': exposedSingleFocused }"
     :style="`--radio-primary-color: ${colorPalettes[5]}; --radio-primary-shadow-color: ${shadowColor};`"
     @click="onSingleClick($event)"
+    @mousedown="onMouseDown"
     v-bind="$attrs"
   >
     <input
@@ -154,6 +168,7 @@ defineExpose({ focus, blur })
       :disabled="mergedDisabled"
       :autofocus="autofocus"
       @change="onSingleClick($event)"
+      @focus="onInputFocus"
       @blur="clearExposedFocus"
     />
     <span class="radio-handle" :class="{ 'radio-checked': mergedChecked }">
@@ -182,6 +197,7 @@ defineExpose({ focus, blur })
     }"
     :style="`--radio-primary-color: ${colorPalettes[5]}; --radio-primary-shadow-color: ${shadowColor};`"
     @click="onSingleClick($event)"
+    @mousedown="onMouseDown"
     v-bind="$attrs"
   >
     <input
@@ -195,6 +211,7 @@ defineExpose({ focus, blur })
       :disabled="mergedDisabled"
       :autofocus="autofocus"
       @change="onSingleClick($event)"
+      @focus="onInputFocus"
       @blur="clearExposedFocus"
     />
     <span class="radio-label">
@@ -238,7 +255,7 @@ defineExpose({ focus, blur })
     overflow: hidden;
     content: '\a0';
   }
-  /* 键盘聚焦走 :focus-visible；脚本调用 focus() 不匹配该伪类，由容器自身的 .radio-focused 兜底显示焦点环 */
+  /* 键盘聚焦走 :focus-visible（input 的 focus 事件同步置位 .radio-focused，双路径兜底）；脚本调用 focus() 不匹配该伪类，由容器自身的 .radio-focused 兜底显示焦点环 */
   .radio-input:focus-visible + .radio-handle,
   &.radio-focused .radio-handle {
     box-shadow: 0 0 0 2px var(--radio-primary-shadow-color);
@@ -326,14 +343,15 @@ defineExpose({ focus, blur })
   transition:
     all 0.2s,
     box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  /* 键盘或脚本聚焦原生 input 时整块按钮显示焦点环（:focus-within 不区分聚焦来源） */
-  &:focus-within {
+  /* 焦点环经 .radio-focused 显示：键盘聚焦与脚本 focus() 在 input 的 focus / focus() 内置位，鼠标按下撤销——与圆点形态同口径（鼠标点击不显示焦点环；:focus-within 不区分聚焦来源，弃用） */
+  &.radio-focused {
     z-index: 1;
     border-color: var(--radio-primary-color);
     box-shadow: 0 0 0 2px var(--radio-primary-shadow-color);
   }
   &:first-child {
-    border-left: 1px solid #d9d9d9;
+    /* 只恢复左边框宽度：颜色由基类 border 简写提供，聚焦 / 选中态的 border-color 方能作用到左边框（写成 border-left 简写会与之同特异性且更晚，把左边框颜色改写死） */
+    border-left-width: 1px;
     border-start-start-radius: 6px;
     border-end-start-radius: 6px;
   }
@@ -363,7 +381,8 @@ defineExpose({ focus, blur })
   }
 }
 .radio-button-single {
-  border-left: 1px solid #d9d9d9;
+  /* 同 :first-child：仅恢复宽度，颜色交给基类与聚焦 / 选中态 */
+  border-left-width: 1px;
   border-radius: 6px;
 }
 .radio-button-wrap.radio-button-checked:not(.radio-button-disabled) {

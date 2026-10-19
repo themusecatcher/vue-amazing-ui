@@ -174,12 +174,7 @@ function onFinished() {
     <h2 class="mt30 mb10">动画过渡效果</h2>
     <Space vertical>
       <Space align="center">
-        <RadioGroup
-          v-model:value="easingCategory"
-          :options="easingCategoryOptions"
-          option-type="button"
-          button-style="solid"
-        />
+        <RadioGroup v-model:value="easingCategory" :options="easingCategoryOptions" button button-style="solid" />
         <Select
           v-if="easingCategory === 'preset'"
           v-model:value="easingType"

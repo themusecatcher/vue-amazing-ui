@@ -207,7 +207,6 @@ export type {
   RadioGroupProps,
   RadioGroupOption,
   RadioValue,
-  RadioGroupOptionType,
   RadioButtonStyle,
   RadioSize,
   RadioChangeTarget,

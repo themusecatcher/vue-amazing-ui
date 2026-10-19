@@ -286,7 +286,7 @@ function handleClick(key: string | number) {
     <Collapse :items="collapseItems" v-model:active-key="hideArrowActiveKey" :show-arrow="false" />
     <h2 class="mt30 mb10">箭头位置</h2>
     <Flex vertical>
-      <RadioGroup :options="positionOptions" v-model:value="arrowPlacement" option-type="button" button-style="solid" />
+      <RadioGroup :options="positionOptions" v-model:value="arrowPlacement" button button-style="solid" />
       <Collapse :items="collapseItems" v-model:active-key="arrowPlaceActiveKey" :arrow-placement="arrowPlacement" />
     </Flex>
     <h2 class="mt30 mb10">面板额外内容</h2>

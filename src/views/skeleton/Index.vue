@@ -96,15 +96,15 @@ const avatarShapeOptions = ref([
         </Space>
         <Space align="center">
           Size:
-          <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" />
+          <RadioGroup :options="sizeOptions" v-model:value="size" button />
         </Space>
         <Space align="center">
           Button Shape:
-          <RadioGroup :options="buttonShapeOptions" v-model:value="buttonShape" option-type="button" />
+          <RadioGroup :options="buttonShapeOptions" v-model:value="buttonShape" button />
         </Space>
         <Space align="center">
           Avatar Shape:
-          <RadioGroup :options="avatarShapeOptions" v-model:value="avatarShape" option-type="button" />
+          <RadioGroup :options="avatarShapeOptions" v-model:value="avatarShape" button />
         </Space>
       </Flex>
     </Flex>

@@ -1004,7 +1004,7 @@ const options4 = ref<{ value: string }[]>([
 
 ## 三种尺寸
 
-<RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
+<RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
 <br />
 <br />
 <AutoComplete
@@ -1073,7 +1073,7 @@ const optionsD = ref([
 ])
 </script>
 <template>
-  <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
+  <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
   <br />
   <br />
   <AutoComplete

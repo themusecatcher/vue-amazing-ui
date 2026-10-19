@@ -159,7 +159,7 @@ const activeColumnTip = computed(() => {
     </Flex>
     <h2 class="mt30 mb10">自定义尺寸</h2>
     <Flex vertical>
-      <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
+      <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Descriptions bordered title="Custom Size" :size="size">
         <template #extra>
           <Button type="primary">Edit</Button>
@@ -274,7 +274,7 @@ const activeColumnTip = computed(() => {
     </Flex>
     <h2 class="mt30 mb10">标签对齐</h2>
     <Flex vertical>
-      <RadioGroup :options="labelAlignOptions" v-model:value="labelAlign" option-type="button" button-style="solid" />
+      <RadioGroup :options="labelAlignOptions" v-model:value="labelAlign" button button-style="solid" />
       <Descriptions title="User Info" bordered :labelAlign="labelAlign">
         <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
         <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>

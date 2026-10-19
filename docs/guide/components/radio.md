@@ -12,11 +12,11 @@ _在一组备选项中选中单个状态，支持圆点、按钮与配置式写�
 
 <script setup lang="ts">
 import { h, ref, watchEffect } from 'vue'
-import type { Radio, RadioGroupOption, RadioProps } from 'vue-amazing-ui'
+import type { Radio, RadioButton, RadioGroupOption, RadioProps } from 'vue-amazing-ui'
 // 基本使用
 const checked = ref<boolean>(false)
-const onChange = (value: string | number | boolean) => {
-  console.log('change', value)
+const onChange = (checked: boolean) => {
+  console.log('change', checked)
 }
 // 单选组合 / 表单字段名
 const groupItems = [
@@ -124,6 +124,9 @@ const groupGapValue = ref<RadioProps['value']>(1)
 const focusChecked = ref<boolean>(false)
 const focusFocused = ref<boolean>(false)
 const focusRadioRef = ref<InstanceType<typeof Radio> | null>(null)
+const focusButtonChecked = ref<boolean>(false)
+const focusButtonFocused = ref<boolean>(false)
+const focusButtonRef = ref<InstanceType<typeof RadioButton> | null>(null)
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -326,7 +329,7 @@ const value = ref<RadioProps['value']>(1)
 
 ## 按钮样式
 
-_按钮形态有两种写法：组内放 `RadioButton`，或给组设置 `optionType="button"`_
+_按钮形态有两种写法：组内放 `RadioButton`，或给组设置 `button`_
 
 <br/>
 
@@ -362,7 +365,7 @@ _按钮形态有两种写法：组内放 `RadioButton`，或给组设置 `option
   </Flex>
   <Flex vertical gap="small" align="start">
     <span class="demo-label">配置式</span>
-    <RadioGroup v-model:value="outlineOptionsValue" :options="options" option-type="button" />
+    <RadioGroup v-model:value="outlineOptionsValue" :options="options" button />
   </Flex>
 </Flex>
 
@@ -392,7 +395,7 @@ const value = ref<RadioProps['value']>('a')
       {{ button.label }}
     </RadioButton>
   </RadioGroup>
-  <RadioGroup v-model:value="value" :options="options" option-type="button" />
+  <RadioGroup v-model:value="value" :options="options" button />
 </template>
 ```
 
@@ -448,7 +451,7 @@ _在按钮形态基础上设置 `buttonStyle="solid"`，选中项以主题色填
   </Flex>
   <Flex vertical gap="small" align="start">
     <span class="demo-label">配置式</span>
-    <RadioGroup v-model:value="solidOptionsGroupValue" :options="options" option-type="button" button-style="solid" />
+    <RadioGroup v-model:value="solidOptionsGroupValue" :options="options" button button-style="solid" />
   </Flex>
 </Flex>
 
@@ -478,7 +481,7 @@ const value = ref<RadioProps['value']>('a')
       {{ button.label }}
     </RadioButton>
   </RadioGroup>
-  <RadioGroup v-model:value="value" :options="options" option-type="button" button-style="solid" />
+  <RadioGroup v-model:value="value" :options="options" button button-style="solid" />
 </template>
 ```
 
@@ -569,7 +572,7 @@ _单组件按自身 `size` 渲染，可与上方的尺寸选择联动切换_
 <Flex vertical align="start">
   <Flex vertical gap="small" align="start">
     <span class="demo-label">尺寸</span>
-    <RadioGroup :options="sizeOptions" v-model:value="buttonSizeValue" option-type="button" button-style="solid" />
+    <RadioGroup :options="sizeOptions" v-model:value="buttonSizeValue" button button-style="solid" />
   </Flex>
   <Flex vertical gap="small" align="start">
     <span class="demo-label">单组件</span>
@@ -577,7 +580,7 @@ _单组件按自身 `size` 渲染，可与上方的尺寸选择联动切换_
   </Flex>
   <Flex vertical gap="small" align="start">
     <span class="demo-label">配置式</span>
-    <RadioGroup :options="options" v-model:value="sizeOptionsValue" option-type="button" :size="buttonSizeValue" />
+    <RadioGroup :options="options" v-model:value="sizeOptionsValue" button :size="buttonSizeValue" />
   </Flex>
 </Flex>
 
@@ -603,9 +606,9 @@ const checked = ref<boolean>(false)
 const value = ref<RadioProps['value']>(2)
 </script>
 <template>
-  <RadioGroup :options="sizeOptions" v-model:value="buttonSizeValue" option-type="button" button-style="solid" />
+  <RadioGroup :options="sizeOptions" v-model:value="buttonSizeValue" button button-style="solid" />
   <Radio v-model:checked="checked" button :size="buttonSizeValue">Radio Button</Radio>
-  <RadioGroup :options="options" v-model:value="value" option-type="button" :size="buttonSizeValue" />
+  <RadioGroup :options="options" v-model:value="value" button :size="buttonSizeValue" />
 </template>
 ```
 
@@ -628,7 +631,7 @@ _开关演示整组禁用：禁用后不可聚焦、不可切换，`disabled` �
   </Flex>
   <Flex vertical gap="small" align="start">
     <span class="demo-label">配置式</span>
-    <RadioGroup :options="options" v-model:value="disabledOptionsValue" option-type="button" disabled />
+    <RadioGroup :options="options" v-model:value="disabledOptionsValue" button disabled />
   </Flex>
   <Flex vertical gap="small" align="start">
     <span class="demo-label">单选组</span>
@@ -670,7 +673,7 @@ _在选项数据里给单项设置 `disabled: true`，仅该项不可选，其�
   </Flex>
   <Flex vertical gap="small" align="start">
     <span class="demo-label">按钮形态</span>
-    <RadioGroup v-model:value="optionDisabledButtonValue" :options="optionsDisabled" option-type="button" />
+    <RadioGroup v-model:value="optionDisabledButtonValue" :options="optionsDisabled" button />
   </Flex>
 </Flex>
 
@@ -911,43 +914,89 @@ const value = ref<RadioProps['value']>(1)
 
 ## 聚焦方法
 
-_组件暴露 `focus` / `blur` 方法操作原生 `input`，程序化聚焦同样会显示焦点环_
+_组件暴露 `focus` / `blur` 方法操作原生 `input`，程序化聚焦同样会显示焦点环；键盘聚焦与脚本聚焦显示焦点环，鼠标按下不显示_
 
 <br/>
 
-<Flex gap="small" align="center">
-  <Radio
-    ref="focusRadioRef"
-    v-model:checked="focusChecked"
-    @focusin="focusFocused = true"
-    @focusout="focusFocused = false"
-  >
-    Radio
-  </Radio>
-  <Button @click="focusRadioRef?.focus()">focus</Button>
-  <Button @click="focusRadioRef?.blur()">blur</Button>
-  <span>{{ focusFocused ? '已聚焦' : '未聚焦' }}</span>
+<Flex vertical gap="small" align="start">
+  <span class="demo-label">圆点形态</span>
+  <Flex gap="small" align="center">
+    <Radio
+      ref="focusRadioRef"
+      v-model:checked="focusChecked"
+      @focusin="focusFocused = true"
+      @focusout="focusFocused = false"
+    >
+      Radio
+    </Radio>
+    <Button @click="focusRadioRef?.focus()">focus</Button>
+    <Button @click="focusRadioRef?.blur()">blur</Button>
+    <span>{{ focusFocused ? '已聚焦' : '未聚焦' }}</span>
+  </Flex>
 </Flex>
 
-::: details Show Code
+<br/>
+
+<Flex vertical gap="small" align="start">
+  <span class="demo-label">按钮形态</span>
+  <Flex gap="small" align="center">
+    <RadioButton
+      ref="focusButtonRef"
+      v-model:checked="focusButtonChecked"
+      @focusin="focusButtonFocused = true"
+      @focusout="focusButtonFocused = false"
+    >
+      Radio Button
+    </RadioButton>
+    <Button @click="focusButtonRef?.focus()">focus</Button>
+    <Button @click="focusButtonRef?.blur()">blur</Button>
+    <span>{{ focusButtonFocused ? '已聚焦' : '未聚焦' }}</span>
+  </Flex>
+</Flex>
+
+:::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { Radio } from 'vue-amazing-ui'
+import type { Radio, RadioButton } from 'vue-amazing-ui'
 const checked = ref<boolean>(false)
 const focused = ref<boolean>(false)
 const radioRef = ref<InstanceType<typeof Radio> | null>(null)
+const buttonChecked = ref<boolean>(false)
+const buttonFocused = ref<boolean>(false)
+const buttonRef = ref<InstanceType<typeof RadioButton> | null>(null)
 </script>
 <template>
-  <Radio ref="radioRef" v-model:checked="checked" @focusin="focused = true" @focusout="focused = false">Radio</Radio>
-  <Button @click="radioRef?.focus()">focus</Button>
-  <Button @click="radioRef?.blur()">blur</Button>
-  <span>{{ focused ? '已聚焦' : '未聚焦' }}</span>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">圆点形态</span>
+    <Flex gap="small" align="center">
+      <Radio ref="radioRef" v-model:checked="checked" @focusin="focused = true" @focusout="focused = false">Radio</Radio>
+      <Button @click="radioRef?.focus()">focus</Button>
+      <Button @click="radioRef?.blur()">blur</Button>
+      <span>{{ focused ? '已聚焦' : '未聚焦' }}</span>
+    </Flex>
+  </Flex>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">按钮形态</span>
+    <Flex gap="small" align="center">
+      <RadioButton
+        ref="buttonRef"
+        v-model:checked="buttonChecked"
+        @focusin="buttonFocused = true"
+        @focusout="buttonFocused = false"
+      >
+        Radio Button
+      </RadioButton>
+      <Button @click="buttonRef?.focus()">focus</Button>
+      <Button @click="buttonRef?.blur()">blur</Button>
+      <span>{{ buttonFocused ? '已聚焦' : '未聚焦' }}</span>
+    </Flex>
+  </Flex>
 </template>
 ```
 
-:::
+::::
 
 ## APIs
 
@@ -957,9 +1006,9 @@ const radioRef = ref<InstanceType<typeof Radio> | null>(null)
 :-- | :-- | :-- | :--
 checked <Tag color="cyan">v-model</Tag> | 当前是否选中；作为组内单项使用时以组的值为准，本属性不生效 | boolean | false
 value | 本项的值；脱离组时随 `change` 事件回传，置于 `RadioGroup` 内时作为本项的身份标识，与组内当前值比较得出选中态 | string &#124; number &#124; boolean | undefined
-button | 是否启用按钮样式；置于 `RadioGroup` 内时，组的 `optionType` 为 `button` 同样会渲染为按钮（显式设置优先） | boolean | false
+button | 是否启用按钮样式；置于 `RadioGroup` 内时，组的 `button` 同样会渲染为按钮（显式设置优先） | boolean | false
 buttonStyle | 按钮样式风格；置于 `RadioGroup` 内时以组的配置为准 | 'outline' &#124; 'solid' | 'outline'
-size | 尺寸，仅当按钮形态时生效；置于 `RadioGroup` 内时以组的配置为准 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
+size | 尺寸，仅当按钮形态时生效；置于 `RadioGroup` 内时以组的配置为准，组未指定时回落自身尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 disabled | 是否禁用 | boolean | false
 autofocus | 是否自动聚焦原生 `input` | boolean | false
 name | 原生 `input` 的表单字段名；置于 `RadioGroup` 内时以组的配置为准 | string | undefined
@@ -971,11 +1020,11 @@ id | 原生 `input` 的 `id` | string | undefined
 :-- | :-- | :-- | :--
 value <Tag color="cyan">v-model</Tag> | 组内当前选中的值；不传时由组内部维护 | string &#124; number &#124; boolean | undefined
 options | 单选框选项数据；提供后组内默认插槽不生效 | (string &#124; number &#124; [RadioGroupOption](#radiogroupoption-type))[] | []
-optionType | 组内选项的呈现形态 | 'default' &#124; 'button' | 'default'
-buttonStyle | 按钮形态的风格，仅当 `optionType` 为 `button` 时生效 | 'outline' &#124; 'solid' | 'outline'
+button | 是否启用按钮样式 | boolean | false
+buttonStyle | 按钮形态的风格，仅按钮形态生效 | 'outline' &#124; 'solid' | 'outline'
 size | 尺寸，仅作用于按钮形态；未指定时组内各项回落自身尺寸 | 'small' &#124; 'middle' &#124; 'large' | undefined
-vertical | 是否垂直排列，仅当 `optionType` 为 `default` 时生效 | boolean | false
-gap | 选项间距，单位 `px`；垂直排列时即垂直间距（传数组取垂直间距）；数组用于水平排列折行时：`[水平间距, 垂直间距]`；`optionType` 为 `button` 时相邻项贴合成组，该属性不生效 | number &#124; number[] | 8
+vertical | 是否垂直排列，仅非按钮形态生效 | boolean | false
+gap | 选项间距，单位 `px`；垂直排列时即垂直间距（传数组取垂直间距）；数组用于水平排列折行时：`[水平间距, 垂直间距]`；按钮形态下相邻项贴合成组，该属性不生效 | number &#124; number[] | 8
 disabled | 是否禁用整组，组内单项自身的 `disabled` 在此基础上叠加 | boolean | false
 name | 表单字段名，下发到组内每个原生 `input` | string | undefined
 id | `input` 的 `id` 前缀，`options` 模式下实际 `id` 追加选项下标 | string | undefined
@@ -1020,13 +1069,29 @@ default | `options` 模式下为每个选项提供作用域参数；未提供 `o
 :-- | :-- | :--
 default | 按钮文本 | v-slot:default
 
+## Methods
+
+### Radio Methods
+
+名称 | 说明 | 类型
+::-- | :-- | :--
+focus | 聚焦组件的原生 `input` | () => void
+blur | 使组件的原生 `input` 失焦 | () => void
+
+### RadioButton Methods
+
+名称 | 说明 | 类型
+::-- | :-- | :--
+focus | 聚焦组件的原生 `input` | () => void
+blur | 使组件的原生 `input` 失焦 | () => void
+
 ## Events
 
 ### Radio Events
 
 名称 | 说明 | 类型
 :-- | :-- | :--
-change | 选项变化时的回调函数；作为 `RadioGroup` 的组内单项使用时本组件不触发（组内选中变更由组的 `change` 统一出口） | (value: string \| number \| boolean, event: RadioChangeEvent) => void
+change | 选项变化时的回调函数；脱组单独使用时触发（仅未选中 → 选中，首参恒为 `true`），作为 `RadioGroup` 的组内单项使用时本组件不触发（组内选中变更由组的 `change` 统一出口） | (checked: boolean, event: RadioChangeEvent) => void
 
 `event` 为与原生 `input` 的 `change` 同形态的事件对象，含 `target`（`checked` / `value` / `name` / `disabled` 状态快照）、`nativeEvent` 与 `stopPropagation` / `preventDefault`
 
@@ -1043,12 +1108,3 @@ change | 组内选项变化时的回调函数 | (value: string \| number \| bool
 名称 | 说明 | 类型
 :-- | :-- | :--
 change | 选项变化时的回调函数；脱离组单独使用时触发，置于 `RadioGroup` 内时不触发（组内选中变更由 `RadioGroup` 的 `change` 统一出口） | (checked: boolean, event: RadioChangeEvent) => void
-
-## Methods
-
-### Radio Methods
-
-名称 | 说明 | 类型
-:-- | :-- | :--
-focus | 聚焦组件的原生 `input` | () => void
-blur | 使组件的原生 `input` 失焦 | () => void

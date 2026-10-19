@@ -371,7 +371,7 @@ function onFocus() {
 ## 三种大小
 
 <Space vertical>
-  <RadioGroup :options="sizeRadios" v-model:value="size" option-type="button" button-style="solid" />
+  <RadioGroup :options="sizeRadios" v-model:value="size" button button-style="solid" />
   <Space>
     <Select :options="sizeOptions" v-model:value="sizeValue" :size="size" :width="200" @popup-scroll="onPopupScroll" />
     <Select
@@ -419,7 +419,7 @@ function onPopupScroll() {
 </script>
 <template>
   <Space vertical>
-    <RadioGroup :options="sizeRadios" v-model:value="size" option-type="button" button-style="solid" />
+    <RadioGroup :options="sizeRadios" v-model:value="size" button button-style="solid" />
     <Space>
       <Select :options="sizeOptions" v-model:value="selectedValue" :size="size" :width="200" @popup-scroll="onPopupScroll" />
       <Select
@@ -634,7 +634,7 @@ _超出 `maxTagCount` 的标签会折叠为省略提示，`maxTagTextLength` 截
   <Flex vertical align="start">
     <Flex gap="small" align="center" wrap="wrap">
       <code>maxTagCount</code>
-      <RadioGroup :options="maxTagCountRadios" v-model:value="maxTagCount" option-type="button" button-style="solid" />
+      <RadioGroup :options="maxTagCountRadios" v-model:value="maxTagCount" button button-style="solid" />
     </Flex>
     <Select
       v-model:value="responsiveValue"
@@ -652,7 +652,7 @@ _超出 `maxTagCount` 的标签会折叠为省略提示，`maxTagTextLength` 截
   <Flex vertical align="start">
     <Flex gap="small" align="center" wrap="wrap">
       <code>maxTagTextLength</code>
-      <RadioGroup :options="maxTagTextLengthRadios" v-model:value="maxTagTextLength" option-type="button" button-style="solid" />
+      <RadioGroup :options="maxTagTextLengthRadios" v-model:value="maxTagTextLength" button button-style="solid" />
     </Flex>
     <Select
       v-model:value="responsiveValue"
@@ -696,7 +696,7 @@ const maxTagTextLengthRadios = [
     <Flex vertical align="start">
       <Flex gap="small" align="center" wrap="wrap">
         <code>maxTagCount</code>
-        <RadioGroup :options="maxTagCountRadios" v-model:value="maxTagCount" option-type="button" button-style="solid" />
+        <RadioGroup :options="maxTagCountRadios" v-model:value="maxTagCount" button button-style="solid" />
       </Flex>
       <Select
         v-model:value="selectedValue"
@@ -714,7 +714,7 @@ const maxTagTextLengthRadios = [
     <Flex vertical align="start">
       <Flex gap="small" align="center" wrap="wrap">
         <code>maxTagTextLength</code>
-        <RadioGroup :options="maxTagTextLengthRadios" v-model:value="maxTagTextLength" option-type="button" button-style="solid" />
+        <RadioGroup :options="maxTagTextLengthRadios" v-model:value="maxTagTextLength" button button-style="solid" />
       </Flex>
       <Select
         v-model:value="selectedValue"
@@ -1508,7 +1508,7 @@ const multipleValue = ref<SelectProps['value']>(['china'])
 ## 下拉面板弹出位置
 
 <Space vertical>
-  <RadioGroup :options="placementRadios" v-model:value="placement" option-type="button" button-style="solid" />
+  <RadioGroup :options="placementRadios" v-model:value="placement" button button-style="solid" />
   <Space align="center" :gap="24">
     <Select
       :options="cityOptions"
@@ -1553,7 +1553,7 @@ const placementValue = ref<SelectProps['value']>(5)
 </script>
 <template>
   <Space vertical>
-    <RadioGroup :options="placementRadios" v-model:value="placement" option-type="button" button-style="solid" />
+    <RadioGroup :options="placementRadios" v-model:value="placement" button button-style="solid" />
     <Space align="center" :gap="24">
       <Select
         :options="options"

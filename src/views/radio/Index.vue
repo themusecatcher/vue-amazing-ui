@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { h, ref, watchEffect } from 'vue'
-import type { Radio, RadioGroupOption, RadioProps } from 'vue-amazing-ui'
+import type { Radio, RadioButton, RadioGroupOption, RadioProps } from 'vue-amazing-ui'
 // 基本使用
 const checked = ref<boolean>(false)
-const onChange = (value: string | number | boolean) => {
-  console.log('change', value)
+const onChange = (checked: boolean) => {
+  console.log('change', checked)
 }
 // 单选组合 / 表单字段名
 const groupItems = [
@@ -112,6 +112,9 @@ const groupGapValue = ref<RadioProps['value']>(1)
 const focusChecked = ref<boolean>(false)
 const focusFocused = ref<boolean>(false)
 const focusRadioRef = ref<InstanceType<typeof Radio> | null>(null)
+const focusButtonChecked = ref<boolean>(false)
+const focusButtonFocused = ref<boolean>(false)
+const focusButtonRef = ref<InstanceType<typeof RadioButton> | null>(null)
 watchEffect(() => {
   console.log('checked', checked.value)
 })
@@ -166,7 +169,7 @@ watchEffect(() => {
       </RadioGroup>
     </Flex>
     <h2 class="mt30 mb10">按钮样式</h2>
-    <p class="mb10">按钮形态有两种写法：组内放 <code>RadioButton</code>，或给组设置 <code>optionType="button"</code></p>
+    <p class="mb10">按钮形态有两种写法：组内放 <code>RadioButton</code>，或给组设置 <code>button</code></p>
     <Flex vertical align="start">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">默认</span>
@@ -199,7 +202,7 @@ watchEffect(() => {
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">配置式</span>
-        <RadioGroup v-model:value="outlineOptionsValue" :options="options" option-type="button" />
+        <RadioGroup v-model:value="outlineOptionsValue" :options="options" button />
       </Flex>
     </Flex>
     <p class="mb10 mt10">单组件同样可用 <code>button</code> 切换按钮形态</p>
@@ -230,12 +233,7 @@ watchEffect(() => {
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">配置式</span>
-        <RadioGroup
-          v-model:value="solidOptionsGroupValue"
-          :options="options"
-          option-type="button"
-          button-style="solid"
-        />
+        <RadioGroup v-model:value="solidOptionsGroupValue" :options="options" button button-style="solid" />
       </Flex>
     </Flex>
     <p class="mb10 mt10">单组件的填底按钮形态：<code>button</code> 配合 <code>buttonStyle="solid"</code></p>
@@ -272,7 +270,7 @@ watchEffect(() => {
     <Flex vertical align="start">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">尺寸</span>
-        <RadioGroup :options="sizeOptions" v-model:value="buttonSizeValue" option-type="button" button-style="solid" />
+        <RadioGroup :options="sizeOptions" v-model:value="buttonSizeValue" button button-style="solid" />
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">单组件</span>
@@ -280,7 +278,7 @@ watchEffect(() => {
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">配置式</span>
-        <RadioGroup :options="options" v-model:value="sizeOptionsValue" option-type="button" :size="buttonSizeValue" />
+        <RadioGroup :options="options" v-model:value="sizeOptionsValue" button :size="buttonSizeValue" />
       </Flex>
     </Flex>
     <h2 class="mt30 mb10">禁用</h2>
@@ -300,7 +298,7 @@ watchEffect(() => {
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">按钮形态</span>
-        <RadioGroup :options="options" v-model:value="disabledOptionsValue" option-type="button" disabled />
+        <RadioGroup :options="options" v-model:value="disabledOptionsValue" button disabled />
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">单选组</span>
@@ -316,7 +314,7 @@ watchEffect(() => {
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">按钮形态</span>
-        <RadioGroup v-model:value="optionDisabledButtonValue" :options="optionsDisabled" option-type="button" />
+        <RadioGroup v-model:value="optionDisabledButtonValue" :options="optionsDisabled" button />
       </Flex>
     </Flex>
     <h2 class="mt30 mb10">自定义选项名</h2>
@@ -403,20 +401,42 @@ watchEffect(() => {
     </Flex>
     <h2 class="mt30 mb10">聚焦方法</h2>
     <p class="mb10"
-      >组件暴露 <code>focus</code> / <code>blur</code> 方法操作原生 <code>input</code>，程序化聚焦同样会显示焦点环</p
+      >组件暴露 <code>focus</code> / <code>blur</code> 方法操作原生
+      <code>input</code>，程序化聚焦同样会显示焦点环；键盘聚焦与脚本聚焦显示焦点环，鼠标按下不显示</p
     >
-    <Flex gap="small" align="center">
-      <Radio
-        ref="focusRadioRef"
-        v-model:checked="focusChecked"
-        @focusin="focusFocused = true"
-        @focusout="focusFocused = false"
-      >
-        Radio
-      </Radio>
-      <Button @click="focusRadioRef?.focus()">focus</Button>
-      <Button @click="focusRadioRef?.blur()">blur</Button>
-      <span class="demo-tip">{{ focusFocused ? '已聚焦' : '未聚焦' }}</span>
+    <Flex vertical align="start">
+      <Flex vertical gap="small" align="start">
+        <span class="demo-label">圆点形态</span>
+        <Flex gap="small" align="center">
+          <Radio
+            ref="focusRadioRef"
+            v-model:checked="focusChecked"
+            @focusin="focusFocused = true"
+            @focusout="focusFocused = false"
+          >
+            Radio
+          </Radio>
+          <Button @click="focusRadioRef?.focus()">focus</Button>
+          <Button @click="focusRadioRef?.blur()">blur</Button>
+          <span class="demo-tip">{{ focusFocused ? '已聚焦' : '未聚焦' }}</span>
+        </Flex>
+      </Flex>
+      <Flex vertical gap="small" align="start">
+        <span class="demo-label">按钮形态</span>
+        <Flex gap="small" align="center">
+          <RadioButton
+            ref="focusButtonRef"
+            v-model:checked="focusButtonChecked"
+            @focusin="focusButtonFocused = true"
+            @focusout="focusButtonFocused = false"
+          >
+            Radio Button
+          </RadioButton>
+          <Button @click="focusButtonRef?.focus()">focus</Button>
+          <Button @click="focusButtonRef?.blur()">blur</Button>
+          <span class="demo-tip">{{ focusButtonFocused ? '已聚焦' : '未聚焦' }}</span>
+        </Flex>
+      </Flex>
     </Flex>
   </div>
 </template>

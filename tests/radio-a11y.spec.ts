@@ -112,13 +112,13 @@ describe('RadioGroup 下发组级配置', () => {
   })
 
   it('按钮形态下 size 下发到组内各项', () => {
-    wrapper = mount(RadioGroup, { props: { options: OPTIONS, value: 'Apple', optionType: 'button', size: 'small' } })
+    wrapper = mount(RadioGroup, { props: { options: OPTIONS, value: 'Apple', button: true, size: 'small' } })
     expect(wrapper.findAll('.radio-button-small')).toHaveLength(OPTIONS.length)
   })
 
   it('组未指定 size 时，组内各项回落自身尺寸', async () => {
     wrapper = mount(RadioGroup, {
-      props: { optionType: 'button' },
+      props: { button: true },
       slots: { default: () => h(Radio, { value: 'a', size: 'large' }, () => 'A') }
     })
     await nextTick()

@@ -487,7 +487,7 @@ const disabled = ref(true)
 ## 按钮尺寸
 
 <Space vertical>
-  <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
+  <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
   <Space>
     <Button :size="size">Default Button</Button>
     <Button :size="size" type="reverse">Reverse Button</Button>
@@ -589,7 +589,7 @@ const size = ref('middle')
 </script>
 <template>
   <Space vertical>
-    <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
+    <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
     <Space>
       <Button :size="size">Default Button</Button>
       <Button :size="size" type="reverse">Reverse Button</Button>

@@ -264,7 +264,7 @@ _`mode` 指定面板模式（月 / 年）：外部变更会同步到面板，面
 
 <Flex vertical>
   <Space align="center">
-    display:<RadioGroup :options="displayOptions" v-model:value="modeDisplay" option-type="button" button-style="solid" />
+    display:<RadioGroup :options="displayOptions" v-model:value="modeDisplay" button button-style="solid" />
   </Space>
   <Calendar v-model:value="modeDate" mode="year" :display="modeDisplay" />
 </Flex>
@@ -290,7 +290,7 @@ const modeDisplay = ref('card')
 <template>
   <Flex vertical>
     <Space align="center">
-      display:<RadioGroup :options="displayOptions" v-model:value="modeDisplay" option-type="button" button-style="solid" />
+      display:<RadioGroup :options="displayOptions" v-model:value="modeDisplay" button button-style="solid" />
     </Space>
     <Calendar v-model:value="modeDate" mode="year" :display="modeDisplay" />
   </Flex>
@@ -356,7 +356,7 @@ _`#headerFull` 插槽接管整行头部：使用后默认的年 / 月选择器�
         <RadioGroup
           :options="headerFullModeOptions"
           :value="mode"
-          option-type="button"
+          button
           size="small"
           button-style="solid"
           @change="(value) => onHeaderFullTypeChange(value, onTypeChange)"
@@ -437,7 +437,7 @@ function onPanelChange(
           <RadioGroup
             :options="headerFullModeOptions"
             :value="mode"
-            option-type="button"
+            button
             size="small"
             button-style="solid"
             @change="(value) => onHeaderFullTypeChange(value, onTypeChange)"
@@ -489,7 +489,7 @@ _取值 `0-6`，`0` 为周一_
 
 <Flex vertical>
   <Space align="center">
-    startDayOfWeek:<RadioGroup :options="weekOptions" v-model:value="startDayOfWeek" option-type="button" button-style="solid" />
+    startDayOfWeek:<RadioGroup :options="weekOptions" v-model:value="startDayOfWeek" button button-style="solid" />
   </Space>
   <Calendar v-model:value="startDayOfWeekDate" :start-day-of-week="startDayOfWeek" @panelChange="onPanelChange" />
 </Flex>
@@ -543,7 +543,7 @@ function onPanelChange(
 <template>
   <Flex vertical>
     <Space align="center">
-      startDayOfWeek:<RadioGroup :options="weekOptions" v-model:value="startDayOfWeek" option-type="button" button-style="solid" />
+      startDayOfWeek:<RadioGroup :options="weekOptions" v-model:value="startDayOfWeek" button button-style="solid" />
     </Space>
     <Calendar v-model:value="startDayOfWeekDate" :start-day-of-week="startDayOfWeek" @panelChange="onPanelChange" />
   </Flex>
@@ -1049,7 +1049,7 @@ _`disabledDate` 入参为时间戳，返回 `true` 表示该日期不可选；�
 
 <Flex vertical>
   <Space align="center">
-    display:<RadioGroup :options="displayOptions" v-model:value="disabledDisplay" option-type="button" button-style="solid" />
+    display:<RadioGroup :options="displayOptions" v-model:value="disabledDisplay" button button-style="solid" />
   </Space>
   <Space align="start" class="mt10">
     <Flex vertical>
@@ -1108,7 +1108,7 @@ function onPanelChange(
 <template>
   <Flex vertical>
     <Space align="center">
-      display:<RadioGroup :options="displayOptions" v-model:value="disabledDisplay" option-type="button" button-style="solid" />
+      display:<RadioGroup :options="displayOptions" v-model:value="disabledDisplay" button button-style="solid" />
     </Space>
     <Space>
       <Flex vertical>

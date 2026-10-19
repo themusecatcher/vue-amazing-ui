@@ -479,7 +479,7 @@ const panelZIndexValue = ref('')
     </Flex>
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Space vertical>
-      <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
+      <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Space :gap="40">
         <Space vertical>
           <AutoComplete v-model:value="valueS" :options="optionsD" :width="200" placeholder="input here" :size="size" />

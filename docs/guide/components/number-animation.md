@@ -415,7 +415,7 @@ const value = ref(100000000)
 
 <Space vertical>
   <Space align="center">
-    <RadioGroup v-model:value="easingCategory" :options="easingCategoryOptions" option-type="button" button-style="solid" />
+    <RadioGroup v-model:value="easingCategory" :options="easingCategoryOptions" button button-style="solid" />
     <Select v-if="easingCategory === 'preset'" v-model:value="easingType" :options="easingOptions" width="200" show-search />
     <Button type="primary" @click="easingRef?.play()">播放</Button>
   </Space>
@@ -476,7 +476,7 @@ const easingKey = computed(() => `${easingCategory.value}-${easingType.value}`)
 <template>
   <Space vertical>
     <Space align="center">
-      <RadioGroup v-model:value="easingCategory" :options="easingCategoryOptions" option-type="button" button-style="solid" />
+      <RadioGroup v-model:value="easingCategory" :options="easingCategoryOptions" button button-style="solid" />
       <Select v-if="easingCategory === 'preset'" v-model:value="easingType" :options="easingOptions" width="200" show-search />
       <Button type="primary" @click="easingRef?.play()">播放</Button>
     </Space>

@@ -227,7 +227,7 @@ function onClick(e: Event) {
     </Space>
     <h2 class="mt30 mb10">按钮尺寸</h2>
     <Space vertical>
-      <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
+      <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Space>
         <Button :size="size">Default Button</Button>
         <Button :size="size" type="reverse">Reverse Button</Button>

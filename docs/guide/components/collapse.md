@@ -803,7 +803,7 @@ watchEffect(() => {
 ## 箭头位置
 
 <Flex vertical>
-  <RadioGroup :options="positionOptions" v-model:value="arrowPlacement" option-type="button" button-style="solid" />
+  <RadioGroup :options="positionOptions" v-model:value="arrowPlacement" button button-style="solid" />
   <Collapse :items="collapseItems" v-model:active-key="arrowPlaceActiveKey" :arrow-placement="arrowPlacement" />
 </Flex>
 
@@ -851,7 +851,7 @@ watchEffect(() => {
 </script>
 <template>
   <Flex vertical>
-    <RadioGroup :options="positionOptions" v-model:value="arrowPlacement" option-type="button" button-style="solid" />
+    <RadioGroup :options="positionOptions" v-model:value="arrowPlacement" button button-style="solid" />
     <Collapse :items="collapseItems" v-model:active-key="arrowPlaceActiveKey" :arrow-placement="arrowPlacement" />
   </Flex>
 </template>

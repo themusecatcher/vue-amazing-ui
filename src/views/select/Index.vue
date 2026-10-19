@@ -342,7 +342,7 @@ const emptyOptions: SelectOption[] = []
     </Space>
     <h2 class="mt30 mb10">三种大小</h2>
     <Flex vertical align="start">
-      <RadioGroup :options="sizeRadios" v-model:value="size" option-type="button" button-style="solid" />
+      <RadioGroup :options="sizeRadios" v-model:value="size" button button-style="solid" />
       <!-- 单选 / 多选 / 标签三条同行展示 -->
       <Space>
         <Select
@@ -410,12 +410,7 @@ const emptyOptions: SelectOption[] = []
       <Flex vertical align="start">
         <Flex gap="small" align="center" wrap="wrap">
           <code>maxTagCount</code>
-          <RadioGroup
-            :options="maxTagCountRadios"
-            v-model:value="maxTagCount"
-            option-type="button"
-            button-style="solid"
-          />
+          <RadioGroup :options="maxTagCountRadios" v-model:value="maxTagCount" button button-style="solid" />
         </Flex>
         <Select
           v-model:value="responsiveValue"
@@ -434,12 +429,7 @@ const emptyOptions: SelectOption[] = []
       <Flex vertical align="start">
         <Flex gap="small" align="center" wrap="wrap">
           <code>maxTagTextLength</code>
-          <RadioGroup
-            :options="maxTagTextLengthRadios"
-            v-model:value="maxTagTextLength"
-            option-type="button"
-            button-style="solid"
-          />
+          <RadioGroup :options="maxTagTextLengthRadios" v-model:value="maxTagTextLength" button button-style="solid" />
         </Flex>
         <Select
           v-model:value="responsiveValue"
@@ -654,7 +644,7 @@ const emptyOptions: SelectOption[] = []
     </Flex>
     <h2 class="mt30 mb10">下拉面板弹出位置</h2>
     <Space vertical>
-      <RadioGroup :options="placementRadios" v-model:value="placement" option-type="button" button-style="solid" />
+      <RadioGroup :options="placementRadios" v-model:value="placement" button button-style="solid" />
       <Space :gap="24">
         <Select
           :options="cityOptions"

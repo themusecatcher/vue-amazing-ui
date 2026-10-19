@@ -2,8 +2,6 @@ import type { ComputedRef, InjectionKey, Ref } from 'vue'
 
 /** 单选框的值类型 */
 export type RadioValue = string | number | boolean
-/** 单选组的呈现形态：圆点 / 按钮 */
-export type RadioGroupOptionType = 'default' | 'button'
 /** 按钮形态的风格 */
 export type RadioButtonStyle = 'outline' | 'solid'
 /** 单选框的尺寸，仅作用于按钮形态 */
@@ -13,7 +11,9 @@ export type RadioSize = 'small' | 'middle' | 'large'
 export interface RadioChangeTarget {
   /** 变化后的选中态 */
   checked: boolean
-  /** 该单选组件当前生效的值 */
+  /**
+   * 该单选框当前生效的值：单项 change 事件中为自身 `value`；组级 change 事件中为触发本次选中的那项的值
+   */
   value?: RadioValue
   /** 生效的表单字段名，组内由组下发 */
   name?: string
@@ -49,8 +49,8 @@ export interface RadioGroupContext {
   value: Ref<RadioValue | undefined>
   /** 组是否整体禁用，组内单项自身的 disabled 在此基础上叠加 */
   disabled: ComputedRef<boolean>
-  /** 组的呈现形态 */
-  optionType: ComputedRef<RadioGroupOptionType>
+  /** 组是否为按钮形态 */
+  button: ComputedRef<boolean>
   /** 按钮形态的风格 */
   buttonStyle: ComputedRef<RadioButtonStyle>
   /** 组的尺寸，未指定时组内单项回落自身尺寸 */

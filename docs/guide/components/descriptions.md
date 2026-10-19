@@ -229,7 +229,7 @@ const activeColumnTip = computed(() => {
 
 <ClientOnly>
   <Flex vertical>
-    <RadioGroup :options="options" v-model:value="size" option-type="button" button-style="solid" />
+    <RadioGroup :options="options" v-model:value="size" button button-style="solid" />
     <Descriptions bordered title="Custom Size" :size="size">
       <template #extra>
         <Button type="primary">Edit</Button>
@@ -292,7 +292,7 @@ const options = [
 </script>
 <template>
   <Flex vertical>
-    <RadioGroup :options="options" v-model:value="size" option-type="button" button-style="solid" />
+    <RadioGroup :options="options" v-model:value="size" button button-style="solid" />
     <Descriptions bordered title="Custom Size" :size="size">
       <template #extra>
         <Button type="primary">Edit</Button>
@@ -523,7 +523,7 @@ _使用 `colon` 属性关闭标签后的冒号_
 
 <ClientOnly>
   <Flex vertical>
-    <RadioGroup :options="labelAlignOptions" v-model:value="labelAlign" option-type="button" button-style="solid" />
+    <RadioGroup :options="labelAlignOptions" v-model:value="labelAlign" button button-style="solid" />
     <Descriptions title="User Info" bordered :labelAlign="labelAlign">
       <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
       <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
@@ -555,7 +555,7 @@ const labelAlignOptions = [
 </script>
 <template>
   <Flex vertical>
-    <RadioGroup :options="labelAlignOptions" v-model:value="labelAlign" option-type="button" button-style="solid" />
+    <RadioGroup :options="labelAlignOptions" v-model:value="labelAlign" button button-style="solid" />
     <Descriptions title="User Info" bordered :labelAlign="labelAlign">
       <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
       <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
