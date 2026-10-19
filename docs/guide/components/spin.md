@@ -412,7 +412,7 @@ const spinning = ref(true)
 ## 自定义描述文案
 
 <Space vertical>
-  <Radio :options="sizeOptions" v-model:value="tipSize" button button-style="solid" />
+  <RadioGroup :options="sizeOptions" v-model:value="tipSize" option-type="button" button-style="solid" />
   <Space>
     <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" />
     <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="dot-wheel" />
@@ -450,7 +450,7 @@ const tipSize = ref('middle')
 </script>
 <template>
   <Space vertical>
-    <Radio :options="sizeOptions" v-model:value="tipSize" button button-style="solid" />
+    <RadioGroup :options="sizeOptions" v-model:value="tipSize" option-type="button" button-style="solid" />
     <Space>
       <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" />
       <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="dot-wheel" />
@@ -478,7 +478,7 @@ div.spin-wrap.spin-item {
 ## 自定义样式
 
 <Space vertical>
-  <Radio :options="sizeOptions" v-model:value="colorSize" button button-style="solid" />
+  <RadioGroup :options="sizeOptions" v-model:value="colorSize" option-type="button" button-style="solid" />
   <Space>
     <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" />
     <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" indicator="dot-wheel" />
@@ -536,7 +536,7 @@ const colorSize = ref('middle')
 </script>
 <template>
   <Space vertical>
-    <Radio :options="sizeOptions" v-model:value="colorSize" button button-style="solid" />
+    <RadioGroup :options="sizeOptions" v-model:value="colorSize" option-type="button" button-style="solid" />
     <Space>
       <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" />
       <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" indicator="dot-wheel" />

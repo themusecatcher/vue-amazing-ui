@@ -160,7 +160,8 @@ const styleSources: Partial<Record<ComponentName, ComponentName>> = {
 const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   AutoComplete: ['Scrollbar'],
   BackTop: ['Tooltip', 'Popup'],
-  Calendar: ['Radio', 'Select', 'Empty', 'Scrollbar'],
+  // RadioGroup 的样式入口含 Radio.css，但依赖表只展开一层，故 Radio 需一并摊平登记
+  Calendar: ['RadioGroup', 'Radio', 'Select', 'Empty', 'Scrollbar'],
   Card: ['Skeleton'],
   Carousel: ['Spin'],
   Cascader: ['Select', 'Empty', 'Scrollbar'],

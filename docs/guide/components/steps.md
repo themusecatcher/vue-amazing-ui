@@ -128,7 +128,7 @@ function onChange(index: number) {
 ## 标签放置位置
 
 <Flex vertical>
-  <Radio :options="placeOptions" v-model:value="place" button button-style="solid" />
+  <RadioGroup :options="placeOptions" v-model:value="place" option-type="button" button-style="solid" />
   <Steps :items="stepsItems" :label-placement="place" :current="current" />
 </Flex>
 
@@ -170,7 +170,7 @@ watchEffect(() => {
 </script>
 <template>
   <Flex vertical>
-    <Radio :options="placeOptions" v-model:value="place" button button-style="solid" />
+    <RadioGroup :options="placeOptions" v-model:value="place" option-type="button" button-style="solid" />
     <Steps :items="stepsItems" :label-placement="place" :current="current" />
   </Flex>
 </template>
@@ -181,7 +181,7 @@ watchEffect(() => {
 ## 迷你版
 
 <Flex vertical>
-  <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
   <Steps :items="minStepsItems" :size="size" :current="current" />
 </Flex>
 
@@ -220,7 +220,7 @@ watchEffect(() => {
 </script>
 <template>
   <Flex vertical>
-    <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
     <Steps :items="minStepsItems" :size="size" :current="current" />
   </Flex>
 </template>
@@ -382,7 +382,7 @@ function onNext() {
   <Col :span="6">
     <Space gap="small" vertical>
       size:
-      <Radio :options="sizeOptions" v-model:value="state.size" button button-style="solid" />
+      <RadioGroup :options="sizeOptions" v-model:value="state.size" option-type="button" button-style="solid" />
     </Space>
   </Col>
   <Col :span="6">
@@ -394,7 +394,7 @@ function onNext() {
   <Col :span="6">
     <Space gap="small" vertical>
       labelPlacement:
-      <Radio :options="placeOptions" v-model:value="state.labelPlacement" button button-style="solid" />
+      <RadioGroup :options="placeOptions" v-model:value="state.labelPlacement" option-type="button" button-style="solid" />
     </Space>
   </Col>
   <Col :span="6">
@@ -471,7 +471,7 @@ const state = reactive<StepsProps>({
     <Col :span="6">
       <Space gap="small" vertical>
         size:
-        <Radio :options="sizeOptions" v-model:value="state.size" button button-style="solid" />
+        <RadioGroup :options="sizeOptions" v-model:value="state.size" option-type="button" button-style="solid" />
       </Space>
     </Col>
     <Col :span="6">
@@ -483,7 +483,7 @@ const state = reactive<StepsProps>({
     <Col :span="6">
       <Space gap="small" vertical>
         labelPlacement:
-        <Radio :options="placeOptions" v-model:value="state.labelPlacement" button button-style="solid" />
+        <RadioGroup :options="placeOptions" v-model:value="state.labelPlacement" option-type="button" button-style="solid" />
       </Space>
     </Col>
     <Col :span="6">

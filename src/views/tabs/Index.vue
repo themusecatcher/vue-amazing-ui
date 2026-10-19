@@ -262,19 +262,19 @@ function onChange(key: string | number) {
     </Flex>
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Flex vertical>
-      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
       <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" />
       <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" type="card" />
     </Flex>
     <h2 class="mt30 mb10">自定义位置</h2>
     <Flex vertical>
-      <Radio :options="positionOptions" v-model:value="position" button button-style="solid" />
+      <RadioGroup :options="positionOptions" v-model:value="position" option-type="button" button-style="solid" />
       <Tabs :items="tabItems" v-model:active-key="activeKey" :tab-position="position" />
       <Tabs :items="tabItems" v-model:active-key="activeKey" :tab-position="position" type="card" />
     </Flex>
     <h2 class="mt30 mb10">左右滑动，容纳更多标签</h2>
     <Flex vertical>
-      <Radio :options="positionOptions" v-model:value="morePosition" button button-style="solid" />
+      <RadioGroup :options="positionOptions" v-model:value="morePosition" option-type="button" button-style="solid" />
       <Tabs
         :style="positionStyle"
         :items="moreTabPages"
@@ -347,12 +347,22 @@ function onChange(key: string | number) {
         </Col>
         <Col :span="12">
           <Space gap="small" vertical>
-            size：<Radio :options="sizeOptions" v-model:value="state.size" button button-style="solid" />
+            size：<RadioGroup
+              :options="sizeOptions"
+              v-model:value="state.size"
+              option-type="button"
+              button-style="solid"
+            />
           </Space>
         </Col>
         <Col :span="6">
           <Space gap="small" vertical>
-            type：<Radio :options="typeOptions" v-model:value="state.type" button button-style="solid" />
+            type：<RadioGroup
+              :options="typeOptions"
+              v-model:value="state.type"
+              option-type="button"
+              button-style="solid"
+            />
           </Space>
         </Col>
         <Col :span="6">
@@ -362,10 +372,10 @@ function onChange(key: string | number) {
         </Col>
         <Col :span="12">
           <Space gap="small" vertical>
-            tabPosition：<Radio
+            tabPosition：<RadioGroup
               :options="positionOptions"
               v-model:value="state.tabPosition"
-              button
+              option-type="button"
               button-style="solid"
             />
           </Space>

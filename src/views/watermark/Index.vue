@@ -72,7 +72,7 @@ const layoutOptions = [
     </p>
     <Flex>
       <Flex vertical :gap="8">
-        Layout: <Radio :options="layoutOptions" v-model:value="imageModel.layout" button />
+        Layout: <RadioGroup :options="layoutOptions" v-model:value="imageModel.layout" option-type="button" />
       </Flex>
       <Flex vertical :gap="8" :width="240">
         Rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
@@ -126,7 +126,9 @@ const layoutOptions = [
       <Col :span="6">
         <Flex vertical :gap="12">
           <Flex vertical> Content:<Input v-model:value="model.content" /> </Flex>
-          <Flex vertical> Layout:<Radio :options="layoutOptions" v-model:value="model.layout" button /> </Flex>
+          <Flex vertical>
+            Layout:<RadioGroup :options="layoutOptions" v-model:value="model.layout" option-type="button" />
+          </Flex>
           <Flex vertical> Color:<ColorPicker v-model:value="model.textStyle.color" /> </Flex>
           <Flex vertical>
             FontSize:<Slider v-model:value="model.textStyle.fontSize" :step="1" :min="0" :max="100" />

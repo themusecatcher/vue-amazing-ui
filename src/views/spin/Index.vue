@@ -135,7 +135,7 @@ const rotate = ref(false)
     </Space>
     <h2 class="mt30 mb10">自定义描述文案</h2>
     <Space vertical>
-      <Radio :options="sizeOptions" v-model:value="tipSize" button button-style="solid" />
+      <RadioGroup :options="sizeOptions" v-model:value="tipSize" option-type="button" button-style="solid" />
       <Space>
         <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" />
         <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="dot-wheel" />
@@ -150,7 +150,7 @@ const rotate = ref(false)
     </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Space vertical>
-      <Radio :options="sizeOptions" v-model:value="colorSize" button button-style="solid" />
+      <RadioGroup :options="sizeOptions" v-model:value="colorSize" option-type="button" button-style="solid" />
       <Space>
         <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" />
         <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" indicator="dot-wheel" />

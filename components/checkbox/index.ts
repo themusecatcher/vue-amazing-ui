@@ -2,7 +2,7 @@ import Checkbox from './Checkbox.vue'
 import CheckboxGroupComp from './checkbox-group'
 import { withInstall } from '../utils/type'
 
-export type { Props as CheckboxProps, Option as CheckboxOption } from './Checkbox.vue'
+export type { Props as CheckboxProps } from './Checkbox.vue'
 export type { CheckboxGroupProps, CheckboxGroupOption } from './checkbox-group'
 export type { CheckboxValue, CheckboxChangeTarget, CheckboxChangeEvent } from './context'
 

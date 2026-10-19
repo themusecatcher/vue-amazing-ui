@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { h, ref, watchEffect } from 'vue'
-import type { Radio, RadioOption, RadioProps, RadioGroupOption } from 'vue-amazing-ui'
+import type { Radio, RadioGroupOption, RadioProps } from 'vue-amazing-ui'
 // 基本使用
 const checked = ref<boolean>(false)
 const onChange = (value: string | number | boolean) => {
@@ -22,14 +22,13 @@ const nameItems = [
 ]
 const nameValue = ref<string>('1')
 // 选项列表：城市选项，长短混排便于观察换行与间距
-const options = ref<RadioOption[]>([
+const options = ref<RadioGroupOption[]>([
   { label: '拜占庭', value: 1 },
   { label: '君士坦丁堡', value: 2 },
   { label: '伊斯坦布尔', value: 3 },
   { label: '布宜诺斯艾利斯', value: 4 }
 ])
 const optionGroupValue = ref<RadioProps['value']>(1)
-const optionValue = ref<RadioProps['value']>(2)
 // 单选组垂直排列
 const verticalItems = [
   { value: 1, label: 'Option A' },
@@ -58,18 +57,16 @@ const outlineItemDisabledValue = ref<RadioProps['value']>('a')
 const outlineGroupDisabledValue = ref<RadioProps['value']>('a')
 const outlineOptionsValue = ref<RadioProps['value']>(2)
 const buttonChecked = ref<boolean>(false)
-const buttonOptionsValue = ref<RadioProps['value']>(2)
 const solidValue = ref<RadioProps['value']>('a')
 const solidItemDisabledValue = ref<RadioProps['value']>('c')
 const solidChecked = ref<boolean>(false)
-const solidOptionsValue = ref<RadioProps['value']>(2)
 const solidOptionsGroupValue = ref<RadioProps['value']>(2)
 const sizeOptions = [
   { label: 'small', value: 'small' },
   { label: 'middle', value: 'middle' },
   { label: 'large', value: 'large' }
 ]
-const buttonSize = ref<RadioProps['size']>('middle')
+const buttonSizeValue = ref<RadioProps['size']>('middle')
 const largeValue = ref<RadioProps['value']>('a')
 const middleValue = ref<RadioProps['value']>('a')
 const smallValue = ref<RadioProps['value']>('a')
@@ -85,27 +82,21 @@ const disabledUnchecked = ref<boolean>(false)
 const disabledOptionsValue = ref<RadioProps['value']>(2)
 const disabledGroupValue = ref<RadioProps['value']>(1)
 // 禁用选项
-const optionsDisabled = ref<RadioOption[]>([
+const optionsDisabled = ref<RadioGroupOption[]>([
   { label: '拜占庭', value: 1 },
   { label: '君士坦丁堡', value: 2, disabled: true },
   { label: '伊斯坦布尔', value: 3 },
   { label: '布宜诺斯艾利斯', value: 4 }
 ])
-const optionDisabledValue = ref<RadioProps['value']>(1)
 const optionDisabledButtonValue = ref<RadioProps['value']>(1)
 const optionDisabledGroupValue = ref<RadioProps['value']>(1)
 // 自定义选项名
 const customSlotValue = ref<RadioProps['value']>(2)
 const customSlotGroupValue = ref<RadioProps['value']>(1)
 // 非字符串选项名：label 直接传入 VNode
-const vnodeOptions: RadioOption[] = [
+const vnodeOptions: RadioGroupOption[] = [
   { label: '拜占庭', value: 1 },
   { label: h('span', { style: 'color: #ff6900' }, '君士坦丁堡'), value: 2 },
-  { label: '伊斯坦布尔', value: 3 }
-]
-const vnodeGroupOptions: RadioGroupOption[] = [
-  { label: '拜占庭', value: 1 },
-  { label: h('span', { style: 'color: #1677ff' }, '君士坦丁堡'), value: 2 },
   { label: '伊斯坦布尔', value: 3 }
 ]
 const vnodeValue = ref<RadioProps['value']>(1)
@@ -113,7 +104,7 @@ const vnodeGroupValue = ref<RadioProps['value']>(1)
 // 自定义间距 / 单选组间距
 const horizontalGap = ref(16)
 const verticalGap = ref(8)
-const gapValue = ref<RadioProps['value']>(2)
+const gapRadioValue = ref<RadioProps['value']>(2)
 const groupGap = ref(16)
 const groupVertical = ref<boolean>(true)
 const groupGapValue = ref<RadioProps['value']>(1)
@@ -130,7 +121,7 @@ watchEffect(() => {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <p class="mb10">独立用法：<code>v-model:checked</code> 双向绑定选中态，<code>change</code> 事件回传最新选中值</p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Radio v-model:checked="checked" @change="onChange">Radio</Radio>
     </Flex>
     <h2 class="mt30 mb10">单选组合</h2>
@@ -138,7 +129,7 @@ watchEffect(() => {
       >选中值由 <code>RadioGroup</code> 统一维护，组内 <code>Radio</code> 用
       <code>value</code> 标识自身，无需各自维护选中态</p
     >
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <RadioGroup v-model:value="groupValue">
         <Radio v-for="item in groupItems" :key="item.value" :value="item.value">{{ item.label }}</Radio>
       </RadioGroup>
@@ -147,26 +138,20 @@ watchEffect(() => {
     <p class="mb10"
       >设置 <code>name</code> 后，组内各原生 <code>input</code> 共享同一字段名，浏览器据此把它们识别为同一组选项</p
     >
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <RadioGroup v-model:value="nameValue" name="radioGroup">
         <Radio v-for="item in nameItems" :key="item.value" :value="item.value">{{ item.label }}</Radio>
       </RadioGroup>
     </Flex>
     <h2 class="mt30 mb10">选项列表</h2>
-    <p class="mb10">配置式写法：传入 <code>options</code> 数组即可渲染整组选项，单选组与单组件都支持</p>
-    <Flex vertical gap="middle" align="start">
-      <Flex vertical gap="small" align="start">
-        <span class="demo-label">单选组</span>
-        <RadioGroup v-model:value="optionGroupValue" :options="options" />
-      </Flex>
-      <Flex vertical gap="small" align="start">
-        <span class="demo-label">单组件</span>
-        <Radio :options="options" v-model:value="optionValue" @change="onChange" />
-      </Flex>
-    </Flex>
+    <p class="mb10"
+      >配置式写法：传入 <code>options</code> 数组即可渲染整组选项；自定义选项名、按钮形态等能力均由
+      <code>RadioGroup</code> 承载</p
+    >
+    <RadioGroup v-model:value="optionGroupValue" :options="options" />
     <h2 class="mt30 mb10">单选组垂直排列</h2>
     <p class="mb10">选项内需要放输入框等控件时，逐项定高并居中，可避免控件出现 / 消失时整行跳动</p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <RadioGroup v-model:value="verticalValue" style="display: inline-block">
         <Radio v-for="item in verticalItems" :key="item.value" :value="item.value" :style="verticalStyle">
           {{ item.label }}
@@ -175,14 +160,14 @@ watchEffect(() => {
       </RadioGroup>
     </Flex>
     <p class="mb10 mt10">也可以直接用 <code>vertical</code> 让组内选项垂直排列</p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <RadioGroup v-model:value="verticalAttrValue" vertical>
         <Radio v-for="item in groupItems" :key="item.value" :value="item.value">{{ item.label }}</Radio>
       </RadioGroup>
     </Flex>
     <h2 class="mt30 mb10">按钮样式</h2>
     <p class="mb10">按钮形态有两种写法：组内放 <code>RadioButton</code>，或给组设置 <code>optionType="button"</code></p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">默认</span>
         <RadioGroup v-model:value="outlineValue">
@@ -217,20 +202,11 @@ watchEffect(() => {
         <RadioGroup v-model:value="outlineOptionsValue" :options="options" option-type="button" />
       </Flex>
     </Flex>
-    <p class="mb10 mt10">单组件用 <code>button</code> 切换按钮形态，配置式写法同样生效</p>
-    <Flex vertical gap="middle" align="start">
-      <Flex vertical gap="small" align="start">
-        <span class="demo-label">单组件</span>
-        <Radio v-model:checked="buttonChecked" button @change="onChange">Radio Button</Radio>
-      </Flex>
-      <Flex vertical gap="small" align="start">
-        <span class="demo-label">配置式</span>
-        <Radio :options="options" v-model:value="buttonOptionsValue" button />
-      </Flex>
-    </Flex>
+    <p class="mb10 mt10">单组件同样可用 <code>button</code> 切换按钮形态</p>
+    <Radio v-model:checked="buttonChecked" button @change="onChange">Radio Button</Radio>
     <h2 class="mt30 mb10">填底的按钮样式</h2>
     <p class="mb10">在按钮形态基础上设置 <code>buttonStyle="solid"</code>，选中项以主题色填底</p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">默认</span>
         <RadioGroup v-model:value="solidValue" button-style="solid">
@@ -263,21 +239,10 @@ watchEffect(() => {
       </Flex>
     </Flex>
     <p class="mb10 mt10">单组件的填底按钮形态：<code>button</code> 配合 <code>buttonStyle="solid"</code></p>
-    <Flex vertical gap="middle" align="start">
-      <Flex vertical gap="small" align="start">
-        <span class="demo-label">单组件</span>
-        <Radio v-model:checked="solidChecked" button button-style="solid" @change="onChange">
-          Radio Button Solid
-        </Radio>
-      </Flex>
-      <Flex vertical gap="small" align="start">
-        <span class="demo-label">配置式</span>
-        <Radio :options="options" v-model:value="solidOptionsValue" button button-style="solid" />
-      </Flex>
-    </Flex>
+    <Radio v-model:checked="solidChecked" button button-style="solid" @change="onChange"> Radio Button Solid </Radio>
     <h2 class="mt30 mb10">按钮大小</h2>
     <p class="mb10">组的 <code>size</code> 统一作用于组内所有按钮，未指定时各按钮回落自身 <code>size</code></p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">large</span>
         <RadioGroup v-model:value="largeValue" size="large">
@@ -304,23 +269,23 @@ watchEffect(() => {
       </Flex>
     </Flex>
     <p class="mb10 mt10">单组件按自身 <code>size</code> 渲染，可与上方的尺寸选择联动切换</p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">尺寸</span>
-        <Radio :options="sizeOptions" v-model:value="buttonSize" button button-style="solid" />
+        <RadioGroup :options="sizeOptions" v-model:value="buttonSizeValue" option-type="button" button-style="solid" />
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">单组件</span>
-        <Radio v-model:checked="sizeChecked" button :size="buttonSize">Radio Button</Radio>
+        <Radio v-model:checked="sizeChecked" button :size="buttonSizeValue">Radio Button</Radio>
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">配置式</span>
-        <Radio :options="options" v-model:value="sizeOptionsValue" button :size="buttonSize" />
+        <RadioGroup :options="options" v-model:value="sizeOptionsValue" option-type="button" :size="buttonSizeValue" />
       </Flex>
     </Flex>
     <h2 class="mt30 mb10">禁用</h2>
     <p class="mb10">开关演示整组禁用：禁用后不可聚焦、不可切换，<code>disabled</code> 由组统一下发给组内各项</p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Button type="primary" @click="toggleDisabled">Toggle disabled</Button>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">单选按钮</span>
@@ -331,11 +296,11 @@ watchEffect(() => {
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">配置式</span>
-        <Radio :options="options" v-model:value="disabledOptionsValue" disabled />
+        <RadioGroup :options="options" v-model:value="disabledOptionsValue" disabled />
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">按钮形态</span>
-        <Radio :options="options" v-model:value="disabledOptionsValue" button disabled />
+        <RadioGroup :options="options" v-model:value="disabledOptionsValue" option-type="button" disabled />
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">单选组</span>
@@ -344,7 +309,7 @@ watchEffect(() => {
     </Flex>
     <h2 class="mt30 mb10">禁用选项</h2>
     <p class="mb10">在选项数据里给单项设置 <code>disabled: true</code>，仅该项不可选，其余选项不受影响</p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">单选组</span>
         <RadioGroup v-model:value="optionDisabledGroupValue" :options="optionsDisabled" />
@@ -353,25 +318,22 @@ watchEffect(() => {
         <span class="demo-label">按钮形态</span>
         <RadioGroup v-model:value="optionDisabledButtonValue" :options="optionsDisabled" option-type="button" />
       </Flex>
-      <Flex vertical gap="small" align="start">
-        <span class="demo-label">单组件</span>
-        <Radio :options="optionsDisabled" v-model:value="optionDisabledValue" />
-      </Flex>
     </Flex>
     <h2 class="mt30 mb10">自定义选项名</h2>
     <p class="mb10"
       ><code>options</code> 模式的默认插槽提供 <code>option</code> / <code>label</code> /
       <code>index</code>，可自行渲染选项名</p
     >
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">插槽 · 配置式</span>
-        <Radio :options="options" v-model:value="customSlotValue">
+        <RadioGroup :options="options" v-model:value="customSlotValue">
           <template #default="{ option, label, index }">
             <span v-if="index === 1" style="color: #ff6900">{{ label }}</span>
-            <span v-if="index === 3" style="color: #1677ff">{{ option?.label }}</span>
+            <span v-else-if="index === 3" style="color: #1677ff">{{ option?.label }}</span>
+            <span v-else>{{ label }}</span>
           </template>
-        </Radio>
+        </RadioGroup>
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">插槽 · 组合式</span>
@@ -383,22 +345,28 @@ watchEffect(() => {
         </RadioGroup>
       </Flex>
     </Flex>
-    <p class="mb10 mt10">也可以直接把 VNode 作为选项 <code>label</code> 传入，适用于图标、富文本等场景</p>
-    <Flex vertical gap="middle" align="start">
+    <p class="mb10 mt10"
+      >选项名支持富内容：配置式可把 <code>VNode</code> 作为 <code>label</code> 传入，组合式直接在插槽内写 HTML 或组件</p
+    >
+    <Flex vertical align="start">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">VNode · 配置式</span>
-        <Radio :options="vnodeOptions" v-model:value="vnodeValue" />
+        <RadioGroup :options="vnodeOptions" v-model:value="vnodeValue" />
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">VNode · 组合式</span>
-        <RadioGroup v-model:value="vnodeGroupValue" :options="vnodeGroupOptions" />
+        <RadioGroup v-model:value="vnodeGroupValue">
+          <Radio :value="1">拜占庭</Radio>
+          <Radio :value="2"><span style="color: #1677ff">君士坦丁堡</span></Radio>
+          <Radio :value="3">伊斯坦布尔</Radio>
+        </RadioGroup>
       </Flex>
     </Flex>
     <h2 class="mt30 mb10">自定义间距</h2>
     <p class="mb10"
       ><code>gap</code> 传数组时为「水平间距, 垂直间距」；垂直间距仅在选项换行时才生效，此处用窄容器触发换行</p
     >
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex gap="large">
         <Flex gap="small" vertical>
           <span>水平间距 {{ horizontalGap }}px</span>
@@ -412,13 +380,13 @@ watchEffect(() => {
       <Flex vertical gap="small" align="start">
         <span class="demo-label">窄容器</span>
         <div style="width: 240px">
-          <Radio :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="gapValue" />
+          <RadioGroup :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="gapRadioValue" />
         </div>
       </Flex>
     </Flex>
     <h2 class="mt30 mb10">单选组间距</h2>
     <p class="mb10">组的 <code>gap</code> 传数字即统一间距；打开「垂直排列」后 <code>gap</code> 转为行间距</p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex gap="large">
         <Flex gap="small" vertical>
           <span>选项间距 {{ groupGap }}px</span>

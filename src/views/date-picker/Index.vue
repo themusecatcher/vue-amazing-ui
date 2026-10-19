@@ -619,7 +619,7 @@ function onStartOpenChange(open: boolean): void {
     </Space>
     <h2 class="mt30 mb10">三种大小</h2>
     <Space vertical>
-      <Radio v-model:value="sizeValue" :options="sizeOptions" button button-style="solid" />
+      <RadioGroup v-model:value="sizeValue" :options="sizeOptions" option-type="button" button-style="solid" />
       <DatePicker v-model:value="sizeCaseValue" :size="sizeValue" placeholder="请选择日期" />
       <DatePicker v-model:value="sizeMonthValue" type="month" :size="sizeValue" placeholder="请选择月份" />
       <DatePicker v-model:value="sizeRangeValue" type="daterange" :size="sizeValue" :placeholder="rangePlaceholder" />

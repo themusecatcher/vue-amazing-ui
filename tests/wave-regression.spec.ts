@@ -2,7 +2,9 @@ import { describe, it, expect, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import Button from 'components/button'
 import Checkbox from 'components/checkbox'
+import { CheckboxGroup } from 'components/checkbox'
 import Radio from 'components/radio'
+import { RadioGroup } from 'components/radio'
 import Switch from 'components/switch'
 
 /**
@@ -100,9 +102,9 @@ describe('水波纹 - 禁用态不渲染波纹节点', () => {
   })
 })
 
-describe('水波纹 - 多选项模式下波纹绑定到被点击的那一项', () => {
-  it('Checkbox options 模式：点到哪一项，哪一项的波纹置位', async () => {
-    wrapper = mount(Checkbox, {
+describe('水波纹 - 配置式模式下波纹绑定到被点击的那一项', () => {
+  it('CheckboxGroup options 模式：点到哪一项，哪一项的波纹置位', async () => {
+    wrapper = mount(CheckboxGroup, {
       props: {
         options: [
           { label: 'A', value: 'a' },
@@ -118,8 +120,8 @@ describe('水波纹 - 多选项模式下波纹绑定到被点击的那一项', (
     expect(waves[1].classes()).toContain('wave-active')
   })
 
-  it('Radio options 模式：点到哪一项，哪一项的波纹置位', async () => {
-    wrapper = mount(Radio, {
+  it('RadioGroup options 模式：点到哪一项，哪一项的波纹置位', async () => {
+    wrapper = mount(RadioGroup, {
       props: {
         options: [
           { label: 'A', value: 'a' },
@@ -135,8 +137,8 @@ describe('水波纹 - 多选项模式下波纹绑定到被点击的那一项', (
     expect(waves[1].classes()).toContain('wave-active')
   })
 
-  it('Radio options 模式：重复点击已选中项不应重新播放波纹', async () => {
-    wrapper = mount(Radio, {
+  it('RadioGroup options 模式：重复点击已选中项不应重新播放波纹', async () => {
+    wrapper = mount(RadioGroup, {
       props: {
         options: [
           { label: 'A', value: 'a' },
@@ -149,7 +151,7 @@ describe('水波纹 - 多选项模式下波纹绑定到被点击的那一项', (
     await wrapper.findAll('.radio-wave')[1].trigger('animationend')
     expect(wrapper.findAll('.radio-wave')[1].classes()).not.toContain('wave-active')
 
-    // 值未变化：onClick 不应再次 startWave
+    // 值未变化：组内选中逻辑不应再次触发波纹
     await containers[1].trigger('click')
     expect(wrapper.findAll('.radio-wave')[1].classes()).not.toContain('wave-active')
   })

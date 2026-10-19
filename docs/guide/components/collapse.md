@@ -17,7 +17,7 @@ import {
   StarOutlined,
   StarFilled
 } from '@ant-design/icons-vue'
-import type { CollapseProps, CollapseItem, RadioOption } from 'vue-amazing-ui'
+import type { CollapseProps, CollapseItem, RadioGroupOption } from 'vue-amazing-ui'
 const collapseItems = ref<CollapseItem[]>([
   {
     key: '1',
@@ -140,7 +140,7 @@ const extraCollapseItems = ref<CollapseItem[]>([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const positionOptions = ref<RadioOption[]>([
+const positionOptions = ref<RadioGroupOption[]>([
   {
     label: 'left',
     value: 'left'
@@ -803,7 +803,7 @@ watchEffect(() => {
 ## 箭头位置
 
 <Flex vertical>
-  <Radio :options="positionOptions" v-model:value="arrowPlacement" button button-style="solid" />
+  <RadioGroup :options="positionOptions" v-model:value="arrowPlacement" option-type="button" button-style="solid" />
   <Collapse :items="collapseItems" v-model:active-key="arrowPlaceActiveKey" :arrow-placement="arrowPlacement" />
 </Flex>
 
@@ -812,7 +812,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import type { CollapseProps, CollapseItem, RadioOption } from 'vue-amazing-ui'
+import type { CollapseProps, CollapseItem, RadioGroupOption } from 'vue-amazing-ui'
 const collapseItems = ref<CollapseItem[]>([
   {
     key: '1',
@@ -833,7 +833,7 @@ const collapseItems = ref<CollapseItem[]>([
       'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
   }
 ])
-const positionOptions = ref<RadioOption[]>([
+const positionOptions = ref<RadioGroupOption[]>([
   {
     label: 'left',
     value: 'left'
@@ -851,7 +851,7 @@ watchEffect(() => {
 </script>
 <template>
   <Flex vertical>
-    <Radio :options="positionOptions" v-model:value="arrowPlacement" button button-style="solid" />
+    <RadioGroup :options="positionOptions" v-model:value="arrowPlacement" option-type="button" button-style="solid" />
     <Collapse :items="collapseItems" v-model:active-key="arrowPlaceActiveKey" :arrow-placement="arrowPlacement" />
   </Flex>
 </template>

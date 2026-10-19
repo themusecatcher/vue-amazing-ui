@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, h, ref, watch, watchEffect } from 'vue'
-import type { Checkbox, CheckboxOption, CheckboxGroupOption } from 'vue-amazing-ui'
+import type { Checkbox, CheckboxGroupOption } from 'vue-amazing-ui'
 // 基本使用
 const checked = ref<boolean>(false)
 const onChange = (value: boolean | (string | number)[]) => {
@@ -47,13 +47,13 @@ const groupObjectValue = ref<string[]>(['Pear'])
 const gridItems = ['A', 'B', 'C', 'D', 'E']
 const gridValue = ref<string[]>([])
 // 选项列表 / 垂直排列 / 禁用选项 / 自定义选项名：城市选项，长短混排便于观察换行与间距
-const options = ref<CheckboxOption[]>([
+const options = ref<CheckboxGroupOption[]>([
   { label: '拜占庭', value: 1 },
   { label: '君士坦丁堡', value: 2 },
   { label: '伊斯坦布尔', value: 3 },
   { label: '布宜诺斯艾利斯', value: 4 }
 ])
-const optionsDisabled = ref<CheckboxOption[]>([
+const optionsDisabled = ref<CheckboxGroupOption[]>([
   { label: '拜占庭', value: 1 },
   { label: '君士坦丁堡', value: 2, disabled: true },
   { label: '伊斯坦布尔', value: 3 },
@@ -83,14 +83,9 @@ const optionDisabledGroupValue = ref<string[]>(['Apple'])
 const customSlotValue = ref<(string | number)[]>([2])
 const customSlotGroupValue = ref<(string | number)[]>([1])
 // 非字符串选项名：label 直接传入 VNode
-const vnodeOptions: CheckboxOption[] = [
+const vnodeOptions: CheckboxGroupOption[] = [
   { label: '拜占庭', value: 1 },
   { label: h('span', { style: 'color: #ff6900' }, '君士坦丁堡'), value: 2 },
-  { label: '伊斯坦布尔', value: 3 }
-]
-const vnodeGroupOptions: CheckboxGroupOption[] = [
-  { label: '拜占庭', value: 1 },
-  { label: h('span', { style: 'color: #1677ff' }, '君士坦丁堡'), value: 2 },
   { label: '伊斯坦布尔', value: 3 }
 ]
 const vnodeValue = ref<(string | number)[]>([2])
@@ -115,7 +110,7 @@ watchEffect(() => {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <p class="mb10">独立用法：<code>v-model:checked</code> 双向绑定选中态；「受控」示例由外部状态驱动选中与禁用</p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">基础</span>
         <Checkbox v-model:checked="checked" @change="onChange">Checkbox</Checkbox>
@@ -133,7 +128,7 @@ watchEffect(() => {
     </Flex>
     <h2 class="mt30 mb10">全选</h2>
     <p class="mb10"><code>indeterminate</code> 用于表达「部分选中」：全选框的半选态由子项已选数量推导</p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">全选</span>
         <Checkbox :indeterminate="indeterminate" v-model:checked="checkAll" @change="onCheckAllChange">
@@ -149,7 +144,7 @@ watchEffect(() => {
     <p class="mb10"
       >选中值由 <code>CheckboxGroup</code> 统一维护，组内 <code>Checkbox</code> 用 <code>value</code> 标识自身</p
     >
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">默认</span>
         <CheckboxGroup v-model:value="groupPlainValue" :options="plainOptions" name="checkboxGroup" />
@@ -165,7 +160,7 @@ watchEffect(() => {
     </Flex>
     <h2 class="mt30 mb10">与栅格配合</h2>
     <p class="mb10"><code>CheckboxGroup</code> 内嵌 <code>Checkbox</code> 并与栅格组合，可实现多列对齐布局</p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <CheckboxGroup v-model:value="gridValue" style="width: 100%">
         <Row>
           <Col v-for="item in gridItems" :key="item" :span="8">
@@ -176,14 +171,14 @@ watchEffect(() => {
     </Flex>
     <h2 class="mt30 mb10">选项列表</h2>
     <p class="mb10">配置式写法：传入 <code>options</code> 数组即可渲染整组选项，选中值为数组</p>
-    <Flex vertical gap="middle" align="start">
-      <Checkbox :options="options" v-model:value="listValue" @change="onChange" />
+    <Flex vertical align="start">
+      <CheckboxGroup :options="options" v-model:value="listValue" @change="onChange" />
     </Flex>
     <h2 class="mt30 mb10">垂直排列</h2>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">配置式</span>
-        <Checkbox :options="options" v-model:value="verticalValue" vertical />
+        <CheckboxGroup :options="options" v-model:value="verticalValue" vertical />
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">组合式</span>
@@ -194,7 +189,7 @@ watchEffect(() => {
     </Flex>
     <h2 class="mt30 mb10">禁用</h2>
     <p class="mb10">开关演示禁用态：禁用后不可聚焦、不可切换，组的 <code>disabled</code> 会叠加到组内各项</p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Button type="primary" @click="toggleDisabled">Toggle disabled</Button>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">复选框</span>
@@ -205,7 +200,7 @@ watchEffect(() => {
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">配置式</span>
-        <Checkbox :options="options" v-model:value="disabledListValue" disabled />
+        <CheckboxGroup :options="options" v-model:value="disabledListValue" disabled />
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">复选框组</span>
@@ -214,10 +209,10 @@ watchEffect(() => {
     </Flex>
     <h2 class="mt30 mb10">禁用选项</h2>
     <p class="mb10">在选项数据里给单项设置 <code>disabled: true</code>，仅该项不可选，其余选项不受影响</p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">配置式</span>
-        <Checkbox :options="optionsDisabled" v-model:value="optionDisabledListValue" />
+        <CheckboxGroup :options="optionsDisabled" v-model:value="optionDisabledListValue" />
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">复选框组</span>
@@ -229,15 +224,16 @@ watchEffect(() => {
       ><code>options</code> 模式的默认插槽提供 <code>option</code> / <code>label</code> /
       <code>index</code>，可自行渲染选项名</p
     >
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">插槽 · 配置式</span>
-        <Checkbox :options="options" v-model:value="customSlotValue">
+        <CheckboxGroup :options="options" v-model:value="customSlotValue">
           <template #default="{ option, label, index }">
             <span v-if="index === 1" style="color: #ff6900">{{ label }}</span>
-            <span v-if="index === 3" style="color: #1677ff">{{ option?.label }}</span>
+            <span v-else-if="index === 3" style="color: #1677ff">{{ option?.label }}</span>
+            <span v-else>{{ label }}</span>
           </template>
-        </Checkbox>
+        </CheckboxGroup>
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">插槽 · 组合式</span>
@@ -249,22 +245,28 @@ watchEffect(() => {
         </CheckboxGroup>
       </Flex>
     </Flex>
-    <p class="mb10 mt10">也可以直接把 VNode 作为选项 <code>label</code> 传入，适用于图标、富文本等场景</p>
-    <Flex vertical gap="middle" align="start">
+    <p class="mb10 mt10"
+      >选项名支持富内容：配置式可把 <code>VNode</code> 作为 <code>label</code> 传入，组合式直接在插槽内写 HTML 或组件</p
+    >
+    <Flex vertical align="start">
       <Flex vertical gap="small" align="start">
         <span class="demo-label">VNode · 配置式</span>
-        <Checkbox :options="vnodeOptions" v-model:value="vnodeValue" />
+        <CheckboxGroup :options="vnodeOptions" v-model:value="vnodeValue" />
       </Flex>
       <Flex vertical gap="small" align="start">
         <span class="demo-label">VNode · 组合式</span>
-        <CheckboxGroup v-model:value="vnodeGroupValue" :options="vnodeGroupOptions" />
+        <CheckboxGroup v-model:value="vnodeGroupValue">
+          <Checkbox :value="1">拜占庭</Checkbox>
+          <Checkbox :value="2"><span style="color: #1677ff">君士坦丁堡</span></Checkbox>
+          <Checkbox :value="3">伊斯坦布尔</Checkbox>
+        </CheckboxGroup>
       </Flex>
     </Flex>
     <h2 class="mt30 mb10">自定义间距</h2>
     <p class="mb10"
       ><code>gap</code> 传数组时为「水平间距, 垂直间距」；垂直间距仅在选项换行时才生效，此处用窄容器触发换行</p
     >
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex gap="large">
         <Flex gap="small" vertical>
           <span>水平间距 {{ horizontalGap }}px</span>
@@ -278,13 +280,13 @@ watchEffect(() => {
       <Flex vertical gap="small" align="start">
         <span class="demo-label">窄容器</span>
         <div style="width: 240px">
-          <Checkbox :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="gapValue" />
+          <CheckboxGroup :gap="[horizontalGap, verticalGap]" :options="options" v-model:value="gapValue" />
         </div>
       </Flex>
     </Flex>
     <h2 class="mt30 mb10">复选框组间距</h2>
     <p class="mb10">组的 <code>gap</code> 传数字即统一间距；打开「垂直排列」后 <code>gap</code> 转为行间距</p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <Flex gap="large">
         <Flex gap="small" vertical>
           <span>选项间距 {{ groupGap }}px</span>

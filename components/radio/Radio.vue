@@ -4,47 +4,29 @@ import type { VNode } from 'vue'
 import { useSlotsExist, useInject, useWave } from 'components/utils'
 import { radioGroupContextKey } from './context'
 import type { RadioChangeEvent, RadioValue } from './context'
-import { renderOptionLabel } from './render'
-export interface Option {
-  label: string | number | VNode // 选项名；传入 VNode 时原样渲染
-  value: RadioValue // 选项值
-  disabled?: boolean // 是否禁用选项
-}
 
 export interface Props {
   checked?: boolean // (v-model) 当前是否选中
-  value?: RadioValue // (v-model) 当前选中的值；置于 RadioGroup 内时作为本项的身份标识，与组内当前值比较得出选中态
-
-  options?: Option[] // 单选框选项数据
-
+  value?: RadioValue // 本项的值；脱离组时随 change 事件回传，置于 RadioGroup 内时作为本项的身份标识，与组内当前值比较得出选中态
   button?: boolean // 是否启用按钮样式；置于 RadioGroup 内时该形态由组的 optionType 决定
   buttonStyle?: 'outline' | 'solid' // 按钮样式风格；置于 RadioGroup 内时以组的配置为准
   size?: 'small' | 'middle' | 'large' // 尺寸，仅当按钮形态时生效；置于 RadioGroup 内时以组的配置为准
-  vertical?: boolean // 是否垂直排列，仅当 button: false 时生效
-  gap?: number | number[] // 多个单选框之间的间距；垂直排列时为垂直间距，单位 px；数组间距用于水平排列折行时：[水平间距, 垂直间距]；仅当 button: false 时生效
-
   disabled?: boolean // 是否禁用
-
   autofocus?: boolean // 是否自动聚焦原生 input
-
   name?: string // 原生 input 的表单字段名；置于 RadioGroup 内时以组的配置为准
-  id?: string // 原生 input 的 id；options 模式下作为前缀，实际 id 追加选项下标
+  id?: string // 原生 input 的 id
 }
 // 声明组件插槽类型
 export interface RadioSlots {
-  // options / button 模式下为每个选项提供作用域参数；children 透传模式下无真实数据，参数为 undefined
-  default?: (props: { option?: Option; label?: string | number | VNode; index?: number }) => VNode[]
+  default?: () => VNode[] // 选项名
 }
 
 const props = withDefaults(defineProps<Props>(), {
   checked: false,
   value: undefined,
-  options: () => [],
   button: false,
   buttonStyle: 'outline',
   size: 'middle',
-  vertical: false,
-  gap: 8,
   disabled: false,
   autofocus: false,
   name: undefined,
@@ -52,23 +34,15 @@ const props = withDefaults(defineProps<Props>(), {
 })
 defineSlots<RadioSlots>()
 const radioChecked = ref<boolean>(false)
-const optionsCheckedValue = ref<string | number | boolean>()
 const { wave, startWave, endWave } = useWave()
 const { colorPalettes, shadowColor } = useInject('Radio') // 主题色注入
-const emits = defineEmits(['update:checked', 'update:value', 'change'])
+const emits = defineEmits(['update:checked', 'change'])
 const slotsExist = useSlotsExist(['default'])
 // 所在单选组：置入组内时选中态、禁用态与按钮形态改由组统一下发，脱离组时不读取
 const groupContext = inject(radioGroupContextKey, undefined)
-// options 模式下按序收集各项原生 input，单选模式下只持有一项，供聚焦与失焦使用
-const optionInputs = ref<HTMLInputElement[]>([])
 const singleInput = ref<HTMLInputElement>()
 // 程序化聚焦不匹配 :focus-visible（调用时最近的交互通常是鼠标），另置标志驱动焦点环，使 focus() 调用有可见反馈
-const exposedOptionIndex = ref<number>(-1)
 const exposedSingleFocused = ref<boolean>(false)
-// 选项总数
-const optionsAmount = computed(() => {
-  return props.options.length
-})
 // 组内是否选中：以自身 value 与组内当前值比较；未提供 value 时无从比较
 const groupChecked = computed(() => {
   if (!groupContext || props.value === undefined) {
@@ -93,33 +67,9 @@ const mergedButtonStyle = computed(() => (groupContext ? groupContext.buttonStyl
 const mergedSize = computed(() => (groupContext ? (groupContext.size.value ?? props.size) : props.size))
 // 表单字段名：组内以组的配置为准
 const mergedName = computed(() => (groupContext ? groupContext.name.value : props.name))
-const gapValue = computed(() => {
-  if (!props.button) {
-    if (!props.vertical && Array.isArray(props.gap)) {
-      return `${props.gap[1]}px ${props.gap[0]}px`
-    }
-    return `${props.gap}px`
-  } else {
-    return 0
-  }
-})
 watchEffect(() => {
   radioChecked.value = props.checked
 })
-watchEffect(() => {
-  optionsCheckedValue.value = props.value
-})
-function checkDisabled(disabled: boolean | undefined): boolean {
-  if (disabled === undefined) {
-    return props.disabled
-  } else {
-    return disabled
-  }
-}
-// options 模式下各原生 input 的 id：以 id 为前缀追加下标，未提供前缀时不产出 id
-function optionId(index: number): string | undefined {
-  return props.id ? `${props.id}-${index}` : undefined
-}
 // 状态快照取本组件 props，原生事件与方法附在其上，与原生 input 的 change 同形态
 function buildChangeEvent(nativeEvent: Event, checked: boolean, value?: RadioValue): RadioChangeEvent {
   return {
@@ -134,25 +84,13 @@ function buildChangeEvent(nativeEvent: Event, checked: boolean, value?: RadioVal
     nativeEvent
   }
 }
-// 受控模式下浏览器已先行切换原生选中态，需按组件状态回写，避免二者不一致
+// 受控模式下浏览器已先行切换原生选中态，需按组件状态回写，避免二者不一致；
+// 选项模式下点击 label 时事件目标是 label，只有落到原生 input 才写回
 function syncInputChecked(event: Event, checked: boolean): void {
-  const input = event.target as HTMLInputElement | null
-  if (input) {
-    input.checked = checked
+  const { target } = event
+  if (target instanceof HTMLInputElement) {
+    target.checked = checked
   }
-}
-// 选项模式选中某一项：鼠标点击与键盘操作共用，重复选中时仅回写状态
-function onClick(option: Option, event: Event): void {
-  if (checkDisabled(option.disabled)) {
-    return
-  }
-  if (option.value !== optionsCheckedValue.value) {
-    startWave()
-    optionsCheckedValue.value = option.value
-    emits('update:value', option.value)
-    emits('change', option.value, buildChangeEvent(event, true, option.value))
-  }
-  syncInputChecked(event, optionsCheckedValue.value === option.value)
 }
 // 组外单选：已选中时不再重复上报
 function onChecked(event: Event): void {
@@ -182,211 +120,95 @@ function onSingleClick(event: Event): void {
 }
 // 清除程序化聚焦标志：焦点真正离开原生 input 时（原生 blur）一并收尾，避免焦点环残留
 function clearExposedFocus(): void {
-  exposedOptionIndex.value = -1
   exposedSingleFocused.value = false
 }
-// 聚焦原生 input：options 模式下优先聚焦当前选中项
+// 聚焦原生 input
 function focus(): void {
-  if (optionsAmount.value) {
-    const inputs = optionInputs.value
-    const checkedIndex = inputs.findIndex((input) => input.checked)
-    const target = checkedIndex === -1 ? 0 : checkedIndex
-    inputs[target]?.focus()
-    exposedOptionIndex.value = target
-    return
-  }
   singleInput.value?.focus()
   exposedSingleFocused.value = true
 }
 // 失焦原生 input
 function blur(): void {
   clearExposedFocus()
-  if (optionsAmount.value) {
-    optionInputs.value.forEach((input) => input.blur())
-    return
-  }
   singleInput.value?.blur()
 }
 defineExpose({ focus, blur })
 </script>
 <template>
-  <div
-    v-if="optionsAmount"
-    class="radio-wrap"
-    :class="{ 'radio-vertical': !button && vertical }"
-    :style="`
-      --radio-gap: ${gapValue};
-      --radio-primary-color: ${colorPalettes[5]};
-      --radio-primary-shadow-color: ${shadowColor};
-    `"
+  <label
+    v-if="!mergedButton"
+    class="radio-container"
+    :class="{ 'radio-disabled': mergedDisabled, 'radio-focused': exposedSingleFocused }"
+    :style="`--radio-primary-color: ${colorPalettes[5]}; --radio-primary-shadow-color: ${shadowColor};`"
+    @click="onSingleClick($event)"
     v-bind="$attrs"
   >
-    <template v-if="!button">
-      <label
-        class="radio-container"
-        :class="{
-          'radio-disabled': checkDisabled(option.disabled),
-          'radio-focused': exposedOptionIndex === index
-        }"
-        v-for="(option, index) in options"
-        :key="index"
-        @click="onClick(option, $event)"
-      >
-        <input
-          ref="optionInputs"
-          class="radio-input"
-          type="radio"
-          :id="optionId(index)"
-          :value="option.value"
-          :name="mergedName"
-          :checked="optionsCheckedValue === option.value"
-          :disabled="checkDisabled(option.disabled)"
-          :autofocus="index === 0 && autofocus"
-          @change="onClick(option, $event)"
-          @blur="clearExposedFocus"
-        />
-        <span class="radio-handle" :class="{ 'radio-checked': optionsCheckedValue === option.value }">
-          <span
-            v-if="!checkDisabled(option.disabled)"
-            class="radio-wave"
-            :class="{ 'wave-active': wave && optionsCheckedValue === option.value }"
-            @animationend="endWave"
-          ></span>
-        </span>
-        <span class="radio-label">
-          <slot :option="option" :label="option.label" :index="index">
-            <component :is="renderOptionLabel(option.label)" />
-          </slot>
-        </span>
-      </label>
-    </template>
-    <template v-else>
-      <label
-        class="radio-button-wrap"
-        :class="{
-          'radio-button-checked': optionsCheckedValue === option.value,
-          'radio-button-disabled': checkDisabled(option.disabled),
-          'radio-button-solid': buttonStyle === 'solid',
-          'radio-button-small': size === 'small',
-          'radio-button-large': size === 'large',
-          'radio-focused': exposedOptionIndex === index
-        }"
-        v-for="(option, index) in options"
-        :key="index"
-        @click="onClick(option, $event)"
-      >
-        <input
-          ref="optionInputs"
-          class="radio-input"
-          type="radio"
-          :id="optionId(index)"
-          :value="option.value"
-          :name="mergedName"
-          :checked="optionsCheckedValue === option.value"
-          :disabled="checkDisabled(option.disabled)"
-          :autofocus="index === 0 && autofocus"
-          @change="onClick(option, $event)"
-          @blur="clearExposedFocus"
-        />
-        <span class="radio-label">
-          <slot :option="option" :label="option.label" :index="index">
-            <component :is="renderOptionLabel(option.label)" />
-          </slot>
-        </span>
-        <span
-          v-if="!checkDisabled(option.disabled)"
-          class="radio-wave"
-          :class="{ 'wave-active': wave && optionsCheckedValue === option.value }"
-          @animationend="endWave"
-        ></span>
-      </label>
-    </template>
-  </div>
-  <template v-else>
-    <label
-      v-if="!mergedButton"
-      class="radio-container"
-      :class="{ 'radio-disabled': mergedDisabled, 'radio-focused': exposedSingleFocused }"
-      :style="`--radio-primary-color: ${colorPalettes[5]}; --radio-primary-shadow-color: ${shadowColor};`"
-      @click="onSingleClick($event)"
-      v-bind="$attrs"
-    >
-      <input
-        ref="singleInput"
-        class="radio-input"
-        type="radio"
-        :id="id"
-        :value="value"
-        :name="mergedName"
-        :checked="mergedChecked"
-        :disabled="mergedDisabled"
-        :autofocus="autofocus"
-        @change="onSingleClick($event)"
-        @blur="clearExposedFocus"
-      />
-      <span class="radio-handle" :class="{ 'radio-checked': mergedChecked }">
-        <span
-          v-if="!mergedDisabled"
-          class="radio-wave"
-          :class="{ 'wave-active': wave && mergedChecked }"
-          @animationend="endWave"
-        ></span>
-      </span>
-      <span v-if="slotsExist.default" class="radio-label">
-        <slot></slot>
-      </span>
-    </label>
-    <label
-      v-else
-      class="radio-button-wrap"
-      :class="{
-        'radio-button-single': !groupContext,
-        'radio-button-checked': mergedChecked,
-        'radio-button-disabled': mergedDisabled,
-        'radio-button-solid': mergedButtonStyle === 'solid',
-        'radio-button-small': mergedSize === 'small',
-        'radio-button-large': mergedSize === 'large',
-        'radio-focused': exposedSingleFocused
-      }"
-      :style="`--radio-primary-color: ${colorPalettes[5]}; --radio-primary-shadow-color: ${shadowColor};`"
-      @click="onSingleClick($event)"
-      v-bind="$attrs"
-    >
-      <input
-        ref="singleInput"
-        class="radio-input"
-        type="radio"
-        :id="id"
-        :value="value"
-        :name="mergedName"
-        :checked="mergedChecked"
-        :disabled="mergedDisabled"
-        :autofocus="autofocus"
-        @change="onSingleClick($event)"
-        @blur="clearExposedFocus"
-      />
-      <span class="radio-label">
-        <slot></slot>
-      </span>
+    <input
+      ref="singleInput"
+      class="radio-input"
+      type="radio"
+      :id="id"
+      :value="value"
+      :name="mergedName"
+      :checked="mergedChecked"
+      :disabled="mergedDisabled"
+      :autofocus="autofocus"
+      @change="onSingleClick($event)"
+      @blur="clearExposedFocus"
+    />
+    <span class="radio-handle" :class="{ 'radio-checked': mergedChecked }">
       <span
         v-if="!mergedDisabled"
         class="radio-wave"
         :class="{ 'wave-active': wave && mergedChecked }"
         @animationend="endWave"
       ></span>
-    </label>
-  </template>
+    </span>
+    <span v-if="slotsExist.default" class="radio-label">
+      <slot></slot>
+    </span>
+  </label>
+  <label
+    v-else
+    class="radio-button-wrap"
+    :class="{
+      'radio-button-single': !groupContext,
+      'radio-button-checked': mergedChecked,
+      'radio-button-disabled': mergedDisabled,
+      'radio-button-solid': mergedButtonStyle === 'solid',
+      'radio-button-small': mergedSize === 'small',
+      'radio-button-large': mergedSize === 'large',
+      'radio-focused': exposedSingleFocused
+    }"
+    :style="`--radio-primary-color: ${colorPalettes[5]}; --radio-primary-shadow-color: ${shadowColor};`"
+    @click="onSingleClick($event)"
+    v-bind="$attrs"
+  >
+    <input
+      ref="singleInput"
+      class="radio-input"
+      type="radio"
+      :id="id"
+      :value="value"
+      :name="mergedName"
+      :checked="mergedChecked"
+      :disabled="mergedDisabled"
+      :autofocus="autofocus"
+      @change="onSingleClick($event)"
+      @blur="clearExposedFocus"
+    />
+    <span class="radio-label">
+      <slot></slot>
+    </span>
+    <span
+      v-if="!mergedDisabled"
+      class="radio-wave"
+      :class="{ 'wave-active': wave && mergedChecked }"
+      @animationend="endWave"
+    ></span>
+  </label>
 </template>
 <style lang="less" scoped>
-.radio-wrap {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: var(--radio-gap);
-}
-.radio-vertical {
-  flex-direction: column;
-  flex-wrap: nowrap;
-}
 /* 原生 input 承载语义与键盘操作，视觉上隐藏且不参与鼠标命中，鼠标交互由外层容器承担 */
 .radio-input {
   position: absolute;
@@ -489,7 +311,8 @@ defineExpose({ focus, blur })
 }
 .radio-button-wrap {
   position: relative;
-  display: block;
+  /* 行内块：脱离组单独使用时按内容宽度呈现；置于组内时为 flex item，宽度仍由组分配 */
+  display: inline-block;
   height: 32px;
   padding-inline: 15px;
   line-height: 30px;
@@ -503,7 +326,7 @@ defineExpose({ focus, blur })
   transition:
     all 0.2s,
     box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  /* 键盘聚焦原生 input 时整块按钮显示焦点环 */
+  /* 键盘或脚本聚焦原生 input 时整块按钮显示焦点环（:focus-within 不区分聚焦来源） */
   &:focus-within {
     z-index: 1;
     border-color: var(--radio-primary-color);

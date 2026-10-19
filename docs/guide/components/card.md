@@ -112,7 +112,7 @@ const loading = ref(true)
 ## 三种尺寸
 
 <Space vertical>
-  <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
   <Card :size="size" :title="`${size.toUpperCase()} size card`" :width="cardWidth[size as keyof typeof cardWidth]">
     <template #extra>
       <a href="#">more</a>
@@ -151,7 +151,7 @@ const size = ref('middle')
 </script>
 <template>
   <Space vertical>
-    <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
     <Card :size="size" :title="`${size.toUpperCase()} size card`" :width="cardWidth[size as keyof typeof cardWidth]">
       <template #extra>
         <a href="#">more</a>

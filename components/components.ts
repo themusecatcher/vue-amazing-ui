@@ -40,7 +40,6 @@ export { default as Cascader } from './cascader'
 
 export type {
   CheckboxProps,
-  CheckboxOption,
   CheckboxGroupProps,
   CheckboxGroupOption,
   CheckboxValue,
@@ -204,7 +203,6 @@ export { default as QRCode } from './qr-code'
 
 export type {
   RadioProps,
-  RadioOption,
   RadioButtonProps,
   RadioGroupProps,
   RadioGroupOption,

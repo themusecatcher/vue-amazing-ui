@@ -10,13 +10,9 @@ import type { RadioChangeEvent, RadioValue } from '../context'
  */
 export interface Props {
   checked?: boolean // (v-model) 脱离组单独使用时的选中态
-
   value?: RadioValue // 该项的值，置于组内时据此判断选中
-
   disabled?: boolean // 是否禁用
-
   autofocus?: boolean // 是否自动聚焦原生 input
-
   name?: string // 原生 input 的表单字段名；置于 RadioGroup 内时以组的配置为准
   id?: string // 原生 input 的 id
 }

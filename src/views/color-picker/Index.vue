@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, h } from 'vue'
 import { BgColorsOutlined } from '@ant-design/icons-vue'
-import type { CheckboxOption, ColorPickerMode, ColorPickerAction, ColorPickerProps } from 'vue-amazing-ui'
+import type { CheckboxGroupOption, ColorPickerMode, ColorPickerAction, ColorPickerProps } from 'vue-amazing-ui'
 const colorValue = ref('rgba(0, 0, 0, 1)')
 const showAlpha = ref(false)
 const modes = ref<ColorPickerMode[]>(['rgb', 'hex'])
@@ -54,7 +54,7 @@ const panelTo = computed(() => {
   if (mode === 'container') return containerRef.value
   return undefined
 })
-const modeOptions: CheckboxOption[] = [
+const modeOptions: CheckboxGroupOption[] = [
   {
     label: 'rgb',
     value: 'rgb'
@@ -72,7 +72,7 @@ const modeOptions: CheckboxOption[] = [
     value: 'hsv'
   }
 ]
-const actionOptions: CheckboxOption[] = [
+const actionOptions: CheckboxGroupOption[] = [
   {
     label: 'confirm',
     value: 'confirm'
@@ -132,7 +132,7 @@ function handleOpenChange(value: boolean) {
     <h2 class="mt30 mb10">设定模式</h2>
     <p class="mb10">使用 <code>modes</code> 设定可选的颜色格式</p>
     <Space vertical>
-      <Space align="center"> modes: <Checkbox :options="modeOptions" v-model:value="modes" /> </Space>
+      <Space align="center"> modes: <CheckboxGroup :options="modeOptions" v-model:value="modes" /> </Space>
       <ColorPicker :width="240" default-value="#ff6900" :modes="modes" />
     </Space>
     <h2 class="mt30 mb10">显示按钮</h2>
@@ -140,7 +140,7 @@ function handleOpenChange(value: boolean) {
       >在 <code>actions</code> 属性中添加 <code>confirm</code> / <code>clear</code>，即可显示对应的确认 / 清除按钮</p
     >
     <Space vertical>
-      <Space align="center"> actions: <Checkbox :options="actionOptions" v-model:value="actions" /> </Space>
+      <Space align="center"> actions: <CheckboxGroup :options="actionOptions" v-model:value="actions" /> </Space>
       <ColorPicker
         :width="240"
         default-value="#ff6900"

@@ -228,8 +228,8 @@ const activeColumnTip = computed(() => {
 ## 自定义尺寸
 
 <ClientOnly>
-  <Flex vertical gap="middle">
-    <Radio :options="options" v-model:value="size" button button-style="solid" />
+  <Flex vertical>
+    <RadioGroup :options="options" v-model:value="size" option-type="button" button-style="solid" />
     <Descriptions bordered title="Custom Size" :size="size">
       <template #extra>
         <Button type="primary">Edit</Button>
@@ -291,8 +291,8 @@ const options = [
 ]
 </script>
 <template>
-  <Flex vertical gap="middle">
-    <Radio :options="options" v-model:value="size" button button-style="solid" />
+  <Flex vertical>
+    <RadioGroup :options="options" v-model:value="size" option-type="button" button-style="solid" />
     <Descriptions bordered title="Custom Size" :size="size">
       <template #extra>
         <Button type="primary">Edit</Button>
@@ -522,8 +522,8 @@ _使用 `colon` 属性关闭标签后的冒号_
 ## 标签对齐
 
 <ClientOnly>
-  <Flex vertical gap="middle">
-    <Radio :options="labelAlignOptions" v-model:value="labelAlign" button button-style="solid" />
+  <Flex vertical>
+    <RadioGroup :options="labelAlignOptions" v-model:value="labelAlign" option-type="button" button-style="solid" />
     <Descriptions title="User Info" bordered :labelAlign="labelAlign">
       <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
       <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
@@ -554,8 +554,8 @@ const labelAlignOptions = [
 ]
 </script>
 <template>
-  <Flex vertical gap="middle">
-    <Radio :options="labelAlignOptions" v-model:value="labelAlign" button button-style="solid" />
+  <Flex vertical>
+    <RadioGroup :options="labelAlignOptions" v-model:value="labelAlign" option-type="button" button-style="solid" />
     <Descriptions title="User Info" bordered :labelAlign="labelAlign">
       <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
       <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
@@ -627,7 +627,7 @@ _使用 `header` 插槽自定义整个头部区域，替代 `title` 与 `extra`_
 <ClientOnly>
   <Descriptions>
     <template #header>
-      <Flex gap="middle" align="center" justify="space-between" style="width: 100%">
+      <Flex align="center" justify="space-between" style="width: 100%">
         <span style="font-weight: 600; font-size: 16px">Custom Header</span>
         <Button type="primary">Edit</Button>
       </Flex>
@@ -644,7 +644,7 @@ _使用 `header` 插槽自定义整个头部区域，替代 `title` 与 `extra`_
 <template>
   <Descriptions>
     <template #header>
-      <Flex gap="middle" align="center" justify="space-between" style="width: 100%">
+      <Flex align="center" justify="space-between" style="width: 100%">
         <span style="font-weight: 600; font-size: 16px">Custom Header</span>
         <Button type="primary">Edit</Button>
       </Flex>
@@ -661,7 +661,7 @@ _使用 `header` 插槽自定义整个头部区域，替代 `title` 与 `extra`_
 ## 自定义内容 & 标签样式
 
 <ClientOnly>
-  <Flex vertical gap="middle">
+  <Flex vertical>
     <Descriptions
       bordered
       title="Custom Style"
@@ -718,7 +718,7 @@ _使用 `header` 插槽自定义整个头部区域，替代 `title` 与 `extra`_
 
 ```vue
 <template>
-  <Flex vertical gap="middle">
+  <Flex vertical>
     <Descriptions
       bordered
       title="Custom Style"
@@ -816,7 +816,7 @@ _使用 `header` 插槽自定义整个头部区域，替代 `title` 与 `extra`_
     </Col>
     <Col :span="24">
       <Flex gap="small" vertical>
-        <Flex gap="middle" align="center" wrap="wrap">
+        <Flex align="center" wrap="wrap">
           column:
           <Segmented v-model:value="state.columnMode" :options="columnModeOptions" />
           <InputNumber
@@ -827,7 +827,7 @@ _使用 `header` 插槽自定义整个头部区域，替代 `title` 与 `extra`_
           />
           <span class="descriptions-column-tip">{{ activeColumnTip }}</span>
         </Flex>
-        <Flex v-if="state.columnMode === 'responsive'" gap="middle" align="flex-start" wrap="wrap">
+        <Flex v-if="state.columnMode === 'responsive'" align="flex-start" wrap="wrap">
           <Flex
             v-for="bp in breakpoints"
             :key="bp.key"
@@ -1075,7 +1075,7 @@ const activeColumnTip = computed(() => {
       </Col>
       <Col :span="24">
         <Flex gap="small" vertical>
-          <Flex gap="middle" align="center" wrap="wrap">
+          <Flex align="center" wrap="wrap">
             column:
             <Segmented v-model:value="state.columnMode" :options="columnModeOptions" />
             <InputNumber
@@ -1086,7 +1086,7 @@ const activeColumnTip = computed(() => {
             />
             <span class="descriptions-column-tip">{{ activeColumnTip }}</span>
           </Flex>
-          <Flex v-if="state.columnMode === 'responsive'" gap="middle" align="flex-start" wrap="wrap">
+          <Flex v-if="state.columnMode === 'responsive'" align="flex-start" wrap="wrap">
             <Flex
               v-for="bp in breakpoints"
               :key="bp.key"

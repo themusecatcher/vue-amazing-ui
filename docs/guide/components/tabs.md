@@ -617,7 +617,7 @@ watchEffect(() => {
 ## 三种尺寸
 
 <Flex vertical>
-  <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
   <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" />
   <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" type="card" />
 </Flex>
@@ -682,7 +682,7 @@ const size = ref('middle')
 </script>
 <template>
   <Flex vertical>
-    <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
     <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" />
     <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" type="card" />
   </Flex>
@@ -694,7 +694,7 @@ const size = ref('middle')
 ## 自定义位置
 
 <Flex vertical>
-  <Radio :options="positionOptions" v-model:value="position" button button-style="solid" />
+  <RadioGroup :options="positionOptions" v-model:value="position" option-type="button" button-style="solid" />
   <Tabs :items="tabItems" v-model:active-key="activeKey" :tab-position="position" />
   <Tabs :items="tabItems" v-model:active-key="activeKey" :tab-position="position" type="card" />
 </Flex>
@@ -763,7 +763,7 @@ const position = ref('top')
 </script>
 <template>
   <Flex vertical>
-    <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    <RadioGroup :options="sizeOptions" v-model:value="size" option-type="button" button-style="solid" />
     <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" />
     <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" type="card" />
   </Flex>
@@ -775,7 +775,7 @@ const position = ref('top')
 ## 左右滑动，容纳更多标签
 
 <Flex vertical>
-  <Radio :options="positionOptions" v-model:value="morePosition" button button-style="solid" />
+  <RadioGroup :options="positionOptions" v-model:value="morePosition" option-type="button" button-style="solid" />
   <Tabs
     :style="positionStyle"
     :items="moreTabPages"
@@ -876,7 +876,7 @@ watchEffect(() => {
 </script>
 <template>
   <Flex vertical>
-    <Radio :options="positionOptions" v-model:value="morePosition" button button-style="solid" />
+    <RadioGroup :options="positionOptions" v-model:value="morePosition" option-type="button" button-style="solid" />
     <Tabs
       :style="positionStyle"
       :items="moreTabPages"
@@ -1096,12 +1096,12 @@ watchEffect(() => {
     </Col>
     <Col :span="12">
       <Space gap="small" vertical>
-        size：<Radio :options="sizeOptions" v-model:value="state.size" button button-style="solid" />
+        size：<RadioGroup :options="sizeOptions" v-model:value="state.size" option-type="button" button-style="solid" />
       </Space>
     </Col>
     <Col :span="6">
       <Space gap="small" vertical>
-        type：<Radio :options="typeOptions" v-model:value="state.type" button button-style="solid" />
+        type：<RadioGroup :options="typeOptions" v-model:value="state.type" option-type="button" button-style="solid" />
       </Space>
     </Col>
     <Col :span="6">
@@ -1111,10 +1111,10 @@ watchEffect(() => {
     </Col>
     <Col :span="12">
       <Space gap="small" vertical>
-        tabPosition：<Radio
+        tabPosition：<RadioGroup
           :options="positionOptions"
           v-model:value="state.tabPosition"
-          button
+          option-type="button"
           button-style="solid"
         />
       </Space>
@@ -1235,12 +1235,12 @@ const state = reactive<TabsProps>({
       </Col>
       <Col :span="12">
         <Space gap="small" vertical>
-          size：<Radio :options="sizeOptions" v-model:value="state.size" button button-style="solid" />
+          size：<RadioGroup :options="sizeOptions" v-model:value="state.size" option-type="button" button-style="solid" />
         </Space>
       </Col>
       <Col :span="6">
         <Space gap="small" vertical>
-          type：<Radio :options="typeOptions" v-model:value="state.type" button button-style="solid" />
+          type：<RadioGroup :options="typeOptions" v-model:value="state.type" option-type="button" button-style="solid" />
         </Space>
       </Col>
       <Col :span="6">
@@ -1250,10 +1250,10 @@ const state = reactive<TabsProps>({
       </Col>
       <Col :span="12">
         <Space gap="small" vertical>
-          tabPosition：<Radio
+          tabPosition：<RadioGroup
             :options="positionOptions"
             v-model:value="state.tabPosition"
-            button
+            option-type="button"
             button-style="solid"
           />
         </Space>
