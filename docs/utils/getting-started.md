@@ -1,3 +1,7 @@
+---
+description: 组件库内置工具函数的安装与快速上手
+---
+
 # 快速上手
 
 <GlobalElement />

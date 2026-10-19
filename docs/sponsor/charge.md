@@ -1,3 +1,7 @@
+---
+description: 赞助 Vue Amazing UI 组件库，支持项目持续迭代
+---
+
 # ✨ 成为赞助者
 
 <GlobalElement hide-sponsor />

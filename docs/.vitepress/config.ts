@@ -36,12 +36,17 @@ function extractPageSummary(filePath: string): string | undefined {
   const intro = raw.replace(/^---[\s\S]*?\n---\n/, '').split(/^## /m)[0] ?? ''
   const summaryLine = intro.split('\n').find((line) => /^_[^_].*_$/.test(line.trim()))
   if (!summaryLine) return undefined
-  return summaryLine
-    .trim()
-    .replace(/^_|_$/g, '')
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-    .replace(/`/g, '')
-    .trim()
+  return (
+    summaryLine
+      .trim()
+      .replace(/^_|_$/g, '')
+      .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+      .replace(/`/g, '')
+      // 描述最终写成 <meta content="..."> / og:description 的纯文本，去掉行内强调与 HTML 标签
+      .replace(/\*\*/g, '')
+      .replace(/<[^>]+>/g, '')
+      .trim()
+  )
 }
 
 export default defineConfig({
