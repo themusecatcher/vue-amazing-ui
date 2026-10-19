@@ -2,6 +2,12 @@ import pluginVue from 'eslint-plugin-vue'
 import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
 import skipFormatting from '@vue/eslint-config-prettier/skip-formatting'
 
+/** 库内深引入的统一提示（三种写法共用，避免文案多处漂移） */
+const DEEP_IMPORT_MESSAGE = [
+  '库内引入请走目录入口（如 components/radio、components/picker、components/utils）；',
+  '仅 utils/type 与 utils/resolver 允许直引文件，构建期模块（style-deps / vendor-styles）禁止在组件内引用'
+].join('')
+
 // To allow more languages other than `ts` in `.vue` files, uncomment the following lines:
 // import { configureVueProject } from '@vue/eslint-config-typescript'
 // configureVueProject({ scriptLangs: ['ts', 'tsx'] })
@@ -48,6 +54,36 @@ export default defineConfigWithVueTs(
       'vue/no-unused-vars': 'off',
       'vue/return-in-computed-property': 'off',
       'vue/require-toggle-inside-transition': 'off'
+    }
+  },
+
+  // 库内引入路径约束：组件目录的内容统一由目录入口 index.ts 汇总（见 development/project-structure.md）。
+  // 三类深引入分别约束：
+  //   1. 别名写法 `components/<dir>/<子目录|文件>` → group（gitignore 语义，例外用 ! 前缀）；
+  //   2/3. 相对写法 → regex。group 无法对 `..` 做精确豁免（`../*/*` 会连 `../../utils/type`
+  //        一并命中且 negate 失效），故相对路径改用 regex 表达。
+  // 允许的写法：同目录兄弟文件（`./date-utils`）、同族父目录辅助模块（`../siderHook`）、
+  // 目录入口（`../radio` / `./descriptions-item`）、`./style/*`、`utils/type`、`utils/resolver`。
+  // 构建期模块 style-deps / vendor-styles 不设例外：组件内本就不应引用它们。
+  {
+    name: 'custom/no-deep-component-imports',
+    files: ['components/**/*.{ts,vue}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            // 跨目录相对文件（`../<dir>/<文件>`、`../../...`）；目录入口与父目录辅助模块不匹配
+            { regex: '^(?:\\.\\./)+(?!.*utils/(?:type|resolver)$)[^/]+/.+$', message: DEEP_IMPORT_MESSAGE },
+            // 同目录子目录文件（`./<子目录>/<文件>`）；兄弟文件与子目录入口不匹配
+            { regex: '^\\./(?!style/)(?!utils/(?:type|resolver)$)[^/]+/.+$', message: DEEP_IMPORT_MESSAGE },
+            {
+              group: ['components/*/*', '!components/utils/type', '!components/utils/resolver'],
+              message: DEEP_IMPORT_MESSAGE
+            }
+          ]
+        }
+      ]
     }
   }
 )
