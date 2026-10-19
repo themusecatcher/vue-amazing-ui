@@ -40,6 +40,18 @@ describe('Radio 原生 input 承载', () => {
     wrapper = mount(Radio, { props: { disabled: true } })
     expect(wrapper.find('input[type="radio"]').attributes('disabled')).toBeDefined()
   })
+
+  it('点击选项名：根节点上的 click 只触发一次，且选中态照常切换', async () => {
+    let clickCount = 0
+    wrapper = mount(Radio, {
+      attrs: { onClick: () => (clickCount += 1) },
+      slots: { default: 'Radio' }
+    })
+    await wrapper.find('.radio-label').trigger('click')
+    // label 会把点击转发给原生 input，转发事件若不拦截会在根节点上再冒泡一次
+    expect(clickCount).toBe(1)
+    expect(wrapper.emitted('change')?.[0]?.[0]).toBe(true)
+  })
 })
 
 describe('Radio change 事件对象', () => {
@@ -136,6 +148,16 @@ describe('RadioGroup 下发组级配置', () => {
     await wrapper.findAll('label')[1].trigger('click')
     expect(wrapper.emitted('change')).toHaveLength(1)
     expect((wrapper.emitted('change')?.[0] as string[])[0]).toBe('Pear')
+  })
+
+  it('组内单项缺少 value 时无法选中，原生切换出的选中态按组件状态回写', async () => {
+    wrapper = mount(RadioGroup, { slots: { default: () => h(Radio, () => 'A') } })
+    const input = wrapper.find('input[type="radio"]')
+    // 模拟浏览器在点击后先行切换原生选中态（change 事件随之触发）
+    ;(input.element as HTMLInputElement).checked = true
+    await input.trigger('change')
+    expect((input.element as HTMLInputElement).checked).toBe(false)
+    expect(wrapper.emitted('change')).toBeUndefined()
   })
 
   it('垂直排列时数组间距取垂直间距，不产出非法 CSS', () => {

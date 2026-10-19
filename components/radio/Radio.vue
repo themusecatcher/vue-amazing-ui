@@ -107,18 +107,26 @@ function onChecked(event: Event): void {
   }
   syncInputChecked(event, true)
 }
-// 单项点击：组内选中态由组维护，本项只上报自身 value；组外走自身的受控切换
+// 单项点击：组内选中态由组维护，本项只上报自身 value；组外走自身的受控切换。
+// 两个分支的原生 input 均以 `@click.stop` 拦掉「label → input」的转发点击，否则使用方绑在组件根上的
+// click 会收到两次（转发点击的选中逻辑已由本函数承载）
 function onSingleClick(event: Event): void {
   if (mergedDisabled.value) {
     return
   }
   if (groupContext) {
     const { value } = props
-    if (value === undefined || groupChecked.value) {
+    if (value === undefined) {
+      // 未提供 value 时组内无从比较，原生选中态仍需按组件状态回写，避免 DOM 与视觉状态不一致
+      syncInputChecked(event, false)
       return
     }
-    startWave()
+    if (groupChecked.value) {
+      syncInputChecked(event, true)
+      return
+    }
     groupContext.onChange(value, buildChangeEvent(event, true, value))
+    syncInputChecked(event, true)
     return
   }
   onChecked(event)
@@ -172,6 +180,7 @@ defineExpose({ focus, blur })
       :checked="mergedChecked"
       :disabled="mergedDisabled"
       :autofocus="autofocus"
+      @click.stop
       @change="onSingleClick($event)"
       @focus="onInputFocus"
       @blur="clearExposedFocus"
@@ -215,6 +224,7 @@ defineExpose({ focus, blur })
       :checked="mergedChecked"
       :disabled="mergedDisabled"
       :autofocus="autofocus"
+      @click.stop
       @change="onSingleClick($event)"
       @focus="onInputFocus"
       @blur="clearExposedFocus"

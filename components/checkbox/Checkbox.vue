@@ -107,7 +107,8 @@ function onCheckedChange(event: Event): void {
   syncInputChecked(event, nextChecked)
 }
 // 单项切换：组内选中集合由组维护，本项只上报新的选中态，避免同一次选择双出口。
-// 交互统一走原生 click（鼠标经外层 label 转发后事件目标仍是本 input），由此天然单点触发
+// 交互统一走原生 click（鼠标经外层 label 转发后事件目标仍是本 input），由此天然单点触发；
+// input 上的 `@click.stop` 同时拦掉这条转发点击的冒泡，否则使用方绑在组件根上的 click 会触发两次
 function onSingleClick(event: Event): void {
   if (!inGroupItem.value) {
     onCheckedChange(event)
@@ -168,7 +169,7 @@ defineExpose({ focus, blur })
       :checked="mergedChecked"
       :disabled="mergedDisabled"
       :autofocus="autofocus"
-      @click.prevent="onSingleClick($event)"
+      @click.stop.prevent="onSingleClick($event)"
       @focus="onInputFocus"
       @blur="clearExposedFocus"
     />

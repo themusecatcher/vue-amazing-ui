@@ -46,6 +46,18 @@ describe('Checkbox 原生 input 承载', () => {
     wrapper = mount(Checkbox, { props: { disabled: true } })
     expect(wrapper.find('input[type="checkbox"]').attributes('disabled')).toBeDefined()
   })
+
+  it('点击选项名：根节点上的 click 只触发一次，且选中态照常切换', async () => {
+    let clickCount = 0
+    wrapper = mount(Checkbox, {
+      attrs: { onClick: () => (clickCount += 1) },
+      slots: { default: 'Checkbox' }
+    })
+    await wrapper.find('.checkbox-label').trigger('click')
+    // label 会把点击转发给原生 input，转发事件若不拦截会在根节点上再冒泡一次
+    expect(clickCount).toBe(1)
+    expect(wrapper.emitted('change')?.[0]?.[0]).toBe(true)
+  })
 })
 
 describe('Checkbox change 事件对象', () => {
