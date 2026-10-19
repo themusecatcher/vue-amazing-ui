@@ -738,7 +738,7 @@ vertical | 是否垂直排列 | boolean | false
 gap | 选项间距，单位 `px`；垂直排列时即垂直间距（传数组取垂直间距）；数组用于水平排列折行时：`[水平间距, 垂直间距]` | number &#124; number[] | 8
 disabled | 是否禁用整组，组内单项自身的 `disabled` 在此基础上叠加 | boolean | false
 name | 表单字段名，下发到组内每个原生 `input` | string | undefined
-id | `input` 的 `id` 前缀，`options` 模式下实际 `id` 追加选项下标 | string | undefined
+id | `input` 的 `id` 前缀，`options` 模式下实际 `id` 追加选项下标；组合式用法不下发，请在组内各项上自行设置 | string | undefined
 autofocus | 是否自动聚焦首项，仅 `options` 模式生效 | boolean | false
 
 ### CheckboxGroupOption Type

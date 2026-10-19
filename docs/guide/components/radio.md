@@ -631,6 +631,10 @@ _开关演示整组禁用：禁用后不可聚焦、不可切换，`disabled` �
   </Flex>
   <Flex vertical gap="small" align="start">
     <span class="demo-label">配置式</span>
+    <RadioGroup :options="options" v-model:value="disabledOptionsValue" disabled />
+  </Flex>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">按钮形态</span>
     <RadioGroup :options="options" v-model:value="disabledOptionsValue" button disabled />
   </Flex>
   <Flex vertical gap="small" align="start">
@@ -644,9 +648,19 @@ _开关演示整组禁用：禁用后不可聚焦、不可切换，`disabled` �
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { RadioGroupOption, RadioProps } from 'vue-amazing-ui'
+const options = ref<RadioGroupOption[]>([
+  { label: '拜占庭', value: 1 },
+  { label: '君士坦丁堡', value: 2 },
+  { label: '伊斯坦布尔', value: 3 },
+  { label: '布宜诺斯艾利斯', value: 4 }
+])
 const disabled = ref<boolean>(true)
 const checked1 = ref<boolean>(true)
 const checked2 = ref<boolean>(false)
+const optionsValue = ref<RadioProps['value']>(1)
+const buttonValue = ref<RadioProps['value']>(1)
+const groupValue = ref<RadioProps['value']>(1)
 const toggleDisabled = () => {
   disabled.value = !disabled.value
 }
@@ -655,6 +669,9 @@ const toggleDisabled = () => {
   <Button type="primary" @click="toggleDisabled">Toggle disabled</Button>
   <Radio v-model:checked="checked1" :disabled="disabled">Disabled</Radio>
   <Radio v-model:checked="checked2" :disabled="disabled">Disabled</Radio>
+  <RadioGroup :options="options" v-model:value="optionsValue" disabled />
+  <RadioGroup :options="options" v-model:value="buttonValue" button disabled />
+  <RadioGroup v-model:value="groupValue" :options="options" disabled />
 </template>
 ```
 
@@ -954,7 +971,7 @@ _组件暴露 `focus` / `blur` 方法操作原生 `input`，程序化聚焦同�
   </Flex>
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -996,7 +1013,7 @@ const buttonRef = ref<InstanceType<typeof RadioButton> | null>(null)
 </template>
 ```
 
-::::
+:::
 
 ## APIs
 
@@ -1006,7 +1023,7 @@ const buttonRef = ref<InstanceType<typeof RadioButton> | null>(null)
 :-- | :-- | :-- | :--
 checked <Tag color="cyan">v-model</Tag> | 当前是否选中；作为组内单项使用时以组的值为准，本属性不生效 | boolean | false
 value | 本项的值；脱离组时随 `change` 事件回传，置于 `RadioGroup` 内时作为本项的身份标识，与组内当前值比较得出选中态 | string &#124; number &#124; boolean | undefined
-button | 是否启用按钮样式；置于 `RadioGroup` 内时，组的 `button` 同样会渲染为按钮（显式设置优先） | boolean | false
+button | 是否启用按钮样式；置于 `RadioGroup` 内时，组为按钮形态同样按按钮渲染（本属性为 `true` 时优先） | boolean | false
 buttonStyle | 按钮样式风格；置于 `RadioGroup` 内时以组的配置为准 | 'outline' &#124; 'solid' | 'outline'
 size | 尺寸，仅当按钮形态时生效；置于 `RadioGroup` 内时以组的配置为准，组未指定时回落自身尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 disabled | 是否禁用 | boolean | false
@@ -1023,11 +1040,11 @@ options | 单选框选项数据；提供后组内默认插槽不生效 | (string
 button | 是否启用按钮样式 | boolean | false
 buttonStyle | 按钮形态的风格，仅按钮形态生效 | 'outline' &#124; 'solid' | 'outline'
 size | 尺寸，仅作用于按钮形态；未指定时组内各项回落自身尺寸 | 'small' &#124; 'middle' &#124; 'large' | undefined
-vertical | 是否垂直排列，仅非按钮形态生效 | boolean | false
+vertical | 是否垂直排列；按钮形态（组的 `button` 或组内 `RadioButton`）不适用 | boolean | false
 gap | 选项间距，单位 `px`；垂直排列时即垂直间距（传数组取垂直间距）；数组用于水平排列折行时：`[水平间距, 垂直间距]`；按钮形态下相邻项贴合成组，该属性不生效 | number &#124; number[] | 8
 disabled | 是否禁用整组，组内单项自身的 `disabled` 在此基础上叠加 | boolean | false
 name | 表单字段名，下发到组内每个原生 `input` | string | undefined
-id | `input` 的 `id` 前缀，`options` 模式下实际 `id` 追加选项下标 | string | undefined
+id | `input` 的 `id` 前缀，`options` 模式下实际 `id` 追加选项下标；组合式用法不下发，请在组内各项上自行设置 | string | undefined
 autofocus | 是否自动聚焦首项，仅 `options` 模式生效 | boolean | false
 
 ### RadioButton

@@ -2,7 +2,7 @@
 
 <GlobalElement />
 
-_在 `<html>` 根元素上切换 `dark` 类值并同步 `color-scheme` 的工具函数_
+_在页面根元素（`html`）上切换 `dark` 类值并同步 `color-scheme` 的工具函数_
 
 ::: details Show Source Code
 

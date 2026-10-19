@@ -1,3 +1,7 @@
+---
+description: Vue Amazing UI 组件库的版本更新记录，含新增组件、接口重构、缺陷修复与文档更新
+---
+
 # 更新日志
 
 <GlobalElement />
@@ -12,8 +16,8 @@
 
 ## <VersionDateTag date="2026-10-19">2.15.2</VersionDateTag>
 
-- 重构并增强 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html)：新增 `RadioGroup` / `CheckboxGroup` 组合式用法（统一下发选中值与禁用态并承载组内选项，组内项以 `value` 标识自身，`Radio` 另有 `RadioButton` 提供按钮形态，`options` 支持字符串 / 数字简写与 `VNode` 选项名）与原生 `input` 承载（`name` / `id` / `autofocus` 可由组下发到组内各项，补齐键盘操作与屏幕阅读器语义，暴露 `focus` / `blur` 实例方法且调用 `focus` 时同样显示焦点环，`change` 事件在「新值」首参之后追加事件对象——含状态快照与原始事件，首参用法不受影响，`RadioChangeEvent` / `CheckboxChangeEvent` 类型随组件一并导出），并修复定高行内与输入框混排时文字与控件基线错位、内容溢出行盒的问题
-- 移除 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html) 的 `options` / `vertical` / `gap` 属性，配置式写法统一由 `RadioGroup` / `CheckboxGroup` 承载；[复选框 Checkbox](/guide/components/checkbox.html) 的 `value` 不再接受数组，`buttonSize` 更名为 `size`（组内由组的 `size` 下发，组未指定时回落自身尺寸），选项类型统一为 `RadioGroupOption` / `CheckboxGroupOption`（`RadioOption` / `CheckboxOption` 不再导出）
+- 重构并增强 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html)：新增 `RadioGroup` / `CheckboxGroup` 组合式用法（统一下发选中值与禁用态并承载组内选项，组内项以 `value` 标识自身，`Radio` 另有 `RadioButton` 提供按钮形态，`options` 支持字符串 / 数字简写与 `VNode` 选项名）与原生 `input` 承载（`name` 下发到组内每个原生 `input`，`id`（前缀 + 选项下标）/ `autofocus` 在 `options` 模式下下发，补齐键盘操作与屏幕阅读器语义，暴露 `focus` / `blur` 实例方法且调用 `focus` 时同样显示焦点环，`change` 事件在「新值」首参之后追加事件对象——含状态快照与原始事件，首参用法不受影响，`RadioChangeEvent` / `CheckboxChangeEvent` 类型随组件一并导出），优化选中反馈并修复定高行内与输入框混排时文字与控件基线错位、内容溢出行盒的问题
+- 移除 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html) 的 `options` / `vertical` / `gap` 属性，配置式写法统一由 `RadioGroup` / `CheckboxGroup` 承载；[复选框 Checkbox](/guide/components/checkbox.html) 的 `value` 不再接受数组；[单选框 Radio](/guide/components/radio.html) 的 `buttonSize` 更名为 `size`（置于 `RadioGroup` 内时由组的 `size` 下发，组未指定时回落自身尺寸）；选项类型统一为 `RadioGroupOption` / `CheckboxGroupOption`（`RadioOption` / `CheckboxOption` 不再导出）
 - [日历 Calendar](/guide/components/calendar.html) 的模式切换器改用 `RadioGroup`，`modeRadioProps` 类型同步改为 `RadioGroupProps`
 - 修复 [输入框 Input](/guide/components/input.html)：未绑定 `v-model` 时输入内容（含输入法合成文本）会因悬浮 / 聚焦等状态变化丢失，与文字混排时会把所在行文字基线压低 `1px`
 - 更新组件库文档和贡献者文档
