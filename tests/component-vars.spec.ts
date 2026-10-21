@@ -198,8 +198,10 @@ describe('组件级主色预索引', () => {
 
 describe('配置键类型契约', () => {
   it('ThemeComponentKey 联合类型与注册表键集合逐项一致（顺序也一致）', () => {
-    const dts = readFileSync(resolve(componentDir, 'theme/component-vars.d.ts'), 'utf-8')
-    const block = dts.match(/export type ThemeComponentKey\s*=([\s\S]*?)(?=\nexport\b)/)
+    // 类型定义在 .types.ts（.d.ts 只声明 .js 的值导出）；手写 .d.ts 不会被 tsc 搬进产物，
+    // 类型必须由普通 .ts 产出，使用方才能解析这份联合类型
+    const typesSource = readFileSync(resolve(componentDir, 'theme/component-vars.types.ts'), 'utf-8')
+    const block = typesSource.match(/export type ThemeComponentKey\s*=([\s\S]*?)(?=\nexport\b)/)
     expect(block, '缺少 ThemeComponentKey 联合类型').toBeTruthy()
     const typedKeys = [...(block?.[1] ?? '').matchAll(/'([A-Za-z0-9]+)'/g)].map((matched) => matched[1])
     expect(typedKeys).toEqual(THEME_COMPONENTS.map((item) => item.key))

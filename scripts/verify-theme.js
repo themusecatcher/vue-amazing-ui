@@ -231,14 +231,15 @@ if (
 }
 
 // 配置键的类型联合必须与注册表一致：类型收窄是「写错组件名编译期报错」的唯一保障，
-// 一旦 .d.ts 与注册表漂移，用户会看到「IDE 报错但运行期可用」或反之。
-const componentVarsDtsPath = resolve(rootDir, 'components/theme/component-vars.d.ts')
-const themeComponentKeyBlock = readFileSync(componentVarsDtsPath, 'utf-8').match(
+// 一旦类型定义与注册表漂移，用户会看到「IDE 报错但运行期可用」或反之。
+// 类型在 `component-vars.types.ts`（`.d.ts` 只声明 `.js` 的值导出，不承载类型）。
+const componentVarsTypesPath = resolve(rootDir, 'components/theme/component-vars.types.ts')
+const themeComponentKeyBlock = readFileSync(componentVarsTypesPath, 'utf-8').match(
   /export type ThemeComponentKey\s*=([\s\S]*?)(?=\nexport\b)/
 )
 const registryThemeComponentKeys = THEME_COMPONENTS.map((item) => item.key)
 if (!themeComponentKeyBlock) {
-  failures.push('components/theme/component-vars.d.ts 缺少 ThemeComponentKey 联合类型')
+  failures.push('components/theme/component-vars.types.ts 缺少 ThemeComponentKey 联合类型')
 } else {
   const typedThemeComponentKeys = [...themeComponentKeyBlock[1].matchAll(/'([A-Za-z0-9]+)'/g)].map(
     (matched) => matched[1]

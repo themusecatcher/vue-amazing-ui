@@ -27,4 +27,10 @@ export {
   THEME_COMPONENTS,
   THEME_COMPONENT_KEYS
 } from './component-vars.js'
-export type { ComponentThemeState, ComponentVarMeta, ThemeComponentKey, ThemeComponentMeta } from './component-vars.js'
+// 类型从真实 `.ts` 出，不经过手写 `.d.ts`：后者不会被 tsc 搬进产物，转发的声明会在 `es|lib` 里悬空
+export type {
+  ComponentThemeState,
+  ComponentVarMeta,
+  ThemeComponentKey,
+  ThemeComponentMeta
+} from './component-vars.types'
