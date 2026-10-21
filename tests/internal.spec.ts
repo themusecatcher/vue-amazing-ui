@@ -7,7 +7,7 @@ import type { MessageApi } from 'components/message'
  * P1 / P5 涉及组件内部的定时器持有情况，无法通过 DOM 断言直接观测。
  * 组件以原生 setTimeout 持有自动关闭定时器，故使用 vitest 假定时器统计
  * 「已注册且尚未触发、尚未取消」的定时器数量：被 clearTimeout 取消的定时器
- * 会从计数中移除，与原先打桩 cancelRaf 的观测口径一致。
+ * 会从计数中移除，即「已取消」与「已触发」都不再计入挂起数。
  * 附带收益：无需真实等待 duration，用例瞬时完成。
  */
 beforeEach(() => {

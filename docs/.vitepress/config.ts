@@ -546,10 +546,6 @@ export default defineConfig({
               link: '/utils/functions/format-number'
             },
             {
-              text: 'rafTimeout/cancelRaf 定时器',
-              link: '/utils/functions/raf-timeout'
-            },
-            {
               text: 'throttle 节流',
               link: '/utils/functions/throttle'
             },

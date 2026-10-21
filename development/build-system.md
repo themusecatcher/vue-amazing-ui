@@ -119,7 +119,7 @@ pnpm guard             # 产物守卫：毫秒级存在性校验（样式入口 
 - 配置：`vitest.config.ts`（独立于 vite.config.ts，避免库模式构建配置干扰）。
 - 环境：`happy-dom`，`globals: true`，用例匹配 `tests/**/*.spec.ts`。
 - 框架：`@vue/test-utils` + `vitest`。
-- `tests/setup.ts`：为 happy-dom 提供符合 `AnimationFrameID` 契约的 `requestAnimationFrame` 实现（详见文件内注释）。
+- `tests/setup.ts`：为 happy-dom 提供返回值稳定为 `number`、帧间隔固定的 `requestAnimationFrame` 实现，供组件帧调度（`Countdown` / `Table` / `Dialog` / `useFps` 等）在测试中可取消、可预期（详见文件内注释）。
 - 用例分类（按主题分布，新增用例就近归入或新建 `<主题>.spec.ts`）：
   - 环境 / 内建：`env.spec.ts`、`internal.spec.ts`、`ssr.spec.ts`
   - 缺陷回归：`bugs.spec.ts`

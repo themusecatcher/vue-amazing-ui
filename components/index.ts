@@ -5,8 +5,6 @@ export * from './components'
 export {
   dateFormat,
   formatNumber,
-  rafTimeout,
-  cancelRaf,
   throttle,
   debounce,
   add,
@@ -25,7 +23,7 @@ export {
   getScrollParent,
   useScrollParent
 } from './utils'
-export type { AnimationFrameID, DownloadOptions, DownloadStrategy, ScrollParentOptions } from './utils'
+export type { DownloadOptions, DownloadStrategy, ScrollParentOptions } from './utils'
 export { VueAmazingUIResolver } from './utils/resolver'
 export type { VueAmazingUIResolverOptions } from './utils/resolver'
 
