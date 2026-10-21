@@ -9,6 +9,8 @@
     "eslint.config.*",
     "components/utils/vendor-styles.ts",
     "components/utils/style-deps.ts",
+    "components/theme/**/*.ts",
+    "components/utils/warn.ts",
     "build/**/*.ts"
   ],
   "compilerOptions": {
@@ -18,6 +20,7 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
+    "lib": ["ES2023", "DOM"],
     "types": ["node"]
   }
 }

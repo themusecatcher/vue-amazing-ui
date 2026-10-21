@@ -21,6 +21,8 @@ import { vendorStyles } from './components/utils/vendor-styles'
 import { mergeComponentStyles } from './build/merge-component-styles'
 // 构建后处理：为每个组件生成样式入口 es|lib/<dir>/style/index.{js,cjs}，见该文件头部说明
 import { generateStyleEntries } from './build/generate-style-entries'
+// 构建期生成主题默认变量表（components/style/generated/theme.css），供 global.less 内联
+import { writeThemeCss } from './build/gen-theme'
 
 // 获取 vite build 构建时，传入的参数：dir f（形如 `vite build -- dir=dist f=iife`）
 // minimist 的 `_` 字段收集所有「非 -x/--x 开头的裸位置参数」，即 `--` 之后的 `dir=dist f=iife` 会被归入 _ 数组
@@ -58,6 +60,19 @@ const externalGlobals: Record<string, string> = {
   seemly: 'seemly',
   '@ant-design/colors': 'Colors',
   '@ctrl/tinycolor': 'TinyColor'
+}
+// 主题默认变量表：dev / build 的 buildStart 均会触发，必须早于样式模块解析（global.less 以 inline 方式引入它）
+function themeCssPlugin(): Plugin {
+  return {
+    name: 'theme-css',
+    buildStart() {
+      try {
+        writeThemeCss(rootDir)
+      } catch (error) {
+        console.warn('[theme-css] 生成主题变量表失败', error)
+      }
+    }
+  }
 }
 // dist（IIFE/UMD 全量构建）下生成 dist/css.d.ts，供 package.json exports["./css"].types 指向，解决 `import 'vue-amazing-ui/css'` 的 TS 报错
 function generateCssDtsPlugin(): Plugin {
@@ -228,6 +243,7 @@ const buildESAndLibOptions = {
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    themeCssPlugin(),
     vue(),
     VueDevTools({
       // https://devtools.vuejs.org
