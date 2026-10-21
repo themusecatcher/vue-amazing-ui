@@ -14,24 +14,25 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-21">2.16.0</VersionDateTag>
+## <VersionDateTag date="2026-10-21">3.0.0</VersionDateTag>
 
-- **破坏性变更**：主题系统重构为「种子 → 派生 → CSS 变量」。[全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme` 改为 `{ seed, mode }`（原 `{ common, ComponentName }` 形式已移除）：`seed` 只接受 7 个颜色种子（`primary` / `success` / `warning` / `error` / `info` / `neutralText` / `neutralBg`），其余 40 个语义变量按色阶索引统一派生；新增 `mode`（`light` / `dark` / `auto`，跟随系统配色）；组件样式改为只消费 `--va-*`，组件级主题覆盖（原 `theme.Button.primaryColor` 等）改用「嵌套 `ConfigProvider`」的作用域换肤；`abstract` 默认值由 `true` 改为 `false`（默认渲染包裹元素，主题只作用于自身子树），需要页面级主题（含 `Teleport` 到 `body` 的浮层、页面链接）时请在最外层显式传 `:abstract="true"`。迁移对照见[定制主题](/guide/customize-theme.html)
-- 主题实现：新增 `components/theme/`（基于 `@ant-design/colors` 的色阶映射 + 中性色透明度阶梯 + 派生缓存），构建期生成静态默认表并随每份按需样式入口下发，首帧不依赖 `JS`；不替品牌色做对比度兜底；公开 `derive(seed, mode)` 供 `JS` / `canvas` / `SVG` 场景取色，已废弃的 `getColorPalettes` / `getAlphaColor` 从主入口与工具文档中一并移除
-- **破坏性变更**：移除 `toggleDark` / `rafTimeout` / `cancelRaf` 三个工具函数（对外工具由 `21` 个收敛为 `16` 个：本条移除 3 个，上条废弃 API 清理 `getColorPalettes` / `getAlphaColor` 再减 2 个；主入口、类型、文档与演示站列表同步清理）。`toggleDark` 只切换 `html.dark`，与库主题无关（组件只消费 `--va-*` 与 `data-va-mode`），切换暗色请改用 `ConfigProvider` 的 `theme.mode`（含 `auto` 跟随系统）或直接写 `data-va-mode`；`rafTimeout` / `cancelRaf` 的回调绑定渲染帧、与 `setTimeout` / `setInterval` 不等价，库内帧调度统一使用原生 `requestAnimationFrame`，需要不被暂停的延时时请直接用 `setTimeout`
-- 默认主色保持 `#1677ff` 不变；新增主题守护脚本 `pnpm verify:theme`（组件不得使用旧主题通道、`--va-*` 引用必须已定义、变量表结构校验）
-- 统一库内告警出口：组件与工具函数中散落的 `console.warn` / `console.error` / `console.debug` 收敛为单一 `log(level, component, message, error?)`（`components/utils/log.ts`），级别即环境策略 —— `error` 全环境输出（线上可观测），`warn` / `debug` 仅开发期输出，前缀 `[vue-amazing-ui] {组件名}: {说明}` 由出口统一拼装；[二维码 QRCode](/guide/components/qr-code.html) 编码 / 绘制 / 导出失败与 [折叠面板 Collapse](/guide/components/collapse.html) 复制失败由 `warn` 升为 `error`，浮层尺寸测量 / 字体就绪检测 / 跨域下载检测等预期内降级改为仅开发期输出；新增 `eslint no-console` 守护（组件内禁止直写 `console`），提醒类告警按「前缀 + 说明」自动去重（渲染路径重复触发不刷屏，`error` 不去重），原 `warnUsage` 更名为 `log`（内部工具，不在包根导出）
-- 新增组件级主色配置 `theme.components.<Component>.primaryColor`，承接旧版 `theme.Button.primaryColor` 的能力：只接受一个通用主色，`Provider` 用同一套派生把它展开为「内部桥 `--va-cp-<component>-primary-*`（覆盖该组件全部主色使用点）+ 注册表 `themeRole` 公开令牌（`Button` / `Slider` / `Menu` 的细粒度覆盖入口）」，自动派生常态 / 悬停 / 按下 / 浅底 / 描边 / 焦点环；组件配置优先于 `seed`，运行期增删会实时生效并回落到 `seed`
-- 覆盖 `39` 个使用主色的内置组件（完整清单见[组件级令牌](/guide/customize-theme.html#组件级令牌与整组覆盖)）；`theme.components` 的键类型收窄为 `ThemeComponentKey`，写错组件名在编译期即报错（不再依赖开发环境告警）；`Teleport` 浮层的主题转发同时携带全局令牌与组件级令牌；组合组件内的子组件（如 `InputSearch` 内的 `Input`）按子组件自己的配置
-- 组件令牌扩展：新增 `Table` / `Card` / `Alert` / `Input` / `Textarea` / `Modal` / `Drawer` 的 `22` 个公开令牌（表格底色 / 表头 / 页脚 / 分隔线，卡片底色 / 边框，输入框与文本域的底色 / 边框 / 文字 / 占位符，弹窗与抽屉表面色），组件令牌总数 `26` → `48`；均按「只消费不声明 + 带默认值」接入，宿主可在任意祖先覆盖
-- 文档重构主题章节：[定制主题](/guide/customize-theme.html)新增「主题系统全景」（一条流水线、写在哪管到哪、优先级链与排查清单）与「主题系统」特性介绍；实现架构（三张变量表、内部桥、浮层转发协议、文件地图）收进贡献者文档 `development/theme-system.md`；组件令牌不再单独成页，作为「定制主题」的附录并由脚本生成，标明哪些令牌跟随 `theme.components` 派生
-- 修复暗色模式下 [模态框 Modal](/guide/components/modal.html) / [抽屉 Drawer](/guide/components/drawer.html) / [图片 Image](/guide/components/image.html) 预览的遮罩变白；[表格 Table](/guide/components/table.html) 与 [列表 List](/guide/components/list.html) 的固定色改为语义变量
-- [水印 Watermark](/guide/components/watermark.html) 默认色改为取语义变量 `--va-fill-color-3`（浅色 `15%` 黑 / 暗色 `18%` 白），移除旧的反色滤镜适配；显式 `textStyle.color` 时仍以传入值为准；同时修复全屏水印 `fixed=false`：保持整屏覆盖、随文档原生滚动（不做 `JS` 位移补偿，避免滚动抖动）
-- 修复暗色下若干「反色表面」配色：[对话框 Dialog](/guide/components/dialog.html) 遮罩变白、[二维码 QRCode](/guide/components/qr-code.html) 状态遮罩白底白字、[菜单 Menu](/guide/components/menu.html) 折叠气泡白底白字、[颜色选择器 ColorPicker](/guide/components/color-picker.html) 面板白底白字、[标签 Tag](/guide/components/tag.html) 输入框 / 新增按钮白底白字；新增 `--va-fill-color-4`，用于 `Tag` 默认底、[结果页 Result](/guide/components/result.html) 内容区底纹与 [表格 Table](/guide/components/table.html) 展开行
-- 修复 [日历 Calendar](/guide/components/calendar.html) 年选择器：选中年份后列表区间不再随面板定位年平移，重新展开时才按当前年份重建并滚动到选中项
-- 修复组件级主色的两处边界：接受 `#rrggbbff`（与 `seed` 同一归一化口径，颜色选择器的 `8` 位输出不再被判非法）；只配置 `theme.components` 时，`Teleport` 浮层不再内联默认色表与 `light` 模式，避免覆盖宿主用纯 `CSS` 设置在 `:root` / `data-va-mode` 上的主题
-- 优化 `ConfigProvider` 的 `<html>` 写入权判定：只有组件配置、没有 `seed` / `mode` 的 `abstract: true` 实例不再参与全局写者仲裁，避免卸载时误清其它实例写入的变量；该场景会在开发环境提示改用 `abstract: false` 或补充 `seed` / `mode`
-- 组件库及文档代码优化
+_本版需要改代码的地方：主题配置形式（`theme`）、`abstract` 默认值、五个已移除的工具函数；迁移对照见[定制主题](/guide/customize-theme.html#迁移-旧版主题-api)。_
+
+- 重构 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme`：改为 `{ seed, mode }`，原 `{ common, 组件名 }` 写法移除（组件级配色改用 `theme.components`），迁移对照见[定制主题](/guide/customize-theme.html)
+- 新增 `theme.mode`（`light` / `dark` / `auto`，`auto` 跟随系统配色）；组件样式只消费 `--va-*`，主色种子派生整套语义变量，不替品牌色做对比度兜底
+- 新增组件级主色 `theme.components.<组件名>.primaryColor`，覆盖 `39` 个使用主色的内置组件，键名写错在编译期报错
+- `abstract` 默认值由 `true` 改为 `false`（主题只作用于自身子树）；需要页面级主题（`Teleport` 浮层、页面链接色）时在最外层显式传 `:abstract="true"`
+- 移除 `toggleDark`：暗色切换改用 `theme.mode` 或直接写 `data-va-mode`
+- 移除 `rafTimeout` / `cancelRaf`：延时改用 `setTimeout` 或原生 `requestAnimationFrame`
+- 移除 `getColorPalettes` / `getAlphaColor`，改用新增的 `derive(seed, mode)` 取色（支持 `JS` / `canvas` / `SVG` 场景）
+- 新增 `Table` / `Card` / `Alert` / `Input` / `Textarea` / `Modal` / `Drawer` 的 `22` 个组件令牌（底色、边框、文字与占位符等），组件令牌共 `48` 个
+- 统一库内告警输出：`error` 全环境输出、`warn` / `debug` 仅开发期输出，同一提醒只输出一次；[二维码 QRCode](/guide/components/qr-code.html) 编码 / 绘制失败与 [折叠面板 Collapse](/guide/components/collapse.html) 复制失败改为 `error`
+- 修复暗色模式下的反色表面配色：[模态框 Modal](/guide/components/modal.html) / [抽屉 Drawer](/guide/components/drawer.html) / [图片 Image](/guide/components/image.html) 预览遮罩、[对话框 Dialog](/guide/components/dialog.html) 遮罩、[二维码 QRCode](/guide/components/qr-code.html) 状态遮罩、[菜单 Menu](/guide/components/menu.html) 折叠气泡、[颜色选择器 ColorPicker](/guide/components/color-picker.html) 面板、[标签 Tag](/guide/components/tag.html) 输入框与新增按钮
+- 修复 [表格 Table](/guide/components/table.html) 与 [列表 List](/guide/components/list.html) 的固定色在暗色下不协调，改为语义变量
+- [水印 Watermark](/guide/components/watermark.html) 默认色由固定黑 / 白改为语义变量（浅色 `15%` 黑、暗色 `18%` 白），并修复 `fixed=false` 时不能整屏覆盖
+- 修复 [日历 Calendar](/guide/components/calendar.html) 年选择器选中年份后列表区间随面板平移，重新展开才滚动到选中项
+- 优化 `ConfigProvider` 对 `<html>` 的写入权：只配组件主色的 `abstract` 实例不再参与全局仲裁，避免卸载时误清其它实例写入的变量
+- 重构使用者文档的主题章节（主题全景、优先级链与排查清单）与贡献者文档的主题实现说明，组件令牌作为附录并入；工具文档移除已删除函数页
 
 ## <VersionDateTag date="2026-10-19">2.15.2</VersionDateTag>
 
@@ -210,8 +211,8 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 - 修复 `SSR` / `Node` 渲染报错：[Avatar](/guide/components/avatar.html)、[Row](/guide/components/grid.html) / [Col](/guide/components/grid.html)、[Descriptions](/guide/components/descriptions.html)、[QRCode](/guide/components/qr-code.html)、[Tag](/guide/components/tag.html)、[Watermark](/guide/components/watermark.html) 及 [useMediaQuery](/utils/functions/use-media-query.html)、[useFps](/utils/functions/use-fps.html)、[useMutationObserver](/utils/functions/use-mutation-observer.html)、[useResizeObserver](/utils/functions/use-resize-observer.html)、[useScrollParent](/utils/functions/use-scroll-parent.html) 不再在 `setup` 阶段访问浏览器全局对象
 - 修复卸载后定时器 / 动画帧泄漏：[Countdown](/guide/components/countdown.html)、[Carousel](/guide/components/carousel.html)、[TextScroll](/guide/components/text-scroll.html)、[Select](/guide/components/select.html)、[useFps](/utils/functions/use-fps.html)、[useMediaQuery](/utils/functions/use-media-query.html)
-- 修复 [Carousel](/guide/components/carousel.html) 容器尺寸为 `0` 时自动轮播失效、[Select](/guide/components/select.html) 搜索过滤自触发循环、[Tag](/guide/components/tag.html) 动态编辑后输入框未清空、[Upload](/guide/components/upload.html) 重复选择同一文件不触发 `change`、[QRCode](/guide/components/qr-code.html) `canvas` 未就绪时跳过绘制、[cancelRaf](/utils/functions/raf-timeout.html) 帧 `id` 为 `0` 时误判
-- 澄清 [rafTimeout](/utils/functions/raf-timeout.html) 语义：回调绑定渲染帧、页面不可见时暂停，与 `setTimeout` / `setInterval` **不等价**
+- 修复 [Carousel](/guide/components/carousel.html) 容器尺寸为 `0` 时自动轮播失效、[Select](/guide/components/select.html) 搜索过滤自触发循环、[Tag](/guide/components/tag.html) 动态编辑后输入框未清空、[Upload](/guide/components/upload.html) 重复选择同一文件不触发 `change`、[QRCode](/guide/components/qr-code.html) `canvas` 未就绪时跳过绘制、`cancelRaf` 帧 `id` 为 `0` 时误判
+- 澄清 `rafTimeout` 语义：回调绑定渲染帧、页面不可见时暂停，与 `setTimeout` / `setInterval` **不等价**
 - 优化 [Rate](/guide/components/rate.html) 未选中状态守卫；收敛组件与演示的模板引用类型，并为可空引用补充 `?.` 与判空守卫
 - 工程优化：`postcss` + `autoprefixer` 按 `browserslist` 补齐产物 `CSS` 厂商前缀，`vue` 提升为 `peerDependencies`，`engines` / `packageManager` 收紧；新增 `prepublishOnly` 产物入口守卫与 `format:check` 门禁
 

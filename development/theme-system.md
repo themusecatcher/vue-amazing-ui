@@ -130,7 +130,7 @@ theme.components.Button.primaryColor = '#ff6900'
 
 - 组件样式：只消费 `--va-*`，禁止 JS 注入颜色；
 - JS / canvas / SVG：用主入口公开的 `derive(seed, mode)`，与 `--va-*` 逐值一致；
-- 焦点环的「等效半透明色」是私有实现（`theme/derive.ts` 的 `alphaOver`），不对外导出；旧的 `getColorPalettes` / `getAlphaColor` 已随 2.16.0 移除，守护脚本仍禁止在 `components/**` 中重新出现。
+- 焦点环的「等效半透明色」是私有实现（`theme/derive.ts` 的 `alphaOver`），不对外导出；旧的 `getColorPalettes` / `getAlphaColor` 已随 3.0.0 移除，守护脚本仍禁止在 `components/**` 中重新出现。
 
 ## 文件地图
 

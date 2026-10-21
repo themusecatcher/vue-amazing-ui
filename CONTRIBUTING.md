@@ -111,6 +111,18 @@ docs: 更新 Menu 组件 API 文档
 chore: 补齐 type-check 门禁并强化发布流程
 ```
 
+## Versioning
+
+Version numbers follow semantic versioning: `major` is reserved for changes of major scope, while routine additions and localized incompatible changes ship in `minor`.
+
+| Digit | Trigger | Examples |
+| :-- | :-- | :-- |
+| `major` | Architecture-level rewrites, or batch-incompatible changes across components | Theme system rewrite, unified interface refactor across many components |
+| `minor` | New features, possibly with localized incompatible changes | New components, new props, or a single component's prop removal / rename / default change |
+| `patch` | Backward-compatible fixes | Bug fixes, style and type corrections |
+
+Incompatible changes are written like any other entry: start with a verb, state what was removed and what replaces it, do not add a "breaking change" prefix or warning marker, and point to the migration guide (e.g. the customize-theme page).
+
 ## Quality Gates
 
 The project configures three Git hooks via [husky](https://github.com/typicode/husky). Please do not skip them with `--no-verify`.
