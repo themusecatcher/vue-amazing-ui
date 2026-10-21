@@ -1414,7 +1414,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 | disabled | 是否禁用 | boolean | false |
 | open | 是否展开下拉菜单（受控） | boolean | undefined |
 | placeholder | 默认占位文本 | string | undefined |
-| popupClassName | 下拉菜单的 className 属性 | string | undefined |
+| popupClassName | 下拉菜单的 `className` 属性 | string | undefined |
 | zIndex | 下拉面板层级，优先级最高（覆盖默认层级与 `ConfigProvider` 的 `baseZIndex` 自动分配） | number | undefined |
 | dropdownMatchSelectWidth | 下拉菜单和选择器同宽，为数字时指定下拉菜单宽度（单位 `px`），当左右空间都不足以容纳时面板自动调整对齐 | boolean &#124; number | true |
 | dropdownMenuStyle | 下拉菜单自定义样式 | CSSProperties | undefined |
@@ -1430,7 +1430,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 
 | 名称              | 说明                          | 类型                | 默认值    |
 | :----------------- | :----------------------------- | :------------------- | :-------- |
-| value             | 唯一的 value 值               | string &#124; number | undefined |
+| value             | 唯一的 `value` 值               | string &#124; number | undefined |
 | label?            | 显示的 `label` 值，缺失时兜底展示 `value`；支持任意自定义字段（`#option` 插槽透传） | string | undefined |
 | disabled?         | 是否禁用选项                  | boolean             | false     |
 

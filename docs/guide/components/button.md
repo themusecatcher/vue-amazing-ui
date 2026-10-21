@@ -985,7 +985,7 @@ const loadingType = ref('dynamic')
 | :-- | :-- | :-- | :-- |
 | type | 设置按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default' |
 | shape | 设置按钮形状 | 'default' &#124; 'circle' &#124; 'round' | 'default' |
-| icon | 设置按钮图标，prop 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | VNode &#124; (() => VNode) | undefined |
+| icon | 设置按钮图标，`prop` 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | VNode &#124; (() => VNode) | undefined |
 | size | 设置按钮尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | ghost | 按钮背景是否透明，仅当 `type: 'primary' \| 'danger'` 时生效 | boolean | false |
 | buttonClass | 设置按钮类名 | string | undefined |

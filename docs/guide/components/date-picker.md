@@ -27,7 +27,7 @@ import {
 } from 'date-fns'
 import type { CSSProperties } from 'vue'
 import type { DatePickerProps } from 'vue-amazing-ui'
-/** 演示用例的固定值：与 antd 官方一致取固定日期（不随当天变化），便于截图与文档展示 */
+/** 演示用例的固定值：取固定日期（不随当天变化），便于截图与文档展示 */
 const fixedDate = new Date(2026, 9, 10).getTime()
 /** 范围用例的初始值：两端都归一到当日零点，与面板按天选择的粒度一致 */
 function initialRange(startOffset: number = 0, endOffset: number = 7): [number, number] {
@@ -36,7 +36,7 @@ function initialRange(startOffset: number = 0, endOffset: number = 7): [number, 
   return [start, end]
 }
 // 各用例独立持有一组值，避免在一个用例里选日期影响到其它用例
-// 与 antd 官方对齐：除「日期格式」「禁用」等少数需要展示已选值的用例外，其余均不设初始值
+// 除「日期格式」「禁用」等少数需要展示已选值的用例外，其余用例均不设初始值
 const basicValue = ref<number | null>(null)
 const slashValue = ref<number | null>(fixedDate)
 const chineseValue = ref<number | null>(fixedDate)
@@ -1827,7 +1827,7 @@ const rangePlaceholder = ['开始日期', '结束日期']
 | allowClear | 是否展示清除按钮 | boolean | true |
 | allowEmpty | 范围形态各段是否允许为空，为空时该段可被单独清空并对外提交 | [boolean, boolean] | [false, false] |
 | inputReadOnly | 输入框是否只读（避免移动端唤起键盘） | boolean | false |
-| to | 面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 'body') 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
+| to | 面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
 | placement | 面板弹出位置 | 'topLeft' &#124; 'top' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottom' &#124; 'bottomRight' | 'bottomLeft' |
 | showArrow | 范围形态的面板指示箭头是否展示：不传时跟随弹出方位（仅左侧对齐的 `bottomLeft` / `topLeft` 展示），`true` 始终展示、`false` 始终隐藏 | boolean | undefined |
 | showToday | 是否展示面板底部的「今天」快捷，面板切到周 / 月 / 季 / 年视图时隐藏 | boolean | true |
@@ -1913,25 +1913,25 @@ const rangePlaceholder = ['开始日期', '结束日期']
 
 | 标识 | 示例 | 描述 |
 | :-- | :-- | :-- |
-| yy | 26 | 年，两位数 |
-| yyyy | 2026 | 年，四位数 |
-| M | 1-12 | 月 |
-| MM | 01-12 | 月，两位数 |
-| Q | 1-4 | 季度 |
-| QQQ | Q1-Q4 | 季度，带 `Q` 前缀 |
-| d | 1-31 | 日 |
-| dd | 01-31 | 日，两位数 |
-| h | 1-12 | 小时，`12` 小时制 |
-| hh | 01-12 | 小时，`12` 小时制，两位数 |
-| H | 0-23 | 小时 |
-| HH | 00-23 | 小时，两位数 |
-| m | 0-59 | 分钟 |
-| mm | 00-59 | 分钟，两位数 |
-| s | 0-59 | 秒 |
-| ss | 00-59 | 秒，两位数 |
-| ww | 01-53 | 第几周，两位数（本地周口径） |
-| II | 01-53 | `ISO` 周序号，两位数 |
-| RRRR | 2026 | `ISO` 周年，四位数 |
+| `yy` | 26 | 年，两位数 |
+| `yyyy` | 2026 | 年，四位数 |
+| `M` | 1-12 | 月 |
+| `MM` | 01-12 | 月，两位数 |
+| `Q` | 1-4 | 季度 |
+| `QQQ` | Q1-Q4 | 季度，带 `Q` 前缀 |
+| `d` | 1-31 | 日 |
+| `dd` | 01-31 | 日，两位数 |
+| `h` | 1-12 | 小时，`12` 小时制 |
+| `hh` | 01-12 | 小时，`12` 小时制，两位数 |
+| `H` | 0-23 | 小时 |
+| `HH` | 00-23 | 小时，两位数 |
+| `m` | 0-59 | 分钟 |
+| `mm` | 00-59 | 分钟，两位数 |
+| `s` | 0-59 | 秒 |
+| `ss` | 00-59 | 秒，两位数 |
+| `ww` | 01-53 | 第几周，两位数（本地周口径） |
+| `II` | 01-53 | `ISO` 周序号，两位数 |
+| `RRRR` | 2026 | `ISO` 周年，四位数 |
 
 > 周形态的默认格式为 `RRRR-II周`（如 `2026-41周`）：「周」是字面量后缀，中文语境下用于指明该数字为周序号，不需要时传入 `format="RRRR-II"` 即可移除；`date-fns` 不允许「周年 + 本地周序号」同串（`yyyy` 与 `ww` 会解析失败），故周序号须与周年同为 `ISO` 口径。
 

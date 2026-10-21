@@ -293,7 +293,7 @@ _自定义滚动时触发显示回到顶部的高度_
 
 ## 自定义层级
 
-_通过 `zIndex` 调整按钮层级；按钮上的气泡为浮层（默认 1070），恒在按钮之上_
+_通过 `zIndex` 调整按钮层级；按钮上的气泡为浮层（默认 `1070`），恒在按钮之上_
 
 <br/>
 
@@ -445,7 +445,7 @@ const scrollContainer = ref<HTMLDivElement>()
 
 参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-icon | 自定义图标，prop 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | VNode &#124; (() => VNode) | undefined
+icon | 自定义图标，`prop` 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | VNode &#124; (() => VNode) | undefined
 description | 文字描述 | string | undefined
 tooltip | 文字提示内容 | string | undefined
 tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip) | [TooltipProps](./tooltip.md#tooltip) | {}
@@ -455,8 +455,8 @@ bottom | `BackTop` 距离页面底部的高度，单位 `px` | number &#124; str
 right | `BackTop` 距离页面右侧的宽度，单位 `px` | number &#124; string | 40
 zIndex | 设置 `BackTop` 的 `z-index` | number | 9
 visibilityHeight | 滚动时触发显示回到顶部的高度，单位 `px` | number | 180
-to | `BackTop` 渲染的容器节点，可选：CSS 选择器（例如 `body`）或者元素本身 | string &#124; HTMLElement | 'body'
-listenTo | 监听滚动的元素，如果为 `undefined` 会监听距离最近的一个可滚动的祖先节点；支持 CSS 选择器、元素、`Document` 或返回目标的函数 | string &#124; HTMLElement &#124; Document &#124; (() => HTMLElement &#124; Document) | undefined
+to | `BackTop` 渲染的容器节点，可选：`CSS` 选择器（例如 `body`）或者元素本身 | string &#124; HTMLElement | 'body'
+listenTo | 监听滚动的元素，如果为 `undefined` 会监听距离最近的一个可滚动的祖先节点；支持 `CSS` 选择器、元素、`Document` 或返回目标的函数 | string &#124; HTMLElement &#124; Document &#124; (() => HTMLElement &#124; Document) | undefined
 
 ## Slots
 

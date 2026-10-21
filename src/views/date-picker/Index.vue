@@ -16,7 +16,7 @@ import {
   startOfMonth
 } from 'date-fns'
 import type { DatePickerProps } from 'vue-amazing-ui'
-/** 演示用例的固定值：与 antd 官方一致取固定日期（不随当天变化），便于截图与文档展示 */
+/** 演示用例的固定值：取固定日期（不随当天变化），便于截图与文档展示 */
 const fixedDate = new Date(2026, 9, 10).getTime()
 /** 范围用例的初始值：两端都归一到当日零点，与面板按天选择的粒度一致 */
 function initialRange(startOffset: number = 0, endOffset: number = 7): [number, number] {
@@ -25,7 +25,7 @@ function initialRange(startOffset: number = 0, endOffset: number = 7): [number, 
   return [start, end]
 }
 // 各用例独立持有一组值，避免在一个用例里选日期影响到其它用例
-// 与 antd 官方对齐：除「日期格式」「禁用」等少数需要展示已选值的用例外，其余均不设初始值
+// 除「日期格式」「禁用」等少数需要展示已选值的用例外，其余用例均不设初始值
 const basicValue = ref<number | null>(null)
 const slashValue = ref<number | null>(fixedDate)
 const chineseValue = ref<number | null>(fixedDate)

@@ -209,7 +209,7 @@ _气泡卡片用 `tooltipClass` / `tooltipStyle`，其外层定位面板用 `pop
 
 ## 位置
 
-位置有 12 个方向
+位置有 `12` 个方向
 
 <br/>
 
@@ -808,7 +808,7 @@ const destroyOpen = ref(false)
 | trigger | 文字提示触发方式 | 'hover' &#124; 'click' &#124; 'focus' &#124; 'contextmenu' | 'hover' |
 | keyboard | 是否支持按键操作 (`enter` 切换显示；`esc` 关闭)，仅当 `trigger: 'click'` 时生效 | boolean | false |
 | disabled | 是否禁用文字提示，禁用后不响应任何触发 | boolean | false |
-| to | 弹出框挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 'body') 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
+| to | 弹出框挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
 | destroyOnHide | 隐藏后是否卸载弹出框 `DOM`：离开动画结束后卸载整棵浮层子树，再次显示时重新创建并重新定位（适合浮层内容较重、实例较多的场景） | boolean | false |
 | transitionDuration | 文字提示动画的过渡持续时间，单位 `ms` | number | 100 |
 | showDelay | 文字提示显示的延迟时间，单位 `ms`，仅当 `trigger: hover` 时生效 | number | 100 |

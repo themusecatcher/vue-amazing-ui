@@ -545,7 +545,7 @@ const topSideOpenKeys = ref<MenuKey[]>(['sub1'])
 
 ## 侧边布局
 
-_侧边导航可收起，横向空间有限时能腾出内容区宽度；如需定制滚动条，可搭配 Scrollbar 组件_
+_侧边导航可收起，横向空间有限时能腾出内容区宽度；如需定制滚动条，可搭配 `Scrollbar` 组件_
 
 <br/>
 
@@ -822,7 +822,7 @@ const onBreakpoint = (broken: boolean) => {
 
 ## 固定侧边栏
 
-_内容超过一屏时侧边栏保持固定，滚动浏览时不会移出视口；如需定制滚动条，可搭配 Scrollbar 组件_
+_内容超过一屏时侧边栏保持固定，滚动浏览时不会移出视口；如需定制滚动条，可搭配 `Scrollbar` 组件_
 
 <br/>
 
@@ -1095,7 +1095,7 @@ const onCollapse = (collapsed: boolean, type: 'clickTrigger' | 'responsive') => 
 
 ## 自定义滚动条
 
-_侧边栏与内容区的滚动条改用 Scrollbar 组件，滚动样式与交互由组件统一提供_
+_侧边栏与内容区的滚动条改用 `Scrollbar` 组件，滚动样式与交互由组件统一提供_
 
 <br/>
 
@@ -1360,7 +1360,7 @@ trigger | 自定义收起触发器，存在时优先于 `trigger` 属性 | v-slo
 
 名称 | 说明 | 类型
 :-- | :-- | :--
-collapse | 展开-收起时的回调函数，点击 trigger 与响应式反馈均可触发 | (collapsed: boolean, type: 'clickTrigger' &#124; 'responsive') => void
+collapse | 展开-收起时的回调函数，点击 `trigger` 与响应式反馈均可触发 | (collapsed: boolean, type: 'clickTrigger' &#124; 'responsive') => void
 breakpoint | 触发响应式布局断点时的回调，`broken` 为 `true` 表示视窗宽度已低于断点 | (broken: boolean) => void
 
 ## CSS 变量

@@ -16,7 +16,7 @@ _全局展示操作反馈信息_
 
 ## 使用方式
 
-| 调用方式 | API | 适用位置 |
+| 调用方式 | `API` | 适用位置 |
 | :-- | :-- | :-- |
 | 组件树内调用 <Tag color="success" size="small">推荐</Tag> | `useMessage()` | 组件 `setup` 内，需外层存在 `<MessageProvider>` |
 | 脱离组件树调用 <Tag color="processing" size="small">无需 MessageProvider</Tag> | `createDiscreteApi()` | 任意位置（`axios` 拦截器、路由守卫、`Pinia action` 等） |
@@ -29,7 +29,7 @@ _适用于组件内部调用：先在应用根节点放置一次 `<MessageProvid
 
 ::: info 关于 `MessageProvider` 与 `Message`
 
-- `MessageProvider` 内部渲染一个 `Message` 组件，并通过 `provide/inject` 向下提供 `useMessage()` 所需的 API，自身不渲染任何可见内容
+- `MessageProvider` 内部渲染一个 `Message` 组件，并通过 `provide/inject` 向下提供 `useMessage()` 所需的 `API`，自身不渲染任何可见内容
 - 组件级配置属性（`duration` / `top` / `maxCount` / `keepAliveOnHover` / `to`）会透传给内部的 `Message`，因此直接参考下方 [Message Props](#message) 设置即可
 - 使用 `useMessage()` 时，组件级配置设置在 `<MessageProvider>` 上（无法直接接触内部 `Message`）；每条消息的个性化配置（`content` / `icon` / `class` / `style` 等）则在调用 `open` / `info` 等方法时作为参数传入，参考 [MessageOptions Type](#messageoptions-type)
 
@@ -986,7 +986,7 @@ _`click` / `close` 为 `<Message>` / `<MessageProvider>` 组件的原生事件�
 | :-- | :-- | :-- |
 | click | 点击 `message` 时触发的回调函数 | (e: Event) => void |
 | close | 关闭时触发的回调函数，参数为该条消息的 `key` | (key: string) => void |
-| ready | 实例挂载完成时触发，参数为该实例的 api | (api: [MessageApi](#methods)) => void |
+| ready | 实例挂载完成时触发，参数为该实例的 `api` | (api: [MessageApi](#methods)) => void |
 
 ## 在 setup 外使用
 
@@ -998,10 +998,10 @@ _适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：�
 
 ::: tip 注意
 
-- 主题使用内置默认值；如需自定义，通过第二个参数 `configProviderProps`（支持 `Ref` / `computed` 响应式）显式传入，详见 [全局化配置 ConfigProvider「主题同步到离散 API」](/guide/components/config-provider.html#主题同步到离散-api)
+- 主题使用内置默认值；如需自定义，通过第二个参数 `configProviderProps`（支持 `Ref` / `computed` 响应式）显式传入，详见 [全局化配置 ConfigProvider「离散 API 的主题」](/guide/components/config-provider.html#离散-api-的主题)
 - 每次调用都会创建一套独立实例（独立的容器与消息栈），建议缓存返回值复用，避免重复创建；不再使用时可通过返回的 `dispose()` 销毁该实例
 - 内部会访问 `document`，`SSR` 场景请在客户端（点击回调、`onMounted` 等）中调用
-- 不建议与 `useMessage()` 在同一 App 中混用：两者各自持有独立的消息栈，`maxCount` / `top` 等组件级配置互不共享，同一页面会出现两套消息容器
+- 不建议与 `useMessage()` 在同一 `App` 中混用：两者各自持有独立的消息栈，`maxCount` / `top` 等组件级配置互不共享，同一页面会出现两套消息容器
 
 :::
 
@@ -1009,7 +1009,7 @@ _适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：�
 
 _独立实例创建后不会随组件卸载自动销毁，也不会因内部消息全部关闭而回收，需根据使用场景决定是否手动 `dispose()`：_
 
-**场景 A · 全局单例，缓存复用（推荐）**：适用于 `axios` 拦截器、路由守卫、`Pinia action` 等常驻场景，整个应用生命周期内复用同一实例：
+**场景 `A` · 全局单例，缓存复用（推荐）**：适用于 `axios` 拦截器、路由守卫、`Pinia action` 等常驻场景，整个应用生命周期内复用同一实例：
 
 ```ts
 import { createDiscreteApi } from 'vue-amazing-ui'
@@ -1020,7 +1020,7 @@ const { message } = createDiscreteApi(['message'])
 message.success('这是一条消息')
 ```
 
-**场景 B · 临时使用后手动 `dispose()`**：适用于测试用例、单次任务等按需回收场景，用完即销毁：
+**场景 `B` · 临时使用后手动 `dispose()`**：适用于测试用例、单次任务等按需回收场景，用完即销毁：
 
 ```ts
 import { createDiscreteApi } from 'vue-amazing-ui'

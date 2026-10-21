@@ -745,7 +745,7 @@ const slideEasing = computed(() => (slideEasingType.value === 'preset' ? slideEa
 
 ## 自定义渐变动画
 
-_`fadeFunction` 可传四个三次贝塞尔控制点（自动转为 CSS `cubic-bezier()` 写法），也可直接传 CSS `transition-timing-function` 写法_
+_`fadeFunction` 可传四个三次贝塞尔控制点（自动转为 `CSS` `cubic-bezier()` 写法），也可直接传 `CSS` `transition-timing-function` 写法_
 
 <br/>
 
@@ -1132,7 +1132,7 @@ function onAfterChange(current: number) {
 
 ## 图片填充方式
 
-_与 CSS 同名属性一致，默认 `fill` 拉伸填满容器_
+_与 `CSS` 同名属性一致，默认 `fill` 拉伸填满容器_
 
 <br/>
 
@@ -2022,11 +2022,11 @@ dotActiveStyle | 指示点选中样式，优先级高于 `dotActiveColor` | [CSS
 dotPosition | 指示点位置，位置为 `left` &#124; `right` 时，`effect: 'slide'` 轮播自动变为垂直轮播 | 'bottom' &#124; 'top' &#124; 'left' &#124; 'right' | 'bottom'
 dotTrigger | 指示点触发切换的方式 | 'click' &#124; 'hover' | 'click'
 spinProps | 图片加载中样式，`Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin) | [SpinProps](./spin.md#spin) | {}
-objectFit | 图片填充方式，同 CSS `object-fit` | 'fill' &#124; 'contain' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'fill'
+objectFit | 图片填充方式，同 `CSS` `object-fit` | 'fill' &#124; 'contain' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'fill'
 draggable | 是否可以拖拽滑动切换（鼠标与触摸均支持） | boolean | false
 mousewheel | 是否支持鼠标滚轮切换 | boolean | false
 fadeDuration | 渐变动画持续时长，单位 `ms`，仅当 `effect` 为 `'fade'` 时生效 | number | 500
-fadeFunction | 渐变动画函数，仅当 `effect` 为 `'fade'` 时生效，可传四个三次贝塞尔控制点（自动转为 CSS `cubic-bezier()` 写法）或 CSS [transition-timing-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function) 写法 | string &#124; [number, number, number, number] | [0.4, 0, 0.2, 1]
+fadeFunction | 渐变动画函数，仅当 `effect` 为 `'fade'` 时生效，可传四个三次贝塞尔控制点（自动转为 `CSS` `cubic-bezier()` 写法）或 `CSS` [transition-timing-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function) 写法 | string &#124; [number, number, number, number] | [0.4, 0, 0.2, 1]
 slideDuration | 滑动动画持续时长，单位 `ms`，仅当 `effect` 为 `'slide'` 时生效 | number | 800
 slideFunction | 滑动动画函数，仅当 `effect` 为 `'slide'` 时生效，可传缓动预设名、三次贝塞尔控制点数组或缓动函数 | [CarouselEasingPreset](#easingpreset-type) &#124; [CubicBezierPoints](https://vueuse.org/core/useTransition/) &#124; [EasingFunction](https://vueuse.org/core/useTransition/) | [0.65, 0, 0.35, 1]
 

@@ -1042,7 +1042,7 @@ ghost | 使折叠面板透明且无边框 | boolean | false
 headerStyle | 设置面板标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 contentStyle | 设置面板内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 collapseStyle | 设置面板容器的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-arrow | 自定义箭头切换图标，prop 支持 `VNode` / 渲染函数；插槽形态请用同名 `#arrow` 插槽 | VNode &#124; (() => VNode) | undefined
+arrow | 自定义箭头切换图标，`prop` 支持 `VNode` / 渲染函数；插槽形态请用同名 `#arrow` 插槽 | VNode &#124; (() => VNode) | undefined
 showArrow | 是否展示箭头 | boolean | true
 arrowPlacement | 箭头位置 | 'left' &#124; 'right' | 'left'
 arrowStyle | 设置面板箭头的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
