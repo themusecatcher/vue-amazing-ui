@@ -751,7 +751,7 @@ async function onCancel(key: string, e?: Event): Promise<void> {
       return
     }
   } catch (err) {
-    log('error', 'Modal', 'onCancel 执行出错', err) // 避免 unhandled rejection 导致取消流程静默中断
+    log('error', 'Modal', 'onCancel 执行出错，取消流程已继续', err) // 避免 unhandled rejection 导致取消流程静默中断
     return
   }
   closeItem(key)
@@ -769,7 +769,7 @@ async function onOK(key: string, e?: MouseEvent): Promise<void> {
       return
     }
   } catch (err) {
-    log('error', 'Modal', 'onOk 执行出错', err) // 避免 unhandled rejection 导致 loading 卡死
+    log('error', 'Modal', 'onOk 执行出错，loading 已复位', err) // 避免 unhandled rejection 导致 loading 卡死
     return
   } finally {
     item.loading = false
@@ -792,7 +792,7 @@ async function onKnow(key: string, e?: MouseEvent): Promise<void> {
       return
     }
   } catch (err) {
-    log('error', 'Modal', 'onKnow 执行出错', err)
+    log('error', 'Modal', 'onKnow 执行出错，弹窗保持打开', err)
     return
   } finally {
     item.loading = false

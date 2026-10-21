@@ -806,7 +806,7 @@ async function onCancel(key: string, e?: Event): Promise<void> {
       return
     }
   } catch (err) {
-    log('error', 'Dialog', 'onCancel 执行出错', err) // 避免 unhandled rejection 导致取消流程静默中断
+    log('error', 'Dialog', 'onCancel 执行出错，取消流程已继续', err) // 避免 unhandled rejection 导致取消流程静默中断
     return
   }
   closeItem(key)
@@ -830,7 +830,7 @@ async function onOK(key: string, e?: MouseEvent): Promise<void> {
       return
     }
   } catch (err) {
-    log('error', 'Dialog', 'onOk 执行出错', err) // 避免 unhandled rejection 导致 loading 卡死
+    log('error', 'Dialog', 'onOk 执行出错，loading 已复位', err) // 避免 unhandled rejection 导致 loading 卡死
     return
   } finally {
     item.loading = false

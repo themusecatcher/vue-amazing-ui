@@ -59,7 +59,7 @@ export function dateFormat(value: number | string | Date = Date.now(), format: s
     }
     return format.replace(/(YYYY|YY|M{1,2}|D{1,2}|H{1,2}|m{1,2}|s{1,2}|SSS)/g, replacement)
   } catch (error) {
-    log('error', 'dateFormat', '日期格式化失败', error)
+    log('error', 'dateFormat', '日期格式化失败，已返回空字符串', error)
     return ''
   }
 }

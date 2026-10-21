@@ -52,7 +52,10 @@ describe('Upload beforeUpload 告警语义', () => {
     await triggerFileChange(wrapper, testFile())
     await flushPromises()
 
-    expect(errorSpy).toHaveBeenCalledWith('[vue-amazing-ui] Upload: beforeUpload 执行出错', expect.any(Error))
+    expect(errorSpy).toHaveBeenCalledWith(
+      '[vue-amazing-ui] Upload: beforeUpload 执行出错，已跳过该文件',
+      expect.any(Error)
+    )
     wrapper.unmount()
   })
 
@@ -67,7 +70,10 @@ describe('Upload beforeUpload 告警语义', () => {
     await triggerFileChange(wrapper, testFile())
     await flushPromises()
 
-    expect(errorSpy).toHaveBeenCalledWith('[vue-amazing-ui] Upload: beforeUpload 执行出错', expect.any(Error))
+    expect(errorSpy).toHaveBeenCalledWith(
+      '[vue-amazing-ui] Upload: beforeUpload 执行出错，已跳过该文件',
+      expect.any(Error)
+    )
     wrapper.unmount()
   })
 })
@@ -160,7 +166,10 @@ describe('Upload base64 读取的 loading 复位', () => {
     expect(wrapper.find('.file-uploading').exists()).toBe(false)
     expect(wrapper.emitted('error')).toBeTruthy()
     // 统一出口只透传诊断价值更高的原始错误（Event 对象无堆栈，不再随日志输出）
-    expect(errorSpy).toHaveBeenCalledWith('[vue-amazing-ui] Upload: 文件读取失败', reader.error)
+    expect(errorSpy).toHaveBeenCalledWith(
+      '[vue-amazing-ui] Upload: 文件读取失败，loading 已复位并派发 error 事件',
+      reader.error
+    )
     wrapper.unmount()
   })
 

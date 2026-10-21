@@ -154,7 +154,7 @@ function onCopy(index: number, key: string | number) {
     },
     (err) => {
       /* clipboard write failed */
-      log('error', 'Collapse', '复制失败', err)
+      log('error', 'Collapse', '复制失败，剪贴板内容未变更', err)
     }
   )
 }

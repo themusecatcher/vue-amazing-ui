@@ -185,7 +185,7 @@ function uploadFile(file: File, index: number): void {
       // beforeUpload 返回 false 表示使用方主动拒绝该文件（内部以带标记的 Error 承载这一信号），属预期业务流，不告警；
       // 其余抛错才是使用方回调异常 —— 与 Dialog / Modal 的回调出错同级，用 error 便于线上排查
       if (error instanceof Error && error.name === 'BeforeUploadRejected') return
-      log('error', 'Upload', 'beforeUpload 执行出错', error)
+      log('error', 'Upload', 'beforeUpload 执行出错，已跳过该文件', error)
     })
 }
 function base64Upload(file: File, index: number): void {
@@ -201,7 +201,7 @@ function base64Upload(file: File, index: number): void {
   reader.onerror = function (e) {
     // 当读取操作发生错误时触发：读取失败不会有 onload，需补上可观测日志与失败事件；
     // loading 由 onloadend 兜底复位（error 之后必然触发）
-    log('error', 'Upload', '文件读取失败', reader.error)
+    log('error', 'Upload', '文件读取失败，loading 已复位并派发 error 事件', reader.error)
     emits('error', reader.error)
   }
   reader.onprogress = function (e) {

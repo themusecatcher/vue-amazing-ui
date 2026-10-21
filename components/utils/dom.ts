@@ -172,7 +172,7 @@ function checkIframeError(iframe: HTMLIFrameElement): void {
     const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
     const bodyContent = iframeDoc?.body?.innerHTML
     if (bodyContent) {
-      log('error', 'checkIframeError', `文件下载失败，服务器返回错误 url：${iframe.src}`)
+      log('error', 'checkIframeError', `下载未完成：服务器返回的是错误页而非文件：${iframe.src}`)
     }
   } catch (err) {
     // 跨域限制导致无法读取 iframe 内容，检测失效属预期行为，用 debug 级别避免污染业务方控制台
@@ -219,7 +219,7 @@ export function downloadFile(url: string, fileName?: string, options: DownloadOp
   try {
     parsedUrl = new URL(url, location.href)
   } catch (err) {
-    log('error', 'downloadFile', `下载地址解析失败：${url}`, err)
+    log('error', 'downloadFile', `下载地址解析失败，已取消下载：${url}`, err)
     return Promise.reject(err)
   }
 
