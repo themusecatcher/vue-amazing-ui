@@ -18,7 +18,9 @@
 
 import { mkdirSync, renameSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
-import { assertVarContract, derive, MODE_ATTRIBUTE, THEME_VAR_NAMES } from '../components/theme'
+// `assertVarContract` 只服务于构建期校验，不进主题聚合出口（否则产物会留下无引用绑定的空头声明）
+import { assertVarContract, derive } from '../components/theme/derive'
+import { MODE_ATTRIBUTE, THEME_VAR_NAMES } from '../components/theme/vars'
 import type { ThemeSeed, ThemeVars } from '../components/theme'
 
 /** 生成产物相对项目根目录的路径 */

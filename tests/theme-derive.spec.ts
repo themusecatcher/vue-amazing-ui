@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { generate } from '@ant-design/colors'
+// 测试直引被测实现文件（同 project-structure.md 的例外 ③）：这些成员仅构建期 / 测试使用，不进主题聚合出口
 import {
   assertVarContract,
   createSeeds,
@@ -7,9 +8,9 @@ import {
   deriveColorStates,
   deriveFocusShadow,
   DEFAULT_SEEDS,
-  isHexColor,
-  THEME_VAR_NAMES
-} from 'components/theme'
+  isHexColor
+} from 'components/theme/derive'
+import { THEME_VAR_NAMES } from 'components/theme/vars'
 
 /**
  * 派生核心契约：键集合、输出格式、色阶索引映射与缓存行为
