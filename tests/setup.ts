@@ -7,6 +7,14 @@
  * 导致取消行为与时序不可控，无法稳定测试 hover 暂停、滚动节流等依赖取消能力的场景。
  * 此处提供返回值稳定为 number、帧间隔固定的最小 rAF 实现。
  */
+import { beforeEach } from 'vitest'
+import { resetLogDedup } from 'components/utils/log'
+
+// 告警去重集合是模块级状态：逐例清空，避免用例 A 的提醒把用例 B 的断言吞掉
+beforeEach(() => {
+  resetLogDedup()
+})
+
 const callbacks = new Map<number, FrameRequestCallback>()
 // 模拟帧间隔，取最小值以缩短测试中等待自动关闭的时间
 const FRAME_INTERVAL = 1

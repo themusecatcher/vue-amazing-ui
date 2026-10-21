@@ -20,7 +20,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 主题实现：新增 `components/theme/`（基于 `@ant-design/colors` 的色阶映射 + 中性色透明度阶梯 + 派生缓存），构建期生成静态默认表并随每份按需样式入口下发，首帧不依赖 `JS`；不替品牌色做对比度兜底；公开 `derive(seed, mode)` 供 `JS` / `canvas` / `SVG` 场景取色，已废弃的 `getColorPalettes` / `getAlphaColor` 从主入口与工具文档中一并移除
 - **破坏性变更**：移除 `toggleDark` / `rafTimeout` / `cancelRaf` 三个工具函数（对外工具由 `21` 个收敛为 `16` 个：本条移除 3 个，上条废弃 API 清理 `getColorPalettes` / `getAlphaColor` 再减 2 个；主入口、类型、文档与演示站列表同步清理）。`toggleDark` 只切换 `html.dark`，与库主题无关（组件只消费 `--va-*` 与 `data-va-mode`），切换暗色请改用 `ConfigProvider` 的 `theme.mode`（含 `auto` 跟随系统）或直接写 `data-va-mode`；`rafTimeout` / `cancelRaf` 的回调绑定渲染帧、与 `setTimeout` / `setInterval` 不等价，库内帧调度统一使用原生 `requestAnimationFrame`，需要不被暂停的延时时请直接用 `setTimeout`
 - 默认主色保持 `#1677ff` 不变；新增主题守护脚本 `pnpm verify:theme`（组件不得使用旧主题通道、`--va-*` 引用必须已定义、变量表结构校验）
-- 统一库内告警出口：组件与工具函数中散落的 `console.warn` / `console.error` / `console.debug` 收敛为单一 `log(level, component, message, error?)`（`components/utils/log.ts`），级别即环境策略 —— `error` 全环境输出（线上可观测），`warn` / `debug` 仅开发期输出，前缀 `[vue-amazing-ui] {组件名}: {说明}` 由出口统一拼装；[二维码 QRCode](/guide/components/qr-code.html) 编码 / 绘制 / 导出失败与 [折叠面板 Collapse](/guide/components/collapse.html) 复制失败由 `warn` 升为 `error`，浮层尺寸测量 / 字体就绪检测 / 跨域下载检测等预期内降级改为仅开发期输出；新增 `eslint no-console` 守护（组件内禁止直写 `console`），原 `warnUsage` 更名为 `log`（内部工具，不在包根导出）
+- 统一库内告警出口：组件与工具函数中散落的 `console.warn` / `console.error` / `console.debug` 收敛为单一 `log(level, component, message, error?)`（`components/utils/log.ts`），级别即环境策略 —— `error` 全环境输出（线上可观测），`warn` / `debug` 仅开发期输出，前缀 `[vue-amazing-ui] {组件名}: {说明}` 由出口统一拼装；[二维码 QRCode](/guide/components/qr-code.html) 编码 / 绘制 / 导出失败与 [折叠面板 Collapse](/guide/components/collapse.html) 复制失败由 `warn` 升为 `error`，浮层尺寸测量 / 字体就绪检测 / 跨域下载检测等预期内降级改为仅开发期输出；新增 `eslint no-console` 守护（组件内禁止直写 `console`），提醒类告警按「前缀 + 说明」自动去重（渲染路径重复触发不刷屏，`error` 不去重），原 `warnUsage` 更名为 `log`（内部工具，不在包根导出）
 - 新增组件级主色配置 `theme.components.<Component>.primaryColor`，承接旧版 `theme.Button.primaryColor` 的能力：只接受一个通用主色，`Provider` 用同一套派生把它展开为「内部桥 `--va-cp-<component>-primary-*`（覆盖该组件全部主色使用点）+ 注册表 `themeRole` 公开令牌（`Button` / `Slider` / `Menu` 的细粒度覆盖入口）」，自动派生常态 / 悬停 / 按下 / 浅底 / 描边 / 焦点环；组件配置优先于 `seed`，运行期增删会实时生效并回落到 `seed`
 - 覆盖 `39` 个使用主色的内置组件（完整清单见[组件级令牌](/guide/customize-theme.html#组件级令牌与整组覆盖)）；`theme.components` 的键类型收窄为 `ThemeComponentKey`，写错组件名在编译期即报错（不再依赖开发环境告警）；`Teleport` 浮层的主题转发同时携带全局令牌与组件级令牌；组合组件内的子组件（如 `InputSearch` 内的 `Input`）按子组件自己的配置
 - 组件令牌扩展：新增 `Table` / `Card` / `Alert` / `Input` / `Textarea` / `Modal` / `Drawer` 的 `22` 个公开令牌（表格底色 / 表头 / 页脚 / 分隔线，卡片底色 / 边框，输入框与文本域的底色 / 边框 / 文字 / 占位符，弹窗与抽屉表面色），组件令牌总数 `26` → `48`；均按「只消费不声明 + 带默认值」接入，宿主可在任意祖先覆盖
@@ -1090,6 +1090,3 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 - 新增 穿梭框 Transfer 组件
 - 新增 漫游式引导 Tour 组件
-<!-- - 更新 表格 Table 组件，新增虚拟滚动功能
-- 时间轴 Timeline 组件，新增水平时间轴
-- 重构级联选择 Cascader 组件 -->

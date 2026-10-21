@@ -7,6 +7,8 @@
  * - `debug` —— 预期内降级（跨域限制、测量失败、字体检测失败）：仅开发期输出。
  *
  * 输出结构固定为 `[vue-amazing-ui] {组件名或工具名}: {中文说明}`，便于使用方在控制台过滤。
+ * 提醒类（`warn` / `debug`）按「前缀 + 说明」去重，同一问题只输出一次；`error` 不去重。
+ * 用法类告警常位于渲染路径（`computed` / `getter`），去重是避免刷屏的必要条件。
  *
  * ⚠️ 环境判定刻意使用 `process.env.NODE_ENV`，而不是 `import.meta.env.DEV`：
  * - `import.meta.env.DEV` 在 Vite 的**库构建**中会被直接内联为 `false`，导致消费方在任何环境都收不到告警；
@@ -24,6 +26,20 @@
 
 /** 告警级别：`error` 线上可观测，`warn` / `debug` 仅开发期输出 */
 export type LogLevel = 'warn' | 'error' | 'debug'
+
+/**
+ * 已输出过的提醒类告警（`warn` / `debug`）
+ *
+ * 提醒类告警常写在 `computed` / `getter` 等渲染路径上，同一问题会随每次重算重复触发；
+ * 按「前缀 + 说明」去重后，一条问题只出现一次，使用方不至于刷屏。
+ * `error` 不去重：故障需要每次都出现在控制台与监控里（便于计数与定位发生时序）。
+ */
+const warnedMessages = new Set<string>()
+
+/** 清空去重记录（仅测试使用：模块级 Set 会跨用例累积，导致后续用例拿不到输出） */
+export function resetLogDedup(): void {
+  warnedMessages.clear()
+}
 
 /**
  * 当前是否处于开发环境
@@ -49,6 +65,11 @@ export function isDevEnv(): boolean {
 export function log(level: LogLevel, component: string, message: string, error?: unknown): void {
   if (level !== 'error' && !isDevEnv()) return
   const text = `[vue-amazing-ui] ${component}: ${message}`
+  // 提醒类去重（见 warnedMessages 注释）；error 每次都输出
+  if (level !== 'error') {
+    if (warnedMessages.has(text)) return
+    warnedMessages.add(text)
+  }
   if (error === undefined) {
     console[level](text)
     return
