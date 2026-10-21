@@ -10,6 +10,24 @@
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-21">2.16.0</VersionDateTag>
+
+- **破坏性变更**：主题系统重构为「种子 → 派生 → CSS 变量」。[全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme` 改为 `{ seed, mode }`（原 `{ common, ComponentName }` 形式已移除）：`seed` 只接受 7 个颜色种子（`primary` / `success` / `warning` / `error` / `info` / `neutralText` / `neutralBg`），其余 40 个语义变量按色阶索引统一派生；新增 `mode`（`light` / `dark` / `auto`，跟随系统配色）；组件样式改为只消费 `--va-*`，组件级主题覆盖（原 `theme.Button.primaryColor` 等）改用「嵌套 `ConfigProvider`」的作用域换肤；`abstract` 默认值由 `true` 改为 `false`（默认渲染包裹元素，主题只作用于自身子树），需要页面级主题（含 `Teleport` 到 `body` 的浮层、页面链接）时请在最外层显式传 `:abstract="true"`。迁移对照见[定制主题](/guide/customize-theme.html)
+- 主题实现：新增 `components/theme/`（基于 `@ant-design/colors` 的色阶映射 + 中性色透明度阶梯 + 派生缓存），构建期生成静态默认表并随每份按需样式入口下发，首帧不依赖 `JS`；不替品牌色做对比度兜底；公开 `derive(seed, mode)` 供 `JS` / `canvas` / `SVG` 场景取色，已废弃的 `getColorPalettes` / `getAlphaColor` 从主入口与工具文档中一并移除
+- **破坏性变更**：移除 `toggleDark` / `rafTimeout` / `cancelRaf` 三个工具函数（对外工具由 `21` 个收敛为 `16` 个：本条移除 3 个，上条废弃 API 清理 `getColorPalettes` / `getAlphaColor` 再减 2 个；主入口、类型、文档与演示站列表同步清理）。`toggleDark` 只切换 `html.dark`，与库主题无关（组件只消费 `--va-*` 与 `data-va-mode`），切换暗色请改用 `ConfigProvider` 的 `theme.mode`（含 `auto` 跟随系统）或直接写 `data-va-mode`；`rafTimeout` / `cancelRaf` 的回调绑定渲染帧、与 `setTimeout` / `setInterval` 不等价，库内帧调度统一使用原生 `requestAnimationFrame`，需要不被暂停的延时时请直接用 `setTimeout`
+- 默认主色保持 `#1677ff` 不变；新增主题守护脚本 `pnpm verify:theme`（组件不得使用旧主题通道、`--va-*` 引用必须已定义、变量表结构校验）
+- 新增组件级主色配置 `theme.components.<Component>.primaryColor`，承接旧版 `theme.Button.primaryColor` 的能力：只接受一个通用主色，`Provider` 用同一套派生把它展开为「内部桥 `--va-cp-<component>-primary-*`（覆盖该组件全部主色使用点）+ 注册表 `themeRole` 公开令牌（`Button` / `Slider` / `Menu` 的细粒度覆盖入口）」，自动派生常态 / 悬停 / 按下 / 浅底 / 描边 / 焦点环；组件配置优先于 `seed`，运行期增删会实时生效并回落到 `seed`
+- 覆盖 `39` 个使用主色的内置组件（完整清单见[组件级令牌](/guide/customize-theme.html#组件级令牌与整组覆盖)）；`theme.components` 的键类型收窄为 `ThemeComponentKey`，写错组件名在编译期即报错（不再依赖开发环境告警）；`Teleport` 浮层的主题转发同时携带全局令牌与组件级令牌；组合组件内的子组件（如 `InputSearch` 内的 `Input`）按子组件自己的配置
+- 组件令牌扩展：新增 `Table` / `Card` / `Alert` / `Input` / `Textarea` / `Modal` / `Drawer` 的 `22` 个公开令牌（表格底色 / 表头 / 页脚 / 分隔线，卡片底色 / 边框，输入框与文本域的底色 / 边框 / 文字 / 占位符，弹窗与抽屉表面色），组件令牌总数 `26` → `48`；均按「只消费不声明 + 带默认值」接入，宿主可在任意祖先覆盖
+- 文档重构主题章节：[定制主题](/guide/customize-theme.html)新增「主题系统全景」（一条流水线、写在哪管到哪、优先级链与排查清单）与「主题系统」特性介绍；实现架构（三张变量表、内部桥、浮层转发协议、文件地图）收进贡献者文档 `development/theme-system.md`；组件令牌不再单独成页，作为「定制主题」的附录并由脚本生成，标明哪些令牌跟随 `theme.components` 派生
+- 修复暗色模式下 [模态框 Modal](/guide/components/modal.html) / [抽屉 Drawer](/guide/components/drawer.html) / [图片 Image](/guide/components/image.html) 预览的遮罩变白；[表格 Table](/guide/components/table.html) 与 [列表 List](/guide/components/list.html) 的固定色改为语义变量
+- [水印 Watermark](/guide/components/watermark.html) 默认色改为取语义变量 `--va-fill-color-3`（浅色 `15%` 黑 / 暗色 `18%` 白），移除旧的反色滤镜适配；显式 `textStyle.color` 时仍以传入值为准；同时修复全屏水印 `fixed=false`：保持整屏覆盖、随文档原生滚动（不做 `JS` 位移补偿，避免滚动抖动）
+- 修复暗色下若干「反色表面」配色：[对话框 Dialog](/guide/components/dialog.html) 遮罩变白、[二维码 QRCode](/guide/components/qr-code.html) 状态遮罩白底白字、[菜单 Menu](/guide/components/menu.html) 折叠气泡白底白字、[颜色选择器 ColorPicker](/guide/components/color-picker.html) 面板白底白字、[标签 Tag](/guide/components/tag.html) 输入框 / 新增按钮白底白字；新增 `--va-fill-color-4`，用于 `Tag` 默认底、[结果页 Result](/guide/components/result.html) 内容区底纹与 [表格 Table](/guide/components/table.html) 展开行
+- 修复 [日历 Calendar](/guide/components/calendar.html) 年选择器：选中年份后列表区间不再随面板定位年平移，重新展开时才按当前年份重建并滚动到选中项
+- 修复组件级主色的两处边界：接受 `#rrggbbff`（与 `seed` 同一归一化口径，颜色选择器的 `8` 位输出不再被判非法）；只配置 `theme.components` 时，`Teleport` 浮层不再内联默认色表与 `light` 模式，避免覆盖宿主用纯 `CSS` 设置在 `:root` / `data-va-mode` 上的主题
+- 优化 `ConfigProvider` 的 `<html>` 写入权判定：只有组件配置、没有 `seed` / `mode` 的 `abstract: true` 实例不再参与全局写者仲裁，避免卸载时误清其它实例写入的变量；该场景会在开发环境提示改用 `abstract: false` 或补充 `seed` / `mode`
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-10-18">2.15.1</VersionDateTag>
 
 - 增强 [日历 Calendar](/guide/components/calendar.html)：新增 `defaultValue`、`validRange`（字符串按 `valueFormat` 解析、区间外的年 / 月选项一并收窄）与 `headerFull` / `dateFull` / `monthFull` 插槽，`mode` 改为受控（外部变更同步到面板），并补齐键盘导航（月份面板按月步进）、`grid` 无障碍语义、整月 / 整年禁用与窄屏头部
