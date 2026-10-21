@@ -128,7 +128,7 @@ function onClick(item: TextScrollItem) {
 
 ## 垂直文字滚动
 
-<TextScroll style="background-color: #e6f4ff" :items="scrollItems" :item-style="{ fontSize: '20px' }" vertical @click="onClick" />
+<TextScroll vertical :items="scrollItems" @click="onClick" />
 
 ::: details Show Code
 
@@ -167,13 +167,7 @@ function onClick(item: TextScrollItem) {
 }
 </script>
 <template>
-  <TextScroll
-    style="background-color: #e6f4ff"
-    :items="scrollItems"
-    :item-style="{ fontSize: '20px' }"
-    vertical
-    @click="onClick"
-  />
+  <TextScroll vertical :items="scrollItems" @click="onClick" />
 </template>
 ```
 

@@ -34,6 +34,8 @@ const model = reactive({
   gap: [100, 100],
   offset: [50, 50]
 })
+// 演示「浮层位于水印之上」：水印排布加密，保证浮层覆盖的区域内一定有水印文字
+const layerDemoGap: [number, number] = [60, 60]
 const layoutOptions = [
   {
     label: 'alternate',
@@ -88,13 +90,21 @@ const layoutOptions = [
       <div style="height: 360px" />
     </Watermark>
     <h2 class="mt30 mb10">全屏幕水印</h2>
+    <p class="mb10">
+      fixed 关闭时水印覆盖整页并随文档原生滚动；开启时钉住视口（本演示页已改为整页滚动，便于观察差异）
+    </p>
     <Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark>
-    <Space align="center"> Fullscreen: <Switch v-model:value="show" /> Fixed: <Switch v-model:value="fixed" /> </Space>
+    <Space align="center"> fullscreen: <Switch v-model:value="show" /> fixed: <Switch v-model:value="fixed" /> </Space>
     <h2 class="mt30 mb10">与浮层叠加</h2>
-    <p class="mb10">水印是装饰层（默认 <code>z-index: 90</code>），始终位于 <code>Tooltip</code> 等浮层之下</p>
-    <Watermark content="Vue Amazing UI">
-      <div style="height: 200px; padding: 24px">
-        <Tooltip tooltip="Vue Amazing UI">
+    <p class="mb10">
+      水印是装饰层（默认 <code>z-index: 90</code>），始终位于 <code>Tooltip</code> 等浮层之下：浮层覆盖的地方看不到水印
+    </p>
+    <Watermark content="Vue Amazing UI" :gap="layerDemoGap">
+      <div class="layer-demo">
+        <Tooltip placement="top">
+          <template #tooltip>
+            <div class="layer-demo-tooltip">我是浮层，水印在我下方：气泡覆盖到哪里，那里的水印就看不见了</div>
+          </template>
           <Button>Hover me</Button>
         </Tooltip>
       </div>
@@ -154,6 +164,18 @@ const layoutOptions = [
   </div>
 </template>
 <style lang="less" scoped>
+.layer-demo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 240px;
+  border: 1px dashed var(--va-border-color);
+  border-radius: 8px;
+}
+.layer-demo-tooltip {
+  width: 168px;
+  line-height: 1.6;
+}
 .paragraph-text {
   margin-bottom: 1em;
   font-size: 16px;

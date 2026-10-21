@@ -69,7 +69,7 @@ const disabledValue = ref(5)
 const disabledOptionValue = ref(5)
 ```
 
-- **为什么**：共用绑定值会让「操作 A 用例时 B / C 用例同步联动」——用户无法逐个核对特性，截图 / 录屏 / 真身对照也会失真。
+- **为什么**：共用绑定值会让「操作 A 用例时 B / C 用例同步联动」——用户无法逐个核对特性，截图 / 录屏 / 实机对照也会失真。
 - **命名**：与主题语义对齐（`basicValue` / `disabledValue` / `searchableValue` …），多个主题并列时在首个变量前加一行注释说明（见上例）。
 - **例外**：**同一主题内**的成对用例可共用（如「三种尺寸」的多个 Select、「下拉面板弹出位置」的 bottom / top 对照），它们是同一用例的对照展示。
 - **文档页同源**：`docs/guide/components/{组件名}.md` 的页面级 `<script setup>` 需与演示页逐项对应（见「演示与文档的对应」）；`::: details Show Code` 代码块是独立可复制示例，块内用局部命名（如 `selectedValue`）不受此约束。
@@ -85,7 +85,7 @@ ConfigProvider（theme 注入）
     └── Watermark（content="Vue Amazing UI"）
 ```
 
-- `ConfigProvider` 提供主题（`theme` 支持 `common.primaryColor` 与按组件覆盖）。
+- `ConfigProvider` 提供主题（`theme` 支持 `seed` 颜色种子与 `mode` 模式；组件级覆盖改用嵌套作用域）；布局层主题开关直接改写 `src/theme.ts` 的 `mode`，页面底板按模式取色：浅色用 `--va-bg-container-color`（白）、暗色用 `--va-bg-layout-color`（黑），卡片始终用容器色。
 - 五个 `XxxProvider` 依次嵌套，使任意演示页内可直接使用对应的 `useXxx()`。
 - 路由切换进度**不**复用上面这个 `LoadingBarProvider`：路由守卫位于组件树之外，改由 `createDiscreteApi(['loadingBar'])` 创建独立实例（`src/router/index.ts` 中惰性单例），并通过 `src/theme.ts` 与根组件共享同一份主题。
 
