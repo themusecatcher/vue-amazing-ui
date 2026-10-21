@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
   columnGap: 20,
   width: '100%',
   borderRadius: 8,
-  backgroundColor: '#F2F4F8',
+  backgroundColor: 'var(--va-bg-layout-color)',
   spinProps: () => ({})
 })
 const waterfallRef = ref<HTMLElement | null>(null) // 瀑布流容器引用
@@ -226,7 +226,7 @@ function onLoaded(index: number): void {
       .image-item {
         width: 100%;
         height: 100%;
-        border-radius: var(--border-radius);
+        border-radius: var(--waterfall-border-radius);
         display: inline-block;
         vertical-align: bottom;
       }

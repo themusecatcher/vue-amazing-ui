@@ -103,7 +103,7 @@ const responsiveValue = computed(() => {
   max-width: 100%;
   min-height: 1px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   line-height: 1.5714285714285714;
   transition: all 0.3s;
 }

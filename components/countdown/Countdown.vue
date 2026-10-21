@@ -222,11 +222,11 @@ defineExpose({
   line-height: 1.5714285714285714;
   .countdown-title {
     margin-bottom: 4px;
-    color: rgba(0, 0, 0, 0.45);
+    color: var(--va-text-color-3);
     font-size: 14px;
   }
   .countdown-time {
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     font-size: 24px;
     font-variant-numeric: tabular-nums; // 数字等宽
     .time-prefix {

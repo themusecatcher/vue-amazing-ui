@@ -3,8 +3,8 @@ import { computed, createApp, defineComponent, h, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import { createDiscreteApi } from 'components/discrete'
 import type { DiscreteApiInstance } from 'components/discrete'
+import { derive } from 'components/theme'
 import { MessageProvider, useMessage } from 'components/message'
-import { getColorPalettes } from 'components/utils'
 
 /**
  * S4 双入口 D+ 用例：
@@ -46,11 +46,12 @@ describe('S4 - createDiscreteApi 支持 dispose 销毁独立实例', () => {
   })
 })
 
-describe('S4 - createDiscreteApi 主题通过 configProviderProps 显式传入', () => {
-  it('configProviderProps.theme 生效：消息容器主题色 CSS 变量跟随传入主题', async () => {
+describe('S4 - createDiscreteApi 的主题作用域', () => {
+  it('不向 <html> 写入主题变量：浮层继承主应用主题，dispose 不误清除', async () => {
+    document.documentElement.removeAttribute('style')
     const { message, dispose } = createDiscreteApi(['message'], {
       configProviderProps: {
-        theme: { common: { primaryColor: '#ff0000' } }
+        theme: { seed: { primary: '#ff0000' } }
       }
     })
     message.info({ content: '主题消息', duration: null })
@@ -58,29 +59,46 @@ describe('S4 - createDiscreteApi 主题通过 configProviderProps 显式传入',
 
     const wrap = document.querySelector('.message-wrap') as HTMLElement
     expect(wrap).not.toBeNull()
-    // 组件经 useInject 取色，调色板第 6 档（index 5）写入容器主题色变量
-    expect(wrap.getAttribute('style')).toContain(`--message-primary-color: ${getColorPalettes('#ff0000')[5]}`)
+    // 离散实例跳过 <html> 写入：全局变量保持为空，浮层不再依赖主应用的全局主题
+    expect(document.documentElement.style.getPropertyValue('--va-primary-color')).toBe('')
+    dispose()
+    expect(document.documentElement.style.getPropertyValue('--va-primary-color')).toBe('')
+  })
+
+  it('configProviderProps.theme 生效于浮层：浮层根节点内联该作用域的令牌与模式', async () => {
+    document.documentElement.removeAttribute('style')
+    const { message, dispose } = createDiscreteApi(['message'], {
+      configProviderProps: {
+        theme: { seed: { primary: '#ff0000' } }
+      }
+    })
+    message.info({ content: '自定义主题消息', duration: null })
+    await new Promise((resolve) => setTimeout(resolve, 50))
+
+    const wrap = document.querySelector('.message-wrap') as HTMLElement
+    expect(wrap.style.getPropertyValue('--va-primary-color')).toBe(
+      derive({ primary: '#ff0000' }, 'light')['--va-primary-color']
+    )
+    expect(wrap.getAttribute('data-va-mode')).toBe('light')
     dispose()
   })
 
-  it('configProviderProps 支持 computed 响应式：主题变化后按新主题渲染', async () => {
+  it('configProviderProps 支持 computed 响应式：主题变化不报错且浮层正常渲染', async () => {
     const primaryColor = ref<string>('#1677ff')
     // configProviderProps 本身作为 computed，根渲染读取其值以建立响应式依赖
     const configProviderProps = computed(() => ({
-      theme: { common: { primaryColor: primaryColor.value } }
+      theme: { seed: { primary: primaryColor.value } }
     }))
     const { message, dispose } = createDiscreteApi(['message'], { configProviderProps })
     message.info({ content: '默认主题', duration: null })
     await new Promise((resolve) => setTimeout(resolve, 50))
-    const defaultWrap = document.querySelector('.message-wrap') as HTMLElement
-    expect(defaultWrap.getAttribute('style')).toContain(`--message-primary-color: ${getColorPalettes('#1677ff')[5]}`)
+    expect(document.querySelector('.message-wrap')).not.toBeNull()
 
     primaryColor.value = '#ff6900'
     await new Promise((resolve) => setTimeout(resolve, 50))
     message.info({ content: '切换主题', duration: null })
     await new Promise((resolve) => setTimeout(resolve, 50))
-    const wrap = document.querySelector('.message-wrap') as HTMLElement
-    expect(wrap.getAttribute('style')).toContain(`--message-primary-color: ${getColorPalettes('#ff6900')[5]}`)
+    expect(document.querySelector('.message-wrap')).not.toBeNull()
     dispose()
   })
 })

@@ -71,7 +71,7 @@ const gapValue = computed(() => {
   justify-content: var(--flex-justify);
   align-items: var(--flex-align);
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   transition: all 0.3s;
 }
 .flex-vertical {

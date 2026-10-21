@@ -1,5 +1,5 @@
 import { createApp, defineComponent, h, provide, unref } from 'vue'
-import { SKIP_LINK_CSS_VARS_KEY } from 'components/config-provider/context'
+import { SKIP_THEME_WRITE_KEY } from 'components/config-provider/context'
 import type { Ref } from 'vue'
 import ConfigProvider from 'components/config-provider'
 import type { ConfigProviderProps } from 'components/config-provider'
@@ -29,8 +29,10 @@ interface DiscreteApi {
 /**
  * createDiscreteApi 选项，离散 API 形态
  *
- * - 不传任何选项时，使用组件库内置默认主题；
- * - 需要定制主题时，通过 `configProviderProps.theme` 显式传入；
+ * 主题有两条路径，二者都不写 `<html>`：
+ * - 不传 `configProviderProps`：浮层的 CSS 变量从 `<html>` 继承，跟随主应用主题；
+ * - 传 `configProviderProps.theme`：浮层根节点内联该作用域的令牌与 `data-va-mode`，
+ *   外观由这份主题决定（可独立换肤），与主应用写到 `<html>` 的主题互不影响；
  *   由于根节点在渲染函数中读取该值，传入 `Ref` / `computed` 即可获得响应式跟随。
  * - 各 `XxxProviderProps` 透传给离散实例内部挂载的对应 Provider，
  *   例如 `messageProviderProps: { top: 60 }` 可配置消息容器位置。
@@ -127,12 +129,18 @@ export function createDiscreteApi<K extends DiscreteApiType>(
   document.body.appendChild(container)
   const app = createApp({
     setup() {
-      // 离散实例不参与「主题色阶写入全局 CSS 变量」：避免覆盖主应用写入的值，并在 dispose 时误清除
-      provide(SKIP_LINK_CSS_VARS_KEY, true)
+      // 离散实例不参与「主题变量写入 <html>」：避免覆盖主应用写入的值，并在 dispose 时误清除
+      provide(SKIP_THEME_WRITE_KEY, true)
       return () =>
-        h(ConfigProvider, unref(configProviderProps ?? {}), {
-          default: () => buildProviders(0)
-        })
+        // 显式传 abstract: true：离散实例不写 <html>（见上方 SKIP），也不需要额外包裹节点；
+        // 传了 configProviderProps.theme 时，其浮层由边界转发拿到该作用域的令牌。调用方显式传入时以调用方为准
+        h(
+          ConfigProvider,
+          { abstract: true, ...unref(configProviderProps ?? {}) },
+          {
+            default: () => buildProviders(0)
+          }
+        )
     }
   })
   app.mount(container)

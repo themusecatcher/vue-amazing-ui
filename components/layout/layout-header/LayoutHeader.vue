@@ -17,7 +17,7 @@ defineSlots<LayoutHeaderSlots>()
   flex: 0 0 auto;
   height: 64px;
   padding: 0 50px;
-  color: var(--layout-header-color, rgba(0, 0, 0, 0.88));
+  color: var(--layout-header-color, var(--va-text-color-1));
   line-height: 64px;
   background: var(--layout-header-background, #001529);
 }

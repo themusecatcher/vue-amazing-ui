@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest'
-import { h } from 'vue'
+import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import { format, getMonth, getYear } from 'date-fns'
 import Calendar from 'components/calendar/Calendar.vue'
@@ -350,6 +350,43 @@ describe('增强能力', () => {
     expect(format(lastEmittedValue(), 'yyyy-MM-dd')).toBe('2027-10-15')
     const selectEvents = wrapper.emitted('select')
     expect(selectEvents?.[selectEvents.length - 1]?.[1]).toEqual({ source: 'year' })
+  })
+
+  it('年选择器：选中年份后列表区间不在关闭动画中平移，重新展开时才按当前年份重建', async () => {
+    wrapper = mount(Calendar, {
+      attachTo: document.body,
+      props: { value: new Date(2026, 9, 15).getTime() }
+    })
+    await flush()
+
+    const yearSelect = wrapper.findAllComponents(Select)[0]
+    const optionValues = (): number[] => (yearSelect.props('options') as { value: number }[]).map((item) => item.value)
+    expect(optionValues()).toEqual(Array.from({ length: 20 }, (_, index) => 2016 + index))
+
+    await wrapper.find('.calendar-year-select').trigger('click')
+    await flush()
+
+    const target = Array.from(document.querySelectorAll('.select-option')).find((el) =>
+      el.textContent?.includes('2027年')
+    )
+    expect(target).toBeTruthy()
+    target!.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await nextTick()
+
+    // 关闭动画期间：列表仍按展开时的区间渲染，选中的年份就地打上选中态
+    expect(optionValues()).toEqual(Array.from({ length: 20 }, (_, index) => 2016 + index))
+    const selectedLabels = Array.from(document.querySelectorAll('.select-option.option-selected')).map(
+      (el) => el.textContent
+    )
+    expect(selectedLabels.some((label) => label?.includes('2027年'))).toBe(true)
+
+    // 重新展开：区间才按当前年份重建，并把选中年份滚入可视区
+    await flush()
+    await wrapper.find('.calendar-year-select').trigger('click')
+    await flush()
+    expect(optionValues()).toEqual(Array.from({ length: 20 }, (_, index) => 2017 + index))
+    const visibleLabels = Array.from(document.querySelectorAll('.select-option')).map((el) => el.textContent)
+    expect(visibleLabels.some((label) => label?.includes('2027年'))).toBe(true)
   })
 
   it('键盘导航：左右一天、上下为一周、翻页为一月', async () => {

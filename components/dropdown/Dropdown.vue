@@ -423,9 +423,9 @@ onBeforeUnmount(() => {
   cursor: not-allowed;
   // 按钮触发器：改用禁用配色，不再叠加整体透明度
   :deep(.btn-wrap) {
-    color: rgba(0, 0, 0, 0.25);
-    border-color: #d9d9d9;
-    background-color: rgba(0, 0, 0, 0.04);
+    color: var(--va-text-color-disabled);
+    border-color: var(--va-border-color);
+    background-color: var(--va-fill-color-1);
   }
   // 其他触发器（链接 / 文本等）：降低整体不透明度示意禁用
   > :deep(*:not(.btn-wrap)) {
@@ -464,16 +464,13 @@ onBeforeUnmount(() => {
   /* 菜单皮肤：背景 / 圆角 / 阴影 / 内边距 */
   .dropdown-content {
     padding: 4px;
-    color: rgba(0, 0, 0, 0.88);
-    background-color: #fff;
+    color: var(--va-text-color-1);
+    background-color: var(--va-bg-elevated-color);
     background-clip: padding-box;
     border-radius: 8px;
     // 卡片不继承触发器的 cursor（按钮、链接都是 pointer）
     cursor: auto;
-    box-shadow:
-      0 6px 16px 0 rgba(0, 0, 0, 0.08),
-      0 3px 6px -4px rgba(0, 0, 0, 0.12),
-      0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--va-popup-shadow);
   }
   .dropdown-arrow {
     position: absolute;
@@ -490,7 +487,7 @@ onBeforeUnmount(() => {
       left: 0;
       width: 16px;
       height: 8px;
-      background-color: #fff;
+      background-color: var(--va-bg-elevated-color);
       clip-path: path(
         'M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z'
       );
@@ -560,11 +557,11 @@ onBeforeUnmount(() => {
     margin: 4px 0;
     overflow: hidden;
     line-height: 0;
-    background-color: rgba(5, 5, 5, 0.06);
+    background-color: var(--va-border-split-color);
   }
   .dropdown-menu-group-title {
     padding: 5px 12px;
-    color: rgba(0, 0, 0, 0.45);
+    color: var(--va-text-color-3);
     font-size: 14px;
     line-height: 22px;
     transition: all 0.3s;
@@ -577,14 +574,14 @@ onBeforeUnmount(() => {
   }
   .dropdown-menu-item {
     position: relative;
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     font-size: 14px;
     line-height: 22px;
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s;
     &:not(.dropdown-menu-item-disabled):hover {
-      background-color: rgba(0, 0, 0, 0.04);
+      background-color: var(--va-fill-color-1);
     }
   }
   .dropdown-menu-item-content {
@@ -622,22 +619,22 @@ onBeforeUnmount(() => {
     right: 8px;
     display: inline-flex;
     align-items: center;
-    color: rgba(0, 0, 0, 0.45);
+    color: var(--va-text-color-3);
     font-size: 12px;
     transform: translateY(-50%);
   }
   .dropdown-menu-item-disabled {
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
     cursor: not-allowed;
     .dropdown-menu-item-content {
       pointer-events: none;
     }
   }
   .dropdown-menu-item-danger {
-    color: #ff4d4f;
+    color: var(--va-error-color);
     &:not(.dropdown-menu-item-disabled):hover {
-      color: #fff;
-      background-color: #ff4d4f;
+      color: var(--va-text-color-solid);
+      background-color: var(--va-error-color);
     }
   }
   // 为右侧展开箭头留出空间
@@ -649,13 +646,10 @@ onBeforeUnmount(() => {
    宽度纯由内容决定，不设 min-width */
 .dropdown-submenu-overlay {
   padding: 4px;
-  background-color: #fff;
+  background-color: var(--va-bg-elevated-color);
   background-clip: padding-box;
   border-radius: 8px;
-  box-shadow:
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--va-popup-shadow);
 }
 @keyframes dropdown-spin {
   100% {

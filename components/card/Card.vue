@@ -85,10 +85,10 @@ const showExtra = computed(() => {
 <style lang="less" scoped>
 .card-wrap {
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   line-height: 1.5714285714285714;
   position: relative;
-  background: #ffffff;
+  background: var(--va-card-bg-color, var(--va-bg-container-color));
   border-radius: 8px;
   text-align: left;
   transition: width 0.2s;
@@ -97,10 +97,10 @@ const showExtra = computed(() => {
     justify-content: center;
     flex-direction: column;
     margin-bottom: -1px;
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     font-weight: 600;
     background: transparent;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid var(--va-card-border-color, var(--va-border-split-color));
     border-radius: 8px 8px 0 0;
     transition: all 0.2s;
     .head-wrapper {
@@ -129,7 +129,7 @@ const showExtra = computed(() => {
   }
 }
 .card-bordered {
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--va-card-border-color, var(--va-border-split-color));
 }
 .card-small {
   .card-head {

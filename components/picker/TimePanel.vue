@@ -279,8 +279,8 @@ defineExpose({ handleKeydown })
   .picker-time-panel-header {
     display: flex;
     padding: 0 8px;
-    color: rgba(0, 0, 0, 0.88);
-    border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+    color: var(--va-text-color-1);
+    border-bottom: 1px solid var(--va-border-split-color);
     .picker-time-panel-view {
       flex: auto;
       // 头部恒定占一行：草稿为空时头部文本为空串，内部没有行盒会让 `line-height` 失效、头部塌成 1px，

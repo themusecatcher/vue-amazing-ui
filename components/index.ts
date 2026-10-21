@@ -18,14 +18,15 @@ export {
   useResizeObserver,
   useSlotsExist,
   useOptionsSupported,
-  getColorPalettes,
-  getAlphaColor,
   getScrollParent,
   useScrollParent
 } from './utils'
 export type { DownloadOptions, DownloadStrategy, ScrollParentOptions } from './utils'
 export { VueAmazingUIResolver } from './utils/resolver'
 export type { VueAmazingUIResolverOptions } from './utils/resolver'
+// 主题派生（纯函数，可用于 canvas / SVG / 第三方 JS 取色）
+export { derive, DEFAULT_PRIMARY, DEFAULT_SEEDS, MODE_ATTRIBUTE, THEME_VAR_NAMES } from './theme'
+export type { ThemeSeed, ThemeMode, ResolvedMode, ThemeVars, ThemeSnapshot } from './theme'
 
 export const install = function (app: App) {
   Object.values(components).forEach((component) => {

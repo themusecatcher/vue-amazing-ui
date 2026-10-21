@@ -224,7 +224,7 @@ defineExpose({ handleKeydown })
   width: auto;
   // 日期列与时间列之间的分隔线由时间面板的左边框提供
   .picker-time-panel {
-    border-left: 1px solid rgba(5, 5, 5, 0.06);
+    border-left: 1px solid var(--va-border-split-color);
   }
   // 键盘操作期间非活动列淡化（活动列保持原透明度）。时间面板由本组件渲染，作用域样式可直接命中；
   // 日期列的透明度由其自身承载（其内部节点不在本组件的样式作用域内）
@@ -263,12 +263,12 @@ defineExpose({ handleKeydown })
 }
 .picker-panel-now-btn {
   // 同 `.picker-panel-today-btn`：还原被宿主文档链接样式接管的字重与下划线
-  color: var(--picker-primary-color, #1677ff);
+  color: var(--picker-primary-color, var(--va-primary-color));
   font-weight: normal;
   text-decoration: none;
   cursor: pointer;
   &:hover {
-    color: var(--picker-primary-color-hover, #4096ff);
+    color: var(--picker-primary-color-hover, var(--va-primary-color-hover));
   }
 }
 </style>

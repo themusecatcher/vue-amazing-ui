@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, useSlots, watch } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
-import { TinyColor } from '@ctrl/tinycolor'
 import Button from 'components/button'
 import Popup from 'components/popup'
 import PickerIcon from 'components/picker/PickerIcon.vue'
@@ -34,7 +33,7 @@ import type {
   PickerValue
 } from 'components/picker'
 import type { FloatingPlacement } from 'components/utils'
-import { FLOATING_LAYER_Z_INDEX, useInject, useSlotsExist } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, useSlotsExist } from 'components/utils'
 /** 默认展示格式（24 小时制） */
 const DEFAULT_FORMAT = 'HH:mm:ss'
 /** 12 小时制下的默认展示格式：小时补零，与面板的小时列标签、头部文本同口径（均为两位的 `09`） */
@@ -176,7 +175,6 @@ const emits = defineEmits<{
 }>()
 const value = defineModel<PickerValue>('value', { default: null })
 const open = defineModel<boolean>('open', { default: false })
-const { colorPalettes, shadowColor } = useInject('TimePicker') // 主题色注入
 const triggerRef = ref<InstanceType<typeof PickerTrigger> | null>(null)
 const popupRef = ref<InstanceType<typeof Popup> | null>(null)
 const wrapperRef = ref<HTMLElement | null>(null)
@@ -195,16 +193,13 @@ const timePanelRef = ref<PanelKeydownTarget | null>(null)
  */
 const keyboardPanelMode = ref(false)
 // 主题变量随组件壳下发，浮层经 Teleport 后不在壳内，需同样注入到面板上
-const themeVars = computed(() => {
-  const primary = colorPalettes.value[5]
-  return {
-    '--picker-primary-color': primary,
-    '--picker-primary-color-hover': colorPalettes.value[4],
-    '--picker-primary-shadow-color': shadowColor.value,
-    '--picker-primary-color-bg': colorPalettes.value[0],
-    '--picker-time-column-active-bg': new TinyColor(colorPalettes.value[0]).setAlpha(0.2).toRgbString()
-  }
-})
+const themeVars = computed(() => ({
+  '--picker-primary-color': 'var(--va-cp-time-picker-primary-color, var(--va-primary-color))',
+  '--picker-primary-color-hover': 'var(--va-cp-time-picker-primary-color-hover, var(--va-primary-color-hover))',
+  '--picker-primary-shadow-color': 'var(--va-cp-time-picker-primary-bg-color, var(--va-primary-bg-color))',
+  '--picker-primary-color-bg': 'var(--va-cp-time-picker-primary-bg-color, var(--va-primary-bg-color))',
+  '--picker-time-column-active-bg': 'var(--va-cp-time-picker-primary-bg-color, var(--va-primary-bg-color))'
+}))
 const wrapperStyle = computed(() => {
   const width =
     props.width === undefined ? undefined : typeof props.width === 'number' ? `${props.width}px` : props.width
@@ -771,7 +766,7 @@ defineExpose({ focus, blur })
     left: 0;
     width: 16px;
     height: 8px;
-    background-color: #fff;
+    background-color: var(--va-bg-container-color);
     clip-path: polygon(
       1.6568542494923806px 100%,
       50% 1.6568542494923806px,
@@ -831,12 +826,15 @@ defineExpose({ focus, blur })
 }
 .timepicker-panel-now-btn {
   // 还原被宿主文档链接样式接管的字重与下划线
-  color: var(--picker-primary-color, #1677ff);
+  color: var(--picker-primary-color, var(--va-cp-time-picker-primary-color, var(--va-primary-color)));
   font-weight: normal;
   text-decoration: none;
   cursor: pointer;
   &:hover {
-    color: var(--picker-primary-color-hover, #4096ff);
+    color: var(
+      --picker-primary-color-hover,
+      var(--va-cp-time-picker-primary-color-hover, var(--va-primary-color-hover))
+    );
   }
 }
 </style>

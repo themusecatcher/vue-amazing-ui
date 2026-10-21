@@ -3,7 +3,7 @@ import { computed, ref, watchEffect, nextTick } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Space, { type SpaceProps } from 'components/space'
 import Spin, { type SpinProps } from 'components/spin'
-import { add, downloadFile, getImageName, useInject, useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import { add, downloadFile, getImageName, useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
 export interface Image {
   src: string // 图像地址
   name?: string // 图像名称，未设置时自动从图像地址 src 中提取
@@ -109,7 +109,6 @@ const right = ref<number>(0) // 图片右边缘距浏览器窗口左边界的距
 const left = ref<number>(0) // 图片左边缘距浏览器窗口左边界的距离
 const viewportWidth = ref<number>(0) // 视口宽度
 const viewportHeight = ref<number>(0) // 视口高度
-const { colorPalettes } = useInject('Image') // 主题色注入
 const imageAmount = computed(() => {
   return images.value.length
 })
@@ -328,7 +327,7 @@ function onSwitchRight(): void {
 }
 </script>
 <template>
-  <div class="image-wrap" :style="`--image-primary-color: ${colorPalettes[5]};`">
+  <div class="image-wrap" :style="``">
     <Space gap="small" v-bind="spaceProps">
       <div
         v-for="(image, index) in images"
@@ -343,7 +342,7 @@ function onSwitchRight(): void {
       >
         <Spin
           :spinning="!(imagesCompleted[index] || imagesRef[index]?.naturalWidth)"
-          color="var(--image-primary-color)"
+          color="var(--va-cp-image-primary-color, var(--va-primary-color))"
           indicator="dynamic-circle"
           size="small"
           v-bind="spinProps"
@@ -598,7 +597,7 @@ function onSwitchRight(): void {
           >
             <Spin
               :spinning="!(previewCompleted[index] || previewImagesRef[index]?.naturalWidth)"
-              color="var(--image-primary-color)"
+              color="var(--va-cp-image-primary-color, var(--va-primary-color))"
               indicator="dynamic-circle"
               v-bind="previewSpinProps"
             >
@@ -772,7 +771,7 @@ function onSwitchRight(): void {
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
+      color: var(--va-text-color-solid);
       background: rgba(0, 0, 0, 0.5);
       cursor: pointer;
       opacity: 0;
@@ -788,17 +787,17 @@ function onSwitchRight(): void {
         .eye-svg {
           margin-right: 4px;
           font-size: 14px;
-          color: #fff;
+          color: var(--va-text-color-solid);
         }
         .mask-pre {
           display: inline-block;
-          color: #fff;
+          color: var(--va-text-color-solid);
         }
       }
     }
   }
   .image-bordered {
-    border: 1px solid #d9d9d9;
+    border: 1px solid var(--va-border-color);
   }
   .preview-mask {
     position: fixed;
@@ -806,7 +805,7 @@ function onSwitchRight(): void {
     /* 默认层级与 useZIndex 的回退值一致；ConfigProvider 传入 baseZIndex 时由内联样式覆盖 */
     z-index: 1070;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.45);
+    background-color: var(--va-mask-color);
   }
   .preview-container {
     position: fixed;
@@ -839,7 +838,7 @@ function onSwitchRight(): void {
           position: absolute;
           left: 12px;
           font-size: 14px;
-          color: rgb(255, 255, 255);
+          color: var(--va-text-color-solid);
           line-height: 1.57;
           max-width: calc(50% - 60px);
           white-space: nowrap;
@@ -847,7 +846,7 @@ function onSwitchRight(): void {
           text-overflow: ellipsis;
           transition: color 0.3s;
           &:hover {
-            color: var(--image-primary-color);
+            color: var(--va-cp-image-primary-color, var(--va-primary-color));
           }
         }
         .preview-progress {
@@ -855,7 +854,7 @@ function onSwitchRight(): void {
           left: 50%;
           transform: translateX(-50%);
           font-size: 14px;
-          color: rgb(255, 255, 255);
+          color: var(--va-text-color-solid);
           line-height: 1.57;
         }
         .preview-operation {
@@ -872,11 +871,11 @@ function onSwitchRight(): void {
             margin-left: 12px;
           }
           &:hover {
-            background: rgba(0, 0, 0, 0.25);
+            background: var(--va-text-color-disabled);
           }
           .icon-svg {
             font-size: 18px;
-            color: #fff;
+            color: var(--va-text-color-solid);
           }
         }
         .operation-disabled {
@@ -921,7 +920,7 @@ function onSwitchRight(): void {
         width: 40px;
         height: 40px;
         margin-top: -20px;
-        color: rgb(255, 255, 255);
+        color: var(--va-text-color-solid);
         background: rgba(0, 0, 0, 0.1);
         border-radius: 50%;
         transform: translateY(-50%);
@@ -934,7 +933,7 @@ function onSwitchRight(): void {
         }
         .switch-svg {
           font-size: 18px;
-          color: #fff;
+          color: var(--va-text-color-solid);
         }
       }
       .switch-right {
@@ -949,7 +948,7 @@ function onSwitchRight(): void {
         width: 40px;
         height: 40px;
         margin-top: -20px;
-        color: rgb(255, 255, 255);
+        color: var(--va-text-color-solid);
         background: rgba(0, 0, 0, 0.1);
         border-radius: 50%;
         transform: translateY(-50%);
@@ -961,7 +960,7 @@ function onSwitchRight(): void {
         }
         .switch-svg {
           font-size: 18px;
-          color: #fff;
+          color: var(--va-text-color-solid);
         }
       }
       .switch-disabled {

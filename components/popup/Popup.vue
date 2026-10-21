@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, h, ref, watch } from 'vue'
+import { computed, h, inject, ref, watch } from 'vue'
 import type { CSSProperties, FunctionalComponent, TransitionProps, VNode } from 'vue'
+import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
 import {
   FLOATING_MOUNT_ATTR,
   raiseFloatingOrder,
@@ -165,6 +166,11 @@ const {
 // 面板内联样式：内核输出（定位 + 缩放原点）+ 皮肤层样式 + 层级。
 // 层级放在最后：panelStyle 允许覆盖定位 / 缩放原点，但**层级始终由宿主接管** ——
 // 否则使用者经 popupStyle / dropdownMenuStyle 传 zIndex 就能绕开 zIndex prop 与分配器
+// 主题转发：作用域变量写在包裹元素上时（abstract: false），Teleport 到 body 的面板拿不到继承，
+// 由 Provider 经此通道下发当前作用域的全量令牌；写在 `<html>` 上时为 null，无需重复内联
+const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
+const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 const mergedPanelStyle = computed<CSSProperties>(() => ({
   ...floatingPanelStyle.value,
   transformOrigin: transformOrigin.value,
@@ -273,7 +279,9 @@ defineExpose({
        append 到目标末尾，同族同层级浮层（如承载层内两个 Tooltip）的上下关系等于「后打开者在上」；
        若 Teleport 常驻，该顺序会退化为模板源码顺序，与打开先后无关 -->
   <Teleport v-if="shouldRender" :disabled="resolvedTo === false" :to="resolvedTo === false ? null : resolvedTo">
-    <div ref="containerRef" class="va-popup-container">
+    <!-- 主题转发落在容器（Teleport 根）：定位样式仍归面板，变量与模式由子树继承，
+         `renderBody` 逃生舱无需感知主题 -->
+    <div ref="containerRef" class="va-popup-container" :style="teleportThemeVars" :data-va-mode="teleportThemeMode">
       <!-- appear：首次插入也要播放进入动画。容器的 v-if 首帧优化让「首次展示」等同于初次渲染，
            不加 appear 时 Vue 不触发 enter，面板会生硬出现（只有第二次起才有过渡） -->
       <Transition

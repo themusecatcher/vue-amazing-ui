@@ -60,14 +60,11 @@ function onPanelMousedown(event: MouseEvent): void {
   // 的 14px 压住，同一组件在两处呈现不同字号
   font-size: 14px;
   text-align: center;
-  background: var(--picker-panel-bg-color, #fff);
+  background: var(--picker-panel-bg-color, var(--va-bg-elevated-color));
   // 面板自身不画边框：外边界由圆角 + 阴影提供，overflow 负责裁掉内容在圆角处的溢出
   border-radius: 8px;
   outline: none;
-  box-shadow:
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--va-popup-shadow);
   overflow: hidden;
   // 行布局：预设侧栏与主体列并排（无侧栏时主体列独占整宽，观感与单列无异）
   .picker-panel-body {
@@ -85,7 +82,7 @@ function onPanelMousedown(event: MouseEvent): void {
     min-width: 100%;
     line-height: 38px;
     text-align: center;
-    border-top: 1px solid rgba(5, 5, 5, 0.06);
+    border-top: 1px solid var(--va-border-split-color);
   }
   // 额外页脚左对齐（与居中的操作行区分），水平内边距与面板头部 / 内容一致；
   // 纵向用 flex 居中承载用户内容：内容多为按钮（本库 Button 根为 inline-flex），
@@ -99,7 +96,7 @@ function onPanelMousedown(event: MouseEvent): void {
     text-align: start;
     // 之后还有操作行时补一道分隔线，额外页脚落在页脚末尾则不补（避免底部多出一道线）
     &:not(:last-child) {
-      border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+      border-bottom: 1px solid var(--va-border-split-color);
     }
   }
 }

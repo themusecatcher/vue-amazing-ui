@@ -283,9 +283,9 @@ defineExpose({ focus, blur })
   box-sizing: border-box;
   align-items: center;
   padding: 4px 11px;
-  background: #fff;
+  background: var(--va-bg-container-color);
   line-height: 1;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--va-border-color);
   border-radius: 6px;
   // 内边距一并过渡：尺寸切换时内边距（0 / 4px / 6.5px）不参与过渡会让整块在首帧瞬跳，故统一为全程平滑
   transition:
@@ -295,21 +295,21 @@ defineExpose({ focus, blur })
   // 指针样式交还浏览器默认：触发器空白区为箭头，文本输入区为文本光标
   cursor: auto;
   &:hover {
-    border-color: var(--picker-primary-color-hover, #4096ff);
+    border-color: var(--picker-primary-color-hover, var(--va-primary-color-hover));
   }
   &.picker-trigger-focused {
-    border-color: var(--picker-primary-color, #1677ff);
-    box-shadow: 0 0 0 2px var(--picker-primary-shadow-color, rgba(5, 145, 255, 0.1));
+    border-color: var(--picker-primary-color, var(--va-primary-color));
+    box-shadow: 0 0 0 2px var(--picker-primary-shadow-color, var(--va-primary-bg-color));
   }
   &.picker-trigger-disabled {
-    background: rgba(0, 0, 0, 0.04);
+    background: var(--va-fill-color-1);
     cursor: not-allowed;
     &:hover {
-      border-color: #d9d9d9;
+      border-color: var(--va-border-color);
     }
     .picker-trigger-input-inner,
     .picker-trigger-suffix {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
       cursor: not-allowed;
     }
   }
@@ -323,31 +323,31 @@ defineExpose({ focus, blur })
     box-shadow: none;
   }
   &.picker-trigger-status-error {
-    border-color: #ff4d4f;
+    border-color: var(--va-error-color);
     &:hover {
-      border-color: #ff4d4f;
+      border-color: var(--va-error-color);
     }
     &.picker-trigger-focused {
-      border-color: #ff4d4f;
-      box-shadow: 0 0 0 2px rgba(255, 38, 5, 0.06);
+      border-color: var(--va-error-color);
+      box-shadow: 0 0 0 2px var(--va-error-bg-color);
     }
     // 范围激活条随状态取色：与边框同色，否则校验态下红框配蓝线会割裂
     .picker-trigger-range-active-bar {
-      background: #ff4d4f;
+      background: var(--va-error-color);
     }
   }
   &.picker-trigger-status-warning {
-    border-color: #faad14;
+    border-color: var(--va-warning-color);
     &:hover {
-      border-color: #faad14;
+      border-color: var(--va-warning-color);
     }
     &.picker-trigger-focused {
-      border-color: #faad14;
-      box-shadow: 0 0 0 2px rgba(255, 215, 5, 0.1);
+      border-color: var(--va-warning-color);
+      box-shadow: 0 0 0 2px var(--va-warning-bg-color);
     }
     // 同上：范围激活条与状态边框同色
     .picker-trigger-range-active-bar {
-      background: #faad14;
+      background: var(--va-warning-color);
     }
   }
   .picker-trigger-input {
@@ -363,24 +363,24 @@ defineExpose({ focus, blur })
       font-family: inherit;
       font-size: 14px;
       line-height: 1.5714285714285714;
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--va-text-color-1);
       background: transparent;
       border: 0;
       outline: none;
       // 尺寸切换时宽度 / 行高 / 字号随过渡变化
       transition: all 0.2s;
       &::placeholder {
-        color: rgba(0, 0, 0, 0.25);
+        color: var(--va-text-color-disabled);
       }
       &:disabled {
-        color: rgba(0, 0, 0, 0.25);
+        color: var(--va-text-color-disabled);
         background: transparent;
       }
     }
   }
   // 展示预览文本（悬浮面板日期时该段的临时值）的段取提示色
   .picker-trigger-input-placeholder .picker-trigger-input-inner {
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
   }
   // 范围形态：两段输入等宽并排，段间为分隔箭头，两段可分别聚焦
   .picker-trigger-range-item {
@@ -398,7 +398,7 @@ defineExpose({ focus, blur })
     // 图标 16px + 左右各 8px 内边距：两段之间的间距因此为 32px
     padding: 0 8px;
     font-size: 16px;
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
     line-height: 1;
     // 段间距随尺寸切换过渡，与输入框的过渡保持同一节奏
     transition: all 0.2s;
@@ -411,7 +411,7 @@ defineExpose({ focus, blur })
     height: 2px;
     // 圆角为观感优化：直角在大尺寸下显得生硬，加 2px 与面板的圆角语言一致
     border-radius: 2px;
-    background: var(--picker-primary-color, #1677ff);
+    background: var(--picker-primary-color, var(--va-primary-color));
     opacity: 0;
     transition:
       all 0.3s ease-out,
@@ -427,9 +427,9 @@ defineExpose({ focus, blur })
     top: 50%;
     right: 0;
     display: flex;
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
     line-height: 1;
-    background: #fff;
+    background: var(--va-bg-container-color);
     transform: translateY(-50%);
     cursor: pointer;
     opacity: 0;
@@ -437,7 +437,7 @@ defineExpose({ focus, blur })
       opacity 0.2s,
       color 0.2s;
     &:hover {
-      color: rgba(0, 0, 0, 0.45);
+      color: var(--va-text-color-3);
     }
   }
   &:hover .picker-trigger-clear {
@@ -448,7 +448,7 @@ defineExpose({ focus, blur })
     flex: none;
     align-self: center;
     margin-left: 4px;
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
     line-height: 1;
     pointer-events: none;
   }

@@ -2,7 +2,6 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import Input, { type InputProps } from 'components/input'
 import Select, { type SelectProps } from 'components/select'
-import { useInject } from 'components/utils'
 export interface Props {
   page?: number // (v-model) 当前页数
   pageSize?: number // (v-model) 每页条数
@@ -41,7 +40,6 @@ const pageListRef = ref<HTMLElement[] | null>(null) // pageList 生成的 page �
 const jumpNumber = ref<string>() // 跳转的页码
 const forwardMore = ref(false) // 左省略号展示
 const backwardMore = ref(false) // 右省略号展示
-const { colorPalettes } = useInject('Pagination') // 主题色注入
 const emits = defineEmits(['update:page', 'update:pageSize', 'change', 'pageSizeChange'])
 const totalPage = computed(() => {
   // 总页数
@@ -220,7 +218,6 @@ function onPageSizeChange(pageSize: number): void {
         'pagination-hidden': !total || (hideOnSinglePage && total <= currentPageSize)
       }
     ]"
-    :style="`--pagination-primary-color: ${colorPalettes[5]}; --pagination-primary-color-focus-visible: ${colorPalettes[2]};`"
   >
     <span class="pagination-total-text" v-if="totalText">{{ totalText }}</span>
     <span
@@ -374,7 +371,7 @@ function onPageSizeChange(pageSize: number): void {
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   line-height: 1.5714285714285714;
   .pagination-total-text {
     display: inline-flex;
@@ -388,19 +385,19 @@ function onPageSizeChange(pageSize: number): void {
     padding: 0 6px;
     min-width: 32px;
     height: 32px;
-    border: 1px solid #d9d9d9;
+    border: 1px solid var(--va-border-color);
     border-radius: 6px;
-    background: #fff;
+    background: var(--va-bg-container-color);
     cursor: pointer;
     outline: 0;
     user-select: none; // 禁止选取文本
     transition: all 0.3s;
     &:hover {
-      color: var(--pagination-primary-color);
-      border-color: var(--pagination-primary-color);
+      color: var(--va-cp-pagination-primary-color, var(--va-primary-color));
+      border-color: var(--va-cp-pagination-primary-color, var(--va-primary-color));
     }
     &:focus-visible {
-      outline: 2px solid var(--pagination-primary-color-focus-visible);
+      outline: 2px solid var(--va-cp-pagination-primary-border-color, var(--va-primary-border-color));
       outline-offset: 1px;
       transition:
         outline-offset 0s,
@@ -414,9 +411,9 @@ function onPageSizeChange(pageSize: number): void {
     justify-content: center;
     min-width: 32px;
     height: 32px;
-    border: 1px solid #d9d9d9;
+    border: 1px solid var(--va-border-color);
     border-radius: 6px;
-    background: #fff;
+    background: var(--va-bg-container-color);
     cursor: pointer;
     outline: 0;
     user-select: none; // 禁止选取文本
@@ -424,17 +421,17 @@ function onPageSizeChange(pageSize: number): void {
     .arrow-svg {
       display: inline-block;
       font-size: 12px;
-      color: rgba(0, 0, 0, 0.65);
+      color: var(--va-text-color-2);
       transition: color 0.3s;
     }
     &:hover {
-      border-color: var(--pagination-primary-color);
+      border-color: var(--va-cp-pagination-primary-color, var(--va-primary-color));
       .arrow-svg {
-        color: var(--pagination-primary-color);
+        color: var(--va-cp-pagination-primary-color, var(--va-primary-color));
       }
     }
     &:focus-visible:not(.pagination-item-disabled) {
-      outline: 2px solid var(--pagination-primary-color-focus-visible);
+      outline: 2px solid var(--va-cp-pagination-primary-border-color, var(--va-primary-border-color));
       outline-offset: 1px;
       transition:
         outline-offset 0s,
@@ -442,25 +439,25 @@ function onPageSizeChange(pageSize: number): void {
     }
   }
   .pagination-item-active {
-    // 悬浮/选中样式
-    color: var(--pagination-primary-color);
-    border-color: var(--pagination-primary-color);
+    // 选中样式：文字取 primary-text 语义位，描边仍取主色本身
+    color: var(--va-cp-pagination-primary-text-color, var(--va-primary-text-color));
+    border-color: var(--va-cp-pagination-primary-color, var(--va-primary-color));
   }
   .pagination-item-disabled {
-    color: rgba(0, 0, 0, 0.25);
-    background: #fff;
-    border-color: #d9d9d9;
+    color: var(--va-text-color-disabled);
+    background: var(--va-bg-container-color);
+    border-color: var(--va-border-color);
     cursor: not-allowed;
     &:hover {
       font-weight: 400;
-      color: rgba(0, 0, 0, 0.65);
-      border-color: #d9d9d9;
+      color: var(--va-text-color-2);
+      border-color: var(--va-border-color);
       .arrow-svg {
-        color: rgba(0, 0, 0, 0.25);
+        color: var(--va-text-color-disabled);
       }
     }
     .arrow-svg {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
     }
   }
   .pagintion-jump-prev,
@@ -480,7 +477,7 @@ function onPageSizeChange(pageSize: number): void {
       bottom: 0;
       right: 0;
       margin: auto;
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
       font-family: Arial, Helvetica, sans-serif; // 省略号圆点字形所需（库内唯一的字体族例外）
       line-height: 32px;
       letter-spacing: 2px;
@@ -498,7 +495,7 @@ function onPageSizeChange(pageSize: number): void {
       margin: auto;
       display: inline-block;
       font-size: 12px;
-      color: var(--pagination-primary-color);
+      color: var(--va-cp-pagination-primary-color, var(--va-primary-color));
       fill: currentColor;
       opacity: 0;
       pointer-events: none;
@@ -515,7 +512,7 @@ function onPageSizeChange(pageSize: number): void {
       }
     }
     &:focus-visible {
-      outline: 2px solid var(--pagination-primary-color-focus-visible);
+      outline: 2px solid var(--va-cp-pagination-primary-border-color, var(--va-primary-border-color));
       outline-offset: 1px;
       transition:
         outline-offset 0s,
@@ -622,16 +619,16 @@ function onPageSizeChange(pageSize: number): void {
 .pagination-disabled {
   .pagination-prev,
   .pagination-next {
-    color: rgba(0, 0, 0, 0.25);
-    border-color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
+    border-color: var(--va-text-color-disabled);
     cursor: not-allowed;
     .arrow-svg {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
     }
     &:hover {
-      border-color: rgba(0, 0, 0, 0.25);
+      border-color: var(--va-text-color-disabled);
       .arrow-svg {
-        color: rgba(0, 0, 0, 0.25);
+        color: var(--va-text-color-disabled);
       }
     }
     &:focus-visible {
@@ -639,31 +636,31 @@ function onPageSizeChange(pageSize: number): void {
     }
   }
   .pagination-item {
-    color: rgba(0, 0, 0, 0.25);
-    border-color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
+    border-color: var(--va-text-color-disabled);
     cursor: not-allowed;
     &:hover {
       font-weight: normal;
-      color: rgba(0, 0, 0, 0.25);
-      border-color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
+      border-color: var(--va-text-color-disabled);
     }
     &:focus-visible {
       outline: 0;
     }
   }
   .pagination-item-active {
-    border-color: #d9d9d9;
-    background-color: rgba(0, 0, 0, 0.15);
+    border-color: var(--va-border-color);
+    background-color: var(--va-fill-color-2);
     &:hover {
       font-weight: 600;
-      color: rgba(0, 0, 0, 0.25);
-      border-color: #d9d9d9;
-      background-color: rgba(0, 0, 0, 0.15);
+      color: var(--va-text-color-disabled);
+      border-color: var(--va-border-color);
+      background-color: var(--va-fill-color-2);
     }
   }
   .pagintion-jump-prev,
   .pagintion-jump-next {
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
     cursor: not-allowed;
     &:hover {
       .ellipsis-character {
@@ -688,7 +685,7 @@ function onPageSizeChange(pageSize: number): void {
     }
   }
   .pagination-options {
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
     cursor: not-allowed;
   }
 }

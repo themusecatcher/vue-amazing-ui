@@ -105,7 +105,7 @@ const showNested = computed(() => {
   position: relative;
   background-color: inherit;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   .comment-inner {
     display: flex;
     padding: 16px 0;
@@ -138,18 +138,18 @@ const showNested = computed(() => {
           line-height: 18px;
         }
         .comment-content-author-name {
-          color: rgba(0, 0, 0, 0.45);
+          color: var(--va-text-color-3);
           font-size: 14px;
           transition: color 0.3s;
           :deep(> *) {
-            color: rgba(0, 0, 0, 0.45);
+            color: var(--va-text-color-3);
             &:hover {
-              color: rgba(0, 0, 0, 0.45);
+              color: var(--va-text-color-3);
             }
           }
         }
         .comment-content-author-time {
-          color: rgba(0, 0, 0, 0.25);
+          color: var(--va-text-color-disabled);
           white-space: nowrap;
           cursor: auto;
         }
@@ -166,16 +166,16 @@ const showNested = computed(() => {
         padding-left: 0;
         :deep(> li) {
           display: inline-block;
-          color: rgba(0, 0, 0, 0.45);
+          color: var(--va-text-color-3);
           > span {
             margin-right: 10px;
-            color: rgba(0, 0, 0, 0.45);
+            color: var(--va-text-color-3);
             font-size: 12px;
             cursor: pointer;
             transition: color 0.3s;
             user-select: none;
             &:hover {
-              color: rgba(0, 0, 0, 0.65);
+              color: var(--va-text-color-2);
             }
           }
         }

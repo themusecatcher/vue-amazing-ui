@@ -60,14 +60,14 @@ function onPresetLeave() {
     padding: 8px;
     overflow: auto;
     list-style: none;
-    border-inline-end: 1px solid rgba(5, 5, 5, 0.06);
+    border-inline-end: 1px solid var(--va-border-split-color);
   }
 }
 .picker-presets-item {
   padding-block: 1px;
   padding-inline: 8px;
   overflow: hidden;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   // 侧栏内容一律左对齐：面板本体是 `text-align: center`（日期格居中），预设条目不该跟着居中
   text-align: left;
   white-space: nowrap;
@@ -79,7 +79,7 @@ function onPresetLeave() {
     margin-top: 8px;
   }
   &:hover {
-    background: rgba(0, 0, 0, 0.04);
+    background: var(--va-fill-color-1);
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, isVNode } from 'vue'
 import type { Ref, VNode, CSSProperties } from 'vue'
-import { useFloating, useResizeObserver, useInject, warnUsage } from 'components/utils'
+import { useFloating, useResizeObserver, warnUsage } from 'components/utils'
 export type Marks = {
   [markValue: number]: string | VNode | (() => VNode) | { style: CSSProperties; label: string | VNode | (() => VNode) }
 }
@@ -58,7 +58,6 @@ const highHandleRef = ref<HTMLElement | null>(null) // high handle DOM 引用
 const highTooltipRef = ref<HTMLElement | null>(null) // high tooltip DOM 引用
 const lowTooltipShow = ref<boolean>(false) // 左 / 下手柄气泡的交互态显隐（拖动 / 聚焦期间为真，悬浮另由 CSS 承担）
 const highTooltipShow = ref<boolean>(false) // 右 / 上手柄气泡的交互态显隐（拖动 / 聚焦期间为真，悬浮另由 CSS 承担）
-const { colorPalettes } = useInject('Slider') // 主题色注入
 /**
  * 手柄气泡的定位内核
  *
@@ -759,24 +758,18 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     :style="[
       sliderStyle,
       `
-        --slider-rail-color: rgba(0, 0, 0, 0.04);
-        --slider-rail-color-hover: rgba(0, 0, 0, 0.1);
-        --slider-rail-color-disabled: rgba(0, 0, 0, 0.06);
-        --slider-track-color: ${colorPalettes[2]};
-        --slider-track-color-hover: ${colorPalettes[5]};
-        --slider-track-color-disabled: rgba(0, 0, 0, 0.25);
-        --slider-handle-color: #fff;
-        --slider-handle-shadow-color: ${colorPalettes[2]};
-        --slider-handle-shadow-color-hover-focus: ${colorPalettes[5]};
-        --slider-handle-shadow-color-disabled: #bfbfbf;
-        --slider-dot-color: #fff;
-        --slider-dot-border-color: #f0f0f0;
-        --slider-dot-border-color-hover: rgba(0, 0, 0, 0.1);
-        --slider-dot-color-active: ${colorPalettes[2]};
-        --slider-mark-color: rgba(0, 0, 0, 0.45);
-        --slider-mark-color-active: rgba(0, 0, 0, 0.88);
-        --slider-tooltip-color: #fff;
-        --slider-tooltip-bg-color: rgba(0, 0, 0, 0.85);
+        --slider-rail-color-disabled: var(--va-border-split-color);
+        --slider-track-color-disabled: var(--va-text-color-disabled);
+        --slider-handle-shadow-color-disabled: var(--va-border-color);
+        /* 轨道 / 光环 / 气泡已提升为公开令牌，默认值写在消费处（见 component-vars.js）。
+           下面这些仍是私有：disabled 态统一走中性令牌，mark 属于组件自有细节；
+           激活态圆点描边虽是私有变量，同样跟随组件级主色桥（theme.components.Slider.primaryColor） */
+        --slider-dot-color: var(--va-bg-elevated-color);
+        --slider-dot-border-color: var(--va-border-split-color);
+        --slider-dot-border-color-hover: var(--va-fill-color-2);
+        --slider-dot-color-active: var(--va-cp-slider-primary-border-color, var(--va-primary-border-color));
+        --slider-mark-color: var(--va-text-color-3);
+        --slider-mark-color-active: var(--va-text-color-1);
       `
     ]"
     @pointerdown="disabled ? () => false : onClickSliderPoint($event)"
@@ -885,14 +878,14 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
   .slider-rail {
     // 灰色轨道颜色
     position: absolute;
-    background-color: var(--slider-rail-color);
+    background-color: var(--va-slider-rail-color, var(--va-fill-color-1));
     border-radius: 2px;
     transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .slider-track {
     // 蓝色轨道颜色
     position: absolute;
-    background-color: var(--slider-track-color);
+    background-color: var(--va-slider-track-color, var(--va-primary-border-color));
     border-radius: 2px;
     transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -940,18 +933,18 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
   &:hover {
     .slider-rail {
       // 灰色轨道悬浮色
-      background: var(--slider-rail-color-hover);
+      background: var(--va-slider-rail-color-hover, var(--va-fill-color-2));
     }
     .slider-track {
       // 蓝色轨道悬浮色
-      background: var(--slider-track-color-hover);
+      background: var(--va-slider-track-color-hover, var(--va-primary-color));
     }
     .slider-dots {
       .slider-dot {
         border-color: var(--slider-dot-border-color-hover);
       }
       .slider-dot-active {
-        border-color: var(--slider-track-color-hover);
+        border-color: var(--va-slider-track-color-hover, var(--va-primary-color));
       }
     }
   }
@@ -980,8 +973,8 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       top: 50%;
       width: 10px;
       height: 10px;
-      background: var(--slider-handle-color);
-      box-shadow: 0 0 0 2px var(--slider-handle-shadow-color);
+      background: var(--va-slider-handle-color, var(--va-bg-elevated-color));
+      box-shadow: 0 0 0 2px var(--va-slider-handle-shadow-color, var(--va-primary-border-color));
       border-radius: 50%;
       translate: -50% -50%;
       transition:
@@ -992,7 +985,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     .hover-focus-handle() {
       width: 12px;
       height: 12px;
-      box-shadow: 0 0 0 4px var(--slider-handle-shadow-color-hover-focus);
+      box-shadow: 0 0 0 4px var(--va-slider-handle-shadow-color-hover-focus, var(--va-primary-color));
     }
     &:hover,
     &:focus {
@@ -1016,15 +1009,14 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       padding: 6px 8px;
       height: 32px;
       font-size: 14px;
-      color: var(--slider-tooltip-color);
+      /* 气泡是反色浮层：暗色底 #424242 + 实色底上的白字。
+         旧实现用「正文色的反色」当底，暗色下会变成纯白气泡，与全局暗色皮肤相反 */
+      color: var(--va-slider-tooltip-color, var(--va-text-color-solid));
       line-height: 20px;
       text-align: center;
       border-radius: 6px;
-      background: var(--slider-tooltip-bg-color);
-      box-shadow:
-        0 6px 16px 0 rgba(0, 0, 0, 0.08),
-        0 3px 6px -4px rgba(0, 0, 0, 0.12),
-        0 9px 28px 8px rgba(0, 0, 0, 0.05);
+      background: var(--va-slider-tooltip-bg-color, var(--va-bg-spotlight-color));
+      box-shadow: var(--va-popup-shadow);
       // 气泡不接收指针事件：否则点击气泡会冒泡到 .slider-wrap
       // 触发「点击轨道改值」，悬浮气泡还会把 hover 态传导给滑块
       pointer-events: none;
@@ -1053,7 +1045,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
           left: 0;
           width: 16px;
           height: 8px;
-          background-color: var(--slider-tooltip-bg-color);
+          background-color: var(--va-slider-tooltip-bg-color, var(--va-bg-spotlight-color));
           clip-path: path(
             'M 0 8 A 4 4 0 0 0 2.82842712474619 6.82842712474619 L 6.585786437626905 3.0710678118654755 A 2 2 0 0 1 9.414213562373096 3.0710678118654755 L 13.17157287525381 6.82842712474619 A 4 4 0 0 0 16 8 Z'
           );

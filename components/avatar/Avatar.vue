@@ -28,7 +28,7 @@ export interface AvatarSlots {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  color: 'rgba(0, 0, 0, 0.25)',
+  color: 'var(--va-text-color-disabled)',
   shape: 'circle',
   size: 'middle',
   src: undefined,
@@ -150,7 +150,7 @@ const strStyle = computed(() => {
   height: 32px;
   border-radius: 50%;
   font-size: 14px;
-  color: #fff;
+  color: var(--va-text-color-solid);
   line-height: 30px;
   border: 1px solid transparent;
   overflow: hidden;
@@ -159,7 +159,7 @@ const strStyle = computed(() => {
   cursor: auto;
   outline: none;
   &:hover {
-    color: #fff;
+    color: var(--va-text-color-solid);
   }
   &.avatar-square {
     border-radius: 6px;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { useEventListener, useResizeObserver, useInject, useMediaQuery, useSlotsExist } from 'components/utils'
+import { useEventListener, useResizeObserver, useMediaQuery, useSlotsExist } from 'components/utils'
 import { transition, TransitionPresets } from '@vueuse/core'
 import type { CubicBezierPoints, EasingFunction } from '@vueuse/core'
 import Spin, { type SpinProps } from 'components/spin'
@@ -120,7 +120,6 @@ const imageHeight = ref<number>() // 图片高度
 const noFadeTransition = ref(false) // 临时关闭 fade 过渡（to 的无动画切换使用）
 // 已加载完成的图片地址集合：按 src 而非下标记录，图片换序、换地址或重复引用时加载态都不会错位
 const loadedSrcs = ref(new Set<string>())
-const { colorPalettes } = useInject('Carousel') // 主题色注入
 const { match: prefersReducedMotion } = useMediaQuery('(prefers-reduced-motion: reduce)') // 系统「减弱动态效果」偏好
 const dragging = ref(false) // 是否处于拖拽会话中（用于禁用文本选择、显示抓取光标）
 let dragDragged = false // 本次拖拽会话是否已构成有效拖拽（用于抑制拖拽尾随的点击）
@@ -181,7 +180,7 @@ const isNextDisabled = computed(() => {
 // 指示点选中颜色
 const dotActiveColorComputed = computed(() => {
   if (props.dotActiveColor === undefined) {
-    return colorPalettes.value[5]
+    return 'var(--va-cp-carousel-primary-color, var(--va-primary-color))'
   } else {
     return props.dotActiveColor
   }
@@ -925,7 +924,6 @@ defineExpose({
         .image-item {
           width: 100%;
           height: 100%;
-          border-radius: var(--border-radius);
           display: inline-block;
           vertical-align: bottom;
         }

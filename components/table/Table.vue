@@ -1751,14 +1751,27 @@ function onPaginationChange(page: number, pageSize: number): void {
   </div>
 </template>
 <style lang="less" scoped>
+/* 不透明填充：把半透明叠加色（--va-fill-color-* / --va-border-split-color）合成到容器底色上，
+   得到可直接使用的实色。背景直接写半透明 rgba 会让 sticky 固定列
+   变成半透明，横向滚动时透出下层被遮挡单元格的文字（表现为整行/整列「变透明」+ 文字重叠）；
+   叠加色改由 inset 阴影承载，既保持不透明结果，也能随 hover 过渡。 */
+.solid-fill(@color) {
+  background-color: var(--va-table-bg-color, var(--va-bg-container-color));
+  box-shadow: inset 0 0 0 9999px @color;
+}
+/* 表头填充：底色与叠加色都走公开令牌，避免 Less mixin 参数里嵌 `var(a, var(b))` 的解析歧义 */
+.solid-fill-header() {
+  background-color: var(--va-table-bg-color, var(--va-bg-container-color));
+  box-shadow: inset 0 0 0 9999px var(--va-table-header-bg-color, var(--va-fill-color-4));
+}
 .table-wrap {
   clear: both;
   max-width: 100%;
   .table-container {
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     font-size: 14px;
     line-height: 1.5714285714285714;
-    background: #ffffff;
+    background: var(--va-table-bg-color, var(--va-bg-container-color));
     border-radius: 8px 8px 0 0;
     .table-header {
       border-radius: 8px 8px 0 0;
@@ -1768,8 +1781,8 @@ function onPaginationChange(page: number, pageSize: number): void {
     .table-footer {
       border-radius: 0 0 8px 8px;
       padding: 16px;
-      color: rgba(0, 0, 0, 0.88);
-      background: #fafafa;
+      color: var(--va-text-color-1);
+      background: var(--va-table-footer-bg-color, var(--va-fill-color-4));
       transition: padding 0.3s;
     }
     .table-content-container {
@@ -1801,7 +1814,7 @@ function onPaginationChange(page: number, pageSize: number): void {
         position: sticky;
         top: 0px;
         z-index: 3;
-        background: #ffffff;
+        background: var(--va-table-bg-color, var(--va-bg-container-color));
       }
       .table-x-scrollbar-sticky {
         overflow: visible;
@@ -1839,21 +1852,22 @@ function onPaginationChange(page: number, pageSize: number): void {
           }
         }
         .table-th {
-          color: rgba(0, 0, 0, 0.88);
+          color: var(--va-text-color-1);
           font-weight: 600;
           text-align: start;
-          background: #fafafa;
+          .solid-fill-header();
           padding: 16px;
-          border-bottom: 1px solid #f0f0f0;
+          border-bottom: 1px solid var(--va-table-border-color, var(--va-border-split-color));
           overflow-wrap: break-word;
           transition:
-            background 0.2s ease,
+            background-color 0.2s ease,
+            box-shadow 0.2s ease,
             padding 0.3s;
           &[colspan]:not([colspan='1']) {
             text-align: center;
           }
           &.table-cell-sort {
-            background: #f0f0f0;
+            background: var(--va-table-border-color, var(--va-border-split-color));
           }
         }
         .table-th-selection {
@@ -1878,11 +1892,11 @@ function onPaginationChange(page: number, pageSize: number): void {
           cursor: pointer;
           transition: all 0.3s;
           &:hover {
-            background: #f0f0f0;
+            background: var(--va-table-border-color, var(--va-border-split-color));
             .table-cell-sorter {
               .table-cell-arrow {
                 &:not(.ascend-arrow, .descend-arrow) {
-                  color: rgba(0, 0, 0, 0.57);
+                  color: var(--va-text-color-2);
                 }
               }
             }
@@ -1901,28 +1915,28 @@ function onPaginationChange(page: number, pageSize: number): void {
               display: inline-flex;
               align-items: center;
               margin-left: 4px;
-              color: rgba(0, 0, 0, 0.29);
+              color: var(--va-text-color-disabled);
               transition: all 0.3s;
               svg {
                 fill: currentColor;
               }
             }
             .ascend-arrow {
-              color: #1677ff;
+              color: var(--va-cp-table-primary-color, var(--va-primary-color));
             }
             .descend-arrow {
-              color: #1677ff;
+              color: var(--va-cp-table-primary-color, var(--va-primary-color));
               transform: rotate(180deg);
             }
           }
         }
         .table-empty {
           padding: 16px;
-          border-bottom: 1px solid #f0f0f0;
+          border-bottom: 1px solid var(--va-table-border-color, var(--va-border-split-color));
           .table-empty-fixed {
             padding: 16px;
             margin: -16px -17px;
-            border-right: 1px solid #f0f0f0;
+            border-right: 1px solid var(--va-table-border-color, var(--va-border-split-color));
           }
           .empty {
             margin: 32px 0;
@@ -1930,10 +1944,13 @@ function onPaginationChange(page: number, pageSize: number): void {
         }
         .table-td {
           padding: 16px;
-          border-bottom: 1px solid #f0f0f0;
-          transition: padding 0.3s;
+          border-bottom: 1px solid var(--va-table-border-color, var(--va-border-split-color));
+          transition:
+            background-color 0.2s ease,
+            box-shadow 0.2s ease,
+            padding 0.3s;
           &.table-cell-sort {
-            background: #fafafa;
+            .solid-fill-header();
           }
           .expand-btn {
             position: relative;
@@ -1943,8 +1960,8 @@ function onPaginationChange(page: number, pageSize: number): void {
             width: 26px;
             height: 26px;
             line-height: 26px;
-            background: #ffffff;
-            border: 1px solid #f0f0f0;
+            background: var(--va-table-bg-color, var(--va-bg-container-color));
+            border: 1px solid var(--va-table-border-color, var(--va-border-split-color));
             border-radius: 8px;
             outline: none;
             cursor: pointer;
@@ -1952,8 +1969,8 @@ function onPaginationChange(page: number, pageSize: number): void {
             user-select: none;
             transition: all 0.3s;
             &:hover {
-              color: #4096ff;
-              border-color: #4096ff;
+              color: var(--va-cp-table-primary-color-hover, var(--va-primary-color-hover));
+              border-color: var(--va-cp-table-primary-color-hover, var(--va-primary-color-hover));
             }
             &::before {
               position: absolute;
@@ -2005,10 +2022,10 @@ function onPaginationChange(page: number, pageSize: number): void {
         .table-cell-fix-left {
           position: sticky !important;
           z-index: 2;
-          background: #ffffff;
+          background: var(--va-table-bg-color, var(--va-bg-container-color));
         }
         .table-th.table-cell-fix-left {
-          background: #fafafa;
+          .solid-fill-header();
         }
         .table-cell-fix-left-last {
           &::after {
@@ -2026,10 +2043,10 @@ function onPaginationChange(page: number, pageSize: number): void {
         .table-cell-fix-right {
           position: sticky !important;
           z-index: 2;
-          background: #ffffff;
+          background: var(--va-table-bg-color, var(--va-bg-container-color));
         }
         .table-th.table-cell-fix-right {
-          background: #fafafa;
+          .solid-fill-header();
         }
         .table-cell-fix-right-first {
           &::before {
@@ -2044,15 +2061,17 @@ function onPaginationChange(page: number, pageSize: number): void {
             pointer-events: none;
           }
         }
+        /* 行悬浮底色：fill-4 合成到容器色后的实色，
+           必须不透明 —— sticky 固定列用半透明底会透出下层单元格 */
         .table-td-hover {
-          background-color: #fafafa;
+          .solid-fill-header();
         }
         .table-td-expand {
           padding-left: 14px;
           padding-right: 14px;
         }
         .table-td-expand-row {
-          background: rgba(0, 0, 0, 0.02);
+          .solid-fill-header();
         }
         .table-td-selection {
           padding-left: 8px;
@@ -2085,14 +2104,14 @@ function onPaginationChange(page: number, pageSize: number): void {
     &:not(.table-has-fix-left) {
       .table-content-container {
         &::before {
-          box-shadow: inset 10px 0 8px -8px rgba(5, 5, 5, 0.06);
+          box-shadow: inset 10px 0 8px -8px var(--va-table-border-color, var(--va-border-split-color));
         }
       }
     }
     .table-content-container {
       .table-cell-fix-left-last {
         &::after {
-          box-shadow: inset 10px 0 8px -8px rgba(5, 5, 5, 0.06);
+          box-shadow: inset 10px 0 8px -8px var(--va-table-border-color, var(--va-border-split-color));
         }
       }
     }
@@ -2101,14 +2120,14 @@ function onPaginationChange(page: number, pageSize: number): void {
     &:not(.table-has-fix-right) {
       .table-content-container {
         &::after {
-          box-shadow: inset -10px 0 8px -8px rgba(5, 5, 5, 0.06);
+          box-shadow: inset -10px 0 8px -8px var(--va-table-border-color, var(--va-border-split-color));
         }
       }
     }
     .table-content-container {
       .table-cell-fix-right-first {
         &::before {
-          box-shadow: inset -10px 0 8px -8px rgba(5, 5, 5, 0.06);
+          box-shadow: inset -10px 0 8px -8px var(--va-table-border-color, var(--va-border-split-color));
         }
       }
     }
@@ -2146,29 +2165,30 @@ function onPaginationChange(page: number, pageSize: number): void {
   .table-striped {
     tbody {
       tr:nth-child(even) {
-        .table-td {
-          background-color: #fafafa;
+        /* 悬浮行优先：斑马纹与 hover 同为 fill-color-4，靠 :not 让 hover 的实色底生效 */
+        .table-td:not(.table-td-hover) {
+          .solid-fill-header();
         }
       }
     }
   }
   .table-bordered {
     .table-header {
-      border: 1px solid #f0f0f0;
+      border: 1px solid var(--va-table-border-color, var(--va-border-split-color));
       border-bottom: 0;
     }
     .table-footer {
-      border: 1px solid #f0f0f0;
+      border: 1px solid var(--va-table-border-color, var(--va-border-split-color));
       border-top: 0;
     }
     .table-content-container {
-      border: 1px solid #f0f0f0;
+      border: 1px solid var(--va-table-border-color, var(--va-border-split-color));
       border-bottom: 0;
       border-right: 0;
       table {
         th,
         td {
-          border-right: 1px solid #f0f0f0;
+          border-right: 1px solid var(--va-table-border-color, var(--va-border-split-color));
         }
       }
       .table-td {

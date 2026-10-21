@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Tooltip from 'components/tooltip'
 import Button, { type ButtonProps } from 'components/button'
-import { useSlotsExist, useInject } from 'components/utils'
+import { useSlotsExist } from 'components/utils'
 
 export interface Props {
   title?: string // 弹出确认框的标题
@@ -51,7 +51,6 @@ const props = withDefaults(defineProps<Props>(), {
 })
 defineSlots<PopconfirmSlots>()
 const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null) // Tooltip 组件模板引用
-const { colorPalettes } = useInject('Popconfirm') // 主题色注入
 const emits = defineEmits(['cancel', 'ok'])
 const slotsExist = useSlotsExist(['description'])
 const showDesc = computed(() => {
@@ -70,7 +69,7 @@ function onOk(e: Event): void {
   <Tooltip
     ref="tooltipRef"
     max-width="auto"
-    bg-color="#fff"
+    bg-color="var(--va-bg-elevated-color)"
     :tooltip-style="{
       padding: '12px',
       borderRadius: '8px',
@@ -82,15 +81,7 @@ function onOk(e: Event): void {
     :transition-duration="200"
   >
     <template #tooltip>
-      <div
-        class="popconfirm-wrap"
-        :style="`
-          --popconfirm-primary-color: ${colorPalettes[5]};
-          --popconfirm-success-color: #52c41a;
-          --popconfirm-danger-color: #ff4d4f;
-          --popconfirm-warning-color: #faad14;
-        `"
-      >
+      <div class="popconfirm-wrap">
         <span class="popconfirm-icon" :style="iconStyle">
           <slot name="icon">
             <svg
@@ -180,7 +171,7 @@ function onOk(e: Event): void {
   position: relative;
   margin-bottom: 8px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   display: flex;
   flex-wrap: nowrap;
   align-items: start;
@@ -200,16 +191,16 @@ function onOk(e: Event): void {
     }
   }
   .icon-info {
-    color: var(--popconfirm-primary-color);
+    color: var(--va-cp-popconfirm-primary-color, var(--va-primary-color));
   }
   .icon-success {
-    color: var(--popconfirm-success-color);
+    color: var(--va-success-color);
   }
   .icon-danger {
-    color: var(--popconfirm-danger-color);
+    color: var(--va-error-color);
   }
   .icon-warning {
-    color: var(--popconfirm-warning-color);
+    color: var(--va-warning-color);
   }
   .popconfirm-title {
     flex: auto;
@@ -224,7 +215,7 @@ function onOk(e: Event): void {
   margin-left: 22px;
   margin-bottom: 8px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
 }
 .popconfirm-btns {
   text-align: end;

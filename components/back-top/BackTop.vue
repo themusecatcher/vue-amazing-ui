@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
-import type { VNode } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount, inject } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
+import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
 import Tooltip, { type TooltipProps } from 'components/tooltip'
-import { useSlotsExist, useInject, useOptionsSupported, getScrollParent, warnUsage } from 'components/utils'
+import { useSlotsExist, useOptionsSupported, getScrollParent, warnUsage } from 'components/utils'
 
 export interface Props {
   icon?: VNode | (() => VNode) // 自定义图标，支持 VNode / 渲染函数；插槽形态请用 #icon
@@ -26,6 +27,10 @@ export interface BackTopSlots {
   description?: () => VNode[]
 }
 
+// 主题转发：回到顶部按钮 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
+const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
+const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 const props = withDefaults(defineProps<Props>(), {
   icon: undefined,
   description: undefined,
@@ -45,7 +50,6 @@ const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免�
 const backTopPlaceholderRef = ref<HTMLElement | null>(null) // backTop 元素引用
 const scrollTop = ref<number>(0) // 滚动距离
 const scrollTarget = ref<HTMLElement | Document | null>(null) // 滚动目标
-const { colorPalettes } = useInject('BackTop') // 主题色注入
 const { isSupported: passiveSupported } = useOptionsSupported('passive')
 let scrollEventTarget: Window | HTMLElement | Document | null = null // 实际承载 scroll 事件的目标，整页滚动时为 window
 const emits = defineEmits(['click', 'show'])
@@ -176,6 +180,7 @@ function onBackTop(): void {
           v-show="backTopShow"
           class="back-top"
           :style="[
+            teleportThemeVars,
             backTopStyle,
             `
               --back-top-z-index: ${zIndex};
@@ -184,24 +189,13 @@ function onBackTop(): void {
               --back-top-icon-size: 26px;
               --back-top-icon-with-description-size: 24px;
               --back-top-description-font-size: 12px;
-              --back-top-default-color: rgba(0, 0, 0, 0.88);
-              --back-top-default-color-hover: ${colorPalettes[5]};
-              --back-top-default-bg-color: rgba(255, 255, 255, 0.88);
-              --back-top-default-bg-color-hover: rgba(255, 255, 255);
-              --back-top-default-shadow-color: rgba(0, 0, 0, 0.12);
-              --back-top-default-shadow-color-hover: rgba(0, 0, 0, 0.12);
-              --back-top-primary-color: #fff;
-              --back-top-primary-color-hover: #fff;
-              --back-top-primary-bg-color: ${colorPalettes[5]};
-              --back-top-primary-bg-color-hover: ${colorPalettes[4]};
-              --back-top-primary-shadow-color: rgba(9, 88, 217, 0.32);
-              --back-top-primary-shadow-color-hover: rgba(9, 88, 217, 0.32);
               --back-top-circle-border-radius: calc(var(--back-top-width) / 2);
               --back-top-square-border-radius: 8px;
             `
           ]"
           @click="onBackTop"
           v-bind="$attrs"
+          :data-va-mode="teleportThemeMode"
         >
           <Tooltip
             :style="`border-radius: var(--back-top-${shape}-border-radius)`"
@@ -304,38 +298,38 @@ function onBackTop(): void {
     }
   }
   .back-top-default {
-    color: var(--back-top-default-color);
-    background-color: var(--back-top-default-bg-color);
-    box-shadow: 0 2px 8px 0 var(--back-top-default-shadow-color);
+    color: var(--va-text-color-1);
+    background-color: var(--va-bg-container-color);
+    box-shadow: var(--va-popup-shadow);
     .back-top-icon,
     .back-top-description {
-      color: var(--back-top-default-color);
+      color: var(--va-text-color-1);
     }
     &:hover {
-      color: var(--back-top-default-color-hover);
-      background-color: var(--back-top-default-bg-color-hover);
-      box-shadow: 0 2px 8px 3px var(--back-top-default-shadow-color-hover);
+      color: var(--va-cp-back-top-primary-color, var(--va-primary-color));
+      background-color: var(--va-bg-container-color);
+      box-shadow: var(--va-popup-shadow);
       .back-top-icon,
       .back-top-description {
-        color: var(--back-top-default-color-hover);
+        color: var(--va-cp-back-top-primary-color, var(--va-primary-color));
       }
     }
   }
   .back-top-primary {
-    color: var(--back-top-primary-color);
-    background-color: var(--back-top-primary-bg-color);
-    box-shadow: 0 2px 8px 0 var(--back-top-primary-shadow-color);
+    color: var(--va-text-color-solid);
+    background-color: var(--va-cp-back-top-primary-color, var(--va-primary-color));
+    box-shadow: var(--va-popup-shadow);
     .back-top-icon,
     .back-top-description {
-      color: var(--back-top-primary-color);
+      color: var(--va-text-color-solid);
     }
     &:hover {
-      color: var(--back-top-primary-color-hover);
-      background-color: var(--back-top-primary-bg-color-hover);
-      box-shadow: 0 2px 8px 3px var(--back-top-primary-shadow-color-hover);
+      color: var(--va-text-color-solid);
+      background-color: var(--va-cp-back-top-primary-color-hover, var(--va-primary-color-hover));
+      box-shadow: var(--va-popup-shadow);
       .back-top-icon,
       .back-top-description {
-        color: var(--back-top-primary-color-hover);
+        color: var(--va-text-color-solid);
       }
     }
   }

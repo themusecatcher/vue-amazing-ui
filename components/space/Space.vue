@@ -56,7 +56,7 @@ const gapValue = computed(() => {
 .space-wrap {
   display: inline-flex;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   transition: all 0.3s;
   flex-direction: row;
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import type { VNode } from 'vue'
-import { useSlotsExist, useInject } from 'components/utils'
+import { useSlotsExist } from 'components/utils'
 
 // 内置指示符枚举（字符串取值即内置；各形态说明见行尾）
 export type BuiltinIndicator =
@@ -47,13 +47,12 @@ const props = withDefaults(defineProps<Props>(), {
   color: undefined,
   spinCircleWidth: undefined,
   spinCirclePercent: 33,
-  ringRailColor: 'rgba(0, 0, 0, 0.12)',
+  ringRailColor: 'var(--va-border-color)',
   magicRingColor: undefined,
   rotate: false,
   speed: undefined
 })
 defineSlots<SpinSlots>()
-const { colorPalettes } = useInject('Spin') // 主题色注入
 const slotsExist = useSlotsExist(['tip', 'default', 'indicator'])
 // 自定义指示符：优先 #indicator 插槽，其次取 indicator 传入的 VNode / 渲染函数；传 null 表示不渲染
 const customIndicator = computed(() => {
@@ -124,17 +123,18 @@ const circlePath = computed(() => {
 const circleDashArray = computed(() => {
   return `${(circlePercent.value / 100) * circlePerimeter.value}px, ${circlePerimeter.value}px`
 })
+// 指示符颜色：未传 color 时取主色别名，实例覆盖写在 --spin-primary-color 上
 const primaryColor = computed(() => {
   if (props.color === undefined) {
-    return colorPalettes.value[5]
+    return 'var(--va-cp-spin-primary-color, var(--va-primary-color))'
   } else {
     return props.color
   }
 })
-// 内环默认取深一档色阶：内环作内壁暗面，与 3D 化后的环面呼应
+// 内环默认取主色按下态（比基色深一档）：内环作内壁暗面，与 3D 化后的环面呼应
 const magicRingColorComputed = computed(() => {
   if (props.magicRingColor === undefined) {
-    return colorPalettes.value[6]
+    return 'var(--va-cp-spin-primary-color-active, var(--va-primary-color-active))'
   } else {
     return props.magicRingColor
   }
@@ -221,10 +221,9 @@ onBeforeUnmount(clearDelayTimer)
             <svg class="circle" viewBox="0 0 100 100">
               <path
                 :d="circlePath"
-                :stroke="ringRailColor"
                 stroke-linecap="round"
                 class="trail"
-                :style="`stroke-dasharray: ${circlePerimeter}px, ${circlePerimeter}px;`"
+                :style="`stroke: ${ringRailColor}; stroke-dasharray: ${circlePerimeter}px, ${circlePerimeter}px;`"
                 fill-opacity="0"
               ></path>
               <path

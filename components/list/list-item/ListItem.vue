@@ -88,7 +88,7 @@ const showExtra = computed(() => {
   justify-content: space-between;
   align-items: center;
   padding: 12px 24px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   max-width: 100%;
   transition: all 0.3s;
   .list-item-main {
@@ -106,24 +106,24 @@ const showExtra = computed(() => {
       .list-item-content {
         flex: 1 0;
         width: 0;
-        color: rgba(0, 0, 0, 0.88);
+        color: var(--va-text-color-1);
         .list-item-title {
           margin-bottom: 4px;
-          color: rgba(0, 0, 0, 0.88);
+          color: var(--va-text-color-1);
           font-size: 14px;
           font-weight: 700;
           line-height: 1.5714285714285714;
           :deep(a) {
             font-weight: 700;
-            color: rgba(0, 0, 0, 0.88);
+            color: var(--va-text-color-1);
             transition: all 0.3s;
             &:hover {
-              color: #1677ff;
+              color: var(--va-link-color-hover);
             }
           }
         }
         .list-item-description {
-          color: rgba(0, 0, 0, 0.45);
+          color: var(--va-text-color-3);
           font-size: 14px;
           line-height: 1.5714285714285714;
         }
@@ -142,7 +142,7 @@ const showExtra = computed(() => {
         display: inline-flex;
         align-items: center;
         padding: 0 8px;
-        color: rgba(0, 0, 0, 0.45);
+        color: var(--va-text-color-3);
         font-size: 14px;
         line-height: 1.5714285714285714;
         text-align: center;
@@ -157,17 +157,17 @@ const showExtra = computed(() => {
             width: 1px;
             height: 14px;
             transform: translateY(-50%);
-            background-color: rgba(5, 5, 5, 0.06);
+            background-color: var(--va-border-split-color);
             content: '';
           }
         }
       }
       & > :deep(a) {
         // 选择所有直接子元素且是 a 标签
-        color: #1677ff;
+        color: var(--va-link-color);
         transition: color 0.3s;
         &:hover {
-          color: #4096ff;
+          color: var(--va-link-color-hover);
         }
       }
     }

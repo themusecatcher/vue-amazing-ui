@@ -378,8 +378,6 @@ defineExpose({
       --scrollbar-width: ${size}px;
       --scrollbar-height: ${size}px;
       --scrollbar-border-radius: ${size}px;
-      --scrollbar-color: rgba(0, 0, 0, 0.25);
-      --scrollbar-color-hover: rgba(0, 0, 0, 0.4);
       --scrollbar-rail-horizontal-top: 4px 2px auto 2px;
       --scrollbar-rail-horizontal-bottom: auto 2px 4px 2px;
       --scrollbar-rail-vertical-right: 2px 4px 2px auto;
@@ -471,13 +469,13 @@ defineExpose({
       cursor: pointer;
       opacity: 0;
       pointer-events: none;
-      background-color: var(--scrollbar-color);
+      background-color: var(--va-scrollbar-color, var(--va-text-color-disabled));
       touch-action: none;
       transition:
         background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
         opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       &:hover {
-        background-color: var(--scrollbar-color-hover);
+        background-color: var(--va-scrollbar-color-hover, var(--va-text-color-3));
       }
     }
     .track-visible {
@@ -512,11 +510,6 @@ defineExpose({
   }
   .rail-horizontal-bottom {
     inset: var(--scrollbar-rail-horizontal-bottom);
-  }
-  .scrollbar-thumb {
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.5);
-    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 </style>

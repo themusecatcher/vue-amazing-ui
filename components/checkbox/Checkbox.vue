@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, nextTick } from 'vue'
 import type { VNode } from 'vue'
-import { useSlotsExist, useInject, useWave } from 'components/utils'
+import { useSlotsExist, useWave } from 'components/utils'
 export interface Option {
   label: string // 选项名
   value: string | number // 选项值
@@ -37,7 +37,6 @@ const checkboxChecked = ref<boolean>(false) // v-model:checked 是否选中标�
 const optionsCheckedValue = ref<(string | number)[]>([]) // v-model:value 已选中的选项值
 const { wave, startWave, endWave } = useWave() // 使用 v-model:checked 时的复选框动画选中效果标志
 const waveOptionsValue = ref<(string | number)[]>([]) // 使用 v-model:value 时的复选框动画选中效果标志
-const { colorPalettes } = useInject('Checkbox') // 主题色注入
 const emits = defineEmits(['update:value', 'update:checked', 'change'])
 const slotsExist = useSlotsExist(['default'])
 // 选项总数
@@ -104,7 +103,7 @@ function onWaveOptionEnd(value: string | number): void {
     v-if="optionsAmount"
     class="checkbox-wrap"
     :class="{ 'checkbox-vertical': vertical }"
-    :style="`--checkbox-gap: ${gapValue}; --checkbox-primary-color: ${colorPalettes[5]};`"
+    :style="`--checkbox-gap: ${gapValue}; `"
     v-bind="$attrs"
   >
     <div
@@ -131,7 +130,6 @@ function onWaveOptionEnd(value: string | number): void {
     v-else
     class="checkbox-container"
     :class="{ 'checkbox-disabled': disabled }"
-    :style="`--checkbox-primary-color: ${colorPalettes[5]};`"
     @click="disabled ? () => false : onChecked()"
     v-bind="$attrs"
   >
@@ -163,12 +161,12 @@ function onWaveOptionEnd(value: string | number): void {
   display: inline-flex;
   align-items: baseline;
   cursor: pointer;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   font-size: 14px;
   line-height: 1.5714285714285714;
   &:not(.checkbox-disabled):hover {
     .checkbox-box {
-      border-color: var(--checkbox-primary-color);
+      border-color: var(--va-cp-checkbox-primary-color, var(--va-primary-color));
     }
   }
   .checkbox-box {
@@ -182,7 +180,7 @@ function onWaveOptionEnd(value: string | number): void {
     width: 16px;
     height: 16px;
     background: transparent;
-    border: 1px solid #d9d9d9;
+    border: 1px solid var(--va-border-color);
     border-radius: 4px;
     transition: all 0.3s;
     &::after {
@@ -192,7 +190,7 @@ function onWaveOptionEnd(value: string | number): void {
       display: table;
       width: 5.7142857142857135px;
       height: 9.142857142857142px;
-      border: 2px solid #fff;
+      border: 2px solid var(--va-text-color-solid);
       border-top: 0;
       border-left: 0;
       transform: rotate(45deg) scale(0) translate(-50%, -50%);
@@ -219,10 +217,10 @@ function onWaveOptionEnd(value: string | number): void {
       animation-name: waveSpread, waveOpacity;
       @keyframes waveSpread {
         from {
-          box-shadow: 0 0 0.5px 0 var(--checkbox-primary-color);
+          box-shadow: 0 0 0.5px 0 var(--va-cp-checkbox-primary-color, var(--va-primary-color));
         }
         to {
-          box-shadow: 0 0 0.5px 5px var(--checkbox-primary-color);
+          box-shadow: 0 0 0.5px 5px var(--va-cp-checkbox-primary-color, var(--va-primary-color));
         }
       }
       @keyframes waveOpacity {
@@ -236,8 +234,8 @@ function onWaveOptionEnd(value: string | number): void {
     }
   }
   .checkbox-checked {
-    background-color: var(--checkbox-primary-color);
-    border-color: var(--checkbox-primary-color);
+    background-color: var(--va-cp-checkbox-primary-color, var(--va-primary-color));
+    border-color: var(--va-cp-checkbox-primary-color, var(--va-primary-color));
     &::after {
       opacity: 1;
       transform: rotate(45deg) scale(1) translate(-50%, -50%);
@@ -250,7 +248,7 @@ function onWaveOptionEnd(value: string | number): void {
       left: 50%;
       width: 8px;
       height: 8px;
-      background-color: var(--checkbox-primary-color);
+      background-color: var(--va-cp-checkbox-primary-color, var(--va-primary-color));
       border: 0;
       transform: translate(-50%, -50%) scale(1);
       opacity: 1;
@@ -262,13 +260,13 @@ function onWaveOptionEnd(value: string | number): void {
   }
 }
 .checkbox-disabled {
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--va-text-color-disabled);
   cursor: not-allowed;
   .checkbox-box {
-    border-color: #d9d9d9;
-    background-color: rgba(0, 0, 0, 0.04);
+    border-color: var(--va-border-color);
+    background-color: var(--va-fill-color-1);
     &::after {
-      border-color: rgba(0, 0, 0, 0.25);
+      border-color: var(--va-text-color-disabled);
       animation-name: none;
     }
   }

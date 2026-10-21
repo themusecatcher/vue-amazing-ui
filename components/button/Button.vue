@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { VNode } from 'vue'
-import { generate } from '@ant-design/colors'
-import { useSlotsExist, useInject, useWave } from 'components/utils'
+import { computed, inject } from 'vue'
+import type { Ref, VNode } from 'vue'
+import { THEME_MODE_KEY } from 'components/config-provider/context'
+import { deriveColorStates } from 'components/theme'
+import type { ResolvedMode } from 'components/theme'
+import { useSlotsExist, useWave } from 'components/utils'
 
 export interface Props {
   type?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 设置按钮类型
@@ -44,24 +46,23 @@ const props = withDefaults(defineProps<Props>(), {
 })
 defineSlots<ButtonSlots>()
 const { wave, startWave, endWave } = useWave()
-const { colorPalettes } = useInject('Button') // 主题色注入
-const colorPalettesComputed = computed(() => {
-  if (props.color !== undefined) {
-    return generate(props.color)
+// 当前主题作用域的模式：实例色的 hover / active 在深浅模式取不同色阶档位，必须跟着走
+const themeMode = inject<Ref<ResolvedMode> | null>(THEME_MODE_KEY, null)
+// 实例色：传 color 时按该色派生主色状态并写到组件公开令牌上；未传时沿用全局别名（见样式内默认值）。
+// 这里写公开名属于「实例覆盖」：inline 优先级最高，比祖先作用域更近，符合「实例 > 祖先」的直觉。
+// 注意 inline 会连带压住整棵子树，所以只允许由 prop 派生的一次性写入，不要拿它当默认值。
+const buttonThemeStyle = computed<Record<string, string>>(() => {
+  if (props.color === undefined) {
+    return {}
   }
-  return colorPalettes.value
-})
-const rippleColorComputed = computed(() => {
-  const presetRippleColors = {
-    default: colorPalettesComputed.value[5],
-    reverse: colorPalettesComputed.value[5],
-    primary: colorPalettesComputed.value[5],
-    danger: '#ff4d4f',
-    dashed: colorPalettesComputed.value[5],
-    text: 'transparent',
-    link: 'transparent'
-  }
-  return presetRippleColors[props.type]
+  const states = deriveColorStates(props.color, themeMode?.value ?? 'light')
+  return {
+    '--va-button-primary-color': states.base,
+    '--va-button-primary-color-hover': states.hover,
+    '--va-button-primary-color-active': states.active,
+    '--va-button-solid-text-color': states.solid,
+    '--button-ripple-color': states.base
+  } as Record<string, string>
 })
 const emit = defineEmits(['click'])
 const slotsExist = useSlotsExist(['icon', 'default'])
@@ -98,17 +99,7 @@ function onKeyboard(e: KeyboardEvent) {
       },
       buttonClass
     ]"
-    :style="`
-      --button-primary-color: ${colorPalettesComputed[5]};
-      --button-primary-color-hover: ${colorPalettesComputed[4]};
-      --button-primary-color-active: ${colorPalettesComputed[6]};
-      --button-danger-color: #ff4d4f;
-      --button-danger-color-hover: #ff7875;
-      --button-danger-color-active: #d9363e;
-      --button-text-color-hover: rgba(0, 0, 0, 0.06);
-      --button-text-color-active: rgba(0, 0, 0, 0.15);
-      --button-ripple-color: ${rippleColorComputed};
-    `"
+    :style="buttonThemeStyle"
     :href="href"
     :target="target"
     @click="disabled || loading ? () => false : onClick($event)"
@@ -144,13 +135,16 @@ function onKeyboard(e: KeyboardEvent) {
 </template>
 <style lang="less" scoped>
 .btn-wrap {
+  // 文本按钮的悬浮 / 按下底色跟随 fill 令牌，无「只改这个按钮」的独立意图，故保持私有
+  --button-text-color-hover: var(--va-fill-color-1);
+  --button-text-color-active: var(--va-fill-color-2);
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-weight: 400;
   line-height: 1.5714285714285714;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   white-space: nowrap;
   text-align: center;
   background-color: transparent;
@@ -248,10 +242,10 @@ function onKeyboard(e: KeyboardEvent) {
     animation-name: waveSpread, waveOpacity;
     @keyframes waveSpread {
       from {
-        box-shadow: 0 0 0.5px 0 var(--button-ripple-color);
+        box-shadow: 0 0 0.5px 0 var(--button-ripple-color, var(--va-button-primary-color, var(--va-primary-color)));
       }
       to {
-        box-shadow: 0 0 0.5px 5.5px var(--button-ripple-color);
+        box-shadow: 0 0 0.5px 5.5px var(--button-ripple-color, var(--va-button-primary-color, var(--va-primary-color)));
       }
     }
     @keyframes waveOpacity {
@@ -268,15 +262,15 @@ function onKeyboard(e: KeyboardEvent) {
   }
 }
 .btn-default {
-  background-color: #ffffff;
-  border-color: #d9d9d9;
+  background-color: var(--va-bg-container-color);
+  border-color: var(--va-border-color);
   &:hover {
-    color: var(--button-primary-color-hover) !important;
-    border-color: var(--button-primary-color-hover);
+    color: var(--va-button-primary-color-hover, var(--va-primary-color-hover)) !important;
+    border-color: var(--va-button-primary-color-hover, var(--va-primary-color-hover));
   }
   &:active {
-    color: var(--button-primary-color-active) !important;
-    border-color: var(--button-primary-color-active);
+    color: var(--va-button-primary-color-active, var(--va-primary-color-active)) !important;
+    border-color: var(--va-button-primary-color-active, var(--va-primary-color-active));
   }
   .btn-icon {
     :deep(svg) {
@@ -287,44 +281,44 @@ function onKeyboard(e: KeyboardEvent) {
 .btn-reverse {
   .btn-default();
   &:hover {
-    color: #fff !important;
-    background-color: var(--button-primary-color);
-    border-color: var(--button-primary-color);
+    color: var(--va-button-solid-text-color, var(--va-text-color-solid)) !important;
+    background-color: var(--va-button-primary-color, var(--va-primary-color));
+    border-color: var(--va-button-primary-color, var(--va-primary-color));
   }
   &:active {
-    color: #fff !important;
-    background-color: var(--button-primary-color-active);
-    border-color: var(--button-primary-color-active);
+    color: var(--va-button-solid-text-color, var(--va-text-color-solid)) !important;
+    background-color: var(--va-button-primary-color-active, var(--va-primary-color-active));
+    border-color: var(--va-button-primary-color-active, var(--va-primary-color-active));
   }
 }
 .btn-primary {
-  color: #fff;
-  background-color: var(--button-primary-color);
-  border-color: var(--button-primary-color);
+  color: var(--va-button-solid-text-color, var(--va-text-color-solid));
+  background-color: var(--va-button-primary-color, var(--va-primary-color));
+  border-color: var(--va-button-primary-color, var(--va-primary-color));
   &:hover {
-    color: #fff;
-    background-color: var(--button-primary-color-hover);
-    border-color: var(--button-primary-color-hover);
+    color: var(--va-button-solid-text-color, var(--va-text-color-solid));
+    background-color: var(--va-button-primary-color-hover, var(--va-primary-color-hover));
+    border-color: var(--va-button-primary-color-hover, var(--va-primary-color-hover));
   }
   &:active {
-    color: #fff;
-    background-color: var(--button-primary-color-active);
-    border-color: var(--button-primary-color-active);
+    color: var(--va-button-solid-text-color, var(--va-text-color-solid));
+    background-color: var(--va-button-primary-color-active, var(--va-primary-color-active));
+    border-color: var(--va-button-primary-color-active, var(--va-primary-color-active));
   }
 }
 .btn-danger {
-  color: #fff;
-  background-color: var(--button-danger-color);
-  border-color: var(--button-danger-color);
+  color: var(--va-button-solid-text-color, var(--va-text-color-solid));
+  background-color: var(--va-button-danger-color, var(--va-error-color));
+  border-color: var(--va-button-danger-color, var(--va-error-color));
   &:hover {
-    color: #fff;
-    background-color: var(--button-danger-color-hover);
-    border-color: var(--button-danger-color-hover);
+    color: var(--va-button-solid-text-color, var(--va-text-color-solid));
+    background-color: var(--va-button-danger-color-hover, var(--va-button-danger-color, var(--va-error-color)));
+    border-color: var(--va-button-danger-color-hover, var(--va-button-danger-color, var(--va-error-color)));
   }
   &:active {
-    color: #fff;
-    background-color: var(--button-danger-color-active);
-    border-color: var(--button-danger-color-active);
+    color: var(--va-button-solid-text-color, var(--va-text-color-solid));
+    background-color: var(--va-button-danger-color-active, var(--va-button-danger-color, var(--va-error-color)));
+    border-color: var(--va-button-danger-color-active, var(--va-button-danger-color, var(--va-error-color)));
   }
 }
 .btn-dashed {
@@ -332,6 +326,7 @@ function onKeyboard(e: KeyboardEvent) {
   border-style: dashed;
 }
 .btn-text {
+  --button-ripple-color: transparent;
   &:hover {
     background-color: var(--button-text-color-hover);
   }
@@ -340,12 +335,13 @@ function onKeyboard(e: KeyboardEvent) {
   }
 }
 .btn-link {
-  color: var(--button-primary-color);
+  --button-ripple-color: transparent;
+  color: var(--va-button-primary-color, var(--va-primary-color));
   &:hover {
-    color: var(--button-primary-color-hover);
+    color: var(--va-button-primary-color-hover, var(--va-primary-color-hover));
   }
   &:active {
-    color: var(--button-primary-color-active);
+    color: var(--va-button-primary-color-active, var(--va-primary-color-active));
   }
   .btn-icon {
     :deep(svg) {
@@ -451,16 +447,16 @@ function onKeyboard(e: KeyboardEvent) {
   pointer-events: none;
 }
 .btn-primary.btn-ghost:not(.btn-disabled) {
-  color: var(--button-primary-color);
-  border-color: var(--button-primary-color);
+  color: var(--va-button-primary-color, var(--va-primary-color));
+  border-color: var(--va-button-primary-color, var(--va-primary-color));
   background-color: transparent;
   &:hover {
-    color: var(--button-primary-color-hover);
-    border-color: var(--button-primary-color-hover);
+    color: var(--va-button-primary-color-hover, var(--va-primary-color-hover));
+    border-color: var(--va-button-primary-color-hover, var(--va-primary-color-hover));
   }
   &:active {
-    color: var(--button-primary-color-active);
-    border-color: var(--button-primary-color-active);
+    color: var(--va-button-primary-color-active, var(--va-primary-color-active));
+    border-color: var(--va-button-primary-color-active, var(--va-primary-color-active));
   }
   .btn-icon {
     :deep(svg) {
@@ -469,16 +465,16 @@ function onKeyboard(e: KeyboardEvent) {
   }
 }
 .btn-danger.btn-ghost:not(.btn-disabled) {
-  color: var(--button-danger-color);
-  border-color: var(--button-danger-color);
+  color: var(--va-button-danger-color, var(--va-error-color));
+  border-color: var(--va-button-danger-color, var(--va-error-color));
   background-color: transparent;
   &:hover {
-    color: var(--button-danger-color-hover);
-    border-color: var(--button-danger-color-hover);
+    color: var(--va-button-danger-color-hover, var(--va-button-danger-color, var(--va-error-color)));
+    border-color: var(--va-button-danger-color-hover, var(--va-button-danger-color, var(--va-error-color)));
   }
   &:active {
-    color: var(--button-danger-color-active);
-    border-color: var(--button-danger-color-active);
+    color: var(--va-button-danger-color-active, var(--va-button-danger-color, var(--va-error-color)));
+    border-color: var(--va-button-danger-color-active, var(--va-button-danger-color, var(--va-error-color)));
   }
   .btn-icon {
     :deep(svg) {
@@ -490,17 +486,17 @@ function onKeyboard(e: KeyboardEvent) {
   width: 100%;
 }
 .btn-disabled {
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--va-text-color-disabled);
   cursor: not-allowed;
   &:not(.btn-text, .btn-link) {
-    border-color: #d9d9d9;
-    background-color: rgba(0, 0, 0, 0.04);
+    border-color: var(--va-border-color);
+    background-color: var(--va-fill-color-1);
   }
   &:not(.btn-text, .btn-link):hover,
   &:not(.btn-text, .btn-link):active {
-    border-color: #d9d9d9;
-    color: rgba(0, 0, 0, 0.25) !important;
-    background-color: rgba(0, 0, 0, 0.04);
+    border-color: var(--va-border-color);
+    color: var(--va-text-color-disabled) !important;
+    background-color: var(--va-fill-color-1);
   }
   &.btn-text:hover,
   &.btn-text:active {
@@ -508,7 +504,7 @@ function onKeyboard(e: KeyboardEvent) {
   }
   &.btn-link:hover,
   &.btn-link:active {
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
   }
 }
 </style>

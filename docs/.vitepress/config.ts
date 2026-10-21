@@ -598,14 +598,6 @@ export default defineConfig({
               link: '/utils/functions/use-options-supported'
             },
             {
-              text: 'getColorPalettes 获取颜色调色板',
-              link: '/utils/functions/get-color-palettes'
-            },
-            {
-              text: 'getAlphaColor 获取透明度颜色',
-              link: '/utils/functions/get-alpha-color'
-            },
-            {
               text: 'getScrollParent 查找可滚动父元素',
               link: '/utils/functions/get-scroll-parent'
             },

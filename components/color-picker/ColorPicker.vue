@@ -25,7 +25,7 @@ import { TinyColor, isReadable } from '@ctrl/tinycolor'
 import Popup from 'components/popup'
 import Input, { type InputProps } from 'components/input'
 import Button from 'components/button'
-import { FLOATING_LAYER_Z_INDEX, useSlotsExist, useInject, warnUsage } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, useSlotsExist, warnUsage } from 'components/utils'
 import type { FloatingPlacement } from 'components/utils'
 export type ColorPickerMode = 'rgb' | 'hsl' | 'hsv' | 'hex'
 export type ColorPickerAction = 'confirm' | 'clear'
@@ -123,7 +123,6 @@ const displayedMode = ref<ColorPickerMode>(getModeFromValue(displayedValue.value
 const hexValue = ref<string>() // hex 模式下输入框的绑定值
 const inputValueArr = ref<string[]>([]) // 非 hex 模式下多个输入框的绑定值
 const inputRefreshKey = ref<number>(0) // 输入框重建令牌：非法输入后强制其回滚到组件内部值
-const { colorPalettes, shadowColor } = useInject('ColorPicker') // 主题色注入
 const emits = defineEmits(['update:value', 'complete', 'confirm', 'clear', 'openChange'])
 const slotsExist = useSlotsExist(['footer', 'trigger'])
 // 面板是否展开：open 未受控（undefined）时恒为收起，写入由 requestOpen 统一驱动
@@ -143,9 +142,9 @@ const triggerSlotProps = computed<ColorPickerTriggerSlotProps>(() => ({
 const mergedPanelClass = computed(() => ['color-picker-panel-container', props.panelClass].filter(Boolean).join(' '))
 // 主题变量随组件壳下发，面板经 Teleport 后不在壳内，需同样注入到面板上
 const themeVars = computed(() => ({
-  '--color-picker-primary-color-hover': colorPalettes.value[4],
-  '--color-picker-primary-color-focus': colorPalettes.value[4],
-  '--color-picker-primary-shadow-color': shadowColor.value
+  '--color-picker-primary-color-hover': 'var(--va-cp-color-picker-primary-color-hover, var(--va-primary-color-hover))',
+  '--color-picker-primary-color-focus': 'var(--va-cp-color-picker-primary-color, var(--va-primary-color))',
+  '--color-picker-primary-shadow-color': 'var(--va-cp-color-picker-primary-bg-color, var(--va-primary-bg-color))'
 }))
 const panelTransitionProps: TransitionProps = { name: 'color-picker-zoom' }
 const layerHandleStyle = computed(() => {
@@ -1255,7 +1254,7 @@ function onClear() {
   }
   .color-picker-handle {
     z-index: 1;
-    box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.45);
+    box-shadow: 0 0 2px 0 var(--va-text-color-3);
     position: absolute;
     background-color: white;
     overflow: hidden;
@@ -1349,12 +1348,12 @@ function onClear() {
 .color-picker-actions {
   display: flex;
   gap: 8px;
-  border-top: 1px solid rgba(5, 5, 5, 0.06);
+  border-top: 1px solid var(--va-border-split-color);
   padding: 8px 12px;
   justify-content: flex-end;
 }
 .color-picker-footer {
-  border-top: 1px solid rgba(5, 5, 5, 0.06);
+  border-top: 1px solid var(--va-border-split-color);
   padding: 8px 12px;
 }
 /* 外壳：透传属性（含 style）的落点，也是浮层锚点与外点判定范围。
@@ -1381,7 +1380,7 @@ function onClear() {
   outline: none;
   &:not(.color-picker-disabled):hover {
     .color-picker-wrap {
-      border-color: var(--color-picker-primary-color-hover);
+      border-color: var(--va-cp-color-picker-primary-color-hover, var(--va-primary-color-hover));
     }
   }
   /* 聚焦视觉与库内 Input 同构：边框转主色 + 2px 浅色阴影环；
@@ -1390,14 +1389,15 @@ function onClear() {
   &:not(.color-picker-disabled):focus,
   &[aria-expanded='true'] {
     .color-picker-wrap {
-      border-color: var(--color-picker-primary-color-focus);
-      box-shadow: 0 0 0 2px var(--color-picker-primary-shadow-color);
+      border-color: var(--va-cp-color-picker-primary-color, var(--va-primary-color));
+      box-shadow: 0 0 0 2px
+        var(--color-picker-primary-shadow-color, var(--va-cp-color-picker-primary-bg-color, var(--va-primary-bg-color)));
     }
   }
   .color-picker-wrap {
     height: 100%;
     cursor: pointer;
-    border: 1px solid #d9d9d9;
+    border: 1px solid var(--va-border-color);
     border-radius: 4px;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     .color-picker-fill {
@@ -1490,11 +1490,13 @@ function onClear() {
   /* 字号：面板属「浮层面板」容器，由面板根声明正文基准字号（见 development/component-design.md §字体口径）。
      不声明则面板内自绘文本会跟随宿主页面字号（文档站 `html` 为 16px），模式标签与页脚被整体放大 */
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
-  background-color: #fff;
+  color: var(--va-text-color-1);
+  // 面板是浮层：底取 elevated，
+  // 既避免写死 #fff 造成暗色白底白字，也保证与容器（#141414）拉开层级
+  background-color: var(--va-bg-elevated-color);
   border-radius: 4px;
   box-shadow:
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 6px 16px 0 var(--va-shadow-color),
     0 3px 6px -4px rgba(0, 0, 0, 0.12),
     0 9px 28px 8px rgba(0, 0, 0, 0.05);
   outline: none;

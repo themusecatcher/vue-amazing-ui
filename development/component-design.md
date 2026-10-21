@@ -83,19 +83,16 @@ defineSlots<ButtonSlots>()
 - 插槽类型名统一为 `<组件名>Slots`，可选插槽用 `?`。
 - 该类型在 SFC 内 `export` 后**不经入口 / `components.ts` 对外导出**，仅供组件自身使用，不属于库的公开 API。
 
-## 主题注入 useInject
+## 主题样式约定
 
-组件通过 `useInject` 获取主题色，无需自行处理主题传递：
+组件**不承担主题逻辑**：样式只消费 CSS 变量，没有主题 Hook、没有组件级主题注册表，也不自行派生颜色。
 
-```ts
-import { useInject } from 'components/utils'
-const { colorPalettes, shadowColor } = useInject('Button') // 组件名作为 key
-```
-
-- `colorPalettes`：由主色生成的 10 级调色板（`@ant-design/colors` 的 `generate`）。
-- `shadowColor`：由主色派生的阴影色。
-- `key` 传组件名，用于匹配 `ConfigProvider` 中该组件的个性化主题。
-- 取值来源（该组件的覆盖 / `common`）经 `computed` 选择而非 `setup` 阶段固化：`ConfigProvider` 运行期新增或移除某组件的覆盖，已挂载组件即时切换来源；组件侧无需处理「覆盖何时出现」，只读这两个 ref 即可。
+- 颜色只允许出现在两处：构建产物 `components/style/generated/theme.css`（40 个默认变量）与「按设计固定」的例外（见下）；
+- 组件私有的结构色用 `--<comp>-*`（如 `--button-primary-color`）在自身 `<style>` 中声明，值必须是 `var(--va-*)` 或 `var(--va-cp-<component>-primary-*, var(--va-*))`；需要按实例覆盖时（如 `Button.color`）由脚本派生具体色值写到该私有变量上；
+- **组件级主色桥**：组件内每一处「跟随主色」的消费都写成 `var(--va-cp-<component>-primary-*, var(--va-*))`（如 `var(--va-cp-switch-primary-color, var(--va-primary-color))`）。桥变量由 `ConfigProvider` 按 `theme.components.<Component>.primaryColor` 写在作用域节点上，组件不感知它的存在；未配置时回落到全局令牌，默认外观不变；
+- 设计上不随主题变化的颜色保留字面量，不算主题泄漏：预设色板（`Tag` / `Badge` / `Timeline` / `Tooltip` / `GradientText` / `Result`）、深色 `Sider` / `theme="dark"` 的 `Menu`、`Image` 预览与 `Video` 播放器的固定 chrome、中性投影；遮罩一律用 `--va-mask-color`（不要用 `--va-text-color-3`，否则暗色下会变白蒙层）；
+- 浮层经 Teleport 脱离组件树时，主题变量有两条下发路径：① 作用域令牌（全局 40 个 + 组件级桥 / 公开令牌）由 `ConfigProvider` 经 `THEME_TELEPORT_KEY` 写到浮层容器；② 组件私有的面板变量（如 `--picker-*`）随面板 `:style` 下发，值仍写 `var(--va-*)` / `var(--va-cp-*)` 引用，不做 JS 取色；
+- 新增组件若消费主色，把消费点接上桥变量即可支持 `theme.components`，并在 `components/theme/component-vars.js` 的 `THEME_COMPONENTS` 登记（守护脚本会校验「登记了就必须有消费点」）；不消费主色的组件无需任何主题代码。`pnpm verify:theme` 会拦截回潮。
 
 ## 插槽检测 useSlotsExist
 
@@ -122,10 +119,14 @@ warnUsage('BackTop', '未找到容器元素，滚动监听未启用')
 ## 样式规范
 
 - Less + scoped，类名采用 BEM 风格前缀（如 `btn-wrap` / `btn-primary` / `btn-icon-only`）。
-- 主题相关颜色**必须使用 CSS 变量**，禁止硬编码主题色：
+- 主题相关颜色**必须使用语义变量**，禁止硬编码主题色：
 
 ```less
 .btn-primary {
+  // 私有变量的默认值指向全局别名
+  --button-primary-color: var(--va-primary-color);
+  --button-primary-color-hover: var(--va-primary-color-hover);
+
   background-color: var(--button-primary-color);
   &:hover {
     background-color: var(--button-primary-color-hover);
@@ -133,13 +134,10 @@ warnUsage('BackTop', '未找到容器元素，滚动监听未启用')
 }
 ```
 
-- CSS 变量在模板中通过内联 style 注入（源于 `colorPalettes`）：
+- 只有「按实例覆盖颜色」（如 `Button.color`）才在脚本里派生具体色值，并把值写到**组件私有变量**上；组件不得写入 `--va-*` 别名。
 
 ```vue
-:style="`
-  --button-primary-color: ${colorPalettesComputed[5]};
-  --button-primary-color-hover: ${colorPalettesComputed[4]};
-`"
+:style="buttonThemeStyle"
 ```
 
 - 嵌套不超过 3 层。
@@ -245,9 +243,14 @@ components/modal/
 
 ## 主题系统
 
-- **注入源头**：`ConfigProvider` 通过 `provide('common', ...)` / `provide('components', ...)` 注入主题，`theme` prop 支持 `common.primaryColor` 与按组件覆盖（如 `Button.primaryColor`）。
-- **调色板**：`getColorPalettes(primaryColor)` → `@ant-design/colors` 的 `generate`，返回 10 级色阶。
-- **阴影色**：`getAlphaColor(frontColor, bg)` → 基于 `@ctrl/tinycolor` 计算。
-- **暗黑模式**：`toggleDark()` 工具函数一键切换。
-- **主题色来源**：组件经 `useInject(组件名)` 读取 JS 调色板（`components/utils/hooks.ts`），默认主色 `#1677ff` 定义在 `useInject` 内；`components/style/global.less` 不定义全局主题变量，主题色统一由 `ConfigProvider` 的 `theme` 定制。
-- **CSS 变量输出**：`common` 主色的色阶写入 `--va-link-color` / `--va-link-color-hover` / `--va-link-color-active`（取色阶第 6 / 4 / 7 级），供链接基座 `:where(a)` 消费。**默认全局生效**：最外层实例（父链上没有其他 `ConfigProvider` 注入过 `common`）把色阶写到 `:root`，页面所有链接随主题色一并变化，卸载时移除变量、回落样式表内的 fallback 默认值；**嵌套实例只在自身子树内生效**：带包裹元素（`abstract` 为 `false`）的实例把色阶写到自身包裹元素上，链接基座逐级向上取值、就近命中 —— 因此嵌套实例想在自己的范围内改变链接配色需采用该形态，且不影响外层。
+- **配置面**：`components/theme/derive.ts` 中的 7 个颜色种子（`primary` / `success` / `warning` / `error` / `info` / `neutralText` / `neutralBg`），默认主色 `#1677ff`。
+- **派生**：`components/theme/derive.ts`（单文件）按固定档位映射（`@ant-design/colors` 生成色阶 → 浅底 1 / 描边 3 / 链接悬停 4 / 悬停 5 / 常态与主色文字 6 / 按下 7）并组装 40 个变量，构建期与运行期共用；产物只含 sRGB `#hex` / `rgba()`。不做对比度兜底：品牌色偏浅时由使用者换色，而不是系统改写。
+- **默认表**：`build/gen-theme.ts` 在 vite `buildStart` 生成 `components/style/generated/theme.css`（`:root` 浅色表 + `[data-va-mode='dark']` 暗色表，各 40 个变量；暗色表另带 `color-scheme: dark`，让原生滚动条与表单控件同步），由 `components/style/global.less` 以 `@import (inline)` 并入每份样式产物，因此按需引入天然携带默认表。
+- **载体**：`ConfigProvider` 只做「合并种子 → 调派生 → 写作用域变量」。未传 `theme` 时不写任何变量；默认 `abstract=false`，写自己的包裹元素（SSR 可直接序列化，首帧即正确）；显式 `abstract=true` 的最外层实例写 `<html>`（`onMounted` 后，SSR 不执行）；卸载时恢复写入前的快照。
+- **组件级主色**：`theme.components.<Component>.primaryColor` 只接受一个通用主色，Provider 用 `deriveColorStates` / `deriveFocusShadow` 展开成两组变量写到同一作用域节点：内部桥 `--va-cp-<component>-primary-*`（所有组件通用，覆盖该组件全部主色使用点）与注册表 `themeRole` 公开令牌（Button / Slider / Menu 的细粒度覆盖入口）。支持清单见 `component-vars.js` 的 `THEME_COMPONENTS`，未登记键开发环境告警；只配置组件、没有 `seed` / `mode` 的 `abstract=true` 实例不参与 `<html>` 写入权仲裁（需改用 `false` 或补全局主题）。
+- **暗色**：`mode` 是派生入参而不是第二套种子；只切 `mode` 时只写 `data-va-mode`，由静态表接管；`mode="auto"` 监听 `prefers-color-scheme` 并在卸载时解除。
+- **填充档位**：`--va-fill-color-1/2/3/4` 依次为三级 / 二级 / 最强 / 最淡的中性叠加，编号不代表强度；最淡的底纹与默认标签底用 `fill-color-4`，水印等需要更高可见度的默认色用 `fill-color-3`。
+- **只读快照**：`provide(THEME_SNAPSHOT_KEY, snapshot)` 仅供 canvas / SVG / 第三方 JS 读取，禁止借它写行内变量。`Watermark` 是首个消费者：默认水印色取快照里的 `--va-fill-color-3`（浅色 .15 黑 / 暗色 .18 白），主题变化时重绘；无 Provider 时回退浅色默认。
+- **文档一致性口径**：机械清单（组件令牌）由 `scripts/gen-component-vars-doc.js` 生成，`tests/component-vars.spec.ts` 逐字节守护，生成物需提交；`定制主题` 页的叙事段（颜色变量清单、已知限制的理由）手写、只保证结论正确，不做逐值自动化 —— 新增可枚举清单优先走生成，不要再手写第二张表。
+- **取色出口**：公开 `derive(seed, mode)` 供 JS / canvas / SVG 场景取与 `--va-*` 逐值一致的结果；旧版色板 / 透明度色工具（`getColorPalettes` / `getAlphaColor`）已移除，焦点环所需的「等效半透明色」作为私有函数 `alphaOver` 留在 `theme/derive.ts`。
+- **演示站 / 文档站的暗色**：两处的主题开关都直接驱动 `ConfigProvider.mode` —— 演示站改写 `src/theme.ts` 的共享 `theme`（`layouts/GlobalLayout.vue`），文档站把 VitePress 的 `useData().isDark` 映射成 `mode`（`docs/.vitepress/theme/index.ts`）；两处均不使用 `html.dark` + `filter: invert()` 模拟暗色（旧的 `toggleDark()` 工具函数已随本版本移除，暗色统一由 `mode` / `data-va-mode` 驱动）。

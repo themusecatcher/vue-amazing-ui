@@ -29,14 +29,14 @@ if (typeof document !== 'undefined') {
 </script>
 
 <script setup lang="ts">
-import { ref, computed, watch, onUnmounted, nextTick, createTextVNode, h, Fragment, provide } from 'vue'
+import { ref, computed, watch, onUnmounted, nextTick, createTextVNode, h, Fragment, provide, inject } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
+import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
 import Button, { type ButtonProps } from 'components/button'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import ModalRenderHost from './ModalRenderHost'
 import {
   createKeyGenerator,
-  useInject,
   lockScroll,
   renderContentToVNode,
   trapTabFocus,
@@ -175,6 +175,10 @@ export interface ModalReactive extends ModalOptions {
 // custom 为完全自定义形态：不渲染内置图标与按钮组，交由 icon / footer 自行组合
 export type Mode = 'info' | 'success' | 'error' | 'warning' | 'confirm' | 'erase' | 'custom'
 
+// 主题转发：弹窗 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
+const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
+const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 const props = withDefaults(defineProps<Props>(), {
   width: 420,
   height: 'auto',
@@ -306,7 +310,6 @@ const {
   allocateOnMount: false
 })
 const modalZIndex = computed(() => props.zIndex ?? layerZIndex.value)
-const { colorPalettes } = useInject('Modal') // 主题色注入
 const emits = defineEmits(['update:open', 'cancel', 'ok', 'know', 'change', 'ready'])
 // 声明式用法下暴露的具名插槽：除 modalRender 外均有模板 <slot> 出口；
 // 显式声明用于稳定 d.ts 导出，不依赖 Volar 对模板实现的推断
@@ -836,14 +839,16 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
         getComputedValue(topOpenItem, 'wrapStyle'),
         {
           zIndex: baseZIndex + 10,
-          '--modal-primary-color': colorPalettes[5],
-          '--modal-success-color': '#52c41a',
-          '--modal-error-color': '#ff4d4f',
-          '--modal-warning-color': '#faad14',
-          '--modal-confirm-color': '#faad14',
-          '--modal-erase-color': '#faad14'
-        }
+          '--modal-primary-color': 'var(--va-cp-modal-primary-color, var(--va-primary-color))',
+          '--modal-success-color': 'var(--va-success-color)',
+          '--modal-error-color': 'var(--va-error-color)',
+          '--modal-warning-color': 'var(--va-warning-color)',
+          '--modal-confirm-color': 'var(--va-warning-color)',
+          '--modal-erase-color': 'var(--va-warning-color)'
+        },
+        teleportThemeVars
       ]"
+      :data-va-mode="teleportThemeMode"
     >
       <template v-for="item in modalList" :key="item.key">
         <!-- layer 自身 pointer-events: none，click.self 永不触发，遮罩点击统一由 mask 处理 -->
@@ -1133,7 +1138,8 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
   inset: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.45);
+  // 遮罩不能跟随正文色：暗色下 --va-text-color-3 是白色，会变成白蒙层
+  background: var(--va-mask-color);
   pointer-events: auto;
 }
 .modal-wrap {
@@ -1156,7 +1162,7 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
     width: auto;
     max-width: calc(100vw - 32px);
     margin: 0 auto;
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     font-size: 14px;
     line-height: 1.5714285714285714;
     padding-bottom: 24px;
@@ -1172,13 +1178,12 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
       outline: none;
       word-break: break-word;
       padding: 20px 24px;
-      background-color: #fff;
+      // 浮层底取 elevated：暗色下它比容器（#141414）提亮一档（#1f1f1f），
+      // 否则弹窗与页面同色，只能靠阴影分层，而阴影在暗底上几乎不可见
+      background-color: var(--va-modal-bg-color, var(--va-bg-elevated-color));
       border-radius: 8px;
       max-width: 100%;
-      box-shadow:
-        0 6px 16px 0 rgba(0, 0, 0, 0.08),
-        0 3px 6px -4px rgba(0, 0, 0, 0.12),
-        0 9px 28px 8px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--va-popup-shadow);
       .modal-body {
         display: flex;
         flex-wrap: wrap;
@@ -1202,22 +1207,22 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
           .modal-title {
             display: inline-block;
             font-size: 16px;
-            color: rgba(0, 0, 0, 0.88);
+            color: var(--va-modal-title-color, var(--va-text-color-1));
             line-height: 1.5;
             font-weight: 600;
           }
         }
         .icon-info {
-          color: var(--modal-primary-color);
+          color: var(--va-cp-modal-primary-color, var(--va-primary-color));
         }
         .icon-success {
-          color: var(--modal-success-color);
+          color: var(--va-success-color);
         }
         .icon-error {
-          color: var(--modal-error-color);
+          color: var(--va-error-color);
         }
         .icon-warning {
-          color: var(--modal-warning-color);
+          color: var(--va-warning-color);
         }
         .icon-confirm {
           color: var(--modal-confirm-color);
@@ -1233,7 +1238,7 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
         }
         .modal-content {
           font-size: 14px;
-          color: rgba(0, 0, 0, 0.88);
+          color: var(--va-modal-text-color, var(--va-text-color-1));
         }
       }
       .close-action {
@@ -1257,7 +1262,7 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
         transition: background 0.2s;
         :deep(.icon-svg) {
           font-size: 16px;
-          color: rgba(0, 0, 0, 0.45);
+          color: var(--va-text-color-3);
           fill: currentColor;
           transition: color 0.2s;
           svg {
@@ -1265,13 +1270,13 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
           }
         }
         &:hover {
-          background: rgba(0, 0, 0, 0.06);
+          background: var(--va-fill-color-2);
           :deep(.icon-svg) {
-            color: rgba(0, 0, 0, 0.88);
+            color: var(--va-text-color-1);
           }
         }
         &:focus-visible {
-          outline: 2px solid rgba(0, 0, 0, 0.88);
+          outline: 2px solid var(--va-text-color-1);
           outline-offset: 1px;
         }
       }

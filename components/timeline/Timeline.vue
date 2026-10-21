@@ -27,13 +27,19 @@ const props = withDefaults(defineProps<Props>(), {
   position: 'left'
 })
 defineSlots<TimelineSlots>()
-// 颜色主题对象
-enum ColorStyle {
-  blue = '#1677ff',
-  green = '#52c41a',
-  red = '#ff4d4f',
-  gray = '#00000040'
-}
+/**
+ * 圆点预设色 → 主题变量
+ *
+ * 映射到主题变量（主色 / 成功 / 错误 / 文字禁用）：
+ * 跟随种子换色，也随模式翻转 —— 尤其 gray：浅色是 25% 黑，暗色自动变成 25% 白，
+ * 否则 rgba(0,0,0,.25) 叠在 #141414 上对比度约 1.05:1，圆点等于消失
+ */
+const DOT_COLORS = {
+  blue: 'var(--va-cp-timeline-primary-color, var(--va-primary-color))',
+  green: 'var(--va-success-color)',
+  red: 'var(--va-error-color)',
+  gray: 'var(--va-text-color-disabled)'
+} as const
 const descRef = ref<HTMLElement[]>([]) // 所有时间轴描述节点的模板引用数组
 const dotsHeight = ref<string[]>([])
 const totalWidth = computed(() => {
@@ -96,11 +102,11 @@ watchEffect(
       <span class="timeline-tail" :class="`tail-${mode}`" :style="`border-left-style: ${lineStyle};`"></span>
       <div class="timeline-dot" :class="`dot-${mode}`" :style="`height: ${dotsHeight[index]}`">
         <slot name="dot" :item="item" :index="index">
-          <span class="dot-item" v-if="item.color === 'red'" :style="{ borderColor: ColorStyle.red }"></span>
-          <span class="dot-item" v-else-if="item.color === 'gray'" :style="{ borderColor: ColorStyle.gray }"></span>
-          <span class="dot-item" v-else-if="item.color === 'green'" :style="{ borderColor: ColorStyle.green }"></span>
-          <span class="dot-item" v-else-if="item.color === 'blue'" :style="{ borderColor: ColorStyle.blue }"></span>
-          <span class="dot-item" v-else :style="{ borderColor: item.color || ColorStyle.blue }"></span>
+          <span class="dot-item" v-if="item.color === 'red'" :style="{ borderColor: DOT_COLORS.red }"></span>
+          <span class="dot-item" v-else-if="item.color === 'gray'" :style="{ borderColor: DOT_COLORS.gray }"></span>
+          <span class="dot-item" v-else-if="item.color === 'green'" :style="{ borderColor: DOT_COLORS.green }"></span>
+          <span class="dot-item" v-else-if="item.color === 'blue'" :style="{ borderColor: DOT_COLORS.blue }"></span>
+          <span class="dot-item" v-else :style="{ borderColor: item.color || DOT_COLORS.blue }"></span>
         </slot>
       </div>
       <div ref="descRef" :class="`timeline-desc desc-${mode}`">
@@ -112,7 +118,7 @@ watchEffect(
 <style lang="less" scoped>
 .timeline-wrap {
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   line-height: 1.5714285714285714;
   .timeline-item {
     position: relative;
@@ -123,7 +129,7 @@ watchEffect(
       width: 0;
       height: 100%;
       border-left-width: 2px;
-      border-left-color: #e8e8e8;
+      border-left-color: var(--va-border-split-color);
     }
     .tail-left {
       left: 5px;
@@ -150,7 +156,7 @@ watchEffect(
         border-width: 2px;
         border-style: solid;
         border-radius: 50%;
-        background: #fff;
+        background: var(--va-bg-container-color);
       }
     }
     .dot-left {

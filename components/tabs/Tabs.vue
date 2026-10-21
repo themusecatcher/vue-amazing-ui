@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { useResizeObserver, useSlotsExist, useInject } from 'components/utils'
+import { useResizeObserver, useSlotsExist } from 'components/utils'
 export interface Item {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
   tab?: string // 页签显示文字
@@ -63,7 +63,6 @@ const scrollMax = ref(0) // 最大滚动距离
 const scrollLeft = ref(0) // 水平滚动距离
 const scrollTop = ref(0) // 垂直滚动距离
 const transition = ref(false)
-const { colorPalettes } = useInject('Tabs') // 主题色注入
 const emits = defineEmits(['update:activeKey', 'change'])
 const slotsExist = useSlotsExist(['prefix', 'suffix'])
 const activeIndex = computed(() => {
@@ -305,7 +304,6 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
         'tabs-card': type === 'card'
       }
     ]"
-    :style="`--tabs-primary-color: ${colorPalettes[5]};`"
   >
     <div class="tabs-nav-container" :style="tabStyle">
       <div v-if="showPrefix" class="tabs-prefix">
@@ -384,7 +382,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
 .tabs-wrap {
   display: flex;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   line-height: 1.5714285714285714;
   list-style: none;
   .tabs-nav-container {
@@ -437,27 +435,30 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
           outline: none;
           cursor: pointer;
           transition: all 0.3s;
-          &:hover {
-            color: var(--tabs-primary-color);
+          // 激活 / 禁用项不参与 hover 变色：active 文字恒为主色（规则作用于内层 btn），
+          // disabled 恒为置灰色（disabled 规则后置书写、同特异性压过 hover）
+          &:not(.tab-line-active, .tab-card-active, .tab-disabled):hover {
+            color: var(--va-cp-tabs-primary-color-hover, var(--va-primary-color-hover));
           }
           :deep(svg) {
             fill: currentColor;
           }
         }
         .tab-line-active {
-          color: var(--tabs-primary-color);
+          /* 激活页签是「主色文字」：取 primary-text 语义位（默认与 primary 同值） */
+          color: var(--va-cp-tabs-primary-text-color, var(--va-primary-text-color));
           text-shadow: 0 0 0.25px currentcolor;
         }
         .tab-disabled {
-          color: rgba(0, 0, 0, 0.25);
+          color: var(--va-text-color-disabled);
           cursor: not-allowed;
           &:hover {
-            color: rgba(0, 0, 0, 0.25);
+            color: var(--va-text-color-disabled);
           }
         }
         .tab-bar {
           position: absolute;
-          background-color: var(--tabs-primary-color);
+          background-color: var(--va-cp-tabs-primary-color, var(--va-primary-color));
           pointer-events: none;
           border-radius: 2px;
           transition:
@@ -468,7 +469,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
             background-color;
         }
         .tab-bar-disabled {
-          background-color: rgba(0, 0, 0, 0.25);
+          background-color: var(--va-text-color-disabled);
         }
         .card-hidden {
           visibility: hidden;
@@ -526,7 +527,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
       right: 0;
       left: 0;
       bottom: 0;
-      border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+      border-bottom: 1px solid var(--va-border-split-color);
     }
     .tabs-nav-wrap {
       &::before {
@@ -534,14 +535,14 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
         bottom: 0;
         width: 32px;
         left: 0;
-        box-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, 0.08);
+        box-shadow: inset 10px 0 8px -8px var(--va-shadow-color);
       }
       &::after {
         top: 0;
         bottom: 0;
         width: 32px;
         right: 0;
-        box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.08);
+        box-shadow: inset -10px 0 8px -8px var(--va-shadow-color);
       }
       .tabs-nav-list {
         .tab-item {
@@ -596,7 +597,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
       right: 0;
       left: 0;
       top: 0;
-      border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+      border-bottom: 1px solid var(--va-border-split-color);
     }
     .tabs-nav-wrap {
       &::before {
@@ -604,14 +605,14 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
         bottom: 0;
         width: 32px;
         left: 0;
-        box-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, 0.08);
+        box-shadow: inset 10px 0 8px -8px var(--va-shadow-color);
       }
       &::after {
         top: 0;
         bottom: 0;
         width: 32px;
         right: 0;
-        box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.08);
+        box-shadow: inset -10px 0 8px -8px var(--va-shadow-color);
       }
       .tabs-nav-list {
         .tab-item {
@@ -669,7 +670,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
       top: 0;
       bottom: 0;
       right: 0;
-      border-left: 1px solid rgba(5, 5, 5, 0.06);
+      border-left: 1px solid var(--va-border-split-color);
     }
     .tabs-nav-wrap {
       flex-direction: column;
@@ -678,14 +679,14 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
         left: 0;
         height: 32px;
         top: 0;
-        box-shadow: inset 0 10px 8px -8px rgba(0, 0, 0, 0.08);
+        box-shadow: inset 0 10px 8px -8px var(--va-shadow-color);
       }
       &::after {
         right: 0;
         left: 0;
         height: 32px;
         bottom: 0;
-        box-shadow: inset 0 -10px 8px -8px rgba(0, 0, 0, 0.08);
+        box-shadow: inset 0 -10px 8px -8px var(--va-shadow-color);
       }
       .tabs-nav-list {
         flex: 1 0 auto;
@@ -745,7 +746,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
       top: 0;
       bottom: 0;
       left: 0;
-      border-left: 1px solid rgba(5, 5, 5, 0.06);
+      border-left: 1px solid var(--va-border-split-color);
     }
     .tabs-nav-wrap {
       flex-direction: column;
@@ -754,14 +755,14 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
         left: 0;
         height: 32px;
         top: 0;
-        box-shadow: inset 0 10px 8px -8px rgba(0, 0, 0, 0.08);
+        box-shadow: inset 0 10px 8px -8px var(--va-shadow-color);
       }
       &::after {
         right: 0;
         left: 0;
         height: 32px;
         bottom: 0;
-        box-shadow: inset 0 -10px 8px -8px rgba(0, 0, 0, 0.08);
+        box-shadow: inset 0 -10px 8px -8px var(--va-shadow-color);
       }
       .tabs-nav-list {
         flex: 1 0 auto;
@@ -859,20 +860,20 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
       .tabs-nav-list {
         .tab-item {
           padding: 8px 16px;
-          background: rgba(0, 0, 0, 0.02);
-          border: 1px solid rgba(5, 5, 5, 0.06);
+          background: var(--va-fill-color-1);
+          border: 1px solid var(--va-border-split-color);
           transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         }
         .tab-card-active {
-          color: var(--tabs-primary-color);
-          background: #ffffff;
+          color: var(--va-cp-tabs-primary-text-color, var(--va-primary-text-color));
+          background: var(--va-bg-container-color);
           text-shadow: 0 0 0.25px currentcolor;
         }
         .tab-disabled {
-          color: rgba(0, 0, 0, 0.25);
+          color: var(--va-text-color-disabled);
           cursor: not-allowed;
           &:hover {
-            color: rgba(0, 0, 0, 0.25);
+            color: var(--va-text-color-disabled);
           }
         }
       }
@@ -888,7 +889,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
             }
           }
           .tab-card-active {
-            border-bottom-color: #ffffff;
+            border-bottom-color: var(--va-bg-container-color);
           }
         }
       }
@@ -904,7 +905,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
             }
           }
           .tab-card-active {
-            border-top-color: #ffffff;
+            border-top-color: var(--va-bg-container-color);
           }
         }
       }
@@ -920,7 +921,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
             }
           }
           .tab-card-active {
-            border-right-color: #ffffff;
+            border-right-color: var(--va-bg-container-color);
           }
         }
       }
@@ -936,7 +937,7 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
             }
           }
           .tab-card-active {
-            border-left-color: #ffffff;
+            border-left-color: var(--va-bg-container-color);
           }
         }
       }

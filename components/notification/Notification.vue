@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { ref, reactive, onBeforeUnmount, isVNode, watch } from 'vue'
+import { ref, reactive, computed, onBeforeUnmount, isVNode, watch, inject } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
 import Scrollbar from 'components/scrollbar'
-import {
-  createKeyGenerator,
-  renderContentToVNode,
-  useInject,
-  useZIndex,
-  FLOATING_LAYER_Z_INDEX
-} from 'components/utils'
+import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
+import { createKeyGenerator, renderContentToVNode, useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
 import type { NotificationApi } from './useNotification'
+// 主题转发：通知 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
+const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
+const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 // 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数
 export type ContentType = string | VNode | (() => VNode)
 export interface Props {
@@ -99,7 +98,6 @@ watch(
     }
   }
 )
-const { colorPalettes } = useInject('Notification') // 主题色注入
 const emits = defineEmits<{
   close: [key: string]
   ready: [api: NotificationApi]
@@ -419,12 +417,10 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
         bottomStyle(group.placement),
         `
         --notification-z-index: ${layerZIndex};
-        --notification-primary-color: ${colorPalettes[5]};
-        --notification-success-color: #52c41a;
-        --notification-error-color: #ff4d4f;
-        --notification-warning-color: #faad14;
-      `
+      `,
+        teleportThemeVars
       ]"
+      :data-va-mode="teleportThemeMode"
     >
       <Scrollbar
         class="notification-scrollbar"
@@ -627,7 +623,7 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
 .notification-wrap {
   position: fixed;
   z-index: var(--notification-z-index, 1040); // 兜底值需与 FLOATING_LAYER_Z_INDEX.notification 保持一致
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   font-size: 14px;
   line-height: 1.5714285714285714;
   .notification-container {
@@ -644,12 +640,10 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
     overflow: hidden;
     line-height: 1.5714285714285714;
     word-break: break-word;
-    background: #fff;
+    // 通知是浮层：底取 elevated，暗色下才不会与页面同色
+    background: var(--va-bg-elevated-color);
     border-radius: 8px;
-    box-shadow:
-      0 6px 16px 0 rgba(0, 0, 0, 0.08),
-      0 3px 6px -4px rgba(0, 0, 0, 0.12),
-      0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--va-popup-shadow);
     :deep(.icon-svg) {
       flex-shrink: 0;
       display: inline-block;
@@ -667,7 +661,7 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
         padding-right: 24px;
         margin-bottom: 8px;
         font-size: 16px;
-        color: rgba(0, 0, 0, 0.88);
+        color: var(--va-text-color-1);
         line-height: 1.5;
       }
       .notification-content {
@@ -680,7 +674,7 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
       margin-top: 16px;
       .notification-footer__meta {
         font-size: 12px;
-        color: rgba(0, 0, 0, 0.45);
+        color: var(--va-text-color-3);
       }
       .notification-footer__action {
         margin-left: auto;
@@ -693,7 +687,7 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
       display: flex;
       align-items: center;
       justify-content: center;
-      color: rgba(0, 0, 0, 0.45);
+      color: var(--va-text-color-3);
       outline: none;
       width: 22px;
       height: 22px;
@@ -708,32 +702,32 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
         transition: color 0.2s;
       }
       &:hover {
-        background: rgba(0, 0, 0, 0.06);
+        background: var(--va-fill-color-2);
 
         .close-svg {
-          color: rgba(0, 0, 0, 0.88);
+          color: var(--va-text-color-1);
         }
       }
     }
   }
   .icon-info {
     :deep(.icon-svg) {
-      color: var(--notification-primary-color);
+      color: var(--va-cp-notification-primary-color, var(--va-primary-color));
     }
   }
   .icon-success {
     :deep(.icon-svg) {
-      color: var(--notification-success-color);
+      color: var(--va-success-color);
     }
   }
   .icon-warning {
     :deep(.icon-svg) {
-      color: var(--notification-warning-color);
+      color: var(--va-warning-color);
     }
   }
   .icon-error {
     :deep(.icon-svg) {
-      color: var(--notification-error-color);
+      color: var(--va-error-color);
     }
   }
 }

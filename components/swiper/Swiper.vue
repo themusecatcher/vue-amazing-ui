@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { getImageName, useInject } from 'components/utils'
+import { getImageName } from 'components/utils'
 import type { Swiper as SwiperTypes } from 'swiper/types'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import {
@@ -71,7 +71,6 @@ const autoplayCarousel = ref<object | boolean>({
   disableOnInteraction: false
 })
 const modulesBroadcast = ref([Navigation, Pagination, Mousewheel])
-const { colorPalettes } = useInject('Swiper') // 主题色注入
 const emits = defineEmits(['swiper', 'change'])
 const swiperWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -127,7 +126,6 @@ function onSlideChange(swiper: SwiperTypes) {
     :style="`
       --swiper-width: ${swiperWidth};
       --swiper-height: ${swiperHeight};
-      --swiper-primary-color: ${colorPalettes[5]};
       --swiper-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
     `"
     :modules="modulesBanner"
@@ -160,7 +158,6 @@ function onSlideChange(swiper: SwiperTypes) {
     :style="`
       --swiper-width: ${swiperWidth};
       --swiper-height: ${swiperHeight};
-      --swiper-primary-color: ${colorPalettes[5]};
       --swiper-timing-function: linear;
     `"
     :modules="modulesCarousel"
@@ -190,7 +187,6 @@ function onSlideChange(swiper: SwiperTypes) {
     :style="`
       --swiper-width: ${swiperWidth};
       --swiper-height: ${swiperHeight};
-      --swiper-primary-color: ${colorPalettes[5]};
       --swiper-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
     `"
     :modules="modulesBroadcast"
@@ -249,13 +245,13 @@ function onSlideChange(swiper: SwiperTypes) {
   }
 }
 .swiper {
-  --swiper-theme-color: var(--swiper-primary-color);
+  --swiper-theme-color: var(--va-cp-swiper-primary-color, var(--va-primary-color));
 }
 :deep(.swiper-pagination-bullet) {
   width: 12px;
   height: 12px;
 }
 .swiper-lazy-preloader-theme {
-  --swiper-preloader-color: var(--swiper-primary-color);
+  --swiper-preloader-color: var(--va-cp-swiper-primary-color, var(--va-primary-color));
 }
 </style>

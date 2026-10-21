@@ -4,7 +4,6 @@ import type { VNode } from 'vue'
 import Spin, { type SpinProps } from 'components/spin'
 import Image, { type ImageProps } from 'components/image'
 import Space, { type SpaceProps } from 'components/space'
-import { useInject } from 'components/utils'
 export interface FileType {
   name?: string // 文件名
   url: any // 文件地址
@@ -55,7 +54,6 @@ const showUpload = ref<number>(1) // 展示的上传框
 const uploading = ref<boolean[]>([]) // 上传中
 const uploadInputRef = ref<HTMLInputElement[]>([]) // 上传文件控件引用
 const imageRef = ref<InstanceType<typeof Image>[]>([]) // Image 组件实例引用
-const { colorPalettes } = useInject('Upload') // 主题色注入
 // 组件自身不再持有 Message，操作提示交由使用方通过 success / error / remove 事件自行处理
 const emits = defineEmits(['update:fileList', 'drop', 'change', 'preview', 'remove', 'success', 'error'])
 const maxFileCount = computed(() => {
@@ -273,7 +271,7 @@ function onRemove(index: number): void {
 }
 </script>
 <template>
-  <div class="upload-wrap" :style="`--upload-primary-color: ${colorPalettes[5]};`">
+  <div class="upload-wrap" :style="``">
     <Space gap="small" v-bind="spaceProps">
       <div class="upload-item-panel" v-for="n of showUpload" :key="n">
         <div
@@ -320,7 +318,7 @@ function onRemove(index: number): void {
             tip="uploading"
             size="small"
             indicator="line-wheel"
-            color="var(--upload-primary-color)"
+            color="var(--va-cp-upload-primary-color, var(--va-primary-color))"
             v-bind="spinProps"
           />
         </div>
@@ -328,7 +326,6 @@ function onRemove(index: number): void {
           <Image
             v-if="isImage(uploadedFiles[n - 1].url)"
             ref="imageRef"
-            style="--image-primary-color: var(--upload-primary-color)"
             :bordered="false"
             :width="82"
             :height="82"
@@ -423,29 +420,29 @@ function onRemove(index: number): void {
       width: 100px;
       height: 100px;
       border-radius: 8px;
-      border: 1px dashed #d9d9d9;
-      background-color: rgba(0, 0, 0, 0.02);
+      border: 1px dashed var(--va-border-color);
+      background-color: var(--va-fill-color-1);
       cursor: pointer;
       transition: border-color 0.3s;
       &:hover {
-        border-color: var(--upload-primary-color);
+        border-color: var(--va-cp-upload-primary-color, var(--va-primary-color));
       }
       .plus-svg {
         display: inline-block;
         font-size: 14px;
-        color: rgba(0, 0, 0, 0.88);
+        color: var(--va-text-color-1);
       }
       .upload-tip {
         margin-top: 8px;
         font-size: 14px;
-        color: rgba(0, 0, 0, 0.88);
+        color: var(--va-text-color-1);
         line-height: 1.5714285714285714;
       }
     }
     .upload-disabled {
       cursor: not-allowed;
       &:hover {
-        border-color: #d9d9d9;
+        border-color: var(--va-border-color);
       }
     }
     .file-uploading {
@@ -453,8 +450,8 @@ function onRemove(index: number): void {
       height: 100px;
       padding: 8px;
       border-radius: 8px;
-      border: 1px dashed #d9d9d9;
-      background-color: rgba(0, 0, 0, 0.02);
+      border: 1px dashed var(--va-border-color);
+      background-color: var(--va-fill-color-1);
       display: flex;
       align-items: center;
       text-align: center;
@@ -475,7 +472,7 @@ function onRemove(index: number): void {
       height: 100px;
       border-radius: 8px;
       padding: 8px;
-      border: 1px solid #d9d9d9;
+      border: 1px solid var(--va-border-color);
       display: flex;
       align-items: center;
       text-align: center;
@@ -483,7 +480,7 @@ function onRemove(index: number): void {
         display: inline-block;
         width: 100%;
         height: 60px;
-        color: var(--upload-primary-color);
+        color: var(--va-cp-upload-primary-color, var(--va-primary-color));
       }
       .file-mask {
         // top right bottom left 简写为 inset: 0
@@ -510,7 +507,7 @@ function onRemove(index: number): void {
             cursor: pointer;
             transition: color 0.3s;
             &:hover {
-              color: rgba(255, 255, 255, 1);
+              color: var(--va-text-color-solid);
             }
           }
         }

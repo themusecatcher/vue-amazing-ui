@@ -103,7 +103,7 @@ components/
 
 ### utils/ 工具目录
 
-`components/utils/` 共 19 个文件，按职责分组：
+`components/utils/` 共 18 个文件，按职责分组：
 
 | 文件 | 职责 |
 | :-- | :-- |
@@ -112,7 +112,6 @@ components/
 | `math.ts` | 精度计算 |
 | `function.ts` | 节流防抖、rAF 定时器 |
 | `dom.ts` | DOM 操作、文件下载、暗黑模式切换 |
-| `color.ts` | 颜色工具（调色板 / 透明度色） |
 | `hooks.ts` | 通用 Hooks（挂载状态 / 插槽检测 / 主题注入等） |
 | `observers.ts` | DOM 观察与滚动监听 Hooks |
 | `position.ts` | 弹出定位 composable |
@@ -131,9 +130,9 @@ components/
 
 ### style/global.less
 
-组件样式基座，只放「组件自身依赖」的声明：盒模型重置（`*` 的 `box-sizing` / `margin` / `padding`）、移动端点击高亮抑制（`body` 的 `-webkit-tap-highlight-color`，属性可继承、向下发）、原生表单控件字体兜底（`input` / `textarea` / `select` / `button` 的 `font-family: inherit`，见 [component-design.md](component-design.md) 的字体口径）、`:where(a)` 低特异性链接基座。组件按需引入时都会携带此样式。
+组件样式基座，只放「组件自身依赖」的声明：主题变量表（以 `@import (inline) './generated/theme.css'` 内联，该文件由 `build/gen-theme.ts` 在构建期生成，已 gitignore）、盒模型重置（`*` 的 `box-sizing` / `margin` / `padding`）、移动端点击高亮抑制（`body` 的 `-webkit-tap-highlight-color`，属性可继承、向下发）、原生表单控件字体兜底（`input` / `textarea` / `select` / `button` 的 `font-family: inherit`，见 [component-design.md](component-design.md) 的字体口径）、`:where(a)` 低特异性链接基座。组件按需引入时都会携带此样式。
 
-`:where()` 包裹而特异性为 `0`，使用方任意链接样式都能覆盖 —— 它保证组件内（含插槽内容）的链接「引入即协调」。其中三个颜色读 `--va-link-*` 变量（由 `ConfigProvider` 按 `common` 主题色阶写入：默认全局生效，嵌套实例改用 `:abstract="false"` 时只在自身子树内生效；fallback 为默认色阶），因此链接颜色随主题色联动。页面级样式（插入光标 `caret-color`、主题变量）不在此定义：由使用方页面样式或 `ConfigProvider` 的 `theme` 负责（见 [component-design.md](component-design.md) 的主题系统一节）；组件自带链接若需与基座不同的配色，由各组件在自己的类名下声明。
+`:where()` 包裹而特异性为 `0`，使用方任意链接样式都能覆盖 —— 它保证组件内（含插槽内容）的链接「引入即协调」。其中三个颜色读 `--va-link-*` 变量（默认值来自内联的变量表；`ConfigProvider` 按种子派生后写作用域：默认（`abstract=false`）写自身包裹元素、只作用于子树，`abstract=true` 的最外层实例写 `<html>`），因此链接颜色随主题色联动。页面级样式（插入光标 `caret-color`）不在此定义，由使用方页面样式负责；组件自带链接若需与基座不同的配色，由各组件在自己的类名下声明。
 
 ## src/ 演示环境
 

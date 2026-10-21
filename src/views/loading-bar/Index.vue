@@ -56,8 +56,8 @@ const themeLoadingBar = ref<LoadingBarApi>()
 const themeGroup = createGroup(() => themeLoadingBar.value)
 const themeColor = ref<string>('#18a058')
 const loadingBarTheme = computed<ConfigProviderTheme>(() => ({
-  LoadingBar: {
-    primaryColor: themeColor.value
+  seed: {
+    primary: themeColor.value
   }
 }))
 // 在 setup 外使用：惰性单例，仅首次调用时创建，避免重复创建独立实例与挂载 DOM

@@ -40,7 +40,7 @@ const props = withDefaults(defineProps<Props>(), {
   iconBackgroundColor: '#FFF',
   iconBorderRadius: 4,
   bordered: true,
-  borderColor: 'rgba(5, 5, 5, 0.06)',
+  borderColor: 'var(--va-border-split-color)',
   status: 'active',
   expiredText: '二维码已过期',
   refreshText: '点击刷新',
@@ -389,8 +389,9 @@ defineExpose({
   // 状态遮罩配色：底色作用于整个遮罩（可为半透明色，让二维码在遮罩下隐约透出），文案色仅作用于 expiredText / scannedText
   // （loading 指示符与「点击刷新」按钮为 Spin / Button，沿用各自主题色）
   // 变量声明在组件根元素上，祖先元素的同名声明会被遮蔽，覆盖需作用于组件自身（如内联样式）
-  --qr-code-mask-bg-color: rgba(255, 255, 255, 0.96);
-  --qr-code-mask-text-color: rgba(0, 0, 0, 0.88);
+  // 遮罩底取容器色（浅色为白、暗色为深灰容器色），文案用正文色 —— 两者必须同源，否则暗色下会出现「白底白字」
+  --qr-code-mask-bg-color: var(--va-bg-container-color);
+  --qr-code-mask-text-color: var(--va-text-color-1);
   position: relative;
   display: inline-flex;
   justify-content: center;

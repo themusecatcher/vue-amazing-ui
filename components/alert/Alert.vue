@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { VNode } from 'vue'
-import { useSlotsExist, useInject } from 'components/utils'
+import { useSlotsExist } from 'components/utils'
 
 export interface Props {
   message?: string // 警告提示内容
@@ -36,7 +36,6 @@ defineSlots<AlertSlots>()
 const alertRef = ref<HTMLElement | null>(null) // alert 模板引用
 const closing = ref(false) // 是否正在播放离场动画（v-show 控制显隐）
 const closed = ref(false) // 离场动画结束后才真正卸载元素（v-if 控制存在）
-const { colorPalettes } = useInject('Alert') // 主题色注入
 const emit = defineEmits(['close', 'afterClose'])
 const slotsExist = useSlotsExist(['icon', 'description', 'actions'])
 const showSlotsIcon = computed(() => {
@@ -95,20 +94,6 @@ function onAfterLeave() {
           'alert-width-description': showDesc
         }
       ]"
-      :style="`
-        --alert-primary-color: ${colorPalettes[5]};
-        --alert-primary-bg-color: ${colorPalettes[0]};
-        --alert-primary-border-color: ${colorPalettes[2]};
-        --alert-success-color: #52c41a;
-        --alert-success-bg-color: #f6ffed;
-        --alert-success-border-color: #b7eb8f;
-        --alert-warning-color: #faad14;
-        --alert-warning-bg-color: #fffbe6;
-        --alert-warning-border-color: #ffe58f;
-        --alert-error-color: #ff4d4f;
-        --alert-error-bg-color: #fff2f0;
-        --alert-error-border-color: #ffccc7;
-      `"
     >
       <template v-if="showIcon && showSlotsIcon">
         <span v-if="!showDesc" class="alert-icon">
@@ -308,7 +293,7 @@ function onAfterLeave() {
 }
 .alert-wrap {
   padding: 8px 12px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   font-size: 14px;
   line-height: 1.5714285714285714;
   position: relative;
@@ -349,31 +334,31 @@ function onAfterLeave() {
   .alert-close {
     margin-left: 8px;
     font-size: 12px;
-    color: rgba(0, 0, 0, 0.45);
+    color: var(--va-text-color-3);
     line-height: 12px;
     cursor: pointer;
     outline: none;
     transition: color 0.2s;
     &:hover {
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--va-text-color-1);
     }
     .alert-close {
       display: inline-block;
       vertical-align: bottom;
-      fill: rgba(0, 0, 0, 0.45);
+      fill: var(--va-text-color-3);
       transition: fill 0.2s;
       &:hover {
-        fill: rgba(0, 0, 0, 0.88);
+        fill: var(--va-text-color-1);
       }
     }
   }
 }
 .alert-default {
-  background-color: rgba(0, 0, 0, 0.02);
-  border: 1px solid #d9d9d9;
+  background-color: var(--va-alert-bg-color, var(--va-fill-color-1));
+  border: 1px solid var(--va-alert-border-color, var(--va-border-color));
   .alert-icon,
   .big-icon {
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     .icon-svg,
     :deep(svg) {
       fill: currentColor;
@@ -381,11 +366,12 @@ function onAfterLeave() {
   }
 }
 .alert-info {
-  background-color: var(--alert-primary-bg-color);
-  border: 1px solid var(--alert-primary-border-color);
+  /* info 态优先跟随组件级主色桥，未配置时取 info 三件套（默认与 primary 同值，外观不变） */
+  background-color: var(--va-cp-alert-primary-bg-color, var(--va-info-bg-color));
+  border: 1px solid var(--va-cp-alert-primary-border-color, var(--va-info-border-color));
   .alert-icon,
   .big-icon {
-    color: var(--alert-primary-color);
+    color: var(--va-cp-alert-primary-color, var(--va-info-color));
     .icon-svg,
     :deep(svg) {
       fill: currentColor;
@@ -393,11 +379,11 @@ function onAfterLeave() {
   }
 }
 .alert-success {
-  background-color: var(--alert-success-bg-color);
-  border: 1px solid var(--alert-success-border-color);
+  background-color: var(--va-success-bg-color);
+  border: 1px solid var(--va-success-border-color);
   .alert-icon,
   .big-icon {
-    color: var(--alert-success-color);
+    color: var(--va-success-color);
     .icon-svg,
     :deep(svg) {
       fill: currentColor;
@@ -405,11 +391,11 @@ function onAfterLeave() {
   }
 }
 .alert-warning {
-  background-color: var(--alert-warning-bg-color);
-  border: 1px solid var(--alert-warning-border-color);
+  background-color: var(--va-warning-bg-color);
+  border: 1px solid var(--va-warning-border-color);
   .alert-icon,
   .big-icon {
-    color: var(--alert-warning-color);
+    color: var(--va-warning-color);
     .icon-svg,
     :deep(svg) {
       fill: currentColor;
@@ -417,11 +403,11 @@ function onAfterLeave() {
   }
 }
 .alert-error {
-  background-color: var(--alert-error-bg-color);
-  border: 1px solid var(--alert-error-border-color);
+  background-color: var(--va-error-bg-color);
+  border: 1px solid var(--va-error-border-color);
   .alert-icon,
   .big-icon {
-    color: var(--alert-error-color);
+    color: var(--va-error-color);
     .icon-svg,
     :deep(svg) {
       fill: currentColor;
@@ -437,7 +423,7 @@ function onAfterLeave() {
   .alert-message {
     display: block;
     margin-bottom: 8px;
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     font-size: 16px;
   }
   .alert-description {

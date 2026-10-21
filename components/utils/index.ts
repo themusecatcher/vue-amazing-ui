@@ -10,8 +10,6 @@ export * from './format'
 export * from './math'
 export * from './function'
 export * from './dom'
-// 颜色/主题工具
-export * from './color'
 // Hooks（通用 hooks + 组件业务 hooks）
 export * from './hooks'
 // DOM 观察 Hooks

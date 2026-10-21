@@ -2,7 +2,7 @@
 import { ref, computed, watch } from 'vue'
 import type { VNode } from 'vue'
 import Button, { type ButtonProps } from 'components/button'
-import { useSlotsExist, useInject } from 'components/utils'
+import { useSlotsExist } from 'components/utils'
 
 export interface Props {
   width?: string | number // 搜索框宽度，单位 px
@@ -53,7 +53,6 @@ defineSlots<InputSearchSlots>()
 const inputRef = ref<HTMLElement | null>(null) // input 元素引用
 const isComposing = ref<boolean>(false) // 是否正在使用文本合成系统输入中
 const inputSearchValue = ref<string>() // 搜索框内容
-const { colorPalettes, shadowColor } = useInject('InputSearch') // 主题色注入
 const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'search'])
 const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore'])
 const inputSearchWidth = computed(() => {
@@ -148,11 +147,9 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
 <template>
   <div
     class="input-search-wrap"
+    :class="`input-search-${size}`"
     :style="`
       --input-search-width: ${inputSearchWidth};
-      --input-search-primary-color-hover: ${colorPalettes[4]};
-      --input-search-primary-color-focus: ${colorPalettes[4]};
-      --input-search-primary-shadow-color: ${shadowColor};
     `"
   >
     <span v-if="showBefore" class="input-search-addon-before" :class="`addon-before-${size}`">
@@ -242,24 +239,33 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
 </template>
 <style lang="less" scoped>
 .input-search-wrap {
+  /* 拼接圆角：随 size 变化（小 / 中 / 大三档），
+     由根节点下发变量，作用域内的容器、前置标签、搜索按钮共用同一份 */
+  --input-search-radius: 6px;
   width: var(--input-search-width);
   position: relative;
   display: inline-flex;
   align-items: center;
+  &.input-search-small {
+    --input-search-radius: 4px;
+  }
+  &.input-search-large {
+    --input-search-radius: 8px;
+  }
   .input-search-addon-before {
     display: inline-flex;
     justify-content: center;
     align-items: center;
     position: relative;
     padding: 0 11px;
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     font-weight: normal;
     font-size: 14px;
     line-height: 1.5714285714285714;
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.02);
-    border: 1px solid #d9d9d9;
-    border-radius: 6px;
+    background-color: var(--va-fill-color-1);
+    border: 1px solid var(--va-border-color);
+    border-radius: var(--input-search-radius);
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border-right: 0;
@@ -274,31 +280,39 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
   .addon-before-middle {
     height: 32px;
   }
-  .addon-before-small {
+  .addon-before-large {
     height: 40px;
   }
   .input-search-container {
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     line-height: 1.5714285714285714;
     position: relative;
     display: inline-flex;
     width: 100%;
     min-width: 0;
-    background-color: #ffffff;
-    border: 1px solid #d9d9d9;
+    /* 右侧保留边框：输入区自身画完整闭合边框（单个元素的边框是一条闭合路径，
+       转角处不会在亚像素位置漏缝）。与按钮的交接线由按钮左移 1px 覆盖 */
+    z-index: 0;
+    background-color: var(--va-bg-container-color);
+    /* 底色只铺到内边距区：聚焦时右边框会临时置透明（见下方 :focus-within），
+       若底色仍延伸到边框区，会从这个透明边框漏出来、把交接线盖成白色 */
+    background-clip: padding-box;
+    border: 1px solid var(--va-border-color);
     transition: all 0.2s;
     &:hover {
-      border-color: var(--input-search-primary-color-hover);
-      border-right-width: 1px;
-      z-index: 1;
+      border-color: var(--va-cp-input-search-primary-color-hover, var(--va-primary-color-hover));
     }
     &:focus-within {
-      border-color: var(--input-search-primary-color-focus);
-      box-shadow: 0 0 0 2px var(--input-search-primary-shadow-color);
-      border-right-width: 1px;
-      outline: 0;
+      border-color: var(--va-cp-input-search-primary-color-hover, var(--va-primary-color-hover));
+      /* 焦点环只包输入区（不含右侧按钮），所以必须抬到按钮之上，
+         否则环的右段被按钮盖住、看上去缺一条边 */
       z-index: 1;
+      /* 交接线由按钮自己的伪元素负责（见 .input-search-button .btn-wrap::before），
+         输入区右边框让位，否则这条高亮色会压在实底按钮的左边缘上 */
+      border-right-color: transparent;
+      box-shadow: var(--va-cp-input-search-focus-shadow, var(--va-focus-shadow));
+      outline: 0;
     }
     .input-search-prefix {
       margin-right: 4px;
@@ -317,23 +331,23 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
       display: inline-block;
       width: 100%;
       min-width: 0;
-      background-color: #ffffff;
+      background-color: var(--va-bg-container-color);
       border: none;
       outline: none;
       text-overflow: ellipsis;
       transition: all 0.2s;
     }
     input::-webkit-input-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
     }
     input:-moz-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
     }
     input::-moz-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
     }
     input:-ms-input-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
     }
     .input-search-suffix {
       margin-left: 4px;
@@ -349,10 +363,10 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
         .clear-svg {
           display: inline-block;
           font-size: 12px;
-          color: rgba(0, 0, 0, 0.25);
+          color: var(--va-text-color-disabled);
           transition: color 0.3s;
           &:hover {
-            color: rgba(0, 0, 0, 0.45);
+            color: var(--va-text-color-3);
           }
         }
       }
@@ -360,7 +374,7 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
         visibility: hidden;
       }
       .input-search-count {
-        color: rgba(0, 0, 0, 0.45);
+        color: var(--va-text-color-3);
       }
       .suffix-item {
         display: flex;
@@ -375,14 +389,14 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
   .input-search-small {
     height: 24px;
     padding: 0 7px;
-    border-radius: 4px;
+    border-radius: var(--input-search-radius);
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
   .input-search-middle {
     height: 32px;
     padding: 4px 11px;
-    border-radius: 6px;
+    border-radius: var(--input-search-radius);
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
@@ -391,7 +405,7 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
     padding: 7px 11px;
     font-size: 16px;
     line-height: 1.5;
-    border-radius: 8px;
+    border-radius: var(--input-search-radius);
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     .input-search {
@@ -404,34 +418,49 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
     border-bottom-left-radius: 0;
   }
   .input-search-disabled {
-    color: rgba(0, 0, 0, 0.25);
-    background-color: rgba(0, 0, 0, 0.04);
+    color: var(--va-text-color-disabled);
+    background-color: var(--va-fill-color-1);
     cursor: not-allowed;
     &:hover {
-      border-color: #d9d9d9;
+      border-color: var(--va-border-color);
     }
     &:focus-within {
-      border-color: #d9d9d9;
+      border-color: var(--va-border-color);
       box-shadow: none;
     }
     .input-search {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
       background-color: transparent;
       cursor: not-allowed;
     }
   }
+  /* 普通按钮把自己的左边框染成输入区当前的颜色（这一像素与输入区右边框完全重叠，上层是谁都同色），
+     悬停时右侧轮廓与其余三条边同为高亮色、移出时同一条 transition 平滑回落；
+     语义色按钮（primary / danger / link / 禁用）的边框本身有意义，保持不动 */
+  &:hover,
+  &:focus-within {
+    .input-search-button :deep(.btn-wrap) {
+      &:not(.btn-primary):not(.btn-danger):not(.btn-link):not(.btn-disabled) {
+        border-left-color: var(--va-cp-input-search-primary-color-hover, var(--va-primary-color-hover));
+      }
+    }
+  }
   .input-search-button {
     position: relative;
-    left: -1px;
+    /* 与输入区重叠 1px：按钮左边框正好压在
+       输入区右边框上，交界处只有一条线；顺带保住按钮右边缘与容器右边缘对齐。
+       若改成相邻不重叠（输入区 border-right: 0），两个边框各画 1px 会在亚像素位置
+       于右上 / 右下转角各缺 1px，悬停、聚焦时最明显 */
+    margin-left: -1px;
     border-left: 0;
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     font-weight: normal;
     font-size: 14px;
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.02);
+    background-color: var(--va-fill-color-1);
     border-top-left-radius: 0;
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
+    border-top-right-radius: var(--input-search-radius);
+    border-bottom-right-radius: var(--input-search-radius);
     border-bottom-left-radius: 0;
     transition: all 0.3s;
     line-height: 1;
@@ -439,13 +468,42 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
       padding-top: 0;
       padding-bottom: 0;
       border-top-left-radius: 0;
-      border-top-right-radius: 6px;
-      border-bottom-right-radius: 6px;
+      border-top-right-radius: var(--input-search-radius);
+      border-bottom-right-radius: var(--input-search-radius);
       border-bottom-left-radius: 0;
+      /* 与输入区保持同一条过渡曲线，交接线才与其余三条边同时到位
+         （按钮自身是 0.2s cubic-bezier(...)，曲线不同会让这一条边看着「慢半拍」） */
+      transition: all 0.2s;
       &:not(.btn-primary):not(.btn-danger):not(.btn-link):not(.btn-disabled) {
-        color: rgba(0, 0, 0, 0.45);
+        color: var(--va-text-color-3);
+      }
+      /* 交接线：按钮左移 1px 后，输入区右边框正好被这一像素压住。这里用伪元素画在按钮边框之上，
+         颜色继承按钮自身的左边框色——
+         · 普通按钮是灰 / 高亮色一条线，且这一像素盖住按钮自身上下边框 45° 斜接留下的半像素，
+           右上 / 右下转角不会各缺 1px；
+         · primary / danger 这类边框色即底色的实底按钮上自然不可见，交界处不会出现浅色细线。
+         注意：这里不能声明 transition——颜色是逐帧继承父元素动画结果的，再补一层过渡会变成
+         「追赶父元素」的二次动画，视觉上这条边明显比其他三条慢 */
+      &::before {
+        content: '';
+        position: absolute;
+        top: -1px;
+        bottom: -1px;
+        left: -1px;
+        width: 0;
+        border-left: 1px solid;
+        border-left-color: inherit;
+        pointer-events: none;
       }
     }
+  }
+  /* slot 自定义按钮：与内置按钮同样按拼接形状重置圆角，
+     否则按钮自带的整圈圆角会在拼接处留下白色缺口 */
+  :deep(.input-search-button > *) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: var(--input-search-radius);
+    border-bottom-right-radius: var(--input-search-radius);
   }
 }
 </style>

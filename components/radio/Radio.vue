@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect } from 'vue'
 import type { VNode } from 'vue'
-import { useSlotsExist, useInject, useWave } from 'components/utils'
+import { useSlotsExist, useWave } from 'components/utils'
 export interface Option {
   label: string // 选项名
   value: string | number | boolean // 选项值
@@ -40,7 +40,6 @@ defineSlots<RadioSlots>()
 const radioChecked = ref<boolean>(false)
 const optionsCheckedValue = ref<string | number | boolean>()
 const { wave, startWave, endWave } = useWave()
-const { colorPalettes } = useInject('Radio') // 主题色注入
 const emits = defineEmits(['update:checked', 'update:value', 'change'])
 const slotsExist = useSlotsExist(['default'])
 // 选项总数
@@ -94,7 +93,6 @@ function onChecked(): void {
     :class="{ 'radio-vertical': !button && vertical }"
     :style="`
       --radio-gap: ${gapValue};
-      --radio-primary-color: ${colorPalettes[5]};
     `"
     v-bind="$attrs"
   >
@@ -151,7 +149,6 @@ function onChecked(): void {
       v-if="!button"
       class="radio-container"
       :class="{ 'radio-disabled': disabled }"
-      :style="`--radio-primary-color: ${colorPalettes[5]};`"
       @click="disabled ? () => false : onChecked()"
       v-bind="$attrs"
     >
@@ -178,7 +175,6 @@ function onChecked(): void {
         'radio-button-small': buttonSize === 'small',
         'radio-button-large': buttonSize === 'large'
       }"
-      :style="`--radio-primary-color: ${colorPalettes[5]};`"
       @click="disabled ? () => false : onChecked()"
       v-bind="$attrs"
     >
@@ -208,12 +204,12 @@ function onChecked(): void {
   display: inline-flex;
   align-items: baseline;
   cursor: pointer;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   font-size: 14px;
   line-height: 1.5714285714285714;
   &:not(.radio-disabled):hover {
     .radio-handle {
-      border-color: var(--radio-primary-color);
+      border-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
     }
   }
   .radio-handle {
@@ -227,7 +223,7 @@ function onChecked(): void {
     width: 16px;
     height: 16px;
     background: transparent;
-    border: 1px solid #d9d9d9;
+    border: 1px solid var(--va-border-color);
     border-radius: 50%;
     transition: all 0.3s;
     &::after {
@@ -240,7 +236,7 @@ function onChecked(): void {
       height: 16px;
       margin-top: -8px;
       margin-left: -8px;
-      background-color: #fff;
+      background-color: var(--va-text-color-solid);
       border-top: 0;
       border-left: 0;
       border-radius: 16px;
@@ -251,8 +247,8 @@ function onChecked(): void {
     }
   }
   .radio-checked {
-    border-color: var(--radio-primary-color);
-    background-color: var(--radio-primary-color);
+    border-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
+    background-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
     &::after {
       transform: scale(0.375);
       opacity: 1;
@@ -266,15 +262,15 @@ function onChecked(): void {
   }
 }
 .radio-disabled {
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--va-text-color-disabled);
   cursor: not-allowed;
   .radio-handle {
-    background-color: rgba(0, 0, 0, 0.04);
-    border-color: #d9d9d9;
+    background-color: var(--va-fill-color-1);
+    border-color: var(--va-border-color);
     cursor: not-allowed;
     &::after {
       transform: scale(0.5);
-      background-color: rgba(0, 0, 0, 0.25);
+      background-color: var(--va-text-color-disabled);
     }
   }
 }
@@ -283,8 +279,8 @@ function onChecked(): void {
   height: 32px;
   padding-inline: 15px;
   line-height: 30px;
-  background: #ffffff;
-  border: 1px solid #d9d9d9;
+  background: var(--va-bg-container-color);
+  border: 1px solid var(--va-border-color);
   border-top-width: 1px;
   border-left-width: 0;
   border-right-width: 1px;
@@ -294,7 +290,7 @@ function onChecked(): void {
     all 0.2s,
     box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   &:first-child {
-    border-left: 1px solid #d9d9d9;
+    border-left: 1px solid var(--va-border-color);
     border-start-start-radius: 6px;
     border-end-start-radius: 6px;
   }
@@ -307,7 +303,7 @@ function onChecked(): void {
     height: 100%;
     padding-block: 1px;
     box-sizing: content-box;
-    background-color: #d9d9d9;
+    background-color: var(--va-border-color);
     transition: background-color 0.3s;
     content: '';
   }
@@ -316,37 +312,37 @@ function onChecked(): void {
     border-end-end-radius: 6px;
   }
   &:not(.radio-button-disabled):hover {
-    color: var(--radio-primary-color);
+    color: var(--va-cp-radio-primary-color, var(--va-primary-color));
   }
 }
 .radio-button-single {
-  border-left: 1px solid #d9d9d9;
+  border-left: 1px solid var(--va-border-color);
   border-radius: 6px;
 }
 .radio-button-wrap.radio-button-checked:not(.radio-button-disabled) {
   z-index: 1;
-  color: var(--radio-primary-color);
-  background-color: #ffffff;
-  border-color: var(--radio-primary-color);
+  color: var(--va-cp-radio-primary-color, var(--va-primary-color));
+  background-color: var(--va-bg-container-color);
+  border-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
   &::before {
-    background-color: var(--radio-primary-color);
+    background-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
   }
 }
 .radio-button-disabled {
-  color: rgba(0, 0, 0, 0.25);
-  background-color: rgba(0, 0, 0, 0.04);
-  border-color: #d9d9d9;
+  color: var(--va-text-color-disabled);
+  background-color: var(--va-fill-color-1);
+  border-color: var(--va-border-color);
   cursor: not-allowed;
 }
 .radio-button-disabled.radio-button-checked {
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: var(--va-fill-color-2);
 }
 .radio-button-solid.radio-button-checked:not(.radio-button-disabled) {
-  color: #fff;
-  background-color: var(--radio-primary-color);
-  border-color: var(--radio-primary-color);
+  color: var(--va-text-color-solid);
+  background-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
+  border-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
   &:hover {
-    color: #fff;
+    color: var(--va-text-color-solid);
   }
 }
 .radio-button-small {
@@ -402,10 +398,10 @@ function onChecked(): void {
   animation-name: waveSpread, waveOpacity;
   @keyframes waveSpread {
     from {
-      box-shadow: 0 0 0.5px 0 var(--radio-primary-color);
+      box-shadow: 0 0 0.5px 0 var(--va-cp-radio-primary-color, var(--va-primary-color));
     }
     to {
-      box-shadow: 0 0 0.5px 5px var(--radio-primary-color);
+      box-shadow: 0 0 0.5px 5px var(--va-cp-radio-primary-color, var(--va-primary-color));
     }
   }
   @keyframes waveOpacity {

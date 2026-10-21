@@ -295,7 +295,7 @@ function handleOffset(value: string): string {
   display: inline-block;
   width: fit-content;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   line-height: 1;
   .status-dot {
     position: relative;
@@ -337,7 +337,7 @@ function handleOffset(value: string): string {
   }
   .status-text {
     margin-left: 8px;
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     font-size: 14px;
   }
   .value {
@@ -354,15 +354,16 @@ function handleOffset(value: string): string {
     padding: 0 8px;
     min-width: 20px;
     height: 20px;
-    color: #ffffff;
+    color: var(--va-text-color-solid);
     font-weight: normal;
     font-size: 12px;
     line-height: 20px;
     white-space: nowrap;
     text-align: center;
-    background: #ff4d4f;
+    background: var(--va-error-color);
     border-radius: 10px;
-    box-shadow: 0 0 0 1px #ffffff;
+    // 缺口环取容器色：暗色下若用白环会变成发光圈
+    box-shadow: 0 0 0 1px var(--va-bg-container-color);
     transition: background 0.2s;
     .number-value {
       position: relative;
@@ -399,31 +400,31 @@ function handleOffset(value: string): string {
     width: 6px;
     min-width: 6px;
     height: 6px;
-    background: #ff4d4f;
+    background: var(--va-error-color);
     border-radius: 100%;
-    box-shadow: 0 0 0 1px #ffffff;
+    box-shadow: 0 0 0 1px var(--va-bg-container-color);
     padding: 0;
     transition: background 0.3s;
   }
   .status-success {
-    color: #52c41a;
-    background-color: #52c41a;
+    color: var(--va-success-color);
+    background-color: var(--va-success-color);
   }
   .status-error {
-    color: #ff4d4f;
-    background-color: #ff4d4f;
+    color: var(--va-error-color);
+    background-color: var(--va-error-color);
   }
   .status-default {
-    color: rgba(0, 0, 0, 0.25);
-    background-color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
+    background-color: var(--va-text-color-disabled);
   }
   .status-processing {
-    color: #1677ff;
-    background-color: #1677ff;
+    color: var(--va-cp-badge-primary-color, var(--va-primary-color));
+    background-color: var(--va-cp-badge-primary-color, var(--va-primary-color));
   }
   .status-warning {
-    color: #faad14;
-    background-color: #faad14;
+    color: var(--va-warning-color);
+    background-color: var(--va-warning-color);
   }
   .color-pink {
     color: #eb2f96;

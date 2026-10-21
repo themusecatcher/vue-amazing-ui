@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue'
 import type { VNode } from 'vue'
 import Tooltip, { type TooltipProps } from 'components/tooltip'
 import Badge, { type BadgeProps } from 'components/badge'
-import { useSlotsExist, useInject } from 'components/utils'
+import { useSlotsExist } from 'components/utils'
 
 export interface Props {
   top?: number | string // 按钮定位的上边距，单位 px
@@ -53,7 +53,6 @@ const props = withDefaults(defineProps<Props>(), {
 })
 defineSlots<FloatButtonSlots>()
 const showMenu = ref(false)
-const { colorPalettes } = useInject('FloatButton') // 主题色注入
 const emits = defineEmits(['click', 'openChange'])
 const slotsExist = useSlotsExist(['icon', 'description', 'tooltip', 'menu'])
 const showTooltip = computed(() => {
@@ -133,8 +132,6 @@ function onClick(e: Event) {
       --float-btn-top: ${floatBtnTop};
       --float-btn-bottom: ${floatBtnBottom};
       --float-btn-z-index: ${zIndex};
-      --float-btn-primary-color: ${colorPalettes[5]};
-      --float-btn-primary-color-hover: ${colorPalettes[4]};
     `"
     :href="href"
     :target="target"
@@ -229,17 +226,14 @@ function onClick(e: Event) {
   bottom: var(--float-btn-bottom);
   z-index: var(--float-btn-z-index);
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   line-height: 1.5714285714285714;
   display: inline-block;
   width: var(--float-btn-width);
   height: var(--float-btn-height);
   cursor: pointer;
   outline: none;
-  box-shadow:
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--va-popup-shadow);
   .float-btn-tooltip {
     width: 100%;
     height: 100%;
@@ -306,24 +300,25 @@ function onClick(e: Event) {
   }
 }
 .float-btn-default {
-  background-color: #ffffff;
+  // 暗色下容器色（#141414）与页面底几乎同色，故按钮取抬升表面色避免「融进」背景
+  background-color: var(--va-bg-elevated-color);
   transition: background-color 0.2s;
   & > .float-btn-tooltip {
     .float-btn-body {
-      background-color: #ffffff;
+      background-color: var(--va-bg-elevated-color);
       transition: background-color 0.2s;
       &:hover {
-        background-color: rgba(0, 0, 0, 0.06);
+        background-color: var(--va-fill-color-2);
       }
       .float-btn-content {
         .float-btn-icon {
-          color: rgba(0, 0, 0, 0.88);
+          color: var(--va-text-color-1);
         }
         .float-btn-description {
           display: flex;
           align-items: center;
           line-height: 16px;
-          color: rgba(0, 0, 0, 0.88);
+          color: var(--va-text-color-1);
           font-size: 12px;
         }
       }
@@ -332,24 +327,24 @@ function onClick(e: Event) {
 }
 
 .float-btn-primary {
-  background-color: var(--float-btn-primary-color);
+  background-color: var(--va-cp-float-button-primary-color, var(--va-primary-color));
   & > .float-btn-tooltip {
     .float-btn-body {
-      background-color: var(--float-btn-primary-color);
+      background-color: var(--va-cp-float-button-primary-color, var(--va-primary-color));
       transition: background-color 0.2s;
       &:hover {
-        background-color: var(--float-btn-primary-color-hover);
+        background-color: var(--va-cp-float-button-primary-color-hover, var(--va-primary-color-hover));
       }
       .float-btn-content {
         .float-btn-icon {
-          color: #fff;
+          color: var(--va-text-color-solid);
         }
       }
       .float-btn-description {
         display: flex;
         align-items: center;
         line-height: 16px;
-        color: #fff;
+        color: var(--va-text-color-solid);
         font-size: 12px;
       }
     }

@@ -201,9 +201,9 @@ describe('范围形态的面板结构', () => {
     const errorBlock = source.match(/&\.picker-trigger-status-error \{[\s\S]*?\n  \}/)?.[0] ?? ''
     const warningBlock = source.match(/&\.picker-trigger-status-warning \{[\s\S]*?\n  \}/)?.[0] ?? ''
     expect(errorBlock).toContain('.picker-trigger-range-active-bar')
-    expect(errorBlock).toContain('background: #ff4d4f')
+    expect(errorBlock).toContain('background: var(--va-error-color)')
     expect(warningBlock).toContain('.picker-trigger-range-active-bar')
-    expect(warningBlock).toContain('background: #faad14')
+    expect(warningBlock).toContain('background: var(--va-warning-color)')
   })
 
   it('面板上渲染随激活段移动的指示箭头', async () => {

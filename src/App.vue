@@ -14,7 +14,8 @@ const routeName = computed(() => {
 })
 </script>
 <template>
-  <ConfigProvider :theme="theme">
+  <!-- abstract 显式传 true：演示站有大量 Teleport 到 body 的浮层，只有写 <html> 才能让它们跟随主题 -->
+  <ConfigProvider :theme="theme" :abstract="true">
     <LoadingBarProvider>
       <MessageProvider>
         <ModalProvider>
