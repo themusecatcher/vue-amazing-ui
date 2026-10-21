@@ -1848,9 +1848,17 @@ _按「改的是哪一层」定位，再检查作用域与覆盖范围；完整�
 | :-- | :-- | :-- | :-- |
 | seed? | 颜色种子 | [ThemeSeed](#themeseed-type) | undefined |
 | mode? | 模式：浅色 / 暗色 / 跟随系统 | 'light' \| 'dark' \| 'auto' | undefined |
-| components? | 组件级主色；优先于 `seed`；键为已接线的组件名（`ThemeComponentKey`，写错在编译期报错） | Partial\<Record\<ThemeComponentKey, [ComponentThemeConfig](#componentthemeconfig-type)\>\> | undefined |
+| components? | 组件级主色；优先于 `seed`；键为已接线的组件名（[ThemeComponentKey](#themecomponentkey-type)，写错在编译期报错） | Partial\<Record\<[ThemeComponentKey](#themecomponentkey-type), [ComponentThemeConfig](#componentthemeconfig-type)\>\> | undefined |
 
 > 未传 `theme`（或传空对象）时不写任何变量，完全使用静态默认表；`mode="auto"` 跟随系统 `prefers-color-scheme` 并在变化时重新派生；`seed` / `mode` / `components` 的派生规则详见[定制主题](/guide/customize-theme.html)。
+
+### ThemeComponentKey Type
+
+| 名称 | 值 |
+| :-- | :-- |
+| ThemeComponentKey | 'Alert' &#124; 'AutoComplete' &#124; 'BackTop' &#124; 'Badge' &#124; 'Button' &#124; 'Calendar' &#124; 'Carousel' &#124; 'Checkbox' &#124; 'ColorPicker' &#124; 'DatePicker' &#124; 'FloatButton' &#124; 'GradientText' &#124; 'Image' &#124; 'Input' &#124; 'InputNumber' &#124; 'InputSearch' &#124; 'LoadingBar' &#124; 'Menu' &#124; 'Message' &#124; 'Modal' &#124; 'Notification' &#124; 'Pagination' &#124; 'Popconfirm' &#124; 'Progress' &#124; 'Radio' &#124; 'Select' &#124; 'Slider' &#124; 'Spin' &#124; 'Steps' &#124; 'Swiper' &#124; 'Switch' &#124; 'Table' &#124; 'Tabs' &#124; 'Tag' &#124; 'TextScroll' &#124; 'Textarea' &#124; 'TimePicker' &#124; 'Timeline' &#124; 'Upload' |
+
+> 取值为已接线组件级主色的组件名（与本库组件目录同名、顺序固定，由 `THEME_COMPONENTS` 守护）；键写错在编译期报错，不依赖运行期告警。每个组件可覆盖的令牌见[组件级令牌](/guide/customize-theme.html#组件级令牌与整组覆盖)。
 
 ### ComponentThemeConfig Type
 
