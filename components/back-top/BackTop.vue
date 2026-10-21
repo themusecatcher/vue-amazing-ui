@@ -197,11 +197,7 @@ function onBackTop(): void {
           v-bind="$attrs"
           :data-va-mode="teleportThemeMode"
         >
-          <Tooltip
-            :style="`border-radius: var(--back-top-${shape}-border-radius)`"
-            :content-style="{ borderRadius: `var(--back-top-${shape}-border-radius)` }"
-            v-bind="tooltipProps"
-          >
+          <Tooltip v-bind="tooltipProps">
             <template v-if="showTooltip" #tooltip>
               <slot name="tooltip">{{ tooltip }}</slot>
             </template>
