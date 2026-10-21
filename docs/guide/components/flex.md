@@ -99,7 +99,7 @@ const customGapSize = ref(16)
 ## 基本使用
 
 <Flex vertical>
-  <Radio :options="directionOptions" v-model:value="direction" />
+  <RadioGroup :options="directionOptions" v-model:value="direction" />
   <Flex :vertical="direction === 'vertical'">
     <div
       v-for="n in 4" :key="n"
@@ -131,7 +131,7 @@ const baseStyle = {
 </script>
 <template>
   <Flex vertical>
-    <Radio :options="directionOptions" v-model:value="direction" />
+    <RadioGroup :options="directionOptions" v-model:value="direction" />
     <Flex :vertical="direction === 'vertical'">
       <div v-for="n in 4" :key="n" :style="{ ...baseStyle, background: `${n % 2 ? '#1677ffbf' : '#1677ff'}` }" />
     </Flex>
@@ -145,9 +145,9 @@ const baseStyle = {
 
 <Flex align="start" vertical>
   <p>Select justify :</p>
-  <Radio v-model:value="justify" button :options="justifyOptions" />
+  <RadioGroup v-model:value="justify" button :options="justifyOptions" />
   <p>Select align :</p>
-  <Radio v-model:value="alignItems" button :options="alignOptions" />
+  <RadioGroup v-model:value="alignItems" button :options="alignOptions" />
   <Flex :style="{ ...boxStyle }" :justify="justify" :align="alignItems">
     <Button type="primary">Primary</Button>
     <Button type="primary">Primary</Button>
@@ -212,9 +212,9 @@ const boxStyle = {
 <template>
   <Flex align="start" vertical>
     <p>Select justify :</p>
-    <Radio v-model:value="justify" button :options="justifyOptions" />
+    <RadioGroup v-model:value="justify" button :options="justifyOptions" />
     <p>Select align :</p>
-    <Radio v-model:value="alignItems" button :options="alignOptions" />
+    <RadioGroup v-model:value="alignItems" button :options="alignOptions" />
     <Flex :style="{ ...boxStyle }" :justify="justify" :align="alignItems">
       <Button type="primary">Primary</Button>
       <Button type="primary">Primary</Button>
@@ -230,7 +230,7 @@ const boxStyle = {
 ## 设置间隙
 
 <Flex vertical>
-  <Radio :options="gapOptions" v-model:value="gapSize" />
+  <RadioGroup :options="gapOptions" v-model:value="gapSize" />
   <Slider v-if="gapSize === 'customize'" v-model:value="customGapSize" />
   <Flex :gap="gapSize !== 'customize' ? gapSize : customGapSize">
     <Button type="primary">Primary</Button>
@@ -267,7 +267,7 @@ const customGapSize = ref(16)
 </script>
 <template>
   <Flex vertical>
-    <Radio :options="gapOptions" v-model:value="gapSize" />
+    <RadioGroup :options="gapOptions" v-model:value="gapSize" />
     <Slider v-if="gapSize === 'customize'" v-model:value="customGapSize" />
     <Flex :gap="gapSize !== 'customize' ? gapSize : customGapSize">
       <Button type="primary">Primary</Button>

@@ -159,7 +159,8 @@ describe('Upload base64 读取的 loading 复位', () => {
 
     expect(wrapper.find('.file-uploading').exists()).toBe(false)
     expect(wrapper.emitted('error')).toBeTruthy()
-    expect(errorSpy).toHaveBeenCalledWith('[vue-amazing-ui] Upload: 文件读取失败', expect.anything(), reader.error)
+    // 统一出口只透传诊断价值更高的原始错误（Event 对象无堆栈，不再随日志输出）
+    expect(errorSpy).toHaveBeenCalledWith('[vue-amazing-ui] Upload: 文件读取失败', reader.error)
     wrapper.unmount()
   })
 

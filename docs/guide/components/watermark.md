@@ -153,7 +153,7 @@ _通过 `image` 指定图片地址；为保证图片高清且不被拉伸，请�
 
 <Flex>
   <Flex vertical :gap="8">
-    Layout: <Radio :options="layoutOptions" v-model:value="imageModel.layout" button />
+    Layout: <RadioGroup :options="layoutOptions" v-model:value="imageModel.layout" button />
   </Flex>
   <Flex vertical :gap="8" :width="240">
     Rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
@@ -191,7 +191,7 @@ const layoutOptions = [
 </script>
 <template>
   <Flex>
-    <Flex vertical :gap="8"> Layout: <Radio :options="layoutOptions" v-model:value="imageModel.layout" button /> </Flex>
+    <Flex vertical :gap="8"> Layout: <RadioGroup :options="layoutOptions" v-model:value="imageModel.layout" button /> </Flex>
     <Flex vertical :gap="8" :width="240">
       Rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
     </Flex>
@@ -305,7 +305,7 @@ _通过自定义参数配置预览水印效果_
   <Col :span="6">
     <Flex vertical :gap="12">
       <Flex vertical> Content:<Input v-model:value="model.content" /> </Flex>
-      <Flex vertical> Layout:<Radio :options="layoutOptions" v-model:value="model.layout" button /> </Flex>
+      <Flex vertical> Layout:<RadioGroup :options="layoutOptions" v-model:value="model.layout" button /> </Flex>
       <Flex vertical> Color:<ColorPicker v-model:value="model.textStyle.color" /> </Flex>
       <Flex vertical> FontSize:<Slider v-model:value="model.textStyle.fontSize" :step="1" :min="0" :max="100" /> </Flex>
       <Flex vertical>
@@ -394,7 +394,7 @@ const layoutOptions = [
     <Col :span="6">
       <Flex vertical :gap="12">
         <Flex vertical> Content:<Input v-model:value="model.content" /> </Flex>
-        <Flex vertical> Layout:<Radio :options="layoutOptions" v-model:value="model.layout" button /> </Flex>
+        <Flex vertical> Layout:<RadioGroup :options="layoutOptions" v-model:value="model.layout" button /> </Flex>
         <Flex vertical> Color:<ColorPicker v-model:value="model.textStyle.color" /> </Flex>
         <Flex vertical>
           FontSize:<Slider v-model:value="model.textStyle.fontSize" :step="1" :min="0" :max="100" />

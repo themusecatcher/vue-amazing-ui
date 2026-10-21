@@ -1,3 +1,7 @@
+---
+description: Vue Amazing UI 组件库的版本更新记录，含新增组件、接口重构、缺陷修复与文档更新
+---
+
 # 更新日志
 
 <GlobalElement />
@@ -16,6 +20,7 @@
 - 主题实现：新增 `components/theme/`（基于 `@ant-design/colors` 的色阶映射 + 中性色透明度阶梯 + 派生缓存），构建期生成静态默认表并随每份按需样式入口下发，首帧不依赖 `JS`；不替品牌色做对比度兜底；公开 `derive(seed, mode)` 供 `JS` / `canvas` / `SVG` 场景取色，已废弃的 `getColorPalettes` / `getAlphaColor` 从主入口与工具文档中一并移除
 - **破坏性变更**：移除 `toggleDark` / `rafTimeout` / `cancelRaf` 三个工具函数（对外工具由 `21` 个收敛为 `16` 个：本条移除 3 个，上条废弃 API 清理 `getColorPalettes` / `getAlphaColor` 再减 2 个；主入口、类型、文档与演示站列表同步清理）。`toggleDark` 只切换 `html.dark`，与库主题无关（组件只消费 `--va-*` 与 `data-va-mode`），切换暗色请改用 `ConfigProvider` 的 `theme.mode`（含 `auto` 跟随系统）或直接写 `data-va-mode`；`rafTimeout` / `cancelRaf` 的回调绑定渲染帧、与 `setTimeout` / `setInterval` 不等价，库内帧调度统一使用原生 `requestAnimationFrame`，需要不被暂停的延时时请直接用 `setTimeout`
 - 默认主色保持 `#1677ff` 不变；新增主题守护脚本 `pnpm verify:theme`（组件不得使用旧主题通道、`--va-*` 引用必须已定义、变量表结构校验）
+- 统一库内告警出口：组件与工具函数中散落的 `console.warn` / `console.error` / `console.debug` 收敛为单一 `log(level, component, message, error?)`（`components/utils/log.ts`），级别即环境策略 —— `error` 全环境输出（线上可观测），`warn` / `debug` 仅开发期输出，前缀 `[vue-amazing-ui] {组件名}: {说明}` 由出口统一拼装；[二维码 QRCode](/guide/components/qr-code.html) 编码 / 绘制 / 导出失败与 [折叠面板 Collapse](/guide/components/collapse.html) 复制失败由 `warn` 升为 `error`，浮层尺寸测量 / 字体就绪检测 / 跨域下载检测等预期内降级改为仅开发期输出；新增 `eslint no-console` 守护（组件内禁止直写 `console`），原 `warnUsage` 更名为 `log`（内部工具，不在包根导出）
 - 新增组件级主色配置 `theme.components.<Component>.primaryColor`，承接旧版 `theme.Button.primaryColor` 的能力：只接受一个通用主色，`Provider` 用同一套派生把它展开为「内部桥 `--va-cp-<component>-primary-*`（覆盖该组件全部主色使用点）+ 注册表 `themeRole` 公开令牌（`Button` / `Slider` / `Menu` 的细粒度覆盖入口）」，自动派生常态 / 悬停 / 按下 / 浅底 / 描边 / 焦点环；组件配置优先于 `seed`，运行期增删会实时生效并回落到 `seed`
 - 覆盖 `39` 个使用主色的内置组件（完整清单见[组件级令牌](/guide/customize-theme.html#组件级令牌与整组覆盖)）；`theme.components` 的键类型收窄为 `ThemeComponentKey`，写错组件名在编译期即报错（不再依赖开发环境告警）；`Teleport` 浮层的主题转发同时携带全局令牌与组件级令牌；组合组件内的子组件（如 `InputSearch` 内的 `Input`）按子组件自己的配置
 - 组件令牌扩展：新增 `Table` / `Card` / `Alert` / `Input` / `Textarea` / `Modal` / `Drawer` 的 `22` 个公开令牌（表格底色 / 表头 / 页脚 / 分隔线，卡片底色 / 边框，输入框与文本域的底色 / 边框 / 文字 / 占位符，弹窗与抽屉表面色），组件令牌总数 `26` → `48`；均按「只消费不声明 + 带默认值」接入，宿主可在任意祖先覆盖
@@ -26,6 +31,15 @@
 - 修复 [日历 Calendar](/guide/components/calendar.html) 年选择器：选中年份后列表区间不再随面板定位年平移，重新展开时才按当前年份重建并滚动到选中项
 - 修复组件级主色的两处边界：接受 `#rrggbbff`（与 `seed` 同一归一化口径，颜色选择器的 `8` 位输出不再被判非法）；只配置 `theme.components` 时，`Teleport` 浮层不再内联默认色表与 `light` 模式，避免覆盖宿主用纯 `CSS` 设置在 `:root` / `data-va-mode` 上的主题
 - 优化 `ConfigProvider` 的 `<html>` 写入权判定：只有组件配置、没有 `seed` / `mode` 的 `abstract: true` 实例不再参与全局写者仲裁，避免卸载时误清其它实例写入的变量；该场景会在开发环境提示改用 `abstract: false` 或补充 `seed` / `mode`
+- 组件库及文档代码优化
+
+## <VersionDateTag date="2026-10-19">2.15.2</VersionDateTag>
+
+- 重构并增强 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html)：新增 `RadioGroup` / `CheckboxGroup` 组合式用法（统一下发选中值与禁用态并承载组内选项，组内项以 `value` 标识自身，`Radio` 另有 `RadioButton` 提供按钮形态，`options` 支持字符串 / 数字简写与 `VNode` 选项名）与原生 `input` 承载（`name` 下发到组内每个原生 `input`，`id`（前缀 + 选项下标）/ `autofocus` 在 `options` 模式下下发，补齐键盘操作与屏幕阅读器语义，暴露 `focus` / `blur` 实例方法且调用 `focus` 时同样显示焦点环，`change` 事件在「新值」首参之后追加事件对象——含状态快照与原始事件，首参用法不受影响，`RadioChangeEvent` / `CheckboxChangeEvent` 类型随组件一并导出），优化选中反馈并修复定高行内与输入框混排时文字与控件基线错位、内容溢出行盒的问题
+- 移除 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html) 的 `options` / `vertical` / `gap` 属性，配置式写法统一由 `RadioGroup` / `CheckboxGroup` 承载；[复选框 Checkbox](/guide/components/checkbox.html) 的 `value` 不再接受数组；[单选框 Radio](/guide/components/radio.html) 的 `buttonSize` 更名为 `size`（置于 `RadioGroup` 内时由组的 `size` 下发，组未指定时回落自身尺寸）；选项类型统一为 `RadioGroupOption` / `CheckboxGroupOption`（`RadioOption` / `CheckboxOption` 不再导出）
+- [日历 Calendar](/guide/components/calendar.html) 的模式切换器改用 `RadioGroup`，`modeRadioProps` 类型同步改为 `RadioGroupProps`
+- 修复 [输入框 Input](/guide/components/input.html)：未绑定 `v-model` 时输入内容（含输入法合成文本）会因悬浮 / 聚焦等状态变化丢失，与文字混排时会把所在行文字基线压低 `1px`
+- 更新组件库文档和贡献者文档
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-10-18">2.15.1</VersionDateTag>

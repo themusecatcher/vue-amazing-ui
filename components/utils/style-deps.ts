@@ -11,7 +11,13 @@
  * 不会再表现为「消费方运行时静默缺样式」。
  */
 
-/** 组件名 → 组件样式所在目录（相对产物 es|lib 根目录） */
+/**
+ * 组件名 → 组件产物目录（相对产物 es|lib 根目录）
+ *
+ * 有自身样式的组件，其样式入口就落在该目录下的 `style/`；无自身样式的子组件（如 `RadioButton` /
+ * `DescriptionsItem`）登记自身所在的子目录，样式来源另由 `styleSources` 指向父组件 —— 生成与按需
+ * 解析都先经 `styleSources` 取目录，故子目录下不必（也不）存在 `style/`。
+ */
 const componentsMap = {
   Alert: 'alert',
   AutoComplete: 'auto-complete',
@@ -25,6 +31,7 @@ const componentsMap = {
   Carousel: 'carousel',
   Cascader: 'cascader',
   Checkbox: 'checkbox',
+  CheckboxGroup: 'checkbox/checkbox-group',
   Collapse: 'collapse',
   ColorPicker: 'color-picker',
   Comment: 'comment',
@@ -81,6 +88,8 @@ const componentsMap = {
   Progress: 'progress',
   QRCode: 'qr-code',
   Radio: 'radio',
+  RadioButton: 'radio/radio-button',
+  RadioGroup: 'radio/radio-group',
   RangePanel: 'picker',
   Rate: 'rate',
   Result: 'result',
@@ -137,6 +146,7 @@ const styleSources: Partial<Record<ComponentName, ComponentName>> = {
   ModalProvider: 'Modal',
   DialogProvider: 'Dialog',
   DescriptionsItem: 'Descriptions',
+  RadioButton: 'Radio',
   MenuDivider: 'Menu',
   MenuItem: 'Menu',
   MenuItemGroup: 'Menu',
@@ -156,10 +166,12 @@ const styleSources: Partial<Record<ComponentName, ComponentName>> = {
 const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   AutoComplete: ['Scrollbar'],
   BackTop: ['Tooltip', 'Popup'],
-  Calendar: ['Radio', 'Select', 'Empty', 'Scrollbar'],
+  // RadioGroup 的样式入口含 Radio.css，但依赖表只展开一层，故 Radio 需一并摊平登记
+  Calendar: ['RadioGroup', 'Radio', 'Select', 'Empty', 'Scrollbar'],
   Card: ['Skeleton'],
   Carousel: ['Spin'],
   Cascader: ['Select', 'Empty', 'Scrollbar'],
+  CheckboxGroup: ['Checkbox'],
   Collapse: ['Button'],
   DatePicker: [
     'DatetimePanel',
@@ -216,6 +228,7 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   Popconfirm: ['Button', 'Tooltip', 'Popup'],
   Popover: ['Tooltip', 'Popup'],
   QRCode: ['Button', 'Spin'],
+  RadioGroup: ['Radio'],
   Rate: ['Tooltip', 'Popup'],
   Select: ['Empty', 'Scrollbar'],
   Table: [

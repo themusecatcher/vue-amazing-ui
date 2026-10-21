@@ -64,7 +64,7 @@ const customGapSize = ref(16)
 ## 设置间距
 
 <Flex vertical>
-  <Radio :options="gapOptions" v-model:value="gapSize" />
+  <RadioGroup :options="gapOptions" v-model:value="gapSize" />
   <Slider v-if="gapSize === 'customize'" v-model:value="customGapSize" />
   <Space :gap="gapSize !== 'customize' ? gapSize : customGapSize">
     <Button type="primary">Primary</Button>
@@ -102,7 +102,7 @@ const customGapSize = ref(16)
 </script>
 <template>
   <Flex vertical>
-    <Radio :options="gapOptions" v-model:value="gapSize" />
+    <RadioGroup :options="gapOptions" v-model:value="gapSize" />
     <Slider v-if="gapSize === 'customize'" v-model:value="customGapSize" />
     <Space :gap="gapSize !== 'customize' ? gapSize : customGapSize">
       <Button type="primary">Primary</Button>

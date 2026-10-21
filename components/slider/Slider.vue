@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, isVNode } from 'vue'
 import type { Ref, VNode, CSSProperties } from 'vue'
-import { useFloating, useResizeObserver, warnUsage } from 'components/utils'
+import { useFloating, useResizeObserver, log } from 'components/utils'
 export type Marks = {
   [markValue: number]: string | VNode | (() => VNode) | { style: CSSProperties; label: string | VNode | (() => VNode) }
 }
@@ -354,7 +354,7 @@ function checkValue(value: number): number {
 // 获取目标值/位置最接近的 mark 标记值/位置
 function findClosestMark(target: number, marks: number[]): number {
   if (!hasMarks.value) {
-    warnUsage('Slider', '显示刻度前请先设置 marks 属性')
+    log('warn', 'Slider', '显示刻度前请先设置 marks 属性')
     return 0
   }
   let closestValue = marks[0]

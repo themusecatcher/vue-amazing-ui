@@ -14,7 +14,7 @@
 
 import { generate } from '@ant-design/colors'
 import { TinyColor } from '@ctrl/tinycolor'
-import { warnUsage } from '../utils/warn'
+import { log } from '../utils/log'
 import { THEME_VAR_NAMES } from './vars'
 import type { ResolvedMode } from './vars'
 import type { ThemeVarName, ThemeVars } from './vars'
@@ -153,7 +153,8 @@ function resolveSeedField(key: SeedKey, value: string | undefined, fallback?: st
   }
   const normalized = normalizeSeedColor(value)
   if (!normalized) {
-    warnUsage(
+    log(
+      'warn',
       'ConfigProvider',
       `theme.seed.${key} 非法（只接受不透明的 #rgb / #rrggbb / #rrggbbff）：${String(value)}，已回退默认值`
     )
@@ -455,7 +456,7 @@ export function derive(seed: ThemeSeed = {}, mode: ResolvedMode = 'light'): Them
 export function deriveColorStates(color: string, mode: ResolvedMode = 'light'): ColorStates {
   const normalized = normalizeSeedColor(color)
   if (!normalized) {
-    warnUsage('theme', `deriveColorStates 收到非法颜色：${String(color)}，已回退默认主色`)
+    log('warn', 'theme', `deriveColorStates 收到非法颜色：${String(color)}，已回退默认主色`)
     return deriveColorStates(DEFAULT_SEEDS.primary, mode)
   }
   const roles = colorRoles(normalized, mode)

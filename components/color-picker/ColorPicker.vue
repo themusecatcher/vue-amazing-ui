@@ -25,7 +25,7 @@ import { TinyColor, isReadable } from '@ctrl/tinycolor'
 import Popup from 'components/popup'
 import Input, { type InputProps } from 'components/input'
 import Button from 'components/button'
-import { FLOATING_LAYER_Z_INDEX, useSlotsExist, warnUsage } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, useSlotsExist, log } from 'components/utils'
 import type { FloatingPlacement } from 'components/utils'
 export type ColorPickerMode = 'rgb' | 'hsl' | 'hsv' | 'hex'
 export type ColorPickerAction = 'confirm' | 'clear'
@@ -930,7 +930,7 @@ function normalizeOutput(parsed: ParsedColor): string | undefined {
     if (/^[a-zA-Z]+$/.test(value) && new TinyColor(value).isValid) {
       value = getHexFromName(value)
     } else {
-      warnUsage('ColorPicker', `色板中的颜色 ${value} 无效，已忽略该色板`)
+      log('warn', 'ColorPicker', `色板中的颜色 ${value} 无效，已忽略该色板`)
       return undefined
     }
   }

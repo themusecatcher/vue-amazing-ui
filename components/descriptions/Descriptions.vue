@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, createTextVNode, isVNode, useSlots, Comment, Fragment, Text } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { useMediaQuery, useMounted, useSlotsExist, warnUsage } from 'components/utils'
+import { useMediaQuery, useMounted, useSlotsExist, log } from 'components/utils'
 import DescriptionsItem from './descriptions-item'
 export interface Responsive {
   xs?: number // <576px 响应式栅格
@@ -182,7 +182,7 @@ const cells = computed<CellData[]>(() => {
   const childNodes = flattenChildren(slots.default?.()).filter((node) => node.type !== Comment)
   const itemNodes = childNodes.filter((node) => node.type === DescriptionsItem)
   if (itemNodes.length !== childNodes.length) {
-    warnUsage('Descriptions', '仅支持 DescriptionsItem 作为子节点，其余节点已被忽略')
+    log('warn', 'Descriptions', '仅支持 DescriptionsItem 作为子节点，其余节点已被忽略')
   }
   return itemNodes.map((node, index) => {
     const itemProps = (node.props ?? {}) as Record<string, unknown>
@@ -224,7 +224,7 @@ const cells = computed<CellData[]>(() => {
 function fillSpan(cell: CellData, restCol: number): CellData {
   if (cell.rawSpan === undefined || cell.span > restCol) {
     if (cell.rawSpan !== undefined && cell.span > restCol) {
-      warnUsage('Descriptions', '同一行 span 之和超过 column，已自动收缩为剩余列数')
+      log('warn', 'Descriptions', '同一行 span 之和超过 column，已自动收缩为剩余列数')
     }
     return { ...cell, span: restCol }
   }

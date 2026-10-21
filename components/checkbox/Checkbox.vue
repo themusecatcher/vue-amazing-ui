@@ -1,172 +1,236 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, nextTick } from 'vue'
+import { computed, inject, ref, watch, watchEffect } from 'vue'
 import type { VNode } from 'vue'
 import { useSlotsExist, useWave } from 'components/utils'
-export interface Option {
-  label: string // 选项名
-  value: string | number // 选项值
-  disabled?: boolean // 是否禁用选项
-}
+import { checkboxGroupContextKey } from './context'
+import type { CheckboxChangeEvent, CheckboxValue } from './context'
 
 export interface Props {
-  options?: Option[] // 复选框选项数据
-  disabled?: boolean // 是否禁用
-  vertical?: boolean // 是否垂直排列
-  value?: (string | number)[] // (v-model) 当前选中的值，配合 options 使用
-  gap?: number | number[] // 多个复选框之间的间距；垂直排列时为垂直间距，单位 px；数组间距用于水平排列折行时：[水平间距, 垂直间距]
-  indeterminate?: boolean // 全选时的样式控制
   checked?: boolean // (v-model) 当前是否选中
+  value?: CheckboxValue // 本项的值；脱离组时随 change 事件回传，置于 CheckboxGroup 内时作为本项的身份标识
+  disabled?: boolean // 是否禁用
+  indeterminate?: boolean // 全选时的样式控制
+  autofocus?: boolean // 是否自动聚焦原生 input
+  name?: string // 原生 input 的表单字段名；置于 CheckboxGroup 内时以组的配置为准
+  id?: string // 原生 input 的 id
 }
 // 声明组件插槽类型
 export interface CheckboxSlots {
-  // options 模式下为每个选项提供作用域参数；children 透传模式下无真实数据，参数为 undefined
-  default?: (props: { option?: Option; label?: string; index?: number }) => VNode[]
+  default?: () => VNode[] // 选项名
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  options: () => [],
+  checked: false,
+  value: undefined,
   disabled: false,
-  vertical: false,
-  value: () => [],
-  gap: 8,
   indeterminate: false,
-  checked: false
+  autofocus: false,
+  name: undefined,
+  id: undefined
 })
 defineSlots<CheckboxSlots>()
 const checkboxChecked = ref<boolean>(false) // v-model:checked 是否选中标志
-const optionsCheckedValue = ref<(string | number)[]>([]) // v-model:value 已选中的选项值
-const { wave, startWave, endWave } = useWave() // 使用 v-model:checked 时的复选框动画选中效果标志
-const waveOptionsValue = ref<(string | number)[]>([]) // 使用 v-model:value 时的复选框动画选中效果标志
-const emits = defineEmits(['update:value', 'update:checked', 'change'])
+const { wave, startWave, endWave } = useWave() // 复选框动画选中效果标志
+const emits = defineEmits(['update:checked', 'change'])
 const slotsExist = useSlotsExist(['default'])
-// 选项总数
-const optionsAmount = computed(() => {
-  return props.options.length
-})
-const gapValue = computed(() => {
-  if (!props.vertical && Array.isArray(props.gap)) {
-    return `${props.gap[1]}px ${props.gap[0]}px`
+// 所在复选框组：置入组内时选中态、禁用态与事件出口改由组统一承载，脱离组时不读取
+const groupContext = inject(checkboxGroupContextKey, undefined)
+const singleInput = ref<HTMLInputElement>()
+// 程序化聚焦不匹配 :focus-visible（调用时最近的交互通常是鼠标），另置标志驱动焦点环，使 focus() 调用有可见反馈
+const exposedSingleFocused = ref<boolean>(false)
+// 是否作为组内单项使用：由组上下文是否存在判断
+const inGroupItem = computed(() => groupContext !== undefined)
+// 组内是否选中：以自身标识值与组内已选值比较；未提供标识值时不参与比较
+const groupChecked = computed(() => {
+  const target = props.value
+  if (!inGroupItem.value || target === undefined) {
+    return false
   }
-  return `${props.gap}px`
+  return groupContext?.value.value.includes(target) ?? false
 })
+// 选中态：组内由组决定，组外读自身 checked
+const mergedChecked = computed(() => (inGroupItem.value ? groupChecked.value : checkboxChecked.value))
+// 禁用态：组内叠加组的禁用，组外读自身 disabled
+const mergedDisabled = computed(() =>
+  inGroupItem.value ? groupContext?.disabled.value || props.disabled : props.disabled
+)
+// 表单字段名：组内以组的配置为准
+const mergedName = computed(() => (inGroupItem.value ? groupContext?.name.value : props.name))
 watchEffect(() => {
   checkboxChecked.value = props.checked
 })
-watchEffect(() => {
-  optionsCheckedValue.value = props.value
+// 半选是 DOM 属性而非 HTML 属性，须在原生 input 上设置；浏览器改写 checked 时会清掉它，故一并依赖选中态
+watch(
+  [() => props.indeterminate, mergedChecked, singleInput],
+  () => {
+    const input = singleInput.value
+    if (input) {
+      input.indeterminate = props.indeterminate
+    }
+  },
+  { flush: 'post' }
+)
+// 选中扩散环由选中态驱动：程序化改变选中值（受控回写 / 组内切换）同样播放，与点击来源无关
+watch(mergedChecked, (checked) => {
+  if (checked) {
+    startWave()
+  }
 })
-function checkDisabled(disabled: boolean | undefined): boolean {
-  if (disabled === undefined) {
-    return props.disabled
-  } else {
-    return disabled
+// 状态快照取本组件 props，原生事件与方法附在其上，与原生 input 的 change 同形态
+function buildChangeEvent(nativeEvent: Event, checked: boolean, value?: CheckboxValue): CheckboxChangeEvent {
+  return {
+    target: {
+      checked,
+      value,
+      name: mergedName.value,
+      disabled: mergedDisabled.value
+    },
+    stopPropagation: () => nativeEvent.stopPropagation(),
+    preventDefault: () => nativeEvent.preventDefault(),
+    nativeEvent
   }
 }
-function onChecked(): void {
-  startWave()
-  checkboxChecked.value = !checkboxChecked.value
-  emits('update:checked', checkboxChecked.value)
-  emits('change', checkboxChecked.value)
-}
-function onClick(value: string | number): void {
-  startOptionWave(value)
-  if (optionsCheckedValue.value.includes(value)) {
-    // 已选中
-    const newVal = optionsCheckedValue.value.filter((target: string | number) => target !== value)
-    optionsCheckedValue.value = newVal
-    emits('update:value', newVal)
-    emits('change', newVal)
-  } else {
-    // 未选中
-    const newVal = [...optionsCheckedValue.value, value]
-    optionsCheckedValue.value = newVal
-    emits('update:value', newVal)
-    emits('change', newVal)
+// 受控模式下浏览器已先行切换原生选中态，需按组件状态回写，避免二者不一致
+function syncInputChecked(event: Event, checked: boolean): void {
+  const { target } = event
+  if (target instanceof HTMLInputElement) {
+    target.checked = checked
   }
 }
-function startOptionWave(value: string | number): void {
-  if (waveOptionsValue.value.includes(value)) {
-    waveOptionsValue.value = waveOptionsValue.value.filter((optionValue: string | number) => optionValue !== value)
-    nextTick(() => {
-      waveOptionsValue.value.push(value)
-    })
-  } else {
-    waveOptionsValue.value.push(value)
+// 组外单项切换：自身受控，取消选中同样上报
+function onCheckedChange(event: Event): void {
+  const nextChecked = !checkboxChecked.value
+  checkboxChecked.value = nextChecked
+  emits('update:checked', nextChecked)
+  emits('change', nextChecked, buildChangeEvent(event, nextChecked, props.value))
+  syncInputChecked(event, nextChecked)
+}
+// 单项切换：组内选中集合由组维护，本项只上报新的选中态，避免同一次选择双出口。
+// 交互统一走原生 click（鼠标经外层 label 转发后事件目标仍是本 input），由此天然单点触发；
+// input 上的 `@click.stop` 同时拦掉这条转发点击的冒泡，否则使用方绑在组件根上的 click 会触发两次
+function onSingleClick(event: Event): void {
+  if (!inGroupItem.value) {
+    onCheckedChange(event)
+    return
+  }
+  const target = props.value
+  if (target === undefined) {
+    return
+  }
+  const nextChecked = !groupChecked.value
+  groupContext?.onChange(nextChecked, target, event)
+  syncInputChecked(event, nextChecked)
+}
+// 清除程序化聚焦标志：焦点真正离开原生 input 时（原生 blur）一并收尾，避免焦点环残留
+function clearExposedFocus(): void {
+  exposedSingleFocused.value = false
+}
+// 键盘聚焦：:focus-visible 无 JS 可读状态，在 focus 事件当下用 matches 判定后置位；
+// 鼠标点击与脚本调用 focus() 均不匹配该伪类，与容器上 :focus-visible 的 CSS 路径同口径
+function onInputFocus(event: Event): void {
+  const { target } = event
+  if (target instanceof HTMLInputElement && target.matches(':focus-visible')) {
+    exposedSingleFocused.value = true
   }
 }
-function onWaveOptionEnd(value: string | number): void {
-  waveOptionsValue.value = waveOptionsValue.value.filter((optionValue: string | number) => optionValue !== value)
+// 鼠标按下即撤销焦点环：浏览器对鼠标按下（含已聚焦元素被再次点击）不再给 :focus-visible，
+// 纯 CSS 方案下焦点环随之消失，class 方案需对齐该行为，避免 Tab 聚焦后点鼠标残留焦点环
+function onMouseDown(): void {
+  clearExposedFocus()
 }
+// 聚焦原生 input
+function focus(): void {
+  singleInput.value?.focus()
+  exposedSingleFocused.value = true
+}
+// 失焦原生 input
+function blur(): void {
+  clearExposedFocus()
+  singleInput.value?.blur()
+}
+defineExpose({ focus, blur })
 </script>
 <template>
-  <div
-    v-if="optionsAmount"
-    class="checkbox-wrap"
-    :class="{ 'checkbox-vertical': vertical }"
-    :style="`--checkbox-gap: ${gapValue}; `"
-    v-bind="$attrs"
-  >
-    <div
-      class="checkbox-container"
-      :class="{ 'checkbox-disabled': checkDisabled(option.disabled) }"
-      v-for="(option, index) in options"
-      :key="index"
-      @click="checkDisabled(option.disabled) ? () => false : onClick(option.value)"
-    >
-      <span class="checkbox-box" :class="{ 'checkbox-checked': optionsCheckedValue.includes(option.value) }">
-        <span
-          v-if="!checkDisabled(option.disabled)"
-          class="checkbox-wave"
-          :class="{ 'wave-active': waveOptionsValue.includes(option.value) }"
-          @animationend="onWaveOptionEnd(option.value)"
-        ></span>
-      </span>
-      <span class="checkbox-label">
-        <slot :option="option" :label="option.label" :index="index">{{ option.label }}</slot>
-      </span>
-    </div>
-  </div>
-  <div
-    v-else
+  <label
     class="checkbox-container"
-    :class="{ 'checkbox-disabled': disabled }"
-    @click="disabled ? () => false : onChecked()"
+    :class="{ 'checkbox-disabled': mergedDisabled, 'checkbox-focused': exposedSingleFocused }"
+    @mousedown="onMouseDown"
     v-bind="$attrs"
   >
+    <input
+      ref="singleInput"
+      class="checkbox-input"
+      type="checkbox"
+      :id="id"
+      :value="value"
+      :name="mergedName"
+      :checked="mergedChecked"
+      :disabled="mergedDisabled"
+      :autofocus="autofocus"
+      @click.stop.prevent="onSingleClick($event)"
+      @focus="onInputFocus"
+      @blur="clearExposedFocus"
+    />
     <span
       class="checkbox-box"
       :class="{
-        'checkbox-checked': checkboxChecked && !indeterminate,
+        'checkbox-checked': mergedChecked && !indeterminate,
         'checkbox-indeterminate': indeterminate
       }"
     >
-      <span v-if="!disabled" class="checkbox-wave" :class="{ 'wave-active': wave }" @animationend="endWave"></span>
+      <span
+        v-if="!mergedDisabled"
+        class="checkbox-wave"
+        :class="{ 'wave-active': wave && mergedChecked }"
+        @animationend="endWave"
+      ></span>
     </span>
     <span v-if="slotsExist.default" class="checkbox-label">
       <slot></slot>
     </span>
-  </div>
+  </label>
 </template>
 <style lang="less" scoped>
-.checkbox-wrap {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: var(--checkbox-gap);
-}
-.checkbox-vertical {
-  flex-direction: column;
-  flex-wrap: nowrap;
+/* 原生 input 承载语义与键盘操作，视觉上隐藏；鼠标交互由外层 label 的转发行为承担 */
+.checkbox-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
 }
 .checkbox-container {
+  position: relative;
   display: inline-flex;
   align-items: baseline;
   cursor: pointer;
   color: var(--va-text-color-1);
   font-size: 14px;
   line-height: 1.5714285714285714;
+  /* 零宽行内伪元素参与基线对齐：容器被指定固定高度（如逐项内联 height）时，方框与文字仍对齐于同一基线 */
+  &::after {
+    display: inline-block;
+    width: 0;
+    overflow: hidden;
+    content: '\a0';
+  }
+  /* 键盘聚焦走 :focus-visible（input 的 focus 事件同步置位 .checkbox-focused，双路径兜底）；脚本调用 focus() 不匹配该伪类，由容器自身的 .checkbox-focused 兜底显示焦点环 */
+  .checkbox-input:focus-visible + .checkbox-box,
+  &.checkbox-focused .checkbox-box {
+    box-shadow: 0 0 0 2px var(--va-cp-checkbox-focus-shadow, var(--va-focus-shadow));
+  }
   &:not(.checkbox-disabled):hover {
     .checkbox-box {
       border-color: var(--va-cp-checkbox-primary-color, var(--va-primary-color));
+    }
+    /* 选中态 hover：底色浅一档、边框转透明，由实心色块铺满整块 */
+    .checkbox-checked {
+      background-color: var(--va-cp-checkbox-primary-color-hover, var(--va-primary-color-hover));
+      border-color: transparent;
     }
   }
   .checkbox-box {
@@ -200,38 +264,42 @@ function onWaveOptionEnd(value: string | number): void {
         all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6),
         opacity 0.1s;
     }
+    /* 选中扩散外环：1.6 倍外扩的描边环，扩散同时淡出 */
     .checkbox-wave {
       position: absolute;
       pointer-events: none;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+      top: -1px;
+      right: -1px;
+      bottom: -1px;
+      left: -1px;
+      box-sizing: border-box;
       animation-iteration-count: 1;
-      animation-duration: 0.6s;
-      animation-timing-function: cubic-bezier(0, 0, 0.2, 1), cubic-bezier(0, 0, 0.2, 1);
+      animation-duration: 0.3s;
+      animation-timing-function: ease-in-out;
       border-radius: inherit;
     }
     .wave-active {
       z-index: 1;
-      animation-name: waveSpread, waveOpacity;
-      @keyframes waveSpread {
+      /* 默认不可见：环由选中态驱动，程序化选中时鼠标未必在项上 */
+      visibility: hidden;
+      border: 2px solid var(--va-cp-checkbox-primary-color, var(--va-primary-color));
+      animation-name: antCheckboxEffect;
+      animation-fill-mode: backwards;
+      @keyframes antCheckboxEffect {
         from {
-          box-shadow: 0 0 0.5px 0 var(--va-cp-checkbox-primary-color, var(--va-primary-color));
+          transform: scale(1);
+          opacity: 0.5;
         }
         to {
-          box-shadow: 0 0 0.5px 5px var(--va-cp-checkbox-primary-color, var(--va-primary-color));
-        }
-      }
-      @keyframes waveOpacity {
-        from {
-          opacity: 0.6;
-        }
-        to {
+          transform: scale(1.6);
           opacity: 0;
         }
       }
     }
+  }
+  /* 悬停时环可见：点击导致的选中必然伴随悬停，日常表现与直接播放一致 */
+  &:hover .checkbox-box .wave-active {
+    visibility: visible;
   }
   .checkbox-checked {
     background-color: var(--va-cp-checkbox-primary-color, var(--va-primary-color));
@@ -269,6 +337,10 @@ function onWaveOptionEnd(value: string | number): void {
       border-color: var(--va-text-color-disabled);
       animation-name: none;
     }
+  }
+  /* 半选禁用：实心小方块随禁用态去饱和，与禁用文字同色 */
+  .checkbox-indeterminate::after {
+    background-color: var(--va-text-color-disabled);
   }
 }
 </style>

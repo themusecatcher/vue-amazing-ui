@@ -2,7 +2,7 @@
 import { ref, watchEffect } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Button, { type ButtonProps } from 'components/button'
-import { debounce } from 'components/utils'
+import { debounce, log } from 'components/utils'
 export interface Item {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
   disabled?: boolean // 是否禁用展开收起
@@ -154,7 +154,7 @@ function onCopy(index: number, key: string | number) {
     },
     (err) => {
       /* clipboard write failed */
-      console.warn('[vue-amazing-ui] Collapse: 复制失败', err)
+      log('error', 'Collapse', '复制失败', err)
     }
   )
 }

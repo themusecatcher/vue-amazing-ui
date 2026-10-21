@@ -227,7 +227,7 @@ function onClick(e: Event) {
     </Space>
     <h2 class="mt30 mb10">按钮尺寸</h2>
     <Space vertical>
-      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Space>
         <Button :size="size">Default Button</Button>
         <Button :size="size" type="reverse">Reverse Button</Button>
@@ -356,7 +356,7 @@ function onClick(e: Event) {
     <h2 class="mt30 mb10">加载中状态</h2>
     <Space vertical>
       <Space align="center"> Loading state:<Switch v-model:value="loading" /> </Space>
-      <Space align="center"> Loading type:<Radio :options="loadingOptions" v-model:value="loadingType" /> </Space>
+      <Space align="center"> Loading type:<RadioGroup :options="loadingOptions" v-model:value="loadingType" /> </Space>
       <Space>
         <Button :loading="loading" :loading-type="loadingType">Default Button</Button>
         <Button type="reverse" :loading="loading" :loading-type="loadingType">Reverse Button</Button>

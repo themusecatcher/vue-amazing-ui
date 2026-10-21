@@ -13,20 +13,20 @@ import {
   startOfMonth,
   startOfYear
 } from 'date-fns'
-import Select, { type SelectProps } from 'components/select'
-import Radio, { type RadioProps } from 'components/radio'
+import Select, { type SelectOption, type SelectProps } from 'components/select'
+import { RadioGroup, type RadioGroupOption, type RadioGroupProps } from 'components/radio'
 import {
   formatTimestamp,
+  handlePanelKeydown,
   isMonthFullyDisabled,
   isSameDayTimestamp,
   isSameMonthTimestamp,
   isYearFullyDisabled,
   parseTimestamp,
-  startOfDayTimestamp
-} from 'components/picker/date-utils'
-import { handlePanelKeydown, type PickerKeydownHandlers } from 'components/picker/keyboard'
+  startOfDayTimestamp,
+  type PickerKeydownHandlers
+} from 'components/picker'
 import { useSlotsExist } from 'components/utils'
-import type { SelectOption, RadioOption } from 'vue-amazing-ui'
 export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
 export type DefaultWeek = '一' | '二' | '三' | '四' | '五' | '六' | '日'
 
@@ -48,7 +48,7 @@ export interface Props {
   monthFormat?: (month: number, timestamp: number) => string // 自定义月展示格式
   yearSelectProps?: SelectProps // 年选择器 props，参考 Select 组件 Props
   monthSelectProps?: SelectProps // 月选择器 props，参考 Select 组件 Props
-  modeRadioProps?: RadioProps // 模式切换器 props，参考 Radio 组件 Props
+  modeRadioProps?: RadioGroupProps // 模式切换器 props，参考 RadioGroup 组件 Props
 }
 // 头部整体替换插槽的入参：当前面板年月 / 模式、当前选中值，以及写回选中值与切换模式的回调
 export interface HeaderFullSlotProps {
@@ -151,7 +151,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (todayTimer) clearInterval(todayTimer)
 })
-const modeOptions = ref<RadioOption[]>([
+const modeOptions = ref<RadioGroupOption[]>([
   {
     label: '月',
     value: 'month'
@@ -666,9 +666,9 @@ function onKeydown(event: KeyboardEvent): void {
           @change="onMonthSelectChanged"
           v-bind="monthSelectProps"
         />
-        <Radio
+        <RadioGroup
           class="calendar-mode-radio"
-          :button-size="display === 'card' ? 'small' : 'middle'"
+          :size="display === 'card' ? 'small' : 'middle'"
           :options="modeOptions"
           v-model:value="calendarMode"
           button

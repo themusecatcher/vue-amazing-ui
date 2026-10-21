@@ -293,7 +293,7 @@ function enterLoading2() {
     </div>
     <h2 class="mt30 mb10">加载中状态</h2>
     <p class="mb10">添加 <code>loading</code> 属性即可让按钮处于加载状态，最后两个按钮演示点击后进入加载状态。</p>
-    <Space direction="vertical">
+    <Space vertical>
       <DropdownButton :menus="buttonMenus" type="primary" loading>Submit</DropdownButton>
       <DropdownButton :menus="buttonMenus" type="primary" size="small" loading>Submit</DropdownButton>
       <DropdownButton :menus="buttonMenus" type="primary" :loading="loading1" @click="enterLoading1">

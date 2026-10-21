@@ -12,10 +12,9 @@
 
 import { computed, inject, provide, watch } from 'vue'
 import type { ComputedRef } from 'vue'
-import { derive, deriveColorStates, deriveFocusShadow, normalizeSeedColor } from '../theme'
+import { COMPONENT_VARS_BY_COMPONENT, derive, deriveColorStates, deriveFocusShadow, normalizeSeedColor } from '../theme'
 import type { ResolvedMode, ThemeSeed, ThemeSnapshot } from '../theme'
-import { COMPONENT_VARS_BY_COMPONENT } from '../theme/component-vars.js'
-import { isDevEnv, warnUsage } from '../utils/warn'
+import { isDevEnv, log } from '../utils/log'
 import { THEME_SEED_KEY, THEME_SNAPSHOT_KEY } from './context'
 import { COMPONENT_THEME_SUPPORT, componentKeyToKebab } from './theme-config'
 import type { ComponentThemeConfig, ThemeConfig } from './theme-config'
@@ -63,7 +62,8 @@ export function buildComponentVars(components: ThemeConfig['components'], mode: 
     const normalizedPrimary = normalizeSeedColor(primary)
     if (!normalizedPrimary) {
       if (isDevEnv()) {
-        warnUsage(
+        log(
+          'warn',
           'ConfigProvider',
           `theme.components.${component}.primaryColor 非法（只接受不透明的 #rgb / #rrggbb / #rrggbbff）：${String(primary)}，已忽略该组件配置`
         )
@@ -143,7 +143,8 @@ export function useThemeSeed(options: ThemeSeedScopeOptions): ThemeSeedScope {
           return
         }
         warnedComponents.add(component)
-        warnUsage(
+        log(
+          'warn',
           'ConfigProvider',
           `theme.components.${component} 暂不支持组件级主色（支持清单见组件级令牌文档），请改用 --va-${componentKeyToKebab(component)}-* 令牌或嵌套作用域`
         )

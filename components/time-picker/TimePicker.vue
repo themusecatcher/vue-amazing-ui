@@ -3,11 +3,11 @@ import { computed, nextTick, onBeforeUnmount, ref, useSlots, watch } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Button from 'components/button'
 import Popup from 'components/popup'
-import PickerIcon from 'components/picker/PickerIcon.vue'
-import PickerPanel from 'components/picker/PickerPanel.vue'
-import PickerTrigger from 'components/picker/PickerTrigger.vue'
-import TimePanel from 'components/picker/TimePanel.vue'
 import {
+  PickerIcon,
+  PickerPanel,
+  PickerTrigger,
+  TimePanel,
   formatTimestamp,
   getHourNumber,
   getInputSize,
@@ -15,22 +15,20 @@ import {
   getMinuteNumber,
   getSecondNumber,
   mergeTimeStep,
+  PANEL_NAV_KEYS,
   parseTimestamp,
-  setTimeTimestamp
-} from 'components/picker/date-utils'
-import { PANEL_NAV_KEYS } from 'components/picker/keyboard'
-import type {
-  PickerDisabledTime,
-  PickerDisabledTimeUnits,
-  PickerFormattedValue,
-  PickerRangeDisabledTime,
-  PickerRangeFormattedValue,
-  PickerRangeSide,
-  PickerRangeValue,
-  PickerSize,
-  PickerStatus,
-  PickerTimePanelProps,
-  PickerValue
+  setTimeTimestamp,
+  type PickerDisabledTime,
+  type PickerDisabledTimeUnits,
+  type PickerFormattedValue,
+  type PickerRangeDisabledTime,
+  type PickerRangeFormattedValue,
+  type PickerRangeSide,
+  type PickerRangeValue,
+  type PickerSize,
+  type PickerStatus,
+  type PickerTimePanelProps,
+  type PickerValue
 } from 'components/picker'
 import type { FloatingPlacement } from 'components/utils'
 import { FLOATING_LAYER_Z_INDEX, useSlotsExist } from 'components/utils'

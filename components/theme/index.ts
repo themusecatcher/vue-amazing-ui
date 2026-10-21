@@ -19,3 +19,12 @@ export {
 export type { ColorStates, ResolvedSeeds, SeedKey, ThemeSeed } from './derive'
 export { MODE_ATTRIBUTE, THEME_VAR_NAMES } from './vars'
 export type { ResolvedMode, ThemeMode, ThemeSnapshot, ThemeVarName, ThemeVars } from './vars'
+export {
+  COMPONENT_THEME_NAMES,
+  COMPONENT_VAR_NAMES,
+  COMPONENT_VARS,
+  COMPONENT_VARS_BY_COMPONENT,
+  THEME_COMPONENTS,
+  THEME_COMPONENT_KEYS
+} from './component-vars.js'
+export type { ComponentThemeState, ComponentVarMeta, ThemeComponentKey, ThemeComponentMeta } from './component-vars.js'

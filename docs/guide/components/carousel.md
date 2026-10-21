@@ -387,7 +387,7 @@ function clickImage(image: CarouselImage) {
 
 ## 指示点位置
 
-<Radio :options="positionOptions" v-model:value="dotPosition" button button-style="solid" />
+<RadioGroup :options="positionOptions" v-model:value="dotPosition" button button-style="solid" />
 <br/>
 <br/>
 <Carousel :images="images" :height="450" autoplay :dotPosition="dotPosition" />
@@ -444,7 +444,7 @@ const positionOptions = [
 const dotPosition = ref<CarouselProps['dotPosition']>('top')
 </script>
 <template>
-  <Radio :options="positionOptions" v-model:value="dotPosition" button button-style="solid" />
+  <RadioGroup :options="positionOptions" v-model:value="dotPosition" button button-style="solid" />
   <br />
   <br />
   <Carousel :images="images" :height="450" autoplay :dotPosition="dotPosition" />
@@ -541,7 +541,7 @@ const images = ref<CarouselImage[]>([
 
 ## 过渡效果
 
-<Radio :options="effectOptions" v-model:value="effect" button button-style="solid" />
+<RadioGroup :options="effectOptions" v-model:value="effect" button button-style="solid" />
 <br />
 <br />
 <Carousel :images="images" :height="450" :effect="effect" :fade-duration="1500" />
@@ -590,7 +590,7 @@ const effectOptions = [
 const effect = ref<CarouselProps['effect']>('fade')
 </script>
 <template>
-  <Radio :options="effectOptions" v-model:value="effect" button button-style="solid" />
+  <RadioGroup :options="effectOptions" v-model:value="effect" button button-style="solid" />
   <br />
   <br />
   <Carousel :images="images" :height="450" :effect="effect" :fade-duration="1500" />
@@ -601,7 +601,7 @@ const effect = ref<CarouselProps['effect']>('fade')
 
 ## 鼠标经过指示点切换轮播图
 
-<Radio :options="triggerOptions" v-model:value="dotTrigger" button button-style="solid" />
+<RadioGroup :options="triggerOptions" v-model:value="dotTrigger" button button-style="solid" />
 <br />
 <br />
 <Carousel :images="images" :height="450" :dot-trigger="dotTrigger" />
@@ -650,7 +650,7 @@ const triggerOptions = [
 const dotTrigger = ref<CarouselProps['dotTrigger']>('hover')
 </script>
 <template>
-  <Radio :options="triggerOptions" v-model:value="dotTrigger" button button-style="solid" />
+  <RadioGroup :options="triggerOptions" v-model:value="dotTrigger" button button-style="solid" />
   <br />
   <br />
   <Carousel :images="images" :height="450" :dot-trigger="dotTrigger" />
@@ -666,7 +666,7 @@ _`slideFunction` 支持缓动预设名、三次贝塞尔控制点数组与缓动
 <br/>
 
 <Space>
-  <Radio :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
+  <RadioGroup :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
   <Select
     v-if="slideEasingType === 'preset'"
     :options="slideEasingPresetOptions"
@@ -726,7 +726,7 @@ const slideEasing = computed(() => (slideEasingType.value === 'preset' ? slideEa
 </script>
 <template>
   <Space>
-    <Radio :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
+    <RadioGroup :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
     <Select
       v-if="slideEasingType === 'preset'"
       :options="slideEasingPresetOptions"
@@ -749,7 +749,7 @@ _`fadeFunction` 可传四个三次贝塞尔控制点（自动转为 `CSS` `cubic
 
 <br/>
 
-<Radio :options="fadeEasingTypeOptions" v-model:value="fadeEasingType" button button-style="solid" />
+<RadioGroup :options="fadeEasingTypeOptions" v-model:value="fadeEasingType" button button-style="solid" />
 <br />
 <br />
 <Carousel :images="images" :height="450" effect="fade" :fade-duration="1500" :fade-function="fadeEasing" />
@@ -797,7 +797,7 @@ const fadeEasing = computed<CarouselProps['fadeFunction']>(() =>
 )
 </script>
 <template>
-  <Radio :options="fadeEasingTypeOptions" v-model:value="fadeEasingType" button button-style="solid" />
+  <RadioGroup :options="fadeEasingTypeOptions" v-model:value="fadeEasingType" button button-style="solid" />
   <br />
   <br />
   <Carousel :images="images" :height="450" effect="fade" :fade-duration="1500" :fade-function="fadeEasing" />
@@ -1593,7 +1593,7 @@ _`currentIndex` 为受控属性，留空时由组件自行维护当前页，设�
     </Col>
     <Col :span="6">
       <Space gap="small" vertical>
-        effect：<Radio :options="effectOptions" v-model:value="state.effect" button button-style="solid" />
+        effect：<RadioGroup :options="effectOptions" v-model:value="state.effect" button button-style="solid" />
       </Space>
     </Col>
     <Col :span="6">
@@ -1652,7 +1652,7 @@ _`currentIndex` 为受控属性，留空时由组件自行维护当前页，设�
     <Col :span="6">
       <Space gap="small" vertical>
         dotTrigger：
-        <Radio :options="triggerOptions" v-model:value="state.dotTrigger" button button-style="solid" />
+        <RadioGroup :options="triggerOptions" v-model:value="state.dotTrigger" button button-style="solid" />
       </Space>
     </Col>
     <Col :span="6">
@@ -1886,7 +1886,7 @@ watch(
       </Col>
       <Col :span="6">
         <Space gap="small" vertical>
-          effect：<Radio :options="effectOptions" v-model:value="state.effect" button button-style="solid" />
+          effect：<RadioGroup :options="effectOptions" v-model:value="state.effect" button button-style="solid" />
         </Space>
       </Col>
       <Col :span="6">
@@ -1945,7 +1945,7 @@ watch(
       <Col :span="6">
         <Space gap="small" vertical>
           dotTrigger：
-          <Radio :options="triggerOptions" v-model:value="state.dotTrigger" button button-style="solid" />
+          <RadioGroup :options="triggerOptions" v-model:value="state.dotTrigger" button button-style="solid" />
         </Space>
       </Col>
       <Col :span="6">

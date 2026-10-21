@@ -8,8 +8,8 @@
  * 这里的函数全部是纯函数（不读写 DOM、不依赖 Vue），可直接单测。
  */
 
-import type { ThemeMode, ThemeSeed } from '../theme'
-import { THEME_COMPONENT_KEYS, type ThemeComponentKey } from '../theme/component-vars.js'
+import { THEME_COMPONENT_KEYS } from '../theme'
+import type { ThemeComponentKey, ThemeMode, ThemeSeed } from '../theme'
 
 export type { ThemeComponentKey }
 

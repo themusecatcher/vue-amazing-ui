@@ -305,7 +305,7 @@ function onDecline(scale: number) {
 ## 自定义边缘形状
 
 <Flex vertical>
-  <Radio :options="lineCapOptions" v-model:value="lineCap" button button-style="solid" />
+  <RadioGroup :options="lineCapOptions" v-model:value="lineCap" button button-style="solid" />
   <Progress
     :line-size="20"
     :line-color="{
@@ -372,7 +372,7 @@ function onDecline(scale: number) {
 </script>
 <template>
   <Flex vertical>
-    <Radio :options="lineCapOptions" v-model:value="lineCap" button button-style="solid" />
+    <RadioGroup :options="lineCapOptions" v-model:value="lineCap" button button-style="solid" />
     <Progress
       :line-size="20"
       :line-color="{

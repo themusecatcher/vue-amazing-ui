@@ -2,6 +2,7 @@ import { ref, toValue, computed, watch, onBeforeUnmount } from 'vue'
 import type { CSSProperties, MaybeRefOrGetter, Ref } from 'vue'
 import { beforeNextFrameOnce } from 'seemly'
 import { getScrollParent } from './dom'
+import { log } from './log'
 /**
  * 浮层定位工具集（组件库内部使用，不对外导出）
  *
@@ -368,7 +369,7 @@ function getPanelBorderBoxSize(
     }
   } catch (err) {
     // 测量失败只影响位移取整（1px 内偏差），属预期内降级：用 debug 级别，避免污染业务方控制台
-    console.debug('[vue-amazing-ui] position: 浮层精确尺寸测量失败，跳过位移取整', err)
+    log('debug', 'position', '浮层精确尺寸测量失败，跳过位移取整', err)
     return fallback
   }
 }
@@ -1146,7 +1147,7 @@ export function useFloating(panelRef: Ref<HTMLElement | null>, options: UseFloat
           if (!disposed && toValue(enabled)) applyPosition()
         })
         // 检测失败只影响「字体加载后的重对齐」，属预期内降级：用 debug 级别，避免污染业务方控制台
-        .catch((err) => console.debug('[vue-amazing-ui] useFloating: 字体就绪检测失败，跳过字体触发的重对齐', err))
+        .catch((err) => log('debug', 'useFloating', '字体就绪检测失败，跳过字体触发的重对齐', err))
     }
   }
 

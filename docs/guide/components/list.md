@@ -341,7 +341,7 @@ const bordered = ref(true)
 ## 三种尺寸
 
 <Flex vertical>
-  <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
   <Row :gutter="32">
     <Col :span="12">
       <List bordered :size="size">
@@ -426,7 +426,7 @@ const size = ref('middle')
 </script>
 <template>
   <Flex vertical>
-    <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
     <Row :gutter="32">
       <Col :span="12">
         <List bordered :size="size">

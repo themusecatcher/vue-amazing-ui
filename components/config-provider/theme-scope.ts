@@ -26,7 +26,7 @@ import type { ComputedRef, CSSProperties } from 'vue'
 import { THEME_VAR_NAMES } from '../theme'
 import type { ResolvedMode } from '../theme'
 import { injectFromChain } from '../utils'
-import { isDevEnv, warnUsage } from '../utils/warn'
+import { isDevEnv, log } from '../utils/log'
 import {
   SKIP_THEME_WRITE_KEY,
   THEME_DOM_SCOPE_KEY,
@@ -236,7 +236,8 @@ export function useThemeScope(options: ThemeScopeOptions): ThemeScope {
     !hasGlobalConfig(options.getTheme())
   ) {
     // 只有组件级配置、没有 seed / mode：不参与 <html> 写入权仲裁，否则会清掉别的实例写入的全局变量
-    warnUsage(
+    log(
+      'warn',
       'ConfigProvider',
       'theme.components 在 abstract: true 时需与 seed / mode 同层才能写入 <html>；请补充 seed / mode，或改用 abstract: false'
     )
@@ -244,7 +245,7 @@ export function useThemeScope(options: ThemeScopeOptions): ThemeScope {
 
   if (isDevEnv() && ancestorScope && options.getAbstract() && hasThemeConfig(options.getTheme())) {
     // 嵌套在已生效的主题作用域内且无包裹元素：没有可写变量与 mode 的节点，只能随外层生效
-    warnUsage('ConfigProvider', '嵌套实例需传 abstract: false 才能隔离主题（当前无包裹元素，已随外层生效）')
+    log('warn', 'ConfigProvider', '嵌套实例需传 abstract: false 才能隔离主题（当前无包裹元素，已随外层生效）')
   }
 
   return { scopeStyle, scopeMode }

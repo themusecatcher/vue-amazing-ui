@@ -55,6 +55,16 @@ function onEnter(e: KeyboardEvent) {
       <Input :width="200" v-model:value="value" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
       <Input :width="200" v-model:value.lazy="lazyValue" placeholder="Lazy usage" @change="onChange" @enter="onEnter" />
     </Space>
+    <h2 class="mt30 mb10">未受控输入与行内混排</h2>
+    <p class="mb10">未绑定 <code>v-model</code> 时输入内容由组件自行承载，不会因悬浮 / 聚焦等状态变化丢失</p>
+    <Space gap="small" vertical :width="300">
+      <Input :width="280" placeholder="未绑定 v-model，输入后移开鼠标内容仍保留" />
+    </Space>
+    <p class="mb10 mt10">与文字混排时按基线对齐，与原生 <code>input</code> 同口径</p>
+    <div style="display: flex; align-items: center; height: 32px; gap: 8px">
+      <span>姓名</span>
+      <Input :width="200" placeholder="与文字同行" />
+    </div>
     <h2 class="mt30 mb10">前缀和后缀</h2>
     <Space gap="small" vertical :width="300">
       <Input v-model:value="value" placeholder="Basic usage" prefix="￥" suffix="RMB" />
@@ -80,7 +90,7 @@ function onEnter(e: KeyboardEvent) {
     </Space>
     <h2 class="mt30 mb10">三种大小</h2>
     <Space gap="small" vertical :width="240">
-      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Input v-model:value="value" :size="size" placeholder="Basic usage" />
       <Input v-model:value="value" :size="size" placeholder="Basic usage">
         <template #prefix>

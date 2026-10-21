@@ -3,7 +3,7 @@ import { ref, computed, watch, onMounted, onBeforeUnmount, inject } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
 import Tooltip, { type TooltipProps } from 'components/tooltip'
-import { useSlotsExist, useOptionsSupported, getScrollParent, warnUsage } from 'components/utils'
+import { useSlotsExist, useOptionsSupported, getScrollParent, log } from 'components/utils'
 
 export interface Props {
   icon?: VNode | (() => VNode) // 自定义图标，支持 VNode / 渲染函数；插槽形态请用 #icon
@@ -132,7 +132,7 @@ function observeScroll(): void {
     scrollTarget.value = resolveListenTarget()
   }
   if (!scrollTarget.value) {
-    warnUsage('BackTop', '未找到容器元素，滚动监听未启用')
+    log('warn', 'BackTop', '未找到容器元素，滚动监听未启用')
   }
   scrollEventTarget = getScrollEventTarget()
   scrollEventTarget?.addEventListener('scroll', updateScrollTop, passiveSupported.value ? { passive: true } : undefined)

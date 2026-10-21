@@ -1269,7 +1269,7 @@ const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
 ## 三种大小
 
 <Space vertical>
-  <Radio v-model:value="sizeValue" :options="sizeOptions" button button-style="solid" />
+  <RadioGroup v-model:value="sizeValue" :options="sizeOptions" button button-style="solid" />
   <DatePicker v-model:value="sizeCaseValue" :size="sizeValue" placeholder="请选择日期" />
   <DatePicker v-model:value="sizeMonthValue" type="month" :size="sizeValue" placeholder="请选择月份" />
   <DatePicker
@@ -1301,7 +1301,7 @@ const sizeOptions: Array<{ label: string; value: NonNullable<DatePickerProps['si
 </script>
 <template>
   <Space vertical>
-    <Radio v-model:value="sizeValue" :options="sizeOptions" button button-style="solid" />
+    <RadioGroup v-model:value="sizeValue" :options="sizeOptions" button button-style="solid" />
     <DatePicker v-model:value="sizeCaseValue" :size="sizeValue" placeholder="请选择日期" />
     <DatePicker v-model:value="sizeMonthValue" type="month" :size="sizeValue" placeholder="请选择月份" />
     <DatePicker

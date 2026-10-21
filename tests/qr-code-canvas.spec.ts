@@ -298,11 +298,12 @@ describe('QRCode image 渲染', () => {
 
 describe('QRCode 编码异常', () => {
   it('内容超出容量时应告警并降级为空渲染', async () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    // 编码失败属「功能不可用」，统一出口按 error 级输出（见 components/utils/log.ts 的级别即环境策略）
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const wrapper = mount(QRCode, { props: { value: 'a'.repeat(3000) } })
     await flushPromises()
 
-    expect(warnSpy).toHaveBeenCalled()
+    expect(errorSpy).toHaveBeenCalled()
     // 编码失败：svg 空渲染（前景路径为空），且不得向渲染层抛错
     const svg = wrapper.find('svg.qr-code-svg')
     expect(svg.exists()).toBe(true)

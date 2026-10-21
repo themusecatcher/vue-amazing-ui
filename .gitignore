@@ -21,8 +21,9 @@ coverage
 *.local
 .npmrc
 
-# vitepress cache and build output
+# vitepress 运行时产物：cache 依赖预构建、.temp 页面数据与 SSR 临时目录、dist 构建输出
 docs/.vitepress/cache
+docs/.vitepress/.temp
 docs/.vitepress/dist
 
 # Editor directories and files

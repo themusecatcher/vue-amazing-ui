@@ -487,7 +487,7 @@ const disabled = ref(true)
 ## 按钮尺寸
 
 <Space vertical>
-  <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
   <Space>
     <Button :size="size">Default Button</Button>
     <Button :size="size" type="reverse">Reverse Button</Button>
@@ -589,7 +589,7 @@ const size = ref('middle')
 </script>
 <template>
   <Space vertical>
-    <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
     <Space>
       <Button :size="size">Default Button</Button>
       <Button :size="size" type="reverse">Reverse Button</Button>
@@ -801,7 +801,7 @@ const customLoading = ref(false)
 
 <Space vertical>
   <Space align="center"> Loading state:<Switch v-model:value="loading" /> </Space>
-  <Space align="center"> Loading type:<Radio :options="loadingOptions" v-model:value="loadingType" /> </Space>
+  <Space align="center"> Loading type:<RadioGroup :options="loadingOptions" v-model:value="loadingType" /> </Space>
   <Space>
     <Button :loading="loading" :loading-type="loadingType">Default Button</Button>
     <Button type="reverse" :loading="loading" :loading-type="loadingType">Reverse Button</Button>
@@ -885,7 +885,7 @@ const loadingType = ref('dynamic')
 <template>
   <Space vertical>
     <Space align="center"> Loading state:<Switch v-model:value="loading" /> </Space>
-    <Space align="center"> Loading type:<Radio :options="loadingOptions" v-model:value="loadingType" /> </Space>
+    <Space align="center"> Loading type:<RadioGroup :options="loadingOptions" v-model:value="loadingType" /> </Space>
     <Space>
       <Button :loading="loading" :loading-type="loadingType">Default Button</Button>
       <Button type="reverse" :loading="loading" :loading-type="loadingType">Reverse Button</Button>

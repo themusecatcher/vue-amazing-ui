@@ -14,7 +14,7 @@ import { computed, ref } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
 import { MODE_ATTRIBUTE } from '../theme'
 import type { ResolvedMode, ThemeSeed, ThemeSnapshot } from '../theme'
-import { isDevEnv, warnUsage } from '../utils/warn'
+import { isDevEnv, log } from '../utils/log'
 import { hasGlobalConfig, hasSeedValue, hasThemeConfig } from './theme-config'
 import type { ThemeConfig } from './theme-config'
 
@@ -112,7 +112,8 @@ export function createGlobalWriter(options: GlobalWriterOptions): GlobalWriter {
     isGlobalOwner.value = shouldOwn
     if (shouldOwn) {
       if (isDevEnv() && globalWriters.length > 1) {
-        warnUsage(
+        log(
+          'warn',
           'ConfigProvider',
           '检测到多个顶层主题实例同时存在，只有最后挂载者写入 <html>；嵌套换肤请改用 abstract: false'
         )

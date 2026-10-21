@@ -250,7 +250,7 @@ watch(
     <h2 class="mt30 mb10">自动轮播</h2>
     <Carousel :images="images" :width="800" :height="450" autoplay @click="clickImage" />
     <h2 class="mt30 mb10">指示点位置</h2>
-    <Radio :options="positionOptions" v-model:value="dotPosition" button button-style="solid" />
+    <RadioGroup :options="positionOptions" v-model:value="dotPosition" button button-style="solid" />
     <br />
     <br />
     <Carousel :images="images" :width="800" :height="450" autoplay :dotPosition="dotPosition" />
@@ -259,12 +259,12 @@ watch(
     <h2 class="mt30 mb10">移入暂停</h2>
     <Carousel :images="images" :width="800" :height="450" autoplay pause-on-mouse-enter dotPosition="right" />
     <h2 class="mt30 mb10">过渡效果</h2>
-    <Radio :options="effectOptions" v-model:value="effect" button button-style="solid" />
+    <RadioGroup :options="effectOptions" v-model:value="effect" button button-style="solid" />
     <br />
     <br />
     <Carousel :images="images" :width="800" :height="450" :effect="effect" :fade-duration="1500" />
     <h2 class="mt30 mb10">鼠标经过指示点切换轮播图</h2>
-    <Radio :options="triggerOptions" v-model:value="dotTrigger" button button-style="solid" />
+    <RadioGroup :options="triggerOptions" v-model:value="dotTrigger" button button-style="solid" />
     <br />
     <br />
     <Carousel :images="images" :width="800" :height="450" :dot-trigger="dotTrigger" />
@@ -274,7 +274,7 @@ watch(
       <code>TransitionPresets</code> 一致
     </p>
     <Space>
-      <Radio :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
+      <RadioGroup :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
       <Select
         v-if="slideEasingType === 'preset'"
         :options="slideEasingPresetOptions"
@@ -291,7 +291,7 @@ watch(
       <code>fadeFunction</code> 可传四个三次贝塞尔控制点（自动转为 CSS <code>cubic-bezier()</code> 写法），也可直接传
       CSS <code>transition-timing-function</code> 写法
     </p>
-    <Radio :options="fadeEasingTypeOptions" v-model:value="fadeEasingType" button button-style="solid" />
+    <RadioGroup :options="fadeEasingTypeOptions" v-model:value="fadeEasingType" button button-style="solid" />
     <br />
     <br />
     <Carousel
@@ -437,7 +437,7 @@ watch(
         </Col>
         <Col :span="6">
           <Space gap="small" vertical>
-            effect：<Radio :options="effectOptions" v-model:value="state.effect" button button-style="solid" />
+            effect：<RadioGroup :options="effectOptions" v-model:value="state.effect" button button-style="solid" />
           </Space>
         </Col>
         <Col :span="6">
@@ -488,7 +488,7 @@ watch(
         <Col :span="6">
           <Space gap="small" vertical>
             dotTrigger：
-            <Radio :options="triggerOptions" v-model:value="state.dotTrigger" button button-style="solid" />
+            <RadioGroup :options="triggerOptions" v-model:value="state.dotTrigger" button button-style="solid" />
           </Space>
         </Col>
         <Col :span="6">

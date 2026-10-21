@@ -43,6 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
 - 接口名统一为 `Props`，并通过 `export` 导出（供入口转出为 `XxxProps`）。
 - 每个字段必须带**中文注释**（文档与类型提示共用）。
 - 联合类型直接内联在接口中（`'small' | 'middle' | 'large'`），可选字段用 `?`。
+- **字段之间不留空行**：接口内的分组语义由**字段顺序 + 行尾注释**表达，不用空行分段；全文件不保留连续空行。空行不承载语义，删掉不影响理解的一律删除（同类要求适用于 `{组件名}Slots`、类型对象与 `withDefaults` 默认值对象）。
 
 ## 类型导出约定
 
@@ -103,18 +104,32 @@ const slotsExist = useSlotsExist(['icon', 'default'])
 const showIconOnly = computed(() => slotsExist.icon && !slotsExist.default)
 ```
 
-## 开发期告警 warnUsage
+## 告警与日志 log
 
-对「调用方式有误、入参被忽略、配置不生效」等**只在开发期需要提醒**的情况，统一走 `warnUsage` 输出，不要在组件里另写 `console.warn` 或 `import.meta.env.DEV`：
+组件与工具函数内**禁止直写 `console.*`**（由 `eslint.config.js` 的 `custom/no-console-in-components` 守护，仅出口文件放行），统一走 `components/utils/log.ts` 的单一出口：
 
 ```ts
-import { warnUsage } from 'components/utils'
-warnUsage('BackTop', '未找到容器元素，滚动监听未启用')
+import { log } from 'components/utils'
+
+log(level, component, message, error?)
+// level: 'warn' | 'error' | 'debug'
+log('warn', 'BackTop', '未找到容器元素，滚动监听未启用')
+log('error', 'Dialog', 'onOk 执行出错', err)
+log('debug', 'position', '浮层精确尺寸测量失败，跳过位移取整', err)
 ```
 
-- 输出结构固定为 `[vue-amazing-ui] {组件名或工具名}: {中文说明}`，便于使用方在控制台过滤定位。
-- **环境判定必须经 `components/utils/warn.ts`（内部用 `process.env.NODE_ENV`），禁止手写 `import.meta.env.DEV`**：后者在库构建中会被内联为 `false`，导致使用方任何环境都收不到告警；前者原样保留在产物中，由使用方的打包工具按其自身环境替换。
-- 运行时失败（异步报错、`DOM` 操作失败等）不走本工具，直接用 `console.error` / `console.warn` 并带 `[vue-amazing-ui]` 前缀，保持线上可观测。
+选择规则：**级别即环境策略**，记一句话即可 —— `error` 线上可观测，`warn` / `debug` 仅开发期：
+
+| level | 输出环境 | 适用场景 |
+| :-- | :-- | :-- |
+| `error` | 全环境 | 运行时失败：回调抛错、编码 / 绘制 / 读取失败等导致功能不可用的问题 |
+| `warn` | 仅开发期 | 调用方式有误、入参被忽略、配置不生效等使用提醒 |
+| `debug` | 仅开发期 | 预期内降级（跨域限制、测量失败、字体检测失败），库内已兜底、用户无需处理 |
+
+- 输出结构固定为 `[vue-amazing-ui] {组件名或工具名}: {中文说明}`，前缀由出口拼装，组件内不要手写。
+- 「开发期」指**最终构建 / 运行这份代码时的模式**（`NODE_ENV !== 'production'`），不是「库作者写代码期间」：库自身演示站与单测、第三方项目的 dev server 都算开发期；第三方项目的 build 产物算生产。同一份库产物在两种场景下表现不同，这是设计目的。
+- **环境判定必须经 `components/utils/log.ts`（内部用 `process.env.NODE_ENV`），禁止手写 `import.meta.env.DEV`**：后者在库构建中会被内联为 `false`，导致使用方任何环境都收不到告警；前者原样保留在产物中（`dist` / `es` / `lib` 已核对），由使用方的打包工具按其自身环境替换。
+- 不经打包工具直接引产物（`<script>` 引 `UMD` / `CDN`）时 `process` 不存在，按非开发环境处理，`warn` / `debug` 静默 —— 属该模式的已知限制。
 
 ## 样式规范
 
@@ -141,6 +156,10 @@ warnUsage('BackTop', '未找到容器元素，滚动监听未启用')
 ```
 
 - 嵌套不超过 3 层。
+- **行内控件与文字混排（2026-10-17 定）**：需要「文字 + 控件（`Input` / `Select` 等行内元素）」同处一行且位置稳定时，该行容器必须用**盒对齐**并固定行高，禁止用基线对齐：
+  - 写法：容器 `display: flex; align-items: center;`，行高取控件高度（`small` 24 / `middle` 32 / `large` 40）；不得矮于控件，否则控件从行底溢出。
+  - 原因：控件是行内元素，出现 / 消失会改变所在行盒的基线，`align-items: baseline` 的容器会因此产生 1px 级整行位移（原生控件同样如此，属 CSS 固有行为）。
+  - 禁止用改控件自身 `vertical-align` 的方式消除该位移：那只是在「参与基线（与文字对齐最好、但会带动整行）」与「不参与基线（不带动整行、但控件内文字与相邻文字错开约 5px）」之间换一种缺陷，两者不可兼得。控件保持与原生输入框同口径的基线对齐。
 - 组件内的 CSS 变量必须带**组件名前缀**（如 `--divider-border-color`、`--flex-align`；允许组件名的稳定缩写，如 `--float-btn-*`），避免与其它组件或宿主页面的同名变量相互污染；`va-` 前缀只用于对外暴露的全局命名（`components/style/global.less` 的 `--va-link-*` 与页面滚动锁写入 `<html>` 的 `--va-scrollbar-width`，后者由 `components/utils/dom.ts` 经 `html.style` 设置、消费方带 `0px` 兜底读取）。
 - **厂商前缀（2026-10-01 定）**：源码中手写的 `-webkit-` / `-moz-` / `-ms-` 前缀是**有意保留**的，禁止以「去冗余」「消除 IDE 的 `vendorPrefix` 提示」为由批量删除：
   - 本库以 SFC 形态分发，组件文件可能被使用方**单独复制**到自己的项目中使用，此时样式由**使用方的构建链**编译。`autoprefixer` 在 Vite 生态中并非默认必备（需使用方自行安装并配置 `postcss.config.js`），其 `browserslist` 也未必与本库（见 `package.json`）一致 —— 手写前缀是这条「源码分发」路径上唯一的兼容兜底。

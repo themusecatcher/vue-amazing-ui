@@ -10,7 +10,7 @@
     "components/utils/vendor-styles.ts",
     "components/utils/style-deps.ts",
     "components/theme/**/*.ts",
-    "components/utils/warn.ts",
+    "components/utils/log.ts",
     "build/**/*.ts"
   ],
   "compilerOptions": {

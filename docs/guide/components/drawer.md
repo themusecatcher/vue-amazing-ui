@@ -13,9 +13,9 @@ _屏幕边缘滑出的浮层面板_
 
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-import type { RadioOption, SelectOption } from 'vue-amazing-ui'
+import type { RadioGroupOption, SelectOption } from 'vue-amazing-ui'
 import { PlusOutlined } from '@ant-design/icons-vue'
-const placementOptions = ref<RadioOption[]>([
+const placementOptions = ref<RadioGroupOption[]>([
   { label: 'top', value: 'top' },
   { label: 'right', value: 'right' },
   { label: 'bottom', value: 'bottom' },
@@ -147,7 +147,7 @@ _自定义位置，点击触发按钮抽屉从相应的位置滑出，点击遮�
 
 <br/>
 
-<Radio v-model:value="placement2" :options="placementOptions" style="margin-right: 8px" />
+<RadioGroup v-model:value="placement2" :options="placementOptions" style="margin-right: 8px" />
 <Button type="primary" @click="open2 = true">Open</Button>
 <Drawer v-model:open="open2" title="Basic Drawer" :closable="false" :placement="placement2" @close="onClose">
   <p>Some contents...</p>
@@ -160,9 +160,9 @@ _自定义位置，点击触发按钮抽屉从相应的位置滑出，点击遮�
 ```vue
 <script lang="ts" setup>
 import { ref } from 'vue'
-import type { RadioOption } from 'vue-amazing-ui'
+import type { RadioGroupOption } from 'vue-amazing-ui'
 const open = ref<boolean>(false)
-const options = ref<RadioOption[]>([
+const options = ref<RadioGroupOption[]>([
   { label: 'top', value: 'top' },
   { label: 'right', value: 'right' },
   { label: 'bottom', value: 'bottom' },
@@ -174,7 +174,7 @@ function onClose() {
 }
 </script>
 <template>
-  <Radio v-model:value="placement" :options="options" style="margin-right: 8px" />
+  <RadioGroup v-model:value="placement" :options="options" style="margin-right: 8px" />
   <Button type="primary" @click="open = true">Open</Button>
   <Drawer v-model:open="open" title="Basic Drawer" :closable="false" :placement="placement" @close="onClose">
     <p>Some contents...</p>
@@ -192,7 +192,7 @@ _操作按钮建议放在抽屉的右上角，可以使用 `extra` 属性来实�
 
 <br/>
 
-<Radio v-model:value="placement3" :options="placementOptions" style="margin-right: 8px" />
+<RadioGroup v-model:value="placement3" :options="placementOptions" style="margin-right: 8px" />
 <Button type="primary" @click="open3 = true">Open</Button>
 <Drawer v-model:open="open3" :width="500" title="Basic Drawer" :placement="placement3" @close="onClose">
   <template #extra>
@@ -209,9 +209,9 @@ _操作按钮建议放在抽屉的右上角，可以使用 `extra` 属性来实�
 ```vue
 <script lang="ts" setup>
 import { ref } from 'vue'
-import type { RadioOption } from 'vue-amazing-ui'
+import type { RadioGroupOption } from 'vue-amazing-ui'
 const open = ref<boolean>(false)
-const options = ref<RadioOption[]>([
+const options = ref<RadioGroupOption[]>([
   { label: 'top', value: 'top' },
   { label: 'right', value: 'right' },
   { label: 'bottom', value: 'bottom' },
@@ -223,7 +223,7 @@ function onClose() {
 }
 </script>
 <template>
-  <Radio v-model:value="placement" :options="options" style="margin-right: 8px" />
+  <RadioGroup v-model:value="placement" :options="options" style="margin-right: 8px" />
   <Button type="primary" @click="open = true">Open</Button>
   <Drawer v-model:open="open" :width="500" title="Basic Drawer" :placement="placement" @close="onClose">
     <template #extra>
@@ -817,7 +817,7 @@ function onClose() {
 
 ## 抽屉页脚
 
-<Radio v-model:value="placement9" :options="placementOptions" style="margin-right: 8px" />
+<RadioGroup v-model:value="placement9" :options="placementOptions" style="margin-right: 8px" />
 <Button type="primary" @click="open9 = true">Open</Button>
 <Drawer
   v-model:open="open9"
@@ -840,9 +840,9 @@ function onClose() {
 ```vue
 <script lang="ts" setup>
 import { ref } from 'vue'
-import type { RadioOption } from 'vue-amazing-ui'
+import type { RadioGroupOption } from 'vue-amazing-ui'
 const open = ref<boolean>(false)
-const options = ref<RadioOption[]>([
+const options = ref<RadioGroupOption[]>([
   { label: 'top', value: 'top' },
   { label: 'right', value: 'right' },
   { label: 'bottom', value: 'bottom' },
@@ -854,7 +854,7 @@ function onClose() {
 }
 </script>
 <template>
-  <Radio v-model:value="placement" :options="options" style="margin-right: 8px" />
+  <RadioGroup v-model:value="placement" :options="options" style="margin-right: 8px" />
   <Button type="primary" @click="open = true">Open</Button>
   <Drawer
     v-model:open="open"

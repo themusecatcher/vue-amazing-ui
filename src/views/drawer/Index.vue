@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-import type { DrawerProps, RadioOption, SelectOption } from 'vue-amazing-ui'
+import type { DrawerProps, RadioGroupOption, SelectOption } from 'vue-amazing-ui'
 import { PlusOutlined } from '@ant-design/icons-vue'
 
-const placementOptions = ref<RadioOption[]>([
+const placementOptions = ref<RadioGroupOption[]>([
   {
     label: 'top',
     value: 'top'
@@ -163,7 +163,7 @@ const layerZIndexOpen = ref<boolean>(false)
 
     <h2 class="mt30 mb10">自定义位置</h2>
     <p class="mb10">自定义位置，点击触发按钮抽屉从相应的位置滑出，点击遮罩区关闭</p>
-    <Radio v-model:value="placement2" :options="placementOptions" style="margin-right: 8px" />
+    <RadioGroup v-model:value="placement2" :options="placementOptions" style="margin-right: 8px" />
     <Button type="primary" @click="open2 = true">Open</Button>
     <Drawer v-model:open="open2" title="Basic Drawer" :closable="false" :placement="placement2" @close="onClose2">
       <p>Some contents...</p>
@@ -173,7 +173,7 @@ const layerZIndexOpen = ref<boolean>(false)
 
     <h2 class="mt30 mb10">额外操作</h2>
     <p class="mb10">操作按钮建议放在抽屉的右上角，可以使用 <code>extra</code> 属性来实现</p>
-    <Radio v-model:value="placement3" :options="placementOptions" style="margin-right: 8px" />
+    <RadioGroup v-model:value="placement3" :options="placementOptions" style="margin-right: 8px" />
     <Button type="primary" @click="open3 = true">Open</Button>
     <Drawer v-model:open="open3" :width="500" title="Basic Drawer" :placement="placement3" @close="onClose3">
       <template #extra>
@@ -402,7 +402,7 @@ const layerZIndexOpen = ref<boolean>(false)
     </Drawer>
 
     <h2 class="mt30 mb10">抽屉页脚</h2>
-    <Radio v-model:value="placement9" :options="placementOptions" style="margin-right: 8px" />
+    <RadioGroup v-model:value="placement9" :options="placementOptions" style="margin-right: 8px" />
     <Button type="primary" @click="open9 = true">Open</Button>
     <Drawer
       v-model:open="open9"

@@ -121,17 +121,21 @@ function onCompositionEnd(e: CompositionEvent): void {
   e.target?.dispatchEvent(changeEvent)
 }
 function onInput(e: Event): void {
-  if (!isComposing.value) {
-    const target = e.target as HTMLInputElement
-    inputValue.value = target.value
-    if (!lazyInput.value) {
-      emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
-      emits('change', e)
-    }
+  const target = e.target as HTMLInputElement
+  // 内部值是 DOM 值的唯一支撑（未绑定 v-model 时更是如此）：含合成期间的文本也要回写，
+  // 否则任一次重渲染（悬浮 / 聚焦态变化都会触发）都会把 DOM 值写回旧值，正在输入的内容被抹掉
+  inputValue.value = target.value
+  if (isComposing.value) {
+    return // 合成期间只回写内部值、不对外上报，待合成结束补发的 change 统一派发
+  }
+  if (!lazyInput.value) {
+    emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
+    emits('change', e)
   }
 }
 function onChange(e: Event): void {
   const target = e.target as HTMLInputElement
+  inputValue.value = target.value // 同 onInput：change 路径同样回写，避免内部值落后于 DOM
   if (target.value !== props.value) {
     emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
     emits('change', e)
@@ -268,7 +272,7 @@ function onPassword(): void {
 .input-wrap {
   width: var(--input-width);
   text-align: start;
-  vertical-align: top;
+  /* 基线对齐：与原生 input 同口径，行内与文字混排时按基线参与行盒计算（取 top 会连带压低行盒基线） */
   position: relative;
   display: inline-table;
   border-collapse: separate;
@@ -310,7 +314,7 @@ function onPassword(): void {
     line-height: 1.5714285714285714;
     position: relative;
     display: inline-flex;
-    vertical-align: top;
+    /* 基线对齐：本层基线决定 inline-table 解析出的基线，取 top 会使整条基线链偏低 1px */
     width: 100%;
     min-width: 0;
     background-color: var(--va-input-bg-color, var(--va-bg-container-color));

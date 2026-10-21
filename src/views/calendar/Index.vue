@@ -189,7 +189,7 @@ function onPanelChange(
     <p class="mb10"><code>mode</code> 指定面板模式（月 / 年）：外部变更会同步到面板，面板内切换模式不会回写该属性</p>
     <Flex vertical>
       <Space align="center">
-        display:<Radio :options="displayOptions" v-model:value="modeDisplay" button button-style="solid" />
+        display:<RadioGroup :options="displayOptions" v-model:value="modeDisplay" button button-style="solid" />
       </Space>
       <Calendar v-model:value="modeDate" mode="year" :display="modeDisplay" />
     </Flex>
@@ -208,11 +208,11 @@ function onPanelChange(
         <div class="header-full">
           <div class="header-full-title">自定义头部：{{ year }} 年 {{ month }} 月 {{ getHeaderFullDay(value) }} 日</div>
           <div class="header-full-actions">
-            <Radio
+            <RadioGroup
               :options="headerFullModeOptions"
               :value="mode"
               button
-              button-size="small"
+              size="small"
               button-style="solid"
               @change="(value) => onHeaderFullTypeChange(value, onTypeChange)"
             />
@@ -238,7 +238,7 @@ function onPanelChange(
     <p class="mb10">取值 <code>0-6</code>，<code>0</code> 为周一</p>
     <Flex vertical>
       <Space align="center">
-        startDayOfWeek:<Radio :options="weekOptions" v-model:value="startDayOfWeek" button button-style="solid" />
+        startDayOfWeek:<RadioGroup :options="weekOptions" v-model:value="startDayOfWeek" button button-style="solid" />
       </Space>
       <Calendar v-model:value="startDayOfWeekDate" :start-day-of-week="startDayOfWeek" />
     </Flex>
@@ -390,7 +390,7 @@ function onPanelChange(
     >
     <Flex vertical>
       <Space align="center">
-        display:<Radio :options="displayOptions" v-model:value="disabledDisplay" button button-style="solid" />
+        display:<RadioGroup :options="displayOptions" v-model:value="disabledDisplay" button button-style="solid" />
       </Space>
       <Space align="start" class="mt10">
         <Flex vertical>

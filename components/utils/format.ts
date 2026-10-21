@@ -1,4 +1,4 @@
-import { warnUsage } from './warn'
+import { log } from './log'
 
 /**
  * 格式化日期时间
@@ -59,7 +59,7 @@ export function dateFormat(value: number | string | Date = Date.now(), format: s
     }
     return format.replace(/(YYYY|YY|M{1,2}|D{1,2}|H{1,2}|m{1,2}|s{1,2}|SSS)/g, replacement)
   } catch (error) {
-    console.error('[vue-amazing-ui] dateFormat: 日期格式化失败', error)
+    log('error', 'dateFormat', '日期格式化失败', error)
     return ''
   }
 }
@@ -86,10 +86,10 @@ export function formatNumber(
 ): string {
   // 类型检查
   if (typeof value !== 'number' && typeof value !== 'string') {
-    warnUsage('formatNumber', 'value 应为 number 或 string 类型')
+    log('warn', 'formatNumber', 'value 应为 number 或 string 类型')
   }
   if (typeof precision !== 'number') {
-    warnUsage('formatNumber', 'precision 应为 number 类型')
+    log('warn', 'formatNumber', 'precision 应为 number 类型')
   }
   // 转换为数字，非数值 / NaN / Infinity 一律返回空串
   const numValue = Number(value)

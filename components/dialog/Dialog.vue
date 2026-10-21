@@ -42,7 +42,8 @@ import {
   useSlotsExist,
   useZIndex,
   Z_INDEX_CONTAINER_OPEN_KEY,
-  FLOATING_LAYER_Z_INDEX
+  FLOATING_LAYER_Z_INDEX,
+  log
 } from 'components/utils'
 import type { DialogApi } from './useDialog'
 /** 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数 */
@@ -805,7 +806,7 @@ async function onCancel(key: string, e?: Event): Promise<void> {
       return
     }
   } catch (err) {
-    console.error('[vue-amazing-ui] Dialog: onCancel 执行出错', err) // 避免 unhandled rejection 导致取消流程静默中断
+    log('error', 'Dialog', 'onCancel 执行出错', err) // 避免 unhandled rejection 导致取消流程静默中断
     return
   }
   closeItem(key)
@@ -829,7 +830,7 @@ async function onOK(key: string, e?: MouseEvent): Promise<void> {
       return
     }
   } catch (err) {
-    console.error('[vue-amazing-ui] Dialog: onOk 执行出错', err) // 避免 unhandled rejection 导致 loading 卡死
+    log('error', 'Dialog', 'onOk 执行出错', err) // 避免 unhandled rejection 导致 loading 卡死
     return
   } finally {
     item.loading = false

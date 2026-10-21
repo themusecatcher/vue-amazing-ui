@@ -38,8 +38,15 @@ export { default as Carousel } from './carousel'
 export type { CascaderProps, CascaderOption, CascaderFieldNames } from './cascader'
 export { default as Cascader } from './cascader'
 
-export type { CheckboxProps, CheckboxOption } from './checkbox'
-export { default as Checkbox } from './checkbox'
+export type {
+  CheckboxProps,
+  CheckboxGroupProps,
+  CheckboxGroupOption,
+  CheckboxValue,
+  CheckboxChangeTarget,
+  CheckboxChangeEvent
+} from './checkbox'
+export { default as Checkbox, CheckboxGroup } from './checkbox'
 
 export type { CollapseProps, CollapseItem } from './collapse'
 export { default as Collapse } from './collapse'
@@ -199,8 +206,18 @@ export { default as Progress } from './progress'
 export type { QRCodeProps } from './qr-code'
 export { default as QRCode } from './qr-code'
 
-export type { RadioProps, RadioOption } from './radio'
-export { default as Radio } from './radio'
+export type {
+  RadioProps,
+  RadioButtonProps,
+  RadioGroupProps,
+  RadioGroupOption,
+  RadioValue,
+  RadioButtonStyle,
+  RadioSize,
+  RadioChangeTarget,
+  RadioChangeEvent
+} from './radio'
+export { default as Radio, RadioButton, RadioGroup } from './radio'
 
 export type { RateProps } from './rate'
 export { default as Rate } from './rate'

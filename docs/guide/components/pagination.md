@@ -81,7 +81,7 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 ## 自定义位置
 
 <Flex vertical>
-  <Radio :options="placementOptions" v-model:value="placement" button button-style="solid" />
+  <RadioGroup :options="placementOptions" v-model:value="placement" button button-style="solid" />
   <Pagination v-model:page="page" :total="total" :placement="placement" @change="onChange" />
 </Flex>
 
@@ -115,7 +115,7 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 </script>
 <template>
   <Flex vertical>
-    <Radio :options="placementOptions" v-model:value="placement" button button-style="solid" />
+    <RadioGroup :options="placementOptions" v-model:value="placement" button button-style="solid" />
     <Pagination v-model:page="page" :total="total" :placement="placement" @change="onChange" />
   </Flex>
 </template>
@@ -126,7 +126,7 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 ## 三种尺寸
 
 <Flex vertical>
-  <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
   <Pagination v-model:page="page" :size="size" :total="total" show-quick-jumper @change="onChange" />
 </Flex>
 
@@ -160,7 +160,7 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 </script>
 <template>
   <Flex vertical>
-    <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
     <Pagination v-model:page="page" :size="size" :total="total" show-quick-jumper @change="onChange" />
   </Flex>
 </template>

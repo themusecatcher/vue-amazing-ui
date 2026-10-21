@@ -798,7 +798,7 @@ _通过 `dropdownMatchSelectWidth` 指定面板宽度：`true` 与输入框等�
 
 <br/>
 
-<Space :size="40">
+<Space :gap="40">
   <AutoComplete
     v-model:value="valueMatchWidthTrue"
     :options="optionsMatchWidth"
@@ -836,7 +836,7 @@ const optionsMatchWidth = [
 ]
 </script>
 <template>
-  <Space :size="40">
+  <Space :gap="40">
     <AutoComplete
       v-model:value="valueMatchWidthTrue"
       :options="optionsMatchWidth"
@@ -1004,7 +1004,7 @@ const options4 = ref<{ value: string }[]>([
 
 ## 三种尺寸
 
-<Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+<RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
 <br />
 <br />
 <AutoComplete
@@ -1073,7 +1073,7 @@ const optionsD = ref([
 ])
 </script>
 <template>
-  <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
   <br />
   <br />
   <AutoComplete

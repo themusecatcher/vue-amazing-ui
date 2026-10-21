@@ -15,6 +15,8 @@
  * 调用方通常无需关心底层实现。
  */
 
+import { log } from './log'
+
 /** iframe 加载完成后等待检查下载结果的时间（ms），确保内容加载完成 */
 const IFRAME_CHECK_DELAY = 1000
 
@@ -170,11 +172,11 @@ function checkIframeError(iframe: HTMLIFrameElement): void {
     const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
     const bodyContent = iframeDoc?.body?.innerHTML
     if (bodyContent) {
-      console.error(`[vue-amazing-ui] checkIframeError: 文件下载失败，服务器返回错误 url：${iframe.src}`)
+      log('error', 'checkIframeError', `文件下载失败，服务器返回错误 url：${iframe.src}`)
     }
   } catch (err) {
     // 跨域限制导致无法读取 iframe 内容，检测失效属预期行为，用 debug 级别避免污染业务方控制台
-    console.debug('[vue-amazing-ui] checkIframeError: 无法检查 iframe 内容（通常为跨域限制，可忽略）', err)
+    log('debug', 'checkIframeError', '无法检查 iframe 内容（通常为跨域限制，可忽略）', err)
   }
 }
 
@@ -217,7 +219,7 @@ export function downloadFile(url: string, fileName?: string, options: DownloadOp
   try {
     parsedUrl = new URL(url, location.href)
   } catch (err) {
-    console.error(`[vue-amazing-ui] downloadFile: 下载地址解析失败：${url}`, err)
+    log('error', 'downloadFile', `下载地址解析失败：${url}`, err)
     return Promise.reject(err)
   }
 

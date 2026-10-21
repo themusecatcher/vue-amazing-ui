@@ -341,8 +341,8 @@ const emptyOptions: SelectOption[] = []
       <Select :options="basicOptions" v-model:value="basicValue" :width="120" loading />
     </Space>
     <h2 class="mt30 mb10">三种大小</h2>
-    <Flex vertical gap="middle" align="start">
-      <Radio :options="sizeRadios" v-model:value="size" button button-style="solid" />
+    <Flex vertical align="start">
+      <RadioGroup :options="sizeRadios" v-model:value="size" button button-style="solid" />
       <!-- 单选 / 多选 / 标签三条同行展示 -->
       <Space>
         <Select
@@ -407,10 +407,10 @@ const emptyOptions: SelectOption[] = []
     </p>
     <Flex vertical gap="large" align="start">
       <!-- maxTagCount：折叠数量（数值或 responsive） -->
-      <Flex vertical gap="middle" align="start">
+      <Flex vertical align="start">
         <Flex gap="small" align="center" wrap="wrap">
           <code>maxTagCount</code>
-          <Radio :options="maxTagCountRadios" v-model:value="maxTagCount" button button-style="solid" />
+          <RadioGroup :options="maxTagCountRadios" v-model:value="maxTagCount" button button-style="solid" />
         </Flex>
         <Select
           v-model:value="responsiveValue"
@@ -426,10 +426,10 @@ const emptyOptions: SelectOption[] = []
         </Select>
       </Flex>
       <!-- maxTagTextLength：标签文本截断长度 -->
-      <Flex vertical gap="middle" align="start">
+      <Flex vertical align="start">
         <Flex gap="small" align="center" wrap="wrap">
           <code>maxTagTextLength</code>
-          <Radio :options="maxTagTextLengthRadios" v-model:value="maxTagTextLength" button button-style="solid" />
+          <RadioGroup :options="maxTagTextLengthRadios" v-model:value="maxTagTextLength" button button-style="solid" />
         </Flex>
         <Select
           v-model:value="responsiveValue"
@@ -603,7 +603,7 @@ const emptyOptions: SelectOption[] = []
       使用 <code>optionLabelProp</code> 指定回填到选择框的 <code>option</code> 字段；<code>optionLabel</code>
       插槽可完全自定义回填节点
     </p>
-    <Flex vertical gap="middle" align="start">
+    <Flex vertical align="start">
       <!-- 单选：optionLabelProp 指定回填字段 vs optionLabel 插槽完全自定义回填节点 -->
       <Space>
         <Select :options="countryOptions" v-model:value="countryValue" option-label-prop="label" :width="220">
@@ -644,8 +644,8 @@ const emptyOptions: SelectOption[] = []
     </Flex>
     <h2 class="mt30 mb10">下拉面板弹出位置</h2>
     <Space vertical>
-      <Radio :options="placementRadios" v-model:value="placement" button button-style="solid" />
-      <Space :size="24">
+      <RadioGroup :options="placementRadios" v-model:value="placement" button button-style="solid" />
+      <Space :gap="24">
         <Select
           :options="cityOptions"
           v-model:value="placementValue"
@@ -668,7 +668,7 @@ const emptyOptions: SelectOption[] = []
       <code>dropdownMatchSelectWidth</code> 为 <code>true</code> 时与触发器等宽，为数字时指定面板宽度，为
       <code>false</code> 时按内容自适应
     </p>
-    <Space :size="40">
+    <Space :gap="40">
       <Select :options="longOptions" v-model:value="matchWidthValue" :width="160" />
       <Select :options="longOptions" v-model:value="matchWidthValue" :width="160" :dropdown-match-select-width="240" />
       <Select
@@ -691,7 +691,7 @@ const emptyOptions: SelectOption[] = []
     <p class="mb10">
       <code>maxDisplay</code> 按项数限制面板高度（默认展示 <code>8</code> 项），<code>listHeight</code> 直接指定像素高度
     </p>
-    <Space :size="40">
+    <Space :gap="40">
       <Select :options="longOptions" v-model:value="listHeightValue" />
       <Select :options="longOptions" v-model:value="listHeightValue" :max-display="4" />
       <Select :options="longOptions" v-model:value="listHeightValue" :list-height="160" />
@@ -743,7 +743,7 @@ const emptyOptions: SelectOption[] = []
       <code>virtual</code>
       默认开启，只渲染可视区选项；关闭开关后渲染全部 <code>10</code> 万项，可对比两者的滚动表现（页面会明显变慢）
     </p>
-    <Flex vertical gap="middle">
+    <Flex vertical>
       <Flex gap="small" align="center">
         <code>virtual</code>
         <Switch v-model:value="bigDataVirtual" />

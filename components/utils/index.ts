@@ -25,7 +25,7 @@ export * from './floating-mount'
 export * from './inherit-font'
 // 侧边栏收起态契约（跨组件：LayoutSider 下发、Menu 消费）
 export * from './sider-collapsed'
-// 开发期用法告警（统一规范 `[vue-amazing-ui] {组件名}: {说明}`，仅开发环境输出）
-export * from './warn'
+// 告警 / 日志统一出口（`[vue-amazing-ui] {组件名}: {说明}`；error 全环境，warn / debug 仅开发期）
+export * from './log'
 // 渲染辅助
 export * from './render'

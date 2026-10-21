@@ -181,7 +181,7 @@ const state = reactive({
     </Flex>
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Flex vertical>
-      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Row :gutter="32">
         <Col :span="12">
           <List bordered :size="size">
@@ -374,7 +374,7 @@ const state = reactive({
         </Col>
         <Col :span="6">
           <Space gap="small" vertical>
-            size:<Radio :options="sizeOptions" v-model:value="state.size" button button-style="solid" />
+            size:<RadioGroup :options="sizeOptions" v-model:value="state.size" button button-style="solid" />
           </Space>
         </Col>
         <Col :span="6">

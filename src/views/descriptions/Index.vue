@@ -113,7 +113,7 @@ const activeColumnTip = computed(() => {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本</h2>
-    <Flex vertical gap="middle">
+    <Flex vertical>
       <Descriptions title="User Info">
         <template #extra>
           <a href="#" @click="onClick">more</a>
@@ -128,7 +128,7 @@ const activeColumnTip = computed(() => {
       </Descriptions>
     </Flex>
     <h2 class="mt30 mb10">带边框的</h2>
-    <Flex vertical gap="middle">
+    <Flex vertical>
       <Descriptions title="User Info" bordered>
         <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
         <DescriptionsItem label="Billing Mode">Prepaid</DescriptionsItem>
@@ -158,8 +158,8 @@ const activeColumnTip = computed(() => {
       </Descriptions>
     </Flex>
     <h2 class="mt30 mb10">自定义尺寸</h2>
-    <Flex vertical gap="middle">
-      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    <Flex vertical>
+      <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Descriptions bordered title="Custom Size" :size="size">
         <template #extra>
           <Button type="primary">Edit</Button>
@@ -198,7 +198,7 @@ const activeColumnTip = computed(() => {
       </Descriptions>
     </Flex>
     <h2 class="mt30 mb10">响应式</h2>
-    <Flex vertical gap="middle">
+    <Flex vertical>
       <Descriptions title="Responsive Descriptions" bordered :column="{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }">
         <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
         <DescriptionsItem label="Billing">Prepaid</DescriptionsItem>
@@ -222,7 +222,7 @@ const activeColumnTip = computed(() => {
       </Descriptions>
     </Flex>
     <h2 class="mt30 mb10">垂直</h2>
-    <Flex vertical gap="middle">
+    <Flex vertical>
       <Descriptions title="User Info" layout="vertical">
         <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
         <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
@@ -234,7 +234,7 @@ const activeColumnTip = computed(() => {
       </Descriptions>
     </Flex>
     <h2 class="mt30 mb10">垂直带边框的</h2>
-    <Flex vertical gap="middle">
+    <Flex vertical>
       <Descriptions title="User Info" layout="vertical" bordered>
         <DescriptionsItem label="Product">Cloud Database</DescriptionsItem>
         <DescriptionsItem label="Billing Mode">Prepaid</DescriptionsItem>
@@ -265,7 +265,7 @@ const activeColumnTip = computed(() => {
     </Flex>
     <h2 class="mt30 mb10">无冒号</h2>
     <p class="mb10">使用 <code>colon</code> 属性关闭标签后的冒号</p>
-    <Flex vertical gap="middle">
+    <Flex vertical>
       <Descriptions title="User Info" :colon="false">
         <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
         <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
@@ -273,8 +273,8 @@ const activeColumnTip = computed(() => {
       </Descriptions>
     </Flex>
     <h2 class="mt30 mb10">标签对齐</h2>
-    <Flex vertical gap="middle">
-      <Radio :options="labelAlignOptions" v-model:value="labelAlign" button button-style="solid" />
+    <Flex vertical>
+      <RadioGroup :options="labelAlignOptions" v-model:value="labelAlign" button button-style="solid" />
       <Descriptions title="User Info" bordered :labelAlign="labelAlign">
         <DescriptionsItem label="UserName">Zhou Maomao</DescriptionsItem>
         <DescriptionsItem label="Telephone">1810000000</DescriptionsItem>
@@ -282,7 +282,7 @@ const activeColumnTip = computed(() => {
       </Descriptions>
     </Flex>
     <h2 class="mt30 mb10">自定义类名</h2>
-    <Flex vertical gap="middle">
+    <Flex vertical>
       <Descriptions
         bordered
         title="Custom Class"
@@ -296,10 +296,10 @@ const activeColumnTip = computed(() => {
     </Flex>
     <h2 class="mt30 mb10">自定义头部</h2>
     <p class="mb10">使用 <code>header</code> 插槽自定义整个头部区域，替代 <code>title</code> 与 <code>extra</code></p>
-    <Flex vertical gap="middle">
+    <Flex vertical>
       <Descriptions>
         <template #header>
-          <Flex gap="middle" align="center" justify="space-between" style="width: 100%">
+          <Flex align="center" justify="space-between" style="width: 100%">
             <span style="font-weight: 600; font-size: 16px">Custom Header</span>
             <Button type="primary">Edit</Button>
           </Flex>
@@ -310,7 +310,7 @@ const activeColumnTip = computed(() => {
       </Descriptions>
     </Flex>
     <h2 class="mt30 mb10">自定义内容 & 标签样式</h2>
-    <Flex vertical gap="middle">
+    <Flex vertical>
       <Descriptions
         bordered
         title="Custom Style"
@@ -402,13 +402,13 @@ const activeColumnTip = computed(() => {
         </Col>
         <Col :span="24">
           <Flex gap="small" vertical>
-            <Flex gap="middle" align="center" wrap="wrap">
+            <Flex align="center" wrap="wrap">
               column:
               <Segmented v-model:value="state.columnMode" :options="columnModeOptions" />
               <InputNumber v-if="state.columnMode === 'number'" v-model:value="state.columnValue" :min="1" :max="9" />
               <span class="descriptions-column-tip">{{ activeColumnTip }}</span>
             </Flex>
-            <Flex v-if="state.columnMode === 'responsive'" gap="middle" align="flex-start" wrap="wrap">
+            <Flex v-if="state.columnMode === 'responsive'" align="flex-start" wrap="wrap">
               <Flex
                 v-for="bp in breakpoints"
                 :key="bp.key"

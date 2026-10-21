@@ -95,12 +95,12 @@ const state = reactive<StepsProps>({
     <Steps :items="stepsItems" :current="current" @change="onChange" />
     <h2 class="mt30 mb10">标签放置位置</h2>
     <Flex vertical>
-      <Radio :options="placeOptions" v-model:value="place" button button-style="solid" />
+      <RadioGroup :options="placeOptions" v-model:value="place" button button-style="solid" />
       <Steps :items="stepsItems" :label-placement="place" :current="current" />
     </Flex>
     <h2 class="mt30 mb10">迷你版</h2>
     <Flex vertical>
-      <Radio :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <Steps :items="minStepsItems" :size="size" :current="current" />
     </Flex>
     <h2 class="mt30 mb10">垂直步骤条</h2>
@@ -128,7 +128,7 @@ const state = reactive<StepsProps>({
       <Col :span="6">
         <Space gap="small" vertical>
           size:
-          <Radio :options="sizeOptions" v-model:value="state.size" button button-style="solid" />
+          <RadioGroup :options="sizeOptions" v-model:value="state.size" button button-style="solid" />
         </Space>
       </Col>
       <Col :span="6">
@@ -140,7 +140,7 @@ const state = reactive<StepsProps>({
       <Col :span="6">
         <Space gap="small" vertical>
           labelPlacement:
-          <Radio :options="placeOptions" v-model:value="state.labelPlacement" button button-style="solid" />
+          <RadioGroup :options="placeOptions" v-model:value="state.labelPlacement" button button-style="solid" />
         </Space>
       </Col>
       <Col :span="6">
