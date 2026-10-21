@@ -69,6 +69,8 @@ export default defineConfig({
   title: `Vue Amazing UI`,
   description: 'Amazing UI 组件库',
   base: '/vue-amazing-ui/',
+  // 生成型片段的存放目录：只被页面 include，不单独成页
+  srcExclude: ['guide/parts/**'],
 
   head: [
     // 网站图标
@@ -560,10 +562,6 @@ export default defineConfig({
             {
               text: 'downloadFile 下载文件',
               link: '/utils/functions/download-file'
-            },
-            {
-              text: 'toggleDark 切换暗黑',
-              link: '/utils/functions/toggle-dark'
             },
             {
               text: 'useEventListener 事件监听',

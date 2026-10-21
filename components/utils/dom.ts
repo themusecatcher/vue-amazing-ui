@@ -258,28 +258,6 @@ export function getImageName(image: { src: string; name?: string } | undefined):
   }
 }
 /**
- * 一键切换暗黑模式
- *
- * 在 `<html>` 根元素上切换 `dark` 类并同步 `color-scheme`；具体暗色样式需使用方自行编写。
- *
- * @example
- * // 需自行补充的样式（以 filter 反色方案为例）：
- * // html { transition: filter .3s ease-in-out; }
- * // html.dark { filter: invert(1) hue-rotate(180deg); }
- * // html.dark img, html.dark video { filter: invert(1) hue-rotate(180deg); } // 二次反色还原本色
- * toggleDark()
- */
-export function toggleDark(): void {
-  const html = document.documentElement
-  // 如果 <html> 上 dark 类值已存在，则移除它，否则添加它
-  html.classList.toggle('dark')
-  if (html.classList.contains('dark')) {
-    html.style.colorScheme = 'dark'
-  } else {
-    html.style.colorScheme = 'light'
-  }
-}
-/**
  * 获取父元素
  *
  * 向上查找元素的直接父元素，若元素已是 documentElement 则返回 null

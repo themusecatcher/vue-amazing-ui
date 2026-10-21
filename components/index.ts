@@ -9,7 +9,6 @@ export {
   debounce,
   add,
   downloadFile,
-  toggleDark,
   useEventListener,
   useMutationObserver,
   useScroll,
