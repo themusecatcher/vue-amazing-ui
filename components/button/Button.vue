@@ -311,6 +311,8 @@ function onKeyboard(e: KeyboardEvent) {
   }
 }
 .btn-danger {
+  // 波纹跟随危险色：波纹的回落链默认取主色，不声明会在这里显示成蓝色
+  --button-ripple-color: var(--va-button-danger-color, var(--va-error-color));
   color: var(--va-button-solid-text-color, var(--va-text-color-solid));
   background-color: var(--va-button-danger-color, var(--va-error-color));
   border-color: var(--va-button-danger-color, var(--va-error-color));

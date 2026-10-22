@@ -33,7 +33,8 @@ const allowedVarNames = new Set<string>([...THEME_VAR_NAMES, ...COMPONENT_VAR_NA
  * 再改这里 —— 数字是刻意的减速带，不是可有可无的快照。
  */
 const usageBaseline: Record<string, number> = {
-  'button/Button.vue': 53,
+  // 53 + danger 波纹色（`--button-ripple-color` 取 `--va-button-danger-color`）1 处
+  'button/Button.vue': 54,
   // 派生组件：分割线跟随 Button 的 hover 色（primary 2 + danger-hover 2 + 链式 danger 2）
   'dropdown/dropdown-button/DropdownButton.vue': 6,
   // 轨道 2 + 未选 2 + 滑块 3 + 气泡 2 + 刻度点 3（dot 描边 / 悬停 / 激活）
