@@ -13,6 +13,9 @@ const timelineItems: TimelineItemProps[] = [
   { content: 'Network problems being solved 2 2025-06-24 10:10', color: 'gray' }
 ]
 const reverse = ref(false)
+// 水平节演示用独立状态：与「进行中与倒序」节的 reverse 解耦，避免一节的操作串扰另一节
+const horizontal = ref(true)
+const horizontalReverse = ref(false)
 const mode = ref<TimelineMode>('left')
 const modeOptions: { label: string; value: TimelineMode }[] = [
   { label: 'left', value: 'left' },
@@ -191,7 +194,14 @@ const lineTypeOptions: { label: string; value: TimelineLineType }[] = [
       </TimelineItem>
     </Timeline>
     <h2 class="mt30 mb10">水平时间轴</h2>
-    <Timeline horizontal>
+    <p class="mb10">水平排列，可与 <code>reverse</code> 倒序组合；内容超出时容器可横向滚动</p>
+    <Space align="center" style="margin-bottom: 20px">
+      horizontal:
+      <Switch v-model:value="horizontal" />
+      reverse:
+      <Switch v-model:value="horizontalReverse" />
+    </Space>
+    <Timeline :horizontal="horizontal" :reverse="horizontalReverse">
       <TimelineItem title="Create" content="Create a services site" time="2025-06-24 10:10" color="success" />
       <TimelineItem title="Error" content="Solve initial network problems" time="2025-06-24 10:10" color="error" />
       <TimelineItem title="Warning" content="Technical testing" time="2025-06-24 10:10" color="warning" />

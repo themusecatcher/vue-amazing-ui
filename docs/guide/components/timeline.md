@@ -24,6 +24,9 @@ const timelineItems: TimelineItemProps[] = [
   { content: 'Network problems being solved 2 2025-06-24 10:10', color: 'gray' }
 ]
 const reverse = ref(false)
+// 水平节演示用独立状态：与「进行中与倒序」节的 reverse 解耦，避免一节的操作串扰另一节
+const horizontal = ref(true)
+const horizontalReverse = ref(false)
 const mode = ref<TimelineMode>('left')
 const modeOptions: { label: string; value: TimelineMode }[] = [
   { label: 'left', value: 'left' },
@@ -570,7 +573,18 @@ const startOptions: { label: string; value: TimelineStart }[] = [
 
 ## 水平时间轴
 
-<Timeline horizontal>
+_水平排列，可与 `reverse` 倒序组合；内容超出时容器可横向滚动_
+
+<br/>
+
+<Space align="center" style="margin-bottom: 20px">
+  horizontal:
+  <Switch v-model:value="horizontal" />
+  reverse:
+  <Switch v-model:value="horizontalReverse" />
+</Space>
+
+<Timeline :horizontal="horizontal" :reverse="horizontalReverse">
   <TimelineItem title="Create" content="Create a services site" time="2025-06-24 10:10" color="success" />
   <TimelineItem title="Error" content="Solve initial network problems" time="2025-06-24 10:10" color="error" />
   <TimelineItem title="Warning" content="Technical testing" time="2025-06-24 10:10" color="warning" />
@@ -580,8 +594,19 @@ const startOptions: { label: string; value: TimelineStart }[] = [
 ::::: details Show Code
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const horizontal = ref(true)
+const horizontalReverse = ref(false)
+</script>
 <template>
-  <Timeline horizontal>
+  <Space align="center" style="margin-bottom: 20px">
+    horizontal:
+    <Switch v-model:value="horizontal" />
+    reverse:
+    <Switch v-model:value="horizontalReverse" />
+  </Space>
+  <Timeline :horizontal="horizontal" :reverse="horizontalReverse">
     <TimelineItem title="Create" content="Create a services site" time="2025-06-24 10:10" color="success" />
     <TimelineItem title="Error" content="Solve initial network problems" time="2025-06-24 10:10" color="error" />
     <TimelineItem title="Warning" content="Technical testing" time="2025-06-24 10:10" color="warning" />
@@ -705,7 +730,7 @@ title | 标题，位于内容上方 | string | undefined
 content | 内容 | string | undefined
 time | 时间，位于内容下方 | string &#124; number | undefined
 label | 左侧标签，任一节点带 `label` 时整条时间轴切换为左右分栏布局 | string | undefined
-color | 轴点颜色，支持预设语义色（`primary` / `success` / `warning` / `error` / `info` / `default`）、色名（`blue` / `green` / `red` / `gray`）与任意 CSS 颜色 | string | 'primary'
+color | 轴点颜色，支持预设语义色（`primary` / `success` / `warning` / `error` / `info` / `default`）、色名（`blue` / `green` / `red` / `gray`）与任意 CSS 颜色，预设名大小写不敏感；未指定时轴点走主题主色 | string | undefined
 lineType | 单独覆盖该节点的线型 | 'solid' &#124; 'dashed' &#124; 'dotted' | 继承 `Timeline` 的 `lineType`
 position | `alternate` 模式下单独指定该节点内容所在侧 | 'left' &#124; 'right' | undefined
 
