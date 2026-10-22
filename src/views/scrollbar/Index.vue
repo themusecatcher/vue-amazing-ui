@@ -94,13 +94,16 @@ function onScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
       啦啦啦啦啦啦啦啦咧
     </Scrollbar>
     <h2 class="mt30 mb10">自定义样式</h2>
-    <p class="mb10">可通过设置 <code>size</code> 属性，自定义相关 <code>--scrollbar</code> 变量进行各种样式自定义</p>
+    <p class="mb10">
+      可通过设置 <code>size</code> 属性，并用 <code>--va-scrollbar-*</code> 令牌（滑块颜色）与
+      <code>--scrollbar-*</code> 变量（轨道偏移）自定义样式
+    </p>
     <Scrollbar
       style="
         max-height: 120px;
         border-radius: 12px;
-        --scrollbar-color: rgba(0, 0, 0, 0.45);
-        --scrollbar-color-hover: rgba(0, 0, 0, 0.65);
+        --va-scrollbar-color: rgba(0, 0, 0, 0.45);
+        --va-scrollbar-color-hover: rgba(0, 0, 0, 0.65);
         --scrollbar-rail-vertical-right: 2px 6px 2px auto;
       "
       :size="8"

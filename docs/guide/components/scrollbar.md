@@ -241,7 +241,7 @@ function onScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
 
 ## 自定义样式
 
-_可通过设置 `size` 属性，自定义相关 `--scrollbar` 变量进行各种样式自定义_
+_可通过设置 `size` 属性，并用 `--va-scrollbar-*` 令牌（滑块颜色）与 `--scrollbar-*` 变量（轨道偏移）自定义样式_
 
 <br/>
 
@@ -249,8 +249,8 @@ _可通过设置 `size` 属性，自定义相关 `--scrollbar` 变量进行各�
   style="
     max-height: 120px;
     border-radius: 12px;
-    --scrollbar-color: rgba(0, 0, 0, 0.45);
-    --scrollbar-color-hover: rgba(0, 0, 0, 0.65);
+    --va-scrollbar-color: rgba(0, 0, 0, 0.45);
+    --va-scrollbar-color-hover: rgba(0, 0, 0, 0.65);
     --scrollbar-rail-vertical-right: 2px 6px 2px auto;
   "
   :size="8"
@@ -283,8 +283,8 @@ _可通过设置 `size` 属性，自定义相关 `--scrollbar` 变量进行各�
     style="
       max-height: 120px;
       border-radius: 12px;
-      --scrollbar-color: rgba(0, 0, 0, 0.45);
-      --scrollbar-color-hover: rgba(0, 0, 0, 0.65);
+      --va-scrollbar-color: rgba(0, 0, 0, 0.45);
+      --va-scrollbar-color-hover: rgba(0, 0, 0, 0.65);
       --scrollbar-rail-vertical-right: 2px 6px 2px auto;
     "
     :size="8"
