@@ -102,6 +102,21 @@ describe('水波纹 - 禁用态不渲染波纹节点', () => {
   })
 })
 
+describe('水波纹 - 禁用期间复位，重新启用不残留', () => {
+  it('Button：点击后动画未结束就被禁用，重新启用时不应带 wave-active', async () => {
+    wrapper = mount(Button, { slots: { default: '按钮' } })
+    await wrapper.find('.btn-wrap').trigger('click')
+    expect(wrapper.find('.button-wave').classes()).toContain('wave-active')
+
+    // disabled 期间波纹节点不渲染，animationend 不会触发，状态必须在禁用时即时复位
+    await wrapper.setProps({ disabled: true })
+    expect(wrapper.find('.button-wave').exists()).toBe(false)
+
+    await wrapper.setProps({ disabled: false })
+    expect(wrapper.find('.button-wave').classes()).not.toContain('wave-active')
+  })
+})
+
 describe('水波纹 - 配置式模式下波纹绑定到被点击的那一项', () => {
   it('CheckboxGroup options 模式：点到哪一项，哪一项的波纹置位', async () => {
     wrapper = mount(CheckboxGroup, {
