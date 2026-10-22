@@ -45,7 +45,7 @@ const props = withDefaults(defineProps<Props>(), {
   block: false
 })
 defineSlots<ButtonSlots>()
-const { wave, startWave, endWave } = useWave()
+const { wave, waveKey, startWave, endWave } = useWave()
 // 禁用时波纹节点被移除，`animationend` 也就不会再回来复位；若置为禁用发生在动画结束前，
 // `wave` 会一直残留到重新启用，元素重新挂载时 `wave-active` 会让波纹凭空播一次（没有点击来源）。
 // 故在进入禁用态时主动复位。
@@ -145,7 +145,13 @@ function onKeyboard(e: KeyboardEvent) {
     <span v-if="slotsExist.default" class="btn-content">
       <slot></slot>
     </span>
-    <div v-if="!disabled" class="button-wave" :class="{ 'wave-active': wave }" @animationend="endWave"></div>
+    <div
+      v-if="!disabled"
+      :key="waveKey"
+      class="button-wave"
+      :class="{ 'wave-active': wave }"
+      @animationend="endWave"
+    ></div>
   </component>
 </template>
 <style lang="less" scoped>

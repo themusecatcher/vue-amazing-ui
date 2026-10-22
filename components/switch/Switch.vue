@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
   value: false
 })
 defineSlots<SwitchSlots>()
-const { wave, startWave, endWave } = useWave()
+const { wave, waveKey, startWave, endWave } = useWave()
 const emit = defineEmits(['update:value', 'change'])
 function onSwitch(): void {
   if (props.value === props.checkedValue) {
@@ -76,7 +76,13 @@ function onSwitch(): void {
       </svg>
       <slot name="node" :checked="value"></slot>
     </div>
-    <div v-if="!disabled" class="switch-wave" :class="{ 'wave-active': wave }" @animationend="endWave"></div>
+    <div
+      v-if="!disabled"
+      :key="waveKey"
+      class="switch-wave"
+      :class="{ 'wave-active': wave }"
+      @animationend="endWave"
+    ></div>
   </div>
 </template>
 <style lang="less" scoped>

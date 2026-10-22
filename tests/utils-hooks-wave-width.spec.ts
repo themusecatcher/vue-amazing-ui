@@ -24,28 +24,42 @@ afterEach(() => {
 
 describe('useWave - 水波纹状态机', () => {
   it('初始状态为未播放', () => {
-    expect(useWave().wave.value).toBe(false)
-  })
-
-  it('首次 startWave 应立即置为播放中', () => {
-    const { wave, startWave } = useWave()
-    startWave()
-    expect(wave.value).toBe(true)
-  })
-
-  it('播放中再次 startWave 应先复位、下一帧再置位，以强制重放动画', async () => {
-    const { wave, startWave } = useWave()
-    startWave()
-    expect(wave.value).toBe(true)
-
-    // 连点：必须先把 wave-active 摘掉，否则同名 class 不会重新触发 CSS 动画
-    startWave()
+    const { wave, waveKey } = useWave()
     expect(wave.value).toBe(false)
-    await nextTick()
+    expect(waveKey.value).toBe(0)
+  })
+
+  it('首次 startWave 应立即置为播放中并递增节点 key', () => {
+    const { wave, waveKey, startWave } = useWave()
+    startWave()
+    expect(wave.value).toBe(true)
+    expect(waveKey.value).toBe(1)
+  })
+
+  it('播放中再次 startWave 应保持播放并再递增 key，由节点重建重放动画', () => {
+    const { wave, waveKey, startWave } = useWave()
+    startWave()
+    startWave()
+    // 不能靠摘类再挂类复位：两次变更同帧，样式无净变化，CSS 动画不会重启
+    expect(wave.value).toBe(true)
+    expect(waveKey.value).toBe(2)
+  })
+
+  it('endWave 在扩散动画（waveSpread）结束时不复位', () => {
+    const { wave, startWave, endWave } = useWave()
+    startWave()
+    endWave({ animationName: 'waveSpread' } as AnimationEvent)
     expect(wave.value).toBe(true)
   })
 
-  it('endWave（animationend 回调）应复位为未播放', () => {
+  it('endWave 在淡出动画（waveOpacity）结束时复位', () => {
+    const { wave, startWave, endWave } = useWave()
+    startWave()
+    endWave({ animationName: 'waveOpacity' } as AnimationEvent)
+    expect(wave.value).toBe(false)
+  })
+
+  it('endWave 无参调用（禁用态复位）应直接复位', () => {
     const { wave, startWave, endWave } = useWave()
     startWave()
     endWave()
@@ -69,6 +83,8 @@ describe('useWave - 水波纹状态机', () => {
     await nextTick()
     expect(a.wave.value).toBe(true)
     expect(b.wave.value).toBe(true)
+    expect(a.waveKey.value).toBe(1)
+    expect(b.waveKey.value).toBe(1)
   })
 })
 
