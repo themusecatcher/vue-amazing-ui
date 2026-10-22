@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, watch, onMounted, inject } from 'vue'
 import type { CSSProperties, VNode, Ref } from 'vue'
+import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
 import Scrollbar from 'components/scrollbar'
 import {
   raiseFloatingOrder,
   useFloating,
   useFloatingTeleportTarget,
   useInheritAnchorFont,
-  useInject,
   useSlotsExist,
   useZIndex,
   Z_INDEX_CONTAINER_OPEN_KEY,
@@ -61,6 +61,10 @@ export interface AutoCompleteSlots {
   option?: (props: any) => VNode[]
 }
 
+// 主题转发：下拉面板 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
+const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
+const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 const props = withDefaults(defineProps<Props>(), {
   allowClear: false,
   autofocus: false,
@@ -104,7 +108,6 @@ const hoverValue = ref<string | number | null>(null) // 鼠标悬浮项的 value
 const lastUserValue = ref<string>('') // 用户原始输入（backfill 时键盘 Esc 还原用，与 onInput 同步更新）
 const showOptions = ref<boolean>(false) // 显示隐藏下拉面板
 const focused = ref<boolean>(false) // 自动完成是否聚焦
-const { colorPalettes, shadowColor } = useInject('AutoComplete') // 主题色注入
 const contentRef = ref<HTMLElement | null>(null) // 内容模板引用
 const panelRef = ref<HTMLElement | null>(null) // 下拉面板模板引用
 const panelWrapperRef = ref<HTMLElement | null>(null) // 定位参照容器：面板 top / left 的坐标原点
@@ -271,7 +274,7 @@ const autoCompletePanelStyle = computed<CSSProperties>(() => ({
   transformOrigin: transformOrigin.value,
   ...props.dropdownMenuStyle,
   zIndex: autoCompletePanelZIndex.value,
-  '--auto-complete-option-bg-color-active': colorPalettes.value[0]
+  '--auto-complete-option-bg-color-active': 'var(--va-cp-auto-complete-primary-bg-color, var(--va-primary-bg-color))'
 }))
 watch(showOptions, (to) => {
   if (!to) return
@@ -591,9 +594,6 @@ defineExpose({
     :style="`
       --auto-complete-width: ${autoCompleteWidth};
       --auto-complete-height: ${autoCompleteHeight};
-      --auto-complete-primary-color-hover: ${colorPalettes[4]};
-      --auto-complete-primary-color-focus: ${colorPalettes[4]};
-      --auto-complete-primary-shadow-color: ${shadowColor};
     `"
     @mousedown="onMousedown"
   >
@@ -657,7 +657,12 @@ defineExpose({
       <!-- 两层 DOM：定位参照容器 + 面板。
            容器的实时矩形即面板 top / left 的坐标原点，故 Teleport 与 to: false 就地渲染共用同一套求解；
            首帧优化内化在此：首次展示前不渲染任何浮层 DOM，之后由面板上的 v-show 复用同一元素 -->
-      <div ref="panelWrapperRef" class="auto-complete-panel-wrapper">
+      <div
+        ref="panelWrapperRef"
+        class="auto-complete-panel-wrapper"
+        :style="teleportThemeVars"
+        :data-va-mode="teleportThemeMode"
+      >
         <Transition
           appear
           name="slide"
@@ -794,13 +799,13 @@ defineExpose({
   width: var(--auto-complete-width);
   font-size: 14px;
   font-weight: 400;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   outline: none;
   cursor: pointer;
   transition: all 0.3s;
   &:not(.auto-complete-disabled):hover {
     .auto-complete-content {
-      border-color: var(--auto-complete-primary-color-hover);
+      border-color: var(--va-cp-auto-complete-primary-color-hover, var(--va-primary-color-hover));
     }
   }
   .auto-complete-content {
@@ -810,9 +815,9 @@ defineExpose({
     width: 100%;
     min-width: 120px;
     padding: 0 11px;
-    border: 1px solid #d9d9d9;
+    border: 1px solid var(--va-border-color);
     border-radius: 6px;
-    background-color: #fff;
+    background-color: var(--va-bg-container-color);
     height: var(--auto-complete-height);
     outline: none;
     cursor: text;
@@ -829,7 +834,7 @@ defineExpose({
       font-size: inherit;
       color: inherit;
       &::placeholder {
-        color: rgba(0, 0, 0, 0.25);
+        color: var(--va-text-color-disabled);
       }
     }
     .clear-svg {
@@ -844,18 +849,18 @@ defineExpose({
       width: 12px;
       height: 12px;
       font-size: 12px;
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
       fill: currentColor;
       opacity: 0;
       user-select: none;
       pointer-events: none;
-      background: #fff;
+      background: var(--va-bg-container-color);
       cursor: pointer;
       transition:
         color 0.2s,
         opacity 0.3s;
       &:hover {
-        color: rgba(0, 0, 0, 0.45);
+        color: var(--va-text-color-3);
       }
       // 自定义 clearIcon 插槽内的图标统一约束尺寸，避免默认图标组件尺寸过大或垂直错位
       :deep(svg) {
@@ -873,8 +878,9 @@ defineExpose({
 }
 .auto-complete-focused:not(.auto-complete-disabled) {
   .auto-complete-content {
-    border-color: var(--auto-complete-primary-color-focus);
-    box-shadow: 0 0 0 2px var(--auto-complete-primary-shadow-color);
+    /* 聚焦态：边框取悬停档主色（与 hover 同色），阴影取焦点环 */
+    border-color: var(--va-cp-auto-complete-primary-color-hover, var(--va-primary-color-hover));
+    box-shadow: var(--va-cp-auto-complete-focus-shadow, var(--va-focus-shadow));
   }
 }
 .auto-complete-small {
@@ -898,36 +904,36 @@ defineExpose({
   }
   &:hover .auto-complete-content {
     border-color: transparent;
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: var(--va-fill-color-1);
   }
   &.auto-complete-focused .auto-complete-content {
     border-color: transparent;
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: var(--va-fill-color-1);
     box-shadow: none;
   }
 }
 .auto-complete-status-error:not(.auto-complete-disabled) {
   .auto-complete-content {
-    border-color: #ff7875;
+    border-color: var(--va-error-color);
   }
   &:hover .auto-complete-content {
-    border-color: #ff7875;
+    border-color: var(--va-error-color);
   }
   &.auto-complete-focused .auto-complete-content {
-    border-color: #ff7875;
-    box-shadow: 0 0 0 2px rgba(255, 38, 5, 0.06);
+    border-color: var(--va-error-color);
+    box-shadow: 0 0 0 2px var(--va-error-bg-color);
   }
 }
 .auto-complete-status-warning:not(.auto-complete-disabled) {
   .auto-complete-content {
-    border-color: #ffd666;
+    border-color: var(--va-warning-color);
   }
   &:hover .auto-complete-content {
-    border-color: #ffd666;
+    border-color: var(--va-warning-color);
   }
   &.auto-complete-focused .auto-complete-content {
-    border-color: #ffd666;
-    box-shadow: 0 0 0 2px rgba(255, 215, 5, 0.1);
+    border-color: var(--va-warning-color);
+    box-shadow: 0 0 0 2px var(--va-warning-bg-color);
   }
 }
 .auto-complete-custom {
@@ -950,8 +956,8 @@ defineExpose({
 }
 .auto-complete-disabled {
   .auto-complete-content {
-    color: rgba(0, 0, 0, 0.25);
-    background: #f5f5f5;
+    color: var(--va-text-color-disabled);
+    background: var(--va-fill-color-1);
     user-select: none;
     cursor: not-allowed;
     .auto-complete-input {
@@ -979,13 +985,10 @@ defineExpose({
   padding: 4px;
   border-radius: 8px;
   overflow: hidden;
-  background-color: #fff;
+  background-color: var(--va-bg-elevated-color);
   outline: none;
   cursor: auto;
-  box-shadow:
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--va-popup-shadow);
   .auto-complete-options {
     /* 关闭滚动越界回弹与滚动链：否则触控板惯性滚动会带着列表冲出滚动区，面板底部露出空白
        （与 Select 面板同一处理；⚠️ 必须是 none 而非 contain —— contain 只切断向父级的滚动链，
@@ -995,7 +998,7 @@ defineExpose({
     }
     .auto-complete-group-title {
       padding: 5px 12px;
-      color: rgba(0, 0, 0, 0.45);
+      color: var(--va-text-color-3);
       font-size: 12px;
       line-height: 22px;
       cursor: default;
@@ -1005,7 +1008,7 @@ defineExpose({
       display: block;
       padding: 5px 12px;
       border-radius: 4px;
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--va-text-color-1);
       font-weight: 400;
       font-size: 14px;
       line-height: 1.5714285714285714;
@@ -1030,10 +1033,10 @@ defineExpose({
       }
     }
     .option-hover {
-      background: rgba(0, 0, 0, 0.04);
+      background: var(--va-fill-color-1);
     }
     .option-disabled {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
       cursor: not-allowed;
     }
   }

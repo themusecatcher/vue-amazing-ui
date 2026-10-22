@@ -205,7 +205,11 @@ describe('浮层默认层级：文档表格与来源一致', () => {
       FLOATING_LAYER_Z_INDEX.overlay + INNER_OFFSET
     ])
     expect(findRow('Drawer').levels).toEqual([FLOATING_LAYER_Z_INDEX.overlay])
-    expect(findRow('Image').levels).toEqual([FLOATING_LAYER_Z_INDEX.image, FLOATING_LAYER_Z_INDEX.image + INNER_OFFSET])
+    expect(findRow('Image').levels).toEqual([
+      FLOATING_LAYER_Z_INDEX.image,
+      FLOATING_LAYER_Z_INDEX.image + INNER_OFFSET,
+      FLOATING_LAYER_Z_INDEX.image + INNER_OFFSET + IMAGE_OPERATION_OFFSET
+    ])
     expect(findRow('Message').levels).toEqual([FLOATING_LAYER_Z_INDEX.message, FLOATING_LAYER_Z_INDEX.notification])
     expect(findRow('LoadingBar').levels).toEqual([FLOATING_LAYER_Z_INDEX.loadingBar])
   })
@@ -223,6 +227,7 @@ describe('浮层默认层级：文档表格与来源一致', () => {
       ...Object.values(FLOATING_LAYER_Z_INDEX),
       FLOATING_LAYER_Z_INDEX.overlay + INNER_OFFSET,
       FLOATING_LAYER_Z_INDEX.image + INNER_OFFSET,
+      FLOATING_LAYER_Z_INDEX.image + INNER_OFFSET + IMAGE_OPERATION_OFFSET,
       ...UNMANAGED_LEVELS
     ])
     expect(Array.from(documented).filter((value) => !registered.has(value))).toEqual([])

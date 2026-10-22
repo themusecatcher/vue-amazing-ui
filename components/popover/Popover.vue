@@ -37,7 +37,7 @@ const showContent = computed(() => {
 <template>
   <Tooltip
     max-width="auto"
-    bg-color="#fff"
+    bg-color="var(--va-bg-elevated-color)"
     :tooltip-style="{
       padding: '12px',
       borderRadius: '8px',
@@ -60,13 +60,13 @@ const showContent = computed(() => {
 <style lang="less" scoped>
 .popover-title {
   min-width: 176px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   font-weight: 600;
 }
 .mb8 {
   margin-bottom: 8px;
 }
 .popover-content {
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
 }
 </style>

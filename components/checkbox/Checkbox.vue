@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, inject, ref, watch, watchEffect } from 'vue'
 import type { VNode } from 'vue'
-import { useSlotsExist, useInject, useWave } from 'components/utils'
+import { useSlotsExist, useWave } from 'components/utils'
 import { checkboxGroupContextKey } from './context'
 import type { CheckboxChangeEvent, CheckboxValue } from './context'
 
@@ -31,7 +31,6 @@ const props = withDefaults(defineProps<Props>(), {
 defineSlots<CheckboxSlots>()
 const checkboxChecked = ref<boolean>(false) // v-model:checked 是否选中标志
 const { wave, startWave, endWave } = useWave() // 复选框动画选中效果标志
-const { colorPalettes, shadowColor } = useInject('Checkbox') // 主题色注入
 const emits = defineEmits(['update:checked', 'change'])
 const slotsExist = useSlotsExist(['default'])
 // 所在复选框组：置入组内时选中态、禁用态与事件出口改由组统一承载，脱离组时不读取
@@ -155,7 +154,6 @@ defineExpose({ focus, blur })
   <label
     class="checkbox-container"
     :class="{ 'checkbox-disabled': mergedDisabled, 'checkbox-focused': exposedSingleFocused }"
-    :style="`--checkbox-primary-color: ${colorPalettes[5]}; --checkbox-primary-color-hover: ${colorPalettes[4]}; --checkbox-primary-shadow-color: ${shadowColor};`"
     @mousedown="onMouseDown"
     v-bind="$attrs"
   >
@@ -210,7 +208,7 @@ defineExpose({ focus, blur })
   display: inline-flex;
   align-items: baseline;
   cursor: pointer;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   font-size: 14px;
   line-height: 1.5714285714285714;
   /* 零宽行内伪元素参与基线对齐：容器被指定固定高度（如逐项内联 height）时，方框与文字仍对齐于同一基线 */
@@ -223,15 +221,15 @@ defineExpose({ focus, blur })
   /* 键盘聚焦走 :focus-visible（input 的 focus 事件同步置位 .checkbox-focused，双路径兜底）；脚本调用 focus() 不匹配该伪类，由容器自身的 .checkbox-focused 兜底显示焦点环 */
   .checkbox-input:focus-visible + .checkbox-box,
   &.checkbox-focused .checkbox-box {
-    box-shadow: 0 0 0 2px var(--checkbox-primary-shadow-color);
+    box-shadow: 0 0 0 2px var(--va-cp-checkbox-focus-shadow, var(--va-focus-shadow));
   }
   &:not(.checkbox-disabled):hover {
     .checkbox-box {
-      border-color: var(--checkbox-primary-color);
+      border-color: var(--va-cp-checkbox-primary-color, var(--va-primary-color));
     }
     /* 选中态 hover：底色浅一档、边框转透明，由实心色块铺满整块 */
     .checkbox-checked {
-      background-color: var(--checkbox-primary-color-hover);
+      background-color: var(--va-cp-checkbox-primary-color-hover, var(--va-primary-color-hover));
       border-color: transparent;
     }
   }
@@ -246,7 +244,7 @@ defineExpose({ focus, blur })
     width: 16px;
     height: 16px;
     background: transparent;
-    border: 1px solid #d9d9d9;
+    border: 1px solid var(--va-border-color);
     border-radius: 4px;
     transition: all 0.3s;
     &::after {
@@ -256,7 +254,7 @@ defineExpose({ focus, blur })
       display: table;
       width: 5.7142857142857135px;
       height: 9.142857142857142px;
-      border: 2px solid #fff;
+      border: 2px solid var(--va-text-color-solid);
       border-top: 0;
       border-left: 0;
       transform: rotate(45deg) scale(0) translate(-50%, -50%);
@@ -284,7 +282,7 @@ defineExpose({ focus, blur })
       z-index: 1;
       /* 默认不可见：环由选中态驱动，程序化选中时鼠标未必在项上 */
       visibility: hidden;
-      border: 2px solid var(--checkbox-primary-color);
+      border: 2px solid var(--va-cp-checkbox-primary-color, var(--va-primary-color));
       animation-name: antCheckboxEffect;
       animation-fill-mode: backwards;
       @keyframes antCheckboxEffect {
@@ -304,8 +302,8 @@ defineExpose({ focus, blur })
     visibility: visible;
   }
   .checkbox-checked {
-    background-color: var(--checkbox-primary-color);
-    border-color: var(--checkbox-primary-color);
+    background-color: var(--va-cp-checkbox-primary-color, var(--va-primary-color));
+    border-color: var(--va-cp-checkbox-primary-color, var(--va-primary-color));
     &::after {
       opacity: 1;
       transform: rotate(45deg) scale(1) translate(-50%, -50%);
@@ -318,7 +316,7 @@ defineExpose({ focus, blur })
       left: 50%;
       width: 8px;
       height: 8px;
-      background-color: var(--checkbox-primary-color);
+      background-color: var(--va-cp-checkbox-primary-color, var(--va-primary-color));
       border: 0;
       transform: translate(-50%, -50%) scale(1);
       opacity: 1;
@@ -330,19 +328,19 @@ defineExpose({ focus, blur })
   }
 }
 .checkbox-disabled {
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--va-text-color-disabled);
   cursor: not-allowed;
   .checkbox-box {
-    border-color: #d9d9d9;
-    background-color: rgba(0, 0, 0, 0.04);
+    border-color: var(--va-border-color);
+    background-color: var(--va-fill-color-1);
     &::after {
-      border-color: rgba(0, 0, 0, 0.25);
+      border-color: var(--va-text-color-disabled);
       animation-name: none;
     }
   }
   /* 半选禁用：实心小方块随禁用态去饱和，与禁用文字同色 */
   .checkbox-indeterminate::after {
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: var(--va-text-color-disabled);
   }
 }
 </style>

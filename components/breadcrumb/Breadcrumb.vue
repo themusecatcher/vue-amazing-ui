@@ -61,13 +61,13 @@ function getTargetUrl(route: Route): string {
     :class="breadcrumbClass"
     :style="[
       `
-        --breadcrumb-color: rgba(0, 0, 0, 0.45);
-        --breadcrumb-bg-color-hover: rgba(0, 0, 0, 0.06);
-        --breadcrumb-color-hover: rgba(0, 0, 0, 0.88);
-        --breadcrumb-color-active: rgba(0, 0, 0, 0.88);
+        --breadcrumb-color: var(--va-text-color-3);
+        --breadcrumb-bg-color-hover: var(--va-fill-color-2);
+        --breadcrumb-color-hover: var(--va-text-color-1);
+        --breadcrumb-color-active: var(--va-text-color-1);
         --breadcrumb-padding: 0 4px;
         --breadcrumb-border-radius: 4px;
-        --breadcrumb-separator-color: rgba(0, 0, 0, 0.45);
+        --breadcrumb-separator-color: var(--va-text-color-3);
       `,
       breadcrumbStyle
     ]"

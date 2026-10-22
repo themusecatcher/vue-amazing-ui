@@ -2,7 +2,7 @@
 import { ref, computed, watch, nextTick, onBeforeUnmount } from 'vue'
 import type { CSSProperties } from 'vue'
 import Ellipsis, { type EllipsisProps } from 'components/ellipsis'
-import { useResizeObserver, useInject } from 'components/utils'
+import { useResizeObserver } from 'components/utils'
 export interface Item {
   title: string // 文字标题
   href?: string // 跳转链接
@@ -53,7 +53,6 @@ const activeIndex = ref<number>(0) // 垂直滚动当前索引
 const verticalMoveTimer = ref<ReturnType<typeof setTimeout> | null>(null) // 垂直滚动定时器引用标识
 const originVertical = ref<boolean>(true) // 垂直滚动初始状态
 const scrollItems = ref<Item[]>([]) // 滚动目标文字数组
-const { colorPalettes } = useInject('TextScroll') // 主题色注入
 const emit = defineEmits(['click'])
 const itemsAmount = computed(() => {
   return scrollItems.value.length
@@ -222,9 +221,7 @@ defineExpose({
     :style="[
       scrollBoardStyle,
       `
-        --text-scroll-shadow-color: #d3d3d3;
-        --text-scroll-bg-color: #fff;
-        --text-scroll-href-hover-color: ${hrefHoverColor || colorPalettes[5]};
+        --text-scroll-href-hover-color: ${hrefHoverColor || 'var(--va-cp-text-scroll-primary-color, var(--va-primary-color))'};
         --text-scroll-item-gap: ${gap}px;
         --text-scroll-play-state: ${playState};
         --text-scroll-duration: ${animationDuration}s;
@@ -298,9 +295,7 @@ defineExpose({
     :style="[
       scrollBoardStyle,
       `
-        --text-scroll-shadow-color: #d3d3d3;
-        --text-scroll-bg-color: #fff;
-        --text-scroll-href-hover-color: ${hrefHoverColor || colorPalettes[5]};
+        --text-scroll-href-hover-color: ${hrefHoverColor || 'var(--va-cp-text-scroll-primary-color, var(--va-primary-color))'};
         --text-scroll-duration: ${duration}ms;
         --text-scroll-timing-function: ease;
         --text-scroll-scale: 0.5;
@@ -341,9 +336,9 @@ defineExpose({
 .text-scroll-horizontal {
   overflow: hidden;
   display: flex;
-  box-shadow: 0px 0px 5px var(--text-scroll-shadow-color);
+  box-shadow: 0px 0px 5px var(--va-text-scroll-shadow-color, var(--va-border-color));
   border-radius: 6px;
-  background-color: var(--text-scroll-bg-color);
+  background-color: var(--va-text-scroll-bg-color, var(--va-bg-container-color));
   .scroll-items-group {
     z-index: 1;
     display: flex;
@@ -364,7 +359,7 @@ defineExpose({
       margin-left: var(--text-scroll-item-gap);
       font-size: 16px;
       font-weight: 400;
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--va-text-color-1);
       line-height: 1.57;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -401,9 +396,9 @@ defineExpose({
 .text-scroll-vertical {
   overflow: hidden;
   position: relative;
-  box-shadow: 0px 0px 5px var(--text-scroll-shadow-color);
+  box-shadow: 0px 0px 5px var(--va-text-scroll-shadow-color, var(--va-border-color));
   border-radius: 6px;
-  background-color: var(--text-scroll-bg-color);
+  background-color: var(--va-text-scroll-bg-color, var(--va-bg-container-color));
   .scroll-item-wrap {
     position: absolute;
     left: 0;
@@ -416,7 +411,7 @@ defineExpose({
     .scroll-item {
       font-size: 16px;
       font-weight: 400;
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--va-text-color-1);
       line-height: 1.57;
       overflow: hidden;
       white-space: nowrap;

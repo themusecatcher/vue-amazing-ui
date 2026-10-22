@@ -37,9 +37,9 @@
 ## 构建配置（vite.config.ts）
 
 - 根据构建参数 `dir` 分发：
-  - `dir=dist` → `buildDistOptions`（全量：es + umd；`f=iife` 时只出 iife）。
+  - `dir=dist` → `buildDistOptions`（全量：es + umd；`f=iife` 时只出 iife）。umd 保留给 require / AMD / 全局脚本形态的消费方（与 antd、naive-ui 的产物形态对齐），故 `dist/index.umd.cjs` 不是冗余产物。
   - 其余（含 `build-only`）→ `buildESAndLibOptions`（按需：es + lib，`preserveModules: true` + `preserveModulesRoot: 'components'`，后者保证产物落在 `es/button/` 而非 `es/components/button/`）。
-- `externalDependencies`：库模式外部化依赖（vue / date-fns / swiper 等），不打进产物。注意 swiper 只外部化子路径 `swiper/modules` / `swiper/vue`，主包留在产物中由 Rollup 处理。
+- `externalDependencies`：库模式外部化依赖（vue / date-fns / swiper 等），不打进产物。注意 swiper 只外部化子路径 `swiper/modules` / `swiper/vue`——源码仅从这两个子路径 import（另有 type-only 的 `swiper/types` 与 CSS 的 `swiper/css*`，样式由 `vendor-styles` 单独复制），**主包 swiper 不会进入产物**，由消费方按 `dependencies` 解析子路径。
 - `externalGlobals`：IIFE / UMD 构建的外部依赖全局变量名。
 - `generateCssDtsPlugin`：`dir=dist` 时生成 `dist/css.d.ts`，供 `package.json` 的 `exports['./css'].types` 指向，解决 `import 'vue-amazing-ui/css'` 的 TS 报错。
 - `stylePostBuildPlugin` 在 `closeBundle` 内**顺序**执行三步后处理（`dir=dist` 时整体跳过），共同确立「样式与 JS 分离」下的产物契约：
@@ -51,12 +51,16 @@
 | 配置 | 值 | 原因 |
 | :--- | :--- | :--- |
 | `buildDistOptions.emptyOutDir` | `false` | `build:components` 用 `run-p` 并行执行 `build:dist` / `build:browser`（两者都写 `dist`），若为 `true` 会在启动时各自清空 `dist` 造成竞态、产物互相覆盖；清空动作由前置 `clean` 串行完成 |
+| `css.preprocessorOptions` | 不配置 | 3.0 起主题唯一来源是 `components/theme` 的 `DEFAULT_SEEDS`（构建期派生 `components/style/generated/theme.css`），不再向 Less 注入主题变量；全仓 88 处 `<style lang="less">` 与 3 份全局 less 均不使用内联 JS / `@plugin`，故 `modifyVars` 与 `javascriptEnabled` 都无消费方。加回前先确认确实有 Less 变量消费方，否则会形成第二份主色事实 |
 | `cssCodeSplit` | dist 为 `false`，es / lib 为 `true` | dist 需合并出单个 `style.css` 供全量引入；es / lib 需按组件粒度拆分出各组件 `Xxx.css` 供按需引入 |
 | `package.json` 的 `sideEffects` | `["dist/*.css", "*.css", "**/style/*"]` | webpack 生产模式默认开启 `optimization.sideEffects`：未被白名单覆盖的文件会被判定为「无副作用」，`import 'vue-amazing-ui/es/button/style'` 这类**纯副作用导入**会被 tree-shaking 丢弃（实测 webpack 5.111：`es/<dir>/style/index.js` 是 `.js`、未被 `*.css` 覆盖 → 样式静默丢失）。不含 `/` 的模式会被 webpack 自动补 `**/` 前缀（故 `*.css` 能覆盖嵌套 CSS）；`**/style/*` 专门覆盖样式入口 JS/CJS（含 `es/grid/row/style` 这类嵌套目录）。`scripts/prepublish-guard.js` 的第 ④ 项断言会兜住漏配 |
+| `dts` 插件的注册条件 | 仅 `dir === undefined`（即 `build-only` / es|lib 构建） | `dts` 的 `outDir` 固定为 `['es','lib']`，与构建自身的产出目录无关。若 dist 构建也注册，三条声明流水线会同时写 `es|lib`，并与 `build-only` 的 `emptyOutDir` 清空（发生在 `renderStart`）竞态，表现为 `[vite:dts] ENOENT ... es/<component>/index.d.ts` 的 CI 随机红，且类型被重复生成三遍 |
 
 ## 类型生成（dts）
 
 `vite-plugin-dts` 从源码生成 `*.d.ts`，以 `entryRoot` 指定 `components/` 为类型产物根，输出路径直接对齐运行产物结构（`es/button/index.d.ts` 而非 `es/components/button/index.d.ts`；复合组件同样落在 `es/grid/row/Row.d.ts`），无需逐条改写路径。`outDir` 为 `['es', 'lib']`，与 JS 产物同目录；`tsconfigPath` 指向 dts 专用的 `tsconfig.dts.json`；`cleanVueFileName` 把 `.vue.d.ts` 规整为 `.d.ts`。
+
+插件**只在 `dir === undefined` 的构建里注册**（即 `build-only`）：类型产物只服务 `es` / `lib`，dist 全量构建不产出 `.d.ts`。这既是产物归属问题，也是并发安全问题——`build:components` 用 `run-p` 并行跑三个构建，若 dist 构建也写 `es|lib` 的声明，会与 `build-only` 的 `emptyOutDir` 清空竞态，CI 会随机报 `ENOENT ... es/<component>/index.d.ts` 且类型被重复生成三遍。
 
 | 源码路径 | 类型产物路径 |
 | :--- | :--- |
@@ -94,18 +98,20 @@
 ```sh
 pnpm build             # clean + 三产物构建（run-s clean build:components）
 pnpm build:components  # 并行 type-check + dist + browser(iife) + es/lib
-pnpm format            # Prettier 格式化 src/ 与 components/
+pnpm format            # Prettier 格式化全仓库（排除项由 .prettierignore 声明：构建产物 / markdown / 锁文件等）
+pnpm format:check      # 只检查不写盘（CI 与 pnpm check 使用；范围同 format）
 pnpm lint              # ESLint 检查并修复
 pnpm type-check        # vue-tsc 类型检查
 pnpm check             # 聚合检查：lint:check + format:check + type-check + test
 pnpm test              # vitest 运行测试
-pnpm verify            # 重量级门禁：build + verify:deps + verify:on-demand + guard（发布前 / CI 自检）
+pnpm verify            # 重量级门禁：build + verify:deps + verify:on-demand + verify:theme + guard（发布前 / CI 自检）
 pnpm verify:deps       # 产物一致性校验：依赖表 ↔ chunk 闭包 + 聚合入口类型声明 ↔ 运行时导出（需已构建产物）
 pnpm verify:on-demand  # 按需引入端到端验证：临时消费方工程 + canary 断言（需已构建产物）
+pnpm verify:theme      # 主题架构守护：变量契约 / 组件令牌注册表 / 组件文件与登记表一致性
 pnpm guard             # 产物守卫：毫秒级存在性校验（样式入口 / 编号 CSS / 入口内引用 / 聚合入口类型与运行时配对）
 ```
 
-> `scripts/publish.sh` 也会在构建后强制执行 `verify:deps` 与 `verify:on-demand`。
+> `scripts/publish.sh` 也会在构建后强制执行 `verify:deps`、`verify:on-demand` 与 `verify:theme`（`guard` 由 `prepublishOnly` 触发）。
 > 边界：`verify:on-demand` 用 Vite 构建，而 Vite 不做 webpack 式的 `sideEffects` tree-shaking，测不到「样式入口被 webpack 丢弃」这类问题 —— 该场景由 `prepublish-guard.js` 的第 ④ 项断言兜底。
 > CI 已启用：`.github/workflows/verify.yml` 在 PR 与 `main` 上**并行**跑两个 job —— `check`（`pnpm check`）与 `verify`（`pnpm verify` + `pnpm docs:build`，含完整构建）；
 > `docs:build` 必须晚于 `build`：docs 站的组件库来源是 `dist/` 产物（`docs/.vitepress/config.ts` 的 resolveId 钩子把 `'vue-amazing-ui'` 指向 `../../dist/index.js`），并非 npm 上的同名包；它同时兜住 `docs/**/*.md`（VitePress 的 md-as-SFC）的模板 / 标签结构错误 —— 这批 md 不可纳入 Prettier（会破坏构建，详见 `.github/workflows/verify.yml` 文件头说明）。
@@ -119,7 +125,7 @@ pnpm guard             # 产物守卫：毫秒级存在性校验（样式入口 
 - 配置：`vitest.config.ts`（独立于 vite.config.ts，避免库模式构建配置干扰）。
 - 环境：`happy-dom`，`globals: true`，用例匹配 `tests/**/*.spec.ts`。
 - 框架：`@vue/test-utils` + `vitest`。
-- `tests/setup.ts`：为 happy-dom 提供符合 `AnimationFrameID` 契约的 `requestAnimationFrame` 实现（详见文件内注释）。
+- `tests/setup.ts`：为 happy-dom 提供返回值稳定为 `number`、帧间隔固定的 `requestAnimationFrame` 实现，供组件帧调度（`Countdown` / `Table` / `Dialog` / `useFps` 等）在测试中可取消、可预期（详见文件内注释）。
 - 用例分类（按主题分布，新增用例就近归入或新建 `<主题>.spec.ts`）：
   - 环境 / 内建：`env.spec.ts`、`internal.spec.ts`、`ssr.spec.ts`
   - 缺陷回归：`bugs.spec.ts`

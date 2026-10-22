@@ -15,7 +15,7 @@ _模态对话框_
 
 ## 使用方式
 
-| 调用方式 | API | 适用位置 |
+| 调用方式 | `API` | 适用位置 |
 | :-- | :-- | :-- |
 | 组件树内调用 <Tag color="success" size="small">推荐</Tag> | `useModal()` | 组件 `setup` 内，需外层存在 `<ModalProvider>` |
 | 声明式用法 <Tag color="warning" size="small">插槽自定义</Tag> | `<Modal v-model:open>` | 模板中，标题 / 内容 / 底部需用插槽自定义时 |
@@ -29,7 +29,7 @@ _适用于命令式调用：先在应用根节点放置一次 `<ModalProvider>`�
 
 ::: info 关于 `ModalProvider` 与 `Modal`
 
-- `ModalProvider` 内部渲染一个 `Modal` 组件，并通过 `provide/inject` 向下提供 `useModal()` 所需的 API，自身不渲染任何可见内容
+- `ModalProvider` 内部渲染一个 `Modal` 组件，并通过 `provide/inject` 向下提供 `useModal()` 所需的 `API`，自身不渲染任何可见内容
 - 组件级配置属性（`width` / `height` / `centered` / `top` / `blockScroll` / `to` 等）会透传给内部的 `Modal`，因此直接参考下方 [Modal Props](#modal) 设置即可
 - 使用 `useModal()` 时，组件级配置设置在 `<ModalProvider>` 上（无法直接接触内部 `Modal`）；每次调用的个性化配置（`title` / `content` / `icon` / `width` / `onOk` 等）则在调用 `info` / `confirm` 等方法时作为参数传入，参考 [ModalOptions Type](#modaloptions-type)
 
@@ -104,7 +104,7 @@ const open = ref(false)
 
 ::: tip 命令式与声明式的差异
 
-- **实例生命周期**：命令式（`info` / `confirm` 等）每次调用入栈一个新实例，默认关闭即销毁（`destroyOnClose: true`）；声明式实例常驻（默认 `destroyOnClose: false`），关闭后内容 DOM 与内部状态保留
+- **实例生命周期**：命令式（`info` / `confirm` 等）每次调用入栈一个新实例，默认关闭即销毁（`destroyOnClose: true`）；声明式实例常驻（默认 `destroyOnClose: false`），关闭后内容 `DOM` 与内部状态保留
 - **默认行为**：命令式默认不显示右上角关闭按钮、不响应遮罩点击，需显式传 `closable: true` / `maskClosable: true`；声明式回落到组件默认值（`closable: false`、`maskClosable: true`）
 - **内容来源**：命令式通过 `title` / `content` 等参数传入；声明式除参数外，还可用 `#icon` / `#title` / `#default` / `#footer` / `#closeIcon` 插槽自定义
 
@@ -1640,7 +1640,7 @@ const renderFnIconOpen = ref(false)
 
 `Modal` 渲染为多层结构，各层的外观 / 定位由对应的 `XxxClass` / `XxxStyle` 控制：
 
-| 层级 | DOM 类名 | 职责 | 对应配置项 |
+| 层级 | `DOM` 类名 | 职责 | 对应配置项 |
 | :-- | :-- | :-- | :-- |
 | 外层容器 | `.modal-wrap` | 铺满视口，多实例共享 | `wrapClass` / `wrapStyle` |
 | 蒙层 | `.modal-mask` | 遮罩 | `maskClass` / `maskStyle` |
@@ -2730,7 +2730,7 @@ _每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)
 | :-- | :-- | :-- | :-- |
 | width | 模态框宽度，单位 `px` | string &#124; number | 420 |
 | height | 内容区高度，单位 `px`，默认自适应内容高度；指定后内容区内部滚动 | string &#124; number | 'auto' |
-| icon | 自定义图标，prop 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | VNode &#124; (() => VNode) | undefined |
+| icon | 自定义图标，`prop` 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | VNode &#124; (() => VNode) | undefined |
 | title | 模态框标题 | string &#124; VNode &#124; (() => VNode) | undefined |
 | titleClass | 自定义标题类名 | string | undefined |
 | titleStyle | 自定义标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
@@ -2749,7 +2749,7 @@ _每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)
 | noticeProps | 通知按钮 `props` 配置，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {} |
 | footer | 是否显示底部按钮区：`false` 隐藏，`true` 渲染内置按钮组，传函数则完全自定义；插槽形态请用 `#footer` | boolean &#124; (() => VNode) | true |
 | closable | 是否显示右上角关闭按钮，默认 `false`，需要时显式开启 | boolean | false |
-| closeIcon | 自定义关闭图标，prop 支持 `VNode` / 渲染函数；插槽形态请用同名 `#closeIcon` 插槽 | VNode &#124; (() => VNode) | undefined |
+| closeIcon | 自定义关闭图标，`prop` 支持 `VNode` / 渲染函数；插槽形态请用同名 `#closeIcon` 插槽 | VNode &#124; (() => VNode) | undefined |
 | closeFocusable | 关闭按钮是否可聚焦，设为 `false` 后关闭按钮 `tabindex` 为 `-1`，不参与 `Tab` 序列 | boolean | true |
 | renderBeforeOpen | 首次打开前是否渲染内容（关闭懒渲染） | boolean | false |
 | destroyOnClose | 关闭时是否销毁 `Modal` 里的子元素，实例栈下关闭即从栈中移除，内容随之销毁 | boolean | false |
@@ -2830,9 +2830,9 @@ _调用时传入的 `ModalOptions` 类型（`info` / `success` / `error` / `warn
 | focusTriggerAfterClose? | 关闭后是否将焦点归还给触发元素 | boolean | undefined |
 | modalRender? | 自定义渲染弹窗内容，常用于包裹拖拽逻辑 | (arg: { originVNode: VNode }) => VNode | undefined |
 | afterClose? | 完全关闭（离场动画结束）后的回调 | () => void | undefined |
-| onKnow? | 点击知道了按钮的回调，返回 `false` 或 `Promise` reject 时阻止关闭 | () => unknown &#124; Promise\<unknown\> | undefined |
-| onOk? | 点击确认按钮的回调，返回 `false` 或 `Promise` reject 时阻止关闭 | () => unknown &#124; Promise\<unknown\> | undefined |
-| onCancel? | 点击遮罩层、`Esc` 键或取消按钮的回调，返回 `false` 或 `Promise` reject 时阻止关闭 | () => unknown &#124; Promise\<unknown\> | undefined |
+| onKnow? | 点击知道了按钮的回调，返回 `false` 或 `Promise` `reject` 时阻止关闭 | () => unknown &#124; Promise\<unknown\> | undefined |
+| onOk? | 点击确认按钮的回调，返回 `false` 或 `Promise` `reject` 时阻止关闭 | () => unknown &#124; Promise\<unknown\> | undefined |
+| onCancel? | 点击遮罩层、`Esc` 键或取消按钮的回调，返回 `false` 或 `Promise` `reject` 时阻止关闭 | () => unknown &#124; Promise\<unknown\> | undefined |
 | onEsc? | 按下 `Esc` 键的回调，无论是否允许关闭都会触发 | (e: KeyboardEvent) => void | undefined |
 | onMaskClick? | 点击遮罩的回调，无论是否允许关闭都会触发 | (e: MouseEvent) => void | undefined |
 
@@ -2900,7 +2900,7 @@ _`cancel` / `ok` / `know` / `change` / `ready` 为 `<Modal>` 与 `<ModalProvider
 | ok | 点击确定按钮的回调 | (e: MouseEvent) => void |
 | know | 点击知道了按钮的回调 | (e: MouseEvent) => void |
 | change | 任一弹窗打开 / 关闭时触发，多实例下携带该实例 `key` | (open: boolean, key: string) => void |
-| ready | 实例挂载完成时触发，参数为该实例的 api | (api: [ModalApi](#methods)) => void |
+| ready | 实例挂载完成时触发，参数为该实例的 `api` | (api: [ModalApi](#methods)) => void |
 
 ## 在 setup 外使用
 
@@ -2912,10 +2912,10 @@ _适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：�
 
 ::: tip 注意
 
-- 主题使用内置默认值；如需自定义，通过第二个参数 `configProviderProps`（支持 `Ref` / `computed` 响应式）显式传入，详见 [全局化配置 ConfigProvider「主题同步到离散 API」](/guide/components/config-provider.html#主题同步到离散-api)
+- 主题使用内置默认值；如需自定义，通过第二个参数 `configProviderProps`（支持 `Ref` / `computed` 响应式）显式传入，详见 [全局化配置 ConfigProvider「离散 API 的主题」](/guide/components/config-provider.html#离散-api-的主题)
 - 每次调用都会创建一套独立实例（独立的容器与弹窗栈），建议缓存返回值复用，避免重复创建；不再使用时可通过返回的 `dispose()` 销毁该实例
 - 内部会访问 `document`，`SSR` 场景请在客户端（点击回调、`onMounted` 等）中调用
-- 不建议与 `useModal()` 在同一 App 中混用：两者各自持有独立的弹窗栈与挂载容器，`zIndex` 层级互不感知
+- 不建议与 `useModal()` 在同一 `App` 中混用：两者各自持有独立的弹窗栈与挂载容器，`zIndex` 层级互不感知
 
 :::
 
@@ -2923,7 +2923,7 @@ _适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：�
 
 _独立实例创建后不会随组件卸载自动销毁，也不会因内部弹窗全部关闭而回收，需根据使用场景决定是否手动 `dispose()`：_
 
-**场景 A · 全局单例，缓存复用（推荐）**：适用于 `axios` 拦截器、路由守卫、`Pinia action` 等常驻场景，整个应用生命周期内复用同一实例：
+**场景 `A` · 全局单例，缓存复用（推荐）**：适用于 `axios` 拦截器、路由守卫、`Pinia action` 等常驻场景，整个应用生命周期内复用同一实例：
 
 ```ts
 import { createDiscreteApi } from 'vue-amazing-ui'
@@ -2934,7 +2934,7 @@ const { modal } = createDiscreteApi(['modal'])
 modal.info({ title: 'Modal Title', content: '这是一个弹窗' })
 ```
 
-**场景 B · 临时使用后手动 `dispose()`**：适用于测试用例、单次任务等按需回收场景，用完即销毁：
+**场景 `B` · 临时使用后手动 `dispose()`**：适用于测试用例、单次任务等按需回收场景，用完即销毁：
 
 ```ts
 import { createDiscreteApi } from 'vue-amazing-ui'

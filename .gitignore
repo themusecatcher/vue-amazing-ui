@@ -36,3 +36,6 @@ docs/.vitepress/dist
 *.njsproj
 *.sln
 *.sw?
+
+# 主题默认变量表（构建期由 build/gen-theme.ts 生成）
+/components/style/generated/

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, createTextVNode, isVNode, useSlots, Comment, Fragment, Text } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { useMediaQuery, useMounted, useSlotsExist, warnUsage } from 'components/utils'
+import { useMediaQuery, useMounted, useSlotsExist, log } from 'components/utils'
 import DescriptionsItem from './descriptions-item'
 export interface Responsive {
   xs?: number // <576px 响应式栅格
@@ -182,7 +182,7 @@ const cells = computed<CellData[]>(() => {
   const childNodes = flattenChildren(slots.default?.()).filter((node) => node.type !== Comment)
   const itemNodes = childNodes.filter((node) => node.type === DescriptionsItem)
   if (itemNodes.length !== childNodes.length) {
-    warnUsage('Descriptions', '仅支持 DescriptionsItem 作为子节点，其余节点已被忽略')
+    log('warn', 'Descriptions', '仅支持 DescriptionsItem 作为子节点，其余节点已被忽略')
   }
   return itemNodes.map((node, index) => {
     const itemProps = (node.props ?? {}) as Record<string, unknown>
@@ -224,7 +224,7 @@ const cells = computed<CellData[]>(() => {
 function fillSpan(cell: CellData, restCol: number): CellData {
   if (cell.rawSpan === undefined || cell.span > restCol) {
     if (cell.rawSpan !== undefined && cell.span > restCol) {
-      warnUsage('Descriptions', '同一行 span 之和超过 column，已自动收缩为剩余列数')
+      log('warn', 'Descriptions', '同一行 span 之和超过 column，已自动收缩为剩余列数')
     }
     return { ...cell, span: restCol }
   }
@@ -377,7 +377,7 @@ const rows = computed<CellData[][]>(() => {
   --descriptions-item-padding-bottom: 16px;
   --descriptions-bordered-padding: 16px 24px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   line-height: 1.5714285714285714;
   &.descriptions-middle {
     --descriptions-item-padding-bottom: 12px;
@@ -398,12 +398,12 @@ const rows = computed<CellData[][]>(() => {
       flex: auto;
       font-weight: 600;
       font-size: 16px;
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--va-text-color-1);
       line-height: 1.5714285714285714;
     }
     .descriptions-extra {
       margin-left: auto;
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--va-text-color-1);
       font-size: 14px;
     }
   }
@@ -426,7 +426,7 @@ const rows = computed<CellData[][]>(() => {
     }
   }
   .descriptions-item-label {
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     font-weight: normal;
     font-size: 14px;
     line-height: 1.5714285714285714;
@@ -451,7 +451,7 @@ const rows = computed<CellData[][]>(() => {
     }
   }
   .descriptions-item-content {
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     font-size: 14px;
     line-height: 1.5714285714285714;
     word-break: break-word;
@@ -481,13 +481,13 @@ const rows = computed<CellData[][]>(() => {
     }
   }
   .descriptions-bordered {
-    border: 1px solid rgba(5, 5, 5, 0.06);
+    border: 1px solid var(--va-border-split-color);
     table {
       table-layout: auto;
       border-collapse: collapse;
     }
     .descriptions-row {
-      border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+      border-bottom: 1px solid var(--va-border-split-color);
       &:last-child {
         border-bottom: none;
       }
@@ -496,7 +496,7 @@ const rows = computed<CellData[][]>(() => {
     .descriptions-item-content {
       // 简写内边距覆盖基础规则的 padding-bottom
       padding: var(--descriptions-bordered-padding);
-      border-right: 1px solid rgba(5, 5, 5, 0.06);
+      border-right: 1px solid var(--va-border-split-color);
       display: table-cell;
       // 边框模式下内容垂直居中，覆盖基础规则中为非边框模式设置的 top
       vertical-align: middle;
@@ -506,7 +506,9 @@ const rows = computed<CellData[][]>(() => {
     }
     .descriptions-item-label {
       font-weight: normal;
-      background-color: rgba(0, 0, 0, 0.02);
+      // 标签底色取最淡一档中性叠加（fill-color-4）；
+      // 用 fill-color-1 会比内容区亮一档，暗色下尤其明显
+      background-color: var(--va-fill-color-4);
       &::after {
         // 边框模式不显示冒号
         display: none;

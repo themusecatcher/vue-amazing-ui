@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { CSSProperties, VNode } from 'vue'
-import { useInject, useWave } from 'components/utils'
+import { useWave } from 'components/utils'
 
 export interface Props {
   checked?: string // 选中时的内容
@@ -35,7 +35,6 @@ const props = withDefaults(defineProps<Props>(), {
 })
 defineSlots<SwitchSlots>()
 const { wave, startWave, endWave } = useWave()
-const { colorPalettes } = useInject('Switch') // 主题色注入
 const emit = defineEmits(['update:value', 'change'])
 function onSwitch(): void {
   if (props.value === props.checkedValue) {
@@ -59,9 +58,7 @@ function onSwitch(): void {
       'switch-disabled': disabled
     }"
     :style="`
-      --switch-primary-color: ${colorPalettes[5]};
-      --switch-primary-color-hover: ${colorPalettes[4]};
-      --switch-ripple-color: ${rippleColor || colorPalettes[5]};
+      --switch-ripple-color: ${rippleColor || 'var(--va-cp-switch-primary-color, var(--va-primary-color))'};
     `"
     @click="disabled || loading ? () => false : onSwitch()"
   >
@@ -90,16 +87,16 @@ function onSwitch(): void {
   vertical-align: middle;
   min-width: 44px;
   height: 22px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   font-size: 14px;
   line-height: 22px;
-  background: rgba(0, 0, 0, 0.25);
+  background: var(--va-text-color-disabled);
   border-radius: 100px;
   cursor: pointer;
   transition: all 0.2s;
   user-select: none;
   &:hover:not(.switch-disabled) {
-    background: rgba(0, 0, 0, 0.45);
+    background: var(--va-text-color-3);
   }
   .switch-inner {
     display: block;
@@ -116,7 +113,7 @@ function onSwitch(): void {
       margin-right: calc(100% - 22px + 48px);
       display: block;
       text-align: center;
-      color: #fff;
+      color: var(--va-text-color-solid);
       font-size: 14px;
       transition:
         margin-left 0.2s ease-in-out,
@@ -129,7 +126,7 @@ function onSwitch(): void {
       margin-right: 0;
       display: block;
       text-align: center;
-      color: #fff;
+      color: var(--va-text-color-solid);
       font-size: 14px;
       transition:
         margin-left 0.2s ease-in-out,
@@ -146,7 +143,7 @@ function onSwitch(): void {
     left: 2px;
     width: 18px;
     height: 18px;
-    background: #fff;
+    background: var(--va-text-color-solid);
     border-radius: 100%;
     transition: all 0.2s ease-in-out;
     .circular {
@@ -165,7 +162,7 @@ function onSwitch(): void {
       .path {
         stroke-dasharray: 90, 150;
         stroke-dashoffset: 0;
-        stroke: var(--switch-primary-color);
+        stroke: var(--va-cp-switch-primary-color, var(--va-primary-color));
         stroke-width: 5;
         stroke-linecap: round;
         animation: loadingDash 1.5s ease-in-out infinite;
@@ -256,9 +253,9 @@ function onSwitch(): void {
   }
 }
 .switch-checked {
-  background: var(--switch-primary-color);
+  background: var(--va-cp-switch-primary-color, var(--va-primary-color));
   &:hover:not(.switch-disabled) {
-    background: var(--switch-primary-color-hover);
+    background: var(--va-cp-switch-primary-color-hover, var(--va-primary-color-hover));
   }
   .switch-inner {
     padding-left: 9px;

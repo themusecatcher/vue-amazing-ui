@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, inject, onBeforeUnmount, onMounted, provide, ref, useSlots, watch } from 'vue'
-import type { CSSProperties, VNode, VNodeChild } from 'vue'
-import { FLOATING_LAYER_Z_INDEX, siderCollapsedKey, useInject } from 'components/utils'
+import type { VNode, VNodeChild } from 'vue'
+import { FLOATING_LAYER_Z_INDEX, siderCollapsedKey } from 'components/utils'
 import MenuNodes from './MenuNodes'
 import { getItemKey, menuContextKey } from './context'
 import type { MenuContext } from './context'
@@ -85,17 +85,9 @@ const EMPTY_KEYS: MenuKey[] = [] // 稳定的空数组：避免每次渲染都�
 // 显式标注插槽类型：`useSlots()` 的返回值参与 `menuItems` / `displayItems` 的推导，构成推断环
 // （构建期的 dts 程序会报 TS7022 / TS7024），标注后即断开；类型与 `defineSlots<MenuSlots>()` 一致
 const slots: MenuSlots = useSlots()
-const { colorPalettes } = useInject('Menu')
-// 强调色与选中底色取自组件主题（可在 ConfigProvider 中按 Menu 覆盖）
-const primaryColor = computed(() => colorPalettes.value[5] ?? colorPalettes.value[0])
-const primaryPalette = computed(() => colorPalettes.value[0] ?? primaryColor.value)
-const rootStyle = computed<CSSProperties>(
-  () =>
-    ({
-      '--menu-primary-color': primaryColor.value,
-      '--menu-primary-palette-1': primaryPalette.value
-    }) as CSSProperties
-)
+// 强调色与选中底色：皮肤 CSS 直接消费公开令牌 `--va-menu-primary-*`（未配置时回落到全局主色）。
+// 组件级主色由 ConfigProvider 写在作用域节点上；浮层面板经 Teleport 脱离作用域时，
+// Provider 的边界转发会把这些令牌一并带到面板根节点，因此不再需要把私有变量随节点下发。
 
 // 受控 / 非受控：传入即为受控，内部副本随外部同步
 const innerOpenKeys = ref<MenuKey[]>(Array.isArray(props.openKeys) ? [...props.openKeys] : [])
@@ -365,8 +357,6 @@ provide<MenuContext>(menuContextKey, {
   forceSubMenuRender: computed(() => props.forceSubMenuRender),
   selectedSubMenuKeys,
   subMenuZIndex: FLOATING_LAYER_Z_INDEX.select,
-  primaryColor,
-  primaryPalette,
   expandIcon,
   onOpenChange: handleOpenChange,
   onItemClick: handleItemClick,
@@ -375,7 +365,7 @@ provide<MenuContext>(menuContextKey, {
 </script>
 
 <template>
-  <MenuNodes :nodes="displayItems" is-root :level="1" :parent-keys="EMPTY_KEYS" :style="rootStyle" />
+  <MenuNodes :nodes="displayItems" is-root :level="1" :parent-keys="EMPTY_KEYS" />
 </template>
 
 <style lang="less">
@@ -386,54 +376,61 @@ provide<MenuContext>(menuContextKey, {
  * 与 `.menu-submenu-popup` / `.menu-tooltip-popup`（浮层面板）三个锚点收口。
  */
 /* 主题变量：`<ul>` 与浮层面板都会带上主题类，故两处都能取到值。
-   主色（`--menu-primary-color` / `--menu-primary-palette-1`）随组件主题由根组件与浮层面板内联注入，不在此声明 */
+   主色直接消费公开令牌 `--va-menu-primary-*`：ConfigProvider 写在作用域节点上，浮层由边界转发带入，
+   因此不需要在组件内声明私有主色变量 */
 .menu-light {
-  --menu-background: #fff;
-  --menu-color: rgba(0, 0, 0, 0.88);
-  --menu-border-color: rgba(5, 5, 5, 0.06);
+  --menu-background: var(--va-bg-container-color);
+  /* 弹出子菜单是浮层：暗色下取 elevated，避免与页面容器同色 */
+  --menu-popup-background: var(--va-bg-elevated-color);
+  --menu-color: var(--va-text-color-1);
+  --menu-border-color: var(--va-border-split-color);
   /* 悬浮态只换底色、不换字色（字色与常态一致） */
-  --menu-item-hover-color: rgba(0, 0, 0, 0.88);
-  --menu-item-hover-background: rgba(0, 0, 0, 0.06);
-  --menu-item-selected-color: var(--menu-primary-color);
-  /* 选中态底色取主色的最浅一阶，由根组件按组件主题注入 */
-  --menu-item-selected-background: var(--menu-primary-palette-1);
+  --menu-item-hover-color: var(--va-text-color-1);
+  --menu-item-hover-background: var(--va-fill-color-2);
+  /* 选中项是「主色文字」：优先跟随组件级主色文字桥，未配置时回落 primary-text 语义位 */
+  --menu-item-selected-color: var(--va-menu-primary-text-color, var(--va-primary-text-color));
+  /* 选中态底色取主色的最浅一阶：组件级主色浅底桥，未配置时回落主色浅底 */
+  --menu-item-selected-background: var(--va-menu-primary-palette, var(--va-primary-bg-color));
   /* 水平菜单：浅色由下划线表达选中，故不着底色 */
   --menu-horizontal-selected-background: transparent;
   /* 水平菜单状态条（下划线）粗细 */
   --menu-horizontal-active-bar-height: 2px;
   /* 水平菜单容器下边界的厚度：浅色有一条边界，水平项需上移同量，状态条才压在边界上 */
   --menu-horizontal-active-bar-border-size: 1px;
-  --menu-item-danger-color: #ff4d4f;
+  --menu-item-danger-color: var(--va-error-color);
   /* 危险项的悬浮字色：浅色下与常态同色 */
-  --menu-item-danger-hover-color: #ff4d4f;
+  --menu-item-danger-hover-color: var(--va-error-color);
   /* 危险项按下 / 选中时的底色：错误色的最浅一阶 */
-  --menu-item-danger-active-background: #fff2f0;
-  --menu-item-danger-selected-background: #fff2f0;
-  --menu-item-danger-selected-color: #ff4d4f;
-  --menu-item-disabled-color: rgba(0, 0, 0, 0.25);
-  --menu-group-title-color: rgba(0, 0, 0, 0.45);
-  --menu-inline-submenu-background: rgba(0, 0, 0, 0.02);
+  --menu-item-danger-active-background: var(--va-error-bg-color);
+  --menu-item-danger-selected-background: var(--va-error-bg-color);
+  --menu-item-danger-selected-color: var(--va-error-color);
+  --menu-item-disabled-color: var(--va-text-color-disabled);
+  --menu-group-title-color: var(--va-text-color-3);
+  --menu-inline-submenu-background: var(--va-fill-color-1);
 }
 .menu-dark {
   --menu-background: #001529;
+  /* 深色皮肤是独立预设，浮层沿用同一深蓝底 */
+  --menu-popup-background: #001529;
   --menu-color: rgba(255, 255, 255, 0.65);
   --menu-border-color: rgba(255, 255, 255, 0.12);
   --menu-item-hover-color: #fff;
-  --menu-item-hover-background: rgba(0, 0, 0, 0.06);
+  /* hover 底固定为白 alpha：这套皮肤本身是深蓝底，跟随主题 fill 档位时（浅色主题的 fill-2 是黑色叠加）
+     会把底色压得更暗，与「悬停提亮」的预期相反 */
+  --menu-item-hover-background: rgba(255, 255, 255, 0.08);
   --menu-item-selected-color: #fff;
-  --menu-item-selected-background: var(--menu-primary-color);
+  --menu-item-selected-background: var(--va-menu-primary-color, var(--va-primary-color));
   /* 水平菜单：深色改由主色填充表达选中，状态条宽度归零（沿用浅色那套下划线会与填充叠加） */
-  --menu-horizontal-selected-background: var(--menu-primary-color);
+  --menu-horizontal-selected-background: var(--va-menu-primary-color, var(--va-primary-color));
   --menu-horizontal-active-bar-height: 0;
   /* 深色既无状态条也无容器下边界，上移量随之归零 */
   --menu-horizontal-active-bar-border-size: 0px;
-  --menu-item-danger-color: #ff4d4f;
+  --menu-item-danger-color: var(--va-error-color);
   /* 危险项的悬浮字色：深色下提亮一阶 */
-  --menu-item-danger-hover-color: #ff7875;
+  --menu-item-danger-hover-color: var(--va-error-color);
   /* 危险项按下 / 选中时的底色：深色下直接取错误色本身 */
-  --menu-item-danger-active-background: #ff4d4f;
-  --menu-item-danger-selected-background: #ff4d4f;
-  --menu-item-danger-selected-color: #fff;
+  --menu-item-danger-active-background: var(--va-error-color);
+  --menu-item-danger-selected-background: var(--va-error-color);
   --menu-item-disabled-color: rgba(255, 255, 255, 0.25);
   --menu-group-title-color: rgba(255, 255, 255, 0.65);
   --menu-inline-submenu-background: #000c17;
@@ -445,7 +442,7 @@ provide<MenuContext>(menuContextKey, {
   font-size: 14px;
   line-height: 1.5714285714285714;
   color: var(--menu-color);
-  background-color: var(--menu-background);
+  background-color: var(--va-menu-background, var(--menu-background));
   list-style: none;
   outline: none;
   transition: width 0.3s cubic-bezier(0.2, 0, 0, 1);
@@ -486,15 +483,16 @@ provide<MenuContext>(menuContextKey, {
   font-size: 14px;
   line-height: 1.5714285714285714;
   color: var(--menu-color);
-  background-color: var(--menu-background);
+  background-color: var(--menu-popup-background);
   border-radius: 8px;
   box-shadow:
     0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 6px 16px 0 var(--va-shadow-color),
     0 9px 28px 8px rgba(0, 0, 0, 0.05);
 }
 .menu-tooltip-popup {
-  --menu-tooltip-background: rgba(0, 0, 0, 0.85);
+  /* 折叠态气泡：与 Tooltip 同用「聚光底色」，卡片文案固定白色；用正文色会在暗色下变成白底白字 */
+  --menu-tooltip-background: var(--va-bg-spotlight-color);
   width: max-content;
   pointer-events: none;
   &.va-popup-placement-right,
@@ -518,7 +516,7 @@ provide<MenuContext>(menuContextKey, {
     background-color: var(--menu-tooltip-background);
     border-radius: 6px;
     box-shadow:
-      0 6px 16px 0 rgba(0, 0, 0, 0.08),
+      0 6px 16px 0 var(--va-shadow-color),
       0 3px 6px -4px rgba(0, 0, 0, 0.12),
       0 9px 28px 8px rgba(0, 0, 0, 0.05);
   }
@@ -639,8 +637,8 @@ provide<MenuContext>(menuContextKey, {
       background-color: var(--menu-item-hover-background);
     }
     &.menu-item-selected {
-      color: var(--menu-item-selected-color);
-      background-color: var(--menu-item-selected-background);
+      color: var(--va-menu-item-selected-color, var(--menu-item-selected-color));
+      background-color: var(--va-menu-item-selected-background, var(--menu-item-selected-background));
     }
     &.menu-item-disabled {
       color: var(--menu-item-disabled-color);
@@ -667,7 +665,7 @@ provide<MenuContext>(menuContextKey, {
     }
   }
   .menu-item-danger {
-    color: var(--menu-item-danger-color);
+    color: var(--va-error-color);
   }
   .menu-item-danger:not(.menu-item-selected):not(.menu-item-disabled):hover,
   .menu-item-danger:not(.menu-item-selected):not(.menu-item-disabled).menu-item-active {
@@ -750,7 +748,7 @@ provide<MenuContext>(menuContextKey, {
     }
   }
   .menu-submenu-selected > .menu-submenu-title {
-    color: var(--menu-item-selected-color);
+    color: var(--va-menu-item-selected-color, var(--menu-item-selected-color));
   }
   /* 悬浮到标题本身：任何模式都铺悬浮底色（禁用态的排除见下方 `.menu-submenu-disabled`） */
   .menu-submenu:not(.menu-submenu-disabled) > .menu-submenu-title:hover {
@@ -797,13 +795,13 @@ provide<MenuContext>(menuContextKey, {
 .menu-wrap:not(.menu-horizontal),
 .menu-submenu-popup {
   .menu-item:not(.menu-item-selected):not(.menu-item-disabled):active {
-    background-color: var(--menu-item-selected-background);
+    background-color: var(--va-menu-item-selected-background, var(--menu-item-selected-background));
   }
   .menu-item-danger.menu-item:not(.menu-item-selected):not(.menu-item-disabled):active {
     background-color: var(--menu-item-danger-active-background);
   }
   .menu-submenu:not(.menu-submenu-disabled) > .menu-submenu-title:active {
-    background-color: var(--menu-item-selected-background);
+    background-color: var(--va-menu-item-selected-background, var(--menu-item-selected-background));
   }
 }
 /* 祖先子菜单的激活底色只服务「浮层」：浮层脱离标题所在的 DOM 树，光标移入面板后标题自身不再
@@ -903,7 +901,7 @@ provide<MenuContext>(menuContextKey, {
     &:hover::after,
     &.menu-item-active::after,
     &.menu-item-selected::after {
-      border-bottom-color: var(--menu-item-selected-color);
+      border-bottom-color: var(--va-menu-item-selected-color, var(--menu-item-selected-color));
     }
   }
   /* 顶层子菜单：悬浮/激活/展开/选中即点亮下划线 */
@@ -912,7 +910,7 @@ provide<MenuContext>(menuContextKey, {
     &.menu-submenu-active::after,
     &.menu-submenu-open::after,
     &.menu-submenu-selected::after {
-      border-bottom-color: var(--menu-item-selected-color);
+      border-bottom-color: var(--va-menu-item-selected-color, var(--menu-item-selected-color));
     }
   }
   > .menu-item:hover,

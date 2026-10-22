@@ -882,7 +882,7 @@ function onNext() {
     height: 32px;
     // 面板整体居中排布，宿主会把 th 改回左对齐
     text-align: center;
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     vertical-align: middle;
   }
 }
@@ -944,45 +944,45 @@ function onNext() {
         .picker-panel-week-row-range-hover
       ):hover
       td {
-      background: rgba(0, 0, 0, 0.04);
+      background: var(--va-fill-color-1);
     }
     &.picker-panel-week-row-selected td,
     &.picker-panel-week-row-range-start td,
     &.picker-panel-week-row-range-end td {
-      background: var(--picker-primary-color, #1677ff);
+      background: var(--picker-primary-color, var(--va-primary-color));
     }
     &.picker-panel-week-row-selected .picker-panel-cell-inner,
     &.picker-panel-week-row-range-start .picker-panel-cell-inner,
     &.picker-panel-week-row-range-end .picker-panel-cell-inner {
-      color: #fff;
+      color: var(--va-text-color-solid);
     }
     // 周序号与日期格同取纯白（周序号直接落在 td 上，不继承格内块的白色）
     &.picker-panel-week-row-selected .picker-panel-cell-week,
     &.picker-panel-week-row-range-start .picker-panel-cell-week,
     &.picker-panel-week-row-range-end .picker-panel-cell-week {
-      color: #fff;
+      color: var(--va-text-color-solid);
     }
     // 选中周里的「今天」圈线改为白色，否则白底蓝框叠在主色行上读不出边界
     &.picker-panel-week-row-selected .picker-panel-cell-today .picker-panel-cell-inner::before,
     &.picker-panel-week-row-range-start .picker-panel-cell-today .picker-panel-cell-inner::before,
     &.picker-panel-week-row-range-end .picker-panel-cell-today .picker-panel-cell-inner::before {
-      border-color: #fff;
+      border-color: var(--va-text-color-solid);
     }
     // 范围形态：区间内部底色只落在「展示月内的日期格」上（跨月补齐日与周序号格不着色）。
     // 一行（一周）跨月时会在左右两块面板各出现一次，整行着色会让同一周出现两处色带，
     // 且跨月补齐日被连带染色——与日期范围的格口径不一致（底色的作用域见 .picker-panel-week-content）
     &.picker-panel-week-row-in-range .picker-panel-cell-in-view {
-      background: var(--picker-primary-color-bg, #e6f4ff);
+      background: var(--picker-primary-color-bg, var(--va-primary-bg-color));
     }
     // 悬浮预览（待选区间）与区间内部同色：整段连成一条「待选色带」，读作"改选后会变成这样"；
     // 若整段都用更深一档的底色，悬浮时会出现一大块深蓝，看起来像"多选了一段"
     &.picker-panel-week-row-range-hover .picker-panel-cell-in-view {
-      background: var(--picker-primary-color-bg, #e6f4ff);
+      background: var(--picker-primary-color-bg, var(--va-primary-bg-color));
     }
     // 鼠标所在的那一周 = 待选端点（新落点）：取普通悬浮的灰底，与未进入待选段时的悬浮观感一致；
     // 行级灰底的权重高于上面的格级浅蓝，故整行覆盖（含周序号格与跨月补齐日）
     &.picker-panel-week-row-range-hover:hover td {
-      background: rgba(0, 0, 0, 0.04);
+      background: var(--va-fill-color-1);
     }
   }
 }
@@ -1017,7 +1017,7 @@ function onNext() {
 }
 .picker-panel-cell {
   padding: 4px 0;
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--va-text-color-disabled);
   cursor: pointer;
   &::before {
     position: absolute;
@@ -1049,22 +1049,22 @@ function onNext() {
       .picker-panel-cell-range-hover-start
     ):not(.picker-panel-cell-range-hover-end):not(.picker-panel-cell-week-day)
     .picker-panel-cell-inner {
-    background: rgba(0, 0, 0, 0.04);
+    background: var(--va-fill-color-1);
   }
   &.picker-panel-cell-in-view {
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
   }
   &.picker-panel-cell-in-view.picker-panel-cell-today .picker-panel-cell-inner::before {
     position: absolute;
     inset: 0;
     z-index: 1;
-    border: 1px solid var(--picker-primary-color, #1677ff);
+    border: 1px solid var(--picker-primary-color, var(--va-primary-color));
     border-radius: 4px;
     content: '';
   }
   &.picker-panel-cell-in-view.picker-panel-cell-selected .picker-panel-cell-inner {
-    color: #fff;
-    background: var(--picker-primary-color, #1677ff);
+    color: var(--va-text-color-solid);
+    background: var(--picker-primary-color, var(--va-primary-color));
   }
   // ===== 范围形态 =====
   // 以下范围规则一律限定在本月格（`-in-view`）内：跨月补齐日虽会命中范围类名，
@@ -1073,7 +1073,7 @@ function onNext() {
   &.picker-panel-cell-in-view.picker-panel-cell-in-range::before,
   &.picker-panel-cell-in-view.picker-panel-cell-range-start:not(.picker-panel-cell-range-start-single)::before,
   &.picker-panel-cell-in-view.picker-panel-cell-range-end:not(.picker-panel-cell-range-end-single)::before {
-    background: var(--picker-primary-color-bg, #e6f4ff);
+    background: var(--picker-primary-color-bg, var(--va-primary-bg-color));
   }
   &.picker-panel-cell-in-view.picker-panel-cell-range-start::before {
     left: 50%;
@@ -1084,8 +1084,8 @@ function onNext() {
   // 端点实心主色：与单选的选中态同款，但圆角只留在区间外侧
   &.picker-panel-cell-in-view.picker-panel-cell-range-start .picker-panel-cell-inner,
   &.picker-panel-cell-in-view.picker-panel-cell-range-end .picker-panel-cell-inner {
-    color: #fff;
-    background: var(--picker-primary-color, #1677ff);
+    color: var(--va-text-color-solid);
+    background: var(--picker-primary-color, var(--va-primary-color));
   }
   &.picker-panel-cell-in-view.picker-panel-cell-range-start:not(.picker-panel-cell-range-start-single):not(
       .picker-panel-cell-range-end
@@ -1109,7 +1109,7 @@ function onNext() {
   &.picker-panel-cell-in-view.picker-panel-cell-range-end:not(
       .picker-panel-cell-range-end-single
     ).picker-panel-cell-range-hover-end::before {
-    background: var(--picker-primary-color-bg-hover, #c8dfff);
+    background: var(--picker-primary-color-bg-hover, var(--va-primary-bg-color));
   }
   // 悬浮预览：预览区间的上下虚线边界（端点与已选端点重合的组合不再单独绘制）
   &.picker-panel-cell-in-view.picker-panel-cell-range-hover-start:not(.picker-panel-cell-in-range):not(
@@ -1128,8 +1128,8 @@ function onNext() {
     z-index: 0;
     height: 24px;
     content: '';
-    border-top: 1px dashed var(--picker-hover-border-color, #7cb3ff);
-    border-bottom: 1px dashed var(--picker-hover-border-color, #7cb3ff);
+    border-top: 1px dashed var(--picker-hover-border-color, var(--va-primary-border-color));
+    border-bottom: 1px dashed var(--picker-hover-border-color, var(--va-primary-border-color));
     transform: translateY(-50%);
     // 只过渡左右边界：`all` 会把后补上的 border-left / border-right 从 currentColor（近黑）与 medium（3px）补间，
     // 观感即「预览边界移动时先出现一条深色粗线、再变成浅蓝虚线」
@@ -1158,7 +1158,7 @@ function onNext() {
     )::after,
   &.picker-panel-cell-in-view.picker-panel-cell-range-hover-start::after {
     left: 6px;
-    border-left: 1px dashed var(--picker-hover-border-color, #7cb3ff);
+    border-left: 1px dashed var(--picker-hover-border-color, var(--va-primary-border-color));
     border-radius: 4px 0 0 4px;
   }
   // 预览端点与已选端点重合（起点已选待选终点 / 终点已选待选起点）：该侧已由已选端点的实心块收口，
@@ -1180,7 +1180,7 @@ function onNext() {
     )::after,
   &.picker-panel-cell-in-view.picker-panel-cell-range-hover-end::after {
     right: 6px;
-    border-right: 1px dashed var(--picker-hover-border-color, #7cb3ff);
+    border-right: 1px dashed var(--picker-hover-border-color, var(--va-primary-border-color));
     border-radius: 0 6px 6px 0;
   }
   // 预览端点落在已选区间内部时，格内剩余半边由内层补一段加深底色（区间底色只铺内侧半边）
@@ -1193,7 +1193,7 @@ function onNext() {
     bottom: 0;
     z-index: -1;
     content: '';
-    background: var(--picker-primary-color-bg-hover, #c8dfff);
+    background: var(--picker-primary-color-bg-hover, var(--va-primary-bg-color));
     transition: all 0.3s;
   }
   &.picker-panel-cell-in-view.picker-panel-cell-in-range.picker-panel-cell-range-hover-start
@@ -1207,17 +1207,17 @@ function onNext() {
     left: -6px;
   }
   &.picker-panel-cell-disabled {
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
     pointer-events: none;
     .picker-panel-cell-inner {
       background: transparent;
     }
     &::before {
-      background: rgba(0, 0, 0, 0.04);
+      background: var(--va-fill-color-1);
     }
   }
   &.picker-panel-cell-disabled.picker-panel-cell-today .picker-panel-cell-inner::before {
-    border-color: rgba(0, 0, 0, 0.25);
+    border-color: var(--va-text-color-disabled);
   }
 }
 // 月 / 季 / 年面板的格比日期格宽（格内块宽 60px）：预览端点竖线随之对齐格内块的边缘内侧（+2px），
@@ -1251,19 +1251,19 @@ function onNext() {
   padding: 0 8px;
 }
 .picker-panel-cell-inner-year.picker-panel-cell-out-view {
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--va-text-color-disabled);
 }
 .picker-panel-today-btn {
   // 就地渲染时会被宿主文档的链接样式接管（如 `.vp-doc a` 的下划线与 500 字重），此处还原为面板自身口径
-  color: var(--picker-primary-color, #1677ff);
+  color: var(--picker-primary-color, var(--va-primary-color));
   font-weight: normal;
   text-decoration: none;
   cursor: pointer;
   &:hover {
-    color: var(--picker-primary-color-hover, #4096ff);
+    color: var(--picker-primary-color-hover, var(--va-primary-color-hover));
   }
   &.picker-panel-today-btn-disabled {
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
     cursor: not-allowed;
   }
 }

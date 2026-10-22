@@ -80,13 +80,10 @@ const shape = ref<ButtonProps['shape']>('default')
 import {
   dateFormat,
   formatNumber,
-  rafTimeout,
-  cancelRaf,
   throttle,
   debounce,
   add,
   downloadFile,
-  toggleDark,
   useEventListener,
   useMutationObserver,
   useScroll,
@@ -95,8 +92,6 @@ import {
   useResizeObserver,
   useSlotsExist,
   useOptionsSupported,
-  getColorPalettes,
-  getAlphaColor,
   getScrollParent,
   useScrollParent
 } from 'vue-amazing-ui'

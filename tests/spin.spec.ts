@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { Transition, h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
-import { TinyColor } from '@ctrl/tinycolor'
 import Spin from 'components/spin'
 
 /**
@@ -114,14 +113,15 @@ describe('Spin - 动画周期与配色默认值', () => {
     expect(spinStyleVar(mount(Spin, { props: { indicator: 'magic-ring', speed: -100 } }), '--spin-speed')).toBe('1ms')
   })
 
-  it('翻转双环内环默认取更深一档色阶，显式传入 magicRingColor 时以其为准', () => {
+  it('翻转双环内外环默认取不同层次的语义变量，显式传入 magicRingColor 时以其为准', () => {
     const wrapper = mount(Spin, { props: { indicator: 'magic-ring' } })
     const outer = spinStyleVar(wrapper, '--spin-primary-color')
     const inner = spinStyleVar(wrapper, '--spin-magic-ring-color')
 
-    // 内环默认色与外环同源但更深（色阶深一档），保证两环在同色系下仍有层次
-    expect(inner).not.toBe(outer)
-    expect(new TinyColor(inner).getLuminance()).toBeLessThan(new TinyColor(outer).getLuminance())
+    // 外环取主色、内环取按下态（深一档），保证两环在同色系下仍有层次；
+    // 组件级主色桥在前，未配置时回落到全局主色
+    expect(outer).toBe('var(--va-cp-spin-primary-color, var(--va-primary-color))')
+    expect(inner).toBe('var(--va-cp-spin-primary-color-active, var(--va-primary-color-active))')
 
     const custom = mount(Spin, { props: { indicator: 'magic-ring', magicRingColor: '#123456' } })
     expect(spinStyleVar(custom, '--spin-magic-ring-color')).toBe('#123456')

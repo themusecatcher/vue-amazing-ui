@@ -27,8 +27,6 @@ export interface MenuContext {
   forceSubMenuRender: ComputedRef<boolean> // 子菜单弹层是否在首次展开前就渲染进 DOM
   selectedSubMenuKeys: ComputedRef<MenuKey[]> // 含选中项的子菜单 key，用于父级高亮
   subMenuZIndex: number // 弹出子菜单的默认层级
-  primaryColor: ComputedRef<string> // 主题强调色：浮层面板脱离根节点，需随面板样式一并带入
-  primaryPalette: ComputedRef<string> // 强调色的最浅一阶：浅色主题的选中底色
   expandIcon: ComputedRef<((info: MenuExpandIconInfo) => VNodeChild) | undefined>
   onOpenChange: (key: MenuKey, open: boolean) => void // 展开 / 收起子菜单
   onItemClick: (info: MenuInfo) => void // 点击菜单项（含选中与关闭弹出菜单）

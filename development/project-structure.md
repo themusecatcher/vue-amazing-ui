@@ -66,7 +66,7 @@ components/
 >
 > 每个「拥有独立样式的可独立引入组件」必须独占一个产物目录：构建期样式入口按组件产物目录聚合（`build/generate-style-entries.ts`），同目录的多个组件会被合并为一个 `style/index.js`，故禁止为减少目录层级而把多个组件平铺到同一目录（会连带引入无关组件的样式）。
 >
-> **库内引入路径**：目录入口 `index.ts` 是该目录的唯一汇总出口，**跨目录**引用一律走目标目录入口（如 `components/radio`、`components/picker`），禁止 `components/<dir>/<子目录>` / `components/<dir>/<文件>` 与相对文件写法 `../<dir>/<文件>` / `./<子目录>/<文件>`。跨目录需要目录内的辅助模块（如 `picker/date-utils.ts`、`picker/keyboard.ts`）时，须由该目录 `index.ts` 先汇总再引入。**同一目录/同一族内部不受此限**：兄弟文件（`./date-utils`）、族内父目录辅助模块（`../siderHook`）与子目录入口（`./descriptions-item`）可直接引 —— 经 `index.ts` 中转会形成循环依赖。仅两类例外可直接引具体文件：① `utils/type`（组件入口装配函数）与 `utils/resolver`（按需引入专用，包根已单独导出），另放行 `components/index.ts` 的 `./style/global.less` 副作用引入；② 测试用例直引被测实现文件（便于锁定单个 SFC / 纯函数）。上述约束由 `eslint.config.js` 的 `custom/no-deep-component-imports` 强制（别名深引入 + 两个方向的相对文件深引入；同目录兄弟、父目录辅助模块、目录入口不拦）。`utils/style-deps` / `utils/vendor-styles` 是构建期 SSOT，只允许 `vite.config.ts` / `build/` / 测试引用，**组件内禁止引入**（不设 ESLint 例外）；其中 `vendor-styles` 还被 `tsconfig.dts.json` 排除、无 d.ts，纳入 `utils/index.ts` 会让 `utils/index.d.ts` 引用不存在的模块，属硬性约束。
+> **库内引入路径**：目录入口 `index.ts` 是该目录的唯一汇总出口，**跨目录**引用一律走目标目录入口（如 `components/radio`、`components/picker`），禁止 `components/<dir>/<子目录>` / `components/<dir>/<文件>` 与相对文件写法 `../<dir>/<文件>` / `./<子目录>/<文件>`。跨目录需要目录内的辅助模块（如 `picker/date-utils.ts`、`picker/keyboard.ts`）时，须由该目录 `index.ts` 先汇总再引入。**同一目录/同一族内部不受此限**：兄弟文件（`./date-utils`）、族内父目录辅助模块（`../siderHook`）与子目录入口（`./descriptions-item`）可直接引 —— 经 `index.ts` 中转会形成循环依赖。仅三类例外可直接引具体文件：① `utils/type`（组件入口装配函数）与 `utils/resolver`（按需引入专用，包根已单独导出），另放行 `components/index.ts` 的 `./style/global.less` 副作用引入；② `components/config-provider/context`（主题注入键的集中定义处，十几个组件按需 `inject`，经组件入口引入会把 `ConfigProvider.vue` 一并带进每个组件的依赖图）；③ 测试用例直引被测实现文件（便于锁定单个 SFC / 纯函数）。上述约束由 `eslint.config.js` 的 `custom/no-deep-component-imports` 强制（别名深引入 + 两个方向的相对文件深引入；同目录兄弟、父目录辅助模块、目录入口不拦）。`utils/style-deps` / `utils/vendor-styles` 是构建期 SSOT，只允许 `vite.config.ts` / `build/` / 测试引用，**组件内禁止引入**（不设 ESLint 例外）；其中 `vendor-styles` 还被 `tsconfig.dts.json` 排除、无 d.ts，纳入 `utils/index.ts` 会让 `utils/index.d.ts` 引用不存在的模块，属硬性约束。
 >
 > 三级路径收敛对产物的影响：**纯转发**入口（`picker/index.ts`）会被 Rollup 穿透，产物 import 直接改指源模块、不生成 `picker/index.js`，按需体积不变；**带本地绑定**的族入口（如 `radio/index.ts` 的 `withInstall` 默认导出）会保留为 `index.js`，产物中 `import { RadioGroup } from '../radio/index.js'` 仍保留具名符号 —— `pnpm verify:deps` 会读取该入口的导出映射，把具名导入还原到实际源模块后再推导依赖边，因此不需要在 `EXEMPTIONS` 中登记（该清单只保留 chunk 图原理上无法表达的合法依赖：异步 `import()`、条件渲染、跨包耦合，以及同目录共享纯 JS 模块被目录兜底误判 —— 如 `LayoutSider` 与 `Layout` 共用 `layout/siderHook.ts`）。
 >
@@ -107,7 +107,7 @@ components/
 
 ### utils/ 工具目录
 
-`components/utils/` 共 19 个文件，按职责分组：
+`components/utils/` 共 18 个文件，按职责分组：
 
 | 文件 | 职责 |
 | :-- | :-- |
@@ -116,7 +116,6 @@ components/
 | `math.ts` | 精度计算 |
 | `function.ts` | 节流防抖、rAF 定时器 |
 | `dom.ts` | DOM 操作、文件下载、暗黑模式切换 |
-| `color.ts` | 颜色工具（调色板 / 透明度色） |
 | `hooks.ts` | 通用 Hooks（挂载状态 / 插槽检测 / 主题注入等） |
 | `observers.ts` | DOM 观察与滚动监听 Hooks |
 | `position.ts` | 弹出定位 composable |
@@ -125,7 +124,7 @@ components/
 | `inherit-font.ts` | 浮层字体承接（库不声明字体，`Teleport` 后显式承接锚点字体族） |
 | `sider-collapsed.ts` | 侧边栏收起态契约（跨组件：`LayoutSider` 下发、`Menu` 消费的注入键） |
 | `render.ts` | 内容渲染辅助（统一归一为 VNode） |
-| `warn.ts` | 开发期用法告警（`warnUsage` / `isDevEnv`：统一文案前缀与环境判定，见 [component-design.md](component-design.md)） |
+| `log.ts` | 告警 / 日志统一出口（`log` / `isDevEnv`：级别即环境策略 —— `error` 全环境、`warn` / `debug` 仅开发期，见 [component-design.md](component-design.md) 的「告警与日志 log」） |
 | `type.ts` | `withInstall` 高阶函数 |
 | `resolver.ts` | `unplugin-vue-components` 按需引入 resolver（返回组件的样式入口路径，见 [import-export.md](import-export.md)） |
 | `style-deps.ts` | 样式依赖表（单一数据源：`componentsMap` / `styleSources` / `componentDependencies` / `stylelessComponents`） |
@@ -135,9 +134,9 @@ components/
 
 ### style/global.less
 
-组件样式基座，只放「组件自身依赖」的声明：盒模型重置（`*` 的 `box-sizing` / `margin` / `padding`）、移动端点击高亮抑制（`body` 的 `-webkit-tap-highlight-color`，属性可继承、向下发）、原生表单控件字体兜底（`input` / `textarea` / `select` / `button` 的 `font-family: inherit`，见 [component-design.md](component-design.md) 的字体口径）、`:where(a)` 低特异性链接基座。组件按需引入时都会携带此样式。
+组件样式基座，只放「组件自身依赖」的声明：主题变量表（以 `@import (inline) './generated/theme.css'` 内联，该文件由 `build/gen-theme.ts` 在构建期生成，已 gitignore）、盒模型重置（`*` 的 `box-sizing` / `margin` / `padding`）、移动端点击高亮抑制（`body` 的 `-webkit-tap-highlight-color`，属性可继承、向下发）、原生表单控件字体兜底（`input` / `textarea` / `select` / `button` 的 `font-family: inherit`，见 [component-design.md](component-design.md) 的字体口径）、`:where(a)` 低特异性链接基座。组件按需引入时都会携带此样式。
 
-`:where()` 包裹而特异性为 `0`，使用方任意链接样式都能覆盖 —— 它保证组件内（含插槽内容）的链接「引入即协调」。其中三个颜色读 `--va-link-*` 变量（由 `ConfigProvider` 按 `common` 主题色阶写入：默认全局生效，嵌套实例改用 `:abstract="false"` 时只在自身子树内生效；fallback 为默认色阶），因此链接颜色随主题色联动。页面级样式（插入光标 `caret-color`、主题变量）不在此定义：由使用方页面样式或 `ConfigProvider` 的 `theme` 负责（见 [component-design.md](component-design.md) 的主题系统一节）；组件自带链接若需与基座不同的配色，由各组件在自己的类名下声明。
+`:where()` 包裹而特异性为 `0`，使用方任意链接样式都能覆盖 —— 它保证组件内（含插槽内容）的链接「引入即协调」。其中三个颜色读 `--va-link-*` 变量（默认值来自内联的变量表；`ConfigProvider` 按种子派生后写作用域：默认（`abstract=false`）写自身包裹元素、只作用于子树，`abstract=true` 的最外层实例写 `<html>`），因此链接颜色随主题色联动。页面级样式（插入光标 `caret-color`）不在此定义，由使用方页面样式负责；组件自带链接若需与基座不同的配色，由各组件在自己的类名下声明。
 
 ## src/ 演示环境
 
@@ -171,8 +170,8 @@ src/
 ```
 docs/
 ├── .vitepress/             # VitePress 配置与主题
-│   ├── config.ts           # 站点配置（sidebar / nav / algolia）、组件库解析到 dist 的 resolveId 钩子
-│   └── theme/              # 主题（GlobalElement 等全局组件、Provider 同构包裹）
+│   ├── config.ts           # 站点配置（sidebar / nav / algolia / 版本号）、组件库解析到 dist 的 resolveId 钩子
+│   └── theme/              # 主题（GlobalElement / VersionBadge 等全局组件、Provider 同构包裹）
 ├── guide/                  # 指引 + 组件文档
 │   ├── components/         # 每个组件一篇 md（kebab-case）
 │   ├── features.md         # 组件总览页

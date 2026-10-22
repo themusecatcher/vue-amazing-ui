@@ -69,15 +69,15 @@ const showSuffix = computed(() => {
 <style lang="less" scoped>
 .statistic-wrap {
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   line-height: 1.5714285714285714;
   .statistic-title {
     margin-bottom: 4px;
-    color: rgba(0, 0, 0, 0.45);
+    color: var(--va-text-color-3);
     font-size: 14px;
   }
   .statistic-content {
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     font-size: 24px;
     .statistic-prefix {
       display: inline-block;

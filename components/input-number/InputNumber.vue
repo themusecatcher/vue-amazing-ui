@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import type { VNode } from 'vue'
-import { useSlotsExist, add, useInject } from 'components/utils'
+import { useSlotsExist, add } from 'components/utils'
 
 export interface Props {
   width?: string | number // 数字输入框宽度，单位 px
@@ -41,7 +41,6 @@ const props = withDefaults(defineProps<Props>(), {
 defineSlots<InputNumberSlots>()
 const inputRef = ref<HTMLInputElement | null>(null) // input 模板引用
 const numValue = ref<string>() // 数字输入框的内容
-const { colorPalettes, shadowColor } = useInject('InputNumber') // 主题色注入
 const emits = defineEmits(['update:value', 'change', 'enter'])
 const slotsExist = useSlotsExist(['prefix'])
 const inputWidth = computed(() => {
@@ -185,10 +184,6 @@ function onDown(): void {
     :class="{ 'input-number-disabled': disabled }"
     :style="`
       --input-number-width: ${inputWidth};
-      --input-number-primary-color: ${colorPalettes[5]};
-      --input-number-primary-color-hover: ${colorPalettes[4]};
-      --input-number-primary-color-focus: ${colorPalettes[4]};
-      --input-number-primary-shadow-color: ${shadowColor};
     `"
   >
     <div class="input-number-container">
@@ -260,24 +255,24 @@ function onDown(): void {
   width: var(--input-number-width);
   height: 32px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   line-height: 1.5714285714285714;
   padding: 0 11px;
-  background-color: #ffffff;
+  background-color: var(--va-bg-container-color);
   border-radius: 6px;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--va-border-color);
   transition: all 0.2s;
   &:hover {
-    border-color: var(--input-number-primary-color-hover);
+    border-color: var(--va-cp-input-number-primary-color-hover, var(--va-primary-color-hover));
     .input-number-handler-wrap {
-      background: #fff;
+      background: var(--va-bg-container-color);
       opacity: 1;
     }
   }
   &:focus-within {
-    // 激活时样式
-    border-color: var(--input-number-primary-color-focus);
-    box-shadow: 0 0 0 2px var(--input-number-primary-shadow-color);
+    // 聚焦态：边框取悬停档主色（与 hover 同色），阴影取焦点环
+    border-color: var(--va-cp-input-number-primary-color-hover, var(--va-primary-color-hover));
+    box-shadow: var(--va-cp-input-number-focus-shadow, var(--va-focus-shadow));
   }
   .input-number-container {
     height: 100%;
@@ -290,7 +285,7 @@ function onDown(): void {
     }
     .input-number {
       font-size: 14px;
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--va-text-color-1);
       width: 100%;
       height: 100%;
       background: transparent;
@@ -301,16 +296,16 @@ function onDown(): void {
       outline: none;
     }
     input::-webkit-input-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
     }
     input:-moz-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
     }
     input::-moz-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
     }
     input:-ms-input-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
     }
   }
   .input-number-handler-wrap {
@@ -332,18 +327,18 @@ function onDown(): void {
       justify-content: center;
       flex: auto;
       height: 40%;
-      border-left: 1px solid #d9d9d9;
+      border-left: 1px solid var(--va-border-color);
       cursor: pointer;
       transition: all 0.2s linear;
       &:hover {
         height: 60%;
         .icon-svg {
-          color: var(--input-number-primary-color);
+          color: var(--va-cp-input-number-primary-color, var(--va-primary-color));
         }
       }
       .icon-svg {
         font-size: 7px;
-        color: rgba(0, 0, 0, 0.45);
+        color: var(--va-text-color-3);
         user-select: none;
         transition: color 0.2s;
       }
@@ -352,7 +347,7 @@ function onDown(): void {
       border-top-right-radius: 6px;
     }
     .down-arrow {
-      border-top: 1px solid #d9d9d9;
+      border-top: 1px solid var(--va-border-color);
       border-bottom-right-radius: 6px;
     }
     .arrow-disabled {
@@ -361,22 +356,22 @@ function onDown(): void {
   }
 }
 .input-number-disabled {
-  color: rgba(0, 0, 0, 0.25);
-  background-color: rgba(0, 0, 0, 0.04);
-  border-color: #d9d9d9;
+  color: var(--va-text-color-disabled);
+  background-color: var(--va-fill-color-1);
+  border-color: var(--va-border-color);
   box-shadow: none;
   cursor: not-allowed;
   opacity: 1;
   &:hover {
-    border-color: #d9d9d9;
+    border-color: var(--va-border-color);
   }
   &:focus-within {
     // 激活时样式
-    border-color: #d9d9d9;
+    border-color: var(--va-border-color);
     box-shadow: none;
   }
   .input-number-container .input-number {
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
     cursor: not-allowed;
   }
   .input-number-handler-wrap {

@@ -178,7 +178,7 @@ const paragraphWidth = computed(() => {
   .skeleton-button {
     display: inline-block;
     vertical-align: top;
-    background: rgba(0, 0, 0, 0.06);
+    background: var(--va-fill-color-2);
     border-radius: 4px;
     width: 64px;
     min-width: 64px;
@@ -211,7 +211,7 @@ const paragraphWidth = computed(() => {
   .skeleton-input {
     display: inline-block;
     vertical-align: top;
-    background: rgba(0, 0, 0, 0.06);
+    background: var(--va-fill-color-2);
     border-radius: 4px;
     width: 160px;
     min-width: 160px;
@@ -235,7 +235,7 @@ const paragraphWidth = computed(() => {
     align-items: center;
     justify-content: center;
     vertical-align: top;
-    background: rgba(0, 0, 0, 0.06);
+    background: var(--va-fill-color-2);
     border-radius: 4px;
     width: 96px;
     height: 96px;
@@ -246,7 +246,8 @@ const paragraphWidth = computed(() => {
       line-height: 48px;
       max-width: 192px;
       max-height: 192px;
-      color: #bfbfbf;
+      // 图标需与容器底色（fill-color-2）拉开对比，否则在两种模式下都不可见
+      color: var(--va-text-color-3);
       .svg-path {
         fill: currentColor;
       }
@@ -259,7 +260,7 @@ const paragraphWidth = computed(() => {
     .skeleton-avatar {
       display: inline-block;
       vertical-align: top;
-      background: rgba(0, 0, 0, 0.06);
+      background: var(--va-fill-color-2);
       width: 32px;
       height: 32px;
       line-height: 32px;
@@ -286,7 +287,7 @@ const paragraphWidth = computed(() => {
     .skeleton-title {
       margin: 0;
       height: 16px;
-      background: rgba(0, 0, 0, 0.06);
+      background: var(--va-fill-color-2);
       border-radius: 4px;
     }
     .skeleton-paragraph {
@@ -295,7 +296,7 @@ const paragraphWidth = computed(() => {
       li {
         height: 16px;
         list-style: none;
-        background: rgba(0, 0, 0, 0.06);
+        background: var(--va-fill-color-2);
         border-radius: 4px;
         &:not(:first-child) {
           margin-top: 16px;
@@ -337,7 +338,12 @@ const paragraphWidth = computed(() => {
       left: -150%;
       bottom: 0;
       right: -150%;
-      background: linear-gradient(90deg, rgba(0, 0, 0, 0.06) 25%, rgba(0, 0, 0, 0.15) 37%, rgba(0, 0, 0, 0.06) 63%);
+      background: linear-gradient(
+        90deg,
+        var(--va-fill-color-2) 25%,
+        var(--va-fill-color-2) 37%,
+        var(--va-fill-color-2) 63%
+      );
       animation-name: skeletonLoading;
       animation-duration: 1.4s;
       animation-timing-function: ease;

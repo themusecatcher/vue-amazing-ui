@@ -1414,7 +1414,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 | disabled | 是否禁用 | boolean | false |
 | open | 是否展开下拉菜单（受控） | boolean | undefined |
 | placeholder | 默认占位文本 | string | undefined |
-| popupClassName | 下拉菜单的 className 属性 | string | undefined |
+| popupClassName | 下拉菜单的 `className` 属性 | string | undefined |
 | zIndex | 下拉面板层级，优先级最高（覆盖默认层级与 `ConfigProvider` 的 `baseZIndex` 自动分配） | number | undefined |
 | dropdownMatchSelectWidth | 下拉菜单和选择器同宽，为数字时指定下拉菜单宽度（单位 `px`），当左右空间都不足以容纳时面板自动调整对齐 | boolean &#124; number | true |
 | dropdownMenuStyle | 下拉菜单自定义样式 | CSSProperties | undefined |
@@ -1424,13 +1424,13 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 | width | 自动完成宽度，单位 `px` | string &#124; number | '100%' |
 | size | 自动完成大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | status | 设置校验状态 | 'error' &#124; 'warning' | undefined |
-| filterOption | 根据输入项进行筛选：<li>默认为 `false` 时不筛选，显示全部数据源，由用户在 `search` 事件中远程更新 `options`</li><li>当其为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | boolean &#124; ((inputValue: string, option: AutoCompleteOption) => boolean) | false |
+| filterOption | 根据输入项进行筛选：<li>默认为 `false` 时不筛选，显示全部数据源，由用户在 `search` 事件中远程更新 `options`</li><li>当其为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | boolean &#124; ((inputValue: string, option: [AutoCompleteOption](#option-type)) => boolean) | false |
 
 ### Option Type
 
 | 名称              | 说明                          | 类型                | 默认值    |
 | :----------------- | :----------------------------- | :------------------- | :-------- |
-| value             | 唯一的 value 值               | string &#124; number | undefined |
+| value             | 唯一的 `value` 值               | string &#124; number | undefined |
 | label?            | 显示的 `label` 值，缺失时兜底展示 `value`；支持任意自定义字段（`#option` 插槽透传） | string | undefined |
 | disabled?         | 是否禁用选项                  | boolean             | false     |
 

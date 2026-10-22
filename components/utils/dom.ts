@@ -15,6 +15,8 @@
  * 调用方通常无需关心底层实现。
  */
 
+import { log } from './log'
+
 /** iframe 加载完成后等待检查下载结果的时间（ms），确保内容加载完成 */
 const IFRAME_CHECK_DELAY = 1000
 
@@ -170,11 +172,11 @@ function checkIframeError(iframe: HTMLIFrameElement): void {
     const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document
     const bodyContent = iframeDoc?.body?.innerHTML
     if (bodyContent) {
-      console.error(`[vue-amazing-ui] checkIframeError: 文件下载失败，服务器返回错误 url：${iframe.src}`)
+      log('error', 'checkIframeError', `下载未完成：服务器返回的是错误页而非文件：${iframe.src}`)
     }
   } catch (err) {
     // 跨域限制导致无法读取 iframe 内容，检测失效属预期行为，用 debug 级别避免污染业务方控制台
-    console.debug('[vue-amazing-ui] checkIframeError: 无法检查 iframe 内容（通常为跨域限制，可忽略）', err)
+    log('debug', 'checkIframeError', '无法检查 iframe 内容（通常为跨域限制，可忽略）', err)
   }
 }
 
@@ -217,7 +219,7 @@ export function downloadFile(url: string, fileName?: string, options: DownloadOp
   try {
     parsedUrl = new URL(url, location.href)
   } catch (err) {
-    console.error(`[vue-amazing-ui] downloadFile: 下载地址解析失败：${url}`, err)
+    log('error', 'downloadFile', `下载地址解析失败，已取消下载：${url}`, err)
     return Promise.reject(err)
   }
 
@@ -255,28 +257,6 @@ export function getImageName(image: { src: string; name?: string } | undefined):
   } catch {
     const segments = image.src.split('?')[0].split('#')[0].split('/')
     return decodeFileName(segments[segments.length - 1] || '')
-  }
-}
-/**
- * 一键切换暗黑模式
- *
- * 在 `<html>` 根元素上切换 `dark` 类并同步 `color-scheme`；具体暗色样式需使用方自行编写。
- *
- * @example
- * // 需自行补充的样式（以 filter 反色方案为例）：
- * // html { transition: filter .3s ease-in-out; }
- * // html.dark { filter: invert(1) hue-rotate(180deg); }
- * // html.dark img, html.dark video { filter: invert(1) hue-rotate(180deg); } // 二次反色还原本色
- * toggleDark()
- */
-export function toggleDark(): void {
-  const html = document.documentElement
-  // 如果 <html> 上 dark 类值已存在，则移除它，否则添加它
-  html.classList.toggle('dark')
-  if (html.classList.contains('dark')) {
-    html.style.colorScheme = 'dark'
-  } else {
-    html.style.colorScheme = 'light'
   }
 }
 /**

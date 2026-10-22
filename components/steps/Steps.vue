@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useInject } from 'components/utils'
 export interface Item {
   title?: string // 标题
   description?: string // 描述
@@ -23,7 +22,6 @@ const props = withDefaults(defineProps<Props>(), {
   dotted: false,
   current: 1
 })
-const { colorPalettes } = useInject('Steps') // 主题色注入
 const emits = defineEmits(['update:current', 'change'])
 const totalWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -64,10 +62,6 @@ function onChange(index: number): void {
     }"
     :style="`
       --steps-width: ${totalWidth};
-      --steps-primary-color: ${colorPalettes[5]};
-      --steps-primary-color-hover: ${colorPalettes[5]};
-      --steps-icon-color: ${colorPalettes[0]};
-      --steps-icon-color-hover: ${colorPalettes[5]};
     `"
   >
     <div
@@ -161,7 +155,7 @@ function onChange(index: number): void {
           vertical-align: top;
           width: 100%;
           height: 1px;
-          background-color: rgba(5, 5, 5, 0.06);
+          background-color: var(--va-border-split-color);
           border-radius: 1px;
           transition: background-color 0.3s;
           content: '';
@@ -176,20 +170,20 @@ function onChange(index: number): void {
         height: 32px;
         border-radius: 50%;
         text-align: center;
-        background-color: rgba(0, 0, 0, 0.06);
+        background-color: var(--va-fill-color-2);
         border: 1px solid transparent;
         transition: all 0.3s;
         .steps-num {
           display: inline-block;
           font-size: 16px;
           line-height: 1;
-          color: rgba(0, 0, 0, 0.65);
+          color: var(--va-text-color-2);
           transition: all 0.3s;
         }
         .icon-svg {
           display: inline-block;
           font-size: 16px;
-          color: var(--steps-primary-color);
+          color: var(--va-cp-steps-primary-color, var(--va-primary-color));
           transition: all 0.3s;
         }
         .steps-dot {
@@ -206,13 +200,13 @@ function onChange(index: number): void {
         .steps-title {
           position: relative;
           display: inline-block;
-          color: rgba(0, 0, 0, 0.45);
+          color: var(--va-text-color-3);
           font-size: 16px;
           line-height: 32px;
           transition: all 0.3s;
           padding-right: 16px;
           &::after {
-            background: #e8e8e8;
+            background: var(--va-border-color);
             position: absolute;
             top: 16px;
             left: 100%;
@@ -227,7 +221,7 @@ function onChange(index: number): void {
         .steps-description {
           max-width: 140px;
           font-size: 14px;
-          color: rgba(0, 0, 0, 0.45);
+          color: var(--va-text-color-3);
           line-height: 22px;
           word-break: break-word;
           transition: all 0.3s;
@@ -240,35 +234,35 @@ function onChange(index: number): void {
       cursor: pointer;
       .steps-tail {
         &::after {
-          background-color: var(--steps-primary-color);
+          background-color: var(--va-cp-steps-primary-color, var(--va-primary-color));
         }
       }
       .steps-icon {
-        background-color: var(--steps-icon-color);
-        border-color: var(--steps-icon-color);
+        background-color: var(--va-cp-steps-primary-bg-color, var(--va-primary-bg-color));
+        border-color: var(--va-cp-steps-primary-bg-color, var(--va-primary-bg-color));
         .steps-dot {
-          background: var(--steps-primary-color);
+          background: var(--va-cp-steps-primary-color, var(--va-primary-color));
         }
       }
       .steps-content {
         .steps-title {
-          color: rgba(0, 0, 0, 0.88);
+          color: var(--va-text-color-1);
           &::after {
-            background-color: var(--steps-primary-color);
+            background-color: var(--va-cp-steps-primary-color, var(--va-primary-color));
           }
         }
         .steps-description {
-          color: rgba(0, 0, 0, 0.45);
+          color: var(--va-text-color-3);
         }
       }
       &:hover {
         .steps-icon {
-          border-color: var(--steps-icon-color-hover);
+          border-color: var(--va-cp-steps-primary-color, var(--va-primary-color));
         }
         .steps-content {
           .steps-title,
           .steps-description {
-            color: var(--steps-primary-color-hover);
+            color: var(--va-cp-steps-primary-color, var(--va-primary-color));
           }
         }
       }
@@ -277,20 +271,20 @@ function onChange(index: number): void {
   .steps-process {
     .steps-info-wrap {
       .steps-icon {
-        background-color: var(--steps-primary-color);
-        border: 1px solid rgba(0, 0, 0, 0.25);
-        border-color: var(--steps-primary-color);
+        background-color: var(--va-cp-steps-primary-color, var(--va-primary-color));
+        border: 1px solid var(--va-text-color-disabled);
+        border-color: var(--va-cp-steps-primary-color, var(--va-primary-color));
         .steps-num {
-          color: #fff;
+          color: var(--va-text-color-solid);
         }
         .steps-dot {
-          background: var(--steps-primary-color);
+          background: var(--va-cp-steps-primary-color, var(--va-primary-color));
         }
       }
       .steps-content {
         .steps-title,
         .steps-description {
-          color: rgba(0, 0, 0, 0.88);
+          color: var(--va-text-color-1);
         }
       }
     }
@@ -300,21 +294,21 @@ function onChange(index: number): void {
       cursor: pointer;
       &:hover {
         .steps-icon {
-          border-color: var(--steps-icon-color-hover);
+          border-color: var(--va-cp-steps-primary-color, var(--va-primary-color));
           .steps-num {
-            color: var(--steps-primary-color-hover);
+            color: var(--va-cp-steps-primary-color, var(--va-primary-color));
           }
         }
         .steps-content {
           .steps-title,
           .steps-description {
-            color: var(--steps-primary-color-hover);
+            color: var(--va-cp-steps-primary-color, var(--va-primary-color));
           }
         }
       }
       .steps-icon {
         .steps-dot {
-          background: rgba(0, 0, 0, 0.25);
+          background: var(--va-text-color-disabled);
         }
       }
     }

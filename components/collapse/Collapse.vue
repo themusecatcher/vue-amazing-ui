@@ -2,7 +2,7 @@
 import { ref, watchEffect } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Button, { type ButtonProps } from 'components/button'
-import { debounce } from 'components/utils'
+import { debounce, log } from 'components/utils'
 export interface Item {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
   disabled?: boolean // 是否禁用展开收起
@@ -154,7 +154,7 @@ function onCopy(index: number, key: string | number) {
     },
     (err) => {
       /* clipboard write failed */
-      console.warn('[vue-amazing-ui] Collapse: 复制失败', err)
+      log('error', 'Collapse', '复制失败，剪贴板内容未变更', err)
     }
   )
 }
@@ -311,14 +311,14 @@ function onCopy(index: number, key: string | number) {
 }
 .collapse-wrap {
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   line-height: 1.5714285714285714;
-  background-color: rgba(0, 0, 0, 0.02);
-  border: 1px solid #d9d9d9;
+  background-color: var(--va-fill-color-1);
+  border: 1px solid var(--va-border-color);
   border-bottom: 0;
   border-radius: 8px;
   .collapse-item {
-    border-bottom: 1px solid #d9d9d9;
+    border-bottom: 1px solid var(--va-border-color);
     &:first-child {
       border-radius: 8px 8px 0 0;
       .collapse-header-wrap {
@@ -338,7 +338,7 @@ function onCopy(index: number, key: string | number) {
       flex-wrap: nowrap;
       align-items: flex-start;
       padding: 12px 16px;
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--va-text-color-1);
       line-height: 1.5714285714285714;
       cursor: pointer;
       transition: all 0.3s;
@@ -380,15 +380,15 @@ function onCopy(index: number, key: string | number) {
     }
     .collapse-content-wrap {
       position: relative;
-      color: rgba(0, 0, 0, 0.88);
-      background-color: #ffffff;
-      border-top: 1px solid #d9d9d9;
+      color: var(--va-text-color-1);
+      background-color: var(--va-bg-container-color);
+      border-top: 1px solid var(--va-border-color);
       .collapse-lang {
         position: absolute;
         right: 10px;
         top: 6px;
         font-size: 14px;
-        color: rgba(0, 0, 0, 0.38);
+        color: var(--va-text-color-3);
         opacity: 1;
         transition: opacity 0.3s;
       }
@@ -431,13 +431,13 @@ function onCopy(index: number, key: string | number) {
   }
   .collapse-item-disabled {
     .collapse-header-wrap {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
       cursor: not-allowed;
     }
   }
 }
 .collapse-borderless {
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: var(--va-fill-color-1);
   border: 0;
   .collapse-item {
     &:last-child {

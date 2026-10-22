@@ -5,45 +5,12 @@
   margin: 0;
   padding: 0;
 }
-html {
-  transition: filter 0.3s ease-in-out;
-}
-/*
-  invert(): 反转输入图像，1表示完全反转
-  hue-rotate(): 在输入图像上应用色相旋转
-*/
-html.dark {
-  // 网站暗黑模式
-  filter: invert(1) hue-rotate(180deg);
-  img,
-  video {
-    // 将图片和视频再次反转以恢复原本的颜色
-    filter: invert(1) hue-rotate(180deg);
-  }
-  /*
-    再反相一次 = 保持「本身按暗色绘制」的元素的原貌（否则深色会被反成浅底深字）：
-    · 深色菜单（侧边栏 `theme="dark"`、主题用例的深色列）与其浮层面板；
-    · 主题开关（`.switch-wrap`）。
-    浅色菜单不列入：让它们随页面一起反相，正好呈现暗色观感。
-  */
-  .menu-wrap.menu-dark,
-  .menu-submenu-popup.menu-dark,
-  .menu-tooltip-popup.menu-dark,
-  .switch-wrap {
-    filter: invert(1) hue-rotate(180deg);
-  }
-}
-// sepia(): 将图像转换为深褐色
-html.cafe {
-  filter: sepia(0.9) hue-rotate(315deg) brightness(0.9);
-}
-html.contrast {
-  filter: contrast(2); // 调整颜色对比度
-}
 body {
   min-height: 100vh;
-  background: #fff;
-  color: rgba(0, 0, 0, 0.88);
+  // 页面底板配色（跟随组件库变量，均由 <html> 上的 mode 驱动）：
+  // 两种模式都取容器色（浅色 #fff / 暗色 #141414），与组件容器表面同源
+  background: var(--va-bg-container-color);
+  color: var(--va-text-color-1);
   // 演示站自身声明页面字体（库不再声明字体，见 components/style/global.less）；
   // 不写 Inter：演示站不加载任何 webfont，写了也只会落到下一顺位，声明即失真
   font-family:
@@ -100,11 +67,11 @@ h1 {
 }
 .u-tip {
   font-size: 18px;
-  color: #333;
+  color: var(--va-text-color-2);
 }
 .u-intro {
   font-size: 16px;
-  color: #333;
+  color: var(--va-text-color-2);
   margin-top: 5px;
   margin-bottom: 10px;
 }

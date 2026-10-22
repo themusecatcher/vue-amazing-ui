@@ -50,7 +50,9 @@ const selectedWallStyle = computed(() => {
     position: 'absolute',
     top: 0,
     left: `${selectedWallOffsetLeft.value}px`,
-    backgroundColor: '#fff',
+    // 选中滑块是「浮起」的元素：暗色下取 elevated，
+    // 用 container 会与页面同色，只剩阴影区分（暗底上阴影不可见）
+    backgroundColor: 'var(--va-bg-elevated-color)',
     boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02)',
     width: `${selectedWallWidth.value}px`,
     height: '100%',
@@ -166,10 +168,10 @@ function getOptionLabel(option: string | number | Option) {
 .segmented-wrap {
   display: inline-block;
   padding: 2px;
-  color: rgba(0, 0, 0, 0.65);
+  color: var(--va-text-color-2);
   font-size: 14px;
   line-height: 1.5714285714285714;
-  background-color: #f5f5f5;
+  background-color: var(--va-bg-layout-color);
   border-radius: 6px;
   transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   .segmented-group {
@@ -187,9 +189,9 @@ function getOptionLabel(option: string | number | Option) {
       transition: color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
       border-radius: 4px;
       &:hover:not(.segmented-item-selected):not(.segmented-item-disabled) {
-        color: rgba(0, 0, 0, 0.88);
+        color: var(--va-text-color-1);
         &::after {
-          background-color: rgba(0, 0, 0, 0.06);
+          background-color: var(--va-fill-color-2);
         }
       }
       &::after {
@@ -228,10 +230,10 @@ function getOptionLabel(option: string | number | Option) {
       }
     }
     .segmented-item-selected {
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--va-text-color-1);
     }
     .segmented-item-disabled {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
       cursor: not-allowed;
     }
   }

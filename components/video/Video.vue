@@ -244,7 +244,7 @@ defineExpose({
     transition: background-color 0.3s;
     .play-svg {
       display: inline-block;
-      color: #fff;
+      color: var(--va-text-color-solid);
       fill: currentColor;
       width: 29px;
       height: 34px;

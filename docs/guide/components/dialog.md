@@ -16,7 +16,7 @@ _弹出的对话框_
 
 ## 使用方式
 
-| 调用方式 | API | 适用位置 |
+| 调用方式 | `API` | 适用位置 |
 | :-- | :-- | :-- |
 | 声明式用法 <Tag color="success" size="small">推荐</Tag> | `<Dialog v-model:open>` | 模板中，内容 / 表单 / 底部由插槽描述时 |
 | 命令式调用 <Tag color="warning" size="small">脱离模板</Tag> | `useDialog()` | 组件 `setup` 内编程式打开，需外层存在 `<DialogProvider>` |
@@ -64,7 +64,7 @@ _适用于编程式打开：先在应用根节点放置一次 `<DialogProvider>`
 
 ::: info 关于 `DialogProvider` 与 `Dialog`
 
-- `DialogProvider` 内部渲染一个 `Dialog` 组件，并通过 `provide/inject` 向下提供 `useDialog()` 所需的 API，自身不渲染任何可见内容
+- `DialogProvider` 内部渲染一个 `Dialog` 组件，并通过 `provide/inject` 向下提供 `useDialog()` 所需的 `API`，自身不渲染任何可见内容
 - 组件级配置属性（`width` / `height` / `centered` / `top` / `blockScroll` / `to` 等）会透传给内部的 `Dialog`，因此直接参考下方 [Dialog Props](#dialog) 设置即可
 - 使用 `useDialog()` 时，组件级配置设置在 `<DialogProvider>` 上（无法直接接触内部 `Dialog`）；每次调用的个性化配置（`title` / `content` / `width` / `onOk` 等）则在调用 `open` 方法时作为参数传入，参考 [DialogOptions Type](#dialogoptions-type)
 - 命令式的内容只能用 `string` / `VNode` / 渲染函数三种形态表达（见 [内容三种形态](#内容三种形态)）；内容复杂（表单 / 表格 / 多段排版）时请改用声明式，把内容写进默认插槽
@@ -125,8 +125,8 @@ function openConfirm() {
 
 ::: tip 声明式与命令式的差异
 
-- **实例生命周期**：声明式实例常驻（默认 `destroyOnClose: false`），关闭后内容 DOM 与内部状态保留，重新打开可复用同一实例；命令式 `open()` 每次调用入栈一个新实例，默认关闭即销毁（`destroyOnClose: true`）
-- **默认关闭行为**：两者点击「取消」/ 遮罩 / `Esc` / 关闭按钮都会关闭（声明式自动回写 `false`）；但「确定」按钮在声明式下**只派发 `ok` 事件、不自动关闭**，需在 `@ok` 中自行将 `open` 置为 `false`；命令式下 `onOk` 回调结束后自动关闭（返回 `false` 或 `Promise` reject 时阻止关闭，期间按钮保持 `loading`）
+- **实例生命周期**：声明式实例常驻（默认 `destroyOnClose: false`），关闭后内容 `DOM` 与内部状态保留，重新打开可复用同一实例；命令式 `open()` 每次调用入栈一个新实例，默认关闭即销毁（`destroyOnClose: true`）
+- **默认关闭行为**：两者点击「取消」/ 遮罩 / `Esc` / 关闭按钮都会关闭（声明式自动回写 `false`）；但「确定」按钮在声明式下**只派发 `ok` 事件、不自动关闭**，需在 `@ok` 中自行将 `open` 置为 `false`；命令式下 `onOk` 回调结束后自动关闭（返回 `false` 或 `Promise` `reject` 时阻止关闭，期间按钮保持 `loading`）
 - **内容来源**：声明式以插槽为主（`#title` / `#default` / `#footer` / `#closeIcon`），`title` / `content` 等属性同样可用；命令式只能通过 `title` / `content` 等参数传入，支持 `string` / `VNode` / 渲染函数三种形态
 - **关闭按钮**：`Dialog` 组件级默认 `closable: true`，命令式实例同样默认展示右上角关闭按钮（与 `Modal` 默认不展示相反），无需显式开启
 
@@ -1117,7 +1117,7 @@ function onRenderFnContent() {
 
 ## 内容保留、预渲染与关闭回调
 
-_声明式实例默认 `destroyOnClose: false`，内容常驻、重新打开复用同一实例；命令式实例默认 `true`，关闭即销毁，传 `false` 时实例保留、内容 DOM 与内部状态持久化，可用 `show()` 重新打开。下面分三组演示内容保留、预渲染与关闭回调的差异_
+_声明式实例默认 `destroyOnClose: false`，内容常驻、重新打开复用同一实例；命令式实例默认 `true`，关闭即销毁，传 `false` 时实例保留、内容 `DOM` 与内部状态持久化，可用 `show()` 重新打开。下面分三组演示内容保留、预渲染与关闭回调的差异_
 
 <br/>
 
@@ -1622,7 +1622,7 @@ const open = ref(false)
 
 `Dialog` 渲染为多层结构，各层的外观 / 定位由对应的 `XxxClass` / `XxxStyle` 控制：
 
-| 层级 | DOM 类名 | 职责 | 对应配置项 |
+| 层级 | `DOM` 类名 | 职责 | 对应配置项 |
 | :-- | :-- | :-- | :-- |
 | 外层容器 | `.dialog-wrap` | 铺满视口，多实例共享 | `wrapClass` / `wrapStyle` |
 | 蒙层 | `.dialog-mask` | 遮罩 | `maskClass` / `maskStyle` |
@@ -2670,10 +2670,10 @@ _每次调用的个性化配置请参考 [DialogOptions Type](#dialogoptions-typ
 | :-- | :-- | :-- | :-- |
 | width | 对话框宽度，单位 `px` | string &#124; number | 520 |
 | height | 对话框高度，单位 `px`，默认自适应内容高度；指定后内容超高在内容区内部滚动 | string &#124; number | 'auto' |
-| title | 对话框标题，prop 支持 `string` / `VNode` / 渲染函数；插槽形态请用同名 `#title` 插槽 | string &#124; VNode &#124; (() => VNode) | undefined |
+| title | 对话框标题，`prop` 支持 `string` / `VNode` / 渲染函数；插槽形态请用同名 `#title` 插槽 | string &#124; VNode &#124; (() => VNode) | undefined |
 | titleClass | 自定义标题类名 | string | undefined |
 | titleStyle | 自定义标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| content | 对话框内容，prop 支持 `string` / `VNode` / 渲染函数；插槽形态请用默认插槽 | string &#124; VNode &#124; (() => VNode) | undefined |
+| content | 对话框内容，`prop` 支持 `string` / `VNode` / 渲染函数；插槽形态请用默认插槽 | string &#124; VNode &#124; (() => VNode) | undefined |
 | contentClass | 自定义内容类名 | string | undefined |
 | contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | bodyClass | 自定义弹窗卡片（`.dialog-body-wrap`）类名，用于定制背景 / 圆角 / 阴影等外观 | string | undefined |
@@ -2686,7 +2686,7 @@ _每次调用的个性化配置请参考 [DialogOptions Type](#dialogoptions-typ
 | okProps | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {} |
 | footer | 是否显示底部按钮区：`false` 隐藏，`true` 渲染内置按钮组，传函数则完全自定义；插槽形态请用 `#footer` | boolean &#124; (() => VNode) | true |
 | closable | 是否显示右上角关闭按钮 | boolean | true |
-| closeIcon | 自定义关闭图标，prop 支持 `VNode` / 渲染函数；插槽形态请用同名 `#closeIcon` 插槽（优先级高于该属性） | VNode &#124; (() => VNode) | undefined |
+| closeIcon | 自定义关闭图标，`prop` 支持 `VNode` / 渲染函数；插槽形态请用同名 `#closeIcon` 插槽（优先级高于该属性） | VNode &#124; (() => VNode) | undefined |
 | closeFocusable | 关闭按钮是否可聚焦，设为 `false` 后关闭按钮 `tabindex` 为 `-1`，不参与 `Tab` 序列 | boolean | true |
 | renderBeforeOpen | 首次打开前是否渲染内容（关闭懒渲染），仅声明式用法生效 | boolean | false |
 | destroyOnClose | 关闭时是否销毁 `Dialog` 里的子元素；声明式默认 `false`（内容常驻），命令式默认 `true`（一次性实例，见 [DialogOptions Type](#dialogoptions-type)） | boolean | false |
@@ -2824,13 +2824,13 @@ _`ok` / `cancel` / `change` / `ready` 为 `<Dialog>` 与 `<DialogProvider>` 组�
 | cancel | 点击蒙层或 `Esc` 键或右上角关闭按钮或取消按钮的回调 | (e?: Event) => void |
 | ok | 点击确定按钮的回调；声明式下**不自动关闭**，需自行将 `v-model:open` 置为 `false`；命令式下回调结束后自动关闭 | (e?: MouseEvent) => void |
 | change | 弹窗开关状态变化的回调，命令式与声明式实例均会触发，多实例下携带该实例 `key` | (open: boolean, key: string) => void |
-| ready | 内部 `Dialog` 挂载完成后派发，参数为该实例的 api，供 `<DialogProvider>` 取用 | (api: { open: (data: [DialogOptions](#dialogoptions-type)) => [DialogReactive](#dialogreactive-type); destroyAll: () => void }) => void |
+| ready | 内部 `Dialog` 挂载完成后派发，参数为该实例的 `api`，供 `<DialogProvider>` 取用 | (api: { open: (data: [DialogOptions](#dialogoptions-type)) => [DialogReactive](#dialogreactive-type); destroyAll: () => void }) => void |
 
 > 点击「确定」只派发 `ok`，关闭与否由 `v-model:open` 决定；点击「取消」/ 遮罩 / `Esc` / 关闭按钮则自动回写 `false`。
 
 ## 在 setup 外使用
 
-_模板之外的场景（路由守卫、`axios` 拦截器、`Pinia action` 等）无法书写 `<Dialog>`，只能走命令式调用：先拿到 api，再在任意位置编程式打开_
+_模板之外的场景（路由守卫、`axios` 拦截器、`Pinia action` 等）无法书写 `<Dialog>`，只能走命令式调用：先拿到 `api`，再在任意位置编程式打开_
 
 ### 选择 1：`createDiscreteApi()`（脱离组件树）
 
@@ -2840,10 +2840,10 @@ _适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：�
 
 ::: tip 注意
 
-- 主题使用内置默认值；如需自定义，通过第二个参数 `configProviderProps`（支持 `Ref` / `computed` 响应式）显式传入，详见 [全局化配置 ConfigProvider「主题同步到离散 API」](/guide/components/config-provider.html#主题同步到离散-api)
+- 主题使用内置默认值；如需自定义，通过第二个参数 `configProviderProps`（支持 `Ref` / `computed` 响应式）显式传入，详见 [全局化配置 ConfigProvider「离散 API 的主题」](/guide/components/config-provider.html#离散-api-的主题)
 - 每次调用都会创建一套独立实例（独立的容器与弹窗栈），建议缓存返回值复用，避免重复创建；不再使用时可通过返回的 `dispose()` 销毁该实例
 - 内部会访问 `document`，`SSR` 场景请在客户端（点击回调、`onMounted` ）中调用
-- 不建议与 `useDialog()` 在同一 App 中混用：两者各自持有独立的弹窗栈与挂载容器，`zIndex` 层级互不感知
+- 不建议与 `useDialog()` 在同一 `App` 中混用：两者各自持有独立的弹窗栈与挂载容器，`zIndex` 层级互不感知
 
 :::
 

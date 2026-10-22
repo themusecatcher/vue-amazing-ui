@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+// 每个演示用例独立绑定值：共用一个 ref 会让任意一处输入同步到所有文本域
 const value = ref('')
 const lazyValue = ref('')
+const autoSizeValue = ref('')
+const minMaxRowsValue = ref('')
+const clearValue = ref('')
+const countValue = ref('')
+const disabledValue = ref('')
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -39,19 +45,30 @@ function onEnter(e: KeyboardEvent) {
       />
     </Space>
     <h2 class="mt30 mb10">适应文本高度的文本域</h2>
-    <Textarea :width="360" v-model:value="value" placeholder="Autosize height based on content lines" auto-size />
+    <Textarea
+      :width="360"
+      v-model:value="autoSizeValue"
+      placeholder="Autosize height based on content lines"
+      auto-size
+    />
     <h2 class="mt30 mb10">自定义行数</h2>
     <Textarea
       :width="360"
-      v-model:value="value"
+      v-model:value="minMaxRowsValue"
       placeholder="Autosize height with minimum and maximum number of lines"
       :auto-size="{ minRows: 2, maxRows: 5 }"
     />
     <h2 class="mt30 mb10">带清除图标</h2>
-    <Textarea :width="360" v-model:value="value" placeholder="textarea with clear icon" allow-clear />
+    <Textarea :width="360" v-model:value="clearValue" placeholder="textarea with clear icon" allow-clear />
     <h2 class="mt30 mb10">带数字提示</h2>
-    <Textarea :width="360" v-model:value="value" placeholder="textarea with show count" show-count :maxlength="10" />
+    <Textarea
+      :width="360"
+      v-model:value="countValue"
+      placeholder="textarea with show count"
+      show-count
+      :maxlength="10"
+    />
     <h2 class="mt30 mb10">禁用</h2>
-    <Textarea :width="360" v-model:value="value" placeholder="disabled textarea" disabled />
+    <Textarea :width="360" v-model:value="disabledValue" placeholder="disabled textarea" disabled />
   </div>
 </template>

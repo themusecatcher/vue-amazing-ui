@@ -2,6 +2,7 @@
 import { ref, computed, watch, watchEffect, onMounted, onUnmounted, inject, provide, nextTick } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
+import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
 import {
   useSlotsExist,
   lockScroll,
@@ -9,6 +10,11 @@ import {
   Z_INDEX_CONTAINER_OPEN_KEY,
   FLOATING_LAYER_Z_INDEX
 } from 'components/utils'
+
+// 主题转发：抽屉 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
+const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
+const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 
 // 多层抽屉推动的默认位移距离
 const DEFAULT_PUSH_DISTANCE = 180
@@ -303,7 +309,8 @@ watch(
       tabindex="-1"
       class="drawer-wrap"
       :class="[rootClassName, { 'is-inline': teleportDisabled }]"
-      :style="[{ zIndex: drawerZIndex }, rootStyle]"
+      :style="[{ zIndex: drawerZIndex }, teleportThemeVars, rootStyle]"
+      :data-va-mode="teleportThemeMode"
       @keydown="onKeydown"
     >
       <Transition name="fade">
@@ -396,7 +403,8 @@ watch(
   .drawer-mask {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
+    // 遮罩不能跟随正文色：暗色下 --va-text-color-3 是白色，会变成白蒙层
+    background: var(--va-mask-color);
     pointer-events: auto;
   }
   .drawer-container {
@@ -406,7 +414,8 @@ watch(
       width: 100%;
       height: 100%;
       overflow: auto;
-      background: #ffffff;
+      // 抽屉是浮层：底取 elevated，暗色下与页面容器拉开层级
+      background: var(--va-drawer-bg-color, var(--va-bg-elevated-color));
       pointer-events: auto;
       .drawer-body-wrapper {
         display: flex;
@@ -420,7 +429,7 @@ watch(
           padding: 16px 24px;
           font-size: 16px;
           line-height: 1.5;
-          border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+          border-bottom: 1px solid var(--va-drawer-header-border-color, var(--va-border-split-color));
           // 标题文字节点复用了同名类 header-title，若不用直接子选择器限定，flex 会一并命中内层文字节点，
           // 使其变成 flex 容器（子项按 justify-content 排列），headerStyle 的 text-align 随之失效、标题无法居中
           > .header-title {
@@ -433,11 +442,11 @@ watch(
               display: inline-flex;
               align-items: center;
               margin-right: 12px;
-              color: rgba(0, 0, 0, 0.45);
+              color: var(--va-text-color-3);
               cursor: pointer;
               transition: color 0.2s;
               &:hover {
-                color: rgba(0, 0, 0, 0.88);
+                color: var(--va-text-color-1);
               }
               .svg-close {
                 display: inline-block;
@@ -449,7 +458,7 @@ watch(
             .header-title {
               flex: 1;
               margin: 0;
-              color: rgba(0, 0, 0, 0.88);
+              color: var(--va-text-color-1);
               font-weight: 600;
               font-size: 16px;
               line-height: 1.5;
@@ -457,7 +466,7 @@ watch(
           }
           .header-extra {
             flex: none;
-            color: rgba(0, 0, 0, 0.88);
+            color: var(--va-text-color-1);
           }
         }
         .drawer-body {
@@ -469,8 +478,8 @@ watch(
         .drawer-footer {
           flex-shrink: 0;
           padding: 8px 16px;
-          border-top: 1px solid rgba(5, 5, 5, 0.06);
-          color: rgba(0, 0, 0, 0.88);
+          border-top: 1px solid var(--va-drawer-footer-border-color, var(--va-border-split-color));
+          color: var(--va-text-color-1);
         }
       }
     }
@@ -480,7 +489,7 @@ watch(
     left: 0;
     right: 0;
     box-shadow:
-      0 6px 16px 0 rgba(0, 0, 0, 0.08),
+      0 6px 16px 0 var(--va-shadow-color),
       0 3px 6px -4px rgba(0, 0, 0, 0.12),
       0 9px 28px 8px rgba(0, 0, 0, 0.05);
   }
@@ -489,7 +498,7 @@ watch(
     right: 0;
     bottom: 0;
     box-shadow:
-      -6px 0 16px 0 rgba(0, 0, 0, 0.08),
+      -6px 0 16px 0 var(--va-shadow-color),
       -3px 0 6px -4px rgba(0, 0, 0, 0.12),
       -9px 0 28px 8px rgba(0, 0, 0, 0.05);
   }
@@ -498,7 +507,7 @@ watch(
     left: 0;
     right: 0;
     box-shadow:
-      0 -6px 16px 0 rgba(0, 0, 0, 0.08),
+      0 -6px 16px 0 var(--va-shadow-color),
       0 -3px 6px -4px rgba(0, 0, 0, 0.12),
       0 -9px 28px 8px rgba(0, 0, 0, 0.05);
   }
@@ -507,7 +516,7 @@ watch(
     bottom: 0;
     left: 0;
     box-shadow:
-      6px 0 16px 0 rgba(0, 0, 0, 0.08),
+      6px 0 16px 0 var(--va-shadow-color),
       3px 0 6px -4px rgba(0, 0, 0, 0.12),
       9px 0 28px 8px rgba(0, 0, 0, 0.05);
   }

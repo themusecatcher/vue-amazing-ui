@@ -31,7 +31,7 @@ function onOpenChange(open: boolean) {
 
 ## 基本使用
 
-<Card width="50%" style="height: 300px; transform: translate(0)">
+<Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton @click="onClick">
     <template #icon>
       <GlobalOutlined />
@@ -49,7 +49,7 @@ function onClick(e: Event) {
 }
 </script>
 <template>
-  <Card width="50%" style="height: 300px; transform: translate(0)">
+  <Card width="100%" style="height: 300px; transform: translate(0)">
     <FloatButton @click="onClick">
       <template #icon>
         <GlobalOutlined />
@@ -63,7 +63,7 @@ function onClick(e: Event) {
 
 ## 位置
 
-<Card width="50%" style="height: 300px; transform: translate(0)">
+<Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton>
     <template #icon>
       <MessageOutlined />
@@ -93,7 +93,7 @@ function onClick(e: Event) {
 import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
-  <Card width="50%" style="height: 300px; transform: translate(0)">
+  <Card width="100%" style="height: 300px; transform: translate(0)">
     <FloatButton>
       <template #icon>
         <MessageOutlined />
@@ -122,7 +122,7 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 
 ## 尺寸
 
-<Card width="50%" style="height: 300px; transform: translate(0)">
+<Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton :width="56" :height="56" :right="120">
     <template #icon>
       <MessageOutlined style="font-size: 24px" />
@@ -142,7 +142,7 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
-  <Card width="50%" style="height: 300px; transform: translate(0)">
+  <Card width="100%" style="height: 300px; transform: translate(0)">
     <FloatButton :width="56" :height="56" :right="120">
       <template #icon>
         <MessageOutlined style="font-size: 24px" />
@@ -161,7 +161,7 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 
 ## 类型
 
-<Card width="50%" style="height: 300px; transform: translate(0)">
+<Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton :right="96">
     <template #icon>
       <QuestionCircleOutlined />
@@ -181,7 +181,7 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 import { QuestionCircleOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
-  <Card width="50%" style="height: 300px; transform: translate(0)">
+  <Card width="100%" style="height: 300px; transform: translate(0)">
     <FloatButton :right="96">
       <template #icon>
         <QuestionCircleOutlined />
@@ -200,7 +200,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons-vue'
 
 ## 形状
 
-<Card width="50%" style="height: 300px; transform: translate(0)">
+<Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton type="primary" :right="96">
     <template #icon>
       <CustomerServiceOutlined />
@@ -220,7 +220,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons-vue'
 import { CustomerServiceOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
-  <Card width="50%" style="height: 300px; transform: translate(0)">
+  <Card width="100%" style="height: 300px; transform: translate(0)">
     <FloatButton type="primary" :right="96">
       <template #icon>
         <CustomerServiceOutlined />
@@ -239,7 +239,7 @@ import { CustomerServiceOutlined } from '@ant-design/icons-vue'
 
 ## 图标
 
-<Card width="50%" style="height: 300px; transform: translate(0)">
+<Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton type="primary" :right="96">
     <template #icon>
       <StarFilled spin style="color: gold" />
@@ -259,7 +259,7 @@ import { h } from 'vue'
 import { StarFilled, SettingOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
-  <Card width="50%" style="height: 300px; transform: translate(0)">
+  <Card width="100%" style="height: 300px; transform: translate(0)">
     <FloatButton type="primary" :right="96">
       <template #icon>
         <StarFilled spin style="color: gold" />
@@ -274,7 +274,7 @@ import { StarFilled, SettingOutlined } from '@ant-design/icons-vue'
 
 ## 文字描述信息
 
-<Card width="50%" style="height: 300px; transform: translate(0)">
+<Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton shape="square" description="HELP" :right="152">
     <template #icon>
       <GlobalOutlined />
@@ -295,7 +295,7 @@ import { StarFilled, SettingOutlined } from '@ant-design/icons-vue'
 import { GlobalOutlined, CustomerServiceOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
-  <Card width="50%" style="height: 300px; transform: translate(0)">
+  <Card width="100%" style="height: 300px; transform: translate(0)">
     <FloatButton shape="square" description="HELP" :right="152">
       <template #icon>
         <GlobalOutlined />
@@ -315,7 +315,7 @@ import { GlobalOutlined, CustomerServiceOutlined } from '@ant-design/icons-vue'
 
 ## 链接跳转
 
-<Card width="50%" style="height: 300px; transform: translate(0)">
+<Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton href="https://themusecatcher.github.io/vue-amazing-ui/" :right="96">
     <template #icon>
       <img style="width: 1em; height: 1em" src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg" />
@@ -334,7 +334,7 @@ import { GlobalOutlined, CustomerServiceOutlined } from '@ant-design/icons-vue'
 
 ```vue
 <template>
-  <Card width="50%" style="height: 300px; transform: translate(0)">
+  <Card width="100%" style="height: 300px; transform: translate(0)">
     <FloatButton href="https://themusecatcher.github.io/vue-amazing-ui/" :right="96">
       <template #icon>
         <img style="width: 1em; height: 1em" src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg" />
@@ -355,7 +355,7 @@ import { GlobalOutlined, CustomerServiceOutlined } from '@ant-design/icons-vue'
 
 ## 菜单模式
 
-<Card width="50%" style="height: 300px; transform: translate(0)">
+<Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton shape="square" description="HELP" :right="96" menu-trigger="click" @openChange="onOpenChange">
     <template #icon>
       <CustomerServiceOutlined />
@@ -402,7 +402,7 @@ function onOpenChange(open: boolean) {
 }
 </script>
 <template>
-  <Card width="50%" style="height: 300px; transform: translate(0)">
+  <Card width="100%" style="height: 300px; transform: translate(0)">
     <FloatButton shape="square" description="HELP" :right="96" menu-trigger="click" @openChange="onOpenChange">
       <template #icon>
         <CustomerServiceOutlined />
@@ -445,7 +445,7 @@ function onOpenChange(open: boolean) {
 
 ## 气泡卡片
 
-<Card width="50%" style="height: 300px; transform: translate(0)">
+<Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton tooltip="Diamond" :right="96">
     <template #icon>
       <SketchOutlined />
@@ -476,7 +476,7 @@ function onOpenChange(open: boolean) {
 import { SketchOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
-  <Card width="50%" style="height: 300px; transform: translate(0)">
+  <Card width="100%" style="height: 300px; transform: translate(0)">
     <FloatButton tooltip="Diamond" :right="96">
       <template #icon>
         <SketchOutlined />
@@ -510,7 +510,7 @@ _通过 `zIndex` 调整按钮层级（默认 `99`）；按钮上的气泡是浮�
 
 <br/>
 
-<Card width="50%" style="height: 300px; transform: translate(0)">
+<Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton tooltip="Diamond" :right="96">
     <template #icon>
       <SketchOutlined />
@@ -530,7 +530,7 @@ _通过 `zIndex` 调整按钮层级（默认 `99`）；按钮上的气泡是浮�
 import { SketchOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
-  <Card width="50%" style="height: 300px; transform: translate(0)">
+  <Card width="100%" style="height: 300px; transform: translate(0)">
     <FloatButton tooltip="Diamond" :right="96">
       <template #icon>
         <SketchOutlined />
@@ -549,7 +549,7 @@ import { SketchOutlined } from '@ant-design/icons-vue'
 
 ## 徽标数
 
-<Card width="50%" style="height: 300px; transform: translate(0)">
+<Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton :badge-props="{ dot: true }" :right="152">
     <template #icon>
       <MessageOutlined />
@@ -579,7 +579,7 @@ import { SketchOutlined } from '@ant-design/icons-vue'
 import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 </script>
 <template>
-  <Card width="50%" style="height: 300px; transform: translate(0)">
+  <Card width="100%" style="height: 300px; transform: translate(0)">
     <FloatButton :badge-props="{ dot: true }" :right="152">
       <template #icon>
         <MessageOutlined />
@@ -621,7 +621,7 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 | height | 浮动按钮高度，单位 `px` | number &#124; string | 44 |
 | type | 浮动按钮类型 | 'default' &#124; 'primary' | 'default' |
 | shape | 浮动按钮形状 | 'circle' &#124; 'square' | 'circle' |
-| icon | 浮动按钮图标，prop 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | VNode &#124; (() => VNode) | undefined |
+| icon | 浮动按钮图标，`prop` 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | VNode &#124; (() => VNode) | undefined |
 | description | 文字描述信息 | string | undefined |
 | href | 点击跳转的地址，指定此属性按钮的行为和 `a` 链接一致 | string | undefined |
 | target | 相当于 `a` 标签的 `target` 属性，`href` 存在时生效 | '\_self' &#124; '\_blank' | '\_self' |

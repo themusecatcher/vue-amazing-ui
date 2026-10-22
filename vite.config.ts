@@ -21,6 +21,8 @@ import { vendorStyles } from './components/utils/vendor-styles'
 import { mergeComponentStyles } from './build/merge-component-styles'
 // 构建后处理：为每个组件生成样式入口 es|lib/<dir>/style/index.{js,cjs}，见该文件头部说明
 import { generateStyleEntries } from './build/generate-style-entries'
+// 构建期生成主题默认变量表（components/style/generated/theme.css），供 global.less 内联
+import { writeThemeCss } from './build/gen-theme'
 
 // 获取 vite build 构建时，传入的参数：dir f（形如 `vite build -- dir=dist f=iife`）
 // minimist 的 `_` 字段收集所有「非 -x/--x 开头的裸位置参数」，即 `--` 之后的 `dir=dist f=iife` 会被归入 _ 数组
@@ -36,8 +38,9 @@ const f = findArg('f')
 // 项目根目录（vite.config.ts 所在目录），ESM 标准 API 获取，与下方 resolve.alias 写法保持一致
 const rootDir = fileURLToPath(new URL('.', import.meta.url))
 // 库模式需外部化处理、不打包进产物的第三方依赖（es/lib 按需引入时由消费方解析）
-// 注意：swiper 只列出子路径 swiper/modules、swiper/vue 而未列主包 swiper——因为源码中仅从这两个子路径 import，
-// 主包 swiper 是它们的公共依赖，保持打包进产物（Rollup 会自动处理），外部化子路径即可让消费方解析到对应实现
+// 注意：swiper 只列子路径 swiper/modules、swiper/vue——源码仅从这两个子路径 import（另有 type-only 的
+// swiper/types 与 CSS 的 swiper/css*，样式由 vendor-styles 单独复制到 es|lib/vendor-styles），
+// 主包 swiper 因此不会进入产物；消费方按 dependencies 解析这两个子路径即可
 const externalDependencies = [
   'vue',
   'date-fns',
@@ -58,6 +61,19 @@ const externalGlobals: Record<string, string> = {
   seemly: 'seemly',
   '@ant-design/colors': 'Colors',
   '@ctrl/tinycolor': 'TinyColor'
+}
+// 主题默认变量表：dev / build 的 buildStart 均会触发，必须早于样式模块解析（global.less 以 inline 方式引入它）
+function themeCssPlugin(): Plugin {
+  return {
+    name: 'theme-css',
+    buildStart() {
+      try {
+        writeThemeCss(rootDir)
+      } catch (error) {
+        console.warn('[theme-css] 生成主题变量表失败', error)
+      }
+    }
+  }
 }
 // dist（IIFE/UMD 全量构建）下生成 dist/css.d.ts，供 package.json exports["./css"].types 指向，解决 `import 'vue-amazing-ui/css'` 的 TS 报错
 function generateCssDtsPlugin(): Plugin {
@@ -134,7 +150,10 @@ const buildDistOptions = {
       umd: 通用模块定义规范，同时支持 amd，cjs 和 iife
       iife: 自执行函数，适用于 <script> 标签（如果你想为你的应用程序创建 bundle，那么你可能会使用它）。iife 表示“自执行 函数表达式”
     */
-    formats: f === 'iife' ? ['iife'] : ['es', 'umd'], // f=iife（build:browser）只出 iife；默认（build:dist）出 es+umd，iife 由 build:browser 单独产出，避免重复
+    // f=iife（build:browser）只出 iife；默认（build:dist）出 es + umd：
+    // umd 保留给 require / AMD / 全局脚本形态的消费方（与 antd、naive-ui 的产物形态对齐），
+    // iife 拆到另一个构建 build:browser 单独产出，避免同一份代码被打两次包
+    formats: f === 'iife' ? ['iife'] : ['es', 'umd'],
     entry: resolve(rootDir, 'components', 'index.ts'), // 或 'components/index.ts' entry 是必需的，因为库不能使用HTML作为入口。
     name: 'VueAmazingUI', // 暴露的全局变量
     fileName: 'index', // 输出的包文件名，默认是 package.json 的 name 选项；也可以定义为以 format 和 entryName 为参数的函数，并返回文件名
@@ -174,7 +193,9 @@ const buildDistOptions = {
   // sourcemap: false // boolean | 'inline' | 'hidden'，构建后是否生成 source map 文件。默认 false
 }
 const buildESAndLibOptions = {
-  // emptyOutDir: true, // 若 outDir 在 root 目录下，则为 true。默认情况下，若 outDir 在 root 目录下，则 Vite 会在构建时清空该目录。若 outDir 在根目录之外则会抛出一个警告避免意外删除掉重要的文件。
+  // emptyOutDir 用默认值 true（outDir 在 root 内）且不要关：es|lib 由本构建独占清空，
+  // 是「一个产物目录只有一个写者」的前提；dist 的两个并行构建则显式设为 false（见 buildDistOptions）。
+  // 清空动作发生在 renderStart（转换完成、写 chunk 之前），所以任何其他构建都不得在同一时刻写 es|lib
   copyPublicDir: false, // 默认情况下，Vite 会在构建阶段将 publicDir 目录中的所有文件复制到 outDir 目录中。
   lib: {
     // 构建为库。如果指定了 build.lib，build.cssCodeSplit 会默认为 false。
@@ -228,6 +249,7 @@ const buildESAndLibOptions = {
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    themeCssPlugin(),
     vue(),
     VueDevTools({
       // https://devtools.vuejs.org
@@ -236,18 +258,26 @@ export default defineConfig({
     }),
     generateCssDtsPlugin(),
     stylePostBuildPlugin(),
-    dts({
-      // 自动生成类型文件
-      outDir: ['es', 'lib'], // 指定输出目录，默认为 Vite 配置的 'build.outDir'，使用 Rollup 时为 tsconfig.json 的 `outDir`
-      tsconfigPath: './tsconfig.dts.json',
-      // 以 components/ 为类型产物根，使 .d.ts 输出路径对齐 JS 产物的 preserveModulesRoot: 'components'
-      // 结构（es/button/index.d.ts 而非 es/components/button/index.d.ts），从根上替代 beforeWriteFile 手动重写
-      entryRoot: resolve(rootDir, 'components'),
-      cleanVueFileName: true // 是否将 '.vue.d.ts' 文件名转换为 '.d.ts'，默认 false
-      // insertTypesEntry: true, // 是否生成类型入口文件，默认 false；当为 `true` 时会基于 package.json 的 `types` 字段生成，或者 `${outDir}/index.d.ts`
-      // rollupTypes: true // 是否将发出的类型文件打包进单个文件，默认 false
-      // copyDtsFiles: true // 是否将源码里的 .d.ts 文件复制到 `outDir`，默认 false
-    }),
+    // 类型声明只由 es|lib 构建产出，故只在该构建注册 dts（判据 = 无 dir 参数，即 build-only）；
+    // build:components 用 run-p 并行执行 build:dist / build:browser / build-only，而 dts 的 outDir 固定为
+    // es|lib —— 若 dist 构建也挂 dts，三条声明流水线会同时写 es|lib，并与 build-only 的 emptyOutDir 清空
+    // 竞态，表现为 `[vite:dts] ENOENT: no such file or directory, open 'es/<component>/index.d.ts'`（CI 随机红）
+    ...(dir === undefined
+      ? [
+          dts({
+            // 自动生成类型文件
+            outDir: ['es', 'lib'], // 指定输出目录，默认为 Vite 配置的 'build.outDir'，使用 Rollup 时为 tsconfig.json 的 `outDir`
+            tsconfigPath: './tsconfig.dts.json',
+            // 以 components/ 为类型产物根，使 .d.ts 输出路径对齐 JS 产物的 preserveModulesRoot: 'components'
+            // 结构（es/button/index.d.ts 而非 es/components/button/index.d.ts），从根上替代 beforeWriteFile 手动重写
+            entryRoot: resolve(rootDir, 'components'),
+            cleanVueFileName: true // 是否将 '.vue.d.ts' 文件名转换为 '.d.ts'，默认 false
+            // insertTypesEntry: true, // 是否生成类型入口文件，默认 false；当为 `true` 时会基于 package.json 的 `types` 字段生成，或者 `${outDir}/index.d.ts`
+            // rollupTypes: true // 是否将发出的类型文件打包进单个文件，默认 false
+            // copyDtsFiles: true // 是否将源码里的 .d.ts 文件复制到 `outDir`，默认 false
+          })
+        ]
+      : []),
     Components({
       resolvers: [
         // ant design, naive ui 自动按需引入
@@ -282,19 +312,6 @@ export default defineConfig({
       less: fileURLToPath(new URL('./src/assets/less', import.meta.url)),
       // demo 演示页按真实用户用法从包总出口引入，重定向到源码总出口
       'vue-amazing-ui': fileURLToPath(new URL('./components/index.ts', import.meta.url))
-    }
-  },
-  css: {
-    preprocessorOptions: {
-      less: {
-        modifyVars: {
-          // 或者globalVars
-          // `themeColor` is global variables fields name
-          themeColor: '#1677ff',
-          themeHoverColor: '#4096ff'
-        },
-        javascriptEnabled: true
-      }
     }
   },
   server: {

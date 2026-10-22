@@ -325,7 +325,7 @@ shape | 指定头像的形状 | 'circle' &#124; 'square' | 'circle'
 size | 设置头像的大小，为数值时单位 `px` | number &#124; 'small' &#124; 'middle' &#124; 'large' &#124; [AvatarResponsive](#responsive-type) | 'middle'
 src | 图片类头像资源地址 | string | undefined
 alt | 图片无法显示时的替代文本 | string | undefined
-icon | 设置头像的图标，prop 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | VNode &#124; (() => VNode) | undefined
+icon | 设置头像的图标，`prop` 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | VNode &#124; (() => VNode) | undefined
 href | 点击跳转的地址，指定此属性按钮的行为和 `a` 链接一致 | string | undefined
 target | 相当于 `a` 标签的 `target` 属性，`href` 存在时生效 | '_self' &#124; '_blank' | '_self'
 

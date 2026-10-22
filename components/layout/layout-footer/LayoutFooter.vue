@@ -16,8 +16,8 @@ defineSlots<LayoutFooterSlots>()
 .layout-footer-wrap {
   flex: 0 0 auto;
   padding: 24px 50px;
-  color: var(--layout-footer-color, rgba(0, 0, 0, 0.88));
+  color: var(--layout-footer-color, var(--va-text-color-1));
   font-size: 14px;
-  background: var(--layout-footer-background, #f5f5f5);
+  background: var(--layout-footer-background, var(--va-bg-layout-color));
 }
 </style>

@@ -153,10 +153,10 @@ function onMenuClick(key: Key | undefined, option: MenuOption): void {
     border-bottom-right-radius: 0;
     // 共享边用 hover 色，使两个实心按钮之间呈现可见的分隔线
     &.btn-primary:not(.btn-disabled) {
-      border-right-color: var(--button-primary-color-hover);
+      border-right-color: var(--va-button-primary-color-hover, var(--va-primary-color-hover));
     }
     &.btn-danger:not(.btn-disabled) {
-      border-right-color: var(--button-danger-color-hover);
+      border-right-color: var(--va-button-danger-color-hover, var(--va-button-danger-color, var(--va-error-color)));
     }
   }
   // 左按钮 loading 时，右按钮同步变淡且不可交互
@@ -172,10 +172,10 @@ function onMenuClick(key: Key | undefined, option: MenuOption): void {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     &.btn-primary:not(.btn-disabled) {
-      border-left-color: var(--button-primary-color-hover);
+      border-left-color: var(--va-button-primary-color-hover, var(--va-primary-color-hover));
     }
     &.btn-danger:not(.btn-disabled) {
-      border-left-color: var(--button-danger-color-hover);
+      border-left-color: var(--va-button-danger-color-hover, var(--va-button-danger-color, var(--va-error-color)));
     }
   }
 }

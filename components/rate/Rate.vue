@@ -301,7 +301,7 @@ function onDown(): void {
     }
     :deep(svg) {
       font-size: var(--rate-star-size);
-      color: rgba(0, 0, 0, 0.06);
+      color: var(--va-fill-color-2);
       fill: currentColor;
       transition: color 0.2s;
     }
@@ -314,7 +314,7 @@ function onDown(): void {
       vertical-align: middle;
       height: 1em;
       font-size: var(--rate-star-size);
-      color: rgba(0, 0, 0, 0.06);
+      color: var(--va-fill-color-2);
       transition: color 0.2s;
     }
     .star-first {
@@ -335,14 +335,14 @@ function onDown(): void {
       &:hover {
         opacity: 0;
         .icon-character {
-          color: rgba(0, 0, 0, 0.06);
+          color: var(--va-fill-color-2);
         }
       }
     }
     .temp-gray-second {
       &:hover {
         .icon-character {
-          color: rgba(0, 0, 0, 0.06);
+          color: var(--va-fill-color-2);
         }
       }
     }

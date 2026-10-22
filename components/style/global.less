@@ -1,5 +1,8 @@
-// 组件库全局样式：仅含基座样式（盒模型重置、移动端点击高亮抑制、表单控件字体兜底）与低特异性链接基座。
-// 链接取色变量由 ConfigProvider 写入；页面级样式（caret-color、主题变量）不在此定义。
+// 组件库全局样式：主题变量表 + 基座样式（盒模型重置、移动端点击高亮抑制、表单控件字体兜底、低特异性链接基座）。
+// 变量表由 build/gen-theme.ts 在构建期生成（`:root` 浅色默认表 + `[data-va-mode='dark']` 暗色默认表），
+// 以 inline 方式并入本文档，因此每份按需样式入口天然携带默认表，首帧不依赖 JS。
+@import (inline) './generated/theme.css';
+
 *,
 *::before,
 *::after {
@@ -15,24 +18,24 @@ body {
 :where(input, textarea, select, button) {
   font-family: inherit;
 }
-/* 颜色取 ConfigProvider 按 common 主题色阶写入的 `--va-link-*`（fallback 为默认色阶，未用 ConfigProvider 时亦成立）；
+/* 颜色取 `--va-link-*`（默认值来自静态变量表，ConfigProvider 按种子派生后覆盖）；
    `va-` 前缀与库其它全局命名（`va-popup-*`）一致，避免与宿主同名变量互相覆盖；
    `:where()` 特异性为 0，使用方任意链接样式均可覆盖 */
 :where(a) {
-  color: var(--va-link-color, #1677ff);
+  color: var(--va-link-color);
   text-decoration: none;
   background-color: transparent;
   cursor: pointer;
   transition: color 0.3s;
   -webkit-text-decoration-skip: objects;
   &:hover {
-    color: var(--va-link-color-hover, #69b1ff);
+    color: var(--va-link-color-hover);
   }
   &:active {
-    color: var(--va-link-color-active, #0958d9);
+    color: var(--va-link-color-active);
   }
   &[disabled] {
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
     cursor: not-allowed;
   }
 }

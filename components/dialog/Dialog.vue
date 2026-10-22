@@ -29,8 +29,9 @@ if (typeof document !== 'undefined') {
 </script>
 
 <script setup lang="ts">
-import { ref, computed, watch, onUnmounted, nextTick, createTextVNode, provide } from 'vue'
+import { ref, computed, watch, onUnmounted, nextTick, createTextVNode, provide, inject } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
+import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import Button, { type ButtonProps } from 'components/button'
 import {
@@ -41,7 +42,8 @@ import {
   useSlotsExist,
   useZIndex,
   Z_INDEX_CONTAINER_OPEN_KEY,
-  FLOATING_LAYER_Z_INDEX
+  FLOATING_LAYER_Z_INDEX,
+  log
 } from 'components/utils'
 import type { DialogApi } from './useDialog'
 /** 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数 */
@@ -186,6 +188,10 @@ interface DragController {
   /** 停止监听并清理待写入的位置 */
   stop: () => void
 }
+// 主题转发：对话框 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
+const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
+const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 const props = withDefaults(defineProps<Props>(), {
   width: 520,
   height: 'auto',
@@ -800,7 +806,7 @@ async function onCancel(key: string, e?: Event): Promise<void> {
       return
     }
   } catch (err) {
-    console.error('[vue-amazing-ui] Dialog: onCancel 执行出错', err) // 避免 unhandled rejection 导致取消流程静默中断
+    log('error', 'Dialog', 'onCancel 执行出错，取消流程已继续', err) // 避免 unhandled rejection 导致取消流程静默中断
     return
   }
   closeItem(key)
@@ -824,7 +830,7 @@ async function onOK(key: string, e?: MouseEvent): Promise<void> {
       return
     }
   } catch (err) {
-    console.error('[vue-amazing-ui] Dialog: onOk 执行出错', err) // 避免 unhandled rejection 导致 loading 卡死
+    log('error', 'Dialog', 'onOk 执行出错，loading 已复位', err) // 避免 unhandled rejection 导致 loading 卡死
     return
   } finally {
     item.loading = false
@@ -997,7 +1003,8 @@ emits('ready', { open: openDialog, destroyAll })
       ref="dialogWrapRef"
       class="dialog-wrap"
       :class="wrapClassOf()"
-      :style="[wrapStyleOf(), { zIndex: baseZIndex + 10 }]"
+      :style="[wrapStyleOf(), { zIndex: baseZIndex + 10 }, teleportThemeVars]"
+      :data-va-mode="teleportThemeMode"
     >
       <template v-for="item in dialogList" :key="item.key">
         <!-- layer 自身 pointer-events: none，click.self 永不触发，遮罩点击统一由 mask 处理 -->
@@ -1249,13 +1256,14 @@ emits('ready', { open: openDialog, destroyAll })
   inset: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.45);
+  // 遮罩不能跟随正文色：暗色下 --va-text-color-3 是白色，会变成白蒙层
+  background: var(--va-mask-color);
   pointer-events: auto; // 遮罩可见时接收点击（遮罩关闭 / 阻断背景交互）
 }
 .dialog-container {
   position: relative;
   margin: 0 auto;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   font-size: 14px;
   line-height: 1.5714285714285714;
   width: auto;
@@ -1273,17 +1281,15 @@ emits('ready', { open: openDialog, destroyAll })
     flex-direction: column;
     position: relative;
     outline: none;
-    background-color: #fff;
+    // 对话框是浮层：底取 elevated，暗色下与页面容器拉开层级
+    background-color: var(--va-bg-elevated-color);
     border-radius: 8px;
-    box-shadow:
-      0 6px 16px 0 rgba(0, 0, 0, 0.08),
-      0 3px 6px -4px rgba(0, 0, 0, 0.12),
-      0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--va-popup-shadow);
     padding: 20px 24px;
     max-width: 100%;
     .dialog-header {
       font-size: 16px;
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--va-text-color-1);
       font-weight: 600;
       line-height: 1.5;
       word-break: break-word;
@@ -1326,18 +1332,18 @@ emits('ready', { open: openDialog, destroyAll })
       justify-content: center;
       .icon-svg {
         font-size: 16px;
-        color: rgba(0, 0, 0, 0.45);
+        color: var(--va-text-color-3);
         fill: currentColor;
         transition: color 0.2s;
       }
       &:hover {
-        background: rgba(0, 0, 0, 0.06);
+        background: var(--va-fill-color-2);
         .icon-svg {
-          color: rgba(0, 0, 0, 0.88);
+          color: var(--va-text-color-1);
         }
       }
       &:focus-visible {
-        outline: 2px solid rgba(0, 0, 0, 0.88);
+        outline: 2px solid var(--va-text-color-1);
         outline-offset: 1px;
       }
     }
@@ -1353,7 +1359,7 @@ emits('ready', { open: openDialog, destroyAll })
     }
     .dialog-content {
       font-size: 14px;
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--va-text-color-1);
       line-height: 1.5714285714285714;
       word-break: break-word;
       transition: all 0.25s;

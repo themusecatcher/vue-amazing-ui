@@ -73,13 +73,7 @@ const state = reactive({
     <h2 class="mt30 mb10">水平文字滚动</h2>
     <TextScroll :items="scrollItems" @click="onClick" />
     <h2 class="mt30 mb10">垂直文字滚动</h2>
-    <TextScroll
-      style="background-color: #e6f4ff"
-      :items="scrollItems"
-      :item-style="{ fontSize: '20px' }"
-      vertical
-      @click="onClick"
-    />
+    <TextScroll vertical :items="scrollItems" @click="onClick" />
     <h2 class="mt30 mb10">单条文字滚动</h2>
     <Flex vertical>
       <TextScroll

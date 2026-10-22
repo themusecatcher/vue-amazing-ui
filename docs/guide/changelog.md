@@ -14,6 +14,26 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-21">3.0.0</VersionDateTag>
+
+_本版需要改代码的地方：主题配置形式（`theme`）、`abstract` 默认值、五个已移除的工具函数；迁移对照见[定制主题](/guide/customize-theme.html#迁移-旧版主题-api)。_
+
+- 重构 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme`：改为 `{ seed, mode }`，原 `{ common, 组件名 }` 写法移除（组件级配色改用 `theme.components`），迁移对照见[定制主题](/guide/customize-theme.html)
+- 新增 `theme.mode`（`light` / `dark` / `auto`，`auto` 跟随系统配色）；组件样式只消费 `--va-*`，主色种子派生整套语义变量，不替品牌色做对比度兜底
+- 新增组件级主色 `theme.components.<组件名>.primaryColor`，覆盖 `39` 个使用主色的内置组件，键名写错在编译期报错
+- `abstract` 默认值由 `true` 改为 `false`（主题只作用于自身子树）；需要页面级主题（`Teleport` 浮层、页面链接色）时在最外层显式传 `:abstract="true"`
+- 移除 `toggleDark`：暗色切换改用 `theme.mode` 或直接写 `data-va-mode`
+- 移除 `rafTimeout` / `cancelRaf`：延时改用 `setTimeout` 或原生 `requestAnimationFrame`
+- 移除 `getColorPalettes` / `getAlphaColor`，改用新增的 `derive(seed, mode)` 取色（支持 `JS` / `canvas` / `SVG` 场景）
+- 新增 `Table` / `Card` / `Alert` / `Input` / `Textarea` / `Modal` / `Drawer` 的 `22` 个组件令牌（底色、边框、文字与占位符等），组件令牌共 `48` 个
+- 统一库内告警输出：`error` 全环境输出、`warn` / `debug` 仅开发期输出，同一提醒只输出一次；[二维码 QRCode](/guide/components/qr-code.html) 编码 / 绘制失败与 [折叠面板 Collapse](/guide/components/collapse.html) 复制失败改为 `error`
+- 修复暗色模式下的反色表面配色：[模态框 Modal](/guide/components/modal.html) / [抽屉 Drawer](/guide/components/drawer.html) / [图片 Image](/guide/components/image.html) 预览遮罩、[对话框 Dialog](/guide/components/dialog.html) 遮罩、[二维码 QRCode](/guide/components/qr-code.html) 状态遮罩、[菜单 Menu](/guide/components/menu.html) 折叠气泡、[颜色选择器 ColorPicker](/guide/components/color-picker.html) 面板、[标签 Tag](/guide/components/tag.html) 输入框与新增按钮
+- 修复 [表格 Table](/guide/components/table.html) 与 [列表 List](/guide/components/list.html) 的固定色在暗色下不协调，改为语义变量
+- [水印 Watermark](/guide/components/watermark.html) 默认色由固定黑 / 白改为语义变量（浅色 `15%` 黑、暗色 `18%` 白），并修复 `fixed=false` 时不能整屏覆盖
+- 修复 [日历 Calendar](/guide/components/calendar.html) 年选择器选中年份后列表区间随面板平移，重新展开才滚动到选中项
+- 优化 `ConfigProvider` 对 `<html>` 的写入权：只配组件主色的 `abstract` 实例不再参与全局仲裁，避免卸载时误清其它实例写入的变量
+- 重构使用者文档的主题章节（主题全景、优先级链与排查清单）与贡献者文档的主题实现说明，组件令牌作为附录并入；工具文档移除已删除函数页
+
 ## <VersionDateTag date="2026-10-19">2.15.2</VersionDateTag>
 
 - 重构并增强 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html)：新增 `RadioGroup` / `CheckboxGroup` 组合式用法（统一下发选中值与禁用态并承载组内选项，组内项以 `value` 标识自身，`Radio` 另有 `RadioButton` 提供按钮形态，`options` 支持字符串 / 数字简写与 `VNode` 选项名）与原生 `input` 承载（`name` 下发到组内每个原生 `input`，`id`（前缀 + 选项下标）/ `autofocus` 在 `options` 模式下下发，补齐键盘操作与屏幕阅读器语义，暴露 `focus` / `blur` 实例方法且调用 `focus` 时同样显示焦点环，`change` 事件在「新值」首参之后追加事件对象——含状态快照与原始事件，首参用法不受影响，`RadioChangeEvent` / `CheckboxChangeEvent` 类型随组件一并导出），优化选中反馈并修复定高行内与输入框混排时文字与控件基线错位、内容溢出行盒的问题
@@ -191,8 +211,8 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 - 修复 `SSR` / `Node` 渲染报错：[Avatar](/guide/components/avatar.html)、[Row](/guide/components/grid.html) / [Col](/guide/components/grid.html)、[Descriptions](/guide/components/descriptions.html)、[QRCode](/guide/components/qr-code.html)、[Tag](/guide/components/tag.html)、[Watermark](/guide/components/watermark.html) 及 [useMediaQuery](/utils/functions/use-media-query.html)、[useFps](/utils/functions/use-fps.html)、[useMutationObserver](/utils/functions/use-mutation-observer.html)、[useResizeObserver](/utils/functions/use-resize-observer.html)、[useScrollParent](/utils/functions/use-scroll-parent.html) 不再在 `setup` 阶段访问浏览器全局对象
 - 修复卸载后定时器 / 动画帧泄漏：[Countdown](/guide/components/countdown.html)、[Carousel](/guide/components/carousel.html)、[TextScroll](/guide/components/text-scroll.html)、[Select](/guide/components/select.html)、[useFps](/utils/functions/use-fps.html)、[useMediaQuery](/utils/functions/use-media-query.html)
-- 修复 [Carousel](/guide/components/carousel.html) 容器尺寸为 `0` 时自动轮播失效、[Select](/guide/components/select.html) 搜索过滤自触发循环、[Tag](/guide/components/tag.html) 动态编辑后输入框未清空、[Upload](/guide/components/upload.html) 重复选择同一文件不触发 `change`、[QRCode](/guide/components/qr-code.html) `canvas` 未就绪时跳过绘制、[cancelRaf](/utils/functions/raf-timeout.html) 帧 `id` 为 `0` 时误判
-- 澄清 [rafTimeout](/utils/functions/raf-timeout.html) 语义：回调绑定渲染帧、页面不可见时暂停，与 `setTimeout` / `setInterval` **不等价**
+- 修复 [Carousel](/guide/components/carousel.html) 容器尺寸为 `0` 时自动轮播失效、[Select](/guide/components/select.html) 搜索过滤自触发循环、[Tag](/guide/components/tag.html) 动态编辑后输入框未清空、[Upload](/guide/components/upload.html) 重复选择同一文件不触发 `change`、[QRCode](/guide/components/qr-code.html) `canvas` 未就绪时跳过绘制、`cancelRaf` 帧 `id` 为 `0` 时误判
+- 澄清 `rafTimeout` 语义：回调绑定渲染帧、页面不可见时暂停，与 `setTimeout` / `setInterval` **不等价**
 - 优化 [Rate](/guide/components/rate.html) 未选中状态守卫；收敛组件与演示的模板引用类型，并为可空引用补充 `?.` 与判空守卫
 - 工程优化：`postcss` + `autoprefixer` 按 `browserslist` 补齐产物 `CSS` 厂商前缀，`vue` 提升为 `peerDependencies`，`engines` / `packageManager` 收紧；新增 `prepublishOnly` 产物入口守卫与 `format:check` 门禁
 
@@ -1071,6 +1091,3 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 - 新增 穿梭框 Transfer 组件
 - 新增 漫游式引导 Tour 组件
-<!-- - 更新 表格 Table 组件，新增虚拟滚动功能
-- 时间轴 Timeline 组件，新增水平时间轴
-- 重构级联选择 Cascader 组件 -->

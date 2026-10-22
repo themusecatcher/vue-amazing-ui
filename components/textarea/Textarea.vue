@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
-import { useInject } from 'components/utils'
 export interface Props {
   width?: string | number // 文本域宽度，单位 px
   allowClear?: boolean // 可以点击清除图标删除内容
@@ -27,7 +26,6 @@ const textareaRef = ref<HTMLElement | null>(null) // textarea 元素引用
 const isComposing = ref<boolean>(false) // 是否正在使用文本合成系统输入中
 const textareaValue = ref<string>() // 文本域的值
 const areaHeight = ref<number>(32)
-const { colorPalettes, shadowColor } = useInject('Textarea') // 主题色注入
 const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'enter'])
 const textareaWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -143,9 +141,6 @@ function onClear(): void {
     :class="{ 'show-count': showCount }"
     :style="`
       --textarea-width: ${textareaWidth};
-      --textarea-primary-color-hover: ${colorPalettes[4]};
-      --textarea-primary-color-focus: ${colorPalettes[4]};
-      --textarea-primary-shadow-color: ${shadowColor};
     `"
     :data-count="showCountNum"
   >
@@ -195,7 +190,7 @@ function onClear(): void {
     max-width: 100%;
     height: auto;
     padding: 4px 11px;
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-textarea-text-color, var(--va-text-color-1));
     font-size: 14px;
     line-height: 1.5714285714285714;
     list-style: none;
@@ -208,17 +203,18 @@ function onClear(): void {
     display: inline-block;
     vertical-align: bottom;
     text-overflow: ellipsis;
-    background-color: #ffffff;
-    border: 1px solid #d9d9d9;
+    background-color: var(--va-textarea-bg-color, var(--va-bg-container-color));
+    border: 1px solid var(--va-textarea-border-color, var(--va-border-color));
     border-radius: 6px;
     outline: none;
     &:hover {
-      border-color: var(--textarea-primary-color-hover);
+      border-color: var(--va-cp-textarea-primary-color-hover, var(--va-primary-color-hover));
       z-index: 1;
     }
     &:focus-within {
-      border-color: var(--textarea-primary-color-focus);
-      box-shadow: 0 0 0 2px var(--textarea-primary-shadow-color);
+      /* 聚焦态：边框取悬停档主色（与 hover 同色），阴影取焦点环 */
+      border-color: var(--va-cp-textarea-primary-color-hover, var(--va-primary-color-hover));
+      box-shadow: var(--va-cp-textarea-focus-shadow, var(--va-focus-shadow));
       outline: 0;
     }
   }
@@ -226,19 +222,28 @@ function onClear(): void {
     padding-right: 24px;
   }
   textarea:disabled {
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
+  }
+  /* 自动填充：与 Input 同一口径，用 inset 阴影覆盖 UA 底色、用 text-fill-color 覆盖文字色 */
+  .textarea-item:-webkit-autofill,
+  .textarea-item:-webkit-autofill:hover,
+  .textarea-item:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--va-textarea-text-color, var(--va-text-color-1));
+    caret-color: var(--va-textarea-text-color, var(--va-text-color-1));
+    box-shadow: 0 0 0 1000px var(--va-textarea-bg-color, var(--va-bg-container-color)) inset;
+    transition: background-color 9999s ease-out 0s;
   }
   textarea::-webkit-input-placeholder {
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-textarea-placeholder-color, var(--va-text-color-disabled));
   }
   textarea:-moz-placeholder {
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-textarea-placeholder-color, var(--va-text-color-disabled));
   }
   textarea::-moz-placeholder {
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-textarea-placeholder-color, var(--va-text-color-disabled));
   }
   textarea:-ms-input-placeholder {
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-textarea-placeholder-color, var(--va-text-color-disabled));
   }
   .clear-svg {
     position: absolute;
@@ -247,23 +252,23 @@ function onClear(): void {
     z-index: 99;
     display: inline-block;
     font-size: 12px;
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
     fill: currentColor;
     cursor: pointer;
     transition: color 0.3s;
     &:hover {
-      color: rgba(0, 0, 0, 0.45);
+      color: var(--va-text-color-3);
     }
   }
   .textarea-disabled {
-    color: rgba(0, 0, 0, 0.25);
-    background-color: rgba(0, 0, 0, 0.04);
+    color: var(--va-text-color-disabled);
+    background-color: var(--va-fill-color-1);
     cursor: not-allowed;
     &:hover {
-      border-color: #d9d9d9;
+      border-color: var(--va-border-color);
     }
     &:focus-within {
-      border-color: #d9d9d9;
+      border-color: var(--va-border-color);
       box-shadow: none;
     }
   }
@@ -271,7 +276,7 @@ function onClear(): void {
 .show-count {
   &::after {
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.45);
+    color: var(--va-text-color-3);
     white-space: nowrap;
     content: attr(data-count);
     pointer-events: none;

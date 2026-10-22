@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, inject } from 'vue'
 import type { CSSProperties } from 'vue'
-import { useInject, useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
+import { useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
 import type { LoadingBarApi } from './useLoadingBar'
 export interface Props {
   containerClass?: string // 加载条容器的类名
@@ -17,13 +18,17 @@ export interface Props {
   }
   to?: string | HTMLElement | false // 加载条的挂载位置，可选：元素标签名（例如 body）或者元素本身，false 会待在原地
 }
+// 主题转发：加载条 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
+const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
+const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 const props = withDefaults(defineProps<Props>(), {
   containerClass: undefined,
   containerStyle: () => ({}),
   loadingBarSize: 2,
   colorLoading: undefined,
   colorFinish: undefined,
-  colorError: '#ff4d4f',
+  colorError: 'var(--va-error-color)',
   loadingBarStyle: undefined,
   to: 'body'
 })
@@ -52,17 +57,16 @@ const transitionDisabled = ref(false) // 是否禁用过渡，表示使用仅由
 const loadingStarted = ref<boolean>(false) // 加载条是否开始
 const loadingFinishing = ref<boolean>(false) // 加载条是否完成
 const loadingErroring = ref<boolean>(false) // 加载条是否报错
-const { colorPalettes } = useInject('LoadingBar') // 主题色注入
 const colorLoadingComputed = computed(() => {
   if (props.colorLoading === undefined) {
-    return colorPalettes.value[5]
+    return 'var(--va-cp-loading-bar-primary-color, var(--va-primary-color))'
   } else {
     return props.colorLoading
   }
 })
 const colorFinishComputed = computed(() => {
   if (props.colorFinish === undefined) {
-    return colorPalettes.value[5]
+    return 'var(--va-cp-loading-bar-primary-color, var(--va-primary-color))'
   } else {
     return props.colorFinish
   }
@@ -187,6 +191,7 @@ emits('ready', { start, finish, error })
         class="loading-bar-wrap"
         :class="containerClass"
         :style="[
+          teleportThemeVars,
           `
             --loading-bar-z-index: ${layerZIndex};
             --loading-bar-size: ${loadingBarSize}px;
@@ -196,6 +201,7 @@ emits('ready', { start, finish, error })
           `,
           containerStyle
         ]"
+        :data-va-mode="teleportThemeMode"
       >
         <div ref="loadingBarRef" class="loading-bar" :style="loadingBarStyleComputed"></div>
       </div>

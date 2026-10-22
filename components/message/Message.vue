@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { ref, computed, onBeforeUnmount, isVNode, watch } from 'vue'
+import { ref, computed, onBeforeUnmount, isVNode, watch, inject } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import {
-  createKeyGenerator,
-  renderContentToVNode,
-  useInject,
-  useZIndex,
-  FLOATING_LAYER_Z_INDEX
-} from 'components/utils'
+import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
+import { createKeyGenerator, renderContentToVNode, useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
 import type { MessageApi } from './useMessage'
+// 主题转发：消息 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
+const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
+const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 // 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数
 export type ContentType = string | VNode | (() => VNode)
 export interface Props {
@@ -76,7 +75,6 @@ watch(
     }
   }
 )
-const { colorPalettes } = useInject('Message') // 主题色注入
 // 所有消息共享同一容器位置
 // 既可通过 <MessageProvider top="..."> 透传生效，也可直接设置在 <Message> 组件上
 const messageTop = computed(() => {
@@ -214,14 +212,14 @@ onBeforeUnmount(() => {
     <div
       v-bind="$attrs"
       class="message-wrap"
-      :style="`
+      :style="[
+        `
       top: ${messageTop};
       --message-z-index: ${layerZIndex};
-      --message-primary-color: ${colorPalettes[5]};
-      --message-success-color: #52c41a;
-      --message-warning-color: #faad14;
-      --message-error-color: #ff4d4f;
-    `"
+    `,
+        teleportThemeVars
+      ]"
+      :data-va-mode="teleportThemeMode"
     >
       <TransitionGroup name="slide-fade">
         <div
@@ -350,7 +348,7 @@ onBeforeUnmount(() => {
 }
 .message-wrap {
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   line-height: 1.5714285714285714;
   position: fixed;
   z-index: var(--message-z-index, 1030); // 兜底值需与 FLOATING_LAYER_Z_INDEX.message 保持一致
@@ -368,12 +366,10 @@ onBeforeUnmount(() => {
       gap: 8px;
       align-items: center;
       padding: 9px 12px;
-      background: #fff;
+      // 消息是浮层：底取 elevated，暗色下才不会与页面同色
+      background: var(--va-bg-elevated-color);
       border-radius: 8px;
-      box-shadow:
-        0 6px 16px 0 rgba(0, 0, 0, 0.08),
-        0 3px 6px -4px rgba(0, 0, 0, 0.12),
-        0 9px 28px 8px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--va-popup-shadow);
       pointer-events: auto; // 保证内容区域部分可以正常响应鼠标事件
       :deep(.icon-svg) {
         display: inline-block;
@@ -424,25 +420,25 @@ onBeforeUnmount(() => {
     .icon-info,
     .icon-loading {
       :deep(svg) {
-        color: var(--message-primary-color);
+        color: var(--va-cp-message-primary-color, var(--va-primary-color));
         fill: currentColor;
       }
     }
     .icon-success {
       :deep(svg) {
-        color: var(--message-success-color);
+        color: var(--va-success-color);
         fill: currentColor;
       }
     }
     .icon-warning {
       :deep(svg) {
-        color: var(--message-warning-color);
+        color: var(--va-warning-color);
         fill: currentColor;
       }
     }
     .icon-error {
       :deep(svg) {
-        color: var(--message-error-color);
+        color: var(--va-error-color);
         fill: currentColor;
       }
     }

@@ -83,7 +83,7 @@ const showFooter = computed(() => {
 .list-wrap {
   margin: 0;
   position: relative;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   font-size: 14px;
   line-height: 1.5714285714285714;
   .list-header,
@@ -100,7 +100,7 @@ const showFooter = computed(() => {
   }
 }
 .list-bordered {
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--va-border-color);
   border-radius: 8px;
   .list-header,
   :deep(.list-item-wrap),
@@ -121,7 +121,7 @@ const showFooter = computed(() => {
         .list-item-content {
           .list-item-title {
             margin-bottom: 12px;
-            color: rgba(0, 0, 0, 0.88);
+            color: var(--va-text-color-1);
             font-size: 16px;
             font-weight: 700;
             line-height: 1.5;
@@ -143,11 +143,11 @@ const showFooter = computed(() => {
 }
 .list-split {
   .list-header {
-    border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+    border-bottom: 1px solid var(--va-border-split-color);
   }
   :deep(.list-item-wrap) {
     &:not(:last-child) {
-      border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+      border-bottom: 1px solid var(--va-border-split-color);
     }
   }
 }
@@ -178,7 +178,7 @@ const showFooter = computed(() => {
 .list-hoverable {
   :deep(.list-item-wrap) {
     &:hover {
-      background-color: rgba(0, 0, 0, 0.02);
+      background-color: var(--va-fill-color-1);
     }
   }
 }

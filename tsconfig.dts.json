@@ -7,7 +7,10 @@
     // 构建期专用数据源：仅被 vite.config.ts / build/ 与测试引用，不参与运行时模块图，
     // 产物中不会生成对应 JS。若仍生成 d.ts 即形成「类型有声明、运行时无模块」的空头声明，
     // 故在此排除出类型产物（详见 development/project-structure.md）
-    "components/utils/vendor-styles.ts"
+    "components/utils/vendor-styles.ts",
+    // 同上：组件公开令牌注册表是 node 脚本与测试的数据源（实现为 .js，TS 侧只有这份手写声明），
+    // 不被任何组件 import，产物中没有对应模块，故不能生成 d.ts
+    "components/theme/component-vars.d.ts"
   ],
   "compilerOptions": {
     "removeComments": true,

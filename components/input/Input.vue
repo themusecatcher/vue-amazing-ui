@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import type { VNode } from 'vue'
-import { useSlotsExist, useInject } from 'components/utils'
+import { useSlotsExist } from 'components/utils'
 
 export interface Props {
   width?: string | number // 输入框宽度，单位 px
@@ -50,7 +50,6 @@ const inputFocus = ref<boolean>(false) // input 元素是否聚焦
 const isComposing = ref<boolean>(false) // 是否正在使用文本合成系统输入中
 const inputValue = ref<string>() // 输入框的值
 const showPassword = ref<boolean>(false) // 是否显示密码
-const { colorPalettes, shadowColor } = useInject('Input') // 主题色注入
 const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'enter'])
 const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore', 'addonAfter'])
 const inputWidth = computed(() => {
@@ -166,9 +165,6 @@ function onPassword(): void {
     class="input-wrap"
     :style="`
       --input-width: ${inputWidth};
-      --input-primary-color-hover: ${colorPalettes[4]};
-      --input-primary-color-focus: ${colorPalettes[4]};
-      --input-primary-shadow-color: ${shadowColor};
     `"
   >
     <span v-if="showBefore" class="input-addon" :class="{ 'addon-before': showBefore }">
@@ -284,12 +280,12 @@ function onPassword(): void {
   .input-addon {
     position: relative;
     padding: 0 11px;
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-input-text-color, var(--va-text-color-1));
     font-weight: normal;
     font-size: 14px;
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.02);
-    border: 1px solid #d9d9d9;
+    background-color: var(--va-fill-color-1);
+    border: 1px solid var(--va-border-color);
     border-radius: 6px;
     line-height: 1;
     display: table-cell;
@@ -314,14 +310,14 @@ function onPassword(): void {
   .input-container {
     position: relative;
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-input-text-color, var(--va-text-color-1));
     line-height: 1.5714285714285714;
     position: relative;
     display: inline-flex;
     /* 基线对齐：本层基线决定 inline-table 解析出的基线，取 top 会使整条基线链偏低 1px */
     width: 100%;
     min-width: 0;
-    background-color: #ffffff;
+    background-color: var(--va-input-bg-color, var(--va-bg-container-color));
     .input-border {
       position: absolute;
       left: 0;
@@ -330,7 +326,7 @@ function onPassword(): void {
       bottom: 0;
       pointer-events: none;
       border-radius: inherit;
-      border: 1px solid #d9d9d9;
+      border: 1px solid var(--va-input-border-color, var(--va-border-color));
     }
     .input-border-state {
       position: absolute;
@@ -341,16 +337,17 @@ function onPassword(): void {
       bottom: 0;
       pointer-events: none;
       border-radius: inherit;
-      border: 1px solid #d9d9d9;
-      border-color: #00000000;
+      border: 1px solid var(--va-input-border-color, var(--va-border-color));
+      border-color: transparent;
       transition: all 0.2s;
     }
     .input-hover {
-      border: 1px solid var(--input-primary-color-hover);
+      border: 1px solid var(--va-cp-input-primary-color-hover, var(--va-primary-color-hover));
     }
     .input-focus {
-      border: 1px solid var(--input-primary-color-focus);
-      box-shadow: 0 0 0 2px var(--input-primary-shadow-color);
+      /* 聚焦态：边框取悬停档主色（非主色本身），阴影取焦点环 */
+      border: 1px solid var(--va-cp-input-primary-color-hover, var(--va-primary-color-hover));
+      box-shadow: var(--va-cp-input-focus-shadow, var(--va-focus-shadow));
     }
     .input-prefix {
       margin-right: 4px;
@@ -363,29 +360,39 @@ function onPassword(): void {
     }
     .input-item {
       font-size: 14px;
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--va-input-text-color, var(--va-text-color-1));
       line-height: 1.5714285714285714;
       position: relative;
       display: inline-block;
       width: 100%;
       min-width: 0;
-      background-color: #ffffff;
+      background-color: var(--va-input-bg-color, var(--va-bg-container-color));
       border: none;
       outline: none;
       text-overflow: ellipsis;
       transition: all 0.2s;
     }
+    /* 浏览器自动填充（Chrome / Safari / Edge）：UA 会强制注入黄 / 蓝底与黑字，暗色下直接破功。
+       inset 阴影覆盖 UA 底色；autofill 状态下 `color` 无效，必须用 -webkit-text-fill-color 覆盖 */
+    .input-item:-webkit-autofill,
+    .input-item:-webkit-autofill:hover,
+    .input-item:-webkit-autofill:focus {
+      -webkit-text-fill-color: var(--va-input-text-color, var(--va-text-color-1));
+      caret-color: var(--va-input-text-color, var(--va-text-color-1));
+      box-shadow: 0 0 0 1000px var(--va-input-bg-color, var(--va-bg-container-color)) inset;
+      transition: background-color 9999s ease-out 0s;
+    }
     input::-webkit-input-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-input-placeholder-color, var(--va-text-color-disabled));
     }
     input:-moz-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-input-placeholder-color, var(--va-text-color-disabled));
     }
     input::-moz-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-input-placeholder-color, var(--va-text-color-disabled));
     }
     input:-ms-input-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-input-placeholder-color, var(--va-text-color-disabled));
     }
     .input-suffix {
       margin-left: 4px;
@@ -400,19 +407,19 @@ function onPassword(): void {
         .clear-svg {
           display: inline-block;
           font-size: 12px;
-          color: rgba(0, 0, 0, 0.25);
+          color: var(--va-text-color-disabled);
           transition: color 0.3s;
           &:hover {
-            color: rgba(0, 0, 0, 0.45);
+            color: var(--va-text-color-3);
           }
         }
         .eye-svg {
           display: inline-block;
           font-size: 14px;
-          color: rgba(0, 0, 0, 0.45);
+          color: var(--va-text-color-3);
           transition: color 0.3s;
           &:hover {
-            color: rgba(0, 0, 0, 0.85);
+            color: var(--va-text-color-1);
           }
         }
       }
@@ -420,7 +427,7 @@ function onPassword(): void {
         visibility: hidden;
       }
       .input-count {
-        color: rgba(0, 0, 0, 0.45);
+        color: var(--va-text-color-3);
       }
       .suffix-item {
         display: flex;
@@ -459,18 +466,18 @@ function onPassword(): void {
     border-bottom-right-radius: 0;
   }
   .input-disabled {
-    color: rgba(0, 0, 0, 0.25);
-    background-color: rgba(0, 0, 0, 0.04);
+    color: var(--va-text-color-disabled);
+    background-color: var(--va-fill-color-1);
     cursor: not-allowed;
     .input-hover {
-      border-color: #d9d9d9;
+      border-color: var(--va-border-color);
     }
     .input-focus {
-      border-color: #d9d9d9;
+      border-color: var(--va-border-color);
       box-shadow: none;
     }
     .input-item {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
       background-color: transparent;
       cursor: not-allowed;
     }

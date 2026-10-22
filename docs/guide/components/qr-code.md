@@ -481,8 +481,8 @@ const value = ref('hello world')
 | type | 渲染类型：矢量 / 位图 / 图片 | 'svg' &#124; 'canvas' &#124; 'image' | 'svg' |
 | size | 二维码整体大小（含内边距与外边框），单位为 `px` | number | 160 |
 | padding | 容器内边距，二维码绘制区为 `size` 减去两侧内边距与外边框 | number | 12 |
-| color | 二维码前景色，CSS 颜色值 | string | '#000' |
-| bgColor | 二维码背景色，CSS 颜色值 | string | '#FFF' |
+| color | 二维码前景色，`CSS` 颜色值 | string | '#000' |
+| bgColor | 二维码背景色，`CSS` 颜色值 | string | '#FFF' |
 | icon | 二维码中央图标的地址 | string | undefined |
 | iconSize | 中央图标的大小，单位为 `px` | number | 40 |
 | iconBackgroundColor | 中央图标的底色，用于压盖点阵、凸显图标 | string | '#FFF' |

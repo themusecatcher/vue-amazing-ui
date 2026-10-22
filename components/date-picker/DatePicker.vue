@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, useSlots, watch } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
-import { TinyColor } from '@ctrl/tinycolor'
 import Popup from 'components/popup'
 import {
   DatePanel,
@@ -41,7 +40,7 @@ import {
   type StartDayOfWeek
 } from 'components/picker'
 import type { FloatingPlacement } from 'components/utils'
-import { FLOATING_LAYER_Z_INDEX, useInject, useSlotsExist } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, useSlotsExist } from 'components/utils'
 export interface Props {
   // 双向绑定
   formattedValue?: PickerFormattedValue // 字符串轨道值：父组件传入时以它为准（受控），随选择经 update 事件回写
@@ -171,7 +170,6 @@ const emits = defineEmits<{
 }>()
 const value = defineModel<PickerValue>('value', { default: null })
 const open = defineModel<boolean>('open', { default: false })
-const { colorPalettes, shadowColor } = useInject('DatePicker') // 主题色注入
 const triggerRef = ref<InstanceType<typeof PickerTrigger> | null>(null)
 const popupRef = ref<InstanceType<typeof Popup> | null>(null)
 const wrapperRef = ref<HTMLElement | null>(null)
@@ -189,22 +187,18 @@ const RANGE_POPUP_OFFSET = POPUP_OFFSET + (RANGE_ARROW_SIZE * 2) / 3
 /** 带面板指示箭头的弹出方位（仅左侧对齐的两个方位，其余方位只展示面板） */
 const ARROW_PLACEMENTS: FloatingPlacement[] = ['bottomLeft', 'topLeft']
 // 主题变量随组件壳下发，浮层经 Teleport 后不在壳内，需同样注入到面板上
-const themeVars = computed(() => {
-  const primary = colorPalettes.value[5]
-  const primaryTone = new TinyColor(primary)
-  return {
-    '--picker-primary-color': primary,
-    '--picker-primary-color-hover': colorPalettes.value[4],
-    '--picker-primary-shadow-color': shadowColor.value,
-    // 区间底色取色板最浅一级
-    '--picker-primary-color-bg': colorPalettes.value[0],
-    // 键盘活动列的底纹：取区间底色的 20% 透明度（浅到不抢格内容，暗色主题下同样成立）
-    '--picker-time-column-active-bg': new TinyColor(colorPalettes.value[0]).setAlpha(0.2).toRgbString(),
-    // 悬浮预览的底色与虚线边界由主色提亮派生（色板中无对应级）
-    '--picker-primary-color-bg-hover': primaryTone.lighten(35).toHexString(),
-    '--picker-hover-border-color': primaryTone.lighten(20).toHexString()
-  }
-})
+const themeVars = computed(() => ({
+  '--picker-primary-color': 'var(--va-cp-date-picker-primary-color, var(--va-primary-color))',
+  '--picker-primary-color-hover': 'var(--va-cp-date-picker-primary-color-hover, var(--va-primary-color-hover))',
+  '--picker-primary-shadow-color': 'var(--va-cp-date-picker-primary-bg-color, var(--va-primary-bg-color))',
+  // 区间底色取主色浅底
+  '--picker-primary-color-bg': 'var(--va-cp-date-picker-primary-bg-color, var(--va-primary-bg-color))',
+  // 键盘活动列的底纹：主色浅底，浅到不抢格内容
+  '--picker-time-column-active-bg': 'var(--va-cp-date-picker-primary-bg-color, var(--va-primary-bg-color))',
+  // 悬浮预览的底色与虚线边界
+  '--picker-primary-color-bg-hover': 'var(--va-cp-date-picker-primary-bg-color, var(--va-primary-bg-color))',
+  '--picker-hover-border-color': 'var(--va-cp-date-picker-primary-border-color, var(--va-primary-border-color))'
+}))
 const wrapperStyle = computed(() => {
   const width =
     props.width === undefined ? undefined : typeof props.width === 'number' ? `${props.width}px` : props.width
@@ -1020,7 +1014,7 @@ defineExpose({ focus, blur })
     left: 0;
     width: 16px;
     height: 8px;
-    background-color: #fff;
+    background-color: var(--va-bg-container-color);
     clip-path: polygon(
       1.6568542494923806px 100%,
       50% 1.6568542494923806px,

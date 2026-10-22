@@ -66,7 +66,7 @@ const props = withDefaults(defineProps<Props>(), {
   popupClassName: undefined,
   popupStyle: () => ({}),
   zIndex: undefined,
-  bgColor: 'rgba(0, 0, 0, 0.85)',
+  bgColor: 'var(--va-bg-spotlight-color)',
   arrow: true,
   arrowPointAtCenter: false,
   placement: 'top',
@@ -504,7 +504,7 @@ defineExpose({
   background-color: var(--tooltip-background-color);
   border-radius: 6px;
   box-shadow:
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
+    0 6px 16px 0 var(--va-shadow-color),
     0 3px 6px -4px rgba(0, 0, 0, 0.12),
     0 9px 28px 8px rgba(0, 0, 0, 0.05);
   /* 卡片不继承触发器的 cursor（FloatButton 的按钮、Table 表头都是 pointer）：

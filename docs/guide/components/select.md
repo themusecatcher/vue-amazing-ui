@@ -1954,7 +1954,7 @@ const options: SelectOption[] = []
 | options | 选项数据 | [SelectOption](#option-type)[] | [] |
 | fieldNames | 选项的文本 / 值字段名配置，`options` 为分组子选项的字段名 | `{ label?: string, value?: string, options?: string }` | `{ label: 'label', value: 'value', options: 'options' }` |
 | mode | 设置多选模式，`'multiple'` 为多选，`'tags'` 为标签（可输入并创建新条目），不传为单选 | 'multiple' &#124; 'tags' | undefined |
-| labelInValue | 是否把每个选项的 label 包装到 value 中，`value` 由原始值变为 `{ label, value, key, originLabel }` 对象 | boolean | false |
+| labelInValue | 是否把每个选项的 `label` 包装到 `value` 中，`value` 由原始值变为 `{ label, value, key, originLabel }` 对象 | boolean | false |
 | optionLabelProp | 回填到选择框的 `option` 属性值，未指定时取 `label` 字段 | string | undefined |
 | width | 选择器宽度，单位 `px` | string &#124; number | 'auto' |
 | height | 选择器高度，单位 `px` | number | undefined |
@@ -1998,7 +1998,7 @@ const options: SelectOption[] = []
 | dropdownMenuStyle | 下拉面板自定义样式，可覆盖定位（与 `AutoComplete` 的同名属性语义一致） | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
 | dropdownMatchSelectWidth | 下拉菜单和选择器同宽，为数字时指定下拉菜单宽度（单位 `px`），为 `false` 时按内容自适应 | boolean &#124; number | true |
 | zIndex | 下拉面板层级，优先级最高（覆盖默认层级与 `ConfigProvider` 的 `baseZIndex` 自动分配） | number | undefined |
-| id | 组件 id，用于 `aria-controls` / `aria-activedescendant` 关联，未传时内部生成 | string | undefined |
+| id | 组件 `id`，用于 `aria-controls` / `aria-activedescendant` 关联，未传时内部生成 | string | undefined |
 
 ### Option Type
 
@@ -2051,7 +2051,7 @@ const options: SelectOption[] = []
 
 | 名称                  | 说明                             | 类型                                                                             |
 | :--------------------- | :-------------------------------- | :------------------------------------------------------------------------------- |
-| change                | 选项值改变后的回调，多选（`multiple` / `tags`）下 `value` / `option` 为数组且第 3 参为 `undefined` | (value: string &#124; number &#124; (string &#124; number)[], option: [SelectOption](#option-type) &#124; [SelectOption](#option-type)[], index: number &#124; undefined) => void |
+| change                | 选项值改变后的回调，多选（`multiple` / `tags`）下 `value` / `option` 为数组且第 `3` 参为 `undefined` | (value: string &#124; number &#124; (string &#124; number)[], option: [SelectOption](#option-type) &#124; [SelectOption](#option-type)[], index: number &#124; undefined) => void |
 | deselect              | 移除已选项（`tag`）时回调        | (value: string &#124; number, option: [SelectOption](#option-type)) => void      |
 | select                | 选中选项时回调                   | (value: string &#124; number, option: [SelectOption](#option-type)) => void                |
 | clear                 | 清除时的回调                     | () => void                                                                       |

@@ -37,6 +37,8 @@ jobs:
   check:
     name: check
     runs-on: ubuntu-latest
+    # 兜底超时：正常约 3-5 min，卡死时避免占用默认的 360 min 配额
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
       # 不写 version：由 package.json 的 packageManager（pnpm@11.24.0）决定，避免版本两处维护
@@ -53,6 +55,8 @@ jobs:
   verify:
     name: verify
     runs-on: ubuntu-latest
+    # 兜底超时：正常约 6-8 min（构建 + 四项产物校验 + 文档站构建），卡死时避免占用默认的 360 min 配额
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6

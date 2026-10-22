@@ -14,7 +14,7 @@ _可预览的图片_
 >
 > 内置 `downloadFile` 对跨域地址走 `iframe` 策略，需由服务端识别 `response-content-disposition` 参数并下发 `Content-Disposition: attachment`，浏览器才会触发下载；而 `cdn.jsdelivr.net` 是普通 `CDN`，不识别该参数（仅 `COS / OSS` 等对象存储支持），响应中不含 `attachment`，图片仅在隐藏的 `iframe` 内渲染。因此请求虽返回 `200`，却不会触发下载，控制台也不会有任何报错——跨域 `iframe` 内容禁止读取，内置的错误检测同样失效，表现为「静默失败」。
 >
-> 下方的「自定义下载」小节演示了可用的 `XHR + Blob` 方案：以二进制流读取图片（需图床开启 `CORS`，本示例图床返回 `Access-Control-Allow-Origin: *`）后转 Blob URL，再用 `a` 标签 `download` 属性强制下载，不受上述限制。
+> 下方的「自定义下载」小节演示了可用的 `XHR + Blob` 方案：以二进制流读取图片（需图床开启 `CORS`，本示例图床返回 `Access-Control-Allow-Origin: *`）后转 `Blob URL`，再用 `a` 标签 `download` 属性强制下载，不受上述限制。
 
 > [!TIP]
 > 预览是整屏浮层：打开时会锁定页面滚动（隐藏滚动条并按被回收的宽度等量补偿，与 [模态框 Modal](./modal.md)、[抽屉 Drawer](./drawer.md) 行为一致），预览内容的缩放 / 拖动 / 切换不受影响。宿主自有的视口锚定固定元素（非 `sticky`）在锁定期间会有最多一个滚动条宽度的位移，可读 `--va-scrollbar-width` 自行补偿。
@@ -487,7 +487,7 @@ const images = ref<ImageItem[]>([
 
 ## 自定义下载
 
-_跨域图床（如设置 `X-Frame-Options` 拒绝 `iframe` 的 CDN）下载受限时，内置 `downloadFile` 可能无法满足：可通过 `downloadOptions` 调整内置下载策略，或通过 `customDownload` 提供完全自定义的下载方法_
+_跨域图床（如设置 `X-Frame-Options` 拒绝 `iframe` 的 `CDN`）下载受限时，内置 `downloadFile` 可能无法满足：可通过 `downloadOptions` 调整内置下载策略，或通过 `customDownload` 提供完全自定义的下载方法_
 
 _下方示例演示了用 `XHR + Blob` 绕过 `X-Frame-Options` 限制下载跨域图床图片_
 

@@ -57,7 +57,12 @@ export { default as ColorPicker } from './color-picker'
 export type { CommentProps } from './comment'
 export { default as Comment } from './comment'
 
-export type { ConfigProviderProps, ConfigProviderTheme } from './config-provider'
+export type {
+  ComponentThemeConfig,
+  ConfigProviderProps,
+  ConfigProviderTheme,
+  ThemeComponentKey
+} from './config-provider'
 export { default as ConfigProvider } from './config-provider'
 
 export type { CountdownProps } from './countdown'

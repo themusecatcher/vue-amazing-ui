@@ -212,7 +212,9 @@ const layoutOptions = [
 
 ## 全屏幕水印
 
-<Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark> <Space align="center"> Fullscreen: <Switch v-model:value="show" /> Fixed: <Switch v-model:value="fixed" /> </Space>
+_`fixed` 关闭时为 `position: absolute`：覆盖整页并随文档原生滚动；开启时钉住视口_
+
+<Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark> <Space align="center"> fullscreen: <Switch v-model:value="show" /> fixed: <Switch v-model:value="fixed" /> </Space>
 
 ::: details Show Code
 
@@ -224,7 +226,7 @@ const fixed = ref(true)
 </script>
 <template>
   <Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark>
-  <Space align="center"> Fullscreen: <Switch v-model:value="show" /> Fixed: <Switch v-model:value="fixed" /> </Space>
+  <Space align="center"> fullscreen: <Switch v-model:value="show" /> fixed: <Switch v-model:value="fixed" /> </Space>
 </template>
 ```
 
@@ -232,28 +234,42 @@ const fixed = ref(true)
 
 ## 与浮层叠加
 
-_水印是装饰层（默认 `z-index: 90`），始终位于 `Tooltip` 等浮层之下_
+_水印是装饰层（默认 `z-index: 90`），始终位于 `Tooltip` 等浮层之下：浮层覆盖的地方看不到水印_
 
 <br/>
 
-<Watermark content="Vue Amazing UI">
-  <div style="height: 200px; padding: 24px">
-    <Tooltip tooltip="Vue Amazing UI">
+<Watermark content="Vue Amazing UI" :gap="[60, 60]">
+  <Flex
+    align="center"
+    justify="center"
+    style="height: 240px; border: 1px dashed var(--va-border-color); border-radius: 8px"
+  >
+    <Tooltip placement="top">
+      <template #tooltip>
+        <div style="width: 168px; line-height: 1.6">我是浮层，水印在我下方：气泡覆盖到哪里，那里的水印就看不见了</div>
+      </template>
       <Button>Hover me</Button>
     </Tooltip>
-  </div>
+  </Flex>
 </Watermark>
 
 ::: details Show Code
 
 ```vue
 <template>
-  <Watermark content="Vue Amazing UI">
-    <div style="height: 200px; padding: 24px">
-      <Tooltip tooltip="Vue Amazing UI">
+  <Watermark content="Vue Amazing UI" :gap="[60, 60]">
+    <Flex
+      align="center"
+      justify="center"
+      style="height: 240px; border: 1px dashed var(--va-border-color); border-radius: 8px"
+    >
+      <Tooltip placement="top">
+        <template #tooltip>
+          <div style="width: 168px; line-height: 1.6">我是浮层，水印在我下方：气泡覆盖到哪里，那里的水印就看不见了</div>
+        </template>
         <Button>Hover me</Button>
       </Tooltip>
-    </div>
+    </Flex>
   </Watermark>
 </template>
 ```
@@ -431,8 +447,8 @@ const layoutOptions = [
 | image | 图片源，建议使用 `2` 倍或 `3` 倍图，优先级高于文字 | string | undefined |
 | content | 水印文字内容 | string &#124; string[] | undefined |
 | fullscreen | 是否启用全屏水印 | boolean | false |
-| fixed | 是否固定水印，仅当启用全屏水印时生效 | boolean | true |
-| textStyle | 水印文字样式 | [WatermarkFont](#font-type) | {<br/>&nbsp;&nbsp;color: 'rgba(0, 0, 0, 0.15)',<br/>&nbsp;&nbsp;fontSize: 16,<br/>&nbsp;&nbsp;fontWeight: 'normal',<br/>&nbsp;&nbsp;fontFamily: 'sans-serif',<br/>&nbsp;&nbsp;fontStyle: 'normal' <br/>} |
+| fixed | 是否固定水印，仅当启用全屏水印时生效：`true` 为 `position: fixed` 始终钉住视口；`false` 为 `position: absolute`，覆盖整页并随文档原生滚动 | boolean | true |
+| textStyle | 水印文字样式；`color` 不传时取主题变量 `--va-fill-color-3`（随明暗切换） | [WatermarkFont](#font-type) | {<br/>&nbsp;&nbsp;fontSize: 16,<br/>&nbsp;&nbsp;fontWeight: 'normal',<br/>&nbsp;&nbsp;fontFamily: 'sans-serif',<br/>&nbsp;&nbsp;fontStyle: 'normal' <br/>} |
 | gap | 水印之间的间距 | [number, number] | [100, 100] |
 | offset | 水印距离容器左上角的偏移量，默认为 `gap/2` | [number, number] | [50, 50] |
 
@@ -440,7 +456,7 @@ const layoutOptions = [
 
 | 名称      | 说明               | 类型                                                   | 默认值                |
 | :--------- | :------------------ | :------------------------------------------------------ | :-------------------- |
-| color     | 字体颜色           | string                                                 | 'rgba(0, 0, 0, 0.15)' |
+| color     | 字体颜色           | string                                                 | 取 `--va-fill-color-3`（浅色 `rgba(0,0,0,.15)` / 暗色 `rgba(255,255,255,.18)`） |
 | fontSize  | 字体大小，单位 `px` | number                                                 | 16                    |
 | fontWeight | 字体粗细           | 'normal' &#124; 'light' &#124; 'weight' &#124; number  | 'normal'              |
 | fontFamily | 字体类型           | string                                                 | 'sans-serif'          |

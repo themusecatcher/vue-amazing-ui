@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { shallowRef, computed, inject, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import { useMutationObserver } from 'components/utils'
+import { THEME_SNAPSHOT_KEY } from 'components/config-provider/context'
 export interface Font {
-  color?: string // 字体颜色，默认 'rgba(0, 0, 0, 0.15)'
+  color?: string // 字体颜色；不传时取主题变量 --va-fill-color-3（浅色 rgba(0,0,0,.15) / 暗色 rgba(255,255,255,.18)）
   fontSize?: number // 字体大小，单位 px，默认 16
   fontWeight?: 'normal' | 'light' | 'weight' | number // 字体粗细，默认 'normal'
   fontFamily?: string // 字体类型，默认 'sans-serif'
@@ -38,7 +39,6 @@ const props = withDefaults(defineProps<Props>(), {
   fullscreen: false,
   fixed: true,
   textStyle: () => ({
-    color: 'rgba(0, 0, 0, 0.15)',
     fontSize: 16,
     fontWeight: 'normal',
     fontFamily: 'sans-serif',
@@ -52,9 +52,18 @@ const FontGap = 3
 // 和 ref() 不同，浅层 ref 的内部值将会原样存储和暴露，并且不会被深层递归地转为响应式。只有对 .value 的访问是响应式的。
 const containerRef = shallowRef<HTMLDivElement | null>(null) // ref() 的浅层作用形式
 const watermarkRef = shallowRef<HTMLDivElement>() // 水印元素，尚未创建时为 undefined
+// 水印实际挂载的父节点（随 fullscreen / fixed 变化），防篡改观察者跟着它走
+const markParent = shallowRef<HTMLElement | null>(null)
 // SSR（Node）环境无 document，htmlRef 为 null；浏览器端仍指向 <html> 元素
 const htmlRef = shallowRef<HTMLElement | null>(typeof document !== 'undefined' ? document.documentElement : null) // <html></html>元素
-const isDark = shallowRef(Boolean(htmlRef.value?.classList.contains('dark'))) // 是否开启暗黑模式
+/**
+ * 水印默认色：canvas 读不到 CSS 变量，故从 Provider 的只读快照取值（这是快照的既定用途之一）。
+ * 优先级：显式 `textStyle.color` > 主题派生值 > 无 Provider 时的浅色默认。
+ */
+const themeSnapshot = inject(THEME_SNAPSHOT_KEY, null)
+const resolvedTextColor = computed(
+  () => props.textStyle.color ?? themeSnapshot?.value?.['--va-fill-color-3'] ?? 'rgba(0, 0, 0, 0.15)'
+)
 const stopObservation = shallowRef(false)
 const gapX = computed(() => props.gap?.[0] ?? 100)
 const gapY = computed(() => props.gap?.[1] ?? 100)
@@ -84,9 +93,6 @@ const markStyle = computed(() => {
     pointerEvents: 'none',
     backgroundRepeat: 'repeat'
   }
-  if (isDark.value) {
-    markStyle.filter = 'invert(1) hue-rotate(180deg)'
-  }
   let positionLeft = offsetLeft.value - gapXCenter.value
   let positionTop = offsetTop.value - gapYCenter.value
   if (positionLeft > 0) {
@@ -103,7 +109,8 @@ const markStyle = computed(() => {
   return markStyle
 })
 watch(
-  () => [props],
+  // 主题变化（含明暗切换）与 props 变化都要重绘
+  () => [props, resolvedTextColor.value],
   () => {
     renderWatermark()
   },
@@ -117,22 +124,11 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   destroyWatermark()
-  resetHtmlPosition()
 })
-// 监听是否开启暗黑模式，自动反转水印颜色
-useMutationObserver(
-  htmlRef,
-  () => {
-    isDark.value = Boolean(htmlRef.value?.classList.contains('dark'))
-    destroyWatermark()
-    renderWatermark()
-  },
-  { attributeFilter: ['class'] }
-)
 // 防止用户修改/隐藏水印
 // 观察目标必须随 fullscreen 变化重建：appendWatermark 用 append() 移动同一个水印节点，
 // 目标若在 setup 阶段被固化，切到全屏后节点搬到 <html> 下，观察者仍盯旧节点会导致防篡改失效
-const observeTarget = computed(() => (props.fullscreen ? htmlRef.value : containerRef.value))
+const observeTarget = computed(() => markParent.value ?? containerRef.value)
 useMutationObserver(observeTarget, onMutate, {
   subtree: true, // 监听以 target 为根节点的整个子树
   childList: true, // 监听 target 节点中发生的节点的新增与删除
@@ -156,43 +152,44 @@ function destroyWatermark() {
     watermarkRef.value = undefined
   }
 }
-// 全屏水印挂在 <html> 下时需其 position: relative 作为定位参照，退出全屏/组件卸载后必须撤销，避免残留影响宿主页面；
-// 仅在本实例写入过时才撤销，避免误清宿主页面自身在 <html> 上预设的 position。
-// 注：多个全屏实例共用同一个 <html>，任一实例卸载都会移除该共享属性，多实例并存时后者的定位参照会一并失效
-let htmlPositionApplied = false
-function resetHtmlPosition() {
-  if (!htmlPositionApplied) {
-    return
-  }
-  htmlRef.value?.style.removeProperty('position')
-  htmlPositionApplied = false
+/**
+ * 水印挂载点：
+ * - 非全屏 → 组件自身容器（局部水印，随所在容器滚动）；
+ * - 全屏 + `fixed`（默认）→ `<html>` + `position: fixed`，始终钉住视口；
+ * - 全屏 + 非 `fixed` → `<html>` + `position: absolute`，高度取文档总高，随文档**原生**滚动。
+ *
+ * 两种全屏形态都覆盖整屏（含侧栏等固定区域）。这里刻意不用 JS 监听滚动再做 translate 补偿：
+ * 主线程补偿与浏览器合成线程的原生滚动不同步，滚动时会出现可见抖动。
+ */
+function resolveMarkParent(): HTMLElement | null {
+  return props.fullscreen ? htmlRef.value : containerRef.value
 }
 function appendWatermark(base64Url: string, markWidth: number) {
-  if (containerRef.value && watermarkRef.value) {
-    stopObservation.value = true
-    watermarkRef.value.setAttribute(
-      'style',
-      getStyleStr({
-        ...markStyle.value,
-        backgroundImage: `url('${base64Url}')`,
-        backgroundSize: `${(gapX.value + markWidth) * BaseSize.value}px`
-      })
-    )
-    // htmlRef 在 SSR 下为 null，取出后判空（appendWatermark 仅客户端挂载后调用）
-    const htmlEl = htmlRef.value
-    if (props.fullscreen && htmlEl) {
-      // <html> 为全局共享元素：只改 position 属性而不整体覆盖 style，避免抹掉宿主已有内联样式
-      htmlEl.style.position = 'relative'
-      htmlPositionApplied = true
-      htmlEl.append(watermarkRef.value)
-    } else {
-      resetHtmlPosition()
-      containerRef.value?.append(watermarkRef.value)
-    }
-    setTimeout(() => {
-      stopObservation.value = false
-    })
+  if (!containerRef.value || !watermarkRef.value) {
+    return
   }
+  stopObservation.value = true
+  const parent = resolveMarkParent()
+  if (!parent) {
+    return
+  }
+  markParent.value = parent
+  // 非 fixed 的全屏水印高度取文档总高：滚到任何位置都覆盖，且由文档原生滚动带走
+  const scrollBoundHeight =
+    props.fullscreen && !props.fixed && htmlRef.value ? { height: `${htmlRef.value.scrollHeight}px` } : {}
+  watermarkRef.value.setAttribute(
+    'style',
+    getStyleStr({
+      ...markStyle.value,
+      ...scrollBoundHeight,
+      backgroundImage: `url('${base64Url}')`,
+      backgroundSize: `${(gapX.value + markWidth) * BaseSize.value}px`
+    })
+  )
+  parent.append(watermarkRef.value)
+  setTimeout(() => {
+    stopObservation.value = false
+  })
 }
 // converting camel-cased strings to be lowercase and link it with Separator
 function toLowercaseSeparator(key: string) {
@@ -237,7 +234,7 @@ function fillTexts(ctx: CanvasRenderingContext2D, drawX: number, drawY: number, 
   const fontWeight = props.textStyle.fontWeight ?? 'normal'
   const fontFamily = props.textStyle.fontFamily ?? 'sans-serif'
   const fontStyle = props.textStyle.fontStyle ?? 'normal'
-  const color = props.textStyle.color ?? 'rgba(0, 0, 0, 0.15)'
+  const color = resolvedTextColor.value
   const mergedFontSize = Number(fontSize) * ratio
   ctx.font = `${fontStyle} normal ${fontWeight} ${mergedFontSize}px/${drawHeight}px ${fontFamily}`
   ctx.fillStyle = color

@@ -70,8 +70,8 @@ const emits = defineEmits<{
 .picker-panel-header {
   display: flex;
   padding: 0 8px;
-  color: rgba(0, 0, 0, 0.88);
-  border-bottom: 1px solid rgba(5, 5, 5, 0.06);
+  color: var(--va-text-color-1);
+  border-bottom: 1px solid var(--va-border-split-color);
   > * {
     flex: none;
   }
@@ -80,13 +80,13 @@ const emits = defineEmits<{
     padding: 0;
     font-size: 14px;
     line-height: 40px;
-    color: rgba(0, 0, 0, 0.45);
+    color: var(--va-text-color-3);
     background: transparent;
     border: 0;
     cursor: pointer;
     transition: color 0.2s;
     &:hover {
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--va-text-color-1);
     }
   }
   // 隐去的导航按钮保留自身占位：两个面板的头部因此结构相同，视图区落在同一水平位置
@@ -152,7 +152,7 @@ const emits = defineEmits<{
         margin-left: 8px;
       }
       &:hover {
-        color: var(--picker-primary-color, #1677ff);
+        color: var(--picker-primary-color, var(--va-primary-color));
       }
     }
     span {

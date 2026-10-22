@@ -26,7 +26,7 @@ import {
   startOfDayTimestamp,
   type PickerKeydownHandlers
 } from 'components/picker'
-import { useSlotsExist, useInject } from 'components/utils'
+import { useSlotsExist } from 'components/utils'
 export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
 export type DefaultWeek = '一' | '二' | '三' | '四' | '五' | '六' | '日'
 
@@ -164,11 +164,14 @@ const modeOptions = ref<RadioGroupOption[]>([
 const calendarYear = ref<number>(getYear(initialTimestamp))
 const calendarMonth = ref<number>(getMonth(initialTimestamp) + 1)
 const calendarMode = ref<'month' | 'year'>(props.mode ?? 'month')
+// 年份选项的区间锚点：面板展开期间冻结，选中年份后列表区间不随面板定位年平移
+// （关闭动画期间列表内容保持原样、选中态就地生效；重新展开时才按当前年份重建并滚动到选中项）
+const yearOptionsAnchor = ref<number>(calendarYear.value)
+const yearSelectOpen = ref<boolean>(false)
 const calendarDates = computed<DateItem[][]>(() => getCalendarDates())
 const calendarMonths = computed<MonthItem[][]>(() => getCalendarMonths())
 const yearOptions = computed<SelectOption[]>(() => getYearOptions())
 const monthOptions = computed<SelectOption[]>(() => getMonthOptions())
-const { colorPalettes } = useInject('Calendar') // 主题色注入
 const emits = defineEmits<{
   change: [value: string | number, dateObject?: DateItem['dateObject'] | MonthItem['monthObject']]
   panelChange: [value: string | number | undefined, info: { year: number; month?: number }, mode: 'month' | 'year']
@@ -226,6 +229,11 @@ watch(
     immediate: true
   }
 )
+// 年份选项区间只在选择器关闭时跟随面板定位年：展开期间保持原区间，
+// 否则选中年份后列表会在关闭动画中整体平移（与「先打选中态、再关闭、下次展开才更新列表」的交互不符）
+watch(calendarYear, (to) => {
+  if (!yearSelectOpen.value) yearOptionsAnchor.value = to
+})
 // 面板模式：外部变更同步到面板；面板内部切换模式不回写该属性
 watch(
   () => props.mode,
@@ -260,12 +268,12 @@ watch(
     immediate: true
   }
 )
-// 年份选项：有可选区间时收窄到该区间的年份，否则取当前年前 10 年起的 20 个年份
+// 年份选项：有可选区间时收窄到该区间的年份，否则取锚点年前 10 年起的 20 个年份
 // （循环为左闭右开 [startYear, endYear)，故 endYear 取「结束年 + 1」才能包含结束年）
 function getYearOptions(): SelectOption[] {
   const range = validRangeTimestamp.value
-  const startYear = range ? getYear(range[0]) : calendarYear.value - 10
-  const endYear = range ? getYear(range[1]) + 1 : calendarYear.value + 10
+  const startYear = range ? getYear(range[0]) : yearOptionsAnchor.value - 10
+  const endYear = range ? getYear(range[1]) + 1 : yearOptionsAnchor.value + 10
   const options: SelectOption[] = []
   for (let y = startYear; y < endYear; y++) {
     options.push({
@@ -533,6 +541,11 @@ function onMonthSelected(month: MonthItem): void {
   const { year, month: targetMonth } = month.monthObject
   commitSelectedTimestamp(resolveYearMonthSelection(baseTimestamp, year, targetMonth + 1), 'month', month.monthObject)
 }
+// 年选择器开合：展开时把选项区间对齐到当前面板定位年；关闭时不刷新，保证列表在收起动画中不突变
+function onYearSelectOpenChange(open: boolean): void {
+  yearSelectOpen.value = open
+  if (open) yearOptionsAnchor.value = calendarYear.value
+}
 // 头部年选择器：仅替换年份，保留原有「月日」，并收窄到可选区间
 function onYearSelectChanged(year: number): void {
   const baseTimestamp = selectedValueTimestamp.value ?? startOfMonthTimestamp.value
@@ -617,15 +630,7 @@ function onKeydown(event: KeyboardEvent): void {
 }
 </script>
 <template>
-  <div
-    class="calendar-wrap"
-    :class="`calendar-${display}`"
-    :style="`
-      --calendar-primary-color: ${colorPalettes[5]};
-      --calendar-panel-primary-bg-color: ${colorPalettes[0]};
-      --calendar-card-primary-bg-color: ${colorPalettes[5]};
-    `"
-  >
+  <div class="calendar-wrap" :class="`calendar-${display}`">
     <slot
       v-if="slotsExist.headerFull"
       name="headerFull"
@@ -648,6 +653,7 @@ function onKeydown(event: KeyboardEvent): void {
           :max-display="8"
           :value="calendarYear"
           @change="onYearSelectChanged"
+          @open-change="onYearSelectOpenChange"
           v-bind="yearSelectProps"
         />
         <Select
@@ -767,11 +773,11 @@ function onKeydown(event: KeyboardEvent): void {
 </template>
 <style lang="less" scoped>
 .calendar-wrap {
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   font-size: 14px;
   line-height: 1.5714285714285714;
   list-style: none;
-  background: #ffffff;
+  background: var(--va-bg-container-color);
   border-radius: 4px;
   .calendar-header-wrap {
     padding: 12px 0;
@@ -794,7 +800,7 @@ function onKeydown(event: KeyboardEvent): void {
     }
   }
   .calendar-display-wrap {
-    background: #ffffff;
+    background: var(--va-bg-container-color);
     .calendar-date-panel,
     .calendar-month-panel {
       display: flex;
@@ -826,12 +832,12 @@ function onKeydown(event: KeyboardEvent): void {
             height: auto;
             line-height: 18px;
             width: 36px;
-            color: rgba(0, 0, 0, 0.88);
+            color: var(--va-text-color-1);
             vertical-align: middle;
             background: transparent;
           }
           .calendar-date-cell {
-            color: rgba(0, 0, 0, 0.25);
+            color: var(--va-text-color-disabled);
             cursor: pointer;
             .date-cell-inner {
               position: relative;
@@ -841,17 +847,17 @@ function onKeydown(event: KeyboardEvent): void {
             }
             &:hover:not(.date-cell-selected) {
               .date-cell-inner {
-                background: rgba(0, 0, 0, 0.04);
+                background: var(--va-fill-color-1);
               }
             }
           }
           // 禁用格：不响应指针（不可悬浮、不可点击、不改变鼠标形态），灰底由卡片形态的伪元素承担
           .date-cell-disabled {
-            color: rgba(0, 0, 0, 0.25);
+            color: var(--va-text-color-disabled);
             pointer-events: none;
           }
           .date-cell-in-view:not(.date-cell-disabled):not(.date-cell-selected) {
-            color: rgba(0, 0, 0, 0.88);
+            color: var(--va-text-color-1);
           }
         }
       }
@@ -893,7 +899,7 @@ function onKeydown(event: KeyboardEvent): void {
               margin: 0 4px;
               padding: 4px 8px 0;
               border: 0;
-              border-top: 2px solid rgba(5, 5, 5, 0.06);
+              border-top: 2px solid var(--va-border-split-color);
               border-radius: 0;
               transition: background 0.3s;
               .date-value {
@@ -905,7 +911,7 @@ function onKeydown(event: KeyboardEvent): void {
                 width: auto;
                 height: 86px;
                 overflow-y: auto;
-                color: rgba(0, 0, 0, 0.88);
+                color: var(--va-text-color-1);
                 line-height: 1.5714285714285714;
                 text-align: start;
               }
@@ -914,9 +920,9 @@ function onKeydown(event: KeyboardEvent): void {
           // 选中：保留原有底色，并把该格的网格线（顶线）一并取主色
           .date-cell-selected {
             .date-cell-inner {
-              color: var(--calendar-primary-color);
-              background: var(--calendar-panel-primary-bg-color);
-              border-top-color: var(--calendar-primary-color);
+              color: var(--va-cp-calendar-primary-color, var(--va-primary-color));
+              background: var(--va-cp-calendar-primary-bg-color, var(--va-primary-bg-color));
+              border-top-color: var(--va-cp-calendar-primary-color, var(--va-primary-color));
             }
           }
         }
@@ -934,8 +940,8 @@ function onKeydown(event: KeyboardEvent): void {
       min-width: 24px;
       height: 24px;
       padding: 0 4px;
-      color: #ffffff;
-      background: var(--calendar-primary-color);
+      color: var(--va-text-color-solid);
+      background: var(--va-cp-calendar-primary-color, var(--va-primary-color));
       border-radius: 12px;
     }
   }
@@ -947,17 +953,17 @@ function onKeydown(event: KeyboardEvent): void {
       height: 24px;
       // 不设最小宽度：宽度由文案决定，两侧留白恒为 8px（长文案如 October 才不会贴边）
       padding: 0 8px;
-      color: #ffffff;
-      background: var(--calendar-primary-color);
+      color: var(--va-text-color-solid);
+      background: var(--va-cp-calendar-primary-color, var(--va-primary-color));
       border-radius: 12px;
     }
   }
   // 今天本身不可选时，标记退为中性色，避免与可选态混淆
   .calendar-date-panel .calendar-date-cell.date-cell-disabled .date-cell-inner.date-cell-today .date-value {
-    background: rgba(0, 0, 0, 0.25);
+    background: var(--va-text-color-disabled);
   }
   .calendar-month-panel .calendar-date-cell.date-cell-disabled .date-cell-inner.date-cell-today .date-value {
-    background: rgba(0, 0, 0, 0.25);
+    background: var(--va-text-color-disabled);
   }
 }
 .calendar-card {
@@ -965,7 +971,7 @@ function onKeydown(event: KeyboardEvent): void {
   width: 300px;
   max-width: 100%;
   box-sizing: border-box;
-  border: 1px solid rgb(217, 217, 217);
+  border: 1px solid var(--va-border-color);
   border-radius: 4px;
   .calendar-header-wrap {
     padding-left: 8px;
@@ -984,7 +990,7 @@ function onKeydown(event: KeyboardEvent): void {
     display: flex;
     flex-direction: column;
     text-align: center;
-    border-top: 1px solid rgba(5, 5, 5, 0.06);
+    border-top: 1px solid var(--va-border-split-color);
     border-radius: 0 0 4px 4px;
     .calendar-date-panel,
     .calendar-month-panel {
@@ -1019,7 +1025,7 @@ function onKeydown(event: KeyboardEvent): void {
           }
           .date-cell-disabled {
             &::before {
-              background: rgba(0, 0, 0, 0.04);
+              background: var(--va-fill-color-1);
             }
           }
           // 今天：1px 主色描边方块 + 主色文字（卡片形态用描边标记，区别于面板形态的实心标记）
@@ -1031,33 +1037,34 @@ function onKeydown(event: KeyboardEvent): void {
               bottom: 0;
               left: 0;
               z-index: 1;
-              border: 1px solid var(--calendar-primary-color);
+              border: 1px solid var(--va-cp-calendar-primary-color, var(--va-primary-color));
               border-radius: 4px;
               content: '';
             }
             .date-value {
               position: relative;
               z-index: 2;
-              color: var(--calendar-primary-color);
+              color: var(--va-cp-calendar-primary-color, var(--va-primary-color));
             }
           }
           // 今天本身不可选且未被选中时，描边与文字一并退为中性色（选中态优先，保持白字）
           .calendar-date-cell.date-cell-disabled:not(.date-cell-selected) .date-cell-inner.date-cell-today {
             &::before {
-              border-color: rgba(0, 0, 0, 0.25);
+              border-color: var(--va-text-color-disabled);
             }
             .date-value {
-              color: rgba(0, 0, 0, 0.25);
+              color: var(--va-text-color-disabled);
             }
           }
+          // 卡片形态的选中态是实心主色块：面板形态的浅底（`-bg-color`）配白字会看不清
           .date-cell-selected {
             .date-cell-inner {
-              color: #fff;
-              background: var(--calendar-card-primary-bg-color);
+              color: var(--va-text-color-solid);
+              background: var(--va-cp-calendar-primary-color, var(--va-primary-color));
             }
             // 选中与今天重叠时，文字以选中态为准
             .date-cell-inner.date-cell-today .date-value {
-              color: #ffffff;
+              color: var(--va-text-color-solid);
             }
           }
         }

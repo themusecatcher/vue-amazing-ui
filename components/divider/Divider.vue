@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
   orientationMargin: undefined,
   borderWidth: 1,
   borderStyle: 'solid',
-  borderColor: 'rgba(5, 5, 5, 0.06)',
+  borderColor: 'var(--va-border-split-color)',
   vertical: false,
   height: '0.9em'
 })
@@ -65,7 +65,7 @@ const showText = computed(() => {
 </template>
 <style lang="less" scoped>
 .divider-wrap {
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   font-size: 14px;
   line-height: 1.5714285714285714;
   border-top: var(--divider-border-width) var(--divider-border-style) var(--divider-border-color);
@@ -95,7 +95,7 @@ const showText = computed(() => {
   display: flex;
   align-items: center;
   margin: 16px 0;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   font-weight: 500;
   font-size: 16px;
   white-space: nowrap;

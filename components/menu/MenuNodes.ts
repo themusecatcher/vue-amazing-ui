@@ -265,14 +265,6 @@ export default defineComponent({
       return h('li', { key, class: ['menu-item', 'menu-overflow-probe'], 'aria-hidden': 'true', ref: setEl }, children)
     }
 
-    /** 面板样式：浮层脱离根节点，主题色变量需随面板一并带入 */
-    function panelStyle(): CSSProperties {
-      return {
-        '--menu-primary-color': menu.primaryColor.value,
-        '--menu-primary-palette-1': menu.primaryPalette.value
-      } as CSSProperties
-    }
-
     /** 在调用方传入的节点上补类名（不额外包一层元素）；非 VNode 原样返回 */
     function withNodeClass(node: VNodeChild, className: string): VNodeChild {
       if (!isVNode(node)) {
@@ -474,7 +466,6 @@ export default defineComponent({
                 arrow: true,
                 arrowClass: 'menu-tooltip-arrow',
                 panelClass: 'menu-tooltip-popup',
-                panelStyle: panelStyle(),
                 defaultZIndex: menu.subMenuZIndex,
                 transitionProps: TOOLTIP_TRANSITION
               },
@@ -632,7 +623,6 @@ export default defineComponent({
             shift: false,
             matchTriggerWidth: popupHorizontal ? 'minWidth' : false,
             panelClass: popupClass,
-            panelStyle: panelStyle(),
             defaultZIndex: menu.subMenuZIndex,
             transitionProps: popupHorizontal ? POPUP_SLIDE_TRANSITION : POPUP_TRANSITION,
             // 提前渲染面板 DOM（关闭态不测量、不可见），首次展开因而无需等待挂载

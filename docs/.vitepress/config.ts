@@ -4,6 +4,17 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vitepress'
 import type { Plugin } from 'vite'
 
+// 主题自定义配置项的类型扩充：docs/ 不在任何 tsconfig 的 include 中，
+// 故在 config.ts 这个模块内扩充（而非全局 .d.ts，后者会覆盖 vitepress 原有类型）
+declare module 'vitepress' {
+  // eslint-disable-next-line @typescript-eslint/no-namespace -- 扩充 vitepress 既有类型必须沿用其 DefaultTheme 命名空间
+  namespace DefaultTheme {
+    interface Config {
+      version?: string
+    }
+  }
+}
+
 // 文档站统一从构建产物 dist 引入组件库（demo 说明符仍写作 'vue-amazing-ui'，展示真实用法）。
 // 项目根 vite.config.ts 的同名 alias 指向源码出口（供 pnpm dev 演示环境热更新），
 // 故用 enforce: 'pre' 的 resolveId 钩子先行拦截，使 docs 站解析到 dist 而非源码。
@@ -16,6 +27,12 @@ function docsResolveLibraryToDist(): Plugin {
       return source === 'vue-amazing-ui' ? distEntry : null
     }
   }
+}
+
+// 组件库版本号（文档站展示的单一可信源）：构建期读取根 package.json。
+// 文档站 demo 经下方的 docsResolveLibraryToDist 跑同一份 dist 产物，二者在同一次 pnpm build 中生成，故版本一致
+const pkg = JSON.parse(readFileSync(fileURLToPath(new URL('../../package.json', import.meta.url)), 'utf-8')) as {
+  version: string
 }
 
 // 文档站对外地址（GitHub Pages）。社交卡片（Open Graph / Twitter Card）要求绝对地址
@@ -57,6 +74,8 @@ export default defineConfig({
   title: `Vue Amazing UI`,
   description: 'Amazing UI 组件库',
   base: '/vue-amazing-ui/',
+  // 生成型片段的存放目录：只被页面 include，不单独成页
+  srcExclude: ['guide/parts/**'],
 
   head: [
     // 网站图标
@@ -104,6 +123,9 @@ export default defineConfig({
   },
   themeConfig: {
     logo: '/amazing-icon.svg',
+
+    // 自定义主题配置：版本号由 theme/components/VersionBadge.vue 经 useData().theme.version 读取
+    version: pkg.version,
 
     editLink: {
       pattern: 'https://github.com/themusecatcher/vue-amazing-ui/tree/main/docs/:path',
@@ -531,10 +553,6 @@ export default defineConfig({
               link: '/utils/functions/format-number'
             },
             {
-              text: 'rafTimeout/cancelRaf 定时器',
-              link: '/utils/functions/raf-timeout'
-            },
-            {
               text: 'throttle 节流',
               link: '/utils/functions/throttle'
             },
@@ -549,10 +567,6 @@ export default defineConfig({
             {
               text: 'downloadFile 下载文件',
               link: '/utils/functions/download-file'
-            },
-            {
-              text: 'toggleDark 切换暗黑',
-              link: '/utils/functions/toggle-dark'
             },
             {
               text: 'useEventListener 事件监听',
@@ -585,14 +599,6 @@ export default defineConfig({
             {
               text: 'useOptionsSupported 是否支持事件监听器选项',
               link: '/utils/functions/use-options-supported'
-            },
-            {
-              text: 'getColorPalettes 获取颜色调色板',
-              link: '/utils/functions/get-color-palettes'
-            },
-            {
-              text: 'getAlphaColor 获取透明度颜色',
-              link: '/utils/functions/get-alpha-color'
             },
             {
               text: 'getScrollParent 查找可滚动父元素',

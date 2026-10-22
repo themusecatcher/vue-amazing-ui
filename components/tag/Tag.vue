@@ -273,11 +273,12 @@ function onKeyboard(e: KeyboardEvent) {
   align-items: center;
   height: 24px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   padding-inline: 7px;
   white-space: nowrap;
-  background: rgba(0, 0, 0, 0.02);
-  border: 1px solid #d9d9d9;
+  // 默认标签底：取最淡的中性叠加，暗色下才是浅色薄底而不是纯黑
+  background: var(--va-fill-color-4);
+  border: 1px solid var(--va-border-color);
   border-radius: 6px;
   transition: all 0.2s;
   text-align: start;
@@ -299,7 +300,7 @@ function onKeyboard(e: KeyboardEvent) {
     display: inline-flex;
     align-items: center;
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     font-style: normal;
     line-height: 0;
     text-align: center;
@@ -319,10 +320,10 @@ function onKeyboard(e: KeyboardEvent) {
     .close-svg {
       display: inline-block;
       font-size: 12px;
-      color: rgba(0, 0, 0, 0.45);
+      color: var(--va-text-color-3);
       transition: all 0.2s;
       &:hover {
-        color: rgba(0, 0, 0, 0.88);
+        color: var(--va-text-color-1);
       }
     }
   }
@@ -348,21 +349,21 @@ function onKeyboard(e: KeyboardEvent) {
   }
 }
 .tag-plus {
-  background: rgb(255, 255, 255);
+  background: var(--va-bg-container-color);
   border-style: dashed;
   padding-inline: 10px;
   text-align: center;
   cursor: pointer;
   &:hover {
-    border-color: #1677ff;
+    border-color: var(--va-cp-tag-primary-color, var(--va-primary-color));
     .plus-svg {
-      color: #1677ff;
+      color: var(--va-cp-tag-primary-color, var(--va-primary-color));
     }
   }
 }
 .tag-input {
   width: 86px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   height: 24px;
   font-size: 14px;
   line-height: 22px;
@@ -370,14 +371,15 @@ function onKeyboard(e: KeyboardEvent) {
   position: relative;
   display: inline-block;
   min-width: 0;
-  background-color: #ffffff;
-  border: 1px solid #d9d9d9;
+  background-color: var(--va-bg-container-color);
+  border: 1px solid var(--va-border-color);
   border-radius: 6px;
   outline: none;
   transition: all 0.2s;
   &:focus {
-    border-color: #4096ff;
-    box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+    /* 聚焦态：边框取悬停档主色（与 hover 同色），阴影取焦点环 */
+    border-color: var(--va-cp-tag-primary-color-hover, var(--va-primary-color-hover));
+    box-shadow: var(--va-cp-tag-focus-shadow, var(--va-focus-shadow));
     border-right-width: 1px;
     outline: 0;
   }
@@ -395,156 +397,157 @@ function onKeyboard(e: KeyboardEvent) {
   height: 28px;
   line-height: 26px;
 }
+// 语义状态直接复用主题变量，暗色随表切换
 .tag-success {
-  color: #52c41a;
-  background: #f6ffed;
-  border-color: #b7eb8f;
+  color: var(--va-success-color);
+  background: var(--va-success-bg-color);
+  border-color: var(--va-success-border-color);
   :deep(svg) {
-    color: #52c41a;
+    color: inherit;
     fill: currentColor;
   }
 }
 .tag-processing {
-  color: #1677ff;
-  background: #e6f4ff;
-  border-color: #91caff;
+  color: var(--va-cp-tag-primary-color, var(--va-primary-color));
+  background: var(--va-cp-tag-primary-bg-color, var(--va-primary-bg-color));
+  border-color: var(--va-cp-tag-primary-border-color, var(--va-primary-border-color));
   :deep(svg) {
-    color: #1677ff;
+    color: inherit;
     fill: currentColor;
   }
 }
 .tag-error {
-  color: #ff4d4f;
-  background: #fff2f0;
-  border-color: #ffccc7;
+  color: var(--va-error-color);
+  background: var(--va-error-bg-color);
+  border-color: var(--va-error-border-color);
   :deep(svg) {
-    color: #ff4d4f;
+    color: inherit;
     fill: currentColor;
   }
 }
 .tag-warning {
-  color: #faad14;
-  background: #fffbe6;
-  border-color: #ffe58f;
+  color: var(--va-warning-color);
+  background: var(--va-warning-bg-color);
+  border-color: var(--va-warning-border-color);
   :deep(svg) {
-    color: #faad14;
+    color: inherit;
     fill: currentColor;
   }
 }
 .tag-pink {
-  color: #c41d7f;
-  background: #fff0f6;
-  border-color: #ffadd2;
+  color: var(--tag-pink-text);
+  background: var(--tag-pink-bg);
+  border-color: var(--tag-pink-border);
   :deep(svg) {
-    color: #c41d7f;
+    color: var(--tag-pink-text);
     fill: currentColor;
   }
 }
 .tag-red {
-  color: #cf1322;
-  background: #fff1f0;
-  border-color: #ffa39e;
+  color: var(--tag-red-text);
+  background: var(--tag-red-bg);
+  border-color: var(--tag-red-border);
   :deep(svg) {
-    color: #cf1322;
+    color: var(--tag-red-text);
     fill: currentColor;
   }
 }
 .tag-yellow {
-  color: #d4b106;
-  background: #feffe6;
-  border-color: #fffb8f;
+  color: var(--tag-yellow-text);
+  background: var(--tag-yellow-bg);
+  border-color: var(--tag-yellow-border);
   :deep(svg) {
-    color: #d4b106;
+    color: var(--tag-yellow-text);
     fill: currentColor;
   }
 }
 .tag-orange {
-  color: #d46b08;
-  background: #fff7e6;
-  border-color: #ffd591;
+  color: var(--tag-orange-text);
+  background: var(--tag-orange-bg);
+  border-color: var(--tag-orange-border);
   :deep(svg) {
-    color: #d46b08;
+    color: var(--tag-orange-text);
     fill: currentColor;
   }
 }
 .tag-green {
-  color: #389e0d;
-  background: #f6ffed;
-  border-color: #b7eb8f;
+  color: var(--tag-green-text);
+  background: var(--tag-green-bg);
+  border-color: var(--tag-green-border);
   :deep(svg) {
-    color: #389e0d;
+    color: var(--tag-green-text);
     fill: currentColor;
   }
 }
 .tag-cyan {
-  color: #08979c;
-  background: #e6fffb;
-  border-color: #87e8de;
+  color: var(--tag-cyan-text);
+  background: var(--tag-cyan-bg);
+  border-color: var(--tag-cyan-border);
   :deep(svg) {
-    color: #08979c;
+    color: var(--tag-cyan-text);
     fill: currentColor;
   }
 }
 .tag-blue {
-  color: #0958d9;
-  background: #e6f4ff;
-  border-color: #91caff;
+  color: var(--tag-blue-text);
+  background: var(--tag-blue-bg);
+  border-color: var(--tag-blue-border);
   :deep(svg) {
-    color: #0958d9;
+    color: var(--tag-blue-text);
     fill: currentColor;
   }
 }
 .tag-purple {
-  color: #531dab;
-  background: #f9f0ff;
-  border-color: #d3adf7;
+  color: var(--tag-purple-text);
+  background: var(--tag-purple-bg);
+  border-color: var(--tag-purple-border);
   :deep(svg) {
-    color: #531dab;
+    color: var(--tag-purple-text);
     fill: currentColor;
   }
 }
 .tag-geekblue {
-  color: #1d39c4;
-  background: #f0f5ff;
-  border-color: #adc6ff;
+  color: var(--tag-geekblue-text);
+  background: var(--tag-geekblue-bg);
+  border-color: var(--tag-geekblue-border);
   :deep(svg) {
-    color: #1d39c4;
+    color: var(--tag-geekblue-text);
     fill: currentColor;
   }
 }
 .tag-magenta {
-  color: #eb2f96;
-  background: #fff0f6;
-  border-color: #ffadd2;
+  color: var(--tag-magenta-text);
+  background: var(--tag-magenta-bg);
+  border-color: var(--tag-magenta-border);
   :deep(svg) {
-    color: #eb2f96;
+    color: var(--tag-magenta-text);
     fill: currentColor;
   }
 }
 .tag-volcano {
-  color: #d4380d;
-  background: #fff2e8;
-  border-color: #ffbb96;
+  color: var(--tag-volcano-text);
+  background: var(--tag-volcano-bg);
+  border-color: var(--tag-volcano-border);
   :deep(svg) {
-    color: #d4380d;
+    color: var(--tag-volcano-text);
     fill: currentColor;
   }
 }
 .tag-gold {
-  color: #d48806;
-  background: #fffbe6;
-  border-color: #ffe58f;
+  color: var(--tag-gold-text);
+  background: var(--tag-gold-bg);
+  border-color: var(--tag-gold-border);
   :deep(svg) {
-    color: #d48806;
+    color: var(--tag-gold-text);
     fill: currentColor;
   }
 }
 .tag-lime {
-  color: #7cb305;
-  background: #fcffe6;
-  border-color: #eaff8f;
+  color: var(--tag-lime-text);
+  background: var(--tag-lime-bg);
+  border-color: var(--tag-lime-border);
   :deep(svg) {
-    color: #7cb305;
+    color: var(--tag-lime-text);
     fill: currentColor;
   }
 }
@@ -563,5 +566,101 @@ function onKeyboard(e: KeyboardEvent) {
 }
 .tag-hidden {
   display: none;
+}
+</style>
+<style lang="less">
+/**
+ * 预设色板变量（组件自有色彩资产，不属于 `--va-*` 公开契约）
+ *
+ * 为什么不用「模式属性 + 后代选择器」：后代选择器只判断“祖先里有没有 dark”，
+ * 无法感知更近的 light 作用域 —— 暗色页面里的嵌套浅色作用域、以及带 `data-va-mode`
+ * 的 Teleport 面板都会取错色板。按模式声明为**继承变量**后，取值跟随最近的声明节点，
+ * 与作用域/转发天然对齐。
+ *
+ * 浅色同时声明在 `:root` 与 `[data-va-mode='light']`：前者服务无属性的默认页面，
+ * 后者用于暗色页面内的浅色回环。暗色值取「底 0 档 / 边 2 档 / 字 5 档」。
+ */
+:root,
+[data-va-mode='light'] {
+  --tag-pink-text: #c41d7f;
+  --tag-pink-bg: #fff0f6;
+  --tag-pink-border: #ffadd2;
+  --tag-red-text: #cf1322;
+  --tag-red-bg: #fff1f0;
+  --tag-red-border: #ffa39e;
+  --tag-yellow-text: #d4b106;
+  --tag-yellow-bg: #feffe6;
+  --tag-yellow-border: #fffb8f;
+  --tag-orange-text: #d46b08;
+  --tag-orange-bg: #fff7e6;
+  --tag-orange-border: #ffd591;
+  --tag-green-text: #389e0d;
+  --tag-green-bg: #f6ffed;
+  --tag-green-border: #b7eb8f;
+  --tag-cyan-text: #08979c;
+  --tag-cyan-bg: #e6fffb;
+  --tag-cyan-border: #87e8de;
+  --tag-blue-text: #0958d9;
+  --tag-blue-bg: #e6f4ff;
+  --tag-blue-border: #91caff;
+  --tag-purple-text: #531dab;
+  --tag-purple-bg: #f9f0ff;
+  --tag-purple-border: #d3adf7;
+  --tag-geekblue-text: #1d39c4;
+  --tag-geekblue-bg: #f0f5ff;
+  --tag-geekblue-border: #adc6ff;
+  --tag-magenta-text: #eb2f96;
+  --tag-magenta-bg: #fff0f6;
+  --tag-magenta-border: #ffadd2;
+  --tag-volcano-text: #d4380d;
+  --tag-volcano-bg: #fff2e8;
+  --tag-volcano-border: #ffbb96;
+  --tag-gold-text: #d48806;
+  --tag-gold-bg: #fffbe6;
+  --tag-gold-border: #ffe58f;
+  --tag-lime-text: #7cb305;
+  --tag-lime-bg: #fcffe6;
+  --tag-lime-border: #eaff8f;
+}
+[data-va-mode='dark'] {
+  --tag-pink-text: #cb2b83;
+  --tag-pink-bg: #291321;
+  --tag-pink-border: #551c3b;
+  --tag-red-text: #d32029;
+  --tag-red-bg: #2a1215;
+  --tag-red-border: #58181c;
+  --tag-yellow-text: #d8bd14;
+  --tag-yellow-bg: #2b2611;
+  --tag-yellow-border: #595014;
+  --tag-orange-text: #d87a16;
+  --tag-orange-bg: #2b1d11;
+  --tag-orange-border: #593815;
+  --tag-green-text: #49aa19;
+  --tag-green-bg: #162312;
+  --tag-green-border: #274916;
+  --tag-cyan-text: #13a8a8;
+  --tag-cyan-bg: #112123;
+  --tag-cyan-border: #144848;
+  --tag-blue-text: #1668dc;
+  --tag-blue-bg: #111a2c;
+  --tag-blue-border: #15325b;
+  --tag-purple-text: #642ab5;
+  --tag-purple-bg: #1a1325;
+  --tag-purple-border: #301c4d;
+  --tag-geekblue-text: #2b4acb;
+  --tag-geekblue-bg: #131629;
+  --tag-geekblue-border: #1c2755;
+  --tag-magenta-text: #cb2b83;
+  --tag-magenta-bg: #291321;
+  --tag-magenta-border: #551c3b;
+  --tag-volcano-text: #d84a1b;
+  --tag-volcano-bg: #2b1611;
+  --tag-volcano-border: #592716;
+  --tag-gold-text: #d89614;
+  --tag-gold-bg: #2b2111;
+  --tag-gold-border: #594214;
+  --tag-lime-text: #8bbb11;
+  --tag-lime-bg: #1f2611;
+  --tag-lime-border: #3e4f13;
 }
 </style>

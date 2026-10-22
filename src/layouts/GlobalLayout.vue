@@ -1,35 +1,33 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { toggleDark, useMutationObserver, useWindowWidth } from 'components/utils'
+import { useWindowWidth } from 'components/utils'
 import SideMenu from './components/SideMenu.vue'
+import ThemeColorButton from './components/ThemeColorButton.vue'
 import type { SideMenuSize } from './components/SideMenu.vue'
+import { theme } from '@/theme'
 import type { Scrollbar } from 'vue-amazing-ui'
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用 $route
-const themeDark = ref<boolean>(false)
-const html = document.documentElement
-onMounted(() => {
-  themeDark.value = html.classList.contains('dark')
+// 开关与组件库主题同源：读当前 mode，改动再写回共享的 theme（供 App.vue 的 ConfigProvider 消费）
+const themeDark = ref<boolean>(theme.value.mode === 'dark')
+watch(themeDark, (dark: boolean) => {
+  theme.value = { ...theme.value, mode: dark ? 'dark' : 'light' }
 })
-// 只关心主题类名的变化：toggleDark 还会同时改写 html.style.colorScheme，
-// 不限定属性名会让每次主题切换触发两次回调
-useMutationObserver(
-  html,
-  () => {
-    themeDark.value = html.classList.contains('dark')
-  },
-  { attributeFilter: ['class'] }
-)
 const contentScrollRef = ref<InstanceType<typeof Scrollbar> | null>(null)
-// 路由变化后把内容区滚动位置复位：滚动由内容区的 Scrollbar 容器承载，
-// router 的 scrollBehavior 只作用于 window，管不到它
+// 少数演示页需要验证「随文档滚动」的行为（如全屏水印 fixed=false），改为整页滚动：
+// 此时不套 Scrollbar，侧栏用 sticky 固定在视口
+const windowScroll = computed(() => route.meta.windowScroll === true)
+// 路由变化后把滚动位置复位：内容区滚动由 Scrollbar 承载（window 的 scrollBehavior 管不到），
+// 整页滚动页则复位 window
 watch(
   () => route.fullPath,
   () => {
+    window.scrollTo({ top: 0 })
     contentScrollRef.value?.scrollTo({ top: 0 })
   },
   { flush: 'post' }
 )
+
 // 侧栏分档：档位与库内 Col 断点口径一致（xl ≥1200 / lg ≥992 / md ≥768 / sm 更窄），
 // 宽度与菜单密度（字号、行高、内边距、文案详略）一起变化，取值见 SideMenu.vue
 const ASIDE_WIDTH: Record<SideMenuSize, number> = { xl: 232, lg: 204, md: 176, sm: 152 }
@@ -42,21 +40,33 @@ const asideSize = computed<SideMenuSize>(() => {
   return 'sm'
 })
 const asideWidth = computed<number>(() => ASIDE_WIDTH[asideSize.value])
+// 整页滚动页：侧栏吸附在视口顶部（sticky），其余页面沿用相对定位
+const asideColStyle = computed(() =>
+  windowScroll.value
+    ? {
+        position: 'sticky' as const,
+        top: '0',
+        alignSelf: 'flex-start' as const,
+        height: '100vh',
+        width: `${asideWidth.value}px`
+      }
+    : { position: 'relative' as const, width: `${asideWidth.value}px` }
+)
 </script>
 <template>
-  <Row style="width: 100%">
+  <Row :style="windowScroll ? { alignItems: 'flex-start' } : undefined" style="width: 100%">
     <!--
       侧栏宽度按视口分档（232 / 204 / 176 / 152），档位随菜单密度一起变化，见上方 asideSize。
       宽度写在 `width` 上、flex-basis 交由 `0 0 auto` 遵循：flex-basis 直接写像素值会被 min-width: auto
       的 min-content（菜单最长项）撑开，`width` 则能提供 specified size suggestion 解除该限制
     -->
-    <Col :flex="'0 0 auto'" :style="{ position: 'relative', width: `${asideWidth}px` }">
+    <Col :flex="'0 0 auto'" :style="asideColStyle">
+      <!-- 主题开关：直接切换组件库的 mode（见 src/theme.ts），不叠加页面级滤镜 -->
       <Switch
         class="switch-theme"
         v-model:value="themeDark"
         ripple-color="#faad14"
         :circle-style="{ background: themeDark ? '#001529' : '#fff' }"
-        @change="toggleDark"
       >
         <template #node>
           <svg
@@ -109,16 +119,27 @@ const asideWidth = computed<number>(() => ASIDE_WIDTH[asideSize.value])
         内容比容器宽时按 max-content 撑开（无上限），页面内所有 `width: 100%` 的组件会跟着变宽。
         这里要求内容宽度始终限制在内容区宽度内（溢出由容器自身承载），故保持默认
       -->
-      <Scrollbar ref="contentScrollRef" style="height: 100vh">
+      <Scrollbar v-if="!windowScroll" ref="contentScrollRef" style="height: 100vh">
         <div class="router-view">
           <RouterView v-slot="{ Component }">
             <Transition name="fade" mode="out-in">
               <component :is="Component" />
             </Transition>
           </RouterView>
+          <ThemeColorButton />
           <BackTop v-if="route.meta.backTop !== false" />
         </div>
       </Scrollbar>
+      <!-- 整页滚动页：不套 Scrollbar，滚动交给文档（window），供全屏水印等需要「随文档滚动」的演示验证 -->
+      <div v-else class="router-view">
+        <RouterView v-slot="{ Component }">
+          <Transition name="fade" mode="out-in">
+            <component :is="Component" />
+          </Transition>
+        </RouterView>
+        <ThemeColorButton />
+        <BackTop v-if="route.meta.backTop !== false" />
+      </div>
     </Col>
   </Row>
 </template>

@@ -17,7 +17,7 @@ _加载进度条_
 
 ## 使用方式
 
-| 调用方式 | API | 适用位置 |
+| 调用方式 | `API` | 适用位置 |
 | :-- | :-- | :-- |
 | 组件树内调用 <Tag color="success" size="small">推荐</Tag> | `useLoadingBar()` | 组件 `setup` 内，需外层存在 `<LoadingBarProvider>` |
 | 脱离组件树调用 <Tag color="processing" size="small">无需 LoadingBarProvider</Tag> | `createDiscreteApi()` | 任意位置（`axios` 拦截器、路由守卫、`Pinia action` 等） |
@@ -248,7 +248,7 @@ function onError() {
 
 ## 局部加载条
 
-_通过 `to` 指定加载条的挂载位置，配合 `container-style` 让它落在局部容器内；容器内的按钮通过 `<LoadingBarProvider>` 的 `@ready` 事件取到该作用域内的 api_
+_通过 `to` 指定加载条的挂载位置，配合 `container-style` 让它落在局部容器内；容器内的按钮通过 `<LoadingBarProvider>` 的 `@ready` 事件取到该作用域内的 `api`_
 
 <br/>
 
@@ -621,7 +621,7 @@ _`useLoadingBar()` 返回的 `LoadingBarApi`，或通过 `<LoadingBar>` / `<Load
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| ready | 实例挂载完成时触发，参数为该实例的 api | (api: [LoadingBarApi](#methods)) => void |
+| ready | 实例挂载完成时触发，参数为该实例的 `api` | (api: [LoadingBarApi](#methods)) => void |
 
 ## 在 setup 外使用
 
@@ -633,10 +633,10 @@ _适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：�
 
 ::: tip 注意
 
-- 主题使用内置默认值；如需自定义，通过第二个参数 `configProviderProps`（支持 `Ref` / `computed` 响应式）显式传入，详见 [全局化配置 ConfigProvider「主题同步到离散 API」](/guide/components/config-provider.html#主题同步到离散-api)
+- 主题使用内置默认值；如需自定义，通过第二个参数 `configProviderProps`（支持 `Ref` / `computed` 响应式）显式传入，详见 [全局化配置 ConfigProvider「离散 API 的主题」](/guide/components/config-provider.html#离散-api-的主题)
 - 每次调用都会创建一套独立实例（独立的容器与加载条），建议缓存返回值复用，避免重复创建；不再使用时可通过返回的 `dispose()` 销毁该实例
 - 内部会访问 `document`，`SSR` 场景请在客户端（点击回调、`onMounted` 等）中调用
-- 不建议与 `useLoadingBar()` 在同一 App 中混用：两者各自持有独立实例，加载条互不影响
+- 不建议与 `useLoadingBar()` 在同一 `App` 中混用：两者各自持有独立实例，加载条互不影响
 
 :::
 

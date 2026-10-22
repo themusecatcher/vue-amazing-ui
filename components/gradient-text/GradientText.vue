@@ -23,20 +23,23 @@ const props = withDefaults(defineProps<Props>(), {
   type: 'primary'
 })
 defineSlots<GradientTextSlots>()
-enum TypeStartColor {
-  primary = 'rgba(22, 199, 255, 0.6)',
-  info = 'rgba(22, 199, 255, 0.6)',
-  success = 'rgba(82, 196, 26, 0.6)',
-  warning = 'rgba(250, 173, 20, 0.6)',
-  error = 'rgba(255, 77, 79, 0.6)'
-}
-enum TypeEndColor {
-  primary = '#1677ff',
-  info = '#1677ff',
-  success = '#52c41a',
-  warning = '#faad14',
-  error = '#ff4d4f'
-}
+/**
+ * 预设渐变的两端 → 主题变量
+ *
+ * 起点取语义色的描边档（浅色为最浅一档，暗色比常态更深，形成「深 → 亮」的渐变），
+ * 终点取常态档。两端都是 `var(--va-*)`，因此换种子与切模式都整体跟随，
+ * 不再把旧的浅色板写死在组件里。
+ */
+const TYPE_GRADIENT = {
+  primary: {
+    from: 'var(--va-cp-gradient-text-primary-border-color, var(--va-primary-border-color))',
+    to: 'var(--va-cp-gradient-text-primary-color, var(--va-primary-color))'
+  },
+  info: { from: 'var(--va-info-border-color)', to: 'var(--va-info-color)' },
+  success: { from: 'var(--va-success-border-color)', to: 'var(--va-success-color)' },
+  warning: { from: 'var(--va-warning-border-color)', to: 'var(--va-warning-color)' },
+  error: { from: 'var(--va-error-border-color)', to: 'var(--va-error-color)' }
+} as const
 const gradientText = computed(() => {
   if (typeof props.gradient === 'string') {
     return {
@@ -55,14 +58,14 @@ const colorStart = computed(() => {
   if (typeof props.gradient === 'object') {
     return props.gradient.from
   } else {
-    return TypeStartColor[props.type]
+    return TYPE_GRADIENT[props.type].from
   }
 })
 const colorEnd = computed(() => {
   if (typeof props.gradient === 'object') {
     return props.gradient.to
   } else {
-    return TypeEndColor[props.type]
+    return TYPE_GRADIENT[props.type].to
   }
 })
 const fontSize = computed(() => {

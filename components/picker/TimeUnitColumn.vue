@@ -144,11 +144,11 @@ function onCellClick(unit: PickerTimeUnit): void {
     position: relative;
   }
   &:not(:first-child) {
-    border-left: 1px solid rgba(5, 5, 5, 0.06);
+    border-left: 1px solid var(--va-border-split-color);
   }
   // 键盘操作当前所在的列：加一层主色底纹标示目标（透明度随主题色）
   &.picker-time-column-active {
-    background: var(--picker-time-column-active-bg, rgba(230, 244, 255, 0.2));
+    background: var(--picker-time-column-active-bg, var(--va-primary-bg-color));
   }
   .picker-time-list {
     margin: 0;
@@ -175,22 +175,22 @@ function onCellClick(unit: PickerTimeUnit): void {
       width: 48px;
       height: 28px;
       padding-left: 14px;
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--va-text-color-1);
       line-height: 28px;
       border-radius: 4px;
       cursor: pointer;
       transition: background 0.2s;
       &:hover {
-        background: rgba(0, 0, 0, 0.04);
+        background: var(--va-fill-color-1);
       }
     }
     &.picker-time-cell-selected .picker-time-cell-inner {
-      background: var(--picker-primary-color-bg, #e6f4ff);
+      background: var(--picker-primary-color-bg, var(--va-primary-bg-color));
     }
     &.picker-time-cell-disabled {
       pointer-events: none;
       .picker-time-cell-inner {
-        color: rgba(0, 0, 0, 0.25);
+        color: var(--va-text-color-disabled);
         background: transparent;
         cursor: not-allowed;
       }

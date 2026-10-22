@@ -28,6 +28,7 @@ import {
   Text
 } from 'vue'
 import type { CSSProperties, Ref, VNode } from 'vue'
+import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
 import Empty from 'components/empty'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import {
@@ -35,7 +36,6 @@ import {
   useFloating,
   useFloatingTeleportTarget,
   useInheritAnchorFont,
-  useInject,
   useResizeObserver,
   useSlotsExist,
   useZIndex,
@@ -164,6 +164,10 @@ export interface SelectSlots {
   removeIcon?: () => VNode[] // 自定义 tag 的移除图标
 }
 
+// 主题转发：下拉面板 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
+const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
+const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 const props = withDefaults(defineProps<Props>(), {
   value: undefined,
   open: undefined,
@@ -260,7 +264,6 @@ const hoverValue = ref<SelectValue | null>(null) // 键盘 / 悬浮高亮项的 
 const backspaceLock = ref<boolean>(false) // 退格锁：上一次按键时搜索文本是否非空（避免清空搜索的同一次按键又删掉一个 tag）
 const responsiveTagCount = ref<number>(0) // maxTagCount 为 'responsive' 时按容器宽度算出的可见 tag 数
 const responsiveMeasured = ref<boolean>(false) // 是否已按容器宽度量取过（量取前先全量渲染，避免无布局环境下 tag 全被折叠）
-const { colorPalettes, shadowColor } = useInject('Select') // 主题色注入
 // 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配，未传则沿用默认 1050（面板需高于承载它的 Modal / Drawer / Dialog）；
 // 领取时机由面板「出现」驱动（allocateOnMount: false）—— 挂载时不持有槽位，否则未展开过的下拉会长期占位、抬高后续分配点
 const {
@@ -955,8 +958,8 @@ const selectPanelStyle = computed<CSSProperties>(() => ({
   transformOrigin: transformOrigin.value,
   ...props.dropdownMenuStyle,
   zIndex: selectPanelZIndex.value,
-  '--select-option-bg-color-active': colorPalettes.value[0],
-  '--select-primary-color': colorPalettes.value[5]
+  '--select-option-bg-color-active': 'var(--va-cp-select-primary-bg-color, var(--va-primary-bg-color))',
+  '--select-primary-color': 'var(--va-cp-select-primary-color, var(--va-primary-color))'
 }))
 
 watch(
@@ -1770,9 +1773,6 @@ defineExpose({
     :style="`
       --select-width: ${selectWidth};
       --select-height: ${selectHeight};
-      --select-primary-color-hover: ${colorPalettes[4]};
-      --select-primary-color-focus: ${colorPalettes[4]};
-      --select-primary-shadow-color: ${shadowColor};
     `"
     @mousedown="onMousedown"
     @mouseenter="onMouseEnter"
@@ -1955,7 +1955,12 @@ defineExpose({
       <!-- 两层 DOM：定位参照容器 + 面板。
            容器的实时矩形即面板 top / left 的坐标原点，故 Teleport 与 to: false 就地渲染共用同一套求解；
            首帧优化内化在此：首次展示前不渲染任何浮层 DOM，之后由面板上的 v-show 复用同一元素 -->
-      <div ref="selectPanelWrapperRef" class="select-panel-wrapper">
+      <div
+        ref="selectPanelWrapperRef"
+        class="select-panel-wrapper"
+        :style="teleportThemeVars"
+        :data-va-mode="teleportThemeMode"
+      >
         <Transition
           appear
           name="slide"
@@ -2047,22 +2052,22 @@ defineExpose({
   height: var(--select-height);
   font-size: 14px;
   font-weight: 400;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   outline: none;
   cursor: pointer;
   transition: all 0.3s;
   &:not(.select-disabled):hover {
     .select-content-container {
-      border-color: var(--select-primary-color-hover);
+      border-color: var(--va-cp-select-primary-color-hover, var(--va-primary-color-hover));
     }
   }
   .select-content-container {
     position: relative;
     display: flex;
     padding: 0 11px;
-    border: 1px solid #d9d9d9;
+    border: 1px solid var(--va-border-color);
     border-radius: 6px;
-    background-color: #fff;
+    background-color: var(--va-bg-container-color);
     width: 100%;
     height: 100%;
     outline: none;
@@ -2114,7 +2119,7 @@ defineExpose({
       transition: color 0.3s;
     }
     .select-placeholder {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
       transition: none;
       pointer-events: none;
     }
@@ -2132,7 +2137,7 @@ defineExpose({
       justify-content: center;
       height: 12px;
       font-size: 12px;
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
       fill: currentColor;
       user-select: none;
       pointer-events: none;
@@ -2159,13 +2164,13 @@ defineExpose({
     .clear-svg {
       z-index: 1;
       opacity: 0;
-      background: #fff;
+      background: var(--va-bg-container-color);
       cursor: pointer;
       transition:
         color 0.2s,
         opacity 0.3s;
       &:hover {
-        color: rgba(0, 0, 0, 0.45);
+        color: var(--va-text-color-3);
       }
     }
     /* 清除图标同样带 .show-svg（表示「满足显示条件」），需压回透明，再由 hover 点亮 */
@@ -2181,13 +2186,14 @@ defineExpose({
 /* 展开时回填内容降为占位色，与既有实现一致 */
 .select-open:not(.select-disabled) {
   .select-item {
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
   }
 }
 .select-focused:not(.select-disabled) {
   .select-content-container {
-    border-color: var(--select-primary-color-focus);
-    box-shadow: 0 0 0 2px var(--select-primary-shadow-color);
+    /* 聚焦态：边框取悬停档主色（与 hover 同色），阴影取焦点环 */
+    border-color: var(--va-cp-select-primary-color-hover, var(--va-primary-color-hover));
+    box-shadow: var(--va-cp-select-focus-shadow, var(--va-focus-shadow));
   }
 }
 .search-select {
@@ -2254,8 +2260,8 @@ defineExpose({
 }
 .select-disabled {
   .select-content-container {
-    color: rgba(0, 0, 0, 0.25);
-    background: #f5f5f5;
+    color: var(--va-text-color-disabled);
+    background: var(--va-fill-color-1);
     user-select: none;
     cursor: not-allowed;
     .select-search .search-input {
@@ -2263,31 +2269,31 @@ defineExpose({
     }
   }
   .select-item {
-    color: rgba(0, 0, 0, 0.25);
+    color: var(--va-text-color-disabled);
   }
 }
 .select-status-error:not(.select-disabled) {
   .select-content-container {
-    border-color: #ff7875;
+    border-color: var(--va-error-color);
   }
   &:hover .select-content-container {
-    border-color: #ff7875;
+    border-color: var(--va-error-color);
   }
   &.select-focused .select-content-container {
-    border-color: #ff7875;
-    box-shadow: 0 0 0 2px rgba(255, 38, 5, 0.06);
+    border-color: var(--va-error-color);
+    box-shadow: 0 0 0 2px var(--va-error-bg-color);
   }
 }
 .select-status-warning:not(.select-disabled) {
   .select-content-container {
-    border-color: #ffd666;
+    border-color: var(--va-warning-color);
   }
   &:hover .select-content-container {
-    border-color: #ffd666;
+    border-color: var(--va-warning-color);
   }
   &.select-focused .select-content-container {
-    border-color: #ffd666;
-    box-shadow: 0 0 0 2px rgba(255, 215, 5, 0.1);
+    border-color: var(--va-warning-color);
+    box-shadow: 0 0 0 2px var(--va-warning-bg-color);
   }
 }
 /* 多选 / 标签 */
@@ -2358,10 +2364,10 @@ defineExpose({
   margin: 2px 4px 2px 0;
   padding-left: 8px;
   padding-right: 4px;
-  border: 1px solid rgba(5, 5, 5, 0.06);
+  border: 1px solid var(--va-border-split-color);
   border-radius: 4px;
-  background: rgba(0, 0, 0, 0.06);
-  color: rgba(0, 0, 0, 0.88);
+  background: var(--va-fill-color-2);
+  color: var(--va-text-color-1);
   font-size: 14px;
   line-height: calc(var(--select-tag-height) - 2px);
   cursor: default;
@@ -2386,14 +2392,14 @@ defineExpose({
 .select-selection-item-remove {
   display: inline-flex;
   align-items: center;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--va-text-color-3);
   font-size: 10px;
   font-weight: bold;
   line-height: inherit;
   cursor: pointer;
   transition: color 0.2s;
   &:hover {
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
   }
   svg {
     vertical-align: -0.2em;
@@ -2401,8 +2407,8 @@ defineExpose({
 }
 /* 禁用项的标签：不可移除 */
 .select-selection-item-disabled {
-  border-color: #d9d9d9;
-  color: rgba(0, 0, 0, 0.25);
+  border-color: var(--va-border-color);
+  color: var(--va-text-color-disabled);
   cursor: not-allowed;
 }
 /* 被 responsive 折叠的 tag：绝对定位隐藏，不占位但保留布局以便量取真实宽度 */
@@ -2433,14 +2439,11 @@ defineExpose({
   padding: 4px;
   border-radius: 8px;
   overflow: hidden;
-  background-color: #fff;
+  background-color: var(--va-bg-elevated-color);
   font-size: 14px;
   outline: none;
   cursor: auto;
-  box-shadow:
-    0 6px 16px 0 rgba(0, 0, 0, 0.08),
-    0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--va-popup-shadow);
   :deep(.select-options-panel) {
     /* 关闭滚动越界回弹与滚动链：否则触控板惯性滚动会带着列表冲出滚动区，面板底部露出空白
        （若以 transform 位移实现列表滚动则内容天然不越界，本库用原生滚动故需在此显式关闭回弹）。
@@ -2455,7 +2458,7 @@ defineExpose({
     .select-option-group {
       min-height: 32px;
       padding: 5px 12px;
-      color: rgba(0, 0, 0, 0.45);
+      color: var(--va-text-color-3);
       font-size: 12px;
       line-height: 1.5714285714285714;
       cursor: default;
@@ -2470,7 +2473,7 @@ defineExpose({
       align-items: center;
       padding: 5px 12px;
       border-radius: 4px;
-      color: rgba(0, 0, 0, 0.88);
+      color: var(--va-text-color-1);
       font-weight: 400;
       font-size: 14px;
       line-height: 1.5714285714285714;
@@ -2488,20 +2491,20 @@ defineExpose({
       }
     }
     .option-hover {
-      background: rgba(0, 0, 0, 0.04);
+      background: var(--va-fill-color-1);
     }
     .option-selected {
       font-weight: 600;
       background: var(--select-option-bg-color-active);
       .select-option-state {
-        color: var(--select-primary-color);
+        color: var(--va-cp-select-primary-color, var(--va-primary-color));
       }
     }
     .option-selected.option-disabled {
-      background: rgba(0, 0, 0, 0.04);
+      background: var(--va-fill-color-1);
     }
     .option-disabled {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--va-text-color-disabled);
       cursor: not-allowed;
     }
   }

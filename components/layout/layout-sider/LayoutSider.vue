@@ -271,15 +271,15 @@ function getResponsiveCollapsedWidth(collapsedWidth: LayoutSiderResponsive) {
     background 0s;
 }
 .layout-sider-light {
-  background: var(--layout-sider-light-background, #fff);
+  background: var(--layout-sider-light-background, var(--va-bg-container-color));
   .layout-sider-trigger {
-    color: var(--layout-sider-light-trigger-color, rgba(0, 0, 0, 0.88));
-    background: var(--layout-sider-light-trigger-background, #fff);
+    color: var(--layout-sider-light-trigger-color, var(--va-text-color-1));
+    background: var(--layout-sider-light-trigger-background, var(--va-bg-container-color));
   }
   .layout-sider-zero-width-trigger {
-    color: var(--layout-sider-light-trigger-color, rgba(0, 0, 0, 0.88));
-    background: var(--layout-sider-light-background, #fff);
-    border: 1px solid var(--layout-background, #f5f5f5);
+    color: var(--layout-sider-light-trigger-color, var(--va-text-color-1));
+    background: var(--layout-sider-light-background, var(--va-bg-container-color));
+    border: 1px solid var(--layout-background, var(--va-bg-layout-color));
     border-inline-start: 0;
   }
 }

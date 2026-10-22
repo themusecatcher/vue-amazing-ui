@@ -10,8 +10,14 @@ _用于多行输入_
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+// 每个演示用例独立绑定值：共用一个 ref 会让任意一处输入同步到页面上所有文本域
 const value = ref('')
 const lazyValue = ref('')
+const autoSizeValue = ref('')
+const minMaxRowsValue = ref('')
+const clearValue = ref('')
+const countValue = ref('')
+const disabledValue = ref('')
 watchEffect(() => {
   console.log('value', value.value)
 })
@@ -88,7 +94,7 @@ function onEnter(e: KeyboardEvent) {
 
 <Textarea
   :width="360"
-  v-model:value="value"
+  v-model:value="autoSizeValue"
   placeholder="Autosize height based on content lines"
   auto-size
 />
@@ -98,13 +104,10 @@ function onEnter(e: KeyboardEvent) {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const value = ref('')
-watchEffect(() => {
-  console.log('value', value.value)
-})
+const autoSizeValue = ref('')
 </script>
 <template>
-  <Textarea :width="360" v-model:value="value" placeholder="Autosize height based on content lines" auto-size />
+  <Textarea :width="360" v-model:value="autoSizeValue" placeholder="Autosize height based on content lines" auto-size />
 </template>
 ```
 
@@ -114,7 +117,7 @@ watchEffect(() => {
 
 <Textarea
   :width="360"
-  v-model:value="value"
+  v-model:value="minMaxRowsValue"
   placeholder="Autosize height with minimum and maximum number of lines"
   :auto-size="{ minRows: 2, maxRows: 5 }"
 />
@@ -124,15 +127,12 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const value = ref('')
-watchEffect(() => {
-  console.log('value', value.value)
-})
+const minMaxRowsValue = ref('')
 </script>
 <template>
   <Textarea
     :width="360"
-    v-model:value="value"
+    v-model:value="minMaxRowsValue"
     placeholder="Autosize height with minimum and maximum number of lines"
     :auto-size="{ minRows: 2, maxRows: 5 }"
   />
@@ -143,20 +143,17 @@ watchEffect(() => {
 
 ## 带清除图标
 
-<Textarea :width="360" v-model:value="value" placeholder="textarea with clear icon" allow-clear />
+<Textarea :width="360" v-model:value="clearValue" placeholder="textarea with clear icon" allow-clear />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const value = ref('')
-watchEffect(() => {
-  console.log('value', value.value)
-})
+const clearValue = ref('')
 </script>
 <template>
-  <Textarea :width="360" v-model:value="value" placeholder="textarea with clear icon" allow-clear />
+  <Textarea :width="360" v-model:value="clearValue" placeholder="textarea with clear icon" allow-clear />
 </template>
 ```
 
@@ -164,20 +161,17 @@ watchEffect(() => {
 
 ## 带数字提示
 
-<Textarea :width="360" v-model:value="value" placeholder="textarea with show count" show-count :maxlength="10" />
+<Textarea :width="360" v-model:value="countValue" placeholder="textarea with show count" show-count :maxlength="10" />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const value = ref('')
-watchEffect(() => {
-  console.log('value', value.value)
-})
+const countValue = ref('')
 </script>
 <template>
-  <Textarea :width="360" v-model:value="value" placeholder="textarea with show count" show-count :maxlength="10" />
+  <Textarea :width="360" v-model:value="countValue" placeholder="textarea with show count" show-count :maxlength="10" />
 </template>
 ```
 
@@ -185,17 +179,17 @@ watchEffect(() => {
 
 ## 禁用
 
-<Textarea :width="360" v-model:value="value" placeholder="disabled textarea" disabled />
+<Textarea :width="360" v-model:value="disabledValue" placeholder="disabled textarea" disabled />
 
 ::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-const value = ref('')
+const disabledValue = ref('')
 </script>
 <template>
-  <Textarea :width="360" v-model:value="value" placeholder="disabled textarea" disabled />
+  <Textarea :width="360" v-model:value="disabledValue" placeholder="disabled textarea" disabled />
 </template>
 ```
 
@@ -218,9 +212,9 @@ const value = ref('')
 
 ## Events
 
-| 名称            | 说明                                              | 类型                          |
+| 名称             | 说明                                               | 类型                          |
 | :--------------- | :------------------------------------------------- | :---------------------------- |
-| change          | 文本域内容变化时的回调                            | (e: Event) => void            |
-| enter           | 按下回车的回调                                    | (e: Event) => void            |
+| change           | 文本域内容变化时的回调                             | (e: Event) => void            |
+| enter            | 按下回车的回调                                     | (e: Event) => void            |
 | compositionstart | 使用文本合成系统即输入法编辑器开始新的输入时的回调 | (e: CompositionEvent) => void |
-| compositionend  | 当文本段落的组成完成或取消时触发的回调            | (e: CompositionEvent) => void |
+| compositionend   | 当文本段落的组成完成或取消时触发的回调             | (e: CompositionEvent) => void |

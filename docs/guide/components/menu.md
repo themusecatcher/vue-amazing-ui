@@ -1442,7 +1442,7 @@ const overflowItems: ItemType[] = [
 
 ## 子菜单预渲染
 
-_开启 `forceSubMenuRender` 后，子菜单面板在首次展开前就已渲染进 DOM（保持不可见），首次展开因此无需等待挂载；可用开发者工具查看未展开的子菜单下是否已存在 `.menu-submenu-popup` 面板_
+_开启 `forceSubMenuRender` 后，子菜单面板在首次展开前就已渲染进 `DOM`（保持不可见），首次展开因此无需等待挂载；可用开发者工具查看未展开的子菜单下是否已存在 `.menu-submenu-popup` 面板_
 
 <br/>
 
@@ -1657,7 +1657,7 @@ const submenuItems = computed<ItemType[]>(() => [
 | triggerSubMenuAction | 子菜单的展开触发方式；`inline` 模式未收起时子菜单就地展开，不受此属性影响 | 'click' &#124; 'hover' | 'hover' |
 | subMenuOpenDelay | 鼠标进入子菜单后开启的延时，单位秒 | number | 0 |
 | subMenuCloseDelay | 鼠标离开子菜单后关闭的延时，单位秒 | number | 0.1 |
-| forceSubMenuRender | 是否在子菜单展示之前就渲染进 DOM（首次展开因而无需等待挂载） | boolean | false |
+| forceSubMenuRender | 是否在子菜单展示之前就渲染进 `DOM`（首次展开因而无需等待挂载） | boolean | false |
 
 ### MenuKey Type
 

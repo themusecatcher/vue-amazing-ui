@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
+import { h, nextTick } from 'vue'
 import Watermark from 'components/watermark/Watermark.vue'
+import ConfigProvider from 'components/config-provider/ConfigProvider.vue'
 
 /**
  * 回归守护：Watermark 的防篡改 MutationObserver 观察目标必须跟随 fullscreen 变化。
@@ -19,8 +20,24 @@ import Watermark from 'components/watermark/Watermark.vue'
 const WATERMARK_STYLE_FLAG = 'background-image'
 const realGetContextDescriptor = Object.getOwnPropertyDescriptor(HTMLCanvasElement.prototype, 'getContext')
 
+interface CanvasContextStub {
+  font: string
+  fillStyle: string
+  textAlign: string
+  textBaseline: string
+  measureText: ReturnType<typeof vi.fn>
+  save: ReturnType<typeof vi.fn>
+  restore: ReturnType<typeof vi.fn>
+  translate: ReturnType<typeof vi.fn>
+  rotate: ReturnType<typeof vi.fn>
+  fillText: ReturnType<typeof vi.fn>
+  drawImage: ReturnType<typeof vi.fn>
+}
+// 用例可读取最近一次绘制用的填充色，用于断言「默认色跟随主题」
+let canvasContext: CanvasContextStub
+
 function installCanvasStub(): void {
-  const context = {
+  canvasContext = {
     font: '',
     fillStyle: '',
     textAlign: 'center',
@@ -35,7 +52,7 @@ function installCanvasStub(): void {
   }
   Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
     configurable: true,
-    value: () => context
+    value: () => canvasContext
   })
 }
 
@@ -109,7 +126,7 @@ describe('Watermark 防篡改观察目标应跟随 fullscreen 变化', () => {
     wrapper.unmount()
   })
 
-  it('全屏退出/卸载后应撤销 <html> 上的 position，且不覆盖其已有内联样式', async () => {
+  it('全屏水印不修改宿主 <html> 的内联样式（不覆盖其已有样式）', async () => {
     document.documentElement.style.setProperty('--watermark-probe', '1')
 
     const wrapper = mount(Watermark, {
@@ -117,8 +134,8 @@ describe('Watermark 防篡改观察目标应跟随 fullscreen 变化', () => {
       props: { content: 'test', fullscreen: true }
     })
     await flushAll()
-    expect(document.documentElement.style.position).toBe('relative')
-    // setAttribute('style', ...) 式写法会整体覆盖 style，此处守护「只改 position」
+    // 全屏水印使用 fixed 定位 / 固定视口层，无需给 <html> 写 position
+    expect(document.documentElement.style.position).toBe('')
     expect(document.documentElement.style.getPropertyValue('--watermark-probe')).toBe('1')
 
     await wrapper.setProps({ fullscreen: false })
@@ -127,11 +144,42 @@ describe('Watermark 防篡改观察目标应跟随 fullscreen 变化', () => {
 
     await wrapper.setProps({ fullscreen: true })
     await flushAll()
-    expect(document.documentElement.style.position).toBe('relative')
+    expect(document.documentElement.style.position).toBe('')
 
     wrapper.unmount()
     await flushAll()
-    expect(document.documentElement.style.position).toBe('')
+    expect(document.documentElement.style.getPropertyValue('--watermark-probe')).toBe('1')
+  })
+
+  it('全屏水印 fixed 开关生效：开启钉住视口，关闭随文档原生滚动', async () => {
+    // 文档总高（测试环境不计算布局），用于断言非 fixed 时水印覆盖整页
+    Object.defineProperty(document.documentElement, 'scrollHeight', { configurable: true, value: 2400 })
+
+    const wrapper = mount(Watermark, {
+      attachTo: document.body,
+      props: { fullscreen: true, fixed: true, content: 'test' }
+    })
+    await flushAll()
+
+    const [fixedNode] = findWatermarks(document.documentElement)
+    expect(fixedNode?.parentElement).toBe(document.documentElement)
+    expect(fixedNode?.style.position).toBe('fixed')
+
+    await wrapper.setProps({ fixed: false })
+    await flushAll()
+
+    // 非 fixed：仍挂在 <html>、绝对定位、高度覆盖整页；滚动交给文档原生滚动，
+    // 不做 JS translate 补偿（否则会与合成线程的滚动不同步，产生抖动）
+    const [absoluteNode] = findWatermarks(document.documentElement)
+    expect(absoluteNode?.parentElement).toBe(document.documentElement)
+    expect(absoluteNode?.style.position).toBe('absolute')
+    expect(absoluteNode?.style.height).toBe('2400px')
+    expect(absoluteNode?.style.transform).toBe('')
+
+    wrapper.unmount()
+    await flushAll()
+    expect(findWatermarks(document.documentElement)).toHaveLength(0)
+    delete (document.documentElement as unknown as { scrollHeight?: number }).scrollHeight
   })
 
   it('非全屏时不应改动 <html> 上已有的 position（只撤销自己写入的值）', async () => {
@@ -144,5 +192,52 @@ describe('Watermark 防篡改观察目标应跟随 fullscreen 变化', () => {
     wrapper.unmount()
     await flushAll()
     expect(document.documentElement.style.position).toBe('absolute')
+  })
+})
+
+/**
+ * 默认色跟随主题（取 `--va-fill-color-3`）：
+ * 浅色 rgba(0,0,0,.15) / 暗色 rgba(255,255,255,.18)，取自 Provider 的只读快照。
+ */
+describe('Watermark 默认色跟随主题', () => {
+  it('浅色使用 --va-fill-color-3（rgba(0, 0, 0, 0.15)）', async () => {
+    const wrapper = mount(ConfigProvider, {
+      attachTo: document.body,
+      props: { theme: { mode: 'light' } },
+      slots: { default: () => h(Watermark, { content: 'test' }) }
+    })
+    await flushAll()
+
+    expect(canvasContext.fillStyle).toBe('rgba(0, 0, 0, 0.15)')
+    wrapper.unmount()
+    await flushAll()
+  })
+
+  it('暗色使用 rgba(255, 255, 255, 0.18)，且不靠 filter 反色', async () => {
+    const wrapper = mount(ConfigProvider, {
+      attachTo: document.body,
+      props: { theme: { mode: 'dark' } },
+      slots: { default: () => h(Watermark, { content: 'test' }) }
+    })
+    await flushAll()
+
+    expect(canvasContext.fillStyle).toBe('rgba(255, 255, 255, 0.18)')
+    const [node] = findWatermarks(document.body)
+    expect(node?.getAttribute('style') ?? '').not.toContain('invert')
+    wrapper.unmount()
+    await flushAll()
+  })
+
+  it('显式 textStyle.color 优先于主题默认值', async () => {
+    const wrapper = mount(ConfigProvider, {
+      attachTo: document.body,
+      props: { theme: { mode: 'dark' } },
+      slots: { default: () => h(Watermark, { content: 'test', textStyle: { color: '#ff0000' } }) }
+    })
+    await flushAll()
+
+    expect(canvasContext.fillStyle).toBe('#ff0000')
+    wrapper.unmount()
+    await flushAll()
   })
 })

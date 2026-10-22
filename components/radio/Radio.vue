@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, inject, ref, watch, watchEffect } from 'vue'
 import type { VNode } from 'vue'
-import { useSlotsExist, useInject, useWave } from 'components/utils'
+import { useSlotsExist, useWave } from 'components/utils'
 import { radioGroupContextKey } from './context'
 import type { RadioButtonStyle, RadioChangeEvent, RadioSize, RadioValue } from './context'
 
@@ -35,7 +35,6 @@ const props = withDefaults(defineProps<Props>(), {
 defineSlots<RadioSlots>()
 const radioChecked = ref<boolean>(false)
 const { wave, startWave, endWave } = useWave()
-const { colorPalettes, shadowColor } = useInject('Radio') // 主题色注入
 const emits = defineEmits(['update:checked', 'change'])
 const slotsExist = useSlotsExist(['default'])
 // 所在单选组：置入组内时选中态、禁用态与按钮形态改由组统一下发，脱离组时不读取
@@ -165,7 +164,6 @@ defineExpose({ focus, blur })
     v-if="!mergedButton"
     class="radio-container"
     :class="{ 'radio-disabled': mergedDisabled, 'radio-focused': exposedSingleFocused }"
-    :style="`--radio-primary-color: ${colorPalettes[5]}; --radio-primary-shadow-color: ${shadowColor};`"
     @click="onSingleClick($event)"
     @mousedown="onMouseDown"
     v-bind="$attrs"
@@ -209,7 +207,6 @@ defineExpose({ focus, blur })
       'radio-button-large': mergedSize === 'large',
       'radio-focused': exposedSingleFocused
     }"
-    :style="`--radio-primary-color: ${colorPalettes[5]}; --radio-primary-color-hover: ${colorPalettes[4]}; --radio-primary-color-active: ${colorPalettes[6]}; --radio-primary-shadow-color: ${shadowColor};`"
     @click="onSingleClick($event)"
     @mousedown="onMouseDown"
     v-bind="$attrs"
@@ -259,7 +256,7 @@ defineExpose({ focus, blur })
   display: inline-flex;
   align-items: baseline;
   cursor: pointer;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   font-size: 14px;
   /* 行高落在容器上、由选项名继承：行内为该行指定行高时（如定高行内混排控件），文字与控件才能对齐同一基线 */
   line-height: 1.5714285714285714;
@@ -273,11 +270,11 @@ defineExpose({ focus, blur })
   /* 键盘聚焦走 :focus-visible（input 的 focus 事件同步置位 .radio-focused，双路径兜底）；脚本调用 focus() 不匹配该伪类，由容器自身的 .radio-focused 兜底显示焦点环 */
   .radio-input:focus-visible + .radio-handle,
   &.radio-focused .radio-handle {
-    box-shadow: 0 0 0 2px var(--radio-primary-shadow-color);
+    box-shadow: 0 0 0 2px var(--va-cp-radio-focus-shadow, var(--va-focus-shadow));
   }
   &:not(.radio-disabled):hover {
     .radio-handle {
-      border-color: var(--radio-primary-color);
+      border-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
     }
   }
   .radio-handle {
@@ -291,7 +288,7 @@ defineExpose({ focus, blur })
     width: 16px;
     height: 16px;
     background: transparent;
-    border: 1px solid #d9d9d9;
+    border: 1px solid var(--va-border-color);
     border-radius: 50%;
     transition: all 0.3s;
     &::after {
@@ -304,7 +301,7 @@ defineExpose({ focus, blur })
       height: 16px;
       margin-top: -8px;
       margin-left: -8px;
-      background-color: #fff;
+      background-color: var(--va-text-color-solid);
       border-top: 0;
       border-left: 0;
       border-radius: 16px;
@@ -326,7 +323,7 @@ defineExpose({ focus, blur })
     .wave-active {
       /* 默认不可见：环由选中态驱动，程序化选中时鼠标未必在项上 */
       visibility: hidden;
-      border: 2px solid var(--radio-primary-color);
+      border: 2px solid var(--va-cp-radio-primary-color, var(--va-primary-color));
       animation-name: antRadioEffect;
       animation-fill-mode: both;
       @keyframes antRadioEffect {
@@ -346,8 +343,8 @@ defineExpose({ focus, blur })
     visibility: visible;
   }
   .radio-checked {
-    border-color: var(--radio-primary-color);
-    background-color: var(--radio-primary-color);
+    border-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
+    background-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
     &::after {
       transform: scale(0.375);
       opacity: 1;
@@ -360,15 +357,15 @@ defineExpose({ focus, blur })
   }
 }
 .radio-disabled {
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--va-text-color-disabled);
   cursor: not-allowed;
   .radio-handle {
-    background-color: rgba(0, 0, 0, 0.04);
-    border-color: #d9d9d9;
+    background-color: var(--va-fill-color-1);
+    border-color: var(--va-border-color);
     cursor: not-allowed;
     &::after {
       transform: scale(0.5);
-      background-color: rgba(0, 0, 0, 0.25);
+      background-color: var(--va-text-color-disabled);
     }
   }
 }
@@ -379,8 +376,8 @@ defineExpose({ focus, blur })
   height: 32px;
   padding-inline: 15px;
   line-height: 30px;
-  background: #ffffff;
-  border: 1px solid #d9d9d9;
+  background: var(--va-bg-container-color);
+  border: 1px solid var(--va-border-color);
   border-top-width: 1px;
   border-left-width: 0;
   border-right-width: 1px;
@@ -392,8 +389,8 @@ defineExpose({ focus, blur })
   /* 焦点环经 .radio-focused 显示：键盘聚焦与脚本 focus() 在 input 的 focus / focus() 内置位，鼠标按下撤销——与圆点形态同口径（鼠标点击不显示焦点环；:focus-within 不区分聚焦来源，弃用） */
   &.radio-focused {
     z-index: 1;
-    border-color: var(--radio-primary-color);
-    box-shadow: 0 0 0 2px var(--radio-primary-shadow-color);
+    border-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
+    box-shadow: 0 0 0 2px var(--va-cp-radio-focus-shadow, var(--va-focus-shadow));
   }
   &:first-child {
     /* 只恢复左边框宽度：颜色由基类 border 简写提供，聚焦 / 选中态的 border-color 方能作用到左边框（写成 border-left 简写会与之同特异性且更晚，把左边框颜色改写死） */
@@ -414,7 +411,7 @@ defineExpose({ focus, blur })
     height: 100%;
     padding-block: 1px;
     box-sizing: content-box;
-    background-color: #d9d9d9;
+    background-color: var(--va-border-color);
     transition: background-color 0.3s;
     content: '';
   }
@@ -423,7 +420,7 @@ defineExpose({ focus, blur })
     border-end-end-radius: 6px;
   }
   &:not(.radio-button-disabled):hover {
-    color: var(--radio-primary-color);
+    color: var(--va-cp-radio-primary-color, var(--va-primary-color));
   }
 }
 .radio-button-single {
@@ -433,53 +430,53 @@ defineExpose({ focus, blur })
 }
 .radio-button-wrap.radio-button-checked:not(.radio-button-disabled) {
   z-index: 1;
-  color: var(--radio-primary-color);
-  background-color: #ffffff;
-  border-color: var(--radio-primary-color);
+  color: var(--va-cp-radio-primary-color, var(--va-primary-color));
+  background-color: var(--va-bg-container-color);
+  border-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
   &::before {
-    background-color: var(--radio-primary-color);
+    background-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
   }
 }
 /* 选中态 hover：文字 / 边框 / 相邻分隔线统一转为浅一档主色 */
 .radio-button-wrap.radio-button-checked:not(.radio-button-disabled):hover {
-  color: var(--radio-primary-color-hover);
-  border-color: var(--radio-primary-color-hover);
+  color: var(--va-cp-radio-primary-color-hover, var(--va-primary-color-hover));
+  border-color: var(--va-cp-radio-primary-color-hover, var(--va-primary-color-hover));
   &::before {
-    background-color: var(--radio-primary-color-hover);
+    background-color: var(--va-cp-radio-primary-color-hover, var(--va-primary-color-hover));
   }
 }
 /* 选中态按下：主色深一档 */
 .radio-button-wrap.radio-button-checked:not(.radio-button-disabled):active {
-  color: var(--radio-primary-color-active);
-  border-color: var(--radio-primary-color-active);
+  color: var(--va-cp-radio-primary-color-active, var(--va-primary-color-active));
+  border-color: var(--va-cp-radio-primary-color-active, var(--va-primary-color-active));
   &::before {
-    background-color: var(--radio-primary-color-active);
+    background-color: var(--va-cp-radio-primary-color-active, var(--va-primary-color-active));
   }
 }
 .radio-button-disabled {
-  color: rgba(0, 0, 0, 0.25);
-  background-color: rgba(0, 0, 0, 0.04);
-  border-color: #d9d9d9;
+  color: var(--va-text-color-disabled);
+  background-color: var(--va-fill-color-1);
+  border-color: var(--va-border-color);
   cursor: not-allowed;
 }
 .radio-button-disabled.radio-button-checked {
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: var(--va-fill-color-2);
 }
 .radio-button-solid.radio-button-checked:not(.radio-button-disabled) {
-  color: #fff;
-  background-color: var(--radio-primary-color);
-  border-color: var(--radio-primary-color);
+  color: var(--va-text-color-solid);
+  background-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
+  border-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
   /* 选中态 hover：实心底色浅一档 */
   &:hover {
-    color: #fff;
-    background-color: var(--radio-primary-color-hover);
-    border-color: var(--radio-primary-color-hover);
+    color: var(--va-text-color-solid);
+    background-color: var(--va-cp-radio-primary-color-hover, var(--va-primary-color-hover));
+    border-color: var(--va-cp-radio-primary-color-hover, var(--va-primary-color-hover));
   }
   /* 选中态按下：实心底色深一档 */
   &:active {
-    color: #fff;
-    background-color: var(--radio-primary-color-active);
-    border-color: var(--radio-primary-color-active);
+    color: var(--va-text-color-solid);
+    background-color: var(--va-cp-radio-primary-color-active, var(--va-primary-color-active));
+    border-color: var(--va-cp-radio-primary-color-active, var(--va-primary-color-active));
   }
 }
 .radio-button-small {
@@ -535,10 +532,10 @@ defineExpose({ focus, blur })
   animation-name: waveSpread, waveOpacity;
   @keyframes waveSpread {
     from {
-      box-shadow: 0 0 0.5px 0 var(--radio-primary-color);
+      box-shadow: 0 0 0.5px 0 var(--va-cp-radio-primary-color, var(--va-primary-color));
     }
     to {
-      box-shadow: 0 0 0.5px 5px var(--radio-primary-color);
+      box-shadow: 0 0 0.5px 5px var(--va-cp-radio-primary-color, var(--va-primary-color));
     }
   }
   @keyframes waveOpacity {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { VNode } from 'vue'
-import { useSlotsExist, useInject } from 'components/utils'
+import { useSlotsExist } from 'components/utils'
 export interface Gradient {
   '0%'?: string
   '100%'?: string
@@ -41,7 +41,6 @@ const props = withDefaults(defineProps<Props>(), {
   type: 'line'
 })
 defineSlots<ProgressSlots>()
-const { colorPalettes } = useInject('Progress') // 主题色注入
 const slotsExist = useSlotsExist(['success'])
 // 进度条宽度/进度圈宽高
 const progressSize = computed(() => {
@@ -97,10 +96,10 @@ const isGradientColor = computed(() => {
   }
   return false
 })
-// 进度条/圈颜色
+// 进度条/圈颜色：未传 lineColor 时取主色别名（组件实例的覆盖写在 --progress-primary-color 上）
 const lineColorComputed = computed(() => {
   if (props.lineColor === undefined) {
-    return colorPalettes.value[5]
+    return 'var(--va-cp-progress-primary-color, var(--va-primary-color))'
   } else if (typeof props.lineColor === 'string') {
     return props.lineColor
   } else {
@@ -154,7 +153,6 @@ const showSuccess = computed(() => {
     :style="`
       --progress-size: ${progressSize};
       --progress-primary-color: ${lineColorComputed};
-      --progress-success-color: #52c41a;
       --progress-font-size: ${progressInfoSize};
       --progress-border-radius: ${lineCap === 'round' ? '100px' : 0};
     `"
@@ -199,7 +197,6 @@ const showSuccess = computed(() => {
     :style="`
       --progress-size: ${progressSize};
       --progress-primary-color: ${isGradientColor ? `url(#${circleGradient})` : lineColorComputed};
-      --progress-success-color: #52c41a;
       --progress-font-size: ${progressInfoSize};
     `"
   >
@@ -274,7 +271,7 @@ const showSuccess = computed(() => {
   line-height: 1.5714285714285714;
   .progress-inner {
     width: 100%;
-    background: rgba(0, 0, 0, 0.06);
+    background: var(--va-fill-color-2);
     border-radius: 100px;
     overflow: hidden;
     .progress-bg {
@@ -307,7 +304,7 @@ const showSuccess = computed(() => {
       }
     }
     .line-success {
-      background: var(--progress-success-color) !important;
+      background: var(--va-success-color) !important;
     }
   }
   .progress-success {
@@ -320,14 +317,14 @@ const showSuccess = computed(() => {
     .icon-svg {
       display: inline-block;
       font-size: var(--progress-font-size);
-      color: var(--progress-success-color);
+      color: var(--va-success-color);
     }
     .progress-success-info {
       flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
       width: 40px;
       font-size: var(--progress-font-size);
       padding-left: 8px;
-      color: var(--progress-success-color);
+      color: var(--va-success-color);
     }
   }
   .progress-text {
@@ -339,7 +336,7 @@ const showSuccess = computed(() => {
     min-width: 40px;
     font-size: var(--progress-font-size);
     padding-left: 8px;
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
   }
 }
 .progress-circle-wrap {
@@ -349,7 +346,7 @@ const showSuccess = computed(() => {
   height: var(--progress-size);
   .progress-circle {
     .circle-trail {
-      stroke: rgba(0, 0, 0, 0.06);
+      stroke: var(--va-fill-color-2);
       stroke-dashoffset: 0;
       transition:
         stroke-dashoffset 0.3s ease 0s,
@@ -369,7 +366,7 @@ const showSuccess = computed(() => {
         opacity 0.3s ease 0s;
     }
     .circle-path-success {
-      stroke: var(--progress-success-color) !important;
+      stroke: var(--va-success-color) !important;
     }
   }
   .icon-svg {
@@ -381,7 +378,7 @@ const showSuccess = computed(() => {
     width: 30%;
     height: 30%;
     fill: currentColor;
-    color: var(--progress-success-color);
+    color: var(--va-success-color);
   }
   .progress-success-info {
     position: absolute;
@@ -392,7 +389,7 @@ const showSuccess = computed(() => {
     font-size: var(--progress-font-size);
     line-height: 1;
     text-align: center;
-    color: var(--progress-success-color);
+    color: var(--va-success-color);
   }
   .progress-text {
     position: absolute;
@@ -403,7 +400,7 @@ const showSuccess = computed(() => {
     font-size: var(--progress-font-size);
     line-height: 1;
     text-align: center;
-    color: rgba(0, 0, 0, 0.85);
+    color: var(--va-text-color-1);
   }
 }
 </style>

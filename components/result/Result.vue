@@ -965,7 +965,7 @@ const showExtra = computed(() => {
 .result-wrap {
   padding: 48px 32px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   .result-image {
     margin-bottom: 24px;
     text-align: center;
@@ -978,16 +978,16 @@ const showExtra = computed(() => {
       font-size: 72px;
     }
     .icon-info {
-      color: #1677ff;
+      color: var(--va-info-color);
     }
     .icon-success {
-      color: #52c41a;
+      color: var(--va-success-color);
     }
     .icon-warning {
-      color: #faad14;
+      color: var(--va-warning-color);
     }
     .icon-error {
-      color: #ff4d4f;
+      color: var(--va-error-color);
     }
     .result-icon {
       display: inline-block;
@@ -995,14 +995,14 @@ const showExtra = computed(() => {
     }
   }
   .result-title {
-    color: rgba(0, 0, 0, 0.88);
+    color: var(--va-text-color-1);
     font-size: 24px;
     line-height: 1.3333333333333333;
     margin: 8px 0;
     text-align: center;
   }
   .result-subtitle {
-    color: rgba(0, 0, 0, 0.45);
+    color: var(--va-text-color-3);
     font-size: 14px;
     line-height: 1.5714285714285714;
     text-align: center;
@@ -1020,7 +1020,7 @@ const showExtra = computed(() => {
   .result-content {
     margin-top: 24px;
     padding: 24px 40px;
-    background-color: rgba(0, 0, 0, 0.02);
+    background-color: var(--va-fill-color-4);
   }
 }
 </style>

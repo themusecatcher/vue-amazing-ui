@@ -16,7 +16,7 @@ _全局展示通知提醒信息_
 
 ## 使用方式
 
-| 调用方式 | API | 适用位置 |
+| 调用方式 | `API` | 适用位置 |
 | :-- | :-- | :-- |
 | 组件树内调用 <Tag color="success" size="small">推荐</Tag> | `useNotification()` | 组件 `setup` 内，需外层存在 `<NotificationProvider>` |
 | 脱离组件树调用 <Tag color="processing" size="small">无需 NotificationProvider</Tag> | `createDiscreteApi()` | 任意位置（`axios` 拦截器、路由守卫、`Pinia action` 等） |
@@ -29,7 +29,7 @@ _适用于组件内部调用：先在应用根节点放置一次 `<NotificationP
 
 ::: info 关于 `NotificationProvider` 与 `Notification`
 
-- `NotificationProvider` 内部渲染一个 `Notification` 组件，并通过 `provide/inject` 向下提供 `useNotification()` 所需的 API，自身不渲染任何可见内容
+- `NotificationProvider` 内部渲染一个 `Notification` 组件，并通过 `provide/inject` 向下提供 `useNotification()` 所需的 `API`，自身不渲染任何可见内容
 - 组件级配置属性（`top` / `bottom` / `duration` / `placement` / `keepAliveOnHover` / `maxCount` / `closable` / `scrollable` / `to`）会透传给内部的 `Notification`，因此直接参考下方 [Notification Props](#notification) 设置即可
 - 使用 `useNotification()` 时，组件级配置设置在 `<NotificationProvider>` 上（无法直接接触内部 `Notification`）；每条通知的个性化配置（`key` / `title` / `content` / `icon` / `action` / `meta` / `class` / `style` 等）则在调用 `open` / `info` 等方法时作为参数传入，参考 [NotificationOptions Type](#notificationoptions-type)
 
@@ -1430,7 +1430,7 @@ _调用时传入的 `NotificationOptions` 类型（`open` / `info` / `success` /
 | content? | 通知提醒内容，支持纯文本、`VNode` 与返回 `VNode` 的渲染函数三种形态 | string &#124; VNode &#124; (() => VNode) | undefined |
 | icon? | 自定义图标，支持 `VNode` 与返回 `VNode` 的渲染函数两种形态 | VNode &#124; (() => VNode) | undefined |
 | action? | 自定义操作区域（如底部按钮），渲染在通知底部右侧，支持三种形态 | string &#124; VNode &#124; (() => VNode) | undefined |
-| meta? | meta 信息，渲染在通知底部左侧，与 `action` 同行左右分布，支持三种形态 | string &#124; VNode &#124; (() => VNode) | undefined |
+| meta? | `meta` 信息，渲染在通知底部左侧，与 `action` 同行左右分布，支持三种形态 | string &#124; VNode &#124; (() => VNode) | undefined |
 | class? | 自定义类名 | string | undefined |
 | style? | 自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
 | closable? | 是否显示右上角关闭按钮，优先级高于组件级 `closable` | boolean | undefined |
@@ -1484,7 +1484,7 @@ _`close` 为 `<Notification>` / `<NotificationProvider>` 组件的事件（需�
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 | close | 通知提醒关闭时的回调，参数为该条通知的 `key` | (key: string) => void |
-| ready | 实例挂载完成时触发，参数为该实例的 api | (api: [NotificationApi](#methods)) => void |
+| ready | 实例挂载完成时触发，参数为该实例的 `api` | (api: [NotificationApi](#methods)) => void |
 
 ## 在 setup 外使用
 
@@ -1496,10 +1496,10 @@ _适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：�
 
 ::: tip 注意
 
-- 主题使用内置默认值；如需自定义，通过第二个参数 `configProviderProps`（支持 `Ref` / `computed` 响应式）显式传入，详见 [全局化配置 ConfigProvider「主题同步到离散 API」](/guide/components/config-provider.html#主题同步到离散-api)
+- 主题使用内置默认值；如需自定义，通过第二个参数 `configProviderProps`（支持 `Ref` / `computed` 响应式）显式传入，详见 [全局化配置 ConfigProvider「离散 API 的主题」](/guide/components/config-provider.html#离散-api-的主题)
 - 每次调用都会创建一套独立实例（独立的容器与通知栈），建议缓存返回值复用，避免重复创建；不再使用时可通过返回的 `dispose()` 销毁该实例
 - 内部会访问 `document`，`SSR` 场景请在客户端（点击回调、`onMounted` 等）中调用
-- 不建议与 `useNotification()` 在同一 App 中混用：两者各自持有独立的通知栈与挂载容器，`maxCount` / `placement` 等组件级配置互不共享
+- 不建议与 `useNotification()` 在同一 `App` 中混用：两者各自持有独立的通知栈与挂载容器，`maxCount` / `placement` 等组件级配置互不共享
 
 :::
 
@@ -1507,7 +1507,7 @@ _适用于 `axios` 拦截器、路由守卫、`Pinia action` 等任意位置：�
 
 _独立实例创建后不会随组件卸载自动销毁，也不会因内部通知全部关闭而回收，需根据使用场景决定是否手动 `dispose()`：_
 
-**场景 A · 全局单例，缓存复用（推荐）**：适用于 `axios` 拦截器、路由守卫、`Pinia action` 等常驻场景，整个应用生命周期内复用同一实例：
+**场景 `A` · 全局单例，缓存复用（推荐）**：适用于 `axios` 拦截器、路由守卫、`Pinia action` 等常驻场景，整个应用生命周期内复用同一实例：
 
 ```ts
 import { createDiscreteApi } from 'vue-amazing-ui'
@@ -1518,7 +1518,7 @@ const { notification } = createDiscreteApi(['notification'])
 notification.info({ title: 'Notification Title', content: '这是一条通知' })
 ```
 
-**场景 B · 临时使用后手动 `dispose()`**：适用于测试用例、单次任务等按需回收场景，用完即销毁：
+**场景 `B` · 临时使用后手动 `dispose()`**：适用于测试用例、单次任务等按需回收场景，用完即销毁：
 
 ```ts
 import { createDiscreteApi } from 'vue-amazing-ui'
