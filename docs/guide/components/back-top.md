@@ -12,20 +12,20 @@ _返回页面顶部的操作按钮_
 <script setup lang="ts">
 import { h, ref } from 'vue'
 import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@ant-design/icons-vue'
+const backTopTheme = {
+  components: {
+    BackTop: { primaryColor: '#d4380d' }
+  }
+}
 const defaultCustomStyle = {
   '--back-top-width': '54px',
   '--back-top-height': '54px',
   '--back-top-icon-size': '32px',
-  '--back-top-default-color-hover': '#d4380d'
 }
 const primaryCustomStyle = {
   '--back-top-width': '54px',
   '--back-top-height': '54px',
   '--back-top-icon-size': '32px',
-  '--back-top-primary-bg-color': '#d4380d',
-  '--back-top-primary-bg-color-hover': '#dd6747',
-  '--back-top-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
-  '--back-top-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
   '--back-top-square-border-radius': '18px'
 }
 const primaryDescCustomStyle = {
@@ -33,10 +33,6 @@ const primaryDescCustomStyle = {
   '--back-top-height': '54px',
   '--back-top-icon-with-description-size': '30px',
   '--back-top-description-font-size': '16px',
-  '--back-top-primary-bg-color': '#d4380d',
-  '--back-top-primary-bg-color-hover': '#dd6747',
-  '--back-top-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
-  '--back-top-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
   '--back-top-square-border-radius': '18px'
 }
 const scrollContainer = ref<HTMLDivElement>()
@@ -190,50 +186,9 @@ import { DoubleLeftOutlined, VerticalAlignTopOutlined, ArrowUpOutlined } from '@
 
 ## 自定义样式
 
-<BackTop :style="defaultCustomStyle" :right="280" :bottom="160" />
-<BackTop :style="primaryCustomStyle" type="primary" shape="square" :right="350" :bottom="160" />
-<BackTop
-  :style="primaryDescCustomStyle"
-  type="primary"
-  shape="square"
-  description="顶部"
-  :right="420"
-  :bottom="160"
-/>
+_尺寸 / 圆角变量仍可逐实例覆盖；主色请走 `theme.components.BackTop.primaryColor`（组件级主色，悬停色自动派生），阴影已统一为 `--va-popup-shadow`、不再单独覆盖_
 
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-const defaultCustomStyle = {
-  '--back-top-width': '54px',
-  '--back-top-height': '54px',
-  '--back-top-icon-size': '32px',
-  '--back-top-default-color-hover': '#d4380d'
-}
-const primaryCustomStyle = {
-  '--back-top-width': '54px',
-  '--back-top-height': '54px',
-  '--back-top-icon-size': '32px',
-  '--back-top-primary-bg-color': '#d4380d',
-  '--back-top-primary-bg-color-hover': '#dd6747',
-  '--back-top-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
-  '--back-top-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
-  '--back-top-square-border-radius': '18px'
-}
-const primaryDescCustomStyle = {
-  '--back-top-width': '54px',
-  '--back-top-height': '54px',
-  '--back-top-icon-with-description-size': '30px',
-  '--back-top-description-font-size': '16px',
-  '--back-top-primary-bg-color': '#d4380d',
-  '--back-top-primary-bg-color-hover': '#dd6747',
-  '--back-top-primary-shadow-color': 'rgba(221, 103, 71, 0.36)',
-  '--back-top-primary-shadow-color-hover': 'rgba(221, 103, 71, 0.36)',
-  '--back-top-square-border-radius': '18px'
-}
-</script>
-<template>
+<ConfigProvider :theme="backTopTheme">
   <BackTop :style="defaultCustomStyle" :right="280" :bottom="160" />
   <BackTop :style="primaryCustomStyle" type="primary" shape="square" :right="350" :bottom="160" />
   <BackTop
@@ -244,6 +199,49 @@ const primaryDescCustomStyle = {
     :right="420"
     :bottom="160"
   />
+</ConfigProvider>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+const backTopTheme = {
+  components: {
+    BackTop: { primaryColor: '#d4380d' }
+  }
+}
+const defaultCustomStyle = {
+  '--back-top-width': '54px',
+  '--back-top-height': '54px',
+  '--back-top-icon-size': '32px',
+}
+const primaryCustomStyle = {
+  '--back-top-width': '54px',
+  '--back-top-height': '54px',
+  '--back-top-icon-size': '32px',
+  '--back-top-square-border-radius': '18px'
+}
+const primaryDescCustomStyle = {
+  '--back-top-width': '54px',
+  '--back-top-height': '54px',
+  '--back-top-icon-with-description-size': '30px',
+  '--back-top-description-font-size': '16px',
+  '--back-top-square-border-radius': '18px'
+}
+</script>
+<template>
+  <ConfigProvider :theme="backTopTheme">
+    <BackTop :style="defaultCustomStyle" :right="280" :bottom="160" />
+    <BackTop :style="primaryCustomStyle" type="primary" shape="square" :right="350" :bottom="160" />
+    <BackTop
+      :style="primaryDescCustomStyle"
+      type="primary"
+      shape="square"
+      description="顶部"
+      :right="420"
+      :bottom="160"
+    />
+  </ConfigProvider>
 </template>
 ```
 

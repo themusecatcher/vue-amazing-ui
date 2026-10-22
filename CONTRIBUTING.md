@@ -39,6 +39,7 @@ Before writing a component, it is recommended to read the design implementation 
 | [`development/project-structure.md`](development/project-structure.md) | Project structure and directory layout |
 | [`development/import-export.md`](development/import-export.md) | Import and export conventions |
 | [`development/component-design.md`](development/component-design.md) | Component design conventions (including the theme system) |
+| [`development/theme-system.md`](development/theme-system.md) | Theme system implementation notes |
 | [`development/demo-doc-guide.md`](development/demo-doc-guide.md) | Demo and documentation writing conventions |
 | [`development/build-system.md`](development/build-system.md) | Build artifacts (including testing) |
 
@@ -141,7 +142,7 @@ pnpm lint:check   # ESLint check only (does not modify files)
 pnpm type-check   # Type checking
 pnpm test         # Unit tests (vitest)
 pnpm check        # Aggregate check: lint:check + format:check + type-check + test
-pnpm verify       # Heavyweight gate: build + dependency consistency + on-demand verification + artifact guard (pre-release / CI)
+pnpm verify       # Heavyweight gate: build + dependency consistency + on-demand verification + theme architecture guard + artifact guard (pre-release / CI)
 ```
 
 Before committing, it is recommended to run `pnpm check` locally and make sure it passes before pushing.

@@ -57,13 +57,31 @@ const markParent = shallowRef<HTMLElement | null>(null)
 // SSR（Node）环境无 document，htmlRef 为 null；浏览器端仍指向 <html> 元素
 const htmlRef = shallowRef<HTMLElement | null>(typeof document !== 'undefined' ? document.documentElement : null) // <html></html>元素
 /**
- * 水印默认色：canvas 读不到 CSS 变量，故从 Provider 的只读快照取值（这是快照的既定用途之一）。
- * 优先级：显式 `textStyle.color` > 主题派生值 > 无 Provider 时的浅色默认。
+ * 水印默认色：canvas 读不到 CSS 变量，故按优先级取色——
+ * 1. 显式 `textStyle.color`；
+ * 2. Provider 的只读快照（既定用途之一）；
+ * 3. 无 Provider 时回读 `<html>` 上的静态变量表（`:root` / `[data-va-mode]` 已声明两个模式的全量表，
+ *    首帧与重绘时两套模式都正确；纯 CSS 在运行期改 `<html>` 属性不会触发重绘，跟随明暗请用 Provider 的 `mode`）；
+ * 4. SSR 等拿不到 DOM 时才回落浅色默认。
  */
 const themeSnapshot = inject(THEME_SNAPSHOT_KEY, null)
-const resolvedTextColor = computed(
-  () => props.textStyle.color ?? themeSnapshot?.value?.['--va-fill-color-3'] ?? 'rgba(0, 0, 0, 0.15)'
-)
+const resolvedTextColor = computed(() => {
+  if (props.textStyle.color) {
+    return props.textStyle.color
+  }
+  const snapshotColor = themeSnapshot?.value?.['--va-fill-color-3']
+  if (snapshotColor) {
+    return snapshotColor
+  }
+  // 静态变量表随每份样式产物下发，无 Provider 的纯 CSS 暗色（直接写 data-va-mode）也能取到模式正确的值
+  if (typeof document !== 'undefined') {
+    const staticColor = getComputedStyle(document.documentElement).getPropertyValue('--va-fill-color-3').trim()
+    if (staticColor) {
+      return staticColor
+    }
+  }
+  return 'rgba(0, 0, 0, 0.15)'
+})
 const stopObservation = shallowRef(false)
 const gapX = computed(() => props.gap?.[0] ?? 100)
 const gapY = computed(() => props.gap?.[1] ?? 100)

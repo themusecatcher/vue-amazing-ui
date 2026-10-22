@@ -86,7 +86,7 @@ _组件库的核心能力：**种子 → 派生 → `CSS` 变量 → 组件消�
 - **覆盖有层次**：`seed` → `components` → 组件令牌 → 实例 `prop` / 行内样式，越往后越局部；
 - **浮层跟随**：`Teleport` 到 `body` 的弹窗 / 下拉 / 消息由库自动转发当前作用域令牌，无需手工处理。
 
-详见[定制主题](/guide/customize-theme)，组件级令牌见[同页附录](/guide/customize-theme#组件级令牌)。
+详见[定制主题](/guide/customize-theme)，组件级令牌见[同页附录](/guide/customize-theme#组件级令牌与整组覆盖)。
 
 ## 使用方式
 

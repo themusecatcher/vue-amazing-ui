@@ -220,7 +220,8 @@ I cant get no, I cant get no`,
       h(
         'a',
         {
-          style: 'color: var(--notification-primary-color); cursor: pointer; font-weight: 500; user-select: none',
+          style:
+            'color: var(--va-cp-notification-primary-color, var(--va-primary-color)); cursor: pointer; font-weight: 500; user-select: none',
           onClick: () => {
             markAsRead = true
             handle.destroy()

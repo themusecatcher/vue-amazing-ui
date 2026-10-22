@@ -448,7 +448,7 @@ export function derive(seed: ThemeSeed = {}, mode: ResolvedMode = 'light'): Them
  * 按实例色派生状态集合（供 `Button.color` 等组件级颜色 props 使用）
  *
  * 只把使用方给的一个颜色展开成与 `--va-*` 同构的状态，组件写到组件私有变量。
- * 索引规则与全局主题一致（色阶 5 / 6 / 7 / 1 / 3 档）。
+ * 索引规则与全局主题一致（常态 / 悬停 / 按下 / 浅底 / 描边取色阶 6 / 5 / 7 / 1 / 3 档）。
  *
  * `mode` 必须由调用方从当前主题作用域取（`THEME_MODE_KEY`）：实例色的 hover / active
  * 在深浅模式下取的是不同色阶档位，固定 light 会让暗色下的自定义色按钮偏亮一档。

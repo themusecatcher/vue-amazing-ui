@@ -57,7 +57,7 @@ function readVarNames() {
 /** 契约规模：增删变量必须同步更新脚本、文档与测试三处口径 */
 const EXPECTED_VAR_COUNT = 40
 /** 组件公开令牌规模（`components/theme/component-vars.js` 与生成文档同口径） */
-const EXPECTED_COMPONENT_VAR_COUNT = 48
+const EXPECTED_COMPONENT_VAR_COUNT = 51
 
 const varNames = readVarNames()
 const varNameSet = new Set(varNames)
@@ -267,13 +267,13 @@ componentFiles.forEach((file) => {
 // 已有公开令牌映射的组件（Button / Slider / Menu）由注册表消费点覆盖，不再要求桥。
 const PUBLIC_THEME_COMPONENTS = new Set(COMPONENT_THEME_NAMES)
 const themeComponentDirs = new Set()
-function readDirSources(dir) {
+function readDirSources(dir, extensions = ['.vue', '.ts', '.less']) {
   let sources = ''
   readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
     const fullPath = resolve(dir, entry.name)
     if (entry.isDirectory()) {
-      sources += readDirSources(fullPath)
-    } else if (['.vue', '.ts', '.less'].some((ext) => entry.name.endsWith(ext))) {
+      sources += readDirSources(fullPath, extensions)
+    } else if (extensions.some((ext) => entry.name.endsWith(ext))) {
       sources += readFileSync(fullPath, 'utf-8')
     }
   })
@@ -318,6 +318,10 @@ componentFiles.forEach((file) => {
     // 只校验 `--va-*` 契约；组件私有变量由 ⑨ 悬空引用规则处理。
     // 以 `-` 结尾的是动态拼接 / 注释里的占位名（如 `var(--va-*)`），跳过。
     if (!name.startsWith('--va-') || name.endsWith('-')) {
+      continue
+    }
+    // `--va-local-*` 是组件自有本地变量：规则 ③ 放行声明，引用同样放行（与 component-vars.spec.ts 口径一致）
+    if (name.startsWith('--va-local-')) {
       continue
     }
     if (!varNameSet.has(name) && !componentVarSet.has(name) && !GLOBAL_VAR_WHITELIST.has(name)) {
@@ -528,6 +532,20 @@ componentFiles.forEach((file) => {
     }
   })
 })
+
+// ⑩ 演示 / 文档中的桥变量引用必须带 fallback：`--va-cp-*` 只在配置了组件级主色时由 Provider 写入，
+//    缺回退时整条声明会被浏览器丢弃，表现为「示例颜色静默失效」（calendar / notification 示例各踩过一次）。
+const bridgeRefWithoutFallback = /var\((--va-cp-[a-z0-9-]+)\)/g
+const bridgeDemoSources = [
+  readDirSources(resolve(rootDir, 'src', 'views'), ['.vue', '.ts', '.less']),
+  readDirSources(resolve(rootDir, 'docs', 'guide', 'components'), ['.vue', '.ts', '.less', '.md'])
+].join('\n')
+const bridgeOffenders = [
+  ...new Set([...stripComments(bridgeDemoSources).matchAll(bridgeRefWithoutFallback)].map((matched) => matched[1]))
+]
+if (bridgeOffenders.length > 0) {
+  failures.push(`演示 / 文档中的桥变量缺少回退值（无组件级主色配置时整条声明会被丢弃）：${bridgeOffenders.join('、')}`)
+}
 
 warnings.forEach((warning) => console.warn(`⚠️  [verify-theme] ${warning}`))
 if (failures.length > 0) {

@@ -12,8 +12,8 @@
 | `docs/` | VitePress 文档站（`pnpm docs:dev` 启动） |
 | `types/` | 全局类型声明（`env.d.ts` 环境变量、`global-components.d.ts` 全局组件） |
 | `tests/` | Vitest 测试用例 |
-| `scripts/` | 发布 / 部署脚本（`deploy.sh` / `publish.sh` / `push.sh`）、发布前守卫（`prepublish-guard.js`）与产物级校验脚本（`parse-style-deps.js` / `verify-style-deps.js` / `verify-on-demand.js`） |
-| `build/` | 构建后处理（`merge-component-styles.ts` 合并同一 SFC 的编号 CSS、`generate-style-entries.ts` 生成每组件样式入口），由 `vite.config.ts` 的 `closeBundle` 调用 |
+| `scripts/` | 发布 / 部署脚本（`deploy.sh` / `publish.sh` / `push.sh`）、发布前守卫（`prepublish-guard.js`）与产物级校验脚本（`parse-style-deps.js` / `verify-style-deps.js` / `verify-on-demand.js` / `verify-theme.js` / `component-vars-check.js` / `gen-component-vars-doc.js`） |
+| `build/` | 构建后处理（`merge-component-styles.ts` 合并同一 SFC 的编号 CSS、`generate-style-entries.ts` 生成每组件样式入口、`gen-theme.ts` 生成主题静态变量表），由 `vite.config.ts` 的 `closeBundle` 调用（`gen-theme.ts` 由 `theme-css` 插件在 `buildStart` 调用） |
 | `vite.config.ts` | 构建配置（三产物 dist / es / lib） |
 | `tsconfig.*.json` | 各环境 TypeScript 配置 |
 | `vitest.config.ts` | 测试配置（独立于 vite.config.ts） |
@@ -66,7 +66,7 @@ components/
 >
 > 每个「拥有独立样式的可独立引入组件」必须独占一个产物目录：构建期样式入口按组件产物目录聚合（`build/generate-style-entries.ts`），同目录的多个组件会被合并为一个 `style/index.js`，故禁止为减少目录层级而把多个组件平铺到同一目录（会连带引入无关组件的样式）。
 >
-> **库内引入路径**：目录入口 `index.ts` 是该目录的唯一汇总出口，**跨目录**引用一律走目标目录入口（如 `components/radio`、`components/picker`），禁止 `components/<dir>/<子目录>` / `components/<dir>/<文件>` 与相对文件写法 `../<dir>/<文件>` / `./<子目录>/<文件>`。跨目录需要目录内的辅助模块（如 `picker/date-utils.ts`、`picker/keyboard.ts`）时，须由该目录 `index.ts` 先汇总再引入。**同一目录/同一族内部不受此限**：兄弟文件（`./date-utils`）、族内父目录辅助模块（`../siderHook`）与子目录入口（`./descriptions-item`）可直接引 —— 经 `index.ts` 中转会形成循环依赖。仅三类例外可直接引具体文件：① `utils/type`（组件入口装配函数）与 `utils/resolver`（按需引入专用，包根已单独导出），另放行 `components/index.ts` 的 `./style/global.less` 副作用引入；② `components/config-provider/context`（主题注入键的集中定义处，十几个组件按需 `inject`，经组件入口引入会把 `ConfigProvider.vue` 一并带进每个组件的依赖图）；③ 测试用例直引被测实现文件（便于锁定单个 SFC / 纯函数）。上述约束由 `eslint.config.js` 的 `custom/no-deep-component-imports` 强制（别名深引入 + 两个方向的相对文件深引入；同目录兄弟、父目录辅助模块、目录入口不拦）。`utils/style-deps` / `utils/vendor-styles` 是构建期 SSOT，只允许 `vite.config.ts` / `build/` / 测试引用，**组件内禁止引入**（不设 ESLint 例外）；其中 `vendor-styles` 还被 `tsconfig.dts.json` 排除、无 d.ts，纳入 `utils/index.ts` 会让 `utils/index.d.ts` 引用不存在的模块，属硬性约束。
+> **库内引入路径**：目录入口 `index.ts` 是该目录的唯一汇总出口，**跨目录**引用一律走目标目录入口（如 `components/radio`、`components/picker`），禁止 `components/<dir>/<子目录>` / `components/<dir>/<文件>` 与相对文件写法 `../<dir>/<文件>` / `./<子目录>/<文件>`。跨目录需要目录内的辅助模块（如 `picker/date-utils.ts`、`picker/keyboard.ts`）时，须由该目录 `index.ts` 先汇总再引入。**同一目录/同一族内部不受此限**：兄弟文件（`./date-utils`）、族内父目录辅助模块（`../siderHook`）与子目录入口（`./descriptions-item`）可直接引 —— 经 `index.ts` 中转会形成循环依赖。仅四类例外可直接引具体文件：① `utils/type`（组件入口装配函数）与 `utils/resolver`（按需引入专用，包根已单独导出），另放行 `components/index.ts` 的 `./style/global.less` 副作用引入；② `components/config-provider/context`（主题注入键的集中定义处，十几个组件按需 `inject`，经组件入口引入会把 `ConfigProvider.vue` 一并带进每个组件的依赖图）；③ `utils/log`（告警 / 日志统一出口，主题派生层不能引 utils 汇总入口，否则形成循环依赖）；④ 测试用例直引被测实现文件（便于锁定单个 SFC / 纯函数）。上述约束由 `eslint.config.js` 的 `custom/no-deep-component-imports` 强制（别名深引入 + 两个方向的相对文件深引入；同目录兄弟、父目录辅助模块、目录入口不拦）。`utils/style-deps` / `utils/vendor-styles` 是构建期 SSOT，只允许 `vite.config.ts` / `build/` / 测试引用，**组件内禁止引入**（不设 ESLint 例外）；其中 `vendor-styles` 还被 `tsconfig.dts.json` 排除、无 d.ts，纳入 `utils/index.ts` 会让 `utils/index.d.ts` 引用不存在的模块，属硬性约束。
 >
 > 三级路径收敛对产物的影响：**纯转发**入口（`picker/index.ts`）会被 Rollup 穿透，产物 import 直接改指源模块、不生成 `picker/index.js`，按需体积不变；**带本地绑定**的族入口（如 `radio/index.ts` 的 `withInstall` 默认导出）会保留为 `index.js`，产物中 `import { RadioGroup } from '../radio/index.js'` 仍保留具名符号 —— `pnpm verify:deps` 会读取该入口的导出映射，把具名导入还原到实际源模块后再推导依赖边，因此不需要在 `EXEMPTIONS` 中登记（该清单只保留 chunk 图原理上无法表达的合法依赖：异步 `import()`、条件渲染、跨包耦合，以及同目录共享纯 JS 模块被目录兜底误判 —— 如 `LayoutSider` 与 `Layout` 共用 `layout/siderHook.ts`）。
 >
@@ -114,9 +114,9 @@ components/
 | `index.ts` | barrel 汇总，按分组 `export *` |
 | `format.ts` | 日期 / 数字格式化 |
 | `math.ts` | 精度计算 |
-| `function.ts` | 节流防抖、rAF 定时器 |
-| `dom.ts` | DOM 操作、文件下载、暗黑模式切换 |
-| `hooks.ts` | 通用 Hooks（挂载状态 / 插槽检测 / 主题注入等） |
+| `function.ts` | 节流防抖、唯一 key 生成 |
+| `dom.ts` | DOM 操作、文件下载、滚动锁 |
+| `hooks.ts` | 通用 Hooks（挂载状态 / 能力检测 / 事件监听 / 插槽检测等） |
 | `observers.ts` | DOM 观察与滚动监听 Hooks |
 | `position.ts` | 弹出定位 composable |
 | `z-index.ts` | 浮层层级（z-index）管理层（`useZIndex` / `createZIndexManager` 与注入键） |
@@ -130,7 +130,7 @@ components/
 | `style-deps.ts` | 样式依赖表（单一数据源：`componentsMap` / `styleSources` / `componentDependencies` / `stylelessComponents`） |
 | `vendor-styles.ts` | 第三方样式依赖清单（单一数据源） |
 
-> `index.ts` 是 barrel，只汇总 `format` / `math` / `function` / `dom` / `color` / `hooks` / `observers` / `position` / `z-index` / `floating-mount` / `inherit-font` / `sider-collapsed` / `render` / `warn` 十四组；`type` / `resolver` / `style-deps` / `vendor-styles` 不属于 barrel 成员，需从具体文件引入（如 `import { withInstall } from 'components/utils/type'`）。工具函数的功能与使用说明见官方文档站 `docs/utils/functions/`。
+> `index.ts` 是 barrel，只汇总 `format` / `math` / `function` / `dom` / `hooks` / `observers` / `position` / `z-index` / `floating-mount` / `inherit-font` / `sider-collapsed` / `log` / `render` 十三组；`type` / `resolver` / `style-deps` / `vendor-styles` 不属于 barrel 成员，需从具体文件引入（如 `import { withInstall } from 'components/utils/type'`）。工具函数的功能与使用说明见官方文档站 `docs/utils/functions/`。
 
 ### style/global.less
 

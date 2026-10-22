@@ -241,7 +241,7 @@ function onScrollEnd(e: Event, direction: 'left' | 'right' | 'top' | 'bottom') {
 
 ## 自定义样式
 
-_可通过设置 `size` 属性，自定义相关 `--scrollbar` 变量进行各种样式自定义_
+_可通过设置 `size` 属性，并用 `--va-scrollbar-*` 令牌（滑块颜色）与 `--scrollbar-*` 变量（轨道偏移）自定义样式_
 
 <br/>
 
@@ -249,12 +249,12 @@ _可通过设置 `size` 属性，自定义相关 `--scrollbar` 变量进行各�
   style="
     max-height: 120px;
     border-radius: 12px;
-    --scrollbar-color: rgba(0, 0, 0, 0.45);
-    --scrollbar-color-hover: rgba(0, 0, 0, 0.65);
+    --va-scrollbar-color: var(--va-text-color-3);
+    --va-scrollbar-color-hover: var(--va-text-color-2);
     --scrollbar-rail-vertical-right: 2px 6px 2px auto;
   "
   :size="8"
-  :content-style="{ backgroundColor: '#e6f4ff', padding: '16px 24px', fontSize: '16px' }"
+  :content-style="{ backgroundColor: 'var(--va-primary-bg-color)', padding: '16px 24px', fontSize: '16px', borderRadius: '12px' }"
 >
   我们在田野上面找猪<br />
   想象中已找到了三只<br />
@@ -283,12 +283,12 @@ _可通过设置 `size` 属性，自定义相关 `--scrollbar` 变量进行各�
     style="
       max-height: 120px;
       border-radius: 12px;
-      --scrollbar-color: rgba(0, 0, 0, 0.45);
-      --scrollbar-color-hover: rgba(0, 0, 0, 0.65);
+      --va-scrollbar-color: var(--va-text-color-3);
+      --va-scrollbar-color-hover: var(--va-text-color-2);
       --scrollbar-rail-vertical-right: 2px 6px 2px auto;
     "
     :size="8"
-    :content-style="{ backgroundColor: '#e6f4ff', padding: '16px 24px', fontSize: '16px' }"
+    :content-style="{ backgroundColor: 'var(--va-primary-bg-color)', padding: '16px 24px', fontSize: '16px', borderRadius: '12px' }"
   >
     我们在田野上面找猪<br />
     想象中已找到了三只<br />

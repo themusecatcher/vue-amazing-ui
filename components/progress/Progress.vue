@@ -96,7 +96,7 @@ const isGradientColor = computed(() => {
   }
   return false
 })
-// 进度条/圈颜色：未传 lineColor 时取主色别名（组件实例的覆盖写在 --progress-primary-color 上）
+// 进度条/圈颜色：未传 lineColor 时取组件级主色桥 → 全局主色
 const lineColorComputed = computed(() => {
   if (props.lineColor === undefined) {
     return 'var(--va-cp-progress-primary-color, var(--va-primary-color))'
@@ -139,8 +139,17 @@ const circleColorTo = computed(() => {
   }
   return undefined
 })
+// 进度值钳制：负数 / 非数按 0 处理，超过 100 按 100 处理。
+// 否则 `width: -20%` / `width: NaN%` 会被浏览器整条丢弃，进度条退化成满格。
+const validPercent = computed(() => {
+  const percent = Number(props.percent)
+  if (!Number.isFinite(percent) || percent < 0) {
+    return 0
+  }
+  return percent > 100 ? 100 : percent
+})
 const showPercent = computed(() => {
-  return props.format(props.percent > 100 ? 100 : props.percent)
+  return props.format(validPercent.value)
 })
 const showSuccess = computed(() => {
   return slotsExist.success || props.success
@@ -159,13 +168,13 @@ const showSuccess = computed(() => {
   >
     <div class="progress-inner">
       <div
-        :class="['progress-bg', { 'line-success': percent >= 100 && !isGradientColor }]"
-        :style="`width: ${percent >= 100 ? 100 : percent}%; height: ${progressLineSize}px;`"
+        :class="['progress-bg', { 'line-success': validPercent >= 100 && !isGradientColor }]"
+        :style="`width: ${validPercent}%; height: ${progressLineSize}px;`"
       ></div>
     </div>
     <template v-if="showInfo">
       <Transition name="fade" mode="out-in">
-        <span v-if="percent >= 100" class="progress-success">
+        <span v-if="validPercent >= 100" class="progress-success">
           <svg
             v-if="showSuccess === undefined"
             class="icon-svg"
@@ -186,7 +195,7 @@ const showSuccess = computed(() => {
           </p>
         </span>
         <p v-else class="progress-text">
-          <slot name="format" :percent="percent">{{ showPercent }}</slot>
+          <slot name="format" :percent="validPercent">{{ showPercent }}</slot>
         </p>
       </Transition>
     </template>
@@ -219,17 +228,17 @@ const showSuccess = computed(() => {
         :d="path"
         :stroke-linecap="lineCap"
         class="circle-path"
-        :class="{ 'circle-path-success': percent >= 100 && !isGradientColor }"
+        :class="{ 'circle-path-success': validPercent >= 100 && !isGradientColor }"
         :stroke-width="progressLineSize"
-        :style="`stroke-dasharray: ${(percent / 100) * perimeter}px, ${perimeter}px;`"
-        :opacity="percent === 0 ? 0 : 1"
+        :style="`stroke-dasharray: ${(validPercent / 100) * perimeter}px, ${perimeter}px;`"
+        :opacity="validPercent === 0 ? 0 : 1"
         fill-opacity="0"
       ></path>
     </svg>
     <template v-if="showInfo">
       <Transition name="fade" mode="out-in">
         <svg
-          v-if="showSuccess === undefined && percent >= 100"
+          v-if="showSuccess === undefined && validPercent >= 100"
           class="icon-svg"
           focusable="false"
           data-icon="check"
@@ -243,11 +252,11 @@ const showSuccess = computed(() => {
             d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 00-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"
           ></path>
         </svg>
-        <p v-else-if="percent >= 100" class="progress-success-info">
+        <p v-else-if="validPercent >= 100" class="progress-success-info">
           <slot name="success">{{ success }}</slot>
         </p>
         <p v-else class="progress-text">
-          <slot name="format" :percent="percent">{{ showPercent }}</slot>
+          <slot name="format" :percent="validPercent">{{ showPercent }}</slot>
         </p>
       </Transition>
     </template>
@@ -308,7 +317,8 @@ const showSuccess = computed(() => {
     }
   }
   .progress-success {
-    width: 40px;
+    // 与 .progress-text 一致用 min-width：自定义 success 文案较长时随内容撑开，而不是溢出固定 40px
+    min-width: 40px;
     text-align: center;
     display: inline-flex;
     align-items: center;
@@ -321,7 +331,7 @@ const showSuccess = computed(() => {
     }
     .progress-success-info {
       flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
-      width: 40px;
+      min-width: 40px;
       font-size: var(--progress-font-size);
       padding-left: 8px;
       color: var(--va-success-color);

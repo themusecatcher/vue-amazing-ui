@@ -198,13 +198,13 @@ es/tooltip/style/index.js
 > - 若组件无样式文件，还需登记到 `stylelessComponents` 白名单（见 [component-design.md](component-design.md)）。
 > - 若新增的是全局提示类 Provider 组件，需在 `styleSources` 中登记其底层组件（见上文 resolver 章节）。
 > - **若新增的是子组件**（如 `Select` 的 `SelectOption` / `SelectOptGroup`），除上述三步外还需四处登记：① 组件级 `index.ts` 用**本地常量再导出**持有绑定（`export const SelectOption = SelectOptionComp`），禁止纯转发；② `components/components.ts` 按其自身具名导出追加（`export { default as Select, SelectOption, SelectOptGroup } from './select'`）；③ `style-deps.ts` 的 `componentsMap` 登记其自身样式目录，并在 `styleSources` 登记其样式来源的父组件；④ `types/global-components.d.ts` 的 `GlobalComponents` 登记组件名。目录形态与纯转发成因见 [project-structure.md](project-structure.md)。
-> - 自检：`pnpm check` 全绿后执行 `pnpm verify`（= 构建 → 依赖一致性 → 按需引入验证 → 产物守卫）。漏填 / 拼错依赖名会在**库构建期**直接失败，不再等消费方发现样式缺失。
+> - 自检：`pnpm check` 全绿后执行 `pnpm verify`（= 构建 → 依赖一致性 → 按需引入验证 → 主题架构守护 → 产物守卫）。漏填 / 拼错依赖名会在**库构建期**直接失败，不再等消费方发现样式缺失。
 
 ## 新增工具函数 Checklist
 
 工具函数 / Hooks 涉及「barrel + 入口 + 文档」三处登记，缺一处会导致无法从包总出口引入，或文档站不显示：
 
-1. **建函数**：在 `components/utils/` 的对应分组文件中新增并导出（`format` / `math` / `function` / `dom` / `color` / `hooks` / `observers` / `position` / `z-index` / `floating-mount` / `render` / `warn`）。
+1. **建函数**：在 `components/utils/` 的对应分组文件中新增并导出（`format` / `math` / `function` / `dom` / `hooks` / `observers` / `position` / `z-index` / `floating-mount` / `inherit-font` / `sider-collapsed` / `log` / `render`）。
 2. **登记 barrel 与入口**：确认所属分组已被 `components/utils/index.ts` 的 `export *` 覆盖；再到 `components/index.ts` 的导出列表中显式登记函数名（公开类型用 `export type` 一并登记）。仅供组件内部复用的实现细节函数（如 `getParentElement` / `renderContentToVNode` / `createKeyGenerator` / `getFloatingBoundaryRect` / `injectFromChain`）与通用 Hook（如 `useWave` / `useWindowWidth`）**未从主入口导出**（不登记入口，仅从 barrel 供组件内部引入），不承诺 API 稳定性。
 3. **登记文档**：在 `docs/utils/functions/` 新增一篇或归入既有 md；并在 `docs/.vitepress/config.ts` 的 `sidebar['/utils/']` 「工具」分组登记链接。
 

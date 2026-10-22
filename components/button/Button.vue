@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject } from 'vue'
+import { computed, inject, watch } from 'vue'
 import type { Ref, VNode } from 'vue'
 import { THEME_MODE_KEY } from 'components/config-provider/context'
 import { deriveColorStates } from 'components/theme'
@@ -46,6 +46,17 @@ const props = withDefaults(defineProps<Props>(), {
 })
 defineSlots<ButtonSlots>()
 const { wave, startWave, endWave } = useWave()
+// 禁用时波纹节点被移除，`animationend` 也就不会再回来复位；若置为禁用发生在动画结束前，
+// `wave` 会一直残留到重新启用，元素重新挂载时 `wave-active` 会让波纹凭空播一次（没有点击来源）。
+// 故在进入禁用态时主动复位。
+watch(
+  () => props.disabled,
+  (disabled: boolean) => {
+    if (disabled) {
+      endWave()
+    }
+  }
+)
 // 当前主题作用域的模式：实例色的 hover / active 在深浅模式取不同色阶档位，必须跟着走
 const themeMode = inject<Ref<ResolvedMode> | null>(THEME_MODE_KEY, null)
 // 实例色：传 color 时按该色派生主色状态并写到组件公开令牌上；未传时沿用全局别名（见样式内默认值）。
@@ -56,13 +67,17 @@ const buttonThemeStyle = computed<Record<string, string>>(() => {
     return {}
   }
   const states = deriveColorStates(props.color, themeMode?.value ?? 'light')
-  return {
+  const style: Record<string, string> = {
     '--va-button-primary-color': states.base,
     '--va-button-primary-color-hover': states.hover,
     '--va-button-primary-color-active': states.active,
-    '--va-button-solid-text-color': states.solid,
-    '--button-ripple-color': states.base
-  } as Record<string, string>
+    '--va-button-solid-text-color': states.solid
+  }
+  // 文字 / 链接按钮的波纹固定透明（见 .btn-text / .btn-link 的声明），不随实例色改写
+  if (props.type !== 'text' && props.type !== 'link') {
+    style['--button-ripple-color'] = states.base
+  }
+  return style
 })
 const emit = defineEmits(['click'])
 const slotsExist = useSlotsExist(['icon', 'default'])
@@ -307,6 +322,8 @@ function onKeyboard(e: KeyboardEvent) {
   }
 }
 .btn-danger {
+  // 波纹跟随危险色：波纹的回落链默认取主色，不声明会在这里显示成蓝色
+  --button-ripple-color: var(--va-button-danger-color, var(--va-error-color));
   color: var(--va-button-solid-text-color, var(--va-text-color-solid));
   background-color: var(--va-button-danger-color, var(--va-error-color));
   border-color: var(--va-button-danger-color, var(--va-error-color));

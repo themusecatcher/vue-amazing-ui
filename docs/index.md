@@ -60,7 +60,6 @@ function fetchDesc () {
 }
 onMounted(() => {
   setLabel(pkg.version)
-  // fetchVersion()
   fetchDesc()
 })
 </script>

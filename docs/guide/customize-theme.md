@@ -6,9 +6,13 @@ description: '通过 ConfigProvider 的 7 个颜色种子定制主题，默认�
 
 <GlobalElement />
 
-`Vue Amazing UI` 的主题有**四层配置面**：`7` 个颜色种子（改整套）→ 组件级主色 `theme.components`（改某个组件的整套主色）→ 全局语义变量 `--va-*`（改某个作用域）→ [组件令牌](#组件级令牌与整组覆盖)（改单个视觉面）。默认颜色全部由派生函数按种子计算，组件样式只消费语义变量 `--va-*`，因此改一个种子，常态 / 悬停 / 按下 / 浅底 / 描边会同步变化。
+`Vue Amazing UI` 的主题在**颜色维度有四层配置面**：`7` 个颜色种子（改整套）→ 组件级主色 `theme.components`（改某个组件的整套主色）→ 全局语义变量 `--va-*`（改某个作用域）→ [组件令牌](#组件级令牌与整组覆盖)（改单个视觉面）；此外还有模式维度（`theme.mode`）与组件实例自身的 `prop` / `style`（见 [ConfigProvider 的配置面](/guide/components/config-provider.html#配置面-从全局到实例)）。默认颜色全部由派生函数按种子计算，组件样式只消费语义变量 `--va-*`，因此改一个种子，常态 / 悬停 / 按下 / 浅底 / 描边会同步变化。
 
-派生规则：每个种子色先摊成 `10` 级色阶（第 `1` 档最浅、第 `10` 档最深），再按固定档位映射语义角色 —— 浅底取第 `1` 档、描边第 `3` 档、链接悬停第 `4` 档、悬停第 `5` 档、常态与主色文字第 `6` 档、按下第 `7` 档。
+<br/>
+
+派生规则：每个种子色先摊成 `10` 级色阶（第 `1` 档最浅、第 `10` 档最深），再按固定档位映射语义角色 —— 浅底取第 `1` 档、描边第 `3` 档、链接悬停第 `4` 档、悬停第 `5` 档、常态与主色文字第 `6` 档、按下第 `7` 档。暗色的色阶方向相反，悬停 / 按下改取第 `7` / `5` 档（链接悬停两模式共用悬停档），常态与主色文字仍取第 `6` 档。
+
+<br/>
 
 默认主题色为 <Tag :bordered="false" color="#1677ff">#1677ff</Tag>，无需任何配置。
 
@@ -115,7 +119,7 @@ const theme: ConfigProviderTheme = {
 
 - 组件配置优先于 `seed`：`Button` 用 `#18a058` 派生，其余组件仍用 `#1677ff`；
 - 组件主色与 `seed` 共用同一校验口径：接受 `#rgb` / `#rrggbb` / `#rrggbbff`（`alpha` 必须为 `ff`），非法值告警并忽略该组件配置；
-- 组件的样式只要消费主色语义，就已接线组件级主色；当前覆盖 `39` 个组件，完整清单见[组件级令牌](#组件级令牌与整组覆盖)。未登记的组件键会在开发环境告警，不会静默生效；
+- 当前有 `39` 个组件接入了组件级主色（完整清单见[组件级令牌](#组件级令牌与整组覆盖)），覆盖对外暴露的主色使用点；组合组件内的子组件与派生组件（如 `DropdownButton` 的分割线）跟随宿主组件的令牌，不单独配置。未接入的组件（如 `Dropdown`）写入键名会在开发环境告警、不会静默生效，需要时用组件令牌或嵌套作用域；
 - 运行期移除某个组件的配置（整体替换 `theme`，或删掉 `components.Button`）会回落到 `seed`；
 - 组件配置写在 `ConfigProvider` 的作用域节点上（`abstract: false` 写包裹元素，`abstract: true` 写 `<html>`），优先级高于 `seed` 与外层祖先的 `--va-primary-*`。`Button` / `Slider` / `Menu` 仍可在更近的元素上覆盖公开组件令牌；其余组件要再覆盖时，请用更内层的 `ConfigProvider` 重新配置该组件；
 - 组件配置沿 `DOM` 继承：外层设置的 `components.Button` 会继续作用于内层；内层只改 `seed` 不会把它重置，需要重置时在内层显式设置该组件的 `primaryColor`；
@@ -256,6 +260,25 @@ _共 `40` 个；新增变量必须同时满足「不是现有变量的函数」�
 系统不替品牌色兜底。如果主色偏浅（如黄色、亮青），主色文字与主色按钮上的白字对比度会不足 —— 这时应当**换一个更深的品牌色**（或单独覆盖 `--va-primary-text-color` / `--va-text-color-solid`），而不是期待主题系统自动修正。
 :::
 
+## 脚本取色：derive
+
+_组件样式只读 `CSS` 变量；需要在 `JS` / `canvas` / `SVG` 里拿到同一份色值时，用主入口导出的 `derive`_
+
+```ts
+import { derive } from 'vue-amazing-ui'
+import type { ThemeVars } from 'vue-amazing-ui'
+
+// 与 <ConfigProvider :theme="{ seed, mode }"> 写出的 40 个变量逐值一致
+const vars: ThemeVars = derive({ primary: '#18a058' }, 'dark')
+vars['--va-primary-color'] // => '#178b4e'
+```
+
+- `derive(seed?, mode?)`：`seed` 为 `ThemeSeed`（未传的字段取默认值），`mode` 为已解析的 `'light'` / `'dark'`（缺省 `'light'`）；
+- 返回 `ThemeVars`（40 个 `--va-*` 的只读快照，键名见上一节清单），`ThemeSnapshot` 是它的只读别名；结果带缓存，同一组输入返回同一对象；
+- 需要 `theme.mode = 'auto'` 的语义时，请先在业务侧把 `auto` 解析成 `light` / `dark` 再传入 —— `derive` 只接受已解析的模式（`ResolvedMode`）；
+- 其它主题出口：`DEFAULT_PRIMARY` / `DEFAULT_SEEDS`（默认主色与默认种子）、`THEME_VAR_NAMES`（变量名清单）、`MODE_ATTRIBUTE`（`data-va-mode` 属性名）；
+- 旧版 `getColorPalettes` / `getAlphaColor` 已移除：色阶与透明度色都改由 `derive` 的返回值和 `--va-*` 承担，避免出现两套取色口径。
+
 ## 组件级令牌与整组覆盖
 
 _只想改某一个组件时（例如「主色按钮变绿、链接仍是品牌蓝」），用 `--va-<组件>-*`；下面是完整清单与覆盖约定_
@@ -295,7 +318,7 @@ _旧版 `theme.common.primaryColor` / `theme.Button.primaryColor` 已改为 `see
 ```
 
 - 组件级主色（`theme.Button.primaryColor`）改为 `theme.components.Button.primaryColor`，只覆盖通用主色；更细的部件颜色用[组件级令牌](#组件级令牌与整组覆盖)或在子树外层包一个 `ConfigProvider` 换肤；
-- 组件内部不再有 `--<组件名>-primary-color` 之类由 `JS` 注入的主题变量，改由各组件样式内的私有变量指向 `--va-*`；
+- 旧版由 `JS` 注入的 `--<组件名>-primary-color` 一类主题对象已移除：组件样式改为只消费 `--va-*`，配置 `theme.components` 时由 `ConfigProvider` 在作用域节点写入内部桥变量（实现细节，不需要手工覆盖）；
 - 需要单独调某个组件的配色时，用 [组件级令牌](#组件级令牌与整组覆盖) 的 `--va-<组件>-*`：它是 `CSS` 侧的公开名（不是旧版由 `JS` 注入的主题对象），组件私有变量仍不对外承诺；
 - 取色改用主题派生：`--va-*` 由 `ConfigProvider` 写入，`JS` / `canvas` / `SVG` 场景用公开的 `derive(seed, mode)` 取同一份结果；旧版 `getColorPalettes` / `getAlphaColor` 已随本版移除；
 - 旧版通过行内变量覆盖组件配色的写法，改为覆盖上表的 `--va-*`（注意优先级随级联关系变化）。

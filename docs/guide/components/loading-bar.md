@@ -159,8 +159,8 @@ const themeLoadingBar = ref<LoadingBarApi>()
 const themeFinishDisabled = ref<boolean>(true)
 const themeColor = ref<string>('#18a058')
 const loadingBarTheme = computed<ConfigProviderTheme>(() => ({
-  LoadingBar: {
-    primaryColor: themeColor.value
+  seed: {
+    primary: themeColor.value
   }
 }))
 function onThemeStart() {
@@ -498,7 +498,7 @@ function onStateError() {
 
 ## 主题跟随
 
-_加载条默认取 `ConfigProvider` 中 `LoadingBar.primaryColor` 生成的调色板，改变主色即可让加载中 / 加载完成颜色同步跟随_
+_加载条跟随 `ConfigProvider` 的主题色：`theme.seed.primary` 改整片作用域，只想改加载条单组件配色时用 `theme.components.LoadingBar.primaryColor`，加载中 / 加载完成颜色会同步跟随_
 
 <br/>
 
@@ -537,8 +537,8 @@ const themeLoadingBar = ref<LoadingBarApi>()
 const themeFinishDisabled = ref(true)
 const themeColor = ref('#18a058')
 const loadingBarTheme = computed<ConfigProviderTheme>(() => ({
-  LoadingBar: {
-    primaryColor: themeColor.value
+  seed: {
+    primary: themeColor.value
   }
 }))
 function onThemeStart() {
@@ -603,7 +603,7 @@ _组件级配置属性（`class` / `style` 亦会透传到加载条容器）：�
 
 > 组件上的 `class` / `style` 透传到加载条容器 `.loading-bar-wrap`（等价于 `containerClass` / `containerStyle`）。
 >
-> `colorLoading` / `colorFinish` 默认取 `LoadingBar.primaryColor` 生成的调色板（跟随主题），`colorError` 默认 `#ff4d4f`。
+> `colorLoading` / `colorFinish` 默认取主色（跟随 `ConfigProvider` 主题，可用 `theme.components.LoadingBar.primaryColor` 单独覆盖），`colorError` 默认 `var(--va-error-color)`（危险色别名）。
 >
 > `loadingBarStyle` 以内联样式作用于内层进度条：与 `loadingBarSize` / `colorLoading` / `colorFinish` / `colorError` 设置同一属性冲突时，以其为准；未提供 `finish` 时，完成态回落到 `loading` 的样式；`error` 态仅取 `error`，未提供时不注入任何自定义样式。
 

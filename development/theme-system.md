@@ -95,7 +95,7 @@ components   ──┘         │                              ├─→ 写到
 ```text
 theme.components.Button.primaryColor = '#ff6900'
         │ deriveColorStates → base / hover / active / bg / border / solid
-        ├─ 内部桥：--va-cp-button-primary-*（7 个，统一格式；多数组件读它）
+        ├─ 内部桥：--va-cp-button-primary-*（7 个，统一格式；除 Button / Menu 外的组件读它，Slider 另有 1 处聚焦边框）
         └─ 公开令牌：--va-button-primary-color 等（themeRole 映射；Button / Menu 只读它）
 ```
 
@@ -105,14 +105,14 @@ theme.components.Button.primaryColor = '#ff6900'
 | :-- | :-- | :-- |
 | Button / Menu | 桥 7 个 + 公开令牌 | 公开令牌（桥是冗余写入） |
 | Slider | 桥 7 个 + 公开令牌 | 公开令牌 + 1 个桥（聚焦边框） |
-| 其余 28 个组件 | 只写桥 | 桥 |
-| Table / Card 等 8 个（有令牌无 `themeRole`） | 只写桥 | 桥；令牌由用户手写 |
+| TextScroll / Table / Alert / Input / Textarea / Modal（有令牌无 `themeRole` 的 6 个） | 桥 7 个 | 桥；公开令牌由用户手写 |
+| 其余 30 个组件 | 只写桥 | 桥 |
 
 桥的冗余写入不会影响视觉：`var(a, b)` 只引用其中一个名字。也正因为 Slider 仍读桥，**不能**按「是否有 `themeRole`」一刀切裁剪桥。
 
 - 组件配置**优先于 seed**：因为它写在同一个作用域节点上，而组件样式先读组件令牌；
 - 只认识一个字段 `primaryColor`，不负责组件的背景 / 文字 / 尺寸；
-- 39 个组件支持，其中 12 个组件另有公开令牌（共 48 个）。
+- 39 个组件支持组件级主色，其中 9 个另有公开令牌（Button / Slider / Menu 的令牌带 `themeRole` 映射，其余 6 个由用户手写）；另有 Card / Drawer / Scrollbar 3 个有公开令牌但不支持组件级主色，公开令牌共 51 个（分属 12 个组件）。
 
 ## 优先级链
 
