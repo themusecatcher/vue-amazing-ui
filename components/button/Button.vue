@@ -56,13 +56,17 @@ const buttonThemeStyle = computed<Record<string, string>>(() => {
     return {}
   }
   const states = deriveColorStates(props.color, themeMode?.value ?? 'light')
-  return {
+  const style: Record<string, string> = {
     '--va-button-primary-color': states.base,
     '--va-button-primary-color-hover': states.hover,
     '--va-button-primary-color-active': states.active,
-    '--va-button-solid-text-color': states.solid,
-    '--button-ripple-color': states.base
-  } as Record<string, string>
+    '--va-button-solid-text-color': states.solid
+  }
+  // 文字 / 链接按钮的波纹固定透明（见 .btn-text / .btn-link 的声明），不随实例色改写
+  if (props.type !== 'text' && props.type !== 'link') {
+    style['--button-ripple-color'] = states.base
+  }
+  return style
 })
 const emit = defineEmits(['click'])
 const slotsExist = useSlotsExist(['icon', 'default'])
