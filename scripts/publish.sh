@@ -135,6 +135,11 @@ if ! pnpm verify:on-demand; then
     echo "❌ 按需引入验证未通过，请修复后重试"
     exit 1
 fi
+# 主题架构守护：与 CI 的 pnpm verify 保持同一组门禁，避免「CI 拦得住、本地 pub 拦不住」
+if ! pnpm verify:theme; then
+    echo "❌ 主题架构守护未通过，请修复后重试"
+    exit 1
+fi
 
 # 检查是否有待提交的更改
 if [ -n "$(git status --porcelain)" ]; then

@@ -4,6 +4,14 @@ es/
 lib/
 dist-ssr/
 
+# Markdown 一律不纳入格式化：docs/ 下的 md 是 md-as-SFC（顶层模板会被 Prettier 改写出行首 `>` 与标签失配，
+# 直接导致 VitePress 构建失败，见 .github/workflows/verify.yml 文件头说明）；README / CONTRIBUTING / development
+# 同为手写文档。故 format 脚本对全仓库生效，实际纳入的只有代码与配置类文件。
+*.md
+
+# 构建期生成的源码内中间产物（build/gen-theme.ts 在 buildStart 写出，已 gitignore）
+/components/style/generated/
+
 # 测试覆盖率
 coverage/
 

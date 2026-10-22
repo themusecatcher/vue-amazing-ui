@@ -79,7 +79,9 @@ export function buildThemeCss(seed: ThemeSeed = {}): string {
 export function writeThemeCss(rootDir: string, seed: ThemeSeed = {}): string {
   const target = resolve(rootDir, THEME_CSS_RELATIVE_PATH)
   mkdirSync(dirname(target), { recursive: true })
-  const temp = `${target}.tmp`
+  // 临时文件名带进程号：build:components 会并行起多个 vite 构建，共用同一个 `.tmp` 时，
+  // 先完成的一方 rename 后另一方会 ENOENT，且可能在对方写入中途把半份内容换成正式表
+  const temp = `${target}.${process.pid}.tmp`
   writeFileSync(temp, buildThemeCss(seed), 'utf-8')
   renameSync(temp, target)
   return target
