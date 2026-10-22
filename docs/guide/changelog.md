@@ -16,8 +16,6 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-10-22">3.1.0</VersionDateTag>
 
-_本版需要改代码的地方：时间轴 `Timeline` 改为组合式 API，选项数据与属性名均有调整；迁移对照见[时间轴 Timeline](/guide/components/timeline.html)。_
-
 - 重构 [时间轴 Timeline](/guide/components/timeline.html) 为组合式：新增 `TimelineItem` 子组件承载单个节点，容器只负责整体布局与状态，数据场景直接 `v-for` 渲染节点
 - 新增 [时间轴 Timeline](/guide/components/timeline.html) 能力：幽灵节点 `pending` / `pendingDot`（内置加载环）、倒序 `reverse`、水平排列 `horizontal`、尺寸档位 `size` 与轴点尺寸 `iconSize`；节点级 `title` / `time` 三段结构、`label` 左侧标签（任一节点带标签即切换左右分栏布局）、`position` 单侧覆盖与 `lineType` 线型覆盖
 - 节点轴点颜色支持预设语义色（`primary` / `success` / `warning` / `error` / `info` / `default`）、色名与任意 CSS 颜色，预设名大小写不敏感
