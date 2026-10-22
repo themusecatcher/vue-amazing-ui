@@ -320,8 +320,9 @@ function onSwitch(): void {
   bottom: 0;
   left: 0;
   animation-iteration-count: 1;
-  animation-duration: 0.6s;
-  animation-timing-function: cubic-bezier(0, 0, 0.2, 1), cubic-bezier(0, 0, 0.2, 1);
+  /* 扩散与淡出分开计时：0.4s 外扩到位后，再由 2s 缓慢收干净 */
+  animation-duration: 0.4s, 2s;
+  animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1), cubic-bezier(0.08, 0.82, 0.17, 1);
   border-radius: inherit;
 }
 .wave-active {
@@ -329,15 +330,15 @@ function onSwitch(): void {
   animation-name: waveSpread, waveOpacity;
   @keyframes waveSpread {
     from {
-      box-shadow: 0 0 0.5px 0 var(--switch-ripple-color);
+      box-shadow: 0 0 0 0 var(--switch-ripple-color);
     }
     to {
-      box-shadow: 0 0 0.5px 5px var(--switch-ripple-color);
+      box-shadow: 0 0 0 6px var(--switch-ripple-color);
     }
   }
   @keyframes waveOpacity {
     from {
-      opacity: 0.6;
+      opacity: 0.2;
     }
     to {
       opacity: 0;

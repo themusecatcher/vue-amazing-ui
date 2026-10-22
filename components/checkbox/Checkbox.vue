@@ -277,6 +277,7 @@ defineExpose({ focus, blur })
       animation-duration: 0.3s;
       animation-timing-function: ease-in-out;
       border-radius: inherit;
+      transition: all 0.3s;
     }
     .wave-active {
       z-index: 1;
@@ -300,6 +301,8 @@ defineExpose({ focus, blur })
   /* 悬停时环可见：点击导致的选中必然伴随悬停，日常表现与直接播放一致 */
   &:hover .checkbox-box .wave-active {
     visibility: visible;
+    /* 悬停中选中时环随选中底色一起提亮 */
+    border-color: var(--va-cp-checkbox-primary-color-hover, var(--va-primary-color-hover));
   }
   .checkbox-checked {
     background-color: var(--va-cp-checkbox-primary-color, var(--va-primary-color));

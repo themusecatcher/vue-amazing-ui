@@ -249,13 +249,15 @@ function onKeyboard(e: KeyboardEvent) {
   .button-wave {
     position: absolute;
     pointer-events: none;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    /* 波纹铺满按钮外框：绝对定位以 padding box 为基准，需向外补回 1px 边框 */
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+    left: -1px;
     animation-iteration-count: 1;
-    animation-duration: 0.6s;
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1), cubic-bezier(0, 0, 0.2, 1);
+    /* 扩散与淡出分开计时：0.4s 外扩到位后，再由 2s 缓慢收干净 */
+    animation-duration: 0.4s, 2s;
+    animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1), cubic-bezier(0.08, 0.82, 0.17, 1);
     border-radius: inherit;
   }
   .wave-active {
@@ -263,15 +265,15 @@ function onKeyboard(e: KeyboardEvent) {
     animation-name: waveSpread, waveOpacity;
     @keyframes waveSpread {
       from {
-        box-shadow: 0 0 0.5px 0 var(--button-ripple-color, var(--va-button-primary-color, var(--va-primary-color)));
+        box-shadow: 0 0 0 0 var(--button-ripple-color, var(--va-button-primary-color, var(--va-primary-color)));
       }
       to {
-        box-shadow: 0 0 0.5px 5.5px var(--button-ripple-color, var(--va-button-primary-color, var(--va-primary-color)));
+        box-shadow: 0 0 0 6px var(--button-ripple-color, var(--va-button-primary-color, var(--va-primary-color)));
       }
     }
     @keyframes waveOpacity {
       from {
-        opacity: 0.6;
+        opacity: 0.2;
       }
       to {
         opacity: 0;
