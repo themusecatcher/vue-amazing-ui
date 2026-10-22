@@ -37,7 +37,7 @@
 ## 构建配置（vite.config.ts）
 
 - 根据构建参数 `dir` 分发：
-  - `dir=dist` → `buildDistOptions`（全量：es + umd；`f=iife` 时只出 iife）。umd 保留给 require / AMD / 全局脚本形态的消费方（与 antd、naive-ui 的产物形态对齐），故 `dist/index.umd.cjs` 不是冗余产物。
+  - `dir=dist` → `buildDistOptions`（全量：es + umd；`f=iife` 时只出 iife）。umd 保留给 require / AMD / 全局脚本形态的消费方，故 `dist/index.umd.cjs` 不是冗余产物。
   - 其余（含 `build-only`）→ `buildESAndLibOptions`（按需：es + lib，`preserveModules: true` + `preserveModulesRoot: 'components'`，后者保证产物落在 `es/button/` 而非 `es/components/button/`）。
 - `externalDependencies`：库模式外部化依赖（vue / date-fns / swiper 等），不打进产物。注意 swiper 只外部化子路径 `swiper/modules` / `swiper/vue`——源码仅从这两个子路径 import（另有 type-only 的 `swiper/types` 与 CSS 的 `swiper/css*`，样式由 `vendor-styles` 单独复制），**主包 swiper 不会进入产物**，由消费方按 `dependencies` 解析子路径。
 - `externalGlobals`：IIFE / UMD 构建的外部依赖全局变量名。
