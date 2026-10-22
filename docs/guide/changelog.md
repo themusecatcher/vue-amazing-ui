@@ -25,15 +25,15 @@ _本版需要改代码的地方：主题配置形式（`theme`）、`abstract` �
 - 新增 `Table` / `Card` / `Alert` / `Input` / `Textarea` / `Modal` / `Drawer` 的 `22` 个组件令牌（底色、边框、文字与占位符等）与 [滑动输入条 Slider](/guide/components/slider.html) 刻度点的描边令牌（常态 / 悬停 / 激活，激活态跟随组件级主色），组件令牌共 `51` 个
 - 统一库内告警输出：`error` 全环境输出、`warn` / `debug` 仅开发期输出，同一提醒只输出一次；[二维码 QRCode](/guide/components/qr-code.html) 编码 / 绘制失败与 [折叠面板 Collapse](/guide/components/collapse.html) 复制失败改为 `error`
 - 修复暗色模式下的表面配色：[模态框 Modal](/guide/components/modal.html) / [抽屉 Drawer](/guide/components/drawer.html) / [图片 Image](/guide/components/image.html) 预览遮罩、[对话框 Dialog](/guide/components/dialog.html) 遮罩、[二维码 QRCode](/guide/components/qr-code.html) 状态遮罩、[菜单 Menu](/guide/components/menu.html) 折叠气泡、[颜色选择器 ColorPicker](/guide/components/color-picker.html) 面板、[标签 Tag](/guide/components/tag.html) 输入框与新增按钮的反色表面，[表格 Table](/guide/components/table.html) 与 [列表 List](/guide/components/list.html) 的固定色改用语义变量
-- [水印 Watermark](/guide/components/watermark.html) 默认色由固定黑 / 白改为语义变量（浅色 `15%` 黑、暗色 `18%` 白），并修复 `fixed=false` 时不能整屏覆盖、未配置 `ConfigProvider` 时默认色不跟随明暗模式
+- [水印 Watermark](/guide/components/watermark.html) 默认色由固定黑 / 白改为语义变量（浅色 `15%` 黑、暗色 `18%` 白，显式传 `textStyle.color` 后不再随暗色反转），并修复 `fixed=false` 时不能整屏覆盖、未配置 `ConfigProvider` 时默认色不跟随明暗模式
 - 修复 [日历 Calendar](/guide/components/calendar.html) 年选择器选中年份后列表区间随面板平移，重新展开才滚动到选中项
 - 修复 [回到顶部 BackTop](/guide/components/back-top.html) 提示气泡的圆角被强制覆盖
-- 修复 [按钮 Button](/guide/components/button.html) 文字 / 链接类型的波纹色被实例主色覆盖
+- 修复 [按钮 Button](/guide/components/button.html) 危险 / 文字 / 链接类型的波纹色被实例主色覆盖、禁用时波纹残留导致重新启用误播动画
 - 修复 [进度条 Progress](/guide/components/progress.html) 进度值越界导致显示异常
 - 优化 `ConfigProvider` 对 `<html>` 的写入权：只配组件主色的 `abstract` 实例不参与全局仲裁，避免卸载时误清其它实例写入的变量；修复嵌套空 `ConfigProvider` 切断浮层的主题转发
 - 重构使用者文档的主题章节（主题全景、优先级链与排查清单），组件令牌说明作为附录并入；修正演示与文档中失效的样式变量与主题配置；工具文档移除已删除函数的页面
-- 文档站的暗色与主色切换到组件库主题系统，实时联动
-- 重构贡献者文档的主题实现说明，并同步开发文档与贡献指南的现状口径
+- 文档站的暗色与主色切换到组件库主题系统，实时联动；导航栏常驻展示当前版本号
+- 重构贡献者文档的主题实现说明，并同步开发文档与贡献指南的现状口径（含版本策略）
 
 ## <VersionDateTag date="2026-10-19">2.15.2</VersionDateTag>
 
@@ -682,7 +682,7 @@ _本版需要改代码的地方：主题配置形式（`theme`）、`abstract` �
 ## <VersionDateTag date="2024-12-24">2.0.2</VersionDateTag>
 
 - 优化并更新 [浮动按钮 FloatButton](/guide/components/float-button.html) 组件，`icon` 属性新增类型 `VNode`
-- 新增 `VueAmazingUIStyleResolve` 方法导出，用于配合 `vite-plugin-style-import` 插件实现按需自动引入组件样式，具体请参考 [自动引入样式](/guide/import-on-demand.html#%E8%87%AA%E5%8A%A8%E5%BC%95%E5%85%A5%E6%A0%B7%E5%BC%8F-%E6%8E%A8%E8%8D%90)
+- 新增 `VueAmazingUIStyleResolve` 方法导出，用于配合 `vite-plugin-style-import` 插件实现按需自动引入组件样式，具体请参考 [自动引入样式](/guide/import-on-demand.html#%E8%87%AA%E5%8A%A8%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5-%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90)
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2024-12-20">2.0.1</VersionDateTag>
