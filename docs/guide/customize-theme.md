@@ -307,7 +307,7 @@ SVG 的 presentation attribute（`fill` / `stroke` / `stop-color`）不解析 CS
 
 ## 迁移：旧版主题 API
 
-_旧版 `theme.common.primaryColor` / `theme.Button.primaryColor` 已改为 `seed` / `components`_
+_旧版 `theme.common.primaryColor` / `theme.Button.primaryColor` 已改为 `seed` / `components`；`abstract` 默认值与被移除的工具函数 / 私有变量见下方逐条_
 
 ```diff
 - <ConfigProvider :theme="{ common: { primaryColor: '#ff6900' } }">
@@ -318,9 +318,11 @@ _旧版 `theme.common.primaryColor` / `theme.Button.primaryColor` 已改为 `see
 ```
 
 - 组件级主色（`theme.Button.primaryColor`）改为 `theme.components.Button.primaryColor`，只覆盖通用主色；更细的部件颜色用[组件级令牌](#组件级令牌与整组覆盖)或在子树外层包一个 `ConfigProvider` 换肤；
-- 旧版由 `JS` 注入的 `--<组件名>-primary-color` 一类主题对象已移除：组件样式改为只消费 `--va-*`，配置 `theme.components` 时由 `ConfigProvider` 在作用域节点写入内部桥变量（实现细节，不需要手工覆盖）；
+- `abstract` 默认值由 `true` 改为 `false`：不写 `abstract` 时实例会渲染一层包裹元素（`tag` 可改为 `span` 等行内元素），主题只作用于自身子树；需要页面级主题（`Teleport` 浮层、页面链接色）时在最外层显式传 `:abstract="true"`，嵌套层保持默认；
+- 旧版由 `JS` 注入的 `--<组件名>-primary-color` 一类主题对象已移除：组件样式改为只消费 `--va-*`，配置 `theme.components` 时由 `ConfigProvider` 在作用域节点写入内部桥变量（实现细节，不需要手工覆盖）；曾用这些变量覆盖配色的样式需改为 `--va-<组件名>-*` 令牌；
 - 需要单独调某个组件的配色时，用 [组件级令牌](#组件级令牌与整组覆盖) 的 `--va-<组件>-*`：它是 `CSS` 侧的公开名（不是旧版由 `JS` 注入的主题对象），组件私有变量仍不对外承诺；
 - 取色改用主题派生：`--va-*` 由 `ConfigProvider` 写入，`JS` / `canvas` / `SVG` 场景用公开的 `derive(seed, mode)` 取同一份结果；旧版 `getColorPalettes` / `getAlphaColor` 已随本版移除；
+- 定时与暗色切换：`rafTimeout` / `cancelRaf` 改用 `setTimeout` / 原生 `requestAnimationFrame`（返回类型 `AnimationFrameID` 一并移除），`toggleDark` 改用 `theme.mode`，或直接写 `<html data-va-mode="dark">`；
 - 旧版通过行内变量覆盖组件配色的写法，改为覆盖上表的 `--va-*`（注意优先级随级联关系变化）。
 
 ## 离散 API：与 `createDiscreteApi` 的关系
