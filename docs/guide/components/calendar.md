@@ -965,32 +965,32 @@ function onPanelChange(
   </Calendar>
 </template>
 <style lang="less" scoped>
-/* 整格替换用例的单元格：整格由业务自绘（浅底圆角块） */
+/* 整格替换用例的单元格：整格由业务自绘（浅底圆角块），色值取语义变量以便跟随明暗模式 */
 .full-cell {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 26px;
   margin: 0 4px;
-  color: rgba(0, 0, 0, 0.88);
-  background: rgba(0, 0, 0, 0.02);
+  color: var(--va-text-color-1);
+  background: var(--va-fill-color-4);
   border-radius: 4px;
   cursor: pointer;
   transition: background 0.2s;
   &:hover {
-    background: rgba(0, 0, 0, 0.06);
+    background: var(--va-fill-color-2);
   }
 }
 /* 今天：主色描边；选中：主色实心 + 白字（整格替换下由插槽内容自行表达） */
 .full-cell-today {
-  color: var(--calendar-primary-color);
-  box-shadow: inset 0 0 0 1px var(--calendar-primary-color);
+  color: var(--va-cp-calendar-primary-color, var(--va-primary-color));
+  box-shadow: inset 0 0 0 1px var(--va-cp-calendar-primary-color, var(--va-primary-color));
 }
 .full-cell-selected {
   color: #ffffff;
-  background: var(--calendar-primary-color);
+  background: var(--va-cp-calendar-primary-color, var(--va-primary-color));
   &:hover {
-    background: var(--calendar-primary-color);
+    background: var(--va-cp-calendar-primary-color, var(--va-primary-color));
   }
 }
 
@@ -1280,7 +1280,7 @@ function onPanelChange(
 .keyboard-tips {
   margin: 0;
   padding-left: 20px;
-  color: rgba(0, 0, 0, 0.65);
+  color: var(--va-text-color-2);
   li {
     line-height: 1.8;
   }
@@ -1313,39 +1313,39 @@ function onPanelChange(
     gap: 8px;
   }
 }
-/* 整格替换用例的单元格：整格由业务自绘（浅底圆角块） */
+/* 整格替换用例的单元格：整格由业务自绘（浅底圆角块），色值取语义变量以便跟随明暗模式 */
 .full-cell {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 26px;
   margin: 0 4px;
-  color: rgba(0, 0, 0, 0.88);
-  background: rgba(0, 0, 0, 0.02);
+  color: var(--va-text-color-1);
+  background: var(--va-fill-color-4);
   border-radius: 4px;
   cursor: pointer;
   transition: background 0.2s;
   &:hover {
-    background: rgba(0, 0, 0, 0.06);
+    background: var(--va-fill-color-2);
   }
 }
 /* 今天：主色描边；选中：主色实心 + 白字（整格替换下由插槽内容自行表达） */
 .full-cell-today {
-  color: var(--calendar-primary-color);
-  box-shadow: inset 0 0 0 1px var(--calendar-primary-color);
+  color: var(--va-cp-calendar-primary-color, var(--va-primary-color));
+  box-shadow: inset 0 0 0 1px var(--va-cp-calendar-primary-color, var(--va-primary-color));
 }
 .full-cell-selected {
   color: #ffffff;
-  background: var(--calendar-primary-color);
+  background: var(--va-cp-calendar-primary-color, var(--va-primary-color));
   &:hover {
-    background: var(--calendar-primary-color);
+    background: var(--va-cp-calendar-primary-color, var(--va-primary-color));
   }
 }
 /* 键盘导航用例的键位说明列表 */
 .keyboard-tips {
   margin: 0;
   padding-left: 20px;
-  color: rgba(0, 0, 0, 0.65);
+  color: var(--va-text-color-2);
   li {
     line-height: 1.8;
   }

@@ -155,12 +155,16 @@ export function useThemeScope(options: ThemeScopeOptions): ThemeScope {
 
   // Teleport 浮层转发：变量不在 `<html>` 上时（DOM 作用域 / 被降级的离散实例 / 未拿到写入权的顶层实例），
   // 浮层必须自带一份当前作用域的令牌；真正持有 `<html>` 的 owner 不转发，让浮层直接继承。
+  // 父级通道：自身未配置主题时透传 —— 否则嵌套一个空 ConfigProvider 会 provide(null)，
+  // 把外层作用域已建立的转发通道切断，其子树里的浮层退回 <html> 的静态表。
+  const parentTeleportTheme = inject(THEME_TELEPORT_KEY, null)
   const teleportTheme = computed<TeleportTheme | null>(() => {
+    if (!configured.value) {
+      return parentTeleportTheme?.value ?? null
+    }
+    // 走到这里 configured 必为 true（未配置已在上方透传父级通道），故不再重复判断
     const needsForward =
-      ancestorDomScope ||
-      (selfScoped.value && configured.value) ||
-      (skipGlobalWrite && configured.value) ||
-      (writesGlobal.value && configured.value && !isGlobalOwner.value)
+      ancestorDomScope || selfScoped.value || skipGlobalWrite || (writesGlobal.value && !isGlobalOwner.value)
     if (!needsForward || deferForAuto.value) {
       // 保持惰性：不需要转发时不读取 snapshot，未配置主题的实例不会触发派生
       return null

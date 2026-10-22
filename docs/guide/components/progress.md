@@ -25,12 +25,6 @@ const lineCapOptions = [
   }
 ]
 const lineCap = ref<ProgressProps['lineCap']>('butt')
-const primaryColor = ref('#ff6900')
-const successColor = ref('#18a058')
-const themeStyle = {
-  '--progress-primary-color': primaryColor.value,
-  '--progress-success-color': successColor.value
-}
 function onIncrease(scale: number) {
   const res = percent.value + scale
   if (res > 100) {
@@ -134,6 +128,8 @@ function onDecline(scale: number) {
 
 _`strokeColor`: `{ '0%': '#108ee9', '100%': '#87d068', direction: 'right' }` 或 `{ from: '#108ee9', to: '#87d068', direction: 'right' }`_
 
+> 渐变进度条到达 `100%` 时保留渐变、不套用成功色；完成态的文案与图标仍转为成功色。需要完成态整条变色时请改用纯色 `lineColor`。
+
 <br/>
 
 <Flex vertical>
@@ -213,7 +209,7 @@ function onDecline(scale: number) {
 
 <Flex vertical>
   <Progress
-    style="--progress-success-color: #ff6900"
+    style="--va-success-color: #ff6900"
     :line-size="24"
     :line-color="{
       '0%': '#108ee9',
@@ -225,7 +221,7 @@ function onDecline(scale: number) {
   />
   <Space align="center">
     <Progress
-      style="--progress-success-color: #ff6900"
+      style="--va-success-color: #ff6900"
       type="circle"
       :width="180"
       :line-size="14"
@@ -269,7 +265,7 @@ function onDecline(scale: number) {
 <template>
   <Flex vertical>
     <Progress
-      style="--progress-success-color: #ff6900"
+      style="--va-success-color: #ff6900"
       :line-size="24"
       :line-color="{
         '0%': '#108ee9',
@@ -281,7 +277,7 @@ function onDecline(scale: number) {
     />
     <Space align="center">
       <Progress
-        style="--progress-success-color: #ff6900"
+        style="--va-success-color: #ff6900"
         type="circle"
         :width="180"
         :line-size="14"
@@ -415,7 +411,7 @@ function onDecline(scale: number) {
     :format="(percent: number) => `$${percent}`"
     success="Done"
   />
-  <Progress style="--success-color: #d48806" :line-size="20" :info-size="20" :percent="percent">
+  <Progress style="--va-success-color: #d48806" :line-size="20" :info-size="20" :percent="percent">
     <template #format="{ percent }">
       <span style="color: #d4380d">{{ percent }}%</span>
     </template>
@@ -433,7 +429,7 @@ function onDecline(scale: number) {
       :format="(percent: number) => `${percent} Days`"
       success="Done"
     />
-    <Progress style="--success-color: #d48806" type="circle" :width="160" :line-size="12" :info-size="24" :percent="percent">
+    <Progress style="--va-success-color: #d48806" type="circle" :width="160" :line-size="12" :info-size="24" :percent="percent">
       <template #format="{ percent }">
         <span style="color: #d4380d">{{ percent }}%</span>
       </template>
@@ -479,7 +475,7 @@ function onDecline(scale: number) {
       :format="(percent: number) => `$${percent}`"
       success="Done"
     />
-    <Progress style="--success-color: #d48806" :line-size="20" :info-size="20" :percent="percent">
+    <Progress style="--va-success-color: #d48806" :line-size="20" :info-size="20" :percent="percent">
       <template #format="{ percent }">
         <span style="color: #d4380d">{{ percent }}%</span>
       </template>
@@ -498,7 +494,7 @@ function onDecline(scale: number) {
         success="Done"
       />
       <Progress
-        style="--success-color: #d48806"
+        style="--va-success-color: #d48806"
         type="circle"
         :width="160"
         :line-size="12"

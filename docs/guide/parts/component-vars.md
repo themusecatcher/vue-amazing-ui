@@ -75,7 +75,7 @@ _本节由 `node scripts/gen-component-vars-doc.js` 从 `components/theme/compon
 
 #### 滑动输入条 Slider
 
-其中 `--va-slider-track-color` / `--va-slider-track-color-hover` / `--va-slider-handle-shadow-color` / `--va-slider-handle-shadow-color-hover-focus` 会跟随 `ConfigProvider` 的 `theme.components.Slider.primaryColor` 自动派生；其余令牌需要用 `CSS` 直接覆盖。
+其中 `--va-slider-track-color` / `--va-slider-track-color-hover` / `--va-slider-handle-shadow-color` / `--va-slider-handle-shadow-color-hover-focus` / `--va-slider-dot-color-active` 会跟随 `ConfigProvider` 的 `theme.components.Slider.primaryColor` 自动派生；其余令牌需要用 `CSS` 直接覆盖。
 
 **已选轨道**
 
@@ -98,6 +98,14 @@ _本节由 `node scripts/gen-component-vars-doc.js` 从 `components/theme/compon
 | `--va-slider-handle-color` | `var(--va-bg-elevated-color)` | 滑块圆点底色 |
 | `--va-slider-handle-shadow-color` | `var(--va-primary-border-color)` | 滑块光环色（常态，常驻 `2px`） |
 | `--va-slider-handle-shadow-color-hover-focus` | `var(--va-primary-color)` | 滑块光环色（悬停 / 聚焦，放大到 `4px`） |
+
+**刻度点**
+
+| 变量 | 默认值 | 说明 |
+| :-- | :-- | :-- |
+| `--va-slider-dot-border-color` | `var(--va-border-split-color)` | 刻度点描边色（常态） |
+| `--va-slider-dot-border-color-hover` | `var(--va-fill-color-2)` | 刻度点描边色（悬停） |
+| `--va-slider-dot-color-active` | `var(--va-primary-border-color)` | 刻度点描边色（激活态，跟随组件级主色） |
 
 **数值气泡**
 
@@ -159,23 +167,23 @@ _本节由 `node scripts/gen-component-vars-doc.js` 从 `components/theme/compon
 | :-- | :-- | :-- |
 | `--va-table-bg-color` | `var(--va-bg-container-color)` | 表格容器 / 数据行 / 固定列底色 |
 
-**header**
+**表头**
 
 | 变量 | 默认值 | 说明 |
 | :-- | :-- | :-- |
 | `--va-table-header-bg-color` | `var(--va-fill-color-4)` | 表头单元格底色（含排序列表头与固定列表头） |
 
-**footer**
+**底部**
 
 | 变量 | 默认值 | 说明 |
 | :-- | :-- | :-- |
 | `--va-table-footer-bg-color` | `var(--va-fill-color-4)` | 表格底部（分页区）底色 |
 
-**border**
+**边框**
 
 | 变量 | 默认值 | 说明 |
 | :-- | :-- | :-- |
-| `--va-table-border-color` | `var(--va-border-split-color)` | 单元格分隔线 / 外边框 / 固定列滚动阴影 |
+| `--va-table-border-color` | `var(--va-border-split-color)` | 单元格分隔线 / 外边框 / 固定列滚动阴影；另作可排序表头底与可排序行悬停底（改浅会连带变亮这两处底色） |
 
 #### 卡片 Card
 
@@ -185,7 +193,7 @@ _本节由 `node scripts/gen-component-vars-doc.js` 从 `components/theme/compon
 | :-- | :-- | :-- |
 | `--va-card-bg-color` | `var(--va-bg-container-color)` | 卡片底色 |
 
-**border**
+**边框**
 
 | 变量 | 默认值 | 说明 |
 | :-- | :-- | :-- |
@@ -199,7 +207,7 @@ _本节由 `node scripts/gen-component-vars-doc.js` 从 `components/theme/compon
 | :-- | :-- | :-- |
 | `--va-alert-bg-color` | `var(--va-fill-color-1)` | 默认态提示框底色（语义态用 --va-{success,warning,error,info}-* 控制） |
 
-**border**
+**边框**
 
 | 变量 | 默认值 | 说明 |
 | :-- | :-- | :-- |
@@ -213,7 +221,7 @@ _本节由 `node scripts/gen-component-vars-doc.js` 从 `components/theme/compon
 | :-- | :-- | :-- |
 | `--va-input-bg-color` | `var(--va-bg-container-color)` | 输入框底色（含自动填充背景） |
 
-**border**
+**边框**
 
 | 变量 | 默认值 | 说明 |
 | :-- | :-- | :-- |
@@ -234,7 +242,7 @@ _本节由 `node scripts/gen-component-vars-doc.js` 从 `components/theme/compon
 | :-- | :-- | :-- |
 | `--va-textarea-bg-color` | `var(--va-bg-container-color)` | 文本域底色（含自动填充背景） |
 
-**border**
+**边框**
 
 | 变量 | 默认值 | 说明 |
 | :-- | :-- | :-- |
@@ -270,7 +278,7 @@ _本节由 `node scripts/gen-component-vars-doc.js` 从 `components/theme/compon
 | :-- | :-- | :-- |
 | `--va-drawer-bg-color` | `var(--va-bg-elevated-color)` | 抽屉面板底色 |
 
-**border**
+**边框**
 
 | 变量 | 默认值 | 说明 |
 | :-- | :-- | :-- |

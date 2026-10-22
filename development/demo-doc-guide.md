@@ -85,7 +85,7 @@ ConfigProvider（theme 注入）
     └── Watermark（content="Vue Amazing UI"）
 ```
 
-- `ConfigProvider` 提供主题（`theme` 支持 `seed` 颜色种子与 `mode` 模式；组件级覆盖改用嵌套作用域）；布局层主题开关直接改写 `src/theme.ts` 的 `mode`，页面底板按模式取色：浅色用 `--va-bg-container-color`（白）、暗色用 `--va-bg-layout-color`（黑），卡片始终用容器色。
+- `ConfigProvider` 提供主题（`theme` 支持 `seed` 颜色种子与 `mode` 模式；组件级覆盖改用嵌套作用域）；布局层主题开关直接改写 `src/theme.ts` 的 `mode`，页面底板两种模式都取 `--va-bg-container-color`（浅色 `#fff` / 暗色 `#141414`，与组件容器表面同源），卡片始终用容器色。
 - 五个 `XxxProvider` 依次嵌套，使任意演示页内可直接使用对应的 `useXxx()`。
 - 路由切换进度**不**复用上面这个 `LoadingBarProvider`：路由守卫位于组件树之外，改由 `createDiscreteApi(['loadingBar'])` 创建独立实例（`src/router/index.ts` 中惰性单例），并通过 `src/theme.ts` 与根组件共享同一份主题。
 

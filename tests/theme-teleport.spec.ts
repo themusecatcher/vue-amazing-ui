@@ -102,6 +102,22 @@ describe('Teleport 浮层的主题转发', () => {
     wrapper.unmount()
   })
 
+  it('嵌套的空 ConfigProvider 透传外层转发通道，不切断浮层主题', async () => {
+    const wrapper = mount(ConfigProvider, {
+      props: { abstract: false, theme: { seed: { primary: RED }, mode: 'dark' } },
+      slots: {
+        default: () => h(ConfigProvider, {}, { default: () => h(Probe) })
+      }
+    })
+    await nextTick()
+    const probe = wrapper.find('.theme-probe').element as HTMLElement
+    // 内层未配置主题：不建立自己的通道，也不该把外层的通道置空
+    expect(probe.getAttribute('data-forwarded')).toBe('yes')
+    expect(probe.getAttribute('data-mode')).toBe('dark')
+    expect(probe.getAttribute('data-has-primary')).toBe('yes')
+    wrapper.unmount()
+  })
+
   it('Popup 的 Teleport 根节点自带当前作用域变量与模式', async () => {
     const wrapper = mount(ConfigProvider, {
       props: { abstract: false, theme: { seed: { primary: RED }, mode: 'dark' } },

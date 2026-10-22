@@ -52,6 +52,9 @@ export const COMPONENT_VAR_NAMES = [
   '--va-slider-handle-color',
   '--va-slider-handle-shadow-color',
   '--va-slider-handle-shadow-color-hover-focus',
+  '--va-slider-dot-border-color',
+  '--va-slider-dot-border-color-hover',
+  '--va-slider-dot-color-active',
   '--va-slider-tooltip-bg-color',
   '--va-slider-tooltip-color',
   '--va-menu-primary-color',
@@ -204,6 +207,31 @@ export const COMPONENT_VARS = {
     themeState: 'base',
     description: '滑块光环色（悬停 / 聚焦，放大到 `4px`）'
   },
+  // 刻度点（`marks` 场景）：只公开常态描边 / 悬停描边 / 激活描边三个视觉面，
+  // 点底色 `--slider-dot-color` 与 mark 文字色属于组件自有细节，仍为私有变量。
+  '--va-slider-dot-border-color': {
+    component: 'Slider',
+    file: 'slider/Slider.vue',
+    group: 'dot',
+    fallback: 'var(--va-border-split-color)',
+    description: '刻度点描边色（常态）'
+  },
+  '--va-slider-dot-border-color-hover': {
+    component: 'Slider',
+    file: 'slider/Slider.vue',
+    group: 'dot',
+    fallback: 'var(--va-fill-color-2)',
+    description: '刻度点描边色（悬停）'
+  },
+  '--va-slider-dot-color-active': {
+    component: 'Slider',
+    file: 'slider/Slider.vue',
+    group: 'dot',
+    fallback: 'var(--va-primary-border-color)',
+    themeRole: 'primary',
+    themeState: 'border',
+    description: '刻度点描边色（激活态，跟随组件级主色）'
+  },
   '--va-slider-tooltip-bg-color': {
     component: 'Slider',
     file: 'slider/Slider.vue',
@@ -333,7 +361,7 @@ export const COMPONENT_VARS = {
     file: 'table/Table.vue',
     group: 'border',
     fallback: 'var(--va-border-split-color)',
-    description: '单元格分隔线 / 外边框 / 固定列滚动阴影'
+    description: '单元格分隔线 / 外边框 / 固定列滚动阴影；另作可排序表头底与可排序行悬停底（改浅会连带变亮这两处底色）'
   },
   '--va-card-bg-color': {
     component: 'Card',
@@ -537,7 +565,7 @@ export const THEME_COMPONENT_KEYS = THEME_COMPONENTS.map((item) => item.key)
  * 组件名 → 该组件参与「组件级主色映射」的公开令牌条目
  *
  * 只收录带 `themeRole` 的令牌（其余令牌不随组件主色变化）。Provider 按当前配置的组件
- * 直接取条目，不必每个组件都全表扫描 `COMPONENT_VARS`（48 条）。
+ * 直接取条目，不必每个组件都全表扫描 `COMPONENT_VARS`。
  */
 export const COMPONENT_VARS_BY_COMPONENT = Object.entries(COMPONENT_VARS).reduce((result, [name, meta]) => {
   if (!meta.themeRole) {

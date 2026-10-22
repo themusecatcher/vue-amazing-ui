@@ -61,27 +61,27 @@ const customTooltipValue = ref<number>(37)
 const customStyleSingleValue = ref<number>(20)
 const customStyleDoubleValue = ref<number[]>([20, 80])
 const singleCustomStyle = {
-  '--slider-track-color': '#ffbb96',
-  '--slider-track-color-hover': '#d4380d',
-  '--slider-handle-color': '#fff2e8',
-  '--slider-handle-shadow-color': '#ffbb96',
-  '--slider-handle-shadow-color-hover-focus': '#d4380d',
-  '--slider-tooltip-color': 'rgba(0, 0, 0, 0.88)',
-  '--slider-tooltip-bg-color': '#fff'
+  '--va-slider-track-color': '#ffbb96',
+  '--va-slider-track-color-hover': '#d4380d',
+  '--va-slider-handle-color': '#fff2e8',
+  '--va-slider-handle-shadow-color': '#ffbb96',
+  '--va-slider-handle-shadow-color-hover-focus': '#d4380d',
+  '--va-slider-tooltip-color': 'rgba(0, 0, 0, 0.88)',
+  '--va-slider-tooltip-bg-color': '#fff'
 }
 const rangeCustomStyle = {
-  '--slider-rail-color': 'rgb(219, 219, 223)',
-  '--slider-rail-color-hover': 'rgb(199, 199, 203)',
-  '--slider-track-color': '#ffbb96',
-  '--slider-track-color-hover': '#d4380d',
-  '--slider-handle-color': '#fff2e8',
-  '--slider-handle-shadow-color': '#ffbb96',
-  '--slider-handle-shadow-color-hover-focus': '#d4380d',
-  '--slider-dot-border-color': 'rgb(219, 219, 223)',
-  '--slider-dot-border-color-hover': 'rgb(199, 199, 203)',
-  '--slider-dot-color-active': '#ffbb96',
-  '--slider-tooltip-color': 'rgba(0, 0, 0, 0.88)',
-  '--slider-tooltip-bg-color': '#fff'
+  '--va-slider-rail-color': 'rgb(219, 219, 223)',
+  '--va-slider-rail-color-hover': 'rgb(199, 199, 203)',
+  '--va-slider-track-color': '#ffbb96',
+  '--va-slider-track-color-hover': '#d4380d',
+  '--va-slider-handle-color': '#fff2e8',
+  '--va-slider-handle-shadow-color': '#ffbb96',
+  '--va-slider-handle-shadow-color-hover-focus': '#d4380d',
+  '--va-slider-dot-border-color': 'rgb(219, 219, 223)',
+  '--va-slider-dot-border-color-hover': 'rgb(199, 199, 203)',
+  '--va-slider-dot-color-active': '#ffbb96',
+  '--va-slider-tooltip-color': 'rgba(0, 0, 0, 0.88)',
+  '--va-slider-tooltip-bg-color': '#fff'
 }
 const tooltipStyle = {
   top: '-20px',

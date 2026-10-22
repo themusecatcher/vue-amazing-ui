@@ -8,7 +8,7 @@ import Modal from 'components/modal/Modal.vue'
  * 测试环境探针：验证 S0 的三个前置条件
  * 1. happy-dom 下 requestAnimationFrame 可用（组件帧调度依赖它）
  * 2. components 别名与 .vue 单文件组件可被解析
- * 3. 三个目标组件可独立挂载（useInject 有默认值回退，无需外层 ConfigProvider）
+ * 3. 三个目标组件可独立挂载（无需外层 ConfigProvider，主题注入均有默认值回退）
  */
 describe('测试环境探针', () => {
   it('requestAnimationFrame 可用，帧回调能被调度', async () => {

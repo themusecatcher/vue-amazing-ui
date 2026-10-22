@@ -39,6 +39,7 @@ pnpm docs:dev
 | [`development/project-structure.md`](development/project-structure.md) | 组织架构与目录结构         |
 | [`development/import-export.md`](development/import-export.md)         | 导入导出规范               |
 | [`development/component-design.md`](development/component-design.md)   | 组件设计规范（含主题系统） |
+| [`development/theme-system.md`](development/theme-system.md)           | 主题系统实现说明           |
 | [`development/demo-doc-guide.md`](development/demo-doc-guide.md)       | 演示与文档编写规范         |
 | [`development/build-system.md`](development/build-system.md)           | 构建产物体系（含测试）     |
 
@@ -141,7 +142,7 @@ pnpm lint:check   # ESLint 只读检查（不修改文件）
 pnpm type-check   # 类型检查
 pnpm test         # 单元测试（vitest）
 pnpm check        # 聚合检查：lint:check + format:check + type-check + test
-pnpm verify       # 重量级门禁：build + 依赖一致性 + 按需引入验证 + 产物守卫（发布前 / CI）
+pnpm verify       # 重量级门禁：build + 依赖一致性 + 按需引入验证 + 主题架构守护 + 产物守卫（发布前 / CI）
 ```
 
 提交前建议先本地运行 `pnpm check`，确保通过后再推送。

@@ -76,6 +76,7 @@
     "verify:deps": "node scripts/verify-style-deps.js",
     "verify:theme": "node scripts/verify-theme.js",
     "verify:on-demand": "node scripts/verify-on-demand.js",
+    "gen:vars": "node scripts/gen-component-vars-doc.js",
     "guard": "node scripts/prepublish-guard.js",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -130,7 +131,7 @@
     "vitepress": "^1.6.4",
     "vitest": "4.1.11",
     "vue": "^3.5.42",
-    "vue-amazing-ui": "2.15.2",
+    "vue-amazing-ui": "3.0.0",
     "vue-router": "^4.6.4",
     "vue-tsc": "^3.2.5"
   },
