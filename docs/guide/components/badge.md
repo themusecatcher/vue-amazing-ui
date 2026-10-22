@@ -165,7 +165,7 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
   </Badge>
   <Badge>
     <template #value>
-      <span class="u-value">world</span>
+      <span class="value-text">world</span>
     </template>
     <Avatar shape="square" size="large" />
   </Badge>
@@ -181,14 +181,14 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
     </Badge>
     <Badge>
       <template #value>
-        <span class="u-value">world</span>
+        <span class="value-text">world</span>
       </template>
       <Avatar shape="square" size="large" />
     </Badge>
   </Space>
 </template>
 <style lang="less" scoped>
-.u-value {
+.badge-value {
   display: inline-block;
   line-height: 20px;
   padding: 0 6px;
@@ -477,7 +477,7 @@ const colors = [
 :::
 
 <style lang="less" scoped>
-.u-value {
+.badge-value {
   display: inline-block;
   line-height: 20px;
   padding: 0 6px;
