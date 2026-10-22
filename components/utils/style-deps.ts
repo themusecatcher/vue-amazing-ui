@@ -115,6 +115,7 @@ const componentsMap = {
   TimePicker: 'time-picker',
   TimeUnitColumn: 'picker',
   Timeline: 'timeline',
+  TimelineItem: 'timeline/timeline-item',
   Tooltip: 'tooltip',
   Upload: 'upload',
   Video: 'video',
@@ -249,6 +250,7 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   TimePanel: ['TimeUnitColumn', 'Scrollbar'],
   TimePicker: ['TimePanel', 'TimeUnitColumn', 'PickerPanel', 'PickerTrigger', 'Button', 'Scrollbar', 'Popup'],
   TimeUnitColumn: ['Scrollbar'],
+  Timeline: ['TimelineItem'],
   Tooltip: ['Popup'],
   Upload: ['Image', 'Space', 'Spin'],
   Waterfall: ['Spin']

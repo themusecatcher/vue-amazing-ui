@@ -33,7 +33,7 @@ import type {
   TabsItem,
   TextScrollItem,
   ThemeMode,
-  TimelineItem,
+  TimelineItemProps,
   UploadFileType
 } from 'vue-amazing-ui'
 // 暗色模式演示默认展示暗色，便于直观对比两套默认表
@@ -63,9 +63,9 @@ const seedTheme = computed<ConfigProviderTheme>(() => ({
 }))
 // 「全组件联动」补充的 6 个主色消费点：Badge / Tag / GradientText / TimePicker / Timeline / Table
 const themeTimeValue = ref<number | null>(null)
-const themeTimelineItems: TimelineItem[] = [
-  { desc: 'Create a services site 2023-05-24' },
-  { desc: 'Solve initial network problems 2023-05-24', color: 'blue' }
+const themeTimelineItems: TimelineItemProps[] = [
+  { content: 'Create a services site 2023-05-24' },
+  { content: 'Solve initial network problems 2023-05-24', color: 'blue' }
 ]
 const themeTableColumns: TableColumn[] = [
   {
@@ -489,7 +489,9 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
       <Tag color="processing">Processing</Tag>
       <GradientText>Gradient Text</GradientText>
       <TimePicker v-model:value="themeTimeValue" placeholder="请选择时间" />
-      <Timeline :items="themeTimelineItems" />
+      <Timeline>
+        <TimelineItem v-for="(item, index) in themeTimelineItems" :key="index" v-bind="item" />
+      </Timeline>
     </Space>
     <Card>
       <Table :columns="themeTableColumns" :data-source="themeTableData" :show-pagination="false" size="small" />
@@ -601,15 +603,15 @@ import type {
   TableColumn,
   TabsItem,
   TextScrollItem,
-  TimelineItem,
+  TimelineItemProps,
   UploadFileType
 } from 'vue-amazing-ui'
 const primaryColor = ref<string>('#ff6900')
 // 补充的 6 个主色消费点：Badge / Tag / GradientText / TimePicker / Timeline / Table
 const themeTimeValue = ref<number | null>(null)
-const themeTimelineItems: TimelineItem[] = [
-  { desc: 'Create a services site 2023-05-24' },
-  { desc: 'Solve initial network problems 2023-05-24', color: 'blue' }
+const themeTimelineItems: TimelineItemProps[] = [
+  { content: 'Create a services site 2023-05-24' },
+  { content: 'Solve initial network problems 2023-05-24', color: 'blue' }
 ]
 const themeTableColumns: TableColumn[] = [
   {
@@ -887,7 +889,9 @@ function onDecline(scale: number) {
         <Tag color="processing">Processing</Tag>
         <GradientText>Gradient Text</GradientText>
         <TimePicker v-model:value="themeTimeValue" placeholder="请选择时间" />
-        <Timeline :items="themeTimelineItems" />
+        <Timeline>
+          <TimelineItem v-for="(item, index) in themeTimelineItems" :key="index" v-bind="item" />
+        </Timeline>
       </Space>
       <Card>
         <Table :columns="themeTableColumns" :data-source="themeTableData" :show-pagination="false" size="small" />

@@ -96,6 +96,7 @@ declare module 'vue' {
     Textarea: typeof VueAmazingUI.Textarea
     TimePicker: typeof VueAmazingUI.TimePicker
     Timeline: typeof VueAmazingUI.Timeline
+    TimelineItem: typeof VueAmazingUI.TimelineItem
     Tooltip: typeof VueAmazingUI.Tooltip
     Upload: typeof VueAmazingUI.Upload
     Video: typeof VueAmazingUI.Video
