@@ -14,25 +14,26 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-21">3.0.0</VersionDateTag>
+## <VersionDateTag date="2026-10-22">3.0.0</VersionDateTag>
 
 _本版需要改代码的地方：主题配置形式（`theme`）、`abstract` 默认值、五个已移除的工具函数；迁移对照见[定制主题](/guide/customize-theme.html#迁移-旧版主题-api)。_
 
-- 重构 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme`：改为 `{ seed, mode }`，原 `{ common, 组件名 }` 写法移除（组件级配色改用 `theme.components`），迁移对照见[定制主题](/guide/customize-theme.html)
-- 新增 `theme.mode`（`light` / `dark` / `auto`，`auto` 跟随系统配色）；组件样式只消费 `--va-*`，主色种子派生整套语义变量，不替品牌色做对比度兜底
+- 重构 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme` 为 `{ seed, mode, components }`：原 `{ common, 组件名 }` 写法移除（组件级配色改用 `theme.components`），新增 `mode`（`light` / `dark` / `auto`，`auto` 跟随系统配色），迁移对照见[定制主题](/guide/customize-theme.html)
 - 新增组件级主色 `theme.components.<组件名>.primaryColor`，覆盖 `39` 个使用主色的内置组件，键名写错在编译期报错
 - `abstract` 默认值由 `true` 改为 `false`（主题只作用于自身子树）；需要页面级主题（`Teleport` 浮层、页面链接色）时在最外层显式传 `:abstract="true"`
-- 移除 `toggleDark`：暗色切换改用 `theme.mode` 或直接写 `data-va-mode`
-- 移除 `rafTimeout` / `cancelRaf`：延时改用 `setTimeout` 或原生 `requestAnimationFrame`
-- 移除 `getColorPalettes` / `getAlphaColor`，改用新增的 `derive(seed, mode)` 取色（支持 `JS` / `canvas` / `SVG` 场景）
-- 新增 `Table` / `Card` / `Alert` / `Input` / `Textarea` / `Modal` / `Drawer` 的 `22` 个组件令牌（底色、边框、文字与占位符等），组件令牌共 `48` 个
+- 移除 `toggleDark` / `rafTimeout` / `cancelRaf` / `getColorPalettes` / `getAlphaColor`：暗色切换改用 `theme.mode` 或直接写 `data-va-mode`，延时改用 `setTimeout` 或原生 `requestAnimationFrame`，取色改用 `derive(seed, mode)`（支持 `JS` / `canvas` / `SVG` 场景）
+- 新增 `Table` / `Card` / `Alert` / `Input` / `Textarea` / `Modal` / `Drawer` 的 `22` 个组件令牌（底色、边框、文字与占位符等）与 [滑动输入条 Slider](/guide/components/slider.html) 刻度点的描边令牌（常态 / 悬停 / 激活，激活态跟随组件级主色），组件令牌共 `51` 个
 - 统一库内告警输出：`error` 全环境输出、`warn` / `debug` 仅开发期输出，同一提醒只输出一次；[二维码 QRCode](/guide/components/qr-code.html) 编码 / 绘制失败与 [折叠面板 Collapse](/guide/components/collapse.html) 复制失败改为 `error`
-- 修复暗色模式下的反色表面配色：[模态框 Modal](/guide/components/modal.html) / [抽屉 Drawer](/guide/components/drawer.html) / [图片 Image](/guide/components/image.html) 预览遮罩、[对话框 Dialog](/guide/components/dialog.html) 遮罩、[二维码 QRCode](/guide/components/qr-code.html) 状态遮罩、[菜单 Menu](/guide/components/menu.html) 折叠气泡、[颜色选择器 ColorPicker](/guide/components/color-picker.html) 面板、[标签 Tag](/guide/components/tag.html) 输入框与新增按钮
-- 修复 [表格 Table](/guide/components/table.html) 与 [列表 List](/guide/components/list.html) 的固定色在暗色下不协调，改为语义变量
-- [水印 Watermark](/guide/components/watermark.html) 默认色由固定黑 / 白改为语义变量（浅色 `15%` 黑、暗色 `18%` 白），并修复 `fixed=false` 时不能整屏覆盖
+- 修复暗色模式下的表面配色：[模态框 Modal](/guide/components/modal.html) / [抽屉 Drawer](/guide/components/drawer.html) / [图片 Image](/guide/components/image.html) 预览遮罩、[对话框 Dialog](/guide/components/dialog.html) 遮罩、[二维码 QRCode](/guide/components/qr-code.html) 状态遮罩、[菜单 Menu](/guide/components/menu.html) 折叠气泡、[颜色选择器 ColorPicker](/guide/components/color-picker.html) 面板、[标签 Tag](/guide/components/tag.html) 输入框与新增按钮的反色表面，[表格 Table](/guide/components/table.html) 与 [列表 List](/guide/components/list.html) 的固定色改用语义变量
+- [水印 Watermark](/guide/components/watermark.html) 默认色由固定黑 / 白改为语义变量（浅色 `15%` 黑、暗色 `18%` 白），并修复 `fixed=false` 时不能整屏覆盖、未配置 `ConfigProvider` 时默认色不跟随明暗模式
 - 修复 [日历 Calendar](/guide/components/calendar.html) 年选择器选中年份后列表区间随面板平移，重新展开才滚动到选中项
-- 优化 `ConfigProvider` 对 `<html>` 的写入权：只配组件主色的 `abstract` 实例不再参与全局仲裁，避免卸载时误清其它实例写入的变量
-- 重构使用者文档的主题章节（主题全景、优先级链与排查清单）与贡献者文档的主题实现说明，组件令牌作为附录并入；工具文档移除已删除函数页
+- 修复 [回到顶部 BackTop](/guide/components/back-top.html) 提示气泡的圆角被强制覆盖
+- 修复 [按钮 Button](/guide/components/button.html) 文字 / 链接类型的波纹色被实例主色覆盖
+- 修复 [进度条 Progress](/guide/components/progress.html) 进度值越界导致显示异常
+- 优化 `ConfigProvider` 对 `<html>` 的写入权：只配组件主色的 `abstract` 实例不参与全局仲裁，避免卸载时误清其它实例写入的变量；修复嵌套空 `ConfigProvider` 切断浮层的主题转发
+- 重构使用者文档的主题章节（主题全景、优先级链与排查清单），组件令牌说明作为附录并入；修正演示与文档中失效的样式变量与主题配置；工具文档移除已删除函数的页面
+- 文档站的暗色与主色切换到组件库主题系统，实时联动
+- 重构贡献者文档的主题实现说明，并同步开发文档与贡献指南的现状口径
 
 ## <VersionDateTag date="2026-10-19">2.15.2</VersionDateTag>
 
