@@ -23,7 +23,7 @@ import { render } from '../scripts/gen-component-vars-doc.js'
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const componentDir = resolve(rootDir, 'components')
 
-/** 允许出现在组件里的 `--va-*`：40 个全局别名 + 26 个组件令牌 + 全局运行时变量 */
+/** 允许出现在组件里的 `--va-*`：40 个全局别名 + 51 个组件令牌 + 全局运行时变量 */
 const allowedVarNames = new Set<string>([...THEME_VAR_NAMES, ...COMPONENT_VAR_NAMES, '--va-scrollbar-width'])
 
 /**
@@ -36,7 +36,8 @@ const usageBaseline: Record<string, number> = {
   'button/Button.vue': 53,
   // 派生组件：分割线跟随 Button 的 hover 色（primary 2 + danger-hover 2 + 链式 danger 2）
   'dropdown/dropdown-button/DropdownButton.vue': 6,
-  'slider/Slider.vue': 11,
+  // 轨道 2 + 未选 2 + 滑块 3 + 气泡 2 + 刻度点 3（dot 描边 / 悬停 / 激活）
+  'slider/Slider.vue': 14,
   // 主色桥 palette / text / color 共 4 处（浅色选中底 / 浅色选中字 / 深色选中底 / 深色水平选中底）
   'menu/Menu.vue': 12,
   'text-scroll/TextScroll.vue': 4,

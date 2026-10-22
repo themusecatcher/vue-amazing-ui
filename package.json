@@ -76,6 +76,7 @@
     "verify:deps": "node scripts/verify-style-deps.js",
     "verify:theme": "node scripts/verify-theme.js",
     "verify:on-demand": "node scripts/verify-on-demand.js",
+    "gen:vars": "node scripts/gen-component-vars-doc.js",
     "guard": "node scripts/prepublish-guard.js",
     "test": "vitest run",
     "test:watch": "vitest",

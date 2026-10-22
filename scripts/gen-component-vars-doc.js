@@ -31,10 +31,14 @@ const GROUP_LABELS = {
   track: '已选轨道',
   rail: '未选轨道',
   handle: '滑块',
+  dot: '刻度点',
   tooltip: '数值气泡',
   surface: '容器',
   selected: '选中态',
-  thumb: '滚动条滑块'
+  thumb: '滚动条滑块',
+  border: '边框',
+  header: '表头',
+  footer: '底部'
 }
 
 /**

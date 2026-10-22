@@ -761,13 +761,9 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
         --slider-rail-color-disabled: var(--va-border-split-color);
         --slider-track-color-disabled: var(--va-text-color-disabled);
         --slider-handle-shadow-color-disabled: var(--va-border-color);
-        /* 轨道 / 光环 / 气泡已提升为公开令牌，默认值写在消费处（见 component-vars.js）。
-           下面这些仍是私有：disabled 态统一走中性令牌，mark 属于组件自有细节；
-           激活态圆点描边虽是私有变量，同样跟随组件级主色桥（theme.components.Slider.primaryColor） */
+        /* 轨道 / 光环 / 气泡 / 刻度点描边已提升为公开令牌，默认值写在消费处（见 component-vars.js）。
+           下面这些仍是私有：disabled 态统一走中性令牌，圆点底色与 mark 属于组件自有细节 */
         --slider-dot-color: var(--va-bg-elevated-color);
-        --slider-dot-border-color: var(--va-border-split-color);
-        --slider-dot-border-color-hover: var(--va-fill-color-2);
-        --slider-dot-color-active: var(--va-cp-slider-primary-border-color, var(--va-primary-border-color));
         --slider-mark-color: var(--va-text-color-3);
         --slider-mark-color-active: var(--va-text-color-1);
       `
@@ -898,13 +894,13 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       width: 8px;
       height: 8px;
       background-color: var(--slider-dot-color);
-      border: 2px solid var(--slider-dot-border-color);
+      border: 2px solid var(--va-slider-dot-border-color, var(--va-border-split-color));
       border-radius: 50%;
       cursor: pointer;
       transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .slider-dot-active {
-      border-color: var(--slider-dot-color-active);
+      border-color: var(--va-slider-dot-color-active, var(--va-primary-border-color));
     }
   }
   .slider-marks {
@@ -941,7 +937,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     }
     .slider-dots {
       .slider-dot {
-        border-color: var(--slider-dot-border-color-hover);
+        border-color: var(--va-slider-dot-border-color-hover, var(--va-fill-color-2));
       }
       .slider-dot-active {
         border-color: var(--va-slider-track-color-hover, var(--va-primary-color));
