@@ -375,13 +375,19 @@ const itemClasses = computed(() => {
   padding-bottom: var(--timeline-gap, 20px);
 }
 // 视觉末位节点内容保底高度：避免单行末项过矮导致连线留白失衡；
-// 存在幽灵节点时，幽灵节点前一项同样保底
-.timeline-wrap:not(.timeline-reverse)
+// 存在幽灵节点时，幽灵节点前一项同样保底。
+// 仅垂直布局需要：水平布局的连线长度由宽度决定，与内容高度无关，故排除
+// （否则末项内容被撑到保底高度，整行随 align-items: stretch 一起变高）
+.timeline-wrap:not(.timeline-reverse):not(.timeline-horizontal)
   > .timeline-item-wrap:last-child:not(.timeline-item-pending)
   > .timeline-item-content,
-.timeline-wrap.timeline-pending:not(.timeline-reverse) > .timeline-item-wrap:nth-last-child(2) > .timeline-item-content,
-.timeline-wrap.timeline-reverse > .timeline-item-wrap:first-child > .timeline-item-content,
-.timeline-wrap.timeline-reverse.timeline-pending > .timeline-item-wrap:last-child > .timeline-item-content {
+.timeline-wrap.timeline-pending:not(.timeline-reverse):not(.timeline-horizontal)
+  > .timeline-item-wrap:nth-last-child(2)
+  > .timeline-item-content,
+.timeline-wrap.timeline-reverse:not(.timeline-horizontal) > .timeline-item-wrap:first-child > .timeline-item-content,
+.timeline-wrap.timeline-reverse.timeline-pending:not(.timeline-horizontal)
+  > .timeline-item-wrap:last-child
+  > .timeline-item-content {
   min-height: var(--timeline-last-content-min-height, 48px);
 }
 .timeline-wrap > .timeline-item-wrap:last-child > .timeline-item-tail {
@@ -391,7 +397,8 @@ const itemClasses = computed(() => {
 // 幽灵节点自身不画尾线，以区分「已发生」与「进行中」
 .timeline-wrap.timeline-pending:not(.timeline-reverse) > .timeline-item-wrap:nth-last-child(2) > .timeline-item-tail {
   display: block;
-  border-left-style: dotted;
+  // 覆写线型变量而非 border-left-style：水平布局的尾线是 border-top，同一变量两种方向都生效
+  --timeline-line-type: dotted;
 }
 // 倒序时视觉末位是 DOM 首位，幽灵节点在视觉首位向下正常续接
 .timeline-wrap.timeline-reverse > .timeline-item-wrap:first-child > .timeline-item-tail {
@@ -399,6 +406,12 @@ const itemClasses = computed(() => {
 }
 .timeline-wrap.timeline-pending.timeline-reverse > .timeline-item-wrap:last-child > .timeline-item-tail {
   display: block;
-  border-left-style: dotted;
+  --timeline-line-type: dotted;
+}
+// 水平 + 倒序：row-reverse 把 DOM 末位排到最左，视觉首位由它承载 ——
+// 上方「DOM 末位隐藏」的通用规则会把它的连线一并隐藏，此处恢复显示
+// （DOM 首位即视觉末位，其尾线由上方倒序规则隐藏，不会向右伸出残线）
+.timeline-wrap.timeline-horizontal.timeline-reverse > .timeline-item-wrap:last-child > .timeline-item-tail {
+  display: block;
 }
 </style>
