@@ -48,6 +48,7 @@ function onDecline(scale: number) {
       <Progress type="circle" :percent="100" />
     </Flex>
     <h2 class="mt30">渐变进度条</h2>
+    <p class="mb10"> 渐变进度条到达 100% 时保留渐变、不套用成功色；完成态的文案与图标仍转为成功色 </p>
     <p class="mb10">
       <code>strokeColor</code>: <code>{ '0%': '#108ee9', '100%': '#87d068', direction: 'right' }</code> 或
       <code>{ from: '#108ee9', to: '#87d068', direction: 'right' }</code>
@@ -76,7 +77,7 @@ function onDecline(scale: number) {
     <h2 class="mt30 mb10">自定义样式</h2>
     <Flex vertical>
       <Progress
-        style="--progress-success-color: #ff6900"
+        style="--va-success-color: #ff6900"
         :line-size="24"
         :line-color="{
           '0%': '#108ee9',
@@ -88,7 +89,7 @@ function onDecline(scale: number) {
       />
       <Space align="center">
         <Progress
-          style="--progress-success-color: #ff6900"
+          style="--va-success-color: #ff6900"
           type="circle"
           :width="180"
           :line-size="14"
@@ -143,7 +144,7 @@ function onDecline(scale: number) {
         :format="(percent: number) => `$${percent}`"
         success="Done"
       />
-      <Progress style="--success-color: #d48806" :line-size="20" :info-size="20" :percent="percent">
+      <Progress style="--va-success-color: #d48806" :line-size="20" :info-size="20" :percent="percent">
         <template #format="{ percent }">
           <span style="color: #d4380d">{{ percent }}%</span>
         </template>
@@ -162,7 +163,7 @@ function onDecline(scale: number) {
           success="Done"
         />
         <Progress
-          style="--success-color: #d48806"
+          style="--va-success-color: #d48806"
           type="circle"
           :width="160"
           :line-size="12"
