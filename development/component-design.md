@@ -280,7 +280,7 @@ components/modal/
 - **组件级主色**：`theme.components.<Component>.primaryColor` 只接受一个通用主色，Provider 用 `deriveColorStates` / `deriveFocusShadow` 展开成两组变量写到同一作用域节点：内部桥 `--va-cp-<component>-primary-*`（所有组件通用，覆盖该组件全部主色使用点）与注册表 `themeRole` 公开令牌（Button / Slider / Menu 的细粒度覆盖入口）。支持清单见 `component-vars.js` 的 `THEME_COMPONENTS`，未登记键开发环境告警；只配置组件、没有 `seed` / `mode` 的 `abstract=true` 实例不参与 `<html>` 写入权仲裁（需改用 `false` 或补全局主题）。
 - **暗色**：`mode` 是派生入参而不是第二套种子；只切 `mode` 时只写 `data-va-mode`，由静态表接管；`mode="auto"` 监听 `prefers-color-scheme` 并在卸载时解除。
 - **填充档位**：`--va-fill-color-1/2/3/4` 依次为三级 / 二级 / 最强 / 最淡的中性叠加，编号不代表强度；最淡的底纹与默认标签底用 `fill-color-4`，水印等需要更高可见度的默认色用 `fill-color-3`。
-- **只读快照**：`provide(THEME_SNAPSHOT_KEY, snapshot)` 仅供 canvas / SVG / 第三方 JS 读取，禁止借它写行内变量。`Watermark` 是首个消费者：默认水印色取快照里的 `--va-fill-color-3`（浅色 .15 黑 / 暗色 .18 白），主题变化时重绘；无 Provider 时回退浅色默认。
+- **只读快照**：`provide(THEME_SNAPSHOT_KEY, snapshot)` 仅供 canvas / SVG / 第三方 JS 读取，禁止借它写行内变量。`Watermark` 是首个消费者：默认水印色取快照里的 `--va-fill-color-3`（浅色 .15 黑 / 暗色 .18 白），主题变化时重绘；无 Provider 时回读 `<html>` 上的静态变量表（纯 CSS 暗色同样正确），SSR 才回落浅色默认。
 - **文档一致性口径**：机械清单（组件令牌）由 `scripts/gen-component-vars-doc.js` 生成，`tests/component-vars.spec.ts` 逐字节守护，生成物需提交；`定制主题` 页的叙事段（颜色变量清单、已知限制的理由）手写、只保证结论正确，不做逐值自动化 —— 新增可枚举清单优先走生成，不要再手写第二张表。
 - **取色出口**：公开 `derive(seed, mode)` 供 JS / canvas / SVG 场景取与 `--va-*` 逐值一致的结果；旧版色板 / 透明度色工具（`getColorPalettes` / `getAlphaColor`）已移除，焦点环所需的「等效半透明色」作为私有函数 `alphaOver` 留在 `theme/derive.ts`。
 - **演示站 / 文档站的暗色**：两处的主题开关都直接驱动 `ConfigProvider.mode` —— 演示站改写 `src/theme.ts` 的共享 `theme`（`layouts/GlobalLayout.vue`），文档站把 VitePress 的 `useData().isDark` 映射成 `mode`（`docs/.vitepress/theme/index.ts`）；两处均不使用 `html.dark` + `filter: invert()` 模拟暗色（旧的 `toggleDark()` 工具函数已随本版本移除，暗色统一由 `mode` / `data-va-mode` 驱动）。
