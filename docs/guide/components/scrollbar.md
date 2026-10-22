@@ -249,12 +249,12 @@ _可通过设置 `size` 属性，并用 `--va-scrollbar-*` 令牌（滑块颜色
   style="
     max-height: 120px;
     border-radius: 12px;
-    --va-scrollbar-color: rgba(0, 0, 0, 0.45);
-    --va-scrollbar-color-hover: rgba(0, 0, 0, 0.65);
+    --va-scrollbar-color: var(--va-text-color-3);
+    --va-scrollbar-color-hover: var(--va-text-color-2);
     --scrollbar-rail-vertical-right: 2px 6px 2px auto;
   "
   :size="8"
-  :content-style="{ backgroundColor: '#e6f4ff', padding: '16px 24px', fontSize: '16px' }"
+  :content-style="{ backgroundColor: 'var(--va-primary-bg-color)', padding: '16px 24px', fontSize: '16px', borderRadius: '12px' }"
 >
   我们在田野上面找猪<br />
   想象中已找到了三只<br />
@@ -283,12 +283,12 @@ _可通过设置 `size` 属性，并用 `--va-scrollbar-*` 令牌（滑块颜色
     style="
       max-height: 120px;
       border-radius: 12px;
-      --va-scrollbar-color: rgba(0, 0, 0, 0.45);
-      --va-scrollbar-color-hover: rgba(0, 0, 0, 0.65);
+      --va-scrollbar-color: var(--va-text-color-3);
+      --va-scrollbar-color-hover: var(--va-text-color-2);
       --scrollbar-rail-vertical-right: 2px 6px 2px auto;
     "
     :size="8"
-    :content-style="{ backgroundColor: '#e6f4ff', padding: '16px 24px', fontSize: '16px' }"
+    :content-style="{ backgroundColor: 'var(--va-primary-bg-color)', padding: '16px 24px', fontSize: '16px', borderRadius: '12px' }"
   >
     我们在田野上面找猪<br />
     想象中已找到了三只<br />

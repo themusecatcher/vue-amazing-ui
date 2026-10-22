@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
 import type { WatermarkProps } from 'vue-amazing-ui'
+import { theme } from '@/theme'
 const realTime = ref<string>(dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS'))
 let rafId = 0
 const updateTime = () => {
@@ -21,18 +22,28 @@ const imageModel = reactive({
   rotate: 0,
   layout: 'alternate'
 })
+// 水印由 canvas 绘制、读不到 CSS 变量，故按当前明暗模式给出与主题令牌 --va-fill-color-3 一致的默认色
+const defaultTextColor = computed<string>(() =>
+  theme.value.mode === 'dark' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(0, 0, 0, 0.15)'
+)
 const model = reactive({
   content: 'Vue Amazing UI',
   layout: 'alternate',
   zIndex: 9,
   rotate: -22,
   textStyle: {
-    color: 'rgba(0, 0, 0, 0.15)',
+    color: defaultTextColor.value,
     fontSize: 16,
     fontWeight: 400
   },
   gap: [100, 100],
   offset: [50, 50]
+})
+// 明暗切换时把仍是「模式默认色」的水印色一起换掉；经 ColorPicker 改过的颜色保持不动
+watch(defaultTextColor, (color: string, previousColor: string) => {
+  if (model.textStyle.color === previousColor) {
+    model.textStyle.color = color
+  }
 })
 // 演示「浮层位于水印之上」：水印排布加密，保证浮层覆盖的区域内一定有水印文字
 const layerDemoGap: [number, number] = [60, 60]
@@ -179,7 +190,7 @@ const layoutOptions = [
 .paragraph-text {
   margin-bottom: 1em;
   font-size: 16px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
   word-break: break-word;
   line-height: 1.5714285714285714;
 }
