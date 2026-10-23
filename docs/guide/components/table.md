@@ -3100,32 +3100,32 @@ watchEffect(() => {
 
 ## APIs
 
-### Table
+### Table Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | header | 表格标题 | string | undefined |
 | footer | 表格尾部 | string | undefined |
-| columns | 表格列的配置项 | [TableColumn](#column-type)[] | [] |
+| columns | 表格列的配置项 | [TableColumn](#tablecolumn-type)[] | [] |
 | dataSource | 表格数据数组 | object[] | [] |
 | bordered | 是否展示外边框和列边框 | boolean | false |
 | rowClassName | 自定义行的类名 | string &#124; ((record: Record<string, any>, rowIndex: number) => string) | undefined |
 | size | 表格大小 | 'large' &#124; 'middle' &#124; 'small' | 'large' |
 | striped | 是否使用斑马条纹 | boolean | false |
 | loading | 是否加载中 | boolean | false |
-| spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置数据加载中 | [SpinProps](./spin.md#spin) | {} |
-| emptyProps | `Empty` 组件属性配置，参考 [Empty Props](./empty.md#empty)，用于配置暂无数据 | [EmptyProps](./empty.md#empty) | {} |
-| ellipsisProps | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](./ellipsis.md#ellipsis)，用于全局配置文本省略 | [EllipsisProps](./ellipsis.md#ellipsis) | {} |
+| spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin-props)，用于配置数据加载中 | [SpinProps](./spin.md#spin-props) | {} |
+| emptyProps | `Empty` 组件属性配置，参考 [Empty Props](./empty.md#empty-props)，用于配置暂无数据 | [EmptyProps](./empty.md#empty-props) | {} |
+| ellipsisProps | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](./ellipsis.md#ellipsis-props)，用于全局配置文本省略 | [EllipsisProps](./ellipsis.md#ellipsis-props) | {} |
 | showSorterTooltip | 表头是否显示下一次排序的 `tooltip` 提示 | boolean | true |
 | sortDirections | 支持的排序方式 | ('ascend' &#124; 'descend')[] | ['ascend', 'descend'] |
-| sortTooltipProps | 排序 `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip)，用于全局配置排序弹出提示 | [TooltipProps](./tooltip.md#tooltip) | {} |
+| sortTooltipProps | 排序 `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip-props)，用于全局配置排序弹出提示 | [TooltipProps](./tooltip.md#tooltip-props) | {} |
 | sticky | 是否设置粘性定位的表头和水平滚动条，设置之后表头和滚动条会跟随页面固定 | boolean | false |
 | showPagination | 是否显示分页 | boolean | true |
-| pagination | `Pagination` 组件属性配置，参考 [Pagination Props](./pagination.md#pagination)，用于配置分页功能 | [PaginationProps](./pagination.md#pagination) | {} |
+| pagination | `Pagination` 组件属性配置，参考 [Pagination Props](./pagination.md#pagination-props)，用于配置分页功能 | [PaginationProps](./pagination.md#pagination-props) | {} |
 | rowKey | 表格内容行的唯一标识 `key`，可以是字符串或一个函数 | string &#124; ((record: Record<string, any>, index?: number) => string) | 'key' |
-| rowSelection | 列表项是否可选择 | [TableSelection](#selection-type) | undefined |
-| scroll | 表格是否可滚动，也可以指定滚动区域的宽、高 | [TableScrollOption](#scrolloption-type) | undefined |
-| scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar)，用于配置表格滚动条 | [ScrollbarProps](./scrollbar.md#scrollbar) | {} |
+| rowSelection | 列表项是否可选择 | [TableSelection](#tableselection-type) | undefined |
+| scroll | 表格是否可滚动，也可以指定滚动区域的宽、高 | [TableScrollOption](#tablescrolloption-type) | undefined |
+| scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar-props)，用于配置表格滚动条 | [ScrollbarProps](./scrollbar.md#scrollbar-props) | {} |
 | tableLayout | 表格布局方式，设为 `fixed` 表示内容不会影响列的布局，参考 [table-layout](https://developer.mozilla.org/zh-CN/docs/Web/CSS/table-layout) 属性，固定表头/列或使用了 `column.ellipsis` 时，默认值为 `fixed` | 'auto' &#124; 'fixed' | undefined |
 | showExpandColumn | 是否展示展开列 | boolean | false |
 | expandColumnTitle | 自定义展开列表头 | string | undefined |
@@ -3134,51 +3134,51 @@ watchEffect(() => {
 | expandedRowKeys <Tag color="cyan">v-model</Tag> | 展开行的 `key` 数组，控制展开行的属性；需与 `dataSource` 数据中的 `key` 配合使用 | string[] | [] |
 | expandRowByClick | 点击行是否展开 | boolean | false |
 
-### Column Type
+### TableColumn Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| title? | 列头显示文字 | string | undefined |
-| align? | 列文本的对齐方式 | 'left' &#124; 'center' &#124; 'right' | undefined |
-| width? | 列宽度，单位 `px` | string &#124; number | undefined |
-| className? | 自定义列的类名 | string | undefined |
-| colSpan? | 表头列合并,设置为 `0` 时，该列表头不渲染 | number | undefined |
-| dataIndex? | 列数据在数据项中对应的路径索引；数据展示列必传，操作列可忽略 | string | undefined |
-| key? | 自定义列标识，未设置 `dataIndex` 时作为 `Vue` 唯一的标识 | string | undefined |
-| ellipsis? | 超过宽度是否自动省略 | boolean | undefined |
-| ellipsisProps? | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](./ellipsis.md#ellipsis)，用于单独配置某列文本省略 | [EllipsisProps](./ellipsis.md#ellipsis) | undefined |
-| fixed? | 列是否固定 | 'left' &#124; 'right' | undefined |
-| slot? | 列插槽名称索引 | string | undefined |
-| children? | 列表头分组的子节点 | [TableColumn](#column-type)[] | undefined |
-| showSorterTooltip? | 表头是否显示下一次排序的 `tooltip` 提示，较高优先级 | boolean | undefined |
-| sortTooltipProps? | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip)，用于单独配置某列的排序弹出提示，较高优先级 | [TooltipProps](./tooltip.md#tooltip) | undefined |
-| defaultSortOrder? | 默认排序顺序，建议只设置一列的默认排序；如果设置多列，则只有第一列默认排序生效 | 'ascend' &#124; 'descend' | undefined |
-| sortDirections? | 支持的排序方式 | ('ascend' &#124; 'descend')[] | undefined |
-| sorter? | 升序排序函数，参考 [Array.sort](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) 的 `compareFunction`，当列表头分组时，请将排序设置在叶子节点 | (a: any, b: any) => number | undefined |
-| customCell? | 设置单元格属性 | (record: Record<string, any>, rowIndex: number, column: TableColumn) => object &#124; undefined | undefined |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| title? | 列头显示文字 | string |
+| align? | 列文本的对齐方式 | 'left' &#124; 'center' &#124; 'right' |
+| width? | 列宽度，单位 `px` | string &#124; number |
+| className? | 自定义列的类名 | string |
+| colSpan? | 表头列合并,设置为 `0` 时，该列表头不渲染 | number |
+| dataIndex? | 列数据在数据项中对应的路径索引；数据展示列必传，操作列可忽略 | string |
+| key? | 自定义列标识，未设置 `dataIndex` 时作为 `Vue` 唯一的标识 | string |
+| ellipsis? | 超过宽度是否自动省略 | boolean |
+| ellipsisProps? | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](./ellipsis.md#ellipsis-props)，用于单独配置某列文本省略 | [EllipsisProps](./ellipsis.md#ellipsis-props) |
+| fixed? | 列是否固定 | 'left' &#124; 'right' |
+| slot? | 列插槽名称索引 | string |
+| children? | 列表头分组的子节点 | [TableColumn](#tablecolumn-type)[] |
+| showSorterTooltip? | 表头是否显示下一次排序的 `tooltip` 提示，较高优先级 | boolean |
+| sortTooltipProps? | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip-props)，用于单独配置某列的排序弹出提示，较高优先级 | [TooltipProps](./tooltip.md#tooltip-props) |
+| defaultSortOrder? | 默认排序顺序，建议只设置一列的默认排序；如果设置多列，则只有第一列默认排序生效 | 'ascend' &#124; 'descend' |
+| sortDirections? | 支持的排序方式 | ('ascend' &#124; 'descend')[] |
+| sorter? | 升序排序函数，参考 [Array.sort](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) 的 `compareFunction`，当列表头分组时，请将排序设置在叶子节点 | (a: any, b: any) => number |
+| customCell? | 设置单元格属性 | (record: Record<string, any>, rowIndex: number, column: TableColumn) => object &#124; undefined |
 
-### Selection Type
+### TableSelection Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| columnTitle? | 自定义选择框标题 | string &#124; VNode | undefined |
-| columnWidth? | 列表选择框宽度 | string &#124; number | undefined |
-| fixed? | 复选框列是否固定在左边 | boolean | undefined |
-| hideSelectAll? | 是否隐藏全选复选框 | boolean | undefined |
-| type? | 复选框/单选框 | 'checkbox' &#124; 'radio' | undefined |
-| selectedRowKeys? | 选中项的 `key` 数组，需和 `onChange` 配合使用 | string[] | undefined |
-| onChange? | 选中项发生变化时的回调 | (selectedRowKeys: string[], selectedRows: Record<string, any>[]) => void | undefined |
-| onSelect? | 点击除全选外某行选择框时的回调 | (record: Record<string, any>, selected: boolean, selectedRows: Record<string, any>[], selectedRowKeys: string[]) => void | undefined |
-| onSelectAll? | 点击复选框全选时的回调 | (selected: boolean, selectedRows: Record<string, any>[], changeRows: Record<string, any>[], selectedRowKeys: string[], changeRowKeys: string[]) => void | undefined |
-| getSelectionProps? | 选择框组件的属性配置 | (record: Record<string, any>, rowIndex: number) => object | undefined |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| columnTitle? | 自定义选择框标题 | string &#124; VNode |
+| columnWidth? | 列表选择框宽度 | string &#124; number |
+| fixed? | 复选框列是否固定在左边 | boolean |
+| hideSelectAll? | 是否隐藏全选复选框 | boolean |
+| type? | 复选框/单选框 | 'checkbox' &#124; 'radio' |
+| selectedRowKeys? | 选中项的 `key` 数组，需和 `onChange` 配合使用 | string[] |
+| onChange? | 选中项发生变化时的回调 | (selectedRowKeys: string[], selectedRows: Record<string, any>[]) => void |
+| onSelect? | 点击除全选外某行选择框时的回调 | (record: Record<string, any>, selected: boolean, selectedRows: Record<string, any>[], selectedRowKeys: string[]) => void |
+| onSelectAll? | 点击复选框全选时的回调 | (selected: boolean, selectedRows: Record<string, any>[], changeRows: Record<string, any>[], selectedRowKeys: string[], changeRowKeys: string[]) => void |
+| getSelectionProps? | 选择框组件的属性配置 | (record: Record<string, any>, rowIndex: number) => object |
 
-### ScrollOption Type
+### TableScrollOption Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| initialScrollPositionOnChange? | 当分页、排序变化后是否滚动到表格初始位置 | boolean | undefined |
-| x? | 设置横向滚动，也可用于指定滚动区域的宽，可以设置为像素值，百分比，`true` 和 `'max-content'` | string &#124; number &#124; true | undefined |
-| y? | 设置纵向滚动，也可用于指定滚动区域的高，可以设置为像素值 | string &#124; number | undefined |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| initialScrollPositionOnChange? | 当分页、排序变化后是否滚动到表格初始位置 | boolean |
+| x? | 设置横向滚动，也可用于指定滚动区域的宽，可以设置为像素值，百分比，`true` 和 `'max-content'` | string &#124; number &#124; true |
+| y? | 设置纵向滚动，也可用于指定滚动区域的高，可以设置为像素值 | string &#124; number |
 
 ## Slots
 
@@ -3198,5 +3198,5 @@ watchEffect(() => {
 | :-- | :-- | :-- |
 | expand | 点击展开图标时的回调 | (expanded: boolean, record: Record<string, any>) => void |
 | expandedRowsChange | 展开的行变化时的回调 | (expandedRows: string[]) => void |
-| sortChange | 排序变化时的回调 | (column: [TableColumn](#column-type) &#124; null, currentDataSource: Record<string, any>[]) => void |
+| sortChange | 排序变化时的回调 | (column: [TableColumn](#tablecolumn-type) &#124; null, currentDataSource: Record<string, any>[]) => void |
 | change | 分页变化时的回调 | (page: number, pageSize: number) => void |

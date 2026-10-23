@@ -1916,22 +1916,22 @@ _按「改的是哪一层」定位，再检查作用域与覆盖范围；完整�
 
 ## APIs
 
-### ConfigProvider
+### ConfigProvider Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| theme | 主题对象 | [ConfigProviderTheme](#theme-type) | undefined |
+| theme | 主题对象 | [ConfigProviderTheme](#configprovidertheme-type) | undefined |
 | abstract | 是否不存在 `DOM` 包裹元素（默认渲染包裹元素、变量写在上面；传 `true` 时写 `<html>`，用于应用级主题。只有 `components`、没有 `seed` / `mode` 时不参与 `<html>` 写入，需改用 `false` 或补充全局主题） | boolean | false |
 | tag | `ConfigProvider` 被渲染成的元素，`abstract` 为 `false` 时有效 | string | 'div' |
 | baseZIndex | 浮层起始层级（`z-index`），传入后各浮层按「后出现者在上」自增分配；不传则各组件沿用自身默认层级 | number | undefined |
 
-### Theme Type
+### ConfigProviderTheme Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| seed? | 颜色种子 | [ThemeSeed](#themeseed-type) | undefined |
-| mode? | 模式：浅色 / 暗色 / 跟随系统 | 'light' \| 'dark' \| 'auto' | undefined |
-| components? | 组件级主色；优先于 `seed`；键为已接线的组件名（[ThemeComponentKey](#themecomponentkey-type)，写错在编译期报错） | Partial\<Record\<[ThemeComponentKey](#themecomponentkey-type), [ComponentThemeConfig](#componentthemeconfig-type)\>\> | undefined |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| seed? | 颜色种子 | [ThemeSeed](#themeseed-type) |
+| mode? | 模式：浅色 / 暗色 / 跟随系统 | 'light' \| 'dark' \| 'auto' |
+| components? | 组件级主色；优先于 `seed`；键为已接线的组件名（[ThemeComponentKey](#themecomponentkey-type)，写错在编译期报错） | Partial\<Record\<[ThemeComponentKey](#themecomponentkey-type), [ComponentThemeConfig](#componentthemeconfig-type)\>\> |
 
 > 未传 `theme`（或传空对象）时不写任何变量，完全使用静态默认表；`mode="auto"` 跟随系统 `prefers-color-scheme` 并在变化时重新派生；`seed` / `mode` / `components` 的派生规则详见[定制主题](/guide/customize-theme.html)。
 
@@ -1945,23 +1945,23 @@ _按「改的是哪一层」定位，再检查作用域与覆盖范围；完整�
 
 ### ComponentThemeConfig Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| primaryColor? | 组件主色，只接受不透明 `#rgb` / `#rrggbb` / `#rrggbbff`（与 `seed` 同一口径）；按色阶派生常态 / 悬停 / 按下 / 浅底 / 描边 / 实色文字 | string | undefined |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| primaryColor? | 组件主色，只接受不透明 `#rgb` / `#rrggbb` / `#rrggbbff`（与 `seed` 同一口径）；按色阶派生常态 / 悬停 / 按下 / 浅底 / 描边 / 实色文字 | string |
 
 > 组件级主色覆盖 `39` 个已接线的内置组件（完整清单见[组件级令牌](/guide/customize-theme.html#组件级令牌与整组覆盖)）；未接入的组件键会在开发环境告警。组件的细部件颜色（如 `Slider` 的 `rail` / `handle` / `tooltip`）仍用组件级令牌覆盖。
 
 ### ThemeSeed Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| primary? | 品牌主色 | string | '#1677ff' |
-| success? | 成功色 | string | '#52c41a' |
-| warning? | 警告色 | string | '#faad14' |
-| error? | 错误 / 危险色 | string | '#ff4d4f' |
-| info? | 信息色 | string | 跟随 primary |
-| neutralText? | 中性文本基准 | string | '#000000' |
-| neutralBg? | 中性背景基准（显式传入时两个模式共用，未传时按模式取 `#ffffff` / `#000000`） | string | '#ffffff' |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| primary? | 品牌主色，默认 `#1677ff` | string |
+| success? | 成功色，默认 `#52c41a` | string |
+| warning? | 警告色，默认 `#faad14` | string |
+| error? | 错误 / 危险色，默认 `#ff4d4f` | string |
+| info? | 信息色，未传时跟随 primary | string |
+| neutralText? | 中性文本基准，默认 `#000000` | string |
+| neutralBg? | 中性背景基准（显式传入时两个模式共用，未传时按模式取 `#ffffff` / `#000000`） | string |
 
 ## Slots
 

@@ -385,9 +385,9 @@ _可通过设置 `size` 属性，并用 `--va-scrollbar-*` 令牌（滑块颜色
 
 ## APIs
 
-### Scrollbar
+### Scrollbar Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | contentClass | 内容 `div` 的类名 | string | undefined |
 | contentStyle | 内容 `div` 的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |

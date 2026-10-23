@@ -895,16 +895,16 @@ div.spin-wrap.spin-item {
 
 ## APIs
 
-### Spin
+### Spin Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | spinning | 是否为加载中状态 | boolean | true |
 | size | 加载中尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | fitContent | 根节点宽度是否贴合内容宽度（内容比父容器窄时，遮罩与加载效果一起按内容宽度居中）；无内容时不生效 | boolean | false |
 | tip | 描述文案 | string | undefined |
 | delay | 延迟显示加载效果的时间（`ms`）；`0` 表示不延迟，可避免请求过快时 `loading` 一闪而过；仅在显示方向生效，隐藏始终立即 | number | 0 |
-| indicator | 加载指示符：`7` 种内置枚举（`dot` 四点闪烁 / `dot-wheel` 八点轮 / `line-wheel` 八线轮 / `ring-circle` 圆环 / `ring-rail` 圆环轨道 / `dynamic-circle` 动态圆环 / `magic-ring` 翻转双环）/ 也可传入 `VNode` 或渲染函数自定义（插槽形态请用 `#indicator`）/ 传 `null` 时不渲染 | [SpinIndicator](#indicator-type) | 'dot' |
+| indicator | 加载指示符：`7` 种内置枚举（`dot` 四点闪烁 / `dot-wheel` 八点轮 / `line-wheel` 八线轮 / `ring-circle` 圆环 / `ring-rail` 圆环轨道 / `dynamic-circle` 动态圆环 / `magic-ring` 翻转双环）/ 也可传入 `VNode` 或渲染函数自定义（插槽形态请用 `#indicator`）/ 传 `null` 时不渲染 | [SpinIndicator](#spinindicator-type) | 'dot' |
 | color | 指示符颜色；`indicator` 为 `magic-ring` 时表示外环颜色 | string | undefined |
 | spinCircleWidth | 圆环宽度（指示符宽度的百分比；`magic-ring` 收敛到 `6～26` 以保证两环定位与翻面动效有效）；仅 `ring-circle` / `ring-rail` / `magic-ring` 生效 | number | undefined（`ring-circle` / `ring-rail` 取 `12`、`magic-ring` 取 `13`） |
 | spinCirclePercent | 圆环弧长（`0～100`，圆环周长的百分比）；仅 `ring-circle` / `ring-rail` 生效 | number | 33 |
@@ -913,7 +913,7 @@ div.spin-wrap.spin-item {
 | rotate | 出现时是否整体旋转一圈；仅 `dot-wheel` / `line-wheel` 生效 | boolean | false |
 | speed | 动画周期（`ms`），值越小越快：`dot-wheel` / `line-wheel` 为亮度扫过一圈、`magic-ring` 为翻面一圈；仅 `dot-wheel` / `line-wheel` / `magic-ring` 生效 | number | undefined（`dot-wheel` / `line-wheel` 取 `800`、`magic-ring` 取 `1500`） |
 
-### Indicator Type
+### SpinIndicator Type
 
 <br/>
 

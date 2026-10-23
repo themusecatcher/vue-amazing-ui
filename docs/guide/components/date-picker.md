@@ -1801,9 +1801,9 @@ const rangePlaceholder = ['开始日期', '结束日期']
 
 ## APIs
 
-### DatePicker
+### DatePicker Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | value <Tag color="cyan">v-model</Tag> | 双向绑定值，毫秒时间戳；范围形态为两段元组，某段可为 `null` | number &#124; [number &#124; null, number &#124; null] &#124; null | null |
 | formattedValue <Tag color="cyan">v-model</Tag> | 字符串轨道的双向绑定值，传入时以它为准（受控）；显示格式由 `format` / `valueFormat` 决定 | string &#124; [string, string] &#124; null | null |
@@ -1847,46 +1847,58 @@ const rangePlaceholder = ['开始日期', '结束日期']
 
 ### DatePickerDisabledTime Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| DatePickerDisabledTime | 不可选择的时间判定 | (timestamp: number) => [DatePickerDisabledTimeUnits](#datepickerdisabledtimeunits-type) | undefined |
+<br/>
+
+不可选择的时间判定，入参为当前面板草稿值的时间戳。
+
+| 名称 | 值 |
+| :-- | :-- |
+| DatePickerDisabledTime | (timestamp: number) => [DatePickerDisabledTimeUnits](#datepickerdisabledtimeunits-type) |
 
 ### DatePickerRangeDisabledTime Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| DatePickerRangeDisabledTime | 范围形态的不可选择时间判定，`side` 标识当前作用在起点还是终点 | (timestamp: number, side: 'start' &#124; 'end') => [DatePickerDisabledTimeUnits](#datepickerdisabledtimeunits-type) | undefined |
+<br/>
+
+范围形态的不可选择时间判定，`side` 标识当前作用在起点还是终点。
+
+| 名称 | 值 |
+| :-- | :-- |
+| DatePickerRangeDisabledTime | (timestamp: number, side: 'start' &#124; 'end') => [DatePickerDisabledTimeUnits](#datepickerdisabledtimeunits-type) |
 
 ### DatePickerDisabledTimeUnits Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| disabledHours | 禁用的「时」 | () => number[] | undefined |
-| disabledMinutes | 禁用的「分」，入参为选中的「时」 | (hour: number) => number[] | undefined |
-| disabledSeconds | 禁用的「秒」，入参为选中的「时」「分」 | (hour: number, minute: number) => number[] | undefined |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| disabledHours? | 禁用的「时」 | () => number[] |
+| disabledMinutes? | 禁用的「分」，入参为选中的「时」 | (hour: number) => number[] |
+| disabledSeconds? | 禁用的「秒」，入参为选中的「时」「分」 | (hour: number, minute: number) => number[] |
 
 ### DatePickerTimeProps Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| hourStep | 「时」的步长，须能整除 `24`，否则按 `1` 处理 | number | 1 |
-| minuteStep | 「分」的步长，须能整除 `60`，否则按 `1` 处理 | number | 1 |
-| secondStep | 「秒」的步长，须能整除 `60`，否则按 `1` 处理 | number | 1 |
-| use12Hours | 是否使用 `12` 小时制，与 `12` 小时制格式（`hh`）配合使用 | boolean | false |
-| hideDisabledOptions | 是否隐藏禁用的选项 | boolean | false |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| hourStep? | 「时」的步长，默认 `1`；须能整除 `24`，非法值按 `1` 处理 | number |
+| minuteStep? | 「分」的步长，默认 `1`；须能整除 `60`，非法值按 `1` 处理 | number |
+| secondStep? | 「秒」的步长，默认 `1`；须能整除 `60`，非法值按 `1` 处理 | number |
+| use12Hours? | 是否使用 `12` 小时制，与 `12` 小时制格式（`hh`）配合使用 | boolean |
+| hideDisabledOptions? | 是否隐藏禁用的选项 | boolean |
 
 ### DatePickerPreset Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| label | 预设名称 | string &#124; VNode | - |
-| value | 预设值：单选形态为一个时间戳，范围形态为两段元组；可为返回预设值的函数（点击时才求值） | number &#124; [number, number] &#124; (() => number &#124; [number, number]) | - |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| label | 预设名称 | string &#124; VNode |
+| value | 预设值：单选形态为一个时间戳，范围形态为两段元组；可为返回预设值的函数（点击时才求值） | number &#124; [number, number] &#124; (() => number &#124; [number, number]) |
 
 ### DatePickerRangeInfo Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| DatePickerRangeInfo | 范围形态草稿变更的来源信息 | { range: 'start' &#124; 'end' } | undefined |
+<br/>
+
+范围形态草稿变更的来源信息。
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| range | 草稿变更落在哪一段 | 'start' &#124; 'end' |
 
 ### DefaultFormat Value
 

@@ -197,9 +197,9 @@ const disabledValue = ref('')
 
 ## APIs
 
-### Textarea
+### Textarea Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | width | 文本域宽度，单位 `px` | string &#124; number | '100%' |
 | allowClear | 可以点击清除图标删除内容 | boolean | false |

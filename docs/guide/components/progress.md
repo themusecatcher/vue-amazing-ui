@@ -519,14 +519,14 @@ function onDecline(scale: number) {
 
 ## APIs
 
-### Progress
+### Progress Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | width | 进度条宽度，单位 `px`；`type: 'line'` 时，为进度条宽度，默认值 `'100%'`；`type: 'circle'` 时，为进度圈宽高，默认值 `120` | string &#124; number | undefined |
 | percent | 当前进度百分比 | number | 0 |
 | lineSize | 进度条的尺寸，单位 `px`；`type: 'line'` 时，为进度条线高，默认值 `8`；`type: 'circle'` 时，单位是进度圈画布宽度的百分比，默认值 `6` | number | undefined |
-| lineColor | 进度条的色彩，支持纯色或渐变；进度圈时 `direction: 'left'` 为逆时针，`direction: 'right'` 为顺时针 | string &#124; [ProgressGradient](#gradient-type) | undefined |
+| lineColor | 进度条的色彩，支持纯色或渐变；进度圈时 `direction: 'left'` 为逆时针，`direction: 'right'` 为顺时针 | string &#124; [ProgressGradient](#progressgradient-type) | undefined |
 | lineCap | 进度条边缘的形状 | 'round' &#124; 'butt' | 'round' |
 | showInfo | 是否显示进度数值或状态图标 | boolean | true |
 | infoSize | 进度数值或状态图标的尺寸，单位 `px`；`type: 'line'` 时，默认值 `14`；`type: 'circle'` 时，默认值 `24` | number | undefined |
@@ -534,15 +534,15 @@ function onDecline(scale: number) {
 | format | 内容的模板函数 | (percent: number) => (string &#124; number) | (percent: number) => percent + '%' |
 | type | 进度条类型 | 'line' &#124; 'circle' | 'line' |
 
-### Gradient Type
+### ProgressGradient Type
 
-| 名称      | 说明    | 类型                 | 默认值    |
-| :--------- | :------- | :-------------------- | :-------- |
-| '0%'?     | 起始值  | string               | undefined |
-| '100%'?   | 终点值  | string               | undefined |
-| from?     | 起始值  | string               | undefined |
-| to?       | 终点值  | string               | undefined |
-| direction? | 渐变方向 | 'right' &#124; 'left' | 'right'   |
+| 名称      | 说明    | 类型                 |
+| :--------- | :------- | :-------------------- |
+| '0%'?     | 起始值  | string               |
+| '100%'?   | 终点值  | string               |
+| from?     | 起始值  | string               |
+| to?       | 终点值  | string               |
+| direction? | 渐变方向，默认 `'right'` | 'right' &#124; 'left' |
 
 ## Slots
 

@@ -958,9 +958,9 @@ p {
 
 ## APIs
 
-### Drawer
+### Drawer Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 width | 抽屉宽度，在 `placement` 为 `right` 或 `left` 时使用，单位 `px`；未设置时由 `size` 推导（`default` 为 `378px`、`large` 为 `736px`） | string &#124; number | undefined
 height | 抽屉高度，在 `placement` 为 `top` 或 `bottom` 时使用，单位 `px`；未设置时由 `size` 推导（`default` 为 `378px`、`large` 为 `736px`） | string &#124; number | undefined
@@ -973,7 +973,7 @@ headerClass | 设置 `Drawer` 头部的类名 | string | undefined
 headerStyle | 设置 `Drawer` 头部的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 bodyClass | 设置 `Drawer` 内容部分的类名 | string | undefined
 bodyStyle | 设置 `Drawer` 内容部分的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar)，用于设置内容滚动条的样式 | [ScrollbarProps](./scrollbar.md#scrollbar) | {}
+scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar-props)，用于设置内容滚动条的样式 | [ScrollbarProps](./scrollbar.md#scrollbar-props) | {}
 extra | 抽屉右上角的操作区域 | string | undefined
 footer | 抽屉的页脚 | string | undefined
 footerClass | 设置 `Drawer` 页脚的类名 | string | undefined

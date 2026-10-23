@@ -455,9 +455,9 @@ const layoutOptions = [
 
 ## APIs
 
-### Watermark
+### Watermark Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | width | 水印的宽度，默认为 `content` 自身的宽度，单位 `px` | number | undefined |
 | height | 水印的高度，默认为 `content` 自身的高度，单位 `px` | number | undefined |
@@ -468,19 +468,19 @@ const layoutOptions = [
 | content | 水印文字内容 | string &#124; string[] | undefined |
 | fullscreen | 是否启用全屏水印 | boolean | false |
 | fixed | 是否固定水印，仅当启用全屏水印时生效：`true` 为 `position: fixed` 始终钉住视口；`false` 为 `position: absolute`，覆盖整页并随文档原生滚动 | boolean | true |
-| textStyle | 水印文字样式；`color` 不传时取主题变量 `--va-fill-color-3`（随明暗切换） | [WatermarkFont](#font-type) | {<br/>&nbsp;&nbsp;fontSize: 16,<br/>&nbsp;&nbsp;fontWeight: 'normal',<br/>&nbsp;&nbsp;fontFamily: 'sans-serif',<br/>&nbsp;&nbsp;fontStyle: 'normal' <br/>} |
+| textStyle | 水印文字样式；`color` 不传时取主题变量 `--va-fill-color-3`（随明暗切换） | [WatermarkFont](#watermarkfont-type) | {<br/>&nbsp;&nbsp;fontSize: 16,<br/>&nbsp;&nbsp;fontWeight: 'normal',<br/>&nbsp;&nbsp;fontFamily: 'sans-serif',<br/>&nbsp;&nbsp;fontStyle: 'normal' <br/>} |
 | gap | 水印之间的间距 | [number, number] | [100, 100] |
 | offset | 水印距离容器左上角的偏移量，默认为 `gap/2` | [number, number] | [50, 50] |
 
-### Font Type
+### WatermarkFont Type
 
-| 名称      | 说明               | 类型                                                   | 默认值                |
-| :--------- | :------------------ | :------------------------------------------------------ | :-------------------- |
-| color     | 字体颜色           | string                                                 | 取 `--va-fill-color-3`（浅色 `rgba(0,0,0,.15)` / 暗色 `rgba(255,255,255,.18)`） |
-| fontSize  | 字体大小，单位 `px` | number                                                 | 16                    |
-| fontWeight | 字体粗细           | 'normal' &#124; 'light' &#124; 'weight' &#124; number  | 'normal'              |
-| fontFamily | 字体类型           | string                                                 | 'sans-serif'          |
-| fontStyle | 字体样式           | 'none' &#124; 'normal' &#124; 'italic' &#124; 'oblique' | 'normal'              |
+| 名称      | 说明               | 类型                                                   |
+| :--------- | :------------------ | :------------------------------------------------------ |
+| color?     | 字体颜色，默认取 `--va-fill-color-3`（浅色 `rgba(0,0,0,.15)` / 暗色 `rgba(255,255,255,.18)`） | string                                                 |
+| fontSize?  | 字体大小，单位 `px`，默认 `16` | number                                                 |
+| fontWeight? | 字体粗细，默认 `'normal'` | 'normal' &#124; 'light' &#124; 'weight' &#124; number  |
+| fontFamily? | 字体类型，默认 `'sans-serif'` | string                                                 |
+| fontStyle? | 字体样式，默认 `'normal'` | 'none' &#124; 'normal' &#124; 'italic' &#124; 'oblique' |
 
 ## Slots
 

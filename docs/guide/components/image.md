@@ -562,11 +562,11 @@ function customDownload(url: string, fileName?: string) {
 
 ## APIs
 
-### Image
+### Image Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| src | 图像地址或图像地址数组 | string &#124; [ImageItem](#image-type)[] | undefined |
+| src | 图像地址或图像地址数组 | string &#124; [ImageItem](#imageitem-type)[] | undefined |
 | name | 图像名称，未设置时自动从图像地址 `src` 中提取 | string | undefined |
 | width | 图像宽度，单位 `px` | string &#124; number &#124; (string &#124; number)[] | 100 |
 | height | 图像高度，单位 `px` | string &#124; number &#124; (string &#124; number)[] | 100 |
@@ -576,9 +576,9 @@ function customDownload(url: string, fileName?: string) {
 | preview | 预览文本 | string | '预览' |
 | previewImageStyle | 自定义预览图片时 `img` 元素的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | zIndex | 预览遮罩层级，预览容器取该值 `+ 10`；未传时使用默认层级（遮罩 `1070` / 预览 `1080` / 操作按钮 `1081`），或由 `ConfigProvider` 的 `baseZIndex` 分配 | number | undefined |
-| spaceProps | `Space` 组件属性配置，参考 [Space Props](./space.md#space)，用于配置多张展示图片时的排列方式 | [SpaceProps](./space.md#space) | {} |
-| spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置图片加载中样式 | [SpinProps](./spin.md#spin) | {} |
-| previewSpinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置预览图片加载中样式 | [SpinProps](./spin.md#spin) | {} |
+| spaceProps | `Space` 组件属性配置，参考 [Space Props](./space.md#space-props)，用于配置多张展示图片时的排列方式 | [SpaceProps](./space.md#space-props) | {} |
+| spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin-props)，用于配置图片加载中样式 | [SpinProps](./spin.md#spin-props) | {} |
+| previewSpinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin-props)，用于配置预览图片加载中样式 | [SpinProps](./spin.md#spin-props) | {} |
 | zoomRatio | 每次缩放比率 | number | 0.1 |
 | minZoomScale | 最小缩放比例 | number | 0.1 |
 | maxZoomScale | 最大缩放比例 | number | 10 |
@@ -589,12 +589,12 @@ function customDownload(url: string, fileName?: string) {
 | downloadOptions | 图片下载配置，透传给内置 `downloadFile` 的第三个参数 `options`；默认 `auto` 策略（同源 `anchor` / 跨域 `iframe`） | { target?: '_self' &#124; '_blank'; strategy?: 'auto' &#124; 'anchor' &#124; 'iframe' } | undefined |
 | customDownload | 自定义下载方法，提供时优先于内置 `downloadFile` 使用；用于解决跨域图床下载受限（如 `X-Frame-Options`、无 `CORS`）等内置策略无法满足的场景 | (url: string, fileName?: string) => void &#124; Promise&lt;void&gt; | undefined |
 
-### Image Type
+### ImageItem Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :---- | :------- | :----- | :-------- |
-| src | 图像地址 | string | undefined |
-| name? | 图像名称，未设置时自动从图像地址 `src` 中提取 | string | undefined |
+| 名称 | 说明 | 类型 |
+| :---- | :------- | :----- |
+| src | 图像地址 | string |
+| name? | 图像名称，未设置时自动从图像地址 `src` 中提取 | string |
 
 ## Slots
 

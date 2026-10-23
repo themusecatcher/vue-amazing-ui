@@ -74,7 +74,7 @@ function showPosition() {
 
 ## Params
 
-| 参数  | 说明                      | 类型     | 默认值    |
+| 名称  | 说明                      | 类型     | 默认值    |
 | ----- | ------------------------- | -------- | --------- |
 | fn    | 要执行的函数              | Function | undefined |
 | delay | 防抖的时间期限，单位 `ms` | number   | 300       |

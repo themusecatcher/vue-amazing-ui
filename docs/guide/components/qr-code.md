@@ -409,7 +409,7 @@ const level = ref('L')
 
 ## 自定义加载中
 
-_通过 `spinProps` 配置 `loading` 状态的指示符，参考 [Spin Props](./spin.md#spin)；不传时按遮罩尺寸取 `small` 档_
+_通过 `spinProps` 配置 `loading` 状态的指示符，参考 [Spin Props](./spin.md#spin-props)；不传时按遮罩尺寸取 `small` 档_
 
 <br/>
 
@@ -562,9 +562,9 @@ const value = ref('hello world')
 
 ## APIs
 
-### QRCode
+### QRCode Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | value | 需要编码为二维码的文本或地址；未传入（或传入空字符串）时渲染空容器，不生成二维码 | string | undefined |
 | title | 无障碍文本：`svg` 类型输出为 `title` 元素，`canvas` / `image` 类型输出为 `aria-label` / `alt` | string | undefined |
@@ -580,7 +580,7 @@ const value = ref('hello world')
 | bordered | 是否展示外边框 | boolean | true |
 | borderColor | 外边框颜色 | string | 取 `--va-border-split-color`（浅色 `#f0f0f0` / 暗色 `#303030`） |
 | status | 二维码状态 | 'active' &#124; 'expired' &#124; 'loading' &#124; 'scanned' | 'active' |
-| spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置加载中样式（`Spin` 默认按遮罩尺寸取 `small` 档） | [SpinProps](./spin.md#spin) | {} |
+| spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin-props)，用于配置加载中样式（`Spin` 默认按遮罩尺寸取 `small` 档） | [SpinProps](./spin.md#spin-props) | {} |
 | expiredText | `status` 为 `expired` 时的提示文案 | string | '二维码已过期' |
 | refreshText | `status` 为 `expired` 时刷新按钮的文案 | string | '点击刷新' |
 | scannedText | `status` 为 `scanned` 时的提示文案 | string | '已扫描' |

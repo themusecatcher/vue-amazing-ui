@@ -716,9 +716,9 @@ const checkboxRef = ref<InstanceType<typeof Checkbox> | null>(null)
 
 ## APIs
 
-### Checkbox
+### Checkbox Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 checked <Tag color="cyan">v-model</Tag> | 当前是否选中；作为组内单项使用时由组内已选值决定，本属性不生效 | boolean | false
 value | 本项的值；脱离组时随 `change` 事件回传，置于 `CheckboxGroup` 内时作为本项的身份标识 | string &#124; number | undefined
@@ -728,9 +728,9 @@ autofocus | 是否自动聚焦原生 `input` | boolean | false
 name | 原生 `input` 的表单字段名；置于 `CheckboxGroup` 内时以组的配置为准 | string | undefined
 id | 原生 `input` 的 `id` | string | undefined
 
-### CheckboxGroup
+### CheckboxGroup Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 value <Tag color="cyan">v-model</Tag> | 组内已选中的值；不传时由组内部维护 | (string &#124; number)[] | []
 options | 复选框选项数据；提供后组内默认插槽不生效 | (string &#124; number &#124; [CheckboxGroupOption](#checkboxgroupoption-type))[] | []
@@ -743,11 +743,11 @@ autofocus | 是否自动聚焦首项，仅 `options` 模式生效 | boolean | fa
 
 ### CheckboxGroupOption Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-label? | 选项名，未提供时以选项值展示；传入 `VNode` 时原样渲染 | string &#124; number &#124; VNode | undefined
-value | 选项值 | string &#124; number | undefined
-disabled? | 是否禁用选项 | boolean | undefined
+名称 | 说明 | 类型
+:-- | :-- | :--
+label? | 选项名，未提供时以选项值展示；传入 `VNode` 时原样渲染 | string &#124; number &#124; VNode
+value | 选项值 | string &#124; number
+disabled? | 是否禁用选项 | boolean
 
 ## Slots
 

@@ -646,9 +646,9 @@ const cancel = (e: MouseEvent) => {
 
 ## APIs
 
-### Popconfirm
+### Popconfirm Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 title | 弹出确认框的标题 | string | undefined
 titleStyle | 设置标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
@@ -660,13 +660,13 @@ icon | 自定义弹出确认框 `Icon` 图标，预置四种类型，或 `prop` 
 iconStyle | 设置 `Icon` 图标的样式，一般不需要设置，主要用于自定义 `Icon` 图标时 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 cancelText | 取消按钮文字 | string | '取消'
 cancelType | 取消按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default'
-cancelProps | 取消按钮 `props`，优先级高于 `cancelType`，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {}
+cancelProps | 取消按钮 `props`，优先级高于 `cancelType`，参考 [Button Props](./button.md#button-props) | [ButtonProps](./button.md#button-props) | {}
 okText | 确认按钮文字 | string | '确定'
 okType | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'primary'
-okProps | 确认按钮 `props`，优先级高于 `okType`，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {}
+okProps | 确认按钮 `props`，优先级高于 `okType`，参考 [Button Props](./button.md#button-props) | [ButtonProps](./button.md#button-props) | {}
 showCancel | 是否显示取消按钮 | boolean | true
 
-更多属性请参考 [Tooltip Props](./tooltip.md#tooltip)
+更多属性请参考 [Tooltip Props](./tooltip.md#tooltip-props)
 
 ## Slots
 

@@ -916,11 +916,11 @@ const state = reactive({
 
 ## APIs
 
-### TextScroll
+### TextScroll Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| items | 滚动文字数组，`single` 为 `true` 时，类型为 `TextScrollItem`；多条文字水平滚动时，数组长度必须大于等于 `amount` 才能滚动 | [TextScrollItem](#item-type)[] &#124; [TextScrollItem](#item-type) | [] |
+| items | 滚动文字数组，`single` 为 `true` 时，类型为 `TextScrollItem`；多条文字水平滚动时，数组长度必须大于等于 `amount` 才能滚动 | [TextScrollItem](#textscrollitem-type)[] &#124; [TextScrollItem](#textscrollitem-type) | [] |
 | single | 是否启用单条文字滚动效果，水平滚动时生效，为 `true` 时，`amount` 自动设为 `1` | boolean | false |
 | width | 滚动区域宽度，单位 `px` | string &#124; number | '100%' |
 | height | 滚动区域高度，单位 `px` | number | 50 |
@@ -933,16 +933,16 @@ const state = reactive({
 | duration | 垂直滚动过渡持续时间，单位 `ms`，垂直滚动时生效 | number | 1000 |
 | interval | 垂直文字滚动时间间隔，单位 `ms`，垂直滚动时生效 | number | 3000 |
 | ellipsis | 是否启用文本省略组件 | boolean | false |
-| ellipsisProps | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](./ellipsis.md#ellipsis)，用于配置文本省略弹出提示 | [EllipsisProps](./ellipsis.md#ellipsis) | {} |
+| ellipsisProps | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](./ellipsis.md#ellipsis-props)，用于配置文本省略弹出提示 | [EllipsisProps](./ellipsis.md#ellipsis-props) | {} |
 | pauseOnMouseEnter | 鼠标移入是否暂停滚动 | boolean | false |
 
-### Item Type
+### TextScrollItem Type
 
-| 名称   | 说明                               | 类型                     | 默认      |
-| ------- | ----------------------------------- | ------------------------- | --------- |
-| title  | 文字标题                           | string                   | undefined |
-| href?  | 跳转链接                           | string                   | undefined |
-| target? | 跳转链接打开方式，`href` 存在时生效 | '\_self' &#124; '\_blank' | undefined |
+| 名称   | 说明                               | 类型                     |
+| ------- | ----------------------------------- | ------------------------- |
+| title  | 文字标题                           | string                   |
+| href?  | 跳转链接                           | string                   |
+| target? | 跳转链接打开方式，`href` 存在时生效 | '\_self' &#124; '\_blank' |
 
 ## Methods
 
@@ -956,4 +956,4 @@ const state = reactive({
 
 | 名称 | 说明            | 类型                               |
 | :---- | :--------------- | :--------------------------------- |
-| click | 点击标题时的回调 | (item: [TextScrollItem](#item-type)) => void |
+| click | 点击标题时的回调 | (item: [TextScrollItem](#textscrollitem-type)) => void |

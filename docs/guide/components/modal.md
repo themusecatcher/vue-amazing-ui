@@ -30,7 +30,7 @@ _适用于命令式调用：先在应用根节点放置一次 `<ModalProvider>`�
 ::: info 关于 `ModalProvider` 与 `Modal`
 
 - `ModalProvider` 内部渲染一个 `Modal` 组件，并通过 `provide/inject` 向下提供 `useModal()` 所需的 `API`，自身不渲染任何可见内容
-- 组件级配置属性（`width` / `height` / `centered` / `top` / `blockScroll` / `to` 等）会透传给内部的 `Modal`，因此直接参考下方 [Modal Props](#modal) 设置即可
+- 组件级配置属性（`width` / `height` / `centered` / `top` / `blockScroll` / `to` 等）会透传给内部的 `Modal`，因此直接参考下方 [Modal Props](#modal-props) 设置即可
 - 使用 `useModal()` 时，组件级配置设置在 `<ModalProvider>` 上（无法直接接触内部 `Modal`）；每次调用的个性化配置（`title` / `content` / `icon` / `width` / `onOk` 等）则在调用 `info` / `confirm` 等方法时作为参数传入，参考 [ModalOptions Type](#modaloptions-type)
 
 :::
@@ -2716,7 +2716,7 @@ function onToModal() {
 
 ## APIs
 
-### Modal
+### Modal Props
 
 <br/>
 
@@ -2726,7 +2726,7 @@ _组件级配置属性：使用 `useModal()` 时设置在 `<ModalProvider>` 上�
 
 _每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)_
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | width | 模态框宽度，单位 `px` | string &#124; number | 420 |
 | height | 内容区高度，单位 `px`，默认自适应内容高度；指定后内容区内部滚动 | string &#124; number | 'auto' |
@@ -2737,16 +2737,16 @@ _每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)
 | content | 模态框内容 | string &#124; VNode &#124; (() => VNode) | undefined |
 | contentClass | 自定义内容类名 | string | undefined |
 | contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| scrollbarProps | 内容滚动条 `Scrollbar` 属性配置 | [ScrollbarProps](./scrollbar.md#scrollbar) | {} |
+| scrollbarProps | 内容滚动条 `Scrollbar` 属性配置 | [ScrollbarProps](./scrollbar.md#scrollbar-props) | {} |
 | bodyClass | 自定义弹窗卡片（`.modal-body-wrap`）类名，用于定制背景 / 圆角 / 阴影等外观 | string | undefined |
 | bodyStyle | 自定义弹窗卡片（`.modal-body-wrap`）样式，用于定制背景 / 圆角 / 阴影等外观 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | cancelText | 取消按钮文字 | string | '取消' |
-| cancelProps | 取消按钮 `props` 配置，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {} |
+| cancelProps | 取消按钮 `props` 配置，参考 [Button Props](./button.md#button-props) | [ButtonProps](./button.md#button-props) | {} |
 | okText | 确认按钮文字 | string | '确定' |
 | okType | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'primary' |
-| okProps | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {} |
+| okProps | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](./button.md#button-props) | [ButtonProps](./button.md#button-props) | {} |
 | noticeText | 通知按钮文字 | string | '知道了' |
-| noticeProps | 通知按钮 `props` 配置，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {} |
+| noticeProps | 通知按钮 `props` 配置，参考 [Button Props](./button.md#button-props) | [ButtonProps](./button.md#button-props) | {} |
 | footer | 是否显示底部按钮区：`false` 隐藏，`true` 渲染内置按钮组，传函数则完全自定义；插槽形态请用 `#footer` | boolean &#124; (() => VNode) | true |
 | closable | 是否显示右上角关闭按钮，默认 `false`，需要时显式开启 | boolean | false |
 | closeIcon | 自定义关闭图标，`prop` 支持 `VNode` / 渲染函数；插槽形态请用同名 `#closeIcon` 插槽 | VNode &#124; (() => VNode) | undefined |
@@ -2785,56 +2785,56 @@ _每次调用的个性化配置请参考 [ModalOptions Type](#modaloptions-type)
 
 _调用时传入的 `ModalOptions` 类型（`info` / `success` / `error` / `warning` / `confirm` / `erase` / `create` 的参数），以下属性均具有更高优先级（覆盖组件级配置）_
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| width? | 模态框宽度，单位 `px` | string &#124; number | undefined |
-| height? | 内容区高度，单位 `px`，指定后内容区内部滚动 | string &#124; number | undefined |
-| icon? | 自定义图标 | VNode &#124; (() => VNode) | undefined |
-| title? | 模态框标题 | string &#124; VNode &#124; (() => VNode) | undefined |
-| titleClass? | 自定义标题类名 | string | undefined |
-| titleStyle? | 自定义标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| content? | 模态框内容 | string &#124; VNode &#124; (() => VNode) | undefined |
-| contentClass? | 自定义内容类名 | string | undefined |
-| contentStyle? | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| scrollbarProps? | 内容滚动条 `Scrollbar` 属性配置 | [ScrollbarProps](./scrollbar.md#scrollbar) | undefined |
-| bodyClass? | 自定义弹窗卡片（`.modal-body-wrap`）类名，用于定制背景 / 圆角 / 阴影等外观 | string | undefined |
-| bodyStyle? | 自定义弹窗卡片（`.modal-body-wrap`）样式，用于定制背景 / 圆角 / 阴影等外观 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| showCancel? | 是否显示取消按钮，仅 `confirm` &#124; `erase` 双按钮形态生效，默认 `true`；`info` 等单按钮形态与 `create` 完全自定义形态不生效 | boolean | undefined |
-| cancelText? | 取消按钮文字 | string | undefined |
-| cancelProps? | 取消按钮 `props` 配置，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | undefined |
-| okText? | 确认按钮文字 | string | undefined |
-| okType? | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | undefined |
-| okProps? | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | undefined |
-| noticeText? | 通知按钮文字 | string | undefined |
-| noticeProps? | 通知按钮 `props` 配置，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | undefined |
-| footer? | 底部区域，`false` 隐藏，函数则完全自定义；无内置按钮组时（`create` 调用）即便为 `true` 也不渲染空白区域 | boolean &#124; (() => VNode) | undefined |
-| closable? | 是否显示右上角关闭按钮，默认 `false`，需要时显式开启 | boolean | undefined |
-| closeIcon? | 自定义关闭图标 | VNode &#124; (() => VNode) | undefined |
-| closeFocusable? | 关闭按钮是否可聚焦，设为 `false` 后不参与 `Tab` 序列 | boolean | undefined |
-| destroyOnClose? | 关闭时是否销毁 `Modal` 里的子元素，命令式默认 `true` | boolean | undefined |
-| centered? | 是否水平垂直居中，否则固定高度水平居中 | boolean | undefined |
-| top? | 固定高度水平居中时，距顶部高度，仅当 `centered: false` 时生效，单位 `px` | string &#124; number | undefined |
-| transformOrigin? | 模态框动画出现的位置 | 'mouse' &#124; 'center' | undefined |
-| blockScroll? | 是否在打开模态框时禁用背景滚动 | boolean | undefined |
-| keyboard? | 是否支持键盘 `esc` 关闭 | boolean | undefined |
-| mask? | 是否展示遮罩 | boolean | undefined |
-| maskClosable? | 点击蒙层是否允许关闭，命令式调用默认 `false`（避免误触关闭），需要时显式传 `true` | boolean | undefined |
-| maskClass? | 自定义蒙层类名 | string | undefined |
-| maskStyle? | 自定义蒙层样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| wrapClass? | 自定义外层容器（`.modal-wrap`）类名，多实例同时打开时以栈顶为准 | string | undefined |
-| wrapStyle? | 自定义外层容器（`.modal-wrap`）样式，多实例同时打开时以栈顶为准 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| containerClass? | 自定义弹窗定位层（`.modal-container`）类名，用于覆盖 `width` / `top` / `zIndex` 等定位表现 | string | undefined |
-| containerStyle? | 自定义弹窗定位层（`.modal-container`）样式，优先级高于 `width` / `top` / `zIndex` 等内置样式；卡片外观（背景 / 圆角 / 阴影）请用 `bodyClass` / `bodyStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| zIndex? | 单实例层级，遮罩取该值，弹窗取该值 `+ 10`；未传时回退到组件级 `zIndex`，再回退到默认层级（遮罩 `1000` / 弹窗 `1010`）或由 `ConfigProvider` 的 `baseZIndex` 分配 | number | undefined |
-| autoFocusButton? | 打开时自动聚焦的按钮 | 'ok' &#124; 'cancel' | undefined |
-| focusTriggerAfterClose? | 关闭后是否将焦点归还给触发元素 | boolean | undefined |
-| modalRender? | 自定义渲染弹窗内容，常用于包裹拖拽逻辑 | (arg: { originVNode: VNode }) => VNode | undefined |
-| afterClose? | 完全关闭（离场动画结束）后的回调 | () => void | undefined |
-| onKnow? | 点击知道了按钮的回调，返回 `false` 或 `Promise` `reject` 时阻止关闭 | () => unknown &#124; Promise\<unknown\> | undefined |
-| onOk? | 点击确认按钮的回调，返回 `false` 或 `Promise` `reject` 时阻止关闭 | () => unknown &#124; Promise\<unknown\> | undefined |
-| onCancel? | 点击遮罩层、`Esc` 键或取消按钮的回调，返回 `false` 或 `Promise` `reject` 时阻止关闭 | () => unknown &#124; Promise\<unknown\> | undefined |
-| onEsc? | 按下 `Esc` 键的回调，无论是否允许关闭都会触发 | (e: KeyboardEvent) => void | undefined |
-| onMaskClick? | 点击遮罩的回调，无论是否允许关闭都会触发 | (e: MouseEvent) => void | undefined |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| width? | 模态框宽度，单位 `px` | string &#124; number |
+| height? | 内容区高度，单位 `px`，指定后内容区内部滚动 | string &#124; number |
+| icon? | 自定义图标 | VNode &#124; (() => VNode) |
+| title? | 模态框标题 | string &#124; VNode &#124; (() => VNode) |
+| titleClass? | 自定义标题类名 | string |
+| titleStyle? | 自定义标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) |
+| content? | 模态框内容 | string &#124; VNode &#124; (() => VNode) |
+| contentClass? | 自定义内容类名 | string |
+| contentStyle? | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) |
+| scrollbarProps? | 内容滚动条 `Scrollbar` 属性配置 | [ScrollbarProps](./scrollbar.md#scrollbar-props) |
+| bodyClass? | 自定义弹窗卡片（`.modal-body-wrap`）类名，用于定制背景 / 圆角 / 阴影等外观 | string |
+| bodyStyle? | 自定义弹窗卡片（`.modal-body-wrap`）样式，用于定制背景 / 圆角 / 阴影等外观 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) |
+| showCancel? | 是否显示取消按钮，仅 `confirm` &#124; `erase` 双按钮形态生效，默认 `true`；`info` 等单按钮形态与 `create` 完全自定义形态不生效 | boolean |
+| cancelText? | 取消按钮文字 | string |
+| cancelProps? | 取消按钮 `props` 配置，参考 [Button Props](./button.md#button-props) | [ButtonProps](./button.md#button-props) |
+| okText? | 确认按钮文字 | string |
+| okType? | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' |
+| okProps? | 确认按钮 `props` 配置，优先级高于 `okType`，参考 [Button Props](./button.md#button-props) | [ButtonProps](./button.md#button-props) |
+| noticeText? | 通知按钮文字 | string |
+| noticeProps? | 通知按钮 `props` 配置，参考 [Button Props](./button.md#button-props) | [ButtonProps](./button.md#button-props) |
+| footer? | 底部区域，`false` 隐藏，函数则完全自定义；无内置按钮组时（`create` 调用）即便为 `true` 也不渲染空白区域 | boolean &#124; (() => VNode) |
+| closable? | 是否显示右上角关闭按钮，默认 `false`，需要时显式开启 | boolean |
+| closeIcon? | 自定义关闭图标 | VNode &#124; (() => VNode) |
+| closeFocusable? | 关闭按钮是否可聚焦，设为 `false` 后不参与 `Tab` 序列 | boolean |
+| destroyOnClose? | 关闭时是否销毁 `Modal` 里的子元素，命令式默认 `true` | boolean |
+| centered? | 是否水平垂直居中，否则固定高度水平居中 | boolean |
+| top? | 固定高度水平居中时，距顶部高度，仅当 `centered: false` 时生效，单位 `px` | string &#124; number |
+| transformOrigin? | 模态框动画出现的位置 | 'mouse' &#124; 'center' |
+| blockScroll? | 是否在打开模态框时禁用背景滚动 | boolean |
+| keyboard? | 是否支持键盘 `esc` 关闭 | boolean |
+| mask? | 是否展示遮罩 | boolean |
+| maskClosable? | 点击蒙层是否允许关闭，命令式调用默认 `false`（避免误触关闭），需要时显式传 `true` | boolean |
+| maskClass? | 自定义蒙层类名 | string |
+| maskStyle? | 自定义蒙层样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) |
+| wrapClass? | 自定义外层容器（`.modal-wrap`）类名，多实例同时打开时以栈顶为准 | string |
+| wrapStyle? | 自定义外层容器（`.modal-wrap`）样式，多实例同时打开时以栈顶为准 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) |
+| containerClass? | 自定义弹窗定位层（`.modal-container`）类名，用于覆盖 `width` / `top` / `zIndex` 等定位表现 | string |
+| containerStyle? | 自定义弹窗定位层（`.modal-container`）样式，优先级高于 `width` / `top` / `zIndex` 等内置样式；卡片外观（背景 / 圆角 / 阴影）请用 `bodyClass` / `bodyStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) |
+| zIndex? | 单实例层级，遮罩取该值，弹窗取该值 `+ 10`；未传时回退到组件级 `zIndex`，再回退到默认层级（遮罩 `1000` / 弹窗 `1010`）或由 `ConfigProvider` 的 `baseZIndex` 分配 | number |
+| autoFocusButton? | 打开时自动聚焦的按钮 | 'ok' &#124; 'cancel' |
+| focusTriggerAfterClose? | 关闭后是否将焦点归还给触发元素 | boolean |
+| modalRender? | 自定义渲染弹窗内容，常用于包裹拖拽逻辑 | (arg: { originVNode: VNode }) => VNode |
+| afterClose? | 完全关闭（离场动画结束）后的回调 | () => void |
+| onKnow? | 点击知道了按钮的回调，返回 `false` 或 `Promise` `reject` 时阻止关闭 | () => unknown &#124; Promise\<unknown\> |
+| onOk? | 点击确认按钮的回调，返回 `false` 或 `Promise` `reject` 时阻止关闭 | () => unknown &#124; Promise\<unknown\> |
+| onCancel? | 点击遮罩层、`Esc` 键或取消按钮的回调，返回 `false` 或 `Promise` `reject` 时阻止关闭 | () => unknown &#124; Promise\<unknown\> |
+| onEsc? | 按下 `Esc` 键的回调，无论是否允许关闭都会触发 | (e: KeyboardEvent) => void |
+| onMaskClick? | 点击遮罩的回调，无论是否允许关闭都会触发 | (e: MouseEvent) => void |
 
 ### ModalUpdate Type
 

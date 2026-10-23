@@ -786,9 +786,9 @@ const destroyOpen = ref(false)
 
 ## APIs
 
-### Tooltip
+### Tooltip Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | maxWidth | 文字提示最大宽度，单位 `px` | string &#124; number | 240 |
 | content | 展示的内容 | string | undefined |

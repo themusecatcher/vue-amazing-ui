@@ -1240,11 +1240,11 @@ function onChange(values: (number | string)[], labels: string[]) {
 
 ## APIs
 
-### Cascader
+### Cascader Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| options | 可选项数据源 | [CascaderOption](#option-type)[] | [] |
+| options | 可选项数据源 | [CascaderOption](#cascaderoption-type)[] | [] |
 | fieldNames | 选项的文本 / 值 / 后代字段名配置 | `{ label?: string, value?: string, children?: string }` | `{ label: 'label', value: 'value', children: 'children' }` |
 | placeholder | 三级选择器各自占位文本 | string &#124; string[] | '请选择' |
 | disabled | 是否禁用，可全部禁用或单独禁用某一级选择器 | boolean &#124; boolean[] | false |
@@ -1258,20 +1258,20 @@ function onChange(values: (number | string)[], labels: string[]) {
 | placement | 下拉面板弹出位置 | 'bottom' &#124; 'top' | 'bottom' |
 | flip | 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true |
 | to | 下拉面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
-| filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段（`fieldNames.label`，默认 `label`）是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | ((inputValue: string, option: [CascaderOption](#option-type)) => boolean) &#124; true | true |
+| filter | 过滤条件函数，仅当支持搜索时生效，根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项的文本字段（`fieldNames.label`，默认 `label`）是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | ((inputValue: string, option: [CascaderOption](#cascaderoption-type)) => boolean) &#124; true | true |
 | maxDisplay | 下拉面板最多能展示的项数，超过后滚动显示 | number | 6 |
-| scrollbarProps | 下拉面板滚动条 `scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar) | [ScrollbarProps](./scrollbar.md#scrollbar) | {} |
+| scrollbarProps | 下拉面板滚动条 `scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar-props) | [ScrollbarProps](./scrollbar.md#scrollbar-props) | {} |
 | value <Tag color="cyan">v-model</Tag> | 级联选中项 | number[] &#124; string[] | [] |
 
-### Option Type
+### CascaderOption Type
 
-| 名称              | 说明                                                  | 类型                    | 默认值    |
-| :----------------- | :----------------------------------------------------- | :----------------------- | :-------- |
-| label?            | 选项名                                                | string                  | undefined |
-| value?            | 选项值                                                | string &#124; number    | undefined |
-| disabled?         | 是否禁用选项                                          | boolean                 | false     |
-| children?         | 选项 `children` 数组                                  | [CascaderOption](#option-type)[] | undefined |
-| [propName: string] | 添加一个字符串索引签名，用于包含带有任意数量的其他属性 | any                     | undefined |
+| 名称              | 说明                                                  | 类型                    |
+| :----------------- | :----------------------------------------------------- | :----------------------- |
+| label?            | 选项名                                                | string                  |
+| value?            | 选项值                                                | string &#124; number    |
+| disabled?         | 是否禁用选项                                          | boolean                 |
+| children?         | 选项 `children` 数组                                  | [CascaderOption](#cascaderoption-type)[] |
+| [propName: string] | 添加一个字符串索引签名，用于包含带有任意数量的其他属性 | any                     |
 
 ## Events
 

@@ -480,9 +480,9 @@ const state = reactive({
 
 ## APIs
 
-### Rate
+### Rate Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 allowClear | 是否允许再次点击后清除 | boolean | true
 allowHalf | 是否允许半选 | boolean | false
@@ -493,7 +493,7 @@ color | 字符选中颜色 | string | '#fadb14'
 gap | 字符间距，单位 `px` | number | 8
 disabled | 只读，无法进行交互 | boolean | false
 tooltips | 自定义每项的提示信息 | string[] | []
-tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip) | [TooltipProps](./tooltip.md#tooltip) | {}
+tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip-props) | [TooltipProps](./tooltip.md#tooltip-props) | {}
 value <Tag color="cyan">v-model</Tag> | 当前数，受控值 `0,1,2,3...` | number | 0
 
 ## Slots

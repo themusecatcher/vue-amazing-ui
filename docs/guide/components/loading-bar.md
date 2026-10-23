@@ -31,7 +31,7 @@ _适用于组件内部调用：先在应用根节点放置一次 `<LoadingBarPro
 ::: info 关于 `LoadingBarProvider` 与 `LoadingBar`
 
 - `LoadingBarProvider` 内部渲染一个 `LoadingBar` 组件，并通过 `provide/inject` 向下提供 `useLoadingBar()` 所需的 `API`，自身不渲染任何可见内容
-- 加载条的配置属性（`loadingBarSize` / `colorLoading` / `colorFinish` / `colorError` / `loadingBarStyle` / `to` 等）会透传给内部的 `LoadingBar`，因此直接参考下方 [LoadingBar Props](#loadingbar) 设置即可
+- 加载条的配置属性（`loadingBarSize` / `colorLoading` / `colorFinish` / `colorError` / `loadingBarStyle` / `to` 等）会透传给内部的 `LoadingBar`，因此直接参考下方 [LoadingBar Props](#loadingbar-props) 设置即可
 - 使用 `useLoadingBar()` 时，组件级配置设置在 `<LoadingBarProvider>` 上（无法直接接触内部 `LoadingBar`）；逐次调用的参数差异通过 `start(from, to, status)` 传入
 
 :::
@@ -584,13 +584,13 @@ function onThemeError() {
 
 ## APIs
 
-### LoadingBar
+### LoadingBar Props
 
 <br/>
 
 _组件级配置属性（`class` / `style` 亦会透传到加载条容器）：使用 `useLoadingBar()` 时设置在 `<LoadingBarProvider>` 上（会透传给内部 `LoadingBar`），直接使用 `<LoadingBar>` 组件时设置在 `<LoadingBar>` 上，两者等价_
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | containerClass | 加载条容器的类名 | string | undefined |
 | containerStyle | 加载条容器的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |

@@ -323,9 +323,9 @@ function playNumsCompare() {
 
 ## APIs
 
-### Statistic
+### Statistic Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 title | 数值的标题 | string | undefined
 value | 数值的内容 | string &#124; number | undefined

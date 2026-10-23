@@ -208,7 +208,7 @@ const scrollTargetName = computed(() => {
 
 ## Params
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | contentRef | 触发器内容元素，用于向上查找可滚动父元素 | Ref&lt;HTMLElement &#124; null&gt; | undefined |
 | onScroll | 滚动/`resize` 触发的回调函数 | () => void | undefined |
@@ -216,7 +216,7 @@ const scrollTargetName = computed(() => {
 
 ### ScrollParentOptions
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | passive | 是否使用 `passive` 滚动监听 | boolean | 跟随浏览器支持情况 |
 | onCleanup | 附加清理，组件自身需在 `cleanup` 时执行的逻辑 | () => void | undefined |

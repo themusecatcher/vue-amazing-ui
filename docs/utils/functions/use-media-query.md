@@ -62,7 +62,7 @@ const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 
 ## Params
 
-| 参数       | 说明                                     | 类型   | 默认值    |
+| 名称       | 说明                                     | 类型   | 默认值    |
 | ---------- | ---------------------------------------- | ------ | --------- |
 | mediaQuery | 媒体查询字符串，用于定义要查询的媒体条件 | string | undefined |
 

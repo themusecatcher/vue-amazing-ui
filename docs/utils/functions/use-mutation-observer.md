@@ -241,7 +241,7 @@ function removeItem() {
 
 ## Params
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | target | 要观察的 `DOM` 元素或元素数组，可以是 `ref` 引用，也可以是 `DOM` 元素本身 | Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[] | undefined |
 | callback | 当观察到变化时调用的回调函数 | MutationCallback | undefined |

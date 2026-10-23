@@ -790,9 +790,9 @@ onmessage = async (e: MessageEvent) => {
 
 ## APIs
 
-### Upload
+### Upload Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | accept | 接受上传的文件类型，与`<input type="file" />`的 `accept` 属性一致，参考 [input accept Attribute](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Attributes/accept) | string | '\*' |
 | multiple | 是否支持多选文件，开启后可选择多个文件 | boolean | false |
@@ -801,21 +801,21 @@ onmessage = async (e: MessageEvent) => {
 | fit | 预览图片缩放规则，参考 [object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit)，仅当上传文件为图片时生效 | 'fill' &#124; 'contain' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain' |
 | draggable | 是否支持拖拽上传，开启后可拖拽文件到选择框上传 | boolean | true |
 | disabled | 是否禁用，只能预览，不能删除和上传 | boolean | false |
-| spaceProps | `Space` 组件属性配置，参考 [Space Props](./space.md#space)，用于配置多个文件时的排列方式 | [SpaceProps](./space.md#space) | {} |
-| spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置上传中样式 | [SpinProps](./spin.md#spin) | {} |
-| imageProps | `Image` 组件属性配置，参考 [Image Props](./image.md#image)，用于配置图片预览 | [ImageProps](./image.md#image) | {} |
+| spaceProps | `Space` 组件属性配置，参考 [Space Props](./space.md#space-props)，用于配置多个文件时的排列方式 | [SpaceProps](./space.md#space-props) | {} |
+| spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin-props)，用于配置上传中样式 | [SpinProps](./spin.md#spin-props) | {} |
+| imageProps | `Image` 组件属性配置，参考 [Image Props](./image.md#image-props)，用于配置图片预览 | [ImageProps](./image.md#image-props) | {} |
 | beforeUpload | 上传文件之前的钩子，参数为上传的文件，返回 `false` 则停止上传，返回 `true` 开始上传；支持返回一个 `Promise` 对象（如服务端校验等），`Promise` 对象 `reject` 时停止上传，`resolve` 时开始上传；通常用来校验用户上传的文件格式和大小 | (file: File) => boolean &#124; void &#124; Promise&lt;unknown&gt; | () => true |
 | uploadMode | 上传文件的方式 | 'base64' &#124; 'custom' | 'base64' |
-| customRequest | 自定义上传行为，只有 `uploadMode: custom` 时，才会使用 `customRequest` 自定义上传行为；未配置时默认返回空结果，避免调用 `.then` 报错 | (file: File) => Promise&lt;[UploadFileType](#filetype-type)&gt; | () => Promise.resolve({ url: '' }) |
-| fileList <Tag color="cyan">v-model</Tag> | 已上传的文件列表 | [UploadFileType](#filetype-type)[] | [] |
+| customRequest | 自定义上传行为，只有 `uploadMode: custom` 时，才会使用 `customRequest` 自定义上传行为；未配置时默认返回空结果，避免调用 `.then` 报错 | (file: File) => Promise&lt;[UploadFileType](#uploadfiletype-type)&gt; | () => Promise.resolve({ url: '' }) |
+| fileList <Tag color="cyan">v-model</Tag> | 已上传的文件列表 | [UploadFileType](#uploadfiletype-type)[] | [] |
 
-### FileType Type
+### UploadFileType Type
 
-| 名称              | 说明                          | 类型  | 默认值    |
-| :----------------- | :----------------------------- | :----- | :-------- |
-| name?             | 文件名                        | string | undefined |
-| url               | 文件地址                      | string | undefined |
-| [propName: string] | 用于包含带有任意数量的其他属性 | any   | undefined |
+| 名称              | 说明                          | 类型  |
+| :----------------- | :----------------------------- | :----- |
+| name?             | 文件名                        | string |
+| url               | 文件地址                      | string |
+| [propName: string] | 用于包含带有任意数量的其他属性 | any   |
 
 ## Slots
 
@@ -828,8 +828,8 @@ onmessage = async (e: MessageEvent) => {
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 | drop | 当文件被拖入上传区域时的回调 | (e: [DragEvent](https://developer.mozilla.org/zh-CN/docs/Web/API/DragEvent/DragEvent)) => void |
-| change | 上传文件改变时的回调 | (files: [UploadFileType](#filetype-type)[]) => void |
-| preview | 点击预览时的回调 | (file: [UploadFileType](#filetype-type)) => void |
-| remove | 点击移除文件时的回调 | (file: [UploadFileType](#filetype-type)) => void |
-| success | 上传成功时的回调 | (file: [UploadFileType](#filetype-type), files: [UploadFileType](#filetype-type)[]) => void |
+| change | 上传文件改变时的回调 | (files: [UploadFileType](#uploadfiletype-type)[]) => void |
+| preview | 点击预览时的回调 | (file: [UploadFileType](#uploadfiletype-type)) => void |
+| remove | 点击移除文件时的回调 | (file: [UploadFileType](#uploadfiletype-type)) => void |
+| success | 上传成功时的回调 | (file: [UploadFileType](#uploadfiletype-type), files: [UploadFileType](#uploadfiletype-type)[]) => void |
 | error | 上传失败时的回调 | (error: any) => void |

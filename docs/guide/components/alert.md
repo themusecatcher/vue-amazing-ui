@@ -601,9 +601,9 @@ function onClose(e: Event) {
 
 ## APIs
 
-### Alert
+### Alert Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 message | 警告提示内容 | string | undefined
 description | 警告提示的辅助性文字介绍 | string | undefined

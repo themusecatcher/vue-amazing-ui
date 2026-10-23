@@ -1996,11 +1996,11 @@ watch(
 
 ## APIs
 
-### Carousel
+### Carousel Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-images | 轮播图图片数组 | [CarouselImage](#image-type)[] | []
+images | 轮播图图片数组 | [CarouselImage](#carouselimage-type)[] | []
 width | 轮播图宽度，单位 `px` | number &#124; string | '100%'
 height | 轮播图高度，单位 `px` | number &#124; string | '100vh'
 autoplay | 是否自动轮播 | boolean | false
@@ -2021,16 +2021,16 @@ dotStyle | 指示点样式，优先级高于 `dotSize`、`dotColor` | [CSSProper
 dotActiveStyle | 指示点选中样式，优先级高于 `dotActiveColor` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 dotPosition | 指示点位置，位置为 `left` &#124; `right` 时，`effect: 'slide'` 轮播自动变为垂直轮播 | 'bottom' &#124; 'top' &#124; 'left' &#124; 'right' | 'bottom'
 dotTrigger | 指示点触发切换的方式 | 'click' &#124; 'hover' | 'click'
-spinProps | 图片加载中样式，`Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin) | [SpinProps](./spin.md#spin) | {}
+spinProps | 图片加载中样式，`Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin-props) | [SpinProps](./spin.md#spin-props) | {}
 objectFit | 图片填充方式，同 `CSS` `object-fit` | 'fill' &#124; 'contain' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'fill'
 draggable | 是否可以拖拽滑动切换（鼠标与触摸均支持） | boolean | false
 mousewheel | 是否支持鼠标滚轮切换 | boolean | false
 fadeDuration | 渐变动画持续时长，单位 `ms`，仅当 `effect` 为 `'fade'` 时生效 | number | 500
 fadeFunction | 渐变动画函数，仅当 `effect` 为 `'fade'` 时生效，可传四个三次贝塞尔控制点（自动转为 `CSS` `cubic-bezier()` 写法）或 `CSS` [transition-timing-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function) 写法 | string &#124; [number, number, number, number] | [0.4, 0, 0.2, 1]
 slideDuration | 滑动动画持续时长，单位 `ms`，仅当 `effect` 为 `'slide'` 时生效 | number | 800
-slideFunction | 滑动动画函数，仅当 `effect` 为 `'slide'` 时生效，可传缓动预设名、三次贝塞尔控制点数组或缓动函数 | [CarouselEasingPreset](#easingpreset-type) &#124; [CubicBezierPoints](https://vueuse.org/core/useTransition/) &#124; [EasingFunction](https://vueuse.org/core/useTransition/) | [0.65, 0, 0.35, 1]
+slideFunction | 滑动动画函数，仅当 `effect` 为 `'slide'` 时生效，可传缓动预设名、三次贝塞尔控制点数组或缓动函数 | [CarouselEasingPreset](#carouseleasingpreset-type) &#124; [CubicBezierPoints](https://vueuse.org/core/useTransition/) &#124; [EasingFunction](https://vueuse.org/core/useTransition/) | [0.65, 0, 0.35, 1]
 
-### EasingPreset Type
+### CarouselEasingPreset Type
 
 <br/>
 
@@ -2040,14 +2040,14 @@ slideFunction | 滑动动画函数，仅当 `effect` 为 `'slide'` 时生效，�
 | :-- | :-- |
 | CarouselEasingPreset | 'linear' &#124; 'easeInSine' &#124; 'easeOutSine' &#124; 'easeInOutSine' &#124; 'easeInQuad' &#124; 'easeOutQuad' &#124; 'easeInOutQuad' &#124; 'easeInCubic' &#124; 'easeOutCubic' &#124; 'easeInOutCubic' &#124; 'easeInQuart' &#124; 'easeOutQuart' &#124; 'easeInOutQuart' &#124; 'easeInQuint' &#124; 'easeOutQuint' &#124; 'easeInOutQuint' &#124; 'easeInExpo' &#124; 'easeOutExpo' &#124; 'easeInOutExpo' &#124; 'easeInCirc' &#124; 'easeOutCirc' &#124; 'easeInOutCirc' &#124; 'easeInBack' &#124; 'easeOutBack' &#124; 'easeInOutBack' |
 
-### Image Type
+### CarouselImage Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-name? | 图片名称 | string | undefined
-src | 图片地址 | string | undefined
-link? | 图片跳转链接 | string | undefined
-target? | 如何打开跳转链接 | '_self' &#124; '_blank' | undefined
+名称 | 说明 | 类型
+:-- | :-- | :--
+name? | 图片名称 | string
+src | 图片地址 | string
+link? | 图片跳转链接 | string
+target? | 如何打开跳转链接 | '_self' &#124; '_blank'
 
 ## Slots
 
@@ -2063,7 +2063,7 @@ dots | 自定义指示点，需自行调用 `to(n)` 切换 | v-slot:dots="{ to, 
 :-- | :-- | :--
 beforeChange | 切换开始时触发，`from` 为当前页、`to` 为目标页，均从 `1` 开始 | (from: number, to: number) => void
 afterChange | 切换结束后触发，参数为当前页，从 `1` 开始 | (current: number) => void
-click | 点击图片时的回调 | (image: [CarouselImage](#image-type)) => void
+click | 点击图片时的回调 | (image: [CarouselImage](#carouselimage-type)) => void
 
 ## Methods
 

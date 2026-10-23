@@ -283,9 +283,9 @@ const customGapSize = ref(16)
 
 ## APIs
 
-### Space
+### Space Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 width | 区域总宽度，单位 `px` | string &#124; number | 'auto'
 align | 垂直排列方式 | 'stretch' &#124; 'start' &#124; 'end' &#124; 'center' &#124; 'baseline' | 'start'

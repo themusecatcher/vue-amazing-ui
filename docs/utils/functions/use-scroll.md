@@ -309,7 +309,7 @@ function onStop(e: Event) {
 
 ## Params
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | target? | 滚动目标元素，未传时默认监听整页滚动（绑定到 `window`） | Ref &#124; HTMLElement &#124; Window &#124; Document | window |
 | throttleDelay | 节流延迟时间，单位 `ms`，用于限制滚动事件的触发频率 | number | 0 |

@@ -608,9 +608,9 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 
 ## APIs
 
-### FloatButton
+### FloatButton Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | top | 按钮定位的上边距，单位 `px` | number &#124; string | undefined |
 | bottom | 按钮定位的下边距，单位 `px` | number &#124; string | 40 |
@@ -627,8 +627,8 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 | target | 相当于 `a` 标签的 `target` 属性，`href` 存在时生效 | '\_self' &#124; '\_blank' | '\_self' |
 | menuTrigger | 浮动按钮菜单显示的触发方式 | 'click' &#124; 'hover' | undefined |
 | tooltip | 气泡卡片的内容 | string | undefined |
-| tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip) | [TooltipProps](./tooltip.md#tooltip) | {} |
-| badgeProps | 带徽标的浮动按钮（不支持 `status` 以及相关属性），参考 [Badge Props](./badge.md#badge) | [BadgeProps](./badge.md#badge) | {} |
+| tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip-props) | [TooltipProps](./tooltip.md#tooltip-props) | {} |
+| badgeProps | 带徽标的浮动按钮（不支持 `status` 以及相关属性），参考 [Badge Props](./badge.md#badge-props) | [BadgeProps](./badge.md#badge-props) | {} |
 
 ## Slots
 

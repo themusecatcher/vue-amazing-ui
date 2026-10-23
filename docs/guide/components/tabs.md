@@ -1276,11 +1276,11 @@ const state = reactive<TabsProps>({
 
 ## APIs
 
-### Tabs
+### Tabs Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-items | 标签页数组 | [TabsItem](#item-type)[] | []
+items | 标签页数组 | [TabsItem](#tabsitem-type)[] | []
 prefix | 标签页前缀 | string | undefined
 suffix | 标签页后缀 | string | undefined
 animated | 是否启用切换动画，在 `tabPosition: 'top' \| 'bottom'` 时有效 | boolean | true
@@ -1293,15 +1293,15 @@ tabPosition | 自定义页签位置 | 'top' &#124; 'right' &#124; 'bottom' &#124
 contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | string &#124; number | undefined
 
-### Item Type
+### TabsItem Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-key? | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 `(0,1,2...)` 绑定 | string &#124; number | undefined
-tab? | 页签显示文字 | string | undefined
-icon? | 页签图标 | VNode | undefined
-content? | 标签页内容 | string | undefined
-disabled? | 是否禁用页签 | boolean | false
+名称 | 说明 | 类型
+:-- | :-- | :--
+key? | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 `(0,1,2...)` 绑定 | string &#124; number
+tab? | 页签显示文字 | string
+icon? | 页签图标 | VNode
+content? | 标签页内容 | string
+disabled? | 是否禁用页签 | boolean
 
 ## Slots
 

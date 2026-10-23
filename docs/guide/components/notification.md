@@ -30,7 +30,7 @@ _适用于组件内部调用：先在应用根节点放置一次 `<NotificationP
 ::: info 关于 `NotificationProvider` 与 `Notification`
 
 - `NotificationProvider` 内部渲染一个 `Notification` 组件，并通过 `provide/inject` 向下提供 `useNotification()` 所需的 `API`，自身不渲染任何可见内容
-- 组件级配置属性（`top` / `bottom` / `duration` / `placement` / `keepAliveOnHover` / `maxCount` / `closable` / `scrollable` / `to`）会透传给内部的 `Notification`，因此直接参考下方 [Notification Props](#notification) 设置即可
+- 组件级配置属性（`top` / `bottom` / `duration` / `placement` / `keepAliveOnHover` / `maxCount` / `closable` / `scrollable` / `to`）会透传给内部的 `Notification`，因此直接参考下方 [Notification Props](#notification-props) 设置即可
 - 使用 `useNotification()` 时，组件级配置设置在 `<NotificationProvider>` 上（无法直接接触内部 `Notification`）；每条通知的个性化配置（`key` / `title` / `content` / `icon` / `action` / `meta` / `class` / `style` 等）则在调用 `open` / `info` 等方法时作为参数传入，参考 [NotificationOptions Type](#notificationoptions-type)
 
 :::
@@ -1393,7 +1393,7 @@ function onToNotification() {
 
 ## APIs
 
-### Notification
+### Notification Props
 
 <br/>
 
@@ -1403,7 +1403,7 @@ _组件级配置属性（`class` / `style` 亦会透传到通知容器）：使�
 
 _每条通知的个性化配置请参考 [NotificationOptions Type](#notificationoptions-type)_
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | top | 顶部弹出（`top` / `topLeft` / `topRight`）时通知列表距视口顶部的距离，单位 `px` | number | 16 |
 | bottom | 底部弹出（`bottom` / `bottomLeft` / `bottomRight`）时通知列表距视口底部的距离，单位 `px` | number | 16 |
@@ -1423,21 +1423,21 @@ _每条通知的个性化配置请参考 [NotificationOptions Type](#notificatio
 
 _调用时传入的 `NotificationOptions` 类型（`open` / `info` / `success` / `error` / `warning` 的参数），以下属性均具有更高优先级（覆盖组件级配置）_
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| key? | 该条通知的唯一标识，未指定时自动生成；指定后相同 `key` 调用不会叠加，只更新该条并重新计时，也可由 `destroy(key)` 精确关闭 | string | undefined |
-| title? | 通知提醒标题，支持纯文本、`VNode` 与返回 `VNode` 的渲染函数三种形态 | string &#124; VNode &#124; (() => VNode) | undefined |
-| content? | 通知提醒内容，支持纯文本、`VNode` 与返回 `VNode` 的渲染函数三种形态 | string &#124; VNode &#124; (() => VNode) | undefined |
-| icon? | 自定义图标，支持 `VNode` 与返回 `VNode` 的渲染函数两种形态 | VNode &#124; (() => VNode) | undefined |
-| action? | 自定义操作区域（如底部按钮），渲染在通知底部右侧，支持三种形态 | string &#124; VNode &#124; (() => VNode) | undefined |
-| meta? | `meta` 信息，渲染在通知底部左侧，与 `action` 同行左右分布，支持三种形态 | string &#124; VNode &#124; (() => VNode) | undefined |
-| class? | 自定义类名 | string | undefined |
-| style? | 自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| closable? | 是否显示右上角关闭按钮，优先级高于组件级 `closable` | boolean | undefined |
-| duration? | 自动关闭的延时时长，单位 `ms`；设置 `null` 时，不自动关闭 | number &#124; null | undefined |
-| placement? | 通知提醒弹出位置 | 'top' &#124; 'topLeft' &#124; 'topRight' &#124; 'bottom' &#124; 'bottomLeft' &#124; 'bottomRight' | undefined |
-| onClick? | 点击通知体时的回调函数；点击右上角关闭按钮不触发 | (e: MouseEvent) => void | undefined |
-| onClose? | 关闭时的回调函数；返回 `false`（或 `Promise` `resolve` `false`）时取消本次关闭 | () => void &#124; boolean &#124; Promise&lt;void &#124; boolean&gt; | undefined |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| key? | 该条通知的唯一标识，未指定时自动生成；指定后相同 `key` 调用不会叠加，只更新该条并重新计时，也可由 `destroy(key)` 精确关闭 | string |
+| title? | 通知提醒标题，支持纯文本、`VNode` 与返回 `VNode` 的渲染函数三种形态 | string &#124; VNode &#124; (() => VNode) |
+| content? | 通知提醒内容，支持纯文本、`VNode` 与返回 `VNode` 的渲染函数三种形态 | string &#124; VNode &#124; (() => VNode) |
+| icon? | 自定义图标，支持 `VNode` 与返回 `VNode` 的渲染函数两种形态 | VNode &#124; (() => VNode) |
+| action? | 自定义操作区域（如底部按钮），渲染在通知底部右侧，支持三种形态 | string &#124; VNode &#124; (() => VNode) |
+| meta? | `meta` 信息，渲染在通知底部左侧，与 `action` 同行左右分布，支持三种形态 | string &#124; VNode &#124; (() => VNode) |
+| class? | 自定义类名 | string |
+| style? | 自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) |
+| closable? | 是否显示右上角关闭按钮，优先级高于组件级 `closable` | boolean |
+| duration? | 自动关闭的延时时长，单位 `ms`；设置 `null` 时，不自动关闭 | number &#124; null |
+| placement? | 通知提醒弹出位置 | 'top' &#124; 'topLeft' &#124; 'topRight' &#124; 'bottom' &#124; 'bottomLeft' &#124; 'bottomRight' |
+| onClick? | 点击通知体时的回调函数；点击右上角关闭按钮不触发 | (e: MouseEvent) => void |
+| onClose? | 关闭时的回调函数；返回 `false`（或 `Promise` `resolve` `false`）时取消本次关闭 | () => void &#124; boolean &#124; Promise&lt;void &#124; boolean&gt; |
 
 ## Methods
 

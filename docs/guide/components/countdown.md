@@ -246,9 +246,9 @@ function onReset() {
 
 ## APIs
 
-### Countdown
+### Countdown Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 title | 倒计时标题 | string | undefined
 titleStyle | 设置标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}

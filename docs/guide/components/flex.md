@@ -302,9 +302,9 @@ const customGapSize = ref(16)
 
 ## APIs
 
-### Flex
+### Flex Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | width | 弹性区域总宽度，单位 `px` | string &#124; number | 'auto' |
 | vertical | `flex` 主轴的方向是否垂直，`vertical` 使用 `flex-direction: column` | boolean | false |

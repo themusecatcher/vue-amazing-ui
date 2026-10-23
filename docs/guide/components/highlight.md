@@ -126,9 +126,9 @@ const patterns = ref(['Vue Amazing UI', 'Vue3', 'TypeScript', 'SFC', 'tree shaki
 
 ## APIs
 
-### Highlight
+### Highlight Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 text | 文本 | string | undefined
 patterns | 需要高亮的文本内容 | string[] | []

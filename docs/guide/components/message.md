@@ -30,7 +30,7 @@ _适用于组件内部调用：先在应用根节点放置一次 `<MessageProvid
 ::: info 关于 `MessageProvider` 与 `Message`
 
 - `MessageProvider` 内部渲染一个 `Message` 组件，并通过 `provide/inject` 向下提供 `useMessage()` 所需的 `API`，自身不渲染任何可见内容
-- 组件级配置属性（`duration` / `top` / `maxCount` / `keepAliveOnHover` / `to`）会透传给内部的 `Message`，因此直接参考下方 [Message Props](#message) 设置即可
+- 组件级配置属性（`duration` / `top` / `maxCount` / `keepAliveOnHover` / `to`）会透传给内部的 `Message`，因此直接参考下方 [Message Props](#message-props) 设置即可
 - 使用 `useMessage()` 时，组件级配置设置在 `<MessageProvider>` 上（无法直接接触内部 `Message`）；每条消息的个性化配置（`content` / `icon` / `class` / `style` 等）则在调用 `open` / `info` 等方法时作为参数传入，参考 [MessageOptions Type](#messageoptions-type)
 
 :::
@@ -904,7 +904,7 @@ function onToMessage() {
 
 ## APIs
 
-### Message
+### Message Props
 
 <br/>
 
@@ -914,7 +914,7 @@ _组件级配置属性（`class` / `style` 亦会透传到消息容器）：使�
 
 _每条消息的个性化配置请参考 [MessageOptions Type](#messageoptions-type)_
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | duration | 自动关闭的延时，单位 `ms`，设置 `null` 时，不自动关闭 | number &#124; null | 3000 |
 | top | 消息距离顶部的位置，单位 `px` | string &#124; number | 30 |
@@ -930,15 +930,15 @@ _每条消息的个性化配置请参考 [MessageOptions Type](#messageoptions-t
 
 _调用时传入的 `MessageOptions` 类型（`open` / `info` / `success` / `error` / `warning` / `loading` 的参数），以下属性均具有更高优先级（覆盖组件级配置）_
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| content? | 提示内容 | string &#124; VNode &#124; (() => VNode) | undefined |
-| icon? | 自定义图标 | VNode &#124; (() => VNode) | undefined |
-| duration? | 自动关闭的延时时长，单位 `ms`；设置 `null` 时，不自动关闭 | number &#124; null | undefined |
-| class? | 自定义类名 | string | undefined |
-| style? | 自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| onClick? | 点击 `message` 时的回调函数 | () => void | undefined |
-| onClose? | 关闭时的回调函数 | () => void | undefined |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| content? | 提示内容 | string &#124; VNode &#124; (() => VNode) |
+| icon? | 自定义图标 | VNode &#124; (() => VNode) |
+| duration? | 自动关闭的延时时长，单位 `ms`；设置 `null` 时，不自动关闭 | number &#124; null |
+| class? | 自定义类名 | string |
+| style? | 自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) |
+| onClick? | 点击 `message` 时的回调函数 | () => void |
+| onClose? | 关闭时的回调函数 | () => void |
 
 ## Methods
 

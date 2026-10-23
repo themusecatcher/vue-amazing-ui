@@ -165,7 +165,7 @@ onBeforeUnmount(() => {
 
 ## Params
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | value | 待格式化的日期时间值，支持数字、字符串和 `Date` 类型，默认为当前时间戳 | number &#124; string &#124; Date | Date.now() |
 | format | 格式化字符串 | string | 'YYYY-MM-DD HH:mm:ss' |
