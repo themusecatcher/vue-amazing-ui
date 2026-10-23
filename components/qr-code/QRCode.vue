@@ -91,7 +91,7 @@ const resolveThemeColor = (name: ThemeVarName, fallback: string) => {
   }
   return fallback
 }
-// 前景取正文色、背景取容器色：与 Ant Design 一致 —— 浅色主题下即「白底近黑码」，深色主题下自动反色融入页面
+// 前景取正文色、背景取容器色：浅色主题下即「白底近黑码」，深色主题下自动反色融入页面
 const resolvedColor = computed(() => props.color ?? resolveThemeColor('--va-text-color-1', '#000'))
 const resolvedBgColor = computed(() => props.bgColor ?? resolveThemeColor('--va-bg-container-color', '#FFF'))
 const resolvedIconBackgroundColor = computed(() => props.iconBgColor ?? resolvedBgColor.value)
@@ -385,8 +385,6 @@ defineExpose({
     ></canvas>
     <img v-else ref="imageRef" :src="imageDataURL" class="qr-code-image" :alt="title || 'QR Code'" />
     <div v-if="status !== 'active'" class="qr-code-mask">
-      <!-- 指示符默认用 small 档（轮盘 20px / 单点 8px）：与 Ant Design 遮罩里默认 Spin 的实际尺寸一致；
-           v-bind 写在 size 之后，spinProps.size 可覆盖默认档位 -->
       <Spin v-if="status === 'loading'" size="small" v-bind="spinProps" />
       <template v-else-if="status === 'expired'">
         <p class="qr-code-expired">{{ expiredText }}</p>

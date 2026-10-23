@@ -409,7 +409,7 @@ describe('QRCode 状态遮罩', () => {
     wrapper.unmount()
   })
 
-  it('loading 状态渲染加载指示符（small 档，与 Ant Design 默认 Spin 尺寸一致）', async () => {
+  it('loading 状态渲染加载指示符（small 档，与遮罩尺寸匹配）', async () => {
     const wrapper = mount(QRCode, {
       props: { value: 'https://a.example.com', status: 'loading' }
     })

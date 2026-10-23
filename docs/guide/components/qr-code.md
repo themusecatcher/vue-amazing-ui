@@ -27,6 +27,10 @@ const bgColor = ref('#00000030')
 const segmentedOptions = ['L', 'M', 'Q', 'H']
 const level = ref('L')
 const status = ref('expired')
+const maskStyle = {
+  '--qr-code-mask-bg-color': 'var(--va-warning-bg-color)',
+  '--qr-code-mask-text-color': 'var(--va-text-color-1)'
+}
 type BuiltinIndicator = Extract<SpinProps['indicator'], string>
 const indicatorOptions: BuiltinIndicator[] = [
   'dot',
@@ -38,10 +42,6 @@ const indicatorOptions: BuiltinIndicator[] = [
   'magic-ring'
 ]
 const indicator = ref<BuiltinIndicator>('dot')
-const maskStyle = {
-  '--qr-code-mask-bg-color': 'var(--va-warning-bg-color)',
-  '--qr-code-mask-text-color': 'var(--va-text-color-1)'
-}
 const decline = () => {
   size.value = size.value - 10
   if (size.value < 48) {
@@ -162,85 +162,9 @@ const refreshStatus = () => {
 
 :::
 
-## 自定义加载中
-
-_通过 `spinProps` 配置 `loading` 状态的指示符，参考 [Spin Props](./spin.md#spin)；不传时按遮罩尺寸取 `small` 档_
-
-<br/>
-
-**内置形态**（`indicator`）
-
-<br/>
-
-<Space vertical :gap="12">
-  <Segmented v-model:value="indicator" :options="indicatorOptions" />
-  <QRCode value="https://themusecatcher.blog.csdn.net" status="loading" :spin-props="{ indicator }" />
-</Space>
-
-<br/>
-<br/>
-
-**自定义颜色与文案**（`color` / `tip`）
-
-<br/>
-
-<Space>
-  <QRCode
-    value="https://themusecatcher.blog.csdn.net"
-    status="loading"
-    :spin-props="{ indicator: 'ring-circle', color: '#52c41a' }"
-  />
-  <QRCode
-    value="https://themusecatcher.blog.csdn.net"
-    status="loading"
-    :spin-props="{ indicator: 'dot-wheel', tip: '加载中' }"
-  />
-</Space>
-
-::: details Show Code
-
-```vue
-<script lang="ts" setup>
-import { ref } from 'vue'
-import type { SpinProps } from 'vue-amazing-ui'
-type BuiltinIndicator = Extract<SpinProps['indicator'], string>
-const indicatorOptions: BuiltinIndicator[] = [
-  'dot',
-  'dot-wheel',
-  'line-wheel',
-  'ring-circle',
-  'ring-rail',
-  'dynamic-circle',
-  'magic-ring'
-]
-const indicator = ref<BuiltinIndicator>('dot')
-</script>
-<template>
-  <Space vertical :gap="12">
-    <Segmented v-model:value="indicator" :options="indicatorOptions" />
-    <QRCode value="https://themusecatcher.blog.csdn.net" status="loading" :spin-props="{ indicator }" />
-  </Space>
-  <br />
-  <Space>
-    <QRCode
-      value="https://themusecatcher.blog.csdn.net"
-      status="loading"
-      :spin-props="{ indicator: 'ring-circle', color: '#52c41a' }"
-    />
-    <QRCode
-      value="https://themusecatcher.blog.csdn.net"
-      status="loading"
-      :spin-props="{ indicator: 'dot-wheel', tip: '加载中' }"
-    />
-  </Space>
-</template>
-```
-
-:::
-
 ## 自定义遮罩配色
 
-_状态遮罩的底色、不透明度与文案色由 `--qr-code-mask-bg-color`、`--qr-code-mask-opacity`、`--qr-code-mask-text-color` 控制，在组件上重新声明即可覆盖；蒙层默认 `0.96` 不透明（与 Ant Design 一致），二维码会隐约透出，需要完全遮住时设为 `1`_
+_状态遮罩的底色、不透明度与文案色由 `--qr-code-mask-bg-color`、`--qr-code-mask-opacity`、`--qr-code-mask-text-color` 控制，在组件上重新声明即可覆盖；蒙层默认 `0.96` 不透明，二维码会隐约透出，需要完全遮住时设为 `1`_
 
 右侧示例用语义变量 `--va-warning-bg-color` 作为底色，遮罩会随浅色 / 暗色主题自动切换；直接写固定色值（如 `rgba(255, 255, 255, 0.88)`）同样可行，但需自行保证两种主题下的对比度，且与默认的 `0.96` 蒙层叠加时建议把 `--qr-code-mask-opacity` 设为 `1`。
 
@@ -478,6 +402,82 @@ const level = ref('L')
     </template>
     <img width="100" height="100" src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg" />
   </Popover>
+</template>
+```
+
+:::
+
+## 自定义加载中
+
+_通过 `spinProps` 配置 `loading` 状态的指示符，参考 [Spin Props](./spin.md#spin)；不传时按遮罩尺寸取 `small` 档_
+
+<br/>
+
+**内置形态**（`indicator`）
+
+<br/>
+
+<Space vertical :gap="12">
+  <Segmented v-model:value="indicator" :options="indicatorOptions" />
+  <QRCode value="https://themusecatcher.blog.csdn.net" status="loading" :spin-props="{ indicator }" />
+</Space>
+
+<br/>
+<br/>
+
+**自定义颜色与文案**（`color` / `tip`）
+
+<br/>
+
+<Space>
+  <QRCode
+    value="https://themusecatcher.blog.csdn.net"
+    status="loading"
+    :spin-props="{ indicator: 'ring-circle', color: '#52c41a' }"
+  />
+  <QRCode
+    value="https://themusecatcher.blog.csdn.net"
+    status="loading"
+    :spin-props="{ indicator: 'dot-wheel', tip: '加载中' }"
+  />
+</Space>
+
+::: details Show Code
+
+```vue
+<script lang="ts" setup>
+import { ref } from 'vue'
+import type { SpinProps } from 'vue-amazing-ui'
+type BuiltinIndicator = Extract<SpinProps['indicator'], string>
+const indicatorOptions: BuiltinIndicator[] = [
+  'dot',
+  'dot-wheel',
+  'line-wheel',
+  'ring-circle',
+  'ring-rail',
+  'dynamic-circle',
+  'magic-ring'
+]
+const indicator = ref<BuiltinIndicator>('dot')
+</script>
+<template>
+  <Space vertical :gap="12">
+    <Segmented v-model:value="indicator" :options="indicatorOptions" />
+    <QRCode value="https://themusecatcher.blog.csdn.net" status="loading" :spin-props="{ indicator }" />
+  </Space>
+  <br />
+  <Space>
+    <QRCode
+      value="https://themusecatcher.blog.csdn.net"
+      status="loading"
+      :spin-props="{ indicator: 'ring-circle', color: '#52c41a' }"
+    />
+    <QRCode
+      value="https://themusecatcher.blog.csdn.net"
+      status="loading"
+      :spin-props="{ indicator: 'dot-wheel', tip: '加载中' }"
+    />
+  </Space>
 </template>
 ```
 

@@ -12,6 +12,11 @@ const bgColor = ref('#00000030')
 const segmentedOptions = ['L', 'M', 'Q', 'H']
 const level = ref<QRCodeProps['errorLevel']>('L')
 const status = ref<'active' | 'expired' | 'loading' | 'scanned'>('expired')
+// 遮罩配色改用语义变量：浅色淡黄蒙层、暗色暗黄蒙层，两种主题都随色板自适应
+const maskStyle = {
+  '--qr-code-mask-bg-color': 'var(--va-warning-bg-color)',
+  '--qr-code-mask-text-color': 'var(--va-text-color-1)'
+}
 // Spin 的 7 种内置指示符，直接用属性取值便于与组件文档对照
 type BuiltinIndicator = Extract<SpinProps['indicator'], string>
 const indicatorOptions: BuiltinIndicator[] = [
@@ -24,11 +29,6 @@ const indicatorOptions: BuiltinIndicator[] = [
   'magic-ring'
 ]
 const indicator = ref<BuiltinIndicator>('dot')
-// 遮罩配色改用语义变量：浅色淡黄蒙层、暗色暗黄蒙层，两种主题都随色板自适应
-const maskStyle = {
-  '--qr-code-mask-bg-color': 'var(--va-warning-bg-color)',
-  '--qr-code-mask-text-color': 'var(--va-text-color-1)'
-}
 const decline = () => {
   size.value = size.value - 10
   if (size.value < 48) {
@@ -96,35 +96,12 @@ const downloadQRCode = () => {
       <Segmented v-model:value="status" :options="['active', 'expired', 'loading', 'scanned']" />
       <Button :icon="h(ReloadOutlined)" @click="refreshStatus">重新获取二维码</Button>
     </Space>
-    <h2 class="mt30 mb10">自定义加载中</h2>
-    <p class="mb10"
-      >通过 <code>spinProps</code> 配置 <code>loading</code> 状态的指示符，参考
-      <code>Spin</code> 组件属性；不传时按遮罩尺寸取 <code>small</code> 档
-    </p>
-    <p class="mb10"><strong>内置形态</strong>（<code>indicator</code>）：</p>
-    <Space vertical :gap="12">
-      <Segmented v-model:value="indicator" :options="indicatorOptions" />
-      <QRCode value="https://themusecatcher.blog.csdn.net" status="loading" :spin-props="{ indicator }" />
-    </Space>
-    <p class="mt30 mb10"><strong>自定义颜色与文案</strong>（<code>color</code> / <code>tip</code>）：</p>
-    <Space>
-      <QRCode
-        value="https://themusecatcher.blog.csdn.net"
-        status="loading"
-        :spin-props="{ indicator: 'ring-circle', color: '#52c41a' }"
-      />
-      <QRCode
-        value="https://themusecatcher.blog.csdn.net"
-        status="loading"
-        :spin-props="{ indicator: 'dot-wheel', tip: '加载中' }"
-      />
-    </Space>
     <h2 class="mt30 mb10">自定义遮罩配色</h2>
     <p class="mb10"
       >状态遮罩的底色、不透明度与文案色由
       <code>--qr-code-mask-bg-color</code>、<code>--qr-code-mask-opacity</code>、<code>--qr-code-mask-text-color</code>
-      控制，在组件上重新声明即可覆盖；蒙层默认 <code>0.96</code> 不透明（与
-      <code>Ant Design</code> 一致），二维码会隐约透出，需要完全遮住时设为 <code>1</code>
+      控制，在组件上重新声明即可覆盖；蒙层默认 <code>0.96</code> 不透明，二维码会隐约透出，需要完全遮住时设为
+      <code>1</code>
     </p>
     <p class="mb10"
       >右侧示例取语义变量 <code>--va-warning-bg-color</code> 作为底色，遮罩会随浅色 /
@@ -206,6 +183,29 @@ const downloadQRCode = () => {
       </template>
       <img width="100" height="100" src="https://themusecatcher.github.io/vue-amazing-ui/amazing-logo.svg" />
     </Popover>
+    <h2 class="mt30 mb10">自定义加载中</h2>
+    <p class="mb10"
+      >通过 <code>spinProps</code> 配置 <code>loading</code> 状态的指示符，参考
+      <code>Spin</code> 组件属性；不传时按遮罩尺寸取 <code>small</code> 档
+    </p>
+    <p class="mb10"><strong>内置形态</strong>（<code>indicator</code>）：</p>
+    <Space vertical :gap="12">
+      <Segmented v-model:value="indicator" :options="indicatorOptions" />
+      <QRCode value="https://themusecatcher.blog.csdn.net" status="loading" :spin-props="{ indicator }" />
+    </Space>
+    <p class="mt30 mb10"><strong>自定义颜色与文案</strong>（<code>color</code> / <code>tip</code>）：</p>
+    <Space>
+      <QRCode
+        value="https://themusecatcher.blog.csdn.net"
+        status="loading"
+        :spin-props="{ indicator: 'ring-circle', color: '#52c41a' }"
+      />
+      <QRCode
+        value="https://themusecatcher.blog.csdn.net"
+        status="loading"
+        :spin-props="{ indicator: 'dot-wheel', tip: '加载中' }"
+      />
+    </Space>
     <h2 class="mt30 mb10">无边框</h2>
     <p class="mb10">通过设置 <code>bordered</code> 为 <code>false</code> 去掉外边框</p>
     <QRCode value="https://themusecatcher.blog.csdn.net" :bordered="false" />
