@@ -13,6 +13,9 @@ const timelineItems: TimelineItemProps[] = [
   { content: 'Network problems being solved 2 2025-06-24 10:10', color: 'gray' }
 ]
 const reverse = ref(false)
+// 水平节演示用独立状态：与「进行中与倒序」节的 reverse 解耦，避免一节的操作串扰另一节
+const horizontal = ref(true)
+const horizontalReverse = ref(false)
 const mode = ref<TimelineMode>('left')
 const modeOptions: { label: string; value: TimelineMode }[] = [
   { label: 'left', value: 'left' },
@@ -190,8 +193,25 @@ const lineTypeOptions: { label: string; value: TimelineLineType }[] = [
         </template>
       </TimelineItem>
     </Timeline>
+    <h2 class="mt30 mb10">节点位置</h2>
+    <p class="mb10">
+      <code>alternate</code> 模式下节点的 <code>position</code> 可单独指定内容所在侧，覆盖奇偶默认位置
+    </p>
+    <Timeline mode="alternate">
+      <TimelineItem content="Create a services site 2025-06-24 10:10" time="2025-06-24 10:10" color="success" />
+      <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" color="error" position="right" />
+      <TimelineItem content="Technical testing" time="2025-06-24 10:10" color="warning" position="left" />
+      <TimelineItem content="Network problems being solved" time="2025-06-24 10:10" color="info" />
+    </Timeline>
     <h2 class="mt30 mb10">水平时间轴</h2>
-    <Timeline horizontal>
+    <p class="mb10">水平排列，可与 <code>reverse</code> 倒序组合；内容超出时容器可横向滚动</p>
+    <Space align="center" style="margin-bottom: 20px">
+      horizontal:
+      <Switch v-model:value="horizontal" />
+      reverse:
+      <Switch v-model:value="horizontalReverse" />
+    </Space>
+    <Timeline :horizontal="horizontal" :reverse="horizontalReverse">
       <TimelineItem title="Create" content="Create a services site" time="2025-06-24 10:10" color="success" />
       <TimelineItem title="Error" content="Solve initial network problems" time="2025-06-24 10:10" color="error" />
       <TimelineItem title="Warning" content="Technical testing" time="2025-06-24 10:10" color="warning" />
@@ -213,6 +233,23 @@ const lineTypeOptions: { label: string; value: TimelineLineType }[] = [
       <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
       <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
       <TimelineItem content="Technical testing" time="2025-06-24 10:10" />
+    </Timeline>
+    <h2 class="mt30 mb10">自定义幽灵节点</h2>
+    <p class="mb10">
+      <code>pending</code> 传 <code>true</code> 时只表示进行中、不渲染内容；<code>pendingDot</code> 属性或
+      <code>#pendingDot</code> 插槽可替换内置加载环，<code>#pending</code> 插槽可替换内容
+    </p>
+    <Timeline :pending="true">
+      <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
+      <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
+    </Timeline>
+    <br />
+    <Timeline pending="Recording...">
+      <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
+      <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
+      <template #pendingDot>
+        <ClockCircleOutlined class="dot-icon" />
+      </template>
     </Timeline>
   </div>
 </template>

@@ -77,7 +77,10 @@ const pendingContent = computed(() => {
           </svg>
         </slot>
       </template>
-      <slot name="pending">{{ pendingContent }}</slot>
+      <slot name="pending">
+        <template v-if="typeof pendingContent === 'string'">{{ pendingContent }}</template>
+        <component :is="pendingContent" v-else-if="pendingContent" />
+      </slot>
     </TimelineItem>
   </ul>
 </template>

@@ -24,6 +24,9 @@ const timelineItems: TimelineItemProps[] = [
   { content: 'Network problems being solved 2 2025-06-24 10:10', color: 'gray' }
 ]
 const reverse = ref(false)
+// 水平节演示用独立状态：与「进行中与倒序」节的 reverse 解耦，避免一节的操作串扰另一节
+const horizontal = ref(true)
+const horizontalReverse = ref(false)
 const mode = ref<TimelineMode>('left')
 const modeOptions: { label: string; value: TimelineMode }[] = [
   { label: 'left', value: 'left' },
@@ -269,6 +272,10 @@ _节点按 `title` / `content` / `time` 渲染为三段结构，分别可用 `ti
 ## 标签
 
 _任一节点提供 `label` 时整条时间轴切换为左右分栏，可用 `mode` 镜像或交替_
+
+::: tip 提示
+左右分栏由 `:has()` 选择器实现（`Chrome` `105+` / `Safari` `15.4+` / `Firefox` `121+`）：更低的浏览器版本会退化为「标签在内容上方」的普通布局，其余特性不受影响。
+:::
 
 <br/>
 
@@ -568,9 +575,48 @@ const startOptions: { label: string; value: TimelineStart }[] = [
 
 :::::
 
+## 节点位置
+
+_`alternate` 模式下节点的 `position` 可单独指定内容所在侧，覆盖奇偶默认位置_
+
+<br/>
+
+<Timeline mode="alternate">
+  <TimelineItem content="Create a services site 2025-06-24 10:10" time="2025-06-24 10:10" color="success" />
+  <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" color="error" position="right" />
+  <TimelineItem content="Technical testing" time="2025-06-24 10:10" color="warning" position="left" />
+  <TimelineItem content="Network problems being solved" time="2025-06-24 10:10" color="info" />
+</Timeline>
+
+::::: details Show Code
+
+```vue
+<template>
+  <Timeline mode="alternate">
+    <TimelineItem content="Create a services site 2025-06-24 10:10" time="2025-06-24 10:10" color="success" />
+    <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" color="error" position="right" />
+    <TimelineItem content="Technical testing" time="2025-06-24 10:10" color="warning" position="left" />
+    <TimelineItem content="Network problems being solved" time="2025-06-24 10:10" color="info" />
+  </Timeline>
+</template>
+```
+
+:::::
+
 ## 水平时间轴
 
-<Timeline horizontal>
+_水平排列，可与 `reverse` 倒序组合；内容超出时容器可横向滚动_
+
+<br/>
+
+<Space align="center" style="margin-bottom: 20px">
+  horizontal:
+  <Switch v-model:value="horizontal" />
+  reverse:
+  <Switch v-model:value="horizontalReverse" />
+</Space>
+
+<Timeline :horizontal="horizontal" :reverse="horizontalReverse">
   <TimelineItem title="Create" content="Create a services site" time="2025-06-24 10:10" color="success" />
   <TimelineItem title="Error" content="Solve initial network problems" time="2025-06-24 10:10" color="error" />
   <TimelineItem title="Warning" content="Technical testing" time="2025-06-24 10:10" color="warning" />
@@ -580,8 +626,19 @@ const startOptions: { label: string; value: TimelineStart }[] = [
 ::::: details Show Code
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const horizontal = ref(true)
+const horizontalReverse = ref(false)
+</script>
 <template>
-  <Timeline horizontal>
+  <Space align="center" style="margin-bottom: 20px">
+    horizontal:
+    <Switch v-model:value="horizontal" />
+    reverse:
+    <Switch v-model:value="horizontalReverse" />
+  </Space>
+  <Timeline :horizontal="horizontal" :reverse="horizontalReverse">
     <TimelineItem title="Create" content="Create a services site" time="2025-06-24 10:10" color="success" />
     <TimelineItem title="Error" content="Solve initial network problems" time="2025-06-24 10:10" color="error" />
     <TimelineItem title="Warning" content="Technical testing" time="2025-06-24 10:10" color="warning" />
@@ -651,6 +708,58 @@ const reverse = ref(false)
 
 :::::
 
+## 自定义幽灵节点
+
+_`pending` 传 `true` 时只表示进行中、不渲染内容；`pendingDot` 属性或 `#pendingDot` 插槽可替换内置加载环，`#pending` 插槽可替换内容_
+
+<br/>
+
+<Timeline :pending="true">
+  <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
+  <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
+</Timeline>
+
+<br/>
+
+<Timeline pending="Recording...">
+  <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
+  <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
+  <template #pendingDot>
+    <ClockCircleOutlined class="dot-icon" />
+  </template>
+</Timeline>
+
+::::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ClockCircleOutlined } from '@ant-design/icons-vue'
+</script>
+<template>
+  <Timeline :pending="true">
+    <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
+    <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
+  </Timeline>
+  <Timeline pending="Recording...">
+    <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
+    <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
+    <template #pendingDot>
+      <ClockCircleOutlined class="dot-icon" />
+    </template>
+  </Timeline>
+</template>
+<style lang="less" scoped>
+.dot-icon {
+  font-size: 16px;
+  color: var(--va-primary-color);
+  background: var(--va-bg-container-color);
+  border-radius: 50%;
+}
+</style>
+```
+
+:::::
+
 <style lang="less" scoped>
 .big-dot {
   display: inline-block;
@@ -683,9 +792,9 @@ const reverse = ref(false)
 
 ## APIs
 
-### Timeline
+### Timeline Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 mode | 时间轴与内容的相对位置，`alternate` 为轴线居中、内容左右交替 | 'left' &#124; 'alternate' &#124; 'right' | 'left'
 start | `alternate` 模式下内容先从哪一侧出现 | 'left' &#124; 'right' | 'right'
@@ -697,17 +806,17 @@ lineType | 整轴线型，时间轴项可通过同名属性覆盖 | 'solid' &#12
 pending | 幽灵节点：为 `true` 时只表示进行中，字符串或 `VNode` 作为其内容 | boolean &#124; string &#124; VNode | false
 pendingDot | 幽灵节点的轴点，未指定时使用内置加载环 | string &#124; VNode | undefined
 
-### TimelineItem
+### TimelineItem Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 title | 标题，位于内容上方 | string | undefined
 content | 内容 | string | undefined
 time | 时间，位于内容下方 | string &#124; number | undefined
 label | 左侧标签，任一节点带 `label` 时整条时间轴切换为左右分栏布局 | string | undefined
-color | 轴点颜色，支持预设语义色（`primary` / `success` / `warning` / `error` / `info` / `default`）、色名（`blue` / `green` / `red` / `gray`）与任意 CSS 颜色 | string | 'primary'
+color | 轴点颜色，支持预设语义色（`primary` / `success` / `warning` / `error` / `info` / `default`）、色名（`blue` / `green` / `red` / `gray`）与任意 CSS 颜色，预设名大小写不敏感；未指定时轴点走主题主色 | string | undefined
 lineType | 单独覆盖该节点的线型 | 'solid' &#124; 'dashed' &#124; 'dotted' | 继承 `Timeline` 的 `lineType`
-position | `alternate` 模式下单独指定该节点内容所在侧 | 'left' &#124; 'right' | undefined
+position | `alternate` 模式下单独指定该节点内容所在侧（`label` 左右分栏与水平排列下不生效） | 'left' &#124; 'right' | undefined
 
 ## Slots
 

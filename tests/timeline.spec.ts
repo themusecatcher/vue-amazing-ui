@@ -82,6 +82,25 @@ describe('Timeline 时间轴组件', () => {
     expect(pendingItem.find('.timeline-pending-dot').exists()).toBe(false)
   })
 
+  it('pending / pendingDot 传 VNode 时按节点渲染，而非被序列化为文本', () => {
+    const wrapper = mount(Timeline, {
+      props: { pending: h('span', { class: 'vnode-pending' }, '幽灵内容'), pendingDot: h('i', { class: 'vnode-dot' }) },
+      slots: { default: () => [item({ content: 'a' })] }
+    })
+    const pendingItem = wrapper.findAll('li')[1]
+    expect(pendingItem.find('.vnode-pending').exists()).toBe(true)
+    expect(pendingItem.find('.timeline-item-content-body').text()).toBe('幽灵内容')
+    expect(pendingItem.find('.vnode-dot').exists()).toBe(true)
+  })
+
+  it('pending 为 false 或空内容时不渲染幽灵节点', () => {
+    const none = mount(Timeline, {
+      slots: { default: () => [item({ content: 'a' })] }
+    })
+    expect(none.classes()).not.toContain('timeline-pending')
+    expect(none.findAll('li')).toHaveLength(1)
+  })
+
   it('content / title / time 按序渲染，未提供时不占位', () => {
     const wrapper = mount(TimelineItem, {
       props: { title: '成功', content: '哪里成功', time: '2018-04-03' }
