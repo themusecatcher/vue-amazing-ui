@@ -61,7 +61,13 @@ function mountWithAnchor(options: {
     components: { Tooltip },
     setup() {
       const anchorRef = ref<HTMLElement | null>(null)
-      return { anchorRef, ...options }
+      // 模板始终引用这三项：缺省时同样要落到实例上，否则渲染期会报「属性未定义」告警
+      return {
+        anchorRef,
+        tooltipProps: options.tooltipProps ?? {},
+        getDisabled: options.getDisabled,
+        anchorAttrs: options.anchorAttrs ?? {}
+      }
     },
     template: `
       <div>
