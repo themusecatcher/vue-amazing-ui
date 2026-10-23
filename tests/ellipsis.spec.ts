@@ -203,6 +203,19 @@ describe('Ellipsis：揭示时机', () => {
     await flush()
     expect(w2.findComponent(Tooltip).props('maxWidth')).toBe('300px')
   })
+
+  it('tooltipMaxWidth 运行期修改对已挂载实例实时生效', async () => {
+    const w = mountEllipsis({ props: { tooltipMaxWidth: 240, tooltip: { to: false, showDelay: 0 } } })
+    await flush()
+    stubOverflow(boxOf(w).element as HTMLElement)
+    await boxOf(w).trigger('pointerenter')
+    await flush()
+    expect(w.findComponent(Tooltip).props('maxWidth')).toBe('240px')
+
+    await w.setProps({ tooltipMaxWidth: 320 })
+    await flush()
+    expect(w.findComponent(Tooltip).props('maxWidth')).toBe('320px')
+  })
 })
 
 describe('Ellipsis：触发方式与受控', () => {
