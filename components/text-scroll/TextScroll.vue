@@ -250,11 +250,13 @@ defineExpose({
         :target="item.target"
         @click="onClick(item)"
       >
+        <!-- 类名与文字样式走 class / style 标准通道：Ellipsis 未溢出时不挂载 Tooltip，
+             content-class / content-style 在未挂载分支没有消费方 -->
         <Ellipsis
           v-if="ellipsis"
           :max-width="itemWidth"
-          :content-class="`${item.href ? 'href-item' : null}`"
-          :content-style="itemStyle"
+          :class="item.href ? 'href-item' : null"
+          :style="itemStyle"
           v-bind="ellipsisProps"
         >
           {{ item.title }}
@@ -278,8 +280,8 @@ defineExpose({
         <Ellipsis
           v-if="ellipsis"
           :max-width="itemWidth"
-          :content-class="`${item.href ? 'href-item' : null}`"
-          :content-style="itemStyle"
+          :class="item.href ? 'href-item' : null"
+          :style="itemStyle"
           v-bind="ellipsisProps"
         >
           {{ item.title }}
@@ -319,8 +321,8 @@ defineExpose({
         >
           <Ellipsis
             v-if="ellipsis"
-            :content-class="`${item.href ? 'href-item' : null}`"
-            :content-style="{ ...itemStyle, maxWidth: '100%' }"
+            :class="item.href ? 'href-item' : null"
+            :style="{ ...itemStyle, maxWidth: '100%' }"
             v-bind="ellipsisProps"
           >
             {{ item.title }}
