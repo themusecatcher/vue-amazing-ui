@@ -25,6 +25,8 @@ const props = withDefaults(defineProps<Props>(), {
   tooltip: true
 })
 defineSlots<EllipsisSlots>()
+// 模板存在「Tooltip / 文本容器」两个条件根，属性继承需显式下发（见模板中的 v-bind="$attrs"）
+defineOptions({ inheritAttrs: false })
 const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null) // tooltip 组件引用
 const showTooltip = ref(false) // 是否显示提示框
 const showExpand = ref(false) // 是否可以启用点击展开
@@ -40,6 +42,27 @@ const textMaxWidth = computed(() => {
   }
   return props.maxWidth
 })
+/**
+ * 是否需要挂载 Tooltip 实例
+ *
+ * 未溢出（或使用者显式关闭 `tooltip`）时不创建浮层实例与包裹层，仅保留文本容器；
+ * `expanded` 期间需保留实例：点击展开后靠 Tooltip 的 `animationend` 复位提示态，
+ * 提前卸载会切断 `hide()` 与动画链，导致展开状态卡死。
+ */
+const tooltipEnabled = computed(() => showTooltip.value || expanded.value)
+// 文本容器的类名 / 样式 / 点击行为：两个渲染分支共用，避免模板重复出现属性差异
+const containerClass = computed(() => [
+  props.line ? 'ellipsis-line' : 'not-ellipsis-line',
+  { 'ellipsis-cursor-pointer': showExpand.value }
+])
+const containerStyle = computed(
+  () => `--ellipsis-max-width: ${textMaxWidth.value}; --ellipsis-line: ${ellipsisLine.value};`
+)
+function onContainerClick() {
+  if (showExpand.value) {
+    onExpand()
+  }
+}
 watch(
   () => props.line,
   (to) => {
@@ -112,7 +135,8 @@ function onExpand() {
     ellipsisLine.value = 'none'
     if (props.tooltip && showTooltip.value) {
       expanded.value = true
-      tooltipRef.value?.hide()
+      // 实例可能未挂载（如 tooltip 关闭），故用可选调用兜底
+      tooltipRef.value?.hide?.()
     }
     emit('expandChange', true)
   } else {
@@ -120,7 +144,7 @@ function onExpand() {
     if (props.tooltip && !showTooltip.value) {
       expanded.value = false
       showTooltip.value = true
-      tooltipRef.value?.show()
+      tooltipRef.value?.show?.()
     }
     emit('expandChange', false)
   }
@@ -133,12 +157,14 @@ function onAnimationEnd() {
 </script>
 <template>
   <Tooltip
+    v-if="tooltipEnabled"
     ref="tooltipRef"
     :style="`max-width: ${textMaxWidth}`"
     :max-width="computedTooltipMaxWidth"
     :content-style="{ maxWidth: textMaxWidth }"
     :tooltip-style="{ padding: '8px 12px' }"
     @animationend="onAnimationEnd"
+    v-bind="$attrs"
   >
     <template #tooltip>
       <slot v-if="showTooltip" name="tooltip">
@@ -148,13 +174,24 @@ function onAnimationEnd() {
     <div
       ref="ellipsisRef"
       class="ellipsis-container"
-      :class="[line ? 'ellipsis-line' : 'not-ellipsis-line', { 'ellipsis-cursor-pointer': showExpand }]"
-      :style="`--ellipsis-max-width: ${textMaxWidth}; --ellipsis-line: ${ellipsisLine};`"
-      @click="showExpand ? onExpand() : () => false"
+      :class="containerClass"
+      :style="containerStyle"
+      @click="onContainerClick"
     >
       <slot></slot>
     </div>
   </Tooltip>
+  <div
+    v-else
+    ref="ellipsisRef"
+    class="ellipsis-container"
+    :class="containerClass"
+    :style="containerStyle"
+    @click="onContainerClick"
+    v-bind="$attrs"
+  >
+    <slot></slot>
+  </div>
 </template>
 <style lang="less" scoped>
 .ellipsis-container {

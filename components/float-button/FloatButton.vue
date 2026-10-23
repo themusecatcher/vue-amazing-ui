@@ -142,8 +142,14 @@ function onClick(e: Event) {
   >
     <!-- 触发器包裹元素的类名走 Tooltip 的公开契约下发（contentClass），不依赖 Tooltip 的内部类名；
          置于 v-bind 之前，允许 tooltipProps 覆盖 -->
-    <Tooltip placement="left" content-class="float-btn-tooltip-content" v-bind="tooltipProps" class="float-btn-tooltip">
-      <template v-if="showTooltip" #tooltip>
+    <Tooltip
+      v-if="showTooltip"
+      placement="left"
+      content-class="float-btn-tooltip-content"
+      v-bind="tooltipProps"
+      class="float-btn-tooltip"
+    >
+      <template #tooltip>
         <slot name="tooltip">{{ tooltip }}</slot>
       </template>
       <Badge v-bind="badgeProps">
@@ -179,6 +185,41 @@ function onClick(e: Event) {
         </div>
       </Badge>
     </Tooltip>
+    <!-- 无提示内容时不挂载 Tooltip：用同名 class 的普通 div 占位，保证尺寸与状态样式链一致 -->
+    <div v-else class="float-btn-tooltip">
+      <Badge v-bind="badgeProps">
+        <div class="float-btn-body">
+          <div class="float-btn-content">
+            <div v-if="showIcon" class="float-btn-icon">
+              <Transition name="fade">
+                <slot v-if="!showMenu" name="icon">
+                  <component v-if="icon" :is="icon" />
+                </slot>
+                <svg
+                  v-else
+                  class="close-svg"
+                  focusable="false"
+                  data-icon="close"
+                  width="1em"
+                  height="1em"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  fill-rule="evenodd"
+                  viewBox="64 64 896 896"
+                >
+                  <path
+                    d="M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z"
+                  ></path>
+                </svg>
+              </Transition>
+            </div>
+            <div v-if="showDescription" class="float-btn-description">
+              <slot name="description">{{ description }}</slot>
+            </div>
+          </div>
+        </div>
+      </Badge>
+    </div>
     <Transition name="move">
       <div v-show="showMenu" class="float-btn-menu">
         <slot name="menu"></slot>
@@ -240,16 +281,18 @@ function onClick(e: Event) {
     :deep(.float-btn-tooltip-content) {
       width: 100%;
       height: 100%;
-      .badge-wrap {
-        vertical-align: top;
-        width: 100%;
-        height: 100%;
-        .badge-value:not(.only-dot) {
-          transform: translate(0, 0);
-          transform-origin: center;
-          top: -6px;
-          right: -6px;
-        }
+    }
+    // 徽标容器上提一层：有提示时位于 content 层内，无提示时直接是 .float-btn-tooltip 的子元素，
+    // 上提后两种结构共用同一份尺寸与角标定位
+    :deep(.badge-wrap) {
+      vertical-align: top;
+      width: 100%;
+      height: 100%;
+      .badge-value:not(.only-dot) {
+        transform: translate(0, 0);
+        transform-origin: center;
+        top: -6px;
+        right: -6px;
       }
     }
   }
