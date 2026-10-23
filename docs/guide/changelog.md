@@ -14,7 +14,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-25">3.2.1</VersionDateTag>
+## <VersionDateTag date="2026-10-25">3.3.0</VersionDateTag>
 
 - 新增 [菜单 Menu](/guide/components/menu.html) 深色皮肤（`theme="dark"`）的底色跟随主题色派生：根列表、浮层面板与内联子菜单取主色派生的暗底，改主色时整套皮肤同步换色相，`theme.components.Menu.primaryColor` 同样驱动；浮层面板与内联子菜单新增可独立覆盖的 `--va-menu-popup-background` / `--va-menu-inline-submenu-background`，全局语义变量由 `40` 个增至 `42` 个、组件令牌由 `51` 个增至 `53` 个
 - 优化 [加载中 Spin](/guide/components/spin.html) 翻转双环配色：内环默认取外环色的浅一档，只传 `color` 时内环跟随该色派生同色系浅调，不再固定为主题主色；修复两环交界处的叠压亮线
