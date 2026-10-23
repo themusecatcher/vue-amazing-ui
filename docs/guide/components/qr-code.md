@@ -15,6 +15,7 @@ _二维码_
 <script lang="ts" setup>
 import { ref, h } from 'vue'
 import { QRCode } from 'vue-amazing-ui'
+import type { SpinProps } from 'vue-amazing-ui'
 import { MinusOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons-vue'
 const qrcodeRef = ref<InstanceType<typeof QRCode> | null>(null)
 const size = ref(160)
@@ -26,9 +27,20 @@ const bgColor = ref('#00000030')
 const segmentedOptions = ['L', 'M', 'Q', 'H']
 const level = ref('L')
 const status = ref('expired')
+type BuiltinIndicator = Extract<SpinProps['indicator'], string>
+const indicatorOptions: BuiltinIndicator[] = [
+  'dot',
+  'dot-wheel',
+  'line-wheel',
+  'ring-circle',
+  'ring-rail',
+  'dynamic-circle',
+  'magic-ring'
+]
+const indicator = ref<BuiltinIndicator>('dot')
 const maskStyle = {
-  '--qr-code-mask-bg-color': 'rgba(255, 255, 255, 0.88)',
-  '--qr-code-mask-text-color': '#faad14'
+  '--qr-code-mask-bg-color': 'var(--va-warning-bg-color)',
+  '--qr-code-mask-text-color': 'var(--va-text-color-1)'
 }
 const decline = () => {
   size.value = size.value - 10
@@ -150,11 +162,87 @@ const refreshStatus = () => {
 
 :::
 
+## 自定义加载中
+
+_通过 `spinProps` 配置 `loading` 状态的指示符，参考 [Spin Props](./spin.md#spin)；不传时按遮罩尺寸取 `small` 档_
+
+<br/>
+
+**内置形态**（`indicator`）
+
+<br/>
+
+<Space vertical :gap="12">
+  <Segmented v-model:value="indicator" :options="indicatorOptions" />
+  <QRCode value="https://themusecatcher.blog.csdn.net" status="loading" :spin-props="{ indicator }" />
+</Space>
+
+<br/>
+<br/>
+
+**自定义颜色与文案**（`color` / `tip`）
+
+<br/>
+
+<Space>
+  <QRCode
+    value="https://themusecatcher.blog.csdn.net"
+    status="loading"
+    :spin-props="{ indicator: 'ring-circle', color: '#52c41a' }"
+  />
+  <QRCode
+    value="https://themusecatcher.blog.csdn.net"
+    status="loading"
+    :spin-props="{ indicator: 'dot-wheel', tip: '加载中' }"
+  />
+</Space>
+
+::: details Show Code
+
+```vue
+<script lang="ts" setup>
+import { ref } from 'vue'
+import type { SpinProps } from 'vue-amazing-ui'
+type BuiltinIndicator = Extract<SpinProps['indicator'], string>
+const indicatorOptions: BuiltinIndicator[] = [
+  'dot',
+  'dot-wheel',
+  'line-wheel',
+  'ring-circle',
+  'ring-rail',
+  'dynamic-circle',
+  'magic-ring'
+]
+const indicator = ref<BuiltinIndicator>('dot')
+</script>
+<template>
+  <Space vertical :gap="12">
+    <Segmented v-model:value="indicator" :options="indicatorOptions" />
+    <QRCode value="https://themusecatcher.blog.csdn.net" status="loading" :spin-props="{ indicator }" />
+  </Space>
+  <br />
+  <Space>
+    <QRCode
+      value="https://themusecatcher.blog.csdn.net"
+      status="loading"
+      :spin-props="{ indicator: 'ring-circle', color: '#52c41a' }"
+    />
+    <QRCode
+      value="https://themusecatcher.blog.csdn.net"
+      status="loading"
+      :spin-props="{ indicator: 'dot-wheel', tip: '加载中' }"
+    />
+  </Space>
+</template>
+```
+
+:::
+
 ## 自定义遮罩配色
 
-_状态遮罩的配色由 `CSS` 变量 `--qr-code-mask-bg-color`（遮罩底色）和 `--qr-code-mask-text-color`（遮罩内文案颜色）控制，在组件上重新声明同名变量即可覆盖_
+_状态遮罩的底色、不透明度与文案色由 `--qr-code-mask-bg-color`、`--qr-code-mask-opacity`、`--qr-code-mask-text-color` 控制，在组件上重新声明即可覆盖；蒙层默认 `0.96` 不透明（与 Ant Design 一致），二维码会隐约透出，需要完全遮住时设为 `1`_
 
-`--qr-code-mask-text-color` 只作用于 `expiredText` / `scannedText` 文案；`loading` 指示符与「点击刷新」按钮是 `Spin` / `Button` 组件，沿用各自主题色。遮罩底色支持半透明色，可让二维码在遮罩下隐约透出（透明度越高，遮罩内文案的可读性越低）。
+右侧示例用语义变量 `--va-warning-bg-color` 作为底色，遮罩会随浅色 / 暗色主题自动切换；直接写固定色值（如 `rgba(255, 255, 255, 0.88)`）同样可行，但需自行保证两种主题下的对比度，且与默认的 `0.96` 蒙层叠加时建议把 `--qr-code-mask-opacity` 设为 `1`。
 
 <br/>
 
@@ -168,8 +256,8 @@ _状态遮罩的配色由 `CSS` 变量 `--qr-code-mask-bg-color`（遮罩底色�
 ```vue
 <script lang="ts" setup>
 const maskStyle = {
-  '--qr-code-mask-bg-color': 'rgba(255, 255, 255, 0.88)',
-  '--qr-code-mask-text-color': '#faad14'
+  '--qr-code-mask-bg-color': 'var(--va-warning-bg-color)',
+  '--qr-code-mask-text-color': 'var(--va-text-color-1)'
 }
 </script>
 <template>
@@ -254,6 +342,8 @@ const increase = () => {
 ## 自定义颜色
 
 _通过设置 `color` 自定义二维码颜色，通过设置 `bgColor` 自定义背景颜色_
+
+`color` / `bgColor` 不传时分别取主题变量 `--va-text-color-1`（正文色）与 `--va-bg-container-color`（容器底色），因此深色主题下二维码会自动反色融入页面，不会出现刺眼的白块；需要固定「白底黑码」时显式传入 `color="#000"` `bg-color="#FFF"` 即可。
 
 <br/>
 
@@ -481,15 +571,16 @@ const value = ref('hello world')
 | type | 渲染类型：矢量 / 位图 / 图片 | 'svg' &#124; 'canvas' &#124; 'image' | 'svg' |
 | size | 二维码整体大小（含内边距与外边框），单位为 `px` | number | 160 |
 | padding | 容器内边距，二维码绘制区为 `size` 减去两侧内边距与外边框 | number | 12 |
-| color | 二维码前景色，`CSS` 颜色值 | string | '#000' |
-| bgColor | 二维码背景色，`CSS` 颜色值 | string | '#FFF' |
+| color | 二维码前景色，`CSS` 颜色值；不传时取主题变量 `--va-text-color-1`（浅色 `rgba(0, 0, 0, 0.88)` / 暗色 `rgba(255, 255, 255, 0.85)`） | string | 取 `--va-text-color-1` |
+| bgColor | 二维码背景色，`CSS` 颜色值；不传时取主题变量 `--va-bg-container-color`（浅色 `#ffffff` / 暗色 `#141414`） | string | 取 `--va-bg-container-color` |
 | icon | 二维码中央图标的地址 | string | undefined |
 | iconSize | 中央图标的大小，单位为 `px` | number | 40 |
-| iconBackgroundColor | 中央图标的底色，用于压盖点阵、凸显图标 | string | '#FFF' |
+| iconBgColor | 中央图标的底色，用于压盖点阵、凸显图标；不传时与背景色一致 | string | 取 `bgColor` |
 | iconBorderRadius | 中央图标底色的圆角，单位为 `px` | number | 4 |
 | bordered | 是否展示外边框 | boolean | true |
-| borderColor | 外边框颜色 | string | 'rgba(5, 5, 5, 0.06)' |
+| borderColor | 外边框颜色 | string | 取 `--va-border-split-color`（浅色 `#f0f0f0` / 暗色 `#303030`） |
 | status | 二维码状态 | 'active' &#124; 'expired' &#124; 'loading' &#124; 'scanned' | 'active' |
+| spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin)，用于配置加载中样式（`Spin` 默认按遮罩尺寸取 `small` 档） | [SpinProps](./spin.md#spin) | {} |
 | expiredText | `status` 为 `expired` 时的提示文案 | string | '二维码已过期' |
 | refreshText | `status` 为 `expired` 时刷新按钮的文案 | string | '点击刷新' |
 | scannedText | `status` 为 `scanned` 时的提示文案 | string | '已扫描' |

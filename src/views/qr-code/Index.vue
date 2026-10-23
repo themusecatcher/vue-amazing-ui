@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, h } from 'vue'
-import type { QRCode, QRCodeProps } from 'vue-amazing-ui'
+import type { QRCode, QRCodeProps, SpinProps } from 'vue-amazing-ui'
 import { MinusOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons-vue'
 const qrcodeRef = ref<InstanceType<typeof QRCode> | null>(null)
 const size = ref(160)
@@ -12,9 +12,22 @@ const bgColor = ref('#00000030')
 const segmentedOptions = ['L', 'M', 'Q', 'H']
 const level = ref<QRCodeProps['errorLevel']>('L')
 const status = ref<'active' | 'expired' | 'loading' | 'scanned'>('expired')
+// Spin 的 7 种内置指示符，直接用属性取值便于与组件文档对照
+type BuiltinIndicator = Extract<SpinProps['indicator'], string>
+const indicatorOptions: BuiltinIndicator[] = [
+  'dot',
+  'dot-wheel',
+  'line-wheel',
+  'ring-circle',
+  'ring-rail',
+  'dynamic-circle',
+  'magic-ring'
+]
+const indicator = ref<BuiltinIndicator>('dot')
+// 遮罩配色改用语义变量：浅色淡黄蒙层、暗色暗黄蒙层，两种主题都随色板自适应
 const maskStyle = {
-  '--qr-code-mask-bg-color': 'rgba(255, 255, 255, 0.88)',
-  '--qr-code-mask-text-color': '#faad14'
+  '--qr-code-mask-bg-color': 'var(--va-warning-bg-color)',
+  '--qr-code-mask-text-color': 'var(--va-text-color-1)'
 }
 const decline = () => {
   size.value = size.value - 10
@@ -83,18 +96,39 @@ const downloadQRCode = () => {
       <Segmented v-model:value="status" :options="['active', 'expired', 'loading', 'scanned']" />
       <Button :icon="h(ReloadOutlined)" @click="refreshStatus">重新获取二维码</Button>
     </Space>
+    <h2 class="mt30 mb10">自定义加载中</h2>
+    <p class="mb10"
+      >通过 <code>spinProps</code> 配置 <code>loading</code> 状态的指示符，参考
+      <code>Spin</code> 组件属性；不传时按遮罩尺寸取 <code>small</code> 档
+    </p>
+    <p class="mb10"><strong>内置形态</strong>（<code>indicator</code>）：</p>
+    <Space vertical :gap="12">
+      <Segmented v-model:value="indicator" :options="indicatorOptions" />
+      <QRCode value="https://themusecatcher.blog.csdn.net" status="loading" :spin-props="{ indicator }" />
+    </Space>
+    <p class="mt30 mb10"><strong>自定义颜色与文案</strong>（<code>color</code> / <code>tip</code>）：</p>
+    <Space>
+      <QRCode
+        value="https://themusecatcher.blog.csdn.net"
+        status="loading"
+        :spin-props="{ indicator: 'ring-circle', color: '#52c41a' }"
+      />
+      <QRCode
+        value="https://themusecatcher.blog.csdn.net"
+        status="loading"
+        :spin-props="{ indicator: 'dot-wheel', tip: '加载中' }"
+      />
+    </Space>
     <h2 class="mt30 mb10">自定义遮罩配色</h2>
     <p class="mb10"
-      >状态遮罩的配色由 <code>CSS</code> 变量 <code>--qr-code-mask-bg-color</code>（遮罩底色）和
-      <code>--qr-code-mask-text-color</code>（遮罩内文案颜色）控制，在组件上重新声明同名变量即可覆盖
+      >状态遮罩的底色、不透明度与文案色由
+      <code>--qr-code-mask-bg-color</code>、<code>--qr-code-mask-opacity</code>、<code>--qr-code-mask-text-color</code>
+      控制，在组件上重新声明即可覆盖；蒙层默认 <code>0.96</code> 不透明（与
+      <code>Ant Design</code> 一致），二维码会隐约透出，需要完全遮住时设为 <code>1</code>
     </p>
     <p class="mb10"
-      ><code>--qr-code-mask-text-color</code> 只作用于 <code>expiredText</code> / <code>scannedText</code> 文案；<code
-        >loading</code
-      >
-      指示符与「点击刷新」按钮是 <code>Spin</code> /
-      <code>Button</code>
-      组件，沿用各自主题色。遮罩底色支持半透明色，可让二维码在遮罩下隐约透出（透明度越高，遮罩内文案的可读性越低）
+      >右侧示例取语义变量 <code>--va-warning-bg-color</code> 作为底色，遮罩会随浅色 /
+      暗色主题自动切换，不会出现固定白色蒙层
     </p>
     <Space>
       <QRCode value="https://themusecatcher.blog.csdn.net" status="expired" />
@@ -120,6 +154,12 @@ const downloadQRCode = () => {
     </Space>
     <h2 class="mt30 mb10">自定义颜色</h2>
     <p class="mb10">通过设置 <code>color</code> 自定义二维码颜色，通过设置 <code>bgColor</code> 自定义背景颜色</p>
+    <p class="mb10">
+      <code>color</code> / <code>bgColor</code> 不传时分别取主题变量 <code>--va-text-color-1</code>（正文色）与
+      <code>--va-bg-container-color</code
+      >（容器底色），因此深色主题下二维码会自动反色融入页面，不会出现刺眼的白块；需要固定「白底黑码」时显式传入
+      <code>color="#000"</code> <code>bg-color="#FFF"</code> 即可
+    </p>
     <Space>
       <QRCode value="https://themusecatcher.blog.csdn.net" color="#52c41a" />
       <QRCode value="https://themusecatcher.blog.csdn.net" color="#1677FF" bg-color="#f5f5f5" />
