@@ -42,6 +42,14 @@ function onHide() {
 // 受控显示：由 open 驱动
 const controlledOpen = ref<boolean>(false)
 const destroyOpen = ref(false)
+// 锚点模式：锚点元素由使用方持有，传入 anchor 后以其为准
+const anchorRef = ref<HTMLDivElement>()
+const gatedAnchorRef = ref<HTMLDivElement>()
+// 展示前判定：关闭开关时悬停不展示
+const gatingAllowed = ref(false)
+function gatingDisabled(): boolean {
+  return !gatingAllowed.value
+}
 </script>
 
 ## 基本使用
@@ -518,6 +526,67 @@ const customColors = ['#f50', '#2db7f5', '#87d068', '#108ee9']
 ```
 
 :::
+
+## 锚点模式
+
+_传入 `anchor` 后不再渲染触发包裹层，触发监听、`tabindex` / `aria-describedby` 与定位均以传入元素为准，使用方的 `DOM` 结构不随提示显隐变化；`getDisabled` 在每次展示前求值，返回 `true` 时不展示_
+
+<br/>
+
+<Space>
+  <div ref="anchorRef" style="display: inline-block; padding: 8px 16px; border-radius: 8px; border: 1px solid #f0f0f0;">
+    锚点元素（悬停查看提示）
+  </div>
+  <Tooltip :anchor="anchorRef" tooltip="Vue Amazing UI" />
+</Space>
+
+<br/>
+
+<Space>
+  <div ref="gatedAnchorRef" style="display: inline-block; padding: 8px 16px; border-radius: 8px; border: 1px solid #f0f0f0;">
+    受判定拦截的锚点
+  </div>
+  <Tooltip :anchor="gatedAnchorRef" :get-disabled="gatingDisabled" tooltip="Vue Amazing UI" />
+  <Switch v-model:value="gatingAllowed" />
+</Space>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Space, Switch, Tooltip } from 'vue-amazing-ui'
+const anchorRef = ref<HTMLDivElement>()
+const gatedAnchorRef = ref<HTMLDivElement>()
+const gatingAllowed = ref(false)
+function gatingDisabled(): boolean {
+  return !gatingAllowed.value
+}
+</script>
+<template>
+  <Space>
+    <div
+      ref="anchorRef"
+      style="display: inline-block; padding: 8px 16px; border-radius: 8px; border: 1px solid #f0f0f0;"
+    >
+      锚点元素（悬停查看提示）
+    </div>
+    <Tooltip :anchor="anchorRef" tooltip="Vue Amazing UI" />
+  </Space>
+  <Space>
+    <div
+      ref="gatedAnchorRef"
+      style="display: inline-block; padding: 8px 16px; border-radius: 8px; border: 1px solid #f0f0f0;"
+    >
+      受判定拦截的锚点
+    </div>
+    <Tooltip :anchor="gatedAnchorRef" :get-disabled="gatingDisabled" tooltip="Vue Amazing UI" />
+    <Switch v-model:value="gatingAllowed" />
+  </Space>
+</template>
+```
+
+::::
 
 ## 按键控制
 
