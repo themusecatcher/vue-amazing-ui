@@ -12,7 +12,14 @@
 
 import { computed, inject, provide, watch } from 'vue'
 import type { ComputedRef } from 'vue'
-import { COMPONENT_VARS_BY_COMPONENT, derive, deriveColorStates, deriveFocusShadow, normalizeSeedColor } from '../theme'
+import {
+  COMPONENT_VARS_BY_COMPONENT,
+  derive,
+  deriveBrandDarkSurfaces,
+  deriveColorStates,
+  deriveFocusShadow,
+  normalizeSeedColor
+} from '../theme'
 import type { ResolvedMode, ThemeSeed, ThemeSnapshot } from '../theme'
 import { isDevEnv, log } from '../utils/log'
 import { THEME_SEED_KEY, THEME_SNAPSHOT_KEY } from './context'
@@ -23,13 +30,14 @@ import type { ComponentThemeConfig, ThemeConfig } from './theme-config'
  * 组件级主色 → CSS 变量（纯函数）
  *
  * 公开配置只有 `{ primaryColor }`，这里展开成两类变量：
- * 1. 内部通用桥 `--va-cp-<kebab>-primary-*`：所有组件样式统一消费，新增组件只需接线样式；
+ * 1. 内部通用桥 `--va-cp-<kebab>-*`：所有组件样式统一消费，新增组件只需接线样式
+ *    （`-primary-*` 六件套 + 焦点环 + 深色皮肤的两个表面色）；
  * 2. 公开组件令牌映射：Button / Slider / Menu 等注册表里带 `themeRole` 的令牌，
  *    保留给细粒度 CSS 覆盖与文档契约。
  *
  * **两类变量是「同时写、由组件样式二选一消费」，不是覆盖关系**：
  * - 有 `themeRole` 的组件（Button / Slider / Menu）会同时拿到桥与公开令牌；Button / Menu 的
- *   样式只读公开令牌，桥对它们是**冗余写入** —— 这是「所有组件统一写 7 个桥变量」换来的规则简单
+ *   样式只读公开令牌，桥对它们是**冗余写入** —— 这是「所有组件统一写 9 个桥变量」换来的规则简单
  *   （新增组件不必判断走哪条通道，也不需要在运行期知道「某组件是否读桥」）；
  * - Slider 仍读 1 个桥（`--va-cp-slider-primary-border-color`，聚焦边框），因此**不能**按
  *   「是否有 themeRole」一刀切裁剪桥；要裁剪就得引入「组件是否读桥」的元数据与配套守护；
@@ -71,7 +79,10 @@ export function buildComponentVars(components: ThemeConfig['components'], mode: 
       return
     }
     const states = deriveColorStates(normalizedPrimary, mode)
-    // 组件级通用桥：所有组件样式统一消费 `--va-cp-<kebab>-primary-*`，
+    // 深色皮肤表面：与全局 `--va-bg-brand-dark-*` 同一派生口径（主色色相 / 饱和度压到暗肤色阶），
+    // 因此组件级主色同样能驱动深色皮肤，且因写在更近的作用域节点上而优先于 `seed`
+    const darkSurfaces = deriveBrandDarkSurfaces(normalizedPrimary)
+    // 组件级通用桥：所有组件样式统一消费 `--va-cp-<kebab>-*`，
     // 因此新增组件时只需接线样式，不必再给每个组件设计一套公开令牌。
     const bridgePrefix = `--va-cp-${componentKeyToKebab(component)}`
     vars[`${bridgePrefix}-primary-color`] = states.base
@@ -81,6 +92,8 @@ export function buildComponentVars(components: ThemeConfig['components'], mode: 
     vars[`${bridgePrefix}-primary-border-color`] = states.border
     vars[`${bridgePrefix}-primary-text-color`] = states.base
     vars[`${bridgePrefix}-focus-shadow`] = deriveFocusShadow(normalizedPrimary, mode)
+    vars[`${bridgePrefix}-dark-bg-color`] = darkSurfaces.background
+    vars[`${bridgePrefix}-dark-bg-deep-color`] = darkSurfaces.deepBackground
     // 预索引：只遍历该组件带 themeRole 的令牌（通常 3~4 条），不再全表扫描 48 条
     ;(COMPONENT_VARS_BY_COMPONENT[component] ?? []).forEach(([name, meta]) => {
       const state = typeof meta.themeState === 'string' ? meta.themeState : meta.themeState?.[mode]

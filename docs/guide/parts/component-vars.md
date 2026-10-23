@@ -53,25 +53,25 @@ _本节由 `node scripts/gen-component-vars-doc.js` 从 `components/theme/compon
 
 **主色**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-button-primary-color` | `var(--va-primary-color)` | 主按钮底色（常态） |
-| `--va-button-primary-color-hover` | `var(--va-primary-color-hover)` | 主按钮底色（悬停） |
-| `--va-button-primary-color-active` | `var(--va-primary-color-active)` | 主按钮底色（按下） |
+| `--va-button-primary-color` | 主按钮底色（常态） | `var(--va-primary-color)` |
+| `--va-button-primary-color-hover` | 主按钮底色（悬停） | `var(--va-primary-color-hover)` |
+| `--va-button-primary-color-active` | 主按钮底色（按下） | `var(--va-primary-color-active)` |
 
 **前景色**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-button-solid-text-color` | `var(--va-text-color-solid)` | 实色底上的文字色（`primary` / `danger` / `reverse` 共用） |
+| `--va-button-solid-text-color` | 实色底上的文字色（`primary` / `danger` / `reverse` 共用） | `var(--va-text-color-solid)` |
 
 **危险色**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-button-danger-color` | `var(--va-error-color)` | 危险按钮底色（常态） |
-| `--va-button-danger-color-hover` | `var(--va-button-danger-color, var(--va-error-color))` | 危险按钮底色（悬停）；默认跟随常态色，只覆盖常态色时不会跳回全局红 |
-| `--va-button-danger-color-active` | `var(--va-button-danger-color, var(--va-error-color))` | 危险按钮底色（按下）；默认跟随常态色 |
+| `--va-button-danger-color` | 危险按钮底色（常态） | `var(--va-error-color)` |
+| `--va-button-danger-color-hover` | 危险按钮底色（悬停）；默认跟随常态色，只覆盖常态色时不会跳回全局红 | `var(--va-button-danger-color, var(--va-error-color))` |
+| `--va-button-danger-color-active` | 危险按钮底色（按下）；默认跟随常态色 | `var(--va-button-danger-color, var(--va-error-color))` |
 
 #### 滑动输入条 Slider
 
@@ -79,211 +79,213 @@ _本节由 `node scripts/gen-component-vars-doc.js` 从 `components/theme/compon
 
 **已选轨道**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-slider-track-color` | `var(--va-primary-border-color)` | 已选轨道底色（常态） |
-| `--va-slider-track-color-hover` | `var(--va-primary-color)` | 已选轨道底色（悬停） |
+| `--va-slider-track-color` | 已选轨道底色（常态） | `var(--va-primary-border-color)` |
+| `--va-slider-track-color-hover` | 已选轨道底色（悬停） | `var(--va-primary-color)` |
 
 **未选轨道**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-slider-rail-color` | `var(--va-fill-color-1)` | 未选轨道底色（常态） |
-| `--va-slider-rail-color-hover` | `var(--va-fill-color-2)` | 未选轨道底色（悬停） |
+| `--va-slider-rail-color` | 未选轨道底色（常态） | `var(--va-fill-color-1)` |
+| `--va-slider-rail-color-hover` | 未选轨道底色（悬停） | `var(--va-fill-color-2)` |
 
 **滑块**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-slider-handle-color` | `var(--va-bg-elevated-color)` | 滑块圆点底色 |
-| `--va-slider-handle-shadow-color` | `var(--va-primary-border-color)` | 滑块光环色（常态，常驻 `2px`） |
-| `--va-slider-handle-shadow-color-hover-focus` | `var(--va-primary-color)` | 滑块光环色（悬停 / 聚焦，放大到 `4px`） |
+| `--va-slider-handle-color` | 滑块圆点底色 | `var(--va-bg-elevated-color)` |
+| `--va-slider-handle-shadow-color` | 滑块光环色（常态，常驻 `2px`） | `var(--va-primary-border-color)` |
+| `--va-slider-handle-shadow-color-hover-focus` | 滑块光环色（悬停 / 聚焦，放大到 `4px`） | `var(--va-primary-color)` |
 
 **刻度点**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-slider-dot-border-color` | `var(--va-border-split-color)` | 刻度点描边色（常态） |
-| `--va-slider-dot-border-color-hover` | `var(--va-fill-color-2)` | 刻度点描边色（悬停） |
-| `--va-slider-dot-color-active` | `var(--va-primary-border-color)` | 刻度点描边色（激活态，跟随组件级主色） |
+| `--va-slider-dot-border-color` | 刻度点描边色（常态） | `var(--va-border-split-color)` |
+| `--va-slider-dot-border-color-hover` | 刻度点描边色（悬停） | `var(--va-fill-color-2)` |
+| `--va-slider-dot-color-active` | 刻度点描边色（激活态，跟随组件级主色） | `var(--va-primary-border-color)` |
 
 **数值气泡**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-slider-tooltip-bg-color` | `var(--va-bg-spotlight-color)` | 数值气泡底色 |
-| `--va-slider-tooltip-color` | `var(--va-text-color-solid)` | 数值气泡文字色；改底色时需同步覆盖，否则浅底白字不可读 |
+| `--va-slider-tooltip-bg-color` | 数值气泡底色 | `var(--va-bg-spotlight-color)` |
+| `--va-slider-tooltip-color` | 数值气泡文字色；改底色时需同步覆盖，否则浅底白字不可读 | `var(--va-text-color-solid)` |
 
 #### 导航菜单 Menu
 
-下表的「浅色 / 深色」指 `theme` 属性（独立皮肤），**与 `data-va-mode` 暗色模式无关**：两种皮肤下这些令牌都继续跟随全局令牌派生（例如浅色皮肤在暗色模式下会取 `--va-bg-container-color` 的暗色值）。三只主色桥令牌由 `theme.components.Menu.primaryColor` 派生；`--va-menu-item-selected-*` 的默认值通过它们间接跟随组件主色，直接覆盖选中态令牌仍然优先。
+下表的「浅色 / 深色」指 `theme` 属性（独立皮肤），**与 `data-va-mode` 暗色模式无关**：浅色皮肤的容器令牌跟随全局令牌派生（暗色模式下自动取暗色值），深色皮肤的三只表面令牌（根列表 / 浮层面板 / 内联子菜单）取**品牌色暗底** `--va-bg-brand-dark-color` / `--va-bg-brand-dark-deep-color`（主色色相与饱和度、亮度压到 `8%` / `4.5%`，两个模式同值），因此换主题色时深色皮肤同步换色相；是否启用这套皮肤只由 `theme` 属性决定。三只主色桥令牌由 `theme.components.Menu.primaryColor` 派生；`--va-menu-item-selected-*` 的默认值通过它们间接跟随组件主色，直接覆盖选中态令牌仍然优先。组件级 `primaryColor` 同样驱动深色皮肤的三只表面令牌（按该主色重新派生暗底，优先级高于 `seed`）；直接覆盖令牌依然优先级最高。
 
 其中 `--va-menu-primary-color` / `--va-menu-primary-palette` / `--va-menu-primary-text-color` 会跟随 `ConfigProvider` 的 `theme.components.Menu.primaryColor` 自动派生；其余令牌需要用 `CSS` 直接覆盖。
 
 **主色**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-menu-primary-color` | `var(--va-primary-color)` | 菜单主色桥：选中项文字 / 深色皮肤选中底 / 水平状态下划线 |
-| `--va-menu-primary-palette` | `var(--va-primary-bg-color)` | 菜单主色浅底桥：浅色皮肤选中项底色（深色皮肤改用 --va-menu-primary-color） |
-| `--va-menu-primary-text-color` | `var(--va-primary-text-color)` | 菜单主色文字桥：浅色皮肤选中项文字 / 水平菜单下划线 |
+| `--va-menu-primary-color` | 菜单主色桥：选中项文字 / 深色皮肤选中底 / 水平状态下划线 | `var(--va-primary-color)` |
+| `--va-menu-primary-palette` | 菜单主色浅底桥：浅色皮肤选中项底色（深色皮肤改用 --va-menu-primary-color） | `var(--va-primary-bg-color)` |
+| `--va-menu-primary-text-color` | 菜单主色文字桥：浅色皮肤选中项文字 / 水平菜单下划线 | `var(--va-primary-text-color)` |
 
 **容器**
 
-| 变量 | 默认值（浅色皮肤 / 深色皮肤） | 说明 |
+| 名称 | 说明 | 默认值（浅色皮肤 / 深色皮肤） |
 | :-- | :-- | :-- |
-| `--va-menu-background` | 浅色 `var(--va-bg-container-color)`<br>深色 `#001529` | 菜单根列表背景；弹出子菜单面板不受它影响 |
+| `--va-menu-background` | 菜单根列表背景；弹出子菜单面板取 --va-menu-popup-background，不受它影响 | 浅色 `var(--va-bg-container-color)`<br>深色 `var(--va-bg-brand-dark-color, #001529)` |
+| `--va-menu-popup-background` | 弹出子菜单（浮层面板）背景；深色皮肤取品牌色暗底，与根列表同色 | 浅色 `var(--va-bg-elevated-color)`<br>深色 `var(--va-bg-brand-dark-color, #001529)` |
+| `--va-menu-inline-submenu-background` | 内联子菜单（inline 展开的下一级列表）背景；深色皮肤取更深一阶的品牌色暗底 | 浅色 `var(--va-fill-color-1)`<br>深色 `var(--va-bg-brand-dark-deep-color, #000c17)` |
 
 **选中态**
 
-| 变量 | 默认值（浅色皮肤 / 深色皮肤） | 说明 |
+| 名称 | 说明 | 默认值（浅色皮肤 / 深色皮肤） |
 | :-- | :-- | :-- |
-| `--va-menu-item-selected-background` | 浅色 `var(--va-primary-bg-color)`<br>深色 `var(--va-primary-color)` | 选中项（含按下态）底色 |
-| `--va-menu-item-selected-color` | 浅色 `var(--va-primary-text-color)`<br>深色 `#fff` | 选中项文字色 / 水平菜单下划线色 |
+| `--va-menu-item-selected-background` | 选中项（含按下态）底色 | 浅色 `var(--va-primary-bg-color)`<br>深色 `var(--va-primary-color)` |
+| `--va-menu-item-selected-color` | 选中项文字色 / 水平菜单下划线色 | 浅色 `var(--va-primary-text-color)`<br>深色 `#fff` |
 
 #### 文字滚动 TextScroll
 
 **容器**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-text-scroll-bg-color` | `var(--va-bg-container-color)` | 滚动区域底色（横 / 纵两个变体共用） |
-| `--va-text-scroll-shadow-color` | `var(--va-border-color)` | 滚动区域外围阴影色（横 / 纵两个变体共用） |
+| `--va-text-scroll-bg-color` | 滚动区域底色（横 / 纵两个变体共用） | `var(--va-bg-container-color)` |
+| `--va-text-scroll-shadow-color` | 滚动区域外围阴影色（横 / 纵两个变体共用） | `var(--va-border-color)` |
 
 #### 滚动条 Scrollbar
 
 **滚动条滑块**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-scrollbar-color` | `var(--va-text-color-disabled)` | 滚动条滑块底色（常态） |
-| `--va-scrollbar-color-hover` | `var(--va-text-color-3)` | 滚动条滑块底色（悬停） |
+| `--va-scrollbar-color` | 滚动条滑块底色（常态） | `var(--va-text-color-disabled)` |
+| `--va-scrollbar-color-hover` | 滚动条滑块底色（悬停） | `var(--va-text-color-3)` |
 
 #### 表格 Table
 
 **容器**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-table-bg-color` | `var(--va-bg-container-color)` | 表格容器 / 数据行 / 固定列底色 |
+| `--va-table-bg-color` | 表格容器 / 数据行 / 固定列底色 | `var(--va-bg-container-color)` |
 
 **表头**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-table-header-bg-color` | `var(--va-fill-color-4)` | 表头单元格底色（含排序列表头与固定列表头） |
+| `--va-table-header-bg-color` | 表头单元格底色（含排序列表头与固定列表头） | `var(--va-fill-color-4)` |
 
 **底部**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-table-footer-bg-color` | `var(--va-fill-color-4)` | 表格底部（分页区）底色 |
+| `--va-table-footer-bg-color` | 表格底部（分页区）底色 | `var(--va-fill-color-4)` |
 
 **边框**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-table-border-color` | `var(--va-border-split-color)` | 单元格分隔线 / 外边框 / 固定列滚动阴影；另作可排序表头底与可排序行悬停底（改浅会连带变亮这两处底色） |
+| `--va-table-border-color` | 单元格分隔线 / 外边框 / 固定列滚动阴影；另作可排序表头底与可排序行悬停底（改浅会连带变亮这两处底色） | `var(--va-border-split-color)` |
 
 #### 卡片 Card
 
 **容器**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-card-bg-color` | `var(--va-bg-container-color)` | 卡片底色 |
+| `--va-card-bg-color` | 卡片底色 | `var(--va-bg-container-color)` |
 
 **边框**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-card-border-color` | `var(--va-border-split-color)` | 卡片外边框与标题分割线 |
+| `--va-card-border-color` | 卡片外边框与标题分割线 | `var(--va-border-split-color)` |
 
 #### 警告提示 Alert
 
 **容器**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-alert-bg-color` | `var(--va-fill-color-1)` | 默认态提示框底色（语义态用 --va-{success,warning,error,info}-* 控制） |
+| `--va-alert-bg-color` | 默认态提示框底色（语义态用 --va-{success,warning,error,info}-* 控制） | `var(--va-fill-color-1)` |
 
 **边框**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-alert-border-color` | `var(--va-border-color)` | 默认态提示框边框（语义态用 --va-{success,warning,error,info}-border-color 控制） |
+| `--va-alert-border-color` | 默认态提示框边框（语义态用 --va-{success,warning,error,info}-border-color 控制） | `var(--va-border-color)` |
 
 #### 输入框 Input
 
 **容器**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-input-bg-color` | `var(--va-bg-container-color)` | 输入框底色（含自动填充背景） |
+| `--va-input-bg-color` | 输入框底色（含自动填充背景） | `var(--va-bg-container-color)` |
 
 **边框**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-input-border-color` | `var(--va-border-color)` | 输入框常态边框（聚焦 / 悬停仍由主色派生） |
+| `--va-input-border-color` | 输入框常态边框（聚焦 / 悬停仍由主色派生） | `var(--va-border-color)` |
 
 **前景色**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-input-text-color` | `var(--va-text-color-1)` | 输入文字与光标颜色 |
-| `--va-input-placeholder-color` | `var(--va-text-color-disabled)` | 占位符文字颜色 |
+| `--va-input-text-color` | 输入文字与光标颜色 | `var(--va-text-color-1)` |
+| `--va-input-placeholder-color` | 占位符文字颜色 | `var(--va-text-color-disabled)` |
 
 #### 文本域 Textarea
 
 **容器**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-textarea-bg-color` | `var(--va-bg-container-color)` | 文本域底色（含自动填充背景） |
+| `--va-textarea-bg-color` | 文本域底色（含自动填充背景） | `var(--va-bg-container-color)` |
 
 **边框**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-textarea-border-color` | `var(--va-border-color)` | 文本域常态边框（聚焦 / 悬停仍由主色派生） |
+| `--va-textarea-border-color` | 文本域常态边框（聚焦 / 悬停仍由主色派生） | `var(--va-border-color)` |
 
 **前景色**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-textarea-text-color` | `var(--va-text-color-1)` | 输入文字与光标颜色 |
-| `--va-textarea-placeholder-color` | `var(--va-text-color-disabled)` | 占位符文字颜色 |
+| `--va-textarea-text-color` | 输入文字与光标颜色 | `var(--va-text-color-1)` |
+| `--va-textarea-placeholder-color` | 占位符文字颜色 | `var(--va-text-color-disabled)` |
 
 #### 模态框 Modal
 
 **容器**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-modal-bg-color` | `var(--va-bg-elevated-color)` | 弹窗内容区底色 |
+| `--va-modal-bg-color` | 弹窗内容区底色 | `var(--va-bg-elevated-color)` |
 
 **前景色**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-modal-title-color` | `var(--va-text-color-1)` | 弹窗标题颜色 |
-| `--va-modal-text-color` | `var(--va-text-color-1)` | 弹窗正文颜色 |
+| `--va-modal-title-color` | 弹窗标题颜色 | `var(--va-text-color-1)` |
+| `--va-modal-text-color` | 弹窗正文颜色 | `var(--va-text-color-1)` |
 
 #### 抽屉 Drawer
 
 **容器**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-drawer-bg-color` | `var(--va-bg-elevated-color)` | 抽屉面板底色 |
+| `--va-drawer-bg-color` | 抽屉面板底色 | `var(--va-bg-elevated-color)` |
 
 **边框**
 
-| 变量 | 默认值 | 说明 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
-| `--va-drawer-header-border-color` | `var(--va-border-split-color)` | 抽屉头部与内容区之间的分割线 |
-| `--va-drawer-footer-border-color` | `var(--va-border-split-color)` | 抽屉底部操作区上方的分割线 |
+| `--va-drawer-header-border-color` | 抽屉头部与内容区之间的分割线 | `var(--va-border-split-color)` |
+| `--va-drawer-footer-border-color` | 抽屉底部操作区上方的分割线 | `var(--va-border-split-color)` |
 
 ### 已知限制
 

@@ -24,23 +24,23 @@ description: '通过 ConfigProvider 的 7 个颜色种子定制主题，默认�
 | :-- | :-- | :-- |
 | 种子（`seed`） | 一整套色阶的**起点色**，共 `7` 个 | `theme.seed.primary = '#1677ff'` |
 | 派生 | 由起点色**计算**出一整组深浅（常态 / 悬停 / 按下 / 浅底 / 描边） | `derive(seed, mode)`，库内部完成 |
-| 变量（`--va-*`） | 派生结果落地为 `CSS` 变量，组件只读取变量 | `--va-primary-color` 等 `40` 个 |
+| 变量（`--va-*`） | 派生结果落地为 `CSS` 变量，组件只读取变量 | `--va-primary-color` 等 `42` 个 |
 | 令牌（`--va-<组件>-*`） | 组件内部细节的**公开变量名**，用于单点覆盖 | `--va-slider-handle-shadow-color` |
 
-**核心结论：给定 `7` 个种子，`40` 个变量由库派生，组件只消费变量；因此换肤不重建组件，也不产生运行时开销。**
+**核心结论：给定 `7` 个种子，`42` 个变量由库派生，组件只消费变量；因此换肤不重建组件，也不产生运行时开销。**
 
 ## 主题模型：种子 → 派生 → 变量
 
-_本节先给出派生模型，下文所有用法都基于它：**种子 → 派生 → `40` 个 `CSS` 变量 → 组件只读变量**。_
+_本节先给出派生模型，下文所有用法都基于它：**种子 → 派生 → `42` 个 `CSS` 变量 → 组件只读变量**。_
 
 ```text
 seed + mode ──┐
-              ├─→ derive(seed, mode) ─→ 40 个 --va-* ─┐
+              ├─→ derive(seed, mode) ─→ 42 个 --va-* ─┐
 components ───┘         │                            ├─→ 写到作用域节点 ─→ CSS 继承 ─→ var(--va-*)
                         └─→ 组件令牌 --va-<comp>-* ─┘     · 包裹元素 / <html> / 浮层根节点
 ```
 
-关键点：**`JS` 只算一次、写一次，染色全在 `CSS` 引擎里完成**。换主色时实际只变 `13` 个变量（主色 `6` + `info` `3` + 链接 `3` + 焦点环 `1`），其余 `27` 个连值都不变；暗色不是第二套种子，而是 `derive` 的另一个入参。
+关键点：**`JS` 只算一次、写一次，染色全在 `CSS` 引擎里完成**。换主色时实际只变 `15` 个变量（主色 `6` + `info` `3` + 链接 `3` + 焦点环 `1` + 品牌色暗底 `2`），其余 `27` 个连值都不变；暗色不是第二套种子，而是 `derive` 的另一个入参。
 
 ### 作用域与载体
 
@@ -229,16 +229,16 @@ _`--va-*` 是公开契约，宿主可直接在任意作用域覆盖_
 只覆盖 `--va-primary-color` 而不覆盖 `-hover` / `-active`，会出现「常态变了、悬停没变」。换色应通过 `ConfigProvider.seed` 派生整套；只想改某个组件时用 `theme.components.<Component>.primaryColor`；或在同一作用域同时覆盖完整状态变量。
 :::
 
-## 颜色变量清单：40 个 `--va-*`
+## 颜色变量清单：42 个 `--va-*`
 
-_共 `40` 个；新增变量必须同时满足「不是现有变量的函数」与「至少有一个组件消费」_
+_共 `42` 个；新增变量必须同时满足「不是现有变量的函数」与「至少有一个组件消费」_
 
 | 分组 | 变量 |
 | :-- | :-- |
 | 主色 | `--va-primary-color` / `-hover` / `-active`；`--va-primary-bg-color` / `--va-primary-border-color` / `--va-primary-text-color` |
 | 语义色 | `--va-{success,warning,error,info}-color` / `-bg-color` / `-border-color` |
 | 文本 | `--va-text-color-1` / `-2` / `-3` / `--va-text-color-solid` / `--va-text-color-disabled` |
-| 背景 | `--va-bg-container-color` / `--va-bg-elevated-color` / `--va-bg-layout-color` / `--va-bg-spotlight-color` |
+| 背景 | `--va-bg-container-color` / `--va-bg-elevated-color` / `--va-bg-layout-color` / `--va-bg-spotlight-color` / `--va-bg-brand-dark-color` / `--va-bg-brand-dark-deep-color` |
 | 边框 | `--va-border-color` / `--va-border-split-color` |
 | 填充 | `--va-fill-color-1` / `--va-fill-color-2` / `--va-fill-color-3` / `--va-fill-color-4` |
 | 阴影 | `--va-shadow-color` / `--va-focus-shadow` / `--va-popup-shadow` |
@@ -249,12 +249,14 @@ _共 `40` 个；新增变量必须同时满足「不是现有变量的函数」�
 - `--va-text-color-solid` 是**实色底（彩色底 / 黑色遮罩）上的文字色**，两种模式恒为白；按钮主色底、`Badge` 计数、`Avatar`、图片预览的白色 `chrome` 都取它；
 - `--va-bg-elevated-color` 是浮层底（浅色 `#ffffff` / 暗色 `#1f1f1f`）：暗色下它比 `--va-bg-container-color` 提亮一档，`Modal` / `Drawer` / `Message` / `Notification` / `Dialog` / `Popover` / `Popconfirm` / `Dropdown` / `Select` 面板 / 日期面板 / `ColorPicker` 面板都取它，否则浮层与页面同色、层级无法分辨；
 - `--va-bg-spotlight-color` 是反色浮层底（浅色 `rgba(0,0,0,.85)` / 暗色 `#424242`），`Tooltip` 默认取它；
+- `--va-bg-brand-dark-color` / `--va-bg-brand-dark-deep-color` 是**品牌色暗底**（默认主色下 `#001129` / `#000a17`）：取主色的色相与饱和度、亮度压到 `8%` / `4.5%`，两个模式取值相同。`Menu` 的 `theme="dark"` 皮肤取它们做根列表 / 浮层面板与内联子菜单的底色，因此**换主题色时深色皮肤跟着变色相**；配置了 `theme.components.Menu.primaryColor` 时按该组件主色重新派生（优先于 `seed`）；是否启用这套皮肤仍只由 `theme` 属性决定，与 `data-va-mode` 无关；
 - `--va-mask-color` 两模式固定 `rgba(0, 0, 0, 0.45)`，`Modal` / `Drawer` / 图片预览的遮罩都取它（遮罩不跟随正文色，否则暗色下会变成白色蒙层）；
 - `--va-fill-color-3` 是最强的一档中性叠加（浅色 `rgba(0,0,0,.15)` / 暗色 `rgba(255,255,255,.18)`），`Watermark` 的默认水印色取它，因此暗色下自动变成半透明白；显式传 `textStyle.color` 时以传入值为准；
 - `--va-fill-color-4` 是最淡的一档中性叠加（浅色 `rgba(0,0,0,.02)` / 暗色 `rgba(255,255,255,.04)`），用于默认标签底、`Result` 内容区底纹、表格展开行；
 - 编号 `1`~`4` 只表示档位，不代表强度顺序（`3` 最强、`4` 最淡）；
 - 阴影变量是完整 `box-shadow` 值，直接整体赋值即可；
-- `--va-shadow-color` 是方向性 / 局部阴影的基色（浅色极淡黑、暗色加深）；**不要**拿 `--va-fill-color-2` 当阴影色，它在暗色下是白色，会形成光晕。
+- `--va-shadow-color` 是方向性 / 局部阴影的基色（浅色极淡黑、暗色加深）；**不要**拿 `--va-fill-color-2` 当阴影色，它在暗色下是白色，会形成光晕；
+- 例外是**落在自身遮罩上的面板阴影**（如 `Drawer` 的四向面板）：遮罩在暗色下已是 `rgba(0,0,0,.45)` 的深色叠加，再用加深的基色会在面板与遮罩交界处叠出一条黑边，这类阴影改用固定 `rgba(0,0,0,.08)` 基色，与 antd 的 `boxShadowDrawer*` 别名同口径。
 
 ::: tip 关于可读性
 系统不替品牌色兜底。如果主色偏浅（如黄色、亮青），主色文字与主色按钮上的白字对比度会不足 —— 这时应当**换一个更深的品牌色**（或单独覆盖 `--va-primary-text-color` / `--va-text-color-solid`），而不是期待主题系统自动修正。
@@ -268,13 +270,13 @@ _组件样式只读 `CSS` 变量；需要在 `JS` / `canvas` / `SVG` 里拿到�
 import { derive } from 'vue-amazing-ui'
 import type { ThemeVars } from 'vue-amazing-ui'
 
-// 与 <ConfigProvider :theme="{ seed, mode }"> 写出的 40 个变量逐值一致
+// 与 <ConfigProvider :theme="{ seed, mode }"> 写出的 42 个变量逐值一致
 const vars: ThemeVars = derive({ primary: '#18a058' }, 'dark')
 vars['--va-primary-color'] // => '#178b4e'
 ```
 
 - `derive(seed?, mode?)`：`seed` 为 `ThemeSeed`（未传的字段取默认值），`mode` 为已解析的 `'light'` / `'dark'`（缺省 `'light'`）；
-- 返回 `ThemeVars`（40 个 `--va-*` 的只读快照，键名见上一节清单），`ThemeSnapshot` 是它的只读别名；结果带缓存，同一组输入返回同一对象；
+- 返回 `ThemeVars`（42 个 `--va-*` 的只读快照，键名见上一节清单），`ThemeSnapshot` 是它的只读别名；结果带缓存，同一组输入返回同一对象；
 - 需要 `theme.mode = 'auto'` 的语义时，请先在业务侧把 `auto` 解析成 `light` / `dark` 再传入 —— `derive` 只接受已解析的模式（`ResolvedMode`）；
 - 其它主题出口：`DEFAULT_PRIMARY` / `DEFAULT_SEEDS`（默认主色与默认种子）、`THEME_VAR_NAMES`（变量名清单）、`MODE_ATTRIBUTE`（`data-va-mode` 属性名）；
 - 旧版 `getColorPalettes` / `getAlphaColor` 已移除：色阶与透明度色都改由 `derive` 的返回值和 `--va-*` 承担，避免出现两套取色口径。
@@ -296,7 +298,8 @@ _`mode="dark"` 覆盖所有消费 `--va-*` 的样式；下列颜色按设计固�
 
 - `Tag` 的预设色板（`pink` / `red` / `blue` 等 `13` 色）按模式声明为组件继承变量（`--tag-*`，组件自有资产，不属于 `--va-*` 契约）：嵌套作用域与带 `data-va-mode` 的浮层都取最近作用域的值，不再是“暗色页面里永远走暗色板”；
 - `Badge` / `Result` 的自定义色板：浅色值固定，暗色另有一套按暗色阶梯重算的覆盖；语义状态（`success` / `processing` / `error` / `warning`）与 `Timeline` 的圆点直接取 `--va-*`，随模式切换；
-- 深色 `Sider` 与 `theme="dark"` 的 `Menu`：本身就是一套独立预设皮肤，改主题不应重定义它们；
+- 深色 `Sider`：本身就是一套独立预设皮肤，改主题不应重定义它；
+- `theme="dark"` 的 `Menu`：皮肤仍是一套独立预设（是否启用只由 `theme` 属性决定，不随 `data-va-mode` 切换），但三个表面色的默认值由主色派生（`--va-bg-brand-dark-color` / `--va-bg-brand-dark-deep-color`），换主色时同步换色相；需要让它跟随明暗模式或与页面容器同色时，把 `--va-menu-background` / `--va-menu-popup-background` / `--va-menu-inline-submenu-background` 分别指向 `--va-bg-container-color` / `--va-bg-elevated-color` / `--va-fill-color-1`；
 - `Image` 预览与 `Video` 播放器的固定 `chrome`（深色底 + 白色图标）；
 - 各类中性投影（`box-shadow` 中的黑色阴影）；
 - `Watermark` 的水印颜色默认取 `--va-fill-color-3`（随模式变），只有显式传 `textStyle.color` 时才脱离主题。

@@ -409,9 +409,11 @@ provide<MenuContext>(menuContextKey, {
   --menu-inline-submenu-background: var(--va-fill-color-1);
 }
 .menu-dark {
-  --menu-background: #001529;
-  /* 深色皮肤是独立预设，浮层沿用同一深蓝底 */
-  --menu-popup-background: #001529;
+  /* 深色皮肤的底色由主色派生（主色色相 / 饱和度压到暗肤色阶）：换主题色时整块皮肤同步变色，
+     是否启用这套皮肤只由 `theme="dark"` 决定。取值链：组件级主色 > 全局种子 > 内置深蓝 */
+  --menu-background: var(--va-cp-menu-dark-bg-color, var(--va-bg-brand-dark-color, #001529));
+  /* 浮层沿用同一底色，避免与根列表分层 */
+  --menu-popup-background: var(--va-cp-menu-dark-bg-color, var(--va-bg-brand-dark-color, #001529));
   --menu-color: rgba(255, 255, 255, 0.65);
   --menu-border-color: rgba(255, 255, 255, 0.12);
   --menu-item-hover-color: #fff;
@@ -433,7 +435,7 @@ provide<MenuContext>(menuContextKey, {
   --menu-item-danger-selected-background: var(--va-error-color);
   --menu-item-disabled-color: rgba(255, 255, 255, 0.25);
   --menu-group-title-color: rgba(255, 255, 255, 0.65);
-  --menu-inline-submenu-background: #000c17;
+  --menu-inline-submenu-background: var(--va-cp-menu-dark-bg-deep-color, var(--va-bg-brand-dark-deep-color, #000c17));
 }
 .menu-wrap {
   box-sizing: border-box;
@@ -483,7 +485,7 @@ provide<MenuContext>(menuContextKey, {
   font-size: 14px;
   line-height: 1.5714285714285714;
   color: var(--menu-color);
-  background-color: var(--menu-popup-background);
+  background-color: var(--va-menu-popup-background, var(--menu-popup-background));
   border-radius: 8px;
   box-shadow:
     0 3px 6px -4px rgba(0, 0, 0, 0.12),
@@ -848,7 +850,7 @@ provide<MenuContext>(menuContextKey, {
     padding 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .menu-wrap.menu-inline .menu-submenu-list {
-  background-color: var(--menu-inline-submenu-background);
+  background-color: var(--va-menu-inline-submenu-background, var(--menu-inline-submenu-background));
 }
 .menu-wrap.menu-inline .menu-submenu .menu-submenu-arrow {
   &::before {

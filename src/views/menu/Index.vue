@@ -16,12 +16,10 @@ import {
   SettingOutlined
 } from '@ant-design/icons-vue'
 import type { ItemType, MenuExpandIconInfo, MenuIcon, MenuKey } from 'vue-amazing-ui'
-
 // 演示数据构造：图标以渲染函数给出
 function getItem(label: string, key: string, icon?: MenuIcon, children?: ItemType[], type?: 'group'): ItemType {
   return { key, icon, children, label, type } as ItemType
 }
-
 // 顶部导航
 const horizontalSelected = ref<MenuKey[]>(['mail'])
 const horizontalItems: ItemType[] = [
@@ -39,7 +37,6 @@ const horizontalItems: ItemType[] = [
   },
   { key: 'alipay', label: 'Navigation Four - Link', title: 'Navigation Four - Link' }
 ]
-
 // 内嵌菜单
 const inlineSelected = ref<MenuKey[]>(['1'])
 const inlineOpenKeys = ref<MenuKey[]>(['sub1'])
@@ -62,7 +59,6 @@ const inlineItems: ItemType[] = [
   ]),
   getItem('Group', 'grp', undefined, [getItem('Option 13', '13'), getItem('Option 14', '14')], 'group')
 ]
-
 // 垂直菜单
 const verticalSelected = ref<MenuKey[]>(['1'])
 const verticalOpenKeys = ref<MenuKey[]>(['sub1'])
@@ -101,7 +97,6 @@ const verticalItems: ItemType[] = [
     ]
   }
 ]
-
 // 切换菜单类型
 const switchMode = ref(false)
 const switchTheme = ref(false)
@@ -122,7 +117,6 @@ const switchItems: ItemType[] = [
     getItem('Option 10', '10')
   ])
 ]
-
 // 子菜单展开触发方式与开合延时
 const triggerHover = ref(true)
 const triggerDelaySelected = ref<MenuKey[]>(['1'])
@@ -137,7 +131,6 @@ const triggerDelayItems: ItemType[] = [
     getItem('Option 4', '2-2')
   ])
 ]
-
 // 自定义缩进：同一份层级结构并排对比默认 24 与 32，两个实例各自持展开状态
 const indentDefaultOpenKeys = ref<MenuKey[]>(['sub1', 'sub1-2'])
 const indentWideOpenKeys = ref<MenuKey[]>(['sub1', 'sub1-2'])
@@ -148,7 +141,6 @@ const indentItems: ItemType[] = [
   ]),
   getItem('Navigation Two', '2', () => h(AppstoreOutlined))
 ]
-
 // 缩起内嵌菜单
 const collapsed = ref(false)
 const collapsedSelected = ref<MenuKey[]>(['1'])
@@ -189,7 +181,6 @@ const collapsedItems: ItemType[] = [
     ]
   }
 ]
-
 // 收起态长标题提示：标题长到换行 ⇒ 提示面板比菜单项更高
 const longTitleSelected = ref<MenuKey[]>(['1'])
 const longTitleItems: ItemType[] = [
@@ -224,7 +215,6 @@ const longTitleItems: ItemType[] = [
     title: '很长的标题 Five：这段文案刻意写长，用于让收起态的悬浮提示折成多行，展示提示内容超出菜单项时的换行效果'
   }
 ]
-
 // 只展开当前父级菜单
 const rootSubmenuKeys: MenuKey[] = ['sub1', 'sub2', 'sub4']
 const parentOpenKeys = ref<MenuKey[]>(['sub1'])
@@ -257,7 +247,6 @@ function onParentOpenChange(openKeys: MenuKey[]) {
     parentOpenKeys.value = [latestOpenKey]
   }
 }
-
 // 多选
 const multipleSelected = ref<MenuKey[]>(['1'])
 const multipleItems: ItemType[] = [
@@ -273,7 +262,6 @@ const multipleItems: ItemType[] = [
     ]
   }
 ]
-
 // 禁用
 const disabledSelected = ref<MenuKey[]>(['1'])
 const wholeDisabled = ref(false)
@@ -283,10 +271,8 @@ const disabledItems: ItemType[] = [
   { key: '3', label: 'Option 3（danger）', danger: true },
   { key: '4', label: 'Option 4', disabled: true }
 ]
-
 // 空数据
 const emptyItems: ItemType[] = []
-
 // 自定义展开图标
 const expandIconSelected = ref<MenuKey[]>(['1'])
 const expandIconOpenKeys = ref<MenuKey[]>(['sub1'])
@@ -302,8 +288,8 @@ const expandIconItems: ItemType[] = [
 const expandIconByProp = (info: MenuExpandIconInfo) =>
   h(RightOutlined, { class: ['demo-expand-icon', { 'demo-expand-icon-open': info.isOpen }] })
 const expandIconPropOpenKeys = ref<MenuKey[]>(['sub1'])
-
-// 主题
+// 主题：深色皮肤的底色由主题色派生，故颜色选择器直接绑定作用域种子
+const themePrimary = ref('#1677ff')
 const themeDark = ref(true)
 const themeSelected = ref<MenuKey[]>(['1'])
 const themeOpenKeys = ref<MenuKey[]>(['sub1'])
@@ -342,7 +328,6 @@ const themeItems: ItemType[] = [
     ]
   }
 ]
-
 // 子菜单主题：根目录深色、子目录浅色（子菜单 theme 随开关变化）
 const submenuDark = ref(false)
 const submenuSelected = ref<MenuKey[]>(['1'])
@@ -363,15 +348,12 @@ const submenuItems = computed<ItemType[]>(() => [
   { key: '5', label: 'Option 5', title: 'Option 5' },
   { key: '6', label: 'Option 6', title: 'Option 6' }
 ])
-
 // 组件式用法
 const componentSelected = ref<MenuKey[]>(['1'])
 const componentOpenKeys = ref<MenuKey[]>(['sub2'])
-
 // 组件式自定义展开图标：子菜单级 expandIcon 优先，未提供的子菜单回落 Menu 级
 const componentExpandIconSelected = ref<MenuKey[]>(['1'])
 const componentExpandIconOpenKeys = ref<MenuKey[]>(['sub1'])
-
 // 水平溢出指示器：容器放不下的项收进省略子菜单，其指示器由 overflowedIndicator 插槽自定义
 const overflowItems: ItemType[] = [
   { key: 'mail', label: 'Navigation One', title: 'Navigation One' },
@@ -380,7 +362,6 @@ const overflowItems: ItemType[] = [
   { key: 'setting', label: 'Navigation Four', title: 'Navigation Four' },
   { key: 'desktop', label: 'Navigation Five', title: 'Navigation Five' }
 ]
-
 // 子菜单预渲染：开启后子菜单面板在首次展开前就已渲染进 DOM（保持不可见）
 const forceRenderEnabled = ref(false)
 const forceRenderItems: ItemType[] = [
@@ -410,11 +391,9 @@ const forceRenderItems: ItemType[] = [
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
-
     <h2 class="mt30 mb10">顶部导航</h2>
     <p class="mb10">水平的顶部导航菜单</p>
     <Menu v-model:selectedKeys="horizontalSelected" mode="horizontal" :items="horizontalItems" />
-
     <h2 class="mt30 mb10">内嵌菜单</h2>
     <p class="mb10">子菜单内嵌在菜单区域内，可逐级展开</p>
     <Menu
@@ -424,7 +403,6 @@ const forceRenderItems: ItemType[] = [
       mode="inline"
       :items="inlineItems"
     />
-
     <h2 class="mt30 mb10">垂直菜单</h2>
     <p class="mb10">子菜单以弹出形式展示，支持多级嵌套</p>
     <Menu
@@ -434,7 +412,6 @@ const forceRenderItems: ItemType[] = [
       mode="vertical"
       :items="verticalItems"
     />
-
     <h2 class="mt30 mb10">切换菜单类型</h2>
     <p class="mb10">动态切换菜单模式与主题</p>
     <Switch v-model:value="switchMode" checked="vertical" unchecked="inline" />
@@ -448,7 +425,6 @@ const forceRenderItems: ItemType[] = [
       :theme="switchTheme ? 'dark' : 'light'"
       :items="switchItems"
     />
-
     <h2 class="mt30 mb10">子菜单展开触发与延时</h2>
     <p class="mb10"
       >切换子菜单的展开触发方式；<code>hover</code> 触发时，<code>subMenuOpenDelay</code> /
@@ -465,7 +441,6 @@ const forceRenderItems: ItemType[] = [
       :sub-menu-close-delay="0.8"
       :items="triggerDelayItems"
     />
-
     <h2 class="mt30 mb10">自定义缩进</h2>
     <p class="mb10"
       ><code>inline</code> 模式下 <code>inlineIndent</code> 决定每一级菜单项的缩进宽度，左侧为默认
@@ -481,7 +456,6 @@ const forceRenderItems: ItemType[] = [
         :items="indentItems"
       />
     </Flex>
-
     <h2 class="mt30 mb10">缩起内嵌菜单</h2>
     <p class="mb10">收起时只显示图标，子菜单以浮层展示，悬浮菜单项可查看完整标题</p>
     <!-- 宽度交给外层容器：内嵌菜单收起后自身宽度收到 80px，若把宽度写在菜单上会把它钉死在展开宽度 -->
@@ -525,11 +499,9 @@ const forceRenderItems: ItemType[] = [
       v-model:selectedKeys="parentSelected"
       @open-change="onParentOpenChange"
     />
-
     <h2 class="mt30 mb10">多选</h2>
     <p class="mb10">通过 <code>multiple</code> 允许多选，再次点击已选中项会触发取消选中</p>
     <Menu v-model:selectedKeys="multipleSelected" style="width: 256px" mode="inline" multiple :items="multipleItems" />
-
     <h2 class="mt30 mb10">禁用</h2>
     <p class="mb10">
       通过 <code>disabled</code> 禁用整个菜单；菜单项自身的 <code>disabled</code> 只禁用该项，<code>danger</code>
@@ -543,11 +515,9 @@ const forceRenderItems: ItemType[] = [
       :disabled="wholeDisabled"
       :items="disabledItems"
     />
-
     <h2 class="mt30 mb10">空数据</h2>
     <p class="mb10">菜单内容为空时渲染空列表，不报错也不残留占位</p>
     <Menu style="width: 256px" mode="inline" :items="emptyItems" />
-
     <h2 class="mt30 mb10">自定义展开图标</h2>
     <p class="mb10"
       >通过
@@ -571,7 +541,6 @@ const forceRenderItems: ItemType[] = [
       :items="expandIconItems"
       :expand-icon="expandIconByProp"
     />
-
     <h2 class="mt30 mb10">组件式用法</h2>
     <p class="mb10">
       以 <code>MenuItem</code> / <code>MenuSubMenu</code> / <code>MenuItemGroup</code> /
@@ -604,7 +573,6 @@ const forceRenderItems: ItemType[] = [
       </MenuItemGroup>
       <MenuItem key="8" disabled>Option 8</MenuItem>
     </Menu>
-
     <h2 class="mt30 mb10">组件式自定义展开图标</h2>
     <p class="mb10">
       子菜单的 <code>expandIcon</code> 插槽优先于 <code>Menu</code> 的同名插槽，未提供时回落到 <code>Menu</code> 级图标
@@ -635,7 +603,6 @@ const forceRenderItems: ItemType[] = [
         <MenuItem key="4">Option 4</MenuItem>
       </MenuSubMenu>
     </Menu>
-
     <h2 class="mt30 mb10">水平溢出指示器</h2>
     <p class="mb10">
       水平空间不足时，放不下的菜单项会收进省略子菜单；其指示器由
@@ -648,7 +615,6 @@ const forceRenderItems: ItemType[] = [
         </template>
       </Menu>
     </div>
-
     <h2 class="mt30 mb10">子菜单预渲染</h2>
     <p class="mb10">
       开启 <code>forceSubMenuRender</code> 后，子菜单面板在首次展开前就已渲染进 DOM（保持不可见），首次展开因此
@@ -661,19 +627,26 @@ const forceRenderItems: ItemType[] = [
       :force-sub-menu-render="forceRenderEnabled"
       :items="forceRenderItems"
     />
-
     <h2 class="mt30 mb10">主题</h2>
-    <p class="mb10">内建 <code>light</code> 与 <code>dark</code> 两套主题，默认为 <code>light</code></p>
-    <Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
-    <Menu
-      v-model:openKeys="themeOpenKeys"
-      v-model:selectedKeys="themeSelected"
-      style="width: 256px; margin-top: 16px"
-      mode="inline"
-      :theme="themeDark ? 'dark' : 'light'"
-      :items="themeItems"
-    />
-
+    <p class="mb10"
+      >内建 <code>light</code> 与 <code>dark</code> 两套主题，默认为
+      <code>light</code>；深色皮肤的底色由主题色派生，改主色时根列表、浮层与内联子菜单同步换色相</p
+    >
+    <Space align="center" wrap>
+      <Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
+      <!-- 主题色只作用于本用例：作用域种子随选择器变化，深色皮肤的派生底色随之更新 -->
+      <ColorPicker v-model:value="themePrimary" :show-alpha="false" style="width: 160px" />
+    </Space>
+    <ConfigProvider :theme="{ seed: { primary: themePrimary } }">
+      <Menu
+        v-model:openKeys="themeOpenKeys"
+        v-model:selectedKeys="themeSelected"
+        style="width: 256px; margin-top: 16px"
+        mode="inline"
+        :theme="themeDark ? 'dark' : 'light'"
+        :items="themeItems"
+      />
+    </ConfigProvider>
     <h2 class="mt30 mb10">子菜单主题</h2>
     <p class="mb10">通过子菜单的 <code>theme</code> 属性设置其主题，可实现根目录深色、子目录浅色的效果</p>
     <Switch v-model:value="submenuDark" checked="Dark" unchecked="Light" />

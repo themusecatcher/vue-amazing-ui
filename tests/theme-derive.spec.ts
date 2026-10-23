@@ -22,8 +22,8 @@ const paletteOf = (color: string, mode: 'light' | 'dark' = 'light'): string[] =>
   generate(color, { theme: mode === 'dark' ? 'dark' : 'default' })
 
 describe('derive 变量契约', () => {
-  it('两种模式的返回键集合与 THEME_VAR_NAMES 完全相等（40 个）', () => {
-    expect(THEME_VAR_NAMES).toHaveLength(40)
+  it('两种模式的返回键集合与 THEME_VAR_NAMES 完全相等（42 个）', () => {
+    expect(THEME_VAR_NAMES).toHaveLength(42)
     const light = derive({}, 'light')
     const dark = derive({}, 'dark')
     expect(Object.keys(light).sort()).toEqual([...THEME_VAR_NAMES].sort())
@@ -52,6 +52,21 @@ describe('derive 变量契约', () => {
   it('未传种子时默认主色保持 #1677ff', () => {
     expect(createSeeds({}).primary).toBe('#1677ff')
     expect(derive({}, 'light')['--va-primary-color']).toBe('#1677ff')
+  })
+
+  it('品牌色暗底：取主色色相与饱和度、亮度固定 8% / 4.5%，两个模式同值', () => {
+    const light = derive({}, 'light')
+    const dark = derive({}, 'dark')
+    // 默认主色 #1677ff 下的两个暗底，与内置深蓝 #001529 / #000c17 同亮度档
+    expect(light['--va-bg-brand-dark-color']).toBe('#001129')
+    expect(light['--va-bg-brand-dark-deep-color']).toBe('#000a17')
+    // 深色皮肤是一套独立预设：不随 data-va-mode 切换
+    expect(dark['--va-bg-brand-dark-color']).toBe(light['--va-bg-brand-dark-color'])
+    expect(dark['--va-bg-brand-dark-deep-color']).toBe(light['--va-bg-brand-dark-deep-color'])
+    // 换主色 → 暗底跟着换色相
+    expect(derive({ primary: '#722ed1' }, 'light')['--va-bg-brand-dark-color']).not.toBe(
+      light['--va-bg-brand-dark-color']
+    )
   })
 
   it('非法种子告警并回退默认值，不中断其余字段', () => {

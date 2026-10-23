@@ -2,7 +2,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { buildComponentVars } from 'components/config-provider/use-theme-seed'
 import { resolveTeleportTheme } from 'components/config-provider/use-theme-teleport'
-import { derive, deriveColorStates } from 'components/theme'
+import { derive, deriveBrandDarkSurfaces, deriveColorStates } from 'components/theme'
 
 /**
  * 编排层拆分后的纯函数单测
@@ -21,6 +21,19 @@ describe('buildComponentVars', () => {
     expect(vars['--va-button-primary-color']).toBe(states.base)
     expect(vars['--va-button-primary-color-hover']).toBe(states.hover)
     expect(vars['--va-cp-button-focus-shadow']).toBe(derive({ primary: GREEN }, 'light')['--va-focus-shadow'])
+  })
+
+  it('写深色皮肤表面桥：与全局品牌暗底同口径，且不随模式变化', () => {
+    const vars = buildComponentVars({ Menu: { primaryColor: GREEN } }, 'light')
+    const surfaces = deriveBrandDarkSurfaces(GREEN)
+    expect(vars['--va-cp-menu-dark-bg-color']).toBe(surfaces.background)
+    expect(vars['--va-cp-menu-dark-bg-deep-color']).toBe(surfaces.deepBackground)
+    // 组件主色与全局主色相同时，桥与全局令牌逐值一致（深色皮肤底色因此改由组件主色接管）
+    const global = derive({ primary: GREEN }, 'light')
+    expect(vars['--va-cp-menu-dark-bg-color']).toBe(global['--va-bg-brand-dark-color'])
+    expect(buildComponentVars({ Menu: { primaryColor: GREEN } }, 'dark')['--va-cp-menu-dark-bg-color']).toBe(
+      surfaces.background
+    )
   })
 
   it('无配置返回空对象', () => {

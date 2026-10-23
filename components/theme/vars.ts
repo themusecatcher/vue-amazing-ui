@@ -9,7 +9,7 @@
  */
 
 /**
- * 颜色别名清单（40 个，增删必须同步更新本节与派生函数的返回键集合）
+ * 颜色别名清单（42 个，增删必须同步更新本节与派生函数的返回键集合）
  *
  * 准入标准：每个变量必须至少有一个组件消费者。零消费的「预留位」会让使用者覆盖后
  * 毫无效果，比没有这个变量更糟；确需扩展时先找到消费点再加。
@@ -42,6 +42,8 @@ export const THEME_VAR_NAMES = [
   '--va-bg-elevated-color',
   '--va-bg-layout-color',
   '--va-bg-spotlight-color',
+  '--va-bg-brand-dark-color',
+  '--va-bg-brand-dark-deep-color',
   '--va-border-color',
   '--va-border-split-color',
   '--va-fill-color-1',

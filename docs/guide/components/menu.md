@@ -312,7 +312,8 @@ const expandIconItems: ItemType[] = [
   ])
 ]
 
-// 主题
+// 主题：深色皮肤的底色由主题色派生，故颜色选择器直接绑定作用域种子
+const themePrimary = ref('#1677ff')
 const themeDark = ref(true)
 const themeSelected = ref<MenuKey[]>(['1'])
 const themeOpenKeys = ref<MenuKey[]>(['sub1'])
@@ -1502,19 +1503,25 @@ const forceRenderItems: ItemType[] = [
 
 ## 主题
 
-_内建 `light` 与 `dark` 两套主题，默认为 `light`_
+_内建 `light` 与 `dark` 两套主题，默认为 `light`；深色皮肤的底色由主题色派生，改主色时根列表、浮层与内联子菜单同步换色相_
 
 <br/>
 
-<Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
-<Menu
-  v-model:openKeys="themeOpenKeys"
-  v-model:selectedKeys="themeSelected"
-  style="width: 256px; margin-top: 16px"
-  mode="inline"
-  :theme="themeDark ? 'dark' : 'light'"
-  :items="themeItems"
-/>
+<Space align="center" wrap>
+  <Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
+  <!-- 主题色只作用于本用例：作用域种子随选择器变化，深色皮肤的派生底色随之更新 -->
+  <ColorPicker v-model:value="themePrimary" :show-alpha="false" style="width: 160px" />
+</Space>
+<ConfigProvider :theme="{ seed: { primary: themePrimary } }">
+  <Menu
+    v-model:openKeys="themeOpenKeys"
+    v-model:selectedKeys="themeSelected"
+    style="width: 256px; margin-top: 16px"
+    mode="inline"
+    :theme="themeDark ? 'dark' : 'light'"
+    :items="themeItems"
+  />
+</ConfigProvider>
 
 ::: details Show Code
 
@@ -1524,6 +1531,7 @@ import { h, ref } from 'vue'
 import { AppstoreOutlined, CalendarOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons-vue'
 import type { ItemType, MenuKey } from 'vue-amazing-ui'
 
+const themePrimary = ref('#1677ff')
 const themeDark = ref(true)
 const themeSelected = ref<MenuKey[]>(['1'])
 const themeOpenKeys = ref<MenuKey[]>(['sub1'])
@@ -1564,15 +1572,20 @@ const themeItems: ItemType[] = [
 ]
 </script>
 <template>
-  <Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
-  <Menu
-    v-model:openKeys="themeOpenKeys"
-    v-model:selectedKeys="themeSelected"
-    style="width: 256px; margin-top: 16px"
-    mode="inline"
-    :theme="themeDark ? 'dark' : 'light'"
-    :items="themeItems"
-  />
+  <Space align="center" wrap>
+    <Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
+    <ColorPicker v-model:value="themePrimary" :show-alpha="false" style="width: 160px" />
+  </Space>
+  <ConfigProvider :theme="{ seed: { primary: themePrimary } }">
+    <Menu
+      v-model:openKeys="themeOpenKeys"
+      v-model:selectedKeys="themeSelected"
+      style="width: 256px; margin-top: 16px"
+      mode="inline"
+      :theme="themeDark ? 'dark' : 'light'"
+      :items="themeItems"
+    />
+  </ConfigProvider>
 </template>
 ```
 

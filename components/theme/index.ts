@@ -28,6 +28,7 @@ export type {
 export const DEFAULT_PRIMARY = deriveSource.DEFAULT_PRIMARY
 export const DEFAULT_SEEDS = deriveSource.DEFAULT_SEEDS
 export const derive = deriveSource.derive
+export const deriveBrandDarkSurfaces = deriveSource.deriveBrandDarkSurfaces
 export const deriveColorStates = deriveSource.deriveColorStates
 export const deriveFocusShadow = deriveSource.deriveFocusShadow
 export const normalizeSeedColor = deriveSource.normalizeSeedColor

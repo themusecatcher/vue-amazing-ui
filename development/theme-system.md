@@ -4,13 +4,13 @@
 
 ## 一句话
 
-> 你给几个颜色种子，库用纯函数算出 40 个语义 CSS 变量，写到某个 DOM 节点上；组件只读变量、不认 JS，靠 CSS 继承自动变色。
+> 你给几个颜色种子，库用纯函数算出 42 个语义 CSS 变量，写到某个 DOM 节点上；组件只读变量、不认 JS，靠 CSS 继承自动变色。
 
 ```text
 配置面                                  库内部                              DOM                       组件
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────
 seed + mode  ──┐
-               ├─→ derive(seed, mode) ─→ 40 个 --va-*  ─┐
+               ├─→ derive(seed, mode) ─→ 42 个 --va-*  ─┐
 components   ──┘         │                              ├─→ 写到作用域节点 ─→ CSS 继承 ─→ var(--va-*)
                          └─→ 组件令牌（--va-<comp>-*）─┘        · 包裹元素
                                                                  · <html>
@@ -37,7 +37,7 @@ components   ──┘         │                              ├─→ 写到
 2. 生成色阶：每个颜色用 `@ant-design/colors` 摊成 10 档；
 3. 映射语义角色：常态 = 第 6 档、悬停 = 第 5 档、按下 = 第 7 档、浅底 = 第 1 档、描边 = 第 3 档；
 4. 生成中性阶梯：文本用 `基准色 + alpha`，背景 / 边框用 `基准色 ± 明暗量`；
-5. 组装 40 个变量（键集合由契约固定，构建期与单测双重断言）；
+5. 组装 42 个变量（键集合由契约固定，构建期与单测双重断言）；
 6. 写入作用域节点：包裹元素（默认）、`<html>`（`abstract: true`）或浮层根节点（Teleport 转发）；
 7. CSS 继承 → 组件样式里的 `var(--va-*)` 解析为新值。
 
@@ -54,9 +54,9 @@ components   ──┘         │                              ├─→ 写到
 静态表的形态：
 
 ```css
-:root, [data-va-mode='light'] { /* 40 个浅色默认值 */ }
+:root, [data-va-mode='light'] { /* 42 个浅色默认值 */ }
 [data-va-mode='light'] { color-scheme: light; }
-[data-va-mode='dark']  { /* 40 个暗色默认值 */ color-scheme: dark; }
+[data-va-mode='dark']  { /* 42 个暗色默认值 */ color-scheme: dark; }
 ```
 
 浅色表挂两处：`:root` 服务无属性的默认页面，`[data-va-mode='light']` 让暗色页面里的嵌套浅色作用域能把颜色翻回来。
@@ -136,12 +136,12 @@ theme.components.Button.primaryColor = '#ff6900'
 
 | 想知道什么 | 看哪里 |
 | :-- | :-- |
-| 40 个变量与命名规则 | `components/theme/vars.ts` |
+| 42 个变量与命名规则 | `components/theme/vars.ts` |
 | 颜色怎么算 | `components/theme/derive.ts` |
 | 组件令牌与映射 | `components/theme/component-vars.js` |
 | 编排：作用域、样式、生命周期 | `components/config-provider/theme-scope.ts` |
 | 主题结构、空值判定、组件键工具 | `components/config-provider/theme-config.ts` |
-| 种子继承、40 个变量派生、组件主色展开 | `components/config-provider/use-theme-seed.ts` |
+| 种子继承、42 个变量派生、组件主色展开 | `components/config-provider/use-theme-seed.ts` |
 | `<html>` 写入、恢复与 owner 仲裁 | `components/config-provider/theme-global-writer.ts` |
 | 浮层转发内容组装 | `components/config-provider/use-theme-teleport.ts` |
 | 注入键与转发协议 | `components/config-provider/context.ts` |

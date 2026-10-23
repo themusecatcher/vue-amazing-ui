@@ -4,7 +4,7 @@
  * 一个文件承担三件紧耦合的事：
  * 1. 种子校验与默认值（唯一配置面）；
  * 2. 色阶 → 语义角色的映射；
- * 3. 组装 40 个别名变量。
+ * 3. 组装 42 个别名变量。
  *
  * 为什么合在一起：三者只服务于 `derive`，拆开会让「读一个派生结果要翻三个文件」。
  * 模式解析与 DOM 监听属于 Provider，不放这里 —— 本模块因此可以在 Node 构建期直接执行。
@@ -291,7 +291,32 @@ function neutralRoles(bgBase: string, textBase: string, mode: ResolvedMode): Neu
 }
 
 /* -------------------------------------------------------------------------- */
-/* 组装 40 个变量                                                              */
+/* 品牌色暗底（深色皮肤表面）                                                  */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * 深色皮肤的两个表面色
+ *
+ * 固定的深蓝底实测就是「主色色相与饱和度 + 亮度 `8%` / `4.5%`」；据此把两个表面改为跟随主色，
+ * 换品牌色时整块深色皮肤换色相，而不是永远是同一块深蓝。
+ *
+ * 亮度取固定档而不是按主色的亮度等比压暗：主色偏浅（亮黄 / 亮青）时等比压暗会落回中灰，
+ * 皮肤就不再是深色。色相与饱和度跟着主色走，主色越是低饱和，暗底越接近中性灰。
+ *
+ * 与明暗模式无关：深色皮肤是一套独立预设，两个模式取同一组值。
+ *
+ * @param color - 主色（不透明 hex）
+ * @returns `background` 为深色皮肤底（根列表 / 浮层面板），`deepBackground` 为更深一阶（内嵌子菜单）
+ */
+export function deriveBrandDarkSurfaces(color: string): { background: string; deepBackground: string } {
+  const { h, s } = new TinyColor(color).toHsl()
+  const surface = (lightness: number): string =>
+    new TinyColor(`hsl(${h}, ${s * 100}%, ${lightness * 100}%)`).toHexString()
+  return { background: surface(0.08), deepBackground: surface(0.045) }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 组装 42 个变量                                                              */
 /* -------------------------------------------------------------------------- */
 
 /** 主色派生出的状态集合（供带颜色 props 的组件按实例派生） */
@@ -356,7 +381,7 @@ function alphaOver(frontColor: string, backgroundColor: string): string {
 }
 
 /**
- * 派生 40 个语义别名变量
+ * 派生 42 个语义别名变量
  *
  * @param seed - 颜色种子（未传字段取默认值，非法值回退默认值）
  * @param mode - 实际模式（`light` / `dark`，由 Provider 解析）
@@ -378,6 +403,8 @@ export function derive(seed: ThemeSeed = {}, mode: ResolvedMode = 'light'): Them
   const error = colorRoles(resolved.error, mode)
   // 链接色取自 info：常态 = info 的常态、悬停 / 按下跟随 info 的对应档位
   const info = resolved.info === resolved.primary ? primary : colorRoles(resolved.info, mode)
+  // 深色皮肤表面：两模式同值，故直接由种子主色派生（不受 `mode` 影响）
+  const brandDark = deriveBrandDarkSurfaces(resolved.primary)
 
   const vars: Record<ThemeVarName, string> = {
     '--va-primary-color': primary.base,
@@ -411,6 +438,9 @@ export function derive(seed: ThemeSeed = {}, mode: ResolvedMode = 'light'): Them
     '--va-bg-elevated-color': neutral.elevated,
     '--va-bg-layout-color': neutral.layout,
     '--va-bg-spotlight-color': neutral.spotlight,
+    // 品牌色暗底：深色皮肤（如 Menu 的 theme="dark"）的两个表面，取主色色相 / 饱和度压到暗肤色阶
+    '--va-bg-brand-dark-color': brandDark.background,
+    '--va-bg-brand-dark-deep-color': brandDark.deepBackground,
     '--va-border-color': neutral.border,
     '--va-border-split-color': neutral.split,
     '--va-fill-color-1': neutral.fill1,
