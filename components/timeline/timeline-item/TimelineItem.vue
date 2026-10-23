@@ -120,9 +120,9 @@ const itemClasses = computed(() => {
 }
 .timeline-item-tail {
   position: absolute;
+  // 轴心 = 行高/2 − 内容偏移（即内容首行的中线），尾线自轴点下沿起画
   top: calc(
-    (var(--timeline-line-height, 22px) + var(--timeline-head-size, 10px)) / 2 - var(--timeline-content-offset, 7px) +
-      1px
+    (var(--timeline-line-height, 22px) + var(--timeline-head-size, 10px)) / 2 - var(--timeline-content-offset, 7px)
   );
   left: calc((var(--timeline-head-size, 10px) - var(--timeline-line-width, 2px)) / 2);
   height: calc(100% + var(--timeline-gap, 20px) - var(--timeline-head-size, 10px));
@@ -131,9 +131,9 @@ const itemClasses = computed(() => {
 }
 .timeline-item-head {
   position: absolute;
+  // 轴点以轴心居中：轴心与内容首行中线重合，多出的 1px 会让轴点比文字低，故不再补偿
   top: calc(
-    (var(--timeline-line-height, 22px) - var(--timeline-head-size, 10px)) / 2 - var(--timeline-content-offset, 7px) +
-      1px
+    (var(--timeline-line-height, 22px) - var(--timeline-head-size, 10px)) / 2 - var(--timeline-content-offset, 7px)
   );
   left: 0;
   color: var(--timeline-dot-color, var(--timeline-head-color, currentColor));
@@ -154,7 +154,7 @@ const itemClasses = computed(() => {
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  border: var(--timeline-head-border-width, 2px) solid currentColor;
+  border: var(--timeline-head-border-width, 3px) solid currentColor;
   border-radius: 50%;
   background: var(--timeline-head-bg, var(--va-bg-container-color));
 }
@@ -191,12 +191,17 @@ const itemClasses = computed(() => {
   }
 }
 // 中轴交替：轴线居中，内容按奇偶分居两侧，默认内容先从右侧出现
-.timeline-alternate > .timeline-item-wrap {
+// 左右分侧是垂直布局的概念，水平布局下所有节点顺序排布，故交替与单侧覆写规则一律带 :not(.timeline-horizontal) 排除
+.timeline-alternate:not(.timeline-horizontal) > .timeline-item-wrap {
   .timeline-item-tail,
   .timeline-item-head {
     right: auto;
     left: 50%;
     transform: translateX(-50%);
+  }
+  // 上面的 translateX 只够默认轴点横向居中，会清掉自定义轴点的纵向位移，这里补回
+  .timeline-item-head-custom {
+    transform: translate(-50%, -50%);
   }
   .timeline-item-content {
     width: calc(50% - var(--timeline-alt-offset, 12px));
@@ -204,25 +209,35 @@ const itemClasses = computed(() => {
     text-align: start;
   }
 }
-.timeline-alternate > .timeline-item-wrap:nth-child(even) > .timeline-item-content {
+.timeline-alternate:not(.timeline-horizontal) > .timeline-item-wrap:nth-child(even) > .timeline-item-content {
   margin-left: 0;
   text-align: end;
 }
 // start=left 时奇偶互换，内容先从左侧出现
-.timeline-alternate.timeline-start-left > .timeline-item-wrap:nth-child(odd) > .timeline-item-content {
+.timeline-alternate.timeline-start-left:not(.timeline-horizontal)
+  > .timeline-item-wrap:nth-child(odd)
+  > .timeline-item-content {
   margin-left: 0;
   text-align: end;
 }
-.timeline-alternate.timeline-start-left > .timeline-item-wrap:nth-child(even) > .timeline-item-content {
+.timeline-alternate.timeline-start-left:not(.timeline-horizontal)
+  > .timeline-item-wrap:nth-child(even)
+  > .timeline-item-content {
   margin-left: calc(50% + var(--timeline-alt-offset, 12px));
   text-align: start;
 }
-// 节点级 position 优先于奇偶默认值，故放在交替规则之后
-.timeline-alternate.timeline-wrap > .timeline-item-wrap.timeline-item-right > .timeline-item-content {
+// 节点级 position 优先于奇偶默认值，故放在交替规则之后；
+// 只在「无 label 的垂直交替」下生效：水平布局顺序排布无左右侧，分栏布局的左右侧由 label 规则统一决定
+// （这两条特异性高于 label 基础规则，若不禁用会盖掉分栏的取值，导致内容与标签重叠）
+.timeline-alternate.timeline-wrap:not(.timeline-horizontal):not(:has(.timeline-item-has-label))
+  > .timeline-item-wrap.timeline-item-right
+  > .timeline-item-content {
   margin-left: calc(50% + var(--timeline-alt-offset, 12px));
   text-align: start;
 }
-.timeline-alternate.timeline-wrap > .timeline-item-wrap.timeline-item-left > .timeline-item-content {
+.timeline-alternate.timeline-wrap:not(.timeline-horizontal):not(:has(.timeline-item-has-label))
+  > .timeline-item-wrap.timeline-item-left
+  > .timeline-item-content {
   margin-left: 0;
   text-align: end;
 }
@@ -233,6 +248,10 @@ const itemClasses = computed(() => {
     right: auto;
     left: 50%;
     transform: translateX(-50%);
+  }
+  // 同上：自定义轴点需要完整的居中位移
+  .timeline-item-head-custom {
+    transform: translate(-50%, -50%);
   }
   .timeline-item-label {
     position: absolute;
@@ -305,6 +324,7 @@ const itemClasses = computed(() => {
   }
 }
 // 自定义轴点：以轴点为圆心由内容撑开尺寸，圆底遮住连线，图标与连线之间自然留出间隙
+// top 直接取轴心（行高/2 − 偏移），与默认轴点 top + 轴点/2 得到的中心一致
 .timeline-item-head-custom {
   top: calc(var(--timeline-line-height, 22px) / 2 - var(--timeline-content-offset, 7px));
   left: calc(var(--timeline-head-size, 10px) / 2);
@@ -315,9 +335,12 @@ const itemClasses = computed(() => {
   border-radius: 50%;
   transform: translate(-50%, -50%);
 }
+// 轴线贴右时轴心距右边界只有轴点边长的一半，故用 left 定位到「100% − 半个轴点」，
+// 与基础规则的 translate(-50%) 配合即可居中；若改用 right + translate(50%)，
+// 分栏布局（覆盖 left）与水平布局（覆盖 transform）都会让偏移量错位
 .timeline-right > .timeline-item-wrap > .timeline-item-head-custom {
-  right: calc(var(--timeline-head-size, 10px) / 2);
-  left: auto;
+  right: auto;
+  left: calc(100% - var(--timeline-head-size, 10px) / 2);
 }
 .timeline-alternate > .timeline-item-wrap > .timeline-item-head-custom,
 .timeline-wrap:has(.timeline-item-has-label):not(.timeline-horizontal)
@@ -326,7 +349,8 @@ const itemClasses = computed(() => {
   right: auto;
   left: 50%;
 }
-// 水平布局放在最后，覆盖垂直/交替/分栏的定位规则；label 退化为内容上方的普通标签
+// 水平布局放在最后，覆盖垂直/交替/分栏的定位规则；label 退化为内容上方的普通标签。
+// 交替与单侧覆写规则已用 :not(.timeline-horizontal) 排除，此处只需处理「轴心在左侧、连线横向」的定位
 .timeline-wrap.timeline-horizontal > .timeline-item-wrap {
   flex: 0 0 auto;
   min-height: 0;
@@ -347,10 +371,13 @@ const itemClasses = computed(() => {
     left: 0;
     transform: none;
   }
+  // 上方 .timeline-item-head 统一清零了 transform，自定义轴点需显式恢复居中偏移，
+  // 否则轴点从「左上角落在轴心」而非「以轴心为中心」
   .timeline-item-head-custom {
     top: calc(var(--timeline-head-size, 10px) / 2);
     right: auto;
     left: calc(var(--timeline-head-size, 10px) / 2);
+    transform: translate(-50%, -50%);
   }
   .timeline-item-label {
     position: static;
@@ -375,7 +402,8 @@ const itemClasses = computed(() => {
   padding-bottom: var(--timeline-gap, 20px);
 }
 // 视觉末位节点内容保底高度：避免单行末项过矮导致连线留白失衡；
-// 存在幽灵节点时，幽灵节点前一项同样保底。
+// 存在幽灵节点时，承载点线尾段的节点同样保底 —— 非倒序是幽灵节点前一项，
+// 倒序是幽灵节点本身（视觉首位，点线自它向下续接）。
 // 仅垂直布局需要：水平布局的连线长度由宽度决定，与内容高度无关，故排除
 // （否则末项内容被撑到保底高度，整行随 align-items: stretch 一起变高）
 .timeline-wrap:not(.timeline-reverse):not(.timeline-horizontal)

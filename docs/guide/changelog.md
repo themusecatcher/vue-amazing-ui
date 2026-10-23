@@ -16,7 +16,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-10-23">3.1.0</VersionDateTag>
 
-- 重构并增强 [时间轴 Timeline](/guide/components/timeline.html)：拆分为容器 + `TimelineItem` 节点组件（容器只管整体布局与状态，数据场景直接 `v-for` 渲染；节点结构改为语义化列表 `ul` / `li`，补齐无障碍语义与系统减少动效偏好下的表现），新增幽灵节点 `pending` / `pendingDot`（内置加载环）、倒序 `reverse`、水平排列 `horizontal`（超出可横向滚动）与尺寸档位 `size` / `iconSize`，节点补齐 `title` / `time` / `label` 三段结构、`position` / `lineType` 单侧覆盖、自定义轴点插槽与预设语义色轴点
+- 重构并增强 [时间轴 Timeline](/guide/components/timeline.html)：拆分为容器 + `TimelineItem` 节点组件（容器只管整体布局与状态，数据场景直接 `v-for` 渲染；节点结构改为语义化列表 `ul` / `li`，补齐无障碍语义与系统减少动效偏好下的表现），新增幽灵节点 `pending` / `pendingDot`（内置加载环）、倒序 `reverse`、水平排列 `horizontal`（超出可横向滚动）与尺寸档位 `size` / `iconSize`，节点补齐 `title` / `content` / `time` 三段结构与左侧标签 `label`，并支持 `position` / `lineType` 单侧覆盖、自定义轴点插槽与预设语义色轴点
 - 调整 [时间轴 Timeline](/guide/components/timeline.html) 的属性、插槽、类名与类型导出：移除 `items` 属性与 `Item` 类型（节点改用 `TimelineItem` 承载）、`width`（宽度交由宿主布局控制）与空内容 `--` 占位；`desc` → `content`、`lineStyle` → `lineType`、`mode` 的 `center` → `alternate`、容器 `position` → `start`（默认 `left` → `right`，交替模式内容先从右侧出现）；旧 `dot` / `desc` 作用域插槽改为无作用域参数的 `dot` / 默认插槽；除 `timeline-wrap` 外类名一律更名（如 `timeline-item` → `timeline-item-wrap`、`timeline-dot` → `timeline-item-head`），依赖旧类名的自定义样式需同步改写；`TimelineItem` 类型改为同名组件、节点配置类型改用 `TimelineItemProps`
 - 组件库文档更新优化
 
