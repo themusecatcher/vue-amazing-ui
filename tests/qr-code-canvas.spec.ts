@@ -416,7 +416,6 @@ describe('QRCode 状态遮罩', () => {
     await flushPromises()
 
     expect(wrapper.find('.qr-code-mask').exists()).toBe(true)
-    // 本库 Spin 的三档整体比 antd 大一档：small（20px 轮盘 / 8px 单点）才等于 antd 的默认尺寸
     expect(wrapper.find('.qr-code-mask .spin-small').exists()).toBe(true)
 
     wrapper.unmount()
