@@ -16,11 +16,10 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-10-24">3.2.0</VersionDateTag>
 
-- 重构 [文本省略 Ellipsis](/guide/components/ellipsis.html)：提示显隐与溢出状态不再改变文本容器的结构、类名与样式，提示实例按需创建（受控开合时提前创建）；`tooltip` 由 `boolean` 扩展为 `boolean | EllipsisTooltipProps`，原先直接写在组件上的 [文字提示 Tooltip](/guide/components/tooltip.html) 属性（如 `bg-color` / `trigger`）需移入该对象，`content-class` / `content-style` 一并失效（类名与样式直接写在组件上），并新增 `EllipsisTooltipProps` 类型导出
-- 增强 [文本省略 Ellipsis](/guide/components/ellipsis.html)：`expand` 在单行文本下同样可展开
+- 重构并增强 [文本省略 Ellipsis](/guide/components/ellipsis.html)：提示显隐与溢出状态不再改变文本容器的结构、类名与样式，提示实例按需创建（受控开合时提前创建）；`tooltip` 由 `boolean` 扩展为 `boolean | EllipsisTooltipProps`，原先直接写在组件上的 [文字提示 Tooltip](/guide/components/tooltip.html) 属性（如 `bg-color` / `trigger`）需移入该对象，`content-class` / `content-style` 一并失效（类名与样式直接写在组件上），并新增 `EllipsisTooltipProps` 类型导出；`expand` 在单行文本下同样可展开
 - 优化 [浮动按钮 FloatButton](/guide/components/float-button.html)：无提示内容时不再创建 [文字提示 Tooltip](/guide/components/tooltip.html) 实例，按钮的结构、类名与尺寸保持不变
 - 新增 [文字提示 Tooltip](/guide/components/tooltip.html) 的 `anchor` 与 `getDisabled` 属性：前者传入外部元素作为锚点（不再渲染触发包裹层），后者在每次展示前判定是否允许展示
-- 组件库文档更新优化
+- 更新组件库文档
 
 ## <VersionDateTag date="2026-10-23">3.1.0</VersionDateTag>
 
