@@ -117,6 +117,30 @@ function onClick(e: Event) {
     showMenu.value = !showMenu.value
   }
 }
+// 菜单显隐的指针 / 焦点行为：模板只做事件转发，避免在模板表达式里赋值
+function onWrapBlur(): void {
+  if (props.menuTrigger === 'click') showMenu.value = false
+}
+function onWrapMouseEnter(): void {
+  if (props.menuTrigger === 'hover') showMenu.value = true
+}
+function onWrapMouseLeave(): void {
+  if (props.menuTrigger === 'hover') showMenu.value = false
+}
+/**
+ * 提示包裹层的属性：仅在存在提示内容（挂载 Tooltip）时下发
+ *
+ * 无提示内容时改用同名 class 的普通 div 占位，故 Tooltip 的属性不能落在占位层上；
+ * 默认值在前、`tooltipProps` 展开在后，保持「使用者配置优先」的既有语义
+ */
+const tooltipBindings = computed(() => {
+  if (!showTooltip.value) return {}
+  return {
+    placement: 'left' as const,
+    contentClass: 'float-btn-tooltip-content',
+    ...props.tooltipProps
+  }
+})
 </script>
 <template>
   <component
@@ -136,14 +160,12 @@ function onClick(e: Event) {
     :href="href"
     :target="target"
     @click="onClick"
-    @blur="menuTrigger === 'click' ? (showMenu = false) : null"
-    @mouseenter="menuTrigger === 'hover' ? (showMenu = true) : null"
-    @mouseleave="menuTrigger === 'hover' ? (showMenu = false) : null"
+    @blur="onWrapBlur"
+    @mouseenter="onWrapMouseEnter"
+    @mouseleave="onWrapMouseLeave"
   >
-    <!-- 触发器包裹元素的类名走 Tooltip 的公开契约下发（contentClass），不依赖 Tooltip 的内部类名；
-         置于 v-bind 之前，允许 tooltipProps 覆盖 -->
-    <Tooltip placement="left" content-class="float-btn-tooltip-content" v-bind="tooltipProps" class="float-btn-tooltip">
-      <template v-if="showTooltip" #tooltip>
+    <component :is="showTooltip ? Tooltip : 'div'" class="float-btn-tooltip" v-bind="tooltipBindings">
+      <template #tooltip>
         <slot name="tooltip">{{ tooltip }}</slot>
       </template>
       <Badge v-bind="badgeProps">
@@ -178,7 +200,7 @@ function onClick(e: Event) {
           </div>
         </div>
       </Badge>
-    </Tooltip>
+    </component>
     <Transition name="move">
       <div v-show="showMenu" class="float-btn-menu">
         <slot name="menu"></slot>
@@ -240,16 +262,18 @@ function onClick(e: Event) {
     :deep(.float-btn-tooltip-content) {
       width: 100%;
       height: 100%;
-      .badge-wrap {
-        vertical-align: top;
-        width: 100%;
-        height: 100%;
-        .badge-value:not(.only-dot) {
-          transform: translate(0, 0);
-          transform-origin: center;
-          top: -6px;
-          right: -6px;
-        }
+    }
+    // 徽标容器上提一层：有提示时位于 content 层内，无提示时直接是 .float-btn-tooltip 的子元素，
+    // 上提后两种结构共用同一份尺寸与角标定位
+    :deep(.badge-wrap) {
+      vertical-align: top;
+      width: 100%;
+      height: 100%;
+      .badge-value:not(.only-dot) {
+        transform: translate(0, 0);
+        transform-origin: center;
+        top: -6px;
+        right: -6px;
       }
     }
   }

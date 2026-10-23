@@ -48,6 +48,8 @@ export interface Props {
   hideDelay?: number // 文字提示隐藏的延迟时间，单位 ms，仅当 trigger: hover 时生效
   open?: boolean // (v-model) 文字提示是否显示
   openControl?: boolean // 只使用 open 属性控制显示隐藏，仅当 trigger: hover 时生效，此时移入移出将不会触发显示隐藏，全部由 open 属性控制
+  anchor?: HTMLElement | null // 外部锚点：传入后不渲染触发包裹层，触发监听、无障碍属性与定位全部以该元素为准
+  getDisabled?: () => boolean // 展示前的动态禁用判定（如文本未溢出时不展示），每次展示前求值
 }
 // 声明组件插槽类型
 export interface TooltipSlots {
@@ -80,9 +82,14 @@ const props = withDefaults(defineProps<Props>(), {
   showDelay: 100,
   hideDelay: 100,
   open: false,
-  openControl: false
+  openControl: false,
+  anchor: null,
+  getDisabled: undefined
 })
 defineSlots<TooltipSlots>()
+// 模板存在「包裹层 / 浮层」两个条件根，属性继承需显式下发（见模板中包裹层根节点的 v-bind="$attrs"；
+// 锚点模式没有自有根节点，$attrs 不再下发）
+defineOptions({ inheritAttrs: false })
 const tooltipShow = ref<boolean>(false) // tooltip 显示隐藏标识
 const tooltipTimer = ref<ReturnType<typeof setTimeout> | null>(null) // tooltip 延迟显示隐藏的定时器标识符
 const documentListenerAttached = ref<boolean>(false) // 外部点击关闭监听是否已注册，确保注册/移除一一对应
@@ -130,6 +137,10 @@ const tooltipMaxWidth = computed(() => {
 const showTooltip = computed(() => {
   return slotsExist.tooltip || props.tooltip
 })
+// 锚点模式：使用方提供外部锚点，本组件不再渲染触发包裹层（.tooltip-wrap / .tooltip-content），
+// 触发监听与无障碍属性（tabindex / aria-describedby）直接写到锚点元素上；浮层只作为「指向该元素
+// 的独立层」存在，故使用方的 DOM 结构不随提示显隐变化
+const anchorMode = computed(() => Boolean(props.anchor))
 // 弹出框 id：以组件实例 uid 保证全局唯一，供触发器 aria-describedby 关联
 const tooltipCardId = `va-tooltip-${getCurrentInstance()?.uid ?? 0}`
 // 仅在弹出框实际可见时关联描述，避免初始隐藏态被读屏器朗读
@@ -213,8 +224,28 @@ const tooltipTransitionProps: TransitionProps = {
   leaveActiveClass: 'tooltip-zoom-leave tooltip-zoom-leave-active',
   leaveToClass: 'tooltip-zoom-leave tooltip-zoom-leave-active'
 }
+// 浮层宿主绑定：包裹层模式与锚点模式共用同一份（两者只有触发元素来源不同）
+const popupBindings = computed(() => ({
+  show: showTooltip.value && tooltipShow.value,
+  to: props.to,
+  destroyOnHide: props.destroyOnHide,
+  anchor: anchorEl.value,
+  placement: props.placement,
+  flip: props.flip,
+  shift: props.flip,
+  offset: mainAxisGap.value,
+  arrow: props.arrow,
+  arrowClass: 'tooltip-arrow',
+  panelClass: tooltipPanelClass.value,
+  panelStyle: tooltipPanelStyle.value,
+  zIndex: props.zIndex,
+  transitionProps: tooltipTransitionProps
+}))
 // 受控 open 初始为真时，可见性 watcher 在 setup 阶段执行（此时模板引用尚未就绪），故挂载后补测一次
-onMounted(measureAnchor)
+onMounted(() => {
+  syncAnchorBinding()
+  measureAnchor()
+})
 watch(
   () => showTooltip.value && tooltipShow.value,
   (to) => {
@@ -254,8 +285,15 @@ if (containerOpen) {
     }
   })
 }
-// 测量锚点：定位内核按「单一 anchorRect」口径求解，锚点尺寸另供箭头中心让位使用
+// 测量锚点：定位内核按「单一 anchorRect」口径求解，锚点尺寸另供箭头中心让位使用。
+// 锚点模式直接以外部元素为锚点；包裹层模式取插槽内容的首个元素，仅文本内容时退回 .tooltip-content
 function measureAnchor(): void {
+  const externalAnchor = props.anchor
+  if (externalAnchor) {
+    anchorEl.value = externalAnchor
+    anchorSize.value = { width: externalAnchor.offsetWidth, height: externalAnchor.offsetHeight }
+    return
+  }
   const wrap = tooltipContentRef.value
   if (!wrap) return
   const el = (wrap.firstElementChild as HTMLElement | null) ?? wrap
@@ -294,7 +332,8 @@ function clearTooltipTimer(): void {
 }
 // immediate 为 true 时跳过 hover 延迟（用于受控 open 需立即生效的场景）
 function onShow(immediate = false): void {
-  if (props.disabled) return
+  // getDisabled 在每次展示前求值：使用方据此表达「当前不值得展示」（如文本未溢出）
+  if (props.disabled || props.getDisabled?.()) return
   clearTooltipTimer()
   if (!tooltipShow.value) {
     // 显示延迟仅在 hover 触发且非立即模式下生效，click/contextmenu/focus 等触发方式立即显示
@@ -380,8 +419,9 @@ function onFocus() {
 }
 function onBlur(e: FocusEvent) {
   if (!showTooltip.value || props.trigger !== 'focus') return
-  // 焦点仍在内容内部移动时（如包裹 span → 内部可聚焦子元素）不隐藏，避免闪烁
-  if (tooltipContentRef.value?.contains(e.relatedTarget as Node | null)) return
+  // 焦点仍在内容内部移动时（包裹层模式看 .tooltip-content，锚点模式看锚点子树）不隐藏，避免闪烁
+  const container = props.anchor ?? tooltipContentRef.value
+  if (container?.contains(e.relatedTarget as Node | null)) return
   onHide()
 }
 // contextmenu 触发：右键菜单时显示 (阻止默认菜单)，点击外部由 handleClick 关闭
@@ -415,11 +455,92 @@ function onContentKeydownEsc() {
     onHide()
   }
 }
+// ── 锚点模式：触发监听与无障碍属性绑定到外部锚点 ────────────────────────────
+// 锚点的 focus / blur 不冒泡，与包裹层模式同口径使用捕获阶段监听；绑定随 anchor 变化重建，
+// 卸载时移除，并把本组件写入锚点的 tabindex / aria-describedby 还原（不覆盖使用方自有值）
+let boundAnchor: HTMLElement | null = null
+let anchorTabIndexApplied = false
+function onAnchorKeydown(e: KeyboardEvent): void {
+  if (e.key === 'Enter') {
+    onContentKeydownEnter()
+  } else if (e.key === 'Escape') {
+    onContentKeydownEsc()
+  }
+}
+function bindAnchor(el: HTMLElement): void {
+  el.addEventListener('mouseenter', onEnterWrap)
+  el.addEventListener('mouseleave', onLeaveWrap)
+  el.addEventListener('click', onContentClick)
+  el.addEventListener('contextmenu', onContextmenu)
+  el.addEventListener('focus', onFocus, true)
+  el.addEventListener('blur', onBlur, true)
+  el.addEventListener('keydown', onAnchorKeydown)
+}
+// 还原写入锚点的无障碍属性：tabindex 仅在本组件补过时才移除
+function releaseAnchorA11y(el: HTMLElement): void {
+  if (anchorTabIndexApplied) {
+    el.removeAttribute('tabindex')
+    anchorTabIndexApplied = false
+  }
+  if (el.getAttribute('aria-describedby') === tooltipCardId) {
+    el.removeAttribute('aria-describedby')
+  }
+}
+function unbindAnchor(el: HTMLElement): void {
+  el.removeEventListener('mouseenter', onEnterWrap)
+  el.removeEventListener('mouseleave', onLeaveWrap)
+  el.removeEventListener('click', onContentClick)
+  el.removeEventListener('contextmenu', onContextmenu)
+  el.removeEventListener('focus', onFocus, true)
+  el.removeEventListener('blur', onBlur, true)
+  el.removeEventListener('keydown', onAnchorKeydown)
+  releaseAnchorA11y(el)
+}
+// 无障碍属性同步：tabindex 仅在 focus 触发时补（使用方已设置则不动），
+// aria-describedby 仅在提示实际可见时关联，避免读屏器朗读隐藏内容
+function syncAnchorA11y(el: HTMLElement | null): void {
+  if (!el) return
+  if (props.trigger === 'focus') {
+    if (!el.hasAttribute('tabindex')) {
+      el.setAttribute('tabindex', '0')
+      anchorTabIndexApplied = true
+    }
+  } else if (anchorTabIndexApplied) {
+    el.removeAttribute('tabindex')
+    anchorTabIndexApplied = false
+  }
+  const describedBy = ariaDescribedby.value
+  if (describedBy) {
+    el.setAttribute('aria-describedby', describedBy)
+  } else if (el.getAttribute('aria-describedby') === tooltipCardId) {
+    el.removeAttribute('aria-describedby')
+  }
+}
+function syncAnchorBinding(): void {
+  const externalAnchor = props.anchor
+  if (boundAnchor === externalAnchor) return
+  if (boundAnchor) {
+    unbindAnchor(boundAnchor)
+    boundAnchor = null
+  }
+  if (externalAnchor) {
+    bindAnchor(externalAnchor)
+    boundAnchor = externalAnchor
+    measureAnchor()
+    syncAnchorA11y(externalAnchor)
+  }
+}
+watch(() => props.anchor, syncAnchorBinding, { flush: 'post' })
+watch([ariaDescribedby, () => props.trigger], () => syncAnchorA11y(props.anchor), { flush: 'post' })
 // 卸载时取消延迟显示/隐藏定时器，避免回调在组件卸载后仍然触发
 // 显示状态下卸载时 onHide 的延迟回调不会执行，需在此无条件移除外部点击监听，避免监听残留
 onBeforeUnmount(() => {
   clearTooltipTimer()
   removeDocumentListener()
+  if (boundAnchor) {
+    unbindAnchor(boundAnchor)
+    boundAnchor = null
+  }
 })
 defineExpose({
   show: () => onShow(),
@@ -427,26 +548,14 @@ defineExpose({
 })
 </script>
 <template>
-  <div class="tooltip-wrap" @mouseenter="onEnterWrap" @mouseleave="onLeaveWrap">
+  <!-- 包裹层模式（默认）：组件自持触发元素与两层包裹 DOM，$attrs 落到包裹层根节点 -->
+  <div v-if="!anchorMode" class="tooltip-wrap" @mouseenter="onEnterWrap" @mouseleave="onLeaveWrap" v-bind="$attrs">
     <!-- 浮层宿主承担 Teleport / 首帧优化 / Transition / 关闭语义 / 层级 / 箭头 DOM；
          面板级监听经宿主的 $attrs 落到面板上（宿主根节点是 Teleport，需显式透传） -->
     <Popup
       ref="popupRef"
-      :show="showTooltip && tooltipShow"
-      :to="to"
-      :destroy-on-hide="destroyOnHide"
-      :anchor="anchorEl"
-      :placement="placement"
-      :flip="flip"
-      :shift="flip"
-      :offset="mainAxisGap"
-      :arrow="arrow"
-      arrow-class="tooltip-arrow"
-      :panel-class="tooltipPanelClass"
-      :panel-style="tooltipPanelStyle"
-      :z-index="zIndex"
+      v-bind="popupBindings"
       :default-z-index="FLOATING_LAYER_Z_INDEX.tooltip"
-      :transition-props="tooltipTransitionProps"
       @mouseenter="onEnterTooltip"
       @mouseleave="onLeaveTooltip"
       @keydown.esc="onTooltipKeydownEsc"
@@ -480,6 +589,29 @@ defineExpose({
       <slot>{{ content }}</slot>
     </span>
   </div>
+  <!-- 锚点模式：触发元素由使用方提供（监听见 bindAnchor），本组件只渲染「指向该元素的浮层」，
+       使用方 DOM 结构不随提示显隐变化；$attrs 在锚点模式下无从下发（本组件没有自有根节点） -->
+  <Popup
+    v-else
+    ref="popupRef"
+    v-bind="popupBindings"
+    :default-z-index="FLOATING_LAYER_Z_INDEX.tooltip"
+    @mouseenter="onEnterTooltip"
+    @mouseleave="onLeaveTooltip"
+    @keydown.esc="onTooltipKeydownEsc"
+    @animationend="onAnimationEnd"
+  >
+    <div
+      ref="tooltipCardRef"
+      class="tooltip-card"
+      role="tooltip"
+      :id="tooltipCardId"
+      :class="tooltipClass"
+      :style="tooltipStyle"
+    >
+      <slot name="tooltip">{{ tooltip }}</slot>
+    </div>
+  </Popup>
 </template>
 <style lang="less" scoped>
 .tooltip-wrap {

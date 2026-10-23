@@ -32,6 +32,14 @@ function onHide() {
 // 受控显示：由 open 驱动
 const controlledOpen = ref<boolean>(false)
 const destroyOpen = ref(false)
+// 锚点模式：锚点元素由使用方持有，传入 anchor 后以其为准
+const anchorRef = ref<HTMLDivElement>()
+const gatedAnchorRef = ref<HTMLDivElement>()
+// 展示前判定：关闭开关时悬停不展示
+const gatingAllowed = ref(false)
+function gatingDisabled(): boolean {
+  return !gatingAllowed.value
+}
 </script>
 <template>
   <div>
@@ -191,6 +199,22 @@ const destroyOpen = ref(false)
     <Tooltip tooltip="Vue Amazing UI" disabled>
       <Button type="primary">Disabled Tooltip</Button>
     </Tooltip>
+    <h2 class="mt30 mb10">锚点模式</h2>
+    <p class="mb10">
+      传入 <code>anchor</code> 后不再渲染触发包裹层，触发监听、<code>tabindex</code> /
+      <code>aria-describedby</code> 与定位均以传入元素为准； <code>getDisabled</code> 在每次展示前求值，返回
+      <code>true</code> 时不展示
+    </p>
+    <Space>
+      <div ref="anchorRef" class="anchor-demo">锚点元素（悬停查看提示）</div>
+      <Tooltip :anchor="anchorRef" tooltip="Vue Amazing UI" />
+    </Space>
+    <br />
+    <Space>
+      <div ref="gatedAnchorRef" class="anchor-demo">受判定拦截的锚点</div>
+      <Tooltip :anchor="gatedAnchorRef" :get-disabled="gatingDisabled" tooltip="Vue Amazing UI" />
+      <Switch v-model:value="gatingAllowed" />
+    </Space>
     <h2 class="mt30 mb10">按键控制</h2>
     <p class="mb10"><code>enter</code> 切换显示；<code>esc</code> 关闭，仅当 <code>trigger: 'click'</code> 时生效</p>
     <Tooltip trigger="click" keyboard>
@@ -276,6 +300,12 @@ const destroyOpen = ref(false)
   </div>
 </template>
 <style lang="less">
+.anchor-demo {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid var(--va-border-split-color);
+  border-radius: 8px;
+}
 .custom-class {
   font-size: 16px !important;
   color: #0958d9 !important;

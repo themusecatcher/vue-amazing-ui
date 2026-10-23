@@ -370,7 +370,7 @@ describe('浮层挂载点（同域模型）', () => {
             ConfigProvider,
             { baseZIndex: 5000 },
             {
-              default: () => [h(Popup, { anchor, show: show.value }), h(Probe)]
+              default: () => [h(Popup, { anchor, show: show.value, defaultZIndex: 5000 }), h(Probe)]
             }
           )
       }),

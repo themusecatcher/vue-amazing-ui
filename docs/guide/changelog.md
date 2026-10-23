@@ -14,6 +14,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-24">3.2.0</VersionDateTag>
+
+- 重构并增强 [文本省略 Ellipsis](/guide/components/ellipsis.html)：提示显隐与溢出状态不再改变文本容器的结构、类名与样式，提示实例按需创建（受控开合时提前创建）；`tooltip` 由 `boolean` 扩展为 `boolean | EllipsisTooltipProps`，原先直接写在组件上的 [文字提示 Tooltip](/guide/components/tooltip.html) 属性（如 `bg-color` / `trigger`）需移入该对象，`content-class` / `content-style` 一并失效（类名与样式直接写在组件上），并新增 `EllipsisTooltipProps` 类型导出；`expand` 在单行文本下同样可展开
+- 优化 [浮动按钮 FloatButton](/guide/components/float-button.html)：无提示内容时不再创建 [文字提示 Tooltip](/guide/components/tooltip.html) 实例，按钮的结构、类名与尺寸保持不变
+- 新增 [文字提示 Tooltip](/guide/components/tooltip.html) 的 `anchor` 与 `getDisabled` 属性：前者传入外部元素作为锚点（不再渲染触发包裹层），后者在每次展示前判定是否允许展示
+- 更新组件库文档
+
 ## <VersionDateTag date="2026-10-23">3.1.0</VersionDateTag>
 
 - 重构并增强 [时间轴 Timeline](/guide/components/timeline.html)：拆分为容器 + `TimelineItem` 节点组件（容器只管整体布局与状态，数据场景直接 `v-for` 渲染；节点结构改为语义化列表 `ul` / `li`，补齐无障碍语义与系统减少动效偏好下的表现），新增幽灵节点 `pending` / `pendingDot`（内置加载环）、倒序 `reverse`、水平排列 `horizontal`（超出可横向滚动）与尺寸档位 `size` / `iconSize`，节点补齐 `title` / `content` / `time` 三段结构与左侧标签 `label`，并支持 `position` / `lineType` 单侧覆盖、自定义轴点插槽与预设语义色轴点

@@ -28,6 +28,8 @@ function expandChange(open: boolean) {
       <br />
       黑暗好像 一颗巨石 按在胸口
     </Ellipsis>
+    <h2 class="mt30 mb10">单行展开</h2>
+    <Ellipsis expand :max-width="240"> 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪 </Ellipsis>
     <h2 class="mt30 mb10">定制 Tooltip 内容</h2>
     <Ellipsis :max-width="240">
       住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
@@ -46,38 +48,40 @@ function expandChange(open: boolean) {
     <h2 class="mt30 mb10">自定义 Tooltip 样式</h2>
     <Ellipsis
       :max-width="240"
-      bg-color="#4096ff"
-      :tooltip-style="{
-        padding: '12px 16px',
-        borderRadius: '12px',
-        fontSize: '16px',
-        backgroundColor: '#4096ff'
+      :tooltip="{
+        bgColor: '#4096ff',
+        tooltipStyle: {
+          padding: '12px 16px',
+          borderRadius: '12px',
+          fontSize: '16px',
+          backgroundColor: '#4096ff'
+        }
       }"
     >
       住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
     </Ellipsis>
     <h2 class="mt30 mb10">自定义过渡动画时间</h2>
-    <Ellipsis :max-width="240" :transition-duration="300">
+    <Ellipsis :max-width="240" :tooltip="{ transitionDuration: 300 }">
       住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
     </Ellipsis>
     <h2 class="mt30 mb10">不同的触发方式</h2>
     <Space>
       <Ellipsis :max-width="240"> Hover Me 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪 </Ellipsis>
-      <Ellipsis :max-width="240" trigger="click">
+      <Ellipsis :max-width="240" :tooltip="{ trigger: 'click' }">
         Click Me 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
       </Ellipsis>
     </Space>
     <h2 class="mt30 mb10">延迟显示隐藏</h2>
     <Space>
-      <Ellipsis :max-width="240" :show-delay="300" :hide-delay="300">
+      <Ellipsis :max-width="240" :tooltip="{ showDelay: 300, hideDelay: 300 }">
         Delay 300ms 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
       </Ellipsis>
-      <Ellipsis :max-width="240" :show-delay="500" :hide-delay="500">
+      <Ellipsis :max-width="240" :tooltip="{ showDelay: 500, hideDelay: 500 }">
         Delay 500ms 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
       </Ellipsis>
     </Space>
     <h2 class="mt30 mb10">隐藏箭头</h2>
-    <Ellipsis :max-width="240" :arrow="false">
+    <Ellipsis :max-width="240" :tooltip="{ arrow: false }">
       Hide Arrow 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
     </Ellipsis>
   </div>
