@@ -107,7 +107,7 @@ export type {
 } from './dropdown'
 export { default as Dropdown, DropdownButton } from './dropdown'
 
-export type { EllipsisProps } from './ellipsis'
+export type { EllipsisProps, EllipsisTooltipProps } from './ellipsis'
 export { default as Ellipsis } from './ellipsis'
 
 export type { EmptyProps } from './empty'

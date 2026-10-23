@@ -14,7 +14,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-23">3.2.0</VersionDateTag>
+## <VersionDateTag date="2026-10-25">3.2.1</VersionDateTag>
 
 - 新增 [菜单 Menu](/guide/components/menu.html) 深色皮肤（`theme="dark"`）的底色跟随主题色派生：根列表、浮层面板与内联子菜单取主色派生的暗底，改主色时整套皮肤同步换色相，`theme.components.Menu.primaryColor` 同样驱动；浮层面板与内联子菜单新增可独立覆盖的 `--va-menu-popup-background` / `--va-menu-inline-submenu-background`，全局语义变量由 `40` 个增至 `42` 个、组件令牌由 `51` 个增至 `53` 个
 - 优化 [加载中 Spin](/guide/components/spin.html) 翻转双环配色：内环默认取外环色的浅一档，只传 `color` 时内环跟随该色派生同色系浅调，不再固定为主题主色；修复两环交界处的叠压亮线
@@ -24,6 +24,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 修复 [轮播图 Swiper](/guide/components/swiper.html) 分页器未选中的圆点与进度条轨道在暗色主题下不可见
 - 更新使用者文档的主题说明：[定制主题](/guide/customize-theme.html) 与组件令牌清单补充 Menu 深色皮肤表面色、浮层与内联子菜单令牌的覆盖方式
 - 更新贡献者文档的组件文档规范：统一表格表头、列序与标题命名，必填项改用 `required` 标签标注，同步更新文档站模板页
+
+## <VersionDateTag date="2026-10-24">3.2.0</VersionDateTag>
+
+- 重构并增强 [文本省略 Ellipsis](/guide/components/ellipsis.html)：提示显隐与溢出状态不再改变文本容器的结构、类名与样式，提示实例按需创建（受控开合时提前创建）；`tooltip` 由 `boolean` 扩展为 `boolean | EllipsisTooltipProps`，原先直接写在组件上的 [文字提示 Tooltip](/guide/components/tooltip.html) 属性（如 `bg-color` / `trigger`）需移入该对象，`content-class` / `content-style` 一并失效（类名与样式直接写在组件上），并新增 `EllipsisTooltipProps` 类型导出；`expand` 在单行文本下同样可展开
+- 优化 [浮动按钮 FloatButton](/guide/components/float-button.html)：无提示内容时不再创建 [文字提示 Tooltip](/guide/components/tooltip.html) 实例，按钮的结构、类名与尺寸保持不变
+- 新增 [文字提示 Tooltip](/guide/components/tooltip.html) 的 `anchor` 与 `getDisabled` 属性：前者传入外部元素作为锚点（不再渲染触发包裹层），后者在每次展示前判定是否允许展示
+- 更新组件库文档
 
 ## <VersionDateTag date="2026-10-23">3.1.0</VersionDateTag>
 
