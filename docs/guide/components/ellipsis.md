@@ -111,12 +111,14 @@ function expandChange(open: boolean) {
 
 <Ellipsis
   :max-width="240"
-  bg-color="#4096ff"
-  :tooltip-style="{
-    padding: '12px 16px',
-    borderRadius: '12px',
-    fontSize: '16px',
-    backgroundColor: '#4096ff'
+  :tooltip="{
+    bgColor: '#4096ff',
+    tooltipStyle: {
+      padding: '12px 16px',
+      borderRadius: '12px',
+      fontSize: '16px',
+      backgroundColor: '#4096ff'
+    }
   }"
 >
   住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
@@ -128,12 +130,14 @@ function expandChange(open: boolean) {
 <template>
   <Ellipsis
     :max-width="240"
-    bg-color="#4096ff"
-    :tooltip-style="{
-      padding: '12px 16px',
-      borderRadius: '12px',
-      fontSize: '16px',
-      backgroundColor: '#4096ff'
+    :tooltip="{
+      bgColor: '#4096ff',
+      tooltipStyle: {
+        padding: '12px 16px',
+        borderRadius: '12px',
+        fontSize: '16px',
+        backgroundColor: '#4096ff'
+      }
     }"
   >
     住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
@@ -145,7 +149,7 @@ function expandChange(open: boolean) {
 
 ## 自定义过渡动画时间
 
-<Ellipsis :max-width="240" :transition-duration="300">
+<Ellipsis :max-width="240" :tooltip="{ transitionDuration: 300 }">
   住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
 </Ellipsis>
 
@@ -153,7 +157,7 @@ function expandChange(open: boolean) {
 
 ```vue
 <template>
-  <Ellipsis :max-width="240" :transition-duration="300">
+  <Ellipsis :max-width="240" :tooltip="{ transitionDuration: 300 }">
     住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
   </Ellipsis>
 </template>
@@ -167,7 +171,7 @@ function expandChange(open: boolean) {
   <Ellipsis :max-width="240">
     Hover Me 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
   </Ellipsis>
-  <Ellipsis :max-width="240" trigger="click">
+  <Ellipsis :max-width="240" :tooltip="{ trigger: 'click' }">
     Click Me 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
   </Ellipsis>
 </Space>
@@ -180,7 +184,7 @@ function expandChange(open: boolean) {
     <Ellipsis :max-width="240">
       Hover Me 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
     </Ellipsis>
-    <Ellipsis :max-width="240" trigger="click">
+    <Ellipsis :max-width="240" :tooltip="{ trigger: 'click' }">
       Click Me 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
     </Ellipsis>
   </Space>
@@ -192,10 +196,10 @@ function expandChange(open: boolean) {
 ## 延迟显示隐藏
 
 <Space>
-  <Ellipsis :max-width="240" :show-delay="300" :hide-delay="300">
+  <Ellipsis :max-width="240" :tooltip="{ showDelay: 300, hideDelay: 300 }">
     Delay 300ms 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
   </Ellipsis>
-  <Ellipsis :max-width="240" :show-delay="500" :hide-delay="500">
+  <Ellipsis :max-width="240" :tooltip="{ showDelay: 500, hideDelay: 500 }">
     Delay 500ms 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
   </Ellipsis>
 </Space>
@@ -205,10 +209,10 @@ function expandChange(open: boolean) {
 ```vue
 <template>
   <Space>
-    <Ellipsis :max-width="240" :show-delay="300" :hide-delay="300">
+    <Ellipsis :max-width="240" :tooltip="{ showDelay: 300, hideDelay: 300 }">
       Delay 300ms 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
     </Ellipsis>
-    <Ellipsis :max-width="240" :show-delay="500" :hide-delay="500">
+    <Ellipsis :max-width="240" :tooltip="{ showDelay: 500, hideDelay: 500 }">
       Delay 500ms 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
     </Ellipsis>
   </Space>
@@ -219,7 +223,7 @@ function expandChange(open: boolean) {
 
 ## 隐藏箭头
 
-<Ellipsis :max-width="240" :arrow="false">
+<Ellipsis :max-width="240" :tooltip="{ arrow: false }">
   Hide Arrow 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
 </Ellipsis>
 
@@ -227,7 +231,7 @@ function expandChange(open: boolean) {
 
 ```vue
 <template>
-  <Ellipsis :max-width="240" :arrow="false">
+  <Ellipsis :max-width="240" :tooltip="{ arrow: false }">
     Hide Arrow 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
   </Ellipsis>
 </template>
@@ -248,10 +252,8 @@ function expandChange(open: boolean) {
 maxWidth | 文本最大宽度，单位 `px` | string &#124; number | '100%'
 tooltipMaxWidth | 弹出提示最大宽度，单位 `px`，默认为 `文本宽度 + 24` | string &#124; number | undefined
 line | 最大行数 | number | undefined
-expand | 是否启用点击文本展开全部 | boolean | false
-tooltip | 是否启用文本提示框，可自定义设置弹出提示内容 | boolean | true
-
-更多属性请参考 [Tooltip Props](./tooltip.md#tooltip)
+expand | 是否启用点击文本展开全部（单行与多行均支持） | boolean | false
+tooltip | 是否启用文本提示框；传对象即 [文字提示 Tooltip](./tooltip.md#tooltip) 的属性配置（如 `trigger` / `placement` / `bgColor` / `showDelay`） | boolean &#124; [TooltipProps](./tooltip.md#tooltip) | true
 
 ## Slots
 
