@@ -14,15 +14,20 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-23">3.1.0</VersionDateTag>
+
+- 重构并增强 [时间轴 Timeline](/guide/components/timeline.html)：拆分为容器 + `TimelineItem` 节点组件（容器只管整体布局与状态，数据场景直接 `v-for` 渲染；节点结构改为语义化列表 `ul` / `li`，补齐无障碍语义与系统减少动效偏好下的表现），新增幽灵节点 `pending` / `pendingDot`（内置加载环）、倒序 `reverse`、水平排列 `horizontal`（超出可横向滚动）与尺寸档位 `size` / `iconSize`，节点补齐 `title` / `content` / `time` 三段结构与左侧标签 `label`，并支持 `position` / `lineType` 单侧覆盖、自定义轴点插槽与预设语义色轴点
+- 调整 [时间轴 Timeline](/guide/components/timeline.html) 的属性、插槽、类名与类型导出：移除 `items` 属性与 `Item` 类型（节点改用 `TimelineItem` 承载）、`width`（宽度交由宿主布局控制）与空内容 `--` 占位；`desc` → `content`、`lineStyle` → `lineType`、`mode` 的 `center` → `alternate`、容器 `position` → `start`（默认 `left` → `right`，交替模式内容先从右侧出现）；旧 `dot` / `desc` 作用域插槽改为无作用域参数的 `dot` / 默认插槽；除 `timeline-wrap` 外类名一律更名（如 `timeline-item` → `timeline-item-wrap`、`timeline-dot` → `timeline-item-head`），依赖旧类名的自定义样式需同步改写；`TimelineItem` 类型改为同名组件、节点配置类型改用 `TimelineItemProps`
+- 组件库文档更新优化
+
 ## <VersionDateTag date="2026-10-22">3.0.0</VersionDateTag>
 
 - 重构 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme` 为 `{ seed, mode, components }`：原 `{ common, 组件名 }` 写法移除（组件级配色改用 `theme.components`），颜色只需给种子，色阶、状态色与暗色档位由库内派生；主题相关迁移（`theme` 形状、`abstract` 默认值、被移除的工具函数与私有变量）对照见[定制主题](/guide/customize-theme.html#迁移-旧版主题-api)
 - 重建主题变量契约：新增 `40` 个全局语义变量（主色阶 / 状态色 / 文字 / 底色 / 边框 / 填充 / 投影 / 遮罩）与 `51` 个组件令牌（含 [滑动输入条 Slider](/guide/components/slider.html) 刻度点的常态 / 悬停 / 激活描边），组件配色统一只取 `--va-*`（含 `--va-cp-*` 组件主色桥），在任一祖先选择器上即可整组换肤或逐值改单点
-- 新增暗色模式 `theme.mode`（`light` / `dark` / `auto`，`auto` 跟随系统配色）：静态变量表随样式产物下发，纯 `CSS` 场景直接写 `<html data-va-mode="dark">` 即可；`Teleport` 浮层与页面链接一并跟随，并逐处补齐遮罩、面板、气泡与固定色表面（[模态框 Modal](/guide/components/modal.html) / [抽屉 Drawer](/guide/components/drawer.html) / [图片 Image](/guide/components/image.html) 预览、[对话框 Dialog](/guide/components/dialog.html)、[二维码 QRCode](/guide/components/qr-code.html)、[菜单 Menu](/guide/components/menu.html) 折叠气泡、[颜色选择器 ColorPicker](/guide/components/color-picker.html)、[标签 Tag](/guide/components/tag.html)、[表格 Table](/guide/components/table.html)、[列表 List](/guide/components/list.html)）
-- 新增组件级主色 `theme.components.<组件名>.primaryColor`，覆盖 `39` 个使用主色的内置组件，键名写错在编译期报错
-- `abstract` 默认值由 `true` 改为 `false`：实例默认渲染一层包裹元素（`tag` 可换 `span` 等），主题只作用于自身子树；需要页面级主题（`Teleport` 浮层、页面链接色）时在最外层显式传 `:abstract="true"`
+- [全局化配置 ConfigProvider](/guide/components/config-provider.html) 组件新增暗色模式 `theme.mode`（`light` / `dark` / `auto`，`auto` 跟随系统配色）：静态变量表随样式产物下发，纯 `CSS` 场景直接写 `<html data-va-mode="dark">` 即可；`Teleport` 浮层与页面链接一并跟随，并逐处补齐遮罩、面板、气泡与固定色表面（[模态框 Modal](/guide/components/modal.html) / [抽屉 Drawer](/guide/components/drawer.html) / [图片 Image](/guide/components/image.html) 预览、[对话框 Dialog](/guide/components/dialog.html)、[二维码 QRCode](/guide/components/qr-code.html)、[菜单 Menu](/guide/components/menu.html) 折叠气泡、[颜色选择器 ColorPicker](/guide/components/color-picker.html)、[标签 Tag](/guide/components/tag.html)、[表格 Table](/guide/components/table.html)、[列表 List](/guide/components/list.html)）
+- [全局化配置 ConfigProvider](/guide/components/config-provider.html) 组件新增组件级主色 `theme.components.<组件名>.primaryColor`，覆盖 `39` 个使用主色的内置组件，键名写错会在编译期报错，旧版由 `JS` 注入的 `--<组件名>-primary-color` 一类主题变量一并移除：曾用它们覆盖组件配色的样式需改为 `--va-<组件名>-*` 令牌或 `theme.components`
+- [全局化配置 ConfigProvider](/guide/components/config-provider.html) 组件 `abstract` 属性默认值由 `true` 改为 `false`：实例默认渲染一层包裹元素（`tag` 可换 `span` 等），主题只作用于自身子树；需要页面级主题（`Teleport` 浮层、页面链接色）时在最外层显式传 `:abstract="true"`
 - 移除 `toggleDark` / `rafTimeout` / `cancelRaf` / `getColorPalettes` / `getAlphaColor` 与 `AnimationFrameID` 类型：暗色切换改用 `theme.mode` 或直接写 `data-va-mode`，延时改用 `setTimeout` / 原生 `requestAnimationFrame`，取色改用 `derive(seed, mode)`（支持 `JS` / `canvas` / `SVG` 场景）
-- 旧版由 `JS` 注入的 `--<组件名>-primary-color` 一类主题变量一并移除：曾用它们覆盖组件配色的样式需改为 `--va-<组件名>-*` 令牌或 `theme.components`
 - 新增主题公开出口 `derive` / `DEFAULT_PRIMARY` / `DEFAULT_SEEDS` / `THEME_VAR_NAMES` / `MODE_ATTRIBUTE` 与 `ThemeSeed` / `ThemeMode` / `ResolvedMode` / `ThemeVars` / `ThemeSnapshot` / `ComponentThemeConfig` / `ThemeComponentKey` 类型，脚本取色与 `--va-*` 取同一份派生结果
 - 统一库内告警输出：`error` 全环境输出、`warn` / `debug` 仅开发期输出，同一提醒只输出一次；[二维码 QRCode](/guide/components/qr-code.html) 编码 / 绘制失败与 [折叠面板 Collapse](/guide/components/collapse.html) 复制失败改为 `error`
 - [水印 Watermark](/guide/components/watermark.html) 默认色由固定黑 / 白改为语义变量（浅色 `15%` 黑、暗色 `18%` 白，显式传 `textStyle.color` 后不再随模式反转），并让 `fixed=false` 时覆盖整个文档而不只首屏

@@ -1,202 +1,168 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect } from 'vue'
-import type { VNode } from 'vue'
-export interface Item {
-  desc: string // 文字描述
-  color?: 'blue' | 'green' | 'red' | 'gray' | string // 圆圈颜色，默认值 blue
-}
-
+import { computed } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
+import TimelineItem from './timeline-item'
 export interface Props {
-  items?: Item[] // 时间轴内容数组
-  width?: number | string // 时间轴区域总宽度，单位 px
-  lineStyle?: 'solid' | 'dashed' | 'dotted' // 时间线样式
-  mode?: 'left' | 'center' | 'right' // 通过设置 mode 可以改变时间轴和内容的相对位置
-  position?: 'left' | 'right' // 当 mode 为 center 时，内容交替展现，内容从左边（left）开始或者右边（right）开始展现
+  mode?: 'left' | 'alternate' | 'right' // 时间轴与内容的相对位置
+  start?: 'left' | 'right' // 交替模式下内容从哪一侧开始出现
+  reverse?: boolean // 节点是否倒序排列
+  horizontal?: boolean // 是否水平排列
+  size?: 'small' | 'middle' | 'large' // 尺寸档位
+  iconSize?: number // 轴点区域的边长，同时决定连线起点与内容偏移，单位 px
+  lineType?: 'solid' | 'dashed' | 'dotted' // 整轴线型，时间轴项可覆盖
+  pending?: boolean | string | VNode // 幽灵节点：为 true 时只表示进行中，字符串或 VNode 作为其内容
+  pendingDot?: string | VNode // 幽灵节点的轴点，未指定时使用内置加载环
 }
 // 声明组件插槽类型
 export interface TimelineSlots {
-  dot?: (props: { item: Item; index: number }) => VNode[]
-  desc?: (props: { item: Item; index: number }) => VNode[]
+  default?: () => VNode[]
+  pending?: () => VNode[]
+  pendingDot?: () => VNode[]
 }
-
 const props = withDefaults(defineProps<Props>(), {
-  items: () => [],
-  width: '100%',
-  lineStyle: 'solid',
   mode: 'left',
-  position: 'left'
+  start: 'right',
+  reverse: false,
+  horizontal: false,
+  size: 'middle',
+  iconSize: undefined,
+  lineType: 'solid',
+  pending: false,
+  pendingDot: undefined
 })
 defineSlots<TimelineSlots>()
-/**
- * 圆点预设色 → 主题变量
- *
- * 映射到主题变量（主色 / 成功 / 错误 / 文字禁用）：
- * 跟随种子换色，也随模式翻转 —— 尤其 gray：浅色是 25% 黑，暗色自动变成 25% 白，
- * 否则 rgba(0,0,0,.25) 叠在 #141414 上对比度约 1.05:1，圆点等于消失
- */
-const DOT_COLORS = {
-  blue: 'var(--va-cp-timeline-primary-color, var(--va-primary-color))',
-  green: 'var(--va-success-color)',
-  red: 'var(--va-error-color)',
-  gray: 'var(--va-text-color-disabled)'
-} as const
-const descRef = ref<HTMLElement[]>([]) // 所有时间轴描述节点的模板引用数组
-const dotsHeight = ref<string[]>([])
-const totalWidth = computed(() => {
-  if (typeof props.width === 'number') {
-    return `${props.width}px`
-  } else {
-    return props.width
-  }
-})
-const len = computed(() => {
-  return props.items.length
-})
-function getDotsHeight() {
-  for (let n = 0; n < len.value; n++) {
-    dotsHeight.value[n] = getComputedStyle(
-      descRef.value[n].firstElementChild || descRef.value[n],
-      null
-    ).getPropertyValue('line-height')
-  }
-}
-watchEffect(
-  () => {
-    getDotsHeight()
-  },
-  { flush: 'post' }
-)
-watchEffect(
-  () => {
-    if (props.mode === 'center') {
-      for (let n = 0; n < len.value; n++) {
-        if ((n + 1) % 2) {
-          // odd
-          if (props.position === 'left') {
-            descRef.value[n].classList.add('desc-alternate-left')
-          } else {
-            descRef.value[n].classList.add('desc-alternate-right')
-          }
-        } else {
-          // even
-          if (props.position === 'left') {
-            descRef.value[n].classList.add('desc-alternate-right')
-          } else {
-            descRef.value[n].classList.add('desc-alternate-left')
-          }
-        }
-      }
+// 根节点显式 role="list"：list-style: none 会让 Safari 丢掉列表语义；
+// 幽灵节点用 aria-busy 表达「进行中」，载入环本身 aria-hidden，无文案时读屏仍能感知
+const rootClasses = computed(() => {
+  return [
+    `timeline-${props.mode}`,
+    `timeline-${props.size}`,
+    `timeline-line-${props.lineType}`,
+    {
+      'timeline-start-left': props.start === 'left',
+      'timeline-horizontal': props.horizontal,
+      'timeline-reverse': props.reverse,
+      'timeline-pending': Boolean(props.pending)
     }
-  },
-  { flush: 'post' }
-)
+  ]
+})
+// 只覆写轴点区域基准尺寸：连线起点与内容偏移都由该变量推导，改一处即可整体缩放
+const rootStyle = computed<CSSProperties | undefined>(() => {
+  return props.iconSize === undefined ? undefined : { '--timeline-head-size': `${props.iconSize}px` }
+})
+// boolean 形态只表达「进行中」，不携带内容
+const pendingContent = computed(() => {
+  return typeof props.pending === 'boolean' ? undefined : props.pending
+})
 </script>
 <template>
-  <div class="timeline-wrap" :style="`width: ${totalWidth};`">
-    <div
-      class="timeline-item"
-      :class="{ 'item-last': index === items.length - 1 }"
-      v-for="(item, index) in items"
-      :key="index"
-    >
-      <span class="timeline-tail" :class="`tail-${mode}`" :style="`border-left-style: ${lineStyle};`"></span>
-      <div class="timeline-dot" :class="`dot-${mode}`" :style="`height: ${dotsHeight[index]}`">
-        <slot name="dot" :item="item" :index="index">
-          <span class="dot-item" v-if="item.color === 'red'" :style="{ borderColor: DOT_COLORS.red }"></span>
-          <span class="dot-item" v-else-if="item.color === 'gray'" :style="{ borderColor: DOT_COLORS.gray }"></span>
-          <span class="dot-item" v-else-if="item.color === 'green'" :style="{ borderColor: DOT_COLORS.green }"></span>
-          <span class="dot-item" v-else-if="item.color === 'blue'" :style="{ borderColor: DOT_COLORS.blue }"></span>
-          <span class="dot-item" v-else :style="{ borderColor: item.color || DOT_COLORS.blue }"></span>
+  <ul class="timeline-wrap" :class="rootClasses" :style="rootStyle" role="list">
+    <slot></slot>
+    <TimelineItem v-if="pending" class="timeline-item-pending" aria-busy="true">
+      <template #dot>
+        <slot name="pendingDot">
+          <span v-if="typeof pendingDot === 'string'" class="timeline-pending-dot-text">{{ pendingDot }}</span>
+          <component :is="pendingDot" v-else-if="pendingDot" />
+          <svg v-else class="timeline-pending-dot" viewBox="0 0 16 16" aria-hidden="true">
+            <circle
+              cx="8"
+              cy="8"
+              r="6.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-dasharray="30 11"
+            />
+          </svg>
         </slot>
-      </div>
-      <div ref="descRef" :class="`timeline-desc desc-${mode}`">
-        <slot name="desc" :item="item" :index="index">{{ item.desc || '--' }}</slot>
-      </div>
-    </div>
-  </div>
+      </template>
+      <slot name="pending">
+        <template v-if="typeof pendingContent === 'string'">{{ pendingContent }}</template>
+        <component :is="pendingContent" v-else-if="pendingContent" />
+      </slot>
+    </TimelineItem>
+  </ul>
 </template>
 <style lang="less" scoped>
 .timeline-wrap {
+  --timeline-head-size: 10px;
+  --timeline-head-border-width: 3px;
+  --timeline-line-width: 2px;
+  --timeline-line-height: 22px;
+  // 内容上移补偿 = 行盒高 − 字号 − 1px 线宽修正：文字在行盒内垂直居中，不补偿会让首行比轴点低一截；
+  // 由行高派生而非写死，覆盖 --timeline-line-height 时内容、轴点、连线一起跟随；14px 须与下方 font-size 保持一致
+  --timeline-content-offset: calc(var(--timeline-line-height, 22px) - 14px - 1px);
+  --timeline-gap: 20px;
+  --timeline-content-gap: 16px;
+  --timeline-horizontal-gap: calc(var(--timeline-gap) * 2);
+  --timeline-alt-offset: 12px;
+  --timeline-title-font-size: 14px;
+  --timeline-meta-font-size: 12px;
+  --timeline-line-color: var(--va-border-split-color);
+  --timeline-head-bg: var(--va-bg-container-color);
+  --timeline-head-color: var(--va-cp-timeline-primary-color, var(--va-primary-color));
+  display: flex;
+  flex-direction: column;
+  gap: var(--timeline-gap);
+  margin: 0;
+  padding: 0;
+  // 内容区整体上移了补偿量，容器补同量上内边距：否则首行文字溢出上边界，与上方内容的间距被吃掉
+  &:not(.timeline-horizontal) {
+    padding-top: var(--timeline-content-offset);
+  }
   font-size: 14px;
-  color: var(--va-text-color-1);
   line-height: 1.5714285714285714;
-  .timeline-item {
-    position: relative;
-    padding-bottom: 30px;
-    .timeline-tail {
-      position: absolute;
-      top: 12px;
-      width: 0;
-      height: 100%;
-      border-left-width: 2px;
-      border-left-color: var(--va-border-split-color);
-    }
-    .tail-left {
-      left: 5px;
-    }
-    .tail-center {
-      left: 0;
-      right: 0;
-      margin: 0 auto;
-    }
-    .tail-right {
-      right: 5px;
-    }
-    .timeline-dot {
-      position: absolute;
-      display: flex;
-      align-items: center;
-      :deep(svg) {
-        fill: currentColor;
-      }
-      .dot-item {
-        display: inline-block;
-        width: 12px;
-        height: 12px;
-        border-width: 2px;
-        border-style: solid;
-        border-radius: 50%;
-        background: var(--va-bg-container-color);
-      }
-    }
-    .dot-left {
-      left: 6px;
-      transform: translateX(-50%);
-    }
-    .dot-center {
-      left: 50%;
-      transform: translateX(-50%);
-    }
-    .dot-right {
-      right: 6px;
-      transform: translateX(50%);
-    }
-    .timeline-desc {
-      font-size: 14px;
-      line-height: 1.5714285714285714;
-      word-break: break-word;
-    }
-    .desc-left {
-      margin-left: 25px;
-    }
-    .desc-center {
-      width: calc(50% - 12px);
-    }
-    .desc-alternate-left {
-      text-align: end;
-    }
-    .desc-alternate-right {
-      margin-left: calc(50% + 12px);
-    }
-    .desc-right {
-      margin-right: 25px;
-      text-align: end;
+  color: var(--va-text-color-1);
+  list-style: none;
+  &.timeline-small {
+    --timeline-head-size: 8px;
+    --timeline-gap: 16px;
+  }
+  &.timeline-large {
+    --timeline-head-size: 14px;
+    --timeline-gap: 24px;
+    --timeline-title-font-size: 16px;
+  }
+  &.timeline-line-solid {
+    --timeline-line-type: solid;
+  }
+  &.timeline-line-dashed {
+    --timeline-line-type: dashed;
+  }
+  &.timeline-line-dotted {
+    --timeline-line-type: dotted;
+  }
+  &.timeline-reverse {
+    flex-direction: column-reverse;
+  }
+  &.timeline-horizontal {
+    flex-direction: row;
+    gap: var(--timeline-horizontal-gap);
+    overflow-x: auto;
+    &.timeline-reverse {
+      flex-direction: row-reverse;
     }
   }
-  .item-last {
-    .timeline-tail {
-      display: none;
-    }
+  // 幽灵节点加载环：SVG 弧线，线宽与端点固定，避免小尺寸下被描边挤压变形
+  .timeline-pending-dot {
+    display: block;
+    width: calc(var(--timeline-head-size) + 6px);
+    height: calc(var(--timeline-head-size) + 6px);
+    color: var(--timeline-head-color);
+    transform-origin: center;
+    animation: timeline-pending-rotate 1s linear infinite;
+  }
+}
+@keyframes timeline-pending-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+// 尊重系统的减少动效偏好，加载环改为静态
+@media (prefers-reduced-motion: reduce) {
+  .timeline-wrap .timeline-pending-dot {
+    animation: none;
   }
 }
 </style>

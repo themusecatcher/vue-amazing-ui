@@ -301,8 +301,8 @@ export type {
 } from './time-picker'
 export { default as TimePicker } from './time-picker'
 
-export type { TimelineProps, TimelineItem } from './timeline'
-export { default as Timeline } from './timeline'
+export type { TimelineProps, TimelineSlots, TimelineItemProps, TimelineItemSlots } from './timeline'
+export { default as Timeline, TimelineItem } from './timeline'
 
 export type { TooltipProps } from './tooltip'
 export { default as Tooltip } from './tooltip'
