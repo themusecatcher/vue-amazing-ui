@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { TinyColor } from '@ctrl/tinycolor'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import type { VNode } from 'vue'
 import { useSlotsExist } from 'components/utils'
@@ -26,7 +27,7 @@ export interface Props {
   spinCircleWidth?: number // 圆环宽度（指示符宽度的百分比；magic-ring 收敛到 6～26 以保证两环定位与翻面动效有效）；仅 ring-circle / ring-rail / magic-ring 生效
   spinCirclePercent?: number // 圆环弧长（0～100，圆环周长的百分比）；仅 ring-circle / ring-rail 生效
   ringRailColor?: string // 圆环轨道颜色；仅 ring-rail 生效
-  magicRingColor?: string // 内环颜色；仅 magic-ring 生效
+  magicRingColor?: string // 内环颜色；仅 magic-ring 生效；未传时取外环色的浅一档（color 无法解析时取主题主色浅一档）
   rotate?: boolean // 出现时是否整体旋转一圈；仅 dot-wheel / line-wheel 生效
   speed?: number // 动画周期（ms），值越小越快：dot-wheel / line-wheel 为亮度扫过一圈、magic-ring 为翻面一圈；仅 dot-wheel / line-wheel / magic-ring 生效
 }
@@ -131,13 +132,21 @@ const primaryColor = computed(() => {
     return props.color
   }
 })
-// 内环默认取主色按下态（比基色深一档）：内环作内壁暗面，与 3D 化后的环面呼应
+// 内环默认比外环浅一档：翻转时两环交替侧视，浅色内环作环面的受光面，与外环基色拉开层次；
+// 显式传 color 时按该色派生同色系浅调（否则会出现外环黄、内环仍是主题色）；color 无法解析
+// （如传入 CSS 变量）时回落到主题的悬停档主色 —— 亮 / 暗两种模式下它都比基色浅，方向一致
+const INNER_RING_LIGHTEN = 8
 const magicRingColorComputed = computed(() => {
-  if (props.magicRingColor === undefined) {
-    return 'var(--va-cp-spin-primary-color-active, var(--va-primary-color-active))'
-  } else {
+  if (props.magicRingColor !== undefined) {
     return props.magicRingColor
   }
+  if (props.color !== undefined) {
+    const parsed = new TinyColor(props.color)
+    if (parsed.isValid) {
+      return parsed.lighten(INNER_RING_LIGHTEN).toRgbString()
+    }
+  }
+  return 'var(--va-cp-spin-primary-color-hover, var(--va-primary-color-hover))'
 })
 const showTip = computed(() => {
   return slotsExist.tip || props.tip
@@ -240,9 +249,11 @@ onBeforeUnmount(clearDelayTimer)
               <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
             </svg>
           </div>
+          <!-- 内环写在前面：后绘制的外环压在内环之上，两环亚像素重叠时由「更靠外」的外环占据，
+               否则浅色内环会在交界处压出一条亮线（视觉上像内环盖住了外环） -->
           <div v-if="builtinIndicator === 'magic-ring'" class="spin-magic-ring">
-            <div class="outer-ring"></div>
             <div class="inner-ring"></div>
+            <div class="outer-ring"></div>
           </div>
           <div v-if="showTip" class="spin-tip" :class="{ 'dot-tip': isDotTip }">
             <slot name="tip">{{ tip }}</slot>
@@ -284,9 +295,10 @@ onBeforeUnmount(clearDelayTimer)
   --spin-magic-size: 36px; // magic-ring 的直径
   // 翻转双环环宽沿用 spinCircleWidth 百分比口径（占指示符宽度），三档尺寸按比例派生，无需分档声明
   --spin-magic-border-width: calc(var(--spin-magic-size) * var(--spin-circle-width) / 100);
-  // 内环相对外环的内缩量：目标是与外环内缘相切（两环紧贴）。border 会被浏览器向下取整到整数像素
-  // （如 4.32px 实渲染 4px），按理论环宽算会多出 <1px 形成细缝 —— 故回退 1px 抵消
-  --spin-magic-inset: calc(var(--spin-magic-border-width) - 1px);
+  // 内环相对外环的内缩量：目标是与外环内缘相切（两环紧贴且不叠压）。border 宽度按整数像素向下取整
+  // （如 4.68px 实渲染 4px），定位偏移却按亚像素四舍五入（3.68px → 4px）—— 回退 0.5px 令两者落在同一
+  // 整数网格上：三档实测均「相接、零重叠」；叠压会让后绘制的内环压住外环内缘，浅色内环即盖出亮线
+  --spin-magic-inset: calc(var(--spin-magic-border-width) - 0.5px);
   // 侧视（|cosθ| 最小）时的投影宽度：前后两段环带正好重叠 → 2 倍环宽。再减 1.5px 冗余抵消 border
   // 取整（最多损失 1px），否则左右边框填不满、中间露出细缝（侧视裂成两条平行线）；下界收敛已保证该值 ≥ 1px
   --spin-magic-narrow-width: calc(var(--spin-magic-border-width) * 2 - 1.5px);

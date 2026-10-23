@@ -42,7 +42,7 @@ const rotateSpinning = ref(true)
 const speed = ref(800)
 const circleWidth = ref(13)
 const color = ref('#1677ff')
-const ringColor = ref('#0958d9')
+const ringColor = ref('#4096ff')
 const rotate = ref(false)
 </script>
 
@@ -793,7 +793,7 @@ const spinning = ref(true)
 
 ## 动画速度、环宽与配色
 
-_通过 `speed` 调节动画周期（值越小越快），`spinCircleWidth` 调节 `magic-ring` 的环宽（内外环同步），`color` / `magicRingColor` 分别设置外环与内环颜色；开启 `rotate` 后，`dot-wheel` / `line-wheel` 出现时会整体旋转一圈_
+_通过 `speed` 调节动画周期（值越小越快），`spinCircleWidth` 调节 `magic-ring` 的环宽（内外环同步），`color` / `magicRingColor` 分别设置外环与内环颜色（未传 `magicRingColor` 时内环取 `color` 的浅一档）；开启 `rotate` 后，`dot-wheel` / `line-wheel` 出现时会整体旋转一圈_
 
 <br/>
 
@@ -842,7 +842,7 @@ const rotateSpinning = ref(true)
 const speed = ref(800)
 const circleWidth = ref(13)
 const color = ref('#1677ff')
-const ringColor = ref('#0958d9')
+const ringColor = ref('#4096ff')
 const rotate = ref(false)
 </script>
 <template>
@@ -909,7 +909,7 @@ div.spin-wrap.spin-item {
 | spinCircleWidth | 圆环宽度（指示符宽度的百分比；`magic-ring` 收敛到 `6～26` 以保证两环定位与翻面动效有效）；仅 `ring-circle` / `ring-rail` / `magic-ring` 生效 | number | undefined（`ring-circle` / `ring-rail` 取 `12`、`magic-ring` 取 `13`） |
 | spinCirclePercent | 圆环弧长（`0～100`，圆环周长的百分比）；仅 `ring-circle` / `ring-rail` 生效 | number | 33 |
 | ringRailColor | 圆环轨道颜色；仅 `ring-rail` 生效 | string | 'rgba(0, 0, 0, 0.12)' |
-| magicRingColor | 内环颜色；仅 `magic-ring` 生效 | string | undefined |
+| magicRingColor | 内环颜色；仅 `magic-ring` 生效 | string | undefined（取外环色的浅一档） |
 | rotate | 出现时是否整体旋转一圈；仅 `dot-wheel` / `line-wheel` 生效 | boolean | false |
 | speed | 动画周期（`ms`），值越小越快：`dot-wheel` / `line-wheel` 为亮度扫过一圈、`magic-ring` 为翻面一圈；仅 `dot-wheel` / `line-wheel` / `magic-ring` 生效 | number | undefined（`dot-wheel` / `line-wheel` 取 `800`、`magic-ring` 取 `1500`） |
 

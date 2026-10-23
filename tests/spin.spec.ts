@@ -1,4 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { Transition, h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Spin from 'components/spin'
@@ -13,6 +15,7 @@ import Spin from 'components/spin'
  *   越界值不得产出非法 path（负半径）或非法 dasharray；
  * - **自定义指示符**：`indicator` 传 VNode / 渲染函数或 `#indicator` 插槽时替代内置指示符（插槽优先），
  *   传 `null` 表示不渲染指示符；
+ * - **翻转双环叠压**：内环先渲染、外环后渲染（重叠归外环），内环内缩补偿与 border 取整对齐（零叠压）；
  * - **delay**：显示延迟（含首次挂载）、隐藏立即；内容变淡与遮罩同步延迟；卸载后不再持有延迟定时器；
  * - **可访问性**：根节点 `aria-busy` 跟随 `spinning`，无文案时指示符为 `img` 并带名称、
  *   有文案时遮罩为 `status` 区域。
@@ -99,6 +102,19 @@ describe('Spin - 圆环参数钳制', () => {
   })
 })
 
+describe('Spin - 翻转双环的叠压与层级', () => {
+  it('内环先渲染、外环后渲染：两环亚像素重叠时由外环占位，浅色内环不压深色外环', () => {
+    const wrapper = mount(Spin, { props: { indicator: 'magic-ring' } })
+    const rings = Array.from(wrapper.find('.spin-magic-ring').element.children)
+    expect(rings.map((ring) => ring.className)).toEqual(['inner-ring', 'outer-ring'])
+  })
+
+  it('内环内缩补偿取 0.5px：与 border 向下取整对齐，三档均无叠压（CSS 无法在单测中测量，故守源码口径）', () => {
+    const source = readFileSync(join(process.cwd(), 'components', 'spin', 'Spin.vue'), 'utf8')
+    expect(source).toMatch(/--spin-magic-inset:\s*calc\(var\(--spin-magic-border-width\) - 0\.5px\)/)
+  })
+})
+
 describe('Spin - 动画周期与配色默认值', () => {
   it('speed 不传时按指示符派生：翻转双环 1500ms、点轮 / 线轮 800ms', () => {
     expect(spinStyleVar(mount(Spin, { props: { indicator: 'magic-ring' } }), '--spin-speed')).toBe('1500ms')
@@ -113,15 +129,25 @@ describe('Spin - 动画周期与配色默认值', () => {
     expect(spinStyleVar(mount(Spin, { props: { indicator: 'magic-ring', speed: -100 } }), '--spin-speed')).toBe('1ms')
   })
 
-  it('翻转双环内外环默认取不同层次的语义变量，显式传入 magicRingColor 时以其为准', () => {
+  it('翻转双环内环默认比外环浅一档，显式传入 magicRingColor 时以其为准', () => {
     const wrapper = mount(Spin, { props: { indicator: 'magic-ring' } })
     const outer = spinStyleVar(wrapper, '--spin-primary-color')
     const inner = spinStyleVar(wrapper, '--spin-magic-ring-color')
 
-    // 外环取主色、内环取按下态（深一档），保证两环在同色系下仍有层次；
-    // 组件级主色桥在前，未配置时回落到全局主色
+    // 外环取主色、内环取悬停态（浅一档）：两环在同色系下仍有层次，且翻转侧视时浅色内环
+    // 不会沉入浅色底；组件级主色桥在前，未配置时回落到全局主色
     expect(outer).toBe('var(--va-cp-spin-primary-color, var(--va-primary-color))')
-    expect(inner).toBe('var(--va-cp-spin-primary-color-active, var(--va-primary-color-active))')
+    expect(inner).toBe('var(--va-cp-spin-primary-color-hover, var(--va-primary-color-hover))')
+
+    // 只传 color 时内环跟随外环派生同色系浅调，避免出现外环黄、内环仍是主题色
+    const derived = mount(Spin, { props: { indicator: 'magic-ring', color: '#fadb14' } })
+    expect(spinStyleVar(derived, '--spin-magic-ring-color')).toBe('rgb(251, 225, 60)')
+
+    // color 无法解析（如传入 CSS 变量）时回落到主题的悬停档主色
+    const unparsable = mount(Spin, { props: { indicator: 'magic-ring', color: 'var(--va-warning-color)' } })
+    expect(spinStyleVar(unparsable, '--spin-magic-ring-color')).toBe(
+      'var(--va-cp-spin-primary-color-hover, var(--va-primary-color-hover))'
+    )
 
     const custom = mount(Spin, { props: { indicator: 'magic-ring', magicRingColor: '#123456' } })
     expect(spinStyleVar(custom, '--spin-magic-ring-color')).toBe('#123456')
