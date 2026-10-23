@@ -28,6 +28,8 @@ function expandChange(open: boolean) {
       <br />
       黑暗好像 一颗巨石 按在胸口
     </Ellipsis>
+    <h2 class="mt30 mb10">单行展开</h2>
+    <Ellipsis expand :max-width="240"> 住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪 </Ellipsis>
     <h2 class="mt30 mb10">定制 Tooltip 内容</h2>
     <Ellipsis :max-width="240">
       住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪

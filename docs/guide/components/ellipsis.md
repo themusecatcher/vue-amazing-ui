@@ -54,6 +54,10 @@ function expandChange(open: boolean) {
 
 ## 点击展开
 
+_设置 `expand` 后，点击文本展开全部内容，再次点击收起；单行与多行均支持_
+
+<br/>
+
 <Ellipsis expand :line="2" @expandChange="expandChange">
   电灯熄灭 物换星移 泥牛入海<br>黑暗好像 一颗巨石 按在胸口<br>独脚大盗
   百万富翁 摸爬滚打<br>黑暗好像 一颗巨石 按在胸口
@@ -76,6 +80,24 @@ function expandChange(open: boolean) {
 ```
 
 :::
+
+## 单行展开
+
+<Ellipsis expand :max-width="240">
+  住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
+</Ellipsis>
+
+:::: details Show Code
+
+```vue
+<template>
+  <Ellipsis expand :max-width="240">
+    住在我心里孤独的 孤独的海怪 痛苦之王 开始厌倦 深海的光 停滞的海浪
+  </Ellipsis>
+</template>
+```
+
+::::
 
 ## 定制 Tooltip 内容
 
