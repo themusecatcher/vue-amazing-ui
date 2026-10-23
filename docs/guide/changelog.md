@@ -14,6 +14,17 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-23">3.2.0</VersionDateTag>
+
+- 新增 [菜单 Menu](/guide/components/menu.html) 深色皮肤（`theme="dark"`）的底色跟随主题色派生：根列表、浮层面板与内联子菜单取主色派生的暗底，改主色时整套皮肤同步换色相，`theme.components.Menu.primaryColor` 同样驱动；浮层面板与内联子菜单新增可独立覆盖的 `--va-menu-popup-background` / `--va-menu-inline-submenu-background`，全局语义变量由 `40` 个增至 `42` 个、组件令牌由 `51` 个增至 `53` 个
+- 优化 [加载中 Spin](/guide/components/spin.html) 翻转双环配色：内环默认取外环色的浅一档，只传 `color` 时内环跟随该色派生同色系浅调，不再固定为主题主色；修复两环交界处的叠压亮线
+- 优化 [二维码 QRCode](/guide/components/qr-code.html) 的默认取色：`color` / `bgColor` / `borderColor` 不传时分别取 `--va-text-color-1` / `--va-bg-container-color` / `--va-border-split-color`（原固定 `#000` / `#FFF` / `rgba(5, 5, 5, 0.06)`），暗色主题下二维码自动反色；中央图标底色属性 `iconBackgroundColor` 移除，改用 `iconBgColor`（不传时与背景色一致）
+- 新增 [二维码 QRCode](/guide/components/qr-code.html) 的 `spinProps` 属性：`loading` 状态可配置指示符、尺寸、颜色与文案（默认按遮罩尺寸取 `small` 档）；状态遮罩默认由全不透明改为 `0.96` 半透明，新增 `--qr-code-mask-opacity` 可调
+- 修复 [抽屉 Drawer](/guide/components/drawer.html) 面板阴影在暗色主题下与遮罩叠加出更深的色带
+- 修复 [轮播图 Swiper](/guide/components/swiper.html) 分页器未选中的圆点与进度条轨道在暗色主题下不可见
+- 更新使用者文档的主题说明：[定制主题](/guide/customize-theme.html) 与组件令牌清单补充 Menu 深色皮肤表面色、浮层与内联子菜单令牌的覆盖方式
+- 更新贡献者文档的组件文档规范：统一表格表头、列序与标题命名，必填项改用 `required` 标签标注，同步更新文档站模板页
+
 ## <VersionDateTag date="2026-10-23">3.1.0</VersionDateTag>
 
 - 重构 [时间轴 Timeline](/guide/components/timeline.html) 为组合式：新增 `TimelineItem` 子组件承载单个节点，容器只负责整体布局与状态，数据场景直接 `v-for` 渲染节点
