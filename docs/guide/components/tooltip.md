@@ -815,6 +815,8 @@ const destroyOpen = ref(false)
 | hideDelay | 文字提示隐藏的延迟时间，单位 `ms`，仅当 `trigger: hover` 时生效 | number | 100 |
 | open <Tag color="cyan">v-model</Tag> | 文字提示是否显示 | boolean | false |
 | openControl | 只使用 `open` 属性控制显示隐藏，仅当 `trigger: hover` 时生效，此时移入移出将不会触发显示隐藏，全部由 `open` 属性控制 | boolean | false |
+| anchor | 外部锚点：传入后不再渲染触发包裹层，触发监听、`tabindex` / `aria-describedby` 与定位均以该元素为准（此时本组件的 `$attrs` 不再下发） | HTMLElement &#124; null | null |
+| getDisabled | 展示前的动态禁用判定，每次展示前求值，返回 `true` 时不展示（如文本未溢出时不需要提示） | () => boolean | undefined |
 
 ## Slots
 
