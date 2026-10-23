@@ -310,7 +310,12 @@ function resolveBarrelExport(entryFile, exportedName, visited = new Set()) {
  *     被引用文件名命中另一个组件才算依赖边；同目录支撑模块（`./date-utils.js`）命中不了组件，
  *     经目录兜底后与自身组件同名而被过滤，不会产生伪边。
  * 嵌套同目录 `./<subdir>/...`（复合组件范式：layout/ → layout-sider/、dropdown/ → dropdown-button/）
- * 中的子组件由组件入口聚合导出引入、各有独立样式入口，不属于父组件的样式依赖，故不计边。
+ * 按来源区分，只有「再导出」不计边：
+ *   - 目录聚合入口 `<dir>/index.js` 中的 import 是**再导出**——子组件各有独立样式入口、由消费方自行引入，
+ *     不属于父组件的样式依赖（Layout → LayoutSider 即此类）；
+ *   - SFC 门面 / 同目录支撑模块中的 import 是**实际使用**——父组件在模板或逻辑里真的渲染了该子组件
+ *     （Timeline 的幽灵节点内嵌 TimelineItem），其 CSS 必须并进父组件样式入口，否则消费方按需引入
+ *     父组件时该节点静默缺样式，正是本脚本要抓的那类问题。
  */
 function buildGraph() {
   const graph = new Map()
@@ -319,6 +324,8 @@ function buildGraph() {
     if (componentName === undefined) {
       return
     }
+    // 当前 chunk 是否是所在组件目录的聚合入口（`<dir>/index.js`）
+    const chunkIsDirEntry = chunkFile === resolve(esDir, componentsMap[componentName], 'index.js')
     // 一个组件可能由多个 chunk 承载（SFC 门面 + 同目录支撑模块），边取并集
     const dependencies = graph.get(componentName) ?? new Set()
     const targetModules = new Set()
@@ -326,8 +333,9 @@ function buildGraph() {
       if (!specifier.startsWith('.')) {
         return
       }
-      // 同目录的嵌套子目录归属另一个组件（复合组件范式），不计边
-      if (specifier.startsWith('./') && specifier.slice(2).includes('/')) {
+      // 聚合入口里的嵌套子目录 import 是再导出（子组件有独立样式入口），不计边；
+      // SFC / 支撑模块里的同名 import 是实际使用，继续参与下方判定
+      if (chunkIsDirEntry && specifier.startsWith('./') && specifier.slice(2).includes('/')) {
         return
       }
       const targetModule = resolve(dirname(chunkFile), specifier)

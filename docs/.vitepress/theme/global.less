@@ -113,6 +113,10 @@
     color: var(--vp-c-text-1);
   }
 }
+/* 组件演示区的内容段落不受文档站正文排版接管：`.vp-doc p` 的 28px 行高会撑高时间轴节点并与轴点错位 */
+.vp-doc .timeline-wrap p {
+  line-height: inherit;
+}
 /* 正文中的 Tag 与相邻文字垂直居中对齐（Tag 为固定高度的 inline-flex，默认按基线对齐会偏低） */
 .vp-doc .tag-wrap {
   vertical-align: middle;
