@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, h, watchEffect, computed, reactive } from 'vue'
+import type { CSSProperties } from 'vue'
 import { AppleOutlined, AndroidOutlined, WindowsOutlined } from '@ant-design/icons-vue'
 import type { TabsProps, TabsItem } from 'vue-amazing-ui'
 const tabItems = ref<TabsItem[]>([
@@ -218,6 +219,23 @@ const state = reactive<TabsProps>({
 function onChange(key: string | number) {
   console.log('key', key)
 }
+// 自定义样式取主题变量：明暗模式与主题主色都会自动跟随（硬编码浅色在暗色下会整条发白）
+const customTabStyle: CSSProperties = {
+  background: 'var(--va-primary-bg-color)',
+  color: 'var(--va-text-color-2)',
+  fontSize: '16px',
+  fontWeight: 600
+}
+// card 的激活页签默认取 --va-bg-container-color（容器底），被自定义底覆盖后要一并改成主色实底，
+// 否则暗色下会在自定义底上「挖出」一块深色页签
+const customCardTabStyle: CSSProperties = {
+  ...customTabStyle,
+  '--va-bg-container-color': 'var(--va-primary-color)',
+  '--va-cp-tabs-primary-text-color': 'var(--va-text-color-solid)'
+}
+const customContentStyle: CSSProperties = {
+  fontSize: '16px'
+}
 </script>
 <template>
   <div>
@@ -295,15 +313,8 @@ function onChange(key: string | number) {
         :items="tabItems"
         v-model:active-key="activeKey"
         :tab-gutter="24"
-        :tab-style="{
-          background: '#fff7e6',
-          fontSize: '16px',
-          color: '#ff6900',
-          fontWeight: 600
-        }"
-        :content-style="{
-          fontSize: '16px'
-        }"
+        :tab-style="customTabStyle"
+        :content-style="customContentStyle"
       />
       <Tabs
         :items="tabItems"
@@ -311,15 +322,8 @@ function onChange(key: string | number) {
         type="card"
         size="large"
         :tab-gutter="12"
-        :tab-style="{
-          background: '#fff7e6',
-          fontSize: '16px',
-          color: '#ff6900',
-          fontWeight: 600
-        }"
-        :content-style="{
-          fontSize: '16px'
-        }"
+        :tab-style="customCardTabStyle"
+        :content-style="customContentStyle"
       />
     </Flex>
     <h2 class="mt30 mb10">自定义内容</h2>
