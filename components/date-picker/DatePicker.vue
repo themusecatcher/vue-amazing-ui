@@ -1014,7 +1014,7 @@ defineExpose({ focus, blur })
     left: 0;
     width: 16px;
     height: 8px;
-    background-color: var(--va-bg-container-color);
+    background-color: var(--picker-panel-bg-color, var(--va-bg-elevated-color));
     clip-path: polygon(
       1.6568542494923806px 100%,
       50% 1.6568542494923806px,
