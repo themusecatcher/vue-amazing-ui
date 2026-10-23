@@ -37,6 +37,30 @@ describe('FloatButton：按需挂载 Tooltip', () => {
     await nextTick()
     expect(wrapper.findAllComponents(Tooltip)).toHaveLength(1)
     expect(wrapper.find('.float-btn-tooltip').exists()).toBe(true)
+    // 触发层类名与默认位置仍走 Tooltip 的公开契约下发（尺寸与角标定位依赖）
+    expect(wrapper.find('.float-btn-tooltip-content').exists()).toBe(true)
+    expect(wrapper.findComponent(Tooltip).props('placement')).toBe('left')
+  })
+
+  it('tooltipProps 可覆盖默认位置与触发层类名', async () => {
+    wrapper = mount(FloatButton, {
+      props: { tooltip: '提示', tooltipProps: { placement: 'top', contentClass: 'custom-content' } }
+    })
+    await nextTick()
+    expect(wrapper.findComponent(Tooltip).props('placement')).toBe('top')
+    expect(wrapper.find('.custom-content').exists()).toBe(true)
+  })
+
+  it('有无提示内容时按钮内容结构一致（共用同一份内容模板）', async () => {
+    const withTooltip = mount(FloatButton, {
+      props: { tooltip: '提示' },
+      slots: { icon: () => 'I', description: () => 'D' }
+    })
+    const withoutTooltip = mount(FloatButton, { slots: { icon: () => 'I', description: () => 'D' } })
+    await nextTick()
+    expect(withoutTooltip.find('.float-btn-body').html()).toBe(withTooltip.find('.float-btn-body').html())
+    withTooltip.unmount()
+    withoutTooltip.unmount()
   })
 
   it('仅提供 #tooltip 插槽时同样创建实例', async () => {
