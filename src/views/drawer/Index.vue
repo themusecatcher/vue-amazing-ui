@@ -422,14 +422,15 @@ const layerZIndexOpen = ref<boolean>(false)
 
     <h2 class="mt30 mb10">自定义 header & body 样式</h2>
     <p class="mb10">
-      通过 <code>header-style</code> 与 <code>body-style</code> 自定义抽屉头部与内容区域样式，并设置背景色便于观察
+      通过 <code>header-style</code> 与 <code>body-style</code> 自定义抽屉头部与内容区域样式，并设置背景色便于观察。
+      背景色取主题令牌 <code>--va-primary-bg-color</code>，明暗两种模式下标题都保持可读
     </p>
     <Button type="primary" @click="open10 = true">Open</Button>
     <Drawer
       v-model:open="open10"
       :closable="false"
       title="Basic Drawer"
-      :header-style="{ textAlign: 'center', background: '#e6f4ff' }"
+      :header-style="{ textAlign: 'center', background: 'var(--va-primary-bg-color)' }"
       :body-style="{ textAlign: 'center' }"
       @close="onClose10"
     >
@@ -440,19 +441,21 @@ const layerZIndexOpen = ref<boolean>(false)
   </div>
 </template>
 <style lang="less" scoped>
+// 演示页文字与容器统一走主题语义变量：抽屉内容会 Teleport 到 body，跟随 <html> 上的明暗变量表
 p {
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
 }
 
 .inline-container {
   height: 200px;
   overflow: hidden;
   position: relative;
-  border: 1px solid #ebedf0;
+  border: 1px solid var(--va-border-color);
   border-radius: 2px;
   padding: 48px;
   text-align: center;
-  background: #fafafa;
+  // 取微弱填充色：浅色下近似 #fafafa，暗色下比页面底色略亮，两种模式都能与页面区分
+  background: var(--va-fill-color-4);
 }
 
 .form-item {
@@ -462,20 +465,20 @@ p {
 .form-label {
   display: block;
   margin-bottom: 8px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
 }
 
 .profile-title {
   font-size: 16px;
   line-height: 24px;
   margin-bottom: 24px;
-  color: rgba(0, 0, 0, 0.85);
+  color: var(--va-text-color-1);
 }
 
 .profile-label {
   font-size: 16px;
   line-height: 24px;
   margin-bottom: 16px;
-  color: rgba(0, 0, 0, 0.85);
+  color: var(--va-text-color-1);
 }
 </style>

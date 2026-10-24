@@ -267,9 +267,9 @@ function expandChange(open: boolean) {
 
 ## APIs
 
-### Ellipsis
+### Ellipsis Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 maxWidth | 文本最大宽度，单位 `px` | string &#124; number | '100%'
 tooltipMaxWidth | 弹出提示最大宽度，单位 `px`，默认为 `文本宽度 + 24` | string &#124; number | undefined

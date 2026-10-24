@@ -80,7 +80,7 @@ function increase() {
       </Badge>
       <Badge>
         <template #value>
-          <span class="u-value">world</span>
+          <span class="value-text">world</span>
         </template>
         <Avatar shape="square" size="large" />
       </Badge>
@@ -175,7 +175,7 @@ function increase() {
   </div>
 </template>
 <style lang="less" scoped>
-.u-value {
+.badge-value {
   display: inline-block;
   line-height: 20px;
   padding: 0 6px;

@@ -61,6 +61,8 @@ export const COMPONENT_VAR_NAMES = [
   '--va-menu-primary-palette',
   '--va-menu-primary-text-color',
   '--va-menu-background',
+  '--va-menu-popup-background',
+  '--va-menu-inline-submenu-background',
   '--va-menu-item-selected-background',
   '--va-menu-item-selected-color',
   '--va-text-scroll-bg-color',
@@ -280,9 +282,31 @@ export const COMPONENT_VARS = {
     fallback: 'var(--menu-background)',
     resolved: {
       light: 'var(--va-bg-container-color)',
-      dark: '#001529'
+      dark: 'var(--va-bg-brand-dark-color, #001529)'
     },
-    description: '菜单根列表背景；弹出子菜单面板不受它影响'
+    description: '菜单根列表背景；弹出子菜单面板取 --va-menu-popup-background，不受它影响'
+  },
+  '--va-menu-popup-background': {
+    component: 'Menu',
+    file: 'menu/Menu.vue',
+    group: 'surface',
+    fallback: 'var(--menu-popup-background)',
+    resolved: {
+      light: 'var(--va-bg-elevated-color)',
+      dark: 'var(--va-bg-brand-dark-color, #001529)'
+    },
+    description: '弹出子菜单（浮层面板）背景；深色皮肤取品牌色暗底，与根列表同色'
+  },
+  '--va-menu-inline-submenu-background': {
+    component: 'Menu',
+    file: 'menu/Menu.vue',
+    group: 'surface',
+    fallback: 'var(--menu-inline-submenu-background)',
+    resolved: {
+      light: 'var(--va-fill-color-1)',
+      dark: 'var(--va-bg-brand-dark-deep-color, #000c17)'
+    },
+    description: '内联子菜单（inline 展开的下一级列表）背景；深色皮肤取更深一阶的品牌色暗底'
   },
   '--va-menu-item-selected-background': {
     component: 'Menu',

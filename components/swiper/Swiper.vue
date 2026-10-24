@@ -246,6 +246,8 @@ function onSlideChange(swiper: SwiperTypes) {
 }
 .swiper {
   --swiper-theme-color: var(--va-cp-swiper-primary-color, var(--va-primary-color));
+  --swiper-pagination-bullet-inactive-color: var(--va-text-color-1);
+  --swiper-pagination-progressbar-bg-color: var(--va-fill-color-3);
 }
 :deep(.swiper-pagination-bullet) {
   width: 12px;

@@ -439,14 +439,14 @@ const scrollContainer = ref<HTMLDivElement>()
 
 ## APIs
 
-### BackTop
+### BackTop Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 icon | 自定义图标，`prop` 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | VNode &#124; (() => VNode) | undefined
 description | 文字描述 | string | undefined
 tooltip | 文字提示内容 | string | undefined
-tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip) | [TooltipProps](./tooltip.md#tooltip) | {}
+tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip-props) | [TooltipProps](./tooltip.md#tooltip-props) | {}
 type | 设置按钮类型 | 'default' &#124; 'primary' | 'default'
 shape | 设置按钮形状 | 'circle' &#124; 'square' | 'circle'
 bottom | `BackTop` 距离页面底部的高度，单位 `px` | number &#124; string | 40

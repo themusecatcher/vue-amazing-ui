@@ -1,6 +1,16 @@
 <script setup lang="ts">
 import { ref, computed, h, onUnmounted } from 'vue'
-import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import {
+  AppstoreOutlined,
+  CalendarOutlined,
+  CommentOutlined,
+  InboxOutlined,
+  MailOutlined,
+  MessageOutlined,
+  MinusOutlined,
+  PlusOutlined,
+  SettingOutlined
+} from '@ant-design/icons-vue'
 import { createDiscreteApi } from 'vue-amazing-ui'
 import type {
   ConfigProviderProps,
@@ -113,21 +123,40 @@ const images = ref<CarouselImage[]>([
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
-const menuItems = ref<ItemType[]>([
+// 种子换色用例的菜单：深色皮肤的三层表面（根列表 / 浮层面板 / 内联子菜单）都取种子派生的品牌色暗底
+const seedMenuOpenKeys = ref<MenuKey[]>(['sub1'])
+const seedMenuSelectedKeys = ref<MenuKey[]>(['3'])
+const seedMenuItems = ref<ItemType[]>([
+  { key: '1', icon: () => h(MailOutlined), label: 'Navigation One' },
+  { key: '2', icon: () => h(CalendarOutlined), label: 'Navigation Two' },
   {
-    key: '1',
-    label: 'Navigation One'
+    key: 'sub1',
+    icon: () => h(AppstoreOutlined),
+    label: 'Navigation Three',
+    children: [
+      { key: '3', label: 'Option 3' },
+      { key: '4', label: 'Option 4' },
+      {
+        key: 'sub1-2',
+        label: 'Submenu',
+        children: [
+          { key: '5', label: 'Option 5' },
+          { key: '6', label: 'Option 6' }
+        ]
+      }
+    ]
   },
   {
-    key: '2',
-    label: 'Navigation Two'
+    key: 'sub2',
+    icon: () => h(SettingOutlined),
+    label: 'Navigation Four',
+    children: [
+      { key: '7', label: 'Option 7' },
+      { key: '8', label: 'Option 8' }
+    ]
   },
-  {
-    key: '3',
-    label: 'Navigation Three'
-  }
+  { key: '9', icon: () => h(InboxOutlined), label: 'Navigation Five' }
 ])
-const menuSelectedKeys = ref<MenuKey[]>(['1'])
 const selectOptions = ref<SelectOption[]>([
   {
     label: '北京市',
@@ -378,7 +407,7 @@ const tokenStyle: Record<string, string> = {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">配置面：从全局到实例</h2>
     <p class="mb10">
-      自上而下，作用范围依次收窄。种子是派生整套色阶的起点色，派生出的 40 个 CSS 变量由组件读取，因此换肤不重建组件；
+      自上而下，作用范围依次收窄。种子是派生整套色阶的起点色，派生出的 42 个 CSS 变量由组件读取，因此换肤不重建组件；
       四层冲突时按普通 CSS 级联处理。
     </p>
     <Descriptions class="mb10" :column="1" bordered>
@@ -432,9 +461,10 @@ const tokenStyle: Record<string, string> = {
           </span>
         </div>
         <p class="theme-tip mt10">
-          上排色块取的就是本作用域真实写入的变量（不是写死的示例色）。改一个种子只重算 13 个变量：主色 5 个色块 +
-          主色文字 1 + info 3 + 链接 3 + 焦点环 1（最后一块是链接色，它取 info，本例未单独传
-          info，因此与主色同值），其余 27 个连值都不变。
+          上排色块取的就是本作用域真实写入的变量（不是写死的示例色）。改一个种子只重算 15 个变量：主色 6（含上排 5
+          个色块与主色文字）+ info 3 + 链接 3（末位色块，取 info，本例未单独传 info 故与主色同值）+ 焦点环 1 +
+          深色皮肤底色 2（只被 <code>Menu</code> 的 <code>theme="dark"</code> 消费，故不单独占色块），其余 27
+          个连值都不变。
         </p>
       </Card>
       <br />
@@ -502,7 +532,14 @@ const tokenStyle: Record<string, string> = {
         <Calendar v-model:value="cardDate" display="card" />
         <Carousel style="margin-left: 0" :images="images" :width="800" :height="450" />
         <Card width="50%">
-          <Menu mode="horizontal" :items="menuItems" v-model:selectedKeys="menuSelectedKeys" />
+          <Menu
+            v-model:openKeys="seedMenuOpenKeys"
+            v-model:selectedKeys="seedMenuSelectedKeys"
+            style="width: 256px"
+            mode="inline"
+            theme="dark"
+            :items="seedMenuItems"
+          />
         </Card>
         <Card width="50%" style="height: 300px; transform: translate(0)">
           <FloatButton type="primary" :right="96">
@@ -590,6 +627,10 @@ const tokenStyle: Record<string, string> = {
         ><code>Tag</code> 的 processing 预设取主色，success / warning / error 取语义色（见「语义种子」）；其余 13
         个命名色为组件自有色板，与种子无关；</li
       >
+      <li class="mb10"
+        >深色皮肤（如 <code>Menu</code> 的
+        <code>theme="dark"</code>）底色取种子派生的品牌色暗底：改主色时根列表、浮层面板与内联子菜单一起换；
+      </li>
       <li>组件样式只消费 <code>var(--va-*)</code>，不参与换色计算：切换种子不会重建组件，也不会触发重渲染。</li>
     </ul>
     <h2 class="mt30 mb10">语义种子：success / warning / error / info</h2>
@@ -630,17 +671,17 @@ const tokenStyle: Record<string, string> = {
     <ul class="mb10">
       <li class="mb10"
         >每个语义色各自派生「常态 / 浅底 / 描边」，组件读
-        <code>--va-{success,warning,error,info}-*</code>，不用逐个组件配置；</li
-      >
+        <code>--va-{success,warning,error,info}-*</code>，不用逐个组件配置；
+      </li>
       <li class="mb10"
         ><code>info</code> 未传时复用主色（链接色也取 <code>info</code>）；本例单独传了
-        <code>info</code>，它就不再跟主色走；</li
-      >
+        <code>info</code>，它就不再跟主色走；
+      </li>
       <li
         ><code>neutralText</code> /
         <code>neutralBg</code>
-        控制中性色阶（文字透明度、背景明暗），一般不用动；色值格式与例外规则见文档站「定制主题」。</li
-      >
+        控制中性色阶（文字透明度、背景明暗），一般不用动；色值格式与例外规则见文档站「定制主题」。
+      </li>
     </ul>
     <h2 class="mt30 mb10">明暗模式：light / dark / auto</h2>
     <p class="mb10">
@@ -714,9 +755,8 @@ const tokenStyle: Record<string, string> = {
     </Flex>
     <ul class="mb10">
       <li class="mb10"
-        >组件配置优先于 <code>seed</code> 与外层祖先上的 <code>--va-primary-*</code>，删掉后回落到
-        <code>seed</code>；</li
-      >
+        >组件配置优先于 <code>seed</code> 与外层祖先上的 <code>--va-primary-*</code>，删掉后回落到 <code>seed</code>；
+      </li>
       <li class="mb10">同一色值可同时配置多个组件（Button / Slider / Progress），各自独立派生；</li>
       <li>仅影响该组件自身的主色使用点；Slider 的轨道 / 手柄 / 气泡等细部件仍使用组件令牌（见下一节）。</li>
     </ul>
@@ -780,16 +820,15 @@ const tokenStyle: Record<string, string> = {
     <ul class="mb10">
       <li class="mb10">变量写在包裹元素上、靠 CSS 继承生效，子树内的组件与更内层作用域都会取到它；</li>
       <li class="mb10"
-        >内层只传
-        <code>seed</code> 的部分字段时是整个替换（不逐字段合并），没传的字段回落默认值；完全不传才继承外层；</li
-      >
+        >内层只传 <code>seed</code> 的部分字段时是整个替换（不逐字段合并），没传的字段回落默认值；完全不传才继承外层；
+      </li>
       <li class="mb10"
         >作用域内的浮层（Tooltip / Select 面板 / Modal）会带上当前令牌，不会因为挂到 body 就退回默认配色；</li
       >
       <li
         >页面级生效只能由最外层 <code>abstract: true</code> 写 <code>&lt;html&gt;</code>，嵌套层一律
-        <code>abstract: false</code>。</li
-      >
+        <code>abstract: false</code>。
+      </li>
     </ul>
     <h2 class="mt30 mb10">运行期切换：响应式 theme</h2>
     <p class="mb10">
@@ -834,12 +873,12 @@ const tokenStyle: Record<string, string> = {
     <ul class="mb10">
       <li class="mb10"
         >链接基座是 <code>:where(a)</code>（特异性 0），你自己的 <code>a { color }</code> 会自然胜出，不需要
-        <code>!important</code>；</li
-      >
+        <code>!important</code>；
+      </li>
       <li
         >只想改链接、不动主色时，单独覆盖 <code>--va-link-color</code> / <code>-hover</code> /
-        <code>-active</code> 三个变量即可。</li
-      >
+        <code>-active</code> 三个变量即可。
+      </li>
     </ul>
     <h2 class="mt30 mb10">自定义包裹元素：tag</h2>
     <p class="mb10">
@@ -918,8 +957,8 @@ const tokenStyle: Record<string, string> = {
       <li class="mb10">暗色只变了一半：纯 CSS 切暗色时 <code>data-va-mode</code> 要写在实际作用域节点上。</li>
       <li class="mb10"
         >自定义 SVG 不变色：<code>fill</code> 是 presentation attribute，不解析 <code>var()</code>，请写进
-        <code>style</code>。</li
-      >
+        <code>style</code>。
+      </li>
       <li>完整排查表见文档站「定制主题 - 排查清单」。</li>
     </ul>
   </div>
@@ -930,15 +969,18 @@ const tokenStyle: Record<string, string> = {
   line-height: 1.6;
   color: var(--va-text-color-3);
 }
+
 .theme-caption {
   font-size: 12px;
   color: var(--va-text-color-3);
 }
+
 .theme-swatches {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
 }
+
 .theme-swatch {
   display: inline-flex;
   align-items: center;
@@ -946,30 +988,38 @@ const tokenStyle: Record<string, string> = {
   font-size: 12px;
   color: var(--va-text-color-2);
 }
+
 .swatch {
   width: 16px;
   height: 16px;
   border: 1px solid var(--va-border-color);
   border-radius: 4px;
 }
+
 .swatch-primary {
   background: var(--va-primary-color);
 }
+
 .swatch-primary-hover {
   background: var(--va-primary-color-hover);
 }
+
 .swatch-primary-active {
   background: var(--va-primary-color-active);
 }
+
 .swatch-primary-bg {
   background: var(--va-primary-bg-color);
 }
+
 .swatch-primary-border {
   background: var(--va-primary-border-color);
 }
+
 .swatch-link {
   background: var(--va-link-color);
 }
+
 .token-zone {
   padding: 16px;
   border: 1px dashed var(--va-border-color);

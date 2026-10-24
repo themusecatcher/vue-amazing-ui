@@ -350,9 +350,9 @@ const customValue2 = ref(2)
 
 ## APIs
 
-### Switch
+### Switch Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | checked | 选中时的内容 | string | undefined |
 | checkedValue | 选中时的值 | boolean &#124; string &#124; number | true |

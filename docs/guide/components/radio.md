@@ -1017,9 +1017,9 @@ const buttonRef = ref<InstanceType<typeof RadioButton> | null>(null)
 
 ## APIs
 
-### Radio
+### Radio Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 checked <Tag color="cyan">v-model</Tag> | 当前是否选中；作为组内单项使用时以组的值为准，本属性不生效 | boolean | false
 value | 本项的值；脱离组时随 `change` 事件回传，置于 `RadioGroup` 内时作为本项的身份标识，与组内当前值比较得出选中态 | string &#124; number &#124; boolean | undefined
@@ -1031,9 +1031,9 @@ autofocus | 是否自动聚焦原生 `input` | boolean | false
 name | 原生 `input` 的表单字段名；置于 `RadioGroup` 内时以组的配置为准 | string | undefined
 id | 原生 `input` 的 `id` | string | undefined
 
-### RadioGroup
+### RadioGroup Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 value <Tag color="cyan">v-model</Tag> | 组内当前选中的值；不传时由组内部维护 | string &#124; number &#124; boolean | undefined
 options | 单选框选项数据；提供后组内默认插槽不生效 | (string &#124; number &#124; [RadioGroupOption](#radiogroupoption-type))[] | []
@@ -1047,9 +1047,9 @@ name | 表单字段名，下发到组内每个原生 `input` | string | undefine
 id | `input` 的 `id` 前缀，`options` 模式下实际 `id` 追加选项下标；组合式用法不下发，请在组内各项上自行设置 | string | undefined
 autofocus | 是否自动聚焦首项，仅 `options` 模式生效 | boolean | false
 
-### RadioButton
+### RadioButton Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 checked <Tag color="cyan">v-model</Tag> | 脱离组单独使用时的选中态 | boolean | false
 value | 该项的值，置于组内时据此判断选中 | string &#124; number &#124; boolean | undefined
@@ -1060,11 +1060,11 @@ id | 原生 `input` 的 `id` | string | undefined
 
 ### RadioGroupOption Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-label? | 选项名，未提供时以选项值展示；传入 `VNode` 时原样渲染 | string &#124; number &#124; VNode | undefined
-value | 选项值 | string &#124; number &#124; boolean | undefined
-disabled? | 是否禁用选项 | boolean | undefined
+名称 | 说明 | 类型
+:-- | :-- | :--
+label? | 选项名，未提供时以选项值展示；传入 `VNode` 时原样渲染 | string &#124; number &#124; VNode
+value | 选项值 | string &#124; number &#124; boolean
+disabled? | 是否禁用选项 | boolean
 
 ## Slots
 

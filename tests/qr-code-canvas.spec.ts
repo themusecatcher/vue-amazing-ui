@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { h, Suspense } from 'vue'
 import { mount, flushPromises } from '@vue/test-utils'
 import QRCode from 'components/qr-code/QRCode.vue'
+import ConfigProvider from 'components/config-provider'
 
 /**
  * 回归用例：QRCode 的渲染内核、状态遮罩与导出契约
@@ -229,7 +230,7 @@ describe('QRCode svg 渲染', () => {
         value: 'https://themusecatcher.blog.csdn.net',
         type: 'svg',
         icon: 'https://a.example.com/logo.svg',
-        iconBackgroundColor: '#333333',
+        iconBgColor: '#333333',
         iconBorderRadius: 4
       }
     })
@@ -264,6 +265,80 @@ describe('QRCode svg 渲染', () => {
     const width = Number(image.attributes('width'))
     const height = Number(image.attributes('height'))
     expect(width / height).toBeCloseTo(2)
+
+    wrapper.unmount()
+  })
+})
+
+describe('QRCode 主题取色', () => {
+  const mountWithTheme = (mode: 'light' | 'dark', props: Record<string, unknown> = {}) =>
+    mount(ConfigProvider, {
+      props: { theme: { mode } },
+      slots: { default: () => h(QRCode, { value: 'https://a.example.com', ...props }) }
+    })
+
+  it('浅色主题下默认取正文色与容器色（白底近黑码）', async () => {
+    const wrapper = mountWithTheme('light')
+    await flushPromises()
+
+    const paths = wrapper.findAll('.qr-code-svg path')
+    expect(paths[0].attributes('fill')).toBe('#ffffff')
+    expect(paths[1].attributes('fill')).toBe('rgba(0, 0, 0, 0.88)')
+
+    wrapper.unmount()
+  })
+
+  it('暗色主题下自动反色：背景取容器色、点阵取正文色', async () => {
+    const wrapper = mountWithTheme('dark')
+    await flushPromises()
+
+    const paths = wrapper.findAll('.qr-code-svg path')
+    expect(paths[0].attributes('fill')).toBe('#141414')
+    expect(paths[1].attributes('fill')).toBe('rgba(255, 255, 255, 0.85)')
+
+    wrapper.unmount()
+  })
+
+  it('显式 color / bgColor 优先于主题默认值', async () => {
+    const wrapper = mountWithTheme('dark', { color: '#52c41a', bgColor: '#f5f5f5' })
+    await flushPromises()
+
+    const paths = wrapper.findAll('.qr-code-svg path')
+    expect(paths[0].attributes('fill')).toBe('#f5f5f5')
+    expect(paths[1].attributes('fill')).toBe('#52c41a')
+
+    wrapper.unmount()
+  })
+
+  it('暗色主题下图标底色跟随背景色，不留白色方块', async () => {
+    vi.stubGlobal('Image', MockImage)
+    const wrapper = mountWithTheme('dark', { icon: 'https://a.example.com/logo.svg' })
+    await flushPromises()
+    await flushPromises()
+
+    expect(wrapper.find('.qr-code-svg rect').attributes('fill')).toBe('#141414')
+
+    wrapper.unmount()
+    vi.unstubAllGlobals()
+  })
+
+  it('canvas 类型随主题切换重绘（亮色与暗色使用同一份解析结果）', async () => {
+    const fillStyles: string[] = []
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({
+      ...contextMock,
+      set fillStyle(value: string) {
+        fillStyles.push(value)
+      },
+      get fillStyle() {
+        return ''
+      }
+    } as unknown as CanvasRenderingContext2D)
+
+    const wrapper = mountWithTheme('dark', { type: 'canvas' })
+    await flushPromises()
+
+    expect(fillStyles).toContain('#141414')
+    expect(fillStyles).toContain('rgba(255, 255, 255, 0.85)')
 
     wrapper.unmount()
   })
@@ -334,13 +409,32 @@ describe('QRCode 状态遮罩', () => {
     wrapper.unmount()
   })
 
-  it('loading 状态渲染加载指示符', async () => {
+  it('loading 状态渲染加载指示符（small 档，与遮罩尺寸匹配）', async () => {
     const wrapper = mount(QRCode, {
       props: { value: 'https://a.example.com', status: 'loading' }
     })
     await flushPromises()
 
     expect(wrapper.find('.qr-code-mask').exists()).toBe(true)
+    expect(wrapper.find('.qr-code-mask .spin-small').exists()).toBe(true)
+
+    wrapper.unmount()
+  })
+
+  it('spinProps 透传给内部 Spin：尺寸可覆盖默认档位、指示符可替换', async () => {
+    const wrapper = mount(QRCode, {
+      props: {
+        value: 'https://a.example.com',
+        status: 'loading',
+        spinProps: { size: 'large', indicator: 'ring-circle' }
+      }
+    })
+    await flushPromises()
+
+    const spin = wrapper.find('.qr-code-mask .spin-wrap')
+    expect(spin.classes()).toContain('spin-large')
+    expect(spin.classes()).not.toContain('spin-small')
+    expect(wrapper.find('.qr-code-mask .spin-ring-circle').exists()).toBe(true)
 
     wrapper.unmount()
   })

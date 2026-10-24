@@ -1401,9 +1401,9 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 
 ## APIs
 
-### AutoComplete
+### AutoComplete Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | allowClear | 是否支持清除，有值时即显示清除图标 | boolean | false |
 | autofocus | 是否自动获取焦点 | boolean | false |
@@ -1419,28 +1419,28 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 | dropdownMatchSelectWidth | 下拉菜单和选择器同宽，为数字时指定下拉菜单宽度（单位 `px`），当左右空间都不足以容纳时面板自动调整对齐 | boolean &#124; number | true |
 | dropdownMenuStyle | 下拉菜单自定义样式 | CSSProperties | undefined |
 | to | 下拉面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
-| options | 自动完成的数据源 | (string &#124; number &#124; [AutoCompleteOption](#option-type) &#124; [AutoCompleteGroupOption](#groupoption-type))[] | [] |
+| options | 自动完成的数据源 | (string &#124; number &#124; [AutoCompleteOption](#autocompleteoption-type) &#124; [AutoCompleteGroupOption](#autocompletegroupoption-type))[] | [] |
 | value <Tag color="cyan">v-model</Tag> | 当前输入的值 | string | undefined |
 | width | 自动完成宽度，单位 `px` | string &#124; number | '100%' |
 | size | 自动完成大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | status | 设置校验状态 | 'error' &#124; 'warning' | undefined |
-| filterOption | 根据输入项进行筛选：<li>默认为 `false` 时不筛选，显示全部数据源，由用户在 `search` 事件中远程更新 `options`</li><li>当其为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | boolean &#124; ((inputValue: string, option: [AutoCompleteOption](#option-type)) => boolean) | false |
+| filterOption | 根据输入项进行筛选：<li>默认为 `false` 时不筛选，显示全部数据源，由用户在 `search` 事件中远程更新 `options`</li><li>当其为 `true` 时，筛选每个选项的文本字段 `label` 是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | boolean &#124; ((inputValue: string, option: [AutoCompleteOption](#autocompleteoption-type)) => boolean) | false |
 
-### Option Type
+### AutoCompleteOption Type
 
-| 名称              | 说明                          | 类型                | 默认值    |
-| :----------------- | :----------------------------- | :------------------- | :-------- |
-| value             | 唯一的 `value` 值               | string &#124; number | undefined |
-| label?            | 显示的 `label` 值，缺失时兜底展示 `value`；支持任意自定义字段（`#option` 插槽透传） | string | undefined |
-| disabled?         | 是否禁用选项                  | boolean             | false     |
+| 名称              | 说明                          | 类型                |
+| :----------------- | :----------------------------- | :------------------- |
+| value             | 唯一的 `value` 值               | string &#124; number |
+| label?            | 显示的 `label` 值，缺失时兜底展示 `value`；支持任意自定义字段（`#option` 插槽透传） | string |
+| disabled?         | 是否禁用选项                  | boolean             |
 
-### GroupOption Type
+### AutoCompleteGroupOption Type
 
-| 名称   | 说明                        | 类型                                  | 默认值    |
-| :------ | :--------------------------- | :------------------------------------- | :-------- |
-| options | 子选项，存在该字段即视为分组 | (string &#124; number &#124; AutoCompleteOption)[] | undefined |
-| label? | 分组名（显示为分组标题）    | string                                | undefined |
-| value? | 分组值                      | string &#124; number                  | undefined |
+| 名称   | 说明                        | 类型                                  |
+| :------ | :--------------------------- | :------------------------------------- |
+| options? | 子选项，存在该字段即视为分组 | (string &#124; number &#124; AutoCompleteOption)[] |
+| label? | 分组名（显示为分组标题）    | string                                |
+| value? | 分组值                      | string &#124; number                  |
 
 ## Events
 
@@ -1461,7 +1461,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 | :-------- | :---------------------------------------------------------------------- | :------------------------------- |
 | default   | 自定义输入组件（替代原生 `input` 元素）                                 | v-slot:default                   |
 | clearIcon | 自定义清除图标，作用域参数 `clearIcon` 为清除方法                       | v-slot:clearIcon="{ clearIcon }" |
-| option    | 自定义选项内容，作用域为当前选项数据，[AutoCompleteOption](#option-type) 的自定义字段会一并透传 | v-slot:option                    |
+| option    | 自定义选项内容，作用域为当前选项数据，[AutoCompleteOption](#autocompleteoption-type) 的自定义字段会一并透传 | v-slot:option                    |
 
 ## Methods
 

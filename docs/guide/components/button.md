@@ -979,9 +979,9 @@ const loadingType = ref('dynamic')
 
 ## APIs
 
-### Button
+### Button Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | type | 设置按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default' |
 | shape | 设置按钮形状 | 'default' &#124; 'circle' &#124; 'round' | 'default' |

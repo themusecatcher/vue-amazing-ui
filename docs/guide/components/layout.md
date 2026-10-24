@@ -1290,15 +1290,15 @@ const customScrollbarSelectedKeys = ref<MenuKey[]>(['1'])
 </Layout>
 ```
 
-### Layout
+### Layout Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 hasSider | 表示子元素里有 `Sider`，一般不用指定；子级存在 `LayoutSider` 时会自动推导，可用于服务端渲染时避免样式闪动 | boolean | undefined
 
-### LayoutSider
+### LayoutSider Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 collapsed <Tag color="cyan">v-model</Tag> | 当前收起状态，不传时为非受控 | boolean | undefined
 defaultCollapsed | 是否默认收起，仅非受控时生效 | boolean | false
@@ -1313,15 +1313,15 @@ zeroWidthTriggerStyle | 指定收起宽度为 `0` 时，悬浮在侧边栏外沿
 
 ### LayoutSiderResponsive Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-xs | `<576px` 时的收起宽度 | number | undefined
-sm | `≥576px` 时的收起宽度 | number | undefined
-md | `≥768px` 时的收起宽度 | number | undefined
-lg | `≥992px` 时的收起宽度 | number | undefined
-xl | `≥1200px` 时的收起宽度 | number | undefined
-xxl | `≥1600px` 时的收起宽度 | number | undefined
-xxxl | `≥2000px` 时的收起宽度 | number | undefined
+名称 | 说明 | 类型
+:-- | :-- | :--
+xs? | `<576px` 时的收起宽度 | number
+sm? | `≥576px` 时的收起宽度 | number
+md? | `≥768px` 时的收起宽度 | number
+lg? | `≥992px` 时的收起宽度 | number
+xl? | `≥1200px` 时的收起宽度 | number
+xxl? | `≥1600px` 时的收起宽度 | number
+xxxl? | `≥2000px` 时的收起宽度 | number
 
 ## Slots
 
@@ -1367,7 +1367,7 @@ breakpoint | 触发响应式布局断点时的回调，`broken` 为 `true` 表�
 
 各布局组件的外观由下述 `CSS` 变量控制，在组件或其祖先元素上重新声明同名变量即可覆盖：
 
-| 变量 | 说明 | 默认值 |
+| 名称 | 说明 | 默认值 |
 | :-- | :-- | :-- |
 | `--layout-background` | `Layout` 背景色 | `#f5f5f5` |
 | `--layout-color` | `Layout` 文本颜色 | `rgba(0, 0, 0, 0.88)` |

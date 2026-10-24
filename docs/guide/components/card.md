@@ -350,16 +350,16 @@ const loading = ref(true)
 
 ## APIs
 
-### Card
+### Card Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 width | 卡片宽度，单位 `px` | number &#124; string | 'auto'
 bordered | 是否有边框 | boolean | true
 size | 卡片的尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
 hoverable | 鼠标移过时可浮起 | boolean | false
 loading | 当卡片内容还在加载中时，可以用 `loading` 展示一个占位 | boolean | false
-skeletonProps | 加载中时，骨架屏的属性配置，参考 [Skeleton Props](./skeleton.md#skeleton) | [SkeletonProps](./skeleton.md#skeleton) | {}
+skeletonProps | 加载中时，骨架屏的属性配置，参考 [Skeleton Props](./skeleton.md#skeleton-props) | [SkeletonProps](./skeleton.md#skeleton-props) | {}
 title | 卡片标题 | string | undefined
 extra | 卡片右上角的操作区域 | string | undefined
 headStyle | 自定义标题区域样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}

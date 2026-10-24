@@ -10,6 +10,7 @@ _选项卡切换组件_
 
 <script setup lang="ts">
 import { ref, h, watchEffect, computed, reactive } from 'vue'
+import type { CSSProperties } from 'vue'
 import { AppleOutlined, AndroidOutlined, WindowsOutlined } from '@ant-design/icons-vue'
 import type { TabsProps, TabsItem } from 'vue-amazing-ui'
 const tabItems = ref<TabsItem[]>([
@@ -227,6 +228,23 @@ const state = reactive<TabsProps>({
 })
 function onChange(key: string | number) {
   console.log('key', key)
+}
+// 自定义样式取主题变量：明暗模式与主题主色都会自动跟随（硬编码浅色在暗色下会整条发白）
+const customTabStyle: CSSProperties = {
+  background: 'var(--va-primary-bg-color)',
+  color: 'var(--va-text-color-2)',
+  fontSize: '16px',
+  fontWeight: 600
+}
+// card 的激活页签默认取 --va-bg-container-color（容器底），被自定义底覆盖后要一并改成主色实底，
+// 否则暗色下会在自定义底上「挖出」一块深色页签
+const customCardTabStyle: CSSProperties = {
+  ...customTabStyle,
+  '--va-bg-container-color': 'var(--va-primary-color)',
+  '--va-cp-tabs-primary-text-color': 'var(--va-text-color-solid)'
+}
+const customContentStyle: CSSProperties = {
+  fontSize: '16px'
 }
 </script>
 
@@ -903,15 +921,8 @@ watchEffect(() => {
     :items="tabItems"
     v-model:active-key="activeKey"
     :tab-gutter="24"
-    :tab-style="{
-      background: '#fff7e6',
-      fontSize: '16px',
-      color: '#ff6900',
-      fontWeight: 600
-    }"
-    :content-style="{
-      fontSize: '16px'
-    }"
+    :tab-style="customTabStyle"
+    :content-style="customContentStyle"
   />
   <Tabs
     :items="tabItems"
@@ -919,15 +930,8 @@ watchEffect(() => {
     type="card"
     size="large"
     :tab-gutter="12"
-    :tab-style="{
-      background: '#fff7e6',
-      fontSize: '16px',
-      color: '#ff6900',
-      fontWeight: 600
-    }"
-    :content-style="{
-      fontSize: '16px'
-    }"
+    :tab-style="customCardTabStyle"
+    :content-style="customContentStyle"
   />
 </Flex>
 
@@ -936,6 +940,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import type { CSSProperties } from 'vue'
 import type { TabsProps, TabsItem } from 'vue-amazing-ui'
 const tabItems = ref<TabsItem[]>([
   {
@@ -973,6 +978,23 @@ const activeKey = ref<TabsProps['activeKey']>('1')
 watchEffect(() => {
   console.log('activeKey', activeKey.value)
 })
+// 自定义样式取主题变量：明暗模式与主题主色都会自动跟随（硬编码浅色在暗色下会整条发白）
+const customTabStyle: CSSProperties = {
+  background: 'var(--va-primary-bg-color)',
+  color: 'var(--va-text-color-2)',
+  fontSize: '16px',
+  fontWeight: 600
+}
+// card 的激活页签默认取 --va-bg-container-color（容器底），被自定义底覆盖后要一并改成主色实底，
+// 否则暗色下会在自定义底上「挖出」一块深色页签
+const customCardTabStyle: CSSProperties = {
+  ...customTabStyle,
+  '--va-bg-container-color': 'var(--va-primary-color)',
+  '--va-cp-tabs-primary-text-color': 'var(--va-text-color-solid)'
+}
+const customContentStyle: CSSProperties = {
+  fontSize: '16px'
+}
 </script>
 <template>
   <Flex vertical>
@@ -980,15 +1002,8 @@ watchEffect(() => {
       :items="tabItems"
       v-model:active-key="activeKey"
       :tab-gutter="24"
-      :tab-style="{
-        background: '#fff7e6',
-        fontSize: '16px',
-        color: '#ff6900',
-        fontWeight: 600
-      }"
-      :content-style="{
-        fontSize: '16px'
-      }"
+      :tab-style="customTabStyle"
+      :content-style="customContentStyle"
     />
     <Tabs
       :items="tabItems"
@@ -996,15 +1011,8 @@ watchEffect(() => {
       type="card"
       size="large"
       :tab-gutter="12"
-      :tab-style="{
-        background: '#fff7e6',
-        fontSize: '16px',
-        color: '#ff6900',
-        fontWeight: 600
-      }"
-      :content-style="{
-        fontSize: '16px'
-      }"
+      :tab-style="customCardTabStyle"
+      :content-style="customContentStyle"
     />
   </Flex>
 </template>
@@ -1268,11 +1276,11 @@ const state = reactive<TabsProps>({
 
 ## APIs
 
-### Tabs
+### Tabs Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
-items | 标签页数组 | [TabsItem](#item-type)[] | []
+items | 标签页数组 | [TabsItem](#tabsitem-type)[] | []
 prefix | 标签页前缀 | string | undefined
 suffix | 标签页后缀 | string | undefined
 animated | 是否启用切换动画，在 `tabPosition: 'top' \| 'bottom'` 时有效 | boolean | true
@@ -1285,15 +1293,15 @@ tabPosition | 自定义页签位置 | 'top' &#124; 'right' &#124; 'bottom' &#124
 contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | string &#124; number | undefined
 
-### Item Type
+### TabsItem Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-key? | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 `(0,1,2...)` 绑定 | string &#124; number | undefined
-tab? | 页签显示文字 | string | undefined
-icon? | 页签图标 | VNode | undefined
-content? | 标签页内容 | string | undefined
-disabled? | 是否禁用页签 | boolean | false
+名称 | 说明 | 类型
+:-- | :-- | :--
+key? | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 `(0,1,2...)` 绑定 | string &#124; number
+tab? | 页签显示文字 | string
+icon? | 页签图标 | VNode
+content? | 标签页内容 | string
+disabled? | 是否禁用页签 | boolean
 
 ## Slots
 

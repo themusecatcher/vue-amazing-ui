@@ -133,7 +133,7 @@ onMounted(() => {
 
 ## Params
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | el | 起始元素，可从 `null` 开始向上查找 | HTMLElement &#124; null | undefined |
 

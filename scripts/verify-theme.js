@@ -55,9 +55,9 @@ function readVarNames() {
 }
 
 /** 契约规模：增删变量必须同步更新脚本、文档与测试三处口径 */
-const EXPECTED_VAR_COUNT = 40
+const EXPECTED_VAR_COUNT = 42
 /** 组件公开令牌规模（`components/theme/component-vars.js` 与生成文档同口径） */
-const EXPECTED_COMPONENT_VAR_COUNT = 51
+const EXPECTED_COMPONENT_VAR_COUNT = 53
 
 const varNames = readVarNames()
 const varNameSet = new Set(varNames)

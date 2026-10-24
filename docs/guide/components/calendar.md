@@ -1354,58 +1354,58 @@ function onPanelChange(
 
 ## APIs
 
-### Calendar
+### Calendar Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | defaultValue | 非受控初始值：同时决定初始面板日期与初始选中值，受控 `value` 优先 | string &#124; number | undefined |
 | valueFormat | 被选中日期的格式，默认为时间戳；参考 [format](https://date-fns.org/v4.1.0/docs/format) | string | undefined |
 | header | 自定义日历头部内容 | string | undefined |
 | display | 日历展示方式，面板 / 卡片 | 'panel' &#124; 'card' | 'panel' |
 | mode | 面板模式（受控）：月 / 年 | 'month' &#124; 'year' | 'month' |
-| startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一（越界值按 `7` 取模收敛） | [CalendarDayOfWeek](#dayofweek-type) | 0 |
+| startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一（越界值按 `7` 取模收敛） | [CalendarDayOfWeek](#calendardayofweek-type) | 0 |
 | disabledDate | 不可选择的日期 | (timestamp: number) => boolean | undefined |
 | validRange | 可选日期区间，区间外的日期不可选，同时收窄年 / 月选择器的可选项；字符串入参按 `valueFormat` 解析（未指定时按时间戳数字串解析，无法解析则忽略该区间） | [string &#124; number, string &#124; number] | undefined |
 | dateFormat | 自定义日期展示格式 | (date: number, timestamp: number) => string | undefined |
-| weekFormat | 自定义星期展示格式 | (defaultWeek: [CalendarDefaultWeek](#defaultweek-type), week: number, timestamp: number) => string | undefined |
+| weekFormat | 自定义星期展示格式 | (defaultWeek: [CalendarDefaultWeek](#calendardefaultweek-type), week: number, timestamp: number) => string | undefined |
 | monthFormat | 自定义月展示格式 | (month: number, timestamp: number) => string | undefined |
-| yearSelectProps | 年选择器 `props`，参考 [Select Props](./select.md#select) | [SelectProps](./select.md#select) | {} |
-| monthSelectProps | 月选择器 `props`，参考 [Select Props](./select.md#select) | [SelectProps](./select.md#select) | {} |
-| modeRadioProps | 模式切换器 `props`，参考 [RadioGroup Props](./radio.md#radiogroup) | [RadioGroupProps](./radio.md#radiogroup) | {} |
+| yearSelectProps | 年选择器 `props`，参考 [Select Props](./select.md#select-props) | [SelectProps](./select.md#select-props) | {} |
+| monthSelectProps | 月选择器 `props`，参考 [Select Props](./select.md#select-props) | [SelectProps](./select.md#select-props) | {} |
+| modeRadioProps | 模式切换器 `props`，参考 [RadioGroup Props](./radio.md#radiogroup-props) | [RadioGroupProps](./radio.md#radiogroup-props) | {} |
 | value <Tag color="cyan">v-model</Tag> | 当前被选中的日期 | string &#124; number | undefined |
 
-### DayOfWeek Type
+### CalendarDayOfWeek Type
 
 | 名称 | 值 |
 | :-------- | :------------------------------------------------------ |
 | DayOfWeek | 0 &#124; 1 &#124; 2 &#124; 3 &#124; 4 &#124; 5 &#124; 6 |
 
-### DefaultWeek Type
+### CalendarDefaultWeek Type
 
 | 名称 | 值 |
 | :---------- | :--------------------------------------------------------------------------- |
 | DefaultWeek | '一' &#124; '二' &#124; '三' &#124; '四' &#124; '五' &#124; '六' &#124; '日' |
 
-### DateItem Type
+### CalendarDateItem Type
 
-| 名称          | 说明            | 类型                                          | 默认值    |
-| :------------- | :--------------- | :--------------------------------------------- | :-------- |
-| type          | 类型            | 'date'                                        | undefined |
-| dateObject    | 日期对象        | \{ date: number, month: number, year: number } | undefined |
-| timestamp     | 当天开始的时间戳 | number                                        | undefined |
-| inCurrentMonth | 是否在当前月    | boolean                                       | undefined |
-| isCurrentDate | 是否为今天      | boolean                                       | undefined |
+| 名称          | 说明            | 类型                                          |
+| :------------- | :--------------- | :--------------------------------------------- |
+| type          | 类型            | 'date'                                        |
+| dateObject    | 日期对象        | \{ date: number, month: number, year: number } |
+| timestamp     | 当天开始的时间戳 | number                                        |
+| inCurrentMonth | 是否在当前月    | boolean                                       |
+| isCurrentDate | 是否为今天      | boolean                                       |
 
-### MonthItem Type
+### CalendarMonthItem Type
 
-| 名称       | 说明            | 类型                            | 默认值    |
-| :---------- | :--------------- | :------------------------------- | :-------- |
-| type       | 类型            | 'month'                         | undefined |
-| monthObject | 月份对象        | \{ month: number, year: number } | undefined |
-| timestamp  | 当月开始的时间戳 | number                          | undefined |
-| isCurrent  | 是否为当前月    | boolean                         | undefined |
+| 名称       | 说明            | 类型                            |
+| :---------- | :--------------- | :------------------------------- |
+| type       | 类型            | 'month'                         |
+| monthObject | 月份对象        | \{ month: number, year: number } |
+| timestamp  | 当月开始的时间戳 | number                          |
+| isCurrent  | 是否为当前月    | boolean                         |
 
-### SelectInfo Type
+### CalendarSelectInfo Type
 
 | 名称 | 说明 | 类型 |
 | :----- | :-------------------------------------- | :----------------------------------------------------- |
@@ -1420,15 +1420,15 @@ function onPanelChange(
 | week | 自定义周展示 | v-slot:week="{ defaultWeek, week, timestamp }" |
 | dateValue | 自定义日期展示 | v-slot:dateValue="{ type, dateObject, timestamp, inCurrentMonth, isCurrentDate }" |
 | dateContent | 自定义日期内容展示 | v-slot:dateContent="{ type, dateObject, timestamp, inCurrentMonth, isCurrentDate }" |
-| dateFull | 替换整个日期单元格，插槽参数为 [CalendarDateItem](#dateitem-type) | v-slot:dateFull="{ type, dateObject, timestamp, inCurrentMonth, isCurrentDate }" |
+| dateFull | 替换整个日期单元格，插槽参数为 [CalendarDateItem](#calendardateitem-type) | v-slot:dateFull="{ type, dateObject, timestamp, inCurrentMonth, isCurrentDate }" |
 | monthValue | 自定义月份展示 | v-slot:monthValue="{ type, monthObject, timestamp, isCurrent }" |
 | monthContent | 自定义月份内容展示 | v-slot:monthContent="{ type, monthObject, timestamp, isCurrent }" |
-| monthFull | 替换整个月份单元格，插槽参数为 [CalendarMonthItem](#monthitem-type) | v-slot:monthFull="{ type, monthObject, timestamp, isCurrent }" |
+| monthFull | 替换整个月份单元格，插槽参数为 [CalendarMonthItem](#calendarmonthitem-type) | v-slot:monthFull="{ type, monthObject, timestamp, isCurrent }" |
 
 ## Events
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| change | 日期变化时的回调（重复点击已选中的日期不触发） | (value: string &#124; number, dateObject?: [CalendarDateItem](#dateitem-type)['dateObject'] &#124; [CalendarMonthItem](#monthitem-type)['monthObject']) => void |
+| change | 日期变化时的回调（重复点击已选中的日期不触发） | (value: string &#124; number, dateObject?: [CalendarDateItem](#calendardateitem-type)['dateObject'] &#124; [CalendarMonthItem](#calendarmonthitem-type)['monthObject']) => void |
 | panelChange | 面板定位变化时的回调（切换年 / 月选择器、切换模式、跨月选择均会触发） | (value: string &#124; number &#124; undefined, info: { year: number, month?: number }, mode: 'month' &#124; 'year') => void |
-| select | 选择日期回调，第二参携带来源信息 | (value: string &#124; number &#124; undefined, info: [CalendarSelectInfo](#selectinfo-type)) => void |
+| select | 选择日期回调，第二参携带来源信息 | (value: string &#124; number &#124; undefined, info: [CalendarSelectInfo](#calendarselectinfo-type)) => void |

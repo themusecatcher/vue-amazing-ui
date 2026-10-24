@@ -14,7 +14,17 @@ _为组件提供统一的全局化配置_
 
 <script setup lang="ts">
 import { ref, computed, h, onMounted, onBeforeUnmount } from 'vue'
-import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import {
+  AppstoreOutlined,
+  CalendarOutlined,
+  CommentOutlined,
+  InboxOutlined,
+  MailOutlined,
+  MessageOutlined,
+  MinusOutlined,
+  PlusOutlined,
+  SettingOutlined
+} from '@ant-design/icons-vue'
 import { ConfigProvider, LoadingBarProvider, createDiscreteApi } from 'vue-amazing-ui'
 import type {
   CarouselImage,
@@ -167,21 +177,40 @@ const images = ref<CarouselImage[]>([
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
-const menuItems = ref<ItemType[]>([
+// 种子换色用例的菜单：深色皮肤的三层表面（根列表 / 浮层面板 / 内联子菜单）都取种子派生的品牌色暗底
+const seedMenuOpenKeys = ref<MenuKey[]>(['sub1'])
+const seedMenuSelectedKeys = ref<MenuKey[]>(['3'])
+const seedMenuItems = ref<ItemType[]>([
+  { key: '1', icon: () => h(MailOutlined), label: 'Navigation One' },
+  { key: '2', icon: () => h(CalendarOutlined), label: 'Navigation Two' },
   {
-    key: '1',
-    label: 'Navigation One'
+    key: 'sub1',
+    icon: () => h(AppstoreOutlined),
+    label: 'Navigation Three',
+    children: [
+      { key: '3', label: 'Option 3' },
+      { key: '4', label: 'Option 4' },
+      {
+        key: 'sub1-2',
+        label: 'Submenu',
+        children: [
+          { key: '5', label: 'Option 5' },
+          { key: '6', label: 'Option 6' }
+        ]
+      }
+    ]
   },
   {
-    key: '2',
-    label: 'Navigation Two'
+    key: 'sub2',
+    icon: () => h(SettingOutlined),
+    label: 'Navigation Four',
+    children: [
+      { key: '7', label: 'Option 7' },
+      { key: '8', label: 'Option 8' }
+    ]
   },
-  {
-    key: '3',
-    label: 'Navigation Three'
-  }
+  { key: '9', icon: () => h(InboxOutlined), label: 'Navigation Five' }
 ])
-const menuSelectedKeys = ref<MenuKey[]>(['1'])
 const selectOptions = ref<SelectOption[]>([
   {
     label: '北京市',
@@ -431,7 +460,7 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
       <span class="theme-demo-swatch"><i class="theme-demo-chip chip-link"></i><code>--va-link-color</code></span>
     </div>
     <p class="theme-demo-hint">
-      色块取自当前作用域实际写入的变量值，而非静态示例色。修改种子后仅重算 13 个变量：主色 5 个色块、主色文字 1、info 3、链接 3、焦点环 1；末位为链接色，其基色取 <code>info</code>（本节未单独设置，故与主色同值）。其余 27 个值不变。
+      色块取自当前作用域实际写入的变量值，而非静态示例色。修改种子后仅重算 15 个变量：主色 6（含上排 5 个色块与主色文字）、info 3、链接 3（末位色块，基色取 <code>info</code>，本节未单独设置故与主色同值）、焦点环 1、深色皮肤底色 2（只被 <code>Menu</code> 的 <code>theme="dark"</code> 消费，故不单独占色块）。其余 27 个值不变。
     </p>
   </Card>
   <br />
@@ -500,9 +529,12 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
     <Carousel style="margin-left: 0" :images="images" :height="450" />
     <Card>
       <Menu
-        mode="horizontal"
-        v-model:selectedKeys="menuSelectedKeys"
-        :items="menuItems"
+        v-model:openKeys="seedMenuOpenKeys"
+        v-model:selectedKeys="seedMenuSelectedKeys"
+        style="width: 256px"
+        mode="inline"
+        theme="dark"
+        :items="seedMenuItems"
       />
     </Card>
     <Card style="height: 300px; transform: translate(0)">
@@ -581,6 +613,7 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
 - 色块与下方组件读取**同一组 `CSS` 变量**：二者位于同一 `Provider` 作用域，不存在第二份色值，因此始终同步；
 - 示例覆盖全部 `39` 个消费主色的组件；`Table` 排序箭头、`Badge` 计数底、`Timeline` 的 `blue` 圆点、`GradientText` 渐变端点均取自种子（点击 `Table` 表头可见）；
 - `Tag` 的 `processing` 预设取主色，`success` / `warning` / `error` 取语义色（见「语义种子」一节）；其余 `13` 个命名色为组件自有色板，与种子无关；
+- 深色皮肤（如 `Menu` 的 `theme="dark"`）底色取种子派生的品牌色暗底：改主色时根列表、浮层面板与内联子菜单一起换；
 - 组件样式只消费 `var(--va-*)`，不参与换色计算：切换种子不会重建组件，也不会触发重渲染。
 
 ::: details Show Code
@@ -588,7 +621,17 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
 ```vue
 <script setup lang="ts">
 import { ref, h } from 'vue'
-import { MessageOutlined, CommentOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import {
+  AppstoreOutlined,
+  CalendarOutlined,
+  CommentOutlined,
+  InboxOutlined,
+  MailOutlined,
+  MessageOutlined,
+  MinusOutlined,
+  PlusOutlined,
+  SettingOutlined
+} from '@ant-design/icons-vue'
 import { LoadingBarProvider } from 'vue-amazing-ui'
 import type {
   CarouselImage,
@@ -673,21 +716,40 @@ const images = ref<CarouselImage[]>([
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
-const menuItems = ref<ItemType[]>([
+// 种子换色用例的菜单：深色皮肤的三层表面（根列表 / 浮层面板 / 内联子菜单）都取种子派生的品牌色暗底
+const seedMenuOpenKeys = ref<MenuKey[]>(['sub1'])
+const seedMenuSelectedKeys = ref<MenuKey[]>(['3'])
+const seedMenuItems = ref<ItemType[]>([
+  { key: '1', icon: () => h(MailOutlined), label: 'Navigation One' },
+  { key: '2', icon: () => h(CalendarOutlined), label: 'Navigation Two' },
   {
-    key: '1',
-    label: 'Navigation One'
+    key: 'sub1',
+    icon: () => h(AppstoreOutlined),
+    label: 'Navigation Three',
+    children: [
+      { key: '3', label: 'Option 3' },
+      { key: '4', label: 'Option 4' },
+      {
+        key: 'sub1-2',
+        label: 'Submenu',
+        children: [
+          { key: '5', label: 'Option 5' },
+          { key: '6', label: 'Option 6' }
+        ]
+      }
+    ]
   },
   {
-    key: '2',
-    label: 'Navigation Two'
+    key: 'sub2',
+    icon: () => h(SettingOutlined),
+    label: 'Navigation Four',
+    children: [
+      { key: '7', label: 'Option 7' },
+      { key: '8', label: 'Option 8' }
+    ]
   },
-  {
-    key: '3',
-    label: 'Navigation Three'
-  }
+  { key: '9', icon: () => h(InboxOutlined), label: 'Navigation Five' }
 ])
-const menuSelectedKeys = ref<MenuKey[]>(['1'])
 const selectOptions = ref<SelectOption[]>([
   {
     label: '北京市',
@@ -899,7 +961,14 @@ function onDecline(scale: number) {
       <Calendar v-model:value="cardDate" display="card" />
       <Carousel style="margin-left: 0" :images="images" :height="450" />
       <Card>
-        <Menu mode="horizontal" v-model:selectedKeys="menuSelectedKeys" :items="menuItems" />
+        <Menu
+          v-model:openKeys="seedMenuOpenKeys"
+          v-model:selectedKeys="seedMenuSelectedKeys"
+          style="width: 256px"
+          mode="inline"
+          theme="dark"
+          :items="seedMenuItems"
+        />
       </Card>
       <Card style="height: 300px; transform: translate(0)">
         <FloatButton type="primary" :right="96">
@@ -1201,6 +1270,16 @@ _`theme.components.<组件>.primaryColor` 仅覆盖该组件的整套主色（�
       <Slider :value="40" style="width: 180px" />
       <Progress :percent="60" style="width: 160px" />
     </Space>
+  </Flex>
+  <Flex vertical gap="small">
+    <span class="theme-caption">theme.components（只改这三个组件）</span>
+    <ConfigProvider :abstract="false" :theme="componentTheme">
+      <Space align="center" wrap>
+        <Button type="primary">Primary Button</Button>
+        <Slider :value="40" style="width: 180px" />
+        <Progress :percent="60" style="width: 160px" />
+      </Space>
+    </ConfigProvider>
   </Flex>
   <Flex vertical gap="small">
     <span class="theme-caption">theme.components（只改这三个组件）</span>
@@ -1837,22 +1916,22 @@ _按「改的是哪一层」定位，再检查作用域与覆盖范围；完整�
 
 ## APIs
 
-### ConfigProvider
+### ConfigProvider Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| theme | 主题对象 | [ConfigProviderTheme](#theme-type) | undefined |
+| theme | 主题对象 | [ConfigProviderTheme](#configprovidertheme-type) | undefined |
 | abstract | 是否不存在 `DOM` 包裹元素（默认渲染包裹元素、变量写在上面；传 `true` 时写 `<html>`，用于应用级主题。只有 `components`、没有 `seed` / `mode` 时不参与 `<html>` 写入，需改用 `false` 或补充全局主题） | boolean | false |
 | tag | `ConfigProvider` 被渲染成的元素，`abstract` 为 `false` 时有效 | string | 'div' |
 | baseZIndex | 浮层起始层级（`z-index`），传入后各浮层按「后出现者在上」自增分配；不传则各组件沿用自身默认层级 | number | undefined |
 
-### Theme Type
+### ConfigProviderTheme Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| seed? | 颜色种子 | [ThemeSeed](#themeseed-type) | undefined |
-| mode? | 模式：浅色 / 暗色 / 跟随系统 | 'light' \| 'dark' \| 'auto' | undefined |
-| components? | 组件级主色；优先于 `seed`；键为已接线的组件名（[ThemeComponentKey](#themecomponentkey-type)，写错在编译期报错） | Partial\<Record\<[ThemeComponentKey](#themecomponentkey-type), [ComponentThemeConfig](#componentthemeconfig-type)\>\> | undefined |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| seed? | 颜色种子 | [ThemeSeed](#themeseed-type) |
+| mode? | 模式：浅色 / 暗色 / 跟随系统 | 'light' \| 'dark' \| 'auto' |
+| components? | 组件级主色；优先于 `seed`；键为已接线的组件名（[ThemeComponentKey](#themecomponentkey-type)，写错在编译期报错） | Partial\<Record\<[ThemeComponentKey](#themecomponentkey-type), [ComponentThemeConfig](#componentthemeconfig-type)\>\> |
 
 > 未传 `theme`（或传空对象）时不写任何变量，完全使用静态默认表；`mode="auto"` 跟随系统 `prefers-color-scheme` 并在变化时重新派生；`seed` / `mode` / `components` 的派生规则详见[定制主题](/guide/customize-theme.html)。
 
@@ -1866,23 +1945,23 @@ _按「改的是哪一层」定位，再检查作用域与覆盖范围；完整�
 
 ### ComponentThemeConfig Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| primaryColor? | 组件主色，只接受不透明 `#rgb` / `#rrggbb` / `#rrggbbff`（与 `seed` 同一口径）；按色阶派生常态 / 悬停 / 按下 / 浅底 / 描边 / 实色文字 | string | undefined |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| primaryColor? | 组件主色，只接受不透明 `#rgb` / `#rrggbb` / `#rrggbbff`（与 `seed` 同一口径）；按色阶派生常态 / 悬停 / 按下 / 浅底 / 描边 / 实色文字 | string |
 
 > 组件级主色覆盖 `39` 个已接线的内置组件（完整清单见[组件级令牌](/guide/customize-theme.html#组件级令牌与整组覆盖)）；未接入的组件键会在开发环境告警。组件的细部件颜色（如 `Slider` 的 `rail` / `handle` / `tooltip`）仍用组件级令牌覆盖。
 
 ### ThemeSeed Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| primary? | 品牌主色 | string | '#1677ff' |
-| success? | 成功色 | string | '#52c41a' |
-| warning? | 警告色 | string | '#faad14' |
-| error? | 错误 / 危险色 | string | '#ff4d4f' |
-| info? | 信息色 | string | 跟随 primary |
-| neutralText? | 中性文本基准 | string | '#000000' |
-| neutralBg? | 中性背景基准（显式传入时两个模式共用，未传时按模式取 `#ffffff` / `#000000`） | string | '#ffffff' |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| primary? | 品牌主色，默认 `#1677ff` | string |
+| success? | 成功色，默认 `#52c41a` | string |
+| warning? | 警告色，默认 `#faad14` | string |
+| error? | 错误 / 危险色，默认 `#ff4d4f` | string |
+| info? | 信息色，未传时跟随 primary | string |
+| neutralText? | 中性文本基准，默认 `#000000` | string |
+| neutralBg? | 中性背景基准（显式传入时两个模式共用，未传时按模式取 `#ffffff` / `#000000`） | string |
 
 ## Slots
 

@@ -165,9 +165,9 @@ _自定义图片地址、描述内容和样式_
 
 ## APIs
 
-### Empty
+### Empty Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 description | 自定义描述内容，传 `null` 时无描述内容 | string &#124; null | '暂无数据'
 descriptionStyle | 设置描述文本的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}

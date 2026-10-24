@@ -312,7 +312,8 @@ const expandIconItems: ItemType[] = [
   ])
 ]
 
-// 主题
+// 主题：深色皮肤的底色由主题色派生，故颜色选择器直接绑定作用域种子
+const themePrimary = ref('#1677ff')
 const themeDark = ref(true)
 const themeSelected = ref<MenuKey[]>(['1'])
 const themeOpenKeys = ref<MenuKey[]>(['sub1'])
@@ -1502,19 +1503,25 @@ const forceRenderItems: ItemType[] = [
 
 ## 主题
 
-_内建 `light` 与 `dark` 两套主题，默认为 `light`_
+_内建 `light` 与 `dark` 两套主题，默认为 `light`；深色皮肤的底色由主题色派生，改主色时根列表、浮层与内联子菜单同步换色相_
 
 <br/>
 
-<Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
-<Menu
-  v-model:openKeys="themeOpenKeys"
-  v-model:selectedKeys="themeSelected"
-  style="width: 256px; margin-top: 16px"
-  mode="inline"
-  :theme="themeDark ? 'dark' : 'light'"
-  :items="themeItems"
-/>
+<Space align="center" wrap>
+  <Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
+  <!-- 主题色只作用于本用例：作用域种子随选择器变化，深色皮肤的派生底色随之更新 -->
+  <ColorPicker v-model:value="themePrimary" :show-alpha="false" style="width: 160px" />
+</Space>
+<ConfigProvider :theme="{ seed: { primary: themePrimary } }">
+  <Menu
+    v-model:openKeys="themeOpenKeys"
+    v-model:selectedKeys="themeSelected"
+    style="width: 256px; margin-top: 16px"
+    mode="inline"
+    :theme="themeDark ? 'dark' : 'light'"
+    :items="themeItems"
+  />
+</ConfigProvider>
 
 ::: details Show Code
 
@@ -1524,6 +1531,7 @@ import { h, ref } from 'vue'
 import { AppstoreOutlined, CalendarOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons-vue'
 import type { ItemType, MenuKey } from 'vue-amazing-ui'
 
+const themePrimary = ref('#1677ff')
 const themeDark = ref(true)
 const themeSelected = ref<MenuKey[]>(['1'])
 const themeOpenKeys = ref<MenuKey[]>(['sub1'])
@@ -1564,15 +1572,20 @@ const themeItems: ItemType[] = [
 ]
 </script>
 <template>
-  <Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
-  <Menu
-    v-model:openKeys="themeOpenKeys"
-    v-model:selectedKeys="themeSelected"
-    style="width: 256px; margin-top: 16px"
-    mode="inline"
-    :theme="themeDark ? 'dark' : 'light'"
-    :items="themeItems"
-  />
+  <Space align="center" wrap>
+    <Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
+    <ColorPicker v-model:value="themePrimary" :show-alpha="false" style="width: 160px" />
+  </Space>
+  <ConfigProvider :theme="{ seed: { primary: themePrimary } }">
+    <Menu
+      v-model:openKeys="themeOpenKeys"
+      v-model:selectedKeys="themeSelected"
+      style="width: 256px; margin-top: 16px"
+      mode="inline"
+      :theme="themeDark ? 'dark' : 'light'"
+      :items="themeItems"
+    />
+  </ConfigProvider>
 </template>
 ```
 
@@ -1639,9 +1652,9 @@ const submenuItems = computed<ItemType[]>(() => [
 
 ## APIs
 
-### Menu
+### Menu Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | openKeys <Tag color="cyan">v-model</Tag> | 当前展开的子菜单 `key` 数组，不传时为非受控 | [MenuKey](#menukey-type)[] | undefined |
 | selectedKeys <Tag color="cyan">v-model</Tag> | 当前选中的菜单项 `key` 数组，不传时为非受控 | [MenuKey](#menukey-type)[] | undefined |
@@ -1685,53 +1698,53 @@ const submenuItems = computed<ItemType[]>(() => [
 
 ### MenuItemType Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| key | 唯一标志 | [MenuKey](#menukey-type) | — |
-| label | 菜单项标题，支持渲染函数 | [MenuNode](#menunode-type) | undefined |
-| icon | 菜单图标，渲染函数入参为所在菜单项的配置 | [MenuIcon](#menuicon-type) | undefined |
-| title | 收起时展示的悬浮标题，支持渲染函数；显式 `false` 表示不展示 | [MenuNode](#menunode-type) | undefined |
-| disabled | 是否禁用 | boolean | false |
-| danger | 是否展示错误状态样式 | boolean | false |
-| style | 菜单项自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| class | 菜单项自定义类名 | string | undefined |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| key | 唯一标志 | [MenuKey](#menukey-type) |
+| label? | 菜单项标题，支持渲染函数 | [MenuNode](#menunode-type) |
+| icon? | 菜单图标，渲染函数入参为所在菜单项的配置 | [MenuIcon](#menuicon-type) |
+| title? | 收起时展示的悬浮标题，支持渲染函数；显式 `false` 表示不展示 | [MenuNode](#menunode-type) |
+| disabled? | 是否禁用 | boolean |
+| danger? | 是否展示错误状态样式 | boolean |
+| style? | 菜单项自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) |
+| class? | 菜单项自定义类名 | string |
 
 ### SubMenuType Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| key | 唯一标志 | [MenuKey](#menukey-type) | — |
-| label | 子菜单标题，支持渲染函数 | [MenuNode](#menunode-type) | undefined |
-| children | 子菜单的菜单项 | [ItemType](#itemtype-type)[] | — |
-| icon | 菜单图标，渲染函数入参为所在子菜单的配置 | [MenuIcon](#menuicon-type) | undefined |
-| expandIcon | 子菜单级展开收起图标，优先于 `Menu` 的 `expandIcon` | (info: [MenuExpandIconInfo](#menuexpandiconinfo-type)) => VNodeChild | undefined |
-| theme | 子菜单主题，不传则继承 `Menu` 的 `theme` | 'light' &#124; 'dark' | undefined |
-| title | 收起时展示的悬浮标题，支持渲染函数；显式 `false` 表示不展示 | [MenuNode](#menunode-type) | undefined |
-| popupClassName | 弹出子菜单的自定义类名，`inline` 模式下无效 | string | undefined |
-| popupOffset | 弹出子菜单与锚点的偏移，`inline` 模式下无效 | [number, number] | undefined |
-| onTitleClick | 点击子菜单标题 | (info: [MenuTitleInfo](#menutitleinfo-type)) => void | undefined |
-| disabled | 是否禁用 | boolean | false |
-| style | 子菜单自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| class | 子菜单自定义类名 | string | undefined |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| key | 唯一标志 | [MenuKey](#menukey-type) |
+| label? | 子菜单标题，支持渲染函数 | [MenuNode](#menunode-type) |
+| children | 子菜单的菜单项 | [ItemType](#itemtype-type)[] |
+| icon? | 菜单图标，渲染函数入参为所在子菜单的配置 | [MenuIcon](#menuicon-type) |
+| expandIcon? | 子菜单级展开收起图标，优先于 `Menu` 的 `expandIcon` | (info: [MenuExpandIconInfo](#menuexpandiconinfo-type)) => VNodeChild |
+| theme? | 子菜单主题，不传则继承 `Menu` 的 `theme` | 'light' &#124; 'dark' |
+| title? | 收起时展示的悬浮标题，支持渲染函数；显式 `false` 表示不展示 | [MenuNode](#menunode-type) |
+| popupClassName? | 弹出子菜单的自定义类名，`inline` 模式下无效 | string |
+| popupOffset? | 弹出子菜单与锚点的偏移，`inline` 模式下无效 | [number, number] |
+| onTitleClick? | 点击子菜单标题 | (info: [MenuTitleInfo](#menutitleinfo-type)) => void |
+| disabled? | 是否禁用 | boolean |
+| style? | 子菜单自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) |
+| class? | 子菜单自定义类名 | string |
 
 ### MenuItemGroupType Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| type | 固定为 `group`，标记该项为分组 | 'group' | — |
-| label | 分组标题，支持渲染函数 | [MenuNode](#menunode-type) | undefined |
-| children | 分组的菜单项 | [ItemType](#itemtype-type)[] | undefined |
-| style | 分组自定义样式（作用于分组容器） | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| class | 分组自定义类名（作用于分组容器） | string | undefined |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| type | 固定为 `group`，标记该项为分组 | 'group' |
+| label? | 分组标题，支持渲染函数 | [MenuNode](#menunode-type) |
+| children? | 分组的菜单项 | [ItemType](#itemtype-type)[] |
+| style? | 分组自定义样式（作用于分组容器） | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) |
+| class? | 分组自定义类名（作用于分组容器） | string |
 
 ### MenuDividerType Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| type | 固定为 `divider`，标记该项为分割线 | 'divider' | — |
-| dashed | 是否虚线 | boolean | false |
-| style | 分割线自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
-| class | 分割线自定义类名 | string | undefined |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| type | 固定为 `divider`，标记该项为分割线 | 'divider' |
+| dashed? | 是否虚线 | boolean |
+| style? | 分割线自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) |
+| class? | 分割线自定义类名 | string |
 
 ### MenuExpandIconInfo Type
 
@@ -1739,18 +1752,18 @@ const submenuItems = computed<ItemType[]>(() => [
 
 `expandIcon` 属性与 `#expandIcon` 插槽的入参类型，为 [SubMenuType](#submenutype-type) 与以下字段的交叉类型：
 
-| 名称   | 说明                   | 类型    | 默认值    |
-| :----- | :--------------------- | :------ | :-------- |
-| isOpen | 所在子菜单当前是否展开 | boolean | undefined |
+| 名称    | 说明                   | 类型    |
+| :------ | :--------------------- | :------ |
+| isOpen? | 所在子菜单当前是否展开 | boolean |
 
 ### MenuInfo Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| key | 触发项的 `key` | [MenuKey](#menukey-type) | — |
-| keyPath | 由根到触发项的 `key` 路径 | [MenuKey](#menukey-type)[] | — |
-| item | 触发项的原始配置 | [SubMenuType](#submenutype-type) &#124; [MenuItemType](#menuitemtype-type) | — |
-| domEvent | 触发的原生事件 | MouseEvent &#124; KeyboardEvent | — |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| key | 触发项的 `key` | [MenuKey](#menukey-type) |
+| keyPath | 由根到触发项的 `key` 路径 | [MenuKey](#menukey-type)[] |
+| item | 触发项的原始配置 | [SubMenuType](#submenutype-type) &#124; [MenuItemType](#menuitemtype-type) |
+| domEvent | 触发的原生事件 | MouseEvent &#124; KeyboardEvent |
 
 ### MenuSelectInfo Type
 
@@ -1758,18 +1771,18 @@ const submenuItems = computed<ItemType[]>(() => [
 
 为 [MenuInfo](#menuinfo-type) 与以下字段的交叉类型：
 
-| 名称         | 说明                      | 类型                       | 默认值 |
-| :----------- | :------------------------ | :------------------------- | :----- |
-| selectedKeys | 变化后的选中项 `key` 数组 | [MenuKey](#menukey-type)[] | —      |
+| 名称         | 说明                      | 类型                       |
+| :----------- | :------------------------ | :------------------------- |
+| selectedKeys | 变化后的选中项 `key` 数组 | [MenuKey](#menukey-type)[] |
 
 ### MenuTitleInfo Type
 
-| 名称     | 说明           | 类型                            | 默认值 |
-| :------- | :------------- | :------------------------------ | :----- |
-| key      | 子菜单的 `key` | [MenuKey](#menukey-type)        | —      |
-| domEvent | 触发的原生事件 | MouseEvent &#124; KeyboardEvent | —      |
+| 名称     | 说明           | 类型                            |
+| :------- | :------------- | :------------------------------ |
+| key      | 子菜单的 `key` | [MenuKey](#menukey-type)        |
+| domEvent | 触发的原生事件 | MouseEvent &#124; KeyboardEvent |
 
-### MenuItem
+### MenuItem Props
 
 <br/>
 
@@ -1781,7 +1794,7 @@ const submenuItems = computed<ItemType[]>(() => [
 | disabled | 是否禁用             | boolean | false     |
 | danger   | 是否展示错误状态样式 | boolean | false     |
 
-### MenuSubMenu
+### MenuSubMenu Props
 
 <br/>
 
@@ -1795,7 +1808,7 @@ const submenuItems = computed<ItemType[]>(() => [
 | popupOffset    | 弹出子菜单与锚点的偏移，`inline` 模式下无效 | [number, number]      | undefined |
 | disabled       | 是否禁用                                    | boolean               | false     |
 
-### MenuItemGroup
+### MenuItemGroup Props
 
 <br/>
 
@@ -1805,7 +1818,7 @@ const submenuItems = computed<ItemType[]>(() => [
 | :---- | :------- | :----- | :-------- |
 | title | 分组标题 | string | undefined |
 
-### MenuDivider
+### MenuDivider Props
 
 <br/>
 

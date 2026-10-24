@@ -48,7 +48,7 @@ const GROUP_LABELS = {
 const COMPONENT_NOTES = {
   button:
     '`color` 属性会在这一个实例上内联写入 `--va-button-primary-color` 等令牌（实例级覆盖，优先级最高），因此传了 `color` 时下面这些令牌对该实例不生效。下拉按钮 `DropdownButton` 的共享分割线也跟随 `--va-button-primary-color-hover` / `--va-button-danger-color-hover`。',
-  menu: '下表的「浅色 / 深色」指 `theme` 属性（独立皮肤），**与 `data-va-mode` 暗色模式无关**：两种皮肤下这些令牌都继续跟随全局令牌派生（例如浅色皮肤在暗色模式下会取 `--va-bg-container-color` 的暗色值）。三只主色桥令牌由 `theme.components.Menu.primaryColor` 派生；`--va-menu-item-selected-*` 的默认值通过它们间接跟随组件主色，直接覆盖选中态令牌仍然优先。'
+  menu: '下表的「浅色 / 深色」指 `theme` 属性（独立皮肤），**与 `data-va-mode` 暗色模式无关**：浅色皮肤的容器令牌跟随全局令牌派生（暗色模式下自动取暗色值），深色皮肤的三只表面令牌（根列表 / 浮层面板 / 内联子菜单）取**品牌色暗底** `--va-bg-brand-dark-color` / `--va-bg-brand-dark-deep-color`（主色色相与饱和度、亮度压到 `8%` / `4.5%`，两个模式同值），因此换主题色时深色皮肤同步换色相；是否启用这套皮肤只由 `theme` 属性决定。三只主色桥令牌由 `theme.components.Menu.primaryColor` 派生；`--va-menu-item-selected-*` 的默认值通过它们间接跟随组件主色，直接覆盖选中态令牌仍然优先。组件级 `primaryColor` 同样驱动深色皮肤的三只表面令牌（按该主色重新派生暗底，优先级高于 `seed`）；直接覆盖令牌依然优先级最高。'
 }
 
 /** 从组件文档的首个一级标题取展示名（如「按钮 Button」），避免再维护一份命名表 */
@@ -93,9 +93,10 @@ function defaultValueCell(meta) {
 }
 
 function renderTable(rows) {
+  // 列序与列名遵循 docs 表格规范（doc-tables-spec.md §5）：三列固定「名称 | 说明 | 默认值」，首列统一「名称」
   const hasResolved = rows.some((row) => Boolean(row.resolved))
-  const header = hasResolved ? '| 变量 | 默认值（浅色皮肤 / 深色皮肤） | 说明 |' : '| 变量 | 默认值 | 说明 |'
-  const body = rows.map((row) => `| \`${row.name}\` | ${defaultValueCell(row)} | ${row.description} |`)
+  const header = hasResolved ? '| 名称 | 说明 | 默认值（浅色皮肤 / 深色皮肤） |' : '| 名称 | 说明 | 默认值 |'
+  const body = rows.map((row) => `| \`${row.name}\` | ${row.description} | ${defaultValueCell(row)} |`)
   return [header, '| :-- | :-- | :-- |', ...body].join('\n')
 }
 

@@ -233,6 +233,23 @@ describe('范围形态的面板结构', () => {
     expect(document.querySelector('.datepicker-range-arrow')).not.toBeNull()
   })
 
+  it('指示箭头与面板同底（取面板底色变量，暗色下才不会显成更暗的补丁）', () => {
+    // 底色由样式声明承载、DOM 断言不到 → 直接核对源码：箭头必须与 .picker-panel 取同一条底色变量链
+    const panelSource = readFileSync(join(process.cwd(), 'components', 'picker', 'PickerPanel.vue'), 'utf8')
+    const panelBg = panelSource.match(/background: (var\(--picker-panel-bg-color,[^;]+\));/)?.[1]
+    expect(panelBg).toBe('var(--picker-panel-bg-color, var(--va-bg-elevated-color))')
+
+    const arrowSources = ['date-picker/DatePicker.vue', 'time-picker/TimePicker.vue'].map((file) => {
+      const source = readFileSync(join(process.cwd(), 'components', file), 'utf8')
+      return source.match(/\.(?:date|time)picker-range-arrow \{[\s\S]*?\n\}/)?.[0] ?? ''
+    })
+    arrowSources.forEach((arrowBlock) => {
+      expect(arrowBlock).toContain(`background-color: ${panelBg}`)
+      // 容器底色比浮层底色暗一档，用于箭头会与面板明显割裂
+      expect(arrowBlock).not.toContain('var(--va-bg-container-color)')
+    })
+  })
+
   it('面板过渡名与实际方位无关（首帧方位未回填也不会取到反向动效）', async () => {
     const range = await mountRange({ value: [START, END] })
     expect(range.findComponent(Popup).props('transitionProps')).toEqual({ name: 'datepicker-zoom' })

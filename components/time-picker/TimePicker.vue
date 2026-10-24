@@ -764,7 +764,9 @@ defineExpose({ focus, blur })
     left: 0;
     width: 16px;
     height: 8px;
-    background-color: var(--va-bg-container-color);
+    // 与面板同底：箭头自绘三角形，必须取 .picker-panel 的同一底色变量，
+    // 否则暗色下浮层底（elevated）比容器底（container）亮一档，箭头会显成一块更暗的补丁
+    background-color: var(--picker-panel-bg-color, var(--va-bg-elevated-color));
     clip-path: polygon(
       1.6568542494923806px 100%,
       50% 1.6568542494923806px,

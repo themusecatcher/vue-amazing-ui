@@ -668,14 +668,14 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 
 ## APIs
 
-### InputSearch
+### InputSearch Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | width | 搜索框宽度，单位 `px` | string &#124; number | '100%' |
 | icon | 搜索图标 | boolean | true |
 | search | 搜索按钮，默认时为搜索图标 | string | undefined |
-| searchProps | 设置搜索按钮的属性，参考 [Button Props](./button.md#button) | [ButtonProps](./button.md#button) | {} |
+| searchProps | 设置搜索按钮的属性，参考 [Button Props](./button.md#button-props) | [ButtonProps](./button.md#button-props) | {} |
 | size | 搜索框大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | allowClear | 可以点击清除图标删除搜索框内容 | boolean | false |
 | addonBefore | 设置前置标签 | string | undefined |

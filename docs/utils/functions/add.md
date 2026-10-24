@@ -75,7 +75,7 @@ const addResult = add(0.1, 0.2)
 
 ## Params
 
-| 参数 | 说明  | 类型   | 默认值    |
+| 名称 | 说明  | 类型   | 默认值    |
 | ---- | ----- | ------ | --------- |
 | num1 | 加数1 | number | undefined |
 | num2 | 加数2 | number | undefined |

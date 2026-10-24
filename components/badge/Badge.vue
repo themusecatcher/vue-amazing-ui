@@ -89,7 +89,7 @@ const presetClass = computed(() => {
   if (props.color) {
     if (presetColors.includes(props.color)) {
       if ((props.value !== undefined && props.value !== 0) || (props.showZero && props.value === 0)) {
-        return `color-${props.color} white`
+        return `color-${props.color} count-text`
       } else {
         return `color-${props.color}`
       }
@@ -97,7 +97,7 @@ const presetClass = computed(() => {
   }
   if (props.status) {
     if ((props.value !== undefined && props.value !== 0) || (props.showZero && props.value === 0)) {
-      return `status-${props.status} white`
+      return `status-${props.status} count-text`
     } else {
       return `status-${props.status}`
     }
@@ -354,7 +354,7 @@ function handleOffset(value: string): string {
     padding: 0 8px;
     min-width: 20px;
     height: 20px;
-    color: var(--va-text-color-solid);
+    color: var(--va-bg-container-color);
     font-weight: normal;
     font-size: 12px;
     line-height: 20px;
@@ -478,8 +478,8 @@ function handleOffset(value: string): string {
     color: #a0d911;
     background-color: #a0d911;
   }
-  .white {
-    color: #ffffff;
+  .count-text {
+    color: var(--va-bg-container-color);
   }
 }
 .badge-status-color {

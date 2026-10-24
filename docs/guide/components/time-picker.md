@@ -700,9 +700,9 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 
 ## APIs
 
-### TimePicker
+### TimePicker Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | value <Tag color="cyan">v-model</Tag> | 双向绑定值，毫秒时间戳；范围形态为两段元组 | [TimePickerValue](#timepickervalue-type) | null |
 | formattedValue <Tag color="cyan">v-model</Tag> | 字符串轨道的双向绑定值，传入时以它为准（受控）；显示格式由 `format` / `valueFormat` 决定 | [TimePickerFormattedValue](#timepickerformattedvalue-type) | null |
@@ -739,47 +739,59 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 
 ### TimePickerType Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| TimePickerType | 选择形态 | 'time' &#124; 'timerange' | 'time' |
+选择形态。
+
+| 名称 | 值 |
+| :-- | :-- |
+| TimePickerType | 'time' &#124; 'timerange' |
 
 ### TimePickerValue Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| TimePickerValue | 双向绑定值，毫秒时间戳；范围形态为两段元组 | number &#124; [number &#124; null, number &#124; null] &#124; null | null |
+双向绑定值，毫秒时间戳；范围形态为两段元组。
+
+| 名称 | 值 |
+| :-- | :-- |
+| TimePickerValue | number &#124; [number &#124; null, number &#124; null] &#124; null |
 
 ### TimePickerFormattedValue Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| TimePickerFormattedValue | 字符串轨道的双向绑定值，格式由 `valueFormat` 决定；范围形态两段未选时分别为空字符串 | string &#124; [string, string] &#124; null | null |
+字符串轨道的双向绑定值，格式由 `valueFormat` 决定；范围形态两段未选时分别为空字符串。
+
+| 名称 | 值 |
+| :-- | :-- |
+| TimePickerFormattedValue | string &#124; [string, string] &#124; null |
 
 ### TimePickerDisabledTime Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| TimePickerDisabledTime | 不可选择的时间判定（范围形态的判定额外接收当前段标识） | (timestamp: number, side?: [TimePickerRangeSide](#timepickerrangeside-type)) => [TimePickerDisabledTimeUnits](#timepickerdisabledtimeunits-type) | undefined |
+不可选择的时间判定（范围形态的判定额外接收当前段标识）。
+
+| 名称 | 值 |
+| :-- | :-- |
+| TimePickerDisabledTime | (timestamp: number, side?: [TimePickerRangeSide](#timepickerrangeside-type)) => [TimePickerDisabledTimeUnits](#timepickerdisabledtimeunits-type) |
 
 ### TimePickerRangeSide Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| TimePickerRangeSide | 范围形态的段标识 | 'start' &#124; 'end' | undefined |
+范围形态的段标识。
+
+| 名称 | 值 |
+| :-- | :-- |
+| TimePickerRangeSide | 'start' &#124; 'end' |
 
 ### TimePickerRangeInfo Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| TimePickerRangeInfo | 范围形态草稿变更的来源信息 | { range: [TimePickerRangeSide](#timepickerrangeside-type) } | undefined |
+范围形态草稿变更的来源信息。
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| range | 草稿变更落在哪一段 | [TimePickerRangeSide](#timepickerrangeside-type) |
 
 ### TimePickerDisabledTimeUnits Type
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| disabledHours | 禁用的「时」 | () => number[] | undefined |
-| disabledMinutes | 禁用的「分」，入参为选中的「时」 | (hour: number) => number[] | undefined |
-| disabledSeconds | 禁用的「秒」，入参为选中的「时」「分」 | (hour: number, minute: number) => number[] | undefined |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| disabledHours? | 禁用的「时」 | () => number[] |
+| disabledMinutes? | 禁用的「分」，入参为选中的「时」 | (hour: number) => number[] |
+| disabledSeconds? | 禁用的「秒」，入参为选中的「时」「分」 | (hour: number, minute: number) => number[] |
 
 ### DefaultFormat Value
 

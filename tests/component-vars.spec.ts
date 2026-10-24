@@ -23,7 +23,7 @@ import { render } from '../scripts/gen-component-vars-doc.js'
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const componentDir = resolve(rootDir, 'components')
 
-/** 允许出现在组件里的 `--va-*`：40 个全局别名 + 51 个组件令牌 + 全局运行时变量 */
+/** 允许出现在组件里的 `--va-*`：42 个全局别名 + 53 个组件令牌 + 全局运行时变量 */
 const allowedVarNames = new Set<string>([...THEME_VAR_NAMES, ...COMPONENT_VAR_NAMES, '--va-scrollbar-width'])
 
 /**
@@ -39,8 +39,9 @@ const usageBaseline: Record<string, number> = {
   'dropdown/dropdown-button/DropdownButton.vue': 6,
   // 轨道 2 + 未选 2 + 滑块 3 + 气泡 2 + 刻度点 3（dot 描边 / 悬停 / 激活）
   'slider/Slider.vue': 14,
-  // 主色桥 palette / text / color 共 4 处（浅色选中底 / 浅色选中字 / 深色选中底 / 深色水平选中底）
-  'menu/Menu.vue': 12,
+  // 主色桥 palette 1（浅色选中底）/ text 1（浅色选中字）/ color 2（深色选中底、深色水平选中底）
+  // + 选中态 7（选中字 4、选中底 3）+ 三处表面各 1（根列表 / 浮层面板 / 内联子菜单）
+  'menu/Menu.vue': 14,
   'text-scroll/TextScroll.vue': 4,
   'scrollbar/Scrollbar.vue': 2,
   // 容器 / 表单类公开令牌（P1）：底色、边框、表头/页脚、浮层表面

@@ -336,7 +336,7 @@ useResizeObserver(el, (entries: ResizeObserverEntry[], observer: ResizeObserver)
 
 ## Params
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | target | 要观察的目标，可以是 `Ref` 对象、`Ref` 数组、`HTMLElement` 或 `HTMLElement` 数组 | Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[] | undefined |
 | callback | 当元素尺寸变化时调用的回调函数 | ResizeObserverCallback | undefined |

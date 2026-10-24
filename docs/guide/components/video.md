@@ -300,9 +300,9 @@ const pause = () => {
 
 ## APIs
 
-### Video
+### Video Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 width | 视频播放器宽度，单位 `px` | number | 800
 height | 视频播放器高度，单位 `px` | number | 450

@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, onMounted, shallowRef } from 'vue'
+import { ref, computed, watchEffect, onMounted, shallowRef, inject } from 'vue'
 import type { CSSProperties } from 'vue'
 import qrcodegen from './qrcodegen'
-import Spin from 'components/spin'
+import Spin, { type SpinProps } from 'components/spin'
 import Button from 'components/button'
 import { log } from 'components/utils'
+import { THEME_SNAPSHOT_KEY } from 'components/config-provider/context'
+import type { ThemeVarName } from 'components/theme'
 
 export interface Props {
   value?: string // 需要编码为二维码的文本或地址
@@ -12,15 +14,16 @@ export interface Props {
   type?: 'svg' | 'canvas' | 'image' // 渲染类型：矢量 / 位图 / 图片
   size?: number // 二维码整体大小（含内边距与外边框），单位 px
   padding?: number // 容器内边距，二维码绘制区为 size 减去两侧内边距与外边框
-  color?: string // 二维码前景色，CSS 颜色值
-  bgColor?: string // 二维码背景色，CSS 颜色值
+  color?: string // 二维码前景色，CSS 颜色值；不传时取主题变量 --va-text-color-1（深色主题下为亮色，二维码自动反色）
+  bgColor?: string // 二维码背景色，CSS 颜色值；不传时取主题变量 --va-bg-container-color（深色主题下为容器底色）
   icon?: string // 二维码中央图标的地址
   iconSize?: number // 中央图标的大小，单位 px
-  iconBackgroundColor?: string // 中央图标的底色，用于压盖点阵、凸显图标
+  iconBgColor?: string // 中央图标的底色，用于压盖点阵、凸显图标；不传时与背景色一致
   iconBorderRadius?: number // 中央图标底色的圆角，单位 px
   bordered?: boolean // 是否展示外边框
   borderColor?: string // 外边框颜色
   status?: 'active' | 'expired' | 'loading' | 'scanned' // 二维码状态
+  spinProps?: SpinProps // Spin 组件属性配置，参考 Spin Props，用于配置加载中样式（默认已按遮罩尺寸取 small 档）
   expiredText?: string // status 为 expired 时的提示文案
   refreshText?: string // status 为 expired 时刷新按钮的文案
   scannedText?: string // status 为 scanned 时的提示文案
@@ -33,15 +36,16 @@ const props = withDefaults(defineProps<Props>(), {
   type: 'svg',
   size: 160,
   padding: 12,
-  color: '#000',
-  bgColor: '#FFF',
+  color: undefined,
+  bgColor: undefined,
   icon: undefined,
   iconSize: 40,
-  iconBackgroundColor: '#FFF',
+  iconBgColor: undefined,
   iconBorderRadius: 4,
   bordered: true,
   borderColor: 'var(--va-border-split-color)',
   status: 'active',
+  spinProps: () => ({}),
   expiredText: '二维码已过期',
   refreshText: '点击刷新',
   scannedText: '已扫描',
@@ -65,6 +69,32 @@ const canvasRef = ref<HTMLCanvasElement | null>(null)
 const imageRef = ref<HTMLImageElement | null>(null)
 const imageDataURL = ref('')
 const iconImage = shallowRef<HTMLImageElement | null>(null)
+/**
+ * 默认取色：canvas 与 SVG 的绘制属性只吃实色（`var()` 在 canvas 里会被忽略并静默失败），
+ * 故按优先级解析成 sRGB 值——
+ * 1. Provider 的只读快照（既定用途之一，随 `mode` 切换响应式更新）；
+ * 2. 无 Provider 时回读 `<html>` 上的静态变量表（`:root` / `[data-va-mode]` 已声明两个模式的全量表，
+ *    纯 CSS 暗色也能取到模式正确的值；运行期改 `<html>` 属性不会触发重绘，跟随明暗请用 Provider 的 `mode`）；
+ * 3. SSR 等拿不到 DOM 时才回落浅色默认。
+ */
+const themeSnapshot = inject(THEME_SNAPSHOT_KEY, null)
+const resolveThemeColor = (name: ThemeVarName, fallback: string) => {
+  const snapshotColor = themeSnapshot?.value?.[name]
+  if (snapshotColor) {
+    return snapshotColor
+  }
+  if (typeof document !== 'undefined') {
+    const staticColor = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+    if (staticColor) {
+      return staticColor
+    }
+  }
+  return fallback
+}
+// 前景取正文色、背景取容器色：浅色主题下即「白底近黑码」，深色主题下自动反色融入页面
+const resolvedColor = computed(() => props.color ?? resolveThemeColor('--va-text-color-1', '#000'))
+const resolvedBgColor = computed(() => props.bgColor ?? resolveThemeColor('--va-bg-container-color', '#FFF'))
+const resolvedIconBackgroundColor = computed(() => props.iconBgColor ?? resolvedBgColor.value)
 /** 二维码绘制区边长（px），扣除容器内边距与外边框 */
 const innerSize = computed(() => Math.max(props.size - props.padding * 2 - BORDER_WIDTH * 2, 0))
 /** 二维码模块矩阵：size 为每边模块数，data 按行优先存储明暗（1 为暗点） */
@@ -132,7 +162,8 @@ const qrcodeStyle = computed(() => {
     width: `${props.size}px`,
     height: `${props.size}px`,
     padding: `${props.padding}px`,
-    backgroundColor: `${props.bgColor}`,
+    // 背景色同时作用于绘制区与内边距，深色主题下与页面容器色保持一致
+    backgroundColor: resolvedBgColor.value,
     // 边框常驻、仅切换颜色，避免 bordered 变化时绘制区尺寸跳动
     borderColor: props.bordered ? `${props.borderColor}` : 'transparent'
   }
@@ -196,9 +227,9 @@ const paint = (canvas: HTMLCanvasElement) => {
   const { data } = matrix
   const box = iconExcavation.value
   ctx.clearRect(0, 0, pixelSize, pixelSize)
-  ctx.fillStyle = props.bgColor
+  ctx.fillStyle = resolvedBgColor.value
   ctx.fillRect(0, 0, pixelSize, pixelSize)
-  ctx.fillStyle = props.color
+  ctx.fillStyle = resolvedColor.value
   for (let y = 0; y < numCells; y++) {
     for (let x = 0; x < numCells; x++) {
       const inExcavation = box !== null && y >= box.start && y < box.end && x >= box.start && x < box.end
@@ -209,7 +240,7 @@ const paint = (canvas: HTMLCanvasElement) => {
   if (!placement) return
   // 图标底色：圆角块压盖点阵；部分环境不支持 roundRect 时退化为直角块
   const { icon, side, radius, x, y, width, height, imageX, imageY } = placement
-  ctx.fillStyle = props.iconBackgroundColor
+  ctx.fillStyle = resolvedIconBackgroundColor.value
   ctx.beginPath()
   if (typeof ctx.roundRect === 'function') {
     ctx.roundRect(x * unit, y * unit, side * unit, side * unit, radius * unit)
@@ -323,11 +354,11 @@ defineExpose({
       :aria-label="title"
     >
       <title v-if="title">{{ title }}</title>
-      <path :fill="bgColor" :d="backgroundPath" />
-      <path :fill="color" :d="foregroundPath" />
+      <path :fill="resolvedBgColor" :d="backgroundPath" />
+      <path :fill="resolvedColor" :d="foregroundPath" />
       <template v-if="iconPlacement">
         <rect
-          :fill="iconBackgroundColor"
+          :fill="resolvedIconBackgroundColor"
           :x="iconPlacement.x"
           :y="iconPlacement.y"
           :width="iconPlacement.side"
@@ -354,7 +385,7 @@ defineExpose({
     ></canvas>
     <img v-else ref="imageRef" :src="imageDataURL" class="qr-code-image" :alt="title || 'QR Code'" />
     <div v-if="status !== 'active'" class="qr-code-mask">
-      <Spin v-if="status === 'loading'" />
+      <Spin v-if="status === 'loading'" size="small" v-bind="spinProps" />
       <template v-else-if="status === 'expired'">
         <p class="qr-code-expired">{{ expiredText }}</p>
         <Button type="link" @click="onRefresh">
@@ -386,17 +417,13 @@ defineExpose({
 </template>
 <style lang="less" scoped>
 .qr-code-wrap {
-  // 状态遮罩配色：底色作用于整个遮罩（可为半透明色，让二维码在遮罩下隐约透出），文案色仅作用于 expiredText / scannedText
-  // （loading 指示符与「点击刷新」按钮为 Spin / Button，沿用各自主题色）
-  // 变量声明在组件根元素上，祖先元素的同名声明会被遮蔽，覆盖需作用于组件自身（如内联样式）
-  // 遮罩底取容器色（浅色为白、暗色为深灰容器色），文案用正文色 —— 两者必须同源，否则暗色下会出现「白底白字」
   --qr-code-mask-bg-color: var(--va-bg-container-color);
+  --qr-code-mask-opacity: 0.96;
   --qr-code-mask-text-color: var(--va-text-color-1);
   position: relative;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  // 边框常驻（颜色由内联样式在透明间切换），保证 bordered 变化时绘制区尺寸不跳动
   border-width: 1px;
   border-style: solid;
   border-radius: 8px;
@@ -423,7 +450,17 @@ defineExpose({
     height: 100%;
     color: var(--qr-code-mask-text-color);
     text-align: center;
-    background: var(--qr-code-mask-bg-color);
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: -1;
+      background: var(--qr-code-mask-bg-color);
+      opacity: var(--qr-code-mask-opacity);
+    }
     .qr-code-expired,
     .qr-code-scanned {
       margin: 0;

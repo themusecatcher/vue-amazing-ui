@@ -878,7 +878,7 @@ function onClose() {
 
 ## 自定义 header & body 样式
 
-_通过 `header-style` 与 `body-style` 自定义抽屉头部与内容区域样式，并设置背景色便于观察_
+_通过 `header-style` 与 `body-style` 自定义抽屉头部与内容区域样式，并设置背景色便于观察。背景色取主题令牌 `--va-primary-bg-color`，明暗两种模式下标题都保持可读_
 
 <br/>
 
@@ -887,7 +887,7 @@ _通过 `header-style` 与 `body-style` 自定义抽屉头部与内容区域样�
   v-model:open="open10"
   :closable="false"
   title="Basic Drawer"
-  :header-style="{ textAlign: 'center', background: '#e6f4ff' }"
+  :header-style="{ textAlign: 'center', background: 'var(--va-primary-bg-color)' }"
   :body-style="{ textAlign: 'center' }"
 >
   <p>Some contents...</p>
@@ -908,7 +908,7 @@ const open = ref<boolean>(false)
     v-model:open="open"
     :closable="false"
     title="Basic Drawer"
-    :header-style="{ textAlign: 'center', background: '#e6f4ff' }"
+    :header-style="{ textAlign: 'center', background: 'var(--va-primary-bg-color)' }"
     :body-style="{ textAlign: 'center' }"
   >
     <p>Some contents...</p>
@@ -922,17 +922,17 @@ const open = ref<boolean>(false)
 
 <style lang="less" scoped>
 p {
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
 }
 .inline-container {
   height: 200px;
   overflow: hidden;
   position: relative;
-  border: 1px solid #ebedf0;
+  border: 1px solid var(--va-border-color);
   border-radius: 2px;
   padding: 48px;
   text-align: center;
-  background: #fafafa;
+  background: var(--va-fill-color-4);
 }
 .form-item {
   margin-bottom: 16px;
@@ -940,27 +940,27 @@ p {
 .form-label {
   display: block;
   margin-bottom: 8px;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--va-text-color-1);
 }
 .profile-title {
   font-size: 16px;
   line-height: 24px;
   margin-bottom: 24px;
-  color: rgba(0, 0, 0, 0.85);
+  color: var(--va-text-color-1);
 }
 .profile-label {
   font-size: 16px;
   line-height: 24px;
   margin-bottom: 16px;
-  color: rgba(0, 0, 0, 0.85);
+  color: var(--va-text-color-1);
 }
 </style>
 
 ## APIs
 
-### Drawer
+### Drawer Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 width | 抽屉宽度，在 `placement` 为 `right` 或 `left` 时使用，单位 `px`；未设置时由 `size` 推导（`default` 为 `378px`、`large` 为 `736px`） | string &#124; number | undefined
 height | 抽屉高度，在 `placement` 为 `top` 或 `bottom` 时使用，单位 `px`；未设置时由 `size` 推导（`default` 为 `378px`、`large` 为 `736px`） | string &#124; number | undefined
@@ -973,7 +973,7 @@ headerClass | 设置 `Drawer` 头部的类名 | string | undefined
 headerStyle | 设置 `Drawer` 头部的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
 bodyClass | 设置 `Drawer` 内容部分的类名 | string | undefined
 bodyStyle | 设置 `Drawer` 内容部分的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar)，用于设置内容滚动条的样式 | [ScrollbarProps](./scrollbar.md#scrollbar) | {}
+scrollbarProps | `Scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar-props)，用于设置内容滚动条的样式 | [ScrollbarProps](./scrollbar.md#scrollbar-props) | {}
 extra | 抽屉右上角的操作区域 | string | undefined
 footer | 抽屉的页脚 | string | undefined
 footerClass | 设置 `Drawer` 页脚的类名 | string | undefined

@@ -485,9 +485,9 @@ import { UserOutlined } from '@ant-design/icons-vue'
 
 ## APIs
 
-### Comment
+### Comment Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 actions | 在评论内容下面呈现的操作项列表 | Array<string &#124; VNode> | undefined
 author | 要显示为评论作者的元素 | string | undefined

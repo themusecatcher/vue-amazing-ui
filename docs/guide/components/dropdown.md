@@ -975,9 +975,9 @@ import { SmileOutlined } from '@ant-design/icons-vue'
 
 ## APIs
 
-### Dropdown
+### Dropdown Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 open <Tag color="cyan">v-model</Tag> | 下拉菜单是否展开 | boolean | undefined
 menus | 菜单项配置数据 (配置式)，与 `overlay` 插槽二选一 | [MenuOption](#menuoption-type)[] | []
@@ -1003,28 +1003,28 @@ zIndex | 下拉菜单层级，优先级最高（未传时使用默认层级或 `
 
 ### DropdownArrowOptions Type
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-pointAtCenter | 箭头是否指向触发器中心 | boolean | false
+名称 | 说明 | 类型
+:-- | :-- | :--
+pointAtCenter? | 箭头是否指向触发器中心 | boolean
 
 ### MenuOption Type
 
+名称 | 说明 | 类型
+:-- | :-- | :--
+key? | 菜单项唯一标识 | string &#124; number
+label? | 菜单项显示文本 | string
+icon? | 菜单项图标 | VNode
+disabled? | 是否禁用 | boolean
+danger? | 是否为危险项（红色文本） | boolean
+loading? | 是否加载中 | boolean
+href? | 链接地址，存在时菜单项渲染为 `a` 标签 | string
+target? | 链接打开方式，默认 `'_self'`，`href` 存在时生效 | '_self' &#124; '_blank'
+type? | 菜单项类型：菜单项 &#124; 分割线 &#124; 分组，默认 `'item'` | 'item' &#124; 'divider' &#124; 'group'
+children? | 子菜单（多级菜单）或分组子项，支持任意层级递归 | [MenuOption](#menuoption-type)[]
+
+### DropdownButton Props
+
 名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-key | 菜单项唯一标识 | string &#124; number | undefined
-label | 菜单项显示文本 | string | undefined
-icon | 菜单项图标 | VNode | undefined
-disabled | 是否禁用 | boolean | false
-danger | 是否为危险项（红色文本） | boolean | false
-loading | 是否加载中 | boolean | false
-href | 链接地址，存在时菜单项渲染为 `a` 标签 | string | undefined
-target | 链接打开方式，`href` 存在时生效 | '_self' &#124; '_blank' | '_self'
-type | 菜单项类型：菜单项 &#124; 分割线 &#124; 分组 | 'item' &#124; 'divider' &#124; 'group' | 'item'
-children | 子菜单（多级菜单）或分组子项，支持任意层级递归 | [MenuOption](#menuoption-type)[] | undefined
-
-### DropdownButton
-
-参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 open <Tag color="cyan">v-model</Tag> | 下拉菜单是否展开 | boolean | undefined
 menus | 菜单项配置数据 (配置式)，与 `overlay` 插槽二选一 | [MenuOption](#menuoption-type)[] | []

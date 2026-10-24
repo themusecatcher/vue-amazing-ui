@@ -498,9 +498,9 @@ const easingKey = computed(() => `${easingCategory.value}-${easingType.value}`)
 
 ## APIs
 
-### NumberAnimation
+### NumberAnimation Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | from | 数值动画起始数值，未播放时展示值同步跟随该值 | number | 0 |
 | to | 数值目标值，`autoplay` 为 `true` 时变更即重播，否则在下次播放时生效 | number | 1000 |
@@ -512,7 +512,7 @@ const easingKey = computed(() => `${easingCategory.value}-${easingType.value}`)
 | separator | 千分位分隔符 | string | ',' |
 | decimal | 小数点字符 | string | '.' |
 | valueStyle | 数值文本样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| easing | 动画缓动曲线，除预置名称外还可传三次贝塞尔控制点数组或缓动函数 | [NumberAnimationEasingPreset](#easingpreset-type) &#124; [CubicBezierPoints](https://vueuse.org/core/useTransition/) &#124; [EasingFunction](https://vueuse.org/core/useTransition/) | 'easeInOutCubic' |
+| easing | 动画缓动曲线，除预置名称外还可传三次贝塞尔控制点数组或缓动函数 | [NumberAnimationEasingPreset](#numberanimationeasingpreset-type) &#124; [CubicBezierPoints](https://vueuse.org/core/useTransition/) &#124; [EasingFunction](https://vueuse.org/core/useTransition/) | 'easeInOutCubic' |
 
 `easing` 的取值与动画驱动方法 `transition` 均来自 `@vueuse/core` 的 [`useTransition`](https://vueuse.org/core/useTransition/) 模块，其中 `CubicBezierPoints` 为三次贝塞尔控制点数组，`EasingFunction` 为 `(t: number) => number` 缓动函数：
 
@@ -521,7 +521,7 @@ const easingKey = computed(() => `${easingCategory.value}-${easingType.value}`)
 <NumberAnimation :easing="(t) => t * t" :to="1000" />
 ```
 
-### EasingPreset Type
+### NumberAnimationEasingPreset Type
 
 <br/>
 

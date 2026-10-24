@@ -71,7 +71,7 @@ function showPosition() {
 
 ## Params
 
-| 参数  | 说明                      | 类型     | 默认值    |
+| 名称  | 说明                      | 类型     | 默认值    |
 | ----- | ------------------------- | -------- | --------- |
 | fn    | 要被节流的函数            | Function | undefined |
 | delay | 节流的时间间隔，单位 `ms` | number   | 300       |

@@ -1944,14 +1944,14 @@ const options: SelectOption[] = []
 
 ## APIs
 
-### Select
+### Select Props
 
-| 参数 | 说明 | 类型 | 默认值 |
+| 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| value <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值，`mode` 为 `multiple` / `tags` 时为数组；`labelInValue` 开启时为 `{ label, value, key, originLabel }` 对象 | number &#124; string &#124; [SelectLabeledValue](#labeledvalue-type) &#124; (number &#124; string &#124; [SelectLabeledValue](#labeledvalue-type))[] | undefined |
+| value <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值，`mode` 为 `multiple` / `tags` 时为数组；`labelInValue` 开启时为 `{ label, value, key, originLabel }` 对象 | number &#124; string &#124; [SelectLabeledValue](#selectlabeledvalue-type) &#124; (number &#124; string &#124; [SelectLabeledValue](#selectlabeledvalue-type))[] | undefined |
 | open | 是否展开下拉菜单（受控，不传时由组件内部维护） | boolean | undefined |
-| searchValue | 搜索文本（受控，配对 `update:searchValue`） | string | undefined |
-| options | 选项数据 | [SelectOption](#option-type)[] | [] |
+| searchValue <Tag color="cyan">v-model</Tag> | 搜索文本（受控，不传时由组件内部维护） | string | undefined |
+| options | 选项数据 | [SelectOption](#selectoption-type)[] | [] |
 | fieldNames | 选项的文本 / 值字段名配置，`options` 为分组子选项的字段名 | `{ label?: string, value?: string, options?: string }` | `{ label: 'label', value: 'value', options: 'options' }` |
 | mode | 设置多选模式，`'multiple'` 为多选，`'tags'` 为标签（可输入并创建新条目），不传为单选 | 'multiple' &#124; 'tags' | undefined |
 | labelInValue | 是否把每个选项的 `label` 包装到 `value` 中，`value` 由原始值变为 `{ label, value, key, originLabel }` 对象 | boolean | false |
@@ -1971,12 +1971,12 @@ const options: SelectOption[] = []
 | menuItemSelectedIcon | 自定义当前选中的条目图标 | VNode &#124; (() => VNode) | undefined |
 | showSearch | 是否支持搜索；未指定时多选（`multiple` / `tags`）默认开启，单选默认关闭 | boolean | undefined |
 | optionFilterProp | 搜索时过滤对应的 `option` 属性，不支持 `children` | string | undefined |
-| filterOption | 根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项 `optionFilterProp` 字段（未传时为 `value`）是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为 `false` 时不筛选，显示全部选项（常用于远程搜索）</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | boolean &#124; ((inputValue: string, option: [SelectOption](#option-type)) => boolean) | true |
-| filterSort | 搜索时对筛选结果项的排序函数 | (optionA: [SelectOption](#option-type), optionB: [SelectOption](#option-type)) => number | undefined |
+| filterOption | 根据输入项进行筛选：<li>默认为 `true` 时，筛选每个选项 `optionFilterProp` 字段（未传时为 `value`）是否包含输入项，包含返回 `true`，反之返回 `false`</li><li>当其为 `false` 时不筛选，显示全部选项（常用于远程搜索）</li><li>当其为函数 `Function` 时，接受 `inputValue` `option` 两个参数，当 `option` 符合筛选条件时，应返回 `true`，反之则返回 `false`</li> | boolean &#124; ((inputValue: string, option: [SelectOption](#selectoption-type)) => boolean) | true |
+| filterSort | 搜索时对筛选结果项的排序函数 | (optionA: [SelectOption](#selectoption-type), optionB: [SelectOption](#selectoption-type)) => number | undefined |
 | maxTagCount | 最多显示多少个 `tag`，超出后折叠为省略提示；设为 `'responsive'` 时按容器宽度自动折叠（有性能消耗，不建议在大表单场景下使用） | number &#124; 'responsive' | undefined |
-| maxTagPlaceholder | 隐藏 `tag` 时显示的内容，为函数时接收被折叠的选项数组 | string &#124; VNode &#124; ((omittedValues: [SelectOption](#option-type)[]) => VNode) | undefined |
+| maxTagPlaceholder | 隐藏 `tag` 时显示的内容，为函数时接收被折叠的选项数组 | string &#124; VNode &#124; ((omittedValues: [SelectOption](#selectoption-type)[]) => VNode) | undefined |
 | maxTagTextLength | `tag` 上显示文本的最大长度，超出部分以 `...` 截断 | number | undefined |
-| tagRender | 自定义 `tag` 的渲染内容，作用域参数含 `label`（已按 `maxTagTextLength` 截断）/ `value` / `disabled` / `closable` / `onClose` / `option` | (params: { label: unknown, value?: string &#124; number, disabled: boolean, closable: boolean, onClose: (e?: MouseEvent) => void, option: [SelectOption](#option-type) }) => VNode | undefined |
+| tagRender | 自定义 `tag` 的渲染内容，作用域参数含 `label`（已按 `maxTagTextLength` 截断）/ `value` / `disabled` / `closable` / `onClose` / `option` | (params: { label: unknown, value?: string &#124; number, disabled: boolean, closable: boolean, onClose: (e?: MouseEvent) => void, option: [SelectOption](#selectoption-type) }) => VNode | undefined |
 | removeIcon | 自定义 `tag` 的移除图标 | VNode &#124; (() => VNode) | undefined |
 | tokenSeparators | 自动分词的分隔符，输入命中后按分隔符拆分并直接选中 | string[] | [] |
 | autoClearSearchValue | 多选模式下选中项后是否清空搜索框 | boolean | true |
@@ -1990,7 +1990,7 @@ const options: SelectOption[] = []
 | listHeight | 下拉面板滚动高度，单位 `px`（未传时回落 `maxDisplay × 32`） | number | undefined |
 | virtual | 是否开启虚拟滚动，大数据量时仅渲染可视区选项（`dropdownMatchSelectWidth` 为 `false` 时自动关闭） | boolean | true |
 | listItemHeight | 虚拟滚动的列表项高度，单位 `px`，需与选项实际行高一致（自定义选项高矮时调整） | number | 32 |
-| scrollbarProps | 下拉面板滚动条 `scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar) | [ScrollbarProps](./scrollbar.md#scrollbar) | {} |
+| scrollbarProps | 下拉面板滚动条 `scrollbar` 组件属性配置，参考 [Scrollbar Props](./scrollbar.md#scrollbar-props) | [ScrollbarProps](./scrollbar.md#scrollbar-props) | {} |
 | placement | 下拉面板弹出位置 | 'bottomLeft' &#124; 'bottomRight' &#124; 'topLeft' &#124; 'topRight' | 'bottomLeft' |
 | flip | 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true |
 | to | 下拉面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
@@ -2000,48 +2000,48 @@ const options: SelectOption[] = []
 | zIndex | 下拉面板层级，优先级最高（覆盖默认层级与 `ConfigProvider` 的 `baseZIndex` 自动分配） | number | undefined |
 | id | 组件 `id`，用于 `aria-controls` / `aria-activedescendant` 关联，未传时内部生成 | string | undefined |
 
-### Option Type
+### SelectOption Type
 
-| 名称              | 说明                          | 类型                | 默认值    |
-| :----------------- | :----------------------------- | :------------------- | :-------- |
-| label?            | 选项名                        | string              | undefined |
-| value?            | 选项值                        | string &#124; number | undefined |
-| disabled?         | 是否禁用选项                  | boolean             | false     |
-| [propName: string] | 用于包含带有任意数量的其他属性，`#option` 插槽会透传原始数据对象 | any                 | undefined |
+| 名称              | 说明                          | 类型                |
+| :----------------- | :----------------------------- | :------------------- |
+| label?            | 选项名                        | string              |
+| value?            | 选项值                        | string &#124; number |
+| disabled?         | 是否禁用选项                  | boolean             |
+| [propName: string] | 用于包含带有任意数量的其他属性，`#option` 插槽会透传原始数据对象 | any                 |
 
-### LabeledValue Type
+### SelectLabeledValue Type
 
 <br/>
 
 `labelInValue` 开启时 `value` 的元素类型（入口导出名 `SelectLabeledValue`）：
 
-| 名称          | 说明                                                                     | 类型                  | 默认值    |
-| :------------ | :----------------------------------------------------------------------- | :-------------------- | :-------- |
-| label         | 选项文本（子组件式写法下由默认插槽求值而来，可能为 `string` 或 `VNode[]`） | unknown               | undefined |
-| value         | 选项值                                                                   | string &#124; number  | undefined |
-| key?          | 选项唯一键，缺省时与 `value` 一致                                        | string &#124; number  | undefined |
-| originLabel?  | 原始选项文本（子组件式写法下为默认插槽函数）                             | unknown               | undefined |
+| 名称          | 说明                                                                     | 类型                  |
+| :------------ | :----------------------------------------------------------------------- | :-------------------- |
+| label         | 选项文本（子组件式写法下由默认插槽求值而来，可能为 `string` 或 `VNode[]`） | unknown               |
+| value         | 选项值                                                                   | string &#124; number  |
+| key?          | 选项唯一键，缺省时与 `value` 一致                                        | string &#124; number  |
+| originLabel?  | 原始选项文本（子组件式写法下为默认插槽函数）                             | unknown               |
 
-### SelectOption
+### SelectOption Props
 
 <br/>
 
-`<Select>` 默认插槽中的选项子组件（配置式写法请用 [SelectOption](#option-type) 数据）：
+`<Select>` 默认插槽中的选项子组件（配置式写法请用 [SelectOption](#selectoption-type) 数据）：
 
-| 参数               | 说明                                                                                                | 类型                 | 默认值    |
+| 名称               | 说明                                                                                                | 类型                 | 默认值    |
 | :----------------- | :-------------------------------------------------------------------------------------------------- | :------------------- | :-------- |
 | value              | 选项值，未传时回落 `<SelectOption>` 的 `key`                                                        | string &#124; number | undefined |
 | label              | 选项文本，优先于默认插槽文本                                                                        | string               | undefined |
 | disabled           | 是否禁用该选项（`<SelectOption disabled />` 亦可）                                                  | boolean              | false     |
 | [propName: string] | 用于包含带有任意数量的其他属性，`#option` 插槽会透传原始数据对象                                    | any                  | undefined |
 
-### SelectOptGroup
+### SelectOptGroup Props
 
 <br/>
 
 `<Select>` 默认插槽中的分组子组件，组内书写 `SelectOption`：
 
-| 参数  | 说明                    | 类型   | 默认值    |
+| 名称  | 说明                    | 类型   | 默认值    |
 | :---- | :---------------------- | :----- | :-------- |
 | label | 分组标题，优先于 `#label` 插槽 | string | undefined |
 
@@ -2051,9 +2051,9 @@ const options: SelectOption[] = []
 
 | 名称                  | 说明                             | 类型                                                                             |
 | :--------------------- | :-------------------------------- | :------------------------------------------------------------------------------- |
-| change                | 选项值改变后的回调，多选（`multiple` / `tags`）下 `value` / `option` 为数组且第 `3` 参为 `undefined` | (value: string &#124; number &#124; (string &#124; number)[], option: [SelectOption](#option-type) &#124; [SelectOption](#option-type)[], index: number &#124; undefined) => void |
-| deselect              | 移除已选项（`tag`）时回调        | (value: string &#124; number, option: [SelectOption](#option-type)) => void      |
-| select                | 选中选项时回调                   | (value: string &#124; number, option: [SelectOption](#option-type)) => void                |
+| change                | 选项值改变后的回调，多选（`multiple` / `tags`）下 `value` / `option` 为数组且第 `3` 参为 `undefined` | (value: string &#124; number &#124; (string &#124; number)[], option: [SelectOption](#selectoption-type) &#124; [SelectOption](#selectoption-type)[], index: number &#124; undefined) => void |
+| deselect              | 移除已选项（`tag`）时回调        | (value: string &#124; number, option: [SelectOption](#selectoption-type)) => void      |
+| select                | 选中选项时回调                   | (value: string &#124; number, option: [SelectOption](#selectoption-type)) => void                |
 | clear                 | 清除时的回调                     | () => void                                                                       |
 | search                | 搜索文本变化时回调（`tokenSeparators` 分词命中后清空输入不触发） | (value: string) => void                                                          |
 | focus                 | 获得焦点时的回调                 | () => void                                                                       |
@@ -2064,14 +2064,13 @@ const options: SelectOption[] = []
 | mouseenter            | 鼠标移入时的回调                 | (e: MouseEvent) => void                                                          |
 | mouseleave            | 鼠标移出时的回调                 | (e: MouseEvent) => void                                                          |
 | inputKeyDown          | 输入框按下键时的回调             | (e: KeyboardEvent) => void                                                       |
-| update:searchValue    | 搜索文本变化时同步（配合 `searchValue` 受控） | (value: string) => void                                              |
 
 ## Slots
 
 | 名称                 | 说明                                                                     | 用法                                                |
 | :-------------------- | :------------------------------------------------------------------------ | :-------------------------------------------------- |
 | default              | 子组件式选项，直接书写 `SelectOption` / `SelectOptGroup`；与 `options` 同时提供时以此为准 | v-slot:default                                      |
-| option               | 自定义选项内容，作用域为当前选项数据，[SelectOption](#option-type) 的自定义字段会一并透传 | v-slot:option="{ label, value, ...rest }"           |
+| option               | 自定义选项内容，作用域为当前选项数据，[SelectOption](#selectoption-type) 的自定义字段会一并透传 | v-slot:option="{ label, value, ...rest }"           |
 | optionLabel          | 自定义回填到选择框的内容，作用域为当前选中项数据                          | v-slot:optionLabel="{ label, value, ...rest }"      |
 | placeholder          | 自定义占位内容                                                           | v-slot:placeholder                                  |
 | suffixIcon           | 自定义的选择框后缀图标                                                   | v-slot:suffixIcon                                   |

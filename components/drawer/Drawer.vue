@@ -484,12 +484,14 @@ watch(
       }
     }
   }
+  // 面板阴影落在自己的遮罩上，而不是页面底板上：遮罩暗色下已是 rgba(0,0,0,0.45) 的深色叠加，
+  // 再用随模式加深的 --va-shadow-color（暗色 0.45）当基色，会在面板与遮罩交界处叠出一条更黑的带。
   .drawer-top {
     top: 0;
     left: 0;
     right: 0;
     box-shadow:
-      0 6px 16px 0 var(--va-shadow-color),
+      0 6px 16px 0 rgba(0, 0, 0, 0.08),
       0 3px 6px -4px rgba(0, 0, 0, 0.12),
       0 9px 28px 8px rgba(0, 0, 0, 0.05);
   }
@@ -498,7 +500,7 @@ watch(
     right: 0;
     bottom: 0;
     box-shadow:
-      -6px 0 16px 0 var(--va-shadow-color),
+      -6px 0 16px 0 rgba(0, 0, 0, 0.08),
       -3px 0 6px -4px rgba(0, 0, 0, 0.12),
       -9px 0 28px 8px rgba(0, 0, 0, 0.05);
   }
@@ -507,7 +509,7 @@ watch(
     left: 0;
     right: 0;
     box-shadow:
-      0 -6px 16px 0 var(--va-shadow-color),
+      0 -6px 16px 0 rgba(0, 0, 0, 0.08),
       0 -3px 6px -4px rgba(0, 0, 0, 0.12),
       0 -9px 28px 8px rgba(0, 0, 0, 0.05);
   }
@@ -516,7 +518,7 @@ watch(
     bottom: 0;
     left: 0;
     box-shadow:
-      6px 0 16px 0 var(--va-shadow-color),
+      6px 0 16px 0 rgba(0, 0, 0, 0.08),
       3px 0 6px -4px rgba(0, 0, 0, 0.12),
       9px 0 28px 8px rgba(0, 0, 0, 0.05);
   }

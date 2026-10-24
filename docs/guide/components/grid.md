@@ -1121,30 +1121,30 @@ const state = reactive({
 
 ## APIs
 
-### Row
+### Row Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 width | 行宽度，单位 `px` | string &#124; number | 'auto'
-gutter | 栅格间隔，可以写成像素值或支持响应式的对象写法来设置水平间隔 `{ xs: 8, sm: 16, md: 24}`。或者使用数组形式同时设置 `[水平间距, 垂直间距]` | number &#124; [number &#124; [RowResponsive](#responsive-type), number &#124; [RowResponsive](#responsive-type)] &#124; [RowResponsive](#responsive-type) | 0
+gutter | 栅格间隔，可以写成像素值或支持响应式的对象写法来设置水平间隔 `{ xs: 8, sm: 16, md: 24}`。或者使用数组形式同时设置 `[水平间距, 垂直间距]` | number &#124; [number &#124; [RowResponsive](#rowresponsive-type), number &#124; [RowResponsive](#rowresponsive-type)] &#124; [RowResponsive](#rowresponsive-type) | 0
 wrap | 是否自动换行 | boolean | false
 align | 垂直对齐方式 | 'top' &#124; 'middle' &#124; 'bottom' &#124; 'stretch' | 'top'
 justify | 水平排列方式 | 'start' &#124; 'end' &#124; 'center' &#124; 'space-around' &#124; 'space-between' &#124; 'space-evenly' | 'start'
 
-### Responsive Type
+### RowResponsive Type
+
+名称 | 说明 | 类型
+:-- | :-- | :--
+xs? | `<576px` 响应式栅格 | number
+sm? | `≥576px` 响应式栅格 | number
+md? | `≥768px` 响应式栅格 | number
+lg? | `≥992px` 响应式栅格 | number
+xl? | `≥1200px` 响应式栅格 | number
+xxl? | `≥1600px` 响应式栅格 | number
+
+### Col Props
 
 名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-xs | `<576px` 响应式栅格 | number |  undefined
-sm | `≥576px` 响应式栅格 | number |  undefined
-md | `≥768px` 响应式栅格 | number |  undefined
-lg | `≥992px` 响应式栅格 | number |  undefined
-xl | `≥1200px` 响应式栅格 | number |  undefined
-xxl | `≥1600px` 响应式栅格 | number |  undefined
-
-### Col
-
-参数 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 span | 栅格占位格数，取 `0,1,2...24`，为 `0` 时相当于 `display: none`，优先级低于 `xs`, `sm`, `md`, `lg`, `xl`, `xxl` | number | undefined
 offset | 栅格左侧的间隔格数，取 `0,1,2...24` | number | 0

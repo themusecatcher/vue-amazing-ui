@@ -713,9 +713,9 @@ const panelTo = computed(() => {
 
 ## APIs
 
-### ColorPicker
+### ColorPicker Props
 
-参数 | 说明 | 类型 | 默认值
+名称 | 说明 | 类型 | 默认值
 :-- | :-- | :-- | :--
 value <Tag color="cyan">v-model</Tag> | 颜色选择器的值 | string | undefined
 defaultValue | 未受控时的初始颜色值 | string | undefined
@@ -738,7 +738,7 @@ zIndex | 面板层级，优先级最高（未传时使用默认层级或 `Config
 offset | 面板与触发器的主轴间距，单位 `px` | number | 6
 destroyOnHide | 隐藏后是否卸载面板 `DOM`，再次展开时重新创建并重新定位 | boolean | false
 to | 弹出面板挂载的容器节点，可选：元素标签名 (例如 `'body'`) 或者元素本身，`false` 会待在原地 | string &#124; HTMLElement &#124; false | undefined
-inputProps | 输入框组件 `props`，参考 [Input Props](./input.md#input) | [InputProps](./input.md#input) | {}
+inputProps | 输入框组件 `props`，参考 [Input Props](./input.md#input-props) | [InputProps](./input.md#input-props) | {}
 
 ### ColorPickerMode Type
 
