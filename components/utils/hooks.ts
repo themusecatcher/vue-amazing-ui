@@ -306,12 +306,12 @@ export function injectFromChain<T>(key: InjectionKey<T>): T | undefined {
 /**
  * 组合式函数：水波纹动画状态（Material 风格的点击 / 选中涟漪）
  *
- * `wave` 驱动 `.wave-active` 类；`waveKey` 作为波纹节点的 `key`，每次 `startWave` 递增一次，
- * 由模板重建节点触发动画。**不能只切类名**：摘类与挂类落在同一帧，样式无净变化，
- * 浏览器不会重启 CSS 动画，连点表现为第一条播完后无后续波纹。
+ * `wave` 驱动 `.wave-active` 类；`waveKey` 作为波纹节点的 `key`，每次 `startWave` 递增一次。
+ * **不能只切类名**：摘类与挂类落在同一帧，浏览器不会重启动画，连点会静默失效（靠 `key` 重建节点）。
+ * 波纹由选中态驱动（无需连点重播）的组件可不绑定 `waveKey`。
  *
- * 扩散与淡出是两段不同时长的动画，`endWave` 接收 `animationend` 事件，
- * 仅在淡出（`waveOpacity`）结束时复位——扩散（`waveSpread`）结束即摘类会把淡出截断。
+ * 扩散与淡出时长不同：`endWave` 只在淡出结束时复位，扩散结束即摘类会截断淡出；
+ * 作用域样式会把动画名改写成 `waveSpread-<scopeId>`，故按前缀判定而非全等。
  *
  * @returns 波纹标志、节点 key 与启停方法
  */
@@ -328,7 +328,8 @@ export function useWave(): {
     waveKey.value += 1
   }
   function endWave(e?: AnimationEvent): void {
-    if (e?.animationName === 'waveSpread') {
+    // 扩散段先结束，此时复位会截断淡出；动画名带 scoped 后缀，故按前缀判定
+    if (e?.animationName?.startsWith('waveSpread')) {
       return
     }
     wave.value = false

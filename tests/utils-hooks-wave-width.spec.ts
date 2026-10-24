@@ -52,10 +52,25 @@ describe('useWave - 水波纹状态机', () => {
     expect(wave.value).toBe(true)
   })
 
+  it('endWave 在带作用域后缀的扩散动画（waveSpread-<scopeId>）结束时不复位', () => {
+    // 组件内为 scoped 样式，实际运行时 animationName 带 `-<scopeId>` 后缀
+    const { wave, startWave, endWave } = useWave()
+    startWave()
+    endWave({ animationName: 'waveSpread-341d35ec' } as AnimationEvent)
+    expect(wave.value).toBe(true)
+  })
+
   it('endWave 在淡出动画（waveOpacity）结束时复位', () => {
     const { wave, startWave, endWave } = useWave()
     startWave()
     endWave({ animationName: 'waveOpacity' } as AnimationEvent)
+    expect(wave.value).toBe(false)
+  })
+
+  it('endWave 在带作用域后缀的淡出动画（waveOpacity-<scopeId>）结束时复位', () => {
+    const { wave, startWave, endWave } = useWave()
+    startWave()
+    endWave({ animationName: 'waveOpacity-341d35ec' } as AnimationEvent)
     expect(wave.value).toBe(false)
   })
 
