@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onBeforeUnmount } from 'vue'
-import type { CSSProperties } from 'vue'
+import { ref, computed, watch, nextTick, onBeforeUnmount, onActivated, onDeactivated } from 'vue'
+import type { ComponentPublicInstance, CSSProperties } from 'vue'
 import Ellipsis, { type EllipsisProps } from 'components/ellipsis'
 import { useResizeObserver } from 'components/utils'
 export interface Item {
@@ -51,11 +51,21 @@ const playState = ref<'paused' | 'running'>('paused') // 水平滚动动画执�
 const reset = ref<boolean>(true) // 重置水平滚动动画状态
 const activeIndex = ref<number>(0) // 垂直滚动当前索引
 const verticalMoveTimer = ref<ReturnType<typeof setTimeout> | null>(null) // 垂直滚动定时器引用标识
-const originVertical = ref<boolean>(true) // 垂直滚动初始状态
-const scrollItems = ref<Item[]>([]) // 滚动目标文字数组
+const atRest = ref<boolean>(true) // 当前没有待完成的位移过渡
+const resumeAfterActivate = ref<boolean>(false) // 失活前是否处于滚动状态，用于恢复播放
 const emit = defineEmits(['click'])
+let disposed = false // 组件已卸载，禁止再启动新的节拍链
+// 派生滚动目标文字数组：single 包装为单条，垂直单条复制两份以便首尾相接
+const normalizedItems = computed<Item[]>(() => {
+  const { items, single, vertical } = props
+  if (single) {
+    return [items as Item]
+  }
+  const list = Array.isArray(items) ? items : [items]
+  return vertical && list.length === 1 ? [...list, ...list] : [...list]
+})
 const itemsAmount = computed(() => {
-  return scrollItems.value.length
+  return normalizedItems.value.length
 })
 // 文字滚动区域尺寸样式
 const scrollBoardStyle = computed(() => {
@@ -72,40 +82,25 @@ const displayAmount = computed(() => {
   if (props.amount === false) {
     return 0
   }
-  return props.amount
+  return Math.max(1, props.amount) // 兜底：amount 为 0 或负数时不参与除法，避免窄宽度算出 Infinity
 })
 const itemWidth = computed(() => {
   // 水平滚动单条文字宽度
   if (props.amount === false) {
     return 'auto'
   }
-  return `${parseFloat((horizontalWrapWidth.value / displayAmount.value).toFixed(2)) - props.gap}px`
+  // 限制两位小数：多列分摊的亚像素误差会在两组接缝处累计成 1px 缝隙
+  const width = Math.round((horizontalWrapWidth.value / displayAmount.value) * 100) / 100
+  return `${width - props.gap}px`
 })
+// 条目自身样式：启用省略时样式由 Ellipsis 的文本容器承载
+const plainItemStyle = computed<CSSProperties>(() => (props.ellipsis ? {} : props.itemStyle))
 const animationDuration = computed(() => {
   // 水平滚动动画持续时间
   return groupWidth.value / props.speed
 })
-watch(
-  () => props.items,
-  () => {
-    if (props.single) {
-      scrollItems.value = [props.items] as Item[]
-    } else {
-      if (props.vertical && (props.items as Item[]).length === 1) {
-        scrollItems.value = [...(props.items as Item[]), ...(props.items as Item[])]
-      } else {
-        scrollItems.value = [...(props.items as Item[])]
-      }
-    }
-  },
-  {
-    immediate: true,
-    deep: true
-  }
-)
-watch(scrollItems, () => {
-  resetMove()
-})
+// 深监听不可省：消费方原地改写 items[0].title 时数组引用不变，浅监听不会触发复位
+watch(normalizedItems, () => resetMove(), { deep: true })
 watch(
   [() => props.vertical, () => props.duration, () => props.interval],
   () => {
@@ -118,11 +113,14 @@ watch(
 useResizeObserver([horizontalRef, groupRef, verticalRef], () => {
   initScroll()
 })
+function clearVerticalTimer(): void {
+  if (verticalMoveTimer.value === null) return
+  clearTimeout(verticalMoveTimer.value)
+  verticalMoveTimer.value = null
+}
 function initScroll(): void {
-  verticalMoveTimer.value && clearTimeout(verticalMoveTimer.value)
-  if (!originVertical.value) {
-    originVertical.value = true
-  }
+  clearVerticalTimer()
+  atRest.value = true
   if (!props.vertical) {
     getScrollSize()
   }
@@ -133,6 +131,10 @@ function getScrollSize(): void {
   if (!horizontalRef.value || !groupRef.value) return
   horizontalWrapWidth.value = horizontalRef.value.offsetWidth
   groupWidth.value = groupRef.value.offsetWidth
+}
+// 水平滚动内容 DOM 引用（渲染两份分组，仅首个分组需取宽度）
+function setGroupRef(el: Element | ComponentPublicInstance | null): void {
+  groupRef.value = el as HTMLElement | null
 }
 // 重置水平滚动状态
 function resetScrollState(): void {
@@ -147,12 +149,10 @@ function onAnimationIteration(): void {
   resetScrollState()
 }
 function verticalMove(): void {
-  // 间隔在启动时确定一次，后续每一拍沿用同一间隔；每次触发后再排下一次，避免堆积与累积漂移
-  const delay = originVertical.value ? props.interval : props.interval + props.duration
+  // 间隔在起链时确定一次并沿用整条链；每次触发后再排下一拍，避免堆积与累积漂移
+  const delay = atRest.value ? props.interval : props.interval + props.duration
   const tick = (): void => {
-    if (originVertical.value) {
-      originVertical.value = false
-    }
+    atRest.value = false
     activeIndex.value = (activeIndex.value + 1) % itemsAmount.value
     verticalMoveTimer.value = setTimeout(tick, delay)
   }
@@ -161,9 +161,19 @@ function verticalMove(): void {
 function onClick(item: Item): void {
   emit('click', item)
 }
-// 滚动开始
+function onMouseEnter(): void {
+  if (!props.pauseOnMouseEnter) return
+  stopMove()
+}
+function onMouseLeave(): void {
+  if (!props.pauseOnMouseEnter) return
+  startMove()
+}
+// 滚动开始；可重入保护：节拍链已在运行时直接返回，避免并存两条链
 function startMove(): void {
+  if (disposed) return
   if (props.vertical) {
+    if (verticalMoveTimer.value !== null) return
     if (itemsAmount.value >= 1) {
       verticalMove() // 垂直滚动
     }
@@ -178,8 +188,8 @@ function startMove(): void {
 // 滚动暂停
 function stopMove(): void {
   if (props.vertical) {
-    originVertical.value = true
-    verticalMoveTimer.value && clearTimeout(verticalMoveTimer.value)
+    atRest.value = true
+    clearVerticalTimer()
   } else {
     playState.value = 'paused'
   }
@@ -187,12 +197,12 @@ function stopMove(): void {
 // 滚动重置
 function resetMove(): void {
   if (props.vertical) {
-    verticalMoveTimer.value && clearTimeout(verticalMoveTimer.value)
+    clearVerticalTimer()
     if (activeIndex.value !== 0) {
       activeIndex.value = 0
-      originVertical.value = false
+      atRest.value = false
     } else {
-      originVertical.value = true
+      atRest.value = true
     }
     startMove()
   } else {
@@ -204,8 +214,19 @@ function resetMove(): void {
     })
   }
 }
+// KeepAlive 失活时组件不卸载，定时器需自行收尾，否则会持续推进到返回页面
+onDeactivated(() => {
+  resumeAfterActivate.value = props.vertical ? verticalMoveTimer.value !== null : playState.value === 'running'
+  stopMove()
+})
+onActivated(() => {
+  if (!resumeAfterActivate.value) return
+  resumeAfterActivate.value = false
+  startMove()
+})
 onBeforeUnmount(() => {
-  verticalMoveTimer.value && clearTimeout(verticalMoveTimer.value)
+  disposed = true
+  clearVerticalTimer()
 })
 defineExpose({
   start: startMove,
@@ -229,54 +250,31 @@ defineExpose({
         --text-scroll-iteration-count: infinite;
       `
     ]"
-    @mouseenter="pauseOnMouseEnter ? stopMove() : () => false"
-    @mouseleave="pauseOnMouseEnter ? startMove() : () => false"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
   >
+    <!-- 两份内容分组首尾相接：首组测量宽度并接管动画复位，次组仅作无缝补位 -->
     <div
-      ref="groupRef"
+      v-for="groupIndex in 2"
+      :key="groupIndex"
+      :ref="groupIndex === 1 ? setGroupRef : undefined"
       class="scroll-items-group"
       :class="{ 'scroll-items-reset': reset }"
-      @animationiteration="onAnimationIteration"
+      v-on="groupIndex === 1 ? { animationiteration: onAnimationIteration } : {}"
     >
       <component
         :is="item.href ? 'a' : 'div'"
+        v-for="(item, index) in normalizedItems"
+        :key="index"
         class="scroll-item"
         :class="{ 'href-item': !ellipsis && item.href }"
-        :style="[ellipsis ? null : itemStyle, `width: ${itemWidth};`]"
-        v-for="(item, index) in scrollItems"
-        :key="index"
+        :style="[plainItemStyle, `width: ${itemWidth};`]"
         :title="ellipsis ? null : item.title"
         :href="item.href"
         :target="item.target"
         @click="onClick(item)"
       >
-        <!-- 类名与文字样式走 class / style 标准通道：Ellipsis 未溢出时不挂载 Tooltip，
-             content-class / content-style 在未挂载分支没有消费方 -->
-        <Ellipsis
-          v-if="ellipsis"
-          :max-width="itemWidth"
-          :class="item.href ? 'href-item' : null"
-          :style="itemStyle"
-          v-bind="ellipsisProps"
-        >
-          {{ item.title }}
-        </Ellipsis>
-        <template v-else>{{ item.title }}</template>
-      </component>
-    </div>
-    <div class="scroll-items-group" :class="{ 'scroll-items-reset': reset }">
-      <component
-        :is="item.href ? 'a' : 'div'"
-        class="scroll-item"
-        :class="{ 'href-item': !ellipsis && item.href }"
-        :style="[ellipsis ? null : itemStyle, `width: ${itemWidth};`]"
-        v-for="(item, index) in scrollItems"
-        :key="index"
-        :title="ellipsis ? null : item.title"
-        :href="item.href"
-        :target="item.target"
-        @click="onClick(item)"
-      >
+        <!-- 类名与文字样式走 class / style 通道：Ellipsis 的浮层按需挂载，落点恒为文本容器 -->
         <Ellipsis
           v-if="ellipsis"
           :max-width="itemWidth"
@@ -304,27 +302,27 @@ defineExpose({
         --text-scroll-item-padding: ${gap}px;
       `
     ]"
-    @mouseenter="pauseOnMouseEnter ? stopMove() : () => false"
-    @mouseleave="pauseOnMouseEnter ? startMove() : () => false"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
   >
     <TransitionGroup name="slide">
-      <div class="scroll-item-wrap" v-for="(item, index) in scrollItems" :key="index" v-show="activeIndex === index">
+      <div
+        class="scroll-item-wrap"
+        v-for="(item, index) in normalizedItems"
+        :key="index"
+        v-show="activeIndex === index"
+      >
         <component
           :is="item.href ? 'a' : 'div'"
           class="scroll-item"
           :class="{ 'href-item': !ellipsis && item.href }"
-          :style="!ellipsis ? itemStyle : {}"
+          :style="plainItemStyle"
           :title="ellipsis ? null : item.title"
           :href="item.href"
           :target="item.target"
           @click="onClick(item)"
         >
-          <Ellipsis
-            v-if="ellipsis"
-            :class="item.href ? 'href-item' : null"
-            :style="{ ...itemStyle, maxWidth: '100%' }"
-            v-bind="ellipsisProps"
-          >
+          <Ellipsis v-if="ellipsis" :class="item.href ? 'href-item' : null" :style="itemStyle" v-bind="ellipsisProps">
             {{ item.title }}
           </Ellipsis>
           <template v-else>{{ item.title }}</template>
@@ -334,6 +332,27 @@ defineExpose({
   </div>
 </template>
 <style lang="less" scoped>
+// 滚动条目文字声明
+.scroll-item-base() {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--va-text-color-1);
+  line-height: 1.57;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+// 链接条目声明；悬浮色需盖过条目自身颜色
+.href-item-base() {
+  cursor: pointer;
+  transition: color 0.3s;
+  &:hover {
+    color: var(--text-scroll-href-hover-color) !important;
+  }
+  .ellipsis-container {
+    cursor: inherit;
+  }
+}
 // 水平滚动
 .text-scroll-horizontal {
   overflow: hidden;
@@ -359,23 +378,10 @@ defineExpose({
     }
     .scroll-item {
       margin-left: var(--text-scroll-item-gap);
-      font-size: 16px;
-      font-weight: 400;
-      color: var(--va-text-color-1);
-      line-height: 1.57;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      .scroll-item-base();
     }
     :deep(.href-item) {
-      cursor: pointer;
-      transition: color 0.3s;
-      &:hover {
-        color: var(--text-scroll-href-hover-color) !important;
-      }
-      .ellipsis-container {
-        cursor: inherit;
-      }
+      .href-item-base();
     }
   }
   .scroll-items-reset {
@@ -411,23 +417,10 @@ defineExpose({
     justify-content: center;
     padding: 0 var(--text-scroll-item-padding);
     .scroll-item {
-      font-size: 16px;
-      font-weight: 400;
-      color: var(--va-text-color-1);
-      line-height: 1.57;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      .scroll-item-base();
     }
     :deep(.href-item) {
-      cursor: pointer;
-      transition: color 0.3s;
-      &:hover {
-        color: var(--text-scroll-href-hover-color) !important;
-      }
-      .ellipsis-container {
-        cursor: inherit;
-      }
+      .href-item-base();
     }
   }
 }
