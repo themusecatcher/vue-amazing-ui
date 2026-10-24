@@ -37,7 +37,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 移除 `toggleDark` / `rafTimeout` / `cancelRaf` / `getColorPalettes` / `getAlphaColor` 与 `AnimationFrameID` 类型：暗色切换改用 `theme.mode` 或直接写 `data-va-mode`，延时改用 `setTimeout` / 原生 `requestAnimationFrame`，取色改用 `derive(seed, mode)`（支持 `JS` / `canvas` / `SVG` 场景）
 - 新增主题公开出口 `derive` / `DEFAULT_PRIMARY` / `DEFAULT_SEEDS` / `THEME_VAR_NAMES` / `MODE_ATTRIBUTE` 与 `ThemeSeed` / `ThemeMode` / `ResolvedMode` / `ThemeVars` / `ThemeSnapshot` / `ComponentThemeConfig` / `ThemeComponentKey` 类型，脚本取色与 `--va-*` 取同一份派生结果
 - 统一库内告警输出：`error` 全环境输出、`warn` / `debug` 仅开发期输出，同一提醒只输出一次；[二维码 QRCode](/guide/components/qr-code.html) 编码 / 绘制失败与 [折叠面板 Collapse](/guide/components/collapse.html) 复制失败改为 `error`
-- [水印 Watermark](/guide/components/watermark.html) 默认色由固定黑 / 白改为语义变量（浅色 `15%` 黑、暗色 `18%` 白，显式传 `textStyle.color` 后不再随模式反转），并让 `fixed=false` 时覆盖整个文档而不只首屏
+- [水印 Watermark](/guide/components/watermark.html) 默认色由固定黑 / 白改为语义变量（显式传 `textStyle.color` 后不再随模式反转），并让 `fixed=false` 时覆盖整个文档而不只首屏
 - 离散 API（`createDiscreteApi`）的浮层不再改写 `<html>`：未传主题时继承主应用主题，传 `configProviderProps.theme` 时在该浮层内独立生效（见[离散 API 的主题](/guide/components/config-provider.html#离散-api-的主题)），`dispose()` 也不会误清主应用写入的变量
 - 修复 [日历 Calendar](/guide/components/calendar.html) 年选择器选中年份后列表区间随面板平移，重新展开才滚动到选中项
 - 修复 [按钮 Button](/guide/components/button.html) 点击后动画未结束即被禁用、重新启用时凭空播放波纹
@@ -52,7 +52,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 重构并增强 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html)：新增 `RadioGroup` / `CheckboxGroup` 组合式用法（统一下发选中值与禁用态并承载组内选项，组内项以 `value` 标识自身，`Radio` 另有 `RadioButton` 提供按钮形态，`options` 支持字符串 / 数字简写与 `VNode` 选项名）与原生 `input` 承载（`name` 下发到组内每个原生 `input`，`id`（前缀 + 选项下标）/ `autofocus` 在 `options` 模式下下发，补齐键盘操作与屏幕阅读器语义，暴露 `focus` / `blur` 实例方法且调用 `focus` 时同样显示焦点环，`change` 事件在「新值」首参之后追加事件对象——含状态快照与原始事件，首参用法不受影响，`RadioChangeEvent` / `CheckboxChangeEvent` 类型随组件一并导出），优化选中反馈并修复定高行内与输入框混排时文字与控件基线错位、内容溢出行盒的问题
 - 移除 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html) 的 `options` / `vertical` / `gap` 属性，配置式写法统一由 `RadioGroup` / `CheckboxGroup` 承载；[复选框 Checkbox](/guide/components/checkbox.html) 的 `value` 不再接受数组；[单选框 Radio](/guide/components/radio.html) 的 `buttonSize` 更名为 `size`（置于 `RadioGroup` 内时由组的 `size` 下发，组未指定时回落自身尺寸）；选项类型统一为 `RadioGroupOption` / `CheckboxGroupOption`（`RadioOption` / `CheckboxOption` 不再导出）
 - [日历 Calendar](/guide/components/calendar.html) 的模式切换器改用 `RadioGroup`，`modeRadioProps` 类型同步改为 `RadioGroupProps`
-- 修复 [输入框 Input](/guide/components/input.html)：未绑定 `v-model` 时输入内容（含输入法合成文本）会因悬浮 / 聚焦等状态变化丢失，与文字混排时会把所在行文字基线压低 `1px`
+- 修复 [输入框 Input](/guide/components/input.html)：未绑定 `v-model` 时输入内容（含输入法合成文本）会因悬浮 / 聚焦等状态变化丢失，与文字混排时会把所在行文字基线压低
 - 更新组件库文档和贡献者文档
 - 组件库及文档代码优化
 
@@ -85,14 +85,14 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-10-15">2.14.1</VersionDateTag>
 
-- 重构并增强 [二维码 QRCode](/guide/components/qr-code.html)：编码改为内置实现（移除第三方编码包，体积减小），`svg` 改为声明式渲染，`canvas` / `image` 高清屏清晰度提升；修复 `canvas` 不渲染、重复更新累积画布、`svg` 中央图标缺底色块 / 被拉伸、`bordered` 绘制区尺寸偏差与跳动等问题；新增 `status` 属性与 `refresh` 事件（`active` / `expired` / `loading` / `scanned` 四种状态，含遮罩与点击刷新）、`iconBackgroundColor` / `iconBorderRadius` / `title` / `padding` 属性与 `--qr-code-mask-bg-color` / `--qr-code-mask-text-color` 遮罩变量，中央图标绘入二维码本体（导出图片同样包含）
+- 重构并增强 [二维码 QRCode](/guide/components/qr-code.html)：编码改为内置实现（移除第三方依赖，体积减小），`canvas` / `image` 高清屏清晰度提升；修复 `canvas` 不渲染、重复更新累积画布、中央图标缺底色块 / 被拉伸、`bordered` 绘制区尺寸偏差与跳动等问题；新增 `status` 属性与 `refresh` 事件（`active` / `expired` / `loading` / `scanned` 四种状态，含遮罩与点击刷新）、`iconBackgroundColor` / `iconBorderRadius` / `title` / `padding` 属性与 `--qr-code-mask-bg-color` / `--qr-code-mask-text-color` 遮罩变量，中央图标绘入二维码本体（导出图片同样包含）
 - [二维码 QRCode](/guide/components/qr-code.html) 组件的 `errorLevel` 改为「最低等级」且默认值由 `'H'` 改为 `'M'`（需保留原行为可显式设置 `errorLevel="H"`）、`scale` 改为「最小像素倍率下限」，实例方法 `getQRCodeImage` 更名为 `toDataURL` 并改为同步返回 `string`（`await ref.getQRCodeImage()` 改为 `ref.toDataURL()`）；[二维码 QRCode](/guide/components/qr-code.html) 与 [回到顶部 BackTop](/guide/components/back-top.html) 的根类名与 `CSS` 变量前缀统一为组件目录名的短横线形式（`qrcode-wrap` → `qr-code-wrap`、`backtop-wrap` → `back-top-wrap`，`--qrcode-*` / `--backtop-*` → `--qr-code-*` / `--back-top-*`，[回到顶部 BackTop](/guide/components/back-top.html) 的 `desc` → `description`），依赖旧 `API` / 类名 / 变量的自定义用法需同步调整
 - 优化并更新 [二维码 QRCode](/guide/components/qr-code.html) 组件文档演示
 
 ## <VersionDateTag date="2026-10-14">2.14.0</VersionDateTag>
 
 - 新增 [时间选择器 TimePicker](/guide/components/time-picker.html) 组件：时分秒三列滚动面板，支持 `type="timerange"` 范围形态、`12` 小时制与步长配置；[全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme` 同步新增 `TimePicker` 键
-- 重构 [日期选择器 DatePicker](/guide/components/date-picker.html) 为自研实现并移除 `@vuepic/vue-datepicker` 依赖：`v-model` 改用 `v-model:value` / `v-model:formatted-value`（毫秒时间戳 / 字符串双轨），`modelType` 改用 `valueFormat`，`mode` / `range` / `showTime` / `maxRange` 移除（形态改由 `type` 承担），`format` 不再支持函数形态，`showToday` 默认值由 `false` 改为 `true`
+- 重构 [日期选择器 DatePicker](/guide/components/date-picker.html) 为自研实现（移除第三方依赖）：`v-model` 改用 `v-model:value` / `v-model:formatted-value`（毫秒时间戳 / 字符串双轨），`modelType` 改用 `valueFormat`，`mode` / `range` / `showTime` / `maxRange` 移除（形态改由 `type` 承担），`format` 不再支持函数形态，`showToday` 默认值由 `false` 改为 `true`
 - 增强 [日期选择器 DatePicker](/guide/components/date-picker.html)：新增日期时间、周、月 / 季 / 年及各自的范围形态（含 `presets` 预设范围与按段配置），以及面板定制（`dateRender` / `renderExtraFooter`）、键盘导航与无障碍语义，并新增 `defaultTime` / `allowEmpty` / `showNow` / `showArrow` / `inputReadOnly` / `panelClass` / `panelStyle` / `zIndex` 等属性与 `panelChange` 事件
 - 修复锁定页面滚动时背景页面与浮层横向抖动、且页面仍可横向推移的问题：锁定期间横向滚动一并禁用，被回收的滚动条宽度等量补偿，库内常驻的 [回到顶部 BackTop](/guide/components/back-top.html) 与 [浮动按钮 FloatButton](/guide/components/float-button.html) 一并补偿（宿主自有固定定位元素可用 `--va-scrollbar-width` 自行补偿）
 - 组件库不再对外导出 `lockScroll` 工具函数
@@ -119,7 +119,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 新增 [布局 Layout](/guide/components/layout.html) 组件：含 `Layout` / `LayoutHeader` / `LayoutContent` / `LayoutFooter` / `LayoutSider`，支持侧边栏收起与 `light` / `dark` 主题
 - 新增 [导航菜单 Menu](/guide/components/menu.html) 组件：支持 `items` 配置与 `MenuItem` / `MenuSubMenu` / `MenuItemGroup` / `MenuDivider` 子组件两种写法，含 `horizontal` / `vertical` / `inline` 三种菜单类型与 `light` / `dark` 主题，展开与选中可受控、可多选，`inline` 支持收起与缩进，水平溢出收进省略子菜单
 - 增强 [全局化配置 ConfigProvider](/guide/components/config-provider.html)：`theme` 新增 `Menu` 键（可按 `Menu` 覆盖主题色）；`common.primaryColor` 派生的色阶写入 `--va-link-color` / `--va-link-color-hover` / `--va-link-color-active`，页面链接颜色随主题色一并变化 —— 默认写到 `:root` 全局生效，`:abstract="false"` 的嵌套实例只在自身子树内生效
-- 优化 [全局提示 Message](/guide/components/message.html) 的进出场动效：时长由 `0.3s` 收敛为 `0.2s`，进场与离场各用一条缓动曲线
+- 优化 [全局提示 Message](/guide/components/message.html) 的进出场动效时长
 - 修复 [滑动输入条 Slider](/guide/components/slider.html) 手柄气泡在贴近容器边缘时不再居中的问题
 - 全局默认样式的 `<a>` 重构为 `:where()` 包裹的低特异性链接基座，配色改由主色色阶决定（常态 / 悬停 / 按下为 `#1677ff` / `#69b1ff` / `#0958d9`，原悬停色 `#4096ff`），且不再移除焦点轮廓；同时移除 `--primary-color` / `--primary-color-hover` 主题变量，主题色请改用 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme`
 - 更新 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 文档：新增「链接颜色跟随主题」章节（变量、作用域与自定义覆盖写法），主题示例与 `ComponentName` 类型补 `Menu`，并订正 `tag` 属性的生效条件为 `abstract` 为 `false` 时有效
@@ -195,7 +195,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 修复 [对话框 Modal](/guide/components/modal.html) / [Dialog](/guide/components/dialog.html) / [加载条 LoadingBar](/guide/components/loading-bar.html) / [消息提示 Message](/guide/components/message.html) / [通知提醒 Notification](/guide/components/notification.html) 的 `class` / `style` 无法透传问题
 - 增强 [轮播图 Carousel](/guide/components/carousel.html)：新增 `loop` / `initialIndex` / 受控 `currentIndex` 等属性、`beforeChange` / `afterChange` 事件与 `#prevArrow` / `#nextArrow` / `#dots` 插槽，修复越界、加载失败、动画中断等交互问题；`fadeFunction` 默认值由 `'cubic-bezier(0.4, 0, 0.2, 1)'` 改为 `[0.4, 0, 0.2, 1]`。属性 `dotsTrigger` 更名为 `dotTrigger`；移除 `change` 事件，切换监听改用 `beforeChange` / `afterChange`，当前页同步使用 `v-model:current-index`
 - 增强 [数字动画 NumberAnimation](/guide/components/number-animation.html)：缓动支持传入三次贝塞尔控制点数组与缓动函数，卸载时中止在飞动画。属性 `transition` 更名为 `easing`，类型 `NumberAnimationTransitionFunc` 更名为 `NumberAnimationEasingPreset`
-- 优化工具函数文档：改用交互式演示并补充边界说明与可运行 `demo`
+- 优化工具函数文档：补充边界说明与可运行示例
 - 修复 `lockScroll` 在 `SSR` / `Node` 环境调用报错；订正 [useOptionsSupported](/utils/functions/use-options-supported.html) 参数名为 `option`
 - 修复按需引入 `VueAmazingUIResolver` 引用 `DescriptionsItem` 不存在的样式路径
 
@@ -206,13 +206,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 优化 [警告提示 Alert](/guide/components/alert.html)：重构关闭离场动画，冻结高度后平滑收缩、同步收起内边距与下边距、动画结束才卸载元素；新增 `afterClose` 事件
 - 新增 [统计数值 Statistic](/guide/components/statistic.html) `tabularNums` 属性：数值滚动时使用等宽数字，避免宽度抖动
 - 优化 [选择器 Select](/guide/components/select.html)：面板打开时自动将当前选中项滚动到可视区域内
-- 修复 [formatNumber](/utils/functions/format-number.html)：数值为 `0` 时丢失 `prefix` / `suffix` 的问题，并简化格式化逻辑
+- 修复 [formatNumber](/utils/functions/format-number.html)：数值为 `0` 时丢失 `prefix` / `suffix` 的问题
 - 优化多个组件全局文字断行：`word-break: break-all` 调整为 `break-word`，避免英文单词与数字被从中间截断
 - 组件库文档及工程优化
 
 ## <VersionDateTag date="2026-09-11">2.7.3</VersionDateTag>
 
-- 优化 [文字提示 Tooltip](/guide/components/tooltip.html) 定位与交互：修复缩放动画期间位置错位、焦点在内容内移动时闪烁，受控 `show` 立即生效、`animationend` 仅响应卡片自身动画，补充 `role="tooltip"` 与 `aria-describedby`；订正 `enter` 文档描述（实际为切换显示）
+- 优化 [文字提示 Tooltip](/guide/components/tooltip.html) 定位与交互：修复缩放动画期间位置错位、焦点在内容内移动时闪烁，受控 `show` 立即生效，补充 `role="tooltip"` 与 `aria-describedby`；订正 `enter` 文档描述（实际为切换显示）
 - 增强 [返回顶部 BackTop](/guide/components/back-top.html)：`listenTo` 支持 `Document` 与返回目标的函数，修复整页滚动监听失效
 - 修复 [水印 Watermark](/guide/components/watermark.html)：切换全屏后防篡改失效，清理写入 `<html>` 的 `style`
 - 优化 [气泡卡片 Popover](/guide/components/popover.html) / [气泡确认框 Popconfirm](/guide/components/popconfirm.html)：订正 `enter` 文档描述（实际为切换显示）；`Popover` 移除 `keyboard` 属性
@@ -222,7 +222,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-09-10">2.7.2</VersionDateTag>
 
-- 修复 `SSR` / `Node` 渲染报错：[Avatar](/guide/components/avatar.html)、[Row](/guide/components/grid.html) / [Col](/guide/components/grid.html)、[Descriptions](/guide/components/descriptions.html)、[QRCode](/guide/components/qr-code.html)、[Tag](/guide/components/tag.html)、[Watermark](/guide/components/watermark.html) 及 [useMediaQuery](/utils/functions/use-media-query.html)、[useFps](/utils/functions/use-fps.html)、[useMutationObserver](/utils/functions/use-mutation-observer.html)、[useResizeObserver](/utils/functions/use-resize-observer.html)、[useScrollParent](/utils/functions/use-scroll-parent.html) 不再在 `setup` 阶段访问浏览器全局对象
+- 修复 `SSR` / `Node` 渲染报错：[Avatar](/guide/components/avatar.html)、[Row](/guide/components/grid.html) / [Col](/guide/components/grid.html)、[Descriptions](/guide/components/descriptions.html)、[QRCode](/guide/components/qr-code.html)、[Tag](/guide/components/tag.html)、[Watermark](/guide/components/watermark.html) 及 [useMediaQuery](/utils/functions/use-media-query.html)、[useFps](/utils/functions/use-fps.html)、[useMutationObserver](/utils/functions/use-mutation-observer.html)、[useResizeObserver](/utils/functions/use-resize-observer.html)、[useScrollParent](/utils/functions/use-scroll-parent.html)
 - 修复卸载后定时器 / 动画帧泄漏：[Countdown](/guide/components/countdown.html)、[Carousel](/guide/components/carousel.html)、[TextScroll](/guide/components/text-scroll.html)、[Select](/guide/components/select.html)、[useFps](/utils/functions/use-fps.html)、[useMediaQuery](/utils/functions/use-media-query.html)
 - 修复 [Carousel](/guide/components/carousel.html) 容器尺寸为 `0` 时自动轮播失效、[Select](/guide/components/select.html) 搜索过滤自触发循环、[Tag](/guide/components/tag.html) 动态编辑后输入框未清空、[Upload](/guide/components/upload.html) 重复选择同一文件不触发 `change`、[QRCode](/guide/components/qr-code.html) `canvas` 未就绪时跳过绘制、`cancelRaf` 帧 `id` 为 `0` 时误判
 - 澄清 `rafTimeout` 语义：回调绑定渲染帧、页面不可见时暂停，与 `setTimeout` / `setInterval` **不等价**
@@ -231,16 +231,16 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-09-09">2.7.1</VersionDateTag>
 
-- 优化 [Dialog](/guide/components/dialog.html) / [Modal](/guide/components/modal.html) 的点击展开：鼠标点击位置改由模块级统一捕获，修复命令式场景（如 `createDiscreteApi`）点击丢失、退回中心；新增 `100ms` 点击时效窗口，离场动画按打开时位置快照收起
+- 优化 [Dialog](/guide/components/dialog.html) / [Modal](/guide/components/modal.html) 的点击展开：修复命令式场景（如 `createDiscreteApi`）点击丢失、退回中心；离场动画按打开时的位置收起
 - [Avatar](/guide/components/avatar.html)、[BackTop](/guide/components/back-top.html)、[Button](/guide/components/button.html)、[FloatButton](/guide/components/float-button.html)、[Popconfirm](/guide/components/popconfirm.html) 的 `icon` 类型由 `VNode | Slot` 收紧为 `VNode | (() => VNode)`，不再支持直接传组件对象，改用 `h(...)` 渲染函数或 `#icon` 插槽
 - 类型强化：具名 / 作用域插槽组件补充 `xxxSlots` 类型并接入 `defineSlots()`，文档类型表同步清理 `string | slot` 写法
 
 ## <VersionDateTag date="2026-09-08">2.7.0</VersionDateTag>
 
-- ⚠️ **破坏性变更**：[Message](/guide/components/message.html)、[Notification](/guide/components/notification.html)、[Modal](/guide/components/modal.html) 移除实例 `ref` 上的命令式方法，统一改用 `useXxx()`（需外层 `XxxProvider`）或 `createDiscreteApi()`；[Dialog](/guide/components/dialog.html) 新增 `useDialog()` / `createDiscreteApi()` 命令式入口；`window['$xxx']` 写法改为赋值 `api`；`@ready` 回传 `api`，句柄支持 `destroy()` / `update()`，`Notification` 额外支持 `destroy(key)` 按 `key` 精确关闭
-- ⚠️ **破坏性变更**：上述四组件浮层默认 `Teleport` 到 `body`，新增 `to` 指定挂载节点；依赖原渲染位置的 `scoped` 样式与 `:deep()` 覆写失效，需改为全局样式
-- ⚠️ **破坏性变更**：`Notification` `description` 更名 `content`、移除组件级 `title` / `description`、`top` / `bottom` 默认 `24` → `16`；Message 单条配置移除 `top`
-- ⚠️ **破坏性变更**：`Modal` 命令式 `maskClosable` 默认改 `false`（组件级仍为 `true`）、`Esc` 监听改绑弹窗主体（焦点移出弹窗后不再响应）、入口类型导出由 `Props` / `Modal` 调整为 `ModalProps` / `ModalOptions` / `ModalUpdate` / `ModalReactive` / `ModalApi`；[Upload](/guide/components/upload.html) 移除内嵌 Message：`messageProps` / `actionMessage` / `UploadMessageType` 及相关方法移除，改用 `success` / `error` / `remove` 事件
+- 移除 [Message](/guide/components/message.html)、[Notification](/guide/components/notification.html)、[Modal](/guide/components/modal.html) 实例 `ref` 上的命令式方法，统一改用 `useXxx()`（需外层 `XxxProvider`）或 `createDiscreteApi()`；[Dialog](/guide/components/dialog.html) 新增 `useDialog()` / `createDiscreteApi()` 命令式入口；`window['$xxx']` 写法改为赋值 `api`；`@ready` 回传 `api`，句柄支持 `destroy()` / `update()`，`Notification` 额外支持 `destroy(key)` 按 `key` 精确关闭
+- 调整四组件浮层默认挂载：`Teleport` 到 `body`，新增 `to` 指定挂载节点；依赖原渲染位置的 `scoped` 样式与 `:deep()` 覆写失效，需改为全局样式
+- 调整 `Notification`：`description` 更名 `content`、移除组件级 `title` / `description`、`top` / `bottom` 默认 `24` → `16`；Message 单条配置移除 `top`
+- 调整 `Modal` 命令式 `maskClosable` 默认改 `false`（组件级仍为 `true`）、`Esc` 监听改绑弹窗主体（焦点移出弹窗后不再响应）、入口类型导出由 `Props` / `Modal` 调整为 `ModalProps` / `ModalOptions` / `ModalUpdate` / `ModalReactive` / `ModalApi`；[Upload](/guide/components/upload.html) 移除内嵌 Message：`messageProps` / `actionMessage` / `UploadMessageType` 及相关方法移除，改用 `success` / `error` / `remove` 事件
 - 重构并增强 [Dialog](/guide/components/dialog.html) / [Modal](/guide/components/modal.html)：改为多实例层叠架构，新增 `mask` / `closable` / `closeIcon`、`wrapClass` / `containerClass` 等分层定制与 `onEsc` / `onMaskClick` / `afterClose` 回调（其中 [Dialog](/guide/components/dialog.html) 额外新增 `draggable` 拖拽），`title` / `content` 支持 `string` / `VNode` / 渲染函数 / 插槽，并补充 `aria-*` 与可聚焦关闭按钮
 - 增强 [Notification](/guide/components/notification.html) / [Message](/guide/components/message.html) 组件：新增 `maxCount` / `keepAliveOnHover` / `to` 等属性，`Notification` 新增 `key` 与 `placement` 的 `top` / `bottom` 居中位置；定时器改为按 `key` 独立管理，修复多条干扰与常驻消息阻塞回收
 - 新增 `lockScroll` 工具函数（第 `24` 个），`Drawer` / `Modal` / `Dialog` 统一改用并补充卸载兜底释放；修复 [Table](/guide/components/table.html) 就地改写用户 `columns`、空 `columns` 崩溃与 `colspan` 计算错误
@@ -250,24 +250,24 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 ## <VersionDateTag date="2026-08-30">2.6.2</VersionDateTag>
 
 - 优化并更新 [下载文件 downloadFile](/utils/functions/download-file.html) 工具函数和文档：`iframe` 策略在未传入文件名时，自动从文件地址中提取文件名并拼接 `response-content-disposition` 参数，与 `anchor` 策略行为对齐，修复跨域图片 / `PDF` 等可预览类型在 `iframe` 内预览而非下载的问题；地址无有效文件名时（如纯域名）不拼接参数，避免发出 `filename` 为空的畸形请求
-- 优化并更新 [图片 Image](/guide/components/image.html) 组件下载逻辑：未显式设置 `name` 时，自动使用从图片地址中提取的图片名称，内置下载与 `customDownload` 自定义下载方法均生效
+- 优化并更新 [图片 Image](/guide/components/image.html) 组件：未显式设置 `name` 时，自动使用从图片地址中提取的图片名称，内置下载与 `customDownload` 自定义下载方法均生效
 - 优化组件库发布脚本
 - 组件库配置及文档代码优化
 
 ## <VersionDateTag date="2026-08-29">2.6.1</VersionDateTag>
 
-- 优化并重构 [通知提醒 Notification](/guide/components/notification.html) 组件代码逻辑，按弹出位置 `placement` 分组管理通知数据、关闭定时器与隐藏状态，修复不同弹出位置的通知相互干扰的问题，多个弹出位置的通知可同时独立展示；自动关闭时长改为优先取单条通知的 `duration`，未设置时使用组件默认 `duration`
-- 优化并更新 [图片 Image](/guide/components/image.html) 组件代码逻辑：优化从图片地址提取图片名称的逻辑，兼容相对路径与带查询参数 / 哈希的地址，并支持 `URL` 解码（含非法百分号编码兜底）；优化预览动画效果，遮罩层过渡由 `transition` 改为 `animation` 实现，与预览图动画保持一致
+- 优化并重构 [通知提醒 Notification](/guide/components/notification.html) 组件，修复不同弹出位置的通知相互干扰的问题，多个弹出位置的通知可同时独立展示；自动关闭时长改为优先取单条通知的 `duration`，未设置时使用组件默认 `duration`
+- 优化并更新 [图片 Image](/guide/components/image.html) 组件：支持从图片地址提取图片名称，兼容相对路径与带查询参数 / 哈希的地址，并支持 `URL` 解码（含非法百分号编码兜底）；优化预览动画效果，遮罩层与预览图动画一致
 - 优化组件库发布脚本
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-08-28">2.6.0</VersionDateTag>
 
-- 优化并重构组件库工程结构：规范化组件目录及文档为短横线命名，同步更新侧边栏与引用链接
+- 组件文档路径统一为短横线命名，侧边栏与引用链接同步更新
 - 拆分 `utils` 为多模块并整理导出；新增抽象弹出定位与滚动感知组合式函数，重构 [选择器 Select](/guide/components/select.html)、[文字提示 Tooltip](/guide/components/tooltip.html)、[自动完成 AutoComplete](/guide/components/auto-complete.html) 等弹出类组件代码
 - 优化 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 组件代码
 - 优化并更新 [自动完成 AutoComplete](/guide/components/auto-complete.html) 组件文档及演示用例
-- 新增第三方样式单一数据源，优化按需引入时第三方样式处理逻辑
+- 优化按需引入时第三方样式的处理
 - 优化并重构 [下载文件 downloadFile](/utils/functions/download-file.html) 工具函数：内置同源 `anchor` 与跨域 `iframe` 双下载策略并自动分流，支持自定义文件名（含中文）与下载策略配置
 - 优化并更新 [图片 Image](/guide/components/image.html) 组件和文档用例，新增 `downloadOptions`、`customDownload` 属性，支持调整内置下载策略或提供完全自定义的下载方法
 - 优化组件库 `vite` 构建配置逻辑与按需引入 `resolver` 逻辑
@@ -283,17 +283,17 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-08-25">2.5.2</VersionDateTag>
 
-- 优化并增强 [文字提示 Tooltip](/guide/components/tooltip.html) 组件代码逻辑：`flip` 主轴翻转改为同轴方向翻转（`top`↔`bottom` / `left`↔`right`），并始终保留原次轴对齐后缀；新增次轴方向溢出兜底逻辑，避免弹出框次轴方向超出视口或滚动容器边界；箭头新增回退样式，兼容不支持 `clip-path: path` 的浏览器；消除重复的类型定义；将模板内联事件表达式提取为具名方法，提升可读性与可维护性
-- 优化并更新 [滑动输入条 Slider](/guide/components/slider.html)、[选择器 Select](/guide/components/select.html)、[文本省略 Ellipsis](/guide/components/ellipsis.html)、[数字动画 NumberAnimation](/guide/components/number-animation.html)、[倒计时 Countdown](/guide/components/countdown.html)、[瀑布流 Waterfall](/guide/components/waterfall.html)、[文字滚动 TextScroll](/guide/components/text-scroll.html)、[日历 Calendar](/guide/components/calendar.html)、[数字输入框 InputNumber](/guide/components/input-number.html) 组件代码逻辑，将多源原子值监听由「数组字面量 + deep」优化为多源 `getter` 数组，去除冗余的深度遍历
+- 优化并增强 [文字提示 Tooltip](/guide/components/tooltip.html) 组件：`flip` 主轴翻转改为同轴方向翻转（`top`↔`bottom` / `left`↔`right`），并始终保留原次轴对齐后缀；新增次轴方向溢出兜底逻辑，避免弹出框次轴方向超出视口或滚动容器边界；箭头新增回退样式，兼容不支持 `clip-path: path` 的浏览器；消除重复的类型定义；将模板内联事件表达式提取为具名方法，提升可读性与可维护性
+- 优化并更新 [滑动输入条 Slider](/guide/components/slider.html)、[选择器 Select](/guide/components/select.html)、[文本省略 Ellipsis](/guide/components/ellipsis.html)、[数字动画 NumberAnimation](/guide/components/number-animation.html)、[倒计时 Countdown](/guide/components/countdown.html)、[瀑布流 Waterfall](/guide/components/waterfall.html)、[文字滚动 TextScroll](/guide/components/text-scroll.html)、[日历 Calendar](/guide/components/calendar.html)、[数字输入框 InputNumber](/guide/components/input-number.html) 组件，将多源原子值监听由「数组字面量 + deep」优化为多源 `getter` 数组，去除冗余的深度遍历
 - 优化并更新 [悬浮按钮 FloatButton](/guide/components/float-button.html) 组件和文档，调整属性 `zIndex` 默认值由 `9` 为 `99`
 - 文档新增 [AI Coding Kit](https://themusecatcher.github.io/ai-coding-kit/) 导航链接
 - 组件库脚本优化
 
 ## <VersionDateTag date="2026-08-24">2.5.1</VersionDateTag>
 
-- 优化并增强 [文字提示 Tooltip](/guide/components/tooltip.html) 组件和文档，`placement` 属性新增支持 `12` 个方向；新增 `arrowPointAtCenter` 属性使箭头指向目标元素中心；`bgColor` 支持多种预设色彩；`trigger` 新增 `focus` / `contextmenu` 触发方式；新增 `disabled` 属性支持禁用；`showDelay` / `hideDelay` 属性调整为仅在 `trigger: hover` 时生效，`click` / `focus` / `contextmenu` 等触发方式立即显示与隐藏；修复弹出框挂载到 `body` 时被中间可滚动容器边界误判导致意外翻转的问题；使用 `requestAnimationFrame` 合并同帧内的多次位置重算，减少滚动时的强制重排
+- 优化并增强 [文字提示 Tooltip](/guide/components/tooltip.html) 组件和文档，`placement` 属性新增支持 `12` 个方向；新增 `arrowPointAtCenter` 属性使箭头指向目标元素中心；`bgColor` 支持多种预设色彩；`trigger` 新增 `focus` / `contextmenu` 触发方式；新增 `disabled` 属性支持禁用；`showDelay` / `hideDelay` 属性调整为仅在 `trigger: hover` 时生效，`click` / `focus` / `contextmenu` 等触发方式立即显示与隐藏；修复弹出框挂载到 `body` 时被中间可滚动容器边界误判导致意外翻转的问题
 - 优化并更新 [颜色选择器 ColorPicker](/guide/components/color-picker.html) 组件和文档，优化弹层定位与显隐行为：弹层定位由 `bottom` 调整为 `bottomLeft`，避免面板与触发元素错位；新增 `keyboard` 键盘支持；`showDelay` / `hideDelay` 调整为立即显示与隐藏
-- 优化并更新 [文本省略 Ellipsis](/guide/components/ellipsis.html) 组件，过渡动画时长由 `200ms` 对齐为默认 `100ms`
+- 优化并更新 [文本省略 Ellipsis](/guide/components/ellipsis.html) 组件，过渡动画时长与库默认档位对齐
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-08-19">2.5.0</VersionDateTag>
@@ -313,7 +313,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-05-30">2.4.25</VersionDateTag>
 
-- 优化 [表格 Table](/guide/components/table.html) 组件代码逻辑
+- 优化 [表格 Table](/guide/components/table.html) 组件
 
 ## <VersionDateTag date="2026-03-08">2.4.24</VersionDateTag>
 
@@ -357,7 +357,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2025-08-21">2.4.17</VersionDateTag>
 
-- 优化并更新 [文字提示 Tooltip](/guide/components/tooltip.html) 组件代码逻辑，并在文档新增自定义设置弹出框挂载容器示例
+- 优化并更新 [文字提示 Tooltip](/guide/components/tooltip.html) 组件，并在文档新增自定义设置弹出框挂载容器示例
 
 ## <VersionDateTag date="2025-08-19">2.4.16</VersionDateTag>
 
@@ -375,11 +375,11 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2025-06-05">2.4.13</VersionDateTag>
 
-- 优化并更新 [表格 Table](/guide/components/table.html) 组件部分代码逻辑，新增 `rowKey` 属性，用于支持设置表格内容行的唯一标识 `key`
+- 优化并更新 [表格 Table](/guide/components/table.html) 组件，新增 `rowKey` 属性，用于支持设置表格内容行的唯一标识 `key`
 
 ## <VersionDateTag date="2025-06-04">2.4.12</VersionDateTag>
 
-- 优化并更新 [瀑布流 Waterfall](/guide/components/waterfall.html) 组件代码逻辑
+- 优化并更新 [瀑布流 Waterfall](/guide/components/waterfall.html) 组件
 
 ## <VersionDateTag date="2025-06-02">2.4.11</VersionDateTag>
 
@@ -396,7 +396,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2025-05-26">2.4.8</VersionDateTag>
 
-- 优化并更新 [图片 Image](/guide/components/image.html) 组件，优化图片已成功加载逻辑：兼容缓存加载以及使用 `SSG` 时 `@load` 事件偶尔无法正常触发的问题；新增 `previewSpinProps`，用于支持配置预览图片加载中样式
+- 优化并更新 [图片 Image](/guide/components/image.html) 组件，修复图片已加载（含缓存与 `SSG` 场景）时加载态不消失的问题；新增 `previewSpinProps` 配置预览加载中样式
 
 ## <VersionDateTag date="2025-05-23">2.4.7</VersionDateTag>
 
@@ -404,7 +404,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2025-05-22">2.4.6</VersionDateTag>
 
-- 优化并更新 [文字提示 Tooltip](/guide/components/tooltip.html) 组件，优化自动查找最近的可滚动父元素代码逻辑
+- 优化并更新 [文字提示 Tooltip](/guide/components/tooltip.html) 组件，优化自动查找最近的可滚动父元素
 - 优化并更新 [输入框 Input](/guide/components/input.html) 组件，修复使用文本合成系统输入时的问题；新增 `compositionstart` `compositionend` 回调事件
 - 优化并更新 [搜索框 InputSearch](/guide/components/input-search.html) 组件，修复使用文本合成系统输入时的问题；新增 `compositionstart` `compositionend` 回调事件
 - 优化并更新 [文本域 Textarea](/guide/components/textarea.html) 组件，修复使用文本合成系统输入时的问题；新增 `compositionstart` `compositionend` 回调事件
@@ -412,7 +412,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2025-05-06">2.4.5</VersionDateTag>
 
-- 优化并更新 [瀑布流 Waterfall](/guide/components/waterfall.html) 组件代码和瀑布流渲染逻辑
+- 优化并更新 [瀑布流 Waterfall](/guide/components/waterfall.html) 组件
 - 更新组件库部分依赖版本
 
 ## <VersionDateTag date="2025-04-16">2.4.4</VersionDateTag>
@@ -536,7 +536,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2025-02-22">2.2.8</VersionDateTag>
 
-- 优化并更新 [回到顶部 BackTop](/guide/components/back-top.html) 组件自动查找可滚动祖先节点相关代码逻辑，修复在某些情况下无法自动找到可滚动祖先节点的问题
+- 优化并更新 [回到顶部 BackTop](/guide/components/back-top.html) 组件，修复在某些情况下无法自动找到可滚动祖先节点的问题
 
 ## <VersionDateTag date="2025-02-21">2.2.7</VersionDateTag>
 
@@ -629,24 +629,24 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2025-01-15">2.0.12</VersionDateTag>
 
-- 优化并更新 [输入框 Input](/guide/components/input.html) 组件代码逻辑
-- 优化并更新 [文字提示 Tooltip](/guide/components/tooltip.html) 组件代码逻辑
+- 优化并更新 [输入框 Input](/guide/components/input.html) 组件
+- 优化并更新 [文字提示 Tooltip](/guide/components/tooltip.html) 组件
 
 ## <VersionDateTag date="2025-01-14">2.0.11</VersionDateTag>
 
-- 优化并更新 [输入框 Input](/guide/components/input.html) 组件代码逻辑
-- 优化并更新 [搜索框 InputSearch](/guide/components/input-search.html) 组件代码逻辑
-- 优化并更新 [文本域 Textarea](/guide/components/textarea.html) 组件代码逻辑
+- 优化并更新 [输入框 Input](/guide/components/input.html) 组件
+- 优化并更新 [搜索框 InputSearch](/guide/components/input-search.html) 组件
+- 优化并更新 [文本域 Textarea](/guide/components/textarea.html) 组件
 - 优化并更新 [数字输入框 InputNumber](/guide/components/input-number.html) 组件代码，新增 `enter` 事件，支持监听按下回车的回调
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2025-01-13">2.0.10</VersionDateTag>
 
 - 优化并更新 [图片 Image](/guide/components/image.html) 组件代码，新增 `draggable` 属性，支持设置是否可以拖动图片
-- 优化并更新 [文本省略 Ellipsis](/guide/components/ellipsis.html) 组件代码逻辑
-- 优化并更新 [滑动输入条 Slider](/guide/components/slider.html) 组件代码逻辑
-- 优化并更新 [滚动条 Scrollbar](/guide/components/scrollbar.html) 组件代码逻辑
-- 优化并更新 [文字提示 Tooltip](/guide/components/tooltip.html) 组件代码逻辑，新增 `animationend` 事件，支持监听显示隐藏动画结束时的回调
+- 优化并更新 [文本省略 Ellipsis](/guide/components/ellipsis.html) 组件
+- 优化并更新 [滑动输入条 Slider](/guide/components/slider.html) 组件
+- 优化并更新 [滚动条 Scrollbar](/guide/components/scrollbar.html) 组件
+- 优化并更新 [文字提示 Tooltip](/guide/components/tooltip.html) 组件，新增 `animationend` 事件，在显示 / 隐藏动画结束时触发
 
 ## <VersionDateTag date="2025-01-10">2.0.9</VersionDateTag>
 
@@ -783,13 +783,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 - 优化并更新 [浮动按钮 FloatButton](/guide/components/float-button.html) 组件，新增 `zIndex` 属性，支持设置按钮的 `z-index` 值
 - 优化并更新 [文字滚动 TextScroll](/guide/components/float-button.html) 组件代码
-- 优化并更新 [文本省略 Ellipsis](/guide/components/ellipsis.html) 组件代码逻辑
+- 优化并更新 [文本省略 Ellipsis](/guide/components/ellipsis.html) 组件
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2024-11-08">1.9.4</VersionDateTag>
 
 - 优化并更新 [文本省略 Ellipsis](/guide/components/ellipsis.html) 组件，优化弹出提示默认最大宽度计算方式
-- 优化并更新 [文字提示 Tooltip](/guide/components/tooltip.html) 组件，优化自动调整弹出位置算法逻辑
+- 优化并更新 [文字提示 Tooltip](/guide/components/tooltip.html) 组件，优化弹出位置自动调整
 - 优化并更新 [警告提示 Alert](/guide/components/alert.html) 组件，优化关闭时的动画效果
 - 优化并更新 [徽标 Badge](/guide/components/badge.html) 组件，优化关闭时的动画效果
 - 优化并更新 [图片 Image](/guide/components/image.html) 组件，优化预览打开关闭动画效果
