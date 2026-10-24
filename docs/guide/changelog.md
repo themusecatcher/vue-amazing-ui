@@ -14,6 +14,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-24">3.2.1</VersionDateTag>
+
+- 修复 [按钮 Button](/guide/components/button.html) 与 [开关 Switch](/guide/components/switch.html) 波纹未播完时连点、后续波纹不再播放的问题
+- 修复 [开关 Switch](/guide/components/switch.html)、[单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html) 波纹未播完即被禁用、重新启用后凭空播放一次波纹的问题
+- 优化 [按钮 Button](/guide/components/button.html)、[开关 Switch](/guide/components/switch.html)、[单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html) 的水波纹动画及样式效果
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-10-24">3.2.0</VersionDateTag>
 
 - 重构并增强 [文本省略 Ellipsis](/guide/components/ellipsis.html)：提示显隐与溢出状态不再改变文本容器的结构、类名与样式，提示实例按需创建（受控开合时提前创建）；`tooltip` 由 `boolean` 扩展为 `boolean | EllipsisTooltipProps`，原先直接写在组件上的 [文字提示 Tooltip](/guide/components/tooltip.html) 属性（如 `bg-color` / `trigger`）需移入该对象，`content-class` / `content-style` 一并失效（类名与样式直接写在组件上），并新增 `EllipsisTooltipProps` 类型导出；`expand` 在单行文本下同样可展开
