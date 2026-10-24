@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { Tooltip } from 'vue-amazing-ui'
+import type { Button, Tooltip } from 'vue-amazing-ui'
 const containerRef = ref<HTMLDivElement>()
 const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null)
 const buttonWidth = 70
@@ -32,9 +32,9 @@ function onHide() {
 // 受控显示：由 open 驱动
 const controlledOpen = ref<boolean>(false)
 const destroyOpen = ref(false)
-// 锚点模式：锚点元素由使用方持有，传入 anchor 后以其为准
-const anchorRef = ref<HTMLDivElement>()
-const gatedAnchorRef = ref<HTMLDivElement>()
+// 锚点模式：锚点元素由使用方持有，传入 anchor 后以其为准（组件作锚点时取其根元素）
+const anchorRef = ref<InstanceType<typeof Button> | null>(null)
+const gatedAnchorRef = ref<InstanceType<typeof Button> | null>(null)
 // 展示前判定：关闭开关时悬停不展示
 const gatingAllowed = ref(false)
 function gatingDisabled(): boolean {
@@ -205,15 +205,18 @@ function gatingDisabled(): boolean {
       <code>aria-describedby</code> 与定位均以传入元素为准； <code>getDisabled</code> 在每次展示前求值，返回
       <code>true</code> 时不展示
     </p>
-    <Space>
-      <div ref="anchorRef" class="anchor-demo">锚点元素（悬停查看提示）</div>
-      <Tooltip :anchor="anchorRef" tooltip="Vue Amazing UI" />
-    </Space>
-    <br />
-    <Space>
-      <div ref="gatedAnchorRef" class="anchor-demo">受判定拦截的锚点</div>
-      <Tooltip :anchor="gatedAnchorRef" :get-disabled="gatingDisabled" tooltip="Vue Amazing UI" />
-      <Switch v-model:value="gatingAllowed" />
+    <Space vertical align="start">
+      <Space align="center">
+        <span>基础锚点</span>
+        <Button ref="anchorRef">锚点元素（悬停查看提示）</Button>
+        <Tooltip :anchor="anchorRef?.$el ?? null" tooltip="Vue Amazing UI" />
+      </Space>
+      <Space align="center">
+        <span>展示前判定</span>
+        <Button ref="gatedAnchorRef">受判定拦截的锚点</Button>
+        <Switch v-model:value="gatingAllowed" checked="放行" unchecked="拦截" />
+        <Tooltip :anchor="gatedAnchorRef?.$el ?? null" :get-disabled="gatingDisabled" tooltip="Vue Amazing UI" />
+      </Space>
     </Space>
     <h2 class="mt30 mb10">按键控制</h2>
     <p class="mb10"><code>enter</code> 切换显示；<code>esc</code> 关闭，仅当 <code>trigger: 'click'</code> 时生效</p>
@@ -300,12 +303,6 @@ function gatingDisabled(): boolean {
   </div>
 </template>
 <style lang="less">
-.anchor-demo {
-  display: inline-block;
-  padding: 8px 16px;
-  border: 1px solid var(--va-border-split-color);
-  border-radius: 8px;
-}
 .custom-class {
   font-size: 16px !important;
   color: #0958d9 !important;
