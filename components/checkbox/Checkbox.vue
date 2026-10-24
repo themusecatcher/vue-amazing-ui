@@ -76,6 +76,12 @@ watch(mergedChecked, (checked) => {
     startWave()
   }
 })
+// 禁用时扩散环节点被移除，`animationend` 不会再回来复位，重新启用时环会凭空播一次，故禁用即复位
+watch(mergedDisabled, (disabled) => {
+  if (disabled) {
+    endWave()
+  }
+})
 // 状态快照取本组件 props，原生事件与方法附在其上，与原生 input 的 change 同形态
 function buildChangeEvent(nativeEvent: Event, checked: boolean, value?: CheckboxValue): CheckboxChangeEvent {
   return {
@@ -277,6 +283,7 @@ defineExpose({ focus, blur })
       animation-duration: 0.3s;
       animation-timing-function: ease-in-out;
       border-radius: inherit;
+      transition: all 0.3s;
     }
     .wave-active {
       z-index: 1;
@@ -300,6 +307,8 @@ defineExpose({ focus, blur })
   /* 悬停时环可见：点击导致的选中必然伴随悬停，日常表现与直接播放一致 */
   &:hover .checkbox-box .wave-active {
     visibility: visible;
+    /* 悬停中选中时环随选中底色一起提亮 */
+    border-color: var(--va-cp-checkbox-primary-color-hover, var(--va-primary-color-hover));
   }
   .checkbox-checked {
     background-color: var(--va-cp-checkbox-primary-color, var(--va-primary-color));

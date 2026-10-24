@@ -151,7 +151,7 @@ const buildDistOptions = {
       iife: 自执行函数，适用于 <script> 标签（如果你想为你的应用程序创建 bundle，那么你可能会使用它）。iife 表示“自执行 函数表达式”
     */
     // f=iife（build:browser）只出 iife；默认（build:dist）出 es + umd：
-    // umd 保留给 require / AMD / 全局脚本形态的消费方（与 antd、naive-ui 的产物形态对齐），
+    // umd 保留给 require / AMD / 全局脚本形态的消费方，
     // iife 拆到另一个构建 build:browser 单独产出，避免同一份代码被打两次包
     formats: f === 'iife' ? ['iife'] : ['es', 'umd'],
     entry: resolve(rootDir, 'components', 'index.ts'), // 或 'components/index.ts' entry 是必需的，因为库不能使用HTML作为入口。

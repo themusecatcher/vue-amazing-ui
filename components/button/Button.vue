@@ -45,7 +45,7 @@ const props = withDefaults(defineProps<Props>(), {
   block: false
 })
 defineSlots<ButtonSlots>()
-const { wave, startWave, endWave } = useWave()
+const { wave, waveKey, startWave, endWave } = useWave()
 // 禁用时波纹节点被移除，`animationend` 也就不会再回来复位；若置为禁用发生在动画结束前，
 // `wave` 会一直残留到重新启用，元素重新挂载时 `wave-active` 会让波纹凭空播一次（没有点击来源）。
 // 故在进入禁用态时主动复位。
@@ -73,7 +73,7 @@ const buttonThemeStyle = computed<Record<string, string>>(() => {
     '--va-button-primary-color-active': states.active,
     '--va-button-solid-text-color': states.solid
   }
-  // 文字 / 链接按钮的波纹固定透明（见 .btn-text / .btn-link 的声明），不随实例色改写
+  // 文字 / 链接按钮的波纹固定透明（见 .btn-text / .btn-link）；其余类型显式写一份，才能让实例色压过 .btn-danger 声明的波纹色
   if (props.type !== 'text' && props.type !== 'link') {
     style['--button-ripple-color'] = states.base
   }
@@ -145,7 +145,13 @@ function onKeyboard(e: KeyboardEvent) {
     <span v-if="slotsExist.default" class="btn-content">
       <slot></slot>
     </span>
-    <div v-if="!disabled" class="button-wave" :class="{ 'wave-active': wave }" @animationend="endWave"></div>
+    <div
+      v-if="!disabled"
+      :key="waveKey"
+      class="button-wave"
+      :class="{ 'wave-active': wave }"
+      @animationend="endWave"
+    ></div>
   </component>
 </template>
 <style lang="less" scoped>
@@ -243,13 +249,14 @@ function onKeyboard(e: KeyboardEvent) {
   .button-wave {
     position: absolute;
     pointer-events: none;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+    left: -1px;
     animation-iteration-count: 1;
-    animation-duration: 0.6s;
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1), cubic-bezier(0, 0, 0.2, 1);
+    animation-duration: 0.4s, 2s;
+    animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1), cubic-bezier(0.08, 0.82, 0.17, 1);
+    animation-fill-mode: forwards;
     border-radius: inherit;
   }
   .wave-active {
@@ -257,15 +264,15 @@ function onKeyboard(e: KeyboardEvent) {
     animation-name: waveSpread, waveOpacity;
     @keyframes waveSpread {
       from {
-        box-shadow: 0 0 0.5px 0 var(--button-ripple-color, var(--va-button-primary-color, var(--va-primary-color)));
+        box-shadow: 0 0 0 0 var(--button-ripple-color, var(--va-button-primary-color, var(--va-primary-color)));
       }
       to {
-        box-shadow: 0 0 0.5px 5.5px var(--button-ripple-color, var(--va-button-primary-color, var(--va-primary-color)));
+        box-shadow: 0 0 0 6px var(--button-ripple-color, var(--va-button-primary-color, var(--va-primary-color)));
       }
     }
     @keyframes waveOpacity {
       from {
-        opacity: 0.6;
+        opacity: 0.2;
       }
       to {
         opacity: 0;

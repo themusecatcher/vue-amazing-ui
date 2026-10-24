@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, watch } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import { useWave } from 'components/utils'
 
@@ -34,7 +35,20 @@ const props = withDefaults(defineProps<Props>(), {
   value: false
 })
 defineSlots<SwitchSlots>()
-const { wave, startWave, endWave } = useWave()
+const { wave, waveKey, startWave, endWave } = useWave()
+// 禁用时波纹节点被移除，`animationend` 不会再回来复位；淡出有 2s，不主动复位会让重新启用时凭空播一次
+watch(
+  () => props.disabled,
+  (disabled: boolean) => {
+    if (disabled) {
+      endWave()
+    }
+  }
+)
+// 仅在传入 rippleColor 时写实例变量，默认值交给样式回落链，避免每次渲染都塞一份等价默认值
+const rippleStyle = computed<CSSProperties>(() =>
+  props.rippleColor ? { '--switch-ripple-color': props.rippleColor } : {}
+)
 const emit = defineEmits(['update:value', 'change'])
 function onSwitch(): void {
   if (props.value === props.checkedValue) {
@@ -57,9 +71,7 @@ function onSwitch(): void {
       'switch-checked': value === checkedValue,
       'switch-disabled': disabled
     }"
-    :style="`
-      --switch-ripple-color: ${rippleColor || 'var(--va-cp-switch-primary-color, var(--va-primary-color))'};
-    `"
+    :style="rippleStyle"
     @click="disabled || loading ? () => false : onSwitch()"
   >
     <div class="switch-inner">
@@ -76,7 +88,13 @@ function onSwitch(): void {
       </svg>
       <slot name="node" :checked="value"></slot>
     </div>
-    <div v-if="!disabled" class="switch-wave" :class="{ 'wave-active': wave }" @animationend="endWave"></div>
+    <div
+      v-if="!disabled"
+      :key="waveKey"
+      class="switch-wave"
+      :class="{ 'wave-active': wave }"
+      @animationend="endWave"
+    ></div>
   </div>
 </template>
 <style lang="less" scoped>
@@ -314,8 +332,9 @@ function onSwitch(): void {
   bottom: 0;
   left: 0;
   animation-iteration-count: 1;
-  animation-duration: 0.6s;
-  animation-timing-function: cubic-bezier(0, 0, 0.2, 1), cubic-bezier(0, 0, 0.2, 1);
+  animation-duration: 0.4s, 2s;
+  animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1), cubic-bezier(0.08, 0.82, 0.17, 1);
+  animation-fill-mode: forwards;
   border-radius: inherit;
 }
 .wave-active {
@@ -323,15 +342,15 @@ function onSwitch(): void {
   animation-name: waveSpread, waveOpacity;
   @keyframes waveSpread {
     from {
-      box-shadow: 0 0 0.5px 0 var(--switch-ripple-color);
+      box-shadow: 0 0 0 0 var(--switch-ripple-color, var(--va-cp-switch-primary-color, var(--va-primary-color)));
     }
     to {
-      box-shadow: 0 0 0.5px 5px var(--switch-ripple-color);
+      box-shadow: 0 0 0 6px var(--switch-ripple-color, var(--va-cp-switch-primary-color, var(--va-primary-color)));
     }
   }
   @keyframes waveOpacity {
     from {
-      opacity: 0.6;
+      opacity: 0.2;
     }
     to {
       opacity: 0;

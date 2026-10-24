@@ -15,8 +15,9 @@ import Switch from 'components/switch'
  * 这些类名（`.xxx-wave` / `.wave-active`）与事件绑定是动画可见性的唯一开关，
  * 一旦抽取过程中改名或漏接，动画会静默失效而没有任何类型错误，故逐一锁定。
  *
- * 说明：动画「连点时先复位、下一帧再置位」的重放细节由 useWave 单元测试覆盖，
- * 此处只验证组件接线（点击置位 / animationend 复位 / disabled 不渲染）。
+ * 说明：连点时以 `key` 重建波纹节点、以及扩散 / 淡出两段动画的复位时机，
+ * 细节由 useWave 单元测试覆盖，此处只验证组件接线
+ * （点击置位 / 连点重建节点 / animationend 复位 / disabled 不渲染）。
  */
 
 const waveCases = [
@@ -80,6 +81,35 @@ describe('水波纹 - 四种组件的点击置位与 animationend 复位', () =>
   })
 })
 
+describe('水波纹 - 连点每次重建波纹节点（不叠加）', () => {
+  it('Button：连点两次应替换波纹节点，且始终只有一条', async () => {
+    wrapper = mount(Button, { slots: { default: '按钮' } })
+    await wrapper.find('.btn-wrap').trigger('click')
+    const first = wrapper.find('.button-wave').element
+
+    await wrapper.find('.btn-wrap').trigger('click')
+    const second = wrapper.find('.button-wave').element
+
+    // 复用同一节点时摘类与挂类同帧发生，浏览器不会重启动画，连点会静默失效
+    expect(second).not.toBe(first)
+    expect(wrapper.findAll('.button-wave')).toHaveLength(1)
+    expect(wrapper.find('.button-wave').classes()).toContain('wave-active')
+  })
+
+  it('Switch：连点两次应替换波纹节点，且始终只有一条', async () => {
+    wrapper = mount(Switch, { props: { value: false } })
+    await wrapper.find('.switch-wrap').trigger('click')
+    const first = wrapper.find('.switch-wave').element
+
+    await wrapper.find('.switch-wrap').trigger('click')
+    const second = wrapper.find('.switch-wave').element
+
+    expect(second).not.toBe(first)
+    expect(wrapper.findAll('.switch-wave')).toHaveLength(1)
+    expect(wrapper.find('.switch-wave').classes()).toContain('wave-active')
+  })
+})
+
 describe('水波纹 - 禁用态不渲染波纹节点', () => {
   it('Button disabled 时不渲染 .button-wave', () => {
     wrapper = mount(Button, { props: { disabled: true }, slots: { default: '按钮' } })
@@ -114,6 +144,42 @@ describe('水波纹 - 禁用期间复位，重新启用不残留', () => {
 
     await wrapper.setProps({ disabled: false })
     expect(wrapper.find('.button-wave').classes()).not.toContain('wave-active')
+  })
+
+  it('Switch：点击后动画未结束就被禁用，重新启用时不应带 wave-active', async () => {
+    wrapper = mount(Switch, { props: { value: false } })
+    await wrapper.find('.switch-wrap').trigger('click')
+    expect(wrapper.find('.switch-wave').classes()).toContain('wave-active')
+
+    await wrapper.setProps({ disabled: true })
+    expect(wrapper.find('.switch-wave').exists()).toBe(false)
+
+    await wrapper.setProps({ disabled: false })
+    expect(wrapper.find('.switch-wave').classes()).not.toContain('wave-active')
+  })
+
+  it('Checkbox：选中动画未结束就被禁用，重新启用时不应带 wave-active', async () => {
+    wrapper = mount(Checkbox, { props: { checked: false }, slots: { default: '复选' } })
+    await wrapper.setProps({ checked: true })
+    expect(wrapper.find('.checkbox-wave').classes()).toContain('wave-active')
+
+    await wrapper.setProps({ disabled: true })
+    expect(wrapper.find('.checkbox-wave').exists()).toBe(false)
+
+    await wrapper.setProps({ disabled: false })
+    expect(wrapper.find('.checkbox-wave').classes()).not.toContain('wave-active')
+  })
+
+  it('Radio：选中动画未结束就被禁用，重新启用时不应带 wave-active', async () => {
+    wrapper = mount(Radio, { props: { checked: false }, slots: { default: '单选' } })
+    await wrapper.setProps({ checked: true })
+    expect(wrapper.find('.radio-wave').classes()).toContain('wave-active')
+
+    await wrapper.setProps({ disabled: true })
+    expect(wrapper.find('.radio-wave').exists()).toBe(false)
+
+    await wrapper.setProps({ disabled: false })
+    expect(wrapper.find('.radio-wave').classes()).not.toContain('wave-active')
   })
 })
 
@@ -205,6 +271,18 @@ describe('水波纹 - 由选中态驱动（非点击来源同样播放）', () =
     const waves = wrapper.findAll('.radio-wave')
     expect(waves[0].classes()).not.toContain('wave-active')
     expect(waves[1].classes()).toContain('wave-active')
+  })
+})
+
+describe('水波纹 - 波纹颜色变量按需写入', () => {
+  it('Switch：未传 ripple-color 时不写实例变量，默认值由样式回落链提供', () => {
+    wrapper = mount(Switch, { props: { value: false } })
+    expect(wrapper.find('.switch-wrap').attributes('style') ?? '').not.toContain('--switch-ripple-color')
+  })
+
+  it('Switch：传入 ripple-color 时以实例变量写入（inline 优先级最高）', () => {
+    wrapper = mount(Switch, { props: { value: false, rippleColor: '#faad14' } })
+    expect(wrapper.find('.switch-wrap').attributes('style') ?? '').toContain('--switch-ripple-color: #faad14')
   })
 })
 
