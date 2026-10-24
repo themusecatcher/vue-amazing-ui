@@ -149,14 +149,15 @@ function onAnimationIteration(): void {
   resetScrollState()
 }
 function verticalMove(): void {
-  // 间隔在起链时确定一次并沿用整条链；每次触发后再排下一拍，避免堆积与累积漂移
-  const delay = atRest.value ? props.interval : props.interval + props.duration
+  // 稳态周期 = 停留 interval + 过渡 duration（与轮播图的 interval 同口径），每次触发后再排下一拍，避免堆积
+  const cycle = props.interval + props.duration
   const tick = (): void => {
     atRest.value = false
     activeIndex.value = (activeIndex.value + 1) % itemsAmount.value
-    verticalMoveTimer.value = setTimeout(tick, delay)
+    verticalMoveTimer.value = setTimeout(tick, cycle)
   }
-  verticalMoveTimer.value = setTimeout(tick, delay)
+  // 静止态起链时当前条已停留过，首拍只等 interval；复位刚触发过一趟过渡时，首拍需再补一个 duration 等它落位
+  verticalMoveTimer.value = setTimeout(tick, atRest.value ? props.interval : cycle)
 }
 function onClick(item: Item): void {
   emit('click', item)

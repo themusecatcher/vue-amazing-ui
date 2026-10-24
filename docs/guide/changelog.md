@@ -25,6 +25,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 修复 [文本滚动 TextScroll](/guide/components/text-scroll.html) 在缓存页面（`KeepAlive`）中失活后垂直滚动仍在推进、返回时已跳到其他条目的问题：失活前正在滚动则暂停，重新激活后接着滚动
 - 修复 [文本滚动 TextScroll](/guide/components/text-scroll.html) 重复调用 `start()` 会并存两条滚动节拍（速度翻倍且无法停止），以及卸载后调用 `start()` 残留定时器的问题
 - 修复 [文本滚动 TextScroll](/guide/components/text-scroll.html) 垂直滚动时 `itemStyle` 中的 `maxWidth` 被组件默认值覆盖的问题；并明确 `ellipsis` 开启时 `itemStyle` 作用于文本容器
+- 修复 [文本滚动 TextScroll](/guide/components/text-scroll.html) 垂直滚动的时间间隔被过渡时长挤占：现在每条停留 `interval`、过渡另计 `duration`，与 [轮播图 Swiper](/guide/components/swiper.html) 的 `interval` 口径一致
 - 更新使用者文档和贡献者文档
 - 组件库及文档代码优化
 

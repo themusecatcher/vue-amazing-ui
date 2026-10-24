@@ -50,7 +50,7 @@ describe('TextScroll：垂直滚动节拍', () => {
     vi.useRealTimers()
   })
 
-  it('静止态起链时每拍间隔为一个 interval', async () => {
+  it('静止态起链：首拍等一个 interval，此后每拍等 interval + duration', async () => {
     wrapper = mountVertical()
     start(wrapper)
 
@@ -59,7 +59,8 @@ describe('TextScroll：垂直滚动节拍', () => {
     await advance(1)
     expect(visibleIndex(wrapper)).toBe(1)
 
-    await advance(99)
+    // 稳态周期 = 停留 interval + 过渡 duration
+    await advance(149)
     expect(visibleIndex(wrapper)).toBe(1)
     await advance(1)
     expect(visibleIndex(wrapper)).toBe(2)
@@ -247,7 +248,8 @@ describe('TextScroll：文字数组变更后的复位', () => {
   it('垂直模式替换 items 后当前索引归零', async () => {
     wrapper = mountVertical()
     start(wrapper)
-    await advance(200)
+    // 首拍 100ms（interval），第二拍再过 150ms（interval + duration）
+    await advance(250)
     expect(visibleIndex(wrapper)).toBe(2)
 
     await wrapper.setProps({ items: [{ title: 'x' }, { title: 'y' }, { title: 'z' }] })
