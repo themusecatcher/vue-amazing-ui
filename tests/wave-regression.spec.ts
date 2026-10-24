@@ -15,8 +15,9 @@ import Switch from 'components/switch'
  * 这些类名（`.xxx-wave` / `.wave-active`）与事件绑定是动画可见性的唯一开关，
  * 一旦抽取过程中改名或漏接，动画会静默失效而没有任何类型错误，故逐一锁定。
  *
- * 说明：动画「连点时先复位、下一帧再置位」的重放细节由 useWave 单元测试覆盖，
- * 此处只验证组件接线（点击置位 / animationend 复位 / disabled 不渲染）。
+ * 说明：连点时以 `key` 重建波纹节点、以及扩散 / 淡出两段动画的复位时机，
+ * 细节由 useWave 单元测试覆盖，此处只验证组件接线
+ * （点击置位 / 连点重建节点 / animationend 复位 / disabled 不渲染）。
  */
 
 const waveCases = [
@@ -77,6 +78,35 @@ describe('水波纹 - 四种组件的点击置位与 animationend 复位', () =>
 
       expect(wrapper.find(waveSelector).classes()).not.toContain('wave-active')
     })
+  })
+})
+
+describe('水波纹 - 连点每次重建波纹节点（不叠加）', () => {
+  it('Button：连点两次应替换波纹节点，且始终只有一条', async () => {
+    wrapper = mount(Button, { slots: { default: '按钮' } })
+    await wrapper.find('.btn-wrap').trigger('click')
+    const first = wrapper.find('.button-wave').element
+
+    await wrapper.find('.btn-wrap').trigger('click')
+    const second = wrapper.find('.button-wave').element
+
+    // 复用同一节点时摘类与挂类同帧发生，浏览器不会重启动画，连点会静默失效
+    expect(second).not.toBe(first)
+    expect(wrapper.findAll('.button-wave')).toHaveLength(1)
+    expect(wrapper.find('.button-wave').classes()).toContain('wave-active')
+  })
+
+  it('Switch：连点两次应替换波纹节点，且始终只有一条', async () => {
+    wrapper = mount(Switch, { props: { value: false } })
+    await wrapper.find('.switch-wrap').trigger('click')
+    const first = wrapper.find('.switch-wave').element
+
+    await wrapper.find('.switch-wrap').trigger('click')
+    const second = wrapper.find('.switch-wave').element
+
+    expect(second).not.toBe(first)
+    expect(wrapper.findAll('.switch-wave')).toHaveLength(1)
+    expect(wrapper.find('.switch-wave').classes()).toContain('wave-active')
   })
 })
 

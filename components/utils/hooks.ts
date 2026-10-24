@@ -1,15 +1,4 @@
-import {
-  ref,
-  nextTick,
-  getCurrentInstance,
-  onMounted,
-  computed,
-  onUnmounted,
-  reactive,
-  useSlots,
-  Text,
-  Comment
-} from 'vue'
+import { ref, getCurrentInstance, onMounted, computed, onUnmounted, reactive, useSlots, Text, Comment } from 'vue'
 import type { InjectionKey, Ref, ComputedRef, Reactive, VNode } from 'vue'
 
 /**
@@ -317,26 +306,32 @@ export function injectFromChain<T>(key: InjectionKey<T>): T | undefined {
 /**
  * 组合式函数：水波纹动画状态（Material 风格的点击 / 选中涟漪）
  *
- * `wave` 用于驱动 `.wave-active` 类；`startWave` 在连点时先复位、下一帧再置位以强制重放动画；
- * `endWave` 供模板 `@animationend` 调用以复位。
+ * `wave` 驱动 `.wave-active` 类；`waveKey` 作为波纹节点的 `key`，每次 `startWave` 递增一次，
+ * 由模板重建节点触发动画。**不能只切类名**：摘类与挂类落在同一帧，样式无净变化，
+ * 浏览器不会重启 CSS 动画，连点表现为第一条播完后无后续波纹。
  *
- * @returns 波纹标志与启停方法
+ * 扩散与淡出是两段不同时长的动画，`endWave` 接收 `animationend` 事件，
+ * 仅在淡出（`waveOpacity`）结束时复位——扩散（`waveSpread`）结束即摘类会把淡出截断。
+ *
+ * @returns 波纹标志、节点 key 与启停方法
  */
-export function useWave(): { wave: Ref<boolean>; startWave: () => void; endWave: () => void } {
+export function useWave(): {
+  wave: Ref<boolean>
+  waveKey: Ref<number>
+  startWave: () => void
+  endWave: (e?: AnimationEvent) => void
+} {
   const wave = ref<boolean>(false)
+  const waveKey = ref<number>(0)
   function startWave(): void {
-    if (wave.value) {
-      // 正在播放时先复位、下一帧再置位，强制重新触发 CSS 动画
-      wave.value = false
-      nextTick(() => {
-        wave.value = true
-      })
-    } else {
-      wave.value = true
-    }
+    wave.value = true
+    waveKey.value += 1
   }
-  function endWave(): void {
+  function endWave(e?: AnimationEvent): void {
+    if (e?.animationName === 'waveSpread') {
+      return
+    }
     wave.value = false
   }
-  return { wave, startWave, endWave }
+  return { wave, waveKey, startWave, endWave }
 }
