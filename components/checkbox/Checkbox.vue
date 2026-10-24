@@ -76,6 +76,12 @@ watch(mergedChecked, (checked) => {
     startWave()
   }
 })
+// 禁用时扩散环节点被移除，`animationend` 不会再回来复位，重新启用时环会凭空播一次，故禁用即复位
+watch(mergedDisabled, (disabled) => {
+  if (disabled) {
+    endWave()
+  }
+})
 // 状态快照取本组件 props，原生事件与方法附在其上，与原生 input 的 change 同形态
 function buildChangeEvent(nativeEvent: Event, checked: boolean, value?: CheckboxValue): CheckboxChangeEvent {
   return {

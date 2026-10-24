@@ -73,7 +73,7 @@ const buttonThemeStyle = computed<Record<string, string>>(() => {
     '--va-button-primary-color-active': states.active,
     '--va-button-solid-text-color': states.solid
   }
-  // 文字 / 链接按钮的波纹固定透明（见 .btn-text / .btn-link 的声明），不随实例色改写
+  // 文字 / 链接按钮的波纹固定透明（见 .btn-text / .btn-link）；其余类型显式写一份，才能让实例色压过 .btn-danger 声明的波纹色
   if (props.type !== 'text' && props.type !== 'link') {
     style['--button-ripple-color'] = states.base
   }
@@ -249,15 +249,14 @@ function onKeyboard(e: KeyboardEvent) {
   .button-wave {
     position: absolute;
     pointer-events: none;
-    /* 波纹铺满按钮外框：绝对定位以 padding box 为基准，需向外补回 1px 边框 */
     top: -1px;
     right: -1px;
     bottom: -1px;
     left: -1px;
     animation-iteration-count: 1;
-    /* 扩散与淡出分开计时：0.4s 外扩到位后，再由 2s 缓慢收干净 */
     animation-duration: 0.4s, 2s;
     animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1), cubic-bezier(0.08, 0.82, 0.17, 1);
+    animation-fill-mode: forwards;
     border-radius: inherit;
   }
   .wave-active {

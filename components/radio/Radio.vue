@@ -75,6 +75,12 @@ watch(mergedChecked, (checked) => {
     startWave()
   }
 })
+// 禁用时扩散环节点被移除，`animationend` 不会再回来复位，重新启用时环会凭空播一次，故禁用即复位
+watch(mergedDisabled, (disabled) => {
+  if (disabled) {
+    endWave()
+  }
+})
 // 状态快照取本组件 props，原生事件与方法附在其上，与原生 input 的 change 同形态
 function buildChangeEvent(nativeEvent: Event, checked: boolean, value?: RadioValue): RadioChangeEvent {
   return {
@@ -312,16 +318,11 @@ defineExpose({ focus, blur })
     }
     /* 选中扩散外环：1.6 倍外扩的描边环，扩散同时淡出（按钮形态仍沿用光晕） */
     .radio-wave {
-      top: -1px;
-      right: -1px;
-      bottom: -1px;
-      left: -1px;
       box-sizing: border-box;
       animation-duration: 0.3s;
       animation-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);
     }
     .wave-active {
-      /* 默认不可见：环由选中态驱动，程序化选中时鼠标未必在项上 */
       visibility: hidden;
       border: 1px solid var(--va-cp-radio-primary-color, var(--va-primary-color));
       animation-name: antRadioEffect;
@@ -518,14 +519,14 @@ defineExpose({ focus, blur })
 .radio-wave {
   position: absolute;
   pointer-events: none;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  top: -1px;
+  right: -1px;
+  bottom: -1px;
+  left: -1px;
   animation-iteration-count: 1;
-  /* 扩散与淡出分开计时：0.4s 外扩到位后，再由 2s 缓慢收干净 */
   animation-duration: 0.4s, 2s;
   animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1), cubic-bezier(0.08, 0.82, 0.17, 1);
+  animation-fill-mode: forwards;
   border-radius: inherit;
 }
 .wave-active {

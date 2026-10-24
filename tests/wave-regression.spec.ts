@@ -145,6 +145,42 @@ describe('水波纹 - 禁用期间复位，重新启用不残留', () => {
     await wrapper.setProps({ disabled: false })
     expect(wrapper.find('.button-wave').classes()).not.toContain('wave-active')
   })
+
+  it('Switch：点击后动画未结束就被禁用，重新启用时不应带 wave-active', async () => {
+    wrapper = mount(Switch, { props: { value: false } })
+    await wrapper.find('.switch-wrap').trigger('click')
+    expect(wrapper.find('.switch-wave').classes()).toContain('wave-active')
+
+    await wrapper.setProps({ disabled: true })
+    expect(wrapper.find('.switch-wave').exists()).toBe(false)
+
+    await wrapper.setProps({ disabled: false })
+    expect(wrapper.find('.switch-wave').classes()).not.toContain('wave-active')
+  })
+
+  it('Checkbox：选中动画未结束就被禁用，重新启用时不应带 wave-active', async () => {
+    wrapper = mount(Checkbox, { props: { checked: false }, slots: { default: '复选' } })
+    await wrapper.setProps({ checked: true })
+    expect(wrapper.find('.checkbox-wave').classes()).toContain('wave-active')
+
+    await wrapper.setProps({ disabled: true })
+    expect(wrapper.find('.checkbox-wave').exists()).toBe(false)
+
+    await wrapper.setProps({ disabled: false })
+    expect(wrapper.find('.checkbox-wave').classes()).not.toContain('wave-active')
+  })
+
+  it('Radio：选中动画未结束就被禁用，重新启用时不应带 wave-active', async () => {
+    wrapper = mount(Radio, { props: { checked: false }, slots: { default: '单选' } })
+    await wrapper.setProps({ checked: true })
+    expect(wrapper.find('.radio-wave').classes()).toContain('wave-active')
+
+    await wrapper.setProps({ disabled: true })
+    expect(wrapper.find('.radio-wave').exists()).toBe(false)
+
+    await wrapper.setProps({ disabled: false })
+    expect(wrapper.find('.radio-wave').classes()).not.toContain('wave-active')
+  })
 })
 
 describe('水波纹 - 配置式模式下波纹绑定到被点击的那一项', () => {
@@ -235,6 +271,18 @@ describe('水波纹 - 由选中态驱动（非点击来源同样播放）', () =
     const waves = wrapper.findAll('.radio-wave')
     expect(waves[0].classes()).not.toContain('wave-active')
     expect(waves[1].classes()).toContain('wave-active')
+  })
+})
+
+describe('水波纹 - 波纹颜色变量按需写入', () => {
+  it('Switch：未传 ripple-color 时不写实例变量，默认值由样式回落链提供', () => {
+    wrapper = mount(Switch, { props: { value: false } })
+    expect(wrapper.find('.switch-wrap').attributes('style') ?? '').not.toContain('--switch-ripple-color')
+  })
+
+  it('Switch：传入 ripple-color 时以实例变量写入（inline 优先级最高）', () => {
+    wrapper = mount(Switch, { props: { value: false, rippleColor: '#faad14' } })
+    expect(wrapper.find('.switch-wrap').attributes('style') ?? '').toContain('--switch-ripple-color: #faad14')
   })
 })
 
