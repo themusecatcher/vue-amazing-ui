@@ -14,6 +14,14 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-26">3.3.1</VersionDateTag>
+
+- 修复 [文本滚动 TextScroll](/guide/components/text-scroll.html) 重复调用 `start()` 会并存两条滚动节拍（速度翻倍且无法停止），以及卸载后调用 `start()` 残留定时器的问题
+- 修复 [文本滚动 TextScroll](/guide/components/text-scroll.html) 在缓存页面（`KeepAlive`）中失活后垂直滚动仍在推进、返回时已跳到其他条目的问题：失活前正在滚动则暂停，重新激活后接着滚动
+- 修复 [文本滚动 TextScroll](/guide/components/text-scroll.html) 垂直滚动的时间间隔被过渡时长挤占：现在每条停留 `interval`、过渡另计 `duration`，与 [轮播图 Swiper](/guide/components/swiper.html) 的 `interval` 口径一致
+- 修复 [文本滚动 TextScroll](/guide/components/text-scroll.html) 垂直滚动时 `itemStyle` 中的 `maxWidth` 被组件默认值覆盖的问题；并明确 `ellipsis` 开启时 `itemStyle` 作用于文本容器
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-10-25">3.3.0</VersionDateTag>
 
 - 新增 [菜单 Menu](/guide/components/menu.html) 深色皮肤（`theme="dark"`）的底色跟随主题色派生：根列表、浮层面板与内联子菜单取主色派生的暗底，改主色时整套皮肤同步换色相，`theme.components.Menu.primaryColor` 同样驱动；浮层面板与内联子菜单新增可独立覆盖的 `--va-menu-popup-background` / `--va-menu-inline-submenu-background`，全局语义变量由 `40` 个增至 `42` 个、组件令牌由 `51` 个增至 `53` 个
@@ -22,10 +30,6 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 新增 [二维码 QRCode](/guide/components/qr-code.html) 的 `spinProps` 属性：`loading` 状态可配置指示符、尺寸、颜色与文案（默认按遮罩尺寸取 `small` 档）；状态遮罩默认由全不透明改为 `0.96` 半透明，新增 `--qr-code-mask-opacity` 可调
 - 修复 [抽屉 Drawer](/guide/components/drawer.html) 面板阴影在暗色主题下与遮罩叠加出更深的色带
 - 修复 [轮播图 Swiper](/guide/components/swiper.html) 分页器未选中的圆点与进度条轨道在暗色主题下不可见
-- 修复 [文本滚动 TextScroll](/guide/components/text-scroll.html) 在缓存页面（`KeepAlive`）中失活后垂直滚动仍在推进、返回时已跳到其他条目的问题：失活前正在滚动则暂停，重新激活后接着滚动
-- 修复 [文本滚动 TextScroll](/guide/components/text-scroll.html) 重复调用 `start()` 会并存两条滚动节拍（速度翻倍且无法停止），以及卸载后调用 `start()` 残留定时器的问题
-- 修复 [文本滚动 TextScroll](/guide/components/text-scroll.html) 垂直滚动时 `itemStyle` 中的 `maxWidth` 被组件默认值覆盖的问题；并明确 `ellipsis` 开启时 `itemStyle` 作用于文本容器
-- 修复 [文本滚动 TextScroll](/guide/components/text-scroll.html) 垂直滚动的时间间隔被过渡时长挤占：现在每条停留 `interval`、过渡另计 `duration`，与 [轮播图 Swiper](/guide/components/swiper.html) 的 `interval` 口径一致
 - 更新使用者文档和贡献者文档
 - 组件库及文档代码优化
 
