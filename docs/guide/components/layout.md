@@ -1292,76 +1292,76 @@ const customScrollbarSelectedKeys = ref<MenuKey[]>(['1'])
 
 ### Layout Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-hasSider | 表示子元素里有 `Sider`，一般不用指定；子级存在 `LayoutSider` 时会自动推导，可用于服务端渲染时避免样式闪动 | boolean | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| hasSider | 表示子元素里有 `Sider`，一般不用指定；子级存在 `LayoutSider` 时会自动推导，可用于服务端渲染时避免样式闪动 | boolean | undefined |
 
 ### LayoutSider Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-collapsed <Tag color="cyan">v-model</Tag> | 当前收起状态，不传时为非受控 | boolean | undefined
-defaultCollapsed | 是否默认收起，仅非受控时生效 | boolean | false
-width | 宽度，数字与数字字符串按 `px` 处理 | number &#124; string | 200
-collapsedWidth | 收起时的宽度，数字按 `px` 处理；传响应式对象时按视窗宽度取对应档位。收起宽度为 `0` 时侧边栏收起后完全不可见，底部内嵌的收起条无处安放，改用悬浮在侧边栏外沿的方形按钮承担展开 / 收起（样式可由 `zeroWidthTriggerStyle` 定制） | number &#124; [LayoutSiderResponsive](#layoutsiderresponsive-type) | 80
-theme | 主题颜色 | 'light' &#124; 'dark' | 'dark'
-collapsible | 是否可收起 | boolean | false
-breakpoint | 触发响应式布局的断点，视窗宽度低于该断点时收起（各档阈值见下方 [LayoutSiderResponsive Type](#layoutsiderresponsive-type)） | 'xs' &#124; 'sm' &#124; 'md' &#124; 'lg' &#124; 'xl' &#124; 'xxl' &#124; 'xxxl' | undefined
-trigger | 自定义收起触发器，设置为 `null` 时隐藏触发器；插槽形态请用同名 `#trigger` 插槽 | VNode &#124; string &#124; null | undefined
-reverseArrow | 翻转折叠提示箭头的方向，当 `Sider` 在右边时可以使用 | boolean | false
-zeroWidthTriggerStyle | 指定收起宽度为 `0` 时，悬浮在侧边栏外沿的方形按钮的样式（如位置 / 尺寸 / 配色） | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| collapsed <Tag color="cyan">v-model</Tag> | 当前收起状态，不传时为非受控 | boolean | undefined |
+| defaultCollapsed | 是否默认收起，仅非受控时生效 | boolean | false |
+| width | 宽度，数字与数字字符串按 `px` 处理 | number &#124; string | 200 |
+| collapsedWidth | 收起时的宽度，数字按 `px` 处理；传响应式对象时按视窗宽度取对应档位。收起宽度为 `0` 时侧边栏收起后完全不可见，底部内嵌的收起条无处安放，改用悬浮在侧边栏外沿的方形按钮承担展开 / 收起（样式可由 `zeroWidthTriggerStyle` 定制） | number &#124; [LayoutSiderResponsive](#layoutsiderresponsive-type) | 80 |
+| theme | 主题颜色 | 'light' &#124; 'dark' | 'dark' |
+| collapsible | 是否可收起 | boolean | false |
+| breakpoint | 触发响应式布局的断点，视窗宽度低于该断点时收起（各档阈值见下方 [LayoutSiderResponsive Type](#layoutsiderresponsive-type)） | 'xs' &#124; 'sm' &#124; 'md' &#124; 'lg' &#124; 'xl' &#124; 'xxl' &#124; 'xxxl' | undefined |
+| trigger | 自定义收起触发器，设置为 `null` 时隐藏触发器；插槽形态请用同名 `#trigger` 插槽 | VNode &#124; string &#124; null | undefined |
+| reverseArrow | 翻转折叠提示箭头的方向，当 `Sider` 在右边时可以使用 | boolean | false |
+| zeroWidthTriggerStyle | 指定收起宽度为 `0` 时，悬浮在侧边栏外沿的方形按钮的样式（如位置 / 尺寸 / 配色） | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
 
 ### LayoutSiderResponsive Type
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-xs? | `<576px` 时的收起宽度 | number
-sm? | `≥576px` 时的收起宽度 | number
-md? | `≥768px` 时的收起宽度 | number
-lg? | `≥992px` 时的收起宽度 | number
-xl? | `≥1200px` 时的收起宽度 | number
-xxl? | `≥1600px` 时的收起宽度 | number
-xxxl? | `≥2000px` 时的收起宽度 | number
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| xs? | `<576px` 时的收起宽度 | number |
+| sm? | `≥576px` 时的收起宽度 | number |
+| md? | `≥768px` 时的收起宽度 | number |
+| lg? | `≥992px` 时的收起宽度 | number |
+| xl? | `≥1200px` 时的收起宽度 | number |
+| xxl? | `≥1600px` 时的收起宽度 | number |
+| xxxl? | `≥2000px` 时的收起宽度 | number |
 
 ## Slots
 
 ### Layout Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-default | 自定义布局内容 | v-slot:default
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 自定义布局内容 | v-slot:default |
 
 ### LayoutHeader Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-default | 自定义顶部布局内容 | v-slot:default
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 自定义顶部布局内容 | v-slot:default |
 
 ### LayoutContent Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-default | 自定义内容区内容 | v-slot:default
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 自定义内容区内容 | v-slot:default |
 
 ### LayoutFooter Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-default | 自定义底部布局内容 | v-slot:default
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 自定义底部布局内容 | v-slot:default |
 
 ### LayoutSider Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-default | 自定义侧边栏内容 | v-slot:default
-trigger | 自定义收起触发器，存在时优先于 `trigger` 属性 | v-slot:trigger
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 自定义侧边栏内容 | v-slot:default |
+| trigger | 自定义收起触发器，存在时优先于 `trigger` 属性 | v-slot:trigger |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-collapse | 展开-收起时的回调函数，点击 `trigger` 与响应式反馈均可触发 | (collapsed: boolean, type: 'clickTrigger' &#124; 'responsive') => void
-breakpoint | 触发响应式布局断点时的回调，`broken` 为 `true` 表示视窗宽度已低于断点 | (broken: boolean) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| collapse | 展开-收起时的回调函数，点击 `trigger` 与响应式反馈均可触发 | (collapsed: boolean, type: 'clickTrigger' &#124; 'responsive') => void |
+| breakpoint | 触发响应式布局断点时的回调，`broken` 为 `true` 表示视窗宽度已低于断点 | (broken: boolean) => void |
 
 ## CSS 变量
 

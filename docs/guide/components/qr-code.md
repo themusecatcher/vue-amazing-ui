@@ -589,8 +589,8 @@ const value = ref('hello world')
 
 ## Events
 
-| 名称    | 说明                   | 类型                        |
-| :------ | :--------------------- | :-------------------------- |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
 | refresh | 点击「点击刷新」时触发 | (event: MouseEvent) => void |
 
 ## Methods

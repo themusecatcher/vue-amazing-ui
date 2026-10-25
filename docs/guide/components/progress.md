@@ -536,17 +536,17 @@ function onDecline(scale: number) {
 
 ### ProgressGradient Type
 
-| 名称      | 说明    | 类型                 |
-| :--------- | :------- | :-------------------- |
-| '0%'?     | 起始值  | string               |
-| '100%'?   | 终点值  | string               |
-| from?     | 起始值  | string               |
-| to?       | 终点值  | string               |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| '0%'? | 起始值 | string |
+| '100%'? | 终点值 | string |
+| from? | 起始值 | string |
+| to? | 终点值 | string |
 | direction? | 渐变方向，默认 `'right'` | 'right' &#124; 'left' |
 
 ## Slots
 
-| 名称   | 说明                  | 用法                        |
-| :------ | :--------------------- | :-------------------------- |
-| success | 自定义进度完成时的信息 | v-slot:success              |
-| format | 自定义格式化内容      | v-slot:format="{ percent }" |
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| success | 自定义进度完成时的信息 | v-slot:success |
+| format | 自定义格式化内容 | v-slot:format="{ percent }" |

@@ -304,26 +304,26 @@ _设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再�
 
 ### Popover Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-title | 卡片标题 | string | undefined
-titleStyle | 卡片标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-content | 卡片内容 | string | undefined
-contentStyle | 卡片内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| title | 卡片标题 | string | undefined |
+| titleStyle | 卡片标题样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| content | 卡片内容 | string | undefined |
+| contentStyle | 卡片内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 
 更多属性请参考 [Tooltip Props](./tooltip.md#tooltip-props)
 
 ## Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-title | 自定义卡片标题 | v-slot:title
-content | 自定义卡片内容 | v-slot:content
-default | 自定义内容 | v-slot:default
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| title | 自定义卡片标题 | v-slot:title |
+| content | 自定义卡片内容 | v-slot:content |
+| default | 自定义内容 | v-slot:default |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-openChange | 显示隐藏的回调 | (open: boolean) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| openChange | 显示隐藏的回调 | (open: boolean) => void |

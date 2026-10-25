@@ -474,16 +474,16 @@ const layoutOptions = [
 
 ### WatermarkFont Type
 
-| 名称      | 说明               | 类型                                                   |
-| :--------- | :------------------ | :------------------------------------------------------ |
-| color?     | 字体颜色，默认取 `--va-fill-color-3`（浅色 `rgba(0,0,0,.15)` / 暗色 `rgba(255,255,255,.18)`） | string                                                 |
-| fontSize?  | 字体大小，单位 `px`，默认 `16` | number                                                 |
-| fontWeight? | 字体粗细，默认 `'normal'` | 'normal' &#124; 'light' &#124; 'weight' &#124; number  |
-| fontFamily? | 字体类型，默认 `'sans-serif'` | string                                                 |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| color? | 字体颜色，默认取 `--va-fill-color-3`（浅色 `rgba(0,0,0,.15)` / 暗色 `rgba(255,255,255,.18)`） | string |
+| fontSize? | 字体大小，单位 `px`，默认 `16` | number |
+| fontWeight? | 字体粗细，默认 `'normal'` | 'normal' &#124; 'light' &#124; 'weight' &#124; number |
+| fontFamily? | 字体类型，默认 `'sans-serif'` | string |
 | fontStyle? | 字体样式，默认 `'normal'` | 'none' &#124; 'normal' &#124; 'italic' &#124; 'oblique' |
 
 ## Slots
 
 | 名称 | 说明 | 用法 |
-| :------ | :--------- | :------------- |
+| :-- | :-- | :-- |
 | default | 自定义内容 | v-slot:default |

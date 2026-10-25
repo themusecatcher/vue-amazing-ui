@@ -881,20 +881,20 @@ const destroyOpen = ref(false)
 ## Slots
 
 | 名称 | 说明 | 用法 |
-| :------ | :----------------- | :------------- |
+| :-- | :-- | :-- |
 | tooltip | 自定义文字提示内容 | v-slot:tooltip |
 | default | 自定义展示的内容 | v-slot:default |
 
 ## Methods
 
 | 名称 | 说明 | 类型 |
-| :--- | :----------- | :--------- |
+| :-- | :-- | :-- |
 | show | 显示文字提示 | () => void |
 | hide | 隐藏文字提示 | () => void |
 
 ## Events
 
 | 名称 | 说明 | 类型 |
-| :----------- | :----------------------- | :---------------------- |
+| :-- | :-- | :-- |
 | openChange | 显示隐藏的回调 | (open: boolean) => void |
 | animationend | 显示隐藏动画结束时的回调 | (open: boolean) => void |

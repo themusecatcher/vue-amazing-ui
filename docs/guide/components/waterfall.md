@@ -196,9 +196,9 @@ onBeforeMount(() => {
 
 ### WaterfallImage Type
 
-| 名称   | 说明            | 类型                     |
-| :------ | :--------------- | :------------------------ |
-| name?  | 图片名称，未设置时自动从图片地址 `src` 中提取 | string                   |
-| src    | 图片地址        | string                   |
-| link?  | 图片跳转链接    | string                   |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| name? | 图片名称，未设置时自动从图片地址 `src` 中提取 | string |
+| src | 图片地址 | string |
+| link? | 图片跳转链接 | string |
 | target? | 如何打开跳转链接 | '\_self' &#124; '\_blank' |

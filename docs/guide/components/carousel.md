@@ -1998,37 +1998,37 @@ watch(
 
 ### Carousel Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-images | 轮播图图片数组 | [CarouselImage](#carouselimage-type)[] | []
-width | 轮播图宽度，单位 `px` | number &#124; string | '100%'
-height | 轮播图高度，单位 `px` | number &#124; string | '100vh'
-autoplay | 是否自动轮播 | boolean | false
-pauseOnMouseEnter | 当鼠标移入轮播图时，是否暂停自动轮播 | boolean | false
-effect | 轮播图切换时的过渡效果 | 'slide' &#124; 'fade' | 'slide'
-interval | 自动轮播间隔，单位 `ms` | number | 3000
-loop | 是否循环切换，为 `false` 时首尾不再回绕，到达边界后该方向的切换（箭头、键盘、滚轮、拖拽、自动轮播）失效 | boolean | true
-initialIndex | 初始展示的图片下标，从 `1` 开始，仅在初始化时生效 | number | 1
-currentIndex <Tag color="cyan">v-model</Tag> | 当前展示的图片下标（受控），从 `1` 开始，配合 `v-model:current-index` 使用 | number | undefined
-showArrow | 是否显示箭头，图片数量大于 `1` 时才渲染 | boolean | true
-arrowColor | 箭头颜色 | string | '#FFF'
-arrowSize | 箭头大小，单位 `px` | number | 36
-dots | 是否显示指示点 | boolean | true
-dotSize | 指示点大小，单位 `px` | number | 10
-dotColor | 指示点颜色 | string | 'rgba(255, 255, 255, 0.3)'
-dotActiveColor | 指示点选中颜色 | string | undefined
-dotStyle | 指示点样式，优先级高于 `dotSize`、`dotColor` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-dotActiveStyle | 指示点选中样式，优先级高于 `dotActiveColor` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-dotPosition | 指示点位置，位置为 `left` &#124; `right` 时，`effect: 'slide'` 轮播自动变为垂直轮播 | 'bottom' &#124; 'top' &#124; 'left' &#124; 'right' | 'bottom'
-dotTrigger | 指示点触发切换的方式 | 'click' &#124; 'hover' | 'click'
-spinProps | 图片加载中样式，`Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin-props) | [SpinProps](./spin.md#spin-props) | {}
-objectFit | 图片填充方式，同 `CSS` `object-fit` | 'fill' &#124; 'contain' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'fill'
-draggable | 是否可以拖拽滑动切换（鼠标与触摸均支持） | boolean | false
-mousewheel | 是否支持鼠标滚轮切换 | boolean | false
-fadeDuration | 渐变动画持续时长，单位 `ms`，仅当 `effect` 为 `'fade'` 时生效 | number | 500
-fadeFunction | 渐变动画函数，仅当 `effect` 为 `'fade'` 时生效，可传四个三次贝塞尔控制点（自动转为 `CSS` `cubic-bezier()` 写法）或 `CSS` [transition-timing-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function) 写法 | string &#124; [number, number, number, number] | [0.4, 0, 0.2, 1]
-slideDuration | 滑动动画持续时长，单位 `ms`，仅当 `effect` 为 `'slide'` 时生效 | number | 800
-slideFunction | 滑动动画函数，仅当 `effect` 为 `'slide'` 时生效，可传缓动预设名、三次贝塞尔控制点数组或缓动函数 | [CarouselEasingPreset](#carouseleasingpreset-type) &#124; [CubicBezierPoints](https://vueuse.org/core/useTransition/) &#124; [EasingFunction](https://vueuse.org/core/useTransition/) | [0.65, 0, 0.35, 1]
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| images | 轮播图图片数组 | [CarouselImage](#carouselimage-type)[] | [] |
+| width | 轮播图宽度，单位 `px` | number &#124; string | '100%' |
+| height | 轮播图高度，单位 `px` | number &#124; string | '100vh' |
+| autoplay | 是否自动轮播 | boolean | false |
+| pauseOnMouseEnter | 当鼠标移入轮播图时，是否暂停自动轮播 | boolean | false |
+| effect | 轮播图切换时的过渡效果 | 'slide' &#124; 'fade' | 'slide' |
+| interval | 自动轮播间隔，单位 `ms` | number | 3000 |
+| loop | 是否循环切换，为 `false` 时首尾不再回绕，到达边界后该方向的切换（箭头、键盘、滚轮、拖拽、自动轮播）失效 | boolean | true |
+| initialIndex | 初始展示的图片下标，从 `1` 开始，仅在初始化时生效 | number | 1 |
+| currentIndex <Tag color="cyan">v-model</Tag> | 当前展示的图片下标（受控），从 `1` 开始，配合 `v-model:current-index` 使用 | number | undefined |
+| showArrow | 是否显示箭头，图片数量大于 `1` 时才渲染 | boolean | true |
+| arrowColor | 箭头颜色 | string | '#FFF' |
+| arrowSize | 箭头大小，单位 `px` | number | 36 |
+| dots | 是否显示指示点 | boolean | true |
+| dotSize | 指示点大小，单位 `px` | number | 10 |
+| dotColor | 指示点颜色 | string | 'rgba(255, 255, 255, 0.3)' |
+| dotActiveColor | 指示点选中颜色 | string | undefined |
+| dotStyle | 指示点样式，优先级高于 `dotSize`、`dotColor` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| dotActiveStyle | 指示点选中样式，优先级高于 `dotActiveColor` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| dotPosition | 指示点位置，位置为 `left` &#124; `right` 时，`effect: 'slide'` 轮播自动变为垂直轮播 | 'bottom' &#124; 'top' &#124; 'left' &#124; 'right' | 'bottom' |
+| dotTrigger | 指示点触发切换的方式 | 'click' &#124; 'hover' | 'click' |
+| spinProps | 图片加载中样式，`Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin-props) | [SpinProps](./spin.md#spin-props) | {} |
+| objectFit | 图片填充方式，同 `CSS` `object-fit` | 'fill' &#124; 'contain' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'fill' |
+| draggable | 是否可以拖拽滑动切换（鼠标与触摸均支持） | boolean | false |
+| mousewheel | 是否支持鼠标滚轮切换 | boolean | false |
+| fadeDuration | 渐变动画持续时长，单位 `ms`，仅当 `effect` 为 `'fade'` 时生效 | number | 500 |
+| fadeFunction | 渐变动画函数，仅当 `effect` 为 `'fade'` 时生效，可传四个三次贝塞尔控制点（自动转为 `CSS` `cubic-bezier()` 写法）或 `CSS` [transition-timing-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function) 写法 | string &#124; [number, number, number, number] | [0.4, 0, 0.2, 1] |
+| slideDuration | 滑动动画持续时长，单位 `ms`，仅当 `effect` 为 `'slide'` 时生效 | number | 800 |
+| slideFunction | 滑动动画函数，仅当 `effect` 为 `'slide'` 时生效，可传缓动预设名、三次贝塞尔控制点数组或缓动函数 | [CarouselEasingPreset](#carouseleasingpreset-type) &#124; [CubicBezierPoints](https://vueuse.org/core/useTransition/) &#124; [EasingFunction](https://vueuse.org/core/useTransition/) | [0.65, 0, 0.35, 1] |
 
 ### CarouselEasingPreset Type
 
@@ -2042,34 +2042,34 @@ slideFunction | 滑动动画函数，仅当 `effect` 为 `'slide'` 时生效，�
 
 ### CarouselImage Type
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-name? | 图片名称 | string
-src | 图片地址 | string
-link? | 图片跳转链接 | string
-target? | 如何打开跳转链接 | '_self' &#124; '_blank'
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| name? | 图片名称 | string |
+| src | 图片地址 | string |
+| link? | 图片跳转链接 | string |
+| target? | 如何打开跳转链接 | '_self' &#124; '_blank' |
 
 ## Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-prevArrow | 自定义上一张箭头，点击切换由组件接管 | v-slot:prevArrow="{ prev, next, to, total, currentIndex, isPrevDisabled, isNextDisabled }"
-nextArrow | 自定义下一张箭头，点击切换由组件接管 | v-slot:nextArrow="{ prev, next, to, total, currentIndex, isPrevDisabled, isNextDisabled }"
-dots | 自定义指示点，需自行调用 `to(n)` 切换 | v-slot:dots="{ to, total, currentIndex }"
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| prevArrow | 自定义上一张箭头，点击切换由组件接管 | v-slot:prevArrow="{ prev, next, to, total, currentIndex, isPrevDisabled, isNextDisabled }" |
+| nextArrow | 自定义下一张箭头，点击切换由组件接管 | v-slot:nextArrow="{ prev, next, to, total, currentIndex, isPrevDisabled, isNextDisabled }" |
+| dots | 自定义指示点，需自行调用 `to(n)` 切换 | v-slot:dots="{ to, total, currentIndex }" |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-beforeChange | 切换开始时触发，`from` 为当前页、`to` 为目标页，均从 `1` 开始 | (from: number, to: number) => void
-afterChange | 切换结束后触发，参数为当前页，从 `1` 开始 | (current: number) => void
-click | 点击图片时的回调 | (image: [CarouselImage](#carouselimage-type)) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| beforeChange | 切换开始时触发，`from` 为当前页、`to` 为目标页，均从 `1` 开始 | (from: number, to: number) => void |
+| afterChange | 切换结束后触发，参数为当前页，从 `1` 开始 | (current: number) => void |
+| click | 点击图片时的回调 | (image: [CarouselImage](#carouselimage-type)) => void |
 
 ## Methods
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-to | 切换至某一页，从 `1` 开始，`dontAnimate` 为 `true` 时不使用动画 | (n: number, dontAnimate?: boolean) => void
-prev | 切换至前一页 | () => void
-next | 切换至后一页 | () => void
-getCurrentIndex | 获取当前页，从 `1` 开始 | () => number
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| to | 切换至某一页，从 `1` 开始，`dontAnimate` 为 `true` 时不使用动画 | (n: number, dontAnimate?: boolean) => void |
+| prev | 切换至前一页 | () => void |
+| next | 切换至后一页 | () => void |
+| getCurrentIndex | 获取当前页，从 `1` 开始 | () => number |

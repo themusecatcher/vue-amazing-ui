@@ -592,18 +592,18 @@ function customDownload(url: string, fileName?: string) {
 ### ImageItem Type
 
 | 名称 | 说明 | 类型 |
-| :---- | :------- | :----- |
+| :-- | :-- | :-- |
 | src | 图像地址 | string |
 | name? | 图像名称，未设置时自动从图像地址 `src` 中提取 | string |
 
 ## Slots
 
 | 名称 | 说明 | 用法 |
-| :------ | :------------- | :------------- |
+| :-- | :-- | :-- |
 | preview | 自定义预览文本 | v-slot:preview |
 
 ## Methods
 
 | 名称 | 说明 | 类型 |
-| :------ | :------------------------------------- | :---------------------- |
+| :-- | :-- | :-- |
 | preview | 预览索引为 `index` 的图片，从 `0` 开始 | (index: number) => void |

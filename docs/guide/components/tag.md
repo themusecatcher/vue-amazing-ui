@@ -586,26 +586,26 @@ const onDynamicClose = (item: TagItem, index: number) => {
 
 ### TagItem Type
 
-| 名称     | 说明            | 类型                                  |
-| :-------- | :--------------- | :------------------------------------- |
-| label?   | 标签文本        | string                     |
-| closable? | 标签是否可以关闭，默认 `true` | boolean                               |
-| color?   | 标签颜色        | string                                |
-| icon?    | 设置图标        | string                     |
-| size?    | 标签尺寸，默认 `'middle'` | 'small' &#124; 'middle' &#124; 'large' |
-| bordered? | 是否有边框，默认 `true` | boolean                               |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| label? | 标签文本 | string |
+| closable? | 标签是否可以关闭，默认 `true` | boolean |
+| color? | 标签颜色 | string |
+| icon? | 设置图标 | string |
+| size? | 标签尺寸，默认 `'middle'` | 'small' &#124; 'middle' &#124; 'large' |
+| bordered? | 是否有边框，默认 `true` | boolean |
 
 ## Slots
 
-| 名称   | 说明          | 用法                                  |
-| :------ | :------------- | :------------------------------------ |
-| icon   | 自定义图标    | v-slot:icon="{ item, icon, index }"   |
-| label  | 自定义标签文本 | v-slot:label="{ item, label, index }" |
-| default | 自定义内容    | v-slot:default                        |
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| icon | 自定义图标 | v-slot:icon="{ item, icon, index }" |
+| label | 自定义标签文本 | v-slot:label="{ item, label, index }" |
+| default | 自定义内容 | v-slot:default |
 
 ## Events
 
-| 名称        | 说明                              | 类型                                              |
-| :----------- | :--------------------------------- | :------------------------------------------------ |
-| close       | 关闭时的回调                      | (e: Event) => void                                |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| close | 关闭时的回调 | (e: Event) => void |
 | dynamicClose | 启用标签动态添加和删除时关闭的回调 | (item: [TagItem](#tagitem-type), index: number) => void |

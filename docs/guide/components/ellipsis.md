@@ -269,23 +269,23 @@ function expandChange(open: boolean) {
 
 ### Ellipsis Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-maxWidth | 文本最大宽度，单位 `px` | string &#124; number | '100%'
-tooltipMaxWidth | 弹出提示最大宽度，单位 `px`，默认为 `文本宽度 + 24` | string &#124; number | undefined
-line | 最大行数 | number | undefined
-expand | 是否启用点击文本展开全部（单行与多行均支持） | boolean | false
-tooltip | 是否启用文本提示框；传对象即 [文字提示 Tooltip](./tooltip.md#tooltip) 的属性配置（如 `trigger` / `placement` / `bgColor` / `showDelay`） | boolean &#124; [TooltipProps](./tooltip.md#tooltip) | true
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| maxWidth | 文本最大宽度，单位 `px` | string &#124; number | '100%' |
+| tooltipMaxWidth | 弹出提示最大宽度，单位 `px`，默认为 `文本宽度 + 24` | string &#124; number | undefined |
+| line | 最大行数 | number | undefined |
+| expand | 是否启用点击文本展开全部（单行与多行均支持） | boolean | false |
+| tooltip | 是否启用文本提示框；传对象即 [文字提示 Tooltip](./tooltip.md#tooltip) 的属性配置（如 `trigger` / `placement` / `bgColor` / `showDelay`） | boolean &#124; [TooltipProps](./tooltip.md#tooltip) | true |
 
 ## Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-tooltip | 自定义弹出提示内容 | v-slot:tooltip
-default | 自定义展示内容 | v-slot:default
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| tooltip | 自定义弹出提示内容 | v-slot:tooltip |
+| default | 自定义展示内容 | v-slot:default |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-expandChange | 点击文本展开收起时的回调 | (expand: boolean) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| expandChange | 点击文本展开收起时的回调 | (expand: boolean) => void |

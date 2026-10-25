@@ -1377,38 +1377,38 @@ function onPanelChange(
 ### CalendarDayOfWeek Type
 
 | 名称 | 值 |
-| :-------- | :------------------------------------------------------ |
+| :-- | :-- |
 | DayOfWeek | 0 &#124; 1 &#124; 2 &#124; 3 &#124; 4 &#124; 5 &#124; 6 |
 
 ### CalendarDefaultWeek Type
 
 | 名称 | 值 |
-| :---------- | :--------------------------------------------------------------------------- |
+| :-- | :-- |
 | DefaultWeek | '一' &#124; '二' &#124; '三' &#124; '四' &#124; '五' &#124; '六' &#124; '日' |
 
 ### CalendarDateItem Type
 
-| 名称          | 说明            | 类型                                          |
-| :------------- | :--------------- | :--------------------------------------------- |
-| type          | 类型            | 'date'                                        |
-| dateObject    | 日期对象        | \{ date: number, month: number, year: number } |
-| timestamp     | 当天开始的时间戳 | number                                        |
-| inCurrentMonth | 是否在当前月    | boolean                                       |
-| isCurrentDate | 是否为今天      | boolean                                       |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| type | 类型 | 'date' |
+| dateObject | 日期对象 | \{ date: number, month: number, year: number } |
+| timestamp | 当天开始的时间戳 | number |
+| inCurrentMonth | 是否在当前月 | boolean |
+| isCurrentDate | 是否为今天 | boolean |
 
 ### CalendarMonthItem Type
 
-| 名称       | 说明            | 类型                            |
-| :---------- | :--------------- | :------------------------------- |
-| type       | 类型            | 'month'                         |
-| monthObject | 月份对象        | \{ month: number, year: number } |
-| timestamp  | 当月开始的时间戳 | number                          |
-| isCurrent  | 是否为当前月    | boolean                         |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| type | 类型 | 'month' |
+| monthObject | 月份对象 | \{ month: number, year: number } |
+| timestamp | 当月开始的时间戳 | number |
+| isCurrent | 是否为当前月 | boolean |
 
 ### CalendarSelectInfo Type
 
 | 名称 | 说明 | 类型 |
-| :----- | :-------------------------------------- | :----------------------------------------------------- |
+| :-- | :-- | :-- |
 | source | 选择来源：年选择器 / 月（选择器或月面板格）/ 日期面板格 / 头部整体替换 | 'year' &#124; 'month' &#124; 'date' &#124; 'customize' |
 
 ## Slots

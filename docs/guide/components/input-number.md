@@ -284,30 +284,30 @@ const disabled = ref(true)
 
 ### InputNumber Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-width | 数字输入框宽度，单位 `px` | string &#124; number | 90
-min | 最小值 | number | -Infinity
-max | 最大值 | number | Infinity
-step | 每次改变步数，可以为小数 | number | 1
-precision | 数值精度 | number | 0
-prefix | 前缀图标 | string | undefined
-formatter | 指定展示值的格式 | (value: number \| string) => string | undefined
-parser | 指定从 `formatter` 里转换回数字的方式，和 `formatter` 搭配使用 | (value: string) => number | undefined
-keyboard | 是否启用键盘快捷键行为（上方向键增，下方向键减） | boolean | true
-disabled | 是否禁用 | boolean | false
-placeholder | 数字输入的占位符 | string | undefined
-value <Tag color="cyan">v-model</Tag> | 当前值 | number | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| width | 数字输入框宽度，单位 `px` | string &#124; number | 90 |
+| min | 最小值 | number | -Infinity |
+| max | 最大值 | number | Infinity |
+| step | 每次改变步数，可以为小数 | number | 1 |
+| precision | 数值精度 | number | 0 |
+| prefix | 前缀图标 | string | undefined |
+| formatter | 指定展示值的格式 | (value: number \| string) => string | undefined |
+| parser | 指定从 `formatter` 里转换回数字的方式，和 `formatter` 搭配使用 | (value: string) => number | undefined |
+| keyboard | 是否启用键盘快捷键行为（上方向键增，下方向键减） | boolean | true |
+| disabled | 是否禁用 | boolean | false |
+| placeholder | 数字输入的占位符 | string | undefined |
+| value <Tag color="cyan">v-model</Tag> | 当前值 | number | undefined |
 
 ## Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-prefix | 自定义前缀图标 | v-slot:prefix
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| prefix | 自定义前缀图标 | v-slot:prefix |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 变化回调 | (value: number) => void
-enter | 按下回车的回调 | (e: KeyboardEvent) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| change | 变化回调 | (value: number) => void |
+| enter | 按下回车的回调 | (e: KeyboardEvent) => void |

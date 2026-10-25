@@ -415,18 +415,18 @@ const value = ref('')
 
 ## Slots
 
-| 名称       | 说明          | 用法               |
-| :---------- | :------------- | :----------------- |
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
 | addonBefore | 自定义前置标签 | v-slot:addonBefore |
-| addonAfter | 自定义后置标签 | v-slot:addonAfter  |
-| prefix     | 自定义前缀图标 | v-slot:prefix      |
-| suffix     | 自定义后缀图标 | v-slot:suffix      |
+| addonAfter | 自定义后置标签 | v-slot:addonAfter |
+| prefix | 自定义前缀图标 | v-slot:prefix |
+| suffix | 自定义后缀图标 | v-slot:suffix |
 
 ## Events
 
-| 名称            | 说明                                              | 类型                          |
-| :--------------- | :------------------------------------------------- | :---------------------------- |
-| change          | 输入框内容变化时的回调                            | (e: Event) => void            |
-| enter           | 按下回车的回调                                    | (e: KeyboardEvent) => void    |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| change | 输入框内容变化时的回调 | (e: Event) => void |
+| enter | 按下回车的回调 | (e: KeyboardEvent) => void |
 | compositionstart | 使用文本合成系统即输入法编辑器开始新的输入时的回调 | (e: CompositionEvent) => void |
-| compositionend  | 当文本段落的组成完成或取消时触发的回调            | (e: CompositionEvent) => void |
+| compositionend | 当文本段落的组成完成或取消时触发的回调 | (e: CompositionEvent) => void |

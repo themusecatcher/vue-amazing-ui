@@ -325,23 +325,23 @@ function playNumsCompare() {
 
 ### Statistic Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-title | 数值的标题 | string | undefined
-value | 数值的内容 | string &#124; number | undefined
-valueStyle | 设置数值的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-precision | 数值精度 | number | 0
-prefix | 设置数值的前缀 | string | undefined
-suffix | 设置数值的后缀 | string | undefined
-separator | 设置千分位标识符 | string | ,
-formatter | 自定义数值展示 | (value: string) => string | (value: string) => value
-tabularNums | 是否使用等宽数字，避免数值变化时宽度抖动 | boolean | false
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| title | 数值的标题 | string | undefined |
+| value | 数值的内容 | string &#124; number | undefined |
+| valueStyle | 设置数值的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| precision | 数值精度 | number | 0 |
+| prefix | 设置数值的前缀 | string | undefined |
+| suffix | 设置数值的后缀 | string | undefined |
+| separator | 设置千分位标识符 | string | , |
+| formatter | 自定义数值展示 | (value: string) => string | (value: string) => value |
+| tabularNums | 是否使用等宽数字，避免数值变化时宽度抖动 | boolean | false |
 
 ## Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-title | 自定义数值的标题 | v-slot:title
-default | 自定义数值的内容 | v-slot:default
-prefix | 自定义数值的前缀 | v-slot:prefix
-suffix | 自定义数值的后缀 | v-slot:suffix
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| title | 自定义数值的标题 | v-slot:title |
+| default | 自定义数值的内容 | v-slot:default |
+| prefix | 自定义数值的前缀 | v-slot:prefix |
+| suffix | 自定义数值的后缀 | v-slot:suffix |

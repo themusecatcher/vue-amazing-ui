@@ -487,21 +487,21 @@ import { UserOutlined } from '@ant-design/icons-vue'
 
 ### Comment Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-actions | 在评论内容下面呈现的操作项列表 | Array<string &#124; VNode> | undefined
-author | 要显示为评论作者的元素 | string | undefined
-avatar | 要显示为评论头像的元素，通常为头像图片地址；`prop` 支持 `VNode` / 渲染函数，插槽形态请用同名 `#avatar` 插槽 | string &#124; VNode &#124; (() => VNode) | undefined
-content | 评论的主要内容 | string | undefined
-datetime | 展示时间描述 | string | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| actions | 在评论内容下面呈现的操作项列表 | Array<string &#124; VNode> | undefined |
+| author | 要显示为评论作者的元素 | string | undefined |
+| avatar | 要显示为评论头像的元素，通常为头像图片地址；`prop` 支持 `VNode` / 渲染函数，插槽形态请用同名 `#avatar` 插槽 | string &#124; VNode &#124; (() => VNode) | undefined |
+| content | 评论的主要内容 | string | undefined |
+| datetime | 展示时间描述 | string | undefined |
 
 ## Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-actions | 在评论内容下面呈现的操作项列表 | v-slot:actions
-author | 要显示为评论作者的元素 | v-slot:author
-avatar | 要显示为评论头像的元素 | v-slot:avatar
-content | 评论的主要内容 | v-slot:content
-datetime | 展示时间描述 | v-slot:datetime
-default | 嵌套评论，通常用于展示评论回复 | v-slot:default
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| actions | 在评论内容下面呈现的操作项列表 | v-slot:actions |
+| author | 要显示为评论作者的元素 | v-slot:author |
+| avatar | 要显示为评论头像的元素 | v-slot:avatar |
+| content | 评论的主要内容 | v-slot:content |
+| datetime | 展示时间描述 | v-slot:datetime |
+| default | 嵌套评论，通常用于展示评论回复 | v-slot:default |

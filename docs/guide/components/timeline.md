@@ -794,46 +794,46 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 
 ### Timeline Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-mode | 时间轴与内容的相对位置，`alternate` 为轴线居中、内容左右交替 | 'left' &#124; 'alternate' &#124; 'right' | 'left'
-start | `alternate` 模式下内容先从哪一侧出现 | 'left' &#124; 'right' | 'right'
-reverse | 节点是否倒序排列 | boolean | false
-horizontal | 是否水平排列，内容超出时容器可横向滚动 | boolean | false
-size | 尺寸档位，控制轴点大小、节点间距与标题字号 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
-iconSize | 轴点区域的边长，同时决定连线起点与内容偏移，单位 `px` | number | undefined
-lineType | 整轴线型，时间轴项可通过同名属性覆盖 | 'solid' &#124; 'dashed' &#124; 'dotted' | 'solid'
-pending | 幽灵节点：为 `true` 时只表示进行中，字符串或 `VNode` 作为其内容 | boolean &#124; string &#124; VNode | false
-pendingDot | 幽灵节点的轴点，未指定时使用内置加载环 | string &#124; VNode | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| mode | 时间轴与内容的相对位置，`alternate` 为轴线居中、内容左右交替 | 'left' &#124; 'alternate' &#124; 'right' | 'left' |
+| start | `alternate` 模式下内容先从哪一侧出现 | 'left' &#124; 'right' | 'right' |
+| reverse | 节点是否倒序排列 | boolean | false |
+| horizontal | 是否水平排列，内容超出时容器可横向滚动 | boolean | false |
+| size | 尺寸档位，控制轴点大小、节点间距与标题字号 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
+| iconSize | 轴点区域的边长，同时决定连线起点与内容偏移，单位 `px` | number | undefined |
+| lineType | 整轴线型，时间轴项可通过同名属性覆盖 | 'solid' &#124; 'dashed' &#124; 'dotted' | 'solid' |
+| pending | 幽灵节点：为 `true` 时只表示进行中，字符串或 `VNode` 作为其内容 | boolean &#124; string &#124; VNode | false |
+| pendingDot | 幽灵节点的轴点，未指定时使用内置加载环 | string &#124; VNode | undefined |
 
 ### TimelineItem Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-title | 标题，位于内容上方 | string | undefined
-content | 内容 | string | undefined
-time | 时间，位于内容下方 | string &#124; number | undefined
-label | 左侧标签，任一节点带 `label` 时整条时间轴切换为左右分栏布局 | string | undefined
-color | 轴点颜色，支持预设语义色（`primary` / `success` / `warning` / `error` / `info` / `default`）、色名（`blue` / `green` / `red` / `gray`）与任意 CSS 颜色，预设名大小写不敏感；未指定时轴点走主题主色 | string | undefined
-lineType | 单独覆盖该节点的线型 | 'solid' &#124; 'dashed' &#124; 'dotted' | 继承 `Timeline` 的 `lineType`
-position | `alternate` 模式下单独指定该节点内容所在侧（`label` 左右分栏与水平排列下不生效） | 'left' &#124; 'right' | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| title | 标题，位于内容上方 | string | undefined |
+| content | 内容 | string | undefined |
+| time | 时间，位于内容下方 | string &#124; number | undefined |
+| label | 左侧标签，任一节点带 `label` 时整条时间轴切换为左右分栏布局 | string | undefined |
+| color | 轴点颜色，支持预设语义色（`primary` / `success` / `warning` / `error` / `info` / `default`）、色名（`blue` / `green` / `red` / `gray`）与任意 CSS 颜色，预设名大小写不敏感；未指定时轴点走主题主色 | string | undefined |
+| lineType | 单独覆盖该节点的线型 | 'solid' &#124; 'dashed' &#124; 'dotted' | 继承 `Timeline` 的 `lineType` |
+| position | `alternate` 模式下单独指定该节点内容所在侧（`label` 左右分栏与水平排列下不生效） | 'left' &#124; 'right' | undefined |
 
 ## Slots
 
 ### Timeline Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-default | 时间轴节点 | v-slot:default
-pending | 幽灵节点的内容 | v-slot:pending
-pendingDot | 幽灵节点的轴点 | v-slot:pendingDot
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 时间轴节点 | v-slot:default |
+| pending | 幽灵节点的内容 | v-slot:pending |
+| pendingDot | 幽灵节点的轴点 | v-slot:pendingDot |
 
 ### TimelineItem Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-default | 内容区，优先于 `content` | v-slot:default
-dot | 自定义轴点 | v-slot:dot
-label | 左侧标签，优先于 `label` | v-slot:label
-title | 标题，优先于 `title` | v-slot:title
-footer | 底部信息，优先于 `time` | v-slot:footer
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 内容区，优先于 `content` | v-slot:default |
+| dot | 自定义轴点 | v-slot:dot |
+| label | 左侧标签，优先于 `label` | v-slot:label |
+| title | 标题，优先于 `title` | v-slot:title |
+| footer | 底部信息，优先于 `time` | v-slot:footer |

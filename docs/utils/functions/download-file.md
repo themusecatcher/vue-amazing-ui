@@ -308,21 +308,21 @@ _`iframe` 策略依赖服务端支持，跨域下载前请先确认文件所在�
 
 ## Params
 
-| 名称      | 说明                                          | 类型   | 默认值    |
-| --------- | --------------------------------------------- | ------ | --------- |
-| url       | 文件的 `URL`，支持绝对 `URL` 与同源相对路径   | string | undefined |
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| url | 文件的 `URL`，支持绝对 `URL` 与同源相对路径 | string | undefined |
 | fileName? | 文件的命名，如果未提供，则从 `URL` 中尝试提取 | string | undefined |
-| options?  | 下载配置                                      | [DownloadOptions](#downloadoptions) | {} |
+| options? | 下载配置 | [DownloadOptions](#downloadoptions) | {} |
 
 ### DownloadOptions
 
-| 名称     | 说明 | 类型 | 默认值 |
-| -------- | ---- | ---- | ------ |
-| target?  | 打开方式，仅 `anchor` 策略生效；且仅在 `download` 属性未真正生效（老浏览器降级 `window.open`）时才起作用 | '_self' &#124; '_blank' | '_blank' |
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| target? | 打开方式，仅 `anchor` 策略生效；且仅在 `download` 属性未真正生效（老浏览器降级 `window.open`）时才起作用 | '_self' &#124; '_blank' | '_blank' |
 | strategy? | 下载策略，`auto` 自动分流——同源走 `anchor`，跨域走 `iframe` | 'auto' &#124; 'anchor' &#124; 'iframe' | 'auto' |
 
 ## Return
 
 | 类型 | 说明 |
-| ---- | ---- |
+| :-- | :-- |
 | Promise&lt;void&gt; | `resolve` 表示已触发下载；`URL` 非法时 `reject` |

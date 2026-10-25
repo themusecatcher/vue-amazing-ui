@@ -648,41 +648,41 @@ const cancel = (e: MouseEvent) => {
 
 ### Popconfirm Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-title | 弹出确认框的标题 | string | undefined
-titleStyle | 设置标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-description | 弹出确认框的内容描述 | string | undefined
-descriptionStyle | 设置内容描述的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-keyboard | 是否支持按键操作 (`enter` 切换显示；`esc` 关闭) | boolean | true
-tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-icon | 自定义弹出确认框 `Icon` 图标，预置四种类型，或 `prop` 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | 'success' &#124; 'info' &#124; 'warning' &#124; 'danger' &#124; VNode &#124; (() => VNode) | 'warning'
-iconStyle | 设置 `Icon` 图标的样式，一般不需要设置，主要用于自定义 `Icon` 图标时 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-cancelText | 取消按钮文字 | string | '取消'
-cancelType | 取消按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default'
-cancelProps | 取消按钮 `props`，优先级高于 `cancelType`，参考 [Button Props](./button.md#button-props) | [ButtonProps](./button.md#button-props) | {}
-okText | 确认按钮文字 | string | '确定'
-okType | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'primary'
-okProps | 确认按钮 `props`，优先级高于 `okType`，参考 [Button Props](./button.md#button-props) | [ButtonProps](./button.md#button-props) | {}
-showCancel | 是否显示取消按钮 | boolean | true
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| title | 弹出确认框的标题 | string | undefined |
+| titleStyle | 设置标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| description | 弹出确认框的内容描述 | string | undefined |
+| descriptionStyle | 设置内容描述的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| keyboard | 是否支持按键操作 (`enter` 切换显示；`esc` 关闭) | boolean | true |
+| tooltipStyle | 设置弹出提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| icon | 自定义弹出确认框 `Icon` 图标，预置四种类型，或 `prop` 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | 'success' &#124; 'info' &#124; 'warning' &#124; 'danger' &#124; VNode &#124; (() => VNode) | 'warning' |
+| iconStyle | 设置 `Icon` 图标的样式，一般不需要设置，主要用于自定义 `Icon` 图标时 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| cancelText | 取消按钮文字 | string | '取消' |
+| cancelType | 取消按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default' |
+| cancelProps | 取消按钮 `props`，优先级高于 `cancelType`，参考 [Button Props](./button.md#button-props) | [ButtonProps](./button.md#button-props) | {} |
+| okText | 确认按钮文字 | string | '确定' |
+| okType | 确认按钮类型 | 'default' &#124; 'reverse' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'primary' |
+| okProps | 确认按钮 `props`，优先级高于 `okType`，参考 [Button Props](./button.md#button-props) | [ButtonProps](./button.md#button-props) | {} |
+| showCancel | 是否显示取消按钮 | boolean | true |
 
 更多属性请参考 [Tooltip Props](./tooltip.md#tooltip-props)
 
 ## Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-icon | 自定义图标 | v-slot:icon
-title | 自定义弹出确认框的标题 | v-slot:title
-description | 自定义弹出确认框的内容描述 | v-slot:description
-cancelText | 自定义取消按钮文字 | v-slot:cancelText
-okText | 自定义确认按钮文字 | v-slot:okText
-default | 自定义内容 | v-slot:default
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| icon | 自定义图标 | v-slot:icon |
+| title | 自定义弹出确认框的标题 | v-slot:title |
+| description | 自定义弹出确认框的内容描述 | v-slot:description |
+| cancelText | 自定义取消按钮文字 | v-slot:cancelText |
+| okText | 自定义确认按钮文字 | v-slot:okText |
+| default | 自定义内容 | v-slot:default |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-cancel | 点击取消的回调 | (e: Event) => void
-ok | 点击确认的回调 | (e: Event) => void
-openChange | 显示隐藏的回调 | (open: boolean) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| cancel | 点击取消的回调 | (e: Event) => void |
+| ok | 点击确认的回调 | (e: Event) => void |
+| openChange | 显示隐藏的回调 | (open: boolean) => void |
