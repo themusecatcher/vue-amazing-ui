@@ -931,7 +931,7 @@ const state = reactive({
 | speed | 水平滚动时移动的速度，单位是像素每秒，水平滚动时生效 | number | 48 |
 | vertical | 是否垂直滚动 | boolean | false |
 | duration | 垂直滚动过渡持续时间，单位 `ms`，垂直滚动时生效 | number | 1000 |
-| interval | 垂直文字滚动时间间隔，单位 `ms`，垂直滚动时生效 | number | 3000 |
+| interval | 垂直滚动每条文字的停留时长，单位 `ms`，过渡时长另由 `duration` 控制 | number | 3000 |
 | ellipsis | 是否启用文本省略组件 | boolean | false |
 | ellipsisProps | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](./ellipsis.md#ellipsis-props)，用于配置文本省略弹出提示 | [EllipsisProps](./ellipsis.md#ellipsis-props) | {} |
 | pauseOnMouseEnter | 鼠标移入是否暂停滚动 | boolean | false |
