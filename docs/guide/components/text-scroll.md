@@ -779,7 +779,7 @@ const scrollItems = ref<TextScrollItem[]>([
 ])
 function onClick(item: TextScrollItem) {
   // 获取点击的 item
-  costringle.log('item', item)
+  console.log('item', item)
 }
 const state = reactive({
   single: false,
