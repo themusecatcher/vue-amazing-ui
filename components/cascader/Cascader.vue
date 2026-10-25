@@ -7,7 +7,7 @@ export interface Option {
   value?: string | number // 选项值
   disabled?: boolean // 是否禁用选项，默认 false
   children?: Option[] // 选项 children 数组
-  [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
+  [propName: string]: any // 允许携带任意自定义字段，会随原始数据对象透传
 }
 export interface FieldNames {
   label?: string // 选项的文本字段名

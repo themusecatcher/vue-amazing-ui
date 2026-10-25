@@ -5,7 +5,7 @@ export interface Props {
   value?: string | number // 选项值
   label?: string // 选项文本，未提供时取默认插槽内容
   disabled?: boolean // 是否禁用该选项，默认 false
-  [propName: string]: unknown // 允许携带任意自定义字段，会原样透传给 #option 插槽
+  [propName: string]: any // 允许携带任意自定义字段，会原样透传给 #option 插槽
 }
 // 声明组件插槽类型
 export interface SelectOptionSlots {

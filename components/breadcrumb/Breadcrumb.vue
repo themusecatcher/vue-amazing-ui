@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 export interface Query {
-  [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
+  [propName: string]: any // 允许携带任意 query 参数
 }
 export interface Route {
   name: string // 路由名称

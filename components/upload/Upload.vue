@@ -8,7 +8,7 @@ import { log } from 'components/utils'
 export interface FileType {
   name?: string // 文件名
   url: any // 文件地址
-  [propName: string]: any // 添加一个字符串索引签名，用于包含带有任意数量的其他属性
+  [propName: string]: any // 允许携带任意自定义字段，会随原始文件对象透传
 }
 
 export interface Props {
