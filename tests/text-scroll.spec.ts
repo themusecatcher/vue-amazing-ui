@@ -184,6 +184,21 @@ describe('TextScroll：渲染结构', () => {
     })
   })
 
+  it('single 误传空数组时不渲染条目', () => {
+    wrapper = mount(TextScroll, { props: { items: [], single: true } })
+    expect(wrapper.findAll('.scroll-item')).toHaveLength(0)
+  })
+
+  it('single 误传数组时按首条渲染', () => {
+    wrapper = mount(TextScroll, { props: { items: [{ title: 'a' }, { title: 'b' }], single: true } })
+    const groups = wrapper.findAll('.scroll-items-group')
+    expect(groups).toHaveLength(2)
+    groups.forEach((group) => {
+      expect(group.findAll('.scroll-item')).toHaveLength(1)
+    })
+    expect(wrapper.text()).toBe('aa')
+  })
+
   it('amount 为 false 时宽度自适应', () => {
     wrapper = mount(TextScroll, {
       props: { items: [{ title: 'a' }, { title: 'b' }], amount: false }

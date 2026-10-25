@@ -59,7 +59,10 @@ let disposed = false // 组件已卸载，禁止再启动新的节拍链
 const normalizedItems = computed<Item[]>(() => {
   const { items, single, vertical } = props
   if (single) {
-    return [items as Item]
+    // single 的契约是单条 Item，但联合类型放行了数组：误传时取首条，空值不产出条目，
+    // 否则会渲染出一条 title 为 undefined 的空条目并参与滚动，click 回传的也是数组本身
+    const item = Array.isArray(items) ? items[0] : items
+    return item ? [item] : []
   }
   const list = Array.isArray(items) ? items : [items]
   return vertical && list.length === 1 ? [...list, ...list] : [...list]
