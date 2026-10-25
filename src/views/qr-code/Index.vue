@@ -69,7 +69,7 @@ const downloadQRCode = () => {
       </li>
     </ul>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Space vertical align="center">
+    <Space vertical>
       <QRCode :value="value" title="扫码查看当前内容" />
       <Input v-model:value="value" placeholder="-" :maxlength="60" />
     </Space>
