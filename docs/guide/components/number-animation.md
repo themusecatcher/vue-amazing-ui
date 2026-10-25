@@ -534,12 +534,12 @@ const easingKey = computed(() => `${easingCategory.value}-${easingType.value}`)
 ## Methods
 
 | 名称 | 说明 | 类型 |
-| :--- | :------- | :--------- |
+| :-- | :-- | :-- |
 | play | 播放动画（动画进行中调用会被忽略，播放结束后可重复调用重新播放） | () => void |
 
 ## Events
 
 | 名称 | 说明 | 类型 |
-| :------- | :----------- | :--------- |
+| :-- | :-- | :-- |
 | started | 动画开始播放 | () => void |
 | finished | 动画播放完成 | () => void |

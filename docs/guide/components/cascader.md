@@ -1265,16 +1265,16 @@ function onChange(values: (number | string)[], labels: string[]) {
 
 ### CascaderOption Type
 
-| 名称              | 说明                                                  | 类型                    |
-| :----------------- | :----------------------------------------------------- | :----------------------- |
-| label?            | 选项名                                                | string                  |
-| value?            | 选项值                                                | string &#124; number    |
-| disabled?         | 是否禁用选项                                          | boolean                 |
-| children?         | 选项 `children` 数组                                  | [CascaderOption](#cascaderoption-type)[] |
-| [propName: string] | 添加一个字符串索引签名，用于包含带有任意数量的其他属性 | any                     |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| label? | 选项名 | string |
+| value? | 选项值 | string &#124; number |
+| disabled? | 是否禁用选项 | boolean |
+| children? | 选项 `children` 数组 | [CascaderOption](#cascaderoption-type)[] |
+| [propName: string] | 允许携带任意自定义字段，会随原始数据对象透传 | any |
 
 ## Events
 
 | 名称 | 说明 | 类型 |
-| :----- | :--------------- | :--------------------------------------------------------- |
+| :-- | :-- | :-- |
 | change | 选择完成后的回调 | (values: (number&#124;string)[], labels: string[]) => void |

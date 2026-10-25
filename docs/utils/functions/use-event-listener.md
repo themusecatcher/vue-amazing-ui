@@ -74,8 +74,8 @@ if (typeof window !== 'undefined') {
 
 ## Params
 
-| 名称     | 说明                         | 类型                                      | 默认值    |
-| -------- | ---------------------------- | ----------------------------------------- | --------- |
-| target   | 要添加监听事件的目标元素     | HTMLElement &#124; Window &#124; Document | undefined |
-| event    | 监听的事件类型（大小写敏感） | string                                    | undefined |
-| callback | 监听事件触发时的回调函数     | Function                                  | undefined |
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| target | 要添加监听事件的目标元素 | HTMLElement &#124; Window &#124; Document | undefined |
+| event | 监听的事件类型（大小写敏感） | string | undefined |
+| callback | 监听事件触发时的回调函数 | Function | undefined |

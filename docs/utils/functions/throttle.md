@@ -71,13 +71,13 @@ function showPosition() {
 
 ## Params
 
-| 名称  | 说明                      | 类型     | 默认值    |
-| ----- | ------------------------- | -------- | --------- |
-| fn    | 要被节流的函数            | Function | undefined |
-| delay | 节流的时间间隔，单位 `ms` | number   | 300       |
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| fn | 要被节流的函数 | Function | undefined |
+| delay | 节流的时间间隔，单位 `ms` | number | 300 |
 
 ## Return
 
 | 类型 | 说明 |
-| --- | --- |
+| :-- | :-- |
 | Function | 节流后的新函数；窗口内被丢弃的调用返回 `false`，正常执行时不返回值 |

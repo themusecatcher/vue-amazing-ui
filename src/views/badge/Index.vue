@@ -80,7 +80,7 @@ function increase() {
       </Badge>
       <Badge>
         <template #value>
-          <span class="value-text">world</span>
+          <span class="badge-value">world</span>
         </template>
         <Avatar shape="square" size="large" />
       </Badge>

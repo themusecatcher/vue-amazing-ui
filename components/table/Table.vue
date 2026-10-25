@@ -29,7 +29,7 @@ export interface Column {
   sortDirections?: ('ascend' | 'descend')[] // 支持的排序方式
   sorter?: (a: any, b: any) => number // 升序排序函数，参考 Array.sort 的 compareFunction，当列表头分组时，请将排序设置在叶子节点
   customCell?: (record: Record<string, any>, rowIndex: number, column: Column) => object | undefined // 设置单元格属性
-  [propName: string]: any // 用于包含带有任意数量的其他属性
+  [propName: string]: any // 允许携带任意自定义字段，会随原始对象透传
 }
 export interface Selection {
   columnTitle?: string | VNode // 自定义选择框标题

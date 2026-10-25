@@ -690,13 +690,13 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 
 ## Slots
 
-| 名称       | 说明          | 用法               |
-| :---------- | :------------- | :----------------- |
-| icon       | 自定义搜索图标 | v-slot:icon        |
-| search     | 自定义搜索按钮 | v-slot:search      |
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| icon | 自定义搜索图标 | v-slot:icon |
+| search | 自定义搜索按钮 | v-slot:search |
 | addonBefore | 自定义前置标签 | v-slot:addonBefore |
-| prefix     | 自定义前缀图标 | v-slot:prefix      |
-| suffix     | 自定义后缀图标 | v-slot:suffix      |
+| prefix | 自定义前缀图标 | v-slot:prefix |
+| suffix | 自定义后缀图标 | v-slot:suffix |
 
 ## Events
 

@@ -334,26 +334,26 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 ### Pagination Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-page <Tag color="cyan">v-model</Tag> | 当前页数 | number | 1
-pageSize <Tag color="cyan">v-model</Tag> | 每页条数 | number | 10
-total | 数据总数 | number | 0
-disabled | 是否禁用 | boolean | false
-pageAmount | 显示的页码数 | number | 5
-hideOnSinglePage | 只有一页时是否隐藏分页 | boolean | false
-showQuickJumper | 是否可以快速跳转至某页 | boolean | false
-jumperProps | 快速跳转组件 `props`，参考 [Input Props](./input.md#input-props) | [InputProps](./input.md#input-props) | {}
-showSizeChanger | 是否展示 `pageSize` 切换器，当 `total` 大于 `50` 时默认为 `true` | boolean | undefined
-changerProps | `pageSize` 切换器组件 `props`，参考 [Select Props](./select.md#select-props) | [SelectProps](./select.md#select-props) | {}
-pageSizeOptions | 设置每页可以显示多少条 | string[] &#124; number[] | [10, 20, 50 ,100]
-showTotal | 用于显示数据总量和当前数据顺序 | boolean &#124; ((total: number, range: number[]) => string) | false
-placement | 分页展示位置 | 'left' &#124; 'center' &#124; 'right' | 'center'
-size | 分页按钮大小 | 'large' &#124; 'middle' &#124; 'small' | 'large'
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| page <Tag color="cyan">v-model</Tag> | 当前页数 | number | 1 |
+| pageSize <Tag color="cyan">v-model</Tag> | 每页条数 | number | 10 |
+| total | 数据总数 | number | 0 |
+| disabled | 是否禁用 | boolean | false |
+| pageAmount | 显示的页码数 | number | 5 |
+| hideOnSinglePage | 只有一页时是否隐藏分页 | boolean | false |
+| showQuickJumper | 是否可以快速跳转至某页 | boolean | false |
+| jumperProps | 快速跳转组件 `props`，参考 [Input Props](./input.md#input-props) | [InputProps](./input.md#input-props) | {} |
+| showSizeChanger | 是否展示 `pageSize` 切换器，当 `total` 大于 `50` 时默认为 `true` | boolean | undefined |
+| changerProps | `pageSize` 切换器组件 `props`，参考 [Select Props](./select.md#select-props) | [SelectProps](./select.md#select-props) | {} |
+| pageSizeOptions | 设置每页可以显示多少条 | string[] &#124; number[] | [10, 20, 50 ,100] |
+| showTotal | 用于显示数据总量和当前数据顺序 | boolean &#124; ((total: number, range: number[]) => string) | false |
+| placement | 分页展示位置 | 'left' &#124; 'center' &#124; 'right' | 'center' |
+| size | 分页按钮大小 | 'large' &#124; 'middle' &#124; 'small' | 'large' |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 页码 `page` 或每页条数 `pageSize` 改变的回调 | (page: number, pageSize: number) => void
-pageSizeChange | 每页条数 `pageSize` 变化的回调 | (page: number, pageSize: number) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| change | 页码 `page` 或每页条数 `pageSize` 改变的回调 | (page: number, pageSize: number) => void |
+| pageSizeChange | 每页条数 `pageSize` 变化的回调 | (page: number, pageSize: number) => void |

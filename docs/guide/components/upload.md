@@ -811,16 +811,16 @@ onmessage = async (e: MessageEvent) => {
 
 ### UploadFileType Type
 
-| 名称              | 说明                          | 类型  |
-| :----------------- | :----------------------------- | :----- |
-| name?             | 文件名                        | string |
-| url               | 文件地址                      | string |
-| [propName: string] | 用于包含带有任意数量的其他属性 | any   |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| name? | 文件名 | string |
+| url | 文件地址 | string |
+| [propName: string] | 允许携带任意自定义字段，会随原始文件对象透传 | any |
 
 ## Slots
 
-| 名称 | 说明              | 用法       |
-| :--- | :----------------- | :--------- |
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
 | tip | 自定义上传描述文字 | v-slot:tip |
 
 ## Events

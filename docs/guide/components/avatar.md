@@ -318,31 +318,31 @@ import { SketchOutlined } from '@ant-design/icons-vue'
 
 ### Avatar Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-color | 头像的背景色 | string | 'rgba(0, 0, 0, 0.25)'
-shape | 指定头像的形状 | 'circle' &#124; 'square' | 'circle'
-size | 设置头像的大小，为数值时单位 `px` | number &#124; 'small' &#124; 'middle' &#124; 'large' &#124; [AvatarResponsive](#avatarresponsive-type) | 'middle'
-src | 图片类头像资源地址 | string | undefined
-alt | 图片无法显示时的替代文本 | string | undefined
-icon | 设置头像的图标，`prop` 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | VNode &#124; (() => VNode) | undefined
-href | 点击跳转的地址，指定此属性按钮的行为和 `a` 链接一致 | string | undefined
-target | 相当于 `a` 标签的 `target` 属性，`href` 存在时生效 | '_self' &#124; '_blank' | '_self'
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| color | 头像的背景色 | string | 'rgba(0, 0, 0, 0.25)' |
+| shape | 指定头像的形状 | 'circle' &#124; 'square' | 'circle' |
+| size | 设置头像的大小，为数值时单位 `px` | number &#124; 'small' &#124; 'middle' &#124; 'large' &#124; [AvatarResponsive](#avatarresponsive-type) | 'middle' |
+| src | 图片类头像资源地址 | string | undefined |
+| alt | 图片无法显示时的替代文本 | string | undefined |
+| icon | 设置头像的图标，`prop` 支持 `VNode` / 渲染函数；插槽形态请用同名 `#icon` 插槽 | VNode &#124; (() => VNode) | undefined |
+| href | 点击跳转的地址，指定此属性按钮的行为和 `a` 链接一致 | string | undefined |
+| target | 相当于 `a` 标签的 `target` 属性，`href` 存在时生效 | '_self' &#124; '_blank' | '_self' |
 
 ### AvatarResponsive Type
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-xs? | `<576px` 响应式栅格 | number
-sm? | `≥576px` 响应式栅格 | number
-md? | `≥768px` 响应式栅格 | number
-lg? | `≥992px` 响应式栅格 | number
-xl? | `≥1200px` 响应式栅格 | number
-xxl? | `≥1600px` 响应式栅格 | number
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| xs? | `<576px` 响应式栅格 | number |
+| sm? | `≥576px` 响应式栅格 | number |
+| md? | `≥768px` 响应式栅格 | number |
+| lg? | `≥992px` 响应式栅格 | number |
+| xl? | `≥1200px` 响应式栅格 | number |
+| xxl? | `≥1600px` 响应式栅格 | number |
 
 ## Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-default | 字符类型的头像内容 | v-slot:default
-icon | 自定义头像图标 | v-slot:icon
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 字符类型的头像内容 | v-slot:default |
+| icon | 自定义头像图标 | v-slot:icon |

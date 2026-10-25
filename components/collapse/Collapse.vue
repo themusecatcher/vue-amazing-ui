@@ -21,7 +21,7 @@ export interface Item {
   copyProps?: ButtonProps // 复制按钮属性配置，参考 Button Props
   copyText?: string // 复制按钮文本
   copiedText?: string // 已复制按钮文本
-  [propName: string]: any // 用于包含带有任意数量的其他属性
+  [propName: string]: any // 允许携带任意自定义字段，会随原始对象透传
 }
 
 export interface Props {

@@ -27,7 +27,7 @@ export interface MenuOption {
   target?: '_self' | '_blank' // 链接打开方式，href 存在时生效
   type?: 'item' | 'divider' | 'group' // 菜单项类型：菜单项 | 分割线 | 分组
   children?: MenuOption[] // 子菜单（多级菜单）或分组子项
-  [key: string]: unknown // 其他自定义字段
+  [propName: string]: any // 允许携带任意自定义字段，会随原始对象透传
 }
 // 箭头配置（arrow 传对象可控制箭头是否指向触发器中心）
 export interface DropdownArrowOptions {

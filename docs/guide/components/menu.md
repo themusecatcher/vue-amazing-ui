@@ -1674,14 +1674,14 @@ const submenuItems = computed<ItemType[]>(() => [
 
 ### MenuKey Type
 
-| 名称    | 值                   |
-| :------ | :------------------- |
+| 名称 | 值 |
+| :-- | :-- |
 | MenuKey | string &#124; number |
 
 ### MenuNode Type
 
-| 名称     | 值                                   |
-| :------- | :----------------------------------- |
+| 名称 | 值 |
+| :-- | :-- |
 | MenuNode | VNodeChild &#124; (() => VNodeChild) |
 
 ### MenuIcon Type
@@ -1702,10 +1702,10 @@ const submenuItems = computed<ItemType[]>(() => [
 | :-- | :-- | :-- |
 | key | 唯一标志 | [MenuKey](#menukey-type) |
 | label? | 菜单项标题，支持渲染函数 | [MenuNode](#menunode-type) |
-| icon? | 菜单图标，渲染函数入参为所在菜单项的配置 | [MenuIcon](#menuicon-type) |
-| title? | 收起时展示的悬浮标题，支持渲染函数；显式 `false` 表示不展示 | [MenuNode](#menunode-type) |
 | disabled? | 是否禁用 | boolean |
 | danger? | 是否展示错误状态样式 | boolean |
+| icon? | 菜单图标，渲染函数入参为所在菜单项的配置 | [MenuIcon](#menuicon-type) |
+| title? | 收起时展示的悬浮标题，支持渲染函数；显式 `false` 表示不展示 | [MenuNode](#menunode-type) |
 | style? | 菜单项自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) |
 | class? | 菜单项自定义类名 | string |
 
@@ -1716,6 +1716,7 @@ const submenuItems = computed<ItemType[]>(() => [
 | key | 唯一标志 | [MenuKey](#menukey-type) |
 | label? | 子菜单标题，支持渲染函数 | [MenuNode](#menunode-type) |
 | children | 子菜单的菜单项 | [ItemType](#itemtype-type)[] |
+| disabled? | 是否禁用 | boolean |
 | icon? | 菜单图标，渲染函数入参为所在子菜单的配置 | [MenuIcon](#menuicon-type) |
 | expandIcon? | 子菜单级展开收起图标，优先于 `Menu` 的 `expandIcon` | (info: [MenuExpandIconInfo](#menuexpandiconinfo-type)) => VNodeChild |
 | theme? | 子菜单主题，不传则继承 `Menu` 的 `theme` | 'light' &#124; 'dark' |
@@ -1723,7 +1724,6 @@ const submenuItems = computed<ItemType[]>(() => [
 | popupClassName? | 弹出子菜单的自定义类名，`inline` 模式下无效 | string |
 | popupOffset? | 弹出子菜单与锚点的偏移，`inline` 模式下无效 | [number, number] |
 | onTitleClick? | 点击子菜单标题 | (info: [MenuTitleInfo](#menutitleinfo-type)) => void |
-| disabled? | 是否禁用 | boolean |
 | style? | 子菜单自定义样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) |
 | class? | 子菜单自定义类名 | string |
 
@@ -1752,8 +1752,8 @@ const submenuItems = computed<ItemType[]>(() => [
 
 `expandIcon` 属性与 `#expandIcon` 插槽的入参类型，为 [SubMenuType](#submenutype-type) 与以下字段的交叉类型：
 
-| 名称    | 说明                   | 类型    |
-| :------ | :--------------------- | :------ |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
 | isOpen? | 所在子菜单当前是否展开 | boolean |
 
 ### MenuInfo Type
@@ -1771,15 +1771,15 @@ const submenuItems = computed<ItemType[]>(() => [
 
 为 [MenuInfo](#menuinfo-type) 与以下字段的交叉类型：
 
-| 名称         | 说明                      | 类型                       |
-| :----------- | :------------------------ | :------------------------- |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
 | selectedKeys | 变化后的选中项 `key` 数组 | [MenuKey](#menukey-type)[] |
 
 ### MenuTitleInfo Type
 
-| 名称     | 说明           | 类型                            |
-| :------- | :------------- | :------------------------------ |
-| key      | 子菜单的 `key` | [MenuKey](#menukey-type)        |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| key | 子菜单的 `key` | [MenuKey](#menukey-type) |
 | domEvent | 触发的原生事件 | MouseEvent &#124; KeyboardEvent |
 
 ### MenuItem Props
@@ -1788,11 +1788,11 @@ const submenuItems = computed<ItemType[]>(() => [
 
 `<Menu>` 默认插槽中的菜单项子组件（配置式写法请用 [MenuItemType](#menuitemtype-type) 数据）：
 
-| 名称     | 说明                 | 类型    | 默认值    |
-| :------- | :------------------- | :------ | :-------- |
-| title    | 收起时展示的悬浮标题 | string  | undefined |
-| disabled | 是否禁用             | boolean | false     |
-| danger   | 是否展示错误状态样式 | boolean | false     |
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| title | 收起时展示的悬浮标题 | string | undefined |
+| disabled | 是否禁用 | boolean | false |
+| danger | 是否展示错误状态样式 | boolean | false |
 
 ### MenuSubMenu Props
 
@@ -1800,13 +1800,13 @@ const submenuItems = computed<ItemType[]>(() => [
 
 `<Menu>` 默认插槽中的子菜单子组件（配置式写法请用 [SubMenuType](#submenutype-type) 数据），默认插槽内书写 `MenuItem` / `MenuSubMenu`：
 
-| 名称           | 说明                                        | 类型                  | 默认值    |
-| :------------- | :------------------------------------------ | :-------------------- | :-------- |
-| title          | 子菜单标题，收起态下同时作为悬浮标题        | string                | undefined |
-| theme          | 子菜单主题，不传则继承 `Menu` 的 `theme`    | 'light' &#124; 'dark' | undefined |
-| popupClassName | 弹出子菜单的自定义类名，`inline` 模式下无效 | string                | undefined |
-| popupOffset    | 弹出子菜单与锚点的偏移，`inline` 模式下无效 | [number, number]      | undefined |
-| disabled       | 是否禁用                                    | boolean               | false     |
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| title | 子菜单标题，收起态下同时作为悬浮标题 | string | undefined |
+| theme | 子菜单主题，不传则继承 `Menu` 的 `theme` | 'light' &#124; 'dark' | undefined |
+| popupClassName | 弹出子菜单的自定义类名，`inline` 模式下无效 | string | undefined |
+| popupOffset | 弹出子菜单与锚点的偏移，`inline` 模式下无效 | [number, number] | undefined |
+| disabled | 是否禁用 | boolean | false |
 
 ### MenuItemGroup Props
 
@@ -1814,8 +1814,8 @@ const submenuItems = computed<ItemType[]>(() => [
 
 `<Menu>` 默认插槽中的分组子组件（配置式写法请用 [MenuItemGroupType](#menuitemgrouptype-type) 数据），组内书写 `MenuItem`：
 
-| 名称  | 说明     | 类型   | 默认值    |
-| :---- | :------- | :----- | :-------- |
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
 | title | 分组标题 | string | undefined |
 
 ### MenuDivider Props
@@ -1824,9 +1824,9 @@ const submenuItems = computed<ItemType[]>(() => [
 
 `<Menu>` 默认插槽中的分割线子组件（配置式写法请用 [MenuDividerType](#menudividertype-type) 数据）：
 
-| 名称   | 说明     | 类型    | 默认值 |
-| :----- | :------- | :------ | :----- |
-| dashed | 是否虚线 | boolean | false  |
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| dashed | 是否虚线 | boolean | false |
 
 > ℹ️ 组件式写法下菜单项与子菜单的 `key` 取子组件的 `key` 属性，未设置时按其所在层级的下标兜底（分组与分割线不参与选中，其 `key` 由渲染时按位置合成）。`items` 与默认插槽同时提供时，本库**以默认插槽为准**，沿用本库「插槽优先于 `prop`」的统一约定。
 
@@ -1842,27 +1842,27 @@ const submenuItems = computed<ItemType[]>(() => [
 
 ### MenuItem Slots
 
-| 名称    | 说明                 | 用法           |
-| :------ | :------------------- | :------------- |
-| default | 菜单项标题           | v-slot:default |
-| icon    | 菜单图标             | v-slot:icon    |
-| title   | 收起时展示的悬浮标题 | v-slot:title   |
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 菜单项标题 | v-slot:default |
+| icon | 菜单图标 | v-slot:icon |
+| title | 收起时展示的悬浮标题 | v-slot:title |
 
 ### MenuSubMenu Slots
 
-| 名称       | 说明                                                      | 用法                                    |
-| :--------- | :-------------------------------------------------------- | :-------------------------------------- |
-| default    | 子菜单的菜单项，书写 `MenuItem` / `MenuSubMenu`           | v-slot:default                          |
-| title      | 子菜单标题                                                | v-slot:title                            |
-| icon       | 菜单图标                                                  | v-slot:icon                             |
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 子菜单的菜单项，书写 `MenuItem` / `MenuSubMenu` | v-slot:default |
+| title | 子菜单标题 | v-slot:title |
+| icon | 菜单图标 | v-slot:icon |
 | expandIcon | 子菜单的展开收起图标，存在时优先于 `Menu` 的 `expandIcon` | v-slot:expandIcon="{ isOpen, ...item }" |
 
 ### MenuItemGroup Slots
 
-| 名称    | 说明                          | 用法           |
-| :------ | :---------------------------- | :------------- |
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
 | default | 分组的菜单项，书写 `MenuItem` | v-slot:default |
-| title   | 分组标题                      | v-slot:title   |
+| title | 分组标题 | v-slot:title |
 
 ## Events
 

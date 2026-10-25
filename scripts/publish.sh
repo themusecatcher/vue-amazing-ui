@@ -227,7 +227,7 @@ else
 fi
 
 # 输出可点击的 GitHub Release 链接（OSC 8 包裹，覆盖新建/已存在两种分支）
-printf '   🔗 Release: '
+printf '🔗 Release: '
 osc8_start "${release_url}"
 printf '%s' "${release_url}"
 osc8_end

@@ -1178,54 +1178,54 @@ const state = reactive({
 
 ### List Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-bordered | 是否展示边框 | boolean | false
-vertical | 是否使用竖直样式 | boolean | false
-split | 是否展示分割线 | boolean | true
-size | 列表尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
-loading | 是否加载中 | boolean | false
-hoverable | 是否显示悬浮样式 | boolean | false
-header | 列表头部 | string | undefined
-footer | 列表底部 | string | undefined
-spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin-props)，用于配置列表加载中样式 | [SpinProps](./spin.md#spin-props) | {}
-emptyProps | `Empty` 组件属性配置，参考 [Empty Props](./empty.md#empty-props)，用于配置暂无数据样式 | [EmptyProps](./empty.md#empty-props) | {}
-showPagination | 是否显示分页 | boolean | false
-pagination | `Pagination` 组件属性配置，参考 [Pagination Props](./pagination.md#pagination-props)，用于配置分页功能 | [PaginationProps](./pagination.md#pagination-props) | {}
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| bordered | 是否展示边框 | boolean | false |
+| vertical | 是否使用竖直样式 | boolean | false |
+| split | 是否展示分割线 | boolean | true |
+| size | 列表尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
+| loading | 是否加载中 | boolean | false |
+| hoverable | 是否显示悬浮样式 | boolean | false |
+| header | 列表头部 | string | undefined |
+| footer | 列表底部 | string | undefined |
+| spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin-props)，用于配置列表加载中样式 | [SpinProps](./spin.md#spin-props) | {} |
+| emptyProps | `Empty` 组件属性配置，参考 [Empty Props](./empty.md#empty-props)，用于配置暂无数据样式 | [EmptyProps](./empty.md#empty-props) | {} |
+| showPagination | 是否显示分页 | boolean | false |
+| pagination | `Pagination` 组件属性配置，参考 [Pagination Props](./pagination.md#pagination-props)，用于配置分页功能 | [PaginationProps](./pagination.md#pagination-props) | {} |
 
 ### ListItem Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-avatar | 列表元素的图标 | string | undefined
-avatarProps | `Avatar` 组件属性配置，参考 [Avatar Props](./avatar.md#avatar-props)，用于配置列表图标样式 | [AvatarProps](./avatar.md#avatar-props) | {}
-title | 列表元素的标题 | string | undefined
-description | 列表元素的描述内容 | string | undefined
-extra | 额外内容，展示在列表右侧 | string | undefined
-avatarStyle | 设置图标的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-titleStyle | 设置标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-descriptionStyle | 设置描述内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-contentStyle | 设置内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-actionsStyle | 设置操作区域的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-extraStyle | 设置额外内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| avatar | 列表元素的图标 | string | undefined |
+| avatarProps | `Avatar` 组件属性配置，参考 [Avatar Props](./avatar.md#avatar-props)，用于配置列表图标样式 | [AvatarProps](./avatar.md#avatar-props) | {} |
+| title | 列表元素的标题 | string | undefined |
+| description | 列表元素的描述内容 | string | undefined |
+| extra | 额外内容，展示在列表右侧 | string | undefined |
+| avatarStyle | 设置图标的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| titleStyle | 设置标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| descriptionStyle | 设置描述内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| contentStyle | 设置内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| actionsStyle | 设置操作区域的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| extraStyle | 设置额外内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 
 ## Slots
 
 ### List Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-header | 自定义列表头部 | v-slot:header
-default | 自定义内容 | v-slot:default
-footer | 自定义列表底部 | v-slot:footer
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| header | 自定义列表头部 | v-slot:header |
+| default | 自定义内容 | v-slot:default |
+| footer | 自定义列表底部 | v-slot:footer |
 
 ### ListItem Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-avatar | 自定义列表元素的图标 | v-slot:avatar
-title | 自定义列表元素的标题 | v-slot:title
-description | 自定义列表元素的描述内容 | v-slot:description
-default | 自定义内容 | v-slot:default
-actions | 自定义列表操作组 | v-slot:actions
-extra | 自定义额外内容 | v-slot:extra
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| avatar | 自定义列表元素的图标 | v-slot:avatar |
+| title | 自定义列表元素的标题 | v-slot:title |
+| description | 自定义列表元素的描述内容 | v-slot:description |
+| default | 自定义内容 | v-slot:default |
+| actions | 自定义列表操作组 | v-slot:actions |
+| extra | 自定义额外内容 | v-slot:extra |

@@ -302,21 +302,21 @@ const pause = () => {
 
 ### Video Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-width | 视频播放器宽度，单位 `px` | number | 800
-height | 视频播放器高度，单位 `px` | number | 450
-src | 视频文件地址，支持网络地址 `https` 和相对地址 | string | undefined
-poster | 视频封面地址，支持网络地址 `https` 和相对地址 | string | undefined
-second | 在未设置封面时，自动截取视频第 `second` 秒对应帧作为视频封面，单位 `s` | number | 0.5
-fit | 视频封面和内容的缩放规则，参考 [object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit) | 'none' &#124; 'fill' &#124; 'contain' &#124; 'cover' | 'contain'
-autoplay | 视频就绪后是否马上播放，优先级高于 `preload`，参考 [MDN 自动播放指南](https://developer.mozilla.org/zh-CN/docs/Web/Media/Autoplay_guide) | boolean | false
-controls | 是否向用户显示控件，比如进度条，全屏等 | boolean | true
-loop | 视频播放完成后，是否循环播放 | boolean | false
-muted |  是否静音 | boolean | false
-preload | 是否在页面加载后载入视频，如果设置了 `autoplay` 属性，则 `preload` 将被忽略 | 'auto' &#124; 'metadata' &#124; 'none' | 'metadata'
-playIcon | 播放暂停时是否显示播放器中间的暂停图标 | boolean | true
-iconSize | 暂停图标尺寸，单位 `px` | number | 80
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| width | 视频播放器宽度，单位 `px` | number | 800 |
+| height | 视频播放器高度，单位 `px` | number | 450 |
+| src | 视频文件地址，支持网络地址 `https` 和相对地址 | string | undefined |
+| poster | 视频封面地址，支持网络地址 `https` 和相对地址 | string | undefined |
+| second | 在未设置封面时，自动截取视频第 `second` 秒对应帧作为视频封面，单位 `s` | number | 0.5 |
+| fit | 视频封面和内容的缩放规则，参考 [object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit) | 'none' &#124; 'fill' &#124; 'contain' &#124; 'cover' | 'contain' |
+| autoplay | 视频就绪后是否马上播放，优先级高于 `preload`，参考 [MDN 自动播放指南](https://developer.mozilla.org/zh-CN/docs/Web/Media/Autoplay_guide) | boolean | false |
+| controls | 是否向用户显示控件，比如进度条，全屏等 | boolean | true |
+| loop | 视频播放完成后，是否循环播放 | boolean | false |
+| muted | 是否静音 | boolean | false |
+| preload | 是否在页面加载后载入视频，如果设置了 `autoplay` 属性，则 `preload` 将被忽略 | 'auto' &#124; 'metadata' &#124; 'none' | 'metadata' |
+| playIcon | 播放暂停时是否显示播放器中间的暂停图标 | boolean | true |
+| iconSize | 暂停图标尺寸，单位 `px` | number | 80 |
 
 _`preload` 可选属性：_
 
@@ -340,7 +340,7 @@ _`fit` 可选属性：_
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-play | 开始播放的回调 | () => void
-pause | 暂停播放的回调 | () => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| play | 开始播放的回调 | () => void |
+| pause | 暂停播放的回调 | () => void |

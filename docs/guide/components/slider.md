@@ -949,40 +949,40 @@ watchEffect(() => {
 
 ### Slider Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-width | 滑动输入条宽度，单位 `px`，水平模式时生效 | string &#124; number | '100%'
-height | 滑动输入条高度，单位 `px`，垂直模式时生效 | string &#124; number | '100%'
-vertical | 是否启用垂直模式 | boolean | false
-min | 最小值 | number | 0
-max | 最大值 | number | 100
-marks | 刻度标记，`key` 的类型必须为 `number` 且取值在闭区间 `[min, max]` 内，每个标记可以单独设置样式 | [SliderMarks](#slidermarks-type) | {}
-disabled | 是否禁用 | boolean | false
-range | 是否使用双滑块模式 | boolean | false
-step | 步长，取值必须大于 `0`，并且可被 `(max - min)` 整除；当 `marks` 不为空对象时，可以设置 `step` 为 `'mark'`，此时 `Slider` 的可选值仅有 `marks` 标记的部分 | number &#124; 'mark' | 1
-tooltip | 是否展示 `Tooltip` | boolean | true
-tooltipOpen | 是否一直显示 `tooltip` | boolean | false
-tooltipStyle | 自定义 `Tooltip` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-tooltipClass | 自定义 `Tooltip` 类名 | string | -
-tooltipPlacement | `Tooltip` 弹出位置，默认为水平模式 `top`、垂直模式 `right` | 'top' &#124; 'bottom' &#124; 'left' &#124; 'right' | -
-formatTooltip | `Slider` 会把当前值传给 `formatTooltip`，并在 `Tooltip` 中显示 `formatTooltip` 的返回值 | (value: number) => string &#124; number | (value: number) => value
-value <Tag color="cyan">v-model</Tag> | 设置当前取值，`range` 为 `false` 时为单个值，否则为区间值 | number &#124; number[] | 0
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| width | 滑动输入条宽度，单位 `px`，水平模式时生效 | string &#124; number | '100%' |
+| height | 滑动输入条高度，单位 `px`，垂直模式时生效 | string &#124; number | '100%' |
+| vertical | 是否启用垂直模式 | boolean | false |
+| min | 最小值 | number | 0 |
+| max | 最大值 | number | 100 |
+| marks | 刻度标记，`key` 的类型必须为 `number` 且取值在闭区间 `[min, max]` 内，每个标记可以单独设置样式 | [SliderMarks](#slidermarks-type) | {} |
+| disabled | 是否禁用 | boolean | false |
+| range | 是否使用双滑块模式 | boolean | false |
+| step | 步长，取值必须大于 `0`，并且可被 `(max - min)` 整除；当 `marks` 不为空对象时，可以设置 `step` 为 `'mark'`，此时 `Slider` 的可选值仅有 `marks` 标记的部分 | number &#124; 'mark' | 1 |
+| tooltip | 是否展示 `Tooltip` | boolean | true |
+| tooltipOpen | 是否一直显示 `tooltip` | boolean | false |
+| tooltipStyle | 自定义 `Tooltip` 样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| tooltipClass | 自定义 `Tooltip` 类名 | string | - |
+| tooltipPlacement | `Tooltip` 弹出位置，默认为水平模式 `top`、垂直模式 `right` | 'top' &#124; 'bottom' &#124; 'left' &#124; 'right' | - |
+| formatTooltip | `Slider` 会把当前值传给 `formatTooltip`，并在 `Tooltip` 中显示 `formatTooltip` 的返回值 | (value: number) => string &#124; number | (value: number) => value |
+| value <Tag color="cyan">v-model</Tag> | 设置当前取值，`range` 为 `false` 时为单个值，否则为区间值 | number &#124; number[] | 0 |
 
 ### SliderMarks Type
 
-名称 | 值
-:-- | :--
-Marks | { [markValue: number]: string &#124; VNode &#124; (() => VNode) &#124; { style: [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties), label: string &#124; VNode &#124; (() => VNode) } }
+| 名称 | 值 |
+| :-- | :-- |
+| Marks | { [markValue: number]: string &#124; VNode &#124; (() => VNode) &#124; { style: [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties), label: string &#124; VNode &#124; (() => VNode) } } |
 
 ## Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-mark | 自定义刻度标记 | v-slot:mark="{ label, value }"
-tooltip | 自定义 `Tooltip` 内容，`value` 为格式化后的当前值 | v-slot:tooltip="{ value }"
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| mark | 自定义刻度标记 | v-slot:mark="{ label, value }" |
+| tooltip | 自定义 `Tooltip` 内容，`value` 为格式化后的当前值 | v-slot:tooltip="{ value }" |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 当前取值变化后的回调 | (value: number &#124; number[]) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| change | 当前取值变化后的回调 | (value: number &#124; number[]) => void |

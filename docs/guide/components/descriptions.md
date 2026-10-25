@@ -1231,43 +1231,43 @@ const activeColumnTip = computed(() => {
 
 ### Descriptions Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-title | 描述列表的标题，显示在最顶部 | string &#124; VNode | undefined
-extra | 描述列表的操作区域，显示在右上方 | string &#124; VNode | undefined
-bordered | 是否展示边框 | boolean | false
-layout | 描述列表布局方式 | 'horizontal' &#124; 'vertical' | 'horizontal'
-size | 设置列表的大小 | 'default' &#124; 'middle' &#124; 'small' | 'default'
-colon | 是否显示标签后的冒号（边框模式不显示冒号） | boolean | true
-column | 一行的 `DescriptionsItem` 数量，可以写成数值或支持响应式的对象写法 `{ xs: 8, sm: 16, md: 24 }` | number &#124; [DescriptionsResponsive](#descriptionsresponsive-type) | {xs: 1, sm: 2, md\: 3, lg: 3, xl: 3, xxl: 3, xxxl: 3}
-labelAlign | 标签对齐方式 | 'left' &#124; 'right' &#124; 'center' | 'left'
-labelStyle | 自定义标签样式，优先级低于 `DescriptionsItem`  的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
-contentStyle | 自定义内容样式，优先级低于 `DescriptionsItem`  的 `contentStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
-labelClass | 标签自定义类名，与 `DescriptionsItem` 的 `labelClass` 叠加 | string | undefined
-contentClass | 内容自定义类名，与 `DescriptionsItem` 的 `contentClass` 叠加 | string | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| title | 描述列表的标题，显示在最顶部 | string &#124; VNode | undefined |
+| extra | 描述列表的操作区域，显示在右上方 | string &#124; VNode | undefined |
+| bordered | 是否展示边框 | boolean | false |
+| layout | 描述列表布局方式 | 'horizontal' &#124; 'vertical' | 'horizontal' |
+| size | 设置列表的大小 | 'default' &#124; 'middle' &#124; 'small' | 'default' |
+| colon | 是否显示标签后的冒号（边框模式不显示冒号） | boolean | true |
+| column | 一行的 `DescriptionsItem` 数量，可以写成数值或支持响应式的对象写法 `{ xs: 8, sm: 16, md: 24 }` | number &#124; [DescriptionsResponsive](#descriptionsresponsive-type) | {xs: 1, sm: 2, md\: 3, lg: 3, xl: 3, xxl: 3, xxxl: 3} |
+| labelAlign | 标签对齐方式 | 'left' &#124; 'right' &#124; 'center' | 'left' |
+| labelStyle | 自定义标签样式，优先级低于 `DescriptionsItem`  的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
+| contentStyle | 自定义内容样式，优先级低于 `DescriptionsItem`  的 `contentStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
+| labelClass | 标签自定义类名，与 `DescriptionsItem` 的 `labelClass` 叠加 | string | undefined |
+| contentClass | 内容自定义类名，与 `DescriptionsItem` 的 `contentClass` 叠加 | string | undefined |
 
 ### DescriptionsResponsive Type
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-xs? | `<576px` 响应式栅格 | number
-sm? | `≥576px` 响应式栅格 | number
-md? | `≥768px` 响应式栅格 | number
-lg? | `≥992px` 响应式栅格 | number
-xl? | `≥1200px` 响应式栅格 | number
-xxl? | `≥1600px` 响应式栅格 | number
-xxxl? | `≥2000px` 响应式栅格 | number
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| xs? | `<576px` 响应式栅格 | number |
+| sm? | `≥576px` 响应式栅格 | number |
+| md? | `≥768px` 响应式栅格 | number |
+| lg? | `≥992px` 响应式栅格 | number |
+| xl? | `≥1200px` 响应式栅格 | number |
+| xxl? | `≥1600px` 响应式栅格 | number |
+| xxxl? | `≥2000px` 响应式栅格 | number |
 
 ### DescriptionsItem Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-label | 内容的描述标签 | string &#124; number &#124; VNode | undefined
-span | 包含列的数量，未设置时按 `1` 处理；**最后一行的最后一项未设置 `span`（或显式 `span` 超出本行剩余列数）时收缩为剩余列数，即补满该行**，显式 `span` 未超出本行剩余列数时按显式值渲染 | number | 1
-labelStyle | 自定义标签样式，优先级高于 `Descriptions` 的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
-contentStyle | 自定义内容样式，优先级高于 `Descriptions` 的 `contentStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined
-labelClass | 标签自定义类名，与 `Descriptions` 的 `labelClass` 叠加 | string | undefined
-contentClass | 内容自定义类名，与 `Descriptions` 的 `contentClass` 叠加 | string | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| label | 内容的描述标签 | string &#124; number &#124; VNode | undefined |
+| span | 包含列的数量，未设置时按 `1` 处理；**最后一行的最后一项未设置 `span`（或显式 `span` 超出本行剩余列数）时收缩为剩余列数，即补满该行**，显式 `span` 未超出本行剩余列数时按显式值渲染 | number | 1 |
+| labelStyle | 自定义标签样式，优先级高于 `Descriptions` 的 `labelStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
+| contentStyle | 自定义内容样式，优先级高于 `Descriptions` 的 `contentStyle` | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | undefined |
+| labelClass | 标签自定义类名，与 `Descriptions` 的 `labelClass` 叠加 | string | undefined |
+| contentClass | 内容自定义类名，与 `Descriptions` 的 `contentClass` 叠加 | string | undefined |
 
 > 同一行 `span` 之和超过 `column` 时，超出本行剩余列数的项会收缩为剩余列数（开发环境会给出提示）。
 
@@ -1275,16 +1275,16 @@ contentClass | 内容自定义类名，与 `Descriptions` 的 `contentClass` 叠
 
 ### Descriptions Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-default | 自定义描述列表内容 | v-slot:default
-header | 自定义整个头部区域，存在时替代 `title` 与 `extra` | v-slot:header
-title | 自定义描述列表的标题 | v-slot:title
-extra | 自定义描述列表的操作区域 | v-slot:extra
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 自定义描述列表内容 | v-slot:default |
+| header | 自定义整个头部区域，存在时替代 `title` 与 `extra` | v-slot:header |
+| title | 自定义描述列表的标题 | v-slot:title |
+| extra | 自定义描述列表的操作区域 | v-slot:extra |
 
 ### DescriptionsItem Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-label | 自定义描述标签 | v-slot:label
-default | 自定义内容 | v-slot:default
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| label | 自定义描述标签 | v-slot:label |
+| default | 自定义内容 | v-slot:default |

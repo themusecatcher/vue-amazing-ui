@@ -134,11 +134,11 @@ onMounted(() => {
 ## Params
 
 | 名称 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
+| :-- | :-- | :-- | :-- |
 | el | 起始元素，可从 `null` 开始向上查找 | HTMLElement &#124; null | undefined |
 
 ## Return
 
 | 类型 | 说明 |
-| --- | --- |
+| :-- | :-- |
 | HTMLElement &#124; null | 最近的可滚动父元素或 `documentElement`，无则返回 `null` |

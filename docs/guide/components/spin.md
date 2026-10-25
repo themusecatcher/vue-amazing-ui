@@ -926,8 +926,8 @@ div.spin-wrap.spin-item {
 
 ## Slots
 
-| 名称      | 说明           | 用法             |
-| :-------- | :------------- | :--------------- |
-| tip       | 自定义描述文案 | v-slot:tip       |
-| indicator | 自定义指示符   | v-slot:indicator |
-| default   | 自定义内容     | v-slot:default   |
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| tip | 自定义描述文案 | v-slot:tip |
+| indicator | 自定义指示符 | v-slot:indicator |
+| default | 自定义内容 | v-slot:default |

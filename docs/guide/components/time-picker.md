@@ -795,7 +795,7 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 
 ### DefaultFormat Value
 
-| 类型 | 值 |
+| 名称 | 值 |
 | :-- | :-- |
 | `24` 小时制 | 'HH:mm:ss' |
 | `12` 小时制（`use12Hours`） | 'hh:mm:ss a' |

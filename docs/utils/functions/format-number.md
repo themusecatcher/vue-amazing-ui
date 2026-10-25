@@ -94,19 +94,19 @@ const samples = [
 
 ## Params
 
-| 名称      | 说明                       | 类型                 | 默认值    |
-| --------- | -------------------------- | -------------------- | --------- |
-| value     | 要格式化的数字或数字字符串 | number &#124; string | undefined |
-| precision | 小数点后的位数             | number               | 2         |
-| separator | 千分位分隔符               | string               | ','       |
-| decimal   | 小数点字符                 | string               | '.'       |
-| prefix?   | 数字前的字符串             | string               | undefined |
-| suffix?   | 数字后的字符串             | string               | undefined |
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| value | 要格式化的数字或数字字符串 | number &#124; string | undefined |
+| precision | 小数点后的位数 | number | 2 |
+| separator | 千分位分隔符 | string | ',' |
+| decimal | 小数点字符 | string | '.' |
+| prefix? | 数字前的字符串 | string | undefined |
+| suffix? | 数字后的字符串 | string | undefined |
 
 ## Return
 
 | 类型 | 说明 |
-| --- | --- |
+| :-- | :-- |
 | string | 格式化后的数字字符串 |
 
 ## 注意事项

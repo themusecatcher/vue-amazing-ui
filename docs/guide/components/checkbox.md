@@ -718,75 +718,75 @@ const checkboxRef = ref<InstanceType<typeof Checkbox> | null>(null)
 
 ### Checkbox Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-checked <Tag color="cyan">v-model</Tag> | 当前是否选中；作为组内单项使用时由组内已选值决定，本属性不生效 | boolean | false
-value | 本项的值；脱离组时随 `change` 事件回传，置于 `CheckboxGroup` 内时作为本项的身份标识 | string &#124; number | undefined
-disabled | 是否禁用 | boolean | false
-indeterminate | 半选（全选）时的样式控制 | boolean | false
-autofocus | 是否自动聚焦原生 `input` | boolean | false
-name | 原生 `input` 的表单字段名；置于 `CheckboxGroup` 内时以组的配置为准 | string | undefined
-id | 原生 `input` 的 `id` | string | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| checked <Tag color="cyan">v-model</Tag> | 当前是否选中；作为组内单项使用时由组内已选值决定，本属性不生效 | boolean | false |
+| value | 本项的值；脱离组时随 `change` 事件回传，置于 `CheckboxGroup` 内时作为本项的身份标识 | string &#124; number | undefined |
+| disabled | 是否禁用 | boolean | false |
+| indeterminate | 半选（全选）时的样式控制 | boolean | false |
+| autofocus | 是否自动聚焦原生 `input` | boolean | false |
+| name | 原生 `input` 的表单字段名；置于 `CheckboxGroup` 内时以组的配置为准 | string | undefined |
+| id | 原生 `input` 的 `id` | string | undefined |
 
 ### CheckboxGroup Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-value <Tag color="cyan">v-model</Tag> | 组内已选中的值；不传时由组内部维护 | (string &#124; number)[] | []
-options | 复选框选项数据；提供后组内默认插槽不生效 | (string &#124; number &#124; [CheckboxGroupOption](#checkboxgroupoption-type))[] | []
-vertical | 是否垂直排列 | boolean | false
-gap | 选项间距，单位 `px`；垂直排列时即垂直间距（传数组取垂直间距）；数组用于水平排列折行时：`[水平间距, 垂直间距]` | number &#124; number[] | 8
-disabled | 是否禁用整组，组内单项自身的 `disabled` 在此基础上叠加 | boolean | false
-name | 表单字段名，下发到组内每个原生 `input` | string | undefined
-id | `input` 的 `id` 前缀，`options` 模式下实际 `id` 追加选项下标；组合式用法不下发，请在组内各项上自行设置 | string | undefined
-autofocus | 是否自动聚焦首项，仅 `options` 模式生效 | boolean | false
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| value <Tag color="cyan">v-model</Tag> | 组内已选中的值；不传时由组内部维护 | (string &#124; number)[] | [] |
+| options | 复选框选项数据；提供后组内默认插槽不生效 | (string &#124; number &#124; [CheckboxGroupOption](#checkboxgroupoption-type))[] | [] |
+| vertical | 是否垂直排列 | boolean | false |
+| gap | 选项间距，单位 `px`；垂直排列时即垂直间距（传数组取垂直间距）；数组用于水平排列折行时：`[水平间距, 垂直间距]` | number &#124; number[] | 8 |
+| disabled | 是否禁用整组，组内单项自身的 `disabled` 在此基础上叠加 | boolean | false |
+| name | 表单字段名，下发到组内每个原生 `input` | string | undefined |
+| id | `input` 的 `id` 前缀，`options` 模式下实际 `id` 追加选项下标；组合式用法不下发，请在组内各项上自行设置 | string | undefined |
+| autofocus | 是否自动聚焦首项，仅 `options` 模式生效 | boolean | false |
 
 ### CheckboxGroupOption Type
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-label? | 选项名，未提供时以选项值展示；传入 `VNode` 时原样渲染 | string &#124; number &#124; VNode
-value | 选项值 | string &#124; number
-disabled? | 是否禁用选项 | boolean
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| label? | 选项名，未提供时以选项值展示；传入 `VNode` 时原样渲染 | string &#124; number &#124; VNode |
+| value | 选项值 | string &#124; number |
+| disabled? | 是否禁用选项 | boolean |
 
 ## Slots
 
 ### Checkbox Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-default | 选项名 | v-slot:default
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 选项名 | v-slot:default |
 
 ### CheckboxGroup Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-default | `options` 模式下为每个选项提供作用域参数；未提供 `options` 时用于放置 `Checkbox` | v-slot:default="{ option, label, index }"
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | `options` 模式下为每个选项提供作用域参数；未提供 `options` 时用于放置 `Checkbox` | v-slot:default="{ option, label, index }" |
 
 ## Methods
 
 ### Checkbox Methods
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-focus | 聚焦组件的原生 `input` | () => void
-blur | 使组件的原生 `input` 失焦 | () => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| focus | 聚焦组件的原生 `input` | () => void |
+| blur | 使组件的原生 `input` 失焦 | () => void |
 
 ## Events
 
 ### Checkbox Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 变化时的回调函数；作为 `CheckboxGroup` 的组内单项使用时本组件不触发（组内选中变更由组的 `change` 统一出口） | (value: boolean, event: CheckboxChangeEvent) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| change | 变化时的回调函数；作为 `CheckboxGroup` 的组内单项使用时本组件不触发（组内选中变更由组的 `change` 统一出口） | (value: boolean, event: CheckboxChangeEvent) => void |
 
 `event` 为与原生 `input` 的 `change` 同形态的事件对象，含 `target`（`checked` / `value` / `name` / `disabled` 状态快照）、`nativeEvent` 与 `stopPropagation` / `preventDefault`。`target.value` 为该项的标识值，`target.checked` 为该项变化后的选中态。
 
 ### CheckboxGroup Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 组内选项变化时的回调函数 | (value: (string \| number)[], event: CheckboxChangeEvent) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| change | 组内选项变化时的回调函数 | (value: (string \| number)[], event: CheckboxChangeEvent) => void |
 
 `event.target.value` 为变更后的组内已选值数组，`event.target.checked` 表示变更后组内是否仍有选中项（非「全选」语义）。
 

@@ -1019,72 +1019,72 @@ const buttonRef = ref<InstanceType<typeof RadioButton> | null>(null)
 
 ### Radio Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-checked <Tag color="cyan">v-model</Tag> | 当前是否选中；作为组内单项使用时以组的值为准，本属性不生效 | boolean | false
-value | 本项的值；脱离组时随 `change` 事件回传，置于 `RadioGroup` 内时作为本项的身份标识，与组内当前值比较得出选中态 | string &#124; number &#124; boolean | undefined
-button | 是否启用按钮样式；置于 `RadioGroup` 内时，组为按钮形态同样按按钮渲染（本属性为 `true` 时优先） | boolean | false
-buttonStyle | 按钮样式风格；置于 `RadioGroup` 内时以组的配置为准 | 'outline' &#124; 'solid' | 'outline'
-size | 尺寸，仅当按钮形态时生效；置于 `RadioGroup` 内时以组的配置为准，组未指定时回落自身尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
-disabled | 是否禁用 | boolean | false
-autofocus | 是否自动聚焦原生 `input` | boolean | false
-name | 原生 `input` 的表单字段名；置于 `RadioGroup` 内时以组的配置为准 | string | undefined
-id | 原生 `input` 的 `id` | string | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| checked <Tag color="cyan">v-model</Tag> | 当前是否选中；作为组内单项使用时以组的值为准，本属性不生效 | boolean | false |
+| value | 本项的值；脱离组时随 `change` 事件回传，置于 `RadioGroup` 内时作为本项的身份标识，与组内当前值比较得出选中态 | string &#124; number &#124; boolean | undefined |
+| button | 是否启用按钮样式；置于 `RadioGroup` 内时，组为按钮形态同样按按钮渲染（本属性为 `true` 时优先） | boolean | false |
+| buttonStyle | 按钮样式风格；置于 `RadioGroup` 内时以组的配置为准 | 'outline' &#124; 'solid' | 'outline' |
+| size | 尺寸，仅当按钮形态时生效；置于 `RadioGroup` 内时以组的配置为准，组未指定时回落自身尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
+| disabled | 是否禁用 | boolean | false |
+| autofocus | 是否自动聚焦原生 `input` | boolean | false |
+| name | 原生 `input` 的表单字段名；置于 `RadioGroup` 内时以组的配置为准 | string | undefined |
+| id | 原生 `input` 的 `id` | string | undefined |
 
 ### RadioGroup Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-value <Tag color="cyan">v-model</Tag> | 组内当前选中的值；不传时由组内部维护 | string &#124; number &#124; boolean | undefined
-options | 单选框选项数据；提供后组内默认插槽不生效 | (string &#124; number &#124; [RadioGroupOption](#radiogroupoption-type))[] | []
-button | 是否启用按钮样式 | boolean | false
-buttonStyle | 按钮形态的风格，仅按钮形态生效 | 'outline' &#124; 'solid' | 'outline'
-size | 尺寸，仅作用于按钮形态；未指定时组内各项回落自身尺寸 | 'small' &#124; 'middle' &#124; 'large' | undefined
-vertical | 是否垂直排列；按钮形态（组的 `button` 或组内 `RadioButton`）不适用 | boolean | false
-gap | 选项间距，单位 `px`；垂直排列时即垂直间距（传数组取垂直间距）；数组用于水平排列折行时：`[水平间距, 垂直间距]`；按钮形态下相邻项贴合成组，该属性不生效 | number &#124; number[] | 8
-disabled | 是否禁用整组，组内单项自身的 `disabled` 在此基础上叠加 | boolean | false
-name | 表单字段名，下发到组内每个原生 `input` | string | undefined
-id | `input` 的 `id` 前缀，`options` 模式下实际 `id` 追加选项下标；组合式用法不下发，请在组内各项上自行设置 | string | undefined
-autofocus | 是否自动聚焦首项，仅 `options` 模式生效 | boolean | false
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| value <Tag color="cyan">v-model</Tag> | 组内当前选中的值；不传时由组内部维护 | string &#124; number &#124; boolean | undefined |
+| options | 单选框选项数据；提供后组内默认插槽不生效 | (string &#124; number &#124; [RadioGroupOption](#radiogroupoption-type))[] | [] |
+| button | 是否启用按钮样式 | boolean | false |
+| buttonStyle | 按钮形态的风格，仅按钮形态生效 | 'outline' &#124; 'solid' | 'outline' |
+| size | 尺寸，仅作用于按钮形态；未指定时组内各项回落自身尺寸 | 'small' &#124; 'middle' &#124; 'large' | undefined |
+| vertical | 是否垂直排列；按钮形态（组的 `button` 或组内 `RadioButton`）不适用 | boolean | false |
+| gap | 选项间距，单位 `px`；垂直排列时即垂直间距（传数组取垂直间距）；数组用于水平排列折行时：`[水平间距, 垂直间距]`；按钮形态下相邻项贴合成组，该属性不生效 | number &#124; number[] | 8 |
+| disabled | 是否禁用整组，组内单项自身的 `disabled` 在此基础上叠加 | boolean | false |
+| name | 表单字段名，下发到组内每个原生 `input` | string | undefined |
+| id | `input` 的 `id` 前缀，`options` 模式下实际 `id` 追加选项下标；组合式用法不下发，请在组内各项上自行设置 | string | undefined |
+| autofocus | 是否自动聚焦首项，仅 `options` 模式生效 | boolean | false |
 
 ### RadioButton Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-checked <Tag color="cyan">v-model</Tag> | 脱离组单独使用时的选中态 | boolean | false
-value | 该项的值，置于组内时据此判断选中 | string &#124; number &#124; boolean | undefined
-disabled | 是否禁用 | boolean | false
-autofocus | 是否自动聚焦原生 `input` | boolean | false
-name | 原生 `input` 的表单字段名；置于 `RadioGroup` 内时以组的配置为准 | string | undefined
-id | 原生 `input` 的 `id` | string | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| checked <Tag color="cyan">v-model</Tag> | 脱离组单独使用时的选中态 | boolean | false |
+| value | 该项的值，置于组内时据此判断选中 | string &#124; number &#124; boolean | undefined |
+| disabled | 是否禁用 | boolean | false |
+| autofocus | 是否自动聚焦原生 `input` | boolean | false |
+| name | 原生 `input` 的表单字段名；置于 `RadioGroup` 内时以组的配置为准 | string | undefined |
+| id | 原生 `input` 的 `id` | string | undefined |
 
 ### RadioGroupOption Type
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-label? | 选项名，未提供时以选项值展示；传入 `VNode` 时原样渲染 | string &#124; number &#124; VNode
-value | 选项值 | string &#124; number &#124; boolean
-disabled? | 是否禁用选项 | boolean
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| label? | 选项名，未提供时以选项值展示；传入 `VNode` 时原样渲染 | string &#124; number &#124; VNode |
+| value | 选项值 | string &#124; number &#124; boolean |
+| disabled? | 是否禁用选项 | boolean |
 
 ## Slots
 
 ### Radio Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-default | 选项名 | v-slot:default
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 选项名 | v-slot:default |
 
 ### RadioGroup Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-default | `options` 模式下为每个选项提供作用域参数；未提供 `options` 时用于放置 `Radio` / `RadioButton` | v-slot:default="{ option, label, index }"
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | `options` 模式下为每个选项提供作用域参数；未提供 `options` 时用于放置 `Radio` / `RadioButton` | v-slot:default="{ option, label, index }" |
 
 ### RadioButton Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-default | 按钮文本 | v-slot:default
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 按钮文本 | v-slot:default |
 
 ## Methods
 
@@ -1106,22 +1106,22 @@ blur | 使组件的原生 `input` 失焦 | () => void
 
 ### Radio Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 选项变化时的回调函数；脱组单独使用时触发（仅未选中 → 选中，首参恒为 `true`），作为 `RadioGroup` 的组内单项使用时本组件不触发（组内选中变更由组的 `change` 统一出口） | (checked: boolean, event: RadioChangeEvent) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| change | 选项变化时的回调函数；脱组单独使用时触发（仅未选中 → 选中，首参恒为 `true`），作为 `RadioGroup` 的组内单项使用时本组件不触发（组内选中变更由组的 `change` 统一出口） | (checked: boolean, event: RadioChangeEvent) => void |
 
 `event` 为与原生 `input` 的 `change` 同形态的事件对象，含 `target`（`checked` / `value` / `name` / `disabled` 状态快照）、`nativeEvent` 与 `stopPropagation` / `preventDefault`
 
 ### RadioGroup Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 组内选项变化时的回调函数 | (value: string \| number \| boolean, event: RadioChangeEvent) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| change | 组内选项变化时的回调函数 | (value: string \| number \| boolean, event: RadioChangeEvent) => void |
 
 `event.target.checked` 恒为 `true`（选中事件），`value` 为本次选中的值，`name` / `disabled` 取该项当前生效的字段名与禁用态。
 
 ### RadioButton Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 选项变化时的回调函数；脱离组单独使用时触发，置于 `RadioGroup` 内时不触发（组内选中变更由 `RadioGroup` 的 `change` 统一出口） | (checked: boolean, event: RadioChangeEvent) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| change | 选项变化时的回调函数；脱离组单独使用时触发，置于 `RadioGroup` 内时不触发（组内选中变更由 `RadioGroup` 的 `change` 统一出口） | (checked: boolean, event: RadioChangeEvent) => void |

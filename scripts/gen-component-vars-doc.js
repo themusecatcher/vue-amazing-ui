@@ -176,7 +176,7 @@ ${sections.join('\n\n')}
 
 ### 已知限制
 
-- **Teleport 浮层只转发全局令牌**：有生效 \`seed\` 时 \`40\` 个 \`--va-*\` 会随浮层根节点下发
+- **Teleport 浮层只转发全局令牌**：有生效 \`seed\` 时 \`42\` 个 \`--va-*\` 会随浮层根节点下发
   （只配置 \`theme.components\` 时只转发组件令牌，避免覆盖宿主用纯 \`CSS\` 写在 \`:root\` 上的主题），
   但你在祖先上手写的 **组件令牌**不会被带过去。受影响场景：
   - \`Menu\` 的弹出型子菜单（\`mode="horizontal"\`、\`inlineCollapsed\` 收起态）里的
@@ -184,7 +184,7 @@ ${sections.join('\n\n')}
   - \`Notification\` / \`Modal\` / \`Select\` 等浮层内的 \`Scrollbar\` 的 \`--va-scrollbar-*\`。
 
   需要时请在 \`<html>\` 或浮层的承载层上设置。\`Menu\` 的 \`inline\` 模式、\`Scrollbar\` 的非浮层用法不受影响。
-- **\`--va-menu-background\` 只改根列表背景**：弹出面板底色是另一套私有变量，不随它变化。
+- **\`--va-menu-background\` 只改根列表背景**：弹出面板底色由 \`--va-menu-popup-background\` 控制、内联子菜单底色由 \`--va-menu-inline-submenu-background\` 控制，需分别覆盖。
 - **\`disabled\` 态不受组件令牌影响**：禁用态统一走中性令牌，这是刻意设计。
 - **\`Button\` 的 \`danger\` 默认为单档**：常态 / 悬停 / 按下三态默认同色（历史视觉档位缺失）；
   已支持只覆盖常态色（悬停 / 按下跟随），但默认状态本身没有档位差。

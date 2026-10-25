@@ -267,19 +267,19 @@ import { SmileTwoTone } from '@ant-design/icons-vue'
 
 ### Result Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-status | 结果的状态，决定图标和颜色 | 'success' &#124; 'error' &#124; 'info' &#124; 'warning' &#124; '404' &#124; '403' &#124; '500' | 'info'
-title | 标题文字 | string | undefined
-subTitle | 副标题文字 | string | undefined
-extra | 额外内容 | string | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| status | 结果的状态，决定图标和颜色 | 'success' &#124; 'error' &#124; 'info' &#124; 'warning' &#124; '404' &#124; '403' &#124; '500' | 'info' |
+| title | 标题文字 | string | undefined |
+| subTitle | 副标题文字 | string | undefined |
+| extra | 额外内容 | string | undefined |
 
 ## Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-icon | 自定义图标 | v-slot:icon
-title | 自定义标题文字 | v-slot:title
-subTitle | 自定义副标题文字 | v-slot:subTitle
-extra | 自定义额外内容 | v-slot:extra
-default | 自定义内容 | v-slot:default
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| icon | 自定义图标 | v-slot:icon |
+| title | 自定义标题文字 | v-slot:title |
+| subTitle | 自定义副标题文字 | v-slot:subTitle |
+| extra | 自定义额外内容 | v-slot:extra |
+| default | 自定义内容 | v-slot:default |

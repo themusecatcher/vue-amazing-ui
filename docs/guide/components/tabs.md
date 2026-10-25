@@ -1278,42 +1278,42 @@ const state = reactive<TabsProps>({
 
 ### Tabs Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-items | 标签页数组 | [TabsItem](#tabsitem-type)[] | []
-prefix | 标签页前缀 | string | undefined
-suffix | 标签页后缀 | string | undefined
-animated | 是否启用切换动画，在 `tabPosition: 'top' \| 'bottom'` 时有效 | boolean | true
-centered | 标签是否居中展示 | boolean | false
-size | 标签页大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
-type | 标签页的类型 |'line' &#124; 'card' | 'line'
-tabGutter | 页签之前的间隙大小，单位 `px` | number | undefined
-tabStyle | 自定义页签样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-tabPosition | 自定义页签位置 | 'top' &#124; 'right' &#124; 'bottom' &#124; 'left' | 'top'
-contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | string &#124; number | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| items | 标签页数组 | [TabsItem](#tabsitem-type)[] | [] |
+| prefix | 标签页前缀 | string | undefined |
+| suffix | 标签页后缀 | string | undefined |
+| animated | 是否启用切换动画，在 `tabPosition: 'top' \| 'bottom'` 时有效 | boolean | true |
+| centered | 标签是否居中展示 | boolean | false |
+| size | 标签页大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
+| type | 标签页的类型 | 'line' &#124; 'card' | 'line' |
+| tabGutter | 页签之前的间隙大小，单位 `px` | number | undefined |
+| tabStyle | 自定义页签样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| tabPosition | 自定义页签位置 | 'top' &#124; 'right' &#124; 'bottom' &#124; 'left' | 'top' |
+| contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | string &#124; number | undefined |
 
 ### TabsItem Type
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-key? | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 `(0,1,2...)` 绑定 | string &#124; number
-tab? | 页签显示文字 | string
-icon? | 页签图标 | VNode
-content? | 标签页内容 | string
-disabled? | 是否禁用页签 | boolean
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| key? | 对应 `activeKey`，如果没有传入 `key` 属性，则默认使用数据索引 `(0,1,2...)` 绑定 | string &#124; number |
+| tab? | 页签显示文字 | string |
+| icon? | 页签图标 | VNode |
+| content? | 标签页内容 | string |
+| disabled? | 是否禁用页签 | boolean |
 
 ## Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-tab | 自定义页签显示文字 | v-slot:tab="{ item, tab, key }"
-content | 自定义标签页内容 | v-slot:content="{ item, content, key }"
-prefix | 自定义标签页前缀 | v-slot:prefix
-suffix | 自定义标签页后缀 | v-slot:suffix
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| tab | 自定义页签显示文字 | v-slot:tab="{ item, tab, key }" |
+| content | 自定义标签页内容 | v-slot:content="{ item, content, key }" |
+| prefix | 自定义标签页前缀 | v-slot:prefix |
+| suffix | 自定义标签页后缀 | v-slot:suffix |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-change | 切换面板的回调 | (key: string &#124; number) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| change | 切换面板的回调 | (key: string &#124; number) => void |

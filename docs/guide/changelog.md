@@ -24,12 +24,15 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-10-25">3.3.0</VersionDateTag>
 
-- 新增 [菜单 Menu](/guide/components/menu.html) 深色皮肤（`theme="dark"`）的底色跟随主题色派生：根列表、浮层面板与内联子菜单取主色派生的暗底，改主色时整套皮肤同步换色相，`theme.components.Menu.primaryColor` 同样驱动；浮层面板与内联子菜单新增可独立覆盖的 `--va-menu-popup-background` / `--va-menu-inline-submenu-background`，全局语义变量由 `40` 个增至 `42` 个、组件令牌由 `51` 个增至 `53` 个
-- 优化 [加载中 Spin](/guide/components/spin.html) 翻转双环配色：内环默认取外环色的浅一档，只传 `color` 时内环跟随该色派生同色系浅调，不再固定为主题主色；修复两环交界处的叠压亮线
-- 优化 [二维码 QRCode](/guide/components/qr-code.html) 的默认取色：`color` / `bgColor` / `borderColor` 不传时分别取 `--va-text-color-1` / `--va-bg-container-color` / `--va-border-split-color`（原固定 `#000` / `#FFF` / `rgba(5, 5, 5, 0.06)`），暗色主题下二维码自动反色；中央图标底色属性 `iconBackgroundColor` 移除，改用 `iconBgColor`（不传时与背景色一致）
-- 新增 [二维码 QRCode](/guide/components/qr-code.html) 的 `spinProps` 属性：`loading` 状态可配置指示符、尺寸、颜色与文案（默认按遮罩尺寸取 `small` 档）；状态遮罩默认由全不透明改为 `0.96` 半透明，新增 `--qr-code-mask-opacity` 可调
+- 新增 [菜单 Menu](/guide/components/menu.html) 深色皮肤（`theme="dark"`）的底色跟随主题色：根列表、浮层面板与内联子菜单同步换色相（`theme.components.Menu.primaryColor` 同样驱动）；新增 `--va-bg-brand-dark-color` / `--va-bg-brand-dark-deep-color`，浮层面板与内联子菜单可用 `--va-menu-popup-background` / `--va-menu-inline-submenu-background` 单独覆盖
+- 优化 [加载中 Spin](/guide/components/spin.html) 翻转双环配色：内环改为跟随外环取色、不再固定为主色，并修复两环交界处的叠压亮线
+- 优化 [二维码 QRCode](/guide/components/qr-code.html) 的默认取色：`color` / `bgColor` / `borderColor` 改取 `--va-text-color-1` / `--va-bg-container-color` / `--va-border-split-color`，暗色主题下二维码自动反色；中央图标底色属性 `iconBackgroundColor` 移除，改用 `iconBgColor`
+- 新增 [二维码 QRCode](/guide/components/qr-code.html) 的 `spinProps` 属性，可配置 `loading` 状态的指示符与文案；遮罩不透明度改由 `--qr-code-mask-opacity` 控制，默认值由 `1` 改为 `0.96`
 - 修复 [抽屉 Drawer](/guide/components/drawer.html) 面板阴影在暗色主题下与遮罩叠加出更深的色带
 - 修复 [轮播图 Swiper](/guide/components/swiper.html) 分页器未选中的圆点与进度条轨道在暗色主题下不可见
+- 修复 [徽标 Badge](/guide/components/badge.html) 实色底上的计数文字在暗色主题下对比不足的问题
+- 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 与 [时间选择器 TimePicker](/guide/components/time-picker.html) 范围选择箭头在暗色主题下与面板底色割裂
+- 优化 [下拉菜单 Dropdown](/guide/components/dropdown.html) 与 [选择器 Select](/guide/components/select.html) 选项类型的透传字段类型，读取自定义字段无需再断言
 - 更新使用者文档和贡献者文档
 - 组件库及文档代码优化
 

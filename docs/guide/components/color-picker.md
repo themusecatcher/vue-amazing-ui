@@ -715,59 +715,59 @@ const panelTo = computed(() => {
 
 ### ColorPicker Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-value <Tag color="cyan">v-model</Tag> | 颜色选择器的值 | string | undefined
-defaultValue | 未受控时的初始颜色值 | string | undefined
-open <Tag color="cyan">v-model</Tag> | 面板是否展开（受控，不传时由组件内部维护） | boolean | undefined
-defaultOpen | 未受控时面板的初始显隐 | boolean | false
-label | 展示的内容，返回值同时支持字符串与 `VNode` | (color: string) => VNodeChild | undefined
-swatches | 色板的值 | string[] | []
-footer | 底部额外的页脚内容 | string | undefined
-modes | 颜色选择器支持颜色的格式 | [ColorPickerMode](#colorpickermode-type)[] | ['rgb', 'hex', 'hsl']
-width | 颜色选择器的宽度，单位 `px`；仅内置触发器生效，使用 `trigger` 插槽自定义触发器时外壳随触发器内容自适应 | string &#124; number | '100%'
-size | 颜色选择器的尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle'
-showAlpha | 是否可调节 `alpha` 通道 | boolean | true
-showPreview | 是否展示颜色预览块 | boolean | false
-placement | 弹出面板的位置 | 'top' &#124; 'topLeft' &#124; 'topRight' &#124; 'bottom' &#124; 'bottomLeft' &#124; 'bottomRight' &#124; 'left' &#124; 'leftTop' &#124; 'leftBottom' &#124; 'right' &#124; 'rightTop' &#124; 'rightBottom' | 'bottomLeft'
-disabled | 是否禁用 | boolean | false
-actions | 显示按钮 | [ColorPickerAction](#colorpickeraction-type)[] | []
-panelClass | 面板的类名（皮肤挂载点） | string | undefined
-panelStyle | 面板样式，在定位与层级之后合并 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-zIndex | 面板层级，优先级最高（未传时使用默认层级或 `ConfigProvider` 的 `baseZIndex` 分配） | number | undefined
-offset | 面板与触发器的主轴间距，单位 `px` | number | 6
-destroyOnHide | 隐藏后是否卸载面板 `DOM`，再次展开时重新创建并重新定位 | boolean | false
-to | 弹出面板挂载的容器节点，可选：元素标签名 (例如 `'body'`) 或者元素本身，`false` 会待在原地 | string &#124; HTMLElement &#124; false | undefined
-inputProps | 输入框组件 `props`，参考 [Input Props](./input.md#input-props) | [InputProps](./input.md#input-props) | {}
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| value <Tag color="cyan">v-model</Tag> | 颜色选择器的值 | string | undefined |
+| defaultValue | 未受控时的初始颜色值 | string | undefined |
+| open <Tag color="cyan">v-model</Tag> | 面板是否展开（受控，不传时由组件内部维护） | boolean | undefined |
+| defaultOpen | 未受控时面板的初始显隐 | boolean | false |
+| label | 展示的内容，返回值同时支持字符串与 `VNode` | (color: string) => VNodeChild | undefined |
+| swatches | 色板的值 | string[] | [] |
+| footer | 底部额外的页脚内容 | string | undefined |
+| modes | 颜色选择器支持颜色的格式 | [ColorPickerMode](#colorpickermode-type)[] | ['rgb', 'hex', 'hsl'] |
+| width | 颜色选择器的宽度，单位 `px`；仅内置触发器生效，使用 `trigger` 插槽自定义触发器时外壳随触发器内容自适应 | string &#124; number | '100%' |
+| size | 颜色选择器的尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
+| showAlpha | 是否可调节 `alpha` 通道 | boolean | true |
+| showPreview | 是否展示颜色预览块 | boolean | false |
+| placement | 弹出面板的位置 | 'top' &#124; 'topLeft' &#124; 'topRight' &#124; 'bottom' &#124; 'bottomLeft' &#124; 'bottomRight' &#124; 'left' &#124; 'leftTop' &#124; 'leftBottom' &#124; 'right' &#124; 'rightTop' &#124; 'rightBottom' | 'bottomLeft' |
+| disabled | 是否禁用 | boolean | false |
+| actions | 显示按钮 | [ColorPickerAction](#colorpickeraction-type)[] | [] |
+| panelClass | 面板的类名（皮肤挂载点） | string | undefined |
+| panelStyle | 面板样式，在定位与层级之后合并 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| zIndex | 面板层级，优先级最高（未传时使用默认层级或 `ConfigProvider` 的 `baseZIndex` 分配） | number | undefined |
+| offset | 面板与触发器的主轴间距，单位 `px` | number | 6 |
+| destroyOnHide | 隐藏后是否卸载面板 `DOM`，再次展开时重新创建并重新定位 | boolean | false |
+| to | 弹出面板挂载的容器节点，可选：元素标签名 (例如 `'body'`) 或者元素本身，`false` 会待在原地 | string &#124; HTMLElement &#124; false | undefined |
+| inputProps | 输入框组件 `props`，参考 [Input Props](./input.md#input-props) | [InputProps](./input.md#input-props) | {} |
 
 ### ColorPickerMode Type
 
-名称 | 值
-:-- | :--
-ColorPickerMode | 'rgb' &#124; 'hsl' &#124; 'hsv' &#124; 'hex'
+| 名称 | 值 |
+| :-- | :-- |
+| ColorPickerMode | 'rgb' &#124; 'hsl' &#124; 'hsv' &#124; 'hex' |
 
 ### ColorPickerAction Type
 
-名称 | 值
-:-- | :--
-ColorPickerAction | 'confirm' &#124; 'clear'
+| 名称 | 值 |
+| :-- | :-- |
+| ColorPickerAction | 'confirm' &#124; 'clear' |
 
 ## Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-label | 自定义展示的内容 | v-slot:label="{ color }"
-footer | 自定义底部额外的页脚内容 | v-slot:footer
-trigger | 自定义触发器（点击开合、面板定位与外点判定均由组件接管，无需回传处理函数与 `ref`） | v-slot:trigger="{ value }"
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| label | 自定义展示的内容 | v-slot:label="{ color }" |
+| footer | 自定义底部额外的页脚内容 | v-slot:footer |
+| trigger | 自定义触发器（点击开合、面板定位与外点判定均由组件接管，无需回传处理函数与 `ref`） | v-slot:trigger="{ value }" |
 
 ## Events
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-openChange | 面板展开状态改变时的回调（内部开合与受控 `open` 被外部改变都算状态变化，状态未变时不派发） | (open: boolean) => void
-complete | 颜色完成改变后的回调（输入框提交和鼠标拖动结束时触发；色板选色、点击清除、原生取色器选色不触发） | (color: string) => void
-confirm | 点击确认按钮的回调 | (color: string) => void
-clear | 点击清除按钮的回调 | () => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| openChange | 面板展开状态改变时的回调（内部开合与受控 `open` 被外部改变都算状态变化，状态未变时不派发） | (open: boolean) => void |
+| complete | 颜色完成改变后的回调（输入框提交和鼠标拖动结束时触发；色板选色、点击清除、原生取色器选色不触发） | (color: string) => void |
+| confirm | 点击确认按钮的回调 | (color: string) => void |
+| clear | 点击清除按钮的回调 | () => void |
 
 > 触发语义由组件接管：点击触发区开合、点击外部关闭、`Esc` 收起并把焦点交还触发区、`Enter` / `Space` 开合（与点击同语义，键盘开合为内置常开）。自定义触发器内容请渲染在外壳内部；若内容自行 `@click.stop` 吞掉点击，面板不会展开（可用受控 `v-model:open` 自行控制）。
 

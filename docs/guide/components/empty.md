@@ -167,18 +167,18 @@ _自定义图片地址、描述内容和样式_
 
 ### Empty Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-description | 自定义描述内容，传 `null` 时无描述内容 | string &#124; null | '暂无数据'
-descriptionStyle | 设置描述文本的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-image | 显示图片的链接，或者选择两种预置风格图片 | 'filled' &#124; 'outlined' &#124; string | 'filled'
-imageStyle | 设置图片的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-footer | 设置底部内容 | string | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| description | 自定义描述内容，传 `null` 时无描述内容 | string &#124; null | '暂无数据' |
+| descriptionStyle | 设置描述文本的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| image | 显示图片的链接，或者选择两种预置风格图片 | 'filled' &#124; 'outlined' &#124; string | 'filled' |
+| imageStyle | 设置图片的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| footer | 设置底部内容 | string | undefined |
 
 ## Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-description | 自定义描述内容 | v-slot:description
-default | 自定义图片 | v-slot:default
-footer | 自定义底部内容 | v-slot:footer
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| description | 自定义描述内容 | v-slot:description |
+| default | 自定义图片 | v-slot:default |
+| footer | 自定义底部内容 | v-slot:footer |

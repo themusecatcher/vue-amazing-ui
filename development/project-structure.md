@@ -12,7 +12,7 @@
 | `docs/` | VitePress 文档站（`pnpm docs:dev` 启动） |
 | `types/` | 全局类型声明（`env.d.ts` 环境变量、`global-components.d.ts` 全局组件） |
 | `tests/` | Vitest 测试用例 |
-| `scripts/` | 发布 / 部署脚本（`deploy.sh` / `publish.sh` / `push.sh`）、发布前守卫（`prepublish-guard.js`）与产物级校验脚本（`parse-style-deps.js` / `verify-style-deps.js` / `verify-on-demand.js` / `verify-theme.js` / `component-vars-check.js` / `gen-component-vars-doc.js`） |
+| `scripts/` | 开发期脚本（发布 / 部署 / 产物校验 / 文档生成），不进 npm 包；逐脚本的职责、命令与触发时机见 [scripts/README.md](../scripts/README.md) |
 | `build/` | 构建后处理（`merge-component-styles.ts` 合并同一 SFC 的编号 CSS、`generate-style-entries.ts` 生成每组件样式入口、`gen-theme.ts` 生成主题静态变量表），由 `vite.config.ts` 的 `closeBundle` 调用（`gen-theme.ts` 由 `theme-css` 插件在 `buildStart` 调用） |
 | `vite.config.ts` | 构建配置（三产物 dist / es / lib） |
 | `tsconfig.*.json` | 各环境 TypeScript 配置 |

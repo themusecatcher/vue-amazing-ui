@@ -94,7 +94,7 @@ export function buildComponentVars(components: ThemeConfig['components'], mode: 
     vars[`${bridgePrefix}-focus-shadow`] = deriveFocusShadow(normalizedPrimary, mode)
     vars[`${bridgePrefix}-dark-bg-color`] = darkSurfaces.background
     vars[`${bridgePrefix}-dark-bg-deep-color`] = darkSurfaces.deepBackground
-    // 预索引：只遍历该组件带 themeRole 的令牌（通常 3~4 条），不再全表扫描 48 条
+    // 预索引：只遍历该组件带 themeRole 的令牌（通常 3~4 条），不再全表扫描整张令牌表
     ;(COMPONENT_VARS_BY_COMPONENT[component] ?? []).forEach(([name, meta]) => {
       const state = typeof meta.themeState === 'string' ? meta.themeState : meta.themeState?.[mode]
       if (state) {

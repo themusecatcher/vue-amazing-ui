@@ -632,16 +632,16 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 
 ## Slots
 
-| 名称       | 说明                | 用法               |
-| :---------- | :------------------- | :----------------- |
-| tooltip    | 自定义气泡卡片的内容 | v-slot:tooltip     |
-| icon       | 自定义浮动按钮图标  | v-slot:icon        |
-| description | 自定义文字描述信息  | v-slot:description |
-| menu       | 自定义菜单按钮      | v-slot:menu        |
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| tooltip | 自定义气泡卡片的内容 | v-slot:tooltip |
+| icon | 自定义浮动按钮图标 | v-slot:icon |
+| description | 自定义文字描述信息 | v-slot:description |
+| menu | 自定义菜单按钮 | v-slot:menu |
 
 ## Events
 
-| 名称      | 说明                        | 类型                    |
-| :--------- | :--------------------------- | :---------------------- |
-| click     | 点击浮动按钮时的回调        | (e: Event) => void      |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| click | 点击浮动按钮时的回调 | (e: Event) => void |
 | openChange | 浮动按钮菜单展开收起时的回调 | (open: boolean) => void |
