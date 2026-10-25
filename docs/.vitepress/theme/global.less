@@ -15,6 +15,24 @@
 }
 
 /**
+ * Typography
+ * -------------------------------------------------------------------------- */
+
+/**
+ * 基准字体与 views 演示站（src/assets/less/global.less）保持同一份系统字体栈。
+ * vitepress 默认以 `Inter` 打头，而 Inter 只覆盖拉丁字符：它会成为行盒的「支柱字体」，
+ * 行盒基线由支柱字体的 ascent / descent 决定，中文 run 只是挂在基线上 ——
+ * Windows 上实测会把 22px 行高内的中文整体推偏约 0.5px（文字度量盒中心 10.5 vs 控件中心 11），
+ * 表现为 Radio / Checkbox 这类「文字 + 16px 控件」组件里文字看起来比控件偏上；
+ * views 演示站用系统字体栈则无此现象。两站字体栈统一后渲染一致。
+ */
+:root {
+  --vp-font-family-base:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue', sans-serif;
+}
+
+/**
  * Component: Button
  * -------------------------------------------------------------------------- */
 

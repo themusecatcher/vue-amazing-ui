@@ -924,14 +924,14 @@ const state = reactive({
 | single | 是否启用单条文字滚动效果，水平滚动时生效，为 `true` 时，`amount` 自动设为 `1` | boolean | false |
 | width | 滚动区域宽度，单位 `px` | string &#124; number | '100%' |
 | height | 滚动区域高度，单位 `px` | number | 50 |
-| itemStyle | 滚动文字样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| itemStyle | 滚动文字样式；启用 `ellipsis` 时作用于文本省略组件的文本容器 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | hrefHoverColor | 链接文字鼠标悬浮颜色；仅当 `href` 存在时生效 | string | undefined |
 | amount | 滚动区域展示条数，为 `false` 时所有文字平铺展示，水平滚动时生效 | number &#124; false | 4 |
 | gap | 水平滚动文字各列间距或垂直滚动文字两边的间距，单位 `px` | number | 20 |
 | speed | 水平滚动时移动的速度，单位是像素每秒，水平滚动时生效 | number | 48 |
 | vertical | 是否垂直滚动 | boolean | false |
 | duration | 垂直滚动过渡持续时间，单位 `ms`，垂直滚动时生效 | number | 1000 |
-| interval | 垂直文字滚动时间间隔，单位 `ms`，垂直滚动时生效 | number | 3000 |
+| interval | 垂直滚动每条文字的停留时长，单位 `ms`，过渡时长另由 `duration` 控制 | number | 3000 |
 | ellipsis | 是否启用文本省略组件 | boolean | false |
 | ellipsisProps | `Ellipsis` 组件属性配置，参考 [Ellipsis Props](./ellipsis.md#ellipsis-props)，用于配置文本省略弹出提示 | [EllipsisProps](./ellipsis.md#ellipsis-props) | {} |
 | pauseOnMouseEnter | 鼠标移入是否暂停滚动 | boolean | false |

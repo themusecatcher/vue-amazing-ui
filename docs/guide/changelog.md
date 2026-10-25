@@ -14,6 +14,11 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-26">3.3.1</VersionDateTag>
+
+- 修复 [文本滚动 TextScroll](/guide/components/text-scroll.html) 垂直滚动的启停、节奏与样式：`start()` 重复调用与卸载后调用不再叠加滚动、`KeepAlive` 失活即暂停并在返回后接着滚动，`interval` 改为纯停留时长（过渡另计 `duration`，同参数下整体变慢），`ellipsis` 下 `itemStyle` 的 `maxWidth` 恢复生效
+- 更新组件库文档
+
 ## <VersionDateTag date="2026-10-25">3.3.0</VersionDateTag>
 
 - 新增 [菜单 Menu](/guide/components/menu.html) 深色皮肤（`theme="dark"`）的底色跟随主题色：根列表、浮层面板与内联子菜单同步换色相（`theme.components.Menu.primaryColor` 同样驱动）；新增 `--va-bg-brand-dark-color` / `--va-bg-brand-dark-deep-color`，浮层面板与内联子菜单可用 `--va-menu-popup-background` / `--va-menu-inline-submenu-background` 单独覆盖
