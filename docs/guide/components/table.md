@@ -3156,6 +3156,7 @@ watchEffect(() => {
 | sortDirections? | 支持的排序方式 | ('ascend' &#124; 'descend')[] |
 | sorter? | 升序排序函数，参考 [Array.sort](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) 的 `compareFunction`，当列表头分组时，请将排序设置在叶子节点 | (a: any, b: any) => number |
 | customCell? | 设置单元格属性 | (record: Record<string, any>, rowIndex: number, column: TableColumn) => object &#124; undefined |
+| [propName: string] | 允许携带任意自定义字段，会随原始对象透传 | any |
 
 ### TableSelection Type
 
@@ -3182,15 +3183,15 @@ watchEffect(() => {
 
 ## Slots
 
-| 名称             | 说明                  | 用法                                                   |
-| :---------------- | :--------------------- | :----------------------------------------------------- |
-| header           | 自定义表格标题        | v-slot:header                                          |
-| expandColumnTitle | 自定义展开列表头      | v-slot:expandColumnTitle                               |
-| headerCell       | 个性化头部单元格      | v-slot:headerCell="{ column, title }"                  |
-| expandCell       | 自定义展开按钮        | v-slot:expandCell="{ record, index, expanded }"        |
-| bodyCell         | 个性化单元格          | v-slot:bodyCell="{ column, record, text, index }"      |
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| header | 自定义表格标题 | v-slot:header |
+| expandColumnTitle | 自定义展开列表头 | v-slot:expandColumnTitle |
+| headerCell | 个性化头部单元格 | v-slot:headerCell="{ column, title }" |
+| expandCell | 自定义展开按钮 | v-slot:expandCell="{ record, index, expanded }" |
+| bodyCell | 个性化单元格 | v-slot:bodyCell="{ column, record, text, index }" |
 | expandedRowRender | 自定义额外的展开行内容 | v-slot:expandedRowRender="{ record, index, expanded }" |
-| footer           | 自定义表格尾部        | v-slot:footer                                          |
+| footer | 自定义表格尾部 | v-slot:footer |
 
 ## Events
 

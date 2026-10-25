@@ -977,104 +977,107 @@ import { SmileOutlined } from '@ant-design/icons-vue'
 
 ### Dropdown Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-open <Tag color="cyan">v-model</Tag> | 下拉菜单是否展开 | boolean | undefined
-menus | 菜单项配置数据 (配置式)，与 `overlay` 插槽二选一 | [MenuOption](#menuoption-type)[] | []
-placement | 下拉菜单弹出位置 | 'topLeft' &#124; 'top' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottom' &#124; 'bottomRight' | 'bottomLeft'
-arrow | 是否显示下拉箭头；传 `{ pointAtCenter: true }` 时箭头指向触发器中心 | boolean &#124; [DropdownArrowOptions](#dropdownarrowoptions-type) | false
-disabled | 菜单是否禁用 | boolean | false
-trigger | 触发下拉行为的方式，可传数组组合 | [DropdownTrigger](#dropdowntrigger-type) &#124; [DropdownTrigger](#dropdowntrigger-type)[] | 'hover'
-flip | 下拉菜单被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true
-mouseEnterDelay | 移入触发器显示下拉菜单的延迟时间，单位 `ms`，`trigger` 含 `'hover'` 时生效 | number | 100
-mouseLeaveDelay | 移出触发器隐藏下拉菜单的延迟时间，单位 `ms`，`trigger` 含 `'hover'` 时生效 | number | 100
-transitionDuration | 下拉菜单动画的过渡持续时间，单位 `ms` | number | 200
-destroyOnHide | 隐藏后是否卸载下拉菜单 `DOM`：离开动画结束后卸载，再次显示时重新创建并重新定位 | boolean | false
-to | 下拉菜单挂载的容器节点，可选：元素标签名 (例如 `'body'`) 或者元素本身，`false` 会待在原地；不传时就近挂载到 `Modal` / `Drawer` / `Dialog` 等承载层内容容器（无承载层则 `body`） | string &#124; HTMLElement &#124; false | undefined
-overlayClassName | 下拉菜单根元素的类名 | string | undefined
-overlayStyle | 下拉菜单根元素的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-zIndex | 下拉菜单层级，优先级最高（未传时使用默认层级或 `ConfigProvider` 的 `baseZIndex` 分配） | number | undefined
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| open <Tag color="cyan">v-model</Tag> | 下拉菜单是否展开 | boolean | undefined |
+| menus | 菜单项配置数据 (配置式)，与 `overlay` 插槽二选一 | [MenuOption](#menuoption-type)[] | [] |
+| placement | 下拉菜单弹出位置 | 'topLeft' &#124; 'top' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottom' &#124; 'bottomRight' | 'bottomLeft' |
+| arrow | 是否显示下拉箭头；传 `{ pointAtCenter: true }` 时箭头指向触发器中心 | boolean &#124; [DropdownArrowOptions](#dropdownarrowoptions-type) | false |
+| disabled | 菜单是否禁用 | boolean | false |
+| trigger | 触发下拉行为的方式，可传数组组合 | [DropdownTrigger](#dropdowntrigger-type) &#124; [DropdownTrigger](#dropdowntrigger-type)[] | 'hover' |
+| flip | 下拉菜单被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true |
+| mouseEnterDelay | 移入触发器显示下拉菜单的延迟时间，单位 `ms`，`trigger` 含 `'hover'` 时生效 | number | 100 |
+| mouseLeaveDelay | 移出触发器隐藏下拉菜单的延迟时间，单位 `ms`，`trigger` 含 `'hover'` 时生效 | number | 100 |
+| transitionDuration | 下拉菜单动画的过渡持续时间，单位 `ms` | number | 200 |
+| destroyOnHide | 隐藏后是否卸载下拉菜单 `DOM`：离开动画结束后卸载，再次显示时重新创建并重新定位 | boolean | false |
+| to | 下拉菜单挂载的容器节点，可选：元素标签名 (例如 `'body'`) 或者元素本身，`false` 会待在原地；不传时就近挂载到 `Modal` / `Drawer` / `Dialog` 等承载层内容容器（无承载层则 `body`） | string &#124; HTMLElement &#124; false | undefined |
+| overlayClassName | 下拉菜单根元素的类名 | string | undefined |
+| overlayStyle | 下拉菜单根元素的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| zIndex | 下拉菜单层级，优先级最高（未传时使用默认层级或 `ConfigProvider` 的 `baseZIndex` 分配） | number | undefined |
 
 ### DropdownTrigger Type
 
-类型 | 说明
-:-- | :--
-'hover' &#124; 'click' &#124; 'contextmenu' | 分别对应移入、点击、右键触发；传入数组可组合多种触发方式
+_分别对应移入、点击、右键触发；传入数组可组合多种触发方式_
+
+| 名称 | 值 |
+| :-- | :-- |
+| DropdownTrigger | 'hover' &#124; 'click' &#124; 'contextmenu' |
 
 ### DropdownArrowOptions Type
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-pointAtCenter? | 箭头是否指向触发器中心 | boolean
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| pointAtCenter? | 箭头是否指向触发器中心 | boolean |
 
 ### MenuOption Type
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-key? | 菜单项唯一标识 | string &#124; number
-label? | 菜单项显示文本 | string
-icon? | 菜单项图标 | VNode
-disabled? | 是否禁用 | boolean
-danger? | 是否为危险项（红色文本） | boolean
-loading? | 是否加载中 | boolean
-href? | 链接地址，存在时菜单项渲染为 `a` 标签 | string
-target? | 链接打开方式，默认 `'_self'`，`href` 存在时生效 | '_self' &#124; '_blank'
-type? | 菜单项类型：菜单项 &#124; 分割线 &#124; 分组，默认 `'item'` | 'item' &#124; 'divider' &#124; 'group'
-children? | 子菜单（多级菜单）或分组子项，支持任意层级递归 | [MenuOption](#menuoption-type)[]
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| key? | 菜单项唯一标识 | string &#124; number |
+| label? | 菜单项显示文本 | string |
+| icon? | 菜单项图标 | VNode |
+| disabled? | 是否禁用 | boolean |
+| danger? | 是否为危险项（红色文本） | boolean |
+| loading? | 是否加载中 | boolean |
+| href? | 链接地址，存在时菜单项渲染为 `a` 标签 | string |
+| target? | 链接打开方式，默认 `'_self'`，`href` 存在时生效 | '_self' &#124; '_blank' |
+| type? | 菜单项类型：菜单项 &#124; 分割线 &#124; 分组，默认 `'item'` | 'item' &#124; 'divider' &#124; 'group' |
+| children? | 子菜单（多级菜单）或分组子项，支持任意层级递归 | [MenuOption](#menuoption-type)[] |
+| [propName: string] | 允许携带任意自定义字段，会随原始对象透传 | any |
 
 ### DropdownButton Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-open <Tag color="cyan">v-model</Tag> | 下拉菜单是否展开 | boolean | undefined
-menus | 菜单项配置数据 (配置式)，与 `overlay` 插槽二选一 | [MenuOption](#menuoption-type)[] | []
-type | 按钮类型，同 [Button](/guide/components/button.html#button) | 'default' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default'
-size | 按钮尺寸，同 [Button](/guide/components/button.html#button) | 'small' &#124; 'middle' &#124; 'large' | 'middle'
-icon | 右侧下拉按钮图标（默认为省略号），插槽形态请用 `#icon` 插槽 | VNode | undefined
-placement | 下拉菜单弹出位置 | 'topLeft' &#124; 'top' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottom' &#124; 'bottomRight' | 'bottomRight'
-arrow | 是否显示下拉箭头；传 `{ pointAtCenter: true }` 时箭头指向触发器中心 | boolean &#124; [DropdownArrowOptions](#dropdownarrowoptions-type) | false
-disabled | 菜单是否禁用（左按钮和右按钮同时禁用） | boolean | false
-loading | 左侧按钮加载状态 | boolean | false
-trigger | 触发下拉行为的方式，可传数组组合 | [DropdownTrigger](#dropdowntrigger-type) &#124; [DropdownTrigger](#dropdowntrigger-type)[] | 'hover'
-mouseEnterDelay | 移入触发按钮显示下拉菜单的延迟时间，单位 `ms`，`trigger` 含 `'hover'` 时生效 | number | 100
-mouseLeaveDelay | 移出触发按钮隐藏下拉菜单的延迟时间，单位 `ms`，`trigger` 含 `'hover'` 时生效 | number | 100
-destroyOnHide | 隐藏后是否卸载下拉菜单 `DOM` | boolean | false
-to | 下拉菜单挂载的容器节点，可选：元素标签名 (例如 `'body'`) 或者元素本身，`false` 会待在原地；不传时就近挂载到 `Modal` / `Drawer` / `Dialog` 等承载层内容容器（无承载层则 `body`） | string &#124; HTMLElement &#124; false | undefined
-overlayClassName | 下拉菜单根元素的类名 | string | undefined
-overlayStyle | 下拉菜单根元素的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| open <Tag color="cyan">v-model</Tag> | 下拉菜单是否展开 | boolean | undefined |
+| menus | 菜单项配置数据 (配置式)，与 `overlay` 插槽二选一 | [MenuOption](#menuoption-type)[] | [] |
+| type | 按钮类型，同 [Button](/guide/components/button.html#button) | 'default' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default' |
+| size | 按钮尺寸，同 [Button](/guide/components/button.html#button) | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
+| icon | 右侧下拉按钮图标（默认为省略号），插槽形态请用 `#icon` 插槽 | VNode | undefined |
+| placement | 下拉菜单弹出位置 | 'topLeft' &#124; 'top' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottom' &#124; 'bottomRight' | 'bottomRight' |
+| arrow | 是否显示下拉箭头；传 `{ pointAtCenter: true }` 时箭头指向触发器中心 | boolean &#124; [DropdownArrowOptions](#dropdownarrowoptions-type) | false |
+| disabled | 菜单是否禁用（左按钮和右按钮同时禁用） | boolean | false |
+| loading | 左侧按钮加载状态 | boolean | false |
+| trigger | 触发下拉行为的方式，可传数组组合 | [DropdownTrigger](#dropdowntrigger-type) &#124; [DropdownTrigger](#dropdowntrigger-type)[] | 'hover' |
+| mouseEnterDelay | 移入触发按钮显示下拉菜单的延迟时间，单位 `ms`，`trigger` 含 `'hover'` 时生效 | number | 100 |
+| mouseLeaveDelay | 移出触发按钮隐藏下拉菜单的延迟时间，单位 `ms`，`trigger` 含 `'hover'` 时生效 | number | 100 |
+| destroyOnHide | 隐藏后是否卸载下拉菜单 `DOM` | boolean | false |
+| to | 下拉菜单挂载的容器节点，可选：元素标签名 (例如 `'body'`) 或者元素本身，`false` 会待在原地；不传时就近挂载到 `Modal` / `Drawer` / `Dialog` 等承载层内容容器（无承载层则 `body`） | string &#124; HTMLElement &#124; false | undefined |
+| overlayClassName | 下拉菜单根元素的类名 | string | undefined |
+| overlayStyle | 下拉菜单根元素的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 
 ## Events
 
 ### Dropdown
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-openChange | 下拉菜单展开收起时的回调（点击菜单项导致的收起不触发） | (open: boolean) => void
-menuClick | 点击菜单项时的回调（`disabled`、`loading` 项不触发） | (key: string &#124; number &#124; undefined, option: [MenuOption](#menuoption-type)) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| openChange | 下拉菜单展开收起时的回调（点击菜单项导致的收起不触发） | (open: boolean) => void |
+| menuClick | 点击菜单项时的回调（`disabled`、`loading` 项不触发） | (key: string &#124; number &#124; undefined, option: [MenuOption](#menuoption-type)) => void |
 
 ### DropdownButton
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-click | 点击左侧按钮时的回调 | (e: MouseEvent) => void
-openChange | 下拉菜单展开收起时的回调（点击菜单项导致的收起不触发） | (open: boolean) => void
-menuClick | 点击菜单项时的回调（`disabled`、`loading` 项不触发） | (key: string &#124; number &#124; undefined, option: [MenuOption](#menuoption-type)) => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| click | 点击左侧按钮时的回调 | (e: MouseEvent) => void |
+| openChange | 下拉菜单展开收起时的回调（点击菜单项导致的收起不触发） | (open: boolean) => void |
+| menuClick | 点击菜单项时的回调（`disabled`、`loading` 项不触发） | (key: string &#124; number &#124; undefined, option: [MenuOption](#menuoption-type)) => void |
 
 ## Slots
 
 ### Dropdown
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-default | 触发器内容 | v-slot:default
-overlay | 自定义下拉浮层内容（与 `menus` 配置二选一） | v-slot:overlay
-label | 自定义菜单项显示文本 | v-slot:label="{ option }"
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 触发器内容 | v-slot:default |
+| overlay | 自定义下拉浮层内容（与 `menus` 配置二选一） | v-slot:overlay |
+| label | 自定义菜单项显示文本 | v-slot:label="{ option }" |
 
 ### DropdownButton
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-default | 左侧按钮内容 | v-slot:default
-overlay | 自定义下拉浮层内容（与 `menus` 配置二选一） | v-slot:overlay
-icon | 自定义右侧下拉按钮图标（优先于 `icon` 属性） | v-slot:icon
-label | 自定义菜单项显示文本 | v-slot:label="{ option }"
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 左侧按钮内容 | v-slot:default |
+| overlay | 自定义下拉浮层内容（与 `menus` 配置二选一） | v-slot:overlay |
+| icon | 自定义右侧下拉按钮图标（优先于 `icon` 属性） | v-slot:icon |
+| label | 自定义菜单项显示文本 | v-slot:label="{ option }" |

@@ -1902,7 +1902,7 @@ const rangePlaceholder = ['开始日期', '结束日期']
 
 ### DefaultFormat Value
 
-| 类型 | 值 |
+| 名称 | 值 |
 | :-- | :-- |
 | date | 'yyyy-MM-dd' |
 | datetime | 'yyyy-MM-dd HH:mm:ss' |

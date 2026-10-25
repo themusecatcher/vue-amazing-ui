@@ -1281,16 +1281,6 @@ _`theme.components.<组件>.primaryColor` 仅覆盖该组件的整套主色（�
       </Space>
     </ConfigProvider>
   </Flex>
-  <Flex vertical gap="small">
-    <span class="theme-caption">theme.components（只改这三个组件）</span>
-    <ConfigProvider :abstract="false" :theme="componentTheme">
-      <Space align="center" wrap>
-        <Button type="primary">Primary Button</Button>
-        <Slider :value="40" style="width: 180px" />
-        <Progress :percent="60" style="width: 160px" />
-      </Space>
-    </ConfigProvider>
-  </Flex>
 </Flex>
 
 - 组件配置优先于 `seed` 与外层祖先上的 `--va-primary-*`；运行期增删实时生效，删掉后回落到 `seed`；

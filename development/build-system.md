@@ -62,6 +62,8 @@
 
 插件**只在 `dir === undefined` 的构建里注册**（即 `build-only`）：类型产物只服务 `es` / `lib`，dist 全量构建不产出 `.d.ts`。这既是产物归属问题，也是并发安全问题——`build:components` 用 `run-p` 并行跑三个构建，若 dist 构建也写 `es|lib` 的声明，会与 `build-only` 的 `emptyOutDir` 清空竞态，CI 会随机报 `ENOENT ... es/<component>/index.d.ts` 且类型被重复生成三遍。
 
+**已知问题（2026-10-25 定位，构建配置未改动）**：`es` / `lib` 已存在旧产物时直接执行 es|lib 构建（`build-only` 或 `vite build`，即跳过 `pnpm clean`），`vite-plugin-dts@4.5.4` 的 `writeBundle`（单例执行：写 d.ts → `unlink` 中间文件 → `removeDirIfEmpty(outDir)`）会把 `es/` 删空，随后以「Xxx 缺少样式文件」的误导性报错失败——此时应查 dts 与既有产物的竞态，而非 `style-deps.ts`。实验矩阵（es/lib 各自「在 / 不在」）：仅 **lib 存在旧产物**时失败（es 空、lib 正常），其余组合均成功——lib 覆盖旧文件写入快、先完成并触发该钩子，此时 es 的 rollup 写入尚未落盘，`removeDirIfEmpty(es)` 把半成品目录删空；与 es 在不在、`outDir` 单 / 多均无关（单 `['es']` 同样复现）。规避：es|lib 单独重复构建前先 `pnpm clean`；**发布链路（`pnpm build` / `scripts/publish.sh` / CI）自带 clean 前置，不受影响**。根治需升级 `vite-plugin-dts` 到 5.x（major，暂不引入）。
+
 | 源码路径 | 类型产物路径 |
 | :--- | :--- |
 | `components/button/index.ts` | `es/button/index.d.ts` |

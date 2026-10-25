@@ -22,6 +22,8 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 新增 [二维码 QRCode](/guide/components/qr-code.html) 的 `spinProps` 属性：`loading` 状态可配置指示符、尺寸、颜色与文案（默认按遮罩尺寸取 `small` 档）；状态遮罩默认由全不透明改为 `0.96` 半透明，新增 `--qr-code-mask-opacity` 可调
 - 修复 [抽屉 Drawer](/guide/components/drawer.html) 面板阴影在暗色主题下与遮罩叠加出更深的色带
 - 修复 [轮播图 Swiper](/guide/components/swiper.html) 分页器未选中的圆点与进度条轨道在暗色主题下不可见
+- 修复 [徽标 Badge](/guide/components/badge.html) 实色底上的计数文字在暗色主题下恒为白色、与亮色底对比不足的问题（文字色改取容器底色，暗色下随容器转深）
+- 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 与 [时间选择器 TimePicker](/guide/components/time-picker.html) 范围选择箭头在暗色主题下与浮层面板底色割裂
 - 更新使用者文档和贡献者文档
 - 组件库及文档代码优化
 

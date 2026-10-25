@@ -1428,44 +1428,45 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 
 ### AutoCompleteOption Type
 
-| 名称              | 说明                          | 类型                |
-| :----------------- | :----------------------------- | :------------------- |
-| value             | 唯一的 `value` 值               | string &#124; number |
-| label?            | 显示的 `label` 值，缺失时兜底展示 `value`；支持任意自定义字段（`#option` 插槽透传） | string |
-| disabled?         | 是否禁用选项                  | boolean             |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| disabled? | 是否禁用选项 | boolean |
+| value | 唯一的 `value` 值 | string &#124; number |
+| label? | 显示的 `label` 值，缺失时兜底展示 `value` | string |
+| [propName: string] | 允许携带任意自定义字段，`#option` 插槽会透传原始数据对象 | any |
 
 ### AutoCompleteGroupOption Type
 
-| 名称   | 说明                        | 类型                                  |
-| :------ | :--------------------------- | :------------------------------------- |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
 | options? | 子选项，存在该字段即视为分组 | (string &#124; number &#124; AutoCompleteOption)[] |
-| label? | 分组名（显示为分组标题）    | string                                |
-| value? | 分组值                      | string &#124; number                  |
+| label? | 分组名（显示为分组标题） | string |
+| value? | 分组值 | string &#124; number |
 
 ## Events
 
-| 名称                  | 说明                  | 类型                                                                           |
-| :--------------------- | :--------------------- | :----------------------------------------------------------------------------- |
-| search                | 输入内容变化时回调    | (value: string) => void                                                        |
-| select                | 选中选项时回调        | (value: string &#124; number, option: AutoCompleteOption) => void                          |
-| change                | 选项值改变后的回调    | (value: string) => void                                                        |
-| focus                 | 获得焦点时的回调      | () => void                                                                     |
-| blur                  | 失去焦点时的回调      | () => void                                                                     |
-| clear                 | 清除时的回调          | () => void                                                                     |
-| openChange            | 下拉菜单展开收起的回调 | (open: boolean) => void                                                        |
-| dropdownVisibleChange | 下拉菜单展开收起的回调 | (open: boolean) => void                                                        |
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| search | 输入内容变化时回调 | (value: string) => void |
+| select | 选中选项时回调 | (value: string &#124; number, option: AutoCompleteOption) => void |
+| change | 选项值改变后的回调 | (value: string) => void |
+| focus | 获得焦点时的回调 | () => void |
+| blur | 失去焦点时的回调 | () => void |
+| clear | 清除时的回调 | () => void |
+| openChange | 下拉菜单展开收起的回调 | (open: boolean) => void |
+| dropdownVisibleChange | 下拉菜单展开收起的回调 | (open: boolean) => void |
 
 ## Slots
 
-| 名称      | 说明                                                                   | 用法                             |
-| :-------- | :---------------------------------------------------------------------- | :------------------------------- |
-| default   | 自定义输入组件（替代原生 `input` 元素）                                 | v-slot:default                   |
-| clearIcon | 自定义清除图标，作用域参数 `clearIcon` 为清除方法                       | v-slot:clearIcon="{ clearIcon }" |
-| option    | 自定义选项内容，作用域为当前选项数据，[AutoCompleteOption](#autocompleteoption-type) 的自定义字段会一并透传 | v-slot:option                    |
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| default | 自定义输入组件（替代原生 `input` 元素） | v-slot:default |
+| clearIcon | 自定义清除图标，作用域参数 `clearIcon` 为清除方法 | v-slot:clearIcon="{ clearIcon }" |
+| option | 自定义选项内容，作用域为当前选项数据，[AutoCompleteOption](#autocompleteoption-type) 的自定义字段会一并透传 | v-slot:option |
 
 ## Methods
 
 | 名称 | 说明 | 类型 |
-| :---- | :----------------- | :--------- |
+| :-- | :-- | :-- |
 | focus | 获取输入框焦点 | () => void |
 | blur | 使输入框失去焦点 | () => void |

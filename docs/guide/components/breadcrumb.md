@@ -351,32 +351,32 @@ const routes = ref<BreadcrumbRoute[]>([
 
 ### Breadcrumb Props
 
-名称 | 说明 | 类型 | 默认值
-:-- | :-- | :-- | :--
-routes | 路由数组 | [BreadcrumbRoute](#breadcrumbroute-type)[] | []
-breadcrumbClass | 设置面包屑类名 | string | undefined
-breadcrumbStyle | 设置面包屑样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-maxWidth | 设置文本最大显示宽度，超出后显示省略号，单位 `px` | string &#124; number | '100%'
-separator | 自定义分隔符，默认为 `>` | string | undefined
-separatorStyle | 设置分隔符样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {}
-target | 如何打开目标`URL` | '_self' &#124; '_blank' | '_self'
+| 名称 | 说明 | 类型 | 默认值 |
+| :-- | :-- | :-- | :-- |
+| routes | 路由数组 | [BreadcrumbRoute](#breadcrumbroute-type)[] | [] |
+| breadcrumbClass | 设置面包屑类名 | string | undefined |
+| breadcrumbStyle | 设置面包屑样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| maxWidth | 设置文本最大显示宽度，超出后显示省略号，单位 `px` | string &#124; number | '100%' |
+| separator | 自定义分隔符，默认为 `>` | string | undefined |
+| separatorStyle | 设置分隔符样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| target | 如何打开目标`URL` | '_self' &#124; '_blank' | '_self' |
 
 ### BreadcrumbRoute Type
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-name | 路由名称 | string
-path? | 路由地址 | string
-query? | 路由查询参数 | [BreadcrumbRouteQuery](#breadcrumbroutequery-type)
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| name | 路由名称 | string |
+| path? | 路由地址 | string |
+| query? | 路由查询参数 | [BreadcrumbRouteQuery](#breadcrumbroutequery-type) |
 
 ### BreadcrumbRouteQuery Type
 
-名称 | 说明 | 类型
-:-- | :-- | :--
-[propName: string] | 用于包含带有任意数量的其他属性 | any
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| [propName: string] | 允许携带任意 query 参数 | any |
 
 ## Slots
 
-名称 | 说明 | 用法
-:-- | :-- | :--
-separator | 自定义分隔符 | v-slot:separator="{ route, index }"
+| 名称 | 说明 | 用法 |
+| :-- | :-- | :-- |
+| separator | 自定义分隔符 | v-slot:separator="{ route, index }" |
