@@ -31,6 +31,10 @@ function onOpenChange(open: boolean) {
 
 ## 基本使用
 
+_点击悬浮按钮触发 `click` 事件；不传定位属性时默认停在视口右下角（`right` / `bottom` 均为 `40`）_
+
+<br/>
+
 <Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton @click="onClick">
     <template #icon>
@@ -62,6 +66,10 @@ function onClick(e: Event) {
 :::
 
 ## 位置
+
+_通过 `top` / `bottom` / `left` / `right` 定位；`top` 与 `left` 分别优先于 `bottom` 与 `right`_
+
+<br/>
 
 <Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton>
@@ -122,6 +130,10 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 
 ## 尺寸
 
+_通过 `width` / `height` 自定义按钮尺寸（默认 `44`）；图标字号不随尺寸缩放，需要时单独设置_
+
+<br/>
+
 <Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton :width="56" :height="56" :right="120">
     <template #icon>
@@ -160,6 +172,10 @@ import { MessageOutlined, CommentOutlined } from '@ant-design/icons-vue'
 :::
 
 ## 类型
+
+_通过 `type` 切换默认与主色两种类型_
+
+<br/>
 
 <Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton :right="96">
@@ -200,6 +216,10 @@ import { QuestionCircleOutlined } from '@ant-design/icons-vue'
 
 ## 形状
 
+_通过 `shape` 切换圆形与方形_
+
+<br/>
+
 <Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton type="primary" :right="96">
     <template #icon>
@@ -239,6 +259,10 @@ import { CustomerServiceOutlined } from '@ant-design/icons-vue'
 
 ## 图标
 
+_图标可用 `icon` 属性（`VNode` 或渲染函数）传入，也可用 `#icon` 插槽自定义_
+
+<br/>
+
 <Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton type="primary" :right="96">
     <template #icon>
@@ -273,6 +297,10 @@ import { StarFilled, SettingOutlined } from '@ant-design/icons-vue'
 :::
 
 ## 文字描述信息
+
+_通过 `description` 在图标下方展示文字；两者上下排列，空间不足时通常搭配方形按钮使用_
+
+<br/>
 
 <Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton shape="square" description="HELP" :right="152">
@@ -315,6 +343,10 @@ import { GlobalOutlined, CustomerServiceOutlined } from '@ant-design/icons-vue'
 
 ## 链接跳转
 
+_设置 `href` 后按钮渲染为 `a` 标签，跳转行为与原生链接一致，`target` 控制打开方式_
+
+<br/>
+
 <Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton href="https://themusecatcher.github.io/vue-amazing-ui/" :right="96">
     <template #icon>
@@ -354,6 +386,10 @@ import { GlobalOutlined, CustomerServiceOutlined } from '@ant-design/icons-vue'
 :::
 
 ## 菜单模式
+
+_设置 `menuTrigger` 后，点击或悬停按钮展开 `#menu` 内的多个悬浮按钮，展开状态由 `openChange` 回传_
+
+<br/>
 
 <Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton shape="square" description="HELP" :right="96" menu-trigger="click" @openChange="onOpenChange">
@@ -444,6 +480,10 @@ function onOpenChange(open: boolean) {
 :::
 
 ## 气泡卡片
+
+_通过 `tooltip` 设置气泡内容，`tooltipProps` 可透传 `Tooltip` 的属性_
+
+<br/>
 
 <Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton tooltip="Diamond" :right="96">
@@ -548,6 +588,10 @@ import { SketchOutlined } from '@ant-design/icons-vue'
 :::
 
 ## 徽标数
+
+_通过 `badgeProps` 在按钮右上角叠加徽标，属性与 `Badge` 一致_
+
+<br/>
 
 <Card width="100%" style="height: 300px; transform: translate(0)">
   <FloatButton :badge-props="{ dot: true }" :right="152">

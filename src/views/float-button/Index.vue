@@ -21,6 +21,10 @@ function onOpenChange(open: boolean) {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
+    <p class="mb10"
+      >点击悬浮按钮触发 <code>click</code> 事件；不传定位属性时默认停在视口右下角（<code>right</code> /
+      <code>bottom</code> 均为 <code>40</code>）</p
+    >
     <Card width="50%" style="height: 300px; transform: translate(0)">
       <FloatButton @click="onClick">
         <template #icon>
@@ -29,6 +33,10 @@ function onOpenChange(open: boolean) {
       </FloatButton>
     </Card>
     <h2 class="mt30 mb10">位置</h2>
+    <p class="mb10"
+      >通过 <code>top</code> / <code>bottom</code> / <code>left</code> / <code>right</code> 定位；<code>top</code> 与
+      <code>left</code> 分别优先于 <code>bottom</code> 与 <code>right</code></p
+    >
     <Card width="50%" style="height: 300px; transform: translate(0)">
       <FloatButton>
         <template #icon>
@@ -52,6 +60,10 @@ function onOpenChange(open: boolean) {
       </FloatButton>
     </Card>
     <h2 class="mt30 mb10">尺寸</h2>
+    <p class="mb10"
+      >通过 <code>width</code> / <code>height</code> 自定义按钮尺寸（默认
+      <code>44</code>）；图标字号不随尺寸缩放，需要时单独设置</p
+    >
     <Card width="50%" style="height: 300px; transform: translate(0)">
       <FloatButton :width="56" :height="56" :right="120">
         <template #icon>
@@ -65,6 +77,7 @@ function onOpenChange(open: boolean) {
       </FloatButton>
     </Card>
     <h2 class="mt30 mb10">类型</h2>
+    <p class="mb10">通过 <code>type</code> 切换默认与主色两种类型</p>
     <Card width="50%" style="height: 300px; transform: translate(0)">
       <FloatButton :right="96">
         <template #icon>
@@ -78,6 +91,7 @@ function onOpenChange(open: boolean) {
       </FloatButton>
     </Card>
     <h2 class="mt30 mb10">形状</h2>
+    <p class="mb10">通过 <code>shape</code> 切换圆形与方形</p>
     <Card width="50%" style="height: 300px; transform: translate(0)">
       <FloatButton type="primary" :right="96">
         <template #icon>
@@ -91,6 +105,9 @@ function onOpenChange(open: boolean) {
       </FloatButton>
     </Card>
     <h2 class="mt30 mb10">图标</h2>
+    <p class="mb10"
+      >图标可用 <code>icon</code> 属性（<code>VNode</code> 或渲染函数）传入，也可用 <code>#icon</code> 插槽自定义</p
+    >
     <Card width="50%" style="height: 300px; transform: translate(0)">
       <FloatButton type="primary" :right="96">
         <template #icon>
@@ -100,6 +117,7 @@ function onOpenChange(open: boolean) {
       <FloatButton shape="square" :icon="() => h(SettingOutlined, { style: 'color: #1677ff' })" />
     </Card>
     <h2 class="mt30 mb10">文字描述信息</h2>
+    <p class="mb10">通过 <code>description</code> 在图标下方展示文字；两者上下排列，空间不足时通常搭配方形按钮使用</p>
     <Card width="50%" style="height: 300px; transform: translate(0)">
       <FloatButton shape="square" description="HELP" :right="152">
         <template #icon>
@@ -114,6 +132,10 @@ function onOpenChange(open: boolean) {
       </FloatButton>
     </Card>
     <h2 class="mt30 mb10">链接跳转</h2>
+    <p class="mb10"
+      >设置 <code>href</code> 后按钮渲染为 <code>a</code> 标签，跳转行为与原生链接一致，<code>target</code>
+      控制打开方式</p
+    >
     <Card width="50%" style="height: 300px; transform: translate(0)">
       <FloatButton href="https://themusecatcher.github.io/vue-amazing-ui/" :right="96">
         <template #icon>
@@ -129,6 +151,10 @@ function onOpenChange(open: boolean) {
       />
     </Card>
     <h2 class="mt30 mb10">菜单模式</h2>
+    <p class="mb10"
+      >设置 <code>menuTrigger</code> 后，点击或悬停按钮展开 <code>#menu</code> 内的多个悬浮按钮，展开状态由
+      <code>openChange</code> 回传</p
+    >
     <Card width="50%" style="height: 300px; transform: translate(0)">
       <FloatButton shape="square" description="HELP" :right="96" menu-trigger="click" @openChange="onOpenChange">
         <template #icon>
@@ -166,6 +192,9 @@ function onOpenChange(open: boolean) {
       </FloatButton>
     </Card>
     <h2 class="mt30 mb10">气泡卡片</h2>
+    <p class="mb10"
+      >通过 <code>tooltip</code> 设置气泡内容，<code>tooltipProps</code> 可透传 <code>Tooltip</code> 的属性</p
+    >
     <Card width="50%" style="height: 300px; transform: translate(0)">
       <FloatButton tooltip="Diamond" :right="96">
         <template #icon>
@@ -207,6 +236,7 @@ function onOpenChange(open: boolean) {
       </FloatButton>
     </Card>
     <h2 class="mt30 mb10">徽标数</h2>
+    <p class="mb10">通过 <code>badgeProps</code> 在按钮右上角叠加徽标，属性与 <code>Badge</code> 一致</p>
     <Card width="50%" style="height: 300px; transform: translate(0)">
       <FloatButton :badge-props="{ dot: true }" :right="152">
         <template #icon>
