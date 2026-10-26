@@ -16,6 +16,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-10-27">3.3.2</VersionDateTag>
 
+- 修复 [文字提示 Tooltip](/guide/components/tooltip.html)、[选择器 Select](/guide/components/select.html) 等组件的 `to` / `listenTo` / `anchor`，以及 [数字动画 NumberAnimation](/guide/components/number-animation.html)、[轮播图 Carousel](/guide/components/carousel.html) 的缓动预设名：发布包中传入 `DOM` 元素或预设名会误报 `Invalid prop`，原写法无需调整
 - 修复 [回到顶部 BackTop](/guide/components/back-top.html) 隐藏时跳过离场动画的问题
 - 更新使用者文档与贡献者文档
 - 组件库及文档代码优化
