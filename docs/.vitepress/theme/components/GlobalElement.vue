@@ -64,7 +64,7 @@ const themeTooltipProps = computed(() => ({
       </FloatButton>
     </template>
     <template #footer>
-      <p class="theme-color-tip">选中的颜色作为组件库主色，应用到文档站内所有组件，刷新后恢复默认</p>
+      <p class="theme-color-tip">选中的颜色作为组件库主色，应用到文档站内所有组件，刷新后保持</p>
     </template>
   </ColorPicker>
   <FloatButton

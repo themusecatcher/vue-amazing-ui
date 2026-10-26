@@ -5,7 +5,7 @@ import './global.less' // global less
 import GlobalElement from './components/GlobalElement.vue'
 import VersionBadge from './components/VersionBadge.vue'
 import VersionDateTag from './components/VersionDateTag.vue'
-import { themePrimary } from './theme-color'
+import { setupThemePrimaryStorage, themePrimary } from './theme-color'
 // 组件库统一从构建产物 dist 引入，不使用 'vue-amazing-ui' 说明符（该说明符在 src 演示环境指向源码出口）
 import VueAmazingUI, {
   ConfigProvider,
@@ -71,6 +71,8 @@ export default {
     app.component('GlobalElement', GlobalElement)
     app.component('VersionDateTag', VersionDateTag)
     app.use(VueAmazingUI)
+    // 恢复上次选中的主色并登记持久化（SSR 期内部自动跳过）
+    setupThemePrimaryStorage()
   },
   Layout
 }

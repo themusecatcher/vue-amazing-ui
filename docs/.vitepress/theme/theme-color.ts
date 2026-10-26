@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 // 主色默认值从库产物取：与 ConfigProvider 的默认种子同源，避免文档站与库各写一份而漂移
 import { DEFAULT_PRIMARY } from '../../../dist/index'
 
@@ -46,3 +46,39 @@ export const THEME_SWATCHES = [
 
 /** 当前选中的主色 */
 export const themePrimary = ref(DEFAULT_PRIMARY)
+
+/** 主色的本地存储键：与暗色模式（VitePress 自带的记忆）同口径，刷新后继续生效 */
+const PRIMARY_STORAGE_KEY = 'va-primary'
+
+function readStoredPrimary(): string | null {
+  try {
+    const stored = window.localStorage.getItem(PRIMARY_STORAGE_KEY)
+    return stored?.trim() ? stored : null
+  } catch (error) {
+    // 隐私模式禁用存储：只影响记忆能力，本次会话仍可正常取色
+    console.warn('[theme-color] 读取本地主色失败', error)
+    return null
+  }
+}
+
+let storageReady = false
+
+/**
+ * 恢复 / 持久化自定义主色
+ *
+ * 由 `theme/index.ts` 的 `enhanceApp` 调用一次：客户端首帧前写回上次选中的颜色（不出现「先默认蓝再变色」）。
+ * SSR 构建期没有 `localStorage`，此处直接跳过。
+ */
+export function setupThemePrimaryStorage(): void {
+  if (storageReady || typeof window === 'undefined') return
+  storageReady = true
+  const stored = readStoredPrimary()
+  if (stored) themePrimary.value = stored
+  watch(themePrimary, (primary: string) => {
+    try {
+      window.localStorage.setItem(PRIMARY_STORAGE_KEY, primary)
+    } catch (error) {
+      console.warn('[theme-color] 保存主色失败', error)
+    }
+  })
+}
