@@ -30,7 +30,7 @@
 | `pnpm verify:deps` | `verify-style-deps.js` | ① `componentDependencies` 手写表 ↔ 产物 chunk 依赖图的双向闭包一致性（抓「漏写」与「写了但已不依赖」）；② 聚合入口 `index.d.ts` 的值导出 ↔ 运行时导出的双向一致性 |
 | `pnpm verify:on-demand` | `verify-on-demand.js` | 在系统临时目录搭最小消费方工程，用 `unplugin-vue-components` 按需引入后真实构建，断言 CSS canary 选择器齐全、无模块缺失告警、`es/<dir>/style` 裸目录写法可被打包器与 Node ESM 解析 |
 | `pnpm verify:theme` | `verify-theme.js` | 主题架构守护：组件不得参与主题派色、`var(--va-*)` 引用一致性、公开令牌只消费不声明且 fallback 逐字一致、注册表自检（键集合 / `.d.ts` 联合类型同步）等 |
-| `pnpm guard` | `prepublish-guard.js` | 毫秒级存在性断言，不跑构建：`package.json` 声明的产物入口存在、每组件样式入口契约（无编号 CSS、`es`/`lib` 双份入口、相对路径可解析、`sideEffects` 覆盖完整）、`index.d.ts` ↔ `index.js`/`index.cjs` 配对 |
+| `pnpm guard` | `prepublish-guard.js` | 毫秒级文本级断言，不跑构建：`package.json` 声明的产物入口存在、每组件样式入口契约（无编号 CSS、`es`/`lib` 双份入口、相对路径可解析、`sideEffects` 覆盖完整）、`index.d.ts` ↔ `index.js`/`index.cjs` 配对、`props` 运行时类型与源码类型对齐（DOM 类型须含 `Object`、字面量联合须含 `String`） |
 
 `prepublish-guard.js` 另由 `package.json` 的 **`prepublishOnly`** 自动触发，因此即使绕开 `pnpm pub` 直接 `npm publish` 也会被拦。它已被 `pnpm verify` 链收录，故 `publish.sh` 内不再单独调用，避免同一断言跑两遍。
 
@@ -47,6 +47,7 @@
 | `parse-style-deps.js` | 用正则解析 `components/utils/style-deps.ts`，得到三张表 + 无样式白名单（`componentsMap` / `styleSources` / `componentDependencies` / `stylelessComponents`） | `prepublish-guard.js`、`verify-style-deps.js` |
 | `component-vars-check.js` | 「文本 → 结构化事实」的纯函数（剥注释、拆 SFC 段、收集 `var()` 引用与使用），**不含判定策略**——规则留在 `verify-theme.js` 与测试中，避免两处口径漂移 | `verify-theme.js`、`tests/component-vars.spec.ts` |
 | `component-vars-check.d.ts` | 上者的类型声明，供 TS 测试导入时获得类型（手写文件，非构建产物） | `tests/component-vars.spec.ts` |
+| `check-prop-runtime-types.js` | `interface Props` 字段文本 → 期望的运行时类型分支，并与 `es/` `lib/` 产物里的 `props` 声明比对；同样只做文本解析、不跑编译器 | `prepublish-guard.js`、`tests/prop-runtime-types.spec.ts` |
 
 ## 命令链
 

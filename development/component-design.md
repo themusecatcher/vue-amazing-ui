@@ -66,6 +66,7 @@ const props = withDefaults(defineProps<Props>(), {
 - **组件 SFC（`.vue`）内的函数**：用中文块注释描述「做什么 / 为什么」，**不写 `@param` / `@returns`** —— 私有函数的参数语义由签名与函数名表达，注释里再写一遍只会与签名漂移；需要补充某入参语义时写进描述句或调用点行内注释。
 - **`components/utils/` 的导出函数**：按 TSDoc 写 `@param name - 说明` / `@returns 说明`，**类型由签名承接，禁止 `@param {type}` 这类重复标注**。
 - 字段注释：`interface Props` 的每个字段、`{组件名}Slots` 的每个插槽必须带中文注释（见上文「Props 定义规范」「插槽类型」）。
+- **样式模块只保留「为什么」**：非直觉取值（如 `overscroll-behavior: none`、`overflow-anchor: none`、`background-clip: padding-box`）与容易被「顺手优化」改回去的写法，用一句话说明原因；复述声明本身、罗列选择器层级、逐步解释动画时序的注释一律删除。原则上「读代码就能知道的不写，读代码不知道为什么的必写」。
 
 ## 事件（emit）
 
