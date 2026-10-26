@@ -25,7 +25,7 @@ import {
   PlusOutlined,
   SettingOutlined
 } from '@ant-design/icons-vue'
-import { ConfigProvider, LoadingBarProvider, createDiscreteApi, useMessage, useModal, useNotification } from 'vue-amazing-ui'
+import { ConfigProvider, LoadingBarProvider, createDiscreteApi } from 'vue-amazing-ui'
 import type {
   CarouselImage,
   ConfigProviderProps,
@@ -147,10 +147,11 @@ function onAutoCompleteSearch(searchText: string) {
 const cardRef = ref<HTMLDivElement>()
 // 局部加载条挂载到 cardRef 容器，通过 <LoadingBarProvider> 的 @ready 取到该作用域内的 api
 const localLoadingBar = ref<LoadingBarApi>()
-// 浮层类组件推荐 useXxx()：入口 App.vue 已包裹对应 Provider
-const message = useMessage()
-const modal = useModal()
-const notification = useNotification()
+// 这三处刻意用组件形态 + @ready 取实例：useMessage() / useModal() / useNotification() 命中的是入口的全局 Provider，
+// 弹层挂在 body 上只跟随页面级主题；只有组件形态落在本段 ConfigProvider 作用域内，才能演示「改种子 → 弹层同步换色」
+const messageRef = ref<MessageApi>()
+const modalRef = ref<ModalApi>()
+const notificationRef = ref<NotificationApi>()
 const page = ref<number>(1)
 const radioChecked = ref<boolean>(false)
 const images = ref<CarouselImage[]>([
@@ -489,17 +490,20 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
         :search-props="{ type: 'primary' }"
         placeholder="input search"
       />
-      <Button type="primary" @click="message.info('This is an info message')">Show Message</Button>
+      <Button type="primary" @click="messageRef?.info('This is an info message')">Show Message</Button>
+      <Message @ready="messageRef = $event" />
       <Button
         type="primary"
-        @click="modal.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
+        @click="modalRef?.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
         >Show Modal</Button
       >
+      <Modal @ready="modalRef = $event" />
       <Button
         type="primary"
-        @click="notification.info({ title: 'Notification Title', content: 'This is a normal notification' })"
+        @click="notificationRef?.info({ title: 'Notification Title', content: 'This is a normal notification' })"
         >Show Notification</Button
       >
+      <Notification @ready="notificationRef = $event" />
       <Popconfirm title="Custom Theme" description="There will have some descriptions ..." icon="info">
         <Button type="primary">Show Confirm</Button>
       </Popconfirm>
@@ -621,7 +625,7 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
 - 示例覆盖全部 `39` 个消费主色的组件；`Table` 排序箭头、`Badge` 计数底、`Timeline` 的 `blue` 圆点、`GradientText` 渐变端点均取自种子（点击 `Table` 表头可见）；
 - `Tag` 的 `processing` 预设取主色，`success` / `warning` / `error` 取语义色（见「语义种子」一节）；其余 `13` 个命名色为组件自有色板，与种子无关；
 - 深色皮肤（如 `Menu` 的 `theme="dark"`）底色取种子派生的品牌色暗底：改主色时根列表、浮层面板与内联子菜单一起换；
-- `Message` / `Modal` / `Notification` 走推荐用法 `useXxx()`（入口已包裹 `Provider`），浮层令牌同样跟随当前作用域；
+- `Message` / `Modal` / `Notification` 在本节用组件形态（`<Message @ready>` 等）取实例：弹层渲染在本作用域内，换主色时一起变色，`useXxx()` 命中的是入口的全局实例，只跟随页面级主题；
 - 组件样式只消费 `var(--va-*)`，不参与换色计算：切换种子不会重建组件，也不会触发重渲染。
 
 ::: details Show Code
@@ -640,7 +644,7 @@ import {
   PlusOutlined,
   SettingOutlined
 } from '@ant-design/icons-vue'
-import { LoadingBarProvider, useMessage, useModal, useNotification } from 'vue-amazing-ui'
+import { LoadingBarProvider } from 'vue-amazing-ui'
 import type {
   CarouselImage,
   ItemType,
@@ -694,10 +698,11 @@ function onAutoCompleteSearch(searchText: string) {
 const cardRef = ref<HTMLDivElement>()
 // 局部加载条挂载到 cardRef 容器，通过 <LoadingBarProvider> 的 @ready 取到该作用域内的 api
 const localLoadingBar = ref<LoadingBarApi>()
-// 浮层类组件推荐 useXxx()：入口 App.vue 已包裹对应 Provider
-const message = useMessage()
-const modal = useModal()
-const notification = useNotification()
+// 这三处刻意用组件形态 + @ready 取实例：useMessage() / useModal() / useNotification() 命中的是入口的全局 Provider，
+// 弹层挂在 body 上只跟随页面级主题；只有组件形态落在本段 ConfigProvider 作用域内，才能演示「改种子 → 弹层同步换色」
+const messageRef = ref<MessageApi>()
+const modalRef = ref<ModalApi>()
+const notificationRef = ref<NotificationApi>()
 const page = ref<number>(1)
 const radioChecked = ref<boolean>(false)
 const images = ref<CarouselImage[]>([
@@ -930,17 +935,20 @@ function onDecline(scale: number) {
           :search-props="{ type: 'primary' }"
           placeholder="input search"
         />
-        <Button type="primary" @click="message.info('This is an info message')">Show Message</Button>
+        <Button type="primary" @click="messageRef?.info('This is an info message')">Show Message</Button>
+        <Message @ready="messageRef = $event" />
         <Button
           type="primary"
-          @click="modal.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
+          @click="modalRef?.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
           >Show Modal</Button
         >
+        <Modal @ready="modalRef = $event" />
         <Button
           type="primary"
-          @click="notification.info({ title: 'Notification Title', content: 'This is a normal notification' })"
+          @click="notificationRef?.info({ title: 'Notification Title', content: 'This is a normal notification' })"
           >Show Notification</Button
         >
+        <Notification @ready="notificationRef = $event" />
         <Popconfirm title="Custom Theme" description="There will have some descriptions ..." icon="info">
           <Button type="primary">Show Confirm</Button>
         </Popconfirm>

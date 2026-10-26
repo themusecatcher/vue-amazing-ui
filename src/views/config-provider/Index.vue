@@ -11,7 +11,7 @@ import {
   PlusOutlined,
   SettingOutlined
 } from '@ant-design/icons-vue'
-import { createDiscreteApi, useMessage, useModal, useNotification } from 'vue-amazing-ui'
+import { createDiscreteApi } from 'vue-amazing-ui'
 import type {
   ConfigProviderProps,
   ConfigProviderTheme,
@@ -19,6 +19,9 @@ import type {
   ItemType,
   LoadingBarApi,
   MenuKey,
+  MessageApi,
+  ModalApi,
+  NotificationApi,
   SelectOption,
   SegmentedOption,
   StepsItem,
@@ -87,10 +90,11 @@ const dateValue = ref<number>(Date.now())
 const inputValue = ref<string>('')
 const inputNumberValue = ref<number>(3)
 const inputSearchValue = ref<string>('')
-// 浮层类组件推荐 useXxx()：入口 App.vue 已包裹对应 Provider
-const message = useMessage()
-const modal = useModal()
-const notification = useNotification()
+// 这三处刻意用组件形态 + @ready 取实例：useMessage() / useModal() / useNotification() 命中的是入口 App.vue 的 Provider，
+// 弹层挂在 <body> 上只跟随页面级主题；只有组件形态落在本段 ConfigProvider 作用域内，才能演示「改种子 → 弹层同步换色」
+const messageRef = ref<MessageApi>()
+const modalRef = ref<ModalApi>()
+const notificationRef = ref<NotificationApi>()
 const cardRef = ref<HTMLDivElement>()
 // 局部加载条挂载到 cardRef 容器，通过 <LoadingBarProvider> 的 @ready 取到该作用域内的 api
 const localLoadingBar = ref<LoadingBarApi>()
@@ -490,17 +494,20 @@ const tokenStyle: Record<string, string> = {
             :search-props="{ type: 'primary' }"
             placeholder="input search"
           />
-          <Button type="primary" @click="message.info('This is an info message')">Show Message</Button>
+          <Button type="primary" @click="messageRef?.info('This is an info message')">Show Message</Button>
+          <Message @ready="messageRef = $event" />
           <Button
             type="primary"
-            @click="modal.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
+            @click="modalRef?.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
             >Show Modal</Button
           >
+          <Modal @ready="modalRef = $event" />
           <Button
             type="primary"
-            @click="notification.info({ title: 'Notification Title', content: 'This is a normal notification' })"
+            @click="notificationRef?.info({ title: 'Notification Title', content: 'This is a normal notification' })"
             >Show Notification</Button
           >
+          <Notification @ready="notificationRef = $event" />
           <Popconfirm title="Custom Theme" description="There will have some descriptions ..." icon="info">
             <Button type="primary">Show Confirm</Button>
           </Popconfirm>
