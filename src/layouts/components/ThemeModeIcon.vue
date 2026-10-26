@@ -43,7 +43,6 @@ withDefaults(defineProps<Props>(), {
   </svg>
 </template>
 <style lang="less" scoped>
-/* 尺寸 / 颜色由父级（font-size / color）控制，与 antd 图标口径一致 */
 .theme-mode-icon {
   width: 1em;
   height: 1em;

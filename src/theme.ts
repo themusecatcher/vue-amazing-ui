@@ -12,7 +12,7 @@ import type { ConfigProviderTheme } from 'vue-amazing-ui'
  * 默认带上 `mode`：右下角的暗黑模式浮钮直接改写它（见 `layouts/components/ThemeModeButton.vue`），
  * 这样切换的是组件库真实的浅色 / 暗色变量表，而不是用 CSS 滤镜反色页面。
  *
- * 持久化口径与 antdv 官网一致：初始化时同步读一次本地存储（不出现「先浅色再变暗」的闪烁），
+ * 持久化：初始化时同步读一次本地存储（不出现「先浅色再变暗」的闪烁），
  * 之后每次变更写回；未存过时回落浅色（不跟随系统偏好，与站点既有默认一致）。
  */
 const THEME_STORAGE_KEY = 'va-theme'
