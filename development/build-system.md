@@ -110,7 +110,7 @@ pnpm verify            # 重量级门禁：build + verify:deps + verify:on-deman
 pnpm verify:deps       # 产物一致性校验：依赖表 ↔ chunk 闭包 + 聚合入口类型声明 ↔ 运行时导出（需已构建产物）
 pnpm verify:on-demand  # 按需引入端到端验证：临时消费方工程 + canary 断言（需已构建产物）
 pnpm verify:theme      # 主题架构守护：变量契约 / 组件令牌注册表 / 组件文件与登记表一致性
-pnpm guard             # 产物守卫：毫秒级存在性校验（样式入口 / 编号 CSS / 入口内引用 / 聚合入口类型与运行时配对）
+pnpm guard             # 产物守卫：毫秒级存在性校验（样式入口 / 编号 CSS / 入口内引用 / 聚合入口类型与运行时配对 / props 运行时类型与源码类型对齐）
 ```
 
 > `scripts/publish.sh` 也会在构建后强制执行 `verify:deps`、`verify:on-demand` 与 `verify:theme`（`guard` 由 `prepublishOnly` 触发）。

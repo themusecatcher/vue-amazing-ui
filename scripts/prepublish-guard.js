@@ -6,7 +6,7 @@
  * 不会报错，只会打出一个 `main` / `module` / `types` 全部悬空的包。若绕开 `pnpm pub`
  * （scripts/publish.sh）直接发布，还可能把上一版遗留产物按新版本号发出去。
  *
- * 因此这里只做**毫秒级的存在性校验**（不跑构建、不校验内容与新鲜度）：
+ * 因此这里只做**毫秒级的文本级校验**（不跑构建、不跑编译器、不校验产物新鲜度）：
  * 1. `package.json` 声明的产物入口是否真实存在；
  * 2. 「每组件一个样式入口」的产物契约：
  *    - `es/` 与 `lib/` 下不存在编号 CSS（`*<数字>.css` → 构建期合并插件未生效，会静默少样式）；
@@ -15,6 +15,7 @@
  *    - `package.json` 的 `sideEffects` 覆盖全部样式产物（CSS 与样式入口 JS/CJS）。
  * 3. 「类型声明 ↔ 运行时模块」配对：每个存在 `index.d.ts` 的产物目录必须有对应 `index.js` / `index.cjs`
  *    （详见下文 ⑤ 的说明）。
+ * 4. props 运行时类型与源码类型对齐（详见 `check-prop-runtime-types.js` 与下文 ⑥）。
  *
  * 「按需引入后样式是否真的齐全」由 `pnpm verify:on-demand` 负责（需跑构建），两者互补。
  */
@@ -22,6 +23,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { readStyleDeps } from './parse-style-deps.js'
+import { checkPropRuntimeTypes } from './check-prop-runtime-types.js'
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -272,6 +274,24 @@ outDirs.forEach(({ dir, entryFileName }) => {
   )
 })
 
+/**
+ * ⑥ props 运行时类型契约
+ *
+ * `defineProps<Props>()` 只能为「可映射类型」生成运行时校验：DOM 接口与 `keyof typeof` 派生类型
+ * 无法推断，生产编译又会剥掉 `skipCheck` 兜底，于是发布包里这类 prop 只剩残缺 type，
+ * 使用方在开发环境传元素便误报 `Invalid prop`。该错位在库内 dev 站（有 `skipCheck`）不可见，
+ * 故在产物层断言：源码用了 DOM 类型 / 字面量联合的 prop，产物运行时类型必须含 `Object` / `String`。
+ * 详见 development/component-design.md 的「Props 运行时类型约定」。
+ */
+const propTypeCheck = checkPropRuntimeTypes({ rootDir })
+if (propTypeCheck.problems.length > 0) {
+  const sample = propTypeCheck.problems.slice(0, 5).join('\n      ✗ ')
+  failures.push(
+    `props 运行时类型与源码类型不一致（发布包会误报 Invalid prop）：\n      ✗ ${sample}` +
+      (propTypeCheck.problems.length > 5 ? `\n      …… 共 ${propTypeCheck.problems.length} 处` : '')
+  )
+}
+
 if (failures.length > 0) {
   console.error('❌ 发布守卫未通过：')
   failures.forEach((failure) => console.error(`   ✗ ${failure}`))
@@ -279,5 +299,7 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `✅ 发布守卫通过：${entryPaths.length} 个产物入口、${entryDirs.size} × ${outDirs.length} 个组件样式入口均就绪`
+  `✅ 发布守卫通过：${entryPaths.length} 个产物入口、${entryDirs.size} × ${outDirs.length} 个组件样式入口均就绪、` +
+    `${propTypeCheck.checked} 处 props 运行时类型已对齐` +
+    (propTypeCheck.skipped > 0 ? `（${propTypeCheck.skipped} 处因产物缺失跳过）` : '')
 )

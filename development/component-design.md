@@ -46,6 +46,16 @@ const props = withDefaults(defineProps<Props>(), {
 - **字段之间不留空行**：接口内的分组语义由**字段顺序 + 行尾注释**表达，不用空行分段；全文件不保留连续空行。空行不承载语义，删掉不影响理解的一律删除（同类要求适用于 `{组件名}Slots`、类型对象与 `withDefaults` 默认值对象）。
 - **数据载体接口的索引签名口径**：允许用户携带自定义字段的数据载体接口（选项 / 列 / 菜单项 / 文件 / 路由参数等）统一以 `[propName: string]: any` 收尾，行尾注释写用户视角的透传表述（如「允许携带任意自定义字段，会随原始对象透传」）；❌ 不写 `[key: string]` 等名称变体，❌ 不用 `unknown`——读取侧需收窄与「透传后直接读取」的核心用法相悖，且 minor 版本收紧属破坏性变更。文档表格由「索引签名」口径同步列出该行（见 demo-doc-guide 表格规范）。
 
+### Props 运行时类型约定
+
+`defineProps<Props>()` 的运行时校验由编译器**按可映射类型**推导（`String` / `Number` / `Boolean` / `Object` / `Array` / `Function` / `Date` / `Symbol`）。**DOM 接口（`HTMLElement` / `Document`）与 `keyof typeof` 派生类型推断不出来，会被静默丢弃**：库内 dev 站丢弃后带 `skipCheck`（跳过校验）→ 永远复现不出问题；发布包（生产编译会剥掉 `skipCheck`）里 `to` 只剩 `[String, Boolean]`、`listenTo` 只剩 `[String, Function]`、缓动只剩 `[Array, Function]` → 使用方开发环境传元素 / 传预设名便误报 `Invalid prop: type check failed`。故约定：
+
+- **DOM 元素 / `Document` 一律经替身类型**：`MountElement` / `MountDocument`（`components/utils` 的 `floating-mount.ts`，`interface extends HTMLElement` 形态，编译为 `Object` 分支）；❌ 不把裸 `HTMLElement` / `Document` 直接作为联合成员（函数返回值位置不受限，如 `() => HTMLElement | Document` 映射为 `Function` 分支）。
+- **`keyof typeof` 派生的字符串联合补 `LiteralUnion`**：`LiteralUnion<EasingPreset> | CubicBezierPoints | EasingFunction` —— `(string & {})` 让 `String` 进入运行时类型，同时保留预设名的 IDE 补全；❌ 直接写 `EasingPreset | ...`（编译不出 `String`）。
+- **不可映射的类型：要么映射，要么有意不校验**：`VNode`、其他组件的 `XxxProps` 等无法校验的类型，容忍产物里没有 `type`（等价于不校验，不误报）；❌ 不允许「本应可校验的联合因写法不当而丢失分支」。
+- **无 `Boolean` / `Function` 分支的联合**（如 `string | MountElement`）在生产编译里 `type` 会被整体省略 —— 属预期（零校验、不误报），不必为了「有 type」硬加成员。
+- 该约定由 `scripts/check-prop-runtime-types.js` 兜底（`pnpm guard` 第 ⑥ 项）：源码用到 DOM 类型 / 字面量联合的 prop，产物运行时类型必须含 `Object` / `String`，否则发布守卫直接失败。
+
 ## 类型导出约定
 
 - 主类型：`interface Props`，导出后由 `components.ts` 重命名为 `<组件名>Props`。
