@@ -46,7 +46,6 @@ const props = withDefaults(defineProps<Props>(), {
   listenTo: undefined
 })
 defineSlots<BackTopSlots>()
-const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const backTopPlaceholderRef = ref<HTMLElement | null>(null) // backTop 元素引用
 const scrollTop = ref<number>(0) // 滚动距离
 const scrollTarget = ref<HTMLElement | Document | null>(null) // 滚动目标
@@ -64,6 +63,8 @@ const backTopStyle = computed(() => {
     right: `calc(${right} + ${lockScrollOffset})`
   }
 })
+// 显隐状态同时驱动模板的 v-if：初始为 false 时不渲染，隐藏时由 <Transition> 播完离场动画再卸载。
+// 模板中不要再叠加 v-show —— Transition 只认 v-if，双指令并存时隐藏动画会退化为 v-show 直接 display:none
 const backTopShow = computed(() => {
   return scrollTop.value >= props.visibilityHeight
 })
@@ -73,17 +74,6 @@ const showTooltip = computed(() => {
 const showDescription = computed(() => {
   return slotsExist.description || props.description
 })
-watch(
-  backTopShow,
-  (to) => {
-    if (to && !initialDisplay.value) {
-      initialDisplay.value = true
-    }
-  },
-  {
-    immediate: true
-  }
-)
 watch(
   () => props.listenTo,
   () => {
@@ -176,8 +166,7 @@ function onBackTop(): void {
     <Teleport :to="to">
       <Transition name="zoom">
         <div
-          v-if="initialDisplay"
-          v-show="backTopShow"
+          v-if="backTopShow"
           class="back-top"
           :style="[
             teleportThemeVars,
@@ -250,14 +239,32 @@ function onBackTop(): void {
   </div>
 </template>
 <style lang="less" scoped>
-.zoom-enter-active,
-.zoom-leave-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.zoom-enter-active {
+  animation: va-back-top-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
-.zoom-enter-from,
-.zoom-leave-to {
-  opacity: 0;
-  transform: scale(0.5);
+.zoom-leave-active {
+  animation: va-back-top-out 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+  pointer-events: none;
+}
+@keyframes va-back-top-in {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes va-back-top-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.5);
+  }
 }
 .back-top {
   position: fixed;
