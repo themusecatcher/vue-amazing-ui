@@ -49,11 +49,15 @@ export const themePrimary = ref(DEFAULT_PRIMARY)
 
 /** 主色的本地存储键：与暗色模式（VitePress 自带的记忆）同口径，刷新后继续生效 */
 const PRIMARY_STORAGE_KEY = 'va-primary'
+/** 主色只认不透明 hex（与库内种子归一化同口径），其余视为损坏数据 */
+const PRIMARY_PATTERN = /^#(?:[0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i
 
 function readStoredPrimary(): string | null {
   try {
-    const stored = window.localStorage.getItem(PRIMARY_STORAGE_KEY)
-    return stored?.trim() ? stored : null
+    const stored = window.localStorage.getItem(PRIMARY_STORAGE_KEY)?.trim()
+    if (!stored) return null
+    // 非法主色直接丢弃：交给 ConfigProvider 时会被判为非法并回退默认值，界面上的取色器却仍显示该值
+    return PRIMARY_PATTERN.test(stored) ? stored : null
   } catch (error) {
     // 隐私模式禁用存储：只影响记忆能力，本次会话仍可正常取色
     console.warn('[theme-color] 读取本地主色失败', error)

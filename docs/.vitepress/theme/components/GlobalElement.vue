@@ -24,6 +24,7 @@ const tooltipProps = {
 // 邮箱气泡：地址需整行展示，故放宽最大宽度（默认 200 会把域名尾巴挤到第二行）
 const mailTooltipProps = { ...tooltipProps, maxWidth: 240 }
 const panelOpen = ref<boolean>(false) // 取色面板显隐（受控，用于连同气泡一起收起）
+// 面板限定 hex 模式：主题种子只接受不透明的 #rgb / #rrggbb，rgb() / hsl() 会被 ConfigProvider 判为非法并回退默认值
 const triggerHovered = ref<boolean>(false) // 触发器的鼠标悬停态
 // 面板打开时收起气泡：气泡族层级（1070）本就高于下拉面板族（1050），不收起会盖住取色面板；
 // 收起的时机取「面板一打开就关」，而不是等鼠标移开（指针停在按钮上时会一直挡住面板）；
@@ -45,6 +46,7 @@ const themeTooltipProps = computed(() => ({
     placement="leftBottom"
     :offset="12"
     :show-alpha="false"
+    :modes="['hex']"
     :swatches="THEME_SWATCHES"
     :panel-style="{ width: '224px' }"
     :tabindex="-1"

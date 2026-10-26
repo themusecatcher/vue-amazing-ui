@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { BgColorsOutlined } from '@ant-design/icons-vue'
 import { DEFAULT_PRIMARY, setThemePrimary, theme } from '@/theme'
 // 主色即可写回共享主题的种子（未取色时回落默认主色），与取色面板双向绑定
+// 面板限定 hex 模式：主题种子只接受不透明的 #rgb / #rrggbb，rgb() / hsl() 会被 ConfigProvider 判为非法并回退默认值
 const primary = computed<string>({
   get: () => theme.value.seed?.primary ?? DEFAULT_PRIMARY,
   set: (color) => {
@@ -40,6 +41,7 @@ const themeTooltipProps = computed(() => ({
     placement="leftBottom"
     :offset="12"
     :show-alpha="false"
+    :modes="['hex']"
     :swatches="swatches"
     :panel-style="{ width: '224px' }"
     :tabindex="-1"

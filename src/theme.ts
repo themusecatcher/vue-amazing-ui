@@ -16,6 +16,8 @@ import type { ConfigProviderTheme } from 'vue-amazing-ui'
  * 之后每次变更写回；未存过时回落浅色（不跟随系统偏好，与站点既有默认一致）。
  */
 const THEME_STORAGE_KEY = 'va-theme'
+/** 主色只认不透明 hex（与库内种子归一化同口径），其余视为损坏数据 */
+const PRIMARY_PATTERN = /^#(?:[0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i
 
 /** 本地存储里只认这两个字段，其余一律回落默认值（旧版本 / 手改残留不影响启动） */
 interface StoredTheme {
@@ -38,7 +40,9 @@ function readStoredTheme(): ConfigProviderTheme | null {
   try {
     const stored = JSON.parse(raw) as StoredTheme
     const mode = stored?.mode === 'dark' ? 'dark' : 'light'
-    const primary = typeof stored?.primary === 'string' && stored.primary ? stored.primary : undefined
+    // 非法主色直接丢弃：交给 ConfigProvider 时会被判为非法并回退默认值，界面上的取色器却仍显示该值
+    const primary =
+      typeof stored?.primary === 'string' && PRIMARY_PATTERN.test(stored.primary) ? stored.primary : undefined
     return primary ? { mode, seed: { primary } } : { mode }
   } catch (error) {
     console.warn('[theme] 本地主题配置解析失败，已回落默认主题', error)
