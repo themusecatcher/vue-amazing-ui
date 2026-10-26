@@ -4,6 +4,7 @@ import type { VNode, CSSProperties } from 'vue'
 import Scrollbar from 'components/scrollbar'
 import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
 import { createKeyGenerator, renderContentToVNode, useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import type { MountElement } from 'components/utils'
 import type { NotificationApi } from './useNotification'
 // 主题转发：通知 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
 const teleportTheme = inject(THEME_TELEPORT_KEY, null)
@@ -20,7 +21,7 @@ export interface Props {
   maxCount?: number // 同一 placement 下可同时存在的最大通知数，超出时淘汰最旧的一条
   closable?: boolean // 是否显示关闭按钮，优先级低于单条通知中的 closable
   scrollable?: boolean // 通知容器是否可滚动，通知过多超出视口高度时滚动显示
-  to?: string | HTMLElement // 通知容器挂载的节点，可选：元素标签名 (例如 'body') 或者元素本身
+  to?: string | MountElement // 通知容器挂载的节点，可选：元素标签名 (例如 'body') 或者元素本身
 }
 const props = withDefaults(defineProps<Props>(), {
   top: 16,

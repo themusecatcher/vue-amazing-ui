@@ -9,6 +9,7 @@ import {
   Z_INDEX_CONTAINER_OPEN_KEY,
   FLOATING_LAYER_Z_INDEX
 } from 'components/utils'
+import type { MountElement } from 'components/utils'
 
 export interface Props {
   maxWidth?: string | number // 文字提示最大宽度，单位 px
@@ -41,14 +42,14 @@ export interface Props {
   trigger?: 'hover' | 'click' | 'focus' | 'contextmenu' // 文字提示触发方式
   keyboard?: boolean // 是否支持按键操作 (enter 切换显示；esc 关闭)，仅当 trigger: 'click' 时生效
   disabled?: boolean // 是否禁用文字提示，禁用后不响应任何触发
-  to?: string | HTMLElement | false // 弹出框挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
+  to?: string | MountElement | false // 弹出框挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   destroyOnHide?: boolean // 隐藏后是否卸载弹出框 DOM：离开动画结束后卸载，再次显示时重新创建并重新定位；false 时元素常驻、仅切换显示
   transitionDuration?: number // 文字提示动画的过渡持续时间，单位 ms
   showDelay?: number // 文字提示显示的延迟时间，单位 ms，仅当 trigger: hover 时生效
   hideDelay?: number // 文字提示隐藏的延迟时间，单位 ms，仅当 trigger: hover 时生效
   open?: boolean // (v-model) 文字提示是否显示
   openControl?: boolean // 只使用 open 属性控制显示隐藏，仅当 trigger: hover 时生效，此时移入移出将不会触发显示隐藏，全部由 open 属性控制
-  anchor?: HTMLElement | null // 外部锚点：传入后不渲染触发包裹层，触发监听、无障碍属性与定位全部以该元素为准
+  anchor?: MountElement | null // 外部锚点：传入后不渲染触发包裹层，触发监听、无障碍属性与定位全部以该元素为准
   getDisabled?: () => boolean // 展示前的动态禁用判定（如文本未溢出时不展示），每次展示前求值
 }
 // 声明组件插槽类型

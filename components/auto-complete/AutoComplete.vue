@@ -13,6 +13,7 @@ import {
   Z_INDEX_CONTAINER_OPEN_KEY,
   FLOATING_LAYER_Z_INDEX
 } from 'components/utils'
+import type { MountElement } from 'components/utils'
 export interface Option {
   disabled?: boolean // 是否禁用
   value: string | number // 唯一的 value 值
@@ -40,7 +41,7 @@ export interface Props {
   zIndex?: number // 下拉面板层级，优先级最高（未传时使用默认层级或 ConfigProvider 的 baseZIndex 分配）
   dropdownMatchSelectWidth?: boolean | number // 下拉菜单和选择器同宽，为数字时指定下拉菜单宽度
   dropdownMenuStyle?: CSSProperties // 下拉菜单自定义样式
-  to?: string | HTMLElement | false // 下拉面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
+  to?: string | MountElement | false // 下拉面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   options?: (string | number | Option | GroupOption)[] // 自动完成的数据源
   value?: string // (v-model) 当前输入的值，未受控时按空串处理
   width?: string | number // 自动完成宽度，单位 px

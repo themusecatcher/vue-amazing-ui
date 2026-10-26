@@ -3,6 +3,7 @@ import { ref, computed, watch, nextTick, inject } from 'vue'
 import type { CSSProperties } from 'vue'
 import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
 import { useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import type { MountElement } from 'components/utils'
 import type { LoadingBarApi } from './useLoadingBar'
 export interface Props {
   containerClass?: string // 加载条容器的类名
@@ -16,7 +17,7 @@ export interface Props {
     finish?: string | CSSProperties // 加载完成状态下的自定义样式
     error?: string | CSSProperties // 错误状态下的自定义样式
   }
-  to?: string | HTMLElement | false // 加载条的挂载位置，可选：元素标签名（例如 body）或者元素本身，false 会待在原地
+  to?: string | MountElement | false // 加载条的挂载位置，可选：元素标签名（例如 body）或者元素本身，false 会待在原地
 }
 // 主题转发：加载条 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
 const teleportTheme = inject(THEME_TELEPORT_KEY, null)

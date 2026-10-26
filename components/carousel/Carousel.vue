@@ -2,6 +2,7 @@
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import { useEventListener, useResizeObserver, useMediaQuery, useSlotsExist } from 'components/utils'
+import type { LiteralUnion } from 'components/utils/type'
 import { transition, TransitionPresets } from '@vueuse/core'
 import type { CubicBezierPoints, EasingFunction } from '@vueuse/core'
 import Spin, { type SpinProps } from 'components/spin'
@@ -43,7 +44,9 @@ export interface Props {
   fadeDuration?: number // 渐变动画持续时长，单位 ms，仅当 effect 为 'fade' 时生效
   fadeFunction?: string | [number, number, number, number] // 渐变动画函数，仅当 effect 为 'fade' 时生效，可传四个三次贝塞尔控制点（自动转为 cubic-bezier 写法）或 CSS transition-timing-function 写法：https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function
   slideDuration?: number // 滑动动画持续时长，单位 ms，仅当 effect 为 'slide' 时生效
-  slideFunction?: EasingPreset | CubicBezierPoints | EasingFunction // 滑动动画函数，仅当 effect 为 'slide' 时生效，可传缓动预设名、三次贝塞尔控制点数组或缓动函数，参考 transition 写法：https://vueuse.org/core/useTransition/#usage
+  // `LiteralUnion` 让编译器把 `String` 也写进运行时类型（`EasingPreset` 是 `keyof typeof` 派生类型，
+  // 无法推断会被丢弃，发布包中会把预设名字符串误判为非法值）；字面量补全不受影响
+  slideFunction?: LiteralUnion<EasingPreset> | CubicBezierPoints | EasingFunction // 滑动动画函数，仅当 effect 为 'slide' 时生效，可传缓动预设名、三次贝塞尔控制点数组或缓动函数，参考 transition 写法：https://vueuse.org/core/useTransition/#usage
 }
 // 声明组件插槽类型
 export interface CarouselSlots {
@@ -206,7 +209,8 @@ const slideDurationValue = computed(() => {
 // https://vueuse.org/core/useTransition/#usage
 const slideEasing = computed(() => {
   const easing = props.slideFunction
-  return typeof easing === 'string' ? TransitionPresets[easing] : easing
+  // 非预设名查表得到 undefined，vueuse 视为「未指定缓动」（退化为线性），不会抛错
+  return typeof easing === 'string' ? TransitionPresets[easing as EasingPreset] : easing
 })
 // 过冲缓冲：过冲类缓动（如 back-out）会让位移越过首 / 末页，而轨道两端之外没有内容（会露出空白），
 // 故 slide + loop 时在轨道两端补副本承接：首部 1 张末图、尾部 2 张首图

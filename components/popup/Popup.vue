@@ -10,7 +10,13 @@ import {
   useInheritAnchorFont,
   useZIndex
 } from 'components/utils'
-import type { FloatingBoundary, FloatingPlacement, FloatingPoint, FloatingVirtualAnchor } from 'components/utils'
+import type {
+  FloatingBoundary,
+  FloatingPlacement,
+  FloatingPoint,
+  FloatingVirtualAnchor,
+  MountElement
+} from 'components/utils'
 /**
  * 浮层宿主
  *
@@ -59,9 +65,9 @@ export interface Props {
      弹层 DOM 提前存在的场景使用（如子菜单的预热渲染）；false（默认）时按首次展示懒渲染。与
      `destroyOnHide` 组合时后者仍生效（离开过渡结束后照样卸载） */
   forceRender?: boolean
-  to?: string | HTMLElement | false // 面板挂载的容器节点：元素标签名（如 body）或元素本身；false 则在原地渲染
+  to?: string | MountElement | false // 面板挂载的容器节点：元素标签名（如 body）或元素本身；false 则在原地渲染
   // 锚点三选一，同时传入时按 point → virtualAnchor → anchor 取第一个可用者：
-  anchor?: HTMLElement | null // DOM 锚点
+  anchor?: MountElement | null // DOM 锚点
   virtualAnchor?: FloatingVirtualAnchor | null // 虚拟锚点：非 DOM 元素，只要实现 getBoundingClientRect，用于指向任意矩形
   point?: FloatingPoint | null // x-y 手动定位（视口坐标，通常取自鼠标事件的 clientX / clientY）
   // 期望方向（12 向对外命名，主轴 + 次轴对齐后缀，如 bottomLeft = 主轴在下、次轴贴左）；

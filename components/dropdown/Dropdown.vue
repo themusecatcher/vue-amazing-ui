@@ -13,7 +13,7 @@ import {
   useSlotsExist,
   Z_INDEX_CONTAINER_OPEN_KEY
 } from 'components/utils'
-import type { FloatingPlacement } from 'components/utils'
+import type { FloatingPlacement, MountElement } from 'components/utils'
 import { DROPDOWN_MENU_KEY, DropdownMenu } from './DropdownMenu'
 export type Key = string | number
 export interface MenuOption {
@@ -47,7 +47,7 @@ export interface Props {
   mouseLeaveDelay?: number // 移出触发器隐藏下拉菜单的延迟时间，单位 ms，仅当 trigger 含 'hover' 时生效
   transitionDuration?: number // 下拉菜单动画的过渡持续时间，单位 ms
   destroyOnHide?: boolean // 隐藏后是否卸载下拉菜单 DOM：离开动画结束后卸载，再次显示时重新创建并重新定位；false 时元素常驻、仅切换显示
-  to?: string | HTMLElement | false // 下拉菜单挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地；不传时就近挂载到 Modal / Drawer / Dialog 等承载层内容容器（无承载层则 body）
+  to?: string | MountElement | false // 下拉菜单挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地；不传时就近挂载到 Modal / Drawer / Dialog 等承载层内容容器（无承载层则 body）
   overlayClassName?: string // 下拉菜单根元素的类名
   overlayStyle?: CSSProperties // 下拉菜单根元素的样式
   zIndex?: number // 下拉菜单层级，优先级最高（未传时使用默认层级或 ConfigProvider 的 baseZIndex 分配）

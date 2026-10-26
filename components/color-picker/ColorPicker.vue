@@ -26,7 +26,7 @@ import Popup from 'components/popup'
 import Input, { type InputProps } from 'components/input'
 import Button from 'components/button'
 import { FLOATING_LAYER_Z_INDEX, useSlotsExist, log } from 'components/utils'
-import type { FloatingPlacement } from 'components/utils'
+import type { FloatingPlacement, MountElement } from 'components/utils'
 export type ColorPickerMode = 'rgb' | 'hsl' | 'hsv' | 'hex'
 export type ColorPickerAction = 'confirm' | 'clear'
 
@@ -56,7 +56,7 @@ export interface Props {
   zIndex?: number // 面板层级，优先级最高（未传时使用默认层级或 ConfigProvider 的 baseZIndex 分配）
   offset?: number // 面板与触发器的主轴间距，单位 px
   destroyOnHide?: boolean // 隐藏后是否卸载面板 DOM
-  to?: string | HTMLElement | false // 弹出面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
+  to?: string | MountElement | false // 弹出面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   inputProps?: InputProps // 输入框组件 props，透传给内部 Input 组件
 }
 /**

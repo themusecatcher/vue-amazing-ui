@@ -7,6 +7,7 @@ import { computed } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Dropdown from '../Dropdown.vue'
 import type { MenuOption, Key, DropdownArrowOptions, DropdownTrigger } from '../Dropdown.vue'
+import type { MountElement } from 'components/utils'
 import Button from 'components/button'
 export interface Props {
   open?: boolean // (v-model) 下拉菜单是否展开
@@ -22,7 +23,7 @@ export interface Props {
   mouseEnterDelay?: number // 移入触发按钮显示下拉菜单的延迟时间，单位 ms，仅当 trigger 含 'hover' 时生效
   mouseLeaveDelay?: number // 移出触发按钮隐藏下拉菜单的延迟时间，单位 ms，仅当 trigger 含 'hover' 时生效
   destroyOnHide?: boolean // 隐藏后是否卸载下拉菜单 DOM
-  to?: string | HTMLElement | false // 下拉菜单挂载的容器节点
+  to?: string | MountElement | false // 下拉菜单挂载的容器节点
   overlayClassName?: string // 下拉菜单根元素的类名
   overlayStyle?: CSSProperties // 下拉菜单根元素的样式
 }

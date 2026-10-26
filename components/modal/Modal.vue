@@ -46,6 +46,7 @@ import {
   FLOATING_LAYER_Z_INDEX,
   log
 } from 'components/utils'
+import type { MountElement } from 'components/utils'
 // 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数
 export type ContentType = string | VNode | (() => VNode)
 // 按钮回调：返回 false 或 Promise reject 时阻止关闭，其余情况（含 Promise resolve）自动关闭
@@ -97,7 +98,7 @@ export interface Props {
   afterClose?: () => void // 完全关闭（离场动画结束）后的回调
   onEsc?: (e: KeyboardEvent) => void // 按下 Esc 键的回调，无论是否允许关闭都会触发
   onMaskClick?: (e: MouseEvent) => void // 点击遮罩的回调，无论是否允许关闭都会触发
-  to?: string | HTMLElement // 弹窗容器挂载的节点，可选：元素标签名 (例如 'body') 或者元素本身
+  to?: string | MountElement // 弹窗容器挂载的节点，可选：元素标签名 (例如 'body') 或者元素本身
   open?: boolean // (v-model) 模态框是否可见，声明式用法下生效
 }
 // 声明组件插槽类型

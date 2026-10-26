@@ -45,6 +45,7 @@ import {
   FLOATING_LAYER_Z_INDEX,
   log
 } from 'components/utils'
+import type { MountElement } from 'components/utils'
 import type { DialogApi } from './useDialog'
 /** 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数 */
 export type ContentType = string | VNode | (() => VNode)
@@ -103,7 +104,7 @@ export interface Props {
   onEsc?: (e: KeyboardEvent) => void // 按下 Esc 键的回调，无论是否允许关闭都会触发
   onMaskClick?: (e: MouseEvent) => void // 点击遮罩的回调，无论是否允许关闭都会触发
   open?: boolean // (v-model) 对话框是否可见，声明式用法下生效
-  to?: string | HTMLElement // 对话框 Teleport 挂载的节点，可选：元素标签名 (例如 'body') 或者元素本身
+  to?: string | MountElement // 对话框 Teleport 挂载的节点，可选：元素标签名 (例如 'body') 或者元素本身
 }
 // 声明组件插槽类型
 export interface DialogSlots {

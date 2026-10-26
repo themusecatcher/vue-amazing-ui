@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onScopeDispose, watch } from 'vue'
 import type { CSSProperties } from 'vue'
 import { formatNumber } from 'components/utils'
+import type { LiteralUnion } from 'components/utils/type'
 import { transition, TransitionPresets } from '@vueuse/core'
 import type { CubicBezierPoints, EasingFunction } from '@vueuse/core'
 // 缓动预设名，派生自 @vueuse/core 的 TransitionPresets，随上游自动同步
@@ -18,7 +19,9 @@ export interface Props {
   separator?: string // 千分位分隔符
   decimal?: string // 小数点字符
   valueStyle?: CSSProperties // 数值文本样式
-  easing?: EasingPreset | CubicBezierPoints | EasingFunction // 动画缓动曲线
+  // `LiteralUnion` 让编译器把 `String` 也写进运行时类型（`EasingPreset` 是 `keyof typeof` 派生类型，
+  // 无法推断会被丢弃，发布包中会把预设名字符串误判为非法值）；字面量补全不受影响
+  easing?: LiteralUnion<EasingPreset> | CubicBezierPoints | EasingFunction // 动画缓动曲线
 }
 const props = withDefaults(defineProps<Props>(), {
   from: 0,
@@ -49,7 +52,8 @@ function animate(from: number = props.from, to: number = props.to) {
   const { duration, easing } = props
   // 字符串形式的预置名需自行查表，vueuse 仅解析缓动函数与贝塞尔控制点
   // https://vueuse.org/core/useTransition/#usage
-  const resolvedEasing = typeof easing === 'string' ? TransitionPresets[easing] : easing
+  // 非预设名查表得到 undefined，vueuse 视为「未指定缓动」（退化为线性），不会抛错
+  const resolvedEasing = typeof easing === 'string' ? TransitionPresets[easing as EasingPreset] : easing
   transition(displayedValue, from, to, {
     duration,
     easing: resolvedEasing,

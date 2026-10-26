@@ -30,7 +30,7 @@ import {
   type PickerTimePanelProps,
   type PickerValue
 } from 'components/picker'
-import type { FloatingPlacement } from 'components/utils'
+import type { FloatingPlacement, MountElement } from 'components/utils'
 import { FLOATING_LAYER_Z_INDEX, useSlotsExist } from 'components/utils'
 /** 默认展示格式（24 小时制） */
 const DEFAULT_FORMAT = 'HH:mm:ss'
@@ -80,7 +80,7 @@ export interface Props {
   allowEmpty?: [boolean, boolean] // 范围形态各段是否允许为空，为空时该段可被单独清空并对外提交
   inputReadOnly?: boolean // 输入框是否只读（避免移动端唤起键盘）
   // 行为交互
-  to?: string | HTMLElement | false // 面板挂载的容器节点，不传时就近挂载到承载层内容容器
+  to?: string | MountElement | false // 面板挂载的容器节点，不传时就近挂载到承载层内容容器
   placement?: FloatingPlacement // 面板弹出位置
   // 范围形态的面板指示箭头：不传时跟随弹出方位（仅左侧对齐的 bottomLeft / topLeft 展示），
   // 传 true 始终展示、传 false 始终隐藏，仅范围形态生效

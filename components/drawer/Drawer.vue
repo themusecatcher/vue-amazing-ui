@@ -10,6 +10,7 @@ import {
   Z_INDEX_CONTAINER_OPEN_KEY,
   FLOATING_LAYER_Z_INDEX
 } from 'components/utils'
+import type { MountElement } from 'components/utils'
 
 // 主题转发：抽屉 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
 const teleportTheme = inject(THEME_TELEPORT_KEY, null)
@@ -41,7 +42,7 @@ export interface Props {
   contentWrapperStyle?: CSSProperties // 设置 Drawer 包裹内容部分的样式
   rootClassName?: string // 最外层容器的类名
   rootStyle?: CSSProperties // 最外层容器的样式
-  to?: string | HTMLElement | false // Drawer 挂载的节点，可选：元素标签名（如 'body'）、元素本身或 false（渲染在当前 DOM）
+  to?: string | MountElement | false // Drawer 挂载的节点，可选：元素标签名（如 'body'）、元素本身或 false（渲染在当前 DOM）
   zIndex?: number // 设置 Drawer 的 z-index；未传时使用默认层级 1000，或由 ConfigProvider 的 baseZIndex 分配
   open?: boolean // (v-model) 抽屉是否可见
   autofocus?: boolean // 抽屉展开后是否将焦点切换至其 DOM 节点

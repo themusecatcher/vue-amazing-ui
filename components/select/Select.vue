@@ -40,7 +40,7 @@ import {
   Z_INDEX_CONTAINER_OPEN_KEY,
   FLOATING_LAYER_Z_INDEX
 } from 'components/utils'
-import type { FloatingPlacement } from 'components/utils'
+import type { FloatingPlacement, MountElement } from 'components/utils'
 export interface Option {
   label?: string // 选项名
   value?: string | number // 选项值
@@ -138,7 +138,7 @@ export interface Props {
   // 面板定位与层级
   placement?: SelectPlacement // 下拉面板弹出位置
   flip?: boolean // 下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
-  to?: string | HTMLElement | false // 下拉面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
+  to?: string | MountElement | false // 下拉面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   popupClassName?: string // 下拉面板的类名，用于自定义面板样式
   dropdownMenuStyle?: CSSProperties // 下拉面板自定义样式，可覆盖定位（与 AutoComplete 的同名属性语义一致）
   dropdownMatchSelectWidth?: boolean | number // 下拉菜单和选择器同宽，为数字时指定下拉菜单宽度

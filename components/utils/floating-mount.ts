@@ -17,6 +17,22 @@ import type { ComputedRef } from 'vue'
  * 「子层必须在父层之上」冲突。
  */
 
+/**
+ * 挂载元素 / 挂载 Document 的类型替身
+ *
+ * 类型本身与 `HTMLElement` / `Document` 结构等价，仅用于 props 声明。不能直接写 `HTMLElement`：
+ * Vue 的 props 运行时类型只能由可映射类型（`String` / `Number` / `Boolean` / `Object` / `Array` /
+ * `Function` 等）推导，DOM 接口无法推断会被丢弃 —— 生产编译的产物没有 `skipCheck` 兜底，
+ * 发布包里 `to` 就只剩 `[String, Boolean]`、`listenTo` 只剩 `[String, Function]`，
+ * 使用方在开发环境传元素便误报 `Invalid prop: type check failed`。
+ * 用 `interface` 形态可让编译器产出 `Object` 分支（与 Vue 自身 `Teleport` 的 `to: [String, Object]` 同口径）。
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface MountElement extends HTMLElement {}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface MountDocument extends Document {}
+
 /** 承载层内容容器上的挂载点标记（属性存在即代表「此处可挂浮层」） */
 export const FLOATING_MOUNT_ATTR = 'data-va-floating-mount'
 

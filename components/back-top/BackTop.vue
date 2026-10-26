@@ -4,6 +4,7 @@ import type { CSSProperties, VNode } from 'vue'
 import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
 import Tooltip, { type TooltipProps } from 'components/tooltip'
 import { useSlotsExist, useOptionsSupported, getScrollParent, log } from 'components/utils'
+import type { MountDocument, MountElement } from 'components/utils'
 
 export interface Props {
   icon?: VNode | (() => VNode) // 自定义图标，支持 VNode / 渲染函数；插槽形态请用 #icon
@@ -16,8 +17,8 @@ export interface Props {
   right?: number | string // BackTop 距离页面右侧的宽度，单位 px
   zIndex?: number // 设置 BackTop 的 z-index
   visibilityHeight?: number // 滚动时触发显示回到顶部按钮的高度，单位 px
-  to?: string | HTMLElement // BackTop 渲染的容器节点，可选：CSS 选择器（例如 'body'）或者元素本身
-  listenTo?: string | HTMLElement | Document | (() => HTMLElement | Document) // 监听滚动的元素，如果为 undefined 会监听距离最近的一个可滚动的祖先节点；支持 CSS 选择器、元素、Document 或返回目标的函数
+  to?: string | MountElement // BackTop 渲染的容器节点，可选：CSS 选择器（例如 'body'）或者元素本身
+  listenTo?: string | MountElement | MountDocument | (() => HTMLElement | Document) // 监听滚动的元素，如果为 undefined 会监听距离最近的一个可滚动的祖先节点；支持 CSS 选择器、元素、Document 或返回目标的函数
 }
 // 声明组件插槽类型
 export interface BackTopSlots {

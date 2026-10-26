@@ -3,6 +3,7 @@ import { ref, computed, onBeforeUnmount, isVNode, watch, inject } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
 import { createKeyGenerator, renderContentToVNode, useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import type { MountElement } from 'components/utils'
 import type { MessageApi } from './useMessage'
 // 主题转发：消息 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
 const teleportTheme = inject(THEME_TELEPORT_KEY, null)
@@ -15,7 +16,7 @@ export interface Props {
   top?: string | number // 消息距离顶部的位置，单位 px
   maxCount?: number // 可同时存在的最大消息数，超出时淘汰最旧的一条
   keepAliveOnHover?: boolean // 鼠标移入时是否暂停自动关闭
-  to?: string | HTMLElement // 消息容器挂载的节点，可选：元素标签名 (例如 'body') 或者元素本身
+  to?: string | MountElement // 消息容器挂载的节点，可选：元素标签名 (例如 'body') 或者元素本身
 }
 const props = withDefaults(defineProps<Props>(), {
   duration: 3000,
