@@ -651,9 +651,8 @@ _组件级配置属性：设置在 `<LoadingBarProvider>` 上，透传给内部 
 | loadingBarStyle | 按状态自定义加载条样式，可选 `loading` / `finish` / `error`，取值为样式字符串或 [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | { loading?: string &#124; CSSProperties, finish?: string &#124; CSSProperties, error?: string &#124; CSSProperties } | undefined |
 | to | 加载条的挂载位置，可选：元素标签名（例如 `'body'`）或者元素本身，`false` 会待在原地 | string &#124; HTMLElement &#124; false | 'body' |
 
-> `colorLoading` / `colorFinish` 未显式传入时取主色，可用 `theme.components.LoadingBar.primaryColor` 单独覆盖。
->
-> `loadingBarStyle` 以内联样式作用于内层进度条：与 `loadingBarSize` / `colorLoading` / `colorFinish` / `colorError` 同属性冲突时以其为准；未提供 `finish` 时完成态回落 `loading`，未提供 `error` 时不注入。
+> - `colorLoading` / `colorFinish` 未显式传入时取主色，可用 `theme.components.LoadingBar.primaryColor` 单独覆盖。
+> - `loadingBarStyle` 以内联样式作用于内层进度条：与 `loadingBarSize` / `colorLoading` / `colorFinish` / `colorError` 同属性冲突时以其为准；未提供 `finish` 时完成态回落 `loading`，未提供 `error` 时不注入。
 
 ## Methods
 
