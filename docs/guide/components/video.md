@@ -132,7 +132,13 @@ const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/ultr
 
 ## 自定义视频封面和内容的缩放规则
 
-<Video :src="src" :poster="poster" fit="cover" />
+<Video
+  :src="src"
+  :poster="poster"
+  fit="cover"
+  width="100%"
+  height="56.25%"
+/>
 
 ::: details Show Code
 
@@ -143,7 +149,13 @@ const src = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/ultr
 const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/ultra.jpg')
 </script>
 <template>
-  <Video :src="src" :poster="poster" fit="cover" />
+  <Video
+    :src="src"
+    :poster="poster"
+    fit="cover"
+    width="100%"
+    height="56.25%"
+  />
 </template>
 ```
 
@@ -266,7 +278,13 @@ const poster = ref('https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/u
     <Button type="primary" @click="play">播放</Button>
     <Button @click="pause">暂停</Button>
   </Space>
-  <Video ref="video" :src="src" :poster="poster" />
+  <Video
+    ref="video"
+    :src="src"
+    :poster="poster"
+    width="100%"
+    height="56.25%"
+  />
 </Flex>
 
 ::: details Show Code
@@ -291,7 +309,13 @@ const pause = () => {
       <Button type="primary" @click="play">播放</Button>
       <Button @click="pause">暂停</Button>
     </Space>
-    <Video ref="video" :src="src" :poster="poster" />
+    <Video
+      ref="video"
+      :src="src"
+      :poster="poster"
+      width="100%"
+      height="56.25%"
+    />
   </Flex>
 </template>
 ```
