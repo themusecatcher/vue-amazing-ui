@@ -65,7 +65,7 @@ const backTopStyle = computed(() => {
   }
 })
 // 显隐状态同时驱动模板的 v-if：初始为 false 时不渲染，隐藏时由 <Transition> 播完离场动画再卸载。
-// 模板中不要再叠加 v-show —— Transition 只认 v-if，双指令并存时隐藏动画会退化为 v-show 直接 display:none
+// 模板中不要再叠加 v-show —— 两条指令各管一套显隐（v-show 直接改 display），离场动画会被跳过
 const backTopShow = computed(() => {
   return scrollTop.value >= props.visibilityHeight
 })

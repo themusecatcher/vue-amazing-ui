@@ -19,8 +19,7 @@ export interface Props {
   separator?: string // 千分位分隔符
   decimal?: string // 小数点字符
   valueStyle?: CSSProperties // 数值文本样式
-  // `LiteralUnion` 让编译器把 `String` 也写进运行时类型（`EasingPreset` 是 `keyof typeof` 派生类型，
-  // 无法推断会被丢弃，发布包中会把预设名字符串误判为非法值）；字面量补全不受影响
+  // 经 `LiteralUnion` 补 `String` 分支（见 components/utils/type.ts），否则发布包会把预设名误判为非法值
   easing?: LiteralUnion<EasingPreset> | CubicBezierPoints | EasingFunction // 动画缓动曲线
 }
 const props = withDefaults(defineProps<Props>(), {

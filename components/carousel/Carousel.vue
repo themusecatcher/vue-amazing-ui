@@ -44,8 +44,7 @@ export interface Props {
   fadeDuration?: number // 渐变动画持续时长，单位 ms，仅当 effect 为 'fade' 时生效
   fadeFunction?: string | [number, number, number, number] // 渐变动画函数，仅当 effect 为 'fade' 时生效，可传四个三次贝塞尔控制点（自动转为 cubic-bezier 写法）或 CSS transition-timing-function 写法：https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function
   slideDuration?: number // 滑动动画持续时长，单位 ms，仅当 effect 为 'slide' 时生效
-  // `LiteralUnion` 让编译器把 `String` 也写进运行时类型（`EasingPreset` 是 `keyof typeof` 派生类型，
-  // 无法推断会被丢弃，发布包中会把预设名字符串误判为非法值）；字面量补全不受影响
+  // 经 `LiteralUnion` 补 `String` 分支（见 components/utils/type.ts），否则发布包会把预设名误判为非法值
   slideFunction?: LiteralUnion<EasingPreset> | CubicBezierPoints | EasingFunction // 滑动动画函数，仅当 effect 为 'slide' 时生效，可传缓动预设名、三次贝塞尔控制点数组或缓动函数，参考 transition 写法：https://vueuse.org/core/useTransition/#usage
 }
 // 声明组件插槽类型
