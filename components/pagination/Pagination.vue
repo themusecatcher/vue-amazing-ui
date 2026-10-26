@@ -439,7 +439,6 @@ function onPageSizeChange(pageSize: number): void {
     }
   }
   .pagination-item-active {
-    // 选中样式：文字取 primary-text 语义位，描边仍取主色本身
     color: var(--va-cp-pagination-primary-text-color, var(--va-primary-text-color));
     border-color: var(--va-cp-pagination-primary-color, var(--va-primary-color));
   }

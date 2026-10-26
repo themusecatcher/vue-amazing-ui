@@ -409,28 +409,19 @@ provide<MenuContext>(menuContextKey, {
   --menu-inline-submenu-background: var(--va-fill-color-1);
 }
 .menu-dark {
-  /* 深色皮肤的底色由主色派生（主色色相 / 饱和度压到暗肤色阶）：换主题色时整块皮肤同步变色，
-     是否启用这套皮肤只由 `theme="dark"` 决定。取值链：组件级主色 > 全局种子 > 内置深蓝 */
   --menu-background: var(--va-cp-menu-dark-bg-color, var(--va-bg-brand-dark-color, #001529));
-  /* 浮层沿用同一底色，避免与根列表分层 */
   --menu-popup-background: var(--va-cp-menu-dark-bg-color, var(--va-bg-brand-dark-color, #001529));
   --menu-color: rgba(255, 255, 255, 0.65);
   --menu-border-color: rgba(255, 255, 255, 0.12);
   --menu-item-hover-color: #fff;
-  /* hover 底固定为白 alpha：这套皮肤本身是深蓝底，跟随主题 fill 档位时（浅色主题的 fill-2 是黑色叠加）
-     会把底色压得更暗，与「悬停提亮」的预期相反 */
   --menu-item-hover-background: rgba(255, 255, 255, 0.08);
   --menu-item-selected-color: #fff;
   --menu-item-selected-background: var(--va-menu-primary-color, var(--va-primary-color));
-  /* 水平菜单：深色改由主色填充表达选中，状态条宽度归零（沿用浅色那套下划线会与填充叠加） */
   --menu-horizontal-selected-background: var(--va-menu-primary-color, var(--va-primary-color));
   --menu-horizontal-active-bar-height: 0;
-  /* 深色既无状态条也无容器下边界，上移量随之归零 */
   --menu-horizontal-active-bar-border-size: 0px;
   --menu-item-danger-color: var(--va-error-color);
-  /* 危险项的悬浮字色：深色下提亮一阶 */
   --menu-item-danger-hover-color: var(--va-error-color);
-  /* 危险项按下 / 选中时的底色：深色下直接取错误色本身 */
   --menu-item-danger-active-background: var(--va-error-color);
   --menu-item-danger-selected-background: var(--va-error-color);
   --menu-item-disabled-color: rgba(255, 255, 255, 0.25);
@@ -493,7 +484,6 @@ provide<MenuContext>(menuContextKey, {
     0 9px 28px 8px rgba(0, 0, 0, 0.05);
 }
 .menu-tooltip-popup {
-  /* 折叠态气泡：与 Tooltip 同用「聚光底色」，卡片文案固定白色；用正文色会在暗色下变成白底白字 */
   --menu-tooltip-background: var(--va-bg-spotlight-color);
   width: max-content;
   pointer-events: none;
@@ -752,7 +742,6 @@ provide<MenuContext>(menuContextKey, {
   .menu-submenu-selected > .menu-submenu-title {
     color: var(--va-menu-item-selected-color, var(--menu-item-selected-color));
   }
-  /* 悬浮到标题本身：任何模式都铺悬浮底色（禁用态的排除见下方 `.menu-submenu-disabled`） */
   .menu-submenu:not(.menu-submenu-disabled) > .menu-submenu-title:hover {
     color: var(--menu-item-hover-color);
     background-color: var(--menu-item-hover-background);
@@ -894,7 +883,6 @@ provide<MenuContext>(menuContextKey, {
       content: '';
     }
   }
-  /* 顶层普通项：悬浮/激活/选中即点亮下划线 */
   > .menu-item {
     &:hover::after,
     &.menu-item-active::after,
@@ -902,7 +890,6 @@ provide<MenuContext>(menuContextKey, {
       border-bottom-color: var(--va-menu-item-selected-color, var(--menu-item-selected-color));
     }
   }
-  /* 顶层子菜单：悬浮/激活/展开/选中即点亮下划线 */
   > .menu-submenu {
     &:hover::after,
     &.menu-submenu-active::after,

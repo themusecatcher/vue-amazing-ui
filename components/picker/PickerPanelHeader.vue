@@ -89,11 +89,9 @@ const emits = defineEmits<{
       color: var(--va-text-color-1);
     }
   }
-  // 隐去的导航按钮保留自身占位：两个面板的头部因此结构相同，视图区落在同一水平位置
   .picker-panel-nav-hidden {
     visibility: hidden;
   }
-  // V 形箭头：7px 盒 + 1.5px 上 / 左边框，旋转 45° / 135°，随行内基线定位
   .picker-panel-nav-icon {
     position: relative;
     display: inline-block;
@@ -111,7 +109,6 @@ const emits = defineEmits<{
       border-top-width: 1.5px;
       border-left-width: 1.5px;
     }
-    // 「跨十年 / 跨年」用的双箭头：再叠一层并偏移半格
     &-super::after {
       position: absolute;
       top: 4px;
@@ -133,12 +130,9 @@ const emits = defineEmits<{
   }
   .picker-panel-view {
     flex: auto;
-    // 视图文字取浏览器默认按钮字号（13.3333px）：该按钮未声明字号，实际渲染即为该值，
-    // 此处取其视觉尺寸而非沿用面板的 14px
     font-size: 13.3333px;
     font-weight: 600;
     line-height: 40px;
-    // 视图切换按钮由各面板经视图插槽传进来，scoped 样式默认选不中插槽内容，须显式声明 :slotted
     :slotted(button) {
       padding: 0;
       font: inherit;

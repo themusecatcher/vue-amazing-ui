@@ -90,8 +90,6 @@ const pendingContent = computed(() => {
   --timeline-head-border-width: 3px;
   --timeline-line-width: 2px;
   --timeline-line-height: 22px;
-  // 内容上移补偿 = 行盒高 − 字号 − 1px 线宽修正：文字在行盒内垂直居中，不补偿会让首行比轴点低一截；
-  // 由行高派生而非写死，覆盖 --timeline-line-height 时内容、轴点、连线一起跟随；14px 须与下方 font-size 保持一致
   --timeline-content-offset: calc(var(--timeline-line-height, 22px) - 14px - 1px);
   --timeline-gap: 20px;
   --timeline-content-gap: 16px;
@@ -107,7 +105,6 @@ const pendingContent = computed(() => {
   gap: var(--timeline-gap);
   margin: 0;
   padding: 0;
-  // 内容区整体上移了补偿量，容器补同量上内边距：否则首行文字溢出上边界，与上方内容的间距被吃掉
   &:not(.timeline-horizontal) {
     padding-top: var(--timeline-content-offset);
   }
@@ -144,7 +141,6 @@ const pendingContent = computed(() => {
       flex-direction: row-reverse;
     }
   }
-  // 幽灵节点加载环：SVG 弧线，线宽与端点固定，避免小尺寸下被描边挤压变形
   .timeline-pending-dot {
     display: block;
     width: calc(var(--timeline-head-size) + 6px);
@@ -159,7 +155,6 @@ const pendingContent = computed(() => {
     transform: rotate(360deg);
   }
 }
-// 尊重系统的减少动效偏好，加载环改为静态
 @media (prefers-reduced-motion: reduce) {
   .timeline-wrap .timeline-pending-dot {
     animation: none;

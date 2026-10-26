@@ -323,8 +323,6 @@ onBeforeUnmount(() => {
 .slide-fade-move {
   transition: all 0.2s cubic-bezier(0.78, 0.14, 0.15, 0.86);
 }
-/* 进出各用一条曲线：进场「快出」（前段推进快、落位不拖沓），离场「两端收拢」（先慢后快、收起稳），
-   两条曲线互为反向；时长与缓动均取浮层族同款口径 */
 .slide-fade-enter-active,
 .slide-fade-leave-active {
   transition: all 0.2s;

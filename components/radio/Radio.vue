@@ -244,7 +244,6 @@ defineExpose({ focus, blur })
   </label>
 </template>
 <style lang="less" scoped>
-/* 原生 input 承载语义与键盘操作，视觉上隐藏且不参与鼠标命中，鼠标交互由外层容器承担 */
 .radio-input {
   position: absolute;
   width: 1px;
@@ -264,16 +263,13 @@ defineExpose({ focus, blur })
   cursor: pointer;
   color: var(--va-text-color-1);
   font-size: 14px;
-  /* 行高落在容器上、由选项名继承：行内为该行指定行高时（如定高行内混排控件），文字与控件才能对齐同一基线 */
   line-height: 1.5714285714285714;
-  /* 零宽行内伪元素参与基线对齐：容器被指定固定高度（如逐项内联 height）时，圆点与文字仍对齐于同一基线 */
   &::after {
     display: inline-block;
     width: 0;
     overflow: hidden;
     content: '\a0';
   }
-  /* 键盘聚焦走 :focus-visible（input 的 focus 事件同步置位 .radio-focused，双路径兜底）；脚本调用 focus() 不匹配该伪类，由容器自身的 .radio-focused 兜底显示焦点环 */
   .radio-input:focus-visible + .radio-handle,
   &.radio-focused .radio-handle {
     box-shadow: 0 0 0 2px var(--va-cp-radio-focus-shadow, var(--va-focus-shadow));
@@ -285,10 +281,10 @@ defineExpose({ focus, blur })
   }
   .radio-handle {
     /*
-      如果所有项目的flex-shrink属性都为1，当空间不足时，都将等比例缩小
-      如果一个项目的flex-shrink属性为0，其他项目都为1，则空间不足时，前者不缩小。
+      如果所有项目的 flex-shrink 属性都为 1，当空间不足时，都将等比例缩小
+      如果一个项目的 flex-shrink 属性为 0，其他项目都为 1，则空间不足时，前者不缩小。
     */
-    flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
+    flex-shrink: 0; // 默认 1 即空间不足时，项目将缩小
     align-self: center;
     position: relative;
     width: 16px;
@@ -316,7 +312,6 @@ defineExpose({ focus, blur })
       transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
       content: '';
     }
-    /* 选中扩散外环：1.6 倍外扩的描边环，扩散同时淡出（按钮形态仍沿用光晕） */
     .radio-wave {
       box-sizing: border-box;
       animation-duration: 0.3s;
@@ -339,7 +334,6 @@ defineExpose({ focus, blur })
       }
     }
   }
-  /* 悬停时环可见：点击导致的选中必然伴随悬停，日常表现与直接播放一致 */
   &:hover .radio-handle .wave-active {
     visibility: visible;
   }
@@ -372,7 +366,6 @@ defineExpose({ focus, blur })
 }
 .radio-button-wrap {
   position: relative;
-  /* 行内块：脱离组单独使用时按内容宽度呈现；置于组内时为 flex item，宽度仍由组分配 */
   display: inline-block;
   height: 32px;
   padding-inline: 15px;
@@ -387,20 +380,17 @@ defineExpose({ focus, blur })
   transition:
     all 0.2s,
     box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  /* 焦点环经 .radio-focused 显示：键盘聚焦与脚本 focus() 在 input 的 focus / focus() 内置位，鼠标按下撤销——与圆点形态同口径（鼠标点击不显示焦点环；:focus-within 不区分聚焦来源，弃用） */
   &.radio-focused {
     z-index: 1;
     border-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
     box-shadow: 0 0 0 2px var(--va-cp-radio-focus-shadow, var(--va-focus-shadow));
   }
   &:first-child {
-    /* 只恢复左边框宽度：颜色由基类 border 简写提供，聚焦 / 选中态的 border-color 方能作用到左边框（写成 border-left 简写会与之同特异性且更晚，把左边框颜色改写死） */
     border-left-width: 1px;
     border-start-start-radius: 6px;
     border-end-start-radius: 6px;
   }
   &:not(:first-child) {
-    /* 置入组内时抵消组的水平间距，相邻按钮的边框才能贴合为一条；组外由 0px 兜底 */
     margin-inline-start: calc(-1 * var(--radio-group-button-overlap, 0px));
   }
   &:not(:first-child):not(.radio-button-single)::before {
@@ -425,7 +415,6 @@ defineExpose({ focus, blur })
   }
 }
 .radio-button-single {
-  /* 同 :first-child：仅恢复宽度，颜色交给基类与聚焦 / 选中态 */
   border-left-width: 1px;
   border-radius: 6px;
 }
@@ -438,7 +427,6 @@ defineExpose({ focus, blur })
     background-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
   }
 }
-/* 选中态 hover：文字 / 边框 / 相邻分隔线统一转为浅一档主色 */
 .radio-button-wrap.radio-button-checked:not(.radio-button-disabled):hover {
   color: var(--va-cp-radio-primary-color-hover, var(--va-primary-color-hover));
   border-color: var(--va-cp-radio-primary-color-hover, var(--va-primary-color-hover));
@@ -446,7 +434,6 @@ defineExpose({ focus, blur })
     background-color: var(--va-cp-radio-primary-color-hover, var(--va-primary-color-hover));
   }
 }
-/* 选中态按下：主色深一档 */
 .radio-button-wrap.radio-button-checked:not(.radio-button-disabled):active {
   color: var(--va-cp-radio-primary-color-active, var(--va-primary-color-active));
   border-color: var(--va-cp-radio-primary-color-active, var(--va-primary-color-active));
@@ -467,13 +454,11 @@ defineExpose({ focus, blur })
   color: var(--va-text-color-solid);
   background-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
   border-color: var(--va-cp-radio-primary-color, var(--va-primary-color));
-  /* 选中态 hover：实心底色浅一档 */
   &:hover {
     color: var(--va-text-color-solid);
     background-color: var(--va-cp-radio-primary-color-hover, var(--va-primary-color-hover));
     border-color: var(--va-cp-radio-primary-color-hover, var(--va-primary-color-hover));
   }
-  /* 选中态按下：实心底色深一档 */
   &:active {
     color: var(--va-text-color-solid);
     background-color: var(--va-cp-radio-primary-color-active, var(--va-primary-color-active));

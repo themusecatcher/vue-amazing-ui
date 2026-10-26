@@ -123,7 +123,6 @@ provide(checkboxGroupContextKey, {
   display: inline-flex;
   flex-wrap: wrap;
   gap: var(--checkbox-group-gap);
-  // 组内栅格：Row 默认 width: auto，作为 flex item 会按内容收缩，撑满组宽后 Col 的 span 百分比才有基准
   :deep(> .grid-row-wrap) {
     flex: 1;
   }

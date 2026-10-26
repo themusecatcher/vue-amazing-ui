@@ -219,15 +219,11 @@ defineExpose({ handleKeydown })
   </DatePanel>
 </template>
 <style lang="less" scoped>
-// 日期时间形态：日期与时间两列并排，面板宽度随内容自适应（日期 280 + 时间列 168 + 两列间分隔线 1）
 .picker-panel.picker-datetime-panel {
   width: auto;
-  // 日期列与时间列之间的分隔线由时间面板的左边框提供
   .picker-time-panel {
     border-left: 1px solid var(--va-border-split-color);
   }
-  // 键盘操作期间非活动列淡化（活动列保持原透明度）。时间面板由本组件渲染，作用域样式可直接命中；
-  // 日期列的透明度由其自身承载（其内部节点不在本组件的样式作用域内）
   &.picker-datetime-panel-active {
     .picker-time-panel {
       opacity: 0.3;
@@ -247,13 +243,8 @@ defineExpose({ handleKeydown })
   list-style: none;
   > li {
     display: inline-block;
-    // 面板就地渲染（`to` 默认 false）会落在宿主文档的内容区内，宿主会给相邻 li 补外边距（如
-    // VitePress 的 `.vp-doc li + li`），使「确定」相对「此刻」下沉；此处归零，间距由本组件自行掌控
     margin: 0;
   }
-  // 隐藏「此刻」时底部只剩「确定」，靠自身外边距顶到行尾；
-  // 高度取页脚行高（display: flex 后行高不再参与内在高度，不声明则页脚矮 10px），
-  // 弹性居中补偿按钮根节点为 inline-block div 的基线偏移（原生 button 按基线排布即居中）
   .picker-panel-ok {
     display: flex;
     align-items: center;
@@ -262,7 +253,6 @@ defineExpose({ handleKeydown })
   }
 }
 .picker-panel-now-btn {
-  // 同 `.picker-panel-today-btn`：还原被宿主文档链接样式接管的字重与下划线
   color: var(--picker-primary-color, var(--va-primary-color));
   font-weight: normal;
   text-decoration: none;

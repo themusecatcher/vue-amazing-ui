@@ -15,7 +15,6 @@ defineSlots<LayoutContentSlots>()
 <style lang="less" scoped>
 .layout-content-wrap {
   flex: auto;
-  // Firefox 无法把 flex item 的高度压到内容高度以下，需显式清掉最小高度
   min-height: 0;
 }
 </style>

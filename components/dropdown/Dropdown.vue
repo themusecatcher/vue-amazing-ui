@@ -448,9 +448,7 @@ onBeforeUnmount(() => {
   width: max-content;
   outline: none;
   font-size: 14px;
-  // 箭头元素边缘距面板对齐边的距离
   --dropdown-arrow-edge: 6px;
-  // 箭头槽位：仅在渲染箭头时按主轴方向保留
   &.dropdown-has-arrow.va-popup-placement-top,
   &.dropdown-has-arrow.va-popup-placement-topLeft,
   &.dropdown-has-arrow.va-popup-placement-topRight {
@@ -461,20 +459,17 @@ onBeforeUnmount(() => {
   &.dropdown-has-arrow.va-popup-placement-bottomRight {
     padding-top: 12px;
   }
-  /* 菜单皮肤：背景 / 圆角 / 阴影 / 内边距 */
   .dropdown-content {
     padding: 4px;
     color: var(--va-text-color-1);
     background-color: var(--va-bg-elevated-color);
     background-clip: padding-box;
     border-radius: 8px;
-    // 卡片不继承触发器的 cursor（按钮、链接都是 pointer）
     cursor: auto;
     box-shadow: var(--va-popup-shadow);
   }
   .dropdown-arrow {
     position: absolute;
-    /* 必须绘制在菜单盒**之上**：菜单盒自带向下扩散的 box-shadow，若箭头置于其下会被阴影染出一条暗带 */
     z-index: 9;
     display: block;
     pointer-events: none;
@@ -493,10 +488,6 @@ onBeforeUnmount(() => {
       );
       content: '';
     }
-    /* 圆角与外投影层：与 ::before 的圆角三角拼成完整箭头。
-       ⚠️ 必须显式给出 bottom / left / right —— 只写 width / height 时绝对定位会退回**静态位置**
-       （箭头盒左上角），投影跑到左上角后被 overflow 裁出一条「重影」；z-index 用 0，
-       与 ::before 同处一个绘制层级、按源码顺序覆盖上去 */
     &::after {
       position: absolute;
       bottom: 0;
@@ -513,8 +504,6 @@ onBeforeUnmount(() => {
       content: '';
     }
   }
-  /* 主轴几何：方向类由 <Popup> 宿主落在面板上（值取 actualPlacement 的对外命名），零 JS 箭头运算。
-     面板为箭头预留 12px 槽位，箭头与菜单盒**相切（不重叠）** —— 重叠会让浅色拼接处显出一条更深的线 */
   &.va-popup-placement-top .dropdown-arrow,
   &.va-popup-placement-topLeft .dropdown-arrow,
   &.va-popup-placement-topRight .dropdown-arrow {
@@ -527,7 +516,6 @@ onBeforeUnmount(() => {
     top: 12px;
     transform: translateY(-100%);
   }
-  /* 次轴对齐：无后缀为居中（主轴规则已给 translate，此处只补水平居中）；Left 贴左、Right 贴右 */
   &.va-popup-placement-top .dropdown-arrow,
   &.va-popup-placement-bottom .dropdown-arrow {
     left: 50%;
@@ -546,7 +534,6 @@ onBeforeUnmount(() => {
   &.va-popup-placement-bottomRight .dropdown-arrow {
     right: var(--dropdown-arrow-edge);
   }
-  /* 菜单项列表（通用：主菜单与子菜单共用） */
   .dropdown-menu {
     margin: 0;
     padding: 0;
@@ -566,7 +553,6 @@ onBeforeUnmount(() => {
     line-height: 22px;
     transition: all 0.3s;
   }
-  // 组内子项左右各留 8px，配合项自身水平内边距形成相对标题的缩进
   .dropdown-menu-group-list {
     margin: 0 8px;
     padding: 0;
@@ -612,7 +598,6 @@ onBeforeUnmount(() => {
       animation: dropdown-spin 1s linear infinite;
     }
   }
-  // 子菜单展开图标
   .dropdown-menu-item-arrow {
     position: absolute;
     top: 50%;
@@ -637,13 +622,10 @@ onBeforeUnmount(() => {
       background-color: var(--va-error-color);
     }
   }
-  // 为右侧展开箭头留出空间
   .dropdown-menu-item-submenu > .dropdown-menu-item-content {
     padding-right: 24px;
   }
 }
-/* 子菜单面板：无箭头槽位，故自身即菜单盒（皮肤直接落在面板上）。
-   宽度纯由内容决定，不设 min-width */
 .dropdown-submenu-overlay {
   padding: 4px;
   background-color: var(--va-bg-elevated-color);
@@ -656,9 +638,6 @@ onBeforeUnmount(() => {
     transform: rotate(360deg);
   }
 }
-/* 主面板动画：slide（仅纵向缩放，像卷帘展开）。关键帧只动 scale（独立变换属性）与 opacity ——
-   定位写在内核的独立属性 `translate` 上（复合链最外层，不受缩放影响）；缩放原点由内核按实际方向
-   给出（始终落在靠近触发器的一侧）。 */
 .dropdown-slide-enter,
 .dropdown-slide-leave {
   animation-duration: var(--dropdown-transition-duration);

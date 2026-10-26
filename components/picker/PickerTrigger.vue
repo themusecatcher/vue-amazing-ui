@@ -287,12 +287,10 @@ defineExpose({ focus, blur })
   line-height: 1;
   border: 1px solid var(--va-border-color);
   border-radius: 6px;
-  // 内边距一并过渡：尺寸切换时内边距（0 / 4px / 6.5px）不参与过渡会让整块在首帧瞬跳，故统一为全程平滑
   transition:
     border 0.2s,
     box-shadow 0.2s,
     padding 0.2s;
-  // 指针样式交还浏览器默认：触发器空白区为箭头，文本输入区为文本光标
   cursor: auto;
   &:hover {
     border-color: var(--picker-primary-color-hover, var(--va-primary-color-hover));
@@ -313,7 +311,6 @@ defineExpose({ focus, blur })
       cursor: not-allowed;
     }
   }
-  // 逐段禁用：被禁用的那一段单独取「不可用」光标（整体禁用时由上方规则统一覆盖）
   .picker-trigger-input-inner:disabled {
     cursor: not-allowed;
   }
@@ -331,7 +328,6 @@ defineExpose({ focus, blur })
       border-color: var(--va-error-color);
       box-shadow: 0 0 0 2px var(--va-error-bg-color);
     }
-    // 范围激活条随状态取色：与边框同色，否则校验态下红框配蓝线会割裂
     .picker-trigger-range-active-bar {
       background: var(--va-error-color);
     }
@@ -345,7 +341,6 @@ defineExpose({ focus, blur })
       border-color: var(--va-warning-color);
       box-shadow: 0 0 0 2px var(--va-warning-bg-color);
     }
-    // 同上：范围激活条与状态边框同色
     .picker-trigger-range-active-bar {
       background: var(--va-warning-color);
     }
@@ -367,7 +362,6 @@ defineExpose({ focus, blur })
       background: transparent;
       border: 0;
       outline: none;
-      // 尺寸切换时宽度 / 行高 / 字号随过渡变化
       transition: all 0.2s;
       &::placeholder {
         color: var(--va-text-color-disabled);
@@ -378,11 +372,9 @@ defineExpose({ focus, blur })
       }
     }
   }
-  // 展示预览文本（悬浮面板日期时该段的临时值）的段取提示色
   .picker-trigger-input-placeholder .picker-trigger-input-inner {
     color: var(--va-text-color-disabled);
   }
-  // 范围形态：两段输入等宽并排，段间为分隔箭头，两段可分别聚焦
   .picker-trigger-range-item {
     display: inline-flex;
     flex: auto;
@@ -395,21 +387,16 @@ defineExpose({ focus, blur })
     display: flex;
     flex: none;
     align-items: center;
-    // 图标 16px + 左右各 8px 内边距：两段之间的间距因此为 32px
     padding: 0 8px;
     font-size: 16px;
     color: var(--va-text-color-disabled);
     line-height: 1;
-    // 段间距随尺寸切换过渡，与输入框的过渡保持同一节奏
     transition: all 0.2s;
   }
-  // 激活段下划线：位置与宽度按激活段测量，仅在聚焦 / 展开时可见
-  // 定位基准取触发器根：bottom 贴住底边框，而非浮在输入区下方
   .picker-trigger-range-active-bar {
     position: absolute;
     bottom: -1px;
     height: 2px;
-    // 圆角为观感优化：直角在大尺寸下显得生硬，加 2px 与面板的圆角语言一致
     border-radius: 2px;
     background: var(--picker-primary-color, var(--va-primary-color));
     opacity: 0;
@@ -421,7 +408,6 @@ defineExpose({ focus, blur })
   &.picker-trigger-focused .picker-trigger-range-active-bar {
     opacity: 1;
   }
-  // 清除按钮与后缀图标同槽位：常驻 DOM 且不占流，以外底色盖住后缀，避免悬浮时触发器宽度跳动
   .picker-trigger-clear {
     position: absolute;
     top: 50%;

@@ -241,8 +241,6 @@ const tooltipBindings = computed(() => {
 .float-btn-wrap {
   position: fixed;
   left: var(--float-btn-left);
-  // 页面滚动锁：右对齐偏移叠加被回收的滚动条宽度（属性单位约定为 px），锁定期间位置与锁定前一致；
-  // 左对齐时 --float-btn-right 为空值，本声明计算失败回退 right: auto，与原先取值一致
   right: calc(var(--float-btn-right) + var(--va-scrollbar-width, 0px));
   top: var(--float-btn-top);
   bottom: var(--float-btn-bottom);
@@ -263,8 +261,6 @@ const tooltipBindings = computed(() => {
       width: 100%;
       height: 100%;
     }
-    // 徽标容器上提一层：有提示时位于 content 层内，无提示时直接是 .float-btn-tooltip 的子元素，
-    // 上提后两种结构共用同一份尺寸与角标定位
     :deep(.badge-wrap) {
       vertical-align: top;
       width: 100%;
@@ -324,7 +320,6 @@ const tooltipBindings = computed(() => {
   }
 }
 .float-btn-default {
-  // 暗色下容器色（#141414）与页面底几乎同色，故按钮取抬升表面色避免「融进」背景
   background-color: var(--va-bg-elevated-color);
   transition: background-color 0.2s;
   & > .float-btn-tooltip {

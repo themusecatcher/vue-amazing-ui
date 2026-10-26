@@ -621,8 +621,6 @@ defineExpose({
 .tooltip-content {
   display: inline-block;
 }
-/* 卡片是插槽内容、由本组件编译（带本组件 scope id），故皮肤留在 scoped 即可；
-   只有 `<Popup>` 宿主编译的面板壳与箭头（scope id 属宿主）才必须走全局块 */
 .tooltip-card {
   min-width: 32px;
   max-width: var(--tooltip-max-width);
@@ -639,8 +637,6 @@ defineExpose({
     0 6px 16px 0 var(--va-shadow-color),
     0 3px 6px -4px rgba(0, 0, 0, 0.12),
     0 9px 28px 8px rgba(0, 0, 0, 0.05);
-  /* 卡片不继承触发器的 cursor（FloatButton 的按钮、Table 表头都是 pointer）：
-     Teleport 到 body 时本就不受影响，就地渲染（to: false）时依赖此规则 */
   cursor: auto;
   svg {
     fill: currentColor;
@@ -657,8 +653,6 @@ defineExpose({
 .tooltip-card-container {
   width: max-content;
   outline: none;
-  /* 箭头槽：仅在渲染箭头时按实际方向保留。
-     方向类由 `<Popup>` 宿主落在面板上，复合方向（如 topLeft）归入其主轴方向 */
   &.tooltip-has-arrow.va-popup-placement-top,
   &.tooltip-has-arrow.va-popup-placement-topLeft,
   &.tooltip-has-arrow.va-popup-placement-topRight {
@@ -681,8 +675,6 @@ defineExpose({
   }
   .tooltip-arrow {
     position: absolute;
-    /* 必须绘制在卡片**之上**：卡片自带向下扩散的 box-shadow，若箭头置于其下会被阴影染出一条暗带。
-       拼接处（相切）的淡色细缝由内核把浮层位置取整到整数像素消除，此处无需重叠补偿 */
     z-index: 9;
     display: block;
     pointer-events: none;
@@ -719,15 +711,7 @@ defineExpose({
       content: '';
     }
   }
-  // 复合方向箭头次轴对齐：--tooltip-arrow-edge = 箭头中心距卡片边(13px) - 箭头视觉半宽(8px)
   --tooltip-arrow-edge: 5px;
-  // 主轴槽位：面板为箭头预留的距离，箭头与卡片**相切（不重叠）**
-  // 说明：重叠会让半透明背景两层叠加，在拼接处显出一条更深的线，故不做重叠补偿；
-  // 相切时卡片边缘可能落在亚像素上，露出的淡色细缝由内核消除 —— 浮层最终位置取整到整数像素，
-  // 使卡片背景边缘与箭头边缘落在同一像素边界上（见 utils/position.ts 的 snapTranslate）
-  // 主轴几何：由 `<Popup>` 宿主落在面板上的方向类驱动（值取 actualPlacement 的对外命名），零 JS 箭头运算
-  // 复合方向归入其主轴：如 topLeft / topRight 与 top 共用「贴面板下边缘」的几何
-  // 主轴 top：箭头贴面板下边缘
   &.va-popup-placement-top .tooltip-arrow,
   &.va-popup-placement-topLeft .tooltip-arrow,
   &.va-popup-placement-topRight .tooltip-arrow {
@@ -834,10 +818,6 @@ defineExpose({
     transform: translateX(-100%) translateY(0) rotate(-90deg);
   }
 }
-/* 缩放动画：关键帧只动 scale（独立变换属性）与 opacity —— 内核的定位写在独立属性 `translate` 上
-   （复合链最外层，不受缩放影响），keyframes 改写 `transform` 会覆盖使用者传入的内联 transform。
-   缩放原点由面板的内联 transform-origin 给出；离开动画期间的指针事件由宿主 Popup 统一禁用
-   （宿主自持 `va-popup-leaving` 状态，皮肤层无需再声明 pointer-events） */
 .tooltip-zoom-enter,
 .tooltip-zoom-leave {
   animation-duration: var(--tooltip-transition-duration);

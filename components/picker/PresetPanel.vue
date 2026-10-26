@@ -45,7 +45,6 @@ function onPresetLeave() {
   </div>
 </template>
 <style lang="less" scoped>
-// 预设侧栏：贴面板左侧，宽度随内容（120-200px），条目单行省略、超长时侧栏内部滚动
 .picker-presets {
   display: flex;
   flex: none;
@@ -53,7 +52,6 @@ function onPresetLeave() {
   min-width: 120px;
   max-width: 200px;
   ul {
-    // height 0 + flex auto：高度交给同一行的面板决定，条目过多时在侧栏内滚动
     flex: auto;
     height: 0;
     margin: 0;
@@ -68,7 +66,6 @@ function onPresetLeave() {
   padding-inline: 8px;
   overflow: hidden;
   color: var(--va-text-color-1);
-  // 侧栏内容一律左对齐：面板本体是 `text-align: center`（日期格居中），预设条目不该跟着居中
   text-align: left;
   white-space: nowrap;
   text-overflow: ellipsis;

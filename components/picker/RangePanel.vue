@@ -316,14 +316,12 @@ defineExpose({ handleKeydown })
   </PickerPanel>
 </template>
 <style lang="less" scoped>
-// 容器宽度随面板展开（内层日期面板各自 280px / 日期时间面板更宽），不能沿用单选面板的固定 280px
 .picker-panel.picker-range-panel-layout {
   width: auto;
 }
 .picker-range-panels {
   display: flex;
 }
-// 面板外观（圆角 / 阴影 / 裁切）由外层容器统一提供，内层面板只保留头部与内容
 .picker-range-panel.picker-panel {
   border-radius: 0;
   box-shadow: none;

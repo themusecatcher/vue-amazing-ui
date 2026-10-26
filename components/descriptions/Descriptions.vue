@@ -373,7 +373,6 @@ const rows = computed<CellData[][]>(() => {
 </template>
 <style lang="less" scoped>
 .descriptions-wrap {
-  // 尺寸相关内边距用 CSS 变量承载，避免用 !important 覆盖基础规则
   --descriptions-item-padding-bottom: 16px;
   --descriptions-bordered-padding: 16px 24px;
   font-size: 14px;
@@ -415,13 +414,10 @@ const rows = computed<CellData[][]>(() => {
     > .descriptions-item,
     > .descriptions-item-label,
     > .descriptions-item-content {
-      // 重置 vitepress 等外部环境对 th / td 的边框与背景入侵（.vp-doc th/td 默认带 1px 边框），
-      // 保证无边框模式干净；带边框模式的 border-right 与标签底色在其后声明，优先级相同故会正常覆盖
       border: none;
       background: transparent;
       padding: 0 0 var(--descriptions-item-padding-bottom);
       vertical-align: top;
-      // 尺寸（size）切换时内边距平滑过渡，避免 default / middle / small 之间生硬跳变
       transition: padding 0.3s;
     }
   }
@@ -445,7 +441,6 @@ const rows = computed<CellData[][]>(() => {
       top: -0.5px;
       margin-inline: 2px 8px;
     }
-    // 关闭冒号时仅清空内容，保留标签后的间距，否则标签与内容会粘连在一起
     &.descriptions-item-no-colon::after {
       content: '';
     }
@@ -457,7 +452,6 @@ const rows = computed<CellData[][]>(() => {
     word-break: break-word;
     overflow-wrap: break-word;
   }
-  // 仅无边框水平模式的内容容器需要弹性布局，避免影响 th / td 的表格单元格语义
   .descriptions-item-container {
     display: flex;
     > .descriptions-item-label,
@@ -494,11 +488,9 @@ const rows = computed<CellData[][]>(() => {
     }
     .descriptions-item-label,
     .descriptions-item-content {
-      // 简写内边距覆盖基础规则的 padding-bottom
       padding: var(--descriptions-bordered-padding);
       border-right: 1px solid var(--va-border-split-color);
       display: table-cell;
-      // 边框模式下内容垂直居中，覆盖基础规则中为非边框模式设置的 top
       vertical-align: middle;
       &:last-child {
         border-right: none;
@@ -506,11 +498,8 @@ const rows = computed<CellData[][]>(() => {
     }
     .descriptions-item-label {
       font-weight: normal;
-      // 标签底色取最淡一档中性叠加（fill-color-4）；
-      // 用 fill-color-1 会比内容区亮一档，暗色下尤其明显
       background-color: var(--va-fill-color-4);
       &::after {
-        // 边框模式不显示冒号
         display: none;
       }
     }

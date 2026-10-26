@@ -1239,7 +1239,6 @@ emits('ready', { open: openDialog, destroyAll })
   inset: 0;
   overflow: hidden;
   outline: 0;
-  // 容器本身不接收点击，避免拦截未被遮罩 / 弹窗覆盖区域的交互
   pointer-events: none;
 }
 .dialog-layer {
@@ -1256,7 +1255,6 @@ emits('ready', { open: openDialog, destroyAll })
   inset: 0;
   width: 100%;
   height: 100%;
-  // 遮罩不能跟随正文色：暗色下 --va-text-color-3 是白色，会变成白蒙层
   background: var(--va-mask-color);
   pointer-events: auto; // 遮罩可见时接收点击（遮罩关闭 / 阻断背景交互）
 }
@@ -1281,7 +1279,6 @@ emits('ready', { open: openDialog, destroyAll })
     flex-direction: column;
     position: relative;
     outline: none;
-    // 对话框是浮层：底取 elevated，暗色下与页面容器拉开层级
     background-color: var(--va-bg-elevated-color);
     border-radius: 8px;
     box-shadow: var(--va-popup-shadow);
@@ -1296,7 +1293,6 @@ emits('ready', { open: openDialog, destroyAll })
       background: transparent;
       border-radius: 8px 8px 0 0;
       margin-bottom: 8px;
-      // 显示右上角按钮时为标题预留空间，避免被按钮遮挡
       &.header-with-close {
         max-width: calc(100% - 24px);
       }
@@ -1350,7 +1346,6 @@ emits('ready', { open: openDialog, destroyAll })
     .fullscreen-action {
       right: 48px;
     }
-    // 无关闭按钮时全屏按钮补位到关闭按钮的位置，避免右侧留出空档
     .fullscreen-action.fullscreen-only {
       right: 18px;
     }

@@ -54,23 +54,16 @@ function onPanelMousedown(event: MouseEvent): void {
   flex-direction: column;
   box-sizing: border-box;
   width: 280px;
-  // 字号：面板属「浮层面板」容器，文字规格由面板自身给定 —— 面板根按项目正文基准声明默认字号
-  // （见 development/component-design.md §字体口径），面板内自绘文本一律继承此值。
-  // 不声明则会跟随宿主页面字号：文档站 `html` 为 16px（面板整体被放大），而演示站被 `Row` / `Col`
-  // 的 14px 压住，同一组件在两处呈现不同字号
   font-size: 14px;
   text-align: center;
   background: var(--picker-panel-bg-color, var(--va-bg-elevated-color));
-  // 面板自身不画边框：外边界由圆角 + 阴影提供，overflow 负责裁掉内容在圆角处的溢出
   border-radius: 8px;
   outline: none;
   box-shadow: var(--va-popup-shadow);
   overflow: hidden;
-  // 行布局：预设侧栏与主体列并排（无侧栏时主体列独占整宽，观感与单列无异）
   .picker-panel-body {
     display: flex;
   }
-  // 列布局：主体内容在上、页脚在下
   .picker-panel-main {
     display: flex;
     flex: 1 1 auto;
@@ -84,23 +77,17 @@ function onPanelMousedown(event: MouseEvent): void {
     text-align: center;
     border-top: 1px solid var(--va-border-split-color);
   }
-  // 额外页脚左对齐（与居中的操作行区分），水平内边距与面板头部 / 内容一致；
-  // 纵向用 flex 居中承载用户内容：内容多为按钮（本库 Button 根为 inline-flex），
-  // 若沿用行盒基线对齐，按钮会被压在行盒基线上、在页脚内偏高（实测顶部 5px / 底部 10px）
   .picker-panel-footer-extra {
     display: flex;
     align-items: center;
-    // 高度沿用行盒口径（页脚行高 38px 含内联内容时实测行盒 39px），保持与操作行同一行高
     min-height: 39px;
     padding: 0 8px;
     text-align: start;
-    // 之后还有操作行时补一道分隔线，额外页脚落在页脚末尾则不补（避免底部多出一道线）
     &:not(:last-child) {
       border-bottom: 1px solid var(--va-border-split-color);
     }
   }
 }
-// 预设侧栏存在时宽度交给内容（侧栏 + 主体）
 .picker-panel.picker-panel-has-presets {
   width: auto;
 }

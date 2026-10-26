@@ -985,7 +985,6 @@ defineExpose({ focus, blur })
 </template>
 <style lang="less" scoped>
 .datepicker-wrap {
-  // 行内弹性容器：未传 width 时收缩为内容宽，不被父容器拉伸
   display: inline-flex;
   width: var(--datepicker-width, auto);
   :deep(.picker-trigger) {
@@ -993,19 +992,15 @@ defineExpose({ focus, blur })
     min-width: 0;
   }
 }
-/* 范围形态的面板指示箭头：left 按激活段给定（宿主经 PickerTrigger 测量后下发），
-   几何与 Tooltip 的箭头同构（浮层箭头的几何由各皮肤层自行实现）*/
 .datepicker-range-arrow {
   position: absolute;
   top: 0;
   z-index: 1;
   width: 16px;
   height: 16px;
-  // 取触发器水平内边距的 1.5 倍
   margin-left: 16.5px;
   overflow: hidden;
   pointer-events: none;
-  // 面板在触发器下方：贴上边缘并向上突出（尖朝上）
   transform: translateY(-100%);
   transition: left 0.3s ease-out;
   &::before {
@@ -1034,7 +1029,6 @@ defineExpose({ focus, blur })
     width: 8.970562748477143px;
     height: 8.970562748477143px;
     margin: auto;
-    // 只延续投影：置于三角形之下，压在三角形之上会把浅色箭头染灰
     z-index: -1;
     background: transparent;
     border-radius: 0 0 2px 0;
@@ -1052,7 +1046,6 @@ defineExpose({ focus, blur })
   width: max-content;
   outline: none;
 }
-/* 面板在触发器上方时指示箭头翻转向下（方向类由 <Popup> 落在面板节点上，故此处留在全局） */
 .va-popup-placement-top .datepicker-range-arrow,
 .va-popup-placement-topLeft .datepicker-range-arrow,
 .va-popup-placement-topRight .datepicker-range-arrow {
@@ -1060,15 +1053,9 @@ defineExpose({ focus, blur })
   bottom: 0;
   transform: translateY(100%) rotate(180deg);
 }
-/* 收起过程中选中格直接落色：收起时容器会被隐藏一帧，令选中格的 0.2s 过渡被浏览器取消，
-   故此处显式复刻该观感（仅收起期间抑制格子过渡；面板保持展开时选中/悬浮过渡照常）。
-   多带一层 .picker-panel-body 是为了稳定压过日期格 scoped 规则里的过渡声明（同特异性下不依赖源码顺序） */
 .datepicker-panel-container.va-popup-leaving .picker-panel-body .picker-panel-cell-inner {
   transition: none;
 }
-/* 展开 / 收起的缩放原点由 <Popup> 按实际方位写在面板上（面板在下方从自身顶边展开、在上方从自身底边展开），
-   故这里只保留一条与方位无关的动效：
-   按方位取名会让首帧取到兜底方向（实际方位到插入首帧才回填），首次展开方向就反了 */
 .datepicker-zoom-enter-active,
 .datepicker-zoom-leave-active {
   animation-duration: 0.2s;
@@ -1086,8 +1073,6 @@ defineExpose({ focus, blur })
 .datepicker-zoom-leave-to {
   opacity: 0;
 }
-/* 关键帧只驱动 transform 与 opacity：缩放原点由 <Popup> 按方位写在面板元素上，
-   写进关键帧会覆盖元素上的取值，上下两个方位就都按同一个原点了 */
 @keyframes datepickerZoomIn {
   0% {
     opacity: 0;

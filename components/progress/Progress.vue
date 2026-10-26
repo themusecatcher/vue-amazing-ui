@@ -339,10 +339,10 @@ const showSuccess = computed(() => {
   }
   .progress-text {
     /*
-      如果所有项目的flex-shrink属性都为1，当空间不足时，都将等比例缩小
-      如果一个项目的flex-shrink属性为0，其他项目都为1，则空间不足时，前者不缩小。
+      如果所有项目的 flex-shrink 属性都为 1，当空间不足时，都将等比例缩小
+      如果一个项目的 flex-shrink 属性为 0，其他项目都为1，则空间不足时，前者不缩小。
     */
-    flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
+    flex-shrink: 0; // 默认 1 即空间不足时，项目将缩小
     min-width: 40px;
     font-size: var(--progress-font-size);
     padding-left: 8px;

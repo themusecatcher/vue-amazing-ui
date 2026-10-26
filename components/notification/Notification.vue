@@ -640,7 +640,6 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
     overflow: hidden;
     line-height: 1.5714285714285714;
     word-break: break-word;
-    // 通知是浮层：底取 elevated，暗色下才不会与页面同色
     background: var(--va-bg-elevated-color);
     border-radius: 8px;
     box-shadow: var(--va-popup-shadow);

@@ -197,7 +197,6 @@ defineExpose({ focus, blur })
   </label>
 </template>
 <style lang="less" scoped>
-/* 原生 input 承载语义与键盘操作，视觉上隐藏；鼠标交互由外层 label 的转发行为承担 */
 .checkbox-input {
   position: absolute;
   width: 1px;
@@ -224,7 +223,6 @@ defineExpose({ focus, blur })
     overflow: hidden;
     content: '\a0';
   }
-  /* 键盘聚焦走 :focus-visible（input 的 focus 事件同步置位 .checkbox-focused，双路径兜底）；脚本调用 focus() 不匹配该伪类，由容器自身的 .checkbox-focused 兜底显示焦点环 */
   .checkbox-input:focus-visible + .checkbox-box,
   &.checkbox-focused .checkbox-box {
     box-shadow: 0 0 0 2px var(--va-cp-checkbox-focus-shadow, var(--va-focus-shadow));
@@ -233,7 +231,6 @@ defineExpose({ focus, blur })
     .checkbox-box {
       border-color: var(--va-cp-checkbox-primary-color, var(--va-primary-color));
     }
-    /* 选中态 hover：底色浅一档、边框转透明，由实心色块铺满整块 */
     .checkbox-checked {
       background-color: var(--va-cp-checkbox-primary-color-hover, var(--va-primary-color-hover));
       border-color: transparent;
@@ -241,10 +238,10 @@ defineExpose({ focus, blur })
   }
   .checkbox-box {
     /*
-      如果所有项目的flex-shrink属性都为1，当空间不足时，都将等比例缩小
-      如果一个项目的flex-shrink属性为0，其他项目都为1，则空间不足时，前者不缩小。
+      如果所有项目的 flex-shrink 属性都为 1，当空间不足时，都将等比例缩小
+      如果一个项目的 flex-shrink 属性为 0，其他项目都为1，则空间不足时，前者不缩小。
     */
-    flex-shrink: 0; // 默认 1.即空间不足时，项目将缩小
+    flex-shrink: 0; // 默认 1 即空间不足时，项目将缩小
     align-self: center;
     position: relative;
     width: 16px;
@@ -307,7 +304,6 @@ defineExpose({ focus, blur })
   /* 悬停时环可见：点击导致的选中必然伴随悬停，日常表现与直接播放一致 */
   &:hover .checkbox-box .wave-active {
     visibility: visible;
-    /* 悬停中选中时环随选中底色一起提亮 */
     border-color: var(--va-cp-checkbox-primary-color-hover, var(--va-primary-color-hover));
   }
   .checkbox-checked {
@@ -347,7 +343,6 @@ defineExpose({ focus, blur })
       animation-name: none;
     }
   }
-  /* 半选禁用：实心小方块随禁用态去饱和，与禁用文字同色 */
   .checkbox-indeterminate::after {
     background-color: var(--va-text-color-disabled);
   }

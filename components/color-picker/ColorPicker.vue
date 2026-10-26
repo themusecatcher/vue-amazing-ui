@@ -1178,7 +1178,6 @@ function onClear() {
         position: relative;
         cursor: pointer;
         touch-action: none;
-        // 空值态不可交互的轨道（alpha）回落为默认箭头，避免误示「可拖动」
         &.slider-empty {
           cursor: default;
         }
@@ -1356,17 +1355,11 @@ function onClear() {
   border-top: 1px solid var(--va-border-split-color);
   padding: 8px 12px;
 }
-/* 外壳：透传属性（含 style）的落点，也是浮层锚点与外点判定范围。
-   外壳只作编程式聚焦落点（Esc 收起后回焦），故不绘制浏览器默认焦点环 ——
-   聚焦指示由内部可交互元素（.color-picker-display）承担 */
 .color-picker {
   display: inline-block;
   outline: none;
-  /* 自定义触发器内容由使用者传入，外壳给出本组件默认字号（正文基准 14px），不依赖宿主继承；
-     内置触发器的文本字号由 .color-picker-value 按尺寸档位覆盖 */
   font-size: 14px;
 }
-/* 自定义触发器形态：随内容自适应宽度，并避开行盒支柱把块级触发器（如色块圆点）顶偏 */
 .color-picker-custom-trigger {
   display: inline-flex;
   outline: none;
@@ -1383,9 +1376,6 @@ function onClear() {
       border-color: var(--va-cp-color-picker-primary-color-hover, var(--va-primary-color-hover));
     }
   }
-  /* 聚焦视觉与库内 Input 同构：边框转主色 + 2px 浅色阴影环；
-     展开期间焦点已交给面板容器（键盘 / 读屏需要），故以 aria-expanded 复用同一套视觉，
-     让「点击展开」也保持与聚焦一致的反馈 */
   &:not(.color-picker-disabled):focus,
   &[aria-expanded='true'] {
     .color-picker-wrap {
@@ -1487,12 +1477,8 @@ function onClear() {
 .color-picker-panel-container {
   width: 240px;
   padding: 0;
-  /* 字号：面板属「浮层面板」容器，由面板根声明正文基准字号（见 development/component-design.md §字体口径）。
-     不声明则面板内自绘文本会跟随宿主页面字号（文档站 `html` 为 16px），模式标签与页脚被整体放大 */
   font-size: 14px;
   color: var(--va-text-color-1);
-  // 面板是浮层：底取 elevated，
-  // 既避免写死 #fff 造成暗色白底白字，也保证与容器（#141414）拉开层级
   background-color: var(--va-bg-elevated-color);
   border-radius: 4px;
   box-shadow:
@@ -1501,8 +1487,6 @@ function onClear() {
     0 9px 28px 8px rgba(0, 0, 0, 0.05);
   outline: none;
 }
-/* 展开 / 收起的缩放原点由 <Popup> 按实际方位写在面板上，故这里只保留一条与方位无关的动效：
-   按方位取名会让首帧取到兜底方向（实际方位到插入首帧才回填），首次展开方向就反了 */
 .color-picker-zoom-enter-active,
 .color-picker-zoom-leave-active {
   animation-duration: 0.2s;
@@ -1520,8 +1504,6 @@ function onClear() {
 .color-picker-zoom-leave-to {
   opacity: 0;
 }
-/* 关键帧只驱动 transform 与 opacity：缩放原点由 <Popup> 写在面板元素上，
-   写进关键帧会覆盖元素上的取值；起始缩放 0.9 与「展开 ease-out / 收起 ease-in」为同一套过渡参数 */
 @keyframes colorPickerZoomIn {
   0% {
     opacity: 0;

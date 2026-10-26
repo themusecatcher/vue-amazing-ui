@@ -267,10 +267,6 @@ onBeforeUnmount(clearDelayTimer)
   </div>
 </template>
 <style lang="less" scoped>
-/*
-  指示符的进出场淡入淡出：.spin-container 隐藏态为 display: none，只能靠 <Transition> 的过渡类驱动；
-  离场期间补 pointer-events 拦截，避免透明的遮罩层在淡出过程中挡住内容区的点击。
-*/
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s;
@@ -283,7 +279,6 @@ onBeforeUnmount(clearDelayTimer)
   pointer-events: none;
 }
 .spin-wrap {
-  // 尺寸只声明「数据」（默认即 middle，故只需覆盖 small / large 两块）；布局与派生计算全局只写一份
   --spin-dot-box: 30px; // dot（四点闪烁）的轮盘边长
   --spin-dot-size: 11px; // dot 的单点直径
   --spin-points-box: 30px; // dot-wheel（八点轮）的轮盘边长
@@ -293,16 +288,9 @@ onBeforeUnmount(clearDelayTimer)
   --spin-ring-size: 36px; // ring-circle / ring-rail 的直径
   --spin-dynamic-size: 38px; // dynamic-circle 的直径
   --spin-magic-size: 36px; // magic-ring 的直径
-  // 翻转双环环宽沿用 spinCircleWidth 百分比口径（占指示符宽度），三档尺寸按比例派生，无需分档声明
   --spin-magic-border-width: calc(var(--spin-magic-size) * var(--spin-circle-width) / 100);
-  // 内环相对外环的内缩量：目标是与外环内缘相切（两环紧贴且不叠压）。border 宽度按整数像素向下取整
-  // （如 4.68px 实渲染 4px），定位偏移却按亚像素四舍五入（3.68px → 4px）—— 回退 0.5px 令两者落在同一
-  // 整数网格上：三档实测均「相接、零重叠」；叠压会让后绘制的内环压住外环内缘，浅色内环即盖出亮线
   --spin-magic-inset: calc(var(--spin-magic-border-width) - 0.5px);
-  // 侧视（|cosθ| 最小）时的投影宽度：前后两段环带正好重叠 → 2 倍环宽。再减 1.5px 冗余抵消 border
-  // 取整（最多损失 1px），否则左右边框填不满、中间露出细缝（侧视裂成两条平行线）；下界收敛已保证该值 ≥ 1px
   --spin-magic-narrow-width: calc(var(--spin-magic-border-width) * 2 - 1.5px);
-  // 翻转双环自转周期：自转与翻面按 5 : 3 配比（默认即 2.5s : 1.5s），并随 speed 同步缩放，避免陀螺姿态漂移
   --spin-magic-rotate-duration: calc(var(--spin-speed) * 5 / 3);
   --spin-tip-font-size: 14px;
   --spin-tip-font-weight: 500;
@@ -315,8 +303,6 @@ onBeforeUnmount(clearDelayTimer)
   display: flex;
   align-items: center;
   justify-content: center;
-  // 宽度贴合内容：内容窄于父容器时，把根节点收缩到内容宽度，遮罩与指示符才以内容为中心
-  // （遮罩与指示符均以根节点盒子为基准，故基准必须等于内容盒）；max-width 兜底「内容本身宽于父容器」
   &.spin-fit-content {
     width: fit-content;
     max-width: 100%;
@@ -334,18 +320,10 @@ onBeforeUnmount(clearDelayTimer)
     .spin-box {
       text-align: center;
       line-height: 0;
-      // 自定义指示符：尺寸与配色由传入内容自身决定，此处只负责定位；行高需还原，
-      // 否则内容（图标 / 文本）会被 .spin-box 的 line-height: 0 一并抹平
       .spin-indicator {
         display: inline-block;
         line-height: normal;
       }
-      /*
-        离散点阵族（dot / dot-wheel / line-wheel）的统一模型：点轮 / 线轮的「旋转」并非元素在移动，
-        而是亮度波峰沿固定位置循环 —— 故位置（角度）与相位（时间）同源于索引 k，步长成对声明：
-          角度 = 角步长 × (k - 1)    相位延迟 = -周期 × 相位步长 × (k - 1)
-        一层 DOM 即可生成 N 个均匀元素，位置与相位天然对齐，无需分层拼接与补偿。
-      */
       .spin-points-box {
         position: relative;
         display: inline-block;
@@ -355,7 +333,6 @@ onBeforeUnmount(clearDelayTimer)
           position: absolute;
           top: 50%;
           left: 50%;
-          // 先按自身尺寸居中，再绕盒子中心旋转到自身角度，最后沿该角度外推到半径处
           transform: translate(-50%, -50%) rotate(calc(var(--spin-points-angle) * (var(--spin-point-index) - 1)))
             translateY(calc(-1 * var(--spin-points-radius)));
           background-color: var(--spin-primary-color);
@@ -365,15 +342,11 @@ onBeforeUnmount(clearDelayTimer)
           animation: spinTrace var(--spin-speed) linear infinite;
           animation-delay: calc(-1 * var(--spin-speed) * var(--spin-points-phase) * (var(--spin-point-index) - 1));
         }
-        // dot：四点整体旋转 + 逐点延迟闪烁（与点轮 / 线轮的「相位扫过」模型不同）
         &.spin-points-dot {
           --spin-points-angle: 90deg;
-          // √2/2：正方形四角到中心的距离
           --spin-points-radius: calc((var(--spin-dot-box) - var(--spin-dot-size)) * 0.7071);
           width: var(--spin-dot-box);
           height: var(--spin-dot-box);
-          // 四点分布在内切正方形的四角：45° + 四角 ≡ 0° + 上下左右（两种表达逐帧等价），
-          // 故容器只需旋转一整圈，点的角度完全由索引给出
           animation: spinDotRotate 1.2s linear infinite;
           .point {
             width: var(--spin-dot-size);
@@ -384,9 +357,7 @@ onBeforeUnmount(clearDelayTimer)
             animation-delay: calc((var(--spin-point-index) - 1) * 0.4s);
           }
         }
-        // dot-wheel：八点等距成轮，亮度梯度沿圆周扫过
         &.spin-points-dot-wheel {
-          // 角度与相位成对反向：负延迟令相位「超前」，故角度取负，亮度波峰才沿顺时针移动
           --spin-points-angle: -45deg;
           --spin-points-phase: 0.125;
           --spin-points-radius: calc((var(--spin-points-box) - var(--spin-points-size)) * 0.7071);
@@ -397,12 +368,9 @@ onBeforeUnmount(clearDelayTimer)
             border-radius: 50%;
           }
         }
-        // line-wheel：八条轮辐等距成轮且沿半径指向外，亮度梯度沿圆周扫过
         &.spin-points-line-wheel {
           --spin-points-angle: -45deg; // 同 dot-wheel：角度与相位成对反向，保证波峰顺时针移动
           --spin-points-phase: 0.125;
-          // 线中心位于半径 = 线长处 → 线自身覆盖 L/2 ~ 1.5L（与外层盒半径 1.5L 对齐）：
-          // 内端不触及圆心，整体成「中空环带」
           --spin-points-radius: var(--spin-line-length);
           --spin-points-fade-step: 0.0875; // 同 dot-wheel：静态兜底与动画首帧一致
           width: calc(var(--spin-line-length) * 3);
@@ -448,7 +416,6 @@ onBeforeUnmount(clearDelayTimer)
             stroke-dashoffset: 0;
             stroke: var(--spin-primary-color);
             stroke-linecap: round;
-            // 弧长完全由动画呈现，故减弱动态效果时禁用动画，让其静态弧长（上方 stroke-dasharray）生效
             animation: loadingDash 1.5s ease-in-out infinite;
             @keyframes loadingDash {
               0% {
@@ -472,8 +439,6 @@ onBeforeUnmount(clearDelayTimer)
           transform: rotate(360deg);
         }
       }
-      // 「扫过」波形：线性单调递减（1 → 0.3，与原实现的最暗点一致）；
-      // 配合逐点负延迟，形成沿圆周移动的亮度梯度
       @keyframes spinTrace {
         0% {
           opacity: 1;
@@ -482,7 +447,6 @@ onBeforeUnmount(clearDelayTimer)
           opacity: 0.3;
         }
       }
-      // dot：整体旋转 + 单点闪烁
       @keyframes spinDotRotate {
         100% {
           transform: rotate(360deg);
@@ -505,12 +469,6 @@ onBeforeUnmount(clearDelayTimer)
             transform: rotate(405deg);
           }
         }
-        /*
-          绕轴翻面用投影宽度表达：投影 = 满宽 × |cosθ|。平面圆环在 90° 处会压成零宽直线（纸片翻面、
-          彻底消失），故宽度保底 2 倍环宽 —— 前后两段环带侧视正好重叠，呈现有厚度的侧壁而不塌成细线
-          （冗余抵消 border 取整见 --spin-magic-narrow-width）；最窄区间显式声明为平台（20.5%～29.5% 周期），
-          模拟「厚度被托住」的停留。
-        */
         .outer-ring,
         .inner-ring {
           position: absolute;
@@ -520,7 +478,6 @@ onBeforeUnmount(clearDelayTimer)
           border-style: solid;
           border-width: var(--spin-magic-border-width);
           border-radius: 50%;
-          // 宽度收窄时仍以外环圆心为中心，保证内环与外环同心
           transform: translateX(-50%);
           animation: spinMagicRingFlip var(--spin-speed) linear infinite;
         }
@@ -530,12 +487,10 @@ onBeforeUnmount(clearDelayTimer)
           border-color: var(--spin-primary-color);
         }
         .inner-ring {
-          // 向内缩进至外环内缘（--spin-magic-inset），四面同量：两环紧贴且同心
           top: var(--spin-magic-inset);
           height: calc(100% - var(--spin-magic-inset) * 2);
           --spin-magic-full-width: calc(100% - var(--spin-magic-inset) * 2);
           border-color: var(--spin-magic-ring-color);
-          // 与外环错开 45° 相位（即 1/8 周期）：任一时刻总有一环处于非侧视姿态，避免两环同时压成线条
           animation-delay: calc(var(--spin-speed) / -8);
         }
         @keyframes spinMagicRingFlip {
@@ -590,7 +545,6 @@ onBeforeUnmount(clearDelayTimer)
     pointer-events: none;
   }
 }
-// 尺寸覆盖：只改数据，不改逻辑
 .spin-wrap.spin-small {
   --spin-dot-box: 20px;
   --spin-dot-size: 8px;
@@ -621,13 +575,6 @@ onBeforeUnmount(clearDelayTimer)
   --spin-tip-margin-top: 16px;
   --spin-dot-tip-margin-top: 22px;
 }
-/*
-  系统「减弱动态效果」：一次性关闭全部动画，静态形态由各元素的基础样式决定 ——
-  点阵族为逐点亮度梯度、dynamic-circle 为静态弧长、圆环与翻转双环为静止图形。
-  选择器与上方动画规则同深度，以便在声明顺序上稳定覆盖；
-  动画名必须写在 CSS 里（不能用 JS 注入的变量）：scoped 会把 @keyframes 重命名为 `名字-<hash>`，
-  变量值不会被重写，会让 animation-name 指向不存在的动画而静默失效。
-*/
 @media (prefers-reduced-motion: reduce) {
   .spin-wrap .spin-container .spin-box {
     .spin-points-box .point,
@@ -644,7 +591,6 @@ onBeforeUnmount(clearDelayTimer)
       animation: none;
     }
   }
-  // 进出场淡入淡出同属动效，一并关闭（指示符改为瞬时出现 / 消失）
   .fade-enter-active,
   .fade-leave-active {
     transition: none;

@@ -273,9 +273,7 @@ defineExpose({ handleKeydown })
   flex-direction: column;
   width: auto;
   min-width: auto;
-  // 键盘操作期间在 0.3 / 1 之间切换透明度（见 `.picker-datetime-panel` 的淡化规则）
   transition: opacity 0.3s;
-  // 头部只展示已选时间的文本、不带导航按钮，故不复用面板头部的导航结构
   .picker-time-panel-header {
     display: flex;
     padding: 0 8px;
@@ -283,9 +281,6 @@ defineExpose({ handleKeydown })
     border-bottom: 1px solid var(--va-border-split-color);
     .picker-time-panel-view {
       flex: auto;
-      // 头部恒定占一行：草稿为空时头部文本为空串，内部没有行盒会让 `line-height` 失效、头部塌成 1px，
-      // 时间列随即顶到面板顶边、与日期列表体错位。此处由 `min-height` 撑出这一行盒，
-      // 头部因此恒为 41px（40 + 1px 下边框），与日期列头部对齐。
       min-height: 40px;
       font-weight: 600;
       line-height: 40px;

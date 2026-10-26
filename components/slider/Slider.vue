@@ -858,11 +858,6 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
   </div>
 </template>
 <style lang="less" scoped>
-/* 手柄气泡显示态：悬浮（hover 规则）/ 拖动 / 聚焦 / tooltipOpen 共用，避免多处重复声明。
-   各落点必须用**复合选择器**建立确定性优先级：显示态与基础隐藏态落在同一个气泡元素上，
-   单类写法只能靠「谁声明在后」决胜（见 .slider-handle 内的调用点）
-   ⚠️ 显示态只切换视觉（opacity / scale），**不**恢复指针事件：气泡是滑块的后代，一旦可点击，
-   `pointerdown` 会冒泡到 `.slider-wrap` 被当作「点击轨道」而改值。 */
 .tooltip-visible-state() {
   opacity: 1;
   scale: 1;
@@ -946,8 +941,6 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
   }
   .slider-handle {
     // 滑块
-    /* 定位盒固定 10px、不随交互变化：气泡是手柄的绝对定位子元素，参照盒（padding box）一旦
-       随 hover / focus 放大，气泡便会整体漂移。故把「圆点 + 光环」这层视觉交由 ::after 承载 */
     position: absolute;
     width: 10px;
     height: 10px;
@@ -1005,16 +998,12 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       padding: 6px 8px;
       height: 32px;
       font-size: 14px;
-      /* 气泡是反色浮层：暗色底 #424242 + 实色底上的白字。
-         旧实现用「正文色的反色」当底，暗色下会变成纯白气泡，与全局暗色皮肤相反 */
       color: var(--va-slider-tooltip-color, var(--va-text-color-solid));
       line-height: 20px;
       text-align: center;
       border-radius: 6px;
       background: var(--va-slider-tooltip-bg-color, var(--va-bg-spotlight-color));
       box-shadow: var(--va-popup-shadow);
-      // 气泡不接收指针事件：否则点击气泡会冒泡到 .slider-wrap
-      // 触发「点击轨道改值」，悬浮气泡还会把 hover 态传导给滑块
       pointer-events: none;
       user-select: none;
       outline: none;
@@ -1024,11 +1013,8 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
         scale 0.2s cubic-bezier(0.4, 0, 0.2, 1),
         opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       .slider-tooltip-arrow {
-        /* 箭头尺寸：元素尺寸与「贴到气泡外的偏移」共用同一变量，避免两处硬编码 */
         --slider-arrow-size: 16px;
         position: absolute;
-        /* 必须绘制在气泡**之上**：气泡自带 box-shadow，若箭头置于其下会被阴影染出一条暗带。
-           拼接处（相切）的淡色细缝由内核把浮层位置取整到整数像素消除，此处无需重叠补偿 */
         z-index: 9;
         display: block;
         pointer-events: none;
@@ -1058,17 +1044,11 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
           border-radius: 0 0 2px 0;
           transform: translateY(50%) rotate(-135deg);
           box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.1);
-          /* 置于三角形**之下**：这层只负责延续投影，若压在三角形之上会把浅色箭头染成灰色 */
           z-index: -1;
           background: transparent;
           content: '';
         }
       }
-      /* 方向几何：由气泡上的方向类（`slider-tooltip-{top|bottom|left|right}`，值取内核输出）驱动，
-         零 JS 箭头运算。四条规则读法一致 ——「沿该边居中」= 该轴 `50%` + `translate` 回退自身一半；
-         「整块贴到该边外侧」= 该边负偏移一个箭头尺寸；「尖端朝向」= 把「尖朝上」的箭头
-         旋转 90° 的整数倍（top 180° / bottom 0° / left 90° / right -90°）。
-         形状与 Tooltip 的箭头同源，仅贴边距离不同：气泡没有「箭头槽」，箭头紧贴气泡边缘相切 */
       &.slider-tooltip-top .slider-tooltip-arrow {
         left: 50%;
         bottom: calc(var(--slider-arrow-size) * -1);
@@ -1094,13 +1074,9 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
         rotate: -90deg;
       }
     }
-    /* 常显态（tooltipOpen）与拖动 / 聚焦态：复合选择器比基础隐藏态 `.slider-tooltip` 多一个
-       类级成分，靠**特异性**压过它（与下方 `&:hover .slider-tooltip` 同为一类 + 伪类/多类，
-       且两者声明值一致），不再依赖「谁声明在后」 */
     .slider-tooltip.slider-tooltip-visible {
       .tooltip-visible-state();
     }
-    // 悬浮手柄时显示气泡（拖动 / 聚焦由状态类承担，两者取并集）
     &:hover .slider-tooltip {
       .tooltip-visible-state();
     }

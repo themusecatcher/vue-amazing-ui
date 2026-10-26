@@ -260,9 +260,7 @@ function getResponsiveCollapsedWidth(collapsedWidth: LayoutSiderResponsive) {
 <style lang="less" scoped>
 .layout-sider-wrap {
   position: relative;
-  // Firefox 无法把 flex item 的宽度压到内容宽度以下，需显式清掉最小宽度
   min-width: 0;
-  // 纵向弹性布局：内容区自适应剩余高度、触发器在侧边栏高度内占位（不额外撑高侧边栏）
   display: flex;
   flex-direction: column;
   background: var(--layout-sider-background, #001529);
@@ -284,16 +282,12 @@ function getResponsiveCollapsedWidth(collapsedWidth: LayoutSiderResponsive) {
   }
 }
 .layout-sider-children {
-  // 自适应剩余高度：触发器存在时自动让出 48px（无需再用 padding 预留）
   flex: 1 1 auto;
-  // Firefox 无法把 flex item 的高度压到内容高度以下，需显式清掉最小高度
   min-height: 0;
-  // 规避首个子元素 margin 折叠后露出的 0.1px 缝隙
   margin-top: -0.1px;
   padding-top: 0.1px;
 }
 .layout-sider-zero-width {
-  // 零宽时兜住自定义内容的横向溢出（零宽触发器为绝对定位，不受影响）
   > * {
     overflow: hidden;
   }
@@ -340,7 +334,6 @@ function getResponsiveCollapsedWidth(collapsedWidth: LayoutSiderResponsive) {
   border-end-start-radius: 6px;
 }
 .layout-sider-trigger {
-  // sticky 相对滚动容器贴底（整页滚动时即为视口底），flex: none 使其在侧边栏高度内占位
   position: sticky;
   bottom: 0;
   z-index: 1;

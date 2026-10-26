@@ -384,7 +384,6 @@ watch(
 .fade-leave-active {
   transition: opacity 0.3s;
 }
-// 遮罩的离场终点也落在 leave-active 上，与面板位移同步开始，避免遮罩比面板晚两帧才淡出
 .fade-enter-from,
 .fade-leave-active {
   opacity: 0;
@@ -403,7 +402,6 @@ watch(
   .drawer-mask {
     position: absolute;
     inset: 0;
-    // 遮罩不能跟随正文色：暗色下 --va-text-color-3 是白色，会变成白蒙层
     background: var(--va-mask-color);
     pointer-events: auto;
   }
@@ -414,7 +412,6 @@ watch(
       width: 100%;
       height: 100%;
       overflow: auto;
-      // 抽屉是浮层：底取 elevated，暗色下与页面容器拉开层级
       background: var(--va-drawer-bg-color, var(--va-bg-elevated-color));
       pointer-events: auto;
       .drawer-body-wrapper {
@@ -430,8 +427,6 @@ watch(
           font-size: 16px;
           line-height: 1.5;
           border-bottom: 1px solid var(--va-drawer-header-border-color, var(--va-border-split-color));
-          // 标题文字节点复用了同名类 header-title，若不用直接子选择器限定，flex 会一并命中内层文字节点，
-          // 使其变成 flex 容器（子项按 justify-content 排列），headerStyle 的 text-align 随之失效、标题无法居中
           > .header-title {
             display: flex;
             flex: 1;
@@ -484,8 +479,6 @@ watch(
       }
     }
   }
-  // 面板阴影落在自己的遮罩上，而不是页面底板上：遮罩暗色下已是 rgba(0,0,0,0.45) 的深色叠加，
-  // 再用随模式加深的 --va-shadow-color（暗色 0.45）当基色，会在面板与遮罩交界处叠出一条更黑的带。
   .drawer-top {
     top: 0;
     left: 0;
@@ -522,8 +515,6 @@ watch(
       3px 0 6px -4px rgba(0, 0, 0, 0.12),
       9px 0 28px 8px rgba(0, 0, 0, 0.05);
   }
-  // 面板位移动画：enter 起点与 leave 终点分别落在 enter-from / leave-active 上；
-  // transition: none 须置于 active 规则之后，才能覆盖常驻 transition，保证 enter 起始态不产生过渡
   .motion-top-enter-active,
   .motion-right-enter-active,
   .motion-bottom-enter-active,

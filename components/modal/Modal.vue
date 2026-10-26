@@ -1139,7 +1139,6 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
   inset: 0;
   width: 100%;
   height: 100%;
-  // 遮罩不能跟随正文色：暗色下 --va-text-color-3 是白色，会变成白蒙层
   background: var(--va-mask-color);
   pointer-events: auto;
 }
@@ -1179,8 +1178,6 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
       outline: none;
       word-break: break-word;
       padding: 20px 24px;
-      // 浮层底取 elevated：暗色下它比容器（#141414）提亮一档（#1f1f1f），
-      // 否则弹窗与页面同色，只能靠阴影分层，而阴影在暗底上几乎不可见
       background-color: var(--va-modal-bg-color, var(--va-bg-elevated-color));
       border-radius: 8px;
       max-width: 100%;

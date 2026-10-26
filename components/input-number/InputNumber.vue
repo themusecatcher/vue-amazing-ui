@@ -270,7 +270,6 @@ function onDown(): void {
     }
   }
   &:focus-within {
-    // 聚焦态：边框取悬停档主色（与 hover 同色），阴影取焦点环
     border-color: var(--va-cp-input-number-primary-color-hover, var(--va-primary-color-hover));
     box-shadow: var(--va-cp-input-number-focus-shadow, var(--va-focus-shadow));
   }
@@ -366,7 +365,6 @@ function onDown(): void {
     border-color: var(--va-border-color);
   }
   &:focus-within {
-    // 激活时样式
     border-color: var(--va-border-color);
     box-shadow: none;
   }

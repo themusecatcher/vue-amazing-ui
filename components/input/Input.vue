@@ -272,7 +272,6 @@ function onPassword(): void {
 .input-wrap {
   width: var(--input-width);
   text-align: start;
-  /* 基线对齐：与原生 input 同口径，行内与文字混排时按基线参与行盒计算（取 top 会连带压低行盒基线） */
   position: relative;
   display: inline-table;
   border-collapse: separate;
@@ -314,7 +313,6 @@ function onPassword(): void {
     line-height: 1.5714285714285714;
     position: relative;
     display: inline-flex;
-    /* 基线对齐：本层基线决定 inline-table 解析出的基线，取 top 会使整条基线链偏低 1px */
     width: 100%;
     min-width: 0;
     background-color: var(--va-input-bg-color, var(--va-bg-container-color));
@@ -345,7 +343,6 @@ function onPassword(): void {
       border: 1px solid var(--va-cp-input-primary-color-hover, var(--va-primary-color-hover));
     }
     .input-focus {
-      /* 聚焦态：边框取悬停档主色（非主色本身），阴影取焦点环 */
       border: 1px solid var(--va-cp-input-primary-color-hover, var(--va-primary-color-hover));
       box-shadow: var(--va-cp-input-focus-shadow, var(--va-focus-shadow));
     }
@@ -372,8 +369,6 @@ function onPassword(): void {
       text-overflow: ellipsis;
       transition: all 0.2s;
     }
-    /* 浏览器自动填充（Chrome / Safari / Edge）：UA 会强制注入黄 / 蓝底与黑字，暗色下直接破功。
-       inset 阴影覆盖 UA 底色；autofill 状态下 `color` 无效，必须用 -webkit-text-fill-color 覆盖 */
     .input-item:-webkit-autofill,
     .input-item:-webkit-autofill:hover,
     .input-item:-webkit-autofill:focus {

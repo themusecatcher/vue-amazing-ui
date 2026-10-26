@@ -821,22 +821,16 @@ function onNext() {
   </PickerPanel>
 </template>
 <style lang="less" scoped>
-// 日期时间形态：日期列与时间列并排，两列各带自己的头部，头部导航因此只覆盖日期列而非整个面板
-// 形态类由 `DatetimePanel` 透传到面板根上，须与之一致
 .picker-datetime-panel {
   .picker-date-panel-body {
     display: flex;
   }
 }
-// 日期列固定 280px（日期 / 周 / 月 / 季 / 年 / 十年各视图共用）：面板宽度改由内容决定时（如带预设侧栏）不收缩
 .picker-date-panel-main {
   flex: none;
   width: 280px;
-  // 键盘操作期间在 0.3 / 1 之间切换透明度（见下方 `.picker-datetime-panel-active`）
   transition: opacity 0.3s;
 }
-// 键盘操作期间非活动列淡化（活动列保持原透明度）。透明度写在日期列自身而非容器组件里：
-// 日期列的内部节点由本组件渲染，不带容器组件的作用域标记，容器组件的样式选不中它们
 .picker-datetime-panel-active .picker-date-panel-main {
   opacity: 0.3;
   &.picker-date-panel-main-active {
@@ -845,28 +839,18 @@ function onNext() {
 }
 .picker-panel-content {
   width: 100%;
-  // 面板就地渲染（`to` 默认 false，见 DatePicker），会落在宿主文档的内容区内：宿主若按 markdown
-  // 表格排版（如 VitePress 的 `.vp-doc table / th / td / tr`），会用元素选择器给表格补
-  // `display: block`、外边距、单元格边框与内边距、行底色 —— 这些属性组件原先未声明，会被宿主接管，
-  // 表现为日期格被撑宽后溢出面板、格间出现边框与灰底。故把「会被宿主接管的表格属性」逐一显式声明
   table {
     display: table;
     width: 100%;
     margin: 0;
-    // 表格布局属性须落在 table 上：写在包裹层不生效，会退回 auto + separate，
-    // 默认 border-spacing（2px）会挤占格宽并露出格间缝隙
     table-layout: fixed;
     border-collapse: collapse;
     overflow: visible;
   }
-  // 行底色与行边框：宿主常用伪类承载斑马纹（如 `.vp-doc tr:nth-child(2n)`），伪类计入类列，
-  // 与本组同特异性、只能靠加载顺序取胜，故加一层 `:nth-child(n)`（匹配全部行）稳定压过
   tr:nth-child(n) {
     border: none;
     background-color: transparent;
   }
-  // 单元格只重置「宿主会补、组件不再覆盖」的属性：内边距不在此列 —— 格内边距一律由
-  // `.picker-panel-cell` 给出（其特异性本就压得过宿主的 `.vp-doc td`，在此归零反而会把格压扁）
   th,
   td {
     position: relative;
@@ -877,10 +861,8 @@ function onNext() {
     border: none;
   }
   th {
-    // 表头只作列名、自身无内边距需求，而宿主会给 th 补 16px 左右内边距（足以把 7 列撑破面板）
     padding: 0;
     height: 32px;
-    // 面板整体居中排布，宿主会把 th 改回左对齐
     text-align: center;
     color: var(--va-text-color-1);
     vertical-align: middle;
@@ -889,7 +871,6 @@ function onNext() {
 .picker-panel-date-content {
   padding: 8px 12px;
   table {
-    // 7 列日期格
     width: 252px;
   }
   th {
@@ -899,27 +880,21 @@ function onNext() {
 .picker-panel-week-content {
   padding: 8px 12px;
   table {
-    // 8 列（周序号 + 7 天）：总宽与日期面板一致，列宽相应收窄
     width: 252px;
-    // 行底色要能收圆角：折叠边框模型下 td 的 border-radius 不生效，故改用分离模型并把间距归零
     border-collapse: separate;
     border-spacing: 0;
   }
-  // 周面板以「行」为选择单位：格内块不吃底色，底色与端点圆角一律由行承载
   .picker-panel-cell {
     &::before {
       content: none;
     }
   }
   .picker-panel-cell-week {
-    // 周序号只作参照，不响应点击
     cursor: default;
   }
   .picker-panel-week-row {
     td {
       transition: background 0.2s;
-      // 行首 / 行尾格恒带圆角：底色由「整行」承载，圆角是这一行作为独立视觉单位的收边，
-      // 悬浮高亮因此与选中周同口径
       &:first-child {
         border-radius: 4px 0 0 4px;
       }
@@ -927,17 +902,12 @@ function onNext() {
         border-radius: 0 4px 4px 0;
       }
     }
-    // 区间色带要连续：端点周朝向区间内侧的一侧、区间内部周与悬浮预览周一律去圆角，
-    // 相邻多周才拼成一条不断开的色带；恰好只占一周的区间（两个端点类名同落一行）两端都要留圆角
     &.picker-panel-week-row-range-start:not(.picker-panel-week-row-range-end) td:last-child,
     &.picker-panel-week-row-range-end:not(.picker-panel-week-row-range-start) td:first-child,
     &.picker-panel-week-row-in-range td,
     &.picker-panel-week-row-range-hover td {
       border-radius: 0;
     }
-    // 整周不可选的行不响应悬浮，避免给「点不动」的行亮起可点反馈；
-    // 已带状态底色的行（选中周 / 区间端点 / 区间内部 / 悬浮预览）同样不吃普通悬浮底色：
-    // 本规则的 :not() 链令其权重高于下方状态规则，不排除会把实心主色行染灰、把行级色带打断
     &:not(.picker-panel-week-row-disabled):not(.picker-panel-week-row-selected):not(
         .picker-panel-week-row-range-start
       ):not(.picker-panel-week-row-range-end):not(.picker-panel-week-row-in-range):not(
@@ -956,31 +926,22 @@ function onNext() {
     &.picker-panel-week-row-range-end .picker-panel-cell-inner {
       color: var(--va-text-color-solid);
     }
-    // 周序号与日期格同取纯白（周序号直接落在 td 上，不继承格内块的白色）
     &.picker-panel-week-row-selected .picker-panel-cell-week,
     &.picker-panel-week-row-range-start .picker-panel-cell-week,
     &.picker-panel-week-row-range-end .picker-panel-cell-week {
       color: var(--va-text-color-solid);
     }
-    // 选中周里的「今天」圈线改为白色，否则白底蓝框叠在主色行上读不出边界
     &.picker-panel-week-row-selected .picker-panel-cell-today .picker-panel-cell-inner::before,
     &.picker-panel-week-row-range-start .picker-panel-cell-today .picker-panel-cell-inner::before,
     &.picker-panel-week-row-range-end .picker-panel-cell-today .picker-panel-cell-inner::before {
       border-color: var(--va-text-color-solid);
     }
-    // 范围形态：区间内部底色只落在「展示月内的日期格」上（跨月补齐日与周序号格不着色）。
-    // 一行（一周）跨月时会在左右两块面板各出现一次，整行着色会让同一周出现两处色带，
-    // 且跨月补齐日被连带染色——与日期范围的格口径不一致（底色的作用域见 .picker-panel-week-content）
     &.picker-panel-week-row-in-range .picker-panel-cell-in-view {
       background: var(--picker-primary-color-bg, var(--va-primary-bg-color));
     }
-    // 悬浮预览（待选区间）与区间内部同色：整段连成一条「待选色带」，读作"改选后会变成这样"；
-    // 若整段都用更深一档的底色，悬浮时会出现一大块深蓝，看起来像"多选了一段"
     &.picker-panel-week-row-range-hover .picker-panel-cell-in-view {
       background: var(--picker-primary-color-bg, var(--va-primary-bg-color));
     }
-    // 鼠标所在的那一周 = 待选端点（新落点）：取普通悬浮的灰底，与未进入待选段时的悬浮观感一致；
-    // 行级灰底的权重高于上面的格级浅蓝，故整行覆盖（含周序号格与跨月补齐日）
     &.picker-panel-week-row-range-hover:hover td {
       background: var(--va-fill-color-1);
     }
@@ -988,19 +949,16 @@ function onNext() {
 }
 .picker-panel-month-content,
 .picker-panel-year-content {
-  // 月 / 年面板上下不留内边距，高度由表格自身决定（4 行 × 66px）
   padding: 0 8px;
   table {
     height: 264px;
   }
 }
 .picker-panel-decade-content {
-  // 十年面板左右不缩进：格宽取满 280px 三等分
   padding: 0;
   table {
     height: 264px;
   }
-  // 十年文本（2010-2019）比年月文本宽：内边距收窄且不设固定宽，随文本自适应，不参与范围形态故不画底色层
   .picker-panel-cell-inner {
     padding: 0 4px;
   }
@@ -1009,7 +967,6 @@ function onNext() {
   }
 }
 .picker-panel-quarter-content {
-  // 季面板只有 1 行（4 格）
   padding: 0 8px;
   table {
     height: 56px;
@@ -1042,8 +999,6 @@ function onNext() {
       background 0.2s,
       border 0.2s;
   }
-  // 已选端点与预览端点不吃普通悬浮底色；周面板的格由行承载底色，格内块同样不吃（见 .picker-panel-week-content）
-  // 跨月补齐日不参与区间渲染（见上方范围规则说明），其区间端点类名不构成排除依据：只要悬浮即吃同一底色
   &:hover:not(.picker-panel-cell-in-view):not(.picker-panel-cell-week-day) .picker-panel-cell-inner,
   &:hover:not(.picker-panel-cell-selected):not(.picker-panel-cell-range-start):not(.picker-panel-cell-range-end):not(
       .picker-panel-cell-range-hover-start
@@ -1066,10 +1021,6 @@ function onNext() {
     color: var(--va-text-color-solid);
     background: var(--picker-primary-color, var(--va-primary-color));
   }
-  // ===== 范围形态 =====
-  // 以下范围规则一律限定在本月格（`-in-view`）内：跨月补齐日虽会命中范围类名，
-  // 但不参与区间底色与预览虚线的渲染
-  // 区间底色由 ::before 承载；端点格只铺内侧半边，与外层底色拼成连续色带
   &.picker-panel-cell-in-view.picker-panel-cell-in-range::before,
   &.picker-panel-cell-in-view.picker-panel-cell-range-start:not(.picker-panel-cell-range-start-single)::before,
   &.picker-panel-cell-in-view.picker-panel-cell-range-end:not(.picker-panel-cell-range-end-single)::before {
@@ -1081,7 +1032,6 @@ function onNext() {
   &.picker-panel-cell-in-view.picker-panel-cell-range-end::before {
     right: 50%;
   }
-  // 端点实心主色：与单选的选中态同款，但圆角只留在区间外侧
   &.picker-panel-cell-in-view.picker-panel-cell-range-start .picker-panel-cell-inner,
   &.picker-panel-cell-in-view.picker-panel-cell-range-end .picker-panel-cell-inner {
     color: var(--va-text-color-solid);
@@ -1099,7 +1049,6 @@ function onNext() {
     .picker-panel-cell-inner {
     border-radius: 0 4px 4px 0;
   }
-  // 悬浮预览：预览区间与已选区间重合处的底色加深（端点格同样只加深内侧半边）
   &.picker-panel-cell-in-view.picker-panel-cell-in-range.picker-panel-cell-range-hover::before,
   &.picker-panel-cell-in-view.picker-panel-cell-range-start.picker-panel-cell-range-hover::before,
   &.picker-panel-cell-in-view.picker-panel-cell-range-end.picker-panel-cell-range-hover::before,
@@ -1111,7 +1060,6 @@ function onNext() {
     ).picker-panel-cell-range-hover-end::before {
     background: var(--picker-primary-color-bg-hover, var(--va-primary-bg-color));
   }
-  // 悬浮预览：预览区间的上下虚线边界（端点与已选端点重合的组合不再单独绘制）
   &.picker-panel-cell-in-view.picker-panel-cell-range-hover-start:not(.picker-panel-cell-in-range):not(
       .picker-panel-cell-range-start
     ):not(.picker-panel-cell-range-end)::after,
@@ -1131,8 +1079,6 @@ function onNext() {
     border-top: 1px dashed var(--picker-hover-border-color, var(--va-primary-border-color));
     border-bottom: 1px dashed var(--picker-hover-border-color, var(--va-primary-border-color));
     transform: translateY(-50%);
-    // 只过渡左右边界：`all` 会把后补上的 border-left / border-right 从 currentColor（近黑）与 medium（3px）补间，
-    // 观感即「预览边界移动时先出现一条深色粗线、再变成浅蓝虚线」
     transition:
       left 0.3s,
       right 0.3s;
@@ -1143,15 +1089,12 @@ function onNext() {
     right: 0;
     left: 2px;
   }
-  // 预览端点落在已选端点上时，该侧虚线收齐到中线
   &.picker-panel-cell-range-hover.picker-panel-cell-range-end::after {
     left: 50%;
   }
   &.picker-panel-cell-range-hover.picker-panel-cell-range-start::after {
     right: 50%;
   }
-  // 预览区间左侧边界：只画「预览起点」与「跨面板时本月的月首格」两处竖线
-  // 行首 / 行末格不画竖线，中间各行因此只有上下虚线、不闭合（按渲染结果对齐，不自补行边竖线）
   &.picker-panel-cell-in-view.picker-panel-cell-start.picker-panel-cell-range-hover-edge-start.picker-panel-cell-range-hover-edge-start-near-range::after,
   &.picker-panel-cell-in-view.picker-panel-cell-range-hover-edge-start:not(
       .picker-panel-cell-range-hover-edge-start-near-range
@@ -1161,8 +1104,6 @@ function onNext() {
     border-left: 1px dashed var(--picker-hover-border-color, var(--va-primary-border-color));
     border-radius: 4px 0 0 4px;
   }
-  // 预览端点与已选端点重合（起点已选待选终点 / 终点已选待选起点）：该侧已由已选端点的实心块收口，
-  // 虚线收到实心块以内（中线），避免虚线穿过实心块、在块外圆角处露出生硬的断点
   &.picker-panel-cell-in-view.picker-panel-cell-range-hover-start.picker-panel-cell-range-start::after {
     left: 50%;
     border-left: 0;
@@ -1173,7 +1114,6 @@ function onNext() {
     border-right: 0;
     border-radius: 0;
   }
-  // 预览区间右侧边界：只画「预览终点」与「跨面板时本月的月末格」两处竖线（同上，行末格不画）
   &.picker-panel-cell-in-view.picker-panel-cell-end.picker-panel-cell-range-hover-edge-end.picker-panel-cell-range-hover-edge-end-near-range::after,
   &.picker-panel-cell-in-view.picker-panel-cell-range-hover-edge-end:not(
       .picker-panel-cell-range-hover-edge-end-near-range
@@ -1183,7 +1123,6 @@ function onNext() {
     border-right: 1px dashed var(--picker-hover-border-color, var(--va-primary-border-color));
     border-radius: 0 6px 6px 0;
   }
-  // 预览端点落在已选区间内部时，格内剩余半边由内层补一段加深底色（区间底色只铺内侧半边）
   &.picker-panel-cell-in-view.picker-panel-cell-in-range.picker-panel-cell-range-hover-start
     .picker-panel-cell-inner::after,
   &.picker-panel-cell-in-view.picker-panel-cell-in-range.picker-panel-cell-range-hover-end
@@ -1220,8 +1159,6 @@ function onNext() {
     border-color: var(--va-text-color-disabled);
   }
 }
-// 月 / 季 / 年面板的格比日期格宽（格内块宽 60px）：预览端点竖线随之对齐格内块的边缘内侧（+2px），
-// 与日期面板「24px 块 + 6px 偏移」同一口径；圆角与上下虚线由上方通用规则给出，此处只管偏移
 .picker-panel-month-content,
 .picker-panel-quarter-content,
 .picker-panel-year-content {
@@ -1231,7 +1168,6 @@ function onNext() {
   .picker-panel-cell.picker-panel-cell-in-view.picker-panel-cell-range-hover-end::after {
     right: calc(50% - 28px);
   }
-  // 与日期面板同口径：预览端点与已选端点重合时收到实心块以内
   .picker-panel-cell.picker-panel-cell-in-view.picker-panel-cell-range-hover-start.picker-panel-cell-range-start::after {
     left: 50%;
   }
@@ -1241,12 +1177,10 @@ function onNext() {
 }
 .picker-panel-month-content .picker-panel-cell .picker-panel-cell-inner,
 .picker-panel-year-content .picker-panel-cell .picker-panel-cell-inner {
-  // 固定宽度，使三个月格 / 年格等宽且居中（与日期格 24px 的自适应宽度区分）
   width: 60px;
   padding: 0 8px;
 }
 .picker-panel-quarter-content .picker-panel-cell .picker-panel-cell-inner {
-  // 与月 / 年格同宽（border-box：60px 含左右内边距，落在 4 列约 66px 的列宽内）
   width: 60px;
   padding: 0 8px;
 }
@@ -1254,7 +1188,6 @@ function onNext() {
   color: var(--va-text-color-disabled);
 }
 .picker-panel-today-btn {
-  // 就地渲染时会被宿主文档的链接样式接管（如 `.vp-doc a` 的下划线与 500 字重），此处还原为面板自身口径
   color: var(--picker-primary-color, var(--va-primary-color));
   font-weight: normal;
   text-decoration: none;

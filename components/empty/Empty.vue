@@ -122,8 +122,6 @@ const showFooter = computed(() => {
     margin-bottom: 8px;
     opacity: 1;
     .empty-filled {
-      /* 预置 filled 图取色固定：插画色属于品牌插图，不随主色派生。
-         以组件私有变量承载，使用方仍可在容器上覆盖 */
       --empty-image-bg: #f5f5f7;
       --empty-image-border: #aeb8c2;
       --empty-image-fill: #dce0e6;
@@ -148,7 +146,6 @@ const showFooter = computed(() => {
   }
   .empty-description {
     font-size: 14px;
-    // 默认描述沿用正文色（text-color-1），只有 outlined 形态才降为禁用色
     color: var(--va-text-color-1);
     line-height: 1.5714285714285714;
   }
@@ -167,10 +164,6 @@ const showFooter = computed(() => {
 }
 </style>
 <style lang="less">
-/* 暗色：内置 filled 插画是浅色固定色，直接放到深色底上会过曝，
-   故暗色下整体降到 0.65 不透明度。
-   必须留在全局块：选择器要跨到祖先作用域节点（`<html>` 或 ConfigProvider 包裹元素）上的
-   `data-va-mode`，scoped 的 `:global()` 经 Less 编译后无法稳定保留该前缀 */
 [data-va-mode='dark'] .empty-filled {
   opacity: 0.65;
 }

@@ -276,7 +276,6 @@ function onKeyboard(e: KeyboardEvent) {
   color: var(--va-text-color-1);
   padding-inline: 7px;
   white-space: nowrap;
-  // 默认标签底：取最淡的中性叠加，暗色下才是浅色薄底而不是纯黑
   background: var(--va-fill-color-4);
   border: 1px solid var(--va-border-color);
   border-radius: 6px;
@@ -377,7 +376,6 @@ function onKeyboard(e: KeyboardEvent) {
   outline: none;
   transition: all 0.2s;
   &:focus {
-    /* 聚焦态：边框取悬停档主色（与 hover 同色），阴影取焦点环 */
     border-color: var(--va-cp-tag-primary-color-hover, var(--va-primary-color-hover));
     box-shadow: var(--va-cp-tag-focus-shadow, var(--va-focus-shadow));
     border-right-width: 1px;
@@ -397,7 +395,6 @@ function onKeyboard(e: KeyboardEvent) {
   height: 28px;
   line-height: 26px;
 }
-// 语义状态直接复用主题变量，暗色随表切换
 .tag-success {
   color: var(--va-success-color);
   background: var(--va-success-bg-color);

@@ -311,8 +311,6 @@ defineExpose({
   </Teleport>
 </template>
 <style lang="less" scoped>
-/* 定位参照容器：绝对定位 + 零高度，既不参与布局也不遮挡页面交互；
-   z-index 保持 auto，避免产生层叠上下文把面板的层级关在里层 */
 .va-popup-container {
   position: absolute;
   top: 0;
@@ -324,17 +322,12 @@ defineExpose({
 }
 .va-popup-panel {
   position: absolute;
-  /* 容器关闭了指针事件（pointer-events 可继承），面板必须显式恢复，否则 hover / click 全部失效 */
   pointer-events: auto;
 }
-/* 离开动画期间不接管指针事件：比上方规则多一个类（0,3,0 > 0,2,0），靠**特异性**生效，与源码顺序无关 ——
-   该状态由宿主自持，皮肤层（Tooltip 等）无需为覆盖上方声明再提高选择器优先级 */
 .va-popup-panel.va-popup-leaving {
   pointer-events: none;
 }
 .va-popup-arrow {
-  /* 箭头绝对定位溢出面板、不占面板盒（主轴间距由 offset 表达），几何全部由皮肤层的
-     方向类选择器驱动 */
   position: absolute;
   pointer-events: none;
 }

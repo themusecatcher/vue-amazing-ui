@@ -137,16 +137,13 @@ function onCellClick(unit: PickerTimeUnit): void {
 .picker-time-column {
   flex: 1 0 auto;
   width: 56px;
-  // 上下留白在滚动容器之外，列高因此等于内容高减 8px
   margin: 4px 0;
-  // 让 Scrollbar 的滚动容器成为列的定位祖先：候选项的 offsetTop 才是「距滚动容器的偏移」
   :deep(.scrollbar-container) {
     position: relative;
   }
   &:not(:first-child) {
     border-left: 1px solid var(--va-border-split-color);
   }
-  // 键盘操作当前所在的列：加一层主色底纹标示目标（透明度随主题色）
   &.picker-time-column-active {
     background: var(--picker-time-column-active-bg, var(--va-primary-bg-color));
   }
@@ -156,11 +153,6 @@ function onCellClick(unit: PickerTimeUnit): void {
     text-align: start;
     list-style: none;
     transition: background 0.2s;
-    // 尾随占位：留出「把最后几项滚到列顶部」的滚动量，缺了它末几项永远到不了顶。
-    // 取值 = 列可视高 - 格高。两种形态共用同一口径、列的视高各不相同：日期时间形态的列被日期列撑到
-    // 232px（→ 204px），独立时间选择器形态为 216px（→ 188px，由组件壳层以
-    // `--picker-time-column-trailing-height` 覆盖）。取值偏大会把末项顶出视口（滚到底只剩残边、
-    // 末项悬浮不到），偏小则末几项滚不到顶，故按形态分别给定
     &::after {
       display: block;
       height: var(--picker-time-column-trailing-height, 204px);

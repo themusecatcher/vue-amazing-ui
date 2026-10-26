@@ -239,8 +239,6 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
 </template>
 <style lang="less" scoped>
 .input-search-wrap {
-  /* 拼接圆角：随 size 变化（小 / 中 / 大三档），
-     由根节点下发变量，作用域内的容器、前置标签、搜索按钮共用同一份 */
   --input-search-radius: 6px;
   width: var(--input-search-width);
   position: relative;
@@ -291,12 +289,8 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
     display: inline-flex;
     width: 100%;
     min-width: 0;
-    /* 右侧保留边框：输入区自身画完整闭合边框（单个元素的边框是一条闭合路径，
-       转角处不会在亚像素位置漏缝）。与按钮的交接线由按钮左移 1px 覆盖 */
     z-index: 0;
     background-color: var(--va-bg-container-color);
-    /* 底色只铺到内边距区：聚焦时右边框会临时置透明（见下方 :focus-within），
-       若底色仍延伸到边框区，会从这个透明边框漏出来、把交接线盖成白色 */
     background-clip: padding-box;
     border: 1px solid var(--va-border-color);
     transition: all 0.2s;
@@ -305,11 +299,7 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
     }
     &:focus-within {
       border-color: var(--va-cp-input-search-primary-color-hover, var(--va-primary-color-hover));
-      /* 焦点环只包输入区（不含右侧按钮），所以必须抬到按钮之上，
-         否则环的右段被按钮盖住、看上去缺一条边 */
       z-index: 1;
-      /* 交接线由按钮自己的伪元素负责（见 .input-search-button .btn-wrap::before），
-         输入区右边框让位，否则这条高亮色会压在实底按钮的左边缘上 */
       border-right-color: transparent;
       box-shadow: var(--va-cp-input-search-focus-shadow, var(--va-focus-shadow));
       outline: 0;
@@ -434,9 +424,6 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
       cursor: not-allowed;
     }
   }
-  /* 普通按钮把自己的左边框染成输入区当前的颜色（这一像素与输入区右边框完全重叠，上层是谁都同色），
-     悬停时右侧轮廓与其余三条边同为高亮色、移出时同一条 transition 平滑回落；
-     语义色按钮（primary / danger / link / 禁用）的边框本身有意义，保持不动 */
   &:hover,
   &:focus-within {
     .input-search-button :deep(.btn-wrap) {
@@ -447,10 +434,6 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
   }
   .input-search-button {
     position: relative;
-    /* 与输入区重叠 1px：按钮左边框正好压在
-       输入区右边框上，交界处只有一条线；顺带保住按钮右边缘与容器右边缘对齐。
-       若改成相邻不重叠（输入区 border-right: 0），两个边框各画 1px 会在亚像素位置
-       于右上 / 右下转角各缺 1px，悬停、聚焦时最明显 */
     margin-left: -1px;
     border-left: 0;
     color: var(--va-text-color-1);
@@ -471,19 +454,10 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
       border-top-right-radius: var(--input-search-radius);
       border-bottom-right-radius: var(--input-search-radius);
       border-bottom-left-radius: 0;
-      /* 与输入区保持同一条过渡曲线，交接线才与其余三条边同时到位
-         （按钮自身是 0.2s cubic-bezier(...)，曲线不同会让这一条边看着「慢半拍」） */
       transition: all 0.2s;
       &:not(.btn-primary):not(.btn-danger):not(.btn-link):not(.btn-disabled) {
         color: var(--va-text-color-3);
       }
-      /* 交接线：按钮左移 1px 后，输入区右边框正好被这一像素压住。这里用伪元素画在按钮边框之上，
-         颜色继承按钮自身的左边框色——
-         · 普通按钮是灰 / 高亮色一条线，且这一像素盖住按钮自身上下边框 45° 斜接留下的半像素，
-           右上 / 右下转角不会各缺 1px；
-         · primary / danger 这类边框色即底色的实底按钮上自然不可见，交界处不会出现浅色细线。
-         注意：这里不能声明 transition——颜色是逐帧继承父元素动画结果的，再补一层过渡会变成
-         「追赶父元素」的二次动画，视觉上这条边明显比其他三条慢 */
       &::before {
         content: '';
         position: absolute;
@@ -497,8 +471,6 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
       }
     }
   }
-  /* slot 自定义按钮：与内置按钮同样按拼接形状重置圆角，
-     否则按钮自带的整圈圆角会在拼接处留下白色缺口 */
   :deep(.input-search-button > *) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;

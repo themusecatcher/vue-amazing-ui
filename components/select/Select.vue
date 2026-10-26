@@ -1,8 +1,6 @@
 <script lang="ts">
-// 选择器 Select：数据源支持配置式 options 与子组件式（SelectOption / SelectOptGroup）双模式，
-// 覆盖单选 / 多选 / 标签 / labelInValue / 虚拟滚动，并提供搜索过滤、tag 折叠与无障碍语义。
 // 本块为模块级作用域（仅在模块加载时执行一次）：a11y 关联 id 的自增序号需跨组件实例唯一。
-// ⚠️ 不使用项目既有的 createKeyGenerator（含时间戳）：SSR 与客户端会产出不同 id，触发水合时属性不匹配。
+// 不使用项目既有的 createKeyGenerator（含时间戳）：SSR 与客户端会产出不同 id，触发水合时属性不匹配。
 let selectIdSeed = 0
 function nextSelectId(): string {
   selectIdSeed += 1
@@ -1989,9 +1987,6 @@ defineExpose({
   </div>
 </template>
 <style lang="less" scoped>
-/* 缩放动画只改独立变换属性 scale：定位由内核写在独立属性 `translate` 上（复合链最外层，不受缩放影响）；
-   keyframes 若改写 `transform` 会覆盖使用者经 `dropdownMenuStyle` 等样式 prop 传入的内联 transform
-   （CSS 动画优先级高于内联样式，且 animation-fill-mode: both 在过渡类移除前一直生效） */
 .slide-enter {
   scale: 0;
   opacity: 0;
@@ -2037,7 +2032,6 @@ defineExpose({
 .select-panel-container.slide-leave-active {
   pointer-events: none;
 }
-/* 屏幕阅读器专用文本：可被读屏读取但不参与视觉呈现（绝对定位，不影响触发器布局） */
 .select-sr-only {
   position: absolute;
   width: 0;
@@ -2072,7 +2066,6 @@ defineExpose({
     height: 100%;
     outline: none;
     transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-    /* 用于与空内容做基线对齐（`''` 与 undefined 值的高度一致） */
     &::after {
       display: inline-block;
       width: 0;
@@ -2141,8 +2134,6 @@ defineExpose({
       fill: currentColor;
       user-select: none;
       pointer-events: none;
-      /* 图标默认透明、由 .show-svg 点亮：箭头与搜索图标常驻 DOM，靠透明度交叉淡入淡出。
-         若改用 v-if 互斥渲染，元素会被直接卸载 / 挂载，切换时没有过渡效果 */
       opacity: 0;
       transition: opacity 0.3s;
     }
@@ -2160,7 +2151,6 @@ defineExpose({
     .loading-svg svg {
       animation: select-loading-spin 1s linear infinite;
     }
-    /* 清除图标覆盖在箭头之上（自带背景遮挡），默认不可见，hover 触发器时显示 */
     .clear-svg {
       z-index: 1;
       opacity: 0;
@@ -2173,7 +2163,6 @@ defineExpose({
         color: var(--va-text-color-3);
       }
     }
-    /* 清除图标同样带 .show-svg（表示「满足显示条件」），需压回透明，再由 hover 点亮 */
     .clear-svg.show-svg {
       opacity: 0;
     }
@@ -2183,7 +2172,6 @@ defineExpose({
     pointer-events: auto;
   }
 }
-/* 展开时回填内容降为占位色，与既有实现一致 */
 .select-open:not(.select-disabled) {
   .select-item {
     color: var(--va-text-color-disabled);
@@ -2191,7 +2179,6 @@ defineExpose({
 }
 .select-focused:not(.select-disabled) {
   .select-content-container {
-    /* 聚焦态：边框取悬停档主色（与 hover 同色），阴影取焦点环 */
     border-color: var(--va-cp-select-primary-color-hover, var(--va-primary-color-hover));
     box-shadow: var(--va-cp-select-focus-shadow, var(--va-focus-shadow));
   }
@@ -2208,7 +2195,6 @@ defineExpose({
     }
   }
 }
-/* 显示箭头时给回填内容预留箭头位置，避免长文本压住图标 */
 .select-show-arrow {
   .select-item {
     padding-right: 18px;
@@ -2298,13 +2284,10 @@ defineExpose({
 }
 /* 多选 / 标签 */
 .select-wrap.select-multiple {
-  /* 高度自适应：tag 换行时触发器随之增高 */
   height: auto;
   min-height: var(--select-height);
-  /* tag 高度随 size 变化（约定：控件高度 - 8px） */
   --select-tag-height: calc(var(--select-height) - 8px);
   .select-content-container {
-    /* 空内容时的基线高度由容器自身保底（替代下方的 \a0 占位） */
     min-height: var(--select-height);
     flex-wrap: wrap;
     align-items: center;
@@ -2314,7 +2297,6 @@ defineExpose({
       content: none;
     }
   }
-  /* 显示箭头 / 支持清除时为右侧图标预留宽度（约定：图标 12px + 内边距 12px） */
   &.select-show-arrow .select-content-container,
   &.select-allow-clear .select-content-container {
     padding-right: 24px;
@@ -2343,7 +2325,6 @@ defineExpose({
   .select-content-container .select-search:not(:first-child) {
     margin-left: 0;
   }
-  /* 占位文本绝对定位：tag 换行时不影响高度计算 */
   .select-content-container .select-placeholder {
     position: absolute;
     top: 50%;
@@ -2353,7 +2334,6 @@ defineExpose({
     line-height: 1.5714285714285714;
   }
 }
-/* 标签本体：（背景 / 边框 / 内边距 / 圆角与选中项一致） */
 .select-selection-item {
   display: flex;
   flex: none;
@@ -2373,8 +2353,6 @@ defineExpose({
   cursor: default;
   user-select: none;
 }
-/* tagRender 接管渲染：外层只保留排布职责，间距与标签视觉（外边距 / 背景 / 边框 / 内边距 / 固定高度）
-   全部交给自定义内容，否则会与自定义内容（如带边框的标签组件）叠成双层标签 */
 .select-selection-item.select-tag-render {
   height: auto;
   margin: 0;
@@ -2405,13 +2383,11 @@ defineExpose({
     vertical-align: -0.2em;
   }
 }
-/* 禁用项的标签：不可移除 */
 .select-selection-item-disabled {
   border-color: var(--va-border-color);
   color: var(--va-text-color-disabled);
   cursor: not-allowed;
 }
-/* 被 responsive 折叠的 tag：绝对定位隐藏，不占位但保留布局以便量取真实宽度 */
 .select-tag-hidden {
   position: absolute;
   top: 0;
@@ -2419,8 +2395,6 @@ defineExpose({
   visibility: hidden;
   pointer-events: none;
 }
-/* 定位参照容器：绝对定位 + 零高度，既不参与布局也不遮挡
-   页面交互；z-index 保持 auto，避免产生层叠上下文而把面板的层级关在里层 */
 .select-panel-wrapper {
   position: absolute;
   top: 0;
@@ -2432,9 +2406,7 @@ defineExpose({
 }
 .select-panel-container {
   position: absolute;
-  /* 容器关闭了指针事件（pointer-events 可继承），面板必须显式恢复，否则选项的 hover / 点击全部失效 */
   pointer-events: auto;
-  /* 默认层级与 useZIndex 的回退值一致；ConfigProvider 传入 baseZIndex 时由内联样式覆盖 */
   z-index: 1050;
   padding: 4px;
   border-radius: 8px;
@@ -2445,14 +2417,8 @@ defineExpose({
   cursor: auto;
   box-shadow: var(--va-popup-shadow);
   :deep(.select-options-panel) {
-    /* 关闭滚动越界回弹与滚动链：否则触控板惯性滚动会带着列表冲出滚动区，面板底部露出空白
-       （若以 transform 位移实现列表滚动则内容天然不越界，本库用原生滚动故需在此显式关闭回弹）。
-       ⚠️ 必须是 none 而非 contain —— contain 只切断向父级的滚动链，元素自身的弹性回弹照旧发生，
-       用 contain 时「滚到底仍有留白」依旧存在 */
     .scrollbar-container {
       overscroll-behavior: none;
-      /* 关闭 Chrome 的滚动锚定：虚拟滚动随窗口切换改变上下占位高度，锚定补偿会反向调整 scrollTop，
-         与窗口计算互相追赶形成抖动（本项目的位置由下标算出，不需要浏览器补偿） */
       overflow-anchor: none;
     }
     .select-option-group {

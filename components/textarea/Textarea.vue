@@ -212,7 +212,6 @@ function onClear(): void {
       z-index: 1;
     }
     &:focus-within {
-      /* 聚焦态：边框取悬停档主色（与 hover 同色），阴影取焦点环 */
       border-color: var(--va-cp-textarea-primary-color-hover, var(--va-primary-color-hover));
       box-shadow: var(--va-cp-textarea-focus-shadow, var(--va-focus-shadow));
       outline: 0;
@@ -224,7 +223,6 @@ function onClear(): void {
   textarea:disabled {
     color: var(--va-text-color-disabled);
   }
-  /* 自动填充：与 Input 同一口径，用 inset 阴影覆盖 UA 底色、用 text-fill-color 覆盖文字色 */
   .textarea-item:-webkit-autofill,
   .textarea-item:-webkit-autofill:hover,
   .textarea-item:-webkit-autofill:focus {

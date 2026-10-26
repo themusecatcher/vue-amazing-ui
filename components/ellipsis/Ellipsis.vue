@@ -200,8 +200,6 @@ function onBoxClick(): void {
 .ellipsis-cursor-pointer {
   cursor: pointer;
 }
-// 展开态只解除截断，不改变盒模型：多行解除行数限制，单行解除不换行（display 保持不变，
-// 避免展开瞬间影响外部行内排版）
 .ellipsis-expanded {
   line-clamp: none;
   -webkit-line-clamp: none;

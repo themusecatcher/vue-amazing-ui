@@ -851,7 +851,6 @@ function onKeydown(event: KeyboardEvent): void {
               }
             }
           }
-          // 禁用格：不响应指针（不可悬浮、不可点击、不改变鼠标形态），灰底由卡片形态的伪元素承担
           .date-cell-disabled {
             color: var(--va-text-color-disabled);
             pointer-events: none;
@@ -865,7 +864,6 @@ function onKeydown(event: KeyboardEvent): void {
   }
 }
 // 面板承载键盘导航：焦点指示沿用内核日期面板口径——容器不画焦点环，
-// 键盘移动即选中，选中态本身就是位置反馈
 .calendar-display-wrap:focus-visible {
   outline: none;
 }
@@ -929,9 +927,6 @@ function onKeydown(event: KeyboardEvent): void {
       }
     }
   }
-  // 今天：日面板用实心主色圆、月面板用两端半圆的实心胶囊（同为实底白字），圆角取 24px 高度的一半
-  // ⚠️ 两者都锁定 24px 行高（不用 aspect-ratio / border 改变盒高），否则 today 所在行被撑高，
-  // 同排 hover / 选中格的底色会在底部露出间隙
   .calendar-date-panel .date-cell-inner.date-cell-today {
     .date-value {
       display: inline-flex;
@@ -951,14 +946,12 @@ function onKeydown(event: KeyboardEvent): void {
       align-items: center;
       justify-content: center;
       height: 24px;
-      // 不设最小宽度：宽度由文案决定，两侧留白恒为 8px（长文案如 October 才不会贴边）
       padding: 0 8px;
       color: var(--va-text-color-solid);
       background: var(--va-cp-calendar-primary-color, var(--va-primary-color));
       border-radius: 12px;
     }
   }
-  // 今天本身不可选时，标记退为中性色，避免与可选态混淆
   .calendar-date-panel .calendar-date-cell.date-cell-disabled .date-cell-inner.date-cell-today .date-value {
     background: var(--va-text-color-disabled);
   }
@@ -967,7 +960,6 @@ function onKeydown(event: KeyboardEvent): void {
   }
 }
 .calendar-card {
-  // 卡片形态按小卡片呈现：宽度由组件给定基准，容器更窄时才收缩
   width: 300px;
   max-width: 100%;
   box-sizing: border-box;
@@ -1013,8 +1005,6 @@ function onKeydown(event: KeyboardEvent): void {
             .date-cell-inner {
               display: inline-block;
               height: 24px;
-              // overflow 非 visible 时行内块的基线取底部边缘，会把日期整体顶高；
-              // 用 middle 把日期摆回格子中线（与灰底条同心）
               vertical-align: middle;
               overflow: hidden;
               border-radius: 4px;
@@ -1028,7 +1018,6 @@ function onKeydown(event: KeyboardEvent): void {
               background: var(--va-fill-color-1);
             }
           }
-          // 今天：1px 主色描边方块 + 主色文字（卡片形态用描边标记，区别于面板形态的实心标记）
           .date-cell-inner.date-cell-today {
             &::before {
               position: absolute;
