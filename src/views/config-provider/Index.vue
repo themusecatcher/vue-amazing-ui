@@ -568,7 +568,9 @@ const tokenStyle: Record<string, string> = {
             <Button type="danger" @click="localLoadingBar?.error()">Error</Button>
           </Space>
         </div>
-        <Pagination v-model:page="page" :total="500" show-quick-jumper />
+        <Card width="50%">
+          <Pagination v-model:page="page" :total="500" show-quick-jumper />
+        </Card>
         <Card width="50%">
           <Flex vertical>
             <Progress :percent="percent" />

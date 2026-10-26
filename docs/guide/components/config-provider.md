@@ -564,7 +564,9 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
         <Button type="danger" @click="localLoadingBar?.error()">Error</Button>
       </Space>
     </div>
-    <Pagination v-model:page="page" :total="500" show-quick-jumper />
+    <Card>
+      <Pagination v-model:page="page" :total="500" show-quick-jumper />
+    </Card>
     <Card>
       <Flex vertical>
         <Progress :percent="percent" />
@@ -993,7 +995,9 @@ function onDecline(scale: number) {
           <Button type="danger" @click="localLoadingBar?.error()">Error</Button>
         </Space>
       </div>
-      <Pagination v-model:page="page" :total="500" show-quick-jumper />
+      <Card>
+        <Pagination v-model:page="page" :total="500" show-quick-jumper />
+      </Card>
       <Card>
         <Flex vertical>
           <Progress :percent="percent" />
