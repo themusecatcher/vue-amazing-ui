@@ -614,7 +614,7 @@ const tokenStyle: Record<string, string> = {
         <Upload v-model:fileList="fileList" />
       </Flex>
     </ConfigProvider>
-    <ul class="mb10">
+    <ul class="mt10 mb10">
       <li class="mb10"
         >色块与下方组件读取同一组 <code>CSS</code> 变量：二者位于同一 Provider
         作用域，不存在第二份色值，因此始终同步；</li
@@ -668,7 +668,7 @@ const tokenStyle: Record<string, string> = {
         </Flex>
       </ConfigProvider>
     </Flex>
-    <ul class="mb10">
+    <ul class="mt10 mb10">
       <li class="mb10"
         >每个语义色各自派生「常态 / 浅底 / 描边」，组件读
         <code>--va-{success,warning,error,info}-*</code>，不用逐个组件配置；
@@ -753,7 +753,7 @@ const tokenStyle: Record<string, string> = {
         </ConfigProvider>
       </Flex>
     </Flex>
-    <ul class="mb10">
+    <ul class="mt10 mb10">
       <li class="mb10"
         >组件配置优先于 <code>seed</code> 与外层祖先上的 <code>--va-primary-*</code>，删掉后回落到 <code>seed</code>；
       </li>
@@ -775,7 +775,7 @@ const tokenStyle: Record<string, string> = {
         <Slider :value="60" />
       </Flex>
     </div>
-    <ul class="mb10">
+    <ul class="mt10 mb10">
       <li class="mb10">状态是成组的：只改常态会出现「悬停跳回默认色」，请整组覆盖（常态 / 悬停 / 按下）；</li>
       <li class="mb10"
         >一个视觉元素可能拆成多个令牌：Slider 的轨道与滑块的光环分别取值，只改轨道会让手柄停在默认主色；</li
@@ -817,7 +817,7 @@ const tokenStyle: Record<string, string> = {
         </Flex>
       </ConfigProvider>
     </Flex>
-    <ul class="mb10">
+    <ul class="mt10 mb10">
       <li class="mb10">变量写在包裹元素上、靠 CSS 继承生效，子树内的组件与更内层作用域都会取到它；</li>
       <li class="mb10"
         >内层只传 <code>seed</code> 的部分字段时是整个替换（不逐字段合并），没传的字段回落默认值；完全不传才继承外层；
@@ -847,7 +847,7 @@ const tokenStyle: Record<string, string> = {
         </Space>
       </ConfigProvider>
     </Flex>
-    <ul class="mb10">
+    <ul class="mt10 mb10">
       <li class="mb10"><code>theme</code> 为普通响应式数据：整体替换或就地改写 <code>seed.primary</code> 均生效；</li>
       <li>切换只重算 CSS 变量、不重建组件，因此输入内容与滚动位置不会丢失。</li>
     </ul>
@@ -870,7 +870,7 @@ const tokenStyle: Record<string, string> = {
         </Card>
       </ConfigProvider>
     </Flex>
-    <ul class="mb10">
+    <ul class="mt10 mb10">
       <li class="mb10"
         >链接基座是 <code>:where(a)</code>（特异性 0），你自己的 <code>a { color }</code> 会自然胜出，不需要
         <code>!important</code>；
@@ -889,7 +889,7 @@ const tokenStyle: Record<string, string> = {
     <ConfigProvider :abstract="false" tag="span" :theme="{ seed: { primary: '#ff6900' } }">
       <Button type="primary">Primary Button</Button>
     </ConfigProvider>
-    <ul class="mb10">
+    <ul class="mt10 mb10">
       <li class="mb10"
         ><code>tag</code> 只在 <code>abstract=false</code> 时有效；<code>abstract=true</code> 不渲染包裹元素；</li
       >
@@ -948,7 +948,7 @@ const tokenStyle: Record<string, string> = {
       </Modal>
     </ConfigProvider>
     <h2 class="mt30 mb10">常见问题排查</h2>
-    <ul class="mb10">
+    <ul class="mt10 mb10">
       <li class="mb10">只有某个组件不对：先看实例 <code>style</code> / <code>color</code> prop 是否覆盖。</li>
       <li class="mb10">悬停 / 按下跳回默认色：组件令牌只覆盖了常态，需整组覆盖（常态 / 悬停 / 按下）。</li>
       <li class="mb10">
