@@ -25,7 +25,7 @@ import {
   PlusOutlined,
   SettingOutlined
 } from '@ant-design/icons-vue'
-import { ConfigProvider, LoadingBarProvider, createDiscreteApi } from 'vue-amazing-ui'
+import { ConfigProvider, LoadingBarProvider, createDiscreteApi, useMessage, useModal, useNotification } from 'vue-amazing-ui'
 import type {
   CarouselImage,
   ConfigProviderProps,
@@ -147,9 +147,10 @@ function onAutoCompleteSearch(searchText: string) {
 const cardRef = ref<HTMLDivElement>()
 // 局部加载条挂载到 cardRef 容器，通过 <LoadingBarProvider> 的 @ready 取到该作用域内的 api
 const localLoadingBar = ref<LoadingBarApi>()
-const messageRef = ref<MessageApi>()
-const modalRef = ref<ModalApi>()
-const notificationRef = ref<NotificationApi>()
+// 浮层类组件推荐 useXxx()：入口 App.vue 已包裹对应 Provider
+const message = useMessage()
+const modal = useModal()
+const notification = useNotification()
 const page = ref<number>(1)
 const radioChecked = ref<boolean>(false)
 const images = ref<CarouselImage[]>([
@@ -488,20 +489,17 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
         :search-props="{ type: 'primary' }"
         placeholder="input search"
       />
-      <Button type="primary" @click="messageRef?.info('This is an info message')">Show Message</Button>
-      <Message @ready="messageRef = $event" />
+      <Button type="primary" @click="message.info('This is an info message')">Show Message</Button>
       <Button
         type="primary"
-        @click="modalRef?.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
+        @click="modal.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
         >Show Modal</Button
       >
-      <Modal @ready="modalRef = $event" />
       <Button
         type="primary"
-        @click="notificationRef?.info({ title: 'Notification Title', content: 'This is a normal notification' })"
+        @click="notification.info({ title: 'Notification Title', content: 'This is a normal notification' })"
         >Show Notification</Button
       >
-      <Notification @ready="notificationRef = $event" />
       <Popconfirm title="Custom Theme" description="There will have some descriptions ..." icon="info">
         <Button type="primary">Show Confirm</Button>
       </Popconfirm>
@@ -549,20 +547,27 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
         </template>
       </FloatButton>
     </Card>
-    <LoadingBarProvider
-      :container-style="{ position: 'absolute' }"
-      :to="cardRef"
-      @ready="localLoadingBar = $event"
-    />
     <div
-      ref="cardRef"
-      style="position: relative; width: 50%; padding: 48px 36px; border-radius: 4px; border: 1px solid #f0f0f0"
+      style="
+        position: relative;
+        padding: 48px 36px;
+        overflow: hidden;
+        border: 1px solid var(--va-border-color);
+        border-radius: 8px;
+      "
     >
-      <Space>
-        <Button type="primary" @click="localLoadingBar?.start()">Start</Button>
-        <Button @click="localLoadingBar?.finish()">Finish</Button>
-        <Button type="danger" @click="localLoadingBar?.error()">Error</Button>
-      </Space>
+      <div ref="cardRef" style="position: absolute; inset: 0; pointer-events: none"></div>
+      <LoadingBarProvider
+        :container-style="{ position: 'absolute' }"
+        :to="cardRef"
+        @ready="localLoadingBar = $event"
+      >
+        <Space>
+          <Button type="primary" @click="localLoadingBar?.start()">Start</Button>
+          <Button @click="localLoadingBar?.finish()">Finish</Button>
+          <Button type="danger" @click="localLoadingBar?.error()">Error</Button>
+        </Space>
+      </LoadingBarProvider>
     </div>
     <Card>
       <Pagination v-model:page="page" :total="500" show-quick-jumper />
@@ -616,6 +621,7 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
 - 示例覆盖全部 `39` 个消费主色的组件；`Table` 排序箭头、`Badge` 计数底、`Timeline` 的 `blue` 圆点、`GradientText` 渐变端点均取自种子（点击 `Table` 表头可见）；
 - `Tag` 的 `processing` 预设取主色，`success` / `warning` / `error` 取语义色（见「语义种子」一节）；其余 `13` 个命名色为组件自有色板，与种子无关；
 - 深色皮肤（如 `Menu` 的 `theme="dark"`）底色取种子派生的品牌色暗底：改主色时根列表、浮层面板与内联子菜单一起换；
+- `Message` / `Modal` / `Notification` 走推荐用法 `useXxx()`（入口已包裹 `Provider`），浮层令牌同样跟随当前作用域；
 - 组件样式只消费 `var(--va-*)`，不参与换色计算：切换种子不会重建组件，也不会触发重渲染。
 
 ::: details Show Code
@@ -634,7 +640,7 @@ import {
   PlusOutlined,
   SettingOutlined
 } from '@ant-design/icons-vue'
-import { LoadingBarProvider } from 'vue-amazing-ui'
+import { LoadingBarProvider, useMessage, useModal, useNotification } from 'vue-amazing-ui'
 import type {
   CarouselImage,
   ItemType,
@@ -688,9 +694,10 @@ function onAutoCompleteSearch(searchText: string) {
 const cardRef = ref<HTMLDivElement>()
 // 局部加载条挂载到 cardRef 容器，通过 <LoadingBarProvider> 的 @ready 取到该作用域内的 api
 const localLoadingBar = ref<LoadingBarApi>()
-const messageRef = ref<MessageApi>()
-const modalRef = ref<ModalApi>()
-const notificationRef = ref<NotificationApi>()
+// 浮层类组件推荐 useXxx()：入口 App.vue 已包裹对应 Provider
+const message = useMessage()
+const modal = useModal()
+const notification = useNotification()
 const page = ref<number>(1)
 const radioChecked = ref<boolean>(false)
 const images = ref<CarouselImage[]>([
@@ -923,20 +930,17 @@ function onDecline(scale: number) {
           :search-props="{ type: 'primary' }"
           placeholder="input search"
         />
-        <Button type="primary" @click="messageRef?.info('This is an info message')">Show Message</Button>
-        <Message @ready="messageRef = $event" />
+        <Button type="primary" @click="message.info('This is an info message')">Show Message</Button>
         <Button
           type="primary"
-          @click="modalRef?.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
+          @click="modal.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
           >Show Modal</Button
         >
-        <Modal @ready="modalRef = $event" />
         <Button
           type="primary"
-          @click="notificationRef?.info({ title: 'Notification Title', content: 'This is a normal notification' })"
+          @click="notification.info({ title: 'Notification Title', content: 'This is a normal notification' })"
           >Show Notification</Button
         >
-        <Notification @ready="notificationRef = $event" />
         <Popconfirm title="Custom Theme" description="There will have some descriptions ..." icon="info">
           <Button type="primary">Show Confirm</Button>
         </Popconfirm>
@@ -984,16 +988,27 @@ function onDecline(scale: number) {
           </template>
         </FloatButton>
       </Card>
-      <LoadingBarProvider :container-style="{ position: 'absolute' }" :to="cardRef" @ready="localLoadingBar = $event" />
       <div
-        ref="cardRef"
-        style="position: relative; width: 50%; padding: 48px 36px; border-radius: 4px; border: 1px solid #f0f0f0"
+        style="
+          position: relative;
+          padding: 48px 36px;
+          overflow: hidden;
+          border: 1px solid var(--va-border-color);
+          border-radius: 8px;
+        "
       >
-        <Space>
-          <Button type="primary" @click="localLoadingBar?.start()">Start</Button>
-          <Button @click="localLoadingBar?.finish()">Finish</Button>
-          <Button type="danger" @click="localLoadingBar?.error()">Error</Button>
-        </Space>
+        <div ref="cardRef" style="position: absolute; inset: 0; pointer-events: none"></div>
+        <LoadingBarProvider
+          :container-style="{ position: 'absolute' }"
+          :to="cardRef"
+          @ready="localLoadingBar = $event"
+        >
+          <Space>
+            <Button type="primary" @click="localLoadingBar?.start()">Start</Button>
+            <Button @click="localLoadingBar?.finish()">Finish</Button>
+            <Button type="danger" @click="localLoadingBar?.error()">Error</Button>
+          </Space>
+        </LoadingBarProvider>
       </div>
       <Card>
         <Pagination v-model:page="page" :total="500" show-quick-jumper />

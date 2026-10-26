@@ -106,8 +106,8 @@ const discreteGroup = createGroup(getDiscreteLoadingBar)
     </Space>
     <h2 class="mt30 mb10">局部加载条</h2>
     <p class="mb10">
-      通过 <code>to</code> 指定加载条的挂载位置，配合 <code>container-style</code> 让它落在局部容器内；容器内的按钮通过
-      <code>&lt;LoadingBarProvider&gt;</code> 的 <code>@ready</code> 事件取到该作用域内的 api
+      通过 <code>to</code> 指定加载条的挂载位置，配合 <code>container-style</code> 让它落在局部容器内；<code>to</code>
+      属组件级配置，须声明在 <code>&lt;LoadingBarProvider&gt;</code> 上，按钮再通过它的 <code>@ready</code> 取到局部 api
     </p>
     <div class="card-container">
       <div ref="localCardRef" class="card-target"></div>
@@ -169,8 +169,8 @@ const discreteGroup = createGroup(getDiscreteLoadingBar)
     </div>
     <h2 class="mt30 mb10">主题跟随</h2>
     <p class="mb10">
-      加载条默认取 <code>ConfigProvider</code> 中 <code>LoadingBar.primaryColor</code> 生成的调色板，
-      改变主色即可让加载中 / 加载完成颜色同步跟随
+      加载条跟随 <code>ConfigProvider</code> 主题色：改 <code>theme.seed.primary</code> 即同步跟随，也可用
+      <code>theme.components.LoadingBar.primaryColor</code> 单独覆盖加载条
     </p>
     <Flex vertical>
       <Space align="center" class="mb10">
@@ -205,7 +205,7 @@ const discreteGroup = createGroup(getDiscreteLoadingBar)
   max-width: 720px;
   height: 120px;
   padding: 16px 24px;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--va-border-color);
   overflow: hidden;
 }
 .card-target {

@@ -248,7 +248,7 @@ function onError() {
 
 ## 局部加载条
 
-_通过 `to` 指定加载条的挂载位置，配合 `container-style` 让它落在局部容器内；容器内的按钮通过 `<LoadingBarProvider>` 的 `@ready` 事件取到该作用域内的 `api`_
+_通过 `to` 指定加载条的挂载位置，配合 `container-style` 让它落在局部容器内；`to` 属组件级配置，只能声明在 `<LoadingBarProvider>` 上，所以局部加载条需要自己的 Provider（入口的全局实例挂在 `body`，只做页面顶部）_
 
 <br/>
 
@@ -267,15 +267,18 @@ _通过 `to` 指定加载条的挂载位置，配合 `container-style` 让它落
   </LoadingBarProvider>
 </div>
 
+::: tip
+按钮与该 Provider 同处一个组件时，`setup` 拿不到它的 `provide`（只对后代生效），`useLoadingBar()` 命中的是入口的全局实例，故用 `@ready` 回传局部 `api`；若按钮在 Provider 子树内的独立组件里，直接 `useLoadingBar()` 即可。
+:::
+
 <style lang="less" scoped>
 .card-container {
   position: relative;
   display: flex;
   align-items: center;
-  max-width: 720px;
   height: 120px;
   padding: 16px 24px;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--va-border-color);
   overflow: hidden;
 }
 .card-target {
@@ -329,10 +332,9 @@ function onLocalError() {
   position: relative;
   display: flex;
   align-items: center;
-  max-width: 720px;
   height: 120px;
   padding: 16px 24px;
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--va-border-color);
   overflow: hidden;
 }
 .card-target {
@@ -413,6 +415,22 @@ function onCustomError() {
     </LoadingBarProvider>
   </div>
 </template>
+<style lang="less" scoped>
+.card-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 120px;
+  padding: 16px 24px;
+  border: 1px solid var(--va-border-color);
+  overflow: hidden;
+}
+.card-target {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+</style>
 ```
 
 :::
@@ -492,6 +510,22 @@ function onStateError() {
     </LoadingBarProvider>
   </div>
 </template>
+<style lang="less" scoped>
+.card-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 120px;
+  padding: 16px 24px;
+  border: 1px solid var(--va-border-color);
+  overflow: hidden;
+}
+.card-target {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+</style>
 ```
 
 :::
@@ -578,6 +612,22 @@ function onThemeError() {
     </ConfigProvider>
   </Flex>
 </template>
+<style lang="less" scoped>
+.card-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 120px;
+  padding: 16px 24px;
+  border: 1px solid var(--va-border-color);
+  overflow: hidden;
+}
+.card-target {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+</style>
 ```
 
 :::
@@ -588,7 +638,7 @@ function onThemeError() {
 
 <br/>
 
-_组件级配置属性（`class` / `style` 亦会透传到加载条容器）：使用 `useLoadingBar()` 时设置在 `<LoadingBarProvider>` 上（会透传给内部 `LoadingBar`），直接使用 `<LoadingBar>` 组件时设置在 `<LoadingBar>` 上，两者等价_
+_组件级配置属性：设置在 `<LoadingBarProvider>` 上，透传给内部 `LoadingBar`；`class` / `style` 作用于其容器 `.loading-bar-wrap`，等价于 `containerClass` / `containerStyle`_
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
@@ -597,19 +647,17 @@ _组件级配置属性（`class` / `style` 亦会透传到加载条容器）：�
 | loadingBarSize | 加载条大小，单位 `px` | number | 2 |
 | colorLoading | 加载中颜色 | string | undefined |
 | colorFinish | 加载完成颜色 | string | undefined |
-| colorError | 加载错误颜色 | string | '#ff4d4f' |
+| colorError | 加载错误颜色 | string | 'var(--va-error-color)' |
 | loadingBarStyle | 按状态自定义加载条样式，可选 `loading` / `finish` / `error`，取值为样式字符串或 [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | { loading?: string &#124; CSSProperties, finish?: string &#124; CSSProperties, error?: string &#124; CSSProperties } | undefined |
 | to | 加载条的挂载位置，可选：元素标签名（例如 `'body'`）或者元素本身，`false` 会待在原地 | string &#124; HTMLElement &#124; false | 'body' |
 
-> 组件上的 `class` / `style` 透传到加载条容器 `.loading-bar-wrap`（等价于 `containerClass` / `containerStyle`）。
+> `colorLoading` / `colorFinish` 未显式传入时取主色，可用 `theme.components.LoadingBar.primaryColor` 单独覆盖。
 >
-> `colorLoading` / `colorFinish` 默认取主色（跟随 `ConfigProvider` 主题，可用 `theme.components.LoadingBar.primaryColor` 单独覆盖），`colorError` 默认 `var(--va-error-color)`（危险色别名）。
->
-> `loadingBarStyle` 以内联样式作用于内层进度条：与 `loadingBarSize` / `colorLoading` / `colorFinish` / `colorError` 设置同一属性冲突时，以其为准；未提供 `finish` 时，完成态回落到 `loading` 的样式；`error` 态仅取 `error`，未提供时不注入任何自定义样式。
+> `loadingBarStyle` 以内联样式作用于内层进度条：与 `loadingBarSize` / `colorLoading` / `colorFinish` / `colorError` 同属性冲突时以其为准；未提供 `finish` 时完成态回落 `loading`，未提供 `error` 时不注入。
 
 ## Methods
 
-_`useLoadingBar()` 返回的 `LoadingBarApi`，或通过 `<LoadingBar>` / `<LoadingBarProvider>` 的 `@ready` 事件获取：_
+_`useLoadingBar()` 返回的 `LoadingBarApi`；局部实例用 `<LoadingBarProvider>` 的 `@ready` 获取：_
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |

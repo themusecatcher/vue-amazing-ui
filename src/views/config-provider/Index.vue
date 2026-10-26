@@ -11,7 +11,7 @@ import {
   PlusOutlined,
   SettingOutlined
 } from '@ant-design/icons-vue'
-import { createDiscreteApi } from 'vue-amazing-ui'
+import { createDiscreteApi, useMessage, useModal, useNotification } from 'vue-amazing-ui'
 import type {
   ConfigProviderProps,
   ConfigProviderTheme,
@@ -19,9 +19,6 @@ import type {
   ItemType,
   LoadingBarApi,
   MenuKey,
-  MessageApi,
-  ModalApi,
-  NotificationApi,
   SelectOption,
   SegmentedOption,
   StepsItem,
@@ -90,9 +87,10 @@ const dateValue = ref<number>(Date.now())
 const inputValue = ref<string>('')
 const inputNumberValue = ref<number>(3)
 const inputSearchValue = ref<string>('')
-const messageRef = ref<MessageApi>()
-const modalRef = ref<ModalApi>()
-const notificationRef = ref<NotificationApi>()
+// 浮层类组件推荐 useXxx()：入口 App.vue 已包裹对应 Provider
+const message = useMessage()
+const modal = useModal()
+const notification = useNotification()
 const cardRef = ref<HTMLDivElement>()
 // 局部加载条挂载到 cardRef 容器，通过 <LoadingBarProvider> 的 @ready 取到该作用域内的 api
 const localLoadingBar = ref<LoadingBarApi>()
@@ -492,20 +490,17 @@ const tokenStyle: Record<string, string> = {
             :search-props="{ type: 'primary' }"
             placeholder="input search"
           />
-          <Button type="primary" @click="messageRef?.info('This is an info message')">Show Message</Button>
-          <Message @ready="messageRef = $event" />
+          <Button type="primary" @click="message.info('This is an info message')">Show Message</Button>
           <Button
             type="primary"
-            @click="modalRef?.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
+            @click="modal.info({ title: 'This is an info modal', content: 'Some descriptions ...' })"
             >Show Modal</Button
           >
-          <Modal @ready="modalRef = $event" />
           <Button
             type="primary"
-            @click="notificationRef?.info({ title: 'Notification Title', content: 'This is a normal notification' })"
+            @click="notification.info({ title: 'Notification Title', content: 'This is a normal notification' })"
             >Show Notification</Button
           >
-          <Notification @ready="notificationRef = $event" />
           <Popconfirm title="Custom Theme" description="There will have some descriptions ..." icon="info">
             <Button type="primary">Show Confirm</Button>
           </Popconfirm>
@@ -553,20 +548,29 @@ const tokenStyle: Record<string, string> = {
             </template>
           </FloatButton>
         </Card>
-        <LoadingBarProvider
-          :container-style="{ position: 'absolute' }"
-          :to="cardRef"
-          @ready="localLoadingBar = $event"
-        />
+        <!-- 就地演示：to / container-style 只能由局部 Provider 声明，加载条才会取本段种子的令牌（全局实例挂在 body，取页面级主色） -->
         <div
-          ref="cardRef"
-          style="position: relative; width: 50%; padding: 48px 36px; border-radius: 4px; border: 1px solid #f0f0f0"
+          style="
+            position: relative;
+            width: 50%;
+            padding: 48px 36px;
+            overflow: hidden;
+            border: 1px solid var(--va-border-color);
+            border-radius: 4px;
+          "
         >
-          <Space>
-            <Button type="primary" @click="localLoadingBar?.start()">Start</Button>
-            <Button @click="localLoadingBar?.finish()">Finish</Button>
-            <Button type="danger" @click="localLoadingBar?.error()">Error</Button>
-          </Space>
+          <div ref="cardRef" style="position: absolute; inset: 0; pointer-events: none"></div>
+          <LoadingBarProvider
+            :container-style="{ position: 'absolute' }"
+            :to="cardRef"
+            @ready="localLoadingBar = $event"
+          >
+            <Space>
+              <Button type="primary" @click="localLoadingBar?.start()">Start</Button>
+              <Button @click="localLoadingBar?.finish()">Finish</Button>
+              <Button type="danger" @click="localLoadingBar?.error()">Error</Button>
+            </Space>
+          </LoadingBarProvider>
         </div>
         <Card width="50%">
           <Pagination v-model:page="page" :total="500" show-quick-jumper />
