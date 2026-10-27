@@ -14,6 +14,11 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-27">3.3.3</VersionDateTag>
+
+- 修复 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `baseZIndex` 与 `theme` 在路由守卫中创建离散实例（`createDiscreteApi`）时不生效的问题；贡献者文档补充 provide / inject 注入契约与守护说明
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-10-27">3.3.2</VersionDateTag>
 
 - 修复 [文字提示 Tooltip](/guide/components/tooltip.html)、[选择器 Select](/guide/components/select.html) 等组件的 `to` / `listenTo` / `anchor`，以及 [数字动画 NumberAnimation](/guide/components/number-animation.html)、[轮播图 Carousel](/guide/components/carousel.html) 的缓动预设名：发布包中传入 `DOM` 元素或预设名会误报 `Invalid prop`，原写法无需调整
