@@ -174,17 +174,17 @@ const activeColumnTip = computed(() => {
     <DescriptionsItem label="Official Receipts">$60.00</DescriptionsItem>
     <DescriptionsItem label="Config Info">
       Data disk type: MongoDB
-      <br />
+      <br/>
       Database version: 3.4
-      <br />
+      <br/>
       Package: dds.mongo.mid
-      <br />
+      <br/>
       Storage space: 10 GB
-      <br />
+      <br/>
       Replication factor: 3
-      <br />
+      <br/>
       Region: East China 1
-      <br />
+      <br/>
     </DescriptionsItem>
   </Descriptions>
 </ClientOnly>
@@ -207,17 +207,17 @@ const activeColumnTip = computed(() => {
     <DescriptionsItem label="Official Receipts">$60.00</DescriptionsItem>
     <DescriptionsItem label="Config Info">
       Data disk type: MongoDB
-      <br />
+      <br/>
       Database version: 3.4
-      <br />
+      <br/>
       Package: dds.mongo.mid
-      <br />
+      <br/>
       Storage space: 10 GB
-      <br />
+      <br/>
       Replication factor: 3
-      <br />
+      <br/>
       Region: East China 1
-      <br />
+      <br/>
     </DescriptionsItem>
   </Descriptions>
 </template>
@@ -242,17 +242,17 @@ const activeColumnTip = computed(() => {
       <DescriptionsItem label="Official">$60.00</DescriptionsItem>
       <DescriptionsItem label="Config Info">
         Data disk type: MongoDB
-        <br />
+        <br/>
         Database version: 3.4
-        <br />
+        <br/>
         Package: dds.mongo.mid
-        <br />
+        <br/>
         Storage space: 10 GB
-        <br />
+        <br/>
         Replication factor: 3
-        <br />
+        <br/>
         Region: East China 1
-        <br />
+        <br/>
       </DescriptionsItem>
     </Descriptions>
     <Descriptions title="Custom Size" :size="size">
@@ -305,17 +305,17 @@ const options = [
       <DescriptionsItem label="Official">$60.00</DescriptionsItem>
       <DescriptionsItem label="Config Info">
         Data disk type: MongoDB
-        <br />
+        <br/>
         Database version: 3.4
-        <br />
+        <br/>
         Package: dds.mongo.mid
-        <br />
+        <br/>
         Storage space: 10 GB
-        <br />
+        <br/>
         Replication factor: 3
-        <br />
+        <br/>
         Region: East China 1
-        <br />
+        <br/>
       </DescriptionsItem>
     </Descriptions>
     <Descriptions title="Custom Size" :size="size">
@@ -347,15 +347,15 @@ const options = [
     <DescriptionsItem label="Official">$60.00</DescriptionsItem>
     <DescriptionsItem label="Config Info">
       Data disk type: MongoDB
-      <br />
+      <br/>
       Database version: 3.4
-      <br />
+      <br/>
       Package: dds.mongo.mid
-      <br />
+      <br/>
       Storage space: 10 GB
-      <br />
+      <br/>
       Replication factor: 3
-      <br />
+      <br/>
       Region: East China 1
     </DescriptionsItem>
   </Descriptions>
@@ -374,15 +374,15 @@ const options = [
     <DescriptionsItem label="Official">$60.00</DescriptionsItem>
     <DescriptionsItem label="Config Info">
       Data disk type: MongoDB
-      <br />
+      <br/>
       Database version: 3.4
-      <br />
+      <br/>
       Package: dds.mongo.mid
-      <br />
+      <br/>
       Storage space: 10 GB
-      <br />
+      <br/>
       Replication factor: 3
-      <br />
+      <br/>
       Region: East China 1
     </DescriptionsItem>
   </Descriptions>
@@ -440,17 +440,17 @@ const options = [
     <DescriptionsItem label="Official Receipts">$60.00</DescriptionsItem>
     <DescriptionsItem label="Config Info">
       Data disk type: MongoDB
-      <br />
+      <br/>
       Database version: 3.4
-      <br />
+      <br/>
       Package: dds.mongo.mid
-      <br />
+      <br/>
       Storage space: 10 GB
-      <br />
+      <br/>
       Replication factor: 3
-      <br />
+      <br/>
       Region: East China 1
-      <br />
+      <br/>
     </DescriptionsItem>
   </Descriptions>
 </ClientOnly>
@@ -473,17 +473,17 @@ const options = [
     <DescriptionsItem label="Official Receipts">$60.00</DescriptionsItem>
     <DescriptionsItem label="Config Info">
       Data disk type: MongoDB
-      <br />
+      <br/>
       Database version: 3.4
-      <br />
+      <br/>
       Package: dds.mongo.mid
-      <br />
+      <br/>
       Storage space: 10 GB
-      <br />
+      <br/>
       Replication factor: 3
-      <br />
+      <br/>
       Region: East China 1
-      <br />
+      <br/>
     </DescriptionsItem>
   </Descriptions>
 </template>
@@ -681,17 +681,17 @@ _使用 `header` 插槽自定义整个头部区域，替代 `title` 与 `extra`_
       <DescriptionsItem label="Official">$60.00</DescriptionsItem>
       <DescriptionsItem label="Config Info">
         Data disk type: MongoDB
-        <br />
+        <br/>
         Database version: 3.4
-        <br />
+        <br/>
         Package: dds.mongo.mid
-        <br />
+        <br/>
         Storage space: 10 GB
-        <br />
+        <br/>
         Replication factor: 3
-        <br />
+        <br/>
         Region: East China 1
-        <br />
+        <br/>
       </DescriptionsItem>
     </Descriptions>
     <Descriptions
@@ -738,17 +738,17 @@ _使用 `header` 插槽自定义整个头部区域，替代 `title` 与 `extra`_
       <DescriptionsItem label="Official">$60.00</DescriptionsItem>
       <DescriptionsItem label="Config Info">
         Data disk type: MongoDB
-        <br />
+        <br/>
         Database version: 3.4
-        <br />
+        <br/>
         Package: dds.mongo.mid
-        <br />
+        <br/>
         Storage space: 10 GB
-        <br />
+        <br/>
         Replication factor: 3
-        <br />
+        <br/>
         Region: East China 1
-        <br />
+        <br/>
       </DescriptionsItem>
     </Descriptions>
     <Descriptions

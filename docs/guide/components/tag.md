@@ -127,8 +127,8 @@ const onClose = (e: MouseEvent) => {
     <Tag color="gold">gold</Tag>
     <Tag color="lime">lime</Tag>
   </Space>
-  <br />
-  <br />
+  <br/>
+  <br/>
   <Space gap="small">
     <Tag color="#f50">#f50</Tag>
     <Tag color="#2db7f5">#2db7f5</Tag>

@@ -14,9 +14,15 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-27">3.3.3</VersionDateTag>
+## <VersionDateTag date="2026-10-27">3.4.1</VersionDateTag>
 
 - 修复 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `baseZIndex` 与 `theme` 在路由守卫中创建离散实例（`createDiscreteApi`）时不生效的问题；贡献者文档补充 provide / inject 注入契约与守护说明
+
+## <VersionDateTag date="2026-10-27">3.4.0</VersionDateTag>
+
+- [水印 Watermark](/guide/components/watermark.html) 移除 `fixed` 属性：全屏水印始终固定于视口，原先 `fixed={false}` 随文档滚动的写法改用非全屏水印包裹页面根内容；`textStyle` 的 `'light'` / `'weight'` / `'none'` 改为 `'lighter'` / `'bolder'` / `'normal'`，`offset` 默认值同时改为 `gap / 2`（原 `[50, 50]`）
+- 新增 [水印 Watermark](/guide/components/watermark.html) 的 `imageOpacity` 与 `textStyle.lineHeight` / `textStyle.textAlign` / `textStyle.fontVariant`：图片水印可调透明度、未指定 `width` / `height` 时按原图比例推算尺寸，多行文字的行高与对齐可调、支持小型大写
+- 修复 [水印 Watermark](/guide/components/watermark.html) 的取色与绘制：直接改 `<html data-va-mode>` 切换明暗时默认色不跟随，图片不可用时给出可定位的提示，切换参数或卸载后不再残留旧水印，自定义字体加载完成后尺寸与字宽自动校正
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-10-27">3.3.2</VersionDateTag>

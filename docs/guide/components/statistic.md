@@ -285,7 +285,7 @@ _使用 `tabularNums` 使数值滚动时宽度保持稳定_
     </Statistic>
   </Col>
 </Row>
-<br />
+<br/>
 <Button type="primary" @click="playNumsCompare">播放对比</Button>
 
 ::: details Show Code
@@ -314,7 +314,7 @@ function playNumsCompare() {
       </Statistic>
     </Col>
   </Row>
-  <br />
+  <br/>
   <Button type="primary" @click="playNumsCompare">播放对比</Button>
 </template>
 ```

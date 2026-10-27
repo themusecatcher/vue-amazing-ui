@@ -12,15 +12,10 @@ const route = useRoute() // 返回当前路由地址，相当于在模板中使�
 // 侧栏菜单的明暗跟随共享主题（模式切换入口统一收敛到右下角的暗黑模式浮钮）
 const isDark = computed<boolean>(() => theme.value.mode === 'dark')
 const contentScrollRef = ref<InstanceType<typeof Scrollbar> | null>(null)
-// 少数演示页需要验证「随文档滚动」的行为（如全屏水印 fixed=false），改为整页滚动：
-// 此时不套 Scrollbar，侧栏用 sticky 固定在视口
-const windowScroll = computed(() => route.meta.windowScroll === true)
-// 路由变化后把滚动位置复位：内容区滚动由 Scrollbar 承载（window 的 scrollBehavior 管不到），
-// 整页滚动页则复位 window
+// 路由变化后把滚动位置复位：内容区滚动由 Scrollbar 承载（window 的 scrollBehavior 管不到）
 watch(
   () => route.fullPath,
   () => {
-    window.scrollTo({ top: 0 })
     contentScrollRef.value?.scrollTo({ top: 0 })
   },
   { flush: 'post' }
@@ -38,21 +33,11 @@ const asideSize = computed<SideMenuSize>(() => {
   return 'sm'
 })
 const asideWidth = computed<number>(() => ASIDE_WIDTH[asideSize.value])
-// 整页滚动页：侧栏吸附在视口顶部（sticky），其余页面沿用相对定位
-const asideColStyle = computed(() =>
-  windowScroll.value
-    ? {
-        position: 'sticky' as const,
-        top: '0',
-        alignSelf: 'flex-start' as const,
-        height: '100vh',
-        width: `${asideWidth.value}px`
-      }
-    : { position: 'relative' as const, width: `${asideWidth.value}px` }
-)
+// 侧栏为定位容器（宽度分档值随视口变化，故用计算属性下发）
+const asideColStyle = computed(() => ({ position: 'relative' as const, width: `${asideWidth.value}px` }))
 </script>
 <template>
-  <Row :style="windowScroll ? { alignItems: 'flex-start' } : undefined" style="width: 100%">
+  <Row style="width: 100%">
     <!--
       侧栏宽度按视口分档（232 / 204 / 176 / 152），档位随菜单密度一起变化，见上方 asideSize。
       宽度写在 `width` 上、flex-basis 交由 `0 0 auto` 遵循：flex-basis 直接写像素值会被 min-width: auto
@@ -67,7 +52,7 @@ const asideColStyle = computed(() =>
         内容比容器宽时按 max-content 撑开（无上限），页面内所有 `width: 100%` 的组件会跟着变宽。
         这里要求内容宽度始终限制在内容区宽度内（溢出由容器自身承载），故保持默认
       -->
-      <Scrollbar v-if="!windowScroll" ref="contentScrollRef" style="height: 100vh">
+      <Scrollbar ref="contentScrollRef" style="height: 100vh">
         <div class="router-view">
           <RouterView v-slot="{ Component }">
             <Transition name="fade" mode="out-in">
@@ -79,17 +64,6 @@ const asideColStyle = computed(() =>
           <BackTop v-if="route.meta.backTop !== false" />
         </div>
       </Scrollbar>
-      <!-- 整页滚动页：不套 Scrollbar，滚动交给文档（window），供全屏水印等需要「随文档滚动」的演示验证 -->
-      <div v-else class="router-view">
-        <RouterView v-slot="{ Component }">
-          <Transition name="fade" mode="out-in">
-            <component :is="Component" />
-          </Transition>
-        </RouterView>
-        <ThemeColorButton />
-        <ThemeModeButton />
-        <BackTop v-if="route.meta.backTop !== false" />
-      </div>
     </Col>
   </Row>
 </template>

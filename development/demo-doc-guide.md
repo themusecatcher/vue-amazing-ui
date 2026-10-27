@@ -251,7 +251,7 @@ _七种类型_
 
 - **函数名与括号之间不留空格**：写 `function onClose(e: Event) {`，不写 `function onClose (e: Event) {`。
 - **不使用尾逗号**（与 `.prettierrc.json` 的 `trailingComma: "none"` 一致）：数组 / 对象的最后一项后不加 `,`。
-- **自闭合标签的 `/>` 前留一个空格**：写 `<br />`、`<ColorPicker :label="labelFormat" />`，不写 `<br/>`、`<ColorPicker :label="labelFormat"/>`。
+- **自闭合标签的 `/>` 前留一个空格**：写 `<ColorPicker :label="labelFormat" />`，不写 `<ColorPicker :label="labelFormat"/>`；**`<br>` 是唯一例外**，文档（md）内统一写 `<br/>`（不写 `<br />`）——源码 `.vue` 模板由 Prettier 格式化，仍是 `<br />`，无需手工调整。
 - **组件属性较多时每行一个属性**，便于阅读与复制（如 `<AutoComplete>` 的多属性写法）。
 - 其余写法与 `.prettierrc.json` 保持一致：二元运算符两侧留空格（`index === 2`）、十六进制颜色用小写（`#fff`）。
 
