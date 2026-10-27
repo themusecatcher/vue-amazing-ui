@@ -14,6 +14,12 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-27">3.5.0</VersionDateTag>
+
+- [选择器 Select](/guide/components/select.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html) 的下拉面板结构改为 `.va-popup-container` + `.va-popup-panel` 两层（面板根仍为 `select-panel-container` / `auto-complete-panel`）：`.select-panel-wrapper` / `.auto-complete-panel-wrapper` 不再存在，依赖旧 `DOM` 结构的 `:deep()` 选择器需改用 `popupClassName` / `dropdownMenuStyle` 等公开属性
+- 上述两个组件的面板内浮层（`dropdownRender` / `option` 插槽里的 `Tooltip` / `Popover`）改为挂进面板内部，面板根不再裁剪溢出内容
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-10-27">3.4.0</VersionDateTag>
 
 - [水印 Watermark](/guide/components/watermark.html) 移除 `fixed` 属性：全屏水印始终固定于视口，原先 `fixed={false}` 随文档滚动的写法改用非全屏水印包裹页面根内容；`textStyle` 的 `'light'` / `'weight'` / `'none'` 改为 `'lighter'` / `'bolder'` / `'normal'`，`offset` 默认值同时改为 `gap / 2`（原 `[50, 50]`）
