@@ -287,8 +287,8 @@ function clickImage(image: CarouselImage) {
 <Space align="center">
   showArrow: <Switch v-model:value="showArrow" />
 </Space>
-<br />
-<br />
+<br/>
+<br/>
 <Carousel :images="images" :height="450" :show-arrow="showArrow" @click="clickImage" />
 
 ::: details Show Code
@@ -331,8 +331,8 @@ function clickImage(image: CarouselImage) {
   <Space align="center">
     showArrow: <Switch v-model:value="showArrow" />
   </Space>
-  <br />
-  <br />
+  <br/>
+  <br/>
   <Carousel :images="images" :height="450" :show-arrow="showArrow" @click="clickImage" />
 </template>
 ```
@@ -445,8 +445,8 @@ const dotPosition = ref<CarouselProps['dotPosition']>('top')
 </script>
 <template>
   <RadioGroup :options="positionOptions" v-model:value="dotPosition" button button-style="solid" />
-  <br />
-  <br />
+  <br/>
+  <br/>
   <Carousel :images="images" :height="450" autoplay :dotPosition="dotPosition" />
 </template>
 ```
@@ -542,8 +542,8 @@ const images = ref<CarouselImage[]>([
 ## 过渡效果
 
 <RadioGroup :options="effectOptions" v-model:value="effect" button button-style="solid" />
-<br />
-<br />
+<br/>
+<br/>
 <Carousel :images="images" :height="450" :effect="effect" :fade-duration="1500" />
 
 ::: details Show Code
@@ -591,8 +591,8 @@ const effect = ref<CarouselProps['effect']>('fade')
 </script>
 <template>
   <RadioGroup :options="effectOptions" v-model:value="effect" button button-style="solid" />
-  <br />
-  <br />
+  <br/>
+  <br/>
   <Carousel :images="images" :height="450" :effect="effect" :fade-duration="1500" />
 </template>
 ```
@@ -602,8 +602,8 @@ const effect = ref<CarouselProps['effect']>('fade')
 ## 鼠标经过指示点切换轮播图
 
 <RadioGroup :options="triggerOptions" v-model:value="dotTrigger" button button-style="solid" />
-<br />
-<br />
+<br/>
+<br/>
 <Carousel :images="images" :height="450" :dot-trigger="dotTrigger" />
 
 ::: details Show Code
@@ -651,8 +651,8 @@ const dotTrigger = ref<CarouselProps['dotTrigger']>('hover')
 </script>
 <template>
   <RadioGroup :options="triggerOptions" v-model:value="dotTrigger" button button-style="solid" />
-  <br />
-  <br />
+  <br/>
+  <br/>
   <Carousel :images="images" :height="450" :dot-trigger="dotTrigger" />
 </template>
 ```
@@ -735,8 +735,8 @@ const slideEasing = computed(() => (slideEasingType.value === 'preset' ? slideEa
       show-search
     />
   </Space>
-  <br />
-  <br />
+  <br/>
+  <br/>
   <Carousel :images="images" :height="450" :slide-duration="800" :slide-function="slideEasing" />
 </template>
 ```
@@ -750,8 +750,8 @@ _`fadeFunction` 可传四个三次贝塞尔控制点（自动转为 `CSS` `cubic
 <br/>
 
 <RadioGroup :options="fadeEasingTypeOptions" v-model:value="fadeEasingType" button button-style="solid" />
-<br />
-<br />
+<br/>
+<br/>
 <Carousel :images="images" :height="450" effect="fade" :fade-duration="1500" :fade-function="fadeEasing" />
 
 ::: details Show Code
@@ -798,8 +798,8 @@ const fadeEasing = computed<CarouselProps['fadeFunction']>(() =>
 </script>
 <template>
   <RadioGroup :options="fadeEasingTypeOptions" v-model:value="fadeEasingType" button button-style="solid" />
-  <br />
-  <br />
+  <br/>
+  <br/>
   <Carousel :images="images" :height="450" effect="fade" :fade-duration="1500" :fade-function="fadeEasing" />
 </template>
 ```
@@ -874,8 +874,8 @@ _关闭 `loop` 后到达首尾时，该方向的切换（箭头、键盘、滚�
 <br/>
 
 <Space align="center"> loop: <Switch v-model:value="loop" /> </Space>
-<br />
-<br />
+<br/>
+<br/>
 <Carousel :images="images" :height="450" :loop="loop" />
 
 ::: details Show Code
@@ -913,8 +913,8 @@ const loop = ref<boolean>(true)
 </script>
 <template>
   <Space align="center"> loop: <Switch v-model:value="loop" /> </Space>
-  <br />
-  <br />
+  <br/>
+  <br/>
   <Carousel :images="images" :height="450" :loop="loop" />
 </template>
 ```
@@ -958,8 +958,8 @@ _通过 `initial-index` 指定初始展示的图片下标，仅在初始化时�
 <Space align="center">
   initialIndex: <InputNumber :min="1" :max="images.length" v-model:value="initialIndex" />
 </Space>
-<br />
-<br />
+<br/>
+<br/>
 <Carousel :key="initialIndex" :images="images" :height="450" :initial-index="initialIndex" />
 
 ::: details Show Code
@@ -999,8 +999,8 @@ const initialIndex = ref<number>(3)
   <Space align="center">
     initialIndex: <InputNumber :min="1" :max="images.length" v-model:value="initialIndex" />
   </Space>
-  <br />
-  <br />
+  <br/>
+  <br/>
   <Carousel :key="initialIndex" :images="images" :height="450" :initial-index="initialIndex" />
 </template>
 ```
@@ -1018,8 +1018,8 @@ _通过 `v-model:current-index` 双向绑定当前页：外部改值即可跳转
   <Button @click="controlledIndex = 1">跳转到第 1 张</Button>
   <Button @click="controlledIndex = images.length">跳转到最后一张</Button>
 </Space>
-<br />
-<br />
+<br/>
+<br/>
 <Carousel v-model:current-index="controlledIndex" :images="images" :height="450" />
 
 ::: details Show Code
@@ -1061,8 +1061,8 @@ const controlledIndex = ref<number>(1)
     <Button @click="controlledIndex = 1">跳转到第 1 张</Button>
     <Button @click="controlledIndex = images.length">跳转到最后一张</Button>
   </Space>
-  <br />
-  <br />
+  <br/>
+  <br/>
   <Carousel v-model:current-index="controlledIndex" :images="images" :height="450" />
 </template>
 ```
@@ -1076,8 +1076,8 @@ _`beforeChange` 在切换开始时触发，`afterChange` 在切换结束后触�
 <br/>
 
 <Space align="center"> 最近一次： {{ beforeChangeInfo }} / {{ afterChangeInfo }} </Space>
-<br />
-<br />
+<br/>
+<br/>
 <Carousel :images="images" :height="450" @before-change="onBeforeChange" @after-change="onAfterChange" />
 
 ::: details Show Code
@@ -1122,8 +1122,8 @@ function onAfterChange(current: number) {
 </script>
 <template>
   <Space align="center"> 最近一次： {{ beforeChangeInfo }} / {{ afterChangeInfo }} </Space>
-  <br />
-  <br />
+  <br/>
+  <br/>
   <Carousel :images="images" :height="450" @before-change="onBeforeChange" @after-change="onAfterChange" />
 </template>
 ```
@@ -1139,8 +1139,8 @@ _与 `CSS` 同名属性一致，默认 `fill` 拉伸填满容器_
 <Space align="center">
   objectFit: <Select :options="objectFitOptions" v-model:value="objectFit" style="width: 160px" />
 </Space>
-<br />
-<br />
+<br/>
+<br/>
 <Carousel :images="images" :height="450" :object-fit="objectFit" />
 
 ::: details Show Code
@@ -1202,8 +1202,8 @@ const objectFit = ref<CarouselProps['objectFit']>('fill')
   <Space align="center">
     objectFit: <Select :options="objectFitOptions" v-model:value="objectFit" style="width: 160px" />
   </Space>
-  <br />
-  <br />
+  <br/>
+  <br/>
   <Carousel :images="images" :height="450" :object-fit="objectFit" />
 </template>
 ```
@@ -1217,8 +1217,8 @@ _开启 `draggable` 后支持鼠标与触摸拖拽，位移超过容器宽度一
 <br/>
 
 <Space align="center"> draggable: <Switch v-model:value="draggable" /> </Space>
-<br />
-<br />
+<br/>
+<br/>
 <Carousel :images="images" :height="450" :draggable="draggable" />
 
 ::: details Show Code
@@ -1256,8 +1256,8 @@ const draggable = ref<boolean>(true)
 </script>
 <template>
   <Space align="center"> draggable: <Switch v-model:value="draggable" /> </Space>
-  <br />
-  <br />
+  <br/>
+  <br/>
   <Carousel :images="images" :height="450" :draggable="draggable" />
 </template>
 ```
@@ -1271,8 +1271,8 @@ _开启 `mousewheel` 后滚轮切换，单次滚动量需超过 `10`_
 <br/>
 
 <Space align="center"> mousewheel: <Switch v-model:value="mousewheel" /> </Space>
-<br />
-<br />
+<br/>
+<br/>
 <Carousel :images="images" :height="450" :mousewheel="mousewheel" />
 
 ::: details Show Code
@@ -1310,8 +1310,8 @@ const mousewheel = ref<boolean>(true)
 </script>
 <template>
   <Space align="center"> mousewheel: <Switch v-model:value="mousewheel" /> </Space>
-  <br />
-  <br />
+  <br/>
+  <br/>
   <Carousel :images="images" :height="450" :mousewheel="mousewheel" />
 </template>
 ```
@@ -1508,8 +1508,8 @@ const images = ref<CarouselImage[]>([
   <Button @click="carousel?.next()">后一页</Button>
   <Button @click="getCurrentIndex">获取当前页：{{ currentIndex }}</Button>
 </Space>
-<br />
-<br />
+<br/>
+<br/>
 <Carousel ref="carousel" :images="images" :height="450" />
 
 ::: details Show Code
@@ -1560,8 +1560,8 @@ function getCurrentIndex() {
     <Button @click="carousel?.next()">后一页</Button>
     <Button @click="getCurrentIndex">获取当前页：{{ currentIndex }}</Button>
   </Space>
-  <br />
-  <br />
+  <br/>
+  <br/>
   <Carousel ref="carousel" :images="images" :height="450" />
 </template>
 ```

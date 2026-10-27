@@ -465,7 +465,7 @@ const indicator = ref<BuiltinIndicator>('dot')
     <Segmented v-model:value="indicator" :options="indicatorOptions" />
     <QRCode value="https://themusecatcher.blog.csdn.net" status="loading" :spin-props="{ indicator }" />
   </Space>
-  <br />
+  <br/>
   <Space>
     <QRCode
       value="https://themusecatcher.blog.csdn.net"

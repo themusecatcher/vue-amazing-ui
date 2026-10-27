@@ -465,8 +465,8 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
       色块取自当前作用域实际写入的变量值，而非静态示例色。修改种子后仅重算 15 个变量：主色 6（含上排 5 个色块与主色文字）、info 3、链接 3（末位色块，基色取 <code>info</code>，本节未单独设置故与主色同值）、焦点环 1、深色皮肤底色 2（只被 <code>Menu</code> 的 <code>theme="dark"</code> 消费，故不单独占色块）。其余 27 个值不变。
     </p>
   </Card>
-  <br />
-  <br />
+  <br/>
+  <br/>
   <Flex vertical>
     <Space align="center">
       <Alert style="width: 200px" message="Info Text" type="info" show-icon />
@@ -910,8 +910,8 @@ function onDecline(scale: number) {
         primaryColor:<ColorPicker style="width: 200px" v-model:value="primaryColor" :show-alpha="false" />
       </Space>
     </Card>
-    <br />
-    <br />
+    <br/>
+    <br/>
     <Flex vertical>
       <Space align="center">
         <Alert style="width: 200px" message="Info Text" type="info" show-icon />

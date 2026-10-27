@@ -592,8 +592,8 @@ function onSearch6(val: string) {
   @search="onSearch7"
   @select="onSelect7"
 />
-<br />
-<br />
+<br/>
+<br/>
 <AutoComplete
   v-model:value="value8"
   :options="options7"
@@ -637,8 +637,8 @@ function onClear() {
     @search="onSearch7"
     @select="onSelect7"
   />
-  <br />
-  <br />
+  <br/>
+  <br/>
   <AutoComplete
     v-model:value="value8"
     :options="options7"
@@ -707,8 +707,8 @@ function onSearch7(searchText: string) {
   @search="onSearch7"
   @select="onSelect7"
 />
-<br />
-<br />
+<br/>
+<br/>
 <AutoComplete
   v-model:value="value11"
   :options="options7"
@@ -760,8 +760,8 @@ function onSearch7(searchText: string) {
     @search="onSearch7"
     @select="onSelect7"
   />
-  <br />
-  <br />
+  <br/>
+  <br/>
   <AutoComplete
     v-model:value="value11"
     :options="options7"
@@ -1005,8 +1005,8 @@ const options4 = ref<{ value: string }[]>([
 ## 三种尺寸
 
 <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
-<br />
-<br />
+<br/>
+<br/>
 <AutoComplete
   v-model:value="valueS"
   :options="optionsD"
@@ -1074,8 +1074,8 @@ const optionsD = ref([
 </script>
 <template>
   <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
-  <br />
-  <br />
+  <br/>
+  <br/>
   <AutoComplete
     v-model:value="valueS"
     :options="optionsD"

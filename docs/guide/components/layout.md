@@ -869,7 +869,7 @@ _内容超过一屏时侧边栏保持固定，滚动浏览时不会移出视口�
       <LayoutHeader style="background: #fff; padding: 0" />
       <LayoutContent style="margin: 24px 16px 0; overflow: initial">
         <div style="padding: 24px; background: #fff; text-align: center">
-          ...<br />Really<br />...<br />...<br />...<br />...<br />...<br />...<br />long<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />content
+          ...<br/>Really<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>long<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>content
         </div>
       </LayoutContent>
       <LayoutFooter style="text-align: center">Vue Amazing UI ©2023 Created by the Muse Catcher</LayoutFooter>
@@ -939,7 +939,7 @@ const fixedSiderSelectedKeys = ref<MenuKey[]>(['4'])
         <LayoutHeader style="background: #fff; padding: 0" />
         <LayoutContent style="margin: 24px 16px 0; overflow: initial">
           <div style="padding: 24px; background: #fff; text-align: center">
-            ...<br />Really<br />...<br />...<br />...<br />...<br />...<br />...<br />long<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />...<br />content
+            ...<br/>Really<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>long<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>...<br/>content
           </div>
         </LayoutContent>
         <LayoutFooter style="text-align: center">Vue Amazing UI ©2023 Created by the Muse Catcher</LayoutFooter>

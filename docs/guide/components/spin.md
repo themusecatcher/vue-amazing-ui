@@ -620,11 +620,11 @@ _打开开关后，加载效果需等 `delay` 时长才出现，从而避免请�
 
 <Flex align="center"> loading state:<Switch v-model:value="delaySpinning" /> </Flex>
 
-<br />
+<br/>
 
 <Flex align="center"> delay:<InputNumber v-model:value="delay" :min="0" /> ms </Flex>
 
-<br />
+<br/>
 
 <Spin :delay="delay" :spinning="delaySpinning" tip="加载中...">
   <p class="spin-content">
@@ -642,9 +642,9 @@ const delay = ref(500)
 </script>
 <template>
   <Flex align="center"> loading state:<Switch v-model:value="delaySpinning" /> </Flex>
-  <br />
+  <br/>
   <Flex align="center"> delay:<InputNumber v-model:value="delay" :min="0" /> ms </Flex>
-  <br />
+  <br/>
   <Spin :delay="delay" :spinning="delaySpinning" tip="加载中...">
     <p class="spin-content">
       请求进行中时，此区域会变淡且不可交互；若在这段时间内请求已经结束（再次关闭开关），加载效果不会出现。
