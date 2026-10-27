@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, h, inject, ref, watch } from 'vue'
+import { computed, h, ref, watch } from 'vue'
 import type { CSSProperties, FunctionalComponent, TransitionProps, VNode } from 'vue'
-import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
+import { themeTeleportKey } from 'components/config-provider/context'
 import {
   FLOATING_MOUNT_ATTR,
+  injectFromChain,
   raiseFloatingOrder,
   useFloating,
   useFloatingTeleportTarget,
@@ -174,7 +175,7 @@ const {
 // 否则使用者经 popupStyle / dropdownMenuStyle 传 zIndex 就能绕开 zIndex prop 与分配器
 // 主题转发：作用域变量写在包裹元素上时（abstract: false），Teleport 到 body 的面板拿不到继承，
 // 由 Provider 经此通道下发当前作用域的全量令牌；写在 `<html>` 上时为 null，无需重复内联
-const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportTheme = injectFromChain(themeTeleportKey) ?? null
 const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
 const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 const mergedPanelStyle = computed<CSSProperties>(() => ({

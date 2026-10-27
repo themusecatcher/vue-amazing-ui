@@ -4,7 +4,6 @@ import {
   computed,
   defineComponent,
   h,
-  inject,
   isVNode,
   onBeforeUnmount,
   onMounted,
@@ -16,7 +15,7 @@ import {
 } from 'vue'
 import type { CSSProperties, ComponentPublicInstance, PropType, TransitionProps, VNode, VNodeChild } from 'vue'
 import Popup from 'components/popup'
-import { useResizeObserver } from 'components/utils'
+import { injectFromChain, useResizeObserver } from 'components/utils'
 import { getItemKey, menuContextKey } from './context'
 import type {
   ItemType,
@@ -154,7 +153,7 @@ export default defineComponent({
     isRoot: { type: Boolean, default: false } // 是否为根列表：决定是否输出根类名与模式 / 主题类名
   },
   setup(props) {
-    const injected = inject(menuContextKey)
+    const injected = injectFromChain(menuContextKey)
     if (!injected) {
       throw new Error('[Menu] 菜单节点渲染内核必须在 Menu 内部使用')
     }

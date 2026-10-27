@@ -1,19 +1,21 @@
 <script setup lang="ts">
-import { ref, computed, watch, watchEffect, onMounted, onUnmounted, inject, provide, nextTick } from 'vue'
+import { ref, computed, watch, watchEffect, onMounted, onUnmounted, provide, nextTick } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
-import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
+import { themeTeleportKey } from 'components/config-provider/context'
 import {
+  injectFromChain,
   useSlotsExist,
   lockScroll,
   useZIndex,
-  Z_INDEX_CONTAINER_OPEN_KEY,
+  zIndexContainerOpenKey,
   FLOATING_LAYER_Z_INDEX
 } from 'components/utils'
 import type { MountElement } from 'components/utils'
+import { parentDrawerOptsKey } from './context'
 
 // 主题转发：抽屉 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
-const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportTheme = injectFromChain(themeTeleportKey) ?? null
 const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
 const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 
@@ -119,8 +121,7 @@ const emits = defineEmits<{
 // 多层抽屉 push
 // 父抽屉通过 provide 暴露 setPush / setPull：子抽屉开合时通知父抽屉位移 / 复位。
 // sPush 表示「本抽屉是否被子抽屉推动」，仅由子抽屉调用本抽屉的 setPush 置位
-type ParentDrawerOpts = { setPush: () => void; setPull: () => void }
-const parentDrawerOpts = inject<ParentDrawerOpts | null>('parentDrawerOpts', null)
+const parentDrawerOpts = injectFromChain(parentDrawerOptsKey) ?? null
 const sPush = ref<boolean>(false)
 function setPush() {
   sPush.value = true
@@ -129,7 +130,7 @@ function setPull() {
   sPush.value = false
   focusDrawer()
 }
-provide('parentDrawerOpts', { setPush, setPull })
+provide(parentDrawerOptsKey, { setPush, setPull })
 // 尺寸
 const mergedWidth = computed(() => props.width ?? (props.size === 'large' ? 736 : 378))
 const mergedHeight = computed(() => props.height ?? (props.size === 'large' ? 736 : 378))
@@ -288,8 +289,8 @@ const {
 const drawerZIndex = computed(() => props.zIndex ?? layerZIndex.value)
 // 向下注入「本层是否处于打开态」：容器关闭时内部浮层（如已展开的 Select 下拉）需一并收起 ——
 // 内容常驻不卸载，内部浮层不会随容器消失；若保持打开，它会占着层级槽位、被重新打开的抽屉反超
-// （详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）
-provide(Z_INDEX_CONTAINER_OPEN_KEY, drawerOpen)
+// （详见 z-index.ts 的 zIndexContainerOpenKey）
+provide(zIndexContainerOpenKey, drawerOpen)
 // 每次「出现」重新领取层级：保证重新打开的抽屉位于其它已打开层之上（未注入管理器时为空操作）；
 // immediate 覆盖「挂载时即为打开态」的场景（此时 watch 不触发，而挂载已不再自动领取）
 watch(

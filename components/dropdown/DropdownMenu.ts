@@ -1,7 +1,7 @@
-import { defineComponent, h, inject, onBeforeUnmount, ref, watch } from 'vue'
+import { defineComponent, h, onBeforeUnmount, ref, watch } from 'vue'
 import type { InjectionKey, PropType, Ref, VNode } from 'vue'
 import Popup from 'components/popup'
-import { FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, injectFromChain } from 'components/utils'
 import type { MenuOption } from './Dropdown.vue'
 /**
  * 下拉菜单渲染（内部模块 · 渲染函数实现）
@@ -28,7 +28,15 @@ export interface DropdownMenuContext {
   /** 浮层是否展开：面板常驻不卸载，主浮层关闭时据此收起子菜单 */
   isOpen: Ref<boolean>
 }
-export const DROPDOWN_MENU_KEY: InjectionKey<DropdownMenuContext> = Symbol('dropdownMenu')
+/**
+ * 菜单上下文的注入键
+ *
+ * - 提供方：`Dropdown`
+ * - 消费方：`DropdownMenu`（各层级菜单项与子菜单）
+ * - 响应式：是（`isOpen` 为 `Ref<boolean>`，面板常驻不卸载）
+ * - 未命中：`undefined`，菜单项按未接入上下文处理（不渲染子菜单）
+ */
+export const dropdownMenuContextKey: InjectionKey<DropdownMenuContext> = Symbol('vaDropdownMenuContext')
 /** 子菜单收起延迟（毫秒）：为「标题 → 子面板」之间的空隙移动留出时间，避免掠过即收起 */
 const SUBMENU_HIDE_DELAY = 100
 /**
@@ -169,7 +177,7 @@ const DropdownSubMenu = defineComponent({
     option: { type: Object as PropType<MenuOption>, required: true }
   },
   setup(props) {
-    const context = inject(DROPDOWN_MENU_KEY, null)
+    const context = injectFromChain(dropdownMenuContextKey) ?? null
     const titleRef = ref<HTMLElement | null>(null) // 子菜单浮层的锚点（标题内容元素）
     const submenuOpen = ref<boolean>(false)
     let hideTimer: ReturnType<typeof setTimeout> | null = null
@@ -284,7 +292,7 @@ export const DropdownMenu = defineComponent({
     options: { type: Array as PropType<MenuOption[]>, default: () => [] }
   },
   setup(props) {
-    const context = inject(DROPDOWN_MENU_KEY, null)
+    const context = injectFromChain(dropdownMenuContextKey) ?? null
     return () => h('ul', { class: 'dropdown-menu', role: 'menu' }, renderOptions(props.options, context))
   }
 })

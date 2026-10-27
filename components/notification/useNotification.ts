@@ -12,7 +12,15 @@ export interface NotificationApi {
   destroyAll(): void
 }
 
-export const notificationApiKey: InjectionKey<NotificationApi> = Symbol('notificationApi')
+/**
+ * 通知命令式 api 的注入键
+ *
+ * - 提供方：`NotificationProvider`
+ * - 消费方：`useNotification`
+ * - 响应式：否（api 对象为稳定引用）
+ * - 未命中：`undefined`，`useNotification` 抛错提示改用 `createDiscreteApi`
+ */
+export const notificationApiKey: InjectionKey<NotificationApi> = Symbol('vaNotificationApi')
 
 /**
  * 在 `setup` 内获取 Notification api，需在 `<NotificationProvider>` 内部使用。

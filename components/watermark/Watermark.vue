@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { shallowRef, computed, inject, watch, onMounted, onBeforeUnmount } from 'vue'
+import { shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { useMutationObserver } from 'components/utils'
-import { THEME_SNAPSHOT_KEY } from 'components/config-provider/context'
+import { injectFromChain, useMutationObserver } from 'components/utils'
+import { themeSnapshotKey } from 'components/config-provider/context'
 export interface Font {
   color?: string // 字体颜色；不传时取主题变量 --va-fill-color-3（浅色 rgba(0,0,0,.15) / 暗色 rgba(255,255,255,.18)）
   fontSize?: number // 字体大小，单位 px，默认 16
@@ -64,7 +64,7 @@ const htmlRef = shallowRef<HTMLElement | null>(typeof document !== 'undefined' ?
  *    首帧与重绘时两套模式都正确；纯 CSS 在运行期改 `<html>` 属性不会触发重绘，跟随明暗请用 Provider 的 `mode`）；
  * 4. SSR 等拿不到 DOM 时才回落浅色默认。
  */
-const themeSnapshot = inject(THEME_SNAPSHOT_KEY, null)
+const themeSnapshot = injectFromChain(themeSnapshotKey) ?? null
 const resolvedTextColor = computed(() => {
   if (props.textStyle.color) {
     return props.textStyle.color
