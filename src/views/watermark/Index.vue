@@ -17,27 +17,78 @@ onBeforeUnmount(() => {
   cancelAnimationFrame(rafId)
 })
 const show = ref(false)
-const fixed = ref(true)
 const imageModel = reactive({
   rotate: 0,
-  layout: 'alternate'
+  layout: 'alternate',
+  opacity: 0.8
 })
 // 水印由 canvas 绘制、读不到 CSS 变量，故按当前明暗模式给出与主题令牌 --va-fill-color-3 一致的默认色
 const defaultTextColor = computed<string>(() =>
   theme.value.mode === 'dark' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(0, 0, 0, 0.15)'
 )
+// 演示多行文字的排版：只放多行专属的字段，其余文字样式由水印配置器覆盖
+const multiLineModel = reactive<{
+  textAlign: 'left' | 'center' | 'right'
+  lineHeight: number
+}>({
+  textAlign: 'center',
+  lineHeight: 24
+})
+const alignOptions = [
+  {
+    label: 'left',
+    value: 'left'
+  },
+  {
+    label: 'center',
+    value: 'center'
+  },
+  {
+    label: 'right',
+    value: 'right'
+  }
+]
+const variantOptions = [
+  {
+    label: 'normal',
+    value: 'normal'
+  },
+  {
+    label: 'small-caps',
+    value: 'small-caps'
+  }
+]
+const fontStyleOptions = [
+  {
+    label: 'normal',
+    value: 'normal'
+  },
+  {
+    label: 'italic',
+    value: 'italic'
+  },
+  {
+    label: 'oblique',
+    value: 'oblique'
+  }
+]
 const model = reactive({
   content: 'Vue Amazing UI',
+  width: 120,
+  height: 64,
   layout: 'alternate',
-  zIndex: 9,
   rotate: -22,
+  zIndex: 9,
+  gap: [100, 100],
+  offset: [50, 50],
   textStyle: {
     color: defaultTextColor.value,
     fontSize: 16,
-    fontWeight: 400
-  },
-  gap: [100, 100],
-  offset: [50, 50]
+    fontWeight: 400,
+    fontFamily: 'sans-serif',
+    fontStyle: 'normal',
+    fontVariant: 'normal'
+  }
 })
 // 明暗切换时把仍是「模式默认色」的水印色一起换掉；经 ColorPicker 改过的颜色保持不动
 watch(defaultTextColor, (color: string, previousColor: string) => {
@@ -70,8 +121,23 @@ const layoutOptions = [
       <div style="height: 360px" />
     </Watermark>
     <h2 class="mt30 mb10">多行水印</h2>
-    <p class="mb10">通过 <code>content</code> 设置字符串数组，指定多行文字水印内容</p>
-    <Watermark :content="['Vue Amazing UI', 'Hello World']">
+    <p class="mb10">
+      <code>content</code> 传数组即为多行水印，每个元素占一行；下方可调 <code>textStyle.textAlign</code> 对齐与
+      <code>textStyle.lineHeight</code> 行高，颜色、字号等其余文字样式见下方水印配置器
+    </p>
+    <Row :gutter="[24, 12]">
+      <Col :span="6">
+        <Flex gap="small" vertical>
+          textAlign:<RadioGroup :options="alignOptions" v-model:value="multiLineModel.textAlign" button />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical>
+          lineHeight:<Slider v-model:value="multiLineModel.lineHeight" :step="1" :min="16" :max="80" />
+        </Flex>
+      </Col>
+    </Row>
+    <Watermark :content="['Vue Amazing UI', 'Hello World']" :text-style="multiLineModel">
       <div style="height: 400px" />
     </Watermark>
     <h2 class="mt30 mb10">实时水印</h2>
@@ -80,32 +146,34 @@ const layoutOptions = [
     </Watermark>
     <h2 class="mt30 mb10">图片水印</h2>
     <p class="mb10">
-      通过 <code>image</code> 指定图片地址；为保证图片高清且不被拉伸，请设置 <code>width</code> 和
-      <code>height</code>；另支持设置图片布局方式 <code>layout</code> 和旋转角度 <code>rotate</code> 等
+      <code>image</code> 指定图片地址，未设置宽高时按原图比例推算单元格尺寸；下方可调 <code>layout</code> 布局、
+      <code>rotate</code> 旋转与 <code>imageOpacity</code> 透明度
     </p>
     <Flex>
       <Flex vertical :gap="8">
-        Layout: <RadioGroup :options="layoutOptions" v-model:value="imageModel.layout" button />
+        layout: <RadioGroup :options="layoutOptions" v-model:value="imageModel.layout" button />
       </Flex>
       <Flex vertical :gap="8" :width="240">
-        Rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
+        rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
+      </Flex>
+      <Flex vertical :gap="8" :width="240">
+        imageOpacity: <Slider v-model:value="imageModel.opacity" :step="0.01" :min="0" :max="1" />
       </Flex>
     </Flex>
     <Watermark
-      :height="48"
-      :width="48"
       :layout="imageModel.layout as WatermarkProps['layout']"
       :rotate="imageModel.rotate"
+      :image-opacity="imageModel.opacity"
       image="https://avatars.githubusercontent.com/u/46012811?v=4"
     >
       <div style="height: 360px" />
     </Watermark>
     <h2 class="mt30 mb10">全屏幕水印</h2>
     <p class="mb10">
-      fixed 关闭时水印覆盖整页并随文档原生滚动；开启时钉住视口（本演示页已改为整页滚动，便于观察差异）
+      开启后水印钉住视口，页面滚动时始终覆盖整屏；需要水印随文档滚动时，用非全屏水印包住页面根内容即可
     </p>
-    <Watermark v-if="show" fullscreen :fixed="fixed" content="Vue Amazing UI"></Watermark>
-    <Space align="center"> fullscreen: <Switch v-model:value="show" /> fixed: <Switch v-model:value="fixed" /> </Space>
+    <Watermark v-if="show" fullscreen content="Vue Amazing UI"></Watermark>
+    <Space align="center"> fullscreen: <Switch v-model:value="show" /> </Space>
     <h2 class="mt30 mb10">与浮层叠加</h2>
     <p class="mb10">
       水印是装饰层（默认 <code>z-index: 90</code>），始终位于 <code>Tooltip</code> 等浮层之下：浮层覆盖的地方看不到水印
@@ -121,57 +189,97 @@ const layoutOptions = [
       </div>
     </Watermark>
     <h2 class="mt30 mb10">水印配置器</h2>
-    <p class="mb10">通过自定义参数配置预览水印效果</p>
-    <Row :gutter="24">
-      <Col :span="18">
-        <Watermark v-bind="model as WatermarkProps">
-          <p class="paragraph-text">
-            《麦田里的守望者》（英语：The Catcher in the
-            Rye），为美国作家J.D.塞林格于1951年发表的长篇小说。这部有争议的作品原本是面向成年读者的，但迅速因其青春期焦虑和隔绝的主题而在青少年读者中流行。
-          </p>
-          <p class="paragraph-text">
-            该书以主人公霍尔顿·考菲尔德第一人称口吻讲述自己被学校开除学籍后在纽约城游荡将近两昼夜，企图逃出虚伪的成人世界、去寻求纯洁与真理的经历与感受。
-          </p>
-          <p class="paragraph-text">
-            该书于1951年出版之后，立刻引起巨大的轰动，受到读者──特别是青年人──的热烈的欢迎，被翻译为多国语版。小说每年大约有250,000本售出、总计为6500万本。《时代杂志》将《麦田里的守望者》列在“2005年度百大英语小说（自1923年起）”榜上，现代图书馆及其读者也将其列在20世纪百大英文小说榜上。赞赏者认为本书用青少年的口吻平铺直叙，增加了作品的感染力，传神地描写主角的内心思维，并说出了青少年不满成年世界充满虚伪欺瞒的心声。批评者则认为书中主角离经叛道，逃学、吸烟、喝酒又满嘴粗话，会给年轻读者带来不良影响。当时许多图书馆及学校将之列为禁书，并被列在America
-            library
-            Associations上。但现在这本书却是许多美国学校的指定读物。有的评论家说，它“大大地影响了好几代美国青年”。而且有学者认为，霍尔顿是当代美国文学中最早出现的反英雄形象之一。
-          </p>
-          <img
-            style="max-width: 100%"
-            src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/6.jpg"
-            alt="示例图片"
-          />
-        </Watermark>
+    <p class="mb10">
+      下方表单覆盖组件的常用属性，改动实时生效；图片水印与全屏模式见上方用例，多行文字的对齐与行高见「多行水印」
+    </p>
+
+    <Row :gutter="[24, 12]">
+      <Col :span="6">
+        <Flex gap="small" vertical> content:<Input v-model:value="model.content" /> </Flex>
       </Col>
       <Col :span="6">
-        <Flex vertical :gap="12">
-          <Flex vertical> Content:<Input v-model:value="model.content" /> </Flex>
-          <Flex vertical> Layout:<RadioGroup :options="layoutOptions" v-model:value="model.layout" button /> </Flex>
-          <Flex vertical> Color:<ColorPicker v-model:value="model.textStyle.color" /> </Flex>
-          <Flex vertical>
-            FontSize:<Slider v-model:value="model.textStyle.fontSize" :step="1" :min="0" :max="100" />
-          </Flex>
-          <Flex vertical>
-            FontWeight:<InputNumber v-model:value="model.textStyle.fontWeight" :step="100" :min="100" :max="1000" />
-          </Flex>
-          <Flex vertical> zIndex:<Slider v-model:value="model.zIndex" :step="1" :min="0" :max="100" /> </Flex>
-          <Flex vertical> Rotate:<Slider v-model:value="model.rotate" :step="1" :min="-180" :max="180" /> </Flex>
-          <Flex vertical>
-            Gap:
-            <Flex>
-              <InputNumber v-model:value="model.gap[0]" :min="0" placeholder="gapX" />
-              <InputNumber v-model:value="model.gap[1]" :min="0" placeholder="gapY" />
-            </Flex>
-            Offset:
-            <Flex>
-              <InputNumber v-model:value="model.offset[0]" :min="0" placeholder="offsetLeft" />
-              <InputNumber v-model:value="model.offset[1]" :min="0" placeholder="offsetTop" />
-            </Flex>
+        <Flex gap="small" vertical> width:<InputNumber v-model:value="model.width" :step="1" :min="0" /> </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical> height:<InputNumber v-model:value="model.height" :step="1" :min="0" /> </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical>
+          layout:<RadioGroup :options="layoutOptions" v-model:value="model.layout" button />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical>
+          rotate:<Slider v-model:value="model.rotate" :step="1" :min="-180" :max="180" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical> zIndex:<Slider v-model:value="model.zIndex" :step="1" :min="0" :max="100" /> </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical>
+          gap:<Flex>
+            <InputNumber v-model:value="model.gap[0]" :min="0" placeholder="gapX" />
+            <InputNumber v-model:value="model.gap[1]" :min="0" placeholder="gapY" />
           </Flex>
         </Flex>
       </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical>
+          offset:<Flex>
+            <InputNumber v-model:value="model.offset[0]" :min="0" placeholder="offsetLeft" />
+            <InputNumber v-model:value="model.offset[1]" :min="0" placeholder="offsetTop" />
+          </Flex>
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical> color:<ColorPicker v-model:value="model.textStyle.color" /> </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical>
+          fontSize:<Slider v-model:value="model.textStyle.fontSize" :step="1" :min="0" :max="100" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical>
+          fontWeight:<InputNumber v-model:value="model.textStyle.fontWeight" :step="100" :min="100" :max="1000" />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical> fontFamily:<Input v-model:value="model.textStyle.fontFamily" /> </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical>
+          fontStyle:<RadioGroup :options="fontStyleOptions" v-model:value="model.textStyle.fontStyle" button />
+        </Flex>
+      </Col>
+      <Col :span="6">
+        <Flex gap="small" vertical>
+          fontVariant:<RadioGroup :options="variantOptions" v-model:value="model.textStyle.fontVariant" button />
+        </Flex>
+      </Col>
     </Row>
+    <div style="margin-top: 20px">
+      <Watermark v-bind="model as WatermarkProps">
+        <p class="paragraph-text">
+          《麦田里的守望者》（英语：The Catcher in the
+          Rye），为美国作家J.D.塞林格于1951年发表的长篇小说。这部有争议的作品原本是面向成年读者的，但迅速因其青春期焦虑和隔绝的主题而在青少年读者中流行。
+        </p>
+        <p class="paragraph-text">
+          该书以主人公霍尔顿·考菲尔德第一人称口吻讲述自己被学校开除学籍后在纽约城游荡将近两昼夜，企图逃出虚伪的成人世界、去寻求纯洁与真理的经历与感受。
+        </p>
+        <p class="paragraph-text">
+          该书于1951年出版之后，立刻引起巨大的轰动，受到读者──特别是青年人──的热烈的欢迎，被翻译为多国语版。小说每年大约有250,000本售出、总计为6500万本。《时代杂志》将《麦田里的守望者》列在“2005年度百大英语小说（自1923年起）”榜上，现代图书馆及其读者也将其列在20世纪百大英文小说榜上。赞赏者认为本书用青少年的口吻平铺直叙，增加了作品的感染力，传神地描写主角的内心思维，并说出了青少年不满成年世界充满虚伪欺瞒的心声。批评者则认为书中主角离经叛道，逃学、吸烟、喝酒又满嘴粗话，会给年轻读者带来不良影响。当时许多图书馆及学校将之列为禁书，并被列在America
+          library
+          Associations上。但现在这本书却是许多美国学校的指定读物。有的评论家说，它“大大地影响了好几代美国青年”。而且有学者认为，霍尔顿是当代美国文学中最早出现的反英雄形象之一。
+        </p>
+        <img
+          style="max-width: 100%"
+          src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/6.jpg"
+          alt="示例图片"
+        />
+      </Watermark>
+    </div>
   </div>
 </template>
 <style lang="less" scoped>
