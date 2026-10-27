@@ -19,7 +19,7 @@ const OPTIONS = [
 
 /** 面板经 Teleport 挂到 body，卸载时需一并清理，避免污染后续用例 */
 function cleanup(): void {
-  document.querySelectorAll('.select-panel-wrapper').forEach((el) => el.remove())
+  document.querySelectorAll('.va-popup-container').forEach((el) => el.remove())
 }
 
 /** 当前可见的下拉面板（Cascader 内部有三级 Select，各自持有面板） */

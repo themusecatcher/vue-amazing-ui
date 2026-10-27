@@ -63,10 +63,11 @@ const UNMANAGED_ROWS: Array<{ row: string; sources: Array<{ file: string; patter
  * CSS 无法 `import` JS 常量，这些「首帧兜底」层级只能以字面量重复书写。相关元素都另有内联层级
  * （`:style` 绑定），而**内联始终覆盖 CSS** —— 于是兜底值一旦过期，**任何行为用例都发现不了**
  * （`tests/z-index.spec.ts` 读的是内联样式）。故此处按常量派生值断言其存在性：常量一变即红。
+ *
+ * `Select` / `AutoComplete` 已迁至 `Popup` 宿主：面板根由宿主渲染，层级只由宿主的内联样式表达，
+ * 组件内不再有 CSS 兜底声明，故不在此表登记（默认层级改由 `:default-z-index` 传入，见下方用例）。
  */
 const CSS_FALLBACK_Z_INDEX: Array<{ file: string; values: number[] }> = [
-  { file: 'components/select/Select.vue', values: [FLOATING_LAYER_Z_INDEX.select] },
-  { file: 'components/auto-complete/AutoComplete.vue', values: [FLOATING_LAYER_Z_INDEX.select] },
   { file: 'components/drawer/Drawer.vue', values: [FLOATING_LAYER_Z_INDEX.overlay] },
   {
     file: 'components/image/Image.vue',
@@ -77,6 +78,9 @@ const CSS_FALLBACK_Z_INDEX: Array<{ file: string; values: number[] }> = [
     ]
   }
 ]
+
+/** 默认层级经 `Popup` 宿主透传的消费组件：绑定形态必须是常量引用，不得退回字面量 */
+const DEFAULT_Z_INDEX_BINDINGS = ['select/Select.vue', 'auto-complete/AutoComplete.vue']
 
 /** 递归收集组件目录下所有 `.vue`（相对 `components/` 的路径） */
 function collectVueFiles(dir: string, prefix = ''): string[] {
@@ -166,6 +170,14 @@ describe('浮层默认层级：组件调用点必须引用 FLOATING_LAYER_Z_INDE
         }
       }
     }
+    expect(offences).toEqual([])
+  })
+
+  it('Select / AutoComplete 的默认层级经宿主 default-z-index 传入（引用常量而非字面量）', () => {
+    const offences = DEFAULT_Z_INDEX_BINDINGS.filter((relativePath) => {
+      const source = readFileSync(join(COMPONENTS_DIR, relativePath), 'utf8')
+      return !source.includes(':default-z-index="FLOATING_LAYER_Z_INDEX.select"')
+    })
     expect(offences).toEqual([])
   })
 

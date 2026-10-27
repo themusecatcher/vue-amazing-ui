@@ -25,21 +25,11 @@ import {
   Fragment,
   Text
 } from 'vue'
-import type { CSSProperties, Ref, VNode } from 'vue'
-import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
+import type { CSSProperties, Ref, TransitionProps, VNode } from 'vue'
 import Empty from 'components/empty'
+import Popup from 'components/popup'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
-import {
-  raiseFloatingOrder,
-  useFloating,
-  useFloatingTeleportTarget,
-  useInheritAnchorFont,
-  useResizeObserver,
-  useSlotsExist,
-  useZIndex,
-  Z_INDEX_CONTAINER_OPEN_KEY,
-  FLOATING_LAYER_Z_INDEX
-} from 'components/utils'
+import { useResizeObserver, useSlotsExist, Z_INDEX_CONTAINER_OPEN_KEY, FLOATING_LAYER_Z_INDEX } from 'components/utils'
 import type { FloatingPlacement, MountElement } from 'components/utils'
 export interface Option {
   label?: string // 选项名
@@ -162,10 +152,6 @@ export interface SelectSlots {
   removeIcon?: () => VNode[] // 自定义 tag 的移除图标
 }
 
-// 主题转发：下拉面板 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
-const teleportTheme = inject(THEME_TELEPORT_KEY, null)
-const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
-const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 const props = withDefaults(defineProps<Props>(), {
   value: undefined,
   open: undefined,
@@ -248,12 +234,10 @@ const emits = defineEmits([
   'inputKeyDown',
   'update:searchValue'
 ])
-const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const selectWrapRef = ref<HTMLElement | null>(null) // 组件根元素引用，用于判断焦点是否仍落在本组件内
 const inputRef = ref<HTMLInputElement | null>(null) // 搜索输入框
 const selectContentRef = ref<HTMLElement | null>(null) // 触发器内容容器（面板定位锚点 + tag 宽度量取对象）
-const selectPanelRef = ref<HTMLElement | null>(null) // 面板根元素（滚动容器查找 / 焦点归属判定）
-const selectPanelWrapperRef = ref<HTMLElement | null>(null) // 定位参照容器：面板 top / left 的坐标原点
+const popupRef = ref<InstanceType<typeof Popup> | null>(null) // 浮层宿主模板引用（面板根元素经其 expose 取得）
 const showOptions = ref<boolean>(false) // 非受控模式下的面板显隐
 const innerSearchValue = ref<string>('') // 非受控模式下的搜索文本
 const focused = ref<boolean>(false) // 是否聚焦（决定描边 / 阴影与多选输入框的可编辑性）
@@ -262,19 +246,6 @@ const hoverValue = ref<SelectValue | null>(null) // 键盘 / 悬浮高亮项的 
 const backspaceLock = ref<boolean>(false) // 退格锁：上一次按键时搜索文本是否非空（避免清空搜索的同一次按键又删掉一个 tag）
 const responsiveTagCount = ref<number>(0) // maxTagCount 为 'responsive' 时按容器宽度算出的可见 tag 数
 const responsiveMeasured = ref<boolean>(false) // 是否已按容器宽度量取过（量取前先全量渲染，避免无布局环境下 tag 全被折叠）
-// 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配，未传则沿用默认 1050（面板需高于承载它的 Modal / Drawer / Dialog）；
-// 领取时机由面板「出现」驱动（allocateOnMount: false）—— 挂载时不持有槽位，否则未展开过的下拉会长期占位、抬高后续分配点
-const {
-  zIndex: layerZIndex,
-  allocate: allocateZIndex,
-  release: releaseZIndex
-} = useZIndex(FLOATING_LAYER_Z_INDEX.select, undefined, { allocateOnMount: false })
-// 挂载点：显式 to 优先，否则就近取承载层内容容器（Modal / Drawer / Dialog / 外层 Popup 面板），
-// 都没有则回落 body（见 utils/floating-mount.ts）
-const resolvedTo = useFloatingTeleportTarget(
-  () => selectContentRef.value,
-  () => props.to
-)
 // 选项字段名配置：未指定（含显式空值）的字段逐一回退默认值
 const mergedFieldNames = computed(() => ({
   label: props.fieldNames?.label || 'label',
@@ -433,12 +404,6 @@ const mergedShowSearch = computed(() => props.showSearch ?? isMultiple.value)
 // 箭头显示：多选默认不显示箭头（约定），loading 时显示（后缀位置由加载中图标接管）
 const mergedShowArrow = computed(() => props.showArrow ?? (props.loading || !isMultiple.value))
 const mergedOpen = computed(() => (props.open !== undefined ? props.open : showOptions.value))
-// 浮层字体承接：Teleport 到 body 后脱离宿主字体继承链，把锚点字体族复制到容器（见 utils/inherit-font.ts）
-useInheritAnchorFont(
-  () => selectContentRef.value,
-  () => selectPanelWrapperRef.value,
-  () => mergedOpen.value
-)
 const mergedSearchValue = computed(() => (props.searchValue !== undefined ? props.searchValue : innerSearchValue.value))
 // labelInValue
 /** 是否为 labelInValue 对象（约定：非对象 / 数组 / 空值一律视为原始值） */
@@ -912,8 +877,7 @@ const hasTextInput = computed(() => {
 })
 // 后缀图标形态：打开且可搜索时显示搜索图标，其余显示箭头（自定义后缀 / loading 分支在模板中优先命中）
 const showSearchIcon = computed(() => mergedOpen.value && mergedShowSearch.value)
-// 定位内核：只做「算 + 输出 + 同步」，本组件不再自研翻转 / 对齐几何
-// （须声明在 panelVisible 之后：enabled 会在内核注册时立即求值，前置会命中 const 的暂时性死区）
+// 期望方向：面板方向由 placement prop 决定（默认 bottomLeft），翻转 / 自适应由浮层宿主承担
 const floatingPlacement = computed<FloatingPlacement>(() => props.placement)
 // 面板与触发器的宽度契约：true 等宽、false 仅最小等宽（内容自适应）、number 指定面板宽度
 const matchTriggerWidth = computed<'width' | 'minWidth' | number>(() => {
@@ -922,43 +886,34 @@ const matchTriggerWidth = computed<'width' | 'minWidth' | number>(() => {
   }
   return props.dropdownMatchSelectWidth ? 'width' : 'minWidth'
 })
-const {
-  panelStyle,
-  transformOrigin,
-  sync: syncFloating
-} = useFloating(selectPanelRef, {
-  anchor: () => selectContentRef.value,
-  offsetContainer: selectPanelWrapperRef,
-  placement: () => floatingPlacement.value,
-  flip: () => props.flip,
-  // 次轴：dropdownMatchSelectWidth 为 false 时面板按内容自适应，可能横向溢出，故交由内核做对齐自适应与微调
-  shift: true,
-  offset: 4, // 主轴间距：面板紧贴锚点外 4px
-  boundary: 'scrollParent', // 复用 getFloatingBoundaryRect 口径：仅当浮层真被滚动容器裁剪时才以容器为界
-  matchTriggerWidth: () => matchTriggerWidth.value,
-  enabled: () => panelVisible.value
-})
-// 触发器「自身尺寸」变化时重算面板位置：内核的 'resize' 只监听视口（window），
+// 触发器「自身尺寸」变化时重算面板位置：宿主的 'resize' 只监听视口（window），
 // 锚点自身长高不会触发重算 —— 典型场景是多选标签逐条增多换行，触发器由一行变两行，
 // 面板仍停在旧位置，与触发器互相遮挡错位（如「隐藏已选择选项」用例选到一定条数时）
 useResizeObserver(selectContentRef, () => {
   if (panelVisible.value) {
-    syncFloating()
+    popupRef.value?.sync()
   }
 })
-// 面板层级：显式 zIndex 优先于自动分配 / 默认层级（与其它浮层组件的 zIndex prop 同一优先级契约）
-const selectPanelZIndex = computed(() => props.zIndex ?? layerZIndex.value)
-// 面板内联样式：内核输出（定位 + 动画原点）+ 使用者自定义样式 + 层级 + 主题变量
-// 顺序与 AutoComplete 一致：dropdownMenuStyle 可覆盖定位，但层级与主题变量始终由组件接管
+// 面板类名：宿主基础皮肤类 + 使用者的 popupClassName（皮肤类作前缀保名，与 ColorPicker 同一范式）
+const mergedPanelClass = computed(() => ['select-panel-container', props.popupClassName].filter(Boolean).join(' '))
+// 面板内联样式：使用者自定义样式 + 面板内主题变量（定位 / 缩放原点 / 层级全部由宿主接管）
+// 顺序与 AutoComplete 一致：dropdownMenuStyle 可覆盖定位，但主题变量始终由组件接管
 // 面板挂载在 Teleport 目标下（可能是 body），拿不到组件根上的 CSS 变量，故面板用到的变量在此重复声明
 const selectPanelStyle = computed<CSSProperties>(() => ({
-  ...panelStyle.value,
-  transformOrigin: transformOrigin.value,
   ...props.dropdownMenuStyle,
-  zIndex: selectPanelZIndex.value,
   '--select-option-bg-color-active': 'var(--va-cp-select-primary-bg-color, var(--va-primary-bg-color))',
   '--select-primary-color': 'var(--va-cp-select-primary-color, var(--va-primary-color))'
 }))
+// 过渡配置：面板根的进入 / 离开类与关键帧属皮肤层，故由本组件传入（宿主只负责在离开期加 va-popup-leaving）
+const panelTransitionProps: TransitionProps = {
+  name: 'select-slide',
+  enterFromClass: 'select-slide-enter',
+  enterActiveClass: 'select-slide-enter',
+  enterToClass: 'select-slide-enter select-slide-enter-active',
+  leaveFromClass: 'select-slide-leave',
+  leaveActiveClass: 'select-slide-leave select-slide-leave-active',
+  leaveToClass: 'select-slide-leave select-slide-leave-active'
+}
 
 watch(
   () => props.open,
@@ -986,26 +941,6 @@ watch(
 watch(showOptions, (open) => {
   if (props.open === undefined) {
     emitPanelChange(open)
-  }
-})
-// 面板首次出现时才用 v-if 渲染浮层 DOM；此后由 v-show 控制显隐
-// 每次「出现」重新领取层级（与 Popup / Modal / Drawer 同一语义）：面板关闭后不卸载（仅 v-show），
-// 若只在挂载时领取一次，则被承载它的 Modal / Drawer 等「重新出现并置顶」后，二次打开的下拉会落到遮罩之下。
-// 关闭时归还槽位（面板元素保留、内联层级不变）：否则「弹窗 ↔ 下拉」交替出现时两者会互相抬升，层级随开合次数持续增长
-watch(panelVisible, async (visible) => {
-  if (!visible) {
-    releaseZIndex()
-    return
-  }
-  if (!initialDisplay.value) {
-    initialDisplay.value = true
-  }
-  allocateZIndex()
-  await nextTick()
-  // 无分配器时同层级浮层的上下关系由 DOM 顺序决定，故每次展开都把容器移到目标末尾 ——
-  // 使顺序等于「最近一次打开的顺序」（就地渲染时容器在组件自身 DOM 内，不能移动）
-  if (resolvedTo.value !== false) {
-    raiseFloatingOrder(selectPanelWrapperRef.value)
   }
 })
 /**
@@ -1074,9 +1009,9 @@ onMounted(() => {
   measureResponsiveTagCount()
 })
 
-/** 面板滚动容器：虚拟滚动的滚动源，也是高亮滚动 / scrollTo 的操作对象 */
+/** 面板滚动容器：虚拟滚动的滚动源，也是高亮滚动 / scrollTo 的操作对象（面板根由浮层宿主经 expose 提供） */
 function getScrollContainer(): HTMLElement | null {
-  return selectPanelRef.value?.querySelector<HTMLElement>('.scrollbar-container') ?? null
+  return popupRef.value?.panelRef?.querySelector<HTMLElement>('.scrollbar-container') ?? null
 }
 const scrollContainerEl = ref<HTMLElement | null>(null) // 已绑定 scroll 监听的容器
 /** 把容器的真实滚动位置同步进组件（滚动事件 / 定位后 / 面板收起前调用） */
@@ -1277,7 +1212,7 @@ function onFocus(): void {
 function onBlur(e?: FocusEvent): void {
   if (props.disabled) return
   const related = (e?.relatedTarget as Node | null) ?? null
-  if (related && (selectPanelRef.value?.contains(related) || selectWrapRef.value?.contains(related))) return
+  if (related && (popupRef.value?.panelRef?.contains(related) || selectWrapRef.value?.contains(related))) return
   // 多选下焦点真正离开组件时处理残留的搜索文本：tags 提交为新标签，multiple 静默清空（约定）
   if (isMultiple.value && mergedSearchValue.value) {
     if (isTagsMode.value) {
@@ -1947,91 +1882,37 @@ defineExpose({
         ></path>
       </svg>
     </div>
-    <!-- 条件放在 Teleport 上：容器按**打开顺序**追加到目标末尾，同族同层级浮层的上下关系即「后打开者在上」
-         （即「容器在可见时才 appendChild 到父节点」）；若 Teleport 常驻，顺序会退化为模板源码顺序，与打开先后无关 -->
-    <Teleport v-if="initialDisplay" :disabled="resolvedTo === false" :to="resolvedTo === false ? null : resolvedTo">
-      <!-- 两层 DOM：定位参照容器 + 面板。
-           容器的实时矩形即面板 top / left 的坐标原点，故 Teleport 与 to: false 就地渲染共用同一套求解；
-           首帧优化内化在此：首次展示前不渲染任何浮层 DOM，之后由面板上的 v-show 复用同一元素 -->
-      <div
-        ref="selectPanelWrapperRef"
-        class="select-panel-wrapper"
-        :style="teleportThemeVars"
-        :data-va-mode="teleportThemeMode"
-      >
-        <Transition
-          appear
-          name="slide"
-          enter-from-class="slide-enter"
-          enter-active-class="slide-enter"
-          enter-to-class="slide-enter slide-enter-active"
-          leave-from-class="slide-leave"
-          leave-active-class="slide-leave slide-leave-active"
-          leave-to-class="slide-leave slide-leave-active"
-        >
-          <div
-            v-show="panelVisible"
-            ref="selectPanelRef"
-            class="select-panel-container"
-            :class="popupClassName"
-            :style="selectPanelStyle"
-            @mousedown="onPanelMousedown"
-            @focusout="onBlur"
-            @click.stop
-          >
-            <component :is="panelContent" />
-          </div>
-        </Transition>
+    <!-- 浮层宿主承担 Teleport / 定位 / 翻转自适应 / 层级 / 过渡 / 字体承接与主题转发；
+         面板级监听（mousedown / focusout / click 阻断）经宿主的 $attrs 落到面板根上。
+         面板内再包一层自持容器：选项皮肤（含 :deep 穿透 Scrollbar 内部）必须落在本组件渲染的
+         元素上才能保住 scoped 作用域，面板根的元素由宿主渲染，选不中 -->
+    <Popup
+      ref="popupRef"
+      :show="panelVisible"
+      :to="to"
+      :anchor="selectContentRef"
+      :placement="floatingPlacement"
+      :offset="4"
+      :flip="flip"
+      :shift="true"
+      boundary="scrollParent"
+      :match-trigger-width="matchTriggerWidth"
+      :default-z-index="FLOATING_LAYER_Z_INDEX.select"
+      :z-index="zIndex"
+      :panel-class="mergedPanelClass"
+      :panel-style="selectPanelStyle"
+      :transition-props="panelTransitionProps"
+      @mousedown="onPanelMousedown"
+      @focusout="onBlur"
+      @click.stop
+    >
+      <div class="select-panel-body">
+        <component :is="panelContent" />
       </div>
-    </Teleport>
+    </Popup>
   </div>
 </template>
 <style lang="less" scoped>
-.slide-enter {
-  scale: 0;
-  opacity: 0;
-  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
-  animation-duration: 0.2s;
-  animation-fill-mode: both;
-  animation-play-state: paused;
-}
-.slide-enter-active {
-  animation-name: slideIn;
-  animation-play-state: running;
-  @keyframes slideIn {
-    0% {
-      scale: 1 0.8;
-      opacity: 0;
-    }
-    100% {
-      scale: 1;
-      opacity: 1;
-    }
-  }
-}
-.slide-leave {
-  animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
-  animation-duration: 0.2s;
-  animation-fill-mode: both;
-  animation-play-state: paused;
-}
-.slide-leave-active {
-  animation-name: slideOut;
-  animation-play-state: running;
-  @keyframes slideOut {
-    0% {
-      scale: 1;
-      opacity: 1;
-    }
-    100% {
-      scale: 1 0.8;
-      opacity: 0;
-    }
-  }
-}
-.select-panel-container.slide-leave-active {
-  pointer-events: none;
-}
 .select-sr-only {
   position: absolute;
   width: 0;
@@ -2395,27 +2276,9 @@ defineExpose({
   visibility: hidden;
   pointer-events: none;
 }
-.select-panel-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: auto;
-  height: 0;
-  pointer-events: none;
-}
-.select-panel-container {
-  position: absolute;
-  pointer-events: auto;
-  z-index: 1050;
-  padding: 4px;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: var(--va-bg-elevated-color);
-  font-size: 14px;
-  outline: none;
-  cursor: auto;
-  box-shadow: var(--va-popup-shadow);
+/* 面板内的自持容器：选项皮肤挂在这一层，靠它（本组件渲染，带 scope id）保住 scoped 作用域；
+   面板根（.select-panel-container）的几何归全局块。本层不设盒模型，尺寸链保持透明 */
+.select-panel-body {
   :deep(.select-options-panel) {
     .scrollbar-container {
       overscroll-behavior: none;
@@ -2487,6 +2350,69 @@ defineExpose({
 @keyframes select-loading-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+</style>
+<style lang="less">
+/* 面板根皮肤与动画必须留在全局：它们作用于 <Popup> 宿主编译出的面板节点（scope id 属宿主），
+   且 Teleport 到 body 后不在本组件 DOM 子树内，scoped 与 :deep() 均选不中。
+   收口口径：① 面板几何以 .select-panel-container 收口（定位 / 指针事件 / 层级由宿主基类与内联样式承担）；
+   ② 动画类与关键帧统一加 `select-slide-` 前缀，避免与宿主页面及其它浮层撞名。
+   裁剪口径：不声明 overflow —— 面板内元素均按 4px 内缩 + 8px 圆角排布，无元素触到裁切区，
+   该声明只剩「裁掉面板内嵌浮层」的负面作用（详见重构文档 §9.1），圆角处背景改由 background-clip 自理。
+   缩放只改独立变换属性 scale：定位由宿主内核写在独立属性 `translate` 上（复合链最外层，不受缩放影响）；
+   keyframes 若改写 `transform` 会覆盖使用者经 dropdownMenuStyle 等样式 prop 传入的内联 transform
+   （CSS 动画优先级高于内联样式，且 animation-fill-mode: both 在过渡类移除前一直生效） */
+.select-panel-container {
+  padding: 4px;
+  border-radius: 8px;
+  background-color: var(--va-bg-elevated-color);
+  background-clip: padding-box;
+  font-size: 14px;
+  outline: none;
+  cursor: auto;
+  box-shadow: var(--va-popup-shadow);
+}
+.select-slide-enter {
+  scale: 0;
+  opacity: 0;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+}
+.select-slide-enter-active {
+  animation-name: selectSlideIn;
+  animation-play-state: running;
+}
+.select-slide-leave {
+  animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+}
+.select-slide-leave-active {
+  animation-name: selectSlideOut;
+  animation-play-state: running;
+}
+@keyframes selectSlideIn {
+  0% {
+    scale: 1 0.8;
+    opacity: 0;
+  }
+  100% {
+    scale: 1;
+    opacity: 1;
+  }
+}
+@keyframes selectSlideOut {
+  0% {
+    scale: 1;
+    opacity: 1;
+  }
+  100% {
+    scale: 1 0.8;
+    opacity: 0;
   }
 }
 </style>

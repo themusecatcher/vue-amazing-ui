@@ -48,7 +48,8 @@ async function flush(): Promise<void> {
   await flushTransition()
 }
 
-const queryWrapperEl = (): HTMLElement | null => document.querySelector('.auto-complete-panel-wrapper')
+// 面板改由 Popup 宿主承载后，定位参照容器即宿主的 .va-popup-container（原 .auto-complete-panel-wrapper 已消失）
+const queryWrapperEl = (): HTMLElement | null => document.querySelector('.va-popup-container')
 const queryPanel = (): HTMLElement | null => document.querySelector('.auto-complete-panel')
 
 let wrapper: ReturnType<typeof mount> | null = null
@@ -83,7 +84,7 @@ beforeEach(() => {
 afterEach(() => {
   wrapper?.unmount()
   wrapper = null
-  document.querySelectorAll('.auto-complete-panel-wrapper').forEach((el) => el.remove())
+  document.querySelectorAll('.va-popup-container').forEach((el) => el.remove())
   HTMLElement.prototype.getBoundingClientRect = originalGetBoundingClientRect
   if (originalOffsetWidth) {
     Object.defineProperty(HTMLElement.prototype, 'offsetWidth', originalOffsetWidth)

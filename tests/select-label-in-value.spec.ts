@@ -40,7 +40,7 @@ afterEach(() => {
   vi.restoreAllMocks()
   wrapper?.unmount()
   wrapper = null
-  document.querySelectorAll('.select-panel-wrapper').forEach((el) => el.remove())
+  document.querySelectorAll('.va-popup-container').forEach((el) => el.remove())
 })
 
 async function flush(): Promise<void> {

@@ -29,7 +29,7 @@ let wrapper: ReturnType<typeof mount> | null = null
 afterEach(() => {
   wrapper?.unmount()
   wrapper = null
-  document.querySelectorAll('.auto-complete-panel-wrapper, .select-panel-wrapper').forEach((el) => el.remove())
+  document.querySelectorAll('.va-popup-container').forEach((el) => el.remove())
 })
 
 /**

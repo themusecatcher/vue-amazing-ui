@@ -52,7 +52,7 @@ describe('Select 搜索模式的输入法（IME）合成', () => {
       expect(fetchOptionTexts()).toEqual(['北京市'])
     } finally {
       wrapper.unmount()
-      document.querySelectorAll('.select-panel-wrapper').forEach((el) => el.remove())
+      document.querySelectorAll('.va-popup-container').forEach((el) => el.remove())
     }
   })
 
@@ -103,7 +103,7 @@ describe('Select 搜索模式的输入法（IME）合成', () => {
       expect(wrapper.emitted('select')?.at(-1)?.[0]).toBe('zhangwei')
     } finally {
       wrapper.unmount()
-      document.querySelectorAll('.select-panel-wrapper').forEach((el) => el.remove())
+      document.querySelectorAll('.va-popup-container').forEach((el) => el.remove())
     }
   })
 })
@@ -148,7 +148,7 @@ describe('Select 搜索模式的关闭复位', () => {
       ])
     } finally {
       wrapper.unmount()
-      document.querySelectorAll('.select-panel-wrapper').forEach((el) => el.remove())
+      document.querySelectorAll('.va-popup-container').forEach((el) => el.remove())
     }
   })
 })

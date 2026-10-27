@@ -41,21 +41,25 @@ let wrapper: ReturnType<typeof mount> | null = null
 afterEach(() => {
   wrapper?.unmount()
   wrapper = null
-  document
-    .querySelectorAll('.select-panel-wrapper, .va-popup-container, #floating-mount-anchor')
-    .forEach((el) => el.remove())
+  document.querySelectorAll('.va-popup-container, #floating-mount-anchor').forEach((el) => el.remove())
 })
+
+/** 面板的挂载容器（宿主的定位参照容器）：宿主不提供容器类定制，故由面板根的父级派生 */
+function mountOf(panel: HTMLElement): HTMLElement {
+  return panel.parentElement as HTMLElement
+}
 
 /** 当前承载层内的下拉面板挂载点（定位参照容器） */
 function panelMount(): HTMLElement {
-  return document.querySelector<HTMLElement>('.select-panel-wrapper')!
+  return mountOf(document.querySelector<HTMLElement>('.select-panel-container')!)
 }
 
 /** 当前**可见**下拉面板的挂载点（同一页面同时只会有一个下拉展开） */
 function visibleMount(): HTMLElement | undefined {
-  return [...document.querySelectorAll<HTMLElement>('.select-panel-wrapper')].find(
-    (mount) => mount.querySelector<HTMLElement>('.select-panel-container')?.style.display !== 'none'
+  const panel = [...document.querySelectorAll<HTMLElement>('.select-panel-container')].find(
+    (el) => el.style.display !== 'none'
   )
+  return panel ? mountOf(panel) : undefined
 }
 
 /** 展开承载层内的下拉面板 */

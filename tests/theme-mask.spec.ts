@@ -61,7 +61,9 @@ describe('反色表面 / 面板底色与文案色同源', () => {
 })
 
 describe('Teleport 根节点转发作用域主题（源码扫描）', () => {
-  // 新增/改动 Teleport 时必须同步转发，否则嵌套作用域下浮层会退回 <html> 的默认表
+  // 新增/改动 Teleport 时必须同步转发，否则嵌套作用域下浮层会退回 <html> 的默认表。
+  // Select / AutoComplete 不再自持 Teleport（面板由 Popup 宿主承载，转发已内建在宿主容器上），
+  // 故不在此清单：它们一旦重新自持 Teleport，就必须重新登记并转发。
   const TELEPORT_CONSUMERS = [
     'popup/Popup.vue',
     'modal/Modal.vue',
@@ -69,8 +71,6 @@ describe('Teleport 根节点转发作用域主题（源码扫描）', () => {
     'drawer/Drawer.vue',
     'message/Message.vue',
     'notification/Notification.vue',
-    'select/Select.vue',
-    'auto-complete/AutoComplete.vue',
     'back-top/BackTop.vue',
     'loading-bar/LoadingBar.vue'
   ]
@@ -81,6 +81,18 @@ describe('Teleport 根节点转发作用域主题（源码扫描）', () => {
       expect(source).toContain('THEME_TELEPORT_KEY')
       expect(source).toContain('teleportThemeVars')
       expect(source).toContain('teleportThemeMode')
+    })
+  })
+
+  // 移出清单的前提是「确实把 Teleport 交给了已登记的宿主」：这条守住该前提，
+  // 否则它们哪天重新自持 Teleport 时，上面的清单不会红、主题却已断
+  const HOSTED_BY_POPUP = ['select/Select.vue', 'auto-complete/AutoComplete.vue']
+
+  HOSTED_BY_POPUP.forEach((file) => {
+    it(`${file} 经 Popup 宿主 Teleport（不自持，故无需自行转发主题）`, () => {
+      const source = readComponent(file)
+      expect(source).toContain('<Popup')
+      expect(source).not.toContain('<Teleport')
     })
   })
 })
