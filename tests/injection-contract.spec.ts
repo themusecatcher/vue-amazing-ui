@@ -208,7 +208,7 @@ describe('命名空间隔离：宿主 provide 的通用字符串键不再被库�
 })
 
 describe('注入键形态', () => {
-  /** 全库注入键（新增键必须同步登记，未登记会被 scripts/verify-inject-keys.js 报出） */
+  /** 全库注入键（新增键必须同步登记：脚本只校验源码文本形态，运行期的 Symbol 与描述串由本用例守护） */
   const INJECTION_KEYS = {
     skipThemeWriteKey,
     themeScopeKey,

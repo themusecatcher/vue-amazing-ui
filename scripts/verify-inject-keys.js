@@ -18,6 +18,7 @@
  *    字符串常量能绕过第 1 条（它压根不是 Symbol 定义）与第 5 条（传的是标识符不是字面量）；
  * 7. 组件内一律用 `injectFromChain`：裸 `inject()` 在 `app.runWithContext`（vue-router 导航守卫）
  *    上下文里会改道去翻宿主 app 的 provides，读不到组件级 provide（离散实例层级 / 主题失效）；
+ *    白名单只有实现文件 `utils/hooks.ts` 自身（其 `inject(key)` 的首参是形参，不参与第 6 条校验）；
  * 8. 键不进入公共入口：`components/index.ts` / `components/components.ts` 不得导出 `*Key`。
  *
  * 扫描前统一剥离注释：注释里的示例键不是实现，不应制造噪声。
@@ -104,14 +105,23 @@ sourceFiles
 const STRING_KEY_PATTERN = /\b(?:provide|inject|injectFromChain)\s*\(\s*['"`]/
 /** 裸 inject：`injectFromChain` 的 `inject` 前缀不带左括号，故不会误命中 */
 const RAW_INJECT_PATTERN = /(?:^|[^A-Za-z0-9_$.])inject\s*[(<]/
-/** provide / inject / injectFromChain 的首参（必须是已声明的 Symbol 键，字符串常量冒充也要拦） */
-const CALL_KEY_PATTERN = /\b(?:provide|inject|injectFromChain)\s*\(\s*([A-Za-z0-9_$]+)/g
+/**
+ * provide / inject / injectFromChain 的首参（必须是已声明的 Symbol 键，字符串常量冒充也要拦）
+ *
+ * 泛型实参可选（`provide<MenuContext>(key, ...)` / `inject<Ref<boolean>>(key)`）：惰性匹配到 `(` 前的
+ * 最后一个 `>`，否则带泛型的调用会整条漏检
+ */
+const CALL_KEY_PATTERN = /\b(?:provide|inject|injectFromChain)\s*(?:<[^()]*?>)?\s*\(\s*([A-Za-z0-9_$]+)/g
 sourceFiles.forEach((file) => {
   const source = stripComments(readFileSync(resolve(componentsDir, file), 'utf-8'))
   if (STRING_KEY_PATTERN.test(source)) {
     failures.push(`provide / inject 不得使用字符串字面量作键：${file}`)
   }
-  if (!RAW_INJECT_WHITELIST.has(file) && RAW_INJECT_PATTERN.test(source)) {
+  // 实现文件（白名单）：裸 `inject(key)` 的 key 是形参，不参与「首参必须是已声明键」校验
+  if (RAW_INJECT_WHITELIST.has(file)) {
+    return
+  }
+  if (RAW_INJECT_PATTERN.test(source)) {
     failures.push(`请改用 injectFromChain（app.runWithContext 场景裸 inject 会改道到宿主 app）：${file}`)
   }
   for (const matched of source.matchAll(CALL_KEY_PATTERN)) {
@@ -122,17 +132,26 @@ sourceFiles.forEach((file) => {
 })
 
 // ⑦ 公共入口不导出注入键
+//    按「已识别的键名」精确匹配而不是任意 *Key：`MenuKey` / `DropdownKey` 等公开类型是合法导出；
+//    导出语句常写成多行，逐行匹配会漏检，故先按语句块切分再取标识符
 PUBLIC_ENTRIES.forEach((entry) => {
   const entryPath = resolve(componentsDir, entry)
   if (!existsSync(entryPath)) {
     return
   }
   const source = stripComments(readFileSync(entryPath, 'utf-8'))
-  const exported = [...source.matchAll(/export[^\n]*/g)]
-    .map((matched) => matched[0])
-    .filter((line) => /\b[A-Za-z0-9_$]*(?:Key|_KEY)\b/.test(line))
-  exported.forEach((line) => {
-    failures.push(`注入键属内部契约，不得从 ${entry} 导出：${line.trim()}`)
+  const exportBlocks = [
+    ...source.matchAll(/export\s*(?:type\s*)?\{[^}]*\}/g),
+    ...source.matchAll(/export\s+(?:const|function)\s+[^\n]*/g)
+  ].map((matched) => matched[0])
+  exportBlocks.forEach((block) => {
+    const identifiers = [...block.matchAll(/[A-Za-z0-9_$]+/g)].map((identifier) => identifier[0])
+    identifiers.forEach((name) => {
+      // `_KEY` 大写形式一并拦：可能是未登记为 Symbol 的字符串键遗留
+      if (keyNames.has(name) || /^[A-Z][A-Z0-9_]*_KEY$/.test(name)) {
+        failures.push(`注入键属内部契约，不得从 ${entry} 导出：${name}`)
+      }
+    })
   })
 })
 

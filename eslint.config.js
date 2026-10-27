@@ -141,6 +141,11 @@ export default defineConfigWithVueTs(
             '注入键禁止使用字符串字面量：请改用 Symbol + InjectionKey 定义的键变量（见 development/component-design.md）'
         },
         {
+          selector: "CallExpression[callee.name='injectFromChain'] > Literal:first-child",
+          message:
+            '注入键禁止使用字符串字面量：请改用 Symbol + InjectionKey 定义的键变量（见 development/component-design.md）'
+        },
+        {
           selector: "CallExpression[callee.name='inject']",
           message:
             '请改用 injectFromChain：app.runWithContext（如路由导航守卫）上下文里裸 inject 会改道到宿主 app 的 provides'
