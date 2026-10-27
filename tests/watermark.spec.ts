@@ -8,7 +8,7 @@ import { resetLogDedup } from 'components/utils/log'
 /**
  * 回归守护：Watermark 的防篡改 MutationObserver 观察目标必须跟随 fullscreen 变化。
  *
- * 背景：appendWatermark 用 append() 移动同一个水印节点，fullscreen 由 false 切为 true 时
+ * 背景：commitWatermark 用 append() 移动同一个水印节点，fullscreen 由 false 切为 true 时
  * 水印节点会从容器搬到 <html> 下。若观察目标在 setup 阶段被固化（三元表达式只求值一次），
  * 节点搬家后观察者仍盯旧节点，此后删除水印不会被发现 —— 防篡改失效。
  *
@@ -78,7 +78,7 @@ function findWatermarks(root: ParentNode): HTMLElement[] {
 }
 
 // 依次推进 Vue 更新队列（nextTick）与 MutationObserver 的微任务投递；
-// 宏任务一轮用于释放 appendWatermark 里 setTimeout 控制的 stopObservation 抑制窗口
+// 宏任务一轮用于释放 commitWatermark 里 setTimeout 控制的 stopObservation 抑制窗口
 async function flushAll(): Promise<void> {
   for (let n = 0; n < 3; n++) {
     await nextTick()
@@ -434,6 +434,26 @@ describe('Watermark 图片水印的异步行为', () => {
     wrapper.unmount()
   })
 
+  it('已被取代的图片请求失败时不再输出提示', async () => {
+    const debugSpy = vi.spyOn(console, 'debug')
+    const wrapper = mount(Watermark, {
+      attachTo: document.body,
+      props: { image: 'https://example.com/a.png', rotate: -22 }
+    })
+    await flushAll()
+    await wrapper.setProps({ rotate: 0 })
+    await flushAll()
+    expect(FakeImage.instances).toHaveLength(2)
+
+    // 旧请求后到且失败：当前水印由新请求决定，这条失败提示会误导排查方向
+    FakeImage.instances[0].onerror?.()
+    await flushAll()
+
+    expect(debugSpy).not.toHaveBeenCalled()
+    debugSpy.mockRestore()
+    wrapper.unmount()
+  })
+
   it('未指定宽高时按原图比例等比缩放，不拉伸', async () => {
     const wrapper = mount(Watermark, {
       attachTo: document.body,
@@ -463,6 +483,22 @@ describe('Watermark 图片水印的异步行为', () => {
     const [node] = findWatermarks(document.body)
     expect(node.style.backgroundSize).toBe('296px')
     wrapper.unmount()
+  })
+
+  it('组件卸载后图片才加载完成，不应把水印残留在 <html> 上', async () => {
+    const wrapper = mount(Watermark, {
+      attachTo: document.body,
+      props: { image: 'https://example.com/a.png', fullscreen: true }
+    })
+    await flushAll()
+    expect(FakeImage.instances).toHaveLength(1)
+
+    wrapper.unmount()
+    // 卸载后 onload 才到达：全屏水印的挂载点是仍然存活的 <html>，不丢弃回调就会留下孤儿节点
+    loadImage(0, 100, 100)
+    await flushAll()
+
+    expect(findWatermarks(document.documentElement)).toHaveLength(0)
   })
 
   it('imageOpacity 作用于图片绘制，且不泄漏到文字水印', async () => {
@@ -514,6 +550,29 @@ describe('Watermark 默认色跟随主题', () => {
     expect(node?.getAttribute('style') ?? '').not.toContain('invert')
     wrapper.unmount()
     await flushAll()
+  })
+
+  it('无 Provider 时直接改 <html> 的模式属性，水印应跟随静态变量表重绘', async () => {
+    const computedStyleSpy = vi.spyOn(window, 'getComputedStyle')
+    computedStyleSpy.mockReturnValue({
+      getPropertyValue: () => 'rgba(0, 0, 0, 0.15)'
+    } as unknown as CSSStyleDeclaration)
+
+    const wrapper = mount(Watermark, { attachTo: document.body, props: { content: 'test' } })
+    await flushAll()
+    expect(canvasContext.fillStyle).toBe('rgba(0, 0, 0, 0.15)')
+
+    // 外部直接写 <html data-va-mode="dark">：canvas 读不到变量，只能靠监听模式属性重读静态表
+    computedStyleSpy.mockReturnValue({
+      getPropertyValue: () => 'rgba(255, 255, 255, 0.18)'
+    } as unknown as CSSStyleDeclaration)
+    document.documentElement.setAttribute('data-va-mode', 'dark')
+    await flushAll()
+    expect(canvasContext.fillStyle).toBe('rgba(255, 255, 255, 0.18)')
+
+    document.documentElement.removeAttribute('data-va-mode')
+    computedStyleSpy.mockRestore()
+    wrapper.unmount()
   })
 
   it('显式 textStyle.color 优先于主题默认值', async () => {

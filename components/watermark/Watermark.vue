@@ -22,7 +22,7 @@ export interface Props {
   image?: string // 图片源，优先级高于 content，建议使用 2 倍或 3 倍图
   imageOpacity?: number // 图片水印的透明度，仅当传 image 时生效
   width?: number // 水印的宽度，单位 px；默认图片按原图比例推算、文字按内容宽度
-  height?: number // 水印的高度，默认为 content 自身的高度，单位 px
+  height?: number // 水印的高度，单位 px；默认图片按原图比例推算、文字按内容高度
   layout?: 'parallel' | 'alternate' // 布局方式：平行布局 / 交替布局
   rotate?: number // 水印绘制时旋转的角度，单位 deg
   textStyle?: Font // 水印文字样式
@@ -66,10 +66,16 @@ const htmlRef = shallowRef<HTMLElement | null>(typeof document !== 'undefined' ?
  * 1. 显式 `textStyle.color`；
  * 2. Provider 的只读快照（既定用途之一）；
  * 3. 无 Provider 时回读 `<html>` 上的静态变量表（`:root` / `[data-va-mode]` 已声明两个模式的全量表，
- *    首帧与重绘时两套模式都正确；纯 CSS 在运行期改 `<html>` 属性不会触发重绘，跟随明暗请用 Provider 的 `mode`）；
+ *    由下方 `onStaticThemeChange` 跟随 `<html>` 的模式属性保持最新）；
  * 4. SSR 等拿不到 DOM 时才回落浅色默认。
  */
 const themeSnapshot = inject(THEME_SNAPSHOT_KEY, null)
+// 静态变量表里的默认色：computed 读的是快照，这里把「外部属性换模式」的结果存成响应式值，才能驱动重绘
+function readStaticTextColor() {
+  if (typeof document === 'undefined') return ''
+  return getComputedStyle(document.documentElement).getPropertyValue('--va-fill-color-3').trim()
+}
+const staticTextColor = shallowRef<string>(readStaticTextColor())
 const resolvedTextColor = computed(() => {
   if (props.textStyle.color) {
     return props.textStyle.color
@@ -79,11 +85,8 @@ const resolvedTextColor = computed(() => {
     return snapshotColor
   }
   // 静态变量表随每份样式产物下发，无 Provider 的纯 CSS 暗色（直接写 data-va-mode）也能取到模式正确的值
-  if (typeof document !== 'undefined') {
-    const staticColor = getComputedStyle(document.documentElement).getPropertyValue('--va-fill-color-3').trim()
-    if (staticColor) {
-      return staticColor
-    }
+  if (staticTextColor.value) {
+    return staticTextColor.value
   }
   return 'rgba(0, 0, 0, 0.15)'
 })
@@ -95,7 +98,7 @@ const gapYCenter = computed(() => gapY.value / 2)
 const offsetLeft = computed(() => props.offset?.[0] ?? gapXCenter.value)
 const offsetTop = computed(() => props.offset?.[1] ?? gapYCenter.value)
 // 平行布局画布为 1 个单元格、交替布局为 2 × 2 个（对角两格绘制图案）；非法 layout 值按交替布局兜底
-const BaseSize = computed(() => (props.layout === 'parallel' ? 1 : 2))
+const baseSize = computed(() => (props.layout === 'parallel' ? 1 : 2))
 const markStyle = computed(() => {
   const markStyle: CSSProperties = {
     zIndex: props.zIndex,
@@ -156,6 +159,18 @@ onBeforeUnmount(() => {
 const observeTarget = computed(() => markParent.value ?? containerRef.value)
 useMutationObserver(observeTarget, onMutate, { childList: true })
 useMutationObserver(watermarkRef, onMutate, { attributes: true, attributeFilter: ['style', 'class'] })
+// 直接用 `<html data-va-mode>` / `class` 切暗色是受支持的用法（见「定制主题」），但 canvas 读不到 CSS 变量、
+// computed 也不会因外部属性变化重算，故监听模式属性重读颜色；值没变就不写响应式，避免无关属性变化引起重绘。
+// 有 Provider 时颜色由快照驱动、已有重绘信号，不必再占一个观察者
+if (!themeSnapshot) {
+  useMutationObserver(htmlRef, onStaticThemeChange, { attributes: true, attributeFilter: ['data-va-mode', 'class'] })
+}
+function onStaticThemeChange() {
+  const color = readStaticTextColor()
+  if (color && color !== staticTextColor.value) {
+    staticTextColor.value = color
+  }
+}
 function onMutate(mutations: MutationRecord[]) {
   if (stopObservation.value) {
     return
@@ -272,8 +287,8 @@ function getCellGeometry(markWidth: number, markHeight: number) {
   const rotateX = (drawWidth + gapX.value * ratio) / 2
   const rotateY = (drawHeight + gapY.value * ratio) / 2
   return {
-    bitmapWidth: Math.round(canvasWidth * BaseSize.value),
-    bitmapHeight: Math.round(canvasHeight * BaseSize.value),
+    bitmapWidth: Math.round(canvasWidth * baseSize.value),
+    bitmapHeight: Math.round(canvasHeight * baseSize.value),
     drawX,
     drawY,
     drawWidth,
@@ -304,7 +319,7 @@ function fillTexts(ctx: CanvasRenderingContext2D, drawX: number, drawY: number, 
   ctx.textAlign = 'left'
   ctx.textBaseline = 'top'
   const contents = Array.isArray(content) ? content : [content]
-  contents?.forEach((item, index) => {
+  contents.forEach((item, index) => {
     const text = item ?? ''
     const lineWidth = ctx.measureText(text).width
     let alignOffset = 0
@@ -353,8 +368,9 @@ function renderWatermark() {
     img.crossOrigin = 'anonymous'
     img.referrerPolicy = 'no-referrer'
     img.onload = () => {
-      // 拖动 rotate 等高频操作会排队多个 onload，后到的旧回调不能再覆盖新水印
-      if (token !== renderToken) {
+      // 拖动 rotate 等高频操作会排队多个 onload，后到的旧回调不能再覆盖新水印；
+      // 组件已卸载时同样丢弃，否则全屏水印会被追加到仍然存活的 <html> 上造成残留
+      if (isUnmounted || token !== renderToken) {
         return
       }
       // 单元格尺寸依赖原图比例，只能在加载完成后才确定
@@ -374,7 +390,12 @@ function renderWatermark() {
       commitWatermark(canvas, width)
     }
     img.onerror = () => {
-      // 图片未返回 CORS 响应头时浏览器直接判为加载失败（onload 不触发），否则表现为水印静默消失
+      // 与 onload 同源：已被取代或已卸载的请求失败不代表当前水印不可用，提示反而误导
+      if (isUnmounted || token !== renderToken) {
+        return
+      }
+      // 图片未返回 CORS 响应头时浏览器直接判为加载失败（onload 不触发），否则表现为水印静默消失。
+      // 失败不改动 DOM：沿用上一份已绘制的水印，避免运行期切换 image 时水印闪空
       log('debug', 'Watermark', '图片加载失败：请确认图片地址可访问，且服务端返回 Access-Control-Allow-Origin 响应头')
     }
     img.src = image
@@ -420,7 +441,7 @@ function commitWatermark(canvas: HTMLCanvasElement, markWidth: number) {
     getStyleStr({
       ...markStyle.value,
       backgroundImage: `url('${dataUrl}')`,
-      backgroundSize: `${(gapX.value + markWidth) * BaseSize.value}px`
+      backgroundSize: `${(gapX.value + markWidth) * baseSize.value}px`
     })
   )
   parent.append(element)
