@@ -39,7 +39,7 @@ export interface MenuContext {
  * - 提供方：`Menu`
  * - 消费方：`MenuNodes` 及各层级菜单项 / 子菜单标题
  * - 响应式：是（上下文内混有 `Ref` / `ComputedRef` 字段与命令式回调）
- * - 未命中：`undefined`，渲染函数内的菜单节点退化为不可展开
+ * - 未命中：`undefined`，`MenuNodes` 直接抛错（渲染内核不允许脱离 `Menu` 使用）
  */
 export const menuContextKey: InjectionKey<MenuContext> = Symbol('vaMenuContext')
 

@@ -39,7 +39,7 @@ export const themeScopeKey: InjectionKey<boolean> = Symbol('vaThemeScope')
  * 当前作用域的实际模式：嵌套实例未显式传 mode 时继承父级（作用于变量派生，不写 DOM）
  *
  * - 提供方：`ConfigProvider`（`useThemeScope`）
- * - 消费方：`useThemeSeed`（派生）、`Button`（按模式取组件级主色）
+ * - 消费方：`useThemeScope`（嵌套实例继承父级模式）、`Button`（按模式取组件级主色）
  * - 响应式：是（`Ref<ResolvedMode>`）
  * - 未命中：`undefined`，按「无显式模式」处理
  */

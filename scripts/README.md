@@ -15,7 +15,7 @@
 
 | 命令 | 脚本 | 作用 | 前置条件 |
 | :-- | :-- | :-- | :-- |
-| `pnpm pub "<msg>"` | `publish.sh` | 单条命令跑完发版全流程：6 项前置校验 → `check` → `build` → 三项产物校验 → 提交推送 → `npm publish` → 升级自身依赖 → 打 tag → 建 GitHub Release → 重新部署文档。`<msg>` 可省略（默认 `feat: 发布 v<version> 版本`） | node、官方 npm 源、`npm login`、version 未在 npm 发布、`gh` 已安装并登录（脚本逐项校验，缺一即退出） |
+| `pnpm pub "<msg>"` | `publish.sh` | 单条命令跑完发版全流程：6 项前置校验 → `check` → `build` → 四项校验（依赖一致性 / 按需引入 / 主题架构 / 注入契约）→ 提交推送 → `npm publish` → 升级自身依赖 → 打 tag → 建 GitHub Release → 重新部署文档。`<msg>` 可省略（默认 `feat: 发布 v<version> 版本`） | node、官方 npm 源、`npm login`、version 未在 npm 发布、`gh` 已安装并登录（脚本逐项校验，缺一即退出） |
 | `pnpm push "<msg>"` | `push.sh` | `git add .` + commit + push，`<msg>` 必填且须符合 commitlint | — |
 | `pnpm docs:deploy "<msg>"` | `deploy.sh` | 构建组件库 → `docs:build` → 强推到 `gh-pages` 分支 → 提交源码。第 2 个参数 `skipBuild=1` 时跳过重复构建（`publish.sh` 末尾即以 `"" 1` 调用） | `<msg>` 在 `skipBuild=1` 时可省略 |
 

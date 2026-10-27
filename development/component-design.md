@@ -271,7 +271,7 @@ components/grid/
 | S4 | 描述串 = `'va' + PascalCase(变量名去 Key)`：`themeModeKey → Symbol('vaThemeMode')`；禁止空描述、动态拼接、含空格 |
 | S5 | 类型标注用注解式（`const key: InjectionKey<T> = Symbol(...)`），不用 `as InjectionKey<T>` 断言 |
 | S6 | 就近定义：一个组件族多键放 `components/<family>/context.ts`；与 hook 一一绑定则同文件（`modal/useModal.ts`）；跨族基础通道放 `components/utils/*.ts`。**禁止**在 `.vue` 内定义键，**禁止**建全库单一 `keys.ts`（会让 `utils` 反向依赖组件目录类型） |
-| S7 | 键不进入公共 API：`components/index.ts`、`components/components.ts`、`types/global-components.d.ts`、`docs/` 一律不导出 / 不出现。`components/config-provider/context` 是唯一允许直引的键文件（走目录入口会把 `ConfigProvider.vue` 拖进每个组件的依赖图） |
+| S7 | 键不进入公共 API：`components/index.ts`、`components/components.ts`、`types/global-components.d.ts`、`docs/` 一律不导出 / 不出现。键按 S6 就近直引实现文件；`components/config-provider/context` 尤其不能走目录入口（会把 `ConfigProvider.vue` 拖进每个组件的依赖图） |
 | S8 | 组件内**一律用 `injectFromChain`**，禁止裸 `inject()`；默认值语义保持原样：`inject(K, null)` → `injectFromChain(K) ?? null`、`inject(K, false)` → `?? false`、`inject(K)` → 直接用返回值判空。**禁止** `as` 断言（键已携带类型） |
 | S9 | 响应式契约写进 JSDoc：值会变化就注入 `Ref` / `ComputedRef` / 含 getter 的对象，禁止注入瞬时快照；每个键的 JSDoc 必须写明**提供方 / 消费方 / 值语义 / 是否响应式 / 未命中时的行为** |
 | S10 | 新增键按「检查清单」逐项过（见下） |
@@ -303,7 +303,7 @@ const teleportTheme = injectFromChain(themeTeleportKey) ?? null
  * 当前作用域的实际模式：嵌套实例未显式传 mode 时继承父级
  *
  * - 提供方：`ConfigProvider`（`useThemeScope`）
- * - 消费方：`useThemeSeed`（派生）、`Button`（按模式取组件级主色）
+ * - 消费方：`useThemeScope`（嵌套实例继承父级模式）、`Button`（按模式取组件级主色）
  * - 响应式：是（`Ref<ResolvedMode>`）
  * - 未命中：`undefined`，按「无显式模式」处理
  */

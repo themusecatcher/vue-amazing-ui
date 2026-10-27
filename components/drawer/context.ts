@@ -20,7 +20,7 @@ export interface ParentDrawerOpts {
  * - 响应式：否（只承载命令式方法，位移状态留在父抽屉内部）
  * - 未命中：`undefined`，按「没有父抽屉，不需要推动」处理
  *
- * 键定义在 `.vue` 之外：provide / inject 两侧共享同一 `InjectionKey`，
- * 改错键名或改错值结构都会在编译期报错，而不是静默退化为「无父抽屉」。
+ * 键定义在 `.vue` 之外：provide / inject 两侧共享同一 `InjectionKey`，值结构写错会在编译期报错。
+ * 键名写错（指向另一个已声明的键）仍只是运行期静默未命中，由 `verify-inject-keys.js` 守住院侧配对。
  */
 export const parentDrawerOptsKey: InjectionKey<ParentDrawerOpts> = Symbol('vaParentDrawerOpts')

@@ -34,7 +34,7 @@ export interface DropdownMenuContext {
  * - 提供方：`Dropdown`
  * - 消费方：`DropdownMenu`（各层级菜单项与子菜单）
  * - 响应式：是（`isOpen` 为 `Ref<boolean>`，面板常驻不卸载）
- * - 未命中：`undefined`，菜单项按未接入上下文处理（不渲染子菜单）
+ * - 未命中：`undefined`，菜单项照常渲染，仅 `label` 插槽与选中回调缺失（点击不响应）
  */
 export const dropdownMenuContextKey: InjectionKey<DropdownMenuContext> = Symbol('vaDropdownMenuContext')
 /** 子菜单收起延迟（毫秒）：为「标题 → 子面板」之间的空隙移动留出时间，避免掠过即收起 */
