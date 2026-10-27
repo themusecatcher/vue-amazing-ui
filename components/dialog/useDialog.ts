@@ -29,11 +29,12 @@ export const dialogApiKey: InjectionKey<DialogApi> = Symbol('vaDialogApi')
 
 /**
  * 在 `setup` 内获取 Dialog api，需在 `<DialogProvider>` 内部使用。
+ * 脱离组件树的场景请改用 `createDiscreteApi`。
  */
 export function useDialog(): DialogApi {
   const api = injectFromChain(dialogApiKey)
   if (!api) {
-    throw new Error('[useDialog] 未获取到 Dialog api，请在 <DialogProvider> 内部使用')
+    throw new Error('[useDialog] 未获取到 Dialog api，请在 <DialogProvider> 内部使用，或改用 createDiscreteApi')
   }
   return api
 }
