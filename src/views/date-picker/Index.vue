@@ -97,6 +97,11 @@ const monthRangePresets: NonNullable<DatePickerProps['presets']> = [
 const rangeValue = ref<[number, number] | null>(null)
 const sizeRangeValue = ref<[number, number] | null>(null)
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
+// 其余范围形态的提示文字按形态区分，与 antdv 语言包的口径一致（周 / 月 / 季 / 年各有独立文案）
+const weekRangePlaceholder: [string, string] = ['开始周', '结束周']
+const monthRangePlaceholder: [string, string] = ['开始月份', '结束月份']
+const quarterRangePlaceholder: [string, string] = ['开始季度', '结束季度']
+const yearRangePlaceholder: [string, string] = ['开始年份', '结束年份']
 // 切换不同的选择器用例：分段控件切换形态，各形态共用同一个绑定值
 type SwitchableType = 'date' | 'week' | 'month' | 'quarter' | 'year'
 const switchableType = ref<SwitchableType>('date')
@@ -403,10 +408,10 @@ function onStartOpenChange(open: boolean): void {
     <p class="mb10">通过设置 <code>type</code> 属性，指定范围选择器类型</p>
     <Space vertical>
       <DatePicker v-model:value="rangeValue" type="daterange" :placeholder="rangePlaceholder" />
-      <DatePicker v-model:value="weekRangeValue" type="weekrange" :placeholder="rangePlaceholder" />
-      <DatePicker v-model:value="monthRangeValue" type="monthrange" :placeholder="rangePlaceholder" />
-      <DatePicker v-model:value="quarterRangeValue" type="quarterrange" :placeholder="rangePlaceholder" />
-      <DatePicker v-model:value="yearRangeValue" type="yearrange" :placeholder="rangePlaceholder" />
+      <DatePicker v-model:value="weekRangeValue" type="weekrange" :placeholder="weekRangePlaceholder" />
+      <DatePicker v-model:value="monthRangeValue" type="monthrange" :placeholder="monthRangePlaceholder" />
+      <DatePicker v-model:value="quarterRangeValue" type="quarterrange" :placeholder="quarterRangePlaceholder" />
+      <DatePicker v-model:value="yearRangeValue" type="yearrange" :placeholder="yearRangePlaceholder" />
     </Space>
     <p class="mt30 mb10">
       <code>type="datetimerange"</code>
@@ -577,7 +582,7 @@ function onStartOpenChange(open: boolean): void {
         v-model:value="presetMonthRangeValue"
         type="monthrange"
         :presets="monthRangePresets"
-        :placeholder="rangePlaceholder"
+        :placeholder="monthRangePlaceholder"
       />
       <DatePicker
         v-model:value="presetDateTimeRangeValue"
@@ -702,25 +707,25 @@ function onStartOpenChange(open: boolean): void {
         v-model:value="borderlessWeekRangeValue"
         type="weekrange"
         :bordered="false"
-        :placeholder="rangePlaceholder"
+        :placeholder="weekRangePlaceholder"
       />
       <DatePicker
         v-model:value="borderlessMonthRangeValue"
         type="monthrange"
         :bordered="false"
-        :placeholder="rangePlaceholder"
+        :placeholder="monthRangePlaceholder"
       />
       <DatePicker
         v-model:value="borderlessQuarterRangeValue"
         type="quarterrange"
         :bordered="false"
-        :placeholder="rangePlaceholder"
+        :placeholder="quarterRangePlaceholder"
       />
       <DatePicker
         v-model:value="borderlessYearRangeValue"
         type="yearrange"
         :bordered="false"
-        :placeholder="rangePlaceholder"
+        :placeholder="yearRangePlaceholder"
       />
     </Space>
     <h2 class="mt30 mb10">弹出位置</h2>
