@@ -17,13 +17,14 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 ## <VersionDateTag date="2026-10-27">3.4.0</VersionDateTag>
 
 - [水印 Watermark](/guide/components/watermark.html) 移除 `fixed` 属性：全屏水印改为始终固定于视口，需要水印随文档滚动时改用非全屏水印包住页面根内容
-- 修复 [水印 Watermark](/guide/components/watermark.html) 的图片水印：图片未返回 `CORS` 响应头时水印静默消失，现给出明确告警；快速切换参数时后到的旧图会覆盖新水印
+- 修复 [水印 Watermark](/guide/components/watermark.html) 的图片水印：图片未返回 `CORS` 响应头时水印静默消失，现给出可定位的提示（仅开发期输出）；快速切换参数时后到的旧图会覆盖新水印
 - 新增 [水印 Watermark](/guide/components/watermark.html) 的 `imageOpacity` 属性；图片未指定 `width` / `height` 时按原图比例推算单元格尺寸，不再拉伸变形
 - 新增 [水印 Watermark](/guide/components/watermark.html) 的 `textStyle.lineHeight` / `textStyle.textAlign` / `textStyle.fontVariant`：多行水印的行高与对齐可调（行高默认按字号等比，同时决定单元格高度），文字可切换小型大写；测量与绘制改用同一 `font` 串，加粗、斜体、小型大写的单元格宽度更准确
 - 修复 [水印 Watermark](/guide/components/watermark.html) 的 `textStyle` 取值：`fontWeight` 的 `'light'` / `'weight'` 与 `fontStyle` 的 `'none'` 不是合法 `CSS` 值，传入会让字号与字体一并失效
+- 修复 [水印 Watermark](/guide/components/watermark.html) 的默认文字颜色：不用 `ConfigProvider`、直接写 `<html data-va-mode>` 切暗色时水印颜色不跟随重绘
 - 修复 [水印 Watermark](/guide/components/watermark.html) 的 `offset` 默认值：文档约定为 `gap / 2`，此前恒为 `[50, 50]`，自定义 `gap` 后偏移不跟随
 - 优化 [水印 Watermark](/guide/components/watermark.html) 的绘制与监听开销：复用 `canvas`、防篡改不再监听整个容器子树、字体加载完成后校正尺寸
-- 更新使用者文档与贡献者文档
+- 更新 [水印 Watermark](/guide/components/watermark.html) 的组件文档与演示用例
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-10-27">3.3.2</VersionDateTag>

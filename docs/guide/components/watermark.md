@@ -177,11 +177,7 @@ _`content` 传数组即为多行水印，每个元素占一行；下方可调 `t
 
 ```vue
 <script setup lang="ts">
-import { reactive, computed } from 'vue'
-import { useData } from 'vitepress'
-// 水印由 canvas 绘制、读不到 CSS 变量，故按当前明暗模式给出与主题令牌 --va-fill-color-3 一致的默认色
-const { isDark } = useData()
-const defaultTextColor = computed<string>(() => (isDark.value ? 'rgba(255, 255, 255, 0.18)' : 'rgba(0, 0, 0, 0.15)'))
+import { reactive } from 'vue'
 // 演示多行文字的排版：只放多行专属的字段，其余文字样式由水印配置器覆盖
 const multiLineModel = reactive<{
   textAlign: 'left' | 'center' | 'right'
@@ -202,30 +198,6 @@ const alignOptions = [
   {
     label: 'right',
     value: 'right'
-  }
-]
-const variantOptions = [
-  {
-    label: 'normal',
-    value: 'normal'
-  },
-  {
-    label: 'small-caps',
-    value: 'small-caps'
-  }
-]
-const fontStyleOptions = [
-  {
-    label: 'normal',
-    value: 'normal'
-  },
-  {
-    label: 'italic',
-    value: 'italic'
-  },
-  {
-    label: 'oblique',
-    value: 'oblique'
   }
 ]
 </script>
@@ -537,7 +509,7 @@ _下方表单覆盖组件的常用属性，改动实时生效；图片水印与�
 
 ```vue
 <script setup lang="ts">
-import { reactive, ref, computed, watch } from 'vue'
+import { reactive, computed, watch } from 'vue'
 import { useData } from 'vitepress'
 // 水印由 canvas 绘制、读不到 CSS 变量，故按当前明暗模式给出与主题令牌 --va-fill-color-3 一致的默认色
 const { isDark } = useData()
@@ -588,6 +560,16 @@ const fontStyleOptions = [
   {
     label: 'oblique',
     value: 'oblique'
+  }
+]
+const variantOptions = [
+  {
+    label: 'normal',
+    value: 'normal'
+  },
+  {
+    label: 'small-caps',
+    value: 'small-caps'
   }
 ]
 </script>
@@ -671,7 +653,6 @@ const fontStyleOptions = [
     </Col>
   </Row>
 
-
   <div style="margin-top: 20px">
     <Watermark v-bind="model">
       <p class="paragraph-text">
@@ -692,7 +673,9 @@ const fontStyleOptions = [
         alt="示例图片"
       />
     </Watermark>
-  </div></template>
+  </div>
+</template>
+
 <style lang="less" scoped>
 .paragraph-text {
   margin-bottom: 1em;
