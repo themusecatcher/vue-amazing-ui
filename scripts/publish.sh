@@ -140,6 +140,11 @@ if ! pnpm verify:theme; then
     echo "❌ 主题架构守护未通过，请修复后重试"
     exit 1
 fi
+# 注入契约守护（只扫源码）：键类型 / 命名 / 描述串 / 读取通道
+if ! pnpm verify:inject-keys; then
+    echo "❌ 注入契约守护未通过，请修复后重试"
+    exit 1
+fi
 
 # 检查是否有待提交的更改
 if [ -n "$(git status --porcelain)" ]; then
