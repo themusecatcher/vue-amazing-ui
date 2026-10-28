@@ -3,18 +3,19 @@
  * 下拉菜单：由「触发器 + 触发语义 + 浮层 + 菜单内容」四层职责构成。
  * 浮层的定位 / Teleport / 动画承载由 Popup 承担，触发语义（hover / click / contextmenu）由本组件自持。
  */
-import { computed, inject, onBeforeUnmount, onMounted, provide, ref, useSlots, watch } from 'vue'
-import type { CSSProperties, Ref, TransitionProps, VNode } from 'vue'
+import { computed, onBeforeUnmount, onMounted, provide, ref, useSlots, watch } from 'vue'
+import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Popup from 'components/popup'
 import {
   FLOATING_LAYER_Z_INDEX,
+  injectFromChain,
   useOptionsSupported,
   useResizeObserver,
   useSlotsExist,
-  Z_INDEX_CONTAINER_OPEN_KEY
+  zIndexContainerOpenKey
 } from 'components/utils'
 import type { FloatingPlacement, MountElement } from 'components/utils'
-import { DROPDOWN_MENU_KEY, DropdownMenu } from './DropdownMenu'
+import { dropdownMenuContextKey, DropdownMenu } from './DropdownMenu'
 export type Key = string | number
 export interface MenuOption {
   key?: Key // 菜单项唯一标识
@@ -182,7 +183,7 @@ function renderLabel(option: MenuOption): VNode[] | undefined {
   return slots.label?.({ option })
 }
 // 菜单上下文：任意层级的菜单项 / 子菜单据此回调，避免逐层透传 props
-provide(DROPDOWN_MENU_KEY, {
+provide(dropdownMenuContextKey, {
   renderLabel,
   onSelect: onMenuSelect,
   isOpen: mergedOpen
@@ -344,7 +345,7 @@ onMounted(measureAnchor)
 // 承载层（Modal / Drawer / Dialog）关闭时收起：与 Tooltip / Select 同一不变量 —— 承载层内容常驻不卸载，
 // 浮层不会随容器消失；若保持打开，容器重开时浮层会以「仍打开」的状态冒出来。
 // Esc 关闭与程序化关闭都不产生 document click，故必须在此显式收起（详见 utils/z-index.ts）
-const containerOpen = inject(Z_INDEX_CONTAINER_OPEN_KEY, null) as Ref<boolean> | null
+const containerOpen = injectFromChain(zIndexContainerOpenKey) ?? null
 if (containerOpen) {
   watch(containerOpen, (open) => {
     if (!open) {

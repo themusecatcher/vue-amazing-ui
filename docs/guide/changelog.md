@@ -14,6 +14,10 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-28">3.4.1</VersionDateTag>
+
+- 修复 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `baseZIndex` 与 `theme` 在路由守卫中创建离散实例（`createDiscreteApi`）时不生效的问题；贡献者文档补充 provide / inject 注入契约与守护说明
+
 ## <VersionDateTag date="2026-10-28">3.4.0</VersionDateTag>
 
 - 移除 [水印 Watermark](/guide/components/watermark.html) 的 `fixed` 属性：`fullscreen` 水印始终固定于视口，原随文档滚动的写法改用非全屏水印包裹根内容；`textStyle` 的 `fontWeight` `'light'` / `'weight'` 改为 `'lighter'` / `'bolder'`、`fontStyle` 的 `'none'` 改为 `'normal'`；`offset` 默认值改为 `gap / 2`（原 `[50, 50]`）

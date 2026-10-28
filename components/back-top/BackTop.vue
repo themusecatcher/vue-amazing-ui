@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount, inject } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
+import { themeTeleportKey } from 'components/config-provider/context'
 import Tooltip, { type TooltipProps } from 'components/tooltip'
-import { useSlotsExist, useOptionsSupported, getScrollParent, log } from 'components/utils'
+import { injectFromChain, useSlotsExist, useOptionsSupported, getScrollParent, log } from 'components/utils'
 import type { MountDocument, MountElement } from 'components/utils'
 
 export interface Props {
@@ -29,7 +29,7 @@ export interface BackTopSlots {
 }
 
 // 主题转发：回到顶部按钮 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
-const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportTheme = injectFromChain(themeTeleportKey) ?? null
 const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
 const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 const props = withDefaults(defineProps<Props>(), {

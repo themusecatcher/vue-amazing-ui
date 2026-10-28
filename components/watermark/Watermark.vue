@@ -3,10 +3,10 @@
  * 在容器（或全屏）上铺一层由 canvas 绘制、按 `background-repeat` 平铺的重复水印。
  * 水印层被删除或被改写 style / class 时自动重建；绘制失败（图片不可用）只告警、不影响宿主内容。
  */
-import { shallowRef, computed, inject, watch, onMounted, onBeforeUnmount } from 'vue'
+import { shallowRef, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { useMutationObserver, log } from 'components/utils'
-import { THEME_SNAPSHOT_KEY } from 'components/config-provider/context'
+import { injectFromChain, useMutationObserver, log } from 'components/utils'
+import { themeSnapshotKey } from 'components/config-provider/context'
 export interface Font {
   color?: string // 字体颜色；不传时取主题变量 --va-fill-color-3（浅色 rgba(0,0,0,.15) / 暗色 rgba(255,255,255,.18)）
   fontSize?: number // 字体大小，单位 px，默认 16
@@ -69,7 +69,7 @@ const htmlRef = shallowRef<HTMLElement | null>(typeof document !== 'undefined' ?
  *    由下方 `onStaticThemeChange` 跟随 `<html>` 的模式属性保持最新）；
  * 4. SSR 等拿不到 DOM 时才回落浅色默认。
  */
-const themeSnapshot = inject(THEME_SNAPSHOT_KEY, null)
+const themeSnapshot = injectFromChain(themeSnapshotKey) ?? null
 // 静态变量表里的默认色：computed 读的是快照，这里把「外部属性换模式」的结果存成响应式值，才能驱动重绘
 function readStaticTextColor() {
   if (typeof document === 'undefined') return ''

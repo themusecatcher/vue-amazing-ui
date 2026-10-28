@@ -142,7 +142,7 @@ pnpm lint:check   # ESLint check only (does not modify files)
 pnpm type-check   # Type checking
 pnpm test         # Unit tests (vitest)
 pnpm check        # Aggregate check: lint:check + format:check + type-check + test
-pnpm verify       # Heavyweight gate: build + dependency consistency + on-demand verification + theme architecture guard + artifact guard (pre-release / CI)
+pnpm verify       # Heavyweight gate: build + dependency consistency + on-demand verification + theme architecture guard + injection contract guard + artifact guard (pre-release / CI)
 ```
 
 Before committing, it is recommended to run `pnpm check` locally and make sure it passes before pushing.

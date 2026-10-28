@@ -17,7 +17,6 @@ import {
   nextTick,
   onMounted,
   onBeforeUnmount,
-  inject,
   h,
   withDirectives,
   vShow,
@@ -25,11 +24,12 @@ import {
   Fragment,
   Text
 } from 'vue'
-import type { CSSProperties, Ref, VNode } from 'vue'
-import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
+import type { CSSProperties, VNode } from 'vue'
+import { themeTeleportKey } from 'components/config-provider/context'
 import Empty from 'components/empty'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import {
+  injectFromChain,
   raiseFloatingOrder,
   useFloating,
   useFloatingTeleportTarget,
@@ -37,7 +37,7 @@ import {
   useResizeObserver,
   useSlotsExist,
   useZIndex,
-  Z_INDEX_CONTAINER_OPEN_KEY,
+  zIndexContainerOpenKey,
   FLOATING_LAYER_Z_INDEX
 } from 'components/utils'
 import type { FloatingPlacement, MountElement } from 'components/utils'
@@ -163,7 +163,7 @@ export interface SelectSlots {
 }
 
 // 主题转发：下拉面板 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
-const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportTheme = injectFromChain(themeTeleportKey) ?? null
 const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
 const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 const props = withDefaults(defineProps<Props>(), {
@@ -1043,9 +1043,9 @@ watchEffect(() => {
   hoverValue.value = firstEnabled ? (getOptionValue(firstEnabled) ?? null) : null
 })
 // 承载层（Modal / Drawer / Dialog）关闭时收起面板并归位聚焦态（容器不卸载内容，面板不会随容器消失）：
-// ① 面板停留打开态会占着层级槽位、被重新打开的容器反超（详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）；
+// ① 面板停留打开态会占着层级槽位、被重新打开的容器反超（详见 z-index.ts 的 zIndexContainerOpenKey）；
 // ② 容器关闭不派发 blur，不显式归位则容器重开时仍残留聚焦描边与阴影
-const containerOpen = inject(Z_INDEX_CONTAINER_OPEN_KEY, null) as Ref<boolean> | null
+const containerOpen = injectFromChain(zIndexContainerOpenKey) ?? null
 if (containerOpen) {
   watch(containerOpen, (open) => {
     if (!open) {

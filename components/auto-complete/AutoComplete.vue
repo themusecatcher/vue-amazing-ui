@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch, onMounted, inject } from 'vue'
-import type { CSSProperties, VNode, Ref } from 'vue'
-import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
+import { ref, computed, watchEffect, watch, onMounted } from 'vue'
+import type { CSSProperties, VNode } from 'vue'
+import { themeTeleportKey } from 'components/config-provider/context'
 import Scrollbar from 'components/scrollbar'
 import {
+  injectFromChain,
   raiseFloatingOrder,
   useFloating,
   useFloatingTeleportTarget,
   useInheritAnchorFont,
   useSlotsExist,
   useZIndex,
-  Z_INDEX_CONTAINER_OPEN_KEY,
+  zIndexContainerOpenKey,
   FLOATING_LAYER_Z_INDEX
 } from 'components/utils'
 import type { MountElement } from 'components/utils'
@@ -63,7 +64,7 @@ export interface AutoCompleteSlots {
 }
 
 // 主题转发：下拉面板 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
-const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportTheme = injectFromChain(themeTeleportKey) ?? null
 const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
 const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 const props = withDefaults(defineProps<Props>(), {
@@ -302,10 +303,10 @@ watch(panelVisible, (visible) => {
 })
 // 承载层（Modal / Drawer / Dialog）关闭时收起面板并归位聚焦态：容器不卸载内容，本面板也不会随容器消失 ——
 // ① 面板：停留在打开态会让它占着层级槽位，被「后出现者在上」重新打开的容器反超（落到遮罩之下），
-//    同时无谓抬高后续分配点（详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）
+//    同时无谓抬高后续分配点（详见 z-index.ts 的 zIndexContainerOpenKey）
 // ② 聚焦态：容器关闭不派发 blur（focusTriggerAfterClose 归还焦点时也未必落到本 input 上），
 //    故须在此显式归位，否则容器重开时 `.auto-complete-focused` 的描边与阴影仍在
-const containerOpen = inject(Z_INDEX_CONTAINER_OPEN_KEY, null) as Ref<boolean> | null
+const containerOpen = injectFromChain(zIndexContainerOpenKey) ?? null
 if (containerOpen) {
   watch(containerOpen, (open) => {
     if (!open) {

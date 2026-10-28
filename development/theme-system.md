@@ -83,7 +83,7 @@ components   ──┘         │                              ├─→ 写到
 
 `Modal` / `Dropdown` / `Message` 等被 `Teleport` 到 `body`：**DOM 搬家了，CSS 继承链没跟过去**。
 
-因此 `Provider` 通过 `THEME_TELEPORT_KEY` 把当前作用域的令牌与模式下发给浮层，浮层在自己的根节点再内联一次。写在 `<html>` 上的 owner 不需要转发（浮层直接继承）。
+因此 `Provider` 通过 `themeTeleportKey` 把当前作用域的令牌与模式下发给浮层，浮层在自己的根节点再内联一次。写在 `<html>` 上的 owner 不需要转发（浮层直接继承）。
 
 转发只包含「当前作用域真实生效」的内容：
 
@@ -144,7 +144,7 @@ theme.components.Button.primaryColor = '#ff6900'
 | 种子继承、42 个变量派生、组件主色展开 | `components/config-provider/use-theme-seed.ts` |
 | `<html>` 写入、恢复与 owner 仲裁 | `components/config-provider/theme-global-writer.ts` |
 | 浮层转发内容组装 | `components/config-provider/use-theme-teleport.ts` |
-| 注入键与转发协议 | `components/config-provider/context.ts` |
+| 注入键与转发协议 | `components/config-provider/context.ts`：键一律 `Symbol` + `InjectionKey<T>`，读取一律 `injectFromChain`（裸 `inject` 在 `app.runWithContext` 上下文会改道到宿主 app）；新增键须补守卫场景测试。条文见 `component-design.md` 的 provide / inject 注入契约 |
 | 系统配色偏好 | `components/config-provider/theme-mode.ts` |
 | 静态表生成 | `build/gen-theme.ts`、`vite.config.ts` 的 `theme-css` 插件 |
 | 架构守护 | `scripts/verify-theme.js` |

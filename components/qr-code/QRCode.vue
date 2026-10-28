@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, onMounted, shallowRef, inject } from 'vue'
+import { ref, computed, watchEffect, onMounted, shallowRef } from 'vue'
 import type { CSSProperties } from 'vue'
 import qrcodegen from './qrcodegen'
 import Spin, { type SpinProps } from 'components/spin'
 import Button from 'components/button'
-import { log } from 'components/utils'
-import { THEME_SNAPSHOT_KEY } from 'components/config-provider/context'
+import { injectFromChain, log } from 'components/utils'
+import { themeSnapshotKey } from 'components/config-provider/context'
 import type { ThemeVarName } from 'components/theme'
 
 export interface Props {
@@ -77,7 +77,7 @@ const iconImage = shallowRef<HTMLImageElement | null>(null)
  *    纯 CSS 暗色也能取到模式正确的值；运行期改 `<html>` 属性不会触发重绘，跟随明暗请用 Provider 的 `mode`）；
  * 3. SSR 等拿不到 DOM 时才回落浅色默认。
  */
-const themeSnapshot = inject(THEME_SNAPSHOT_KEY, null)
+const themeSnapshot = injectFromChain(themeSnapshotKey) ?? null
 const resolveThemeColor = (name: ThemeVarName, fallback: string) => {
   const snapshotColor = themeSnapshot?.value?.[name]
   if (snapshotColor) {

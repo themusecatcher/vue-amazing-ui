@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { defineComponent, h, inject, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import ConfigProvider from 'components/config-provider/ConfigProvider.vue'
-import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
+import { themeTeleportKey } from 'components/config-provider/context'
 import { derive, deriveColorStates, MODE_ATTRIBUTE } from 'components/theme'
 import type { ConfigProviderTheme } from 'components/config-provider'
 
@@ -30,7 +30,7 @@ const TeleportProbe = defineComponent({
   name: 'ComponentThemeTeleportProbe',
   props: { name: { type: String, required: true } },
   setup(props) {
-    const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+    const teleportTheme = inject(themeTeleportKey, null)
     return () =>
       h('i', {
         class: 'component-theme-probe',

@@ -12,7 +12,15 @@ export interface MessageApi {
   destroyAll(): void
 }
 
-export const messageApiKey: InjectionKey<MessageApi> = Symbol('messageApi')
+/**
+ * 消息命令式 api 的注入键
+ *
+ * - 提供方：`MessageProvider`
+ * - 消费方：`useMessage`
+ * - 响应式：否（api 对象为稳定引用）
+ * - 未命中：`undefined`，`useMessage` 抛错提示改用 `createDiscreteApi`
+ */
+export const messageApiKey: InjectionKey<MessageApi> = Symbol('vaMessageApi')
 
 /**
  * 在 `setup` 内获取 Message api，需在 `<MessageProvider>` 内部使用。

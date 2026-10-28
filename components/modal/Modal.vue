@@ -29,20 +29,21 @@ if (typeof document !== 'undefined') {
 </script>
 
 <script setup lang="ts">
-import { ref, computed, watch, onUnmounted, nextTick, createTextVNode, h, Fragment, provide, inject } from 'vue'
+import { ref, computed, watch, onUnmounted, nextTick, createTextVNode, h, Fragment, provide } from 'vue'
 import type { VNode, CSSProperties } from 'vue'
-import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
+import { themeTeleportKey } from 'components/config-provider/context'
 import Button, { type ButtonProps } from 'components/button'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import ModalRenderHost from './ModalRenderHost'
 import {
   createKeyGenerator,
+  injectFromChain,
   lockScroll,
   renderContentToVNode,
   trapTabFocus,
   useSlotsExist,
   useZIndex,
-  Z_INDEX_CONTAINER_OPEN_KEY,
+  zIndexContainerOpenKey,
   FLOATING_LAYER_Z_INDEX,
   log
 } from 'components/utils'
@@ -178,7 +179,7 @@ export interface ModalReactive extends ModalOptions {
 export type Mode = 'info' | 'success' | 'error' | 'warning' | 'confirm' | 'erase' | 'custom'
 
 // 主题转发：弹窗 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
-const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportTheme = injectFromChain(themeTeleportKey) ?? null
 const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
 const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 const props = withDefaults(defineProps<Props>(), {
@@ -820,9 +821,9 @@ watch(showModalWrap, (show) => {
 })
 // 向下注入「本层是否处于打开态」：容器关闭时内部浮层（如已展开的 Select 下拉）需一并收起 ——
 // 内容常驻不卸载，内部浮层不会随容器消失；若保持打开，它会占着层级槽位、被重新打开的弹窗反超
-// （详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）
+// （详见 z-index.ts 的 zIndexContainerOpenKey）
 provide(
-  Z_INDEX_CONTAINER_OPEN_KEY,
+  zIndexContainerOpenKey,
   computed(() => openCount.value > 0)
 )
 // 向 <ModalProvider> 回传 api，使其无需依赖模板 ref 即可对外提供

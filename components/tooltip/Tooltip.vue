@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ref, computed, watch, inject, getCurrentInstance, onBeforeUnmount, onMounted } from 'vue'
-import type { CSSProperties, Ref, TransitionProps, VNode } from 'vue'
+import { ref, computed, watch, getCurrentInstance, onBeforeUnmount, onMounted } from 'vue'
+import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Popup from 'components/popup'
 import {
+  injectFromChain,
   useSlotsExist,
   useResizeObserver,
   useOptionsSupported,
-  Z_INDEX_CONTAINER_OPEN_KEY,
+  zIndexContainerOpenKey,
   FLOATING_LAYER_Z_INDEX
 } from 'components/utils'
 import type { MountElement } from 'components/utils'
@@ -277,8 +278,8 @@ watch(
 // 承载层内容常驻不卸载，浮层不会随容器消失；若保持打开，容器重开时浮层会以「仍打开」的状态冒出来。
 // 关闭容器的路径里，点 X / 遮罩会顺带触发「点击外部」把 click 触发型关掉，但 **Esc 关闭**（Modal 的
 // Esc 处理在弹窗主体上，不产生 document click）与 **程序化关闭**（接口回调 / 父状态变更）没有任何指针
-// 事件，浮层会残留打开态。详见 utils/z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY
-const containerOpen = inject(Z_INDEX_CONTAINER_OPEN_KEY, null) as Ref<boolean> | null
+// 事件，浮层会残留打开态。详见 utils/z-index.ts 的 zIndexContainerOpenKey
+const containerOpen = injectFromChain(zIndexContainerOpenKey) ?? null
 if (containerOpen) {
   watch(containerOpen, (open) => {
     if (!open) {

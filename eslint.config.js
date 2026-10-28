@@ -116,5 +116,48 @@ export default defineConfigWithVueTs(
     rules: {
       'no-console': 'off'
     }
+  },
+
+  // 注入契约守护（条文见 development/component-design.md 的 provide / inject 章节）：
+  //   1. 字符串字面量作键 → 宿主应用也能 provide 同名键，库会读到错误的值（实测 useZIndex 抛
+  //      `manager.allocate is not a function`）。键必须是 Symbol + InjectionKey；
+  //   2. 裸 inject() → 在 app.runWithContext（vue-router 导航守卫）上下文里会改道去翻宿主 app 的
+  //      provides，读不到组件级 provide，离散实例的层级与主题因此失效。统一走 utils 的 injectFromChain。
+  // 白名单：injectFromChain 的实现文件自身。
+  {
+    name: 'custom/no-raw-injection-key',
+    files: ['components/**/*.{ts,vue}'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "CallExpression[callee.name='provide'] > Literal:first-child",
+          message:
+            '注入键禁止使用字符串字面量：请改用 Symbol + InjectionKey 定义的键变量（见 development/component-design.md）'
+        },
+        {
+          selector: "CallExpression[callee.name='inject'] > Literal:first-child",
+          message:
+            '注入键禁止使用字符串字面量：请改用 Symbol + InjectionKey 定义的键变量（见 development/component-design.md）'
+        },
+        {
+          selector: "CallExpression[callee.name='injectFromChain'] > Literal:first-child",
+          message:
+            '注入键禁止使用字符串字面量：请改用 Symbol + InjectionKey 定义的键变量（见 development/component-design.md）'
+        },
+        {
+          selector: "CallExpression[callee.name='inject']",
+          message:
+            '请改用 injectFromChain：app.runWithContext（如路由导航守卫）上下文里裸 inject 会改道到宿主 app 的 provides'
+        }
+      ]
+    }
+  },
+  {
+    name: 'custom/no-raw-injection-key-exceptions',
+    files: ['components/utils/hooks.ts'],
+    rules: {
+      'no-restricted-syntax': 'off'
+    }
   }
 )

@@ -61,5 +61,12 @@ export interface RadioGroupContext {
   onChange: (value: RadioValue, event: RadioChangeEvent) => void
 }
 
-/** 单选组上下文的注入键 */
-export const radioGroupContextKey: InjectionKey<RadioGroupContext> = Symbol('radioGroupContext')
+/**
+ * 单选组上下文的注入键
+ *
+ * - 提供方：`RadioGroup`
+ * - 消费方：`Radio`（置于组内时按组的选中值与禁用态渲染）
+ * - 响应式：是（上下文内为 `Ref` / `ComputedRef` 字段）
+ * - 未命中：`undefined`，单项按脱离组处理，走自身 `checked` 受控逻辑
+ */
+export const radioGroupContextKey: InjectionKey<RadioGroupContext> = Symbol('vaRadioGroupContext')

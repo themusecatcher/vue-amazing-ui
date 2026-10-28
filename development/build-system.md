@@ -106,14 +106,15 @@ pnpm lint              # ESLint 检查并修复
 pnpm type-check        # vue-tsc 类型检查
 pnpm check             # 聚合检查：lint:check + format:check + type-check + test
 pnpm test              # vitest 运行测试
-pnpm verify            # 重量级门禁：build + verify:deps + verify:on-demand + verify:theme + guard（发布前 / CI 自检）
+pnpm verify            # 重量级门禁：build + verify:deps + verify:on-demand + verify:theme + verify:inject-keys + guard（发布前 / CI 自检）
 pnpm verify:deps       # 产物一致性校验：依赖表 ↔ chunk 闭包 + 聚合入口类型声明 ↔ 运行时导出（需已构建产物）
 pnpm verify:on-demand  # 按需引入端到端验证：临时消费方工程 + canary 断言（需已构建产物）
 pnpm verify:theme      # 主题架构守护：变量契约 / 组件令牌注册表 / 组件文件与登记表一致性
+pnpm verify:inject-keys # 注入契约守护：键类型 / 命名 / 描述串 / 读取通道（只扫源码）
 pnpm guard             # 产物守卫：毫秒级存在性校验（样式入口 / 编号 CSS / 入口内引用 / 聚合入口类型与运行时配对 / props 运行时类型与源码类型对齐）
 ```
 
-> `scripts/publish.sh` 也会在构建后强制执行 `verify:deps`、`verify:on-demand` 与 `verify:theme`（`guard` 由 `prepublishOnly` 触发）。
+> `scripts/publish.sh` 也会在构建后强制执行 `verify:deps`、`verify:on-demand`、`verify:theme` 与 `verify:inject-keys`（`guard` 由 `prepublishOnly` 触发）。
 > 边界：`verify:on-demand` 用 Vite 构建，而 Vite 不做 webpack 式的 `sideEffects` tree-shaking，测不到「样式入口被 webpack 丢弃」这类问题 —— 该场景由 `prepublish-guard.js` 的第 ④ 项断言兜底。
 > CI 已启用：`.github/workflows/verify.yml` 在 PR 与 `main` 上**并行**跑两个 job —— `check`（`pnpm check`）与 `verify`（`pnpm verify` + `pnpm docs:build`，含完整构建）；
 > `docs:build` 必须晚于 `build`：docs 站的组件库来源是 `dist/` 产物（`docs/.vitepress/config.ts` 的 resolveId 钩子把 `'vue-amazing-ui'` 指向 `../../dist/index.js`），并非 npm 上的同名包；它同时兜住 `docs/**/*.md`（VitePress 的 md-as-SFC）的模板 / 标签结构错误 —— 这批 md 不可纳入 Prettier（会破坏构建，详见 `.github/workflows/verify.yml` 文件头说明）。

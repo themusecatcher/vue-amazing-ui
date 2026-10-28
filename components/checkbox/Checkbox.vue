@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, inject, ref, watch, watchEffect } from 'vue'
+import { computed, ref, watch, watchEffect } from 'vue'
 import type { VNode } from 'vue'
-import { useSlotsExist, useWave } from 'components/utils'
+import { injectFromChain, useSlotsExist, useWave } from 'components/utils'
 import { checkboxGroupContextKey } from './context'
 import type { CheckboxChangeEvent, CheckboxValue } from './context'
 
@@ -34,7 +34,7 @@ const { wave, startWave, endWave } = useWave() // 复选框动画选中效果标
 const emits = defineEmits(['update:checked', 'change'])
 const slotsExist = useSlotsExist(['default'])
 // 所在复选框组：置入组内时选中态、禁用态与事件出口改由组统一承载，脱离组时不读取
-const groupContext = inject(checkboxGroupContextKey, undefined)
+const groupContext = injectFromChain(checkboxGroupContextKey)
 const singleInput = ref<HTMLInputElement>()
 // 程序化聚焦不匹配 :focus-visible（调用时最近的交互通常是鼠标），另置标志驱动焦点环，使 focus() 调用有可见反馈
 const exposedSingleFocused = ref<boolean>(false)
