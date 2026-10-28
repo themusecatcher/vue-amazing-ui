@@ -14,13 +14,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-30">3.5.0</VersionDateTag>
+## <VersionDateTag date="2026-10-29">3.5.0</VersionDateTag>
 
 - [选择器 Select](/guide/components/select.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html) 的下拉面板结构改为 `.va-popup-container` + `.va-popup-panel` 两层（面板根仍为 `select-panel-container` / `auto-complete-panel`）：`.select-panel-wrapper` / `.auto-complete-panel-wrapper` 不再存在，依赖旧 `DOM` 结构的 `:deep()` 选择器需改用 `popupClassName` / `dropdownMenuStyle` 等公开属性
 - 上述两个组件的面板内浮层（`dropdownRender` / `option` 插槽里的 `Tooltip` / `Popover`）改为挂进面板内部，面板根不再裁剪溢出内容
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-10-29">3.4.1</VersionDateTag>
+## <VersionDateTag date="2026-10-28">3.4.1</VersionDateTag>
 
 - 修复 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `baseZIndex` 与 `theme` 在路由守卫中创建离散实例（`createDiscreteApi`）时不生效的问题
 - 贡献者文档补充 `provide` / `inject` 注入契约与守护说明
