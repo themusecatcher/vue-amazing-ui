@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { BgColorsOutlined } from '@ant-design/icons-vue'
-import { DEFAULT_PRIMARY, setThemePrimary, theme } from '@/theme'
+import { DEFAULT_PRIMARY } from 'vue-amazing-ui'
+import { useThemeStore } from '@/stores/theme'
 // 主色即可写回共享主题的种子（未取色时回落默认主色），与取色面板双向绑定
 // 面板限定 hex 模式：主题种子只接受不透明的 #rgb / #rrggbb，rgb() / hsl() 会被 ConfigProvider 判为非法并回退默认值
+const themeStore = useThemeStore()
 const primary = computed<string>({
-  get: () => theme.value.seed?.primary ?? DEFAULT_PRIMARY,
+  get: () => themeStore.primaryColor ?? DEFAULT_PRIMARY,
   set: (color) => {
-    if (color) setThemePrimary(color)
+    if (color) themeStore.primaryColor = color
   }
 })
 // 取色面板的预设色板：每个色系只留一个代表色（近似色会让「换主题色」失去意义），

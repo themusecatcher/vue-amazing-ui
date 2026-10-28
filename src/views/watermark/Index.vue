@@ -2,7 +2,8 @@
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { dateFormat } from 'vue-amazing-ui'
 import type { WatermarkProps } from 'vue-amazing-ui'
-import { theme } from '@/theme'
+import { useThemeStore } from '@/stores/theme'
+const themeStore = useThemeStore()
 const realTime = ref<string>(dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss:SSS'))
 let rafId = 0
 const updateTime = () => {
@@ -24,7 +25,7 @@ const imageModel = reactive({
 })
 // 水印由 canvas 绘制、读不到 CSS 变量，故按当前明暗模式给出与主题令牌 --va-fill-color-3 一致的默认色
 const defaultTextColor = computed<string>(() =>
-  theme.value.mode === 'dark' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(0, 0, 0, 0.15)'
+  themeStore.mode === 'dark' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(0, 0, 0, 0.15)'
 )
 // 演示多行文字的排版：只放多行专属的字段，其余文字样式由水印配置器覆盖
 const multiLineModel = reactive<{

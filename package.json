@@ -119,6 +119,7 @@
     "minimist": "^1.2.8",
     "naive-ui": "^2.45.3",
     "npm-run-all2": "^8.0.4",
+    "pinia": "^3.0.4",
     "postcss": "^8.5.28",
     "prettier": "^3.8.1",
     "rimraf": "^6.1.3",

@@ -4,7 +4,7 @@ import { createDiscreteApi } from 'vue-amazing-ui'
 import type { DiscreteApiInstance } from 'vue-amazing-ui'
 import GlobalLayout from '@/layouts/GlobalLayout.vue'
 // 与 App.vue 的 ConfigProvider 共用同一份主题，使路由加载条跟随主题变化
-import { theme } from '@/theme'
+import { useThemeStore } from '@/stores/theme'
 
 // export const routes = [
 //   {
@@ -117,9 +117,11 @@ const router = createRouter({
 let discreteLoadingBar: DiscreteApiInstance<'loadingBar'> | null = null
 function getLoadingBar(): DiscreteApiInstance<'loadingBar'> {
   if (!discreteLoadingBar) {
+    // 守卫首次触发时 pinia 已安装（main.ts 中 app.use(createPinia()) 早于 app.use(router)），可安全取 store
+    const themeStore = useThemeStore()
     discreteLoadingBar = createDiscreteApi(['loadingBar'], {
-      // 传 computed 建立响应式依赖：theme 变化时独立实例同步重渲染
-      configProviderProps: computed(() => ({ theme: theme.value }))
+      // 传 computed 建立响应式依赖：主题变化时独立实例同步重渲染
+      configProviderProps: computed(() => ({ theme: themeStore.theme }))
     })
   }
   return discreteLoadingBar

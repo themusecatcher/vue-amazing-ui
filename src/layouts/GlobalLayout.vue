@@ -6,11 +6,12 @@ import SideMenu from './components/SideMenu.vue'
 import ThemeColorButton from './components/ThemeColorButton.vue'
 import ThemeModeButton from './components/ThemeModeButton.vue'
 import type { SideMenuSize } from './components/SideMenu.vue'
-import { theme } from '@/theme'
+import { useThemeStore } from '@/stores/theme'
 import type { Scrollbar } from 'vue-amazing-ui'
 const route = useRoute() // 返回当前路由地址，相当于在模板中使用 $route
+const themeStore = useThemeStore()
 // 侧栏菜单的明暗跟随共享主题（模式切换入口统一收敛到右下角的暗黑模式浮钮）
-const isDark = computed<boolean>(() => theme.value.mode === 'dark')
+const isDark = computed<boolean>(() => themeStore.mode === 'dark')
 const contentScrollRef = ref<InstanceType<typeof Scrollbar> | null>(null)
 // 路由变化后把滚动位置复位：内容区滚动由 Scrollbar 承载（window 的 scrollBehavior 管不到）
 watch(
