@@ -96,7 +96,6 @@ const lastUserValue = ref<string>('') // 用户原始输入（backfill 时键盘
 const showOptions = ref<boolean>(false) // 显示隐藏下拉面板
 const focused = ref<boolean>(false) // 自动完成是否聚焦
 const contentRef = ref<HTMLElement | null>(null) // 内容模板引用（浮层锚点）
-const popupRef = ref<InstanceType<typeof Popup> | null>(null) // 浮层宿主模板引用
 // 清除图标显隐：开启 allowClear、未禁用且有值时显示（与 Input 组件保持一致，有值即显示，不依赖 hover）
 const showClear = computed<boolean>(() => {
   return props.allowClear && !props.disabled && Boolean(props.value)
@@ -590,7 +589,6 @@ defineExpose({
          面板级监听（mousedown 阻止默认行为）经宿主的 $attrs 落到面板根上。
          定位口径显式传入：bottomLeft（左对齐）+ 间距 4，与迁移前的自持内核参数一致 -->
     <Popup
-      ref="popupRef"
       :show="panelVisible"
       :to="to"
       :anchor="contentRef"
@@ -839,7 +837,7 @@ defineExpose({
 </style>
 <style lang="less">
 /* 面板皮肤与动画必须留在全局：它们作用于 <Popup> 宿主编译出的面板节点（scope id 属宿主），
-   且 Teleport 到 body 后不在本组件 DOM 子树内，scoped 与 :deep() 均选不中。
+   且宿主把面板 Teleport 到 body 后不在本组件 DOM 子树内，scoped 与 :deep() 均选不中。
    收口口径：① 面板几何以 .auto-complete-panel 收口（定位 / 指针事件 / 层级由宿主基类与内联样式承担）；
    ② 动画类与关键帧统一加 `auto-complete-slide-` 前缀，避免与宿主页面及其它浮层撞名。
    裁剪口径：不声明 overflow —— 面板内元素均按 4px 内缩 + 8px 圆角排布（滚动条滑轨再内缩 4px），

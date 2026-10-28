@@ -1,7 +1,8 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest'
-import { nextTick } from 'vue'
+import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import AutoComplete from 'components/auto-complete/AutoComplete.vue'
+import Tooltip from 'components/tooltip'
 import { flushTransition } from './helpers'
 
 /**
@@ -216,5 +217,45 @@ describe('AutoComplete · 浮层字体承接', () => {
     await flush()
 
     expect(queryWrapperEl()?.style.fontFamily).toBe('monospace')
+  })
+})
+
+describe('AutoComplete 面板关闭时内嵌浮层收起', () => {
+  /**
+   * 与 `Select` 同源：面板自带 `data-va-floating-mount`，`option` 插槽里的浮层会挂进面板；
+   * 面板关闭只是 `v-show` 隐藏，不派发 `mouseleave`，故由宿主（`Popup`）经
+   * `zIndexContainerOpenKey` 下发开合状态，内嵌浮层据此收起（宿主级守护见 `tests/popup.spec.ts`）。
+   */
+  it('option 插槽内的 Tooltip 随面板收起，重开面板不再闪现', async () => {
+    const localWrapper = mount(AutoComplete, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { value: '', open: true, options: [{ label: 'apple', value: 1 }] },
+      slots: {
+        option: () => [
+          h(
+            Tooltip,
+            { tooltip: '选项提示', open: true },
+            { default: () => h('span', { class: 'nested-tooltip-trigger' }, 'apple') }
+          )
+        ]
+      }
+    })
+    wrapper = localWrapper
+    await flush()
+
+    const tooltipPanel = (): HTMLElement | null =>
+      document.querySelector<HTMLElement>('.auto-complete-panel .va-popup-container .va-popup-panel')
+    // 打开态：插槽内的 Tooltip 正常显示
+    expect(tooltipPanel()?.style.display).not.toBe('none')
+
+    await localWrapper.setProps({ open: false })
+    await flush()
+    expect(tooltipPanel()?.style.display).toBe('none')
+
+    // 重开面板：残留的打开态不应冒出来
+    await localWrapper.setProps({ open: true })
+    await flush()
+    expect(tooltipPanel()?.style.display).toBe('none')
   })
 })

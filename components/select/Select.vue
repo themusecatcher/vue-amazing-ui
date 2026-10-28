@@ -1574,7 +1574,7 @@ function renderOptionNode(option: Option, index: number, key: string): VNode {
       // 仅文本型 label 设置 title（与回填内容 / tag 的 title 口径一致：VNode 标签无法转为有意义的文本）
       title: typeof label === 'string' || typeof label === 'number' ? String(label) : undefined,
       // 选项上按下鼠标时阻止默认行为：否则 mousedown 会让 input 失焦触发 blur 关闭面板，
-      // 而面板在离开动画期间已整体禁用指针事件（见 .select-panel-container.slide-leave-active），
+      // 而面板在离开动画期间已整体禁用指针事件（宿主在离开过渡期间给面板加 .va-popup-leaving），
       // 随后的 mouseup / click 便落不到选项上 —— 表现为「真实鼠标点击选项无任何反应」
       onMousedown: (e: MouseEvent) => e.preventDefault(),
       onMouseenter: () => onHover(option),
@@ -2360,7 +2360,7 @@ defineExpose({
 </style>
 <style lang="less">
 /* 面板根皮肤与动画必须留在全局：它们作用于 <Popup> 宿主编译出的面板节点（scope id 属宿主），
-   且 Teleport 到 body 后不在本组件 DOM 子树内，scoped 与 :deep() 均选不中。
+   且宿主把面板 Teleport 到 body 后不在本组件 DOM 子树内，scoped 与 :deep() 均选不中。
    收口口径：① 面板几何以 .select-panel-container 收口（定位 / 指针事件 / 层级由宿主基类与内联样式承担）；
    ② 动画类与关键帧统一加 `select-slide-` 前缀，避免与宿主页面及其它浮层撞名。
    裁剪口径：不声明 overflow —— 面板内元素均按 4px 内缩 + 8px 圆角排布，无元素触到裁切区，

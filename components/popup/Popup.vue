@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, h, ref, watch } from 'vue'
+import { computed, h, provide, ref, watch } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import { themeTeleportKey } from 'components/config-provider/context'
 import {
@@ -8,7 +8,8 @@ import {
   useFloating,
   useFloatingTeleportTarget,
   useInheritAnchorFont,
-  useZIndex
+  useZIndex,
+  zIndexContainerOpenKey
 } from 'components/utils'
 import type {
   FloatingBoundary,
@@ -21,7 +22,7 @@ import type {
  * 浮层宿主
  *
  * 只管「弹层」中与内容、皮肤无关的宿主机制，供 `Tooltip` / `Popover` / `Popconfirm` / `Dropdown` /
- * `Menu` 等复用。关键约定：
+ * `Menu` / `Select` / `AutoComplete` 等复用。关键约定：
  * - **两层 DOM**：定位参照容器（`absolute` + 零高度 + `pointer-events: none`，不参与布局、不产生层叠
  *   上下文，只作面板 `top` / `left` 的坐标原点）+ 面板（定位样式落点）。容器按实时测量，故 Teleport
  *   到 body 与 `to: false` 就地渲染共用同一套求解；
@@ -34,6 +35,8 @@ import type {
  * - **触发语义留在消费组件**：宿主只按 `show` 渲染，动画结束发 `animationend` / `afterLeave`，
  *   hover / click / focus / 延迟 / 外部点击 / esc 一律不管；
  * - **层级**：消费 `useZIndex`，每次「出现」重新领取，保证后出现者在上；
+ * - **承载层契约**：面板带 `data-va-floating-mount`，插槽里的浮层会挂进面板；宿主经
+ *   `zIndexContainerOpenKey` 下发开合状态，面板关闭（`v-show` 隐藏）时内部浮层随之收起；
  * - **箭头 + 方向类**：箭头 DOM 由宿主渲染，几何由皮肤层用方向类选择器驱动 —— 面板上落
  *   `va-popup-placement-{实际方向}`（对外命名，如 `va-popup-placement-bottomLeft`），内核不向 JS
  *   输出箭头几何。
@@ -106,6 +109,14 @@ const emits = defineEmits<{
   animationend: [] // 面板自身动画（进入 / 离开）结束
   afterLeave: [] // 离开动画结束，面板已完全隐藏
 }>()
+// 承载层契约（与 Modal / Drawer / Dialog 同一语义，见 z-index.ts 的 zIndexContainerOpenKey）：
+// 面板携带 data-va-floating-mount 后，内部浮层会挂进面板 —— 面板关闭只是 v-show 隐藏，既不给
+// 内部浮层的触发元素派发 mouseleave 也不派发 blur，浮层会停在打开态并在面板重新打开时闪现；
+// 由宿主下发开合状态，内部浮层据此收起
+provide(
+  zIndexContainerOpenKey,
+  computed<boolean>(() => props.show)
+)
 const initialDisplay = ref<boolean>(props.show) // 首帧优化：首次展示前不渲染，之后用 v-show 复用
 const destroyed = ref<boolean>(false) // 面板子树已被卸载（仅 destroyOnHide 模式会置真；重新展示时复位）
 // 面板子树是否存在：默认模式首次展示后常驻，销毁模式在离开过渡结束后移除整棵子树；
@@ -152,7 +163,7 @@ const {
 })
 // 面板内联样式：内核输出（定位 + 缩放原点）+ 皮肤层样式 + 层级。
 // 层级放在最后：panelStyle 允许覆盖定位 / 缩放原点，但**层级始终由宿主接管** ——
-// 否则使用者经 popupStyle / dropdownMenuStyle 传 zIndex 就能绕开 zIndex prop 与分配器
+// 否则使用者经 popupStyle / dropdownMenuStyle 传 zIndex 就能绕开 zIndex prop 与分配器。
 // 主题转发：作用域变量写在包裹元素上时（abstract: false），Teleport 到 body 的面板拿不到继承，
 // 由 Provider 经此通道下发当前作用域的全量令牌；写在 `<html>` 上时为 null，无需重复内联
 const teleportTheme = injectFromChain(themeTeleportKey) ?? null

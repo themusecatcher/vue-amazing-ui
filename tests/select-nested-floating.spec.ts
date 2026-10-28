@@ -112,3 +112,39 @@ describe('Select 面板内嵌浮层的挂载位置', () => {
     expect(selectPanel().contains(container ?? null)).toBe(true)
   })
 })
+
+describe('Select 面板关闭时内嵌浮层收起', () => {
+  /**
+   * 面板关闭只是 `v-show` 隐藏，既不给内嵌浮层的触发元素派发 `mouseleave` 也不派发 `blur`；
+   * 宿主（`Popup`）经 `zIndexContainerOpenKey` 下发开合状态，内嵌浮层据此收起 —— 否则会停在
+   * 打开态，面板重开时以「仍打开」的状态冒出来（宿主级同源守护见 `tests/popup.spec.ts`）。
+   */
+  it('关闭面板后内嵌 Tooltip 收起，重开面板不再闪现', async () => {
+    mountSelect(({ menuNode }) =>
+      h('div', { class: 'nested-dropdown' }, [
+        h(
+          Tooltip,
+          { tooltip: '内嵌提示', open: true },
+          { default: () => h('button', { class: 'nested-tooltip-trigger' }, 'hover') }
+        ),
+        h(menuNode)
+      ])
+    )
+    await settle()
+
+    const tooltipPanel = (): HTMLElement | null =>
+      nestedContainer()?.querySelector<HTMLElement>('.va-popup-panel') ?? null
+    // 打开态：内嵌 Tooltip 正常显示
+    expect(tooltipPanel()?.style.display).not.toBe('none')
+
+    const trigger = wrapper!.find('.select-wrap')
+    await trigger.trigger('click')
+    await settle()
+    expect(tooltipPanel()?.style.display).toBe('none')
+
+    // 重开面板：残留的打开态不应冒出来
+    await trigger.trigger('click')
+    await settle()
+    expect(tooltipPanel()?.style.display).toBe('none')
+  })
+})

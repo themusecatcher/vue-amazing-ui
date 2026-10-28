@@ -1,9 +1,10 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest'
-import { defineComponent, h, nextTick, onMounted, ref } from 'vue'
+import { defineComponent, h, nextTick, onMounted, ref, watchEffect } from 'vue'
 import type { Ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import Popup from 'components/popup'
 import ConfigProvider from 'components/config-provider'
+import { injectFromChain, zIndexContainerOpenKey } from 'components/utils'
 import { flushTransition } from './helpers'
 
 /**
@@ -675,5 +676,43 @@ describe('Popup · 浮层字体承接', () => {
     await flush()
 
     expect((queryContainer() as HTMLElement).style.fontFamily).toBe('Georgia')
+  })
+})
+
+describe('Popup · 承载层开合契约', () => {
+  /**
+   * 面板携带 `data-va-floating-mount` 后，插槽里的浮层（Tooltip / Dropdown / 内层选择器等）会挂进面板。
+   * 面板关闭只是 `v-show` 隐藏，既不给内部浮层的触发元素派发 `mouseleave` 也不派发 `blur`，
+   * 故宿主必须下发开合状态（`zIndexContainerOpenKey`，与 Modal / Drawer / Dialog 同一契约）；
+   * 不下发时内部浮层会停在打开态，并在面板重新打开时闪现。
+   */
+  it('面板关闭时向内层下发 false', async () => {
+    const show = ref<boolean>(true)
+    const seen: boolean[] = []
+    const Probe = defineComponent({
+      setup() {
+        const open = injectFromChain(zIndexContainerOpenKey)
+        watchEffect(() => {
+          if (open) seen.push(open.value)
+        })
+        return () => h('span', { class: 'probe' }, String(open?.value))
+      }
+    })
+    const Host = defineComponent({
+      setup() {
+        return () => h(Popup, { defaultZIndex: 1070, show: show.value }, { default: () => h(Probe) })
+      }
+    })
+    wrapper = mount(Host, { attachTo: document.body, global: { stubs: { transition: false } } })
+    await flush()
+
+    // 插槽内容能取到宿主下发的开合状态（承载层契约的前提）
+    expect(queryPanel()?.querySelector('.probe')?.textContent).toBe('true')
+    expect(seen[seen.length - 1]).toBe(true)
+
+    show.value = false
+    await flush()
+
+    expect(seen[seen.length - 1]).toBe(false)
   })
 })
