@@ -39,7 +39,7 @@ afterEach(() => {
   vi.restoreAllMocks()
   wrapper?.unmount()
   wrapper = null
-  document.querySelectorAll('.select-panel-wrapper').forEach((el) => el.remove())
+  document.querySelectorAll('.va-popup-container').forEach((el) => el.remove())
 })
 
 /** 等待「状态变更 → 面板渲染」稳定 */

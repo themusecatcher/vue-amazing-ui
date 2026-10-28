@@ -158,20 +158,20 @@ const styleSources: Partial<Record<ComponentName, ComponentName>> = {
 /**
  * 组件样式依赖关系（仅声明「除自身外」的样式依赖；自身样式由 styleSources / componentsMap 兜底）
  *
- * - Tooltip 的浮层宿主为 Popup，故 Tooltip 及其全部间接依赖组件都要追加 Popup；
+ * - Tooltip / Select / AutoComplete 的浮层宿主为 Popup，故三者及其全部间接依赖组件都要追加 Popup；
  * - 生成器只展开一层依赖，不追溯间接依赖，因此「间接用到的有样式组件」须由各组件自行摊平登记
  *   （如日期时间形态的 `DatePicker` 需一并登记 `Button` 与全部 picker 内核组件）；
  * - 依赖项必须是「有自己 CSS 的组件」，不能是 styleSources 的键（复用他人样式）或 stylelessComponents
  *   （无样式），否则生成器会拼出不存在的 CSS 路径（构建期有存在性断言兜底）。
  */
 const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
-  AutoComplete: ['Scrollbar'],
+  AutoComplete: ['Scrollbar', 'Popup'],
   BackTop: ['Tooltip', 'Popup'],
   // RadioGroup 的样式入口含 Radio.css，但依赖表只展开一层，故 Radio 需一并摊平登记
-  Calendar: ['RadioGroup', 'Radio', 'Select', 'Empty', 'Scrollbar'],
+  Calendar: ['RadioGroup', 'Radio', 'Select', 'Empty', 'Scrollbar', 'Popup'],
   Card: ['Skeleton'],
   Carousel: ['Spin'],
-  Cascader: ['Select', 'Empty', 'Scrollbar'],
+  Cascader: ['Select', 'Empty', 'Scrollbar', 'Popup'],
   CheckboxGroup: ['Checkbox'],
   Collapse: ['Button'],
   DatePicker: [
@@ -218,20 +218,20 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   FloatButton: ['Badge', 'Tooltip', 'Popup'],
   Image: ['Space', 'Spin'],
   InputSearch: ['Button'],
-  List: ['Empty', 'Pagination', 'Input', 'Select', 'Scrollbar', 'Spin'],
+  List: ['Empty', 'Pagination', 'Input', 'Select', 'Scrollbar', 'Spin', 'Popup'],
   ListItem: ['Avatar'],
   Menu: ['Popup'],
   Modal: ['Button', 'Scrollbar'],
   ModalProvider: ['Button', 'Scrollbar'],
   Notification: ['Scrollbar'],
   NotificationProvider: ['Scrollbar'],
-  Pagination: ['Input', 'Select', 'Empty', 'Scrollbar'],
+  Pagination: ['Input', 'Select', 'Empty', 'Scrollbar', 'Popup'],
   Popconfirm: ['Button', 'Tooltip', 'Popup'],
   Popover: ['Tooltip', 'Popup'],
   QRCode: ['Button', 'Spin'],
   RadioGroup: ['Radio'],
   Rate: ['Tooltip', 'Popup'],
-  Select: ['Empty', 'Scrollbar'],
+  Select: ['Empty', 'Scrollbar', 'Popup'],
   Table: [
     'Checkbox',
     'Ellipsis',

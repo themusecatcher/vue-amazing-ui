@@ -151,7 +151,8 @@ describe('generateStyleEntries - 入口内容与顺序', () => {
       "import '../../input/Input.css'",
       "import '../../select/Select.css'",
       "import '../../scrollbar/Scrollbar.css'",
-      "import '../../spin/Spin.css'"
+      "import '../../spin/Spin.css'",
+      "import '../../popup/Popup.css'"
     ])
   })
 

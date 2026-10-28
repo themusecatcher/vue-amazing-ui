@@ -49,7 +49,8 @@ async function flush(): Promise<void> {
   await nextTick()
 }
 
-const queryWrapperEl = (): HTMLElement | null => document.querySelector('.select-panel-wrapper')
+// 面板改由 Popup 宿主承载后，定位参照容器即宿主的 .va-popup-container（原 .select-panel-wrapper 已消失）
+const queryWrapperEl = (): HTMLElement | null => document.querySelector('.va-popup-container')
 const queryPanel = (): HTMLElement | null => document.querySelector('.select-panel-container')
 
 let wrapper: ReturnType<typeof mount> | null = null
@@ -84,7 +85,7 @@ beforeEach(() => {
 afterEach(() => {
   wrapper?.unmount()
   wrapper = null
-  document.querySelectorAll('.select-panel-wrapper').forEach((el) => el.remove())
+  document.querySelectorAll('.va-popup-container').forEach((el) => el.remove())
   HTMLElement.prototype.getBoundingClientRect = originalGetBoundingClientRect
   if (originalOffsetWidth) {
     Object.defineProperty(HTMLElement.prototype, 'offsetWidth', originalOffsetWidth)
@@ -178,8 +179,9 @@ describe('Select 定位内核接入（L1 旁路）', () => {
 
 describe('Select 面板的公开覆盖入口（popupClassName / dropdownMenuStyle / zIndex）', () => {
   /**
-   * 面板多了一层定位参照容器（`.select-panel-wrapper`）后，`body > .xxx` / 直接子代选择器等
-   * DOM 结构依赖会失效，故面板样式必须提供公开入口。
+   * 面板改由 Popup 宿主承载后，两层结构升级为 `.va-popup-container` + `.va-popup-panel`（面板根仍挂
+   * `select-panel-container`），`body > .xxx` / 直接子代选择器等 DOM 结构依赖会失效，故面板样式
+   * 必须提供公开入口。
    */
   it('popupClassName 落在面板根元素上，且不覆盖组件自有类名', async () => {
     await mountAndOpen({ popupClassName: 'my-panel' })

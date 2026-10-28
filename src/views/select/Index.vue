@@ -727,7 +727,7 @@ const emptyOptions: SelectOption[] = []
       <template #dropdownRender="{ menuNode }">
         <component :is="menuNode" />
         <Divider style="margin: 4px 0" />
-        <Space style="padding: 4px 8px">
+        <Space :wrap="false" style="padding: 4px 8px">
           <Input v-model:value="addableName" placeholder="Please enter item" />
           <Button type="text" @click="addItem">
             <template #icon>

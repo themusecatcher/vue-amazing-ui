@@ -1,19 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, watch, onMounted } from 'vue'
-import type { CSSProperties, VNode } from 'vue'
-import { themeTeleportKey } from 'components/config-provider/context'
+import type { CSSProperties, TransitionProps, VNode } from 'vue'
+import Popup from 'components/popup'
 import Scrollbar from 'components/scrollbar'
-import {
-  injectFromChain,
-  raiseFloatingOrder,
-  useFloating,
-  useFloatingTeleportTarget,
-  useInheritAnchorFont,
-  useSlotsExist,
-  useZIndex,
-  zIndexContainerOpenKey,
-  FLOATING_LAYER_Z_INDEX
-} from 'components/utils'
+import { injectFromChain, useSlotsExist, zIndexContainerOpenKey, FLOATING_LAYER_Z_INDEX } from 'components/utils'
 import type { MountElement } from 'components/utils'
 export interface Option {
   disabled?: boolean // 是否禁用
@@ -63,10 +53,6 @@ export interface AutoCompleteSlots {
   option?: (props: any) => VNode[]
 }
 
-// 主题转发：下拉面板 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
-const teleportTheme = injectFromChain(themeTeleportKey) ?? null
-const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
-const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 const props = withDefaults(defineProps<Props>(), {
   allowClear: false,
   autofocus: false,
@@ -102,7 +88,6 @@ const emit = defineEmits([
   'openChange',
   'dropdownVisibleChange'
 ])
-const initialDisplay = ref<boolean>(false) // 性能优化，使用 v-if 避免初始时不必要的渲染，展示之后使用 v-show 来控制显示隐藏
 const inputRef = ref<HTMLInputElement | null>(null) // input 元素引用
 const customInputRef = ref<HTMLElement | null>(null) // 自定义输入组件容器引用
 const isComposing = ref<boolean>(false) // 是否处于输入法(IME)合成中，合成期间不触发 search/filter
@@ -110,30 +95,8 @@ const hoverValue = ref<string | number | null>(null) // 鼠标悬浮项的 value
 const lastUserValue = ref<string>('') // 用户原始输入（backfill 时键盘 Esc 还原用，与 onInput 同步更新）
 const showOptions = ref<boolean>(false) // 显示隐藏下拉面板
 const focused = ref<boolean>(false) // 自动完成是否聚焦
-const contentRef = ref<HTMLElement | null>(null) // 内容模板引用
-const panelRef = ref<HTMLElement | null>(null) // 下拉面板模板引用
-const panelWrapperRef = ref<HTMLElement | null>(null) // 定位参照容器：面板 top / left 的坐标原点
-// 层级：ConfigProvider 传入 baseZIndex 时按「后出现者在上」自增分配；未传则沿用默认层级 1050
-// （下拉面板需高于承载它的 Modal / Drawer / Dialog，故取 popupBase + 50）
-// 领取时机由面板「出现」驱动（allocateOnMount: false）：面板首帧才渲染，挂载时不持有槽位，
-// 否则未展开过的下拉会长期占位、抬高后续分配点
-const {
-  zIndex: layerZIndex,
-  allocate: allocateZIndex,
-  release: releaseZIndex
-} = useZIndex(FLOATING_LAYER_Z_INDEX.select, undefined, { allocateOnMount: false })
-// 挂载点：显式 to 优先，否则就近取承载层内容容器（Modal / Drawer / Dialog / 外层 Popup 面板），
-// 都没有则回落 body（见 utils/floating-mount.ts）
-const resolvedTo = useFloatingTeleportTarget(
-  () => contentRef.value,
-  () => props.to
-)
-// 浮层字体承接：Teleport 到 body 后脱离宿主字体继承链，把锚点字体族复制到容器（见 utils/inherit-font.ts）
-useInheritAnchorFont(
-  () => contentRef.value,
-  () => panelWrapperRef.value,
-  () => showOptions.value
-)
+const contentRef = ref<HTMLElement | null>(null) // 内容模板引用（浮层锚点）
+const popupRef = ref<InstanceType<typeof Popup> | null>(null) // 浮层宿主模板引用
 // 清除图标显隐：开启 allowClear、未禁用且有值时显示（与 Input 组件保持一致，有值即显示，不依赖 hover）
 const showClear = computed<boolean>(() => {
   return props.allowClear && !props.disabled && Boolean(props.value)
@@ -253,54 +216,24 @@ const matchTriggerWidth = computed<'width' | 'minWidth' | number>(() => {
   }
   return props.dropdownMatchSelectWidth ? 'width' : 'minWidth'
 })
-// 定位内核：只做「算 + 输出 + 同步」，本组件不再自研翻转与 3 态水平对齐。
-// 期望方向取 bottomLeft（左对齐）：次轴溢出时的对齐自适应与边界位移由内核的次轴处理（shift）承担，
-// 故组件侧不再保留独立的水平对齐判定
-const { panelStyle, transformOrigin } = useFloating(panelRef, {
-  anchor: () => contentRef.value,
-  offsetContainer: panelWrapperRef,
-  placement: 'bottomLeft',
-  flip: true, // 始终按空间翻转（无开关，翻到对侧以保证面板完整可见）
-  shift: true, // 次轴溢出时做对齐自适应与微调
-  offset: 4, // 主轴间距：面板紧贴锚点外 4px
-  boundary: 'scrollParent', // 复用 getFloatingBoundaryRect 口径：仅当浮层真被滚动容器裁剪时才以容器为界
-  matchTriggerWidth: () => matchTriggerWidth.value,
-  enabled: () => panelVisible.value
-})
-// 面板层级：显式 zIndex 优先于自动分配 / 默认层级（与其它浮层组件的 zIndex prop 同一优先级契约）
-const autoCompletePanelZIndex = computed(() => props.zIndex ?? layerZIndex.value)
-// 面板内联样式：内核输出（定位 + 动画原点）+ 使用者自定义样式 + 层级 + 主题变量
-// 合并顺序：自定义样式可覆盖定位，但层级与主题变量始终由组件接管
+// 面板类名：宿主基础皮肤类 + 使用者的 popupClassName（与 ColorPicker 同一范式：皮肤类作前缀保名）
+const mergedPanelClass = computed(() => ['auto-complete-panel', props.popupClassName].filter(Boolean).join(' '))
+// 面板内联样式：使用者自定义样式 + 面板内主题变量（定位 / 缩放原点 / 层级全部由宿主接管）
+// 合并顺序：自定义样式可覆盖定位，但主题变量始终由组件接管
 const autoCompletePanelStyle = computed<CSSProperties>(() => ({
-  ...panelStyle.value,
-  transformOrigin: transformOrigin.value,
   ...props.dropdownMenuStyle,
-  zIndex: autoCompletePanelZIndex.value,
   '--auto-complete-option-bg-color-active': 'var(--va-cp-auto-complete-primary-bg-color, var(--va-primary-bg-color))'
 }))
-watch(showOptions, (to) => {
-  if (!to) return
-  // 首次展开：容器由 Teleport 追加到目标末尾（天然在末尾），此处无需处理
-  if (!initialDisplay.value) {
-    initialDisplay.value = true
-    return
-  }
-  // 再次展开：把容器移到目标末尾 —— 无分配器时同层级浮层的上下关系由 DOM 顺序决定，
-  // 移动后顺序即「最近一次打开的顺序」（就地渲染时容器在组件自身 DOM 内，不能移动）
-  if (resolvedTo.value !== false) {
-    raiseFloatingOrder(panelWrapperRef.value)
-  }
-})
-// 每次「出现」重新领取层级（与 Popup / Modal / Drawer 同一语义）：面板关闭后不卸载（仅 v-show），
-// 若只在挂载时领取一次，则被承载它的 Modal / Drawer 等「重新出现并置顶」后，二次打开的下拉会落到遮罩之下。
-// 关闭时归还槽位（面板元素保留、内联层级不变）：否则「弹窗 ↔ 下拉」交替出现时两者会互相抬升，层级随开合次数持续增长
-watch(panelVisible, (visible) => {
-  if (visible) {
-    allocateZIndex()
-  } else {
-    releaseZIndex()
-  }
-})
+// 过渡配置：面板根的进入 / 离开类与关键帧属皮肤层，故由本组件传入（宿主只负责在离开期加 va-popup-leaving）
+const panelTransitionProps: TransitionProps = {
+  name: 'auto-complete-slide',
+  enterFromClass: 'auto-complete-slide-enter',
+  enterActiveClass: 'auto-complete-slide-enter',
+  enterToClass: 'auto-complete-slide-enter auto-complete-slide-enter-active',
+  leaveFromClass: 'auto-complete-slide-leave',
+  leaveActiveClass: 'auto-complete-slide-leave auto-complete-slide-leave-active',
+  leaveToClass: 'auto-complete-slide-leave auto-complete-slide-leave-active'
+}
 // 承载层（Modal / Drawer / Dialog）关闭时收起面板并归位聚焦态：容器不卸载内容，本面板也不会随容器消失 ——
 // ① 面板：停留在打开态会让它占着层级槽位，被「后出现者在上」重新打开的容器反超（落到遮罩之下），
 //    同时无谓抬高后续分配点（详见 z-index.ts 的 zIndexContainerOpenKey）
@@ -653,148 +586,84 @@ defineExpose({
         ></path>
       </svg>
     </div>
-    <!-- 条件放在 Teleport 上：容器按**打开顺序**追加到目标末尾，同族同层级浮层的上下关系即「后打开者在上」
-         （即「容器在可见时才 appendChild 到父节点」）；若 Teleport 常驻，顺序会退化为模板源码顺序，与打开先后无关 -->
-    <Teleport v-if="initialDisplay" :disabled="resolvedTo === false" :to="resolvedTo === false ? null : resolvedTo">
-      <!-- 两层 DOM：定位参照容器 + 面板。
-           容器的实时矩形即面板 top / left 的坐标原点，故 Teleport 与 to: false 就地渲染共用同一套求解；
-           首帧优化内化在此：首次展示前不渲染任何浮层 DOM，之后由面板上的 v-show 复用同一元素 -->
-      <div
-        ref="panelWrapperRef"
-        class="auto-complete-panel-wrapper"
-        :style="teleportThemeVars"
-        :data-va-mode="teleportThemeMode"
+    <!-- 浮层宿主承担 Teleport / 定位 / 翻转自适应 / 层级 / 过渡 / 字体承接与主题转发；
+         面板级监听（mousedown 阻止默认行为）经宿主的 $attrs 落到面板根上。
+         定位口径显式传入：bottomLeft（左对齐）+ 间距 4，与迁移前的自持内核参数一致 -->
+    <Popup
+      ref="popupRef"
+      :show="panelVisible"
+      :to="to"
+      :anchor="contentRef"
+      placement="bottomLeft"
+      :offset="4"
+      :flip="true"
+      :shift="true"
+      boundary="scrollParent"
+      :match-trigger-width="matchTriggerWidth"
+      :default-z-index="FLOATING_LAYER_Z_INDEX.select"
+      :z-index="zIndex"
+      :panel-class="mergedPanelClass"
+      :panel-style="autoCompletePanelStyle"
+      :transition-props="panelTransitionProps"
+      @mousedown.prevent
+    >
+      <Scrollbar
+        :style="{ ...optionsStyle, '--scrollbar-rail-vertical-right': '2px 0 2px auto' }"
+        class="auto-complete-options"
+        @click.stop="inputFocus"
       >
-        <Transition
-          appear
-          name="slide"
-          enter-from-class="slide-enter"
-          enter-active-class="slide-enter"
-          enter-to-class="slide-enter slide-enter-active"
-          leave-from-class="slide-leave"
-          leave-active-class="slide-leave slide-leave-active"
-          leave-to-class="slide-leave slide-leave-active"
-        >
-          <div
-            v-show="panelVisible"
-            ref="panelRef"
-            class="auto-complete-panel"
-            :class="popupClassName"
-            :style="autoCompletePanelStyle"
-            @mousedown.prevent
-          >
-            <Scrollbar
-              :style="{ ...optionsStyle, '--scrollbar-rail-vertical-right': '2px 0 2px auto' }"
-              class="auto-complete-options"
-              @click.stop="inputFocus"
+        <!-- 选项上按下鼠标时阻止默认行为：否则 mousedown 会让 input 失焦触发 blur 关闭面板，
+             而面板在离开动画期间已整体禁用指针事件（见宿主的 .va-popup-leaving），
+             随后的 mouseup / click 便落不到选项上 —— 表现为「真实鼠标点击选项无任何反应」 -->
+        <template v-for="(item, index) in displayData" :key="index">
+          <template v-if="isGroup(item)">
+            <p class="auto-complete-group-title">
+              <slot v-if="slotsExist.option" name="option" v-bind="item" />
+              <template v-else>{{ item.label ?? item.value }}</template>
+            </p>
+            <p
+              v-for="(child, childIndex) in item.options"
+              :key="`${index}-${childIndex}`"
+              :class="[
+                'auto-complete-option',
+                'option-grouped',
+                {
+                  'option-hover': !isDisabled(child) && getValue(child) === hoverValue,
+                  'option-disabled': isDisabled(child)
+                }
+              ]"
+              :title="getLabel(child)"
+              @mouseenter="onHover(getValue(child), isDisabled(child))"
+              @mousedown.prevent
+              @click.stop="isDisabled(child) ? inputFocus() : onSelectOption(child)"
             >
-              <!-- 选项上按下鼠标时阻止默认行为：否则 mousedown 会让 input 失焦触发 blur 关闭面板，
-                   而面板在离开动画期间已整体禁用指针事件（见 .auto-complete-panel.slide-leave-active），
-                   随后的 mouseup / click 便落不到选项上 —— 表现为「真实鼠标点击选项无任何反应」 -->
-              <template v-for="(item, index) in displayData" :key="index">
-                <template v-if="isGroup(item)">
-                  <p class="auto-complete-group-title">
-                    <slot v-if="slotsExist.option" name="option" v-bind="item" />
-                    <template v-else>{{ item.label ?? item.value }}</template>
-                  </p>
-                  <p
-                    v-for="(child, childIndex) in item.options"
-                    :key="`${index}-${childIndex}`"
-                    :class="[
-                      'auto-complete-option',
-                      'option-grouped',
-                      {
-                        'option-hover': !isDisabled(child) && getValue(child) === hoverValue,
-                        'option-disabled': isDisabled(child)
-                      }
-                    ]"
-                    :title="getLabel(child)"
-                    @mouseenter="onHover(getValue(child), isDisabled(child))"
-                    @mousedown.prevent
-                    @click.stop="isDisabled(child) ? inputFocus() : onSelectOption(child)"
-                  >
-                    <slot v-if="slotsExist.option" name="option" v-bind="childSlotProps(child)" />
-                    <template v-else>{{ getLabel(child) }}</template>
-                  </p>
-                </template>
-                <p
-                  v-else
-                  :class="[
-                    'auto-complete-option',
-                    {
-                      'option-hover': !isDisabled(item) && getValue(item) === hoverValue,
-                      'option-disabled': isDisabled(item)
-                    }
-                  ]"
-                  :title="getLabel(item)"
-                  @mouseenter="onHover(getValue(item), isDisabled(item))"
-                  @mousedown.prevent
-                  @click.stop="isDisabled(item) ? inputFocus() : onSelectOption(item)"
-                >
-                  <slot v-if="slotsExist.option" name="option" v-bind="childSlotProps(item)" />
-                  <template v-else>{{ getLabel(item) }}</template>
-                </p>
-              </template>
-            </Scrollbar>
-          </div>
-        </Transition>
-      </div>
-    </Teleport>
+              <slot v-if="slotsExist.option" name="option" v-bind="childSlotProps(child)" />
+              <template v-else>{{ getLabel(child) }}</template>
+            </p>
+          </template>
+          <p
+            v-else
+            :class="[
+              'auto-complete-option',
+              {
+                'option-hover': !isDisabled(item) && getValue(item) === hoverValue,
+                'option-disabled': isDisabled(item)
+              }
+            ]"
+            :title="getLabel(item)"
+            @mouseenter="onHover(getValue(item), isDisabled(item))"
+            @mousedown.prevent
+            @click.stop="isDisabled(item) ? inputFocus() : onSelectOption(item)"
+          >
+            <slot v-if="slotsExist.option" name="option" v-bind="childSlotProps(item)" />
+            <template v-else>{{ getLabel(item) }}</template>
+          </p>
+        </template>
+      </Scrollbar>
+    </Popup>
   </div>
 </template>
 <style lang="less" scoped>
-/* 缩放动画只改独立变换属性 scale：定位由内核写在独立属性 `translate` 上（复合链最外层，不受缩放影响）；
-   keyframes 若改写 `transform` 会覆盖使用者经 `dropdownMenuStyle` 等样式 prop 传入的内联 transform
-   （CSS 动画优先级高于内联样式，且 animation-fill-mode: both 在过渡类移除前一直生效） */
-.slide-enter {
-  scale: 0;
-  opacity: 0;
-  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
-  animation-duration: 0.2s;
-  animation-fill-mode: both;
-  animation-play-state: paused;
-}
-.slide-enter-active {
-  animation-name: slideIn;
-  animation-play-state: running;
-  @keyframes slideIn {
-    0% {
-      scale: 1 0.8;
-      opacity: 0;
-    }
-    100% {
-      scale: 1;
-      opacity: 1;
-    }
-  }
-}
-.slide-leave {
-  animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
-  animation-duration: 0.2s;
-  animation-fill-mode: both;
-  animation-play-state: paused;
-}
-.slide-leave-active {
-  animation-name: slideOut;
-  animation-play-state: running;
-  @keyframes slideOut {
-    0% {
-      scale: 1;
-      opacity: 1;
-    }
-    100% {
-      scale: 1 0.8;
-      opacity: 0;
-    }
-  }
-}
-/* 离开动画期间禁用指针事件
-   必须带上 `.auto-complete-panel`：单类写法 `.slide-leave-active` 与下方的
-   `.auto-complete-panel { pointer-events: auto }` 同为「类 + 作用域属性 = 0,2,0」，
-   且本规则声明在**前**，会被后者按源码顺序覆盖而静默失效；带上该类后为 0,3,0，靠**特异性**取胜 */
-.auto-complete-panel.slide-leave-active {
-  pointer-events: none;
-}
 .auto-complete-wrap {
   position: relative;
   display: inline-block;
@@ -967,27 +836,23 @@ defineExpose({
     }
   }
 }
-/* 定位参照容器：绝对定位 + 零高度，既不参与布局也不遮挡
-   页面交互；z-index 保持 auto，避免产生层叠上下文而把面板的层级关在里层 */
-.auto-complete-panel-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: auto;
-  height: 0;
-  pointer-events: none;
-}
+</style>
+<style lang="less">
+/* 面板皮肤与动画必须留在全局：它们作用于 <Popup> 宿主编译出的面板节点（scope id 属宿主），
+   且 Teleport 到 body 后不在本组件 DOM 子树内，scoped 与 :deep() 均选不中。
+   收口口径：① 面板几何以 .auto-complete-panel 收口（定位 / 指针事件 / 层级由宿主基类与内联样式承担）；
+   ② 动画类与关键帧统一加 `auto-complete-slide-` 前缀，避免与宿主页面及其它浮层撞名。
+   裁剪口径：不声明 overflow —— 面板内元素均按 4px 内缩 + 8px 圆角排布（滚动条滑轨再内缩 4px），
+   无元素触到裁切区；迁移为 Popup 基座后面板带 data-va-floating-mount，option 插槽内的浮层会挂进面板，
+   该声明只剩「把内嵌浮层裁掉」的负面作用（与 Select 面板同一处理）。
+   缩放只改独立变换属性 scale：定位由宿主内核写在独立属性 `translate` 上（复合链最外层，不受缩放影响）；
+   keyframes 若改写 `transform` 会覆盖使用者经 `dropdownMenuStyle` 等样式 prop 传入的内联 transform
+   （CSS 动画优先级高于内联样式，且 animation-fill-mode: both 在过渡类移除前一直生效） */
 .auto-complete-panel {
-  position: absolute;
-  /* 容器关闭了指针事件（pointer-events 可继承），面板必须显式恢复，否则选项的 hover / 点击全部失效 */
-  pointer-events: auto;
-  /* 默认层级与 useZIndex 的回退值一致；ConfigProvider 传入 baseZIndex 时由内联样式覆盖 */
-  z-index: 1050;
   padding: 4px;
   border-radius: 8px;
-  overflow: hidden;
   background-color: var(--va-bg-elevated-color);
+  background-clip: padding-box;
   outline: none;
   cursor: auto;
   box-shadow: var(--va-popup-shadow);
@@ -995,7 +860,7 @@ defineExpose({
     /* 关闭滚动越界回弹与滚动链：否则触控板惯性滚动会带着列表冲出滚动区，面板底部露出空白
        （与 Select 面板同一处理；⚠️ 必须是 none 而非 contain —— contain 只切断向父级的滚动链，
        元素自身的弹性回弹照旧发生） */
-    :deep(.scrollbar-container) {
+    .scrollbar-container {
       overscroll-behavior: none;
     }
     .auto-complete-group-title {
@@ -1024,7 +889,7 @@ defineExpose({
         padding-left: 24px;
       }
       // 自定义选项内容为 flex 布局时，允许子项收缩并对超宽文本省略号截断
-      :deep(> div) {
+      > div {
         min-width: 0;
         > span,
         > a {
@@ -1041,6 +906,48 @@ defineExpose({
       color: var(--va-text-color-disabled);
       cursor: not-allowed;
     }
+  }
+}
+.auto-complete-slide-enter {
+  scale: 0;
+  opacity: 0;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+}
+.auto-complete-slide-enter-active {
+  animation-name: autoCompleteSlideIn;
+  animation-play-state: running;
+}
+.auto-complete-slide-leave {
+  animation-timing-function: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+}
+.auto-complete-slide-leave-active {
+  animation-name: autoCompleteSlideOut;
+  animation-play-state: running;
+}
+@keyframes autoCompleteSlideIn {
+  0% {
+    scale: 1 0.8;
+    opacity: 0;
+  }
+  100% {
+    scale: 1;
+    opacity: 1;
+  }
+}
+@keyframes autoCompleteSlideOut {
+  0% {
+    scale: 1;
+    opacity: 1;
+  }
+  100% {
+    scale: 1 0.8;
+    opacity: 0;
   }
 }
 </style>

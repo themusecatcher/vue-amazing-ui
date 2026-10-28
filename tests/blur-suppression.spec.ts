@@ -31,7 +31,7 @@ let wrapper: ReturnType<typeof mount> | null = null
 afterEach(() => {
   wrapper?.unmount()
   wrapper = null
-  document.querySelectorAll('.select-panel-wrapper, .auto-complete-panel-wrapper').forEach((el) => el.remove())
+  document.querySelectorAll('.va-popup-container').forEach((el) => el.remove())
 })
 
 /** 等到 DOM 稳定（连续两轮「微任务 + 宏任务」无变化即返回），避免固定时长等待输给异步链路 */

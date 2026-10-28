@@ -23,7 +23,7 @@ let wrapper: ReturnType<typeof mount> | null = null
 afterEach(() => {
   wrapper?.unmount()
   wrapper = null
-  document.querySelectorAll('.auto-complete-panel-wrapper').forEach((el) => el.remove())
+  document.querySelectorAll('.va-popup-container').forEach((el) => el.remove())
 })
 
 /** 等待受控显隐落定（公共等待见 tests/helpers.ts —— 即从该用例抽出的实现） */

@@ -1806,7 +1806,7 @@ _使用 `dropdownRender` 对下拉菜单自由扩展，`menuNode` 为内置菜�
   <template #dropdownRender="{ menuNode }">
     <component :is="menuNode" />
     <Divider style="margin: 4px 0" />
-    <Space style="padding: 4px 8px">
+    <Space :wrap="false" style="padding: 4px 8px">
       <Input v-model:value="addableName" placeholder="Please enter item" />
       <Button type="text" @click="addItem">
         <template #icon><PlusOutlined /></template>
@@ -1842,7 +1842,7 @@ function addItem() {
     <template #dropdownRender="{ menuNode }">
       <component :is="menuNode" />
       <Divider style="margin: 4px 0" />
-      <Space style="padding: 4px 8px">
+      <Space :wrap="false" style="padding: 4px 8px">
         <Input v-model:value="name" placeholder="Please enter item" />
         <Button type="text" @click="addItem">
           <template #icon><PlusOutlined /></template>

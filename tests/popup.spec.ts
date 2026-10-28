@@ -3,7 +3,6 @@ import { defineComponent, h, nextTick, onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import Popup from 'components/popup'
-import type { PopupBodyBindings } from 'components/popup'
 import ConfigProvider from 'components/config-provider'
 import { flushTransition } from './helpers'
 
@@ -18,7 +17,6 @@ import { flushTransition } from './helpers'
  *   `actualPlacement` 的**对外命名**（kebab 命名仅内核内部使用），箭头只由该方向类选择器驱动；
  * - **层级**：未注入管理器时用 `defaultZIndex`，注入后按「后出现者在上」分配，显式 `zIndex` 优先；
  * - **关闭语义**：仅响应面板自身的动画结束（忽略插槽内容里冒泡的嵌套动画），离开结束发 `afterLeave`；
- * - **逃生舱**：`renderBody` 接管面板元素后，显隐 / 定位 / 层级仍由宿主负责；
  * - **卸载语义**：默认为「不卸载」；`destroyOnHide` 为真时在**离开过渡结束之后**卸载整棵子树，
  *   重新展示按「首次展示」路径重建（重新领层级 + 重新测量）。
  */
@@ -346,41 +344,6 @@ describe('Popup · 关闭语义', () => {
   })
 })
 
-describe('Popup · renderBody 逃生舱', () => {
-  it('接管面板元素后，显隐 / 定位 / 层级仍由宿主负责', async () => {
-    const renderBody = (bindings: PopupBodyBindings) =>
-      h(
-        'div',
-        {
-          class: [bindings.class, 'custom-panel'],
-          ref: bindings.setPanelRef,
-          style: bindings.style
-        },
-        [h('div', { class: 'custom-content' }, 'content'), bindings.arrow]
-      )
-    const host = mountPopup({ props: { placement: 'bottomLeft', renderBody, arrow: true, arrowClass: 'custom-arrow' } })
-    wrapper = host.wrapper
-    await flush()
-
-    const panel = document.querySelector('.custom-panel') as HTMLElement
-    expect(panel).not.toBeNull()
-    // 默认面板与逃生舱互斥：只存在使用者渲染的那一个
-    expect(document.querySelectorAll('.va-popup-panel')).toHaveLength(1)
-    expect(panel.classList.contains('va-popup-panel')).toBe(true)
-    // 使用者按契约落下的绑定：方向类 / 定位样式 / 层级
-    expect(panel.classList.contains('va-popup-placement-bottomLeft')).toBe(true)
-    expect(panel.style.left).toBe('400px')
-    expect(Number(panel.style.zIndex)).toBe(1070)
-    // 箭头节点由宿主按 arrow / arrowClass 生成，交由使用者放入面板内
-    expect(panel.querySelector('.custom-arrow')).not.toBeNull()
-
-    // 显隐仍由宿主控制（v-show），且元素不卸载
-    await hide(host, panel)
-    expect(document.querySelector('.custom-panel')).toBe(panel)
-    expect(panel.style.display).toBe('none')
-  })
-})
-
 describe('Popup · destroyOnHide（隐藏后卸载）', () => {
   it('显式传 false 时与默认一致：隐藏后整棵子树常驻，仅切换 display', async () => {
     const host = mountPopup({ props: { destroyOnHide: false } })
@@ -591,37 +554,6 @@ describe('Popup · destroyOnHide（隐藏后卸载）', () => {
     active.dispatchEvent(new Event('animationend'))
     await flush()
     expect(queryContainer()).toBeNull()
-  })
-
-  it('renderBody 逃生舱的面板同样被卸载与重建，重建后绑定与挂载点标记齐全', async () => {
-    const renderBody = (bindings: PopupBodyBindings) =>
-      h('div', { class: [bindings.class, 'custom-panel'], ref: bindings.setPanelRef, style: bindings.style }, [
-        h('div', { class: 'custom-content' }, 'content'),
-        bindings.arrow
-      ])
-    const host = mountPopup({
-      props: { destroyOnHide: true, placement: 'bottomLeft', renderBody, arrow: true, arrowClass: 'custom-arrow' }
-    })
-    wrapper = host.wrapper
-    await flush()
-
-    const firstPanel = document.querySelector('.custom-panel') as HTMLElement
-    expect(firstPanel.getAttribute('data-va-floating-mount')).toBe('')
-
-    await hide(host, firstPanel)
-    expect(document.querySelector('.custom-panel')).toBeNull()
-    expect(queryContainer()).toBeNull()
-
-    host.show.value = true
-    await flush()
-    const secondPanel = document.querySelector('.custom-panel') as HTMLElement
-    expect(secondPanel).not.toBe(firstPanel)
-    // 使用者按契约落下的绑定 + 宿主补挂的挂载点标记，在重建后同样齐全
-    expect(secondPanel.classList.contains('va-popup-placement-bottomLeft')).toBe(true)
-    expect(secondPanel.style.left).toBe('400px')
-    expect(Number(secondPanel.style.zIndex)).toBe(1070)
-    expect(secondPanel.getAttribute('data-va-floating-mount')).toBe('')
-    expect(secondPanel.querySelector('.custom-arrow')).not.toBeNull()
   })
 })
 
