@@ -139,8 +139,8 @@ importers:
         specifier: ^3.5.42
         version: 3.5.42(typescript@5.9.3)
       vue-amazing-ui:
-        specifier: 3.4.0
-        version: 3.4.0(vue@3.5.42(typescript@5.9.3))
+        specifier: 3.4.1
+        version: 3.4.1(vue@3.5.42(typescript@5.9.3))
       vue-router:
         specifier: ^4.6.4
         version: 4.6.4(vue@3.5.42(typescript@5.9.3))
@@ -3531,8 +3531,8 @@ packages:
   vscode-uri@3.1.0:
     resolution: {integrity: sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==}
 
-  vue-amazing-ui@3.4.0:
-    resolution: {integrity: sha512-DObQkO6Y6Y1PnW7ItnIps107AlALqMjlBvrWvECm6gyDRJxlxN5d7w10y0eGm3JyWtqLW+aPkT/+VCAZ/OT9tA==}
+  vue-amazing-ui@3.4.1:
+    resolution: {integrity: sha512-jH6CUAtMjUUdoo0YDyKDDhktFuVIemh7xU5GUTKgkihQ5fbUmmdK1PfnH6UNEo8liJz4fo6F7jG55M9unxcxOg==}
     engines: {node: ^20.19.0 || >=22.12.0, pnpm: '>=11'}
     peerDependencies:
       vue: ^3.4.0
@@ -7096,7 +7096,7 @@ snapshots:
 
   vscode-uri@3.1.0: {}
 
-  vue-amazing-ui@3.4.0(vue@3.5.42(typescript@5.9.3)):
+  vue-amazing-ui@3.4.1(vue@3.5.42(typescript@5.9.3)):
     dependencies:
       '@ant-design/colors': 8.0.1
       '@ctrl/tinycolor': 4.2.0
