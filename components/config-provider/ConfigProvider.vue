@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { provide } from 'vue'
 import type { VNode } from 'vue'
-import { createZIndexManager, Z_INDEX_INJECT_KEY } from 'components/utils'
+import { createZIndexManager, zIndexManagerKey } from 'components/utils'
 import { useThemeScope } from './theme-scope'
 import type { ThemeConfig } from './theme-scope'
 
@@ -13,7 +13,7 @@ export interface Props {
    *
    * 默认 `false`：渲染包裹元素，变量与 `data-va-mode` 写在该元素上，只作用于自身子树 ——
    * 与组件树的组合语义一致，SSR 首帧可直接序列化。Teleport 到 body 的浮层由边界转发补齐
-   * （浮层根节点自带当前作用域的令牌与模式，见 `THEME_TELEPORT_KEY`），因此不需要为了浮层
+   * （浮层根节点自带当前作用域的令牌与模式，见 `themeTeleportKey`），因此不需要为了浮层
    * 把主题抬到 `<html>`。
    *
    * 传 `true` 时：不产生包裹节点，最顶层实例写 `<html>` —— 用于「应用级主题」，
@@ -47,10 +47,10 @@ const { scopeStyle, scopeMode } = useThemeScope({
   getAbstract: () => props.abstract
 })
 // 层级管理层：传入 baseZIndex 时建立分配器并向下注入，甲、乙两类浮层据此自增分配；
-// 未传则不注入，各组件回退到自身既有硬编码层级（可关闭开关）。嵌套 ConfigProvider 未传时会继承外层分配器。
+// 未传则不注入，各组件回退到 `FLOATING_LAYER_Z_INDEX` 里的默认层级。嵌套 ConfigProvider 未传时会继承外层分配器。
 // 注：在 setup 阶段读取一次，运行期改变 baseZIndex 需重新挂载才生效。
 if (typeof props.baseZIndex === 'number') {
-  provide(Z_INDEX_INJECT_KEY, createZIndexManager(props.baseZIndex))
+  provide(zIndexManagerKey, createZIndexManager(props.baseZIndex))
 }
 </script>
 <template>

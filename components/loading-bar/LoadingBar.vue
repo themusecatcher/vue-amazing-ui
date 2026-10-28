@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, inject } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import type { CSSProperties } from 'vue'
-import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
-import { useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import { themeTeleportKey } from 'components/config-provider/context'
+import { injectFromChain, useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
 import type { MountElement } from 'components/utils'
 import type { LoadingBarApi } from './useLoadingBar'
 export interface Props {
@@ -20,7 +20,7 @@ export interface Props {
   to?: string | MountElement | false // 加载条的挂载位置，可选：元素标签名（例如 body）或者元素本身，false 会待在原地
 }
 // 主题转发：加载条 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
-const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportTheme = injectFromChain(themeTeleportKey) ?? null
 const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
 const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 const props = withDefaults(defineProps<Props>(), {

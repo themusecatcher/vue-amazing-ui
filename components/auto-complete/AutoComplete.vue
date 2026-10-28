@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect, watch, onMounted, inject } from 'vue'
-import type { CSSProperties, TransitionProps, VNode, Ref } from 'vue'
+import { ref, computed, watchEffect, watch, onMounted } from 'vue'
+import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Popup from 'components/popup'
 import Scrollbar from 'components/scrollbar'
-import { useSlotsExist, Z_INDEX_CONTAINER_OPEN_KEY, FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import { injectFromChain, useSlotsExist, zIndexContainerOpenKey, FLOATING_LAYER_Z_INDEX } from 'components/utils'
 import type { MountElement } from 'components/utils'
 export interface Option {
   disabled?: boolean // 是否禁用
@@ -236,10 +236,10 @@ const panelTransitionProps: TransitionProps = {
 }
 // 承载层（Modal / Drawer / Dialog）关闭时收起面板并归位聚焦态：容器不卸载内容，本面板也不会随容器消失 ——
 // ① 面板：停留在打开态会让它占着层级槽位，被「后出现者在上」重新打开的容器反超（落到遮罩之下），
-//    同时无谓抬高后续分配点（详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）
+//    同时无谓抬高后续分配点（详见 z-index.ts 的 zIndexContainerOpenKey）
 // ② 聚焦态：容器关闭不派发 blur（focusTriggerAfterClose 归还焦点时也未必落到本 input 上），
 //    故须在此显式归位，否则容器重开时 `.auto-complete-focused` 的描边与阴影仍在
-const containerOpen = inject(Z_INDEX_CONTAINER_OPEN_KEY, null) as Ref<boolean> | null
+const containerOpen = injectFromChain(zIndexContainerOpenKey) ?? null
 if (containerOpen) {
   watch(containerOpen, (open) => {
     if (!open) {

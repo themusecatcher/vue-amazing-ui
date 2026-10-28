@@ -29,19 +29,20 @@ if (typeof document !== 'undefined') {
 </script>
 
 <script setup lang="ts">
-import { ref, computed, watch, onUnmounted, nextTick, createTextVNode, provide, inject } from 'vue'
+import { ref, computed, watch, onUnmounted, nextTick, createTextVNode, provide } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
+import { themeTeleportKey } from 'components/config-provider/context'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import Button, { type ButtonProps } from 'components/button'
 import {
   createKeyGenerator,
+  injectFromChain,
   lockScroll,
   renderContentToVNode,
   trapTabFocus,
   useSlotsExist,
   useZIndex,
-  Z_INDEX_CONTAINER_OPEN_KEY,
+  zIndexContainerOpenKey,
   FLOATING_LAYER_Z_INDEX,
   log
 } from 'components/utils'
@@ -190,7 +191,7 @@ interface DragController {
   stop: () => void
 }
 // 主题转发：对话框 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
-const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+const teleportTheme = injectFromChain(themeTeleportKey) ?? null
 const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
 const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 const props = withDefaults(defineProps<Props>(), {
@@ -333,9 +334,9 @@ watch(showDialogWrap, (show) => {
 })
 // 向下注入「本层是否处于打开态」：容器关闭时内部浮层（如已展开的 Select 下拉）需一并收起 ——
 // 内容常驻不卸载，内部浮层不会随容器消失；若保持打开，它会占着层级槽位、被重新打开的对话框反超
-// （详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）
+// （详见 z-index.ts 的 zIndexContainerOpenKey）
 provide(
-  Z_INDEX_CONTAINER_OPEN_KEY,
+  zIndexContainerOpenKey,
   computed(() => openCount.value > 0)
 )
 // 本组件持有的滚动锁释放函数：加锁后保存返回值、释放后置空，存在即代表本组件持锁；

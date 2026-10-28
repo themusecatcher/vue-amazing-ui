@@ -1,12 +1,19 @@
 <script setup lang="ts">
-import { ref, computed, onBeforeUnmount, isVNode, watch, inject } from 'vue'
+import { ref, computed, onBeforeUnmount, isVNode, watch } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
-import { createKeyGenerator, renderContentToVNode, useZIndex, FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import { themeTeleportKey } from 'components/config-provider/context'
+import {
+  createKeyGenerator,
+  injectFromChain,
+  renderContentToVNode,
+  useZIndex,
+  FLOATING_LAYER_Z_INDEX
+} from 'components/utils'
 import type { MountElement } from 'components/utils'
 import type { MessageApi } from './useMessage'
 // 主题转发：消息 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
-const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+// 沿实例链读取：离散实例在 `app.runWithContext` 上下文创建，裸 `inject` 会改道到宿主 app
+const teleportTheme = injectFromChain(themeTeleportKey) ?? null
 const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
 const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
 // 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数

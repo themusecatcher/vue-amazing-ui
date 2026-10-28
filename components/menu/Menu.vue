@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, inject, onBeforeUnmount, onMounted, provide, ref, useSlots, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, provide, ref, useSlots, watch } from 'vue'
 import type { VNode, VNodeChild } from 'vue'
-import { FLOATING_LAYER_Z_INDEX, siderCollapsedKey } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, injectFromChain, siderCollapsedKey } from 'components/utils'
 import MenuNodes from './MenuNodes'
 import { getItemKey, menuContextKey } from './context'
 import type { MenuContext } from './context'
@@ -120,7 +120,7 @@ function changeActiveKeys(keys: MenuKey[]): void {
 
 // 模式归一：inline 收起后菜单退化为 vertical（子菜单改用浮层承载），样式与布局随之为同一套
 // 外层侧边栏下发的收起态优先：此时菜单宽度由侧边栏决定，自身 inlineCollapsed 不再参与
-const siderCollapsed = inject(siderCollapsedKey, null)
+const siderCollapsed = injectFromChain(siderCollapsedKey) ?? null
 const collapsed = computed(() => Boolean(siderCollapsed?.value ?? props.inlineCollapsed))
 const mergedInlineCollapsed = computed(() => (props.mode === 'inline' || props.mode === 'vertical') && collapsed.value)
 const mergedMode = computed<MenuMode>(() => (mergedInlineCollapsed.value ? 'vertical' : props.mode))

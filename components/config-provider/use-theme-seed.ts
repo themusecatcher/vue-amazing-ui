@@ -3,14 +3,14 @@
  *
  * 负责三件事（都不碰 DOM）：
  * 1. 合并种子：自身传了整份替换，否则继承最近一层作用域；
- * 2. 派生 40 个全局语义变量（`derive`，纯函数）；
+ * 2. 派生 42 个全局语义变量（`derive`，纯函数）；
  * 3. 展开 `theme.components.<Component>.primaryColor` 为组件变量（桥 + 公开令牌）。
  *
  * 拆分原因：这部分是「纯数据 → 纯数据」，与 `<html>` 写入、Teleport 转发、生命周期无关，
  * 独立后可以单独测试 `buildComponentVars`，也避免编排文件被 200 行派生逻辑淹没。
  */
 
-import { computed, inject, provide, watch } from 'vue'
+import { computed, provide, watch } from 'vue'
 import type { ComputedRef } from 'vue'
 import {
   COMPONENT_VARS_BY_COMPONENT,
@@ -21,8 +21,9 @@ import {
   normalizeSeedColor
 } from '../theme'
 import type { ResolvedMode, ThemeSeed, ThemeSnapshot } from '../theme'
+import { injectFromChain } from '../utils'
 import { isDevEnv, log } from '../utils/log'
-import { THEME_SEED_KEY, THEME_SNAPSHOT_KEY } from './context'
+import { themeSeedKey, themeSnapshotKey } from './context'
 import { COMPONENT_THEME_SUPPORT, componentKeyToKebab } from './theme-config'
 import type { ComponentThemeConfig, ThemeConfig } from './theme-config'
 
@@ -115,7 +116,7 @@ export interface ThemeSeedScopeOptions {
 export interface ThemeSeedScope {
   /** 生效种子：自身传了整体替换，否则继承最近一层作用域的种子 */
   effectiveSeed: ComputedRef<ThemeSeed | undefined>
-  /** 40 个全局语义变量的只读派生结果 */
+  /** 42 个全局语义变量的只读派生结果 */
   snapshot: ComputedRef<ThemeSnapshot>
   /** 组件级主色展开出的变量（桥 + 公开令牌） */
   componentVars: ComputedRef<Record<string, string>>
@@ -124,19 +125,20 @@ export interface ThemeSeedScope {
 /**
  * 建立当前作用域的种子派生：注入父级种子、派生变量、告警未支持的组件键
  *
- * 会 `provide` 两个通道给子级/浮层使用：`THEME_SEED_KEY`（种子继承）与
- * `THEME_SNAPSHOT_KEY`（canvas / SVG 等需要真实色值的场景）。
+ * 会 `provide` 两个通道给子级/浮层使用：`themeSeedKey`（种子继承）与
+ * `themeSnapshotKey`（canvas / SVG 等需要真实色值的场景）。
  */
 export function useThemeSeed(options: ThemeSeedScopeOptions): ThemeSeedScope {
-  const parentSeed = inject(THEME_SEED_KEY, null)
+  // 沿实例链读取：离散实例在 `app.runWithContext` 上下文创建，裸 `inject` 会改道到宿主 app
+  const parentSeed = injectFromChain(themeSeedKey) ?? null
 
   // 生效种子：自身传了整份替换，否则继承最近一层作用域的种子 —— 与 mode 的继承口径对称，
   // 否则「外层换品牌色 + 内层只切暗色」会让子树悄悄退回默认蓝
   const effectiveSeed = computed<ThemeSeed | undefined>(() => options.getTheme()?.seed ?? parentSeed?.value)
-  provide(THEME_SEED_KEY, effectiveSeed)
+  provide(themeSeedKey, effectiveSeed)
 
   const snapshot = computed<ThemeSnapshot>(() => derive(effectiveSeed.value ?? {}, options.resolvedMode.value))
-  provide(THEME_SNAPSHOT_KEY, snapshot)
+  provide(themeSnapshotKey, snapshot)
 
   const componentVars = computed<Record<string, string>>(() =>
     buildComponentVars(options.getTheme()?.components, options.resolvedMode.value)

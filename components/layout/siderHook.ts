@@ -11,7 +11,15 @@ export interface SiderHook {
   removeSider: (id: string) => void
 }
 
-export const siderHookKey: InjectionKey<SiderHook> = Symbol('layoutSiderHook')
+/**
+ * 子级 Sider 登记通道的注入键
+ *
+ * - 提供方：`Layout`
+ * - 消费方：`LayoutSider`（挂载登记 / 卸载注销）
+ * - 响应式：否（只承载两个登记方法，集合由 `Layout` 内部维护）
+ * - 未命中：`undefined`，Sider 不登记（表现为 Layout 认为没有侧边栏）
+ */
+export const siderHookKey: InjectionKey<SiderHook> = Symbol('vaSiderHook')
 
 let siderUid = 0
 /** 生成 Sider 唯一标识：仅作登记表键使用、不写入 DOM，故 SSR 两端计数不一致也无副作用 */

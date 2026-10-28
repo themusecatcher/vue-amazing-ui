@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, inject, ref, watch, watchEffect } from 'vue'
+import { computed, ref, watch, watchEffect } from 'vue'
 import type { VNode } from 'vue'
-import { useSlotsExist, useWave } from 'components/utils'
+import { injectFromChain, useSlotsExist, useWave } from 'components/utils'
 import { radioGroupContextKey } from './context'
 import type { RadioButtonStyle, RadioChangeEvent, RadioSize, RadioValue } from './context'
 
@@ -38,7 +38,7 @@ const { wave, startWave, endWave } = useWave()
 const emits = defineEmits(['update:checked', 'change'])
 const slotsExist = useSlotsExist(['default'])
 // 所在单选组：置入组内时选中态、禁用态与按钮形态改由组统一下发，脱离组时不读取
-const groupContext = inject(radioGroupContextKey, undefined)
+const groupContext = injectFromChain(radioGroupContextKey)
 const singleInput = ref<HTMLInputElement>()
 // 程序化聚焦不匹配 :focus-visible（调用时最近的交互通常是鼠标），另置标志驱动焦点环，使 focus() 调用有可见反馈
 const exposedSingleFocused = ref<boolean>(false)

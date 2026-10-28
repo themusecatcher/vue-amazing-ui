@@ -1,5 +1,6 @@
-import { inject, onBeforeUnmount, onMounted, ref } from 'vue'
-import type { Ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import type { InjectionKey, Ref } from 'vue'
+import { injectFromChain } from './hooks'
 
 /**
  * 浮层层级（z-index）管理层
@@ -112,8 +113,15 @@ export function createZIndexManager(baseZIndex: number): ZIndexManager {
   }
 }
 
-/** 层级管理器的注入键（与 ConfigProvider 的 provide 保持一致） */
-export const Z_INDEX_INJECT_KEY = 'zIndex'
+/**
+ * 层级管理器的注入键
+ *
+ * - 提供方：`ConfigProvider`（传了 `baseZIndex` 时创建并向下注入）
+ * - 消费方：`useZIndex`（全部浮层组件）
+ * - 响应式：否（管理器对象内部按需读写，层级值由 `useZIndex` 的 ref 承载）
+ * - 未命中：`undefined`，各浮层回退到 `FLOATING_LAYER_Z_INDEX` 中的默认层级
+ */
+export const zIndexManagerKey: InjectionKey<ZIndexManager> = Symbol('vaZIndexManager')
 
 /**
  * 承载层可见态的注入键
@@ -127,8 +135,13 @@ export const Z_INDEX_INJECT_KEY = 'zIndex'
  * 「后出现者在上」重新领取层级，从而越过这个仍占位的内部浮层 → 形成「子层在父层之下」的反序层级
  * （下拉被遮罩 / 弹窗盖住），同时让分配点被无谓抬高。子树内的浮层据此在承载层关闭时收起自身
  * （收起即归还槽位），恢复「数值随同时可见层数增长」。
+ *
+ * - 提供方：`Modal` / `Drawer` / `Dialog`（各自向下提供本层的打开态）
+ * - 消费方：`Select` / `AutoComplete` / `Tooltip` / `Dropdown`
+ * - 响应式：是（`Ref<boolean>`）
+ * - 未命中：`undefined`，按「不在承载层内」处理
  */
-export const Z_INDEX_CONTAINER_OPEN_KEY = 'zIndexContainerOpen'
+export const zIndexContainerOpenKey: InjectionKey<Ref<boolean>> = Symbol('vaZIndexContainerOpen')
 
 /** `useZIndex` 的选项 */
 export interface UseZIndexOptions {
@@ -150,7 +163,7 @@ export interface UseZIndexOptions {
  * - 已注入管理器时挂载即领取槽位，组件每次「出现」可再调用 `allocate()` —— 内部先归还旧槽位再领取，
  *   使同一组件重新打开时位于其它已打开层之上；卸载时自动归还，避免数值无限增长；
  * - 位于承载层（Modal / Drawer / Dialog）内部时，还需在承载层关闭时收起自身（见
- *   `Z_INDEX_CONTAINER_OPEN_KEY`），否则会以「已占层」的身份被重新打开的承载层反超。
+ *   `zIndexContainerOpenKey`），否则会以「已占层」的身份被重新打开的承载层反超。
  *
  * @param fallback - 无管理器时的回退层级（= 该组件的默认层级）
  * @param span - 本层需连续占用的段数（内部还有相对分层的组件传更大值），默认 1
@@ -162,7 +175,8 @@ export function useZIndex(
   span = DEFAULT_SPAN,
   { allocateOnMount = true }: UseZIndexOptions = {}
 ): { zIndex: Ref<number>; allocate: () => void; release: () => void } {
-  const manager = inject(Z_INDEX_INJECT_KEY, null) as ZIndexManager | null
+  // 沿实例链读取：离散实例在 `app.runWithContext` 上下文创建，裸 `inject` 会改道到宿主 app
+  const manager = injectFromChain(zIndexManagerKey) ?? null
   const zIndex = ref(fallback)
   let slot: number | null = null
   // 归还当前槽位（幂等）

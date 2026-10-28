@@ -6,7 +6,7 @@
  *
  * 本文件只负责「编排」，具体能力已拆到同目录的模块：
  * - `theme-config.ts`：主题结构、空值判定、组件键工具（纯函数）；
- * - `use-theme-seed.ts`：种子继承、40 个变量派生、组件级主色展开（纯数据）；
+ * - `use-theme-seed.ts`：种子继承、42 个变量派生、组件级主色展开（纯数据）；
  * - `theme-global-writer.ts`：`<html>` 写入、恢复、注册表与唯一 owner 仲裁；
  * - `use-theme-teleport.ts`：浮层转发内容组装（纯函数）；
  * - `theme-mode.ts`：系统配色偏好探测与监听（浏览器 API）。
@@ -16,24 +16,18 @@
  * - `abstract: false`（默认）→ 变量与 `data-va-mode` 绑定在包裹元素上（SSR 可直接序列化）；
  * - `abstract: true` → 挂载后写 `<html>`（应用级主题、含 body 级链接），多实例由注册表仲裁；
  * - 只切 mode（无种子）→ 两种形态都不写变量，只写 `data-va-mode`，交给静态表；
- * - Teleport 浮层：变量只写包裹元素时，经 `THEME_TELEPORT_KEY` 转发到浮层根节点；
+ * - Teleport 浮层：变量只写包裹元素时，经 `themeTeleportKey` 转发到浮层根节点；
  * - 嵌套且 `abstract: true` → 没有可承载的 DOM 节点，仅继承外层；
  * - 卸载时恢复写入前的快照，静态默认表重新生效。
  */
 
-import { computed, inject, onMounted, onUnmounted, provide, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, provide, ref, watch } from 'vue'
 import type { ComputedRef, CSSProperties } from 'vue'
 import { THEME_VAR_NAMES } from '../theme'
 import type { ResolvedMode } from '../theme'
 import { injectFromChain } from '../utils'
 import { isDevEnv, log } from '../utils/log'
-import {
-  SKIP_THEME_WRITE_KEY,
-  THEME_DOM_SCOPE_KEY,
-  THEME_MODE_KEY,
-  THEME_SCOPE_KEY,
-  THEME_TELEPORT_KEY
-} from './context'
+import { skipThemeWriteKey, themeDomScopeKey, themeModeKey, themeScopeKey, themeTeleportKey } from './context'
 import type { TeleportTheme } from './context'
 import { createGlobalWriter } from './theme-global-writer'
 import { hasComponentConfig, hasGlobalConfig, hasSeedValue, hasThemeConfig } from './theme-config'
@@ -59,16 +53,16 @@ export interface ThemeScope {
 
 export function useThemeScope(options: ThemeScopeOptions): ThemeScope {
   // 祖先作用域：仅表示「父链上已有实例真正写过变量」，未配置主题的 Provider 不算
-  const ancestorScope = inject(THEME_SCOPE_KEY, false)
-  // 沿实例链读取：离散实例在 `app.runWithContext` 上下文创建，裸 `inject` 会改道到宿主 app
-  const skipGlobalWrite = injectFromChain(SKIP_THEME_WRITE_KEY) ?? false
-  const parentMode = inject(THEME_MODE_KEY, null)
-  const ancestorDomScope = inject(THEME_DOM_SCOPE_KEY, false)
+  // 以下均沿实例链读取：离散实例在 `app.runWithContext` 上下文创建，裸 `inject` 会改道到宿主 app
+  const ancestorScope = injectFromChain(themeScopeKey) ?? false
+  const skipGlobalWrite = injectFromChain(skipThemeWriteKey) ?? false
+  const parentMode = injectFromChain(themeModeKey) ?? null
+  const ancestorDomScope = injectFromChain(themeDomScopeKey) ?? false
   // 登记作用域供子级判定：只要配置过主题（种子或模式）就登记，空主题实例不占用「最外层」名额。
   // 以 setup 时的 theme 快照判定 —— 嵌套关系在子级 setup 时已固定，运行期切换主题不改变层级。
   // 口径必须与 `scopeMode` 一致：只切 mode 的实例同样构成一个「就近模式作用域」，
   // 其子级不应再抢占 `<html>`（否则嵌套换肤会泄漏成整页换肤）。
-  provide(THEME_SCOPE_KEY, ancestorScope || hasThemeConfig(options.getTheme()))
+  provide(themeScopeKey, ancestorScope || hasThemeConfig(options.getTheme()))
 
   // 系统偏好只在客户端有意义；SSR 首帧按 light，客户端挂载后由监听纠正
   const systemDark = ref(systemPrefersDark())
@@ -85,9 +79,9 @@ export function useThemeScope(options: ThemeScopeOptions): ThemeScope {
     // 这里看的是「是否有父级作用域节点」，与父级是否写过变量无关（只切 mode 的父级同样要继承）
     return parentMode ? parentMode.value : 'light'
   })
-  provide(THEME_MODE_KEY, resolvedMode)
+  provide(themeModeKey, resolvedMode)
 
-  // 种子继承 + 40 个变量派生 + 组件级主色展开（内部会 provide 种子与快照通道）
+  // 种子继承 + 42 个变量派生 + 组件级主色展开（内部会 provide 种子与快照通道）
   const { effectiveSeed, snapshot, componentVars } = useThemeSeed({ getTheme: options.getTheme, resolvedMode })
 
   const configured = computed(() => hasThemeConfig(options.getTheme()))
@@ -96,7 +90,7 @@ export function useThemeScope(options: ThemeScopeOptions): ThemeScope {
   // 嵌套层级在 setup 时固定，故以快照值下发；Teleport 浮层据此判断是否需要自带变量。
   const selfScoped = computed(() => hasThemeConfig(options.getTheme()) && !options.getAbstract())
   const domScope = ancestorDomScope || selfScoped.value
-  provide(THEME_DOM_SCOPE_KEY, domScope)
+  provide(themeDomScopeKey, domScope)
 
   // `mode="auto"` 的首帧延迟：系统偏好在服务端不可知，此时下发任何值都会与客户端首次渲染不一致
   // （hydration mismatch）。因此 auto 模式在挂载前不写变量与 mode 属性 —— SSR 与客户端首帧
@@ -157,7 +151,7 @@ export function useThemeScope(options: ThemeScopeOptions): ThemeScope {
   // 浮层必须自带一份当前作用域的令牌；真正持有 `<html>` 的 owner 不转发，让浮层直接继承。
   // 父级通道：自身未配置主题时透传 —— 否则嵌套一个空 ConfigProvider 会 provide(null)，
   // 把外层作用域已建立的转发通道切断，其子树里的浮层退回 <html> 的静态表。
-  const parentTeleportTheme = inject(THEME_TELEPORT_KEY, null)
+  const parentTeleportTheme = injectFromChain(themeTeleportKey) ?? null
   const teleportTheme = computed<TeleportTheme | null>(() => {
     if (!configured.value) {
       return parentTeleportTheme?.value ?? null
@@ -183,7 +177,7 @@ export function useThemeScope(options: ThemeScopeOptions): ThemeScope {
     }
     return theme
   })
-  provide(THEME_TELEPORT_KEY, teleportTheme)
+  provide(themeTeleportKey, teleportTheme)
 
   let stopSystemMode: (() => void) | null = null
   function syncSystemModeListener(): void {

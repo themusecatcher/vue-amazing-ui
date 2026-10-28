@@ -4,14 +4,14 @@ import { mount } from '@vue/test-utils'
 import ConfigProvider from 'components/config-provider/ConfigProvider.vue'
 import Popup from 'components/popup/Popup.vue'
 import Modal from 'components/modal/Modal.vue'
-import { THEME_TELEPORT_KEY } from 'components/config-provider/context'
+import { themeTeleportKey } from 'components/config-provider/context'
 import { derive, MODE_ATTRIBUTE } from 'components/theme'
 
 /**
  * Teleport 浮层的主题转发
  *
  * 变量写在包裹元素上（`abstract: false`）时，Teleport 到 body 的浮层拿不到 DOM 继承，
- * 必须由 Provider 经 `THEME_TELEPORT_KEY` 把当前作用域的令牌与模式转发到浮层根节点。
+ * 必须由 Provider 经 `themeTeleportKey` 把当前作用域的令牌与模式转发到浮层根节点。
  * 写在 `<html>` 上的全局 owner 不转发，避免无谓的内联样式。
  */
 const RED = '#f5222d'
@@ -21,7 +21,7 @@ const GREEN = '#18a058'
 const Probe = defineComponent({
   name: 'ThemeProbe',
   setup() {
-    const teleportTheme = inject(THEME_TELEPORT_KEY, null)
+    const teleportTheme = inject(themeTeleportKey, null)
     return () =>
       h('i', {
         class: 'theme-probe',

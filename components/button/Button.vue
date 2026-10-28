@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { computed, inject, watch } from 'vue'
-import type { Ref, VNode } from 'vue'
-import { THEME_MODE_KEY } from 'components/config-provider/context'
+import { computed, watch } from 'vue'
+import type { VNode } from 'vue'
+import { themeModeKey } from 'components/config-provider/context'
 import { deriveColorStates } from 'components/theme'
-import type { ResolvedMode } from 'components/theme'
-import { useSlotsExist, useWave } from 'components/utils'
+import { injectFromChain, useSlotsExist, useWave } from 'components/utils'
 
 export interface Props {
   type?: 'default' | 'reverse' | 'primary' | 'danger' | 'dashed' | 'text' | 'link' // 设置按钮类型
@@ -58,7 +57,7 @@ watch(
   }
 )
 // 当前主题作用域的模式：实例色的 hover / active 在深浅模式取不同色阶档位，必须跟着走
-const themeMode = inject<Ref<ResolvedMode> | null>(THEME_MODE_KEY, null)
+const themeMode = injectFromChain(themeModeKey) ?? null
 // 实例色：传 color 时按该色派生主色状态并写到组件公开令牌上；未传时沿用全局别名（见样式内默认值）。
 // 这里写公开名属于「实例覆盖」：inline 优先级最高，比祖先作用域更近，符合「实例 > 祖先」的直觉。
 // 注意 inline 会连带压住整棵子树，所以只允许由 prop 派生的一次性写入，不要拿它当默认值。

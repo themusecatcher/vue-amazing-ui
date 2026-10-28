@@ -1,5 +1,5 @@
 import { createApp, defineComponent, h, provide, unref } from 'vue'
-import { SKIP_THEME_WRITE_KEY } from 'components/config-provider/context'
+import { skipThemeWriteKey } from 'components/config-provider/context'
 import type { Ref } from 'vue'
 import ConfigProvider from 'components/config-provider'
 import type { ConfigProviderProps } from 'components/config-provider'
@@ -130,9 +130,9 @@ export function createDiscreteApi<K extends DiscreteApiType>(
   const app = createApp({
     setup() {
       // 离散实例不参与「主题变量写入 <html>」：避免覆盖主应用写入的值，并在 dispose 时误清除
-      provide(SKIP_THEME_WRITE_KEY, true)
+      provide(skipThemeWriteKey, true)
       return () =>
-        // 显式传 abstract: true：离散实例不写 <html>（见上方 SKIP），也不需要额外包裹节点；
+        // 显式传 abstract: true：离散实例不写 <html>（见上方的 `skipThemeWriteKey`），也不需要额外包裹节点；
         // 传了 configProviderProps.theme 时，其浮层由边界转发拿到该作用域的令牌。调用方显式传入时以调用方为准
         h(
           ConfigProvider,

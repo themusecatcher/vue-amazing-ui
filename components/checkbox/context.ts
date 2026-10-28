@@ -51,5 +51,12 @@ export interface CheckboxGroupContext {
   onChange: (checked: boolean, value: CheckboxValue, nativeEvent: Event) => void
 }
 
-/** 复选框组上下文的注入键 */
-export const checkboxGroupContextKey: InjectionKey<CheckboxGroupContext> = Symbol('checkboxGroupContext')
+/**
+ * 复选框组上下文的注入键
+ *
+ * - 提供方：`CheckboxGroup`
+ * - 消费方：`Checkbox`（置于组内时按组的已选集合与禁用态渲染）
+ * - 响应式：是（上下文内为 `Ref` / `ComputedRef` 字段）
+ * - 未命中：`undefined`，单项按脱离组处理，走自身 `checked` 受控逻辑
+ */
+export const checkboxGroupContextKey: InjectionKey<CheckboxGroupContext> = Symbol('vaCheckboxGroupContext')
