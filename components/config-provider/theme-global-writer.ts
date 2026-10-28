@@ -53,7 +53,7 @@ export interface GlobalWriterOptions {
   resolvedMode: ComputedRef<ResolvedMode>
   /** 生效种子（决定是否写全局变量表） */
   effectiveSeed: ComputedRef<ThemeSeed | undefined>
-  /** 40 个全局语义变量的派生结果 */
+  /** 42 个全局语义变量的派生结果 */
   snapshot: ComputedRef<ThemeSnapshot>
   /** 组件级主色变量（与全局变量写在同一节点） */
   componentVars: ComputedRef<Record<string, string>>

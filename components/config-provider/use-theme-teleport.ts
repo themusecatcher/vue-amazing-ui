@@ -23,7 +23,7 @@ export interface TeleportThemeInput {
   /** 是否显式配置了 `mode`（`light` / `dark` / `auto`） */
   explicitMode: boolean
   /**
-   * 惰性取 40 个全局变量的派生结果
+   * 惰性取 42 个全局变量的派生结果
    *
    * 只有 `seeded` 为 true 时才会调用：只配置 `theme.components` 时不应触发 `derive`
    * （与「未配置种子不派生」的口径保持一致）。

@@ -3,7 +3,7 @@
  *
  * 负责三件事（都不碰 DOM）：
  * 1. 合并种子：自身传了整份替换，否则继承最近一层作用域；
- * 2. 派生 40 个全局语义变量（`derive`，纯函数）；
+ * 2. 派生 42 个全局语义变量（`derive`，纯函数）；
  * 3. 展开 `theme.components.<Component>.primaryColor` 为组件变量（桥 + 公开令牌）。
  *
  * 拆分原因：这部分是「纯数据 → 纯数据」，与 `<html>` 写入、Teleport 转发、生命周期无关，
@@ -116,7 +116,7 @@ export interface ThemeSeedScopeOptions {
 export interface ThemeSeedScope {
   /** 生效种子：自身传了整体替换，否则继承最近一层作用域的种子 */
   effectiveSeed: ComputedRef<ThemeSeed | undefined>
-  /** 40 个全局语义变量的只读派生结果 */
+  /** 42 个全局语义变量的只读派生结果 */
   snapshot: ComputedRef<ThemeSnapshot>
   /** 组件级主色展开出的变量（桥 + 公开令牌） */
   componentVars: ComputedRef<Record<string, string>>

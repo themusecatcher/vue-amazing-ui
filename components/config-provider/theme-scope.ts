@@ -6,7 +6,7 @@
  *
  * 本文件只负责「编排」，具体能力已拆到同目录的模块：
  * - `theme-config.ts`：主题结构、空值判定、组件键工具（纯函数）；
- * - `use-theme-seed.ts`：种子继承、40 个变量派生、组件级主色展开（纯数据）；
+ * - `use-theme-seed.ts`：种子继承、42 个变量派生、组件级主色展开（纯数据）；
  * - `theme-global-writer.ts`：`<html>` 写入、恢复、注册表与唯一 owner 仲裁；
  * - `use-theme-teleport.ts`：浮层转发内容组装（纯函数）；
  * - `theme-mode.ts`：系统配色偏好探测与监听（浏览器 API）。
@@ -81,7 +81,7 @@ export function useThemeScope(options: ThemeScopeOptions): ThemeScope {
   })
   provide(themeModeKey, resolvedMode)
 
-  // 种子继承 + 40 个变量派生 + 组件级主色展开（内部会 provide 种子与快照通道）
+  // 种子继承 + 42 个变量派生 + 组件级主色展开（内部会 provide 种子与快照通道）
   const { effectiveSeed, snapshot, componentVars } = useThemeSeed({ getTheme: options.getTheme, resolvedMode })
 
   const configured = computed(() => hasThemeConfig(options.getTheme()))
