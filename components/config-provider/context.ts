@@ -39,7 +39,7 @@ export const themeScopeKey: InjectionKey<boolean> = Symbol('vaThemeScope')
  * 当前作用域的实际模式：嵌套实例未显式传 mode 时继承父级（作用于变量派生，不写 DOM）
  *
  * - 提供方：`ConfigProvider`（`useThemeScope`）
- * - 消费方：`useThemeScope`（嵌套实例继承父级模式）、`Button`（按模式取组件级主色）
+ * - 消费方：`useThemeScope`（嵌套实例继承父级模式）、`Button`（`color` 实例色的 hover / active 档位随模式）
  * - 响应式：是（`Ref<ResolvedMode>`）
  * - 未命中：`undefined`，按「无显式模式」处理
  */
@@ -84,7 +84,7 @@ export const themeDomScopeKey: InjectionKey<boolean> = Symbol('vaThemeDomScope')
 /** 需要转发到 Teleport 浮层的主题：变量 + 模式，二者必须成对下发 */
 export interface TeleportTheme {
   /**
-   * 当前作用域派生出的令牌：40 个全局别名 + 可能存在的组件级公开令牌。
+   * 当前作用域派生出的令牌：42 个全局别名 + 可能存在的组件级公开令牌。
    *
    * 用宽泛的 `Record<string, string>` 而不是 `ThemeVars`：组件级令牌数量随注册表变化，
    * 浮层只需要把它们原样内联到根节点，不关心具体键集合。

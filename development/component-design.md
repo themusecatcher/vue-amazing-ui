@@ -259,7 +259,7 @@ components/grid/
 
 ## provide / inject 注入契约
 
-注入键是**内部契约**（不对外导出、不承诺稳定性），但命名与读取方式必须统一，否则改错键或读错通道只会静默退化为「未命中」。当前全库 21 个键，均由本节条文约束，`scripts/verify-inject-keys.js` 机器校验。
+注入键是**内部契约**（不对外导出、不承诺稳定性），但命名与读取方式必须统一，否则改错键或读错通道只会静默退化为「未命中」。当前全库 21 个键，均由本节条文约束，其中键形态、调用通道与公共入口导出由 `scripts/verify-inject-keys.js` 机器校验；S3 的语义后缀分层、S7 的「`docs/` 与 `types/` 不出现」、S9 的 JSDoc 说明仍靠评审把关。
 
 ### 条文
 
@@ -289,7 +289,7 @@ import { injectFromChain } from 'components/utils'
 const teleportTheme = injectFromChain(themeTeleportKey) ?? null
 ```
 
-例外：`components/utils/hooks.ts` 自身（实现文件），以及未来必须在 `setup` 同步期之外调用的位置 —— 后者保留裸 `inject` 并就地在注释里说明原因（`injectFromChain` 依赖 `getCurrentInstance()`，只能在 setup 同步执行期使用）。
+例外：`components/utils/hooks.ts` 自身（实现文件：函数签名 `injectFromChain<T>(key)` 的首参是形参，会被「首参必须是已声明键」的文本检查误命中；实现本身直接读 `instance.provides`、不经 `inject()`），以及未来必须在 `setup` 同步期之外调用的位置 —— 后者保留裸 `inject` 并就地在注释里说明原因（`injectFromChain` 依赖 `getCurrentInstance()`，只能在 setup 同步执行期使用）。
 
 与裸 `inject` 的差异要留意两处：
 
@@ -323,7 +323,7 @@ export const themeModeKey: InjectionKey<Ref<ResolvedMode>> = Symbol('vaThemeMode
 ### 守护
 
 - ESLint（`eslint.config.js` 的 `custom/no-raw-injection-key`）：字符串字面量作键、裸 `inject()` 均报错，白名单只有 `components/utils/hooks.ts`；
-- `pnpm verify:inject-keys`（`scripts/verify-inject-keys.js`）8 条文本级检查：① 键必须是 `Symbol` 且带 `: InjectionKey<T>`；② 变量名 `camelCase` + `Key`；③ 描述串 = `va` + 变量名去 `Key`；④ 键不得定义在 `.vue`（含不带 `export` 的写法）；⑤ `provide` / `inject` / `injectFromChain` 不得用字符串字面量；⑥ 三者首参必须是已声明的 Symbol 键（拦 `export const menuKey = 'menu'` 这类字符串常量冒充）；⑦ 组件内不得裸 `inject`；⑧ 公共入口不得导出 `*Key`。
+- `pnpm verify:inject-keys`（`scripts/verify-inject-keys.js`）8 条文本级检查：① 键必须是 `Symbol` 且带 `: InjectionKey<T>`；② 变量名 `camelCase` + `Key`；③ 描述串 = `va` + 变量名去 `Key`；④ 键不得定义在 `.vue`（含不带 `export` 的写法）；⑤ `provide` / `inject` / `injectFromChain` 不得用字符串字面量；⑥ 三者首参必须是已声明的 Symbol 键（拦 `export const menuKey = 'menu'` 这类字符串常量冒充）；⑦ 组件内不得裸 `inject`；⑧ 公共入口不得导出注入键（`MenuKey` / `DropdownKey` 等公开类型是合法导出，脚本按已识别的键名精确匹配）。
 - 单测（`tests/injection-contract.spec.ts`）盯运行期语义，脚本盯文本形态 —— 两者不重叠：脚本不跑组件、单测不读源码。
 
 ### 取舍记录

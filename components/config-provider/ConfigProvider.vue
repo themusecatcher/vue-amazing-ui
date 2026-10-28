@@ -47,7 +47,7 @@ const { scopeStyle, scopeMode } = useThemeScope({
   getAbstract: () => props.abstract
 })
 // 层级管理层：传入 baseZIndex 时建立分配器并向下注入，甲、乙两类浮层据此自增分配；
-// 未传则不注入，各组件回退到自身既有硬编码层级（可关闭开关）。嵌套 ConfigProvider 未传时会继承外层分配器。
+// 未传则不注入，各组件回退到 `FLOATING_LAYER_Z_INDEX` 里的默认层级。嵌套 ConfigProvider 未传时会继承外层分配器。
 // 注：在 setup 阶段读取一次，运行期改变 baseZIndex 需重新挂载才生效。
 if (typeof props.baseZIndex === 'number') {
   provide(zIndexManagerKey, createZIndexManager(props.baseZIndex))

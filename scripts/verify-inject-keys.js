@@ -18,8 +18,9 @@
  *    字符串常量能绕过第 1 条（它压根不是 Symbol 定义）与第 5 条（传的是标识符不是字面量）；
  * 7. 组件内一律用 `injectFromChain`：裸 `inject()` 在 `app.runWithContext`（vue-router 导航守卫）
  *    上下文里会改道去翻宿主 app 的 provides，读不到组件级 provide（离散实例层级 / 主题失效）；
- *    白名单只有实现文件 `utils/hooks.ts` 自身（其 `inject(key)` 的首参是形参，不参与第 6 条校验）；
- * 8. 键不进入公共入口：`components/index.ts` / `components/components.ts` 不得导出 `*Key`。
+ *    白名单只有实现文件 `utils/hooks.ts` 自身：其函数签名 `injectFromChain<T>(key)` 会被第 6 条
+ *    「首参必须是已声明键」命中（首参是形参），实现本身直接读 `instance.provides`、不经 `inject()`；
+ * 8. 键不进入公共入口：`components/index.ts` / `components/components.ts` 不得导出注入键。
  *
  * 扫描前统一剥离注释：注释里的示例键不是实现，不应制造噪声。
  */
@@ -117,7 +118,7 @@ sourceFiles.forEach((file) => {
   if (STRING_KEY_PATTERN.test(source)) {
     failures.push(`provide / inject 不得使用字符串字面量作键：${file}`)
   }
-  // 实现文件（白名单）：裸 `inject(key)` 的 key 是形参，不参与「首参必须是已声明键」校验
+  // 实现文件（白名单）：函数签名 `injectFromChain<T>(key)` 的首参是形参，会被「首参必须是已声明键」误命中
   if (RAW_INJECT_WHITELIST.has(file)) {
     return
   }
@@ -131,7 +132,7 @@ sourceFiles.forEach((file) => {
   }
 })
 
-// ⑦ 公共入口不导出注入键
+// ⑧ 公共入口不导出注入键
 //    按「已识别的键名」精确匹配而不是任意 *Key：`MenuKey` / `DropdownKey` 等公开类型是合法导出；
 //    导出语句常写成多行，逐行匹配会漏检，故先按语句块切分再取标识符
 PUBLIC_ENTRIES.forEach((entry) => {
