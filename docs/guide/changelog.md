@@ -16,7 +16,9 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-10-28">3.4.1</VersionDateTag>
 
-- 修复 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `baseZIndex` 与 `theme` 在路由守卫中创建离散实例（`createDiscreteApi`）时不生效的问题；贡献者文档补充 provide / inject 注入契约与守护说明
+- 修复 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `baseZIndex` 与 `theme` 在路由守卫中创建离散实例（`createDiscreteApi`）时不生效的问题
+- 贡献者文档补充 `provide` / `inject` 注入契约与守护说明
+- 组件库代码优化
 
 ## <VersionDateTag date="2026-10-28">3.4.0</VersionDateTag>
 
