@@ -17,7 +17,6 @@ import {
   nextTick,
   onMounted,
   onBeforeUnmount,
-  inject,
   h,
   withDirectives,
   vShow,
@@ -25,11 +24,17 @@ import {
   Fragment,
   Text
 } from 'vue'
-import type { CSSProperties, Ref, TransitionProps, VNode } from 'vue'
+import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Empty from 'components/empty'
 import Popup from 'components/popup'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
-import { useResizeObserver, useSlotsExist, Z_INDEX_CONTAINER_OPEN_KEY, FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import {
+  injectFromChain,
+  useResizeObserver,
+  useSlotsExist,
+  zIndexContainerOpenKey,
+  FLOATING_LAYER_Z_INDEX
+} from 'components/utils'
 import type { FloatingPlacement, MountElement } from 'components/utils'
 export interface Option {
   label?: string // 选项名
@@ -978,9 +983,9 @@ watchEffect(() => {
   hoverValue.value = firstEnabled ? (getOptionValue(firstEnabled) ?? null) : null
 })
 // 承载层（Modal / Drawer / Dialog）关闭时收起面板并归位聚焦态（容器不卸载内容，面板不会随容器消失）：
-// ① 面板停留打开态会占着层级槽位、被重新打开的容器反超（详见 z-index.ts 的 Z_INDEX_CONTAINER_OPEN_KEY）；
+// ① 面板停留打开态会占着层级槽位、被重新打开的容器反超（详见 z-index.ts 的 zIndexContainerOpenKey）；
 // ② 容器关闭不派发 blur，不显式归位则容器重开时仍残留聚焦描边与阴影
-const containerOpen = inject(Z_INDEX_CONTAINER_OPEN_KEY, null) as Ref<boolean> | null
+const containerOpen = injectFromChain(zIndexContainerOpenKey) ?? null
 if (containerOpen) {
   watch(containerOpen, (open) => {
     if (!open) {

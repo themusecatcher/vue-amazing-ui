@@ -33,8 +33,15 @@ export interface MenuContext {
   onTitleClick: (item: SubMenuType, domEvent: MouseEvent) => void // 点击子菜单标题
 }
 
-/** 菜单上下文的注入键 */
-export const menuContextKey: InjectionKey<MenuContext> = Symbol('menuContext')
+/**
+ * 菜单上下文的注入键
+ *
+ * - 提供方：`Menu`
+ * - 消费方：`MenuNodes` 及各层级菜单项 / 子菜单标题
+ * - 响应式：是（上下文内混有 `Ref` / `ComputedRef` 字段与命令式回调）
+ * - 未命中：`undefined`，`MenuNodes` 直接抛错（渲染内核不允许脱离 `Menu` 使用）
+ */
+export const menuContextKey: InjectionKey<MenuContext> = Symbol('vaMenuContext')
 
 /** 从菜单配置里取到稳定的 key：配置未提供 key 时以列表下标兜底，避免渲染出现重复 key */
 export function getItemKey(node: MenuItemType | SubMenuType | null | undefined, index: number): MenuKey {

@@ -104,7 +104,7 @@ defineSlots<ButtonSlots>()
 - 组件私有的结构色用 `--<comp>-*`（如 `--button-primary-color`）在自身 `<style>` 中声明，值必须是 `var(--va-*)` 或 `var(--va-cp-<component>-primary-*, var(--va-*))`；需要按实例覆盖时（如 `Button.color`）由脚本派生具体色值写到该私有变量上；
 - **组件级主色桥**：组件内每一处「跟随主色」的消费都写成 `var(--va-cp-<component>-*, var(--va-*))`（如 `var(--va-cp-switch-primary-color, var(--va-primary-color))`；深色皮肤表面用 `var(--va-cp-<component>-dark-bg-color, var(--va-bg-brand-dark-color))`）。桥变量由 `ConfigProvider` 按 `theme.components.<Component>.primaryColor` 写在作用域节点上，组件不感知它的存在；未配置时回落到全局令牌，默认外观不变；
 - 设计上不随主题变化的颜色保留字面量，不算主题泄漏：预设色板（`Tag` / `Badge` / `Timeline` / `Tooltip` / `GradientText` / `Result`）、深色 `Sider`、`Image` 预览与 `Video` 播放器的固定 chrome、中性投影；遮罩一律用 `--va-mask-color`（不要用 `--va-text-color-3`，否则暗色下会变白蒙层）；
-- 浮层经 Teleport 脱离组件树时，主题变量有两条下发路径：① 作用域令牌（全局 42 个 + 组件级桥 / 公开令牌）由 `ConfigProvider` 经 `THEME_TELEPORT_KEY` 写到浮层容器；② 组件私有的面板变量（如 `--picker-*`）随面板 `:style` 下发，值仍写 `var(--va-*)` / `var(--va-cp-*)` 引用，不做 JS 取色；
+- 浮层经 Teleport 脱离组件树时，主题变量有两条下发路径：① 作用域令牌（全局 42 个 + 组件级桥 / 公开令牌）由 `ConfigProvider` 经 `themeTeleportKey` 写到浮层容器；② 组件私有的面板变量（如 `--picker-*`）随面板 `:style` 下发，值仍写 `var(--va-*)` / `var(--va-cp-*)` 引用，不做 JS 取色；
 - 新增组件若消费主色，把消费点接上桥变量即可支持 `theme.components`，并在 `components/theme/component-vars.js` 的 `THEME_COMPONENTS` 登记（守护脚本会校验「登记了就必须有消费点」）；不消费主色的组件无需任何主题代码。`pnpm verify:theme` 会拦截回潮。
 
 ## 插槽检测 useSlotsExist
@@ -257,6 +257,84 @@ components/grid/
 └── index.ts        # 汇总导出 Row + Col
 ```
 
+## provide / inject 注入契约
+
+注入键是**内部契约**（不对外导出、不承诺稳定性），但命名与读取方式必须统一，否则改错键或读错通道只会静默退化为「未命中」。当前全库 21 个键，均由本节条文约束，`scripts/verify-inject-keys.js` 机器校验。
+
+### 条文
+
+| # | 规则 |
+| :-- | :-- |
+| S1 | 键必须是 `Symbol`，且带 `: InjectionKey<T>` 注解；禁止字符串 / 数字键、`Symbol.for()`、`InjectionKey<any>`、省略泛型 |
+| S2 | 变量名 `camelCase` + `Key` 后缀：`themeModeKey` ✅ / `THEME_MODE_KEY`、`DROPDOWN_MENU_KEY` ❌；不加 `Injection` 冗余词 |
+| S3 | 语义后缀分层：`ContextKey`（组件组内共享上下文）、`ApiKey`（Provider 暴露的命令式 API）、`Key`（单一职责通道） |
+| S4 | 描述串 = `'va' + PascalCase(变量名去 Key)`：`themeModeKey → Symbol('vaThemeMode')`；禁止空描述、动态拼接、含空格 |
+| S5 | 类型标注用注解式（`const key: InjectionKey<T> = Symbol(...)`），不用 `as InjectionKey<T>` 断言 |
+| S6 | 就近定义：一个组件族多键放 `components/<family>/context.ts`；与 hook 一一绑定则同文件（`modal/useModal.ts`）；跨族基础通道放 `components/utils/*.ts`。**禁止**在 `.vue` 内定义键，**禁止**建全库单一 `keys.ts`（会让 `utils` 反向依赖组件目录类型） |
+| S7 | 键不进入公共 API：`components/index.ts`、`components/components.ts`、`types/global-components.d.ts`、`docs/` 一律不导出 / 不出现。键按 S6 就近直引实现文件；`components/config-provider/context` 尤其不能走目录入口（会把 `ConfigProvider.vue` 拖进每个组件的依赖图） |
+| S8 | 组件内**一律用 `injectFromChain`**，禁止裸 `inject()`；默认值语义保持原样：`inject(K, null)` → `injectFromChain(K) ?? null`、`inject(K, false)` → `?? false`、`inject(K)` → 直接用返回值判空。**禁止** `as` 断言（键已携带类型） |
+| S9 | 响应式契约写进 JSDoc：值会变化就注入 `Ref` / `ComputedRef` / 含 getter 的对象，禁止注入瞬时快照；每个键的 JSDoc 必须写明**提供方 / 消费方 / 值语义 / 是否响应式 / 未命中时的行为** |
+| S10 | 新增键按「检查清单」逐项过（见下） |
+| S11 | 非注入用途的内部哨兵 Symbol（不参与 provide / inject）允许无描述，但变量名同样 `camelCase` + 语义后缀；反之禁止用此类 Symbol 充当注入键 |
+
+### 为什么必须 `injectFromChain`
+
+`inject()` 内部是「二选一且不回退」：`currentApp ? currentApp._context.provides : instance.parent.provides`。`vue-router@4` 用 `app.runWithContext()` 执行导航守卫，而 `createDiscreteApi()` 恰恰推荐在守卫里调用 —— 此时 `currentApp` 非空，裸 `inject` 只翻宿主 app 的 **app 级** `provides`（组件级 `provide` 在那里不可见），于是层级管理器与主题转发通道全部丢失：浮层退回默认层级、浮层拿不到 `configProviderProps.theme`，且**不报错**。
+
+`injectFromChain`（`components/utils/hooks.ts`）只读 `instance.provides`（原型链已含祖先组件级与 app 级 provides），必要时沿 `instance.parent` 上溯，完全不看 `currentApp`。
+
+```ts
+import { injectFromChain } from 'components/utils'
+
+const teleportTheme = injectFromChain(themeTeleportKey) ?? null
+```
+
+例外：`components/utils/hooks.ts` 自身（实现文件），以及未来必须在 `setup` 同步期之外调用的位置 —— 后者保留裸 `inject` 并就地在注释里说明原因（`injectFromChain` 依赖 `getCurrentInstance()`，只能在 setup 同步执行期使用）。
+
+与裸 `inject` 的差异要留意两处：
+
+- **读取起点**：`injectFromChain` 从**自己实例**的 `provides` 起步（裸 `inject` 从父级起步）。同一实例内「先 `provide` 再 `inject` 同名键」会读到自己而非父级 —— 需要读父级透传时**必须先 `inject` 再 `provide`**（`theme-scope.ts` 的 `themeTeleportKey`、`Drawer` 的 `parentDrawerOptsKey` 均按此顺序书写）；
+- **无告警**：不再输出 Vue 的 `injection "Symbol(...)" not found` 开发期告警。需要「缺失即报错」的通道由消费方显式抛错（`useModal` / `useMessage` / `useDialog` / `useNotification` / `useLoadingBar`），可选通道则显式兜底。
+
+### 键定义范例
+
+```ts
+/**
+ * 当前作用域的实际模式：嵌套实例未显式传 mode 时继承父级
+ *
+ * - 提供方：`ConfigProvider`（`useThemeScope`）
+ * - 消费方：`useThemeScope`（嵌套实例继承父级模式）、`Button`（按模式取组件级主色）
+ * - 响应式：是（`Ref<ResolvedMode>`）
+ * - 未命中：`undefined`，按「无显式模式」处理
+ */
+export const themeModeKey: InjectionKey<Ref<ResolvedMode>> = Symbol('vaThemeMode')
+```
+
+### 新增键的检查清单
+
+1. 值类型已定义接口 / 别名，无 `any`；
+2. 变量名符合 S2 / S3，描述串符合 S4；
+3. 定义位置符合 S6，未出现在 `.vue` 内；
+4. `provide` 侧全库唯一；
+5. 消费侧用 `injectFromChain` 且有明确兜底；
+6. JSDoc 按 S9 填写；
+7. 补测试：`typeof key === 'symbol'`、命中 / 未命中各一条；涉及外观或层级的键再补「`app.runWithContext` 上下文创建」场景一条（`tests/injection-contract.spec.ts`）。
+
+### 守护
+
+- ESLint（`eslint.config.js` 的 `custom/no-raw-injection-key`）：字符串字面量作键、裸 `inject()` 均报错，白名单只有 `components/utils/hooks.ts`；
+- `pnpm verify:inject-keys`（`scripts/verify-inject-keys.js`）8 条文本级检查：① 键必须是 `Symbol` 且带 `: InjectionKey<T>`；② 变量名 `camelCase` + `Key`；③ 描述串 = `va` + 变量名去 `Key`；④ 键不得定义在 `.vue`（含不带 `export` 的写法）；⑤ `provide` / `inject` / `injectFromChain` 不得用字符串字面量；⑥ 三者首参必须是已声明的 Symbol 键（拦 `export const menuKey = 'menu'` 这类字符串常量冒充）；⑦ 组件内不得裸 `inject`；⑧ 公共入口不得导出 `*Key`。
+- 单测（`tests/injection-contract.spec.ts`）盯运行期语义，脚本盯文本形态 —— 两者不重叠：脚本不跑组件、单测不读源码。
+
+### 取舍记录
+
+| 决策 | 选择 | 理由 |
+| :-- | :-- | :-- |
+| 学 naive-ui 用字符串键 + `n-` 前缀 | **不学** | 字符串键的唯一收益是「跨副本匹配」，而 `vue` 是 peerDependency、库单实例；代价是宿主同名 `app.provide()` 可劫持（实测 `useZIndex` 抛 `manager.allocate is not a function`） |
+| 用 `Symbol.for()` | **不用** | 注入链路依赖的 Vue 运行时本身无法跨副本共享 `provides`，收益不成立且污染全局注册表 |
+| 集中到单一 `keys.ts` | **不集中** | 会形成 `utils → 组件目录类型` 的反向依赖与循环依赖 |
+| 照抄 vue-router 的「小写空格短语 + `__DEV__` 条件描述串」 | **不照抄** | 仓库无 `__DEV__` 常量，条件描述串会让「描述串 = va + 变量名」无法静态校验 |
+
 ## 单组件目录的辅助文件
 
 单组件目录并非固定为「`Xxx.vue` + `index.ts`」两个文件，可按需在同一目录内增加辅助模块，例如：
@@ -292,7 +370,7 @@ components/modal/
 - **组件级主色**：`theme.components.<Component>.primaryColor` 只接受一个通用主色，Provider 用 `deriveColorStates` / `deriveFocusShadow` 展开成两组变量写到同一作用域节点：内部桥 `--va-cp-<component>-primary-*`（所有组件通用，覆盖该组件全部主色使用点）与注册表 `themeRole` 公开令牌（Button / Slider / Menu 的细粒度覆盖入口）。支持清单见 `component-vars.js` 的 `THEME_COMPONENTS`，未登记键开发环境告警；只配置组件、没有 `seed` / `mode` 的 `abstract=true` 实例不参与 `<html>` 写入权仲裁（需改用 `false` 或补全局主题）。
 - **暗色**：`mode` 是派生入参而不是第二套种子；只切 `mode` 时只写 `data-va-mode`，由静态表接管；`mode="auto"` 监听 `prefers-color-scheme` 并在卸载时解除。
 - **填充档位**：`--va-fill-color-1/2/3/4` 依次为三级 / 二级 / 最强 / 最淡的中性叠加，编号不代表强度；最淡的底纹与默认标签底用 `fill-color-4`，水印等需要更高可见度的默认色用 `fill-color-3`。
-- **只读快照**：`provide(THEME_SNAPSHOT_KEY, snapshot)` 仅供 canvas / SVG / 第三方 JS 读取，禁止借它写行内变量。`Watermark` 是首个消费者：默认水印色取快照里的 `--va-fill-color-3`（浅色 .15 黑 / 暗色 .18 白），主题变化时重绘；无 Provider 时回读 `<html>` 上的静态变量表并监听其 `data-va-mode` / `class`（纯 CSS 暗色切换同样跟随），SSR 才回落浅色默认。
+- **只读快照**：`provide(themeSnapshotKey, snapshot)` 仅供 canvas / SVG / 第三方 JS 读取，禁止借它写行内变量。`Watermark` 是首个消费者：默认水印色取快照里的 `--va-fill-color-3`（浅色 .15 黑 / 暗色 .18 白），主题变化时重绘；无 Provider 时回读 `<html>` 上的静态变量表并监听其 `data-va-mode` / `class`（纯 CSS 暗色切换同样跟随），SSR 才回落浅色默认。
 - **文档一致性口径**：机械清单（组件令牌）由 `scripts/gen-component-vars-doc.js` 生成，`tests/component-vars.spec.ts` 逐字节守护，生成物需提交；`定制主题` 页的叙事段（颜色变量清单、已知限制的理由）手写、只保证结论正确，不做逐值自动化 —— 新增可枚举清单优先走生成，不要再手写第二张表。
 - **取色出口**：公开 `derive(seed, mode)` 供 JS / canvas / SVG 场景取与 `--va-*` 逐值一致的结果；旧版色板 / 透明度色工具（`getColorPalettes` / `getAlphaColor`）已移除，焦点环所需的「等效半透明色」作为私有函数 `alphaOver` 留在 `theme/derive.ts`。
 - **演示站 / 文档站的暗色**：两处的主题开关都直接驱动 `ConfigProvider.mode` —— 演示站改写 `src/theme.ts` 的共享 `theme`（`layouts/GlobalLayout.vue`），文档站把 VitePress 的 `useData().isDark` 映射成 `mode`（`docs/.vitepress/theme/index.ts`）；两处均不使用 `html.dark` + `filter: invert()` 模拟暗色（旧的 `toggleDark()` 工具函数已随本版本移除，暗色统一由 `mode` / `data-va-mode` 驱动）。

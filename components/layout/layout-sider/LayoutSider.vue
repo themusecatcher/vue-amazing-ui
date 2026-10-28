@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, inject, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { renderContentToVNode, siderCollapsedKey, useWindowWidth } from 'components/utils'
+import { injectFromChain, renderContentToVNode, siderCollapsedKey, useWindowWidth } from 'components/utils'
 import { getSiderId, siderHookKey } from '../siderHook'
 
 /** 断点对应的视窗宽度（单位 px），用于 collapsedWidth 的响应式取值 */
@@ -75,7 +75,7 @@ watch(
   }
 )
 // 响应式登记：Layout 收到登记后才会把布局方向切换为水平
-const siderHook = inject(siderHookKey, null)
+const siderHook = injectFromChain(siderHookKey) ?? null
 const siderId = getSiderId()
 siderHook?.addSider(siderId)
 onBeforeUnmount(() => {

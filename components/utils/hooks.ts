@@ -287,6 +287,10 @@ interface ProvidesChainInstance {
  * 正常路径可见范围的超集），必要时沿 `instance.parent` 兜底上溯，且**完全不看
  * `currentApp`**，从而始终命中提取器自己那条链上的 `<XxxProvider>`。
  *
+ * ⚠️ 依赖 `getCurrentInstance()`：只能在 `setup` 同步执行期调用。挂载后（`onMounted` 回调、
+ * 异步分支、事件处理等）调用会因当前实例为空而返回 `undefined`，且**不告警** —— 需要延迟读取时，
+ * 应在 `setup` 期先取值再在闭包中使用。
+ *
  * 组件库内部使用：注入协议属内部实现，不对外导出、不承诺 API 稳定性。
  *
  * @param key - 注入键

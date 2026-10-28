@@ -78,7 +78,7 @@ describe('Teleport 根节点转发作用域主题（源码扫描）', () => {
   TELEPORT_CONSUMERS.forEach((file) => {
     it(`${file} 绑定转发变量与模式`, () => {
       const source = readComponent(file)
-      expect(source).toContain('THEME_TELEPORT_KEY')
+      expect(source).toContain('themeTeleportKey')
       expect(source).toContain('teleportThemeVars')
       expect(source).toContain('teleportThemeMode')
     })

@@ -332,4 +332,4 @@ _旧版 `theme.common.primaryColor` / `theme.Button.primaryColor` 已改为 `see
 
 _离散实例的浮层挂在 `body`：传了 `configProviderProps.theme` 时由边界转发写到浮层根节点；未传时从 `<html>` 继承主应用主题_
 
-它不会改写 `<html>`，`dispose()` 也不会误清除主应用写入的变量。`configProviderProps.theme`（含 `seed` / `mode` / `components`）会作用于该实例自己的浮层（经 `THEME_TELEPORT_KEY` 转发，只写浮层根节点，不污染全局）；未传时浮层沿用 `<html>` 上的主应用主题。
+它不会改写 `<html>`，`dispose()` 也不会误清除主应用写入的变量。`configProviderProps.theme`（含 `seed` / `mode` / `components`）会作用于该实例自己的浮层（经内部转发通道写到浮层根节点，不污染全局）；未传时浮层沿用 `<html>` 上的主应用主题。
