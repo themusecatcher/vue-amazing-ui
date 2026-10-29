@@ -229,6 +229,7 @@ const optionsMatchWidth = [
 const toValue = ref('')
 // 下拉面板样式的公开入口：popupClassName / dropdownMenuStyle / zIndex
 const panelValue = ref('')
+const panelCustomValue = ref('')
 const panelZIndexValue = ref('')
 </script>
 
@@ -894,7 +895,7 @@ const optionsArr = ['Apple', 'Banana', 'Cherry', 'Durian', 'Elderberry', 'Fig', 
 
 ## 自定义下拉面板
 
-_通过 `popupClassName` 自定义面板类名、`dropdownMenuStyle` 设置面板样式，两者均落在 `Teleport` 后的面板上；`popupClassName` 的样式需写在全局样式中（`scoped` 样式无法命中），`zIndex` 用于覆盖面板层级（默认 `1050`）_
+_面板本体（底色 / 边框 / 圆角 / 阴影 / 裁剪）用 `dropdownMenuStyle` 即可，它落在 `Teleport` 后的面板根上；面板内选项等子元素的皮肤才需要 `popupClassName`（其样式需写在全局样式中，`scoped` 样式无法命中）；`zIndex` 用于覆盖面板层级（默认 `1050`，需与其它浮层同时展开才能看出上下关系）_
 
 <br/>
 
@@ -906,16 +907,17 @@ _通过 `popupClassName` 自定义面板类名、`dropdownMenuStyle` 设置面�
   <Flex vertical gap="small" align="start">
     <span class="demo-label">自定义类名与样式</span>
     <AutoComplete
-      v-model:value="panelValue"
+      v-model:value="panelCustomValue"
       :options="options4"
       :width="180"
       placeholder="input here"
       popup-class-name="custom-ac-panel"
       :dropdown-menu-style="{
-        background: 'rgba(255, 105, 0, 0.05)',
+        backgroundImage: 'linear-gradient(rgba(255, 105, 0, 0.06), rgba(255, 105, 0, 0.06))',
         border: '1px solid #ff6900',
         borderRadius: '12px',
-        boxShadow: '0 8px 20px rgba(255, 105, 0, 0.25)'
+        boxShadow: '0 8px 20px rgba(255, 105, 0, 0.25)',
+        overflow: 'hidden'
       }"
     />
   </Flex>
@@ -937,6 +939,7 @@ _通过 `popupClassName` 自定义面板类名、`dropdownMenuStyle` 设置面�
 <script setup lang="ts">
 import { ref } from 'vue'
 const panelValue = ref('')
+const panelCustomValue = ref('')
 const panelZIndexValue = ref('')
 const options4 = ref<{ value: string }[]>([
   { value: 'Burns Bay Road' },
@@ -953,16 +956,17 @@ const options4 = ref<{ value: string }[]>([
     <Flex vertical gap="small" align="start">
       <span class="demo-label">自定义类名与样式</span>
       <AutoComplete
-        v-model:value="panelValue"
+        v-model:value="panelCustomValue"
         :options="options4"
         :width="180"
         placeholder="input here"
         popup-class-name="custom-ac-panel"
         :dropdown-menu-style="{
-          background: 'rgba(255, 105, 0, 0.05)',
+          backgroundImage: 'linear-gradient(rgba(255, 105, 0, 0.06), rgba(255, 105, 0, 0.06))',
           border: '1px solid #ff6900',
           borderRadius: '12px',
-          boxShadow: '0 8px 20px rgba(255, 105, 0, 0.25)'
+          boxShadow: '0 8px 20px rgba(255, 105, 0, 0.25)',
+          overflow: 'hidden'
         }"
       />
     </Flex>
@@ -980,22 +984,23 @@ const options4 = ref<{ value: string }[]>([
 </template>
 
 <style lang="less">
-/* 面板经 Teleport 挂载，scoped 样式无法命中，故用 popupClassName 下发类名 + 全局样式；
-   选项规则把类名重复一次以提升特异性，覆盖带 scope 属性的组件内规则 */
+/* 面板经 Teleport 挂载到 body，scoped 样式无法命中，故用 popupClassName 下发类名 + 全局样式；
+   面板类名重复一次以提升特异性，覆盖组件内置的面板皮肤规则。
+   模板里的 .demo-label 属于文档站排版约定（定义在文档站全局样式），复制示例时替换为自己的类名 */
 @demo-primary: #ff6900;
 
-.custom-ac-panel {
-  &.custom-ac-panel .auto-complete-options .auto-complete-option {
-    color: darken(@demo-primary, 12%);
+/* 面板本体（底色叠加 / 边框 / 圆角 / 阴影 / 圆角裁剪）全部由 dropdownMenuStyle 控制；
+   底色用 backgroundImage 叠加而非 background / backgroundColor —— 后者会覆盖组件按明暗主题给的底板色。
+   这里只放面板内部元素（选项）的皮肤：内联样式选不中后代，选项配色才需要 popupClassName 下发类名 */
+.custom-ac-panel.custom-ac-panel {
+  .auto-complete-options .auto-complete-option {
+    color: @demo-primary;
     font-weight: 500;
   }
+
   .auto-complete-options .auto-complete-option.option-hover {
-    background: fade(@demo-primary, 10%);
+    background: fade(@demo-primary, 12%);
   }
-}
-.demo-label {
-  color: rgba(0, 0, 0, 0.45);
-  font-size: 13px;
 }
 </style>
 ```
@@ -1470,3 +1475,23 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 | :-- | :-- | :-- |
 | focus | 获取输入框焦点 | () => void |
 | blur | 使输入框失去焦点 | () => void |
+
+<style lang="less">
+/* 与「自定义下拉面板」示例代码里的样式块同源：示例代码块只用于展示，页面上的实际效果由这里生效。
+   面板经 Teleport 挂载到 body，scoped 样式无法命中，故用 popupClassName 下发类名 + 全局样式 */
+@demo-primary: #ff6900;
+
+/* 面板本体（底色叠加 / 边框 / 圆角 / 阴影 / 圆角裁剪）全部由 dropdownMenuStyle 控制；
+   底色用 backgroundImage 叠加而非 background / backgroundColor —— 后者会覆盖组件按明暗主题给的底板色。
+   这里只放面板内部元素（选项）的皮肤：内联样式选不中后代，选项配色才需要 popupClassName 下发类名 */
+.custom-ac-panel.custom-ac-panel {
+  .auto-complete-options .auto-complete-option {
+    color: @demo-primary;
+    font-weight: 500;
+  }
+
+  .auto-complete-options .auto-complete-option.option-hover {
+    background: fade(@demo-primary, 12%);
+  }
+}
+</style>

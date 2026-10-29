@@ -307,13 +307,16 @@ const listHeightValue = ref<SelectProps['value']>(1)
 const scrollbarValue = ref<SelectProps['value']>(1)
 // 自定义下拉面板
 const panelValue = ref<SelectProps['value']>(1)
+const panelCustomValue = ref<SelectProps['value']>(1)
 const panelZIndexValue = ref<SelectProps['value']>(1)
-// 自定义面板外观：经 dropdownMenuStyle 传入
+// 自定义面板外观：面板本体全部经 dropdownMenuStyle 传入
+// 底色用 backgroundImage 叠加而非 background / backgroundColor —— 后者会覆盖组件按明暗主题给的底板色
 const customPanelStyle = {
-  background: 'rgba(255, 105, 0, 0.05)',
+  backgroundImage: 'linear-gradient(rgba(255, 105, 0, 0.06), rgba(255, 105, 0, 0.06))',
   border: '1px solid #ff6900',
   borderRadius: '12px',
-  boxShadow: '0 8px 20px rgba(255, 105, 0, 0.25)'
+  boxShadow: '0 8px 20px rgba(255, 105, 0, 0.25)',
+  overflow: 'hidden'
 }
 // 扩展菜单
 const addableItems = ref(['jack', 'lucy'])
@@ -1715,21 +1718,30 @@ const selectedValue = ref<SelectProps['value']>(1)
 
 ## 自定义下拉面板
 
-_通过 `popupClassName` 自定义面板类名、`dropdownMenuStyle` 设置面板样式，两者均落在 `Teleport` 后的面板上；`popupClassName` 的样式需写在全局样式中（`scoped` 样式无法命中），`zIndex` 用于覆盖面板层级（默认 `1050`）_
+_面板本体（底色 / 边框 / 圆角 / 阴影 / 裁剪）用 `dropdownMenuStyle` 即可，它落在 `Teleport` 后的面板根上；面板内选项等子元素的皮肤才需要 `popupClassName`（其样式需写在全局样式中，`scoped` 样式无法命中）；`zIndex` 用于覆盖面板层级（默认 `1050`，需与其它浮层同时展开才能看出上下关系）_
 
 <br/>
 
-<Space>
-  <Select :options="cityOptions" v-model:value="panelValue" :width="180" />
-  <Select
-    :options="cityOptions"
-    v-model:value="panelValue"
-    :width="180"
-    popup-class-name="custom-select-panel"
-    :dropdown-menu-style="customPanelStyle"
-  />
-  <Select :options="cityOptions" v-model:value="panelZIndexValue" :width="180" :z-index="1100" />
-</Space>
+<Flex gap="large" wrap="wrap">
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">默认面板</span>
+    <Select :options="cityOptions" v-model:value="panelValue" :width="180" />
+  </Flex>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">自定义类名与样式</span>
+    <Select
+      :options="cityOptions"
+      v-model:value="panelCustomValue"
+      :width="180"
+      popup-class-name="custom-select-panel"
+      :dropdown-menu-style="customPanelStyle"
+    />
+  </Flex>
+  <Flex vertical gap="small" align="start">
+    <span class="demo-label">自定义层级</span>
+    <Select :options="cityOptions" v-model:value="panelZIndexValue" :width="180" :z-index="1200" />
+  </Flex>
+</Flex>
 
 ::: details Show Code
 
@@ -1745,45 +1757,63 @@ const options = ref<SelectOption[]>([
   { label: '伊斯坦布尔', value: 5 },
   { label: '君士坦丁堡', value: 6 }
 ])
+// 自定义面板外观：面板本体全部经 dropdownMenuStyle 传入
+// 底色用 backgroundImage 叠加而非 background / backgroundColor —— 后者会覆盖组件按明暗主题给的底板色
 const customPanelStyle = {
-  background: 'rgba(255, 105, 0, 0.05)',
+  backgroundImage: 'linear-gradient(rgba(255, 105, 0, 0.06), rgba(255, 105, 0, 0.06))',
   border: '1px solid #ff6900',
   borderRadius: '12px',
-  boxShadow: '0 8px 20px rgba(255, 105, 0, 0.25)'
+  boxShadow: '0 8px 20px rgba(255, 105, 0, 0.25)',
+  overflow: 'hidden'
 }
 const selectedValue = ref<SelectProps['value']>(1)
+const customSelectedValue = ref<SelectProps['value']>(1)
 const zIndexValue = ref<SelectProps['value']>(1)
 </script>
 <template>
-  <Space>
-    <Select :options="options" v-model:value="selectedValue" :width="180" />
-    <Select
-      :options="options"
-      v-model:value="selectedValue"
-      :width="180"
-      popup-class-name="custom-select-panel"
-      :dropdown-menu-style="customPanelStyle"
-    />
-    <Select :options="options" v-model:value="zIndexValue" :width="180" :z-index="1100" />
-  </Space>
+  <Flex gap="large" wrap="wrap">
+    <Flex vertical gap="small" align="start">
+      <span class="demo-label">默认面板</span>
+      <Select :options="options" v-model:value="selectedValue" :width="180" />
+    </Flex>
+    <Flex vertical gap="small" align="start">
+      <span class="demo-label">自定义类名与样式</span>
+      <Select
+        :options="options"
+        v-model:value="customSelectedValue"
+        :width="180"
+        popup-class-name="custom-select-panel"
+        :dropdown-menu-style="customPanelStyle"
+      />
+    </Flex>
+    <Flex vertical gap="small" align="start">
+      <span class="demo-label">自定义层级</span>
+      <Select :options="options" v-model:value="zIndexValue" :width="180" :z-index="1200" />
+    </Flex>
+  </Flex>
 </template>
 
 <style lang="less">
-/* 面板经 Teleport 挂载，scoped 样式无法命中，故用 popupClassName 下发类名 + 全局样式；
-   选项规则把类名重复一次以提升特异性，覆盖带 scope 属性的组件内规则 */
+/* 面板经 Teleport 挂载到 body，scoped 样式无法命中，故用 popupClassName 下发类名 + 全局样式。
+   组件内置的选项皮肤由 `.select-panel-body[data-v-*]` 前缀限定（特异性 0,4,0），
+   故用 body 前缀 + 重复一次面板类名把特异性提到 0,4,1，保证自定义规则生效。
+   模板里的 .demo-label 是文档站的用例标签辅助类（样式统一在文档站全局样式中），复制示例时替换为自己的类名 */
 @demo-primary: #ff6900;
 
-.custom-select-panel {
-  &.custom-select-panel .select-options-panel .select-option {
-    color: darken(@demo-primary, 12%);
+/* 面板本体（底色叠加 / 边框 / 圆角 / 阴影 / 圆角裁剪）全部由 dropdownMenuStyle 控制；
+   这里只放面板内部元素（选项）的皮肤：内联样式选不中后代，选项配色才需要 popupClassName 下发类名 */
+body .custom-select-panel.custom-select-panel {
+  .select-options-panel .select-option {
+    color: @demo-primary;
     font-weight: 500;
   }
+
   .select-options-panel .select-option.option-hover {
-    background: fade(@demo-primary, 10%);
+    background: fade(@demo-primary, 12%);
   }
+
   .select-options-panel .select-option.option-selected {
-    color: darken(@demo-primary, 12%);
-    background: fade(@demo-primary, 16%);
+    background: fade(@demo-primary, 18%);
   }
 }
 </style>
@@ -2089,3 +2119,27 @@ const options: SelectOption[] = []
 | focus | 获取输入框焦点 | () => void |
 | blur | 使输入框失去焦点 | () => void |
 | scrollTo | 滚动面板选项：传数字按下标定位，传对象按顶部偏移定位 | (arg: number &#124; { index?: number; top?: number }) => void |
+
+<style lang="less">
+/* 与「自定义下拉面板」示例代码里的样式块同源：示例代码块只用于展示，页面上的实际效果由这里生效。
+   组件内置的选项皮肤由 `.select-panel-body[data-v-*]` 前缀限定（特异性 0,4,0），
+   故用 body 前缀 + 重复一次面板类名把特异性提到 0,4,1，保证自定义规则生效 */
+@demo-primary: #ff6900;
+
+/* 面板本体（底色叠加 / 边框 / 圆角 / 阴影 / 圆角裁剪）全部由 dropdownMenuStyle 控制；
+   这里只放面板内部元素（选项）的皮肤：内联样式选不中后代，选项配色才需要 popupClassName 下发类名 */
+body .custom-select-panel.custom-select-panel {
+  .select-options-panel .select-option {
+    color: @demo-primary;
+    font-weight: 500;
+  }
+
+  .select-options-panel .select-option.option-hover {
+    background: fade(@demo-primary, 12%);
+  }
+
+  .select-options-panel .select-option.option-selected {
+    background: fade(@demo-primary, 18%);
+  }
+}
+</style>
