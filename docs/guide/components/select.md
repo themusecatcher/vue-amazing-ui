@@ -1797,7 +1797,7 @@ const zIndexValue = ref<SelectProps['value']>(1)
 /* 面板经 Teleport 挂载到 body，scoped 样式无法命中，故用 popupClassName 下发类名 + 全局样式。
    组件内置的选项皮肤由 `.select-panel-body[data-v-*]` 前缀限定（特异性 0,4,0），
    故用 body 前缀 + 重复一次面板类名把特异性提到 0,4,1，保证自定义规则生效。
-   模板里的 .demo-label 是文档站的用例标签辅助类（样式统一在文档站全局样式中），复制示例时替换为自己的类名 */
+ */
 @demo-primary: #ff6900;
 
 /* 面板本体（底色叠加 / 边框 / 圆角 / 阴影 / 圆角裁剪）全部由 dropdownMenuStyle 控制；

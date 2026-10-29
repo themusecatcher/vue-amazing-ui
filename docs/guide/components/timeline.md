@@ -421,13 +421,6 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
     </Flex>
   </Flex>
 </template>
-<style lang="less" scoped>
-.demo-label {
-  color: var(--va-text-color-3);
-  font-size: 13px;
-  line-height: 22px;
-}
-</style>
 ```
 
 :::::
@@ -782,11 +775,6 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 }
 .label-strong {
   color: var(--va-error-color);
-}
-.demo-label {
-  color: var(--va-text-color-3);
-  font-size: 13px;
-  line-height: 22px;
 }
 </style>
 

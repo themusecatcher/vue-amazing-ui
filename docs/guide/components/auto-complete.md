@@ -986,7 +986,7 @@ const options4 = ref<{ value: string }[]>([
 <style lang="less">
 /* 面板经 Teleport 挂载到 body，scoped 样式无法命中，故用 popupClassName 下发类名 + 全局样式；
    面板类名重复一次以提升特异性，覆盖组件内置的面板皮肤规则。
-   模板里的 .demo-label 属于文档站排版约定（定义在文档站全局样式），复制示例时替换为自己的类名 */
+ */
 @demo-primary: #ff6900;
 
 /* 面板本体（底色叠加 / 边框 / 圆角 / 阴影 / 圆角裁剪）全部由 dropdownMenuStyle 控制；
