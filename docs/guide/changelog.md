@@ -14,9 +14,9 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-29">3.5.0</VersionDateTag>
+## <VersionDateTag date="2026-10-29">3.4.2</VersionDateTag>
 
-- 重构 [选择器 Select](/guide/components/select.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html) 的下拉面板：外层包裹节点 `.select-panel-wrapper` / `.auto-complete-panel-wrapper` 移除，改由公共浮层容器承载（面板根 `select-panel-container` / `auto-complete-panel` 不变），依赖旧包裹节点的 `:deep()` 选择器改用 `popupClassName` / `dropdownMenuStyle` 或直接写面板根类名；贡献者文档同步浮层字体承接的适用范围
+- 重构 [选择器 Select](/guide/components/select.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html) 的下拉面板：外层包裹节点 `.select-panel-wrapper` / `.auto-complete-panel-wrapper` 移除，改由公共浮层容器承载（面板根 `select-panel-container` / `auto-complete-panel` 不变），依赖旧包裹节点的 `:deep()` 选择器改用 `popupClassName` / `dropdownMenuStyle` 或直接写面板根类名
 - 修复 [下拉菜单 Dropdown](/guide/components/dropdown.html)、[菜单 Menu](/guide/components/menu.html) 等浮层面板内嵌的 `Tooltip` / `Popover` 在面板关闭时不随之收起的问题
 - 组件库及文档代码优化
 
