@@ -222,6 +222,7 @@ const sizeRadios = [
 const size = ref<CascaderProps['size']>('middle')
 // 各分区独立绑定：避免操作一个用例时其余用例同步联动，便于单独核对每个特性
 const basicValue = ref<CascaderProps['value']>(['zhejiang', 'hangzhou', 'xihu'])
+const customTriggerValue = ref<CascaderProps['value']>(['zhejiang', 'hangzhou', 'xihu'])
 const hoverValue = ref<CascaderProps['value']>([])
 const disabledOptionValue = ref<CascaderProps['value']>([])
 const changeOnSelectValue = ref<CascaderProps['value']>(['zhejiang'])
@@ -229,13 +230,20 @@ const sizeValue = ref<CascaderProps['value']>(['zhejiang', 'hangzhou', 'xihu'])
 const displayRenderValue = ref<CascaderProps['value']>(['zhejiang', 'hangzhou', 'xihu'])
 const searchValue = ref<CascaderProps['value']>([])
 const fieldNameValue = ref<CascaderProps['value']>(['1', '11', '111'])
-const suffixValue = ref<CascaderProps['value']>([])
+const suffixSlotValue = ref<CascaderProps['value']>([])
+const suffixIconValue = ref<CascaderProps['value']>([])
 const disabledValue = ref<CascaderProps['value']>(['zhejiang', 'ningbo', 'yinzhou'])
 const clearValue = ref<CascaderProps['value']>(['jiangsu', 'nanjing', 'zhonghuamen'])
-const emptyValue = ref<CascaderProps['value']>([])
-const statusValue = ref<CascaderProps['value']>([])
+const emptyOptionsValue = ref<CascaderProps['value']>([])
+const emptyFallbackValue = ref<CascaderProps['value']>([])
+const emptySearchValue = ref<CascaderProps['value']>([])
+const statusErrorValue = ref<CascaderProps['value']>([])
+const statusWarningValue = ref<CascaderProps['value']>([])
+const statusBorderlessValue = ref<CascaderProps['value']>([])
 const open = ref(false)
 const controlledValue = ref<CascaderProps['value']>([])
+const panelHeightSmallValue = ref<CascaderProps['value']>([])
+const panelHeightLargeValue = ref<CascaderProps['value']>([])
 function onChange(values: (string | number)[], selectedOptions: CascaderOption[]) {
   console.log('values', values)
   console.log('selectedOptions', selectedOptions)
@@ -255,7 +263,15 @@ const tagRenderValue = ref<CascaderProps['value']>([
   ['jiangsu', 'nanjing', 'zhonghuamen']
 ])
 // 最大 tag 数：取 6 条不同省份的末级（互不折叠），max-tag-count 才能折叠出剩余项
-const maxTagValue = ref<CascaderProps['value']>([
+const maxTagCountValue = ref<CascaderProps['value']>([
+  ['zhejiang', 'hangzhou', 'xihu'],
+  ['jiangsu', 'nanjing', 'zhonghuamen'],
+  ['beijing', 'beijingshi', 'dongcheng'],
+  ['shanghai', 'shanghaishi', 'huangpu'],
+  ['guangdong', 'guangzhou', 'tianhe'],
+  ['sichuan', 'chengdu', 'wuhou']
+])
+const maxTagResponsiveValue = ref<CascaderProps['value']>([
   ['zhejiang', 'hangzhou', 'xihu'],
   ['jiangsu', 'nanjing', 'zhonghuamen'],
   ['beijing', 'beijingshi', 'dongcheng'],
@@ -293,6 +309,7 @@ const lazyOptions = ref<CascaderOption[]>([
   { value: 'zhejiang', label: '浙江', isLeaf: false },
   { value: 'jiangsu', label: '江苏', isLeaf: false }
 ])
+const lazyValue = ref<CascaderProps['value']>([])
 function loadLazyData(selectedOptions: CascaderOption[]) {
   const target = selectedOptions[selectedOptions.length - 1]
   if (!target) return
@@ -353,8 +370,8 @@ function onReadCheckedData() {
     <h2 class="mt30 mb10">可以自定义显示</h2>
     <p class="mb10">默认插槽替换整个触发器，选中结果由外部展示</p>
     <span>
-      {{ basicValue?.length ? '已选择' : '未选择' }} &nbsp;
-      <Cascader v-model:value="basicValue" placeholder="请选择" :options="options" @change="onChange">
+      {{ customTriggerValue?.length ? '已选择' : '未选择' }} &nbsp;
+      <Cascader v-model:value="customTriggerValue" placeholder="请选择" :options="options" @change="onChange">
         <a href="#" @click.prevent>切换城市</a>
       </Cascader>
     </span>
@@ -432,7 +449,7 @@ function onReadCheckedData() {
       <code>loading</code>
     </p>
     <Cascader
-      v-model:value="basicValue"
+      v-model:value="lazyValue"
       placeholder="请选择"
       :options="lazyOptions"
       :load-data="loadLazyData"
@@ -465,7 +482,7 @@ function onReadCheckedData() {
     <h2 class="mt30 mb10">后缀图标</h2>
     <p class="mb10">通过 <code>#suffixIcon</code> 插槽或 <code>suffixIcon</code> 属性替换默认箭头</p>
     <Space>
-      <Cascader v-model:value="suffixValue" placeholder="请选择" :options="options" @change="onChange">
+      <Cascader v-model:value="suffixSlotValue" placeholder="请选择" :options="options" @change="onChange">
         <template #suffixIcon>
           <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2" />
@@ -474,7 +491,7 @@ function onReadCheckedData() {
         </template>
       </Cascader>
       <Cascader
-        v-model:value="suffixValue"
+        v-model:value="suffixIconValue"
         placeholder="请选择"
         :options="options"
         suffix-icon="ab"
@@ -495,10 +512,10 @@ function onReadCheckedData() {
       >无选项或搜索无结果时展示 <code>Empty</code>，传 <code>notFoundContent: null</code> 时回落默认空态</p
     >
     <Space>
-      <Cascader v-model:value="emptyValue" placeholder="请选择" :options="[]" />
-      <Cascader v-model:value="emptyValue" placeholder="请选择" :options="[]" :not-found-content="null" />
+      <Cascader v-model:value="emptyOptionsValue" placeholder="请选择" :options="[]" />
+      <Cascader v-model:value="emptyFallbackValue" placeholder="请选择" :options="[]" :not-found-content="null" />
       <Cascader
-        v-model:value="emptyValue"
+        v-model:value="emptySearchValue"
         placeholder="请选择"
         :options="[{ value: '1', label: '浙江', children: [] }]"
         show-search
@@ -508,9 +525,9 @@ function onReadCheckedData() {
     <h2 class="mt30 mb10">自定义状态</h2>
     <p class="mb10">通过 <code>status</code> 设置校验状态，与 <code>Input</code> / <code>Select</code> 同一口径</p>
     <Space>
-      <Cascader v-model:value="statusValue" placeholder="请选择" :options="options" status="error" />
-      <Cascader v-model:value="statusValue" placeholder="请选择" :options="options" status="warning" />
-      <Cascader v-model:value="statusValue" placeholder="请选择" :options="options" :bordered="false" />
+      <Cascader v-model:value="statusErrorValue" placeholder="请选择" :options="options" status="error" />
+      <Cascader v-model:value="statusWarningValue" placeholder="请选择" :options="options" status="warning" />
+      <Cascader v-model:value="statusBorderlessValue" placeholder="请选择" :options="options" :bordered="false" />
     </Space>
 
     <h2 class="mt30 mb10">受控展开</h2>
@@ -573,7 +590,7 @@ function onReadCheckedData() {
     </p>
     <Space>
       <Cascader
-        v-model:value="maxTagValue"
+        v-model:value="maxTagCountValue"
         placeholder="请选择"
         :options="longOptions"
         multiple
@@ -581,7 +598,7 @@ function onReadCheckedData() {
         @change="onChange"
       />
       <Cascader
-        v-model:value="maxTagValue"
+        v-model:value="maxTagResponsiveValue"
         placeholder="请选择"
         :options="longOptions"
         multiple
@@ -619,8 +636,8 @@ function onReadCheckedData() {
     <h2 class="mt30 mb10">面板高度</h2>
     <p class="mb10">通过 <code>panelHeight</code> 调整每列高度，超出后列内滚动</p>
     <Space>
-      <Cascader v-model:value="basicValue" placeholder="请选择" :options="longOptions" :panel-height="120" />
-      <Cascader v-model:value="basicValue" placeholder="请选择" :options="longOptions" :panel-height="240" />
+      <Cascader v-model:value="panelHeightSmallValue" placeholder="请选择" :options="longOptions" :panel-height="120" />
+      <Cascader v-model:value="panelHeightLargeValue" placeholder="请选择" :options="longOptions" :panel-height="240" />
     </Space>
 
     <h2 class="mt30 mb10">长列表虚拟滚动</h2>
