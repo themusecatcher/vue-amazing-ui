@@ -41,6 +41,7 @@ function onHide() {
 }
 // 受控显示：由 open 驱动
 const controlledOpen = ref<boolean>(false)
+const openControlOpen = ref<boolean>(false)
 const destroyOpen = ref(false)
 // 锚点模式：锚点元素由使用方持有，传入 anchor 后以其为准（组件作锚点时取其根元素）
 const anchorRef = ref<InstanceType<typeof Button> | null>(null)
@@ -752,15 +753,23 @@ function onHide() {
 
 ## 受控显示
 
-_使用 `open` 属性控制浮层的显示与隐藏：传入即受控，内部触发（悬停 / 点击 / `Esc`）只经 `update:open` 上报，是否收起由该属性决定_
+_使用 `open` 属性控制浮层的显示与隐藏：传入即受控，内部触发（悬停 / 点击 / `Esc`）只经 `update:open` 上报，是否收起由该属性决定；`openControl` 为真时 `trigger: hover` 不再驱动显隐，显隐完全由 `open` 决定_
 
 <br/>
 
-<Space>
-  <Tooltip v-model:open="controlledOpen" tooltip="Vue Amazing UI">
-    <Button>Controlled: {{ controlledOpen }}</Button>
-  </Tooltip>
-  <Button type="primary" @click="controlledOpen = !controlledOpen">Toggle Open</Button>
+<Space vertical align="start" :gap="12">
+  <Space>
+    <Tooltip v-model:open="controlledOpen" tooltip="Vue Amazing UI">
+      <Button>Controlled: {{ controlledOpen }}</Button>
+    </Tooltip>
+    <Button type="primary" @click="controlledOpen = !controlledOpen">Toggle Open</Button>
+  </Space>
+  <Space>
+    <Tooltip v-model:open="openControlOpen" open-control tooltip="Hover won't open me">
+      <Button>Hover (openControl)</Button>
+    </Tooltip>
+    <Button type="primary" @click="openControlOpen = !openControlOpen">Toggle Open (openControl)</Button>
+  </Space>
 </Space>
 
 ::: details Show Code
@@ -770,13 +779,22 @@ _使用 `open` 属性控制浮层的显示与隐藏：传入即受控，内部�
 import { ref } from 'vue'
 import { Tooltip } from 'vue-amazing-ui'
 const controlledOpen = ref<boolean>(false)
+const openControlOpen = ref<boolean>(false)
 </script>
 <template>
-  <Space>
-    <Tooltip v-model:open="controlledOpen" tooltip="Vue Amazing UI">
-      <Button>Controlled: {{ controlledOpen }}</Button>
-    </Tooltip>
-    <Button type="primary" @click="controlledOpen = !controlledOpen">Toggle Open</Button>
+  <Space vertical align="start" :gap="12">
+    <Space>
+      <Tooltip v-model:open="controlledOpen" tooltip="Vue Amazing UI">
+        <Button>Controlled: {{ controlledOpen }}</Button>
+      </Tooltip>
+      <Button type="primary" @click="controlledOpen = !controlledOpen">Toggle Open</Button>
+    </Space>
+    <Space>
+      <Tooltip v-model:open="openControlOpen" open-control tooltip="Hover won't open me">
+        <Button>Hover (openControl)</Button>
+      </Tooltip>
+      <Button type="primary" @click="openControlOpen = !openControlOpen">Toggle Open (openControl)</Button>
+    </Space>
   </Space>
 </template>
 ```
@@ -897,7 +915,7 @@ const destroyOpen = ref(false)
 | show | 显示文字提示 | () => void |
 | hide | 隐藏文字提示 | () => void |
 | focusTrigger | 让焦点回到触发元素（关闭浮层后归还焦点） | () => void |
-| tooltipCardRef | 气泡卡片根元素引用（供判定焦点是否仍在面板内） | Ref<HTMLElement &#124; null> |
+| tooltipCardRef | 气泡卡片根元素（供判定焦点是否仍在面板内） | HTMLElement &#124; null |
 
 ## Events
 

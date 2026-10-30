@@ -9,7 +9,7 @@ import type { MountElement } from '../utils'
  */
 export interface TooltipProps {
   open?: boolean // (v-model) 文字提示是否显示；显式传入（含 false）即为受控：显隐以该值为准，内部触发只经 update:open / openChange 上报
-  openControl?: boolean // 只使用 open 属性控制显示隐藏，仅当 trigger: hover 时生效，此时移入移出将不会触发显示隐藏，全部由 open 属性控制
+  openControl?: boolean // 仅当 trigger: hover 时生效：移入移出不再驱动显隐、也不再上报 update:open，显隐全部由 open 决定
   content?: string // 展示的内容
   tooltip?: string // 文字提示内容
   maxWidth?: string | number // 文字提示最大宽度，单位 px
@@ -37,7 +37,7 @@ export interface TooltipProps {
   popupStyle?: CSSProperties // 设置浮层面板（定位盒）的样式，在皮肤变量与动画原点之后合并，可覆盖定位
   disabled?: boolean // 是否禁用文字提示，禁用后不响应任何触发
   trigger?: 'hover' | 'click' | 'focus' | 'contextmenu' // 文字提示触发方式
-  keyboard?: boolean // 是否支持按键操作 (enter 切换显示；esc 关闭)，仅当 trigger: 'click' 时生效
+  keyboard?: boolean // 是否支持 Enter 键切换显示，仅当 trigger: 'click' 时生效；Esc 关闭不受其控制（click / contextmenu 触发时始终可用）
   flip?: boolean // 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
   showDelay?: number // 文字提示显示的延迟时间，单位 ms，仅当 trigger: hover 时生效
   hideDelay?: number // 文字提示隐藏的延迟时间，单位 ms，仅当 trigger: hover 时生效

@@ -149,7 +149,8 @@ function onOpenChange(open: boolean): void {
   }
   restoreFocusToTrigger()
 }
-// 受控开合由父侧直接改 open 驱动，不经过 requestVisible（因而没有 openChange），单独兜两条路径
+// 受控开合由父侧直接改 open 驱动，不经过 requestVisible（因而没有 openChange），单独兜两条路径；
+// immediate 覆盖「初始即以 open: true 打开」：此时首次聚焦不发生在任何开合事件里
 watch(
   () => props.open,
   (open) => {
@@ -158,7 +159,8 @@ watch(
       return
     }
     if (open === false) restoreFocusToTrigger()
-  }
+  },
+  { immediate: true }
 )
 function onCancel(e: Event): void {
   emits('cancel', e)
