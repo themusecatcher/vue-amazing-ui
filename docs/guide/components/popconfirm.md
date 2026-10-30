@@ -40,7 +40,7 @@ const placement = ref('top')
   description="This will have other effects..."
   @ok="confirm"
   @cancel="cancel"
-  @openChange="openChange"
+  @open-change="openChange"
 >
   <Button type="danger">Delete Confirm</Button>
 </Popconfirm>
@@ -69,7 +69,7 @@ const openChange = (open: boolean) => {
     description="This will have other effects..."
     @ok="confirm"
     @cancel="cancel"
-    @openChange="openChange"
+    @open-change="openChange"
   >
     <Button type="danger">Delete Confirm</Button>
   </Popconfirm>
@@ -243,6 +243,50 @@ const placement = ref('top')
 
 :::
 
+## 箭头指向
+
+_设置 `arrowPointAtCenter` 后，箭头将指向目标元素中心，仅当 `placement` 为复合方向（如 `topLeft`）时生效_
+
+<br/>
+
+<Space>
+  <Popconfirm placement="topLeft" title="Are you sure ?" @ok="confirm" @cancel="cancel">
+    <Button type="primary">Align edge</Button>
+  </Popconfirm>
+  <Popconfirm placement="topLeft" arrow-point-at-center title="Are you sure ?" @ok="confirm" @cancel="cancel">
+    <Button type="primary">Arrow points to center</Button>
+  </Popconfirm>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { useMessage } from 'vue-amazing-ui'
+const message = useMessage()
+const confirm = (e: MouseEvent) => {
+  console.log('confirm', e)
+  message.success('Click on Yes')
+}
+const cancel = (e: MouseEvent) => {
+  console.log('cancel', e)
+  message.error('Click on No')
+}
+</script>
+<template>
+  <Space>
+    <Popconfirm placement="topLeft" title="Are you sure ?" @ok="confirm" @cancel="cancel">
+      <Button type="primary">Align edge</Button>
+    </Popconfirm>
+    <Popconfirm placement="topLeft" arrow-point-at-center title="Are you sure ?" @ok="confirm" @cancel="cancel">
+      <Button type="primary">Arrow points to center</Button>
+    </Popconfirm>
+  </Space>
+</template>
+```
+
+:::
+
 ## 自定义按钮
 
 <Space>
@@ -261,6 +305,17 @@ const placement = ref('top')
     :ok-props="{ ghost: true }"
     cancel-text="No"
     :cancel-props="{ type: 'danger', ghost: true }"
+    @ok="confirm"
+    @cancel="cancel"
+  >
+    <Button type="danger">Delete Confirm</Button>
+  </Popconfirm>
+  <Popconfirm
+    title="Are you sure ?"
+    ok-text="Yes"
+    ok-type="danger"
+    cancel-text="No"
+    cancel-type="dashed"
     @ok="confirm"
     @cancel="cancel"
   >
@@ -300,6 +355,17 @@ const cancel = (e: MouseEvent) => {
       :ok-props="{ ghost: true }"
       cancel-text="No"
       :cancel-props="{ type: 'danger', ghost: true }"
+      @ok="confirm"
+      @cancel="cancel"
+    >
+      <Button type="danger">Delete Confirm</Button>
+    </Popconfirm>
+    <Popconfirm
+      title="Are you sure ?"
+      ok-text="Yes"
+      ok-type="danger"
+      cancel-text="No"
+      cancel-type="dashed"
       @ok="confirm"
       @cancel="cancel"
     >
@@ -832,7 +898,7 @@ const cancel = (e: MouseEvent) => {
 
 <br/>
 
-> *更多使用方式请参考 [文字提示 Tooltip](./tooltip.md)*
+> _更多使用方式请参考 [文字提示 Tooltip](./tooltip.md)_
 
 ## APIs
 
@@ -855,45 +921,28 @@ const cancel = (e: MouseEvent) => {
 | okProps | 确认按钮 `props`，优先级高于 `okType`，参考 [Button Props](./button.md#button-props) | [ButtonProps](./button.md#button-props) | {} |
 | showCancel | 是否显示取消按钮 | boolean | true |
 
-#### 继承自 Tooltip 的属性
+### 与 Tooltip 的差异
 
-除上述自有属性外，`Popconfirm` 完整继承 [Tooltip Props](./tooltip.md#tooltip-props) —— 类型为 `PopconfirmProps`，即 `Omit<TooltipProps, …>` 后叠加自有字段，`<Popconfirm trigger="hover">` 这类写法与 `<Tooltip trigger="hover">` 等价。以下为高频项（默认值为 `Popconfirm` 的实际取值）：
+<br/>
 
-| 名称 | 说明 | 类型 | 默认值 |
-| :-- | :-- | :-- | :-- |
-| open <Tag color="cyan">v-model</Tag> | 确认框是否显示；显式传入（含 `false`）即为受控，显隐以该值为准，内部触发只经 `update:open` / `openChange` 上报（不传时由内部触发自管） | boolean | undefined |
-| openControl | 仅当 `trigger: hover` 时生效：移入移出连 `update:open` 都不再上报（显隐受控本身由是否传入 `open` 决定） | boolean | false |
-| placement | 确认框位置 | 'top' &#124; 'topLeft' &#124; 'topRight' &#124; 'bottom' &#124; 'bottomLeft' &#124; 'bottomRight' &#124; 'left' &#124; 'leftTop' &#124; 'leftBottom' &#124; 'right' &#124; 'rightTop' &#124; 'rightBottom' | 'top' |
-| arrow | 是否显示箭头 | boolean | true |
-| arrowPointAtCenter | 箭头是否指向目标元素中心，仅当 `placement` 为复合方向 (如 `topLeft`) 时生效 | boolean | false |
-| maxWidth | 确认框最大宽度，单位 `px` | string &#124; number | 'auto' |
-| bgColor | 确认框背景颜色，支持预设色或自定义色值 (如 `#f50` / `rgba`) | string | 'var(--va-bg-elevated-color)' |
-| popupClassName | 设置浮层面板（定位盒）的类名 | string | undefined |
-| popupStyle | 设置浮层面板（定位盒）的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| disabled | 禁用确认框，禁用后不响应任何触发 | boolean | false |
-| trigger | 触发方式（与 `Tooltip` 不同，默认点击触发；`click` 再次点击触发器收起，`click` / `contextmenu` 点击浮层之外收起） | 'hover' &#124; 'click' &#124; 'focus' &#124; 'contextmenu' | 'click' |
-| keyboard | 是否支持按键操作 (`enter` 切换显示)，仅当 `trigger: 'click'` 时生效；`esc` 关闭不受此属性控制，`trigger` 为 `click` / `contextmenu` 时始终可用 | boolean | true |
-| flip | 确认框被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true |
-| showDelay | 显示延迟时间，单位 `ms`，仅当 `trigger: hover` 时生效 | number | 100 |
-| hideDelay | 隐藏延迟时间，单位 `ms`，仅当 `trigger: hover` 时生效 | number | 100 |
-| destroyOnHide | 隐藏后是否卸载浮层 `DOM`：离开动画结束后卸载，再次显示时重新创建并重新定位 | boolean | false |
-| to | 浮层挂载的容器节点（同 [Tooltip `to`](./tooltip.md#tooltip-props)，不传时优先挂到最近的承载层内容容器） | string &#124; HTMLElement &#124; false | undefined |
-| zIndex | 浮层层级，优先级最高 | number | undefined |
-| transitionDuration | 确认框动画的过渡持续时间，单位 `ms` | number | 200 |
+`Popconfirm` 完整继承 [Tooltip Props](./tooltip.md#tooltip-props) 及对应的 `Events` / `Methods`（类型 `PopconfirmProps` 即 `Omit<TooltipProps, …>` 叠加自有字段），`<Popconfirm trigger="hover">` 这类写法与 `<Tooltip trigger="hover">` 等价。
 
-**未在此列出**的继承属性与 [Tooltip Props](./tooltip.md#tooltip-props) 完全一致，类型见 `TooltipProps`。
+下表只列与 `Tooltip` 不同的部分，其余属性、事件与方法见 [文字提示 Tooltip](./tooltip.md)：
 
-#### 特殊字段
-
-| 名称 | 说明 |
+| 名称 | 与 Tooltip 的差异 |
 | :-- | :-- |
-| tooltipStyle | 支持，作用于卡片容器（覆盖内置的 `padding` / 圆角） |
-| contentClass / contentStyle / tooltip | **不支持**（类型上已从 `PopconfirmProps` 剔除）。运行时传入仍会作为 `Tooltip` 属性透传并生效（`Omit` 只修正类型承诺，挡不住运行时）：`contentClass` / `contentStyle` 落在触发包裹层，`tooltip` 被 `#tooltip` 插槽覆盖 —— 均属未定义行为 |
-| content | 继承自 `Tooltip`（触发元素旁的内联文案），但确认框的 `#tooltip` 插槽恒定提供，故传入后不显示；请改用 `title` / `description` 或同名插槽 |
-| anchor | 支持。传入后不再渲染触发包裹层（默认插槽不渲染），需自行提供触发元素；`#tooltip` 卡片仍正常渲染 |
-| describedBy | 默认为 `false`（`Tooltip` 为 `true`）：确认框内容是待操作内容而非触发器的描述，关联后整块按钮文案都会被朗读 |
-| tooltipRole / tooltipLabelledby | 默认值为 `alertdialog` 与标题元素 `id`，无需设置；显式传入会覆盖，可能破坏对话框语义 |
-| title | 为 `Popconfirm` 自有属性（确认框标题） |
+| tooltipStyle | 作用于卡片容器，内置 `padding: 12px` / `border-radius: 8px` 与左对齐文案，可覆盖 |
+| tooltipClass | 可用，类名落在卡片容器上（与 `tooltipStyle` 同节点） |
+| contentClass / contentStyle | 不可用（类型上已从 `PopconfirmProps` 剔除），请改用 `titleStyle` / `descriptionStyle` 或对应插槽 |
+| tooltip | 不可用：卡片内容由本组件渲染，请改用 `title` / `description` 或同名插槽 |
+| content | 不可用：确认框内容由 `title` / `description` 提供，传入后不显示 |
+| trigger | 默认 `'click'`（`Tooltip` 为 `'hover'`）；`click` 再次点击触发器收起 |
+| keyboard | 默认 `true`（`Tooltip` 为 `false`） |
+| maxWidth | 默认 `'auto'`（`Tooltip` 为 `240`） |
+| bgColor | 默认 `var(--va-bg-elevated-color)`，与浮层底板同色（`Tooltip` 为 `var(--va-bg-spotlight-color)`） |
+| transitionDuration | 默认 `200`（`Tooltip` 为 `100`） |
+| tooltipRole / describedBy | 默认 `'alertdialog'` / `false`（`Tooltip` 为 `'tooltip'` / `true`）：面板是待操作内容而非触发器的描述，无需传入 |
+| anchor | 可用，但传入后不再渲染触发包裹层，触发元素需由使用方自行提供 |
 
 ## Slots
 

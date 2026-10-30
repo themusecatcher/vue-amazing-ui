@@ -78,6 +78,19 @@ const openControlOpen = ref(false)
     <Popconfirm :placement="placement" title="It's friendly reminder ..." @ok="confirm" @cancel="cancel">
       <Button type="primary">Adjust Placement</Button>
     </Popconfirm>
+    <h2 class="mt30 mb10">箭头指向</h2>
+    <p class="mb10">
+      设置 <code>arrowPointAtCenter</code> 后，箭头将指向目标元素中心，仅当 <code>placement</code> 为复合方向（如
+      <code>topLeft</code>）时生效
+    </p>
+    <Space>
+      <Popconfirm placement="topLeft" title="Are you sure ?" @ok="confirm" @cancel="cancel">
+        <Button type="primary">Align edge</Button>
+      </Popconfirm>
+      <Popconfirm placement="topLeft" arrow-point-at-center title="Are you sure ?" @ok="confirm" @cancel="cancel">
+        <Button type="primary">Arrow points to center</Button>
+      </Popconfirm>
+    </Space>
     <h2 class="mt30 mb10">自定义按钮</h2>
     <Space>
       <Popconfirm title="Are you sure ?" ok-text="Yes" cancel-text="No" @ok="confirm" @cancel="cancel">
@@ -89,6 +102,17 @@ const openControlOpen = ref(false)
         :ok-props="{ ghost: true }"
         cancel-text="No"
         :cancel-props="{ type: 'danger', ghost: true }"
+        @ok="confirm"
+        @cancel="cancel"
+      >
+        <Button type="danger">Delete Confirm</Button>
+      </Popconfirm>
+      <Popconfirm
+        title="Are you sure ?"
+        ok-text="Yes"
+        ok-type="danger"
+        cancel-text="No"
+        cancel-type="dashed"
         @ok="confirm"
         @cancel="cancel"
       >

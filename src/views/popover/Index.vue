@@ -56,6 +56,19 @@ const openControlOpen = ref(false)
       </template>
       <Button type="primary">Adjust Placement</Button>
     </Popover>
+    <h2 class="mt30 mb10">箭头指向</h2>
+    <p class="mb10">
+      设置 <code>arrowPointAtCenter</code> 后，箭头将指向目标元素中心，仅当 <code>placement</code> 为复合方向（如
+      <code>topLeft</code>）时生效
+    </p>
+    <Space>
+      <Popover placement="topLeft" title="Title" content="Vue Amazing UI">
+        <Button type="primary">Align edge</Button>
+      </Popover>
+      <Popover placement="topLeft" arrow-point-at-center title="Title" content="Vue Amazing UI">
+        <Button type="primary">Arrow points to center</Button>
+      </Popover>
+    </Space>
     <h2 class="mt30 mb10">不同的触发方式</h2>
     <Space>
       <Popover title="Hover Title">

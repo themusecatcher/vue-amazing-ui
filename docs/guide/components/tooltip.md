@@ -90,6 +90,8 @@ function openChange(open: boolean) {
 
 _气泡卡片用 `tooltipClass` / `tooltipStyle`，其外层定位面板用 `popupClassName` / `popupStyle`，层级用 `zIndex`_
 
+<br/>
+
 <Space gap="large">
   <Tooltip :max-width="360" bg-color="#fff" tooltip-class="custom-class">
     <template #tooltip>
@@ -461,6 +463,8 @@ const customColors = ['#f50', '#2db7f5', '#87d068', '#108ee9']
 ## 不同的触发方式
 
 _`click` 触发时再次点击触发器收起；`click` / `contextmenu` 触发时点击浮层之外或按 `esc` 关闭_
+
+<br/>
 
 <Space>
   <Tooltip>
