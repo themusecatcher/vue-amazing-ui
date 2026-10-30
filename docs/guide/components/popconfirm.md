@@ -891,6 +891,8 @@ const cancel = (e: MouseEvent) => {
 | contentClass / contentStyle / tooltip | **不支持**（类型上已从 `PopconfirmProps` 剔除）。运行时传入仍会作为 `Tooltip` 属性透传并生效（`Omit` 只修正类型承诺，挡不住运行时）：`contentClass` / `contentStyle` 落在触发包裹层，`tooltip` 被 `#tooltip` 插槽覆盖 —— 均属未定义行为 |
 | content | 继承自 `Tooltip`（触发元素旁的内联文案），但确认框的 `#tooltip` 插槽恒定提供，故传入后不显示；请改用 `title` / `description` 或同名插槽 |
 | anchor | 支持。传入后不再渲染触发包裹层（默认插槽不渲染），需自行提供触发元素；`#tooltip` 卡片仍正常渲染 |
+| describedBy | 默认为 `false`（`Tooltip` 为 `true`）：确认框内容是待操作内容而非触发器的描述，关联后整块按钮文案都会被朗读 |
+| tooltipRole / tooltipLabelledby | 默认值为 `alertdialog` 与标题元素 `id`，无需设置；显式传入会覆盖，可能破坏对话框语义 |
 | title | 为 `Popconfirm` 自有属性（确认框标题） |
 
 ## Slots
@@ -911,3 +913,4 @@ const cancel = (e: MouseEvent) => {
 | cancel | 点击取消的回调 | (e: Event) => void |
 | ok | 点击确认的回调 | (e: Event) => void |
 | openChange | 显示隐藏的回调 | (open: boolean) => void |
+| animationend | 显示隐藏动画结束时的回调 | (open: boolean) => void |

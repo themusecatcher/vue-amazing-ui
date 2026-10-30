@@ -107,6 +107,7 @@ _组件库不依赖浏览器全局对象即可完成 `setup`，可在 `Node` 环
 ```ts
 import { createSSRApp } from 'vue'
 import { renderToString } from 'vue/server-renderer'
+import App from './App.vue'
 
 const app = createSSRApp(App)
 const ssrContext: Record<string, unknown> = {}

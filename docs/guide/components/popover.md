@@ -446,3 +446,4 @@ _设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再�
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 | openChange | 显示隐藏的回调 | (open: boolean) => void |
+| animationend | 显示隐藏动画结束时的回调 | (open: boolean) => void |

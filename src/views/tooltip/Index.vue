@@ -29,8 +29,10 @@ function onShow() {
 function onHide() {
   tooltipRef.value?.hide()
 }
-// 受控显示：由 open 驱动
+// 受控显示：传入 open 即受控，显隐以该值为准
 const controlledOpen = ref<boolean>(false)
+// openControl：hover 不再驱动显隐，显隐只由 open 决定
+const openControlOpen = ref<boolean>(false)
 const destroyOpen = ref(false)
 // 锚点模式：锚点元素由使用方持有，传入 anchor 后以其为准（组件作锚点时取其根元素）
 const anchorRef = ref<InstanceType<typeof Button> | null>(null)
@@ -219,7 +221,10 @@ function gatingDisabled(): boolean {
       </Space>
     </Space>
     <h2 class="mt30 mb10">按键控制</h2>
-    <p class="mb10"><code>enter</code> 切换显示；<code>esc</code> 关闭，仅当 <code>trigger: 'click'</code> 时生效</p>
+    <p class="mb10">
+      <code>enter</code> 切换显示（需开启 <code>keyboard</code>）；<code>esc</code> 关闭在 <code>trigger</code> 为
+      <code>click</code> / <code>contextmenu</code> 时于触发器或气泡卡片上按下即可
+    </p>
     <Tooltip trigger="click" keyboard>
       <template #tooltip>Vue Amazing UI</template>
       <Button type="primary">Click Me</Button>
@@ -271,12 +276,24 @@ function gatingDisabled(): boolean {
       <Button @click="onHide">隐藏</Button>
     </Space>
     <h2 class="mt30 mb10">受控显示</h2>
-    <p class="mb10">使用 <code>open</code> 属性控制浮层的显示与隐藏</p>
-    <Space>
-      <Tooltip v-model:open="controlledOpen" tooltip="Vue Amazing UI">
-        <Button>Controlled: {{ controlledOpen }}</Button>
-      </Tooltip>
-      <Button type="primary" @click="controlledOpen = !controlledOpen">Toggle Open</Button>
+    <p class="mb10">
+      使用 <code>v-model:open</code> 控制显隐：传入即受控，内部触发（悬停 / 点击 / <code>Esc</code>）只经
+      <code>update:open</code> 上报；<code>openControl</code> 为真时
+      <code>trigger: hover</code> 不再驱动显隐，显隐完全由 <code>open</code> 决定
+    </p>
+    <Space vertical align="start" :gap="12">
+      <Space>
+        <Tooltip v-model:open="controlledOpen" tooltip="Vue Amazing UI">
+          <Button>Controlled: {{ controlledOpen }}</Button>
+        </Tooltip>
+        <Button type="primary" @click="controlledOpen = !controlledOpen">Toggle Open</Button>
+      </Space>
+      <Space>
+        <Tooltip v-model:open="openControlOpen" open-control tooltip="Hover won't open me">
+          <Button>Hover (openControl)</Button>
+        </Tooltip>
+        <Button type="primary" @click="openControlOpen = !openControlOpen">Toggle Open (openControl)</Button>
+      </Space>
     </Space>
     <h2 class="mt30 mb10">隐藏后卸载</h2>
     <p class="mb10">
