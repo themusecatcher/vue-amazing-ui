@@ -108,7 +108,7 @@ const monthRangePresets: NonNullable<DatePickerProps['presets']> = [
 const rangeValue = ref<[number, number] | null>(null)
 const sizeRangeValue = ref<[number, number] | null>(null)
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
-// 其余范围形态的提示文字按形态区分，与 antdv 语言包的口径一致（周 / 月 / 季 / 年各有独立文案）
+// 其余范围形态的提示文字按形态区分（周 / 月 / 季 / 年各有独立文案）
 const weekRangePlaceholder: [string, string] = ['开始周', '结束周']
 const monthRangePlaceholder: [string, string] = ['开始月份', '结束月份']
 const quarterRangePlaceholder: [string, string] = ['开始季度', '结束季度']
@@ -475,7 +475,7 @@ const monthRangeValue = ref<[number, number] | null>(null)
 const quarterRangeValue = ref<[number, number] | null>(null)
 const yearRangeValue = ref<[number, number] | null>(null)
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
-// 其余范围形态的提示文字按形态区分，与 antdv 语言包的口径一致（周 / 月 / 季 / 年各有独立文案）
+// 其余范围形态的提示文字按形态区分（周 / 月 / 季 / 年各有独立文案）
 const weekRangePlaceholder: [string, string] = ['开始周', '结束周']
 const monthRangePlaceholder: [string, string] = ['开始月份', '结束月份']
 const quarterRangePlaceholder: [string, string] = ['开始季度', '结束季度']
@@ -1147,7 +1147,7 @@ const presetRangeValue = ref<[number, number] | null>(null)
 const presetMonthRangeValue = ref<[number, number] | null>(null)
 const presetDateTimeRangeValue = ref<[number, number] | null>(null)
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
-// 月范围的提示文字按形态区分，与 antdv 语言包的口径一致
+// 月范围的提示文字按形态区分
 const monthRangePlaceholder: [string, string] = ['开始月份', '结束月份']
 /** 近 N 天区间：起点取 N 天前的零点、终点取当前时刻 */
 function recentDaysRange(days: number): [number, number] {
@@ -1641,7 +1641,7 @@ const borderlessMonthRangeValue = ref<[number, number] | null>(null)
 const borderlessQuarterRangeValue = ref<[number, number] | null>(null)
 const borderlessYearRangeValue = ref<[number, number] | null>(null)
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
-// 其余范围形态的提示文字按形态区分，与 antdv 语言包的口径一致（周 / 月 / 季 / 年各有独立文案）
+// 其余范围形态的提示文字按形态区分（周 / 月 / 季 / 年各有独立文案）
 const weekRangePlaceholder: [string, string] = ['开始周', '结束周']
 const monthRangePlaceholder: [string, string] = ['开始月份', '结束月份']
 const quarterRangePlaceholder: [string, string] = ['开始季度', '结束季度']

@@ -12,7 +12,7 @@ import { flushTransition } from './helpers'
  *
  * 覆盖三类「后续重构容易无声改坏」的行为：
  * 1. 配置式菜单各类型的渲染分支（普通 / 分割线 / 分组 / 禁用 / 危险 / 加载中 / 递归子菜单）；
- * 2. 触发语义与展开语义：hover 延迟、click 切换、contextmenu 点位锚定、外部点击 / esc 关闭、
+ * 2. 触发语义与展开语义：hover 延迟、click 切换、contextmenu 相对偏移锚定、外部点击 / esc 关闭、
  *    受控 open 不擅自收起、菜单项点击**不通知 openChange**；
  * 3. 浮层能力接线：`matchTriggerWidth`（等宽策略）、箭头（含 pointAtCenter 让位）、过渡配置透传、层级。
  *
@@ -316,7 +316,8 @@ describe('Dropdown · 触发语义', () => {
     await wrapper!.find('.dropdown-trigger').trigger('click')
     await flush()
 
-    document.body.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    // 外点判定挂在 mousedown，click 不再触发关闭
+    document.body.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
     await flush()
 
     expect(onOpenChange).toHaveBeenLastCalledWith(false)
@@ -365,19 +366,32 @@ describe('Dropdown · 触发语义', () => {
     expect(onOpenChange).toHaveBeenLastCalledWith(false)
   })
 
-  it('trigger 为 contextmenu 时以鼠标位置为锚点展开并阻止浏览器默认菜单', async () => {
+  it('trigger 为 contextmenu 时以「右键点相对触发器的偏移」为锚点，并随触发器实时重算', async () => {
     const onOpenChange = vi.fn()
     mountDropdown({ menus, trigger: 'contextmenu', onOpenChange })
     await flush()
 
-    const event = new MouseEvent('contextmenu', { clientX: 500, clientY: 300, bubbles: true, cancelable: true })
-    wrapper!.find('.dropdown-trigger').element.dispatchEvent(event)
+    const trigger = wrapper!.find('.dropdown-trigger').element as HTMLElement
+    // jsdom 无布局：桩出触发器矩形，右键点落在触发区内偏右下
+    const triggerRect = { left: 100, top: 200, right: 340, bottom: 400, width: 240, height: 200 }
+    const rectSpy = vi.spyOn(trigger, 'getBoundingClientRect').mockReturnValue(triggerRect as unknown as DOMRect)
+
+    const event = new MouseEvent('contextmenu', { clientX: 300, clientY: 350, bubbles: true, cancelable: true })
+    trigger.dispatchEvent(event)
     await flush()
 
     expect(event.defaultPrevented).toBe(true)
     expect(onOpenChange).toHaveBeenLastCalledWith(true)
-    // 点位锚定由内核的 point 承担（jsdom 无视口，不断言求解结果）
-    expect(wrapper!.findComponent(Popup).props('point')).toEqual({ x: 500, y: 300 })
+
+    const anchor = wrapper!.findComponent(Popup).props('virtualAnchor') as { getBoundingClientRect: () => DOMRect }
+    expect(anchor.getBoundingClientRect()).toMatchObject({ left: 300, top: 350, width: 0, height: 0 })
+
+    // 回归守护：触发器上移 300（页面 / 容器滚动），锚点矩形按触发器最新矩形重算；
+    // 旧实现记录鼠标视口坐标，滚动后仍停在 350，面板便与右键所指的内容脱钩
+    rectSpy.mockReturnValue({ ...triggerRect, top: -100, bottom: 100 } as unknown as DOMRect)
+    expect(anchor.getBoundingClientRect()).toMatchObject({ left: 300, top: 50 })
+
+    rectSpy.mockRestore()
   })
 
   it('esc 关闭浮层（click / contextmenu 触发）', async () => {

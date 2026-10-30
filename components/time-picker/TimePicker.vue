@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, useSlots, watch } from 'vue'
+import { computed, nextTick, ref, useSlots, watch } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Button from 'components/button'
 import Popup from 'components/popup'
@@ -31,7 +31,7 @@ import {
   type PickerValue
 } from 'components/picker'
 import type { FloatingPlacement, MountElement } from 'components/utils'
-import { FLOATING_LAYER_Z_INDEX, useSlotsExist } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, useContainerClose, useSlotsExist } from 'components/utils'
 /** 默认展示格式（24 小时制） */
 const DEFAULT_FORMAT = 'HH:mm:ss'
 /** 12 小时制下的默认展示格式：小时补零，与面板的小时列标签、头部文本同口径（均为两位的 `09`） */
@@ -394,35 +394,15 @@ const showRangeArrow = computed(() => {
 const popupOffset = computed(() => (isRange.value ? RANGE_POPUP_OFFSET : POPUP_OFFSET))
 /** 面板过渡：仅给 name，类名走 Vue 默认派生（-enter-from/-enter-active/…），缩放原点由 <Popup> 按方位写入 */
 const panelTransitionProps: TransitionProps = { name: 'timepicker-zoom' }
-let documentListenerAttached = false // 外部点击监听是否已注册，确保注册与移除一一对应
-function attachDocumentListener() {
-  if (documentListenerAttached || typeof document === 'undefined') return
-  document.addEventListener('click', handleDocumentClick, true)
-  documentListenerAttached = true
-}
-function detachDocumentListener() {
-  if (!documentListenerAttached || typeof document === 'undefined') return
-  document.removeEventListener('click', handleDocumentClick, true)
-  documentListenerAttached = false
-}
-// 点击触发器与面板内部都不关闭，其余位置视为外部点击
-function handleDocumentClick(event: MouseEvent) {
-  const target = event.target as Node | null
-  if (!target) return
-  if (wrapperRef.value?.contains(target) || popupRef.value?.panelRef?.contains(target)) return
-  requestOpen(false)
-}
 // 收起即丢弃草稿：未点「确定」的选择不生效
 watch(
   () => open.value,
   (next) => {
     if (next) {
-      attachDocumentListener()
       draftRange.value = rangeValue.value // 展开时以已提交区间为草稿起点
       activateSide(activeSide.value) // 展开即视为激活当前段：段由点击的输入框决定，不强制回到起点段
       return
     }
-    detachDocumentListener()
     draftValue.value = null
     draftRange.value = null
     keyboardPanelMode.value = false // 面板收起后不再保留上一次的键盘归属
@@ -430,7 +410,10 @@ watch(
   },
   { immediate: true }
 )
-onBeforeUnmount(detachDocumentListener)
+// 承载层（Modal / Drawer / Dialog / 外层浮层面板）关闭时收起：容器关闭只是 v-show 隐藏、不派发任何
+// 指针或焦点事件，面板会停在打开态并占着层级槽位，容器重开时以「仍打开」的样子出现。
+// 收起走同一个入口，草稿复位由上面的 open watcher 承担
+useContainerClose(() => requestOpen(false))
 function requestOpen(next: boolean) {
   if (fullyDisabled.value || open.value === next) return
   open.value = next
@@ -702,7 +685,9 @@ defineExpose({ focus, blur })
       :z-index="zIndex"
       :default-z-index="FLOATING_LAYER_Z_INDEX.select"
       :transition-props="panelTransitionProps"
+      close-on-outside-click
       @keydown.esc="onEscKeydown"
+      @outside-click="requestOpen(false)"
     >
       <PickerPanel class="timepicker-panel" show-footer :extra-footer="mergedExtraFooter">
         <TimePanel

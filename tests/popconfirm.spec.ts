@@ -3,6 +3,7 @@ import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Popconfirm from 'components/popconfirm'
 import Button from 'components/button'
+import Tooltip from 'components/tooltip'
 import { flushTransition } from './helpers'
 
 /**
@@ -133,6 +134,72 @@ describe('Popconfirm 落在 Popup 浮层链上', () => {
 })
 
 /**
+ * 无障碍语义与焦点管理
+ *
+ * 面板是「要求用户做决策」的气泡，不是描述性提示：
+ * - role=alertdialog，可访问名称由标题元素经 aria-labelledby 提供；
+ * - 触发器不再把整块面板作为描述（describedBy: false），否则按钮文案会被当描述朗读；
+ * - 面板 Teleport 到 body 末尾，不主动聚焦时 Tab 的下一个落点是触发器之后的 DOM，键盘用户到不了按钮，
+ *   故打开后聚焦「确定」、关闭后归还触发器（外部点击把焦点放到别处时不抢回）。
+ */
+describe('Popconfirm · 无障碍语义与焦点管理', () => {
+  it('面板 role 为 alertdialog，并以标题元素作为可访问名称', async () => {
+    mountPopconfirm({ title: '删除确认', description: '确定删除吗？' })
+    await flush()
+    await clickTrigger()
+
+    const panel = queryPanel() as HTMLElement
+    const card = panel.querySelector('.tooltip-card') as HTMLElement
+    const title = panel.querySelector('.popconfirm-title') as HTMLElement
+    expect(card.getAttribute('role')).toBe('alertdialog')
+    expect(title.id).toBeTruthy()
+    expect(card.getAttribute('aria-labelledby')).toBe(title.id)
+  })
+
+  it('触发器不再把面板内容当作描述关联', async () => {
+    mountPopconfirm({ title: '删除确认' })
+    await flush()
+    await clickTrigger()
+
+    const trigger = document.querySelector('.tooltip-content') as HTMLElement
+    expect(trigger.hasAttribute('aria-describedby')).toBe(false)
+  })
+
+  it('受控开合同样聚焦 / 归还（父侧改 open 不经过 openChange）', async () => {
+    mountPopconfirm({ title: '删除确认', open: false })
+    await flush()
+
+    await wrapper!.setProps({ open: true })
+    await flush()
+    const panel = queryPanel() as HTMLElement
+    const okBtn = panel.querySelectorAll('.popconfirm-btns .btn-wrap')[1] as HTMLElement
+    expect(document.activeElement).toBe(okBtn)
+
+    await wrapper!.setProps({ open: false })
+    await flush()
+    expect(document.activeElement).toBe(document.querySelector('.tooltip-content .btn'))
+  })
+
+  it('打开后焦点落在「确定」，关闭后归还触发器', async () => {
+    mountPopconfirm({ title: '删除确认' })
+    await flush()
+    await clickTrigger()
+
+    const panel = queryPanel() as HTMLElement
+    const buttons = panel.querySelectorAll('.popconfirm-btns .btn-wrap')
+    expect(buttons).toHaveLength(2)
+    const okBtn = buttons[1] as HTMLElement
+    expect(document.activeElement).toBe(okBtn)
+
+    okBtn.click()
+    await waitClosed(panel)
+
+    const triggerBtn = document.querySelector('.tooltip-content .btn') as HTMLElement
+    expect(document.activeElement).toBe(triggerBtn)
+  })
+})
+
+/**
  * `Popconfirm` 未声明 `destroyOnHide`，该属性依赖**两跳**属性透传
  * （`Popconfirm` → `Popover` → `Tooltip`）才能落到浮层宿主 —— 链路任一环被切断即失效，故用行为断言锁住。
  */
@@ -162,5 +229,61 @@ describe('Popconfirm · destroyOnHide 经两跳透传到浮层宿主', () => {
     expect(recreated.querySelector('.popconfirm-title')?.textContent).toBe('删除确认')
     expect(recreated.querySelector('.popconfirm-btns')).not.toBeNull()
     expect(recreated.classList.contains('va-popup-placement-top')).toBe(true)
+  })
+})
+
+/**
+ * `Popconfirm` 的 prop 契约改为 `extends Omit<TooltipProps, …>` 之后的守护：
+ *
+ * - 类型继承**不继承默认值**，默认值必须显式补：`trigger: 'click'` 漏写会让确认框从
+ *   「点击确认」静默退化为「悬停确认」（Tooltip 默认 hover）；`arrow` / `flip` 漏写会让
+ *   缺省的 `false` 覆盖 Tooltip 的 `true`（箭头消失、flip 失效）；
+ * - 声明 `open` 后 Vue 会丢弃 `onUpdate:open` 的 attrs 透传，必须自行声明 emits 并转发。
+ */
+describe('Popconfirm 继承 Tooltip 契约', () => {
+  const innerTooltip = () => wrapper?.findComponent(Tooltip)
+
+  it('4. trigger="hover" 可覆盖默认 click', async () => {
+    mountPopconfirm({ title: '删除确认', trigger: 'hover' })
+    await flush()
+
+    expect(innerTooltip()?.props('trigger')).toBe('hover')
+  })
+
+  it('5. v-model:open：点击触发后父组件收到 update:open', async () => {
+    mountPopconfirm({ title: '删除确认', open: false })
+    await flush()
+
+    await clickTrigger()
+
+    expect(wrapper?.emitted('update:open')).toEqual([[true]])
+    // `to` 的联合类型含 `false` → 运行时类型带 Boolean，缺省会被 Vue 转成 `false`（等价「就地渲染」，
+    // 浮层不再挂进承载层）。必须保持 undefined，宿主才会就近解析挂载点
+    expect(innerTooltip()?.props('to')).toBeUndefined()
+  })
+
+  it('6. 不变量：Tooltip 中「默认 true 的布尔 prop」必须全部被继承', async () => {
+    type PropOptions = Record<string, { default?: unknown }>
+    const tooltipProps = (Tooltip as unknown as { props: PropOptions }).props
+    const popconfirmProps = (Popconfirm as unknown as { props: PropOptions }).props
+    const omitted = ['tooltip', 'contentClass', 'contentStyle', 'tooltipStyle']
+    // 有意偏离：面板是 alertdialog，必须断开触发器的描述关联（其余默认 true 的项一律继承原值）
+    const intentionallyOverridden: Record<string, unknown> = { describedBy: false }
+    const checked: string[] = []
+
+    for (const key of Object.keys(tooltipProps)) {
+      if (omitted.includes(key)) continue
+      if (tooltipProps[key]?.default !== true) continue // 只守「默认 true 的布尔项」
+      expect(popconfirmProps[key]?.default, key).toBe(
+        key in intentionallyOverridden ? intentionallyOverridden[key] : true
+      )
+      checked.push(key)
+    }
+    // 守住用例本身：当前至少覆盖 arrow / flip，避免列表为空时「空跑通过」
+    expect(checked).toEqual(expect.arrayContaining(['arrow', 'flip']))
+    // 契约形状的运行时声明：继承到 Tooltip 字段、剔除名单项不出现、anchor 保留
+    expect('open' in popconfirmProps).toBe(true)
+    expect('anchor' in popconfirmProps).toBe(true)
+    expect('tooltip' in popconfirmProps).toBe(false)
   })
 })

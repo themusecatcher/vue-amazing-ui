@@ -28,13 +28,7 @@ import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Empty from 'components/empty'
 import Popup from 'components/popup'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
-import {
-  injectFromChain,
-  useResizeObserver,
-  useSlotsExist,
-  zIndexContainerOpenKey,
-  FLOATING_LAYER_Z_INDEX
-} from 'components/utils'
+import { useContainerClose, useResizeObserver, useSlotsExist, FLOATING_LAYER_Z_INDEX } from 'components/utils'
 import type { FloatingPlacement, MountElement } from 'components/utils'
 export interface Option {
   label?: string // 选项名
@@ -982,19 +976,15 @@ watchEffect(() => {
   const firstEnabled = displayOptions.value.find((option) => !option.disabled)
   hoverValue.value = firstEnabled ? (getOptionValue(firstEnabled) ?? null) : null
 })
-// 承载层（Modal / Drawer / Dialog）关闭时收起面板并归位聚焦态（容器不卸载内容，面板不会随容器消失）：
-// ① 面板停留打开态会占着层级槽位、被重新打开的容器反超（详见 z-index.ts 的 zIndexContainerOpenKey）；
-// ② 容器关闭不派发 blur，不显式归位则容器重开时仍残留聚焦描边与阴影
-const containerOpen = injectFromChain(zIndexContainerOpenKey) ?? null
-if (containerOpen) {
-  watch(containerOpen, (open) => {
-    if (!open) {
-      closePanel()
-      focused.value = false
-      hoverValue.value = null
-    }
-  })
-}
+// 承载层（Modal / Drawer / Dialog / 外层浮层面板）关闭时收起面板并归位聚焦态（容器不卸载内容，
+// 面板不会随容器消失）：① 面板停留打开态会占着层级槽位、被重新打开的容器反超；
+// ② 容器关闭不派发 blur，不显式归位则容器重开时仍残留聚焦描边与阴影。
+// 开合状态的订阅收敛在 useContainerClose（Popup 只提供状态，不自订阅）
+useContainerClose(() => {
+  closePanel()
+  focused.value = false
+  hoverValue.value = null
+})
 onMounted(() => {
   // autofocus：挂载后自动获取焦点
   if (props.autofocus && !props.disabled) {

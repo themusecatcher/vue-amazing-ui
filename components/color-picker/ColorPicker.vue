@@ -25,7 +25,7 @@ import { TinyColor, isReadable } from '@ctrl/tinycolor'
 import Popup from 'components/popup'
 import Input, { type InputProps } from 'components/input'
 import Button from 'components/button'
-import { FLOATING_LAYER_Z_INDEX, useSlotsExist, log } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, useContainerClose, useSlotsExist, log } from 'components/utils'
 import type { FloatingPlacement, MountElement } from 'components/utils'
 export type ColorPickerMode = 'rgb' | 'hsl' | 'hsv' | 'hex'
 export type ColorPickerAction = 'confirm' | 'clear'
@@ -579,7 +579,7 @@ function handleAlphaSliderPointerUp(): void {
   document.removeEventListener('pointercancel', handleAlphaSliderPointerUp)
   emits('complete', displayedValue.value)
 }
-// 卸载时统一清理拖拽残留的全局指针监听与外点监听
+// 卸载时统一清理拖拽残留的全局指针监听（外部点击监听由宿主自行移除）
 onBeforeUnmount(() => {
   document.removeEventListener('pointermove', handlePalletePointerMove)
   document.removeEventListener('pointerup', handlePalletePointerUp)
@@ -590,7 +590,6 @@ onBeforeUnmount(() => {
   document.removeEventListener('pointermove', handleAlphaSliderPointerMove)
   document.removeEventListener('pointerup', handleAlphaSliderPointerUp)
   document.removeEventListener('pointercancel', handleAlphaSliderPointerUp)
-  detachDocumentListener()
 })
 function getModeFromValue(color: string | undefined): ColorPickerMode | undefined {
   if (color === undefined) return undefined
@@ -614,6 +613,9 @@ function requestOpen(next: boolean): void {
   if (props.disabled || panelOpen.value === next) return
   open.value = next
 }
+// 承载层（Modal / Drawer / Dialog / 外层浮层面板）关闭时收起：容器关闭只是 v-show 隐藏、不派发任何
+// 指针或焦点事件，面板会停在打开态并占着层级槽位，容器重开时以「仍打开」的样子出现
+useContainerClose(() => requestOpen(false))
 // 外壳点击：内置触发器与自定义触发器内容都渲染在外壳内部，点击由外壳统一接管；
 // 面板就地渲染（to: false）时其 DOM 也在外壳内，故需排除面板内部的点击（拖拽指针 / 输入框聚焦等）
 function onWrapperClick(event: MouseEvent): void {
@@ -630,34 +632,12 @@ function onWrapperKeydown(event: KeyboardEvent): void {
   event.preventDefault()
   requestOpen(!panelOpen.value)
 }
-let documentListenerAttached = false // 外部点击监听是否已注册，确保注册与移除一一对应
-function attachDocumentListener(): void {
-  if (documentListenerAttached || typeof document === 'undefined') return
-  document.addEventListener('click', handleDocumentClick, true)
-  documentListenerAttached = true
-}
-function detachDocumentListener(): void {
-  if (!documentListenerAttached || typeof document === 'undefined') return
-  document.removeEventListener('click', handleDocumentClick, true)
-  documentListenerAttached = false
-}
-// 触发器与面板内部都不关闭，其余视为外部点击（capture 阶段：不与面板内的拖拽冒泡链耦合）
-function handleDocumentClick(event: MouseEvent): void {
-  const target = event.target as Node | null
-  if (!target) return
-  if (wrapperRef.value?.contains(target) || popupRef.value?.panelRef?.contains(target)) return
-  requestOpen(false)
-}
 watch(
   () => panelOpen.value,
   (next) => {
-    if (next) {
-      attachDocumentListener()
-      // 展开时把焦点交给面板容器：面板内的键盘操作（Esc 收起）与读屏器进入 dialog 语义都依赖它
-      nextTick(() => popupRef.value?.panelRef?.focus({ preventScroll: true }))
-      return
-    }
-    detachDocumentListener()
+    if (!next) return
+    // 展开时把焦点交给面板容器：面板内的键盘操作（Esc 收起）与读屏器进入 dialog 语义都依赖它
+    nextTick(() => popupRef.value?.panelRef?.focus({ preventScroll: true }))
   },
   { immediate: true }
 )
@@ -985,7 +965,9 @@ function onClear() {
       :default-z-index="FLOATING_LAYER_Z_INDEX.select"
       :destroy-on-hide="destroyOnHide"
       :transition-props="panelTransitionProps"
+      close-on-outside-click
       @keydown.esc="onEscKeydown"
+      @outside-click="requestOpen(false)"
     >
       <div
         class="color-picker-panel"

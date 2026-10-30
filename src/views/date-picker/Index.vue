@@ -97,7 +97,7 @@ const monthRangePresets: NonNullable<DatePickerProps['presets']> = [
 const rangeValue = ref<[number, number] | null>(null)
 const sizeRangeValue = ref<[number, number] | null>(null)
 const rangePlaceholder: [string, string] = ['开始日期', '结束日期']
-// 其余范围形态的提示文字按形态区分，与 antdv 语言包的口径一致（周 / 月 / 季 / 年各有独立文案）
+// 其余范围形态的提示文字按形态区分（周 / 月 / 季 / 年各有独立文案）
 const weekRangePlaceholder: [string, string] = ['开始周', '结束周']
 const monthRangePlaceholder: [string, string] = ['开始月份', '结束月份']
 const quarterRangePlaceholder: [string, string] = ['开始季度', '结束季度']

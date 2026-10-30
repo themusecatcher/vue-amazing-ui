@@ -435,6 +435,20 @@ const FOCUSABLE_SELECTOR = [
 ].join(',')
 
 /**
+ * 在容器（含自身）内找首个可聚焦元素
+ *
+ * 与 {@link trapTabFocus} 使用的 `getFocusableEls` 不同：**不判可见性**。用于「焦点送入面板 / 归还触发器」
+ * 这类目标已知可见的定点聚焦；也避免在无布局环境（jsdom 的 `getClientRects()` 恒为空）里取不到目标。
+ *
+ * @param container - 查询起点（包含自身）
+ * @returns 首个可聚焦元素；容器内没有则返回 null
+ */
+export function findFocusable(container: HTMLElement): HTMLElement | null {
+  if (container.matches(FOCUSABLE_SELECTOR)) return container
+  return container.querySelector<HTMLElement>(FOCUSABLE_SELECTOR)
+}
+
+/**
  * 取容器内当前可见的可聚焦元素
  *
  * 隐藏元素（如未展开的面板）不参与循环，避免 Tab 落到不可见元素上

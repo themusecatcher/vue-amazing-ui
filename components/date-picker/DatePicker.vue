@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, useSlots, watch } from 'vue'
+import { computed, nextTick, ref, useSlots, watch } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Popup from 'components/popup'
 import {
@@ -40,7 +40,7 @@ import {
   type StartDayOfWeek
 } from 'components/picker'
 import type { FloatingPlacement, MountElement } from 'components/utils'
-import { FLOATING_LAYER_Z_INDEX, useSlotsExist } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, useContainerClose, useSlotsExist } from 'components/utils'
 export interface Props {
   // 双向绑定
   formattedValue?: PickerFormattedValue // 字符串轨道值：父组件传入时以它为准（受控），随选择经 update 事件回写
@@ -466,36 +466,16 @@ const showRangeArrow = computed(() => {
 /** 面板过渡：仅给 name，类名走 Vue 默认派生（-enter-from/-enter-active/…）。展开 / 收起的缩放原点
     随**实际方位**取（见 `datepicker-zoom` 一节），过渡名因此与方位无关 —— 首帧方位未回填也不会取反向动效 */
 const panelTransitionProps: TransitionProps = { name: 'datepicker-zoom' }
-let documentListenerAttached = false // 外部点击监听是否已注册，确保注册与移除一一对应
-function attachDocumentListener() {
-  if (documentListenerAttached || typeof document === 'undefined') return
-  document.addEventListener('click', handleDocumentClick, true)
-  documentListenerAttached = true
-}
-function detachDocumentListener() {
-  if (!documentListenerAttached || typeof document === 'undefined') return
-  document.removeEventListener('click', handleDocumentClick, true)
-  documentListenerAttached = false
-}
-// 点击触发器与面板内部都不关闭，其余位置视为外部点击
-function handleDocumentClick(event: MouseEvent) {
-  const target = event.target as Node | null
-  if (!target) return
-  if (wrapperRef.value?.contains(target) || popupRef.value?.panelRef?.contains(target)) return
-  requestOpen(false)
-}
 watch(
   () => open.value,
   (next) => {
     if (next) {
-      attachDocumentListener()
       draftRange.value = rangeValue.value // 展开时以已提交区间为草稿起点
       // 展开即视为激活当前段：段由点击的输入框决定，不强制回到起点段，
       // 以免「点第二段却被拉回第一段」
       activateSide(activeSide.value)
       return
     }
-    detachDocumentListener()
     draftValue.value = null // 收起即丢弃草稿，未点「确定」的选择不生效
     draftRange.value = null
     resetActivatedSides() // 段激活记录只在本次展开期间有效
@@ -504,7 +484,10 @@ watch(
   },
   { immediate: true }
 )
-onBeforeUnmount(detachDocumentListener)
+// 承载层（Modal / Drawer / Dialog / 外层浮层面板）关闭时收起：容器关闭只是 v-show 隐藏、不派发任何
+// 指针或焦点事件，面板会停在打开态并占着层级槽位，容器重开时以「仍打开」的样子出现。
+// 收起走同一个入口，草稿复位由上面的 open watcher 承担
+useContainerClose(() => requestOpen(false))
 function requestOpen(next: boolean) {
   if (fullyDisabled.value || open.value === next) return
   open.value = next
@@ -898,7 +881,9 @@ defineExpose({ focus, blur })
       :z-index="zIndex"
       :default-z-index="FLOATING_LAYER_Z_INDEX.select"
       :transition-props="panelTransitionProps"
+      close-on-outside-click
       @keydown.esc="onEscKeydown"
+      @outside-click="requestOpen(false)"
     >
       <RangePanel
         v-if="isRange"

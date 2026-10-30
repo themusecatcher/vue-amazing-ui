@@ -3,7 +3,7 @@ import { ref, computed, watchEffect, watch, onMounted } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Popup from 'components/popup'
 import Scrollbar from 'components/scrollbar'
-import { injectFromChain, useSlotsExist, zIndexContainerOpenKey, FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import { useContainerClose, useSlotsExist, FLOATING_LAYER_Z_INDEX } from 'components/utils'
 import type { MountElement } from 'components/utils'
 export interface Option {
   disabled?: boolean // 是否禁用
@@ -233,21 +233,17 @@ const panelTransitionProps: TransitionProps = {
   leaveActiveClass: 'auto-complete-slide-leave auto-complete-slide-leave-active',
   leaveToClass: 'auto-complete-slide-leave auto-complete-slide-leave-active'
 }
-// 承载层（Modal / Drawer / Dialog）关闭时收起面板并归位聚焦态：容器不卸载内容，本面板也不会随容器消失 ——
-// ① 面板：停留在打开态会让它占着层级槽位，被「后出现者在上」重新打开的容器反超（落到遮罩之下），
-//    同时无谓抬高后续分配点（详见 z-index.ts 的 zIndexContainerOpenKey）
-// ② 聚焦态：容器关闭不派发 blur（focusTriggerAfterClose 归还焦点时也未必落到本 input 上），
-//    故须在此显式归位，否则容器重开时 `.auto-complete-focused` 的描边与阴影仍在
-const containerOpen = injectFromChain(zIndexContainerOpenKey) ?? null
-if (containerOpen) {
-  watch(containerOpen, (open) => {
-    if (!open) {
-      setPanelOpen(false)
-      focused.value = false
-      hoverValue.value = null
-    }
-  })
-}
+// 承载层（Modal / Drawer / Dialog / 外层浮层面板）关闭时收起面板并归位聚焦态：容器不卸载内容，
+// 本面板也不会随容器消失 —— ① 面板：停留在打开态会让它占着层级槽位，被「后出现者在上」重新打开的
+// 容器反超（落到遮罩之下），同时无谓抬高后续分配点；② 聚焦态：容器关闭不派发 blur
+// （focusTriggerAfterClose 归还焦点时也未必落到本 input 上），故须在此显式归位，
+// 否则容器重开时 `.auto-complete-focused` 的描边与阴影仍在。
+// 开合状态的订阅收敛在 useContainerClose（Popup 只提供状态，不自订阅）
+useContainerClose(() => {
+  setPanelOpen(false)
+  focused.value = false
+  hoverValue.value = null
+})
 watch(showOptions, (to) => {
   // 非受控模式下由内部状态变化上报开合事件；
   // 受控模式的事件由 setPanelOpen 在「用户请求变更」时派发（见下），此处必须跳过 ——

@@ -233,9 +233,10 @@ describe('AutoComplete 面板关闭时内嵌浮层收起', () => {
       props: { value: '', open: true, options: [{ label: 'apple', value: 1 }] },
       slots: {
         option: () => [
+          // 用内部触发（hover）打开：受控 open 不再由组件改写，无法用它构造「已打开」态
           h(
             Tooltip,
-            { tooltip: '选项提示', open: true },
+            { tooltip: '选项提示', showDelay: 0 },
             { default: () => h('span', { class: 'nested-tooltip-trigger' }, 'apple') }
           )
         ]
@@ -247,6 +248,10 @@ describe('AutoComplete 面板关闭时内嵌浮层收起', () => {
     const tooltipPanel = (): HTMLElement | null =>
       document.querySelector<HTMLElement>('.auto-complete-panel .va-popup-container .va-popup-panel')
     // 打开态：插槽内的 Tooltip 正常显示
+    ;(document.querySelector('.auto-complete-panel .tooltip-wrap') as HTMLElement).dispatchEvent(
+      new MouseEvent('mouseenter')
+    )
+    await flush()
     expect(tooltipPanel()?.style.display).not.toBe('none')
 
     await localWrapper.setProps({ open: false })
