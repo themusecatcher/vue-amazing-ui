@@ -90,7 +90,7 @@ function componentByDirFallback(dir) {
  *
  * 刻意不按 SFC 产物文件名（如 `*.vue2.js`）筛选：`preserveModules` 下同名 chunk 的编号后缀取决于
  * Rollup 创建模块的顺序（受 SFC 是否 scoped 等影响），同一份源码在不同组件上会落到 `X.vue.js` /
- * `X.vue2.js` / `X.vue3.js` 这类不同名字上 —— 按名筛选会让整个组件在图中消失（Menu 即此例）。
+ * `X.vue2.js` / `X2.vue.js` 这类不同名字上 —— 按名筛选会让整个组件在图中消失（Menu 即此例）。
  *
  * 必须排除 `style/`：该目录由 generate-style-entries 按手写依赖表生成，其 import 与表同源，
  * 收进图里会让「表 ⊆ 闭包」自证成立，掩盖真实的漏写/残留。
@@ -108,7 +108,7 @@ function collectChunks(dir) {
 /**
  * chunk 所属组件名：先按 chunk 文件名认，认不出再按「目录 → 组件」映射兜底
  *
- * - 文件名认得出（`Popup.vue2.js` → `Popup`、`DialogProvider.vue.js` → `DialogProvider`）：同目录的
+ * - 文件名认得出（`Popup.vue2.js` / `Popup2.vue.js` → `Popup`、`DialogProvider.vue.js` → `DialogProvider`）：同目录的
  *   Provider / 子组件各有自己的节点，不能一律按目录归并；
  * - 认不出（`Menu.vue.js` 这类 SFC 门面、`MenuNodes.js` / `useModal.js` 这类同目录支撑模块）：
  *   `preserveModules` 下 chunk 路径与源码路径同构，且该目录唯一归属一个组件时按目录归并 ——
@@ -117,7 +117,8 @@ function collectChunks(dir) {
  */
 function componentOfChunk(chunkFile) {
   const fileName = chunkFile.slice(chunkFile.lastIndexOf('/') + 1)
-  const namedByFile = fileName.replace(/\..*$/, '')
+  // 编号后缀位置随 Rollup 版本变化（`Popup.vue2.js` / `Popup2.vue.js`），剥离尾部编号后同归 Popup
+  const namedByFile = fileName.replace(/\..*$/, '').replace(/\d+$/, '')
   if (componentsMap[namedByFile] !== undefined) {
     return namedByFile
   }
@@ -301,7 +302,7 @@ function resolveBarrelExport(entryFile, exportedName, visited = new Set()) {
  * 目标组件解析顺序：
  *   1. 目录聚合入口（`<dir>/index.js`）按 import 的**具名符号**展开到实际源模块
  *      （`import { RadioGroup } from "../radio/index.js"` → `radio/radio-group/index.js` → RadioGroup）；
- *   2. 被引用文件名直接命中组件名（`PickerPanel.vue.js` → PickerPanel、`Popup.vue2.js` → Popup）；
+ *   2. 被引用文件名直接命中组件名（`PickerPanel.vue.js` → PickerPanel、`Popup.vue2.js` / `Popup2.vue.js` → Popup）；
  *   3. 否则按所在目录兜底（`../popup/index.js` → 目录 popup → Popup），见 `componentByDirFallback`。
  *
  * 起点按 chunk 归属组件汇总（见 `componentOfChunk`）。参与判定的说明符两类：
@@ -360,7 +361,11 @@ function buildGraph() {
       targetModules.add(targetModule)
     })
     targetModules.forEach((targetModule) => {
-      const namedByFile = targetModule.slice(targetModule.lastIndexOf('/') + 1).replace(/\..*$/, '')
+      // 同上：先剥离扩展名与尾部编号，`Popup.vue2.js` / `Popup2.vue.js` 都能命中组件名
+      const namedByFile = targetModule
+        .slice(targetModule.lastIndexOf('/') + 1)
+        .replace(/\..*$/, '')
+        .replace(/\d+$/, '')
       const targetComponent =
         componentsMap[namedByFile] !== undefined
           ? namedByFile
