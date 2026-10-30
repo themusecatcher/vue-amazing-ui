@@ -41,6 +41,13 @@ h1 {
 .mb30 {
   margin-bottom: 30px;
 }
+/* 演示用例标签：6 个演示页共 62 处复用；路由为懒加载，页面 <style> 随 chunk 异步注入，
+   放在某个页面里会导致「先访问哪个页面才决定有没有样式」，故与其它演示排版约定一起收口在此 */
+.demo-label {
+  color: var(--va-text-color-3);
+  font-size: 13px;
+  line-height: 22px;
+}
 .ml20 {
   margin-left: 20px;
 }

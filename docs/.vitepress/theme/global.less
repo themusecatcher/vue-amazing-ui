@@ -141,6 +141,15 @@
   position: relative;
   top: -1px;
 }
+/* 组件演示区的用例标签（如 `<span class="demo-label">默认面板</span>`）：弱于正文的辅助说明，
+   跟随明暗主题取次要文字色。它属于文档站的排版约定而非某个组件的演示样式 ——
+   6 个组件页共 78 处复用，且文档站会把各 md 的 <style> 合并成同一份 CSS，
+   故在此统一定义（单一来源），各页面样式块里不再重复 */
+.demo-label {
+  color: var(--vp-c-text-3);
+  font-size: 13px;
+  line-height: 22px;
+}
 /* 正文列表内的行内代码与 Tag 统一为同高同圆角的胶囊，避免一行出现两种胶囊样式 */
 .vp-doc li > code {
   display: inline-block;

@@ -276,9 +276,4 @@ const lineTypeOptions: { label: string; value: TimelineLineType }[] = [
 .label-strong {
   color: var(--va-error-color);
 }
-.demo-label {
-  color: var(--va-text-color-3);
-  font-size: 13px;
-  line-height: 22px;
-}
 </style>
