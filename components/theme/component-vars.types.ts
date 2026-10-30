@@ -30,6 +30,7 @@ export type ThemeComponentKey =
   | 'Button'
   | 'Calendar'
   | 'Carousel'
+  | 'Cascader'
   | 'Checkbox'
   | 'ColorPicker'
   | 'DatePicker'

@@ -14,6 +14,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-28">3.6.0</VersionDateTag>
+
+- 移除 [级联选择 Cascader](/guide/components/cascader.html) 的 `gap` / `height` / `maxDisplay` / `search` / `filter` 属性，`width` / `disabled` / `placeholder` 不再接受数组；`change` 第二参由文本数组改为选项数组
+- 重构 [级联选择 Cascader](/guide/components/cascader.html)：由三个并列 `Select` 改为单选择器 + 多列浮层面板，新增 `showSearch`（`filter` / `sort` / `limit` / `render`）、`expandTrigger`、`displayRender`、`panelHeight`、`status`、`bordered`、`open` / `searchValue` 受控与默认插槽自定义触发器
+- 新增 `theme.components.Cascader` 组件级主色，面板选中项底色与选择器描边可独立换色
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-10-29">3.5.0</VersionDateTag>
 
 - 重构 [选择器 Select](/guide/components/select.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html) 的下拉面板：外层包裹节点 `.select-panel-wrapper` / `.auto-complete-panel-wrapper` 移除，改由公共浮层容器承载（面板根 `select-panel-container` / `auto-complete-panel` 不变），依赖旧包裹节点的 `:deep()` 选择器改用 `popupClassName` / `dropdownMenuStyle` 或直接写面板根类名；贡献者文档同步浮层字体承接的适用范围

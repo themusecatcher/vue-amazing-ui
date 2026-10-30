@@ -548,6 +548,7 @@ export const THEME_COMPONENTS = [
   { key: 'Button', dir: 'button' },
   { key: 'Calendar', dir: 'calendar' },
   { key: 'Carousel', dir: 'carousel' },
+  { key: 'Cascader', dir: 'cascader' },
   { key: 'Checkbox', dir: 'checkbox' },
   { key: 'ColorPicker', dir: 'color-picker' },
   { key: 'DatePicker', dir: 'date-picker' },

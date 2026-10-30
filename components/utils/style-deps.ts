@@ -171,7 +171,7 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
   Calendar: ['RadioGroup', 'Radio', 'Select', 'Empty', 'Scrollbar', 'Popup'],
   Card: ['Skeleton'],
   Carousel: ['Spin'],
-  Cascader: ['Select', 'Empty', 'Scrollbar', 'Popup'],
+  Cascader: ['Empty', 'Scrollbar', 'Popup'],
   CheckboxGroup: ['Checkbox'],
   Collapse: ['Button'],
   DatePicker: [
