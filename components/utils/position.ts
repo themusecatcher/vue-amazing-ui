@@ -257,7 +257,7 @@ export interface FloatingVirtualAnchor {
   getBoundingClientRect(): FloatingRectLike
 }
 
-/** x-y 手动定位点（视口坐标，通常取自鼠标事件 clientX / clientY） */
+/** x-y 手动定位点（视口坐标，通常取自鼠标事件 clientX / clientY；需要随内容滚动时改用虚拟锚点） */
 export interface FloatingPoint {
   x: number
   y: number
@@ -905,9 +905,15 @@ const MAX_HIDDEN_RETRIES = 2
 export interface UseFloatingOptions {
   /** 锚点元素（DOM 锚点；与 virtualAnchor / point 三选一，优先级见 {@link useFloating}） */
   anchor?: MaybeRefOrGetter<HTMLElement | null>
-  /** 虚拟锚点（非 DOM 元素的自定义矩形，用于 Tour / Table 列筛选等「指向任意位置」场景） */
+  /**
+   * 虚拟锚点（非 DOM 元素的自定义矩形，用于「指向任意位置」场景：鼠标定点弹出、Tour 引导框等）
+   *
+   * 每次求解都会重新调用 `getBoundingClientRect()`，故可在其中按当时的 DOM 实时折算位置
+   * （如「触发器当前矩形 + 记录时的相对偏移」）——滚动 / 布局变化后浮层仍落在原处。
+   * 需要「随内容滚动」的定点弹层请用本项，而不是 {@link point}。
+   */
   virtualAnchor?: MaybeRefOrGetter<FloatingVirtualAnchor | null>
-  /** x-y 手动定位（视口坐标，用于跟随鼠标 / 鼠标事件定点弹出） */
+  /** x-y 手动定位（视口坐标，用于跟随鼠标 / 鼠标事件定点弹出；不随页面滚动移动） */
   point?: MaybeRefOrGetter<FloatingPoint | null>
   /**
    * 浮层的定位参照容器

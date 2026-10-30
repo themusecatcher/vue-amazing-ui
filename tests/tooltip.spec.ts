@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { nextTick } from 'vue'
+import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Tooltip from 'components/tooltip'
 
@@ -74,16 +74,39 @@ afterEach(() => {
 })
 
 describe('Tooltip 行为回归', () => {
-  it('受控 open 应立即显示，不套用 hover 的 showDelay', async () => {
+  it('受控 open 应立即显示，不套用 hover 的 showDelay，且不额外回传事件', async () => {
     wrapper = mount(Tooltip, {
       ...mountOptions,
       props: { tooltip: 'hi', open: true, showDelay: 5000 }
     })
     await flush()
 
-    // 若误走 showDelay，5s 内不会有任何显示与事件
-    expect(wrapper.emitted('openChange')).toEqual([[true]])
+    // 若误走 showDelay，5s 内不会有任何显示
     expect(document.querySelector('.tooltip-card-container')).not.toBeNull()
+    // 受控：显隐由属性驱动，属性变化不再回传 update:open / openChange（只有内部触发才上报）
+    expect(wrapper.emitted('openChange')).toBeUndefined()
+    expect(wrapper.emitted('update:open')).toBeUndefined()
+  })
+
+  it('显式传入 open（含 false）即为受控：内部触发只上报，面板跟随属性', async () => {
+    wrapper = mount(Tooltip, {
+      ...mountOptions,
+      props: { tooltip: 'hi', trigger: 'click', open: true, to: false }
+    })
+    await flush()
+    const trigger = wrapper.find('.tooltip-content').element
+    const panel = (): HTMLElement | null => panelOf(wrapper)
+
+    trigger.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await flush()
+    // 父侧不响应 update:open ⇒ 属性未变，面板必须保持打开（不能由组件自行收起）
+    expect(wrapper.emitted('openChange')).toEqual([[false]])
+    expect(panel()?.style.display).not.toBe('none')
+
+    // 属性一变即生效，无需内部触发
+    await wrapper.setProps({ open: false })
+    await waitHidden(() => panelOf(wrapper))
+    expect(panel()?.style.display).toBe('none')
   })
 
   it('卡片带 role="tooltip"，且与触发器经 aria-describedby 关联', async () => {
@@ -101,6 +124,32 @@ describe('Tooltip 行为回归', () => {
     const cardId = card?.getAttribute('id')
     expect(cardId).toBeTruthy()
     expect(trigger.getAttribute('aria-describedby')).toBe(cardId)
+  })
+
+  it('tooltipRole / tooltipLabelledby 可改写面板语义（默认仍是 tooltip）', async () => {
+    wrapper = mount(Tooltip, {
+      ...mountOptions,
+      props: { tooltip: 'hi', open: true, tooltipRole: 'dialog', tooltipLabelledby: 'va-panel-title' }
+    })
+    await flush()
+
+    const card = document.querySelector('.tooltip-card') as HTMLElement | null
+    expect(card?.getAttribute('role')).toBe('dialog')
+    expect(card?.getAttribute('aria-labelledby')).toBe('va-panel-title')
+  })
+
+  it('describedBy 为 false 时断开触发器的描述关联（对话框类面板不把内容当描述）', async () => {
+    wrapper = mount(Tooltip, {
+      ...mountOptions,
+      props: { tooltip: 'hi', open: true, describedBy: false }
+    })
+    await flush()
+
+    const card = document.querySelector('.tooltip-card') as HTMLElement | null
+    const trigger = wrapper.find('.tooltip-content').element
+    // 面板仍然可见、仍有 id，只是不再回指为触发器的描述
+    expect(card?.getAttribute('id')).toBeTruthy()
+    expect(trigger.hasAttribute('aria-describedby')).toBe(false)
   })
 
   it('仅响应卡片容器自身的 animationend，忽略子节点嵌套动画冒泡', async () => {
@@ -216,5 +265,69 @@ describe('Tooltip · destroyOnHide（透传给浮层宿主）', () => {
     const trigger = wrapper.find('.tooltip-content').element
     expect(card?.getAttribute('id')).toBeTruthy()
     expect(trigger.getAttribute('aria-describedby')).toBe(card?.getAttribute('id'))
+  })
+})
+
+describe('Tooltip · keyboard 的 enter 切换', () => {
+  it('Enter 切换显示后，浏览器补发的 click 不再把显示态切回', async () => {
+    wrapper = mount(Tooltip, {
+      ...mountOptions,
+      props: { tooltip: 'hi', trigger: 'click', keyboard: true, to: false }
+    })
+    await flush()
+    const trigger = wrapper.find('.tooltip-content').element
+
+    trigger.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
+    // 键盘激活可聚焦子元素时，浏览器会在 keydown 之后补发一次 click（同一操作，不应再切换一次）
+    trigger.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await flush()
+    expect(wrapper.emitted('openChange')).toEqual([[true]])
+
+    // 标记只在同拍内有效：随后的真实点击照常关闭
+    trigger.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await flush()
+    expect(wrapper.emitted('openChange')).toEqual([[true], [false]])
+  })
+})
+
+/**
+ * 多根默认插槽的触发范围
+ *
+ * 定位锚点取插槽内容的**首个元素**（同一元素兼作宿主的「外点排除」范围），而显式切换的落点是
+ * 整个 `.tooltip-content` 包裹层 —— 两者不一致的区域（首个元素之外、包裹层之内）依赖一个隐性约束
+ * 才不会「先判外点关掉、再由 toggle 打开」：外点关闭必须是**异步**的（走 `onHide` 的 delay 0 定时器），
+ * 且 toggle 先 `clearTimers()` 再落定。若把外部点击改成同步收起，本用例会立刻变红。
+ */
+describe('Tooltip · 多根插槽的触发范围', () => {
+  it('点击首个元素之外的触发器区域只切换一次，不出现「关了又开」', async () => {
+    wrapper = mount(Tooltip, {
+      ...mountOptions,
+      props: { tooltip: 'hi', trigger: 'click', to: false },
+      slots: { default: () => [h('span', { class: 'first' }, 'a'), h('span', { class: 'second' }, 'b')] }
+    })
+    await flush()
+
+    const first = wrapper.element.querySelector('.first') as HTMLElement
+    const second = wrapper.element.querySelector('.second') as HTMLElement
+    expect(first).not.toBeNull()
+    expect(second).not.toBeNull()
+
+    first.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await flush()
+    expect(wrapper.emitted('openChange')).toEqual([[true]])
+    expect(panelOf(wrapper)?.style.display).not.toBe('none')
+
+    second.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await flush()
+    await waitHidden(() => panelOf(wrapper))
+    // 只发一次 false：外点上报与显式切换在同一拍收敛，没有「关了又开」的中间态
+    expect(wrapper.emitted('openChange')).toEqual([[true], [false]])
+    expect(panelOf(wrapper)?.style.display).toBe('none')
+
+    // 收起后再点同一处仍是一次切换（重新打开）
+    second.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await flush()
+    expect(wrapper.emitted('openChange')).toEqual([[true], [false], [true]])
+    expect(panelOf(wrapper)?.style.display).not.toBe('none')
   })
 })

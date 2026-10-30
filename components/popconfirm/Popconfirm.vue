@@ -1,16 +1,35 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, getCurrentInstance, nextTick, watch } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Tooltip from 'components/tooltip'
 import Button, { type ButtonProps } from 'components/button'
 import { useSlotsExist } from 'components/utils'
+// 基类型必须是相对路径的纯 .ts：compiler-sfc 解析 extends 基类型时不认别名，也不认 .vue
+import type { TooltipProps } from '../tooltip/types'
+import { TOOLTIP_INHERITED_DEFAULTS } from '../tooltip/types'
 
-export interface Props {
+/**
+ * 弹出确认：Tooltip 的对话框皮肤（标题 + 描述 + 取消 / 确定）
+ *
+ * 契约：面板语义为 `alertdialog`，打开聚焦「确定」、关闭归还焦点；其余能力继承 Tooltip
+ */
+// 排除名单独立成类型：Omit 的 K 约束是 keyof any，拼错会静默漏剔除，
+// 用 AssertKeys 补上 key 存在性校验（pnpm type-check 会拦住）
+type OmittedTooltipKeys = 'tooltip' | 'contentClass' | 'contentStyle' | 'tooltipStyle'
+type AssertKeys<T extends keyof TooltipProps> = T
+type _OmittedKeysExist = AssertKeys<OmittedTooltipKeys>
+
+/**
+ * 与 Popover 同构：继承 Tooltip 契约，再由 rest 全量下发给内层 Tooltip，
+ * 保证 `<Popconfirm trigger="hover">` 这类属性直接写在组件上的用法继续成立。
+ *
+ * `keyboard` 不再本地重声明，直接沿用继承来的类型（默认值仍为 true，见 withDefaults）。
+ */
+export interface Props extends Omit<TooltipProps, OmittedTooltipKeys> {
   title?: string // 弹出确认框的标题
   titleStyle?: CSSProperties // 设置标题的样式
   description?: string // 弹出确认框的内容描述
   descriptionStyle?: CSSProperties // 设置内容描述的样式
-  keyboard?: boolean // 是否支持按键操作 (enter 切换显示；esc 关闭)
   tooltipStyle?: CSSProperties // 设置弹出提示的样式
   icon?: 'success' | 'info' | 'warning' | 'danger' | VNode | (() => VNode) // 自定义 Icon 图标；插槽形态请用 #icon
   iconStyle?: CSSProperties // 设置 Icon 图标的样式，一般不需要设置，主要用于自定义 Icon 图标时
@@ -33,11 +52,27 @@ export interface PopconfirmSlots {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  // 默认值为 true 的布尔项必须显式继承：缺省会被 Vue 强转成 false 并覆盖 Tooltip 的默认值
+  ...TOOLTIP_INHERITED_DEFAULTS,
+  // 必须显式给默认值：Tooltip 默认 hover，漏写会让「点击确认」静默退化为「悬停确认」
+  trigger: 'click',
+  keyboard: true,
+  // 确认框是「要求用户做决策」的面板：role 用 alertdialog（气泡内、无遮罩，故不设 aria-modal），
+  // 可访问名称由标题元素经 aria-labelledby 提供；同时断开触发器的 aria-describedby ——
+  // 否则整块按钮文案都会被当成触发器的描述朗读，而面板内容是待操作内容而非说明
+  tooltipRole: 'alertdialog',
+  describedBy: false,
+  maxWidth: 'auto',
+  bgColor: 'var(--va-bg-elevated-color)', // 必须是 CSS 变量，硬编码会失去换肤能力
+  transitionDuration: 200,
+  // `to` 的联合类型含 `false`，运行时类型因此带 Boolean —— 缺省时 Vue 会把它转成 `false`，
+  // 下发给 Tooltip 后等价于「就地渲染」，浮层不再挂进承载层（Modal / Select 面板）内。
+  // 必须显式给 `undefined`，Vue 才不会对该 boolean 型 prop 做缺省转换
+  to: undefined,
   title: undefined,
   titleStyle: () => ({}),
   description: undefined,
   descriptionStyle: () => ({}),
-  keyboard: true,
   tooltipStyle: () => ({}),
   icon: 'warning',
   iconStyle: () => ({}),
@@ -49,13 +84,82 @@ const props = withDefaults(defineProps<Props>(), {
   okProps: () => ({}),
   showCancel: true
 })
+// 声明 open 后 Vue 会丢弃 onUpdate:open 的 attrs 透传（runtime-core filterModelListeners），
+// 故必须自行声明 emits 并在模板转发，否则 v-model:open 静默失效
+const emits = defineEmits(['update:open', 'openChange', 'animationend', 'cancel', 'ok'])
 defineSlots<PopconfirmSlots>()
+// 必须用 computed 包裹：直接解构 props 会丢响应性，rest 变成一次性快照。
+// 下方解构出的自有字段仅用于「从 rest 中剔除」，否则会作为 DOM 属性落到触发包裹层
+const tooltipBindings = computed(() => {
+  const {
+    title,
+    titleStyle,
+    description,
+    descriptionStyle,
+    tooltipStyle,
+    icon,
+    iconStyle,
+    cancelText,
+    cancelType,
+    cancelProps,
+    okText,
+    okType,
+    okProps,
+    showCancel,
+    ...rest
+  } = props
+  return rest
+})
 const tooltipRef = ref<InstanceType<typeof Tooltip> | null>(null) // Tooltip 组件模板引用
-const emits = defineEmits(['cancel', 'ok'])
 const slotsExist = useSlotsExist(['description'])
 const showDesc = computed(() => {
   return slotsExist.description || props.description
 })
+// 面板的可访问名称：确认框标题既可来自 title prop 也可来自 #title 插槽，故 id 必须由组件自己生成，
+// 由 aria-labelledby（落在带 role 的 .tooltip-card 上）指向标题元素
+const titleId = `va-popconfirm-title-${getCurrentInstance()?.uid ?? 0}`
+const okButtonRef = ref<InstanceType<typeof Button> | null>(null)
+// 焦点是否由本组件送入面板：为真才在关闭时归还，避免把用户点到别处的焦点抢回来
+let focusInsidePending = false
+// 打开时把焦点送进「确定」：面板 Teleport 到 body 末尾，不主动聚焦时 Tab 的下一个落点是触发器
+// 之后的 DOM，键盘用户根本到不了面板里的按钮。仅 click 触发聚焦 —— hover 打开时抢焦点会打断输入
+function focusPanelOk(): void {
+  if (props.trigger !== 'click') return
+  nextTick(() => {
+    const okEl = okButtonRef.value?.$el as HTMLElement | null
+    if (!okEl) return
+    okEl.focus({ preventScroll: true })
+    focusInsidePending = true
+  })
+}
+// 关闭后归还焦点：仅当焦点仍在面板内（或已落到 body）时归还，用户点到别处则不抢回来
+function restoreFocusToTrigger(): void {
+  if (!focusInsidePending) return
+  focusInsidePending = false
+  const card = tooltipRef.value?.tooltipCardRef ?? null
+  const active = document.activeElement as HTMLElement | null
+  if (active && active !== document.body && !card?.contains(active)) return
+  tooltipRef.value?.focusTrigger()
+}
+function onOpenChange(open: boolean): void {
+  emits('openChange', open)
+  if (open) {
+    focusPanelOk()
+    return
+  }
+  restoreFocusToTrigger()
+}
+// 受控开合由父侧直接改 open 驱动，不经过 requestVisible（因而没有 openChange），单独兜两条路径
+watch(
+  () => props.open,
+  (open) => {
+    if (open === true) {
+      focusPanelOk()
+      return
+    }
+    if (open === false) restoreFocusToTrigger()
+  }
+)
 function onCancel(e: Event): void {
   emits('cancel', e)
   tooltipRef.value?.hide()
@@ -68,17 +172,17 @@ function onOk(e: Event): void {
 <template>
   <Tooltip
     ref="tooltipRef"
-    max-width="auto"
-    bg-color="var(--va-bg-elevated-color)"
+    v-bind="tooltipBindings"
     :tooltip-style="{
       padding: '12px',
       borderRadius: '8px',
       textAlign: 'start',
       ...tooltipStyle
     }"
-    trigger="click"
-    :keyboard="keyboard"
-    :transition-duration="200"
+    :tooltip-labelledby="titleId"
+    @update:open="emits('update:open', $event)"
+    @open-change="onOpenChange"
+    @animationend="emits('animationend', $event)"
   >
     <template #tooltip>
       <div class="popconfirm-wrap">
@@ -147,7 +251,7 @@ function onOk(e: Event): void {
             <component v-else-if="icon" :is="icon" />
           </slot>
         </span>
-        <div class="popconfirm-title" :class="{ 'title-font-weight': showDesc }" :style="titleStyle">
+        <div :id="titleId" class="popconfirm-title" :class="{ 'title-font-weight': showDesc }" :style="titleStyle">
           <slot name="title">{{ title }}</slot>
         </div>
       </div>
@@ -158,7 +262,7 @@ function onOk(e: Event): void {
         <Button v-if="showCancel" size="small" :type="cancelType" @click="onCancel" v-bind="cancelProps">
           <slot name="cancelText">{{ cancelText }}</slot>
         </Button>
-        <Button size="small" :type="okType" @click="onOk" v-bind="okProps">
+        <Button ref="okButtonRef" size="small" :type="okType" @click="onOk" v-bind="okProps">
           <slot name="okText">{{ okText }}</slot>
         </Button>
       </div>

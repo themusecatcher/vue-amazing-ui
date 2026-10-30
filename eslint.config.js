@@ -75,8 +75,14 @@ export default defineConfigWithVueTs(
         'error',
         {
           patterns: [
-            // 跨目录相对文件（`../<dir>/<文件>`、`../../...`）；目录入口与父目录辅助模块不匹配
-            { regex: '^(?:\\.\\./)+(?!.*utils/(?:type|resolver|log)$)[^/]+/.+$', message: DEEP_IMPORT_MESSAGE },
+            // 跨目录相对文件（`../<dir>/<文件>`、`../../...`）；目录入口与父目录辅助模块不匹配。
+            // 例外 `../tooltip/types`：Popover / Popconfirm 用 `extends` 继承 Tooltip 契约，
+            // 而 compiler-sfc 解析 `extends` 基类型时只认相对路径的 .ts（别名 / .vue 直接编译失败），
+            // 故该文件必须相对引入，不能改走目录入口
+            {
+              regex: '^(?:\\.\\./)+(?!.*(?:utils/(?:type|resolver|log)|tooltip/types)$)[^/]+/.+$',
+              message: DEEP_IMPORT_MESSAGE
+            },
             // 同目录子目录文件（`./<子目录>/<文件>`）；兄弟文件与子目录入口不匹配
             { regex: '^\\./(?!style/)(?!utils/(?:type|resolver|log)$)[^/]+/.+$', message: DEEP_IMPORT_MESSAGE },
             {

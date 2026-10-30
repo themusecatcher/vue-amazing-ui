@@ -2,6 +2,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Popover from 'components/popover'
+import Tooltip from 'components/tooltip'
 
 /**
  * 回归守护：Popover 未声明 `trigger` / `keyboard`（以及 `open`），
@@ -141,5 +142,78 @@ describe('Popover 落在 Popup 浮层链上', () => {
     const panel = queryPanel()
     expect(panel.querySelector('.tooltip-arrow')).toBeNull()
     expect(panel.classList.contains('tooltip-has-arrow')).toBe(false)
+  })
+})
+
+/**
+ * `Popover` 的 prop 契约改为 `extends Omit<TooltipProps, …>` 之后的两条硬约束：
+ *
+ * 1. 类型继承**不继承默认值**。缺省且无默认值的布尔 prop 会被 Vue 强转成 `false` 并经 rest
+ *    下发给 Tooltip，覆盖其 `arrow: true` / `flip: true`（表现为箭头消失、flip 失效）；
+ * 2. 声明 `open` 后 Vue 会丢弃 `onUpdate:open` 的 attrs 透传（runtime-core filterModelListeners），
+ *    必须由组件自行声明 emits 并转发，否则 `v-model:open` 静默失效。
+ *
+ * 用例 2 / 3 锁第 1 条，用例 4 锁第 2 条，用例 5 是防未来新增字段静默回归的不变量。
+ */
+describe('Popover 继承 Tooltip 契约', () => {
+  const innerTooltip = () => wrapper?.findComponent(Tooltip)
+
+  it('1. maxWidth 显式传参经 rest 下发，覆盖默认 auto', async () => {
+    mountPopover({ title: 't', content: 'c', maxWidth: 320 })
+    await flush()
+
+    expect(innerTooltip()?.props('maxWidth')).toBe(320)
+  })
+
+  it('2. 缺省时内层 Tooltip 收到 arrow: true / flip: true', async () => {
+    mountPopover({ title: 't', content: 'c' })
+    await flush()
+
+    const tooltip = innerTooltip()
+    expect(tooltip?.props('arrow')).toBe(true)
+    expect(tooltip?.props('flip')).toBe(true)
+    // 数字 / 字符串 prop 本就由 Tooltip 自身默认值兜底，一并确认未被 rest 污染
+    expect(tooltip?.props('showDelay')).toBe(100)
+    expect(tooltip?.props('trigger')).toBe('hover')
+    // `to` 的联合类型含 `false` → 运行时类型带 Boolean，缺省会被 Vue 转成 `false`（等价「就地渲染」，
+    // 浮层不再挂进承载层）。必须保持 undefined，宿主才会就近解析挂载点
+    expect(tooltip?.props('to')).toBeUndefined()
+  })
+
+  it('3. 显式 :arrow="false" 仍可关闭箭头（默认值不吞显式传参）', async () => {
+    mountPopover({ title: 't', content: 'c', arrow: false })
+    await flush()
+
+    expect(innerTooltip()?.props('arrow')).toBe(false)
+  })
+
+  it('5. v-model:open：点击触发后父组件收到 update:open', async () => {
+    mountPopover({ title: 't', content: 'c', trigger: 'click', open: false })
+    await flush()
+    ;(document.querySelector('.tooltip-content') as HTMLElement).dispatchEvent(new Event('click'))
+    await flush()
+
+    expect(wrapper?.emitted('update:open')).toEqual([[true]])
+  })
+
+  it('6. 不变量：Tooltip 中「默认 true 的布尔 prop」必须全部被继承', async () => {
+    type PropOptions = Record<string, { default?: unknown }>
+    const tooltipProps = (Tooltip as unknown as { props: PropOptions }).props
+    const popoverProps = (Popover as unknown as { props: PropOptions }).props
+    const omitted = ['content', 'contentClass', 'contentStyle', 'tooltip', 'tooltipStyle']
+    const checked: string[] = []
+
+    for (const key of Object.keys(tooltipProps)) {
+      if (omitted.includes(key)) continue
+      if (tooltipProps[key]?.default !== true) continue // 只守「默认 true 的布尔项」
+      expect(popoverProps[key]?.default, key).toBe(true)
+      checked.push(key)
+    }
+    // 守住用例本身：当前至少覆盖 arrow / flip，避免列表为空时「空跑通过」
+    expect(checked).toEqual(expect.arrayContaining(['arrow', 'flip']))
+    // 契约形状的运行时声明：继承到 Tooltip 字段、剔除名单项不出现、anchor 保留
+    expect('open' in popoverProps).toBe(true)
+    expect('anchor' in popoverProps).toBe(true)
+    expect('tooltip' in popoverProps).toBe(false)
   })
 })

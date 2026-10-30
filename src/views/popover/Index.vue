@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const open = ref(false)
+import type { PopoverProps } from 'components/popover'
 function openChange(open: boolean) {
   console.log('open', open)
 }
+// 弹出位置：6 个方向（含复合方向），默认的箭头与翻转行为可一屏对比
+type PopoverPlacement = NonNullable<PopoverProps['placement']>
+const placements: PopoverPlacement[] = ['topLeft', 'top', 'topRight', 'bottomLeft', 'bottom', 'bottomRight']
+const placement = ref<PopoverPlacement>('top')
+// 受控显示：显隐由 v-model:open 接管，内部触发的开合经 update:open 回传
+const controlledOpen = ref(false)
+// openControl：显隐只由 open 驱动
+const openControlOpen = ref(false)
 </script>
 <template>
   <div>
@@ -31,6 +39,23 @@ function openChange(open: boolean) {
       </template>
       <Button type="primary">Hover me</Button>
     </Popover>
+    <h2 class="mt30 mb10">弹出位置</h2>
+    <p class="mb10">
+      通过 <code>placement</code> 指定方向；复合方向（如 <code>topLeft</code>）配合
+      <code>arrowPointAtCenter</code> 可让箭头指向触发元素中心，空间不足时 <code>flip</code> 会自动翻转
+    </p>
+    <div style="margin-bottom: 16px">
+      <Space align="center">
+        placement:
+        <Segmented v-model:value="placement" :options="placements" />
+      </Space>
+    </div>
+    <Popover :placement="placement" title="Title">
+      <template #content>
+        <p>Content</p>
+      </template>
+      <Button type="primary">Adjust Placement</Button>
+    </Popover>
     <h2 class="mt30 mb10">不同的触发方式</h2>
     <Space>
       <Popover title="Hover Title">
@@ -48,14 +73,31 @@ function openChange(open: boolean) {
         <Button type="primary">Click Me</Button>
       </Popover>
     </Space>
-    <h2 class="mt30 mb10">从浮层内关闭</h2>
-    <p class="mb10">使用 <code>open</code> 属性控制显示隐藏</p>
-    <Popover v-model:open="open" title="Click Title" trigger="click">
-      <template #content>
-        <a @click="open = false">Close</a>
-      </template>
-      <Button type="primary">Click Me</Button>
-    </Popover>
+    <h2 class="mt30 mb10">受控显示</h2>
+    <p class="mb10">
+      使用 <code>v-model:open</code> 控制显隐；<code>openControl</code> 为真时
+      <code>trigger: hover</code> 不再驱动显隐，显隐完全由 <code>open</code> 决定
+    </p>
+    <Space vertical align="start" :gap="12">
+      <Space>
+        <Popover v-model:open="controlledOpen" title="Click Title" trigger="click">
+          <template #content>
+            <a @click="controlledOpen = false">Close</a>
+          </template>
+          <Button>Controlled: {{ controlledOpen }}</Button>
+        </Popover>
+        <Button type="primary" @click="controlledOpen = !controlledOpen">Toggle Open</Button>
+      </Space>
+      <Space>
+        <Popover v-model:open="openControlOpen" open-control trigger="hover" title="Controlled Only">
+          <template #content>
+            <p>悬停不会展开，只有 open 为真才显示</p>
+          </template>
+          <Button>Hover (openControl)</Button>
+        </Popover>
+        <Button type="primary" @click="openControlOpen = !openControlOpen">Toggle Open (openControl)</Button>
+      </Space>
+    </Space>
     <h2 class="mt30 mb10">自定义过渡动画时间</h2>
     <Popover title="Transition Duration 300ms" :transition-duration="300">
       <template #content>

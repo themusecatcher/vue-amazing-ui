@@ -67,24 +67,9 @@ description: Amazing UI 组件库的核心特性——主题可调、按需引�
 
 ## 主题系统
 
-_组件库的核心能力：**种子 → 派生 → `CSS` 变量 → 组件消费**。`JS` 只算一次、写一次，染色全部交给 `CSS` 引擎，因此切主题不重建样式、不闪烁。_
+_种子 → 派生 → `CSS` 变量 → 组件消费，`JS` 只算一次，换肤不重建样式、不闪烁_
 
-| 想改什么 | 怎么改 | 粒度 |
-| :-- | :-- | :-- |
-| 品牌色与语义色（整套换色） | `ConfigProvider` 的 `theme.seed` | 全局 |
-| 浅色 / 暗色 / 跟随系统 | `theme.mode` | 全局 |
-| 某个组件的整套主色 | `theme.components.<组件>.primaryColor` | 组件组 |
-| 某个组件的单个视觉面 | `--va-<组件>-*` 组件令牌 | 单点 |
-
-```vue
-<ConfigProvider :theme="{ seed: { primary: '#18a058' }, mode: 'dark' }">
-  <Button type="primary">常态 / 悬停 / 按下 / 描边全部自动派生</Button>
-</ConfigProvider>
-```
-
-- **默认即完整**：不传任何主题时使用构建期生成的静态变量表，首帧正确、`SSR` 可用、切暗色零 `JS`；
-- **覆盖有层次**：`seed` → `components` → 组件令牌 → 实例 `prop` / 行内样式，越往后越局部；
-- **浮层跟随**：`Teleport` 到 `body` 的弹窗 / 下拉 / 消息由库自动转发当前作用域令牌，无需手工处理。
+改整套用 `ConfigProvider` 的 `theme.seed`，切浅色 / 暗色用 `theme.mode`，单组件主色用 `theme.components.<组件>.primaryColor`，单点用 `--va-<组件>-*` 令牌。
 
 详见[定制主题](/guide/customize-theme)，组件级令牌见[同页附录](/guide/customize-theme#组件级令牌与整组覆盖)。
 
