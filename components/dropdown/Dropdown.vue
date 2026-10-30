@@ -6,15 +6,8 @@
 import { computed, onBeforeUnmount, onMounted, provide, ref, useSlots, watch } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Popup from 'components/popup'
-import {
-  FLOATING_LAYER_Z_INDEX,
-  injectFromChain,
-  useOptionsSupported,
-  useResizeObserver,
-  useSlotsExist,
-  zIndexContainerOpenKey
-} from 'components/utils'
-import type { FloatingPlacement, MountElement } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, useContainerClose, useResizeObserver, useSlotsExist } from 'components/utils'
+import type { FloatingPlacement, FloatingVirtualAnchor, MountElement } from 'components/utils'
 import { dropdownMenuContextKey, DropdownMenu } from './DropdownMenu'
 export type Key = string | number
 export interface MenuOption {
@@ -87,9 +80,26 @@ const emits = defineEmits<{
 const slots = useSlots()
 const slotsExist = useSlotsExist(['overlay'])
 const triggerRef = ref<HTMLElement | null>(null) // 触发器元素：浮层锚点与触发事件的落点
-const popupRef = ref<InstanceType<typeof Popup> | null>(null) // 浮层宿主引用：面板引用用于判定外部点击
-// contextmenu 触发时作为锚点的鼠标位置（视口坐标）：内核的 point 锚点优先级高于 DOM 锚点
-const contextPoint = ref<{ x: number; y: number } | null>(null)
+const popupRef = ref<InstanceType<typeof Popup> | null>(null) // 浮层宿主引用：读回实际方位（翻转 / 自适应结果）
+// contextmenu 触发时右键点相对触发器左上角的偏移（**内容坐标**，不是视口坐标）。
+// 若直接记录鼠标的 clientX / clientY，滚动后该点描述的就不再是同一处内容：内核按视口点重算，
+// 浮层会钉在屏幕上、内容从底下滑走。记相对偏移 + 每次求解时从触发器当前 rect 折算，
+// 浮层便随触发区（也就是随内容）一起移动，页面滚动与容器内滚动同样成立
+const contextOffset = ref<{ x: number; y: number } | null>(null)
+// 合成锚点：宽高为 0 的矩形，位置 = 触发器当前视口矩形 + 记录时的相对偏移
+const contextAnchor = computed<FloatingVirtualAnchor | null>(() => {
+  const offset = contextOffset.value
+  const trigger = triggerRef.value
+  if (!offset || !trigger) return null
+  return {
+    getBoundingClientRect() {
+      const rect = trigger.getBoundingClientRect()
+      const left = rect.left + offset.x
+      const top = rect.top + offset.y
+      return { left, top, right: left, bottom: top, width: 0, height: 0 }
+    }
+  }
+})
 const innerOpen = ref<boolean>(false) // 未受控时使用的内部展开态
 // 展开态：受控时以 open 为准（内部写入不生效，需外部更新），未受控时用内部态
 const mergedOpen = computed<boolean>({
@@ -188,10 +198,8 @@ provide(dropdownMenuContextKey, {
   onSelect: onMenuSelect,
   isOpen: mergedOpen
 })
-const { isSupported: captureSupported } = useOptionsSupported('capture') // 外部点击监听是否支持 options 形态
 let showTimer: ReturnType<typeof setTimeout> | null = null // 延迟展开的定时器
 let hideTimer: ReturnType<typeof setTimeout> | null = null // 延迟收起的定时器
-let documentListenerAttached = false // 外部点击监听是否已注册，确保注册 / 移除一一对应
 // 测量触发器宽度（箭头指向中心时面板需按此让位）
 function measureAnchor(): void {
   anchorWidth.value = triggerRef.value?.offsetWidth ?? 0
@@ -275,18 +283,27 @@ function scheduleHide(): void {
     requestOpen(false)
   }, props.mouseLeaveDelay)
 }
-// 触发器点击：click 触发时切换展开态
+// 触发器点击：click 触发时切换展开态；contextmenu 触发时左键点击收起 —— 右键唤起的菜单没有
+// 左键 toggle 语义，但「点触发器关掉它」是最直觉的关闭动作（与 antdv 一致）
 function onTriggerClick(): void {
-  if (!useClick.value) return
-  clearTimers()
-  requestOpen(!mergedOpen.value)
+  if (useClick.value) {
+    clearTimers()
+    requestOpen(!mergedOpen.value)
+    return
+  }
+  if (useContextMenu.value && mergedOpen.value) {
+    clearTimers()
+    requestOpen(false)
+  }
 }
-// 触发器右键：contextmenu 触发时阻止默认菜单，并以鼠标位置为锚点展开
+// 触发器右键：contextmenu 触发时阻止默认菜单，并以「右键点相对触发器的偏移」为锚点展开
+// （展开状态下重复右键只更新偏移，面板保持打开、平滑跟随，不经历收起再展开）
 function onTriggerContextMenu(e: MouseEvent): void {
   if (!useContextMenu.value || !canOpen.value) return
   e.preventDefault()
   clearTimers()
-  contextPoint.value = { x: e.clientX, y: e.clientY }
+  const rect = triggerRef.value?.getBoundingClientRect()
+  contextOffset.value = rect ? { x: e.clientX - rect.left, y: e.clientY - rect.top } : null
   requestOpen(true)
 }
 // 面板 / 触发器 esc：click / contextmenu 触发时关闭
@@ -294,26 +311,16 @@ function onEscKeydown(): void {
   if (!needOutsideClick.value || !mergedOpen.value) return
   requestOpen(false)
 }
-// 外部点击关闭：仅 click / contextmenu 触发需要，点击触发器与浮层内部均不关闭
-function handleDocumentClick(e: MouseEvent): void {
-  const target = e.target as Node | null
-  if (!target) return
-  if (triggerRef.value?.contains(target) || popupRef.value?.panelRef?.contains(target)) return
+// 外部点击 / 承载层关闭：两种「非用户主动切换」的收起，统一清理定时器后关闭。
+// 「面板外 && 触发器外」的判定与监听挂卸已下沉到宿主（Popup），此处只接收上报结果
+function closeFromOutside(): void {
   clearTimers()
   requestOpen(false)
 }
-// 注册外部点击关闭监听（幂等，避免重复注册）
-function addDocumentListener(): void {
-  if (documentListenerAttached || typeof document === 'undefined') return
-  document.addEventListener('click', handleDocumentClick, captureSupported.value ? { capture: true } : true)
-  documentListenerAttached = true
-}
-// 移除外部点击关闭监听（幂等；与注册条件解耦，确保显隐切换或卸载时不残留）
-function removeDocumentListener(): void {
-  if (!documentListenerAttached || typeof document === 'undefined') return
-  document.removeEventListener('click', handleDocumentClick, captureSupported.value ? { capture: true } : true)
-  documentListenerAttached = false
-}
+// 承载层（Modal / Drawer / Dialog / 外层浮层面板）关闭时同样收起：承载层内容常驻不卸载，浮层不会随
+// 容器消失，若保持打开，容器重开时会以「仍打开」的状态冒出来；Esc / 程序化关闭都不产生 document click，
+// 故必须显式收起（订阅实现见 utils/z-index.ts 的 useContainerClose）
+useContainerClose(closeFromOutside)
 // 菜单项点击：触发 menuClick；无子项的菜单项点击后收起浮层（任意菜单项点击即关闭，含链接项）
 function onMenuSelect(option: MenuOption): void {
   if (option.disabled || option.loading) return
@@ -321,18 +328,12 @@ function onMenuSelect(option: MenuOption): void {
   if (option.children?.length) return
   requestOpen(false, false)
 }
-// 展开态变化时同步监听与锚点：展开注册外部点击监听，收起清除鼠标锚点并注销监听
+// 展开态变化时同步锚点：收起清除鼠标锚点（外部点击监听的挂卸由宿主按 show 负责）
 watch(
   mergedOpen,
   (open) => {
-    if (open) {
-      if (needOutsideClick.value) {
-        addDocumentListener()
-      }
-      return
-    }
-    contextPoint.value = null
-    removeDocumentListener()
+    if (open) return
+    contextOffset.value = null
   },
   { immediate: true }
 )
@@ -342,23 +343,8 @@ useResizeObserver(triggerRef, () => {
 })
 // 受控 open 初始为真时，挂载后再测一次锚点宽度，避免首帧以 0 计算让位量
 onMounted(measureAnchor)
-// 承载层（Modal / Drawer / Dialog）关闭时收起：与 Tooltip / Select 同一不变量 —— 承载层内容常驻不卸载，
-// 浮层不会随容器消失；若保持打开，容器重开时浮层会以「仍打开」的状态冒出来。
-// Esc 关闭与程序化关闭都不产生 document click，故必须在此显式收起（详见 utils/z-index.ts）
-const containerOpen = injectFromChain(zIndexContainerOpenKey) ?? null
-if (containerOpen) {
-  watch(containerOpen, (open) => {
-    if (!open) {
-      clearTimers()
-      requestOpen(false)
-    }
-  })
-}
-// 卸载时清理定时器与外部点击监听，避免回调在组件卸载后仍触发
-onBeforeUnmount(() => {
-  clearTimers()
-  removeDocumentListener()
-})
+// 卸载时清理定时器，避免回调在组件卸载后仍触发（外部点击监听由宿主自行移除）
+onBeforeUnmount(clearTimers)
 </script>
 <template>
   <!-- 触发器与浮层为**兄弟节点**：浮层在 to: false 就地渲染时会落进根容器内，
@@ -384,7 +370,7 @@ onBeforeUnmount(() => {
       :to="to"
       :destroy-on-hide="destroyOnHide"
       :anchor="triggerRef"
-      :point="contextPoint"
+      :virtual-anchor="contextAnchor"
       :placement="placement"
       :flip="flip"
       :shift="flip"
@@ -397,9 +383,11 @@ onBeforeUnmount(() => {
       :z-index="zIndex"
       :default-z-index="FLOATING_LAYER_Z_INDEX.select"
       :transition-props="panelTransitionProps"
+      :close-on-outside-click="needOutsideClick"
       @mouseenter="onPanelEnter"
       @mouseleave="onPanelLeave"
       @keydown.esc="onEscKeydown"
+      @outside-click="closeFromOutside"
     >
       <!-- 菜单皮肤承载层：面板只做定位盒与箭头槽位，皮肤（背景 / 圆角 / 阴影 / 内边距）落在此层 -->
       <div class="dropdown-content">
