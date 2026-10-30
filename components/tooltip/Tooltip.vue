@@ -3,63 +3,25 @@ import { ref, computed, watch, getCurrentInstance, onBeforeUnmount, onMounted } 
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Popup from 'components/popup'
 import {
-  injectFromChain,
+  findFocusable,
+  useContainerClose,
   useSlotsExist,
   useResizeObserver,
-  useOptionsSupported,
-  zIndexContainerOpenKey,
   FLOATING_LAYER_Z_INDEX
 } from 'components/utils'
-import type { MountElement } from 'components/utils'
+// prop 契约与「下游需继承的默认值」同源存放于纯 .ts 文件（Popover / Popconfirm 用 extends 继承）
+import type { TooltipProps } from './types'
+import { TOOLTIP_INHERITED_DEFAULTS } from './types'
 
-export interface Props {
-  maxWidth?: string | number // 文字提示最大宽度，单位 px
-  content?: string // 展示的内容
-  contentClass?: string // 设置展示内容的类名
-  contentStyle?: CSSProperties // 设置展示内容的样式
-  tooltip?: string // 文字提示内容
-  tooltipClass?: string // 设置文字提示的类名
-  tooltipStyle?: CSSProperties // 设置文字提示的样式
-  popupClassName?: string // 设置浮层面板（定位盒）的类名，用于自定义面板层样式
-  popupStyle?: CSSProperties // 设置浮层面板（定位盒）的样式，在皮肤变量与动画原点之后合并，可覆盖定位
-  zIndex?: number // 浮层层级，优先级最高（未传时使用默认层级或 ConfigProvider 的 baseZIndex 分配）
-  bgColor?: string // 文字提示框背景颜色，支持预设色或自定义色值 (如 #f50/rgba)
-  arrow?: boolean // 是否显示箭头
-  arrowPointAtCenter?: boolean // 箭头是否指向目标元素中心，仅当 placement 为复合方向 (如 topLeft) 时生效
-  placement?:
-    | 'top'
-    | 'topLeft'
-    | 'topRight'
-    | 'bottom'
-    | 'bottomLeft'
-    | 'bottomRight'
-    | 'left'
-    | 'leftTop'
-    | 'leftBottom'
-    | 'right'
-    | 'rightTop'
-    | 'rightBottom' // 文字提示位置
-  flip?: boolean // 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置
-  trigger?: 'hover' | 'click' | 'focus' | 'contextmenu' // 文字提示触发方式
-  keyboard?: boolean // 是否支持按键操作 (enter 切换显示；esc 关闭)，仅当 trigger: 'click' 时生效
-  disabled?: boolean // 是否禁用文字提示，禁用后不响应任何触发
-  to?: string | MountElement | false // 弹出框挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
-  destroyOnHide?: boolean // 隐藏后是否卸载弹出框 DOM：离开动画结束后卸载，再次显示时重新创建并重新定位；false 时元素常驻、仅切换显示
-  transitionDuration?: number // 文字提示动画的过渡持续时间，单位 ms
-  showDelay?: number // 文字提示显示的延迟时间，单位 ms，仅当 trigger: hover 时生效
-  hideDelay?: number // 文字提示隐藏的延迟时间，单位 ms，仅当 trigger: hover 时生效
-  open?: boolean // (v-model) 文字提示是否显示
-  openControl?: boolean // 只使用 open 属性控制显示隐藏，仅当 trigger: hover 时生效，此时移入移出将不会触发显示隐藏，全部由 open 属性控制
-  anchor?: MountElement | null // 外部锚点：传入后不渲染触发包裹层，触发监听、无障碍属性与定位全部以该元素为准
-  getDisabled?: () => boolean // 展示前的动态禁用判定（如文本未溢出时不展示），每次展示前求值
-}
 // 声明组件插槽类型
 export interface TooltipSlots {
   tooltip?: () => VNode[]
   default?: () => VNode[]
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<TooltipProps>(), {
+  // 含默认值 ≠ 隐式默认的布尔项（arrow / flip），下游组件继承类型时一并继承这里的默认值
+  ...TOOLTIP_INHERITED_DEFAULTS,
   maxWidth: 240,
   content: undefined,
   contentClass: undefined,
@@ -71,10 +33,8 @@ const props = withDefaults(defineProps<Props>(), {
   popupStyle: () => ({}),
   zIndex: undefined,
   bgColor: 'var(--va-bg-spotlight-color)',
-  arrow: true,
   arrowPointAtCenter: false,
   placement: 'top',
-  flip: true,
   trigger: 'hover',
   keyboard: false,
   disabled: false,
@@ -83,19 +43,32 @@ const props = withDefaults(defineProps<Props>(), {
   transitionDuration: 100,
   showDelay: 100,
   hideDelay: 100,
-  open: false,
   openControl: false,
   anchor: null,
-  getDisabled: undefined
+  getDisabled: undefined,
+  tooltipRole: 'tooltip',
+  tooltipLabelledby: undefined,
+  describedBy: true
 })
 defineSlots<TooltipSlots>()
 // 模板存在「包裹层 / 浮层」两个条件根，属性继承需显式下发（见模板中包裹层根节点的 v-bind="$attrs"；
 // 锚点模式没有自有根节点，$attrs 不再下发）
 defineOptions({ inheritAttrs: false })
-const tooltipShow = ref<boolean>(false) // tooltip 显示隐藏标识
-const tooltipTimer = ref<ReturnType<typeof setTimeout> | null>(null) // tooltip 延迟显示隐藏的定时器标识符
-const documentListenerAttached = ref<boolean>(false) // 外部点击关闭监听是否已注册，确保注册/移除一一对应
-type Placement = NonNullable<Props['placement']>
+const tooltipShow = ref<boolean>(false) // 未受控时的内部显隐状态
+// 受控判定：显式传入 open（含 false）即视为受控 —— 显隐以属性为准，内部请求只经事件上报。
+// 与 Dropdown 的 `props.open === undefined ? innerOpen : props.open` 同口径；open 的默认值因此必须是
+// undefined（布尔 prop 缺省会被 Vue 强转成 false，那会让所有用法都变成「受控且恒关闭」）
+const openControlled = computed<boolean>(() => props.open !== undefined)
+// 实际可见性：受控取 open 属性，未受控取内部状态。面板渲染、无障碍关联与所有早返回判定统一看它，
+// 避免出现「内部状态与属性各说各话」的脱同步
+const tooltipVisible = computed<boolean>(() => (openControlled.value ? Boolean(props.open) : tooltipShow.value))
+// 显隐定时器分离（与 Dropdown 同口径）：单定时器会让「待显示」与「待隐藏」互相取消 ——
+// 例如 hover 移入排了显示、移出排了隐藏，后者复用同一个句柄时前者的取消动作会把两者搅在一起
+let showTimer: ReturnType<typeof setTimeout> | null = null
+let hideTimer: ReturnType<typeof setTimeout> | null = null
+// Enter 键切换的一次性标记：浏览器会在 Enter 后为可聚焦子元素补发 click，用于忽略那次重复切换
+let enterActivated = false
+type Placement = NonNullable<TooltipProps['placement']>
 type MainAxis = 'top' | 'bottom' | 'left' | 'right' // 主轴方向
 type CrossAlign = 'start' | 'center' | 'end' // 次轴对齐方式
 const popupRef = ref<InstanceType<typeof Popup> | null>(null) // 浮层宿主引用：定位 / 显隐 / 层级 / 箭头 DOM 均由宿主承担
@@ -107,7 +80,6 @@ const anchorEl = ref<HTMLElement | null>(null)
 const anchorSize = ref<{ width: number; height: number }>({ width: 0, height: 0 })
 // 卡片布局尺寸 (取 offset 尺寸)：仅用于识别「尺寸真的变了」的重复回调，避免无谓重算
 const cardSize = ref<{ width: number; height: number }>({ width: 0, height: 0 })
-const { isSupported: captureSupported } = useOptionsSupported('capture')
 const emits = defineEmits(['update:open', 'openChange', 'animationend'])
 const slotsExist = useSlotsExist(['tooltip'])
 // 预设色板：色名 → 色值
@@ -143,10 +115,17 @@ const showTooltip = computed(() => {
 // 触发监听与无障碍属性（tabindex / aria-describedby）直接写到锚点元素上；浮层只作为「指向该元素
 // 的独立层」存在，故使用方的 DOM 结构不随提示显隐变化
 const anchorMode = computed(() => Boolean(props.anchor))
+// 是否需要「点击外部 / esc 关闭」：click 与 contextmenu 这类主动触发的浮层由使用者显式收起，
+// hover 由移出延迟承担、focus 由失焦承担。与 Dropdown 的 needOutsideClick 同口径
+const needOutsideClick = computed<boolean>(() => props.trigger === 'click' || props.trigger === 'contextmenu')
 // 弹出框 id：以组件实例 uid 保证全局唯一，供触发器 aria-describedby 关联
 const tooltipCardId = `va-tooltip-${getCurrentInstance()?.uid ?? 0}`
-// 仅在弹出框实际可见时关联描述，避免初始隐藏态被读屏器朗读
-const ariaDescribedby = computed(() => (showTooltip.value && tooltipShow.value ? tooltipCardId : undefined))
+// 仅在弹出框实际可见时关联描述，避免初始隐藏态被读屏器朗读；
+// 对话框类面板（role 为 dialog / alertdialog）由皮肤层传入 describedBy: false 断开 —— 面板内容是「待操作
+// 的内容」而非触发器的描述，且关联后整块按钮文案都会被当成描述朗读
+const ariaDescribedby = computed(() =>
+  showTooltip.value && tooltipVisible.value && props.describedBy ? tooltipCardId : undefined
+)
 // 复合方向时箭头中心距面板对齐边的距离，单位 px
 const arrowOffset = computed(() => {
   return props.arrow ? 13 : 8
@@ -228,7 +207,9 @@ const tooltipTransitionProps: TransitionProps = {
 }
 // 浮层宿主绑定：包裹层模式与锚点模式共用同一份（两者只有触发元素来源不同）
 const popupBindings = computed(() => ({
-  show: showTooltip.value && tooltipShow.value,
+  show: showTooltip.value && tooltipVisible.value,
+  // 外点判定与监听下沉到宿主：口径为「面板之外 且 锚点（触发器）之外」，本组件只接收上报结果
+  closeOnOutsideClick: needOutsideClick.value,
   to: props.to,
   destroyOnHide: props.destroyOnHide,
   anchor: anchorEl.value,
@@ -243,13 +224,16 @@ const popupBindings = computed(() => ({
   zIndex: props.zIndex,
   transitionProps: tooltipTransitionProps
 }))
-// 受控 open 初始为真时，可见性 watcher 在 setup 阶段执行（此时模板引用尚未就绪），故挂载后补测一次
+// 初始即为可见态（受控 open 为真）时，可见性 watcher 在 setup 阶段执行（此时模板引用尚未就绪），
+// 故挂载后补测一次
 onMounted(() => {
   syncAnchorBinding()
   measureAnchor()
 })
+// 可见性完全由 tooltipVisible 表达（受控时取属性、未受控时取内部状态），故无需同步状态的 watcher，
+// 也不需要因属性变化回传 update:open —— 受控变化由父侧驱动，与 Dropdown 同口径
 watch(
-  () => showTooltip.value && tooltipShow.value,
+  () => showTooltip.value && tooltipVisible.value,
   (to) => {
     if (to) {
       measureAnchor()
@@ -259,34 +243,12 @@ watch(
     immediate: true
   }
 )
-watch(
-  () => props.open,
-  (to) => {
-    // 受控 open 需立即同步（跳过 hover 延迟）
-    if (to && !tooltipShow.value) {
-      onShow(true)
-    }
-    if (!to && tooltipShow.value) {
-      onHide(true)
-    }
-  },
-  {
-    immediate: true
-  }
-)
-// 承载层（Modal / Dialog / Drawer）关闭时收起：与 Select / AutoComplete 同一不变量 ——
-// 承载层内容常驻不卸载，浮层不会随容器消失；若保持打开，容器重开时浮层会以「仍打开」的状态冒出来。
-// 关闭容器的路径里，点 X / 遮罩会顺带触发「点击外部」把 click 触发型关掉，但 **Esc 关闭**（Modal 的
-// Esc 处理在弹窗主体上，不产生 document click）与 **程序化关闭**（接口回调 / 父状态变更）没有任何指针
-// 事件，浮层会残留打开态。详见 utils/z-index.ts 的 zIndexContainerOpenKey
-const containerOpen = injectFromChain(zIndexContainerOpenKey) ?? null
-if (containerOpen) {
-  watch(containerOpen, (open) => {
-    if (!open) {
-      onHide(true)
-    }
-  })
-}
+// 承载层（Modal / Dialog / Drawer / 外层浮层面板）关闭时收起：承载层内容常驻不卸载，浮层不会随容器消失；
+// 若保持打开，容器重开时浮层会以「仍打开」的状态冒出来。关闭容器的路径里，点 X / 遮罩会顺带触发
+// 「点击外部」把 click 触发型关掉，但 **Esc 关闭**（Modal 的 Esc 处理在弹窗主体上，不产生 document click）
+// 与 **程序化关闭**（接口回调 / 父状态变更）没有任何指针事件，浮层会残留打开态。
+// 开合状态的订阅收敛在 useContainerClose（Popup 只提供状态，不自订阅）
+useContainerClose(() => onHide(true))
 // 测量锚点：定位内核按「单一 anchorRect」口径求解，锚点尺寸另供箭头中心让位使用。
 // 锚点模式直接以外部元素为锚点；包裹层模式取插槽内容的首个元素，仅文本内容时退回 .tooltip-content
 function measureAnchor(): void {
@@ -304,7 +266,7 @@ function measureAnchor(): void {
 }
 // 监听 tooltipCard 和 tooltipContent 的尺寸变化，更新弹出框位置
 useResizeObserver([tooltipCardRef, tooltipContentRef], (entries: ResizeObserverEntry[]) => {
-  if (!(showTooltip.value && tooltipShow.value)) return
+  if (!(showTooltip.value && tooltipVisible.value)) return
   // 显隐切换 (v-show display:none→block) 会产生同尺寸的重复回调；卡片尺寸未变则无需重算位置（双方均为 offset 边框盒口径，无需取整）
   if (entries.length === 1 && entries[0].target === tooltipCardRef.value) {
     const cardEl = entries[0].target as HTMLElement
@@ -325,67 +287,95 @@ function updatePosition(): void {
   measureAnchor()
   popupRef.value?.update()
 }
-// 取消延迟显示/隐藏定时器并清空标识，避免重复取消已失效的定时器
-function clearTooltipTimer(): void {
-  if (tooltipTimer.value !== null) {
-    clearTimeout(tooltipTimer.value)
-    tooltipTimer.value = null
+function clearShowTimer(): void {
+  if (showTimer !== null) {
+    clearTimeout(showTimer)
+    showTimer = null
   }
 }
-// immediate 为 true 时跳过 hover 延迟（用于受控 open 需立即生效的场景）
-function onShow(immediate = false): void {
+function clearHideTimer(): void {
+  if (hideTimer !== null) {
+    clearTimeout(hideTimer)
+    hideTimer = null
+  }
+}
+function clearTimers(): void {
+  clearShowTimer()
+  clearHideTimer()
+}
+// 请求变更显隐：受控时只上报（状态以 open 属性为准，组件不自行改写），未受控时写内部状态；
+// 两者都只在「值真的变化」时上报 —— 与 Dropdown 的 requestOpen 同口径，避免无变化通知
+function requestVisible(val: boolean): void {
+  const prev = tooltipVisible.value
+  if (!openControlled.value) {
+    tooltipShow.value = val
+  }
+  if (prev === val) return
+  emits('update:open', val)
+  emits('openChange', val)
+}
+function applyShow(): void {
+  showTimer = null
+  requestVisible(true)
+}
+function applyHide(): void {
+  hideTimer = null
+  requestVisible(false)
+}
+function onShow(): void {
   // getDisabled 在每次展示前求值：使用方据此表达「当前不值得展示」（如文本未溢出）
   if (props.disabled || props.getDisabled?.()) return
-  clearTooltipTimer()
-  if (!tooltipShow.value) {
-    // 显示延迟仅在 hover 触发且非立即模式下生效，click/contextmenu/focus 等触发方式立即显示
-    const delay = props.trigger === 'hover' && !immediate ? props.showDelay : 0
-    tooltipTimer.value = setTimeout(() => {
-      tooltipShow.value = true
-      emits('update:open', true)
-      emits('openChange', true)
-      if (showTooltip.value && (props.trigger === 'click' || props.trigger === 'contextmenu')) {
-        addDocumentListener()
-      }
-    }, delay)
-  }
+  // 先取消待执行的隐藏：重新移入 / 重新打开不应被上一次的隐藏回调收走
+  clearHideTimer()
+  if (tooltipVisible.value) return
+  clearShowTimer()
+  // 显示延迟仅在 hover 触发时生效，click/contextmenu/focus 等触发方式立即显示
+  const delay = props.trigger === 'hover' ? props.showDelay : 0
+  showTimer = setTimeout(applyShow, delay)
 }
 function onHide(immediate = false): void {
-  clearTooltipTimer()
-  if (tooltipShow.value) {
-    // 隐藏延迟仅在 hover 触发且非立即模式下生效，click/contextmenu/focus 等触发方式立即隐藏
-    const delay = props.trigger === 'hover' && !immediate ? props.hideDelay : 0
-    tooltipTimer.value = setTimeout(() => {
-      tooltipShow.value = false
-      emits('update:open', false)
-      emits('openChange', false)
-      removeDocumentListener()
-    }, delay)
+  // 先取消待执行的显示：快速划过时鼠标已离开，不能在离开后补弹
+  clearShowTimer()
+  if (!tooltipVisible.value) return
+  clearHideTimer()
+  // 隐藏延迟仅在 hover 触发且非立即模式下生效，click/contextmenu/focus 等触发方式立即隐藏
+  const delay = props.trigger === 'hover' && !immediate ? props.hideDelay : 0
+  hideTimer = setTimeout(applyHide, delay)
+}
+// 显式切换（click 触发 / keyboard 的 enter）：状态在同一拍内落定，不依赖定时器时序
+function toggleVisible(): void {
+  if (!showTooltip.value) return
+  clearTimers()
+  if (tooltipVisible.value) {
+    applyHide()
+    return
   }
+  if (props.disabled || props.getDisabled?.()) return
+  applyShow()
 }
-function toggleVisible() {
-  if (!tooltipShow.value) {
-    onShow()
-  } else {
-    onHide()
+// 触发器点击：click 触发时显式切换（与 Dropdown 的 onTriggerClick 同口径）。
+// contextmenu 触发时左键点击触发器应收起 —— 右键唤起的浮层没有左键 toggle 语义，
+// 但「点触发器关掉它」是最直觉的关闭动作（antdv 在 contextmenu 模式下同样会收起）
+function onTriggerClick(): void {
+  if (props.trigger === 'contextmenu') {
+    if (tooltipVisible.value) {
+      onHide()
+    }
+    return
   }
-}
-function handleClick(e: Event) {
-  if (!popupRef.value?.panelRef?.contains(e.target as Node)) {
-    onHide()
+  if (props.trigger !== 'click') return
+  if (enterActivated) {
+    // 浏览器在可聚焦子元素上收到 Enter 后会补发一次 click（键盘激活），该次切换已由
+    // onEnterKeydown 完成，此处忽略，否则同一次按键会把显示态切回原样
+    enterActivated = false
+    return
   }
+  toggleVisible()
 }
-// 注册外部点击关闭监听（仅 click/contextmenu 触发需要），幂等，避免重复注册
-function addDocumentListener(): void {
-  if (documentListenerAttached.value) return
-  document.addEventListener('click', handleClick, captureSupported.value ? { capture: true } : true)
-  documentListenerAttached.value = true
-}
-// 移除外部点击关闭监听，幂等；与注册条件解耦，确保卸载或显隐切换时不残留
-function removeDocumentListener(): void {
-  if (!documentListenerAttached.value) return
-  document.removeEventListener('click', handleClick, captureSupported.value ? { capture: true } : true)
-  documentListenerAttached.value = false
+// 外部点击：判定与监听已下沉到宿主（closeOnOutsideClick，口径为「面板之外 且 触发器之外」），
+// 此处只接上报结果、不参与判定
+function closeFromOutside(): void {
+  onHide()
 }
 function onEnterWrap() {
   if (showTooltip.value && props.trigger === 'hover' && !props.openControl) {
@@ -399,7 +389,7 @@ function onLeaveWrap() {
 }
 // 面板自身的动画结束由宿主过滤（忽略插槽内容中嵌套动画的冒泡），此处只负责对外转发
 function onAnimationEnd() {
-  emits('animationend', tooltipShow.value)
+  emits('animationend', tooltipVisible.value)
 }
 function onEnterTooltip() {
   if (props.trigger === 'hover' && !props.openControl) {
@@ -426,36 +416,30 @@ function onBlur(e: FocusEvent) {
   if (container?.contains(e.relatedTarget as Node | null)) return
   onHide()
 }
-// contextmenu 触发：右键菜单时显示 (阻止默认菜单)，点击外部由 handleClick 关闭
+// contextmenu 触发：右键时显示并阻止浏览器原生菜单。**展开状态下同样要阻止** ——
+// 否则同一个手势第一次拦、第二次放行，原生菜单会叠在浮层上（与 antdv 一致）
 function onContextmenu(e: Event) {
-  if (showTooltip.value && props.trigger === 'contextmenu' && !tooltipShow.value) {
-    e.preventDefault()
+  if (!showTooltip.value || props.trigger !== 'contextmenu') return
+  e.preventDefault()
+  if (!tooltipVisible.value) {
     onShow()
   }
 }
-// 弹出框卡片上的 esc 按键处理：trigger 为 click 且开启 keyboard 时关闭
-function onTooltipKeydownEsc() {
-  if (props.trigger === 'click' && props.keyboard && tooltipShow.value) {
-    onHide()
-  }
+// esc：click / contextmenu 触发时关闭。触发器与面板两处都响应（与 Dropdown 同口径）：
+// 焦点落在触发子树上时按键事件经冒泡到此处，不必要求焦点停在面板内
+function onEscKeydown() {
+  if (!needOutsideClick.value || !tooltipVisible.value) return
+  onHide()
 }
-// 内容元素点击处理：trigger 为 click 时切换显示
-function onContentClick() {
-  if (showTooltip.value && props.trigger === 'click' && !tooltipShow.value) {
-    onShow()
-  }
-}
-// 内容元素 enter 按键处理：trigger 为 click 且开启 keyboard 时切换显示
-function onContentKeydownEnter() {
-  if (showTooltip.value && props.trigger === 'click' && props.keyboard) {
-    toggleVisible()
-  }
-}
-// 内容元素 esc 按键处理：trigger 为 click 且开启 keyboard 时关闭
-function onContentKeydownEsc() {
-  if (showTooltip.value && props.trigger === 'click' && props.keyboard && tooltipShow.value) {
-    onHide()
-  }
+// enter：click 触发且开启 keyboard 时切换显示（click 切换本身由 onTriggerClick 承担，与本键无关）
+function onEnterKeydown() {
+  if (!showTooltip.value || props.trigger !== 'click' || !props.keyboard) return
+  enterActivated = true
+  // 同拍内复位：补发的 click 与 keydown 在同一轮任务里，若浏览器不补发（非可激活元素）则不影响下次点击
+  setTimeout(() => {
+    enterActivated = false
+  }, 0)
+  toggleVisible()
 }
 // ── 锚点模式：触发监听与无障碍属性绑定到外部锚点 ────────────────────────────
 // 锚点的 focus / blur 不冒泡，与包裹层模式同口径使用捕获阶段监听；绑定随 anchor 变化重建，
@@ -464,15 +448,15 @@ let boundAnchor: HTMLElement | null = null
 let anchorTabIndexApplied = false
 function onAnchorKeydown(e: KeyboardEvent): void {
   if (e.key === 'Enter') {
-    onContentKeydownEnter()
+    onEnterKeydown()
   } else if (e.key === 'Escape') {
-    onContentKeydownEsc()
+    onEscKeydown()
   }
 }
 function bindAnchor(el: HTMLElement): void {
   el.addEventListener('mouseenter', onEnterWrap)
   el.addEventListener('mouseleave', onLeaveWrap)
-  el.addEventListener('click', onContentClick)
+  el.addEventListener('click', onTriggerClick)
   el.addEventListener('contextmenu', onContextmenu)
   el.addEventListener('focus', onFocus, true)
   el.addEventListener('blur', onBlur, true)
@@ -491,7 +475,7 @@ function releaseAnchorA11y(el: HTMLElement): void {
 function unbindAnchor(el: HTMLElement): void {
   el.removeEventListener('mouseenter', onEnterWrap)
   el.removeEventListener('mouseleave', onLeaveWrap)
-  el.removeEventListener('click', onContentClick)
+  el.removeEventListener('click', onTriggerClick)
   el.removeEventListener('contextmenu', onContextmenu)
   el.removeEventListener('focus', onFocus, true)
   el.removeEventListener('blur', onBlur, true)
@@ -535,18 +519,27 @@ function syncAnchorBinding(): void {
 watch(() => props.anchor, syncAnchorBinding, { flush: 'post' })
 watch([ariaDescribedby, () => props.trigger], () => syncAnchorA11y(props.anchor), { flush: 'post' })
 // 卸载时取消延迟显示/隐藏定时器，避免回调在组件卸载后仍然触发
-// 显示状态下卸载时 onHide 的延迟回调不会执行，需在此无条件移除外部点击监听，避免监听残留
+// （外部点击监听由宿主按 show 挂卸并在自身卸载时移除，本组件无需处理）
 onBeforeUnmount(() => {
-  clearTooltipTimer()
-  removeDocumentListener()
+  clearTimers()
   if (boundAnchor) {
     unbindAnchor(boundAnchor)
     boundAnchor = null
   }
 })
+// 焦点归还：把焦点送回触发元素。包裹层模式取「触发内容里的首个可聚焦元素」（触发器常是 Button，
+// 包裹用的 `.tooltip-content` 本身不可聚焦，聚焦它等于没还）；锚点模式直接聚焦使用方提供的锚点
+function focusTrigger(): void {
+  const root = anchorMode.value ? anchorEl.value : tooltipContentRef.value
+  if (!root) return
+  const target = findFocusable(root)
+  ;(target ?? root).focus({ preventScroll: true })
+}
 defineExpose({
   show: () => onShow(),
-  hide: () => onHide()
+  hide: () => onHide(),
+  focusTrigger, // 供皮肤层（Popconfirm）在关闭后归还焦点
+  tooltipCardRef // 供皮肤层判定「焦点是否仍留在面板内」
 })
 </script>
 <template>
@@ -560,13 +553,15 @@ defineExpose({
       :default-z-index="FLOATING_LAYER_Z_INDEX.tooltip"
       @mouseenter="onEnterTooltip"
       @mouseleave="onLeaveTooltip"
-      @keydown.esc="onTooltipKeydownEsc"
+      @keydown.esc="onEscKeydown"
+      @outside-click="closeFromOutside"
       @animationend="onAnimationEnd"
     >
       <div
         ref="tooltipCardRef"
         class="tooltip-card"
-        role="tooltip"
+        :role="tooltipRole"
+        :aria-labelledby="tooltipLabelledby"
         :id="tooltipCardId"
         :class="tooltipClass"
         :style="tooltipStyle"
@@ -581,12 +576,12 @@ defineExpose({
       :style="contentStyle"
       :aria-describedby="ariaDescribedby"
       :tabindex="trigger === 'focus' ? 0 : undefined"
-      @click="onContentClick"
+      @click="onTriggerClick"
       @contextmenu="onContextmenu"
       @focus.capture="onFocus"
       @blur.capture="onBlur"
-      @keydown.enter="onContentKeydownEnter"
-      @keydown.esc="onContentKeydownEsc"
+      @keydown.enter="onEnterKeydown"
+      @keydown.esc="onEscKeydown"
     >
       <slot>{{ content }}</slot>
     </span>
@@ -600,13 +595,15 @@ defineExpose({
     :default-z-index="FLOATING_LAYER_Z_INDEX.tooltip"
     @mouseenter="onEnterTooltip"
     @mouseleave="onLeaveTooltip"
-    @keydown.esc="onTooltipKeydownEsc"
+    @keydown.esc="onEscKeydown"
+    @outside-click="closeFromOutside"
     @animationend="onAnimationEnd"
   >
     <div
       ref="tooltipCardRef"
       class="tooltip-card"
-      role="tooltip"
+      :role="tooltipRole"
+      :aria-labelledby="tooltipLabelledby"
       :id="tooltipCardId"
       :class="tooltipClass"
       :style="tooltipStyle"

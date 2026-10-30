@@ -123,8 +123,9 @@ describe('Select 面板关闭时内嵌浮层收起', () => {
     mountSelect(({ menuNode }) =>
       h('div', { class: 'nested-dropdown' }, [
         h(
+          // 用内部触发（hover）打开：受控 open 不再由组件改写，无法用它构造「已打开」态
           Tooltip,
-          { tooltip: '内嵌提示', open: true },
+          { tooltip: '内嵌提示', showDelay: 0 },
           { default: () => h('button', { class: 'nested-tooltip-trigger' }, 'hover') }
         ),
         h(menuNode)
@@ -134,7 +135,11 @@ describe('Select 面板关闭时内嵌浮层收起', () => {
 
     const tooltipPanel = (): HTMLElement | null =>
       nestedContainer()?.querySelector<HTMLElement>('.va-popup-panel') ?? null
-    // 打开态：内嵌 Tooltip 正常显示
+    // 打开态：内嵌 Tooltip 正常显示（触发包裹层在 Select 面板内，不由 nestedContainer 覆盖）
+    ;(document.querySelector('.nested-dropdown .tooltip-wrap') as HTMLElement).dispatchEvent(
+      new MouseEvent('mouseenter')
+    )
+    await settle()
     expect(tooltipPanel()?.style.display).not.toBe('none')
 
     const trigger = wrapper!.find('.select-wrap')
