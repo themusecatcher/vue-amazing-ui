@@ -114,7 +114,7 @@ function clickOn(el: Element): void {
   el.dispatchEvent(new MouseEvent('click', { bubbles: true }))
 }
 
-/** 外部按下：宿主与 antdv 同口径，在 mousedown / touchstart 上判定「面板之外 且 锚点之外」 */
+/** 外部按下：在 mousedown / touchstart 上判定「面板之外 且 锚点之外」 */
 function downOn(el: Element): void {
   el.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
 }

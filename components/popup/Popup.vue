@@ -36,7 +36,7 @@ import type {
  * - **触发语义留在消费组件**：宿主只按 `show` 渲染，动画结束发 `animationend` / `afterLeave`；
  *   `closeOnOutsideClick` 为真时额外上报 `outsideClick`（判定口径：**面板之外 且 锚点之外**）——
  *   只监听与上报，「是否真的关闭」仍由消费组件决定，hover / click / focus / 延迟 / esc 一律不管；
- *   事件模型与 antdv 的 `vc-trigger` 一致：判定挂 `mousedown` / `touchstart`（不是 `click`）；
+ *   判定挂 `mousedown` / `touchstart`（不是 `click`）；
  * - **层级**：消费 `useZIndex`，每次「出现」重新领取，保证后出现者在上；
  * - **承载层契约**：面板带 `data-va-floating-mount`，插槽里的浮层会挂进面板；宿主经
  *   `zIndexContainerOpenKey` 下发开合状态，面板关闭（`v-show` 隐藏）时内部浮层随之收起；
@@ -232,14 +232,12 @@ watch(
 )
 // 外部点击：只判「面板之外 且 锚点之外」并上报，不决定是否关闭（决策留在消费组件）。
 // 未传 anchor（如仅 point / virtualAnchor 定位）时无法排除触发器，口径退化为「面板之外」，消费方须自行再判触发器。
-// 事件模型与 antdv 的 vc-trigger 一致：判定挂 mousedown / touchstart，而**不是** click ——
-// click 的 target 在「面板内按下、面板外松开」时会退化为两者的最近共同祖先（通常是 body），
-// 于是「不在面板内 && 不在锚点内」独立成立而误关（面板内拖选文本、拖滚动条都会踩到）；
-// mousedown 的 target 恒为真实按下的元素，从事件模型上消除该退化。
-// 监听挂在 document 的 capture 阶段、按 show 挂卸（面板可按需挂载 / 可整棵卸载，指令式挂法会出现
-// 「面板尚未创建时无监听」），注册幂等
+// 判定挂 mousedown / touchstart 而非 click：click 的 target 在「面板内按下、面板外松开」时会退化为
+// 两者的最近共同祖先（通常是 body），「不在面板内 && 不在锚点内」便独立成立而误关（面板内拖选文本、
+// 拖滚动条都会踩到）；mousedown 的 target 恒为真实按下的元素，从事件模型上消除该退化。
+// 监听挂在 document 的 capture 阶段、按 show 挂卸（面板可按需挂载 / 可整棵卸载），注册幂等
 const { isSupported: captureSupported } = useOptionsSupported('capture')
-// capture 保证不被面板 / 锚点内部的 stopPropagation 截断；passive: false 与 antdv 的 touchstart 同口径
+// capture 保证不被面板 / 锚点内部的 stopPropagation 截断；passive: false 保留 preventDefault 能力
 const listenerOptions = computed<AddEventListenerOptions | boolean>(() =>
   captureSupported.value ? { capture: true, passive: false } : false
 )
@@ -254,7 +252,7 @@ function handleOutsideDown(e: MouseEvent | TouchEvent): void {
 function attachOutsideListener(): void {
   if (outsideListenerAttached || typeof document === 'undefined') return
   document.addEventListener('mousedown', handleOutsideDown, listenerOptions.value)
-  // 触屏设备不产生 mousedown：与 antdv 一样补一条 touchstart（「always hide on mobile」）
+  // 触屏设备不产生 mousedown，故补一条 touchstart
   document.addEventListener('touchstart', handleOutsideDown, listenerOptions.value)
   outsideListenerAttached = true
 }

@@ -13,6 +13,11 @@ import {
 import type { TooltipProps } from './types'
 import { TOOLTIP_INHERITED_DEFAULTS } from './types'
 
+/**
+ * 文字提示：hover / click / focus / contextmenu 触发的轻量浮层
+ *
+ * 契约：显式传入 `open` 即为受控，内部触发只经 `update:open` / `openChange` 上报
+ */
 // 声明组件插槽类型
 export interface TooltipSlots {
   tooltip?: () => VNode[]
@@ -20,35 +25,34 @@ export interface TooltipSlots {
 }
 
 const props = withDefaults(defineProps<TooltipProps>(), {
-  // 含默认值 ≠ 隐式默认的布尔项（arrow / flip），下游组件继承类型时一并继承这里的默认值
+  // 含默认值 ≠ 隐式默认的布尔项（arrow / flip / describedBy / open），下游组件继承类型时一并继承
   ...TOOLTIP_INHERITED_DEFAULTS,
-  maxWidth: 240,
+  openControl: false,
   content: undefined,
+  tooltip: undefined,
+  maxWidth: 240,
+  bgColor: 'var(--va-bg-spotlight-color)',
+  placement: 'top',
+  arrowPointAtCenter: false,
   contentClass: undefined,
   contentStyle: () => ({}),
-  tooltip: undefined,
   tooltipClass: undefined,
   tooltipStyle: () => ({}),
   popupClassName: undefined,
   popupStyle: () => ({}),
-  zIndex: undefined,
-  bgColor: 'var(--va-bg-spotlight-color)',
-  arrowPointAtCenter: false,
-  placement: 'top',
+  disabled: false,
   trigger: 'hover',
   keyboard: false,
-  disabled: false,
-  to: undefined,
-  destroyOnHide: false,
-  transitionDuration: 100,
   showDelay: 100,
   hideDelay: 100,
-  openControl: false,
-  anchor: null,
+  destroyOnHide: false,
   getDisabled: undefined,
+  anchor: null,
+  to: undefined,
+  zIndex: undefined,
+  transitionDuration: 100,
   tooltipRole: 'tooltip',
-  tooltipLabelledby: undefined,
-  describedBy: true
+  tooltipLabelledby: undefined
 })
 defineSlots<TooltipSlots>()
 // 模板存在「包裹层 / 浮层」两个条件根，属性继承需显式下发（见模板中包裹层根节点的 v-bind="$attrs"；
@@ -355,7 +359,7 @@ function toggleVisible(): void {
 }
 // 触发器点击：click 触发时显式切换（与 Dropdown 的 onTriggerClick 同口径）。
 // contextmenu 触发时左键点击触发器应收起 —— 右键唤起的浮层没有左键 toggle 语义，
-// 但「点触发器关掉它」是最直觉的关闭动作（antdv 在 contextmenu 模式下同样会收起）
+// 但「点触发器关掉它」是最直觉的关闭动作
 function onTriggerClick(): void {
   if (props.trigger === 'contextmenu') {
     if (tooltipVisible.value) {
@@ -417,7 +421,7 @@ function onBlur(e: FocusEvent) {
   onHide()
 }
 // contextmenu 触发：右键时显示并阻止浏览器原生菜单。**展开状态下同样要阻止** ——
-// 否则同一个手势第一次拦、第二次放行，原生菜单会叠在浮层上（与 antdv 一致）
+// 否则同一个手势第一次拦、第二次放行，原生菜单会叠在浮层上
 function onContextmenu(e: Event) {
   if (!showTooltip.value || props.trigger !== 'contextmenu') return
   e.preventDefault()
@@ -532,8 +536,8 @@ onBeforeUnmount(() => {
 function focusTrigger(): void {
   const root = anchorMode.value ? anchorEl.value : tooltipContentRef.value
   if (!root) return
-  const target = findFocusable(root)
-  ;(target ?? root).focus({ preventScroll: true })
+  const target = findFocusable(root) ?? root
+  target.focus({ preventScroll: true })
 }
 defineExpose({
   show: () => onShow(),

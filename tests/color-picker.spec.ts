@@ -632,7 +632,7 @@ describe('ColorPicker', () => {
     input?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
     await wait(120)
     expect(display.attributes('aria-expanded')).toBe('true')
-    // 点击外部关闭（外点判定挂在 mousedown，与 antdv 一致）
+    // 点击外部关闭（外点判定挂在 mousedown）
     document.body.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
     await wait(120)
     expect(display.attributes('aria-expanded')).toBe('false')
@@ -830,7 +830,7 @@ describe('ColorPicker', () => {
     const display = wrapper.find('.color-picker-display')
     await display.trigger('click')
     await wait(120)
-    // 外点判定挂 mousedown / touchstart（与 antdv 一致），各注册一次
+    // 外点判定挂 mousedown / touchstart，各注册一次
     expect(addSpy.mock.calls.filter(([type]) => type === 'mousedown')).toHaveLength(1)
     expect(addSpy.mock.calls.filter(([type]) => type === 'touchstart')).toHaveLength(1)
     // 收起即移除：隐藏态不得继续监听全局按下

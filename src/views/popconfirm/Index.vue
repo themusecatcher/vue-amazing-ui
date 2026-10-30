@@ -15,14 +15,14 @@ const cancel = (e: MouseEvent) => {
 const openChange = (open: boolean) => {
   console.log('open', open)
 }
-// 受控显示：显隐由 v-model:open 接管，内部触发的开合经 update:open 回传
-const controlledOpen = ref(false)
-// openControl：显隐只由 open 驱动
-const openControlOpen = ref(false)
 // 弹出位置：6 个方向（含复合方向），默认的箭头与翻转行为可一屏对比
 type PopconfirmPlacement = NonNullable<PopconfirmProps['placement']>
 const placements: PopconfirmPlacement[] = ['topLeft', 'top', 'topRight', 'bottomLeft', 'bottom', 'bottomRight']
 const placement = ref<PopconfirmPlacement>('top')
+// 受控显示：显隐由 v-model:open 接管，内部触发的开合经 update:open 回传
+const controlledOpen = ref(false)
+// openControl：显隐只由 open 驱动
+const openControlOpen = ref(false)
 </script>
 <template>
   <div>
@@ -33,7 +33,7 @@ const placement = ref<PopconfirmPlacement>('top')
       description="This will have other effects..."
       @ok="confirm"
       @cancel="cancel"
-      @openChange="openChange"
+      @open-change="openChange"
     >
       <Button type="danger">Delete Confirm</Button>
     </Popconfirm>
@@ -205,6 +205,20 @@ const placement = ref<PopconfirmPlacement>('top')
     <h2 class="mt30 mb10">隐藏箭头</h2>
     <Popconfirm :arrow="false" title="My arrow is hidden" @ok="confirm" @cancel="cancel">
       <Button type="primary">Hide Arrow Confirm</Button>
+    </Popconfirm>
+    <h2 class="mt30 mb10">键盘与读屏</h2>
+    <p class="mb10">
+      面板语义为 <code>alertdialog</code>，可访问名称取标题；打开后焦点落在「确定」，<code>Tab</code> 在「取消 /
+      确定」之间移动，<code>Esc</code>
+      关闭，关闭后焦点归还触发元素（若关闭前焦点已被点到页面上其它位置，则不抢回）。触发器不再把面板内容作为描述朗读
+    </p>
+    <Popconfirm
+      title="Are you sure delete this task ?"
+      description="This will have other effects..."
+      @ok="confirm"
+      @cancel="cancel"
+    >
+      <Button type="primary">Keyboard Confirm</Button>
     </Popconfirm>
   </div>
 </template>

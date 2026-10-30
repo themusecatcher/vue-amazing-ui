@@ -725,7 +725,7 @@ describe('Popup · 承载层开合契约', () => {
  * 消费方控制（这也是不把 Popover 迁到 Popup 上的理由）。
  */
 describe('Popup · 外点上报（closeOnOutsideClick）', () => {
-  /** 触发一次 mousedown：宿主与 antdv 同口径，在 mousedown / touchstart 上判定外部按下 */
+  /** 触发一次 mousedown：宿主在 mousedown / touchstart 上判定外部按下 */
   const downOn = (target: Element): void => {
     target.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
   }
@@ -810,7 +810,7 @@ describe('Popup · 外点上报（closeOnOutsideClick）', () => {
     expect(calls).toHaveLength(0)
   })
 
-  it('触屏 touchstart 同样上报（移动端不产生 mousedown，与 antdv 一致）', async () => {
+  it('触屏 touchstart 同样上报（移动端不产生 mousedown）', async () => {
     const { calls } = mountOutsideHost()
     await flush()
 

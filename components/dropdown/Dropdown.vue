@@ -284,7 +284,7 @@ function scheduleHide(): void {
   }, props.mouseLeaveDelay)
 }
 // 触发器点击：click 触发时切换展开态；contextmenu 触发时左键点击收起 —— 右键唤起的菜单没有
-// 左键 toggle 语义，但「点触发器关掉它」是最直觉的关闭动作（与 antdv 一致）
+// 左键 toggle 语义，但「点触发器关掉它」是最直觉的关闭动作
 function onTriggerClick(): void {
   if (useClick.value) {
     clearTimers()

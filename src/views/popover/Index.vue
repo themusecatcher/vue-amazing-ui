@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { PopoverProps } from 'components/popover'
-const controlledOpen = ref(false)
 function openChange(open: boolean) {
   console.log('open', open)
 }
@@ -9,6 +8,8 @@ function openChange(open: boolean) {
 type PopoverPlacement = NonNullable<PopoverProps['placement']>
 const placements: PopoverPlacement[] = ['topLeft', 'top', 'topRight', 'bottomLeft', 'bottom', 'bottomRight']
 const placement = ref<PopoverPlacement>('top')
+// 受控显示：显隐由 v-model:open 接管，内部触发的开合经 update:open 回传
+const controlledOpen = ref(false)
 // openControl：显隐只由 open 驱动
 const openControlOpen = ref(false)
 </script>

@@ -7,6 +7,11 @@ import { useSlotsExist } from 'components/utils'
 import type { TooltipProps } from '../tooltip/types'
 import { TOOLTIP_INHERITED_DEFAULTS } from '../tooltip/types'
 
+/**
+ * 气泡卡片：Tooltip 的内容皮肤（标题 + 内容），其余能力继承 Tooltip
+ *
+ * 契约：自有字段从下发的 rest 中剔除，剩余属性全量透传给内层 Tooltip
+ */
 // 排除名单独立成类型：Omit 的 K 约束是 keyof any，拼错会静默漏剔除，
 // 用 AssertKeys 补上 key 存在性校验（pnpm type-check 会拦住）
 type OmittedTooltipKeys = 'content' | 'contentClass' | 'contentStyle' | 'tooltip' | 'tooltipStyle'

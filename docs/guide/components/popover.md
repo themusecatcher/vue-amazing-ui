@@ -402,31 +402,31 @@ _设置 `destroyOnHide` 后，浮层在离开动画结束时卸载 `DOM`，再�
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| trigger | 触发方式 | 'hover' &#124; 'click' &#124; 'focus' &#124; 'contextmenu' | 'hover' |
 | open <Tag color="cyan">v-model</Tag> | 卡片是否显示；显式传入（含 `false`）即为受控，显隐以该值为准，内部触发只经 `update:open` / `openChange` 上报（不传时由内部触发自管） | boolean | undefined |
 | openControl | 仅当 `trigger: hover` 时生效：移入移出连 `update:open` 都不再上报（显隐受控本身由是否传入 `open` 决定） | boolean | false |
 | placement | 卡片位置 | 'top' &#124; 'topLeft' &#124; 'topRight' &#124; 'bottom' &#124; 'bottomLeft' &#124; 'bottomRight' &#124; 'left' &#124; 'leftTop' &#124; 'leftBottom' &#124; 'right' &#124; 'rightTop' &#124; 'rightBottom' | 'top' |
-| flip | 卡片被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true |
 | arrow | 是否显示箭头 | boolean | true |
 | arrowPointAtCenter | 箭头是否指向目标元素中心，仅当 `placement` 为复合方向 (如 `topLeft`) 时生效 | boolean | false |
+| maxWidth | 卡片最大宽度，单位 `px` | string &#124; number | 'auto' |
+| bgColor | 卡片背景颜色，支持预设色或自定义色值 (如 `#f50` / `rgba`) | string | 'var(--va-bg-elevated-color)' |
+| popupClassName | 设置浮层面板（定位盒）的类名 | string | undefined |
+| popupStyle | 设置浮层面板（定位盒）的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
+| disabled | 禁用卡片，禁用后不响应任何触发 | boolean | false |
+| trigger | 触发方式 | 'hover' &#124; 'click' &#124; 'focus' &#124; 'contextmenu' | 'hover' |
+| keyboard | 是否支持按键操作 (`enter` 切换显示)，仅当 `trigger: 'click'` 时生效；`esc` 关闭不受此属性控制，`trigger` 为 `click` / `contextmenu` 时始终可用 | boolean | false |
+| flip | 卡片被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true |
+| showDelay | 显示延迟时间，单位 `ms`，仅当 `trigger: hover` 时生效 | number | 100 |
+| hideDelay | 隐藏延迟时间，单位 `ms`，仅当 `trigger: hover` 时生效 | number | 100 |
 | destroyOnHide | 隐藏后是否卸载浮层 `DOM`：离开动画结束后卸载，再次显示时重新创建并重新定位 | boolean | false |
 | to | 浮层挂载的容器节点（同 [Tooltip `to`](./tooltip.md#tooltip-props)，不传时优先挂到最近的承载层内容容器） | string &#124; HTMLElement &#124; false | undefined |
 | zIndex | 浮层层级，优先级最高 | number | undefined |
-| popupClassName | 设置浮层面板（定位盒）的类名 | string | undefined |
-| popupStyle | 设置浮层面板（定位盒）的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| showDelay | 显示延迟时间，单位 `ms`，仅当 `trigger: hover` 时生效 | number | 100 |
-| hideDelay | 隐藏延迟时间，单位 `ms`，仅当 `trigger: hover` 时生效 | number | 100 |
-| disabled | 禁用卡片，禁用后不响应任何触发 | boolean | false |
-| keyboard | 是否支持按键操作 (`enter` 切换显示)，仅当 `trigger: 'click'` 时生效；`esc` 关闭不受此属性控制，`trigger` 为 `click` / `contextmenu` 时始终可用 | boolean | false |
-| maxWidth | 卡片最大宽度，单位 `px` | string &#124; number | 'auto' |
-| bgColor | 卡片背景颜色，支持预设色或自定义色值 (如 `#f50` / `rgba`) | string | 'var(--va-bg-elevated-color)' |
 | transitionDuration | 卡片动画的过渡持续时间，单位 `ms` | number | 200 |
 
 **未在此列出**的继承属性与 [Tooltip Props](./tooltip.md#tooltip-props) 完全一致，类型见 `TooltipProps`。
 
 #### 特殊字段
 
-| 字段 | 说明 |
+| 名称 | 说明 |
 | :-- | :-- |
 | contentStyle / tooltipStyle | 支持，含义同自有属性：分别作用于卡片内容区与卡片容器（覆盖内置的 `padding` / 圆角） |
 | contentClass / tooltip | **不支持**（类型上已从 `PopoverProps` 剔除）。运行时传入仍会作为 `Tooltip` 属性透传并生效（`Omit` 只修正类型承诺，挡不住运行时）：`contentClass` 落在触发包裹层，`tooltip` 被 `#tooltip` 插槽覆盖 —— 均属未定义行为，请改用 `#content` 插槽与自有属性 |

@@ -8,6 +8,11 @@ import { useSlotsExist } from 'components/utils'
 import type { TooltipProps } from '../tooltip/types'
 import { TOOLTIP_INHERITED_DEFAULTS } from '../tooltip/types'
 
+/**
+ * 弹出确认：Tooltip 的对话框皮肤（标题 + 描述 + 取消 / 确定）
+ *
+ * 契约：面板语义为 `alertdialog`，打开聚焦「确定」、关闭归还焦点；其余能力继承 Tooltip
+ */
 // 排除名单独立成类型：Omit 的 K 约束是 keyof any，拼错会静默漏剔除，
 // 用 AssertKeys 补上 key 存在性校验（pnpm type-check 会拦住）
 type OmittedTooltipKeys = 'tooltip' | 'contentClass' | 'contentStyle' | 'tooltipStyle'

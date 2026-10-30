@@ -23,7 +23,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - [文字提示 Tooltip](/guide/components/tooltip.html) 的 `click` 触发：点击触发器即开合，展开后再次点击立刻收起，不再滞后一拍
 - [文字提示 Tooltip](/guide/components/tooltip.html) 在 `trigger` 为 `click` / `contextmenu` 时，焦点落在触发器上按 `Esc` 即可关闭，不再要求开启 `keyboard`（该属性此后仅控制 `Enter` 切换显示）；[气泡卡片 Popover](/guide/components/popover.html)、[弹出确认 Popconfirm](/guide/components/popconfirm.html) 同步生效
 - [文字提示 Tooltip](/guide/components/tooltip.html) 的 `open` 改为受控属性（默认值改为 `undefined`）：传入后显隐以该值为准，内部触发只经 `update:open` / `openChange` 上报，不再自行改写；[气泡卡片 Popover](/guide/components/popover.html)、[弹出确认 Popconfirm](/guide/components/popconfirm.html) 同步生效
-- [下拉菜单 Dropdown](/guide/components/dropdown.html)、[文字提示 Tooltip](/guide/components/tooltip.html)、[颜色选择器 ColorPicker](/guide/components/color-picker.html) 等浮层的「点击外部关闭」改为按下即判定（触屏为 `touchstart`）：在面板内按下、拖到面板外松手不再误关，与 ant-design-vue 一致
+- [下拉菜单 Dropdown](/guide/components/dropdown.html)、[文字提示 Tooltip](/guide/components/tooltip.html)、[颜色选择器 ColorPicker](/guide/components/color-picker.html) 等浮层的「点击外部关闭」改为按下即判定（触屏为 `touchstart`）：在面板内按下、拖到面板外松手不再误关
 - [文字提示 Tooltip](/guide/components/tooltip.html) / [下拉菜单 Dropdown](/guide/components/dropdown.html) 的 `contextmenu` 触发：展开后再次右键不再弹出浏览器原生菜单，点击触发器可直接收起
 - 修复 [时间选择器 TimePicker](/guide/components/time-picker.html) / [日期选择器 DatePicker](/guide/components/date-picker.html) / [颜色选择器 ColorPicker](/guide/components/color-picker.html) 在 [模态框 Modal](/guide/components/modal.html) / [抽屉 Drawer](/guide/components/drawer.html) / [对话框 Dialog](/guide/components/dialog.html) 内被 Esc 或程序化关闭后面板仍停留在打开态（重开容器时以打开态出现）的问题
 - 补充使用者文档：[文本省略 Ellipsis](/guide/components/ellipsis.html) 的 `tooltip` 类型更正为 `EllipsisTooltipProps`，并说明 `maxWidth` / `tooltipMaxWidth` / `tooltip.maxWidth` 的取值优先级

@@ -316,7 +316,7 @@ describe('Dropdown · 触发语义', () => {
     await wrapper!.find('.dropdown-trigger').trigger('click')
     await flush()
 
-    // 外点判定挂在 mousedown（与 antdv 一致），click 不再触发关闭
+    // 外点判定挂在 mousedown，click 不再触发关闭
     document.body.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
     await flush()
 

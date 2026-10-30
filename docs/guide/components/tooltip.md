@@ -852,33 +852,33 @@ const destroyOpen = ref(false)
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| maxWidth | 文字提示最大宽度，单位 `px` | string &#124; number | 240 |
+| open <Tag color="cyan">v-model</Tag> | 文字提示是否显示；显式传入（含 `false`）即为受控，显隐以该值为准，内部触发只经 `update:open` / `openChange` 上报（不传时由内部触发自管） | boolean | undefined |
+| openControl | 仅当 `trigger: hover` 时生效：移入移出连 `update:open` 都不再上报（显隐受控本身由是否传入 `open` 决定） | boolean | false |
 | content | 展示的内容 | string | undefined |
+| tooltip | 文字提示内容 | string | undefined |
+| maxWidth | 文字提示最大宽度，单位 `px` | string &#124; number | 240 |
+| bgColor | 文字提示框背景颜色，支持预设色 (`pink` &#124; `red` &#124; `yellow` &#124; `orange` &#124; `cyan` &#124; `green` &#124; `blue` &#124; `purple` &#124; `geekblue` &#124; `magenta` &#124; `volcano` &#124; `gold` &#124; `lime`) 或自定义色值 (如 `#f50` / `rgba`) | string | 'var(--va-bg-spotlight-color)' |
+| placement | 文字提示位置 | 'top' &#124; 'topLeft' &#124; 'topRight' &#124; 'bottom' &#124; 'bottomLeft' &#124; 'bottomRight' &#124; 'left' &#124; 'leftTop' &#124; 'leftBottom' &#124; 'right' &#124; 'rightTop' &#124; 'rightBottom' | 'top' |
+| arrow | 是否显示箭头 | boolean | true |
+| arrowPointAtCenter | 箭头是否指向目标元素中心，仅当 `placement` 为复合方向 (如 `topLeft`) 时生效 | boolean | false |
 | contentClass | 设置展示内容的类名 | string | undefined |
 | contentStyle | 设置展示内容的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| tooltip | 文字提示内容 | string | undefined |
 | tooltipClass | 设置文字提示的类名 | string | undefined |
 | tooltipStyle | 设置文字提示的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | popupClassName | 设置浮层面板（定位盒）的类名，用于自定义面板层样式 | string | undefined |
 | popupStyle | 设置浮层面板（定位盒）的样式，在皮肤变量与动画原点之后合并，可覆盖定位 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| zIndex | 浮层层级，优先级最高（覆盖默认层级与 `ConfigProvider` 的 `baseZIndex` 自动分配） | number | undefined |
-| bgColor | 文字提示框背景颜色，支持预设色 (`pink` &#124; `red` &#124; `yellow` &#124; `orange` &#124; `cyan` &#124; `green` &#124; `blue` &#124; `purple` &#124; `geekblue` &#124; `magenta` &#124; `volcano` &#124; `gold` &#124; `lime`) 或自定义色值 (如 `#f50` / `rgba`) | string | 'rgba(0, 0, 0, 0.85)' |
-| arrow | 是否显示箭头 | boolean | true |
-| arrowPointAtCenter | 箭头是否指向目标元素中心，仅当 `placement` 为复合方向 (如 `topLeft`) 时生效 | boolean | false |
-| placement | 文字提示位置 | 'top' &#124; 'topLeft' &#124; 'topRight' &#124; 'bottom' &#124; 'bottomLeft' &#124; 'bottomRight' &#124; 'left' &#124; 'leftTop' &#124; 'leftBottom' &#124; 'right' &#124; 'rightTop' &#124; 'rightBottom' | 'top' |
-| flip | 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true |
+| disabled | 是否禁用文字提示，禁用后不响应任何触发 | boolean | false |
 | trigger | 文字提示触发方式 (`click` 再次点击触发器收起，`click` / `contextmenu` 点击浮层之外收起) | 'hover' &#124; 'click' &#124; 'focus' &#124; 'contextmenu' | 'hover' |
 | keyboard | 是否支持按键操作 (`enter` 切换显示)，仅当 `trigger: 'click'` 时生效；`esc` 关闭不受此属性控制，`trigger` 为 `click` / `contextmenu` 时始终可用 | boolean | false |
-| disabled | 是否禁用文字提示，禁用后不响应任何触发 | boolean | false |
-| to | 弹出框挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
-| destroyOnHide | 隐藏后是否卸载弹出框 `DOM`：离开动画结束后卸载整棵浮层子树，再次显示时重新创建并重新定位（适合浮层内容较重、实例较多的场景） | boolean | false |
-| transitionDuration | 文字提示动画的过渡持续时间，单位 `ms` | number | 100 |
+| flip | 文字提示被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置 | boolean | true |
 | showDelay | 文字提示显示的延迟时间，单位 `ms`，仅当 `trigger: hover` 时生效 | number | 100 |
 | hideDelay | 文字提示隐藏的延迟时间，单位 `ms`，仅当 `trigger: hover` 时生效 | number | 100 |
-| open <Tag color="cyan">v-model</Tag> | 文字提示是否显示；显式传入（含 `false`）即为受控，显隐以该值为准，内部触发只经 `update:open` / `openChange` 上报（不传时由内部触发自管） | boolean | undefined |
-| openControl | 仅当 `trigger: hover` 时生效：移入移出连 `update:open` 都不再上报（显隐受控本身由是否传入 `open` 决定） | boolean | false |
-| anchor | 外部锚点：传入后不再渲染触发包裹层，触发监听、`tabindex` / `aria-describedby` 与定位均以该元素为准（此时本组件的 `$attrs` 不再下发） | HTMLElement &#124; null | null |
+| destroyOnHide | 隐藏后是否卸载弹出框 `DOM`：离开动画结束后卸载整棵浮层子树，再次显示时重新创建并重新定位（适合浮层内容较重、实例较多的场景） | boolean | false |
 | getDisabled | 展示前的动态禁用判定，每次展示前求值，返回 `true` 时不展示（如文本未溢出时不需要提示） | () => boolean | undefined |
+| anchor | 外部锚点：传入后不再渲染触发包裹层，触发监听、`tabindex` / `aria-describedby` 与定位均以该元素为准（此时本组件的 `$attrs` 不再下发） | HTMLElement &#124; null | null |
+| to | 弹出框挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
+| zIndex | 浮层层级，优先级最高（覆盖默认层级与 `ConfigProvider` 的 `baseZIndex` 自动分配） | number | undefined |
+| transitionDuration | 文字提示动画的过渡持续时间，单位 `ms` | number | 100 |
 | tooltipRole | 气泡卡片的 `role`，落在 `.tooltip-card`（与 `tooltipStyle` 同节点）；对话框类皮肤（见 [弹出确认 Popconfirm](./popconfirm.md)）改为 `alertdialog` | string | 'tooltip' |
 | tooltipLabelledby | 气泡卡片可访问名称的来源元素 `id`：`role` 为 `dialog` / `alertdialog` 时必需，普通提示无需设置 | string | undefined |
 | describedBy | 是否把气泡卡片的 `id` 关联到触发器的 `aria-describedby`；对话框类面板应关闭，否则整块内容会被当作触发器的描述朗读 | boolean | true |
@@ -896,6 +896,8 @@ const destroyOpen = ref(false)
 | :-- | :-- | :-- |
 | show | 显示文字提示 | () => void |
 | hide | 隐藏文字提示 | () => void |
+| focusTrigger | 让焦点回到触发元素（关闭浮层后归还焦点） | () => void |
+| tooltipCardRef | 气泡卡片根元素引用（供判定焦点是否仍在面板内） | Ref<HTMLElement &#124; null> |
 
 ## Events
 
