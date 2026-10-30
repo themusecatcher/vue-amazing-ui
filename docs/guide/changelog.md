@@ -14,6 +14,20 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-29">3.6.0</VersionDateTag>
+
+- 重构 [气泡卡片 Popover](/guide/components/popover.html) / [弹出确认 Popconfirm](/guide/components/popconfirm.html) 的 Props 类型：改为继承 [文字提示 Tooltip](/guide/components/tooltip.html) 的完整契约，新增 `anchor` / `disabled` / `openControl` 等字段声明，`contentClass` / `tooltip` 不再声明（改用 `tooltipClass` / `content` 插槽），使用者文档属性表同步列出继承字段与不支持字段，并补充受控开合 / `openControl` / 弹出位置示例
+- 补充 [弹出确认 Popconfirm](/guide/components/popconfirm.html) 的键盘与读屏支持：面板语义改为 `alertdialog`（标题作为可访问名称），打开后焦点落在「确定」、关闭归还触发元素，键盘用户不再到不了面板内的按钮
+- [文字提示 Tooltip](/guide/components/tooltip.html) 新增 `tooltipRole` / `tooltipLabelledby` / `describedBy`，可改写气泡卡片的 `role` 与描述关联；`Popover` / `Popconfirm` 一并继承
+- [下拉菜单 Dropdown](/guide/components/dropdown.html) 的 `contextmenu` 浮层改为锚定「右键位置相对触发器的偏移」，页面或容器滚动时随触发区域一起移动，不再停在屏幕原处与内容脱钩
+- [文字提示 Tooltip](/guide/components/tooltip.html) 的 `click` 触发：点击触发器即开合，展开后再次点击立刻收起，不再滞后一拍
+- [文字提示 Tooltip](/guide/components/tooltip.html) 在 `trigger` 为 `click` / `contextmenu` 时，焦点落在触发器上按 `Esc` 即可关闭，不再要求开启 `keyboard`（该属性此后仅控制 `Enter` 切换显示）；[气泡卡片 Popover](/guide/components/popover.html)、[弹出确认 Popconfirm](/guide/components/popconfirm.html) 同步生效
+- [文字提示 Tooltip](/guide/components/tooltip.html) 的 `open` 改为受控属性（默认值改为 `undefined`）：传入后显隐以该值为准，内部触发只经 `update:open` / `openChange` 上报，不再自行改写；[气泡卡片 Popover](/guide/components/popover.html)、[弹出确认 Popconfirm](/guide/components/popconfirm.html) 同步生效
+- [下拉菜单 Dropdown](/guide/components/dropdown.html)、[文字提示 Tooltip](/guide/components/tooltip.html)、[颜色选择器 ColorPicker](/guide/components/color-picker.html) 等浮层的「点击外部关闭」改为按下即判定（触屏为 `touchstart`）：在面板内按下、拖到面板外松手不再误关，与 ant-design-vue 一致
+- [文字提示 Tooltip](/guide/components/tooltip.html) / [下拉菜单 Dropdown](/guide/components/dropdown.html) 的 `contextmenu` 触发：展开后再次右键不再弹出浏览器原生菜单，点击触发器可直接收起
+- 修复 [时间选择器 TimePicker](/guide/components/time-picker.html) / [日期选择器 DatePicker](/guide/components/date-picker.html) / [颜色选择器 ColorPicker](/guide/components/color-picker.html) 在 [模态框 Modal](/guide/components/modal.html) / [抽屉 Drawer](/guide/components/drawer.html) / [对话框 Dialog](/guide/components/dialog.html) 内被 Esc 或程序化关闭后面板仍停留在打开态（重开容器时以打开态出现）的问题
+- 补充使用者文档：[文本省略 Ellipsis](/guide/components/ellipsis.html) 的 `tooltip` 类型更正为 `EllipsisTooltipProps`，并说明 `maxWidth` / `tooltipMaxWidth` / `tooltip.maxWidth` 的取值优先级
+
 ## <VersionDateTag date="2026-10-29">3.5.0</VersionDateTag>
 
 - 重构 [选择器 Select](/guide/components/select.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html) 的下拉面板：外层包裹节点 `.select-panel-wrapper` / `.auto-complete-panel-wrapper` 移除，改由公共浮层容器承载（面板根 `select-panel-container` / `auto-complete-panel` 不变），依赖旧包裹节点的 `:deep()` 选择器改用 `popupClassName` / `dropdownMenuStyle` 或直接写面板根类名；贡献者文档同步浮层字体承接的适用范围

@@ -52,7 +52,7 @@ const lineTypeOptions: { label: string; value: TimelineLineType }[] = [
   <TimelineItem v-for="(item, index) in timelineItems" :key="index" v-bind="item" />
 </Timeline>
 
-::::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -72,7 +72,7 @@ const timelineItems: TimelineItemProps[] = [
 </template>
 ```
 
-:::::
+:::
 
 ## 圆圈颜色
 
@@ -107,7 +107,7 @@ const timelineItems: TimelineItemProps[] = [
   </TimelineItem>
 </Timeline>
 
-::::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -147,7 +147,7 @@ import { SmileOutlined } from '@ant-design/icons-vue'
 </template>
 ```
 
-:::::
+:::
 
 ## 自定义时间轴点
 
@@ -172,7 +172,7 @@ import { SmileOutlined } from '@ant-design/icons-vue'
   </TimelineItem>
 </Timeline>
 
-::::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -223,7 +223,7 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 </style>
 ```
 
-:::::
+:::
 
 ## 标题与时间
 
@@ -246,7 +246,7 @@ _节点按 `title` / `content` / `time` 渲染为三段结构，分别可用 `ti
   <TimelineItem content="Release archived" color="gray" />
 </Timeline>
 
-::::: details Show Code
+::: details Show Code
 
 ```vue
 <template>
@@ -267,7 +267,7 @@ _节点按 `title` / `content` / `time` 渲染为三段结构，分别可用 `ti
 </template>
 ```
 
-:::::
+:::
 
 ## 标签
 
@@ -295,7 +295,7 @@ _任一节点提供 `label` 时整条时间轴切换为左右分栏，可用 `mo
   </TimelineItem>
 </Timeline>
 
-::::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -332,7 +332,7 @@ const modeOptions: { label: string; value: TimelineMode }[] = [
 </style>
 ```
 
-:::::
+:::
 
 ## 尺寸
 
@@ -375,7 +375,7 @@ const modeOptions: { label: string; value: TimelineMode }[] = [
   </Flex>
 </Flex>
 
-::::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -430,7 +430,7 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 </style>
 ```
 
-:::::
+:::
 
 ## 线型
 
@@ -447,7 +447,7 @@ _容器级 `line-type` 统一设置线型，节点级 `line-type` 可单独覆�
   <TimelineItem v-for="(item, index) in timelineItems" :key="index" v-bind="item" />
 </Timeline>
 
-::::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -479,7 +479,7 @@ const lineTypeOptions: { label: string; value: TimelineLineType }[] = [
 </template>
 ```
 
-:::::
+:::
 
 ## 右侧时间轴点
 
@@ -487,7 +487,7 @@ const lineTypeOptions: { label: string; value: TimelineLineType }[] = [
   <TimelineItem v-for="(item, index) in timelineItems" :key="index" v-bind="item" />
 </Timeline>
 
-::::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -507,7 +507,7 @@ const timelineItems: TimelineItemProps[] = [
 </template>
 ```
 
-:::::
+:::
 
 ## 交替展现
 
@@ -528,7 +528,7 @@ _`alternate` 模式轴线居中、内容左右交替，`start` 决定首个内�
   </TimelineItem>
 </Timeline>
 
-::::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -573,7 +573,7 @@ const startOptions: { label: string; value: TimelineStart }[] = [
 </style>
 ```
 
-:::::
+:::
 
 ## 节点位置
 
@@ -588,7 +588,7 @@ _`alternate` 模式下节点的 `position` 可单独指定内容所在侧，覆�
   <TimelineItem content="Network problems being solved" time="2025-06-24 10:10" color="info" />
 </Timeline>
 
-::::: details Show Code
+::: details Show Code
 
 ```vue
 <template>
@@ -601,7 +601,7 @@ _`alternate` 模式下节点的 `position` 可单独指定内容所在侧，覆�
 </template>
 ```
 
-:::::
+:::
 
 ## 水平时间轴
 
@@ -623,7 +623,7 @@ _水平排列，可与 `reverse` 倒序组合；内容超出时容器可横向�
   <TimelineItem title="Info" content="Network problems being solved" time="2025-06-24 10:10" color="info" />
 </Timeline>
 
-::::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -647,7 +647,7 @@ const horizontalReverse = ref(false)
 </template>
 ```
 
-:::::
+:::
 
 ## 嵌套时间轴
 
@@ -661,7 +661,7 @@ const horizontalReverse = ref(false)
   <TimelineItem content="Network problems being solved" time="2025-06-24 10:10" color="warning" />
 </Timeline>
 
-::::: details Show Code
+::: details Show Code
 
 ```vue
 <template>
@@ -677,7 +677,7 @@ const horizontalReverse = ref(false)
 </template>
 ```
 
-:::::
+:::
 
 ## 进行中与倒序
 
@@ -689,7 +689,7 @@ const horizontalReverse = ref(false)
   <TimelineItem content="Technical testing" time="2025-06-24 10:10" />
 </Timeline>
 
-::::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -706,7 +706,7 @@ const reverse = ref(false)
 </template>
 ```
 
-:::::
+:::
 
 ## 自定义幽灵节点
 
@@ -729,7 +729,7 @@ _`pending` 传 `true` 时只表示进行中、不渲染内容；`pendingDot` 属
   </template>
 </Timeline>
 
-::::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -758,7 +758,7 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 </style>
 ```
 
-:::::
+:::
 
 <style lang="less" scoped>
 .big-dot {
