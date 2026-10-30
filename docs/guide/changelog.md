@@ -14,6 +14,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-31">3.6.0</VersionDateTag>
+
+- 移除 [级联选择 Cascader](/guide/components/cascader.html) 的 `gap` / `height` / `maxDisplay` / `search` / `filter` 属性，`width` / `disabled` / `placeholder` 不再接受数组；`change` 第二参由文本数组改为选项数组
+- 重构 [级联选择 Cascader](/guide/components/cascader.html)：由三个并列 `Select` 改为单选择器 + 多列浮层面板，新增 `showSearch`（`filter` / `sort` / `limit` / `render`）、`expandTrigger`、`displayRender`、`panelHeight`、`status`、`bordered`、`open` / `searchValue` 受控与默认插槽自定义触发器
+- 新增 `theme.components.Cascader` 组件级主色，面板选中项底色与选择器描边可独立换色
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-10-30">3.5.0</VersionDateTag>
 
 - [文字提示 Tooltip](/guide/components/tooltip.html) 的 `open` 改为受控（默认 `false` → `undefined`，不传时行为不变，传入后需经 `v-model:open` 回写），新增 `tooltipRole` / `tooltipLabelledby` / `describedBy`；[气泡卡片 Popover](/guide/components/popover.html)、[弹出确认 Popconfirm](/guide/components/popconfirm.html) 继承其完整属性，`anchor` / `disabled` / `openControl` 等可直接写在组件上，`contentClass` / `tooltip` 移除

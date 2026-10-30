@@ -1267,15 +1267,15 @@ _`open` 受控时面板显隐由外部驱动，配合 `dropdownVisibleChange` �
 <br/>
 
 <Space>
-  <Button type="primary" @mousedown="onToggleMousedown" @click="onToggleClick">
-    {{ controlledOpen ? '关闭面板' : '展开面板' }}
-  </Button>
   <Select
     :options="cityOptions"
     v-model:value="controlledOpenValue"
     :open="controlledOpen"
     @dropdown-visible-change="onControlledVisibleChange"
   />
+  <Button type="primary" @mousedown="onToggleMousedown" @click="onToggleClick">
+    {{ controlledOpen ? '关闭面板' : '展开面板' }}
+  </Button>
 </Space>
 
 ::: details Show Code
@@ -1307,15 +1307,15 @@ function onToggleClick() {
 </script>
 <template>
   <Space>
-    <Button type="primary" @mousedown="onToggleMousedown" @click="onToggleClick">
-      {{ open ? '关闭面板' : '展开面板' }}
-    </Button>
     <Select
       :options="options"
       v-model:value="selectedValue"
       :open="open"
       @dropdown-visible-change="open = $event"
     />
+    <Button type="primary" @mousedown="onToggleMousedown" @click="onToggleClick">
+      {{ open ? '关闭面板' : '展开面板' }}
+    </Button>
   </Space>
 </template>
 ```

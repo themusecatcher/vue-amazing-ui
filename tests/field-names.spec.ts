@@ -79,7 +79,9 @@ describe('Select fieldNames', () => {
 })
 
 describe('Cascader fieldNames', () => {
-  it('传 fieldNames 时按自定义字段名渲染各级文本', async () => {
+  const cascaderText = (target: ReturnType<typeof mount>): string => target.find('.cascader-item').text().trim()
+
+  it('传 fieldNames 时按自定义字段名渲染路径文本', async () => {
     wrapper = mount(Cascader, {
       props: {
         options: [{ name: '浙江', id: '2', items: [{ name: '杭州市', id: '21' }] }],
@@ -88,11 +90,10 @@ describe('Cascader fieldNames', () => {
       }
     })
     await flush()
-    expect(selectTexts(wrapper)[0]).toBe('浙江')
-    expect(selectTexts(wrapper)[1]).toBe('杭州市')
+    expect(cascaderText(wrapper)).toBe('浙江 / 杭州市')
   })
 
-  it('不传 fieldNames 时按默认 label / value / children 渲染各级文本', async () => {
+  it('不传 fieldNames 时按默认 label / value / children 渲染路径文本', async () => {
     wrapper = mount(Cascader, {
       props: {
         options: [{ label: '浙江', value: '2', children: [{ label: '杭州市', value: '21' }] }],
@@ -100,7 +101,6 @@ describe('Cascader fieldNames', () => {
       }
     })
     await flush()
-    expect(selectTexts(wrapper)[0]).toBe('浙江')
-    expect(selectTexts(wrapper)[1]).toBe('杭州市')
+    expect(cascaderText(wrapper)).toBe('浙江 / 杭州市')
   })
 })

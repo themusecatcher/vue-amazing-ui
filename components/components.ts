@@ -35,8 +35,22 @@ export { default as Card } from './card'
 export type { CarouselProps, CarouselImage, CarouselEasingPreset } from './carousel'
 export { default as Carousel } from './carousel'
 
-export type { CascaderProps, CascaderOption, CascaderFieldNames } from './cascader'
-export { default as Cascader } from './cascader'
+export type {
+  CascaderProps,
+  CascaderOption,
+  CascaderFieldNames,
+  CascaderSearchConfig,
+  CascaderDisplayRenderParams,
+  CascaderSearchRenderParams,
+  CascaderTagRenderParams,
+  CascaderMaxTagPlaceholderParams,
+  CascaderValue,
+  CascaderPath,
+  CascaderModelValue,
+  CascaderPlacement,
+  ShowCheckedStrategy
+} from './cascader'
+export { default as Cascader, SHOW_CHILD, SHOW_PARENT } from './cascader'
 
 export type {
   CheckboxProps,

@@ -5,7 +5,7 @@ _本节由 `node scripts/gen-component-vars-doc.js` 从 `components/theme/compon
 组件令牌**只在消费处带默认值、自身不声明**，因此写在任何祖先选择器上都能生效，也不会被组件样式反向压住。
 
 ::: tip 组件级主色的支持范围
-当前支持 `39` 个组件：`Alert` / `AutoComplete` / `BackTop` / `Badge` / `Button` / `Calendar` / `Carousel` / `Checkbox` / `ColorPicker` / `DatePicker` / `FloatButton` / `GradientText` / `Image` / `Input` / `InputNumber` / `InputSearch` / `LoadingBar` / `Menu` / `Message` / `Modal` / `Notification` / `Pagination` / `Popconfirm` / `Progress` / `Radio` / `Select` / `Slider` / `Spin` / `Steps` / `Swiper` / `Switch` / `Table` / `Tabs` / `Tag` / `TextScroll` / `Textarea` / `TimePicker` / `Timeline` / `Upload`。
+当前支持 `40` 个组件：`Alert` / `AutoComplete` / `BackTop` / `Badge` / `Button` / `Calendar` / `Carousel` / `Cascader` / `Checkbox` / `ColorPicker` / `DatePicker` / `FloatButton` / `GradientText` / `Image` / `Input` / `InputNumber` / `InputSearch` / `LoadingBar` / `Menu` / `Message` / `Modal` / `Notification` / `Pagination` / `Popconfirm` / `Progress` / `Radio` / `Select` / `Slider` / `Spin` / `Steps` / `Swiper` / `Switch` / `Table` / `Tabs` / `Tag` / `TextScroll` / `Textarea` / `TimePicker` / `Timeline` / `Upload`。
 `Button` / `Slider` / `Menu` 通过注册表里的 `themeRole` 令牌映射；其余组件在样式里消费内部桥变量
 `--va-cp-<component>-primary-*`，配置后会覆盖该组件的全部主色使用点。写错组件名会在编译期报错。
 :::
