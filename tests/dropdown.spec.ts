@@ -194,8 +194,7 @@ describe('Dropdown · 递归子菜单', () => {
     await flush()
 
     const nestedTitle = submenuPanels()[0]?.querySelector('.dropdown-menu-item-submenu .dropdown-menu-item-content') as
-      | HTMLElement
-      | undefined
+      HTMLElement | undefined
     expect(nestedTitle?.textContent).toContain('nested sub menu')
 
     nestedTitle?.dispatchEvent(new MouseEvent('mouseenter'))

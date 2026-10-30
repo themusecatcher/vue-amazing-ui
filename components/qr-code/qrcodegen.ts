@@ -820,7 +820,7 @@ namespace qrcodegen {
         throw new RangeError('String contains non-numeric characters')
       }
       const bb: bit[] = []
-      for (let i = 0; i < digits.length; ) {
+      for (let i = 0; i < digits.length;) {
         // Consume up to 3 digits per iteration
         const n: int = Math.min(digits.length - i, 3)
         appendBits(Number.parseInt(digits.substr(i, n), 10), n * 3 + 1, bb)
