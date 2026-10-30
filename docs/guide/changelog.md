@@ -14,11 +14,10 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-31">3.6.0</VersionDateTag>
+## <VersionDateTag date="2026-10-30">3.6.0</VersionDateTag>
 
-- 移除 [级联选择 Cascader](/guide/components/cascader.html) 的 `gap` / `height` / `maxDisplay` / `search` / `filter` 属性，`width` / `disabled` / `placeholder` 不再接受数组；`change` 第二参由文本数组改为选项数组
-- 重构 [级联选择 Cascader](/guide/components/cascader.html)：由三个并列 `Select` 改为单选择器 + 多列浮层面板，新增 `showSearch`（`filter` / `sort` / `limit` / `render`）、`expandTrigger`、`displayRender`、`panelHeight`、`status`、`bordered`、`open` / `searchValue` 受控与默认插槽自定义触发器
-- 新增 `theme.components.Cascader` 组件级主色，面板选中项底色与选择器描边可独立换色
+- 重构 [级联选择 Cascader](/guide/components/cascader.html)：由三个并排选择框改为单选择器 + 多列浮层面板，层级不再固定三级；移除 `gap` / `height` / `maxDisplay` / `search` / `filter`（`maxDisplay` → `panelHeight`、`search` → `showSearch`、`filter` → `showSearch.filter` 且第二参改为完整路径），`width` / `disabled` / `placeholder` 不再接受数组，`width` 默认 `auto` → `184`、`allowClear` 默认 `false` → `true`、`placement` 改四向取值（旧 `'bottom'` / `'top'` 失效）、`change` 第二参改为选项数组
+- 新增 [级联选择 Cascader](/guide/components/cascader.html) 的多选（`multiple` / `showCheckedStrategy` / `maxTagCount` / `maxTagPlaceholder` / `tagRender` / `getCheckedData`）、`showSearch` 定制（`filter` / `sort` / `limit` / `render` / `matchInputWidth`）、`loadData` 异步加载、`virtual` 虚拟滚动、`v-model:open` / `v-model:searchValue` 受控、`displayRender` / `expandTrigger` / `status` / `bordered`、`default` / `action` 插槽、键盘操作（方向键跨列、`Space` 勾选、`Backspace` 删 tag）、`theme.components.Cascader.primaryColor` 组件级主色；使用者文档同步补全属性 / 事件 / 插槽说明
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-10-30">3.5.0</VersionDateTag>
