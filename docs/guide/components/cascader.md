@@ -12,7 +12,7 @@ _级联选择框，在一个浮层中按列完成多级分类的选择_
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { CascaderOption, CascaderProps } from 'vue-amazing-ui'
+import type { CascaderOption, CascaderPlacement, CascaderProps } from 'vue-amazing-ui'
 const options: CascaderOption[] = [
   {
     value: 'zhejiang',
@@ -237,7 +237,9 @@ const disabledOptionValue = ref<CascaderProps['value']>([])
 const changeOnSelectValue = ref<CascaderProps['value']>(['zhejiang'])
 const sizeValue = ref<CascaderProps['value']>(['zhejiang', 'hangzhou', 'xihu'])
 const displayRenderValue = ref<CascaderProps['value']>(['zhejiang', 'hangzhou', 'xihu'])
+const optionSlotValue = ref<CascaderProps['value']>([])
 const searchValue = ref<CascaderProps['value']>([])
+const searchRenderValue = ref<CascaderProps['value']>([])
 const fieldNameValue = ref<CascaderProps['value']>(['1', '11', '111'])
 const suffixSlotValue = ref<CascaderProps['value']>([])
 const suffixIconValue = ref<CascaderProps['value']>([])
@@ -246,11 +248,22 @@ const clearValue = ref<CascaderProps['value']>(['jiangsu', 'nanjing', 'zhonghuam
 const emptyOptionsValue = ref<CascaderProps['value']>([])
 const emptyFallbackValue = ref<CascaderProps['value']>([])
 const emptySearchValue = ref<CascaderProps['value']>([])
+const emptySlotValue = ref<CascaderProps['value']>([])
 const statusErrorValue = ref<CascaderProps['value']>([])
 const statusWarningValue = ref<CascaderProps['value']>([])
 const statusBorderlessValue = ref<CascaderProps['value']>([])
 const open = ref(false)
 const controlledValue = ref<CascaderProps['value']>([])
+const controlledSearchValue = ref<CascaderProps['value']>([])
+const controlledKeyword = ref('')
+const placement = ref<CascaderPlacement>('bottomLeft')
+const placementOptions: { label: string; value: CascaderPlacement }[] = [
+  { label: '左下', value: 'bottomLeft' },
+  { label: '右下', value: 'bottomRight' },
+  { label: '左上', value: 'topLeft' },
+  { label: '右上', value: 'topRight' }
+]
+const placementValue = ref<CascaderProps['value']>([])
 const panelHeightSmallValue = ref<CascaderProps['value']>([])
 const panelHeightLargeValue = ref<CascaderProps['value']>([])
 function onChange(values: (string | number)[], selectedOptions: CascaderOption[]) {
@@ -281,6 +294,14 @@ const maxTagCountValue = ref<CascaderProps['value']>([
   ['sichuan', 'chengdu', 'wuhou']
 ])
 const maxTagResponsiveValue = ref<CascaderProps['value']>([
+  ['zhejiang', 'hangzhou', 'xihu'],
+  ['jiangsu', 'nanjing', 'zhonghuamen'],
+  ['beijing', 'beijingshi', 'dongcheng'],
+  ['shanghai', 'shanghaishi', 'huangpu'],
+  ['guangdong', 'guangzhou', 'tianhe'],
+  ['sichuan', 'chengdu', 'wuhou']
+])
+const maxTagSlotValue = ref<CascaderProps['value']>([
   ['zhejiang', 'hangzhou', 'xihu'],
   ['jiangsu', 'nanjing', 'zhonghuamen'],
   ['beijing', 'beijingshi', 'dongcheng'],
@@ -384,7 +405,45 @@ _省市区三级联动，面板按列展示，选中回填完整路径_
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { CascaderOption } from 'vue-amazing-ui'
-// options 数据见「基本使用」示例
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const value = ref<(string | number)[]>(['zhejiang', 'hangzhou', 'xihu'])
 function onChange(values: (string | number)[], selectedOptions: CascaderOption[]) {
   console.log('values', values)
@@ -416,7 +475,46 @@ _默认插槽替换整个触发器，选中结果由外部展示_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// options 数据见「基本使用」示例
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const value = ref<(string | number)[]>([])
 </script>
 <template>
@@ -444,7 +542,46 @@ _通过 `expand-trigger="hover"` 把次级菜单的展开方式改为悬浮_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// options 数据见「基本使用」示例
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const value = ref<(string | number)[]>([])
 </script>
 <template>
@@ -468,7 +605,7 @@ _在 `options` 中给选项设置 `disabled` 即可禁用整棵子树_
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { CascaderOption } from 'vue-amazing-ui'
-// disabledOptions 数据见「基本使用」示例
+// 给父级设置 disabled 即可禁用整棵子树
 const options: CascaderOption[] = [
   {
     value: 'zhejiang',
@@ -504,7 +641,46 @@ _`change-on-select` 打开后点选任意层级都会改变 `value`，面板保�
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// options 数据见「基本使用」示例
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const value = ref<(string | number)[]>(['zhejiang'])
 </script>
 <template>
@@ -527,7 +703,46 @@ _打开 `multiple` 后面板每列出现复选按钮，勾选父级会连带全�
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// options 数据见「基本使用」示例
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const value = ref<(string | number)[][]>([['zhejiang', 'hangzhou', 'xihu']])
 </script>
 <template>
@@ -553,7 +768,46 @@ _通过 `size` 切换选择器尺寸_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// options 数据见「基本使用」示例
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const size = ref('middle')
 const sizeRadios = [
   { label: 'large', value: 'large' },
@@ -596,7 +850,46 @@ _通过 `#displayRender` 插槽接管回填内容，末级可附自定义信息_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// options 数据见「基本使用」示例（叶子节点带 code 字段）
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const value = ref<(string | number)[]>(['zhejiang', 'hangzhou', 'xihu'])
 function onAreaClick(e: MouseEvent, code?: number) {
   e.preventDefault()
@@ -621,9 +914,81 @@ function onAreaClick(e: MouseEvent, code?: number) {
 
 :::
 
+## 自定义选项内容
+
+_通过 `#option` 插槽接管选项渲染，作用域参数为当前选项数据，自定义字段一并透传_
+
+<br/>
+
+<Cascader v-model:value="optionSlotValue" placeholder="请选择" :options="options" @change="onChange">
+  <template #option="{ label, code }">
+    <span>{{ label }}</span>
+    <span v-if="code" class="option-code">{{ code }}</span>
+  </template>
+</Cascader>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
+const value = ref<(string | number)[]>([])
+</script>
+<template>
+  <Cascader v-model:value="value" placeholder="请选择" :options="options">
+    <template #option="{ label, code }">
+      <span>{{ label }}</span>
+      <span v-if="code" class="option-code">{{ code }}</span>
+    </template>
+  </Cascader>
+</template>
+```
+
+:::
+
 ## 搜索
 
-_打开 `show-search` 后可直接输入关键词，结果按完整路径展示并高亮命中片段；传对象可自定义 `filter` / `sort` / `limit` / `render`_
+_打开 `show-search` 后可直接输入关键词，结果按完整路径展示并高亮命中片段；传对象可自定义 `filter` / `sort` / `limit` / `render`。多选下点选结果即切换该路径的勾选，搜索文本随之清空并回到该路径所在列_
 
 <br/>
 
@@ -635,7 +1000,45 @@ _打开 `show-search` 后可直接输入关键词，结果按完整路径展示�
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { CascaderOption } from 'vue-amazing-ui'
-// options 数据见「基本使用」示例
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const value = ref<(string | number)[]>([])
 // 只匹配末级文本；不传 filter 时按「路径上任一层文本包含关键词」判定
 function filter(inputValue: string, path: CascaderOption[]) {
@@ -652,9 +1055,93 @@ function filter(inputValue: string, path: CascaderOption[]) {
 
 :::
 
+## 搜索结果自定义
+
+_`#showSearchRender` 插槽接管搜索结果项的内容，作用域参数含输入文本、命中路径、已切分的高亮片段与 `disabled`；下方用例用 `segments` 还原内置样式（` / ` 分隔 + 命中的关键词标红 + 路径含禁用项时置灰）_
+
+<br/>
+
+<Cascader v-model:value="searchRenderValue" placeholder="请选择" :options="options" show-search @change="onChange">
+  <template #showSearchRender="{ segments, disabled }">
+    <template v-for="(level, levelIndex) in segments" :key="levelIndex">
+      <span v-if="levelIndex > 0" :class="{ 'search-disabled': disabled }"> / </span>
+      <span v-for="(segment, segmentIndex) in level" :key="segmentIndex" :class="{ 'search-keyword': segment.hit, 'search-disabled': disabled }">{{ segment.text }}</span>
+    </template>
+  </template>
+</Cascader>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
+const value = ref<(string | number)[]>([])
+</script>
+<template>
+  <Cascader v-model:value="value" placeholder="请选择" :options="options" show-search>
+    <template #showSearchRender="{ segments, disabled }">
+      <template v-for="(level, levelIndex) in segments" :key="levelIndex">
+        <span v-if="levelIndex > 0" :class="{ 'search-disabled': disabled }"> / </span>
+        <span v-for="(segment, segmentIndex) in level" :key="segmentIndex" :class="{ 'search-keyword': segment.hit, 'search-disabled': disabled }">{{ segment.text }}</span>
+      </template>
+    </template>
+  </Cascader>
+</template>
+<style lang="less" scoped>
+.search-keyword {
+  color: var(--va-error-color);
+}
+.search-disabled {
+  color: var(--va-text-color-disabled);
+}
+</style>
+```
+
+:::
+
 ## 动态加载选项
 
-_通过 `loadData` 按需加载子级：父级先以 `isLeaf: false` 占位，展开时写入子项并解除 `loading`_
+_通过 `loadData` 按需加载子级：父级先以 `isLeaf: false` 占位，展开时写入子项并解除 `loading`；加载结果为空时把该选项的 `isLeaf` 置为 `true`，加载图标随之结束_
 
 <br/>
 
@@ -753,7 +1240,46 @@ _通过 `#tagRender` 插槽接管多选 tag 的渲染，作用域参数含路径
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// options 数据见「基本使用」示例
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const value = ref<(string | number)[][]>([['zhejiang', 'hangzhou', 'xihu']])
 </script>
 <template>
@@ -793,7 +1319,46 @@ _通过 `#suffixIcon` 插槽或 `suffixIcon` 属性替换默认箭头_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// options 数据见「基本使用」示例
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const value = ref<(string | number)[]>([])
 </script>
 <template>
@@ -826,7 +1391,46 @@ _整体禁用时不响应点击，清除图标与面板均不可用_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// options 数据见「基本使用」示例
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const value = ref<(string | number)[]>(['zhejiang', 'ningbo', 'yinzhou'])
 </script>
 <template>
@@ -849,7 +1453,46 @@ _悬浮时出现清除图标，点击回写空路径；`change` 收到空数组_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// options 数据见「基本使用」示例
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const value = ref<(string | number)[]>(['jiangsu', 'nanjing', 'zhonghuamen'])
 </script>
 <template>
@@ -861,7 +1504,7 @@ const value = ref<(string | number)[]>(['jiangsu', 'nanjing', 'zhonghuamen'])
 
 ## 空数据
 
-_无选项或搜索无结果时展示 `Empty`，传 `notFoundContent: null` 时回落默认空态_
+_无选项或搜索无结果时展示 `Empty`，传 `notFoundContent: null` 时回落默认空态；`#notFoundContent` 插槽可自定义空数据内容_
 
 <br/>
 
@@ -869,6 +1512,11 @@ _无选项或搜索无结果时展示 `Empty`，传 `notFoundContent: null` 时�
   <Cascader v-model:value="emptyOptionsValue" placeholder="请选择" :options="[]" />
   <Cascader v-model:value="emptyFallbackValue" placeholder="请选择" :options="[]" :not-found-content="null" />
   <Cascader v-model:value="emptySearchValue" placeholder="请选择" :options="[{ value: '1', label: '浙江', children: [] }]" show-search />
+  <Cascader v-model:value="emptySlotValue" placeholder="请选择" :options="[]">
+    <template #notFoundContent>
+      <span class="empty-slot-text">暂无数据</span>
+    </template>
+  </Cascader>
 </Space>
 
 ::: details Show Code
@@ -883,6 +1531,11 @@ const value = ref<(string | number)[]>([])
     <Cascader v-model:value="value" placeholder="请选择" :options="[]" />
     <Cascader v-model:value="value" placeholder="请选择" :options="[]" :not-found-content="null" />
     <Cascader v-model:value="value" placeholder="请选择" :options="[{ value: '1', label: '浙江', children: [] }]" show-search />
+    <Cascader v-model:value="value" placeholder="请选择" :options="[]">
+      <template #notFoundContent>
+        <span class="empty-slot-text">暂无数据</span>
+      </template>
+    </Cascader>
   </Space>
 </template>
 ```
@@ -906,7 +1559,46 @@ _通过 `status` 设置校验状态，与 `Input` / `Select` 同一口径_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// options 数据见「基本使用」示例
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const value = ref<(string | number)[]>([])
 </script>
 <template>
@@ -926,9 +1618,16 @@ _通过 `v-model:open` 控制面板显隐，配套 `open-change` 事件；`searc
 
 <br/>
 
-<Space>
-  <Cascader v-model:value="controlledValue" v-model:open="open" placeholder="请选择" :options="options" @change="onChange" />
-  <Button type="primary" @click="open = !open">{{ open ? '收起面板' : '展开面板' }}</Button>
+<Space vertical>
+  <Space>
+    <Cascader v-model:value="controlledValue" v-model:open="open" placeholder="请选择" :options="options" @change="onChange" />
+    <Button type="primary" @click="open = !open">{{ open ? '收起面板' : '展开面板' }}</Button>
+  </Space>
+  <Space>
+    <Cascader v-model:value="controlledSearchValue" v-model:search-value="controlledKeyword" placeholder="请选择" :options="options" show-search @change="onChange" />
+    <Button @click="controlledKeyword = 'hang'">设为 hang</Button>
+    <Button @click="controlledKeyword = ''">清空关键词</Button>
+  </Space>
 </Space>
 
 ::: details Show Code
@@ -936,14 +1635,61 @@ _通过 `v-model:open` 控制面板显隐，配套 `open-change` 事件；`searc
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// options 数据见「基本使用」示例
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const open = ref(false)
 const value = ref<(string | number)[]>([])
+const keyword = ref('')
 </script>
 <template>
-  <Space>
-    <Cascader v-model:value="value" v-model:open="open" placeholder="请选择" :options="options" />
-    <Button type="primary" @click="open = !open">{{ open ? '收起面板' : '展开面板' }}</Button>
+  <Space vertical>
+    <Space>
+      <Cascader v-model:value="value" v-model:open="open" placeholder="请选择" :options="options" />
+      <Button type="primary" @click="open = !open">{{ open ? '收起面板' : '展开面板' }}</Button>
+    </Space>
+    <Space>
+      <Cascader v-model:value="value" v-model:search-value="keyword" placeholder="请选择" :options="options" show-search />
+      <Button @click="keyword = 'hang'">设为 hang</Button>
+      <Button @click="keyword = ''">清空关键词</Button>
+    </Space>
   </Space>
 </template>
 ```
@@ -965,7 +1711,45 @@ _通过 `default-value` 提供非受控初值，形态与 `value` 一致_
 
 ```vue
 <script setup lang="ts">
-// options 数据见「基本使用」示例
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 </script>
 <template>
   <Space>
@@ -999,7 +1783,46 @@ _`show-checked-strategy` 决定父级全选时的回填形态：`SHOW_PARENT`（
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// options 数据见「基本使用」示例
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const parentValue = ref<(string | number)[][]>([])
 const childValue = ref<(string | number)[][]>([])
 </script>
@@ -1024,7 +1847,46 @@ _已选内容的顺序跟随值中路径的先后：可折叠为父级的分支�
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// options 数据见「基本使用」示例
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const value = ref<(string | number)[][]>([
   ['beijing', 'beijingshi', 'dongcheng'],
   ['zhejiang', 'hangzhou', 'xihu'],
@@ -1042,7 +1904,7 @@ const value = ref<(string | number)[][]>([
 
 ## 最大 tag 数
 
-_通过 `max-tag-count` 折叠超出数量的 tag（传 `'responsive'` 时按容器宽度自动折叠），`max-tag-placeholder` 自定义折叠提示_
+_通过 `max-tag-count` 折叠超出数量的 tag（传 `'responsive'` 时按容器宽度自动折叠），`max-tag-placeholder` 属性或 `#maxTagPlaceholder` 插槽自定义折叠提示_
 
 <br/>
 
@@ -1064,6 +1926,16 @@ _通过 `max-tag-count` 折叠超出数量的 tag（传 `'responsive'` 时按容
     :width="240"
     @change="onChange"
   />
+  <Cascader
+    v-model:value="maxTagSlotValue"
+    placeholder="请选择"
+    :options="longOptions"
+    multiple
+    :max-tag-count="3"
+    @change="onChange"
+  >
+    <template #maxTagPlaceholder="{ omittedValues }">+ {{ omittedValues.length }} 项</template>
+  </Cascader>
 </Space>
 
 ::: details Show Code
@@ -1071,7 +1943,123 @@ _通过 `max-tag-count` 折叠超出数量的 tag（传 `'responsive'` 时按容
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// longOptions 为长列表数据（选项足够多才能折叠出剩余项）
+import type { CascaderOption } from 'vue-amazing-ui'
+// 长列表数据：分支足够多才能折叠出剩余 tag / 触发列内滚动
+const longOptions: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖' },
+          { value: 'yuhang', label: '余杭' }
+        ]
+      },
+      {
+        value: 'ningbo',
+        label: '宁波',
+        children: [
+          { value: 'yinzhou', label: '鄞州' },
+          { value: 'haishu', label: '海曙' }
+        ]
+      },
+      { value: 'wenzhou', label: '温州', children: [{ value: 'lucheng', label: '鹿城' }] },
+      { value: 'shaoxing', label: '绍兴', children: [{ value: 'yuecheng', label: '越城' }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      {
+        value: 'nanjing',
+        label: '南京',
+        children: [
+          { value: 'zhonghuamen', label: '中华门' },
+          { value: 'xuanwu', label: '玄武' }
+        ]
+      },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴' }] },
+      { value: 'suzhou', label: '苏州', children: [{ value: 'gusu', label: '姑苏' }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区' },
+          { value: 'xicheng', label: '西城区' }
+        ]
+      }
+    ]
+  },
+  {
+    value: 'shanghai',
+    label: '上海',
+    children: [
+      {
+        value: 'shanghaishi',
+        label: '上海市',
+        children: [
+          { value: 'huangpu', label: '黄浦区' },
+          { value: 'xuhui', label: '徐汇区' }
+        ]
+      }
+    ]
+  },
+  {
+    value: 'guangdong',
+    label: '广东',
+    children: [
+      {
+        value: 'guangzhou',
+        label: '广州',
+        children: [
+          { value: 'tianhe', label: '天河区' },
+          { value: 'yuexiu', label: '越秀区' }
+        ]
+      },
+      { value: 'shenzhen', label: '深圳', children: [{ value: 'futian', label: '福田区' }] }
+    ]
+  },
+  {
+    value: 'sichuan',
+    label: '四川',
+    children: [
+      {
+        value: 'chengdu',
+        label: '成都',
+        children: [
+          { value: 'wuhou', label: '武侯区' },
+          { value: 'jinjiang', label: '锦江区' }
+        ]
+      }
+    ]
+  },
+  {
+    value: 'hubei',
+    label: '湖北',
+    children: [
+      { value: 'wuhan', label: '武汉', children: [{ value: 'wuchang', label: '武昌区' }] },
+      { value: 'yichang', label: '宜昌', children: [{ value: 'xiling', label: '西陵区' }] }
+    ]
+  },
+  {
+    value: 'shaanxi',
+    label: '陕西',
+    children: [
+      { value: 'xian', label: '西安', children: [{ value: 'yanta', label: '雁塔区' }] },
+      { value: 'xianyang', label: '咸阳', children: [{ value: 'qindu', label: '秦都区' }] }
+    ]
+  }
+]
 const value = ref<(string | number)[][]>([
   ['zhejiang', 'hangzhou', 'xihu'],
   ['jiangsu', 'nanjing', 'zhonghuamen'],
@@ -1083,6 +2071,9 @@ const value = ref<(string | number)[][]>([
 </script>
 <template>
   <Cascader v-model:value="value" placeholder="请选择" :options="longOptions" multiple :max-tag-count="3" />
+  <Cascader v-model:value="value" placeholder="请选择" :options="longOptions" multiple :max-tag-count="3">
+    <template #maxTagPlaceholder="{ omittedValues }">+ {{ omittedValues.length }} 项</template>
+  </Cascader>
 </template>
 ```
 
@@ -1125,6 +2116,24 @@ _通过实例方法 `getCheckedData()` 读取已勾选项的选项数据_
     color: var(--va-text-color-3);
     font-size: 13px;
   }
+}
+/* #option 插槽里的自定义字段 */
+.option-code {
+  margin-left: 6px;
+  color: var(--va-text-color-3);
+  font-size: 12px;
+}
+/* #showSearchRender 插槽里命中关键词的高亮 */
+.search-keyword {
+  color: var(--va-error-color);
+}
+/* #showSearchRender 插槽里路径含禁用项的置灰（写在 .search-keyword 之后以覆盖高亮色） */
+.search-disabled {
+  color: var(--va-text-color-disabled);
+}
+/* #notFoundContent 插槽内容 */
+.empty-slot-text {
+  color: var(--va-text-color-3);
 }
 </style>
 
@@ -1182,7 +2191,7 @@ function onRead() {
 </style>
 ```
 
-::::
+:::
 
 ## 键盘操作
 
@@ -1209,11 +2218,125 @@ _聚焦后 `↑` `↓` 在当前列内移动（搜索态下在结果间移动）
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// options 数据见「基本使用」示例
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
 const value = ref<(string | number)[][]>([])
 </script>
 <template>
   <Cascader v-model:value="value" placeholder="请选择" :options="options" multiple />
+</template>
+```
+
+:::
+
+## 面板位置
+
+_通过 `placement` 指定面板展开方向，空间不足时 `flip` 会自动翻转_
+
+<br/>
+
+<Space vertical>
+  <Space align="center"> placement: <Segmented v-model:value="placement" :options="placementOptions" /> </Space>
+  <Cascader v-model:value="placementValue" placeholder="请选择" :options="options" :placement="placement" @change="onChange" />
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖', code: 330100 },
+          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
+        ]
+      },
+      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区', code: 100010 },
+          { value: 'xicheng', label: '西城区', code: 100032 }
+        ]
+      }
+    ]
+  }
+]
+const value = ref<(string | number)[]>([])
+const placement = ref('bottomLeft')
+const placementOptions = [
+  { label: '左下', value: 'bottomLeft' },
+  { label: '右下', value: 'bottomRight' },
+  { label: '左上', value: 'topLeft' },
+  { label: '右上', value: 'topRight' }
+]
+</script>
+<template>
+  <Space vertical>
+    <Space align="center"> placement: <Segmented v-model:value="placement" :options="placementOptions" /> </Space>
+    <Cascader v-model:value="value" placeholder="请选择" :options="options" :placement="placement" />
+  </Space>
 </template>
 ```
 
@@ -1235,7 +2358,123 @@ _通过 `panelHeight` 调整每列高度，超出后列内滚动_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// longOptions 为长列表数据（列内项数超过面板高度才会滚动）
+import type { CascaderOption } from 'vue-amazing-ui'
+// 长列表数据：分支足够多才能折叠出剩余 tag / 触发列内滚动
+const longOptions: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖' },
+          { value: 'yuhang', label: '余杭' }
+        ]
+      },
+      {
+        value: 'ningbo',
+        label: '宁波',
+        children: [
+          { value: 'yinzhou', label: '鄞州' },
+          { value: 'haishu', label: '海曙' }
+        ]
+      },
+      { value: 'wenzhou', label: '温州', children: [{ value: 'lucheng', label: '鹿城' }] },
+      { value: 'shaoxing', label: '绍兴', children: [{ value: 'yuecheng', label: '越城' }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      {
+        value: 'nanjing',
+        label: '南京',
+        children: [
+          { value: 'zhonghuamen', label: '中华门' },
+          { value: 'xuanwu', label: '玄武' }
+        ]
+      },
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴' }] },
+      { value: 'suzhou', label: '苏州', children: [{ value: 'gusu', label: '姑苏' }] }
+    ]
+  },
+  {
+    value: 'beijing',
+    label: '北京',
+    children: [
+      {
+        value: 'beijingshi',
+        label: '北京市',
+        children: [
+          { value: 'dongcheng', label: '东城区' },
+          { value: 'xicheng', label: '西城区' }
+        ]
+      }
+    ]
+  },
+  {
+    value: 'shanghai',
+    label: '上海',
+    children: [
+      {
+        value: 'shanghaishi',
+        label: '上海市',
+        children: [
+          { value: 'huangpu', label: '黄浦区' },
+          { value: 'xuhui', label: '徐汇区' }
+        ]
+      }
+    ]
+  },
+  {
+    value: 'guangdong',
+    label: '广东',
+    children: [
+      {
+        value: 'guangzhou',
+        label: '广州',
+        children: [
+          { value: 'tianhe', label: '天河区' },
+          { value: 'yuexiu', label: '越秀区' }
+        ]
+      },
+      { value: 'shenzhen', label: '深圳', children: [{ value: 'futian', label: '福田区' }] }
+    ]
+  },
+  {
+    value: 'sichuan',
+    label: '四川',
+    children: [
+      {
+        value: 'chengdu',
+        label: '成都',
+        children: [
+          { value: 'wuhou', label: '武侯区' },
+          { value: 'jinjiang', label: '锦江区' }
+        ]
+      }
+    ]
+  },
+  {
+    value: 'hubei',
+    label: '湖北',
+    children: [
+      { value: 'wuhan', label: '武汉', children: [{ value: 'wuchang', label: '武昌区' }] },
+      { value: 'yichang', label: '宜昌', children: [{ value: 'xiling', label: '西陵区' }] }
+    ]
+  },
+  {
+    value: 'shaanxi',
+    label: '陕西',
+    children: [
+      { value: 'xian', label: '西安', children: [{ value: 'yanta', label: '雁塔区' }] },
+      { value: 'xianyang', label: '咸阳', children: [{ value: 'qindu', label: '秦都区' }] }
+    ]
+  }
+]
 const value = ref<(string | number)[]>(['zhejiang', 'hangzhou', 'xihu'])
 </script>
 <template>
@@ -1261,7 +2500,22 @@ _省级 200、每省 200 个市级的长列表，显式开启 `virtual` 后每�
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-// manyOptions 为省级 200、每省 200 个市级的长列表数据
+import type { CascaderOption } from 'vue-amazing-ui'
+// 省级 200、每省 200 个市级：列内项数远超面板高度，用于验证虚拟滚动
+const MANY_OPTIONS_LENGTH = 200
+const manyAreas: CascaderOption[] = Array.from({ length: MANY_OPTIONS_LENGTH }, (_, index) => ({
+  value: `area-${index}`,
+  label: `区级 ${index + 1}`
+}))
+const manyOptions: CascaderOption[] = Array.from({ length: MANY_OPTIONS_LENGTH }, (_, provinceIndex) => ({
+  value: `province-${provinceIndex}`,
+  label: `省级 ${provinceIndex + 1}`,
+  children: Array.from({ length: MANY_OPTIONS_LENGTH }, (_, cityIndex) => ({
+    value: `city-${provinceIndex}-${cityIndex}`,
+    label: `市级 ${provinceIndex + 1}-${cityIndex + 1}`,
+    children: manyAreas
+  }))
+}))
 const value = ref<(string | number)[]>([])
 </script>
 <template>
@@ -1269,7 +2523,7 @@ const value = ref<(string | number)[]>([])
 </template>
 ```
 
-::::
+:::
 
 ## 面板底部操作区
 
@@ -1306,7 +2560,7 @@ function onConfirm() {
 </template>
 ```
 
-::::
+:::
 
 ## APIs
 
@@ -1316,7 +2570,7 @@ function onConfirm() {
 | :-- | :-- | :-- | :-- |
 | value <Tag color="cyan">v-model</Tag> | 选中路径：单选为单条路径，多选为路径数组 | [CascaderModelValue](#cascadermodelvalue-type) | undefined |
 | defaultValue | 非受控初始值，形态同 `value` | [CascaderModelValue](#cascadermodelvalue-type) | undefined |
-| open <Tag color="cyan">v-model</Tag> | 面板是否展开，不传时由组件内部维护 | boolean | undefined |
+| open <Tag color="cyan">v-model</Tag> | 面板是否展开；显式传入即为受控，内部触发只经 `update:open` / `openChange` 上报（不传时由组件内部维护） | boolean | undefined |
 | searchValue <Tag color="cyan">v-model</Tag> | 搜索文本，不传时由组件内部维护 | string | undefined |
 | options | 可选项数据源 | [CascaderOption](#cascaderoption-type)[] | [] |
 | fieldNames | 选项的文本 / 值 / 子选项字段名配置 | [CascaderFieldNames](#cascaderfieldnames-type) | undefined |
@@ -1324,8 +2578,8 @@ function onConfirm() {
 | size | 选择器大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | placeholder | 未选中时的占位文本 | string | '请选择' |
 | bordered | 是否有边框 | boolean | true |
-| maxTagCount | 多选时最多显示多少个 tag，超出部分折叠为「+ N ...」；传 `'responsive'` 时按容器宽度自动折叠 | number &#124; 'responsive' | undefined |
-| maxTagPlaceholder | 折叠 tag 的提示内容 | string &#124; VNode &#124; ((params: [CascaderMaxTagPlaceholderParams](#cascadermaxtagplaceholderparams-type)) => VNode) | undefined |
+| maxTagCount | 多选时最多显示多少个 `tag`，超出部分折叠为「`+ N ...`」；传 `'responsive'` 时按容器宽度自动折叠 | number &#124; 'responsive' | undefined |
+| maxTagPlaceholder | 折叠 `tag` 的提示内容 | string &#124; VNode &#124; ((params: [CascaderMaxTagPlaceholderParams](#cascadermaxtagplaceholderparams-type)) => VNode) | undefined |
 | disabled | 是否禁用 | boolean | false |
 | status | 校验状态 | 'error' &#124; 'warning' | undefined |
 | allowClear | 是否支持清除 | boolean | true |
@@ -1333,15 +2587,15 @@ function onConfirm() {
 | suffixIcon | 自定义选择框后缀图标，多选下不渲染 | string &#124; VNode &#124; (() => VNode) | undefined |
 | expandIcon | 自定义次级菜单展开图标 | string &#124; VNode &#124; (() => VNode) | undefined |
 | loadingIcon | 自定义子项加载中的图标 | string &#124; VNode &#124; (() => VNode) | undefined |
-| removeIcon | 自定义多选 tag 的移除图标 | string &#124; VNode &#124; (() => VNode) | undefined |
+| removeIcon | 自定义多选 `tag` 的移除图标 | string &#124; VNode &#124; (() => VNode) | undefined |
 | changeOnSelect | 点选任意层级即改变 `value`，面板保持展开供继续下钻 | boolean | false |
 | multiple | 是否支持多选 | boolean | false |
 | showCheckedStrategy | 多选回填策略：父级全选时只回填父级路径，或只回填叶子路径 | [ShowCheckedStrategy](#showcheckedstrategy-type) | 'SHOW_PARENT' |
 | loadData | 异步加载子项，入参为当前路径上的选项数据 | (selectedOptions: [CascaderOption](#cascaderoption-type)[]) => void | undefined |
 | expandTrigger | 次级菜单的展开方式 | 'click' &#124; 'hover' | 'click' |
-| showSearch | 是否支持搜索，为对象时可配置过滤 / 排序 / 渲染 / 条数上限 | boolean &#124; [CascaderSearchConfig](#cascadersearchconfig-type) | false |
+| showSearch | 是否支持搜索，为对象时可配置过滤 / 排序 / 渲染 / 条数上限 / 结果面板宽度 | boolean &#124; [CascaderSearchConfig](#cascadersearchconfig-type) | false |
 | displayRender | 自定义已选内容的渲染（单选生效） | (params: [CascaderDisplayRenderParams](#cascaderdisplayrenderparams-type)) => VNode &#124; string | undefined |
-| tagRender | 自定义多选 tag 的渲染 | (params: [CascaderTagRenderParams](#cascadertagrenderparams-type)) => VNode | undefined |
+| tagRender | 自定义多选 `tag` 的渲染 | (params: [CascaderTagRenderParams](#cascadertagrenderparams-type)) => VNode | undefined |
 | notFoundContent | 面板空数据时的内容，传 `null` 时回落默认空态 | string &#124; VNode &#124; null | undefined |
 | panelHeight | 面板每列的高度，单位 `px`，超出后列内滚动 | number | 180 |
 | virtual | 是否开启列虚拟滚动，长列表仅渲染可视区选项；关闭时全量渲染。两种模式下列宽都由整列内容决定，滚动时不变 | boolean | false |
@@ -1355,9 +2609,9 @@ function onConfirm() {
 | dropdownMenuColumnStyle | 面板每一列的样式，可按列定制宽度等 | CSSProperties | undefined |
 | zIndex | 面板层级，优先级最高（未传时使用默认层级或 `ConfigProvider` 的 `baseZIndex` 分配） | number | undefined |
 | autofocus | 是否自动获取焦点 | boolean | false |
-| id | 组件 id，用于 `aria-controls` / `aria-valuetext` 关联，未传时内部生成 | string | undefined |
+| id | 组件 `id`，用于 `aria-controls` / `aria-owns` 关联，未传时内部生成 | string | undefined |
 
-> 多选下点击父级只展开子列，勾选走复选按钮；勾选父级会连带其全部叶子，`showCheckedStrategy` 决定回填与 tag 展示时是否折叠为父级路径。`loadData` 与 `showSearch` 建议不要同时使用（搜索结果依赖已加载的完整数据）。
+> 多选下点击父级只展开子列，勾选走复选按钮；勾选父级会连带其全部叶子，`showCheckedStrategy` 决定回填与 `tag` 展示时是否折叠为父级路径。`loadData` 与 `showSearch` 建议不要同时使用（搜索结果依赖已加载的完整数据）。
 
 ### CascaderValue Type
 
@@ -1421,7 +2675,7 @@ function onConfirm() {
 | children? | 子选项数组，缺省或为空即叶子节点 | [CascaderOption](#cascaderoption-type)[] |
 | isLeaf? | 是否叶子节点，异步加载场景下置 `false` 可强制显示展开图标 | boolean |
 | loading? | 是否正在加载子项，置 `true` 会显示加载图标 | boolean |
-| [propName: string]? | 允许携带任意自定义字段，会随 `#option` 插槽与 `change` 的第二参透传 | any |
+| [propName: string] | 允许携带任意自定义字段，会随 `#option` 插槽与 `change` 的第二参透传 | any |
 
 ### CascaderFieldNames Type
 
@@ -1438,7 +2692,7 @@ function onConfirm() {
 | filter? | 命中判定，入参为输入项与命中项的完整路径；缺省时按「路径上任一层文本包含关键词」判定（大小写不敏感） | (inputValue: string, path: [CascaderOption](#cascaderoption-type)[]) => boolean |
 | sort? | 结果排序，入参为两条命中路径与输入项 | (pathA: [CascaderOption](#cascaderoption-type)[], pathB: [CascaderOption](#cascaderoption-type)[], inputValue: string) => number |
 | render? | 结果项内容渲染，缺省时展示完整路径并高亮命中片段 | (params: [CascaderSearchRenderParams](#cascadersearchrenderparams-type)) => VNode &#124; string |
-| limit? | 结果条数上限，`false` 为不限 | number &#124; false |
+| limit? | 结果条数上限，默认 `50`，`false` 为不限 | number &#124; false |
 | matchInputWidth? | 搜索结果面板是否与选择器同宽，默认 `true`；为 `false` 时宽度由结果内容决定 | boolean |
 
 ### CascaderDisplayRenderParams Type
@@ -1462,6 +2716,19 @@ function onConfirm() {
 | :-- | :-- | :-- |
 | inputValue | 当前搜索文本 | string |
 | path | 命中项从根到自身的选项路径 | [CascaderOption](#cascaderoption-type)[] |
+| segments | 逐级切分好的文本片段，直接渲染即可与内置结果保持一致 | [CascaderSearchSegment](#cascadersearchsegment-type)[][] |
+| disabled | 路径上是否存在禁用项（禁用结果不可选中，自定义渲染时可按此置灰） | boolean |
+
+### CascaderSearchSegment Type
+
+<br/>
+
+搜索文本按关键词切分后的片段，`hit` 为 `true` 的片段即命中的关键词，可用于高亮。
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| text | 片段文本 | string |
+| hit | 是否命中关键词 | boolean |
 
 ### CascaderTagRenderParams Type
 
@@ -1471,12 +2738,12 @@ function onConfirm() {
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| label | tag 显示文本，默认取选中路径末级（按回填策略折叠后的父级）文本 | string |
-| value | tag 对应的选中路径 | [CascaderPath](#cascaderpath-type) |
-| path | tag 对应的选项数据 | [CascaderOption](#cascaderoption-type)[] |
-| closable | 是否可移除 | boolean |
-| disabled | 是否禁用（禁用项的 tag 不可移除） | boolean |
-| onClose | 移除该 tag | (e?: MouseEvent) => void |
+| label | `tag` 显示文本，默认取选中路径末级（按回填策略折叠后的父级）文本 | string |
+| value | `tag` 对应的选中路径 | [CascaderPath](#cascaderpath-type) |
+| path | `tag` 对应的选项数据 | [CascaderOption](#cascaderoption-type)[] |
+| closable | 是否可移除，整体 `disabled` 时为 `false` | boolean |
+| disabled | 路径上是否存在禁用项，用于置灰 `tag` | boolean |
+| onClose | 移除该 `tag` | (e?: MouseEvent) => void |
 
 ### CascaderMaxTagPlaceholderParams Type
 
@@ -1507,15 +2774,15 @@ function onConfirm() {
 | :-- | :-- | :-- |
 | default | 自定义触发器内容，提供后整体替换选择框 | v-slot:default |
 | displayRender | 自定义已选内容的渲染（单选生效） | v-slot:displayRender="{ labels, selectedOptions }" |
-| tagRender | 自定义多选 tag 的渲染 | v-slot:tagRender="{ label, value, path, closable, disabled, onClose }" |
-| maxTagPlaceholder | 折叠 tag 的提示内容 | v-slot:maxTagPlaceholder="{ omittedValues, omittedLabels }" |
-| showSearchRender | 自定义搜索结果项内容 | v-slot:showSearchRender="{ inputValue, path }" |
+| tagRender | 自定义多选 `tag` 的渲染 | v-slot:tagRender="{ label, value, path, closable, disabled, onClose }" |
+| maxTagPlaceholder | 折叠 `tag` 的提示内容 | v-slot:maxTagPlaceholder="{ omittedValues, omittedLabels }" |
+| showSearchRender | 自定义搜索结果项内容，作用域参数同 `showSearch.render` | v-slot:showSearchRender="{ inputValue, path, segments, disabled }" |
 | option | 自定义选项内容，作用域为当前选项数据 | v-slot:option="option" |
 | expandIcon | 自定义次级菜单展开图标 | v-slot:expandIcon |
 | loadingIcon | 自定义子项加载中的图标 | v-slot:loadingIcon |
 | suffixIcon | 自定义选择框后缀图标，多选下不渲染 | v-slot:suffixIcon |
 | clearIcon | 自定义清除图标 | v-slot:clearIcon="{ clear }" |
-| removeIcon | 自定义多选 tag 的移除图标 | v-slot:removeIcon |
+| removeIcon | 自定义多选 `tag` 的移除图标 | v-slot:removeIcon |
 | notFoundContent | 自定义空数据内容 | v-slot:notFoundContent |
 | action | 面板底部的自定义操作区 | v-slot:action |
 

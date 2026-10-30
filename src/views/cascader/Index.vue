@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { CascaderOption, CascaderProps } from 'vue-amazing-ui'
+import type { CascaderOption, CascaderPlacement, CascaderProps } from 'vue-amazing-ui'
 // 省市区数据：基本使用 / 移入展开 / 选择即改变 / 三种大小 / 自定义已选项 / 搜索 / 后缀图标 / 禁用 / 清除 / 受控展开共用
 const options: CascaderOption[] = [
   {
@@ -228,7 +228,9 @@ const disabledOptionValue = ref<CascaderProps['value']>([])
 const changeOnSelectValue = ref<CascaderProps['value']>(['zhejiang'])
 const sizeValue = ref<CascaderProps['value']>(['zhejiang', 'hangzhou', 'xihu'])
 const displayRenderValue = ref<CascaderProps['value']>(['zhejiang', 'hangzhou', 'xihu'])
+const optionSlotValue = ref<CascaderProps['value']>([])
 const searchValue = ref<CascaderProps['value']>([])
+const searchRenderValue = ref<CascaderProps['value']>([])
 const fieldNameValue = ref<CascaderProps['value']>(['1', '11', '111'])
 const suffixSlotValue = ref<CascaderProps['value']>([])
 const suffixIconValue = ref<CascaderProps['value']>([])
@@ -237,11 +239,22 @@ const clearValue = ref<CascaderProps['value']>(['jiangsu', 'nanjing', 'zhonghuam
 const emptyOptionsValue = ref<CascaderProps['value']>([])
 const emptyFallbackValue = ref<CascaderProps['value']>([])
 const emptySearchValue = ref<CascaderProps['value']>([])
+const emptySlotValue = ref<CascaderProps['value']>([])
 const statusErrorValue = ref<CascaderProps['value']>([])
 const statusWarningValue = ref<CascaderProps['value']>([])
 const statusBorderlessValue = ref<CascaderProps['value']>([])
 const open = ref(false)
 const controlledValue = ref<CascaderProps['value']>([])
+const controlledSearchValue = ref<CascaderProps['value']>([])
+const controlledKeyword = ref('')
+const placement = ref<CascaderPlacement>('bottomLeft')
+const placementOptions: { label: string; value: CascaderPlacement }[] = [
+  { label: '左下', value: 'bottomLeft' },
+  { label: '右下', value: 'bottomRight' },
+  { label: '左上', value: 'topLeft' },
+  { label: '右上', value: 'topRight' }
+]
+const placementValue = ref<CascaderProps['value']>([])
 const panelHeightSmallValue = ref<CascaderProps['value']>([])
 const panelHeightLargeValue = ref<CascaderProps['value']>([])
 function onChange(values: (string | number)[], selectedOptions: CascaderOption[]) {
@@ -272,6 +285,14 @@ const maxTagCountValue = ref<CascaderProps['value']>([
   ['sichuan', 'chengdu', 'wuhou']
 ])
 const maxTagResponsiveValue = ref<CascaderProps['value']>([
+  ['zhejiang', 'hangzhou', 'xihu'],
+  ['jiangsu', 'nanjing', 'zhonghuamen'],
+  ['beijing', 'beijingshi', 'dongcheng'],
+  ['shanghai', 'shanghaishi', 'huangpu'],
+  ['guangdong', 'guangzhou', 'tianhe'],
+  ['sichuan', 'chengdu', 'wuhou']
+])
+const maxTagSlotValue = ref<CascaderProps['value']>([
   ['zhejiang', 'hangzhou', 'xihu'],
   ['jiangsu', 'nanjing', 'zhonghuamen'],
   ['beijing', 'beijingshi', 'dongcheng'],
@@ -366,7 +387,6 @@ function onReadCheckedData() {
     <h2 class="mt30 mb10">基本使用</h2>
     <p class="mb10">省市区三级联动，面板按列展示，选中回填完整路径</p>
     <Cascader v-model:value="basicValue" placeholder="请选择" :options="options" @change="onChange" />
-
     <h2 class="mt30 mb10">可以自定义显示</h2>
     <p class="mb10">默认插槽替换整个触发器，选中结果由外部展示</p>
     <span>
@@ -375,7 +395,6 @@ function onReadCheckedData() {
         <a href="#" @click.prevent>切换城市</a>
       </Cascader>
     </span>
-
     <h2 class="mt30 mb10">移入展开</h2>
     <p class="mb10">通过 <code>expand-trigger="hover"</code> 把次级菜单的展开方式改为悬浮</p>
     <Cascader
@@ -385,11 +404,9 @@ function onReadCheckedData() {
       expand-trigger="hover"
       @change="onChange"
     />
-
     <h2 class="mt30 mb10">禁用选项</h2>
     <p class="mb10">在 <code>options</code> 中给选项设置 <code>disabled</code> 即可禁用整棵子树</p>
     <Cascader v-model:value="disabledOptionValue" placeholder="请选择" :options="disabledOptions" @change="onChange" />
-
     <h2 class="mt30 mb10">选择即改变</h2>
     <p class="mb10">
       <code>change-on-select</code> 打开后点选任意层级都会改变 <code>value</code>，面板保持展开供继续下钻
@@ -401,20 +418,17 @@ function onReadCheckedData() {
       change-on-select
       @change="onChange"
     />
-
     <h2 class="mt30 mb10">多选</h2>
     <p class="mb10">
       打开 <code>multiple</code> 后面板每列出现复选按钮，勾选父级会连带全部子项；已选项以 tag 回填，可逐个移除
     </p>
     <Cascader v-model:value="multipleValue" placeholder="请选择" :options="options" multiple @change="onChange" />
-
     <h2 class="mt30 mb10">三种大小</h2>
     <p class="mb10">通过 <code>size</code> 切换选择器尺寸</p>
     <Space vertical>
       <RadioGroup :options="sizeRadios" v-model:value="size" button button-style="solid" />
       <Cascader v-model:value="sizeValue" placeholder="请选择" :options="options" :size="size" @change="onChange" />
     </Space>
-
     <h2 class="mt30 mb10">自定义已选项</h2>
     <p class="mb10">通过 <code>#displayRender</code> 插槽接管回填内容，末级可附自定义信息</p>
     <Cascader v-model:value="displayRenderValue" placeholder="请选择" :options="options" @change="onChange">
@@ -429,11 +443,19 @@ function onReadCheckedData() {
         </span>
       </template>
     </Cascader>
-
+    <h2 class="mt30 mb10">自定义选项内容</h2>
+    <p class="mb10">通过 <code>#option</code> 插槽接管选项渲染，作用域参数为当前选项数据，自定义字段一并透传</p>
+    <Cascader v-model:value="optionSlotValue" placeholder="请选择" :options="options" @change="onChange">
+      <template #option="{ label, code }">
+        <span>{{ label }}</span>
+        <span v-if="code" class="option-code">{{ code }}</span>
+      </template>
+    </Cascader>
     <h2 class="mt30 mb10">搜索</h2>
     <p class="mb10">
       打开 <code>show-search</code> 后可直接输入关键词，结果按完整路径展示并高亮命中片段；传对象可自定义
-      <code>filter</code> / <code>sort</code> / <code>limit</code> / <code>render</code>
+      <code>filter</code> / <code>sort</code> / <code>limit</code> /
+      <code>render</code>。多选下点选结果即切换该路径的勾选，搜索文本随之清空并回到该路径所在列
     </p>
     <Cascader
       v-model:value="searchValue"
@@ -442,11 +464,29 @@ function onReadCheckedData() {
       :show-search="{ filter: searchFilter }"
       @change="onChange"
     />
-
+    <h2 class="mt30 mb10">搜索结果自定义</h2>
+    <p class="mb10">
+      <code>#showSearchRender</code>
+      插槽接管搜索结果项的内容，作用域参数含输入文本、命中路径、已切分的高亮片段与 <code>disabled</code>；下方用例用
+      <code>segments</code> 还原内置样式（<code> / </code> 分隔 + 命中的关键词标红 + 路径含禁用项时置灰）
+    </p>
+    <Cascader v-model:value="searchRenderValue" placeholder="请选择" :options="options" show-search @change="onChange">
+      <template #showSearchRender="{ segments, disabled }">
+        <template v-for="(level, levelIndex) in segments" :key="levelIndex">
+          <span v-if="levelIndex > 0" :class="{ 'search-disabled': disabled }"> / </span>
+          <span
+            v-for="(segment, segmentIndex) in level"
+            :key="segmentIndex"
+            :class="{ 'search-keyword': segment.hit, 'search-disabled': disabled }"
+            >{{ segment.text }}</span
+          >
+        </template>
+      </template>
+    </Cascader>
     <h2 class="mt30 mb10">动态加载选项</h2>
     <p class="mb10">
       通过 <code>loadData</code> 按需加载子级：父级先以 <code>isLeaf: false</code> 占位，展开时写入子项并解除
-      <code>loading</code>
+      <code>loading</code>；加载结果为空时把该选项的 <code>isLeaf</code> 置为 <code>true</code>，加载图标随之结束
     </p>
     <Cascader
       v-model:value="lazyValue"
@@ -455,7 +495,6 @@ function onReadCheckedData() {
       :load-data="loadLazyData"
       @change="onChange"
     />
-
     <h2 class="mt30 mb10">自定义字段名</h2>
     <p class="mb10"
       >通过 <code>fieldNames</code> 指定 <code>label</code> / <code>value</code> / <code>children</code> 对应的字段</p
@@ -467,7 +506,6 @@ function onReadCheckedData() {
       :field-names="{ label: 'name', value: 'code', children: 'items' }"
       @change="onChange"
     />
-
     <h2 class="mt30 mb10">自定义 tag 内容</h2>
     <p class="mb10">通过 <code>#tagRender</code> 插槽接管多选 tag 的渲染，作用域参数含路径、文本与移除方法</p>
     <Cascader v-model:value="tagRenderValue" placeholder="请选择" :options="options" multiple @change="onChange">
@@ -478,7 +516,6 @@ function onReadCheckedData() {
         </span>
       </template>
     </Cascader>
-
     <h2 class="mt30 mb10">后缀图标</h2>
     <p class="mb10">通过 <code>#suffixIcon</code> 插槽或 <code>suffixIcon</code> 属性替换默认箭头</p>
     <Space>
@@ -498,18 +535,18 @@ function onReadCheckedData() {
         @change="onChange"
       />
     </Space>
-
     <h2 class="mt30 mb10">禁用</h2>
     <p class="mb10">整体禁用时不响应点击，清除图标与面板均不可用</p>
     <Cascader v-model:value="disabledValue" placeholder="请选择" :options="options" disabled @change="onChange" />
-
     <h2 class="mt30 mb10">支持清除</h2>
     <p class="mb10">悬浮时出现清除图标，点击回写空路径；<code>change</code> 收到空数组</p>
     <Cascader v-model:value="clearValue" placeholder="请选择" :options="options" allow-clear @change="onChange" />
-
     <h2 class="mt30 mb10">空数据</h2>
     <p class="mb10"
-      >无选项或搜索无结果时展示 <code>Empty</code>，传 <code>notFoundContent: null</code> 时回落默认空态</p
+      >无选项或搜索无结果时展示 <code>Empty</code>，传 <code>notFoundContent: null</code> 时回落默认空态；<code
+        >#notFoundContent</code
+      >
+      插槽可自定义空数据内容</p
     >
     <Space>
       <Cascader v-model:value="emptyOptionsValue" placeholder="请选择" :options="[]" />
@@ -520,8 +557,12 @@ function onReadCheckedData() {
         :options="[{ value: '1', label: '浙江', children: [] }]"
         show-search
       />
+      <Cascader v-model:value="emptySlotValue" placeholder="请选择" :options="[]">
+        <template #notFoundContent>
+          <span class="empty-slot-text">暂无数据</span>
+        </template>
+      </Cascader>
     </Space>
-
     <h2 class="mt30 mb10">自定义状态</h2>
     <p class="mb10">通过 <code>status</code> 设置校验状态，与 <code>Input</code> / <code>Select</code> 同一口径</p>
     <Space>
@@ -529,30 +570,41 @@ function onReadCheckedData() {
       <Cascader v-model:value="statusWarningValue" placeholder="请选择" :options="options" status="warning" />
       <Cascader v-model:value="statusBorderlessValue" placeholder="请选择" :options="options" :bordered="false" />
     </Space>
-
     <h2 class="mt30 mb10">受控展开</h2>
     <p class="mb10">
       通过 <code>v-model:open</code> 控制面板显隐，配套 <code>open-change</code> 事件；<code>search-value</code>
       可受控搜索文本
     </p>
-    <Space>
-      <Cascader
-        v-model:value="controlledValue"
-        v-model:open="open"
-        placeholder="请选择"
-        :options="options"
-        @change="onChange"
-      />
-      <Button type="primary" @click="open = !open">{{ open ? '收起面板' : '展开面板' }}</Button>
+    <Space vertical>
+      <Space>
+        <Cascader
+          v-model:value="controlledValue"
+          v-model:open="open"
+          placeholder="请选择"
+          :options="options"
+          @change="onChange"
+        />
+        <Button type="primary" @click="open = !open">{{ open ? '收起面板' : '展开面板' }}</Button>
+      </Space>
+      <Space>
+        <Cascader
+          v-model:value="controlledSearchValue"
+          v-model:search-value="controlledKeyword"
+          placeholder="请选择"
+          :options="options"
+          show-search
+          @change="onChange"
+        />
+        <Button @click="controlledKeyword = 'hang'">设为 hang</Button>
+        <Button @click="controlledKeyword = ''">清空关键词</Button>
+      </Space>
     </Space>
-
     <h2 class="mt30 mb10">默认值</h2>
     <p class="mb10">通过 <code>default-value</code> 提供非受控初值，形态与 <code>value</code> 一致</p>
     <Space>
       <Cascader placeholder="请选择" :options="options" :default-value="['jiangsu', 'nanjing', 'zhonghuamen']" />
       <Cascader placeholder="请选择" :options="options" multiple :default-value="[['zhejiang', 'hangzhou', 'xihu']]" />
     </Space>
-
     <h2 class="mt30 mb10">多选回填策略</h2>
     <p class="mb10">
       <code>show-checked-strategy</code> 决定父级全选时的回填形态：<code>SHOW_PARENT</code>（默认）只回填父级路径，
@@ -576,17 +628,15 @@ function onReadCheckedData() {
         @change="onChange"
       />
     </Space>
-
     <h2 class="mt30 mb10">多选回填顺序</h2>
     <p class="mb10">
       已选内容的顺序跟随值中路径的先后：可折叠为父级的分支在首次出现的位置收敛成一条，其后的同级项并入该条
     </p>
     <Cascader v-model:value="orderValue" placeholder="请选择" :options="options" multiple @change="onChange" />
-
     <h2 class="mt30 mb10">最大 tag 数</h2>
     <p class="mb10">
       通过 <code>max-tag-count</code> 折叠超出数量的 tag（传 <code>'responsive'</code> 时按容器宽度自动折叠），
-      <code>max-tag-placeholder</code> 自定义折叠提示
+      <code>max-tag-placeholder</code> 属性或 <code>#maxTagPlaceholder</code> 插槽自定义折叠提示
     </p>
     <Space>
       <Cascader
@@ -606,8 +656,17 @@ function onReadCheckedData() {
         :width="240"
         @change="onChange"
       />
+      <Cascader
+        v-model:value="maxTagSlotValue"
+        placeholder="请选择"
+        :options="longOptions"
+        multiple
+        :max-tag-count="3"
+        @change="onChange"
+      >
+        <template #maxTagPlaceholder="{ omittedValues }">+ {{ omittedValues.length }} 项</template>
+      </Cascader>
     </Space>
-
     <h2 class="mt30 mb10">已勾选的数据</h2>
     <p class="mb10">通过实例方法 <code>getCheckedData()</code> 读取已勾选项的选项数据</p>
     <Space>
@@ -622,7 +681,6 @@ function onReadCheckedData() {
       </template>
       <span v-else class="demo-checked-result-empty">点击「读取已勾选项」查看返回值，同时输出到控制台</span>
     </div>
-
     <h2 class="mt30 mb10">键盘操作</h2>
     <p class="mb10">
       聚焦后 <code>↑</code> <code>↓</code> 在当前列内移动（搜索态下在结果间移动）、<code>←</code>
@@ -632,21 +690,30 @@ function onReadCheckedData() {
       移除最后一个 tag
     </p>
     <Cascader v-model:value="keyboardValue" placeholder="请选择" :options="options" multiple @change="onChange" />
-
+    <h2 class="mt30 mb10">面板位置</h2>
+    <p class="mb10">通过 <code>placement</code> 指定面板展开方向，空间不足时 <code>flip</code> 会自动翻转</p>
+    <Space vertical>
+      <Space align="center"> placement: <Segmented v-model:value="placement" :options="placementOptions" /> </Space>
+      <Cascader
+        v-model:value="placementValue"
+        placeholder="请选择"
+        :options="options"
+        :placement="placement"
+        @change="onChange"
+      />
+    </Space>
     <h2 class="mt30 mb10">面板高度</h2>
     <p class="mb10">通过 <code>panelHeight</code> 调整每列高度，超出后列内滚动</p>
     <Space>
       <Cascader v-model:value="panelHeightSmallValue" placeholder="请选择" :options="longOptions" :panel-height="120" />
       <Cascader v-model:value="panelHeightLargeValue" placeholder="请选择" :options="longOptions" :panel-height="240" />
     </Space>
-
     <h2 class="mt30 mb10">长列表虚拟滚动</h2>
     <p class="mb10">
       省级 200、每省 200 个市级的长列表，显式开启 <code>virtual</code> 后每列只渲染可视区；<code>option-height</code>
       需与选项实际行高一致，列宽按整列内容锁定，滚动时不变
     </p>
     <Cascader v-model:value="virtualValue" placeholder="请选择" :options="manyOptions" virtual />
-
     <h2 class="mt30 mb10">面板底部操作区</h2>
     <p class="mb10">通过 <code>#action</code> 插槽在面板底部加入自定义操作</p>
     <Cascader ref="actionRef" v-model:value="actionValue" placeholder="请选择" :options="options" multiple>
@@ -685,5 +752,23 @@ function onReadCheckedData() {
     color: var(--va-text-color-3);
     font-size: 13px;
   }
+}
+/* #option 插槽里的自定义字段 */
+.option-code {
+  margin-left: 6px;
+  color: var(--va-text-color-3);
+  font-size: 12px;
+}
+/* #showSearchRender 插槽里命中关键词的高亮 */
+.search-keyword {
+  color: var(--va-error-color);
+}
+/* #showSearchRender 插槽里路径含禁用项的置灰（写在 .search-keyword 之后以覆盖高亮色） */
+.search-disabled {
+  color: var(--va-text-color-disabled);
+}
+/* #notFoundContent 插槽内容 */
+.empty-slot-text {
+  color: var(--va-text-color-3);
 }
 </style>
