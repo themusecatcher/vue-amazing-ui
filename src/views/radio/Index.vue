@@ -418,7 +418,7 @@ watchEffect(() => {
           </Radio>
           <Button @click="focusRadioRef?.focus()">focus</Button>
           <Button @click="focusRadioRef?.blur()">blur</Button>
-          <span class="demo-tip">{{ focusFocused ? '已聚焦' : '未聚焦' }}</span>
+          <span class="demo-label">{{ focusFocused ? '已聚焦' : '未聚焦' }}</span>
         </Flex>
       </Flex>
       <Flex vertical gap="small" align="start">
@@ -434,21 +434,9 @@ watchEffect(() => {
           </RadioButton>
           <Button @click="focusButtonRef?.focus()">focus</Button>
           <Button @click="focusButtonRef?.blur()">blur</Button>
-          <span class="demo-tip">{{ focusButtonFocused ? '已聚焦' : '未聚焦' }}</span>
+          <span class="demo-label">{{ focusButtonFocused ? '已聚焦' : '未聚焦' }}</span>
         </Flex>
       </Flex>
     </Flex>
   </div>
 </template>
-<style lang="less" scoped>
-.demo-label {
-  color: var(--va-text-color-3);
-  font-size: 13px;
-  line-height: 22px;
-}
-.demo-tip {
-  color: var(--va-text-color-3);
-  font-size: 13px;
-  line-height: 22px;
-}
-</style>

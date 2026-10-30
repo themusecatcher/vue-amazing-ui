@@ -316,19 +316,7 @@ watchEffect(() => {
       </Checkbox>
       <Button @click="focusCheckboxRef?.focus()">focus</Button>
       <Button @click="focusCheckboxRef?.blur()">blur</Button>
-      <span class="demo-tip">{{ focusFocused ? '已聚焦' : '未聚焦' }}</span>
+      <span class="demo-label">{{ focusFocused ? '已聚焦' : '未聚焦' }}</span>
     </Flex>
   </div>
 </template>
-<style lang="less" scoped>
-.demo-label {
-  color: rgba(0, 0, 0, 0.45);
-  font-size: 13px;
-  line-height: 22px;
-}
-.demo-tip {
-  color: rgba(0, 0, 0, 0.45);
-  font-size: 13px;
-  line-height: 22px;
-}
-</style>

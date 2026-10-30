@@ -216,6 +216,7 @@ const optionsMatchWidth = [
 const toValue = ref('')
 // 下拉面板样式的公开入口：popupClassName / dropdownMenuStyle / zIndex
 const panelValue = ref('')
+const panelCustomValue = ref('')
 const panelZIndexValue = ref('')
 </script>
 <template>
@@ -441,9 +442,10 @@ const panelZIndexValue = ref('')
     </Space>
     <h2 class="mt30 mb10">自定义下拉面板</h2>
     <p class="mb10">
-      通过 <code>popupClassName</code> 自定义面板类名、<code>dropdownMenuStyle</code> 设置面板样式，两者均落在
-      <code>Teleport</code> 后的面板上；<code>popupClassName</code> 的样式需写在全局样式中（<code>scoped</code>
-      样式无法命中），<code>zIndex</code> 用于覆盖面板层级（默认 <code>1050</code>）
+      面板本体（底色 / 边框 / 圆角 / 阴影 / 裁剪）用 <code>dropdownMenuStyle</code> 即可，它落在
+      <code>Teleport</code> 后的面板根上；面板内选项等子元素的皮肤才需要
+      <code>popupClassName</code>（其样式需写在全局样式中， <code>scoped</code> 样式无法命中）；<code>zIndex</code>
+      用于覆盖面板层级（默认 <code>1050</code>，需与其它浮层同时展开才能看出上下关系）
     </p>
     <Flex gap="large" wrap="wrap">
       <Flex vertical gap="small" align="start">
@@ -453,16 +455,17 @@ const panelZIndexValue = ref('')
       <Flex vertical gap="small" align="start">
         <span class="demo-label">自定义类名与样式</span>
         <AutoComplete
-          v-model:value="panelValue"
+          v-model:value="panelCustomValue"
           :options="options4"
           :width="180"
           placeholder="input here"
           popup-class-name="custom-ac-panel"
           :dropdown-menu-style="{
-            background: 'rgba(255, 105, 0, 0.05)',
+            backgroundImage: 'linear-gradient(rgba(255, 105, 0, 0.06), rgba(255, 105, 0, 0.06))',
             border: '1px solid #ff6900',
             borderRadius: '12px',
-            boxShadow: '0 8px 20px rgba(255, 105, 0, 0.25)'
+            boxShadow: '0 8px 20px rgba(255, 105, 0, 0.25)',
+            overflow: 'hidden'
           }"
         />
       </Flex>
@@ -569,21 +572,20 @@ const panelZIndexValue = ref('')
   </div>
 </template>
 <style lang="less">
-/* 面板经 Teleport 挂载，scoped 样式无法命中，故用 popupClassName 下发类名 + 全局样式；
-   选项规则把类名重复一次以提升特异性，覆盖带 scope 属性的组件内规则 */
+/* 面板经 Teleport 挂载到 body，scoped 样式无法命中，故用 popupClassName 下发类名 + 全局样式；
+   面板类名重复一次以提升特异性，覆盖组件内置的面板皮肤规则 */
 @demo-primary: #ff6900;
 
-.custom-ac-panel {
-  &.custom-ac-panel .auto-complete-options .auto-complete-option {
-    color: darken(@demo-primary, 12%);
+/* 面板本体（底色叠加 / 边框 / 圆角 / 阴影 / 圆角裁剪）全部由 dropdownMenuStyle 控制；
+   这里只放面板内部元素（选项）的皮肤：内联样式选不中后代，选项配色才需要 popupClassName 下发类名 */
+.custom-ac-panel.custom-ac-panel {
+  .auto-complete-options .auto-complete-option {
+    color: @demo-primary;
     font-weight: 500;
   }
+
   .auto-complete-options .auto-complete-option.option-hover {
-    background: fade(@demo-primary, 10%);
+    background: fade(@demo-primary, 12%);
   }
-}
-.demo-label {
-  color: rgba(0, 0, 0, 0.45);
-  font-size: 13px;
 }
 </style>
