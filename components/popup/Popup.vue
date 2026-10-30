@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, h, provide, ref, watch } from 'vue'
+import { computed, h, onBeforeUnmount, provide, ref, watch } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import { themeTeleportKey } from 'components/config-provider/context'
 import {
@@ -8,6 +8,7 @@ import {
   useFloating,
   useFloatingTeleportTarget,
   useInheritAnchorFont,
+  useOptionsSupported,
   useZIndex,
   zIndexContainerOpenKey
 } from 'components/utils'
@@ -32,8 +33,10 @@ import type {
  *   当帧不卸载（否则离开动画会直接消失），离开被打断时 Vue 不发 `afterLeave`，同样不卸载；
  * - **Teleport**：`to === false` 就地渲染（picker 面板的内层浮层需要），否则挂到 `to` 或就近的承载层；
  * - **Transition**：动画配置由皮肤层经 `transitionProps` 传入，缓动 / 关键帧属皮肤层（Tooltip 的 zoom）；
- * - **触发语义留在消费组件**：宿主只按 `show` 渲染，动画结束发 `animationend` / `afterLeave`，
- *   hover / click / focus / 延迟 / 外部点击 / esc 一律不管；
+ * - **触发语义留在消费组件**：宿主只按 `show` 渲染，动画结束发 `animationend` / `afterLeave`；
+ *   `closeOnOutsideClick` 为真时额外上报 `outsideClick`（判定口径：**面板之外 且 锚点之外**）——
+ *   只监听与上报，「是否真的关闭」仍由消费组件决定，hover / click / focus / 延迟 / esc 一律不管；
+ *   事件模型与 antdv 的 `vc-trigger` 一致：判定挂 `mousedown` / `touchstart`（不是 `click`）；
  * - **层级**：消费 `useZIndex`，每次「出现」重新领取，保证后出现者在上；
  * - **承载层契约**：面板带 `data-va-floating-mount`，插槽里的浮层会挂进面板；宿主经
  *   `zIndexContainerOpenKey` 下发开合状态，面板关闭（`v-show` 隐藏）时内部浮层随之收起；
@@ -44,6 +47,10 @@ import type {
 
 export interface Props {
   show?: boolean // 面板是否显示，由消费组件控制（宿主不接管触发语义）
+  /* 是否上报「外部按下」：为真时在展示期间监听 document 的 mousedown / touchstart（capture），
+     命中「面板之外 且 锚点之外」即发 `outsideClick`（未传 anchor 时退化判「面板之外」）。
+     宿主不会自行关闭，是否收起由消费组件在监听里决定；未传 anchor 的消费方必须自行再判触发器范围 */
+  closeOnOutsideClick?: boolean
   /* 隐藏后是否卸载浮层 DOM：true 时在离开过渡结束后卸载整棵子树，重新展示时
      元素与内部状态均为新建；false（默认）时元素常驻、仅切换 display。运行中切换只影响其后发生的隐藏 */
   destroyOnHide?: boolean
@@ -83,6 +90,7 @@ export interface Props {
 }
 const props = withDefaults(defineProps<Props>(), {
   show: false,
+  closeOnOutsideClick: false,
   destroyOnHide: false,
   forceRender: false,
   to: undefined,
@@ -108,11 +116,13 @@ defineOptions({ inheritAttrs: false })
 const emits = defineEmits<{
   animationend: [] // 面板自身动画（进入 / 离开）结束
   afterLeave: [] // 离开动画结束，面板已完全隐藏
+  outsideClick: [e: MouseEvent | TouchEvent] // 外部按下（面板外 && 锚点外），是否关闭由消费组件决定
 }>()
 // 承载层契约（与 Modal / Drawer / Dialog 同一语义，见 z-index.ts 的 zIndexContainerOpenKey）：
 // 面板携带 data-va-floating-mount 后，内部浮层会挂进面板 —— 面板关闭只是 v-show 隐藏，既不给
 // 内部浮层的触发元素派发 mouseleave 也不派发 blur，浮层会停在打开态并在面板重新打开时闪现；
-// 由宿主下发开合状态，内部浮层据此收起
+// 由宿主下发开合状态，内部浮层经 z-index.ts 的 useContainerClose 订阅后收起自身。
+// 宿主只提供、不订阅：`injectFromChain` 自当前实例起查，同时 provide 同一键会读到自己下发的值。
 provide(
   zIndexContainerOpenKey,
   computed<boolean>(() => props.show)
@@ -220,6 +230,53 @@ watch(
   // 初始即为显示态（受控 show / 默认展开）时也要领取一次，故立即执行
   { immediate: true }
 )
+// 外部点击：只判「面板之外 且 锚点之外」并上报，不决定是否关闭（决策留在消费组件）。
+// 未传 anchor（如仅 point / virtualAnchor 定位）时无法排除触发器，口径退化为「面板之外」，消费方须自行再判触发器。
+// 事件模型与 antdv 的 vc-trigger 一致：判定挂 mousedown / touchstart，而**不是** click ——
+// click 的 target 在「面板内按下、面板外松开」时会退化为两者的最近共同祖先（通常是 body），
+// 于是「不在面板内 && 不在锚点内」独立成立而误关（面板内拖选文本、拖滚动条都会踩到）；
+// mousedown 的 target 恒为真实按下的元素，从事件模型上消除该退化。
+// 监听挂在 document 的 capture 阶段、按 show 挂卸（面板可按需挂载 / 可整棵卸载，指令式挂法会出现
+// 「面板尚未创建时无监听」），注册幂等
+const { isSupported: captureSupported } = useOptionsSupported('capture')
+// capture 保证不被面板 / 锚点内部的 stopPropagation 截断；passive: false 与 antdv 的 touchstart 同口径
+const listenerOptions = computed<AddEventListenerOptions | boolean>(() =>
+  captureSupported.value ? { capture: true, passive: false } : false
+)
+let outsideListenerAttached = false
+function handleOutsideDown(e: MouseEvent | TouchEvent): void {
+  const target = e.target as Node | null
+  if (!target) return
+  if (panelRef.value?.contains(target)) return
+  if (props.anchor?.contains(target)) return
+  emits('outsideClick', e)
+}
+function attachOutsideListener(): void {
+  if (outsideListenerAttached || typeof document === 'undefined') return
+  document.addEventListener('mousedown', handleOutsideDown, listenerOptions.value)
+  // 触屏设备不产生 mousedown：与 antdv 一样补一条 touchstart（「always hide on mobile」）
+  document.addEventListener('touchstart', handleOutsideDown, listenerOptions.value)
+  outsideListenerAttached = true
+}
+function detachOutsideListener(): void {
+  if (!outsideListenerAttached || typeof document === 'undefined') return
+  document.removeEventListener('mousedown', handleOutsideDown, listenerOptions.value)
+  document.removeEventListener('touchstart', handleOutsideDown, listenerOptions.value)
+  outsideListenerAttached = false
+}
+watch(
+  () => props.show && props.closeOnOutsideClick,
+  (enabled) => {
+    if (enabled) {
+      attachOutsideListener()
+      return
+    }
+    detachOutsideListener()
+  },
+  { immediate: true }
+)
+// 卸载时移除监听，避免回调在组件卸载后仍触发
+onBeforeUnmount(detachOutsideListener)
 // 仅响应面板自身的动画结束：插槽内容中的嵌套动画冒泡上来时 target 不是面板，需忽略
 function onAnimationEnd(e: AnimationEvent): void {
   if (e.target !== panelRef.value) return

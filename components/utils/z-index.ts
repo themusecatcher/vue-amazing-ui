@@ -1,4 +1,4 @@
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { InjectionKey, Ref } from 'vue'
 import { injectFromChain } from './hooks'
 
@@ -136,12 +136,36 @@ export const zIndexManagerKey: InjectionKey<ZIndexManager> = Symbol('vaZIndexMan
  * （下拉被遮罩 / 弹窗盖住），同时让分配点被无谓抬高。子树内的浮层据此在承载层关闭时收起自身
  * （收起即归还槽位），恢复「数值随同时可见层数增长」。
  *
- * - 提供方：`Modal` / `Drawer` / `Dialog`（各自向下提供本层的打开态）
- * - 消费方：`Select` / `AutoComplete` / `Tooltip` / `Dropdown`
+ * - 提供方：`Modal` / `Drawer` / `Dialog` / `Popup`（各自向下提供本层的打开态）
+ * - 消费方：统一走 `useContainerClose`（`Tooltip` / `Dropdown` / `Select` / `AutoComplete` / 三个 Picker）
  * - 响应式：是（`Ref<boolean>`）
  * - 未命中：`undefined`，按「不在承载层内」处理
  */
 export const zIndexContainerOpenKey: InjectionKey<Ref<boolean>> = Symbol('vaZIndexContainerOpen')
+
+/**
+ * 组合式函数：订阅「承载层已关闭」
+ *
+ * 承载层内容常驻不卸载，容器关闭只是 `v-show` 隐藏，既不派发 `mouseleave` 也不派发 `blur` ——
+ * 内部浮层会停在打开态，容器重开时以「仍打开」的样子出现，且持续占着层级槽位。
+ * 消费方由此订阅一次，在容器关闭时收起自己的面板。
+ *
+ * ⚠️ 只能在「自己不 provide 该键」的组件里调用：`injectFromChain` 自当前实例起查，
+ * 同时提供同一键的组件会读到自己下发的值。故该订阅不放在 `Popup` 内（它是提供方）。
+ *
+ * @param onClose - 承载层关闭时的收尾动作（收起面板 / 复位聚焦态等）
+ */
+export function useContainerClose(onClose: () => void): void {
+  const containerOpen = injectFromChain(zIndexContainerOpenKey) ?? null
+  if (!containerOpen) {
+    return
+  }
+  watch(containerOpen, (open) => {
+    if (!open) {
+      onClose()
+    }
+  })
+}
 
 /** `useZIndex` 的选项 */
 export interface UseZIndexOptions {

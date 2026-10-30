@@ -716,3 +716,107 @@ describe('Popup · 承载层开合契约', () => {
     expect(seen[seen.length - 1]).toBe(false)
   })
 })
+
+/**
+ * 外点上报（`closeOnOutsideClick`）
+ *
+ * 判定口径固定为「面板之外 且 锚点之外」：只判「面板外」时消费方仍要各自排触发器，
+ * 等于只省了 `addEventListener` 样板。宿主只监听与上报、**不决定是否关闭** —— `show` 仍由
+ * 消费方控制（这也是不把 Popover 迁到 Popup 上的理由）。
+ */
+describe('Popup · 外点上报（closeOnOutsideClick）', () => {
+  /** 触发一次 mousedown：宿主与 antdv 同口径，在 mousedown / touchstart 上判定外部按下 */
+  const downOn = (target: Element): void => {
+    target.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
+  }
+  /** 挂载「锚点 + Popup」宿主并收集上报事件 */
+  const mountOutsideHost = (options: { enabled?: boolean; show?: boolean } = {}) => {
+    const { enabled = true, show: initialShow = true } = options
+    const calls: MouseEvent[] = []
+    const host = mountPopup({
+      show: initialShow,
+      props: enabled ? { closeOnOutsideClick: true } : {},
+      listeners: { onOutsideClick: (e: MouseEvent) => calls.push(e) }
+    })
+    wrapper = host.wrapper
+    return { host, calls }
+  }
+
+  it('opt-in：未传 closeOnOutsideClick 时点击面板外不上报', async () => {
+    const { calls } = mountOutsideHost({ enabled: false })
+    await flush()
+
+    downOn(document.body)
+    await flush()
+
+    expect(calls).toHaveLength(0)
+  })
+
+  it('面板内点击（含面板内子节点）不上报', async () => {
+    const { calls } = mountOutsideHost()
+    await flush()
+
+    downOn(queryPanel() as HTMLElement)
+    downOn(queryPanel()?.querySelector('.popup-body') as HTMLElement)
+    await flush()
+
+    expect(calls).toHaveLength(0)
+  })
+
+  it('锚点（触发器）内点击不上报', async () => {
+    const { host, calls } = mountOutsideHost()
+    await flush()
+
+    downOn(host.anchor.value as HTMLElement)
+    await flush()
+
+    expect(calls).toHaveLength(0)
+  })
+
+  it('面板外且锚点外点击上报一次，并携带原始事件', async () => {
+    const { calls } = mountOutsideHost()
+    await flush()
+
+    downOn(document.body)
+    await flush()
+
+    expect(calls).toHaveLength(1)
+    expect(calls[0].target).toBe(document.body)
+  })
+
+  it('show 变假后移除监听（收起态点击不再上报）', async () => {
+    const { host, calls } = mountOutsideHost()
+    await flush()
+
+    host.show.value = false
+    await flush()
+    downOn(document.body)
+    await flush()
+
+    expect(calls).toHaveLength(0)
+  })
+
+  it('面板内按下、面板外松开不上报（回归守护：click 的 target 会退化为共同祖先）', async () => {
+    const { calls } = mountOutsideHost()
+    await flush()
+
+    // 面板内按下 → 拖到面板外松手：mousedown 的 target 是面板内元素，判定不会「误关」；
+    // 旧实现在 click 上判定，此时 click 的 target 退化为 body（共同祖先）而误报
+    downOn(queryPanel() as HTMLElement)
+    document.body.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
+    document.body.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await flush()
+
+    expect(calls).toHaveLength(0)
+  })
+
+  it('触屏 touchstart 同样上报（移动端不产生 mousedown，与 antdv 一致）', async () => {
+    const { calls } = mountOutsideHost()
+    await flush()
+
+    document.body.dispatchEvent(new Event('touchstart', { bubbles: true }))
+    await flush()
+
+    expect(calls).toHaveLength(1)
+  })
+})
