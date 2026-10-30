@@ -14,7 +14,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-28">3.5.0</VersionDateTag>
+## <VersionDateTag date="2026-10-30">3.5.0</VersionDateTag>
 
 - 移除 [级联选择 Cascader](/guide/components/cascader.html) 的 `gap` / `height` / `maxDisplay` / `search` / `filter` 属性，`width` / `disabled` / `placeholder` 不再接受数组；`change` 第二参由文本数组改为选项数组
 - 重构 [级联选择 Cascader](/guide/components/cascader.html)：由三个并列 `Select` 改为单选择器 + 多列浮层面板，新增 `showSearch`（`filter` / `sort` / `limit` / `render`）、`expandTrigger`、`displayRender`、`panelHeight`、`status`、`bordered`、`open` / `searchValue` 受控与默认插槽自定义触发器
