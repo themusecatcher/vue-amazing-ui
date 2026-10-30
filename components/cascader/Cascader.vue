@@ -40,10 +40,17 @@ export type CascaderPath = CascaderValue[]
 export type CascaderModelValue = CascaderPath | CascaderPath[]
 export type CascaderPlacement = 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'
 export type ShowCheckedStrategy = typeof SHOW_PARENT | typeof SHOW_CHILD
+// 搜索文本切分片段：hit 为 true 表示该片段命中了关键词（供高亮）
+export interface SearchSegment {
+  text: string
+  hit: boolean
+}
 // 搜索结果自定义渲染的回调参数
 export interface SearchRenderParams {
   inputValue: string // 当前搜索文本
   path: Option[] // 命中项从根到自身的选项路径
+  segments: SearchSegment[][] // 逐级切分好的文本片段，直接渲染即可与内置结果保持一致
+  disabled: boolean // 路径上是否存在禁用项（禁用结果不可选中，自定义渲染时可按此置灰）
 }
 export interface SearchConfig {
   filter?: (inputValue: string, path: Option[]) => boolean // 命中判定，缺省为「路径上任一选项文本包含输入项」
@@ -62,8 +69,8 @@ export interface TagRenderParams {
   label: string // tag 显示文本（各级文本以 ' / ' 连接）
   value: CascaderPath // tag 对应的选中路径
   path: Option[] // tag 对应的选项数据
-  closable: boolean // 是否可移除
-  disabled: boolean // 是否禁用（禁用项的 tag 不可移除）
+  closable: boolean // 是否可移除（整体 disabled 时为 false）
+  disabled: boolean // 路径上是否存在禁用项（用于置灰 tag）
   onClose: (e?: MouseEvent) => void // 移除该 tag
 }
 // maxTagPlaceholder 的回调参数
@@ -121,7 +128,7 @@ export interface Props {
   zIndex?: number // 面板层级，优先级最高（未传时使用默认层级或 ConfigProvider 的 baseZIndex 分配）
   // 可访问性
   autofocus?: boolean // 是否自动获取焦点
-  id?: string // 组件 id，用于 aria-controls / aria-activedescendant 关联，未传时内部生成
+  id?: string // 组件 id，用于 aria-controls / aria-owns 关联，未传时内部生成
 }
 // 声明组件插槽类型（顺序与文档 `## Slots` 表一致）
 export interface CascaderSlots {
@@ -187,10 +194,12 @@ defineSlots<CascaderSlots>()
 // 插槽一律按「是否提供」判定，不以渲染内容探测：带作用域参数的插槽（displayRender / option 等）
 // 以空对象调用时渲染结果本就为空，内容探测会把已提供的插槽误判为未提供
 const slots = useSlots()
-// 声明组件事件（顺序与文档 `## Events` 表一致；update:value 即 v-model:value 回写，随 value 属性一并说明）
+// 声明组件事件（顺序与文档 `## Events` 表一致；update:value / update:searchValue / update:open
+// 分别是 v-model:value / v-model:searchValue / v-model:open 的回写，随对应属性一并说明）
 const emits = defineEmits([
   'update:value',
   'change',
+  'update:open',
   'openChange',
   'dropdownVisibleChange',
   'update:searchValue',
@@ -357,31 +366,64 @@ function collectLeafPaths(path: CascaderPath, result: CascaderPath[]): void {
     }
   })
 }
-/** 统计子树中被勾选的叶子数与叶子总数（禁用分支不计入，其勾选态不参与父级推导） */
-function countSubtreeLeaves(option: Option, path: CascaderPath): { checked: number; total: number } {
-  const children = getChildren(option)
-  if (children.length === 0) {
-    return { checked: checkedKeySet.value.has(pathKey(path)) ? 1 : 0, total: 1 }
-  }
-  return children.reduce<{ checked: number; total: number }>(
-    (acc, child) => {
+/**
+ * 多选勾选态表：只遍历各列**已渲染**选项的子树，一次后序汇总「已勾选叶子数 / 叶子总数」并落到路径键上。
+ * 模板里每个选项要读多次勾选态（aria / 样式 / 扩散环），逐次遍历子树会把整列渲染放大成平方级；
+ * 禁用分支不计入（不可勾选，其勾选态也不参与父级推导）
+ */
+const checkStateMap = computed<Map<string, 'checked' | 'half' | 'none'>>(() => {
+  const map = new Map<string, 'checked' | 'half' | 'none'>()
+  if (!isMultiple.value) return map
+  const stats = new Map<string, { checked: number; total: number }>()
+  const visit = (option: Option, path: CascaderPath): { checked: number; total: number } => {
+    const key = pathKey(path)
+    const cached = stats.get(key)
+    if (cached) return cached
+    const children = getChildren(option)
+    if (children.length === 0) {
+      const checked = checkedKeySet.value.has(key) ? 1 : 0
+      const result = { checked, total: 1 }
+      stats.set(key, result)
+      map.set(key, checked === 1 ? 'checked' : 'none')
+      return result
+    }
+    let checked = 0
+    let total = 0
+    children.forEach((child) => {
       const value = getOptionValue(child)
-      if (value === undefined || child.disabled) return acc
-      const next = countSubtreeLeaves(child, [...path, value])
-      return { checked: acc.checked + next.checked, total: acc.total + next.total }
-    },
-    { checked: 0, total: 0 }
-  )
-}
+      if (value === undefined || child.disabled) return
+      const next = visit(child, [...path, value])
+      checked += next.checked
+      total += next.total
+    })
+    const result = { checked, total }
+    stats.set(key, result)
+    let state: 'checked' | 'half' | 'none' = 'none'
+    if (total > 0 && checked === total) {
+      state = 'checked'
+    } else if (checked > 0) {
+      state = 'half'
+    }
+    map.set(key, state)
+    return result
+  }
+  columns.value.forEach((column, columnIndex) => {
+    visibleColumnOptions(column, columnIndex).forEach((option) => {
+      const path = pathOfOption(option, columnIndex)
+      if (path.length === 0 || option.disabled) return
+      visit(option, path)
+    })
+  })
+  return map
+})
 /** 多选勾选态：全选 / 半选 / 未选（禁用项恒为未选，与不可操作的语义一致） */
 function getCheckState(option: Option, columnIndex: number): 'checked' | 'half' | 'none' {
   if (!isMultiple.value || option.disabled) return 'none'
   const path = pathOfOption(option, columnIndex)
   if (path.length === 0) return 'none'
-  const { checked, total } = countSubtreeLeaves(option, path)
-  if (total > 0 && checked === total) return 'checked'
-  return checked > 0 ? 'half' : 'none'
+  return checkStateMap.value.get(pathKey(path)) ?? 'none'
 }
+
 // 单选回填路径：取第一条路径
 const displayPath = computed<CascaderPath>(() => valuePaths.value[0] ?? [])
 // 选中路径的选项数据：逐级下钻，缺项处用兜底选项占位，保证回填文本不丢
@@ -457,9 +499,10 @@ const columns = computed<Option[][]>(() => {
   }
   return result
 })
-/** 该列当前激活项（路径命中即高亮，整条激活路径都会高亮） */
+/** 该列当前激活项（路径命中即高亮，整条激活路径都会高亮；无 value 的选项不参与高亮） */
 function isActiveOption(option: Option, columnIndex: number): boolean {
-  return activeCells.value[columnIndex] === getOptionValue(option)
+  const value = getOptionValue(option)
+  return value !== undefined && activeCells.value[columnIndex] === value
 }
 // 虚拟滚动：列内只渲染可视区的选项，未渲染区用等高占位撑出，滚动条长度与全量渲染等价
 const DEFAULT_OPTION_HEIGHT = 32 // 默认行高（与 .cascader-option 的 min-height 一致）
@@ -546,8 +589,13 @@ async function measureColumnWidths(): Promise<void> {
   measuringColumns.value = false
   columnMinWidths.value = widths
 }
-// 列数据 / 勾选形态 / 尺寸变化后重量列宽：面板首次挂载、换父级新开一列都会走到
-watch([columns, () => props.multiple, () => props.size], () => nextTick(measureColumnWidths), { immediate: true })
+// 列数据 / 勾选形态 / 尺寸 / 面板高度变化后重量列宽：面板首次挂载、换父级新开一列都会走到；
+// 面板高度决定该列是否窗口化（进而是否需要锁宽），故一并作为依赖
+watch(
+  [columns, () => props.multiple, () => props.size, () => props.panelHeight, () => props.optionHeight],
+  () => nextTick(measureColumnWidths),
+  { immediate: true }
+)
 /** 列滚动：记录滚动位置驱动渲染窗口（Scrollbar 的 scroll 事件带原生事件对象） */
 function onColumnScroll(columnIndex: number, e: Event): void {
   const target = e.target as HTMLElement | null
@@ -703,9 +751,9 @@ const searchResults = computed<Option[][]>(() => {
   return limit === false ? result : result.slice(0, limit)
 })
 /** 把文本按关键词切成「命中 / 未命中」片段，供搜索结果高亮渲染 */
-function splitKeyword(text: string, keyword: string): { text: string; hit: boolean }[] {
+function splitKeyword(text: string, keyword: string): SearchSegment[] {
   if (!keyword) return [{ text, hit: false }]
-  const segments: { text: string; hit: boolean }[] = []
+  const segments: SearchSegment[] = []
   const lowerText = text.toLowerCase()
   const lowerKeyword = keyword.toLowerCase()
   let start = 0
@@ -727,13 +775,30 @@ function splitKeyword(text: string, keyword: string): { text: string; hit: boole
 const searchItems = computed(() => {
   const render = searchConfig.value.render
   const inputValue = mergedSearchValue.value
-  return searchResults.value.map((path) => ({
-    key: path.map((option) => String(getOptionValue(option))).join('-'),
-    path,
-    segments: path.map((option) => splitKeyword(getOptionLabelText(option), inputValue)),
-    renderNode: render ? () => render({ inputValue, path }) : null
-  }))
+  return searchResults.value.map((path) => {
+    const segments = path.map((option) => splitKeyword(getOptionLabelText(option), inputValue))
+    // 路径上任一禁选项与列内语义一致：结果置灰且不可选中
+    const disabled = path.some((option) => option.disabled)
+    return {
+      // 用序列化后的值路径做 key：值里可能含 '-'，拼接会与另一条路径撞键
+      key: pathKey(path.map((option) => getOptionValue(option) as CascaderValue)),
+      path,
+      segments,
+      disabled,
+      renderNode: render ? () => render({ inputValue, path, segments, disabled }) : null
+    }
+  })
 })
+// 结果集变化后把高亮落到第一个可选中结果：首项禁用时不能让高亮停在不可选中项上
+watch(
+  searchItems,
+  (items) => {
+    if (!items[searchHoverIndex.value]?.disabled) return
+    const first = items.findIndex((item) => !item.disabled)
+    searchHoverIndex.value = first === -1 ? 0 : first
+  },
+  { immediate: true }
+)
 const showSearchPanel = computed(() => panelSearchMode.value && searchItems.value.length > 0)
 const showEmptyPanel = computed(
   () => props.options.length === 0 || (panelSearchMode.value && searchItems.value.length === 0)
@@ -752,7 +817,9 @@ function setPanelOpen(open: boolean): void {
     emitPanelChange(open)
   }
 }
+// 开合上报：受控与非受控都派发 update:open，父侧才能用 v-model:open 回写
 function emitPanelChange(open: boolean): void {
+  emits('update:open', open)
   emits('openChange', open)
   emits('dropdownVisibleChange', open)
 }
@@ -956,10 +1023,12 @@ function loadChildren(option: Option, path: CascaderPath): void {
  * 子项是否处于加载中：数据里标记 loading，或已触发 loadData 但子项尚未写入
  *
  * 子项到位即结束加载态（而不是等 options 变更事件）：使用者在 loadData 里通常就地补写
- * `option.children`，数组引用不变，侦听不到变更
+ * `option.children`，数组引用不变，侦听不到变更；加载结果为空的场景没有子项可等，
+ * 由使用者把该选项的 `isLeaf` 置为 `true` 结束加载态（否则图标会一直转）
  */
 function isLoadingOption(option: Option, columnIndex: number): boolean {
   if (option.loading === true) return true
+  if (option.isLeaf === true) return false
   if (loadingKeys.value.size === 0) return false
   if (!loadingKeys.value.has(pathKey(pathOfOption(option, columnIndex)))) return false
   return getChildren(option).length === 0
@@ -1037,8 +1106,9 @@ function onOptionMouseEnter(option: Option, columnIndex: number): void {
     loadChildren(option, cells)
   }
 }
-/** 点选搜索结果：单选回填并收起；多选切换勾选并保持展开 */
+/** 点选搜索结果：单选回填并收起；多选切换勾选并保持展开；路径含禁用项时不响应 */
 function onSearchItemClick(path: Option[]): void {
+  if (path.some((option) => option.disabled)) return
   const cells = path
     .map((option) => getOptionValue(option))
     .filter((value): value is CascaderValue => value !== undefined)
@@ -1052,6 +1122,19 @@ function onSearchItemClick(path: Option[]): void {
   emitChange(cells)
   closePanel()
   focusTrigger()
+}
+/** 从 from 起按 step 找下一个可选中（非禁用）的结果下标，全部禁用时返回 -1 */
+function nextSelectableIndex(from: number, step: number): number {
+  const total = searchItems.value.length
+  for (let offset = 1; offset <= total; offset++) {
+    const index = (((from + step * offset) % total) + total) % total
+    if (!searchItems.value[index]?.disabled) return index
+  }
+  return -1
+}
+/** 结果项 hover：禁用结果不接管键盘高亮，避免高亮停在不可选中项上 */
+function onSearchItemHover(index: number): void {
+  if (!searchItems.value[index]?.disabled) searchHoverIndex.value = index
 }
 function onSearchInput(e: Event): void {
   // 输入法合成中不触发 search / 过滤：以 v-model 在元素上维护的 composing 标记为准
@@ -1091,8 +1174,9 @@ function onClear(e?: MouseEvent): void {
   focusTrigger()
 }
 /**
- * 键盘交互：Esc 收起面板、Enter 选中当前激活项、↑↓ 在当前列内移动激活项
- * （跨列方向键与搜索结果列表的完整导航在后续迭代补齐）
+ * 键盘交互：Esc 收起面板、Enter 选中当前激活项、↑↓ 在当前列内移动激活项、
+ * ← → 跨列下钻与退回（搜索态下 ↑↓ 在结果间移动、Enter 选中高亮结果）；
+ * 多选另支持 Space 勾选当前激活项、Backspace 移除最后一个 tag
  */
 function onKeydown(e: KeyboardEvent): void {
   if (props.disabled) return
@@ -1105,13 +1189,14 @@ function onKeydown(e: KeyboardEvent): void {
     }
     return
   }
-  // 搜索态：↑↓ 在结果间移动，Enter 选中当前高亮结果
+  // 搜索态：↑↓ 在结果间移动（跳过禁用结果），Enter 选中当前高亮结果
   if (panelSearchMode.value) {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       if (searchItems.value.length === 0) return
       e.preventDefault()
       const step = e.key === 'ArrowDown' ? 1 : -1
-      searchHoverIndex.value = (searchHoverIndex.value + step + searchItems.value.length) % searchItems.value.length
+      const next = nextSelectableIndex(searchHoverIndex.value, step)
+      if (next !== -1) searchHoverIndex.value = next
       return
     }
     if (e.key === 'Enter') {
@@ -1649,11 +1734,15 @@ defineExpose({
                   v-for="(item, index) in searchItems"
                   :key="item.key"
                   class="cascader-option"
-                  :class="{ 'option-hover': index === searchHoverIndex }"
+                  :class="{
+                    'option-hover': index === searchHoverIndex && !item.disabled,
+                    'option-disabled': item.disabled
+                  }"
                   role="option"
-                  aria-selected="false"
+                  :aria-selected="index === searchHoverIndex"
+                  :aria-disabled="item.disabled || undefined"
                   @mousedown.prevent
-                  @mouseenter="searchHoverIndex = index"
+                  @mouseenter="onSearchItemHover(index)"
                   @click.stop="onSearchItemClick(item.path)"
                 >
                   <span class="cascader-option-content">
@@ -1662,6 +1751,8 @@ defineExpose({
                       name="showSearchRender"
                       :input-value="mergedSearchValue"
                       :path="item.path"
+                      :segments="item.segments"
+                      :disabled="item.disabled"
                     />
                     <component :is="item.renderNode" v-else-if="item.renderNode" />
                     <template v-else>
@@ -1952,9 +2043,6 @@ defineExpose({
       transition:
         transform 0.3s,
         opacity 0.3s;
-    }
-    .arrow-rotate {
-      transform: rotate(180deg);
     }
     .clear-svg {
       z-index: 1;

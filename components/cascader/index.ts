@@ -7,6 +7,7 @@ export type {
   SearchConfig as CascaderSearchConfig,
   DisplayRenderParams as CascaderDisplayRenderParams,
   SearchRenderParams as CascaderSearchRenderParams,
+  SearchSegment as CascaderSearchSegment,
   TagRenderParams as CascaderTagRenderParams,
   MaxTagPlaceholderParams as CascaderMaxTagPlaceholderParams,
   CascaderValue,
