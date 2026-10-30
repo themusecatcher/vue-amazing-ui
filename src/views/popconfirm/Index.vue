@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { h } from 'vue'
+import { h, ref } from 'vue'
 import { FireFilled, QuestionCircleFilled, SoundFilled } from '@ant-design/icons-vue'
 import { useMessage } from 'components/message'
+import type { PopconfirmProps } from 'components/popconfirm'
 const message = useMessage()
 const confirm = (e: MouseEvent) => {
   console.log('confirm', e)
@@ -14,6 +15,14 @@ const cancel = (e: MouseEvent) => {
 const openChange = (open: boolean) => {
   console.log('open', open)
 }
+// 受控显示：显隐由 v-model:open 接管，内部触发的开合经 update:open 回传
+const controlledOpen = ref(false)
+// openControl：显隐只由 open 驱动
+const openControlOpen = ref(false)
+// 弹出位置：6 个方向（含复合方向），默认的箭头与翻转行为可一屏对比
+type PopconfirmPlacement = NonNullable<PopconfirmProps['placement']>
+const placements: PopconfirmPlacement[] = ['topLeft', 'top', 'topRight', 'bottomLeft', 'bottom', 'bottomRight']
+const placement = ref<PopconfirmPlacement>('top')
 </script>
 <template>
   <div>
@@ -54,6 +63,20 @@ const openChange = (open: boolean) => {
         <FireFilled style="color: #d4380d" />
       </template>
       <Button type="primary">Vue Amazing UI</Button>
+    </Popconfirm>
+    <h2 class="mt30 mb10">弹出位置</h2>
+    <p class="mb10">
+      通过 <code>placement</code> 指定方向；复合方向（如 <code>topLeft</code>）配合
+      <code>arrowPointAtCenter</code> 可让箭头指向触发元素中心，空间不足时 <code>flip</code> 会自动翻转
+    </p>
+    <div style="margin-bottom: 16px">
+      <Space align="center">
+        placement:
+        <Segmented v-model:value="placement" :options="placements" />
+      </Space>
+    </div>
+    <Popconfirm :placement="placement" title="It's friendly reminder ..." @ok="confirm" @cancel="cancel">
+      <Button type="primary">Adjust Placement</Button>
     </Popconfirm>
     <h2 class="mt30 mb10">自定义按钮</h2>
     <Space>
@@ -112,6 +135,32 @@ const openChange = (open: boolean) => {
       <Popconfirm title="It's friendly reminder ..." trigger="hover" @ok="confirm" @cancel="cancel">
         <Button type="primary">Hover Me Confirm</Button>
       </Popconfirm>
+    </Space>
+    <h2 class="mt30 mb10">受控显示</h2>
+    <p class="mb10">
+      使用 <code>v-model:open</code> 控制显隐；<code>openControl</code> 为真时
+      <code>trigger: hover</code> 不再驱动显隐，显隐完全由 <code>open</code> 决定
+    </p>
+    <Space vertical align="start" :gap="12">
+      <Space>
+        <Popconfirm v-model:open="controlledOpen" title="It's friendly reminder ..." @ok="confirm" @cancel="cancel">
+          <Button>Controlled: {{ controlledOpen }}</Button>
+        </Popconfirm>
+        <Button type="primary" @click="controlledOpen = !controlledOpen">Toggle Open</Button>
+      </Space>
+      <Space>
+        <Popconfirm
+          v-model:open="openControlOpen"
+          open-control
+          trigger="hover"
+          title="Controlled Only"
+          @ok="confirm"
+          @cancel="cancel"
+        >
+          <Button>Hover (openControl)</Button>
+        </Popconfirm>
+        <Button type="primary" @click="openControlOpen = !openControlOpen">Toggle Open (openControl)</Button>
+      </Space>
     </Space>
     <h2 class="mt30 mb10">自定义过渡动画时间</h2>
     <Popconfirm title="Transition Duration 300ms" :transition-duration="300" @ok="confirm" @cancel="cancel">
