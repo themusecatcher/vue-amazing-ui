@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { injectFromChain, renderContentToVNode, siderCollapsedKey, useWindowWidth } from 'components/utils'
+import {
+  injectFromChain,
+  renderContentToVNode,
+  siderCollapsedKey,
+  useControlledModel,
+  useWindowWidth
+} from 'components/utils'
 import { getSiderId, siderHookKey } from '../siderHook'
 
 /** 断点对应的视窗宽度（单位 px），用于 collapsedWidth 的响应式取值 */
@@ -66,14 +72,9 @@ const responsiveSize = {
   xxxl: 2000
 }
 const viewportWidth = useWindowWidth() // SSR 取 0，挂载后随 resize 更新
-const innerCollapsed = ref<boolean>(Boolean(props.collapsed ?? props.defaultCollapsed))
-// 受控时跟随外部 collapsed（显式传 undefined 会回落到展开态，与非受控语义区分开）
-watch(
-  () => props.collapsed,
-  (value) => {
-    innerCollapsed.value = Boolean(value)
-  }
-)
+// (v-model) 收起态：传值即受控，未传时取 defaultCollapsed 自持
+// （显式传 undefined 会回落到非受控语义，与受控的空值区分开）
+const collapsedModel = useControlledModel<boolean>('collapsed', Boolean(props.defaultCollapsed))
 // 响应式登记：Layout 收到登记后才会把布局方向切换为水平
 const siderHook = injectFromChain(siderHookKey) ?? null
 const siderId = getSiderId()
@@ -82,7 +83,7 @@ onBeforeUnmount(() => {
   siderHook?.removeSider(siderId)
 })
 // 下发收起态给内部菜单：菜单自身不再需要绑定 inlineCollapsed
-provide(siderCollapsedKey, innerCollapsed)
+provide(siderCollapsedKey, collapsedModel)
 const collapsedSiderWidth = computed(() => {
   if (typeof props.collapsedWidth === 'number') {
     return props.collapsedWidth
@@ -103,7 +104,7 @@ function toLength(value: number | string): string {
 }
 // 宽度只取决于当前收起状态：断点响应式收起同样生效（与 collapsible 无关，后者仅决定是否渲染点击触发器）
 const siderWidth = computed(() => {
-  const rawWidth = innerCollapsed.value ? collapsedSiderWidth.value : props.width
+  const rawWidth = collapsedModel.value ? collapsedSiderWidth.value : props.width
   return toLength(rawWidth)
 })
 // --layout-sider-width 经 CSS 变量继承链下发给内部菜单：菜单收起态宽度跟随侧边栏实际宽度（如 80/120/0）
@@ -132,23 +133,20 @@ const showTriggerArea = computed(() => {
   return props.collapsible || (zeroWidth.value && breakpointBroken.value === true)
 })
 const arrowRotated = computed(() => {
-  return props.reverseArrow ? !innerCollapsed.value : innerCollapsed.value
+  return props.reverseArrow ? !collapsedModel.value : collapsedModel.value
 })
 /**
  * 同步收起状态
  *
- * 仅非受控（collapsed 未传）时才写内部状态——受控模式下外部才是唯一数据源，
- * 但仍需抛出 update:collapsed 供 v-model 回写
+ * 写模型即完成两种路径：受控时只抛出 update:collapsed（外部才是唯一数据源），
+ * 非受控时本地生效；collapse 事件两种模式都派发
  */
 function collapse(value: boolean, type: CollapseType) {
-  if (props.collapsed === undefined) {
-    innerCollapsed.value = value
-  }
-  emits('update:collapsed', value)
+  collapsedModel.value = value
   emits('collapse', value, type)
 }
 function toggleCollapse() {
-  collapse(!innerCollapsed.value, 'clickTrigger')
+  collapse(!collapsedModel.value, 'clickTrigger')
 }
 /** 视窗宽度变化跨越断点时同步收起状态，并抛出 breakpoint / collapse 事件 */
 function handleBreakpoint() {
@@ -157,7 +155,7 @@ function handleBreakpoint() {
     return
   }
   emits('breakpoint', broken)
-  if (innerCollapsed.value !== broken) {
+  if (collapsedModel.value !== broken) {
     collapse(broken, 'responsive')
   }
 }
