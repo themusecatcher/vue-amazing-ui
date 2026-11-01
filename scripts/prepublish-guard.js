@@ -295,18 +295,18 @@ if (propTypeCheck.problems.length > 0) {
 }
 
 /**
- * ⑦ v-model 对外类型契约
+ * ⑦ v-model 声明契约
  *
- * `defineModel('value')` 的 prop 由编译器生成，源码侧 `interface Props` 看不到它，
- * 对外具名类型须手动合并 `Props & { value?: ... }`。漏补时组件本身与模板均正常
- * （实例类型由编译器补全），只有使用方显式标注 `XxxProps` 才暴露，故在源码层断言。
+ * 两条断言：① 公共 API 禁止用 `defineModel` 声明 v-model（其受控判据要求 prop + 监听器同时存在，
+ * 与全库「传值即受控」冲突），只允许白名单内的待迁移存量；② 白名单内若仍用 `defineModel`，
+ * 其字段必须并入对外 props 类型（`interface Props` 或 `Props & { x?: ... }`）。
  * 详见 development/component-design.md 的「v-model 声明约定」。
  */
 const modelPropsCheck = checkModelProps({ rootDir })
 if (modelPropsCheck.problems.length > 0) {
   const sample = modelPropsCheck.problems.slice(0, 5).join('\n      ✗ ')
   failures.push(
-    `v-model 字段未并入对外 props 类型（使用方拿到的具名类型会缺字段）：\n      ✗ ${sample}` +
+    `v-model 声明契约未通过：\n      ✗ ${sample}` +
       (modelPropsCheck.problems.length > 5 ? `\n      …… 共 ${modelPropsCheck.problems.length} 处` : '')
   )
 }
@@ -320,6 +320,6 @@ if (failures.length > 0) {
 console.log(
   `✅ 发布守卫通过：${entryPaths.length} 个产物入口、${entryDirs.size} × ${outDirs.length} 个组件样式入口均就绪、` +
     `${propTypeCheck.checked} 处 props 运行时类型已对齐、` +
-    `${modelPropsCheck.checked} 处 v-model 字段已并入对外 props 类型` +
+    `${modelPropsCheck.checked} 处存量 defineModel 字段已并入对外 props 类型` +
     (propTypeCheck.skipped > 0 ? `（${propTypeCheck.skipped} 处因产物缺失跳过）` : '')
 )

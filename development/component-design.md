@@ -56,18 +56,27 @@ const props = withDefaults(defineProps<Props>(), {
 - **无 `Boolean` / `Function` 分支的联合**（如 `string | MountElement`）在生产编译里 `type` 会被整体省略 —— 属预期（零校验、不误报），不必为了「有 type」硬加成员。
 - 该约定由 `scripts/check-prop-runtime-types.js` 兜底（`pnpm guard` 第 ⑥ 项）：源码用到 DOM 类型 / 字面量联合的 prop，产物运行时类型必须含 `Object` / `String`，否则发布守卫直接失败。
 
-### v-model 声明约定
+### v-model 声明约定（受控判据 = 传值即受控）
 
-`v-model` 本质是「一个 prop + 一个 `update:` 事件」，两种声明方式在库内并存，但**同一字段不能两处都声明**（`defineProps` 与 `defineModel` 同名会重复声明 prop）：
+`v-model` 本质是「一个 prop + 一个 `update:` 事件」。全库统一一条判据，**不使用 `defineModel`**：
 
-- **默认用 `defineProps` 手写**：`value?: T` 写进 `interface Props`，`defineEmits` 声明 `update:value` —— prop 天然出现在对外类型中，无需补偿（父独占所有权的字段、只读展示字段属此类）。
-- **`defineModel` 用于「需要非受控兜底」的双模字段**（判据见下文第 4 条）：它内建 local 模式（父组件未监听 `update:` 时写入只在本地生效），这是手写 prop + emit 需自行实现的能力；但其 prop 由编译器生成，`interface Props` 看不到，故**必须**在对外类型上合并：`export type XxxProps = Props & { value?: T; open?: boolean }`。
-- 需要精确区分「值来自父级」与「值由内部写回」的字段（如 `DatePicker` / `TimePicker` 的 `formattedValue`）仍用 `defineProps` 声明 —— `defineModel` 返回的 ref 会立即反映本地写入，无法据此判定父组件是否传入。
-- **判据是「该字段是否需要组件自己持有一份值」，看两个客观锚点**：① **代码事实** —— 组件已有内部副本（`innerX` / `mergedX` / `watch(() => props.x)` 同步 / `props.x === undefined` 分支）即说明设计上就需要双模，应改为 `defineModel` 消除手写副本（属等价重构，不产生行为变更）；② **对标 antdv** —— 该交互在 antdv 有 `defaultXxx` 入口（`defaultValue` / `defaultActiveKey` / `defaultCurrent` …）即说明需要非受控入口。两个锚点都不满足的**纯受控字段**（父不传值即不可交互，如 `Switch` 的 `value`、`Steps` 的 `current`）保持 `defineProps` + `update:` 声明。
-- **非受控初值用 `defineModel` 的 `default` 选项承担**（`defineModel('value', { default: 0 })`），不额外拆 `defaultValue` —— 受控判定看 `vnode.props` 的 key 是否存在，prop 是否有默认值不影响判定；已发布的 `defaultXxx` API（`Calendar` / `Cascader` / `ColorPicker` / `Select` / `AutoComplete`）保持不变。
-- **数组 / 对象型 model 必须整体赋值**（`model.value = [...model.value, x]`），禁止 `push` / `splice` 原地修改：`defineModel` 返回 `customRef`，原地修改不经过 setter → 不 emit、不触发更新，且受控时 `model.value` 就是父数组引用，会直接污染父级数据。
-- **原生表单元素的 `value` 保持手写**（`Input` / `Textarea` / `InputSearch`）：父不传值时由 DOM 自身维护输入状态，组件只需在受控时回写；改用 `defineModel` 会多出一份 JS 本地状态与 DOM 并存，形成两个真相源。
-- 该约定由 `scripts/check-model-props.js` 兜底（`pnpm guard` 第 ⑦ 项）：凡声明了对外 props 类型的 SFC，每个 `defineModel('x')` 的 `x` 必须出现在 `interface Props` 或 `Props & { ... }` 合并块中，否则发布守卫失败。「纯受控字段禁用 `defineModel`」依赖评审判断（是否有非受控需求无稳定静态特征），不做脚本强制。
+> **受控判据 = 父是否传了值（`props.x !== undefined`）**：传了即受控（值归父，组件只上报），未传则组件自持。
+
+依据（2026-11 复核，均核对过源码）：
+
+- **Vue `useModel` 的判据不同**：它要求「prop key 存在**且** `onUpdate:x` 监听器存在」（`@vue/runtime-core` 的 `hasVModel`）。于是「父只传值、不监听回写」时组件会本地自写 —— UI 正常但数据不回流，正是本库最不能接受的**静默分叉**；而 `!== undefined` 判据的失败是「点了没反应」，开发期立即暴露。响亮失败优于静默失败。
+- **生态一致**：`ant-design-vue@4.2.6`（`es/_util/hooks/useMergedState.js`）与 `naive-ui@2.45.3`（`vooks` 的 `useMergedState`）都用 `value !== undefined` 判据，且两库对 `useModel` / `defineModel` 的使用量为 **0**。
+- **类型单一真相源**：`defineModel` 生成的 prop 不在 `interface Props` 里，须用 `Props & { x?: T }` 合并 + 守卫脚本补偿；手写声明天然只有一个出处。
+
+落地细则：
+
+- **声明形态**：字段写进 `interface Props`（带中文注释），`defineEmits` 声明 `update:x`。双模字段用 `components/utils` 的 `useControlledModel(name, default)` 取可写 ref，**禁止**再手写 `innerX` + `watch(() => props.x)` + `mergedX` 三件套。
+- **受控字段的 prop 默认值必须是 `undefined`**：否则 `!== undefined` 判据恒真，组件永久受控、彻底不可交互。非受控初值由 `useControlledModel` 的第二个参数承担，对外按需暴露 `defaultXxx`。
+- **写入必须整体赋值**（`model.value = [...model.value, x]`），禁止 `push` / `splice`：受控时该 ref 读到的是父数组引用，原地修改会直接污染父级数据且不触发上报。
+- **「要不要双模」是组件特性，逐字段定**：不绑 `v-model` 时是否必须可交互。`Switch` / `Tag` / `Steps` 保持纯受控（无内部态）；`Tabs` / `Collapse` / `Slider` / `Pagination` / `AutoComplete` 补 `defaultXxx` 作为非受控入口。
+- **原生表单元素**（`Input` / `Textarea` / `InputSearch` / `InputNumber`）保持手写：真相源在 DOM 节点，受控时回写元素，非受控时元素自持，不得再引入一份 JS 本地状态。
+- **双轨字段**（`DatePicker` / `TimePicker` 的 `formattedValue`）保持手写：需区分「父写」与「组件派生」，可写 ref 无法提供来源信息。
+- **`defineModel` 禁止用于公共 API**：其受控判据与全库冲突（见上文依据）。确有非公共入口需要时，须加入 `scripts/check-model-props.js` 的白名单并写明理由；白名单当前只容纳 4 个待迁移的存量 SFC，迁完即清空。该约定由 `pnpm guard` 第 ⑦ 项强制。
 
 ## 类型导出约定
 

@@ -21,6 +21,21 @@ import { collectSfcs, findBalancedEnd, parsePropsFields } from './check-prop-run
 /** `defineModel` 声明：不带参数时默认模型名为 `modelValue` */
 const MODEL_PATTERN = /defineModel\s*(?:<[^()]*>)?\s*\(\s*(?:'([^']+)'|"([^"]+)")?/g
 
+/**
+ * 存量白名单：仅这些 SFC 仍用 `defineModel` 声明 v-model 字段
+ *
+ * 全库 v-model 判据统一为「传值即受控」（`props.x !== undefined`），见
+ * `development/component-design.md` 的「v-model 声明约定」。`defineModel` 的受控判据要求
+ * 「prop + onUpdate 监听器」同时存在，与上述判据冲突，故禁止用于公共 API；此处白名单只容纳
+ * 待迁移的存量字段，迁完后应清空。
+ */
+const LEGACY_DEFINE_MODEL = new Set([
+  'calendar/Calendar.vue',
+  'color-picker/ColorPicker.vue',
+  'date-picker/DatePicker.vue',
+  'time-picker/TimePicker.vue'
+])
+
 /** `Props & { ... }` 形式的对外合并块（如 `CalendarProps = Props & { value?: ... }`） */
 const MERGE_PATTERN = /type\s+[A-Za-z_$][\w$]*\s*=\s*Props\s*&\s*\{/g
 
@@ -128,9 +143,10 @@ export function parseModelContract(source) {
  * @param options - 校验参数
  * @param options.rootDir - 项目根目录
  * @param options.componentsDir - 组件源码目录（默认 `components`）
+ * @param options.allowedSfc - 允许继续使用 `defineModel` 的 SFC 相对路径集合（默认取存量白名单）
  * @returns `checked` 已校验的 v-model 字段数、`skipped` 不适用（内部组件）的模型数、`problems` 问题清单
  */
-export function checkModelProps({ rootDir, componentsDir = 'components' }) {
+export function checkModelProps({ rootDir, componentsDir = 'components', allowedSfc = LEGACY_DEFINE_MODEL }) {
   const problems = []
   let checked = 0
   let skipped = 0
@@ -142,6 +158,17 @@ export function checkModelProps({ rootDir, componentsDir = 'components' }) {
       return
     }
     const sfcRelative = relative(componentsRoot, sfcPath).split('\\').join('/')
+    // 白名单之外一律禁止：defineModel 的受控判据（prop + 监听器）与全库「传值即受控」的判据冲突，
+    // 会让「父只传值不监听」的用法退化为本地可写（静默分叉）
+    if (!allowedSfc.has(sfcRelative)) {
+      problems.push(
+        `${componentsDir}/${sfcRelative} 使用了 \`defineModel('${models[0]}')\`：公共 API 禁止用 defineModel 声明 v-model，` +
+          '请改为 `interface Props` 里声明字段 + `defineEmits` 声明 `update:x`' +
+          '（双模字段用 components/utils 的 useControlledModel），见 development/component-design.md 的「v-model 声明约定」；' +
+          '非公共入口确需使用请加入 scripts/check-model-props.js 的白名单'
+      )
+      return
+    }
     models.forEach((modelName) => {
       if (!typed) {
         skipped++

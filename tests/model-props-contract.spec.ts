@@ -6,14 +6,17 @@ import { dirname, join } from 'node:path'
 import { checkModelProps, parseModelContract, parseObjectFieldNames } from '../scripts/check-model-props.js'
 
 /**
- * v-model 对外类型契约校验的用例（纯源码文本断言，无 DOM、无产物）
+ * v-model 声明契约校验的用例（纯源码文本断言，无 DOM、无产物）
  *
- * 背景见 `scripts/check-model-props.js` 头部：`defineModel` 生成的 prop 不在 `interface Props` 里，
- * 对外具名类型须手动合并 `Props & { value?: ... }`，漏补时只有使用方显式标注 `XxxProps` 才暴露。
+ * 契约有两条（见 `scripts/check-model-props.js` 头部与 development/component-design.md）：
+ * ① 公共 API 禁止 `defineModel`，只放行白名单内的待迁移存量；
+ * ② 白名单内仍用 `defineModel` 时，字段必须并入对外 props 类型（`interface Props` 或 `Props & { x?: ... }`）。
  * 本用例锁定「能报出来」与「不误报（合并块 / 无参数模型 / 内部组件）」两侧。
  */
 
 const tempDirs: string[] = []
+// 测试夹具的路径是 demo/Demo.vue，需显式放行才能触达第二条断言
+const ALLOWED = new Set(['demo/Demo.vue'])
 
 function createFixture(source: string, name = 'Demo') {
   const rootDir = mkdtempSync(join(tmpdir(), 'va-model-props-'))
@@ -91,7 +94,7 @@ describe('checkModelProps', () => {
       const value = defineModel<string | number>('value')
       </script>
     `)
-    const result = checkModelProps({ rootDir })
+    const result = checkModelProps({ rootDir, allowedSfc: ALLOWED })
     expect(result.problems).toEqual([])
     expect(result.checked).toBe(1)
   })
@@ -108,7 +111,7 @@ describe('checkModelProps', () => {
       const value = defineModel<string | number>('value')
       </script>
     `)
-    const result = checkModelProps({ rootDir })
+    const result = checkModelProps({ rootDir, allowedSfc: ALLOWED })
     expect(result.problems).toEqual([])
   })
 
@@ -121,7 +124,7 @@ describe('checkModelProps', () => {
       const value = defineModel<string | number>('value')
       </script>
     `)
-    const result = checkModelProps({ rootDir })
+    const result = checkModelProps({ rootDir, allowedSfc: ALLOWED })
     expect(result.problems).toHaveLength(1)
     expect(result.problems[0]).toContain("defineModel('value')")
   })
@@ -132,9 +135,25 @@ describe('checkModelProps', () => {
       const open = defineModel<boolean>('open')
       </script>
     `)
-    const result = checkModelProps({ rootDir })
+    const result = checkModelProps({ rootDir, allowedSfc: ALLOWED })
     expect(result.problems).toEqual([])
     expect(result.skipped).toBe(1)
     expect(result.checked).toBe(0)
+  })
+
+  it('白名单之外使用 defineModel：直接报「公共 API 禁止」而非字段缺失', () => {
+    const rootDir = createFixture(`
+      <script setup lang="ts">
+      export interface Props {
+        value?: string | number
+      }
+      const value = defineModel<string | number>('value')
+      </script>
+    `)
+    // 默认白名单不含 demo/Demo.vue
+    const result = checkModelProps({ rootDir })
+    expect(result.problems).toHaveLength(1)
+    expect(result.problems[0]).toContain('公共 API 禁止用 defineModel')
+    expect(result.problems[0]).toContain('useControlledModel')
   })
 })
