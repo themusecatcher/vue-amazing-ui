@@ -3,7 +3,7 @@ import { ref, computed, watchEffect, watch, onMounted } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Popup from 'components/popup'
 import Scrollbar from 'components/scrollbar'
-import { useContainerClose, useSlotsExist, FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import { useContainerClose, useControlledModel, useSlotsExist, FLOATING_LAYER_Z_INDEX } from 'components/utils'
 import type { MountElement } from 'components/utils'
 export interface Option {
   disabled?: boolean // 是否禁用
@@ -94,7 +94,8 @@ const customInputRef = ref<HTMLElement | null>(null) // 自定义输入组件容
 const isComposing = ref<boolean>(false) // 是否处于输入法(IME)合成中，合成期间不触发 search/filter
 const hoverValue = ref<string | number | null>(null) // 鼠标悬浮项的 value 值
 const lastUserValue = ref<string>('') // 用户原始输入（backfill 时键盘 Esc 还原用，与 onInput 同步更新）
-const showOptions = ref<boolean>(false) // 显示隐藏下拉面板
+// (v-model:open) 面板显隐：传值即受控，未传时组件自持
+const openModel = useControlledModel<boolean>('open', false)
 const focused = ref<boolean>(false) // 自动完成是否聚焦
 const contentRef = ref<HTMLElement | null>(null) // 内容模板引用（浮层锚点）
 // 清除图标显隐：开启 allowClear、未禁用且有值时显示（与 Input 组件保持一致，有值即显示，不依赖 hover）
@@ -197,7 +198,7 @@ const flattenOptions = computed<Option[]>(() => {
   return result
 })
 // 面板是否可见：打开状态且有可展示的选项（无选项时隐藏），单一布尔驱动 Transition 保证隐藏动画完整
-const panelVisible = computed<boolean>(() => showOptions.value && flattenOptions.value.length > 0)
+const panelVisible = computed<boolean>(() => openModel.value && flattenOptions.value.length > 0)
 // 面板渲染用的选项数据（保留态）：有选项时同步 filteredData，选项变空时保留上一次内容，避免面板隐藏动画期间内容突然清空导致高度塌缩打断 leave 动画
 const displayData = ref<(string | number | Option | GroupOption)[]>([])
 watch(
@@ -245,25 +246,12 @@ useContainerClose(() => {
   focused.value = false
   hoverValue.value = null
 })
-watch(showOptions, (to) => {
-  // 非受控模式下由内部状态变化上报开合事件；
-  // 受控模式的事件由 setPanelOpen 在「用户请求变更」时派发（见下），此处必须跳过 ——
-  // 否则外部改 open 驱动 showOptions 变化也会被回传成一次多余事件，事件方向就反了
+// 非受控模式下由模型变化派发语义化开合事件；受控模式由 setPanelOpen 在「用户请求变更」时同步派发
+watch(openModel, (visible) => {
   if (props.open === undefined) {
-    emitPanelChange(to)
+    emitPanelChange(visible)
   }
 })
-// 受控 open：外部传入 open 时，同步到内部面板显隐
-watch(
-  () => props.open,
-  (val) => {
-    if (typeof val === 'boolean') {
-      // 面板定位由定位内核在面板可见时自动执行（enabled 驱动），无需显式重算
-      showOptions.value = val
-    }
-  },
-  { immediate: true }
-)
 watchEffect(() => {
   // defaultActiveFirstOption 为 true 时默认高亮第一个可用选项，否则不预高亮
   if (!props.defaultActiveFirstOption) {
@@ -276,7 +264,7 @@ watchEffect(() => {
 // 打开面板时把悬浮态复位到「当前输入值对应的选项」
 // 输入框无值、或值查不到对应项时**保持关闭前的悬浮项不动**（不回落首项）：否则「输入框为空 → 悬浮某项 → 关闭 → 重开」会丢失上次的悬浮项。
 // 首个可用项的兜底高亮由上方 watchEffect 负责，它只在选项列表变化（含搜索过滤）时触发，与面板开合无关
-watch(showOptions, (to) => {
+watch(openModel, (to) => {
   if (!to) return
   const matched = flattenOptions.value.find((option) => !option.disabled && String(option.value) === props.value)
   if (matched) {
@@ -285,7 +273,7 @@ watch(showOptions, (to) => {
 })
 watchEffect(() => {
   if (focused.value && props.open === undefined) {
-    showOptions.value = true
+    openModel.value = true
   }
 })
 onMounted(() => {
@@ -306,26 +294,24 @@ onMounted(() => {
   }
 })
 // 滚动跟随 / 视口 resize / 字体就绪的重对齐由定位内核统一承担（遍历锚点全链滚动祖先 + 帧合并）
-// 面板开合状态变更 / 用户开合请求的统一上报：
-// open 为受控属性（显隐由外部驱动），组件同时派发 update:open（支持 `v-model:open`）、
-// openChange（项目惯例）与 dropdownVisibleChange（对应的对外事件）
-function emitPanelChange(open: boolean): void {
-  emit('update:open', open)
-  emit('openChange', open)
-  emit('dropdownVisibleChange', open)
+// 面板开合状态变更 / 用户开合请求的语义化上报：
+// update:open 由 useControlledModel 在写模型时派发，此处只负责 openChange（项目惯例）
+// 与 dropdownVisibleChange（对应的对外事件）
+function emitPanelChange(nextOpen: boolean): void {
+  emit('openChange', nextOpen)
+  emit('dropdownVisibleChange', nextOpen)
 }
-// 统一控制面板显隐：
-// - 非受控：直接改内部状态，事件由 watch(showOptions) 上报
-// - 受控：不直接改内部状态（实际显隐由外部 open 驱动），但必须把用户的「开合请求」上报出去 ——
+// 统一控制面板显隐：写模型即完成两种路径 ——
+// - 非受控：本地生效，语义化事件由 watch(openModel) 派发
+// - 受控：实际显隐由外部 open 驱动，但必须把用户的「开合请求」上报出去 ——
 //   若受控时直接 return，用户交互（聚焦 / 点击 / 输入）既打不开面板也不派发任何事件，
 //   而 openChange / dropdownVisibleChange 只在 props 变化时回传，与文档「通过 open 控制面板显隐，
 //   配合 dropdownVisibleChange 事件使用」的用法完全相反；与目标值相同的请求不再重复上报，避免噪声
-function setPanelOpen(open: boolean): void {
-  if (props.open === undefined) {
-    showOptions.value = open
-  } else if (props.open !== open) {
-    emitPanelChange(open)
-  }
+function setPanelOpen(nextOpen: boolean): void {
+  if (openModel.value === nextOpen) return
+  const controlled = props.open !== undefined
+  openModel.value = nextOpen
+  if (controlled) emitPanelChange(nextOpen)
 }
 function openPanel(): void {
   if (!props.disabled) {
@@ -393,7 +379,7 @@ function onKeydown(e: KeyboardEvent): void {
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
     if (!list.length) return
     // 面板未打开时，↑↓ 仅打开面板并保持/设置默认高亮，不修改 hoverValue
-    if (!showOptions.value) {
+    if (!openModel.value) {
       openPanel()
       e.preventDefault()
       return
@@ -427,7 +413,7 @@ function onKeydown(e: KeyboardEvent): void {
     }
   } else if (e.key === 'Enter') {
     // 面板打开且有高亮未禁用项时，Enter 确认选中
-    if (showOptions.value && hoverValue.value !== null) {
+    if (openModel.value && hoverValue.value !== null) {
       const target = list.find((option) => !option.disabled && option.value === hoverValue.value)
       if (target) {
         e.preventDefault()
@@ -436,7 +422,7 @@ function onKeydown(e: KeyboardEvent): void {
     }
   } else if (e.key === 'Escape') {
     // Esc：还原用户原始输入并关闭面板
-    if (showOptions.value) {
+    if (openModel.value) {
       e.preventDefault()
       emit('update:value', lastUserValue.value)
       setPanelOpen(false)
