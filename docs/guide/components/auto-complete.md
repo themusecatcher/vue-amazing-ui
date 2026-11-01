@@ -1296,7 +1296,7 @@ const optionsBackfill = ['Apple', 'Banana', 'Cherry', 'Durian']
 
 ## 受控展开
 
-通过 `open` 控制面板显隐，配合 `dropdownVisibleChange` 事件使用。
+通过 `v-model:open` 控制面板显隐（也可用 `:open` 配合 `dropdownVisibleChange` 手动同步）。
 
 <br/>
 
@@ -1417,7 +1417,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 | defaultActiveFirstOption | 是否默认高亮第一个选项 | boolean | true |
 | defaultOpen | 是否默认展开下拉菜单 | boolean | false |
 | disabled | 是否禁用 | boolean | false |
-| open | 是否展开下拉菜单（受控） | boolean | undefined |
+| open <Tag color="cyan">v-model</Tag> | 是否展开下拉菜单（受控，不传时由组件内部维护） | boolean | undefined |
 | placeholder | 默认占位文本 | string | undefined |
 | popupClassName | 下拉菜单的 `className` 属性 | string | undefined |
 | zIndex | 下拉面板层级，优先级最高（覆盖默认层级与 `ConfigProvider` 的 `baseZIndex` 自动分配） | number | undefined |
@@ -1458,6 +1458,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 | focus | 获得焦点时的回调 | () => void |
 | blur | 失去焦点时的回调 | () => void |
 | clear | 清除时的回调 | () => void |
+| update:open | 下拉菜单展开收起时的回调，支持 `v-model:open` | (open: boolean) => void |
 | openChange | 下拉菜单展开收起的回调 | (open: boolean) => void |
 | dropdownVisibleChange | 下拉菜单展开收起的回调 | (open: boolean) => void |
 

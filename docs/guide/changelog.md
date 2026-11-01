@@ -14,6 +14,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-10-31">3.6.1</VersionDateTag>
+
+- 修复 [日历 Calendar](/guide/components/calendar.html) 的 `CalendarProps` 类型缺少 `value`：`v-model:value` 字段此前未并入对外类型，显式标注 `CalendarProps` 时该字段报错
+- 新增全部组件的 `XxxSlots` 类型导出（含 `XxxProvider`）：配合 `defineSlots` 可在二次封装时继承插槽名与作用域参数类型；同时补齐 [级联选择 Cascader](/guide/components/cascader.html) 的 `CascaderSearchSegment`、[选择器 Select](/guide/components/select.html) 的 `SelectMenuNode` / `SelectDropdownRenderParams` / `SelectTagRenderParams`
+- 新增 [选择器 Select](/guide/components/select.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html) 的 `update:open` 事件：面板开合支持 `v-model:open`，与 [级联选择 Cascader](/guide/components/cascader.html) 等弹层组件一致；原有 `openChange` / `dropdownVisibleChange` 继续派发
+- 贡献者文档补充 `v-model` 声明约定与类型导出约定
+
 ## <VersionDateTag date="2026-10-31">3.6.0</VersionDateTag>
 
 - 重构 [级联选择 Cascader](/guide/components/cascader.html)：由三个并排选择框改为单选择器 + 多列浮层面板，层级不再固定三级；移除 `gap` / `height` / `maxDisplay` / `search` / `filter`（`maxDisplay` → `panelHeight`、`search` → `showSearch`、`filter` → `showSearch.filter` 且第二参改为完整路径），`width` / `disabled` / `placeholder` 不再接受数组，`width` 默认 `auto` → `184`、`allowClear` 默认 `false` → `true`、`placement` 改四向取值（旧 `'bottom'` / `'top'` 失效）、`change` 第二参改为选项数组

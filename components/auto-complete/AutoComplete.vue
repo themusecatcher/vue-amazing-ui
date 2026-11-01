@@ -86,7 +86,8 @@ const emit = defineEmits([
   'blur',
   'clear',
   'openChange',
-  'dropdownVisibleChange'
+  'dropdownVisibleChange',
+  'update:open'
 ])
 const inputRef = ref<HTMLInputElement | null>(null) // input 元素引用
 const customInputRef = ref<HTMLElement | null>(null) // 自定义输入组件容器引用
@@ -306,9 +307,10 @@ onMounted(() => {
 })
 // 滚动跟随 / 视口 resize / 字体就绪的重对齐由定位内核统一承担（遍历锚点全链滚动祖先 + 帧合并）
 // 面板开合状态变更 / 用户开合请求的统一上报：
-// open 为纯受控属性（显隐由外部驱动），
-// 组件只通过 openChange / dropdownVisibleChange 通知可见性变更，不做 v-model:open 双向绑定
+// open 为受控属性（显隐由外部驱动），组件同时派发 update:open（支持 `v-model:open`）、
+// openChange（项目惯例）与 dropdownVisibleChange（对应的对外事件）
 function emitPanelChange(open: boolean): void {
+  emit('update:open', open)
   emit('openChange', open)
   emit('dropdownVisibleChange', open)
 }

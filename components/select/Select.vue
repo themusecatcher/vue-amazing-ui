@@ -231,7 +231,8 @@ const emits = defineEmits([
   'mouseenter',
   'mouseleave',
   'inputKeyDown',
-  'update:searchValue'
+  'update:searchValue',
+  'update:open'
 ])
 const selectWrapRef = ref<HTMLElement | null>(null) // 组件根元素引用，用于判断焦点是否仍落在本组件内
 const inputRef = ref<HTMLInputElement | null>(null) // 搜索输入框
@@ -1094,9 +1095,11 @@ async function scrollRowIntoView(rowIndex: number): Promise<void> {
 }
 /**
  * 面板开合状态变更 / 用户开合请求的统一上报：
- * open 为纯受控属性（显隐由外部驱动），组件同时派发 openChange（项目惯例）与 dropdownVisibleChange（对应的对外事件）
+ * open 为受控属性（显隐由外部驱动），组件同时派发 update:open（支持 `v-model:open`）、
+ * openChange（项目惯例）与 dropdownVisibleChange（对应的对外事件）
  */
 function emitPanelChange(open: boolean): void {
+  emits('update:open', open)
   emits('openChange', open)
   emits('dropdownVisibleChange', open)
 }
