@@ -9,7 +9,8 @@ export type {
   DatePickerDisabledTimeUnits,
   DatePickerTimeProps,
   DatePickerPreset,
-  DatePickerRangeInfo
+  DatePickerRangeInfo,
+  DatePickerSlots
 } from './DatePicker.vue'
 import { withInstall } from '../utils/type'
 

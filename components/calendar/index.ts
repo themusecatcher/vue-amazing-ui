@@ -1,11 +1,12 @@
 import Calendar from './Calendar.vue'
 export type {
-  Props as CalendarProps,
+  CalendarProps,
   DayOfWeek as CalendarDayOfWeek,
   DefaultWeek as CalendarDefaultWeek,
   DateItem as CalendarDateItem,
   MonthItem as CalendarMonthItem,
-  SelectInfo as CalendarSelectInfo
+  SelectInfo as CalendarSelectInfo,
+  CalendarSlots
 } from './Calendar.vue'
 import { withInstall } from '../utils/type'
 

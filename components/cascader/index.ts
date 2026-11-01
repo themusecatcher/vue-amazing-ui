@@ -14,7 +14,8 @@ export type {
   CascaderPath,
   CascaderModelValue,
   CascaderPlacement,
-  ShowCheckedStrategy
+  ShowCheckedStrategy,
+  CascaderSlots
 } from './Cascader.vue'
 export { SHOW_CHILD, SHOW_PARENT }
 // 回填策略常量同时挂在组件上，便于以 `Cascader.SHOW_PARENT` 的形式使用

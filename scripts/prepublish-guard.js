@@ -16,6 +16,7 @@
  * 3. 「类型声明 ↔ 运行时模块」配对：每个存在 `index.d.ts` 的产物目录必须有对应 `index.js` / `index.cjs`
  *    （详见下文 ⑤ 的说明）。
  * 4. props 运行时类型与源码类型对齐（详见 `check-prop-runtime-types.js` 与下文 ⑥）。
+ * 5. v-model 字段已并入对外 props 类型（详见 `check-model-props.js` 与下文 ⑦）。
  *
  * 「按需引入后样式是否真的齐全」由 `pnpm verify:on-demand` 负责（需跑构建），两者互补。
  */
@@ -24,6 +25,7 @@ import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { readStyleDeps } from './parse-style-deps.js'
 import { checkPropRuntimeTypes } from './check-prop-runtime-types.js'
+import { checkModelProps } from './check-model-props.js'
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -292,6 +294,23 @@ if (propTypeCheck.problems.length > 0) {
   )
 }
 
+/**
+ * ⑦ v-model 对外类型契约
+ *
+ * `defineModel('value')` 的 prop 由编译器生成，源码侧 `interface Props` 看不到它，
+ * 对外具名类型须手动合并 `Props & { value?: ... }`。漏补时组件本身与模板均正常
+ * （实例类型由编译器补全），只有使用方显式标注 `XxxProps` 才暴露，故在源码层断言。
+ * 详见 development/component-design.md 的「v-model 声明约定」。
+ */
+const modelPropsCheck = checkModelProps({ rootDir })
+if (modelPropsCheck.problems.length > 0) {
+  const sample = modelPropsCheck.problems.slice(0, 5).join('\n      ✗ ')
+  failures.push(
+    `v-model 字段未并入对外 props 类型（使用方拿到的具名类型会缺字段）：\n      ✗ ${sample}` +
+      (modelPropsCheck.problems.length > 5 ? `\n      …… 共 ${modelPropsCheck.problems.length} 处` : '')
+  )
+}
+
 if (failures.length > 0) {
   console.error('❌ 发布守卫未通过：')
   failures.forEach((failure) => console.error(`   ✗ ${failure}`))
@@ -300,6 +319,7 @@ if (failures.length > 0) {
 
 console.log(
   `✅ 发布守卫通过：${entryPaths.length} 个产物入口、${entryDirs.size} × ${outDirs.length} 个组件样式入口均就绪、` +
-    `${propTypeCheck.checked} 处 props 运行时类型已对齐` +
+    `${propTypeCheck.checked} 处 props 运行时类型已对齐、` +
+    `${modelPropsCheck.checked} 处 v-model 字段已并入对外 props 类型` +
     (propTypeCheck.skipped > 0 ? `（${propTypeCheck.skipped} 处因产物缺失跳过）` : '')
 )

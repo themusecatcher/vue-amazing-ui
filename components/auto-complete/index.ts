@@ -2,7 +2,8 @@ import AutoComplete from './AutoComplete.vue'
 export type {
   Props as AutoCompleteProps,
   Option as AutoCompleteOption,
-  GroupOption as AutoCompleteGroupOption
+  GroupOption as AutoCompleteGroupOption,
+  AutoCompleteSlots
 } from './AutoComplete.vue'
 import { withInstall } from '../utils/type'
 

@@ -56,10 +56,23 @@ const props = withDefaults(defineProps<Props>(), {
 - **无 `Boolean` / `Function` 分支的联合**（如 `string | MountElement`）在生产编译里 `type` 会被整体省略 —— 属预期（零校验、不误报），不必为了「有 type」硬加成员。
 - 该约定由 `scripts/check-prop-runtime-types.js` 兜底（`pnpm guard` 第 ⑥ 项）：源码用到 DOM 类型 / 字面量联合的 prop，产物运行时类型必须含 `Object` / `String`，否则发布守卫直接失败。
 
+### v-model 声明约定
+
+`v-model` 本质是「一个 prop + 一个 `update:` 事件」，两种声明方式在库内并存，但**同一字段不能两处都声明**（`defineProps` 与 `defineModel` 同名会重复声明 prop）：
+
+- **默认用 `defineProps` 手写**：`value?: T` 写进 `interface Props`，`defineEmits` 声明 `update:value` —— prop 天然出现在对外类型中，无需补偿（绝大多数组件属此类）。
+- **`defineModel` 仅用于「需要非受控兜底」的双模字段**（判据见下文第 4 条）：它内建 local 模式（父组件未监听 `update:` 时写入只在本地生效），这是手写 prop + emit 需自行实现的能力；但其 prop 由编译器生成，`interface Props` 看不到，故**必须**在对外类型上合并：`export type XxxProps = Props & { value?: T; open?: boolean }`。
+- 需要精确区分「值来自父级」与「值由内部写回」的字段（如 `DatePicker` / `TimePicker` 的 `formattedValue`）仍用 `defineProps` 声明 —— `defineModel` 返回的 ref 会立即反映本地写入，无法据此判定父组件是否传入。
+- **只有「支持非受控」的字段才可用 `defineModel`**：判据是该字段存在对应的 `defaultXxx` 属性（`defaultValue` / `defaultOpen` / `defaultCollapsed` …），或组件本身需要维护草稿态（如 `TimePicker` 的面板草稿）。**纯受控字段**（父不传值即不可交互，如 `Rate` 的 `value`、`Tabs` 的 `activeKey`、`Switch` 的 `value`）必须用 `defineProps` + `update:` 声明 —— 改用 `defineModel` 会引入未声明的非受控行为（父不监听 `update:` 时本地照样更新），并使对外 props 类型缺字段。
+- **原生表单元素的 `value` 保持手写**（`Input` / `Textarea` / `InputSearch`）：父不传值时由 DOM 自身维护输入状态，组件只需在受控时回写；改用 `defineModel` 会多出一份 JS 本地状态与 DOM 并存，形成两个真相源。
+- 该约定由 `scripts/check-model-props.js` 兜底（`pnpm guard` 第 ⑦ 项）：凡声明了对外 props 类型的 SFC，每个 `defineModel('x')` 的 `x` 必须出现在 `interface Props` 或 `Props & { ... }` 合并块中，否则发布守卫失败。「纯受控字段禁用 `defineModel`」依赖评审判断（是否有非受控需求无稳定静态特征），不做脚本强制。
+
 ## 类型导出约定
 
 - 主类型：`interface Props`，导出后由 `components.ts` 重命名为 `<组件名>Props`。
 - 子类型：命名 `<组件名><语义>`，如 `AutoCompleteOption`、`CalendarDateItem`，在 SFC 内定义并 `export`。
+- **同类 API 一致性**：同一语义的类型（渲染函数参数、插槽作用域参数、事件载荷）在各组件间的导出状态须一致 —— 同类类型已在某个组件导出时，其余组件同步导出（如 `CascaderTagRenderParams` 与 `SelectTagRenderParams`）。判据是「一致性」而非「完整性」：可内联替代的字面量联合（`ContentType`、`Mode`、`Placement`）保持不导出，使用者用 `Props['字段名']` 反推。
+- **插槽类型全量导出**：每个公开组件（含 `XxxProvider`）的 `<组件名>Slots` 都从入口导出 —— 带作用域参数的插槽提供参数类型（库外封装透传、`h()` 渲染函数场景没有替代方案，`h()` 不推断插槽参数），纯无参插槽提供**插槽名校验**（业务侧写 `defineSlots<AlertSlots>()` 后，`#descripton` 这类拼写错误在编译期暴露）。内部组件（`picker` / `popup`）的 Slots 不导出。
 
 ## 注释规范
 

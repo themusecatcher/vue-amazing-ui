@@ -50,6 +50,15 @@ export interface Props {
   monthSelectProps?: SelectProps // 月选择器 props，参考 Select 组件 Props
   modeRadioProps?: RadioGroupProps // 模式切换器 props，参考 RadioGroup 组件 Props
 }
+/**
+ * 组件对外 props 类型
+ *
+ * `value` 由 `defineModel` 声明（同名出现在 `defineProps` 中会与模型绑定冲突），此处合并回对外类型，
+ * 保证使用方获得完整的 props 提示
+ */
+export type CalendarProps = Props & {
+  value?: string | number
+}
 // 头部整体替换插槽的入参：当前面板年月 / 模式、当前选中值，以及写回选中值与切换模式的回调
 export interface HeaderFullSlotProps {
   year: number
