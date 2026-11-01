@@ -60,10 +60,12 @@ const props = withDefaults(defineProps<Props>(), {
 
 `v-model` 本质是「一个 prop + 一个 `update:` 事件」，两种声明方式在库内并存，但**同一字段不能两处都声明**（`defineProps` 与 `defineModel` 同名会重复声明 prop）：
 
-- **默认用 `defineProps` 手写**：`value?: T` 写进 `interface Props`，`defineEmits` 声明 `update:value` —— prop 天然出现在对外类型中，无需补偿（绝大多数组件属此类）。
-- **`defineModel` 仅用于「需要非受控兜底」的双模字段**（判据见下文第 4 条）：它内建 local 模式（父组件未监听 `update:` 时写入只在本地生效），这是手写 prop + emit 需自行实现的能力；但其 prop 由编译器生成，`interface Props` 看不到，故**必须**在对外类型上合并：`export type XxxProps = Props & { value?: T; open?: boolean }`。
+- **默认用 `defineProps` 手写**：`value?: T` 写进 `interface Props`，`defineEmits` 声明 `update:value` —— prop 天然出现在对外类型中，无需补偿（父独占所有权的字段、只读展示字段属此类）。
+- **`defineModel` 用于「需要非受控兜底」的双模字段**（判据见下文第 4 条）：它内建 local 模式（父组件未监听 `update:` 时写入只在本地生效），这是手写 prop + emit 需自行实现的能力；但其 prop 由编译器生成，`interface Props` 看不到，故**必须**在对外类型上合并：`export type XxxProps = Props & { value?: T; open?: boolean }`。
 - 需要精确区分「值来自父级」与「值由内部写回」的字段（如 `DatePicker` / `TimePicker` 的 `formattedValue`）仍用 `defineProps` 声明 —— `defineModel` 返回的 ref 会立即反映本地写入，无法据此判定父组件是否传入。
-- **只有「支持非受控」的字段才可用 `defineModel`**：判据是该字段存在对应的 `defaultXxx` 属性（`defaultValue` / `defaultOpen` / `defaultCollapsed` …），或组件本身需要维护草稿态（如 `TimePicker` 的面板草稿）。**纯受控字段**（父不传值即不可交互，如 `Rate` 的 `value`、`Tabs` 的 `activeKey`、`Switch` 的 `value`）必须用 `defineProps` + `update:` 声明 —— 改用 `defineModel` 会引入未声明的非受控行为（父不监听 `update:` 时本地照样更新），并使对外 props 类型缺字段。
+- **判据是「该字段是否需要组件自己持有一份值」，看两个客观锚点**：① **代码事实** —— 组件已有内部副本（`innerX` / `mergedX` / `watch(() => props.x)` 同步 / `props.x === undefined` 分支）即说明设计上就需要双模，应改为 `defineModel` 消除手写副本（属等价重构，不产生行为变更）；② **对标 antdv** —— 该交互在 antdv 有 `defaultXxx` 入口（`defaultValue` / `defaultActiveKey` / `defaultCurrent` …）即说明需要非受控入口。两个锚点都不满足的**纯受控字段**（父不传值即不可交互，如 `Switch` 的 `value`、`Steps` 的 `current`）保持 `defineProps` + `update:` 声明。
+- **非受控初值用 `defineModel` 的 `default` 选项承担**（`defineModel('value', { default: 0 })`），不额外拆 `defaultValue` —— 受控判定看 `vnode.props` 的 key 是否存在，prop 是否有默认值不影响判定；已发布的 `defaultXxx` API（`Calendar` / `Cascader` / `ColorPicker` / `Select` / `AutoComplete`）保持不变。
+- **数组 / 对象型 model 必须整体赋值**（`model.value = [...model.value, x]`），禁止 `push` / `splice` 原地修改：`defineModel` 返回 `customRef`，原地修改不经过 setter → 不 emit、不触发更新，且受控时 `model.value` 就是父数组引用，会直接污染父级数据。
 - **原生表单元素的 `value` 保持手写**（`Input` / `Textarea` / `InputSearch`）：父不传值时由 DOM 自身维护输入状态，组件只需在受控时回写；改用 `defineModel` 会多出一份 JS 本地状态与 DOM 并存，形成两个真相源。
 - 该约定由 `scripts/check-model-props.js` 兜底（`pnpm guard` 第 ⑦ 项）：凡声明了对外 props 类型的 SFC，每个 `defineModel('x')` 的 `x` 必须出现在 `interface Props` 或 `Props & { ... }` 合并块中，否则发布守卫失败。「纯受控字段禁用 `defineModel`」依赖评审判断（是否有非受控需求无稳定静态特征），不做脚本强制。
 
