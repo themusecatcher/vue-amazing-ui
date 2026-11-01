@@ -34,7 +34,7 @@ export interface CheckboxGroupSlots {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  value: () => [],
+  // value 不设默认值：受控判据是「传值即受控」，非受控初值由 useControlledModel 提供
   options: () => [],
   vertical: false,
   gap: 8,
