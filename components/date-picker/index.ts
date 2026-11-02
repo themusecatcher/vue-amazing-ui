@@ -1,6 +1,6 @@
 import DatePicker from './DatePicker.vue'
 export type {
-  DatePickerProps,
+  Props as DatePickerProps,
   DatePickerValue,
   DatePickerFormattedValue,
   DatePickerType,
