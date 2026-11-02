@@ -108,6 +108,26 @@ describe('Pagination 页码钳制', () => {
     expect(wrapper.emitted('pageSizeChange')?.at(-1)).toEqual([5, 20])
     expect(wrapper.emitted('change')?.at(-1)).toEqual([5, 20])
   })
+
+  it('受控时换每页条数同样收敛并上报新页码', async () => {
+    const wrapper = mount(Pagination, { props: { total: 100, page: 10, pageSize: 10, showSizeChanger: true } })
+
+    wrapper.findComponent(Select).vm.$emit('change', 20)
+    await nextTick()
+
+    expect(wrapper.emitted('update:page')?.at(-1)).toEqual([5])
+    expect(wrapper.emitted('pageSizeChange')?.at(-1)).toEqual([5, 20])
+    expect(wrapper.emitted('change')?.at(-1)).toEqual([5, 20])
+  })
+
+  it('总数为 0 时换每页条数不产生页码 0', async () => {
+    const wrapper = mount(Pagination, { props: { total: 0, page: 1, pageSize: 10, showSizeChanger: true } })
+
+    wrapper.findComponent(Select).vm.$emit('change', 20)
+    await nextTick()
+
+    expect(wrapper.emitted('pageSizeChange')?.at(-1)).toEqual([1, 20])
+  })
 })
 
 describe('Pagination 交互', () => {

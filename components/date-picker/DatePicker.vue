@@ -728,7 +728,7 @@ const rangePanelRef = ref<PanelKeydownTarget | null>(null)
 const datetimePanelRef = ref<PanelKeydownTarget | null>(null)
 const datePanelRef = ref<PanelKeydownTarget | null>(null)
 // 面板展开状态变化即重置键盘状态：收起后不再保留上一次的键盘归属与活动区
-watch(open, () => {
+watch(openModel, () => {
   keyboardPanelMode.value = false
   activeSection.value = null
 })

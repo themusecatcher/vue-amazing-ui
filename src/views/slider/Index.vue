@@ -203,6 +203,11 @@ function formatter(value: number) {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Slider v-model:value="singleValue" @change="onChange" />
+    <h2 class="mt30 mb10">非受控模式</h2>
+    <Flex vertical gap="large">
+      <Slider :default-value="37" @change="onChange" />
+      <Slider range :default-value="[20, 80]" @change="onChange" />
+    </Flex>
     <h2 class="mt30 mb10">双滑块</h2>
     <Slider range v-model:value="doubleValue" @change="onChange" />
     <h2 class="mt30 mb10">禁用</h2>

@@ -275,6 +275,8 @@ const highTooltipValue = computed(() => {
   }
   return props.formatTooltip(sliderValue.value as number)
 })
+// 只跟随外部输入（min / max / step / 方向 / 受控值）：非受控时的写入都由交互产生，
+// 手柄位置本就是那次交互的真相源，再回读模型会让「值 ↔ 位置」互相回写
 watch(
   [() => props.min, () => props.max, () => props.step, () => props.vertical, () => props.value],
   () => {

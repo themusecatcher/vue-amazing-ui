@@ -25,7 +25,14 @@ import { TinyColor, isReadable } from '@ctrl/tinycolor'
 import Popup from 'components/popup'
 import Input, { type InputProps } from 'components/input'
 import Button from 'components/button'
-import { FLOATING_LAYER_Z_INDEX, useContainerClose, useControlledModel, useSlotsExist, log } from 'components/utils'
+import {
+  FLOATING_LAYER_Z_INDEX,
+  useContainerClose,
+  useControlledModel,
+  useIsControlled,
+  useSlotsExist,
+  log
+} from 'components/utils'
 import type { FloatingPlacement, MountElement } from 'components/utils'
 export type ColorPickerMode = 'rgb' | 'hsl' | 'hsv' | 'hex'
 export type ColorPickerAction = 'confirm' | 'clear'
@@ -33,8 +40,9 @@ export type ColorPickerAction = 'confirm' | 'clear'
 export interface Props {
   // 双向绑定与受控核心
   value?: string // (v-model) 颜色选择器的值
-  defaultValue?: string // 未受控时颜色选择器的初始值
-  defaultOpen?: boolean // 未受控时面板的初始显隐
+  defaultValue?: string // 非受控时颜色选择器的初始值
+  open?: boolean // (v-model:open) 面板是否展开；传入即受控
+  defaultOpen?: boolean // 非受控时面板的初始显隐
   // 内容与数据源
   label?: (color: string) => VNodeChild // 展示的内容，返回值同时支持字符串与 VNode
   swatches?: string[] // 色板的值
@@ -58,7 +66,6 @@ export interface Props {
   destroyOnHide?: boolean // 隐藏后是否卸载面板 DOM
   to?: string | MountElement | false // 弹出面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   inputProps?: InputProps // 输入框组件 props，透传给内部 Input 组件
-  open?: boolean // (v-model:open) 面板是否展开；传入即受控
 }
 // 自定义触发器的插槽参数：值由使用方渲染，点击开合 / 面板定位与外点判定均由组件外壳接管
 export interface ColorPickerTriggerSlotProps {
@@ -72,9 +79,9 @@ export interface ColorPickerSlots {
 
 const props = withDefaults(defineProps<Props>(), {
   value: undefined,
-  // 布尔 prop 缺省会被 Vue 强转为 false，那会让 R1 判定恒为「受控」；必须显式给 undefined
-  open: undefined,
   defaultValue: undefined,
+  // 布尔 prop 缺省会被 Vue 强转为 false，那会让受控判定恒为「受控」；必须显式给 undefined
+  open: undefined,
   defaultOpen: false,
   label: undefined,
   modes: () => ['rgb', 'hex', 'hsl'],
@@ -101,10 +108,11 @@ const HANDLE_SIZE = '12px'
 const HANDLE_SIZE_NUM = 12
 const BORDER_RADIUS = '6px'
 const BORDER_RADIUS_NUM = 6
-// 面板显隐：不传 open 时为非受控，由组件自持（初始值取 defaultOpen）；传了则以父组件为准
-// (v-model:open) 面板显隐：传值即受控，未传时组件自持（defaultOpen 作为初值）
+// (v-model:open) 面板显隐：传值即受控，未传时组件自持
 // 初值保持 false：defaultOpen 由下方 setup 中显式写一次，才能像改造前一样派发 openChange
 const openModel = useControlledModel<boolean>('open', false)
+// 面板显隐是否受控：defaultOpen 只在非受控时生效
+const isOpenControlled = useIsControlled('open')
 const popupRef = ref<InstanceType<typeof Popup> | null>(null) // 浮层宿主模板引用
 const wrapperRef = ref<HTMLElement | null>(null) // 外壳模板引用：触发区、浮层锚点与外点判定范围
 const palleteRef = ref<HTMLElement | null>(null) // pallete 调色板模板引用
@@ -122,7 +130,7 @@ const inputValueArr = ref<string[]>([]) // 非 hex 模式下多个输入框的�
 const inputRefreshKey = ref<number>(0) // 输入框重建令牌：非法输入后强制其回滚到组件内部值
 const emits = defineEmits(['update:value', 'update:open', 'complete', 'confirm', 'clear', 'openChange'])
 const slotsExist = useSlotsExist(['footer', 'trigger'])
-// 面板是否展开：open 未受控（undefined）时恒为收起，写入由 requestOpen 统一驱动
+// 面板是否展开：读模型（受控取父值 / 非受控取本地值），写入由 requestOpen 统一驱动
 const panelOpen = computed(() => openModel.value === true)
 // 对外表达的展开态：禁用时不展开（面板同样被抑制），故无障碍语义以实际可见性为准
 const panelExpanded = computed(() => panelOpen.value && !props.disabled)
@@ -644,7 +652,7 @@ function onEscKeydown(): void {
   wrapperRef.value?.focus({ preventScroll: true })
 }
 // 非受控时的初始显隐：父组件未传 open 时套用 defaultOpen（受控时交由父组件决定）
-if (props.defaultOpen && props.open === undefined && !props.disabled) {
+if (props.defaultOpen && !isOpenControlled.value && !props.disabled) {
   openModel.value = true
 }
 // 触发器展示内容：label 函数可返回字符串或 VNode，未提供时直接展示颜色值
@@ -729,8 +737,9 @@ function handleInputUpdateValue(value: string): void {
   onUpdateValue(value, 'input')
   emits('complete', value)
   // 收敛后的值可能与原值相同（如 alpha 输入 300% → 100%），输入框收不到新 props 不会刷新，
-  // 故主动回滚文本，保证「输入框文本 ≡ 内部值」
-  if (valueModel.value === previousValue) restoreInput()
+  // 故主动回滚文本，保证「输入框文本 ≡ 内部值」。
+  // 比较入参与原值而非回读模型：受控时写完立刻回读拿到的仍是父侧旧值，会误判为「未变化」并每次输入都重建输入框
+  if (value === previousValue) restoreInput()
 }
 function handleUnitUpdateValue(index: number, value: number | string) {
   if (displayedMode.value === 'hex') {

@@ -96,6 +96,8 @@ function pageSizeChange(page: number, pageSize: number) {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Pagination v-model:page="page" :total="50" @change="onChange" />
+    <h2 class="mt30 mb10">非受控模式</h2>
+    <Pagination :total="100" :default-page="3" :default-page-size="20" @change="onChange" />
     <h2 class="mt30 mb10">自定义位置</h2>
     <Space align="center" style="margin-bottom: 16px">
       placement:

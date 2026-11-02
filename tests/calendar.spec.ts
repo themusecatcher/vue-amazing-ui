@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, afterEach, vi } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import { format, getMonth, getYear } from 'date-fns'
@@ -671,5 +671,26 @@ describe('增强能力', () => {
     await wrapper.find('.probe-value').trigger('click')
     await flush()
     expect(format(lastEmittedValue(), 'yyyy-MM-dd')).toBe('2026-05-20')
+  })
+})
+
+describe('v-model 事件声明', () => {
+  it('update:value 已声明进 emits：交互只派发事件，不产生「未声明事件」告警', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      mountControlled()
+      await flush()
+
+      await currentMonthCells()[0].trigger('click')
+      await flush()
+
+      expect(calendarEmitted('update:value')?.length).toBe(1)
+      // 漏声明时 Vue 会 warn「emitted event ... but it is neither declared in the emits option
+      // nor as an "onUpdate:value" prop」，并把监听器落进 $attrs 透传到根节点
+      const undeclared = warnSpy.mock.calls.filter((args) => String(args[0]).includes('neither declared'))
+      expect(undeclared).toEqual([])
+    } finally {
+      warnSpy.mockRestore()
+    }
   })
 })

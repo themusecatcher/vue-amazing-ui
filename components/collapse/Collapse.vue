@@ -28,7 +28,7 @@ export interface Item {
 export type CollapseActiveKey = (string | number)[] | string | number | null
 export interface Props {
   items?: Item[] // 折叠面板数据，可使用 slot 替换指定 key 的 header、content、arrow、extra、lang
-  activeKey?: CollapseActiveKey // (v-model) 当前激活 tab 面板的 key，传入单个值时即为手风琴模式
+  activeKey?: CollapseActiveKey // (v-model) 当前激活面板的 key，传入单个值时即为手风琴模式
   defaultActiveKey?: CollapseActiveKey // 非受控时的初始激活 key（未绑 v-model:active-key 时生效）
   bordered?: boolean // 带边框风格的折叠面板
   disabled?: boolean // 是否禁用展开收起，较低优先级

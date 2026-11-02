@@ -14,26 +14,31 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-11-02">3.7.0</VersionDateTag>
+## <VersionDateTag date="2026-11-02">3.8.0</VersionDateTag>
 
 - 新增 [分页 Pagination](/guide/components/pagination.html) 的 `bordered` 属性（默认 `true`）：传 `false` 切换为无边框风格
+- 修复 [分页 Pagination](/guide/components/pagination.html) 页码越界后无页码高亮、切换每页条数后当前页未收敛的问题：钳制后按新页码派发 `update:page` / `pageSizeChange` / `change`
 - [分页 Pagination](/guide/components/pagination.html) 统一两种风格的选中态与交互反馈：当前页加粗、悬浮取主色、过渡时长对齐 0.2s
 - 修复 [分页 Pagination](/guide/components/pagination.html) 无边框风格下禁用态未选中页仍带边框的问题
-- [选择器 Select](/guide/components/select.html) / [输入框 Input](/guide/components/input.html) / [分页 Pagination](/guide/components/pagination.html) 的尺寸切换补充过渡：运行时切换 `size` 不再整块突变
-- 新增 [输入框 Input](/guide/components/input.html) 的 `blur` 事件（带 `relatedTarget`）；[分页 Pagination](/guide/components/pagination.html) 跳转框失焦到页码时不再重复跳转、重复上报 `change`
 - [分页 Pagination](/guide/components/pagination.html) 的跳转输入框只接受数字：按键输入直接拦截，粘贴 / 输入法按数字过滤，不再把非法内容静默丢弃
 - [分页 Pagination](/guide/components/pagination.html) 的 `showQuickJumper` 支持对象形态 `{ goButton }`：展示跳转确认按钮（文案可自定义），有按钮时失焦不再自动跳转
-- 修复 [表格 Table](/guide/components/table.html) 展开按钮缺少 `type="button"`：在表单内点击会连带提交表单；同时补充 `aria-expanded` / `aria-label`
-- [分页 Pagination](/guide/components/pagination.html) 跳转确认按钮、[对话框 Dialog](/guide/components/dialog.html) / [模态框 Modal](/guide/components/modal.html) 的关闭与全屏按钮补充按压态
-- 修复 [分页 Pagination](/guide/components/pagination.html) 页码越界后无页码高亮、切换每页条数后当前页未收敛的问题
 - [分页 Pagination](/guide/components/pagination.html) 补充 `aria-current` / `aria-disabled` / `role="navigation"` 与页码 `title`，禁用态与边界页移出 Tab 序列
-- 统一 `v-model` 的受控判据为「传值即受控」：传入 `value` / `open` 后组件不再本地改写，只派发 `update:x`。此前父侧仅传值、未监听 `update:x` 时，[抽屉 Drawer](/guide/components/drawer.html) 的遮罩关闭、[上传 Upload](/guide/components/upload.html) 的增删文件、[表格 Table](/guide/components/table.html) 的展开行、[菜单 Menu](/guide/components/menu.html) 与 [分页 Pagination](/guide/components/pagination.html) 的切换仍在组件内生效，与父侧数据不一致
-- 修复 [多选组 CheckboxGroup](/guide/components/checkbox.html) 不传 `value` 时仍被当作受控、无法非受控使用的问题
-- 新增非受控入口：[滑动输入条 Slider](/guide/components/slider.html) 的 `defaultValue`，[标签页 Tabs](/guide/components/tabs.html) / [折叠面板 Collapse](/guide/components/collapse.html) 的 `defaultActiveKey`，[分页 Pagination](/guide/components/pagination.html) 的 `defaultPage` / `defaultPageSize`：不绑 `v-model` 时也能指定初值并正常交互
-- 修复 [日历 Calendar](/guide/components/calendar.html) 的 `CalendarProps` 类型缺少 `value`：显式标注该类型时 `v-model:value` 字段报错
-- 新增 [选择器 Select](/guide/components/select.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html) 的 `update:open` 事件：面板开合支持 `v-model:open`，与 [级联选择 Cascader](/guide/components/cascader.html) 等弹层组件一致；原有 `openChange` / `dropdownVisibleChange` 继续派发
-- 新增全部组件的 `XxxSlots` 类型导出（含 `XxxProvider`）：配合 `defineSlots` 可在二次封装时继承插槽名与作用域参数类型；同时补齐 [级联选择 Cascader](/guide/components/cascader.html) 的 `CascaderSearchSegment`、[选择器 Select](/guide/components/select.html) 的 `SelectMenuNode` / `SelectDropdownRenderParams` / `SelectTagRenderParams`
-- 贡献者文档补充 `v-model` 声明约定与类型导出约定：受控判据为传值即受控（例外仅限自动推进的轮播游标、需区分父写的格式化值与原生表单控件），存量字段迁移已完成
+- 新增 [输入框 Input](/guide/components/input.html) 的 `blur` 事件（带 `relatedTarget`）；[分页 Pagination](/guide/components/pagination.html) 跳转框失焦到页码时不再重复跳转、重复上报 `change`
+- [选择器 Select](/guide/components/select.html) / [输入框 Input](/guide/components/input.html) / [分页 Pagination](/guide/components/pagination.html) 的尺寸切换补充过渡：运行时切换 `size` 不再整块突变
+- [分页 Pagination](/guide/components/pagination.html) 跳转确认按钮、[对话框 Dialog](/guide/components/dialog.html) / [模态框 Modal](/guide/components/modal.html) 的关闭与全屏按钮补充按压态与焦点环
+- 修复 [表格 Table](/guide/components/table.html) 展开按钮缺少 `type="button"`：在表单内点击会连带提交表单；同时补充 `aria-expanded` / `aria-label` 与按压态、焦点环
+- 使用者文档补齐 [分页 Pagination](/guide/components/pagination.html) 与 [输入框 Input](/guide/components/input.html) 的新增属性 / 事件说明与示例
+
+## <VersionDateTag date="2026-11-02">3.7.0</VersionDateTag>
+
+- 可写字段改为「传值即受控」：`value` / `open` / `activeKey` 等传入后，交互只上报 `update:`、界面以父侧回写为准；只传值不监听 `update:` 的写法不再响应交互（[评分 Rate](/guide/components/rate.html)、[日期选择器 DatePicker](/guide/components/date-picker.html)、[分页 Pagination](/guide/components/pagination.html) 等），补 `v-model` 即可，原本就用 `v-model` 的无需改动
+- 修复 [下拉菜单 Dropdown](/guide/components/dropdown.html) 受控时点击菜单项不收起：该次收起只上报 `update:open`，不触发 `openChange`
+- 修复 [日历 Calendar](/guide/components/calendar.html) 的 `CalendarProps` 缺少 `value`：显式标注该类型时 `v-model:value` 类型报错
+- 新增非受控入口：[滑动输入条 Slider](/guide/components/slider.html) 的 `defaultValue`、[标签页 Tabs](/guide/components/tabs.html) / [折叠面板 Collapse](/guide/components/collapse.html) 的 `defaultActiveKey`、[分页 Pagination](/guide/components/pagination.html) 的 `defaultPage` / `defaultPageSize`：不绑 `v-model` 时也能指定初值并正常交互
+- 新增 [选择器 Select](/guide/components/select.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html) 的 `update:open` 事件：面板开合支持 `v-model:open`；原有的 `openChange` / `dropdownVisibleChange` 继续派发
+- 新增各组件的 `XxxSlots` 类型导出（含 `XxxProvider`）：配合 `defineSlots` 可在二次封装时继承插槽名与作用域参数类型、插槽名写错在编译期报错；同时补齐 [级联选择 Cascader](/guide/components/cascader.html) 的 `CascaderSearchSegment`、[选择器 Select](/guide/components/select.html) 的 `SelectMenuNode` / `SelectDropdownRenderParams` / `SelectTagRenderParams`
+- 更新使用者文档和贡献者文档
+- 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-10-31">3.6.0</VersionDateTag>
 

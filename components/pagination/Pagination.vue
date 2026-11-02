@@ -237,12 +237,15 @@ function onPageChange(page: number, inPageList: boolean = false): void {
 function onPageSizeChange(pageSize: number): void {
   pageSizeModel.value = pageSize
   // 换每页条数后总页数变化，当前页可能越界，统一按新总页数钳制
-  const next = currentPage.value
-  if (props.page === undefined && pageModel.value !== next) {
-    pageModel.value = next
+  // 总页数与目标页码都用本地入参算：受控时写完立刻回读模型，拿到的仍是父侧旧值
+  const maxPage = Math.max(Math.ceil(props.total / Math.max(pageSize, 1)), 1)
+  const nextPage = Math.min(Math.max(pageModel.value, 1), maxPage)
+  if (pageModel.value !== nextPage) {
+    // 受控时此处只派发 update:page，由父侧回写；非受控时直接改写本地值
+    pageModel.value = nextPage
   }
-  emits('pageSizeChange', next, pageSize)
-  emits('change', next, pageSize)
+  emits('pageSizeChange', nextPage, pageSize)
+  emits('change', nextPage, pageSize)
 }
 </script>
 <template>

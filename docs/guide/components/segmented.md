@@ -385,7 +385,7 @@ const value = ref<SegmentedProps['value']>(options[0])
 | disabled | 是否禁用 | boolean | false |
 | options | 选项数据 | (string &#124; number &#124; [SegmentedOption](#segmentedoption-type))[] | [] |
 | size | 控件尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
-| value <Tag color="cyan">v-model</Tag> | 当前选中的值 | string &#124; number | undefined |
+| value <Tag color="cyan">v-model</Tag> | 当前选中的值；传入即受控，不传时由组件内部维护 | string &#124; number | undefined |
 
 ### SegmentedOption Type
 

@@ -1978,9 +1978,9 @@ const options: SelectOption[] = []
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| value <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值，`mode` 为 `multiple` / `tags` 时为数组；`labelInValue` 开启时为 `{ label, value, key, originLabel }` 对象 | number &#124; string &#124; [SelectLabeledValue](#selectlabeledvalue-type) &#124; (number &#124; string &#124; [SelectLabeledValue](#selectlabeledvalue-type))[] | undefined |
-| open <Tag color="cyan">v-model</Tag> | 是否展开下拉菜单（受控，不传时由组件内部维护） | boolean | undefined |
-| searchValue <Tag color="cyan">v-model</Tag> | 搜索文本（受控，不传时由组件内部维护） | string | undefined |
+| value <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值，`mode` 为 `multiple` / `tags` 时为数组；`labelInValue` 开启时为 `{ label, value, key, originLabel }` 对象；传入即受控，不传时由组件内部维护 | number &#124; string &#124; [SelectLabeledValue](#selectlabeledvalue-type) &#124; (number &#124; string &#124; [SelectLabeledValue](#selectlabeledvalue-type))[] | undefined |
+| open <Tag color="cyan">v-model</Tag> | 是否展开下拉菜单；传入即受控，不传时由组件内部维护 | boolean | undefined |
+| searchValue <Tag color="cyan">v-model</Tag> | 搜索文本；传入即受控，不传时由组件内部维护 | string | undefined |
 | options | 选项数据 | [SelectOption](#selectoption-type)[] | [] |
 | fieldNames | 选项的文本 / 值字段名配置，`options` 为分组子选项的字段名 | `{ label?: string, value?: string, options?: string }` | `{ label: 'label', value: 'value', options: 'options' }` |
 | mode | 设置多选模式，`'multiple'` 为多选，`'tags'` 为标签（可输入并创建新条目），不传为单选 | 'multiple' &#124; 'tags' | undefined |
@@ -2088,7 +2088,6 @@ const options: SelectOption[] = []
 | search | 搜索文本变化时回调（`tokenSeparators` 分词命中后清空输入不触发） | (value: string) => void |
 | focus | 获得焦点时的回调 | () => void |
 | blur | 失去焦点时的回调 | () => void |
-| update:open | 下拉菜单展开收起时的回调，支持 `v-model:open` | (open: boolean) => void |
 | openChange | 下拉菜单展开收起的回调（与 `dropdownVisibleChange` 为同一事件的两个名称，同参同时派发） | (open: boolean) => void |
 | dropdownVisibleChange | 下拉菜单展开收起的回调，`openChange` 的别名 | (open: boolean) => void |
 | popupScroll | 下拉列表滚动时的回调 | (e: Event) => void |

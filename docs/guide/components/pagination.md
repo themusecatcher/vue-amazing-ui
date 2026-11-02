@@ -124,6 +124,28 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 :::
 
+## 非受控模式
+
+_不传 `v-model:page` / `v-model:page-size` 时由组件自持，用 `defaultPage` / `defaultPageSize` 指定初始值；翻页照常生效_
+
+<Pagination :total="100" :default-page="3" :default-page-size="20" @change="onChange" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+function onChange(page: number, pageSize: number) {
+  console.log('change page', page)
+  console.log('change pageSize', pageSize)
+}
+</script>
+<template>
+  <Pagination :total="100" :default-page="3" :default-page-size="20" @change="onChange" />
+</template>
+```
+
+:::
+
 ## 自定义位置
 
 <Space align="center" style="margin-bottom: 16px">
@@ -825,15 +847,14 @@ function pageSizeChange(page: number, pageSize: number) {
 
 > **受控 / 非受控**：`page / pageSize` 传入即受控（值以父为准，组件只上报 `update:page / update:pageSize`）；不传则由组件自持，交互照常生效，可用 `defaultPage / defaultPageSize` 指定初值。
 
-
 ### Pagination Props
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| page <Tag color="cyan">v-model</Tag> | 当前页数（不传时组件自持，可用 `defaultPage` 指定初值） | number | 1 |
-| defaultPage | 非受控时的初始页数，未绑 `v-model:page` 时生效 | number | 1 |
-| pageSize <Tag color="cyan">v-model</Tag> | 每页条数（不传时组件自持，可用 `defaultPageSize` 指定初值） | number | 10 |
-| defaultPageSize | 非受控时的初始每页条数，未绑 `v-model:page-size` 时生效 | number | 10 |
+| page <Tag color="cyan">v-model</Tag> | 当前页数（不传时组件自持，可用 `defaultPage` 指定初值） | number | undefined |
+| defaultPage | 非受控时的初始页数，未绑 `v-model:page` 时生效；缺省为 `1` | number | undefined |
+| pageSize <Tag color="cyan">v-model</Tag> | 每页条数（不传时组件自持，可用 `defaultPageSize` 指定初值） | number | undefined |
+| defaultPageSize | 非受控时的初始每页条数，未绑 `v-model:page-size` 时生效；缺省为 `10` | number | undefined |
 | total | 数据总数 | number | 0 |
 | disabled | 是否禁用 | boolean | false |
 | pageAmount | 显示的页码数 | number | 5 |
