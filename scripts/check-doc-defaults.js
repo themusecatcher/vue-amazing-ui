@@ -23,6 +23,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parseModelDefaults } from './check-model-props.js'
+import { stripComments } from './component-vars-check.js'
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const componentsDir = resolve(rootDir, 'components')
@@ -114,7 +115,8 @@ readdirSync(componentsDir).forEach((name) => {
   const sfcPath = join(dir, `${pascalCase(name)}.vue`)
   if (!existsSync(sfcPath)) return
 
-  const { hasBlock, blocked, defaults } = parseModelDefaults(readFileSync(sfcPath, 'utf-8'))
+  // 先剥注释：注释里的旧 `withDefaults` 示例会被当成真实默认值，导致比对的是过期取值
+  const { hasBlock, blocked, defaults } = parseModelDefaults(stripComments(readFileSync(sfcPath, 'utf-8')))
   if (blocked) {
     failures.push(`${name}.md 对应的 ${name}/${pascalCase(name)}.vue 的 withDefaults 无法解析，默认值列无法校验`)
     return
