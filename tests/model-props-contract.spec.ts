@@ -3,15 +3,23 @@ import { describe, expect, it, afterEach } from 'vitest'
 import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
-import { checkModelProps, parseModelContract, parseObjectFieldNames } from '../scripts/check-model-props.js'
+import {
+  checkModelProps,
+  collectModelDefaultProblems,
+  parseModelContract,
+  parseModelDefaults,
+  parseObjectFieldNames
+} from '../scripts/check-model-props.js'
 
 /**
  * v-model 声明契约校验的用例（纯源码文本断言，无 DOM、无产物）
  *
- * 契约有两条（见 `scripts/check-model-props.js` 头部与 development/component-design.md）：
+ * 契约有三条（见 `scripts/check-model-props.js` 头部与 development/component-design.md）：
  * ① 公共 API 禁止 `defineModel`，只放行白名单内的待迁移存量；
- * ② 白名单内仍用 `defineModel` 时，字段必须并入对外 props 类型（`interface Props` 或 `Props & { x?: ... }`）。
- * 本用例锁定「能报出来」与「不误报（合并块 / 无参数模型 / 内部组件）」两侧。
+ * ② 白名单内仍用 `defineModel` 时，字段必须并入对外 props 类型（`interface Props` 或 `Props & { x?: ... }`）；
+ * ③ `useControlledModel` 的字段在 `withDefaults` 里只能写 `undefined`（布尔字段必须显式写），
+ * 否则「传值即受控」的判据恒真。
+ * 本用例锁定「能报出来」与「不误报（合并块 / 无参数模型 / 内部组件 / 展开项）」两侧。
  */
 
 const tempDirs: string[] = []
@@ -155,5 +163,96 @@ describe('checkModelProps', () => {
     expect(result.problems).toHaveLength(1)
     expect(result.problems[0]).toContain('公共 API 禁止用 defineModel')
     expect(result.problems[0]).toContain('useControlledModel')
+  })
+})
+
+describe('parseModelDefaults', () => {
+  it('取顶层字段的默认值，行尾注释与尾逗号不影响判定', () => {
+    const source = `
+      <script setup lang="ts">
+      const props = withDefaults(defineProps<Props>(), {
+        value: undefined,
+        open: undefined,
+        tableLayout: undefined, // 固定表头时默认值为 fixed
+        to: 'body',
+        push: () => ({ distance: 16 })
+      })
+      </script>
+    `
+    const { hasBlock, hasSpread, defaults } = parseModelDefaults(source)
+    expect(hasBlock).toBe(true)
+    expect(hasSpread).toBe(false)
+    expect(defaults.get('value')).toBe('undefined')
+    expect(defaults.get('tableLayout')).toBe('undefined')
+    expect(defaults.get('to')).toBe("'body'")
+    expect(defaults.get('push')).toBe('() => ({ distance: 16 })')
+  })
+
+  it('含展开项时标记 hasSpread，供上层退化为「只判字段是否在块内」', () => {
+    const { hasSpread } = parseModelDefaults(`
+      const props = withDefaults(defineProps<Props>(), {
+        ...SHARED_DEFAULTS,
+        openControl: false
+      })
+    `)
+    expect(hasSpread).toBe(true)
+  })
+})
+
+describe('collectModelDefaultProblems', () => {
+  it('双模字段给了非 undefined 默认值：报问题（判据恒真）', () => {
+    const problems = collectModelDefaultProblems(
+      `
+      export interface Props {
+        expandedRowKeys?: string[]
+      }
+      const props = withDefaults(defineProps<Props>(), {
+        expandedRowKeys: () => []
+      })
+      const model = useControlledModel<string[]>('expandedRowKeys', [])
+      `,
+      'components/table/Table.vue'
+    )
+    expect(problems).toHaveLength(1)
+    expect(problems[0]).toContain('expandedRowKeys')
+    expect(problems[0]).toContain('() => []')
+  })
+
+  it('布尔字段未在 withDefaults 声明：报问题（缺省被强转为 false）', () => {
+    const problems = collectModelDefaultProblems(
+      `
+      export interface Props {
+        open?: boolean
+      }
+      const props = withDefaults(defineProps<Props>(), {
+        autofocus: true
+      })
+      const model = useControlledModel<boolean>('open', false)
+      `,
+      'components/drawer/Drawer.vue'
+    )
+    expect(problems).toHaveLength(1)
+    expect(problems[0]).toContain('boolean')
+  })
+
+  it('显式 undefined / 非布尔字段缺省 / 含展开项时都不报（避免误伤）', () => {
+    const explicitUndefined = `
+      const props = withDefaults(defineProps<Props>(), { value: undefined, open: undefined })
+      const a = useControlledModel<string>('value', '')
+      const b = useControlledModel<boolean>('open', false)
+    `
+    expect(collectModelDefaultProblems(explicitUndefined, 'components/demo/Demo.vue')).toEqual([])
+
+    const nonBooleanAbsent = `
+      const props = withDefaults(defineProps<Props>(), { size: 'middle' })
+      const a = useControlledModel<string>('value', '')
+    `
+    expect(collectModelDefaultProblems(nonBooleanAbsent, 'components/demo/Demo.vue')).toEqual([])
+
+    const withSpread = `
+      const props = withDefaults(defineProps<Props>(), { ...SHARED, size: 'middle' })
+      const a = useControlledModel<boolean>('open', false)
+    `
+    expect(collectModelDefaultProblems(withSpread, 'components/demo/Demo.vue')).toEqual([])
   })
 })
