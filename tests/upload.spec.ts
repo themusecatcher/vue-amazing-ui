@@ -356,6 +356,35 @@ describe('Upload 拖拽投放的类型约束', () => {
 })
 
 /**
+ * 单文件模式下「一次投放全被 accept 拒绝」的落点边界
+ *
+ * 单文件模式的落点是恒定的槽位 0，落点数必须跟随实际文件数归零：多出来的落点会让
+ * `uploadFile` 拿到 `undefined` —— custom 模式写出 `{ url: '' }` 的空文件，
+ * base64（默认模式）在 `readAsDataURL` 抛错后留下永不消失的 loading。
+ */
+describe('Upload 单文件模式下的空投放', () => {
+  it('全部被 accept 拒绝时不调用 beforeUpload、不写 fileList、不残留 loading', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const beforeUpload = vi.fn(() => true)
+    const wrapper = mount(Upload, {
+      props: { maxCount: 1, accept: '.png', beforeUpload },
+      attachTo: document.body
+    })
+    await flushPromises()
+
+    await triggerDrop(wrapper, [new File(['x'], 'a.txt', { type: 'text/plain' })])
+
+    expect((wrapper.emitted('reject')?.[0]?.[0] as unknown[]).length).toBe(1)
+    expect(beforeUpload).not.toHaveBeenCalled()
+    expect(wrapper.emitted('update:fileList')).toBeUndefined()
+    expect(wrapper.find('.file-uploading').exists()).toBe(false)
+    expect(errorSpy).not.toHaveBeenCalled()
+    wrapper.unmount()
+    errorSpy.mockRestore()
+  })
+})
+
+/**
  * 单文件模式（`maxCount: 1`）的替换语义
  *
  * 槽位模型下每格既是上传框又是预览位，占满后无空位可点 —— 此前 `maxCount: 1` 只剩预览、

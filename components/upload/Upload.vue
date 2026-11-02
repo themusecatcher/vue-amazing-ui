@@ -93,9 +93,13 @@ function initUpload(): void {
  *
  * @param index - 触发上传的格子下标
  * @param count - 本次待写入的文件数
- * @returns 与文件一一对应的落点槽位清单，长度不足 `count` 即表示多余文件被丢弃
+ * @returns 与文件一一对应的落点槽位清单，长度不足 `count` 即表示多余文件被丢弃；
+ *          一个文件都不收时为空数组 —— 落点数绝不能多于文件数（否则 `uploadFile` 会拿到 `undefined`）
  */
 function resolveSlots(index: number, count: number): number[] {
+  // 全部文件都被 accept 拒绝时没有任何落点：单文件模式的槽位恒为 0，
+  // 若此时仍返回 `[0]`，`uploadFile(undefined, 0)` 会写出空文件（custom 模式）或卡住 loading（base64 模式）
+  if (count === 0) return []
   if (maxFileCount.value === 1) return [0]
   return Array.from({ length: count }, (_, n) => index + n).filter((slot) => slot < maxFileCount.value)
 }
