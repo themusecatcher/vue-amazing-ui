@@ -1,6 +1,6 @@
 import TimePicker from './TimePicker.vue'
 export type {
-  TimePickerProps,
+  Props as TimePickerProps,
   TimePickerType,
   TimePickerValue,
   TimePickerFormattedValue,
