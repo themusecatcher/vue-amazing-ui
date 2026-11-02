@@ -495,6 +495,78 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 :::
 
+## 非受控初值
+
+<p class="mb10">不绑定 <code>v-model</code> 时页码与每页条数由组件自持，可用 <code>defaultPage</code> / <code>defaultPageSize</code> 指定初值</p>
+
+<Pagination :total="total" :default-page="3" :default-page-size="20" @change="onChange" />
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const total = ref(500)
+function onChange(page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
+  console.log('change page', page)
+  console.log('change pageSize', pageSize)
+}
+</script>
+<template>
+  <Pagination :total="total" :default-page="3" :default-page-size="20" @change="onChange" />
+</template>
+```
+
+::::
+
+## 自定义切换器与跳转框
+
+<p class="mb10"><code>changerProps</code> 透传给每页条数切换器（参考 Select Props），<code>jumperProps</code> 透传给跳转输入框（参考 Input Props）</p>
+
+<Pagination
+  v-model:page="page"
+  v-model:page-size="pageSize"
+  :total="total"
+  show-quick-jumper
+  :changer-props="{ width: 120 }"
+  :jumper-props="{ placeholder: '页码', width: 56 }"
+  @change="onChange"
+  @pageSizeChange="pageSizeChange"
+/>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const page = ref(1)
+const pageSize = ref(10)
+const total = ref(500)
+function onChange(page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
+  console.log('change page', page)
+  console.log('change pageSize', pageSize)
+}
+function pageSizeChange(page: number, pageSize: number) { // 每页条数 pageSize 变化的回调
+  console.log('pageSizeChange page', page)
+  console.log('pageSizeChange pageSize', pageSize)
+}
+</script>
+<template>
+  <Pagination
+    v-model:page="page"
+    v-model:page-size="pageSize"
+    :total="total"
+    show-quick-jumper
+    :changer-props="{ width: 120 }"
+    :jumper-props="{ placeholder: '页码', width: 56 }"
+    @change="onChange"
+    @pageSizeChange="pageSizeChange"
+  />
+</template>
+```
+
+::::
+
 ## 分页配置器
 
 <Row :gutter="[24, 12]">

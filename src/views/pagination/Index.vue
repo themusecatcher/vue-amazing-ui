@@ -162,6 +162,27 @@ function pageSizeChange(page: number, pageSize: number) {
     </Flex>
     <h2 class="mt30 mb10">禁用</h2>
     <Pagination disabled v-model:page="page" :total="total" show-quick-jumper @change="onChange" />
+    <h2 class="mt30 mb10">非受控初值</h2>
+    <p class="mb10">
+      不绑定 <code>v-model</code> 时页码与每页条数由组件自持，可用 <code>defaultPage</code> /
+      <code>defaultPageSize</code> 指定初值
+    </p>
+    <Pagination :total="total" :default-page="3" :default-page-size="20" @change="onChange" />
+    <h2 class="mt30 mb10">自定义切换器与跳转框</h2>
+    <p class="mb10">
+      <code>changerProps</code> 透传给每页条数切换器（参考 Select Props），<code>jumperProps</code>
+      透传给跳转输入框（参考 Input Props）
+    </p>
+    <Pagination
+      v-model:page="page"
+      v-model:page-size="pageSize"
+      :total="total"
+      show-quick-jumper
+      :changer-props="{ width: 120 }"
+      :jumper-props="{ placeholder: '页码', width: 56 }"
+      @change="onChange"
+      @pageSizeChange="pageSizeChange"
+    />
     <h2 class="mt30 mb10">分页配置器</h2>
     <Row :gutter="[24, 12]">
       <Col :span="6">
