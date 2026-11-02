@@ -78,6 +78,28 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 :::
 
+## 非受控模式
+
+_不传 `v-model:page` / `v-model:page-size` 时由组件自持，用 `defaultPage` / `defaultPageSize` 指定初始值；翻页照常生效_
+
+<Pagination :total="100" :default-page="3" :default-page-size="20" @change="onChange" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+function onChange(page: number, pageSize: number) {
+  console.log('change page', page)
+  console.log('change pageSize', pageSize)
+}
+</script>
+<template>
+  <Pagination :total="100" :default-page="3" :default-page-size="20" @change="onChange" />
+</template>
+```
+
+:::
+
 ## 自定义位置
 
 <Flex vertical>

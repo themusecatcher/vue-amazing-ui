@@ -233,6 +233,33 @@ function onChange(value: number | number[]) {
 
 :::
 
+## 非受控模式
+
+_不传 `v-model:value` 时由组件自持，用 `defaultValue` 指定初始取值；拖拽与键盘调节照常生效_
+
+<Flex vertical gap="large">
+  <Slider :default-value="37" @change="onChange" />
+  <Slider range :default-value="[20, 80]" @change="onChange" />
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+function onChange(value: number | number[]) {
+  console.log('change', value)
+}
+</script>
+<template>
+  <Flex vertical gap="large">
+    <Slider :default-value="37" @change="onChange" />
+    <Slider range :default-value="[20, 80]" @change="onChange" />
+  </Flex>
+</template>
+```
+
+:::
+
 ## 双滑块
 
 <Slider range v-model:value="doubleValue" @change="onChange" />
@@ -970,7 +997,7 @@ watchEffect(() => {
 | tooltipPlacement | `Tooltip` 弹出位置，默认为水平模式 `top`、垂直模式 `right` | 'top' &#124; 'bottom' &#124; 'left' &#124; 'right' | - |
 | formatTooltip | `Slider` 会把当前值传给 `formatTooltip`，并在 `Tooltip` 中显示 `formatTooltip` 的返回值 | (value: number) => string &#124; number | (value: number) => value |
 | value <Tag color="cyan">v-model</Tag> | 设置当前取值，`range` 为 `false` 时为单个值，否则为区间值（不传时组件自持，可用 `defaultValue` 指定初值） | number &#124; number[] | 0 |
-| defaultValue | 非受控时的初始取值，未绑 `v-model:value` 时生效；`range` 模式下缺省为 `[min, min]` | number &#124; number[] | — |
+| defaultValue | 非受控时的初始取值，未绑 `v-model:value` 时生效；`range` 模式下缺省为 `[min, min]` | number &#124; number[] | undefined |
 
 ### SliderMarks Type
 
