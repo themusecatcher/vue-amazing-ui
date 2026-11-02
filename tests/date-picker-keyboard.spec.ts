@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, afterEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import DatePicker from 'components/date-picker/DatePicker.vue'
 import { flushTransition } from './helpers'
@@ -388,5 +388,21 @@ describe('逐段禁用', () => {
       ['2026-01-10', '2026-01-25']
     ])
     expect(picker.emitted('update:open')?.at(-1)).toEqual([false])
+  })
+})
+
+describe('模型绑定', () => {
+  it('开合监听只绑定模型，不回落全局 window.open', async () => {
+    const spy = vi.spyOn(window, 'open').mockReturnValue(null)
+    wrapper = mount(DatePicker, { attachTo: document.body })
+    await flush()
+
+    // 唤起并收起：收起后复位键盘态的监听必须跟着模型走，写成裸标识符 `open` 会落到全局 window.open
+    await press('a')
+    await press('Escape')
+    await flush()
+
+    expect(spy).not.toHaveBeenCalled()
+    spy.mockRestore()
   })
 })
