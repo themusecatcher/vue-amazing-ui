@@ -1340,8 +1340,14 @@ emits('ready', { open: openDialog, destroyAll })
           color: var(--va-text-color-1);
         }
       }
+      &:active {
+        background: var(--va-fill-color-3);
+        .icon-svg {
+          color: var(--va-text-color-1);
+        }
+      }
       &:focus-visible {
-        outline: 2px solid var(--va-text-color-1);
+        outline: 2px solid var(--va-primary-border-color);
         outline-offset: 1px;
       }
     }
