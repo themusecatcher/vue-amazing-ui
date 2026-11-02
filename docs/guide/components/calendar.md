@@ -1358,6 +1358,7 @@ function onPanelChange(
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
+| value <Tag color="cyan">v-model</Tag> | 当前被选中的日期 | string &#124; number | undefined |
 | defaultValue | 非受控初始值：同时决定初始面板日期与初始选中值，受控 `value` 优先 | string &#124; number | undefined |
 | valueFormat | 被选中日期的格式，默认为时间戳；参考 [format](https://date-fns.org/v4.1.0/docs/format) | string | undefined |
 | header | 自定义日历头部内容 | string | undefined |
@@ -1372,7 +1373,6 @@ function onPanelChange(
 | yearSelectProps | 年选择器 `props`，参考 [Select Props](./select.md#select-props) | [SelectProps](./select.md#select-props) | {} |
 | monthSelectProps | 月选择器 `props`，参考 [Select Props](./select.md#select-props) | [SelectProps](./select.md#select-props) | {} |
 | modeRadioProps | 模式切换器 `props`，参考 [RadioGroup Props](./radio.md#radiogroup-props) | [RadioGroupProps](./radio.md#radiogroup-props) | {} |
-| value <Tag color="cyan">v-model</Tag> | 当前被选中的日期 | string &#124; number | undefined |
 
 ### CalendarDayOfWeek Type
 

@@ -705,8 +705,8 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | value <Tag color="cyan">v-model</Tag> | 双向绑定值，毫秒时间戳；范围形态为两段元组 | [TimePickerValue](#timepickervalue-type) | null |
-| formattedValue <Tag color="cyan">v-model</Tag> | 字符串轨道的双向绑定值，传入时以它为准（受控）；显示格式由 `format` / `valueFormat` 决定 | [TimePickerFormattedValue](#timepickerformattedvalue-type) | null |
 | open <Tag color="cyan">v-model</Tag> | 面板是否展开 | boolean | false |
+| formattedValue <Tag color="cyan">v-model</Tag> | 字符串轨道的双向绑定值，传入时以它为准（受控）；显示格式由 `format` / `valueFormat` 决定 | [TimePickerFormattedValue](#timepickerformattedvalue-type) | null |
 | type | 选择形态：`time` 为单选，`timerange` 为范围（双段输入） | [TimePickerType](#timepickertype-type) | 'time' |
 | format | 时间展示格式，参考 [format](https://date-fns.org/v4.1.0/docs/format) | string | [DefaultFormat](#defaultformat-value) |
 | valueFormat | 绑定值格式，默认与 `format` 相同 | string | undefined |
