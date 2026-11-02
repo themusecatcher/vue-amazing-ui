@@ -77,7 +77,17 @@ const props = withDefaults(defineProps<Props>(), {
 - **原生表单元素**（`Input` / `Textarea` / `InputSearch` / `InputNumber`）保持手写：真相源在 DOM 节点，受控时回写元素，非受控时元素自持，不得再引入一份 JS 本地状态。
 - **双轨字段**（`DatePicker` / `TimePicker` 的 `formattedValue`）保持手写：需区分「父写」与「组件派生」，可写 ref 无法提供来源信息。
 - **唯一的结构性例外是 `Carousel.currentIndex`**：自动播放会在**无用户交互**时持续推进下标并改变展示，组件内的动画下标才是展示真相，`currentIndex` 只是「父可驱动 + 变更上报」的通道。判别条件只有一条：**组件是否会在无用户交互时自动改值** —— 会（自动播放）则 R1 不适用；只在用户交互时改值（点击 / 键盘 / 拖拽）则一律 R1。
-- **存量待迁（白名单临时豁免，判据仍是 R1）**：`Calendar.value`、`DatePicker.value` / `open`、`TimePicker.value` / `open`、`ColorPicker.open` 共 6 个字段目前仍用 `defineModel`，属**未完成的迁移**而非例外 —— 它们的键盘步进与面板切换都由用户交互触发，没有第二个自动写者。迁移需同步把 4 个 spec（`calendar` / `date-picker-*` / `time-picker`）约 50 处挂载点改为 v-model 回写载体。清单见 `scripts/check-model-props.js` 的 `LEGACY_DEFINE_MODEL`，新增字段不得进白名单。
+- **存量待迁（白名单临时豁免，判据仍是 R1）**：`DatePicker.value` / `open`、`TimePicker.value` / `open` 共 4 个字段仍用 `defineModel`，属**未完成的迁移**而非例外 —— 它们的键盘步进与面板切换都由用户交互触发，没有第二个自动写者。`Calendar.value` 与 `ColorPicker.open` 已完成迁移，可作为范本。清单见 `scripts/check-model-props.js` 的 `LEGACY_DEFINE_MODEL`，新增字段不得进白名单。
+
+#### `defineModel` → `useControlledModel` 迁移清单
+
+三条必踩项（均在 `Calendar` / `ColorPicker` 上实测踩到）：
+
+1. **布尔字段必须在 `withDefaults` 里显式给 `undefined`**：`open?: boolean` 会被编译成 `{ type: Boolean }`，父未传时 Vue 强转成 `false` → 判据读到 `false` → 永久受控、交互全失效（表现为「事件正常派发但界面不动」）。
+2. **`update:x` 事件要手动补进 `defineEmits`**：`defineModel` 会自动注册，换成 composable 后必须自己写，否则父侧 `v-model` 收不到（Vue 会 warn「emitted event ... neither declared」）。
+3. **字段名与 prop 同名会被 `vue/no-dupe-keys` 拦**：setup 里的变量需改名（`openModel` / `valueModel`），并同步模板中的裸引用；`value` 这类高频词要逐处确认，避免误改局部变量。
+
+另：`defaultOpen` 之类的非受控初值**不要**预置进模型初值，应由 setup 显式写一次，否则「显隐从未变化」会让 `openChange` 不派发。
 - **`defineModel` 禁止用于公共 API**：其受控判据与全库冲突（见上文依据）。确有非公共入口需要时，须加入 `scripts/check-model-props.js` 的白名单并写明理由；白名单当前只容纳 4 个待迁移的存量 SFC，迁完即清空。该约定由 `pnpm guard` 第 ⑦ 项强制。
 
 ## 类型导出约定
