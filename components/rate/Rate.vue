@@ -15,7 +15,7 @@ export interface Props {
   disabled?: boolean // 只读，无法进行交互
   tooltips?: string[] // 自定义每项的提示信息
   tooltipProps?: TooltipProps // Tooltip 组件属性配置，参考 Tooltip Props
-  value?: number // (v-model) 当前数，受控值 0,1,2,3...
+  value?: number // (v-model) 当前评分，取值 0,1,2,3...（0 为未评分）；传入即受控
 }
 // 声明组件插槽类型
 export interface RateSlots {

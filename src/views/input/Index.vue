@@ -55,7 +55,7 @@ function onEnter(e: KeyboardEvent) {
       <Input :width="200" v-model:value="value" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
       <Input :width="200" v-model:value.lazy="lazyValue" placeholder="Lazy usage" @change="onChange" @enter="onEnter" />
     </Space>
-    <h2 class="mt30 mb10">未受控输入与行内混排</h2>
+    <h2 class="mt30 mb10">非受控输入与行内混排</h2>
     <p class="mb10">未绑定 <code>v-model</code> 时输入内容由组件自行承载，不会因悬浮 / 聚焦等状态变化丢失</p>
     <Space gap="small" vertical :width="300">
       <Input :width="280" placeholder="未绑定 v-model，输入后移开鼠标内容仍保留" />

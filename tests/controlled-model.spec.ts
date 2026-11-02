@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
 import { mount } from '@vue/test-utils'
-import { useControlledModel } from 'components/utils'
+import { useControlledModel, useIsControlled } from 'components/utils'
 
 /**
  * `useControlledModel` 的判据用例
@@ -82,5 +82,65 @@ describe('useControlledModel', () => {
     await nextTick()
     expect(wrapper.text()).toBe('true')
     expect(wrapper.emitted('update:open')).toEqual([[true]])
+  })
+
+  it('同一轮内重复写同一个值：只上报一次（输入框 v-model 与事件处理器各写一次的兜底）', async () => {
+    const wrapper = mount(createProbe(false))
+    wrapper.vm.write(true)
+    wrapper.vm.write(true)
+    await nextTick()
+    expect(wrapper.emitted('update:open')).toEqual([[true]])
+  })
+
+  it('受控父拒绝回写后，下一轮再请求同一个值仍上报', async () => {
+    const Probe = createProbe(false)
+    const wrapper = mount(
+      defineComponent({
+        // 父传值但不接受回写（如校验不通过 / 值被钳制），组件不得因此「记住」已上报的目标值
+        setup: () => () => h(Probe, { open: false })
+      })
+    )
+    const probe = wrapper.findComponent(Probe)
+
+    probe.vm.write(true)
+    await nextTick()
+    probe.vm.write(true)
+    await nextTick()
+
+    expect(probe.emitted('update:open')).toEqual([[true], [true]])
+  })
+})
+
+describe('useIsControlled', () => {
+  /** 探针：把判据结果渲染出来，父值变化后应随之翻转 */
+  const createFlagProbe = () =>
+    defineComponent({
+      props: {
+        open: {
+          type: Boolean,
+          default: undefined
+        }
+      },
+      setup() {
+        const controlled = useIsControlled('open')
+        return () => h('div', String(controlled.value))
+      }
+    })
+
+  it('不传值时为 false，传值（含 false）后为 true', async () => {
+    const wrapper = mount(createFlagProbe())
+    expect(wrapper.text()).toBe('false')
+
+    await wrapper.setProps({ open: false })
+    // 判据是「传了非 undefined 的值」，不是「值真为真」—— 显式传 false 同样是受控
+    expect(wrapper.text()).toBe('true')
+  })
+
+  it('父值在受控 / 非受控之间切换时实时跟随', async () => {
+    const wrapper = mount(createFlagProbe(), { props: { open: true } })
+    expect(wrapper.text()).toBe('true')
+
+    await wrapper.setProps({ open: undefined })
+    expect(wrapper.text()).toBe('false')
   })
 })

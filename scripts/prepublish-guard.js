@@ -16,7 +16,8 @@
  * 3. 「类型声明 ↔ 运行时模块」配对：每个存在 `index.d.ts` 的产物目录必须有对应 `index.js` / `index.cjs`
  *    （详见下文 ⑤ 的说明）。
  * 4. props 运行时类型与源码类型对齐（详见 `check-prop-runtime-types.js` 与下文 ⑥）。
- * 5. v-model 字段已并入对外 props 类型（详见 `check-model-props.js` 与下文 ⑦）。
+ * 5. v-model 声明契约：公共 API 无 `defineModel`、双模字段的默认值为 `undefined`（详见
+ *    `check-model-props.js` 与下文 ⑦）。
  *
  * 「按需引入后样式是否真的齐全」由 `pnpm verify:on-demand` 负责（需跑构建），两者互补。
  */
@@ -297,9 +298,10 @@ if (propTypeCheck.problems.length > 0) {
 /**
  * ⑦ v-model 声明契约
  *
- * 两条断言：① 公共 API 禁止用 `defineModel` 声明 v-model（其受控判据要求 prop + 监听器同时存在，
+ * 三条断言：① 公共 API 禁止用 `defineModel` 声明 v-model（其受控判据要求 prop + 监听器同时存在，
  * 与全库「传值即受控」冲突），只允许白名单内的存量（当前已清空）；② 白名单内若仍用 `defineModel`，
- * 其字段必须并入对外 props 类型（`interface Props` 或 `Props & { x?: ... }`）。
+ * 其字段必须并入对外 props 类型（`interface Props` 或 `Props & { x?: ... }`）；③ `useControlledModel`
+ * 的字段在 `withDefaults` 里只能写 `undefined`（布尔字段必须显式写），否则判据恒真、组件永久受控。
  * 详见 development/component-design.md 的「v-model 声明约定」。
  */
 const modelPropsCheck = checkModelProps({ rootDir })
@@ -323,5 +325,6 @@ console.log(
     (modelPropsCheck.checked > 0
       ? `${modelPropsCheck.checked} 处存量 defineModel 字段已并入对外 props 类型`
       : '公共 API 已无 defineModel') +
+    `、${modelPropsCheck.defaultsChecked} 个双模字段的默认值已判定为非受控` +
     (propTypeCheck.skipped > 0 ? `（${propTypeCheck.skipped} 处因产物缺失跳过）` : '')
 )

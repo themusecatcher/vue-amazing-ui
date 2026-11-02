@@ -66,6 +66,8 @@ export interface DrawerSlots {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  // 布尔 prop 缺省会被 Vue 强转为 false，那会让受控判定恒为「受控」；必须显式给 undefined
+  open: undefined,
   width: undefined,
   height: undefined,
   size: 'default',

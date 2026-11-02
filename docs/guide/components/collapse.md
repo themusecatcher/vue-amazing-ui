@@ -276,6 +276,49 @@ function onChange(key: number | string) {
 
 :::
 
+## 非受控模式
+
+_不传 `v-model:active-key` 时由组件自持，用 `defaultActiveKey` 指定初始展开项；点击照常生效并派发 `change`_
+
+<Collapse :items="collapseItems" :default-active-key="['1']" @change="onChange" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { CollapseItem } from 'vue-amazing-ui'
+const collapseItems = ref<CollapseItem[]>([
+  {
+    key: '1',
+    header: 'This is panel header 1',
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
+  },
+  {
+    key: '2',
+    header: 'This is panel header 2',
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
+  },
+  {
+    key: '3',
+    header: 'This is panel header 3',
+    content:
+      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
+  }
+])
+function onChange(key: number | string) {
+  console.log('change', key)
+}
+</script>
+<template>
+  <Collapse :items="collapseItems" :default-active-key="['1']" @change="onChange" />
+</template>
+```
+
+:::
+
 ## 手风琴
 
 _只允许单个内容区域展开，只需 `activeKey` 传入 `number` | `string` 即可_
@@ -1032,14 +1075,13 @@ watchEffect(() => {
 
 > **受控 / 非受控**：`activeKey` 传入即受控（值以父为准，组件只上报 `update:activeKey`）；不传则由组件自持，交互照常生效，可用 `defaultActiveKey` 指定初值。
 
-
 ### Collapse Props
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | items | 折叠面板数据 | [CollapseItem](#collapseitem-type)[] | [] |
-| activeKey <Tag color="cyan">v-model</Tag> | 当前激活面板的 `key`（不传时组件自持，可用 `defaultActiveKey` 指定初值） | number[] &#124; number &#124; string[] &#124; string &#124; null | null |
-| defaultActiveKey | 非受控时的初始激活 `key`，未绑 `v-model:active-key` 时生效 | number[] &#124; number &#124; string[] &#124; string &#124; null | null |
+| activeKey <Tag color="cyan">v-model</Tag> | 当前激活面板的 `key`（不传时组件自持，可用 `defaultActiveKey` 指定初值） | number[] &#124; number &#124; string[] &#124; string &#124; null | undefined |
+| defaultActiveKey | 非受控时的初始激活 `key`，未绑 `v-model:active-key` 时生效；缺省为全部收起 | number[] &#124; number &#124; string[] &#124; string &#124; null | undefined |
 | bordered | 带边框风格的折叠面板 | boolean | true |
 | disabled | 是否禁用展开收起 | boolean | false |
 | ghost | 使折叠面板透明且无边框 | boolean | false |

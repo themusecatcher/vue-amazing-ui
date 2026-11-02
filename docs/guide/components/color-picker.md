@@ -496,7 +496,7 @@ const placementOptions: { label: string; value: Placement }[] = [
 
 ## 默认值
 
-_未受控时使用 `defaultValue` 设置初始颜色_
+_非受控时使用 `defaultValue` 设置初始颜色_
 
 <br/>
 
@@ -717,10 +717,10 @@ const panelTo = computed(() => {
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| value <Tag color="cyan">v-model</Tag> | 颜色选择器的值 | string | undefined |
-| defaultValue | 未受控时的初始颜色值 | string | undefined |
-| open <Tag color="cyan">v-model</Tag> | 面板是否展开（受控，不传时由组件内部维护） | boolean | undefined |
-| defaultOpen | 未受控时面板的初始显隐 | boolean | false |
+| value <Tag color="cyan">v-model</Tag> | 颜色选择器的值；传入即受控，不传时由组件内部维护（初值见 `defaultValue`） | string | undefined |
+| defaultValue | 非受控时的初始颜色值 | string | undefined |
+| open <Tag color="cyan">v-model</Tag> | 面板是否展开；传入即受控，不传时由组件内部维护 | boolean | undefined |
+| defaultOpen | 非受控时面板的初始显隐 | boolean | false |
 | label | 展示的内容，返回值同时支持字符串与 `VNode` | (color: string) => VNodeChild | undefined |
 | swatches | 色板的值 | string[] | [] |
 | footer | 底部额外的页脚内容 | string | undefined |
