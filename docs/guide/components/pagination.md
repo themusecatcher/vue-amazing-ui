@@ -332,12 +332,17 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 ## APIs
 
+> **受控 / 非受控**：`page / pageSize` 传入即受控（值以父为准，组件只上报 `update:page / update:pageSize`）；不传则由组件自持，交互照常生效，可用 `defaultPage / defaultPageSize` 指定初值。
+
+
 ### Pagination Props
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| page <Tag color="cyan">v-model</Tag> | 当前页数 | number | 1 |
-| pageSize <Tag color="cyan">v-model</Tag> | 每页条数 | number | 10 |
+| page <Tag color="cyan">v-model</Tag> | 当前页数（不传时组件自持，可用 `defaultPage` 指定初值） | number | 1 |
+| defaultPage | 非受控时的初始页数，未绑 `v-model:page` 时生效 | number | 1 |
+| pageSize <Tag color="cyan">v-model</Tag> | 每页条数（不传时组件自持，可用 `defaultPageSize` 指定初值） | number | 10 |
+| defaultPageSize | 非受控时的初始每页条数，未绑 `v-model:page-size` 时生效 | number | 10 |
 | total | 数据总数 | number | 0 |
 | disabled | 是否禁用 | boolean | false |
 | pageAmount | 显示的页码数 | number | 5 |

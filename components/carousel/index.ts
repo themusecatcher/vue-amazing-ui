@@ -2,7 +2,8 @@ import Carousel from './Carousel.vue'
 export type {
   Props as CarouselProps,
   Image as CarouselImage,
-  EasingPreset as CarouselEasingPreset
+  EasingPreset as CarouselEasingPreset,
+  CarouselSlots
 } from './Carousel.vue'
 import { withInstall } from '../utils/type'
 

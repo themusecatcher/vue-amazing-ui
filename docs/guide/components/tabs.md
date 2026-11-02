@@ -1276,6 +1276,9 @@ const state = reactive<TabsProps>({
 
 ## APIs
 
+> **受控 / 非受控**：`activeKey` 传入即受控（值以父为准，组件只上报 `update:activeKey`）；不传则由组件自持，交互照常生效，可用 `defaultActiveKey` 指定初值。
+
+
 ### Tabs Props
 
 | 名称 | 说明 | 类型 | 默认值 |
@@ -1291,7 +1294,8 @@ const state = reactive<TabsProps>({
 | tabStyle | 自定义页签样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | tabPosition | 自定义页签位置 | 'top' &#124; 'right' &#124; 'bottom' &#124; 'left' | 'top' |
 | contentStyle | 自定义内容样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key` | string &#124; number | undefined |
+| activeKey <Tag color="cyan">v-model</Tag> | 当前激活 `tab` 面板的 `key`（不传时组件自持，可用 `defaultActiveKey` 指定初值） | string &#124; number | undefined |
+| defaultActiveKey | 非受控时的初始激活 `key`，未绑 `v-model:active-key` 时生效 | string &#124; number | undefined |
 
 ### TabsItem Type
 

@@ -6,7 +6,13 @@
 import { computed, onBeforeUnmount, onMounted, provide, ref, useSlots, watch } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Popup from 'components/popup'
-import { FLOATING_LAYER_Z_INDEX, useContainerClose, useResizeObserver, useSlotsExist } from 'components/utils'
+import {
+  FLOATING_LAYER_Z_INDEX,
+  useContainerClose,
+  useControlledModel,
+  useResizeObserver,
+  useSlotsExist
+} from 'components/utils'
 import type { FloatingPlacement, FloatingVirtualAnchor, MountElement } from 'components/utils'
 import { dropdownMenuContextKey, DropdownMenu } from './DropdownMenu'
 export type Key = string | number
@@ -100,16 +106,8 @@ const contextAnchor = computed<FloatingVirtualAnchor | null>(() => {
     }
   }
 })
-const innerOpen = ref<boolean>(false) // 未受控时使用的内部展开态
-// 展开态：受控时以 open 为准（内部写入不生效，需外部更新），未受控时用内部态
-const mergedOpen = computed<boolean>({
-  get() {
-    return props.open === undefined ? innerOpen.value : props.open
-  },
-  set(val: boolean) {
-    innerOpen.value = val
-  }
-})
+// (v-model) 展开态：传值即受控（内部写入不生效，需外部更新），未传时组件自持
+const openModel = useControlledModel<boolean>('open', false)
 // 触发方式归一为数组后逐项判定
 const triggerTypes = computed<DropdownTrigger[]>(() => {
   return Array.isArray(props.trigger) ? props.trigger : [props.trigger]
@@ -196,7 +194,7 @@ function renderLabel(option: MenuOption): VNode[] | undefined {
 provide(dropdownMenuContextKey, {
   renderLabel,
   onSelect: onMenuSelect,
-  isOpen: mergedOpen
+  isOpen: openModel
 })
 let showTimer: ReturnType<typeof setTimeout> | null = null // 延迟展开的定时器
 let hideTimer: ReturnType<typeof setTimeout> | null = null // 延迟收起的定时器
@@ -223,24 +221,22 @@ function clearTimers(): void {
 /**
  * 请求变更展开态
  *
- * notify 为假时只改状态、不对外通知 —— 菜单项点击导致的收起走此路径（onMenuSelect）
+ * notify 为假时不派发 openChange —— 菜单项点击导致的收起走此路径（onMenuSelect），
+ * 文档约定「点击菜单项导致的收起不触发 openChange」
  */
 function requestOpen(val: boolean, notify = true): void {
   if (val && !canOpen.value) {
     return
   }
-  const prev = mergedOpen.value
-  if (props.open === undefined) {
-    innerOpen.value = val
-  }
-  if (prev === val) {
+  if (openModel.value === val) {
     return
   }
+  // 写模型即完成两种路径：受控时只上报（显示以父侧回写为准），非受控时本地生效
+  openModel.value = val
   if (val) {
     measureAnchor()
   }
   if (notify) {
-    emits('update:open', val)
     emits('openChange', val)
   }
 }
@@ -248,7 +244,7 @@ function requestOpen(val: boolean, notify = true): void {
 function onTriggerEnter(): void {
   if (!useHover.value) return
   clearHideTimer()
-  if (mergedOpen.value || !canOpen.value) return
+  if (openModel.value || !canOpen.value) return
   clearShowTimer()
   showTimer = setTimeout(() => {
     showTimer = null
@@ -261,7 +257,7 @@ function onTriggerEnter(): void {
 function onTriggerLeave(): void {
   if (!useHover.value) return
   clearShowTimer()
-  if (!mergedOpen.value) return
+  if (!openModel.value) return
   scheduleHide()
 }
 // 浮层移入：取消待执行的收起（鼠标从触发器移到浮层时必经此处）
@@ -288,10 +284,10 @@ function scheduleHide(): void {
 function onTriggerClick(): void {
   if (useClick.value) {
     clearTimers()
-    requestOpen(!mergedOpen.value)
+    requestOpen(!openModel.value)
     return
   }
-  if (useContextMenu.value && mergedOpen.value) {
+  if (useContextMenu.value && openModel.value) {
     clearTimers()
     requestOpen(false)
   }
@@ -308,7 +304,7 @@ function onTriggerContextMenu(e: MouseEvent): void {
 }
 // 面板 / 触发器 esc：click / contextmenu 触发时关闭
 function onEscKeydown(): void {
-  if (!needOutsideClick.value || !mergedOpen.value) return
+  if (!needOutsideClick.value || !openModel.value) return
   requestOpen(false)
 }
 // 外部点击 / 承载层关闭：两种「非用户主动切换」的收起，统一清理定时器后关闭。
@@ -330,9 +326,9 @@ function onMenuSelect(option: MenuOption): void {
 }
 // 展开态变化时同步锚点：收起清除鼠标锚点（外部点击监听的挂卸由宿主按 show 负责）
 watch(
-  mergedOpen,
-  (open) => {
-    if (open) return
+  openModel,
+  (visible) => {
+    if (visible) return
     contextOffset.value = null
   },
   { immediate: true }
@@ -366,7 +362,7 @@ onBeforeUnmount(clearTimers)
          面板级监听经宿主的 $attrs 落到面板上（宿主根节点是 Teleport，需显式透传） -->
     <Popup
       ref="popupRef"
-      :show="mergedOpen && showOverlay"
+      :show="openModel && showOverlay"
       :to="to"
       :destroy-on-hide="destroyOnHide"
       :anchor="triggerRef"

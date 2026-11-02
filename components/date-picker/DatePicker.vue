@@ -40,8 +40,10 @@ import {
   type StartDayOfWeek
 } from 'components/picker'
 import type { FloatingPlacement, MountElement } from 'components/utils'
-import { FLOATING_LAYER_Z_INDEX, useContainerClose, useSlotsExist } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, useContainerClose, useControlledModel, useSlotsExist } from 'components/utils'
 export interface Props {
+  value?: PickerValue // (v-model:value) 当前取值；传入即受控
+  open?: boolean // (v-model:open) 面板是否展开；传入即受控
   // 双向绑定
   formattedValue?: PickerFormattedValue // 字符串轨道值：父组件传入时以它为准（受控），随选择经 update 事件回写
   // 内容数据
@@ -82,17 +84,6 @@ export interface Props {
   panelStyle?: CSSProperties // 面板额外样式
   zIndex?: number // 面板层级，优先级最高
 }
-/**
- * 组件对外 props 类型
- *
- * `value` / `open` 由 `defineModel` 声明（同名出现在 `defineProps` 中会与模型绑定冲突），此处合并回对外
- * 类型，保证使用方获得完整的 props 提示。`formattedValue` 例外：它必须由 `defineProps` 声明，才能从
- * 「父组件是否传入」判定字符串轨道是否受控（模型值无法区分父组件写入与本组件回写）
- */
-export type DatePickerProps = Props & {
-  value?: PickerValue
-  open?: boolean
-}
 /** 范围形态草稿变更的来源信息：本次改动落在哪一段 */
 export interface DatePickerRangeInfo {
   range: PickerRangeSide
@@ -119,8 +110,11 @@ export type {
   PickerTimePanelProps as DatePickerTimeProps,
   PickerPreset as DatePickerPreset
 } from 'components/picker'
-// value / open 两个双向绑定项的默认值由 defineModel 声明，此处不重复
+// value / open 为受控字段：prop 默认值必须是 undefined（布尔缺省会被强转为 false，导致判据恒为受控）
+// 非受控初值由 useControlledModel 的第二个参数承担
 const props = withDefaults(defineProps<Props>(), {
+  value: undefined,
+  open: undefined,
   formattedValue: undefined,
   type: 'date',
   format: undefined,
@@ -163,13 +157,15 @@ const emits = defineEmits<{
   ]
   ok: [value: PickerValue, formattedValue: PickerFormattedValue]
   'update:formattedValue': [value: PickerFormattedValue]
+  'update:value': [value: PickerValue]
+  'update:open': [open: boolean]
   openChange: [open: boolean]
   panelChange: [value: number, mode: PickerPanelMode]
   focus: [event: FocusEvent]
   blur: [event: FocusEvent]
 }>()
-const value = defineModel<PickerValue>('value', { default: null })
-const open = defineModel<boolean>('open', { default: false })
+const valueModel = useControlledModel<PickerValue>('value', null)
+const openModel = useControlledModel<boolean>('open', false)
 const triggerRef = ref<InstanceType<typeof PickerTrigger> | null>(null)
 const popupRef = ref<InstanceType<typeof Popup> | null>(null)
 const wrapperRef = ref<HTMLElement | null>(null)
@@ -278,7 +274,7 @@ const innerValue = computed<number | null>(() => {
       ? parseTimestamp(props.formattedValue, mergedValueFormat.value)
       : null
   }
-  return typeof value.value === 'number' ? value.value : null
+  return typeof valueModel.value === 'number' ? valueModel.value : null
 })
 /** 单段文本 → 时间戳（空文本视为该段未选） */
 function parseSideTimestamp(text: string | null | undefined): number | null {
@@ -297,7 +293,7 @@ const rangeValue = computed<PickerRangeValue | null>(() => {
     }
     return [parseSideTimestamp(formatted[0]), parseSideTimestamp(formatted[1])]
   }
-  const raw = value.value
+  const raw = valueModel.value
   if (!Array.isArray(raw)) {
     return null
   }
@@ -320,7 +316,7 @@ const hoverPreviewIndex = computed<0 | 1 | null>(() => {
   // 依赖需先读取：条件短路会让后续依赖在首轮求值时不被收集，之后悬浮变化便不再触发重算
   const hovered = hoverTimestamp.value
   const isRangeType = isRange.value
-  const isPanelOpen = open.value
+  const isPanelOpen = openModel.value
   if (!isRangeType || !isPanelOpen || hovered === null) {
     return null
   }
@@ -331,7 +327,7 @@ const singlePreviewTimestamp = computed<number | null>(() => {
   // 依赖先读取（同 hoverPreviewIndex）：条件短路会漏采依赖，悬浮变化便不再触发重算
   const hovered = hoverTimestamp.value
   const isRangeType = isRange.value
-  const isPanelOpen = open.value
+  const isPanelOpen = openModel.value
   return !isRangeType && isPanelOpen ? hovered : null
 })
 /** 面板指示箭头相对输入区左边缘的偏移：与激活段下划线同源、随激活段平移（范围形态专用） */
@@ -354,12 +350,12 @@ function resetActivatedSides() {
  * 唯一会产生草稿的是键盘导航——它只把光标落在草稿上（连同输入框文本），由回车或「确定」落值。
  */
 const panelTimestamp = computed(() => {
-  const drafting = open.value && draftValue.value !== null
+  const drafting = openModel.value && draftValue.value !== null
   return drafting ? draftValue.value : innerValue.value
 })
 /** 面板展示区间：范围形态展开期间取草稿，其余情况跟随已提交值 */
 const panelRangeValue = computed<PickerRangeValue | null>(() => {
-  const drafting = isRange.value && open.value && draftRange.value !== null
+  const drafting = isRange.value && openModel.value && draftRange.value !== null
   return drafting ? draftRange.value : rangeValue.value
 })
 /**
@@ -427,7 +423,7 @@ const displayRangeTexts = computed<[string, string]>(() => {
   // ⚠️ 依赖先读取（同 hoverPreviewIndex）：条件短路会漏采 `hoverTimestamp`，悬浮不再触发重算
   const hovered = hoverTimestamp.value
   const isRangeType = isRange.value
-  const isPanelOpen = open.value
+  const isPanelOpen = openModel.value
   if (isRangeType && isPanelOpen && hovered !== null) {
     texts[activeTriggerIndex.value] = formatSideTimestamp(hovered)
   }
@@ -467,7 +463,7 @@ const showRangeArrow = computed(() => {
     随**实际方位**取（见 `datepicker-zoom` 一节），过渡名因此与方位无关 —— 首帧方位未回填也不会取反向动效 */
 const panelTransitionProps: TransitionProps = { name: 'datepicker-zoom' }
 watch(
-  () => open.value,
+  () => openModel.value,
   (next) => {
     if (next) {
       draftRange.value = rangeValue.value // 展开时以已提交区间为草稿起点
@@ -489,8 +485,8 @@ watch(
 // 收起走同一个入口，草稿复位由上面的 open watcher 承担
 useContainerClose(() => requestOpen(false))
 function requestOpen(next: boolean) {
-  if (fullyDisabled.value || open.value === next) return
-  open.value = next
+  if (fullyDisabled.value || openModel.value === next) return
+  openModel.value = next
   emits('openChange', next)
 }
 /**
@@ -504,7 +500,7 @@ function onTriggerClick(index: 0 | 1 = 0) {
     keyboardPanelMode.value = false
     activeSection.value = null
   }
-  if (open.value) return
+  if (openModel.value) return
   // 该段被禁用时不展开：禁用段不可编辑，展开后也没有可选的段
   if (disabledSides.value[index]) return
   activateSide(index === 0 ? 'start' : 'end')
@@ -516,7 +512,7 @@ function onTriggerClick(index: 0 | 1 = 0) {
 /** 回写两条轨道：主轨道始终同步，字符串轨道按同一格式生成；返回回写的字符串，供「确定」事件复用 */
 function commit(timestamp: number | null): PickerFormattedValue {
   const nextFormatted = timestamp === null ? null : formatTimestamp(timestamp, mergedValueFormat.value)
-  value.value = timestamp
+  valueModel.value = timestamp
   emits('update:formattedValue', nextFormatted)
   emits('change', timestamp, nextFormatted)
   return nextFormatted
@@ -543,7 +539,7 @@ function formatRangeValue(range: PickerRangeValue | null): PickerRangeFormattedV
 /** 回写范围形态的两条轨道，返回回写的文本供事件复用 */
 function commitRange(range: PickerRangeValue | null): PickerRangeFormattedValue | null {
   const nextFormatted = formatRangeValue(range)
-  value.value = range
+  valueModel.value = range
   emits('update:formattedValue', nextFormatted)
   emits('change', range, nextFormatted)
   return nextFormatted
@@ -700,7 +696,7 @@ function onTextConfirm(text: string, source: 'enter' | 'blur', index: 0 | 1) {
   requestOpen(false)
 }
 function onEscKeydown() {
-  if (open.value) {
+  if (openModel.value) {
     requestOpen(false)
   }
 }
@@ -796,12 +792,12 @@ function onTabKeydown(event: KeyboardEvent): void {
 /** 触发器的按键入口：面板未展开时任意输入键唤起面板，展开后按键盘归属决定是否操作面板 */
 function onWrapperKeydown(event: KeyboardEvent): void {
   if (event.key === 'Tab') {
-    if (open.value && !fullyDisabled.value) {
+    if (openModel.value && !fullyDisabled.value) {
       onTabKeydown(event)
     }
     return
   }
-  if (!open.value) {
+  if (!openModel.value) {
     if (!PANEL_OPEN_IGNORED_KEYS.includes(event.key)) {
       requestOpen(true)
     }
@@ -847,7 +843,7 @@ defineExpose({ focus, blur })
       :disabled-sides="disabledSides"
       :input-read-only="inputReadOnly || keyboardPanelMode"
       :allow-clear="allowClear && showClear"
-      :open="open"
+      :open="openModel"
       :input-size="inputSize"
       :suffix-icon="suffixIcon"
       @click="onTriggerClick"
@@ -871,7 +867,7 @@ defineExpose({ focus, blur })
     </PickerTrigger>
     <Popup
       ref="popupRef"
-      :show="open && !fullyDisabled"
+      :show="openModel && !fullyDisabled"
       :to="to"
       :anchor="wrapperRef"
       :placement="placement"
@@ -890,7 +886,7 @@ defineExpose({ focus, blur })
         ref="rangePanelRef"
         :value="panelRangeValue"
         :base-mode="panelBaseMode"
-        :active="open"
+        :active="openModel"
         :active-section="activeSection"
         :active-side="activeSide"
         :start-day-of-week="startDayOfWeek"
@@ -933,7 +929,7 @@ defineExpose({ focus, blur })
         :extra-footer="mergedExtraFooter"
         :start-day-of-week="startDayOfWeek"
         :show-now="showNow"
-        :active="open"
+        :active="openModel"
         @change="onDraftChange"
         @confirm="onConfirm"
         @panel-change="onPanelChange"
@@ -949,7 +945,7 @@ defineExpose({ focus, blur })
         ref="datePanelRef"
         :value="panelTimestamp"
         :base-mode="panelBaseMode"
-        :active="open"
+        :active="openModel"
         :start-day-of-week="startDayOfWeek"
         :disabled-date="disabledDate"
         :date-render="mergedDateRender"

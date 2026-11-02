@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { useResizeObserver, useSlotsExist } from 'components/utils'
+import { useControlledModel, useResizeObserver, useSlotsExist } from 'components/utils'
 export interface Item {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
   tab?: string // 页签显示文字
@@ -23,6 +23,7 @@ export interface Props {
   tabPosition?: 'top' | 'right' | 'bottom' | 'left' // 自定义页签位置
   contentStyle?: CSSProperties // 自定义内容样式
   activeKey?: string | number // (v-model) 当前激活 tab 面板的 key
+  defaultActiveKey?: string | number // 非受控时的初始激活 key（未绑 v-model:active-key 时生效）
 }
 // 声明组件插槽类型
 export interface TabsSlots {
@@ -64,9 +65,11 @@ const scrollLeft = ref(0) // 水平滚动距离
 const scrollTop = ref(0) // 垂直滚动距离
 const transition = ref(false)
 const emits = defineEmits(['update:activeKey', 'change'])
+// (v-model) 当前激活 key：传值即受控，未传时取 defaultActiveKey 自持（缺省即无激活项）
+const activeKeyModel = useControlledModel<string | number | undefined>('activeKey', props.defaultActiveKey)
 const slotsExist = useSlotsExist(['prefix', 'suffix'])
 const activeIndex = computed(() => {
-  return props.items.findIndex((page, index) => getPageKey(page.key, index) === props.activeKey)
+  return props.items.findIndex((page, index) => getPageKey(page.key, index) === activeKeyModel.value)
 })
 const showPrefix = computed(() => {
   return Boolean(slotsExist.prefix || props.prefix)
@@ -148,7 +151,7 @@ const hiddenStyle = computed(() => {
   }
 })
 watch(
-  () => props.activeKey,
+  () => activeKeyModel.value,
   () => {
     getBarDisplay()
   },
@@ -254,7 +257,8 @@ function getPageKey(key: string | number | undefined, index: number): string | n
   }
 }
 function onTab(key: string | number): void {
-  emits('update:activeKey', key)
+  // 写模型即完成两种路径：受控时只上报，非受控时本地生效
+  activeKeyModel.value = key
   emits('change', key)
 }
 /*
@@ -289,7 +293,7 @@ function getVerticalScroll(deltaY: number): void {
   scrollTop.value = Math.min(Math.max(scrollTop.value + scrollY, 0), scrollMax.value)
 }
 function getContentStyle(key: string | number | undefined, index: number): CSSProperties {
-  if (props.activeKey !== getPageKey(key, index)) {
+  if (activeKeyModel.value !== getPageKey(key, index)) {
     return hiddenStyle.value as CSSProperties
   }
   return {}
@@ -330,8 +334,8 @@ function getContentStyle(key: string | number | undefined, index: number): CSSPr
             ref="tabsRef"
             class="tab-item"
             :class="{
-              'tab-line-active': type === 'line' && activeKey === getPageKey(item.key, index),
-              'tab-card-active': type === 'card' && activeKey === getPageKey(item.key, index),
+              'tab-line-active': type === 'line' && activeKeyModel === getPageKey(item.key, index),
+              'tab-card-active': type === 'card' && activeKeyModel === getPageKey(item.key, index),
               'tab-disabled': item.disabled
             }"
             :style="index > 0 && tabGutter !== undefined ? tabGutterStyle : {}"

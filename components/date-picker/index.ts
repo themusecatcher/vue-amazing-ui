@@ -1,6 +1,6 @@
 import DatePicker from './DatePicker.vue'
 export type {
-  DatePickerProps,
+  Props as DatePickerProps,
   DatePickerValue,
   DatePickerFormattedValue,
   DatePickerType,
@@ -9,7 +9,8 @@ export type {
   DatePickerDisabledTimeUnits,
   DatePickerTimeProps,
   DatePickerPreset,
-  DatePickerRangeInfo
+  DatePickerRangeInfo,
+  DatePickerSlots
 } from './DatePicker.vue'
 import { withInstall } from '../utils/type'
 

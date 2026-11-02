@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, provide, ref, watchEffect } from 'vue'
+import { computed, provide } from 'vue'
 import type { VNode } from 'vue'
 import Radio from '../Radio.vue'
 import { radioGroupContextKey } from '../context'
 import type { RadioButtonStyle, RadioSize, RadioValue } from '../context'
 import { renderOptionLabel } from '../render'
+import { useControlledModel } from 'components/utils'
 
 export interface Option {
   label?: string | number | VNode // 选项名，未提供时以选项值展示
@@ -50,8 +51,8 @@ const props = withDefaults(defineProps<Props>(), {
 })
 defineSlots<RadioGroupSlots>()
 const emits = defineEmits(['update:value', 'change'])
-// 组内当前值：外部传入时以外层为准，未受控时由本地副本即时切换
-const groupValue = ref<RadioValue | undefined>(props.value)
+// (v-model) 组内当前值：传值即受控，未传时组件自持
+const valueModel = useControlledModel<RadioValue | undefined>('value', undefined)
 // 选项归一：字符串 / 数字简写取自身为值，对象形态取 label / value / disabled
 const normalizedOptions = computed<NormalizedOption[]>(() => {
   return props.options.map((option) => {
@@ -80,22 +81,19 @@ const buttonOverlap = computed(() => {
   }
   return Array.isArray(props.gap) ? props.gap[0] : props.gap
 })
-watchEffect(() => {
-  groupValue.value = props.value
-})
 provide(radioGroupContextKey, {
-  value: groupValue,
+  value: valueModel,
   disabled: computed(() => props.disabled),
   button: computed(() => props.button),
   buttonStyle: computed(() => props.buttonStyle),
   size: computed(() => props.size),
   name: computed(() => props.name),
   onChange: (value, event) => {
-    if (value === groupValue.value) {
+    if (value === valueModel.value) {
       return
     }
-    groupValue.value = value
-    emits('update:value', value)
+    // 写模型即完成两种路径：受控时只上报（显示以父侧回写为准），非受控时本地生效
+    valueModel.value = value
     emits('change', value, event)
   }
 })

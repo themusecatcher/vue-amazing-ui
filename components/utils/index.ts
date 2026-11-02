@@ -12,6 +12,8 @@ export * from './function'
 export * from './dom'
 // Hooks（通用 hooks + 组件业务 hooks）
 export * from './hooks'
+// v-model 双模字段统一实现（全库唯一的受控判定：传值即受控）
+export * from './controlled-model'
 // DOM 观察 Hooks
 export * from './observers'
 // 弹出定位相关 composable

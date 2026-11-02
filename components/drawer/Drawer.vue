@@ -5,6 +5,7 @@ import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import { themeTeleportKey } from 'components/config-provider/context'
 import {
   injectFromChain,
+  useControlledModel,
   useSlotsExist,
   lockScroll,
   useZIndex,
@@ -88,7 +89,6 @@ const props = withDefaults(defineProps<Props>(), {
   rootStyle: () => ({}),
   to: 'body',
   zIndex: undefined,
-  open: false,
   autofocus: true,
   keyboard: true,
   mask: true,
@@ -108,7 +108,8 @@ function focusDrawer() {
     drawerRef.value?.focus()
   })
 }
-const drawerOpen = ref<boolean>(props.open)
+// (v-model) 显隐：传值即受控（遮罩 / Esc 的关闭只上报，由父决定是否真的关），未传时组件自持
+const drawerOpen = useControlledModel<boolean>('open', false)
 // 组件持有的滚动锁释放函数：加锁后保存返回值、释放后置空，存在即代表本组件持锁；
 // 卸载兜底据此精确释放，避免未持锁时误解锁他人
 let scrollLockRelease: (() => void) | null = null
@@ -214,10 +215,6 @@ watch(
   }
 )
 // 开合响应
-// 外部 open 同步到内部 drawerOpen
-watchEffect(() => {
-  drawerOpen.value = props.open
-})
 watch(
   drawerOpen,
   (to) => {
@@ -255,8 +252,8 @@ onUnmounted(() => {
   parentDrawerOpts?.setPull()
 })
 function closeDrawer(e: Event) {
+  // 写模型即完成两种路径：受控时只上报（父可否决关闭），非受控时本地生效
   drawerOpen.value = false
-  emits('update:open', false)
   emits('close', e)
 }
 function onMaskClick(e: MouseEvent) {

@@ -4,7 +4,7 @@ import type { VNode } from 'vue'
 import Spin, { type SpinProps } from 'components/spin'
 import Image, { type ImageProps } from 'components/image'
 import Space, { type SpaceProps } from 'components/space'
-import { log } from 'components/utils'
+import { log, useControlledModel } from 'components/utils'
 export interface FileType {
   name?: string // 文件名
   url: any // 文件地址
@@ -46,11 +46,12 @@ const props = withDefaults(defineProps<Props>(), {
   beforeUpload: () => true,
   uploadMode: 'base64',
   // custom 模式下的兜底实现：返回空结果，避免未配置时 .then 抛错
-  customRequest: () => Promise.resolve({ url: '' }),
-  fileList: () => []
+  customRequest: () => Promise.resolve({ url: '' })
 })
 defineSlots<UploadSlots>()
-const uploadedFiles = ref<FileType[]>([]) // 上传文件列表
+// (v-model) 上传文件列表：传值即受控，未传时组件自持
+// 写入一律整体替换（H1）：受控时该 ref 就是父数组，下标赋值 / splice 会绕过上报并污染父级数据
+const uploadedFilesModel = useControlledModel<FileType[]>('fileList', [])
 const showUpload = ref<number>(1) // 展示的上传框
 const uploading = ref<boolean[]>([]) // 上传中
 const uploadInputRef = ref<HTMLInputElement[]>([]) // 上传文件控件引用
@@ -67,20 +68,23 @@ watchEffect(() => {
   initUpload()
 })
 function initUpload(): void {
-  uploadedFiles.value = [...props.fileList]
-  if (uploadedFiles.value.length > maxFileCount.value) {
-    uploadedFiles.value.splice(maxFileCount.value)
-  }
+  // 展示槽位数由 fileList 长度与 maxCount 推得；超限时不再截断数组本体
+  // （截断必须改父级数组，与「受控只上报」冲突），模板本就只渲染 showUpload 个槽位
+  const count = uploadedFilesModel.value.length
   if (props.disabled) {
     // 禁用
-    showUpload.value = uploadedFiles.value.length
+    showUpload.value = count
+  } else if (count < maxFileCount.value) {
+    showUpload.value = count + 1
   } else {
-    if (uploadedFiles.value.length < maxFileCount.value) {
-      showUpload.value = props.fileList.length + 1
-    } else {
-      showUpload.value = maxFileCount.value
-    }
+    showUpload.value = maxFileCount.value
   }
+}
+/** 按上传槽位写入结果：整体替换数组（H1），保留槽位下标的稀疏语义 */
+function setUploadedFile(index: number, file: FileType): void {
+  const next = [...uploadedFilesModel.value]
+  next[index] = file
+  uploadedFilesModel.value = next
 }
 // 检查 url 是否为图片
 function isImage(url: string): boolean {
@@ -208,8 +212,8 @@ function base64Upload(file: File, index: number): void {
     // 在读取 Blob 时触发，读取上传进度，50ms 左右调用一次
     if (e.loaded === e.total) {
       // 上传完成：进度读满即隐藏 loading（原有提前收口行为，保留）
-      // 代价：此刻 uploadedFiles[index] 尚未写入（要到 onload 才赋值），模板的「上传框」
-      // （v-show="!uploading[n-1] && !uploadedFiles[n-1]"）与「loading」（v-if="uploading[n-1]"）
+      // 代价：此刻 uploadedFilesModel[index] 尚未写入（要到 onload 才赋值），模板的「上传框」
+      // （v-show="!uploading[n-1] && !uploadedFilesModel[n-1]"）与「loading」（v-if="uploading[n-1]"）
       // 会同时为假，该槽位理论上存在一帧空窗；失败 / 中断 / progress 未报满的复位由 onloadend 兜底
       uploading.value[index] = false // 隐藏 loading 状态
     }
@@ -217,13 +221,10 @@ function base64Upload(file: File, index: number): void {
   reader.onload = function (e) {
     // 当读取操作成功完成时调用
     // 该文件的 base64 数据，如果是图片，则前端可直接用来展示图片
-    uploadedFiles.value[index] = {
-      name: file.name,
-      url: e.target?.result
-    }
-    emits('update:fileList', uploadedFiles.value)
-    emits('success', uploadedFiles.value[index], uploadedFiles.value)
-    emits('change', uploadedFiles.value)
+    const uploaded = { name: file.name, url: e.target?.result } as FileType
+    setUploadedFile(index, uploaded)
+    emits('success', uploaded, uploadedFilesModel.value)
+    emits('change', uploadedFilesModel.value)
   }
   reader.onloadend = function (e) {
     // 当读取操作结束时触发（成功 / 失败 / 中断都会触发）：作为 loading 的兜底复位。
@@ -237,14 +238,13 @@ function customUpload(file: File, index: number): void {
   props
     .customRequest(file)
     .then((res: FileType) => {
-      uploadedFiles.value[index] = res
-      emits('update:fileList', uploadedFiles.value)
-      emits('success', uploadedFiles.value[index], uploadedFiles.value)
-      emits('change', uploadedFiles.value)
+      setUploadedFile(index, res)
+      emits('success', res, uploadedFilesModel.value)
+      emits('change', uploadedFilesModel.value)
     })
     .catch((err: any) => {
       if (maxFileCount.value > 1) {
-        showUpload.value = uploadedFiles.value.length + 1
+        showUpload.value = uploadedFilesModel.value.length + 1
       }
       emits('error', err)
     })
@@ -254,21 +254,22 @@ function customUpload(file: File, index: number): void {
 }
 function onPreview(index: number, url: string): void {
   if (isImage(url)) {
-    const files = uploadedFiles.value.slice(0, index).filter((file) => !isImage(file.url))
+    const files = uploadedFilesModel.value.slice(0, index).filter((file) => !isImage(file.url))
     imageRef.value[index - files.length].preview(0)
   } else {
     window.open(url)
   }
-  emits('preview', uploadedFiles.value[index])
+  emits('preview', uploadedFilesModel.value[index])
 }
 function onRemove(index: number): void {
-  if (uploadedFiles.value.length < maxFileCount.value) {
+  if (uploadedFilesModel.value.length < maxFileCount.value) {
     showUpload.value--
   }
-  const removeFile = uploadedFiles.value.splice(index, 1)
-  emits('remove', removeFile[0])
-  emits('update:fileList', uploadedFiles.value)
-  emits('change', uploadedFiles.value)
+  const next = [...uploadedFilesModel.value]
+  const [removed] = next.splice(index, 1)
+  uploadedFilesModel.value = next
+  emits('remove', removed)
+  emits('change', next)
 }
 </script>
 <template>
@@ -276,7 +277,7 @@ function onRemove(index: number): void {
     <Space gap="small" v-bind="spaceProps">
       <div class="upload-item-panel" v-for="n of showUpload" :key="n">
         <div
-          v-show="!uploading[n - 1] && !uploadedFiles[n - 1]"
+          v-show="!uploading[n - 1] && !uploadedFilesModel[n - 1]"
           class="upload-item"
           :class="{ 'upload-disabled': disabled }"
           @dragenter.stop.prevent
@@ -323,20 +324,20 @@ function onRemove(index: number): void {
             v-bind="spinProps"
           />
         </div>
-        <div v-else-if="uploadedFiles[n - 1]" class="file-preview">
+        <div v-else-if="uploadedFilesModel[n - 1]" class="file-preview">
           <Image
-            v-if="isImage(uploadedFiles[n - 1].url)"
+            v-if="isImage(uploadedFilesModel[n - 1].url)"
             ref="imageRef"
             :bordered="false"
             :width="82"
             :height="82"
             :fit="fit"
-            :src="uploadedFiles[n - 1].url"
-            :name="uploadedFiles[n - 1].name"
+            :src="uploadedFilesModel[n - 1].url"
+            :name="uploadedFilesModel[n - 1].name"
             v-bind="imageProps"
           />
           <svg
-            v-else-if="isPDF(uploadedFiles[n - 1].url)"
+            v-else-if="isPDF(uploadedFilesModel[n - 1].url)"
             class="file-svg"
             focusable="false"
             data-icon="file-pdf"
@@ -366,7 +367,7 @@ function onRemove(index: number): void {
             ></path>
           </svg>
           <div class="file-mask">
-            <a class="file-icon" title="预览" @click="onPreview(n - 1, uploadedFiles[n - 1].url)">
+            <a class="file-icon" title="预览" @click="onPreview(n - 1, uploadedFilesModel[n - 1].url)">
               <svg
                 class="icon-svg"
                 focusable="false"

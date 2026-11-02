@@ -56,6 +56,8 @@ describe('承载层关闭时 Picker 面板随之收起', () => {
   for (const { name, component } of CASES) {
     it(`${name}：容器程序化关闭后面板收起，重开容器不会以打开态出现`, async () => {
       const modalOpen = ref<boolean>(true)
+      // 受控判据为「传值即受控」：面板必须由父持有 open 并回写，否则容器关闭时组件只能上报、无法自行收起
+      const pickerOpen = ref<boolean>(true)
       const Host = defineComponent({
         render: () =>
           h(
@@ -67,7 +69,15 @@ describe('承载层关闭时 Picker 面板随之收起', () => {
                 modalOpen.value = value
               }
             },
-            { default: () => h(component, { open: true }) }
+            {
+              default: () =>
+                h(component, {
+                  open: pickerOpen.value,
+                  'onUpdate:open': (value: boolean) => {
+                    pickerOpen.value = value
+                  }
+                })
+            }
           )
       })
       wrapper = mount(Host, { attachTo: document.body, global: { stubs: { transition: false } } })

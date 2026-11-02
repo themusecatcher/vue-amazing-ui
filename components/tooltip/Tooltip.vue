@@ -5,6 +5,7 @@ import Popup from 'components/popup'
 import {
   findFocusable,
   useContainerClose,
+  useControlledModel,
   useSlotsExist,
   useResizeObserver,
   FLOATING_LAYER_Z_INDEX
@@ -58,14 +59,12 @@ defineSlots<TooltipSlots>()
 // 模板存在「包裹层 / 浮层」两个条件根，属性继承需显式下发（见模板中包裹层根节点的 v-bind="$attrs"；
 // 锚点模式没有自有根节点，$attrs 不再下发）
 defineOptions({ inheritAttrs: false })
-const tooltipShow = ref<boolean>(false) // 未受控时的内部显隐状态
-// 受控判定：显式传入 open（含 false）即视为受控 —— 显隐以属性为准，内部请求只经事件上报。
-// 与 Dropdown 的 `props.open === undefined ? innerOpen : props.open` 同口径；open 的默认值因此必须是
-// undefined（布尔 prop 缺省会被 Vue 强转成 false，那会让所有用法都变成「受控且恒关闭」）
-const openControlled = computed<boolean>(() => props.open !== undefined)
-// 实际可见性：受控取 open 属性，未受控取内部状态。面板渲染、无障碍关联与所有早返回判定统一看它，
+// (v-model) 显隐：传值即受控（只上报不回弹），未传时组件自持 —— open 的默认值因此必须是 undefined
+// （布尔 prop 缺省会被 Vue 强转成 false，那会让所有用法都变成「受控且恒关闭」）
+const open = useControlledModel<boolean>('open', false)
+// 实际可见性：面板渲染、无障碍关联与所有早返回判定统一看它，
 // 避免出现「内部状态与属性各说各话」的脱同步
-const tooltipVisible = computed<boolean>(() => (openControlled.value ? Boolean(props.open) : tooltipShow.value))
+const tooltipVisible = computed<boolean>(() => open.value)
 // 显隐定时器分离（与 Dropdown 同口径）：单定时器会让「待显示」与「待隐藏」互相取消 ——
 // 例如 hover 移入排了显示、移出排了隐藏，后者复用同一个句柄时前者的取消动作会把两者搅在一起
 let showTimer: ReturnType<typeof setTimeout> | null = null
@@ -310,12 +309,9 @@ function clearTimers(): void {
 // 请求变更显隐：受控时只上报（状态以 open 属性为准，组件不自行改写），未受控时写内部状态；
 // 两者都只在「值真的变化」时上报 —— 与 Dropdown 的 requestOpen 同口径，避免无变化通知
 function requestVisible(val: boolean): void {
-  const prev = tooltipVisible.value
-  if (!openControlled.value) {
-    tooltipShow.value = val
-  }
-  if (prev === val) return
-  emits('update:open', val)
+  if (tooltipVisible.value === val) return
+  // 写模型即完成两种路径：受控时只上报（显示以父侧回写为准），非受控时本地生效
+  open.value = val
   emits('openChange', val)
 }
 function applyShow(): void {

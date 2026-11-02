@@ -50,7 +50,9 @@ const groupChecked = computed(() => {
   return groupContext.value.value === props.value
 })
 // 选中态：组内由组决定，组外读自身 checked
-const mergedChecked = computed(() => (groupContext ? groupChecked.value : radioChecked.value))
+// 组内外合并后的选中态：组内取组的选中集合，组外取自身的内部选中态。
+// 与「受控 / 非受控」无关 —— 那是 v-model:checked 的职责，这里只回答「视觉上是否选中」
+const groupAwareChecked = computed(() => (groupContext ? groupChecked.value : radioChecked.value))
 // 禁用态：组内叠加组的禁用，组外读自身 disabled
 const mergedDisabled = computed(() => (groupContext ? groupContext.disabled.value || props.disabled : props.disabled))
 // 按钮形态：显式声明 button，或所在组为按钮形态时，按按钮渲染
@@ -70,7 +72,7 @@ watchEffect(() => {
   radioChecked.value = props.checked
 })
 // 选中扩散环由选中态驱动：程序化改变选中值（受控回写 / 组内切换）同样播放，与点击来源无关
-watch(mergedChecked, (checked) => {
+watch(groupAwareChecked, (checked) => {
   if (checked) {
     startWave()
   }
@@ -181,7 +183,7 @@ defineExpose({ focus, blur })
       :id="id"
       :value="value"
       :name="mergedName"
-      :checked="mergedChecked"
+      :checked="groupAwareChecked"
       :disabled="mergedDisabled"
       :autofocus="autofocus"
       @click.stop
@@ -189,11 +191,11 @@ defineExpose({ focus, blur })
       @focus="onInputFocus"
       @blur="clearExposedFocus"
     />
-    <span class="radio-handle" :class="{ 'radio-checked': mergedChecked }">
+    <span class="radio-handle" :class="{ 'radio-checked': groupAwareChecked }">
       <span
         v-if="!mergedDisabled"
         class="radio-wave"
-        :class="{ 'wave-active': wave && mergedChecked }"
+        :class="{ 'wave-active': wave && groupAwareChecked }"
         @animationend="endWave"
       ></span>
     </span>
@@ -206,7 +208,7 @@ defineExpose({ focus, blur })
     class="radio-button-wrap"
     :class="{
       'radio-button-single': !groupContext,
-      'radio-button-checked': mergedChecked,
+      'radio-button-checked': groupAwareChecked,
       'radio-button-disabled': mergedDisabled,
       'radio-button-solid': mergedButtonStyle === 'solid',
       'radio-button-small': mergedSize === 'small',
@@ -224,7 +226,7 @@ defineExpose({ focus, blur })
       :id="id"
       :value="value"
       :name="mergedName"
-      :checked="mergedChecked"
+      :checked="groupAwareChecked"
       :disabled="mergedDisabled"
       :autofocus="autofocus"
       @click.stop
@@ -238,7 +240,7 @@ defineExpose({ focus, blur })
     <span
       v-if="!mergedDisabled"
       class="radio-wave"
-      :class="{ 'wave-active': wave && mergedChecked }"
+      :class="{ 'wave-active': wave && groupAwareChecked }"
       @animationend="endWave"
     ></span>
   </label>

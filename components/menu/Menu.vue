@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, provide, ref, useSlots, watch } from 'vue'
 import type { VNode, VNodeChild } from 'vue'
-import { FLOATING_LAYER_Z_INDEX, injectFromChain, siderCollapsedKey } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, injectFromChain, siderCollapsedKey, useControlledModel } from 'components/utils'
 import MenuNodes from './MenuNodes'
 import { getItemKey, menuContextKey } from './context'
 import type { MenuContext } from './context'
@@ -89,27 +89,11 @@ const slots: MenuSlots = useSlots()
 // 组件级主色由 ConfigProvider 写在作用域节点上；浮层面板经 Teleport 脱离作用域时，
 // Provider 的边界转发会把这些令牌一并带到面板根节点，因此不再需要把私有变量随节点下发。
 
-// 受控 / 非受控：传入即为受控，内部副本随外部同步
-const innerOpenKeys = ref<MenuKey[]>(Array.isArray(props.openKeys) ? [...props.openKeys] : [])
-const innerSelectedKeys = ref<MenuKey[]>(Array.isArray(props.selectedKeys) ? [...props.selectedKeys] : [])
-watch(
-  () => props.openKeys,
-  (keys) => {
-    if (Array.isArray(keys)) {
-      innerOpenKeys.value = [...keys]
-    }
-  },
-  { deep: true }
-)
-watch(
-  () => props.selectedKeys,
-  (keys) => {
-    if (Array.isArray(keys)) {
-      innerSelectedKeys.value = [...keys]
-    }
-  },
-  { deep: true }
-)
+// (v-model:openKeys) 展开的子菜单 key 集合：传值即受控，未传时组件自持
+// (v-model:selectedKeys) 选中的菜单项 key 集合：传值即受控，未传时组件自持
+// 注：两个模型读到的都可能是父级数组本体，写入必须整体替换（禁止 push / splice）
+const openKeysModel = useControlledModel<MenuKey[]>('openKeys', [])
+const selectedKeysModel = useControlledModel<MenuKey[]>('selectedKeys', [])
 
 // 当前激活路径：悬浮或焦点所在项的完整 key 链（含祖先）。子菜单浮层经 Teleport 脱离 DOM 树，
 // 浮层内的项被悬浮时父级标题无法用 `:hover` 感知，故统一由这条路径驱动高亮
@@ -169,7 +153,7 @@ const keyMetaMap = computed(() => {
 // 含选中项的子菜单整链高亮：父级被选中态需要它（内嵌与浮层两种形态共用）
 const selectedSubMenuKeys = computed(() => {
   const keys = new Set<MenuKey>()
-  innerSelectedKeys.value.forEach((key) => {
+  selectedKeysModel.value.forEach((key) => {
     keyMetaMap.value.get(key)?.parents.forEach((parent) => keys.add(parent))
   })
   return [...keys]
@@ -191,20 +175,19 @@ function collectDescendantKeys(key: MenuKey): MenuKey[] {
 }
 
 function triggerOpenKeys(keys: MenuKey[]): void {
-  innerOpenKeys.value = keys
-  emit('update:openKeys', keys)
+  openKeysModel.value = keys
   emit('openChange', keys)
 }
 
 function handleOpenChange(key: MenuKey, open: boolean): void {
-  let keys = innerOpenKeys.value.filter((item) => item !== key)
+  let keys = openKeysModel.value.filter((item) => item !== key)
   if (open) {
     keys.push(key)
   } else if (!isInlineMode.value) {
     const descendants = collectDescendantKeys(key)
     keys = keys.filter((item) => !descendants.includes(item))
   }
-  if (!isSameKeys(keys, innerOpenKeys.value)) {
+  if (!isSameKeys(keys, openKeysModel.value)) {
     triggerOpenKeys(keys)
   }
 }
@@ -213,19 +196,16 @@ function handleItemClick(info: MenuInfo): void {
   emit('click', info)
   if (props.selectable) {
     const { key } = info
-    const existed = innerSelectedKeys.value.includes(key)
+    const existed = selectedKeysModel.value.includes(key)
     const nextKeys = props.multiple
       ? existed
-        ? innerSelectedKeys.value.filter((item) => item !== key)
-        : [...innerSelectedKeys.value, key]
+        ? selectedKeysModel.value.filter((item) => item !== key)
+        : [...selectedKeysModel.value, key]
       : [key]
-    if (!isSameKeys(nextKeys, innerSelectedKeys.value)) {
-      // 受控时只回传，等外部更新后再经 watch 同步；非受控直接落到内部副本
-      if (props.selectedKeys === undefined) {
-        innerSelectedKeys.value = nextKeys
-      }
+    if (!isSameKeys(nextKeys, selectedKeysModel.value)) {
+      // 写模型即完成两种路径：受控时只回传（等外部更新后生效），非受控直接生效
+      selectedKeysModel.value = nextKeys
       const menuSelectInfo: MenuSelectInfo = { ...info, selectedKeys: nextKeys }
-      emit('update:selectedKeys', nextKeys)
       if (existed && props.multiple) {
         emit('deselect', menuSelectInfo)
       } else {
@@ -234,7 +214,7 @@ function handleItemClick(info: MenuInfo): void {
     }
   }
   // 浮层型子菜单在选中后收起；多选不收起，便于连续勾选
-  if (!isInlineMode.value && !props.multiple && innerOpenKeys.value.length) {
+  if (!isInlineMode.value && !props.multiple && openKeysModel.value.length) {
     triggerOpenKeys([])
   }
 }
@@ -242,18 +222,18 @@ function handleItemClick(info: MenuInfo): void {
 function handleTitleClick(item: SubMenuType, domEvent: MouseEvent): void {
   item.onTitleClick?.({ key: item.key, domEvent })
   if (isInlineMode.value) {
-    handleOpenChange(item.key, !innerOpenKeys.value.includes(item.key))
+    handleOpenChange(item.key, !openKeysModel.value.includes(item.key))
   } else if (props.triggerSubMenuAction === 'click') {
     // 点击触发时同级只保留一个展开项，与「点击外部即收起」的语义一致
-    triggerOpenKeys(innerOpenKeys.value.includes(item.key) ? [] : [item.key])
+    triggerOpenKeys(openKeysModel.value.includes(item.key) ? [] : [item.key])
   }
 }
 
 // 展开集合在 inline 与浮层形态之间不可直接沿用（浮层态无处表达「内嵌展开」），故缓存后还原
-const cachedOpenKeys = ref<MenuKey[]>([...innerOpenKeys.value])
+const cachedOpenKeys = ref<MenuKey[]>([...openKeysModel.value])
 let modeInitialized = false
 watch(
-  innerOpenKeys,
+  openKeysModel,
   (keys) => {
     if (isInlineMode.value) {
       cachedOpenKeys.value = [...keys]
@@ -290,8 +270,8 @@ watch(
     }
     if (inline) {
       setRetainingInline(false)
-      innerOpenKeys.value = [...cachedOpenKeys.value]
-    } else if (innerOpenKeys.value.length) {
+      openKeysModel.value = [...cachedOpenKeys.value]
+    } else if (openKeysModel.value.length) {
       setRetainingInline(true)
       triggerOpenKeys([])
     }
@@ -311,7 +291,7 @@ const expandIcon = computed<MenuContext['expandIcon']['value']>(() => {
 
 // 点击触发模式下，浮层需在点击菜单外部时收起
 function handleDocumentMouseDown(event: MouseEvent): void {
-  if (props.triggerSubMenuAction !== 'click' || isInlineMode.value || !innerOpenKeys.value.length) {
+  if (props.triggerSubMenuAction !== 'click' || isInlineMode.value || !openKeysModel.value.length) {
     return
   }
   const target = event.target as HTMLElement | null
@@ -345,8 +325,8 @@ provide<MenuContext>(menuContextKey, {
   triggerSubMenuAction: computed(() => props.triggerSubMenuAction),
   subMenuOpenDelay: computed(() => props.subMenuOpenDelay),
   subMenuCloseDelay: computed(() => props.subMenuCloseDelay),
-  openKeys: innerOpenKeys,
-  selectedKeys: innerSelectedKeys,
+  openKeys: openKeysModel,
+  selectedKeys: selectedKeysModel,
   activeKeys,
   changeActiveKeys,
   overflowStart,

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
-import { useResizeObserver } from 'components/utils'
+import { useControlledModel, useResizeObserver } from 'components/utils'
 export interface Option {
   label?: string // 选项名
   value: string | number // 选项值
@@ -36,7 +36,8 @@ const props = withDefaults(defineProps<Props>(), {
 defineSlots<SegmentedSlots>()
 const segmentedGroupRef = ref<HTMLElement | null>(null)
 const segmentedItemRef = ref<HTMLElement[]>([])
-const selectedValue = ref<string | number>() // 当前选中的值
+// (v-model) 当前选中的值：传值即受控，未传时组件自持
+const valueModel = useControlledModel<string | number | undefined>('value', undefined)
 const selectedWallWidth = ref<number>(0) // selectedWall 的宽度
 const selectedWallOffsetLeft = ref<number>(0) // selectedWall 的偏移量
 const emits = defineEmits(['update:value', 'change'])
@@ -62,14 +63,12 @@ const selectedWallStyle = computed(() => {
   }
   return style
 })
+// 值变化（父侧驱动或内部选中）后重算滑块位置
 watch(
-  () => props.value,
-  async (to) => {
-    if (to !== selectedValue.value) {
-      selectedValue.value = to
-      await nextTick()
-      getSelectedWallState()
-    }
+  valueModel,
+  async () => {
+    await nextTick()
+    getSelectedWallState()
   },
   {
     immediate: true
@@ -80,7 +79,7 @@ useResizeObserver(segmentedGroupRef, () => {
 })
 function getSelectedWallState() {
   const selectedIndex = props.options.findIndex(
-    (option: string | number | Option) => getOptionValue(option) === selectedValue.value
+    (option: string | number | Option) => getOptionValue(option) === valueModel.value
   )
   const selectedTarget = segmentedItemRef.value?.[selectedIndex]
   if (selectedTarget && segmentedGroupRef.value) {
@@ -91,12 +90,10 @@ function getSelectedWallState() {
   }
 }
 function onSelected(value: string | number) {
-  if (value !== selectedValue.value) {
-    selectedValue.value = value
-    getSelectedWallState()
-    emits('update:value', value)
-    emits('change', value)
-  }
+  if (value === valueModel.value) return
+  // 写模型即完成两种路径：受控时只上报（显示以父侧回写为准），非受控时本地生效
+  valueModel.value = value
+  emits('change', value)
 }
 function getOptionDisabled(option: string | number | Option) {
   if (typeof option == 'object') {
@@ -131,7 +128,7 @@ function getOptionLabel(option: string | number | Option) {
         ref="segmentedItemRef"
         class="segmented-item"
         :class="{
-          'segmented-item-selected': selectedValue === getOptionValue(option),
+          'segmented-item-selected': valueModel === getOptionValue(option),
           'segmented-item-disabled': disabled || getOptionDisabled(option),
           'segmented-item-block': block
         }"
@@ -142,7 +139,7 @@ function getOptionLabel(option: string | number | Option) {
         <input
           type="radio"
           class="segmented-item-input"
-          :checked="selectedValue === getOptionValue(option)"
+          :checked="valueModel === getOptionValue(option)"
           :disabled="disabled || getOptionDisabled(option)"
         />
         <div

@@ -9,7 +9,7 @@ import Radio from 'components/radio'
 import Tooltip, { type TooltipProps } from 'components/tooltip'
 import Ellipsis, { type EllipsisProps } from 'components/ellipsis'
 import Pagination, { type PaginationProps } from 'components/pagination'
-import { useSlotsExist, useResizeObserver } from 'components/utils'
+import { useControlledModel, useSlotsExist, useResizeObserver } from 'components/utils'
 export interface Column {
   title?: string // 列头显示文字
   align?: 'left' | 'center' | 'right' // 列文本的对齐方式
@@ -158,7 +158,9 @@ const tablePageSize = ref<number>(10) // 分页器每页条数
 const hoverRowIndex = ref<number | null>(null) // 鼠标悬浮行的索引
 const mergeHoverCoords = ref<Coords[]>([]) // 鼠标悬浮时被合并单元格的坐标
 const displayDataSource = ref<Record<string, any>[]>([]) // 当前展示的表格数据
-const tableExpandedRowKeys = ref<string[]>([]) // 当前展开行的 key 数组
+// (v-model) 展开行 key 集合：传值即受控，未传时组件自持
+// 写入一律整体替换（禁止 push / splice）：受控时读到的是父数组引用，原地修改会污染父级数据
+const expandedRowKeysModel = useControlledModel<string[]>('expandedRowKeys', [])
 const checkAll = ref(false) // 是否全选
 const indeterminate = ref(false) // 全选样式控制
 const tableOptionsChecked = ref<boolean[]>([]) // 表格选项数组
@@ -544,11 +546,6 @@ watchEffect(() => {
       tablePageSize.value = props.pagination.pageSize as number
     }
   }
-})
-// 监听当前展开行的 key 数组变化
-// 注意：拷贝而非直接引用 props 数组，避免组件内部 push/filter 污染外部传入的 expandedRowKeys 数组
-watchEffect(() => {
-  tableExpandedRowKeys.value = props.expandedRowKeys ? [...props.expandedRowKeys] : []
 })
 onMounted(() => {
   getScrollState()
@@ -1049,14 +1046,14 @@ function checkHoverCoord(row: number, col: number): boolean {
 // 展开/收起展开行
 function onExpandCell(record: Record<string, any>, rowIndex: number): void {
   const key = getRowKey.value(record, rowIndex)
-  if (tableExpandedRowKeys.value.includes(key)) {
-    tableExpandedRowKeys.value = tableExpandedRowKeys.value.filter((rowKey: string | number) => rowKey !== key)
+  if (expandedRowKeysModel.value.includes(key)) {
+    expandedRowKeysModel.value = expandedRowKeysModel.value.filter((rowKey: string) => rowKey !== key)
   } else {
-    tableExpandedRowKeys.value.push(key)
+    // H1：整体替换，禁止 push —— 受控时该 ref 就是父数组，原地修改既不上报也污染父级
+    expandedRowKeysModel.value = [...expandedRowKeysModel.value, key]
   }
-  emits('expand', tableExpandedRowKeys.value.includes(key), record)
-  emits('expandedRowsChange', tableExpandedRowKeys.value)
-  emits('update:expandedRowKeys', tableExpandedRowKeys.value)
+  emits('expand', expandedRowKeysModel.value.includes(key), record)
+  emits('expandedRowsChange', expandedRowKeysModel.value)
 }
 // 表格滚动事件
 function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom'): void {
@@ -1309,12 +1306,12 @@ function onPaginationChange(page: number, pageSize: number): void {
                           name="expandCell"
                           :record="record"
                           :index="rowIndex"
-                          :expanded="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))"
+                          :expanded="expandedRowKeysModel.includes(getRowKey(record, rowIndex))"
                         >
                           <button
                             class="expand-btn"
                             :class="{
-                              'expand-btn-collapsed': !tableExpandedRowKeys.includes(getRowKey(record, rowIndex))
+                              'expand-btn-collapsed': !expandedRowKeysModel.includes(getRowKey(record, rowIndex))
                             }"
                           ></button>
                         </slot>
@@ -1398,14 +1395,14 @@ function onPaginationChange(page: number, pageSize: number): void {
                       </td>
                     </tr>
                     <template v-if="showExpandColumn">
-                      <tr v-show="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))">
+                      <tr v-show="expandedRowKeysModel.includes(getRowKey(record, rowIndex))">
                         <td class="table-td table-td-expand-row" :colspan="tableFullRowColspan">
                           <div v-if="expandColumnFixed" class="table-expand-row-fixed" :style="tableExpandRowFixStyle">
                             <slot
                               name="expandedRowRender"
                               :record="record"
                               :index="rowIndex"
-                              :expanded="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))"
+                              :expanded="expandedRowKeysModel.includes(getRowKey(record, rowIndex))"
                             ></slot>
                           </div>
                           <slot
@@ -1413,7 +1410,7 @@ function onPaginationChange(page: number, pageSize: number): void {
                             name="expandedRowRender"
                             :record="record"
                             :index="rowIndex"
-                            :expanded="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))"
+                            :expanded="expandedRowKeysModel.includes(getRowKey(record, rowIndex))"
                           ></slot>
                         </td>
                       </tr>
@@ -1615,12 +1612,12 @@ function onPaginationChange(page: number, pageSize: number): void {
                           name="expandCell"
                           :record="record"
                           :index="rowIndex"
-                          :expanded="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))"
+                          :expanded="expandedRowKeysModel.includes(getRowKey(record, rowIndex))"
                         >
                           <button
                             class="expand-btn"
                             :class="{
-                              'expand-btn-collapsed': !tableExpandedRowKeys.includes(getRowKey(record, rowIndex))
+                              'expand-btn-collapsed': !expandedRowKeysModel.includes(getRowKey(record, rowIndex))
                             }"
                           ></button>
                         </slot>
@@ -1704,14 +1701,14 @@ function onPaginationChange(page: number, pageSize: number): void {
                       </td>
                     </tr>
                     <template v-if="showExpandColumn">
-                      <tr v-show="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))">
+                      <tr v-show="expandedRowKeysModel.includes(getRowKey(record, rowIndex))">
                         <td class="table-td table-td-expand-row" :colspan="tableFullRowColspan">
                           <div v-if="expandColumnFixed" class="table-expand-row-fixed" :style="tableExpandRowFixStyle">
                             <slot
                               name="expandedRowRender"
                               :record="record"
                               :index="rowIndex"
-                              :expanded="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))"
+                              :expanded="expandedRowKeysModel.includes(getRowKey(record, rowIndex))"
                             ></slot>
                           </div>
                           <slot
@@ -1719,7 +1716,7 @@ function onPaginationChange(page: number, pageSize: number): void {
                             name="expandedRowRender"
                             :record="record"
                             :index="rowIndex"
-                            :expanded="tableExpandedRowKeys.includes(getRowKey(record, rowIndex))"
+                            :expanded="expandedRowKeysModel.includes(getRowKey(record, rowIndex))"
                           ></slot>
                         </td>
                       </tr>
