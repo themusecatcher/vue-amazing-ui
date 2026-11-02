@@ -7,7 +7,8 @@ export type {
   Props as TableProps,
   Column as TableColumn,
   Selection as TableSelection,
-  ScrollOption as TableScrollOption
+  ScrollOption as TableScrollOption,
+  TableSlots
 } from './Table.vue'
 
 // 显式标注默认导出类型，避免 vue-tsc --build 序列化 Table 完整实例类型时超出上限（TS7056）；

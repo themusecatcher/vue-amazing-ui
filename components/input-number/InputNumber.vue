@@ -42,6 +42,10 @@ defineSlots<InputNumberSlots>()
 const inputRef = ref<HTMLInputElement | null>(null) // input 模板引用
 const numValue = ref<string>() // 数字输入框的内容
 const emits = defineEmits(['update:value', 'change', 'enter'])
+// 父是否提供了值（受控）—— 值的真相源始终是 DOM 元素，这里只用于两处判断：
+// ① 同步 props.value 时是否需要保留光标位置（非受控时元素自持，不能覆盖光标）；
+// ② 清空输入时是否需要回传 undefined（非受控时无值可清）
+const isControlled = computed(() => props.value !== undefined)
 const slotsExist = useSlotsExist(['prefix'])
 const inputWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -63,7 +67,7 @@ const lazyInput = computed(() => {
 watch(
   [() => props.value, () => precision.value, () => props.formatter],
   async () => {
-    if (props.value !== undefined) {
+    if (isControlled.value) {
       if (inputRef.value) {
         const { selectionStart, selectionEnd, value } = inputRef.value
         const start = selectionStart ?? 0
@@ -142,7 +146,7 @@ function onInput(e: Event): void {
     if (value && !Number.isNaN(getNumberValue(value)) && getNumberValue(value) !== props.value) {
       updateValue(value)
     }
-    if (!value && props.value !== undefined) {
+    if (!value && isControlled.value) {
       emitValue(undefined)
     }
   }

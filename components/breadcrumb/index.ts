@@ -2,7 +2,8 @@ import Breadcrumb from './Breadcrumb.vue'
 export type {
   Props as BreadcrumbProps,
   Route as BreadcrumbRoute,
-  Query as BreadcrumbRouteQuery
+  Query as BreadcrumbRouteQuery,
+  BreadcrumbSlots
 } from './Breadcrumb.vue'
 import { withInstall } from '../utils/type'
 

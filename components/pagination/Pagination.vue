@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 import Input, { type InputProps } from 'components/input'
+import { useControlledModel } from 'components/utils'
 import Select, { type SelectProps } from 'components/select'
 export interface Props {
   page?: number // (v-model) 当前页数
+  defaultPage?: number // 非受控时的初始页数（未绑 v-model:page 时生效）
   pageSize?: number // (v-model) 每页条数
+  defaultPageSize?: number // 非受控时的初始每页条数（未绑 v-model:page-size 时生效）
   total?: number // 数据总数
   disabled?: boolean // 是否禁用
   pageAmount?: number // 显示的页码数
@@ -19,8 +22,6 @@ export interface Props {
   size?: 'large' | 'middle' | 'small' // 分页按钮大小
 }
 const props = withDefaults(defineProps<Props>(), {
-  page: 1,
-  pageSize: 10,
   total: 0,
   disabled: false,
   pageAmount: 5,
@@ -34,8 +35,9 @@ const props = withDefaults(defineProps<Props>(), {
   placement: 'center',
   size: 'large'
 })
-const currentPage = ref<number>(props.page) // 当前页数
-const currentPageSize = ref<number>(props.pageSize) // 每页条数
+// (v-model) 当前页数 / 每页条数：传值即受控，未传时组件自持（初值 1 / 10）
+const pageModel = useControlledModel<number>('page', props.defaultPage ?? 1)
+const pageSizeModel = useControlledModel<number>('pageSize', props.defaultPageSize ?? 10)
 const pageListRef = ref<HTMLElement[] | null>(null) // pageList 生成的 page 元素引用
 const jumpNumber = ref<string>() // 跳转的页码
 const forwardMore = ref(false) // 左省略号展示
@@ -43,7 +45,7 @@ const backwardMore = ref(false) // 右省略号展示
 const emits = defineEmits(['update:page', 'update:pageSize', 'change', 'pageSizeChange'])
 const totalPage = computed(() => {
   // 总页数
-  return Math.ceil(props.total / currentPageSize.value) // 向上取整
+  return Math.ceil(props.total / pageSizeModel.value) // 向上取整
 })
 const totalText = computed(() => {
   if (typeof props.showTotal === 'boolean') {
@@ -51,16 +53,16 @@ const totalText = computed(() => {
       return `共 ${props.total} 条`
     }
   } else {
-    const first = (currentPage.value - 1) * currentPageSize.value + 1
+    const first = (pageModel.value - 1) * pageSizeModel.value + 1
     const last =
-      currentPage.value * currentPageSize.value > props.total ? props.total : currentPage.value * currentPageSize.value
+      pageModel.value * pageSizeModel.value > props.total ? props.total : pageModel.value * pageSizeModel.value
     return props.showTotal(props.total, [first, last])
   }
   return null
 })
 const pageList = computed(() => {
   // 获取显示的页码数组
-  return dealPageList(currentPage.value).filter((n) => n !== 1 && n !== totalPage.value)
+  return dealPageList(pageModel.value).filter((n) => n !== 1 && n !== totalPage.value)
 })
 const showPageSizeChanger = computed(() => {
   if (typeof props.showSizeChanger === 'boolean') {
@@ -71,7 +73,7 @@ const showPageSizeChanger = computed(() => {
   }
 })
 const selectOptions = computed(() => {
-  const pageSizeOptipns = [currentPageSize.value, ...props.pageSizeOptions].map((pageSize: number | string) =>
+  const pageSizeOptipns = [pageSizeModel.value, ...props.pageSizeOptions].map((pageSize: number | string) =>
     Number(pageSize)
   )
   return Array.from(new Set(pageSizeOptipns))
@@ -97,18 +99,6 @@ const optionsSize = computed(() => {
   }
   return 'middle'
 })
-watch(
-  () => props.page,
-  (to) => {
-    currentPage.value = to
-  }
-)
-watch(
-  () => props.pageSize,
-  (to: number) => {
-    currentPageSize.value = to
-  }
-)
 function dealPageList(curPage: number): number[] {
   const resList = []
   const offset = Math.floor(props.pageAmount / 2)
@@ -144,15 +134,15 @@ function dealPageList(curPage: number): number[] {
   return resList
 }
 function onPageForward(): void {
-  currentPage.value = currentPage.value - props.pageAmount > 0 ? currentPage.value - props.pageAmount : 1
-  emits('update:page', currentPage.value)
-  emits('change', currentPage.value, currentPageSize.value)
+  const target = pageModel.value - props.pageAmount > 0 ? pageModel.value - props.pageAmount : 1
+  pageModel.value = target
+  emits('change', target, pageSizeModel.value)
 }
 function onPageBackward(): void {
-  currentPage.value =
-    currentPage.value + props.pageAmount < totalPage.value ? currentPage.value + props.pageAmount : totalPage.value
-  emits('update:page', currentPage.value)
-  emits('change', currentPage.value, currentPageSize.value)
+  const next =
+    pageModel.value + props.pageAmount < totalPage.value ? pageModel.value + props.pageAmount : totalPage.value
+  pageModel.value = next
+  emits('change', next, pageSizeModel.value)
 }
 async function onPageJump(): Promise<void> {
   let num = Number(jumpNumber.value) // 转换为数字
@@ -180,13 +170,12 @@ function onPageChange(page: number, inPageList: boolean = false): boolean | void
     return false
   }
   // 点击的页码不是当前页码
-  if (currentPage.value !== page) {
-    currentPage.value = page
+  if (pageModel.value !== page) {
+    pageModel.value = page
     if (inPageList) {
       activePageFocus(page)
     }
-    emits('update:page', currentPage.value)
-    emits('change', currentPage.value, currentPageSize.value)
+    emits('change', page, pageSizeModel.value)
   }
 }
 function onPageNext(e: Event, page: number): void {
@@ -195,15 +184,13 @@ function onPageNext(e: Event, page: number): void {
 }
 // pageSize 切换器变化时的回调
 function onPageSizeChange(pageSize: number): void {
-  currentPageSize.value = pageSize
+  pageSizeModel.value = pageSize
   const maxPage = Math.ceil(props.total / pageSize)
-  if (currentPage.value > maxPage) {
-    currentPage.value = maxPage
+  if (pageModel.value > maxPage) {
+    pageModel.value = maxPage
   }
-  emits('update:page', currentPage.value)
-  emits('update:pageSize', currentPageSize.value)
-  emits('pageSizeChange', currentPage.value, currentPageSize.value)
-  emits('change', currentPage.value, currentPageSize.value)
+  emits('pageSizeChange', pageModel.value, pageSize)
+  emits('change', pageModel.value, pageSize)
 }
 </script>
 <template>
@@ -215,7 +202,7 @@ function onPageSizeChange(pageSize: number): void {
         'pagination-small': size === 'small',
         'pagination-middle': size === 'middle',
         'pagination-disabled': disabled,
-        'pagination-hidden': !total || (hideOnSinglePage && total <= currentPageSize)
+        'pagination-hidden': !total || (hideOnSinglePage && total <= pageSizeModel)
       }
     ]"
   >
@@ -223,9 +210,9 @@ function onPageSizeChange(pageSize: number): void {
     <span
       tabindex="0"
       class="pagination-prev"
-      :class="{ 'pagination-item-disabled': currentPage === 1 }"
-      @keydown.enter.prevent="disabled ? () => false : onPageChange(currentPage - 1)"
-      @click="disabled || currentPage === 1 ? () => false : onPageChange(currentPage - 1)"
+      :class="{ 'pagination-item-disabled': pageModel === 1 }"
+      @keydown.enter.prevent="disabled ? () => false : onPageChange(pageModel - 1)"
+      @click="disabled || pageModel === 1 ? () => false : onPageChange(pageModel - 1)"
     >
       <svg
         class="arrow-svg"
@@ -244,7 +231,7 @@ function onPageSizeChange(pageSize: number): void {
     </span>
     <span
       tabindex="0"
-      :class="['pagination-item', { 'pagination-item-active': currentPage === 1 }]"
+      :class="['pagination-item', { 'pagination-item-active': pageModel === 1 }]"
       @keydown.enter.prevent="disabled ? () => false : onPageChange(1)"
       @click="disabled ? () => false : onPageChange(1)"
     >
@@ -277,7 +264,7 @@ function onPageSizeChange(pageSize: number): void {
     <span
       ref="pageListRef"
       tabindex="0"
-      :class="['pagination-item', { 'pagination-item-active': currentPage === page }]"
+      :class="['pagination-item', { 'pagination-item-active': pageModel === page }]"
       v-for="(page, index) in pageList"
       :key="index"
       @keydown.enter.prevent="disabled ? () => false : onPageChange(page, true)"
@@ -312,7 +299,7 @@ function onPageSizeChange(pageSize: number): void {
     <span
       v-show="totalPage !== 1"
       tabindex="0"
-      :class="['pagination-item', { 'pagination-item-active': currentPage === totalPage }]"
+      :class="['pagination-item', { 'pagination-item-active': pageModel === totalPage }]"
       @keydown.enter.prevent="disabled ? () => false : onPageChange(totalPage)"
       @click="disabled ? () => false : onPageChange(totalPage)"
     >
@@ -321,9 +308,9 @@ function onPageSizeChange(pageSize: number): void {
     <span
       tabindex="0"
       class="pagination-next"
-      :class="{ 'pagination-item-disabled': currentPage === totalPage }"
-      @keydown.enter.prevent="disabled ? () => false : onPageChange(currentPage + 1)"
-      @click="disabled || currentPage === totalPage ? () => false : onPageNext($event, currentPage + 1)"
+      :class="{ 'pagination-item-disabled': pageModel === totalPage }"
+      @keydown.enter.prevent="disabled ? () => false : onPageChange(pageModel + 1)"
+      @click="disabled || pageModel === totalPage ? () => false : onPageNext($event, pageModel + 1)"
     >
       <svg
         class="arrow-svg"
@@ -347,7 +334,7 @@ function onPageSizeChange(pageSize: number): void {
         :height="selectHeight"
         :disabled="disabled"
         :options="selectOptions"
-        v-model:value="currentPageSize"
+        v-model:value="pageSizeModel"
         @change="onPageSizeChange"
         v-bind="changerProps"
       />

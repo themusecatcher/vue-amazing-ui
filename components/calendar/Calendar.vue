@@ -26,7 +26,7 @@ import {
   startOfDayTimestamp,
   type PickerKeydownHandlers
 } from 'components/picker'
-import { useSlotsExist } from 'components/utils'
+import { useControlledModel, useSlotsExist } from 'components/utils'
 export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
 export type DefaultWeek = '一' | '二' | '三' | '四' | '五' | '六' | '日'
 
@@ -35,6 +35,7 @@ export interface SelectInfo {
   source: 'year' | 'month' | 'date' | 'customize'
 }
 export interface Props {
+  value?: string | number // (v-model) 当前选中的日期，支持时间戳 / 日期字符串；传入即受控
   defaultValue?: string | number // 非受控初始值：同时决定初始面板日期与初始选中值，受控 value 优先
   valueFormat?: string // 被选中日期的格式，默认为时间戳；参考 format https://date-fns.org/v4.1.0/docs/format
   header?: string // 自定义日历头部内容
@@ -90,7 +91,13 @@ const props = withDefaults(defineProps<Props>(), {
 })
 defineSlots<CalendarSlots>()
 // (v-model) 当前被选中的日期
-const selectedValue = defineModel<string | number>('value')
+// 非受控初值：defaultValue 同时作为初始选中值（受控 value 优先，此时初值不参与）
+const initialSelectedValue = (() => {
+  const defaultTimestamp = toTimestamp(props.defaultValue ?? '')
+  return defaultTimestamp === undefined ? undefined : formatDate(defaultTimestamp)
+})()
+// (v-model) 选中值：传值即受控，未传时取 defaultValue 自持
+const selectedValue = useControlledModel<string | number | undefined>('value', initialSelectedValue)
 export interface DateItem {
   type: 'date'
   dateObject: {
@@ -135,10 +142,10 @@ const validRangeTimestamp = computed<[number, number] | undefined>(() => {
 // 是否存在可造成「整层禁用（整月 / 整年不可选）」的来源：disabledDate 或 validRange 二者之一；
 // 都没有时整月 / 整年必然可选，可跳过逐日扫描（年 / 月选项与月份格的禁用判定共用该口径）
 const hasDisableSource = computed(() => Boolean(props.disabledDate) || validRangeTimestamp.value !== undefined)
-// 初始面板日期：受控 value 优先，其次非受控 defaultValue，两者都缺省时取当天
-const hasControlledValue = selectedValue.value !== undefined && selectedValue.value !== ''
-const initialTimestamp =
-  toTimestamp((hasControlledValue ? selectedValue.value : props.defaultValue) ?? '') ?? Date.now()
+// 初始面板日期：取当前选中值（受控父值 / 非受控初值），都缺省时取当天
+// 父是否传了值（受控）：与非受控时的本地值区分开
+const hasControlledValue = props.value !== undefined && props.value !== ''
+const initialTimestamp = toTimestamp(selectedValue.value ?? '') ?? Date.now()
 // 面板「今天」基准：跨零点后重新取当天，避免长驻页面中今天的高亮停在昨天
 const todayTimestamp = ref<number>(startOfDayTimestamp(Date.now()))
 let todayTimer: ReturnType<typeof setInterval> | undefined
@@ -180,11 +187,6 @@ const emits = defineEmits<{
 const slotsExist = useSlotsExist(['header', 'headerFull'])
 // 月面板网格列数：12 个月按 3 列 × 4 行排布，键盘上下移动一行即跨三个月
 const MONTH_GRID_COLUMNS = 3
-// 非受控初值：受控 value 缺省时，defaultValue 同时作为初始选中值
-if (!hasControlledValue && props.defaultValue !== undefined && props.defaultValue !== '') {
-  const defaultDateTimestamp = toTimestamp(props.defaultValue)
-  if (defaultDateTimestamp !== undefined) selectedValue.value = formatDate(defaultDateTimestamp)
-}
 // 一周起始日的收敛值：入参越界（或非数字）时归一到 0-6，避免周标题与日期网格生成陷入死循环
 const normalizedStartDay = computed<DayOfWeek>(() => {
   const day = Math.trunc(Number(props.startDayOfWeek))

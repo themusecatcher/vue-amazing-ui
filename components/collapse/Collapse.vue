@@ -2,7 +2,7 @@
 import { ref, watchEffect } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Button, { type ButtonProps } from 'components/button'
-import { debounce, log } from 'components/utils'
+import { debounce, log, useControlledModel } from 'components/utils'
 export interface Item {
   key?: string | number // 对应 activeKey，如果没有传入 key 属性，则默认使用数据索引 (0,1,2...) 绑定
   disabled?: boolean // 是否禁用展开收起
@@ -24,9 +24,12 @@ export interface Item {
   [propName: string]: any // 允许携带任意自定义字段，会随原始对象透传
 }
 
+/** 激活 key 的完整取值：数组为多项展开，单值为手风琴，null 为全部收起 */
+export type CollapseActiveKey = (string | number)[] | string | number | null
 export interface Props {
   items?: Item[] // 折叠面板数据，可使用 slot 替换指定 key 的 header、content、arrow、extra、lang
-  activeKey?: string[] | string | number[] | number | null // (v-model) 当前激活 tab 面板的 key，传入单个值时即为手风琴模式
+  activeKey?: CollapseActiveKey // (v-model) 当前激活 tab 面板的 key，传入单个值时即为手风琴模式
+  defaultActiveKey?: CollapseActiveKey // 非受控时的初始激活 key（未绑 v-model:active-key 时生效）
   bordered?: boolean // 带边框风格的折叠面板
   disabled?: boolean // 是否禁用展开收起，较低优先级
   ghost?: boolean // 使折叠面板透明且无边框
@@ -56,7 +59,6 @@ export interface CollapseSlots {
 
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],
-  activeKey: null,
   bordered: true,
   disabled: false,
   ghost: false,
@@ -79,6 +81,8 @@ const contentRef = ref<HTMLElement[]>([]) // 面板内容的模板引用数组
 const copyBtnTxt = ref<string>() // 复制按钮文本
 const copyBtnClickedKeys = ref<(string | number)[]>([]) // 被点击的复制按钮的 key
 const emits = defineEmits(['update:activeKey', 'change'])
+// (v-model) 当前激活 key：传值即受控，未传时取 defaultActiveKey 自持（缺省为全部收起）
+const activeKeyModel = useControlledModel<CollapseActiveKey>('activeKey', props.defaultActiveKey ?? null)
 watchEffect(() => {
   copyBtnTxt.value = props.copyText
 })
@@ -104,31 +108,32 @@ function removeProperties(el: Element) {
   ;(el as HTMLElement).style.removeProperty('height')
   ;(el as HTMLElement).style.removeProperty('opacity')
 }
-function emitValue(value: any) {
-  emits('update:activeKey', value)
+function emitValue(value: CollapseActiveKey) {
+  // 写模型即完成两种路径：受控时只上报，非受控时本地生效
+  activeKeyModel.value = value
   emits('change', value)
 }
 function onClick(key: string | number) {
   if (activeCheck(key)) {
-    if (Array.isArray(props.activeKey)) {
-      const res = (props.activeKey as any[]).filter((actKey: string | number) => actKey !== key)
+    if (Array.isArray(activeKeyModel.value)) {
+      const res = (activeKeyModel.value as any[]).filter((actKey: string | number) => actKey !== key)
       emitValue(res)
     } else {
       emitValue(null)
     }
   } else {
-    if (Array.isArray(props.activeKey)) {
-      emitValue([...props.activeKey, key])
+    if (Array.isArray(activeKeyModel.value)) {
+      emitValue([...activeKeyModel.value, key])
     } else {
       emitValue(key)
     }
   }
 }
 function activeCheck(key: string | number): boolean {
-  if (Array.isArray(props.activeKey)) {
-    return (props.activeKey as any[]).includes(key)
+  if (Array.isArray(activeKeyModel.value)) {
+    return (activeKeyModel.value as any[]).includes(key)
   } else {
-    return props.activeKey === key
+    return activeKeyModel.value === key
   }
 }
 function getCopyBtnTxt(item: Item, index: number) {

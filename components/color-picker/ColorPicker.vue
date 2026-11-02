@@ -25,7 +25,7 @@ import { TinyColor, isReadable } from '@ctrl/tinycolor'
 import Popup from 'components/popup'
 import Input, { type InputProps } from 'components/input'
 import Button from 'components/button'
-import { FLOATING_LAYER_Z_INDEX, useContainerClose, useSlotsExist, log } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, useContainerClose, useControlledModel, useSlotsExist, log } from 'components/utils'
 import type { FloatingPlacement, MountElement } from 'components/utils'
 export type ColorPickerMode = 'rgb' | 'hsl' | 'hsv' | 'hex'
 export type ColorPickerAction = 'confirm' | 'clear'
@@ -58,15 +58,7 @@ export interface Props {
   destroyOnHide?: boolean // 隐藏后是否卸载面板 DOM
   to?: string | MountElement | false // 弹出面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   inputProps?: InputProps // 输入框组件 props，透传给内部 Input 组件
-}
-/**
- * 组件对外 props 类型
- *
- * `open` 由 `defineModel` 声明（同名出现在 `defineProps` 中会与模型绑定冲突），此处合并回对外类型，
- * 保证使用方获得完整的 props 提示
- */
-export type ColorPickerProps = Props & {
-  open?: boolean
+  open?: boolean // (v-model:open) 面板是否展开；传入即受控
 }
 // 自定义触发器的插槽参数：值由使用方渲染，点击开合 / 面板定位与外点判定均由组件外壳接管
 export interface ColorPickerTriggerSlotProps {
@@ -80,6 +72,8 @@ export interface ColorPickerSlots {
 
 const props = withDefaults(defineProps<Props>(), {
   value: undefined,
+  // 布尔 prop 缺省会被 Vue 强转为 false，那会让 R1 判定恒为「受控」；必须显式给 undefined
+  open: undefined,
   defaultValue: undefined,
   defaultOpen: false,
   label: undefined,
@@ -108,7 +102,9 @@ const HANDLE_SIZE_NUM = 12
 const BORDER_RADIUS = '6px'
 const BORDER_RADIUS_NUM = 6
 // 面板显隐：不传 open 时为非受控，由组件自持（初始值取 defaultOpen）；传了则以父组件为准
-const open = defineModel<boolean | undefined>('open', { default: undefined })
+// (v-model:open) 面板显隐：传值即受控，未传时组件自持（defaultOpen 作为初值）
+// 初值保持 false：defaultOpen 由下方 setup 中显式写一次，才能像改造前一样派发 openChange
+const openModel = useControlledModel<boolean>('open', false)
 const popupRef = ref<InstanceType<typeof Popup> | null>(null) // 浮层宿主模板引用
 const wrapperRef = ref<HTMLElement | null>(null) // 外壳模板引用：触发区、浮层锚点与外点判定范围
 const palleteRef = ref<HTMLElement | null>(null) // pallete 调色板模板引用
@@ -118,15 +114,16 @@ const displayedHue = ref<number>(0)
 const displayedAlpha = ref<number>(1)
 const displayedSv = ref<[number, number]>([0, 0])
 const upcomingValue = ref<string | undefined>()
-const displayedValue = ref<string | undefined>(props.value ?? props.defaultValue) // 展示的值
-const displayedMode = ref<ColorPickerMode>(getModeFromValue(displayedValue.value) || props.modes[0] || 'rgb') // 当前展示的 mode
+// (v-model) 展示的值：传值即受控，未传时取 defaultValue 自持
+const valueModel = useControlledModel<string | undefined>('value', props.defaultValue)
+const displayedMode = ref<ColorPickerMode>(getModeFromValue(valueModel.value) || props.modes[0] || 'rgb') // 当前展示的 mode
 const hexValue = ref<string>() // hex 模式下输入框的绑定值
 const inputValueArr = ref<string[]>([]) // 非 hex 模式下多个输入框的绑定值
 const inputRefreshKey = ref<number>(0) // 输入框重建令牌：非法输入后强制其回滚到组件内部值
-const emits = defineEmits(['update:value', 'complete', 'confirm', 'clear', 'openChange'])
+const emits = defineEmits(['update:value', 'update:open', 'complete', 'confirm', 'clear', 'openChange'])
 const slotsExist = useSlotsExist(['footer', 'trigger'])
 // 面板是否展开：open 未受控（undefined）时恒为收起，写入由 requestOpen 统一驱动
-const panelOpen = computed(() => open.value === true)
+const panelOpen = computed(() => openModel.value === true)
 // 对外表达的展开态：禁用时不展开（面板同样被抑制），故无障碍语义以实际可见性为准
 const panelExpanded = computed(() => panelOpen.value && !props.disabled)
 const showFooter = computed(() => {
@@ -136,7 +133,7 @@ const showTrigger = computed(() => {
   return slotsExist.trigger
 })
 const triggerSlotProps = computed<ColorPickerTriggerSlotProps>(() => ({
-  value: displayedValue.value
+  value: valueModel.value
 }))
 // 面板皮肤：由组件自持的面板容器承担，使用者的 panelStyle / panelClass 追加在其上
 const mergedPanelClass = computed(() => ['color-picker-panel-container', props.panelClass].filter(Boolean).join(' '))
@@ -284,7 +281,7 @@ const displayStyle = computed(
     }) as CSSProperties
 )
 const valueMode = computed(() => {
-  return getModeFromValue(displayedValue.value)
+  return getModeFromValue(valueModel.value)
 })
 const displayedModeComputed = computed(() => {
   return displayedMode.value.toUpperCase() + (props.showAlpha ? 'A' : '')
@@ -301,7 +298,7 @@ let _h: number, // avoid conflict with render function's
   b: number,
   a: number
 const hsvaComputed = computed<HSVA | null>(() => {
-  const currentValue = displayedValue.value
+  const currentValue = valueModel.value
   const currentMode = valueMode.value
   if (!currentValue || !currentMode) return null
   return safeParseColor(() => {
@@ -319,7 +316,7 @@ const hsvaComputed = computed<HSVA | null>(() => {
   })
 })
 const rgbaComputed = computed<RGBA | null>(() => {
-  const currentValue = displayedValue.value
+  const currentValue = valueModel.value
   const currentMode = valueMode.value
   if (!currentValue || !currentMode) return null
   return safeParseColor(() => {
@@ -337,7 +334,7 @@ const rgbaComputed = computed<RGBA | null>(() => {
   })
 })
 const hslaComputed = computed<HSLA | null>(() => {
-  const currentValue = displayedValue.value
+  const currentValue = valueModel.value
   const currentMode = valueMode.value
   if (!currentValue || !currentMode) return null
   return safeParseColor(() => {
@@ -354,7 +351,7 @@ const hslaComputed = computed<HSLA | null>(() => {
     }
   })
 })
-const displayedValueArr = computed(() => {
+const valueModelArr = computed(() => {
   switch (displayedMode.value) {
     case 'rgb':
     case 'hex':
@@ -380,12 +377,6 @@ const parsedSwatches = computed<ParsedColor[]>(() =>
     }
   })
 )
-watch(
-  () => props.value,
-  (to) => {
-    displayedValue.value = to
-  }
-)
 // modes 运行时变动使当前模式失效时，收敛到首个可用模式：否则面板会停留在已被移除的模式上
 // （输入框组与模式标签都还是旧模式）。空列表无可收敛目标，保持现状
 // deep：使用方原地增删（如 splice / push）同样要收敛，仅换引用才监听会漏掉原地写法
@@ -398,7 +389,7 @@ watch(
   { deep: true }
 )
 watch(
-  () => [displayedMode.value, displayedValueArr.value],
+  () => [displayedMode.value, valueModelArr.value],
   () => {
     if (displayedMode.value === 'hex') {
       hexValue.value = formatHexValue()
@@ -412,7 +403,7 @@ watch(
   }
 )
 watchEffect(() => {
-  if (upcomingValue.value === undefined || upcomingValue.value !== displayedValue.value) {
+  if (upcomingValue.value === undefined || upcomingValue.value !== valueModel.value) {
     if (hsvaComputed.value) {
       displayedHue.value = hsvaComputed.value[0]
       displayedAlpha.value = hsvaComputed.value[3]
@@ -427,8 +418,8 @@ function onUpdateValue(value: string | undefined, updateSource: 'cursor' | 'inpu
   } else {
     upcomingValue.value = undefined
   }
-  displayedValue.value = value
-  emits('update:value', value)
+  // 写模型即完成两种路径：受控时只上报（显示以父侧回写为准），非受控时本地生效
+  valueModel.value = value
 }
 function handleUpdateSv(s: number, v: number): void {
   const alpha = hsvaComputed.value ? hsvaComputed.value[3] : 1
@@ -479,7 +470,7 @@ function handlePalletePointerUp(): void {
   document.removeEventListener('pointermove', handlePalletePointerMove)
   document.removeEventListener('pointerup', handlePalletePointerUp)
   document.removeEventListener('pointercancel', handlePalletePointerUp)
-  emits('complete', displayedValue.value)
+  emits('complete', valueModel.value)
 }
 function handleUpdateHue(hue: number): void {
   displayedHue.value = hue
@@ -523,7 +514,7 @@ function handleHueSliderPointerUp(): void {
   document.removeEventListener('pointermove', handleHueSliderPointerMove)
   document.removeEventListener('pointerup', handleHueSliderPointerUp)
   document.removeEventListener('pointercancel', handleHueSliderPointerUp)
-  emits('complete', displayedValue.value)
+  emits('complete', valueModel.value)
 }
 function handleUpdateAlpha(alpha: number): void {
   // 拖拽期间父组件可能把值清空或改成非法色值：此时各解析结果均为 null，无颜色可写，忽略本次变更
@@ -577,7 +568,7 @@ function handleAlphaSliderPointerUp(): void {
   document.removeEventListener('pointermove', handleAlphaSliderPointerMove)
   document.removeEventListener('pointerup', handleAlphaSliderPointerUp)
   document.removeEventListener('pointercancel', handleAlphaSliderPointerUp)
-  emits('complete', displayedValue.value)
+  emits('complete', valueModel.value)
 }
 // 卸载时统一清理拖拽残留的全局指针监听（外部点击监听由宿主自行移除）
 onBeforeUnmount(() => {
@@ -611,7 +602,7 @@ function safeParseColor<T>(parse: () => T): T | null {
 // 显隐的统一入口：禁用拦截 + 幂等（受控时以父组件回传为准，非受控时组件自持）
 function requestOpen(next: boolean): void {
   if (props.disabled || panelOpen.value === next) return
-  open.value = next
+  openModel.value = next
 }
 // 承载层（Modal / Drawer / Dialog / 外层浮层面板）关闭时收起：容器关闭只是 v-show 隐藏、不派发任何
 // 指针或焦点事件，面板会停在打开态并占着层级槽位，容器重开时以「仍打开」的样子出现
@@ -653,13 +644,13 @@ function onEscKeydown(): void {
   wrapperRef.value?.focus({ preventScroll: true })
 }
 // 非受控时的初始显隐：父组件未传 open 时套用 defaultOpen（受控时交由父组件决定）
-if (props.defaultOpen && open.value === undefined && !props.disabled) {
-  open.value = true
+if (props.defaultOpen && props.open === undefined && !props.disabled) {
+  openModel.value = true
 }
 // 触发器展示内容：label 函数可返回字符串或 VNode，未提供时直接展示颜色值
 function renderLabelContent(): VNodeChild {
   const { label } = props
-  const color = displayedValue.value
+  const color = valueModel.value
   if (label && color !== undefined) return label(color)
   return color ?? ''
 }
@@ -716,7 +707,7 @@ function normalizeRgbUnit(value: string): number | false {
 }
 // 组件内部值 → 输入框显示串（alpha 通道按百分比显示）
 function formatInputValueArr(): string[] {
-  const valueArr = displayedValueArr.value
+  const valueArr = valueModelArr.value
   if (!valueArr) return new Array(props.showAlpha ? 4 : 3).fill(undefined)
   return valueArr.map((value: number, index: number) =>
     props.showAlpha && index === 3 ? `${Math.floor(value * 100)}%` : `${Math.floor(value)}`
@@ -724,7 +715,7 @@ function formatInputValueArr(): string[] {
 }
 // 组件内部值 → hex 输入框显示串
 function formatHexValue(): string | undefined {
-  const valueArr = displayedValueArr.value
+  const valueArr = valueModelArr.value
   return valueArr ? (props.showAlpha ? toHexaString : toHexString)(valueArr as RGBA) : undefined
 }
 // 非法输入：回滚为组件内部值，并重建输入框以清掉其自身状态
@@ -734,19 +725,19 @@ function restoreInput(): void {
   inputRefreshKey.value += 1
 }
 function handleInputUpdateValue(value: string): void {
-  const previousValue = displayedValue.value
+  const previousValue = valueModel.value
   onUpdateValue(value, 'input')
   emits('complete', value)
   // 收敛后的值可能与原值相同（如 alpha 输入 300% → 100%），输入框收不到新 props 不会刷新，
   // 故主动回滚文本，保证「输入框文本 ≡ 内部值」
-  if (displayedValue.value === previousValue) restoreInput()
+  if (valueModel.value === previousValue) restoreInput()
 }
 function handleUnitUpdateValue(index: number, value: number | string) {
   if (displayedMode.value === 'hex') {
     handleInputUpdateValue((props.showAlpha ? toHexaString : toHexString)(value as string))
     return
   }
-  const nextValueArr: number[] = displayedValueArr.value ? [...displayedValueArr.value] : [0, 0, 0, 0]
+  const nextValueArr: number[] = valueModelArr.value ? [...valueModelArr.value] : [0, 0, 0, 0]
   nextValueArr[index] = value as number
   switch (displayedMode.value) {
     case 'hsv':
@@ -925,7 +916,7 @@ function onSwatch(swatch: ParsedColor): void {
   onUpdateValue(swatchValue, 'input')
 }
 function onConfirm() {
-  emits('confirm', displayedValue.value)
+  emits('confirm', valueModel.value)
   requestOpen(false)
 }
 function onClear() {
@@ -1121,8 +1112,8 @@ function onClear() {
           <div
             :style="`position: absolute; left: 0; right: 0; top: 0; bottom: 0; background-color: ${hslaComputed ? toHslaString(hslaComputed) : ''};`"
           ></div>
-          <div v-if="displayedValue && hslaComputed" class="color-picker-value" :style="{ color: labelColor }">
-            <slot name="label" :color="displayedValue">
+          <div v-if="valueModel && hslaComputed" class="color-picker-value" :style="{ color: labelColor }">
+            <slot name="label" :color="valueModel">
               <component :is="renderLabelContent" />
             </slot>
           </div>

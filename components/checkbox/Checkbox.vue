@@ -49,7 +49,9 @@ const groupChecked = computed(() => {
   return groupContext?.value.value.includes(target) ?? false
 })
 // 选中态：组内由组决定，组外读自身 checked
-const mergedChecked = computed(() => (inGroupItem.value ? groupChecked.value : checkboxChecked.value))
+// 组内外合并后的选中态：组内取组的选中集合，组外取自身的内部选中态。
+// 与「受控 / 非受控」无关 —— 那是 v-model:checked 的职责，这里只回答「视觉上是否选中」
+const groupAwareChecked = computed(() => (inGroupItem.value ? groupChecked.value : checkboxChecked.value))
 // 禁用态：组内叠加组的禁用，组外读自身 disabled
 const mergedDisabled = computed(() =>
   inGroupItem.value ? groupContext?.disabled.value || props.disabled : props.disabled
@@ -61,7 +63,7 @@ watchEffect(() => {
 })
 // 半选是 DOM 属性而非 HTML 属性，须在原生 input 上设置；浏览器改写 checked 时会清掉它，故一并依赖选中态
 watch(
-  [() => props.indeterminate, mergedChecked, singleInput],
+  [() => props.indeterminate, groupAwareChecked, singleInput],
   () => {
     const input = singleInput.value
     if (input) {
@@ -71,7 +73,7 @@ watch(
   { flush: 'post' }
 )
 // 选中扩散环由选中态驱动：程序化改变选中值（受控回写 / 组内切换）同样播放，与点击来源无关
-watch(mergedChecked, (checked) => {
+watch(groupAwareChecked, (checked) => {
   if (checked) {
     startWave()
   }
@@ -170,7 +172,7 @@ defineExpose({ focus, blur })
       :id="id"
       :value="value"
       :name="mergedName"
-      :checked="mergedChecked"
+      :checked="groupAwareChecked"
       :disabled="mergedDisabled"
       :autofocus="autofocus"
       @click.stop.prevent="onSingleClick($event)"
@@ -180,14 +182,14 @@ defineExpose({ focus, blur })
     <span
       class="checkbox-box"
       :class="{
-        'checkbox-checked': mergedChecked && !indeterminate,
+        'checkbox-checked': groupAwareChecked && !indeterminate,
         'checkbox-indeterminate': indeterminate
       }"
     >
       <span
         v-if="!mergedDisabled"
         class="checkbox-wave"
-        :class="{ 'wave-active': wave && mergedChecked }"
+        :class="{ 'wave-active': wave && groupAwareChecked }"
         @animationend="endWave"
       ></span>
     </span>

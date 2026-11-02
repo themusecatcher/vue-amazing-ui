@@ -5,11 +5,11 @@ import MenuItemGroupComp from './menu-item-group'
 import MenuSubMenuComp from './menu-sub-menu'
 import { withInstall } from '../utils/type'
 
-export type { Props as MenuProps } from './Menu.vue'
+export type { Props as MenuProps, MenuSlots } from './Menu.vue'
 export type { MenuDividerProps } from './menu-divider'
-export type { MenuItemProps } from './menu-item'
-export type { MenuItemGroupProps } from './menu-item-group'
-export type { MenuSubMenuProps } from './menu-sub-menu'
+export type { MenuItemProps, MenuItemSlots } from './menu-item'
+export type { MenuItemGroupProps, MenuItemGroupSlots } from './menu-item-group'
+export type { MenuSubMenuProps, MenuSubMenuSlots } from './menu-sub-menu'
 export type {
   ItemType,
   MenuKey,

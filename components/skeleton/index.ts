@@ -5,7 +5,8 @@ export type {
   SkeletonTitleProps,
   SkeletonInputProps,
   SkeletonAvatarProps,
-  SkeletonButtonProps
+  SkeletonButtonProps,
+  SkeletonSlots
 } from './Skeleton.vue'
 import { withInstall } from '../utils/type'
 
