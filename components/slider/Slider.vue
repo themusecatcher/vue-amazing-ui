@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, isVNode } from 'vue'
 import type { Ref, VNode, CSSProperties } from 'vue'
-import { useFloating, useResizeObserver, log } from 'components/utils'
+import { useControlledModel, useFloating, useResizeObserver, log } from 'components/utils'
 export type Marks = {
   [markValue: number]: string | VNode | (() => VNode) | { style: CSSProperties; label: string | VNode | (() => VNode) }
 }
@@ -23,6 +23,7 @@ export interface Props {
   tooltipPlacement?: 'top' | 'bottom' | 'left' | 'right' // Tooltip 弹出位置，默认为水平模式 top、垂直模式 right
   formatTooltip?: (value: number) => string | number // Slider 会把当前值传给 formatTooltip，并在 Tooltip 中显示 formatTooltip 的返回值
   value?: number | number[] // (v-model) 设置当前取值，当 range 为 false 时为单个值，否则为区间值
+  defaultValue?: number | number[] // 非受控时的初始取值（未绑 v-model:value 时生效；range 模式缺省为 [min, min]）
 }
 // 声明组件插槽类型
 export interface SliderSlots {
@@ -43,8 +44,7 @@ const props = withDefaults(defineProps<Props>(), {
   tooltip: true,
   tooltipOpen: false,
   tooltipStyle: () => ({}),
-  formatTooltip: (value: number) => value,
-  value: 0
+  formatTooltip: (value: number) => value
 })
 defineSlots<SliderSlots>()
 const sliderRef = ref<HTMLElement | null>(null) // slider 模板引用
@@ -109,6 +109,12 @@ const highTooltipStyle = computed<CSSProperties>(() => ({
   ...props.tooltipStyle
 }))
 const emits = defineEmits(['update:value', 'change'])
+// (v-model) 当前取值：传值即受控，未传时取 defaultValue 自持（range 模式缺省 [min, min]）
+// 注：拖拽期间手柄像素位置是展示真相，这里只承担「初始值 + 受控输入 + 变更上报」通道
+const valueModel = useControlledModel<number | number[]>(
+  'value',
+  props.defaultValue ?? (props.range ? [props.min, props.min] : 0)
+)
 const sliderSize = computed(() => {
   if (!props.vertical) {
     return sliderWidth.value
@@ -221,7 +227,7 @@ const markPrecision = computed(() => {
 })
 // 滑动输入条的值（通过 handle 位置计算得出）（总体数据流向也是由位置获得数值）
 const sliderValue = computed(() => {
-  if (sliderSize.value === 0) return props.value
+  if (sliderSize.value === 0) return valueModel.value
   let highValue
   if (high.value === sliderSize.value) {
     highValue = props.max
@@ -279,8 +285,9 @@ watch(
   }
 )
 watch(sliderValue, (to) => {
-  if (JSON.stringify(to) !== JSON.stringify(props.value)) {
-    emits('update:value', to)
+  if (JSON.stringify(to) !== JSON.stringify(valueModel.value)) {
+    // 写模型即完成两种路径：受控时只上报，非受控时本地生效
+    valueModel.value = to
     emits('change', to)
   }
 })
@@ -323,11 +330,11 @@ function updateSingleHandlePosition(value: number): void {
 function updateSliderPosition(): void {
   if (props.range) {
     // 双滑块模式
-    updateLowHandlePosition((props.value as number[])[0])
-    updateHighHandlePosition((props.value as number[])[1])
+    updateLowHandlePosition((valueModel.value as number[])[0])
+    updateHighHandlePosition((valueModel.value as number[])[1])
   } else {
     // 单滑块模式
-    updateSingleHandlePosition(props.value as number)
+    updateSingleHandlePosition(valueModel.value as number)
   }
 }
 function checkLow(value: number): number {

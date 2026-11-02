@@ -6,6 +6,9 @@ import Cascader from 'components/cascader/Cascader.vue'
 import AutoComplete from 'components/auto-complete/AutoComplete.vue'
 import Tooltip from 'components/tooltip/Tooltip.vue'
 import Dropdown from 'components/dropdown/Dropdown.vue'
+import Tabs from 'components/tabs/Tabs.vue'
+import Collapse from 'components/collapse/Collapse.vue'
+import Pagination from 'components/pagination/Pagination.vue'
 
 /**
  * v-model 字段的**非受控**用例（父不传 prop 也不监听）
@@ -118,5 +121,63 @@ describe('v-model 非受控：不传值时可交互', () => {
 
     expect(wrapper.emitted('update:open')?.[0]).toEqual([true])
     expect(wrapper.emitted('openChange')?.[0]).toEqual([true])
+  })
+})
+
+describe('v-model 非受控：defaultXxx 提供初值后可交互', () => {
+  it('Tabs：defaultActiveKey 指定初始项，切换在本地生效并上报', async () => {
+    wrapper = mount(Tabs, {
+      attachTo: document.body,
+      props: {
+        defaultActiveKey: 'a',
+        items: [
+          { key: 'a', title: 'A', content: '内容 A' },
+          { key: 'b', title: 'B', content: '内容 B' }
+        ]
+      }
+    })
+    await flush()
+    expect(wrapper.text()).toContain('内容 A')
+
+    const items = wrapper.findAll('.tab-item')
+    await items[1].trigger('click')
+    await flush()
+
+    expect(wrapper.emitted('update:activeKey')?.[0]).toEqual(['b'])
+    // 非受控：本地切换生效（受控且父不回写时会一直是「内容 A」）
+    expect(wrapper.text()).toContain('内容 B')
+  })
+
+  it('Collapse：defaultActiveKey 指定初始展开项，点击可本地切换', async () => {
+    wrapper = mount(Collapse, {
+      props: {
+        defaultActiveKey: 'a',
+        items: [
+          { key: 'a', title: 'A', content: '面板 A' },
+          { key: 'b', title: 'B', content: '面板 B' }
+        ]
+      }
+    })
+    await flush()
+    const headers = wrapper.findAll('.collapse-header')
+    expect(headers).toHaveLength(2)
+
+    await headers[1].trigger('click')
+    await flush()
+
+    expect(wrapper.emitted('update:activeKey')?.[0]).toEqual(['b'])
+  })
+
+  it('Pagination：defaultPage 生效，翻页在本地生效并上报', async () => {
+    wrapper = mount(Pagination, { attachTo: document.body, props: { total: 100, defaultPage: 3 } })
+    await flush()
+    const active = wrapper.find('.pagination-item-active')
+    expect(active.text()).toBe('3')
+
+    await wrapper.find('.pagination-next').trigger('click')
+    await flush()
+
+    expect(wrapper.emitted('update:page')?.[0]).toEqual([4])
+    expect(wrapper.find('.pagination-item-active').text()).toBe('4')
   })
 })

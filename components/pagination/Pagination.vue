@@ -5,7 +5,9 @@ import { useControlledModel } from 'components/utils'
 import Select, { type SelectProps } from 'components/select'
 export interface Props {
   page?: number // (v-model) 当前页数
+  defaultPage?: number // 非受控时的初始页数（未绑 v-model:page 时生效）
   pageSize?: number // (v-model) 每页条数
+  defaultPageSize?: number // 非受控时的初始每页条数（未绑 v-model:page-size 时生效）
   total?: number // 数据总数
   disabled?: boolean // 是否禁用
   pageAmount?: number // 显示的页码数
@@ -34,8 +36,8 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'large'
 })
 // (v-model) 当前页数 / 每页条数：传值即受控，未传时组件自持（初值 1 / 10）
-const pageModel = useControlledModel<number>('page', 1)
-const pageSizeModel = useControlledModel<number>('pageSize', 10)
+const pageModel = useControlledModel<number>('page', props.defaultPage ?? 1)
+const pageSizeModel = useControlledModel<number>('pageSize', props.defaultPageSize ?? 10)
 const pageListRef = ref<HTMLElement[] | null>(null) // pageList 生成的 page 元素引用
 const jumpNumber = ref<string>() // 跳转的页码
 const forwardMore = ref(false) // 左省略号展示
