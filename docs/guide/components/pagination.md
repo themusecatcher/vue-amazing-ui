@@ -360,10 +360,10 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| page <Tag color="cyan">v-model</Tag> | 当前页数（不传时组件自持，可用 `defaultPage` 指定初值） | number | 1 |
-| defaultPage | 非受控时的初始页数，未绑 `v-model:page` 时生效 | number | 1 |
-| pageSize <Tag color="cyan">v-model</Tag> | 每页条数（不传时组件自持，可用 `defaultPageSize` 指定初值） | number | 10 |
-| defaultPageSize | 非受控时的初始每页条数，未绑 `v-model:page-size` 时生效 | number | 10 |
+| page <Tag color="cyan">v-model</Tag> | 当前页数（不传时组件自持，可用 `defaultPage` 指定初值） | number | undefined |
+| defaultPage | 非受控时的初始页数，未绑 `v-model:page` 时生效；缺省为 `1` | number | undefined |
+| pageSize <Tag color="cyan">v-model</Tag> | 每页条数（不传时组件自持，可用 `defaultPageSize` 指定初值） | number | undefined |
+| defaultPageSize | 非受控时的初始每页条数，未绑 `v-model:page-size` 时生效；缺省为 `10` | number | undefined |
 | total | 数据总数 | number | 0 |
 | disabled | 是否禁用 | boolean | false |
 | pageAmount | 显示的页码数 | number | 5 |

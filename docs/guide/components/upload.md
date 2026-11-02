@@ -807,7 +807,7 @@ onmessage = async (e: MessageEvent) => {
 | beforeUpload | 上传文件之前的钩子，参数为上传的文件，返回 `false` 则停止上传，返回 `true` 开始上传；支持返回一个 `Promise` 对象（如服务端校验等），`Promise` 对象 `reject` 时停止上传，`resolve` 时开始上传；通常用来校验用户上传的文件格式和大小 | (file: File) => boolean &#124; void &#124; Promise&lt;unknown&gt; | () => true |
 | uploadMode | 上传文件的方式 | 'base64' &#124; 'custom' | 'base64' |
 | customRequest | 自定义上传行为，只有 `uploadMode: custom` 时，才会使用 `customRequest` 自定义上传行为；未配置时默认返回空结果，避免调用 `.then` 报错 | (file: File) => Promise&lt;[UploadFileType](#uploadfiletype-type)&gt; | () => Promise.resolve({ url: '' }) |
-| fileList <Tag color="cyan">v-model</Tag> | 已上传的文件列表；传入即受控，不传时由组件内部维护 | [UploadFileType](#uploadfiletype-type)[] | [] |
+| fileList <Tag color="cyan">v-model</Tag> | 已上传的文件列表；传入即受控，不传时由组件内部维护（缺省为空列表） | [UploadFileType](#uploadfiletype-type)[] | undefined |
 
 ### UploadFileType Type
 

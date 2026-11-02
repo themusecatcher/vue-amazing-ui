@@ -196,7 +196,7 @@ function handleOpenChange(value: boolean) {
       <ColorPicker :width="240" default-value="#ff6900" :placement="placement" :offset="offset" />
     </Space>
     <h2 class="mt30 mb10">默认值</h2>
-    <p class="mb10">未受控时使用 <code>defaultValue</code> 设置初始颜色</p>
+    <p class="mb10">非受控时使用 <code>defaultValue</code> 设置初始颜色</p>
     <ColorPicker :width="240" default-value="#ff6900" />
     <h2 class="mt30 mb10">自定义展示内容</h2>
     <p class="mb10">通过 <code>label</code> 属性（可返回字符串或 VNode）或 <code>label</code> 插槽自定义展示内容</p>

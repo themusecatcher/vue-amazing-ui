@@ -71,6 +71,7 @@ const props = withDefaults(defineProps<Props>(), {
 落地细则：
 
 - **声明形态**：字段写进 `interface Props`（带中文注释），`defineEmits` 声明 `update:x`。双模字段用 `components/utils` 的 `useControlledModel(name, default)` 取可写 ref，**禁止**再手写 `innerX` + `watch(() => props.x)` + `mergedX` 三件套。
+- **`defineModel` 禁止用于公共 API**：其受控判据与全库冲突（见上文依据）。确有非公共入口需要时，须加入 `scripts/check-model-props.js` 的白名单并写明理由；白名单当前为空。该条与上一条默认值约定同由 `pnpm guard` 第 ⑦ 项强制。
 - **受控字段的 prop 默认值必须是 `undefined`**：否则 `!== undefined` 判据恒真，组件永久受控、彻底不可交互（布尔字段连「不写」也不行——缺省会被强转 `false`，必须显式写 `undefined`）。非受控初值由 `useControlledModel` 的第二个参数承担，对外按需暴露 `defaultXxx`。该条由 `pnpm guard` 第 ⑦ 项强制。
 - **需要知道「当前是否受控」时用 `useIsControlled(name)`**：`useControlledModel` 只负责读写，不对外暴露判据；组件中若还有「只在非受控时才做」的旁路逻辑（典型：非受控才派发 `panelChange`、非受控 `defaultOpen` 才生效），统一调用 `useIsControlled`，**禁止**再直接写 `props.x === undefined` —— 两处判据一旦分叉，就会重现「事件扣了但界面不动」这类问题。
 - **写入必须整体赋值**（`model.value = [...model.value, x]`），禁止 `push` / `splice`：受控时该 ref 读到的是父数组引用，原地修改会直接污染父级数据且不触发上报。
@@ -85,11 +86,10 @@ const props = withDefaults(defineProps<Props>(), {
 五条必踩项（均实测踩到）：
 
 1. **布尔字段必须在 `withDefaults` 里显式给 `undefined`**：`open?: boolean` 会被编译成 `{ type: Boolean }`，父未传时 Vue 强转成 `false` → 判据读到 `false` → 永久受控、交互全失效（表现为「事件正常派发但界面不动」）。
-2. **`update:x` 事件要手动补进 `defineEmits`**：`defineModel` 会自动注册，换成 composable 后必须自己写，否则父侧 `v-model` 收不到（Vue 会 warn「emitted event ... neither declared」）。
-3. **字段名与 prop 同名不报错，但会遮蔽 `props.x`**：`vue/no-dupe-keys` 不覆盖 `<script setup>` 的顶层绑定，TS 也不报，模板与脚本会各读一份、极易脱同步；因此统一把 setup 变量改名（`openModel` / `valueModel`）并同步模板中的裸引用；`value` 这类高频词要逐处确认，避免误改局部变量。
+2. **`update:x` 事件要手动补进 `defineEmits`**：`defineModel` 会自动注册，换成 composable 后必须自己写。父侧仍能收到事件（Vue 从 `vnode.props` 取监听器），但开发期会 warn「emitted event ... neither declared」，且该监听器会落进 `$attrs` 透传到根节点。
+3. **字段名不能与 prop 同名**：`const open = useControlledModel('open', false)` 会被 `vue/no-dupe-keys` 直接拦下（`Duplicate key 'open'. May cause name collision in script or template tag`），故统一改名为 `openModel` / `valueModel` —— 改名本身是被动结果，真正的坑在改名之后（见下两条）。
 4. **模板里的裸引用命中 prop，不会命中改名后的模型变量**：`const openModel = useControlledModel('open', false)` 之后，模板中的 `:show="open"` / `:active="open"` 仍解析为 `props.open`（未传值即 `undefined`）—— 症状与第 1 项相同（事件正常派发、面板却永不渲染），且单测若只断言 `update:open` 会漏过。改名后须把模板里的同名裸引用逐处换成 `openModel`，并补一条「不传 `open`、点击唤起后断言面板真的渲染」的用例。
 5. **脚本里的裸引用同样不会报错**：`watch(open, ...)` 这类写法在改名后仍能编译 —— DOM 类型声明自带全局 `open` / `close`，`vue-tsc` 与 ESLint 都不报，运行期却落到 `window.open()`（挂载即调用），依赖它的副作用（如收起后复位键盘态）静默失效。改名后须连脚本一起搜一遍同名标识符，并补一条「展开 → 收起」不触碰 `window.open` 的用例。
-- **`defineModel` 禁止用于公共 API**：其受控判据与全库冲突（见上文依据）。确有非公共入口需要时，须加入 `scripts/check-model-props.js` 的白名单并写明理由；白名单当前为空。该约定由 `pnpm guard` 第 ⑦ 项强制。
 
 另：**开合类**字段的 `defaultOpen` 之类不要预置进模型初值，应由 setup 显式写一次（`if (props.defaultOpen && !isOpenControlled.value) openModel.value = true`），否则「显隐从未变化」会让 `openChange` 不派发；**取值类**字段（`defaultValue` / `defaultActiveKey` / `defaultPage`）没有这个问题，直接作为 `useControlledModel` 的第二个参数即可。
 
