@@ -320,7 +320,7 @@ import { SketchOutlined } from '@ant-design/icons-vue'
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| color | 头像的背景色 | string | 'rgba(0, 0, 0, 0.25)' |
+| color | 头像的背景色，不传时取主题变量 `--va-text-color-disabled` | string | 'var(--va-text-color-disabled)' |
 | shape | 指定头像的形状 | 'circle' &#124; 'square' | 'circle' |
 | size | 设置头像的大小，为数值时单位 `px` | number &#124; 'small' &#124; 'middle' &#124; 'large' &#124; [AvatarResponsive](#avatarresponsive-type) | 'middle' |
 | src | 图片类头像资源地址 | string | undefined |

@@ -1982,7 +1982,7 @@ const options: SelectOption[] = []
 | open <Tag color="cyan">v-model</Tag> | 是否展开下拉菜单；传入即受控，不传时由组件内部维护 | boolean | undefined |
 | searchValue <Tag color="cyan">v-model</Tag> | 搜索文本；传入即受控，不传时由组件内部维护 | string | undefined |
 | options | 选项数据 | [SelectOption](#selectoption-type)[] | [] |
-| fieldNames | 选项的文本 / 值字段名配置，`options` 为分组子选项的字段名 | `{ label?: string, value?: string, options?: string }` | `{ label: 'label', value: 'value', options: 'options' }` |
+| fieldNames | 选项的文本 / 值字段名配置，`options` 为分组子选项的字段名；未传时按 `{ label: 'label', value: 'value', options: 'options' }` 解析 | `{ label?: string, value?: string, options?: string }` | undefined |
 | mode | 设置多选模式，`'multiple'` 为多选，`'tags'` 为标签（可输入并创建新条目），不传为单选 | 'multiple' &#124; 'tags' | undefined |
 | labelInValue | 是否把每个选项的 `label` 包装到 `value` 中，`value` 由原始值变为 `{ label, value, key, originLabel }` 对象 | boolean | false |
 | optionLabelProp | 回填到选择框的 `option` 属性值，未指定时取 `label` 字段 | string | undefined |

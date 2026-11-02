@@ -704,18 +704,18 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| value <Tag color="cyan">v-model</Tag> | 双向绑定值，毫秒时间戳；范围形态为两段元组 | [TimePickerValue](#timepickervalue-type) | null |
-| open <Tag color="cyan">v-model</Tag> | 面板是否展开；传入即受控，内部触发只经 `update:open` / `openChange` 上报（不传时由组件内部维护） | boolean | false |
-| formattedValue <Tag color="cyan">v-model</Tag> | 字符串轨道的双向绑定值，传入时以它为准（受控）；显示格式由 `format` / `valueFormat` 决定 | [TimePickerFormattedValue](#timepickerformattedvalue-type) | null |
+| value <Tag color="cyan">v-model</Tag> | 双向绑定值，毫秒时间戳；范围形态为两段元组 | [TimePickerValue](#timepickervalue-type) | undefined |
+| open <Tag color="cyan">v-model</Tag> | 面板是否展开；传入即受控，内部触发只经 `update:open` / `openChange` 上报（不传时由组件内部维护） | boolean | undefined |
+| formattedValue <Tag color="cyan">v-model</Tag> | 字符串轨道的双向绑定值，传入时以它为准（受控）；显示格式由 `format` / `valueFormat` 决定 | [TimePickerFormattedValue](#timepickerformattedvalue-type) | undefined |
 | type | 选择形态：`time` 为单选，`timerange` 为范围（双段输入） | [TimePickerType](#timepickertype-type) | 'time' |
-| format | 时间展示格式，参考 [format](https://date-fns.org/v4.1.0/docs/format) | string | [DefaultFormat](#defaultformat-value) |
+| format | 时间展示格式，未传时按 [DefaultFormat](#defaultformat-value)，参考 [format](https://date-fns.org/v4.1.0/docs/format) | string | undefined |
 | valueFormat | 绑定值格式，默认与 `format` 相同 | string | undefined |
 | placeholder | 输入框提示文字，范围形态可分别为两段指定 | string &#124; [string, string] | '' |
 | disabledTime | 不可选择的时间，入参为当前面板值的时间戳；范围形态追加当前段标识 | [TimePickerDisabledTime](#timepickerdisabledtime-type) | undefined |
-| hourStep | 「时」的步长，须能整除 `24`，否则按 `1` 处理 | number | 1 |
-| minuteStep | 「分」的步长，须能整除 `60`，否则按 `1` 处理 | number | 1 |
-| secondStep | 「秒」的步长，须能整除 `60`，否则按 `1` 处理 | number | 1 |
-| use12Hours | 是否使用 `12` 小时制，启用后面板追加上午 / 下午列，默认 `format` 为 `hh:mm:ss a` | boolean | false |
+| hourStep | 「时」的步长，须能整除 `24`；未传时按 `1` 处理 | number | undefined |
+| minuteStep | 「分」的步长，须能整除 `60`；未传时按 `1` 处理 | number | undefined |
+| secondStep | 「秒」的步长，须能整除 `60`；未传时按 `1` 处理 | number | undefined |
+| use12Hours | 是否使用 `12` 小时制，启用后面板追加上午 / 下午列，默认 `format` 为 `hh:mm:ss a` | boolean | undefined |
 | hideDisabledOptions | 是否隐藏禁用的选项 | boolean | false |
 | width | 选择器宽度，单位 `px`，不传时随内容自适应 | string &#124; number | undefined |
 | size | 选择器大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |

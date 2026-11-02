@@ -985,7 +985,7 @@ p {
 | rootStyle | 最外层容器的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | to | `Drawer` 挂载的节点，可选：元素标签名（如 `'body'`）、元素本身或 `false`（渲染在当前 `DOM`） | string &#124; HTMLElement &#124; false | 'body' |
 | zIndex | 设置 `Drawer` 的 `z-index`；未传时使用默认层级 `1000`，或由 `ConfigProvider` 的 `baseZIndex` 分配 | number | undefined |
-| open <Tag color="cyan">v-model</Tag> | 抽屉是否可见；传入即受控，不传时由组件内部维护 | boolean | false |
+| open <Tag color="cyan">v-model</Tag> | 抽屉是否可见；传入即受控，不传时由组件内部维护 | boolean | undefined |
 | autofocus | 抽屉展开后是否将焦点切换至其 `DOM` 节点 | boolean | true |
 | keyboard | 是否支持键盘 `esc` 关闭 | boolean | true |
 | mask | 是否展示遮罩 | boolean | true |
