@@ -58,15 +58,7 @@ export interface Props {
   destroyOnHide?: boolean // 隐藏后是否卸载面板 DOM
   to?: string | MountElement | false // 弹出面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   inputProps?: InputProps // 输入框组件 props，透传给内部 Input 组件
-}
-/**
- * 组件对外 props 类型
- *
- * `open` 由 `defineModel` 声明（同名出现在 `defineProps` 中会与模型绑定冲突），此处合并回对外类型，
- * 保证使用方获得完整的 props 提示
- */
-export type ColorPickerProps = Props & {
-  open?: boolean
+  open?: boolean // (v-model:open) 面板是否展开；传入即受控
 }
 // 自定义触发器的插槽参数：值由使用方渲染，点击开合 / 面板定位与外点判定均由组件外壳接管
 export interface ColorPickerTriggerSlotProps {
@@ -80,6 +72,8 @@ export interface ColorPickerSlots {
 
 const props = withDefaults(defineProps<Props>(), {
   value: undefined,
+  // 布尔 prop 缺省会被 Vue 强转为 false，那会让 R1 判定恒为「受控」；必须显式给 undefined
+  open: undefined,
   defaultValue: undefined,
   defaultOpen: false,
   label: undefined,
@@ -108,7 +102,9 @@ const HANDLE_SIZE_NUM = 12
 const BORDER_RADIUS = '6px'
 const BORDER_RADIUS_NUM = 6
 // 面板显隐：不传 open 时为非受控，由组件自持（初始值取 defaultOpen）；传了则以父组件为准
-const open = defineModel<boolean | undefined>('open', { default: undefined })
+// (v-model:open) 面板显隐：传值即受控，未传时组件自持（defaultOpen 作为初值）
+// 初值保持 false：defaultOpen 由下方 setup 中显式写一次，才能像改造前一样派发 openChange
+const openModel = useControlledModel<boolean>('open', false)
 const popupRef = ref<InstanceType<typeof Popup> | null>(null) // 浮层宿主模板引用
 const wrapperRef = ref<HTMLElement | null>(null) // 外壳模板引用：触发区、浮层锚点与外点判定范围
 const palleteRef = ref<HTMLElement | null>(null) // pallete 调色板模板引用
@@ -124,10 +120,10 @@ const displayedMode = ref<ColorPickerMode>(getModeFromValue(valueModel.value) ||
 const hexValue = ref<string>() // hex 模式下输入框的绑定值
 const inputValueArr = ref<string[]>([]) // 非 hex 模式下多个输入框的绑定值
 const inputRefreshKey = ref<number>(0) // 输入框重建令牌：非法输入后强制其回滚到组件内部值
-const emits = defineEmits(['update:value', 'complete', 'confirm', 'clear', 'openChange'])
+const emits = defineEmits(['update:value', 'update:open', 'complete', 'confirm', 'clear', 'openChange'])
 const slotsExist = useSlotsExist(['footer', 'trigger'])
 // 面板是否展开：open 未受控（undefined）时恒为收起，写入由 requestOpen 统一驱动
-const panelOpen = computed(() => open.value === true)
+const panelOpen = computed(() => openModel.value === true)
 // 对外表达的展开态：禁用时不展开（面板同样被抑制），故无障碍语义以实际可见性为准
 const panelExpanded = computed(() => panelOpen.value && !props.disabled)
 const showFooter = computed(() => {
@@ -606,7 +602,7 @@ function safeParseColor<T>(parse: () => T): T | null {
 // 显隐的统一入口：禁用拦截 + 幂等（受控时以父组件回传为准，非受控时组件自持）
 function requestOpen(next: boolean): void {
   if (props.disabled || panelOpen.value === next) return
-  open.value = next
+  openModel.value = next
 }
 // 承载层（Modal / Drawer / Dialog / 外层浮层面板）关闭时收起：容器关闭只是 v-show 隐藏、不派发任何
 // 指针或焦点事件，面板会停在打开态并占着层级槽位，容器重开时以「仍打开」的样子出现
@@ -648,8 +644,8 @@ function onEscKeydown(): void {
   wrapperRef.value?.focus({ preventScroll: true })
 }
 // 非受控时的初始显隐：父组件未传 open 时套用 defaultOpen（受控时交由父组件决定）
-if (props.defaultOpen && open.value === undefined && !props.disabled) {
-  open.value = true
+if (props.defaultOpen && props.open === undefined && !props.disabled) {
+  openModel.value = true
 }
 // 触发器展示内容：label 函数可返回字符串或 VNode，未提供时直接展示颜色值
 function renderLabelContent(): VNodeChild {
