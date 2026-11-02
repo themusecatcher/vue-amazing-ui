@@ -192,7 +192,6 @@ const onBreakpoint = (broken: boolean) => {
         </Layout>
       </Layout>
     </Layout>
-
     <h2 class="mt30 mb10">顶部-侧边布局</h2>
     <p class="mb10">相比通栏形态，内容区两侧留出边距，多用于展示类页面</p>
     <Layout>
@@ -257,7 +256,6 @@ const onBreakpoint = (broken: boolean) => {
       </LayoutContent>
       <LayoutFooter style="text-align: center">Vue Amazing UI ©2023 Created by the Muse Catcher</LayoutFooter>
     </Layout>
-
     <h2 class="mt30 mb10">侧边布局</h2>
     <p class="mb10">侧边导航可收起，横向空间有限时能腾出内容区宽度；如需定制滚动条，可搭配 Scrollbar 组件</p>
     <div class="demo-container">
@@ -300,7 +298,6 @@ const onBreakpoint = (broken: boolean) => {
         </Layout>
       </Layout>
     </div>
-
     <h2 class="mt30 mb10">自定义触发器</h2>
     <p class="mb10">设置 <code>:trigger="null"</code> 隐藏默认触发器，改用头部图标控制侧边栏开合</p>
     <Layout>
@@ -331,7 +328,6 @@ const onBreakpoint = (broken: boolean) => {
         </LayoutContent>
       </Layout>
     </Layout>
-
     <h2 class="mt30 mb10">响应式布局</h2>
     <p class="mb10">
       视窗宽度低于 <code>breakpoint</code> 时侧边栏自动收起到 <code>collapsedWidth</code>；收起宽度为
@@ -368,7 +364,6 @@ const onBreakpoint = (broken: boolean) => {
         <LayoutFooter style="text-align: center">Vue Amazing UI ©2023 Created by the Muse Catcher</LayoutFooter>
       </Layout>
     </Layout>
-
     <h2 class="mt30 mb10">固定侧边栏</h2>
     <p class="mb10">内容超过一屏时侧边栏保持固定，滚动浏览时不会移出视口；如需定制滚动条，可搭配 Scrollbar 组件</p>
     <div class="demo-container">
@@ -421,7 +416,6 @@ const onBreakpoint = (broken: boolean) => {
         </Layout>
       </Layout>
     </div>
-
     <h2 class="mt30 mb10">固定头部</h2>
     <p class="mb10">顶部导航固定在顶部，长页面滚动时仍可随时切换</p>
     <div class="demo-container">
@@ -441,7 +435,6 @@ const onBreakpoint = (broken: boolean) => {
         <LayoutFooter style="text-align: center">Vue Amazing UI ©2023 Created by the Muse Catcher</LayoutFooter>
       </Layout>
     </div>
-
     <h2 class="mt30 mb10">响应式收起宽度</h2>
     <p class="mb10"><code>collapsedWidth</code> 支持响应式宽度，按不同视窗宽度设置不同的收起宽度</p>
     <Layout>
@@ -474,7 +467,6 @@ const onBreakpoint = (broken: boolean) => {
         <LayoutFooter style="text-align: center">Vue Amazing UI ©2023 Created by the Muse Catcher</LayoutFooter>
       </Layout>
     </Layout>
-
     <h2 class="mt30 mb10">自定义滚动条</h2>
     <p class="mb10">侧边栏与内容区的滚动条改用 Scrollbar 组件，滚动样式与交互由组件统一提供</p>
     <div class="demo-container demo-container-lg">

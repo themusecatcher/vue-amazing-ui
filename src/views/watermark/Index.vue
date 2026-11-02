@@ -193,7 +193,6 @@ const layoutOptions = [
     <p class="mb10">
       下方表单覆盖组件的常用属性，改动实时生效；图片水印与全屏模式见上方用例，多行文字的对齐与行高见「多行水印」
     </p>
-
     <Row :gutter="[24, 12]">
       <Col :span="6">
         <Flex gap="small" vertical> content:<Input v-model:value="model.content" /> </Flex>
