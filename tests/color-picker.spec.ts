@@ -494,6 +494,34 @@ describe('ColorPicker', () => {
     wrapper.unmount()
   })
 
+  it('受控时输入合法值不重建输入框（回读模型会误判「未变化」，每次按键丢焦点）', async () => {
+    document.body.innerHTML = ''
+    const value = ref('rgba(0, 0, 0, 1)')
+    const Host = defineComponent({
+      setup: () => () =>
+        h(ColorPicker, {
+          value: value.value,
+          showAlpha: false,
+          'onUpdate:value': (next: string) => {
+            value.value = next
+          }
+        })
+    })
+    const host = mount(Host, { attachTo: document.body })
+    await wait()
+    await openPanel()
+    const inputs = Array.from(document.querySelectorAll<HTMLInputElement>('.color-picker-input-group .input-item'))
+    const target = inputs[0]
+    target.value = '128'
+    target.dispatchEvent(new Event('input', { bubbles: true }))
+    target.dispatchEvent(new Event('change', { bubbles: true }))
+    await wait()
+    // 同一 DOM 节点仍挂在文档中：输入框未被重建（重建会让正在编辑的输入框失焦）
+    expect(document.contains(target)).toBe(true)
+    expect(value.value).toContain('128')
+    host.unmount()
+  })
+
   it('complete 仅在输入提交 / 拖拽结束时触发（色板与清除不触发）', async () => {
     document.body.innerHTML = ''
     const wrapper = mount(ColorPicker, {

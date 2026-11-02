@@ -178,7 +178,7 @@ const calendarMonths = computed<MonthItem[][]>(() => getCalendarMonths())
 const yearOptions = computed<SelectOption[]>(() => getYearOptions())
 const monthOptions = computed<SelectOption[]>(() => getMonthOptions())
 const emits = defineEmits<{
-  'update:value': [value: string | number | undefined] // v-model:value
+  'update:value': [value: string | number | undefined] // v-model:value 回写（useControlledModel 不自动注册，须显式声明）
   change: [value: string | number, dateObject?: DateItem['dateObject'] | MonthItem['monthObject']]
   panelChange: [value: string | number | undefined, info: { year: number; month?: number }, mode: 'month' | 'year']
   select: [value: string | number | undefined, info: SelectInfo]

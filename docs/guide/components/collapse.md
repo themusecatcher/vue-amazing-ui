@@ -1080,8 +1080,8 @@ watchEffect(() => {
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | items | 折叠面板数据 | [CollapseItem](#collapseitem-type)[] | [] |
-| activeKey <Tag color="cyan">v-model</Tag> | 当前激活面板的 `key`（不传时组件自持，可用 `defaultActiveKey` 指定初值） | number[] &#124; number &#124; string[] &#124; string &#124; null | null |
-| defaultActiveKey | 非受控时的初始激活 `key`，未绑 `v-model:active-key` 时生效 | number[] &#124; number &#124; string[] &#124; string &#124; null | null |
+| activeKey <Tag color="cyan">v-model</Tag> | 当前激活面板的 `key`（不传时组件自持，可用 `defaultActiveKey` 指定初值） | number[] &#124; number &#124; string[] &#124; string &#124; null | undefined |
+| defaultActiveKey | 非受控时的初始激活 `key`，未绑 `v-model:active-key` 时生效；缺省为全部收起 | number[] &#124; number &#124; string[] &#124; string &#124; null | undefined |
 | bordered | 带边框风格的折叠面板 | boolean | true |
 | disabled | 是否禁用展开收起 | boolean | false |
 | ghost | 使折叠面板透明且无边框 | boolean | false |

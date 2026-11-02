@@ -1090,7 +1090,7 @@ function emitPanelChange(nextOpen: boolean): void {
  * 非受控时本地生效；与目标值相同的请求不重复上报
  *
  * 事件时序与改造前保持一致：受控路径在「用户请求变更」时同步派发；
- * 非受控路径由下方 watch(openModel) 在模型变化时派发（与旧 watch(showOptions) 同一拍，
+ * 非受控路径由下方 watch(openModel) 在模型变化时派发（与改造前的内部显隐 watcher 同一拍，
  * 避免开合事件抢在同一次点击的 change 之前到达，导致父级在关闭动画期间重建面板内容）
  */
 function setPanelOpen(nextOpen: boolean): void {

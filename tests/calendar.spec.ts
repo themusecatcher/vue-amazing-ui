@@ -674,28 +674,23 @@ describe('增强能力', () => {
   })
 })
 
-/**
- * v-model 契约：`update:value` 必须写进 `defineEmits`
- *
- * `useControlledModel` 在组合式函数内部派发 `update:value`，组件源码里搜不到 emit 调用，
- * 漏声明时功能照常（Vue 从 vnode.props 取监听器），但每次交互都会输出
- * 「neither declared in the emits option nor as an "onUpdate:value" prop」的 dev 告警，
- * 且监听器落进 `$attrs` 透传到根节点。这两条症状即为本用例的判据。
- */
-describe('v-model 契约', () => {
-  it('update:value 已声明进 emits（不落 $attrs、不触发 dev 告警）', () => {
-    wrapper = mount(Calendar, {
-      attachTo: document.body,
-      props: { value: '2026-11-02' },
-      attrs: { 'onUpdate:value': () => {} }
-    })
-    const inner = wrapper.findComponent(Calendar)
-    expect(Object.keys(inner.vm.$attrs)).not.toContain('onUpdate:value')
+describe('v-model 事件声明', () => {
+  it('update:value 已声明进 emits：交互只派发事件，不产生「未声明事件」告警', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    try {
+      mountControlled()
+      await flush()
 
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    ;(inner.vm as unknown as { $emit: (event: string, ...args: unknown[]) => void }).$emit('update:value', '2026-11-03')
-    const warned = warn.mock.calls.flat().join(' ')
-    warn.mockRestore()
-    expect(warned).not.toContain('neither declared')
+      await currentMonthCells()[0].trigger('click')
+      await flush()
+
+      expect(calendarEmitted('update:value')?.length).toBe(1)
+      // 漏声明时 Vue 会 warn「emitted event ... but it is neither declared in the emits option
+      // nor as an "onUpdate:value" prop」，并把监听器落进 $attrs 透传到根节点
+      const undeclared = warnSpy.mock.calls.filter((args) => String(args[0]).includes('neither declared'))
+      expect(undeclared).toEqual([])
+    } finally {
+      warnSpy.mockRestore()
+    }
   })
 })

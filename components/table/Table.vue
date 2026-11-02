@@ -1045,14 +1045,15 @@ function checkHoverCoord(row: number, col: number): boolean {
 // 展开/收起展开行
 function onExpandCell(record: Record<string, any>, rowIndex: number): void {
   const key = getRowKey.value(record, rowIndex)
-  if (expandedRowKeysModel.value.includes(key)) {
-    expandedRowKeysModel.value = expandedRowKeysModel.value.filter((rowKey: string) => rowKey !== key)
-  } else {
-    // 整体替换而非 push：受控时读到的就是父数组，原地修改既不上报也污染父级数据
-    expandedRowKeysModel.value = [...expandedRowKeysModel.value, key]
-  }
-  emits('expand', expandedRowKeysModel.value.includes(key), record)
-  emits('expandedRowsChange', expandedRowKeysModel.value)
+  const expanded = expandedRowKeysModel.value.includes(key)
+  // 整体替换而非 push：受控时读到的就是父数组，原地修改既不上报也污染父级数据。
+  // 事件载荷一律用本地算出的新数组（受控时写完立刻回读拿到的仍是父侧旧值）
+  const nextKeys = expanded
+    ? expandedRowKeysModel.value.filter((rowKey: string) => rowKey !== key)
+    : [...expandedRowKeysModel.value, key]
+  expandedRowKeysModel.value = nextKeys
+  emits('expand', !expanded, record)
+  emits('expandedRowsChange', nextKeys)
 }
 // 表格滚动事件
 function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom'): void {

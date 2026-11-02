@@ -148,6 +148,24 @@ describe('Upload base64 读取的 loading 复位', () => {
     wrapper.unmount()
   })
 
+  it('受控 fileList 时 change / success 携带本次读取到的文件（不回读模型）', async () => {
+    const wrapper = mount(Upload, { props: { fileList: [] }, attachTo: document.body })
+    await flushPromises()
+
+    await triggerFileChange(wrapper, testFile())
+    await flushPromises()
+
+    const reader = pendingReaders[0]
+    reader.result = 'data:text/plain;base64,eA=='
+    reader.onload?.({ target: reader } as unknown as ProgressEvent<FileReader>)
+    await flushPromises()
+
+    const uploaded = { name: 'a.txt', url: 'data:text/plain;base64,eA==' }
+    expect(wrapper.emitted('change')?.[0]).toEqual([[uploaded]])
+    expect(wrapper.emitted('success')?.[0]).toEqual([uploaded, [uploaded]])
+    wrapper.unmount()
+  })
+
   it('读取失败时复位 loading 并派发 error', async () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const wrapper = mount(Upload, { attachTo: document.body })

@@ -2568,10 +2568,10 @@ function onConfirm() {
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| value <Tag color="cyan">v-model</Tag> | 选中路径：单选为单条路径，多选为路径数组 | [CascaderModelValue](#cascadermodelvalue-type) | undefined |
+| value <Tag color="cyan">v-model</Tag> | 选中路径：单选为单条路径，多选为路径数组；传入即受控，不传时由组件内部维护（初值见 `defaultValue`） | [CascaderModelValue](#cascadermodelvalue-type) | undefined |
 | defaultValue | 非受控初始值，形态同 `value` | [CascaderModelValue](#cascadermodelvalue-type) | undefined |
 | open <Tag color="cyan">v-model</Tag> | 面板是否展开；显式传入即为受控，内部触发只经 `update:open` / `openChange` 上报（不传时由组件内部维护） | boolean | undefined |
-| searchValue <Tag color="cyan">v-model</Tag> | 搜索文本，不传时由组件内部维护 | string | undefined |
+| searchValue <Tag color="cyan">v-model</Tag> | 搜索文本；传入即受控，不传时由组件内部维护 | string | undefined |
 | options | 可选项数据源 | [CascaderOption](#cascaderoption-type)[] | [] |
 | fieldNames | 选项的文本 / 值 / 子选项字段名配置 | [CascaderFieldNames](#cascaderfieldnames-type) | undefined |
 | width | 选择器宽度，单位 `px` | string &#124; number | 184 |

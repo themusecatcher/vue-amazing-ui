@@ -62,8 +62,8 @@ defineOptions({ inheritAttrs: false })
 // (v-model) 显隐：传值即受控（只上报不回弹），未传时组件自持 —— open 的默认值因此必须是 undefined
 // （布尔 prop 缺省会被 Vue 强转成 false，那会让所有用法都变成「受控且恒关闭」）
 const openModel = useControlledModel<boolean>('open', false)
-// 实际可见性：面板渲染、无障碍关联与所有早返回判定统一看它，
-// 避免出现「内部状态与属性各说各话」的脱同步
+// 实际可见性：面板渲染、无障碍关联与所有早返回判定统一看它
+// （受控 / 非受控的取值差异已收敛在 openModel 内，此处不再分叉）
 const tooltipVisible = computed<boolean>(() => openModel.value)
 // 显隐定时器分离（与 Dropdown 同口径）：单定时器会让「待显示」与「待隐藏」互相取消 ——
 // 例如 hover 移入排了显示、移出排了隐藏，后者复用同一个句柄时前者的取消动作会把两者搅在一起
@@ -233,8 +233,8 @@ onMounted(() => {
   syncAnchorBinding()
   measureAnchor()
 })
-// 可见性完全由 tooltipVisible 表达（受控时取属性、非受控时取内部状态），故无需同步状态的 watcher，
-// 也不需要因属性变化回传 update:open —— 受控变化由父侧驱动，与 Dropdown 同口径
+// 可见性完全由 tooltipVisible 表达（受控取父值、非受控取内部值，分叉已在 openModel 内收敛），
+// 故无需同步状态的 watcher，也不需要因属性变化回传 update:open —— 受控变化由父侧驱动，与 Dropdown 同口径
 watch(
   () => showTooltip.value && tooltipVisible.value,
   (to) => {

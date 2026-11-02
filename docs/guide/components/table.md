@@ -3131,7 +3131,7 @@ watchEffect(() => {
 | expandColumnTitle | 自定义展开列表头 | string | undefined |
 | expandColumnWidth | 展开列的宽度 | string &#124; number | 48 |
 | expandFixed | 是否固定展开列 | boolean | false |
-| expandedRowKeys <Tag color="cyan">v-model</Tag> | 展开行的 `key` 数组，控制展开行的属性；需与 `dataSource` 数据中的 `key` 配合使用（不传时由组件内部维护） | string[] | [] |
+| expandedRowKeys <Tag color="cyan">v-model</Tag> | 展开行的 `key` 数组，控制展开行的属性；需与 `dataSource` 数据中的 `key` 配合使用；传入即受控，不传时由组件内部维护 | string[] | undefined |
 | expandRowByClick | 点击行是否展开 | boolean | false |
 
 ### TableColumn Type

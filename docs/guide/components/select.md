@@ -1978,7 +1978,7 @@ const options: SelectOption[] = []
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| value <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值，`mode` 为 `multiple` / `tags` 时为数组；`labelInValue` 开启时为 `{ label, value, key, originLabel }` 对象 | number &#124; string &#124; [SelectLabeledValue](#selectlabeledvalue-type) &#124; (number &#124; string &#124; [SelectLabeledValue](#selectlabeledvalue-type))[] | undefined |
+| value <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值，`mode` 为 `multiple` / `tags` 时为数组；`labelInValue` 开启时为 `{ label, value, key, originLabel }` 对象；传入即受控，不传时由组件内部维护 | number &#124; string &#124; [SelectLabeledValue](#selectlabeledvalue-type) &#124; (number &#124; string &#124; [SelectLabeledValue](#selectlabeledvalue-type))[] | undefined |
 | open <Tag color="cyan">v-model</Tag> | 是否展开下拉菜单；传入即受控，不传时由组件内部维护 | boolean | undefined |
 | searchValue <Tag color="cyan">v-model</Tag> | 搜索文本；传入即受控，不传时由组件内部维护 | string | undefined |
 | options | 选项数据 | [SelectOption](#selectoption-type)[] | [] |

@@ -30,7 +30,8 @@ export function useIsControlled(name: string): ComputedRef<boolean> {
  * 刻意不用 `defineModel`：它的判据要求「prop + onUpdate 监听器」同时存在，会让「父只传值不监听」
  * 的用法退化为本地可写（静默分叉），详见 development/component-design.md 的「v-model 声明约定」。
  *
- * @param name - 字段名，须已在 `defineProps` 中声明；该字段的 `withDefaults` 默认值必须省略（否则判据恒真）
+ * @param name - 字段名，须已在 `defineProps` 中声明；该字段的 `withDefaults` 默认值必须省略
+ *   （布尔字段例外：必须显式写 `undefined` —— 缺省会被 Vue 强转成 `false`，判据同样恒真）
  * @param defaultValue - 非受控时的初值；受控字段的初值语义由此承担（对外可暴露为 `defaultXxx`）
  * @returns 可写 ref：读为「受控取父值 / 非受控取本地值」，写为「写本地 + `emit('update:name')`」
  */
