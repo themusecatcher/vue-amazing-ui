@@ -143,8 +143,6 @@ const validRangeTimestamp = computed<[number, number] | undefined>(() => {
 // 都没有时整月 / 整年必然可选，可跳过逐日扫描（年 / 月选项与月份格的禁用判定共用该口径）
 const hasDisableSource = computed(() => Boolean(props.disabledDate) || validRangeTimestamp.value !== undefined)
 // 初始面板日期：取当前选中值（受控父值 / 非受控初值），都缺省时取当天
-// 父是否传了值（受控）：与非受控时的本地值区分开
-const hasControlledValue = props.value !== undefined && props.value !== ''
 const initialTimestamp = toTimestamp(selectedValue.value ?? '') ?? Date.now()
 // 面板「今天」基准：跨零点后重新取当天，避免长驻页面中今天的高亮停在昨天
 const todayTimestamp = ref<number>(startOfDayTimestamp(Date.now()))

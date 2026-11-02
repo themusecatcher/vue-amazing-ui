@@ -31,6 +31,7 @@ import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import {
   useContainerClose,
   useControlledModel,
+  useIsControlled,
   useResizeObserver,
   useSlotsExist,
   FLOATING_LAYER_Z_INDEX
@@ -248,6 +249,8 @@ const popupRef = ref<InstanceType<typeof Popup> | null>(null) // 浮层宿主模
 const valueModel = useControlledModel<Props['value']>('value', undefined)
 // (v-model:open) 面板显隐：传值即受控，未传时组件自持
 const openModel = useControlledModel<boolean>('open', false)
+// 面板开合是否受控：非受控时才由组件自己派发 panelChange，受控由父侧回写驱动
+const isOpenControlled = useIsControlled('open')
 // (v-model:search-value) 搜索文本：传值即受控，未传时组件自持
 const searchValueModel = useControlledModel<string>('searchValue', '')
 const focused = ref<boolean>(false) // 是否聚焦（决定描边 / 阴影与多选输入框的可编辑性）
@@ -972,7 +975,7 @@ onMounted(() => {
     selectFocus()
   }
   // defaultOpen：非受控时初始展开下拉面板
-  if (props.defaultOpen && props.open === undefined && !props.disabled) {
+  if (props.defaultOpen && !isOpenControlled.value && !props.disabled) {
     openPanel()
   }
   // firstActiveValue：指定默认高亮项（数组取首项）
@@ -1092,14 +1095,14 @@ function emitPanelChange(nextOpen: boolean): void {
  */
 function setPanelOpen(nextOpen: boolean): void {
   if (openModel.value === nextOpen) return
-  const controlled = props.open !== undefined
+  const controlled = isOpenControlled.value
   openModel.value = nextOpen
   if (controlled) emitPanelChange(nextOpen)
 }
 // 非受控模式下由模型变化派发语义化开合事件；受控模式的显隐变化由父侧驱动，
 // 回传会形成「外部改 open → 又上报一次」的反向事件
 watch(openModel, (visible) => {
-  if (props.open === undefined) emitPanelChange(visible)
+  if (!isOpenControlled.value) emitPanelChange(visible)
 })
 /** 展开面板（禁用态不响应） */
 function openPanel(): void {

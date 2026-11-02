@@ -3,7 +3,13 @@ import { ref, computed, watchEffect, watch, onMounted } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Popup from 'components/popup'
 import Scrollbar from 'components/scrollbar'
-import { useContainerClose, useControlledModel, useSlotsExist, FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import {
+  useContainerClose,
+  useControlledModel,
+  useIsControlled,
+  useSlotsExist,
+  FLOATING_LAYER_Z_INDEX
+} from 'components/utils'
 import type { MountElement } from 'components/utils'
 export interface Option {
   disabled?: boolean // 是否禁用
@@ -96,6 +102,8 @@ const hoverValue = ref<string | number | null>(null) // 鼠标悬浮项的 value
 const lastUserValue = ref<string>('') // 用户原始输入（backfill 时键盘 Esc 还原用，与 onInput 同步更新）
 // (v-model:open) 面板显隐：传值即受控，未传时组件自持
 const openModel = useControlledModel<boolean>('open', false)
+// 面板开合是否受控：非受控时才由组件自己派发 panelChange，受控由父侧回写驱动
+const isOpenControlled = useIsControlled('open')
 const focused = ref<boolean>(false) // 自动完成是否聚焦
 const contentRef = ref<HTMLElement | null>(null) // 内容模板引用（浮层锚点）
 // 清除图标显隐：开启 allowClear、未禁用且有值时显示（与 Input 组件保持一致，有值即显示，不依赖 hover）
@@ -248,7 +256,7 @@ useContainerClose(() => {
 })
 // 非受控模式下由模型变化派发语义化开合事件；受控模式由 setPanelOpen 在「用户请求变更」时同步派发
 watch(openModel, (visible) => {
-  if (props.open === undefined) {
+  if (!isOpenControlled.value) {
     emitPanelChange(visible)
   }
 })
@@ -272,7 +280,7 @@ watch(openModel, (to) => {
   }
 })
 watchEffect(() => {
-  if (focused.value && props.open === undefined) {
+  if (focused.value && !isOpenControlled.value) {
     openModel.value = true
   }
 })
@@ -289,7 +297,7 @@ onMounted(() => {
     inputFocus()
   }
   // defaultOpen：非受控时初始展开下拉面板
-  if (props.defaultOpen && props.open === undefined && !props.disabled) {
+  if (props.defaultOpen && !isOpenControlled.value && !props.disabled) {
     openPanel()
   }
 })
@@ -309,7 +317,7 @@ function emitPanelChange(nextOpen: boolean): void {
 //   配合 dropdownVisibleChange 事件使用」的用法完全相反；与目标值相同的请求不再重复上报，避免噪声
 function setPanelOpen(nextOpen: boolean): void {
   if (openModel.value === nextOpen) return
-  const controlled = props.open !== undefined
+  const controlled = isOpenControlled.value
   openModel.value = nextOpen
   if (controlled) emitPanelChange(nextOpen)
 }
