@@ -997,6 +997,8 @@ import { SmileOutlined } from '@ant-design/icons-vue'
 
 ### DropdownTrigger Type
 
+<br/>
+
 _分别对应移入、点击、右键触发；传入数组可组合多种触发方式_
 
 | 名称 | 值 |

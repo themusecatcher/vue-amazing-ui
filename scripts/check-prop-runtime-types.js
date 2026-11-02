@@ -21,19 +21,45 @@
  * 只做文本解析（不跑编译器、不跑构建），与守卫其余各项同为毫秒级。
  */
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
-import { relative, resolve } from 'node:path'
+import { basename, dirname, relative, resolve } from 'node:path'
 
 /**
- * 各产物目录的组件编译产物后缀
+ * 各产物目录与组件编译产物扩展名
  *
- * 同一 SFC 的编译代码落在哪个文件取决于它是否另有 `<template>` / `<style>` 之外的部件：
- * 多数组件在 `<Name>.vue2.js`，另一些（如 `NumberAnimation`）在 `<Name>.vue.js`，另一个只是转发壳，
- * 故两个都要试（lib 同理为 `.vue2.cjs` / `.vue.cjs`）。
+ * 同一 SFC 的编译代码落在哪个文件取决于它是否另有 `<template>` / `<style>` 之外的部件，
+ * 且编号后缀的位置随 Rollup 版本变化：旧版为 `<Name>.vue2.js`，新版为 `<Name>2.vue.js`，
+ * 另一个文件只是转发壳。故不按固定后缀试，改为按文件名模式匹配（见 `listArtifacts`）。
  */
 const DEFAULT_OUT_DIRS = [
-  { dir: 'es', artifactSuffixes: ['.vue2.js', '.vue.js'] },
-  { dir: 'lib', artifactSuffixes: ['.vue2.cjs', '.vue.cjs'] }
+  { dir: 'es', ext: '.js' },
+  { dir: 'lib', ext: '.cjs' }
 ]
+
+/** 正则元字符转义（组件名直接参与正则，避免 `$` 等字符被当成语法） */
+function escapeRegExp(text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+/**
+ * 列出某 SFC 在产物目录下的全部编译产物
+ *
+ * 匹配规则：`<组件名>` + 可选编号 + `.vue` + 可选编号 + 扩展名 —— 同时覆盖
+ * `<Name>.vue.js` / `<Name>.vue2.js` / `<Name>2.vue.js` 三种形态，编号上限不再写死。
+ *
+ * @returns `{ suffix, path }`：`suffix` 为去掉组件名后的文件名片段（用于拼报错信息），按文件名排序保证确定性
+ */
+function listArtifacts(rootDir, dir, artifactBase, ext) {
+  const targetDir = resolve(rootDir, dir, dirname(artifactBase))
+  if (!existsSync(targetDir)) {
+    return []
+  }
+  const base = basename(artifactBase)
+  const pattern = new RegExp(`^${escapeRegExp(base)}\\d*\\.vue\\d*\\${ext}$`)
+  return readdirSync(targetDir)
+    .filter((name) => pattern.test(name))
+    .sort()
+    .map((name) => ({ suffix: name.slice(base.length), path: resolve(targetDir, name) }))
+}
 
 /** 裸 DOM 类型：只能经 interface 替身（MountElement / MountDocument）间接使用 */
 const RAW_DOM_TYPES = new Set(['HTMLElement', 'Document'])
@@ -297,7 +323,7 @@ function expectsRuntimeType(typeText) {
  * @param options - 校验参数
  * @param options.rootDir - 项目根目录
  * @param options.componentsDir - 组件源码目录（默认 `components`）
- * @param options.outDirs - 产物目录与组件产物后缀
+ * @param options.outDirs - 产物目录与编译产物扩展名（`{ dir, ext }`）
  * @returns `checked` 已校验的 prop × 产物数、`skipped` 产物缺失跳过数、`problems` 问题清单
  */
 export function checkPropRuntimeTypes({ rootDir, componentsDir = 'components', outDirs = DEFAULT_OUT_DIRS }) {
@@ -329,12 +355,10 @@ export function checkPropRuntimeTypes({ rootDir, componentsDir = 'components', o
             '（见 development/component-design.md 的「Props 运行时类型约定」）'
         )
       }
-      outDirs.forEach(({ dir, artifactSuffixes }) => {
+      outDirs.forEach(({ dir, ext }) => {
         const expected = [needsObject && 'Object', needsString && 'String'].filter(Boolean).join(' / ')
-        // 编译代码可能在 `.vue2.*` 也可能在 `.vue.*`（另一个是转发壳）：取第一个能读出该 prop 的文件
-        const artifacts = artifactSuffixes
-          .map((suffix) => ({ suffix, path: resolve(rootDir, dir, `${artifactBase}${suffix}`) }))
-          .filter(({ path }) => existsSync(path))
+        // 编译代码可能落在任一产物文件（其余是转发壳）：取第一个能读出该 prop 的文件
+        const artifacts = listArtifacts(rootDir, dir, artifactBase, ext)
         if (artifacts.length === 0) {
           skipped++
           return

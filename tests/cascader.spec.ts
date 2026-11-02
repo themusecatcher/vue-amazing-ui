@@ -640,6 +640,27 @@ describe('Cascader 非受控与异步加载', () => {
     expect(columnTexts(1)).toEqual(['杭州'])
   })
 
+  it('加载结果为空时，把选项标记为 isLeaf 即可结束加载图标', async () => {
+    const asyncOptions = ref([{ label: '浙江', value: 'zhejiang', isLeaf: false }])
+    const loadData = (path: { label?: string }[]) => {
+      const target = path[path.length - 1] as { isLeaf?: boolean }
+      setTimeout(() => {
+        target.isLeaf = true
+      }, 120)
+    }
+    wrapper = mount(Cascader, { attachTo: document.body, props: { options: asyncOptions.value, loadData } })
+    await flush()
+    await openPanel()
+    await clickOption('浙江')
+    expect(document.querySelector('.cascader-option-loading-icon')).toBeTruthy()
+
+    await sleep(180)
+    await flush()
+    // 没有子项可等：由 isLeaf 结束加载态，且不再显示展开箭头
+    expect(document.querySelector('.cascader-option-loading-icon')).toBeNull()
+    expect(document.querySelector('.cascader-option-expand-icon')).toBeNull()
+  })
+
   it('键盘 ↓↑ 在当前激活列内移动，不自动展开子列', async () => {
     wrapper = mount(Cascader, { attachTo: document.body, props: { options: OPTIONS } })
     await flush()
@@ -937,5 +958,163 @@ describe('Cascader 虚拟列宽度锁定', () => {
     } finally {
       HTMLElement.prototype.getBoundingClientRect = origin
     }
+  })
+})
+
+describe('Cascader 受控展开', () => {
+  it('点击触发器派发 update:open 与 openChange，显隐由 open 属性决定', async () => {
+    wrapper = mount(Cascader, { attachTo: document.body, props: { options: OPTIONS, open: false } })
+    await flush()
+    await wrapper.trigger('click')
+    await flush()
+    expect(wrapper.emitted('update:open')?.[0]).toEqual([true])
+    expect(wrapper.emitted('openChange')?.[0]).toEqual([true])
+    expect(wrapper.emitted('dropdownVisibleChange')?.[0]).toEqual([true])
+    // 受控：父侧未回写前面板不展开
+    expect(document.querySelector('.cascader-menu')).toBeNull()
+
+    await wrapper.setProps({ open: true })
+    await flush()
+    await sleep(20)
+    expect(document.querySelector('.cascader-menu')).toBeTruthy()
+  })
+
+  it('展开态点击触发器派发 update:open(false)', async () => {
+    wrapper = mount(Cascader, { attachTo: document.body, props: { options: OPTIONS, open: true } })
+    await flush()
+    await sleep(20)
+    expect(document.querySelector('.cascader-menu')).toBeTruthy()
+    await wrapper.trigger('click')
+    await flush()
+    expect(wrapper.emitted('update:open')?.[0]).toEqual([false])
+    expect(wrapper.emitted('openChange')?.[0]).toEqual([false])
+  })
+
+  it('非受控模式同样派发 update:open，面板自行开合', async () => {
+    wrapper = mount(Cascader, { attachTo: document.body, props: { options: OPTIONS } })
+    await flush()
+    await wrapper.trigger('click')
+    await flush()
+    await sleep(20)
+    expect(wrapper.emitted('update:open')?.[0]).toEqual([true])
+    expect(document.querySelector('.cascader-menu')).toBeTruthy()
+  })
+})
+
+describe('Cascader 虚拟滚动下的勾选态', () => {
+  const MANY = Array.from({ length: 60 }, (_, index) => ({
+    label: `选项${index}`,
+    value: `v${index}`,
+    children: [
+      { label: `子${index}-甲`, value: `c${index}-a` },
+      { label: `子${index}-乙`, value: `c${index}-b` }
+    ]
+  }))
+
+  it('只渲染可视区时，已渲染选项仍按子树推导全选 / 半选', async () => {
+    wrapper = mount(Cascader, {
+      attachTo: document.body,
+      props: { options: MANY, virtual: true, multiple: true, value: [['v0', 'c0-a']] }
+    })
+    await flush()
+    await openPanel()
+    const options = [...document.querySelectorAll<HTMLElement>('.cascader-menu .cascader-option')]
+    expect(options.length).toBeLessThan(MANY.length)
+    const firstCheckbox = options[0].querySelector<HTMLElement>('.cascader-option-checkbox')
+    expect(firstCheckbox?.getAttribute('aria-checked')).toBe('mixed')
+    const secondCheckbox = options[1].querySelector<HTMLElement>('.cascader-option-checkbox')
+    expect(secondCheckbox?.getAttribute('aria-checked')).toBe('false')
+  })
+})
+
+describe('Cascader 搜索结果插槽参数', () => {
+  it('showSearchRender 插槽能拿到 segments 并还原高亮片段', async () => {
+    wrapper = mount(Cascader, {
+      attachTo: document.body,
+      props: { options: OPTIONS, showSearch: true },
+      slots: {
+        showSearchRender: `<span class="slot-seg"><template v-for="(level, levelIndex) in params.segments" :key="levelIndex"><span v-if="levelIndex > 0"> / </span><span v-for="(segment, segmentIndex) in level" :key="segmentIndex" :class="{ hit: segment.hit }">{{ segment.text }}</span></template></span>`
+      }
+    })
+    await flush()
+    await openPanel()
+    await wrapper.find('.search-input').setValue('江')
+    await flush()
+    await sleep(20)
+    const slot = document.querySelector<HTMLElement>('.slot-seg')
+    expect(slot, '插槽应渲染命中结果').toBeTruthy()
+    expect(slot?.textContent?.replace(/\s+/g, ' ').trim()).toContain(' / ')
+    const hits = [...document.querySelectorAll<HTMLElement>('.slot-seg .hit')].map((el) => el.textContent)
+    expect(hits).toContain('江')
+  })
+})
+
+describe('Cascader 搜索结果中的禁用项', () => {
+  const DISABLED_OPTIONS = [
+    {
+      label: '浙江',
+      value: 'zhejiang',
+      children: [
+        {
+          label: '杭州',
+          value: 'hangzhou',
+          children: [
+            { label: '西湖', value: 'xihu' },
+            { label: '下沙', value: 'xiasha', disabled: true }
+          ]
+        }
+      ]
+    }
+  ]
+
+  /** 搜索结果行（按文本找） */
+  function searchRow(text: string): HTMLElement | undefined {
+    return [...document.querySelectorAll<HTMLElement>('.cascader-menu .cascader-option')].find((el) =>
+      (el.textContent ?? '').includes(text)
+    )
+  }
+
+  it('路径含禁用项的结果置灰且点击不改变选中值', async () => {
+    wrapper = mount(Cascader, { attachTo: document.body, props: { options: DISABLED_OPTIONS, showSearch: true } })
+    await flush()
+    await openPanel()
+    await wrapper.find('.search-input').setValue('江')
+    await flush()
+    await sleep(20)
+
+    const row = searchRow('下沙')
+    expect(row, '应命中禁用结果').toBeTruthy()
+    expect(row?.classList.contains('option-disabled')).toBe(true)
+    expect(row?.getAttribute('aria-disabled')).toBe('true')
+
+    row?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    await flush()
+    await sleep(20)
+    expect(wrapper.emitted('change')).toBeUndefined()
+    // 未选中：面板保持展开在搜索结果上，搜索文本未被清掉
+    expect(document.querySelector('.cascader-menu')).toBeTruthy()
+    expect((wrapper.find('.search-input').element as HTMLInputElement).value).toBe('江')
+  })
+
+  it('键盘 ↓ 跳过禁用结果、hover 也不抢高亮', async () => {
+    wrapper = mount(Cascader, { attachTo: document.body, props: { options: DISABLED_OPTIONS, showSearch: true } })
+    await flush()
+    await openPanel()
+    const input = wrapper.find('.search-input')
+    await input.setValue('江')
+    await flush()
+    await sleep(20)
+
+    const hovered = () => document.querySelector('.cascader-option.option-hover')?.textContent ?? ''
+    expect(hovered()).toContain('西湖')
+
+    // 禁用行上悬停 / 按 ↓ 都不应把高亮移到不可选中项
+    searchRow('下沙')?.dispatchEvent(new MouseEvent('mouseenter', { bubbles: false }))
+    await flush()
+    expect(hovered()).toContain('西湖')
+
+    await input.trigger('keydown', { key: 'ArrowDown' })
+    await flush()
+    expect(hovered()).toContain('西湖')
   })
 })
