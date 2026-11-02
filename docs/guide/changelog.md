@@ -14,6 +14,18 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-11-02">3.8.0</VersionDateTag>
+
+- 新增 [上传 Upload](/guide/components/upload.html) 的 `reject` 事件：拖拽的文件不符合 `accept` 时回传被拒绝的文件列表
+- 修复 [上传 Upload](/guide/components/upload.html) 在拖拽路径上忽略 `multiple` 与 `accept`：关闭多选时只取第一个文件，类型不符的文件不再入库
+- 修复 [上传 Upload](/guide/components/upload.html) 的 `maxCount` 为 `1` 时无法替换当前文件：占满后仍显示上传入口，新文件覆盖当前文件
+- 修复 [上传 Upload](/guide/components/upload.html) 拖拽投放的文件数超过剩余槽位时多写入一个
+- 修复 [评分 Rate](/guide/components/rate.html) 的 `change` 早于 `update:value` 派发：`@change` 中读到的是旧值
+- 修复 [日历 Calendar](/guide/components/calendar.html) 未声明 `update:value` 事件：`v-model:value` 交互时控制台会输出 dev 告警
+- 发布守卫取消 `defineModel` 白名单并补齐双模字段契约（声明 `update:x`、默认值块解析失败即报错）：全库禁用 `defineModel`
+- 更新使用者文档：上传组件补充 `accept` / `multiple` / `maxCount` 的拖拽与单文件替换行为说明，并新增拖拽上传与单文件替换的演示
+- 更新使用者文档：Props 默认值列与源码 `withDefaults` 对齐（[时间选择器 TimePicker](/guide/components/time-picker.html)、[日期选择器 DatePicker](/guide/components/date-picker.html)、[二维码 QRCode](/guide/components/qr-code.html)、[文本域 Textarea](/guide/components/textarea.html) 等），改由 `pnpm verify:docs` 逐字段校验
+
 ## <VersionDateTag date="2026-11-02">3.7.0</VersionDateTag>
 
 - 统一 `v-model` 的受控判据为「传值即受控」：传入 `value` / `open` 后组件不再本地改写，只派发 `update:x`；此前父侧只传值、未监听该事件时，[抽屉 Drawer](/guide/components/drawer.html)、[上传 Upload](/guide/components/upload.html)、[表格 Table](/guide/components/table.html)、[菜单 Menu](/guide/components/menu.html)、[分页 Pagination](/guide/components/pagination.html) 的交互仍在内部生效，父侧值不会更新
