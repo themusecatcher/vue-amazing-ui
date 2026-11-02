@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest'
-import { h, nextTick } from 'vue'
+import { defineComponent, h, nextTick, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import { format, getMonth, getYear } from 'date-fns'
 import Calendar from 'components/calendar/Calendar.vue'
@@ -36,10 +36,37 @@ function currentMonthCells() {
   return wrapper!.findAll('.calendar-date-cell.date-cell-in-view:not(.date-cell-today)')
 }
 
-/** 最近一次 update:value 事件的首个参数 */
+/** 最近一次 update:value 事件的首个参数（受控挂载时读内层 Calendar 实例） */
 function lastEmittedValue(): number {
-  const events = wrapper!.emitted('update:value')
+  const events = wrapper!.findComponent(Calendar).emitted('update:value')
   return events?.[events.length - 1]?.[0] as number
+}
+
+/**
+ * 受控挂载：父持有值并按 `update:value` 回写
+ *
+ * 受控判据是「传值即受控」——父传了 `value` 又不会回写时，组件不会本地改写。
+ * 多步交互（键盘连续步进）必须以回写为前提，故用壳组件承载 v-model。
+ */
+/** 读内层 Calendar 实例的事件（受控挂载时外层是壳组件，事件挂在实例上） */
+function calendarEmitted(event: string) {
+  return wrapper!.findComponent(Calendar).emitted(event)
+}
+
+function mountControlled(props: Record<string, unknown> = {}) {
+  const value = ref<number | string | undefined>(props.value as number | string | undefined)
+  const Host = defineComponent({
+    setup: () => () =>
+      h(Calendar, {
+        ...props,
+        value: value.value,
+        'onUpdate:value': (next: string | number) => {
+          value.value = next
+        }
+      })
+  })
+  wrapper = mount(Host, { attachTo: document.body })
+  return value
 }
 
 describe('日期选择的事件触发条件', () => {
@@ -56,8 +83,8 @@ describe('日期选择的事件触发条件', () => {
     await cell.trigger('click')
     await flush()
 
-    expect(wrapper.emitted('select')?.length).toBe(2)
-    expect(wrapper.emitted('change')?.length).toBe(1)
+    expect(calendarEmitted('select')?.length).toBe(2)
+    expect(calendarEmitted('change')?.length).toBe(1)
   })
 
   it('点击日期后，select 携带的来源为 date', async () => {
@@ -67,7 +94,7 @@ describe('日期选择的事件触发条件', () => {
     await currentMonthCells()[0].trigger('click')
     await flush()
 
-    const selectEvents = wrapper.emitted('select')
+    const selectEvents = calendarEmitted('select')
     expect(selectEvents?.[0]?.[1]).toEqual({ source: 'date' })
   })
 })
@@ -126,7 +153,7 @@ describe('面板定位与 panelChange', () => {
     wrapper.findAllComponents(Select)[0].vm.$emit('change', targetYear)
     await flush()
 
-    const panelChangeEvents = wrapper.emitted('panelChange')
+    const panelChangeEvents = calendarEmitted('panelChange')
     expect(panelChangeEvents?.length).toBe(1)
     expect(panelChangeEvents?.[0]?.[1]).toEqual({ year: targetYear, month: getMonth(Date.now()) + 1 })
     expect(panelChangeEvents?.[0]?.[2]).toBe('month')
@@ -141,7 +168,7 @@ describe('面板定位与 panelChange', () => {
     wrapper.findAllComponents(Select)[1].vm.$emit('change', targetMonth)
     await flush()
 
-    const panelChangeEvents = wrapper.emitted('panelChange')
+    const panelChangeEvents = calendarEmitted('panelChange')
     expect(panelChangeEvents?.length).toBe(1)
     expect(panelChangeEvents?.[0]?.[1]).toEqual({ year: getYear(Date.now()), month: targetMonth })
   })
@@ -154,8 +181,8 @@ describe('面板定位与 panelChange', () => {
     await cell!.trigger('click')
     await flush()
 
-    expect(wrapper.emitted('change')?.length).toBe(1)
-    expect(wrapper.emitted('panelChange')).toBeUndefined()
+    expect(calendarEmitted('change')?.length).toBe(1)
+    expect(calendarEmitted('panelChange')).toBeUndefined()
   })
 })
 
@@ -289,7 +316,7 @@ describe('增强能力', () => {
     await disabledCells[0].trigger('click')
     await flush()
 
-    expect(wrapper.emitted('change')).toBeUndefined()
+    expect(calendarEmitted('change')).toBeUndefined()
   })
 
   it('整月都不可选时，月份格呈禁用态且点击不写回值', async () => {
@@ -310,7 +337,7 @@ describe('增强能力', () => {
     await disabledMonths[0].trigger('click')
     await flush()
 
-    expect(wrapper.emitted('change')).toBeUndefined()
+    expect(calendarEmitted('change')).toBeUndefined()
   })
 
   it('validRange 下月份面板：区间外的月份整月禁用，点击不写回值', async () => {
@@ -333,8 +360,8 @@ describe('增强能力', () => {
     await may!.trigger('click')
     await flush()
 
-    expect(wrapper.emitted('change')).toBeUndefined()
-    expect(wrapper.emitted('select')).toBeUndefined()
+    expect(calendarEmitted('change')).toBeUndefined()
+    expect(calendarEmitted('select')).toBeUndefined()
   })
 
   it('年选择器变更：写回选中值并发 change 与 select（来源为 year）', async () => {
@@ -348,22 +375,19 @@ describe('增强能力', () => {
     await flush()
 
     expect(format(lastEmittedValue(), 'yyyy-MM-dd')).toBe('2027-10-15')
-    const selectEvents = wrapper.emitted('select')
+    const selectEvents = calendarEmitted('select')
     expect(selectEvents?.[selectEvents.length - 1]?.[1]).toEqual({ source: 'year' })
   })
 
   it('年选择器：选中年份后列表区间不在关闭动画中平移，重新展开时才按当前年份重建', async () => {
-    wrapper = mount(Calendar, {
-      attachTo: document.body,
-      props: { value: new Date(2026, 9, 15).getTime() }
-    })
+    mountControlled({ value: new Date(2026, 9, 15).getTime() })
     await flush()
 
-    const yearSelect = wrapper.findAllComponents(Select)[0]
+    const yearSelect = wrapper!.findAllComponents(Select)[0]
     const optionValues = (): number[] => (yearSelect.props('options') as { value: number }[]).map((item) => item.value)
     expect(optionValues()).toEqual(Array.from({ length: 20 }, (_, index) => 2016 + index))
 
-    await wrapper.find('.calendar-year-select').trigger('click')
+    await wrapper!.find('.calendar-year-select').trigger('click')
     await flush()
 
     const target = Array.from(document.querySelectorAll('.select-option')).find((el) =>
@@ -382,7 +406,7 @@ describe('增强能力', () => {
 
     // 重新展开：区间才按当前年份重建，并把选中年份滚入可视区
     await flush()
-    await wrapper.find('.calendar-year-select').trigger('click')
+    await wrapper!.find('.calendar-year-select').trigger('click')
     await flush()
     expect(optionValues()).toEqual(Array.from({ length: 20 }, (_, index) => 2017 + index))
     const visibleLabels = Array.from(document.querySelectorAll('.select-option')).map((el) => el.textContent)
@@ -390,13 +414,10 @@ describe('增强能力', () => {
   })
 
   it('键盘导航：左右一天、上下为一周、翻页为一月', async () => {
-    wrapper = mount(Calendar, {
-      attachTo: document.body,
-      props: { value: new Date(2026, 9, 15).getTime() }
-    })
+    mountControlled({ value: new Date(2026, 9, 15).getTime() })
     await flush()
 
-    const panel = wrapper.find('.calendar-display-wrap')
+    const panel = wrapper!.find('.calendar-display-wrap')
     await panel.trigger('keydown', { key: 'ArrowRight' })
     await flush()
     expect(format(lastEmittedValue(), 'yyyy-MM-dd')).toBe('2026-10-16')
@@ -411,17 +432,14 @@ describe('增强能力', () => {
   })
 
   it('年面板键盘导航：左右一月、上下一行（三个月），来源为 month', async () => {
-    wrapper = mount(Calendar, {
-      attachTo: document.body,
-      props: { mode: 'year', value: new Date(2026, 9, 15).getTime() }
-    })
+    mountControlled({ mode: 'year', value: new Date(2026, 9, 15).getTime() })
     await flush()
 
-    const panel = wrapper.find('.calendar-display-wrap')
+    const panel = wrapper!.find('.calendar-display-wrap')
     await panel.trigger('keydown', { key: 'ArrowRight' })
     await flush()
     expect(format(lastEmittedValue(), 'yyyy-MM-dd')).toBe('2026-11-15')
-    const selectEvents = wrapper.emitted('select')
+    const selectEvents = calendarEmitted('select')
     expect(selectEvents?.[selectEvents.length - 1]?.[1]).toEqual({ source: 'month' })
 
     await panel.trigger('keydown', { key: 'ArrowDown' })
@@ -443,7 +461,7 @@ describe('增强能力', () => {
     await wrapper.find('.calendar-display-wrap').trigger('keydown', { key: 'PageUp' })
     await flush()
 
-    expect(wrapper.emitted('update:value')).toBeUndefined()
+    expect(calendarEmitted('update:value')).toBeUndefined()
   })
 
   it('validRange 字符串入参按 valueFormat 解析', async () => {
@@ -495,7 +513,7 @@ describe('增强能力', () => {
 
     expect(format(lastEmittedValue(), 'yyyy-MM-dd')).toBe('2026-11-05')
     // 来源为月：change 第二参保持月份对象口径
-    expect(wrapper.emitted('change')?.[0]?.[1]).toEqual({ month: 10, year: 2026 })
+    expect(calendarEmitted('change')?.[0]?.[1]).toEqual({ month: 10, year: 2026 })
   })
 
   it('validRange 下月选择器：保留的「日」落在区间外时收敛到区间端点', async () => {
@@ -530,19 +548,16 @@ describe('增强能力', () => {
   })
 
   it('键盘移动与年选择器的 change 均携带日期对象', async () => {
-    wrapper = mount(Calendar, {
-      attachTo: document.body,
-      props: { value: new Date(2026, 9, 15).getTime() }
-    })
+    mountControlled({ value: new Date(2026, 9, 15).getTime() })
     await flush()
 
-    await wrapper.find('.calendar-display-wrap').trigger('keydown', { key: 'ArrowRight' })
+    await wrapper!.find('.calendar-display-wrap').trigger('keydown', { key: 'ArrowRight' })
     await flush()
-    expect(wrapper.emitted('change')?.[0]?.[1]).toEqual({ date: 16, month: 9, year: 2026 })
+    expect(calendarEmitted('change')?.[0]?.[1]).toEqual({ date: 16, month: 9, year: 2026 })
 
-    wrapper.findAllComponents(Select)[0].vm.$emit('change', 2027)
+    wrapper!.findAllComponents(Select)[0].vm.$emit('change', 2027)
     await flush()
-    expect(wrapper.emitted('change')?.[1]?.[1]).toEqual({ date: 16, month: 9, year: 2027 })
+    expect(calendarEmitted('change')?.[1]?.[1]).toEqual({ date: 16, month: 9, year: 2027 })
   })
 
   it('卡片形态固定渲染六周（末行补齐下月日期），不留空白', async () => {
@@ -651,7 +666,7 @@ describe('增强能力', () => {
 
     await wrapper.find('.probe-type').trigger('click')
     await flush()
-    expect(wrapper.emitted('panelChange')?.[0]?.[2]).toBe('year')
+    expect(calendarEmitted('panelChange')?.[0]?.[2]).toBe('year')
 
     await wrapper.find('.probe-value').trigger('click')
     await flush()

@@ -1,6 +1,6 @@
 import Calendar from './Calendar.vue'
 export type {
-  CalendarProps,
+  Props as CalendarProps,
   DayOfWeek as CalendarDayOfWeek,
   DefaultWeek as CalendarDefaultWeek,
   DateItem as CalendarDateItem,
