@@ -1,16 +1,18 @@
 /**
- * v-model 对外类型契约校验（由 `scripts/prepublish-guard.js` 第 ⑦ 项调用）
+ * v-model 声明契约校验（由 `scripts/prepublish-guard.js` 第 ⑦ 项调用）
  *
- * 背景：`defineModel('value')` 是编译期宏 —— 它在产物里生成 `value` prop 与 `update:value` 事件，
- * 但源码侧的 `export interface Props` 看不到它（同名字段再写进 `defineProps` 会重复声明 prop）。
- * 于是对外导出的 `XxxProps` 必须手动合并 `Props & { value?: T }`，否则使用方拿到的具名 props
- * 类型缺 v-model 字段：组件本身可用（实例与模板类型由编译器补全），只有显式标注 `XxxProps`
- * 的场景出错，如 `const p: CalendarProps = { value }` 报「不存在该属性」。
+ * 全库判据是「传值即受控」（`props.x !== undefined`），它与 `defineModel` 自带的判据
+ * （prop + `onUpdate` 监听器同时存在）冲突，故三条断言：
  *
- * 该错位在库内全部自检链条上都不可见：dev 站与单测都走组件实例，`vue-tsc` 也不会报。
- * 故按「源码约定」在此兜住：凡声明了对外 props 类型（`interface Props` 或 `Props & { ... }` 合并块）
- * 的 SFC，其每个 `defineModel('x')` 的 `x` 都必须能在其中找到。
- * 未声明任何对外 props 类型的 SFC（内部组件）不适用，计入 skipped。
+ * ① **公共 API 禁止 `defineModel`**（见 `LEGACY_DEFINE_MODEL` 白名单，当前为空）——
+ *    `defineModel` 会把「父只传值不监听」退化为本地可写，UI 正常但数据不回流（静默分叉）。
+ * ② 白名单内的存量若仍用 `defineModel`，其字段必须并入对外 props 类型：`defineModel('value')`
+ *    在产物里生成 `value` prop 与 `update:value` 事件，但源码侧的 `export interface Props`
+ *    看不到它，对外导出的 `XxxProps` 须手动合并 `Props & { value?: T }`，否则
+ *    `const p: XxxProps = { value }` 这类显式标注会报「不存在该属性」（dev 站与单测都走
+ *    组件实例，`vue-tsc` 也不报，只有使用方踩得到）。未声明对外 props 类型的 SFC 计入 skipped。
+ * ③ `useControlledModel('x', ...)` 的字段在 `withDefaults` 里只能写 `undefined`：
+ *    布尔 prop 缺省会被强转 `false`，其余默认值同样会让判据恒真 → 组件永久受控、写入不生效。
  *
  * 只做文本解析（不跑编译器、不跑构建），与守卫其余各项同为毫秒级。
  */
@@ -36,9 +38,14 @@ const LEGACY_DEFINE_MODEL = new Set([])
 /** `Props & { ... }` 形式的对外合并块（如 `CalendarProps = Props & { value?: ... }`） */
 const MERGE_PATTERN = /type\s+[A-Za-z_$][\w$]*\s*=\s*Props\s*&\s*\{/g
 
-/** `useControlledModel<T>('x', ...)` 调用点：受控判据落在 `<T>` 与 `'x'` 上 */
+/**
+ * `useControlledModel<T>('x', ...)` 调用点：受控判据落在 `<T>` 与 `'x'` 上
+ *
+ * 泛型写不写都要能识别 —— 漏掉不写泛型的调用会让下面第 ③ 条静默失效（正是它要防的那类缺陷）。
+ * 不写泛型时 `typeName` 为 `undefined`，只跳过「布尔字段必须显式写 `undefined`」那条（类型不可知）。
+ */
 const CONTROLLED_MODEL_PATTERN =
-  /useControlledModel\s*<\s*([^<>]*(?:<[^<>]*>[^<>]*)*)\s*>\s*\(\s*['"]([A-Za-z_$][\w$]*)['"]/g
+  /useControlledModel\s*(?:<\s*([^<>]*(?:<[^<>]*>[^<>]*)*)\s*>)?\s*\(\s*['"]([A-Za-z_$][\w$]*)['"]/g
 
 /**
  * 解析 `withDefaults(defineProps(), { ... })` 的顶层默认值
@@ -287,7 +294,8 @@ export function collectModelDefaultProblems(source, label) {
     }
     if (hasSpread) continue
     // 布尔 prop 缺省会被 Vue 强转为 false，判据同样恒真 —— 必须显式写 undefined
-    if (/\bboolean\b/.test(typeName)) {
+    // 未标注泛型时类型不可知，只能跳过这条（字段本身的默认值判定不受影响）
+    if (typeName && /\bboolean\b/.test(typeName)) {
       problems.push(
         `${label} 的 \`useControlledModel<${typeName}>('${field}')\` 未在 withDefaults 中声明：` +
           '布尔 prop 缺省会被 Vue 强转为 false，判据恒真；请在 withDefaults 中显式写 `undefined`'
@@ -347,7 +355,7 @@ export function checkModelProps({ rootDir, componentsDir = 'components', allowed
         })
       }
     }
-    defaultsChecked += (source.match(/useControlledModel\s*</g) || []).length
+    defaultsChecked += (source.match(/useControlledModel\s*[(<]/g) || []).length
     collectModelDefaultProblems(source, label).forEach((problem) => problems.push(problem))
   })
 

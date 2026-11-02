@@ -235,6 +235,18 @@ describe('collectModelDefaultProblems', () => {
     expect(problems[0]).toContain('boolean')
   })
 
+  it('不写泛型的调用同样参与默认值判定（泛型不是识别前提）', () => {
+    const problems = collectModelDefaultProblems(
+      `
+      const props = withDefaults(defineProps<Props>(), { open: false })
+      const model = useControlledModel('open', false)
+      `,
+      'components/demo/Demo.vue'
+    )
+    expect(problems).toHaveLength(1)
+    expect(problems[0]).toContain('open')
+  })
+
   it('显式 undefined / 非布尔字段缺省 / 含展开项时都不报（避免误伤）', () => {
     const explicitUndefined = `
       const props = withDefaults(defineProps<Props>(), { value: undefined, open: undefined })
