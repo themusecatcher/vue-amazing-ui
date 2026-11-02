@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, afterEach, vi } from 'vitest'
 import { defineComponent, h, nextTick, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import { format, getMonth, getYear } from 'date-fns'
@@ -671,5 +671,31 @@ describe('增强能力', () => {
     await wrapper.find('.probe-value').trigger('click')
     await flush()
     expect(format(lastEmittedValue(), 'yyyy-MM-dd')).toBe('2026-05-20')
+  })
+})
+
+/**
+ * v-model 契约：`update:value` 必须写进 `defineEmits`
+ *
+ * `useControlledModel` 在组合式函数内部派发 `update:value`，组件源码里搜不到 emit 调用，
+ * 漏声明时功能照常（Vue 从 vnode.props 取监听器），但每次交互都会输出
+ * 「neither declared in the emits option nor as an "onUpdate:value" prop」的 dev 告警，
+ * 且监听器落进 `$attrs` 透传到根节点。这两条症状即为本用例的判据。
+ */
+describe('v-model 契约', () => {
+  it('update:value 已声明进 emits（不落 $attrs、不触发 dev 告警）', () => {
+    wrapper = mount(Calendar, {
+      attachTo: document.body,
+      props: { value: '2026-11-02' },
+      attrs: { 'onUpdate:value': () => {} }
+    })
+    const inner = wrapper.findComponent(Calendar)
+    expect(Object.keys(inner.vm.$attrs)).not.toContain('onUpdate:value')
+
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    ;(inner.vm as unknown as { $emit: (event: string, ...args: unknown[]) => void }).$emit('update:value', '2026-11-03')
+    const warned = warn.mock.calls.flat().join(' ')
+    warn.mockRestore()
+    expect(warned).not.toContain('neither declared')
   })
 })
