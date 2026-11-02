@@ -130,7 +130,6 @@ const props = withDefaults(defineProps<Props>(), {
   expandColumnTitle: undefined,
   expandColumnWidth: 48,
   expandFixed: false,
-  expandedRowKeys: () => [],
   expandRowByClick: false
 })
 defineSlots<TableSlots>()
