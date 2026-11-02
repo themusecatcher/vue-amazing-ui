@@ -979,7 +979,7 @@ import { SmileOutlined } from '@ant-design/icons-vue'
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| open <Tag color="cyan">v-model</Tag> | 下拉菜单是否展开 | boolean | undefined |
+| open <Tag color="cyan">v-model</Tag> | 下拉菜单是否展开；传入即受控，不传时由组件内部维护 | boolean | undefined |
 | menus | 菜单项配置数据 (配置式)，与 `overlay` 插槽二选一 | [MenuOption](#menuoption-type)[] | [] |
 | placement | 下拉菜单弹出位置 | 'topLeft' &#124; 'top' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottom' &#124; 'bottomRight' | 'bottomLeft' |
 | arrow | 是否显示下拉箭头；传 `{ pointAtCenter: true }` 时箭头指向触发器中心 | boolean &#124; [DropdownArrowOptions](#dropdownarrowoptions-type) | false |
@@ -1031,7 +1031,7 @@ _分别对应移入、点击、右键触发；传入数组可组合多种触发�
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| open <Tag color="cyan">v-model</Tag> | 下拉菜单是否展开 | boolean | undefined |
+| open <Tag color="cyan">v-model</Tag> | 下拉菜单是否展开；传入即受控，不传时由组件内部维护 | boolean | undefined |
 | menus | 菜单项配置数据 (配置式)，与 `overlay` 插槽二选一 | [MenuOption](#menuoption-type)[] | [] |
 | type | 按钮类型，同 [Button](/guide/components/button.html#button) | 'default' &#124; 'primary' &#124; 'danger' &#124; 'dashed' &#124; 'text' &#124; 'link' | 'default' |
 | size | 按钮尺寸，同 [Button](/guide/components/button.html#button) | 'small' &#124; 'middle' &#124; 'large' | 'middle' |

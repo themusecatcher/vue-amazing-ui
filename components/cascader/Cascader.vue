@@ -21,6 +21,7 @@ import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
 import {
   injectFromChain,
   useControlledModel,
+  useIsControlled,
   useResizeObserver,
   zIndexContainerOpenKey,
   FLOATING_LAYER_Z_INDEX
@@ -222,6 +223,8 @@ const contentRef = ref<HTMLElement | null>(null) // 触发器内容容器（面�
 const popupRef = ref<InstanceType<typeof Popup> | null>(null) // 浮层宿主模板引用（面板根元素经其 expose 取得）
 // (v-model:open) 面板显隐：传值即受控，未传时组件自持
 const openModel = useControlledModel<boolean>('open', false)
+// 面板开合是否受控：非受控时才由组件自己派发 panelChange，受控由父侧回写驱动
+const isOpenControlled = useIsControlled('open')
 // (v-model:search-value) 搜索文本：传值即受控，未传时组件自持
 const searchValueModel = useControlledModel<string>('searchValue', '')
 const focused = ref<boolean>(false) // 是否聚焦（决定描边 / 阴影）
@@ -818,7 +821,7 @@ const matchTriggerWidth = computed<'minWidth' | false>(() => {
  */
 function setPanelOpen(nextOpen: boolean): void {
   if (openModel.value === nextOpen) return
-  const controlled = props.open !== undefined
+  const controlled = isOpenControlled.value
   openModel.value = nextOpen
   if (controlled) emitPanelChange(nextOpen)
 }
@@ -1354,7 +1357,7 @@ const screenReaderText = computed(() => {
 })
 // 非受控模式下由模型变化派发语义化开合事件；受控模式由 setPanelOpen 在「用户请求变更」时同步派发
 watch(openModel, (visible) => {
-  if (props.open === undefined) {
+  if (!isOpenControlled.value) {
     emitPanelChange(visible)
   }
 })

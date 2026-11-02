@@ -65,31 +65,33 @@ const props = withDefaults(defineProps<Props>(), {
 依据（2026-11 复核，均核对过源码）：
 
 - **Vue `useModel` 的判据不同**：它要求「prop key 存在**且** `onUpdate:x` 监听器存在」（`@vue/runtime-core` 的 `hasVModel`）。于是「父只传值、不监听回写」时组件会本地自写 —— UI 正常但数据不回流，正是本库最不能接受的**静默分叉**；而 `!== undefined` 判据的失败是「点了没反应」，开发期立即暴露。响亮失败优于静默失败。
-- **生态一致**：`ant-design-vue@4.2.6`（`es/_util/hooks/useMergedState.js`）与 `naive-ui@2.45.3`（`vooks` 的 `useMergedState`）都用 `value !== undefined` 判据，且两库对 `useModel` / `defineModel` 的使用量为 **0**。
+- **生态惯例**：主流同类组件库的可写状态合并实现普遍以 `value !== undefined` 判据，且极少使用 `useModel` / `defineModel`（2026-11 逐库核对源码确认）；本库跟随这一惯例。
 - **类型单一真相源**：`defineModel` 生成的 prop 不在 `interface Props` 里，须用 `Props & { x?: T }` 合并 + 守卫脚本补偿；手写声明天然只有一个出处。
 
 落地细则：
 
 - **声明形态**：字段写进 `interface Props`（带中文注释），`defineEmits` 声明 `update:x`。双模字段用 `components/utils` 的 `useControlledModel(name, default)` 取可写 ref，**禁止**再手写 `innerX` + `watch(() => props.x)` + `mergedX` 三件套。
-- **受控字段的 prop 默认值必须是 `undefined`**：否则 `!== undefined` 判据恒真，组件永久受控、彻底不可交互。非受控初值由 `useControlledModel` 的第二个参数承担，对外按需暴露 `defaultXxx`。
+- **`defineModel` 禁止用于公共 API**：其受控判据与全库冲突（见上文依据）。确有非公共入口需要时，须加入 `scripts/check-model-props.js` 的白名单并写明理由；白名单当前为空。该条与上一条默认值约定同由 `pnpm guard` 第 ⑦ 项强制。
+- **受控字段的 prop 默认值必须是 `undefined`**：否则 `!== undefined` 判据恒真，组件永久受控、彻底不可交互（布尔字段连「不写」也不行——缺省会被强转 `false`，必须显式写 `undefined`）。非受控初值由 `useControlledModel` 的第二个参数承担，对外按需暴露 `defaultXxx`。该条由 `pnpm guard` 第 ⑦ 项强制。
+- **需要知道「当前是否受控」时用 `useIsControlled(name)`**：`useControlledModel` 只负责读写，不对外暴露判据；组件中若还有「只在非受控时才做」的旁路逻辑（典型：非受控才派发 `panelChange`、非受控 `defaultOpen` 才生效），统一调用 `useIsControlled`，**禁止**再直接写 `props.x === undefined` —— 两处判据一旦分叉，就会重现「事件扣了但界面不动」这类问题。
 - **写入必须整体赋值**（`model.value = [...model.value, x]`），禁止 `push` / `splice`：受控时该 ref 读到的是父数组引用，原地修改会直接污染父级数据且不触发上报。
-- **「要不要双模」是组件特性，逐字段定**：不绑 `v-model` 时是否必须可交互。`Switch` / `Tag` / `Steps` 保持纯受控（无内部态）；`Tabs` / `Collapse` / `Slider` / `Pagination` / `AutoComplete` 补 `defaultXxx` 作为非受控入口。
+- **「要不要双模」是组件特性，逐字段定**：不绑 `v-model` 时是否必须可交互。`Switch` / `Tag` / `Steps` / `AutoComplete` 的 `value` 保持纯受控（无内部态）；`Tabs` / `Collapse` / `Slider` / `Pagination` 补 `defaultXxx` 作为非受控入口。
 - **原生表单元素**（`Input` / `Textarea` / `InputSearch` / `InputNumber`）保持手写：真相源在 DOM 节点，受控时回写元素，非受控时元素自持，不得再引入一份 JS 本地状态。
 - **双轨字段**（`DatePicker` / `TimePicker` 的 `formattedValue`）保持手写：需区分「父写」与「组件派生」，可写 ref 无法提供来源信息。
 - **唯一的结构性例外是 `Carousel.currentIndex`**：自动播放会在**无用户交互**时持续推进下标并改变展示，组件内的动画下标才是展示真相，`currentIndex` 只是「父可驱动 + 变更上报」的通道。判别条件只有一条：**组件是否会在无用户交互时自动改值** —— 会（自动播放）则 R1 不适用；只在用户交互时改值（点击 / 键盘 / 拖拽）则一律 R1。
-- **存量迁移已全部完成**（3.7.0）：50 个 `v-model` 字段中 49 个走 R1 判据 + `useControlledModel`，唯一例外是上文 `Carousel.currentIndex`。`scripts/check-model-props.js` 的 `LEGACY_DEFINE_MODEL` 已清空，新字段不得进白名单。
+- **存量迁移已全部完成**（3.7.0）：31 个双模字段统一走 `useControlledModel`；其余字段按性质保留 —— 纯受控（`Switch` / `Tag` / `Steps` / `AutoComplete` 的 `value` / `Dialog` / `Modal`）、原生表单元素（`Input` / `Textarea` / `InputSearch` / `InputNumber` / `Radio` / `RadioButton` / `Checkbox`）、双轨（`DatePicker` / `TimePicker` 的 `formattedValue`），以及上文唯一的结构性例外 `Carousel.currentIndex`。`scripts/check-model-props.js` 的 `LEGACY_DEFINE_MODEL` 已清空，新字段不得进白名单。
 
 #### `defineModel` → `useControlledModel` 迁移清单
 
-四条必踩项（均实测踩到）：
+五条必踩项（均实测踩到）：
 
 1. **布尔字段必须在 `withDefaults` 里显式给 `undefined`**：`open?: boolean` 会被编译成 `{ type: Boolean }`，父未传时 Vue 强转成 `false` → 判据读到 `false` → 永久受控、交互全失效（表现为「事件正常派发但界面不动」）。
-2. **`update:x` 事件要手动补进 `defineEmits`**：`defineModel` 会自动注册，换成 composable 后必须自己写，否则父侧 `v-model` 收不到（Vue 会 warn「emitted event ... neither declared」）。
-3. **字段名与 prop 同名会被 `vue/no-dupe-keys` 拦**：setup 里的变量需改名（`openModel` / `valueModel`），并同步模板中的裸引用；`value` 这类高频词要逐处确认，避免误改局部变量。
+2. **`update:x` 事件要手动补进 `defineEmits`**：`defineModel` 会自动注册，换成 composable 后必须自己写。父侧仍能收到事件（Vue 从 `vnode.props` 取监听器），但开发期会 warn「emitted event ... neither declared」，且该监听器会落进 `$attrs` 透传到根节点。
+3. **字段名不能与 prop 同名**：`const open = useControlledModel('open', false)` 会被 `vue/no-dupe-keys` 直接拦下（`Duplicate key 'open'. May cause name collision in script or template tag`），故统一改名为 `openModel` / `valueModel` —— 改名本身是被动结果，真正的坑在改名之后（见下两条）。
 4. **模板里的裸引用命中 prop，不会命中改名后的模型变量**：`const openModel = useControlledModel('open', false)` 之后，模板中的 `:show="open"` / `:active="open"` 仍解析为 `props.open`（未传值即 `undefined`）—— 症状与第 1 项相同（事件正常派发、面板却永不渲染），且单测若只断言 `update:open` 会漏过。改名后须把模板里的同名裸引用逐处换成 `openModel`，并补一条「不传 `open`、点击唤起后断言面板真的渲染」的用例。
+5. **脚本里的裸引用同样不会报错**：`watch(open, ...)` 这类写法在改名后仍能编译 —— DOM 类型声明自带全局 `open` / `close`，`vue-tsc` 与 ESLint 都不报，运行期却落到 `window.open()`（挂载即调用），依赖它的副作用（如收起后复位键盘态）静默失效。改名后须连脚本一起搜一遍同名标识符，并补一条「展开 → 收起」不触碰 `window.open` 的用例。
 
-另：`defaultOpen` 之类的非受控初值**不要**预置进模型初值，应由 setup 显式写一次，否则「显隐从未变化」会让 `openChange` 不派发。
-- **`defineModel` 禁止用于公共 API**：其受控判据与全库冲突（见上文依据）。确有非公共入口需要时，须加入 `scripts/check-model-props.js` 的白名单并写明理由；白名单当前为空。该约定由 `pnpm guard` 第 ⑦ 项强制。
+另：**开合类**字段的 `defaultOpen` 之类不要预置进模型初值，应由 setup 显式写一次（`if (props.defaultOpen && !isOpenControlled.value) openModel.value = true`），否则「显隐从未变化」会让 `openChange` 不派发；**取值类**字段（`defaultValue` / `defaultActiveKey` / `defaultPage`）没有这个问题，直接作为 `useControlledModel` 的第二个参数即可。
 
 ## 类型导出约定
 
@@ -131,7 +133,7 @@ defineSlots<ButtonSlots>()
 ```
 
 - 插槽类型名统一为 `<组件名>Slots`，可选插槽用 `?`。
-- 该类型在 SFC 内 `export` 后**不经入口 / `components.ts` 对外导出**，仅供组件自身使用，不属于库的公开 API。
+- 该类型对外导出的范围见上文「类型导出约定」：**公开组件（含 `XxxProvider`）一律经 `index.ts` → `components.ts` 导出**；仅库内组件（`picker` / `popup`）不导出。
 
 ## 主题样式约定
 
@@ -367,10 +369,10 @@ export const themeModeKey: InjectionKey<Ref<ResolvedMode>> = Symbol('vaThemeMode
 
 | 决策 | 选择 | 理由 |
 | :-- | :-- | :-- |
-| 学 naive-ui 用字符串键 + `n-` 前缀 | **不学** | 字符串键的唯一收益是「跨副本匹配」，而 `vue` 是 peerDependency、库单实例；代价是宿主同名 `app.provide()` 可劫持（实测 `useZIndex` 抛 `manager.allocate is not a function`） |
+| 用字符串键 + 短前缀做注入令牌 | **不采用** | 字符串键的唯一收益是「跨副本匹配」，而 `vue` 是 peerDependency、库单实例；代价是宿主同名 `app.provide()` 可劫持（实测 `useZIndex` 抛 `manager.allocate is not a function`） |
 | 用 `Symbol.for()` | **不用** | 注入链路依赖的 Vue 运行时本身无法跨副本共享 `provides`，收益不成立且污染全局注册表 |
 | 集中到单一 `keys.ts` | **不集中** | 会形成 `utils → 组件目录类型` 的反向依赖与循环依赖 |
-| 照抄 vue-router 的「小写空格短语 + `__DEV__` 条件描述串」 | **不照抄** | 仓库无 `__DEV__` 常量，条件描述串会让「描述串 = va + 变量名」无法静态校验 |
+| 描述串用「小写空格短语 + 条件编译」 | **不采用** | 仓库无条件编译常量，条件描述串会让「描述串 = va + 变量名」无法静态校验 |
 
 ## 单组件目录的辅助文件
 

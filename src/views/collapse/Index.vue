@@ -222,6 +222,9 @@ function handleClick(key: string | number) {
     <h2 class="mt30 mb10">基本使用</h2>
     <p class="mb10"><code>activeKey</code> 传入 <code>number[]</code> | <code>string[]</code>，所有面板可同时展开</p>
     <Collapse :items="collapseItems" v-model:active-key="activeKey" @change="onChange" />
+    <h2 class="mt30 mb10">非受控模式</h2>
+    <p class="mb10">不传 <code>v-model:active-key</code> 时由组件自持，<code>defaultActiveKey</code> 指定初始展开项</p>
+    <Collapse :items="collapseItems" :default-active-key="['1']" @change="onChange" />
     <h2 class="mt30 mb10">手风琴</h2>
     <p class="mb10"
       >只允许单个内容区域展开，只需 <code>activeKey</code> 传入 <code>number</code> | <code>string</code> 即可</p

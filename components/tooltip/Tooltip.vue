@@ -61,10 +61,10 @@ defineSlots<TooltipSlots>()
 defineOptions({ inheritAttrs: false })
 // (v-model) 显隐：传值即受控（只上报不回弹），未传时组件自持 —— open 的默认值因此必须是 undefined
 // （布尔 prop 缺省会被 Vue 强转成 false，那会让所有用法都变成「受控且恒关闭」）
-const open = useControlledModel<boolean>('open', false)
-// 实际可见性：面板渲染、无障碍关联与所有早返回判定统一看它，
-// 避免出现「内部状态与属性各说各话」的脱同步
-const tooltipVisible = computed<boolean>(() => open.value)
+const openModel = useControlledModel<boolean>('open', false)
+// 实际可见性：面板渲染、无障碍关联与所有早返回判定统一看它
+// （受控 / 非受控的取值差异已收敛在 openModel 内，此处不再分叉）
+const tooltipVisible = computed<boolean>(() => openModel.value)
 // 显隐定时器分离（与 Dropdown 同口径）：单定时器会让「待显示」与「待隐藏」互相取消 ——
 // 例如 hover 移入排了显示、移出排了隐藏，后者复用同一个句柄时前者的取消动作会把两者搅在一起
 let showTimer: ReturnType<typeof setTimeout> | null = null
@@ -233,8 +233,8 @@ onMounted(() => {
   syncAnchorBinding()
   measureAnchor()
 })
-// 可见性完全由 tooltipVisible 表达（受控时取属性、未受控时取内部状态），故无需同步状态的 watcher，
-// 也不需要因属性变化回传 update:open —— 受控变化由父侧驱动，与 Dropdown 同口径
+// 可见性完全由 tooltipVisible 表达（受控取父值、非受控取内部值，分叉已在 openModel 内收敛），
+// 故无需同步状态的 watcher，也不需要因属性变化回传 update:open —— 受控变化由父侧驱动，与 Dropdown 同口径
 watch(
   () => showTooltip.value && tooltipVisible.value,
   (to) => {
@@ -306,12 +306,12 @@ function clearTimers(): void {
   clearShowTimer()
   clearHideTimer()
 }
-// 请求变更显隐：受控时只上报（状态以 open 属性为准，组件不自行改写），未受控时写内部状态；
+// 请求变更显隐：受控时只上报（状态以 open 属性为准，组件不自行改写），非受控时写内部状态；
 // 两者都只在「值真的变化」时上报 —— 与 Dropdown 的 requestOpen 同口径，避免无变化通知
 function requestVisible(val: boolean): void {
   if (tooltipVisible.value === val) return
   // 写模型即完成两种路径：受控时只上报（显示以父侧回写为准），非受控时本地生效
-  open.value = val
+  openModel.value = val
   emits('openChange', val)
 }
 function applyShow(): void {

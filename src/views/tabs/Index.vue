@@ -35,6 +35,24 @@ const tabItems = ref<TabsItem[]>([
     content: 'Content of Tab Pane 6'
   }
 ])
+// 非受控演示专用：短列表让示例聚焦「不绑 v-model 也能切换」这一点
+const tabItemsDefault = ref<TabsItem[]>([
+  {
+    key: '1',
+    tab: 'Tab 1',
+    content: 'Content of Tab Pane 1'
+  },
+  {
+    key: '2',
+    tab: 'Tab 2',
+    content: 'Content of Tab Pane 2'
+  },
+  {
+    key: '3',
+    tab: 'Tab 3',
+    content: 'Content of Tab Pane 3'
+  }
+])
 const tabItemsDisabled = ref<TabsItem[]>([
   {
     key: '1',
@@ -242,6 +260,8 @@ const customContentStyle: CSSProperties = {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Tabs :items="tabItems" v-model:active-key="activeKey" @change="onChange" />
+    <h2 class="mt30 mb10">非受控模式</h2>
+    <Tabs :items="tabItemsDefault" default-active-key="2" @change="onChange" />
     <h2 class="mt30 mb10">卡片式标签页</h2>
     <Tabs :items="tabItems" v-model:active-key="activeKey" type="card" @change="onChange" />
     <h2 class="mt30 mb10">禁用某一项</h2>

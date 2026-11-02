@@ -1656,8 +1656,8 @@ const submenuItems = computed<ItemType[]>(() => [
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| openKeys <Tag color="cyan">v-model</Tag> | 当前展开的子菜单 `key` 数组，不传时为非受控 | [MenuKey](#menukey-type)[] | undefined |
-| selectedKeys <Tag color="cyan">v-model</Tag> | 当前选中的菜单项 `key` 数组，不传时为非受控 | [MenuKey](#menukey-type)[] | undefined |
+| openKeys <Tag color="cyan">v-model</Tag> | 当前展开的子菜单 `key` 数组；传入即受控，不传时由组件内部维护 | [MenuKey](#menukey-type)[] | undefined |
+| selectedKeys <Tag color="cyan">v-model</Tag> | 当前选中的菜单项 `key` 数组；传入即受控，不传时由组件内部维护 | [MenuKey](#menukey-type)[] | undefined |
 | items | 菜单内容 | [ItemType](#itemtype-type)[] | [] |
 | mode | 菜单类型 | 'horizontal' &#124; 'vertical' &#124; 'inline' | 'vertical' |
 | theme | 主题颜色 | 'light' &#124; 'dark' | 'light' |

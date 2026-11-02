@@ -182,6 +182,14 @@ describe('Drawer 挂载节点与属性透传', () => {
 })
 
 describe('Drawer 受控判据（传值即受控）', () => {
+  it('不传 open 时按非受控处理：布尔 prop 不得被 Vue 强转为 false', () => {
+    const wrapper = mountInline()
+    const { props } = (wrapper.vm as unknown as { $: { props: Record<string, unknown> } }).$
+    // 缺省被强转成 false 会让判据恒为「受控」，组件自持的写入将永远不生效
+    expect(props.open).toBeUndefined()
+    wrapper.unmount()
+  })
+
   it('父传 open 且不监听 update 时，遮罩点击只上报、组件不自行关闭', async () => {
     const wrapper = mountInline({ open: true })
     const mask = wrapper.find('.drawer-mask')
