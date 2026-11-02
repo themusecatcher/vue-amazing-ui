@@ -16,17 +16,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-11-02">3.7.0</VersionDateTag>
 
-- 统一 `v-model` 的受控判据为「传值即受控」：传入 `value` / `open` 后组件不再本地改写，只派发 `update:x`。此前父仅传值、未监听 `update:x` 时，[抽屉 Drawer](/guide/components/drawer.html) 的遮罩关闭、[上传 Upload](/guide/components/upload.html) 的增删文件、[表格 Table](/guide/components/table.html) 的展开行、[菜单 Menu](/guide/components/menu.html) 与 [分页 Pagination](/guide/components/pagination.html) 的切换等仍会在组件内生效，与父侧数据不一致
+- 统一 `v-model` 的受控判据为「传值即受控」：传入 `value` / `open` 后组件不再本地改写，只派发 `update:x`。此前父侧仅传值、未监听 `update:x` 时，[抽屉 Drawer](/guide/components/drawer.html) 的遮罩关闭、[上传 Upload](/guide/components/upload.html) 的增删文件、[表格 Table](/guide/components/table.html) 的展开行、[菜单 Menu](/guide/components/menu.html) 与 [分页 Pagination](/guide/components/pagination.html) 的切换仍在组件内生效，与父侧数据不一致
 - 修复 [多选组 CheckboxGroup](/guide/components/checkbox.html) 不传 `value` 时仍被当作受控、无法非受控使用的问题
 - 新增非受控入口：[滑动输入条 Slider](/guide/components/slider.html) 的 `defaultValue`，[标签页 Tabs](/guide/components/tabs.html) / [折叠面板 Collapse](/guide/components/collapse.html) 的 `defaultActiveKey`，[分页 Pagination](/guide/components/pagination.html) 的 `defaultPage` / `defaultPageSize`：不绑 `v-model` 时也能指定初值并正常交互
-- 贡献者文档补充 `v-model` 判据的划分：值为唯一状态时用「传值即受控」，值之外还有自主推进的游标（轮播、日期 / 时间 / 颜色面板）时保留双向绑定
-
-## <VersionDateTag date="2026-10-31">3.6.1</VersionDateTag>
-
-- 修复 [日历 Calendar](/guide/components/calendar.html) 的 `CalendarProps` 类型缺少 `value`：`v-model:value` 字段此前未并入对外类型，显式标注 `CalendarProps` 时该字段报错
-- 新增全部组件的 `XxxSlots` 类型导出（含 `XxxProvider`）：配合 `defineSlots` 可在二次封装时继承插槽名与作用域参数类型；同时补齐 [级联选择 Cascader](/guide/components/cascader.html) 的 `CascaderSearchSegment`、[选择器 Select](/guide/components/select.html) 的 `SelectMenuNode` / `SelectDropdownRenderParams` / `SelectTagRenderParams`
+- 修复 [日历 Calendar](/guide/components/calendar.html) 的 `CalendarProps` 类型缺少 `value`：显式标注该类型时 `v-model:value` 字段报错
 - 新增 [选择器 Select](/guide/components/select.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html) 的 `update:open` 事件：面板开合支持 `v-model:open`，与 [级联选择 Cascader](/guide/components/cascader.html) 等弹层组件一致；原有 `openChange` / `dropdownVisibleChange` 继续派发
-- 贡献者文档补充 `v-model` 声明约定与类型导出约定
+- 新增全部组件的 `XxxSlots` 类型导出（含 `XxxProvider`）：配合 `defineSlots` 可在二次封装时继承插槽名与作用域参数类型；同时补齐 [级联选择 Cascader](/guide/components/cascader.html) 的 `CascaderSearchSegment`、[选择器 Select](/guide/components/select.html) 的 `SelectMenuNode` / `SelectDropdownRenderParams` / `SelectTagRenderParams`
+- 贡献者文档补充 `v-model` 声明约定与类型导出约定：受控判据为传值即受控（例外仅限自动推进的轮播游标、需区分父写的格式化值与原生表单控件），存量字段迁移已完成
 
 ## <VersionDateTag date="2026-10-31">3.6.0</VersionDateTag>
 

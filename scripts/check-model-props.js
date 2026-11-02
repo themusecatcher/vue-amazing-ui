@@ -22,19 +22,16 @@ import { collectSfcs, findBalancedEnd, parsePropsFields } from './check-prop-run
 const MODEL_PATTERN = /defineModel\s*(?:<[^()]*>)?\s*\(\s*(?:'([^']+)'|"([^"]+)")?/g
 
 /**
- * 存量白名单：仅这些 SFC 仍用 `defineModel` 声明 v-model 字段
+ * 存量白名单：这些 SFC 仍允许用 `defineModel` 声明 v-model 字段
  *
  * 全库 v-model 判据统一为「传值即受控」（`props.x !== undefined`），见
  * `development/component-design.md` 的「v-model 声明约定」。`defineModel` 的受控判据要求
- * 「prop + onUpdate 监听器」同时存在，与上述判据冲突，故禁止用于公共 API；此处白名单只容纳
- * 待迁移的存量字段，迁完后应清空。
+ * 「prop + onUpdate 监听器」同时存在，与上述判据冲突，故禁止用于公共 API。
+ *
+ * 存量迁移已全部完成（最后一处 `time-picker/TimePicker.vue` 随 3.7.0 迁往 `useControlledModel`），
+ * 白名单为空：任何组件新增 `defineModel` 都会被判为问题。
  */
-const LEGACY_DEFINE_MODEL = new Set([
-  'calendar/Calendar.vue',
-  'color-picker/ColorPicker.vue',
-  'date-picker/DatePicker.vue',
-  'time-picker/TimePicker.vue'
-])
+const LEGACY_DEFINE_MODEL = new Set([])
 
 /** `Props & { ... }` 形式的对外合并块（如 `CalendarProps = Props & { value?: ... }`） */
 const MERGE_PATTERN = /type\s+[A-Za-z_$][\w$]*\s*=\s*Props\s*&\s*\{/g
