@@ -16,6 +16,17 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-11-02">3.7.0</VersionDateTag>
 
+- 新增 [分页 Pagination](/guide/components/pagination.html) 的 `bordered` 属性（默认 `true`）：传 `false` 切换为无边框风格
+- [分页 Pagination](/guide/components/pagination.html) 统一两种风格的选中态与交互反馈：当前页加粗、悬浮取主色、过渡时长对齐 0.2s
+- 修复 [分页 Pagination](/guide/components/pagination.html) 无边框风格下禁用态未选中页仍带边框的问题
+- [选择器 Select](/guide/components/select.html) / [输入框 Input](/guide/components/input.html) / [分页 Pagination](/guide/components/pagination.html) 的尺寸切换补充过渡：运行时切换 `size` 不再整块突变
+- 新增 [输入框 Input](/guide/components/input.html) 的 `blur` 事件（带 `relatedTarget`）；[分页 Pagination](/guide/components/pagination.html) 跳转框失焦到页码时不再重复跳转、重复上报 `change`
+- [分页 Pagination](/guide/components/pagination.html) 的跳转输入框只接受数字：按键输入直接拦截，粘贴 / 输入法按数字过滤，不再把非法内容静默丢弃
+- [分页 Pagination](/guide/components/pagination.html) 的 `showQuickJumper` 支持对象形态 `{ goButton }`：展示跳转确认按钮（文案可自定义），有按钮时失焦不再自动跳转
+- 修复 [表格 Table](/guide/components/table.html) 展开按钮缺少 `type="button"`：在表单内点击会连带提交表单；同时补充 `aria-expanded` / `aria-label`
+- [分页 Pagination](/guide/components/pagination.html) 跳转确认按钮、[对话框 Dialog](/guide/components/dialog.html) / [模态框 Modal](/guide/components/modal.html) 的关闭与全屏按钮补充按压态
+- 修复 [分页 Pagination](/guide/components/pagination.html) 页码越界后无页码高亮、切换每页条数后当前页未收敛的问题
+- [分页 Pagination](/guide/components/pagination.html) 补充 `aria-current` / `aria-disabled` / `role="navigation"` 与页码 `title`，禁用态与边界页移出 Tab 序列
 - 统一 `v-model` 的受控判据为「传值即受控」：传入 `value` / `open` 后组件不再本地改写，只派发 `update:x`。此前父侧仅传值、未监听 `update:x` 时，[抽屉 Drawer](/guide/components/drawer.html) 的遮罩关闭、[上传 Upload](/guide/components/upload.html) 的增删文件、[表格 Table](/guide/components/table.html) 的展开行、[菜单 Menu](/guide/components/menu.html) 与 [分页 Pagination](/guide/components/pagination.html) 的切换仍在组件内生效，与父侧数据不一致
 - 修复 [多选组 CheckboxGroup](/guide/components/checkbox.html) 不传 `value` 时仍被当作受控、无法非受控使用的问题
 - 新增非受控入口：[滑动输入条 Slider](/guide/components/slider.html) 的 `defaultValue`，[标签页 Tabs](/guide/components/tabs.html) / [折叠面板 Collapse](/guide/components/collapse.html) 的 `defaultActiveKey`，[分页 Pagination](/guide/components/pagination.html) 的 `defaultPage` / `defaultPageSize`：不绑 `v-model` 时也能指定初值并正常交互
