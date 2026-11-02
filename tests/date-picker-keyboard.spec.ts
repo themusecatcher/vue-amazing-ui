@@ -172,9 +172,13 @@ describe('键盘导航：日期面板', () => {
 
     await press('a')
     expect(wrapper.emitted('update:open')?.at(-1)).toEqual([true])
+    // 未传 `open` 时由组件自持开合：面板必须真的渲染出来（只断言事件会漏掉「值已上报但界面不动」）
+    expect(document.querySelector('.picker-panel')).not.toBeNull()
 
     await press('Escape')
     expect(wrapper.emitted('update:open')?.at(-1)).toEqual([false])
+    // 面板节点常驻、由 v-show 收起，故以浮层宿主的 display 判断收起
+    expect(document.querySelector<HTMLElement>('[data-va-floating-mount]')?.style.display).toBe('none')
 
     // Esc 之后仍不再唤起
     await press('Escape')
