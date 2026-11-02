@@ -5,26 +5,23 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import {
   checkModelProps,
+  collectEmitDeclareProblems,
   collectModelDefaultProblems,
-  parseModelContract,
-  parseModelDefaults,
-  parseObjectFieldNames
+  parseModelDefaults
 } from '../scripts/check-model-props.js'
 
 /**
  * v-model 声明契约校验的用例（纯源码文本断言，无 DOM、无产物）
  *
  * 契约有三条（见 `scripts/check-model-props.js` 头部与 development/component-design.md）：
- * ① 公共 API 禁止 `defineModel`，只放行白名单内的待迁移存量；
- * ② 白名单内仍用 `defineModel` 时，字段必须并入对外 props 类型（`interface Props` 或 `Props & { x?: ... }`）；
- * ③ `useControlledModel` 的字段在 `withDefaults` 里只能写 `undefined`（布尔字段必须显式写），
- * 否则「传值即受控」的判据恒真。
- * 本用例锁定「能报出来」与「不误报（合并块 / 无参数模型 / 内部组件 / 展开项）」两侧。
+ * ① 全库禁止 `defineModel`（无白名单例外，公共 API 与内部组件一律适用）；
+ * ② `useControlledModel` 的字段在 `withDefaults` 里只能写 `undefined`（布尔字段必须显式写），
+ * 否则「传值即受控」的判据恒真；
+ * ③ 同一字段必须在 `defineEmits` 里声明 `update:x`，否则每次交互都输出 dev 告警、监听器落进 `$attrs`。
+ * 本用例锁定「能报出来」与「不误报（展开项 / 未标注泛型 / 注释 / 含函数成员的类型参数）」两侧。
  */
 
 const tempDirs: string[] = []
-// 测试夹具的路径是 demo/Demo.vue，需显式放行才能触达第二条断言
-const ALLOWED = new Set(['demo/Demo.vue'])
 
 function createFixture(source: string, name = 'Demo') {
   const rootDir = mkdtempSync(join(tmpdir(), 'va-model-props-'))
@@ -39,117 +36,8 @@ afterEach(() => {
   tempDirs.splice(0).forEach((dir) => rmSync(dir, { recursive: true, force: true }))
 })
 
-describe('parseObjectFieldNames', () => {
-  it('只取顶层字段，嵌套对象与箭头函数的 > 不影响判定', () => {
-    const body = `
-      value?: string | number
-      open?: boolean
-      render?: (arg: { origin: string; extra: number }) => void
-    `
-    expect(parseObjectFieldNames(body)).toEqual(['value', 'open', 'render'])
-  })
-})
-
-describe('parseModelContract', () => {
-  it('解析具名模型与无参数模型（默认 modelValue）', () => {
-    const source = `
-      <script setup lang="ts">
-      const value = defineModel<string | number>('value', { default: null })
-      const open = defineModel<boolean>()
-      </script>
-    `
-    const { models } = parseModelContract(source)
-    expect(models).toEqual(['value', 'modelValue'])
-  })
-
-  it('合并块字段计入 declared，且标记 typed', () => {
-    const source = `
-      <script setup lang="ts">
-      export interface Props {
-        display?: 'panel' | 'card'
-      }
-      export type DemoProps = Props & {
-        value?: string | number
-      }
-      const value = defineModel<string | number>('value')
-      </script>
-    `
-    const { declared, typed } = parseModelContract(source)
-    expect(typed).toBe(true)
-    expect([...declared]).toEqual(expect.arrayContaining(['display', 'value']))
-  })
-
-  it('没有对外 props 类型时不标记 typed（内部组件）', () => {
-    const source = `
-      <script setup lang="ts">
-      const open = defineModel<boolean>('open')
-      </script>
-    `
-    const { typed, declared } = parseModelContract(source)
-    expect(typed).toBe(false)
-    expect(declared.size).toBe(0)
-  })
-})
-
 describe('checkModelProps', () => {
-  it('模型字段写在 interface Props 中：通过', () => {
-    const rootDir = createFixture(`
-      <script setup lang="ts">
-      export interface Props {
-        value?: string | number
-        display?: 'panel' | 'card'
-      }
-      const value = defineModel<string | number>('value')
-      </script>
-    `)
-    const result = checkModelProps({ rootDir, allowedSfc: ALLOWED })
-    expect(result.problems).toEqual([])
-    expect(result.checked).toBe(1)
-  })
-
-  it('模型字段经 Props & { ... } 合并：通过', () => {
-    const rootDir = createFixture(`
-      <script setup lang="ts">
-      export interface Props {
-        display?: 'panel' | 'card'
-      }
-      export type DemoProps = Props & {
-        value?: string | number
-      }
-      const value = defineModel<string | number>('value')
-      </script>
-    `)
-    const result = checkModelProps({ rootDir, allowedSfc: ALLOWED })
-    expect(result.problems).toEqual([])
-  })
-
-  it('模型字段两处都没有：报问题', () => {
-    const rootDir = createFixture(`
-      <script setup lang="ts">
-      export interface Props {
-        display?: 'panel' | 'card'
-      }
-      const value = defineModel<string | number>('value')
-      </script>
-    `)
-    const result = checkModelProps({ rootDir, allowedSfc: ALLOWED })
-    expect(result.problems).toHaveLength(1)
-    expect(result.problems[0]).toContain("defineModel('value')")
-  })
-
-  it('内部组件（无对外 props 类型）：跳过而非报错', () => {
-    const rootDir = createFixture(`
-      <script setup lang="ts">
-      const open = defineModel<boolean>('open')
-      </script>
-    `)
-    const result = checkModelProps({ rootDir, allowedSfc: ALLOWED })
-    expect(result.problems).toEqual([])
-    expect(result.skipped).toBe(1)
-    expect(result.checked).toBe(0)
-  })
-
-  it('白名单之外使用 defineModel：直接报「公共 API 禁止」而非字段缺失', () => {
+  it('使用 defineModel：报「禁止」并给出替代写法，不再提示加白名单', () => {
     const rootDir = createFixture(`
       <script setup lang="ts">
       export interface Props {
@@ -158,11 +46,57 @@ describe('checkModelProps', () => {
       const value = defineModel<string | number>('value')
       </script>
     `)
-    // 默认白名单不含 demo/Demo.vue
     const result = checkModelProps({ rootDir })
     expect(result.problems).toHaveLength(1)
-    expect(result.problems[0]).toContain('公共 API 禁止用 defineModel')
+    expect(result.problems[0]).toContain("defineModel('value')")
+    expect(result.problems[0]).toContain('禁止用 defineModel')
     expect(result.problems[0]).toContain('useControlledModel')
+    expect(result.problems[0]).not.toContain('白名单')
+  })
+
+  it('无参数 defineModel（默认 modelValue）同样报问题', () => {
+    const rootDir = createFixture(`
+      <script setup lang="ts">
+      const model = defineModel<boolean>()
+      </script>
+    `)
+    const result = checkModelProps({ rootDir })
+    expect(result.problems).toHaveLength(1)
+    expect(result.problems[0]).toContain("defineModel('modelValue')")
+  })
+
+  it('未使用 defineModel 的双模字段（已声明 update:x）：通过且计入 defaultsChecked', () => {
+    const rootDir = createFixture(`
+      <script setup lang="ts">
+      export interface Props {
+        value?: string | number
+      }
+      const props = withDefaults(defineProps<Props>(), { value: undefined })
+      const emits = defineEmits(['update:value'])
+      const valueModel = useControlledModel<string>('value', '')
+      </script>
+    `)
+    const result = checkModelProps({ rootDir })
+    expect(result.problems).toEqual([])
+    expect(result.defaultsChecked).toBe(1)
+  })
+
+  it('双模字段漏声明 update:x：报问题并指到 defineEmits', () => {
+    const rootDir = createFixture(`
+      <script setup lang="ts">
+      export interface Props {
+        value?: string | number
+      }
+      const props = withDefaults(defineProps<Props>(), { value: undefined })
+      const emits = defineEmits(['change'])
+      const valueModel = useControlledModel<string>('value', '')
+      </script>
+    `)
+    const result = checkModelProps({ rootDir })
+    expect(result.problems).toHaveLength(1)
+    expect(result.problems[0]).toContain("useControlledModel('value')")
+    expect(result.problems[0]).toContain('update:value')
+    expect(result.problems[0]).toContain('$attrs')
   })
 })
 
@@ -266,5 +200,106 @@ describe('collectModelDefaultProblems', () => {
       const a = useControlledModel<boolean>('open', false)
     `
     expect(collectModelDefaultProblems(withSpread, 'components/demo/Demo.vue')).toEqual([])
+  })
+
+  it('注释里的 useControlledModel 调用不参与判定（不误报默认值缺失）', () => {
+    const source = `
+      const props = withDefaults(defineProps<Props>(), { size: 'middle' })
+      // 原先写法：useControlledModel<boolean>('open', false)
+      /* 备用写法：useControlledModel('value', '') */
+    `
+    expect(collectModelDefaultProblems(source, 'components/demo/Demo.vue')).toEqual([])
+  })
+})
+
+describe('parseModelDefaults 的泛型配平', () => {
+  it('类型参数含函数成员时仍能解析（原 `[^)]*` 写法会静默跳过整个默认值块）', () => {
+    const { hasBlock, blocked, defaults } = parseModelDefaults(`
+      const props = withDefaults(defineProps<Props & { onItemClick?: (item: Item) => void }>(), {
+        open: undefined,
+        size: 'middle'
+      })
+    `)
+    expect(blocked).toBe(false)
+    expect(hasBlock).toBe(true)
+    expect(defaults.get('open')).toBe('undefined')
+    expect(defaults.get('size')).toBe("'middle'")
+  })
+
+  it('嵌套泛型与箭头函数不影响配平', () => {
+    const { hasBlock, defaults } = parseModelDefaults(`
+      const props = withDefaults(defineProps<Props<{ a: string }>>(), { open: undefined })
+    `)
+    expect(hasBlock).toBe(true)
+    expect(defaults.get('open')).toBe('undefined')
+  })
+
+  it('没有默认值块时不算解析失败', () => {
+    const { hasBlock, blocked } = parseModelDefaults(`const props = defineProps<Props>()`)
+    expect(hasBlock).toBe(false)
+    expect(blocked).toBe(false)
+  })
+
+  it('无法解析时标记 blocked，由上层转成问题而非静默通过', () => {
+    const source = `
+      const props = withDefaults(defineProps<Props>(), SHARED_DEFAULTS)
+      const open = useControlledModel<boolean>('open', false)
+    `
+    expect(parseModelDefaults(source).blocked).toBe(true)
+    const problems = collectModelDefaultProblems(source, 'components/demo/Demo.vue')
+    expect(problems).toHaveLength(1)
+    expect(problems[0]).toContain('无法解析')
+  })
+})
+
+describe('collectEmitDeclareProblems', () => {
+  it('对象字面量声明 update:x：通过', () => {
+    const source = `
+      const emits = defineEmits<{ 'update:value': [value: string]; change: [value: string] }>()
+      const valueModel = useControlledModel<string>('value', '')
+    `
+    expect(collectEmitDeclareProblems(source, 'components/demo/Demo.vue')).toEqual([])
+  })
+
+  it('数组形态的 defineEmits 同样算声明', () => {
+    const source = `
+      const emits = defineEmits(['update:open', 'change'])
+      const openModel = useControlledModel<boolean>('open', false)
+    `
+    expect(collectEmitDeclareProblems(source, 'components/demo/Demo.vue')).toEqual([])
+  })
+
+  it('只有派发调用、没有声明：报问题（调用点不算声明）', () => {
+    const source = `
+      const emits = defineEmits(['change'])
+      const valueModel = useControlledModel<string>('value', '')
+      function commit(next: string): void {
+        valueModel.value = next
+        emits('update:value', next)
+      }
+    `
+    const problems = collectEmitDeclareProblems(source, 'components/demo/Demo.vue')
+    expect(problems).toHaveLength(1)
+    expect(problems[0]).toContain("useControlledModel('value')")
+    expect(problems[0]).toContain('update:value')
+    expect(problems[0]).toContain('defineEmits')
+  })
+
+  it('注释里的字符串不算声明', () => {
+    const source = `
+      const emits = defineEmits(['change'])
+      const valueModel = useControlledModel<string>('value', '')
+      // 记得补 'update:value' 声明
+    `
+    expect(collectEmitDeclareProblems(source, 'components/demo/Demo.vue')).toHaveLength(1)
+  })
+
+  it('同一字段的多次调用只报一次', () => {
+    const source = `
+      const emits = defineEmits(['change'])
+      const a = useControlledModel<string>('value', '')
+      const b = useControlledModel<string>('value', '')
+    `
+    expect(collectEmitDeclareProblems(source, 'components/demo/Demo.vue')).toHaveLength(1)
   })
 })
