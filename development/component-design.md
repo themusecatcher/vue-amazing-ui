@@ -77,6 +77,7 @@ const props = withDefaults(defineProps<Props>(), {
 - **原生表单元素**（`Input` / `Textarea` / `InputSearch` / `InputNumber`）保持手写：真相源在 DOM 节点，受控时回写元素，非受控时元素自持，不得再引入一份 JS 本地状态。
 - **双轨字段**（`DatePicker` / `TimePicker` 的 `formattedValue`）保持手写：需区分「父写」与「组件派生」，可写 ref 无法提供来源信息。
 - **`Carousel.currentIndex` 同属双轨**：自动播放 / 拖拽会在父不介入时持续推进下标，组件内的动画下标才是展示真相，`currentIndex` 只是「父可驱动 + 变更上报」的通道（父传该值后自动播放仍会推进并上报）。因此它不套用 R1 的「传值即冻结」。
+- **交互游标型双轨**（`Calendar.value`、`DatePicker.value` / `open`、`TimePicker.value` / `open`、`ColorPicker.open`，共 6 个字段）同样保留 `defineModel`（守卫白名单）：这些组件的值之外还有一个**必须自主推进的游标**（日期面板的键盘步进与高亮、时间面板的草稿、选色面板的模式切换），冻结取值等于废掉键盘导航与面板操作。判据归纳为一条：**「值是唯一状态」→ R1；「值之外还有自主推进的游标」→ 双轨**。待迁移存量清单见 `scripts/check-model-props.js` 的 `LEGACY_DEFINE_MODEL`，新增字段不得再进白名单。
 - **`defineModel` 禁止用于公共 API**：其受控判据与全库冲突（见上文依据）。确有非公共入口需要时，须加入 `scripts/check-model-props.js` 的白名单并写明理由；白名单当前只容纳 4 个待迁移的存量 SFC，迁完即清空。该约定由 `pnpm guard` 第 ⑦ 项强制。
 
 ## 类型导出约定

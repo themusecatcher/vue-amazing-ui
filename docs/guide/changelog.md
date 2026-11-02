@@ -14,6 +14,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-11-02">3.7.0</VersionDateTag>
+
+- 统一 `v-model` 的受控判据为「传值即受控」：传入 `value` / `open` 后组件不再本地改写，只派发 `update:x`。此前父仅传值、未监听 `update:x` 时，[抽屉 Drawer](/guide/components/drawer.html) 的遮罩关闭、[上传 Upload](/guide/components/upload.html) 的增删文件、[表格 Table](/guide/components/table.html) 的展开行、[菜单 Menu](/guide/components/menu.html) 与 [分页 Pagination](/guide/components/pagination.html) 的切换等仍会在组件内生效，与父侧数据不一致
+- 修复 [多选组 CheckboxGroup](/guide/components/checkbox.html) 不传 `value` 时仍被当作受控、无法非受控使用的问题
+- 新增非受控入口：[滑动输入条 Slider](/guide/components/slider.html) 的 `defaultValue`，[标签页 Tabs](/guide/components/tabs.html) / [折叠面板 Collapse](/guide/components/collapse.html) 的 `defaultActiveKey`，[分页 Pagination](/guide/components/pagination.html) 的 `defaultPage` / `defaultPageSize`：不绑 `v-model` 时也能指定初值并正常交互
+- 贡献者文档补充 `v-model` 判据的划分：值为唯一状态时用「传值即受控」，值之外还有自主推进的游标（轮播、日期 / 时间 / 颜色面板）时保留双向绑定
+
 ## <VersionDateTag date="2026-10-31">3.6.1</VersionDateTag>
 
 - 修复 [日历 Calendar](/guide/components/calendar.html) 的 `CalendarProps` 类型缺少 `value`：`v-model:value` 字段此前未并入对外类型，显式标注 `CalendarProps` 时该字段报错
