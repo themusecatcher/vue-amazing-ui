@@ -16,7 +16,8 @@
  * 3. 「类型声明 ↔ 运行时模块」配对：每个存在 `index.d.ts` 的产物目录必须有对应 `index.js` / `index.cjs`
  *    （详见下文 ⑤ 的说明）。
  * 4. props 运行时类型与源码类型对齐（详见 `check-prop-runtime-types.js` 与下文 ⑥）。
- * 5. v-model 字段已并入对外 props 类型（详见 `check-model-props.js` 与下文 ⑦）。
+ * 5. v-model 声明契约：公共 API 无 `defineModel`、双模字段的默认值为 `undefined`（详见
+ *    `check-model-props.js` 与下文 ⑦）。
  *
  * 「按需引入后样式是否真的齐全」由 `pnpm verify:on-demand` 负责（需跑构建），两者互补。
  */

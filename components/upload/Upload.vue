@@ -50,7 +50,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 defineSlots<UploadSlots>()
 // (v-model) 上传文件列表：传值即受控，未传时组件自持
-// 写入一律整体替换（H1）：受控时该 ref 就是父数组，下标赋值 / splice 会绕过上报并污染父级数据
+// 写入一律整体替换：受控时该 ref 就是父数组，下标赋值 / splice 会绕过上报并污染父级数据
 const uploadedFilesModel = useControlledModel<FileType[]>('fileList', [])
 const showUpload = ref<number>(1) // 展示的上传框
 const uploading = ref<boolean[]>([]) // 上传中
@@ -80,7 +80,7 @@ function initUpload(): void {
     showUpload.value = maxFileCount.value
   }
 }
-/** 按上传槽位写入结果：整体替换数组（H1），保留槽位下标的稀疏语义 */
+/** 按上传槽位写入结果：整体替换数组，保留槽位下标的稀疏语义 */
 function setUploadedFile(index: number, file: FileType): void {
   const next = [...uploadedFilesModel.value]
   next[index] = file

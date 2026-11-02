@@ -1048,7 +1048,7 @@ function onExpandCell(record: Record<string, any>, rowIndex: number): void {
   if (expandedRowKeysModel.value.includes(key)) {
     expandedRowKeysModel.value = expandedRowKeysModel.value.filter((rowKey: string) => rowKey !== key)
   } else {
-    // H1：整体替换，禁止 push —— 受控时该 ref 就是父数组，原地修改既不上报也污染父级
+    // 整体替换而非 push：受控时读到的就是父数组，原地修改既不上报也污染父级数据
     expandedRowKeysModel.value = [...expandedRowKeysModel.value, key]
   }
   emits('expand', expandedRowKeysModel.value.includes(key), record)

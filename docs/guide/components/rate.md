@@ -494,7 +494,7 @@ const state = reactive({
 | disabled | 只读，无法进行交互 | boolean | false |
 | tooltips | 自定义每项的提示信息 | string[] | [] |
 | tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip-props) | [TooltipProps](./tooltip.md#tooltip-props) | {} |
-| value <Tag color="cyan">v-model</Tag> | 当前数，受控值 `0,1,2,3...` | number | 0 |
+| value <Tag color="cyan">v-model</Tag> | 当前评分，取值 `0,1,2,3...`（`0` 为未评分）；传入即受控，不传时由组件内部维护 | number | 0 |
 
 ## Slots
 

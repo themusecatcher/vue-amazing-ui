@@ -40,9 +40,9 @@ export type ColorPickerAction = 'confirm' | 'clear'
 export interface Props {
   // 双向绑定与受控核心
   value?: string // (v-model) 颜色选择器的值
-  defaultValue?: string // 未受控时颜色选择器的初始值
+  defaultValue?: string // 非受控时颜色选择器的初始值
   open?: boolean // (v-model:open) 面板是否展开；传入即受控
-  defaultOpen?: boolean // 未受控时面板的初始显隐
+  defaultOpen?: boolean // 非受控时面板的初始显隐
   // 内容与数据源
   label?: (color: string) => VNodeChild // 展示的内容，返回值同时支持字符串与 VNode
   swatches?: string[] // 色板的值

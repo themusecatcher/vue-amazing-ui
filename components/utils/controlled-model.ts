@@ -41,7 +41,8 @@ export function useControlledModel<T>(name: string, defaultValue: T): WritableCo
   }
   const propName = camelize(name)
   const readProp = (): T | undefined => instance.props[propName] as T | undefined
-  // 本地值的初值取「当前父值」：受控期间被父改过、之后父不再传值时，接管的最后一个父值最符合直觉
+  // 初值取「当前父值」（有则接管，无则用 defaultValue）；受控期间本地值只作后备，
+  // 父不再传值时直接呈现它，避免状态跳回组件挂载时的初值
   const initial = readProp()
   const localValue = ref(initial === undefined ? defaultValue : initial) as Ref<T>
   // 上一次上报的值：同一组件内两处写同一个值（如输入框 v-model 与 input 事件的处理器各写一次）不重复上报。

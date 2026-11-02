@@ -1358,7 +1358,7 @@ function onPanelChange(
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| value <Tag color="cyan">v-model</Tag> | 当前被选中的日期 | string &#124; number | undefined |
+| value <Tag color="cyan">v-model</Tag> | 当前被选中的日期；传入即受控，不传时由组件内部维护（初值见 `defaultValue`） | string &#124; number | undefined |
 | defaultValue | 非受控初始值：同时决定初始面板日期与初始选中值，受控 `value` 优先 | string &#124; number | undefined |
 | valueFormat | 被选中日期的格式，默认为时间戳；参考 [format](https://date-fns.org/v4.1.0/docs/format) | string | undefined |
 | header | 自定义日历头部内容 | string | undefined |

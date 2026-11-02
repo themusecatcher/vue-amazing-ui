@@ -16,7 +16,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-11-02">3.7.0</VersionDateTag>
 
-- 统一 `v-model` 的受控判据为「传值即受控」：传入 `value` / `open` 后组件不再本地改写，只派发 `update:x`。此前父侧仅传值、未监听 `update:x` 时，[抽屉 Drawer](/guide/components/drawer.html) 的遮罩关闭、[上传 Upload](/guide/components/upload.html) 的增删文件、[表格 Table](/guide/components/table.html) 的展开行、[菜单 Menu](/guide/components/menu.html) 与 [分页 Pagination](/guide/components/pagination.html) 的切换仍在组件内生效，与父侧数据不一致
+- 统一 `v-model` 的受控判据为「传值即受控」：传入 `value` / `open` 后组件不再本地改写，只派发 `update:x`；此前父侧只传值、未监听该事件时，[抽屉 Drawer](/guide/components/drawer.html)、[上传 Upload](/guide/components/upload.html)、[表格 Table](/guide/components/table.html)、[菜单 Menu](/guide/components/menu.html)、[分页 Pagination](/guide/components/pagination.html) 的交互仍在内部生效，父侧值不会更新
 - 修复 [多选组 CheckboxGroup](/guide/components/checkbox.html) 不传 `value` 时仍被当作受控、无法非受控使用的问题
 - 新增非受控入口：[滑动输入条 Slider](/guide/components/slider.html) 的 `defaultValue`，[标签页 Tabs](/guide/components/tabs.html) / [折叠面板 Collapse](/guide/components/collapse.html) 的 `defaultActiveKey`，[分页 Pagination](/guide/components/pagination.html) 的 `defaultPage` / `defaultPageSize`：不绑 `v-model` 时也能指定初值并正常交互
 - 修复 [日历 Calendar](/guide/components/calendar.html) 的 `CalendarProps` 类型缺少 `value`：显式标注该类型时 `v-model:value` 字段报错

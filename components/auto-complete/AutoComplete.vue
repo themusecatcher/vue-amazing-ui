@@ -40,7 +40,7 @@ export interface Props {
   dropdownMenuStyle?: CSSProperties // 下拉菜单自定义样式
   to?: string | MountElement | false // 下拉面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   options?: (string | number | Option | GroupOption)[] // 自动完成的数据源
-  value?: string // (v-model) 当前输入的值，未受控时按空串处理
+  value?: string // (v-model) 当前输入的值，非受控时按空串处理
   width?: string | number // 自动完成宽度，单位 px
   size?: 'small' | 'middle' | 'large' // 自动完成大小
   status?: 'error' | 'warning' // 设置校验状态
@@ -155,7 +155,7 @@ function isDisabled(item: string | number | Option): boolean | undefined {
   }
   return item.disabled
 }
-// 选项过滤是否匹配（value 可选，未受控时按空串参与匹配，与「空输入不过滤」的行为一致）
+// 选项过滤是否匹配（value 可选，非受控时按空串参与匹配，与「空输入不过滤」的行为一致）
 function matchOption(item: string | number | Option): boolean {
   const label = getLabel(item)
   const inputValue = props.value ?? ''

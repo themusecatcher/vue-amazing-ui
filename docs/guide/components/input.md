@@ -95,7 +95,7 @@ function onEnter(e: KeyboardEvent) {
 
 :::
 
-## 未受控输入与行内混排
+## 非受控输入与行内混排
 
 _未绑定 `v-model` 时输入内容由组件自行承载，不会因悬浮 / 聚焦等状态变化丢失_
 
@@ -103,7 +103,7 @@ _未绑定 `v-model` 时输入内容由组件自行承载，不会因悬浮 / �
 
 <Input placeholder="未绑定 v-model，输入后移开鼠标内容仍保留" style="width: 280px" />
 
-::: tip 未受控用法
+::: tip 非受控用法
 不绑定 `v-model` 时，输入框仅作为展示载体：输入内容（含输入法合成中的文本）由组件内部承载，悬浮 / 聚焦等状态变化都不会将其抹掉；但组件不会向外上报值，需要取值、校验或受控渲染时请绑定 `v-model` 或监听 `change` 事件。
 :::
 
@@ -124,7 +124,7 @@ _与文字混排时按基线对齐，与原生 `input` 同口径_
 
 ```vue
 <template>
-  <!-- 未受控：内容由组件内部承载 -->
+  <!-- 非受控：内容由组件内部承载 -->
   <Input placeholder="未绑定 v-model，输入后移开鼠标内容仍保留" style="width: 280px" />
   <!-- 行内混排：行容器盒对齐并固定行高，避免控件动态出现 / 消失时整行位移 -->
   <div style="display: flex; align-items: center; height: 32px; gap: 8px">
