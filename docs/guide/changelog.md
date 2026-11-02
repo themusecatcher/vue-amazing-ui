@@ -14,21 +14,11 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-10-31">3.7.0</VersionDateTag>
+## <VersionDateTag date="2026-11-02">3.7.1</VersionDateTag>
 
-- 移除 [标签页 Tabs](/guide/components/tabs.html) 的 `items` 属性与 `TabsItem` 类型：页签改由 `TabPane` 子组件描述（`key` 写在子组件上），原 `tab` / `content` 插槽由 `TabPane` 的 `tab` 插槽与默认插槽替代
-- 移除 [标签页 Tabs](/guide/components/tabs.html) 的 `centered` 属性：改用 `justifyContent: 'center'`，`card` 类型下同样生效
-- 新增 [标签页 Tabs](/guide/components/tabs.html) 的 `TabPane` 子组件：页签标签与面板内容逐页签配置，富内容不再需要在父级插槽里按 `key` 分支
-- 新增 [标签页 Tabs](/guide/components/tabs.html) 的 `defaultActiveKey`、`addable`、`destroyInactiveTabPane` 属性，以及 `tabClick` / `tabScroll` / `add` / `close` 事件
-- 新增 [标签页 Tabs](/guide/components/tabs.html) 的 `tabBar` / `addIcon` 插槽与 `TabPane` 的 `closable`：自定义页签头与页签增删改由插槽和事件驱动
-- 新增 [标签页 Tabs](/guide/components/tabs.html) 的 `justifyContent`、`centerActiveTab`、`tabClass`、`contentClass`、`beforeLeave`、对象形态 `addable`，`TabPane` 的 `displayDirective`（`if` / `show` / `show:lazy`）
-- 优化 [标签页 Tabs](/guide/components/tabs.html) 的可访问性：补 `tablist` / `tab` / `tabpanel` 语义与方向键、`Home`、`End` 键盘导航
 - 新增 [间距 Space](/guide/components/space.html) 的 `split` 插槽：在相邻内容之间插入分隔符，无内容时不再占用父级间距
 - 新增 [弹性布局 Flex](/guide/components/flex.html) 的 `flex`（容器自身伸缩简写）与 `component`（语义化标签）属性，无内容时不再占用父级间距
-- 修复 [标签页 Tabs](/guide/components/tabs.html) 溢出收纳下拉面板的弹出位置与菜单间距，新增页签按钮补独立点击区并对齐图标
-- 修复 [标签页 Tabs](/guide/components/tabs.html) 切换 `justifyContent` / `centered` 后指示条未重新贴合激活页签的问题
 - 修复 [弹性布局 Flex](/guide/components/flex.html) / [间距 Space](/guide/components/space.html) 覆盖调用方间距样式（如 `mb10` 类）的问题，折行容器不再被内部负偏移压缩
-- 更新使用者文档与贡献者文档
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-10-31">3.6.0</VersionDateTag>
