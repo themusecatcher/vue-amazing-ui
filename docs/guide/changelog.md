@@ -16,17 +16,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-11-02">3.8.0</VersionDateTag>
 
-- 新增 [分页 Pagination](/guide/components/pagination.html) 的 `bordered` 属性（默认 `true`）：传 `false` 切换为无边框风格
+- 新增 [分页 Pagination](/guide/components/pagination.html) 的 `bordered` 属性：传 `false` 切换为无边框风格（页码去掉边框与底色），两种风格的选中态与悬浮 / 按压反馈一致，并修复无边框风格下禁用态未选中页仍带边框的问题
 - 修复 [分页 Pagination](/guide/components/pagination.html) 页码越界后无页码高亮、切换每页条数后当前页未收敛的问题：钳制后按新页码派发 `update:page` / `pageSizeChange` / `change`
-- [分页 Pagination](/guide/components/pagination.html) 统一两种风格的选中态与交互反馈：当前页加粗、悬浮取主色、过渡时长对齐 0.2s
-- 修复 [分页 Pagination](/guide/components/pagination.html) 无边框风格下禁用态未选中页仍带边框的问题
-- [分页 Pagination](/guide/components/pagination.html) 的跳转输入框只接受数字：按键输入直接拦截，粘贴 / 输入法按数字过滤，不再把非法内容静默丢弃
-- [分页 Pagination](/guide/components/pagination.html) 的 `showQuickJumper` 支持对象形态 `{ goButton }`：展示跳转确认按钮（文案可自定义），有按钮时失焦不再自动跳转
-- [分页 Pagination](/guide/components/pagination.html) 补充 `aria-current` / `aria-disabled` / `role="navigation"` 与页码 `title`，禁用态与边界页移出 Tab 序列
-- 新增 [输入框 Input](/guide/components/input.html) 的 `blur` 事件（带 `relatedTarget`）；[分页 Pagination](/guide/components/pagination.html) 跳转框失焦到页码时不再重复跳转、重复上报 `change`
+- [分页 Pagination](/guide/components/pagination.html) 的 `showQuickJumper` 增强：支持对象形态 `{ goButton }` 展示跳转确认按钮（文案可自定义，有按钮时失焦不再自动跳转），跳转框只接受数字、失焦落在页码上不再重复跳转与重复上报 `change`
+- [分页 Pagination](/guide/components/pagination.html) 补齐无障碍与交互反馈：补充 `aria-current` / `aria-disabled` / `role="navigation"` 与页码 `title`，禁用态与边界页移出 Tab 序列，跳转确认按钮补按压态与焦点环
+- 新增 [输入框 Input](/guide/components/input.html) 的 `blur` 事件（带 `relatedTarget`）
 - [选择器 Select](/guide/components/select.html) / [输入框 Input](/guide/components/input.html) / [分页 Pagination](/guide/components/pagination.html) 的尺寸切换补充过渡：运行时切换 `size` 不再整块突变
-- [分页 Pagination](/guide/components/pagination.html) 跳转确认按钮、[对话框 Dialog](/guide/components/dialog.html) / [模态框 Modal](/guide/components/modal.html) 的关闭与全屏按钮补充按压态与焦点环
-- 修复 [表格 Table](/guide/components/table.html) 展开按钮缺少 `type="button"`：在表单内点击会连带提交表单；同时补充 `aria-expanded` / `aria-label` 与按压态、焦点环
+- 修复 [表格 Table](/guide/components/table.html) 展开按钮缺少 `type="button"`（表单内点击会连带提交表单），补充 `aria-expanded` / `aria-label` 与按压态、焦点环；[对话框 Dialog](/guide/components/dialog.html) / [模态框 Modal](/guide/components/modal.html) 的关闭与全屏按钮补同样的按压态与焦点环
 - 使用者文档补齐 [分页 Pagination](/guide/components/pagination.html) 与 [输入框 Input](/guide/components/input.html) 的新增属性 / 事件说明与示例
 
 ## <VersionDateTag date="2026-11-02">3.7.0</VersionDateTag>
