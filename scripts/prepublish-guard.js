@@ -298,10 +298,10 @@ if (propTypeCheck.problems.length > 0) {
 /**
  * ⑦ v-model 声明契约
  *
- * 三条断言：① 公共 API 禁止用 `defineModel` 声明 v-model（其受控判据要求 prop + 监听器同时存在，
- * 与全库「传值即受控」冲突），只允许白名单内的存量（当前已清空）；② 白名单内若仍用 `defineModel`，
- * 其字段必须并入对外 props 类型（`interface Props` 或 `Props & { x?: ... }`）；③ `useControlledModel`
- * 的字段在 `withDefaults` 里只能写 `undefined`（布尔字段必须显式写），否则判据恒真、组件永久受控。
+ * 三条断言：① 全库禁止用 `defineModel` 声明 v-model（其受控判据要求 prop + 监听器同时存在，
+ * 与全库「传值即受控」冲突）；② `useControlledModel` 的字段在 `withDefaults` 里只能写 `undefined`
+ * （布尔字段必须显式写），否则判据恒真、组件永久受控；③ 同一字段必须在 `defineEmits` 里声明
+ * `update:x`，否则每次交互都输出 dev 告警、监听器还会落进 `$attrs`。
  * 详见 development/component-design.md 的「v-model 声明约定」。
  */
 const modelPropsCheck = checkModelProps({ rootDir })
@@ -322,9 +322,7 @@ if (failures.length > 0) {
 console.log(
   `✅ 发布守卫通过：${entryPaths.length} 个产物入口、${entryDirs.size} × ${outDirs.length} 个组件样式入口均就绪、` +
     `${propTypeCheck.checked} 处 props 运行时类型已对齐、` +
-    (modelPropsCheck.checked > 0
-      ? `${modelPropsCheck.checked} 处存量 defineModel 字段已并入对外 props 类型`
-      : '公共 API 已无 defineModel') +
-    `、${modelPropsCheck.defaultsChecked} 个双模字段的默认值已判定为非受控` +
+    '全库无 defineModel、' +
+    `${modelPropsCheck.defaultsChecked} 个双模字段的默认值已判定为非受控、其 update:x 事件均已声明` +
     (propTypeCheck.skipped > 0 ? `（${propTypeCheck.skipped} 处因产物缺失跳过）` : '')
 )

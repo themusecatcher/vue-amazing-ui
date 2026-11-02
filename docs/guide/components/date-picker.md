@@ -1826,7 +1826,7 @@ const rangePlaceholder = ['开始日期', '结束日期']
 | open <Tag color="cyan">v-model</Tag> | 面板是否展开；传入即受控，内部触发只经 `update:open` / `openChange` 上报（不传时由组件内部维护，缺省收起） | boolean | undefined |
 | formattedValue <Tag color="cyan">v-model</Tag> | 字符串轨道的双向绑定值，传入时以它为准（受控）；显示格式由 `format` / `valueFormat` 决定 | string &#124; [string, string] &#124; null | undefined |
 | type | 选择形态 | [DatePickerType](#datepickertype-type) | 'date' |
-| format | 日期展示格式，参考 [format](https://date-fns.org/v4.1.0/docs/format) | string | [DefaultFormat](#defaultformat-value) |
+| format | 日期展示格式，未传时按 [DefaultFormat](#defaultformat-value)，参考 [format](https://date-fns.org/v4.1.0/docs/format) | string | undefined |
 | valueFormat | 绑定值格式，默认与 `format` 相同 | string | undefined |
 | placeholder | 输入框提示文字，范围形态可传入两段文案 | string &#124; [string, string] | '' |
 | defaultPickerValue | 面板初始日期（毫秒时间戳），默认取 `value` 或今天 | number | undefined |

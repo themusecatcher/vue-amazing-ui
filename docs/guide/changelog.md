@@ -14,6 +14,15 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-11-02">3.8.0</VersionDateTag>
+
+- 新增 [上传 Upload](/guide/components/upload.html) 的 `reject` 事件：拖拽的文件不符合 `accept` 时回传被拒绝的文件列表
+- 修复 [上传 Upload](/guide/components/upload.html) 拖拽路径忽略 `multiple` / `accept`：关闭多选时只取第一个文件，类型不符的文件不再入库；使用者文档补充对应行为说明与演示
+- 修复 [上传 Upload](/guide/components/upload.html) 的 `maxCount` 为 `1` 时无法替换当前文件，投放文件数超过剩余槽位时多写入一个
+- 修复 [评分 Rate](/guide/components/rate.html) 的 `change` 早于 `update:value` 派发：`@change` 中读到的是旧值
+- 更新使用者文档：Props 默认值列改按源码默认值书写，未传时的生效取值写进说明列（[时间选择器 TimePicker](/guide/components/time-picker.html)、[二维码 QRCode](/guide/components/qr-code.html)、[文本域 Textarea](/guide/components/textarea.html) 等）
+- 更新贡献者文档：`defineModel` 全库禁用、双模字段须声明 `update:x`，并统一 Props 默认值列口径
+
 ## <VersionDateTag date="2026-11-02">3.7.0</VersionDateTag>
 
 - 可写字段改为「传值即受控」：`value` / `open` / `activeKey` 等传入后，交互只上报 `update:`、界面以父侧回写为准；只传值不监听 `update:` 的写法不再响应交互（[评分 Rate](/guide/components/rate.html)、[日期选择器 DatePicker](/guide/components/date-picker.html)、[分页 Pagination](/guide/components/pagination.html) 等），补 `v-model` 即可，原本就用 `v-model` 的无需改动

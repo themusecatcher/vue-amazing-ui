@@ -704,7 +704,7 @@ const variantOptions = [
 | rotate | 水印绘制时，旋转的角度，单位 `°` | number | -22 |
 | textStyle | 水印文字样式；`color` 不传时取主题变量 `--va-fill-color-3`（随明暗切换） | [WatermarkFont](#watermarkfont-type) | {<br/>&nbsp;&nbsp;fontSize: 16,<br/>&nbsp;&nbsp;fontWeight: 'normal',<br/>&nbsp;&nbsp;fontFamily: 'sans-serif',<br/>&nbsp;&nbsp;fontStyle: 'normal' <br/>} |
 | gap | 水印之间的间距 | [number, number] | [100, 100] |
-| offset | 水印距离容器左上角的偏移量 | [number, number] | gap / 2 |
+| offset | 水印距离容器左上角的偏移量；未传时按 `gap / 2` 居中 | [number, number] | undefined |
 | zIndex | 追加的水印元素的 `z-index` | number | 90 |
 | fullscreen | 是否启用全屏水印，启用后挂载到 `<html>` 并固定于视口 | boolean | false |
 

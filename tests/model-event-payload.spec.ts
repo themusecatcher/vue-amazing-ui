@@ -4,7 +4,7 @@ import { h, nextTick } from 'vue'
 import Table from 'components/table/Table.vue'
 import Upload from 'components/upload/Upload.vue'
 import Pagination from 'components/pagination/Pagination.vue'
-import Select from 'components/select/select.vue'
+import Select from 'components/select/Select.vue'
 
 /**
  * 受控模式下的事件载荷回归

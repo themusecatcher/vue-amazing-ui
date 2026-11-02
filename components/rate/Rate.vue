@@ -53,13 +53,13 @@ watch(
 function onClick(value: number): void {
   tempValue.value = null
   if (value !== valueModel.value) {
-    emits('change', value) // 选择时的回调
     valueModel.value = value
+    emits('change', value) // 选择时的回调
   } else {
     if (props.allowClear) {
       tempValue.value = value
-      emits('change', 0)
       valueModel.value = 0
+      emits('change', 0)
     } else {
       // 不允许清除
       emits('change', value) // 选择时的回调
@@ -85,16 +85,16 @@ function onUp(): void {
   tempValue.value = null
   const next = valueModel.value + (props.allowHalf ? 0.5 : 1)
   if (next <= props.count) {
-    emits('change', next)
     valueModel.value = next
+    emits('change', next)
   }
 }
 function onDown(): void {
   tempValue.value = null
   const next = valueModel.value - (props.allowHalf ? 0.5 : 1)
   if (next >= 0) {
-    emits('change', next)
     valueModel.value = next
+    emits('change', next)
   }
 }
 </script>
