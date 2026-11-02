@@ -107,6 +107,7 @@ const componentsMap = {
   Swiper: 'swiper',
   Switch: 'switch',
   Table: 'table',
+  TabPane: 'tabs/tab-pane',
   Tabs: 'tabs',
   Tag: 'tag',
   Textarea: 'textarea',
@@ -153,7 +154,8 @@ const styleSources: Partial<Record<ComponentName, ComponentName>> = {
   MenuItemGroup: 'Menu',
   MenuSubMenu: 'Menu',
   SelectOption: 'Select',
-  SelectOptGroup: 'Select'
+  SelectOptGroup: 'Select',
+  TabPane: 'Tabs'
 }
 /**
  * 组件样式依赖关系（仅声明「除自身外」的样式依赖；自身样式由 styleSources / componentsMap 兜底）
@@ -245,6 +247,7 @@ const componentDependencies: Partial<Record<ComponentName, ComponentName[]>> = {
     'Tooltip',
     'Popup'
   ],
+  Tabs: ['Dropdown', 'Popup'],
   Tag: ['Space'],
   TextScroll: ['Ellipsis', 'Tooltip', 'Popup'],
   TimePanel: ['TimeUnitColumn', 'Scrollbar'],

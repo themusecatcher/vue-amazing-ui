@@ -91,6 +91,7 @@ declare module 'vue' {
     Switch: typeof VueAmazingUI.Switch
     Table: typeof VueAmazingUI.Table
     Tabs: typeof VueAmazingUI.Tabs
+    TabPane: typeof VueAmazingUI.TabPane
     Tag: typeof VueAmazingUI.Tag
     TextScroll: typeof VueAmazingUI.TextScroll
     Textarea: typeof VueAmazingUI.Textarea

@@ -290,8 +290,15 @@ export { default as Switch } from './switch'
 export type { TableProps, TableColumn, TableSelection, TableScrollOption } from './table'
 export { default as Table } from './table'
 
-export type { TabsProps, TabsItem } from './tabs'
-export { default as Tabs } from './tabs'
+export type {
+  TabsProps,
+  TabsAddable,
+  TabsBeforeLeave,
+  TabsDisplayDirective,
+  TabsJustifyContent,
+  TabPaneProps
+} from './tabs'
+export { default as Tabs, TabPane } from './tabs'
 
 export type { TagProps, TagItem } from './tag'
 export { default as Tag } from './tag'
