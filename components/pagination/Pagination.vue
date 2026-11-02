@@ -186,11 +186,13 @@ function onPageNext(e: Event, page: number): void {
 function onPageSizeChange(pageSize: number): void {
   pageSizeModel.value = pageSize
   const maxPage = Math.ceil(props.total / pageSize)
-  if (pageModel.value > maxPage) {
-    pageModel.value = maxPage
+  // 页码超界即回落到最后一页；载荷用本地算出的目标页码 —— 受控时写完立刻回读拿到的仍是父侧旧值
+  const nextPage = pageModel.value > maxPage ? maxPage : pageModel.value
+  if (nextPage !== pageModel.value) {
+    pageModel.value = nextPage
   }
-  emits('pageSizeChange', pageModel.value, pageSize)
-  emits('change', pageModel.value, pageSize)
+  emits('pageSizeChange', nextPage, pageSize)
+  emits('change', nextPage, pageSize)
 }
 </script>
 <template>

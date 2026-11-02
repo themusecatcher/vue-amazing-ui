@@ -737,8 +737,9 @@ function handleInputUpdateValue(value: string): void {
   onUpdateValue(value, 'input')
   emits('complete', value)
   // 收敛后的值可能与原值相同（如 alpha 输入 300% → 100%），输入框收不到新 props 不会刷新，
-  // 故主动回滚文本，保证「输入框文本 ≡ 内部值」
-  if (valueModel.value === previousValue) restoreInput()
+  // 故主动回滚文本，保证「输入框文本 ≡ 内部值」。
+  // 比较入参与原值而非回读模型：受控时写完立刻回读拿到的仍是父侧旧值，会误判为「未变化」并每次输入都重建输入框
+  if (value === previousValue) restoreInput()
 }
 function handleUnitUpdateValue(index: number, value: number | string) {
   if (displayedMode.value === 'hex') {

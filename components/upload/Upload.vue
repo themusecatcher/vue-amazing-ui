@@ -80,11 +80,27 @@ function initUpload(): void {
     showUpload.value = maxFileCount.value
   }
 }
-/** 按上传槽位写入结果：整体替换数组，保留槽位下标的稀疏语义 */
-function setUploadedFile(index: number, file: FileType): void {
+/**
+ * 按上传槽位写入结果：整体替换数组，保留槽位下标的稀疏语义
+ *
+ * @returns 写入后的新数组：受控时模型写完立刻回读拿到的仍是父侧旧值，
+ *          事件载荷须用它而不是再读一次模型
+ */
+function setUploadedFile(index: number, file: FileType): FileType[] {
   const next = [...uploadedFilesModel.value]
   next[index] = file
   uploadedFilesModel.value = next
+  return next
+}
+/**
+ * 上传成功收口：写入槽位后派发 `success` / `change`
+ *
+ * 两条上传路径（base64 读取、customRequest）共用，避免其中一条漏用写入结果而当载荷落后一拍
+ */
+function emitUploaded(index: number, file: FileType): void {
+  const nextFiles = setUploadedFile(index, file)
+  emits('success', file, nextFiles)
+  emits('change', nextFiles)
 }
 // 检查 url 是否为图片
 function isImage(url: string): boolean {
@@ -222,9 +238,7 @@ function base64Upload(file: File, index: number): void {
     // 当读取操作成功完成时调用
     // 该文件的 base64 数据，如果是图片，则前端可直接用来展示图片
     const uploaded = { name: file.name, url: e.target?.result } as FileType
-    setUploadedFile(index, uploaded)
-    emits('success', uploaded, uploadedFilesModel.value)
-    emits('change', uploadedFilesModel.value)
+    emitUploaded(index, uploaded)
   }
   reader.onloadend = function (e) {
     // 当读取操作结束时触发（成功 / 失败 / 中断都会触发）：作为 loading 的兜底复位。
@@ -238,9 +252,7 @@ function customUpload(file: File, index: number): void {
   props
     .customRequest(file)
     .then((res: FileType) => {
-      setUploadedFile(index, res)
-      emits('success', res, uploadedFilesModel.value)
-      emits('change', uploadedFilesModel.value)
+      emitUploaded(index, res)
     })
     .catch((err: any) => {
       if (maxFileCount.value > 1) {
