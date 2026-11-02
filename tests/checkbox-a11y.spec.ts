@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { h, nextTick } from 'vue'
+import { defineComponent, h, nextTick, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import Checkbox from 'components/checkbox/Checkbox.vue'
 import CheckboxGroup from 'components/checkbox/checkbox-group/CheckboxGroup.vue'
@@ -147,19 +147,32 @@ describe('CheckboxGroup 下发组级配置与组内受控', () => {
   })
 
   it('组内勾选按操作顺序追加，取消勾选按值移除', async () => {
-    wrapper = mount(CheckboxGroup, {
-      props: { value: [] },
-      slots: {
-        default: () =>
-          checkboxOptions.map((option) => h(Checkbox, { key: option.value, value: option.value }, () => option.label))
-      }
-    })
+    // 受控判据为「传值即受控」：父不回写时组件不得本地累积，故此处按真实用法用 v-model 回写
+    const picked = ref<string[]>([])
+    wrapper = mount(
+      defineComponent({
+        setup: () => () =>
+          h(
+            CheckboxGroup,
+            {
+              value: picked.value,
+              'onUpdate:value': (next: string[]) => {
+                picked.value = next
+              }
+            },
+            () =>
+              checkboxOptions.map((option) =>
+                h(Checkbox, { key: option.value, value: option.value }, () => option.label)
+              )
+          )
+      })
+    )
     const inputs = wrapper.findAll('input[type="checkbox"]')
     await inputs[2].trigger('click')
     await inputs[0].trigger('click')
-    expect((wrapper.emitted('change')?.[1]?.[0] as string[]) ?? []).toEqual(['Orange', 'Apple'])
+    expect(picked.value).toEqual(['Orange', 'Apple'])
     await inputs[2].trigger('click')
-    expect((wrapper.emitted('change')?.[2]?.[0] as string[]) ?? []).toEqual(['Apple'])
+    expect(picked.value).toEqual(['Apple'])
   })
 
   it('垂直排列时数组间距取垂直间距，不产出非法 CSS', () => {

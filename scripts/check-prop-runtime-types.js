@@ -65,7 +65,7 @@ function listArtifacts(rootDir, dir, artifactBase, ext) {
 const RAW_DOM_TYPES = new Set(['HTMLElement', 'Document'])
 
 /** 递归收集 SFC（跳过隐藏目录与 node_modules） */
-function collectSfcs(dir, result = []) {
+export function collectSfcs(dir, result = []) {
   if (!existsSync(dir)) {
     return result
   }
@@ -86,7 +86,7 @@ function collectSfcs(dir, result = []) {
 }
 
 /** 取从 openIndex 处左括号开始、配平的右括号下标（跳过字符串字面量内的括号） */
-function findBalancedEnd(text, openIndex) {
+export function findBalancedEnd(text, openIndex) {
   const open = text[openIndex]
   const close = open === '{' ? '}' : open === '[' ? ']' : open === '(' ? ')' : '<'
   let depth = 0

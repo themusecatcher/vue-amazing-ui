@@ -5,7 +5,8 @@ export type {
   DefaultWeek as CalendarDefaultWeek,
   DateItem as CalendarDateItem,
   MonthItem as CalendarMonthItem,
-  SelectInfo as CalendarSelectInfo
+  SelectInfo as CalendarSelectInfo,
+  CalendarSlots
 } from './Calendar.vue'
 import { withInstall } from '../utils/type'
 

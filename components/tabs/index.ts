@@ -2,7 +2,7 @@ import Tabs from './Tabs.vue'
 import TabPaneComp from './tab-pane'
 import { withInstall } from '../utils/type'
 
-export type { Props as TabsProps, TabsAddable, TabsBeforeLeave, TabsJustifyContent } from './Tabs.vue'
+export type { Props as TabsProps, TabsAddable, TabsBeforeLeave, TabsJustifyContent, TabsSlots } from './Tabs.vue'
 export type { TabsDisplayDirective } from './slotItems'
 export type { TabPaneProps } from './tab-pane'
 

@@ -2,8 +2,8 @@ import Checkbox from './Checkbox.vue'
 import CheckboxGroupComp from './checkbox-group'
 import { withInstall } from '../utils/type'
 
-export type { Props as CheckboxProps } from './Checkbox.vue'
-export type { CheckboxGroupProps, CheckboxGroupOption } from './checkbox-group'
+export type { Props as CheckboxProps, CheckboxSlots } from './Checkbox.vue'
+export type { CheckboxGroupProps, CheckboxGroupOption, CheckboxGroupSlots } from './checkbox-group'
 export type { CheckboxValue, CheckboxChangeTarget, CheckboxChangeEvent } from './context'
 
 // 子组件经本地常量再导出（同 menu/index.ts）：直接写 `export { CheckboxGroup }` 属纯 re-export，

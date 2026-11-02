@@ -18,7 +18,13 @@ import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Empty from 'components/empty'
 import Popup from 'components/popup'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
-import { injectFromChain, useResizeObserver, zIndexContainerOpenKey, FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import {
+  injectFromChain,
+  useControlledModel,
+  useResizeObserver,
+  zIndexContainerOpenKey,
+  FLOATING_LAYER_Z_INDEX
+} from 'components/utils'
 import type { FloatingPlacement, MountElement } from 'components/utils'
 export interface Option {
   label?: string // 选项名
@@ -214,8 +220,10 @@ const hasCustomTrigger = Boolean(slots.default)
 const inputRef = ref<HTMLInputElement | null>(null) // 触发器输入框（只读时仅用于承载聚焦态）
 const contentRef = ref<HTMLElement | null>(null) // 触发器内容容器（面板定位锚点）
 const popupRef = ref<InstanceType<typeof Popup> | null>(null) // 浮层宿主模板引用（面板根元素经其 expose 取得）
-const innerOpen = ref<boolean>(false) // 非受控模式下的面板显隐
-const innerSearchValue = ref<string>('') // 非受控模式下的搜索文本
+// (v-model:open) 面板显隐：传值即受控，未传时组件自持
+const openModel = useControlledModel<boolean>('open', false)
+// (v-model:search-value) 搜索文本：传值即受控，未传时组件自持
+const searchValueModel = useControlledModel<string>('searchValue', '')
 const focused = ref<boolean>(false) // 是否聚焦（决定描边 / 阴影）
 const isComposing = ref<boolean>(false) // 是否处于输入法(IME)合成中，合成期间不触发 search / 过滤
 const searchHoverIndex = ref<number>(0) // 搜索结果的键盘高亮下标
@@ -226,8 +234,6 @@ const mergedFieldNames = computed(() => ({
   value: props.fieldNames?.value || 'value',
   children: props.fieldNames?.children || 'children'
 }))
-const mergedOpen = computed(() => (props.open !== undefined ? props.open : innerOpen.value))
-const mergedSearchValue = computed(() => (props.searchValue !== undefined ? props.searchValue : innerSearchValue.value))
 const mergedShowSearch = computed(() => props.showSearch !== false)
 const searchConfig = computed<SearchConfig>(() =>
   typeof props.showSearch === 'object' && props.showSearch !== null ? props.showSearch : {}
@@ -271,15 +277,15 @@ const innerCascaderId = nextCascaderId()
 const mergedCascaderId = computed(() => props.id || innerCascaderId)
 const listboxId = computed(() => `${mergedCascaderId.value}_list`)
 // 面板可见：打开即可见；无选项由面板内的空态占位呈现，notFoundContent 传 null 时回退默认空态
-const panelVisible = computed(() => mergedOpen.value)
-const panelSearchMode = computed(() => mergedShowSearch.value && mergedSearchValue.value !== '')
+const panelVisible = computed(() => openModel.value)
+const panelSearchMode = computed(() => mergedShowSearch.value && searchValueModel.value !== '')
 // 是否处于「有输入文本」状态：输入法合成期间也算（此时搜索文本尚未同步，否则拼音会与占位文本重叠）
-const hasTextInput = computed(() => mergedShowSearch.value && (mergedSearchValue.value !== '' || isComposing.value))
+const hasTextInput = computed(() => mergedShowSearch.value && (searchValueModel.value !== '' || isComposing.value))
 // 后缀图标形态：打开且支持搜索时显示搜索图标，其余显示箭头（自定义后缀在模板中优先命中）
-const showSearchIcon = computed(() => mergedOpen.value && mergedShowSearch.value)
+const showSearchIcon = computed(() => openModel.value && mergedShowSearch.value)
 const showPlaceholder = computed(() => valuePaths.value.length === 0 && !hasTextInput.value)
 watch(
-  [() => props.to, mergedOpen],
+  [() => props.to, openModel],
   () => {
     const to = props.to
     resolvedTo.value = typeof to === 'function' ? to(contentRef.value) : to
@@ -321,11 +327,8 @@ function createFallbackOption(value: CascaderValue): Option {
     [mergedFieldNames.value.label]: String(value)
   }
 }
-// 内部值：受控时以 value 为准，非受控时由内部维护（初值取 defaultValue）
-const innerValue = ref<CascaderModelValue | undefined>(props.defaultValue)
-const modelValue = computed<CascaderModelValue | undefined>(() =>
-  props.value !== undefined ? props.value : innerValue.value
-)
+// (v-model:value) 选中值：传值即受控，未传时组件自持（初值取 defaultValue）
+const modelValue = useControlledModel<CascaderModelValue | undefined>('value', props.defaultValue)
 const isMultiple = computed(() => props.multiple)
 /** 路径键：值里可能含任意字符，用序列化结果做键避免拼接冲突 */
 function pathKey(path: CascaderPath): string {
@@ -725,7 +728,7 @@ function defaultSearchFilter(inputValue: string, path: Option[]): boolean {
 }
 // 搜索结果：仅叶子节点参与（changeOnSelect 打开时任意层级都可作为结果，与面板点选口径一致）
 const searchResults = computed<Option[][]>(() => {
-  const keyword = mergedSearchValue.value
+  const keyword = searchValueModel.value
   if (!panelSearchMode.value) return []
   const { filter, sort, limit = 50 } = searchConfig.value
   const matcher = filter ?? defaultSearchFilter
@@ -774,7 +777,7 @@ function splitKeyword(text: string, keyword: string): SearchSegment[] {
 // 搜索结果渲染项：key + 路径 + 逐级高亮片段（render 配置存在时改由使用者接管内容）
 const searchItems = computed(() => {
   const render = searchConfig.value.render
-  const inputValue = mergedSearchValue.value
+  const inputValue = searchValueModel.value
   return searchResults.value.map((path) => {
     const segments = path.map((option) => splitKeyword(getOptionLabelText(option), inputValue))
     // 路径上任一禁选项与列内语义一致：结果置灰且不可选中
@@ -809,19 +812,20 @@ const matchTriggerWidth = computed<'minWidth' | false>(() => {
     showEmptyPanel.value || (panelSearchMode.value && (searchConfig.value.matchInputWidth ?? true))
   return keepTriggerWidth ? 'minWidth' : false
 })
-/** 统一控制面板显隐：非受控直接改内部状态（事件由 watch(innerOpen) 上报） */
-function setPanelOpen(open: boolean): void {
-  if (props.open === undefined) {
-    innerOpen.value = open
-  } else if (props.open !== open) {
-    emitPanelChange(open)
-  }
+/**
+ * 统一控制面板显隐：写模型即完成两种路径 —— 受控时只上报（显隐以父侧回写为准），非受控时本地生效；
+ * 与目标值相同的请求不重复上报。事件时序与改造前一致：受控路径同步派发，非受控路径由 watch(openModel) 派发
+ */
+function setPanelOpen(nextOpen: boolean): void {
+  if (openModel.value === nextOpen) return
+  const controlled = props.open !== undefined
+  openModel.value = nextOpen
+  if (controlled) emitPanelChange(nextOpen)
 }
-// 开合上报：受控与非受控都派发 update:open，父侧才能用 v-model:open 回写
-function emitPanelChange(open: boolean): void {
-  emits('update:open', open)
-  emits('openChange', open)
-  emits('dropdownVisibleChange', open)
+// update:open 由 useControlledModel 在写模型时派发，此处只负责语义化事件
+function emitPanelChange(nextOpen: boolean): void {
+  emits('openChange', nextOpen)
+  emits('dropdownVisibleChange', nextOpen)
 }
 function openPanel(): void {
   if (!props.disabled) {
@@ -831,18 +835,16 @@ function openPanel(): void {
 function closePanel(): void {
   setPanelOpen(false)
 }
+/** 设置搜索文本：写模型即完成两种路径（受控回写 / 非受控本地生效） */
 function setSearchValue(value: string): void {
-  innerSearchValue.value = value
-  if (props.searchValue !== undefined) {
-    emits('update:searchValue', value)
-  }
+  searchValueModel.value = value
 }
 /**
- * 搜索输入框的可写目标：读统一走 mergedSearchValue（受控时由外部驱动），
+ * 搜索输入框的可写目标：读统一走 searchValueModel（受控时由外部驱动），
  * 写走 setSearchValue（受控时额外回传 update:searchValue）
  */
 const inputModelValue = computed({
-  get: () => mergedSearchValue.value,
+  get: () => searchValueModel.value,
   set: (value: string) => setSearchValue(value)
 })
 function focusTrigger(): void {
@@ -885,7 +887,7 @@ function onPanelMousedown(e: MouseEvent): void {
 }
 function togglePanel(): void {
   if (props.disabled) return
-  if (mergedOpen.value) {
+  if (openModel.value) {
     closePanel()
     return
   }
@@ -894,19 +896,13 @@ function togglePanel(): void {
 }
 /** 单选值变更统一出口：同步 v-model 并派发 change（value 为路径，options 为路径上的选项数据） */
 function emitChange(cells: CascaderPath): void {
-  if (props.value === undefined) {
-    innerValue.value = cells
-  }
-  emits('update:value', cells)
+  modelValue.value = cells
   emits('change', cells, resolveOptions(cells))
 }
 /** 多选值变更统一出口：按回填策略格式化后同步 v-model 并派发 change */
 function emitMultipleChange(leafPaths: CascaderPath[]): void {
   const nextValue = formatStrategyPaths(leafPaths)
-  if (props.value === undefined) {
-    innerValue.value = nextValue
-  }
-  emits('update:value', nextValue)
+  modelValue.value = nextValue
   emits(
     'change',
     nextValue,
@@ -1094,7 +1090,7 @@ function onCheckboxClick(option: Option, columnIndex: number, e: MouseEvent): vo
 }
 /** 双击选项：changeOnSelect 下作为「结束下钻」的快捷操作 */
 function onOptionDblclick(): void {
-  if (props.changeOnSelect && mergedOpen.value && !isMultiple.value) {
+  if (props.changeOnSelect && openModel.value && !isMultiple.value) {
     closePanel()
   }
 }
@@ -1144,7 +1140,7 @@ function onSearchInput(e: Event): void {
   emits('search', value)
   activeCells.value = []
   searchHoverIndex.value = 0
-  if (!mergedOpen.value) {
+  if (!openModel.value) {
     openPanel()
   }
 }
@@ -1165,10 +1161,7 @@ function onClear(e?: MouseEvent): void {
   if (props.disabled) return
   setSearchValue('')
   closePanel()
-  if (props.value === undefined) {
-    innerValue.value = []
-  }
-  emits('update:value', [])
+  modelValue.value = []
   emits('change', [], [])
   emits('clear')
   focusTrigger()
@@ -1183,7 +1176,7 @@ function onKeydown(e: KeyboardEvent): void {
   // 输入法组合中的按键全部交由 IME 处理，不驱动面板
   if (e.isComposing || isComposing.value) return
   if (e.key === 'Escape') {
-    if (mergedOpen.value) {
+    if (openModel.value) {
       e.preventDefault()
       closePanel()
     }
@@ -1200,7 +1193,7 @@ function onKeydown(e: KeyboardEvent): void {
       return
     }
     if (e.key === 'Enter') {
-      if (!mergedOpen.value) {
+      if (!openModel.value) {
         openPanel()
         return
       }
@@ -1212,7 +1205,7 @@ function onKeydown(e: KeyboardEvent): void {
     }
     return
   }
-  if (!mergedOpen.value) {
+  if (!openModel.value) {
     // 面板未展开时，方向键 / 回车都可唤起面板
     if (e.key === 'Enter' || e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault()
@@ -1270,7 +1263,7 @@ function onKeydown(e: KeyboardEvent): void {
     toggleCheckPath(activeCells.value)
     return
   }
-  if (isMultiple.value && e.key === 'Backspace' && mergedSearchValue.value === '') {
+  if (isMultiple.value && e.key === 'Backspace' && searchValueModel.value === '') {
     const lastTag = tagItems.value[tagItems.value.length - 1]
     if (lastTag) {
       e.preventDefault()
@@ -1348,7 +1341,7 @@ const customMaxTagPlaceholder = computed<(() => string | VNode) | null>(() => {
 })
 // 清除图标可用：开启 allowClear、未禁用，且存在已选值或搜索文本
 const canClear = computed(
-  () => props.allowClear && !props.disabled && (valuePaths.value.length > 0 || mergedSearchValue.value !== '')
+  () => props.allowClear && !props.disabled && (valuePaths.value.length > 0 || searchValueModel.value !== '')
 )
 const customNotFoundContent = computed<(() => string | VNode) | null>(() => {
   const content = props.notFoundContent
@@ -1356,38 +1349,18 @@ const customNotFoundContent = computed<(() => string | VNode) | null>(() => {
   return () => content
 })
 const screenReaderText = computed(() => {
-  if (mergedOpen.value) return ''
+  if (openModel.value) return ''
   return isMultiple.value ? tagItems.value.map((item) => item.label).join(', ') : displayText.value
 })
-// 受控 open：外部变更同步到内部状态（模板统一读 mergedOpen，内部值仅作镜像）
-watch(
-  () => props.open,
-  (value) => {
-    if (typeof value === 'boolean') {
-      innerOpen.value = value
-    }
-  },
-  { immediate: true }
-)
-// 受控 searchValue：外部变更同步到内部可写目标
-watch(
-  () => props.searchValue,
-  (value) => {
-    if (value !== undefined) {
-      innerSearchValue.value = value
-    }
-  },
-  { immediate: true }
-)
-// 非受控模式下由内部状态变化上报开合事件；受控模式由 setPanelOpen 在「用户请求变更」时派发
-watch(innerOpen, (open) => {
+// 非受控模式下由模型变化派发语义化开合事件；受控模式由 setPanelOpen 在「用户请求变更」时同步派发
+watch(openModel, (visible) => {
   if (props.open === undefined) {
-    emitPanelChange(open)
+    emitPanelChange(visible)
   }
 })
 // 展开时把激活路径复位到已选路径（没有已选值时只展示根列）；收起时只清搜索文本。
 // 收起期间保留激活路径，否则列会在收起动画途中塌陷，看起来像「逐列关闭」而非整体收起
-watch(mergedOpen, (open) => {
+watch(openModel, (open) => {
   if (open) {
     /*
       展开即回到上次关掉时的各列位置：缓存（渲染窗口的依据）保持不变，只把容器 scrollTop 写回，
@@ -1417,7 +1390,7 @@ watch(
   () => props.value,
   () => {
     const nextPath = valuePaths.value[0] ?? []
-    if (mergedOpen.value && !isMultiple.value && !panelSearchMode.value && nextPath.length > 0) {
+    if (openModel.value && !isMultiple.value && !panelSearchMode.value && nextPath.length > 0) {
       activeCells.value = [...nextPath]
     }
   }
@@ -1491,7 +1464,7 @@ if (containerOpen) {
  * 因此无法沿用「输入框 blur」的收起路径，改为文档级 mousedown 判定（捕获阶段，先于触发器的开合）
  */
 function onDocumentMousedown(e: MouseEvent): void {
-  if (!mergedOpen.value) return
+  if (!openModel.value) return
   const target = e.target as Node | null
   if (!target) return
   if (wrapRef.value?.contains(target) || popupRef.value?.panelRef?.contains(target)) return
@@ -1524,7 +1497,7 @@ defineExpose({
     class="cascader-wrap"
     :class="{
       'cascader-focused': focused,
-      'cascader-open': mergedOpen,
+      'cascader-open': openModel,
       'cascader-small': size === 'small',
       'cascader-large': size === 'large',
       'cascader-disabled': disabled,
@@ -1612,7 +1585,7 @@ defineExpose({
           autocomplete="off"
           role="combobox"
           :id="mergedCascaderId"
-          :aria-expanded="mergedOpen"
+          :aria-expanded="openModel"
           aria-haspopup="listbox"
           :aria-controls="listboxId"
           :aria-owns="listboxId"
@@ -1749,7 +1722,7 @@ defineExpose({
                     <slot
                       v-if="slots.showSearchRender"
                       name="showSearchRender"
-                      :input-value="mergedSearchValue"
+                      :input-value="searchValueModel"
                       :path="item.path"
                       :segments="item.segments"
                       :disabled="item.disabled"

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, provide, ref, watchEffect } from 'vue'
+import { computed, provide } from 'vue'
 import type { VNode } from 'vue'
 import Checkbox from '../Checkbox.vue'
 import { checkboxGroupContextKey } from '../context'
 import type { CheckboxChangeEvent, CheckboxValue } from '../context'
 import { renderOptionLabel } from '../render'
+import { useControlledModel } from 'components/utils'
 
 export interface Option {
   label?: string | number | VNode // 选项名，未提供时以选项值展示
@@ -33,7 +34,7 @@ export interface CheckboxGroupSlots {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  value: () => [],
+  // value 不设默认值：受控判据是「传值即受控」，非受控初值由 useControlledModel 提供
   options: () => [],
   vertical: false,
   gap: 8,
@@ -44,8 +45,8 @@ const props = withDefaults(defineProps<Props>(), {
 })
 defineSlots<CheckboxGroupSlots>()
 const emits = defineEmits(['update:value', 'change'])
-// 组内已选值：外部传入时以外层为准，未受控时由本地副本即时切换
-const groupValue = ref<CheckboxValue[]>(props.value)
+// (v-model) 组内已选值：传值即受控，未传时组件自持（写入一律整体替换，禁止 push / splice）
+const valueModel = useControlledModel<CheckboxValue[]>('value', [])
 // 选项归一：字符串 / 数字简写取自身为值，对象形态取 label / value / disabled
 const normalizedOptions = computed<NormalizedOption[]>(() => {
   return props.options.map((option) => {
@@ -63,9 +64,6 @@ const gapValue = computed(() => {
   }
   return props.vertical ? `${gap[1]}px` : `${gap[1]}px ${gap[0]}px`
 })
-watchEffect(() => {
-  groupValue.value = props.value
-})
 // 状态快照取本组件 props，原生事件与方法附在其上，与原生 input 的 change 同形态
 function buildChangeEvent(nativeEvent: Event, value: CheckboxValue[]): CheckboxChangeEvent {
   return {
@@ -82,14 +80,14 @@ function buildChangeEvent(nativeEvent: Event, value: CheckboxValue[]): CheckboxC
   }
 }
 provide(checkboxGroupContextKey, {
-  value: groupValue,
+  value: valueModel,
   disabled: computed(() => props.disabled),
   name: computed(() => props.name),
   onChange: (checked, value, nativeEvent) => {
     // 组内单项只上报自身状态，选中集合的增删由组统一维护，保证数组顺序与操作顺序一致
-    const nextValue = checked ? [...groupValue.value, value] : groupValue.value.filter((item) => item !== value)
-    groupValue.value = nextValue
-    emits('update:value', nextValue)
+    const nextValue = checked ? [...valueModel.value, value] : valueModel.value.filter((item) => item !== value)
+    // 写模型即完成两种路径：受控时只上报（显示以父侧回写为准），非受控时本地生效
+    valueModel.value = nextValue
     emits('change', nextValue, buildChangeEvent(nativeEvent, nextValue))
   }
 })

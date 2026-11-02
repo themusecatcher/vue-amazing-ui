@@ -28,7 +28,13 @@ import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Empty from 'components/empty'
 import Popup from 'components/popup'
 import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
-import { useContainerClose, useResizeObserver, useSlotsExist, FLOATING_LAYER_Z_INDEX } from 'components/utils'
+import {
+  useContainerClose,
+  useControlledModel,
+  useResizeObserver,
+  useSlotsExist,
+  FLOATING_LAYER_Z_INDEX
+} from 'components/utils'
 import type { FloatingPlacement, MountElement } from 'components/utils'
 export interface Option {
   label?: string // 选项名
@@ -231,14 +237,19 @@ const emits = defineEmits([
   'mouseenter',
   'mouseleave',
   'inputKeyDown',
-  'update:searchValue'
+  'update:searchValue',
+  'update:open'
 ])
 const selectWrapRef = ref<HTMLElement | null>(null) // 组件根元素引用，用于判断焦点是否仍落在本组件内
 const inputRef = ref<HTMLInputElement | null>(null) // 搜索输入框
 const selectContentRef = ref<HTMLElement | null>(null) // 触发器内容容器（面板定位锚点 + tag 宽度量取对象）
 const popupRef = ref<InstanceType<typeof Popup> | null>(null) // 浮层宿主模板引用（面板根元素经其 expose 取得）
-const showOptions = ref<boolean>(false) // 非受控模式下的面板显隐
-const innerSearchValue = ref<string>('') // 非受控模式下的搜索文本
+// (v-model:value) 选中值：传值即受控，未传时组件自持（多选按整体替换，不原地修改）
+const valueModel = useControlledModel<Props['value']>('value', undefined)
+// (v-model:open) 面板显隐：传值即受控，未传时组件自持
+const openModel = useControlledModel<boolean>('open', false)
+// (v-model:search-value) 搜索文本：传值即受控，未传时组件自持
+const searchValueModel = useControlledModel<string>('searchValue', '')
 const focused = ref<boolean>(false) // 是否聚焦（决定描边 / 阴影与多选输入框的可编辑性）
 const isComposing = ref<boolean>(false) // 是否处于输入法(IME)合成中，合成期间不触发 search / 过滤
 const hoverValue = ref<SelectValue | null>(null) // 键盘 / 悬浮高亮项的 value
@@ -402,8 +413,6 @@ const isTagsMode = computed(() => props.mode === 'tags') // 是否标签模式�
 const mergedShowSearch = computed(() => props.showSearch ?? isMultiple.value)
 // 箭头显示：多选默认不显示箭头（约定），loading 时显示（后缀位置由加载中图标接管）
 const mergedShowArrow = computed(() => props.showArrow ?? (props.loading || !isMultiple.value))
-const mergedOpen = computed(() => (props.open !== undefined ? props.open : showOptions.value))
-const mergedSearchValue = computed(() => (props.searchValue !== undefined ? props.searchValue : innerSearchValue.value))
 // labelInValue
 /** 是否为 labelInValue 对象（约定：非对象 / 数组 / 空值一律视为原始值） */
 function isLabeledValue(value: unknown): value is LabeledValue {
@@ -423,7 +432,7 @@ function toValueItems(value: Props['value']): (SelectValue | LabeledValue)[] {
 /** 入参 labelInValue 对象携带的 label：回填文本与事件回传时保留调用方传入的文本（约定：入参 label 优先于选项数据） */
 const incomingLabels = computed(() => {
   const labels = new Map<SelectValue, unknown>()
-  toValueItems(props.value).forEach((item) => {
+  toValueItems(valueModel.value).forEach((item) => {
     if (!isLabeledValue(item) || item.label === undefined) return
     const raw = getRawValue(item)
     if (raw !== undefined) labels.set(raw, item.label)
@@ -466,27 +475,27 @@ function wrapValues(values: SelectValue[]): SelectValue[] | LabeledValue[] {
 }
 // 多选值列表：单选值归一为单元素数组，labelInValue 对象取其原始值，空值统一为空数组（内部一律按原始值数组处理）
 const valueList = computed<SelectValue[]>(() =>
-  toValueItems(props.value)
+  toValueItems(valueModel.value)
     .map((item) => getRawValue(item))
     .filter((item): item is SelectValue => item !== undefined)
 )
 // 输入框展示文本：多选（非 tags）在面板关闭时不展示已输入的搜索文本（约定：重开面板时恢复）
 const inputDisplayValue = computed(() =>
-  isMultiple.value && !isTagsMode.value && !mergedOpen.value ? '' : mergedSearchValue.value
+  isMultiple.value && !isTagsMode.value && !openModel.value ? '' : searchValueModel.value
 )
-// 输入框绑定值：仍以内部状态为准（保留 v-model 在元素上维护的 composing 标记，IME 期间不触发 search），
+// 输入框绑定值：写入口即搜索文本模型（v-model 在元素上维护 composing 标记，IME 合成期间不回写），
 // 仅在「多选且面板关闭」时展示为空
 const inputModelValue = computed({
   get: () => inputDisplayValue.value,
-  set: (value: string) => {
-    innerSearchValue.value = value
+  set: (text: string) => {
+    searchValueModel.value = text
   }
 })
 // 输入框可编辑性（约定）：tags 始终可输入；multiple 需开启 showSearch 且面板展开 / 已聚焦；单选仅看 showSearch
 const inputEditable = computed(() => {
   if (isTagsMode.value) return true
   if (!isMultiple.value) return mergedShowSearch.value
-  return mergedShowSearch.value && (mergedOpen.value || focused.value)
+  return mergedShowSearch.value && (openModel.value || focused.value)
 })
 const selectWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -549,14 +558,14 @@ function isOptionSelected(option: Option): boolean {
 }
 // 当前选中项（单选）：value 未指定 / 为数组 / 在选项中查不到时为 undefined
 const selectedOption = computed<Option | undefined>(() => {
-  const value = props.value
+  const value = valueModel.value
   if (value === undefined || value === null || Array.isArray(value)) return undefined
   const raw = getRawValue(value)
   return raw === undefined ? undefined : findOption(raw)
 })
 // 回填内容：入参 label 优先，其次 optionLabelProp 指定字段，再取 label 字段，均缺失时回落 value
 const optionLabelRaw = computed<unknown>(() => {
-  const value = props.value
+  const value = valueModel.value
   if (value === undefined || value === null || Array.isArray(value)) return undefined
   const raw = getRawValue(value)
   return raw === undefined ? undefined : resolveLabel(raw, findOption(raw))
@@ -567,11 +576,11 @@ const showPlaceholder = computed(() => {
   if (isMultiple.value) {
     return valueList.value.length === 0 && !inputDisplayValue.value && !isComposing.value
   }
-  if (props.value === undefined) return true
-  if (props.value === null) return optionLabelRaw.value === undefined || optionLabelRaw.value === null
+  if (valueModel.value === undefined) return true
+  if (valueModel.value === null) return optionLabelRaw.value === undefined || optionLabelRaw.value === null
   return false
 })
-const displayText = computed<unknown>(() => optionLabelRaw.value ?? props.value)
+const displayText = computed<unknown>(() => optionLabelRaw.value ?? valueModel.value)
 /** 回填内容的渲染节点：子组件式写法下由标签插槽渲染富内容，普通选项仍走模板插值的快速路径 */
 const displayLabelContent = computed<SelectMenuNode | null>(() => {
   const labelSlot = getOptionLabelSlot(selectedOption.value)
@@ -722,7 +731,7 @@ const filledOptions = computed<Option[]>(() => {
 // 过滤后的选项：filterOption 为 false 或搜索文本为空时不过滤
 // 默认过滤字段：optionFilterProp 优先，未指定时按 value 字段匹配（大小写不敏感）
 const filteredOptions = computed<Option[]>(() => {
-  const keyword = mergedSearchValue.value
+  const keyword = searchValueModel.value
   if (!keyword || props.filterOption === false) return filledOptions.value
   const upperKeyword = keyword.toUpperCase()
   const filterProp = props.optionFilterProp ?? mergedFieldNames.value.value
@@ -739,7 +748,7 @@ const filteredOptions = computed<Option[]>(() => {
 // tags 模式：输入内容未命中任何选项时，把它作为「新建标签」伪选项置于列表首位，可直接点击 / 回车选中（约定）
 const searchFilledOptions = computed<Option[]>(() => {
   if (!isTagsMode.value) return filteredOptions.value
-  const keyword = mergedSearchValue.value
+  const keyword = searchValueModel.value
   if (!keyword) return filteredOptions.value
   const filterProp = props.optionFilterProp ?? mergedFieldNames.value.value
   const matched = filteredOptions.value.some((option) => option?.[filterProp] === keyword)
@@ -843,13 +852,13 @@ function optionDomId(optionIndex: number): string {
 }
 /** 当前高亮项对应的 DOM id：面板未展开 / 无高亮 / 高亮行不在渲染窗口内时均不设置（避免指向不存在的节点） */
 const activeDescendantId = computed(() =>
-  mergedOpen.value && activeRowRendered.value && activeOptionIndex.value >= 0
+  openModel.value && activeRowRendered.value && activeOptionIndex.value >= 0
     ? optionDomId(activeOptionIndex.value)
     : undefined
 )
 /** 屏幕阅读器播报文本：面板关闭时聚合已选内容（隐藏 aria-live 节点同款） */
 const screenReaderText = computed(() => {
-  if (mergedOpen.value) return ''
+  if (openModel.value) return ''
   return selectedOptions.value
     .map((option) => {
       const label = getOptionLabel(option)
@@ -864,18 +873,18 @@ const screenReaderText = computed(() => {
 const hasNotFoundContent = computed(() => props.notFoundContent !== null)
 const emptyListContent = computed(() => !hasNotFoundContent.value && displayOptions.value.length === 0)
 // 面板可见：不仅要打开，还需有空态兜底，否则空列表下会展开一个空壳面板
-const panelVisible = computed(() => mergedOpen.value && !emptyListContent.value)
+const panelVisible = computed(() => openModel.value && !emptyListContent.value)
 // 清除图标可用：开启 allowClear、未禁用，且「有选中值或有搜索文本」
 const canClear = computed(
-  () => props.allowClear && !props.disabled && (!showPlaceholder.value || Boolean(mergedSearchValue.value))
+  () => props.allowClear && !props.disabled && (!showPlaceholder.value || Boolean(searchValueModel.value))
 )
 // 是否处于「有输入文本」状态（既有口径）：此时隐藏回填内容与占位文本
 const hasTextInput = computed(() => {
-  if (!mergedShowSearch.value && !mergedOpen.value) return false
-  return Boolean(mergedSearchValue.value) || isComposing.value
+  if (!mergedShowSearch.value && !openModel.value) return false
+  return Boolean(searchValueModel.value) || isComposing.value
 })
 // 后缀图标形态：打开且可搜索时显示搜索图标，其余显示箭头（自定义后缀 / loading 分支在模板中优先命中）
-const showSearchIcon = computed(() => mergedOpen.value && mergedShowSearch.value)
+const showSearchIcon = computed(() => openModel.value && mergedShowSearch.value)
 // 期望方向：面板方向由 placement prop 决定（默认 bottomLeft），翻转 / 自适应由浮层宿主承担
 const floatingPlacement = computed<FloatingPlacement>(() => props.placement)
 // 面板与触发器的宽度契约：true 等宽、false 仅最小等宽（内容自适应）、number 指定面板宽度
@@ -914,34 +923,6 @@ const panelTransitionProps: TransitionProps = {
   leaveToClass: 'select-slide-leave select-slide-leave-active'
 }
 
-watch(
-  () => props.open,
-  (val) => {
-    if (typeof val === 'boolean') {
-      showOptions.value = val
-    }
-  },
-  { immediate: true }
-)
-// 受控 searchValue：外部变更同步到内部可写目标（v-model 绑定的就是该目标），
-// 呈现层统一读 mergedSearchValue，故受控时内部值仅作镜像、不参与过滤
-watch(
-  () => props.searchValue,
-  (val) => {
-    if (val !== undefined && val !== innerSearchValue.value) {
-      innerSearchValue.value = val
-    }
-  },
-  { immediate: true }
-)
-// 非受控模式下由内部状态变化上报开合事件；
-// 受控模式的事件由 setPanelOpen 在「用户请求变更」时派发，此处必须跳过 ——
-// 否则外部改 open 驱动状态变化也会被回传成一次多余事件，事件方向就反了
-watch(showOptions, (open) => {
-  if (props.open === undefined) {
-    emitPanelChange(open)
-  }
-})
 /**
  * 打开面板时的高亮 / 滚动处理：仅「单选且已有选中值」把高亮复位到选中项并滚入可视区；
  * 其余情形（多选 / 标签 / 单选无值）保留用户上次移动的高亮与滚动位置，避免打断已定位的位置
@@ -1093,25 +1074,33 @@ async function scrollRowIntoView(rowIndex: number): Promise<void> {
   scrollRowIntoViewSync(rowIndex)
 }
 /**
- * 面板开合状态变更 / 用户开合请求的统一上报：
- * open 为纯受控属性（显隐由外部驱动），组件同时派发 openChange（项目惯例）与 dropdownVisibleChange（对应的对外事件）
+ * 面板开合状态变更 / 用户开合请求的语义化上报：
+ * update:open 由 useControlledModel 在写模型时派发，此处只负责 openChange（项目惯例）
+ * 与 dropdownVisibleChange（对应的对外事件）
  */
-function emitPanelChange(open: boolean): void {
-  emits('openChange', open)
-  emits('dropdownVisibleChange', open)
+function emitPanelChange(nextOpen: boolean): void {
+  emits('openChange', nextOpen)
+  emits('dropdownVisibleChange', nextOpen)
 }
 /**
- * 统一控制面板显隐：非受控直接改内部状态（事件由 watch(showOptions) 上报）；
- * 受控不改内部状态，但必须把用户的「开合请求」上报（直接 return 会让点击 / 输入既不开面板也不派发事件），
- * 与目标值相同的请求不重复上报
+ * 统一控制面板显隐：写模型即完成两种路径 —— 受控时只上报（显隐以父侧回写为准），
+ * 非受控时本地生效；与目标值相同的请求不重复上报
+ *
+ * 事件时序与改造前保持一致：受控路径在「用户请求变更」时同步派发；
+ * 非受控路径由下方 watch(openModel) 在模型变化时派发（与旧 watch(showOptions) 同一拍，
+ * 避免开合事件抢在同一次点击的 change 之前到达，导致父级在关闭动画期间重建面板内容）
  */
-function setPanelOpen(open: boolean): void {
-  if (props.open === undefined) {
-    showOptions.value = open
-  } else if (props.open !== open) {
-    emitPanelChange(open)
-  }
+function setPanelOpen(nextOpen: boolean): void {
+  if (openModel.value === nextOpen) return
+  const controlled = props.open !== undefined
+  openModel.value = nextOpen
+  if (controlled) emitPanelChange(nextOpen)
 }
+// 非受控模式下由模型变化派发语义化开合事件；受控模式的显隐变化由父侧驱动，
+// 回传会形成「外部改 open → 又上报一次」的反向事件
+watch(openModel, (visible) => {
+  if (props.open === undefined) emitPanelChange(visible)
+})
 /** 展开面板（禁用态不响应） */
 function openPanel(): void {
   if (!props.disabled) {
@@ -1125,12 +1114,9 @@ function closePanel(): void {
     setSearchValue('')
   }
 }
-/** 设置搜索文本：受控（searchValue）时仅回传事件，非受控时同步内部状态 */
+/** 设置搜索文本：写模型即完成两种路径（受控回写 / 非受控本地生效） */
 function setSearchValue(value: string): void {
-  innerSearchValue.value = value
-  if (props.searchValue !== undefined) {
-    emits('update:searchValue', value)
-  }
+  searchValueModel.value = value
 }
 /**
  * tokenSeparators 分词：命中分隔符时返回拆分结果（过滤空串），未命中返回 null
@@ -1184,7 +1170,7 @@ function handleSearch(value: string): void {
   }
   setSearchValue(value)
   emits('search', value)
-  if (!mergedOpen.value && !props.disabled) {
+  if (!openModel.value && !props.disabled) {
     openPanel()
   }
 }
@@ -1209,7 +1195,7 @@ function onBlur(e?: FocusEvent): void {
   const related = (e?.relatedTarget as Node | null) ?? null
   if (related && (popupRef.value?.panelRef?.contains(related) || selectWrapRef.value?.contains(related))) return
   // 多选下焦点真正离开组件时处理残留的搜索文本：tags 提交为新标签，multiple 静默清空（约定）
-  if (isMultiple.value && mergedSearchValue.value) {
+  if (isMultiple.value && searchValueModel.value) {
     if (isTagsMode.value) {
       submitTag()
     } else {
@@ -1267,7 +1253,7 @@ function onCompositionEnd(): void {
 /** 点击触发器：开合面板（禁用态不响应） */
 function toggleSelect(): void {
   if (props.disabled) return
-  if (mergedOpen.value) {
+  if (openModel.value) {
     closePanel()
     return
   }
@@ -1288,7 +1274,7 @@ function isValueListChanged(nextValues: SelectValue[]): boolean {
 function emitMultipleChange(nextValues: SelectValue[]): void {
   if (!isValueListChanged(nextValues)) return
   const payload = wrapValues(nextValues)
-  emits('update:value', payload)
+  valueModel.value = payload
   emits(
     'change',
     payload,
@@ -1307,7 +1293,7 @@ function removeTag(option: Option): void {
 }
 /** tags 模式：把当前搜索文本提交为新标签（回车 / 失焦时触发） */
 function submitTag(): void {
-  const text = (mergedSearchValue.value || '').trim()
+  const text = (searchValueModel.value || '').trim()
   if (!text) return
   const value: SelectValue = text
   const nextValues = valueList.value.includes(value) ? [...valueList.value] : [...valueList.value, value]
@@ -1319,13 +1305,13 @@ function submitTag(): void {
 function onSelectOption(option: Option, index: number): void {
   const value = getOptionValue(option)
   if (!isMultiple.value) {
-    // 受控比较按原始值进行：labelInValue 打开时 props.value 是对象，直接比较必然不等
+    // 受控比较按原始值进行：labelInValue 打开时 valueModel.value 是对象，直接比较必然不等
     const current =
-      Array.isArray(props.value) || props.value === undefined || props.value === null
+      Array.isArray(valueModel.value) || valueModel.value === undefined || valueModel.value === null
         ? undefined
-        : getRawValue(props.value)
+        : getRawValue(valueModel.value)
     if (current !== value) {
-      emits('update:value', wrapValue(value))
+      valueModel.value = wrapValue(value)
       emits('change', wrapValue(value), option, index)
     }
     emits('select', wrapValue(value), option)
@@ -1354,17 +1340,17 @@ function onSelectOption(option: Option, index: number): void {
 function onClear(e?: MouseEvent): void {
   e?.stopPropagation()
   if (props.disabled) return
-  const changed = isMultiple.value ? valueList.value.length > 0 : props.value !== undefined
+  const changed = isMultiple.value ? valueList.value.length > 0 : valueModel.value !== undefined
   setSearchValue('')
   hoverValue.value = null
   closePanel()
   if (isMultiple.value && changed) {
     const clearedOptions = selectedOptions.value
-    emits('update:value', [])
+    valueModel.value = []
     emits('change', [], [], undefined)
     clearedOptions.forEach((option) => emits('deselect', wrapValue(getOptionValue(option)), option))
   } else if (changed) {
-    emits('update:value', undefined)
+    valueModel.value = undefined
     emits('change', undefined, undefined, undefined)
   }
   emits('clear')
@@ -1384,10 +1370,10 @@ function onKeydown(e: KeyboardEvent): void {
   // 退格锁：记录本次按键前的搜索文本是否非空（上一次按键结束时写入），
   // 避免「清空搜索文本的同一次按键」紧接着又删掉一个标签（既有的锁语义）
   const clearLock = backspaceLock.value
-  backspaceLock.value = Boolean(mergedSearchValue.value)
+  backspaceLock.value = Boolean(searchValueModel.value)
   const list = displayOptions.value
   // 退格删除：搜索文本为空时删除最后一个可移除的标签（多选专属，禁用项跳过）
-  if (e.key === 'Backspace' && isMultiple.value && !clearLock && !mergedSearchValue.value && valueList.value.length) {
+  if (e.key === 'Backspace' && isMultiple.value && !clearLock && !searchValueModel.value && valueList.value.length) {
     const removable = [...selectedOptions.value].reverse().find((option) => !option.disabled)
     if (removable) {
       removeTag(removable)
@@ -1396,7 +1382,7 @@ function onKeydown(e: KeyboardEvent): void {
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
     if (!list.length) return
     e.preventDefault()
-    if (!mergedOpen.value) {
+    if (!openModel.value) {
       openPanel()
       return
     }
@@ -1425,7 +1411,7 @@ function onKeydown(e: KeyboardEvent): void {
     return
   }
   if (e.key === 'Enter') {
-    if (!mergedOpen.value) {
+    if (!openModel.value) {
       // tags 模式：面板未展开时回车把输入内容提交为新标签
       if (isTagsMode.value) {
         e.preventDefault()
@@ -1446,13 +1432,13 @@ function onKeydown(e: KeyboardEvent): void {
     onSelectOption(list[index], index)
     return
   }
-  if (e.key === 'Escape' && mergedOpen.value) {
+  if (e.key === 'Escape' && openModel.value) {
     e.preventDefault()
     closePanel()
     return
   }
   // 可打印字符（无修饰键）触发面板展开，使非搜索模式也能用键盘唤起下拉
-  if (!mergedOpen.value && !isComposing.value && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+  if (!openModel.value && !isComposing.value && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
     openPanel()
   }
 }
@@ -1685,7 +1671,7 @@ defineExpose({
     class="select-wrap"
     :class="{
       'select-focused': focused,
-      'select-open': mergedOpen,
+      'select-open': openModel,
       'select-small': size === 'small',
       'select-large': size === 'large',
       'select-disabled': disabled,
@@ -1766,12 +1752,12 @@ defineExpose({
         <input
           ref="inputRef"
           class="search-input"
-          :class="{ 'caret-show': mergedOpen }"
+          :class="{ 'caret-show': openModel }"
           type="text"
           autocomplete="off"
           role="combobox"
           :id="mergedSelectId"
-          :aria-expanded="mergedOpen"
+          :aria-expanded="openModel"
           aria-haspopup="listbox"
           :aria-controls="listboxId"
           :aria-owns="listboxId"
@@ -1820,7 +1806,7 @@ defineExpose({
              开关面板时「箭头 ⇄ 搜索图标」就没有交叉淡入淡出的过渡效果 -->
         <svg
           class="icon-svg arrow-svg"
-          :class="{ 'show-svg': !showSearchIcon, 'arrow-rotate': mergedOpen }"
+          :class="{ 'show-svg': !showSearchIcon, 'arrow-rotate': openModel }"
           focusable="false"
           data-icon="down"
           width="1em"

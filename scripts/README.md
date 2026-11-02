@@ -49,6 +49,7 @@
 | `component-vars-check.js` | 「文本 → 结构化事实」的纯函数（剥注释、拆 SFC 段、收集 `var()` 引用与使用），**不含判定策略**——规则留在 `verify-theme.js` 与测试中，避免两处口径漂移；`verify-inject-keys.js` 复用其中的 `stripComments` | `verify-theme.js`、`verify-inject-keys.js`、`tests/component-vars.spec.ts` |
 | `component-vars-check.d.ts` | 上者的类型声明，供 TS 测试导入时获得类型（手写文件，非构建产物） | `tests/component-vars.spec.ts` |
 | `check-prop-runtime-types.js` | `interface Props` 字段文本 → 期望的运行时类型分支，并与 `es/` `lib/` 产物里的 `props` 声明比对；同样只做文本解析、不跑编译器 | `prepublish-guard.js`、`tests/prop-runtime-types.spec.ts` |
+| `check-model-props.js` | 每个 `defineModel('x')` 的 `x` 是否出现在同 SFC 的 `interface Props` 或 `Props & { ... }` 合并块中（`defineModel` 的 prop 由编译器生成，对外具名类型须手动合并）；复用前者导出的 `parsePropsFields` / `collectSfcs` / `findBalancedEnd` | `prepublish-guard.js`、`tests/model-props-contract.spec.ts` |
 
 ## 命令链
 

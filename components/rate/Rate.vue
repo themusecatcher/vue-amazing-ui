@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue'
 import type { VNode } from 'vue'
 import Tooltip, { type TooltipProps } from 'components/tooltip'
+import { useControlledModel } from 'components/utils'
 
 export interface Props {
   allowClear?: boolean // 是否允许再次点击后清除
@@ -32,25 +33,16 @@ const props = withDefaults(defineProps<Props>(), {
   gap: 8,
   disabled: false,
   tooltips: () => [],
-  tooltipProps: () => ({}),
-  value: 0
+  tooltipProps: () => ({})
 })
 defineSlots<RateSlots>()
-const activeValue = ref<number>()
+// (v-model) 当前评分：传值即受控，未传时组件自持（初值 0 = 未评分）
+const valueModel = useControlledModel<number>('value', 0)
 const hoverValue = ref<number>()
 const tempValue = ref<number | null>() // 清除时保存点击value
 const emits = defineEmits(['update:value', 'change', 'hoverChange'])
 watch(
-  () => props.value,
-  (to) => {
-    activeValue.value = to
-  },
-  {
-    immediate: true
-  }
-)
-watch(
-  activeValue,
+  valueModel,
   (to) => {
     hoverValue.value = to
   },
@@ -60,16 +52,14 @@ watch(
 )
 function onClick(value: number): void {
   tempValue.value = null
-  if (value !== activeValue.value) {
-    activeValue.value = value
+  if (value !== valueModel.value) {
     emits('change', value) // 选择时的回调
-    emits('update:value', value)
+    valueModel.value = value
   } else {
     if (props.allowClear) {
       tempValue.value = value
-      activeValue.value = 0
       emits('change', 0)
-      emits('update:value', 0)
+      valueModel.value = 0
     } else {
       // 不允许清除
       emits('change', value) // 选择时的回调
@@ -89,22 +79,22 @@ function resetTempValue(): void {
   tempValue.value = null
 }
 function onLeave(): void {
-  hoverValue.value = activeValue.value
+  hoverValue.value = valueModel.value
 }
 function onUp(): void {
   tempValue.value = null
-  if (activeValue.value !== undefined && activeValue.value < props.count) {
-    activeValue.value += props.allowHalf ? 0.5 : 1
-    emits('change', activeValue.value)
-    emits('update:value', activeValue.value)
+  const next = valueModel.value + (props.allowHalf ? 0.5 : 1)
+  if (next <= props.count) {
+    emits('change', next)
+    valueModel.value = next
   }
 }
 function onDown(): void {
   tempValue.value = null
-  if (activeValue.value !== undefined && activeValue.value > 0) {
-    activeValue.value -= props.allowHalf ? 0.5 : 1
-    emits('change', activeValue.value)
-    emits('update:value', activeValue.value)
+  const next = valueModel.value - (props.allowHalf ? 0.5 : 1)
+  if (next >= 0) {
+    emits('change', next)
+    valueModel.value = next
   }
 }
 </script>

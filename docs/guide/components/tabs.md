@@ -1813,6 +1813,8 @@ const state = reactive<TabsProps>({
 
 ## APIs
 
+> **受控 / 非受控**：`activeKey` 传入即受控（值以父为准，组件只上报 `update:activeKey`）；不传则由组件自持，交互照常生效，可用 `defaultActiveKey` 指定初值。
+
 ### Tabs Props
 
 | 名称 | 说明 | 类型 | 默认值 |

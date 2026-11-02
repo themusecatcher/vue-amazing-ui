@@ -3,7 +3,6 @@
  * 下拉按钮：左侧为普通按钮（承载默认插槽内容与 loading 态），右侧为仅图标的下拉触发器，两者构成按钮组。
  * 菜单能力全部透传给 Dropdown，本组件只处理按钮形态与左按钮点击。
  */
-import { computed } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Dropdown from '../Dropdown.vue'
 import type { MenuOption, Key, DropdownArrowOptions, DropdownTrigger } from '../Dropdown.vue'
@@ -57,7 +56,6 @@ const props = withDefaults(defineProps<Props>(), {
 })
 defineSlots<DropdownButtonSlots>()
 const emits = defineEmits(['update:open', 'openChange', 'menuClick', 'click'])
-const mergedOpen = computed<boolean | undefined>(() => props.open)
 function onLeftClick(e: MouseEvent): void {
   if (props.disabled || props.loading) {
     return
@@ -90,7 +88,7 @@ function onMenuClick(key: Key | undefined, option: MenuOption): void {
       :trigger="trigger"
       :disabled="disabled"
       :arrow="arrow"
-      :open="mergedOpen"
+      :open="props.open"
       :to="to"
       :overlay-class-name="overlayClassName"
       :overlay-style="overlayStyle"

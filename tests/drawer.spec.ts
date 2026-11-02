@@ -180,3 +180,20 @@ describe('Drawer 挂载节点与属性透传', () => {
     wrapper.unmount()
   })
 })
+
+describe('Drawer 受控判据（传值即受控）', () => {
+  it('父传 open 且不监听 update 时，遮罩点击只上报、组件不自行关闭', async () => {
+    const wrapper = mountInline({ open: true })
+    const mask = wrapper.find('.drawer-mask')
+    expect((mask.element as HTMLElement).style.display).not.toBe('none')
+
+    await mask.trigger('click')
+    await nextTick()
+
+    expect(wrapper.emitted('update:open')).toEqual([[false]])
+    expect(wrapper.emitted('close')).toHaveLength(1)
+    // 受控：显隐以父侧回写为准，父不回写则保持打开
+    expect((mask.element as HTMLElement).style.display).not.toBe('none')
+    wrapper.unmount()
+  })
+})

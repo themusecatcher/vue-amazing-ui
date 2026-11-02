@@ -2,7 +2,7 @@
 import { ref, computed, watch, onMounted, useSlots, defineComponent, getCurrentInstance } from 'vue'
 import type { CSSProperties, PropType, VNode } from 'vue'
 import Dropdown, { type DropdownMenuOption } from 'components/dropdown'
-import { log, useResizeObserver, useSlotsExist } from 'components/utils'
+import { log, useControlledModel, useResizeObserver, useSlotsExist } from 'components/utils'
 import { parseTabPanes } from './slotItems'
 import { getCenterScroll } from './scroll'
 import type { TabsDisplayDirective, TabsPane } from './slotItems'
@@ -122,11 +122,10 @@ const emits = defineEmits<{
 }>()
 const slotsExist = useSlotsExist(['prefix', 'suffix', 'tabBar'])
 const uid = `tabs-${getCurrentInstance()?.uid ?? 0}` // 页签与面板的 aria 关联 id 前缀
-// 受控 / 非受控：传了 activeKey 即以外部为准，否则用内部副本（初值取 defaultActiveKey）
-const innerActiveKey = ref(props.defaultActiveKey)
-const mergedActiveKey = computed(() => props.activeKey ?? innerActiveKey.value)
+// (v-model) 当前激活 key：传值即受控，未传时取 defaultActiveKey 自持（缺省即无激活项）
+const activeKeyModel = useControlledModel<string | number | undefined>('activeKey', props.defaultActiveKey)
 const activeIndex = computed(() => {
-  return panes.value.findIndex((pane) => pane.key === mergedActiveKey.value)
+  return panes.value.findIndex((pane) => pane.key === activeKeyModel.value)
 })
 const showPrefix = computed(() => {
   return Boolean(slotsExist.prefix || props.prefix)
@@ -217,7 +216,7 @@ const hiddenStyle = computed(() => {
   }
 })
 watch(
-  () => mergedActiveKey.value,
+  () => activeKeyModel.value,
   () => {
     getBarDisplay()
   },
@@ -354,11 +353,11 @@ function getBarVerticalDisplay(): void {
 }
 /** 是否为当前激活页签 */
 function isActive(key: string | number): boolean {
-  return mergedActiveKey.value === key
+  return activeKeyModel.value === key
 }
 function onTab(key: string | number): void {
-  innerActiveKey.value = key
-  emits('update:activeKey', key)
+  // 写模型即完成两种路径：受控时只上报，非受控时本地生效
+  activeKeyModel.value = key
   emits('change', key)
 }
 let tabChangeId = 0 // 切换请求序号：连点时只让最后一次的校验结果生效
@@ -371,13 +370,13 @@ let tabChangeId = 0 // 切换请求序号：连点时只让最后一次的校验
 function requestTabChange(key: string | number): void {
   const guard = props.beforeLeave
   // 未传守卫时保持既有行为；激活项未变化时也不必拦截（受控模式下外部值可能尚未回写）
-  if (!guard || key === mergedActiveKey.value) {
+  if (!guard || key === activeKeyModel.value) {
     onTab(key)
     return
   }
   const id = ++tabChangeId
   Promise.resolve()
-    .then(() => guard(key, mergedActiveKey.value))
+    .then(() => guard(key, activeKeyModel.value))
     .then((allow) => {
       if (allow !== false && id === tabChangeId) {
         onTab(key)
@@ -485,7 +484,7 @@ function onMoreClose(key: DropdownMenuOption['key']): void {
 // 首次激活过的页签集合：show:lazy 只渲染访问过的面板内容
 const visitedKeys = ref<Set<string | number>>(new Set())
 watch(
-  () => mergedActiveKey.value,
+  () => activeKeyModel.value,
   (key) => {
     if (key === undefined || visitedKeys.value.has(key)) return
     visitedKeys.value = new Set(visitedKeys.value).add(key)
@@ -574,7 +573,7 @@ function getContentStyle(pane: TabsPane): CSSProperties {
       <div v-if="showPrefix" class="tabs-prefix">
         <slot name="prefix">{{ prefix }}</slot>
       </div>
-      <slot v-if="slotsExist.tabBar" name="tabBar" :tabs="panes" :active-key="mergedActiveKey" :change="onTab" />
+      <slot v-if="slotsExist.tabBar" name="tabBar" :tabs="panes" :active-key="activeKeyModel" :change="onTab" />
       <div
         v-else
         ref="wrapRef"
