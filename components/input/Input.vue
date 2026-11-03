@@ -50,7 +50,7 @@ const inputFocus = ref<boolean>(false) // input 元素是否聚焦
 const isComposing = ref<boolean>(false) // 是否正在使用文本合成系统输入中
 const inputValue = ref<string>() // 输入框的值
 const showPassword = ref<boolean>(false) // 是否显示密码
-const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'enter'])
+const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'enter', 'blur'])
 const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore', 'addonAfter'])
 const inputWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -105,8 +105,10 @@ function onMouseLeave(): void {
 function onFocus(): void {
   inputFocus.value = true
 }
-function onBlur(): void {
+function onBlur(e: FocusEvent): void {
   inputFocus.value = false
+  // 原生 blur 带上 relatedTarget：宿主可据此区分「失焦到哪」，如分页跳转框失焦到页码时不必再跳一次
+  emits('blur', e)
 }
 // 文本合成系统即输入法编辑器开始新的输入合成时会触发
 function onCompositionStart(e: CompositionEvent): void {
@@ -316,6 +318,12 @@ function onPassword(): void {
     width: 100%;
     min-width: 0;
     background-color: var(--va-input-bg-color, var(--va-bg-container-color));
+    // 尺寸类（input-small / input-middle / input-large）改的是 padding 与字号，需过渡，否则切换尺寸时整体突变
+    transition:
+      padding 0.2s,
+      font-size 0.2s,
+      line-height 0.2s,
+      border-radius 0.2s;
     .input-border {
       position: absolute;
       left: 0;
@@ -362,6 +370,9 @@ function onPassword(): void {
       position: relative;
       display: inline-block;
       width: 100%;
+      transition:
+        font-size 0.2s,
+        line-height 0.2s;
       min-width: 0;
       background-color: var(--va-input-bg-color, var(--va-bg-container-color));
       border: none;
