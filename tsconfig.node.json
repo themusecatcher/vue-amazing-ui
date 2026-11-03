@@ -9,6 +9,7 @@
     "eslint.config.*",
     "components/utils/vendor-styles.ts",
     "components/utils/style-deps.ts",
+    "components/utils/style-deps.data.js",
     "components/theme/**/*.ts",
     "components/utils/log.ts",
     "build/**/*.ts"
@@ -16,6 +17,7 @@
   "compilerOptions": {
     "composite": true,
     "noEmit": true,
+    "allowJs": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "module": "ESNext",
     "moduleResolution": "bundler",

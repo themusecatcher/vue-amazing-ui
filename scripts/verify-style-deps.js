@@ -32,7 +32,15 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { dirname, relative, resolve } from 'node:path'
-import { readStyleDeps, rootDir, styleSourceOf } from './parse-style-deps.js'
+import { fileURLToPath } from 'node:url'
+import {
+  componentDependencies,
+  componentsMap,
+  stylelessComponents,
+  styleSources
+} from '../components/utils/style-deps.data.js'
+
+const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
 /**
  * 豁免清单：chunk 图推导不出、但确属合法的样式依赖。
@@ -48,10 +56,44 @@ const EXEMPTIONS = {
   }
 }
 
-const { componentsMap, styleSources, componentDependencies, stylelessComponents } = readStyleDeps()
 const esDir = resolve(rootDir, 'es')
 const componentNames = Object.keys(componentsMap)
 const styleless = new Set(stylelessComponents)
+
+// ========== 数据层跨表引用完整性 ==========
+// 数据在 `components/utils/style-deps.data.js`（纯 JS，Node 可直接 import），类型系统看不到，
+// 原本由 `Partial<Record<ComponentName, ComponentName>>` 在编译期保证的「键与值必须是已收录组件」
+// 改由这里守护。放在产物检查之前：数据本身写错时先报数据问题，不让它伪装成「产物不一致」。
+const componentNameSet = new Set(componentNames)
+const dataIssues = []
+Object.entries(styleSources).forEach(([name, source]) => {
+  if (!componentNameSet.has(name)) {
+    dataIssues.push(`styleSources 的键不在 componentsMap 中：${name}`)
+  }
+  if (!componentNameSet.has(source)) {
+    dataIssues.push(`styleSources 的值不在 componentsMap 中：${name} → ${source}`)
+  }
+})
+Object.entries(componentDependencies).forEach(([name, dependencies]) => {
+  if (!componentNameSet.has(name)) {
+    dataIssues.push(`componentDependencies 的键不在 componentsMap 中：${name}`)
+  }
+  dependencies.forEach((dependency) => {
+    if (!componentNameSet.has(dependency)) {
+      dataIssues.push(`componentDependencies 的依赖不在 componentsMap 中：${name} → ${dependency}`)
+    }
+  })
+})
+stylelessComponents.forEach((name) => {
+  if (!componentNameSet.has(name)) {
+    dataIssues.push(`stylelessComponents 含未收录的组件：${name}`)
+  }
+})
+if (dataIssues.length > 0) {
+  console.error('❌ components/utils/style-deps.data.js 存在跨表引用错误：')
+  dataIssues.forEach((issue) => console.error(`   ✗ ${issue}`))
+  process.exit(1)
+}
 
 if (!existsSync(esDir) || !existsSync(resolve(rootDir, 'lib'))) {
   console.error('❌ 未找到 es/ 或 lib/ 产物，请先执行 `pnpm build` 后再运行 `pnpm verify:deps`')
@@ -433,7 +475,7 @@ componentNames.forEach((componentName) => {
     return
   }
   // Provider / 子组件：与样式来源组件**共用同一个入口**，其声明的依赖必须落在共享入口的集合内
-  const source = styleSourceOf(componentName, styleSources)
+  const source = styleSources[componentName] ?? componentName
   const sharedCss = new Set([source, ...(componentDependencies[source] ?? [])])
   const extra = [...expected].filter((dep) => !sharedCss.has(dep)).sort()
   if (extra.length > 0) {
@@ -564,7 +606,9 @@ if (issues.length > 0 || entryExportIssues.length > 0) {
   if (issues.length > 0) {
     console.error('❌ 样式依赖一致性校验未通过：')
     issues.forEach((issue) => console.error(`   ✗ ${issue}`))
-    console.error('   请修改 components/utils/style-deps.ts 的 componentDependencies；确属无法从 chunk 图推导的依赖，')
+    console.error(
+      '   请修改 components/utils/style-deps.data.js 的 componentDependencies；确属无法从 chunk 图推导的依赖，'
+    )
     console.error('   在 scripts/verify-style-deps.js 的 EXEMPTIONS 中登记并写明原因')
   }
   if (entryExportIssues.length > 0) {

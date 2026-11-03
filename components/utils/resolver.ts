@@ -5,7 +5,7 @@ import type { ComponentName } from './style-deps'
  * unplugin-vue-components 的按需引入 resolver
  *
  * 通过组件名回答两件事：组件从哪引入、需要携带哪些样式 sideEffects。样式依赖的完整知识放在
- * `style-deps.ts`（SSOT），本文件只做查表与路径拼接。
+ * `style-deps.data.js`（SSOT），类型经 `style-deps.ts` 门面导出，本文件只做查表与路径拼接。
  */
 
 /**
@@ -13,7 +13,7 @@ import type { ComponentName } from './style-deps'
  *
  * 每组件一个样式入口后，本函数只需回答「该组件的样式入口在哪」：入口
  * `es|lib/<dir>/style/index.{js,cjs}` 内部已按「global → 自身 → 依赖 → vendor」顺序引齐全部 CSS
- * （由构建期 build/generate-style-entries.ts 依据 style-deps.ts 生成），故此处不再维护依赖表。
+ * （由构建期 build/generate-style-entries.ts 依据 style-deps.data.js 生成），故此处不再维护依赖表。
  *
  * @param componentName - 组件名（必为 componentsMap 已收录的键）
  * @param options - resolver 选项，`cjs: true` 时指向 lib 产物

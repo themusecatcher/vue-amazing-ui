@@ -127,7 +127,8 @@ components/
 | `log.ts` | 告警 / 日志统一出口（`log` / `isDevEnv`：级别即环境策略 —— `error` 全环境、`warn` / `debug` 仅开发期，见 [component-design.md](component-design.md) 的「告警与日志 log」） |
 | `type.ts` | `withInstall` 高阶函数 |
 | `resolver.ts` | `unplugin-vue-components` 按需引入 resolver（返回组件的样式入口路径，见 [import-export.md](import-export.md)） |
-| `style-deps.ts` | 样式依赖表（单一数据源：`componentsMap` / `styleSources` / `componentDependencies` / `stylelessComponents`） |
+| `style-deps.data.js` | 样式依赖表（单一数据源：`componentsMap` / `styleSources` / `componentDependencies` / `stylelessComponents`；实现为 `.js`，Node 脚本可直接 import） |
+| `style-deps.ts` | 上者的类型门面（`ComponentName` / `isComponentName`），不承载数据 |
 | `vendor-styles.ts` | 第三方样式依赖清单（单一数据源） |
 
 > `index.ts` 是 barrel，只汇总 `format` / `math` / `function` / `dom` / `hooks` / `observers` / `position` / `z-index` / `floating-mount` / `inherit-font` / `sider-collapsed` / `log` / `render` 十三组；`type` / `resolver` / `style-deps` / `vendor-styles` 不属于 barrel 成员，需从具体文件引入（如 `import { withInstall } from 'components/utils/type'`）。工具函数的功能与使用说明见官方文档站 `docs/utils/functions/`。
