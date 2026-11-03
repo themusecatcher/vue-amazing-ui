@@ -846,9 +846,9 @@ const position = ref('top')
 </script>
 <template>
   <Flex vertical>
-    <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
-    <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" />
-    <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" type="card" />
+    <RadioGroup :options="positionOptions" v-model:value="position" button button-style="solid" />
+    <Tabs :items="tabItems" v-model:active-key="activeKey" :tab-position="position" />
+    <Tabs :items="tabItems" v-model:active-key="activeKey" :tab-position="position" type="card" />
   </Flex>
 </template>
 ```

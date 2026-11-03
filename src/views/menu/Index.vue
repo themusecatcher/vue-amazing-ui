@@ -654,7 +654,7 @@ const forceRenderItems: ItemType[] = [
       style="width: 256px; margin-top: 16px"
       mode="vertical"
       theme="dark"
-      :open-keys="submenuOpenKeys"
+      v-model:openKeys="submenuOpenKeys"
       v-model:selectedKeys="submenuSelected"
       :items="submenuItems"
     />

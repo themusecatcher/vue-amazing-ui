@@ -842,7 +842,7 @@ const handleRowEdit = (key: string) => {
   rowEditableData[key] = dataSourceRowEditable.value.filter((item) => key === item.key)[0]
 }
 const handleRowSave = (key: string) => {
-  Object.assign(dataSourceCellEditable.value.filter((item) => key === item.key)[0], rowEditableData[key])
+  Object.assign(dataSourceRowEditable.value.filter((item) => key === item.key)[0], rowEditableData[key])
   delete rowEditableData[key]
 }
 const handleRowCancel = (key: string) => {
@@ -2221,7 +2221,7 @@ const handleRowEdit = (key: string) => {
   rowEditableData[key] = dataSourceRowEditable.value.filter((item) => key === item.key)[0]
 }
 const handleRowSave = (key: string) => {
-  Object.assign(dataSourceCellEditable.value.filter((item) => key === item.key)[0], rowEditableData[key])
+  Object.assign(dataSourceRowEditable.value.filter((item) => key === item.key)[0], rowEditableData[key])
   delete rowEditableData[key]
 }
 const handleRowCancel = (key: string) => {

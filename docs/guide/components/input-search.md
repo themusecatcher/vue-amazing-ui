@@ -80,7 +80,6 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 
 ```vue
 <script setup lang="ts">
-<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const value = ref('')
 const lazyValue = ref('')

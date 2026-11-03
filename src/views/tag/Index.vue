@@ -175,7 +175,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
     <Space gap="small">
       <Tag closable size="small" @close="onClose">爱在西元前</Tag>
       <Tag color="warning" closable @close="onClose">超人不会飞</Tag>
-      <Tag color="blue" size="large" dynamic v-model:value="sizeTags" closable @close="onDynamicClose" />
+      <Tag color="blue" size="large" dynamic v-model:value="sizeTags" closable @dynamic-close="onDynamicClose" />
     </Space>
     <h2 class="mt30 mb10">自定义动态标签排列</h2>
     <Tag
@@ -185,7 +185,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
       size="large"
       :space-props="{ vertical: true, gap: 12 }"
       v-model:value="customLayoutTags"
-      @close="onDynamicClose"
+      @dynamic-close="onDynamicClose"
     />
     <h2 class="mt30 mb10">无边框</h2>
     <Space gap="small">

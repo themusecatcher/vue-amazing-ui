@@ -56,8 +56,7 @@ const state = reactive({
   size: 36,
   color: '#fadb14',
   gap: 8,
-  disabled: false,
-  value: 3
+  disabled: false
 })
 function onChange(value: number) {
   console.log('change', value)
@@ -393,11 +392,11 @@ watchEffect(() => {
     </Flex>
   </Col>
 </Row>
-<Badge :value="state.value" style="margin-top: 30px">
+<Badge :value="configValue" style="margin-top: 30px">
   <Rate
     v-bind="state"
     :character="state.character === 'custom-character' ? state.customCharacter : state.character"
-    v-model:value="state.value"
+    v-model:value="configValue"
   />
 </Badge>
 
@@ -405,7 +404,7 @@ watchEffect(() => {
 
 ```vue
 <script setup lang="ts">
-import { ref, watchEffect, reactive } from 'vue'
+import { ref, reactive } from 'vue'
 const characterOptions = [
   {
     label: 'star-outlined',
