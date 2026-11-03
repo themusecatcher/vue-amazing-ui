@@ -53,7 +53,7 @@
 | `buildDistOptions.emptyOutDir` | `false` | `build:components` 用 `run-p` 并行执行 `build:dist` / `build:browser`（两者都写 `dist`），若为 `true` 会在启动时各自清空 `dist` 造成竞态、产物互相覆盖；清空动作由前置 `clean` 串行完成 |
 | `css.preprocessorOptions` | 不配置 | 3.0 起主题唯一来源是 `components/theme` 的 `DEFAULT_SEEDS`（构建期派生 `components/style/generated/theme.css`），不再向 Less 注入主题变量；全仓 88 处 `<style lang="less">` 与 3 份全局 less 均不使用内联 JS / `@plugin`，故 `modifyVars` 与 `javascriptEnabled` 都无消费方。加回前先确认确实有 Less 变量消费方，否则会形成第二份主色事实 |
 | `cssCodeSplit` | dist 为 `false`，es / lib 为 `true` | dist 需合并出单个 `style.css` 供全量引入；es / lib 需按组件粒度拆分出各组件 `Xxx.css` 供按需引入 |
-| `package.json` 的 `sideEffects` | `["dist/*.css", "*.css", "**/style/*"]` | webpack 生产模式默认开启 `optimization.sideEffects`：未被白名单覆盖的文件会被判定为「无副作用」，`import 'vue-amazing-ui/es/button/style'` 这类**纯副作用导入**会被 tree-shaking 丢弃（实测 webpack 5.111：`es/<dir>/style/index.js` 是 `.js`、未被 `*.css` 覆盖 → 样式静默丢失）。不含 `/` 的模式会被 webpack 自动补 `**/` 前缀（故 `*.css` 能覆盖嵌套 CSS）；`**/style/*` 专门覆盖样式入口 JS/CJS（含 `es/grid/row/style` 这类嵌套目录）。`scripts/prepublish-guard.js` 的第 ④ 项断言会兜住漏配 |
+| `package.json` 的 `sideEffects` | `["dist/*.css", "*.css", "**/style/*"]` | webpack 生产模式默认开启 `optimization.sideEffects`：未被白名单覆盖的文件会被判定为「无副作用」，`import 'vue-amazing-ui/es/button/style'` 这类**纯副作用导入**会被 tree-shaking 丢弃（实测 webpack 5.111：`es/<dir>/style/index.js` 是 `.js`、未被 `*.css` 覆盖 → 样式静默丢失）。不含 `/` 的模式会被 webpack 自动补 `**/` 前缀（故 `*.css` 能覆盖嵌套 CSS）；`**/style/*` 专门覆盖样式入口 JS/CJS（含 `es/grid/row/style` 这类嵌套目录）。`scripts/prepublish-guard.ts` 的第 ④ 项断言会兜住漏配 |
 | `dts` 插件的注册条件 | 仅 `dir === undefined`（即 `build-only` / es|lib 构建） | `dts` 的 `outDir` 固定为 `['es','lib']`，与构建自身的产出目录无关。若 dist 构建也注册，三条声明流水线会同时写 `es|lib`，并与 `build-only` 的 `emptyOutDir` 清空（发生在 `renderStart`）竞态，表现为 `[vite:dts] ENOENT ... es/<component>/index.d.ts` 的 CI 随机红，且类型被重复生成三遍 |
 
 ## 类型生成（dts）
@@ -62,7 +62,7 @@
 
 插件**只在 `dir === undefined` 的构建里注册**（即 `build-only`）：类型产物只服务 `es` / `lib`，dist 全量构建不产出 `.d.ts`。这既是产物归属问题，也是并发安全问题——`build:components` 用 `run-p` 并行跑三个构建，若 dist 构建也写 `es|lib` 的声明，会与 `build-only` 的 `emptyOutDir` 清空竞态，CI 会随机报 `ENOENT ... es/<component>/index.d.ts` 且类型被重复生成三遍。
 
-**已知问题（2026-10-25 定位，构建配置未改动）**：`es` / `lib` 已存在旧产物时直接执行 es|lib 构建（`build-only` 或 `vite build`，即跳过 `pnpm clean`），`vite-plugin-dts@4.5.4` 的 `writeBundle`（单例执行：写 d.ts → `unlink` 中间文件 → `removeDirIfEmpty(outDir)`）会把 `es/` 删空，随后以「Xxx 缺少样式文件」的误导性报错失败——此时应查 dts 与既有产物的竞态，而非 `style-deps.data.js`。实验矩阵（es/lib 各自「在 / 不在」）：仅 **lib 存在旧产物**时失败（es 空、lib 正常），其余组合均成功——lib 覆盖旧文件写入快、先完成并触发该钩子，此时 es 的 rollup 写入尚未落盘，`removeDirIfEmpty(es)` 把半成品目录删空；与 es 在不在、`outDir` 单 / 多均无关（单 `['es']` 同样复现）。规避：es|lib 单独重复构建前先 `pnpm clean`；**发布链路（`pnpm build` / `scripts/publish.sh` / CI）自带 clean 前置，不受影响**。根治需升级 `vite-plugin-dts` 到 5.x（major，暂不引入）。
+**已知问题（2026-10-25 定位，构建配置未改动）**：`es` / `lib` 已存在旧产物时直接执行 es|lib 构建（`build-only` 或 `vite build`，即跳过 `pnpm clean`），`vite-plugin-dts@4.5.4` 的 `writeBundle`（单例执行：写 d.ts → `unlink` 中间文件 → `removeDirIfEmpty(outDir)`）会把 `es/` 删空，随后以「Xxx 缺少样式文件」的误导性报错失败——此时应查 dts 与既有产物的竞态，而非 `style-deps.ts`。实验矩阵（es/lib 各自「在 / 不在」）：仅 **lib 存在旧产物**时失败（es 空、lib 正常），其余组合均成功——lib 覆盖旧文件写入快、先完成并触发该钩子，此时 es 的 rollup 写入尚未落盘，`removeDirIfEmpty(es)` 把半成品目录删空；与 es 在不在、`outDir` 单 / 多均无关（单 `['es']` 同样复现）。规避：es|lib 单独重复构建前先 `pnpm clean`；**发布链路（`pnpm build` / `scripts/publish.sh` / CI）自带 clean 前置，不受影响**。根治需升级 `vite-plugin-dts` 到 5.x（major，暂不引入）。
 
 | 源码路径 | 类型产物路径 |
 | :--- | :--- |
@@ -118,7 +118,7 @@ pnpm guard             # 产物守卫：毫秒级存在性校验（样式入口 
 ```
 
 > `scripts/publish.sh` 按同口径跑 `check` → `build` → `verify:artifacts` → `guard`，且 `guard` 在提交 / 推送**之前**执行（守卫失败即中止，不留下「已推送但产物是坏的」状态）；`prepublishOnly` 仍会再跑一次 `guard`，绕开 `pnpm pub` 直接 `npm publish` 时照样被拦。
-> 边界：`verify:on-demand` 用 Vite 构建，而 Vite 不做 webpack 式的 `sideEffects` tree-shaking，测不到「样式入口被 webpack 丢弃」这类问题 —— 该场景由 `prepublish-guard.js` 的第 ④ 项断言兜底。
+> 边界：`verify:on-demand` 用 Vite 构建，而 Vite 不做 webpack 式的 `sideEffects` tree-shaking，测不到「样式入口被 webpack 丢弃」这类问题 —— 该场景由 `prepublish-guard.ts` 的第 ④ 项断言兜底。
 > CI 已启用：`.github/workflows/verify.yml` 在 PR 与 `main` 上**并行**跑两个 job —— `check`（`pnpm check`）与 `verify`（`pnpm verify` + `pnpm docs:build`，含完整构建）；
 > `docs:build` 必须晚于 `build`：docs 站的组件库来源是 `dist/` 产物（`docs/.vitepress/config.ts` 的 resolveId 钩子把 `'vue-amazing-ui'` 指向 `../../dist/index.js`），并非 npm 上的同名包；它同时兜住 `docs/**/*.md`（VitePress 的 md-as-SFC）的模板 / 标签结构错误 —— 这批 md 不可纳入 Prettier（会破坏构建，详见 `.github/workflows/verify.yml` 文件头说明）。
 > 安装按 lock 文件对齐（`pnpm install --frozen-lockfile`），Node 24，并统一锁定时区为 `Asia/Shanghai`（runner 默认 UTC，本仓库时间敏感用例会漂）。

@@ -77,7 +77,7 @@ components/
 >
 > 两种情况下 `index.d.ts` 都会照常声明，形成「类型有声明、运行时无模块」的错位。须经**本地常量**再导出持有绑定，如 `export const Row = RowComp`、`export const useMessage = useMessageImpl`。
 >
-> 已登记例外：`utils/index.ts` 是 `export * from` 形式的纯 barrel，展开为逐符号本地绑定成本高且无深层导入需求 —— 工具函数请从包根（`vue-amazing-ui`）或具体文件（`vue-amazing-ui/es/utils/format`）导入；`picker/index.ts`（`DatePicker` / `TimePicker` 共用的选择器内核出口）同理，内核本就无对外深层导入需求。两个例外均已列入 `scripts/prepublish-guard.js` 的 `INDEX_DTS_WHITELIST`。
+> 已登记例外：`utils/index.ts` 是 `export * from` 形式的纯 barrel，展开为逐符号本地绑定成本高且无深层导入需求 —— 工具函数请从包根（`vue-amazing-ui`）或具体文件（`vue-amazing-ui/es/utils/format`）导入；`picker/index.ts`（`DatePicker` / `TimePicker` 共用的选择器内核出口）同理，内核本就无对外深层导入需求。两个例外均已列入 `scripts/prepublish-guard.ts` 的 `INDEX_DTS_WHITELIST`。
 >
 > **构建期专用模块**同样会形成空头声明：`utils/vendor-styles.ts` 仅被 `vite.config.ts` / `build/` 与测试引用，不参与运行时模块图，产物中本就没有对应 JS，而 `tsconfig.dts.json` 仍会为它生成 `vendor-styles.d.ts`。处置方式是把它登记进该文件的 `exclude`，使其不产出 `.d.ts`（已登记）—— 新增同类「仅构建期使用」的模块时须同步登记。
 >
@@ -127,8 +127,7 @@ components/
 | `log.ts` | 告警 / 日志统一出口（`log` / `isDevEnv`：级别即环境策略 —— `error` 全环境、`warn` / `debug` 仅开发期，见 [component-design.md](component-design.md) 的「告警与日志 log」） |
 | `type.ts` | `withInstall` 高阶函数 |
 | `resolver.ts` | `unplugin-vue-components` 按需引入 resolver（返回组件的样式入口路径，见 [import-export.md](import-export.md)） |
-| `style-deps.data.js` | 样式依赖表（单一数据源：`componentsMap` / `styleSources` / `componentDependencies` / `stylelessComponents`；实现为 `.js`，Node 脚本可直接 import） |
-| `style-deps.ts` | 上者的类型门面（`ComponentName` / `isComponentName`），不承载数据 |
+| `style-deps.ts` | 样式依赖表（单一数据源：`componentsMap` / `styleSources` / `componentDependencies` / `stylelessComponents`，以及推导出的 `ComponentName` / `isComponentName`；脚本侧经 `tsx` 读取同一份事实） |
 | `vendor-styles.ts` | 第三方样式依赖清单（单一数据源） |
 
 > `index.ts` 是 barrel，只汇总 `format` / `math` / `function` / `dom` / `hooks` / `observers` / `position` / `z-index` / `floating-mount` / `inherit-font` / `sider-collapsed` / `log` / `render` 十三组；`type` / `resolver` / `style-deps` / `vendor-styles` 不属于 barrel 成员，需从具体文件引入（如 `import { withInstall } from 'components/utils/type'`）。工具函数的功能与使用说明见官方文档站 `docs/utils/functions/`。

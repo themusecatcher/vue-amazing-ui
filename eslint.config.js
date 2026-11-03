@@ -168,34 +168,6 @@ const config = defineConfigWithVueTs(
     rules: {
       'no-restricted-syntax': 'off'
     }
-  },
-
-  // 手写 `.js`（命令行脚本 + Node/TS 共用的数据源）此前不在任何 files 匹配内（只覆盖 ts/mts/tsx/vue），
-  // 删改后留下的死常量 / 死变量 / 重复键只能靠人工清单发现（实测：写 `var` / `debugger` 均不报错）。
-  // 这里补上「与运行时无关的静态错误」最小集：
-  // - 覆盖 scripts/**（命令式入口）与 components/**（component-vars.js / style-deps.data.js 两份数据源）；
-  // - 不启用 no-undef：node 全局（process / console 等）需额外依赖 `globals` 包，本项目未安装；
-  // - 不启用 no-console：脚本的职责就是向终端输出。
-  {
-    name: 'custom/js-rules',
-    files: ['scripts/**/*.js', 'components/**/*.js'],
-    languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module'
-    },
-    rules: {
-      'no-var': 'error',
-      'prefer-const': 'error',
-      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
-      'no-debugger': 'error',
-      eqeqeq: ['error', 'always', { null: 'ignore' }],
-      'no-dupe-keys': 'error',
-      'no-dupe-else-if': 'error',
-      'no-unreachable': 'error',
-      'no-const-assign': 'error',
-      'no-self-assign': 'error',
-      'no-constant-condition': 'error'
-    }
   }
 )
 

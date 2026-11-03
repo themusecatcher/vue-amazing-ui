@@ -1,12 +1,13 @@
 /**
- * 组件公开令牌的源码扫描工具（守护与测试共用）
+ * 组件公开令牌的源码解析层（守护与测试共用）
  *
- * 只做「文本 → 结构化事实」的纯函数，不含任何策略：判定规则留在 `verify-theme.js` 与测试里，
- * 避免两处口径漂移。
+ * 只做「文本 → 结构化事实」的纯函数，不含任何策略：判定规则留在 `verify-theme.ts` 与测试里，
+ * 避免两处口径漂移。文件名用 `parse` 而非 `check` —— 这里没有任何断言，读到 `-check`
+ * 会误以为判定在本文件内。
  */
 
 /** 去掉注释：`//` 前必须是行首或非冒号字符，避免误伤 `https://` 与 `var(--x)` */
-export function stripComments(source) {
+export function stripComments(source: string): string {
   return source
     .replace(/<!--[\s\S]*?-->/g, '')
     .replace(/\/\*[\s\S]*?\*\//g, '')
@@ -22,9 +23,9 @@ export function stripComments(source) {
  * @param {string} source 单文件组件源码
  * @returns {{ head: string, style: string }}
  */
-export function splitSfc(source) {
-  const styleBlocks = []
-  const head = source.replace(/<style[^>]*>([\s\S]*?)<\/style>/g, (block, body) => {
+export function splitSfc(source: string): { head: string; style: string } {
+  const styleBlocks: string[] = []
+  const head = source.replace(/<style[^>]*>([\s\S]*?)<\/style>/g, (_block: string, body: string) => {
     styleBlocks.push(body)
     return ''
   })
@@ -36,7 +37,7 @@ export function splitSfc(source) {
  *
  * @param {string} value CSS 值文本
  */
-export function normalizeValue(value) {
+export function normalizeValue(value: string): string {
   return value.replace(/\s+/g, ' ').trim()
 }
 
@@ -46,7 +47,7 @@ export function normalizeValue(value) {
  * 用于解析 `var(--a, var(--b, c))` 这类嵌套 fallback —— 不能用 `split(',')` 切，
  * 否则嵌套 fallback 会被切碎。
  */
-function findClosingParen(source, start) {
+function findClosingParen(source: string, start: number): number {
   let depth = 0
   for (let index = start; index < source.length; index += 1) {
     const char = source[index]
@@ -72,8 +73,8 @@ function findClosingParen(source, start) {
  * @param {string} source 已剥离注释的源码
  * @returns {{ name: string, hasFallback: boolean }[]}
  */
-export function collectVarRefs(source) {
-  const refs = []
+export function collectVarRefs(source: string): { name: string; hasFallback: boolean }[] {
+  const refs: { name: string; hasFallback: boolean }[] = []
   let cursor = source.indexOf('var(--')
   while (cursor >= 0) {
     const openIndex = cursor + 'var'.length
@@ -95,9 +96,12 @@ export function collectVarRefs(source) {
  * @param {string} name 变量名（含 `--` 前缀）
  * @returns {{ hasFallback: boolean, fallback: string, index: number }[]}
  */
-export function collectVarUsages(source, name) {
+export function collectVarUsages(
+  source: string,
+  name: string
+): { hasFallback: boolean; fallback: string; index: number }[] {
   const needle = `var(${name}`
-  const usages = []
+  const usages: { hasFallback: boolean; fallback: string; index: number }[] = []
   let cursor = source.indexOf(needle)
   while (cursor >= 0) {
     const next = source.indexOf(needle, cursor + needle.length)

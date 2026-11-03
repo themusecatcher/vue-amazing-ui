@@ -234,7 +234,7 @@ _七种类型_
 | `## Methods` / `## Events` | 名称 \| 说明 \| 类型 | 类型列写完整签名，❌ 不写 `Function` |
 | 工具函数 `## Params` | 名称 \| 说明 \| 类型 \| 默认值 | 首列同为「名称」 |
 | 工具函数 `## Return` | 纯函数：`类型 \| 说明`；composable：`名称 \| 说明 \| 类型` | 按语义分流，不追求列数统一（纯函数无「名称」维度） |
-| `## CSS 变量` | 名称 \| 说明 \| 默认值 | 名称列写 `--va-<组件>-*` 全名。主清单 `docs/guide/parts/component-vars.md` 由 `scripts/gen-component-vars-doc.js` 生成，改表头须改生成器后重新生成 |
+| `## CSS 变量` | 名称 \| 说明 \| 默认值 | 名称列写 `--va-<组件>-*` 全名。主清单 `docs/guide/parts/component-vars.md` 由 `scripts/gen-component-vars-doc.ts` 生成，改表头须改生成器后重新生成 |
 | `## 自定义样式`（DOM 类名） | 名称 \| 说明 | 首列写类名，列头仍用「名称」；❌ 不加「层级 / 对应配置项」等自拟列 |
 
 - **标题**：组件用 `### {组件名} Props`（复合组件逐子组件，如 `### Descriptions Props` / `### DescriptionsItem Props`），类型用 `### {公开导出名} Type`；两者平级，读者一眼区分「组件属性 / 数据类型」。

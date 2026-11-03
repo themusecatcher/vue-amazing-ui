@@ -27,7 +27,7 @@
  * （`export { useX } from './useX'`）会被 Rollup 转发优化剔除 —— 入口自身另有本地绑定（如
  * `export default withInstall(X)`）时模块仍存在、`index.js` 也会生成，只是该具名导出不在其中，
  * 而 `index.d.ts` 仍照常声明，消费方走深路径 `vue-amazing-ui/es|lib/<dir>` 时取到 `undefined`。
- * 该类错位对 `pnpm build`、type-check、单测与 `prepublish-guard.js` 第 ⑤ 项（只查模块存在性）均不可见。
+ * 该类错位对 `pnpm build`、type-check、单测与 `prepublish-guard.ts` 第 ⑤ 项（只查模块存在性）均不可见。
  */
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { createRequire } from 'node:module'
@@ -37,8 +37,9 @@ import {
   componentDependencies,
   componentsMap,
   stylelessComponents,
-  styleSources
-} from '../components/utils/style-deps.data.js'
+  styleSources,
+  type ComponentName
+} from '../components/utils/style-deps'
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -46,7 +47,7 @@ const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
  * 豁免清单：chunk 图推导不出、但确属合法的样式依赖。
  * 结构：{ <组件名>: { deps: string[], reason: string } }
  */
-const EXEMPTIONS = {
+const EXEMPTIONS: Partial<Record<ComponentName, { deps: string[]; reason: string }>> = {
   LayoutSider: {
     deps: ['Layout'],
     reason:
@@ -57,15 +58,20 @@ const EXEMPTIONS = {
 }
 
 const esDir = resolve(rootDir, 'es')
-const componentNames = Object.keys(componentsMap)
+const componentNames = Object.keys(componentsMap) as ComponentName[]
 const styleless = new Set(stylelessComponents)
 
+/** 类型收窄：`name` 是否为已收录组件名（`componentsMap` 的键） */
+function isComponentName(name: string): name is ComponentName {
+  return name in componentsMap
+}
+
 // ========== 数据层跨表引用完整性 ==========
-// 数据在 `components/utils/style-deps.data.js`（纯 JS，Node 可直接 import），类型系统看不到，
-// 原本由 `Partial<Record<ComponentName, ComponentName>>` 在编译期保证的「键与值必须是已收录组件」
-// 改由这里守护。放在产物检查之前：数据本身写错时先报数据问题，不让它伪装成「产物不一致」。
-const componentNameSet = new Set(componentNames)
-const dataIssues = []
+// 「键与值必须是已收录组件」已由 `components/utils/style-deps.ts` 的 `Partial<Record<ComponentName, ...>>`
+// 在编译期拦住；这里保留同口径的运行期断言，覆盖脚本侧不经 tsc 的情形（`tsx` 只擦除类型、不做检查）。
+// 放在产物检查之前：数据本身写错时先报数据问题，不让它伪装成「产物不一致」。
+const componentNameSet = new Set<string>(componentNames)
+const dataIssues: string[] = []
 Object.entries(styleSources).forEach(([name, source]) => {
   if (!componentNameSet.has(name)) {
     dataIssues.push(`styleSources 的键不在 componentsMap 中：${name}`)
@@ -90,7 +96,7 @@ stylelessComponents.forEach((name) => {
   }
 })
 if (dataIssues.length > 0) {
-  console.error('❌ components/utils/style-deps.data.js 存在跨表引用错误：')
+  console.error('❌ components/utils/style-deps.ts 存在跨表引用错误：')
   dataIssues.forEach((issue) => console.error(`   ✗ ${issue}`))
   process.exit(1)
 }
@@ -101,7 +107,7 @@ if (!existsSync(esDir) || !existsSync(resolve(rootDir, 'lib'))) {
 }
 
 /** 产物目录 → 该目录下「有自己的一份 CSS」的组件集合 */
-const ownCssComponentsByDir = new Map()
+const ownCssComponentsByDir = new Map<string, Set<ComponentName>>()
 componentNames.forEach((name) => {
   if (!hasOwnCss(name)) {
     return
@@ -122,7 +128,7 @@ componentNames.forEach((name) => {
  * 返回 undefined —— 否则 `date-utils.js` / `keyboard.js` 这类公共模块会被硬折成目录里的某个
  * 具体组件，既在闭包里造出伪边，又掩盖真实依赖。
  */
-function componentByDirFallback(dir) {
+function componentByDirFallback(dir: string): ComponentName | undefined {
   const set = ownCssComponentsByDir.get(dir)
   return set !== undefined && set.size === 1 ? [...set][0] : undefined
 }
@@ -137,7 +143,7 @@ function componentByDirFallback(dir) {
  * 必须排除 `style/`：该目录由 generate-style-entries 按手写依赖表生成，其 import 与表同源，
  * 收进图里会让「表 ⊆ 闭包」自证成立，掩盖真实的漏写/残留。
  */
-function collectChunks(dir) {
+function collectChunks(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const fullPath = resolve(dir, entry.name)
     if (entry.isDirectory()) {
@@ -157,11 +163,11 @@ function collectChunks(dir) {
  *   组件经 `.ts` 内核模块转出去的 import（如 Menu 的浮层宿主 `Popup`）只有这样才进得了闭包。
  * 目录与文件名都不对应组件（`utils/`、`_virtual/`、`index.js`、多组件共享目录等）时返回 undefined，调用方跳过。
  */
-function componentOfChunk(chunkFile) {
+function componentOfChunk(chunkFile: string): ComponentName | undefined {
   const fileName = chunkFile.slice(chunkFile.lastIndexOf('/') + 1)
   // 编号后缀位置随 Rollup 版本变化（`Popup.vue2.js` / `Popup2.vue.js`），剥离尾部编号后同归 Popup
   const namedByFile = fileName.replace(/\..*$/, '').replace(/\d+$/, '')
-  if (componentsMap[namedByFile] !== undefined) {
+  if (isComponentName(namedByFile)) {
     return namedByFile
   }
   const dir = relative(esDir, dirname(chunkFile)).split('\\').join('/')
@@ -169,15 +175,15 @@ function componentOfChunk(chunkFile) {
 }
 
 /** 该组件是否有「自己的一份 CSS」——无自身 CSS 的组件（Provider / 子组件 / 无样式组件）不构成样式依赖 */
-function hasOwnCss(componentName) {
+function hasOwnCss(componentName: ComponentName): boolean {
   return styleSources[componentName] === undefined && !styleless.has(componentName)
 }
 
 /** 解析 chunk 的 import 语句：说明符 + 具名导入的**原始导出名**（默认导入记 `default`、命名空间记 `*`） */
-function parseImports(code) {
+function parseImports(code: string): { specifier: string; imported: string[] }[] {
   return [...code.matchAll(/import\s+([^;]+?)\s+from\s+"([^"]+)"/g)].map((matched) => {
     const [, clause, specifier] = matched
-    const imported = []
+    const imported: string[] = []
     const named = clause.match(/\{([^}]*)\}/)
     if (named) {
       splitTopLevel(named[1], ',').forEach((item) => {
@@ -200,8 +206,8 @@ function parseImports(code) {
 }
 
 /** 按顶层分隔符切分（忽略括号内的逗号，如 `const f = r(o)` 的参数） */
-function splitTopLevel(text, separator) {
-  const items = []
+function splitTopLevel(text: string, separator: string): string[] {
+  const items: string[] = []
   let depth = 0
   let current = ''
   for (const char of text) {
@@ -230,12 +236,21 @@ function splitTopLevel(text, separator) {
  * 因此需要还原 `导出名 → 本地变量 → import 源模块` 的链路，才能把「经 barrel 引入」
  * 还原成「实际依赖哪个组件」。
  */
-const barrelCache = new Map()
-function parseBarrel(entryFile) {
-  if (barrelCache.has(entryFile)) {
-    return barrelCache.get(entryFile)
+/** 目录聚合入口的解析结果 */
+interface Barrel {
+  imports: Map<string, { source: string; imported: string }>
+  aliases: Map<string, string>
+  exports: Map<string, string>
+  stars: string[]
+}
+
+const barrelCache = new Map<string, Barrel>()
+function parseBarrel(entryFile: string): Barrel {
+  const cached = barrelCache.get(entryFile)
+  if (cached !== undefined) {
+    return cached
   }
-  const barrel = { imports: new Map(), aliases: new Map(), exports: new Map(), stars: [] }
+  const barrel: Barrel = { imports: new Map(), aliases: new Map(), exports: new Map(), stars: [] }
   barrelCache.set(entryFile, barrel)
   // `export *` 的目标可能是纯类型模块（产物中无对应 JS），不存在时按空入口处理
   if (!existsSync(entryFile)) {
@@ -298,7 +313,7 @@ function parseBarrel(entryFile) {
 }
 
 /** 本地名 → 实际源模块：import 直接返回；常量别名展开其表达式中的标识符（如 `f = r(o)` 中的 `r` / `o`） */
-function resolveBarrelLocal(entryFile, local, barrel, visited) {
+function resolveBarrelLocal(entryFile: string, local: string, barrel: Barrel, visited: Set<string>): string[] {
   const key = `${entryFile}#local#${local}`
   if (visited.has(key)) {
     return []
@@ -312,11 +327,12 @@ function resolveBarrelLocal(entryFile, local, barrel, visited) {
   if (expression === undefined) {
     return []
   }
-  const sources = []
+  const sources: string[] = []
   ;[...expression.matchAll(/\b([A-Za-z_$][\w$]*)\b/g)].forEach((matched) => {
     const identifier = matched[1]
-    if (barrel.imports.has(identifier)) {
-      sources.push(barrel.imports.get(identifier).source)
+    const imported = barrel.imports.get(identifier)
+    if (imported !== undefined) {
+      sources.push(imported.source)
     } else if (barrel.aliases.has(identifier)) {
       sources.push(...resolveBarrelLocal(entryFile, identifier, barrel, visited))
     }
@@ -325,7 +341,7 @@ function resolveBarrelLocal(entryFile, local, barrel, visited) {
 }
 
 /** 导出名 → 实际源模块（未命中显式导出时沿 `export *` 继续找） */
-function resolveBarrelExport(entryFile, exportedName, visited = new Set()) {
+function resolveBarrelExport(entryFile: string, exportedName: string, visited: Set<string> = new Set()): string[] {
   const key = `${entryFile}#${exportedName}`
   if (visited.has(key)) {
     return []
@@ -360,8 +376,8 @@ function resolveBarrelExport(entryFile, exportedName, visited = new Set()) {
  *     （Timeline 的幽灵节点内嵌 TimelineItem），其 CSS 必须并进父组件样式入口，否则消费方按需引入
  *     父组件时该节点静默缺样式，正是本脚本要抓的那类问题。
  */
-function buildGraph() {
-  const graph = new Map()
+function buildGraph(): Map<string, Set<ComponentName>> {
+  const graph = new Map<string, Set<ComponentName>>()
   collectChunks(esDir).forEach((chunkFile) => {
     const componentName = componentOfChunk(chunkFile)
     if (componentName === undefined) {
@@ -370,8 +386,8 @@ function buildGraph() {
     // 当前 chunk 是否是所在组件目录的聚合入口（`<dir>/index.js`）
     const chunkIsDirEntry = chunkFile === resolve(esDir, componentsMap[componentName], 'index.js')
     // 一个组件可能由多个 chunk 承载（SFC 门面 + 同目录支撑模块），边取并集
-    const dependencies = graph.get(componentName) ?? new Set()
-    const targetModules = new Set()
+    const dependencies = graph.get(componentName) ?? new Set<ComponentName>()
+    const targetModules = new Set<string>()
     parseImports(readFileSync(chunkFile, 'utf-8')).forEach(({ specifier, imported }) => {
       if (!specifier.startsWith('.')) {
         return
@@ -384,7 +400,7 @@ function buildGraph() {
       const targetModule = resolve(dirname(chunkFile), specifier)
       if (targetModule.endsWith('/index.js') && existsSync(targetModule)) {
         const importedNames = imported.length > 0 ? imported : ['*']
-        const expanded = []
+        const expanded: string[] = []
         importedNames.forEach((name) => {
           if (name !== '*') {
             expanded.push(...resolveBarrelExport(targetModule, name))
@@ -408,10 +424,9 @@ function buildGraph() {
         .slice(targetModule.lastIndexOf('/') + 1)
         .replace(/\..*$/, '')
         .replace(/\d+$/, '')
-      const targetComponent =
-        componentsMap[namedByFile] !== undefined
-          ? namedByFile
-          : componentByDirFallback(relative(esDir, dirname(targetModule)).split('\\').join('/'))
+      const targetComponent = isComponentName(namedByFile)
+        ? namedByFile
+        : componentByDirFallback(relative(esDir, dirname(targetModule)).split('\\').join('/'))
       if (targetComponent === undefined || targetComponent === componentName) {
         return
       }
@@ -428,30 +443,37 @@ function buildGraph() {
 }
 
 /** 从起点求传递闭包（不含起点自身） */
-function closureOf(start, graph) {
-  const visited = new Set()
-  const queue = [...(graph.get(start) ?? [])]
-  while (queue.length > 0) {
-    const current = queue.shift()
+function closureOf(start: ComponentName, graph: Map<string, Set<ComponentName>>): Set<ComponentName> {
+  const visited = new Set<ComponentName>()
+  const queue: ComponentName[] = [...(graph.get(start) ?? [])]
+  for (let index = 0; index < queue.length; index++) {
+    const current = queue[index]
     if (visited.has(current)) {
       continue
     }
     visited.add(current)
-    ;(graph.get(current) ?? []).forEach((next) => {
-      if (!visited.has(next)) {
-        queue.push(next)
+    const nextSet = graph.get(current)
+    if (nextSet) {
+      for (const next of nextSet) {
+        if (!visited.has(next)) {
+          queue.push(next)
+        }
       }
-    })
+    }
   }
   visited.delete(start)
   return visited
 }
 
 const graph = buildGraph()
-const issues = []
+const issues: string[] = []
 
 /** 双向比对：返回 { missing（漏写）, stale（写了但已不依赖） } */
-function diff(componentName, actual, expected) {
+function diff(
+  componentName: ComponentName,
+  actual: Set<ComponentName>,
+  expected: Set<ComponentName>
+): { missing: ComponentName[]; stale: ComponentName[] } {
   const exempted = new Set(EXEMPTIONS[componentName]?.deps ?? [])
   const missing = [...actual].filter((dep) => !expected.has(dep) && !exempted.has(dep)).sort()
   const stale = [...expected].filter((dep) => !actual.has(dep) && !exempted.has(dep)).sort()
@@ -493,16 +515,17 @@ componentNames.forEach((componentName) => {
  *   - 运行时 ⊆ 声明 → 抓「有导出无声明」（消费方拿不到类型）。
  *
  * 只解析携带 `index.d.ts` 且**同时**有运行时入口的目录：整个入口纯转发导致 `index.js` 缺失的情形
- * 由 `scripts/prepublish-guard.js` 第 ⑤ 项负责，本脚本不重复报错（`utils/` 已登记为例外）。
+ * 由 `scripts/prepublish-guard.ts` 第 ⑤ 项负责，本脚本不重复报错（`utils/` 已登记为例外）。
  */
-const dtsExportCache = new Map()
+const dtsExportCache = new Map<string, Set<string>>()
 
 /** 解析 `*.d.ts` 声明的值导出：`export type` 为纯类型出口，不参与比对 */
-function collectDeclaredExports(dtsPath) {
-  if (dtsExportCache.has(dtsPath)) {
-    return dtsExportCache.get(dtsPath)
+function collectDeclaredExports(dtsPath: string): Set<string> {
+  const cached = dtsExportCache.get(dtsPath)
+  if (cached !== undefined) {
+    return cached
   }
-  const names = new Set()
+  const names = new Set<string>()
   // 先落缓存再解析：`export *` 形成环时天然截断，不会无限递归
   dtsExportCache.set(dtsPath, names)
   if (!existsSync(dtsPath)) {
@@ -548,14 +571,14 @@ function collectDeclaredExports(dtsPath) {
 }
 
 /** 把 `*.d.ts` 内的相对模块说明符解析为真实声明文件路径 */
-function resolveDtsSpecifier(fromDts, specifier) {
+function resolveDtsSpecifier(fromDts: string, specifier: string): string {
   const base = resolve(dirname(fromDts), specifier)
   const candidates = [`${base}.d.ts`, resolve(base, 'index.d.ts')]
   return candidates.find((candidate) => existsSync(candidate)) ?? candidates[1]
 }
 
 /** 递归收集「既有 index.d.ts 又有运行时入口」的产物目录 */
-function collectEntryDirs(dir, entryFileName, result = []) {
+function collectEntryDirs(dir: string, entryFileName: string, result: string[] = []): string[] {
   if (!existsSync(dir)) {
     return result
   }
@@ -573,11 +596,15 @@ function collectEntryDirs(dir, entryFileName, result = []) {
 }
 
 const requireCjs = createRequire(import.meta.url)
-const OUT_FORMATS = [
+const OUT_FORMATS: {
+  dir: string
+  entryFileName: string
+  load: (entryPath: string) => Promise<Record<string, unknown>> | Record<string, unknown>
+}[] = [
   { dir: 'es', entryFileName: 'index.js', load: (entryPath) => import(entryPath) },
   { dir: 'lib', entryFileName: 'index.cjs', load: (entryPath) => requireCjs(entryPath) }
 ]
-const entryExportIssues = []
+const entryExportIssues: string[] = []
 let checkedEntryCount = 0
 
 for (const { dir, entryFileName, load } of OUT_FORMATS) {
@@ -606,10 +633,8 @@ if (issues.length > 0 || entryExportIssues.length > 0) {
   if (issues.length > 0) {
     console.error('❌ 样式依赖一致性校验未通过：')
     issues.forEach((issue) => console.error(`   ✗ ${issue}`))
-    console.error(
-      '   请修改 components/utils/style-deps.data.js 的 componentDependencies；确属无法从 chunk 图推导的依赖，'
-    )
-    console.error('   在 scripts/verify-style-deps.js 的 EXEMPTIONS 中登记并写明原因')
+    console.error('   请修改 components/utils/style-deps.ts 的 componentDependencies；确属无法从 chunk 图推导的依赖，')
+    console.error('   在 scripts/verify-style-deps.ts 的 EXEMPTIONS 中登记并写明原因')
   }
   if (entryExportIssues.length > 0) {
     console.error('❌ 聚合入口导出一致性校验未通过：')

@@ -1,5 +1,5 @@
 /**
- * props 运行时类型契约校验（由 `scripts/prepublish-guard.js` 第 ⑥ 项调用）
+ * props 运行时类型契约校验（由 `scripts/prepublish-guard.ts` 第 ⑥ 项调用）
  *
  * 背景：本库的 SFC 统一用 `defineProps<Props>()` 类型推导声明 props。Vue 编译器只能把
  * 「可映射类型」（`String` / `Number` / `Boolean` / `Object` / `Array` / `Function` / `Date` /
@@ -36,7 +36,7 @@ const DEFAULT_OUT_DIRS = [
 ]
 
 /** 正则元字符转义（组件名直接参与正则，避免 `$` 等字符被当成语法） */
-function escapeRegExp(text) {
+function escapeRegExp(text: string): string {
   return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
@@ -48,7 +48,12 @@ function escapeRegExp(text) {
  *
  * @returns `{ suffix, path }`：`suffix` 为去掉组件名后的文件名片段（用于拼报错信息），按文件名排序保证确定性
  */
-function listArtifacts(rootDir, dir, artifactBase, ext) {
+function listArtifacts(
+  rootDir: string,
+  dir: string,
+  artifactBase: string,
+  ext: string
+): { suffix: string; path: string }[] {
   const targetDir = resolve(rootDir, dir, dirname(artifactBase))
   if (!existsSync(targetDir)) {
     return []
@@ -65,7 +70,7 @@ function listArtifacts(rootDir, dir, artifactBase, ext) {
 const RAW_DOM_TYPES = new Set(['HTMLElement', 'Document'])
 
 /** 递归收集 SFC（跳过隐藏目录与 node_modules） */
-export function collectSfcs(dir, result = []) {
+export function collectSfcs(dir: string, result: string[] = []): string[] {
   if (!existsSync(dir)) {
     return result
   }
@@ -86,7 +91,7 @@ export function collectSfcs(dir, result = []) {
 }
 
 /** 取从 openIndex 处左括号开始、配平的右括号下标（跳过字符串字面量内的括号） */
-export function findBalancedEnd(text, openIndex) {
+export function findBalancedEnd(text: string, openIndex: number): number {
   const open = text[openIndex]
   const close = open === '{' ? '}' : open === '[' ? ']' : open === '(' ? ')' : '<'
   let depth = 0
@@ -118,14 +123,14 @@ export function findBalancedEnd(text, openIndex) {
 }
 
 /** 去掉行尾 `//` 注释（类型文本本身不含 `//`，注释里的 URL 一律在 `//` 之后） */
-function stripLineComment(line) {
+function stripLineComment(line: string): string {
   const index = line.indexOf('//')
   return index >= 0 ? line.slice(0, index) : line
 }
 
 /** 按顶层 `|` 拆分联合类型，返回各成员（已 trim、去空） */
-export function splitUnionMembers(typeText) {
-  const members = []
+export function splitUnionMembers(typeText: string): string[] {
+  const members: string[] = []
   let depth = 0
   let current = ''
   for (let index = 0; index < typeText.length; index++) {
@@ -162,7 +167,7 @@ export function splitUnionMembers(typeText) {
  * @param source - SFC 源码
  * @returns 字段映射；SFC 内没有 `interface Props` 时返回 null
  */
-export function parsePropsFields(source) {
+export function parsePropsFields(source: string): Map<string, string> | null {
   const match = /interface\s+Props\b[^{]*\{/.exec(source)
   if (!match) {
     return null
@@ -178,7 +183,7 @@ export function parsePropsFields(source) {
     .map(stripLineComment)
     .join('\n')
   const fieldStart = /([A-Za-z_$][\w$]*)\??\s*:\s*/g
-  const starts = []
+  const starts: { key: string; start: number; typeStart: number }[] = []
   let depth = 0
   let quote = ''
   let index = 0
@@ -227,7 +232,7 @@ export function parsePropsFields(source) {
     }
     index++
   }
-  const fields = new Map()
+  const fields = new Map<string, string>()
   starts.forEach((item, position) => {
     const typeEnd = position + 1 < starts.length ? starts[position + 1].start : body.length
     fields.set(item.key, body.slice(item.typeStart, typeEnd).trim().replace(/\s+/g, ' '))
@@ -242,9 +247,9 @@ export function parsePropsFields(source) {
  * @param source - SFC 源码
  * @returns `domAliases` 命中 DOM 类型的别名、`stringAliases` 命中 `keyof typeof` 的别名
  */
-function parseRiskyAliases(source) {
-  const domAliases = new Set()
-  const stringAliases = new Set()
+function parseRiskyAliases(source: string): { domAliases: Set<string>; stringAliases: Set<string> } {
+  const domAliases = new Set<string>()
+  const stringAliases = new Set<string>()
   const aliasPattern = /(?:export\s+)?type\s+([A-Za-z_$][\w$]*)\s*=\s*([^\n]+)/g
   let hit = aliasPattern.exec(source)
   while (hit) {
@@ -260,12 +265,12 @@ function parseRiskyAliases(source) {
 }
 
 /** 类型文本是否引用了任一别名（按标识符边界匹配，避免 `EasingPreset` 命中 `EasingPresetX`） */
-function mentionsAlias(typeText, aliases) {
+function mentionsAlias(typeText: string, aliases: Set<string>): boolean {
   return [...aliases].some((alias) => new RegExp(`\\b${alias}\\b`).test(typeText))
 }
 
 /** 从产物文本中读取某个 prop 的运行时类型声明（如 `[String,Object,Boolean]` / `String`）；读不到返回 null */
-export function readRuntimePropType(artifactText, propName) {
+export function readRuntimePropType(artifactText: string, propName: string): string | null {
   const propsIndex = artifactText.indexOf('props:')
   if (propsIndex < 0) {
     return null
@@ -301,7 +306,7 @@ export function readRuntimePropType(artifactText, propName) {
 }
 
 /** 判定类型文本是否把裸 DOM 类型直接当联合成员（应改用 MountElement / MountDocument） */
-function hasRawDomMember(typeText) {
+function hasRawDomMember(typeText: string): boolean {
   return splitUnionMembers(typeText).some((member) => RAW_DOM_TYPES.has(member))
 }
 
@@ -311,7 +316,7 @@ function hasRawDomMember(typeText) {
  * 因此「产物里没有 type」对 `string | MountElement` 这类纯对象/字符串联合是预期结果 ——
  * 此时运行时完全不校验，不会误报，无需断言；只有本应保留 type 的联合缺失才算问题。
  */
-function expectsRuntimeType(typeText) {
+function expectsRuntimeType(typeText: string): boolean {
   return splitUnionMembers(typeText).some(
     (member) => member === 'Boolean' || member === 'Function' || /=>/.test(member)
   )
@@ -326,8 +331,16 @@ function expectsRuntimeType(typeText) {
  * @param options.outDirs - 产物目录与编译产物扩展名（`{ dir, ext }`）
  * @returns `checked` 已校验的 prop × 产物数、`skipped` 产物缺失跳过数、`problems` 问题清单
  */
-export function checkPropRuntimeTypes({ rootDir, componentsDir = 'components', outDirs = DEFAULT_OUT_DIRS }) {
-  const problems = []
+export function checkPropRuntimeTypes({
+  rootDir,
+  componentsDir = 'components',
+  outDirs = DEFAULT_OUT_DIRS
+}: {
+  rootDir: string
+  componentsDir?: string
+  outDirs?: { dir: string; ext: string }[]
+}): { checked: number; skipped: number; problems: string[] } {
+  const problems: string[] = []
   let checked = 0
   let skipped = 0
   const componentsRoot = resolve(rootDir, componentsDir)
@@ -363,7 +376,7 @@ export function checkPropRuntimeTypes({ rootDir, componentsDir = 'components', o
           skipped++
           return
         }
-        let runtimeType = null
+        let runtimeType: string | null = null
         let artifactLabel = ''
         artifacts.forEach(({ suffix, path }) => {
           if (runtimeType !== null) {
@@ -384,12 +397,14 @@ export function checkPropRuntimeTypes({ rootDir, componentsDir = 'components', o
           return
         }
         checked++
-        if (!runtimeType && !expectsRuntimeType(typeText)) {
+        // `runtimeType` 在上方 forEach 回调里被赋值，闭包内不参与窄化，先收敛为本地常量再进 filter
+        const runtimeTypeText = runtimeType
+        if (!runtimeTypeText && !expectsRuntimeType(typeText)) {
           // 找到 prop 但生产编译省略了 type（如 `string | MountElement`）：零校验，不会误报
           return
         }
         const missing = [needsObject && 'Object', needsString && 'String'].filter(
-          (branch) => branch && !new RegExp(`\\b${branch}\\b`).test(runtimeType)
+          (branch) => branch && !new RegExp(`\\b${branch}\\b`).test(runtimeTypeText)
         )
         if (missing.length > 0) {
           problems.push(

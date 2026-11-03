@@ -9,7 +9,6 @@
     "eslint.config.*",
     "components/utils/vendor-styles.ts",
     "components/utils/style-deps.ts",
-    "components/utils/style-deps.data.js",
     "components/theme/**/*.ts",
     "components/utils/log.ts",
     "build/**/*.ts"

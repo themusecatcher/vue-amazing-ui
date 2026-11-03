@@ -1,5 +1,5 @@
 /**
- * v-model 声明契约校验（由 `scripts/prepublish-guard.js` 第 ⑦ 项调用）
+ * v-model 声明契约校验（由 `scripts/prepublish-guard.ts` 第 ⑦ 项调用）
  *
  * 全库判据是「传值即受控」（`props.x !== undefined`），它与 `defineModel` 自带的判据
  * （prop + `onUpdate` 监听器同时存在）冲突，故三条断言：
@@ -17,8 +17,8 @@
  */
 import { readFileSync } from 'node:fs'
 import { relative, resolve } from 'node:path'
-import { collectSfcs, findBalancedEnd } from './check-prop-runtime-types.js'
-import { stripComments } from './component-vars-check.js'
+import { collectSfcs, findBalancedEnd } from './check-prop-runtime-types'
+import { stripComments } from './component-vars-parse'
 
 /** `defineModel` 声明：不带参数时默认模型名为 `modelValue` */
 const MODEL_PATTERN = /defineModel\s*(?:<[^()]*>)?\s*\(\s*(?:'([^']+)'|"([^"]+)")?/g
@@ -31,8 +31,8 @@ const MODEL_PATTERN = /defineModel\s*(?:<[^()]*>)?\s*\(\s*(?:'([^']+)'|"([^"]+)"
  * @param source - SFC 源码
  * @returns 模型名清单，未使用时为空数组
  */
-function collectDefinedModels(source) {
-  const models = []
+function collectDefinedModels(source: string): string[] {
+  const models: string[] = []
   MODEL_PATTERN.lastIndex = 0
   let hit = MODEL_PATTERN.exec(source)
   while (hit) {
@@ -52,7 +52,7 @@ const CONTROLLED_MODEL_PATTERN =
   /useControlledModel\s*(?:<\s*([^<>]*(?:<[^<>]*>[^<>]*)*)\s*>)?\s*\(\s*['"]([A-Za-z_$][\w$]*)['"]/g
 
 /** 跳过后随空白，返回第一个非空白字符下标 */
-function skipSpaces(text, index) {
+function skipSpaces(text: string, index: number): number {
   let next = index
   while (next < text.length && /\s/.test(text[next])) next++
   return next
@@ -68,8 +68,8 @@ function skipSpaces(text, index) {
  * @param startIndex - 开括号所在下标
  * @returns 闭括号下标，未配平时为 `-1`
  */
-function findCloseIndex(text, startIndex) {
-  const pairs = { '(': ')', '<': '>', '[': ']', '{': '}' }
+function findCloseIndex(text: string, startIndex: number): number {
+  const pairs: Record<string, string> = { '(': ')', '<': '>', '[': ']', '{': '}' }
   const opener = text[startIndex]
   const closer = pairs[opener]
   let depth = 0
@@ -115,9 +115,9 @@ function findCloseIndex(text, startIndex) {
  * @returns `hasBlock` 是否存在默认值块、`blocked` 是否有默认值块但解析失败、
  *          `hasSpread` 是否含展开项（展开项无法静态求值）、`defaults` 字段名 → 默认值文本
  */
-export function parseModelDefaults(source) {
-  const empty = () => ({ hasBlock: false, blocked: false, hasSpread: false, defaults: new Map() })
-  const failed = () => ({ hasBlock: false, blocked: true, hasSpread: false, defaults: new Map() })
+export function parseModelDefaults(source: string) {
+  const empty = () => ({ hasBlock: false, blocked: false, hasSpread: false, defaults: new Map<string, string>() })
+  const failed = () => ({ hasBlock: false, blocked: true, hasSpread: false, defaults: new Map<string, string>() })
   const hit = /withDefaults\s*\(\s*defineProps\b/.exec(source)
   if (!hit) return empty()
   let index = hit.index + hit[0].length
@@ -137,7 +137,7 @@ export function parseModelDefaults(source) {
   if (source[braceIndex] !== '{') return failed()
   const end = findBalancedEnd(source, braceIndex)
   if (end <= braceIndex) return failed()
-  const defaults = new Map()
+  const defaults = new Map<string, string>()
   // 先剥注释：默认值常带 `, // 说明`，注释里的逗号会切断后续字段
   const body = stripComments(source.slice(braceIndex + 1, end))
   // 展开项（`...SHARED_DEFAULTS`）在源码里不可求值，含展开时只做「字段是否在块内」的判断
@@ -158,8 +158,8 @@ export function parseModelDefaults(source) {
  * @param body - 对象体文本
  * @returns 成员文本清单
  */
-function splitTopLevelEntries(body) {
-  const entries = []
+function splitTopLevelEntries(body: string): string[] {
+  const entries: string[] = []
   let depth = 0
   let quote = ''
   let start = 0
@@ -217,8 +217,8 @@ function splitTopLevelEntries(body) {
  * @param label - 问题信息里的文件标识
  * @returns 问题清单
  */
-export function collectModelDefaultProblems(source, label) {
-  const problems = []
+export function collectModelDefaultProblems(source: string, label: string): string[] {
+  const problems: string[] = []
   const text = stripComments(source)
   const { hasBlock, blocked, hasSpread, defaults } = parseModelDefaults(text)
   // 有默认值块却解析不出来时不能静默跳过：那会让该组件的双模默认值「不被检查」而守卫仍显示通过
@@ -275,10 +275,10 @@ export function collectModelDefaultProblems(source, label) {
  * @param label - 问题信息里的文件标识
  * @returns 问题清单
  */
-export function collectEmitDeclareProblems(source, label) {
-  const problems = []
+export function collectEmitDeclareProblems(source: string, label: string): string[] {
+  const problems: string[] = []
   const text = stripComments(source)
-  const checked = new Set()
+  const checked = new Set<string>()
   CONTROLLED_MODEL_PATTERN.lastIndex = 0
   let hit = CONTROLLED_MODEL_PATTERN.exec(text)
   while (hit) {
@@ -308,8 +308,14 @@ export function collectEmitDeclareProblems(source, label) {
  * @param options.componentsDir - 组件源码目录（默认 `components`）
  * @returns `defaultsChecked` 已校验的双模字段数、`problems` 问题清单
  */
-export function checkModelProps({ rootDir, componentsDir = 'components' }) {
-  const problems = []
+export function checkModelProps({
+  rootDir,
+  componentsDir = 'components'
+}: {
+  rootDir: string
+  componentsDir?: string
+}): { defaultsChecked: number; problems: string[] } {
+  const problems: string[] = []
   let defaultsChecked = 0
   const componentsRoot = resolve(rootDir, componentsDir)
 

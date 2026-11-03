@@ -1,4 +1,4 @@
-_本节由 `node scripts/gen-component-vars-doc.js` 从 `components/theme/component-vars.js` 生成，请勿手动修改；生成物需提交（不要加进 `.gitignore`）。_
+_本节由 `tsx scripts/gen-component-vars-doc.ts` 从 `components/theme/component-vars.ts` 生成，请勿手动修改；生成物需提交（不要加进 `.gitignore`）。_
 
 组件令牌是**组件内部颜色变量的公开名字**（`--va-<组件>-*`），也包括把组件主色接到具体皮肤上的桥接令牌。
 它们与全局令牌一样是普通的 `CSS` 自定义属性，直接在选择器里赋值即可，沿 `DOM` 继承生效；

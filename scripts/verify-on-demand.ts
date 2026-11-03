@@ -12,7 +12,7 @@
  *      —— 嵌套目录用于验证 `exports` 通配符 `*` 可跨 `/` 匹配。
  *
  * 边界：本脚本用 Vite 构建，Vite 不做 webpack 式的 `sideEffects` tree-shaking，因此测不到「样式入口被 webpack
- * 丢弃」这类问题；那部分由 scripts/prepublish-guard.js 的第 ④ 项断言（sideEffects 覆盖全部样式产物）兜底。
+ * 丢弃」这类问题；那部分由 scripts/prepublish-guard.ts 的第 ④ 项断言（sideEffects 覆盖全部样式产物）兜底。
  *
  * 与 `pnpm guard` 的分工：守卫只查「产物文件在不在」（毫秒级、不跑构建），本脚本查「按需引入后样式是否真的齐全」。
  * 需要已构建的 `es` / `lib` 产物 → 已挂在 `pnpm verify` 链与 `scripts/publish.sh` 中。
@@ -33,7 +33,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const failures = []
+const failures: string[] = []
 
 /** canary：按需引入后，消费方产物 CSS 中必须命中的选择器 */
 const CANARIES = [
@@ -106,7 +106,7 @@ import 'vue-amazing-ui/es/grid/row/style'
 createApp(App).mount('#app')
 `
 
-function write(baseDir, relativePath, content) {
+function write(baseDir: string, relativePath: string, content: string): string {
   const fullPath = join(baseDir, relativePath)
   mkdirSync(dirname(fullPath), { recursive: true })
   writeFileSync(fullPath, content, 'utf-8')
@@ -114,7 +114,7 @@ function write(baseDir, relativePath, content) {
 }
 
 /** 递归收集目录下所有文件 */
-function collectFiles(dir, result = []) {
+function collectFiles(dir: string, result: string[] = []): string[] {
   readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
     const fullPath = join(dir, entry.name)
     if (entry.isDirectory()) {
@@ -133,13 +133,21 @@ const BARE_DIR_CASES = [
   { bare: 'vue-amazing-ui/lib/grid/row/style', expectedSuffix: '/lib/grid/row/style/index.cjs' }
 ]
 
+/** 子进程回传的解析结果（与 `script` 里逐字段拼装的形状一致） */
+interface ResolvedSpecifier {
+  bare: string
+  expectedSuffix: string
+  bareUrl: string
+  fileUrl: string
+}
+
 /**
  * 验证 `exports` 映射：裸目录写法 `vue-amazing-ui/<fmt>/<dir>/style` 能否被 Node ESM 解析
  *
  * 用 `import.meta.resolve`（只解析、不加载）—— 入口内部 import 的是 `.css`，Node 无法加载 CSS 文件，
  * 直接 import 会因扩展名报错而掩盖「解析是否成功」这一验证目标。
  */
-function verifyBareDirSpecifier(workDir) {
+function verifyBareDirSpecifier(workDir: string): void {
   const checkDir = join(workDir, 'pkg-check')
   mkdirSync(join(checkDir, 'node_modules'), { recursive: true })
   // 该目录下的 node_modules 只放一个指向本仓库的软链，避免污染仓库自身的 node_modules
@@ -162,7 +170,8 @@ function verifyBareDirSpecifier(workDir) {
     failures.push(`裸目录写法无法被 Node 解析：${result.stderr?.trim()}`)
     return
   }
-  JSON.parse(result.stdout.trim()).forEach(({ bare, expectedSuffix, bareUrl, fileUrl }) => {
+  const resolved = JSON.parse(result.stdout.trim()) as ResolvedSpecifier[]
+  resolved.forEach(({ bare, expectedSuffix, bareUrl, fileUrl }) => {
     if (!bareUrl.endsWith(expectedSuffix)) {
       failures.push(`裸目录写法解析结果异常：${bare} → ${bareUrl}（期望以 ${expectedSuffix} 结尾）`)
     }

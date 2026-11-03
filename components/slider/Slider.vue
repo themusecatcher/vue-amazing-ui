@@ -770,7 +770,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
         --slider-rail-color-disabled: var(--va-border-split-color);
         --slider-track-color-disabled: var(--va-text-color-disabled);
         --slider-handle-shadow-color-disabled: var(--va-border-color);
-        /* 轨道 / 光环 / 气泡 / 刻度点描边已提升为公开令牌，默认值写在消费处（见 component-vars.js）。
+        /* 轨道 / 光环 / 气泡 / 刻度点描边已提升为公开令牌，默认值写在消费处（见 component-vars.ts）。
            下面这些仍是私有：disabled 态统一走中性令牌，圆点底色与 mark 属于组件自有细节 */
         --slider-dot-color: var(--va-bg-elevated-color);
         --slider-mark-color: var(--va-text-color-3);

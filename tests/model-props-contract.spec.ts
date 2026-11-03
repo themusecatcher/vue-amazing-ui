@@ -8,12 +8,12 @@ import {
   collectEmitDeclareProblems,
   collectModelDefaultProblems,
   parseModelDefaults
-} from '../scripts/check-model-props.js'
+} from '../scripts/check-model-props'
 
 /**
  * v-model 声明契约校验的用例（纯源码文本断言，无 DOM、无产物）
  *
- * 契约有三条（见 `scripts/check-model-props.js` 头部与 development/component-design.md）：
+ * 契约有三条（见 `scripts/check-model-props.ts` 头部与 development/component-design.md）：
  * ① 全库禁止 `defineModel`（无白名单例外，公共 API 与内部组件一律适用）；
  * ② `useControlledModel` 的字段在 `withDefaults` 里只能写 `undefined`（布尔字段必须显式写），
  * 否则「传值即受控」的判据恒真；

@@ -1,11 +1,13 @@
 /**
- * 组件级公开令牌注册表
+ * 组件级公开令牌注册表（单一数据源）
  *
- * 唯一数据源：文档生成脚本（`scripts/gen-component-vars-doc.js`）、守护（`scripts/verify-theme.js`）
- * 与测试（`tests/component-vars.spec.ts`）都直接 import 本文件。必须是 `.js` 而不是 `.ts`：
- * 上述脚本由 `node` 直接执行，engines 允许的 Node 20.19 / 22.12 都不支持 import `.ts`。
- * 运行期由 `components/config-provider/theme-scope.ts` 读取，用于把组件级通用主色映射到
- * 现有公开令牌；因此本文件同时提供 `components/theme/component-vars.d.ts` 供 `vue-tsc` 解析。
+ * 消费方：文档生成脚本（`scripts/gen-component-vars-doc.ts`）、守护（`scripts/verify-theme.ts`）、
+ * 运行期 `components/config-provider/theme-scope.ts`（把组件级通用主色映射到现有公开令牌）
+ * 与测试（`tests/component-vars.spec.ts`）。脚本侧由 `tsx` 执行，因此类型与数据同处一个 `.ts`：
+ * 顶部是类型契约（公开 API，随 `index.d.ts` 产出），下方是纯数据注册表，不再需要手写 `.d.ts`。
+ *
+ * 只有 `COMPONENT_VARS` 的键集合与 `COMPONENT_VAR_NAMES` 的一致性无法由类型表达
+ * （键是运行期字符串），由 `pnpm verify:theme` 与 `tests/component-vars.spec.ts` 守护。
  *
  * 【不变量一】公开令牌只能「带默认值消费」，禁止在任何组件 `<style>` 里以 `--name:` 声明。
  *   元素自身的声明优先于从祖先继承的值，用户在外面写的同名变量会被压住 —— 文档就成了假承诺。
@@ -22,22 +24,99 @@
  * 【不变量四】`themeRole` / `themeState` 只描述「组件级通用主色如何映射到本令牌」，
  *   不改变令牌的公开默认值；未标记的令牌（中性色、皮肤固定色）不参与组件级派生。
  *   映射目标由组件注册表决定，ConfigProvider 只认识 `primaryColor` 这一个粗粒度配置。
- *
- * @typedef {'base' | 'hover' | 'active' | 'bg' | 'border' | 'solid'} ComponentThemeState
- * @typedef {Object} ComponentVarMeta
- * @property {string} component 所属组件名（与 `theme.components.<Component>` 的键一致）
- * @property {string} file 所属组件源文件（相对 components/）
- * @property {string} group 令牌组：同一视觉元素的状态族，文档按组呈现、用户按组覆盖
- * @property {string} fallback 必须与组件样式里的 `var(name, fallback)` 逐字一致
- * @property {{ light: string, dark: string }} [resolved] fallback 指向组件私有名（`var(--menu-xxx)`）时必填
- * @property {'primary'} [themeRole] 组件级通用色角色；未标记表示不跟随组件主色
- * @property {ComponentThemeState | { light: ComponentThemeState, dark: ComponentThemeState }} [themeState]
- *   取 `deriveColorStates` 的哪一档；按模式分列用于皮肤/模式映射不同的组件
- * @property {string} description 面向使用者的说明
  */
+/* -------------------------------------------------------------------------- */
+/* 类型契约（公开类型面）                                                     */
+/* -------------------------------------------------------------------------- */
+
+/** 组件级通用主色派生出的状态档位（与 `deriveColorStates` 的返回键一致） */
+export type ComponentThemeState = 'base' | 'hover' | 'active' | 'bg' | 'border' | 'solid'
+
+/**
+ * `theme.components` 的配置键：已接线组件级主色的内置组件
+ *
+ * 与 `THEME_COMPONENTS` 的 key 集合逐项一致（顺序也一致）：注册表是运行期数据源，
+ * 本类型是编译期入口。「注册表有、本类型没有」由 `key: ThemeComponentKey` 在编译期拦下；
+ * 「本类型有、注册表没有」类型无法表达，由 `tests/component-vars.spec.ts` 逐项比对守护。
+ *
+ * 新增组件支持时：先接线样式 + 登记 `THEME_COMPONENTS`，再补到这里。
+ */
+export type ThemeComponentKey =
+  | 'Alert'
+  | 'AutoComplete'
+  | 'BackTop'
+  | 'Badge'
+  | 'Button'
+  | 'Calendar'
+  | 'Carousel'
+  | 'Cascader'
+  | 'Checkbox'
+  | 'ColorPicker'
+  | 'DatePicker'
+  | 'FloatButton'
+  | 'GradientText'
+  | 'Image'
+  | 'Input'
+  | 'InputNumber'
+  | 'InputSearch'
+  | 'LoadingBar'
+  | 'Menu'
+  | 'Message'
+  | 'Modal'
+  | 'Notification'
+  | 'Pagination'
+  | 'Popconfirm'
+  | 'Progress'
+  | 'Radio'
+  | 'Select'
+  | 'Slider'
+  | 'Spin'
+  | 'Steps'
+  | 'Swiper'
+  | 'Switch'
+  | 'Table'
+  | 'Tabs'
+  | 'Tag'
+  | 'TextScroll'
+  | 'Textarea'
+  | 'TimePicker'
+  | 'Timeline'
+  | 'Upload'
+
+/** 组件令牌元数据 */
+export interface ComponentVarMeta {
+  /** 所属组件名（与 `theme.components.<Component>` 的键一致）；Scrollbar 等仅有公开令牌、无桥接线的组件也在此列 */
+  component: string
+  /** 所属组件源文件（相对 components/） */
+  file: string
+  /** 令牌组：同一视觉元素的状态族 */
+  group: string
+  /** 必须与组件样式里的 `var(name, fallback)` 逐字一致 */
+  fallback: string
+  /** fallback 指向组件私有名时提供的实际默认值 */
+  resolved?: { light: string; dark: string }
+  /** 组件级通用色角色；未标记表示不跟随组件主色 */
+  themeRole?: 'primary'
+  /** 取派生状态的哪一档；按模式分列用于皮肤/模式映射不同的组件 */
+  themeState?: ComponentThemeState | { light: ComponentThemeState; dark: ComponentThemeState }
+  /** 面向使用者的说明 */
+  description: string
+}
+
+/** 已接线组件级主色的组件清单 */
+export interface ThemeComponentMeta {
+  /** `theme.components` 的配置键 */
+  key: ThemeComponentKey
+  /** 组件源码目录（相对 components/） */
+  dir: string
+}
+
+/* -------------------------------------------------------------------------- */
+/* 数据注册表（单一数据源）                                                   */
+/* -------------------------------------------------------------------------- */
 
 /** 公开令牌名（增删必须同步 `COMPONENT_VARS` 的键） */
-export const COMPONENT_VAR_NAMES = [
+export const COMPONENT_VAR_NAMES: readonly string[] = [
   '--va-button-primary-color',
   '--va-button-primary-color-hover',
   '--va-button-primary-color-active',
@@ -94,7 +173,7 @@ export const COMPONENT_VAR_NAMES = [
 ]
 
 /** 令牌元数据（键集合必须与 `COMPONENT_VAR_NAMES` 完全一致） */
-export const COMPONENT_VARS = {
+export const COMPONENT_VARS: Record<string, ComponentVarMeta> = {
   '--va-button-primary-color': {
     component: 'Button',
     file: 'button/Button.vue',
@@ -521,7 +600,7 @@ export const COMPONENT_VARS = {
  * 只收录至少有一个 `themeRole` 令牌的组件；`ConfigProvider` 用它对未支持的键告警，
  * 文档生成器据此说明哪些组件可以走 `theme.components.<Component>.primaryColor`。
  */
-export const COMPONENT_THEME_NAMES = [
+export const COMPONENT_THEME_NAMES: readonly string[] = [
   ...new Set(
     COMPONENT_VAR_NAMES.map((name) => COMPONENT_VARS[name])
       .filter((meta) => Boolean(meta.themeRole))
@@ -540,7 +619,7 @@ export const COMPONENT_THEME_NAMES = [
  * `dir` 用于守护脚本与测试做「每个组件至少有一处桥变量消费」的覆盖检查；
  * 新增组件支持时，必须同时完成样式接线并把条目加到这里，否则视为假承诺。
  */
-export const THEME_COMPONENTS = [
+export const THEME_COMPONENTS: readonly ThemeComponentMeta[] = [
   { key: 'Alert', dir: 'alert' },
   { key: 'AutoComplete', dir: 'auto-complete' },
   { key: 'BackTop', dir: 'back-top' },
@@ -584,7 +663,7 @@ export const THEME_COMPONENTS = [
 ]
 
 /** 配置键集合（Provider 用于告警与桥变量写入） */
-export const THEME_COMPONENT_KEYS = THEME_COMPONENTS.map((item) => item.key)
+export const THEME_COMPONENT_KEYS: readonly ThemeComponentKey[] = THEME_COMPONENTS.map((item) => item.key)
 
 /**
  * 组件名 → 该组件参与「组件级主色映射」的公开令牌条目
@@ -592,13 +671,14 @@ export const THEME_COMPONENT_KEYS = THEME_COMPONENTS.map((item) => item.key)
  * 只收录带 `themeRole` 的令牌（其余令牌不随组件主色变化）。Provider 按当前配置的组件
  * 直接取条目，不必每个组件都全表扫描 `COMPONENT_VARS`。
  */
-export const COMPONENT_VARS_BY_COMPONENT = Object.entries(COMPONENT_VARS).reduce((result, [name, meta]) => {
-  if (!meta.themeRole) {
+export const COMPONENT_VARS_BY_COMPONENT: Readonly<Record<string, ReadonlyArray<readonly [string, ComponentVarMeta]>>> =
+  Object.entries(COMPONENT_VARS).reduce<Record<string, [string, ComponentVarMeta][]>>((result, [name, meta]) => {
+    if (!meta.themeRole) {
+      return result
+    }
+    if (!result[meta.component]) {
+      result[meta.component] = []
+    }
+    result[meta.component].push([name, meta])
     return result
-  }
-  if (!result[meta.component]) {
-    result[meta.component] = []
-  }
-  result[meta.component].push([name, meta])
-  return result
-}, {})
+  }, {})

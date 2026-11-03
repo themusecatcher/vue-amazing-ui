@@ -138,7 +138,7 @@ theme.components.Button.primaryColor = '#ff6900'
 | :-- | :-- |
 | 42 个变量与命名规则 | `components/theme/vars.ts` |
 | 颜色怎么算 | `components/theme/derive.ts` |
-| 组件令牌与映射 | `components/theme/component-vars.js` |
+| 组件令牌与映射 | `components/theme/component-vars.ts` |
 | 编排：作用域、样式、生命周期 | `components/config-provider/theme-scope.ts` |
 | 主题结构、空值判定、组件键工具 | `components/config-provider/theme-config.ts` |
 | 种子继承、42 个变量派生、组件主色展开 | `components/config-provider/use-theme-seed.ts` |
@@ -147,7 +147,7 @@ theme.components.Button.primaryColor = '#ff6900'
 | 注入键与转发协议 | `components/config-provider/context.ts`：键一律 `Symbol` + `InjectionKey<T>`，读取一律 `injectFromChain`（裸 `inject` 在 `app.runWithContext` 上下文会改道到宿主 app）；新增键须补守卫场景测试。条文见 `component-design.md` 的 provide / inject 注入契约 |
 | 系统配色偏好 | `components/config-provider/theme-mode.ts` |
 | 静态表生成 | `build/gen-theme.ts`、`vite.config.ts` 的 `theme-css` 插件 |
-| 架构守护 | 跨文件统计 / 引用登记 / 闭合性在 `scripts/verify-theme.js`；注册表自洽、fallback 一致性、默认表结构在 `tests/component-vars.spec.ts` 与 `tests/theme-build.spec.ts`（同一契约只保留一层权威，见 `scripts/README.md` 的「契约 → 权威层」表） |
+| 架构守护 | 跨文件统计 / 引用登记 / 闭合性在 `scripts/verify-theme.ts`；注册表自洽、fallback 一致性、默认表结构在 `tests/component-vars.spec.ts` 与 `tests/theme-build.spec.ts`（同一契约只保留一层权威，见 `scripts/README.md` 的「契约 → 权威层」表） |
 
 ## 工具函数收口
 

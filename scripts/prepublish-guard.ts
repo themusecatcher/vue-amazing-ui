@@ -1,6 +1,5 @@
-#!/usr/bin/env node
 /**
- * 发布前守卫（由 package.json 的 `prepublishOnly` 触发，仅在 `npm publish` 时执行）
+ * 发布前守卫（由 package.json 的 `prepublishOnly` 触发，仅在 `npm publish` 时执行；经 `tsx` 执行）
  *
  * 背景：`npm publish` 自身不会触发构建，而 `files` 是 glob 语义——产物目录缺失时 npm
  * 不会报错，只会打出一个 `main` / `module` / `types` 全部悬空的包。若绕开 `pnpm pub`
@@ -15,31 +14,42 @@
  *    - `package.json` 的 `sideEffects` 覆盖全部样式产物（CSS 与样式入口 JS/CJS）。
  * 3. 「类型声明 ↔ 运行时模块」配对：每个存在 `index.d.ts` 的产物目录必须有对应 `index.js` / `index.cjs`
  *    （详见下文 ⑤ 的说明）。
- * 4. props 运行时类型与源码类型对齐（详见 `check-prop-runtime-types.js` 与下文 ⑥）。
+ * 4. props 运行时类型与源码类型对齐（详见 `check-prop-runtime-types.ts` 与下文 ⑥）。
  * 5. v-model 声明契约：公共 API 无 `defineModel`、双模字段的默认值为 `undefined`（详见
- *    `check-model-props.js` 与下文 ⑦）。
+ *    `check-model-props.ts` 与下文 ⑦）。
  *
  * 「按需引入后样式是否真的齐全」由 `pnpm verify:on-demand` 负责（需跑构建），两者互补。
  */
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { componentsMap, styleSources, stylelessComponents } from '../components/utils/style-deps.data.js'
-import { checkPropRuntimeTypes } from './check-prop-runtime-types.js'
-import { checkModelProps } from './check-model-props.js'
+import { componentsMap, styleSources, stylelessComponents, type ComponentName } from '../components/utils/style-deps'
+import { checkPropRuntimeTypes } from './check-prop-runtime-types'
+import { checkModelProps } from './check-model-props'
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
+/** package.json 里守卫需要读取的字段（`exports` 形状任意，只做递归字符串收集） */
+interface PackageJson {
+  main?: string
+  module?: string
+  types?: string
+  unpkg?: string
+  jsdelivr?: string
+  exports?: unknown
+  sideEffects?: string[]
+}
+
 /** 从 package.json 收集所有指向产物的具体路径（exports 中的通配项如 "./*" 不是具体文件，跳过） */
-function collectEntryPaths(pkg) {
-  const paths = new Set()
-  const addPath = (value) => {
+function collectEntryPaths(pkg: PackageJson): string[] {
+  const paths = new Set<string>()
+  const addPath = (value: string | undefined) => {
     if (typeof value !== 'string') return
     const normalized = value.replace(/^\.\//, '')
     if (normalized.includes('*')) return
     paths.add(normalized)
   }
-  const walkExports = (node) => {
+  const walkExports = (node: unknown) => {
     if (typeof node === 'string') {
       addPath(node)
       return
@@ -55,7 +65,7 @@ function collectEntryPaths(pkg) {
 }
 
 /** 递归收集编号 CSS（`Xxx2.css` 这类构建期合并前的残留） */
-function findNumberedCss(dir, result = []) {
+function findNumberedCss(dir: string, result: string[] = []): string[] {
   if (!existsSync(dir)) {
     return result
   }
@@ -70,8 +80,8 @@ function findNumberedCss(dir, result = []) {
   return result
 }
 
-const failures = []
-const pkg = JSON.parse(readFileSync(resolve(rootDir, 'package.json'), 'utf-8'))
+const failures: string[] = []
+const pkg: PackageJson = JSON.parse(readFileSync(resolve(rootDir, 'package.json'), 'utf-8'))
 const entryPaths = collectEntryPaths(pkg)
 const missing = entryPaths.filter((entryPath) => !existsSync(resolve(rootDir, entryPath)))
 if (missing.length > 0) {
@@ -90,8 +100,9 @@ const outDirs = [
 ]
 
 // 唯一样式入口目录：Provider / 子组件与其样式来源组件共用一个入口（如 Message 与 MessageProvider）
-const entryDirs = new Set()
-Object.keys(componentsMap).forEach((componentName) => {
+const entryDirs = new Set<string>()
+const componentNames = Object.keys(componentsMap) as ComponentName[]
+componentNames.forEach((componentName) => {
   if (styleless.has(componentName)) {
     return
   }
@@ -155,7 +166,7 @@ const SIDE_EFFECT_MATCH_CASES = [
  * 1. 不含 `/` 的模式自动补 `**\/` 前缀（故 `"*.css"` 能匹配 `es/tag/Tag.css`）；
  * 2. `**` 跨目录段（可为零段），`*` 只在单个目录段内匹配；整串锚定，允许可选 `./` 前缀。
  */
-function sideEffectsPatternToRegExp(pattern) {
+function sideEffectsPatternToRegExp(pattern: string): RegExp {
   const expanded = pattern.includes('/') ? pattern : `**/${pattern}`
   const segments = expanded.split('/')
   let source = ''
@@ -178,7 +189,7 @@ function sideEffectsPatternToRegExp(pattern) {
   return new RegExp(`^(?:\\./)?${source}$`)
 }
 
-function matchesSideEffects(filePath, pattern) {
+function matchesSideEffects(filePath: string, pattern: string): boolean {
   return sideEffectsPatternToRegExp(pattern).test(filePath)
 }
 
@@ -189,7 +200,7 @@ SIDE_EFFECT_MATCH_CASES.forEach(({ filePath, pattern, matched }) => {
 })
 
 /** 收集所有「必须被 sideEffects 覆盖」的样式产物：CSS 文件 + 样式入口 JS/CJS */
-function collectStyleArtifacts(dir, result = []) {
+function collectStyleArtifacts(dir: string, result: string[] = []): string[] {
   if (!existsSync(dir)) {
     return result
   }
@@ -243,7 +254,7 @@ const INDEX_DTS_WHITELIST = new Set([
 ])
 
 /** 递归收集「有类型声明却缺运行时入口」的目录（同目录需存在 entryNames 之一） */
-function findUnpairedIndexDts(dir, entryNames, result = []) {
+function findUnpairedIndexDts(dir: string, entryNames: string[], result: string[] = []): string[] {
   if (!existsSync(dir)) {
     return result
   }

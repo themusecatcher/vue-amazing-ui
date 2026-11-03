@@ -34,6 +34,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 新增 [输入框 Input](/guide/components/input.html) 的 `blur` 事件，参数为原生 `FocusEvent`
 - 优化 [选择器 Select](/guide/components/select.html) / [输入框 Input](/guide/components/input.html) / [分页 Pagination](/guide/components/pagination.html) 的尺寸切换：运行时切换 `size` 不再瞬间跳变
 - 修复 [表格 Table](/guide/components/table.html) 展开按钮缺少 `type="button"`；[对话框 Dialog](/guide/components/dialog.html) / [模态框 Modal](/guide/components/modal.html) 的头部按钮补齐按压态与焦点环
+- 组件库脚本及配置优化
 - 更新使用者文档与贡献者文档
 - 组件库及文档代码优化
 

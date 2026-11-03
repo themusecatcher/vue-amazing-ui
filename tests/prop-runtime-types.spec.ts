@@ -8,12 +8,12 @@ import {
   parsePropsFields,
   readRuntimePropType,
   splitUnionMembers
-} from '../scripts/check-prop-runtime-types.js'
+} from '../scripts/check-prop-runtime-types'
 
 /**
  * props 运行时类型契约校验的用例（源码扫描 + 产物文本断言，无 DOM）
  *
- * 背景见 `scripts/check-prop-runtime-types.js` 头部：`defineProps<Props>()` 无法为 DOM 接口与
+ * 背景见 `scripts/check-prop-runtime-types.ts` 头部：`defineProps<Props>()` 无法为 DOM 接口与
  * `keyof typeof` 派生类型生成运行时校验分支，生产编译又剥掉 `skipCheck`，于是发布包里这类 prop
  * 只剩残缺 type，使用方开发环境误报 `Invalid prop`。本用例锁定「能报出来」与「不误报」两侧。
  */
