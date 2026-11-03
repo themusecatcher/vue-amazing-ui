@@ -41,7 +41,7 @@ import { parentDrawerOptsKey } from 'components/drawer/context'
  * - **键形态**：注入键必须是 Symbol，否则宿主应用 `app.provide('zIndex', ...)` 之类的通用名会被库
  *   当成自己的契约读取（实测 `useZIndex` 抛 `manager.allocate is not a function`）；
  * - **对照一致性**：普通上下文与守卫上下文的结果必须一致（防修复引入回退）；
- * - **契约自描述**：键名 / 描述串可被 `scripts/verify-inject-keys.js` 静态校验。
+ * - **契约自描述**：键名 / 描述串可被 `scripts/verify-inject-keys.ts` 静态校验。
  */
 
 /** 等待「离散实例挂载 → 首帧渲染」两拍 */

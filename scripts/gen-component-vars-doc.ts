@@ -19,6 +19,7 @@ import {
   THEME_COMPONENT_KEYS,
   type ComponentVarMeta
 } from '../components/theme/component-vars'
+import { THEME_VAR_NAMES } from '../components/theme/vars'
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const outputPath = resolve(rootDir, 'docs/guide/parts/component-vars.md')
@@ -185,7 +186,7 @@ ${sections.join('\n\n')}
 
 ### 已知限制
 
-- **Teleport 浮层只转发全局令牌**：有生效 \`seed\` 时 \`42\` 个 \`--va-*\` 会随浮层根节点下发
+- **Teleport 浮层只转发全局令牌**：有生效 \`seed\` 时 \`${THEME_VAR_NAMES.length}\` 个 \`--va-*\` 会随浮层根节点下发
   （只配置 \`theme.components\` 时只转发组件令牌，避免覆盖宿主用纯 \`CSS\` 写在 \`:root\` 上的主题），
   但你在祖先上手写的 **组件令牌**不会被带过去。受影响场景：
   - \`Menu\` 的弹出型子菜单（\`mode="horizontal"\`、\`inlineCollapsed\` 收起态）里的
