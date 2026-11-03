@@ -22,7 +22,11 @@ const optionsDisabled = reactive<(string | SegmentedOption)[]>([
   { label: 'Quarterly', value: 'Quarterly', disabled: true },
   'Yearly'
 ])
-const value = ref<SegmentedProps['value']>(options[0])
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicValue = ref<SegmentedProps['value']>(options[0])
+const disabledValue = ref<SegmentedProps['value']>(options[0])
+const blockValue = ref<SegmentedProps['value']>(options[0])
+const sizeValue = ref<SegmentedProps['value']>(options[0])
 const value2 = ref<SegmentedProps['value']>('Daily')
 const onChange = (value: string | number) => {
   console.log('change', value)
@@ -101,7 +105,7 @@ const customValue2 = ref<SegmentedProps['value']>(customOptions2[0].value)
 
 ## 基本使用
 
-<Segmented v-model:value="value" :options="options" @change="onChange" />
+<Segmented v-model:value="basicValue" :options="options" @change="onChange" />
 
 ::: details Show Code
 
@@ -125,7 +129,7 @@ const onChange = (value: string | number) => {
 ## 禁用
 
 <Space vertical>
-  <Segmented v-model:value="value" disabled :options="options" />
+  <Segmented v-model:value="disabledValue" disabled :options="options" />
   <Segmented v-model:value="value2" :options="optionsDisabled" />
 </Space>
 
@@ -194,7 +198,7 @@ const loadMore = () => {
 
 ## block 分段控制器
 
-<Segmented v-model:value="value" block :options="blockOptions" />
+<Segmented v-model:value="blockValue" block :options="blockOptions" />
 
 ::: details Show Code
 
@@ -350,9 +354,9 @@ const customValue2 = ref<SegmentedProps['value']>(customOptions2[0].value)
 ## 三种大小
 
 <Space vertical>
-  <Segmented v-model:value="value" :options="options" size="large" />
-  <Segmented v-model:value="value" :options="options" />
-  <Segmented v-model:value="value" :options="options" size="small" />
+  <Segmented v-model:value="sizeValue" :options="options" size="large" />
+  <Segmented v-model:value="sizeValue" :options="options" />
+  <Segmented v-model:value="sizeValue" :options="options" size="small" />
 </Space>
 
 ::: details Show Code

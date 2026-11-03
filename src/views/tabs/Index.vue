@@ -156,12 +156,19 @@ const moreTabPages = ref<TabsItem[]>([
     content: 'Content of Tab Pane 8'
   }
 ])
-const activeKey = ref<TabsProps['activeKey']>('1')
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicActiveKey = ref<TabsProps['activeKey']>('1')
+const cardActiveKey = ref<TabsProps['activeKey']>('1')
+const disabledActiveKey = ref<TabsProps['activeKey']>('1')
+const centeredActiveKey = ref<TabsProps['activeKey']>('1')
+const prefixActiveKey = ref<TabsProps['activeKey']>('1')
+const sizeActiveKey = ref<TabsProps['activeKey']>('1')
+const positionActiveKey = ref<TabsProps['activeKey']>('1')
+const customStyleActiveKey = ref<TabsProps['activeKey']>('1')
+const contentActiveKey = ref<TabsProps['activeKey']>('1')
+const configActiveKey = ref<TabsProps['activeKey']>('1')
 const iconActiveKey = ref<TabsProps['activeKey']>(0)
 const moreActiveKey = ref<TabsProps['activeKey']>('1')
-watchEffect(() => {
-  console.log('activeKey', activeKey.value)
-})
 watchEffect(() => {
   console.log('iconActiveKey', iconActiveKey.value)
 })
@@ -259,20 +266,20 @@ const customContentStyle: CSSProperties = {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Tabs :items="tabItems" v-model:active-key="activeKey" @change="onChange" />
+    <Tabs :items="tabItems" v-model:active-key="basicActiveKey" @change="onChange" />
     <h2 class="mt30 mb10">非受控模式</h2>
     <Tabs :items="tabItemsDefault" default-active-key="2" @change="onChange" />
     <h2 class="mt30 mb10">卡片式标签页</h2>
-    <Tabs :items="tabItems" v-model:active-key="activeKey" type="card" @change="onChange" />
+    <Tabs :items="tabItems" v-model:active-key="cardActiveKey" type="card" @change="onChange" />
     <h2 class="mt30 mb10">禁用某一项</h2>
     <Flex vertical>
-      <Tabs :items="tabItemsDisabled" v-model:active-key="activeKey" />
-      <Tabs :items="tabItemsDisabled" v-model:active-key="activeKey" type="card" />
+      <Tabs :items="tabItemsDisabled" v-model:active-key="disabledActiveKey" />
+      <Tabs :items="tabItemsDisabled" v-model:active-key="disabledActiveKey" type="card" />
     </Flex>
     <h2 class="mt30 mb10">居中展示</h2>
     <Flex vertical>
-      <Tabs :items="tabItems" v-model:active-key="activeKey" centered />
-      <Tabs :items="tabItems" v-model:active-key="activeKey" centered type="card" />
+      <Tabs :items="tabItems" v-model:active-key="centeredActiveKey" centered />
+      <Tabs :items="tabItems" v-model:active-key="centeredActiveKey" centered type="card" />
     </Flex>
     <h2 class="mt30 mb10">带图标的标签页</h2>
     <Flex vertical>
@@ -288,8 +295,8 @@ const customContentStyle: CSSProperties = {
     </Flex>
     <h2 class="mt30 mb10">前缀 & 后缀</h2>
     <Flex vertical>
-      <Tabs :items="tabItems" v-model:active-key="activeKey" prefix="prefix" suffix="suffix" />
-      <Tabs :items="tabItems" v-model:active-key="activeKey" type="card">
+      <Tabs :items="tabItems" v-model:active-key="prefixActiveKey" prefix="prefix" suffix="suffix" />
+      <Tabs :items="tabItems" v-model:active-key="prefixActiveKey" type="card">
         <template #prefix>
           <Button type="primary">prefix</Button>
         </template>
@@ -301,14 +308,14 @@ const customContentStyle: CSSProperties = {
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Flex vertical>
       <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
-      <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" />
-      <Tabs :items="tabItems" v-model:active-key="activeKey" :size="size" type="card" />
+      <Tabs :items="tabItems" v-model:active-key="sizeActiveKey" :size="size" />
+      <Tabs :items="tabItems" v-model:active-key="sizeActiveKey" :size="size" type="card" />
     </Flex>
     <h2 class="mt30 mb10">自定义位置</h2>
     <Flex vertical>
       <RadioGroup :options="positionOptions" v-model:value="position" button button-style="solid" />
-      <Tabs :items="tabItems" v-model:active-key="activeKey" :tab-position="position" />
-      <Tabs :items="tabItems" v-model:active-key="activeKey" :tab-position="position" type="card" />
+      <Tabs :items="tabItems" v-model:active-key="positionActiveKey" :tab-position="position" />
+      <Tabs :items="tabItems" v-model:active-key="positionActiveKey" :tab-position="position" type="card" />
     </Flex>
     <h2 class="mt30 mb10">左右滑动，容纳更多标签</h2>
     <Flex vertical>
@@ -331,14 +338,14 @@ const customContentStyle: CSSProperties = {
     <Flex vertical>
       <Tabs
         :items="tabItems"
-        v-model:active-key="activeKey"
+        v-model:active-key="customStyleActiveKey"
         :tab-gutter="24"
         :tab-style="customTabStyle"
         :content-style="customContentStyle"
       />
       <Tabs
         :items="tabItems"
-        v-model:active-key="activeKey"
+        v-model:active-key="customStyleActiveKey"
         type="card"
         size="large"
         :tab-gutter="12"
@@ -347,7 +354,7 @@ const customContentStyle: CSSProperties = {
       />
     </Flex>
     <h2 class="mt30 mb10">自定义内容</h2>
-    <Tabs :items="tabItems" v-model:active-key="activeKey">
+    <Tabs :items="tabItems" v-model:active-key="contentActiveKey">
       <template #content="{ key, content }">
         <p v-if="key === '1'">key: 1 的 slot 内容</p>
         <p v-if="key === '2'">key: 2 的 slot 内容</p>
@@ -395,7 +402,7 @@ const customContentStyle: CSSProperties = {
           </Space>
         </Col>
       </Row>
-      <Tabs :items="tabItems" v-model:active-key="activeKey" v-bind="state" />
+      <Tabs :items="tabItems" v-model:active-key="configActiveKey" v-bind="state" />
     </Flex>
   </div>
 </template>

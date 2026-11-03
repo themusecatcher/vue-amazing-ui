@@ -1,8 +1,23 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import type { PaginationProps } from 'vue-amazing-ui'
-const page = ref(1)
-const pageSize = ref(10)
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicPage = ref(1)
+const placementPage = ref(1)
+const sizePage = ref(1)
+const pageAmountPage = ref(1)
+const borderedPage = ref(1)
+const changerPage = ref(1)
+const hideChangerPage = ref(1)
+const quickJumperPage = ref(1)
+const goButtonPage = ref(1)
+const totalTextPage = ref(1)
+const disabledPage = ref(1)
+const customOptionsPage = ref(1)
+const configPage = ref(1)
+const changerPageSize = ref(10)
+const customOptionsPageSize = ref(10)
+const configPageSize = ref(10)
 const total = ref(500)
 const placementOptions = [
   {
@@ -95,7 +110,7 @@ function pageSizeChange(page: number, pageSize: number) {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Pagination v-model:page="page" :total="50" @change="onChange" />
+    <Pagination v-model:page="basicPage" :total="50" @change="onChange" />
     <h2 class="mt30 mb10">非受控模式</h2>
     <Pagination :total="100" :default-page="3" :default-page-size="20" @change="onChange" />
     <h2 class="mt30 mb10">自定义位置</h2>
@@ -103,81 +118,85 @@ function pageSizeChange(page: number, pageSize: number) {
       placement:
       <RadioGroup :options="placementOptions" v-model:value="placement" button button-style="solid" />
     </Space>
-    <Pagination v-model:page="page" :total="total" :placement="placement" @change="onChange" />
+    <Pagination v-model:page="placementPage" :total="total" :placement="placement" @change="onChange" />
     <h2 class="mt30 mb10">三种尺寸</h2>
     <Space align="center" style="margin-bottom: 16px">
       size:
       <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
     </Space>
-    <Pagination v-model:page="page" :size="size" :total="total" show-quick-jumper @change="onChange" />
+    <Pagination v-model:page="sizePage" :size="size" :total="total" show-quick-jumper @change="onChange" />
     <h2 class="mt30 mb10">自定义页码数量</h2>
     <Space align="center" style="margin-bottom: 16px">
       pageAmount:
       <RadioGroup :options="pageAmountOptions" v-model:value="pageAmount" button button-style="solid" />
     </Space>
-    <Pagination v-model:page="page" :total="total" :page-amount="pageAmount" @change="onChange" />
+    <Pagination v-model:page="pageAmountPage" :total="total" :page-amount="pageAmount" @change="onChange" />
     <h2 class="mt30 mb10">无边框风格</h2>
     <Space align="center" style="margin-bottom: 16px">
       bordered:
       <Switch v-model:value="bordered" />
     </Space>
     <Flex vertical>
-      <Pagination v-model:page="page" :total="total" :bordered="bordered" @change="onChange" />
-      <Pagination v-model:page="page" :total="total" :bordered="bordered" disabled @change="onChange" />
+      <Pagination v-model:page="borderedPage" :total="total" :bordered="bordered" @change="onChange" />
+      <Pagination v-model:page="borderedPage" :total="total" :bordered="bordered" disabled @change="onChange" />
     </Flex>
     <h2 class="mt30 mb10">自定义 pageSize 切换选项</h2>
     <Pagination
-      v-model:page="page"
-      v-model:page-size="pageSize"
+      v-model:page="changerPage"
+      v-model:page-size="changerPageSize"
       :total="total"
       :page-size-options="[10, 20, 30, 40, 50]"
       @change="onChange"
       @pageSizeChange="pageSizeChange"
     />
     <h2 class="mt30 mb10">隐藏 pageSize 切换器</h2>
-    <Pagination v-model:page="page" :total="total" :show-size-changer="false" @change="onChange" />
+    <Pagination v-model:page="hideChangerPage" :total="total" :show-size-changer="false" @change="onChange" />
     <h2 class="mt30 mb10">快速跳转</h2>
-    <Pagination v-model:page="page" :total="total" show-quick-jumper @change="onChange" />
+    <Pagination v-model:page="quickJumperPage" :total="total" show-quick-jumper @change="onChange" />
     <h2 class="mt30 mb10">跳转确认按钮</h2>
     <p class="mb10">
       <code>goButton</code> 传 <code>true</code> 取默认文案「确定」，传字符串则作为自定义文案；有按钮时失焦不再自动跳转
     </p>
     <Flex vertical>
-      <Pagination v-model:page="page" :total="total" :show-quick-jumper="{ goButton: true }" @change="onChange" />
-      <Pagination v-model:page="page" :total="total" :show-quick-jumper="{ goButton: '前往' }" @change="onChange" />
+      <Pagination
+        v-model:page="goButtonPage"
+        :total="total"
+        :show-quick-jumper="{ goButton: true }"
+        @change="onChange"
+      />
+      <Pagination
+        v-model:page="goButtonPage"
+        :total="total"
+        :show-quick-jumper="{ goButton: '前往' }"
+        @change="onChange"
+      />
     </Flex>
     <h2 class="mt30 mb10">数据总数</h2>
     <Flex vertical>
-      <Pagination v-model:page="page" :total="total" show-total @change="onChange" />
+      <Pagination v-model:page="totalTextPage" :total="total" show-total @change="onChange" />
       <Pagination
-        v-model:page="page"
+        v-model:page="totalTextPage"
         :total="total"
         :show-total="(total: number) => `Total ${total} items`"
         @change="onChange"
       />
       <Pagination
-        v-model:page="page"
+        v-model:page="totalTextPage"
         :total="total"
         :show-total="(total: number, range: number[]) => `${range[0]}-${range[1]} of ${total} items`"
         @change="onChange"
       />
     </Flex>
     <h2 class="mt30 mb10">禁用</h2>
-    <Pagination disabled v-model:page="page" :total="total" show-quick-jumper @change="onChange" />
-    <h2 class="mt30 mb10">非受控初值</h2>
-    <p class="mb10">
-      不绑定 <code>v-model</code> 时页码与每页条数由组件自持，可用 <code>defaultPage</code> /
-      <code>defaultPageSize</code> 指定初值
-    </p>
-    <Pagination :total="total" :default-page="3" :default-page-size="20" @change="onChange" />
+    <Pagination disabled v-model:page="disabledPage" :total="total" show-quick-jumper @change="onChange" />
     <h2 class="mt30 mb10">自定义切换器与跳转框</h2>
     <p class="mb10">
       <code>changerProps</code> 透传给每页条数切换器（参考 Select Props），<code>jumperProps</code>
       透传给跳转输入框（参考 Input Props）
     </p>
     <Pagination
-      v-model:page="page"
-      v-model:page-size="pageSize"
+      v-model:page="customOptionsPage"
+      v-model:page-size="customOptionsPageSize"
       :total="total"
       show-quick-jumper
       :changer-props="{ width: 120 }"
@@ -250,15 +269,15 @@ function pageSizeChange(page: number, pageSize: number) {
       <Col :span="6">
         <Space gap="small" vertical>
           showQuickJumper.goButton:
-          <Switch v-model:value="goButton" />
+          <Switch v-model:value="goButton" :disabled="!config.showQuickJumper" />
         </Space>
       </Col>
     </Row>
     <Pagination
-      v-model:page="page"
-      v-model:page-size="pageSize"
+      v-model:page="configPage"
+      v-model:page-size="configPageSize"
       v-bind="config"
-      :show-quick-jumper="goButton ? { goButton: true } : config.showQuickJumper"
+      :show-quick-jumper="config.showQuickJumper ? { goButton } : false"
       class="mt30"
       @change="onChange"
       @pageSizeChange="pageSizeChange"

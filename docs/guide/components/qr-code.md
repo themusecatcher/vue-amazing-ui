@@ -21,7 +21,9 @@ const qrcodeRef = ref<InstanceType<typeof QRCode> | null>(null)
 const size = ref(160)
 const padding = ref(12)
 const formatPadding = (value: number) => `${value}px`
-const value = ref('hello world')
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicValue = ref('hello world')
+const customValue = ref('hello world')
 const color = ref('#FF6900')
 const bgColor = ref('#00000030')
 const segmentedOptions = ['L', 'M', 'Q', 'H']
@@ -75,8 +77,8 @@ const downloadQRCode = () => {
 ## 基本使用
 
 <Space vertical>
-  <QRCode :value="value" title="扫码查看当前内容" />
-  <Input v-model:value="value" placeholder="-" :maxlength="60" />
+  <QRCode :value="basicValue" title="扫码查看当前内容" />
+  <Input v-model:value="basicValue" placeholder="-" :maxlength="60" />
 </Space>
 
 ::: details Show Code
@@ -539,8 +541,8 @@ const formatPadding = (value: number) => `${value}px`
 ## 自定义生成二维码
 
 <Space align="center" gap="large">
-  <QRCode :value="value" />
-  <Textarea v-model:value="value" :width="200" allowClear />
+  <QRCode :value="customValue" />
+  <Textarea v-model:value="customValue" :width="200" allowClear />
 </Space>
 
 ::: details Show Code

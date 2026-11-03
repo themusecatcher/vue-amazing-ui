@@ -10,9 +10,19 @@ _评分_
 - 对事物进行快速的评级操作
 
 <script setup lang="ts">
-import { ref, watchEffect, reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { ThunderboltFilled, LikeFilled, FireFilled } from '@ant-design/icons-vue'
-const value = ref(3)
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicValue = ref(3)
+const tooltipValue = ref(3)
+const disabledValue = ref(3)
+const characterValue = ref(3)
+const halfValue = ref(3)
+const customCharacterValue = ref(3)
+const colorValue = ref(3)
+const gapValue = ref(3)
+const countValue = ref(3)
+const configValue = ref(3)
 const tooltipsChinese = ['极差', '失望', '一般', '满意', '惊喜']
 const tooltipsEnglish = ['terrible', 'bad', 'normal', 'good', 'wonderful']
 const characterOptions = [
@@ -49,9 +59,6 @@ const state = reactive({
   disabled: false,
   value: 3
 })
-watchEffect(() => {
-  console.log('value', value.value)
-})
 function onChange(value: number) {
   console.log('change', value)
 }
@@ -62,7 +69,7 @@ function onHoverChange(value: number) {
 
 ## 基本使用
 
-<Rate v-model:value="value" @change="onChange" @hoverChange="onHoverChange" />
+<Rate v-model:value="basicValue" @change="onChange" @hoverChange="onHoverChange" />
 
 ::: details Show Code
 
@@ -91,14 +98,14 @@ function onHoverChange(value: number) {
 
 <Space vertical>
   <Space align="center">
-    <Rate v-model:value="value" :tooltips="tooltipsChinese" />
+    <Rate v-model:value="tooltipValue" :tooltips="tooltipsChinese" />
     <Tag color="blue" :bordered="false">
-      {{ tooltipsChinese[value - 1] }}
+      {{ tooltipsChinese[tooltipValue - 1] }}
     </Tag>
   </Space>
   <Space align="center">
     <Rate
-      v-model:value="value"
+      v-model:value="tooltipValue"
       :tooltips="tooltipsEnglish"
       :tooltip-props="{
         bgColor: '#fff',
@@ -109,7 +116,7 @@ function onHoverChange(value: number) {
       }"
     />
     <Tag color="red" :bordered="false">
-      {{ tooltipsEnglish[value - 1] }}
+      {{ tooltipsEnglish[tooltipValue - 1] }}
     </Tag>
   </Space>
 </Space>
@@ -158,7 +165,7 @@ watchEffect(() => {
 
 ## 禁用
 
-<Rate v-model:value="value" disabled />
+<Rate v-model:value="disabledValue" disabled />
 
 ::: details Show Code
 
@@ -180,9 +187,9 @@ watchEffect(() => {
 ## 预置图标
 
 <Space vertical>
-  <Rate v-model:value="value" character="star-outlined" :size="24" />
-  <Rate v-model:value="value" character="heart-filled" :size="24" />
-  <Rate v-model:value="value" character="heart-outlined" :size="24" />
+  <Rate v-model:value="characterValue" character="star-outlined" :size="24" />
+  <Rate v-model:value="characterValue" character="heart-filled" :size="24" />
+  <Rate v-model:value="characterValue" character="heart-outlined" :size="24" />
 </Space>
 
 ::: details Show Code
@@ -208,7 +215,7 @@ watchEffect(() => {
 
 ## 半星
 
-<Rate v-model:value="value" :size="30" allow-half />
+<Rate v-model:value="halfValue" :size="30" allow-half />
 
 ::: details Show Code
 
@@ -230,9 +237,9 @@ watchEffect(() => {
 ## 自定义字符
 
 <Space vertical>
-  <Rate v-model:value="value" character="好" :size="32" allow-half />
-  <Rate v-model:value="value" character="A" :size="48" allow-half />
-  <Rate v-model:value="value" :size="32" allow-half>
+  <Rate v-model:value="customCharacterValue" character="好" :size="32" allow-half />
+  <Rate v-model:value="customCharacterValue" character="A" :size="48" allow-half />
+  <Rate v-model:value="customCharacterValue" :size="32" allow-half>
     <template #character>
       <ThunderboltFilled />
     </template>
@@ -268,13 +275,13 @@ watchEffect(() => {
 ## 自定义颜色
 
 <Space vertical>
-  <Rate v-model:value="value" color="#1677FF" :size="32" allow-half />
-  <Rate v-model:value="value" color="#ff6900" :size="32" allow-half>
+  <Rate v-model:value="colorValue" color="#1677FF" :size="32" allow-half />
+  <Rate v-model:value="colorValue" color="#ff6900" :size="32" allow-half>
     <template #character>
       <LikeFilled />
     </template>
   </Rate>
-  <Rate v-model:value="value" color="#d4380d" :size="32" allow-half>
+  <Rate v-model:value="colorValue" color="#d4380d" :size="32" allow-half>
     <template #character>
       <FireFilled />
     </template>
@@ -313,7 +320,7 @@ watchEffect(() => {
 
 ## 自定义间距
 
-<Rate v-model:value="value" :size="32" :gap="16" />
+<Rate v-model:value="gapValue" :size="32" :gap="16" />
 
 ::: details Show Code
 
@@ -334,7 +341,7 @@ watchEffect(() => {
 
 ## 自定义 star 总数
 
-<Rate v-model:value="value" :size="32" :count="10" />
+<Rate v-model:value="countValue" :size="32" :count="10" />
 
 ::: details Show Code
 

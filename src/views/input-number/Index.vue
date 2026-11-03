@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { formatNumber } from 'vue-amazing-ui'
-const value = ref(3)
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicValue = ref(3)
+const stepValue = ref(3)
+const precisionValue = ref(3)
+const rangeValue = ref(3)
+const prefixValue = ref(3)
+const disabledValue = ref(3)
 const lazyValue = ref(6)
 const formatValue1 = ref(1000)
 const formatValue2 = ref(100)
 const disabled = ref(true)
-watchEffect(() => {
-  console.log('value', value.value)
-})
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
@@ -43,9 +46,15 @@ function onEnter(e: KeyboardEvent) {
         <br />
         你可以添加 lazy 修饰符来改为在每次 change 事件后更新数据：
         <br />
-        {{ '<InputNumber v-model:value.lazy="value" />' }}
+        {{ '<InputNumber v-model:value.lazy="basicValue" />' }}
       </Alert>
-      <InputNumber :width="120" v-model:value="value" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
+      <InputNumber
+        :width="120"
+        v-model:value="basicValue"
+        placeholder="Basic usage"
+        @change="onChange"
+        @enter="onEnter"
+      />
       <InputNumber
         :width="120"
         v-model:value.lazy="lazyValue"
@@ -55,9 +64,9 @@ function onEnter(e: KeyboardEvent) {
       />
     </Space>
     <h2 class="mt30 mb10">步数为小数</h2>
-    <InputNumber :step="0.1" v-model:value="value" />
+    <InputNumber :step="0.1" v-model:value="stepValue" />
     <h2 class="mt30 mb10">设置数值精度</h2>
-    <InputNumber :min="-10" :max="10" :step="0.6" :precision="2" v-model:value="value" />
+    <InputNumber :min="-10" :max="10" :step="0.6" :precision="2" v-model:value="precisionValue" />
     <h2 class="mt30 mb10">格式化展示</h2>
     <Space>
       <InputNumber
@@ -69,13 +78,13 @@ function onEnter(e: KeyboardEvent) {
       <InputNumber :width="120" v-model:value="formatValue2" :formatter="formatter" :parser="parser" />
     </Space>
     <h2 class="mt30 mb10">自定义最大最小值</h2>
-    <InputNumber :min="0" :max="10" v-model:value="value" />
+    <InputNumber :min="0" :max="10" v-model:value="rangeValue" />
     <h2 class="mt30 mb10">添加前缀图标 $</h2>
-    <InputNumber prefix="$" v-model:value="value" />
+    <InputNumber prefix="$" v-model:value="prefixValue" />
     <h2 class="mt30 mb10">禁用</h2>
     <Space vertical>
       <Space align="center">disabled: <Switch v-model:value="disabled" /></Space>
-      <InputNumber v-model:value="value" :disabled="disabled" />
+      <InputNumber v-model:value="disabledValue" :disabled="disabled" />
     </Space>
   </div>
 </template>

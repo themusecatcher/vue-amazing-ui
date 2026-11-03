@@ -11,8 +11,23 @@ _采用分页的形式分隔长列表，每次只加载一个页面_
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import type { PaginationProps } from 'vue-amazing-ui'
-const page = ref(1)
-const pageSize = ref(10)
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicPage = ref(1)
+const placementPage = ref(1)
+const sizePage = ref(1)
+const pageAmountPage = ref(1)
+const borderedPage = ref(1)
+const changerPage = ref(1)
+const hideChangerPage = ref(1)
+const quickJumperPage = ref(1)
+const goButtonPage = ref(1)
+const totalTextPage = ref(1)
+const disabledPage = ref(1)
+const customOptionsPage = ref(1)
+const configPage = ref(1)
+const changerPageSize = ref(10)
+const customOptionsPageSize = ref(10)
+const configPageSize = ref(10)
 const total = ref(500)
 const placementOptions = [
   {
@@ -104,7 +119,7 @@ function pageSizeChange(page: number, pageSize: number) {
 
 ## 基本使用
 
-<Pagination v-model:page="page" :total="50" @change="onChange" />
+<Pagination v-model:page="basicPage" :total="50" @change="onChange" />
 
 ::: details Show Code
 
@@ -152,7 +167,7 @@ function onChange(page: number, pageSize: number) {
   placement:
   <RadioGroup :options="placementOptions" v-model:value="placement" button button-style="solid" />
 </Space>
-<Pagination v-model:page="page" :total="total" :placement="placement" @change="onChange" />
+<Pagination v-model:page="placementPage" :total="total" :placement="placement" @change="onChange" />
 
 ::: details Show Code
 
@@ -199,7 +214,7 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
   size:
   <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
 </Space>
-<Pagination v-model:page="page" :size="size" :total="total" show-quick-jumper @change="onChange" />
+<Pagination v-model:page="sizePage" :size="size" :total="total" show-quick-jumper @change="onChange" />
 
 ::: details Show Code
 
@@ -246,7 +261,7 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
   pageAmount:
   <RadioGroup :options="pageAmountOptions" v-model:value="pageAmount" button button-style="solid" />
 </Space>
-<Pagination v-model:page="page" :total="total" :page-amount="pageAmount" @change="onChange" />
+<Pagination v-model:page="pageAmountPage" :total="total" :page-amount="pageAmount" @change="onChange" />
 
 ::: details Show Code
 
@@ -294,8 +309,8 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
   <Switch v-model:value="bordered" />
 </Space>
 <Flex vertical>
-  <Pagination v-model:page="page" :total="total" :bordered="bordered" @change="onChange" />
-  <Pagination v-model:page="page" :total="total" :bordered="bordered" disabled @change="onChange" />
+  <Pagination v-model:page="borderedPage" :total="total" :bordered="bordered" @change="onChange" />
+  <Pagination v-model:page="borderedPage" :total="total" :bordered="bordered" disabled @change="onChange" />
 </Flex>
 
 ::: details Show Code
@@ -328,8 +343,8 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 ## 自定义 pageSize 切换选项
 
 <Pagination
-  v-model:page="page"
-  v-model:page-size="pageSize"
+  v-model:page="changerPage"
+  v-model:page-size="changerPageSize"
   :total="total"
   :page-size-options="[10, 20, 30, 40, 50]"
   @change="onChange"
@@ -369,7 +384,7 @@ function pageSizeChange(page: number, pageSize: number) { // 每页条数 pageSi
 
 ## 隐藏 pageSize 切换器
 
-<Pagination v-model:page="page" :total="total" :show-size-changer="false" @change="onChange" />
+<Pagination v-model:page="hideChangerPage" :total="total" :show-size-changer="false" @change="onChange" />
 
 ::: details Show Code
 
@@ -392,7 +407,7 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 ## 快速跳转
 
-<Pagination v-model:page="page" :total="total" show-quick-jumper @change="onChange" />
+<Pagination v-model:page="quickJumperPage" :total="total" show-quick-jumper @change="onChange" />
 
 ::: details Show Code
 
@@ -415,10 +430,12 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 ## 跳转确认按钮
 
-<p class="mb10"><code>goButton</code> 传 <code>true</code> 取默认文案「确定」，传字符串则作为自定义文案；有按钮时失焦不再自动跳转</p>
+_`goButton` 传 `true` 取默认文案「确定」，传字符串则作为自定义文案；有按钮时失焦不再自动跳转_
+
+<br/>
 <Flex vertical>
-  <Pagination v-model:page="page" :total="total" :show-quick-jumper="{ goButton: true }" @change="onChange" />
-  <Pagination v-model:page="page" :total="total" :show-quick-jumper="{ goButton: '前往' }" @change="onChange" />
+  <Pagination v-model:page="goButtonPage" :total="total" :show-quick-jumper="{ goButton: true }" @change="onChange" />
+  <Pagination v-model:page="goButtonPage" :total="total" :show-quick-jumper="{ goButton: '前往' }" @change="onChange" />
 </Flex>
 
 ::: details Show Code
@@ -446,15 +463,15 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 ## 数据总数
 
 <Flex vertical>
-  <Pagination v-model:page="page" :total="total" show-total @change="onChange" />
+  <Pagination v-model:page="totalTextPage" :total="total" show-total @change="onChange" />
   <Pagination
-    v-model:page="page"
+    v-model:page="totalTextPage"
     :total="total"
     :show-total="(total: number) => `Total ${total} items`"
     @change="onChange"
   />
   <Pagination
-    v-model:page="page"
+    v-model:page="totalTextPage"
     :total="total"
     :show-total="(total: number, range: number[]) => `${range[0]}-${range[1]} of ${total} items`"
     @change="onChange"
@@ -496,7 +513,7 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 ## 禁用
 
-<Pagination v-model:page="page" disabled :total="total" show-quick-jumper @change="onChange" />
+<Pagination v-model:page="disabledPage" disabled :total="total" show-quick-jumper @change="onChange" />
 
 ::: details Show Code
 
@@ -517,37 +534,15 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 :::
 
-## 非受控初值
-
-<p class="mb10">不绑定 <code>v-model</code> 时页码与每页条数由组件自持，可用 <code>defaultPage</code> / <code>defaultPageSize</code> 指定初值</p>
-
-<Pagination :total="total" :default-page="3" :default-page-size="20" @change="onChange" />
-
-:::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const total = ref(500)
-function onChange(page: number, pageSize: number) { // 页码 page 或每页条数 pageSize 改变的回调
-  console.log('change page', page)
-  console.log('change pageSize', pageSize)
-}
-</script>
-<template>
-  <Pagination :total="total" :default-page="3" :default-page-size="20" @change="onChange" />
-</template>
-```
-
-::::
-
 ## 自定义切换器与跳转框
 
-<p class="mb10"><code>changerProps</code> 透传给每页条数切换器（参考 Select Props），<code>jumperProps</code> 透传给跳转输入框（参考 Input Props）</p>
+_`changerProps` 透传给每页条数切换器（参考 Select Props），`jumperProps` 透传给跳转输入框（参考 Input Props）_
+
+<br/>
 
 <Pagination
-  v-model:page="page"
-  v-model:page-size="pageSize"
+  v-model:page="customOptionsPage"
+  v-model:page-size="customOptionsPageSize"
   :total="total"
   show-quick-jumper
   :changer-props="{ width: 120 }"
@@ -556,7 +551,7 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
   @pageSizeChange="pageSizeChange"
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -587,84 +582,84 @@ function pageSizeChange(page: number, pageSize: number) { // 每页条数 pageSi
 </template>
 ```
 
-::::
+:::
 
 ## 分页配置器
 
 <Row :gutter="[24, 12]">
-  <Col :span="6">
-    <Space gap="small" vertical>
-      bordered:
-      <Switch v-model:value="config.bordered" />
-    </Space>
-  </Col>
-  <Col :span="6">
+  <Col :span="8">
     <Space gap="small" vertical>
       size:
       <RadioGroup :options="sizeOptions" v-model:value="config.size" button button-style="solid" />
     </Space>
   </Col>
-  <Col :span="6">
+  <Col :span="8">
     <Space gap="small" vertical>
       placement:
       <RadioGroup :options="placementOptions" v-model:value="config.placement" button button-style="solid" />
     </Space>
   </Col>
-  <Col :span="6">
+  <Col :span="8">
+    <Space gap="small" vertical>
+      bordered:
+      <Switch v-model:value="config.bordered" />
+    </Space>
+  </Col>
+  <Col :span="8">
     <Space gap="small" vertical>
       pageAmount:
       <RadioGroup :options="pageAmountOptions" v-model:value="config.pageAmount" button button-style="solid" />
     </Space>
   </Col>
-  <Col :span="6">
+  <Col :span="8">
     <Space gap="small" vertical>
       disabled:
       <Switch v-model:value="config.disabled" />
     </Space>
   </Col>
-  <Col :span="6">
+  <Col :span="8">
     <Space gap="small" vertical>
       hideOnSinglePage:
       <Switch v-model:value="config.hideOnSinglePage" />
     </Space>
   </Col>
-  <Col :span="6">
+  <Col :span="8">
     <Space gap="small" vertical>
       showTotal:
       <Switch v-model:value="config.showTotal" />
     </Space>
   </Col>
-  <Col :span="6">
+  <Col :span="8">
     <Space gap="small" vertical>
       showQuickJumper:
       <Switch v-model:value="config.showQuickJumper" />
     </Space>
   </Col>
-  <Col :span="6">
+  <Col :span="8">
     <Space gap="small" vertical>
       showSizeChanger:
       <Switch v-model:value="config.showSizeChanger" />
     </Space>
   </Col>
-  <Col :span="6">
+  <Col :span="8">
     <Space gap="small" vertical>
       total:
       <RadioGroup :options="totalOptions" v-model:value="config.total" button button-style="solid" />
     </Space>
   </Col>
-  <Col :span="6">
+  <Col :span="8">
     <Space gap="small" vertical>
       showQuickJumper.goButton:
-      <Switch v-model:value="goButton" />
+      <Switch v-model:value="goButton" :disabled="!config.showQuickJumper" />
     </Space>
   </Col>
 </Row>
+<br/>
 <Pagination
-  v-model:page="page"
-  v-model:page-size="pageSize"
+  v-model:page="configPage"
+  v-model:page-size="configPageSize"
   v-bind="config"
-  :show-quick-jumper="goButton ? { goButton: true } : config.showQuickJumper"
-  class="mt30"
+  :show-quick-jumper="config.showQuickJumper ? { goButton } : false"
   @change="onChange"
   @pageSizeChange="pageSizeChange"
 />
@@ -762,79 +757,79 @@ function pageSizeChange(page: number, pageSize: number) {
 </script>
 <template>
   <Row :gutter="[24, 12]">
-    <Col :span="6">
-      <Space gap="small" vertical>
-        bordered:
-        <Switch v-model:value="config.bordered" />
-      </Space>
-    </Col>
-    <Col :span="6">
+    <Col :span="8">
       <Space gap="small" vertical>
         size:
         <RadioGroup :options="sizeOptions" v-model:value="config.size" button button-style="solid" />
       </Space>
     </Col>
-    <Col :span="6">
+    <Col :span="8">
       <Space gap="small" vertical>
         placement:
         <RadioGroup :options="placementOptions" v-model:value="config.placement" button button-style="solid" />
       </Space>
     </Col>
-    <Col :span="6">
+    <Col :span="8">
+      <Space gap="small" vertical>
+        bordered:
+        <Switch v-model:value="config.bordered" />
+      </Space>
+    </Col>
+    <Col :span="8">
       <Space gap="small" vertical>
         pageAmount:
         <RadioGroup :options="pageAmountOptions" v-model:value="config.pageAmount" button button-style="solid" />
       </Space>
     </Col>
-    <Col :span="6">
+    <Col :span="8">
       <Space gap="small" vertical>
         disabled:
         <Switch v-model:value="config.disabled" />
       </Space>
     </Col>
-    <Col :span="6">
+    <Col :span="8">
       <Space gap="small" vertical>
         hideOnSinglePage:
         <Switch v-model:value="config.hideOnSinglePage" />
       </Space>
     </Col>
-    <Col :span="6">
+    <Col :span="8">
       <Space gap="small" vertical>
         showTotal:
         <Switch v-model:value="config.showTotal" />
       </Space>
     </Col>
-    <Col :span="6">
+    <Col :span="8">
       <Space gap="small" vertical>
         showQuickJumper:
         <Switch v-model:value="config.showQuickJumper" />
       </Space>
     </Col>
-    <Col :span="6">
+    <Col :span="8">
       <Space gap="small" vertical>
         showSizeChanger:
         <Switch v-model:value="config.showSizeChanger" />
       </Space>
     </Col>
-    <Col :span="6">
+    <Col :span="8">
       <Space gap="small" vertical>
         total:
         <RadioGroup :options="totalOptions" v-model:value="config.total" button button-style="solid" />
       </Space>
     </Col>
-    <Col :span="6">
+    <Col :span="8">
       <Space gap="small" vertical>
         showQuickJumper.goButton:
-        <Switch v-model:value="goButton" />
+        <Switch v-model:value="goButton" :disabled="!config.showQuickJumper" />
       </Space>
     </Col>
   </Row>
+  <br/>
   <Pagination
     v-model:page="page"
     v-model:page-size="pageSize"
     v-bind="config"
-    :show-quick-jumper="goButton ? { goButton: true } : config.showQuickJumper"
-    class="mt30"
+    :show-quick-jumper="config.showQuickJumper ? { goButton } : false"
     @change="onChange"
     @pageSizeChange="pageSizeChange"
   />
@@ -863,7 +858,7 @@ function pageSizeChange(page: number, pageSize: number) {
 | jumperProps | 快速跳转组件 `props`，参考 [Input Props](./input.md#input-props) | [InputProps](./input.md#input-props) | {} |
 | showSizeChanger | 是否展示 `pageSize` 切换器，当 `total` 大于 `50` 时默认为 `true` | boolean | undefined |
 | changerProps | `pageSize` 切换器组件 `props`，参考 [Select Props](./select.md#select-props) | [SelectProps](./select.md#select-props) | {} |
-| pageSizeOptions | 设置每页可以显示多少条 | string[] &#124; number[] | [10, 20, 50 ,100] |
+| pageSizeOptions | 设置每页可以显示多少条 | string[] &#124; number[] | [10, 20, 50, 100] |
 | showTotal | 用于显示数据总量和当前数据顺序 | boolean &#124; ((total: number, range: number[]) => string) | false |
 | bordered | 页码是否显示边框，`false` 时为无边框风格 | boolean | true |
 | placement | 分页展示位置 | 'left' &#124; 'center' &#124; 'right' | 'center' |

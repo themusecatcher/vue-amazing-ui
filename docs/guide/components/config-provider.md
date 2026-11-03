@@ -133,7 +133,9 @@ const overrideTheme = computed<ConfigProviderTheme>(() =>
 const checkboxChecked = ref<boolean>(false)
 const cardDate = ref<number>(Date.now())
 const dateValue = ref<number>(Date.now())
-const inputValue = ref<string>('')
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const seedInputValue = ref<string>('')
+const modeInputValue = ref<string>('')
 const inputNumberValue = ref<number>(3)
 const inputSearchValue = ref<string>('')
 const autoCompleteValue = ref<string>('')
@@ -265,7 +267,8 @@ const stepsItems = ref<StepsItem[]>([
   }
 ])
 const current = ref<number>(2)
-const switchChecked = ref<boolean>(false)
+const seedSwitchChecked = ref<boolean>(false)
+const modeSwitchChecked = ref<boolean>(false)
 const tabItems = ref<TabsItem[]>([
   {
     key: '1',
@@ -482,7 +485,7 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
       <Checkbox v-model:checked="checkboxChecked">Checkbox</Checkbox>
       <ColorPicker :width="200" />
       <DatePicker v-model:value="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
-      <Input :width="200" v-model:value="inputValue" placeholder="please input" />
+      <Input :width="200" v-model:value="seedInputValue" placeholder="please input" />
       <InputNumber :width="120" v-model:value="inputNumberValue" placeholder="please input" />
       <InputSearch
         :width="200"
@@ -509,7 +512,7 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
       </Popconfirm>
       <Radio v-model:checked="radioChecked">Radio</Radio>
       <Select :options="selectOptions" v-model:value="selectedValue" />
-      <Switch v-model:value="switchChecked" />
+      <Switch v-model:value="seedSwitchChecked" />
       <Textarea :width="360" v-model:value="textareaValue" placeholder="custom theme textarea" />
       <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
     </Space>
@@ -1175,7 +1178,7 @@ _`theme.mode` 决定派生使用的色阶（`light` / `dark`），`auto` 跟随�
 <br/>
 
 <Flex vertical>
-  <Space align="center" class="mb10">
+  <Space align="center">
     mode:
     <Segmented v-model:value="mode" :options="modeOptions" />
   </Space>
@@ -1187,12 +1190,12 @@ _`theme.mode` 决定派生使用的色阶（`light` / `dark`），`auto` 跟随�
           <Button>Default Button</Button>
           <Button type="danger">Danger Button</Button>
           <Tag color="blue">Tag</Tag>
-          <Switch v-model:value="switchChecked" />
+          <Switch v-model:value="modeSwitchChecked" />
           <Slider :value="60" style="width: 160px" />
           <Progress :percent="percent" style="width: 180px" />
         </Space>
         <Space align="center" wrap>
-          <Input :width="180" v-model:value="inputValue" placeholder="please input" />
+          <Input :width="180" v-model:value="modeInputValue" placeholder="please input" />
           <Select :options="darkSelectOptions" v-model:value="darkSelectValue" :width="160" />
           <Pagination v-model:page="darkPage" :total="50" :page-size="10" />
           <Tooltip tooltip="浮层跟随当前作用域">
@@ -1240,7 +1243,7 @@ const darkPage = ref<number>(1)
 </script>
 <template>
   <Flex vertical>
-    <Space class="mb10" align="center">
+    <Space align="center">
       mode:
       <Segmented v-model:value="mode" :options="modeOptions" />
     </Space>

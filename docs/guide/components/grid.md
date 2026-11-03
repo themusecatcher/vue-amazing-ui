@@ -958,7 +958,8 @@ _↑ 中间列内容超过容器高：该列把同行其余列一并拉高，并
     </Flex>
   </Col>
 </Row>
-<Row class="mt30" :gutter="[state.horizontalGutter, state.verticalGutter]">
+<br/>
+<Row :gutter="[state.horizontalGutter, state.verticalGutter]">
   <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
     <div class="gutter-box">Col-{{ 24 / state.colCount }}</div>
   </Col>
@@ -1033,7 +1034,8 @@ const state = reactive({
       </Flex>
     </Col>
   </Row>
-  <Row class="mt30" :gutter="[state.horizontalGutter, state.verticalGutter]">
+  <br/>
+  <Row :gutter="[state.horizontalGutter, state.verticalGutter]">
     <Col class="gutter-row" v-for="n in state.colCount" :key="n" :span="24 / state.colCount">
       <div class="gutter-box">Col-{{ 24 / state.colCount }}</div>
     </Col>
@@ -1046,9 +1048,6 @@ const state = reactive({
   </Row>
 </template>
 <style lang="less" scoped>
-.mt30 {
-  margin-top: 30px;
-}
 .gutter-row {
   .grid-col {
     min-height: 30px;
@@ -1067,9 +1066,6 @@ const state = reactive({
 :::
 
 <style lang="less" scoped>
-.mt30 {
-  margin: 30px;
-}
 .row {
   .grid-col {
     min-height: 30px;

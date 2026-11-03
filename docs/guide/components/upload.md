@@ -15,17 +15,28 @@ import { ref, watchEffect } from 'vue'
 import { useMessage } from 'vue-amazing-ui'
 import type { UploadFileType } from 'vue-amazing-ui'
 const message = useMessage()
-const files = ref<UploadFileType[]>([])
-const fileList = ref<UploadFileType[]>([
-  {
-    name: '1.jpg',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
-  },
-  {
-    name: 'Markdown.pdf',
-    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
-  }
-])
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicFiles = ref<UploadFileType[]>([])
+const multipleFiles = ref<UploadFileType[]>([])
+// 工厂每次返回新数组，避免各分节共用同一份文件列表
+function createFileList(): UploadFileType[] {
+  return [
+    {
+      name: '1.jpg',
+      url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
+    },
+    {
+      name: 'Markdown.pdf',
+      url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
+    }
+  ]
+}
+const disabledFileList = ref<UploadFileType[]>(createFileList())
+const limitFileList = ref<UploadFileType[]>(createFileList())
+const customStyleFileList = ref<UploadFileType[]>(createFileList())
+const messageFileList = ref<UploadFileType[]>(createFileList())
+const customRequestFileList = ref<UploadFileType[]>(createFileList())
+const chunkFileList = ref<UploadFileType[]>(createFileList())
 const imageList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
@@ -47,12 +58,6 @@ const singleFile = ref<UploadFileType[]>([
 ])
 // 拖拽上传演示：拖拽路径同样按 accept 过滤，类型不符的文件经 reject 回传
 const dragList = ref<UploadFileType[]>([])
-watchEffect(() => {
-  console.log('files', files.value)
-})
-watchEffect(() => {
-  console.log('fileList', fileList.value)
-})
 watchEffect(() => {
   console.log('imageList', imageList.value)
 })
@@ -157,7 +162,7 @@ function onUploadFailRequest(file: File) {
 
 ## 基本使用
 
-<Upload v-model:fileList="files" @drop="onDrop" @change="onChange" @preview="onPreview" />
+<Upload v-model:fileList="basicFiles" @drop="onDrop" @change="onChange" @preview="onPreview" />
 
 ::: details Show Code
 
@@ -192,7 +197,7 @@ _只能预览，不能删除和上传_
 
 <br/>
 
-<Upload disabled v-model:fileList="fileList" />
+<Upload disabled v-model:fileList="disabledFileList" />
 
 ::: details Show Code
 
@@ -226,7 +231,7 @@ _通过 `maxCount` 限制上传数量；当为 `1` 时占满后仍显示上传�
 
 <Space vertical>
   <Upload :max-count="1" tip="maxCount: 1" v-model:fileList="singleFile" />
-  <Upload :max-count="3" tip="maxCount: 3" v-model:fileList="fileList" />
+  <Upload :max-count="3" tip="maxCount: 3" v-model:fileList="limitFileList" />
 </Space>
 
 ::: details Show Code
@@ -254,9 +259,6 @@ const fileList = ref<UploadFileType[]>([
 watchEffect(() => {
   console.log('singleFile', singleFile.value)
 })
-watchEffect(() => {
-  console.log('fileList', fileList.value)
-})
 </script>
 <template>
   <Space vertical>
@@ -274,7 +276,7 @@ _可一次选择多个文件进行上传_
 
 <br/>
 
-<Upload multiple v-model:fileList="files" />
+<Upload multiple v-model:fileList="multipleFiles" />
 
 ::: details Show Code
 
@@ -348,7 +350,7 @@ _缩略图等比覆盖；上传描述文字使用：上传_
 
 <br/>
 
-<Upload tip="上传" fit="cover" v-model:fileList="fileList" />
+<Upload tip="上传" fit="cover" v-model:fileList="customStyleFileList" />
 
 ::: details Show Code
 
@@ -366,9 +368,6 @@ const fileList = ref<UploadFileType[]>([
     url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
-watchEffect(() => {
-  console.log('fileList', fileList.value)
-})
 </script>
 <template>
   <Upload tip="上传" fit="cover" v-model:fileList="fileList" />
@@ -384,7 +383,7 @@ _排列间距使用：`'middle'`；自定义上传 `uploading` 动画样式_
 <Upload
   :space-props="{ gap: 'middle' }"
   :spin-props="{ indicator: 'dot-wheel', color: '#ff6900', tip: '上传中...' }"
-  v-model:fileList="fileList"
+  v-model:fileList="customStyleFileList"
 />
 
 ::: details Show Code
@@ -403,9 +402,6 @@ const fileList = ref<UploadFileType[]>([
     url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
-watchEffect(() => {
-  console.log('fileList', fileList.value)
-})
 </script>
 <template>
   <Upload
@@ -426,14 +422,14 @@ _全局提示由使用方监听 `@success` / `@remove` / `@error` 后调用_
 
 <Space vertical>
   <Upload
-    v-model:fileList="fileList"
+    v-model:fileList="messageFileList"
     @success="onSuccess"
     @remove="onRemove"
   />
   <Upload
     upload-mode="custom"
     :custom-request="onUploadFailRequest"
-    v-model:fileList="fileList"
+    v-model:fileList="messageFileList"
     @error="onError"
   />
 </Space>
@@ -456,9 +452,6 @@ const fileList = ref<UploadFileType[]>([
     url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
-watchEffect(() => {
-  console.log('fileList', fileList.value)
-})
 function onSuccess(file: UploadFileType) {
   console.log('upload success', file)
   message.success('upload success')
@@ -613,7 +606,7 @@ function onRemove(file: UploadFileType) {
 
 ## 自定义上传行为
 
-<Upload multiple upload-mode="custom" :custom-request="onCustomRequest" v-model:fileList="fileList" @change="onChange" @remove="onRemove" @success="onSuccess" @error="onError" />
+<Upload multiple upload-mode="custom" :custom-request="onCustomRequest" v-model:fileList="customRequestFileList" @change="onChange" @remove="onRemove" @success="onSuccess" @error="onError" />
 
 ::: details Show Code
 
@@ -633,9 +626,6 @@ const fileList = ref<UploadFileType[]>([
     url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
-watchEffect(() => {
-  console.log('fileList', fileList.value)
-})
 function onCustomRequest(file: File) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -693,7 +683,7 @@ function onError(err: unknown) {
 
 ## 自定义分片上传
 
-<Upload upload-mode="custom" :custom-request="onCustomSliceUpload" v-model:fileList="fileList" @change="onChange" @remove="onRemove" @success="onSuccess" @error="onError" />
+<Upload upload-mode="custom" :custom-request="onCustomSliceUpload" v-model:fileList="chunkFileList" @change="onChange" @remove="onRemove" @success="onSuccess" @error="onError" />
 
 ::: details Show Code
 
@@ -713,9 +703,6 @@ const fileList = ref<UploadFileType[]>([
     url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
-watchEffect(() => {
-  console.log('fileList', fileList.value)
-})
 import { sliceFile } from './sliceFile'
 function onCustomSliceUpload(file: File) {
   return new Promise((resolve, reject) => {

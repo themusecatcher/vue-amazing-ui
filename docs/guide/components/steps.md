@@ -9,7 +9,7 @@ _引导用户按照流程完成任务的导航条_
 - 当任务复杂或者存在先后关系时，将其分解成一系列步骤，从而简化任务
 
 <script setup lang="ts">
-import { ref, watchEffect, reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import type { StepsProps, StepsItem } from 'vue-amazing-ui'
 const stepsItems = ref<StepsItem[]>([
   {
@@ -36,10 +36,14 @@ const minStepsItems = ref<StepsItem[]>([
     title: 'Step 3'
   }
 ])
-const current = ref(2)
-watchEffect(() => {
-  console.log('current', current.value)
-})
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicCurrent = ref(2)
+const placementCurrent = ref(2)
+const miniCurrent = ref(2)
+const verticalCurrent = ref(2)
+const dotCurrent = ref(2)
+const clickableCurrent = ref(2)
+const configCurrent = ref(2)
 const sizeOptions = [
   {
     label: 'default',
@@ -87,7 +91,7 @@ const state = reactive<StepsProps>({
 
 ## 基本使用
 
-<Steps :items="stepsItems" :current="current" @change="onChange" />
+<Steps :items="stepsItems" :current="basicCurrent" @change="onChange" />
 
 ::: details Show Code
 
@@ -129,7 +133,7 @@ function onChange(index: number) {
 
 <Flex vertical>
   <RadioGroup :options="placeOptions" v-model:value="place" button button-style="solid" />
-  <Steps :items="stepsItems" :label-placement="place" :current="current" />
+  <Steps :items="stepsItems" :label-placement="place" :current="placementCurrent" />
 </Flex>
 
 ::: details Show Code
@@ -182,7 +186,7 @@ watchEffect(() => {
 
 <Flex vertical>
   <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
-  <Steps :items="minStepsItems" :size="size" :current="current" />
+  <Steps :items="minStepsItems" :size="size" :current="miniCurrent" />
 </Flex>
 
 ::: details Show Code
@@ -231,8 +235,8 @@ watchEffect(() => {
 ## 垂直步骤条
 
 <Space :gap="120">
-  <Steps :items="stepsItems" vertical :current="current" />
-  <Steps :items="stepsItems" vertical size="small" :current="current" />
+  <Steps :items="stepsItems" vertical :current="verticalCurrent" />
+  <Steps :items="stepsItems" vertical size="small" :current="verticalCurrent" />
 </Space>
 
 ::: details Show Code
@@ -273,8 +277,8 @@ watchEffect(() => {
 ## 点状步骤条
 
 <Space vertical>
-  <Steps :items="stepsItems" dotted v-model:current="current" />
-  <Steps :items="stepsItems" vertical dotted v-model:current="current" />
+  <Steps :items="stepsItems" dotted v-model:current="dotCurrent" />
+  <Steps :items="stepsItems" vertical dotted v-model:current="dotCurrent" />
 </Space>
 
 ::: details Show Code
@@ -323,8 +327,8 @@ _设置 `v-model:current` 后即可点击_
     <Button @click="onPrev">Prev</Button>
     <Button @click="onNext">Next</Button>
   </Space>
-  <Steps :items="stepsItems" v-model:current="current" />
-  <Steps :items="stepsItems" vertical v-model:current="current" />
+  <Steps :items="stepsItems" v-model:current="clickableCurrent" />
+  <Steps :items="stepsItems" vertical v-model:current="clickableCurrent" />
 </Flex>
 
 ::: details Show Code
@@ -404,14 +408,14 @@ function onNext() {
     </Space>
   </Col>
 </Row>
+<br/>
 <Steps
-  class="mt30"
   :items="stepsItems"
   :size="state.size"
   :vertical="state.vertical"
   :label-placement="state.labelPlacement"
   :dotted="state.dotted"
-  v-model:current="current"
+  v-model:current="configCurrent"
 />
 
 ::: details Show Code
@@ -493,8 +497,8 @@ const state = reactive<StepsProps>({
       </Space>
     </Col>
   </Row>
+  <br/>
   <Steps
-    class="mt30"
     :items="stepsItems"
     :size="state.size"
     :vertical="state.vertical"
@@ -503,21 +507,9 @@ const state = reactive<StepsProps>({
     v-model:current="current"
   />
 </template>
-<style lang="less" scoped>
-.mt30 {
-  margin-top: 30px;
-}
-</style>
 ```
 
 :::
-
-<style lang="less" scoped>
-.mt30 {
-  margin-top: 30px;
-}
-</style>
-
 ## APIs
 
 ### Steps Props

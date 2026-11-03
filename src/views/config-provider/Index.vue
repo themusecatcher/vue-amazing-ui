@@ -87,7 +87,9 @@ const autoCompleteOptions = ref<string[]>([])
 const checkboxChecked = ref<boolean>(false)
 const cardDate = ref<number>(Date.now())
 const dateValue = ref<number>(Date.now())
-const inputValue = ref<string>('')
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const seedInputValue = ref<string>('')
+const modeInputValue = ref<string>('')
 const inputNumberValue = ref<number>(3)
 const inputSearchValue = ref<string>('')
 // 这三处刻意用组件形态 + @ready 取实例：useMessage() / useModal() / useNotification() 命中的是入口 App.vue 的 Provider，
@@ -211,7 +213,8 @@ const stepsItems = ref<StepsItem[]>([
   }
 ])
 const current = ref<number>(2)
-const switchChecked = ref<boolean>(false)
+const seedSwitchChecked = ref<boolean>(false)
+const modeSwitchChecked = ref<boolean>(false)
 const darkSelectValue = ref<number>(1)
 const darkSelectOptions: SelectOption[] = [
   { label: 'Option 1', value: 1 },
@@ -486,7 +489,7 @@ const tokenStyle: Record<string, string> = {
           <Checkbox v-model:checked="checkboxChecked">Checkbox</Checkbox>
           <ColorPicker :width="200" />
           <DatePicker v-model:value="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
-          <Input :width="200" v-model:value="inputValue" placeholder="please input" />
+          <Input :width="200" v-model:value="seedInputValue" placeholder="please input" />
           <InputNumber :width="120" v-model:value="inputNumberValue" placeholder="please input" />
           <InputSearch
             :width="200"
@@ -513,7 +516,7 @@ const tokenStyle: Record<string, string> = {
           </Popconfirm>
           <Radio v-model:checked="radioChecked">Radio</Radio>
           <Select :options="selectOptions" v-model:value="selectedValue" />
-          <Switch v-model:value="switchChecked" />
+          <Switch v-model:value="seedSwitchChecked" />
           <Textarea :width="360" v-model:value="textareaValue" placeholder="custom theme textarea" />
           <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
         </Space>
@@ -715,12 +718,12 @@ const tokenStyle: Record<string, string> = {
               <Button>Default Button</Button>
               <Button type="danger">Danger Button</Button>
               <Tag color="blue">Tag</Tag>
-              <Switch v-model:value="switchChecked" />
+              <Switch v-model:value="modeSwitchChecked" />
               <Slider :value="60" style="width: 160px" />
               <Progress :percent="percent" style="width: 180px" />
             </Space>
             <Space align="center" wrap>
-              <Input :width="180" v-model:value="inputValue" placeholder="please input" />
+              <Input :width="180" v-model:value="modeInputValue" placeholder="please input" />
               <Select :options="darkSelectOptions" v-model:value="darkSelectValue" :width="160" />
               <Pagination v-model:page="darkPage" :total="50" :page-size="10" />
               <Tooltip tooltip="浮层跟随当前作用域">
