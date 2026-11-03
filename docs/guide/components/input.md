@@ -18,7 +18,15 @@ import {
   EnvironmentOutlined,
   CompassOutlined
 } from '@ant-design/icons-vue'
-const value = ref('')
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicValue = ref('')
+const prefixSuffixValue = ref('')
+const addonValue = ref('')
+const sizeValue = ref('')
+const clearValue = ref('')
+const passwordValue = ref('')
+const showCountValue = ref('')
+const disabledValue = ref('')
 const lazyValue = ref('')
 const sizeOptions = [
   {
@@ -35,9 +43,6 @@ const sizeOptions = [
   }
 ]
 const size = ref('middle')
-watchEffect(() => {
-  console.log('value', value.value)
-})
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
@@ -61,7 +66,7 @@ function onEnter(e: KeyboardEvent) {
 :::
 
 <Space gap="small" vertical :width="200">
-  <Input v-model:value="value" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
+  <Input v-model:value="basicValue" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
   <Input v-model:value.lazy="lazyValue" placeholder="Lazy usage" @change="onChange" @enter="onEnter" />
 </Space>
 
@@ -139,8 +144,8 @@ _与文字混排时按基线对齐，与原生 `input` 同口径_
 ## 前缀和后缀
 
 <Space gap="small" vertical :width="300">
-  <Input v-model:value="value" placeholder="Basic usage" prefix="￥" suffix="RMB" />
-  <Input v-model:value="value" placeholder="Basic usage">
+  <Input v-model:value="prefixSuffixValue" placeholder="Basic usage" prefix="￥" suffix="RMB" />
+  <Input v-model:value="prefixSuffixValue" placeholder="Basic usage">
     <template #prefix>
       <UserOutlined />
     </template>
@@ -186,12 +191,12 @@ watchEffect(() => {
 
 <Space gap="small" vertical :width="300">
   <Input
-    v-model:value="value"
+    v-model:value="addonValue"
     placeholder="Basic usage"
     addon-before="Http://"
     addon-after=".com"
   />
-  <Input v-model:value="value" placeholder="Basic usage">
+  <Input v-model:value="addonValue" placeholder="Basic usage">
     <template #addonAfter>
       <SettingOutlined />
     </template>
@@ -227,9 +232,9 @@ watchEffect(() => {
 
 <Space gap="small" vertical :width="240">
   <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
-  <Input v-model:value="value" :size="size" placeholder="Basic usage" />
+  <Input v-model:value="sizeValue" :size="size" placeholder="Basic usage" />
   <Input
-    v-model:value="value"
+    v-model:value="sizeValue"
     :size="size"
     placeholder="Basic usage"
   >
@@ -241,7 +246,7 @@ watchEffect(() => {
     </template>
   </Input>
   <Input
-    v-model:value="value"
+    v-model:value="sizeValue"
     :size="size"
     placeholder="Basic usage"
   >
@@ -308,7 +313,7 @@ watchEffect(() => {
 
 ## 带清除图标
 
-<Input :width="200" allow-clear v-model:value="value" placeholder="input with clear icon" />
+<Input :width="200" allow-clear v-model:value="clearValue" placeholder="input with clear icon" />
 
 ::: details Show Code
 
@@ -329,7 +334,7 @@ watchEffect(() => {
 
 ## 密码框
 
-<Input :width="200" password v-model:value="value" placeholder="input password" />
+<Input :width="200" password v-model:value="passwordValue" placeholder="input password" />
 
 ::: details Show Code
 
@@ -351,8 +356,8 @@ watchEffect(() => {
 ## 带字数提示
 
 <Space vertical>
-  <Input show-count allow-clear v-model:value="value" placeholder="please input" />
-  <Input show-count allow-clear v-model:value="value" :maxlength="20" placeholder="please input" />
+  <Input show-count allow-clear v-model:value="showCountValue" placeholder="please input" />
+  <Input show-count allow-clear v-model:value="showCountValue" :maxlength="20" placeholder="please input" />
 </Space>
 
 ::: details Show Code
@@ -377,7 +382,7 @@ watchEffect(() => {
 
 ## 禁用
 
-<Input :width="200" disabled v-model:value="value" placeholder="disabled input" />
+<Input :width="200" disabled v-model:value="disabledValue" placeholder="disabled input" />
 
 ::: details Show Code
 
@@ -430,3 +435,4 @@ const value = ref('')
 | enter | 按下回车的回调 | (e: KeyboardEvent) => void |
 | compositionstart | 使用文本合成系统即输入法编辑器开始新的输入时的回调 | (e: CompositionEvent) => void |
 | compositionend | 当文本段落的组成完成或取消时触发的回调 | (e: CompositionEvent) => void |
+| blur | 输入框失焦的回调，`relatedTarget` 为获得焦点的元素 | (e: FocusEvent) => void |

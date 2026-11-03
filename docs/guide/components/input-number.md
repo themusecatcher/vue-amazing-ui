@@ -11,14 +11,17 @@ _通过鼠标或键盘，输入范围内的数值_
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import { formatNumber } from 'vue-amazing-ui'
-const value = ref(3)
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicValue = ref(3)
+const stepValue = ref(3)
+const precisionValue = ref(3)
+const rangeValue = ref(3)
+const prefixValue = ref(3)
+const disabledValue = ref(3)
 const lazyValue = ref(6)
 const formatValue1 = ref(1000)
 const formatValue2 = ref(100)
 const disabled = ref(true)
-watchEffect(() => {
-  console.log('value', value.value)
-})
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
@@ -57,7 +60,7 @@ function onEnter(e: KeyboardEvent) {
 <Space gap="small" vertical>
   <InputNumber
     :width="120"
-    v-model:value="value"
+    v-model:value="basicValue"
     placeholder="Basic usage"
     @change="onChange"
     @enter="onEnter"
@@ -115,7 +118,7 @@ function onEnter(e: KeyboardEvent) {
 
 ## 步数为小数
 
-<InputNumber :step="0.1" v-model:value="value" />
+<InputNumber :step="0.1" v-model:value="stepValue" />
 
 ::: details Show Code
 
@@ -136,7 +139,7 @@ watchEffect(() => {
 
 ## 设置数值精度
 
-<InputNumber :step="0.3" :precision="2" v-model:value="value" />
+<InputNumber :step="0.3" :precision="2" v-model:value="precisionValue" />
 
 ::: details Show Code
 
@@ -215,7 +218,7 @@ function parser(value: string): number {
 
 ## 自定义最大最小值
 
-<InputNumber :min="0" :max="10" v-model:value="value" />
+<InputNumber :min="0" :max="10" v-model:value="rangeValue" />
 
 ::: details Show Code
 
@@ -236,7 +239,7 @@ watchEffect(() => {
 
 ## 添加前缀图标 $
 
-<InputNumber prefix="$" v-model:value="value" />
+<InputNumber prefix="$" v-model:value="prefixValue" />
 
 ::: details Show Code
 
@@ -259,7 +262,7 @@ watchEffect(() => {
 
 <Space vertical>
   <Space align="center">disabled: <Switch v-model:value="disabled" /></Space>
-  <InputNumber v-model:value="value" :disabled="disabled" />
+  <InputNumber v-model:value="disabledValue" :disabled="disabled" />
 </Space>
 
 ::: details Show Code

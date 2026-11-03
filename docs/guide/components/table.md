@@ -3121,7 +3121,7 @@ watchEffect(() => {
 | sortTooltipProps | 排序 `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip-props)，用于全局配置排序弹出提示 | [TooltipProps](./tooltip.md#tooltip-props) | {} |
 | sticky | 是否设置粘性定位的表头和水平滚动条，设置之后表头和滚动条会跟随页面固定 | boolean | false |
 | showPagination | 是否显示分页 | boolean | true |
-| pagination | `Pagination` 组件属性配置，参考 [Pagination Props](./pagination.md#pagination-props)，用于配置分页功能 | [PaginationProps](./pagination.md#pagination-props) | {} |
+| pagination | `Pagination` 组件属性配置，参考 [Pagination Props](./pagination.md#pagination-props)，用于配置分页功能；`page` / `pageSize` 传入后表格随之切换，未传入时取 `defaultPage` / `defaultPageSize` 作初值，页码越界时按有效页码渲染 | [PaginationProps](./pagination.md#pagination-props) | {} |
 | rowKey | 表格内容行的唯一标识 `key`，可以是字符串或一个函数 | string &#124; ((record: Record<string, any>, index?: number) => string) | 'key' |
 | rowSelection | 列表项是否可选择 | [TableSelection](#tableselection-type) | undefined |
 | scroll | 表格是否可滚动，也可以指定滚动区域的宽、高 | [TableScrollOption](#tablescrolloption-type) | undefined |

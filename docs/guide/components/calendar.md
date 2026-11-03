@@ -1248,7 +1248,7 @@ _面板可聚焦，键盘直接移动选中日期；日期面板按日粒度移�
 
 <br/>
 
-<ul class="keyboard-tips mb10">
+<ul class="keyboard-tips">
   <li>日期面板：← / → 一天、↑ / ↓ 一周、PageUp / PageDown 一月、Ctrl（macOS 为 Cmd）+ ← / → 一年</li>
   <li>月份面板：← / → 一月、↑ / ↓ 一行（三个月）、Ctrl（macOS 为 Cmd）+ ← / → 一年（翻页键不响应）</li>
 </ul>
@@ -1270,7 +1270,7 @@ function onPanelChange(
 }
 </script>
 <template>
-  <ul class="keyboard-tips mb10">
+  <ul class="keyboard-tips">
     <li>日期面板：← / → 一天、↑ / ↓ 一周、PageUp / PageDown 一月、Ctrl（macOS 为 Cmd）+ ← / → 一年</li>
     <li>月份面板：← / → 一月、↑ / ↓ 一行（三个月）、Ctrl（macOS 为 Cmd）+ ← / → 一年（翻页键不响应）</li>
   </ul>

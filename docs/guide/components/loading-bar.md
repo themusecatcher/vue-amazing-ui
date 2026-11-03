@@ -537,7 +537,7 @@ _加载条跟随 `ConfigProvider` 的主题色：`theme.seed.primary` 改整片�
 <br/>
 
 <Flex vertical>
-  <Space align="center" class="mb10">
+  <Space align="center">
     primaryColor:
     <ColorPicker :width="200" v-model:value="themeColor" />
   </Space>
@@ -590,7 +590,7 @@ function onThemeError() {
 </script>
 <template>
   <Flex vertical>
-    <Space align="center" class="mb10">
+    <Space align="center">
       primaryColor:
       <ColorPicker :width="200" v-model:value="themeColor" />
     </Space>

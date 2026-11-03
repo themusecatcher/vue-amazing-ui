@@ -2,7 +2,16 @@
 import { ref, watchEffect } from 'vue'
 import type { InputSearchProps } from 'vue-amazing-ui'
 import { SearchOutlined, CompassOutlined, EnvironmentOutlined, InfoCircleOutlined } from '@ant-design/icons-vue'
-const value = ref('')
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicValue = ref('')
+const customButtonValue = ref('')
+const sizeValue = ref('')
+const clearValue = ref('')
+const showCountValue = ref('')
+const addonValue = ref('')
+const prefixSuffixValue = ref('')
+const searchingValue = ref('')
+const disabledValue = ref('')
 const lazyValue = ref('')
 const sizeOptions = [
   {
@@ -21,9 +30,6 @@ const sizeOptions = [
 const size = ref<InputSearchProps['size']>('middle')
 const loading = ref(true)
 const disabled = ref(true)
-watchEffect(() => {
-  console.log('value', value.value)
-})
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
@@ -50,7 +56,7 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
       </Alert>
       <InputSearch
         :width="200"
-        v-model:value="value"
+        v-model:value="basicValue"
         placeholder="Basic search usage"
         @change="onChange"
         @search="onSearch"
@@ -66,20 +72,20 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
     <h2 class="mt30 mb10">自定义搜索按钮</h2>
     <Space vertical>
       <InputSearch
-        v-model:value="value"
+        v-model:value="customButtonValue"
         :search-props="{ type: 'primary' }"
         placeholder="input search text"
         @search="onSearch"
       />
       <InputSearch
-        v-model:value="value"
+        v-model:value="customButtonValue"
         placeholder="input search text"
         :icon="false"
         search="Search"
         :search-props="{ type: 'primary' }"
         @search="onSearch"
       />
-      <InputSearch v-model:value="value" placeholder="input search text" @search="onSearch">
+      <InputSearch v-model:value="customButtonValue" placeholder="input search text" @search="onSearch">
         <template #search>
           <Button type="primary">
             <template #icon>
@@ -90,7 +96,7 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
         </template>
       </InputSearch>
       <InputSearch
-        v-model:value="value"
+        v-model:value="customButtonValue"
         placeholder="input search text"
         search="Search"
         :search-props="{ type: 'primary', ghost: true }"
@@ -100,7 +106,7 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
           <CompassOutlined />
         </template>
       </InputSearch>
-      <InputSearch v-model:value="value" placeholder="input search text" @search="onSearch">
+      <InputSearch v-model:value="customButtonValue" placeholder="input search text" @search="onSearch">
         <template #search>
           <Button>
             <template #icon>
@@ -115,14 +121,14 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
     <Space vertical>
       <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
       <InputSearch
-        v-model:value="value"
+        v-model:value="sizeValue"
         :size="size"
         :search-props="{ type: 'primary' }"
         placeholder="input search text"
         @search="onSearch"
       />
       <InputSearch
-        v-model:value="value"
+        v-model:value="sizeValue"
         :size="size"
         placeholder="input search text"
         :icon="false"
@@ -130,7 +136,7 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
         :search-props="{ type: 'primary' }"
         @search="onSearch"
       />
-      <InputSearch v-model:value="value" :size="size" placeholder="input search text" @search="onSearch">
+      <InputSearch v-model:value="sizeValue" :size="size" placeholder="input search text" @search="onSearch">
         <template #search>
           <Button type="primary" :size="size">
             <template #icon>
@@ -143,13 +149,13 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
     </Space>
     <h2 class="mt30 mb10">带清除图标</h2>
     <Space>
-      <InputSearch v-model:value="value" allow-clear placeholder="input search text" @search="onSearch" />
+      <InputSearch v-model:value="clearValue" allow-clear placeholder="input search text" @search="onSearch" />
     </Space>
     <h2 class="mt30 mb10">带字数提示</h2>
     <Space :width="300">
-      <InputSearch v-model:value="value" show-count placeholder="input search text" @search="onSearch" />
+      <InputSearch v-model:value="showCountValue" show-count placeholder="input search text" @search="onSearch" />
       <InputSearch
-        v-model:value="value"
+        v-model:value="showCountValue"
         allow-clear
         show-count
         :maxlength="20"
@@ -159,9 +165,14 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
     </Space>
     <h2 class="mt30 mb10">前置标签</h2>
     <Space :width="300">
-      <InputSearch v-model:value="value" addon-before="Please" placeholder="input search text" @search="onSearch" />
       <InputSearch
-        v-model:value="value"
+        v-model:value="addonValue"
+        addon-before="Please"
+        placeholder="input search text"
+        @search="onSearch"
+      />
+      <InputSearch
+        v-model:value="addonValue"
         :search-props="{ type: 'primary' }"
         placeholder="input search text"
         @search="onSearch"
@@ -173,8 +184,14 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
     </Space>
     <h2 class="mt30 mb10">前缀和后缀</h2>
     <Space :width="300">
-      <InputSearch v-model:value="value" prefix="¥" suffix="RMB" placeholder="input search text" @search="onSearch" />
-      <InputSearch v-model:value="value" placeholder="input search text" @search="onSearch">
+      <InputSearch
+        v-model:value="prefixSuffixValue"
+        prefix="¥"
+        suffix="RMB"
+        placeholder="input search text"
+        @search="onSearch"
+      />
+      <InputSearch v-model:value="prefixSuffixValue" placeholder="input search text" @search="onSearch">
         <template #prefix>
           <EnvironmentOutlined />
         </template>
@@ -189,14 +206,14 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
     <Space vertical>
       <Space align="center"> Loading state:<Switch v-model:value="loading" /> </Space>
       <InputSearch
-        v-model:value="value"
+        v-model:value="searchingValue"
         :loading="loading"
         :search-props="{ type: 'primary' }"
         placeholder="input search text"
         @search="onSearch"
       />
       <InputSearch
-        v-model:value="value"
+        v-model:value="searchingValue"
         :loading="loading"
         placeholder="input search text"
         :icon="false"
@@ -204,7 +221,7 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
         :search-props="{ type: 'primary' }"
         @search="onSearch"
       />
-      <InputSearch v-model:value="value" placeholder="input search text" @search="onSearch">
+      <InputSearch v-model:value="searchingValue" placeholder="input search text" @search="onSearch">
         <template #search>
           <Button type="primary" :loading="loading">
             <template #icon>
@@ -218,16 +235,21 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
     <h2 class="mt30 mb10">禁用</h2>
     <Space vertical>
       <Space align="center"> Disabled state:<Switch v-model:value="disabled" /> </Space>
-      <InputSearch v-model:value="value" :disabled="disabled" placeholder="input search text" @search="onSearch" />
       <InputSearch
-        v-model:value="value"
+        v-model:value="disabledValue"
+        :disabled="disabled"
+        placeholder="input search text"
+        @search="onSearch"
+      />
+      <InputSearch
+        v-model:value="disabledValue"
         :disabled="disabled"
         :search-props="{ type: 'primary' }"
         placeholder="input search text"
         @search="onSearch"
       />
       <InputSearch
-        v-model:value="value"
+        v-model:value="disabledValue"
         :disabled="disabled"
         placeholder="input search text"
         :icon="false"
@@ -235,7 +257,12 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
         :search-props="{ type: 'primary' }"
         @search="onSearch"
       />
-      <InputSearch v-model:value="value" :disabled="disabled" placeholder="input search text" @search="onSearch">
+      <InputSearch
+        v-model:value="disabledValue"
+        :disabled="disabled"
+        placeholder="input search text"
+        @search="onSearch"
+      >
         <template #search>
           <Button type="primary" :disabled="disabled">
             <template #icon>

@@ -8,7 +8,15 @@ import {
   EnvironmentOutlined,
   CompassOutlined
 } from '@ant-design/icons-vue'
-const value = ref('')
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicValue = ref('')
+const prefixSuffixValue = ref('')
+const addonValue = ref('')
+const sizeValue = ref('')
+const clearValue = ref('')
+const passwordValue = ref('')
+const showCountValue = ref('')
+const disabledValue = ref('')
 const lazyValue = ref('')
 const sizeOptions = [
   {
@@ -25,9 +33,6 @@ const sizeOptions = [
   }
 ]
 const size = ref<InputProps['size']>('middle')
-watchEffect(() => {
-  console.log('value', value.value)
-})
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
@@ -52,7 +57,7 @@ function onEnter(e: KeyboardEvent) {
         <br />
         {{ '<Input v-model:value.lazy="msg" />' }}
       </Alert>
-      <Input :width="200" v-model:value="value" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
+      <Input :width="200" v-model:value="basicValue" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
       <Input :width="200" v-model:value.lazy="lazyValue" placeholder="Lazy usage" @change="onChange" @enter="onEnter" />
     </Space>
     <h2 class="mt30 mb10">非受控输入与行内混排</h2>
@@ -67,8 +72,8 @@ function onEnter(e: KeyboardEvent) {
     </div>
     <h2 class="mt30 mb10">前缀和后缀</h2>
     <Space gap="small" vertical :width="300">
-      <Input v-model:value="value" placeholder="Basic usage" prefix="￥" suffix="RMB" />
-      <Input v-model:value="value" placeholder="Basic usage">
+      <Input v-model:value="prefixSuffixValue" placeholder="Basic usage" prefix="￥" suffix="RMB" />
+      <Input v-model:value="prefixSuffixValue" placeholder="Basic usage">
         <template #prefix>
           <UserOutlined />
         </template>
@@ -81,8 +86,8 @@ function onEnter(e: KeyboardEvent) {
     </Space>
     <h2 class="mt30 mb10">前置和后置标签</h2>
     <Space gap="small" vertical :width="300">
-      <Input v-model:value="value" placeholder="Basic usage" addon-before="Http://" addon-after=".com" />
-      <Input v-model:value="value" placeholder="Basic usage">
+      <Input v-model:value="addonValue" placeholder="Basic usage" addon-before="Http://" addon-after=".com" />
+      <Input v-model:value="addonValue" placeholder="Basic usage">
         <template #addonAfter>
           <SettingOutlined />
         </template>
@@ -91,8 +96,8 @@ function onEnter(e: KeyboardEvent) {
     <h2 class="mt30 mb10">三种大小</h2>
     <Space gap="small" vertical :width="240">
       <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
-      <Input v-model:value="value" :size="size" placeholder="Basic usage" />
-      <Input v-model:value="value" :size="size" placeholder="Basic usage">
+      <Input v-model:value="sizeValue" :size="size" placeholder="Basic usage" />
+      <Input v-model:value="sizeValue" :size="size" placeholder="Basic usage">
         <template #prefix>
           <UserOutlined />
         </template>
@@ -100,7 +105,7 @@ function onEnter(e: KeyboardEvent) {
           <InfoCircleOutlined />
         </template>
       </Input>
-      <Input v-model:value="value" :size="size" placeholder="Basic usage">
+      <Input v-model:value="sizeValue" :size="size" placeholder="Basic usage">
         <template #addonBefore>
           <EnvironmentOutlined />
         </template>
@@ -110,15 +115,15 @@ function onEnter(e: KeyboardEvent) {
       </Input>
     </Space>
     <h2 class="mt30 mb10">带清除图标</h2>
-    <Input :width="200" allow-clear v-model:value="value" placeholder="input with clear icon" />
+    <Input :width="200" allow-clear v-model:value="clearValue" placeholder="input with clear icon" />
     <h2 class="mt30 mb10">密码框</h2>
-    <Input :width="200" password v-model:value="value" placeholder="input password" />
+    <Input :width="200" password v-model:value="passwordValue" placeholder="input password" />
     <h2 class="mt30 mb10">带字数提示</h2>
     <Space vertical>
-      <Input show-count allow-clear v-model:value="value" placeholder="please input" />
-      <Input show-count allow-clear v-model:value="value" :maxlength="20" placeholder="please input" />
+      <Input show-count allow-clear v-model:value="showCountValue" placeholder="please input" />
+      <Input show-count allow-clear v-model:value="showCountValue" :maxlength="20" placeholder="please input" />
     </Space>
     <h2 class="mt30 mb10">禁用</h2>
-    <Input :width="200" disabled v-model:value="value" placeholder="disabled input" />
+    <Input :width="200" disabled v-model:value="disabledValue" placeholder="disabled input" />
   </div>
 </template>

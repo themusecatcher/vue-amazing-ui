@@ -111,7 +111,9 @@ import {
 <\/script>`
   }
 ]
-const activeKey = ref(0)
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const usageActiveKey = ref(0)
+const utilsActiveKey = ref(0)
 // 路由 children 为「首页 + 全部组件演示页」，减去首页自身即为组件总数
 const componentsTotal = computed(() => {
   return (routes[0].children as Array<any>).length - 1
@@ -163,7 +165,7 @@ function onOpenWindow() {
     <p class="u-tip mb10"> 全部组件均采用单文件组件 <Tag color="magenta">SFC</Tag>，可独立使用 </p>
     <p class="u-tip"> 开箱即用，不墨迹 </p>
     <h2 class="mt30 mb10">使用方式：</h2>
-    <Collapse lang="bash" :fontSize="16" :items="installItems" v-model:activeKey="activeKey" copyable />
+    <Collapse lang="bash" :fontSize="16" :items="installItems" v-model:activeKey="usageActiveKey" copyable />
     <ul class="m-list">
       <li class="u-tip mb10 mt10">全局完整注册所有组件（不推荐）</li>
       <li class="u-tip mb10 mt10">全局部分注册组件</li>
@@ -178,7 +180,7 @@ function onOpenWindow() {
         : {{ func.description }}
       </li>
     </ul>
-    <Collapse lang="vue" :fontSize="16" :items="functionItems" v-model:activeKey="activeKey" copyable />
+    <Collapse lang="vue" :fontSize="16" :items="functionItems" v-model:activeKey="utilsActiveKey" copyable />
     <Descriptions class="mb10 mt30" title="生产环境依赖 (dependencies)" :column="{ md: 2, lg: 3, xl: 4 }">
       <DescriptionsItem :label="String(dependency)" v-for="(version, dependency) in pkg.dependencies" :key="dependency">
         <Tag color="volcano">{{ version }}</Tag>

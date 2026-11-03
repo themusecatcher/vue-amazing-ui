@@ -486,7 +486,7 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <p class="mb10">使用 <code>marks</code> 属性可以添加刻度标记</p>
+  <p>使用 <code>marks</code> 属性可以添加刻度标记</p>
   <Flex vertical>
     <Slider v-model:value="markSingleValue1" :marks="marks">
       <template #mark="{ label, value }">
@@ -505,7 +505,7 @@ watchEffect(() => {
       </template>
     </Slider>
   </Flex>
-  <p class="mb10">同时设置 <code>marks</code> & <code>step</code> 属性</p>
+  <p>同时设置 <code>marks</code> & <code>step</code> 属性</p>
   <Flex vertical>
     <Slider v-model:value="markSingleValue2" :marks="marks" :step="10">
       <template #mark="{ label, value }">
@@ -524,7 +524,7 @@ watchEffect(() => {
       </template>
     </Slider>
   </Flex>
-  <p class="mb10">设置 <code>step</code> 为 <code>'mark'</code>，此时 <code>Slider</code> 的可选值仅有 <code>marks</code> 标记的部分</p>
+  <p>设置 <code>step</code> 为 <code>'mark'</code>，此时 <code>Slider</code> 的可选值仅有 <code>marks</code> 标记的部分</p>
   <Flex vertical>
     <Slider v-model:value="markSingleValue3" :marks="marks" step="mark">
       <template #mark="{ label, value }">

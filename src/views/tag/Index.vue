@@ -13,10 +13,10 @@ import {
   InstagramOutlined
 } from '@ant-design/icons-vue'
 import type { TagItem } from 'vue-amazing-ui'
-const strTags = ref<string[]>(['天空', '大海', '湖泊'])
-watchEffect(() => {
-  console.log('strTags', strTags.value)
-})
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const sizeTags = ref<string[]>(['天空', '大海', '湖泊'])
+const dynamicTags = ref<string[]>(['天空', '大海', '湖泊'])
+const customLayoutTags = ref<string[]>(['天空', '大海', '湖泊'])
 const objTags = ref<TagItem[]>([
   {
     label: '天空',
@@ -155,7 +155,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
     </Space>
     <h2 class="mt30 mb10">动态添加和删除</h2>
     <p class="mb10">使用字符串格式数组</p>
-    <Tag dynamic v-model:value="strTags" @dynamic-close="onDynamicClose" />
+    <Tag dynamic v-model:value="dynamicTags" @dynamic-close="onDynamicClose" />
     <br />
     <br />
     <p class="mb10">使用对象格式数组</p>
@@ -175,7 +175,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
     <Space gap="small">
       <Tag closable size="small" @close="onClose">爱在西元前</Tag>
       <Tag color="warning" closable @close="onClose">超人不会飞</Tag>
-      <Tag color="blue" size="large" dynamic v-model:value="strTags" closable @close="onDynamicClose" />
+      <Tag color="blue" size="large" dynamic v-model:value="sizeTags" closable @close="onDynamicClose" />
     </Space>
     <h2 class="mt30 mb10">自定义动态标签排列</h2>
     <Tag
@@ -184,7 +184,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
       color="blue"
       size="large"
       :space-props="{ vertical: true, gap: 12 }"
-      v-model:value="strTags"
+      v-model:value="customLayoutTags"
       @close="onDynamicClose"
     />
     <h2 class="mt30 mb10">无边框</h2>

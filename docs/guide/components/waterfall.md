@@ -93,8 +93,8 @@ onBeforeMount(() => {
     </Flex>
   </Col>
 </Row>
+<br/>
 <Waterfall
-  class="mt30"
   :images="images"
   :column-count="state.columnCount"
   :column-gap="state.columnGap"
@@ -156,8 +156,8 @@ onBeforeMount(() => {
       </Flex>
     </Col>
   </Row>
+  <br/>
   <Waterfall
-    class="mt30"
     :images="images"
     :column-count="state.columnCount"
     :column-gap="state.columnGap"
@@ -165,21 +165,9 @@ onBeforeMount(() => {
     :border-radius="state.borderRadius"
   />
 </template>
-<style lang="less" scoped>
-.mt30 {
-  margin-top: 30px;
-}
-</style>
 ```
 
 :::
-
-<style lang="less" scoped>
-.mt30 {
-  margin-top: 30px;
-}
-</style>
-
 ## APIs
 
 ### Waterfall Props

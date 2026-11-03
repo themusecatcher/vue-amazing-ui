@@ -32,7 +32,19 @@ const moreTabList = [
   { key: '7', tab: 'Tab 7', content: 'Content of Tab Pane 7' },
   { key: '8', tab: 'Tab 8', content: 'Content of Tab Pane 8' }
 ]
-const activeKey = ref<TabsProps['activeKey']>('1')
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicActiveKey = ref<TabsProps['activeKey']>('1')
+const disabledActiveKey = ref<TabsProps['activeKey']>('1')
+const centeredActiveKey = ref<TabsProps['activeKey']>('1')
+const prefixActiveKey = ref<TabsProps['activeKey']>('1')
+const sizeActiveKey = ref<TabsProps['activeKey']>('1')
+const positionActiveKey = ref<TabsProps['activeKey']>('1')
+const cardActiveKey = ref<TabsProps['activeKey']>('1')
+const cardContainerActiveKey = ref<TabsProps['activeKey']>('1')
+const customStyleActiveKey = ref<TabsProps['activeKey']>('1')
+const justifyActiveKey = ref<TabsProps['activeKey']>('1')
+const classActiveKey = ref<TabsProps['activeKey']>('1')
+const configActiveKey = ref<TabsProps['activeKey']>('1')
 const iconActiveKey = ref<TabsProps['activeKey']>('1')
 const moreActiveKey = ref<TabsProps['activeKey']>('1')
 const contentActiveKey = ref<TabsProps['activeKey']>('1')
@@ -69,9 +81,6 @@ function closePane(key: string | number): void {
     editActiveKey.value = rest[Math.min(index, rest.length - 1)].key
   }
 }
-watchEffect(() => {
-  console.log('activeKey', activeKey.value)
-})
 watchEffect(() => {
   console.log('moreActiveKey', moreActiveKey.value)
 })
@@ -216,7 +225,7 @@ const cardTopContentStyle: CSSProperties = {
 
 ## 基本用法
 
-<Tabs v-model:active-key="activeKey" @change="onChange">
+<Tabs v-model:active-key="basicActiveKey" @change="onChange">
   <TabPane key="1" tab="Tab 1">Content of Tab Pane 1</TabPane>
   <TabPane key="2" tab="Tab 2">Content of Tab Pane 2</TabPane>
   <TabPane key="3" tab="Tab 3">Content of Tab Pane 3</TabPane>
@@ -247,12 +256,12 @@ function onChange(key: string | number) {
 ## 禁用
 
 <Flex vertical>
-  <Tabs v-model:active-key="activeKey">
+  <Tabs v-model:active-key="disabledActiveKey">
     <TabPane v-for="item in tabListDisabled" :key="item.key" :tab="item.tab" :disabled="item.disabled">{{
       item.content
     }}</TabPane>
   </Tabs>
-  <Tabs v-model:active-key="activeKey" type="card">
+  <Tabs v-model:active-key="disabledActiveKey" type="card">
     <TabPane v-for="item in tabListDisabled" :key="item.key" :tab="item.tab" :disabled="item.disabled">{{
       item.content
     }}</TabPane>
@@ -297,10 +306,10 @@ _通过 `justifyContent` 设为 center 让页签居中，line 与 card 类型均
 <br/>
 
 <Flex vertical>
-  <Tabs v-model:active-key="activeKey" justify-content="center">
+  <Tabs v-model:active-key="centeredActiveKey" justify-content="center">
     <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
   </Tabs>
-  <Tabs v-model:active-key="activeKey" justify-content="center" type="card">
+  <Tabs v-model:active-key="centeredActiveKey" justify-content="center" type="card">
     <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
   </Tabs>
 </Flex>
@@ -388,7 +397,7 @@ _页签超出可视区域时可滚轮滑动，滚出视口的页签收纳进末�
 
 <br/>
 
-<Flex gap="small" align="center" class="mb10">
+<Flex gap="small" align="center">
   tabPosition：<RadioGroup :options="positionOptions" v-model:value="morePosition" button button-style="solid" />
 </Flex>
 
@@ -438,7 +447,7 @@ const positionStyle = computed(() => {
 const moreActiveKey = ref<TabsProps['activeKey']>('1')
 </script>
 <template>
-  <Flex gap="small" align="center" class="mb10">
+  <Flex gap="small" align="center">
     tabPosition：<RadioGroup :options="positionOptions" v-model:value="morePosition" button button-style="solid" />
   </Flex>
   <Flex vertical>
@@ -457,10 +466,10 @@ const moreActiveKey = ref<TabsProps['activeKey']>('1')
 ## 附加内容
 
 <Flex vertical>
-  <Tabs v-model:active-key="activeKey" prefix="prefix" suffix="suffix">
+  <Tabs v-model:active-key="prefixActiveKey" prefix="prefix" suffix="suffix">
     <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
   </Tabs>
-  <Tabs v-model:active-key="activeKey" type="card">
+  <Tabs v-model:active-key="prefixActiveKey" type="card">
     <template #prefix>
       <Button type="primary">prefix</Button>
     </template>
@@ -506,15 +515,15 @@ const activeKey = ref<TabsProps['activeKey']>('1')
 
 ## 大小
 
-<Flex gap="small" align="center" class="mb10">
+<Flex gap="small" align="center">
   size：<RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
 </Flex>
 
 <Flex vertical>
-  <Tabs v-model:active-key="activeKey" :size="size">
+  <Tabs v-model:active-key="sizeActiveKey" :size="size">
     <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
   </Tabs>
-  <Tabs v-model:active-key="activeKey" :size="size" type="card">
+  <Tabs v-model:active-key="sizeActiveKey" :size="size" type="card">
     <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
   </Tabs>
 </Flex>
@@ -539,7 +548,7 @@ const size = ref<TabsProps['size']>('middle')
 const activeKey = ref<TabsProps['activeKey']>('1')
 </script>
 <template>
-  <Flex gap="small" align="center" class="mb10">
+  <Flex gap="small" align="center">
     size：<RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
   </Flex>
   <Flex vertical>
@@ -557,15 +566,15 @@ const activeKey = ref<TabsProps['activeKey']>('1')
 
 ## 位置
 
-<Flex gap="small" align="center" class="mb10">
+<Flex gap="small" align="center">
   tabPosition：<RadioGroup :options="positionOptions" v-model:value="position" button button-style="solid" />
 </Flex>
 
 <Flex vertical>
-  <Tabs v-model:active-key="activeKey" :tab-position="position">
+  <Tabs v-model:active-key="positionActiveKey" :tab-position="position">
     <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
   </Tabs>
-  <Tabs v-model:active-key="activeKey" :tab-position="position" type="card">
+  <Tabs v-model:active-key="positionActiveKey" :tab-position="position" type="card">
     <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
   </Tabs>
 </Flex>
@@ -591,7 +600,7 @@ const position = ref<NonNullable<TabsProps['tabPosition']>>('top')
 const activeKey = ref<TabsProps['activeKey']>('1')
 </script>
 <template>
-  <Flex gap="small" align="center" class="mb10">
+  <Flex gap="small" align="center">
     tabPosition：<RadioGroup :options="positionOptions" v-model:value="position" button button-style="solid" />
   </Flex>
   <Flex vertical>
@@ -609,7 +618,7 @@ const activeKey = ref<TabsProps['activeKey']>('1')
 
 ## 卡片式页签
 
-<Tabs v-model:active-key="activeKey" type="card" @change="onChange">
+<Tabs v-model:active-key="cardActiveKey" type="card" @change="onChange">
   <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
 </Tabs>
 
@@ -730,7 +739,7 @@ _用于容器顶部时，可通过 `contentStyle` 覆盖面板底色与内边距
 
 <br/>
 
-<Tabs v-model:active-key="activeKey" type="card" :content-style="cardTopContentStyle">
+<Tabs v-model:active-key="cardContainerActiveKey" type="card" :content-style="cardTopContentStyle">
   <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">
     <p>{{ item.content }}</p>
     <p>{{ item.content }}</p>
@@ -925,7 +934,7 @@ _`addable` 传对象可把新增按钮渲染为禁用态，无权限时保留入
 
 <br/>
 
-<Flex gap="small" align="center" class="mb10"> 禁用新增：<Switch v-model:value="addDisabledDemo" /> </Flex>
+<Flex gap="small" align="center"> 禁用新增：<Switch v-model:value="addDisabledDemo" /> </Flex>
 
 <Tabs v-model:active-key="editActiveKey" type="card" :addable="addableDemo" @add="addPane" @close="closePane">
   <TabPane
@@ -1091,7 +1100,7 @@ const barActiveKey = ref<TabsProps['activeKey']>('1')
 
 <Flex vertical>
   <Tabs
-    v-model:active-key="activeKey"
+    v-model:active-key="customStyleActiveKey"
     :tab-gutter="24"
     :tab-style="customTabStyle"
     :content-style="customContentStyle"
@@ -1099,7 +1108,7 @@ const barActiveKey = ref<TabsProps['activeKey']>('1')
     <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
   </Tabs>
   <Tabs
-    v-model:active-key="activeKey"
+    v-model:active-key="customStyleActiveKey"
     type="card"
     size="large"
     :tab-gutter="12"
@@ -1175,15 +1184,15 @@ _使用 `TabPane` 的默认插槽自定义该页签的内容，可放任意组�
 
 <Tabs v-model:active-key="contentActiveKey">
   <TabPane key="1" tab="Tab 1">
-    <p class="mb10">key: 1 的插槽内容（可放任意组件）</p>
+    <p>key: 1 的插槽内容（可放任意组件）</p>
     <Button type="primary" size="small">操作按钮</Button>
   </TabPane>
   <TabPane key="2" tab="Tab 2">
-    <p class="mb10">key: 2 的插槽内容（可放任意组件）</p>
+    <p>key: 2 的插槽内容（可放任意组件）</p>
     <Button type="primary" size="small">操作按钮</Button>
   </TabPane>
   <TabPane key="3" tab="Tab 3">
-    <p class="mb10">key: 3 的插槽内容（可放任意组件）</p>
+    <p>key: 3 的插槽内容（可放任意组件）</p>
     <Button type="primary" size="small">操作按钮</Button>
   </TabPane>
 </Tabs>
@@ -1199,15 +1208,15 @@ const contentActiveKey = ref<TabsProps['activeKey']>('1')
 <template>
   <Tabs v-model:active-key="contentActiveKey">
     <TabPane key="1" tab="Tab 1">
-      <p class="mb10">key: 1 的插槽内容（可放任意组件）</p>
+      <p>key: 1 的插槽内容（可放任意组件）</p>
       <Button type="primary" size="small">操作按钮</Button>
     </TabPane>
     <TabPane key="2" tab="Tab 2">
-      <p class="mb10">key: 2 的插槽内容（可放任意组件）</p>
+      <p>key: 2 的插槽内容（可放任意组件）</p>
       <Button type="primary" size="small">操作按钮</Button>
     </TabPane>
     <TabPane key="3" tab="Tab 3">
-      <p class="mb10">key: 3 的插槽内容（可放任意组件）</p>
+      <p>key: 3 的插槽内容（可放任意组件）</p>
       <Button type="primary" size="small">操作按钮</Button>
     </TabPane>
   </Tabs>
@@ -1222,7 +1231,7 @@ _开启 `animated` 后面板随页签横向滑动切换，仅在 `tabPosition` �
 
 <br/>
 
-<Flex gap="small" align="center" class="mb10">
+<Flex gap="small" align="center">
   animated：<Switch v-model:value="animEnabled" />
 </Flex>
 
@@ -1246,7 +1255,7 @@ const animActiveKey = ref<TabsProps['activeKey']>('1')
 const animEnabled = ref(true)
 </script>
 <template>
-  <Flex gap="small" align="center" class="mb10">
+  <Flex gap="small" align="center">
     animated：<Switch v-model:value="animEnabled" />
   </Flex>
   <Tabs v-model:active-key="animActiveKey" :animated="animEnabled">
@@ -1263,7 +1272,7 @@ _开启 `destroyInactiveTabPane` 后非激活面板的内容会被卸载，切�
 
 <br/>
 
-<Flex gap="small" align="center" class="mb10">
+<Flex gap="small" align="center">
   destroyInactiveTabPane：<Switch v-model:value="destroyEnabled" />
 </Flex>
 
@@ -1288,7 +1297,7 @@ const destroyActiveKey = ref<TabsProps['activeKey']>('1')
 const destroyEnabled = ref(true)
 </script>
 <template>
-  <Flex gap="small" align="center" class="mb10">
+  <Flex gap="small" align="center">
     destroyInactiveTabPane：<Switch v-model:value="destroyEnabled" />
   </Flex>
   <Tabs v-model:active-key="destroyActiveKey" :destroy-inactive-tab-pane="destroyEnabled">
@@ -1310,19 +1319,19 @@ _`TabPane` 的 `displayDirective` 控制非激活面板：`if` 立即卸载、`s
 <Flex vertical>
   <Tabs v-model:active-key="renderActiveKey">
     <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab" display-directive="if">
-      <p class="mb10">if：切走后内容卸载，输入不保留</p>
+      <p>if：切走后内容卸载，输入不保留</p>
       <Input placeholder="输入后切换页签，观察内容" />
     </TabPane>
   </Tabs>
   <Tabs v-model:active-key="renderActiveKey">
     <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab" display-directive="show">
-      <p class="mb10">show：内容常驻，输入保留</p>
+      <p>show：内容常驻，输入保留</p>
       <Input placeholder="输入后切换页签，观察内容" />
     </TabPane>
   </Tabs>
   <Tabs v-model:active-key="renderActiveKey">
     <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab" display-directive="show:lazy">
-      <p class="mb10">show:lazy：首次激活后才渲染，之后保留</p>
+      <p>show:lazy：首次激活后才渲染，之后保留</p>
       <Input placeholder="输入后切换页签，观察内容" />
     </TabPane>
   </Tabs>
@@ -1458,11 +1467,11 @@ _通过 `justifyContent` 控制页签在导航区的分布，仅在 `type` 为 l
 
 <br/>
 
-<Flex gap="small" align="center" class="mb10">
+<Flex gap="small" align="center">
   justifyContent：<RadioGroup :options="justifyOptions" v-model:value="justifyValue" button button-style="solid" />
 </Flex>
 
-<Tabs v-model:active-key="activeKey" :justify-content="justifyValue">
+<Tabs v-model:active-key="justifyActiveKey" :justify-content="justifyValue">
   <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
 </Tabs>
 
@@ -1489,7 +1498,7 @@ const justifyOptions = [
 ]
 </script>
 <template>
-  <Flex gap="small" align="center" class="mb10">
+  <Flex gap="small" align="center">
     justifyContent：<RadioGroup :options="justifyOptions" v-model:value="justifyValue" button button-style="solid" />
   </Flex>
   <Tabs v-model:active-key="activeKey" :justify-content="justifyValue">
@@ -1506,7 +1515,7 @@ _通过 `beforeLeave` 拦截切换：返回 `false` 或 Promise reject 时取消
 
 <br/>
 
-<Flex gap="small" align="center" class="mb10"> 拦截切换：<Switch v-model:value="guardEnabled" /> </Flex>
+<Flex gap="small" align="center"> 拦截切换：<Switch v-model:value="guardEnabled" /> </Flex>
 
 <Tabs v-model:active-key="guardActiveKey" :before-leave="onBeforeLeave">
   <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
@@ -1554,7 +1563,7 @@ _通过 `tabClass` / `contentClass` 给页签与面板挂类名，便于用外�
 
 <br/>
 
-<Tabs v-model:active-key="activeKey" tab-class="demo-tab" content-class="demo-content">
+<Tabs v-model:active-key="classActiveKey" tab-class="demo-tab" content-class="demo-content">
   <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
 </Tabs>
 
@@ -1605,7 +1614,7 @@ _开启 `centerActiveTab` 后切换页签会把激活项滚到导航区中间，
 
 <br/>
 
-<Flex gap="small" align="center" class="mb10"> 居中：<Switch v-model:value="centerEnabled" /> </Flex>
+<Flex gap="small" align="center"> 居中：<Switch v-model:value="centerEnabled" /> </Flex>
 
 <Tabs v-model:active-key="centerActiveKey" style="width: 360px" :center-active-tab="centerEnabled">
   <TabPane v-for="item in moreTabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
@@ -1697,7 +1706,7 @@ _组合调整下方配置项可实时预览属性效果，`justifyContent` 的 `
       </Space>
     </Col>
   </Row>
-  <Tabs v-model:active-key="activeKey" v-bind="state">
+  <Tabs v-model:active-key="configActiveKey" v-bind="state">
     <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
   </Tabs>
 </Flex>

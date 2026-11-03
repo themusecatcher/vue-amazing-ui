@@ -1,7 +1,17 @@
 <script setup lang="ts">
-import { ref, watchEffect, reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { ThunderboltFilled, LikeFilled, FireFilled } from '@ant-design/icons-vue'
-const value = ref(3)
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicValue = ref(3)
+const tooltipValue = ref(3)
+const disabledValue = ref(3)
+const characterValue = ref(3)
+const halfValue = ref(3)
+const customCharacterValue = ref(3)
+const colorValue = ref(3)
+const gapValue = ref(3)
+const countValue = ref(3)
+const configValue = ref(3)
 const tooltipsChinese = ['极差', '失望', '一般', '满意', '惊喜']
 const tooltipsEnglish = ['terrible', 'bad', 'normal', 'good', 'wonderful']
 const characterOptions = [
@@ -37,9 +47,6 @@ const state = reactive({
   gap: 8,
   disabled: false
 })
-watchEffect(() => {
-  console.log('value', value.value)
-})
 function onChange(value: number) {
   console.log('change', value)
 }
@@ -51,18 +58,18 @@ function onHoverChange(value: number) {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Rate v-model:value="value" @change="onChange" @hoverChange="onHoverChange" />
+    <Rate v-model:value="basicValue" @change="onChange" @hoverChange="onHoverChange" />
     <h2 class="mt30 mb10">文案提示</h2>
     <Space vertical>
       <Space align="center">
-        <Rate v-model:value="value" :tooltips="tooltipsChinese" />
+        <Rate v-model:value="tooltipValue" :tooltips="tooltipsChinese" />
         <Tag color="blue" :bordered="false">
-          {{ tooltipsChinese[value - 1] }}
+          {{ tooltipsChinese[tooltipValue - 1] }}
         </Tag>
       </Space>
       <Space align="center">
         <Rate
-          v-model:value="value"
+          v-model:value="tooltipValue"
           :tooltips="tooltipsEnglish"
           :tooltip-props="{
             bgColor: '#fff',
@@ -73,25 +80,25 @@ function onHoverChange(value: number) {
           }"
         />
         <Tag color="red" :bordered="false">
-          {{ tooltipsEnglish[value - 1] }}
+          {{ tooltipsEnglish[tooltipValue - 1] }}
         </Tag>
       </Space>
     </Space>
     <h2 class="mt30 mb10">禁用</h2>
-    <Rate v-model:value="value" disabled />
+    <Rate v-model:value="disabledValue" disabled />
     <h2 class="mt30 mb10">预置图标</h2>
     <Space vertical>
-      <Rate v-model:value="value" character="star-outlined" :size="24" />
-      <Rate v-model:value="value" character="heart-filled" :size="24" />
-      <Rate v-model:value="value" character="heart-outlined" :size="24" />
+      <Rate v-model:value="characterValue" character="star-outlined" :size="24" />
+      <Rate v-model:value="characterValue" character="heart-filled" :size="24" />
+      <Rate v-model:value="characterValue" character="heart-outlined" :size="24" />
     </Space>
     <h2 class="mt30 mb10">半星</h2>
-    <Rate v-model:value="value" :size="24" allow-half />
+    <Rate v-model:value="halfValue" :size="24" allow-half />
     <h2 class="mt30 mb10">自定义字符</h2>
     <Space vertical>
-      <Rate v-model:value="value" character="好" :size="32" allow-half />
-      <Rate v-model:value="value" character="A" :size="48" allow-half />
-      <Rate v-model:value="value" :size="32" allow-half>
+      <Rate v-model:value="customCharacterValue" character="好" :size="32" allow-half />
+      <Rate v-model:value="customCharacterValue" character="A" :size="48" allow-half />
+      <Rate v-model:value="customCharacterValue" :size="32" allow-half>
         <template #character>
           <ThunderboltFilled />
         </template>
@@ -99,22 +106,22 @@ function onHoverChange(value: number) {
     </Space>
     <h2 class="mt30 mb10">自定义颜色</h2>
     <Space vertical>
-      <Rate v-model:value="value" color="#1677FF" :size="32" allow-half />
-      <Rate v-model:value="value" color="#ff6900" :size="32" allow-half>
+      <Rate v-model:value="colorValue" color="#1677FF" :size="32" allow-half />
+      <Rate v-model:value="colorValue" color="#ff6900" :size="32" allow-half>
         <template #character>
           <LikeFilled />
         </template>
       </Rate>
-      <Rate v-model:value="value" color="#d4380d" :size="32" allow-half>
+      <Rate v-model:value="colorValue" color="#d4380d" :size="32" allow-half>
         <template #character>
           <FireFilled />
         </template>
       </Rate>
     </Space>
     <h2 class="mt30 mb10">自定义间距</h2>
-    <Rate v-model:value="value" :size="32" :gap="16" />
+    <Rate v-model:value="gapValue" :size="32" :gap="16" />
     <h2 class="mt30 mb10">自定义 star 总数</h2>
-    <Rate v-model:value="value" :size="32" :count="10" />
+    <Rate v-model:value="countValue" :size="32" :count="10" />
     <h2 class="mt30 mb10">评分配置器</h2>
     <Row :gutter="[24, 12]">
       <Col :span="6">
@@ -149,11 +156,11 @@ function onHoverChange(value: number) {
         </Flex>
       </Col>
     </Row>
-    <Badge :value="value" style="margin-top: 30px">
+    <Badge :value="configValue" style="margin-top: 30px">
       <Rate
         v-bind="state"
         :character="state.character === 'custom-character' ? state.customCharacter : state.character"
-        v-model:value="value"
+        v-model:value="configValue"
       />
     </Badge>
   </div>

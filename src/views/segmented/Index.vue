@@ -18,7 +18,11 @@ const optionsDisabled = reactive<(string | SegmentedOption)[]>([
   { label: 'Quarterly', value: 'Quarterly', disabled: true },
   'Yearly'
 ])
-const value = ref<SegmentedProps['value']>(options[0])
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicValue = ref<SegmentedProps['value']>(options[0])
+const disabledValue = ref<SegmentedProps['value']>(options[0])
+const blockValue = ref<SegmentedProps['value']>(options[0])
+const sizeValue = ref<SegmentedProps['value']>(options[0])
 const value2 = ref<SegmentedProps['value']>('Daily')
 const onChange = (value: string | number) => {
   console.log('change', value)
@@ -98,10 +102,10 @@ const customValue2 = ref<SegmentedProps['value']>(customOptions2[0].value)
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Segmented v-model:value="value" :options="options" @change="onChange" />
+    <Segmented v-model:value="basicValue" :options="options" @change="onChange" />
     <h2 class="mt30 mb10">禁用</h2>
     <Space vertical>
-      <Segmented v-model:value="value" disabled :options="options" />
+      <Segmented v-model:value="disabledValue" disabled :options="options" />
       <Segmented v-model:value="value2" :options="optionsDisabled" />
     </Space>
     <h2 class="mt30 mb10">动态加载数据</h2>
@@ -111,7 +115,7 @@ const customValue2 = ref<SegmentedProps['value']>(customOptions2[0].value)
     </Space>
     <h2 class="mt30 mb10">block 分段控制器</h2>
     <Space :width="600">
-      <Segmented v-model:value="value" block :options="blockOptions" />
+      <Segmented v-model:value="blockValue" block :options="blockOptions" />
     </Space>
     <h2 class="mt30 mb10">自定义渲染</h2>
     <Space vertical>
@@ -146,9 +150,9 @@ const customValue2 = ref<SegmentedProps['value']>(customOptions2[0].value)
     </Space>
     <h2 class="mt30 mb10">三种大小</h2>
     <Space vertical>
-      <Segmented v-model:value="value" :options="options" size="large" />
-      <Segmented v-model:value="value" :options="options" />
-      <Segmented v-model:value="value" :options="options" size="small" />
+      <Segmented v-model:value="sizeValue" :options="options" size="large" />
+      <Segmented v-model:value="sizeValue" :options="options" />
+      <Segmented v-model:value="sizeValue" :options="options" size="small" />
     </Space>
   </div>
 </template>

@@ -28,7 +28,19 @@ const moreTabList = [
   { key: '7', tab: 'Tab 7', content: 'Content of Tab Pane 7' },
   { key: '8', tab: 'Tab 8', content: 'Content of Tab Pane 8' }
 ]
-const activeKey = ref<TabsProps['activeKey']>('1')
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicActiveKey = ref<TabsProps['activeKey']>('1')
+const disabledActiveKey = ref<TabsProps['activeKey']>('1')
+const centeredActiveKey = ref<TabsProps['activeKey']>('1')
+const prefixActiveKey = ref<TabsProps['activeKey']>('1')
+const sizeActiveKey = ref<TabsProps['activeKey']>('1')
+const positionActiveKey = ref<TabsProps['activeKey']>('1')
+const cardActiveKey = ref<TabsProps['activeKey']>('1')
+const cardContainerActiveKey = ref<TabsProps['activeKey']>('1')
+const customStyleActiveKey = ref<TabsProps['activeKey']>('1')
+const justifyActiveKey = ref<TabsProps['activeKey']>('1')
+const classActiveKey = ref<TabsProps['activeKey']>('1')
+const configActiveKey = ref<TabsProps['activeKey']>('1')
 const iconActiveKey = ref<TabsProps['activeKey']>('1')
 const moreActiveKey = ref<TabsProps['activeKey']>('1')
 const contentActiveKey = ref<TabsProps['activeKey']>('1')
@@ -207,19 +219,19 @@ const cardTopContentStyle: CSSProperties = {
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本用法</h2>
-    <Tabs v-model:active-key="activeKey" @change="onChange">
+    <Tabs v-model:active-key="basicActiveKey" @change="onChange">
       <TabPane key="1" tab="Tab 1">Content of Tab Pane 1</TabPane>
       <TabPane key="2" tab="Tab 2">Content of Tab Pane 2</TabPane>
       <TabPane key="3" tab="Tab 3">Content of Tab Pane 3</TabPane>
     </Tabs>
     <h2 class="mt30 mb10">禁用</h2>
     <Flex vertical>
-      <Tabs v-model:active-key="activeKey">
+      <Tabs v-model:active-key="disabledActiveKey">
         <TabPane v-for="item in tabListDisabled" :key="item.key" :tab="item.tab" :disabled="item.disabled">{{
           item.content
         }}</TabPane>
       </Tabs>
-      <Tabs v-model:active-key="activeKey" type="card">
+      <Tabs v-model:active-key="disabledActiveKey" type="card">
         <TabPane v-for="item in tabListDisabled" :key="item.key" :tab="item.tab" :disabled="item.disabled">{{
           item.content
         }}</TabPane>
@@ -228,10 +240,10 @@ const cardTopContentStyle: CSSProperties = {
     <h2 class="mt30 mb10">居中</h2>
     <p class="mb10">通过 <code>justifyContent</code> 设为 center 让页签居中，line 与 card 类型均支持</p>
     <Flex vertical>
-      <Tabs v-model:active-key="activeKey" justify-content="center">
+      <Tabs v-model:active-key="centeredActiveKey" justify-content="center">
         <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
       </Tabs>
-      <Tabs v-model:active-key="activeKey" justify-content="center" type="card">
+      <Tabs v-model:active-key="centeredActiveKey" justify-content="center" type="card">
         <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
       </Tabs>
     </Flex>
@@ -266,10 +278,10 @@ const cardTopContentStyle: CSSProperties = {
     </Flex>
     <h2 class="mt30 mb10">附加内容</h2>
     <Flex vertical>
-      <Tabs v-model:active-key="activeKey" prefix="prefix" suffix="suffix">
+      <Tabs v-model:active-key="prefixActiveKey" prefix="prefix" suffix="suffix">
         <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
       </Tabs>
-      <Tabs v-model:active-key="activeKey" type="card">
+      <Tabs v-model:active-key="prefixActiveKey" type="card">
         <template #prefix>
           <Button type="primary">prefix</Button>
         </template>
@@ -284,10 +296,10 @@ const cardTopContentStyle: CSSProperties = {
       size：<RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
     </Flex>
     <Flex vertical>
-      <Tabs v-model:active-key="activeKey" :size="size">
+      <Tabs v-model:active-key="sizeActiveKey" :size="size">
         <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
       </Tabs>
-      <Tabs v-model:active-key="activeKey" :size="size" type="card">
+      <Tabs v-model:active-key="sizeActiveKey" :size="size" type="card">
         <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
       </Tabs>
     </Flex>
@@ -296,15 +308,15 @@ const cardTopContentStyle: CSSProperties = {
       tabPosition：<RadioGroup :options="positionOptions" v-model:value="position" button button-style="solid" />
     </Flex>
     <Flex vertical>
-      <Tabs v-model:active-key="activeKey" :tab-position="position">
+      <Tabs v-model:active-key="positionActiveKey" :tab-position="position">
         <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
       </Tabs>
-      <Tabs v-model:active-key="activeKey" :tab-position="position" type="card">
+      <Tabs v-model:active-key="positionActiveKey" :tab-position="position" type="card">
         <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
       </Tabs>
     </Flex>
     <h2 class="mt30 mb10">卡片式页签</h2>
-    <Tabs v-model:active-key="activeKey" type="card" @change="onChange">
+    <Tabs v-model:active-key="cardActiveKey" type="card" @change="onChange">
       <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
     </Tabs>
     <h2 class="mt30 mb10">新增和关闭页签</h2>
@@ -326,7 +338,7 @@ const cardTopContentStyle: CSSProperties = {
     </Flex>
     <h2 class="mt30 mb10">卡片式页签容器</h2>
     <p class="mb10">用于容器顶部时，可通过 <code>contentStyle</code> 覆盖面板底色与内边距</p>
-    <Tabs v-model:active-key="activeKey" type="card" :content-style="cardTopContentStyle">
+    <Tabs v-model:active-key="cardContainerActiveKey" type="card" :content-style="cardTopContentStyle">
       <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">
         <p>{{ item.content }}</p>
         <p>{{ item.content }}</p>
@@ -383,7 +395,7 @@ const cardTopContentStyle: CSSProperties = {
     <h2 class="mt30 mb10">自定义 Tab & Content 样式</h2>
     <Flex vertical>
       <Tabs
-        v-model:active-key="activeKey"
+        v-model:active-key="customStyleActiveKey"
         :tab-gutter="24"
         :tab-style="customTabStyle"
         :content-style="customContentStyle"
@@ -391,7 +403,7 @@ const cardTopContentStyle: CSSProperties = {
         <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
       </Tabs>
       <Tabs
-        v-model:active-key="activeKey"
+        v-model:active-key="customStyleActiveKey"
         type="card"
         size="large"
         :tab-gutter="12"
@@ -490,7 +502,7 @@ const cardTopContentStyle: CSSProperties = {
     <Flex gap="small" align="center" class="mb10">
       justifyContent：<RadioGroup :options="justifyOptions" v-model:value="justifyValue" button button-style="solid" />
     </Flex>
-    <Tabs v-model:active-key="activeKey" :justify-content="justifyValue">
+    <Tabs v-model:active-key="justifyActiveKey" :justify-content="justifyValue">
       <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
     </Tabs>
     <h2 class="mt30 mb10">切换拦截</h2>
@@ -504,7 +516,7 @@ const cardTopContentStyle: CSSProperties = {
     <p class="mt10">最近操作：{{ guardTip || '暂无' }}</p>
     <h2 class="mt30 mb10">自定义类名</h2>
     <p class="mb10"> 通过 <code>tabClass</code> / <code>contentClass</code> 给页签与面板挂类名，便于用外部样式定制 </p>
-    <Tabs v-model:active-key="activeKey" tab-class="demo-tab" content-class="demo-content">
+    <Tabs v-model:active-key="classActiveKey" tab-class="demo-tab" content-class="demo-content">
       <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
     </Tabs>
     <h2 class="mt30 mb10">激活项居中</h2>
@@ -572,7 +584,7 @@ const cardTopContentStyle: CSSProperties = {
           </Space>
         </Col>
       </Row>
-      <Tabs v-model:active-key="activeKey" v-bind="state">
+      <Tabs v-model:active-key="configActiveKey" v-bind="state">
         <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
       </Tabs>
     </Flex>

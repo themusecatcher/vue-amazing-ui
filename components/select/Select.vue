@@ -1914,7 +1914,11 @@ defineExpose({
   color: var(--va-text-color-1);
   outline: none;
   cursor: pointer;
-  transition: all 0.3s;
+  transition:
+    width 0.3s,
+    height 0.2s,
+    min-height 0.2s,
+    font-size 0.2s;
   &:not(.select-disabled):hover {
     .select-content-container {
       border-color: var(--va-cp-select-primary-color-hover, var(--va-primary-color-hover));
@@ -1974,11 +1978,16 @@ defineExpose({
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      transition: color 0.3s;
+      transition:
+        color 0.3s,
+        line-height 0.2s,
+        padding-right 0.2s;
     }
     .select-placeholder {
       color: var(--va-text-color-disabled);
-      transition: none;
+      transition:
+        line-height 0.2s,
+        padding-right 0.2s;
       pointer-events: none;
     }
     .select-item-hidden {

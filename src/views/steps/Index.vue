@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watchEffect, reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import type { StepsProps, StepsItem } from 'vue-amazing-ui'
 const stepsItems = ref<StepsItem[]>([
   {
@@ -40,10 +40,14 @@ const minStepsItems = ref<StepsItem[]>([
     title: 'Step 5'
   }
 ])
-const current = ref(3)
-watchEffect(() => {
-  console.log('current', current.value)
-})
+// 各分节独立绑定，操作任一用例不会联动其余用例
+const basicCurrent = ref(3)
+const placementCurrent = ref(3)
+const miniCurrent = ref(3)
+const verticalCurrent = ref(3)
+const dotCurrent = ref(3)
+const clickableCurrent = ref(3)
+const configCurrent = ref(3)
 const sizeOptions = [
   {
     label: 'default',
@@ -71,13 +75,13 @@ function onChange(index: number) {
   console.log('change', index)
 }
 function onPrev() {
-  if (current.value > 1) {
-    current.value--
+  if (clickableCurrent.value > 1) {
+    clickableCurrent.value--
   }
 }
 function onNext() {
-  if (stepsItems.value.length >= current.value) {
-    current.value++
+  if (stepsItems.value.length >= clickableCurrent.value) {
+    clickableCurrent.value++
   }
 }
 const state = reactive<StepsProps>({
@@ -92,26 +96,26 @@ const state = reactive<StepsProps>({
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
-    <Steps :items="stepsItems" :current="current" @change="onChange" />
+    <Steps :items="stepsItems" :current="basicCurrent" @change="onChange" />
     <h2 class="mt30 mb10">标签放置位置</h2>
     <Flex vertical>
       <RadioGroup :options="placeOptions" v-model:value="place" button button-style="solid" />
-      <Steps :items="stepsItems" :label-placement="place" :current="current" />
+      <Steps :items="stepsItems" :label-placement="place" :current="placementCurrent" />
     </Flex>
     <h2 class="mt30 mb10">迷你版</h2>
     <Flex vertical>
       <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
-      <Steps :items="minStepsItems" :size="size" :current="current" />
+      <Steps :items="minStepsItems" :size="size" :current="miniCurrent" />
     </Flex>
     <h2 class="mt30 mb10">垂直步骤条</h2>
     <Space :gap="120">
-      <Steps :items="stepsItems" vertical :current="current" />
-      <Steps :items="stepsItems" vertical size="small" :current="current" />
+      <Steps :items="stepsItems" vertical :current="verticalCurrent" />
+      <Steps :items="stepsItems" vertical size="small" :current="verticalCurrent" />
     </Space>
     <h2 class="mt30 mb10">点状步骤条</h2>
     <Space vertical>
-      <Steps :items="stepsItems" dotted v-model:current="current" />
-      <Steps :items="stepsItems" vertical dotted v-model:current="current" />
+      <Steps :items="stepsItems" dotted v-model:current="dotCurrent" />
+      <Steps :items="stepsItems" vertical dotted v-model:current="dotCurrent" />
     </Space>
     <h2 class="mt30 mb10">可点击</h2>
     <p class="mb10">设置 <code>v-model:current</code> 后即可点击</p>
@@ -120,8 +124,8 @@ const state = reactive<StepsProps>({
         <Button @click="onPrev">Prev</Button>
         <Button @click="onNext">Next</Button>
       </Space>
-      <Steps :items="stepsItems" v-model:current="current" />
-      <Steps :items="stepsItems" vertical v-model:current="current" />
+      <Steps :items="stepsItems" v-model:current="clickableCurrent" />
+      <Steps :items="stepsItems" vertical v-model:current="clickableCurrent" />
     </Flex>
     <h2 class="mt30 mb10">步骤条配置器</h2>
     <Row :gutter="24">
@@ -157,7 +161,7 @@ const state = reactive<StepsProps>({
       :vertical="state.vertical"
       :label-placement="state.labelPlacement"
       :dotted="state.dotted"
-      v-model:current="current"
+      v-model:current="configCurrent"
     />
   </div>
 </template>

@@ -117,9 +117,9 @@ _点击 `TimePicker` 后可在浮层中选择或输入某一时间_
 <br/>
 
 <Space vertical>
-  <p class="mb10"><code>v-model:value</code>：绑定毫秒时间戳</p>
+  <p><code>v-model:value</code>：绑定毫秒时间戳</p>
   <TimePicker v-model:value="basicValue" placeholder="请选择时间" />
-  <p class="mb10"><code>v-model:formatted-value</code>：绑定字符串，格式由 <code>value-format</code> 决定</p>
+  <p><code>v-model:formatted-value</code>：绑定字符串，格式由 <code>value-format</code> 决定</p>
   <TimePicker v-model:formatted-value="basicFixedTextValue" value-format="HH:mm:ss" placeholder="请选择时间" />
 </Space>
 
@@ -138,9 +138,9 @@ const basicFixedTextValue = ref<string | null>('09:00:00')
 </script>
 <template>
   <Space vertical>
-    <p class="mb10"><code>v-model:value</code>：绑定毫秒时间戳</p>
+    <p><code>v-model:value</code>：绑定毫秒时间戳</p>
     <TimePicker v-model:value="basicValue" placeholder="请选择时间" />
-    <p class="mb10"><code>v-model:formatted-value</code>：绑定字符串，格式由 <code>value-format</code> 决定</p>
+    <p><code>v-model:formatted-value</code>：绑定字符串，格式由 <code>value-format</code> 决定</p>
     <TimePicker v-model:formatted-value="basicFixedTextValue" value-format="HH:mm:ss" placeholder="请选择时间" />
   </Space>
 </template>
@@ -155,7 +155,7 @@ _在 `TimePicker` 选择框底部显示自定义的内容_
 <br/>
 
 <Space vertical>
-  <p class="mb10">绑定 <code>v-model:open</code> 并接收 <code>openChange</code></p>
+  <p>绑定 <code>v-model:open</code> 并接收 <code>openChange</code></p>
   <TimePicker
     v-model:value="addonValue"
     v-model:open="addonOpen"
@@ -166,7 +166,7 @@ _在 `TimePicker` 选择框底部显示自定义的内容_
       <Button size="small" type="primary" @click="closeAddonPanel">OK</Button>
     </template>
   </TimePicker>
-  <p class="mb10">只绑定 <code>v-model:open</code>（不接收 <code>openChange</code>）</p>
+  <p>只绑定 <code>v-model:open</code>（不接收 <code>openChange</code>）</p>
   <TimePicker v-model:value="addonValue2" v-model:open="addonOpen2" placeholder="请选择时间">
     <template #renderExtraFooter>
       <Button size="small" type="primary" @click="closeAddonPanel">OK</Button>
@@ -193,13 +193,13 @@ function onOpenChange(openState: boolean) {
 </script>
 <template>
   <Space vertical>
-    <p class="mb10">绑定 <code>v-model:open</code> 并接收 <code>openChange</code></p>
+    <p>绑定 <code>v-model:open</code> 并接收 <code>openChange</code></p>
     <TimePicker v-model:value="value" v-model:open="open" placeholder="请选择时间" @open-change="onOpenChange">
       <template #renderExtraFooter>
         <Button size="small" type="primary" @click="closePanel">OK</Button>
       </template>
     </TimePicker>
-    <p class="mb10">只绑定 <code>v-model:open</code>（不接收 <code>openChange</code>）</p>
+    <p>只绑定 <code>v-model:open</code>（不接收 <code>openChange</code>）</p>
     <TimePicker v-model:value="value2" v-model:open="open2" placeholder="请选择时间">
       <template #renderExtraFooter>
         <Button size="small" type="primary" @click="closePanel">OK</Button>
@@ -220,11 +220,11 @@ _`use12Hours` 启用 `12` 小时制，默认的 `format` 为 `hh:mm:ss a`_
 <br/>
 
 <Space vertical>
-  <p class="mb10">默认 <code>format</code>（<code>hh:mm:ss a</code>）：小时补零</p>
+  <p>默认 <code>format</code>（<code>hh:mm:ss a</code>）：小时补零</p>
   <TimePicker v-model:value="h12Value" use12-hours placeholder="请选择时间" />
-  <p class="mb10">显式 <code>format="h:mm:ss a"</code>：小时不补零</p>
+  <p>显式 <code>format="h:mm:ss a"</code>：小时不补零</p>
   <TimePicker v-model:value="h12FormatValue" use12-hours format="h:mm:ss a" placeholder="请选择时间" />
-  <p class="mb10">显式 <code>format="h:mm a"</code>：只到分（面板只有时 / 分两列）</p>
+  <p>显式 <code>format="h:mm a"</code>：只到分（面板只有时 / 分两列）</p>
   <TimePicker v-model:value="h12ShortValue" use12-hours format="h:mm a" placeholder="请选择时间" />
 </Space>
 
@@ -239,11 +239,11 @@ const h12ShortValue = ref<number | null>(null)
 </script>
 <template>
   <Space vertical>
-    <p class="mb10">默认 <code>format</code>（<code>hh:mm:ss a</code>）：小时补零</p>
+    <p>默认 <code>format</code>（<code>hh:mm:ss a</code>）：小时补零</p>
     <TimePicker v-model:value="h12Value" use12-hours placeholder="请选择时间" />
-    <p class="mb10">显式 <code>format="h:mm:ss a"</code>：小时不补零</p>
+    <p>显式 <code>format="h:mm:ss a"</code>：小时不补零</p>
     <TimePicker v-model:value="h12FormatValue" use12-hours format="h:mm:ss a" placeholder="请选择时间" />
-    <p class="mb10">显式 <code>format="h:mm a"</code>：只到分（面板只有时 / 分两列）</p>
+    <p>显式 <code>format="h:mm a"</code>：只到分（面板只有时 / 分两列）</p>
     <TimePicker v-model:value="h12ShortValue" use12-hours format="h:mm a" placeholder="请选择时间" />
   </Space>
 </template>
@@ -396,11 +396,11 @@ _`value` 和 `@change` 需要配合使用，也可以直接使用 `v-model`_
 <br/>
 
 <Space vertical>
-  <p class="mb10">使用 <code>value</code> 和 <code>@change</code></p>
+  <p>使用 <code>value</code> 和 <code>@change</code></p>
   <TimePicker :value="controlledValue" placeholder="请选择时间" @change="onControlledChange" />
-  <p class="mb10">使用 <code>v-model</code></p>
+  <p>使用 <code>v-model</code></p>
   <TimePicker v-model:value="controlledValue" placeholder="请选择时间" />
-  <p class="mb10">只传 <code>value</code> 不回写（不响应变更）</p>
+  <p>只传 <code>value</code> 不回写（不响应变更）</p>
   <TimePicker :value="fixedValue" placeholder="请选择时间" />
 </Space>
 
@@ -421,11 +421,11 @@ function onControlledChange(
 </script>
 <template>
   <Space vertical>
-    <p class="mb10">使用 <code>value</code> 和 <code>@change</code></p>
+    <p>使用 <code>value</code> 和 <code>@change</code></p>
     <TimePicker :value="controlledValue" placeholder="请选择时间" @change="onControlledChange" />
-    <p class="mb10">使用 <code>v-model</code></p>
+    <p>使用 <code>v-model</code></p>
     <TimePicker v-model:value="controlledValue" placeholder="请选择时间" />
-    <p class="mb10">只传 <code>value</code> 不回写（不响应变更）</p>
+    <p>只传 <code>value</code> 不回写（不响应变更）</p>
     <TimePicker :value="fixedValue" placeholder="请选择时间" />
   </Space>
 </template>
