@@ -323,7 +323,7 @@ _通过 `split` 插槽在相邻内容之间插入间隔元素，分隔符两侧�
 | align | 垂直排列方式 | 'stretch' &#124; 'start' &#124; 'end' &#124; 'center' &#124; 'baseline' | 'start' |
 | vertical | 是否为垂直布局 | boolean | false |
 | gap | 间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | 'middle' |
-| wrap | 是否自动换行，仅在 `horizontal` 时有效 | boolean | true |
+| wrap | 是否自动换行，仅在未开启 `vertical` 时有效 | boolean | true |
 
 无子元素时不参与布局（不占父级间距）。
 

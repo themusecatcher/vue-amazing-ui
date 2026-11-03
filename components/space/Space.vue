@@ -6,7 +6,7 @@ export interface Props {
   align?: 'stretch' | 'start' | 'end' | 'center' | 'baseline' // 垂直排列方式
   vertical?: boolean // 是否为垂直布局
   gap?: number | number[] | 'small' | 'middle' | 'large' // 间距大小，数组时表示: [水平间距, 垂直间距]
-  wrap?: boolean // 是否自动换行，仅在 horizontal 时有效
+  wrap?: boolean // 是否自动换行，仅在未开启 vertical 时有效
 }
 // 声明组件插槽类型
 export interface SpaceSlots {

@@ -88,6 +88,7 @@ const customGapSize = ref(16)
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
+    <p class="mb10">通过 <code>vertical</code> 切换主轴方向</p>
     <Flex vertical>
       <RadioGroup :options="directionOptions" v-model:value="direction" />
       <Flex :vertical="direction === 'vertical'">
@@ -112,7 +113,8 @@ const customGapSize = ref(16)
         <Button type="primary">Primary</Button>
       </Flex>
     </Flex>
-    <h2 class="mt30 mb10">设置间隙</h2>
+    <h2 class="mt30 mb10">设置间距</h2>
+    <p class="mb10">通过 <code>gap</code> 设置间距，可选档位或自定义数值</p>
     <Flex vertical>
       <RadioGroup :options="gapOptions" v-model:value="gapSize" />
       <Slider v-if="gapSize === 'customize'" v-model:value="customGapSize" />
@@ -124,8 +126,25 @@ const customGapSize = ref(16)
       </Flex>
     </Flex>
     <h2 class="mt30 mb10">自动换行</h2>
+    <p class="mb10"
+      ><code>wrap</code> 开启换行，<code>width</code> 限定容器宽度，<code>gap</code> 数组分别设置水平与垂直间距</p
+    >
     <Flex wrap="wrap" :width="600" :gap="[8, 16]">
       <Button v-for="n in 16" :key="n" type="primary">Button</Button>
+    </Flex>
+    <h2 class="mt30 mb10">自定义标签</h2>
+    <p class="mb10">通过 <code>component</code> 指定渲染的标签或组件，便于语义化布局</p>
+    <Flex component="ul" vertical :gap="8" class="flex-list">
+      <li v-for="n in 3" :key="n">列表项 {{ n }}</li>
+    </Flex>
+    <h2 class="mt30 mb10">容器伸缩</h2>
+    <p class="mb10"
+      >通过 <code>flex</code> 设置容器自身作为 flex 子项时的伸缩比，示例两块按 1 : 2 分配剩余宽度，无需另写
+      <code>style</code></p
+    >
+    <Flex gap="small">
+      <Flex flex="1" justify="center" align="center" class="flex-stretch-demo">flex: 1</Flex>
+      <Flex flex="2" justify="center" align="center" class="flex-stretch-demo">flex: 2</Flex>
     </Flex>
     <h2 class="mt30 mb10">组合使用</h2>
     <p class="mb10">嵌套使用可实现更复杂的布局，主轴与交叉轴可分别控制</p>
@@ -146,20 +165,6 @@ const customGapSize = ref(16)
         </Flex>
       </Flex>
     </Card>
-    <h2 class="mt30 mb10">自定义标签</h2>
-    <p class="mb10">通过 <code>component</code> 指定渲染的标签或组件，便于语义化布局</p>
-    <Flex component="ul" vertical :gap="8" class="flex-list">
-      <li v-for="n in 3" :key="n">列表项 {{ n }}</li>
-    </Flex>
-    <h2 class="mt30 mb10">容器伸缩</h2>
-    <p class="mb10"
-      >通过 <code>flex</code> 设置容器自身作为 flex 子项时的伸缩比，示例两块按 1 : 2 分配剩余宽度，无需另写
-      <code>style</code></p
-    >
-    <Flex gap="small">
-      <Flex flex="1" justify="center" align="center" class="flex-stretch-demo">flex: 1</Flex>
-      <Flex flex="2" justify="center" align="center" class="flex-stretch-demo">flex: 2</Flex>
-    </Flex>
   </div>
 </template>
 <style lang="less" scoped>
