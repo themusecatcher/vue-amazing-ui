@@ -26,7 +26,7 @@ const textareaRef = ref<HTMLElement | null>(null) // textarea 元素引用
 const isComposing = ref<boolean>(false) // 是否正在使用文本合成系统输入中
 const textareaValue = ref<string>() // 文本域的值
 const areaHeight = ref<number>(32)
-const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'enter'])
+const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'enter', 'blur'])
 const textareaWidth = computed(() => {
   if (typeof props.width === 'number') {
     return `${props.width}px`
@@ -129,6 +129,11 @@ function onEnter(e: KeyboardEvent): void {
   }
   emits('enter', e)
 }
+// 原生 blur 从内部 textarea 转发：blur 不冒泡，挂在根节点上的监听收不到；同步带上 relatedTarget 供宿主判断失焦去向
+// 注意点击清除图标会先让 textarea 失焦、再清空值，宿主若用 blur 做校验，拿到的是清空前的值（与 Input 的清除行为一致）
+function onBlur(e: FocusEvent): void {
+  emits('blur', e)
+}
 function onClear(): void {
   textareaValue.value = ''
   emits('update:value', '')
@@ -158,6 +163,7 @@ function onClear(): void {
       @compositionend="onCompositionEnd"
       @input="onInput"
       @change="onChange"
+      @blur="onBlur"
       @keydown.enter="onEnter"
     />
     <svg

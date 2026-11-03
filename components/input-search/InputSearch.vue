@@ -53,7 +53,7 @@ defineSlots<InputSearchSlots>()
 const inputRef = ref<HTMLElement | null>(null) // input 元素引用
 const isComposing = ref<boolean>(false) // 是否正在使用文本合成系统输入中
 const inputSearchValue = ref<string>() // 搜索框内容
-const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'search'])
+const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'search', 'blur'])
 const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore'])
 const inputSearchWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -143,6 +143,10 @@ function onInputSearch(e: KeyboardEvent): void {
 function onSearch(e: MouseEvent | KeyboardEvent): void {
   emits('search', inputSearchValue.value, e)
 }
+// 原生 blur 从内部 input 转发：blur 不冒泡，挂在根节点上的监听收不到；同步带上 relatedTarget 供宿主判断失焦去向
+function onBlur(e: FocusEvent): void {
+  emits('blur', e)
+}
 </script>
 <template>
   <div
@@ -181,6 +185,7 @@ function onSearch(e: MouseEvent | KeyboardEvent): void {
         @compositionend="onCompositionEnd"
         @input="onInput"
         @change="onChange"
+        @blur="onBlur"
         @keydown.enter.prevent="onInputSearch"
       />
       <span v-if="showInputSuffix" class="input-search-suffix">

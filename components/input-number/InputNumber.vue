@@ -41,7 +41,7 @@ const props = withDefaults(defineProps<Props>(), {
 defineSlots<InputNumberSlots>()
 const inputRef = ref<HTMLInputElement | null>(null) // input 模板引用
 const numValue = ref<string>() // 数字输入框的内容
-const emits = defineEmits(['update:value', 'change', 'enter'])
+const emits = defineEmits(['update:value', 'change', 'enter', 'blur'])
 // 父是否提供了值（受控）—— 值的真相源始终是 DOM 元素，这里只用于两处判断：
 // ① 同步 props.value 时是否需要保留光标位置（非受控时元素自持，不能覆盖光标）；
 // ② 清空输入时是否需要回传 undefined（非受控时无值可清）
@@ -172,6 +172,11 @@ function onEnter(e: KeyboardEvent): void {
     updateValue(value)
   }
 }
+// 原生 blur 从内部 input 转发：blur 不冒泡，挂在根节点上的监听收不到；同步带上 relatedTarget 供宿主判断失焦去向
+// 注意点击上下箭头会先让 input 失焦、再由点击改值，宿主若用 blur 做校验，拿到的是改值前的值
+function onBlur(e: FocusEvent): void {
+  emits('blur', e)
+}
 function onUp(): void {
   const res = Math.min(props.max, add(props.value || 0, +props.step)).toFixed(precision.value)
   emitValue(getNumberValue(res))
@@ -203,6 +208,7 @@ function onDown(): void {
         v-model="numValue"
         @input="onInput"
         @change="onChange"
+        @blur="onBlur"
         @keydown.up.prevent
         @keydown="keyboard ? onKeyboard($event) : () => false"
         @keydown.enter.prevent="onEnter"
