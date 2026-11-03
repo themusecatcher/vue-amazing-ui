@@ -91,6 +91,16 @@ const customGapSize = ref(16)
         <Button type="primary">Button</Button>
       </template>
     </Space>
+    <h2 class="mt30 mb10">分隔符</h2>
+    <p class="mb10">通过 <code>split</code> 插槽在相邻内容之间插入间隔元素，分隔符两侧各占一份 <code>gap</code> 间距</p>
+    <Space align="center" :gap="8">
+      <template #split>
+        <Divider vertical />
+      </template>
+      <a href="#">Link</a>
+      <a href="#">Link</a>
+      <a href="#">Link</a>
+    </Space>
   </div>
 </template>
 <style lang="less" scoped>
