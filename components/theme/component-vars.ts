@@ -3,8 +3,8 @@
  *
  * 消费方：文档生成脚本（`scripts/gen-component-vars-doc.ts`）、守护（`scripts/verify-theme.ts`）、
  * 运行期 `components/config-provider/theme-scope.ts`（把组件级通用主色映射到现有公开令牌）
- * 与测试（`tests/component-vars.spec.ts`）。脚本侧由 `tsx` 执行，因此数据与类型同处一个 `.ts`：
- * 类型权威在 `component-vars.types.ts`，本文件只负责数据，不再需要手写 `.d.ts`。
+ * 与测试（`tests/component-vars.spec.ts`）。脚本侧由 `tsx` 执行，因此类型与数据同处一个 `.ts`：
+ * 顶部是类型契约（公开 API，随 `index.d.ts` 产出），下方是纯数据注册表，不再需要手写 `.d.ts`。
  *
  * 只有 `COMPONENT_VARS` 的键集合与 `COMPONENT_VAR_NAMES` 的一致性无法由类型表达
  * （键是运行期字符串），由 `pnpm verify:theme` 与 `tests/component-vars.spec.ts` 守护。
@@ -25,7 +25,95 @@
  *   不改变令牌的公开默认值；未标记的令牌（中性色、皮肤固定色）不参与组件级派生。
  *   映射目标由组件注册表决定，ConfigProvider 只认识 `primaryColor` 这一个粗粒度配置。
  */
-import type { ComponentVarMeta, ThemeComponentKey, ThemeComponentMeta } from './component-vars.types'
+/* -------------------------------------------------------------------------- */
+/* 类型契约（公开类型面）                                                     */
+/* -------------------------------------------------------------------------- */
+
+/** 组件级通用主色派生出的状态档位（与 `deriveColorStates` 的返回键一致） */
+export type ComponentThemeState = 'base' | 'hover' | 'active' | 'bg' | 'border' | 'solid'
+
+/**
+ * `theme.components` 的配置键：已接线组件级主色的内置组件
+ *
+ * 与 `THEME_COMPONENTS` 的 key 集合逐项一致（顺序也一致）：注册表是运行期数据源，
+ * 本类型是编译期入口。「注册表有、本类型没有」由 `key: ThemeComponentKey` 在编译期拦下；
+ * 「本类型有、注册表没有」类型无法表达，由 `tests/component-vars.spec.ts` 逐项比对守护。
+ *
+ * 新增组件支持时：先接线样式 + 登记 `THEME_COMPONENTS`，再补到这里。
+ */
+export type ThemeComponentKey =
+  | 'Alert'
+  | 'AutoComplete'
+  | 'BackTop'
+  | 'Badge'
+  | 'Button'
+  | 'Calendar'
+  | 'Carousel'
+  | 'Cascader'
+  | 'Checkbox'
+  | 'ColorPicker'
+  | 'DatePicker'
+  | 'FloatButton'
+  | 'GradientText'
+  | 'Image'
+  | 'Input'
+  | 'InputNumber'
+  | 'InputSearch'
+  | 'LoadingBar'
+  | 'Menu'
+  | 'Message'
+  | 'Modal'
+  | 'Notification'
+  | 'Pagination'
+  | 'Popconfirm'
+  | 'Progress'
+  | 'Radio'
+  | 'Select'
+  | 'Slider'
+  | 'Spin'
+  | 'Steps'
+  | 'Swiper'
+  | 'Switch'
+  | 'Table'
+  | 'Tabs'
+  | 'Tag'
+  | 'TextScroll'
+  | 'Textarea'
+  | 'TimePicker'
+  | 'Timeline'
+  | 'Upload'
+
+/** 组件令牌元数据 */
+export interface ComponentVarMeta {
+  /** 所属组件名（与 `theme.components.<Component>` 的键一致）；Scrollbar 等仅有公开令牌、无桥接线的组件也在此列 */
+  component: string
+  /** 所属组件源文件（相对 components/） */
+  file: string
+  /** 令牌组：同一视觉元素的状态族 */
+  group: string
+  /** 必须与组件样式里的 `var(name, fallback)` 逐字一致 */
+  fallback: string
+  /** fallback 指向组件私有名时提供的实际默认值 */
+  resolved?: { light: string; dark: string }
+  /** 组件级通用色角色；未标记表示不跟随组件主色 */
+  themeRole?: 'primary'
+  /** 取派生状态的哪一档；按模式分列用于皮肤/模式映射不同的组件 */
+  themeState?: ComponentThemeState | { light: ComponentThemeState; dark: ComponentThemeState }
+  /** 面向使用者的说明 */
+  description: string
+}
+
+/** 已接线组件级主色的组件清单 */
+export interface ThemeComponentMeta {
+  /** `theme.components` 的配置键 */
+  key: ThemeComponentKey
+  /** 组件源码目录（相对 components/） */
+  dir: string
+}
+
+/* -------------------------------------------------------------------------- */
+/* 数据注册表（单一数据源）                                                   */
+/* -------------------------------------------------------------------------- */
 
 /** 公开令牌名（增删必须同步 `COMPONENT_VARS` 的键） */
 export const COMPONENT_VAR_NAMES: readonly string[] = [

@@ -13,8 +13,12 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { COMPONENT_VAR_NAMES, COMPONENT_VARS, THEME_COMPONENT_KEYS } from '../components/theme/component-vars'
-import type { ComponentVarMeta } from '../components/theme/component-vars.types'
+import {
+  COMPONENT_VAR_NAMES,
+  COMPONENT_VARS,
+  THEME_COMPONENT_KEYS,
+  type ComponentVarMeta
+} from '../components/theme/component-vars'
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const outputPath = resolve(rootDir, 'docs/guide/parts/component-vars.md')
