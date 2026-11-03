@@ -124,10 +124,11 @@ const showPagination = computed(() => {
 const canPrev = computed(() => !props.disabled && currentPage.value > 1)
 const canNext = computed(() => !props.disabled && currentPage.value < totalPage.value)
 const selectOptions = computed(() => {
-  const pageSizeOptipns = [pageSizeModel.value, ...props.pageSizeOptions].map((pageSize: number | string) =>
+  // 当前生效值一并进选项，避免受控传入的 pageSize 不在 pageSizeOptions 里时切换器无选项可显示
+  const pageSizeList = [pageSizeModel.value, ...props.pageSizeOptions].map((pageSize: number | string) =>
     Number(pageSize)
   )
-  return Array.from(new Set(pageSizeOptipns))
+  return Array.from(new Set(pageSizeList))
     .sort((a: number, b: number) => a - b)
     .map((pageSize: number) => {
       return {
@@ -156,10 +157,10 @@ watch([() => props.total, pageSizeModel], () => {
     pageModel.value = currentPage.value
   }
 })
-function onPageForward(): void {
+function onJumpPrev(): void {
   onPageChange(currentPage.value - props.pageAmount)
 }
-function onPageBackward(): void {
+function onJumpNext(): void {
   onPageChange(currentPage.value + props.pageAmount)
 }
 async function onPageJump(): Promise<void> {
@@ -304,8 +305,8 @@ function onPageSizeChange(pageSize: number): void {
       :tabindex="disabled ? -1 : 0"
       class="pagination-jump-prev"
       :title="`向前 ${pageAmount} 页`"
-      @keydown.enter.prevent="onPageForward()"
-      @click="onPageForward()"
+      @keydown.enter.prevent="onJumpPrev()"
+      @click="onJumpPrev()"
     >
       <span class="ellipsis-character">•••</span>
       <svg
@@ -341,8 +342,8 @@ function onPageSizeChange(pageSize: number): void {
       :tabindex="disabled ? -1 : 0"
       class="pagination-jump-next"
       :title="`向后 ${pageAmount} 页`"
-      @keydown.enter.prevent="onPageBackward()"
-      @click="onPageBackward()"
+      @keydown.enter.prevent="onJumpNext()"
+      @click="onJumpNext()"
     >
       <span class="ellipsis-character">•••</span>
       <svg
@@ -470,9 +471,6 @@ function onPageSizeChange(pageSize: number): void {
     &:focus-visible {
       outline: 2px solid var(--va-cp-pagination-primary-border-color, var(--va-primary-border-color));
       outline-offset: 1px;
-      transition:
-        outline-offset 0s,
-        outline 0s;
     }
   }
   .pagination-prev,
@@ -508,9 +506,6 @@ function onPageSizeChange(pageSize: number): void {
     &:focus-visible:not(.pagination-item-disabled) {
       outline: 2px solid var(--va-cp-pagination-primary-border-color, var(--va-primary-border-color));
       outline-offset: 1px;
-      transition:
-        outline-offset 0s,
-        outline 0s;
     }
   }
   .pagination-item-active {
@@ -598,9 +593,6 @@ function onPageSizeChange(pageSize: number): void {
     &:focus-visible {
       outline: 2px solid var(--va-cp-pagination-primary-border-color, var(--va-primary-border-color));
       outline-offset: 1px;
-      transition:
-        outline-offset 0s,
-        outline 0s;
       .ellipsis-character {
         opacity: 0;
         pointer-events: none;
@@ -698,7 +690,6 @@ function onPageSizeChange(pageSize: number): void {
       height: 24px;
       .pagination-jump-button {
         padding: 0 7px;
-        border-radius: 4px;
       }
     }
   }
@@ -839,9 +830,6 @@ function onPageSizeChange(pageSize: number): void {
     &:not(.pagination-item-disabled) .arrow-svg {
       color: var(--va-text-color-1);
     }
-  }
-  .pagination-item-active {
-    background: var(--va-bg-container-color);
   }
   .pagination-item-disabled {
     border-color: transparent;

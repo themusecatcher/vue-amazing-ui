@@ -318,7 +318,6 @@ function onPassword(): void {
     width: 100%;
     min-width: 0;
     background-color: var(--va-input-bg-color, var(--va-bg-container-color));
-    // 尺寸类（input-small / input-middle / input-large）改的是 padding 与字号，需过渡，否则切换尺寸时整体突变
     transition:
       padding 0.2s,
       font-size 0.2s,
@@ -370,9 +369,6 @@ function onPassword(): void {
       position: relative;
       display: inline-block;
       width: 100%;
-      transition:
-        font-size 0.2s,
-        line-height 0.2s;
       min-width: 0;
       background-color: var(--va-input-bg-color, var(--va-bg-container-color));
       border: none;
