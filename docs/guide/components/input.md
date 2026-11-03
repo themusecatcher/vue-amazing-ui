@@ -430,4 +430,3 @@ const value = ref('')
 | enter | 按下回车的回调 | (e: KeyboardEvent) => void |
 | compositionstart | 使用文本合成系统即输入法编辑器开始新的输入时的回调 | (e: CompositionEvent) => void |
 | compositionend | 当文本段落的组成完成或取消时触发的回调 | (e: CompositionEvent) => void |
-| blur | 输入框失焦的回调，`relatedTarget` 为获得焦点的元素 | (e: FocusEvent) => void |

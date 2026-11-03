@@ -1275,14 +1275,8 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
             color: var(--va-text-color-1);
           }
         }
-        &:active {
-          background: var(--va-fill-color-3);
-          :deep(.icon-svg) {
-            color: var(--va-text-color-1);
-          }
-        }
         &:focus-visible {
-          outline: 2px solid var(--va-primary-border-color);
+          outline: 2px solid var(--va-text-color-1);
           outline-offset: 1px;
         }
       }

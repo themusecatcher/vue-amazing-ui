@@ -1309,15 +1309,10 @@ function onPaginationChange(page: number, pageSize: number): void {
                           :expanded="expandedRowKeysModel.includes(getRowKey(record, rowIndex))"
                         >
                           <button
-                            type="button"
                             class="expand-btn"
                             :class="{
                               'expand-btn-collapsed': !expandedRowKeysModel.includes(getRowKey(record, rowIndex))
                             }"
-                            :aria-expanded="expandedRowKeysModel.includes(getRowKey(record, rowIndex))"
-                            :aria-label="
-                              expandedRowKeysModel.includes(getRowKey(record, rowIndex)) ? '收起行' : '展开行'
-                            "
                           ></button>
                         </slot>
                       </td>
@@ -1620,15 +1615,10 @@ function onPaginationChange(page: number, pageSize: number): void {
                           :expanded="expandedRowKeysModel.includes(getRowKey(record, rowIndex))"
                         >
                           <button
-                            type="button"
                             class="expand-btn"
                             :class="{
                               'expand-btn-collapsed': !expandedRowKeysModel.includes(getRowKey(record, rowIndex))
                             }"
-                            :aria-expanded="expandedRowKeysModel.includes(getRowKey(record, rowIndex))"
-                            :aria-label="
-                              expandedRowKeysModel.includes(getRowKey(record, rowIndex)) ? '收起行' : '展开行'
-                            "
                           ></button>
                         </slot>
                       </td>
@@ -1978,18 +1968,6 @@ function onPaginationChange(page: number, pageSize: number): void {
             &:hover {
               color: var(--va-cp-table-primary-color-hover, var(--va-primary-color-hover));
               border-color: var(--va-cp-table-primary-color-hover, var(--va-primary-color-hover));
-            }
-            &:active {
-              color: var(--va-cp-table-primary-color-active, var(--va-primary-color-active));
-              border-color: var(--va-cp-table-primary-color-active, var(--va-primary-color-active));
-            }
-            // 按钮无文字，默认 outline 已抹去，键盘聚焦需自带焦点环，否则零视觉反馈
-            &:focus-visible {
-              outline: 2px solid var(--va-cp-table-primary-border-color, var(--va-primary-border-color));
-              outline-offset: 1px;
-              transition:
-                outline-offset 0s,
-                outline 0s;
             }
             &::before {
               position: absolute;
