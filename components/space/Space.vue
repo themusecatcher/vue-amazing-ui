@@ -43,7 +43,7 @@ const gapValue = computed(() => {
     return gapMap[props.gap]
   }
 })
-// 承载 vnode 列表的稳定组件：直接返回数组等价于 Fragment，不产生包裹元素
+// 承载 vnode 列表的中间组件：render 直接返回数组（等价于 Fragment），不产生包裹元素
 const SpaceContent = defineComponent({
   name: 'SpaceContent',
   props: {
@@ -63,13 +63,14 @@ function isRenderable(node: VNode): boolean {
 // 插槽在 computed 内求值以保留依赖收集，分隔符内容随外部状态更新
 const contentNodes = computed<VNode[]>(() => {
   const children = (slots.default?.() ?? []).filter(isRenderable)
-  if (children.length < 2 || !slots.split) {
+  const splitSlot = slots.split
+  if (children.length < 2 || !splitSlot) {
     return children
   }
   const nodes: VNode[] = []
   children.forEach((child, index) => {
     if (index > 0) {
-      nodes.push(...(slots.split?.() ?? []))
+      nodes.push(...splitSlot())
     }
     nodes.push(child)
   })
@@ -91,7 +92,6 @@ const contentNodes = computed<VNode[]>(() => {
   font-size: 14px;
   color: var(--va-text-color-1);
   transition: all 0.3s;
-  flex-direction: row;
   &:empty {
     display: none;
   }
