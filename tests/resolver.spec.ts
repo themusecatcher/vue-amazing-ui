@@ -3,13 +3,15 @@ import { basename, join, resolve } from 'node:path'
 import { describe, it, expect } from 'vitest'
 import { VueAmazingUIResolver } from 'components/utils/resolver'
 import type { VueAmazingUIResolverOptions } from 'components/utils/resolver'
+// 数据层是 .js（Node 脚本与 TS 侧共用），测试可直接 import，无需再解析源码文本
+import { componentsMap, styleSources, stylelessComponents } from 'components/utils/style-deps.data.js'
 
 /**
  * 按需引入 resolver 的回归防护（每组件一个样式入口）
  *
  * 背景：resolver 现在只回答一个问题「该组件的样式入口在哪」——返回**单条**
  * `es|lib/<dir>/style/index.{js,cjs}`。入口内部的 CSS 顺序（global → 自身 → 依赖 → vendor）由构建期
- * build/generate-style-entries.ts 依据 components/utils/style-deps.ts 固化，其断言集见
+ * build/generate-style-entries.ts 依据 components/utils/style-deps.data.js 固化，其断言集见
  * tests/generate-style-entries.spec.ts（原先「依赖是否注入齐全」的多条 CSS 列表断言已迁移到那里）。
  *
  * 本文件保留两类职责：
@@ -20,33 +22,6 @@ function sideEffectsOf(name: string, options?: VueAmazingUIResolverOptions): str
   return VueAmazingUIResolver(options).resolve(name)?.sideEffects ?? []
 }
 
-// 从 style-deps.ts（样式依赖的单一数据源）源码解析各表，避免为测试而导出内部常量
-const styleDepsSource = readFileSync(resolve(process.cwd(), 'components/utils/style-deps.ts'), 'utf-8')
-function parseComponentsMap(): Array<[string, string]> {
-  const block = styleDepsSource.match(/const componentsMap = \{([\s\S]*?)\n\}/)
-  if (!block) {
-    throw new Error('未能从 components/utils/style-deps.ts 中解析出 componentsMap')
-  }
-  return [...block[1].matchAll(/^\s*([A-Za-z0-9]+):\s*'([^']+)',?\s*$/gm)].map((m) => [m[1], m[2]])
-}
-/** 从 style-deps.ts 源码解析组件样式来源表（键为自身无样式的组件，值为承载其样式的组件） */
-function parseStyleSources(): Record<string, string> {
-  const block = styleDepsSource.match(
-    /const styleSources: Partial<Record<ComponentName, ComponentName>> = \{([\s\S]*?)\n\}/
-  )
-  if (!block) {
-    throw new Error('未能从 components/utils/style-deps.ts 中解析出 styleSources')
-  }
-  return Object.fromEntries([...block[1].matchAll(/^\s*([A-Za-z0-9]+):\s*'([^']+)',?\s*$/gm)].map((m) => [m[1], m[2]]))
-}
-/** 从 style-deps.ts 源码解析「无任何样式」的组件白名单 */
-function parseStylelessComponents(): string[] {
-  const block = styleDepsSource.match(/const stylelessComponents:[^=]*= \[([^\]]*)\]/)
-  if (!block) {
-    throw new Error('未能从 components/utils/style-deps.ts 中解析出无样式组件白名单')
-  }
-  return [...block[1].matchAll(/'([^']+)'/g)].map((m) => m[1])
-}
 /** 递归收集目录下所有 SFC 的绝对路径 */
 function collectVueFiles(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -140,9 +115,8 @@ describe('resolver - 样式入口路径', () => {
 })
 
 describe('resolver - 全量组件映射', () => {
-  const entries = parseComponentsMap()
+  const entries = Object.entries(componentsMap)
   const dirMap = new Map(entries)
-  const styleSources = parseStyleSources()
 
   it('应解析出全部组件映射', () => {
     expect(entries.length).toBeGreaterThanOrEqual(68)
@@ -188,8 +162,7 @@ describe('resolver - 全量组件映射', () => {
 
 describe('resolver - 无 <style> 块 SFC 的登记完整性', () => {
   it('每个无 <style> 块的 SFC 都必须登记到白名单或样式来源表', () => {
-    const styleSources = parseStyleSources()
-    const styleless = parseStylelessComponents()
+    const styleless = stylelessComponents
     const unregistered = collectVueFiles(resolve(process.cwd(), 'components'))
       .filter((file) => !/<style[\s>]/.test(readFileSync(file, 'utf-8')))
       .map((file) => basename(file, '.vue'))

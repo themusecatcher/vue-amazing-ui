@@ -24,7 +24,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { readStyleDeps } from './parse-style-deps.js'
+import { componentsMap, styleSources, stylelessComponents } from '../components/utils/style-deps.data.js'
 import { checkPropRuntimeTypes } from './check-prop-runtime-types.js'
 import { checkModelProps } from './check-model-props.js'
 
@@ -83,7 +83,6 @@ if (missing.length > 0) {
 }
 
 // 以下为「每组件样式入口」的产物契约
-const { componentsMap, styleSources, stylelessComponents } = readStyleDeps()
 const styleless = new Set(stylelessComponents)
 const outDirs = [
   { dir: 'es', entryFileName: 'index.js' },

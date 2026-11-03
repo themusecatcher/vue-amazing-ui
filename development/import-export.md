@@ -163,7 +163,7 @@ es/tooltip/style/index.js
 | 自动按需引入（推荐） | `VueAmazingUIResolver({ cjs: false })`，由 `sideEffects` 注入上述单条入口 |
 | 手动引入（推荐） | `import 'vue-amazing-ui/es/button/style'` —— **裸目录写法**（`package.json` 的 `exports` 已加 `"./es/*/style"` / `"./lib/*/style"` 映射，Node / 打包器均可解析）；需要完全显式时可用 `…/button/style/index.js` |
 
-### 单一数据源：`components/utils/style-deps.ts`
+### 单一数据源：`components/utils/style-deps.data.js`
 
 | 表 | 作用 | 谁读 |
 | :-- | :-- | :-- |
@@ -172,10 +172,12 @@ es/tooltip/style/index.js
 | `componentDependencies` | 组件的样式依赖（如 `Table` 依赖 `Checkbox` / `Pagination` 等） | 生成器（按表顺序写进入口）＋ `scripts/verify-style-deps.js`（与产物 chunk 闭包双向比对） |
 | `stylelessComponents` | 完全没有样式的组件（`ConfigProvider` / `Highlight` / `NumberAnimation` / `PickerIcon` / `Watermark`） | resolver（返回空）+ 生成器（跳过） |
 
-表结构带类型约束，组件名写错会在编译期报错，而非静默生成 `undefined` 路径：
+数据层是**纯 `.js`**（Node 脚本 `scripts/verify-style-deps.js` / `prepublish-guard.js` 直接 import，不再有「正则解析 TS 源码」的中间层，条目格式也不受单行约束）；类型与守卫在 `components/utils/style-deps.ts` 门面里：
 
-- `ComponentName = keyof typeof componentsMap`：作为 `styleSources` / `componentDependencies` 的键值约束，用 `Partial<Record<...>>` 表达「可能查不到」。
+- `ComponentName = keyof typeof componentsMap`：由数据层的键推导，作为 resolver / 生成器的查表类型。
 - `isComponentName(name): name is ComponentName`：`resolve` 时的类型守卫，未收录的组件名直接返回 `undefined`，交给其他 resolver 处理。
+
+代价与兜底：数据在 `.js` 里，类型系统看不到表的内容，因此「`styleSources` / `componentDependencies` / `stylelessComponents` 的键与值必须是已收录组件」由 `pnpm verify:deps`（`scripts/verify-style-deps.js`）的运行期断言守护，报错会直接点出越界的表名与条目。
 
 第三方样式由 `components/utils/vendor-styles.ts` 统一派生：`vendorStyles` 定义 `source`（node_modules 源路径）与 `target`（产物内路径，含 `vendorStylesDir` 常量与「镜像原包结构」约定），`vendorStylesByComponent` 按组件名索引，供生成器写入样式入口。
 
@@ -193,12 +195,12 @@ es/tooltip/style/index.js
 
 1. **建组件**：`components/<kebab-case>/` 下创建 `Xxx.vue` + `index.ts`（三件套结构）。
 2. **登记汇总**：在 `components/components.ts` 末尾追加 `export type { XxxProps } from './<kebab-case>'` + `export { default as Xxx } from './<kebab-case>'`（类型已在组件级 `index.ts` 重命名为 `XxxProps`）。
-3. **登记按需**：在 `components/utils/style-deps.ts` 的 `componentsMap` 追加 `Xxx: '<kebab-case>'`（用到其它组件的样式再补 `componentDependencies`）。样式入口 `es|lib/<dir>/style/*` 由构建期自动生成，**不需要手写**。
+3. **登记按需**：在 `components/utils/style-deps.data.js` 的 `componentsMap` 追加 `Xxx: '<kebab-case>'`（用到其它组件的样式再补 `componentDependencies`）。样式入口 `es|lib/<dir>/style/*` 由构建期自动生成，**不需要手写**。
 
 > - 若组件无样式文件，还需登记到 `stylelessComponents` 白名单（见 [component-design.md](component-design.md)）。
 > - 若新增的是全局提示类 Provider 组件，需在 `styleSources` 中登记其底层组件（见上文 resolver 章节）。
-> - **若新增的是子组件**（如 `Select` 的 `SelectOption` / `SelectOptGroup`），除上述三步外还需四处登记：① 组件级 `index.ts` 用**本地常量再导出**持有绑定（`export const SelectOption = SelectOptionComp`），禁止纯转发；② `components/components.ts` 按其自身具名导出追加（`export { default as Select, SelectOption, SelectOptGroup } from './select'`）；③ `style-deps.ts` 的 `componentsMap` 登记其自身样式目录，并在 `styleSources` 登记其样式来源的父组件；④ `types/global-components.d.ts` 的 `GlobalComponents` 登记组件名。目录形态与纯转发成因见 [project-structure.md](project-structure.md)。
-> - 自检：`pnpm check` 全绿后执行 `pnpm verify`（= 构建 → 依赖一致性 → 按需引入验证 → 主题架构守护 → 注入契约守护 → 产物守卫）。漏填 / 拼错依赖名会在**库构建期**直接失败，不再等消费方发现样式缺失。
+> - **若新增的是子组件**（如 `Select` 的 `SelectOption` / `SelectOptGroup`），除上述三步外还需四处登记：① 组件级 `index.ts` 用**本地常量再导出**持有绑定（`export const SelectOption = SelectOptionComp`），禁止纯转发；② `components/components.ts` 按其自身具名导出追加（`export { default as Select, SelectOption, SelectOptGroup } from './select'`）；③ `style-deps.data.js` 的 `componentsMap` 登记其自身样式目录，并在 `styleSources` 登记其样式来源的父组件；④ `types/global-components.d.ts` 的 `GlobalComponents` 登记组件名。目录形态与纯转发成因见 [project-structure.md](project-structure.md)。
+> - 自检：`pnpm check` 全绿后执行 `pnpm verify`（= 构建 → `verify:artifacts`（依赖一致性 + 按需引入验证）→ `guard`）。漏填 / 拼错依赖名会在**库构建期**直接失败，不再等消费方发现样式缺失。
 
 ## 新增工具函数 Checklist
 
