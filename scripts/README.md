@@ -123,7 +123,7 @@ git hook 只覆盖静态检查，不碰本目录脚本：`pre-commit` → `lint-
 
 ## 目录：为什么不分子目录
 
-13 个脚本分三类，扁平存放。前缀在字母序里已经完成分组（`check-*` → `component-*` → `deploy` → `gen-*` → `prepublish-*` → `publish` → `push` → `verify-*`），分子目录不减少扫描成本，只增加路径深度；而迁移成本是持续的：`package.json` 12 处路径、`tests/` 4 处相对 import、本文件与 `development/*.md` 的路径引用都要跟着改，且以后每个新文件都要先做一次「放哪个目录」的决策。
+13 个脚本分三类，扁平存放。前缀在字母序里已经完成分组（`check-*` → `component-*` → `deploy` → `gen-*` → `prepublish-*` → `publish` → `push` → `verify-*`），分子目录不减少扫描成本，只增加路径深度；而迁移成本是持续的：`package.json` 11 处路径（10 个文件，`prepublish-guard.ts` 被 `prepublishOnly` 与 `guard` 各引一次）、`tests/` 4 处相对 import、本文件与 `development/*.md` 的路径引用都要跟着改，且以后每个新文件都要先做一次「放哪个目录」的决策。
 
 不按「语言」拆（`.ts` / `.sh` 扩展名已表达），也不按「入口/库」拆（`package.json` 已表达）。唯一有意义的切分轴是**是否会改远端状态**（发布链 vs 只读校验），但当前只有 3 个 `.sh`，单独建目录反而会让发布脚本从 `ls` 首屏消失。
 

@@ -5,7 +5,8 @@
  * 只保留「单测不适合做」的部分：跨文件统计、演示站与文档目录扫描、全库闭合性、注册表清单自检。
  * 与数据自洽有关的契约已单一化到测试侧，此处不再重复实现：
  * - 注册表自洽（键 / 名称 / `file` / `fallback` / `themeRole` / `ThemeComponentKey`）→ `tests/component-vars.spec.ts`
- * - 公开令牌每处使用都带与注册表一致的 fallback、`<style>` 内不得声明 → `tests/component-vars.spec.ts`
+ * - 公开令牌每处使用都带与注册表一致的 fallback → `tests/component-vars.spec.ts`
+ *   （本脚本只做全库口径那一条：任何组件都不得在 `<style>` 里声明公开令牌，见强制项 4）
  * - 悬空引用（无 fallback 且从未声明）→ `tests/component-vars.spec.ts`
  * - `theme.css` 两套表各含全部别名 → `tests/theme-build.spec.ts`
  *
@@ -35,6 +36,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { COMPONENT_VAR_NAMES, COMPONENT_VARS, THEME_COMPONENTS } from '../components/theme/component-vars'
+import { THEME_VAR_NAMES } from '../components/theme/vars'
 import { collectVarRefs, splitSfc, stripComments } from './component-vars-parse'
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -42,17 +44,8 @@ const strict = process.argv.includes('--strict')
 const failures: string[] = []
 const warnings: string[] = []
 
-/** 从 vars.ts 解析别名清单，避免脚本内复制一份而漂移 */
-function readVarNames(): string[] {
-  const source = readFileSync(resolve(rootDir, 'components/theme/vars.ts'), 'utf-8')
-  const block = source.match(/THEME_VAR_NAMES = \[([\s\S]*?)\] as const/)
-  if (!block) {
-    throw new Error('[verify-theme] 未能从 components/theme/vars.ts 解析 THEME_VAR_NAMES')
-  }
-  return [...block[1].matchAll(/'(--va-[a-z0-9-]+)'/g)].map((matched) => matched[1])
-}
-
-const varNames = readVarNames()
+// 全局令牌清单直接引用源码常量（脚本经 tsx 执行，不需要再正则解析 TS）
+const varNames: string[] = [...THEME_VAR_NAMES]
 const varNameSet = new Set(varNames)
 
 // 组件级公开令牌注册表：静态 import 同一份数据源（脚本经 tsx 执行，可直接读 .ts）

@@ -404,7 +404,7 @@ const value = ref<SegmentedProps['value']>(options[0])
 
 | 名称 | 说明 | 用法 |
 | :-- | :-- | :-- |
-| label | 自定义图标 | v-slot:label="{ option, label, index, payload }" |
+| label | 自定义选项内容 | v-slot:label="{ option, label, index, payload }" |
 
 ## Events
 

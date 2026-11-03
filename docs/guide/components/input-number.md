@@ -314,3 +314,4 @@ const disabled = ref(true)
 | :-- | :-- | :-- |
 | change | 变化回调 | (value: number) => void |
 | enter | 按下回车的回调 | (e: KeyboardEvent) => void |
+| blur | 数字输入框失焦的回调，`relatedTarget` 为获得焦点的元素 | (e: FocusEvent) => void |

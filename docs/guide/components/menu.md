@@ -1602,7 +1602,7 @@ _通过子菜单的 `theme` 属性设置其主题，可实现根目录深色、�
   style="width: 256px; margin-top: 16px"
   mode="vertical"
   theme="dark"
-  :open-keys="submenuOpenKeys"
+  v-model:openKeys="submenuOpenKeys"
   v-model:selectedKeys="submenuSelected"
   :items="submenuItems"
 />
@@ -1641,7 +1641,7 @@ const submenuItems = computed<ItemType[]>(() => [
     style="width: 256px; margin-top: 16px"
     mode="vertical"
     theme="dark"
-    :open-keys="submenuOpenKeys"
+    v-model:openKeys="submenuOpenKeys"
     v-model:selectedKeys="submenuSelected"
     :items="submenuItems"
   />

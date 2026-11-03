@@ -71,13 +71,13 @@ function onChange(index: number) {
   console.log('change', index)
 }
 function onPrev() {
-  if (current.value > 1) {
-    current.value--
+  if (clickableCurrent.value > 1) {
+    clickableCurrent.value--
   }
 }
 function onNext() {
-  if (stepsItems.value.length >= current.value) {
-    current.value++
+  if (stepsItems.value.length >= clickableCurrent.value) {
+    clickableCurrent.value++
   }
 }
 const state = reactive<StepsProps>({
@@ -97,7 +97,7 @@ const state = reactive<StepsProps>({
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import type { StepsItem } from 'vue-amazing-ui'
 const stepsItems = ref<StepsItem[]>([
   {
@@ -140,7 +140,7 @@ function onChange(index: number) {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import type { StepsItem } from 'vue-amazing-ui'
 const stepsItems = ref<StepsItem[]>([
   {
@@ -193,7 +193,7 @@ watchEffect(() => {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import type { StepsItem } from 'vue-amazing-ui'
 const minStepsItems = ref<StepsItem[]>([
   {
@@ -243,7 +243,7 @@ watchEffect(() => {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import type { StepsItem } from 'vue-amazing-ui'
 const stepsItems = ref<StepsItem[]>([
   {
@@ -285,7 +285,7 @@ watchEffect(() => {
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import type { StepsItem } from 'vue-amazing-ui'
 const stepsItems = ref<StepsItem[]>([
   {
@@ -361,7 +361,7 @@ function onPrev() {
   }
 }
 function onNext() {
-  if (steps.value.length >= current.value) {
+  if (stepsItems.value.length >= current.value) {
     current.value++
   }
 }
@@ -422,7 +422,7 @@ function onNext() {
 
 ```vue
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { reactive, ref, watchEffect } from 'vue'
 import type { StepsProps, StepsItem } from 'vue-amazing-ui'
 const stepsItems = ref<StepsItem[]>([
   {
@@ -510,6 +510,7 @@ const state = reactive<StepsProps>({
 ```
 
 :::
+
 ## APIs
 
 ### Steps Props

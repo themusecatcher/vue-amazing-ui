@@ -68,7 +68,7 @@ tag="v$version"
 # 1. 校验 node 已安装（读取版本号、执行构建均依赖）
 if ! command -v node >/dev/null 2>&1; then
     echo "❌ 未检测到 node，无法执行发布流程"
-    echo "   请先安装 Node.js >= 20.19.0"
+    echo "   请先安装 Node.js >= 22.12.0"
     exit 1
 fi
 echo "✅ node 已安装: $(node -v)"

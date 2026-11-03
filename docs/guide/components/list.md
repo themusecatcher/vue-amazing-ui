@@ -93,8 +93,7 @@ for (let i = 1; i <= 8; i++) {
 const paginationListData = ref<any[]>([])
 paginationListData.value = allListData.value.slice(0, 3)
 const pagination = {
-  page: 1,
-  pageSize: 3,
+  defaultPageSize: 3,
   total: 8,
   onChange: (page: number, pageSize: number) => {
     console.log('change page', page)
@@ -136,6 +135,9 @@ const state = reactive({
     onChange: (page: number, pageSize: number) => {
       console.log('change page', page)
       console.log('change pageSize', pageSize)
+      // page / pageSize 传值即受控，需在此回写，否则分页器停在初值
+      state.pagination.page = page
+      state.pagination.pageSize = pageSize
       const start = (page - 1) * pageSize + 1
       const end = page * pageSize > state.pagination.total ? state.pagination.total : page * pageSize
       configListData.value = allConfigListData.value.slice(start - 1, end)
@@ -924,8 +926,7 @@ for (let i = 1; i <= 8; i++) {
 const paginationListData = ref<any[]>([])
 paginationListData.value = allListData.value.slice(0, 3)
 const pagination = {
-  page: 1,
-  pageSize: 3,
+  defaultPageSize: 3,
   total: 8,
   onChange: (page: number, pageSize: number) => {
     console.log('change page', page)
@@ -1094,6 +1095,9 @@ const state = reactive({
     onChange: (page: number, pageSize: number) => {
       console.log('change page', page)
       console.log('change pageSize', pageSize)
+      // page / pageSize 传值即受控，需在此回写，否则分页器停在初值
+      state.pagination.page = page
+      state.pagination.pageSize = pageSize
       const start = (page - 1) * pageSize + 1
       const end = page * pageSize > state.pagination.total ? state.pagination.total : page * pageSize
       configListData.value = allConfigListData.value.slice(start - 1, end)

@@ -80,7 +80,6 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 
 ```vue
 <script setup lang="ts">
-<script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 const value = ref('')
 const lazyValue = ref('')
@@ -712,3 +711,4 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 | search | 点击搜索或按下回车键时的回调 | (value: string, e: MouseEvent &#124; KeyboardEvent) => void |
 | compositionstart | 使用文本合成系统即输入法编辑器开始新的输入时的回调 | (e: CompositionEvent) => void |
 | compositionend | 当文本段落的组成完成或取消时触发的回调 | (e: CompositionEvent) => void |
+| blur | 搜索框失焦的回调，`relatedTarget` 为获得焦点的元素 | (e: FocusEvent) => void |

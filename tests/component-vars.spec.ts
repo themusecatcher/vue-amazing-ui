@@ -370,14 +370,8 @@ describe('文档页', () => {
   })
 
   // 逐字节比对：补上前两条用例抓不到的「删令牌后残留段落 / 说明文字漂移 / 表格被手改」
-  it('生成物与注册表逐字节一致（改注册表后需重跑 node scripts/gen-component-vars-doc.js）', () => {
+  it('生成物与注册表逐字节一致（改注册表后需重跑 pnpm gen:vars）', () => {
     expect(readFileSync(docPath, 'utf-8')).toBe(render())
-  })
-
-  // 生成脚本无法 import TS 的 THEME_VAR_NAMES，正文里的全局变量数量只能写死，
-  // 因此由测试侧按契约长度守护（逐字节断言无法发现「两边都写错同一个数」）
-  it('生成文档中的全局变量数量与契约一致', () => {
-    expect(render()).toContain(`\`${THEME_VAR_NAMES.length}\` 个 \`--va-*\``)
   })
 
   // 数量只出现在手写的「颜色变量清单」里，是那一节唯一可机械判定的硬事实

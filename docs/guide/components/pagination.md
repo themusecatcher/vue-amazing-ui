@@ -407,6 +407,8 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 ## 快速跳转
 
+_跳转框只接受数字，回车或失焦即跳转；输入超出范围时落到首 / 末页_
+
 <Pagination v-model:page="quickJumperPage" :total="total" show-quick-jumper @change="onChange" />
 
 ::: details Show Code

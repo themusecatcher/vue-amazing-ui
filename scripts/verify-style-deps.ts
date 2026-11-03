@@ -36,6 +36,7 @@ import { fileURLToPath } from 'node:url'
 import {
   componentDependencies,
   componentsMap,
+  isComponentName,
   stylelessComponents,
   styleSources,
   type ComponentName
@@ -60,11 +61,6 @@ const EXEMPTIONS: Partial<Record<ComponentName, { deps: string[]; reason: string
 const esDir = resolve(rootDir, 'es')
 const componentNames = Object.keys(componentsMap) as ComponentName[]
 const styleless = new Set(stylelessComponents)
-
-/** 类型收窄：`name` 是否为已收录组件名（`componentsMap` 的键） */
-function isComponentName(name: string): name is ComponentName {
-  return name in componentsMap
-}
 
 // ========== 数据层跨表引用完整性 ==========
 // 「键与值必须是已收录组件」已由 `components/utils/style-deps.ts` 的 `Partial<Record<ComponentName, ...>>`

@@ -842,7 +842,7 @@ const handleRowEdit = (key: string) => {
   rowEditableData[key] = dataSourceRowEditable.value.filter((item) => key === item.key)[0]
 }
 const handleRowSave = (key: string) => {
-  Object.assign(dataSourceCellEditable.value.filter((item) => key === item.key)[0], rowEditableData[key])
+  Object.assign(dataSourceRowEditable.value.filter((item) => key === item.key)[0], rowEditableData[key])
   delete rowEditableData[key]
 }
 const handleRowCancel = (key: string) => {
@@ -2221,7 +2221,7 @@ const handleRowEdit = (key: string) => {
   rowEditableData[key] = dataSourceRowEditable.value.filter((item) => key === item.key)[0]
 }
 const handleRowSave = (key: string) => {
-  Object.assign(dataSourceCellEditable.value.filter((item) => key === item.key)[0], rowEditableData[key])
+  Object.assign(dataSourceRowEditable.value.filter((item) => key === item.key)[0], rowEditableData[key])
   delete rowEditableData[key]
 }
 const handleRowCancel = (key: string) => {
@@ -3199,5 +3199,5 @@ watchEffect(() => {
 | :-- | :-- | :-- |
 | expand | 点击展开图标时的回调 | (expanded: boolean, record: Record<string, any>) => void |
 | expandedRowsChange | 展开的行变化时的回调 | (expandedRows: string[]) => void |
-| sortChange | 排序变化时的回调 | (column: [TableColumn](#tablecolumn-type) &#124; null, currentDataSource: Record<string, any>[]) => void |
+| sortChange | 排序变化时的回调 | (column: [TableColumn](#tablecolumn-type), currentDataSource: Record<string, any>[]) => void |
 | change | 分页变化时的回调 | (page: number, pageSize: number) => void |

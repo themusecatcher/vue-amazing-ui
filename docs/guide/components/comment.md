@@ -375,7 +375,7 @@ _评论编辑器组件提供了相同样式的封装以支持自定义评论编�
   </template>
   <template #content>
     <Textarea v-model:value="value" :rows="4" />
-    <Button html-type="submit" :loading="submitting" type="primary" class="mt10" @click="handleSubmit">
+    <Button html-type="submit" :loading="submitting" type="primary" style="margin-top: 10px;" @click="handleSubmit">
       Add Comment
     </Button>
   </template>
@@ -427,7 +427,7 @@ function handleSubmit() {
     </template>
     <template #content>
       <Textarea v-model:value="value" :rows="4" />
-      <Button html-type="submit" :loading="submitting" type="primary" class="mt10" @click="handleSubmit">
+      <Button html-type="submit" :loading="submitting" type="primary" style="margin-top: 10px;" @click="handleSubmit">
         Add Comment
       </Button>
     </template>

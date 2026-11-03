@@ -140,7 +140,8 @@ _通过 `status` 控制二维码状态，可选 `active`、`expired`、`loading`
 
 ```vue
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, h } from 'vue'
+import { ReloadOutlined } from '@ant-design/icons-vue'
 const status = ref('expired')
 const refreshStatus = () => {
   status.value = 'loading'
@@ -157,7 +158,7 @@ const refreshStatus = () => {
       <QRCode value="https://themusecatcher.blog.csdn.net" status="scanned" />
     </Space>
     <Segmented v-model:value="status" :options="['active', 'expired', 'loading', 'scanned']" />
-    <Button @click="refreshStatus">重新获取二维码</Button>
+    <Button :icon="h(ReloadOutlined)" @click="refreshStatus">重新获取二维码</Button>
   </Space>
 </template>
 ```
