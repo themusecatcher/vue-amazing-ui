@@ -4,6 +4,13 @@ import { createCommentVNode, h, nextTick, ref } from 'vue'
 import type { VNode } from 'vue'
 import Space from 'components/space/Space.vue'
 
+/**
+ * Space 的分隔符插槽与内容排布
+ *
+ * 覆盖 3.7.2 新增的 `split` 插槽：n 个内容之间插入 n-1 个分隔符，
+ * 注释 / 纯空白节点既不计入内容也不额外插入分隔符。
+ */
+
 const item = (label: string) => h('span', { class: 'item' }, label)
 const splitNode = () => h('span', { class: 'split' }, '|')
 
@@ -55,6 +62,23 @@ describe('Space 分隔符（split 插槽）', () => {
     )
     expect(wrapper.findAll('.item').length).toBe(2)
     expect(wrapper.findAll('.split').length).toBe(1)
+    wrapper.unmount()
+  })
+
+  it('内容全为注释或空白时不渲染子节点（空内容不参与布局）', () => {
+    const wrapper = mountSpace(
+      () => [createCommentVNode('v-if'), createCommentVNode('v-if'), h('span', '  ')],
+      () => [splitNode()]
+    )
+    expect(wrapper.element.children.length).toBe(0)
+    expect(wrapper.findAll('.split').length).toBe(0)
+    wrapper.unmount()
+  })
+
+  it('内容直接作为容器子节点渲染，不产生包裹元素', () => {
+    const wrapper = mountSpace(() => [item('A'), item('B')])
+    expect(wrapper.element.children.length).toBe(2)
+    expect((wrapper.element.children[0] as HTMLElement).className).toBe('item')
     wrapper.unmount()
   })
 
