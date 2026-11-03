@@ -5,7 +5,7 @@ import { log } from 'components/utils'
  *
  * 点选路径由 `<input accept>` 原生校验，拖拽路径没有这层约束，需按 MDN 的 accept 语法自行比对。
  * 规则对齐 antdv 的 `vc-upload/attr-accept.ts`：
- * - 全通配 `*`（含 `*` 斜杠 `*` 的写法）：放行所有文件，本库 `accept` 默认值即 `'*'`；
+ * - 全通配 `*`（星号 + 斜杠 + 星号同义，块注释内无法直接写出该字面量）：放行所有文件，本库 `accept` 默认值即 `'*'`；
  * - `.ext`：按文件名后缀比对，`.jpg` 与 `.jpeg` 互通；
  * - `image/*`：按主 mime 比对；
  * - 完整 mime（如 `application/pdf`）：精确比对；
