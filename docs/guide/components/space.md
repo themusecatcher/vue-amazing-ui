@@ -37,6 +37,10 @@ const customGapSize = ref(16)
 
 ## 基本使用
 
+_基础用法，默认为水平排列_
+
+<br/>
+
 <Space align="center">
   Space
   <Button type="primary">Button</Button>
@@ -62,6 +66,10 @@ const customGapSize = ref(16)
 :::
 
 ## 设置间距
+
+_通过 `gap` 设置间距，可选档位或自定义数值_
+
+<br/>
 
 <Flex vertical>
   <RadioGroup :options="gapOptions" v-model:value="gapSize" />
@@ -118,6 +126,10 @@ const customGapSize = ref(16)
 
 ## 垂直间距
 
+_开启 `vertical` 后内容按垂直方向排列_
+
+<br/>
+
 <Space vertical>
   <Card title="Card" style="width: 300px">
     <p>Card content</p>
@@ -149,6 +161,10 @@ const customGapSize = ref(16)
 :::
 
 ## 对齐
+
+_通过 `align` 控制交叉轴的对齐方式_
+
+<br/>
 
 <div class="space-align-container">
   <div class="space-align-block">
@@ -259,7 +275,11 @@ const customGapSize = ref(16)
 
 ## 自动换行
 
-<Space :gap="[8, 16]">
+_`gap` 数组分别设置水平与垂直间距，超出容器宽度时自动换行_
+
+<br/>
+
+<Space :gap="[8, 16]" style="width: 100%">
   <template v-for="n in 16" :key="n">
     <Button type="primary">Button</Button>
   </template>
@@ -271,7 +291,7 @@ const customGapSize = ref(16)
 
 ```vue
 <template>
-  <Space :gap="[8, 16]">
+  <Space :gap="[8, 16]" style="width: 100%">
     <template v-for="n in 16" :key="n">
       <Button type="primary">Button</Button>
     </template>

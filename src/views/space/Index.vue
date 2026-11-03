@@ -25,6 +25,7 @@ const customGapSize = ref(16)
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
+    <p class="mb10">基础用法，默认为水平排列</p>
     <Space align="center">
       Space
       <Button type="primary">Button</Button>
@@ -33,6 +34,7 @@ const customGapSize = ref(16)
       </Popconfirm>
     </Space>
     <h2 class="mt30 mb10">设置间距</h2>
+    <p class="mb10">通过 <code>gap</code> 设置间距，可选档位或自定义数值</p>
     <Flex vertical>
       <RadioGroup :options="gapOptions" v-model:value="gapSize" />
       <Slider v-if="gapSize === 'customize'" v-model:value="customGapSize" />
@@ -44,6 +46,7 @@ const customGapSize = ref(16)
       </Space>
     </Flex>
     <h2 class="mt30 mb10">垂直间距</h2>
+    <p class="mb10">开启 <code>vertical</code> 后内容按垂直方向排列</p>
     <Space vertical>
       <Card title="Card" style="width: 300px">
         <p>Card content</p>
@@ -55,6 +58,7 @@ const customGapSize = ref(16)
       </Card>
     </Space>
     <h2 class="mt30 mb10">对齐</h2>
+    <p class="mb10">通过 <code>align</code> 控制交叉轴的对齐方式</p>
     <div class="space-align-container">
       <div class="space-align-block">
         <Space align="center">
@@ -86,6 +90,7 @@ const customGapSize = ref(16)
       </div>
     </div>
     <h2 class="mt30 mb10">自动换行</h2>
+    <p class="mb10"><code>gap</code> 数组分别设置水平与垂直间距，超出容器宽度时自动换行</p>
     <Space :gap="[8, 16]" style="width: 100%">
       <template v-for="n in 16" :key="n">
         <Button type="primary">Button</Button>
