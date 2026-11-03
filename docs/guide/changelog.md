@@ -14,7 +14,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-11-02">3.8.0</VersionDateTag>
+## <VersionDateTag date="2026-11-04">3.8.0</VersionDateTag>
 
 - 新增 [分页 Pagination](/guide/components/pagination.html) 的 `bordered` 属性：传 `false` 切换为无边框风格（页码去掉边框与底色），两种风格的选中态与悬浮 / 按压反馈一致，并修复无边框风格下禁用态未选中页仍带边框的问题
 - 修复 [分页 Pagination](/guide/components/pagination.html) 页码越界后无页码高亮、切换每页条数后当前页未收敛的问题：钳制后按新页码派发 `update:page` / `pageSizeChange` / `change`
