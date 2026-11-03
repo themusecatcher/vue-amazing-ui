@@ -26,6 +26,18 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 修复 [标签页 Tabs](/guide/components/tabs.html) 溢出收纳下拉面板的弹出位置与菜单间距，新增页签按钮补独立点击区并对齐图标
 - 修复 [标签页 Tabs](/guide/components/tabs.html) 切换 `justifyContent` / `centered` 后指示条未重新贴合激活页签的问题
 
+## <VersionDateTag date="2026-11-04">3.8.0</VersionDateTag>
+
+- 新增 [分页 Pagination](/guide/components/pagination.html) 的 `bordered` 属性：传 `false` 切换为无边框风格
+- 修复 [分页 Pagination](/guide/components/pagination.html) 的页码越界：`total` 缩小或传入超出总页数的 `page` 时不再无页码高亮，切换每页条数与跳转均按有效页码派发 `update:page` / `pageSizeChange` / `change`
+- 增强 [分页 Pagination](/guide/components/pagination.html) 的 `showQuickJumper`：支持对象形态 `{ goButton }` 展示跳转确认按钮，传字符串可自定义按钮文案，有按钮时失焦不再自动跳转；跳转框屏蔽非数字输入，点击页码时跳转框失焦不再重复跳转
+- 增强 [分页 Pagination](/guide/components/pagination.html) 的无障碍与键盘可用性：补 `role="navigation"`、`aria-current` / `aria-disabled` 与页码 `title`，禁用与边界页移出 Tab 序列，跳转确认按钮补按压态与焦点环
+- 新增 [输入框 Input](/guide/components/input.html) 的 `blur` 事件，参数为原生 `FocusEvent`（含 `relatedTarget`）
+- 优化 [选择器 Select](/guide/components/select.html) / [输入框 Input](/guide/components/input.html) / [分页 Pagination](/guide/components/pagination.html) 的尺寸切换：运行时切换 `size` 不再整块突变
+- 修复 [表格 Table](/guide/components/table.html) 展开按钮缺少 `type="button"`（表单内点击会连带提交表单），补 `aria-expanded` / `aria-label` 与按压态、焦点环；[对话框 Dialog](/guide/components/dialog.html) / [模态框 Modal](/guide/components/modal.html) 的关闭与全屏按钮补按压态，焦点环配色统一为主题色
+- 更新使用者文档
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-11-03">3.7.2</VersionDateTag>
 
 - 新增 [间距 Space](/guide/components/space.html) 的 `split` 插槽：在相邻内容之间插入分隔符，内容不足两个时不渲染
