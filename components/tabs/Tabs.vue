@@ -767,22 +767,18 @@ function getContentStyle(pane: TabsPane): CSSProperties {
       .tabs-nav-list {
         position: relative;
         display: flex;
-        // 内容不足时撑满容器（分布样式才有作用），内容超出时不参与收缩、由内容撑开触发溢出收纳
         flex: none;
         min-width: 100%;
         .tab-item {
           position: relative;
           display: inline-flex;
           align-items: center;
-          // 图标与文字的间距；关闭按钮再以负外边距抵消到 8px
           gap: 12px;
           background: transparent;
           border: 0;
           outline: none;
           cursor: pointer;
           transition: all 0.3s;
-          // 激活 / 禁用项不参与 hover 变色：active 文字恒为主色（规则作用于内层 btn），
-          // disabled 恒为置灰色（disabled 规则后置书写、同特异性压过 hover）
           &:not(.tab-line-active, .tab-card-active, .tab-disabled):hover {
             color: var(--va-cp-tabs-primary-color-hover, var(--va-primary-color-hover));
           }
@@ -791,7 +787,6 @@ function getContentStyle(pane: TabsPane): CSSProperties {
           }
         }
         .tab-line-active {
-          /* 激活页签是「主色文字」：取 primary-text 语义位（默认与 primary 同值） */
           color: var(--va-cp-tabs-primary-text-color, var(--va-primary-text-color));
           text-shadow: 0 0 0.25px currentcolor;
         }
@@ -825,12 +820,10 @@ function getContentStyle(pane: TabsPane): CSSProperties {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          // 独立点击区：line 类型没有卡片外框，靠最小宽度与内边距撑出可点范围
           min-width: 32px;
           padding: 0 8px;
           margin-left: 16px;
           font-size: 14px;
-          // 与页签文字同色：图标取 currentColor，偏浅会显得像禁用态
           color: var(--va-text-color-1);
           background: transparent;
           border: 0;
@@ -875,13 +868,11 @@ function getContentStyle(pane: TabsPane): CSSProperties {
         transition: all 0.15s;
       }
     }
-    // 溢出收纳入口：作为导航区的兄弟节点占位，不覆盖页签（覆盖式会遮住滚到底的末项）
     .tabs-nav-operations {
       display: flex;
       flex: none;
       align-items: stretch;
       align-self: stretch;
-      // 触发器撑满导航高度：浮层锚点底边与导航底边重合，下拉面板才能落在分割线下方
       :deep(.dropdown-trigger) {
         display: flex;
         align-items: center;
@@ -892,9 +883,7 @@ function getContentStyle(pane: TabsPane): CSSProperties {
         align-items: center;
         justify-content: center;
         height: 100%;
-        // 与页签文字等宽的点击区：宽度由图标 + 左右各 16px 内边距撑开
         padding: 0 16px;
-        // 图标以 1em 取尺寸：显式字号避免落到浏览器按钮默认的 13.33px
         font-size: 14px;
         color: var(--va-text-color-1);
         background: transparent;
@@ -935,7 +924,6 @@ function getContentStyle(pane: TabsPane): CSSProperties {
         fill: currentColor;
       }
     }
-    // 自定义页签头的高度由插槽内容决定，会把分割线压在内容下方；提升层级保证底边线始终可见
     &.tabs-nav-custom::before {
       z-index: 1;
     }
@@ -1164,7 +1152,6 @@ function getContentStyle(pane: TabsPane): CSSProperties {
         }
       }
     }
-    // 纵向位置时收纳入口落在导航区下方，横向占满并居中
     .tabs-nav-operations {
       height: 32px;
       align-self: auto;
@@ -1246,7 +1233,6 @@ function getContentStyle(pane: TabsPane): CSSProperties {
         }
       }
     }
-    // 纵向位置时收纳入口落在导航区下方，横向占满并居中
     .tabs-nav-operations {
       height: 32px;
       align-self: auto;
@@ -1333,7 +1319,6 @@ function getContentStyle(pane: TabsPane): CSSProperties {
   .tabs-nav-container {
     .tabs-nav-wrap {
       .tabs-nav-list {
-        // 卡片按内容宽度排列，居中由导航容器负责（与 line 的分布方式互不影响）
         min-width: 0;
         .tab-item {
           padding: 8px 16px;
@@ -1444,7 +1429,6 @@ function getContentStyle(pane: TabsPane): CSSProperties {
 // 「更多」下拉：面板由宿主 Dropdown 渲染并 Teleport 到 body，作用域样式无法命中，故落在全局样式块。
 // 内边距只留菜单自身一层（内容层归零），面板高度与首项间距才与页签栏密度一致；菜单项 30px 高 / 最小宽 120px / 超过 200px 滚动
 .tabs-more-menu {
-  // 展开动画以锚点侧为原点：默认居中缩放会让面板顶边在进场期间下沉，看起来离页签栏更远
   &.dropdown-overlay.va-popup-placement-bottomLeft,
   &.dropdown-overlay.va-popup-placement-bottomRight {
     transform-origin: top left;
