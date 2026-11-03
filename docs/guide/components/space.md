@@ -281,6 +281,38 @@ const customGapSize = ref(16)
 
 :::
 
+## 分隔符
+
+_通过 `split` 插槽在相邻内容之间插入间隔元素，分隔符两侧各占一份 `gap` 间距_
+
+<br/>
+
+<Space align="center" :gap="8">
+  <template #split>
+    <Divider vertical />
+  </template>
+  <a href="#">Link</a>
+  <a href="#">Link</a>
+  <a href="#">Link</a>
+</Space>
+
+::: details Show Code
+
+```vue
+<template>
+  <Space align="center" :gap="8">
+    <template #split>
+      <Divider vertical />
+    </template>
+    <a href="#">Link</a>
+    <a href="#">Link</a>
+    <a href="#">Link</a>
+  </Space>
+</template>
+```
+
+:::
+
 ## APIs
 
 ### Space Props
@@ -291,10 +323,13 @@ const customGapSize = ref(16)
 | align | 垂直排列方式 | 'stretch' &#124; 'start' &#124; 'end' &#124; 'center' &#124; 'baseline' | 'start' |
 | vertical | 是否为垂直布局 | boolean | false |
 | gap | 间距大小，数组时表示: `[水平间距, 垂直间距]` | number &#124; number[] &#124; 'small' &#124; 'middle' &#124; 'large' | 'middle' |
-| wrap | 是否自动换行，仅在 `horizontal` 时有效 | boolean | true |
+| wrap | 是否自动换行，仅在未开启 `vertical` 时有效 | boolean | true |
+
+无子元素时不参与布局（不占父级间距）。
 
 ## Slots
 
 | 名称 | 说明 | 用法 |
 | :-- | :-- | :-- |
 | default | 自定义内容 | v-slot:default |
+| split | 相邻内容的间隔元素，内容不足两个时不渲染 | v-slot:split |

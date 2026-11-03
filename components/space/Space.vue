@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { VNode } from 'vue'
+import { Comment, computed, defineComponent, useSlots } from 'vue'
+import type { PropType, VNode } from 'vue'
 export interface Props {
   width?: string | number // 区域总宽度，单位 px
   align?: 'stretch' | 'start' | 'end' | 'center' | 'baseline' // 垂直排列方式
   vertical?: boolean // 是否为垂直布局
   gap?: number | number[] | 'small' | 'middle' | 'large' // 间距大小，数组时表示: [水平间距, 垂直间距]
-  wrap?: boolean // 是否自动换行，仅在 horizontal 时有效
+  wrap?: boolean // 是否自动换行，仅在未开启 vertical 时有效
 }
 // 声明组件插槽类型
 export interface SpaceSlots {
-  default?: () => VNode[]
+  default?: () => VNode[] // 间距内容
+  split?: () => VNode[] // 相邻内容的间隔元素
 }
 const props = withDefaults(defineProps<Props>(), {
   width: 'auto',
@@ -42,14 +43,46 @@ const gapValue = computed(() => {
     return gapMap[props.gap]
   }
 })
+// 承载 vnode 列表的稳定组件：直接返回数组等价于 Fragment，不产生包裹元素
+const SpaceContent = defineComponent({
+  name: 'SpaceContent',
+  props: {
+    content: { type: Array as PropType<VNode[]> }
+  },
+  setup: (contentProps) => () => contentProps.content
+})
+const slots: SpaceSlots = useSlots()
+// 无内容的节点（`v-if` 假分支的注释、纯空白文本）不参与排列，否则会多出一份间隔
+function isRenderable(node: VNode): boolean {
+  if (node.type === Comment) {
+    return false
+  }
+  return !(typeof node.children === 'string' && node.children.trim() === '')
+}
+// 渲染序列：内容之间插入分隔符。每个间隔重新求值插槽，避免同一 vnode 被多位置复用；
+// 插槽在 computed 内求值以保留依赖收集，分隔符内容随外部状态更新
+const contentNodes = computed<VNode[]>(() => {
+  const children = (slots.default?.() ?? []).filter(isRenderable)
+  if (children.length < 2 || !slots.split) {
+    return children
+  }
+  const nodes: VNode[] = []
+  children.forEach((child, index) => {
+    if (index > 0) {
+      nodes.push(...(slots.split?.() ?? []))
+    }
+    nodes.push(child)
+  })
+  return nodes
+})
 </script>
 <template>
   <div
     class="space-wrap"
     :class="[`space-${align}`, { 'space-vertical': vertical, 'space-flex-wrap': wrap }]"
-    :style="`width: ${spaceWidth}; gap: ${gapValue}; margin-bottom: -${Array.isArray(props.gap) && wrap ? props.gap[1] : 0}px;`"
+    :style="`width: ${spaceWidth}; gap: ${gapValue};`"
   >
-    <slot></slot>
+    <SpaceContent :content="contentNodes" />
   </div>
 </template>
 <style lang="less" scoped>
@@ -59,6 +92,9 @@ const gapValue = computed(() => {
   color: var(--va-text-color-1);
   transition: all 0.3s;
   flex-direction: row;
+  &:empty {
+    display: none;
+  }
 }
 .space-vertical {
   flex-direction: column;

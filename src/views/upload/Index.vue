@@ -26,6 +26,15 @@ const pdfList = ref<UploadFileType[]>([
     url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
+// 单文件模式演示：预置 1 个文件，用于展示「占满后仍显示上传入口，再次上传即替换」
+const singleFile = ref<UploadFileType[]>([
+  {
+    name: '1.jpg',
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
+  }
+])
+// 拖拽上传演示：拖拽路径同样按 accept 过滤，类型不符的文件经 reject 回传
+const dragList = ref<UploadFileType[]>([])
 watchEffect(() => {
   console.log('files', files.value)
 })
@@ -37,6 +46,12 @@ watchEffect(() => {
 })
 watchEffect(() => {
   console.log('pdfList', pdfList.value)
+})
+watchEffect(() => {
+  console.log('singleFile', singleFile.value)
+})
+watchEffect(() => {
+  console.log('dragList', dragList.value)
 })
 function onBeforeImageUpload(file: File): boolean {
   if (file.size > 500 * 1024) {
@@ -66,6 +81,11 @@ function onBeforePdfUpload(file: File): boolean {
     return false // 停止上传
   }
   return true // 继续上传
+}
+// 拖拽投放的文件不符合 accept 时触发：点选不会走到这里（<input accept> 已由浏览器拦截）
+function onReject(rejectedFiles: File[]) {
+  console.log('reject', rejectedFiles)
+  message.warning(`已忽略 ${rejectedFiles.length} 个类型不符的文件`)
 }
 function onCustomRequest(file: File): Promise<UploadFileType> {
   return new Promise((resolve, reject) => {
@@ -161,34 +181,43 @@ function onUploadFailRequest(file: File): Promise<UploadFileType> {
     <p class="mb10">只能预览，不能删除和上传</p>
     <Upload disabled v-model:fileList="fileList" />
     <h2 class="mt30 mb10">限制数量</h2>
-    <p class="mb10">通过 <code>maxCount</code> 限制上传数量；当为 <code>1</code> 时，始终用最新上传的代替当前</p>
+    <p class="mb10">
+      通过 <code>maxCount</code> 限制上传数量；当为
+      <code>1</code> 时占满后仍显示上传入口，再次上传即替换当前文件（示例已预置 1 个文件）
+    </p>
     <Space vertical>
-      <Upload :max-count="1" tip="maxCount: 1" v-model:fileList="files" />
+      <Upload :max-count="1" tip="maxCount: 1" v-model:fileList="singleFile" />
       <Upload :max-count="3" tip="maxCount: 3" v-model:fileList="fileList" />
     </Space>
     <h2 class="mt30 mb10">多文件上传</h2>
     <p class="mb10">可一次选择多个文件进行上传</p>
     <Upload multiple v-model:fileList="files" />
+    <h2 class="mt30 mb10">拖拽上传</h2>
+    <p class="mb10">
+      <code>draggable</code> 默认开启，把文件拖入上传框即可上传；拖拽路径与点选共用 <code>multiple</code> /
+      <code>accept</code> 约束，类型不符的文件经 <code>reject</code> 回传
+    </p>
+    <Upload accept="image/*" tip="拖拽图片到此" v-model:fileList="dragList" @drop="onDrop" @reject="onReject" />
     <h2 class="mt30 mb10">自定义样式布局</h2>
     <p class="mb10">缩略图等比覆盖；上传描述文字使用：上传</p>
     <Upload tip="上传" fit="cover" v-model:fileList="fileList" />
-    <h3 class="mt30 mb10">排列间距使用：'middle'；自定义上传 uploading 动画样式</h3>
+    <p class="mt30 mb10">排列间距使用：<code>'middle'</code>；自定义上传 <code>uploading</code> 动画样式</p>
     <Upload
       :space-props="{ gap: 'middle' }"
       :spin-props="{ indicator: 'dot-wheel', color: '#ff6900', tip: '上传中...' }"
       v-model:fileList="fileList"
     />
     <h2 class="mt30 mb10">操作完成的消息提示</h2>
-    <p class="mb10">
-      组件不再内嵌 <code>Message</code>，上传成功 / 删除 / 上传失败等提示改由使用方监听 <code>@success</code> /
-      <code>@remove</code> / <code>@error</code> 事件后自行调用
-    </p>
+    <p class="mb10">全局提示由使用方监听 <code>@success</code> / <code>@remove</code> / <code>@error</code> 后调用</p>
     <Space vertical>
       <Upload v-model:fileList="fileList" @success="onSuccess" @remove="onRemove" />
       <Upload upload-mode="custom" :custom-request="onUploadFailRequest" v-model:fileList="fileList" @error="onError" />
     </Space>
     <h2 class="mt30 mb10">上传文件校验</h2>
-    <p class="mb10">上传文件最大 <code>500KB</code>；同时限定文件类型</p>
+    <p class="mb10">
+      上传文件最大 <code>500KB</code>；同时限定文件类型（拖拽路径的类型过滤与
+      <code>reject</code> 回传见「拖拽上传」一节）
+    </p>
     <Space vertical>
       <Upload
         accept="image/*"

@@ -191,7 +191,7 @@ onBeforeMount(() => {
 | columnGap | 各列之间的间隙，单位 `px` | number | 20 |
 | width | 瀑布流区域的总宽度 | string &#124; number | '100%' |
 | borderRadius | 瀑布流区域和图片圆角，单位 `px` | number | 8 |
-| backgroundColor | 瀑布流区域背景填充色 | string | '#F2F4F8' |
+| backgroundColor | 瀑布流区域背景填充色，不传时取主题变量 `--va-bg-layout-color` | string | 'var(--va-bg-layout-color)' |
 | spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin-props)，用于配置图片加载中样式 | [SpinProps](./spin.md#spin-props) | {} |
 
 ### WaterfallImage Type

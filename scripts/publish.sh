@@ -145,6 +145,11 @@ if ! pnpm verify:inject-keys; then
     echo "❌ 注入契约守护未通过，请修复后重试"
     exit 1
 fi
+# 文档默认值守护（只扫源码）：文档 Props 默认值列 ↔ 源码 withDefaults 逐字段比对
+if ! pnpm verify:docs; then
+    echo "❌ 文档默认值守护未通过，请修复后重试"
+    exit 1
+fi
 
 # 检查是否有待提交的更改
 if [ -n "$(git status --porcelain)" ]; then

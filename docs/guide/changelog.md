@@ -25,6 +25,21 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 修复 [表格 Table](/guide/components/table.html) 展开按钮缺少 `type="button"`（表单内点击会连带提交表单），补充 `aria-expanded` / `aria-label` 与按压态、焦点环；[对话框 Dialog](/guide/components/dialog.html) / [模态框 Modal](/guide/components/modal.html) 的关闭与全屏按钮补同样的按压态与焦点环
 - 使用者文档补齐 [分页 Pagination](/guide/components/pagination.html) 与 [输入框 Input](/guide/components/input.html) 的新增属性 / 事件说明与示例
 
+## <VersionDateTag date="2026-11-03">3.7.2</VersionDateTag>
+
+- 新增 [间距 Space](/guide/components/space.html) 的 `split` 插槽：在相邻内容之间插入分隔符，两侧各占一份 `gap`，内容不足两个时不渲染
+- 新增 [弹性布局 Flex](/guide/components/flex.html) 的 `flex`（自身作为子项时的伸缩简写，数值即 `flex-grow`）与 `component`（渲染的标签名或组件）属性
+- 修复 [弹性布局 Flex](/guide/components/flex.html) / [间距 Space](/guide/components/space.html) 的下外边距与空内容占位；折行且 `gap` 为数组时下方间距不再少掉一份垂直 `gap`，空内容（`v-if` 全不成立）时不参与布局
+- 组件库及文档代码优化
+
+## <VersionDateTag date="2026-11-03">3.7.1</VersionDateTag>
+
+- 拖拽上传改为遵循 [上传 Upload](/guide/components/upload.html) 的 `accept` / `multiple` 约束：类型不符的文件不再入库，经新增的 `reject` 事件回传；关闭多选时拖入多个只取第一个文件
+- 修复 [上传 Upload](/guide/components/upload.html) 的 `maxCount`：为 `1` 时占满后仍可上传替换当前文件，超出上限的文件不再写入列表
+- 修复 [评分 Rate](/guide/components/rate.html) 的 `change` 派发时序：改在 `v-model` 更新后触发，`@change` 中不再读到旧值
+- 更新使用者文档与贡献者文档
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-11-02">3.7.0</VersionDateTag>
 
 - 可写字段改为「传值即受控」：`value` / `open` / `activeKey` 等传入后，交互只上报 `update:`、界面以父侧回写为准；只传值不监听 `update:` 的写法不再响应交互（[评分 Rate](/guide/components/rate.html)、[日期选择器 DatePicker](/guide/components/date-picker.html)、[分页 Pagination](/guide/components/pagination.html) 等），补 `v-model` 即可，原本就用 `v-model` 的无需改动

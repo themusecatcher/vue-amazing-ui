@@ -550,9 +550,8 @@ function canTriggerSide(timestamp: number | null, index: 0 | 1): boolean {
 }
 /**
  * 写入范围形态的某一段（面板选择与手输提交共用）：起点晚于终点时丢弃另一端、只保留本次写入，
- * 两段齐全（或未选段声明可为空）才对外提交；只写到一段时保持展开，由调用场景决定是否切到另一端
- *
- * @returns 写入后的区间与其文本（未提交时即为草稿），供 `ok` 事件复用
+ * 两段齐全（或未选段声明可为空）才对外提交；只写到一段时保持展开，由调用场景决定是否切到另一端。
+ * 返回写入后的区间与其文本（未提交时即为草稿），供 `ok` 事件复用
  */
 function applyRangeSide(timestamp: number, side: PickerRangeSide, switchSide: boolean) {
   const current = draftRange.value ?? rangeValue.value ?? [null, null]

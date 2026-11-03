@@ -571,14 +571,14 @@ const value = ref('hello world')
 | type | 渲染类型：矢量 / 位图 / 图片 | 'svg' &#124; 'canvas' &#124; 'image' | 'svg' |
 | size | 二维码整体大小（含内边距与外边框），单位为 `px` | number | 160 |
 | padding | 容器内边距，二维码绘制区为 `size` 减去两侧内边距与外边框 | number | 12 |
-| color | 二维码前景色，`CSS` 颜色值；不传时取主题变量 `--va-text-color-1`（浅色 `rgba(0, 0, 0, 0.88)` / 暗色 `rgba(255, 255, 255, 0.85)`） | string | 取 `--va-text-color-1` |
-| bgColor | 二维码背景色，`CSS` 颜色值；不传时取主题变量 `--va-bg-container-color`（浅色 `#ffffff` / 暗色 `#141414`） | string | 取 `--va-bg-container-color` |
+| color | 二维码前景色，`CSS` 颜色值；不传时取主题变量 `--va-text-color-1`（浅色 `rgba(0, 0, 0, 0.88)` / 暗色 `rgba(255, 255, 255, 0.85)`） | string | undefined |
+| bgColor | 二维码背景色，`CSS` 颜色值；不传时取主题变量 `--va-bg-container-color`（浅色 `#ffffff` / 暗色 `#141414`） | string | undefined |
 | icon | 二维码中央图标的地址 | string | undefined |
 | iconSize | 中央图标的大小，单位为 `px` | number | 40 |
-| iconBgColor | 中央图标的底色，用于压盖点阵、凸显图标；不传时与背景色一致 | string | 取 `bgColor` |
+| iconBgColor | 中央图标的底色，用于压盖点阵、凸显图标；不传时与背景色一致 | string | undefined |
 | iconBorderRadius | 中央图标底色的圆角，单位为 `px` | number | 4 |
 | bordered | 是否展示外边框 | boolean | true |
-| borderColor | 外边框颜色 | string | 取 `--va-border-split-color`（浅色 `#f0f0f0` / 暗色 `#303030`） |
+| borderColor | 外边框颜色，不传时取主题变量 `--va-border-split-color`（浅色 `#f0f0f0` / 暗色 `#303030`） | string | 'var(--va-border-split-color)' |
 | status | 二维码状态 | 'active' &#124; 'expired' &#124; 'loading' &#124; 'scanned' | 'active' |
 | spinProps | `Spin` 组件属性配置，参考 [Spin Props](./spin.md#spin-props)，用于配置加载中样式（`Spin` 默认按遮罩尺寸取 `small` 档） | [SpinProps](./spin.md#spin-props) | {} |
 | expiredText | `status` 为 `expired` 时的提示文案 | string | '二维码已过期' |
