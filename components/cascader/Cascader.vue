@@ -252,7 +252,7 @@ const cascaderHeight = computed(() => {
 })
 const panelHeightStyle = computed(() => `${props.panelHeight}px`)
 const floatingPlacement = computed<FloatingPlacement>(() => props.placement)
-// 挂载容器支持函数形态：按当前触发器求值一次，开合时重算（对齐「按触发器动态取容器」的用法）
+// 挂载容器支持函数形态：按当前触发器求值一次，开合时重算
 const resolvedTo = shallowRef<string | MountElement | false | undefined>(
   typeof props.to === 'function' ? undefined : props.to
 )

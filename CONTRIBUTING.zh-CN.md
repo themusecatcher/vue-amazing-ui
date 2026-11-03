@@ -142,7 +142,7 @@ pnpm lint:check   # ESLint 只读检查（不修改文件）
 pnpm type-check   # 类型检查
 pnpm test         # 单元测试（vitest）
 pnpm check        # 聚合检查：lint:check + format:check + type-check + test
-pnpm verify       # 重量级门禁：build + 依赖一致性 + 按需引入验证 + 主题架构守护 + 注入契约守护 + 产物守卫（发布前 / CI）
+pnpm verify       # 重量级门禁：build + 依赖一致性 + 按需引入验证 + 主题架构守护 + 注入契约守护 + 文档默认值守护 + 产物守卫（发布前 / CI）
 ```
 
 提交前建议先本地运行 `pnpm check`，确保通过后再推送。
@@ -151,7 +151,7 @@ pnpm verify       # 重量级门禁：build + 依赖一致性 + 按需引入验�
 
 1. 从最新 `main` 切出符合命名规范的功能分支。
 2. 开发组件 / 功能，同步补充 `docs/` 下对应的文档与演示。
-3. 本地运行 `pnpm check` 确保 lint 与类型检查通过；若改动了样式注入 / 构建产物，再跑一次 `pnpm verify`。
+3. 本地运行 `pnpm check` 确保 lint 与类型检查通过；若改动了样式注入 / 构建产物，再跑一次 `pnpm verify`（只改了组件 Props 默认值文档时，`pnpm verify:docs` 单独跑即可）。
 4. 按提交规范提交（钩子会自动校验）。
 5. 推送分支并发起 Pull Request，描述改动内容。
 6. 合入 `main` 后删除功能分支。

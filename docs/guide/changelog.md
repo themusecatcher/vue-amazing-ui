@@ -14,7 +14,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-11-02">3.8.0</VersionDateTag>
+## <VersionDateTag date="2026-11-05">3.9.0</VersionDateTag>
 
 - 移除 [标签页 Tabs](/guide/components/tabs.html) 的 `items` 属性与 `TabsItem` 类型：页签改由 `TabPane` 子组件描述（`key` 写在子组件上），原 `tab` / `content` 插槽由 `TabPane` 的 `tab` 插槽与默认插槽替代
 - 移除 [标签页 Tabs](/guide/components/tabs.html) 的 `centered` 属性：改用 `justifyContent: 'center'`，`card` 类型下同样生效
@@ -25,6 +25,19 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 优化 [标签页 Tabs](/guide/components/tabs.html) 的可访问性：补 `tablist` / `tab` / `tabpanel` 语义与方向键、`Home`、`End` 键盘导航
 - 修复 [标签页 Tabs](/guide/components/tabs.html) 溢出收纳下拉面板的弹出位置与菜单间距，新增页签按钮补独立点击区并对齐图标
 - 修复 [标签页 Tabs](/guide/components/tabs.html) 切换 `justifyContent` / `centered` 后指示条未重新贴合激活页签的问题
+
+## <VersionDateTag date="2026-11-03">3.7.2</VersionDateTag>
+
+- 新增 [间距 Space](/guide/components/space.html) 的 `split` 插槽：在相邻内容之间插入分隔符，内容不足两个时不渲染
+- 新增 [弹性布局 Flex](/guide/components/flex.html) 的 `flex`（容器自身作为 `flex` 子项时的伸缩简写，如 `flex: 1`）与 `component`（渲染的标签名或组件）属性
+- 修复 [弹性布局 Flex](/guide/components/flex.html) / [间距 Space](/guide/components/space.html) 的外部间距与空内容占位：写在组件上的 `margin` 类可正常生效，无内容（`v-if` 全不成立）时不再占位
+- 组件库及文档代码优化
+
+## <VersionDateTag date="2026-11-03">3.7.1</VersionDateTag>
+
+- 拖拽上传改为遵循 [上传 Upload](/guide/components/upload.html) 的 `accept` / `multiple` 约束：类型不符的文件不再入库，经新增的 `reject` 事件回传；关闭多选时拖入多个只取第一个文件
+- 修复 [上传 Upload](/guide/components/upload.html) 的 `maxCount`：为 `1` 时占满后仍可上传替换当前文件，超出上限的文件不再写入列表
+- 修复 [评分 Rate](/guide/components/rate.html) 的 `change` 派发时序：改在 `v-model` 更新后触发，`@change` 中不再读到旧值
 - 更新使用者文档与贡献者文档
 - 组件库及文档代码优化
 

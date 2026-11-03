@@ -11,8 +11,8 @@ import Upload from 'components/upload/Upload.vue'
  */
 
 /** 为隐藏的 file input 构造 FileList 并触发 change（走 onUpload → uploadFile） */
-async function triggerFileChange(wrapper: ReturnType<typeof mount>, file: File): Promise<void> {
-  const input = wrapper.find('input[type="file"]')
+async function triggerFileChange(wrapper: ReturnType<typeof mount>, file: File, index = 0): Promise<void> {
+  const input = wrapper.findAll('input[type="file"]')[index]
   Object.defineProperty(input.element, 'files', {
     value: [file],
     configurable: true
@@ -205,6 +205,246 @@ describe('Upload base64 读取的 loading 复位', () => {
     await flushPromises()
 
     expect(wrapper.find('.file-uploading').exists()).toBe(false)
+    wrapper.unmount()
+  })
+})
+
+/** happy-dom 没有可构造的 DataTransfer，直接把 files 挂到 drop 事件上 */
+async function triggerDrop(wrapper: ReturnType<typeof mount>, files: File[]): Promise<void> {
+  const target = wrapper.find('.upload-item')
+  const event = new Event('drop', { bubbles: true, cancelable: true })
+  Object.defineProperty(event, 'dataTransfer', { value: { files } })
+  target.element.dispatchEvent(event)
+  await flushPromises()
+}
+
+const makeFiles = (count: number): File[] =>
+  Array.from({ length: count }, (_, index) => new File(['x'], `f${index}.txt`, { type: 'text/plain' }))
+
+/** 最后一次上报的文件列表即组件最终自持的结果 */
+function lastFiles(wrapper: ReturnType<typeof mount>): { name?: string }[] {
+  const updates = wrapper.emitted('update:fileList')
+  return updates?.at(-1)?.[0] as { name?: string }[]
+}
+
+function lastFileCount(wrapper: ReturnType<typeof mount>): number {
+  return lastFiles(wrapper).length
+}
+
+/**
+ * 拖拽投放的文件数超过剩余槽位时的越界判定
+ *
+ * 槽位下标合法范围是 `[0, maxCount - 1]`：拖拽路径此前用 `index + n <= maxCount`，
+ * 比点击路径宽一格，一次投放的文件数多于剩余槽位时会多写一个越界槽位 ——
+ * 该文件进了 `fileList`，却因 `showUpload` 被压在 `maxCount` 而既不展示也无法删除。
+ */
+describe('Upload 拖拽投放的数量上限', () => {
+  it('投放数量超过剩余槽位时只写满剩余槽位', async () => {
+    const wrapper = mount(Upload, {
+      props: { maxCount: 3, multiple: true, uploadMode: 'custom' },
+      attachTo: document.body
+    })
+    await flushPromises()
+
+    await triggerDrop(wrapper, makeFiles(5))
+
+    expect(lastFileCount(wrapper)).toBe(3)
+    wrapper.unmount()
+  })
+
+  it('maxCount 为 1 时投放多个文件也只保留一个', async () => {
+    const wrapper = mount(Upload, {
+      props: { maxCount: 1, multiple: true, uploadMode: 'custom' },
+      attachTo: document.body
+    })
+    await flushPromises()
+
+    await triggerDrop(wrapper, makeFiles(2))
+
+    expect(lastFileCount(wrapper)).toBe(1)
+    wrapper.unmount()
+  })
+
+  it('投放数量未超限时全部写入（避免反向漏写）', async () => {
+    const wrapper = mount(Upload, {
+      props: { maxCount: 3, multiple: true, uploadMode: 'custom' },
+      attachTo: document.body
+    })
+    await flushPromises()
+
+    await triggerDrop(wrapper, makeFiles(3))
+
+    expect(lastFileCount(wrapper)).toBe(3)
+    wrapper.unmount()
+  })
+})
+
+/**
+ * 拖拽路径的 `multiple` 约束
+ *
+ * 点选路径由 `<input multiple>` 约束，拖拽路径此前直接遍历 `dataTransfer.files`，
+ * 于是 `multiple=false`（默认值）时一次拖入 N 个文件会全部入库：`multiple === false` 时只保留第一个。
+ */
+describe('Upload 拖拽投放的多选约束', () => {
+  it('multiple 为 false 时投放多个文件只取第一个', async () => {
+    const wrapper = mount(Upload, {
+      props: {
+        uploadMode: 'custom',
+        customRequest: (file: File) => Promise.resolve({ name: file.name, url: file.name })
+      },
+      attachTo: document.body
+    })
+    await flushPromises()
+
+    await triggerDrop(wrapper, makeFiles(3))
+
+    const files = lastFiles(wrapper)
+    expect(files).toHaveLength(1)
+    expect(files[0].name).toBe('f0.txt')
+    wrapper.unmount()
+  })
+})
+
+/** 回显文件名的自定义上传，便于断言「哪些文件真正入库」 */
+const echoRequest = (file: File): Promise<{ name: string; url: string }> =>
+  Promise.resolve({ name: file.name, url: file.name })
+
+/**
+ * 拖拽路径的 `accept` 约束
+ *
+ * 点选路径由 `<input accept>` 约束，拖拽路径此前直接遍历 `dataTransfer.files`，任何类型都能入库。
+ * 先按 accept 分区，被拒文件通过 `reject` 事件回传。
+ */
+describe('Upload 拖拽投放的类型约束', () => {
+  it('不符合 accept 的文件不入库，并通过 reject 事件回传', async () => {
+    const wrapper = mount(Upload, {
+      props: { accept: 'image/*', multiple: true, uploadMode: 'custom', customRequest: echoRequest },
+      attachTo: document.body
+    })
+    await flushPromises()
+
+    await triggerDrop(wrapper, [
+      new File(['x'], 'a.png', { type: 'image/png' }),
+      new File(['x'], 'b.txt', { type: 'text/plain' })
+    ])
+
+    expect(lastFiles(wrapper).map((file) => file.name)).toEqual(['a.png'])
+    const rejected = wrapper.emitted('reject')?.[0]?.[0] as File[]
+    expect(rejected.map((file) => file.name)).toEqual(['b.txt'])
+    wrapper.unmount()
+  })
+
+  it('accept 支持逗号分隔与后缀形式（.jpeg 命中 .jpg）', async () => {
+    const wrapper = mount(Upload, {
+      props: {
+        accept: '.jpg, application/pdf',
+        multiple: true,
+        uploadMode: 'custom',
+        customRequest: echoRequest
+      },
+      attachTo: document.body
+    })
+    await flushPromises()
+
+    await triggerDrop(wrapper, [
+      new File(['x'], 'a.jpeg', { type: 'image/jpeg' }),
+      new File(['x'], 'b.pdf', { type: 'application/pdf' }),
+      new File(['x'], 'c.txt', { type: 'text/plain' })
+    ])
+
+    expect(lastFiles(wrapper).map((file) => file.name)).toEqual(['a.jpeg', 'b.pdf'])
+    wrapper.unmount()
+  })
+
+  it('全部符合 accept 时不派发 reject', async () => {
+    const wrapper = mount(Upload, {
+      props: { accept: 'image/*', multiple: true, uploadMode: 'custom', customRequest: echoRequest },
+      attachTo: document.body
+    })
+    await flushPromises()
+
+    await triggerDrop(wrapper, [new File(['x'], 'a.png', { type: 'image/png' })])
+
+    expect(lastFileCount(wrapper)).toBe(1)
+    expect(wrapper.emitted('reject')).toBeUndefined()
+    wrapper.unmount()
+  })
+})
+
+/**
+ * 单文件模式下「一次投放全被 accept 拒绝」的落点边界
+ *
+ * 单文件模式的落点是恒定的槽位 0，落点数必须跟随实际文件数归零：多出来的落点会让
+ * `uploadFile` 拿到 `undefined` —— custom 模式写出 `{ url: '' }` 的空文件，
+ * base64（默认模式）在 `readAsDataURL` 抛错后留下永不消失的 loading。
+ */
+describe('Upload 单文件模式下的空投放', () => {
+  it('全部被 accept 拒绝时不调用 beforeUpload、不写 fileList、不残留 loading', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const beforeUpload = vi.fn(() => true)
+    const wrapper = mount(Upload, {
+      props: { maxCount: 1, accept: '.png', beforeUpload },
+      attachTo: document.body
+    })
+    await flushPromises()
+
+    await triggerDrop(wrapper, [new File(['x'], 'a.txt', { type: 'text/plain' })])
+
+    expect((wrapper.emitted('reject')?.[0]?.[0] as unknown[]).length).toBe(1)
+    expect(beforeUpload).not.toHaveBeenCalled()
+    expect(wrapper.emitted('update:fileList')).toBeUndefined()
+    expect(wrapper.find('.file-uploading').exists()).toBe(false)
+    expect(errorSpy).not.toHaveBeenCalled()
+    wrapper.unmount()
+    errorSpy.mockRestore()
+  })
+})
+
+/**
+ * 单文件模式（`maxCount: 1`）的替换语义
+ *
+ * 槽位模型下每格既是上传框又是预览位，占满后无空位可点 —— 此前 `maxCount: 1` 只剩预览、
+ * 无法替换：占满后仍常驻一格上传框，
+ * 上传落点特例为槽位 0，新文件覆盖当前文件。
+ */
+describe('Upload 单文件模式的替换语义', () => {
+  const existing = [{ name: 'old.jpg', url: 'old.jpg' }]
+
+  it('已有 1 个文件时仍渲染上传入口（2 格 = 1 预览 + 1 上传框）', async () => {
+    const wrapper = mount(Upload, {
+      props: { maxCount: 1, fileList: existing },
+      attachTo: document.body
+    })
+    await flushPromises()
+
+    expect(wrapper.findAll('input[type="file"]')).toHaveLength(2)
+    wrapper.unmount()
+  })
+
+  it('已有 1 个文件时再上传：仍只有 1 个，且是最新文件', async () => {
+    const wrapper = mount(Upload, {
+      props: { maxCount: 1, fileList: existing, uploadMode: 'custom', customRequest: echoRequest },
+      attachTo: document.body
+    })
+    await flushPromises()
+
+    // 下标 1 即常驻上传框，写入的是槽位 0
+    await triggerFileChange(wrapper, new File(['x'], 'new.png', { type: 'image/png' }), 1)
+
+    const files = lastFiles(wrapper)
+    expect(files).toHaveLength(1)
+    expect(files[0].name).toBe('new.png')
+    wrapper.unmount()
+  })
+
+  it('禁用时不渲染上传入口（只保留预览）', async () => {
+    const wrapper = mount(Upload, {
+      props: { maxCount: 1, disabled: true, fileList: existing },
+      attachTo: document.body
+    })
+    await flushPromises()
+
+    expect(wrapper.findAll('input[type="file"]')).toHaveLength(1)
     wrapper.unmount()
   })
 })

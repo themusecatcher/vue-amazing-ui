@@ -208,7 +208,7 @@ const disabledValue = ref('')
 | placeholder | 文本域输入的占位符 | string | undefined |
 | maxlength | 文字最大长度 | number | undefined |
 | showCount | 是否展示字数 | boolean | false |
-| value <Tag color="cyan">v-model</Tag> | 文本域内容 | string | undefined |
+| value <Tag color="cyan">v-model</Tag> | 文本域内容；与其他原生表单类组件不同，本字段默认 `''` 而非 `undefined`（真相源在 DOM 节点） | string | '' |
 
 ## Events
 

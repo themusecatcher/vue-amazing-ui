@@ -5,6 +5,7 @@ import Spin, { type SpinProps } from 'components/spin'
 import Image, { type ImageProps } from 'components/image'
 import Space, { type SpaceProps } from 'components/space'
 import { log, useControlledModel } from 'components/utils'
+import { attrAccept } from './accept'
 export interface FileType {
   name?: string // 文件名
   url: any // 文件地址
@@ -57,7 +58,7 @@ const uploading = ref<boolean[]>([]) // 上传中
 const uploadInputRef = ref<HTMLInputElement[]>([]) // 上传文件控件引用
 const imageRef = ref<InstanceType<typeof Image>[]>([]) // Image 组件实例引用
 // 组件自身不再持有 Message，操作提示交由使用方通过 success / error / remove 事件自行处理
-const emits = defineEmits(['update:fileList', 'drop', 'change', 'preview', 'remove', 'success', 'error'])
+const emits = defineEmits(['update:fileList', 'drop', 'reject', 'change', 'preview', 'remove', 'success', 'error'])
 const maxFileCount = computed(() => {
   if (props.maxCount === undefined) {
     return Infinity
@@ -76,15 +77,33 @@ function initUpload(): void {
     showUpload.value = count
   } else if (count < maxFileCount.value) {
     showUpload.value = count + 1
+  } else if (maxFileCount.value === 1 && count === 1) {
+    // 单文件模式占满后在预览格外常驻一格上传框（共 2 格），上传落点覆盖槽位 0：
+    // 仍可上传，新文件代替当前文件
+    showUpload.value = 2
   } else {
     showUpload.value = maxFileCount.value
   }
 }
 /**
- * 按上传槽位写入结果：整体替换数组，保留槽位下标的稀疏语义
+ * 按「触发上传的格子下标」与「本次待写入的文件数」求落点槽位
  *
- * @returns 写入后的新数组：受控时模型写完立刻回读拿到的仍是父侧旧值，
- *          事件载荷须用它而不是再读一次模型
+ * 返回值与文件一一对应，长度不足 `count` 即表示多余文件被丢弃：槽位下标合法范围是
+ * `[0, maxCount - 1]`，超出的文件直接丢弃（否则会进 fileList 却不展示、无法删除）。
+ * 单文件模式特殊：常驻上传框的下标是 1，但它与预览格共用槽位 0，故一次只收第一个文件。
+ * 一个文件都不收时返回空数组 —— 落点数绝不能多于文件数（否则 `uploadFile` 会拿到 `undefined`）
+ */
+function resolveSlots(index: number, count: number): number[] {
+  // 全部文件都被 accept 拒绝时没有任何落点：单文件模式的槽位恒为 0，
+  // 若此时仍返回 `[0]`，`uploadFile(undefined, 0)` 会写出空文件（custom 模式）或卡住 loading（base64 模式）
+  if (count === 0) return []
+  if (maxFileCount.value === 1) return [0]
+  return Array.from({ length: count }, (_, n) => index + n).filter((slot) => slot < maxFileCount.value)
+}
+/**
+ * 按上传槽位写入结果：整体替换数组，保留槽位下标的稀疏语义，返回写入后的新数组
+ *
+ * 事件载荷必须用返回值：受控时模型写完立刻回读，拿到的仍是父侧旧值
  */
 function setUploadedFile(index: number, file: FileType): FileType[] {
   const next = [...uploadedFilesModel.value]
@@ -118,14 +137,25 @@ function isPDF(url: string): boolean {
 function onDrop(e: DragEvent, index: number): void {
   const files = e.dataTransfer?.files
   if (files?.length) {
-    const len = files.length
-    for (let n = 0; n < len; n++) {
-      if (index + n <= maxFileCount.value) {
-        uploadFile(files[n], index + n)
+    // 拖拽路径不受 <input accept> / <input multiple> 约束，需在此复刻：
+    // 先按 accept 分区（被拒的通过 reject 事件回传），未开启多选时只取第一个文件。
+    // 分区必须一趟走完：attrAccept 对非法 token 会告警，逐条 filter 等于对同一文件重复求值
+    const dropped = Array.from(files)
+    const accepted: File[] = []
+    const rejected: File[] = []
+    dropped.forEach((file) => {
+      if (attrAccept(file, props.accept)) {
+        accepted.push(file)
       } else {
-        break
+        rejected.push(file)
       }
+    })
+    if (rejected.length > 0) {
+      emits('reject', rejected)
     }
+    const picked = props.multiple ? accepted : accepted.slice(0, 1)
+    const slots = resolveSlots(index, picked.length)
+    slots.forEach((slot, n) => uploadFile(picked[n], slot))
     // input 的 change 事件默认保存上一次 input 的 value 值，同一 value 值(根据文件路径判断)在上传时不重新加载
     uploadInputRef.value[index].value = ''
   }
@@ -136,16 +166,12 @@ function onClickFileInput(index: number): void {
 }
 // 点击上传
 function onUpload(e: any, index: number): void {
-  const files = e.target.files
+  const files = e.target.files as FileList | null
   if (files?.length) {
-    const len = files.length
-    for (let n = 0; n < len; n++) {
-      if (index + n < maxFileCount.value) {
-        uploadFile(files[n], index + n)
-      } else {
-        break
-      }
-    }
+    // 单文件模式下常驻上传框（下标 1）与预览格共用槽位 0，落点由 resolveSlots 统一计算
+    const picked = Array.from(files)
+    const slots = resolveSlots(index, picked.length)
+    slots.forEach((slot, n) => uploadFile(picked[n], slot))
     // input 的 change 事件默认保存上一次 input 的 value 值，同一 value 值(根据文件路径判断)在上传时不重新加载
     uploadInputRef.value[index].value = ''
   }
@@ -285,7 +311,7 @@ function onRemove(index: number): void {
 }
 </script>
 <template>
-  <div class="upload-wrap" :style="``">
+  <div class="upload-wrap">
     <Space gap="small" v-bind="spaceProps">
       <div class="upload-item-panel" v-for="n of showUpload" :key="n">
         <div
@@ -485,7 +511,6 @@ function onRemove(index: number): void {
       width: 100px;
       height: 100px;
       border-radius: 8px;
-      padding: 8px;
       border: 1px solid var(--va-border-color);
       display: flex;
       align-items: center;
@@ -498,7 +523,7 @@ function onRemove(index: number): void {
       }
       .file-mask {
         // top right bottom left 简写为 inset: 0
-        // insert 无论元素的书写模式、行内方向和文本朝向如何，其所定义的都不是逻辑偏移而是实体偏移
+        // inset 无论元素的书写模式、行内方向和文本朝向如何，其所定义的都不是逻辑偏移而是实体偏移
         position: absolute;
         inset: 0;
         margin: 8px;

@@ -66,20 +66,20 @@ const props = withDefaults(defineProps<Props>(), {
 
 - **Vue `useModel` 的判据不同**：它要求「prop key 存在**且** `onUpdate:x` 监听器存在」（`@vue/runtime-core` 的 `hasVModel`）。于是「父只传值、不监听回写」时组件会本地自写 —— UI 正常但数据不回流，正是本库最不能接受的**静默分叉**；而 `!== undefined` 判据的失败是「点了没反应」，开发期立即暴露。响亮失败优于静默失败。
 - **生态惯例**：主流同类组件库的可写状态合并实现普遍以 `value !== undefined` 判据，且极少使用 `useModel` / `defineModel`（2026-11 逐库核对源码确认）；本库跟随这一惯例。
-- **类型单一真相源**：`defineModel` 生成的 prop 不在 `interface Props` 里，须用 `Props & { x?: T }` 合并 + 守卫脚本补偿；手写声明天然只有一个出处。
+- **类型单一真相源**：`defineModel` 生成的 prop 不在 `interface Props` 里，须额外维护一份 `Props & { x?: T }` 合并块，同一字段两个出处；手写声明天然只有一个。
 
 落地细则：
 
 - **声明形态**：字段写进 `interface Props`（带中文注释），`defineEmits` 声明 `update:x`。双模字段用 `components/utils` 的 `useControlledModel(name, default)` 取可写 ref，**禁止**再手写 `innerX` + `watch(() => props.x)` + `mergedX` 三件套。
-- **`defineModel` 禁止用于公共 API**：其受控判据与全库冲突（见上文依据）。确有非公共入口需要时，须加入 `scripts/check-model-props.js` 的白名单并写明理由；白名单当前为空。该条与上一条默认值约定同由 `pnpm guard` 第 ⑦ 项强制。
+- **`defineModel` 全库禁用**：其受控判据与全库冲突（见上文依据），公共 API 与内部组件一律适用，无白名单例外。该条与「`update:x` 必须声明」「默认值只能是 `undefined`」两条同由 `pnpm guard` 第 ⑦ 项强制。
 - **受控字段的 prop 默认值必须是 `undefined`**：否则 `!== undefined` 判据恒真，组件永久受控、彻底不可交互（布尔字段连「不写」也不行——缺省会被强转 `false`，必须显式写 `undefined`）。非受控初值由 `useControlledModel` 的第二个参数承担，对外按需暴露 `defaultXxx`。该条由 `pnpm guard` 第 ⑦ 项强制。
 - **需要知道「当前是否受控」时用 `useIsControlled(name)`**：`useControlledModel` 只负责读写，不对外暴露判据；组件中若还有「只在非受控时才做」的旁路逻辑（典型：非受控才派发 `panelChange`、非受控 `defaultOpen` 才生效），统一调用 `useIsControlled`，**禁止**再直接写 `props.x === undefined` —— 两处判据一旦分叉，就会重现「事件扣了但界面不动」这类问题。
 - **写入必须整体赋值**（`model.value = [...model.value, x]`），禁止 `push` / `splice`：受控时该 ref 读到的是父数组引用，原地修改会直接污染父级数据且不触发上报。
 - **「要不要双模」是组件特性，逐字段定**：不绑 `v-model` 时是否必须可交互。`Switch` / `Tag` / `Steps` / `AutoComplete` 的 `value` 保持纯受控（无内部态）；`Tabs` / `Collapse` / `Slider` / `Pagination` 补 `defaultXxx` 作为非受控入口。
-- **原生表单元素**（`Input` / `Textarea` / `InputSearch` / `InputNumber`）保持手写：真相源在 DOM 节点，受控时回写元素，非受控时元素自持，不得再引入一份 JS 本地状态。
+- **原生表单元素**（`Input` / `Textarea` / `InputSearch` / `InputNumber`）保持手写：真相源在 DOM 节点，受控时回写元素，非受控时元素自持，不得再引入一份 JS 本地状态。其中 **`Textarea` 的 `value` 默认值是 `''`**（其余三者是 `undefined`）——它的写入路径按 `lazy` 修饰符与 `target.value !== props.value` 逐字符比对，改成 `undefined` 会牵动组合输入（IME）与 `autoSize` 高度重算，属有意保留的例外；文档默认值列照实写 `''`。
 - **双轨字段**（`DatePicker` / `TimePicker` 的 `formattedValue`）保持手写：需区分「父写」与「组件派生」，可写 ref 无法提供来源信息。
 - **唯一的结构性例外是 `Carousel.currentIndex`**：自动播放会在**无用户交互**时持续推进下标并改变展示，组件内的动画下标才是展示真相，`currentIndex` 只是「父可驱动 + 变更上报」的通道。判别条件只有一条：**组件是否会在无用户交互时自动改值** —— 会（自动播放）则 R1 不适用；只在用户交互时改值（点击 / 键盘 / 拖拽）则一律 R1。
-- **存量迁移已全部完成**（3.7.0）：31 个双模字段统一走 `useControlledModel`；其余字段按性质保留 —— 纯受控（`Switch` / `Tag` / `Steps` / `AutoComplete` 的 `value` / `Dialog` / `Modal`）、原生表单元素（`Input` / `Textarea` / `InputSearch` / `InputNumber` / `Radio` / `RadioButton` / `Checkbox`）、双轨（`DatePicker` / `TimePicker` 的 `formattedValue`），以及上文唯一的结构性例外 `Carousel.currentIndex`。`scripts/check-model-props.js` 的 `LEGACY_DEFINE_MODEL` 已清空，新字段不得进白名单。
+- **存量迁移已全部完成**（3.7.0）：31 个双模字段统一走 `useControlledModel`；其余字段按性质保留 —— 纯受控（`Switch` / `Tag` / `Steps` / `AutoComplete` 的 `value` / `Dialog` / `Modal`）、原生表单元素（`Input` / `Textarea` / `InputSearch` / `InputNumber` / `Radio` / `RadioButton` / `Checkbox`）、双轨（`DatePicker` / `TimePicker` 的 `formattedValue`），以及上文唯一的结构性例外 `Carousel.currentIndex`。`scripts/check-model-props.js` 已取消白名单机制：任何 SFC（含内部组件）使用 `defineModel` 都会让守卫失败。
 
 #### `defineModel` → `useControlledModel` 迁移清单
 
