@@ -16,9 +16,9 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-11-03">3.7.2</VersionDateTag>
 
-- 新增 [间距 Space](/guide/components/space.html) 的 `split` 插槽：在相邻内容之间插入分隔符，两侧各占一份 `gap`，内容不足两个时不渲染
-- 新增 [弹性布局 Flex](/guide/components/flex.html) 的 `flex`（自身作为子项时的伸缩简写，数值即 `flex-grow`）与 `component`（渲染的标签名或组件）属性
-- 修复 [弹性布局 Flex](/guide/components/flex.html) / [间距 Space](/guide/components/space.html) 的下外边距与空内容占位；折行且 `gap` 为数组时下方间距不再少掉一份垂直 `gap`，空内容（`v-if` 全不成立）时不参与布局
+- 新增 [间距 Space](/guide/components/space.html) 的 `split` 插槽：在相邻内容之间插入分隔符，内容不足两个时不渲染
+- 新增 [弹性布局 Flex](/guide/components/flex.html) 的 `flex`（容器自身作为 `flex` 子项时的伸缩简写，如 `flex="1"`）与 `component`（渲染的标签名或组件）属性
+- 修复 [弹性布局 Flex](/guide/components/flex.html) / [间距 Space](/guide/components/space.html) 的外部间距与空内容占位：写在组件上的 `margin` 类可正常生效，无内容（`v-if` 全不成立）时不再占位
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-11-03">3.7.1</VersionDateTag>
