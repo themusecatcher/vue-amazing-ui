@@ -14,13 +14,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-11-02">3.7.1</VersionDateTag>
+## <VersionDateTag date="2026-11-03">3.7.1</VersionDateTag>
 
-- 新增 [上传 Upload](/guide/components/upload.html) 的 `reject` 事件：拖拽上传改为遵循 `multiple` / `accept` 约束，关闭多选时只取第一个文件，类型不符的文件经 `reject` 回传而不入库；使用者文档补充对应行为说明与拖拽演示
-- 修复 [上传 Upload](/guide/components/upload.html) 的 `maxCount`：为 `1` 时占满后无法再上传替换当前文件，拖拽超出上限的文件会入库却无法删除
-- 修复 [评分 Rate](/guide/components/rate.html) 的 `change` 早于 `update:value` 派发：`@change` 中读到的是旧值
-- 更新使用者文档：Props 默认值列改按源码默认值书写，未传时的生效取值写进说明列（[时间选择器 TimePicker](/guide/components/time-picker.html)、[二维码 QRCode](/guide/components/qr-code.html)、[文本域 Textarea](/guide/components/textarea.html) 等）
-- 更新贡献者文档：`defineModel` 全库禁用、双模字段须声明 `update:x`，并统一 Props 默认值列口径
+- 拖拽上传改为遵循 [上传 Upload](/guide/components/upload.html) 的 `accept` / `multiple` 约束：类型不符的文件不再入库，经新增的 `reject` 事件回传；关闭多选时拖入多个只取第一个文件
+- 修复 [上传 Upload](/guide/components/upload.html) 的 `maxCount`：为 `1` 时占满后仍可上传替换当前文件，超出上限的文件不再写入列表
+- 修复 [评分 Rate](/guide/components/rate.html) 的 `change` 派发时序：改在 `v-model` 更新后触发，`@change` 中不再读到旧值
+- 更新使用者文档与贡献者文档
+- 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-11-02">3.7.0</VersionDateTag>
 
