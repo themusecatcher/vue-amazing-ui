@@ -3,7 +3,7 @@
  * 文档 Props「默认值」列与源码 `withDefaults` 的一致性守护（`pnpm verify:docs`）
  *
  * 为什么需要脚本：这类失真只能靠「逐字段与源码比对」发现，人工抽查必然漏 ——
- * 已发现的 4 处（`avatar.color` / `waterfall.backgroundColor` / `time-picker.*Step` / `textarea.value`）
+ * 已发现的每一处（如 `avatar.color` / `waterfall.backgroundColor` / `time-picker.*Step` / `textarea.value`）
  * 都是这么漏掉的，且每一处都让使用方按错误默认值写代码。
  *
  * **口径**：默认值列写 **prop 默认值**，不是未传时的**有效初始值**（有效值写进说明列）。

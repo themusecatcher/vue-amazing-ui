@@ -2,7 +2,7 @@
  * v-model 声明契约校验（由 `scripts/prepublish-guard.js` 第 ⑦ 项调用）
  *
  * 全库判据是「传值即受控」（`props.x !== undefined`），它与 `defineModel` 自带的判据
- * （prop + `onUpdate` 监听器同时存在）冲突，故两条断言：
+ * （prop + `onUpdate` 监听器同时存在）冲突，故三条断言：
  *
  * ① **禁止 `defineModel`**（无白名单例外，公共 API 与内部组件一律适用）——
  *    `defineModel` 会把「父只传值不监听」退化为本地可写，UI 正常但数据不回流（静默分叉）。

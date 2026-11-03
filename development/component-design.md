@@ -71,7 +71,7 @@ const props = withDefaults(defineProps<Props>(), {
 落地细则：
 
 - **声明形态**：字段写进 `interface Props`（带中文注释），`defineEmits` 声明 `update:x`。双模字段用 `components/utils` 的 `useControlledModel(name, default)` 取可写 ref，**禁止**再手写 `innerX` + `watch(() => props.x)` + `mergedX` 三件套。
-- **`defineModel` 禁止用于公共 API**：其受控判据与全库冲突（见上文依据）。确有非公共入口需要时，须加入 `scripts/check-model-props.js` 的白名单并写明理由；白名单当前为空。该条与上一条默认值约定同由 `pnpm guard` 第 ⑦ 项强制。
+- **`defineModel` 全库禁用**：其受控判据与全库冲突（见上文依据），公共 API 与内部组件一律适用，无白名单例外。该条与「`update:x` 必须声明」「默认值只能是 `undefined`」两条同由 `pnpm guard` 第 ⑦ 项强制。
 - **受控字段的 prop 默认值必须是 `undefined`**：否则 `!== undefined` 判据恒真，组件永久受控、彻底不可交互（布尔字段连「不写」也不行——缺省会被强转 `false`，必须显式写 `undefined`）。非受控初值由 `useControlledModel` 的第二个参数承担，对外按需暴露 `defaultXxx`。该条由 `pnpm guard` 第 ⑦ 项强制。
 - **需要知道「当前是否受控」时用 `useIsControlled(name)`**：`useControlledModel` 只负责读写，不对外暴露判据；组件中若还有「只在非受控时才做」的旁路逻辑（典型：非受控才派发 `panelChange`、非受控 `defaultOpen` 才生效），统一调用 `useIsControlled`，**禁止**再直接写 `props.x === undefined` —— 两处判据一旦分叉，就会重现「事件扣了但界面不动」这类问题。
 - **写入必须整体赋值**（`model.value = [...model.value, x]`），禁止 `push` / `splice`：受控时该 ref 读到的是父数组引用，原地修改会直接污染父级数据且不触发上报。
