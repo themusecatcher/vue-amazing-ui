@@ -14,7 +14,10 @@ const DEEP_IMPORT_MESSAGE = [
 // configureVueProject({ scriptLangs: ['ts', 'tsx'] })
 // More info at https://github.com/vuejs/eslint-config-typescript/#advanced-setup
 
-export default defineConfigWithVueTs(
+// 显式标注类型：tsconfig.node.json 用 allowJs 把本文件纳入程序后，默认导出若靠推断会引用
+// @typescript-eslint/utils 的深层类型而报 TS2742（不可移植），标注后即可作为具名类型声明
+/** @type {import('eslint').Linter.Config[]} */
+const config = defineConfigWithVueTs(
   {
     name: 'app/files-to-lint',
     files: ['**/*.{ts,mts,tsx,vue}']
@@ -167,3 +170,5 @@ export default defineConfigWithVueTs(
     }
   }
 )
+
+export default config
