@@ -81,7 +81,7 @@
     "verify:theme": "tsx scripts/verify-theme.ts --strict",
     "verify:on-demand": "tsx scripts/verify-on-demand.ts",
     "verify:inject-keys": "tsx scripts/verify-inject-keys.ts",
-    "verify:docs": "tsx scripts/check-doc-defaults.ts",
+    "verify:docs": "tsx scripts/verify-docs.ts",
     "gen:vars": "tsx scripts/gen-component-vars-doc.ts",
     "guard": "tsx scripts/prepublish-guard.ts",
     "test": "vitest run",

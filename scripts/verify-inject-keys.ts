@@ -27,7 +27,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { stripComments } from './component-vars-check'
+import { stripComments } from './component-vars-parse'
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const componentsDir = resolve(rootDir, 'components')

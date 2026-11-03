@@ -23,7 +23,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parseModelDefaults } from './check-model-props'
-import { stripComments } from './component-vars-check'
+import { stripComments } from './component-vars-parse'
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const componentsDir = resolve(rootDir, 'components')
@@ -150,5 +150,5 @@ if (failures.length > 0) {
 }
 console.log(
   `✅ 文档默认值守护通过：${checked} 个 prop 的默认值列与源码 withDefaults 一致` +
-    (whitelisted > 0 ? `（${whitelisted} 处按白名单豁免，见 scripts/check-doc-defaults.ts）` : '')
+    (whitelisted > 0 ? `（${whitelisted} 处按白名单豁免，见 scripts/verify-docs.ts）` : '')
 )

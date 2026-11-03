@@ -11,7 +11,7 @@ import {
   COMPONENT_VARS_BY_COMPONENT,
   THEME_COMPONENTS
 } from 'components/theme/component-vars'
-import { collectVarRefs, collectVarUsages, splitSfc, stripComments } from '../scripts/component-vars-check'
+import { collectVarRefs, collectVarUsages, splitSfc, stripComments } from '../scripts/component-vars-parse'
 import { render } from '../scripts/gen-component-vars-doc'
 
 /**

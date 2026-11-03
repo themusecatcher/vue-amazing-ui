@@ -18,7 +18,7 @@
 import { readFileSync } from 'node:fs'
 import { relative, resolve } from 'node:path'
 import { collectSfcs, findBalancedEnd } from './check-prop-runtime-types'
-import { stripComments } from './component-vars-check'
+import { stripComments } from './component-vars-parse'
 
 /** `defineModel` 声明：不带参数时默认模型名为 `modelValue` */
 const MODEL_PATTERN = /defineModel\s*(?:<[^()]*>)?\s*\(\s*(?:'([^']+)'|"([^"]+)")?/g

@@ -35,7 +35,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { COMPONENT_VAR_NAMES, COMPONENT_VARS, THEME_COMPONENTS } from '../components/theme/component-vars'
-import { collectVarRefs, splitSfc, stripComments } from './component-vars-check'
+import { collectVarRefs, splitSfc, stripComments } from './component-vars-parse'
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const strict = process.argv.includes('--strict')
