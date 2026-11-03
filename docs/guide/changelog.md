@@ -14,11 +14,19 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-11-02">3.7.1</VersionDateTag>
+## <VersionDateTag date="2026-11-03">3.7.2</VersionDateTag>
 
 - 新增 [间距 Space](/guide/components/space.html) 的 `split` 插槽：在相邻内容之间插入分隔符，无内容时不再占用父级间距
 - 新增 [弹性布局 Flex](/guide/components/flex.html) 的 `flex`（容器自身伸缩简写）与 `component`（语义化标签）属性，无内容时不再占用父级间距
 - 修复 [弹性布局 Flex](/guide/components/flex.html) / [间距 Space](/guide/components/space.html) 覆盖调用方间距样式（如 `mb10` 类）的问题，折行容器不再被内部负偏移压缩
+- 组件库及文档代码优化
+
+## <VersionDateTag date="2026-11-03">3.7.1</VersionDateTag>
+
+- 拖拽上传改为遵循 [上传 Upload](/guide/components/upload.html) 的 `accept` / `multiple` 约束：类型不符的文件不再入库，经新增的 `reject` 事件回传；关闭多选时拖入多个只取第一个文件
+- 修复 [上传 Upload](/guide/components/upload.html) 的 `maxCount`：为 `1` 时占满后仍可上传替换当前文件，超出上限的文件不再写入列表
+- 修复 [评分 Rate](/guide/components/rate.html) 的 `change` 派发时序：改在 `v-model` 更新后触发，`@change` 中不再读到旧值
+- 更新使用者文档与贡献者文档
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-11-02">3.7.0</VersionDateTag>

@@ -55,7 +55,7 @@ jobs:
   verify:
     name: verify
     runs-on: ubuntu-latest
-    # 兜底超时：正常约 6-8 min（构建 + 四项产物校验 + 文档站构建），卡死时避免占用默认的 360 min 配额
+    # 兜底超时：正常约 6-8 min（构建 + 五项校验 + 文档站构建），卡死时避免占用默认的 360 min 配额
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
@@ -66,7 +66,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       # = build → verify:deps（依赖表 ↔ 产物 chunk 闭包）→ verify:on-demand（临时消费方工程 + canary）
-      #   → verify:theme（主题架构）→ verify:inject-keys（注入契约）→ guard（产物守卫）
+      #   → verify:theme（主题架构）→ verify:inject-keys（注入契约）→ verify:docs（文档默认值）→ guard（产物守卫）
       - run: pnpm verify
       # docs:build —— 必须晚于 build：docs 站的组件库来源是 dist 产物（非 npm 包），并兜住 md-as-SFC 的模板/标签结构错误
       - run: pnpm docs:build

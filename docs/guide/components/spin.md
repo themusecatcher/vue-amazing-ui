@@ -908,7 +908,7 @@ div.spin-wrap.spin-item {
 | color | 指示符颜色；`indicator` 为 `magic-ring` 时表示外环颜色 | string | undefined |
 | spinCircleWidth | 圆环宽度（指示符宽度的百分比；`magic-ring` 收敛到 `6～26` 以保证两环定位与翻面动效有效）；仅 `ring-circle` / `ring-rail` / `magic-ring` 生效 | number | undefined（`ring-circle` / `ring-rail` 取 `12`、`magic-ring` 取 `13`） |
 | spinCirclePercent | 圆环弧长（`0～100`，圆环周长的百分比）；仅 `ring-circle` / `ring-rail` 生效 | number | 33 |
-| ringRailColor | 圆环轨道颜色；仅 `ring-rail` 生效 | string | 'rgba(0, 0, 0, 0.12)' |
+| ringRailColor | 圆环轨道颜色，不传时取主题变量 `--va-border-color`；仅 `ring-rail` 生效 | string | 'var(--va-border-color)' |
 | magicRingColor | 内环颜色；仅 `magic-ring` 生效 | string | undefined（取外环色的浅一档） |
 | rotate | 出现时是否整体旋转一圈；仅 `dot-wheel` / `line-wheel` 生效 | boolean | false |
 | speed | 动画周期（`ms`），值越小越快：`dot-wheel` / `line-wheel` 为亮度扫过一圈、`magic-ring` 为翻面一圈；仅 `dot-wheel` / `line-wheel` / `magic-ring` 生效 | number | undefined（`dot-wheel` / `line-wheel` 取 `800`、`magic-ring` 取 `1500`） |

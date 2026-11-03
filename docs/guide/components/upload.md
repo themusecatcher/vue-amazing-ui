@@ -38,6 +38,15 @@ const pdfList = ref<UploadFileType[]>([
     url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/Markdown.pdf'
   }
 ])
+// 单文件模式演示：预置 1 个文件，用于展示「占满后仍显示上传入口，再次上传即替换」
+const singleFile = ref<UploadFileType[]>([
+  {
+    name: '1.jpg',
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
+  }
+])
+// 拖拽上传演示：拖拽路径同样按 accept 过滤，类型不符的文件经 reject 回传
+const dragList = ref<UploadFileType[]>([])
 watchEffect(() => {
   console.log('files', files.value)
 })
@@ -49,6 +58,12 @@ watchEffect(() => {
 })
 watchEffect(() => {
   console.log('pdfList', pdfList.value)
+})
+watchEffect(() => {
+  console.log('singleFile', singleFile.value)
+})
+watchEffect(() => {
+  console.log('dragList', dragList.value)
 })
 function onBeforeImageUpload(file: File) {
   if (file.size > 500 * 1024) {
@@ -78,6 +93,11 @@ function onBeforePdfUpload(file: File) {
     return false // 停止上传
   }
   return true // 继续上传
+}
+// 拖拽投放的文件不符合 accept 时触发：点选不会走到这里（<input accept> 已由浏览器拦截）
+function onReject(rejectedFiles: File[]) {
+  console.log('reject', rejectedFiles)
+  message.warning(`已忽略 ${rejectedFiles.length} 个类型不符的文件`)
 }
 function onCustomRequest(file: File) {
   return new Promise((resolve, reject) => {
@@ -200,12 +220,12 @@ const fileList = ref<UploadFileType[]>([
 
 ## 限制数量
 
-_通过 `maxCount` 限制上传数量；当为 `1` 时，始终用最新上传的代替当前_
+_通过 `maxCount` 限制上传数量；当为 `1` 时占满后仍显示上传入口，再次上传即替换当前文件（示例已预置 1 个文件）_
 
 <br/>
 
 <Space vertical>
-  <Upload :max-count="1" tip="maxCount: 1" v-model:fileList="files" />
+  <Upload :max-count="1" tip="maxCount: 1" v-model:fileList="singleFile" />
   <Upload :max-count="3" tip="maxCount: 3" v-model:fileList="fileList" />
 </Space>
 
@@ -215,7 +235,12 @@ _通过 `maxCount` 限制上传数量；当为 `1` 时，始终用最新上传�
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
 import type { UploadFileType } from 'vue-amazing-ui'
-const files = ref<UploadFileType[]>([])
+const singleFile = ref<UploadFileType[]>([
+  {
+    name: '1.jpg',
+    url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
+  }
+])
 const fileList = ref<UploadFileType[]>([
   {
     name: '1.jpg',
@@ -227,7 +252,7 @@ const fileList = ref<UploadFileType[]>([
   }
 ])
 watchEffect(() => {
-  console.log('files', files.value)
+  console.log('singleFile', singleFile.value)
 })
 watchEffect(() => {
   console.log('fileList', fileList.value)
@@ -235,7 +260,7 @@ watchEffect(() => {
 </script>
 <template>
   <Space vertical>
-    <Upload :max-count="1" tip="maxCount: 1" v-model:fileList="files" />
+    <Upload :max-count="1" tip="maxCount: 1" v-model:fileList="singleFile" />
     <Upload :max-count="3" tip="maxCount: 3" v-model:fileList="fileList" />
   </Space>
 </template>
@@ -268,6 +293,54 @@ watchEffect(() => {
 ```
 
 :::
+
+## 拖拽上传
+
+_`draggable` 默认开启，把文件拖入上传框即可上传；拖拽路径与点选共用 `multiple` / `accept` 约束，类型不符的文件经 `reject` 回传_
+
+<br/>
+
+<Upload
+  accept="image/*"
+  tip="拖拽图片到此"
+  v-model:fileList="dragList"
+  @drop="onDrop"
+  @reject="onReject"
+/>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref, watchEffect } from 'vue'
+import { useMessage } from 'vue-amazing-ui'
+import type { UploadFileType } from 'vue-amazing-ui'
+const message = useMessage()
+const dragList = ref<UploadFileType[]>([])
+watchEffect(() => {
+  console.log('dragList', dragList.value)
+})
+function onDrop(e: DragEvent) {
+  console.log('drop', e)
+}
+// 拖拽投放的文件不符合 accept 时触发：点选不会走到这里（<input accept> 已由浏览器拦截）
+function onReject(rejectedFiles: File[]) {
+  console.log('reject', rejectedFiles)
+  message.warning(`已忽略 ${rejectedFiles.length} 个类型不符的文件`)
+}
+</script>
+<template>
+  <Upload
+    accept="image/*"
+    tip="拖拽图片到此"
+    v-model:fileList="dragList"
+    @drop="onDrop"
+    @reject="onReject"
+  />
+</template>
+```
+
+::::
 
 ## 自定义样式布局
 
@@ -347,7 +420,9 @@ watchEffect(() => {
 
 ## 操作完成的消息提示
 
-_组件不再内嵌 `Message`，上传成功 / 删除 / 上传失败等提示改由使用方监听 `@success` / `@remove` / `@error` 事件后自行调用（本例使用 `useMessage()` 演示；第二个示例为 `custom` 模式下上传失败触发 `@error` 的场景）_
+_全局提示由使用方监听 `@success` / `@remove` / `@error` 后调用_
+
+<br/>
 
 <Space vertical>
   <Upload
@@ -427,7 +502,7 @@ function onUploadFailRequest(file: File) {
 
 ## 上传文件校验
 
-_上传文件最大 `500KB`；同时限定文件类型_
+_上传文件最大 `500KB`；同时限定文件类型（拖拽路径的类型过滤与 `reject` 回传见「拖拽上传」一节）_
 
 <br/>
 
@@ -688,7 +763,6 @@ function onError(err: unknown) {
 </script>
 <template>
   <Upload
-    multiple
     upload-mode="custom"
     :custom-request="onCustomSliceUpload"
     v-model:fileList="fileList"
@@ -794,9 +868,9 @@ onmessage = async (e: MessageEvent) => {
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| accept | 接受上传的文件类型，与`<input type="file" />`的 `accept` 属性一致，参考 [input accept Attribute](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Attributes/accept) | string | '\*' |
-| multiple | 是否支持多选文件，开启后可选择多个文件 | boolean | false |
-| maxCount | 限制上传数量。当为 `1` 时，始终用最新上传的文件代替当前文件 | number | undefined |
+| accept | 接受上传的文件类型，与 `<input type="file" />` 的 `accept` 属性一致，参考 [input accept Attribute](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Attributes/accept)；拖拽上传时同样生效，不符合的文件通过 `reject` 事件回传 | string | '\*' |
+| multiple | 是否支持多选文件，开启后可选择多个文件；拖拽上传时同样生效，关闭时只取第一个文件 | boolean | false |
+| maxCount | 限制上传数量。当为 `1` 时，始终用最新上传的文件代替当前文件（占满后仍显示上传入口） | number | undefined |
 | tip | 上传描述文字 | string | 'Upload' |
 | fit | 预览图片缩放规则，参考 [object-fit](https://developer.mozilla.org/zh-CN/docs/Web/CSS/object-fit)，仅当上传文件为图片时生效 | 'fill' &#124; 'contain' &#124; 'cover' &#124; 'none' &#124; 'scale-down' | 'contain' |
 | draggable | 是否支持拖拽上传，开启后可拖拽文件到选择框上传 | boolean | true |
@@ -828,6 +902,7 @@ onmessage = async (e: MessageEvent) => {
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 | drop | 当文件被拖入上传区域时的回调 | (e: [DragEvent](https://developer.mozilla.org/zh-CN/docs/Web/API/DragEvent/DragEvent)) => void |
+| reject | 拖拽的文件不符合 `accept` 类型时的回调，参数为被拒绝的文件列表 | (files: File[]) => void |
 | change | 上传文件改变时的回调 | (files: [UploadFileType](#uploadfiletype-type)[]) => void |
 | preview | 点击预览时的回调 | (file: [UploadFileType](#uploadfiletype-type)) => void |
 | remove | 点击移除文件时的回调 | (file: [UploadFileType](#uploadfiletype-type)) => void |
