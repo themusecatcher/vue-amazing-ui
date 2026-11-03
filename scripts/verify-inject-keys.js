@@ -8,7 +8,7 @@
  *    `provide` 与 `inject` 两侧失去类型关联，改错键或改错结构只会静默退化为「未命中」；
  * 2. 变量名为 camelCase + `Key` 后缀：`*_KEY` 形态在 import 列表里与配置常量无法区分；
  * 3. 描述串 = `'va' + PascalCase(变量名去 Key)`：描述串是 DevTools 里唯一的归属标识，
- *    一一对应才能静态校验（参考库 ant-design-vue 有一半以上做不到）；
+ *    一一对应才能静态校验；
  * 4. 键不得定义在 `.vue` 内（含不带 `export` 的写法）：provide / inject 两侧必须共享同一份定义，
  *    写在组件里无法被复用与校验；
  * 5. `provide` / `inject` / `injectFromChain` 不得使用字符串字面量：字符串键是宿主应用也能命中的

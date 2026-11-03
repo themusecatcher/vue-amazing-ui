@@ -79,7 +79,7 @@ function initUpload(): void {
     showUpload.value = count + 1
   } else if (maxFileCount.value === 1 && count === 1) {
     // 单文件模式占满后在预览格外常驻一格上传框（共 2 格），上传落点覆盖槽位 0：
-    // 仍可上传，新文件代替当前文件（对齐 antdv 的「maxCount 为 1 时取最后一条」）
+    // 仍可上传，新文件代替当前文件
     showUpload.value = 2
   } else {
     showUpload.value = maxFileCount.value
