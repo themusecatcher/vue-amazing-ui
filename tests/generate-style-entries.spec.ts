@@ -14,7 +14,7 @@ import { vendorStylesByComponent } from 'components/utils/vendor-styles'
  * 「组件 → 样式依赖」固化成 `es|lib/<dir>/style/index.{js,cjs}` 入口后，resolver 只需返回单条路径，
  * 且任何「表写错 / CSS 缺失 / 编号残留」都在**库构建期**报错，而不是消费方运行时静默缺样式。
  *
- * fixture 直接按生产表（style-deps.data.js + vendor-styles.ts）铺出完整产物文件树，
+ * fixture 直接按生产表（style-deps.ts + vendor-styles.ts）铺出完整产物文件树，
  * 保证断言对象与真实构建一致；「缺失 / 编号残留」两类负面用例通过删除或追加文件构造。
  */
 

@@ -6,12 +6,12 @@
  * 只聚合「运行期真正会被引用」的成员：入口按需引入时会经过本地常量再导出（见下），
  * 而产物只保留入口或库内实际引用到的绑定 —— 仅构建期 / 测试使用的成员（`assertVarContract`、
  * `createSeeds`、`isHexColor`、`SEED_KEYS`、`COMPONENT_*` 注册表）请直接从 `./derive`、
- * `./component-vars.js` 引入，否则会形成「index.d.ts 有声明、index.js 无导出」的错位。
+ * `./component-vars` 引入，否则会形成「index.d.ts 有声明、index.js 无导出」的错位。
  */
 
 import * as deriveSource from './derive'
 import * as varsSource from './vars'
-import * as componentVarsSource from './component-vars.js'
+import * as componentVarsSource from './component-vars'
 
 export type { ColorStates, ResolvedSeeds, SeedKey, ThemeSeed } from './derive'
 export type { ResolvedMode, ThemeMode, ThemeSnapshot, ThemeVarName, ThemeVars } from './vars'

@@ -2,24 +2,25 @@
 /**
  * 组件级令牌文档生成器
  *
- * 唯一数据源：`components/theme/component-vars.js`。手写内容必然与注册表漂移，
+ * 唯一数据源：`components/theme/component-vars.ts`。手写内容必然与注册表漂移，
  * 因此本节整篇由脚本生成（含说明文字），只允许改脚本再重新生成。
  *
  * 输出是「定制主题」页的片段：`docs/guide/parts/` 已被 srcExclude 排除、不单独成页，
  * 由 `docs/guide/customize-theme.md` 通过 `<!--@include-->` 引入。
  *
- * 用法：node scripts/gen-component-vars-doc.js
+ * 用法：tsx scripts/gen-component-vars-doc.ts
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { COMPONENT_VAR_NAMES, COMPONENT_VARS, THEME_COMPONENT_KEYS } from '../components/theme/component-vars.js'
+import { COMPONENT_VAR_NAMES, COMPONENT_VARS, THEME_COMPONENT_KEYS } from '../components/theme/component-vars'
+import type { ComponentVarMeta } from '../components/theme/component-vars.types'
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const outputPath = resolve(rootDir, 'docs/guide/parts/component-vars.md')
 
 /** 令牌组的中文标签（决定文档小节标题，顺序取首次出现） */
-const GROUP_LABELS = {
+const GROUP_LABELS: Record<string, string> = {
   primary: '主色',
   foreground: '前景色',
   danger: '危险色',
@@ -40,14 +41,25 @@ const GROUP_LABELS = {
  * 组件级补充说明：默认值的歧义（皮肤 vs 模式）、实例覆盖的来源等
  * 生成在每个组件小节的开头，避免读者把「浅色 / 深色」误读成暗色模式
  */
-const COMPONENT_NOTES = {
+const COMPONENT_NOTES: Record<string, string> = {
   button:
     '`color` 属性会在这一个实例上内联写入 `--va-button-primary-color` 等令牌（实例级覆盖，优先级最高），因此传了 `color` 时下面这些令牌对该实例不生效。下拉按钮 `DropdownButton` 的共享分割线也跟随 `--va-button-primary-color-hover` / `--va-button-danger-color-hover`。',
   menu: '下表的「浅色 / 深色」指 `theme` 属性（独立皮肤），**与 `data-va-mode` 暗色模式无关**：浅色皮肤的容器令牌跟随全局令牌派生（暗色模式下自动取暗色值），深色皮肤的三只表面令牌（根列表 / 浮层面板 / 内联子菜单）取**品牌色暗底** `--va-bg-brand-dark-color` / `--va-bg-brand-dark-deep-color`（主色色相与饱和度、亮度压到 `8%` / `4.5%`，两个模式同值），因此换主题色时深色皮肤同步换色相；是否启用这套皮肤只由 `theme` 属性决定。三只主色桥令牌由 `theme.components.Menu.primaryColor` 派生；`--va-menu-item-selected-*` 的默认值通过它们间接跟随组件主色，直接覆盖选中态令牌仍然优先。组件级 `primaryColor` 同样驱动深色皮肤的三只表面令牌（按该主色重新派生暗底，优先级高于 `seed`）；直接覆盖令牌依然优先级最高。'
 }
 
+/** 表格行 = 令牌名 + 注册表元数据 */
+type VarRow = { name: string } & ComponentVarMeta
+
+/** 单个组件在文档里的归集结果（`groups` 的键是令牌组名，顺序取首次出现） */
+interface ComponentSection {
+  dir: string
+  title: string
+  componentName: string
+  groups: Map<string, VarRow[]>
+}
+
 /** 从组件文档的首个一级标题取展示名（如「按钮 Button」），避免再维护一份命名表 */
-function readComponentTitle(dir) {
+function readComponentTitle(dir: string): string {
   const docPath = resolve(rootDir, 'docs/guide/components', `${dir}.md`)
   if (!existsSync(docPath)) {
     return dir
@@ -57,37 +69,35 @@ function readComponentTitle(dir) {
 }
 
 /** 注册表按组件 → 组两级归集，保持注册表顺序（决定表格行序） */
-function groupByComponent() {
-  const components = new Map()
+function groupByComponent(): ComponentSection[] {
+  const components = new Map<string, ComponentSection>()
   COMPONENT_VAR_NAMES.forEach((name) => {
     const meta = COMPONENT_VARS[name]
     const dir = meta.file.split('/')[0]
-    if (!components.has(dir)) {
-      components.set(dir, {
-        dir,
-        title: readComponentTitle(dir),
-        componentName: meta.component,
-        groups: new Map()
-      })
+    let component = components.get(dir)
+    if (!component) {
+      component = { dir, title: readComponentTitle(dir), componentName: meta.component, groups: new Map() }
+      components.set(dir, component)
     }
-    const component = components.get(dir)
-    if (!component.groups.has(meta.group)) {
-      component.groups.set(meta.group, [])
+    let rows = component.groups.get(meta.group)
+    if (!rows) {
+      rows = []
+      component.groups.set(meta.group, rows)
     }
-    component.groups.get(meta.group).push({ name, ...meta })
+    rows.push({ name, ...meta })
   })
   return [...components.values()]
 }
 
 /** 单个变量的默认值单元格：有 resolved 时按模式分列 */
-function defaultValueCell(meta) {
+function defaultValueCell(meta: ComponentVarMeta): string {
   if (!meta.resolved) {
     return `\`${meta.fallback}\``
   }
   return `浅色 \`${meta.resolved.light}\`<br>深色 \`${meta.resolved.dark}\``
 }
 
-function renderTable(rows) {
+function renderTable(rows: VarRow[]): string {
   // 列序与列名遵循 docs 表格规范（doc-tables-spec.md §5）：三列固定「名称 | 说明 | 默认值」，首列统一「名称」
   const hasResolved = rows.some((row) => Boolean(row.resolved))
   const header = hasResolved ? '| 名称 | 说明 | 默认值（浅色皮肤 / 深色皮肤） |' : '| 名称 | 说明 | 默认值 |'
@@ -95,7 +105,7 @@ function renderTable(rows) {
   return [header, '| :-- | :-- | :-- |', ...body].join('\n')
 }
 
-export function render() {
+export function render(): string {
   const sections = groupByComponent().map((component) => {
     const blocks = [...component.groups.entries()].map(([group, rows]) => {
       const label = GROUP_LABELS[group] ?? group
@@ -120,7 +130,7 @@ export function render() {
     return parts.join('\n\n')
   })
 
-  return `_本节由 \`node scripts/gen-component-vars-doc.js\` 从 \`components/theme/component-vars.js\` 生成，请勿手动修改；生成物需提交（不要加进 \`.gitignore\`）。_
+  return `_本节由 \`tsx scripts/gen-component-vars-doc.ts\` 从 \`components/theme/component-vars.ts\` 生成，请勿手动修改；生成物需提交（不要加进 \`.gitignore\`）。_
 
 组件令牌是**组件内部颜色变量的公开名字**（\`--va-<组件>-*\`），也包括把组件主色接到具体皮肤上的桥接令牌。
 它们与全局令牌一样是普通的 \`CSS\` 自定义属性，直接在选择器里赋值即可，沿 \`DOM\` 继承生效；

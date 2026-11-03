@@ -1,13 +1,13 @@
 # scripts/ 脚本索引
 
-本目录存放**开发期工具**（发布 / 部署 / 产物校验 / 文档生成），不进 npm 包产物、不进 `components/` 运行时依赖。脚本由 node / bash 直接执行，因此 `*.js` 不能 `import` 仓库内的 `.ts`（`engines` 允许的 Node 20.19 / 22.12 不支持类型擦除）。
+本目录存放**开发期工具**（发布 / 部署 / 产物校验 / 文档生成），不进 npm 包产物、不进 `components/` 运行时依赖。全部脚本为 `.ts`，由 `tsx` 执行（与 ant-design-vue / naive-ui 一致：`engines` 下限 Node 22.12 仍无原生类型擦除能力）；类型由 `tsconfig.scripts.json` 在 `pnpm type-check` 内检查。
 
 ## 两类文件
 
 | 类型 | 判据 | 数量 |
 | :-- | :-- | :-- |
 | **入口脚本** | 在 `package.json` 的 `scripts` 中有对应命令，或由聚合命令 / npm 生命周期（`prepublishOnly`）触发 | 10 |
-| **共用库** | 无独立命令，只被入口脚本或测试 `import`（文件名不带动作前缀） | 4 |
+| **共用库** | 无独立命令，只被入口脚本或测试 `import`（文件名不带动作前缀） | 3 |
 
 ## 门禁命令（唯一清单）
 
@@ -38,19 +38,19 @@
 
 | 命令 | 脚本 | 检查什么 |
 | :-- | :-- | :-- |
-| `pnpm verify:theme` | `verify-theme.js` | 主题架构守护（`--strict` 运行，告警即失败）：组件不得走旧主题通道、`var(--va-*)` 引用登记与写入位置、公开令牌只消费不声明且只能由所属组件实例覆盖、组件级主色清单自检（重复键 / 目录存在）、公开变量闭合（零消费即失败）、演示站与文档内的 `--va-cp-*` 必须带 fallback、颜色字面量三档统计（设计固定 / 自有色彩资产 / 未登记） |
-| `pnpm verify:inject-keys` | `verify-inject-keys.js` | provide / inject 注入契约守护（只扫源码）：键必须是 `Symbol` + `InjectionKey<T>`、变量名 `camelCase` + `Key`、描述串 = `va` + 变量名去 `Key`、键不得定义在 `.vue`、`provide`/`inject` 不得用字符串字面量、组件内不得裸 `inject`、公共入口不得导出 `*Key` |
-| `pnpm verify:docs` | `check-doc-defaults.js` | 文档 Props「默认值」列与源码 `withDefaults` 的一致性守护（只扫源码 + `docs/`）：默认值列须写 prop 默认值（未传时的有效取值写进说明列），无法静态求值的行在脚本 `WHITELIST` 登记并写明理由 |
+| `pnpm verify:theme` | `verify-theme.ts` | 主题架构守护（`--strict` 运行，告警即失败）：组件不得走旧主题通道、`var(--va-*)` 引用登记与写入位置、公开令牌只消费不声明且只能由所属组件实例覆盖、组件级主色清单自检（重复键 / 目录存在）、公开变量闭合（零消费即失败）、演示站与文档内的 `--va-cp-*` 必须带 fallback、颜色字面量三档统计（设计固定 / 自有色彩资产 / 未登记） |
+| `pnpm verify:inject-keys` | `verify-inject-keys.ts` | provide / inject 注入契约守护（只扫源码）：键必须是 `Symbol` + `InjectionKey<T>`、变量名 `camelCase` + `Key`、描述串 = `va` + 变量名去 `Key`、键不得定义在 `.vue`、`provide`/`inject` 不得用字符串字面量、组件内不得裸 `inject`、公共入口不得导出 `*Key` |
+| `pnpm verify:docs` | `check-doc-defaults.ts` | 文档 Props「默认值」列与源码 `withDefaults` 的一致性守护（只扫源码 + `docs/`）：默认值列须写 prop 默认值（未传时的有效取值写进说明列），无法静态求值的行在脚本 `WHITELIST` 登记并写明理由 |
 
 ### 产物校验（`verify:artifacts` / `guard`，需先 `pnpm build`）
 
 | 命令 | 脚本 | 检查什么 |
 | :-- | :-- | :-- |
-| `pnpm verify:deps` | `verify-style-deps.js` | ① `componentDependencies` 手写表 ↔ 产物 chunk 依赖图的双向闭包一致性（抓「漏写」与「写了但已不依赖」）；② 聚合入口 `index.d.ts` 的值导出 ↔ 运行时导出的双向一致性 |
-| `pnpm verify:on-demand` | `verify-on-demand.js` | 在系统临时目录搭最小消费方工程，用 `unplugin-vue-components` 按需引入后真实构建，断言 CSS canary 选择器齐全、无模块缺失告警、`es/<dir>/style` 裸目录写法可被打包器与 Node ESM 解析 |
-| `pnpm guard` | `prepublish-guard.js` | 毫秒级文本级断言，不跑构建：`package.json` 声明的产物入口存在、每组件样式入口契约（无编号 CSS、`es`/`lib` 双份入口、相对路径可解析、`sideEffects` 覆盖完整）、`index.d.ts` ↔ `index.js`/`index.cjs` 配对、`props` 运行时类型与源码类型对齐（DOM 类型须含 `Object`、字面量联合须含 `String`） |
+| `pnpm verify:deps` | `verify-style-deps.ts` | ① `componentDependencies` 手写表 ↔ 产物 chunk 依赖图的双向闭包一致性（抓「漏写」与「写了但已不依赖」）；② 聚合入口 `index.d.ts` 的值导出 ↔ 运行时导出的双向一致性 |
+| `pnpm verify:on-demand` | `verify-on-demand.ts` | 在系统临时目录搭最小消费方工程，用 `unplugin-vue-components` 按需引入后真实构建，断言 CSS canary 选择器齐全、无模块缺失告警、`es/<dir>/style` 裸目录写法可被打包器与 Node ESM 解析 |
+| `pnpm guard` | `prepublish-guard.ts` | 毫秒级文本级断言，不跑构建：`package.json` 声明的产物入口存在、每组件样式入口契约（无编号 CSS、`es`/`lib` 双份入口、相对路径可解析、`sideEffects` 覆盖完整）、`index.d.ts` ↔ `index.js`/`index.cjs` 配对、`props` 运行时类型与源码类型对齐（DOM 类型须含 `Object`、字面量联合须含 `String`） |
 
-`prepublish-guard.js` 有三处触发点，重复执行是有意为之：
+`prepublish-guard.ts` 有三处触发点，重复执行是有意为之：
 
 1. `pnpm verify` 链尾（CI）—— 与其余产物校验同批；
 2. `publish.sh` 在 **`git commit` / `git push` 之前**显式跑一次 —— 守卫失败即中止，不产生「已推送但产物是坏的」这种不可逆状态；
@@ -62,18 +62,17 @@
 
 | 命令 | 脚本 | 输出 |
 | :-- | :-- | :-- |
-| `pnpm gen:vars` | `gen-component-vars-doc.js` | `docs/guide/parts/component-vars.md`（由 `docs/guide/customize-theme.md` 以 `<!--@include-->` 引入）。唯一数据源是 `components/theme/component-vars.js`，**改注册表后必须重跑**，`tests/component-vars.spec.ts` 会断言生成物与注册表逐字节一致 |
+| `pnpm gen:vars` | `gen-component-vars-doc.ts` | `docs/guide/parts/component-vars.md`（由 `docs/guide/customize-theme.md` 以 `<!--@include-->` 引入）。唯一数据源是 `components/theme/component-vars.ts`，**改注册表后必须重跑**，`tests/component-vars.spec.ts` 会断言生成物与注册表逐字节一致 |
 
 ## 共用库
 
 | 文件 | 职责 | 消费方 |
 | :-- | :-- | :-- |
-| `component-vars-check.js` | 「文本 → 结构化事实」的纯函数（剥注释、拆 SFC 段、收集 `var()` 引用与使用），**不含判定策略**——规则留在 `verify-theme.js` 与测试中，避免两处口径漂移；`verify-inject-keys.js` 与 `check-doc-defaults.js` 复用其中的 `stripComments` | `verify-theme.js`、`verify-inject-keys.js`、`check-doc-defaults.js`、`tests/component-vars.spec.ts` |
-| `component-vars-check.d.ts` | 上者的类型声明，供 TS 测试导入时获得类型（手写文件，非构建产物） | `tests/component-vars.spec.ts` |
-| `check-prop-runtime-types.js` | `interface Props` 字段文本 → 期望的运行时类型分支，并与 `es/` `lib/` 产物里的 `props` 声明比对；同样只做文本解析、不跑编译器 | `prepublish-guard.js`、`tests/prop-runtime-types.spec.ts` |
-| `check-model-props.js` | v-model 声明契约（三条）：① 全库禁止 `defineModel`（无白名单例外，其受控判据与全库「传值即受控」冲突）；② `useControlledModel('x', ...)` 的字段在 `withDefaults` 里只能写 `undefined`（布尔字段必须显式写），否则判据恒真；③ 同一字段必须在 `defineEmits` 里声明 `update:x`，否则每次交互输出 dev 告警且监听器落进 `$attrs`；复用 `check-prop-runtime-types.js` 的 `collectSfcs` / `findBalancedEnd` 与 `component-vars-check.js` 的 `stripComments` | `prepublish-guard.js`、`check-doc-defaults.js`、`tests/model-props-contract.spec.ts` |
+| `component-vars-check.ts` | 「文本 → 结构化事实」的纯函数（剥注释、拆 SFC 段、收集 `var()` 引用与使用），**不含判定策略**——规则留在 `verify-theme.ts` 与测试中，避免两处口径漂移；`verify-inject-keys.ts` 与 `check-doc-defaults.ts` 复用其中的 `stripComments` | `verify-theme.ts`、`verify-inject-keys.ts`、`check-doc-defaults.ts`、`tests/component-vars.spec.ts` |
+| `check-prop-runtime-types.ts` | `interface Props` 字段文本 → 期望的运行时类型分支，并与 `es/` `lib/` 产物里的 `props` 声明比对；同样只做文本解析、不跑编译器 | `prepublish-guard.ts`、`tests/prop-runtime-types.spec.ts` |
+| `check-model-props.ts` | v-model 声明契约（三条）：① 全库禁止 `defineModel`（无白名单例外，其受控判据与全库「传值即受控」冲突）；② `useControlledModel('x', ...)` 的字段在 `withDefaults` 里只能写 `undefined`（布尔字段必须显式写），否则判据恒真；③ 同一字段必须在 `defineEmits` 里声明 `update:x`，否则每次交互输出 dev 告警且监听器落进 `$attrs`；复用 `check-prop-runtime-types.ts` 的 `collectSfcs` / `findBalancedEnd` 与 `component-vars-check.ts` 的 `stripComments` | `prepublish-guard.ts`、`check-doc-defaults.ts`、`tests/model-props-contract.spec.ts` |
 
-> 样式依赖表（`components/utils/style-deps.data.js`）不在本目录：它是纯 `.js` 数据源，`prepublish-guard.js` / `verify-style-deps.js` 直接 `import`，不再需要「正则解析 TS 源码」的读取器；数据侧的跨表引用完整性（键与值必须是已收录组件）由 `verify:deps` 断言。
+> 样式依赖表（`components/utils/style-deps.ts`）不在本目录：入口脚本由 `tsx` 执行，直接 `import` 同一份 `.ts`，不再需要「正则解析 TS 源码」的读取器；跨表引用完整性（键与值必须是已收录组件）由类型系统在编译期保证，`verify:deps` 内保留同口径运行期断言（覆盖 `tsx` 只擦除类型的情形）。
 
 ## 契约 → 权威层
 
@@ -81,20 +80,20 @@
 
 | 契约 | 权威层 | 备注 |
 | :-- | :-- | :-- |
-| 组件令牌注册表自洽（名称数组 / 元数据 / `themeRole`·`themeState`） | `tests/component-vars.spec.ts` | `verify-theme.js` 不再重复 |
+| 组件令牌注册表自洽（名称数组 / 元数据 / `themeRole`·`themeState`） | `tests/component-vars.spec.ts` | `verify-theme.ts` 不再重复 |
 | `ThemeComponentKey` 联合类型 ↔ `THEME_COMPONENTS` | `tests/component-vars.spec.ts` | — |
-| 公开令牌每处使用都带与注册表一致的 fallback（含派生组件） | `tests/component-vars.spec.ts` | `verify-theme.js` 不再重复 |
+| 公开令牌每处使用都带与注册表一致的 fallback（含派生组件） | `tests/component-vars.spec.ts` | `verify-theme.ts` 不再重复 |
 | 悬空引用（无 fallback 且从未声明） | `tests/component-vars.spec.ts` | — |
 | `theme.css` 两套表各含全部别名 | `tests/theme-build.spec.ts` | 直接调 `buildThemeCss()`，不读脏文件 |
 | 组件级主色桥消费点 | `tests/component-vars.spec.ts` | 脚本只保留清单自检（重复键 / 目录存在） |
-| `--va-*` 引用登记与写入位置（`--va-local-*` 例外、`--va-cp-*` 桥、全局白名单） | `scripts/verify-theme.js` | 口径比单测更细 |
-| 公开变量闭合（零消费即失败） | `scripts/verify-theme.js` | 单测无此维度 |
-| 颜色字面量三档统计（`--strict` 为门禁） | `scripts/verify-theme.js` | 跨文件统计 + 登记制 |
-| 演示站 / 文档中的 `--va-cp-*` fallback | `scripts/verify-theme.js` | 单测只扫 `components/` |
-| `props` 运行时类型 ↔ 源码类型 | `scripts/check-prop-runtime-types.js` | `guard` 第 ⑥ 项 + `tests/prop-runtime-types.spec.ts` |
-| 样式依赖表跨表引用完整性（`styleSources` / `componentDependencies` / `stylelessComponents` 的键与值都在 `componentsMap` 内） | `scripts/verify-style-deps.js` | 数据层是 `.js`，编译期看不到；`verify:deps` 内断言（需产物，故不在 `check` 链）。数据的漏登记另有构建期「缺少样式文件」兜底 |
-| v-model 声明契约 | `scripts/check-model-props.js` | `guard` 第 ⑦ 项 + `tests/model-props-contract.spec.ts` |
-| 文档 Props 默认值列 ↔ 源码 `withDefaults` | `scripts/check-doc-defaults.js` | — |
+| `--va-*` 引用登记与写入位置（`--va-local-*` 例外、`--va-cp-*` 桥、全局白名单） | `scripts/verify-theme.ts` | 口径比单测更细 |
+| 公开变量闭合（零消费即失败） | `scripts/verify-theme.ts` | 单测无此维度 |
+| 颜色字面量三档统计（`--strict` 为门禁） | `scripts/verify-theme.ts` | 跨文件统计 + 登记制 |
+| 演示站 / 文档中的 `--va-cp-*` fallback | `scripts/verify-theme.ts` | 单测只扫 `components/` |
+| `props` 运行时类型 ↔ 源码类型 | `scripts/check-prop-runtime-types.ts` | `guard` 第 ⑥ 项 + `tests/prop-runtime-types.spec.ts` |
+| 样式依赖表跨表引用完整性（`styleSources` / `componentDependencies` / `stylelessComponents` 的键与值都在 `componentsMap` 内） | `components/utils/style-deps.ts`（编译期）+ `scripts/verify-style-deps.ts`（运行期） | 类型注解 `Partial<Record<ComponentName, ComponentName>>` 已在 `pnpm type-check` 拦住越界键值；`verify:deps` 保留同口径运行期断言，覆盖脚本侧 `tsx` 只擦除类型的情形（需产物，故不在 `check` 链）。数据的漏登记另有构建期「缺少样式文件」兜底 |
+| v-model 声明契约 | `scripts/check-model-props.ts` | `guard` 第 ⑦ 项 + `tests/model-props-contract.spec.ts` |
+| 文档 Props 默认值列 ↔ 源码 `withDefaults` | `scripts/check-doc-defaults.ts` | — |
 | 生成文档 ↔ 注册表 | `tests/component-vars.spec.ts`（逐字节） | 生成脚本只负责渲染 |
 
 ## 命令链与钩子
@@ -103,7 +102,7 @@
 
 `publish.sh` 跑的是 `check` → `build` → `verify:artifacts` → `guard`，与 CI 的 `check` / `verify` 同口径（守卫在推送前多跑一次，见上文说明）。
 
-git hook 只覆盖静态检查，不碰本目录脚本：`pre-commit` → `lint-staged`（`*.js` 仅 prettier）、`commit-msg` → `commitlint`、`pre-push` → `type-check`。
+git hook 只覆盖静态检查，不碰本目录脚本：`pre-commit` → `lint-staged`（`*.ts` / `*.js` 均 prettier + eslint）、`commit-msg` → `commitlint`、`pre-push` → `type-check`（含 `type-check:scripts`）。
 
 ## 新增脚本的约定
 

@@ -163,21 +163,21 @@ es/tooltip/style/index.js
 | 自动按需引入（推荐） | `VueAmazingUIResolver({ cjs: false })`，由 `sideEffects` 注入上述单条入口 |
 | 手动引入（推荐） | `import 'vue-amazing-ui/es/button/style'` —— **裸目录写法**（`package.json` 的 `exports` 已加 `"./es/*/style"` / `"./lib/*/style"` 映射，Node / 打包器均可解析）；需要完全显式时可用 `…/button/style/index.js` |
 
-### 单一数据源：`components/utils/style-deps.data.js`
+### 单一数据源：`components/utils/style-deps.ts`
 
 | 表 | 作用 | 谁读 |
 | :-- | :-- | :-- |
 | `componentsMap` | 组件名 → 产物目录（如 `Button: 'button'`；主组件平铺的复合目录直接用目录名，如 `Descriptions: 'descriptions'`、`List: 'list'`；成员在子目录时走子目录，如 `Row: 'grid/row'`、`ListItem: 'list/list-item'`），并收录 Provider 组件与**库内共用的选择器内核**（`picker/`：`DatePicker` / `TimePicker` 的面板与触发器，不对外导出，仅为 `componentDependencies` 提供样式来源） | resolver（拼入口路径）＋ 生成器 |
 | `styleSources` | 自身无样式文件的组件 → 承载其样式的组件（如 `MessageProvider: 'Message'`、`DescriptionsItem: 'Descriptions'`） | resolver（决定入口落在哪个目录）＋ 生成器 |
-| `componentDependencies` | 组件的样式依赖（如 `Table` 依赖 `Checkbox` / `Pagination` 等） | 生成器（按表顺序写进入口）＋ `scripts/verify-style-deps.js`（与产物 chunk 闭包双向比对） |
+| `componentDependencies` | 组件的样式依赖（如 `Table` 依赖 `Checkbox` / `Pagination` 等） | 生成器（按表顺序写进入口）＋ `scripts/verify-style-deps.ts`（与产物 chunk 闭包双向比对） |
 | `stylelessComponents` | 完全没有样式的组件（`ConfigProvider` / `Highlight` / `NumberAnimation` / `PickerIcon` / `Watermark`） | resolver（返回空）+ 生成器（跳过） |
 
-数据层是**纯 `.js`**（Node 脚本 `scripts/verify-style-deps.js` / `prepublish-guard.js` 直接 import，不再有「正则解析 TS 源码」的中间层，条目格式也不受单行约束）；类型与守卫在 `components/utils/style-deps.ts` 门面里：
+数据与类型同处一个 `.ts`：脚本侧由 `tsx` 执行（与 ant-design-vue / naive-ui 一致），Node 能直接读同一份事实，不再有「正则解析 TS 源码」的中间层，条目格式也不受单行约束；同文件还导出：
 
-- `ComponentName = keyof typeof componentsMap`：由数据层的键推导，作为 resolver / 生成器的查表类型。
+- `ComponentName = keyof typeof componentsMap`：由数据键推导，作为 resolver / 生成器的查表类型。
 - `isComponentName(name): name is ComponentName`：`resolve` 时的类型守卫，未收录的组件名直接返回 `undefined`，交给其他 resolver 处理。
 
-代价与兜底：数据在 `.js` 里，类型系统看不到表的内容，因此「`styleSources` / `componentDependencies` / `stylelessComponents` 的键与值必须是已收录组件」由 `pnpm verify:deps`（`scripts/verify-style-deps.js`）的运行期断言守护，报错会直接点出越界的表名与条目。
+跨表引用完整性由类型系统在编译期保证：「`styleSources` / `componentDependencies` / `stylelessComponents` 的键与值必须是已收录组件」即 `Partial<Record<ComponentName, ComponentName>>` 的约束（`tsconfig.scripts.json` 让脚本侧同样被 `pnpm type-check` 覆盖）。`pnpm verify:deps`（`scripts/verify-style-deps.ts`）保留同口径的运行期断言，覆盖 `tsx` 只擦除类型、不做检查的情形，报错会直接点出越界的表名与条目。
 
 第三方样式由 `components/utils/vendor-styles.ts` 统一派生：`vendorStyles` 定义 `source`（node_modules 源路径）与 `target`（产物内路径，含 `vendorStylesDir` 常量与「镜像原包结构」约定），`vendorStylesByComponent` 按组件名索引，供生成器写入样式入口。
 
@@ -186,8 +186,8 @@ es/tooltip/style/index.js
 | 时机 | 落点 | 校验内容 |
 | :-- | :-- | :-- |
 | 库构建 | `build/generate-style-entries.ts`（由 `vite.config.ts` 的 `stylePostBuildPlugin` 在 `mergeComponentStyles()` 之后顺序调用） | ① 入口引用的每个 CSS 都真实存在（表写错 / SFC 漏 `<style>` 块 → 报出「哪个组件缺哪个文件」）；② 组件目录下「与组件同名前缀」的 CSS 恰好 1 份（残留 `Tooltip2.css` → 报错） |
-| 发布前 | `pnpm guard`（`scripts/prepublish-guard.js`） | 毫秒级存在性校验：无编号 CSS、每个组件都有样式入口与 `index.d.ts`、入口内相对路径均可解析、**每个聚合入口的 `index.d.ts` 都有配对的 `index.js` / `index.cjs`**（纯转发入口被 Rollup 转发优化剔除后，产物只剩类型声明，深层路径报 `ERR_MODULE_NOT_FOUND`；例外见 `INDEX_DTS_WHITELIST`：`utils`、`picker` 两个内部共用 barrel） |
-| 发布前 / CI | `pnpm verify:deps`（`scripts/verify-style-deps.js`） | ① 用产物 chunk 依赖图闭包**双向**校验 `componentDependencies`：`closure ⊆ table` 抓漏写、`table ⊆ closure` 抓 stale；② **聚合入口导出一致性**：`<dir>/index.d.ts` 声明的值导出与 `es\|lib` 运行时导出**双向**比对，抓「类型有声明、运行时无导出」（纯转发的具名导出被 Rollup 转发优化剔除）与「有导出无声明」 |
+| 发布前 | `pnpm guard`（`scripts/prepublish-guard.ts`） | 毫秒级存在性校验：无编号 CSS、每个组件都有样式入口与 `index.d.ts`、入口内相对路径均可解析、**每个聚合入口的 `index.d.ts` 都有配对的 `index.js` / `index.cjs`**（纯转发入口被 Rollup 转发优化剔除后，产物只剩类型声明，深层路径报 `ERR_MODULE_NOT_FOUND`；例外见 `INDEX_DTS_WHITELIST`：`utils`、`picker` 两个内部共用 barrel） |
+| 发布前 / CI | `pnpm verify:deps`（`scripts/verify-style-deps.ts`） | ① 用产物 chunk 依赖图闭包**双向**校验 `componentDependencies`：`closure ⊆ table` 抓漏写、`table ⊆ closure` 抓 stale；② **聚合入口导出一致性**：`<dir>/index.d.ts` 声明的值导出与 `es\|lib` 运行时导出**双向**比对，抓「类型有声明、运行时无导出」（纯转发的具名导出被 Rollup 转发优化剔除）与「有导出无声明」 |
 
 > 全量扫描与登记完整性由 `tests/resolver.spec.ts` 与 `tests/generate-style-entries.spec.ts` 守护：前者校验每个组件的入口路径合法（不含 `undefined`）、并扫描 `components/**/*.vue` 中所有不含 `<style>` 块的 SFC 是否已登记；后者直接断言入口内的 CSS 顺序、依赖摊平结果与 vendor 行。
 
@@ -195,11 +195,11 @@ es/tooltip/style/index.js
 
 1. **建组件**：`components/<kebab-case>/` 下创建 `Xxx.vue` + `index.ts`（三件套结构）。
 2. **登记汇总**：在 `components/components.ts` 末尾追加 `export type { XxxProps } from './<kebab-case>'` + `export { default as Xxx } from './<kebab-case>'`（类型已在组件级 `index.ts` 重命名为 `XxxProps`）。
-3. **登记按需**：在 `components/utils/style-deps.data.js` 的 `componentsMap` 追加 `Xxx: '<kebab-case>'`（用到其它组件的样式再补 `componentDependencies`）。样式入口 `es|lib/<dir>/style/*` 由构建期自动生成，**不需要手写**。
+3. **登记按需**：在 `components/utils/style-deps.ts` 的 `componentsMap` 追加 `Xxx: '<kebab-case>'`（用到其它组件的样式再补 `componentDependencies`）。样式入口 `es|lib/<dir>/style/*` 由构建期自动生成，**不需要手写**。
 
 > - 若组件无样式文件，还需登记到 `stylelessComponents` 白名单（见 [component-design.md](component-design.md)）。
 > - 若新增的是全局提示类 Provider 组件，需在 `styleSources` 中登记其底层组件（见上文 resolver 章节）。
-> - **若新增的是子组件**（如 `Select` 的 `SelectOption` / `SelectOptGroup`），除上述三步外还需四处登记：① 组件级 `index.ts` 用**本地常量再导出**持有绑定（`export const SelectOption = SelectOptionComp`），禁止纯转发；② `components/components.ts` 按其自身具名导出追加（`export { default as Select, SelectOption, SelectOptGroup } from './select'`）；③ `style-deps.data.js` 的 `componentsMap` 登记其自身样式目录，并在 `styleSources` 登记其样式来源的父组件；④ `types/global-components.d.ts` 的 `GlobalComponents` 登记组件名。目录形态与纯转发成因见 [project-structure.md](project-structure.md)。
+> - **若新增的是子组件**（如 `Select` 的 `SelectOption` / `SelectOptGroup`），除上述三步外还需四处登记：① 组件级 `index.ts` 用**本地常量再导出**持有绑定（`export const SelectOption = SelectOptionComp`），禁止纯转发；② `components/components.ts` 按其自身具名导出追加（`export { default as Select, SelectOption, SelectOptGroup } from './select'`）；③ `style-deps.ts` 的 `componentsMap` 登记其自身样式目录，并在 `styleSources` 登记其样式来源的父组件；④ `types/global-components.d.ts` 的 `GlobalComponents` 登记组件名。目录形态与纯转发成因见 [project-structure.md](project-structure.md)。
 > - 自检：`pnpm check` 全绿后执行 `pnpm verify`（= 构建 → `verify:artifacts`（依赖一致性 + 按需引入验证）→ `guard`）。漏填 / 拼错依赖名会在**库构建期**直接失败，不再等消费方发现样式缺失。
 
 ## 新增工具函数 Checklist

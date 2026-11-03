@@ -27,11 +27,11 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { stripComments } from './component-vars-check.js'
+import { stripComments } from './component-vars-check'
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const componentsDir = resolve(rootDir, 'components')
-const failures = []
+const failures: string[] = []
 
 /** 键变量名：camelCase + Key 后缀 */
 const KEY_NAME_PATTERN = /^[a-z][A-Za-z0-9]*Key$/
@@ -41,7 +41,7 @@ const RAW_INJECT_WHITELIST = new Set(['utils/hooks.ts'])
 const PUBLIC_ENTRIES = ['index.ts', 'components.ts']
 
 /** 递归收集组件目录下的源码文件（返回相对 components 的 posix 路径） */
-function walk(dir, result = []) {
+function walk(dir: string, result: string[] = []): string[] {
   readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
     const fullPath = resolve(dir, entry.name)
     if (entry.isDirectory()) {
@@ -55,8 +55,16 @@ function walk(dir, result = []) {
 
 const sourceFiles = walk(componentsDir)
 
+/** 已识别的注入键定义：`annotation` 是 `: InjectionKey<T>` 注解文本，未写注解时为 undefined */
+interface KeyDef {
+  name: string
+  file: string
+  annotation: string | undefined
+  description: string
+}
+
 // ① + ② + ③ + ④ 键定义形态
-const keyDefs = []
+const keyDefs: KeyDef[] = []
 const KEY_DEF_PATTERN = /export\s+const\s+([A-Za-z0-9_$]+)\s*(?::\s*([^=\n]+?))?\s*=\s*Symbol\(([^)]*)\)/g
 sourceFiles.forEach((file) => {
   const source = stripComments(readFileSync(resolve(componentsDir, file), 'utf-8'))

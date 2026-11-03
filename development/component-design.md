@@ -54,7 +54,7 @@ const props = withDefaults(defineProps<Props>(), {
 - **`keyof typeof` 派生的字符串联合补 `LiteralUnion`**：`LiteralUnion<EasingPreset> | CubicBezierPoints | EasingFunction` —— `(string & {})` 让 `String` 进入运行时类型，同时保留预设名的 IDE 补全；❌ 直接写 `EasingPreset | ...`（编译不出 `String`）。
 - **不可映射的类型：要么映射，要么有意不校验**：`VNode`、其他组件的 `XxxProps` 等无法校验的类型，容忍产物里没有 `type`（等价于不校验，不误报）；❌ 不允许「本应可校验的联合因写法不当而丢失分支」。
 - **无 `Boolean` / `Function` 分支的联合**（如 `string | MountElement`）在生产编译里 `type` 会被整体省略 —— 属预期（零校验、不误报），不必为了「有 type」硬加成员。
-- 该约定由 `scripts/check-prop-runtime-types.js` 兜底（`pnpm guard` 第 ⑥ 项）：源码用到 DOM 类型 / 字面量联合的 prop，产物运行时类型必须含 `Object` / `String`，否则发布守卫直接失败。
+- 该约定由 `scripts/check-prop-runtime-types.ts` 兜底（`pnpm guard` 第 ⑥ 项）：源码用到 DOM 类型 / 字面量联合的 prop，产物运行时类型必须含 `Object` / `String`，否则发布守卫直接失败。
 
 ### v-model 声明约定（受控判据 = 传值即受控）
 
@@ -79,7 +79,7 @@ const props = withDefaults(defineProps<Props>(), {
 - **原生表单元素**（`Input` / `Textarea` / `InputSearch` / `InputNumber`）保持手写：真相源在 DOM 节点，受控时回写元素，非受控时元素自持，不得再引入一份 JS 本地状态。其中 **`Textarea` 的 `value` 默认值是 `''`**（其余三者是 `undefined`）——它的写入路径按 `lazy` 修饰符与 `target.value !== props.value` 逐字符比对，改成 `undefined` 会牵动组合输入（IME）与 `autoSize` 高度重算，属有意保留的例外；文档默认值列照实写 `''`。
 - **双轨字段**（`DatePicker` / `TimePicker` 的 `formattedValue`）保持手写：需区分「父写」与「组件派生」，可写 ref 无法提供来源信息。
 - **唯一的结构性例外是 `Carousel.currentIndex`**：自动播放会在**无用户交互**时持续推进下标并改变展示，组件内的动画下标才是展示真相，`currentIndex` 只是「父可驱动 + 变更上报」的通道。判别条件只有一条：**组件是否会在无用户交互时自动改值** —— 会（自动播放）则 R1 不适用；只在用户交互时改值（点击 / 键盘 / 拖拽）则一律 R1。
-- **存量迁移已全部完成**（3.7.0）：31 个双模字段统一走 `useControlledModel`；其余字段按性质保留 —— 纯受控（`Switch` / `Tag` / `Steps` / `AutoComplete` 的 `value` / `Dialog` / `Modal`）、原生表单元素（`Input` / `Textarea` / `InputSearch` / `InputNumber` / `Radio` / `RadioButton` / `Checkbox`）、双轨（`DatePicker` / `TimePicker` 的 `formattedValue`），以及上文唯一的结构性例外 `Carousel.currentIndex`。`scripts/check-model-props.js` 已取消白名单机制：任何 SFC（含内部组件）使用 `defineModel` 都会让守卫失败。
+- **存量迁移已全部完成**（3.7.0）：31 个双模字段统一走 `useControlledModel`；其余字段按性质保留 —— 纯受控（`Switch` / `Tag` / `Steps` / `AutoComplete` 的 `value` / `Dialog` / `Modal`）、原生表单元素（`Input` / `Textarea` / `InputSearch` / `InputNumber` / `Radio` / `RadioButton` / `Checkbox`）、双轨（`DatePicker` / `TimePicker` 的 `formattedValue`），以及上文唯一的结构性例外 `Carousel.currentIndex`。`scripts/check-model-props.ts` 已取消白名单机制：任何 SFC（含内部组件）使用 `defineModel` 都会让守卫失败。
 
 #### `defineModel` → `useControlledModel` 迁移清单
 
@@ -144,7 +144,7 @@ defineSlots<ButtonSlots>()
 - **组件级主色桥**：组件内每一处「跟随主色」的消费都写成 `var(--va-cp-<component>-*, var(--va-*))`（如 `var(--va-cp-switch-primary-color, var(--va-primary-color))`；深色皮肤表面用 `var(--va-cp-<component>-dark-bg-color, var(--va-bg-brand-dark-color))`）。桥变量由 `ConfigProvider` 按 `theme.components.<Component>.primaryColor` 写在作用域节点上，组件不感知它的存在；未配置时回落到全局令牌，默认外观不变；
 - 设计上不随主题变化的颜色保留字面量，不算主题泄漏：预设色板（`Tag` / `Badge` / `Timeline` / `Tooltip` / `GradientText` / `Result`）、深色 `Sider`、`Image` 预览与 `Video` 播放器的固定 chrome、中性投影；遮罩一律用 `--va-mask-color`（不要用 `--va-text-color-3`，否则暗色下会变白蒙层）；
 - 浮层经 Teleport 脱离组件树时，主题变量有两条下发路径：① 作用域令牌（全局 42 个 + 组件级桥 / 公开令牌）由 `ConfigProvider` 经 `themeTeleportKey` 写到浮层容器；② 组件私有的面板变量（如 `--picker-*`）随面板 `:style` 下发，值仍写 `var(--va-*)` / `var(--va-cp-*)` 引用，不做 JS 取色；
-- 新增组件若消费主色，把消费点接上桥变量即可支持 `theme.components`，并在 `components/theme/component-vars.js` 的 `THEME_COMPONENTS` 登记（守护脚本会校验「登记了就必须有消费点」）；不消费主色的组件无需任何主题代码。`pnpm verify:theme` 会拦截回潮。
+- 新增组件若消费主色，把消费点接上桥变量即可支持 `theme.components`，并在 `components/theme/component-vars.ts` 的 `THEME_COMPONENTS` 登记（守护脚本会校验「登记了就必须有消费点」）；不消费主色的组件无需任何主题代码。`pnpm verify:theme` 会拦截回潮。
 
 ## 插槽检测 useSlotsExist
 
@@ -298,7 +298,7 @@ components/grid/
 
 ## provide / inject 注入契约
 
-注入键是**内部契约**（不对外导出、不承诺稳定性），但命名与读取方式必须统一，否则改错键或读错通道只会静默退化为「未命中」。当前全库 21 个键，均由本节条文约束，其中键形态、调用通道与公共入口导出由 `scripts/verify-inject-keys.js` 机器校验；S3 的语义后缀分层、S7 的「`docs/` 与 `types/` 不出现」、S9 的 JSDoc 说明仍靠评审把关。
+注入键是**内部契约**（不对外导出、不承诺稳定性），但命名与读取方式必须统一，否则改错键或读错通道只会静默退化为「未命中」。当前全库 21 个键，均由本节条文约束，其中键形态、调用通道与公共入口导出由 `scripts/verify-inject-keys.ts` 机器校验；S3 的语义后缀分层、S7 的「`docs/` 与 `types/` 不出现」、S9 的 JSDoc 说明仍靠评审把关。
 
 ### 条文
 
@@ -362,7 +362,7 @@ export const themeModeKey: InjectionKey<Ref<ResolvedMode>> = Symbol('vaThemeMode
 ### 守护
 
 - ESLint（`eslint.config.js` 的 `custom/no-raw-injection-key`）：字符串字面量作键、裸 `inject()` 均报错，白名单只有 `components/utils/hooks.ts`；
-- `pnpm verify:inject-keys`（`scripts/verify-inject-keys.js`）8 条文本级检查：① 键必须是 `Symbol` 且带 `: InjectionKey<T>`；② 变量名 `camelCase` + `Key`；③ 描述串 = `va` + 变量名去 `Key`；④ 键不得定义在 `.vue`（含不带 `export` 的写法）；⑤ `provide` / `inject` / `injectFromChain` 不得用字符串字面量；⑥ 三者首参必须是已声明的 Symbol 键（拦 `export const menuKey = 'menu'` 这类字符串常量冒充）；⑦ 组件内不得裸 `inject`；⑧ 公共入口不得导出注入键（`MenuKey` / `DropdownKey` 等公开类型是合法导出，脚本按已识别的键名精确匹配）。
+- `pnpm verify:inject-keys`（`scripts/verify-inject-keys.ts`）8 条文本级检查：① 键必须是 `Symbol` 且带 `: InjectionKey<T>`；② 变量名 `camelCase` + `Key`；③ 描述串 = `va` + 变量名去 `Key`；④ 键不得定义在 `.vue`（含不带 `export` 的写法）；⑤ `provide` / `inject` / `injectFromChain` 不得用字符串字面量；⑥ 三者首参必须是已声明的 Symbol 键（拦 `export const menuKey = 'menu'` 这类字符串常量冒充）；⑦ 组件内不得裸 `inject`；⑧ 公共入口不得导出注入键（`MenuKey` / `DropdownKey` 等公开类型是合法导出，脚本按已识别的键名精确匹配）。
 - 单测（`tests/injection-contract.spec.ts`）盯运行期语义，脚本盯文本形态 —— 两者不重叠：脚本不跑组件、单测不读源码。
 
 ### 取舍记录
@@ -393,11 +393,11 @@ components/modal/
 
 | 情况 | 组件 | 处理方式 |
 | :--- | :--- | :--- |
-| 业务组件，自身完全无样式 | `ConfigProvider` / `Highlight` / `NumberAnimation` / `PickerIcon` / `Watermark` | 登记在 `style-deps.data.js` 的 `stylelessComponents` 白名单中：resolver 返回空 sideEffects，样式入口生成器跳过（自身样式入口不生成，但**与有自身 CSS 的组件共用产物目录**时，该目录的入口仍会产出，其中不得引用它的 `Xxx.css`） |
+| 业务组件，自身完全无样式 | `ConfigProvider` / `Highlight` / `NumberAnimation` / `PickerIcon` / `Watermark` | 登记在 `style-deps.ts` 的 `stylelessComponents` 白名单中：resolver 返回空 sideEffects，样式入口生成器跳过（自身样式入口不生成，但**与有自身 CSS 的组件共用产物目录**时，该目录的入口仍会产出，其中不得引用它的 `Xxx.css`） |
 | 命令式 API 的 Provider | `MessageProvider` / `ModalProvider` / `DialogProvider` / `NotificationProvider` / `LoadingBarProvider` | 在 `styleSources` 中登记其底层组件（如 `MessageProvider: 'Message'`、`LoadingBarProvider: 'LoadingBar'`），与底层组件**共用同一个样式入口** |
 | 子组件，样式定义在父 SFC 内 | `DescriptionsItem`（`Descriptions.vue`）、`SelectOption` / `SelectOptGroup`（`Select.vue`）、`MenuItem` / `MenuSubMenu` / `MenuItemGroup` / `MenuDivider`（`Menu.vue`） | 在 `styleSources` 中登记父组件（如 `DescriptionsItem: 'Descriptions'`、`MenuItem: 'Menu'`），否则 resolver 会指向并不存在的入口目录 |
 
-> 新增无 `<style>` 块的 SFC 时，必须同步在 `components/utils/style-deps.data.js` 中登记（白名单或 `styleSources`），
+> 新增无 `<style>` 块的 SFC 时，必须同步在 `components/utils/style-deps.ts` 中登记（白名单或 `styleSources`），
 > 否则按需引入会引用不存在的样式入口。`tests/resolver.spec.ts` 会扫描 `components/**/*.vue` 自动校验登记完整性。
 
 ## 主题系统
@@ -406,10 +406,10 @@ components/modal/
 - **派生**：`components/theme/derive.ts`（单文件）按固定档位映射（`@ant-design/colors` 生成色阶 → 浅底 1 / 描边 3 / 链接悬停 4 / 悬停 5 / 常态与主色文字 6 / 按下 7）并组装 42 个变量，构建期与运行期共用；产物只含 sRGB `#hex` / `rgba()`。不做对比度兜底：品牌色偏浅时由使用者换色，而不是系统改写。
 - **默认表**：`build/gen-theme.ts` 在 vite `buildStart` 生成 `components/style/generated/theme.css`（`:root` 浅色表 + `[data-va-mode='dark']` 暗色表，各 42 个变量；暗色表另带 `color-scheme: dark`，让原生滚动条与表单控件同步），由 `components/style/global.less` 以 `@import (inline)` 并入每份样式产物，因此按需引入天然携带默认表。
 - **载体**：`ConfigProvider` 只做「合并种子 → 调派生 → 写作用域变量」。未传 `theme` 时不写任何变量；默认 `abstract=false`，写自己的包裹元素（SSR 可直接序列化，首帧即正确）；显式 `abstract=true` 的最外层实例写 `<html>`（`onMounted` 后，SSR 不执行）；卸载时恢复写入前的快照。
-- **组件级主色**：`theme.components.<Component>.primaryColor` 只接受一个通用主色，Provider 用 `deriveColorStates` / `deriveFocusShadow` 展开成两组变量写到同一作用域节点：内部桥 `--va-cp-<component>-primary-*`（所有组件通用，覆盖该组件全部主色使用点）与注册表 `themeRole` 公开令牌（Button / Slider / Menu 的细粒度覆盖入口）。支持清单见 `component-vars.js` 的 `THEME_COMPONENTS`，未登记键开发环境告警；只配置组件、没有 `seed` / `mode` 的 `abstract=true` 实例不参与 `<html>` 写入权仲裁（需改用 `false` 或补全局主题）。
+- **组件级主色**：`theme.components.<Component>.primaryColor` 只接受一个通用主色，Provider 用 `deriveColorStates` / `deriveFocusShadow` 展开成两组变量写到同一作用域节点：内部桥 `--va-cp-<component>-primary-*`（所有组件通用，覆盖该组件全部主色使用点）与注册表 `themeRole` 公开令牌（Button / Slider / Menu 的细粒度覆盖入口）。支持清单见 `component-vars.ts` 的 `THEME_COMPONENTS`，未登记键开发环境告警；只配置组件、没有 `seed` / `mode` 的 `abstract=true` 实例不参与 `<html>` 写入权仲裁（需改用 `false` 或补全局主题）。
 - **暗色**：`mode` 是派生入参而不是第二套种子；只切 `mode` 时只写 `data-va-mode`，由静态表接管；`mode="auto"` 监听 `prefers-color-scheme` 并在卸载时解除。
 - **填充档位**：`--va-fill-color-1/2/3/4` 依次为三级 / 二级 / 最强 / 最淡的中性叠加，编号不代表强度；最淡的底纹与默认标签底用 `fill-color-4`，水印等需要更高可见度的默认色用 `fill-color-3`。
 - **只读快照**：`provide(themeSnapshotKey, snapshot)` 仅供 canvas / SVG / 第三方 JS 读取，禁止借它写行内变量。`Watermark` 是首个消费者：默认水印色取快照里的 `--va-fill-color-3`（浅色 .15 黑 / 暗色 .18 白），主题变化时重绘；无 Provider 时回读 `<html>` 上的静态变量表并监听其 `data-va-mode` / `class`（纯 CSS 暗色切换同样跟随），SSR 才回落浅色默认。
-- **文档一致性口径**：机械清单（组件令牌）由 `scripts/gen-component-vars-doc.js` 生成，`tests/component-vars.spec.ts` 逐字节守护，生成物需提交；`定制主题` 页的叙事段（颜色变量清单、已知限制的理由）手写、只保证结论正确，不做逐值自动化 —— 新增可枚举清单优先走生成，不要再手写第二张表。
+- **文档一致性口径**：机械清单（组件令牌）由 `scripts/gen-component-vars-doc.ts` 生成，`tests/component-vars.spec.ts` 逐字节守护，生成物需提交；`定制主题` 页的叙事段（颜色变量清单、已知限制的理由）手写、只保证结论正确，不做逐值自动化 —— 新增可枚举清单优先走生成，不要再手写第二张表。
 - **取色出口**：公开 `derive(seed, mode)` 供 JS / canvas / SVG 场景取与 `--va-*` 逐值一致的结果；旧版色板 / 透明度色工具（`getColorPalettes` / `getAlphaColor`）已移除，焦点环所需的「等效半透明色」作为私有函数 `alphaOver` 留在 `theme/derive.ts`。
 - **演示站 / 文档站的暗色**：两处的主题开关都直接驱动 `ConfigProvider.mode` —— 演示站改写 `src/theme.ts` 的共享 `theme`（`layouts/GlobalLayout.vue`），文档站把 VitePress 的 `useData().isDark` 映射成 `mode`（`docs/.vitepress/theme/index.ts`）；两处均不使用 `html.dark` + `filter: invert()` 模拟暗色（旧的 `toggleDark()` 工具函数已随本版本移除，暗色统一由 `mode` / `data-va-mode` 驱动）。

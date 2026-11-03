@@ -116,7 +116,7 @@ export function generateStyleEntries(options: GenerateStyleEntriesOptions): stri
       if (missing.length > 0) {
         throw new Error(
           `[generate-style-entry] ${componentName} 缺少样式文件：\n${missing.map((css) => `  ${dir}/${css}`).join('\n')}\n` +
-            '（请检查 components/utils/style-deps.data.js 的 componentsMap / styleSources / componentDependencies，' +
+            '（请检查 components/utils/style-deps.ts 的 componentsMap / styleSources / componentDependencies，' +
             '或该 SFC 是否漏了 <style> 块）'
         )
       }

@@ -1,13 +1,9 @@
 /**
  * 组件级公开令牌注册表的类型定义
  *
- * 注册表实现是 `component-vars.js`（Node 脚本与运行期共用的单一数据源，必须是 `.js`：
- * `scripts/` 下的脚本由 `node` 直接执行，Node 20.19 / 22.12 都不支持 import `.ts`）。
- * 但 `tsc` 不会把手写的 `.d.ts` 搬进产物，而类型是公开 API 的一部分
- * （使用方 `import type { ThemeComponentKey } from 'vue-amazing-ui'` 要能解析），
- * 所以类型写在普通 `.ts` 里，由编译器随 `index.d.ts` 一并产出。
- *
- * `.js` 侧的值声明仍在 `component-vars.d.ts`，两处分工：本文件管类型，那边管「`.js` 导出什么」。
+ * 注册表实现是 `component-vars.ts`（运行期与脚本共用的单一数据源）；类型单独拆在这里，
+ * 因为它是**公开 API**（使用方 `import type { ThemeComponentKey } from 'vue-amazing-ui'` 要能解析），
+ * 由编译器随 `index.d.ts` 一并产出。数据文件只留数据，扫读与改数据时不必穿过类型定义。
  */
 
 /** 组件级通用主色派生出的状态档位（与 `deriveColorStates` 的返回键一致） */

@@ -7,15 +7,12 @@
     "types/*.d.ts",
     "components/*.ts",
     "components/**/*.ts",
-    "components/**/*.vue",
-    // Node 脚本与 TS 侧共用的数据层（见 components/utils/style-deps.ts 门面）；只这一份 .js 进程序
-    "components/utils/style-deps.data.js"
+    "components/**/*.vue"
   ],
   "exclude": ["node_modules", "dist", "es", "lib"],
   "compilerOptions": {
     "removeComments": true,
     "isolatedModules": true,
-    "allowJs": true,
     "composite": true,
     // "noUnusedLocals": true,
     // "noUnusedParameters": true,

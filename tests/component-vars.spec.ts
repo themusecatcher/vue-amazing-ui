@@ -10,9 +10,9 @@ import {
   COMPONENT_VARS,
   COMPONENT_VARS_BY_COMPONENT,
   THEME_COMPONENTS
-} from 'components/theme/component-vars.js'
-import { collectVarRefs, collectVarUsages, splitSfc, stripComments } from '../scripts/component-vars-check.js'
-import { render } from '../scripts/gen-component-vars-doc.js'
+} from 'components/theme/component-vars'
+import { collectVarRefs, collectVarUsages, splitSfc, stripComments } from '../scripts/component-vars-check'
+import { render } from '../scripts/gen-component-vars-doc'
 
 /**
  * 组件级公开令牌的契约测试（源码扫描，无 DOM）

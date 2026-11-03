@@ -3,15 +3,14 @@ import { basename, join, resolve } from 'node:path'
 import { describe, it, expect } from 'vitest'
 import { VueAmazingUIResolver } from 'components/utils/resolver'
 import type { VueAmazingUIResolverOptions } from 'components/utils/resolver'
-// 数据层是 .js（Node 脚本与 TS 侧共用），测试可直接 import，无需再解析源码文本
-import { componentsMap, styleSources, stylelessComponents } from 'components/utils/style-deps.data.js'
+import { componentsMap, styleSources, stylelessComponents } from 'components/utils/style-deps'
 
 /**
  * 按需引入 resolver 的回归防护（每组件一个样式入口）
  *
  * 背景：resolver 现在只回答一个问题「该组件的样式入口在哪」——返回**单条**
  * `es|lib/<dir>/style/index.{js,cjs}`。入口内部的 CSS 顺序（global → 自身 → 依赖 → vendor）由构建期
- * build/generate-style-entries.ts 依据 components/utils/style-deps.data.js 固化，其断言集见
+ * build/generate-style-entries.ts 依据 components/utils/style-deps.ts 固化，其断言集见
  * tests/generate-style-entries.spec.ts（原先「依赖是否注入齐全」的多条 CSS 列表断言已迁移到那里）。
  *
  * 本文件保留两类职责：

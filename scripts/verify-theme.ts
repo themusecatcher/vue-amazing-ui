@@ -13,7 +13,7 @@
  * 1. 组件不再参与主题：`components/**` 下不得出现 `useInject(` / `getColorPalettes(` / `getAlphaColor(`；
  * 2. 组件级主色清单自检：键不重复、`dir` 存在（这两项单测覆盖不到，缺失只会以 ENOENT 崩测试）；
  * 3. `var(--va-*)` 引用一致性：所有引用必须命中 `components/theme/vars.ts` 的别名清单、
- *    `components/theme/component-vars.js` 的组件令牌清单、登记过的全局变量，或内部桥
+ *    `components/theme/component-vars.ts` 的组件令牌清单、登记过的全局变量，或内部桥
  *    `--va-cp-*`（内部桥由 Provider 写入，组件只能带 fallback 消费）；
  * 4. 组件不得写入别名变量：行内样式里的 `--va-*` 声明只允许 `--va-local-*`；
  *    **公开组件令牌只能消费、不能声明**：`<style>` 段里出现 `--va-<component>-*:` 即失败
@@ -33,16 +33,17 @@
  */
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, relative, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
-import { collectVarRefs, splitSfc, stripComments } from './component-vars-check.js'
+import { fileURLToPath } from 'node:url'
+import { COMPONENT_VAR_NAMES, COMPONENT_VARS, THEME_COMPONENTS } from '../components/theme/component-vars'
+import { collectVarRefs, splitSfc, stripComments } from './component-vars-check'
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const strict = process.argv.includes('--strict')
-const failures = []
-const warnings = []
+const failures: string[] = []
+const warnings: string[] = []
 
 /** 从 vars.ts 解析别名清单，避免脚本内复制一份而漂移 */
-function readVarNames() {
+function readVarNames(): string[] {
   const source = readFileSync(resolve(rootDir, 'components/theme/vars.ts'), 'utf-8')
   const block = source.match(/THEME_VAR_NAMES = \[([\s\S]*?)\] as const/)
   if (!block) {
@@ -54,10 +55,7 @@ function readVarNames() {
 const varNames = readVarNames()
 const varNameSet = new Set(varNames)
 
-// 组件级公开令牌注册表：脚本是 ESM，直接 import 同一份数据源（注册表必须是 .js，node 不认 .ts）
-const { COMPONENT_VAR_NAMES, COMPONENT_VARS, THEME_COMPONENTS } = await import(
-  pathToFileURL(resolve(rootDir, 'components/theme/component-vars.js')).href
-)
+// 组件级公开令牌注册表：静态 import 同一份数据源（脚本经 tsx 执行，可直接读 .ts）
 const componentVarNames = [...COMPONENT_VAR_NAMES]
 const componentVarSet = new Set(componentVarNames)
 /** 内部组件级主色桥前缀：只允许消费（必须带 fallback），不允许组件声明 */
@@ -108,7 +106,7 @@ const FIXED_BY_DESIGN = [
 
 const LITERAL_PATTERN = /#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(/g
 
-function walk(dir, result = []) {
+function walk(dir: string, result: string[] = []): string[] {
   readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
     const fullPath = resolve(dir, entry.name)
     if (entry.isDirectory()) {
@@ -121,7 +119,7 @@ function walk(dir, result = []) {
 }
 
 /** 读取目录下所有匹配后缀的源码（用于演示站 / 文档目录的整体扫描） */
-function readDirSources(dir, extensions = ['.vue', '.ts', '.less']) {
+function readDirSources(dir: string, extensions: string[] = ['.vue', '.ts', '.less']): string {
   let sources = ''
   readdirSync(dir, { withFileTypes: true }).forEach((entry) => {
     const fullPath = resolve(dir, entry.name)
@@ -149,7 +147,7 @@ componentFiles.forEach((file) => {
 
 // ② 组件级主色清单自检：重复键与目录缺失单测覆盖不到（缺失只会以 ENOENT 崩测试），在此守护。
 //   「清单内每个组件都有桥变量消费点」已交给 tests/component-vars.spec.ts 的「组件级主色覆盖」。
-const seenThemeComponents = new Set()
+const seenThemeComponents = new Set<string>()
 THEME_COMPONENTS.forEach(({ key, dir }) => {
   if (seenThemeComponents.has(key)) {
     failures.push(`组件级主色清单存在重复键：${key}`)
@@ -221,17 +219,30 @@ componentFiles.forEach((file) => {
   }
 })
 
-const styleCache = new Map()
+const styleCache = new Map<string, string>()
 /** 读取组件 `<style>` 段（已剥离注释），按文件缓存 */
-function styleOf(file) {
-  if (!styleCache.has(file)) {
-    styleCache.set(file, stripComments(splitSfc(readFileSync(resolve(rootDir, 'components', file), 'utf-8')).style))
+function styleOf(file: string): string {
+  const cached = styleCache.get(file)
+  if (cached !== undefined) {
+    return cached
   }
-  return styleCache.get(file)
+  const style = stripComments(splitSfc(readFileSync(resolve(rootDir, 'components', file), 'utf-8')).style)
+  styleCache.set(file, style)
+  return style
+}
+
+/** 单个文件的字面量统计（`count` = 该文件内的出现次数） */
+interface LiteralBucket {
+  file: string
+  count: number
 }
 
 // ④ 颜色字面量：三档分类 —— 设计固定 / 组件自有色彩资产 / 未登记（后者才是债）
-const literalBuckets = { fixed: [], assets: [], unknown: [] }
+const literalBuckets: { fixed: LiteralBucket[]; assets: LiteralBucket[]; unknown: LiteralBucket[] } = {
+  fixed: [],
+  assets: [],
+  unknown: []
+}
 componentFiles.forEach((file) => {
   const count = (styleOf(file).match(LITERAL_PATTERN) ?? []).length
   if (count === 0) {
@@ -245,8 +256,8 @@ componentFiles.forEach((file) => {
     literalBuckets.unknown.push({ file, count })
   }
 })
-const sumOf = (list) => list.reduce((sum, item) => sum + item.count, 0)
-const describe = (list) =>
+const sumOf = (list: LiteralBucket[]): number => list.reduce((sum, item) => sum + item.count, 0)
+const describe = (list: LiteralBucket[]): string =>
   list
     .sort((first, second) => second.count - first.count)
     .map((item) => `${item.file}(${item.count})`)
@@ -280,7 +291,7 @@ const SCRIPT_LITERAL_WHITELIST = [
 
 // ⑤ 颜色字面量（`<style>` 之前的脚本 / 模板）：这类色值不进样式块，旧守护完全看不到 ——
 //    Timeline 写死的圆点色就是这样漏掉的。同样按「登记制」暴露存量。
-const scriptBuckets = { assets: [], unknown: [] }
+const scriptBuckets: { assets: LiteralBucket[]; unknown: LiteralBucket[] } = { assets: [], unknown: [] }
 componentFiles.forEach((file) => {
   const source = readFileSync(resolve(rootDir, 'components', file), 'utf-8')
   const { head } = splitSfc(source)

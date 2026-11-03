@@ -22,8 +22,8 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { parseModelDefaults } from './check-model-props.js'
-import { stripComments } from './component-vars-check.js'
+import { parseModelDefaults } from './check-model-props'
+import { stripComments } from './component-vars-check'
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const componentsDir = resolve(rootDir, 'components')
@@ -43,7 +43,7 @@ const WHITELIST = new Map([
 ])
 
 /** `input-search` → `InputSearch`，用于定位同名 SFC */
-function pascalCase(name) {
+function pascalCase(name: string): string {
   return name
     .split('-')
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
@@ -51,7 +51,7 @@ function pascalCase(name) {
 }
 
 /** 取走包裹括号：`({ a: 1 })` → `{ a: 1 }` */
-function unwrapParens(value) {
+function unwrapParens(value: string): string {
   let current = value.trim()
   while (current.startsWith('(') && current.endsWith(')')) {
     current = current.slice(1, -1).trim()
@@ -65,7 +65,7 @@ function unwrapParens(value) {
  * @param raw - 源码默认值表达式或文档单元格文本
  * @returns 归一化后的可比值
  */
-function normalizeValue(raw) {
+function normalizeValue(raw: string): string {
   let value = raw
   // 文档侧：HTML / Markdown 修饰与转义
   value = value.replace(/<br\s*\/?>/gi, '')
@@ -91,19 +91,19 @@ function normalizeValue(raw) {
  * @param cell - 表格的默认值单元格
  * @returns 可比值
  */
-function docCellValue(cell) {
+function docCellValue(cell: string): string {
   const withoutNote = cell.split(/[（，]/)[0] ?? ''
   return withoutNote.replace(/^\s*默认\s*/, '')
 }
 
 /** 首列是否就是该 prop（允许反引号与 `<Tag>` 修饰） */
-function isPropRow(line, prop) {
+function isPropRow(line: string, prop: string): boolean {
   if (!line.trim().startsWith('|')) return false
   const first = (line.split('|')[1] ?? '').replace(/`/g, '').trim()
   return new RegExp(`^${prop.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\s|$|<)`).test(first)
 }
 
-const failures = []
+const failures: string[] = []
 let checked = 0
 let whitelisted = 0
 
@@ -150,5 +150,5 @@ if (failures.length > 0) {
 }
 console.log(
   `✅ 文档默认值守护通过：${checked} 个 prop 的默认值列与源码 withDefaults 一致` +
-    (whitelisted > 0 ? `（${whitelisted} 处按白名单豁免，见 scripts/check-doc-defaults.js）` : '')
+    (whitelisted > 0 ? `（${whitelisted} 处按白名单豁免，见 scripts/check-doc-defaults.ts）` : '')
 )
