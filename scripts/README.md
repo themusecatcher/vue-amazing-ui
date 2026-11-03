@@ -51,16 +51,30 @@
 | `check-prop-runtime-types.js` | `interface Props` 字段文本 → 期望的运行时类型分支，并与 `es/` `lib/` 产物里的 `props` 声明比对；同样只做文本解析、不跑编译器 | `prepublish-guard.js`、`tests/prop-runtime-types.spec.ts` |
 | `check-model-props.js` | v-model 声明契约（三条）：① 全库禁止 `defineModel`（无白名单例外，其受控判据与全库「传值即受控」冲突）；② `useControlledModel('x', ...)` 的字段在 `withDefaults` 里只能写 `undefined`（布尔字段必须显式写），否则判据恒真；③ 同一字段必须在 `defineEmits` 里声明 `update:x`，否则每次交互输出 dev 告警且监听器落进 `$attrs`；复用 `check-prop-runtime-types.js` 的 `collectSfcs` / `findBalancedEnd` 与 `component-vars-check.js` 的 `stripComments` | `prepublish-guard.js`、`check-doc-defaults.js`、`tests/model-props-contract.spec.ts` |
 
-## 命令链
+> 样式依赖表（`components/utils/style-deps.data.js`）不在本目录：它是纯 `.js` 数据源，`prepublish-guard.js` / `verify-style-deps.js` 直接 `import`，不再需要「正则解析 TS 源码」的读取器；数据侧的跨表引用完整性（键与值必须是已收录组件）由 `verify:deps` 断言。
 
-两条链刻意不重叠：**产物无关的进 `check`，需构建的进 `verify`**。
+## 契约 → 权威层
 
-| 链 | 组成 | 使用位置 |
+同一个契约只允许**一层**为权威，其余为兜底（并在此注明）。新增断言前先查表，避免同一规则在两处维护。
+
+| 契约 | 权威层 | 备注 |
 | :-- | :-- | :-- |
-| `pnpm check` | `lint:check` → `format:check` → `type-check` → `test` | CI `check` job、`publish.sh` |
-| `pnpm verify` | `build` → `verify:deps` → `verify:on-demand` → `verify:theme` → `verify:inject-keys` → `verify:docs` → `guard` | CI `verify` job（随后 `docs:build`） |
+| 组件令牌注册表自洽（名称数组 / 元数据 / `themeRole`·`themeState`） | `tests/component-vars.spec.ts` | `verify-theme.js` 不再重复 |
+| `ThemeComponentKey` 联合类型 ↔ `THEME_COMPONENTS` | `tests/component-vars.spec.ts` | — |
+| 公开令牌每处使用都带与注册表一致的 fallback（含派生组件） | `tests/component-vars.spec.ts` | `verify-theme.js` 不再重复 |
+| 悬空引用（无 fallback 且从未声明） | `tests/component-vars.spec.ts` | — |
+| `theme.css` 两套表各含全部别名 | `tests/theme-build.spec.ts` | 直接调 `buildThemeCss()`，不读脏文件 |
+| 组件级主色桥消费点 | `tests/component-vars.spec.ts` | 脚本只保留清单自检（重复键 / 目录存在） |
+| `--va-*` 引用登记与写入位置（`--va-local-*` 例外、`--va-cp-*` 桥、全局白名单） | `scripts/verify-theme.js` | 口径比单测更细 |
+| 公开变量闭合（零消费即失败） | `scripts/verify-theme.js` | 单测无此维度 |
+| 颜色字面量三档统计（`--strict` 为门禁） | `scripts/verify-theme.js` | 跨文件统计 + 登记制 |
+| 演示站 / 文档中的 `--va-cp-*` fallback | `scripts/verify-theme.js` | 单测只扫 `components/` |
+| `props` 运行时类型 ↔ 源码类型 | `scripts/check-prop-runtime-types.js` | `guard` 第 ⑥ 项 + `tests/prop-runtime-types.spec.ts` |
+| 样式依赖表跨表引用完整性（`styleSources` / `componentDependencies` / `stylelessComponents` 的键与值都在 `componentsMap` 内） | `scripts/verify-style-deps.js` | 数据层是 `.js`，编译期看不到；`verify:deps` 内断言（需产物，故不在 `check` 链）。数据的漏登记另有构建期「缺少样式文件」兜底 |
+| v-model 声明契约 | `scripts/check-model-props.js` | `guard` 第 ⑦ 项 + `tests/model-props-contract.spec.ts` |
+| 文档 Props 默认值列 ↔ 源码 `withDefaults` | `scripts/check-doc-defaults.js` | — |
+| 生成文档 ↔ 注册表 | `tests/component-vars.spec.ts`（逐字节） | 生成脚本只负责渲染 |
 
-`publish.sh` 跑的是 `check` + `build` + 五项 `verify:*`，**不含 `guard`**——该断言改由 `npm publish` 的 `prepublishOnly` 触发，只跑一次。
 
 git hook 只覆盖静态检查，不碰本目录脚本：`pre-commit` → `lint-staged`（`*.js` 仅 prettier）、`commit-msg` → `commitlint`、`pre-push` → `type-check`。
 

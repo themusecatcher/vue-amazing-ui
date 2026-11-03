@@ -74,7 +74,7 @@
     "check": "run-s lint:check format:check type-check test",
     "verify": "run-s build verify:deps verify:on-demand verify:theme verify:inject-keys verify:docs guard",
     "verify:deps": "node scripts/verify-style-deps.js",
-    "verify:theme": "node scripts/verify-theme.js",
+    "verify:theme": "node scripts/verify-theme.js --strict",
     "verify:on-demand": "node scripts/verify-on-demand.js",
     "verify:inject-keys": "node scripts/verify-inject-keys.js",
     "verify:docs": "node scripts/check-doc-defaults.js",
