@@ -43,27 +43,31 @@ if [ "$skipBuild" != "1" ]; then
   pnpm build
 fi
 
+# 部署目标读主仓库 origin：不硬编码 remote（fork / 改名 / HTTPS 与 SSH 切换后都不必改脚本）。
+# 放在构建之前：remote 缺失 / 改名的失败应当秒级暴露，而不是等构建跑完才报错
+originUrl=$(git remote get-url origin)
+
 # 打包生成静态文件
 pnpm docs:build
 
-# 进入待发布的 dist/ 目录
-cd docs/.vitepress/dist
-
+# 在仓库外的临时目录发布 gh-pages：不在仓库内 `git init`，避免嵌套 .git 在中断时干扰主仓库。
+# EXIT trap 同时覆盖成功与失败两条路径，临时目录不会残留
+pagesDir=$(mktemp -d)
+trap 'rm -rf "$pagesDir"' EXIT
+cp -R docs/.vitepress/dist/. "$pagesDir"/
 # GitHub Pages 默认走 Jekyll，加 .nojekyll 跳过（保留下划线开头的资源目录）
-touch .nojekyll
+touch "$pagesDir/.nojekyll"
 
-# 提交打包静态网站到 gh-pages 分支
-git init
-git branch -M main
-git add .
-git commit -m 'docs: deploy site'
-
-# 部署到 https://themusecatcher.github.io/vue-amazing-ui/
-git push -f git@github.com:themusecatcher/vue-amazing-ui.git main:gh-pages
-
-# 回到仓库根，清理临时 git 仓库，避免嵌套 .git 干扰主仓库
-rm -rf .git
-cd ../../../
+(
+  cd "$pagesDir"
+  git init -q
+  git branch -M main
+  git add .
+  git commit -qm 'docs: deploy site'
+  # 强制推送覆盖 gh-pages 历史：该分支只承载构建产物，保留历史会无限膨胀
+  git push -f "$originUrl" main:gh-pages
+)
+echo "✅ 静态站点已推送到 gh-pages"
 
 # 提交所有源码到 github
 git add .

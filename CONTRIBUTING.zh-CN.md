@@ -141,8 +141,8 @@ pnpm lint         # ESLint 检查并自动修复
 pnpm lint:check   # ESLint 只读检查（不修改文件）
 pnpm type-check   # 类型检查
 pnpm test         # 单元测试（vitest）
-pnpm check        # 聚合检查：lint:check + format:check + type-check + test
-pnpm verify       # 重量级门禁：build + 依赖一致性 + 按需引入验证 + 主题架构守护 + 注入契约守护 + 文档默认值守护 + 产物守卫（发布前 / CI）
+pnpm check        # 聚合检查：lint:check + format:check + type-check + check:static + test（免构建）
+pnpm verify       # 重量级门禁：build + verify:artifacts（依赖一致性 + 按需引入验证）+ guard（发布前 / CI）
 ```
 
 提交前建议先本地运行 `pnpm check`，确保通过后再推送。

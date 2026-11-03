@@ -104,23 +104,25 @@ pnpm format            # Prettier 格式化全仓库（排除项由 .prettierign
 pnpm format:check      # 只检查不写盘（CI 与 pnpm check 使用；范围同 format）
 pnpm lint              # ESLint 检查并修复
 pnpm type-check        # vue-tsc 类型检查
-pnpm check             # 聚合检查：lint:check + format:check + type-check + test
+pnpm check             # 聚合检查：lint:check + format:check + type-check + check:static + test（免构建）
+pnpm check:static      # 免构建的源码契约守护：verify:theme + verify:inject-keys + verify:docs
 pnpm test              # vitest 运行测试
-pnpm verify            # 重量级门禁：build + verify:deps + verify:on-demand + verify:theme + verify:inject-keys + verify:docs + guard（发布前 / CI 自检）
+pnpm verify            # 重量级门禁：build + verify:artifacts + guard（发布前 / CI 自检）
+pnpm verify:artifacts  # 产物校验：verify:deps + verify:on-demand（需已构建产物）
 pnpm verify:deps       # 产物一致性校验：依赖表 ↔ chunk 闭包 + 聚合入口类型声明 ↔ 运行时导出（需已构建产物）
 pnpm verify:on-demand  # 按需引入端到端验证：临时消费方工程 + canary 断言（需已构建产物）
-pnpm verify:theme      # 主题架构守护：变量契约 / 组件令牌注册表 / 组件文件与登记表一致性
+pnpm verify:theme      # 主题架构守护（--strict）：变量引用登记与写入位置 / 公开变量闭合 / 色值三档统计 / 演示站与文档桥变量回退
 pnpm verify:inject-keys # 注入契约守护：键类型 / 命名 / 描述串 / 读取通道（只扫源码）
 pnpm verify:docs       # 文档默认值守护：Props「默认值」列 ↔ 源码 withDefaults 逐字段比对（只扫源码）
 pnpm guard             # 产物守卫：毫秒级存在性校验（样式入口 / 编号 CSS / 入口内引用 / 聚合入口类型与运行时配对 / props 运行时类型与源码类型对齐）
 ```
 
-> `scripts/publish.sh` 也会在构建后强制执行 `verify:deps`、`verify:on-demand`、`verify:theme`、`verify:inject-keys` 与 `verify:docs`（`guard` 由 `prepublishOnly` 触发）。
+> `scripts/publish.sh` 按同口径跑 `check` → `build` → `verify:artifacts` → `guard`，且 `guard` 在提交 / 推送**之前**执行（守卫失败即中止，不留下「已推送但产物是坏的」状态）；`prepublishOnly` 仍会再跑一次 `guard`，绕开 `pnpm pub` 直接 `npm publish` 时照样被拦。
 > 边界：`verify:on-demand` 用 Vite 构建，而 Vite 不做 webpack 式的 `sideEffects` tree-shaking，测不到「样式入口被 webpack 丢弃」这类问题 —— 该场景由 `prepublish-guard.js` 的第 ④ 项断言兜底。
 > CI 已启用：`.github/workflows/verify.yml` 在 PR 与 `main` 上**并行**跑两个 job —— `check`（`pnpm check`）与 `verify`（`pnpm verify` + `pnpm docs:build`，含完整构建）；
 > `docs:build` 必须晚于 `build`：docs 站的组件库来源是 `dist/` 产物（`docs/.vitepress/config.ts` 的 resolveId 钩子把 `'vue-amazing-ui'` 指向 `../../dist/index.js`），并非 npm 上的同名包；它同时兜住 `docs/**/*.md`（VitePress 的 md-as-SFC）的模板 / 标签结构错误 —— 这批 md 不可纳入 Prettier（会破坏构建，详见 `.github/workflows/verify.yml` 文件头说明）。
 > 安装按 lock 文件对齐（`pnpm install --frozen-lockfile`），Node 24，并统一锁定时区为 `Asia/Shanghai`（runner 默认 UTC，本仓库时间敏感用例会漂）。
-> 提交钩子**保持现状**：`verify:*` 含完整构建（约 30–60s），不适合放进 `.husky/pre-commit` / `pre-push`。
+> 提交钩子**保持现状**：`pnpm verify` 含完整构建（约 30–60s），不适合放进 `.husky/pre-commit` / `pre-push`。
 
 > 启动类命令（`pnpm dev` / `pnpm docs:dev`）见 [CONTRIBUTING.zh-CN.md](../CONTRIBUTING.zh-CN.md) 的环境准备章节。
 

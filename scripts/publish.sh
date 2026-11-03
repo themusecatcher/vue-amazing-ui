@@ -113,44 +113,66 @@ fi
 echo "✅ gh CLI 登录态校验通过"
 # ============ 校验结束 ============
 
-# 发布前门禁：lint + type-check，失败则中止（早于 build 失败，信息更清晰）
+# ============ 阶段化中断提示 ============
+# phase 记录当前所处阶段，中断时据此提示「哪一步失败、是否已改动远端」。
+# 关键：npm 发布之前的失败一律不得提示「可能已发布」（发布守卫失败时 npm 根本没发出去）。
+phase="预检"
+on_error() {
+    case "$phase" in
+    预检 | 构建 | 产物校验)
+        echo "⚠️ 发布流程中断于「${phase}」：尚未提交、未推送、未发布，修复后重跑 pnpm pub 即可"
+        ;;
+    提交推送)
+        echo "⚠️ 发布流程中断于「提交推送」：代码可能已部分提交 / 推送，但 npm 尚未发布，请检查 git 状态后重跑"
+        ;;
+    发布)
+        echo "⚠️ 发布流程中断于「npm 发布」：请核对 registry 上是否已出现 $version；若是守卫拦截则未发布，修复后重跑即可"
+        ;;
+    依赖升级)
+        echo "⚠️ 发布流程中断于「依赖升级」：npm 已发布 $version，但仓库内依赖未同步，请手动执行 pnpm up vue-amazing-ui@$version"
+        ;;
+    打tag)
+        echo "⚠️ 发布流程中断于「打 tag」：npm 已发布 $version，本地 / 远程 tag 可能不完整，请检查 git tag 状态"
+        ;;
+    release)
+        echo "⚠️ 发布流程中断于「GitHub Release」：npm 与 git tag 已就绪，Release 可能未创建，请手动执行 gh release create $tag"
+        ;;
+    文档部署)
+        echo "⚠️ 发布流程中断于「文档部署」：npm 已发布 $version，文档站可能未更新，请手动执行 pnpm docs:deploy \"\" 1"
+        ;;
+    esac
+}
+trap on_error ERR
+
+# 发布前门禁：lint / 格式 / 类型 / 静态契约守护（主题架构 / 注入契约 / 文档默认值），
+# 与 CI 的 pnpm check 是同一条链，避免「CI 拦得住、本地 pub 拦不住」
 if ! pnpm check; then
-    echo "❌ 发布前检查（lint + type-check）未通过，请修复后重试"
+    echo "❌ 发布前检查（lint / 格式 / 类型 / 静态契约守护）未通过，请修复后重试"
     exit 1
 fi
 
+phase="构建"
 # 打包构建
 if ! pnpm build; then
     echo "❌ 构建失败，请根据上方报错修复后重试"
     exit 1
 fi
 
-# 产物级验证（按需引入样式入口）：依赖表 ↔ 产物 chunk 闭包一致性 + 按需引入端到端（canary）
-# 与 npm publish 触发的 prepublish-guard.js 形成多重保险：守卫查「产物文件在不在」，这里查「按需引入后样式是否齐全」
-if ! pnpm verify:deps; then
-    echo "❌ 样式依赖一致性校验未通过，请修复后重试"
+phase="产物校验"
+# 产物级校验（verify:artifacts = 依赖表 ↔ chunk 闭包 + 按需引入端到端 canary），
+# 与下面更轻量的 guard 形成分工：这里查「按需引入后样式是否齐全」，guard 查「产物文件在不在」
+if ! pnpm verify:artifacts; then
+    echo "❌ 产物级校验（样式依赖一致性 / 按需引入）未通过，请修复后重试"
     exit 1
 fi
-if ! pnpm verify:on-demand; then
-    echo "❌ 按需引入验证未通过，请修复后重试"
-    exit 1
-fi
-# 主题架构守护：与 CI 的 pnpm verify 保持同一组门禁，避免「CI 拦得住、本地 pub 拦不住」
-if ! pnpm verify:theme; then
-    echo "❌ 主题架构守护未通过，请修复后重试"
-    exit 1
-fi
-# 注入契约守护（只扫源码）：键类型 / 命名 / 描述串 / 读取通道
-if ! pnpm verify:inject-keys; then
-    echo "❌ 注入契约守护未通过，请修复后重试"
-    exit 1
-fi
-# 文档默认值守护（只扫源码）：文档 Props 默认值列 ↔ 源码 withDefaults 逐字段比对
-if ! pnpm verify:docs; then
-    echo "❌ 文档默认值守护未通过，请修复后重试"
+# 产物守卫必须在提交 / 推送之前：守卫失败即中止，不留下「已推送但产物是坏的」这种需要反向修复的状态
+# （prepublishOnly 仍会在 npm publish 时再跑一次，约 0.2s，换取绕开 pnpm pub 直接 npm publish 也被拦）
+if ! pnpm guard; then
+    echo "❌ 产物守卫（package.json 入口 / 样式入口 / props 运行时类型）未通过，请修复后重试"
     exit 1
 fi
 
+phase="提交推送"
 # 检查是否有待提交的更改
 if [ -n "$(git status --porcelain)" ]; then
     git add .
@@ -160,14 +182,14 @@ else
     echo "No changes to commit. Skipping git commit and push."
 fi
 
-# 发布到 npm
-# 发布后若后续步骤失败，提示当前可能处于「npm 已发布但 git 未同步」的状态
-trap "echo \"⚠️ 发布流程中断：npm 可能已发布 $version，但后续 git 提交/tag/release/文档部署可能未完成，请检查状态并手动补全\"" ERR
+phase="发布"
+# 发布到 npm（prepublishOnly 会再跑一次 guard）
 npm publish
 
 # 发布成功：npm publish 正常返回后立即输出醒目横幅，便于核对版本与分享链接
 print_publish_success_banner
 
+phase="依赖升级"
 # 升级 vue-amazing-ui 依赖版本（npm publish 后 registry 存在同步延迟，失败则等待重试）
 retry=0
 until pnpm up vue-amazing-ui@$version; do
@@ -189,6 +211,7 @@ else
 fi
 git push
 
+phase="打tag"
 # 打版本 tag（确保指向最终发布状态的 commit），并推送
 # 覆盖边界：本地/远程均无 → 新建；本地有但远程缺 → 补推；本地 tag 指向旧 commit → 中止并提示人工决策
 local_tag_commit=""
@@ -221,6 +244,7 @@ else
     echo "⚠️ git tag $tag 已存在（本地与远程一致），跳过打 tag"
 fi
 
+phase="release"
 # 自动创建 GitHub Release（与 tag 同名，正文统一引用 CHANGELOG）
 # 依赖 gh CLI；gh 安装与登录态已在前置校验区检查，此处仅处理创建逻辑
 # 说明：GitHub 上 Release 页即 Tag 页（地址均为 releases/tag/<tag>），故只输出一次链接，避免重复
@@ -243,8 +267,6 @@ printf '%s' "${release_url}"
 osc8_end
 echo ""
 
-# release 已就绪，清除 npm 发布后的中断提示（后续文档部署失败不再提示「npm 已发布」）
-trap - ERR
-
+phase="文档部署"
 # 重新部署文档（组件库已构建过，跳过重复构建；skipBuild=1 时 commitMessage 用不上，传空占位）
 pnpm docs:deploy "" 1

@@ -1,8 +1,8 @@
 # 持续集成：在 PR 与 main 上自动跑本仓库既有的检查命令（不重复实现任何校验逻辑）
 #
 # 两个 job 刻意并行（二者无耦合，串行会白白多花一倍墙钟时间）：
-#   check  —— 纯静态与单测，不依赖构建产物；
-#   verify —— 构建 + 产物 / 架构校验链路（构建 → 依赖表 ↔ 产物闭包 → 按需引入端到端 → 主题架构守护 → 注入契约守护 → 产物守卫 → 文档站构建）：其中依赖一致性与按需引入两项校验依赖构建产物。
+#   check  —— 纯静态与单测，不依赖构建产物（lint / 格式 / 类型 / 三项源码守护 / 单测）；
+#   verify —— 构建 + 产物校验链路（build → verify:artifacts（依赖表 ↔ 产物闭包 + 按需引入端到端）→ guard → 文档站构建）。
 #
 # 设计取舍：
 #   1. 触发含 pull_request —— 把「消费方静默缺样式」这类问题拦在合并前；原先只有 scripts/publish.sh 会拦，
@@ -55,7 +55,7 @@ jobs:
   verify:
     name: verify
     runs-on: ubuntu-latest
-    # 兜底超时：正常约 6-8 min（构建 + 五项校验 + 文档站构建），卡死时避免占用默认的 360 min 配额
+    # 兜底超时：正常约 6-8 min（构建 + 产物校验 + guard + 文档站构建），卡死时避免占用默认的 360 min 配额
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
@@ -65,8 +65,8 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      # = build → verify:deps（依赖表 ↔ 产物 chunk 闭包）→ verify:on-demand（临时消费方工程 + canary）
-      #   → verify:theme（主题架构）→ verify:inject-keys（注入契约）→ verify:docs（文档默认值）→ guard（产物守卫）
+      # = build → verify:artifacts（verify:deps 依赖表 ↔ 产物 chunk 闭包 + verify:on-demand 临时消费方工程 + canary）
+      #   → guard（产物守卫）；主题 / 注入契约 / 文档默认值三项源码守护在 check job 的 check:static 内
       - run: pnpm verify
       # docs:build —— 必须晚于 build：docs 站的组件库来源是 dist 产物（非 npm 包），并兜住 md-as-SFC 的模板/标签结构错误
       - run: pnpm docs:build
