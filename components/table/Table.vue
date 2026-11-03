@@ -152,8 +152,9 @@ interface Coords {
   col: number // 列索引坐标
 }
 const tableRef = ref<HTMLElement | null>(null) // table 组件模板引用
-const tablePage = ref<number>(1) // 分页器当前页数
-const tablePageSize = ref<number>(10) // 分页器每页条数
+// 分页初值：优先取受控值，其次非受控默认值（与 Pagination 的 defaultPage / defaultPageSize 口径一致）
+const tablePage = ref<number>(props.pagination.page ?? props.pagination.defaultPage ?? 1) // 分页器当前页数
+const tablePageSize = ref<number>(props.pagination.pageSize ?? props.pagination.defaultPageSize ?? 10) // 分页器每页条数
 const hoverRowIndex = ref<number | null>(null) // 鼠标悬浮行的索引
 const mergeHoverCoords = ref<Coords[]>([]) // 鼠标悬浮时被合并单元格的坐标
 const displayDataSource = ref<Record<string, any>[]>([]) // 当前展示的表格数据
@@ -399,6 +400,14 @@ const totalDataSource = computed<number>(() => {
 const loadAllData = computed<boolean>(() => {
   return props.showPagination && totalDataSource.value === props.dataSource.length
 })
+// 分页总页数：pageSize 兜底 1，避免除零；total 可由 pagination.total 指定（服务端分页场景）
+const totalPage = computed<number>(() => {
+  return Math.max(Math.ceil(totalDataSource.value / Math.max(tablePageSize.value, 1)), 1)
+})
+// 生效页码：total / dataSource 缩小后外部传入的 page 可能越界，切片与分页渲染统一按有效页码，避免出现空表却显示有效页码
+const currentPage = computed<number>(() => {
+  return Math.min(Math.max(tablePage.value, 1), totalPage.value)
+})
 // 整行占位单元格（空态 / 展开行）跨列的 colspan：展开列 + 选择列 + 叶子数据列
 // 叶子数据列沿用 thColumnsLeaf（与 getTdColumnsGroup 渲染口径一致），仅补此前漏算的展开列/选择列
 const tableFullRowColspan = computed<number>(() => {
@@ -409,7 +418,7 @@ watch(
   () => [
     props.dataSource,
     loadAllData.value,
-    tablePage.value,
+    currentPage.value,
     tablePageSize.value,
     sortColumnDataIndex.value,
     sortColumnSorter.value,
@@ -427,8 +436,8 @@ watch(
         }
       }
       displayDataSource.value = allDataSource.slice(
-        (tablePage.value - 1) * tablePageSize.value,
-        tablePage.value * tablePageSize.value
+        (currentPage.value - 1) * tablePageSize.value,
+        currentPage.value * tablePageSize.value
       )
     } else {
       let currentDataSource: Record<string, any>[]
@@ -538,11 +547,12 @@ watchEffect(() => {
 // 监听分页状态变化
 watchEffect(() => {
   if (props.showPagination) {
-    if ('page' in props.pagination) {
-      tablePage.value = props.pagination.page as number
+    // 显式传 undefined 视为未传，避免把 undefined 写入页码后切片得到空数据
+    if (props.pagination.page !== undefined) {
+      tablePage.value = props.pagination.page
     }
-    if ('pageSize' in props.pagination) {
-      tablePageSize.value = props.pagination.pageSize as number
+    if (props.pagination.pageSize !== undefined) {
+      tablePageSize.value = props.pagination.pageSize
     }
   }
 })
@@ -1749,7 +1759,7 @@ function onPaginationChange(page: number, pageSize: number): void {
         @change="onPaginationChange"
         v-bind="{
           ...pagination,
-          page: tablePage,
+          page: currentPage,
           pageSize: tablePageSize,
           total: totalDataSource
         }"
