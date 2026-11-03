@@ -192,7 +192,7 @@ interface TableEmits {
   expand: [expanded: boolean, record: Record<string, any>] // 展开状态变化：是否展开 + 对应行数据
   expandedRowsChange: [expandedRowKeys: string[]] // 展开行 key 数组变化
   'update:expandedRowKeys': [expandedRowKeys: string[]] // v-model:expandedRowKeys
-  sortChange: [column: Column | null, dataSource: Record<string, any>[]] // 排序变化：排序列 + 排序后当前页数据
+  sortChange: [column: Column, dataSource: Record<string, any>[]] // 排序变化：排序列 + 排序后当前页数据（点击排序必有排序列，取消排序只清排序状态）
   change: [page: number, pageSize: number] // 分页变化
 }
 const emits = defineEmits<TableEmits>()
@@ -478,7 +478,11 @@ watch(displayDataSource, (to) => {
   }
   if (clickSorter.value) {
     clickSorter.value = false
-    emits('sortChange', sortColumn.value, to)
+    // clickSorter 只在 onSorter() 内置为 true，那里已先写入排序列；取消排序只清排序状态不清排序列，故此处必有排序列
+    const sortColumnClicked = sortColumn.value
+    if (sortColumnClicked) {
+      emits('sortChange', sortColumnClicked, to)
+    }
   }
 })
 // 监听选中项的 key 数组和选择框类型变化
