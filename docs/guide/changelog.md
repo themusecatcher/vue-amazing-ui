@@ -16,6 +16,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-11-04">3.8.0</VersionDateTag>
 
+- 安装与开发所需的 `Node` 版本下限提升到 22.12（`^22.12.0 || >=24.0.0`），构建期脚本改由 `tsx` 执行
 - 新增 [分页 Pagination](/guide/components/pagination.html) 的 `bordered` 属性与 `showQuickJumper` 的对象形态 `{ goButton }`（传字符串即按钮文案），跳转框改为只接受数字、有按钮时失焦不自动跳转，并补出 `PaginationQuickJumper` 类型导出
 - 修复 [分页 Pagination](/guide/components/pagination.html) 的省略号按钮类名拼写（`pagintion-jump-prev` / `pagintion-jump-next` → `pagination-jump-prev` / `pagination-jump-next`，按旧类名覆盖样式的需同步改名）与页码越界：`total` / `page` 越界时按有效页码渲染，`update:page` / `change` 也返回有效页码
 - 修复 [表格 Table](/guide/components/table.html) 分页在数据量或 `total` 缩小后表体为空：改按有效页码渲染，`pagination` 补充 `defaultPage` / `defaultPageSize` 初值
