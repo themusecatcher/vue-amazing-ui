@@ -38,14 +38,14 @@ if [ "$skipBuild" != "1" ] && [ -z "$commitMessage" ]; then
   exit 1
 fi
 
+# 部署目标读主仓库 origin：不硬编码 remote（fork / 改名 / HTTPS 与 SSH 切换后都不必改脚本）。
+# 放在构建之前：remote 缺失 / 改名的失败应当秒级暴露，而不是等构建跑完才报错
+originUrl=$(git remote get-url origin)
+
 # 重新打包组件库（被 publish.sh 调用时已构建过，可跳过）
 if [ "$skipBuild" != "1" ]; then
   pnpm build
 fi
-
-# 部署目标读主仓库 origin：不硬编码 remote（fork / 改名 / HTTPS 与 SSH 切换后都不必改脚本）。
-# 放在构建之前：remote 缺失 / 改名的失败应当秒级暴露，而不是等构建跑完才报错
-originUrl=$(git remote get-url origin)
 
 # 打包生成静态文件
 pnpm docs:build
