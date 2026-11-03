@@ -242,7 +242,7 @@ export function parsePropsFields(source) {
  * @param source - SFC 源码
  * @returns `domAliases` 命中 DOM 类型的别名、`stringAliases` 命中 `keyof typeof` 的别名
  */
-export function parseRiskyAliases(source) {
+function parseRiskyAliases(source) {
   const domAliases = new Set()
   const stringAliases = new Set()
   const aliasPattern = /(?:export\s+)?type\s+([A-Za-z_$][\w$]*)\s*=\s*([^\n]+)/g

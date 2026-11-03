@@ -161,7 +161,8 @@
       "eslint --fix"
     ],
     "*.js": [
-      "prettier --write"
+      "prettier --write",
+      "eslint --fix"
     ],
     "*.vue": [
       "prettier --parser=vue --write",
