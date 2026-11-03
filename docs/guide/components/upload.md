@@ -308,7 +308,7 @@ _`draggable` 默认开启，把文件拖入上传框即可上传；拖拽路径�
   @reject="onReject"
 />
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -340,7 +340,7 @@ function onReject(rejectedFiles: File[]) {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义样式布局
 

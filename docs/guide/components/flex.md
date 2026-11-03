@@ -172,6 +172,7 @@ _通过 `justify` 与 `align` 分别控制主轴与交叉轴的对齐方式_
 
 ```vue
 <script setup lang="ts">
+import { ref } from 'vue'
 const justifyOptions = ref([
   {
     label: 'flex-start',
@@ -264,6 +265,7 @@ _通过 `gap` 设置间距，可选档位或自定义数值_
 
 ```vue
 <script setup lang="ts">
+import { ref } from 'vue'
 const gapOptions = ref([
   {
     label: 'small',
@@ -355,6 +357,18 @@ _通过 `component` 指定渲染的标签或组件，便于语义化布局_
     <li v-for="n in 3" :key="n">列表项 {{ n }}</li>
   </Flex>
 </template>
+<style lang="less" scoped>
+.flex-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  li {
+    padding: 8px 12px;
+    background: var(--va-fill-color-1);
+    border-radius: 6px;
+  }
+}
+</style>
 ```
 
 :::

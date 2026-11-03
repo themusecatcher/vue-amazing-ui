@@ -283,8 +283,7 @@ describe('Upload 拖拽投放的数量上限', () => {
  * 拖拽路径的 `multiple` 约束
  *
  * 点选路径由 `<input multiple>` 约束，拖拽路径此前直接遍历 `dataTransfer.files`，
- * 于是 `multiple=false`（默认值）时一次拖入 N 个文件会全部入库。对齐 antdv 的
- * `AjaxUploader.onFileDrop`：`multiple === false` 时只保留第一个。
+ * 于是 `multiple=false`（默认值）时一次拖入 N 个文件会全部入库：`multiple === false` 时只保留第一个。
  */
 describe('Upload 拖拽投放的多选约束', () => {
   it('multiple 为 false 时投放多个文件只取第一个', async () => {
@@ -314,8 +313,7 @@ const echoRequest = (file: File): Promise<{ name: string; url: string }> =>
  * 拖拽路径的 `accept` 约束
  *
  * 点选路径由 `<input accept>` 约束，拖拽路径此前直接遍历 `dataTransfer.files`，任何类型都能入库。
- * 对齐 antdv（`AjaxUploader.onFileDrop` + `vc-upload/attr-accept.ts`）：先按 accept 分区，
- * 被拒文件通过 `reject` 事件回传。
+ * 先按 accept 分区，被拒文件通过 `reject` 事件回传。
  */
 describe('Upload 拖拽投放的类型约束', () => {
   it('不符合 accept 的文件不入库，并通过 reject 事件回传', async () => {
@@ -406,7 +404,7 @@ describe('Upload 单文件模式下的空投放', () => {
  * 单文件模式（`maxCount: 1`）的替换语义
  *
  * 槽位模型下每格既是上传框又是预览位，占满后无空位可点 —— 此前 `maxCount: 1` 只剩预览、
- * 无法替换。对齐 antdv「maxCount 为 1 时取最后一条」：占满后仍常驻一格上传框，
+ * 无法替换：占满后仍常驻一格上传框，
  * 上传落点特例为槽位 0，新文件覆盖当前文件。
  */
 describe('Upload 单文件模式的替换语义', () => {
