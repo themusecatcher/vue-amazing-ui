@@ -1282,7 +1282,7 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
           }
         }
         &:focus-visible {
-          outline: 2px solid var(--va-primary-border-color);
+          outline: 2px solid var(--va-cp-modal-primary-border-color, var(--va-primary-border-color));
           outline-offset: 1px;
         }
       }
