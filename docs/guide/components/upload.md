@@ -137,6 +137,17 @@ function onChange(files: UploadFileType[]) {
 function onPreview(file: UploadFileType) {
   console.log('preview', file)
 }
+// 自定义分片上传：文档站不引入 Web Worker，按 5MB 切片后打印分片数，再走与上面一致的模拟上传；
+// 完整的并发分片实现（含 sliceFile 源码）见「自定义分片上传」的 Show Code
+async function onCustomSliceUpload(file: File): Promise<UploadFileType> {
+  const CHUNK_SIZE = 1024 * 1024 * 5 // 5MB 分片大小
+  const chunks: Blob[] = []
+  for (let start = 0; start < file.size; start += CHUNK_SIZE) {
+    chunks.push(file.slice(start, start + CHUNK_SIZE))
+  }
+  console.log('chunks', chunks)
+  return (await onCustomRequest(file)) as UploadFileType
+}
 function onSuccess(file: UploadFileType) {
   console.log('upload success', file)
   message.success('upload success')
