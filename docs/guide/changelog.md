@@ -18,12 +18,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 - 新增 [分页 Pagination](/guide/components/pagination.html) 的 `bordered` 属性与 `showQuickJumper` 的对象形态 `{ goButton }`（传字符串即按钮文案），跳转框改为只接受数字、有按钮时失焦不自动跳转，并补出 `PaginationQuickJumper` 类型导出
 - 修复 [分页 Pagination](/guide/components/pagination.html) 的省略号按钮类名拼写（`pagintion-jump-prev` / `pagintion-jump-next` → `pagination-jump-prev` / `pagination-jump-next`，按旧类名覆盖样式的需同步改名）与页码越界：`total` / `page` 越界时按有效页码渲染，`update:page` / `change` 也返回有效页码
-- 修复 [表格 Table](/guide/components/table.html) 分页在数据量或 `total` 缩小后表体为空：改按有效页码渲染，`pagination` 补充 `defaultPage` / `defaultPageSize` 初值
-- 新增 [输入框 Input](/guide/components/input.html) 的 `blur` 事件，参数为原生 `FocusEvent`
+- 修复 [表格 Table](/guide/components/table.html) 分页在数据量或 `total` 缩小后表体为空：改按有效页码渲染，`pagination` 补充 `defaultPage` / `defaultPageSize` 初值；展开按钮补齐 `type="button"` 与展开态无障碍属性
+- 新增 [输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [文本域 Textarea](/guide/components/textarea.html) / [数字输入框 InputNumber](/guide/components/input-number.html) 的 `blur` 事件，参数为原生 `FocusEvent`
 - 优化 [选择器 Select](/guide/components/select.html) / [输入框 Input](/guide/components/input.html) / [分页 Pagination](/guide/components/pagination.html) 的尺寸切换：运行时切换 `size` 不再瞬间跳变
-- 修复 [表格 Table](/guide/components/table.html) 展开按钮缺少 `type="button"`；[对话框 Dialog](/guide/components/dialog.html) / [模态框 Modal](/guide/components/modal.html) 的头部按钮补齐按压态与焦点环
-- 组件库脚本及配置优化
+- 修复 [对话框 Dialog](/guide/components/dialog.html) / [模态框 Modal](/guide/components/modal.html) 的头部按钮缺少按压态与焦点环
+- 修复 [表格 Table](/guide/components/table.html) 的 `sortChange` 事件类型：`column` 误标为可空（`TableColumn | null`），实际不会为空，改为 `TableColumn`，使用方无需再判空
 - 更新使用者文档与贡献者文档
+- 组件库脚本及配置优化
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-11-03">3.7.2</VersionDateTag>
