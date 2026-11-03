@@ -1914,7 +1914,6 @@ defineExpose({
   color: var(--va-text-color-1);
   outline: none;
   cursor: pointer;
-  // 尺寸切换（height / font-size / min-height 随 --select-height 与尺寸类变化）需要过渡，否则整块高度突变
   transition:
     width 0.3s,
     height 0.2s,
@@ -1979,7 +1978,6 @@ defineExpose({
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      // line-height / padding-right 与尺寸类联动，需一并过渡，否则文字位置先跳、盒子后变
       transition:
         color 0.3s,
         line-height 0.2s,
@@ -1987,7 +1985,9 @@ defineExpose({
     }
     .select-placeholder {
       color: var(--va-text-color-disabled);
-      transition: none;
+      transition:
+        line-height 0.2s,
+        padding-right 0.2s;
       pointer-events: none;
     }
     .select-item-hidden {
