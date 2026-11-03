@@ -201,17 +201,14 @@ function onUploadFailRequest(file: File): Promise<UploadFileType> {
     <h2 class="mt30 mb10">自定义样式布局</h2>
     <p class="mb10">缩略图等比覆盖；上传描述文字使用：上传</p>
     <Upload tip="上传" fit="cover" v-model:fileList="fileList" />
-    <p class="mt30 mb10">排列间距使用：'middle'；自定义上传 uploading 动画样式</p>
+    <p class="mt30 mb10">排列间距使用：<code>'middle'</code>；自定义上传 <code>uploading</code> 动画样式</p>
     <Upload
       :space-props="{ gap: 'middle' }"
       :spin-props="{ indicator: 'dot-wheel', color: '#ff6900', tip: '上传中...' }"
       v-model:fileList="fileList"
     />
     <h2 class="mt30 mb10">操作完成的消息提示</h2>
-    <p class="mb10">
-      组件不再内嵌 <code>Message</code>，上传成功 / 删除 / 上传失败等提示改由使用方监听 <code>@success</code> /
-      <code>@remove</code> / <code>@error</code> 事件后自行调用
-    </p>
+    <p class="mb10">全局提示由使用方监听 <code>@success</code> / <code>@remove</code> / <code>@error</code> 后调用</p>
     <Space vertical>
       <Upload v-model:fileList="fileList" @success="onSuccess" @remove="onRemove" />
       <Upload upload-mode="custom" :custom-request="onUploadFailRequest" v-model:fileList="fileList" @error="onError" />

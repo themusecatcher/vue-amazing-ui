@@ -420,7 +420,9 @@ watchEffect(() => {
 
 ## 操作完成的消息提示
 
-_组件不再内嵌 `Message`，上传成功 / 删除 / 上传失败等提示改由使用方监听 `@success` / `@remove` / `@error` 事件后自行调用（本例使用 `useMessage()` 演示；第二个示例为 `custom` 模式下上传失败触发 `@error` 的场景）_
+_全局提示由使用方监听 `@success` / `@remove` / `@error` 后调用_
+
+<br/>
 
 <Space vertical>
   <Upload
@@ -761,7 +763,6 @@ function onError(err: unknown) {
 </script>
 <template>
   <Upload
-    multiple
     upload-mode="custom"
     :custom-request="onCustomSliceUpload"
     v-model:fileList="fileList"
@@ -867,7 +868,7 @@ onmessage = async (e: MessageEvent) => {
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| accept | 接受上传的文件类型，与`<input type="file" />`的 `accept` 属性一致，参考 [input accept Attribute](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Attributes/accept)；拖拽上传时同样生效，不符合的文件通过 `reject` 事件回传 | string | '\*' |
+| accept | 接受上传的文件类型，与 `<input type="file" />` 的 `accept` 属性一致，参考 [input accept Attribute](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Attributes/accept)；拖拽上传时同样生效，不符合的文件通过 `reject` 事件回传 | string | '\*' |
 | multiple | 是否支持多选文件，开启后可选择多个文件；拖拽上传时同样生效，关闭时只取第一个文件 | boolean | false |
 | maxCount | 限制上传数量。当为 `1` 时，始终用最新上传的文件代替当前文件（占满后仍显示上传入口） | number | undefined |
 | tip | 上传描述文字 | string | 'Upload' |
