@@ -16,14 +16,15 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-11-04">3.8.0</VersionDateTag>
 
-- 新增 [分页 Pagination](/guide/components/pagination.html) 的 `bordered` 属性：传 `false` 切换为无边框风格（页码去掉边框与底色），两种风格的选中态与悬浮 / 按压反馈一致，并修复无边框风格下禁用态未选中页仍带边框的问题
-- 修复 [分页 Pagination](/guide/components/pagination.html) 页码越界后无页码高亮、切换每页条数后当前页未收敛的问题：钳制后按新页码派发 `update:page` / `pageSizeChange` / `change`
-- [分页 Pagination](/guide/components/pagination.html) 的 `showQuickJumper` 增强：支持对象形态 `{ goButton }` 展示跳转确认按钮（文案可自定义，有按钮时失焦不再自动跳转），跳转框只接受数字、失焦落在页码上不再重复跳转与重复上报 `change`
-- [分页 Pagination](/guide/components/pagination.html) 补齐无障碍与交互反馈：补充 `aria-current` / `aria-disabled` / `role="navigation"` 与页码 `title`，禁用态与边界页移出 Tab 序列，跳转确认按钮补按压态与焦点环
-- 新增 [输入框 Input](/guide/components/input.html) 的 `blur` 事件（带 `relatedTarget`）
-- [选择器 Select](/guide/components/select.html) / [输入框 Input](/guide/components/input.html) / [分页 Pagination](/guide/components/pagination.html) 的尺寸切换补充过渡：运行时切换 `size` 不再整块突变
-- 修复 [表格 Table](/guide/components/table.html) 展开按钮缺少 `type="button"`（表单内点击会连带提交表单），补充 `aria-expanded` / `aria-label` 与按压态、焦点环；[对话框 Dialog](/guide/components/dialog.html) / [模态框 Modal](/guide/components/modal.html) 的关闭与全屏按钮补同样的按压态与焦点环
-- 使用者文档补齐 [分页 Pagination](/guide/components/pagination.html) 与 [输入框 Input](/guide/components/input.html) 的新增属性 / 事件说明与示例
+- 新增 [分页 Pagination](/guide/components/pagination.html) 的 `bordered` 属性：传 `false` 切换为无边框风格
+- 修复 [分页 Pagination](/guide/components/pagination.html) 的页码越界：`total` 缩小或传入超出总页数的 `page` 时不再无页码高亮，切换每页条数与跳转均按有效页码派发 `update:page` / `pageSizeChange` / `change`
+- 增强 [分页 Pagination](/guide/components/pagination.html) 的 `showQuickJumper`：支持对象形态 `{ goButton }` 展示跳转确认按钮，传字符串可自定义按钮文案，有按钮时失焦不再自动跳转；跳转框屏蔽非数字输入，点击页码时跳转框失焦不再重复跳转
+- 增强 [分页 Pagination](/guide/components/pagination.html) 的无障碍与键盘可用性：补 `role="navigation"`、`aria-current` / `aria-disabled` 与页码 `title`，禁用与边界页移出 Tab 序列，跳转确认按钮补按压态与焦点环
+- 新增 [输入框 Input](/guide/components/input.html) 的 `blur` 事件，参数为原生 `FocusEvent`（含 `relatedTarget`）
+- 优化 [选择器 Select](/guide/components/select.html) / [输入框 Input](/guide/components/input.html) / [分页 Pagination](/guide/components/pagination.html) 的尺寸切换：运行时切换 `size` 不再整块突变
+- 修复 [表格 Table](/guide/components/table.html) 展开按钮缺少 `type="button"`（表单内点击会连带提交表单），补 `aria-expanded` / `aria-label` 与按压态、焦点环；[对话框 Dialog](/guide/components/dialog.html) / [模态框 Modal](/guide/components/modal.html) 的关闭与全屏按钮补按压态，焦点环配色统一为主题色
+- 更新使用者文档
+- 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-11-03">3.7.2</VersionDateTag>
 
