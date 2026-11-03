@@ -257,7 +257,7 @@ export { default as Notification, NotificationProvider, useNotification } from '
 export type { NumberAnimationProps, NumberAnimationEasingPreset } from './number-animation'
 export { default as NumberAnimation } from './number-animation'
 
-export type { PaginationProps } from './pagination'
+export type { PaginationProps, PaginationQuickJumper } from './pagination'
 export { default as Pagination } from './pagination'
 
 export type { PopconfirmProps, PopconfirmSlots } from './popconfirm'
