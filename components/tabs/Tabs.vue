@@ -30,7 +30,7 @@ export interface Props {
   size?: 'small' | 'middle' | 'large' // 标签页大小
   type?: 'line' | 'card' // 标签页的类型
   tabPosition?: 'top' | 'right' | 'bottom' | 'left' // 自定义页签位置
-  justifyContent?: TabsJustifyContent // 页签在导航区的分布方式，line 下仅未溢出时生效，card 下仅 center 生效
+  justifyContent?: TabsJustifyContent // 页签在导航区的分布方式，溢出时不生效，card 下仅 center 生效
   tabGutter?: number // 页签之前的间隙大小，单位 px
   tabStyle?: CSSProperties // 自定义页签样式
   tabClass?: string // 自定义页签类名
@@ -115,7 +115,7 @@ const transition = ref(false)
 const emits = defineEmits<{
   'update:activeKey': [key: string | number] // 激活项变化
   change: [key: string | number] // 切换面板时调用
-  tabClick: [key: string | number, event: MouseEvent | KeyboardEvent] // 点击页签时调用
+  tabClick: [key: string | number, event: MouseEvent | KeyboardEvent] // 点击页签或键盘切换页签时调用
   tabScroll: [info: { direction: 'left' | 'right' | 'top' | 'bottom' }] // 页签滚动时调用
   add: [] // 点击新增页签按钮时调用
   close: [key: string | number] // 点击页签关闭按钮时调用
@@ -180,8 +180,9 @@ const justifyStyle = computed<CSSProperties>(() => {
   }
   return props.justifyContent ? { justifyContent: props.justifyContent } : {}
 })
-// card 的页签按内容宽度排列，居中由导航容器承担；该形态下只有 center 有含义
-const navCentered = computed(() => props.justifyContent === 'center')
+// card 的页签按内容宽度排列，居中由导航容器承担；该形态下只有 center 有含义。
+// 溢出时列表由内容撑开、两端页签靠滚动到达，居中会把首尾页签挪出可滚动区间，故与 justifyContent 同口径只在未溢出时生效
+const navCentered = computed(() => props.justifyContent === 'center' && !showWheel.value)
 const tabBarStyle = computed(() => {
   if (['top', 'bottom'].includes(props.tabPosition)) {
     return {
@@ -203,7 +204,7 @@ const animatedStyle = computed(() => {
   }
   return {}
 })
-const hiddenStyle = computed(() => {
+const hiddenStyle = computed<CSSProperties>(() => {
   if (props.animated && ['top', 'bottom'].includes(props.tabPosition)) {
     return {
       visibility: 'hidden',
@@ -454,6 +455,16 @@ const hiddenPanes = computed<TabsPane[]>(() => {
   })
 })
 const moreOpen = ref(false)
+/**
+ * 「更多」面板的弹出方位：纵向（left / right）时面板贴导航列的外沿 —— 左列贴左、右列贴右
+ *
+ * 纵向的收纳入口在列底、宽度撑满整列（见样式），故 `bottomLeft` / `bottomRight` 的次轴对齐边
+ * 恰好是导航列的左 / 右边界：面板左（右）边缘与页签列对齐，并朝内容侧展开。横向（top / bottom）
+ * 的入口在导航末端，沿用 `bottomLeft` 与触发器左沿对齐即可。
+ */
+const morePlacement = computed<'bottomLeft' | 'bottomRight'>(() => {
+  return props.tabPosition === 'right' ? 'bottomRight' : 'bottomLeft'
+})
 // 收纳入口与末个页签的间距跟随 tabGutter（未显式设置时紧贴，纵向位置单独成行不叠加）
 const operationsStyle = computed<CSSProperties>(() => {
   if (['top', 'bottom'].includes(props.tabPosition) && props.tabGutter !== undefined) {
@@ -461,14 +472,24 @@ const operationsStyle = computed<CSSProperties>(() => {
   }
   return {}
 })
-const moreMenus = computed<DropdownMenuOption[]>(() => {
+/** 「更多」下拉的菜单项：在公开的菜单项配置上附带页签自身字段，供 `label` 插槽读取 */
+interface TabsMoreMenuItem extends DropdownMenuOption {
+  paneClosable: boolean // 是否在收纳项上展示关闭按钮
+  tabSlot?: () => VNode[] // 自定义页签内容，与导航区同源
+}
+const moreMenus = computed<TabsMoreMenuItem[]>(() => {
   return hiddenPanes.value.map((pane) => ({
     key: pane.key,
     label: pane.tab,
     disabled: pane.disabled,
-    paneClosable: Boolean(pane.closable)
+    paneClosable: Boolean(pane.closable),
+    tabSlot: pane.tabSlot
   }))
 })
+/** 读取收纳项上的页签插槽：`MenuOption` 允许携带自定义字段，此处收敛回插槽类型 */
+function moreTabSlot(option?: DropdownMenuOption): (() => VNode[]) | undefined {
+  return (option as TabsMoreMenuItem | undefined)?.tabSlot
+}
 function onMoreSelect(key: DropdownMenuOption['key']): void {
   // 切换后隐藏项集合会变，显式收起避免菜单停留在新一批可见项上
   moreOpen.value = false
@@ -526,10 +547,12 @@ function onAddClick(): void {
 function onWheel(e: WheelEvent): void {
   e.stopPropagation()
   e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
-  if (e.deltaX || e.deltaY) {
+  // 横向导航优先取触摸板的横向分量：鼠标滚轮只有 deltaY，回落为横向滚动，否则「滚轮滑动」对鼠标不生效
+  const delta = e.deltaX || e.deltaY
+  if (delta) {
     if (['top', 'bottom'].includes(props.tabPosition)) {
       // 水平滚动
-      getHorizontalScroll(e.deltaX)
+      getHorizontalScroll(delta)
     } else {
       // 垂直滚动
       getVerticalScroll(e.deltaY)
@@ -553,10 +576,7 @@ function getVerticalScroll(deltaY: number): void {
   emits('tabScroll', { direction: deltaY > 0 ? 'bottom' : 'top' })
 }
 function getContentStyle(pane: TabsPane): CSSProperties {
-  if (!isActive(pane.key)) {
-    return hiddenStyle.value as CSSProperties
-  }
-  return {}
+  return isActive(pane.key) ? {} : hiddenStyle.value
 }
 </script>
 <template>
@@ -573,7 +593,13 @@ function getContentStyle(pane: TabsPane): CSSProperties {
       <div v-if="showPrefix" class="tabs-prefix">
         <slot name="prefix">{{ prefix }}</slot>
       </div>
-      <slot v-if="slotsExist.tabBar" name="tabBar" :tabs="panes" :active-key="activeKeyModel" :change="onTab" />
+      <slot
+        v-if="slotsExist.tabBar"
+        name="tabBar"
+        :tabs="panes"
+        :active-key="activeKeyModel"
+        :change="requestTabChange"
+      />
       <div
         v-else
         ref="wrapRef"
@@ -663,12 +689,12 @@ function getContentStyle(pane: TabsPane): CSSProperties {
         <Dropdown
           v-model:open="moreOpen"
           trigger="hover"
-          placement="bottomLeft"
+          :placement="morePlacement"
           overlay-class-name="tabs-more-menu"
           :menus="moreMenus"
           @menu-click="onMoreSelect"
         >
-          <button type="button" class="tab-more" aria-label="更多页签">
+          <button type="button" class="tab-more" aria-label="更多页签" aria-haspopup="menu" :aria-expanded="moreOpen">
             <svg focusable="false" aria-hidden="true" viewBox="64 64 896 896">
               <path
                 d="M176 511a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0zm280 0a56 56 0 10112 0 56 56 0 10-112 0z"
@@ -676,7 +702,10 @@ function getContentStyle(pane: TabsPane): CSSProperties {
             </svg>
           </button>
           <template #label="{ option }">
-            <span class="tab-more-label">{{ option?.label }}</span>
+            <span class="tab-more-label">
+              <TabsSlotContent v-if="moreTabSlot(option)" :content="moreTabSlot(option)" />
+              <template v-else>{{ option?.label }}</template>
+            </span>
             <span
               v-if="option?.paneClosable"
               class="tab-more-close"
@@ -1025,6 +1054,9 @@ function getContentStyle(pane: TabsPane): CSSProperties {
           .tab-item {
             border-radius: 6px 6px 0 0;
           }
+          .tab-add {
+            border-radius: 6px 6px 0 0;
+          }
         }
       }
     }
@@ -1086,6 +1118,9 @@ function getContentStyle(pane: TabsPane): CSSProperties {
           .tab-item {
             border-radius: 0 0 8px 8px;
           }
+          .tab-add {
+            border-radius: 0 0 8px 8px;
+          }
         }
       }
     }
@@ -1096,6 +1131,9 @@ function getContentStyle(pane: TabsPane): CSSProperties {
       .tabs-nav-wrap {
         .tabs-nav-list {
           .tab-item {
+            border-radius: 0 0 6px 6px;
+          }
+          .tab-add {
             border-radius: 0 0 6px 6px;
           }
         }
@@ -1150,12 +1188,23 @@ function getContentStyle(pane: TabsPane): CSSProperties {
           width: 2px;
           right: 0;
         }
+        .tab-add {
+          margin-top: 16px;
+          margin-left: 0;
+        }
       }
     }
     .tabs-nav-operations {
       height: 32px;
-      align-self: auto;
       justify-content: center;
+      align-self: stretch;
+      :deep(.dropdown-wrap) {
+        flex: 1;
+        min-width: 0;
+      }
+      .tab-more {
+        width: 100%;
+      }
     }
   }
   &.tabs-card {
@@ -1164,6 +1213,11 @@ function getContentStyle(pane: TabsPane): CSSProperties {
       .tabs-nav-wrap {
         .tabs-nav-list {
           .tab-item {
+            border-radius: 8px 0 0 8px;
+          }
+          .tab-add {
+            margin-top: 2px;
+            margin-left: 0;
             border-radius: 8px 0 0 8px;
           }
         }
@@ -1176,6 +1230,9 @@ function getContentStyle(pane: TabsPane): CSSProperties {
       .tabs-nav-wrap {
         .tabs-nav-list {
           .tab-item {
+            border-radius: 6px 0 0 6px;
+          }
+          .tab-add {
             border-radius: 6px 0 0 6px;
           }
         }
@@ -1231,12 +1288,23 @@ function getContentStyle(pane: TabsPane): CSSProperties {
           width: 2px;
           left: 0;
         }
+        .tab-add {
+          margin-top: 16px;
+          margin-left: 0;
+        }
       }
     }
     .tabs-nav-operations {
       height: 32px;
-      align-self: auto;
       justify-content: center;
+      align-self: stretch;
+      :deep(.dropdown-wrap) {
+        flex: 1;
+        min-width: 0;
+      }
+      .tab-more {
+        width: 100%;
+      }
     }
   }
   &.tabs-card {
@@ -1245,6 +1313,11 @@ function getContentStyle(pane: TabsPane): CSSProperties {
       .tabs-nav-wrap {
         .tabs-nav-list {
           .tab-item {
+            border-radius: 0 8px 8px 0;
+          }
+          .tab-add {
+            margin-top: 2px;
+            margin-left: 0;
             border-radius: 0 8px 8px 0;
           }
         }
@@ -1257,6 +1330,9 @@ function getContentStyle(pane: TabsPane): CSSProperties {
       .tabs-nav-wrap {
         .tabs-nav-list {
           .tab-item {
+            border-radius: 0 6px 6px 0;
+          }
+          .tab-add {
             border-radius: 0 6px 6px 0;
           }
         }

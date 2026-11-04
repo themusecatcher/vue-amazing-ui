@@ -3,6 +3,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { defineComponent, h, nextTick, ref } from 'vue'
 import Tabs from 'components/tabs/Tabs.vue'
 import TabPane from 'components/tabs/tab-pane'
+import Dropdown from 'components/dropdown'
 import { getCenterScroll } from 'components/tabs/scroll'
 
 const makeTab = (key: string | number | undefined, tab: string, content: string, disabled = false) => {
@@ -255,6 +256,32 @@ describe('Tabs 增强能力', () => {
     wrapper.unmount()
   })
 
+  it('鼠标滚轮（仅 deltaY）也能横向滚动页签', async () => {
+    const widthSpy = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (
+      this: HTMLElement
+    ) {
+      return this.classList.contains('tabs-nav-list') ? 200 : 100
+    })
+    const wrapper = mount(Tabs, {
+      props: { activeKey: '1' },
+      slots: { default: () => [makeTab('1', 'Tab 1', 'C1'), makeTab('2', 'Tab 2', 'C2')] }
+    })
+    await nextTick()
+    const nav = wrapper.find('.tabs-nav-list')
+    const fireWheel = (deltaY: number) => {
+      const wheelEvent = new WheelEvent('wheel', { bubbles: true })
+      Object.defineProperty(wheelEvent, 'deltaY', { value: deltaY })
+      nav.element.dispatchEvent(wheelEvent)
+    }
+    fireWheel(50)
+    await nextTick()
+    fireWheel(-50)
+    await nextTick()
+    expect(wrapper.emitted('tabScroll')).toEqual([[{ direction: 'right' }], [{ direction: 'left' }]])
+    widthSpy.mockRestore()
+    wrapper.unmount()
+  })
+
   it('tabBar 插槽替换内置导航，change 可回写页签', async () => {
     const wrapper = mount(Tabs, {
       props: { activeKey: '1' },
@@ -421,6 +448,41 @@ describe('Tabs 能力对齐（beforeLeave / displayDirective / justifyContent / 
     card.unmount()
   })
 
+  it('justifyContent 为 center 且页签溢出时不再居中（否则两端页签滚不到）', async () => {
+    // 导航区宽于容器即溢出，按类名伪造宽度
+    const widthSpy = vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (
+      this: HTMLElement
+    ) {
+      return this.classList.contains('tabs-nav-list') ? 200 : 100
+    })
+    const wrapper = mount(Tabs, {
+      props: { activeKey: '1', justifyContent: 'center' },
+      slots: { default: twoTabs }
+    })
+    await nextTick()
+    expect(wrapper.find('.tabs-nav-wrap').classes()).not.toContain('tabs-center')
+    expect(wrapper.find('.tabs-nav-list').attributes('style') ?? '').not.toContain('justify-content')
+    widthSpy.mockRestore()
+    wrapper.unmount()
+  })
+
+  it('tabBar 插槽的 change 同样经过 beforeLeave 拦截', async () => {
+    const beforeLeave = vi.fn(() => false)
+    const wrapper = mount(Tabs, {
+      props: { defaultActiveKey: '1', beforeLeave },
+      slots: {
+        default: twoTabs,
+        tabBar: ({ change }: { change: (key: string | number) => void }) =>
+          h('button', { class: 'custom-bar', onClick: () => change('2') }, '自定义页签头')
+      }
+    })
+    await wrapper.find('.custom-bar').trigger('click')
+    await flushPromises()
+    expect(beforeLeave).toHaveBeenCalledWith('2', '1')
+    expect(wrapper.emitted('change')).toBeUndefined()
+    wrapper.unmount()
+  })
+
   it('切换 justifyContent 后指示条重新贴合激活页签', async () => {
     // jsdom 无布局：按页签下标伪造水平位置，分布变化时位置随之改变，用于验证指示条重算
     let distributed = false
@@ -484,6 +546,48 @@ describe('Tabs 能力对齐（beforeLeave / displayDirective / justifyContent / 
     expect(wrapper.text()).toContain('C1')
     expect(wrapper.text()).not.toContain('C2')
     wrapper.unmount()
+  })
+})
+
+/**
+ * 「更多」下拉的对齐方位
+ *
+ * 纵向时收纳入口在导航列底、宽度撑满整列（样式侧保证），故面板的次轴对齐边即导航列的边界：
+ * 左列贴左（bottomLeft）、右列贴右（bottomRight），面板朝内容侧展开。横向入口在导航末端，
+ * 沿用 bottomLeft 与触发器左沿对齐。
+ */
+describe('Tabs 更多下拉的对齐方位', () => {
+  it('纵向按导航列边界对齐：左列贴左、右列贴右；横向贴触发器左沿', async () => {
+    // jsdom 无布局：伪造「导航列表长于容器 + 次个页签完全滚出视口」，使收纳入口渲染出来。
+    // 首项贴容器起点（激活项不回滚），次项落在视口之外，故收纳集合非空
+    const stub = (prop: 'offsetWidth' | 'offsetHeight' | 'offsetLeft' | 'offsetTop') =>
+      vi.spyOn(HTMLElement.prototype, prop, 'get').mockImplementation(function (this: HTMLElement) {
+        if (prop === 'offsetLeft' || prop === 'offsetTop') {
+          const index = Array.from(this.parentElement?.children ?? []).indexOf(this)
+          return this.classList.contains('tab-item') && index > 0 ? 300 : 0
+        }
+        return this.classList.contains('tabs-nav-list') ? 200 : 100
+      })
+    const spies = [stub('offsetWidth'), stub('offsetHeight'), stub('offsetLeft'), stub('offsetTop')]
+    const cases = [
+      { tabPosition: 'top', placement: 'bottomLeft' },
+      { tabPosition: 'bottom', placement: 'bottomLeft' },
+      { tabPosition: 'left', placement: 'bottomLeft' },
+      { tabPosition: 'right', placement: 'bottomRight' }
+    ] as const
+
+    for (const item of cases) {
+      const wrapper = mount(Tabs, {
+        props: { activeKey: '1', tabPosition: item.tabPosition },
+        slots: { default: () => [makeTab('1', 'Tab 1', 'C1'), makeTab('2', 'Tab 2', 'C2')] }
+      })
+      await nextTick()
+      expect(wrapper.find('.tab-more').exists()).toBe(true)
+      expect(wrapper.findComponent(Dropdown).props('placement')).toBe(item.placement)
+      wrapper.unmount()
+    }
+
+    spies.forEach((spy) => spy.mockRestore())
   })
 })
 
