@@ -1425,7 +1425,7 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 | dropdownMenuStyle | 下拉菜单自定义样式 | CSSProperties | undefined |
 | to | 下拉面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
 | options | 自动完成的数据源 | (string &#124; number &#124; [AutoCompleteOption](#autocompleteoption-type) &#124; [AutoCompleteGroupOption](#autocompletegroupoption-type))[] | [] |
-| value <Tag color="cyan">v-model</Tag> | 当前输入的值 | string | undefined |
+| value <Tag color="cyan">v-model</Tag> | 当前输入的值；传入即受控，不传时由组件内部维护 | string | undefined |
 | width | 自动完成宽度，单位 `px` | string &#124; number | '100%' |
 | size | 自动完成大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | status | 设置校验状态 | 'error' &#124; 'warning' | undefined |
