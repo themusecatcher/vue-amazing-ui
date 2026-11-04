@@ -76,6 +76,7 @@ export interface TagRenderParams {
 export interface Props {
   // 双向绑定与受控核心
   value?: SelectValue | LabeledValue | (SelectValue | LabeledValue)[] // (v-model:value) 当前选中的 option 条目值，mode 为 multiple / tags 时为数组；labelInValue 打开时元素为 { label, value, key, originLabel } 对象
+  defaultValue?: SelectValue | LabeledValue | (SelectValue | LabeledValue)[] // 非受控初始值，未绑 v-model:value 时生效
   open?: boolean // 是否展开下拉菜单（受控，不传时由组件内部维护）
   searchValue?: string // 搜索文本（受控，配对 update:searchValue；不传时由组件内部维护）
   // 内容与数据源
@@ -160,6 +161,7 @@ export interface SelectSlots {
 
 const props = withDefaults(defineProps<Props>(), {
   value: undefined,
+  defaultValue: undefined,
   open: undefined,
   searchValue: undefined,
   options: () => [],
@@ -246,7 +248,7 @@ const inputRef = ref<HTMLInputElement | null>(null) // 搜索输入框
 const selectContentRef = ref<HTMLElement | null>(null) // 触发器内容容器（面板定位锚点 + tag 宽度量取对象）
 const popupRef = ref<InstanceType<typeof Popup> | null>(null) // 浮层宿主模板引用（面板根元素经其 expose 取得）
 // (v-model:value) 选中值：传值即受控，未传时组件自持（多选按整体替换，不原地修改）
-const valueModel = useControlledModel<Props['value']>('value', undefined)
+const valueModel = useControlledModel<Props['value']>('value', props.defaultValue)
 // (v-model:open) 面板显隐：传值即受控，未传时组件自持
 const openModel = useControlledModel<boolean>('open', false)
 // 面板开合是否受控：非受控时才由组件自己派发 panelChange，受控由父侧回写驱动

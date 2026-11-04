@@ -19,6 +19,7 @@ interface NormalizedOption extends Option {
 
 export interface Props {
   value?: RadioValue // (v-model) 组内当前选中的值
+  defaultValue?: RadioValue // 非受控初始值，未绑 v-model 时生效
   options?: (string | number | Option)[] // 单选框选项数据；提供后组内默认插槽不生效
   button?: boolean // 是否启用按钮样式；组内选项随之以按钮形态呈现
   buttonStyle?: RadioButtonStyle // 按钮形态的风格，仅按钮形态生效
@@ -38,6 +39,7 @@ export interface RadioGroupSlots {
 
 const props = withDefaults(defineProps<Props>(), {
   value: undefined,
+  defaultValue: undefined,
   options: () => [],
   button: false,
   buttonStyle: 'outline',
@@ -52,7 +54,7 @@ const props = withDefaults(defineProps<Props>(), {
 defineSlots<RadioGroupSlots>()
 const emits = defineEmits(['update:value', 'change'])
 // (v-model) 组内当前值：传值即受控，未传时组件自持
-const valueModel = useControlledModel<RadioValue | undefined>('value', undefined)
+const valueModel = useControlledModel<RadioValue | undefined>('value', props.defaultValue)
 // 选项归一：字符串 / 数字简写取自身为值，对象形态取 label / value / disabled
 const normalizedOptions = computed<NormalizedOption[]>(() => {
   return props.options.map((option) => {

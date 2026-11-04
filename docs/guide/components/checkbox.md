@@ -730,9 +730,12 @@ const checkboxRef = ref<InstanceType<typeof Checkbox> | null>(null)
 
 ### CheckboxGroup Props
 
+> **受控 / 非受控**：传入 `v-model:value` 即受控，组件只经 `update:value` 上报；不传时由组自持，可用 `defaultValue` 指定初值。两者同时传时以 `value` 为准。
+
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| value <Tag color="cyan">v-model</Tag> | 组内已选中的值；传入即受控，不传时由组内部维护（缺省无选中项） | (string &#124; number)[] | undefined |
+| value <Tag color="cyan">v-model</Tag> | 组内已选中的值；传入即受控，不传时由组自持（可用 `defaultValue` 指定初值，缺省无选中项） | (string &#124; number)[] | undefined |
+| defaultValue | 非受控初始值，未绑 `v-model:value` 时生效 | (string &#124; number)[] | undefined |
 | options | 复选框选项数据；提供后组内默认插槽不生效 | (string &#124; number &#124; [CheckboxGroupOption](#checkboxgroupoption-type))[] | [] |
 | vertical | 是否垂直排列 | boolean | false |
 | gap | 选项间距，单位 `px`；垂直排列时即垂直间距（传数组取垂直间距）；数组用于水平排列折行时：`[水平间距, 垂直间距]` | number &#124; number[] | 8 |

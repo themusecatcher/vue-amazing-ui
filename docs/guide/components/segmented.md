@@ -381,6 +381,8 @@ const value = ref<SegmentedProps['value']>(options[0])
 
 ## APIs
 
+> **受控 / 非受控**：传入 `v-model:value` 即受控，组件只经 `update:value` 上报；不传时由组件自持，可用 `defaultValue` 指定初值。两者同时传时以 `value` 为准。
+
 ### Segmented Props
 
 | 名称 | 说明 | 类型 | 默认值 |
@@ -389,7 +391,8 @@ const value = ref<SegmentedProps['value']>(options[0])
 | disabled | 是否禁用 | boolean | false |
 | options | 选项数据 | (string &#124; number &#124; [SegmentedOption](#segmentedoption-type))[] | [] |
 | size | 控件尺寸 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
-| value <Tag color="cyan">v-model</Tag> | 当前选中的值；传入即受控，不传时由组件内部维护 | string &#124; number | undefined |
+| value <Tag color="cyan">v-model</Tag> | 当前选中的值；传入即受控，不传时组件自持（可用 `defaultValue` 指定初值） | string &#124; number | undefined |
+| defaultValue | 非受控初始值，未绑 `v-model:value` 时生效 | string &#124; number | undefined |
 
 ### SegmentedOption Type
 

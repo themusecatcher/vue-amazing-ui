@@ -1033,9 +1033,12 @@ const buttonRef = ref<InstanceType<typeof RadioButton> | null>(null)
 
 ### RadioGroup Props
 
+> **受控 / 非受控**：传入 `v-model:value` 即受控，组件只经 `update:value` 上报；不传时由组自持，可用 `defaultValue` 指定初值。两者同时传时以 `value` 为准。
+
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| value <Tag color="cyan">v-model</Tag> | 组内当前选中的值；不传时由组内部维护 | string &#124; number &#124; boolean | undefined |
+| value <Tag color="cyan">v-model</Tag> | 组内当前选中的值；传入即受控，不传时由组自持（可用 `defaultValue` 指定初值） | string &#124; number &#124; boolean | undefined |
+| defaultValue | 非受控初始值，未绑 `v-model:value` 时生效 | string &#124; number &#124; boolean | undefined |
 | options | 单选框选项数据；提供后组内默认插槽不生效 | (string &#124; number &#124; [RadioGroupOption](#radiogroupoption-type))[] | [] |
 | button | 是否启用按钮样式 | boolean | false |
 | buttonStyle | 按钮形态的风格，仅按钮形态生效 | 'outline' &#124; 'solid' | 'outline' |

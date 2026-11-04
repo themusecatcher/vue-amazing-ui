@@ -1974,11 +1974,14 @@ const options: SelectOption[] = []
 
 ## APIs
 
+> **受控 / 非受控**：传入 `v-model:value` 即受控，组件只经 `update:value` 上报；不传时由组件自持，可用 `defaultValue` 指定初值。两者同时传时以 `value` 为准。
+
 ### Select Props
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| value <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值，`mode` 为 `multiple` / `tags` 时为数组；`labelInValue` 开启时为 `{ label, value, key, originLabel }` 对象；传入即受控，不传时由组件内部维护 | number &#124; string &#124; [SelectLabeledValue](#selectlabeledvalue-type) &#124; (number &#124; string &#124; [SelectLabeledValue](#selectlabeledvalue-type))[] | undefined |
+| value <Tag color="cyan">v-model</Tag> | 当前选中的 `option` 条目值，`mode` 为 `multiple` / `tags` 时为数组；`labelInValue` 开启时为 `{ label, value, key, originLabel }` 对象；传入即受控，不传时组件自持（可用 `defaultValue` 指定初值） | number &#124; string &#124; [SelectLabeledValue](#selectlabeledvalue-type) &#124; (number &#124; string &#124; [SelectLabeledValue](#selectlabeledvalue-type))[] | undefined |
+| defaultValue | 非受控初始值，未绑 `v-model:value` 时生效 | number &#124; string &#124; [SelectLabeledValue](#selectlabeledvalue-type) &#124; (number &#124; string &#124; [SelectLabeledValue](#selectlabeledvalue-type))[] | undefined |
 | open <Tag color="cyan">v-model</Tag> | 是否展开下拉菜单；传入即受控，不传时由组件内部维护 | boolean | undefined |
 | searchValue <Tag color="cyan">v-model</Tag> | 搜索文本；传入即受控，不传时由组件内部维护 | string | undefined |
 | options | 选项数据 | [SelectOption](#selectoption-type)[] | [] |

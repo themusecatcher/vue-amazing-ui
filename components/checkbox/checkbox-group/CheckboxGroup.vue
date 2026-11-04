@@ -19,6 +19,7 @@ interface NormalizedOption extends Option {
 
 export interface Props {
   value?: CheckboxValue[] // (v-model) 组内已选中的值
+  defaultValue?: CheckboxValue[] // 非受控初始值，未绑 v-model 时生效
   options?: (string | number | Option)[] // 复选框选项数据；提供后组内默认插槽不生效
   vertical?: boolean // 是否垂直排列
   gap?: number | number[] // 选项间距，单位 px；垂直排列时即垂直间距；数组用于水平排列折行时：[水平间距, 垂直间距]
@@ -35,6 +36,7 @@ export interface CheckboxGroupSlots {
 
 const props = withDefaults(defineProps<Props>(), {
   // value 不设默认值：受控判据是「传值即受控」，非受控初值由 useControlledModel 提供
+  defaultValue: undefined,
   options: () => [],
   vertical: false,
   gap: 8,
@@ -46,7 +48,7 @@ const props = withDefaults(defineProps<Props>(), {
 defineSlots<CheckboxGroupSlots>()
 const emits = defineEmits(['update:value', 'change'])
 // (v-model) 组内已选值：传值即受控，未传时组件自持（写入一律整体替换，禁止 push / splice）
-const valueModel = useControlledModel<CheckboxValue[]>('value', [])
+const valueModel = useControlledModel<CheckboxValue[]>('value', props.defaultValue ?? [])
 // 选项归一：字符串 / 数字简写取自身为值，对象形态取 label / value / disabled
 const normalizedOptions = computed<NormalizedOption[]>(() => {
   return props.options.map((option) => {
