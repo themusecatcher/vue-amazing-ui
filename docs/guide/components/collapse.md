@@ -276,49 +276,6 @@ function onChange(key: number | string) {
 
 :::
 
-## 非受控模式
-
-_不传 `v-model:active-key` 时由组件自持，用 `defaultActiveKey` 指定初始展开项；点击照常生效并派发 `change`_
-
-<Collapse :items="collapseItems" :default-active-key="['1']" @change="onChange" />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import type { CollapseItem } from 'vue-amazing-ui'
-const collapseItems = ref<CollapseItem[]>([
-  {
-    key: '1',
-    header: 'This is panel header 1',
-    content:
-      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
-  },
-  {
-    key: '2',
-    header: 'This is panel header 2',
-    content:
-      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
-  },
-  {
-    key: '3',
-    header: 'This is panel header 3',
-    content:
-      'A dog is a type of domesticated animal. Known for its loyalty and faithfulness,it can be found as a welcome guest in many households across the world.'
-  }
-])
-function onChange(key: number | string) {
-  console.log('change', key)
-}
-</script>
-<template>
-  <Collapse :items="collapseItems" :default-active-key="['1']" @change="onChange" />
-</template>
-```
-
-:::
-
 ## 手风琴
 
 _只允许单个内容区域展开，只需 `activeKey` 传入 `number` | `string` 即可_

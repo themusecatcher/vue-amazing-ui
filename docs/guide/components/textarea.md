@@ -90,6 +90,24 @@ function onEnter(e: KeyboardEvent) {
 
 :::
 
+## 非受控模式
+
+_不传 `v-model:value`，用 `defaultValue` 指定初始值；输入、清除与字数提示照常生效；`placeholder` 只是占位提示，不能替代初值_
+
+<br/>
+
+<Textarea :width="200" default-value="非受控初值" allow-clear show-count placeholder="default value" />
+
+::: details Show Code
+
+```vue
+<template>
+  <Textarea :width="200" default-value="非受控初值" allow-clear show-count placeholder="default value" />
+</template>
+```
+
+:::
+
 ## 适应文本高度的文本域
 
 <Textarea
@@ -208,7 +226,8 @@ const disabledValue = ref('')
 | placeholder | 文本域输入的占位符 | string | undefined |
 | maxlength | 文字最大长度 | number | undefined |
 | showCount | 是否展示字数 | boolean | false |
-| value <Tag color="cyan">v-model</Tag> | 文本域内容；传入即受控，不传时由组件内部维护。与其他原生表单类组件不同，本字段默认 `''` 而非 `undefined`（真相源在 DOM 节点） | string | '' |
+| value <Tag color="cyan">v-model</Tag> | 文本域内容；传入即受控，不传时组件自持（可用 `defaultValue` 指定初值） | string | undefined |
+| defaultValue | 非受控初始值，未绑 `v-model:value` 时生效 | string | undefined |
 
 ## Events
 

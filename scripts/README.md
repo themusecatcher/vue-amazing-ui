@@ -1,6 +1,6 @@
 # scripts/ 脚本索引
 
-本目录存放**开发期工具**（发布 / 部署 / 产物校验 / 文档生成），不进 npm 包产物、不进 `components/` 运行时依赖。校验与生成脚本为 `.ts`，由 `tsx` 执行（与 ant-design-vue / naive-ui 一致：`engines` 下限 Node 22.12 仍无原生类型擦除能力）；发布链为 `.sh`，由 `sh` 执行。`.ts` 脚本的类型由 `tsconfig.node.json` 在 `pnpm type-check` 内检查。
+本目录存放**开发期工具**（发布 / 部署 / 产物校验 / 文档生成），不进 npm 包产物、不进 `components/` 运行时依赖。校验与生成脚本为 `.ts`，由 `tsx` 执行；发布链为 `.sh`，由 `sh` 执行。`.ts` 脚本的类型由 `tsconfig.node.json` 在 `pnpm type-check` 内检查。
 
 ## 三类文件
 

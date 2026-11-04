@@ -16,6 +16,7 @@ export interface Props {
   disabled?: boolean // 是否禁用
   placeholder?: string // 数字输入的占位符
   value?: number // (v-model) 当前值
+  defaultValue?: number // 非受控初始值，未绑 v-model:value 时生效
   valueModifiers?: object // 用于访问组件的 v-model 上添加的修饰符
 }
 // 声明组件插槽类型
@@ -36,11 +37,12 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   placeholder: undefined,
   value: undefined,
+  defaultValue: undefined,
   valueModifiers: () => ({})
 })
 defineSlots<InputNumberSlots>()
 const inputRef = ref<HTMLInputElement | null>(null) // input 模板引用
-const numValue = ref<string>() // 数字输入框的内容
+const isComposing = ref<boolean>(false) // 是否正在使用文本合成系统输入中
 const emits = defineEmits(['update:value', 'change', 'enter', 'focus', 'blur'])
 // 父是否提供了值（受控）—— 值的真相源始终是 DOM 元素，这里只用于两处判断：
 // ① 同步 props.value 时是否需要保留光标位置（非受控时元素自持，不能覆盖光标）；
@@ -58,6 +60,10 @@ const precision = computed(() => {
   const stepPrecision = String(props.step).split('.')[1]?.length || 0
   return Math.max(props.precision, stepPrecision)
 })
+// 初值必须与受控路径同口径（先按 min/max 钳制、再按 precision 格式化），故只能放在 precision 之后初始化
+const numValue = ref<string | undefined>(
+  props.defaultValue === undefined ? undefined : getFormatValue(getNumberValue(String(props.defaultValue)))
+)
 const showPrefix = computed(() => {
   return slotsExist.prefix || props.prefix
 })
@@ -109,11 +115,11 @@ function emitValue(value: number | undefined): void {
   emits('update:value', value) // 保证在 change 回调时能获取到最新数据
   emits('change', value)
 }
-function getFormatValue(): string | undefined {
+function getFormatValue(value: number | undefined = props.value): string | undefined {
   if (props.formatter) {
-    return props.formatter(props.value?.toFixed(precision.value) as string)
+    return props.formatter(value?.toFixed(precision.value) as string)
   } else {
-    return props.value?.toFixed(precision.value)
+    return value?.toFixed(precision.value)
   }
 }
 function getNumberValue(value: string): number {
@@ -126,20 +132,50 @@ function getNumberValue(value: string): number {
   }
   return numberValue
 }
+// 步进 / 钳制 / 箭头禁用态的数值基准：受控时以父值为准，非受控时以当前显示值为准
+function currentNumber(): number {
+  if (props.value !== undefined) {
+    return props.value
+  }
+  const parsed = Number.parseFloat(numValue.value ?? '')
+  return Number.isNaN(parsed) ? 0 : getNumberValue(String(parsed))
+}
 function updateValue(value: string): void {
   // Number.isNaN() 判断传递的值是否为 NaN，并检测器类型是否为 Number
   if (!Number.isNaN(parseFloat(value))) {
     const numberValue = getNumberValue(value)
+    // 判据取父值而非当前显示值：受控时天然去重；非受控时 props.value 恒为 undefined，
+    // 因此输入与失焦会各上报一次同一值（与 Input 的 change 口径一致，属既有设计）
     if (numberValue !== props.value) {
       emitValue(numberValue)
+      // 非受控时没有父回写，必须自己把钳制后的值落到显示上，否则「显示 999 / 上报 100」分叉
+      if (!isControlled.value) {
+        numValue.value = getFormatValue(numberValue)
+      }
     } else {
       numValue.value = getFormatValue()
     }
   } else {
-    numValue.value = getFormatValue()
+    // 非受控时 props.value 恒为 undefined，直接回退会清空输入框，故以当前数值为基准回退
+    numValue.value = getFormatValue(isControlled.value ? props.value : currentNumber())
+  }
+}
+// 文本合成系统即输入法编辑器开始新的输入合成时会触发（不对外派发：Events 表无该事件）
+function onCompositionStart(): void {
+  isComposing.value = true
+}
+// 合成结束统一解析一次，替代合成期的逐字符解析
+function onCompositionEnd(e: CompositionEvent): void {
+  isComposing.value = false
+  const target = e.target as HTMLInputElement | null
+  if (target) {
+    updateValueWithChineseDot(target.value)
   }
 }
 function onInput(e: Event): void {
+  if (isComposing.value) {
+    return // 合成期不解析、不上报：半成品（拼音、全角数字）不该进 updateValue
+  }
   if (!lazyInput.value) {
     const target = e.target as HTMLInputElement
     const value = props.parser ? String(props.parser(target.value)) : target.value
@@ -151,12 +187,25 @@ function onInput(e: Event): void {
     }
   }
 }
+/** 中文标点下打小数点会得到 `。`，静默纠正为 `.` */
+function updateValueWithChineseDot(raw: string): void {
+  const normalized = props.parser ? String(props.parser(raw)) : raw.replace(/。/g, '.')
+  // 非受控时先落纠正后的文本：updateValue 解析失败会按「当前显示值」回退，基准必须是纠正后的文本，
+  // 否则会退回 `1。5`；解析成功时 updateValue 再按精度重写一次。受控时交给父回写，避免中间帧闪烁
+  if (!isControlled.value) {
+    numValue.value = normalized
+  }
+  updateValue(normalized)
+}
 function onChange(e: Event): void {
   const target = e.target as HTMLInputElement
   const value = props.parser ? String(props.parser(target.value)) : target.value
   updateValue(value)
 }
 function onKeyboard(e: KeyboardEvent): void {
+  if (isComposing.value) {
+    return // 合成期上下键用于选候选词，不能同时触发步进
+  }
   if (e.key === 'ArrowUp') {
     onUp()
   }
@@ -181,12 +230,21 @@ function onBlur(e: FocusEvent): void {
   emits('blur', e)
 }
 function onUp(): void {
-  const res = Math.min(props.max, add(props.value || 0, +props.step)).toFixed(precision.value)
-  emitValue(getNumberValue(res))
+  const res = Math.min(props.max, add(currentNumber(), +props.step)).toFixed(precision.value)
+  const numberValue = getNumberValue(res)
+  // 非受控时没有父回写，必须自己写显示，否则「点了箭头画面完全不动」
+  if (!isControlled.value) {
+    numValue.value = getFormatValue(numberValue)
+  }
+  emitValue(numberValue)
 }
 function onDown(): void {
-  const res = Math.max(props.min, add(props.value || 0, -props.step)).toFixed(precision.value)
-  emitValue(getNumberValue(res))
+  const res = Math.max(props.min, add(currentNumber(), -props.step)).toFixed(precision.value)
+  const numberValue = getNumberValue(res)
+  if (!isControlled.value) {
+    numValue.value = getFormatValue(numberValue)
+  }
+  emitValue(numberValue)
 }
 // 程序化控制焦点：走原生 input 的 focus / blur，聚焦态由 CSS :focus-within 驱动，无需另行同步
 function focus(): void {
@@ -216,6 +274,8 @@ defineExpose({ focus, blur })
         :disabled="disabled"
         :placeholder="placeholder"
         v-model="numValue"
+        @compositionstart="onCompositionStart"
+        @compositionend="onCompositionEnd"
         @input="onInput"
         @change="onChange"
         @focus="onFocus"
@@ -228,9 +288,9 @@ defineExpose({ focus, blur })
     <div class="input-number-handler-wrap">
       <span
         class="input-number-arrow up-arrow"
-        :class="{ 'arrow-disabled': (value || 0) >= max }"
+        :class="{ 'arrow-disabled': currentNumber() >= max }"
         @mousedown.prevent
-        @click="(value || 0) >= max ? () => false : onUp()"
+        @click="currentNumber() >= max ? () => false : onUp()"
       >
         <svg
           class="icon-svg"
@@ -249,9 +309,9 @@ defineExpose({ focus, blur })
       </span>
       <span
         class="input-number-arrow down-arrow"
-        :class="{ 'arrow-disabled': (value || 0) <= min }"
+        :class="{ 'arrow-disabled': currentNumber() <= min }"
         @mousedown.prevent
-        @click="(value || 0) <= min ? () => false : onDown()"
+        @click="currentNumber() <= min ? () => false : onDown()"
       >
         <svg
           class="icon-svg"

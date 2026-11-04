@@ -233,33 +233,6 @@ function onChange(value: number | number[]) {
 
 :::
 
-## 非受控模式
-
-_不传 `v-model:value` 时由组件自持，用 `defaultValue` 指定初始取值；拖拽与键盘调节照常生效_
-
-<Flex vertical gap="large">
-  <Slider :default-value="37" @change="onChange" />
-  <Slider range :default-value="[20, 80]" @change="onChange" />
-</Flex>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-function onChange(value: number | number[]) {
-  console.log('change', value)
-}
-</script>
-<template>
-  <Flex vertical gap="large">
-    <Slider :default-value="37" @change="onChange" />
-    <Slider range :default-value="[20, 80]" @change="onChange" />
-  </Flex>
-</template>
-```
-
-:::
-
 ## 双滑块
 
 <Slider range v-model:value="doubleValue" @change="onChange" />

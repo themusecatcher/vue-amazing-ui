@@ -474,13 +474,6 @@ const cardTopContentStyle: CSSProperties = {
         </TabPane>
       </Tabs>
     </Flex>
-    <h2 class="mt30 mb10">非受控模式</h2>
-    <p class="mb10">
-      不传 <code>activeKey</code> 时用 <code>defaultActiveKey</code> 指定初始页签，之后的切换由组件内部维护
-    </p>
-    <Tabs default-active-key="2">
-      <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
-    </Tabs>
     <h2 class="mt30 mb10">事件回调</h2>
     <p class="mb10">
       <code>change</code> / <code>tabClick</code> 在切换时触发，<code>tabScroll</code> 在页签滚动到边界之外时触发

@@ -494,24 +494,6 @@ const placementOptions: { label: string; value: Placement }[] = [
 
 :::
 
-## 默认值
-
-_非受控时使用 `defaultValue` 设置初始颜色_
-
-<br/>
-
-<ColorPicker :width="240" default-value="#ff6900" />
-
-::: details Show Code
-
-```vue
-<template>
-  <ColorPicker :width="240" default-value="#ff6900" />
-</template>
-```
-
-:::
-
 ## 自定义展示内容
 
 _通过 `label` 属性（可返回字符串或 `VNode`）或 `label` 插槽自定义展示内容_
@@ -715,9 +697,11 @@ const panelTo = computed(() => {
 
 ### ColorPicker Props
 
+> **受控 / 非受控**：`value` 与 `open` 传入即受控（值以父为准，组件只上报 `update:value` / `update:open`）；不传则由组件自持，交互照常生效，可用 `defaultValue` / `defaultOpen` 指定初值。
+
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| value <Tag color="cyan">v-model</Tag> | 颜色选择器的值；传入即受控，不传时由组件内部维护（初值见 `defaultValue`） | string | undefined |
+| value <Tag color="cyan">v-model</Tag> | 颜色选择器的值；传入即受控，不传时组件自持（可用 `defaultValue` 指定初值） | string | undefined |
 | defaultValue | 非受控时的初始颜色值 | string | undefined |
 | open <Tag color="cyan">v-model</Tag> | 面板是否展开；传入即受控，不传时由组件内部维护 | boolean | undefined |
 | defaultOpen | 非受控时面板的初始显隐 | boolean | false |

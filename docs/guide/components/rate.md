@@ -486,6 +486,8 @@ const state = reactive({
 
 ## APIs
 
+> **受控 / 非受控**：传入 `v-model:value` 即受控，组件只经 `update:value` 上报；不传时由组件自持，可用 `defaultValue` 指定初值。两者同时传时以 `value` 为准。
+
 ### Rate Props
 
 | 名称 | 说明 | 类型 | 默认值 |
@@ -500,7 +502,8 @@ const state = reactive({
 | disabled | 只读，无法进行交互 | boolean | false |
 | tooltips | 自定义每项的提示信息 | string[] | [] |
 | tooltipProps | `Tooltip` 组件属性配置，参考 [Tooltip Props](./tooltip.md#tooltip-props) | [TooltipProps](./tooltip.md#tooltip-props) | {} |
-| value <Tag color="cyan">v-model</Tag> | 当前评分，取值 `0,1,2,3...`（`0` 为未评分）；传入即受控，不传时由组件内部维护，从 `0` 起算 | number | undefined |
+| value <Tag color="cyan">v-model</Tag> | 当前评分，取值 `0,1,2,3...`（`0` 为未评分）；传入即受控，不传时组件自持（可用 `defaultValue` 指定初值，缺省为 `0`） | number | undefined |
+| defaultValue | 非受控初始值，未绑 `v-model:value` 时生效 | number | undefined |
 
 ## Slots
 

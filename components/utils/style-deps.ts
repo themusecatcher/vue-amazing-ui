@@ -7,7 +7,7 @@
  * 3. `scripts/prepublish-guard.ts` / `scripts/verify-style-deps.ts` —— 产物存在性与依赖闭包校验；
  * 4. `tests/*.spec.ts` —— 单测直接查表。
  *
- * 为什么数据与类型能同处一个 `.ts`：脚本侧入口由 `tsx` 执行（与 ant-design-vue / naive-ui 一致），
+ * 为什么数据与类型能同处一个 `.ts`：脚本侧入口由 `tsx` 执行，
  * 不依赖 Node 原生类型擦除（`engines` 下限 Node 22.12 仍没有该能力）。因此跨表引用完整性回到编译期：
  * `styleSources` / `componentDependencies` / `stylelessComponents` 的键与值都必须是 `componentsMap`
  * 已收录的组件，由 `Partial<Record<ComponentName, ComponentName>>` 保证；`pnpm verify:deps` 的运行期

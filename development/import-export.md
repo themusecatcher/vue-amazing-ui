@@ -172,7 +172,7 @@ es/tooltip/style/index.js
 | `componentDependencies` | 组件的样式依赖（如 `Table` 依赖 `Checkbox` / `Pagination` 等） | 生成器（按表顺序写进入口）＋ `scripts/verify-style-deps.ts`（与产物 chunk 闭包双向比对） |
 | `stylelessComponents` | 完全没有样式的组件（`ConfigProvider` / `Highlight` / `NumberAnimation` / `PickerIcon` / `Watermark`） | resolver（返回空）+ 生成器（跳过） |
 
-数据与类型同处一个 `.ts`：脚本侧由 `tsx` 执行（与 ant-design-vue / naive-ui 一致），Node 能直接读同一份事实，不再有「正则解析 TS 源码」的中间层，条目格式也不受单行约束；同文件还导出：
+数据与类型同处一个 `.ts`：脚本侧由 `tsx` 执行，Node 能直接读同一份事实，不再有「正则解析 TS 源码」的中间层，条目格式也不受单行约束；同文件还导出：
 
 - `ComponentName = keyof typeof componentsMap`：由数据键推导，作为 resolver / 生成器的查表类型。
 - `isComponentName(name): name is ComponentName`：`resolve` 时的类型守卫，未收录的组件名直接返回 `undefined`，交给其他 resolver 处理。

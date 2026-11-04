@@ -16,6 +16,7 @@ export interface Props {
   tooltips?: string[] // 自定义每项的提示信息
   tooltipProps?: TooltipProps // Tooltip 组件属性配置，参考 Tooltip Props
   value?: number // (v-model) 当前评分，取值 0,1,2,3...（0 为未评分）；传入即受控
+  defaultValue?: number // 非受控初始值，未绑 v-model:value 时生效
 }
 // 声明组件插槽类型
 export interface RateSlots {
@@ -33,11 +34,12 @@ const props = withDefaults(defineProps<Props>(), {
   gap: 8,
   disabled: false,
   tooltips: () => [],
-  tooltipProps: () => ({})
+  tooltipProps: () => ({}),
+  defaultValue: undefined
 })
 defineSlots<RateSlots>()
 // (v-model) 当前评分：传值即受控，未传时组件自持（初值 0 = 未评分）
-const valueModel = useControlledModel<number>('value', 0)
+const valueModel = useControlledModel<number>('value', props.defaultValue ?? 0)
 const hoverValue = ref<number>()
 const tempValue = ref<number | null>() // 清除时保存点击value
 const emits = defineEmits(['update:value', 'change', 'hoverChange'])

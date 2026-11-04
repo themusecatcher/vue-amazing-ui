@@ -1371,35 +1371,6 @@ const renderActiveKey = ref<TabsProps['activeKey']>('1')
 
 ::::
 
-## 非受控模式
-
-_不传 `activeKey` 时用 `defaultActiveKey` 指定初始页签，之后的切换由组件内部维护_
-
-<br/>
-
-<Tabs default-active-key="2">
-  <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
-</Tabs>
-
-:::: details Show Code
-
-```vue
-<script setup lang="ts">
-const tabList = [
-  { key: '1', tab: 'Tab 1', content: 'Content of Tab Pane 1' },
-  { key: '2', tab: 'Tab 2', content: 'Content of Tab Pane 2' },
-  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' }
-]
-</script>
-<template>
-  <Tabs default-active-key="2">
-    <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
-  </Tabs>
-</template>
-```
-
-::::
-
 ## 事件回调
 
 _`change` / `tabClick` 在切换时触发，`tabScroll` 在页签滚动到边界之外时触发_

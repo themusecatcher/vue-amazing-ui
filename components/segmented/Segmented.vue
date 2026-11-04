@@ -15,6 +15,7 @@ export interface Props {
   options?: (string | number | Option)[] // 选项数据
   size?: 'small' | 'middle' | 'large' // 控件尺寸
   value?: string | number // (v-model) 当前选中的值
+  defaultValue?: string | number // 非受控初始值，未绑 v-model:value 时生效
 }
 // 声明组件插槽类型
 export interface SegmentedSlots {
@@ -31,13 +32,14 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   options: () => [],
   size: 'middle',
-  value: undefined
+  value: undefined,
+  defaultValue: undefined
 })
 defineSlots<SegmentedSlots>()
 const segmentedGroupRef = ref<HTMLElement | null>(null)
 const segmentedItemRef = ref<HTMLElement[]>([])
 // (v-model) 当前选中的值：传值即受控，未传时组件自持
-const valueModel = useControlledModel<string | number | undefined>('value', undefined)
+const valueModel = useControlledModel<string | number | undefined>('value', props.defaultValue)
 const selectedWallWidth = ref<number>(0) // selectedWall 的宽度
 const selectedWallOffsetLeft = ref<number>(0) // selectedWall 的偏移量
 const emits = defineEmits(['update:value', 'change'])

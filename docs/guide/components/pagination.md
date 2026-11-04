@@ -139,28 +139,6 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 :::
 
-## 非受控模式
-
-_不传 `v-model:page` / `v-model:page-size` 时由组件自持，用 `defaultPage` / `defaultPageSize` 指定初始值；翻页照常生效_
-
-<Pagination :total="100" :default-page="3" :default-page-size="20" @change="onChange" />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-function onChange(page: number, pageSize: number) {
-  console.log('change page', page)
-  console.log('change pageSize', pageSize)
-}
-</script>
-<template>
-  <Pagination :total="100" :default-page="3" :default-page-size="20" @change="onChange" />
-</template>
-```
-
-:::
-
 ## 自定义位置
 
 <Space align="center" style="margin-bottom: 16px">
@@ -842,7 +820,7 @@ function pageSizeChange(page: number, pageSize: number) {
 
 ## APIs
 
-> **受控 / 非受控**：`page / pageSize` 传入即受控（值以父为准，组件只上报 `update:page / update:pageSize`）；不传则由组件自持，交互照常生效，可用 `defaultPage / defaultPageSize` 指定初值。
+> **受控 / 非受控**：`page` / `pageSize` 传入即受控（值以父为准，组件只上报 `update:page` / `update:pageSize`）；不传则由组件自持，交互照常生效，可用 `defaultPage` / `defaultPageSize` 指定初值。
 
 ### Pagination Props
 

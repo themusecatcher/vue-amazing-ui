@@ -57,6 +57,7 @@ const RANGE_ARROW_SIZE = 16
 const RANGE_POPUP_OFFSET = POPUP_OFFSET + (RANGE_ARROW_SIZE * 2) / 3
 export interface Props {
   value?: PickerValue // (v-model:value) 当前取值；传入即受控
+  defaultValue?: PickerValue // 非受控初始值，未绑 v-model:value 时生效
   open?: boolean // (v-model:open) 面板是否展开；传入即受控
   // 双向绑定
   formattedValue?: PickerFormattedValue // 字符串轨道值：父组件传入时以它为准（受控），随选择经 update 事件回写
@@ -120,6 +121,7 @@ export type {
 } from 'components/picker'
 const props = withDefaults(defineProps<Props>(), {
   value: undefined,
+  defaultValue: undefined,
   open: undefined,
   formattedValue: undefined,
   type: 'time',
@@ -166,7 +168,7 @@ const emits = defineEmits<{
   focus: [event: FocusEvent]
   blur: [event: FocusEvent]
 }>()
-const valueModel = useControlledModel<PickerValue>('value', null)
+const valueModel = useControlledModel<PickerValue>('value', props.defaultValue ?? null)
 const openModel = useControlledModel<boolean>('open', false)
 const triggerRef = ref<InstanceType<typeof PickerTrigger> | null>(null)
 const popupRef = ref<InstanceType<typeof Popup> | null>(null)

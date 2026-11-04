@@ -106,6 +106,24 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 
 :::
 
+## 非受控模式
+
+_不传 `v-model:value`，用 `defaultValue` 指定初始值；输入、清除与搜索照常生效；`placeholder` 只是占位提示，不能替代初值_
+
+<br/>
+
+<InputSearch :width="200" default-value="非受控初值" allow-clear placeholder="default value" />
+
+::: details Show Code
+
+```vue
+<template>
+  <InputSearch :width="200" default-value="非受控初值" allow-clear placeholder="default value" />
+</template>
+```
+
+:::
+
 ## 自定义搜索按钮
 
 <Space vertical>
@@ -691,7 +709,8 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 | placeholder | 搜索框输入的占位符 | string | undefined |
 | maxlength | 文本最大长度 | number | undefined |
 | showCount | 是否展示字数 | boolean | false |
-| value <Tag color="cyan">v-model</Tag> | 搜索框内容；传入即受控，不传时由组件内部维护 | string | undefined |
+| value <Tag color="cyan">v-model</Tag> | 搜索框内容；传入即受控，不传时组件自持（可用 `defaultValue` 指定初值） | string | undefined |
+| defaultValue | 非受控初始值，未绑 `v-model:value` 时生效 | string | undefined |
 
 ## Slots
 
