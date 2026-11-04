@@ -208,7 +208,7 @@ _七种类型_
 - 斜体说明句统一用**下划线**包裹：顶部描述写 `_中文名用于……_`，每个示例标题下用一行 `_说明_` 描述；❌ 不写 `*说明*`（两种写法渲染等价，但历史上混用过，统一为下划线形态；`docs/**` 不纳入 Prettier，故该写法是稳定的）。
 - 可交互 demo 直接写在正文，用内联 `<script setup>` 提供响应式状态。
 - 每个示例后接 `::: details Show Code` 折叠块，展示可复制的完整代码。
-- 章节顺序统一为：何时使用 → 基本使用 → APIs → Slots → Methods → Events → CSS 变量（可选，仅组件暴露主题变量时）；表格一律**带首尾竖线**（`| 名称 | 说明 | 类型 | 默认值 |`；2026-10-23 修订：原「无首尾竖线的紧凑写法」在增删列时易错位，实测两种写法渲染一致；2026-10-24 全库 151 处存量旧式表已收敛，现无例外）；**全部表格首列统一「名称」**（❌ 不写「参数 / 字段 / 属性名」；内容性速查表不受此限，如「调用方式」「按键」等以语义维度为首列的说明表），详见 §表格规范速查。
+- **尾部章节顺序固定为：APIs → Slots → Events → Methods → CSS 变量（可选，仅组件暴露主题变量时）→ 在 setup 外使用（可选，仅离散 API 组件）**；正文示例（何时使用 → 基本使用 → 各示例）在尾部章节之前。章节可缺省（无插槽的组件就没有 `## Slots`），但**相对顺序不得变更**，由 `pnpm verify:docs` 强制校验，唯一标准见 §尾部章节顺序；表格一律**带首尾竖线**（`| 名称 | 说明 | 类型 | 默认值 |`；2026-10-23 修订：原「无首尾竖线的紧凑写法」在增删列时易错位，实测两种写法渲染一致；2026-10-24 全库 151 处存量旧式表已收敛，现无例外）；**全部表格首列统一「名称」**（❌ 不写「参数 / 字段 / 属性名」；内容性速查表不受此限，如「调用方式」「按键」等以语义维度为首列的说明表），详见 §表格规范速查。
 - `update:xxx` 属于 `v-model` 双向绑定的更新事件，**不写入 Events 表**；双向绑定统一在 APIs 表的参数名后标注 `<Tag color="cyan">v-model</Tag>`（如 `open <Tag color="cyan">v-model</Tag>`），避免同一语义在两处重复维护。
 - **受控 / 非受控的写法**（2026-11-02 新增，对应 component-design.md 的「v-model 声明约定」）：`v-model` 参数行的说明里带上判据，统一句式「传入即受控，不传时由组件内部维护」；提供 `defaultXxx` 的组件改写为「（不传时组件自持，可用 `defaultXxx` 指定初值）」，并在 `## APIs` 下补一行 `> **受控 / 非受控**：…` 说明契约、正文补 `## 非受控模式` 示例（判据只在一处展开，其余页面用参数行内句式即可）；面板开合类字段可在参数行内追加「内部触发只经 `update:open` / `openChange` 上报」。
 - **必填 prop 用 `required` 标签标识**（2026-10-23 新增）：`value <Tag color="red">required</Tag>`，与 `v-model` 标签同款；两者并存时顺序固定 `v-model` 在前、`required` 在后（`value <Tag color="cyan">v-model</Tag> <Tag color="red">required</Tag>`）。默认值列同时写 `—`（标签给扫读、`—` 给精确语义）。⚠️ 只在**真必填**时使用（源码 `required: true`，或缺该 prop 组件无法工作），可选 prop 即便业务上常用也 ❌ 不加，否则标签贬值。
@@ -216,6 +216,24 @@ _七种类型_
 - **`## Slots` 表的「用法」列写插槽的实际用法**：默认插槽 `v-slot:default`、具名插槽 `v-slot:xxx`、带作用域参数写 `v-slot:xxx="{ a, b }"`；❌ 不写 `-` / `{ option: T }` 这类「参数」列形态。列头固定为「名称 | 说明 | 用法」，与 `docs/guide/template.md` 一致；该列表达的是插槽**用法**（消费侧语法），不要与 APIs / Methods / Events 表的「类型」列（TS 类型 / 签名）混写。
 - `## Slots` 表需与组件 `defineSlots` 的定义**逐项对应**（名称、是否有作用域参数）；插槽参数由 `v-bind` 动态展开、无法静态收窄时（如 `option`），用法列只写 `v-slot:option`。
 - **表格内禁止裸对象字面量**：APIs / Events 等表格单元格里直接写 `{ label: 'label' }` 会被 markdown 的属性语法当作前一个标签的 HTML 属性（渲染成 `<td ... label:="" ...>`），轻则单元格内容丢失，重则同名属性重复让 `pnpm docs:build` 直接失败（报 `Duplicate attribute`）。对象字面量一律用行内代码包裹：`` `{ label: 'label', value: 'value' }` ``。
+
+### 尾部章节顺序（2026-11-04 制定，唯一标准）
+
+> 背景：全量盘点 73 个组件文档，旧顺序「APIs → Slots → Methods → Events」执行率仅 85%（11 处漂移、4 种形态：输入类把 Methods 写到 Events 之后，下拉/浮层类把 Events 提到 Slots 之前），且 `pnpm verify:docs` 只校验默认值列、不守护顺序。同期对照 ant-design-vue（`Props → Events → Methods`）与 naive-ui（75 个多表文档中 64 个为 `Props → Slots → Methods`）均把 Methods 收尾，故调整为下列顺序并加脚本守护。
+
+| 序号 | 章节 | 缺省条件 | 位置理由 |
+|:--|:--|:--|:--|
+| 1 | `## APIs` | 必有 | 参数是查文档的第一诉求 |
+| 2 | `## Slots` | 无插槽时省略 | 与 Props 同属**模板层声明**（`v-slot`），紧随其后 |
+| 3 | `## Events` | 无事件时省略 | 同属模板层（`@event`），保持「写模板」阅读连续 |
+| 4 | `## Methods` | 无实例方法时省略 | 需 `ref` 调用 `defineExpose` 暴露的方法，是门槛最高、频次最低的**实例层** API，统一收尾 |
+| 5 | `## CSS 变量` | 未暴露主题变量时省略 | 样式定制属补充参考，位于用法定型之后 |
+| 6 | `## 在 setup 外使用` | 仅离散 API 组件（dialog / modal / loading-bar / message / notification） | 同属命令式调用，紧邻 Methods |
+
+- **存量**：2026-11-04 一次性收敛 20 个组件文档——9 个原 `A → S → M → E`（checkbox / countdown / date-picker / dialog / modal / radio / scrollbar / time-picker / tooltip）、6 个原 `A → M → E`（loading-bar / message / notification / number-animation / text-scroll / video）、5 个把 Events 提前的（auto-complete / cascader / drawer / dropdown / select）；现全库 73 个文档 100% 合规，收敛前后逐行比对确认仅行移动、无内容改动。
+- 组件 Props 表与类型表（`### Xxx Props` / `### Xxx Type`）归属各自章节，不参与本节排序；`###` 的摆放仍按 §表格规范速查（类型表紧跟唯一引用它的表）。
+- 章节标题文字固定为上述 6 种，❌ 不自造 `## 实例方法` / `## 属性` / `## 事件` 等变体，否则脚本与锚点失效。
+- 校验：`pnpm verify:docs`（`scripts/verify-docs.ts` 的第 ② 项断言）解析每个文档的 `## ` 尾部章节序列，断言等于上述标准的**子序列**；新增组件文档漏排、乱排都会失败，通篇只写变体标题（一节规范标题都没有，如从零新写时用了 `## Props` / `## 事件`）同样失败。顺序断言与默认值列断言同扫 `docs/`，故不单开脚本与命令。
 
 ### 表格规范速查（2026-10-23 制定 / 同日修订二 / 2026-10-24 修订三）
 

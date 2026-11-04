@@ -1973,13 +1973,6 @@ const rangePlaceholder = ['开始日期', '结束日期']
 | suffixIcon | 自定义选择框后缀图标 | v-slot:suffixIcon |
 | separator | 范围形态两段之间的分隔符 | v-slot:separator |
 
-## Methods
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| focus | 使选择器获取焦点 | () => void |
-| blur | 使选择器失去焦点 | () => void |
-
 ## Events
 
 | 名称 | 说明 | 类型 |
@@ -1991,3 +1984,10 @@ const rangePlaceholder = ['开始日期', '结束日期']
 | panelChange | 面板视图切换时的回调 | (value: number, mode: string) => void |
 | focus | 输入框获取焦点时的回调 | (event: FocusEvent) => void |
 | blur | 输入框失去焦点时的回调 | (event: FocusEvent) => void |
+
+## Methods
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| focus | 使选择器获取焦点 | () => void |
+| blur | 使选择器失去焦点 | () => void |

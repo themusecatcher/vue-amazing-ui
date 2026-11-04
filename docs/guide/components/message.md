@@ -940,6 +940,16 @@ _调用时传入的 `MessageOptions` 类型（`open` / `info` / `success` / `err
 | onClick? | 点击 `message` 时的回调函数 | () => void |
 | onClose? | 关闭时的回调函数 | () => void |
 
+## Events
+
+_`click` / `close` 为 `<Message>` / `<MessageProvider>` 组件的原生事件（需通过组件标签监听）；使用 `useMessage()` 时，对应事件请改用每条消息的 `onClick` / `onClose` 回调。_
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| click | 点击 `message` 时触发的回调函数 | (e: Event) => void |
+| close | 关闭时触发的回调函数，参数为该条消息的 `key` | (key: string) => void |
+| ready | 实例挂载完成时触发，参数为该实例的 `api` | (api: [MessageApi](#methods)) => void |
+
 ## Methods
 
 _`useMessage()` 返回的 `MessageApi`，或通过 `<Message>` / `<MessageProvider>` 的 `@ready` 事件获取：_
@@ -977,16 +987,6 @@ _`update` 可更新的字段为 `MessageOptions` 的全部属性，另支持 `mo
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 | mode? | 消息类型，决定内置图标（仅 `update` 可传此字段） | 'open' &#124; 'info' &#124; 'success' &#124; 'error' &#124; 'warning' &#124; 'loading' |
-
-## Events
-
-_`click` / `close` 为 `<Message>` / `<MessageProvider>` 组件的原生事件（需通过组件标签监听）；使用 `useMessage()` 时，对应事件请改用每条消息的 `onClick` / `onClose` 回调。_
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| click | 点击 `message` 时触发的回调函数 | (e: Event) => void |
-| close | 关闭时触发的回调函数，参数为该条消息的 `key` | (key: string) => void |
-| ready | 实例挂载完成时触发，参数为该实例的 `api` | (api: [MessageApi](#methods)) => void |
 
 ## 在 setup 外使用
 

@@ -996,13 +996,6 @@ p {
 
 > 组件上的 `class` / `style` 透传到最外层容器 `.drawer-wrap`（等价于 `rootClassName` / `rootStyle`）。
 
-## Events
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| close | 点击遮罩层或左上角叉或取消按钮的回调 | (e: Event) => void |
-| afterOpenChange | 切换抽屉时动画结束后的回调 | (open: boolean) => void |
-
 ## Slots
 
 | 名称 | 说明 | 用法 |
@@ -1012,3 +1005,10 @@ p {
 | default | 自定义抽屉内容 | v-slot:default |
 | footer | 自定义抽屉的页脚 | v-slot:footer |
 | closeIcon | 自定义关闭图标 | v-slot:closeIcon |
+
+## Events
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| close | 点击遮罩层或左上角叉或取消按钮的回调 | (e: Event) => void |
+| afterOpenChange | 切换抽屉时动画结束后的回调 | (open: boolean) => void |

@@ -1439,6 +1439,15 @@ _调用时传入的 `NotificationOptions` 类型（`open` / `info` / `success` /
 | onClick? | 点击通知体时的回调函数；点击右上角关闭按钮不触发 | (e: MouseEvent) => void |
 | onClose? | 关闭时的回调函数；返回 `false`（或 `Promise` `resolve` `false`）时取消本次关闭 | () => void &#124; boolean &#124; Promise&lt;void &#124; boolean&gt; |
 
+## Events
+
+_`close` 为 `<Notification>` / `<NotificationProvider>` 组件的事件（需通过组件标签监听）；使用 `useNotification()` 时，单条通知的点击 / 关闭回调请分别使用 `onClick` / `onClose`。_
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| close | 通知提醒关闭时的回调，参数为该条通知的 `key` | (key: string) => void |
+| ready | 实例挂载完成时触发，参数为该实例的 `api` | (api: [NotificationApi](#methods)) => void |
+
 ## Methods
 
 _`useNotification()` 返回的 `NotificationApi`，或通过 `<Notification>` / `<NotificationProvider>` 的 `@ready` 事件获取：_
@@ -1476,15 +1485,6 @@ _`update` 可更新的字段为 `NotificationOptions` 除 `key` 外的全部属�
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 | mode? | 通知类型，决定内置图标（仅 `update` 可传此字段） | 'open' &#124; 'info' &#124; 'success' &#124; 'error' &#124; 'warning' |
-
-## Events
-
-_`close` 为 `<Notification>` / `<NotificationProvider>` 组件的事件（需通过组件标签监听）；使用 `useNotification()` 时，单条通知的点击 / 关闭回调请分别使用 `onClick` / `onClose`。_
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| close | 通知提醒关闭时的回调，参数为该条通知的 `key` | (key: string) => void |
-| ready | 实例挂载完成时触发，参数为该实例的 `api` | (api: [NotificationApi](#methods)) => void |
 
 ## 在 setup 外使用
 

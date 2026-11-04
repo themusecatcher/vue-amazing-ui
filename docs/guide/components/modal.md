@@ -2862,6 +2862,18 @@ _`update` 可更新的字段为 `ModalOptions` 的全部属性，另支持 `mode
 
 > `modalRender` 为作用域插槽，可接收 `{ originVNode }` 对弹窗内容做包裹式自定义渲染（常用于拖拽等场景），仅声明式用法下生效；命令式用法请使用同名的 `modalRender` 属性。当属性与该插槽同时配置时，**属性优先级更高**。
 
+## Events
+
+_`cancel` / `ok` / `know` / `change` / `ready` 为 `<Modal>` 与 `<ModalProvider>` 组件的事件（需通过组件标签监听）；使用 `useModal()` 时，请在调用参数中使用 `onOk` / `onCancel` / `onKnow` 等回调。_
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| cancel | 点击蒙层或 `Esc` 键或取消按钮的回调 | (e: Event) => void |
+| ok | 点击确定按钮的回调 | (e: MouseEvent) => void |
+| know | 点击知道了按钮的回调 | (e: MouseEvent) => void |
+| change | 任一弹窗打开 / 关闭时触发，多实例下携带该实例 `key` | (open: boolean, key: string) => void |
+| ready | 实例挂载完成时触发，参数为该实例的 `api` | (api: [ModalApi](#methods)) => void |
+
 ## Methods
 
 _`useModal()` 返回的 `ModalApi`，或通过 `<Modal>` / `<ModalProvider>` 的 `@ready` 事件获取：_
@@ -2889,18 +2901,6 @@ _单个模态框的句柄，由 `info` / `success` 等方法调用后返回：_
 | destroy | 关闭该模态框 | () => void |
 | update | 更新该模态框，`mode` 可切换弹窗类型与内置图标 | (options: [ModalUpdate](#modalupdate-type)) => void |
 | show | 重新打开该模态框，实例已销毁时调用无效 | () => void |
-
-## Events
-
-_`cancel` / `ok` / `know` / `change` / `ready` 为 `<Modal>` 与 `<ModalProvider>` 组件的事件（需通过组件标签监听）；使用 `useModal()` 时，请在调用参数中使用 `onOk` / `onCancel` / `onKnow` 等回调。_
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| cancel | 点击蒙层或 `Esc` 键或取消按钮的回调 | (e: Event) => void |
-| ok | 点击确定按钮的回调 | (e: MouseEvent) => void |
-| know | 点击知道了按钮的回调 | (e: MouseEvent) => void |
-| change | 任一弹窗打开 / 关闭时触发，多实例下携带该实例 `key` | (open: boolean, key: string) => void |
-| ready | 实例挂载完成时触发，参数为该实例的 `api` | (api: [ModalApi](#methods)) => void |
 
 ## 在 setup 外使用
 
