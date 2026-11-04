@@ -208,14 +208,14 @@ const disabledValue = ref('')
 | placeholder | 文本域输入的占位符 | string | undefined |
 | maxlength | 文字最大长度 | number | undefined |
 | showCount | 是否展示字数 | boolean | false |
-| value <Tag color="cyan">v-model</Tag> | 文本域内容；与其他原生表单类组件不同，本字段默认 `''` 而非 `undefined`（真相源在 DOM 节点） | string | '' |
+| value <Tag color="cyan">v-model</Tag> | 文本域内容；传入即受控，不传时由组件内部维护。与其他原生表单类组件不同，本字段默认 `''` 而非 `undefined`（真相源在 DOM 节点） | string | '' |
 
 ## Events
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 | change | 文本域内容变化时的回调 | (e: Event) => void |
-| enter | 按下回车的回调 | (e: Event) => void |
+| enter | 按下回车的回调 | (e: KeyboardEvent) => void |
 | compositionstart | 使用文本合成系统即输入法编辑器开始新的输入时的回调 | (e: CompositionEvent) => void |
 | compositionend | 当文本段落的组成完成或取消时触发的回调 | (e: CompositionEvent) => void |
 | focus | 文本域获取焦点时的回调，`relatedTarget` 为失去焦点的元素 | (e: FocusEvent) => void |

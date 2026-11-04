@@ -129,7 +129,7 @@ function onEnter(e: KeyboardEvent): void {
   }
   emits('enter', e)
 }
-// 原生 focus / blur 从内部 textarea 转发：两者都不冒泡，挂在根节点上的监听收不到；同步带上 relatedTarget 供宿主判断焦点去向
+// 原生 focus / blur 从内部 textarea 转发：两者都不冒泡，挂在根节点上的监听收不到；同步带上 relatedTarget 供宿主判断焦点来源 / 去向
 // 注意点击清除图标会先让 textarea 失焦、再清空值，宿主若用 blur 做校验，拿到的是清空前的值（与 Input 的清除行为一致）
 function onFocus(e: FocusEvent): void {
   emits('focus', e)
