@@ -2077,24 +2077,6 @@ const options: SelectOption[] = []
 
 > ℹ️ `options` 与默认插槽（子组件）同时提供时，本库**以子组件为准**，沿用本库「插槽优先于 `prop`」的统一约定。
 
-## Events
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| change | 选项值改变后的回调，多选（`multiple` / `tags`）下 `value` / `option` 为数组且第 `3` 参为 `undefined` | (value: string &#124; number &#124; (string &#124; number)[], option: [SelectOption](#selectoption-type) &#124; [SelectOption](#selectoption-type)[], index: number &#124; undefined) => void |
-| deselect | 移除已选项（`tag`）时回调 | (value: string &#124; number, option: [SelectOption](#selectoption-type)) => void |
-| select | 选中选项时回调 | (value: string &#124; number, option: [SelectOption](#selectoption-type)) => void |
-| clear | 清除时的回调 | () => void |
-| search | 搜索文本变化时回调（`tokenSeparators` 分词命中后清空输入不触发） | (value: string) => void |
-| focus | 获得焦点时的回调 | () => void |
-| blur | 失去焦点时的回调 | () => void |
-| openChange | 下拉菜单展开收起的回调（与 `dropdownVisibleChange` 为同一事件的两个名称，同参同时派发） | (open: boolean) => void |
-| dropdownVisibleChange | 下拉菜单展开收起的回调，`openChange` 的别名 | (open: boolean) => void |
-| popupScroll | 下拉列表滚动时的回调 | (e: Event) => void |
-| mouseenter | 鼠标移入时的回调 | (e: MouseEvent) => void |
-| mouseleave | 鼠标移出时的回调 | (e: MouseEvent) => void |
-| inputKeyDown | 输入框按下键时的回调 | (e: KeyboardEvent) => void |
-
 ## Slots
 
 | 名称 | 说明 | 用法 |
@@ -2111,6 +2093,24 @@ const options: SelectOption[] = []
 | tagRender | 自定义 `tag` 的渲染内容，作用域参数同 `tagRender` 属性 | v-slot:tagRender="{ label, value, disabled, closable, onClose, option }" |
 | maxTagPlaceholder | 隐藏 `tag` 时显示的内容，作用域参数 `omittedValues` 为被折叠的选项数组（本库统一以具名参数对象传参） | v-slot:maxTagPlaceholder="{ omittedValues }" |
 | removeIcon | 自定义 `tag` 的移除图标 | v-slot:removeIcon |
+
+## Events
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| change | 选项值改变后的回调，多选（`multiple` / `tags`）下 `value` / `option` 为数组且第 `3` 参为 `undefined` | (value: string &#124; number &#124; (string &#124; number)[], option: [SelectOption](#selectoption-type) &#124; [SelectOption](#selectoption-type)[], index: number &#124; undefined) => void |
+| deselect | 移除已选项（`tag`）时回调 | (value: string &#124; number, option: [SelectOption](#selectoption-type)) => void |
+| select | 选中选项时回调 | (value: string &#124; number, option: [SelectOption](#selectoption-type)) => void |
+| clear | 清除时的回调 | () => void |
+| search | 搜索文本变化时回调（`tokenSeparators` 分词命中后清空输入不触发） | (value: string) => void |
+| focus | 获得焦点时的回调，`relatedTarget` 为失去焦点的元素 | (e: FocusEvent) => void |
+| blur | 失去焦点时的回调，`relatedTarget` 为获得焦点的元素 | (e: FocusEvent) => void |
+| openChange | 下拉菜单展开收起的回调（与 `dropdownVisibleChange` 为同一事件的两个名称，同参同时派发） | (open: boolean) => void |
+| dropdownVisibleChange | 下拉菜单展开收起的回调，`openChange` 的别名 | (open: boolean) => void |
+| popupScroll | 下拉列表滚动时的回调 | (e: Event) => void |
+| mouseenter | 鼠标移入时的回调 | (e: MouseEvent) => void |
+| mouseleave | 鼠标移出时的回调 | (e: MouseEvent) => void |
+| inputKeyDown | 输入框按下键时的回调 | (e: KeyboardEvent) => void |
 
 ## Methods
 

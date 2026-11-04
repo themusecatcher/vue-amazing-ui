@@ -2756,18 +2756,6 @@ function onConfirm() {
 | omittedValues | 被折叠的选中路径 | [CascaderPath](#cascaderpath-type)[] |
 | omittedLabels | 被折叠路径的文本 | string[] |
 
-## Events
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| change | 选中路径变化后的回调：单选第一参为路径、第二参为路径上的选项数据；多选第一参为路径数组、第二参为对应的选项数据数组；清除时为 `[]`（空路径，与 `value` 的空值形态一致） | (values: [CascaderModelValue](#cascadermodelvalue-type), selectedOptions: [CascaderOption](#cascaderoption-type)[] &#124; [CascaderOption](#cascaderoption-type)[][]) => void |
-| openChange | 面板展开 / 收起时触发 | (open: boolean) => void |
-| dropdownVisibleChange | 面板展开 / 收起时触发，与 `openChange` 同源 | (open: boolean) => void |
-| search | 搜索文本变化时触发 | (value: string) => void |
-| clear | 点击清除按钮时触发 | () => void |
-| focus | 获得焦点时触发 | () => void |
-| blur | 失去焦点时触发 | () => void |
-
 ## Slots
 
 | 名称 | 说明 | 用法 |
@@ -2787,6 +2775,18 @@ function onConfirm() {
 | action | 面板底部的自定义操作区 | v-slot:action |
 
 > 插槽按「是否提供」生效，不做内容探测：带作用域参数的插槽在参数为空时渲染结果为空，内容探测会误判为未提供。
+
+## Events
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| change | 选中路径变化后的回调：单选第一参为路径、第二参为路径上的选项数据；多选第一参为路径数组、第二参为对应的选项数据数组；清除时为 `[]`（空路径，与 `value` 的空值形态一致） | (values: [CascaderModelValue](#cascadermodelvalue-type), selectedOptions: [CascaderOption](#cascaderoption-type)[] &#124; [CascaderOption](#cascaderoption-type)[][]) => void |
+| openChange | 面板展开 / 收起时触发 | (open: boolean) => void |
+| dropdownVisibleChange | 面板展开 / 收起时触发，与 `openChange` 同源 | (open: boolean) => void |
+| search | 搜索文本变化时触发 | (value: string) => void |
+| clear | 点击清除按钮时触发 | () => void |
+| focus | 获得焦点时触发，`relatedTarget` 为失去焦点的元素 | (e: FocusEvent) => void |
+| blur | 失去焦点时触发，`relatedTarget` 为获得焦点的元素 | (e: FocusEvent) => void |
 
 ## Methods
 

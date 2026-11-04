@@ -354,15 +354,17 @@ function onCompositionEnd(e: Event): void {
   emit('search', input)
   openPanel()
 }
-function onFocus(): void {
+function onFocus(e: FocusEvent): void {
   focused.value = true
   openPanel()
-  emit('focus')
+  // 回传原生事件：宿主可据 relatedTarget 判断焦点来源，与 blur 及 picker 家族口径一致
+  emit('focus', e)
 }
-function onBlur(): void {
+function onBlur(e: FocusEvent): void {
   focused.value = false
   setPanelOpen(false)
-  emit('blur')
+  // 回传原生事件：宿主可据 relatedTarget 判断焦点去向，与输入类组件的 blur 口径一致
+  emit('blur', e)
 }
 function onClick(): void {
   openPanel()
@@ -531,8 +533,8 @@ defineExpose({
         @input="onInput"
         @compositionstart="onCompositionStart"
         @compositionend="onCompositionEnd"
-        @focusin="!disabled ? onFocus() : () => false"
-        @focusout="!disabled ? onBlur() : () => false"
+        @focusin="!disabled ? onFocus($event) : () => false"
+        @focusout="!disabled ? onBlur($event) : () => false"
         @keydown="onKeydown"
         @click="onClick"
       >
@@ -551,8 +553,8 @@ defineExpose({
         @compositionstart="onCompositionStart"
         @compositionend="onCompositionEnd"
         @keydown="onKeydown"
-        @blur="!disabled ? onBlur() : () => false"
-        @focus="!disabled ? onFocus() : () => false"
+        @blur="!disabled ? onBlur($event) : () => false"
+        @focus="!disabled ? onFocus($event) : () => false"
         @click="onClick"
       />
       <span v-if="slotsExist.clearIcon" class="clear-svg" :class="{ 'show-svg': showClear }" @click.stop="onClear">
