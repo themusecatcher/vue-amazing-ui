@@ -17,8 +17,9 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 ## <VersionDateTag date="2026-11-04">3.8.1</VersionDateTag>
 
 - 新增 [输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [文本域 Textarea](/guide/components/textarea.html) / [数字输入框 InputNumber](/guide/components/input-number.html) 的 `focus` 事件与 `focus()` / `blur()` 方法：事件参数为原生 `FocusEvent`，方法可程序化控制焦点
-- 修复 [输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [数字输入框 InputNumber](/guide/components/input-number.html) 的容器误设 `tabindex="1"`：键盘 `Tab` 会多停一次且打乱全站 `Tab` 顺序，现直达输入框
+- 修复 [输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [数字输入框 InputNumber](/guide/components/input-number.html) 的容器误设 `tabindex="1"`：键盘 `Tab` 会多停一次且打乱全站 `Tab` 顺序，现直达输入框；`InputNumber` 点击上下箭头也不再让输入框失焦
 - 优化 [选择器 Select](/guide/components/select.html) / [级联选择 Cascader](/guide/components/cascader.html) / [自动补全 AutoComplete](/guide/components/auto-complete.html) 的 `focus` / `blur` 事件：均回传原生 `FocusEvent`（含 `relatedTarget`），与日期 / 时间选择器口径统一
+- 更新使用者文档与贡献者文档
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-11-04">3.8.0</VersionDateTag>
