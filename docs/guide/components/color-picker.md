@@ -494,7 +494,7 @@ const placementOptions: { label: string; value: Placement }[] = [
 
 :::
 
-## 默认值
+## 非受控模式
 
 _非受控时使用 `defaultValue` 设置初始颜色_
 

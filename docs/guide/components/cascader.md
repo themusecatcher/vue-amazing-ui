@@ -1696,7 +1696,7 @@ const keyword = ref('')
 
 :::
 
-## 默认值
+## 非受控模式
 
 _通过 `default-value` 提供非受控初值，形态与 `value` 一致_
 

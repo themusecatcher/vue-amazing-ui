@@ -599,7 +599,7 @@ function onReadCheckedData() {
         <Button @click="controlledKeyword = ''">清空关键词</Button>
       </Space>
     </Space>
-    <h2 class="mt30 mb10">默认值</h2>
+    <h2 class="mt30 mb10">非受控模式</h2>
     <p class="mb10">通过 <code>default-value</code> 提供非受控初值，形态与 <code>value</code> 一致</p>
     <Space>
       <Cascader placeholder="请选择" :options="options" :default-value="['jiangsu', 'nanjing', 'zhonghuamen']" />

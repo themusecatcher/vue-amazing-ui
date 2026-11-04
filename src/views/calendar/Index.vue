@@ -429,7 +429,7 @@ function onPanelChange(
         @panelChange="onPanelChange"
       />
     </Flex>
-    <h2 class="mt30 mb10">非受控初值</h2>
+    <h2 class="mt30 mb10">非受控模式</h2>
     <p class="mb10"
       ><code>defaultValue</code> 同时决定初始面板日期与初始选中值；绑定 <code>value</code> 时以
       <code>value</code> 为准</p

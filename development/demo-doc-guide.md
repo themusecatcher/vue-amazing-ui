@@ -210,7 +210,8 @@ _七种类型_
 - 每个示例后接 `::: details Show Code` 折叠块，展示可复制的完整代码。
 - **尾部章节顺序固定为：APIs → Slots → Events → Methods → CSS 变量（可选，仅组件暴露主题变量时）→ 在 setup 外使用（可选，仅离散 API 组件）**；正文示例（何时使用 → 基本使用 → 各示例）在尾部章节之前。章节可缺省（无插槽的组件就没有 `## Slots`），但**相对顺序不得变更**，由 `pnpm verify:docs` 强制校验，唯一标准见 §尾部章节顺序；表格一律**带首尾竖线**（`| 名称 | 说明 | 类型 | 默认值 |`；2026-10-23 修订：原「无首尾竖线的紧凑写法」在增删列时易错位，实测两种写法渲染一致；2026-10-24 全库 151 处存量旧式表已收敛，现无例外）；**全部表格首列统一「名称」**（❌ 不写「参数 / 字段 / 属性名」；内容性速查表不受此限，如「调用方式」「按键」等以语义维度为首列的说明表），详见 §表格规范速查。
 - `update:xxx` 属于 `v-model` 双向绑定的更新事件，**不写入 Events 表**；双向绑定统一在 APIs 表的参数名后标注 `<Tag color="cyan">v-model</Tag>`（如 `open <Tag color="cyan">v-model</Tag>`），避免同一语义在两处重复维护。
-- **受控 / 非受控的写法**（2026-11-02 新增，对应 component-design.md 的「v-model 声明约定」）：`v-model` 参数行的说明里带上判据，统一句式「传入即受控，不传时由组件内部维护」；提供 `defaultXxx` 的组件改写为「（不传时组件自持，可用 `defaultXxx` 指定初值）」，并在 `## APIs` 下补一行 `> **受控 / 非受控**：…` 说明契约、正文补 `## 非受控模式` 示例（判据只在一处展开，其余页面用参数行内句式即可）；面板开合类字段可在参数行内追加「内部触发只经 `update:open` / `openChange` 上报」。
+- **受控 / 非受控的写法**（2026-11-02 新增，对应 component-design.md 的「v-model 声明约定」）：`v-model` 参数行的说明里带上判据，统一句式「传入即受控，不传时由组件内部维护」；提供 `defaultXxx` 的组件改写为「（不传时组件自持，可用 `defaultXxx` 指定初值）」，并在正文补 `## 非受控模式` 示例（① 档）或只在**对应字段所在 Props 表上方**补一行 `> **受控 / 非受控**：…` 契约（② 档，判据只在一处展开，其余页面用参数行内句式即可；多组件页面如 `checkbox` / `radio` 必须写在**组**的 Props 表上方，写到 `## APIs` 之下会被读成约束单项组件）；面板开合类字段可在参数行内追加「内部触发只经 `update:open` / `openChange` 上报」。
+- **`## 非受控模式` 示例的边界**（2026-11-04 新增）：该章节只演示**可观察的预填值**（输入框里真的有内容、评分星真的亮着）与「不绑 `v-model` 也能正常交互」，❌ 不写「内容不会丢 / 内部自持」这类**不可观察的实现承诺**（曾有 `input.md` 的 tip 因此被删除，不得回填）。演示范围分三档：① 必配示例 = 原生表单四件套（`Input` / `InputSearch` / `Textarea` / `InputNumber`）与 `Upload`；② 其余取值类字段只补参数行 + `> **受控 / 非受控**` 契约行，不新增示例章节；③ 存量章节名统一为 `## 非受控模式`（`## 非受控初值` / `## 默认值` 一律改名）。
 - **必填 prop 用 `required` 标签标识**（2026-10-23 新增）：`value <Tag color="red">required</Tag>`，与 `v-model` 标签同款；两者并存时顺序固定 `v-model` 在前、`required` 在后（`value <Tag color="cyan">v-model</Tag> <Tag color="red">required</Tag>`）。默认值列同时写 `—`（标签给扫读、`—` 给精确语义）。⚠️ 只在**真必填**时使用（源码 `required: true`，或缺该 prop 组件无法工作），可选 prop 即便业务上常用也 ❌ 不加，否则标签贬值。
 - APIs / Events / Methods 表中的类型引用一律写**组件入口重命名后的公开导出名**（如 `SliderMarks`、`TabsItem`、`SwiperImage`），确保读者可直接 `import type`，且与 IDE 类型提示一致；**类型章节标题同样使用该公开导出名**（如 `### SliderMarks Type`，锚点 `#slidermarks-type`），使目录、链接文字、`import type` 三者一致。⚠️ 2026-10-23 修订：原规定「标题保留 SFC 内定义名、锚点不随引用名变更」，实测导致 39 处类型标题与读者点击的链接文字不一致（占 87 个类型标题的 45%，如 `TabsItem` → `### Item Type`），且 `Item Type` / `Option Type` / `Image Type` 在多组件重复，目录树与页内查找无法定位；改名须同步该文件内全部 `#xxx-type` 锚点。文档自造的结构性类型（源码中无对应导出，如 ConfigProvider 的 `Config`、Scrollbar 的 `ScrollBehavior`）沿用文档内命名，但加组件前缀避免跨页重名。
 - **`## Slots` 表的「用法」列写插槽的实际用法**：默认插槽 `v-slot:default`、具名插槽 `v-slot:xxx`、带作用域参数写 `v-slot:xxx="{ a, b }"`；❌ 不写 `-` / `{ option: T }` 这类「参数」列形态。列头固定为「名称 | 说明 | 用法」，与 `docs/guide/template.md` 一致；该列表达的是插槽**用法**（消费侧语法），不要与 APIs / Methods / Events 表的「类型」列（TS 类型 / 签名）混写。
@@ -219,7 +220,7 @@ _七种类型_
 
 ### 尾部章节顺序（2026-11-04 制定，唯一标准）
 
-> 背景：全量盘点 73 个组件文档，旧顺序「APIs → Slots → Methods → Events」执行率仅 85%（11 处漂移、4 种形态：输入类把 Methods 写到 Events 之后，下拉/浮层类把 Events 提到 Slots 之前），且 `pnpm verify:docs` 只校验默认值列、不守护顺序。同期对照 ant-design-vue（`Props → Events → Methods`）与 naive-ui（75 个多表文档中 64 个为 `Props → Slots → Methods`）均把 Methods 收尾，故调整为下列顺序并加脚本守护。
+> 背景：全量盘点 73 个组件文档，旧顺序「APIs → Slots → Methods → Events」执行率仅 85%（11 处漂移、4 种形态：输入类把 Methods 写到 Events 之后，下拉/浮层类把 Events 提到 Slots 之前），且 `pnpm verify:docs` 只校验默认值列、不守护顺序。
 
 | 序号 | 章节 | 缺省条件 | 位置理由 |
 |:--|:--|:--|:--|

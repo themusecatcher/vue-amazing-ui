@@ -1181,7 +1181,7 @@ function onPanelChange(
 
 :::
 
-## 非受控初值
+## 非受控模式
 
 _`defaultValue` 同时决定初始面板日期与初始选中值；绑定 `value` 时以 `value` 为准_
 

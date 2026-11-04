@@ -24,6 +24,9 @@ _模板文件_
 
 :::
 
+<!-- 可选章节：仅含取值类双模字段（value / activeKey / page / fileList 等）的组件需要；演示不绑 v-model 时的预填值 -->
+<!-- ## 非受控模式 -->
+
 ## APIs
 
 ### Template Props
