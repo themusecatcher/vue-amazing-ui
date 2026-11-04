@@ -14,7 +14,8 @@ import AutoComplete from 'components/auto-complete/AutoComplete.vue'
  *
  * 1. `focus` / `blur` 事件一律回传原生 `FocusEvent`（含 `relatedTarget`）——宿主可据它判断焦点
  *    「从哪来 / 到哪去」，输入类组件与带面板组件共用同一份契约，也才能解释「焦点进了面板不关闭」；
- * 2. 四个基础输入组件暴露 `focus()` / `blur()` 方法，可程序化控制焦点，与 Select / DatePicker 等一致。
+ * 2. 四个基础输入组件暴露 `focus()` / `blur()` 方法，可程序化控制焦点，与 Select / DatePicker 等一致；
+ * 3. 容器不占用 `Tab` 顺序（不设正 `tabindex`），输入类组件的「聚焦」只指内部原生控件。
  */
 
 /** 组件对外暴露的方法集合（`defineExpose` 后经 `$` 内部实例读取，避免依赖 VTU 的 vm 代理实现） */
@@ -93,6 +94,25 @@ describe('程序化控制焦点', () => {
 
     blur()
     expect(document.activeElement).not.toBe(field)
+    wrapper.unmount()
+  })
+})
+
+describe('InputNumber 上下箭头不抢走输入框焦点', () => {
+  it('箭头的 mousedown 被阻止默认行为，焦点仍留在内部 input', () => {
+    const wrapper = mount(InputNumber, { attachTo: document.body })
+    const field = wrapper.find('input.input-number').element as HTMLElement
+    field.focus()
+
+    const arrows = wrapper.findAll('.input-number-arrow')
+    expect(arrows.length).toBeGreaterThan(0)
+    arrows.forEach((arrow) => {
+      // 箭头是不可聚焦的 span，浏览器默认会在 mousedown 时让 input 失焦；组件按事件逐个阻止
+      const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
+      arrow.element.dispatchEvent(event)
+      expect(event.defaultPrevented).toBe(true)
+    })
+    expect(document.activeElement).toBe(field)
     wrapper.unmount()
   })
 })
