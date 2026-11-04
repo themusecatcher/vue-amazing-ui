@@ -16,11 +16,12 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-11-04">3.8.2</VersionDateTag>
 
-- 调整输入类组件：[输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [文本域 Textarea](/guide/components/textarea.html) / [数字输入框 InputNumber](/guide/components/input-number.html) 的 `v-model` 值由有值改为 `undefined` 时保留最后一次内容，不再清空输入框（字符串类组件需要清空时显式传空字符串）；文本域 Textarea 的 `value` 默认值由 `''` 改为 `undefined`
-- 新增非受控初值：上述 4 个输入类组件，以及 [选择器 Select](/guide/components/select.html) / [日期选择器 DatePicker](/guide/components/date-picker.html) / [时间选择器 TimePicker](/guide/components/time-picker.html) / [分段控制器 Segmented](/guide/components/segmented.html) / [复选框 CheckboxGroup](/guide/components/checkbox.html) / [单选框 RadioGroup](/guide/components/radio.html) / [评分 Rate](/guide/components/rate.html) 的 `defaultValue` 与 [上传 Upload](/guide/components/upload.html) 的 `defaultFileList`：不绑 `v-model` 时也能指定初值并正常交互；其中 Textarea 在非受控下开启 `autoSize` 也能随内容增高
-- 修复 [输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [文本域 Textarea](/guide/components/textarea.html) 的 `showCount` 在输入法合成期字数跳动：改为确认选词后更新
-- 修复 [数字输入框 InputNumber](/guide/components/input-number.html) 的输入法合成：合成期用上下键选词不再误触发数值步进，中文标点下输入的 `。` 自动转为小数点
-- 更新使用者文档与贡献者文档：补充各组件非受控模式的示例与 `defaultValue` 属性说明，明确取值类字段的非受控入口约定
+- 调整输入类组件：[输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [文本域 Textarea](/guide/components/textarea.html) 的 `v-model` 置为 `undefined` 时保留最后一次内容，不再清空输入框（需要清空时显式传空字符串）；`Textarea` 的 `value` 默认值由 `''` 改为 `undefined`
+- 新增非受控初值：[输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [文本域 Textarea](/guide/components/textarea.html) / [数字输入框 InputNumber](/guide/components/input-number.html) / [选择器 Select](/guide/components/select.html) / [日期选择器 DatePicker](/guide/components/date-picker.html) / [时间选择器 TimePicker](/guide/components/time-picker.html) / [分段控制器 Segmented](/guide/components/segmented.html) / [复选框 CheckboxGroup](/guide/components/checkbox.html) / [单选框 RadioGroup](/guide/components/radio.html) / [评分 Rate](/guide/components/rate.html) 共 `11` 个组件的 `defaultValue`；[上传 Upload](/guide/components/upload.html) 为 `defaultFileList`
+- 修复 [输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [文本域 Textarea](/guide/components/textarea.html) 的 `showCount` 在输入法合成期字数跳动
+- 修复 [数字输入框 InputNumber](/guide/components/input-number.html) 的输入法合成：输入法选词时上下键不再触发数值步进，中文句号 `。` 自动按小数点处理
+- 修复 [文本域 Textarea](/guide/components/textarea.html) 非受控下开启 `autoSize` 时高度不随内容增长
+- 更新使用者文档与贡献者文档：补充 `defaultValue` 属性说明与非受控示例，明确取值类字段的非受控入口约定
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-11-04">3.8.1</VersionDateTag>

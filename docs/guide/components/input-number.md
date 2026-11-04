@@ -118,7 +118,7 @@ function onEnter(e: KeyboardEvent) {
 
 ## 非受控模式
 
-_不传 `v-model:value` 时由组件自持，用 `defaultValue` 指定初始值；输入、步进与精度格式化照常生效；`placeholder` 只是占位提示，不能替代初值_
+_不传 `v-model:value`，用 `defaultValue` 指定初始值；输入、步进与精度格式化照常生效；`placeholder` 只是占位提示，不能替代初值_
 
 <br/>
 

@@ -183,7 +183,9 @@ function onUploadFailRequest(file: File): Promise<UploadFileType> {
     <h2 class="mt30 mb10">基本使用</h2>
     <Upload v-model:fileList="basicFiles" @drop="onDrop" @change="onChange" @preview="onPreview" />
     <h2 class="mt30 mb10">非受控模式</h2>
-    <p class="mb10">不传 v-model:fileList 时由组件自持，用 defaultFileList 预填文件列表；继续上传、删除照常生效</p>
+    <p class="mb10"
+      >不传 <code>v-model:fileList</code>，用 <code>defaultFileList</code> 预填文件列表；继续上传、删除照常生效</p
+    >
     <Upload
       :default-file-list="[
         {

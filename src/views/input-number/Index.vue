@@ -65,7 +65,7 @@ function onEnter(e: KeyboardEvent) {
     </Space>
     <h2 class="mt30 mb10">非受控模式</h2>
     <p class="mb10"
-      >不传 v-model:value 时由组件自持，用 defaultValue 指定初始值；输入、步进与精度格式化照常生效；placeholder
+      >不传 v-model:value，用 defaultValue 指定初始值；输入、步进与精度格式化照常生效；placeholder
       只是占位提示，不能替代初值</p
     >
     <InputNumber :width="120" :default-value="5" :precision="2" />

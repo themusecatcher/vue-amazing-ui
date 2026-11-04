@@ -1974,7 +1974,7 @@ const options: SelectOption[] = []
 
 ## APIs
 
-> **受控 / 非受控**：传入 `v-model:value` 即受控，组件只经 `update:value` 上报；不传时由组件自持，可用 `defaultValue` 指定初值。两者同时传时以 `value` 为准。
+> **受控 / 非受控**：`value` / `open` / `searchValue` 传入即受控（值以父为准，组件只上报对应的 `update:xxx`）；不传则各自由组件自持，交互照常生效，`value` 可用 `defaultValue`、`open` 可用 `defaultOpen` 指定初值。
 
 ### Select Props
 

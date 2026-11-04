@@ -701,7 +701,7 @@ const panelTo = computed(() => {
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| value <Tag color="cyan">v-model</Tag> | 颜色选择器的值；传入即受控，不传时由组件内部维护（初值见 `defaultValue`） | string | undefined |
+| value <Tag color="cyan">v-model</Tag> | 颜色选择器的值；传入即受控，不传时组件自持（可用 `defaultValue` 指定初值） | string | undefined |
 | defaultValue | 非受控时的初始颜色值 | string | undefined |
 | open <Tag color="cyan">v-model</Tag> | 面板是否展开；传入即受控，不传时由组件内部维护 | boolean | undefined |
 | defaultOpen | 非受控时面板的初始显隐 | boolean | false |
