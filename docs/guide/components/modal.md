@@ -1197,7 +1197,7 @@ _命令式弹窗默认 `destroyOnClose: true`，关闭即销毁；声明式弹�
 .demo-group + .demo-group {
   margin-top: 16px;
 }
-.demo-group-desc {
+.vp-doc .demo-group-desc {
   margin: 0 0 16px;
   color: rgba(0, 0, 0, 0.65);
   font-size: 14px;
@@ -1207,7 +1207,7 @@ _命令式弹窗默认 `destroyOnClose: true`，关闭即销毁；声明式弹�
   flex: 1 1 280px;
   min-width: 260px;
 }
-.demo-variant-desc {
+.vp-doc .demo-variant-desc {
   margin: 0 0 12px;
   color: rgba(0, 0, 0, 0.65);
   font-size: 14px;

@@ -453,7 +453,7 @@ _嵌套使用可实现更复杂的布局，主轴与交叉轴可分别控制_
   flex: 1;
   padding: 32px;
 }
-.flex-combination-quote {
+.vp-doc .flex-combination-quote {
   margin: 0;
   font-size: 24px;
   font-weight: 600;

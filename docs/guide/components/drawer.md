@@ -942,13 +942,13 @@ p {
   margin-bottom: 8px;
   color: var(--va-text-color-1);
 }
-.profile-title {
+.vp-doc .profile-title {
   font-size: 16px;
   line-height: 24px;
   margin-bottom: 24px;
   color: var(--va-text-color-1);
 }
-.profile-label {
+.vp-doc .profile-label {
   font-size: 16px;
   line-height: 24px;
   margin-bottom: 16px;

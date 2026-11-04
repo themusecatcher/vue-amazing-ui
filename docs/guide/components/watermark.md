@@ -496,7 +496,7 @@ _下方表单覆盖组件的常用属性，改动实时生效；图片水印与�
 </div>
 
 <style lang="less" scoped>
-.paragraph-text {
+.vp-doc .paragraph-text {
   margin-bottom: 1em;
   font-size: 16px;
   color: var(--va-text-color-1);

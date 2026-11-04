@@ -1093,23 +1093,23 @@ const state = reactive({
     padding: 8px 0;
   }
 }
-.height-50 {
+.vp-doc .height-50 {
   height: 50px;
   line-height: 50px;
 }
-.height-80 {
+.vp-doc .height-80 {
   height: 80px;
   line-height: 80px;
 }
-.height-100 {
+.vp-doc .height-100 {
   height: 100px;
   line-height: 100px;
 }
-.height-120 {
+.vp-doc .height-120 {
   height: 120px;
   line-height: 120px;
 }
-.height-200 {
+.vp-doc .height-200 {
   height: 200px;
   line-height: 200px;
 }

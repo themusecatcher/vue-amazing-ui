@@ -1225,7 +1225,7 @@ _声明式实例默认 `destroyOnClose: false`，内容常驻、重新打开复�
 .demo-group + .demo-group {
   margin-top: 16px;
 }
-.demo-group-desc {
+.vp-doc .demo-group-desc {
   margin: 0 0 16px;
   color: rgba(0, 0, 0, 0.65);
   font-size: 14px;
@@ -1235,7 +1235,7 @@ _声明式实例默认 `destroyOnClose: false`，内容常驻、重新打开复�
   flex: 1 1 280px;
   min-width: 260px;
 }
-.demo-variant-desc {
+.vp-doc .demo-variant-desc {
   margin: 0 0 12px;
   color: rgba(0, 0, 0, 0.65);
   font-size: 14px;
