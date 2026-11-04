@@ -9,7 +9,7 @@ _选项卡切换组件_
 - 提供平级的区域将大块内容进行收纳和展现，保持界面整洁
 
 <script setup lang="ts">
-import { ref, watchEffect, computed, reactive } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import type { CSSProperties } from 'vue'
 import { AppleOutlined, AndroidOutlined, PlusCircleOutlined, PlusOutlined, WindowsOutlined } from '@ant-design/icons-vue'
 import type { TabsProps } from 'vue-amazing-ui'
@@ -53,37 +53,61 @@ const animActiveKey = ref<TabsProps['activeKey']>('1')
 const animEnabled = ref(true)
 const destroyActiveKey = ref<TabsProps['activeKey']>('1')
 const destroyEnabled = ref(true)
-const editActiveKey = ref<TabsProps['activeKey']>('1')
-const editPanes = ref([
-  { key: '1', tab: 'Tab 1', content: 'Content of Tab 1' },
-  { key: '2', tab: 'Tab 2', content: 'Content of Tab 2' },
-  { key: '3', tab: 'Tab 3', content: 'Content of Tab 3', closable: false }
-])
-let newPaneIndex = 0
-function addPane(): void {
-  newPaneIndex += 1
-  const key = `newTab${newPaneIndex}`
-  editPanes.value = [
-    ...editPanes.value,
-    { key, tab: `New Tab ${newPaneIndex}`, content: `Content of New Tab ${newPaneIndex}`, closable: true }
+// 增删类用例各自持有一份页签数据：操作任一用例不会联动其余用例
+interface EditPane {
+  key: string
+  tab: string
+  content: string
+  closable?: boolean
+}
+function createEditPanes(): EditPane[] {
+  return [
+    { key: '1', tab: 'Tab 1', content: 'Content of Tab 1' },
+    { key: '2', tab: 'Tab 2', content: 'Content of Tab 2' },
+    { key: '3', tab: 'Tab 3', content: 'Content of Tab 3', closable: false }
   ]
-  editActiveKey.value = key
 }
-function closePane(key: string | number): void {
-  const index = editPanes.value.findIndex((pane) => pane.key === key)
-  if (index === -1) {
-    return
+function useEditPanes() {
+  const activeKey = ref<TabsProps['activeKey']>('1')
+  const panes = ref<EditPane[]>(createEditPanes())
+  let newPaneIndex = 0
+  function add(): void {
+    newPaneIndex += 1
+    const key = `newTab${newPaneIndex}`
+    panes.value = [
+      ...panes.value,
+      { key, tab: `New Tab ${newPaneIndex}`, content: `Content of New Tab ${newPaneIndex}`, closable: true }
+    ]
+    activeKey.value = key
   }
-  const rest = editPanes.value.filter((pane) => pane.key !== key)
-  editPanes.value = rest
-  // 关掉的是当前激活项时，优先激活后一个，没有则取前一个
-  if (editActiveKey.value === key && rest.length) {
-    editActiveKey.value = rest[Math.min(index, rest.length - 1)].key
+  function close(key: string | number): void {
+    const index = panes.value.findIndex((pane) => pane.key === key)
+    if (index === -1) {
+      return
+    }
+    const rest = panes.value.filter((pane) => pane.key !== key)
+    panes.value = rest
+    // 关掉的是当前激活项时，优先激活后一个，没有则取前一个
+    if (activeKey.value === key && rest.length) {
+      activeKey.value = rest[Math.min(index, rest.length - 1)].key
+    }
   }
+  return { activeKey, panes, add, close }
 }
-watchEffect(() => {
-  console.log('moreActiveKey', moreActiveKey.value)
-})
+const { activeKey: editActiveKey, panes: editPanes, add: addPane, close: closePane } = useEditPanes()
+const {
+  activeKey: triggerActiveKey,
+  panes: triggerPanes,
+  add: addTriggerPane,
+  close: closeTriggerPane
+} = useEditPanes()
+const { activeKey: addIconActiveKey, panes: addIconPanes, add: addIconPane, close: closeAddIconPane } = useEditPanes()
+const {
+  activeKey: disabledAddActiveKey,
+  panes: disabledAddPanes,
+  add: addDisabledPane,
+  close: closeDisabledPane
+} = useEditPanes()
 const typeOptions = [
   {
     label: 'line',
@@ -791,15 +815,15 @@ _关闭内置新增按钮，改用 `suffix` 插槽中的自定义触发器_
 
 <br/>
 
-<Tabs v-model:active-key="editActiveKey" type="card" @close="closePane">
+<Tabs v-model:active-key="triggerActiveKey" type="card" @close="closeTriggerPane">
   <template #suffix>
-    <Button type="primary" @click="addPane">
+    <Button type="primary" @click="addTriggerPane">
       <template #icon><PlusOutlined /></template>
       新增页签
     </Button>
   </template>
   <TabPane
-    v-for="pane in editPanes"
+    v-for="pane in triggerPanes"
     :key="pane.key"
     :tab="pane.tab"
     :closable="pane.closable !== false"
@@ -870,10 +894,10 @@ _通过 `addIcon` 插槽替换新增按钮的内置图标_
 
 <br/>
 
-<Tabs v-model:active-key="editActiveKey" type="card" addable @add="addPane" @close="closePane">
+<Tabs v-model:active-key="addIconActiveKey" type="card" addable @add="addIconPane" @close="closeAddIconPane">
   <template #addIcon><PlusCircleOutlined /></template>
   <TabPane
-    v-for="pane in editPanes"
+    v-for="pane in addIconPanes"
     :key="pane.key"
     :tab="pane.tab"
     :closable="pane.closable !== false"
@@ -905,10 +929,15 @@ function addPane(): void {
   editActiveKey.value = key
 }
 function closePane(key: string | number): void {
+  const index = editPanes.value.findIndex((pane) => pane.key === key)
+  if (index === -1) {
+    return
+  }
   const rest = editPanes.value.filter((pane) => pane.key !== key)
   editPanes.value = rest
+  // 关掉的是当前激活项时，优先激活后一个，没有则取前一个
   if (editActiveKey.value === key && rest.length) {
-    editActiveKey.value = rest[rest.length - 1].key
+    editActiveKey.value = rest[Math.min(index, rest.length - 1)].key
   }
 }
 </script>
@@ -936,9 +965,15 @@ _`addable` 传对象可把新增按钮渲染为禁用态，无权限时保留入
 
 <Flex gap="small" align="center"> 禁用新增：<Switch v-model:value="addDisabledDemo" /> </Flex>
 
-<Tabs v-model:active-key="editActiveKey" type="card" :addable="addableDemo" @add="addPane" @close="closePane">
+<Tabs
+  v-model:active-key="disabledAddActiveKey"
+  type="card"
+  :addable="addableDemo"
+  @add="addDisabledPane"
+  @close="closeDisabledPane"
+>
   <TabPane
-    v-for="pane in editPanes"
+    v-for="pane in disabledAddPanes"
     :key="pane.key"
     :tab="pane.tab"
     :closable="pane.closable !== false"
@@ -1268,7 +1303,7 @@ const animEnabled = ref(true)
 
 ## 销毁非活跃面板
 
-_开启 `destroyInactiveTabPane` 后非激活面板的内容会被卸载，切回时重新创建（关闭后输入内容会保留）_
+_开启 `destroyInactiveTabPane` 后非激活面板的内容会被卸载，切回时重新创建；关闭开关则内容常驻，输入不会丢失_
 
 <br/>
 
@@ -1373,7 +1408,7 @@ const renderActiveKey = ref<TabsProps['activeKey']>('1')
 
 ## 事件回调
 
-_`change` / `tabClick` 在切换时触发，`tabScroll` 在页签滚动到边界之外时触发_
+_`change` / `tabClick` 在切换页签时触发，`tabScroll` 在页签滚动时触发并上报方向_
 
 <br/>
 
@@ -1565,15 +1600,6 @@ const activeKey = ref<TabsProps['activeKey']>('1')
   background: var(--va-fill-color-1);
   border-radius: 8px;
 }
-:deep(.demo-tab) {
-  font-weight: 600;
-}
-:deep(.demo-content) {
-  padding: 8px 12px;
-  background: var(--va-fill-color-1);
-  border-radius: 8px;
-}
-
 </style>
 ```
 
@@ -1621,7 +1647,7 @@ const centerActiveKey = ref<TabsProps['activeKey']>('1')
 
 ## 标签页配置器
 
-_组合调整下方配置项可实时预览属性效果，`justifyContent` 的 `center` 用于页签居中；`line` 下仅未溢出时生效，`card` 下仅 `center` 生效_
+_组合调整下方配置项可实时预览属性效果，`justifyContent` 的 `center` 用于页签居中；溢出时不生效，`card` 下仅 `center` 生效_
 
 <br/>
 
@@ -1791,6 +1817,17 @@ const state = reactive<TabsProps>({
 
 ::::
 
+## 键盘操作
+
+_聚焦页签后可用键盘切换，禁用页签自动跳过_
+
+| 按键 | 说明 |
+| :-- | :-- |
+| ← / → | `tabPosition` 为 `top` / `bottom` 时，在页签之间前后移动并激活 |
+| ↑ / ↓ | `tabPosition` 为 `left` / `right` 时，在页签之间前后移动并激活 |
+| Home | 跳到第一个可用页签并激活 |
+| End | 跳到最后一个可用页签并激活 |
+
 ## APIs
 
 > **受控 / 非受控**：`activeKey` 传入即受控（值以父为准，组件只上报 `update:activeKey`）；不传则由组件自持，交互照常生效，可用 `defaultActiveKey` 指定初值。
@@ -1806,7 +1843,7 @@ const state = reactive<TabsProps>({
 | size | 标签页大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | type | 标签页的类型 | 'line' &#124; 'card' | 'line' |
 | tabPosition | 自定义页签位置 | 'top' &#124; 'right' &#124; 'bottom' &#124; 'left' | 'top' |
-| justifyContent | 页签在导航区的分布方式，`line` 下仅未溢出时生效，`card` 下仅 `center` 生效 | 'space-between' &#124; 'space-around' &#124; 'space-evenly' &#124; 'center' &#124; 'start' &#124; 'end' | undefined |
+| justifyContent | 页签在导航区的分布方式，溢出时不生效；`card` 下仅 `center` 生效 | [TabsJustifyContent](#tabsjustifycontent-type) | undefined |
 | tabGutter | 页签之前的间隙大小，单位 `px` | number | undefined |
 | tabStyle | 自定义页签样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | tabClass | 自定义页签类名 | string | undefined |
@@ -1817,6 +1854,16 @@ const state = reactive<TabsProps>({
 | addable | 是否展示新增页签按钮，传对象可渲染为禁用态 | boolean &#124; [TabsAddable](#tabsaddable-type) | false |
 | destroyInactiveTabPane | 是否销毁非激活面板的内容，`TabPane` 的 `displayDirective` 优先 | boolean | false |
 | beforeLeave | 切换页签前的钩子，返回 `false` 或 Promise reject 时取消本次切换 | [TabsBeforeLeave](#tabsbeforeleave-type) | undefined |
+
+### TabsJustifyContent Type
+
+<br/>
+
+_页签在导航区的分布方式，取值为 `flex` 的 `justify-content` 取值_
+
+| 名称 | 值 |
+| :-- | :-- |
+| TabsJustifyContent | 'space-between' &#124; 'space-around' &#124; 'space-evenly' &#124; 'center' &#124; 'start' &#124; 'end' |
 
 ### TabsAddable Type
 
@@ -1832,12 +1879,24 @@ const state = reactive<TabsProps>({
 
 ### TabPane Props
 
+> `key` 写在 `TabPane` 上，作为 `activeKey` 的取值；未写时按渲染顺序的下标（`0` / `1` / …）兜底。
+
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | tab | 页签显示文字，`tab` 插槽优先 | string | undefined |
 | disabled | 是否禁用页签 | boolean | false |
 | closable | 是否展示关闭按钮，点击后抛出 `close` 事件 | boolean | false |
-| displayDirective | 面板内容渲染口径：`if` 非激活即卸载、`show` 保留、`show:lazy` 首次激活后保留；未设置时由 `Tabs` 的 `destroyInactiveTabPane` 决定 | 'if' &#124; 'show' &#124; 'show:lazy' | undefined |
+| displayDirective | 面板内容渲染口径：`if` 非激活即卸载、`show` 保留、`show:lazy` 首次激活后保留；未设置时由 `Tabs` 的 `destroyInactiveTabPane` 决定 | [TabsDisplayDirective](#tabsdisplaydirective-type) | undefined |
+
+### TabsDisplayDirective Type
+
+<br/>
+
+_面板内容的渲染口径：非激活时立即卸载 / 保留 / 首次激活后保留_
+
+| 名称 | 值 |
+| :-- | :-- |
+| TabsDisplayDirective | 'if' &#124; 'show' &#124; 'show:lazy' |
 
 ## Slots
 
@@ -1863,16 +1922,7 @@ const state = reactive<TabsProps>({
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 | change | 切换面板的回调 | (key: string &#124; number) => void |
-| tabClick | 点击页签的回调，禁用页签也会触发 | (key: string &#124; number, event: MouseEvent &#124; KeyboardEvent) => void |
-| tabScroll | 页签滚动到边界之外时的回调 | (info: { direction: 'left' &#124; 'right' &#124; 'top' &#124; 'bottom' }) => void |
+| tabClick | 点击页签或键盘切换页签的回调，禁用页签点击时也会触发 | (key: string &#124; number, event: MouseEvent &#124; KeyboardEvent) => void |
+| tabScroll | 页签滚动时的回调，参数为滚动方向 | (info: { direction: 'left' &#124; 'right' &#124; 'top' &#124; 'bottom' }) => void |
 | add | 点击新增页签按钮的回调 | () => void |
 | close | 点击页签关闭按钮的回调 | (key: string &#124; number) => void |
-
-## 键盘操作
-
-| 按键 | 说明 |
-| :-- | :-- |
-| ← / → | `tabPosition` 为 `top` / `bottom` 时，在页签之间前后移动并激活 |
-| ↑ / ↓ | `tabPosition` 为 `left` / `right` 时，在页签之间前后移动并激活 |
-| Home | 跳到第一个可用页签并激活 |
-| End | 跳到最后一个可用页签并激活 |

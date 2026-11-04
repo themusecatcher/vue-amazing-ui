@@ -49,34 +49,61 @@ const animActiveKey = ref<TabsProps['activeKey']>('1')
 const animEnabled = ref(true)
 const destroyActiveKey = ref<TabsProps['activeKey']>('1')
 const destroyEnabled = ref(true)
-const editActiveKey = ref<TabsProps['activeKey']>('1')
-const editPanes = ref([
-  { key: '1', tab: 'Tab 1', content: 'Content of Tab 1' },
-  { key: '2', tab: 'Tab 2', content: 'Content of Tab 2' },
-  { key: '3', tab: 'Tab 3', content: 'Content of Tab 3', closable: false }
-])
-let newPaneIndex = 0
-function addPane(): void {
-  newPaneIndex += 1
-  const key = `newTab${newPaneIndex}`
-  editPanes.value = [
-    ...editPanes.value,
-    { key, tab: `New Tab ${newPaneIndex}`, content: `Content of New Tab ${newPaneIndex}`, closable: true }
+// 增删类用例各自持有一份页签数据：操作任一用例不会联动其余用例
+interface EditPane {
+  key: string
+  tab: string
+  content: string
+  closable?: boolean
+}
+function createEditPanes(): EditPane[] {
+  return [
+    { key: '1', tab: 'Tab 1', content: 'Content of Tab 1' },
+    { key: '2', tab: 'Tab 2', content: 'Content of Tab 2' },
+    { key: '3', tab: 'Tab 3', content: 'Content of Tab 3', closable: false }
   ]
-  editActiveKey.value = key
 }
-function closePane(key: string | number): void {
-  const index = editPanes.value.findIndex((pane) => pane.key === key)
-  if (index === -1) {
-    return
+function useEditPanes() {
+  const activeKey = ref<TabsProps['activeKey']>('1')
+  const panes = ref<EditPane[]>(createEditPanes())
+  let newPaneIndex = 0
+  function add(): void {
+    newPaneIndex += 1
+    const key = `newTab${newPaneIndex}`
+    panes.value = [
+      ...panes.value,
+      { key, tab: `New Tab ${newPaneIndex}`, content: `Content of New Tab ${newPaneIndex}`, closable: true }
+    ]
+    activeKey.value = key
   }
-  const rest = editPanes.value.filter((pane) => pane.key !== key)
-  editPanes.value = rest
-  // 关掉的是当前激活项时，优先激活后一个，没有则取前一个
-  if (editActiveKey.value === key && rest.length) {
-    editActiveKey.value = rest[Math.min(index, rest.length - 1)].key
+  function close(key: string | number): void {
+    const index = panes.value.findIndex((pane) => pane.key === key)
+    if (index === -1) {
+      return
+    }
+    const rest = panes.value.filter((pane) => pane.key !== key)
+    panes.value = rest
+    // 关掉的是当前激活项时，优先激活后一个，没有则取前一个
+    if (activeKey.value === key && rest.length) {
+      activeKey.value = rest[Math.min(index, rest.length - 1)].key
+    }
   }
+  return { activeKey, panes, add, close }
 }
+const { activeKey: editActiveKey, panes: editPanes, add: addPane, close: closePane } = useEditPanes()
+const {
+  activeKey: triggerActiveKey,
+  panes: triggerPanes,
+  add: addTriggerPane,
+  close: closeTriggerPane
+} = useEditPanes()
+const { activeKey: addIconActiveKey, panes: addIconPanes, add: addIconPane, close: closeAddIconPane } = useEditPanes()
+const {
+  activeKey: disabledAddActiveKey,
+  panes: disabledAddPanes,
+  add: addDisabledPane,
+  close: closeDisabledPane
+} = useEditPanes()
 const typeOptions = [
   {
     label: 'line',
@@ -347,30 +374,36 @@ const cardTopContentStyle: CSSProperties = {
     </Tabs>
     <h2 class="mt30 mb10">自定义新增页签触发器</h2>
     <p class="mb10">关闭内置新增按钮，改用 <code>suffix</code> 插槽中的自定义触发器</p>
-    <Tabs v-model:active-key="editActiveKey" type="card" @close="closePane">
+    <Tabs v-model:active-key="triggerActiveKey" type="card" @close="closeTriggerPane">
       <template #suffix>
-        <Button type="primary" @click="addPane">
+        <Button type="primary" @click="addTriggerPane">
           <template #icon><PlusOutlined /></template>
           新增页签
         </Button>
       </template>
-      <TabPane v-for="pane in editPanes" :key="pane.key" :tab="pane.tab" :closable="pane.closable !== false">{{
+      <TabPane v-for="pane in triggerPanes" :key="pane.key" :tab="pane.tab" :closable="pane.closable !== false">{{
         pane.content
       }}</TabPane>
     </Tabs>
     <h2 class="mt30 mb10">自定义新增图标</h2>
     <p class="mb10">通过 <code>addIcon</code> 插槽替换新增按钮的内置图标</p>
-    <Tabs v-model:active-key="editActiveKey" type="card" addable @add="addPane" @close="closePane">
+    <Tabs v-model:active-key="addIconActiveKey" type="card" addable @add="addIconPane" @close="closeAddIconPane">
       <template #addIcon><PlusCircleOutlined /></template>
-      <TabPane v-for="pane in editPanes" :key="pane.key" :tab="pane.tab" :closable="pane.closable !== false">{{
+      <TabPane v-for="pane in addIconPanes" :key="pane.key" :tab="pane.tab" :closable="pane.closable !== false">{{
         pane.content
       }}</TabPane>
     </Tabs>
     <h2 class="mt30 mb10">新增按钮禁用</h2>
     <p class="mb10"> <code>addable</code> 传对象可把新增按钮渲染为禁用态，无权限时保留入口而非直接消失 </p>
     <Flex gap="small" align="center" class="mb10"> 禁用新增：<Switch v-model:value="addDisabledDemo" /> </Flex>
-    <Tabs v-model:active-key="editActiveKey" type="card" :addable="addableDemo" @add="addPane" @close="closePane">
-      <TabPane v-for="pane in editPanes" :key="pane.key" :tab="pane.tab" :closable="pane.closable !== false">{{
+    <Tabs
+      v-model:active-key="disabledAddActiveKey"
+      type="card"
+      :addable="addableDemo"
+      @add="addDisabledPane"
+      @close="closeDisabledPane"
+    >
+      <TabPane v-for="pane in disabledAddPanes" :key="pane.key" :tab="pane.tab" :closable="pane.closable !== false">{{
         pane.content
       }}</TabPane>
     </Tabs>
@@ -439,7 +472,9 @@ const cardTopContentStyle: CSSProperties = {
     </Tabs>
     <h2 class="mt30 mb10">销毁非活跃面板</h2>
     <p class="mb10"
-      >开启 <code>destroyInactiveTabPane</code> 后非激活面板的内容会被卸载，切回时重新创建（关闭后输入内容会保留）</p
+      >开启
+      <code>destroyInactiveTabPane</code>
+      后非激活面板的内容会被卸载，切回时重新创建；关闭开关则内容常驻，输入不会丢失</p
     >
     <Flex gap="small" align="center" class="mb10">
       destroyInactiveTabPane：<Switch v-model:value="destroyEnabled" />
@@ -476,7 +511,8 @@ const cardTopContentStyle: CSSProperties = {
     </Flex>
     <h2 class="mt30 mb10">事件回调</h2>
     <p class="mb10">
-      <code>change</code> / <code>tabClick</code> 在切换时触发，<code>tabScroll</code> 在页签滚动到边界之外时触发
+      <code>change</code> / <code>tabClick</code> 在切换页签时触发，<code>tabScroll</code>
+      在页签滚动时触发并上报方向
     </p>
     <Tabs
       v-model:active-key="eventActiveKey"
@@ -520,10 +556,8 @@ const cardTopContentStyle: CSSProperties = {
     </Tabs>
     <h2 class="mt30 mb10">标签页配置器</h2>
     <p class="mb10">
-      组合调整下方配置项可实时预览属性效果，<code>justifyContent</code> 的 <code>center</code> 用于页签居中；<code
-        >line</code
-      >
-      下仅未溢出时生效，<code>card</code> 下仅 <code>center</code> 生效
+      组合调整下方配置项可实时预览属性效果，<code>justifyContent</code> 的
+      <code>center</code> 用于页签居中；溢出时不生效，<code>card</code> 下仅 <code>center</code> 生效
     </p>
     <Flex gap="large" vertical>
       <Row :gutter="[24, 12]">
