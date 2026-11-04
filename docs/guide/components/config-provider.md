@@ -28,6 +28,7 @@ import {
 import { ConfigProvider, LoadingBarProvider, createDiscreteApi } from 'vue-amazing-ui'
 import type {
   CarouselImage,
+  CascaderOption,
   ConfigProviderProps,
   ConfigProviderTheme,
   ItemType,
@@ -214,6 +215,53 @@ const seedMenuItems = ref<ItemType[]>([
   },
   { key: '9', icon: () => h(InboxOutlined), label: 'Navigation Five' }
 ])
+const cascaderOptions: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖' },
+          { value: 'xiasha', label: '下沙' }
+        ]
+      },
+      {
+        value: 'ningbo',
+        label: '宁波',
+        children: [
+          { value: 'yinzhou', label: '鄞州' },
+          { value: 'beilun', label: '北仑' }
+        ]
+      }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      {
+        value: 'nanjing',
+        label: '南京',
+        children: [
+          { value: 'zhonghuamen', label: '中华门' },
+          { value: 'xuanwu', label: '玄武' }
+        ]
+      },
+      {
+        value: 'wuxi',
+        label: '无锡',
+        children: [
+          { value: 'jiangyin', label: '江阴' },
+          { value: 'yixing', label: '宜兴' }
+        ]
+      }
+    ]
+  }
+]
+const cascaderValue = ref<(string | number)[]>(['zhejiang', 'hangzhou', 'xihu'])
 const selectOptions = ref<SelectOption[]>([
   {
     label: '北京市',
@@ -449,6 +497,7 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
       />
       <BackTop />
       <Button type="primary">Primary Button</Button>
+      <Cascader v-model:value="cascaderValue" :options="cascaderOptions" />
       <Checkbox v-model:checked="checkboxChecked">Checkbox</Checkbox>
       <ColorPicker :width="200" />
       <DatePicker v-model:value="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
@@ -596,7 +645,7 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
 </ConfigProvider>
 
 - 色块与下方组件读取**同一组 `CSS` 变量**：二者位于同一 `Provider` 作用域，不存在第二份色值，因此始终同步；
-- 示例覆盖全部 `39` 个消费主色的组件；`Table` 排序箭头、`Badge` 计数底、`Timeline` 的 `blue` 圆点、`GradientText` 渐变端点均取自种子（点击 `Table` 表头可见）；
+- 示例覆盖全部 `40` 个消费主色的组件；`Table` 排序箭头、`Badge` 计数底、`Timeline` 的 `blue` 圆点、`GradientText` 渐变端点均取自种子（点击 `Table` 表头可见）；
 - `Tag` 的 `processing` 预设取主色，`success` / `warning` / `error` 取语义色（见「语义种子」一节）；其余 `13` 个命名色为组件自有色板，与种子无关；
 - 深色皮肤（如 `Menu` 的 `theme="dark"`）底色取种子派生的品牌色暗底：改主色时根列表、浮层面板与内联子菜单一起换；
 - `Message` / `Modal` / `Notification` 在本节用组件形态（`<Message @ready>` 等）取实例：弹层渲染在本作用域内，换主色时一起变色，`useXxx()` 命中的是入口的全局实例，只跟随页面级主题；
@@ -618,9 +667,9 @@ import {
   PlusOutlined,
   SettingOutlined
 } from '@ant-design/icons-vue'
-import { LoadingBarProvider } from 'vue-amazing-ui'
 import type {
   CarouselImage,
+  CascaderOption,
   ItemType,
   LoadingBarApi,
   MenuKey,
@@ -737,6 +786,53 @@ const seedMenuItems = ref<ItemType[]>([
   },
   { key: '9', icon: () => h(InboxOutlined), label: 'Navigation Five' }
 ])
+const cascaderOptions: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖' },
+          { value: 'xiasha', label: '下沙' }
+        ]
+      },
+      {
+        value: 'ningbo',
+        label: '宁波',
+        children: [
+          { value: 'yinzhou', label: '鄞州' },
+          { value: 'beilun', label: '北仑' }
+        ]
+      }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      {
+        value: 'nanjing',
+        label: '南京',
+        children: [
+          { value: 'zhonghuamen', label: '中华门' },
+          { value: 'xuanwu', label: '玄武' }
+        ]
+      },
+      {
+        value: 'wuxi',
+        label: '无锡',
+        children: [
+          { value: 'jiangyin', label: '江阴' },
+          { value: 'yixing', label: '宜兴' }
+        ]
+      }
+    ]
+  }
+]
+const cascaderValue = ref<(string | number)[]>(['zhejiang', 'hangzhou', 'xihu'])
 const selectOptions = ref<SelectOption[]>([
   {
     label: '北京市',
@@ -865,6 +961,7 @@ function onDecline(scale: number) {
         />
         <BackTop />
         <Button type="primary">Primary Button</Button>
+        <Cascader v-model:value="cascaderValue" :options="cascaderOptions" />
         <Checkbox v-model:checked="checkboxChecked">Checkbox</Checkbox>
         <ColorPicker :width="200" />
         <DatePicker v-model:value="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
@@ -1259,7 +1356,7 @@ _`theme.components.<组件>.primaryColor` 仅覆盖该组件的整套主色（�
 - 同一色值可同时配置多个组件（本节 `Button` / `Slider` / `Progress`），各自独立派生；
 - 沿 `DOM` 继承：外层配的组件主色会继续作用于内层，内层只改 `seed` 不会把它重置；
 - 仅影响该组件自身的主色使用点；组合组件内的子组件按各自的 `theme.components` 配置；`Slider` 的轨道 / 手柄 / 气泡等细部件仍使用组件令牌（见下一节）；
-- 完整规则（`39` 个可配组件清单、`abstract` 组合方式、纯 `CSS` 切暗色时的 `mode` 要求）见[定制主题：组件级主色](/guide/customize-theme.html#组件级主色-theme-components)。
+- 完整规则（`40` 个可配组件清单、`abstract` 组合方式、纯 `CSS` 切暗色时的 `mode` 要求）见[定制主题：组件级主色](/guide/customize-theme.html#组件级主色-theme-components)。
 
 ::: details Show Code
 
@@ -1532,6 +1629,81 @@ _链接色由种子派生：`--va-link-color` / `-hover` / `-active` 随主色�
 
   .link-theme-demo a:active {
     color: var(--va-link-color-active, #0958d9);
+  }
+
+  /* 主题联动演示：色块图例与说明文字（仅本页使用） */
+  .theme-demo {
+    margin: 24px 0 8px;
+    padding: 20px 24px;
+    border: 1px solid var(--va-border-color);
+    border-radius: 16px;
+    background: var(--va-bg-container-color);
+  }
+
+  .theme-caption {
+    font-size: 12px;
+    color: var(--va-text-color-3);
+  }
+
+  .theme-demo-surface {
+    margin-top: 16px;
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--va-bg-layout-color);
+  }
+
+  .theme-demo-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .theme-demo-swatch {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--va-text-color-2);
+  }
+
+  /* 正文段落 `.vp-doc p` 的 28px 行高会压过单类选择器，故在其下收紧行高 */
+  .vp-doc .theme-demo-hint {
+    margin: 16px 0 0;
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--va-text-color-3);
+  }
+
+  .theme-demo-chip {
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--va-border-color);
+    border-radius: 4px;
+  }
+
+  .chip-primary {
+    background: var(--va-primary-color);
+  }
+
+  .chip-primary-hover {
+    background: var(--va-primary-color-hover);
+  }
+
+  .chip-primary-active {
+    background: var(--va-primary-color-active);
+  }
+
+  .chip-primary-bg {
+    background: var(--va-primary-bg-color);
+  }
+
+  .chip-primary-border {
+    background: var(--va-primary-border-color);
+  }
+
+  .chip-link {
+    background: var(--va-link-color);
   }
 </style>
 
@@ -1911,7 +2083,7 @@ _按「改的是哪一层」定位，再检查作用域与覆盖范围；完整�
 | :-- | :-- | :-- |
 | primaryColor? | 组件主色，只接受不透明 `#rgb` / `#rrggbb` / `#rrggbbff`（与 `seed` 同一口径）；按色阶派生常态 / 悬停 / 按下 / 浅底 / 描边 / 实色文字 | string |
 
-> 组件级主色覆盖 `39` 个已接线的内置组件（完整清单见[组件级令牌](/guide/customize-theme.html#组件级令牌与整组覆盖)）；未接入的组件键会在开发环境告警。组件的细部件颜色（如 `Slider` 的 `rail` / `handle` / `tooltip`）仍用组件级令牌覆盖。
+> 组件级主色覆盖 `40` 个已接线的内置组件（完整清单见[组件级令牌](/guide/customize-theme.html#组件级令牌与整组覆盖)）；未接入的组件键会在开发环境告警。组件的细部件颜色（如 `Slider` 的 `rail` / `handle` / `tooltip`）仍用组件级令牌覆盖。
 
 ### ThemeSeed Type
 

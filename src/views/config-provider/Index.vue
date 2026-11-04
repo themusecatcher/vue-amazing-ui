@@ -16,6 +16,7 @@ import type {
   ConfigProviderProps,
   ConfigProviderTheme,
   CarouselImage,
+  CascaderOption,
   ItemType,
   LoadingBarApi,
   MenuKey,
@@ -160,6 +161,53 @@ const seedMenuItems = ref<ItemType[]>([
   },
   { key: '9', icon: () => h(InboxOutlined), label: 'Navigation Five' }
 ])
+const cascaderOptions: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      {
+        value: 'hangzhou',
+        label: '杭州',
+        children: [
+          { value: 'xihu', label: '西湖' },
+          { value: 'xiasha', label: '下沙' }
+        ]
+      },
+      {
+        value: 'ningbo',
+        label: '宁波',
+        children: [
+          { value: 'yinzhou', label: '鄞州' },
+          { value: 'beilun', label: '北仑' }
+        ]
+      }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      {
+        value: 'nanjing',
+        label: '南京',
+        children: [
+          { value: 'zhonghuamen', label: '中华门' },
+          { value: 'xuanwu', label: '玄武' }
+        ]
+      },
+      {
+        value: 'wuxi',
+        label: '无锡',
+        children: [
+          { value: 'jiangyin', label: '江阴' },
+          { value: 'yixing', label: '宜兴' }
+        ]
+      }
+    ]
+  }
+]
+const cascaderValue = ref<(string | number)[]>(['zhejiang', 'hangzhou', 'xihu'])
 const selectOptions = ref<SelectOption[]>([
   {
     label: '北京市',
@@ -392,7 +440,7 @@ const tokenStyle: Record<string, string> = {
     </Descriptions>
     <h2 class="mt30 mb10">种子换色：全组件联动</h2>
     <p class="mb10">
-      只修改种子 <code>seed.primary</code> 一个值，<code>39</code> 个消费主色的组件同步换色，无需逐组件传色。
+      只修改种子 <code>seed.primary</code> 一个值，<code>40</code> 个消费主色的组件同步换色，无需逐组件传色。
     </p>
     <!--
       用默认包裹元素形态（abstract: false）演示：本站 <html> 已被 App.vue 的应用级主题占用，
@@ -453,6 +501,7 @@ const tokenStyle: Record<string, string> = {
           />
           <BackTop />
           <Button type="primary">Primary Button</Button>
+          <Cascader v-model:value="cascaderValue" :options="cascaderOptions" />
           <Checkbox v-model:checked="checkboxChecked">Checkbox</Checkbox>
           <ColorPicker :width="200" />
           <DatePicker v-model:value="dateValue" format="yyyy-MM-dd" placeholder="请选择日期" />
@@ -607,8 +656,8 @@ const tokenStyle: Record<string, string> = {
         作用域，不存在第二份色值，因此始终同步；</li
       >
       <li class="mb10"
-        >示例覆盖全部 39 个消费主色的组件；<code>Table</code> 排序箭头、<code>Badge</code> 计数底、<code>Timeline</code>
-        的 blue 圆点、<code>GradientText</code> 渐变端点均取自种子（点击表头可见）；</li
+        >示例覆盖全部 40 个消费主色的组件；<code>Table</code> 排序箭头、<code>Badge</code> 计数底、<code>Timeline</code>
+        的 <code>blue</code> 圆点、<code>GradientText</code> 渐变端点均取自种子（点击表头可见）；</li
       >
       <li class="mb10"
         ><code>Tag</code> 的 processing 预设取主色，success / warning / error 取语义色（见「语义种子」）；其余 13
