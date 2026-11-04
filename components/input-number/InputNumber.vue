@@ -187,7 +187,7 @@ function onInput(e: Event): void {
     }
   }
 }
-/** 中文标点下打小数点会得到 `。`，静默纠正为 `.`（antd issue #8196） */
+/** 中文标点下打小数点会得到 `。`，静默纠正为 `.` */
 function updateValueWithChineseDot(raw: string): void {
   const normalized = props.parser ? String(props.parser(raw)) : raw.replace(/。/g, '.')
   // 非受控时 updateValue 只上报、由本函数负责落显示，否则会出现「上报了 1.5，输入框里还是 1。5」；
