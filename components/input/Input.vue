@@ -17,6 +17,7 @@ export interface Props {
   maxlength?: number // 最大长度
   showCount?: boolean // 是否展示字数
   value?: string // (v-model) 输入框内容
+  defaultValue?: string // 非受控初始值，未绑 v-model:value 时生效
   valueModifiers?: object // 用于访问组件的 v-model 上添加的修饰符
 }
 // 声明组件插槽类型
@@ -41,6 +42,7 @@ const props = withDefaults(defineProps<Props>(), {
   maxlength: undefined,
   showCount: false,
   value: undefined,
+  defaultValue: undefined,
   valueModifiers: () => ({})
 })
 defineSlots<InputSlots>()
@@ -48,7 +50,10 @@ const inputRef = ref<HTMLElement | null>(null) // input 元素引用
 const inputWrapHover = ref<boolean>(false) // 鼠标是否悬浮
 const inputFocus = ref<boolean>(false) // input 元素是否聚焦
 const isComposing = ref<boolean>(false) // 是否正在使用文本合成系统输入中
-const inputValue = ref<string>() // 输入框的值
+// 渲染镜像：唯一用途是给模板 :value 提供值，必须无条件追随 DOM（落后一次就会被重渲染写回旧值）
+const innerValue = ref<string | undefined>(props.defaultValue)
+// 字数计数：合成期冻结，仅供展示，不参与写入判定、不上报
+const countValue = ref<string | undefined>(props.defaultValue)
 const showPassword = ref<boolean>(false) // 是否显示密码
 const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'enter', 'focus', 'blur'])
 const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore', 'addonAfter'])
@@ -63,9 +68,9 @@ const showClear = computed(() => {
 })
 const showCountNum = computed(() => {
   if (props.maxlength) {
-    return `${inputValue.value ? inputValue.value.length : 0} / ${props.maxlength}`
+    return `${countValue.value ? countValue.value.length : 0} / ${props.maxlength}`
   }
-  return inputValue.value ? inputValue.value.length : 0
+  return countValue.value ? countValue.value.length : 0
 })
 const showPrefix = computed(() => {
   return slotsExist.prefix || props.prefix
@@ -88,9 +93,11 @@ const lazyInput = computed(() => {
 watch(
   () => props.value,
   (to) => {
-    if (inputValue.value !== to) {
-      inputValue.value = to
+    if (to === undefined) {
+      return // 非受控：保留 defaultValue 与用户输入，不回写
     }
+    innerValue.value = to
+    countValue.value = to
   },
   {
     immediate: true
@@ -120,18 +127,24 @@ function onCompositionStart(e: CompositionEvent): void {
 // 当文本段落的组成完成或取消时触发 (具有特殊字符的触发，需要一系列键和其他输入，如语音识别或移动中的字词建议)
 function onCompositionEnd(e: CompositionEvent): void {
   isComposing.value = false
+  const target = e.target as HTMLInputElement | null
+  // 选词后 DOM 已是最终文本：镜像与计数都要同步（只同步计数的话，镜像仍停在拼音上）
+  if (target) {
+    innerValue.value = target.value
+    countValue.value = target.value
+  }
   emits('compositionend', e)
   const changeEvent = new Event('change')
   e.target?.dispatchEvent(changeEvent)
 }
 function onInput(e: Event): void {
   const target = e.target as HTMLInputElement
-  // 内部值是 DOM 值的唯一支撑（未绑定 v-model 时更是如此）：含合成期间的文本也要回写，
-  // 否则任一次重渲染（悬浮 / 聚焦态变化都会触发）都会把 DOM 值写回旧值，正在输入的内容被抹掉
-  inputValue.value = target.value
+  // 含合成期间的文本也要回写镜像，否则任一次重渲染（悬浮 / 聚焦态变化都会触发）都会把 DOM 值写回旧值
+  innerValue.value = target.value
   if (isComposing.value) {
-    return // 合成期间只回写内部值、不对外上报，待合成结束补发的 change 统一派发
+    return // 合成期间只回写镜像：字数冻结、不对外上报，待合成结束补发的 change 统一派发
   }
+  countValue.value = target.value
   if (!lazyInput.value) {
     emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
     emits('change', e)
@@ -139,7 +152,9 @@ function onInput(e: Event): void {
 }
 function onChange(e: Event): void {
   const target = e.target as HTMLInputElement
-  inputValue.value = target.value // 同 onInput：change 路径同样回写，避免内部值落后于 DOM
+  // 同 onInput：change 路径同样回写，避免镜像落后于 DOM
+  innerValue.value = target.value
+  countValue.value = target.value
   if (target.value !== props.value) {
     emits('update:value', target.value) // 保证在 change 回调时能获取到最新数据
     emits('change', e)
@@ -156,7 +171,8 @@ function onEnter(e: KeyboardEvent): void {
   }
 }
 function onClear(): void {
-  inputValue.value = ''
+  innerValue.value = ''
+  countValue.value = ''
   emits('update:value', '')
   inputRef.value?.focus()
 }
@@ -204,7 +220,7 @@ defineExpose({ focus, blur })
         ref="inputRef"
         class="input-item"
         :type="password && !showPassword ? 'password' : 'text'"
-        :value="inputValue"
+        :value="innerValue"
         :placeholder="placeholder"
         :maxlength="maxlength"
         :disabled="disabled"
@@ -217,7 +233,7 @@ defineExpose({ focus, blur })
         @keydown.enter.prevent="onEnter"
       />
       <span v-if="showInputSuffix" class="input-suffix">
-        <span v-if="showClear" class="input-actions" :class="{ 'clear-hidden': !inputValue }" @click="onClear">
+        <span v-if="showClear" class="input-actions" :class="{ 'clear-hidden': !innerValue }" @click="onClear">
           <svg
             class="clear-svg"
             focusable="false"

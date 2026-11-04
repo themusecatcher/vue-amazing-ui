@@ -60,6 +60,12 @@ function onEnter(e: KeyboardEvent) {
       <Input :width="200" v-model:value="basicValue" placeholder="Basic usage" @change="onChange" @enter="onEnter" />
       <Input :width="200" v-model:value.lazy="lazyValue" placeholder="Lazy usage" @change="onChange" @enter="onEnter" />
     </Space>
+    <h2 class="mt30 mb10">非受控模式</h2>
+    <p class="mb10"
+      >不传 v-model:value 时由组件自持，用 defaultValue 指定初始值；输入、清除与字数提示照常生效；placeholder
+      只是占位提示，不能替代初值</p
+    >
+    <Input :width="200" default-value="非受控初值" allow-clear show-count placeholder="default value" />
     <h2 class="mt30 mb10">与文字混排</h2>
     <p class="mb10">与文字同处一行时按基线对齐</p>
     <div style="display: flex; align-items: center; height: 32px; gap: 8px">

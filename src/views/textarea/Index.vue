@@ -44,6 +44,12 @@ function onEnter(e: KeyboardEvent) {
         @enter="onEnter"
       />
     </Space>
+    <h2 class="mt30 mb10">非受控模式</h2>
+    <p class="mb10"
+      >不传 v-model:value 时由组件自持，用 defaultValue 指定初始值；输入、清除与字数提示照常生效；placeholder
+      只是占位提示，不能替代初值</p
+    >
+    <Textarea :width="200" default-value="非受控初值" allow-clear show-count placeholder="default value" />
     <h2 class="mt30 mb10">适应文本高度的文本域</h2>
     <Textarea
       :width="360"

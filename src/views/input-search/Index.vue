@@ -69,6 +69,12 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
         @search="onSearch"
       />
     </Space>
+    <h2 class="mt30 mb10">非受控模式</h2>
+    <p class="mb10"
+      >不传 v-model:value 时由组件自持，用 defaultValue 指定初始值；输入、清除与搜索照常生效；placeholder
+      只是占位提示，不能替代初值</p
+    >
+    <InputSearch :width="200" default-value="非受控初值" allow-clear placeholder="default value" />
     <h2 class="mt30 mb10">自定义搜索按钮</h2>
     <Space vertical>
       <InputSearch

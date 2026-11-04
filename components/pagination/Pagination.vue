@@ -169,7 +169,7 @@ async function onPageJump(): Promise<void> {
     onPageChange(num)
   }
   await nextTick()
-  jumpNumber.value = undefined // 清空跳转输入框
+  jumpNumber.value = '' // 清空跳转输入框（传 undefined 属「父不再传值」，不会清空非受控的输入框）
 }
 // 跳转框只接受数字：非数字字符在 keydown 阶段就拦下，否则非法内容会被静默丢弃、用户无从判断
 function onJumperKeydown(e: KeyboardEvent): void {
@@ -191,7 +191,7 @@ function onJumperValue(value: string): void {
   jumpNumber.value = digits
   if (prev === digits) {
     // 过滤后与旧值相同（如粘贴纯字母）时 props 不变、Input 不会回写，置空再恢复以强制复位
-    jumpNumber.value = undefined
+    jumpNumber.value = ''
     nextTick(() => {
       jumpNumber.value = digits
     })
@@ -204,7 +204,7 @@ async function onJumperBlur(e: FocusEvent): Promise<void> {
     '.pagination-item, .pagination-prev, .pagination-next, .pagination-jump-prev, .pagination-jump-next'
   )
   if (isPagerNode) {
-    jumpNumber.value = undefined
+    jumpNumber.value = ''
     return
   }
   // 有确认按钮时失焦不算提交，保留已输入内容，等按钮或回车

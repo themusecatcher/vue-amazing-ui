@@ -116,6 +116,22 @@ function onEnter(e: KeyboardEvent) {
 
 :::
 
+## 非受控模式
+
+_不传 `v-model:value` 时由组件自持，用 `defaultValue` 指定初始值；输入、步进与精度格式化照常生效；`placeholder` 只是占位提示，不能替代初值_
+
+<InputNumber :width="120" :default-value="5" :precision="2" />
+
+::: details Show Code
+
+```vue
+<template>
+  <InputNumber :width="120" :default-value="5" :precision="2" />
+</template>
+```
+
+:::
+
 ## 步数为小数
 
 <InputNumber :step="0.1" v-model:value="stepValue" />
@@ -300,7 +316,8 @@ const disabled = ref(true)
 | keyboard | 是否启用键盘快捷键行为（上方向键增，下方向键减） | boolean | true |
 | disabled | 是否禁用 | boolean | false |
 | placeholder | 数字输入的占位符 | string | undefined |
-| value <Tag color="cyan">v-model</Tag> | 当前值；传入即受控，不传时由组件内部维护 | number | undefined |
+| value <Tag color="cyan">v-model</Tag> | 当前值；传入即受控，不传时组件自持（可用 `defaultValue` 指定初值） | number | undefined |
+| defaultValue | 非受控初始值，未绑 `v-model:value` 时生效；与 `value` 同样按 `precision` / `formatter` 展示 | number | undefined |
 
 ## Slots
 
