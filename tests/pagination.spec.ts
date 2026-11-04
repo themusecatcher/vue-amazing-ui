@@ -165,6 +165,22 @@ describe('Pagination 交互', () => {
     wrapper.unmount()
   })
 
+  it('跳转成功后清空跳转框', async () => {
+    const wrapper = mount(Pagination, {
+      props: { total: 100, showQuickJumper: true },
+      attachTo: document.body
+    })
+    const jumper = wrapper.find('.pagination-jump-page input')
+    ;(jumper.element as HTMLInputElement).value = '3'
+    await jumper.trigger('input')
+    await jumper.trigger('keydown.enter')
+
+    // 内部 Input 已改为「值变 undefined 时保留内容」，清空必须显式传空字符串
+    expect((jumper.element as HTMLInputElement).value).toBe('')
+
+    wrapper.unmount()
+  })
+
   it('跳转框拦截非数字按键，数字与功能键放行', async () => {
     const wrapper = mount(Pagination, {
       props: { total: 500, showQuickJumper: true },
