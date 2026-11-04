@@ -206,6 +206,8 @@ function onPreview(file: UploadFileType) {
 
 _不传 `v-model:fileList` 时由组件自持，用 `defaultFileList` 预填文件列表；继续上传、删除照常生效_
 
+<br/>
+
 <Upload
   :default-file-list="[
     {

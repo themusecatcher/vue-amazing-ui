@@ -35,8 +35,6 @@ const rangeDate = ref(new Date(2026, 9, 15).getTime())
 const keyboardDate = ref(new Date(2026, 9, 15).getTime())
 // 可选区间用例：入参为时间戳
 const validRangeValue: [number, number] = [new Date(2026, 9, 10).getTime(), new Date(2026, 9, 20).getTime()]
-// 非受控初值用例：仅作为 defaultValue 传入，不参与 v-model
-const defaultDate = new Date(2026, 4, 20).getTime()
 const message = useMessage()
 // 头部整体替换用例：插槽不提供选项数据，年月选项由使用方自行构造
 const headerFullModeOptions = [
@@ -429,12 +427,6 @@ function onPanelChange(
         @panelChange="onPanelChange"
       />
     </Flex>
-    <h2 class="mt30 mb10">非受控模式</h2>
-    <p class="mb10"
-      ><code>defaultValue</code> 同时决定初始面板日期与初始选中值；绑定 <code>value</code> 时以
-      <code>value</code> 为准</p
-    >
-    <Calendar :default-value="defaultDate" @panelChange="onPanelChange" />
     <h2 class="mt30 mb10">整层禁用</h2>
     <p class="mb10"
       >整月都被 <code>disabledDate</code> 禁用时，月份面板（<code>mode="year"</code>）的月份格与年 /

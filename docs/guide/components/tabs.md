@@ -45,24 +45,6 @@ const tabItems = ref<TabsItem[]>([
     content: 'Content of Tab Pane 6'
   }
 ])
-// 非受控演示专用：短列表让示例聚焦「不绑 v-model 也能切换」这一点
-const tabItemsDefault = ref<TabsItem[]>([
-  {
-    key: '1',
-    tab: 'Tab 1',
-    content: 'Content of Tab Pane 1'
-  },
-  {
-    key: '2',
-    tab: 'Tab 2',
-    content: 'Content of Tab Pane 2'
-  },
-  {
-    key: '3',
-    tab: 'Tab 3',
-    content: 'Content of Tab Pane 3'
-  }
-])
 const tabItemsDisabled = ref<TabsItem[]>([
   {
     key: '1',
@@ -325,46 +307,6 @@ function onChange(key: string | number) {
 </script>
 <template>
   <Tabs :items="tabItems" v-model:active-key="activeKey" @change="onChange" />
-</template>
-```
-
-:::
-
-## 非受控模式
-
-_不传 `v-model:active-key` 时由组件自持，用 `defaultActiveKey` 指定初始激活项；切换照常生效并派发 `change`_
-
-<Tabs :items="tabItemsDefault" default-active-key="2" @change="onChange" />
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-import type { TabsItem } from 'vue-amazing-ui'
-const tabItemsDefault = ref<TabsItem[]>([
-  {
-    key: '1',
-    tab: 'Tab 1',
-    content: 'Content of Tab Pane 1'
-  },
-  {
-    key: '2',
-    tab: 'Tab 2',
-    content: 'Content of Tab Pane 2'
-  },
-  {
-    key: '3',
-    tab: 'Tab 3',
-    content: 'Content of Tab Pane 3'
-  }
-])
-function onChange(key: string | number) {
-  console.log('key', key)
-}
-</script>
-<template>
-  <Tabs :items="tabItemsDefault" default-active-key="2" @change="onChange" />
 </template>
 ```
 

@@ -1696,71 +1696,6 @@ const keyword = ref('')
 
 :::
 
-## 非受控模式
-
-_通过 `default-value` 提供非受控初值，形态与 `value` 一致_
-
-<br/>
-
-<Space>
-  <Cascader placeholder="请选择" :options="options" :default-value="['jiangsu', 'nanjing', 'zhonghuamen']" />
-  <Cascader placeholder="请选择" :options="options" multiple :default-value="[['zhejiang', 'hangzhou', 'xihu']]" />
-</Space>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-const options: CascaderOption[] = [
-  {
-    value: 'zhejiang',
-    label: '浙江',
-    children: [
-      {
-        value: 'hangzhou',
-        label: '杭州',
-        children: [
-          { value: 'xihu', label: '西湖', code: 330100 },
-          { value: 'xiasha', label: '下沙', code: 310018, disabled: true }
-        ]
-      },
-      { value: 'ningbo', label: '宁波', children: [{ value: 'yinzhou', label: '鄞州', code: 315100 }] }
-    ]
-  },
-  {
-    value: 'jiangsu',
-    label: '江苏',
-    children: [
-      { value: 'nanjing', label: '南京', children: [{ value: 'zhonghuamen', label: '中华门', code: 210000 }] },
-      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴', code: 214400 }] }
-    ]
-  },
-  {
-    value: 'beijing',
-    label: '北京',
-    children: [
-      {
-        value: 'beijingshi',
-        label: '北京市',
-        children: [
-          { value: 'dongcheng', label: '东城区', code: 100010 },
-          { value: 'xicheng', label: '西城区', code: 100032 }
-        ]
-      }
-    ]
-  }
-]
-</script>
-<template>
-  <Space>
-    <Cascader placeholder="请选择" :options="options" :default-value="['jiangsu', 'nanjing', 'zhonghuamen']" />
-    <Cascader placeholder="请选择" :options="options" multiple :default-value="[['zhejiang', 'hangzhou', 'xihu']]" />
-  </Space>
-</template>
-```
-
-:::
-
 ## 多选回填策略
 
 _`show-checked-strategy` 决定父级全选时的回填形态：`SHOW_PARENT`（默认）只回填父级路径，`SHOW_CHILD` 只回填叶子路径_
@@ -2565,6 +2500,8 @@ function onConfirm() {
 ## APIs
 
 ### Cascader Props
+
+> **受控 / 非受控**：`value` / `open` / `searchValue` 传入即受控（值以父为准，组件只上报对应的 `update:xxx`）；不传则各自由组件自持，交互照常生效，`value` 可用 `defaultValue` 指定初值。
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |

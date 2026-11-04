@@ -24,7 +24,7 @@ _模板文件_
 
 :::
 
-<!-- 可选章节：仅含取值类双模字段（value / activeKey / page / fileList 等）的组件需要；演示不绑 v-model 时的预填值 -->
+<!-- 可选章节：仅初值可观察差异时添加（如 Input 有预填文字、Upload 有预填文件）；静态默认值与受控版外观一致时不加，判据见 development/demo-doc-guide.md -->
 <!-- ## 非受控模式 -->
 
 ## APIs

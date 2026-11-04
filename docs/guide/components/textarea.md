@@ -94,6 +94,8 @@ function onEnter(e: KeyboardEvent) {
 
 _不传 `v-model:value` 时由组件自持，用 `defaultValue` 指定初始值；输入、清除与字数提示照常生效；`placeholder` 只是占位提示，不能替代初值_
 
+<br/>
+
 <Textarea :width="200" default-value="非受控初值" allow-clear show-count placeholder="default value" />
 
 ::: details Show Code

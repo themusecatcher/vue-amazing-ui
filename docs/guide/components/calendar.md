@@ -49,8 +49,6 @@ const rangeDate = ref(new Date(2026, 9, 15).getTime())
 const keyboardDate = ref(new Date(2026, 9, 15).getTime())
 // 可选区间用例：入参为时间戳
 const validRangeValue: [number, number] = [new Date(2026, 9, 10).getTime(), new Date(2026, 9, 20).getTime()]
-// 非受控初值用例：仅作为 defaultValue 传入，不参与 v-model
-const defaultDate = new Date(2026, 4, 20).getTime()
 const message = useMessage()
 // 头部整体替换用例：插槽不提供选项数据，年月选项由使用方自行构造
 const headerFullModeOptions = [
@@ -1181,34 +1179,6 @@ function onPanelChange(
 
 :::
 
-## 非受控模式
-
-_`defaultValue` 同时决定初始面板日期与初始选中值；绑定 `value` 时以 `value` 为准_
-
-<br/>
-
-<Calendar :default-value="defaultDate" @panelChange="onPanelChange" />
-
-::: details Show Code
-
-```vue
-<script lang="ts" setup>
-const defaultDate = new Date(2026, 4, 20).getTime()
-function onPanelChange(
-  value: string | number | undefined,
-  info: { year: number; month?: number },
-  mode: 'month' | 'year'
-): void {
-  console.log('panelChange', value, info, mode)
-}
-</script>
-<template>
-  <Calendar :default-value="defaultDate" @panelChange="onPanelChange" />
-</template>
-```
-
-:::
-
 ## 整层禁用
 
 _整月都被 `disabledDate` 禁用时，月份面板（`mode="year"`）的月份格与年 / 月选择器的对应项一并禁用_
@@ -1355,6 +1325,8 @@ function onPanelChange(
 ## APIs
 
 ### Calendar Props
+
+> **受控 / 非受控**：`value` 传入即受控（值以父为准，组件只上报 `update:value`）；不传则由组件自持，交互照常生效，可用 `defaultValue` 指定初值（同时决定初始面板日期）。
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
