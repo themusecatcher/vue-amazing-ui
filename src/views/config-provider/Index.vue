@@ -26,7 +26,6 @@ import type {
   SegmentedOption,
   StepsItem,
   TableColumn,
-  TabsItem,
   TextScrollItem,
   ThemeMode,
   TimelineItemProps,
@@ -222,38 +221,6 @@ const darkSelectOptions: SelectOption[] = [
   { label: 'Option 3', value: 3 }
 ]
 const darkPage = ref<number>(1)
-const tabItems = ref<TabsItem[]>([
-  {
-    key: '1',
-    tab: 'Tab 1',
-    content: 'Content of Tab Pane 1'
-  },
-  {
-    key: '2',
-    tab: 'Tab 2',
-    content: 'Content of Tab Pane 2'
-  },
-  {
-    key: '3',
-    tab: 'Tab 3',
-    content: 'Content of Tab Pane 3'
-  },
-  {
-    key: '4',
-    tab: 'Tab 4',
-    content: 'Content of Tab Pane 4'
-  },
-  {
-    key: '5',
-    tab: 'Tab 5',
-    content: 'Content of Tab Pane 5'
-  },
-  {
-    key: '6',
-    tab: 'Tab 6',
-    content: 'Content of Tab Pane 6'
-  }
-])
 const activeKey = ref<string>('1')
 const textareaValue = ref<string>('')
 const scrollItems = ref<TextScrollItem[]>([
@@ -624,7 +591,11 @@ const tokenStyle: Record<string, string> = {
           }"
         />
         <Card width="50%">
-          <Tabs :items="tabItems" v-model:active-key="activeKey" />
+          <Tabs v-model:active-key="activeKey">
+            <TabPane key="1" tab="Tab 1">Content of Tab Pane 1</TabPane>
+            <TabPane key="2" tab="Tab 2">Content of Tab Pane 2</TabPane>
+            <TabPane key="3" tab="Tab 3">Content of Tab Pane 3</TabPane>
+          </Tabs>
         </Card>
         <TextScroll :items="scrollItems" />
         <Upload v-model:fileList="fileList" />

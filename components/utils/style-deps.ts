@@ -110,6 +110,7 @@ export const componentsMap = {
   Swiper: 'swiper',
   Switch: 'switch',
   Table: 'table',
+  TabPane: 'tabs/tab-pane',
   Tabs: 'tabs',
   Tag: 'tag',
   Textarea: 'textarea',
@@ -154,7 +155,8 @@ export const styleSources: Partial<Record<ComponentName, ComponentName>> = {
   MenuItemGroup: 'Menu',
   MenuSubMenu: 'Menu',
   SelectOption: 'Select',
-  SelectOptGroup: 'Select'
+  SelectOptGroup: 'Select',
+  TabPane: 'Tabs'
 }
 
 /**
@@ -250,6 +252,7 @@ export const componentDependencies: Partial<Record<ComponentName, ComponentName[
     'Tooltip',
     'Popup'
   ],
+  Tabs: ['Dropdown', 'Popup'],
   Tag: ['Space'],
   TextScroll: ['Ellipsis', 'Tooltip', 'Popup'],
   TimePanel: ['TimeUnitColumn', 'Scrollbar'],

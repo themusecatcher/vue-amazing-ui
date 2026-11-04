@@ -7,6 +7,7 @@ import AutoComplete from 'components/auto-complete/AutoComplete.vue'
 import Tooltip from 'components/tooltip/Tooltip.vue'
 import Dropdown from 'components/dropdown/Dropdown.vue'
 import Tabs from 'components/tabs/Tabs.vue'
+import TabPane from 'components/tabs/tab-pane'
 import Collapse from 'components/collapse/Collapse.vue'
 import Pagination from 'components/pagination/Pagination.vue'
 import Rate from 'components/rate/Rate.vue'
@@ -134,26 +135,24 @@ describe('v-model 非受控：不传值时可交互', () => {
 
 describe('v-model 非受控：defaultXxx 提供初值后可交互', () => {
   it('Tabs：defaultActiveKey 指定初始项，切换在本地生效并上报', async () => {
+    const panes = ['a', 'b'].map((key) =>
+      h(TabPane, { key, tab: `Tab ${key}`, disabled: false }, { default: () => `内容 ${key}` })
+    )
     wrapper = mount(Tabs, {
       attachTo: document.body,
-      props: {
-        defaultActiveKey: 'a',
-        items: [
-          { key: 'a', title: 'A', content: '内容 A' },
-          { key: 'b', title: 'B', content: '内容 B' }
-        ]
-      }
+      props: { defaultActiveKey: 'a' },
+      slots: { default: () => panes }
     })
     await flush()
-    expect(wrapper.text()).toContain('内容 A')
+    expect(wrapper.findAll('.tab-item')[0].classes()).toContain('tab-line-active')
 
     const items = wrapper.findAll('.tab-item')
     await items[1].trigger('click')
     await flush()
 
     expect(wrapper.emitted('update:activeKey')?.[0]).toEqual(['b'])
-    // 非受控：本地切换生效（受控且父不回写时会一直是「内容 A」）
-    expect(wrapper.text()).toContain('内容 B')
+    // 非受控：本地切换生效（受控且父不回写时会一直停在第一个页签）
+    expect(items[1].classes()).toContain('tab-line-active')
   })
 
   it('Collapse：defaultActiveKey 指定初始展开项，点击可本地切换', async () => {
