@@ -1982,12 +1982,12 @@ const rangePlaceholder = ['开始日期', '结束日期']
 | ok | 带时间的形态点击「确定」时的回调 | (value: number &#124; [number &#124; null, number &#124; null] &#124; null, formattedValue: string &#124; [string, string] &#124; null) => void |
 | openChange | 面板展开收起时的回调 | (open: boolean) => void |
 | panelChange | 面板视图切换时的回调 | (value: number, mode: string) => void |
-| focus | 输入框获取焦点时的回调 | (event: FocusEvent) => void |
-| blur | 输入框失去焦点时的回调 | (event: FocusEvent) => void |
+| focus | 输入框获取焦点时的回调，`relatedTarget` 为失去焦点的元素 | (e: FocusEvent) => void |
+| blur | 输入框失焦的回调，`relatedTarget` 为获得焦点的元素 | (e: FocusEvent) => void |
 
 ## Methods
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| focus | 使选择器获取焦点 | () => void |
+| focus | 获取选择器焦点 | () => void |
 | blur | 使选择器失去焦点 | () => void |

@@ -2792,6 +2792,6 @@ function onConfirm() {
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| focus | 使选择器获得焦点 | () => void |
+| focus | 获取选择器焦点 | () => void |
 | blur | 使选择器失去焦点 | () => void |
 | getCheckedData | 取多选已勾选项的选项数据，按 `showCheckedStrategy` 折叠，与 `change` 第二参同源；非多选返回空数组 | () => [CascaderOption](#cascaderoption-type)[][] |

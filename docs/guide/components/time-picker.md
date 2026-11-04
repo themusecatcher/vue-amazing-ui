@@ -834,12 +834,12 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 | calendarChange | 范围形态草稿段变更时的回调，`info.range` 标注本次改动的段 | (value: [TimePickerValue](#timepickervalue-type), formattedValue: [TimePickerFormattedValue](#timepickerformattedvalue-type), info: [TimePickerRangeInfo](#timepickerrangeinfo-type)) => void |
 | ok | 点击「确定」时的回调 | (value: [TimePickerValue](#timepickervalue-type), formattedValue: [TimePickerFormattedValue](#timepickerformattedvalue-type)) => void |
 | openChange | 面板展开收起时的回调 | (open: boolean) => void |
-| focus | 输入框获取焦点时的回调 | (event: FocusEvent) => void |
-| blur | 输入框失去焦点时的回调 | (event: FocusEvent) => void |
+| focus | 输入框获取焦点时的回调，`relatedTarget` 为失去焦点的元素 | (e: FocusEvent) => void |
+| blur | 输入框失焦的回调，`relatedTarget` 为获得焦点的元素 | (e: FocusEvent) => void |
 
 ## Methods
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| focus | 使选择器获取焦点 | () => void |
+| focus | 获取选择器焦点 | () => void |
 | blur | 使选择器失去焦点 | () => void |
