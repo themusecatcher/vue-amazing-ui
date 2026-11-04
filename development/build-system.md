@@ -105,7 +105,7 @@ pnpm format:check      # 只检查不写盘（CI 与 pnpm check 使用；范围�
 pnpm lint              # ESLint 检查并修复
 pnpm type-check        # vue-tsc 类型检查：源码 / 构建期脚本走 --build，tests/ 单独走 tsconfig.test.json
 pnpm check             # 聚合检查：lint:check + format:check + type-check + check:static + test（免构建）
-pnpm check:static      # 免构建的源码契约守护：verify:theme + verify:inject-keys + verify:docs
+pnpm check:static      # 免构建的源码契约守护：verify:theme + verify:inject-keys + verify:docs（含文档章节顺序）
 pnpm test              # vitest 运行测试
 pnpm verify            # 重量级门禁：build + verify:artifacts + guard（发布前 / CI 自检）
 pnpm verify:artifacts  # 产物校验：verify:deps + verify:on-demand（需已构建产物）
@@ -113,7 +113,7 @@ pnpm verify:deps       # 产物一致性校验：依赖表 ↔ chunk 闭包 + �
 pnpm verify:on-demand  # 按需引入端到端验证：临时消费方工程 + canary 断言（需已构建产物）
 pnpm verify:theme      # 主题架构守护（--strict）：变量引用登记与写入位置 / 公开变量闭合 / 色值三档统计 / 演示站与文档桥变量回退
 pnpm verify:inject-keys # 注入契约守护：键类型 / 命名 / 描述串 / 读取通道（只扫源码）
-pnpm verify:docs       # 文档默认值守护：Props「默认值」列 ↔ 源码 withDefaults 逐字段比对（只扫源码）
+pnpm verify:docs       # 文档守护：Props「默认值」列 ↔ 源码 withDefaults 逐字段比对 + 尾部章节顺序（APIs → Slots → Events → Methods → CSS 变量 → 在 setup 外使用）
 pnpm guard             # 产物守卫：毫秒级存在性校验（样式入口 / 编号 CSS / 入口内引用 / 聚合入口类型与运行时配对 / props 运行时类型与源码类型对齐）
 ```
 
