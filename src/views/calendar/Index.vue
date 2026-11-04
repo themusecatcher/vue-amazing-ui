@@ -172,9 +172,9 @@ function onPanelChange(
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
-    <ul class="m-list">
+    <ul class="demo-list">
       <li>
-        <a class="u-file" href="https://date-fns.org/" target="_blank">date-fns</a>
+        <a class="demo-file" href="https://date-fns.org/" target="_blank">date-fns</a>
       </li>
     </ul>
     <h2 class="mt30 mb10">基本使用</h2>
@@ -187,7 +187,8 @@ function onPanelChange(
     <p class="mb10"><code>mode</code> 指定面板模式（月 / 年）：外部变更会同步到面板，面板内切换模式不会回写该属性</p>
     <Flex vertical>
       <Space align="center">
-        display:<RadioGroup :options="displayOptions" v-model:value="modeDisplay" button button-style="solid" />
+        display:
+        <RadioGroup :options="displayOptions" v-model:value="modeDisplay" button button-style="solid" />
       </Space>
       <Calendar v-model:value="modeDate" mode="year" :display="modeDisplay" />
     </Flex>
@@ -236,7 +237,8 @@ function onPanelChange(
     <p class="mb10">取值 <code>0-6</code>，<code>0</code> 为周一</p>
     <Flex vertical>
       <Space align="center">
-        startDayOfWeek:<RadioGroup :options="weekOptions" v-model:value="startDayOfWeek" button button-style="solid" />
+        startDayOfWeek:
+        <RadioGroup :options="weekOptions" v-model:value="startDayOfWeek" button button-style="solid" />
       </Space>
       <Calendar v-model:value="startDayOfWeekDate" :start-day-of-week="startDayOfWeek" />
     </Flex>
@@ -384,11 +386,12 @@ function onPanelChange(
     <p class="mb10"
       ><code>disabledDate</code> 入参为时间戳，返回 <code>true</code> 表示该日期不可选；年 /
       月选择器与月格只替换年月、保留原「日」，该日不可选（命中 <code>disabledDate</code> 或落在
-      <code>validRange</code> 外）时收敛到同月最近的可用日</p
-    >
+      <code>validRange</code> 外）时收敛到同月最近的可用日
+    </p>
     <Flex vertical>
       <Space align="center">
-        display:<RadioGroup :options="displayOptions" v-model:value="disabledDisplay" button button-style="solid" />
+        display:
+        <RadioGroup :options="displayOptions" v-model:value="disabledDisplay" button button-style="solid" />
       </Space>
       <Space align="start" class="mt10">
         <Flex vertical>
@@ -416,8 +419,8 @@ function onPanelChange(
     <h2 class="mt30 mb10">可选日期区间</h2>
     <p class="mb10"
       ><code>validRange</code> 限定可选区间，区间外的日期不可选，年 / 月选择器的可选项一并收窄；字符串入参按
-      <code>valueFormat</code> 解析</p
-    >
+      <code>valueFormat</code> 解析
+    </p>
     <Flex vertical>
       <Alert type="info" message="仅允许选择 2026-10-10 ~ 2026-10-20，区间外的日期不可选" />
       <Calendar
@@ -449,17 +452,21 @@ function onPanelChange(
 .notice-item {
   display: flex;
   align-items: center;
+
   .notice-text {
     flex: 1;
     min-width: 0;
   }
 }
+
 /* 头部整体替换用例：标题行 + 操作行，两端分布 */
 .header-full {
   padding: 10px;
+
   .header-full-title {
     margin-bottom: 10px;
   }
+
   .header-full-actions {
     display: flex;
     align-items: center;
@@ -467,6 +474,7 @@ function onPanelChange(
     gap: 8px;
   }
 }
+
 /* 整格替换用例的单元格：整格由业务自绘（浅底圆角块），色值取语义变量以便跟随明暗模式 */
 .full-cell {
   display: flex;
@@ -479,26 +487,32 @@ function onPanelChange(
   border-radius: 4px;
   cursor: pointer;
   transition: background 0.2s;
+
   &:hover {
     background: var(--va-fill-color-2);
   }
 }
+
 /* 今天：主色描边；选中：主色实心 + 白字（整格替换下由插槽内容自行表达） */
 .full-cell-today {
   color: var(--va-cp-calendar-primary-color, var(--va-primary-color));
   box-shadow: inset 0 0 0 1px var(--va-cp-calendar-primary-color, var(--va-primary-color));
 }
+
 .full-cell-selected {
   color: #ffffff;
   background: var(--va-cp-calendar-primary-color, var(--va-primary-color));
+
   &:hover {
     background: var(--va-cp-calendar-primary-color, var(--va-primary-color));
   }
 }
+
 .keyboard-tips {
   margin: 0;
   padding-left: 20px;
   color: var(--va-text-color-2);
+
   li {
     line-height: 1.8;
   }

@@ -141,13 +141,13 @@ function onOpenWindow() {
     <br />
     <br />
     <Button type="primary" @click="onOpenWindow">Open New Window</Button>
-    <p class="u-tip mt30 mb10"
+    <p class="demo-tip mt30 mb10"
       >组件库采用 <Tag color="magenta">Vue@{{ devDependencies['vue'] }}</Tag> +
       <Tag color="magenta">TypeScript@{{ devDependencies['typescript'] }}</Tag> +
       <Tag color="magenta">Vite@{{ devDependencies['vite'] }}</Tag> +
-      <Tag color="magenta">Less@{{ devDependencies['less'] }}</Tag> 实现！</p
-    >
-    <p class="u-tip mb10">
+      <Tag color="magenta">Less@{{ devDependencies['less'] }}</Tag> 实现！
+    </p>
+    <p class="demo-tip mb10">
       目前共包含
       <Tag color="magenta">{{ componentsTotal }}</Tag>
       个基础
@@ -156,26 +156,26 @@ function onOpenWindow() {
       <Tag color="magenta">{{ toolFunctions.length }}</Tag>
       个工具函数，并且持续探索更新中...
     </p>
-    <p class="u-tip mb10"> 顺便一提，它们全都可以 <Tag color="magenta">treeshaking</Tag> </p>
-    <p class="u-tip mb10"> 主题可调，你只需提供一个主题色，剩下的都交给我 </p>
-    <p class="u-tip mb10">
+    <p class="demo-tip mb10"> 顺便一提，它们全都可以 <Tag color="magenta">treeshaking</Tag> </p>
+    <p class="demo-tip mb10"> 主题可调，你只需提供一个主题色，剩下的都交给我 </p>
+    <p class="demo-tip mb10">
       <Tag color="magenta">Vue Amazing UI</Tag> 全量使用 <Tag color="magenta">TypeScript</Tag> 编写，和你的
       <Tag color="magenta">TypeScript</Tag> 项目无缝衔接
     </p>
-    <p class="u-tip mb10"> 全部组件均采用单文件组件 <Tag color="magenta">SFC</Tag>，可独立使用 </p>
-    <p class="u-tip"> 开箱即用，不墨迹 </p>
+    <p class="demo-tip mb10"> 全部组件均采用单文件组件 <Tag color="magenta">SFC</Tag>，可独立使用 </p>
+    <p class="demo-tip"> 开箱即用，不墨迹 </p>
     <h2 class="mt30 mb10">使用方式：</h2>
     <Collapse lang="bash" :fontSize="16" :items="installItems" v-model:activeKey="usageActiveKey" copyable />
-    <ul class="m-list">
-      <li class="u-tip mb10 mt10">全局完整注册所有组件（不推荐）</li>
-      <li class="u-tip mb10 mt10">全局部分注册组件</li>
-      <li class="u-tip mb10 mt10">局部注册组件</li>
-      <li class="u-tip mb10 mt10">自动按需引入（强烈推荐）</li>
-      <li class="u-tip mb10">无需任何安装引入，直接使用单文件组件 <Tag color="magenta">SFC</Tag></li>
+    <ul class="demo-list">
+      <li class="demo-tip mb10 mt10">全局完整注册所有组件（不推荐）</li>
+      <li class="demo-tip mb10 mt10">全局部分注册组件</li>
+      <li class="demo-tip mb10 mt10">局部注册组件</li>
+      <li class="demo-tip mb10 mt10">自动按需引入（强烈推荐）</li>
+      <li class="demo-tip mb10">无需任何安装引入，直接使用单文件组件 <Tag color="magenta">SFC</Tag> </li>
     </ul>
     <h2 class="mt30">常用工具函数：</h2>
-    <ul class="m-list">
-      <li class="u-tip mb10" :class="{ mt10: index === 0 }" v-for="(func, index) in toolFunctions" :key="index">
+    <ul class="demo-list">
+      <li class="demo-tip mb10" :class="{ mt10: index === 0 }" v-for="(func, index) in toolFunctions" :key="index">
         <Tag color="geekblue">{{ func.name }}</Tag>
         : {{ func.description }}
       </li>

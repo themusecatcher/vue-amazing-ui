@@ -105,18 +105,18 @@ function onNext() {
 <template>
   <div>
     <h1>Swiper 参考文档</h1>
-    <ul class="m-list">
+    <ul class="demo-list">
       <li>
-        <a class="u-file" href="https://swiperjs.com/" target="_blank">Swiper官方</a>
+        <a class="demo-file" href="https://swiperjs.com/" target="_blank">Swiper官方</a>
       </li>
       <li>
-        <a class="u-file" href="https://swiperjs.com/swiper-api" target="_blank">Swiper API</a>
+        <a class="demo-file" href="https://swiperjs.com/swiper-api" target="_blank">Swiper API</a>
       </li>
       <li>
-        <a class="u-file" href="https://swiperjs.com/vue" target="_blank">Swiper Vue</a>
+        <a class="demo-file" href="https://swiperjs.com/vue" target="_blank">Swiper Vue</a>
       </li>
       <li>
-        <a class="u-file" href="https://swiperjs.com/demos" target="_blank">Swiper Demos</a>
+        <a class="demo-file" href="https://swiperjs.com/demos" target="_blank">Swiper Demos</a>
       </li>
     </ul>
     <Space class="mt30" gap="small">

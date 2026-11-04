@@ -5,6 +5,7 @@
   margin: 0;
   padding: 0;
 }
+
 body {
   min-height: 100vh;
   // 页面底板配色（跟随组件库变量，均由 <html> 上的 mode 驱动）：
@@ -17,6 +18,7 @@ body {
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans',
     'Helvetica Neue', sans-serif;
 }
+
 h1 {
   // h1 标签渐变色文本
   display: inline-block;
@@ -26,59 +28,65 @@ h1 {
   white-space: nowrap;
   background-image: linear-gradient(to right, #09c8ce, #eb2f96);
 }
+
 .mt10 {
   margin-top: 10px;
 }
+
 .mt30 {
   margin-top: 30px;
 }
+
 .mt150 {
   margin-top: 150px;
 }
+
 .mb10 {
   margin-bottom: 10px;
 }
+
 .mb30 {
   margin-bottom: 30px;
 }
-/* 演示用例标签：6 个演示页共 60 处复用；路由为懒加载，页面 <style> 随 chunk 异步注入，
-   放在某个页面里会导致「先访问哪个页面才决定有没有样式」，故与其它演示排版约定一起收口在此 */
+
+.ml20 {
+  margin-left: 20px;
+}
+
+.ml60 {
+  margin-left: 60px;
+}
+
+.ml120 {
+  margin-left: 120px;
+}
+
+.mr20 {
+  margin-right: 20px;
+}
+
+.mr30 {
+  margin-right: 30px;
+}
+
 .demo-label {
   color: var(--va-text-color-3);
   font-size: 13px;
   line-height: 22px;
 }
-.ml20 {
-  margin-left: 20px;
-}
-.ml60 {
-  margin-left: 60px;
-}
-.ml120 {
-  margin-left: 120px;
-}
-.mr20 {
-  margin-right: 20px;
-}
-.mr30 {
-  margin-right: 30px;
-}
-.m-list {
+
+.demo-list {
   margin-top: 10px;
   margin-left: 16px;
   font-size: 20px;
 }
-.u-file {
+
+.demo-file {
   font-size: 18px;
   cursor: pointer;
 }
-.u-tip {
+
+.demo-tip {
   font-size: 18px;
   color: var(--va-text-color-2);
-}
-.u-intro {
-  font-size: 16px;
-  color: var(--va-text-color-2);
-  margin-top: 5px;
-  margin-bottom: 10px;
 }

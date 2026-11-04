@@ -63,9 +63,9 @@ const downloadQRCode = () => {
 <template>
   <div>
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
-    <ul class="m-list">
+    <ul class="demo-list">
       <li>
-        <a class="u-file" href="https://www.nayuki.io/page/qr-code-generator-library" target="_blank"
+        <a class="demo-file" href="https://www.nayuki.io/page/qr-code-generator-library" target="_blank"
           >QR Code generator library</a
         >
       </li>
