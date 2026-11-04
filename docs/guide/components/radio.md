@@ -1114,14 +1114,14 @@ const buttonRef = ref<InstanceType<typeof RadioButton> | null>(null)
 
 ### Radio Methods
 
-名称 | 说明 | 类型
-::-- | :-- | :--
-focus | 聚焦组件的原生 `input` | () => void
-blur | 使组件的原生 `input` 失焦 | () => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| focus | 聚焦组件的原生 `input` | () => void |
+| blur | 使组件的原生 `input` 失焦 | () => void |
 
 ### RadioButton Methods
 
-名称 | 说明 | 类型
-::-- | :-- | :--
-focus | 聚焦组件的原生 `input` | () => void
-blur | 使组件的原生 `input` 失焦 | () => void
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| focus | 聚焦组件的原生 `input` | () => void |
+| blur | 使组件的原生 `input` 失焦 | () => void |
