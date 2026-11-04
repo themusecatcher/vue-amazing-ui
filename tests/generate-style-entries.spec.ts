@@ -22,6 +22,8 @@ const compMap = componentsMap as Record<string, string>
 const sourceMap = styleSources as Record<string, string | undefined>
 const depsMap = componentDependencies as Record<string, string[] | undefined>
 const componentNames = Object.keys(compMap)
+/** stylelessComponents 的键是字面量联合，这里按「名字集合」使用 */
+const isStyleless = (name: string): boolean => (stylelessComponents as readonly string[]).includes(name)
 
 /** 组件自身（或样式来源组件）的 CSS 相对产物根的路径 */
 function cssOf(name: string): string {
@@ -32,7 +34,7 @@ function cssOf(name: string): string {
 function expectedCssFiles(): string[] {
   const files = new Set<string>(['style/global.css'])
   componentNames.forEach((name) => {
-    if (stylelessComponents.includes(name)) {
+    if (isStyleless(name)) {
       return
     }
     files.add(cssOf(sourceMap[name] ?? name))
@@ -118,9 +120,7 @@ describe('generateStyleEntries - 入口内容与顺序', () => {
     // 每个「唯一产物目录」只生成 2 个文件（index.js + index.d.ts）
     // 唯一产物目录 = 各组件「样式来源组件」的目录去重（DescriptionsItem 不产出自己的入口）
     const uniqueDirs = new Set(
-      componentNames
-        .filter((name) => !stylelessComponents.includes(name))
-        .map((name) => compMap[sourceMap[name] ?? name])
+      componentNames.filter((name) => !isStyleless(name)).map((name) => compMap[sourceMap[name] ?? name])
     )
     expect(generated.filter((file) => file.includes('/es/')).length).toBe(uniqueDirs.size * 2)
   })

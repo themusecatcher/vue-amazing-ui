@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest'
 import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import TimePicker from 'components/time-picker/TimePicker.vue'
+import type { TimePickerRangeDisabledTime } from 'components/time-picker'
 import { flushTransition } from './helpers'
 
 /**
@@ -389,7 +390,8 @@ describe('范围形态', () => {
   })
 
   it('聚焦另一段即切换激活段，禁用时间随之按段透传', async () => {
-    const disabledTime = vi.fn(() => ({}))
+    // 显式声明签名，mock.calls 才能按段标识取参（否则参数元组为空）
+    const disabledTime = vi.fn<TimePickerRangeDisabledTime>(() => ({}))
     wrapper = mount(TimePicker, {
       attachTo: document.body,
       global: { stubs: { transition: false } },

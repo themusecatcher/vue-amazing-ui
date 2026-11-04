@@ -531,15 +531,15 @@ const easingKey = computed(() => `${easingCategory.value}-${easingType.value}`)
 | :-- | :-- |
 | NumberAnimationEasingPreset | 'linear' &#124; 'easeInSine' &#124; 'easeOutSine' &#124; 'easeInOutSine' &#124; 'easeInQuad' &#124; 'easeOutQuad' &#124; 'easeInOutQuad' &#124; 'easeInCubic' &#124; 'easeOutCubic' &#124; 'easeInOutCubic' &#124; 'easeInQuart' &#124; 'easeOutQuart' &#124; 'easeInOutQuart' &#124; 'easeInQuint' &#124; 'easeOutQuint' &#124; 'easeInOutQuint' &#124; 'easeInExpo' &#124; 'easeOutExpo' &#124; 'easeInOutExpo' &#124; 'easeInCirc' &#124; 'easeOutCirc' &#124; 'easeInOutCirc' &#124; 'easeInBack' &#124; 'easeOutBack' &#124; 'easeInOutBack' |
 
-## Methods
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| play | 播放动画（动画进行中调用会被忽略，播放结束后可重复调用重新播放） | () => void |
-
 ## Events
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 | started | 动画开始播放 | () => void |
 | finished | 动画播放完成 | () => void |
+
+## Methods
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| play | 播放动画（动画进行中调用会被忽略，播放结束后可重复调用重新播放） | () => void |

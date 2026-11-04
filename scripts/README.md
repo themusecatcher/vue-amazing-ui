@@ -1,6 +1,6 @@
 # scripts/ 脚本索引
 
-本目录存放**开发期工具**（发布 / 部署 / 产物校验 / 文档生成），不进 npm 包产物、不进 `components/` 运行时依赖。校验与生成脚本为 `.ts`，由 `tsx` 执行（与 ant-design-vue / naive-ui 一致：`engines` 下限 Node 22.12 仍无原生类型擦除能力）；发布链为 `.sh`，由 `sh` 执行。`.ts` 脚本的类型由 `tsconfig.scripts.json` 在 `pnpm type-check` 内检查。
+本目录存放**开发期工具**（发布 / 部署 / 产物校验 / 文档生成），不进 npm 包产物、不进 `components/` 运行时依赖。校验与生成脚本为 `.ts`，由 `tsx` 执行（与 ant-design-vue / naive-ui 一致：`engines` 下限 Node 22.12 仍无原生类型擦除能力）；发布链为 `.sh`，由 `sh` 执行。`.ts` 脚本的类型由 `tsconfig.node.json` 在 `pnpm type-check` 内检查。
 
 ## 三类文件
 
@@ -45,7 +45,7 @@
 | :-- | :-- | :-- |
 | `pnpm verify:theme` | `verify-theme.ts` | 主题架构守护（`--strict` 运行，告警即失败）：组件不得走旧主题通道、`var(--va-*)` 引用登记与写入位置、公开令牌只消费不声明且只能由所属组件实例覆盖、组件级主色清单自检（重复键 / 目录存在）、公开变量闭合（零消费即失败）、演示站与文档内的 `--va-cp-*` 必须带 fallback、颜色字面量三档统计（设计固定 / 自有色彩资产 / 未登记） |
 | `pnpm verify:inject-keys` | `verify-inject-keys.ts` | provide / inject 注入契约守护（只扫源码）：键必须是 `Symbol` + `InjectionKey<T>`、变量名 `camelCase` + `Key`、描述串 = `va` + 变量名去 `Key`、键不得定义在 `.vue`、`provide`/`inject` 不得用字符串字面量、组件内不得裸 `inject`、公共入口不得导出 `*Key` |
-| `pnpm verify:docs` | `verify-docs.ts` | 文档 Props「默认值」列与源码 `withDefaults` 的一致性守护（只扫源码 + `docs/`）：默认值列须写 prop 默认值（未传时的有效取值写进说明列），无法静态求值的行在脚本 `WHITELIST` 登记并写明理由 |
+| `pnpm verify:docs` | `verify-docs.ts` | 组件文档两项断言（只扫源码 + `docs/`），同进程同退出码：① Props「默认值」列 ↔ 源码 `withDefaults`（默认值列须写 prop 默认值，未传时的有效取值写进说明列；无法静态求值的行在 `WHITELIST` 登记并写明理由）；② 尾部章节顺序必须是 `APIs → Slots → Events → Methods → CSS 变量 → 在 setup 外使用` 的**子序列**（章节可缺省、相对顺序不可变），并拦截尾部自造标题（`## API` / `## 属性` / `## 事件` / `## 实例方法` 等），口径见 `development/demo-doc-guide.md` 的「尾部章节顺序」 |
 
 ### 产物校验（`verify:artifacts` / `guard`，需先 `pnpm build`）
 
@@ -104,6 +104,7 @@
 | 样式依赖表跨表引用完整性（`styleSources` / `componentDependencies` / `stylelessComponents` 的键与值都在 `componentsMap` 内） | `components/utils/style-deps.ts`（编译期）+ `scripts/verify-style-deps.ts`（运行期） | 类型注解 `Partial<Record<ComponentName, ComponentName>>` 已在 `pnpm type-check` 拦住越界键值；`verify:deps` 保留同口径运行期断言，覆盖脚本侧 `tsx` 只擦除类型的情形（需产物，故不在 `check` 链）。数据的漏登记另有构建期「缺少样式文件」兜底 |
 | v-model 声明契约 | `scripts/check-model-props.ts` | `guard` 第 ⑦ 项 + `tests/model-props-contract.spec.ts` |
 | 文档 Props 默认值列 ↔ 源码 `withDefaults` | `scripts/verify-docs.ts` | — |
+| 组件文档尾部章节顺序 | `scripts/verify-docs.ts`（第 ② 项断言） | 口径文本在 `development/demo-doc-guide.md`「尾部章节顺序」，脚本只做子序列断言；与默认值同扫 `docs/`，故不单开脚本 |
 | 生成文档 ↔ 注册表 | `tests/component-vars.spec.ts`（逐字节） | 生成脚本只负责渲染 |
 
 ## 命令链与钩子
@@ -112,7 +113,7 @@
 
 `publish.sh` 跑的是 `check` → `build` → `verify:artifacts` → `guard`，与 CI 的 `check` / `verify` 同口径（守卫在推送前多跑一次，见上文说明）。
 
-git hook 只覆盖静态检查，不碰本目录脚本：`pre-commit` → `lint-staged`（`*.ts` / `*.js` 均 prettier + eslint）、`commit-msg` → `commitlint`、`pre-push` → `type-check`（含 `type-check:scripts`）。
+git hook 只覆盖静态检查，不碰本目录脚本：`pre-commit` → `lint-staged`（`*.ts` / `*.js` 均 prettier + eslint）、`commit-msg` → `commitlint`、`pre-push` → `type-check`（源码与 `scripts/` 走 `vue-tsc --build`，`tests/` 走 `tsconfig.test.json`）。
 
 ## 新增脚本的约定
 

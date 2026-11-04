@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach, beforeEach } from 'vitest'
 import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import AutoComplete from 'components/auto-complete/AutoComplete.vue'
+import type { AutoCompleteProps } from 'components/auto-complete'
 import Tooltip from 'components/tooltip'
 import { flushTransition } from './helpers'
 
@@ -96,7 +97,7 @@ afterEach(() => {
 })
 
 /** 挂载并展开面板：`defaultOpen` 即非受控初始展开（面板可见性由「有选项」决定，故数据源不可为空） */
-async function mountAndOpen(props: Record<string, unknown> = {}): Promise<void> {
+async function mountAndOpen(props: Partial<AutoCompleteProps> = {}): Promise<void> {
   wrapper = mount(AutoComplete, {
     attachTo: document.body,
     global: { stubs: { transition: false } },

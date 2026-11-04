@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import { createCommentVNode, h, nextTick, ref } from 'vue'
 import type { VNode } from 'vue'
 import Space from 'components/space/Space.vue'
+import type { SpaceProps } from 'components/space'
 
 /**
  * Space 的分隔符插槽与内容排布
@@ -14,7 +15,7 @@ import Space from 'components/space/Space.vue'
 const item = (label: string) => h('span', { class: 'item' }, label)
 const splitNode = () => h('span', { class: 'split' }, '|')
 
-const mountSpace = (children: () => VNode[], split?: () => VNode[], props: Record<string, unknown> = {}) =>
+const mountSpace = (children: () => VNode[], split?: () => VNode[], props: Partial<SpaceProps> = {}) =>
   mount(Space, { props, slots: { default: children, ...(split ? { split } : {}) } })
 
 describe('Space 分隔符（split 插槽）', () => {
@@ -32,7 +33,7 @@ describe('Space 分隔符（split 插槽）', () => {
     )
     expect(wrapper.findAll('.item').length).toBe(3)
     expect(wrapper.findAll('.split').length).toBe(2)
-    const sequence = Array.from(wrapper.element.children).map((el) =>
+    const sequence = Array.from((wrapper.element as HTMLElement).children).map((el) =>
       el.classList.contains('split') ? 'split' : el.textContent
     )
     expect(sequence).toEqual(['A', 'split', 'B', 'split', 'C'])

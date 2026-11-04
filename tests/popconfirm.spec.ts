@@ -2,6 +2,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Popconfirm from 'components/popconfirm'
+import type { PopconfirmProps } from 'components/popconfirm'
 import Button from 'components/button'
 import Tooltip from 'components/tooltip'
 import { flushTransition } from './helpers'
@@ -62,7 +63,7 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-function mountPopconfirm(props: Record<string, unknown> = {}): void {
+function mountPopconfirm(props: Partial<PopconfirmProps> = {}): void {
   wrapper = mount(Popconfirm, {
     ...mountOptions,
     props,

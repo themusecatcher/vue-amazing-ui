@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import DatePicker from 'components/date-picker/DatePicker.vue'
+import type { DatePickerProps } from 'components/date-picker'
 import { getClosingViewTimestamp, getPanelModeOf, getRangeCellClassNames } from 'components/picker/date-utils'
 import { flushTransition } from './helpers'
 
@@ -67,7 +68,7 @@ function singleInput(): HTMLInputElement | null {
   return document.querySelector<HTMLInputElement>('.picker-trigger-input > input.picker-trigger-input-inner')
 }
 
-async function mountPicker(props: Record<string, unknown> = {}) {
+async function mountPicker(props: Partial<DatePickerProps> = {}) {
   wrapper = mount(DatePicker, {
     attachTo: document.body,
     global: { stubs: { transition: false } },

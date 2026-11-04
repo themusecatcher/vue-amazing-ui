@@ -912,6 +912,13 @@ const destroyOpen = ref(false)
 | tooltip | 自定义文字提示内容 | v-slot:tooltip |
 | default | 自定义展示的内容 | v-slot:default |
 
+## Events
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| openChange | 显示隐藏的回调 | (open: boolean) => void |
+| animationend | 显示隐藏动画结束时的回调 | (open: boolean) => void |
+
 ## Methods
 
 | 名称 | 说明 | 类型 |
@@ -920,10 +927,3 @@ const destroyOpen = ref(false)
 | hide | 隐藏文字提示 | () => void |
 | focusTrigger | 让焦点回到触发元素（关闭浮层后归还焦点） | () => void |
 | tooltipCardRef | 气泡卡片根元素（供判定焦点是否仍在面板内） | HTMLElement &#124; null |
-
-## Events
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| openChange | 显示隐藏的回调 | (open: boolean) => void |
-| animationend | 显示隐藏动画结束时的回调 | (open: boolean) => void |

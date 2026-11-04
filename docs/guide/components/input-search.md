@@ -691,7 +691,7 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 | placeholder | 搜索框输入的占位符 | string | undefined |
 | maxlength | 文本最大长度 | number | undefined |
 | showCount | 是否展示字数 | boolean | false |
-| value <Tag color="cyan">v-model</Tag> | 搜索框内容 | string | undefined |
+| value <Tag color="cyan">v-model</Tag> | 搜索框内容；传入即受控，不传时由组件内部维护 | string | undefined |
 
 ## Slots
 
@@ -711,4 +711,12 @@ function onSearch(value: string, e: MouseEvent | KeyboardEvent) {
 | search | 点击搜索或按下回车键时的回调 | (value: string, e: MouseEvent &#124; KeyboardEvent) => void |
 | compositionstart | 使用文本合成系统即输入法编辑器开始新的输入时的回调 | (e: CompositionEvent) => void |
 | compositionend | 当文本段落的组成完成或取消时触发的回调 | (e: CompositionEvent) => void |
+| focus | 搜索框获取焦点时的回调，`relatedTarget` 为失去焦点的元素 | (e: FocusEvent) => void |
 | blur | 搜索框失焦的回调，`relatedTarget` 为获得焦点的元素 | (e: FocusEvent) => void |
+
+## Methods
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| focus | 获取搜索框焦点 | () => void |
+| blur | 使搜索框失去焦点 | () => void |

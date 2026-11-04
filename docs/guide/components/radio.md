@@ -1086,22 +1086,6 @@ const buttonRef = ref<InstanceType<typeof RadioButton> | null>(null)
 | :-- | :-- | :-- |
 | default | 按钮文本 | v-slot:default |
 
-## Methods
-
-### Radio Methods
-
-名称 | 说明 | 类型
-::-- | :-- | :--
-focus | 聚焦组件的原生 `input` | () => void
-blur | 使组件的原生 `input` 失焦 | () => void
-
-### RadioButton Methods
-
-名称 | 说明 | 类型
-::-- | :-- | :--
-focus | 聚焦组件的原生 `input` | () => void
-blur | 使组件的原生 `input` 失焦 | () => void
-
 ## Events
 
 ### Radio Events
@@ -1125,3 +1109,19 @@ blur | 使组件的原生 `input` 失焦 | () => void
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 | change | 选项变化时的回调函数；脱离组单独使用时触发，置于 `RadioGroup` 内时不触发（组内选中变更由 `RadioGroup` 的 `change` 统一出口） | (checked: boolean, event: RadioChangeEvent) => void |
+
+## Methods
+
+### Radio Methods
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| focus | 聚焦组件的原生 `input` | () => void |
+| blur | 使组件的原生 `input` 失焦 | () => void |
+
+### RadioButton Methods
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| focus | 聚焦组件的原生 `input` | () => void |
+| blur | 使组件的原生 `input` 失焦 | () => void |

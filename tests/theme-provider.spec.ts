@@ -247,8 +247,8 @@ describe('嵌套 ConfigProvider 的作用域隔离', () => {
 
     const wraps = wrapper.findAll('.config-provider-wrap')
     expect(wraps).toHaveLength(2)
-    expect(wraps[0].element.style.getPropertyValue('--va-primary-color')).toBe(RED)
-    expect(wraps[1].element.style.getPropertyValue('--va-primary-color')).toBe(GREEN)
+    expect((wraps[0].element as HTMLElement).style.getPropertyValue('--va-primary-color')).toBe(RED)
+    expect((wraps[1].element as HTMLElement).style.getPropertyValue('--va-primary-color')).toBe(GREEN)
     // 最外层是 abstract=false，故 <html> 不被写入
     expect(document.documentElement.style.getPropertyValue('--va-primary-color')).toBe('')
   })

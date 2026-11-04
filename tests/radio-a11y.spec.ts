@@ -4,6 +4,11 @@ import { mount } from '@vue/test-utils'
 import Radio from 'components/radio/Radio.vue'
 import RadioButton from 'components/radio/radio-button/RadioButton.vue'
 import RadioGroup from 'components/radio/radio-group/RadioGroup.vue'
+import type { RadioChangeEvent } from 'components/radio/context'
+import type { RadioGroupSlots } from 'components/radio'
+
+/** options 模式下默认插槽的作用域参数（取自组件声明的插槽类型） */
+type OptionSlotProps = Parameters<NonNullable<RadioGroupSlots['default']>>[0]
 
 /**
  * 单选组件「原生 input 承载」「change 事件对象」与「组级配置下发」的契约回归
@@ -58,8 +63,7 @@ describe('Radio change 事件对象', () => {
   it('单项点击后，首参为选中态、第二参为事件对象', async () => {
     wrapper = mount(Radio, { props: { checked: false }, slots: { default: 'Radio' } })
     await wrapper.find('label').trigger('click')
-    const emitted = wrapper.emitted('change')?.[0] as [boolean, Record<string, never>] | undefined
-    const [value, event] = emitted ?? []
+    const [value, event] = (wrapper.emitted('change')?.[0] ?? []) as [boolean, RadioChangeEvent]
     expect(value).toBe(true)
     expect(event.target.checked).toBe(true)
     expect(event.nativeEvent).toBeInstanceOf(Event)
@@ -102,8 +106,7 @@ describe('RadioGroup 下发组级配置', () => {
     wrapper = mount(RadioGroup, {
       props: { options: OPTIONS },
       slots: {
-        default: ({ label, index }: { label?: string | number; index?: number }) =>
-          h('span', { class: 'custom-option-label' }, `${index}-${label}`)
+        default: ({ label, index }: OptionSlotProps) => h('span', { class: 'custom-option-label' }, `${index}-${label}`)
       }
     })
     const labels = wrapper.findAll('.custom-option-label').map((node) => node.text())

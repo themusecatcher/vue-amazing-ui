@@ -406,6 +406,13 @@ _可通过设置 `size` 属性，并用 `--va-scrollbar-*` 令牌（滑块颜色
 | :-- | :-- | :-- |
 | default | 自定义内容 | v-slot:default |
 
+## Events
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| scroll | 滚动的回调 | (e: Event, direction: 'left' \| 'right' \| 'top' \| 'bottom') => void |
+| scrollend | 滚动结束的回调 | (e: Event, direction: 'left' \| 'right' \| 'top' \| 'bottom') => void |
+
 ## Methods
 
 | 名称 | 说明 | 类型 |
@@ -417,15 +424,10 @@ _可通过设置 `size` 属性，并用 `--va-scrollbar-*` 令牌（滑块颜色
 
 ### ScrollBehavior Type
 
+<br/>
+
 _`smooth` 平滑滚动并产生过渡效果；`instant` 滚动会直接跳转到目标位置，没有过渡效果；`auto` 或缺省值表示浏览器会自动选择滚动时的过渡效果_
 
 | 名称 | 值 |
 | :-- | :-- |
 | ScrollBehavior | 'smooth' &#124; 'instant' &#124; 'auto' |
-
-## Events
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| scroll | 滚动的回调 | (e: Event, direction: 'left' \| 'right' \| 'top' \| 'bottom') => void |
-| scrollend | 滚动结束的回调 | (e: Event, direction: 'left' \| 'right' \| 'top' \| 'bottom') => void |

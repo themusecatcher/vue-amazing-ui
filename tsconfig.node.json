@@ -1,5 +1,7 @@
 {
   "extends": "@tsconfig/node22/tsconfig.json",
+  // 构建期 Node 侧唯一类型工程：vite/vitest/eslint 配置 + build/ 生成器 + scripts/ 开发期工具。
+  // 三者同为 Node 环境、均无产物输出（noEmit），故共用一个工程，不按目录再拆分。
   "include": [
     "vite.config.*",
     "vitest.config.*",
@@ -11,7 +13,8 @@
     "components/utils/style-deps.ts",
     "components/theme/**/*.ts",
     "components/utils/log.ts",
-    "build/**/*.ts"
+    "build/**/*.ts",
+    "scripts/**/*.ts"
   ],
   "compilerOptions": {
     "composite": true,

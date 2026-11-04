@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import DatePicker from 'components/date-picker/DatePicker.vue'
+import type { DatePickerProps } from 'components/date-picker'
 import { flushTransition } from './helpers'
 
 /**
@@ -62,7 +63,7 @@ function findCell(dateText: string): HTMLElement | undefined {
   )
 }
 
-async function mountPicker(props: Record<string, unknown> = {}) {
+async function mountPicker(props: Partial<DatePickerProps> = {}) {
   wrapper = mount(DatePicker, {
     attachTo: document.body,
     global: { stubs: { transition: false } },

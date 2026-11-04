@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Table from 'components/table/Table.vue'
+import type { TableProps } from 'components/table'
 
 /**
  * 表格分页的有效性与初值
@@ -17,7 +18,7 @@ function makeData(total: number): Record<string, any>[] {
   return Array.from({ length: total }, (_, index) => ({ key: `${index + 1}`, name: `row-${index + 1}` }))
 }
 
-function mountTable(props: Record<string, unknown> = {}) {
+function mountTable(props: Partial<TableProps> = {}) {
   return mount(Table, { props: { columns, ...props } })
 }
 

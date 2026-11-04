@@ -25,7 +25,12 @@ function createFixture({
   esArtifact,
   libArtifact,
   extraFiles
-}: Record<string, string | undefined> & { extraFiles?: Record<string, string> }) {
+}: {
+  source: string
+  esArtifact?: string
+  libArtifact?: string
+  extraFiles?: Record<string, string>
+}) {
   const rootDir = mkdtempSync(join(tmpdir(), 'va-prop-types-'))
   tempDirs.push(rootDir)
   const sfcPath = join(rootDir, 'components', 'demo', 'Demo.vue')

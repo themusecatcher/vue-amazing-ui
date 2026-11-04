@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick, h } from 'vue'
 import Carousel from 'components/carousel/Carousel.vue'
+import type { CarouselProps } from 'components/carousel'
 
 interface CarouselInst {
   to: (n: number, dontAnimate?: boolean) => void
@@ -57,7 +58,7 @@ function restoreLayoutEnv(): void {
 
 const DEFAULT_IMAGES = [{ src: 'a.png' }, { src: 'b.png' }, { src: 'c.png' }]
 
-async function mountCarousel(props: Record<string, unknown> = {}) {
+async function mountCarousel(props: Partial<CarouselProps> = {}) {
   const wrapper = mount(Carousel, {
     attachTo: document.body,
     props: {

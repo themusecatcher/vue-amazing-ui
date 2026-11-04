@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { h } from 'vue'
 import { mount } from '@vue/test-utils'
 import Popover from 'components/popover'
-import Select, { type DropdownRenderParams } from 'components/select'
+import Select, { type SelectDropdownRenderParams } from 'components/select'
 import Tooltip from 'components/tooltip'
 import { flushTransition } from './helpers'
 
@@ -50,7 +50,7 @@ function nestedContainer(): HTMLElement | undefined {
 }
 
 /** 挂载一个「默认展开 + 自定义下拉内容」的 Select */
-function mountSelect(dropdownRender: (params: DropdownRenderParams) => ReturnType<typeof h>): void {
+function mountSelect(dropdownRender: (params: SelectDropdownRenderParams) => ReturnType<typeof h>): void {
   wrapper = mount(Select, {
     attachTo: document.body,
     global: { stubs: { transition: false } },

@@ -152,10 +152,12 @@ describe('TextScroll：KeepAlive 缓存时的滚动收尾', () => {
     await advance(100)
     expect(visibleIndex(wrapper)).toBe(1)
 
-    wrapper.vm.show = false
+    // Host 用模板字符串定义 setup 返回值，vm 上无类型声明，按实际暴露的字段断言
+    const hostVm = wrapper.vm as unknown as { show: boolean }
+    hostVm.show = false
     await nextTick()
     await advance(500)
-    wrapper.vm.show = true
+    hostVm.show = true
     await nextTick()
     expect(visibleIndex(wrapper)).toBe(1)
 
