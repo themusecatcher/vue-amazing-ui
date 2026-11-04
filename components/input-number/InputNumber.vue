@@ -145,7 +145,7 @@ function updateValue(value: string): void {
   if (!Number.isNaN(parseFloat(value))) {
     const numberValue = getNumberValue(value)
     // 判据取父值而非当前显示值：受控时天然去重；非受控时 props.value 恒为 undefined，
-    // 失焦（change）会对同一值再上报一次。这与 Input 的 change 口径一致（每键即报，属既有设计），
+    // 因此输入与失焦会各上报一次同一值（与 Input 的 change 口径一致，属既有设计）
     if (numberValue !== props.value) {
       emitValue(numberValue)
       // 非受控时没有父回写，必须自己把钳制后的值落到显示上，否则「显示 999 / 上报 100」分叉
@@ -190,8 +190,8 @@ function onInput(e: Event): void {
 /** 中文标点下打小数点会得到 `。`，静默纠正为 `.` */
 function updateValueWithChineseDot(raw: string): void {
   const normalized = props.parser ? String(props.parser(raw)) : raw.replace(/。/g, '.')
-  // 非受控时 updateValue 只上报、由本函数负责落显示，否则会出现「上报了 1.5，输入框里还是 1。5」；
-  // 受控时交给父回写，避免中间帧闪烁
+  // 非受控时先落纠正后的文本：updateValue 解析失败会按「当前显示值」回退，基准必须是纠正后的文本，
+  // 否则会退回 `1。5`；解析成功时 updateValue 再按精度重写一次。受控时交给父回写，避免中间帧闪烁
   if (!isControlled.value) {
     numValue.value = normalized
   }
