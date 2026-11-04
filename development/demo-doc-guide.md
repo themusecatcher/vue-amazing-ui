@@ -230,7 +230,7 @@ _七种类型_
 | 5 | `## CSS 变量` | 未暴露主题变量时省略 | 样式定制属补充参考，位于用法定型之后 |
 | 6 | `## 在 setup 外使用` | 仅离散 API 组件（dialog / modal / loading-bar / message / notification） | 同属命令式调用，紧邻 Methods |
 
-- **存量**：2026-11-04 一次性收敛 20 个组件文档——9 个原 `A → S → M → E`（checkbox / countdown / date-picker / dialog / modal / radio / scrollbar / time-picker / tooltip）、6 个原 `A → M → E`（loading-bar / message / notification / number-animation / text-scroll / video）、5 个把 Events 提前的（auto-complete / cascader / drawer / dropdown / select）；现全库 73 个文档 100% 合规，收敛前后逐行比对确认仅行移动、无内容改动。
+- **存量**：2026-11-04 一次性收敛 20 个组件文档——9 个原 `A → S → M → E`（checkbox / countdown / date-picker / dialog / modal / radio / scrollbar / time-picker / tooltip）、6 个原 `A → M → E`（loading-bar / message / notification / number-animation / text-scroll / video）、5 个把 Events 提前的（auto-complete / cascader / drawer / dropdown / select）；其中 dialog / modal / loading-bar / message / notification 末尾还带「在 setup 外使用」，位置本就在 Methods 之后，无需变动。现全库 73 个文档 100% 合规，收敛前后逐行比对确认仅行移动（scrollbar 另补一处 `<br/>` 间距），无正文改动。
 - 组件 Props 表与类型表（`### Xxx Props` / `### Xxx Type`）归属各自章节，不参与本节排序；`###` 的摆放仍按 §表格规范速查（类型表紧跟唯一引用它的表）。
 - 章节标题文字固定为上述 6 种，❌ 不自造 `## 实例方法` / `## 属性` / `## 事件` 等变体，否则脚本与锚点失效。
 - 校验：`pnpm verify:docs`（`scripts/verify-docs.ts` 的第 ② 项断言）解析每个文档的 `## ` 尾部章节序列，断言等于上述标准的**子序列**；新增组件文档漏排、乱排都会失败，通篇只写变体标题（一节规范标题都没有，如从零新写时用了 `## Props` / `## 事件`）同样失败。顺序断言与默认值列断言同扫 `docs/`，故不单开脚本与命令。
