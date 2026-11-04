@@ -16,19 +16,19 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-11-05">3.9.0</VersionDateTag>
 
-- 移除 [标签页 Tabs](/guide/components/tabs.html) 的 `items` 属性与 `TabsItem` 类型：页签改由 `TabPane` 子组件描述（`key` 写在子组件上），原 `tab` / `content` 插槽由 `TabPane` 的 `tab` 插槽与默认插槽替代
-- 移除 [标签页 Tabs](/guide/components/tabs.html) 的 `centered` 属性：改用 `justifyContent: 'center'`，`card` 类型下同样生效
-- 新增 [标签页 Tabs](/guide/components/tabs.html) 的 `TabPane` 子组件：页签标签与面板内容逐页签配置，富内容不再需要在父级插槽里按 `key` 分支
-- 新增 [标签页 Tabs](/guide/components/tabs.html) 的 `addable`、`destroyInactiveTabPane` 属性，以及 `tabClick` / `tabScroll` / `add` / `close` 事件
-- 新增 [标签页 Tabs](/guide/components/tabs.html) 的 `tabBar` / `addIcon` 插槽与 `TabPane` 的 `closable`：自定义页签头与页签增删改由插槽和事件驱动
-- 新增 [标签页 Tabs](/guide/components/tabs.html) 的 `justifyContent`、`centerActiveTab`、`tabClass`、`contentClass`、`beforeLeave`、对象形态 `addable`，`TabPane` 的 `displayDirective`（`if` / `show` / `show:lazy`）
-- 优化 [标签页 Tabs](/guide/components/tabs.html) 的可访问性：补 `tablist` / `tab` / `tabpanel` 语义与方向键、`Home`、`End` 键盘导航
-- 修复 [标签页 Tabs](/guide/components/tabs.html) 溢出收纳下拉面板的弹出位置与菜单间距，新增页签按钮补独立点击区并对齐图标
-- 修复 [标签页 Tabs](/guide/components/tabs.html) 切换 `justifyContent` / `centered` 后指示条未重新贴合激活页签的问题
+- 移除 [标签页 Tabs](/guide/components/tabs.html) 的 `items` 属性与 `TabsItem` 类型，页签改由新增的 `TabPane` 子组件描述：`key` 写在子组件上，`tab` / `content` 插槽改为 `TabPane` 的 `tab` 插槽与默认插槽，`items` 里的 `icon` 由 `tab` 插槽承接
+- 移除 `centered` 属性，改用 `justifyContent: 'center'`，`line` 与 `card` 类型下均可居中
+- `animated` 默认值由 `true` 改为 `false`，需要页签切换动画时须显式开启
+- 新增 `addable`、`TabPane` 的 `closable` 与 `tabBar` / `addIcon` 插槽，以及 `add` / `close` / `tabClick` 事件：页签可增删，页签头可完全自定义
+- 新增 `justifyContent`、`beforeLeave`、`destroyInactiveTabPane`、`tabClass` / `contentClass` 与 `TabPane` 的 `displayDirective`（`if` / `show` / `show:lazy`）：页签分布、切换前拦截与面板卸载时机可配置
+- 新增溢出页签收纳：导航区放不下的页签收进「更多」下拉，`centerActiveTab` 开启时激活项滚动到导航区中间，滚动方向经 `tabScroll` 上报
+- 优化可访问性：补 `tablist` / `tab` / `tabpanel` 语义与方向键、`Home` / `End` 键盘导航
+- 更新使用者文档：标签页文档改为 `TabPane` 用法，补页签增删、溢出收纳与键盘导航示例，配置提供者的标签页示例同步迁移
+- 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-11-04">3.8.2</VersionDateTag>
 
-- 调整输入类组件：[输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [文本域 Textarea](/guide/components/textarea.html) 的 `v-model` 置为 `undefined` 时保留最后一次内容，不再清空输入框（需要清空时显式传空字符串）；`Textarea` 的 `value` 默认值由 `''` 改为 `undefined`
+- 优化输入类组件：[输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [文本域 Textarea](/guide/components/textarea.html) 的 `v-model` 置为 `undefined` 时保留最后一次内容，不再清空输入框（需要清空时显式传空字符串）；`Textarea` 的 `value` 默认值由 `''` 改为 `undefined`
 - 新增非受控初值：[输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [文本域 Textarea](/guide/components/textarea.html) / [数字输入框 InputNumber](/guide/components/input-number.html) / [选择器 Select](/guide/components/select.html) / [日期选择器 DatePicker](/guide/components/date-picker.html) / [时间选择器 TimePicker](/guide/components/time-picker.html) / [分段控制器 Segmented](/guide/components/segmented.html) / [复选框 CheckboxGroup](/guide/components/checkbox.html) / [单选框 RadioGroup](/guide/components/radio.html) / [评分 Rate](/guide/components/rate.html) 共 `11` 个组件的 `defaultValue`；[上传 Upload](/guide/components/upload.html) 为 `defaultFileList`
 - 修复 [输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [文本域 Textarea](/guide/components/textarea.html) 的 `showCount` 在输入法合成期字数跳动
 - 修复 [数字输入框 InputNumber](/guide/components/input-number.html) 的输入法合成：输入法选词时上下键不再触发数值步进，中文句号 `。` 自动按小数点处理
