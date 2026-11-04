@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach, beforeEach } from 'vitest'
 import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Slider from 'components/slider/Slider.vue'
+import type { SliderProps } from 'components/slider'
 
 /**
  * Slider 手柄气泡接入定位内核后的契约回归
@@ -117,7 +118,7 @@ afterEach(() => {
   }
 })
 
-async function mountSlider(props: Record<string, unknown> = {}, slots: Record<string, string> = {}): Promise<void> {
+async function mountSlider(props: Partial<SliderProps> = {}, slots: Record<string, string> = {}): Promise<void> {
   wrapper = mount(Slider, { attachTo: document.body, props: { value: 0, ...props }, slots })
   await flush()
 }

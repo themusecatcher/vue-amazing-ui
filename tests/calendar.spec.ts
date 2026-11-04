@@ -3,6 +3,7 @@ import { defineComponent, h, nextTick, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import { format, getMonth, getYear } from 'date-fns'
 import Calendar from 'components/calendar/Calendar.vue'
+import type { CalendarProps } from 'components/calendar'
 import type { DayOfWeek, HeaderFullSlotProps } from 'components/calendar/Calendar.vue'
 import Select from 'components/select'
 import { startOfDayTimestamp } from 'components/picker/date-utils'
@@ -53,14 +54,14 @@ function calendarEmitted(event: string) {
   return wrapper!.findComponent(Calendar).emitted(event)
 }
 
-function mountControlled(props: Record<string, unknown> = {}) {
+function mountControlled(props: Partial<CalendarProps> = {}) {
   const value = ref<number | string | undefined>(props.value as number | string | undefined)
   const Host = defineComponent({
     setup: () => () =>
       h(Calendar, {
         ...props,
         value: value.value,
-        'onUpdate:value': (next: string | number) => {
+        'onUpdate:value': (next: string | number | undefined) => {
           value.value = next
         }
       })

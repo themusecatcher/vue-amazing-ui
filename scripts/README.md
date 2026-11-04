@@ -1,6 +1,6 @@
 # scripts/ 脚本索引
 
-本目录存放**开发期工具**（发布 / 部署 / 产物校验 / 文档生成），不进 npm 包产物、不进 `components/` 运行时依赖。校验与生成脚本为 `.ts`，由 `tsx` 执行（与 ant-design-vue / naive-ui 一致：`engines` 下限 Node 22.12 仍无原生类型擦除能力）；发布链为 `.sh`，由 `sh` 执行。`.ts` 脚本的类型由 `tsconfig.scripts.json` 在 `pnpm type-check` 内检查。
+本目录存放**开发期工具**（发布 / 部署 / 产物校验 / 文档生成），不进 npm 包产物、不进 `components/` 运行时依赖。校验与生成脚本为 `.ts`，由 `tsx` 执行（与 ant-design-vue / naive-ui 一致：`engines` 下限 Node 22.12 仍无原生类型擦除能力）；发布链为 `.sh`，由 `sh` 执行。`.ts` 脚本的类型由 `tsconfig.node.json` 在 `pnpm type-check` 内检查。
 
 ## 三类文件
 
@@ -112,7 +112,7 @@
 
 `publish.sh` 跑的是 `check` → `build` → `verify:artifacts` → `guard`，与 CI 的 `check` / `verify` 同口径（守卫在推送前多跑一次，见上文说明）。
 
-git hook 只覆盖静态检查，不碰本目录脚本：`pre-commit` → `lint-staged`（`*.ts` / `*.js` 均 prettier + eslint）、`commit-msg` → `commitlint`、`pre-push` → `type-check`（含 `type-check:scripts`）。
+git hook 只覆盖静态检查，不碰本目录脚本：`pre-commit` → `lint-staged`（`*.ts` / `*.js` 均 prettier + eslint）、`commit-msg` → `commitlint`、`pre-push` → `type-check`（源码与 `scripts/` 走 `vue-tsc --build`，`tests/` 走 `tsconfig.test.json`）。
 
 ## 新增脚本的约定
 

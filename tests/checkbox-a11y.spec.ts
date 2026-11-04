@@ -4,6 +4,10 @@ import { mount } from '@vue/test-utils'
 import Checkbox from 'components/checkbox/Checkbox.vue'
 import CheckboxGroup from 'components/checkbox/checkbox-group/CheckboxGroup.vue'
 import type { CheckboxChangeEvent } from 'components/checkbox/context'
+import type { CheckboxGroupSlots } from 'components/checkbox'
+
+/** options 模式下默认插槽的作用域参数（取自组件声明的插槽类型） */
+type OptionSlotProps = Parameters<NonNullable<CheckboxGroupSlots['default']>>[0]
 
 /**
  * 多选组件「原生 input 承载」「change 事件对象」与「组内受控」的契约回归
@@ -105,8 +109,7 @@ describe('CheckboxGroup 下发组级配置与组内受控', () => {
     wrapper = mount(CheckboxGroup, {
       props: { options: OPTIONS },
       slots: {
-        default: ({ label, index }: { label?: string | number; index?: number }) =>
-          h('span', { class: 'custom-option-label' }, `${index}-${label}`)
+        default: ({ label, index }: OptionSlotProps) => h('span', { class: 'custom-option-label' }, `${index}-${label}`)
       }
     })
     const labels = wrapper.findAll('.custom-option-label').map((node) => node.text())

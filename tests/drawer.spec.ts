@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick, ref, h } from 'vue'
 import Drawer from 'components/drawer/Drawer.vue'
+import type { DrawerProps } from 'components/drawer'
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -13,7 +14,7 @@ afterEach(() => {
 })
 
 // to: false 关闭 Teleport，使 DOM 留在 wrapper 内便于断言
-const mountInline = (props: Record<string, unknown> = {}) =>
+const mountInline = (props: Partial<DrawerProps> = {}) =>
   mount(Drawer, { attachTo: document.body, props: { to: false, ...props } })
 
 describe('Drawer 滚动锁', () => {

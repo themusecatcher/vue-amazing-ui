@@ -1,6 +1,18 @@
 import { nextTick } from 'vue'
 
 /**
+ * 挂载 helper 的入参约定：形参写 `Partial<XxxProps>`，不要写 `Record<string, unknown>`。
+ *
+ * 背景：`@vue/test-utils` 的 `props` 是泛型形参（`P extends ComponentProps<C>`），约束检查不做
+ * 多余属性检查 —— 于是 `mount(Comp, { props: { 拼错的键: 1 } })` 连直接调用都**不会**报错。
+ * 把 helper 的形参标注成 `Partial<XxxProps>` 后，调用点获得上下文类型，拼错的键立刻报 TS2561，
+ * 这是目前唯一能补上这段检查的低成本手段（覆盖范围仅限经过 helper 的挂载）。
+ *
+ * 两类例外：① emits 以 `on*` 传入不属于 `Props`（用 `on*` 放行通道，见 `dropdown.spec.ts`）；
+ * ② 同一份用例跨组件共享的 helper（如 `trigger-semantics.spec.ts`）保持 `Record<string, unknown>`。
+ */
+
+/**
  * 等待浮层显隐落定（`<Transition>` + `v-show` 场景的公共等待）。
  *
  * 为什么不能只等固定毫秒：面板的 `display` 由**过渡收尾**写入（`v-show` 在 leave 结束后才落值）。

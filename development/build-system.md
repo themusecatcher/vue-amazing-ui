@@ -103,7 +103,7 @@ pnpm build:components  # 并行 type-check + dist + browser(iife) + es/lib
 pnpm format            # Prettier 格式化全仓库（排除项由 .prettierignore 声明：构建产物 / markdown / 锁文件等）
 pnpm format:check      # 只检查不写盘（CI 与 pnpm check 使用；范围同 format）
 pnpm lint              # ESLint 检查并修复
-pnpm type-check        # vue-tsc 类型检查
+pnpm type-check        # vue-tsc 类型检查：源码 / 构建期脚本走 --build，tests/ 单独走 tsconfig.test.json
 pnpm check             # 聚合检查：lint:check + format:check + type-check + check:static + test（免构建）
 pnpm check:static      # 免构建的源码契约守护：verify:theme + verify:inject-keys + verify:docs
 pnpm test              # vitest 运行测试

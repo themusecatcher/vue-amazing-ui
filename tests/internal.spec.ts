@@ -17,15 +17,6 @@ afterEach(() => {
   vi.useRealTimers()
 })
 
-interface MessageReactive {
-  key: string
-  destroy(): void
-}
-interface MessageInst {
-  info(m: { content: string; duration: number | null }): MessageReactive
-  success(m: { content: string; duration: number | null }): MessageReactive
-}
-
 function mountMessage() {
   // Message 已移除 defineExpose，改用 ready 事件回传命令式 api
   let api!: MessageApi
@@ -33,7 +24,7 @@ function mountMessage() {
     attachTo: document.body,
     props: { onReady: (value: MessageApi) => (api = value) }
   })
-  return { wrapper, vm: api as unknown as MessageInst }
+  return { wrapper, vm: api }
 }
 
 // 挂载本身（happy-dom 渲染环境）会带来常驻定时器，且其不随 unmount 释放，

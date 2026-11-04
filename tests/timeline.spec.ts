@@ -3,6 +3,7 @@ import { h } from 'vue'
 import { mount } from '@vue/test-utils'
 import Timeline from 'components/timeline/Timeline.vue'
 import TimelineItem from 'components/timeline/timeline-item/TimelineItem.vue'
+import type { TimelineItemProps } from 'components/timeline/timeline-item'
 
 /**
  * 回归守护：Timeline 的结构与布局类
@@ -11,7 +12,7 @@ import TimelineItem from 'components/timeline/timeline-item/TimelineItem.vue'
  * 不命令式操作 class，因此断言集中在「根/节点类名」与「节点结构」上。
  */
 
-const item = (props: Record<string, unknown>, slot?: () => unknown) => {
+const item = (props: Partial<TimelineItemProps>, slot?: () => unknown) => {
   return h(TimelineItem, props, slot ? { default: slot } : undefined)
 }
 

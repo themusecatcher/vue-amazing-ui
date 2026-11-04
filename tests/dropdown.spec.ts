@@ -2,6 +2,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Dropdown from 'components/dropdown/Dropdown.vue'
+import type { DropdownProps } from 'components/dropdown'
 import DropdownButton from 'components/dropdown/dropdown-button'
 import Popup from 'components/popup'
 import type { DropdownMenuOption } from 'components/dropdown'
@@ -89,7 +90,15 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-function mountDropdown(props: Record<string, unknown> = {}, slots: Record<string, unknown> = {}) {
+/**
+ * 挂载入参：组件 props + `on*` 监听器。
+ * `openChange` / `menuClick` 是 emits 而非 props，但命令式挂载时统一以 `onXxx` 传入，
+ * `DropdownProps` 里没有这些键，故单开一条受控的放行通道。
+ */
+type DropdownMountProps = Partial<DropdownProps> & {
+  [K in `on${string}`]?: (...args: never[]) => unknown
+}
+function mountDropdown(props: DropdownMountProps = {}, slots: Record<string, unknown> = {}) {
   wrapper = mount(Dropdown, {
     ...mountOptions,
     props: { to: false, mouseEnterDelay: 0, mouseLeaveDelay: 0, ...props },

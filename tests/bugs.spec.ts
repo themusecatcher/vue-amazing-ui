@@ -17,59 +17,6 @@ import type { ModalApi } from 'components/modal'
  * 三组件已移除 defineExpose，统一通过 @ready 事件回传命令式 api 驱动。
  */
 
-interface MessageOptions {
-  content?: unknown // string | VNode | (() => VNode)
-  duration?: number | null
-}
-interface MessageInst {
-  open(m: MessageOptions): void
-  info(m: MessageOptions): void
-  success(m: MessageOptions): void
-  error(m: MessageOptions): void
-  warning(m: MessageOptions): void
-  loading(m: MessageOptions): void
-}
-
-interface NotificationOptions {
-  key?: string
-  title?: unknown // string | VNode | (() => VNode)
-  content?: unknown
-  closable?: boolean
-  duration?: number | null
-  placement?: string
-  onClick?: () => void
-}
-interface NotificationReactive {
-  readonly key: string
-  destroy(): void
-  update(options: Partial<NotificationOptions>): void
-}
-interface NotificationInst {
-  open(o: NotificationOptions): NotificationReactive
-  info(o: NotificationOptions): NotificationReactive
-  success(o: NotificationOptions): NotificationReactive
-  error(o: NotificationOptions): NotificationReactive
-  warning(o: NotificationOptions): NotificationReactive
-}
-
-interface ModalOptions {
-  title?: unknown
-  content?: unknown
-  centered?: boolean
-  top?: number | string
-  onOk?: () => void | Promise<void>
-  onCancel?: () => void
-  onKnow?: () => void
-}
-interface ModalInst {
-  info(o: ModalOptions): void
-  success(o: ModalOptions): void
-  error(o: ModalOptions): void
-  warning(o: ModalOptions): void
-  confirm(o: ModalOptions): void
-  erase(o: ModalOptions): void
-}
-
 // 自动关闭依赖真实计时，此处直接等待对应时长推进；
 // 不引入假定时器，以免干扰 Teleport 与过渡相关的断言
 function wait(ms: number): Promise<void> {
@@ -94,6 +41,9 @@ function dispatch(el: Element, type: string): void {
  * 三组件已移除 defineExpose，改用 ready 事件回传命令式 api。
  * 挂载时通过 onReady 监听器取回 api，组件实例本身仍作为 wrapper 根组件，
  * 以便继续使用 wrapper.emitted() 观察组件自身事件。
+ *
+ * `vm` 直接用组件导出的 `MessageApi` / `NotificationApi` / `ModalApi`：传参对象是**数据**，
+ * 拼错或过期的配置项会被运行时静默忽略，只有真实类型能在编译期拦住。
  */
 function mountMessage() {
   let api!: MessageApi
@@ -101,7 +51,7 @@ function mountMessage() {
     attachTo: document.body,
     props: { onReady: (value: MessageApi) => (api = value) }
   })
-  return { wrapper, vm: api as unknown as MessageInst }
+  return { wrapper, vm: api }
 }
 function mountNotification() {
   let api!: NotificationApi
@@ -109,7 +59,7 @@ function mountNotification() {
     attachTo: document.body,
     props: { onReady: (value: NotificationApi) => (api = value) }
   })
-  return { wrapper, vm: api as unknown as NotificationInst }
+  return { wrapper, vm: api }
 }
 function mountModal() {
   let api!: ModalApi
@@ -117,7 +67,7 @@ function mountModal() {
     attachTo: document.body,
     props: { onReady: (value: ModalApi) => (api = value) }
   })
-  return { wrapper, vm: api as unknown as ModalInst }
+  return { wrapper, vm: api }
 }
 
 describe('B1 Message - duration 为全局单例，hover 离开后按错误的 duration 重新计时', () => {
@@ -304,10 +254,9 @@ describe('Modal 多实例 - 每实例独占全屏 layer，弹窗层叠而非纵�
 
   it('关闭其中一层后仅移除该实例的 layer，其余 layer 保留', async () => {
     const { wrapper, vm } = mountModal()
-    const modal = vm as unknown as ModalApi
-    const first = modal.info({ content: 'first' })
-    modal.confirm({ content: 'second' })
-    modal.error({ content: 'third' })
+    const first = vm.info({ content: 'first' })
+    vm.confirm({ content: 'second' })
+    vm.error({ content: 'third' })
     await wrapper.vm.$nextTick()
     expect(containers('.modal-layer').length).toBe(3)
 
@@ -669,7 +618,7 @@ describe('Notification - key 去重与按 key 关闭', () => {
     vm.info({ title: 'other', duration: null })
     await wrapper.vm.$nextTick()
     expect(containers('.notification-container').length).toBe(2)
-    ;(vm as unknown as NotificationApi).destroy('sync')
+    vm.destroy('sync')
     await flushPromises()
     await wrapper.vm.$nextTick()
     expect(containers('.notification-container').length).toBe(1)
@@ -708,7 +657,7 @@ describe('Notification - 通知清空后回收空容器 DOM', () => {
     vm.info({ title: 'only', duration: null })
     await wrapper.vm.$nextTick()
     expect(containers('.notification-wrap').length).toBe(1)
-    ;(vm as unknown as NotificationApi).destroyAll()
+    vm.destroyAll()
     await flushPromises()
     await wrapper.vm.$nextTick()
     // 需等离场动画结束（after-leave）后回收分组，jsdom 无真实动画，短等即可

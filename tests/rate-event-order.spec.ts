@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { defineComponent, h, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import Rate from 'components/rate/Rate.vue'
+import type { RateProps } from 'components/rate'
 
 /**
  * Rate 的事件时序回归
@@ -14,7 +15,7 @@ import Rate from 'components/rate/Rate.vue'
  */
 
 /** 以「持有 ref 的宿主」模拟父组件：value + onUpdate:value 等价于 v-model:value */
-function mountHost(initial: number, props: Record<string, unknown> = {}) {
+function mountHost(initial: number, props: Partial<RateProps> = {}) {
   const seen: number[] = []
   const Host = defineComponent({
     setup() {

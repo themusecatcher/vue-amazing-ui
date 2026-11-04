@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest'
 import { createSSRApp, h } from 'vue'
 import { renderToString } from 'vue/server-renderer'
 import ConfigProvider from 'components/config-provider/ConfigProvider.vue'
+import type { ConfigProviderProps } from 'components/config-provider'
 import { derive, deriveColorStates } from 'components/theme'
 
 /**
@@ -10,7 +11,7 @@ import { derive, deriveColorStates } from 'components/theme'
  *
  * 首帧外观 = 服务端渲染时的 mode 与种子；客户端挂载后仅在值不同时重写。
  */
-const render = (props: Record<string, unknown>, slotText = 'content'): Promise<string> =>
+const render = (props: Partial<ConfigProviderProps>, slotText = 'content'): Promise<string> =>
   renderToString(
     createSSRApp({
       render: () => h(ConfigProvider, props, { default: () => h('span', slotText) })
