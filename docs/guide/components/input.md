@@ -108,7 +108,7 @@ _与文字同处一行时按基线对齐_
 
 <div style="display: flex; align-items: center; height: 32px; gap: 8px">
   <span>姓名</span>
-  <Input placeholder="与文字同行" style="width: 200px" />
+  <Input :width="200" placeholder="与文字同行" />
 </div>
 
 ::: details Show Code
@@ -118,7 +118,7 @@ _与文字同处一行时按基线对齐_
   <!-- 行容器盒对齐并固定行高，避免控件动态出现 / 消失时整行位移 -->
   <div style="display: flex; align-items: center; height: 32px; gap: 8px">
     <span>姓名</span>
-    <Input placeholder="与文字同行" style="width: 200px" />
+    <Input :width="200" placeholder="与文字同行" />
   </div>
 </template>
 ```
