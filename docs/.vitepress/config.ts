@@ -493,12 +493,12 @@ export default defineConfig({
               link: '/guide/components/tag'
             },
             {
-              text: '文本域 Textarea',
-              link: '/guide/components/textarea'
-            },
-            {
               text: '文字滚动 TextScroll',
               link: '/guide/components/text-scroll'
+            },
+            {
+              text: '文本域 Textarea',
+              link: '/guide/components/textarea'
             },
             {
               text: '时间选择器 TimePicker',
