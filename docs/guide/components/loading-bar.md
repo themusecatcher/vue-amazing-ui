@@ -654,6 +654,12 @@ _组件级配置属性：设置在 `<LoadingBarProvider>` 上，透传给内部 
 > - `colorLoading` / `colorFinish` 未显式传入时取主色，可用 `theme.components.LoadingBar.primaryColor` 单独覆盖。
 > - `loadingBarStyle` 以内联样式作用于内层进度条：与 `loadingBarSize` / `colorLoading` / `colorFinish` / `colorError` 同属性冲突时以其为准；未提供 `finish` 时完成态回落 `loading`，未提供 `error` 时不注入。
 
+## Events
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| ready | 实例挂载完成时触发，参数为该实例的 `api` | (api: [LoadingBarApi](#methods)) => void |
+
 ## Methods
 
 _`useLoadingBar()` 返回的 `LoadingBarApi`；局部实例用 `<LoadingBarProvider>` 的 `@ready` 获取：_
@@ -663,12 +669,6 @@ _`useLoadingBar()` 返回的 `LoadingBarApi`；局部实例用 `<LoadingBarProvi
 | start | 开始加载，`from` / `to` 为进度百分比（默认 `0` → `80`），`status` 决定起始状态的类名 | (from?: number, to?: number, status?: 'starting' &#124; 'error') => Promise&lt;void&gt; |
 | finish | 结束加载，进度补满到 `100%` 后隐藏 | () => Promise&lt;void&gt; |
 | error | 出现错误，进度条切为错误色并隐藏 | () => void |
-
-## Events
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| ready | 实例挂载完成时触发，参数为该实例的 `api` | (api: [LoadingBarApi](#methods)) => void |
 
 ## 在 setup 外使用
 

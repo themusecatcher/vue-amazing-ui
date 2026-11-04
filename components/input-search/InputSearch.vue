@@ -53,7 +53,7 @@ defineSlots<InputSearchSlots>()
 const inputRef = ref<HTMLElement | null>(null) // input 元素引用
 const isComposing = ref<boolean>(false) // 是否正在使用文本合成系统输入中
 const inputSearchValue = ref<string>() // 搜索框内容
-const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'search', 'blur'])
+const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'search', 'focus', 'blur'])
 const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore'])
 const inputSearchWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -143,10 +143,22 @@ function onInputSearch(e: KeyboardEvent): void {
 function onSearch(e: MouseEvent | KeyboardEvent): void {
   emits('search', inputSearchValue.value, e)
 }
-// 原生 blur 从内部 input 转发：blur 不冒泡，挂在根节点上的监听收不到；同步带上 relatedTarget 供宿主判断失焦去向
+// 原生 focus / blur 从内部 input 转发：两者都不冒泡，挂在根节点上的监听收不到；同步带上 relatedTarget 供宿主判断焦点去向
+// 注意口径：事件只对应内部 input，视觉聚焦态由容器的 :focus-within 驱动，搜索按钮获得焦点时不会上报
+function onFocus(e: FocusEvent): void {
+  emits('focus', e)
+}
 function onBlur(e: FocusEvent): void {
   emits('blur', e)
 }
+// 程序化控制焦点：走原生 input 的 focus / blur，聚焦态由 CSS :focus-within 驱动，无需另行同步
+function focus(): void {
+  inputRef.value?.focus()
+}
+function blur(): void {
+  inputRef.value?.blur()
+}
+defineExpose({ focus, blur })
 </script>
 <template>
   <div
@@ -160,7 +172,6 @@ function onBlur(e: FocusEvent): void {
       <slot name="addonBefore">{{ addonBefore }}</slot>
     </span>
     <div
-      tabindex="1"
       class="input-search-container"
       :class="[
         `input-search-${size}`,
@@ -185,6 +196,7 @@ function onBlur(e: FocusEvent): void {
         @compositionend="onCompositionEnd"
         @input="onInput"
         @change="onChange"
+        @focus="onFocus"
         @blur="onBlur"
         @keydown.enter.prevent="onInputSearch"
       />

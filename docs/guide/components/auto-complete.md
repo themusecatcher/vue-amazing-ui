@@ -1448,19 +1448,6 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 | label? | 分组名（显示为分组标题） | string |
 | value? | 分组值 | string &#124; number |
 
-## Events
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| search | 输入内容变化时回调 | (value: string) => void |
-| select | 选中选项时回调 | (value: string &#124; number, option: AutoCompleteOption) => void |
-| change | 选项值改变后的回调 | (value: string) => void |
-| focus | 获得焦点时的回调 | () => void |
-| blur | 失去焦点时的回调 | () => void |
-| clear | 清除时的回调 | () => void |
-| openChange | 下拉菜单展开收起的回调 | (open: boolean) => void |
-| dropdownVisibleChange | 下拉菜单展开收起的回调 | (open: boolean) => void |
-
 ## Slots
 
 | 名称 | 说明 | 用法 |
@@ -1468,6 +1455,19 @@ const optionsOpen = ['Option 1', 'Option 2', 'Option 3']
 | default | 自定义输入组件（替代原生 `input` 元素） | v-slot:default |
 | clearIcon | 自定义清除图标，作用域参数 `clearIcon` 为清除方法 | v-slot:clearIcon="{ clearIcon }" |
 | option | 自定义选项内容，作用域为当前选项数据，[AutoCompleteOption](#autocompleteoption-type) 的自定义字段会一并透传 | v-slot:option |
+
+## Events
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| search | 输入内容变化时回调 | (value: string) => void |
+| select | 选中选项时回调 | (value: string &#124; number, option: AutoCompleteOption) => void |
+| change | 选项值改变后的回调 | (value: string) => void |
+| focus | 获得焦点时的回调，`relatedTarget` 为失去焦点的元素 | (e: FocusEvent) => void |
+| blur | 失去焦点时的回调，`relatedTarget` 为获得焦点的元素 | (e: FocusEvent) => void |
+| clear | 清除时的回调 | () => void |
+| openChange | 下拉菜单展开收起的回调 | (open: boolean) => void |
+| dropdownVisibleChange | 下拉菜单展开收起的回调 | (open: boolean) => void |
 
 ## Methods
 

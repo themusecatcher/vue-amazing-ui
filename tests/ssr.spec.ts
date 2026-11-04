@@ -25,6 +25,7 @@ import Ellipsis from 'components/ellipsis/Ellipsis.vue'
 import Rate from 'components/rate/Rate.vue'
 import Tabs from 'components/tabs/Tabs.vue'
 import Drawer from 'components/drawer/Drawer.vue'
+import type { DrawerProps } from 'components/drawer'
 import Layout from 'components/layout/Layout.vue'
 import LayoutSider from 'components/layout/layout-sider/LayoutSider.vue'
 import Menu from 'components/menu/Menu.vue'
@@ -61,8 +62,11 @@ const HookProbe = defineComponent({
   }
 })
 
-const renderComponent = (component: unknown, props: Record<string, unknown> = {}) =>
-  renderToString(createSSRApp({ render: () => h(component as never, props) }))
+/** 组件的对外 props 类型（SFC 实例的 `$props`） */
+type PropsOf<C> = C extends new (...args: never[]) => { $props: infer P } ? P : never
+
+const renderComponent = <C>(component: C, props: Partial<PropsOf<C>> = {}, slots?: Record<string, () => string>) =>
+  renderToString(createSSRApp({ render: () => h(component as never, props, slots) }))
 
 describe('SSR 渲染安全性', () => {
   it('changelog 声明的组件与工具函数可在 Node 环境渲染', async () => {
@@ -100,7 +104,8 @@ describe('SSR 渲染安全性', () => {
     await expect(renderComponent(Scrollbar)).resolves.toBeTruthy()
     await expect(renderComponent(Slider)).resolves.toBeTruthy()
     await expect(renderComponent(BackTop)).resolves.toBeTruthy()
-    await expect(renderComponent(Ellipsis, { content: 'text' })).resolves.toBeTruthy()
+    // 文本走默认插槽（`content` 不是 Ellipsis 的 prop，早先传 prop 时实际渲染的是空文本）
+    await expect(renderComponent(Ellipsis, {}, { default: () => 'text' })).resolves.toBeTruthy()
     await expect(renderComponent(Rate)).resolves.toBeTruthy()
     await expect(renderComponent(Tabs)).resolves.toBeTruthy()
     await expect(renderComponent(Layout, { hasSider: true })).resolves.toBeTruthy()
@@ -114,7 +119,7 @@ describe('SSR 渲染安全性', () => {
  * 需应用侧注入到 HTML；此处锁定该契约，避免后续把 Teleport 去掉或改错目标节点而无人察觉。
  */
 describe('SSR 浮层与 Teleport', () => {
-  const renderWithContext = (props: Record<string, unknown>) => {
+  const renderWithContext = (props: Partial<DrawerProps>) => {
     const ssrContext: { teleports?: Record<string, string> } = {}
     return renderToString(createSSRApp({ render: () => h(Drawer, props) }), ssrContext).then((html) => ({
       html,

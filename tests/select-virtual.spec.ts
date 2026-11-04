@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach } from 'vitest'
 import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Select from 'components/select/Select.vue'
+import type { SelectProps } from 'components/select'
 import type { Option } from 'components/select/Select.vue'
 
 /**
@@ -91,7 +92,7 @@ async function pressEscape(): Promise<void> {
 }
 
 /** 挂载并展开面板 */
-async function mountAndOpen(props: Record<string, unknown>): Promise<void> {
+async function mountAndOpen(props: Partial<SelectProps>): Promise<void> {
   wrapper = mount(Select, {
     attachTo: document.body,
     global: { stubs: { transition: false } },

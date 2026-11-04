@@ -4,6 +4,7 @@ import { describe, it, expect } from 'vitest'
 import { VueAmazingUIResolver } from 'components/utils/resolver'
 import type { VueAmazingUIResolverOptions } from 'components/utils/resolver'
 import { componentsMap, styleSources, stylelessComponents } from 'components/utils/style-deps'
+import type { ComponentName } from 'components/utils/style-deps'
 
 /**
  * 按需引入 resolver 的回归防护（每组件一个样式入口）
@@ -114,7 +115,7 @@ describe('resolver - 样式入口路径', () => {
 })
 
 describe('resolver - 全量组件映射', () => {
-  const entries = Object.entries(componentsMap)
+  const entries = Object.entries(componentsMap) as [ComponentName, string][]
   const dirMap = new Map(entries)
 
   it('应解析出全部组件映射', () => {
@@ -164,7 +165,7 @@ describe('resolver - 无 <style> 块 SFC 的登记完整性', () => {
     const styleless = stylelessComponents
     const unregistered = collectVueFiles(resolve(process.cwd(), 'components'))
       .filter((file) => !/<style[\s>]/.test(readFileSync(file, 'utf-8')))
-      .map((file) => basename(file, '.vue'))
+      .map((file) => basename(file, '.vue') as ComponentName)
       .filter((name) => !styleless.includes(name) && styleSources[name] === undefined)
     expect(unregistered, `以下 SFC 无 <style> 块但未登记样式来源：${unregistered.join('、')}`).toEqual([])
   })

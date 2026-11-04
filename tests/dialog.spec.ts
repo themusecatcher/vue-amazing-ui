@@ -91,7 +91,7 @@ describe('Dialog', () => {
 
   it('命令式点击确定按钮应在回调结束后自动关闭', async () => {
     // ready 由内部 Dialog 派发，Provider 通过 @ready 透出 api
-    let api: DialogApi | null = null
+    let api!: DialogApi
     const wrapper = mount(DialogProvider, {
       attrs: {
         onReady: (value: DialogApi) => {
@@ -119,7 +119,7 @@ describe('Dialog', () => {
     // 回归用例：createDiscreteApi 首调时组件实例尚未 mount，
     // 若 click 监听挂在 onMounted 中，这次点击会丢失、展开原点退回 50% 50%
     document.body.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 60, clientY: 80 }))
-    let api: DialogApi | null = null
+    let api!: DialogApi
     const wrapper = mount(DialogProvider, {
       attrs: {
         onReady: (value: DialogApi) => {
@@ -147,7 +147,7 @@ describe('Dialog', () => {
     document.body.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: 60, clientY: 80 }))
     // 等待超过 100ms 时效窗口
     await new Promise((resolve) => setTimeout(resolve, 150))
-    let api: DialogApi | null = null
+    let api!: DialogApi
     const wrapper = mount(DialogProvider, {
       attrs: {
         onReady: (value: DialogApi) => {
@@ -168,7 +168,7 @@ describe('Dialog', () => {
   })
 
   it('离场动画沿用打开时的鼠标位置，不随关闭时的点击位置改变', async () => {
-    let api: DialogApi | null = null
+    let api!: DialogApi
     const wrapper = mount(DialogProvider, {
       attrs: {
         onReady: (value: DialogApi) => {
@@ -236,7 +236,7 @@ describe('Dialog', () => {
   })
 
   it('同实例多弹窗时，Esc 只关闭事件来源的那个弹窗', async () => {
-    let api: DialogApi | null = null
+    let api!: DialogApi
     const wrapper = mount(DialogProvider, {
       attrs: {
         onReady: (value: DialogApi) => {
@@ -277,7 +277,7 @@ describe('Dialog', () => {
   })
 
   it('弹窗内组件可通过 stopPropagation 优先消费 Esc', async () => {
-    let api: DialogApi | null = null
+    let api!: DialogApi
     const wrapper = mount(DialogProvider, {
       attrs: {
         onReady: (value: DialogApi) => {
@@ -300,7 +300,7 @@ describe('Dialog', () => {
   })
 
   it('点击遮罩应关闭该遮罩所属的实例，而非入栈顺序的最后一个', async () => {
-    let api: DialogApi | null = null
+    let api!: DialogApi
     const wrapper = mount(DialogProvider, {
       attrs: {
         onReady: (value: DialogApi) => {
@@ -324,8 +324,8 @@ describe('Dialog', () => {
   })
 
   it('Esc 只关闭焦点所在的弹窗，其他实例的弹窗保持打开', async () => {
-    let apiA: DialogApi | null = null
-    let apiB: DialogApi | null = null
+    let apiA!: DialogApi
+    let apiB!: DialogApi
     const wrapperA = mount(DialogProvider, {
       attrs: {
         onReady: (value: DialogApi) => {

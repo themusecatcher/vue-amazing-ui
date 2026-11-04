@@ -2,6 +2,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Popover from 'components/popover'
+import type { PopoverProps } from 'components/popover'
 import Tooltip from 'components/tooltip'
 
 /**
@@ -41,7 +42,7 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-function mountPopover(props: Record<string, unknown>): void {
+function mountPopover(props: Partial<PopoverProps>): void {
   wrapper = mount(Popover, {
     ...mountOptions,
     props,

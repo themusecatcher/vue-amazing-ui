@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { h, Suspense } from 'vue'
 import { mount, flushPromises } from '@vue/test-utils'
 import QRCode from 'components/qr-code/QRCode.vue'
+import type { QRCodeProps } from 'components/qr-code'
 import ConfigProvider from 'components/config-provider'
 
 /**
@@ -271,7 +272,7 @@ describe('QRCode svg 渲染', () => {
 })
 
 describe('QRCode 主题取色', () => {
-  const mountWithTheme = (mode: 'light' | 'dark', props: Record<string, unknown> = {}) =>
+  const mountWithTheme = (mode: 'light' | 'dark', props: Partial<QRCodeProps> = {}) =>
     mount(ConfigProvider, {
       props: { theme: { mode } },
       slots: { default: () => h(QRCode, { value: 'https://a.example.com', ...props }) }

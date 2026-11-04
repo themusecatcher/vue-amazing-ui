@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest'
 import { nextTick, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import Cascader from 'components/cascader/Cascader.vue'
+import type { CascaderOption } from 'components/cascader'
 import Popup from 'components/popup'
 
 const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
@@ -289,7 +290,9 @@ describe('Cascader 搜索', () => {
       attachTo: document.body,
       props: {
         options: OPTIONS,
-        showSearch: { filter: (_inputValue: string, path: { value?: string }[]) => path[0]?.value === 'jiangsu' }
+        showSearch: {
+          filter: (_inputValue: string, path: CascaderOption[]) => path[0]?.value === 'jiangsu'
+        }
       }
     })
     await flush()
@@ -472,7 +475,7 @@ describe('Cascader 多选', () => {
 
   it('responsive 折叠为输入框预留占位，避免 tag 占满整行后输入框换行', async () => {
     // happy-dom 无布局：打桩容器宽度与 tag / 折叠提示宽度，并保留 ResizeObserver 回调手动触发重算
-    let resizeCallback: ResizeObserverCallback | null = null
+    let resizeCallback!: ResizeObserverCallback
     const realResizeObserver = globalThis.ResizeObserver
     globalThis.ResizeObserver = class {
       constructor(callback: ResizeObserverCallback) {
@@ -508,7 +511,7 @@ describe('Cascader 多选', () => {
     // 前提：ResizeObserver 已注册（首次测量发生在尺寸回调里）
     expect(typeof resizeCallback).toBe('function')
     // 首次测量时折叠提示尚未渲染（rest 宽度按 0 计），尺寸变化回调后按真实宽度重算
-    resizeCallback?.([] as unknown as ResizeObserverEntry[], {} as ResizeObserver)
+    resizeCallback([] as unknown as ResizeObserverEntry[], {} as ResizeObserver)
     await flush()
     // 2 个 tag（71 + 4） + 折叠提示（55 + 4） = 209 > 210 - 输入框占位（4 + 4），故只保留 1 个
     expect(wrapper.find('.cascader-selection-item-rest').text()).toContain('+ 2')

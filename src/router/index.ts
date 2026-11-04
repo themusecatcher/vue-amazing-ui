@@ -64,6 +64,22 @@ function toPascalCase(word: string): string {
     .map((part) => (acronyms.has(part) ? part.toUpperCase() : part[0].toUpperCase() + part.slice(1)))
     .join('')
 }
+// import.meta.glob 的键顺序取自文件系统目录项（不保证字母序），直接展开会让侧栏菜单乱序
+// （如 input-number 排在 input 之前）。这里按视图目录名的字典序排序，
+// 使菜单顺序与 components/ 目录的排列保持同一套字母表顺序。
+// 只取目录部分比较：完整路径里同名目录的后续字符是 `/`，`/` 大于 `-`，
+// 会让 input-number / input-search 排到 input 之前
+function toViewDir(path: string): string {
+  return path.replace('../views/', '').replace('/index.ts', '')
+}
+function compareByPath([pathA]: [string, unknown], [pathB]: [string, unknown]): number {
+  const dirA = toViewDir(pathA)
+  const dirB = toViewDir(pathB)
+  if (dirA === dirB) {
+    return 0
+  }
+  return dirA < dirB ? -1 : 1
+}
 export const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -79,6 +95,7 @@ export const routes: RouteRecordRaw[] = [
       },
       ...(Object.entries(modules)
         .filter(([path, _]) => !path.includes('home') && !path.includes('exception'))
+        .sort(compareByPath)
         .map(([path, meta]) => {
           const componentPath = path.replace('index.ts', 'Index.vue') // 打包过后，目录结构是不存在的，不能直接用该变量作为组件导入的路径
           // 目录名片段；filter(Boolean) 去掉空字符串，即去掉多余的斜杠导致的空字符串

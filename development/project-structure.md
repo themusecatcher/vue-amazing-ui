@@ -15,7 +15,7 @@
 | `scripts/` | 开发期脚本（发布 / 部署 / 产物校验 / 文档生成），不进 npm 包；逐脚本的职责、命令与触发时机见 [scripts/README.md](../scripts/README.md) |
 | `build/` | 构建后处理（`merge-component-styles.ts` 合并同一 SFC 的编号 CSS、`generate-style-entries.ts` 生成每组件样式入口、`gen-theme.ts` 生成主题静态变量表），由 `vite.config.ts` 的 `closeBundle` 调用（`gen-theme.ts` 由 `theme-css` 插件在 `buildStart` 调用） |
 | `vite.config.ts` | 构建配置（三产物 dist / es / lib） |
-| `tsconfig.*.json` | 各环境 TypeScript 配置 |
+| `tsconfig.*.json` | 各环境 TypeScript 配置：`tsconfig.json`（solution，引用 node + app）、`app`（组件与演示环境）、`dts`（声明产物，供 vite-plugin-dts）、`node`（构建期 Node：vite/vitest/eslint 配置 + `build/` + `scripts/`）、`test`（`tests/`，DOM + node 并集 + vitest 全局） |
 | `vitest.config.ts` | 测试配置（独立于 vite.config.ts） |
 | `postcss.config.js` | PostCSS 配置（autoprefixer 依据 `package.json` 的 browserslist **补齐**厂商前缀；注意这是「补齐」而非「清理」，源码中手写的厂商前缀仍需保留，理由见 [component-design.md](component-design.md) 的「样式规范」） |
 | `eslint.config.js` | ESLint 配置 |

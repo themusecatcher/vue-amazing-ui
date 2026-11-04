@@ -177,7 +177,7 @@ es/tooltip/style/index.js
 - `ComponentName = keyof typeof componentsMap`：由数据键推导，作为 resolver / 生成器的查表类型。
 - `isComponentName(name): name is ComponentName`：`resolve` 时的类型守卫，未收录的组件名直接返回 `undefined`，交给其他 resolver 处理。
 
-跨表引用完整性由类型系统在编译期保证：「`styleSources` / `componentDependencies` / `stylelessComponents` 的键与值必须是已收录组件」即 `Partial<Record<ComponentName, ComponentName>>` 的约束（`tsconfig.scripts.json` 让脚本侧同样被 `pnpm type-check` 覆盖）。`pnpm verify:deps`（`scripts/verify-style-deps.ts`）保留同口径的运行期断言，覆盖 `tsx` 只擦除类型、不做检查的情形，报错会直接点出越界的表名与条目。
+跨表引用完整性由类型系统在编译期保证：「`styleSources` / `componentDependencies` / `stylelessComponents` 的键与值必须是已收录组件」即 `Partial<Record<ComponentName, ComponentName>>` 的约束（`tsconfig.node.json` 让脚本侧同样被 `pnpm type-check` 覆盖）。`pnpm verify:deps`（`scripts/verify-style-deps.ts`）保留同口径的运行期断言，覆盖 `tsx` 只擦除类型、不做检查的情形，报错会直接点出越界的表名与条目。
 
 第三方样式由 `components/utils/vendor-styles.ts` 统一派生：`vendorStyles` 定义 `source`（node_modules 源路径）与 `target`（产物内路径，含 `vendorStylesDir` 常量与「镜像原包结构」约定），`vendorStylesByComponent` 按组件名索引，供生成器写入样式入口。
 

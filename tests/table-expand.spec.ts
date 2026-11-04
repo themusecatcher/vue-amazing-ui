@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Table from 'components/table/Table.vue'
+import type { TableProps } from 'components/table'
 
 /**
  * 展开行的受控判据用例
@@ -11,7 +12,7 @@ import Table from 'components/table/Table.vue'
  *   判据读到 `[]` 而非 `undefined` → 恒为受控 → 展开行永不显示，事件却照常派发）；
  * - 父传了值：只上报，显隐以父侧回写为准。
  */
-function mountTable(props: Record<string, unknown> = {}) {
+function mountTable(props: Partial<TableProps> = {}) {
   return mount(Table, {
     props: {
       showExpandColumn: true,

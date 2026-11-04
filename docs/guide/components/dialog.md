@@ -2793,6 +2793,19 @@ _`DialogReactive.update()` 的配置项，字段与 [DialogOptions](#dialogoptio
 | footer | 自定义底部内容，优先级低于 `footer` 渲染函数（均高于内置按钮组） | v-slot:footer |
 | closeIcon | 自定义关闭图标，优先级高于 `closeIcon` 属性 | v-slot:closeIcon |
 
+## Events
+
+_`ok` / `cancel` / `change` / `ready` 为 `<Dialog>` 与 `<DialogProvider>` 组件的事件（需通过组件标签监听）；使用 `useDialog()` 时，请在调用参数中使用 `onOk` / `onCancel` 等回调。_
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| cancel | 点击蒙层或 `Esc` 键或右上角关闭按钮或取消按钮的回调 | (e?: Event) => void |
+| ok | 点击确定按钮的回调；声明式下**不自动关闭**，需自行将 `v-model:open` 置为 `false`；命令式下回调结束后自动关闭 | (e?: MouseEvent) => void |
+| change | 弹窗开关状态变化的回调，命令式与声明式实例均会触发，多实例下携带该实例 `key` | (open: boolean, key: string) => void |
+| ready | 内部 `Dialog` 挂载完成后派发，参数为该实例的 `api`，供 `<DialogProvider>` 取用 | (api: { open: (data: [DialogOptions](#dialogoptions-type)) => [DialogReactive](#dialogreactive-type); destroyAll: () => void }) => void |
+
+> 点击「确定」只派发 `ok`，关闭与否由 `v-model:open` 决定；点击「取消」/ 遮罩 / `Esc` / 关闭按钮则自动回写 `false`。
+
 ## Methods
 
 _仅命令式调用需要（声明式用法通过 `v-model:open` 控制显隐，无需这些方法）：通过 `useDialog()` 调用，需在 `<DialogProvider>` 内部使用：_
@@ -2814,19 +2827,6 @@ _单个弹窗的句柄，由 `useDialog().open()` 或 `<Dialog>` / `<DialogProvi
 | destroy | 关闭该弹窗 | () => void |
 | update | 更新该弹窗配置 | (options: [DialogUpdate](#dialogupdate-type)) => void |
 | show | 重新打开该弹窗；实例已被销毁（`destroyOnClose: true` 且离场结束）时调用无效 | () => void |
-
-## Events
-
-_`ok` / `cancel` / `change` / `ready` 为 `<Dialog>` 与 `<DialogProvider>` 组件的事件（需通过组件标签监听）；使用 `useDialog()` 时，请在调用参数中使用 `onOk` / `onCancel` 等回调。_
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| cancel | 点击蒙层或 `Esc` 键或右上角关闭按钮或取消按钮的回调 | (e?: Event) => void |
-| ok | 点击确定按钮的回调；声明式下**不自动关闭**，需自行将 `v-model:open` 置为 `false`；命令式下回调结束后自动关闭 | (e?: MouseEvent) => void |
-| change | 弹窗开关状态变化的回调，命令式与声明式实例均会触发，多实例下携带该实例 `key` | (open: boolean, key: string) => void |
-| ready | 内部 `Dialog` 挂载完成后派发，参数为该实例的 `api`，供 `<DialogProvider>` 取用 | (api: { open: (data: [DialogOptions](#dialogoptions-type)) => [DialogReactive](#dialogreactive-type); destroyAll: () => void }) => void |
-
-> 点击「确定」只派发 `ok`，关闭与否由 `v-model:open` 决定；点击「取消」/ 遮罩 / `Esc` / 关闭按钮则自动回写 `false`。
 
 ## 在 setup 外使用
 

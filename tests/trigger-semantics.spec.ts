@@ -3,6 +3,7 @@ import { defineComponent, h, ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import type { VueWrapper } from '@vue/test-utils'
 import Tooltip from 'components/tooltip'
+import type { TooltipProps } from 'components/tooltip'
 import Dropdown from 'components/dropdown/Dropdown.vue'
 import { flushTransition } from './helpers'
 
@@ -325,7 +326,7 @@ for (const subject of subjects) {
 describe('触发语义一致性 · Tooltip 锚点模式', () => {
   const tooltipSubject = subjects[0]
 
-  function mountWithAnchor(props: Record<string, unknown>): {
+  function mountWithAnchor(props: Partial<TooltipProps>): {
     wrapper: VueWrapper
     anchor: () => HTMLElement
     tooltip: () => VueWrapper
@@ -348,9 +349,9 @@ describe('触发语义一致性 · Tooltip 锚点模式', () => {
     wrapper = mount(Host, mountOptions) as VueWrapper
     return {
       wrapper,
-      anchor: () => wrapper.find('.subject-trigger').element as HTMLElement,
+      anchor: () => wrapper!.find('.subject-trigger').element as HTMLElement,
       // openChange 由内层 Tooltip 发出，宿主不转发，故按组件实例读事件
-      tooltip: () => wrapper.findComponent(Tooltip)
+      tooltip: () => wrapper!.findComponent(Tooltip)
     }
   }
 

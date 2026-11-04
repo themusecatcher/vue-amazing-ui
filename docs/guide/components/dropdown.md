@@ -1048,23 +1048,6 @@ _分别对应移入、点击、右键触发；传入数组可组合多种触发�
 | overlayClassName | 下拉菜单根元素的类名 | string | undefined |
 | overlayStyle | 下拉菜单根元素的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 
-## Events
-
-### Dropdown
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| openChange | 下拉菜单展开收起时的回调（点击菜单项导致的收起不触发） | (open: boolean) => void |
-| menuClick | 点击菜单项时的回调（`disabled`、`loading` 项不触发） | (key: string &#124; number &#124; undefined, option: [MenuOption](#menuoption-type)) => void |
-
-### DropdownButton
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| click | 点击左侧按钮时的回调 | (e: MouseEvent) => void |
-| openChange | 下拉菜单展开收起时的回调（点击菜单项导致的收起不触发） | (open: boolean) => void |
-| menuClick | 点击菜单项时的回调（`disabled`、`loading` 项不触发） | (key: string &#124; number &#124; undefined, option: [MenuOption](#menuoption-type)) => void |
-
 ## Slots
 
 ### Dropdown
@@ -1083,3 +1066,20 @@ _分别对应移入、点击、右键触发；传入数组可组合多种触发�
 | overlay | 自定义下拉浮层内容（与 `menus` 配置二选一） | v-slot:overlay |
 | icon | 自定义右侧下拉按钮图标（优先于 `icon` 属性） | v-slot:icon |
 | label | 自定义菜单项显示文本 | v-slot:label="{ option }" |
+
+## Events
+
+### Dropdown
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| openChange | 下拉菜单展开收起时的回调（点击菜单项导致的收起不触发） | (open: boolean) => void |
+| menuClick | 点击菜单项时的回调（`disabled`、`loading` 项不触发） | (key: string &#124; number &#124; undefined, option: [MenuOption](#menuoption-type)) => void |
+
+### DropdownButton
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| click | 点击左侧按钮时的回调 | (e: MouseEvent) => void |
+| openChange | 下拉菜单展开收起时的回调（点击菜单项导致的收起不触发） | (open: boolean) => void |
+| menuClick | 点击菜单项时的回调（`disabled`、`loading` 项不触发） | (key: string &#124; number &#124; undefined, option: [MenuOption](#menuoption-type)) => void |

@@ -4,7 +4,7 @@ import { mount, flushPromises } from '@vue/test-utils'
 import LoadingBarProvider from 'components/loading-bar/LoadingBarProvider.vue'
 import { useLoadingBar } from 'components/loading-bar/useLoadingBar'
 import type { LoadingBarApi } from 'components/loading-bar/useLoadingBar'
-import type { LoadingBarProps } from 'components/loading-bar/LoadingBar.vue'
+import type { LoadingBarProps } from 'components/loading-bar'
 
 describe('LoadingBarProvider', () => {
   it('useLoadingBar 可在 Provider 内部取到 api', async () => {

@@ -63,12 +63,14 @@ _模板文件_
 | 名称 | 说明 | 用法 |
 | :-- | :-- | :-- |
 
-## Methods
+## Events
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 
-## Events
+<!-- 尾部章节顺序固定：APIs → Slots → Events → Methods → CSS 变量 → 在 setup 外使用。Methods 需 ref 调用，恒在 Events 之后收尾；章节可缺省，相对顺序不可变更（pnpm verify:docs） -->
+
+## Methods
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |

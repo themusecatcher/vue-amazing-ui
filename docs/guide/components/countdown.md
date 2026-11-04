@@ -270,14 +270,14 @@ function onReset() {
 | suffix | 自定义倒计时的后缀 | v-slot:suffix |
 | finish | 自定义完成后的展示文本 | v-slot:finish |
 
-## Methods
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| reset | 重置倒计时 | () => void |
-
 ## Events
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 | finish | 倒计时结束的回调 | () => void |
+
+## Methods
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| reset | 重置倒计时 | () => void |

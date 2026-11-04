@@ -5,6 +5,7 @@ import { mount } from '@vue/test-utils'
 import Select from 'components/select/Select.vue'
 import type { Option } from 'components/select/Select.vue'
 import SelectOption from 'components/select/select-option'
+import type { SelectOptionProps } from 'components/select/select-option'
 import SelectOptGroup from 'components/select/select-optgroup'
 
 /**
@@ -64,7 +65,7 @@ function panelTexts(): string[] {
 }
 
 /** 构造 `<SelectOption>`：文本内容用文本节点（与模板编译产物一致） */
-function optionNode(value: string | number, text?: string, props: Record<string, unknown> = {}): VNode {
+function optionNode(value: string | number, text?: string, props: Partial<SelectOptionProps> = {}): VNode {
   return h(
     SelectOption,
     { value, ...props },
@@ -151,7 +152,10 @@ describe('Select 子组件式选项（default 插槽）', () => {
       attachTo: document.body,
       global: { stubs: { transition: false } },
       props: { defaultOpen: true },
-      slots: { default: () => [optionNode('jack', 'Jack', { disabled: '' }), optionNode('lucy', 'Lucy')] }
+      // 模板里的静态属性 `disabled` 编译产物是空串（而非 true），此处按编译产物构造入参
+      slots: {
+        default: () => [optionNode('jack', 'Jack', { disabled: '' as unknown as boolean }), optionNode('lucy', 'Lucy')]
+      }
     })
     await flush()
 
