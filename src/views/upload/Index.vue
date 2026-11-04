@@ -182,6 +182,16 @@ function onUploadFailRequest(file: File): Promise<UploadFileType> {
     <h1>{{ $route.name }} {{ $route.meta.title }}</h1>
     <h2 class="mt30 mb10">基本使用</h2>
     <Upload v-model:fileList="basicFiles" @drop="onDrop" @change="onChange" @preview="onPreview" />
+    <h2 class="mt30 mb10">非受控模式</h2>
+    <p class="mb10">不传 v-model:fileList 时由组件自持，用 defaultFileList 预填文件列表；继续上传、删除照常生效</p>
+    <Upload
+      :default-file-list="[
+        {
+          name: '1.jpg',
+          url: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg'
+        }
+      ]"
+    />
     <h2 class="mt30 mb10">禁用</h2>
     <p class="mb10">只能预览，不能删除和上传</p>
     <Upload disabled v-model:fileList="disabledFileList" />

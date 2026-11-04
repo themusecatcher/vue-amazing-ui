@@ -27,6 +27,7 @@ export interface Props {
   uploadMode?: 'base64' | 'custom' // 上传文件的方式
   customRequest?: (file: File) => Promise<FileType> // 自定义上传行为，只有 uploadMode: custom 时，才会使用 customRequest 自定义上传行为
   fileList?: FileType[] // (v-model) 已上传的文件列表
+  defaultFileList?: FileType[] // 非受控初始值，未绑 v-model:fileList 时生效
 }
 // 声明组件插槽类型
 export interface UploadSlots {
@@ -47,12 +48,13 @@ const props = withDefaults(defineProps<Props>(), {
   beforeUpload: () => true,
   uploadMode: 'base64',
   // custom 模式下的兜底实现：返回空结果，避免未配置时 .then 抛错
-  customRequest: () => Promise.resolve({ url: '' })
+  customRequest: () => Promise.resolve({ url: '' }),
+  defaultFileList: undefined
 })
 defineSlots<UploadSlots>()
 // (v-model) 上传文件列表：传值即受控，未传时组件自持
 // 写入一律整体替换：受控时该 ref 就是父数组，下标赋值 / splice 会绕过上报并污染父级数据
-const uploadedFilesModel = useControlledModel<FileType[]>('fileList', [])
+const uploadedFilesModel = useControlledModel<FileType[]>('fileList', props.defaultFileList ?? [])
 const showUpload = ref<number>(1) // 展示的上传框
 const uploading = ref<boolean[]>([]) // 上传中
 const uploadInputRef = ref<HTMLInputElement[]>([]) // 上传文件控件引用
