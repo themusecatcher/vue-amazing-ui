@@ -4,6 +4,7 @@ import { join } from 'node:path'
 import { h } from 'vue'
 import { mount } from '@vue/test-utils'
 import DatePicker from 'components/date-picker/DatePicker.vue'
+import type { DatePickerProps, DatePickerRangeDisabledTime } from 'components/date-picker'
 import Popup from 'components/popup'
 import { getRangeCellClassNames, isInRangeTimestamp, isOutOfRangeBoundary } from 'components/picker/date-utils'
 import { flushTransition } from './helpers'
@@ -52,7 +53,7 @@ function findCell(dateText: string): HTMLElement | undefined {
   )
 }
 
-async function mountRange(props: Record<string, unknown> = {}) {
+async function mountRange(props: Partial<DatePickerProps> = {}) {
   wrapper = mount(DatePicker, {
     attachTo: document.body,
     global: { stubs: { transition: false } },
@@ -617,7 +618,8 @@ describe('日期时间范围形态', () => {
   })
 
   it('禁用时间按当前激活段注入（disabledTime 接收段标识）', async () => {
-    const disabledTime = vi.fn(() => ({ disabledHours: () => [0] }))
+    // 显式声明签名，mock.calls 才能按段标识取参（否则参数元组为空）
+    const disabledTime = vi.fn<DatePickerRangeDisabledTime>(() => ({ disabledHours: () => [0] }))
     await mountRange({ type: 'datetimerange', value: null, defaultTime: DEFAULT_TIME, disabledTime })
 
     expect(disabledTime).toHaveBeenCalled()
@@ -647,7 +649,7 @@ describe('日期时间范围形态', () => {
   })
 
   it('激活段为空时禁用时间的判定基准取另一端（同日约束不失效）', async () => {
-    const disabledTime = vi.fn(() => ({}))
+    const disabledTime = vi.fn<DatePickerRangeDisabledTime>(() => ({}))
     await mountRange({ type: 'datetimerange', value: [START, null], disabledTime })
 
     // 切到终点段（该段为空）：判定基准应落在起点那一日，而不是「默认时分秒 / 当前时刻」
@@ -661,7 +663,7 @@ describe('日期时间范围形态', () => {
 
   it('选日期后保留越界时刻、「确定」不禁用（不做顺位校正）', async () => {
     // 终点侧禁用 0-9 时：选日期时保留的 08:30 属越界草稿
-    const disabledTime = vi.fn((_timestamp: number, side: PickerRangeSide) =>
+    const disabledTime = vi.fn<DatePickerRangeDisabledTime>((_timestamp, side) =>
       side === 'end' ? { disabledHours: () => Array.from({ length: 10 }, (_, index) => index) } : {}
     )
     const range = await mountRange({

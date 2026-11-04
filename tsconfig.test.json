@@ -1,0 +1,23 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  // 测试工程：与 app 的区别是「DOM + node 并集 + vitest 全局」。vitest 用 esbuild 只擦类型、
+  // 不做检查，故由本工程把 tests/ 纳入 pnpm type-check。
+  // 不设 composite：测试不在构建图里（tests 引用 components/ 与 scripts/ 全部源码，纳入
+  // 构建图会触发 TS6307 要求逐条列全文件），保持独立检查工程，仅开 incremental 拿缓存。
+  "include": ["tests/**/*.ts", "types/*.d.ts"],
+  "exclude": ["node_modules", "dist", "es", "lib"],
+  "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
+    "types": ["node", "vitest/globals"],
+    // `@vitest-environment node` 是逐文件 pragma，单工程无法逐文件切换环境，这里取并集：
+    // node 环境测试里误用 document / window 不会被类型拦下，属本工程的固有限制。
+    "paths": {
+      "@/*": ["./src/*"],
+      "#/*": ["./types/*"],
+      "components/*": ["./components/*"],
+      "vue-amazing-ui": ["./components/index.ts"],
+      "less/*": ["./src/assets/less/*"]
+    }
+  }
+}

@@ -50,7 +50,7 @@ const inputFocus = ref<boolean>(false) // input 元素是否聚焦
 const isComposing = ref<boolean>(false) // 是否正在使用文本合成系统输入中
 const inputValue = ref<string>() // 输入框的值
 const showPassword = ref<boolean>(false) // 是否显示密码
-const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'enter', 'blur'])
+const emits = defineEmits(['update:value', 'compositionstart', 'compositionend', 'change', 'enter', 'focus', 'blur'])
 const slotsExist = useSlotsExist(['prefix', 'suffix', 'addonBefore', 'addonAfter'])
 const inputWidth = computed(() => {
   if (typeof props.width === 'number') {
@@ -102,8 +102,10 @@ function onMouseEnter(): void {
 function onMouseLeave(): void {
   inputWrapHover.value = false
 }
-function onFocus(): void {
+function onFocus(e: FocusEvent): void {
   inputFocus.value = true
+  // 原生 focus 带上 relatedTarget：宿主可据此区分「从哪来」（如 Tab 正向 / 反向进入）
+  emits('focus', e)
 }
 function onBlur(e: FocusEvent): void {
   inputFocus.value = false
@@ -161,6 +163,14 @@ function onClear(): void {
 function onPassword(): void {
   showPassword.value = !showPassword.value
 }
+// 程序化控制焦点：走原生 input 的 focus / blur，聚焦态由原生 focus / blur 事件驱动，无需另行同步
+function focus(): void {
+  inputRef.value?.focus()
+}
+function blur(): void {
+  inputRef.value?.blur()
+}
+defineExpose({ focus, blur })
 </script>
 <template>
   <div
@@ -173,7 +183,6 @@ function onPassword(): void {
       <slot name="addonBefore">{{ addonBefore }}</slot>
     </span>
     <div
-      tabindex="1"
       class="input-container"
       :class="[
         `input-${size}`,

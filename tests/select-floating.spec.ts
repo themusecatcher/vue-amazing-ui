@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach, beforeEach } from 'vitest'
 import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Select from 'components/select/Select.vue'
+import type { SelectProps } from 'components/select'
 
 /**
  * Select 走 L1 旁路接入定位内核后的契约回归
@@ -96,7 +97,7 @@ afterEach(() => {
 })
 
 /** 挂载并打开面板 */
-async function mountAndOpen(props: Record<string, unknown> = {}): Promise<void> {
+async function mountAndOpen(props: Partial<SelectProps> = {}): Promise<void> {
   wrapper = mount(Select, {
     attachTo: document.body,
     global: { stubs: { transition: false } },

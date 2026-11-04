@@ -14,6 +14,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-11-04">3.8.1</VersionDateTag>
+
+- 新增 [输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [文本域 Textarea](/guide/components/textarea.html) / [数字输入框 InputNumber](/guide/components/input-number.html) 的 `focus` 事件与 `focus()` / `blur()` 方法：事件参数为原生 `FocusEvent`，方法可程序化控制焦点
+- 修复 [输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [数字输入框 InputNumber](/guide/components/input-number.html) 的容器误设 `tabindex="1"`：键盘 `Tab` 会多停一次且打乱全站 `Tab` 顺序，现直达输入框
+- 优化 [选择器 Select](/guide/components/select.html) / [级联选择 Cascader](/guide/components/cascader.html) / [自动补全 AutoComplete](/guide/components/auto-complete.html) 的 `focus` / `blur` 事件：均回传原生 `FocusEvent`（含 `relatedTarget`），与日期 / 时间选择器口径统一
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-11-04">3.8.0</VersionDateTag>
 
 - 新增 [分页 Pagination](/guide/components/pagination.html) 的 `bordered` 属性与 `showQuickJumper` 的对象形态 `{ goButton }`（传字符串即按钮文案），跳转框改为只接受数字、有按钮时失焦不自动跳转，并补充 `PaginationQuickJumper` 类型导出

@@ -1180,9 +1180,10 @@ function handleSearch(value: string): void {
 function selectFocus(): void {
   inputRef.value?.focus() // 通过 input 标签聚焦来模拟 select 整体聚焦效果
 }
-function onFocus(): void {
+function onFocus(e: FocusEvent): void {
   focused.value = true
-  emits('focus')
+  // 回传原生事件：宿主可据 relatedTarget 判断焦点来源，与 blur 及 picker 家族口径一致
+  emits('focus', e)
 }
 /**
  * 焦点离开组件（触发器 blur 与面板 focusout 共用）
@@ -1193,9 +1194,9 @@ function onFocus(): void {
  * 面板侧的 focusout 是必需的一环：焦点进入面板内的自定义内容（dropdownRender 的输入框等）时
  * 触发器的 input 已经失焦，此后焦点再离开面板不会再触发它的 blur，仅靠 input 的 blur 面板将无法关闭
  */
-function onBlur(e?: FocusEvent): void {
+function onBlur(e: FocusEvent): void {
   if (props.disabled) return
-  const related = (e?.relatedTarget as Node | null) ?? null
+  const related = (e.relatedTarget as Node | null) ?? null
   if (related && (popupRef.value?.panelRef?.contains(related) || selectWrapRef.value?.contains(related))) return
   // 多选下焦点真正离开组件时处理残留的搜索文本：tags 提交为新标签，multiple 静默清空（约定）
   if (isMultiple.value && searchValueModel.value) {
@@ -1207,7 +1208,8 @@ function onBlur(e?: FocusEvent): void {
   }
   focused.value = false
   closePanel()
-  emits('blur')
+  // 回传原生事件：宿主可据 relatedTarget 判断焦点去向，与输入类组件的 blur 口径一致
+  emits('blur', e)
 }
 /**
  * 触发器 mousedown：阻止输入框以外的区域抢走焦点

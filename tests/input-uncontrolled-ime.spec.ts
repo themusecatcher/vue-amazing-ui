@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest'
 import { nextTick } from 'vue'
-import { mount } from '@vue/test-utils'
+import { mount, type VueWrapper } from '@vue/test-utils'
 import Input from 'components/input/Input.vue'
 
 /**
@@ -12,14 +12,15 @@ import Input from 'components/input/Input.vue'
  * 旧值，表现为「输入中文后鼠标一移开内容就没了」。故用测试固化「各条输入路径都必须回写内部值」。
  */
 
-let wrapper: ReturnType<typeof mount> | null = null
+// `ReturnType<typeof mount>` 会退化：mount 是重载泛型函数，ReturnType 取不到实际返回类型
+let wrapper: VueWrapper | null = null
 
 afterEach(() => {
   wrapper?.unmount()
   wrapper = null
 })
 
-type Wrapper = NonNullable<typeof wrapper>
+type Wrapper = VueWrapper
 
 const field = (w: Wrapper) => w.find('input.input-item')
 const domValue = (w: Wrapper) => (field(w).element as HTMLInputElement).value

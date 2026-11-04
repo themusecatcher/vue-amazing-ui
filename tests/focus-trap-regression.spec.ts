@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { createTextVNode, h } from 'vue'
+import type { VNode } from 'vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import Modal from 'components/modal'
 import Dialog from 'components/dialog'
@@ -50,7 +51,7 @@ afterEach(() => {
 const cases = [
   {
     name: 'Modal',
-    mountOpen: (slots: Record<string, unknown>, props: Record<string, unknown> = {}) =>
+    mountOpen: (slots: { default: () => VNode[] }, props: Record<string, unknown> = {}) =>
       mount(Modal, { props: { open: true, title: '焦点', ...props }, slots, attachTo: document.body }),
     containerSelector: '.modal-container',
     bodySelector: '.modal-body-wrap',
@@ -58,7 +59,7 @@ const cases = [
   },
   {
     name: 'Dialog',
-    mountOpen: (slots: Record<string, unknown>, props: Record<string, unknown> = {}) =>
+    mountOpen: (slots: { default: () => VNode[] }, props: Record<string, unknown> = {}) =>
       mount(Dialog, { props: { open: true, title: '焦点', ...props }, slots, attachTo: document.body }),
     containerSelector: '.dialog-container',
     bodySelector: '.dialog-body-wrap',

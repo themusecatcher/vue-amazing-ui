@@ -826,13 +826,6 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 | separator | 范围形态两段之间的分隔符，默认右向箭头 | v-slot:separator |
 | renderExtraFooter | 面板底部的额外页脚，渲染在操作行之上，优先于同名属性 | v-slot:renderExtraFooter |
 
-## Methods
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| focus | 使选择器获取焦点 | () => void |
-| blur | 使选择器失去焦点 | () => void |
-
 ## Events
 
 | 名称 | 说明 | 类型 |
@@ -843,3 +836,10 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 | openChange | 面板展开收起时的回调 | (open: boolean) => void |
 | focus | 输入框获取焦点时的回调 | (event: FocusEvent) => void |
 | blur | 输入框失去焦点时的回调 | (event: FocusEvent) => void |
+
+## Methods
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| focus | 使选择器获取焦点 | () => void |
+| blur | 使选择器失去焦点 | () => void |

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import DatePicker from 'components/date-picker/DatePicker.vue'
+import type { DatePickerProps } from 'components/date-picker'
 import { flushTransition } from './helpers'
 
 /**
@@ -32,13 +33,13 @@ async function flush(): Promise<void> {
   await flushTransition()
 }
 
-function mountPicker(props: Record<string, unknown> = {}) {
+function mountPicker(props: Partial<DatePickerProps> = {}) {
   wrapper = mount(DatePicker, {
     attachTo: document.body,
     global: { stubs: { transition: false } },
     props: { open: true, defaultPickerValue: VIEW_DATE, ...props }
   })
-  return flush().then(() => wrapper)
+  return flush().then(() => wrapper!)
 }
 
 /** 按 title（`yyyy-MM-dd`）定位日期格 */

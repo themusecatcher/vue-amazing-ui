@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import type { VueWrapper } from '@vue/test-utils'
+import type { DOMWrapper, VueWrapper } from '@vue/test-utils'
 import { nextTick } from 'vue'
 import Ellipsis from 'components/ellipsis'
 import Tooltip from 'components/tooltip'
@@ -74,7 +74,7 @@ function mountEllipsis(options: Parameters<typeof mount>[1] = {}): VueWrapper {
   return wrapper
 }
 /** 文本容器（恒为根节点，不随状态变化） */
-function boxOf(target: VueWrapper): VueWrapper {
+function boxOf(target: VueWrapper): DOMWrapper<Element> {
   const found = target.findAll('.ellipsis-container')[0]
   expect(found).toBeTruthy()
   return found

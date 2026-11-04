@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 import Carousel from 'components/carousel/Carousel.vue'
+import type { CarouselProps } from 'components/carousel'
 
 interface CarouselInst {
   to: (n: number) => void
@@ -68,7 +69,7 @@ function resetVisibility(): void {
   delete (document as unknown as Record<string, unknown>).visibilityState
 }
 
-async function mountCarousel(props: Record<string, unknown> = {}) {
+async function mountCarousel(props: Partial<CarouselProps> = {}) {
   const wrapper = mount(Carousel, {
     attachTo: document.body,
     props: {

@@ -95,7 +95,7 @@ describe('Tooltip 行为回归', () => {
     })
     await flush()
     const trigger = wrapper.find('.tooltip-content').element
-    const panel = (): HTMLElement | null => panelOf(wrapper)
+    const panel = (): HTMLElement | null => panelOf(wrapper!)
 
     trigger.dispatchEvent(new MouseEvent('click', { bubbles: true }))
     await flush()
@@ -105,7 +105,7 @@ describe('Tooltip 行为回归', () => {
 
     // 属性一变即生效，无需内部触发
     await wrapper.setProps({ open: false })
-    await waitHidden(() => panelOf(wrapper))
+    await waitHidden(() => panelOf(wrapper!))
     expect(panel()?.style.display).toBe('none')
   })
 
@@ -227,7 +227,7 @@ describe('Tooltip · destroyOnHide（透传给浮层宿主）', () => {
     expect(panel).not.toBeNull()
 
     await wrapper.setProps({ open: false })
-    await waitHidden(() => panelOf(wrapper))
+    await waitHidden(() => panelOf(wrapper!))
     expect(panelOf(wrapper)).toBe(panel)
     expect(panel?.style.display).toBe('none')
   })
@@ -319,7 +319,7 @@ describe('Tooltip · 多根插槽的触发范围', () => {
 
     second.dispatchEvent(new MouseEvent('click', { bubbles: true }))
     await flush()
-    await waitHidden(() => panelOf(wrapper))
+    await waitHidden(() => panelOf(wrapper!))
     // 只发一次 false：外点上报与显式切换在同一拍收敛，没有「关了又开」的中间态
     expect(wrapper.emitted('openChange')).toEqual([[true], [false]])
     expect(panelOf(wrapper)?.style.display).toBe('none')

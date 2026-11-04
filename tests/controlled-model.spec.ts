@@ -35,12 +35,19 @@ function createProbe(defaultValue: boolean) {
   })
 }
 
+/** 探针组件经 `expose` 暴露的方法：`defineComponent` 无法推导 expose 的类型，按实际暴露面声明 */
+interface ProbeApi {
+  read: () => boolean
+  write: (value: boolean) => void
+}
+const vmOf = (target: { vm: unknown }): ProbeApi => target.vm as ProbeApi
+
 describe('useControlledModel', () => {
   it('不传值：非受控，初值取 defaultValue，写入本地生效并上报', async () => {
     const wrapper = mount(createProbe(false))
     expect(wrapper.text()).toBe('false')
 
-    wrapper.vm.write(true)
+    vmOf(wrapper).write(true)
     await nextTick()
     expect(wrapper.text()).toBe('true')
     expect(wrapper.emitted('update:open')).toEqual([[true]])
@@ -50,7 +57,7 @@ describe('useControlledModel', () => {
     const wrapper = mount(createProbe(false), { props: { open: true } })
     expect(wrapper.text()).toBe('true')
 
-    wrapper.vm.write(false)
+    vmOf(wrapper).write(false)
     await nextTick()
     expect(wrapper.text()).toBe('true')
     expect(wrapper.emitted('update:open')).toEqual([[false]])
@@ -68,7 +75,7 @@ describe('useControlledModel', () => {
     )
     expect(wrapper.text()).toBe('true')
 
-    wrapper.findComponent(Probe).vm.write(false)
+    vmOf(wrapper.findComponent(Probe)).write(false)
     await nextTick()
     expect(open.value).toBe(false)
     expect(wrapper.text()).toBe('false')
@@ -78,7 +85,7 @@ describe('useControlledModel', () => {
     const wrapper = mount(createProbe(false), { props: { open: undefined } })
     expect(wrapper.text()).toBe('false')
 
-    wrapper.vm.write(true)
+    vmOf(wrapper).write(true)
     await nextTick()
     expect(wrapper.text()).toBe('true')
     expect(wrapper.emitted('update:open')).toEqual([[true]])
@@ -86,8 +93,8 @@ describe('useControlledModel', () => {
 
   it('同一轮内重复写同一个值：只上报一次（输入框 v-model 与事件处理器各写一次的兜底）', async () => {
     const wrapper = mount(createProbe(false))
-    wrapper.vm.write(true)
-    wrapper.vm.write(true)
+    vmOf(wrapper).write(true)
+    vmOf(wrapper).write(true)
     await nextTick()
     expect(wrapper.emitted('update:open')).toEqual([[true]])
   })
@@ -102,9 +109,9 @@ describe('useControlledModel', () => {
     )
     const probe = wrapper.findComponent(Probe)
 
-    probe.vm.write(true)
+    vmOf(probe).write(true)
     await nextTick()
-    probe.vm.write(true)
+    vmOf(probe).write(true)
     await nextTick()
 
     expect(probe.emitted('update:open')).toEqual([[true], [true]])

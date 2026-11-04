@@ -944,6 +944,12 @@ const state = reactive({
 | href? | 跳转链接 | string |
 | target? | 跳转链接打开方式，`href` 存在时生效 | '\_self' &#124; '\_blank' |
 
+## Events
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| click | 点击标题时的回调 | (item: [TextScrollItem](#textscrollitem-type)) => void |
+
 ## Methods
 
 | 名称 | 说明 | 类型 |
@@ -951,9 +957,3 @@ const state = reactive({
 | start | 开始滚动 | () => void |
 | stop | 暂停滚动 | () => void |
 | reset | 重置滚动 | () => void |
-
-## Events
-
-| 名称 | 说明 | 类型 |
-| :-- | :-- | :-- |
-| click | 点击标题时的回调 | (item: [TextScrollItem](#textscrollitem-type)) => void |

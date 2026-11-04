@@ -8,17 +8,17 @@ import type { NotificationApi, NotificationOptions } from 'components/notificati
  * 统一改为 document 级查询；命令式方法经 `ready` 事件回传的 api 获取。
  */
 function mountNotification(attrs: Record<string, unknown> = {}) {
-  const apiHolder: { api?: NotificationApi } = {}
+  let api!: NotificationApi
   const wrapper = mount(Notification, {
     attachTo: document.body,
     props: {
       onReady: (value: NotificationApi) => {
-        apiHolder.api = value
+        api = value
       }
     },
     attrs
   })
-  return { wrapper, api: apiHolder.api as unknown as { open: (o: NotificationOptions) => void } }
+  return { wrapper, api }
 }
 
 describe('Notification 属性透传', () => {

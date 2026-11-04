@@ -853,9 +853,10 @@ const inputModelValue = computed({
 function focusTrigger(): void {
   inputRef.value?.focus()
 }
-function onFocus(): void {
+function onFocus(e: FocusEvent): void {
   focused.value = true
-  emits('focus')
+  // 回传原生事件：宿主可据 relatedTarget 判断焦点来源，与 blur 及 picker 家族口径一致
+  emits('focus', e)
 }
 /**
  * 焦点离开组件（触发器 blur 与面板 focusout 共用）
@@ -863,13 +864,14 @@ function onFocus(): void {
  * 焦点仍在本组件内时（面板内自定义内容之间移动、或回到触发器本身）不收起，
  * 面板侧的 focusout 是必需的一环：焦点进入面板内自定义内容后再离开时，触发器不会再收到 blur
  */
-function onBlur(e?: FocusEvent): void {
+function onBlur(e: FocusEvent): void {
   if (props.disabled) return
-  const related = (e?.relatedTarget as Node | null) ?? null
+  const related = (e.relatedTarget as Node | null) ?? null
   if (related && (popupRef.value?.panelRef?.contains(related) || wrapRef.value?.contains(related))) return
   focused.value = false
   closePanel()
-  emits('blur')
+  // 回传原生事件：宿主可据 relatedTarget 判断焦点去向，与输入类组件的 blur 口径一致
+  emits('blur', e)
 }
 /**
  * 触发器 mousedown：阻止输入框以外的区域抢走焦点
