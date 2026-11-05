@@ -160,6 +160,9 @@ const positionStyle = computed(() => {
     }
   }
 })
+// 键盘操作用例：tabPosition 决定方向键（top / bottom 用 ← →，left / right 用 ↑ ↓），禁用页签自动跳过
+const keyboardPosition = ref<NonNullable<TabsProps['tabPosition']>>('top')
+const keyboardActiveKey = ref<TabsProps['activeKey']>('1')
 const state = reactive<TabsProps>({
   prefix: '',
   suffix: '',
@@ -196,18 +199,24 @@ const justifyOptions = [
   { label: 'space-around', value: 'space-around' },
   { label: 'space-evenly', value: 'space-evenly' }
 ]
-const guardEnabled = ref(true)
 const guardActiveKey = ref<TabsProps['activeKey']>('1')
 const guardTip = ref('')
-function onBeforeLeave(key: string | number): boolean {
-  if (!guardEnabled.value) {
-    guardTip.value = `未拦截，已切换到 Tab ${key}`
-    return true
+function onBeforeLeave(key: string | number): boolean | Promise<never> {
+  if (key === '3') {
+    guardTip.value = `beforeLeave 返回 false，已取消切换到 Tab ${key}`
+    return false
   }
-  guardTip.value = `beforeLeave 返回 false，已取消切换到 Tab ${key}`
-  return false
+  if (key === '4') {
+    guardTip.value = `beforeLeave Promise reject，已取消切换到 Tab ${key}`
+    return Promise.reject(new Error('取消切换'))
+  }
+  guardTip.value = `已放行，切换到 Tab ${key}`
+  return true
 }
-const renderActiveKey = ref<TabsProps['activeKey']>('1')
+// 三种 displayDirective 各自独立激活项，便于单独操作某一个对照观察
+const renderIfActiveKey = ref<TabsProps['activeKey']>('1')
+const renderShowActiveKey = ref<TabsProps['activeKey']>('1')
+const renderShowLazyActiveKey = ref<TabsProps['activeKey']>('1')
 const addDisabledDemo = ref(true)
 // 对象形态渲染禁用态按钮：无权限时保留入口但不触发新增
 const addableDemo = computed<boolean | { disabled?: boolean }>(() => {
@@ -292,10 +301,10 @@ const cardTopContentStyle: CSSProperties = {
     </Tabs>
     <h2 class="mt30 mb10">滑动</h2>
     <p class="mb10">页签超出可视区域时可滚轮滑动，滚出视口的页签收纳进末尾的更多下拉</p>
-    <Flex gap="small" align="center" class="mb10">
-      tabPosition：<RadioGroup :options="positionOptions" v-model:value="morePosition" button button-style="solid" />
-    </Flex>
     <Flex vertical>
+      <Flex gap="small" align="center">
+        tabPosition：<RadioGroup :options="positionOptions" v-model:value="morePosition" button button-style="solid" />
+      </Flex>
       <Tabs :style="positionStyle" v-model:active-key="moreActiveKey" :tab-position="morePosition">
         <TabPane v-for="item in moreTabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
       </Tabs>
@@ -319,10 +328,10 @@ const cardTopContentStyle: CSSProperties = {
       </Tabs>
     </Flex>
     <h2 class="mt30 mb10">大小</h2>
-    <Flex gap="small" align="center" class="mb10">
-      size：<RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
-    </Flex>
     <Flex vertical>
+      <Flex gap="small" align="center">
+        size：<RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      </Flex>
       <Tabs v-model:active-key="sizeActiveKey" :size="size">
         <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
       </Tabs>
@@ -331,15 +340,36 @@ const cardTopContentStyle: CSSProperties = {
       </Tabs>
     </Flex>
     <h2 class="mt30 mb10">位置</h2>
-    <Flex gap="small" align="center" class="mb10">
-      tabPosition：<RadioGroup :options="positionOptions" v-model:value="position" button button-style="solid" />
-    </Flex>
     <Flex vertical>
+      <Flex gap="small" align="center">
+        tabPosition：<RadioGroup :options="positionOptions" v-model:value="position" button button-style="solid" />
+      </Flex>
       <Tabs v-model:active-key="positionActiveKey" :tab-position="position">
         <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
       </Tabs>
       <Tabs v-model:active-key="positionActiveKey" :tab-position="position" type="card">
         <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
+      </Tabs>
+    </Flex>
+    <h2 class="mt30 mb10">键盘操作</h2>
+    <p class="mb10">
+      聚焦页签后可用键盘切换，禁用页签自动跳过（<code>tabPosition</code> 为 <code>top</code> / <code>bottom</code> 时用
+      <code>←</code> <code>→</code>，为 <code>left</code> / <code>right</code> 时用 <code>↑</code>
+      <code>↓</code>）；<code>Home</code> / <code>End</code> 跳到首尾可用页签，移动即激活并把焦点交给目标页签
+    </p>
+    <Flex vertical>
+      <Flex gap="small" align="center">
+        tabPosition：<RadioGroup
+          :options="positionOptions"
+          v-model:value="keyboardPosition"
+          button
+          button-style="solid"
+        />
+      </Flex>
+      <Tabs v-model:active-key="keyboardActiveKey" :tab-position="keyboardPosition">
+        <TabPane v-for="item in tabListDisabled" :key="item.key" :tab="item.tab" :disabled="item.disabled">{{
+          item.content
+        }}</TabPane>
       </Tabs>
     </Flex>
     <h2 class="mt30 mb10">卡片式页签</h2>
@@ -395,18 +425,20 @@ const cardTopContentStyle: CSSProperties = {
     </Tabs>
     <h2 class="mt30 mb10">新增按钮禁用</h2>
     <p class="mb10"> <code>addable</code> 传对象可把新增按钮渲染为禁用态，无权限时保留入口而非直接消失 </p>
-    <Flex gap="small" align="center" class="mb10"> 禁用新增：<Switch v-model:value="addDisabledDemo" /> </Flex>
-    <Tabs
-      v-model:active-key="disabledAddActiveKey"
-      type="card"
-      :addable="addableDemo"
-      @add="addDisabledPane"
-      @close="closeDisabledPane"
-    >
-      <TabPane v-for="pane in disabledAddPanes" :key="pane.key" :tab="pane.tab" :closable="pane.closable !== false">{{
-        pane.content
-      }}</TabPane>
-    </Tabs>
+    <Flex vertical>
+      <Flex gap="small" align="center"> 禁用新增：<Switch v-model:value="addDisabledDemo" /> </Flex>
+      <Tabs
+        v-model:active-key="disabledAddActiveKey"
+        type="card"
+        :addable="addableDemo"
+        @add="addDisabledPane"
+        @close="closeDisabledPane"
+      >
+        <TabPane v-for="pane in disabledAddPanes" :key="pane.key" :tab="pane.tab" :closable="pane.closable !== false">{{
+          pane.content
+        }}</TabPane>
+      </Tabs>
+    </Flex>
     <h2 class="mt30 mb10">自定义页签头</h2>
     <p class="mb10">通过 <code>tabBar</code> 插槽替换内置导航，示例为卡片式页签头，选中项呈现为主色实心</p>
     <Tabs v-model:active-key="barActiveKey">
@@ -466,45 +498,48 @@ const cardTopContentStyle: CSSProperties = {
     <p class="mb10"
       >开启 <code>animated</code> 后面板随页签横向滑动切换，仅在 <code>tabPosition</code> 为 top / bottom 时生效</p
     >
-    <Flex gap="small" align="center" class="mb10"> animated：<Switch v-model:value="animEnabled" /> </Flex>
-    <Tabs v-model:active-key="animActiveKey" :animated="animEnabled">
-      <TabPane v-for="item in tabList.slice(0, 4)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
-    </Tabs>
+    <Flex vertical>
+      <Flex gap="small" align="center"> animated：<Switch v-model:value="animEnabled" /> </Flex>
+      <Tabs v-model:active-key="animActiveKey" :animated="animEnabled">
+        <TabPane v-for="item in tabList.slice(0, 4)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
+      </Tabs>
+    </Flex>
     <h2 class="mt30 mb10">销毁非活跃面板</h2>
     <p class="mb10"
       >开启
       <code>destroyInactiveTabPane</code>
       后非激活面板的内容会被卸载，切回时重新创建；关闭开关则内容常驻，输入不会丢失</p
     >
-    <Flex gap="small" align="center" class="mb10">
-      destroyInactiveTabPane：<Switch v-model:value="destroyEnabled" />
+    <Flex vertical>
+      <Flex gap="small" align="center"> destroyInactiveTabPane：<Switch v-model:value="destroyEnabled" /> </Flex>
+      <Tabs v-model:active-key="destroyActiveKey" :destroy-inactive-tab-pane="destroyEnabled">
+        <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">
+          <p class="mb10">当前面板 {{ item.key }}</p>
+          <Input placeholder="输入后切换页签，观察内容是否保留" />
+        </TabPane>
+      </Tabs>
     </Flex>
-    <Tabs v-model:active-key="destroyActiveKey" :destroy-inactive-tab-pane="destroyEnabled">
-      <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">
-        <Input placeholder="输入后切换页签，观察内容是否保留" />
-      </TabPane>
-    </Tabs>
     <h2 class="mt30 mb10">面板渲染时机</h2>
     <p class="mb10">
       <code>TabPane</code> 的 <code>displayDirective</code> 控制非激活面板：<code>if</code> 立即卸载、<code>show</code>
       保留、<code>show:lazy</code> 首次激活后保留
     </p>
     <Flex vertical>
-      <Tabs v-model:active-key="renderActiveKey">
+      <Tabs v-model:active-key="renderIfActiveKey">
         <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab" display-directive="if">
-          <p class="mb10">if：切走后内容卸载，输入不保留</p>
+          <p class="mb10">面板 {{ item.key }}｜if：切走后内容卸载，输入不保留</p>
           <Input placeholder="输入后切换页签，观察内容" />
         </TabPane>
       </Tabs>
-      <Tabs v-model:active-key="renderActiveKey">
+      <Tabs v-model:active-key="renderShowActiveKey">
         <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab" display-directive="show">
-          <p class="mb10">show：内容常驻，输入保留</p>
+          <p class="mb10">面板 {{ item.key }}｜show：内容常驻，输入保留</p>
           <Input placeholder="输入后切换页签，观察内容" />
         </TabPane>
       </Tabs>
-      <Tabs v-model:active-key="renderActiveKey">
+      <Tabs v-model:active-key="renderShowLazyActiveKey">
         <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab" display-directive="show:lazy">
-          <p class="mb10">show:lazy：首次激活后才渲染，之后保留</p>
+          <p class="mb10">面板 {{ item.key }}｜show:lazy：首次激活后才渲染，之后保留</p>
           <Input placeholder="输入后切换页签，观察内容" />
         </TabPane>
       </Tabs>
@@ -528,19 +563,29 @@ const cardTopContentStyle: CSSProperties = {
     <p class="mb10">
       通过 <code>justifyContent</code> 控制页签在导航区的分布，仅在 <code>type</code> 为 line 且页签未溢出时生效
     </p>
-    <Flex gap="small" align="center" class="mb10">
-      justifyContent：<RadioGroup :options="justifyOptions" v-model:value="justifyValue" button button-style="solid" />
+    <Flex vertical>
+      <Flex gap="small" align="center">
+        justifyContent：<RadioGroup
+          :options="justifyOptions"
+          v-model:value="justifyValue"
+          button
+          button-style="solid"
+        />
+      </Flex>
+      <Tabs v-model:active-key="justifyActiveKey" :justify-content="justifyValue">
+        <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
+      </Tabs>
     </Flex>
-    <Tabs v-model:active-key="justifyActiveKey" :justify-content="justifyValue">
-      <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
-    </Tabs>
     <h2 class="mt30 mb10">切换拦截</h2>
     <p class="mb10">
-      通过 <code>beforeLeave</code> 拦截切换：返回 <code>false</code> 或 Promise reject 时取消本次切换
+      通过 <code>beforeLeave</code> 拦截切换：返回 <code>false</code> 或 <code>Promise.reject</code> 时取消本次切换；从
+      Tab 1 出发，Tab 2 正常放行、Tab 3 返回 <code>false</code>、Tab 4 返回 <code>Promise.reject</code>，结果展示在下方
     </p>
-    <Flex gap="small" align="center" class="mb10"> 拦截切换：<Switch v-model:value="guardEnabled" /> </Flex>
     <Tabs v-model:active-key="guardActiveKey" :before-leave="onBeforeLeave">
-      <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
+      <TabPane key="1" tab="Tab 1">切换到下方页签，观察放行与拦截结果</TabPane>
+      <TabPane key="2" tab="Tab 2">beforeLeave 返回 true，切换成功</TabPane>
+      <TabPane key="3" tab="Tab 3">beforeLeave 返回 false，取消切换</TabPane>
+      <TabPane key="4" tab="Tab 4">beforeLeave 返回 Promise.reject，取消切换</TabPane>
     </Tabs>
     <p class="mt10">最近操作：{{ guardTip || '暂无' }}</p>
     <h2 class="mt30 mb10">自定义类名</h2>
@@ -550,10 +595,12 @@ const cardTopContentStyle: CSSProperties = {
     </Tabs>
     <h2 class="mt30 mb10">激活项居中</h2>
     <p class="mb10"> 开启 <code>centerActiveTab</code> 后切换页签会把激活项滚到导航区中间，首尾空间不足时贴边 </p>
-    <Flex gap="small" align="center" class="mb10"> 居中：<Switch v-model:value="centerEnabled" /> </Flex>
-    <Tabs v-model:active-key="centerActiveKey" style="width: 360px" :center-active-tab="centerEnabled">
-      <TabPane v-for="item in moreTabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
-    </Tabs>
+    <Flex vertical>
+      <Flex gap="small" align="center"> 居中：<Switch v-model:value="centerEnabled" /> </Flex>
+      <Tabs v-model:active-key="centerActiveKey" style="width: 360px" :center-active-tab="centerEnabled">
+        <TabPane v-for="item in moreTabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
+      </Tabs>
+    </Flex>
     <h2 class="mt30 mb10">标签页配置器</h2>
     <p class="mb10">
       组合调整下方配置项可实时预览属性效果，<code>justifyContent</code> 的

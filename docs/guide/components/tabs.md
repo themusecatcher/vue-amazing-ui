@@ -164,6 +164,9 @@ const positionStyle = computed(() => {
     }
   }
 })
+// 键盘操作用例：tabPosition 决定方向键（top / bottom 用 ← →，left / right 用 ↑ ↓），禁用页签自动跳过
+const keyboardPosition = ref<NonNullable<TabsProps['tabPosition']>>('top')
+const keyboardActiveKey = ref<TabsProps['activeKey']>('1')
 const state = reactive<TabsProps>({
   prefix: '',
   suffix: '',
@@ -200,18 +203,24 @@ const justifyOptions = [
   { label: 'space-around', value: 'space-around' },
   { label: 'space-evenly', value: 'space-evenly' }
 ]
-const guardEnabled = ref(true)
 const guardActiveKey = ref<TabsProps['activeKey']>('1')
 const guardTip = ref('')
-function onBeforeLeave(key: string | number): boolean {
-  if (!guardEnabled.value) {
-    guardTip.value = `未拦截，已切换到 Tab ${key}`
-    return true
+function onBeforeLeave(key: string | number): boolean | Promise<never> {
+  if (key === '3') {
+    guardTip.value = `beforeLeave 返回 false，已取消切换到 Tab ${key}`
+    return false
   }
-  guardTip.value = `beforeLeave 返回 false，已取消切换到 Tab ${key}`
-  return false
+  if (key === '4') {
+    guardTip.value = `beforeLeave Promise reject，已取消切换到 Tab ${key}`
+    return Promise.reject(new Error('取消切换'))
+  }
+  guardTip.value = `已放行，切换到 Tab ${key}`
+  return true
 }
-const renderActiveKey = ref<TabsProps['activeKey']>('1')
+// 三种 displayDirective 各自独立激活项，便于单独操作某一个对照观察
+const renderIfActiveKey = ref<TabsProps['activeKey']>('1')
+const renderShowActiveKey = ref<TabsProps['activeKey']>('1')
+const renderShowLazyActiveKey = ref<TabsProps['activeKey']>('1')
 const addDisabledDemo = ref(true)
 // 对象形态渲染禁用态按钮：无权限时保留入口但不触发新增
 const addableDemo = computed<boolean | { disabled?: boolean }>(() => {
@@ -255,7 +264,7 @@ const cardTopContentStyle: CSSProperties = {
   <TabPane key="3" tab="Tab 3">Content of Tab Pane 3</TabPane>
 </Tabs>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -275,7 +284,7 @@ function onChange(key: string | number) {
 </template>
 ```
 
-::::
+:::
 
 ## 禁用
 
@@ -292,7 +301,7 @@ function onChange(key: string | number) {
   </Tabs>
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -301,7 +310,10 @@ import type { TabsProps } from 'vue-amazing-ui'
 const tabListDisabled = [
   { key: '1', tab: 'Tab 1', content: 'Content of Tab Pane 1', disabled: false },
   { key: '2', tab: 'Tab 2', content: 'Content of Tab Pane 2', disabled: false },
-  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3', disabled: true }
+  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3', disabled: true },
+  { key: '4', tab: 'Tab 4', content: 'Content of Tab Pane 4', disabled: false },
+  { key: '5', tab: 'Tab 5', content: 'Content of Tab Pane 5', disabled: false },
+  { key: '6', tab: 'Tab 6', content: 'Content of Tab Pane 6', disabled: false }
 ]
 const activeKey = ref<TabsProps['activeKey']>('1')
 </script>
@@ -321,7 +333,7 @@ const activeKey = ref<TabsProps['activeKey']>('1')
 </template>
 ```
 
-::::
+:::
 
 ## 居中
 
@@ -338,7 +350,7 @@ _通过 `justifyContent` 设为 center 让页签居中，line 与 card 类型均
   </Tabs>
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -347,7 +359,10 @@ import type { TabsProps } from 'vue-amazing-ui'
 const tabList = [
   { key: '1', tab: 'Tab 1', content: 'Content of Tab Pane 1' },
   { key: '2', tab: 'Tab 2', content: 'Content of Tab Pane 2' },
-  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' }
+  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' },
+  { key: '4', tab: 'Tab 4', content: 'Content of Tab Pane 4' },
+  { key: '5', tab: 'Tab 5', content: 'Content of Tab Pane 5' },
+  { key: '6', tab: 'Tab 6', content: 'Content of Tab Pane 6' }
 ]
 const activeKey = ref<TabsProps['activeKey']>('1')
 </script>
@@ -363,7 +378,7 @@ const activeKey = ref<TabsProps['activeKey']>('1')
 </template>
 ```
 
-::::
+:::
 
 ## 图标
 
@@ -386,7 +401,7 @@ _使用 `TabPane` 的 `tab` 插槽自定义页签内容_
   </TabPane>
 </Tabs>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -413,7 +428,7 @@ const iconActiveKey = ref<TabsProps['activeKey']>('1')
 </template>
 ```
 
-::::
+:::
 
 ## 滑动
 
@@ -421,11 +436,10 @@ _页签超出可视区域时可滚轮滑动，滚出视口的页签收纳进末�
 
 <br/>
 
-<Flex gap="small" align="center">
-  tabPosition：<RadioGroup :options="positionOptions" v-model:value="morePosition" button button-style="solid" />
-</Flex>
-
 <Flex vertical>
+  <Flex gap="small" align="center">
+    tabPosition：<RadioGroup :options="positionOptions" v-model:value="morePosition" button button-style="solid" />
+  </Flex>
   <Tabs :style="positionStyle" v-model:active-key="moreActiveKey" :tab-position="morePosition">
     <TabPane v-for="item in moreTabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
   </Tabs>
@@ -434,7 +448,7 @@ _页签超出可视区域时可滚轮滑动，滚出视口的页签收纳进末�
   </Tabs>
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -471,10 +485,10 @@ const positionStyle = computed(() => {
 const moreActiveKey = ref<TabsProps['activeKey']>('1')
 </script>
 <template>
-  <Flex gap="small" align="center">
-    tabPosition：<RadioGroup :options="positionOptions" v-model:value="morePosition" button button-style="solid" />
-  </Flex>
   <Flex vertical>
+    <Flex gap="small" align="center">
+      tabPosition：<RadioGroup :options="positionOptions" v-model:value="morePosition" button button-style="solid" />
+    </Flex>
     <Tabs :style="positionStyle" v-model:active-key="moreActiveKey" :tab-position="morePosition">
       <TabPane v-for="item in moreTabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
     </Tabs>
@@ -485,7 +499,7 @@ const moreActiveKey = ref<TabsProps['activeKey']>('1')
 </template>
 ```
 
-::::
+:::
 
 ## 附加内容
 
@@ -504,7 +518,7 @@ const moreActiveKey = ref<TabsProps['activeKey']>('1')
   </Tabs>
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -513,7 +527,10 @@ import type { TabsProps } from 'vue-amazing-ui'
 const tabList = [
   { key: '1', tab: 'Tab 1', content: 'Content of Tab Pane 1' },
   { key: '2', tab: 'Tab 2', content: 'Content of Tab Pane 2' },
-  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' }
+  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' },
+  { key: '4', tab: 'Tab 4', content: 'Content of Tab Pane 4' },
+  { key: '5', tab: 'Tab 5', content: 'Content of Tab Pane 5' },
+  { key: '6', tab: 'Tab 6', content: 'Content of Tab Pane 6' }
 ]
 const activeKey = ref<TabsProps['activeKey']>('1')
 </script>
@@ -535,15 +552,14 @@ const activeKey = ref<TabsProps['activeKey']>('1')
 </template>
 ```
 
-::::
+:::
 
 ## 大小
 
-<Flex gap="small" align="center">
-  size：<RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
-</Flex>
-
 <Flex vertical>
+  <Flex gap="small" align="center">
+    size：<RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  </Flex>
   <Tabs v-model:active-key="sizeActiveKey" :size="size">
     <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
   </Tabs>
@@ -552,7 +568,7 @@ const activeKey = ref<TabsProps['activeKey']>('1')
   </Tabs>
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -561,7 +577,10 @@ import type { TabsProps } from 'vue-amazing-ui'
 const tabList = [
   { key: '1', tab: 'Tab 1', content: 'Content of Tab Pane 1' },
   { key: '2', tab: 'Tab 2', content: 'Content of Tab Pane 2' },
-  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' }
+  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' },
+  { key: '4', tab: 'Tab 4', content: 'Content of Tab Pane 4' },
+  { key: '5', tab: 'Tab 5', content: 'Content of Tab Pane 5' },
+  { key: '6', tab: 'Tab 6', content: 'Content of Tab Pane 6' }
 ]
 const sizeOptions = [
   { label: 'small', value: 'small' },
@@ -572,10 +591,10 @@ const size = ref<TabsProps['size']>('middle')
 const activeKey = ref<TabsProps['activeKey']>('1')
 </script>
 <template>
-  <Flex gap="small" align="center">
-    size：<RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
-  </Flex>
   <Flex vertical>
+    <Flex gap="small" align="center">
+      size：<RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    </Flex>
     <Tabs v-model:active-key="activeKey" :size="size">
       <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
     </Tabs>
@@ -586,15 +605,14 @@ const activeKey = ref<TabsProps['activeKey']>('1')
 </template>
 ```
 
-::::
+:::
 
 ## 位置
 
-<Flex gap="small" align="center">
-  tabPosition：<RadioGroup :options="positionOptions" v-model:value="position" button button-style="solid" />
-</Flex>
-
 <Flex vertical>
+  <Flex gap="small" align="center">
+    tabPosition：<RadioGroup :options="positionOptions" v-model:value="position" button button-style="solid" />
+  </Flex>
   <Tabs v-model:active-key="positionActiveKey" :tab-position="position">
     <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
   </Tabs>
@@ -603,7 +621,7 @@ const activeKey = ref<TabsProps['activeKey']>('1')
   </Tabs>
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -612,7 +630,10 @@ import type { TabsProps } from 'vue-amazing-ui'
 const tabList = [
   { key: '1', tab: 'Tab 1', content: 'Content of Tab Pane 1' },
   { key: '2', tab: 'Tab 2', content: 'Content of Tab Pane 2' },
-  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' }
+  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' },
+  { key: '4', tab: 'Tab 4', content: 'Content of Tab Pane 4' },
+  { key: '5', tab: 'Tab 5', content: 'Content of Tab Pane 5' },
+  { key: '6', tab: 'Tab 6', content: 'Content of Tab Pane 6' }
 ]
 const positionOptions = [
   { label: 'top', value: 'top' },
@@ -624,10 +645,10 @@ const position = ref<NonNullable<TabsProps['tabPosition']>>('top')
 const activeKey = ref<TabsProps['activeKey']>('1')
 </script>
 <template>
-  <Flex gap="small" align="center">
-    tabPosition：<RadioGroup :options="positionOptions" v-model:value="position" button button-style="solid" />
-  </Flex>
   <Flex vertical>
+    <Flex gap="small" align="center">
+      tabPosition：<RadioGroup :options="positionOptions" v-model:value="position" button button-style="solid" />
+    </Flex>
     <Tabs v-model:active-key="activeKey" :tab-position="position">
       <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
     </Tabs>
@@ -638,7 +659,68 @@ const activeKey = ref<TabsProps['activeKey']>('1')
 </template>
 ```
 
-::::
+:::
+
+## 键盘操作
+
+_聚焦页签后可用键盘切换，禁用页签自动跳过_
+
+| 按键 | 说明 |
+| :-- | :-- |
+| `←` / `→` | `tabPosition` 为 `top` / `bottom` 时，在页签之间前后移动并激活 |
+| `↑` / `↓` | `tabPosition` 为 `left` / `right` 时，在页签之间前后移动并激活 |
+| `Home` | 跳到第一个可用页签并激活 |
+| `End` | 跳到最后一个可用页签并激活 |
+
+<Flex vertical>
+  <Flex gap="small" align="center">
+    tabPosition：<RadioGroup :options="positionOptions" v-model:value="keyboardPosition" button button-style="solid" />
+  </Flex>
+  <Tabs v-model:active-key="keyboardActiveKey" :tab-position="keyboardPosition">
+    <TabPane v-for="item in tabListDisabled" :key="item.key" :tab="item.tab" :disabled="item.disabled">{{
+      item.content
+    }}</TabPane>
+  </Tabs>
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { TabsProps } from 'vue-amazing-ui'
+const tabListDisabled = [
+  { key: '1', tab: 'Tab 1', content: 'Content of Tab Pane 1', disabled: false },
+  { key: '2', tab: 'Tab 2', content: 'Content of Tab Pane 2', disabled: false },
+  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3', disabled: true },
+  { key: '4', tab: 'Tab 4', content: 'Content of Tab Pane 4', disabled: false },
+  { key: '5', tab: 'Tab 5', content: 'Content of Tab Pane 5', disabled: false },
+  { key: '6', tab: 'Tab 6', content: 'Content of Tab Pane 6', disabled: false }
+]
+const positionOptions = [
+  { label: 'top', value: 'top' },
+  { label: 'bottom', value: 'bottom' },
+  { label: 'left', value: 'left' },
+  { label: 'right', value: 'right' }
+]
+const keyboardPosition = ref<NonNullable<TabsProps['tabPosition']>>('top')
+const keyboardActiveKey = ref<TabsProps['activeKey']>('1')
+</script>
+<template>
+  <Flex vertical>
+    <Flex gap="small" align="center">
+      tabPosition：<RadioGroup :options="positionOptions" v-model:value="keyboardPosition" button button-style="solid" />
+    </Flex>
+    <Tabs v-model:active-key="keyboardActiveKey" :tab-position="keyboardPosition">
+      <TabPane v-for="item in tabListDisabled" :key="item.key" :tab="item.tab" :disabled="item.disabled">{{
+        item.content
+      }}</TabPane>
+    </Tabs>
+  </Flex>
+</template>
+```
+
+:::
 
 ## 卡片式页签
 
@@ -646,7 +728,7 @@ const activeKey = ref<TabsProps['activeKey']>('1')
   <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
 </Tabs>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -655,7 +737,10 @@ import type { TabsProps } from 'vue-amazing-ui'
 const tabList = [
   { key: '1', tab: 'Tab 1', content: 'Content of Tab Pane 1' },
   { key: '2', tab: 'Tab 2', content: 'Content of Tab Pane 2' },
-  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' }
+  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' },
+  { key: '4', tab: 'Tab 4', content: 'Content of Tab Pane 4' },
+  { key: '5', tab: 'Tab 5', content: 'Content of Tab Pane 5' },
+  { key: '6', tab: 'Tab 6', content: 'Content of Tab Pane 6' }
 ]
 const activeKey = ref<TabsProps['activeKey']>('1')
 function onChange(key: string | number) {
@@ -669,7 +754,7 @@ function onChange(key: string | number) {
 </template>
 ```
 
-::::
+:::
 
 ## 新增和关闭页签
 
@@ -698,7 +783,7 @@ _`addable` 展示新增按钮、`closable` 展示关闭按钮，增删由 `add` 
   </Tabs>
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -734,28 +819,30 @@ function closePane(key: string | number): void {
 }
 </script>
 <template>
-  <Tabs v-model:active-key="editActiveKey" type="card" addable @add="addPane" @close="closePane">
-    <TabPane
-      v-for="pane in editPanes"
-      :key="pane.key"
-      :tab="pane.tab"
-      :closable="pane.closable !== false"
-      >{{ pane.content }}</TabPane
-    >
-  </Tabs>
-  <Tabs v-model:active-key="editActiveKey" type="line" addable @add="addPane" @close="closePane">
-    <TabPane
-      v-for="pane in editPanes"
-      :key="pane.key"
-      :tab="pane.tab"
-      :closable="pane.closable !== false"
-      >{{ pane.content }}</TabPane
-    >
-  </Tabs>
+  <Flex vertical>
+    <Tabs v-model:active-key="editActiveKey" type="card" addable @add="addPane" @close="closePane">
+      <TabPane
+        v-for="pane in editPanes"
+        :key="pane.key"
+        :tab="pane.tab"
+        :closable="pane.closable !== false"
+        >{{ pane.content }}</TabPane
+      >
+    </Tabs>
+    <Tabs v-model:active-key="editActiveKey" type="line" addable @add="addPane" @close="closePane">
+      <TabPane
+        v-for="pane in editPanes"
+        :key="pane.key"
+        :tab="pane.tab"
+        :closable="pane.closable !== false"
+        >{{ pane.content }}</TabPane
+      >
+    </Tabs>
+  </Flex>
 </template>
 ```
 
-::::
+:::
 
 ## 卡片式页签容器
 
@@ -771,7 +858,7 @@ _用于容器顶部时，可通过 `contentStyle` 覆盖面板底色与内边距
   </TabPane>
 </Tabs>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -807,7 +894,7 @@ const cardTopContentStyle: CSSProperties = {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义新增页签触发器
 
@@ -831,7 +918,7 @@ _关闭内置新增按钮，改用 `suffix` 插槽中的自定义触发器_
   >
 </Tabs>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -886,7 +973,7 @@ function closePane(key: string | number): void {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义新增图标
 
@@ -905,7 +992,7 @@ _通过 `addIcon` 插槽替换新增按钮的内置图标_
   >
 </Tabs>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -955,7 +1042,7 @@ function closePane(key: string | number): void {
 </template>
 ```
 
-::::
+:::
 
 ## 新增按钮禁用
 
@@ -963,52 +1050,71 @@ _`addable` 传对象可把新增按钮渲染为禁用态，无权限时保留入
 
 <br/>
 
-<Flex gap="small" align="center"> 禁用新增：<Switch v-model:value="addDisabledDemo" /> </Flex>
-
-<Tabs
-  v-model:active-key="disabledAddActiveKey"
-  type="card"
-  :addable="addableDemo"
-  @add="addDisabledPane"
-  @close="closeDisabledPane"
->
-  <TabPane
-    v-for="pane in disabledAddPanes"
-    :key="pane.key"
-    :tab="pane.tab"
-    :closable="pane.closable !== false"
-    >{{ pane.content }}</TabPane
+<Flex vertical>
+  <Flex gap="small" align="center"> 禁用新增：<Switch v-model:value="addDisabledDemo" /> </Flex>
+  <Tabs
+    v-model:active-key="disabledAddActiveKey"
+    type="card"
+    :addable="addableDemo"
+    @add="addDisabledPane"
+    @close="closeDisabledPane"
   >
-</Tabs>
+    <TabPane
+      v-for="pane in disabledAddPanes"
+      :key="pane.key"
+      :tab="pane.tab"
+      :closable="pane.closable !== false"
+      >{{ pane.content }}</TabPane
+    >
+  </Tabs>
+</Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { TabsProps } from 'vue-amazing-ui'
-const editActiveKey = ref<TabsProps['activeKey']>('1')
-const editPanes = ref([
+const disabledAddActiveKey = ref<TabsProps['activeKey']>('1')
+const disabledAddPanes = ref([
   { key: '1', tab: 'Tab 1', content: 'Content of Tab 1' },
-  { key: '2', tab: 'Tab 2', content: 'Content of Tab 2' }
+  { key: '2', tab: 'Tab 2', content: 'Content of Tab 2' },
+  { key: '3', tab: 'Tab 3', content: 'Content of Tab 3', closable: false }
 ])
-const addDisabled = ref(true)
-const addable = computed<boolean | { disabled?: boolean }>(() => {
-  return addDisabled.value ? { disabled: true } : true
+const addDisabledDemo = ref(true)
+const addableDemo = computed<boolean | { disabled?: boolean }>(() => {
+  return addDisabledDemo.value ? { disabled: true } : true
 })
-function addPane(): void {
+function addDisabledPane(): void {
   // 实际项目这里追加页签数据
+}
+function closeDisabledPane(key: string | number): void {
+  disabledAddPanes.value = disabledAddPanes.value.filter((pane) => pane.key !== key)
 }
 </script>
 <template>
-  <Switch v-model:value="addDisabled" />
-  <Tabs v-model:active-key="editActiveKey" type="card" :addable="addable" @add="addPane">
-    <TabPane v-for="pane in editPanes" :key="pane.key" :tab="pane.tab">{{ pane.content }}</TabPane>
-  </Tabs>
+  <Flex vertical>
+    <Flex gap="small" align="center"> 禁用新增：<Switch v-model:value="addDisabledDemo" /> </Flex>
+    <Tabs
+      v-model:active-key="disabledAddActiveKey"
+      type="card"
+      :addable="addableDemo"
+      @add="addDisabledPane"
+      @close="closeDisabledPane"
+    >
+      <TabPane
+        v-for="pane in disabledAddPanes"
+        :key="pane.key"
+        :tab="pane.tab"
+        :closable="pane.closable !== false"
+        >{{ pane.content }}</TabPane
+      >
+    </Tabs>
+  </Flex>
 </template>
 ```
 
-::::
+:::
 
 ## 自定义页签头
 
@@ -1033,7 +1139,7 @@ _通过 `tabBar` 插槽替换内置导航，示例为卡片式页签头，选中
   <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
 </Tabs>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1097,9 +1203,17 @@ const barActiveKey = ref<TabsProps['activeKey']>('1')
 </style>
 ```
 
-::::
+:::
 
 <style lang="less" scoped>
+:deep(.demo-tab) {
+  font-weight: 600;
+}
+:deep(.demo-content) {
+  padding: 8px 12px;
+  background: var(--va-fill-color-1);
+  border-radius: 8px;
+}
 .custom-tab-bar {
   display: flex;
   gap: 8px;
@@ -1154,7 +1268,7 @@ const barActiveKey = ref<TabsProps['activeKey']>('1')
   </Tabs>
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1164,7 +1278,10 @@ import type { TabsProps } from 'vue-amazing-ui'
 const tabList = [
   { key: '1', tab: 'Tab 1', content: 'Content of Tab Pane 1' },
   { key: '2', tab: 'Tab 2', content: 'Content of Tab Pane 2' },
-  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' }
+  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' },
+  { key: '4', tab: 'Tab 4', content: 'Content of Tab Pane 4' },
+  { key: '5', tab: 'Tab 5', content: 'Content of Tab Pane 5' },
+  { key: '6', tab: 'Tab 6', content: 'Content of Tab Pane 6' }
 ]
 const activeKey = ref<TabsProps['activeKey']>('1')
 // 自定义样式取主题变量：明暗模式与主题主色都会自动跟随（硬编码浅色在暗色下会整条发白）
@@ -1209,7 +1326,7 @@ const customContentStyle: CSSProperties = {
 </template>
 ```
 
-::::
+:::
 
 ## 自定义内容
 
@@ -1232,7 +1349,7 @@ _使用 `TabPane` 的默认插槽自定义该页签的内容，可放任意组�
   </TabPane>
 </Tabs>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1258,23 +1375,24 @@ const contentActiveKey = ref<TabsProps['activeKey']>('1')
 </template>
 ```
 
-::::
+:::
 
 ## 切换动画
 
-_开启 `animated` 后面板随页签横向滑动切换，仅在 `tabPosition` 为 top / bottom 时生效_
+_开启 `animated` 后面板随页签横向滑动切换，仅在 `tabPosition` 为 `top` / `bottom` 时生效_
 
 <br/>
 
-<Flex gap="small" align="center">
-  animated：<Switch v-model:value="animEnabled" />
+<Flex vertical>
+  <Flex gap="small" align="center">
+    animated：<Switch v-model:value="animEnabled" />
+  </Flex>
+  <Tabs v-model:active-key="animActiveKey" :animated="animEnabled">
+    <TabPane v-for="item in tabList.slice(0, 4)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
+  </Tabs>
 </Flex>
 
-<Tabs v-model:active-key="animActiveKey" :animated="animEnabled">
-  <TabPane v-for="item in tabList.slice(0, 4)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
-</Tabs>
-
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1290,16 +1408,18 @@ const animActiveKey = ref<TabsProps['activeKey']>('1')
 const animEnabled = ref(true)
 </script>
 <template>
-  <Flex gap="small" align="center">
-    animated：<Switch v-model:value="animEnabled" />
+  <Flex vertical>
+    <Flex gap="small" align="center">
+      animated：<Switch v-model:value="animEnabled" />
+    </Flex>
+    <Tabs v-model:active-key="animActiveKey" :animated="animEnabled">
+      <TabPane v-for="item in tabList.slice(0, 4)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
+    </Tabs>
   </Flex>
-  <Tabs v-model:active-key="animActiveKey" :animated="animEnabled">
-    <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
-  </Tabs>
 </template>
 ```
 
-::::
+:::
 
 ## 销毁非活跃面板
 
@@ -1307,17 +1427,19 @@ _开启 `destroyInactiveTabPane` 后非激活面板的内容会被卸载，切�
 
 <br/>
 
-<Flex gap="small" align="center">
-  destroyInactiveTabPane：<Switch v-model:value="destroyEnabled" />
+<Flex vertical>
+  <Flex gap="small" align="center">
+    destroyInactiveTabPane：<Switch v-model:value="destroyEnabled" />
+  </Flex>
+  <Tabs v-model:active-key="destroyActiveKey" :destroy-inactive-tab-pane="destroyEnabled">
+    <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">
+      <p>当前面板 {{ item.key }}</p>
+      <Input placeholder="输入后切换页签，观察内容是否保留" />
+    </TabPane>
+  </Tabs>
 </Flex>
 
-<Tabs v-model:active-key="destroyActiveKey" :destroy-inactive-tab-pane="destroyEnabled">
-  <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">
-    <Input placeholder="输入后切换页签，观察内容是否保留" />
-  </TabPane>
-</Tabs>
-
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1332,18 +1454,21 @@ const destroyActiveKey = ref<TabsProps['activeKey']>('1')
 const destroyEnabled = ref(true)
 </script>
 <template>
-  <Flex gap="small" align="center">
-    destroyInactiveTabPane：<Switch v-model:value="destroyEnabled" />
+  <Flex vertical>
+    <Flex gap="small" align="center">
+      destroyInactiveTabPane：<Switch v-model:value="destroyEnabled" />
+    </Flex>
+    <Tabs v-model:active-key="destroyActiveKey" :destroy-inactive-tab-pane="destroyEnabled">
+      <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">
+        <p>当前面板 {{ item.key }}</p>
+        <Input placeholder="输入后切换页签，观察内容是否保留" />
+      </TabPane>
+    </Tabs>
   </Flex>
-  <Tabs v-model:active-key="destroyActiveKey" :destroy-inactive-tab-pane="destroyEnabled">
-    <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">
-      <Input placeholder="输入后切换页签，观察内容是否保留" />
-    </TabPane>
-  </Tabs>
 </template>
 ```
 
-::::
+:::
 
 ## 面板渲染时机
 
@@ -1352,27 +1477,27 @@ _`TabPane` 的 `displayDirective` 控制非激活面板：`if` 立即卸载、`s
 <br/>
 
 <Flex vertical>
-  <Tabs v-model:active-key="renderActiveKey">
+  <Tabs v-model:active-key="renderIfActiveKey">
     <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab" display-directive="if">
-      <p>if：切走后内容卸载，输入不保留</p>
+      <p>面板 {{ item.key }}｜if：切走后内容卸载，输入不保留</p>
       <Input placeholder="输入后切换页签，观察内容" />
     </TabPane>
   </Tabs>
-  <Tabs v-model:active-key="renderActiveKey">
+  <Tabs v-model:active-key="renderShowActiveKey">
     <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab" display-directive="show">
-      <p>show：内容常驻，输入保留</p>
+      <p>面板 {{ item.key }}｜show：内容常驻，输入保留</p>
       <Input placeholder="输入后切换页签，观察内容" />
     </TabPane>
   </Tabs>
-  <Tabs v-model:active-key="renderActiveKey">
+  <Tabs v-model:active-key="renderShowLazyActiveKey">
     <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab" display-directive="show:lazy">
-      <p>show:lazy：首次激活后才渲染，之后保留</p>
+      <p>面板 {{ item.key }}｜show:lazy：首次激活后才渲染，之后保留</p>
       <Input placeholder="输入后切换页签，观察内容" />
     </TabPane>
   </Tabs>
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1383,28 +1508,35 @@ const tabList = [
   { key: '2', tab: 'Tab 2', content: 'Content of Tab Pane 2' },
   { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' }
 ]
-const renderActiveKey = ref<TabsProps['activeKey']>('1')
+const renderIfActiveKey = ref<TabsProps['activeKey']>('1')
+const renderShowActiveKey = ref<TabsProps['activeKey']>('1')
+const renderShowLazyActiveKey = ref<TabsProps['activeKey']>('1')
 </script>
 <template>
-  <Tabs v-model:active-key="renderActiveKey">
-    <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab" display-directive="if">
-      <Input placeholder="输入后切换页签，观察内容" />
-    </TabPane>
-  </Tabs>
-  <Tabs v-model:active-key="renderActiveKey">
-    <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab" display-directive="show">
-      <Input placeholder="输入后切换页签，观察内容" />
-    </TabPane>
-  </Tabs>
-  <Tabs v-model:active-key="renderActiveKey">
-    <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab" display-directive="show:lazy">
-      <Input placeholder="输入后切换页签，观察内容" />
-    </TabPane>
-  </Tabs>
+  <Flex vertical>
+    <Tabs v-model:active-key="renderIfActiveKey">
+      <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab" display-directive="if">
+        <p>面板 {{ item.key }}｜if：切走后内容卸载，输入不保留</p>
+        <Input placeholder="输入后切换页签，观察内容" />
+      </TabPane>
+    </Tabs>
+    <Tabs v-model:active-key="renderShowActiveKey">
+      <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab" display-directive="show">
+        <p>面板 {{ item.key }}｜show：内容常驻，输入保留</p>
+        <Input placeholder="输入后切换页签，观察内容" />
+      </TabPane>
+    </Tabs>
+    <Tabs v-model:active-key="renderShowLazyActiveKey">
+      <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab" display-directive="show:lazy">
+        <p>面板 {{ item.key }}｜show:lazy：首次激活后才渲染，之后保留</p>
+        <Input placeholder="输入后切换页签，观察内容" />
+      </TabPane>
+    </Tabs>
+  </Flex>
 </template>
 ```
 
-::::
+:::
 
 ## 事件回调
 
@@ -1424,7 +1556,7 @@ _`change` / `tabClick` 在切换页签时触发，`tabScroll` 在页签滚动时
 
 <p class="mt10">最近事件：{{ eventLog || '暂无' }}</p>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1437,7 +1569,8 @@ const tabList = [
   { key: '4', tab: 'Tab 4', content: 'Content of Tab Pane 4' },
   { key: '5', tab: 'Tab 5', content: 'Content of Tab Pane 5' },
   { key: '6', tab: 'Tab 6', content: 'Content of Tab Pane 6' },
-  { key: '7', tab: 'Tab 7', content: 'Content of Tab Pane 7' }
+  { key: '7', tab: 'Tab 7', content: 'Content of Tab Pane 7' },
+  { key: '8', tab: 'Tab 8', content: 'Content of Tab Pane 8' }
 ]
 const eventActiveKey = ref<TabsProps['activeKey']>('1')
 const eventLog = ref('')
@@ -1465,7 +1598,7 @@ function onEventTabScroll(info: { direction: 'left' | 'right' | 'top' | 'bottom'
 </template>
 ```
 
-::::
+:::
 
 ## 页签分布
 
@@ -1473,15 +1606,16 @@ _通过 `justifyContent` 控制页签在导航区的分布，仅在 `type` 为 l
 
 <br/>
 
-<Flex gap="small" align="center">
-  justifyContent：<RadioGroup :options="justifyOptions" v-model:value="justifyValue" button button-style="solid" />
+<Flex vertical>
+  <Flex gap="small" align="center">
+    justifyContent：<RadioGroup :options="justifyOptions" v-model:value="justifyValue" button button-style="solid" />
+  </Flex>
+  <Tabs v-model:active-key="justifyActiveKey" :justify-content="justifyValue">
+    <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
+  </Tabs>
 </Flex>
 
-<Tabs v-model:active-key="justifyActiveKey" :justify-content="justifyValue">
-  <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
-</Tabs>
-
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1504,64 +1638,67 @@ const justifyOptions = [
 ]
 </script>
 <template>
-  <Flex gap="small" align="center">
-    justifyContent：<RadioGroup :options="justifyOptions" v-model:value="justifyValue" button button-style="solid" />
+  <Flex vertical>
+    <Flex gap="small" align="center">
+      justifyContent：<RadioGroup :options="justifyOptions" v-model:value="justifyValue" button button-style="solid" />
+    </Flex>
+    <Tabs v-model:active-key="activeKey" :justify-content="justifyValue">
+      <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
+    </Tabs>
   </Flex>
-  <Tabs v-model:active-key="activeKey" :justify-content="justifyValue">
-    <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
-  </Tabs>
 </template>
 ```
 
-::::
+:::
 
 ## 切换拦截
 
-_通过 `beforeLeave` 拦截切换：返回 `false` 或 Promise reject 时取消本次切换_
+_通过 `beforeLeave` 拦截切换：返回 `false` 或 `Promise.reject` 时取消本次切换；从 Tab 1 出发，Tab 2 正常放行、Tab 3 返回 `false`、Tab 4 返回 `Promise.reject`，结果展示在下方_
 
 <br/>
 
-<Flex gap="small" align="center"> 拦截切换：<Switch v-model:value="guardEnabled" /> </Flex>
-
 <Tabs v-model:active-key="guardActiveKey" :before-leave="onBeforeLeave">
-  <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
+  <TabPane key="1" tab="Tab 1">切换到下方页签，观察放行与拦截结果</TabPane>
+  <TabPane key="2" tab="Tab 2">beforeLeave 返回 true，切换成功</TabPane>
+  <TabPane key="3" tab="Tab 3">beforeLeave 返回 false，取消切换</TabPane>
+  <TabPane key="4" tab="Tab 4">beforeLeave 返回 Promise.reject，取消切换</TabPane>
 </Tabs>
 
 <p class="mt10">最近操作：{{ guardTip || '暂无' }}</p>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { TabsProps } from 'vue-amazing-ui'
-const tabList = [
-  { key: '1', tab: 'Tab 1', content: 'Content of Tab Pane 1' },
-  { key: '2', tab: 'Tab 2', content: 'Content of Tab Pane 2' },
-  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' }
-]
-const guardEnabled = ref(true)
-const guardActiveKey = ref<TabsProps['activeKey']>('1')
-const guardTip = ref('')
-function onBeforeLeave(key: string | number): boolean {
-  if (!guardEnabled.value) {
-    guardTip.value = `未拦截，已切换到 Tab ${key}`
-    return true
+const activeKey = ref<TabsProps['activeKey']>('1')
+const tip = ref('')
+function onBeforeLeave(key: string | number): boolean | Promise<never> {
+  if (key === '3') {
+    tip.value = `beforeLeave 返回 false，已取消切换到 Tab ${key}`
+    return false
   }
-  guardTip.value = `beforeLeave 返回 false，已取消切换到 Tab ${key}`
-  return false
+  if (key === '4') {
+    tip.value = `beforeLeave Promise reject，已取消切换到 Tab ${key}`
+    return Promise.reject(new Error('取消切换'))
+  }
+  tip.value = `已放行，切换到 Tab ${key}`
+  return true
 }
 </script>
 <template>
-  <Switch v-model:value="guardEnabled" />
-  <Tabs v-model:active-key="guardActiveKey" :before-leave="onBeforeLeave">
-    <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
+  <Tabs v-model:active-key="activeKey" :before-leave="onBeforeLeave">
+    <TabPane key="1" tab="Tab 1">切换到下方页签，观察放行与拦截结果</TabPane>
+    <TabPane key="2" tab="Tab 2">beforeLeave 返回 true，切换成功</TabPane>
+    <TabPane key="3" tab="Tab 3">beforeLeave 返回 false，取消切换</TabPane>
+    <TabPane key="4" tab="Tab 4">beforeLeave 返回 Promise.reject，取消切换</TabPane>
   </Tabs>
-  <p>最近操作：{{ guardTip || '暂无' }}</p>
+  <p class="mt10">最近操作：{{ tip || '暂无' }}</p>
 </template>
 ```
 
-::::
+:::
 
 ## 自定义类名
 
@@ -1573,7 +1710,7 @@ _通过 `tabClass` / `contentClass` 给页签与面板挂类名，便于用外�
   <TabPane v-for="item in tabList.slice(0, 3)" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
 </Tabs>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1603,7 +1740,7 @@ const activeKey = ref<TabsProps['activeKey']>('1')
 </style>
 ```
 
-::::
+:::
 
 ## 激活项居中
 
@@ -1611,13 +1748,14 @@ _开启 `centerActiveTab` 后切换页签会把激活项滚到导航区中间，
 
 <br/>
 
-<Flex gap="small" align="center"> 居中：<Switch v-model:value="centerEnabled" /> </Flex>
+<Flex vertical>
+  <Flex gap="small" align="center"> 居中：<Switch v-model:value="centerEnabled" /> </Flex>
+  <Tabs v-model:active-key="centerActiveKey" style="width: 360px" :center-active-tab="centerEnabled">
+    <TabPane v-for="item in moreTabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
+  </Tabs>
+</Flex>
 
-<Tabs v-model:active-key="centerActiveKey" style="width: 360px" :center-active-tab="centerEnabled">
-  <TabPane v-for="item in moreTabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
-</Tabs>
-
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1630,20 +1768,23 @@ const tabList = [
   { key: '4', tab: 'Tab 4', content: 'Content of Tab Pane 4' },
   { key: '5', tab: 'Tab 5', content: 'Content of Tab Pane 5' },
   { key: '6', tab: 'Tab 6', content: 'Content of Tab Pane 6' },
-  { key: '7', tab: 'Tab 7', content: 'Content of Tab Pane 7' }
+  { key: '7', tab: 'Tab 7', content: 'Content of Tab Pane 7' },
+  { key: '8', tab: 'Tab 8', content: 'Content of Tab Pane 8' }
 ]
 const centerEnabled = ref(true)
 const centerActiveKey = ref<TabsProps['activeKey']>('1')
 </script>
 <template>
-  <Switch v-model:value="centerEnabled" />
-  <Tabs v-model:active-key="centerActiveKey" style="width: 360px" :center-active-tab="centerEnabled">
-    <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
-  </Tabs>
+  <Flex vertical>
+    <Flex gap="small" align="center"> 居中：<Switch v-model:value="centerEnabled" /> </Flex>
+    <Tabs v-model:active-key="centerActiveKey" style="width: 360px" :center-active-tab="centerEnabled">
+      <TabPane v-for="item in tabList" :key="item.key" :tab="item.tab">{{ item.content }}</TabPane>
+    </Tabs>
+  </Flex>
 </template>
 ```
 
-::::
+:::
 
 ## 标签页配置器
 
@@ -1708,7 +1849,7 @@ _组合调整下方配置项可实时预览属性效果，`justifyContent` 的 `
   </Tabs>
 </Flex>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -1717,7 +1858,10 @@ import type { TabsProps } from 'vue-amazing-ui'
 const tabList = [
   { key: '1', tab: 'Tab 1', content: 'Content of Tab Pane 1' },
   { key: '2', tab: 'Tab 2', content: 'Content of Tab Pane 2' },
-  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' }
+  { key: '3', tab: 'Tab 3', content: 'Content of Tab Pane 3' },
+  { key: '4', tab: 'Tab 4', content: 'Content of Tab Pane 4' },
+  { key: '5', tab: 'Tab 5', content: 'Content of Tab Pane 5' },
+  { key: '6', tab: 'Tab 6', content: 'Content of Tab Pane 6' }
 ]
 const activeKey = ref<TabsProps['activeKey']>('1')
 const typeOptions = [
@@ -1815,18 +1959,7 @@ const state = reactive<TabsProps>({
 </template>
 ```
 
-::::
-
-## 键盘操作
-
-_聚焦页签后可用键盘切换，禁用页签自动跳过_
-
-| 按键 | 说明 |
-| :-- | :-- |
-| ← / → | `tabPosition` 为 `top` / `bottom` 时，在页签之间前后移动并激活 |
-| ↑ / ↓ | `tabPosition` 为 `left` / `right` 时，在页签之间前后移动并激活 |
-| Home | 跳到第一个可用页签并激活 |
-| End | 跳到最后一个可用页签并激活 |
+:::
 
 ## APIs
 
