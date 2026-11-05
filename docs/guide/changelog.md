@@ -14,6 +14,17 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-11-06">3.9.1</VersionDateTag>
+
+- 重构滚动监测 [useScroll](/utils/functions/use-scroll.html)：签名改为 `useScroll(target, options)`，返回 `direction` / `maxX` / `maxY` / 边界标志与 `start` / `stop` / `refresh`，滚动状态不再受节流影响（不兼容旧签名）
+- 优化 [滚动条 Scrollbar](/guide/components/scrollbar.html) 的实例能力：新增导出 `ScrollbarExpose` / `ScrollDirection` / `ScrollbarScrollData` 类型，`getScrollData()` 补 `scrollLeft` 并改为实时读取（未挂载时各项为 `0`）
+- 修复 [滚动条 Scrollbar](/guide/components/scrollbar.html) 的 `scroll` / `scrollend` 在拖动滑块、`scrollTo` / `scrollBy` 及直接写 `scrollLeft` / `scrollTop` 时丢失：方向改按实际位移上报，位置未变时不派发
+- 修复 [滚动条 Scrollbar](/guide/components/scrollbar.html) 在 `<KeepAlive>` 失活返回后滚动位置丢失；滑块与轨道等长时拖动滑块不再跳到末端
+- 修复 [级联选择 Cascader](/guide/components/cascader.html) 虚拟滚动快速滚动时列内出现整片空白：滚轮滚动与渲染窗口同帧更新，新开列与程序化滚动同样跟随
+- 修复 [时间轴 Timeline](/guide/components/timeline.html) 自定义轴点在页面底色与容器色不一致时露出方块 / 圆环；`--timeline-head-bg` 支持在祖先元素覆盖
+- 更新使用者文档：统一各组件文档的代码标识与属性表链接，修正演示用例的布局间距、主题配色与长列表规模
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-11-05">3.9.0</VersionDateTag>
 
 - 重构 [标签页 Tabs](/guide/components/tabs.html)：`items` 属性与 `TabsItem` 类型移除，页签改用 `TabPane` 子组件描述（`key` 写在子组件，`tab` / `content` 插槽改为 `tab` 插槽与默认插槽，`icon` 由 `tab` 插槽承接）
