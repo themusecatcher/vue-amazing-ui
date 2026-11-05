@@ -27,7 +27,7 @@ import {
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Empty from 'components/empty'
 import Popup from 'components/popup'
-import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
+import Scrollbar, { type ScrollbarProps, type ScrollbarExpose } from 'components/scrollbar'
 import {
   useContainerClose,
   useControlledModel,
@@ -247,6 +247,7 @@ const selectWrapRef = ref<HTMLElement | null>(null) // 组件根元素引用，�
 const inputRef = ref<HTMLInputElement | null>(null) // 搜索输入框
 const selectContentRef = ref<HTMLElement | null>(null) // 触发器内容容器（面板定位锚点 + tag 宽度量取对象）
 const popupRef = ref<InstanceType<typeof Popup> | null>(null) // 浮层宿主模板引用（面板根元素经其 expose 取得）
+const optionsScrollbarRef = ref<ScrollbarExpose | null>(null) // 选项面板滚动条实例引用（滚动容器经其 scrollElement 取得）
 // (v-model:value) 选中值：传值即受控，未传时组件自持（多选按整体替换，不原地修改）
 const valueModel = useControlledModel<Props['value']>('value', props.defaultValue)
 // (v-model:open) 面板显隐：传值即受控，未传时组件自持
@@ -990,9 +991,9 @@ onMounted(() => {
   measureResponsiveTagCount()
 })
 
-/** 面板滚动容器：虚拟滚动的滚动源，也是高亮滚动 / scrollTo 的操作对象（面板根由浮层宿主经 expose 提供） */
+/** 面板滚动容器：虚拟滚动的滚动源，也是高亮滚动 / scrollTo 的操作对象（取 Scrollbar 暴露的容器元素） */
 function getScrollContainer(): HTMLElement | null {
-  return popupRef.value?.panelRef?.querySelector<HTMLElement>('.scrollbar-container') ?? null
+  return optionsScrollbarRef.value?.scrollElement ?? null
 }
 const scrollContainerEl = ref<HTMLElement | null>(null) // 已绑定 scroll 监听的容器
 /** 把容器的真实滚动位置同步进组件（滚动事件 / 定位后 / 面板收起前调用） */
@@ -1619,6 +1620,7 @@ const menuNode: SelectMenuNode = () => {
   const listNode = h(
     Scrollbar,
     {
+      ref: optionsScrollbarRef,
       class: 'select-options-panel',
       style: { ...optionsStyle.value, '--scrollbar-rail-vertical-right': '2px 0 2px auto' },
       onScroll: onPopupScroll,

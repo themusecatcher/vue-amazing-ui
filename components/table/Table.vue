@@ -3,7 +3,7 @@ import { isVNode, ref, computed, watch, watchEffect, onMounted, onUnmounted } fr
 import type { VNode, CSSProperties } from 'vue'
 import Spin, { type SpinProps } from 'components/spin'
 import Empty, { type EmptyProps } from 'components/empty'
-import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
+import Scrollbar, { type ScrollbarProps, type ScrollbarExpose } from 'components/scrollbar'
 import Checkbox from 'components/checkbox'
 import Radio from 'components/radio'
 import Tooltip, { type TooltipProps } from 'components/tooltip'
@@ -133,20 +133,6 @@ const props = withDefaults(defineProps<Props>(), {
   expandRowByClick: false
 })
 defineSlots<TableSlots>()
-// 子组件暴露的滚动容器最小接口（模板 ref 类型化，避免 any）
-interface ScrollbarExpose {
-  scrollTo(options?: ScrollToOptions): void
-  scrollBy(options?: ScrollToOptions): void
-  getScrollData(): object
-}
-// Scrollbar 暴露的滚动数据（结构与 scrollbar getScrollData 返回值一致）
-interface ScrollbarScrollData {
-  scrollTop: number
-  scrollWidth: number
-  scrollHeight: number
-  clientWidth: number
-  clientHeight: number
-}
 interface Coords {
   row: number // 行索引坐标
   col: number // 列索引坐标
@@ -168,7 +154,7 @@ const selectedRowKeys = ref<string[]>([]) // 已选中行的 key 数组
 const changeRowKeys = ref<string[]>([]) // 变化行的 key 数组
 const selectedRows = ref<Record<string, any>[]>([]) // 已选中行的数组
 const changeRows = ref<Record<string, any>[]>([]) // 变化行的数组
-const scrollbarRef = ref<ScrollbarExpose | null>(null) // 水平滚动容器模板引用
+const scrollbarRef = ref<ScrollbarExpose | null>(null) // 滚动容器模板引用（能力由 Scrollbar 导出）
 const scrollLeft = ref<number>(0) // 表格水平滚动时距容器左边位置
 const scrollWidth = ref<number>(0) // 表格水平滚动元素宽度，包括溢出滚动，不包括边框
 const scrollHeight = ref<number>(0) // 表格垂直滚动元素高度，包括溢出滚动，不包括边框
@@ -658,7 +644,7 @@ function initDefaultSort(): void {
 // 获取滚动状态信息
 function getScrollState(): void {
   if (scrollbarRef.value) {
-    const scrollData = scrollbarRef.value.getScrollData() as ScrollbarScrollData
+    const scrollData = scrollbarRef.value.getScrollData()
     if (horizontalScroll.value) {
       scrollWidth.value = scrollData.scrollWidth
       clientWidth.value = scrollData.clientWidth

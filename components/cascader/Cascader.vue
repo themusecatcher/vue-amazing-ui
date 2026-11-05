@@ -17,7 +17,7 @@ import { ref, shallowRef, computed, watch, nextTick, onMounted, onBeforeUnmount,
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Empty from 'components/empty'
 import Popup from 'components/popup'
-import Scrollbar, { type ScrollbarProps } from 'components/scrollbar'
+import Scrollbar, { type ScrollbarProps, type ScrollbarExpose } from 'components/scrollbar'
 import {
   injectFromChain,
   useControlledModel,
@@ -515,7 +515,8 @@ const DEFAULT_OPTION_HEIGHT = 32 // 默认行高（与 .cascader-option 的 min-
 const VIRTUAL_OVERSCAN = 1 // 可视区上下各多渲染的行数，快速滚动时不留空隙
 const rowHeight = computed(() => (props.optionHeight > 0 ? props.optionHeight : DEFAULT_OPTION_HEIGHT))
 const columnScrollTops = ref<Record<number, number>>({}) // 各列滚动位置（列下标 → scrollTop）
-const columnMenuEls = ref<(HTMLElement | null)[]>([]) // 各列菜单容器（定位滚动容器用）
+const columnMenuEls = ref<(HTMLElement | null)[]>([]) // 各列菜单容器（量取列宽 / 全量渲染定位用）
+const columnScrollbars = ref<(ScrollbarExpose | null)[]>([]) // 各列列表滚动条实例（滚动容器经其取得）
 /** 该列是否需要窗口化：显式开启且内容高于面板（装得下时全量渲染） */
 function isColumnVirtualActive(length: number): boolean {
   return props.virtual === true && length * rowHeight.value > props.panelHeight
@@ -602,13 +603,66 @@ watch(
   () => nextTick(measureColumnWidths),
   { immediate: true }
 )
-/** 列滚动：记录滚动位置驱动渲染窗口（Scrollbar 的 scroll 事件带原生事件对象） */
-function onColumnScroll(columnIndex: number, e: Event): void {
-  const target = e.target as HTMLElement | null
-  columnScrollTops.value = { ...columnScrollTops.value, [columnIndex]: target?.scrollTop ?? 0 }
+/** 把容器的真实滚动位置写进状态（渲染窗口的唯一依据，位置未变时不触发重渲染） */
+function syncColumnScrollTop(columnIndex: number, container: HTMLElement): void {
+  const top = container.scrollTop
+  if (columnScrollTops.value[columnIndex] === top) return
+  columnScrollTops.value = { ...columnScrollTops.value, [columnIndex]: top }
 }
 /**
- * 列菜单容器 ref：拿到 Scrollbar 内部滚动容器，用于键盘导航时按行高换算滚动位置。
+ * 列内滚轮接管（与 Select 面板同策略）：窗口化生效时由本组件驱动滚动。
+ * 原生滚动跑在合成线程、渲染窗口算在主线程，快速滚动（尤其触控板惯性）时窗口追不上，
+ * 视口上下沿会先露出未渲染的占位（整片空白，随后才被数据填充）→ 阻止原生滚动并按 delta 自行写 scrollTop，
+ * 让滚动位置与渲染窗口在同一帧生效；到边界且方向朝外时不拦截，保留页面滚动链
+ */
+function proxyColumnWheel(columnIndex: number, container: HTMLElement, e: WheelEvent): void {
+  const length = columns.value[columnIndex]?.length ?? 0
+  if (!isColumnVirtualActive(length)) return
+  const maxTop = Math.max(container.scrollHeight - container.clientHeight, 0)
+  // deltaMode 归一：行模式按行高换算（Firefox 鼠标滚轮固定 deltaY=±3，不换算会近乎不动）、页模式按可视区高度
+  const unit = e.deltaMode === 1 ? rowHeight.value : e.deltaMode === 2 ? container.clientHeight : 1
+  const nextTop = Math.min(Math.max(container.scrollTop + e.deltaY * unit, 0), maxTop)
+  if (nextTop === container.scrollTop) return
+  e.preventDefault()
+  container.scrollTop = nextTop
+  syncColumnScrollTop(columnIndex, container)
+}
+/** 一列的滚动监听（滚轮 / 触控板 / 拖动滚动条 / 程序化滚动都要能被记录） */
+interface ColumnScrollBinding {
+  container: HTMLElement // 已绑定监听的滚动容器
+  onScroll: () => void // 原生 scroll 监听
+  onWheel: (e: WheelEvent) => void // 滚轮代理监听
+}
+const columnScrollBindings = new Map<number, ColumnScrollBinding>()
+/** 解绑该列的滚动监听 */
+function unbindColumnScroll(columnIndex: number): void {
+  const binding = columnScrollBindings.get(columnIndex)
+  if (!binding) return
+  binding.container.removeEventListener('scroll', binding.onScroll)
+  binding.container.removeEventListener('wheel', binding.onWheel)
+  columnScrollBindings.delete(columnIndex)
+}
+/**
+ * 绑定该列的原生滚动监听（容器未变时直接返回，容器被重建时自动改绑）。
+ * 直接绑容器而不走子组件的 scroll 事件：滚轮接管与滚动位置记录落在同一个目标上，
+ * 少一层事件转手与节流，任何来源的滚动（滚轮 / 触控板 / 拖动滚动条 / 程序化写入）都能立即反映到渲染窗口
+ */
+function bindColumnScroll(columnIndex: number): void {
+  const container = columnScrollContainer(columnIndex)
+  if (columnScrollBindings.get(columnIndex)?.container === container) return
+  unbindColumnScroll(columnIndex)
+  if (!container) return
+  const onScroll = (): void => syncColumnScrollTop(columnIndex, container)
+  const onWheel = (e: WheelEvent): void => proxyColumnWheel(columnIndex, container, e)
+  container.addEventListener('scroll', onScroll, { passive: true })
+  // 须非 passive：滚轮代理要能 preventDefault 掉原生滚动
+  container.addEventListener('wheel', onWheel, { passive: false })
+  // 只记录监听，不回写滚动位置：容器可能是重建后的新节点（scrollTop 归零），
+  // 而缓存里才是收起前的真实位置，回写会把渲染窗口打回顶部（由 restoreColumnScroll 统一对齐）
+  columnScrollBindings.set(columnIndex, { container, onScroll, onWheel })
+}
+/**
+ * 列菜单容器 ref：用于量取列宽（隐藏的量宽层）与全量渲染下按真实几何滚动。
  * 元素未变时直接返回：内联函数 ref 每次渲染都会调用，无条件写新数组会触发重渲染死循环
  */
 function setColumnMenuRef(el: unknown, columnIndex: number): void {
@@ -618,9 +672,30 @@ function setColumnMenuRef(el: unknown, columnIndex: number): void {
   list[columnIndex] = next
   columnMenuEls.value = list
 }
-/** 该列的滚动容器（Scrollbar 内部容器） */
+/**
+ * 列表滚动条实例 ref：滚动容器由 Scrollbar 的 scrollElement 提供，不依赖其内部类名；
+ * 容器就位即绑定滚动监听，列卸载（搜索态切换、列数减少）时解绑
+ */
+function setColumnScrollbarRef(el: unknown, columnIndex: number): void {
+  const next = (el as ScrollbarExpose | null) ?? null
+  if (columnScrollbars.value[columnIndex] === next) return
+  const list = [...columnScrollbars.value]
+  list[columnIndex] = next
+  columnScrollbars.value = list
+  if (!next) {
+    unbindColumnScroll(columnIndex)
+    return
+  }
+  bindColumnScroll(columnIndex)
+  // 实例就位时其内部容器可能还没挂载（scrollElement 仍为 null），补一帧重试；
+  // 已经绑过时 bindColumnScroll 会直接返回，不会重复挂监听
+  if (!columnScrollBindings.has(columnIndex)) {
+    nextTick(() => bindColumnScroll(columnIndex))
+  }
+}
+/** 该列的滚动容器（由 Scrollbar 实例暴露，未挂载时为 null） */
 function columnScrollContainer(columnIndex: number): HTMLElement | null {
-  return columnMenuEls.value[columnIndex]?.querySelector<HTMLElement>('.scrollbar-container') ?? null
+  return columnScrollbars.value[columnIndex]?.scrollElement ?? null
 }
 /**
  * 把该列的下标项最小幅度地滚入可视区：
@@ -655,9 +730,7 @@ function scrollColumnOptionIntoView(columnIndex: number, optionIndex: number): v
   }
   // 同步回写渲染窗口的依据：程序化设置 scrollTop 的 scroll 事件是异步的，不主动写会让窗口停在旧位置，
   // 表现为「面板打开了但选中项不在渲染出来的那几项里」
-  if (columnScrollTops.value[columnIndex] !== container.scrollTop) {
-    columnScrollTops.value = { ...columnScrollTops.value, [columnIndex]: container.scrollTop }
-  }
+  syncColumnScrollTop(columnIndex, container)
 }
 /** 该列滚动位置回到顶部（列内容换成另一组选项时调用） */
 function resetColumnScroll(columnIndex: number): void {
@@ -681,21 +754,19 @@ function restoreColumnScroll(): void {
   columns.value.forEach((column, columnIndex) => {
     const container = columnScrollContainer(columnIndex)
     if (!container) return
+    // 面板重开时列可能刚重建：监听在列 ref 回调里已绑过，这里补一次（容器未变时直接返回）
+    bindColumnScroll(columnIndex)
     const cached = columnScrollTops.value[columnIndex]
     // 无缓存（首次展开 / 切换父级时刚清空）：以容器真实位置为准。面板只是 v-show 隐藏时
     // 浏览器自己会保留 scrollTop，此处的职责是让渲染窗口跟上它，而不是把容器打回顶部
     if (cached === undefined) {
-      if (container.scrollTop !== 0) {
-        columnScrollTops.value = { ...columnScrollTops.value, [columnIndex]: container.scrollTop }
-      }
+      syncColumnScrollTop(columnIndex, container)
       return
     }
     // 有缓存：收起期间容器可能被重建（scrollTop 归零），按缓存写回
     const top = isColumnVirtualActive(column.length) ? Math.min(cached, columnMaxScrollTop(column.length)) : cached
     container.scrollTop = top
-    if (cached !== container.scrollTop) {
-      columnScrollTops.value = { ...columnScrollTops.value, [columnIndex]: container.scrollTop }
-    }
+    syncColumnScrollTop(columnIndex, container)
   })
 }
 /**
@@ -1487,6 +1558,8 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   document.removeEventListener('mousedown', onDocumentMousedown, true)
+  // 各列的原生 scroll / wheel 监听挂在 Scrollbar 内部容器上，随组件一起解绑
+  ;[...columnScrollBindings.keys()].forEach(unbindColumnScroll)
 })
 defineExpose({
   focus: focusTrigger,
@@ -1771,10 +1844,10 @@ defineExpose({
                 </div>
               </div>
               <Scrollbar
+                :ref="(el) => setColumnScrollbarRef(el, columnIndex)"
                 class="cascader-menu-scroll"
                 :style="{ '--scrollbar-rail-vertical-right': '2px 0 2px auto' }"
                 v-bind="scrollbarProps"
-                @scroll="onColumnScroll(columnIndex, $event)"
               >
                 <ul
                   class="cascader-menu-list"

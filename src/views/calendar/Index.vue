@@ -393,7 +393,7 @@ function onPanelChange(
         display:
         <RadioGroup :options="displayOptions" v-model:value="disabledDisplay" button button-style="solid" />
       </Space>
-      <Space align="start" class="mt10">
+      <Space class="mt10">
         <Flex vertical>
           <Alert type="info" message="禁用指定日期 (以今天为准的前三天至后三天，含当天)" />
           <Calendar

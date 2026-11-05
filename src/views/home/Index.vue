@@ -55,7 +55,7 @@ const toolFunctions = [
   },
   {
     name: 'useScroll',
-    description: '实时监测目标元素滚动位置及状态'
+    description: '实时监测滚动位置、方向与边界状态'
   },
   {
     name: 'useFps',

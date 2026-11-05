@@ -135,6 +135,11 @@
 .vp-doc .timeline-wrap p {
   line-height: inherit;
 }
+/* 时间轴自定义轴点遮挡连线用的是「容器色」：文档站演示区的底色是 --vp-c-bg，
+   与组件库容器色（深色下更深）不一致，不覆盖的话轴点上下会露出一截更深的线段 */
+.vp-doc .timeline-wrap {
+  --timeline-head-bg: var(--vp-c-bg);
+}
 /* 正文中的 Tag 与相邻文字垂直居中对齐（Tag 为固定高度的 inline-flex，默认按基线对齐会偏低） */
 .vp-doc .tag-wrap {
   vertical-align: middle;

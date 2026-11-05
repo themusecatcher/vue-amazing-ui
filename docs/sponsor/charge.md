@@ -159,7 +159,7 @@ const sponsors: Sponsor[] = [
 
 _可自定义展示个人头像、名称以及主页的跳转地址（只需将这些信息发送至右下角邮箱，稍待片刻 😉）_
 
-<Space class="sponsor-wall" gap="middle">
+<Space class="sponsor-wall">
   <Tooltip v-for="sponsor in sponsors" :key="sponsor.name">
     <template #tooltip>
       <div class="sponsor-tooltip">

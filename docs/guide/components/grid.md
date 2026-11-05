@@ -691,7 +691,11 @@ const state = reactive({
 
 ## 固定高度下的等高
 
-`align="stretch"` 把**同一行内**的列拉齐（交叉轴 `align-items: stretch`），拉的是「行内最高内容」的高度而不是容器高度：各列内容都不超过容器高时，它们一起等于容器高度；一旦有一列内容超过容器高，各列会被它拉高并**溢出容器**：
+`align="stretch"` 把**同一行内**的列拉齐（交叉轴 `align-items: stretch`），拉的是「行内最高内容」的高度而不是容器高度：各列内容都不超过容器高时，它们一起等于容器高度；一旦有一列内容超过容器高，各列会被它拉高并**溢出容器**
+
+<br/>
+
+_三列内容都未超过容器高：各列等高_
 
 <br/>
 
@@ -709,7 +713,7 @@ const state = reactive({
 
 <br/>
 
-_↑ 三列内容都未超过容器高：各列等高_
+_中间列内容超过容器高：该列把同行其余列一并拉高，并溢出容器（灰色区域即容器高度）_
 
 <br/>
 
@@ -726,8 +730,6 @@ _↑ 三列内容都未超过容器高：各列等高_
 </Row>
 
 <br/>
-
-_↑ 中间列内容超过容器高：该列把同行其余列一并拉高，并溢出容器（灰色区域即容器高度）_
 
 ::: tip 提示
 要让列内元素填满**固定高度**的容器，不要依赖 `stretch` 从容器高度向下传导：给列显式高度（`height: 100%`），或把滚动容器放进列内部 —— 由列承担高度、由滚动容器承担溢出。
@@ -941,19 +943,19 @@ _↑ 中间列内容超过容器高：该列把同行其余列一并拉高，并
 <Row :gutter="24">
   <Col :span="6">
     <Flex vertical align="flex-start">
-      Horizontal Column Gutter:
+      horizontal column gutter:
       <Slider :step="8" :max="48" v-model:value="state.horizontalGutter" />
     </Flex>
   </Col>
   <Col :span="6">
     <Flex vertical align="flex-start">
-      Vertical Row Gutter:
+      vertical row gutter:
       <Slider :step="8" :max="48" v-model:value="state.verticalGutter" />
     </Flex>
   </Col>
   <Col :span="12">
     <Flex vertical align="flex-start">
-      Col Count:
+      col count:
       <RadioGroup :options="colCountOptions" v-model:value="state.colCount" button />
     </Flex>
   </Col>
@@ -976,7 +978,6 @@ _↑ 中间列内容超过容器高：该列把同行其余列一并拉高，并
 ```vue
 <script setup lang="ts">
 import { reactive } from 'vue'
-
 const colCountOptions = [
   {
     label: 2,
@@ -1017,19 +1018,19 @@ const state = reactive({
   <Row :gutter="24">
     <Col :span="6">
       <Flex vertical align="flex-start">
-        Horizontal Column Gutter:
+        horizontal column gutter:
         <Slider :step="8" :max="48" v-model:value="state.horizontalGutter" />
       </Flex>
     </Col>
     <Col :span="6">
       <Flex vertical align="flex-start">
-        Vertical Row Gutter:
+        vertical row gutter:
         <Slider :step="8" :max="48" v-model:value="state.verticalGutter" />
       </Flex>
     </Col>
     <Col :span="12">
       <Flex vertical align="flex-start">
-        Col Count:
+        col count:
         <RadioGroup :options="colCountOptions" v-model:value="state.colCount" button />
       </Flex>
     </Col>

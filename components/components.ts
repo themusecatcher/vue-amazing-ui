@@ -294,7 +294,7 @@ export { default as Rate } from './rate'
 export type { ResultProps, ResultSlots } from './result'
 export { default as Result } from './result'
 
-export type { ScrollbarProps, ScrollbarSlots } from './scrollbar'
+export type { ScrollbarProps, ScrollbarSlots, ScrollbarExpose, ScrollDirection, ScrollbarScrollData } from './scrollbar'
 export { default as Scrollbar } from './scrollbar'
 
 export type { SegmentedProps, SegmentedOption, SegmentedSlots } from './segmented'

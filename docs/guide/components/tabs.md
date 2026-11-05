@@ -337,7 +337,7 @@ const activeKey = ref<TabsProps['activeKey']>('1')
 
 ## 居中
 
-_通过 `justifyContent` 设为 center 让页签居中，line 与 card 类型均支持_
+_通过 `justifyContent` 设为 `center` 让页签居中，`line` 与 `card` 类型均支持_
 
 <br/>
 
@@ -1602,7 +1602,7 @@ function onEventTabScroll(info: { direction: 'left' | 'right' | 'top' | 'bottom'
 
 ## 页签分布
 
-_通过 `justifyContent` 控制页签在导航区的分布，仅在 `type` 为 line 且页签未溢出时生效_
+_通过 `justifyContent` 控制页签在导航区的分布，仅在 `type` 为 `line` 且页签未溢出时生效_
 
 <br/>
 
@@ -1653,7 +1653,7 @@ const justifyOptions = [
 
 ## 切换拦截
 
-_通过 `beforeLeave` 拦截切换：返回 `false` 或 `Promise.reject` 时取消本次切换；从 Tab 1 出发，Tab 2 正常放行、Tab 3 返回 `false`、Tab 4 返回 `Promise.reject`，结果展示在下方_
+_通过 `beforeLeave` 拦截切换：返回 `false` 或 `Promise.reject` 时取消本次切换；从 `Tab 1` 出发，`Tab 2` 正常放行、`Tab 3` 返回 `false`、`Tab 4` 返回 `Promise.reject`，结果展示在下方_
 
 <br/>
 

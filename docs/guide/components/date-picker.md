@@ -896,8 +896,6 @@ _`disabledDate` 与 `disabledTime` 分别禁止选择部分日期与时间，`di
 
 _不可选择今天之后的日期_
 
-<br/>
-
 <DatePicker v-model:value="beforeTodayValue" :disabled-date="disabledDateBefore" placeholder="请选择日期" />
 
 <br/>
@@ -905,16 +903,12 @@ _不可选择今天之后的日期_
 
 _只能选择未来七天内的日期_
 
-<br/>
-
 <DatePicker v-model:value="afterTodayValue" :disabled-date="disabledDateAfter" placeholder="请选择日期" />
 
 <br/>
 <br/>
 
 _日期范围不可选择今天及之前（`disabledDate` 同时作用于两个面板）_
-
-<br/>
 
 <DatePicker
   v-model:value="disabledRangeValue"
@@ -928,16 +922,12 @@ _日期范围不可选择今天及之前（`disabledDate` 同时作用于两个�
 
 _不可选择周六与周日_
 
-<br/>
-
 <DatePicker v-model:value="weekendValue" :disabled-date="disabledWeekendDate" placeholder="请选择日期" />
 
 <br/>
 <br/>
 
 _月形态不可选择今天之前的月份（`disabledDate` 的粒度为整月，整月都不可选该格才禁用）_
-
-<br/>
 
 <DatePicker
   v-model:value="disabledMonthBeforeValue"
@@ -950,8 +940,6 @@ _月形态不可选择今天之前的月份（`disabledDate` 的粒度为整月�
 <br/>
 
 _用 `time-picker-props` 的 `hideDisabledOptions` 把禁用的时分秒从面板中隐藏（而非置灰），适合禁用项过多的场景_
-
-<br/>
 
 <DatePicker
   v-model:value="hideDisabledOptionsValue"

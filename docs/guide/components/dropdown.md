@@ -447,6 +447,8 @@ const basicMenus: DropdownMenuOption[] = [
 
 _分割线和不可用菜单项。_
 
+<br/>
+
 <Dropdown :menus="itemMenus">
   <a @click.prevent>
     Hover me
@@ -482,6 +484,8 @@ const itemMenus: DropdownMenuOption[] = [
 ## 菜单分组
 
 _支持把菜单项进行分组，分组子项相对分组标题缩进显示。_
+
+<br/>
 
 <Dropdown :menus="groupMenus">
   <a @click.prevent>
@@ -754,6 +758,8 @@ const basicMenus: DropdownMenuOption[] = [
 ## 菜单隐藏方式
 
 _默认是点击关闭菜单，可以关闭此功能。_
+
+<br/>
 
 <Dropdown
   :menus="keepOpenMenus"

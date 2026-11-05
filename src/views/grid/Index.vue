@@ -285,19 +285,19 @@ const state = reactive({
     <Row :gutter="24">
       <Col :span="8">
         <Flex vertical align="flex-start">
-          Horizontal Column Gutter:
+          horizontal column gutter:
           <Slider :step="8" :max="48" v-model:value="state.horizontalGutter" />
         </Flex>
       </Col>
       <Col :span="8">
         <Flex vertical align="flex-start">
-          Vertical Row Gutter:
+          vertical row gutter:
           <Slider :step="8" :max="48" v-model:value="state.verticalGutter" />
         </Flex>
       </Col>
       <Col :span="8">
         <Flex vertical align="flex-start">
-          Col Count:
+          col count:
           <RadioGroup :options="colCountOptions" v-model:value="state.colCount" button />
         </Flex>
       </Col>

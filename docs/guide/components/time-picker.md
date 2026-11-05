@@ -742,6 +742,8 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 
 ### TimePickerType Type
 
+<br/>
+
 选择形态。
 
 | 名称 | 值 |
@@ -749,6 +751,8 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 | TimePickerType | 'time' &#124; 'timerange' |
 
 ### TimePickerValue Type
+
+<br/>
 
 双向绑定值，毫秒时间戳；范围形态为两段元组。
 
@@ -758,6 +762,8 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 
 ### TimePickerFormattedValue Type
 
+<br/>
+
 字符串轨道的双向绑定值，格式由 `valueFormat` 决定；范围形态两段未选时分别为空字符串。
 
 | 名称 | 值 |
@@ -765,6 +771,8 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 | TimePickerFormattedValue | string &#124; [string, string] &#124; null |
 
 ### TimePickerDisabledTime Type
+
+<br/>
 
 不可选择的时间判定（范围形态的判定额外接收当前段标识）。
 
@@ -774,6 +782,8 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 
 ### TimePickerRangeSide Type
 
+<br/>
+
 范围形态的段标识。
 
 | 名称 | 值 |
@@ -781,6 +791,8 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 | TimePickerRangeSide | 'start' &#124; 'end' |
 
 ### TimePickerRangeInfo Type
+
+<br/>
 
 范围形态草稿变更的来源信息。
 
@@ -804,6 +816,8 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 | `12` 小时制（`use12Hours`） | 'hh:mm:ss a' |
 
 ### format 支持的格式化占位符列表
+
+<br/>
 
 `format` / `valueFormat` 采用 [date-fns](https://date-fns.org/v4.1.0/docs/format) 占位符，时间相关占位符：
 

@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vitepress'
@@ -15,16 +15,43 @@ declare module 'vitepress' {
   }
 }
 
+/** 目录下最新文件的 mtime（含子目录），用于判断 dist 产物是否落后于组件源码 */
+function newestMtime(dir: string): number {
+  let newest = 0
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name === 'node_modules') continue
+    const full = resolve(dir, entry.name)
+    newest = Math.max(newest, entry.isDirectory() ? newestMtime(full) : statSync(full).mtimeMs)
+  }
+  return newest
+}
+
 // 文档站统一从构建产物 dist 引入组件库（demo 说明符仍写作 'vue-amazing-ui'，展示真实用法）。
 // 项目根 vite.config.ts 的同名 alias 指向源码出口（供 pnpm dev 演示环境热更新），
 // 故用 enforce: 'pre' 的 resolveId 钩子先行拦截，使 docs 站解析到 dist 而非源码。
 function docsResolveLibraryToDist(): Plugin {
   const distEntry = fileURLToPath(new URL('../../dist/index.js', import.meta.url))
+  const componentsDir = fileURLToPath(new URL('../../components', import.meta.url))
   return {
     name: 'docs-resolve-library-to-dist',
     enforce: 'pre',
     resolveId(source) {
       return source === 'vue-amazing-ui' ? distEntry : null
+    },
+    // 只在 dev 启动时提示：dist 落后于源码时 demo 会静默跑旧实现（新增字段渲染为空白），
+    // 这类失真不会报错，只能靠时间戳兜底 —— 否则改完源码刷新页面只会看到「数据没了」
+    configResolved(config) {
+      if (config.command !== 'serve' || !existsSync(distEntry)) return
+      try {
+        if (newestMtime(componentsDir) > statSync(distEntry).mtimeMs) {
+          console.warn(
+            '[docs] dist 产物早于组件源码：文档站 demo 跑的是 dist，源码的新改动不会生效。' +
+              '请先执行 `pnpm build:dist`（或 `pnpm build`），再重启 docs:dev。'
+          )
+        }
+      } catch (error) {
+        console.warn('[docs] 检查 dist 产物时间戳失败', error)
+      }
     }
   }
 }

@@ -399,6 +399,8 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 _跳转框只接受数字，回车或失焦即跳转；输入超出范围时落到首 / 末页_
 
+<br/>
+
 <Pagination v-model:page="quickJumperPage" :total="total" show-quick-jumper @change="onChange" />
 
 ::: details Show Code
@@ -528,7 +530,7 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 ## 自定义切换器与跳转框
 
-_`changerProps` 透传给每页条数切换器（参考 Select Props），`jumperProps` 透传给跳转输入框（参考 Input Props）_
+_`changerProps` 透传给每页条数切换器（参考 [Select Props](./select.md#select-props)），`jumperProps` 透传给跳转输入框（参考 [Input Props](./input.md#input-props)）_
 
 <br/>
 

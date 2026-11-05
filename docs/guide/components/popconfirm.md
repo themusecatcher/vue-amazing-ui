@@ -600,7 +600,7 @@ _使用 `v-model:open` 控制显隐；`openControl` 为真时 `trigger: hover` �
 
 <br/>
 
-<Space vertical align="start" :gap="12">
+<Space vertical :gap="12">
   <Space>
     <Popconfirm v-model:open="controlledOpen" title="It's friendly reminder ..." @ok="confirm" @cancel="cancel">
       <Button>Controlled: {{ controlledOpen }}</Button>
@@ -641,7 +641,7 @@ const controlledOpen = ref(false)
 const openControlOpen = ref(false)
 </script>
 <template>
-  <Space vertical align="start" :gap="12">
+  <Space vertical :gap="12">
     <Space>
       <Popconfirm v-model:open="controlledOpen" title="It's friendly reminder ..." @ok="confirm" @cancel="cancel">
         <Button>Controlled: {{ controlledOpen }}</Button>

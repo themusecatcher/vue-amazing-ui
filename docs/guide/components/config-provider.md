@@ -532,7 +532,7 @@ _只修改种子 `seed.primary` 一个值，所有消费主色的组件同步换
       <Textarea :width="360" v-model:value="textareaValue" placeholder="custom theme textarea" />
       <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
     </Space>
-    <Space align="center" wrap>
+    <Space align="center">
       <Badge :value="5">
         <Avatar shape="square" size="large" />
       </Badge>
@@ -996,7 +996,7 @@ function onDecline(scale: number) {
         <Textarea :width="360" v-model:value="textareaValue" placeholder="custom theme textarea" />
         <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
       </Space>
-      <Space align="center" wrap>
+      <Space align="center">
         <Badge :value="5">
           <Avatar shape="square" size="large" />
         </Badge>
@@ -1118,28 +1118,28 @@ _`seed` 的 `success` / `warning` / `error` / `info` 与 `primary` 共用同一�
 
 <br/>
 
-<Flex vertical gap="middle">
-  <Space align="center" wrap>
+<Flex vertical>
+  <Space align="center">
     <span>success:</span>
     <ColorPicker style="width: 160px" v-model:value="seedSuccess" :show-alpha="false" />
     <span>warning:</span>
     <ColorPicker style="width: 160px" v-model:value="seedWarning" :show-alpha="false" />
   </Space>
-  <Space align="center" wrap>
+  <Space align="center">
     <span>error:</span>
     <ColorPicker style="width: 160px" v-model:value="seedError" :show-alpha="false" />
     <span>info:</span>
     <ColorPicker style="width: 160px" v-model:value="seedInfo" :show-alpha="false" />
   </Space>
   <ConfigProvider :abstract="false" :theme="seedTheme">
-    <Flex vertical gap="middle">
-      <Space align="center" wrap>
+    <Flex vertical>
+      <Space align="center">
         <Alert style="width: 180px" type="success" message="Success" show-icon />
         <Alert style="width: 180px" type="warning" message="Warning" show-icon />
         <Alert style="width: 180px" type="error" message="Error" show-icon />
         <Alert style="width: 180px" type="info" message="Info" show-icon />
       </Space>
-      <Space align="center" wrap>
+      <Space align="center">
         <Button type="danger">Danger</Button>
         <Tag color="success">Success</Tag>
         <Tag color="warning">Warning</Tag>
@@ -1175,28 +1175,28 @@ const seedTheme = computed<ConfigProviderTheme>(() => ({
 }))
 </script>
 <template>
-  <Flex vertical gap="middle">
-    <Space align="center" wrap>
+  <Flex vertical>
+    <Space align="center">
       <span>success:</span>
       <ColorPicker style="width: 160px" v-model:value="seedSuccess" :show-alpha="false" />
       <span>warning:</span>
       <ColorPicker style="width: 160px" v-model:value="seedWarning" :show-alpha="false" />
     </Space>
-    <Space align="center" wrap>
+    <Space align="center">
       <span>error:</span>
       <ColorPicker style="width: 160px" v-model:value="seedError" :show-alpha="false" />
       <span>info:</span>
       <ColorPicker style="width: 160px" v-model:value="seedInfo" :show-alpha="false" />
     </Space>
     <ConfigProvider :abstract="false" :theme="seedTheme">
-      <Flex vertical gap="middle">
-        <Space align="center" wrap>
+      <Flex vertical>
+        <Space align="center">
           <Alert style="width: 180px" type="success" message="Success" show-icon />
           <Alert style="width: 180px" type="warning" message="Warning" show-icon />
           <Alert style="width: 180px" type="error" message="Error" show-icon />
           <Alert style="width: 180px" type="info" message="Info" show-icon />
         </Space>
-        <Space align="center" wrap>
+        <Space align="center">
           <Button type="danger">Danger</Button>
           <Tag color="success">Success</Tag>
           <Tag color="warning">Warning</Tag>
@@ -1223,8 +1223,8 @@ _`theme.mode` 决定派生使用的色阶（`light` / `dark`），`auto` 跟随�
   </Space>
   <ConfigProvider :abstract="false" :theme="{ mode }">
     <Card title="作用域内的明暗切换">
-      <Flex vertical gap="middle">
-        <Space align="center" wrap>
+      <Flex vertical>
+        <Space align="center">
           <Button type="primary">Primary Button</Button>
           <Button>Default Button</Button>
           <Button type="danger">Danger Button</Button>
@@ -1233,7 +1233,7 @@ _`theme.mode` 决定派生使用的色阶（`light` / `dark`），`auto` 跟随�
           <Slider :value="60" style="width: 160px" />
           <Progress :percent="percent" style="width: 180px" />
         </Space>
-        <Space align="center" wrap>
+        <Space align="center">
           <Input :width="180" v-model:value="modeInputValue" placeholder="please input" />
           <Select :options="darkSelectOptions" v-model:value="darkSelectValue" :width="160" />
           <Pagination v-model:page="darkPage" :total="50" :page-size="10" />
@@ -1241,7 +1241,7 @@ _`theme.mode` 决定派生使用的色阶（`light` / `dark`），`auto` 跟随�
             <Button>Hover me</Button>
           </Tooltip>
         </Space>
-        <Space align="center" wrap>
+        <Space align="center">
           <Alert style="width: 190px" message="Info Text" type="info" show-icon />
           <Alert style="width: 190px" message="Success Text" type="success" show-icon />
           <Alert style="width: 190px" message="Warning Text" type="warning" show-icon />
@@ -1288,8 +1288,8 @@ const darkPage = ref<number>(1)
     </Space>
     <ConfigProvider :abstract="false" :theme="{ mode }">
       <Card title="作用域内的明暗切换">
-        <Flex vertical gap="middle">
-          <Space align="center" wrap>
+        <Flex vertical>
+          <Space align="center">
             <Button type="primary">Primary Button</Button>
             <Button>Default Button</Button>
             <Button type="danger">Danger Button</Button>
@@ -1298,7 +1298,7 @@ const darkPage = ref<number>(1)
             <Slider :value="60" style="width: 160px" />
             <Progress :percent="percent" style="width: 180px" />
           </Space>
-          <Space align="center" wrap>
+          <Space align="center">
             <Input :width="180" v-model:value="inputValue" placeholder="please input" />
             <Select :options="darkSelectOptions" v-model:value="darkSelectValue" :width="160" />
             <Pagination v-model:page="darkPage" :total="50" :page-size="10" />
@@ -1306,7 +1306,7 @@ const darkPage = ref<number>(1)
               <Button>Hover me</Button>
             </Tooltip>
           </Space>
-          <Space align="center" wrap>
+          <Space align="center">
             <Alert style="width: 190px" message="Info Text" type="info" show-icon />
             <Alert style="width: 190px" message="Success Text" type="success" show-icon />
             <Alert style="width: 190px" message="Warning Text" type="warning" show-icon />
@@ -1327,14 +1327,14 @@ _`theme.components.<组件>.primaryColor` 仅覆盖该组件的整套主色（�
 
 <br/>
 
-<Flex vertical gap="middle">
-  <Space align="center" wrap>
+<Flex vertical>
+  <Space align="center">
     <span>componentPrimary:</span>
     <ColorPicker style="width: 200px" v-model:value="componentPrimary" :show-alpha="false" />
   </Space>
   <Flex vertical gap="small">
     <span class="theme-caption">默认 seed（Button / Slider / Progress 全部跟随）</span>
-    <Space align="center" wrap>
+    <Space align="center">
       <Button type="primary">Primary Button</Button>
       <Slider :value="40" style="width: 180px" />
       <Progress :percent="60" style="width: 160px" />
@@ -1343,7 +1343,7 @@ _`theme.components.<组件>.primaryColor` 仅覆盖该组件的整套主色（�
   <Flex vertical gap="small">
     <span class="theme-caption">theme.components（只改这三个组件）</span>
     <ConfigProvider :abstract="false" :theme="componentTheme">
-      <Space align="center" wrap>
+      <Space align="center">
         <Button type="primary">Primary Button</Button>
         <Slider :value="40" style="width: 180px" />
         <Progress :percent="60" style="width: 160px" />
@@ -1374,14 +1374,14 @@ const componentTheme = computed<ConfigProviderTheme>(() => ({
 }))
 </script>
 <template>
-  <Flex vertical gap="middle">
-    <Space align="center" wrap>
+  <Flex vertical>
+    <Space align="center">
       <span>componentPrimary:</span>
       <ColorPicker style="width: 200px" v-model:value="componentPrimary" :show-alpha="false" />
     </Space>
     <Flex vertical gap="small">
       <span class="theme-caption">默认 seed（Button / Slider / Progress 全部跟随）</span>
-      <Space align="center" wrap>
+      <Space align="center">
         <Button type="primary">Primary Button</Button>
         <Slider :value="40" style="width: 180px" />
         <Progress :percent="60" style="width: 160px" />
@@ -1390,7 +1390,7 @@ const componentTheme = computed<ConfigProviderTheme>(() => ({
     <Flex vertical gap="small">
       <span class="theme-caption">theme.components（只改这三个组件）</span>
       <ConfigProvider :abstract="false" :theme="componentTheme">
-        <Space align="center" wrap>
+        <Space align="center">
           <Button type="primary">Primary Button</Button>
           <Slider :value="40" style="width: 180px" />
           <Progress :percent="60" style="width: 160px" />
@@ -1411,8 +1411,8 @@ _`theme.components` 覆盖整套主色；仅调整单个视觉面（滑动条轨
 
 <div class="theme-demo">
   <div class="theme-demo-surface" :style="tokenStyle">
-    <Flex vertical gap="middle">
-      <Space align="center" wrap>
+    <Flex vertical>
+      <Space align="center">
         <Button type="primary">Token Button</Button>
         <Button>Default Button</Button>
       </Space>
@@ -1445,8 +1445,8 @@ const tokenStyle = {
 </script>
 <template>
   <div :style="tokenStyle">
-    <Flex vertical gap="middle">
-      <Space align="center" wrap>
+    <Flex vertical>
+      <Space align="center">
         <Button type="primary">Token Button</Button>
         <Button>Default Button</Button>
       </Space>
@@ -1465,17 +1465,17 @@ _典型场景：深色侧边栏、活动页局部换肤。在该区域外层再�
 <br/>
 
 <Flex vertical>
-  <Space align="center" wrap>
+  <Space align="center">
     <span>commonPrimaryColor:</span>
     <ColorPicker style="width: 200px" v-model:value="commonPrimaryColor" :show-alpha="false" />
   </Space>
-  <Space align="center" wrap>
+  <Space align="center">
     <span>scopePrimaryColor:</span>
     <ColorPicker style="width: 200px" v-model:value="scopePrimaryColor" :show-alpha="false" />
   </Space>
   <ConfigProvider :abstract="false" :theme="theme">
-    <Flex vertical gap="middle">
-      <Space align="center" wrap>
+    <Flex vertical>
+      <Space align="center">
         <span class="theme-caption">外层作用域</span>
         <Alert style="width: 180px" message="Outer Alert" type="info" show-icon />
         <Button type="primary">Outer Button</Button>
@@ -1483,7 +1483,7 @@ _典型场景：深色侧边栏、活动页局部换肤。在该区域外层再�
       <ConfigProvider :abstract="false" :theme="{ seed: { primary: scopePrimaryColor } }">
         <Flex vertical gap="small">
           <span class="theme-caption">子树作用域（仅影响本子树）</span>
-          <Space align="center" wrap>
+          <Space align="center">
             <Alert style="width: 180px" message="Scoped Alert" type="info" show-icon />
             <Button type="primary">Scoped Button</Button>
           </Space>
@@ -1516,17 +1516,17 @@ const theme = computed<ConfigProviderTheme>(() => ({
 </script>
 <template>
   <Flex vertical>
-    <Space align="center" wrap>
+    <Space align="center">
       <span>commonPrimaryColor:</span>
       <ColorPicker style="width: 200px" v-model:value="commonPrimaryColor" :show-alpha="false" />
     </Space>
-    <Space align="center" wrap>
+    <Space align="center">
       <span>scopePrimaryColor:</span>
       <ColorPicker style="width: 200px" v-model:value="scopePrimaryColor" :show-alpha="false" />
     </Space>
     <ConfigProvider :abstract="false" :theme="theme">
-      <Flex vertical gap="middle">
-        <Space align="center" wrap>
+      <Flex vertical>
+        <Space align="center">
           <span class="theme-caption">外层作用域</span>
           <Alert style="width: 180px" message="Outer Alert" type="info" show-icon />
           <Button type="primary">Outer Button</Button>
@@ -1534,7 +1534,7 @@ const theme = computed<ConfigProviderTheme>(() => ({
         <ConfigProvider :abstract="false" :theme="{ seed: { primary: scopePrimaryColor } }">
           <Flex vertical gap="small">
             <span class="theme-caption">子树作用域（仅影响本子树）</span>
-            <Space align="center" wrap>
+            <Space align="center">
               <Alert style="width: 180px" message="Scoped Alert" type="info" show-icon />
               <Button type="primary">Scoped Button</Button>
             </Space>
@@ -1869,7 +1869,7 @@ _传 `configProviderProps.theme`：浮层根节点内联该作用域的令牌与
 <br/>
 
 <Flex vertical gap="small">
-  <Space align="center" wrap>
+  <Space align="center">
     <span>customPrimary:</span>
     <ColorPicker style="width: 200px" v-model:value="discreteCustomPrimary" :show-alpha="false" />
   </Space>
@@ -1924,7 +1924,7 @@ function onDiscreteModal() {
 </script>
 <template>
   <Flex vertical gap="small">
-    <Space align="center" wrap>
+    <Space align="center">
       <span>customPrimary:</span>
       <ColorPicker style="width: 200px" v-model:value="discreteCustomPrimary" :show-alpha="false" />
     </Space>
@@ -2093,7 +2093,7 @@ _按「改的是哪一层」定位，再检查作用域与覆盖范围；完整�
 | success? | 成功色，默认 `#52c41a` | string |
 | warning? | 警告色，默认 `#faad14` | string |
 | error? | 错误 / 危险色，默认 `#ff4d4f` | string |
-| info? | 信息色，未传时跟随 primary | string |
+| info? | 信息色，未传时跟随 `primary` | string |
 | neutralText? | 中性文本基准，默认 `#000000` | string |
 | neutralBg? | 中性背景基准（显式传入时两个模式共用，未传时按模式取 `#ffffff` / `#000000`） | string |
 

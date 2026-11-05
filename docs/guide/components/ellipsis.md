@@ -271,11 +271,13 @@ function expandChange(open: boolean) {
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| maxWidth | 文本最大宽度，单位 `px` | string &#124; number | '100%' |
-| tooltipMaxWidth | 弹出提示最大宽度，单位 `px`，默认为 `文本宽度 + 24` | string &#124; number | undefined |
-| line | 最大行数 | number | undefined |
-| expand | 是否启用点击文本展开全部（单行与多行均支持） | boolean | false |
-| tooltip | 是否启用文本提示框；传对象即 [文字提示 Tooltip](./tooltip.md#tooltip) 的属性配置（如 `trigger` / `placement` / `bgColor` / `showDelay`），类型为 `EllipsisTooltipProps` | boolean &#124; EllipsisTooltipProps | true |
+| maxWidth | 文本最大宽度，`number` 按 `px` 处理 | string &#124; number | '100%' |
+| line | 最多展示行数；不传时为单行省略 | number | undefined |
+| expand | 文本溢出时点击展开 / 收起全部 | boolean | false |
+| tooltip | 是否显示提示框，**仅在文本溢出时出现**；传对象即 [文字提示 Tooltip](./tooltip.md#tooltip-props) 的属性配置 | boolean &#124; EllipsisTooltipProps | true |
+| tooltipMaxWidth | 提示框最大宽度，`number` 按 `px` 处理，默认为文本容器宽度 `+ 24` | string &#124; number | undefined |
+
+`expand` 展开时提示框会收起，再次收起后若文本仍溢出则恢复显示。
 
 `tooltip` 传对象时的类型是 `EllipsisTooltipProps`（从包入口导出）：
 
@@ -286,17 +288,21 @@ type EllipsisTooltipProps = Omit<
 >
 ```
 
-锚点（`anchor`）、展示判定（`getDisabled`）与提示内容（`content` / `tooltip` 等）由本组件接管，其余 [Tooltip Props](./tooltip.md#tooltip-props) 均可下发。
+被 `Omit` 的字段按用途分三类，其余 [Tooltip Props](./tooltip.md#tooltip-props) 均可下发：
 
-**提示宽度**有三个入口，优先级从高到低：`:tooltip="{ maxWidth }"` → `tooltipMaxWidth` → 默认「文本容器宽度 + 24」。
-注意 `maxWidth` 是本组件**文本**的最大宽度，与提示宽度互不影响，两者不要混用。
+- 锚点与展示判定（`anchor` / `getDisabled`）：由本组件接管，覆盖会导致提示错位或失效
+- 提示内容（`content` / `tooltip`）：内容源由默认插槽与 `#tooltip` 插槽决定
+- 包裹层样式（`contentClass` / `contentStyle`）：只作用于 `Tooltip` 的触发包裹层，本组件以锚点模式渲染、没有该节点，传入不生效；调整提示框样式请用 `tooltipStyle` / `popupStyle`
+
+**提示宽度**优先级从高到低：提示的 `maxWidth`（经 `:tooltip="{ maxWidth }"` 下发）→ `tooltipMaxWidth` → 默认「文本容器宽度 `+ 24`」。
+两者同名易混：本组件的 `maxWidth` 是**文本**最大宽度，`{ maxWidth }` 是**提示**最大宽度，互不影响。
 
 ## Slots
 
 | 名称 | 说明 | 用法 |
 | :-- | :-- | :-- |
-| tooltip | 自定义弹出提示内容 | v-slot:tooltip |
-| default | 自定义展示内容 | v-slot:default |
+| default | 文本内容；未使用 `tooltip` 插槽时，它同时是提示框的内容 | v-slot:default |
+| tooltip | 自定义提示框内容，优先于默认插槽 | v-slot:tooltip |
 
 ## Events
 

@@ -91,7 +91,7 @@ const openControlOpen = ref(false)
       使用 <code>v-model:open</code> 控制显隐；<code>openControl</code> 为真时
       <code>trigger: hover</code> 不再驱动显隐，显隐完全由 <code>open</code> 决定
     </p>
-    <Space vertical align="start" :gap="12">
+    <Space vertical :gap="12">
       <Space>
         <Popover v-model:open="controlledOpen" title="Click Title" trigger="click">
           <template #content>

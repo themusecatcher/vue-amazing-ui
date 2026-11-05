@@ -672,7 +672,7 @@ _切换子菜单的展开触发方式；`hover` 触发时，`subMenuOpenDelay` /
 
 <br/>
 
-<Flex vertical>
+<Space vertical>
   <Switch v-model:value="triggerHover" checked="hover" unchecked="click" />
   <Menu
     v-model:selectedKeys="triggerDelaySelected"
@@ -683,7 +683,7 @@ _切换子菜单的展开触发方式；`hover` 触发时，`subMenuOpenDelay` /
     :sub-menu-close-delay="0.8"
     :items="triggerDelayItems"
   />
-</Flex>
+</Space>
 
 ::: details Show Code
 
@@ -711,7 +711,7 @@ const triggerDelayItems: ItemType[] = [
 ]
 </script>
 <template>
-  <Flex vertical>
+  <Space vertical>
     <Switch v-model:value="triggerHover" checked="hover" unchecked="click" />
     <Menu
       v-model:selectedKeys="triggerDelaySelected"
@@ -722,7 +722,7 @@ const triggerDelayItems: ItemType[] = [
       :sub-menu-close-delay="0.8"
       :items="triggerDelayItems"
     />
-  </Flex>
+  </Space>
 </template>
 ```
 
@@ -1071,7 +1071,7 @@ _通过 `disabled` 禁用整个菜单；菜单项自身的 `disabled` 只禁用�
 
 <br/>
 
-<Flex vertical>
+<Space vertical>
   <Switch v-model:value="wholeDisabled" checked="禁用" unchecked="可用" />
   <Menu
     v-model:selectedKeys="disabledSelected"
@@ -1080,7 +1080,7 @@ _通过 `disabled` 禁用整个菜单；菜单项自身的 `disabled` 只禁用�
     :disabled="wholeDisabled"
     :items="disabledItems"
   />
-</Flex>
+</Space>
 
 ::: details Show Code
 
@@ -1099,7 +1099,7 @@ const disabledItems: ItemType[] = [
 ]
 </script>
 <template>
-  <Flex vertical>
+  <Space vertical>
     <Switch v-model:value="wholeDisabled" checked="禁用" unchecked="可用" />
     <Menu
       v-model:selectedKeys="disabledSelected"
@@ -1108,7 +1108,7 @@ const disabledItems: ItemType[] = [
       :disabled="wholeDisabled"
       :items="disabledItems"
     />
-  </Flex>
+  </Space>
 </template>
 ```
 
@@ -1459,7 +1459,7 @@ _开启 `forceSubMenuRender` 后，子菜单面板在首次展开前就已渲染
 
 <br/>
 
-<Flex vertical>
+<Space vertical>
   <Switch v-model:value="forceRenderEnabled" checked="On" unchecked="Off" />
   <Menu
     style="width: 256px"
@@ -1467,7 +1467,7 @@ _开启 `forceSubMenuRender` 后，子菜单面板在首次展开前就已渲染
     :force-sub-menu-render="forceRenderEnabled"
     :items="forceRenderItems"
   />
-</Flex>
+</Space>
 
 ::: details Show Code
 
@@ -1503,7 +1503,7 @@ const forceRenderItems: ItemType[] = [
 ]
 </script>
 <template>
-  <Flex vertical>
+  <Space vertical>
     <Switch v-model:value="forceRenderEnabled" checked="On" unchecked="Off" />
     <Menu
       style="width: 256px"
@@ -1511,7 +1511,7 @@ const forceRenderItems: ItemType[] = [
       :force-sub-menu-render="forceRenderEnabled"
       :items="forceRenderItems"
     />
-  </Flex>
+  </Space>
 </template>
 ```
 
@@ -1524,7 +1524,7 @@ _内建 `light` 与 `dark` 两套主题，默认为 `light`；深色皮肤的底
 <br/>
 
 <Flex vertical>
-  <Space align="center" wrap>
+  <Space align="center">
     <Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
     <!-- 主题色只作用于本用例：作用域种子随选择器变化，深色皮肤的派生底色随之更新 -->
     <ColorPicker v-model:value="themePrimary" :show-alpha="false" style="width: 160px" />
@@ -1591,7 +1591,7 @@ const themeItems: ItemType[] = [
 </script>
 <template>
   <Flex vertical>
-    <Space align="center" wrap>
+    <Space align="center">
       <Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
       <ColorPicker v-model:value="themePrimary" :show-alpha="false" style="width: 160px" />
     </Space>
@@ -1617,7 +1617,7 @@ _通过子菜单的 `theme` 属性设置其主题，可实现根目录深色、�
 
 <br/>
 
-<Flex vertical>
+<Space vertical>
   <Switch v-model:value="submenuDark" checked="Dark" unchecked="Light" />
   <Menu
     style="width: 256px"
@@ -1627,7 +1627,7 @@ _通过子菜单的 `theme` 属性设置其主题，可实现根目录深色、�
     v-model:selectedKeys="submenuSelected"
     :items="submenuItems"
   />
-</Flex>
+</Space>
 
 ::: details Show Code
 
@@ -1658,7 +1658,7 @@ const submenuItems = computed<ItemType[]>(() => [
 ])
 </script>
 <template>
-  <Flex vertical>
+  <Space vertical>
     <Switch v-model:value="submenuDark" checked="Dark" unchecked="Light" />
     <Menu
       style="width: 256px"
@@ -1668,7 +1668,7 @@ const submenuItems = computed<ItemType[]>(() => [
       v-model:selectedKeys="submenuSelected"
       :items="submenuItems"
     />
-  </Flex>
+  </Space>
 </template>
 ```
 

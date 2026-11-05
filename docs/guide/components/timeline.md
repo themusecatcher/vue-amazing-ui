@@ -151,6 +151,10 @@ import { SmileOutlined } from '@ant-design/icons-vue'
 
 ## 自定义时间轴点
 
+_自定义轴点会盖住穿过它的连线，遮挡色默认取容器色；页面底色与容器色不同时（深色页面、整页演示），把 `--timeline-head-bg` 设为页面底色，否则轴点处会露出一截色差_
+
+<br/>
+
 <Timeline>
   <TimelineItem content="Create a services site 2025-06-24 10:10" />
   <TimelineItem content="Custom dot">
@@ -207,13 +211,10 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
   height: 18px;
   border: 4px solid var(--va-primary-color);
   border-radius: 50%;
-  background: var(--va-bg-container-color);
 }
 .dot-icon {
   font-size: 16px;
   color: var(--va-primary-color);
-  background: var(--va-bg-container-color);
-  border-radius: 50%;
 }
 .desc {
   margin-bottom: 4px;
@@ -570,7 +571,6 @@ const startOptions: { label: string; value: TimelineStart }[] = [
   height: 18px;
   border: 4px solid var(--va-primary-color);
   border-radius: 50%;
-  background: var(--va-bg-container-color);
 }
 </style>
 ```
@@ -760,8 +760,6 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 .dot-icon {
   font-size: 16px;
   color: var(--va-primary-color);
-  background: var(--va-bg-container-color);
-  border-radius: 50%;
 }
 </style>
 ```
@@ -775,13 +773,10 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
   height: 18px;
   border: 4px solid var(--va-primary-color);
   border-radius: 50%;
-  background: var(--va-bg-container-color);
 }
 .dot-icon {
   font-size: 16px;
   color: var(--va-primary-color);
-  background: var(--va-bg-container-color);
-  border-radius: 50%;
 }
 .desc {
   margin-bottom: 4px;
