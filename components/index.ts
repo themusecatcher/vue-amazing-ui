@@ -20,7 +20,7 @@ export {
   getScrollParent,
   useScrollParent
 } from './utils'
-export type { DownloadOptions, DownloadStrategy, ScrollParentOptions } from './utils'
+export type { DownloadOptions, DownloadStrategy, ScrollParentOptions, UseScrollOptions, UseScrollReturn } from './utils'
 export { VueAmazingUIResolver } from './utils/resolver'
 export type { VueAmazingUIResolverOptions } from './utils/resolver'
 // 主题派生（纯函数，可用于 canvas / SVG / 第三方 JS 取色）
