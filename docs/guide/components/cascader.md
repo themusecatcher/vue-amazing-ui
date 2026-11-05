@@ -1839,7 +1839,7 @@ const value = ref<(string | number)[][]>([
 
 ## 最大 tag 数
 
-_通过 `max-tag-count` 折叠超出数量的 tag（传 `'responsive'` 时按容器宽度自动折叠），`max-tag-placeholder` 属性或 `#maxTagPlaceholder` 插槽自定义折叠提示_
+_通过 `max-tag-count` 折叠超出数量的 `tag`（传 `'responsive'` 时按容器宽度自动折叠），`max-tag-placeholder` 属性或 `#maxTagPlaceholder` 插槽自定义折叠提示_
 
 <br/>
 
@@ -1995,6 +1995,8 @@ const longOptions: CascaderOption[] = [
     ]
   }
 ]
+const responsiveValue = ref<(string | number)[][]>([])
+const slotValue = ref<(string | number)[][]>([])
 const value = ref<(string | number)[][]>([
   ['zhejiang', 'hangzhou', 'xihu'],
   ['jiangsu', 'nanjing', 'zhonghuamen'],
@@ -2006,7 +2008,15 @@ const value = ref<(string | number)[][]>([
 </script>
 <template>
   <Cascader v-model:value="value" placeholder="请选择" :options="longOptions" multiple :max-tag-count="3" />
-  <Cascader v-model:value="value" placeholder="请选择" :options="longOptions" multiple :max-tag-count="3">
+  <Cascader
+    v-model:value="responsiveValue"
+    placeholder="请选择"
+    :options="longOptions"
+    multiple
+    max-tag-count="responsive"
+    :width="240"
+  />
+  <Cascader v-model:value="slotValue" placeholder="请选择" :options="longOptions" multiple :max-tag-count="3">
     <template #maxTagPlaceholder="{ omittedValues }">+ {{ omittedValues.length }} 项</template>
   </Cascader>
 </template>
@@ -2078,6 +2088,22 @@ _通过实例方法 `getCheckedData()` 读取已勾选项的选项数据_
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      { value: 'hangzhou', label: '杭州', children: [{ value: 'xihu', label: '西湖' }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴' }] }
+    ]
+  }
+]
 const value = ref<(string | number)[][]>([
   ['zhejiang', 'hangzhou', 'xihu'],
   ['jiangsu', 'wuxi', 'jiangyin']
@@ -2478,6 +2504,23 @@ _通过 `#action` 插槽在面板底部加入自定义操作_
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { CascaderOption } from 'vue-amazing-ui'
+const options: CascaderOption[] = [
+  {
+    value: 'zhejiang',
+    label: '浙江',
+    children: [
+      { value: 'hangzhou', label: '杭州', children: [{ value: 'xihu', label: '西湖' }] }
+    ]
+  },
+  {
+    value: 'jiangsu',
+    label: '江苏',
+    children: [
+      { value: 'wuxi', label: '无锡', children: [{ value: 'jiangyin', label: '江阴' }] }
+    ]
+  }
+]
 const value = ref<(string | number)[][]>([['zhejiang', 'hangzhou', 'xihu']])
 const cascaderRef = ref()
 // 确定后收起面板

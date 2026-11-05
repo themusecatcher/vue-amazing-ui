@@ -253,10 +253,13 @@ const groupOptions: CheckboxGroupOption[] = [
   { label: 'Orange', value: 'Orange' }
 ]
 const value = ref<string[]>(['Apple'])
+const selectedValue = ref<string[]>([])
+const objectValue = ref<string[]>([])
 </script>
 <template>
   <CheckboxGroup v-model:value="value" :options="plainOptions" name="checkboxGroup" />
-  <CheckboxGroup v-model:value="value" :options="groupOptions" />
+  <CheckboxGroup v-model:value="selectedValue" :options="plainOptions" />
+  <CheckboxGroup v-model:value="objectValue" :options="groupOptions" />
 </template>
 ```
 
@@ -397,9 +400,18 @@ _开关演示禁用态：禁用后不可聚焦、不可切换，组的 `disabled
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { CheckboxGroupOption } from 'vue-amazing-ui'
+const options: CheckboxGroupOption[] = [
+  { label: '拜占庭', value: 1 },
+  { label: '君士坦丁堡', value: 2 },
+  { label: '伊斯坦布尔', value: 3 }
+]
+const groupOptions: string[] = ['Apple', 'Pear', 'Orange']
 const disabled = ref<boolean>(true)
 const checked1 = ref<boolean>(true)
 const checked2 = ref<boolean>(false)
+const listValue = ref<(string | number)[]>([1])
+const groupValue = ref<string[]>(['Apple'])
 const toggleDisabled = () => {
   disabled.value = !disabled.value
 }
@@ -408,6 +420,8 @@ const toggleDisabled = () => {
   <Button type="primary" @click="toggleDisabled">Toggle disabled</Button>
   <Checkbox v-model:checked="checked1" :disabled="disabled">Disabled</Checkbox>
   <Checkbox v-model:checked="checked2" :disabled="disabled">Disabled</Checkbox>
+  <CheckboxGroup :options="options" v-model:value="listValue" disabled />
+  <CheckboxGroup v-model:value="groupValue" :options="groupOptions" disabled />
 </template>
 ```
 
@@ -499,6 +513,7 @@ const options = ref<CheckboxGroupOption[]>([
   { label: '布宜诺斯艾利斯', value: 4 }
 ])
 const value = ref<(string | number)[]>([2])
+const groupValue = ref<(string | number)[]>([2])
 </script>
 <template>
   <CheckboxGroup :options="options" v-model:value="value">
@@ -507,6 +522,12 @@ const value = ref<(string | number)[]>([2])
       <span v-else-if="index === 3" style="color: #1677ff">{{ option?.label }}</span>
       <span v-else>{{ label }}</span>
     </template>
+  </CheckboxGroup>
+  <CheckboxGroup v-model:value="groupValue">
+    <Checkbox :value="1">拜占庭</Checkbox>
+    <Checkbox :value="2"><span style="color: #ff6900">君士坦丁堡</span></Checkbox>
+    <Checkbox :value="3">伊斯坦布尔</Checkbox>
+    <Checkbox :value="4"><span style="color: #1677ff">布宜诺斯艾利斯</span></Checkbox>
   </CheckboxGroup>
 </template>
 ```
@@ -602,11 +623,11 @@ const value = ref<(string | number)[]>([2])
 <template>
   <Flex gap="small" vertical>
     <span>水平间距 {{ horizontalGap }}px</span>
-    <Slider v-model:value="horizontalGap" />
+    <Slider v-model:value="horizontalGap" :width="200" />
   </Flex>
   <Flex gap="small" vertical>
     <span>垂直间距 {{ verticalGap }}px</span>
-    <Slider v-model:value="verticalGap" />
+    <Slider v-model:value="verticalGap" :width="200" />
   </Flex>
   <!-- 容器宽度不足时选项换行，此时垂直间距生效 -->
   <div style="width: 240px">
@@ -658,7 +679,7 @@ const value = ref<(string | number)[]>([1, 2])
 <template>
   <Flex gap="small" vertical>
     <span>选项间距 {{ groupGap }}px</span>
-    <Slider v-model:value="groupGap" />
+    <Slider v-model:value="groupGap" :width="200" />
   </Flex>
   <Flex gap="small" vertical align="flex-start">
     <span>垂直排列</span>

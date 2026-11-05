@@ -388,9 +388,26 @@ const options = ref<RadioGroupOption[]>([
   { label: '布宜诺斯艾利斯', value: 4 }
 ])
 const value = ref<RadioProps['value']>('a')
+const itemDisabledValue = ref<RadioProps['value']>('a')
+const groupDisabledValue = ref<RadioProps['value']>('a')
 </script>
 <template>
   <RadioGroup v-model:value="value">
+    <RadioButton v-for="button in buttonItems" :key="button.value" :value="button.value">
+      {{ button.label }}
+    </RadioButton>
+  </RadioGroup>
+  <RadioGroup v-model:value="itemDisabledValue">
+    <RadioButton
+      v-for="button in buttonItems"
+      :key="button.value"
+      :value="button.value"
+      :disabled="button.value === 'b'"
+    >
+      {{ button.label }}
+    </RadioButton>
+  </RadioGroup>
+  <RadioGroup v-model:value="groupDisabledValue" disabled>
     <RadioButton v-for="button in buttonItems" :key="button.value" :value="button.value">
       {{ button.label }}
     </RadioButton>
@@ -474,10 +491,16 @@ const options = ref<RadioGroupOption[]>([
   { label: '布宜诺斯艾利斯', value: 4 }
 ])
 const value = ref<RadioProps['value']>('a')
+const itemDisabledValue = ref<RadioProps['value']>('a')
 </script>
 <template>
   <RadioGroup v-model:value="value" button-style="solid">
     <RadioButton v-for="button in buttonItems" :key="button.value" :value="button.value">
+      {{ button.label }}
+    </RadioButton>
+  </RadioGroup>
+  <RadioGroup v-model:value="itemDisabledValue" button-style="solid">
+    <RadioButton v-for="button in buttonItems" :key="button.value" :value="button.value" :disabled="button.value === 'b'">
       {{ button.label }}
     </RadioButton>
   </RadioGroup>
@@ -553,9 +576,21 @@ const buttonItems = [
   { value: 'd', label: 'Chengdu' }
 ]
 const value = ref<RadioProps['value']>('a')
+const middleValue = ref<RadioProps['value']>('a')
+const smallValue = ref<RadioProps['value']>('a')
 </script>
 <template>
   <RadioGroup v-model:value="value" size="large">
+    <RadioButton v-for="button in buttonItems" :key="button.value" :value="button.value">
+      {{ button.label }}
+    </RadioButton>
+  </RadioGroup>
+  <RadioGroup v-model:value="middleValue" size="middle">
+    <RadioButton v-for="button in buttonItems" :key="button.value" :value="button.value">
+      {{ button.label }}
+    </RadioButton>
+  </RadioGroup>
+  <RadioGroup v-model:value="smallValue" size="small">
     <RadioButton v-for="button in buttonItems" :key="button.value" :value="button.value">
       {{ button.label }}
     </RadioButton>
@@ -707,9 +742,11 @@ const options = ref<RadioGroupOption[]>([
   { label: '布宜诺斯艾利斯', value: 4 }
 ])
 const value = ref<RadioProps['value']>(1)
+const buttonValue = ref<RadioProps['value']>(1)
 </script>
 <template>
   <RadioGroup v-model:value="value" :options="options" />
+  <RadioGroup v-model:value="buttonValue" :options="options" button />
 </template>
 ```
 
@@ -756,6 +793,7 @@ const options = ref<RadioGroupOption[]>([
   { label: '布宜诺斯艾利斯', value: 4 }
 ])
 const value = ref<RadioProps['value']>(2)
+const groupValue = ref<RadioProps['value']>(2)
 </script>
 <template>
   <RadioGroup :options="options" v-model:value="value">
@@ -764,6 +802,12 @@ const value = ref<RadioProps['value']>(2)
       <span v-else-if="index === 3" style="color: #1677ff">{{ option?.label }}</span>
       <span v-else>{{ label }}</span>
     </template>
+  </RadioGroup>
+  <RadioGroup v-model:value="groupValue">
+    <Radio :value="1">拜占庭</Radio>
+    <Radio :value="2"><span style="color: #ff6900">君士坦丁堡</span></Radio>
+    <Radio :value="3">伊斯坦布尔</Radio>
+    <Radio :value="4"><span style="color: #1677ff">布宜诺斯艾利斯</span></Radio>
   </RadioGroup>
 </template>
 ```
@@ -859,11 +903,11 @@ const value = ref<RadioProps['value']>(2)
 <template>
   <Flex gap="small" vertical>
     <span>水平间距 {{ horizontalGap }}px</span>
-    <Slider v-model:value="horizontalGap" />
+    <Slider v-model:value="horizontalGap" :width="200" />
   </Flex>
   <Flex gap="small" vertical>
     <span>垂直间距 {{ verticalGap }}px</span>
-    <Slider v-model:value="verticalGap" />
+    <Slider v-model:value="verticalGap" :width="200" />
   </Flex>
   <!-- 容器宽度不足时选项换行，此时垂直间距生效 -->
   <div style="width: 240px">
@@ -915,7 +959,7 @@ const value = ref<RadioProps['value']>(1)
 <template>
   <Flex gap="small" vertical>
     <span>选项间距 {{ groupGap }}px</span>
-    <Slider v-model:value="groupGap" />
+    <Slider v-model:value="groupGap" :width="200" />
   </Flex>
   <Flex gap="small" vertical align="flex-start">
     <span>垂直排列</span>

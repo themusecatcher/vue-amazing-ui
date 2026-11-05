@@ -1074,6 +1074,11 @@ for (let i = 1; i <= 30; i++) {
 }
 const configListData = ref<any[]>([])
 configListData.value = allConfigListData.value.slice(0, 5)
+const sizeOptions = [
+  { label: 'small', value: 'small' },
+  { label: 'middle', value: 'middle' },
+  { label: 'large', value: 'large' }
+]
 const state = reactive({
   bordered: true,
   vertical: false,

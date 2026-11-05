@@ -894,6 +894,18 @@ _通过修改样式变量可以自定义滑动输入条样式、标记样式、`
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
+import type { SliderMarks } from 'vue-amazing-ui'
+const marks = ref<SliderMarks>({
+  0: '0°C',
+  26: '26°C',
+  37: '37°C',
+  100: {
+    style: {
+      color: '#f50'
+    },
+    label: '100°C'
+  }
+})
 const customStyleSingleValue = ref<number>(20)
 const customStyleDoubleValue = ref<number[]>([20, 80])
 const singleCustomStyle = {

@@ -139,6 +139,11 @@ const activeColumnTip = computed(() => {
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+const onClick = (): void => {
+  console.log('more')
+}
+</script>
 <template>
   <Descriptions title="User Info">
     <template #extra>

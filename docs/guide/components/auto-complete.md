@@ -681,6 +681,9 @@ function mockVal(str: string, repeat = 1): { value: string } {
 function onSearch7(searchText: string) {
   options7.value = !searchText ? [] : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)]
 }
+function onSelect7(value: string) {
+  console.log('onSelect', value)
+}
 </script>
 <template>
   <AutoComplete
@@ -749,6 +752,9 @@ function mockVal(str: string, repeat = 1): { value: string } {
 }
 function onSearch7(searchText: string) {
   options7.value = !searchText ? [] : [mockVal(searchText), mockVal(searchText, 2), mockVal(searchText, 3)]
+}
+function onSelect7(value: string) {
+  console.log('onSelect', value)
 }
 </script>
 <template>
@@ -1009,16 +1015,16 @@ const options4 = ref<{ value: string }[]>([
 
 ## 三种尺寸
 
-<RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
-<br/>
-<br/>
-<AutoComplete
-  v-model:value="valueS"
-  :options="optionsD"
-  :width="200"
-  placeholder="input here"
-  :size="size"
-/>
+<Flex vertical>
+  <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  <AutoComplete
+    v-model:value="valueS"
+    :options="optionsD"
+    :width="200"
+    placeholder="input here"
+    :size="size"
+  />
+</Flex>
 
 ::: details Show Code
 
@@ -1078,16 +1084,16 @@ const optionsD = ref([
 ])
 </script>
 <template>
-  <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
-  <br/>
-  <br/>
-  <AutoComplete
-    v-model:value="valueS"
-    :options="optionsD"
-    :width="200"
-    placeholder="input here"
-    :size="size"
-  />
+  <Flex vertical>
+    <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    <AutoComplete
+      v-model:value="valueS"
+      :options="optionsD"
+      :width="200"
+      placeholder="input here"
+      :size="size"
+    />
+  </Flex>
 </template>
 ```
 
