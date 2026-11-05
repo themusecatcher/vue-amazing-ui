@@ -114,20 +114,22 @@ const lineTypeOptions: { label: string; value: TimelineLineType }[] = [
     </Timeline>
     <h2 class="mt30 mb10">标签</h2>
     <p class="mb10">任一节点提供 <code>label</code> 时整条时间轴切换为左右分栏，可用 <code>mode</code> 镜像或交替</p>
-    <Space align="center" style="margin-bottom: 20px">
-      mode:
-      <Segmented v-model:value="mode" :options="modeOptions" />
-    </Space>
-    <Timeline :mode="mode">
-      <TimelineItem label="2025-06-24 10:10" content="Create a services" />
-      <TimelineItem label="2025-06-24 10:10" content="Solve initial network problems" />
-      <TimelineItem content="Technical testing" />
-      <TimelineItem label="2025-06-24 10:10" content="Network problems being solved">
-        <template #label>
-          <strong class="label-strong">2025-06-24 10:10</strong>
-        </template>
-      </TimelineItem>
-    </Timeline>
+    <Flex vertical>
+      <Space align="center">
+        mode:
+        <Segmented v-model:value="mode" :options="modeOptions" />
+      </Space>
+      <Timeline :mode="mode">
+        <TimelineItem label="2025-06-24 10:10" content="Create a services" />
+        <TimelineItem label="2025-06-24 10:10" content="Solve initial network problems" />
+        <TimelineItem content="Technical testing" />
+        <TimelineItem label="2025-06-24 10:10" content="Network problems being solved">
+          <template #label>
+            <strong class="label-strong">2025-06-24 10:10</strong>
+          </template>
+        </TimelineItem>
+      </Timeline>
+    </Flex>
     <h2 class="mt30 mb10">尺寸</h2>
     <Flex gap="large" align="flex-start" wrap="wrap">
       <Flex vertical gap="small" align="start">
@@ -169,30 +171,34 @@ const lineTypeOptions: { label: string; value: TimelineLineType }[] = [
     </Flex>
     <h2 class="mt30 mb10">线型</h2>
     <p class="mb10">容器级 <code>line-type</code> 统一设置线型，节点级 <code>line-type</code> 可单独覆盖</p>
-    <Space align="center" style="margin-bottom: 20px">
-      line-type:
-      <Segmented v-model:value="lineType" :options="lineTypeOptions" />
-    </Space>
-    <Timeline :line-type="lineType">
-      <TimelineItem v-for="(item, index) in timelineItems" :key="index" v-bind="item" />
-    </Timeline>
+    <Flex vertical>
+      <Space align="center">
+        line-type:
+        <Segmented v-model:value="lineType" :options="lineTypeOptions" />
+      </Space>
+      <Timeline :line-type="lineType">
+        <TimelineItem v-for="(item, index) in timelineItems" :key="index" v-bind="item" />
+      </Timeline>
+    </Flex>
     <h2 class="mt30 mb10">右侧时间轴点</h2>
     <Timeline mode="right">
       <TimelineItem v-for="(item, index) in timelineItems" :key="index" v-bind="item" />
     </Timeline>
     <h2 class="mt30 mb10">交替展现</h2>
     <p class="mb10"> <code>alternate</code> 模式轴线居中、内容左右交替，<code>start</code> 决定首个内容出现的一侧 </p>
-    <Space align="center" style="margin-bottom: 20px">
-      start:
-      <Segmented v-model:value="start" :options="startOptions" />
-    </Space>
-    <Timeline mode="alternate" :start="start">
-      <TimelineItem v-for="(item, index) in timelineItems" :key="index" v-bind="item">
-        <template #dot>
-          <span class="big-dot" v-if="index === 2"></span>
-        </template>
-      </TimelineItem>
-    </Timeline>
+    <Flex vertical>
+      <Space align="center">
+        start:
+        <Segmented v-model:value="start" :options="startOptions" />
+      </Space>
+      <Timeline mode="alternate" :start="start">
+        <TimelineItem v-for="(item, index) in timelineItems" :key="index" v-bind="item">
+          <template #dot>
+            <span class="big-dot" v-if="index === 2"></span>
+          </template>
+        </TimelineItem>
+      </Timeline>
+    </Flex>
     <h2 class="mt30 mb10">节点位置</h2>
     <p class="mb10">
       <code>alternate</code> 模式下节点的 <code>position</code> 可单独指定内容所在侧，覆盖奇偶默认位置
@@ -205,18 +211,20 @@ const lineTypeOptions: { label: string; value: TimelineLineType }[] = [
     </Timeline>
     <h2 class="mt30 mb10">水平时间轴</h2>
     <p class="mb10">水平排列，可与 <code>reverse</code> 倒序组合；内容超出时容器可横向滚动</p>
-    <Space align="center" style="margin-bottom: 20px">
-      horizontal:
-      <Switch v-model:value="horizontal" />
-      reverse:
-      <Switch v-model:value="horizontalReverse" />
-    </Space>
-    <Timeline :horizontal="horizontal" :reverse="horizontalReverse">
-      <TimelineItem title="Create" content="Create a services site" time="2025-06-24 10:10" color="success" />
-      <TimelineItem title="Error" content="Solve initial network problems" time="2025-06-24 10:10" color="error" />
-      <TimelineItem title="Warning" content="Technical testing" time="2025-06-24 10:10" color="warning" />
-      <TimelineItem title="Info" content="Network problems being solved" time="2025-06-24 10:10" color="info" />
-    </Timeline>
+    <Flex vertical>
+      <Space align="center">
+        horizontal:
+        <Switch v-model:value="horizontal" />
+        reverse:
+        <Switch v-model:value="horizontalReverse" />
+      </Space>
+      <Timeline :horizontal="horizontal" :reverse="horizontalReverse">
+        <TimelineItem title="Create" content="Create a services site" time="2025-06-24 10:10" color="success" />
+        <TimelineItem title="Error" content="Solve initial network problems" time="2025-06-24 10:10" color="error" />
+        <TimelineItem title="Warning" content="Technical testing" time="2025-06-24 10:10" color="warning" />
+        <TimelineItem title="Info" content="Network problems being solved" time="2025-06-24 10:10" color="info" />
+      </Timeline>
+    </Flex>
     <h2 class="mt30 mb10">嵌套时间轴</h2>
     <Timeline>
       <TimelineItem title="Release" content="Create a services site" time="2025-06-24 10:10" color="success">
@@ -228,12 +236,14 @@ const lineTypeOptions: { label: string; value: TimelineLineType }[] = [
       <TimelineItem content="Network problems being solved" time="2025-06-24 10:10" color="warning" />
     </Timeline>
     <h2 class="mt30 mb10">进行中与倒序</h2>
-    <Button type="primary" style="margin-bottom: 20px" @click="reverse = !reverse">Toggle Reverse</Button>
-    <Timeline pending="Recording..." :reverse="reverse">
-      <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
-      <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
-      <TimelineItem content="Technical testing" time="2025-06-24 10:10" />
-    </Timeline>
+    <Flex vertical>
+      <Button type="primary" @click="reverse = !reverse">Toggle Reverse</Button>
+      <Timeline pending="Recording..." :reverse="reverse">
+        <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
+        <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
+        <TimelineItem content="Technical testing" time="2025-06-24 10:10" />
+      </Timeline>
+    </Flex>
     <h2 class="mt30 mb10">自定义幽灵节点</h2>
     <p class="mb10">
       <code>pending</code> 传 <code>true</code> 时只表示进行中、不渲染内容；<code>pendingDot</code> 属性或

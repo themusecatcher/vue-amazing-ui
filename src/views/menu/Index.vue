@@ -414,33 +414,37 @@ const forceRenderItems: ItemType[] = [
     />
     <h2 class="mt30 mb10">切换菜单类型</h2>
     <p class="mb10">动态切换菜单模式与主题</p>
-    <Switch v-model:value="switchMode" checked="vertical" unchecked="inline" />
-    <span class="demo-divider" />
-    <Switch v-model:value="switchTheme" checked="dark" unchecked="light" />
-    <Menu
-      v-model:openKeys="switchOpenKeys"
-      v-model:selectedKeys="switchSelected"
-      style="width: 256px; margin-top: 16px"
-      :mode="switchMode ? 'vertical' : 'inline'"
-      :theme="switchTheme ? 'dark' : 'light'"
-      :items="switchItems"
-    />
+    <Flex vertical>
+      <Flex align="center">
+        <Switch v-model:value="switchMode" checked="vertical" unchecked="inline" />
+        <Switch v-model:value="switchTheme" checked="dark" unchecked="light" />
+      </Flex>
+      <Menu
+        v-model:openKeys="switchOpenKeys"
+        v-model:selectedKeys="switchSelected"
+        style="width: 256px"
+        :mode="switchMode ? 'vertical' : 'inline'"
+        :theme="switchTheme ? 'dark' : 'light'"
+        :items="switchItems"
+      />
+    </Flex>
     <h2 class="mt30 mb10">子菜单展开触发与延时</h2>
     <p class="mb10"
       >切换子菜单的展开触发方式；<code>hover</code> 触发时，<code>subMenuOpenDelay</code> /
       <code>subMenuCloseDelay</code> 分别决定展开与收起的延时</p
     >
-    <Switch v-model:value="triggerHover" checked="hover" unchecked="click" />
-    <span class="demo-divider" />
-    <Menu
-      v-model:selectedKeys="triggerDelaySelected"
-      style="width: 256px; margin-top: 16px"
-      mode="vertical"
-      :trigger-sub-menu-action="triggerHover ? 'hover' : 'click'"
-      :sub-menu-open-delay="0.3"
-      :sub-menu-close-delay="0.8"
-      :items="triggerDelayItems"
-    />
+    <Flex vertical>
+      <Switch v-model:value="triggerHover" checked="hover" unchecked="click" />
+      <Menu
+        v-model:selectedKeys="triggerDelaySelected"
+        style="width: 256px"
+        mode="vertical"
+        :trigger-sub-menu-action="triggerHover ? 'hover' : 'click'"
+        :sub-menu-open-delay="0.3"
+        :sub-menu-close-delay="0.8"
+        :items="triggerDelayItems"
+      />
+    </Flex>
     <h2 class="mt30 mb10">自定义缩进</h2>
     <p class="mb10"
       ><code>inline</code> 模式下 <code>inlineIndent</code> 决定每一级菜单项的缩进宽度，左侧为默认
@@ -507,14 +511,16 @@ const forceRenderItems: ItemType[] = [
       通过 <code>disabled</code> 禁用整个菜单；菜单项自身的 <code>disabled</code> 只禁用该项，<code>danger</code>
       用于呈现错误状态样式
     </p>
-    <Switch v-model:value="wholeDisabled" checked="禁用" unchecked="可用" />
-    <Menu
-      v-model:selectedKeys="disabledSelected"
-      style="width: 256px; margin-top: 16px"
-      mode="inline"
-      :disabled="wholeDisabled"
-      :items="disabledItems"
-    />
+    <Flex vertical>
+      <Switch v-model:value="wholeDisabled" checked="禁用" unchecked="可用" />
+      <Menu
+        v-model:selectedKeys="disabledSelected"
+        style="width: 256px"
+        mode="inline"
+        :disabled="wholeDisabled"
+        :items="disabledItems"
+      />
+    </Flex>
     <h2 class="mt30 mb10">空数据</h2>
     <p class="mb10">菜单内容为空时渲染空列表，不报错也不残留占位</p>
     <Menu style="width: 256px" mode="inline" :items="emptyItems" />
@@ -620,50 +626,53 @@ const forceRenderItems: ItemType[] = [
       开启 <code>forceSubMenuRender</code> 后，子菜单面板在首次展开前就已渲染进 DOM（保持不可见），首次展开因此
       无需等待挂载；可用开发者工具查看未展开的子菜单下是否已存在 <code>.menu-submenu-popup</code> 面板
     </p>
-    <Switch v-model:value="forceRenderEnabled" checked="On" unchecked="Off" />
-    <Menu
-      style="width: 256px; margin-top: 16px"
-      mode="vertical"
-      :force-sub-menu-render="forceRenderEnabled"
-      :items="forceRenderItems"
-    />
+    <Flex vertical>
+      <Switch v-model:value="forceRenderEnabled" checked="On" unchecked="Off" />
+      <Menu
+        style="width: 256px"
+        mode="vertical"
+        :force-sub-menu-render="forceRenderEnabled"
+        :items="forceRenderItems"
+      />
+    </Flex>
     <h2 class="mt30 mb10">主题</h2>
     <p class="mb10"
       >内建 <code>light</code> 与 <code>dark</code> 两套主题，默认为
       <code>light</code>；深色皮肤的底色由主题色派生，改主色时根列表、浮层与内联子菜单同步换色相</p
     >
-    <Space align="center" wrap>
-      <Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
-      <!-- 主题色只作用于本用例：作用域种子随选择器变化，深色皮肤的派生底色随之更新 -->
-      <ColorPicker v-model:value="themePrimary" :show-alpha="false" style="width: 160px" />
-    </Space>
-    <ConfigProvider :theme="{ seed: { primary: themePrimary } }">
-      <Menu
-        v-model:openKeys="themeOpenKeys"
-        v-model:selectedKeys="themeSelected"
-        style="width: 256px; margin-top: 16px"
-        mode="inline"
-        :theme="themeDark ? 'dark' : 'light'"
-        :items="themeItems"
-      />
-    </ConfigProvider>
+    <Flex vertical>
+      <Space align="center" wrap>
+        <Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
+        <!-- 主题色只作用于本用例：作用域种子随选择器变化，深色皮肤的派生底色随之更新 -->
+        <ColorPicker v-model:value="themePrimary" :show-alpha="false" style="width: 160px" />
+      </Space>
+      <ConfigProvider :theme="{ seed: { primary: themePrimary } }">
+        <Menu
+          v-model:openKeys="themeOpenKeys"
+          v-model:selectedKeys="themeSelected"
+          style="width: 256px"
+          mode="inline"
+          :theme="themeDark ? 'dark' : 'light'"
+          :items="themeItems"
+        />
+      </ConfigProvider>
+    </Flex>
     <h2 class="mt30 mb10">子菜单主题</h2>
     <p class="mb10">通过子菜单的 <code>theme</code> 属性设置其主题，可实现根目录深色、子目录浅色的效果</p>
-    <Switch v-model:value="submenuDark" checked="Dark" unchecked="Light" />
-    <Menu
-      style="width: 256px; margin-top: 16px"
-      mode="vertical"
-      theme="dark"
-      v-model:openKeys="submenuOpenKeys"
-      v-model:selectedKeys="submenuSelected"
-      :items="submenuItems"
-    />
+    <Flex vertical>
+      <Switch v-model:value="submenuDark" checked="Dark" unchecked="Light" />
+      <Menu
+        style="width: 256px"
+        mode="vertical"
+        theme="dark"
+        v-model:openKeys="submenuOpenKeys"
+        v-model:selectedKeys="submenuSelected"
+        :items="submenuItems"
+      />
+    </Flex>
   </div>
 </template>
 <style lang="less" scoped>
-.demo-divider {
-  margin: 0 1em;
-}
 /* 展开图标用「单个箭头旋转 90°」表达展开态：直接切换图标会有一次瞬跳，旋转则连续过渡 */
 .demo-expand-icon {
   transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);

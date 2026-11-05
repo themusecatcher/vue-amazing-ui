@@ -279,21 +279,22 @@ _任一节点提供 `label` 时整条时间轴切换为左右分栏，可用 `mo
 
 <br/>
 
-<Space align="center" style="margin-bottom: 20px">
-  mode:
-  <Segmented v-model:value="mode" :options="modeOptions" />
-</Space>
-
-<Timeline :mode="mode">
-  <TimelineItem label="2025-06-24 10:10" content="Create a services" />
-  <TimelineItem label="2025-06-24 10:10" content="Solve initial network problems" />
-  <TimelineItem content="Technical testing" />
-  <TimelineItem label="2025-06-24 10:10" content="Network problems being solved">
-    <template #label>
-      <strong class="label-strong">2025-06-24 10:10</strong>
-    </template>
-  </TimelineItem>
-</Timeline>
+<Flex vertical>
+  <Space align="center">
+    mode:
+    <Segmented v-model:value="mode" :options="modeOptions" />
+  </Space>
+  <Timeline :mode="mode">
+    <TimelineItem label="2025-06-24 10:10" content="Create a services" />
+    <TimelineItem label="2025-06-24 10:10" content="Solve initial network problems" />
+    <TimelineItem content="Technical testing" />
+    <TimelineItem label="2025-06-24 10:10" content="Network problems being solved">
+      <template #label>
+        <strong class="label-strong">2025-06-24 10:10</strong>
+      </template>
+    </TimelineItem>
+  </Timeline>
+</Flex>
 
 ::: details Show Code
 
@@ -310,20 +311,22 @@ const modeOptions: { label: string; value: TimelineMode }[] = [
 ]
 </script>
 <template>
-  <Space align="center" style="margin-bottom: 20px">
-    mode:
-    <Segmented v-model:value="mode" :options="modeOptions" />
-  </Space>
-  <Timeline :mode="mode">
-    <TimelineItem label="2025-06-24 10:10" content="Create a services" />
-    <TimelineItem label="2025-06-24 10:10" content="Solve initial network problems" />
-    <TimelineItem content="Technical testing" />
-    <TimelineItem label="2025-06-24 10:10" content="Network problems being solved">
-      <template #label>
-        <strong class="label-strong">2025-06-24 10:10</strong>
-      </template>
-    </TimelineItem>
-  </Timeline>
+  <Flex vertical>
+    <Space align="center">
+      mode:
+      <Segmented v-model:value="mode" :options="modeOptions" />
+    </Space>
+    <Timeline :mode="mode">
+      <TimelineItem label="2025-06-24 10:10" content="Create a services" />
+      <TimelineItem label="2025-06-24 10:10" content="Solve initial network problems" />
+      <TimelineItem content="Technical testing" />
+      <TimelineItem label="2025-06-24 10:10" content="Network problems being solved">
+        <template #label>
+          <strong class="label-strong">2025-06-24 10:10</strong>
+        </template>
+      </TimelineItem>
+    </Timeline>
+  </Flex>
 </template>
 <style lang="less" scoped>
 .label-strong {
@@ -431,14 +434,15 @@ _容器级 `line-type` 统一设置线型，节点级 `line-type` 可单独覆�
 
 <br/>
 
-<Space align="center" style="margin-bottom: 20px">
-  line-type:
-  <Segmented v-model:value="lineType" :options="lineTypeOptions" />
-</Space>
-
-<Timeline :line-type="lineType">
-  <TimelineItem v-for="(item, index) in timelineItems" :key="index" v-bind="item" />
-</Timeline>
+<Flex vertical>
+  <Space align="center">
+    line-type:
+    <Segmented v-model:value="lineType" :options="lineTypeOptions" />
+  </Space>
+  <Timeline :line-type="lineType">
+    <TimelineItem v-for="(item, index) in timelineItems" :key="index" v-bind="item" />
+  </Timeline>
+</Flex>
 
 ::: details Show Code
 
@@ -462,13 +466,15 @@ const lineTypeOptions: { label: string; value: TimelineLineType }[] = [
 ]
 </script>
 <template>
-  <Space align="center" style="margin-bottom: 20px">
-    line-type:
-    <Segmented v-model:value="lineType" :options="lineTypeOptions" />
-  </Space>
-  <Timeline :line-type="lineType">
-    <TimelineItem v-for="(item, index) in timelineItems" :key="index" v-bind="item" />
-  </Timeline>
+  <Flex vertical>
+    <Space align="center">
+      line-type:
+      <Segmented v-model:value="lineType" :options="lineTypeOptions" />
+    </Space>
+    <Timeline :line-type="lineType">
+      <TimelineItem v-for="(item, index) in timelineItems" :key="index" v-bind="item" />
+    </Timeline>
+  </Flex>
 </template>
 ```
 
@@ -508,18 +514,19 @@ _`alternate` 模式轴线居中、内容左右交替，`start` 决定首个内�
 
 <br/>
 
-<Space align="center" style="margin-bottom: 20px">
-  start:
-  <Segmented v-model:value="start" :options="startOptions" />
-</Space>
-
-<Timeline mode="alternate" :start="start">
-  <TimelineItem v-for="(item, index) in timelineItems" :key="index" v-bind="item">
-    <template #dot>
-      <span class="big-dot" v-if="index === 2"></span>
-    </template>
-  </TimelineItem>
-</Timeline>
+<Flex vertical>
+  <Space align="center">
+    start:
+    <Segmented v-model:value="start" :options="startOptions" />
+  </Space>
+  <Timeline mode="alternate" :start="start">
+    <TimelineItem v-for="(item, index) in timelineItems" :key="index" v-bind="item">
+      <template #dot>
+        <span class="big-dot" v-if="index === 2"></span>
+      </template>
+    </TimelineItem>
+  </Timeline>
+</Flex>
 
 ::: details Show Code
 
@@ -542,17 +549,19 @@ const startOptions: { label: string; value: TimelineStart }[] = [
 ]
 </script>
 <template>
-  <Space align="center" style="margin-bottom: 20px">
-    start:
-    <Segmented v-model:value="start" :options="startOptions" />
-  </Space>
-  <Timeline mode="alternate" :start="start">
-    <TimelineItem v-for="(item, index) in timelineItems" :key="index" v-bind="item">
-      <template #dot>
-        <span class="big-dot" v-if="index === 2"></span>
-      </template>
-    </TimelineItem>
-  </Timeline>
+  <Flex vertical>
+    <Space align="center">
+      start:
+      <Segmented v-model:value="start" :options="startOptions" />
+    </Space>
+    <Timeline mode="alternate" :start="start">
+      <TimelineItem v-for="(item, index) in timelineItems" :key="index" v-bind="item">
+        <template #dot>
+          <span class="big-dot" v-if="index === 2"></span>
+        </template>
+      </TimelineItem>
+    </Timeline>
+  </Flex>
 </template>
 <style lang="less" scoped>
 .big-dot {
@@ -602,30 +611,8 @@ _水平排列，可与 `reverse` 倒序组合；内容超出时容器可横向�
 
 <br/>
 
-<Space align="center" style="margin-bottom: 20px">
-  horizontal:
-  <Switch v-model:value="horizontal" />
-  reverse:
-  <Switch v-model:value="horizontalReverse" />
-</Space>
-
-<Timeline :horizontal="horizontal" :reverse="horizontalReverse">
-  <TimelineItem title="Create" content="Create a services site" time="2025-06-24 10:10" color="success" />
-  <TimelineItem title="Error" content="Solve initial network problems" time="2025-06-24 10:10" color="error" />
-  <TimelineItem title="Warning" content="Technical testing" time="2025-06-24 10:10" color="warning" />
-  <TimelineItem title="Info" content="Network problems being solved" time="2025-06-24 10:10" color="info" />
-</Timeline>
-
-::: details Show Code
-
-```vue
-<script setup lang="ts">
-import { ref } from 'vue'
-const horizontal = ref(true)
-const horizontalReverse = ref(false)
-</script>
-<template>
-  <Space align="center" style="margin-bottom: 20px">
+<Flex vertical>
+  <Space align="center">
     horizontal:
     <Switch v-model:value="horizontal" />
     reverse:
@@ -637,6 +624,31 @@ const horizontalReverse = ref(false)
     <TimelineItem title="Warning" content="Technical testing" time="2025-06-24 10:10" color="warning" />
     <TimelineItem title="Info" content="Network problems being solved" time="2025-06-24 10:10" color="info" />
   </Timeline>
+</Flex>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const horizontal = ref(true)
+const horizontalReverse = ref(false)
+</script>
+<template>
+  <Flex vertical>
+    <Space align="center">
+      horizontal:
+      <Switch v-model:value="horizontal" />
+      reverse:
+      <Switch v-model:value="horizontalReverse" />
+    </Space>
+    <Timeline :horizontal="horizontal" :reverse="horizontalReverse">
+      <TimelineItem title="Create" content="Create a services site" time="2025-06-24 10:10" color="success" />
+      <TimelineItem title="Error" content="Solve initial network problems" time="2025-06-24 10:10" color="error" />
+      <TimelineItem title="Warning" content="Technical testing" time="2025-06-24 10:10" color="warning" />
+      <TimelineItem title="Info" content="Network problems being solved" time="2025-06-24 10:10" color="info" />
+    </Timeline>
+  </Flex>
 </template>
 ```
 
@@ -674,13 +686,14 @@ const horizontalReverse = ref(false)
 
 ## 进行中与倒序
 
-<Button type="primary" style="margin-bottom: 20px" @click="reverse = !reverse">Toggle Reverse</Button>
-
-<Timeline pending="Recording..." :reverse="reverse">
-  <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
-  <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
-  <TimelineItem content="Technical testing" time="2025-06-24 10:10" />
-</Timeline>
+<Flex vertical>
+  <Button type="primary" @click="reverse = !reverse">Toggle Reverse</Button>
+  <Timeline pending="Recording..." :reverse="reverse">
+    <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
+    <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
+    <TimelineItem content="Technical testing" time="2025-06-24 10:10" />
+  </Timeline>
+</Flex>
 
 ::: details Show Code
 
@@ -690,12 +703,14 @@ import { ref } from 'vue'
 const reverse = ref(false)
 </script>
 <template>
-  <Button type="primary" style="margin-bottom: 20px" @click="reverse = !reverse">Toggle Reverse</Button>
-  <Timeline pending="Recording..." :reverse="reverse">
-    <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
-    <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
-    <TimelineItem content="Technical testing" time="2025-06-24 10:10" />
-  </Timeline>
+  <Flex vertical>
+    <Button type="primary" @click="reverse = !reverse">Toggle Reverse</Button>
+    <Timeline pending="Recording..." :reverse="reverse">
+      <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
+      <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
+      <TimelineItem content="Technical testing" time="2025-06-24 10:10" />
+    </Timeline>
+  </Flex>
 </template>
 ```
 

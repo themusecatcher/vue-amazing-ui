@@ -600,17 +600,20 @@ _动态切换菜单模式与主题_
 
 <br/>
 
-<Switch v-model:value="switchMode" checked="vertical" unchecked="inline" />
-<span class="demo-divider" />
-<Switch v-model:value="switchTheme" checked="dark" unchecked="light" />
-<Menu
-  v-model:openKeys="switchOpenKeys"
-  v-model:selectedKeys="switchSelected"
-  style="width: 256px; margin-top: 16px"
-  :mode="switchMode ? 'vertical' : 'inline'"
-  :theme="switchTheme ? 'dark' : 'light'"
-  :items="switchItems"
-/>
+<Flex vertical>
+  <Flex align="center">
+    <Switch v-model:value="switchMode" checked="vertical" unchecked="inline" />
+    <Switch v-model:value="switchTheme" checked="dark" unchecked="light" />
+  </Flex>
+  <Menu
+    v-model:openKeys="switchOpenKeys"
+    v-model:selectedKeys="switchSelected"
+    style="width: 256px"
+    :mode="switchMode ? 'vertical' : 'inline'"
+    :theme="switchTheme ? 'dark' : 'light'"
+    :items="switchItems"
+  />
+</Flex>
 
 ::: details Show Code
 
@@ -644,17 +647,20 @@ const switchItems: ItemType[] = [
 ]
 </script>
 <template>
-  <Switch v-model:value="switchMode" checked="vertical" unchecked="inline" />
-  <span class="demo-divider" />
-  <Switch v-model:value="switchTheme" checked="dark" unchecked="light" />
-  <Menu
-    v-model:openKeys="switchOpenKeys"
-    v-model:selectedKeys="switchSelected"
-    style="width: 256px; margin-top: 16px"
-    :mode="switchMode ? 'vertical' : 'inline'"
-    :theme="switchTheme ? 'dark' : 'light'"
-    :items="switchItems"
-  />
+  <Flex vertical>
+    <Flex align="center">
+      <Switch v-model:value="switchMode" checked="vertical" unchecked="inline" />
+      <Switch v-model:value="switchTheme" checked="dark" unchecked="light" />
+    </Flex>
+    <Menu
+      v-model:openKeys="switchOpenKeys"
+      v-model:selectedKeys="switchSelected"
+      style="width: 256px"
+      :mode="switchMode ? 'vertical' : 'inline'"
+      :theme="switchTheme ? 'dark' : 'light'"
+      :items="switchItems"
+    />
+  </Flex>
 </template>
 ```
 
@@ -666,17 +672,18 @@ _切换子菜单的展开触发方式；`hover` 触发时，`subMenuOpenDelay` /
 
 <br/>
 
-<Switch v-model:value="triggerHover" checked="hover" unchecked="click" />
-<span class="demo-divider" />
-<Menu
-  v-model:selectedKeys="triggerDelaySelected"
-  style="width: 256px; margin-top: 16px"
-  mode="vertical"
-  :trigger-sub-menu-action="triggerHover ? 'hover' : 'click'"
-  :sub-menu-open-delay="0.3"
-  :sub-menu-close-delay="0.8"
-  :items="triggerDelayItems"
-/>
+<Flex vertical>
+  <Switch v-model:value="triggerHover" checked="hover" unchecked="click" />
+  <Menu
+    v-model:selectedKeys="triggerDelaySelected"
+    style="width: 256px"
+    mode="vertical"
+    :trigger-sub-menu-action="triggerHover ? 'hover' : 'click'"
+    :sub-menu-open-delay="0.3"
+    :sub-menu-close-delay="0.8"
+    :items="triggerDelayItems"
+  />
+</Flex>
 
 ::: details Show Code
 
@@ -704,17 +711,18 @@ const triggerDelayItems: ItemType[] = [
 ]
 </script>
 <template>
-  <Switch v-model:value="triggerHover" checked="hover" unchecked="click" />
-  <span class="demo-divider" />
-  <Menu
-    v-model:selectedKeys="triggerDelaySelected"
-    style="width: 256px; margin-top: 16px"
-    mode="vertical"
-    :trigger-sub-menu-action="triggerHover ? 'hover' : 'click'"
-    :sub-menu-open-delay="0.3"
-    :sub-menu-close-delay="0.8"
-    :items="triggerDelayItems"
-  />
+  <Flex vertical>
+    <Switch v-model:value="triggerHover" checked="hover" unchecked="click" />
+    <Menu
+      v-model:selectedKeys="triggerDelaySelected"
+      style="width: 256px"
+      mode="vertical"
+      :trigger-sub-menu-action="triggerHover ? 'hover' : 'click'"
+      :sub-menu-open-delay="0.3"
+      :sub-menu-close-delay="0.8"
+      :items="triggerDelayItems"
+    />
+  </Flex>
 </template>
 ```
 
@@ -1063,14 +1071,16 @@ _通过 `disabled` 禁用整个菜单；菜单项自身的 `disabled` 只禁用�
 
 <br/>
 
-<Switch v-model:value="wholeDisabled" checked="禁用" unchecked="可用" />
-<Menu
-  v-model:selectedKeys="disabledSelected"
-  style="width: 256px; margin-top: 16px"
-  mode="inline"
-  :disabled="wholeDisabled"
-  :items="disabledItems"
-/>
+<Flex vertical>
+  <Switch v-model:value="wholeDisabled" checked="禁用" unchecked="可用" />
+  <Menu
+    v-model:selectedKeys="disabledSelected"
+    style="width: 256px"
+    mode="inline"
+    :disabled="wholeDisabled"
+    :items="disabledItems"
+  />
+</Flex>
 
 ::: details Show Code
 
@@ -1089,14 +1099,16 @@ const disabledItems: ItemType[] = [
 ]
 </script>
 <template>
-  <Switch v-model:value="wholeDisabled" checked="禁用" unchecked="可用" />
-  <Menu
-    v-model:selectedKeys="disabledSelected"
-    style="width: 256px; margin-top: 16px"
-    mode="inline"
-    :disabled="wholeDisabled"
-    :items="disabledItems"
-  />
+  <Flex vertical>
+    <Switch v-model:value="wholeDisabled" checked="禁用" unchecked="可用" />
+    <Menu
+      v-model:selectedKeys="disabledSelected"
+      style="width: 256px"
+      mode="inline"
+      :disabled="wholeDisabled"
+      :items="disabledItems"
+    />
+  </Flex>
 </template>
 ```
 
@@ -1447,13 +1459,15 @@ _开启 `forceSubMenuRender` 后，子菜单面板在首次展开前就已渲染
 
 <br/>
 
-<Switch v-model:value="forceRenderEnabled" checked="On" unchecked="Off" />
-<Menu
-  style="width: 256px; margin-top: 16px"
-  mode="vertical"
-  :force-sub-menu-render="forceRenderEnabled"
-  :items="forceRenderItems"
-/>
+<Flex vertical>
+  <Switch v-model:value="forceRenderEnabled" checked="On" unchecked="Off" />
+  <Menu
+    style="width: 256px"
+    mode="vertical"
+    :force-sub-menu-render="forceRenderEnabled"
+    :items="forceRenderItems"
+  />
+</Flex>
 
 ::: details Show Code
 
@@ -1489,13 +1503,15 @@ const forceRenderItems: ItemType[] = [
 ]
 </script>
 <template>
-  <Switch v-model:value="forceRenderEnabled" checked="On" unchecked="Off" />
-  <Menu
-    style="width: 256px; margin-top: 16px"
-    mode="vertical"
-    :force-sub-menu-render="forceRenderEnabled"
-    :items="forceRenderItems"
-  />
+  <Flex vertical>
+    <Switch v-model:value="forceRenderEnabled" checked="On" unchecked="Off" />
+    <Menu
+      style="width: 256px"
+      mode="vertical"
+      :force-sub-menu-render="forceRenderEnabled"
+      :items="forceRenderItems"
+    />
+  </Flex>
 </template>
 ```
 
@@ -1507,21 +1523,23 @@ _内建 `light` 与 `dark` 两套主题，默认为 `light`；深色皮肤的底
 
 <br/>
 
-<Space align="center" wrap>
-  <Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
-  <!-- 主题色只作用于本用例：作用域种子随选择器变化，深色皮肤的派生底色随之更新 -->
-  <ColorPicker v-model:value="themePrimary" :show-alpha="false" style="width: 160px" />
-</Space>
-<ConfigProvider :theme="{ seed: { primary: themePrimary } }">
-  <Menu
-    v-model:openKeys="themeOpenKeys"
-    v-model:selectedKeys="themeSelected"
-    style="width: 256px; margin-top: 16px"
-    mode="inline"
-    :theme="themeDark ? 'dark' : 'light'"
-    :items="themeItems"
-  />
-</ConfigProvider>
+<Flex vertical>
+  <Space align="center" wrap>
+    <Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
+    <!-- 主题色只作用于本用例：作用域种子随选择器变化，深色皮肤的派生底色随之更新 -->
+    <ColorPicker v-model:value="themePrimary" :show-alpha="false" style="width: 160px" />
+  </Space>
+  <ConfigProvider :theme="{ seed: { primary: themePrimary } }">
+    <Menu
+      v-model:openKeys="themeOpenKeys"
+      v-model:selectedKeys="themeSelected"
+      style="width: 256px"
+      mode="inline"
+      :theme="themeDark ? 'dark' : 'light'"
+      :items="themeItems"
+    />
+  </ConfigProvider>
+</Flex>
 
 ::: details Show Code
 
@@ -1572,20 +1590,22 @@ const themeItems: ItemType[] = [
 ]
 </script>
 <template>
-  <Space align="center" wrap>
-    <Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
-    <ColorPicker v-model:value="themePrimary" :show-alpha="false" style="width: 160px" />
-  </Space>
-  <ConfigProvider :theme="{ seed: { primary: themePrimary } }">
-    <Menu
-      v-model:openKeys="themeOpenKeys"
-      v-model:selectedKeys="themeSelected"
-      style="width: 256px; margin-top: 16px"
-      mode="inline"
-      :theme="themeDark ? 'dark' : 'light'"
-      :items="themeItems"
-    />
-  </ConfigProvider>
+  <Flex vertical>
+    <Space align="center" wrap>
+      <Switch v-model:value="themeDark" checked="Dark" unchecked="Light" />
+      <ColorPicker v-model:value="themePrimary" :show-alpha="false" style="width: 160px" />
+    </Space>
+    <ConfigProvider :theme="{ seed: { primary: themePrimary } }">
+      <Menu
+        v-model:openKeys="themeOpenKeys"
+        v-model:selectedKeys="themeSelected"
+        style="width: 256px"
+        mode="inline"
+        :theme="themeDark ? 'dark' : 'light'"
+        :items="themeItems"
+      />
+    </ConfigProvider>
+  </Flex>
 </template>
 ```
 
@@ -1597,15 +1617,17 @@ _通过子菜单的 `theme` 属性设置其主题，可实现根目录深色、�
 
 <br/>
 
-<Switch v-model:value="submenuDark" checked="Dark" unchecked="Light" />
-<Menu
-  style="width: 256px; margin-top: 16px"
-  mode="vertical"
-  theme="dark"
-  v-model:openKeys="submenuOpenKeys"
-  v-model:selectedKeys="submenuSelected"
-  :items="submenuItems"
-/>
+<Flex vertical>
+  <Switch v-model:value="submenuDark" checked="Dark" unchecked="Light" />
+  <Menu
+    style="width: 256px"
+    mode="vertical"
+    theme="dark"
+    v-model:openKeys="submenuOpenKeys"
+    v-model:selectedKeys="submenuSelected"
+    :items="submenuItems"
+  />
+</Flex>
 
 ::: details Show Code
 
@@ -1636,15 +1658,17 @@ const submenuItems = computed<ItemType[]>(() => [
 ])
 </script>
 <template>
-  <Switch v-model:value="submenuDark" checked="Dark" unchecked="Light" />
-  <Menu
-    style="width: 256px; margin-top: 16px"
-    mode="vertical"
-    theme="dark"
-    v-model:openKeys="submenuOpenKeys"
-    v-model:selectedKeys="submenuSelected"
-    :items="submenuItems"
-  />
+  <Flex vertical>
+    <Switch v-model:value="submenuDark" checked="Dark" unchecked="Light" />
+    <Menu
+      style="width: 256px"
+      mode="vertical"
+      theme="dark"
+      v-model:openKeys="submenuOpenKeys"
+      v-model:selectedKeys="submenuSelected"
+      :items="submenuItems"
+    />
+  </Flex>
 </template>
 ```
 
@@ -1875,9 +1899,6 @@ const submenuItems = computed<ItemType[]>(() => [
 | titleClick | 点击子菜单标题时调用（`MenuSubMenu` 的事件，需在 `<MenuSubMenu>` 上监听，而非 `<Menu>`） | (info: [MenuTitleInfo](#menutitleinfo-type)) => void |
 
 <style lang="less" scoped>
-.demo-divider {
-  margin: 0 1em;
-}
 /* 水平溢出用例的限宽容器：宽度不足以容纳全部菜单项时才会触发溢出省略 */
 .demo-overflow-box {
   width: 480px;
