@@ -44,18 +44,18 @@ const openControlOpen = ref(false)
       通过 <code>placement</code> 指定方向；复合方向（如 <code>topLeft</code>）配合
       <code>arrowPointAtCenter</code> 可让箭头指向触发元素中心，空间不足时 <code>flip</code> 会自动翻转
     </p>
-    <div style="margin-bottom: 16px">
+    <Flex vertical>
       <Space align="center">
         placement:
         <Segmented v-model:value="placement" :options="placements" />
       </Space>
-    </div>
-    <Popover :placement="placement" title="Title">
-      <template #content>
-        <p>Content</p>
-      </template>
-      <Button type="primary">Adjust Placement</Button>
-    </Popover>
+      <Popover :placement="placement" title="Title">
+        <template #content>
+          <p>Content</p>
+        </template>
+        <Button type="primary">Adjust Placement</Button>
+      </Popover>
+    </Flex>
     <h2 class="mt30 mb10">箭头指向</h2>
     <p class="mb10">
       设置 <code>arrowPointAtCenter</code> 后，箭头将指向目标元素中心，仅当 <code>placement</code> 为复合方向（如

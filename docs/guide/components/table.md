@@ -1981,29 +1981,30 @@ const dataSourceMerge = ref([
 
 ## 可编辑单元格
 
-<Button style="margin-bottom: 16px" type="primary" :icon="h(PlusOutlined)" @click="handleCellAdd">新增</Button>
-
-<Table :columns="columnsCellEditable" :data-source="dataSourceCellEditable" bordered>
-  <template #bodyCell="{ column, text, record }">
-    <template v-if="column.dataIndex === 'name'">
-      <div class="editable-cell">
-        <Flex v-if="cellEditableData[record.key]" justify="space-between" align="center">
-          <Input v-model:value="cellEditableData[record.key].name" @enter="handleCellSave(record.key)" />
-          <CheckOutlined class="cell-icon-check" @click="handleCellSave(record.key)" />
-        </Flex>
-        <Flex v-else justify="space-between" align="center">
-          {{ text || ' ' }}
-          <EditOutlined class="cell-icon" @click="handleCellEdit(record.key)" />
-        </Flex>
-      </div>
+<Flex vertical>
+  <Button type="primary" :icon="h(PlusOutlined)" @click="handleCellAdd">新增</Button>
+  <Table :columns="columnsCellEditable" :data-source="dataSourceCellEditable" bordered>
+    <template #bodyCell="{ column, text, record }">
+      <template v-if="column.dataIndex === 'name'">
+        <div class="editable-cell">
+          <Flex v-if="cellEditableData[record.key]" justify="space-between" align="center">
+            <Input v-model:value="cellEditableData[record.key].name" @enter="handleCellSave(record.key)" />
+            <CheckOutlined class="cell-icon-check" @click="handleCellSave(record.key)" />
+          </Flex>
+          <Flex v-else justify="space-between" align="center">
+            {{ text || ' ' }}
+            <EditOutlined class="cell-icon" @click="handleCellEdit(record.key)" />
+          </Flex>
+        </div>
+      </template>
+      <template v-else-if="column.dataIndex === 'action'">
+        <Popconfirm v-if="dataSourceCellEditable.length" title="Sure to delete?" @ok="handleCellDelete(record.key)">
+          <a>delete</a>
+        </Popconfirm>
+      </template>
     </template>
-    <template v-else-if="column.dataIndex === 'action'">
-      <Popconfirm v-if="dataSourceCellEditable.length" title="Sure to delete?" @ok="handleCellDelete(record.key)">
-        <a>delete</a>
-      </Popconfirm>
-    </template>
-  </template>
-</Table>
+  </Table>
+</Flex>
 
 ::: details Show Code
 
@@ -2083,28 +2084,30 @@ const handleCellDelete = (key: string) => {
 }
 </script>
 <template>
-  <Button style="margin-bottom: 16px" type="primary" :icon="h(PlusOutlined)" @click="handleCellAdd">新增</Button>
-  <Table :columns="columnsCellEditable" :data-source="dataSourceCellEditable" bordered>
-    <template #bodyCell="{ column, text, record }">
-      <template v-if="column.dataIndex === 'name'">
-        <div class="editable-cell">
-          <Flex v-if="cellEditableData[record.key]" justify="space-between" align="center">
-            <Input v-model:value="cellEditableData[record.key].name" @enter="handleCellSave(record.key)" />
-            <CheckOutlined class="cell-icon-check" @click="handleCellSave(record.key)" />
-          </Flex>
-          <Flex v-else justify="space-between" align="center">
-            {{ text || ' ' }}
-            <EditOutlined class="cell-icon" @click="handleCellEdit(record.key)" />
-          </Flex>
-        </div>
+  <Flex vertical>
+    <Button type="primary" :icon="h(PlusOutlined)" @click="handleCellAdd">新增</Button>
+    <Table :columns="columnsCellEditable" :data-source="dataSourceCellEditable" bordered>
+      <template #bodyCell="{ column, text, record }">
+        <template v-if="column.dataIndex === 'name'">
+          <div class="editable-cell">
+            <Flex v-if="cellEditableData[record.key]" justify="space-between" align="center">
+              <Input v-model:value="cellEditableData[record.key].name" @enter="handleCellSave(record.key)" />
+              <CheckOutlined class="cell-icon-check" @click="handleCellSave(record.key)" />
+            </Flex>
+            <Flex v-else justify="space-between" align="center">
+              {{ text || ' ' }}
+              <EditOutlined class="cell-icon" @click="handleCellEdit(record.key)" />
+            </Flex>
+          </div>
+        </template>
+        <template v-else-if="column.dataIndex === 'action'">
+          <Popconfirm v-if="dataSourceCellEditable.length" title="Sure to delete?" @ok="handleCellDelete(record.key)">
+            <a>delete</a>
+          </Popconfirm>
+        </template>
       </template>
-      <template v-else-if="column.dataIndex === 'action'">
-        <Popconfirm v-if="dataSourceCellEditable.length" title="Sure to delete?" @ok="handleCellDelete(record.key)">
-          <a>delete</a>
-        </Popconfirm>
-      </template>
-    </template>
-  </Table>
+    </Table>
+  </Flex>
 </template>
 <style lang="less" scoped>
 .editable-cell {

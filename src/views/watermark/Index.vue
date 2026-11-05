@@ -150,25 +150,27 @@ const layoutOptions = [
       <code>image</code> 指定图片地址，未设置宽高时按原图比例推算单元格尺寸；下方可调 <code>layout</code> 布局、
       <code>rotate</code> 旋转与 <code>imageOpacity</code> 透明度
     </p>
-    <Flex>
-      <Flex vertical :gap="8">
-        layout: <RadioGroup :options="layoutOptions" v-model:value="imageModel.layout" button />
+    <Flex vertical>
+      <Flex>
+        <Flex vertical :gap="8">
+          layout: <RadioGroup :options="layoutOptions" v-model:value="imageModel.layout" button />
+        </Flex>
+        <Flex vertical :gap="8" :width="240">
+          rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
+        </Flex>
+        <Flex vertical :gap="8" :width="240">
+          imageOpacity: <Slider v-model:value="imageModel.opacity" :step="0.01" :min="0" :max="1" />
+        </Flex>
       </Flex>
-      <Flex vertical :gap="8" :width="240">
-        rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
-      </Flex>
-      <Flex vertical :gap="8" :width="240">
-        imageOpacity: <Slider v-model:value="imageModel.opacity" :step="0.01" :min="0" :max="1" />
-      </Flex>
+      <Watermark
+        :layout="imageModel.layout as WatermarkProps['layout']"
+        :rotate="imageModel.rotate"
+        :image-opacity="imageModel.opacity"
+        image="https://avatars.githubusercontent.com/u/46012811?v=4"
+      >
+        <div style="height: 360px" />
+      </Watermark>
     </Flex>
-    <Watermark
-      :layout="imageModel.layout as WatermarkProps['layout']"
-      :rotate="imageModel.rotate"
-      :image-opacity="imageModel.opacity"
-      image="https://avatars.githubusercontent.com/u/46012811?v=4"
-    >
-      <div style="height: 360px" />
-    </Watermark>
     <h2 class="mt30 mb10">全屏幕水印</h2>
     <p class="mb10">
       开启后水印钉住视口，页面滚动时始终覆盖整屏；需要水印随文档滚动时，用非全屏水印包住页面根内容即可

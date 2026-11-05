@@ -189,21 +189,20 @@ _通过 `placement` 指定方向；复合方向（如 `topLeft`）配合 `arrowP
 
 <br/>
 
-<div style="margin-bottom: 16px">
+<Flex vertical>
   <Space align="center">
     placement:
     <Segmented v-model:value="placement" :options="placements" />
   </Space>
-</div>
-
-<Popconfirm
-  :placement="placement"
-  title="It's friendly reminder ..."
-  @ok="confirm"
-  @cancel="cancel"
->
-  <Button type="primary">Adjust Placement</Button>
-</Popconfirm>
+  <Popconfirm
+    :placement="placement"
+    title="It's friendly reminder ..."
+    @ok="confirm"
+    @cancel="cancel"
+  >
+    <Button type="primary">Adjust Placement</Button>
+  </Popconfirm>
+</Flex>
 
 ::: details Show Code
 
@@ -224,20 +223,20 @@ const placements = ['topLeft', 'top', 'topRight', 'bottomLeft', 'bottom', 'botto
 const placement = ref('top')
 </script>
 <template>
-  <div style="margin-bottom: 16px">
+  <Flex vertical>
     <Space align="center">
       placement:
       <Segmented v-model:value="placement" :options="placements" />
     </Space>
-  </div>
-  <Popconfirm
-    :placement="placement"
-    title="It's friendly reminder ..."
-    @ok="confirm"
-    @cancel="cancel"
-  >
-    <Button type="primary">Adjust Placement</Button>
-  </Popconfirm>
+    <Popconfirm
+      :placement="placement"
+      title="It's friendly reminder ..."
+      @ok="confirm"
+      @cancel="cancel"
+    >
+      <Button type="primary">Adjust Placement</Button>
+    </Popconfirm>
+  </Flex>
 </template>
 ```
 

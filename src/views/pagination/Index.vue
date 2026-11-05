@@ -112,29 +112,35 @@ function pageSizeChange(page: number, pageSize: number) {
     <h2 class="mt30 mb10">基本使用</h2>
     <Pagination v-model:page="basicPage" :total="50" @change="onChange" />
     <h2 class="mt30 mb10">自定义位置</h2>
-    <Space align="center" style="margin-bottom: 16px">
-      placement:
-      <RadioGroup :options="placementOptions" v-model:value="placement" button button-style="solid" />
-    </Space>
-    <Pagination v-model:page="placementPage" :total="total" :placement="placement" @change="onChange" />
-    <h2 class="mt30 mb10">三种尺寸</h2>
-    <Space align="center" style="margin-bottom: 16px">
-      size:
-      <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
-    </Space>
-    <Pagination v-model:page="sizePage" :size="size" :total="total" show-quick-jumper @change="onChange" />
-    <h2 class="mt30 mb10">自定义页码数量</h2>
-    <Space align="center" style="margin-bottom: 16px">
-      pageAmount:
-      <RadioGroup :options="pageAmountOptions" v-model:value="pageAmount" button button-style="solid" />
-    </Space>
-    <Pagination v-model:page="pageAmountPage" :total="total" :page-amount="pageAmount" @change="onChange" />
-    <h2 class="mt30 mb10">无边框风格</h2>
-    <Space align="center" style="margin-bottom: 16px">
-      bordered:
-      <Switch v-model:value="bordered" />
-    </Space>
     <Flex vertical>
+      <Space align="center">
+        placement:
+        <RadioGroup :options="placementOptions" v-model:value="placement" button button-style="solid" />
+      </Space>
+      <Pagination v-model:page="placementPage" :total="total" :placement="placement" @change="onChange" />
+    </Flex>
+    <h2 class="mt30 mb10">三种尺寸</h2>
+    <Flex vertical>
+      <Space align="center">
+        size:
+        <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
+      </Space>
+      <Pagination v-model:page="sizePage" :size="size" :total="total" show-quick-jumper @change="onChange" />
+    </Flex>
+    <h2 class="mt30 mb10">自定义页码数量</h2>
+    <Flex vertical>
+      <Space align="center">
+        pageAmount:
+        <RadioGroup :options="pageAmountOptions" v-model:value="pageAmount" button button-style="solid" />
+      </Space>
+      <Pagination v-model:page="pageAmountPage" :total="total" :page-amount="pageAmount" @change="onChange" />
+    </Flex>
+    <h2 class="mt30 mb10">无边框风格</h2>
+    <Flex vertical>
+      <Space align="center">
+        bordered:
+        <Switch v-model:value="bordered" />
+      </Space>
       <Pagination v-model:page="borderedPage" :total="total" :bordered="bordered" @change="onChange" />
       <Pagination v-model:page="borderedPage" :total="total" :bordered="bordered" disabled @change="onChange" />
     </Flex>

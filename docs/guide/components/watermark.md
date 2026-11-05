@@ -261,25 +261,27 @@ onBeforeUnmount(() => {
 
 _`image` 指定图片地址，未设置宽高时按原图比例推算单元格尺寸；下方可调 `layout` 布局、`rotate` 旋转与 `imageOpacity` 透明度_
 
-<Flex>
-  <Flex vertical :gap="8">
-    layout: <RadioGroup :options="layoutOptions" v-model:value="imageModel.layout" button />
+<Flex vertical>
+  <Flex>
+    <Flex vertical :gap="8">
+      layout: <RadioGroup :options="layoutOptions" v-model:value="imageModel.layout" button />
+    </Flex>
+    <Flex vertical :gap="8" :width="240">
+      rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
+    </Flex>
+    <Flex vertical :gap="8" :width="240">
+      imageOpacity: <Slider v-model:value="imageModel.opacity" :step="0.01" :min="0" :max="1" />
+    </Flex>
   </Flex>
-  <Flex vertical :gap="8" :width="240">
-    rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
-  </Flex>
-  <Flex vertical :gap="8" :width="240">
-    imageOpacity: <Slider v-model:value="imageModel.opacity" :step="0.01" :min="0" :max="1" />
-  </Flex>
+  <Watermark
+    :layout="imageModel.layout"
+    :rotate="imageModel.rotate"
+    :image-opacity="imageModel.opacity"
+    image="https://avatars.githubusercontent.com/u/46012811?v=4"
+  >
+    <div style="height: 360px" />
+  </Watermark>
 </Flex>
-<Watermark
-  :layout="imageModel.layout"
-  :rotate="imageModel.rotate"
-  :image-opacity="imageModel.opacity"
-  image="https://avatars.githubusercontent.com/u/46012811?v=4"
->
-  <div style="height: 360px" />
-</Watermark>
 
 ::: details Show Code
 
@@ -303,23 +305,25 @@ const layoutOptions = [
 ]
 </script>
 <template>
-  <Flex>
-    <Flex vertical :gap="8"> layout: <RadioGroup :options="layoutOptions" v-model:value="imageModel.layout" button /> </Flex>
-    <Flex vertical :gap="8" :width="240">
-      rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
+  <Flex vertical>
+    <Flex>
+      <Flex vertical :gap="8"> layout: <RadioGroup :options="layoutOptions" v-model:value="imageModel.layout" button /> </Flex>
+      <Flex vertical :gap="8" :width="240">
+        rotate: <Slider v-model:value="imageModel.rotate" :step="1" :min="-180" :max="180" />
+      </Flex>
+      <Flex vertical :gap="8" :width="240">
+        imageOpacity: <Slider v-model:value="imageModel.opacity" :step="0.01" :min="0" :max="1" />
+      </Flex>
     </Flex>
-    <Flex vertical :gap="8" :width="240">
-      imageOpacity: <Slider v-model:value="imageModel.opacity" :step="0.01" :min="0" :max="1" />
-    </Flex>
+    <Watermark
+      :layout="imageModel.layout"
+      :rotate="imageModel.rotate"
+      :image-opacity="imageModel.opacity"
+      image="https://avatars.githubusercontent.com/u/46012811?v=4"
+    >
+      <div style="height: 360px" />
+    </Watermark>
   </Flex>
-  <Watermark
-    :layout="imageModel.layout"
-    :rotate="imageModel.rotate"
-    :image-opacity="imageModel.opacity"
-    image="https://avatars.githubusercontent.com/u/46012811?v=4"
-  >
-    <div style="height: 360px" />
-  </Watermark>
 </template>
 ```
 

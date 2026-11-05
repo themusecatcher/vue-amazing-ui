@@ -141,11 +141,13 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 ## 自定义位置
 
-<Space align="center" style="margin-bottom: 16px">
-  placement:
-  <RadioGroup :options="placementOptions" v-model:value="placement" button button-style="solid" />
-</Space>
-<Pagination v-model:page="placementPage" :total="total" :placement="placement" @change="onChange" />
+<Flex vertical>
+  <Space align="center">
+    placement:
+    <RadioGroup :options="placementOptions" v-model:value="placement" button button-style="solid" />
+  </Space>
+  <Pagination v-model:page="placementPage" :total="total" :placement="placement" @change="onChange" />
+</Flex>
 
 ::: details Show Code
 
@@ -176,11 +178,13 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 }
 </script>
 <template>
-  <Space align="center" style="margin-bottom: 16px">
-    placement:
-    <RadioGroup :options="placementOptions" v-model:value="placement" button button-style="solid" />
-  </Space>
-  <Pagination v-model:page="page" :total="total" :placement="placement" @change="onChange" />
+  <Flex vertical>
+    <Space align="center">
+      placement:
+      <RadioGroup :options="placementOptions" v-model:value="placement" button button-style="solid" />
+    </Space>
+    <Pagination v-model:page="page" :total="total" :placement="placement" @change="onChange" />
+  </Flex>
 </template>
 ```
 
@@ -188,11 +192,13 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 ## 三种尺寸
 
-<Space align="center" style="margin-bottom: 16px">
-  size:
-  <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
-</Space>
-<Pagination v-model:page="sizePage" :size="size" :total="total" show-quick-jumper @change="onChange" />
+<Flex vertical>
+  <Space align="center">
+    size:
+    <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  </Space>
+  <Pagination v-model:page="sizePage" :size="size" :total="total" show-quick-jumper @change="onChange" />
+</Flex>
 
 ::: details Show Code
 
@@ -223,11 +229,13 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 }
 </script>
 <template>
-  <Space align="center" style="margin-bottom: 16px">
-    size:
-    <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
-  </Space>
-  <Pagination v-model:page="page" :size="size" :total="total" show-quick-jumper @change="onChange" />
+  <Flex vertical>
+    <Space align="center">
+      size:
+      <RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
+    </Space>
+    <Pagination v-model:page="page" :size="size" :total="total" show-quick-jumper @change="onChange" />
+  </Flex>
 </template>
 ```
 
@@ -235,11 +243,13 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 ## 自定义页码数量
 
-<Space align="center" style="margin-bottom: 16px">
-  pageAmount:
-  <RadioGroup :options="pageAmountOptions" v-model:value="pageAmount" button button-style="solid" />
-</Space>
-<Pagination v-model:page="pageAmountPage" :total="total" :page-amount="pageAmount" @change="onChange" />
+<Flex vertical>
+  <Space align="center">
+    pageAmount:
+    <RadioGroup :options="pageAmountOptions" v-model:value="pageAmount" button button-style="solid" />
+  </Space>
+  <Pagination v-model:page="pageAmountPage" :total="total" :page-amount="pageAmount" @change="onChange" />
+</Flex>
 
 ::: details Show Code
 
@@ -270,11 +280,13 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 }
 </script>
 <template>
-  <Space align="center" style="margin-bottom: 16px">
-    pageAmount:
-    <RadioGroup :options="pageAmountOptions" v-model:value="pageAmount" button button-style="solid" />
-  </Space>
-  <Pagination v-model:page="page" :total="total" :page-amount="pageAmount" @change="onChange" />
+  <Flex vertical>
+    <Space align="center">
+      pageAmount:
+      <RadioGroup :options="pageAmountOptions" v-model:value="pageAmount" button button-style="solid" />
+    </Space>
+    <Pagination v-model:page="page" :total="total" :page-amount="pageAmount" @change="onChange" />
+  </Flex>
 </template>
 ```
 
@@ -282,11 +294,11 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 
 ## 无边框风格
 
-<Space align="center" style="margin-bottom: 16px">
-  bordered:
-  <Switch v-model:value="bordered" />
-</Space>
 <Flex vertical>
+  <Space align="center">
+    bordered:
+    <Switch v-model:value="bordered" />
+  </Space>
   <Pagination v-model:page="borderedPage" :total="total" :bordered="bordered" @change="onChange" />
   <Pagination v-model:page="borderedPage" :total="total" :bordered="bordered" disabled @change="onChange" />
 </Flex>
@@ -305,11 +317,11 @@ function onChange(page: number, pageSize: number) { // 页码 page 或每页条�
 }
 </script>
 <template>
-  <Space align="center" style="margin-bottom: 16px">
-    bordered:
-    <Switch v-model:value="bordered" />
-  </Space>
   <Flex vertical>
+    <Space align="center">
+      bordered:
+      <Switch v-model:value="bordered" />
+    </Space>
     <Pagination v-model:page="page" :total="total" :bordered="bordered" @change="onChange" />
     <Pagination v-model:page="page" :total="total" :bordered="bordered" disabled @change="onChange" />
   </Flex>
