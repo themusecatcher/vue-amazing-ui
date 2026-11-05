@@ -11,7 +11,19 @@ _用于页面和区块的加载中状态_
 <script setup lang="ts">
 import { h, ref } from 'vue'
 import { LoadingOutlined } from '@ant-design/icons-vue'
-const spinning = ref(true)
+// 各分节独立绑定加载状态：操作任一用例不会联动其余用例
+const basicSpinning = ref(true)
+const dotWheelSpinning = ref(true)
+const lineWheelSpinning = ref(true)
+const ringCircleSpinning = ref(true)
+const ringRailSpinning = ref(true)
+const dynamicCircleSpinning = ref(true)
+const magicRingSpinning = ref(true)
+const sizeSpinning = ref(true)
+const tipSpinning = ref(true)
+const colorSpinning = ref(true)
+const indicatorSpinning = ref(true)
+const fitContentSpinning = ref(true)
 // 自定义指示符的两条属性路径：已构造的 VNode 与返回 VNode 的渲染函数（第三条路径为 #indicator 插槽）
 function renderCustomIndicator(color: string) {
   return h(LoadingOutlined, { spin: true, style: `font-size: 24px; color: ${color}` })
@@ -48,17 +60,16 @@ const rotate = ref(false)
 
 ## 基本使用
 
-<Flex align="center">
-  Loading state:<Switch v-model:value="spinning" />
+<Flex vertical>
+  <Flex align="center">
+    Loading state:<Switch v-model:value="basicSpinning" />
+  </Flex>
+  <Spin :spinning="basicSpinning">
+    <p class="spin-content">
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+    </p>
+  </Spin>
 </Flex>
-
-<br/>
-
-<Spin :spinning="spinning">
-  <p class="spin-content">
-    当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
-  </p>
-</Spin>
 
 ::: details Show Code
 
@@ -68,13 +79,18 @@ import { ref } from 'vue'
 const spinning = ref(true)
 </script>
 <template>
-  <Spin :spinning="spinning">
-    <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
-      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
-      描述文案一起水平垂直居中。
-    </p>
-  </Spin>
+  <Flex vertical>
+    <Flex align="center">
+      Loading state:<Switch v-model:value="spinning" />
+    </Flex>
+    <Spin :spinning="spinning">
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+        描述文案一起水平垂直居中。
+      </p>
+    </Spin>
+  </Flex>
 </template>
 <style lang="less" scoped>
 .spin-content {
@@ -95,11 +111,16 @@ _`indicator` 取值 `dot-wheel`_
 
 <br/>
 
-<Spin :spinning="spinning" indicator="dot-wheel">
-  <p class="spin-content">
-    当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
-  </p>
-</Spin>
+<Flex vertical>
+  <Flex align="center">
+    Loading state:<Switch v-model:value="dotWheelSpinning" />
+  </Flex>
+  <Spin :spinning="dotWheelSpinning" indicator="dot-wheel">
+    <p class="spin-content">
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+    </p>
+  </Spin>
+</Flex>
 
 ::: details Show Code
 
@@ -109,13 +130,18 @@ import { ref } from 'vue'
 const spinning = ref(true)
 </script>
 <template>
-  <Spin :spinning="spinning" indicator="dot-wheel">
-    <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
-      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
-      描述文案一起水平垂直居中。
-    </p>
-  </Spin>
+  <Flex vertical>
+    <Flex align="center">
+      Loading state:<Switch v-model:value="spinning" />
+    </Flex>
+    <Spin :spinning="spinning" indicator="dot-wheel">
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+        描述文案一起水平垂直居中。
+      </p>
+    </Spin>
+  </Flex>
 </template>
 <style lang="less" scoped>
 .spin-content {
@@ -136,11 +162,16 @@ _`indicator` 取值 `line-wheel`_
 
 <br/>
 
-<Spin :spinning="spinning" indicator="line-wheel">
-  <p class="spin-content">
-    当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
-  </p>
-</Spin>
+<Flex vertical>
+  <Flex align="center">
+    Loading state:<Switch v-model:value="lineWheelSpinning" />
+  </Flex>
+  <Spin :spinning="lineWheelSpinning" indicator="line-wheel">
+    <p class="spin-content">
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+    </p>
+  </Spin>
+</Flex>
 
 ::: details Show Code
 
@@ -150,13 +181,18 @@ import { ref } from 'vue'
 const spinning = ref(true)
 </script>
 <template>
-  <Spin :spinning="spinning" indicator="line-wheel">
-    <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
-      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
-      描述文案一起水平垂直居中。
-    </p>
-  </Spin>
+  <Flex vertical>
+    <Flex align="center">
+      Loading state:<Switch v-model:value="spinning" />
+    </Flex>
+    <Spin :spinning="spinning" indicator="line-wheel">
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+        描述文案一起水平垂直居中。
+      </p>
+    </Spin>
+  </Flex>
 </template>
 <style lang="less" scoped>
 .spin-content {
@@ -177,11 +213,16 @@ _`indicator` 取值 `ring-circle`_
 
 <br/>
 
-<Spin :spinning="spinning" indicator="ring-circle">
-  <p class="spin-content">
-    当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
-  </p>
-</Spin>
+<Flex vertical>
+  <Flex align="center">
+    Loading state:<Switch v-model:value="ringCircleSpinning" />
+  </Flex>
+  <Spin :spinning="ringCircleSpinning" indicator="ring-circle">
+    <p class="spin-content">
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+    </p>
+  </Spin>
+</Flex>
 
 ::: details Show Code
 
@@ -191,13 +232,18 @@ import { ref } from 'vue'
 const spinning = ref(true)
 </script>
 <template>
-  <Spin :spinning="spinning" indicator="ring-circle">
-    <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
-      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
-      描述文案一起水平垂直居中。
-    </p>
-  </Spin>
+  <Flex vertical>
+    <Flex align="center">
+      Loading state:<Switch v-model:value="spinning" />
+    </Flex>
+    <Spin :spinning="spinning" indicator="ring-circle">
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+        描述文案一起水平垂直居中。
+      </p>
+    </Spin>
+  </Flex>
 </template>
 <style lang="less" scoped>
 .spin-content {
@@ -218,13 +264,18 @@ _`indicator` 取值 `ring-rail`_
 
 <br/>
 
-<Spin :spinning="spinning" indicator="ring-rail">
-  <p class="spin-content">
-    当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
-    描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
-    描述文案一起水平垂直居中。
-  </p>
-</Spin>
+<Flex vertical>
+  <Flex align="center">
+    Loading state:<Switch v-model:value="ringRailSpinning" />
+  </Flex>
+  <Spin :spinning="ringRailSpinning" indicator="ring-rail">
+    <p class="spin-content">
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+      描述文案一起水平垂直居中。
+    </p>
+  </Spin>
+</Flex>
 
 ::: details Show Code
 
@@ -234,13 +285,18 @@ import { ref } from 'vue'
 const spinning = ref(true)
 </script>
 <template>
-  <Spin :spinning="spinning" indicator="ring-rail">
-    <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
-      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
-      描述文案一起水平垂直居中。
-    </p>
-  </Spin>
+  <Flex vertical>
+    <Flex align="center">
+      Loading state:<Switch v-model:value="spinning" />
+    </Flex>
+    <Spin :spinning="spinning" indicator="ring-rail">
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+        描述文案一起水平垂直居中。
+      </p>
+    </Spin>
+  </Flex>
 </template>
 <style lang="less" scoped>
 .spin-content {
@@ -261,11 +317,16 @@ _`indicator` 取值 `dynamic-circle`_
 
 <br/>
 
-<Spin :spinning="spinning" indicator="dynamic-circle">
-  <p class="spin-content">
-    当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
-  </p>
-</Spin>
+<Flex vertical>
+  <Flex align="center">
+    Loading state:<Switch v-model:value="dynamicCircleSpinning" />
+  </Flex>
+  <Spin :spinning="dynamicCircleSpinning" indicator="dynamic-circle">
+    <p class="spin-content">
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+    </p>
+  </Spin>
+</Flex>
 
 ::: details Show Code
 
@@ -275,13 +336,18 @@ import { ref } from 'vue'
 const spinning = ref(true)
 </script>
 <template>
-  <Spin :spinning="spinning" indicator="dynamic-circle">
-    <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
-      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
-      描述文案一起水平垂直居中。
-    </p>
-  </Spin>
+  <Flex vertical>
+    <Flex align="center">
+      Loading state:<Switch v-model:value="spinning" />
+    </Flex>
+    <Spin :spinning="spinning" indicator="dynamic-circle">
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+        描述文案一起水平垂直居中。
+      </p>
+    </Spin>
+  </Flex>
 </template>
 <style lang="less" scoped>
 .spin-content {
@@ -302,11 +368,16 @@ _`indicator` 取值 `magic-ring`_
 
 <br/>
 
-<Spin :spinning="spinning" indicator="magic-ring">
-  <p class="spin-content">
-    当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
-  </p>
-</Spin>
+<Flex vertical>
+  <Flex align="center">
+    Loading state:<Switch v-model:value="magicRingSpinning" />
+  </Flex>
+  <Spin :spinning="magicRingSpinning" indicator="magic-ring">
+    <p class="spin-content">
+      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip 描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip 描述文案一起水平垂直居中。
+    </p>
+  </Spin>
+</Flex>
 
 ::: details Show Code
 
@@ -316,13 +387,18 @@ import { ref } from 'vue'
 const spinning = ref(true)
 </script>
 <template>
-  <Spin :spinning="spinning" indicator="magic-ring">
-    <p class="spin-content">
-      当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
-      描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
-      描述文案一起水平垂直居中。
-    </p>
-  </Spin>
+  <Flex vertical>
+    <Flex align="center">
+      Loading state:<Switch v-model:value="spinning" />
+    </Flex>
+    <Spin :spinning="spinning" indicator="magic-ring">
+      <p class="spin-content">
+        当 spinning 为 false 时，不显示 loading 状态；当 spinning 为 true 时，显示 loading 效果；如果不设置 tip
+        描述文案时，则只有 loading 效果水平垂直居中；如果设置了 tip 描述文案，则 loading 效果和 tip
+        描述文案一起水平垂直居中。
+      </p>
+    </Spin>
+  </Flex>
 </template>
 <style lang="less" scoped>
 .spin-content {
@@ -339,31 +415,36 @@ const spinning = ref(true)
 
 ## 各种大小
 
-<Space vertical>
-  <Space>
-    <Spin class="spin-size" :spinning="spinning" size="small" />
-    <Spin class="spin-size" :spinning="spinning" />
-    <Spin class="spin-size" :spinning="spinning" size="large" />
-    <Spin class="spin-size" :spinning="spinning" size="small" indicator="dot-wheel" />
-    <Spin class="spin-size" :spinning="spinning" indicator="dot-wheel" />
-    <Spin class="spin-size" :spinning="spinning" size="large" indicator="dot-wheel" />
-    <Spin class="spin-size" :spinning="spinning" size="small" indicator="line-wheel" />
-    <Spin class="spin-size" :spinning="spinning" indicator="line-wheel" />
-    <Spin class="spin-size" :spinning="spinning" size="large" indicator="line-wheel" />
-    <Spin class="spin-size" :spinning="spinning" size="small" indicator="ring-circle" />
-    <Spin class="spin-size" :spinning="spinning" indicator="ring-circle" />
-    <Spin class="spin-size" :spinning="spinning" size="large" indicator="ring-circle" />
-    <Spin class="spin-size" :spinning="spinning" size="small" indicator="ring-rail" />
-    <Spin class="spin-size" :spinning="spinning" indicator="ring-rail" />
-    <Spin class="spin-size" :spinning="spinning" size="large" indicator="ring-rail" />
-    <Spin class="spin-size" :spinning="spinning" size="small" indicator="dynamic-circle" />
-    <Spin class="spin-size" :spinning="spinning" indicator="dynamic-circle" />
-    <Spin class="spin-size" :spinning="spinning" size="large" indicator="dynamic-circle" />
-    <Spin class="spin-size" :spinning="spinning" size="small" indicator="magic-ring" />
-    <Spin class="spin-size" :spinning="spinning" indicator="magic-ring" />
-    <Spin class="spin-size" :spinning="spinning" size="large" indicator="magic-ring" />
+<Flex vertical>
+  <Flex align="center">
+    Loading state:<Switch v-model:value="sizeSpinning" />
+  </Flex>
+  <Space vertical>
+    <Space>
+      <Spin class="spin-size" :spinning="sizeSpinning" size="small" />
+      <Spin class="spin-size" :spinning="sizeSpinning" />
+      <Spin class="spin-size" :spinning="sizeSpinning" size="large" />
+      <Spin class="spin-size" :spinning="sizeSpinning" size="small" indicator="dot-wheel" />
+      <Spin class="spin-size" :spinning="sizeSpinning" indicator="dot-wheel" />
+      <Spin class="spin-size" :spinning="sizeSpinning" size="large" indicator="dot-wheel" />
+      <Spin class="spin-size" :spinning="sizeSpinning" size="small" indicator="line-wheel" />
+      <Spin class="spin-size" :spinning="sizeSpinning" indicator="line-wheel" />
+      <Spin class="spin-size" :spinning="sizeSpinning" size="large" indicator="line-wheel" />
+      <Spin class="spin-size" :spinning="sizeSpinning" size="small" indicator="ring-circle" />
+      <Spin class="spin-size" :spinning="sizeSpinning" indicator="ring-circle" />
+      <Spin class="spin-size" :spinning="sizeSpinning" size="large" indicator="ring-circle" />
+      <Spin class="spin-size" :spinning="sizeSpinning" size="small" indicator="ring-rail" />
+      <Spin class="spin-size" :spinning="sizeSpinning" indicator="ring-rail" />
+      <Spin class="spin-size" :spinning="sizeSpinning" size="large" indicator="ring-rail" />
+      <Spin class="spin-size" :spinning="sizeSpinning" size="small" indicator="dynamic-circle" />
+      <Spin class="spin-size" :spinning="sizeSpinning" indicator="dynamic-circle" />
+      <Spin class="spin-size" :spinning="sizeSpinning" size="large" indicator="dynamic-circle" />
+      <Spin class="spin-size" :spinning="sizeSpinning" size="small" indicator="magic-ring" />
+      <Spin class="spin-size" :spinning="sizeSpinning" indicator="magic-ring" />
+      <Spin class="spin-size" :spinning="sizeSpinning" size="large" indicator="magic-ring" />
+    </Space>
   </Space>
-</Space>
+</Flex>
 
 ::: details Show Code
 
@@ -373,31 +454,36 @@ import { ref } from 'vue'
 const spinning = ref(true)
 </script>
 <template>
-  <Space vertical>
-    <Space>
-      <Spin class="spin-size" :spinning="spinning" size="small" />
-      <Spin class="spin-size" :spinning="spinning" />
-      <Spin class="spin-size" :spinning="spinning" size="large" />
-      <Spin class="spin-size" :spinning="spinning" size="small" indicator="dot-wheel" />
-      <Spin class="spin-size" :spinning="spinning" indicator="dot-wheel" />
-      <Spin class="spin-size" :spinning="spinning" size="large" indicator="dot-wheel" />
-      <Spin class="spin-size" :spinning="spinning" size="small" indicator="line-wheel" />
-      <Spin class="spin-size" :spinning="spinning" indicator="line-wheel" />
-      <Spin class="spin-size" :spinning="spinning" size="large" indicator="line-wheel" />
-      <Spin class="spin-size" :spinning="spinning" size="small" indicator="ring-circle" />
-      <Spin class="spin-size" :spinning="spinning" indicator="ring-circle" />
-      <Spin class="spin-size" :spinning="spinning" size="large" indicator="ring-circle" />
-      <Spin class="spin-size" :spinning="spinning" size="small" indicator="ring-rail" />
-      <Spin class="spin-size" :spinning="spinning" indicator="ring-rail" />
-      <Spin class="spin-size" :spinning="spinning" size="large" indicator="ring-rail" />
-      <Spin class="spin-size" :spinning="spinning" size="small" indicator="dynamic-circle" />
-      <Spin class="spin-size" :spinning="spinning" indicator="dynamic-circle" />
-      <Spin class="spin-size" :spinning="spinning" size="large" indicator="dynamic-circle" />
-      <Spin class="spin-size" :spinning="spinning" size="small" indicator="magic-ring" />
-      <Spin class="spin-size" :spinning="spinning" indicator="magic-ring" />
-      <Spin class="spin-size" :spinning="spinning" size="large" indicator="magic-ring" />
+  <Flex vertical>
+    <Flex align="center">
+      Loading state:<Switch v-model:value="spinning" />
+    </Flex>
+    <Space vertical>
+      <Space>
+        <Spin class="spin-size" :spinning="spinning" size="small" />
+        <Spin class="spin-size" :spinning="spinning" />
+        <Spin class="spin-size" :spinning="spinning" size="large" />
+        <Spin class="spin-size" :spinning="spinning" size="small" indicator="dot-wheel" />
+        <Spin class="spin-size" :spinning="spinning" indicator="dot-wheel" />
+        <Spin class="spin-size" :spinning="spinning" size="large" indicator="dot-wheel" />
+        <Spin class="spin-size" :spinning="spinning" size="small" indicator="line-wheel" />
+        <Spin class="spin-size" :spinning="spinning" indicator="line-wheel" />
+        <Spin class="spin-size" :spinning="spinning" size="large" indicator="line-wheel" />
+        <Spin class="spin-size" :spinning="spinning" size="small" indicator="ring-circle" />
+        <Spin class="spin-size" :spinning="spinning" indicator="ring-circle" />
+        <Spin class="spin-size" :spinning="spinning" size="large" indicator="ring-circle" />
+        <Spin class="spin-size" :spinning="spinning" size="small" indicator="ring-rail" />
+        <Spin class="spin-size" :spinning="spinning" indicator="ring-rail" />
+        <Spin class="spin-size" :spinning="spinning" size="large" indicator="ring-rail" />
+        <Spin class="spin-size" :spinning="spinning" size="small" indicator="dynamic-circle" />
+        <Spin class="spin-size" :spinning="spinning" indicator="dynamic-circle" />
+        <Spin class="spin-size" :spinning="spinning" size="large" indicator="dynamic-circle" />
+        <Spin class="spin-size" :spinning="spinning" size="small" indicator="magic-ring" />
+        <Spin class="spin-size" :spinning="spinning" indicator="magic-ring" />
+        <Spin class="spin-size" :spinning="spinning" size="large" indicator="magic-ring" />
+      </Space>
     </Space>
-  </Space>
+  </Flex>
 </template>
 <style lang="less" scoped>
 .spin-size {
@@ -411,20 +497,25 @@ const spinning = ref(true)
 
 ## 自定义描述文案
 
-<Space vertical>
-  <RadioGroup :options="sizeOptions" v-model:value="tipSize" button button-style="solid" />
-  <Space>
-    <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" />
-    <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="dot-wheel" />
-    <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="line-wheel" />
-    <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="ring-circle" />
-    <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="ring-rail" />
-    <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="dynamic-circle" />
-    <Spin class="spin-item" :size="tipSize" :spinning="spinning" indicator="magic-ring">
-      <template #tip>加载中...</template>
-    </Spin>
+<Flex vertical>
+  <Flex align="center">
+    Loading state:<Switch v-model:value="tipSpinning" />
+  </Flex>
+  <Space vertical>
+    <RadioGroup :options="sizeOptions" v-model:value="tipSize" button button-style="solid" />
+    <Space>
+      <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="tipSpinning" />
+      <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="tipSpinning" indicator="dot-wheel" />
+      <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="tipSpinning" indicator="line-wheel" />
+      <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="tipSpinning" indicator="ring-circle" />
+      <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="tipSpinning" indicator="ring-rail" />
+      <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="tipSpinning" indicator="dynamic-circle" />
+      <Spin class="spin-item" :size="tipSize" :spinning="tipSpinning" indicator="magic-ring">
+        <template #tip>加载中...</template>
+      </Spin>
+    </Space>
   </Space>
-</Space>
+</Flex>
 
 ::: details Show Code
 
@@ -449,20 +540,25 @@ const sizeOptions = [
 const tipSize = ref('middle')
 </script>
 <template>
-  <Space vertical>
-    <RadioGroup :options="sizeOptions" v-model:value="tipSize" button button-style="solid" />
-    <Space>
-      <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" />
-      <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="dot-wheel" />
-      <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="line-wheel" />
-      <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="ring-circle" />
-      <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="ring-rail" />
-      <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="dynamic-circle" />
-      <Spin class="spin-item" :size="tipSize" :spinning="spinning" indicator="magic-ring">
-        <template #tip>加载中...</template>
-      </Spin>
+  <Flex vertical>
+    <Flex align="center">
+      Loading state:<Switch v-model:value="spinning" />
+    </Flex>
+    <Space vertical>
+      <RadioGroup :options="sizeOptions" v-model:value="tipSize" button button-style="solid" />
+      <Space>
+        <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" />
+        <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="dot-wheel" />
+        <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="line-wheel" />
+        <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="ring-circle" />
+        <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="ring-rail" />
+        <Spin class="spin-item" :size="tipSize" tip="加载中..." :spinning="spinning" indicator="dynamic-circle" />
+        <Spin class="spin-item" :size="tipSize" :spinning="spinning" indicator="magic-ring">
+          <template #tip>加载中...</template>
+        </Spin>
+      </Space>
     </Space>
-  </Space>
+  </Flex>
 </template>
 <style lang="less" scoped>
 // 叠加组件根类名提高特异性：组件根节点为 width / height 100%，同特异性下会随样式注入顺序反转
@@ -477,40 +573,45 @@ div.spin-wrap.spin-item {
 
 ## 自定义样式
 
-<Space vertical>
-  <RadioGroup :options="sizeOptions" v-model:value="colorSize" button button-style="solid" />
-  <Space>
-    <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" />
-    <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" indicator="dot-wheel" />
-    <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" indicator="line-wheel" />
-    <Spin
-      class="spin-item"
-      :size="colorSize"
-      color="#fadb14"
-      :spinning="spinning"
-      :spin-circle-percent="50"
-      indicator="ring-circle"
-    />
-    <Spin
-      class="spin-item"
-      :size="colorSize"
-      color="#fadb14"
-      :spin-circle-percent="50"
-      ring-rail-color="rgba(212, 136, 6, 0.6)"
-      :spinning="spinning"
-      indicator="ring-rail"
-    />
-    <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
-    <Spin
-      class="spin-item"
-      :size="colorSize"
-      color="#fadb14"
-      magic-ring-color="#ffe58f"
-      :spinning="spinning"
-      indicator="magic-ring"
-    />
+<Flex vertical>
+  <Flex align="center">
+    Loading state:<Switch v-model:value="colorSpinning" />
+  </Flex>
+  <Space vertical>
+    <RadioGroup :options="sizeOptions" v-model:value="colorSize" button button-style="solid" />
+    <Space>
+      <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="colorSpinning" />
+      <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="colorSpinning" indicator="dot-wheel" />
+      <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="colorSpinning" indicator="line-wheel" />
+      <Spin
+        class="spin-item"
+        :size="colorSize"
+        color="#fadb14"
+        :spinning="colorSpinning"
+        :spin-circle-percent="50"
+        indicator="ring-circle"
+      />
+      <Spin
+        class="spin-item"
+        :size="colorSize"
+        color="#fadb14"
+        :spin-circle-percent="50"
+        ring-rail-color="rgba(212, 136, 6, 0.6)"
+        :spinning="colorSpinning"
+        indicator="ring-rail"
+      />
+      <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="colorSpinning" indicator="dynamic-circle" />
+      <Spin
+        class="spin-item"
+        :size="colorSize"
+        color="#fadb14"
+        magic-ring-color="#ffe58f"
+        :spinning="colorSpinning"
+        indicator="magic-ring"
+      />
+    </Space>
   </Space>
-</Space>
+</Flex>
 
 ::: details Show Code
 
@@ -535,40 +636,45 @@ const sizeOptions = [
 const colorSize = ref('middle')
 </script>
 <template>
-  <Space vertical>
-    <RadioGroup :options="sizeOptions" v-model:value="colorSize" button button-style="solid" />
-    <Space>
-      <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" />
-      <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" indicator="dot-wheel" />
-      <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" indicator="line-wheel" />
-      <Spin
-        class="spin-item"
-        :size="colorSize"
-        color="#fadb14"
-        :spinning="spinning"
-        :spin-circle-percent="50"
-        indicator="ring-circle"
-      />
-      <Spin
-        class="spin-item"
-        :size="colorSize"
-        color="#fadb14"
-        :spin-circle-percent="50"
-        ring-rail-color="rgba(212, 136, 6, 0.6)"
-        :spinning="spinning"
-        indicator="ring-rail"
-      />
-      <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
-      <Spin
-        class="spin-item"
-        :size="colorSize"
-        color="#fadb14"
-        magic-ring-color="#ffe58f"
-        :spinning="spinning"
-        indicator="magic-ring"
-      />
+  <Flex vertical>
+    <Flex align="center">
+      Loading state:<Switch v-model:value="spinning" />
+    </Flex>
+    <Space vertical>
+      <RadioGroup :options="sizeOptions" v-model:value="colorSize" button button-style="solid" />
+      <Space>
+        <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" />
+        <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" indicator="dot-wheel" />
+        <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" indicator="line-wheel" />
+        <Spin
+          class="spin-item"
+          :size="colorSize"
+          color="#fadb14"
+          :spinning="spinning"
+          :spin-circle-percent="50"
+          indicator="ring-circle"
+        />
+        <Spin
+          class="spin-item"
+          :size="colorSize"
+          color="#fadb14"
+          :spin-circle-percent="50"
+          ring-rail-color="rgba(212, 136, 6, 0.6)"
+          :spinning="spinning"
+          indicator="ring-rail"
+        />
+        <Spin class="spin-item" :size="colorSize" color="#fadb14" :spinning="spinning" indicator="dynamic-circle" />
+        <Spin
+          class="spin-item"
+          :size="colorSize"
+          color="#fadb14"
+          magic-ring-color="#ffe58f"
+          :spinning="spinning"
+          indicator="magic-ring"
+        />
+      </Space>
     </Space>
-  </Space>
+  </Flex>
 </template>
 <style lang="less" scoped>
 // 叠加组件根类名提高特异性：组件根节点为 width / height 100%，同特异性下会随样式注入顺序反转
@@ -618,19 +724,15 @@ _打开开关后，加载效果需等 `delay` 时长才出现，从而避免请�
 
 <br/>
 
-<Flex align="center"> loading state:<Switch v-model:value="delaySpinning" /> </Flex>
-
-<br/>
-
-<Flex align="center"> delay:<InputNumber v-model:value="delay" :min="0" /> ms </Flex>
-
-<br/>
-
-<Spin :delay="delay" :spinning="delaySpinning" tip="加载中...">
-  <p class="spin-content">
-    请求进行中时，此区域会变淡且不可交互；若在这段时间内请求已经结束（再次关闭开关），加载效果不会出现。
-  </p>
-</Spin>
+<Flex vertical>
+  <Flex align="center"> loading state:<Switch v-model:value="delaySpinning" /> </Flex>
+  <Flex align="center"> delay:<InputNumber v-model:value="delay" :min="0" /> ms </Flex>
+  <Spin :delay="delay" :spinning="delaySpinning" tip="加载中...">
+    <p class="spin-content">
+      请求进行中时，此区域会变淡且不可交互；若在这段时间内请求已经结束（再次关闭开关），加载效果不会出现。
+    </p>
+  </Spin>
+</Flex>
 
 ::: details Show Code
 
@@ -641,15 +743,15 @@ const delaySpinning = ref(false)
 const delay = ref(500)
 </script>
 <template>
-  <Flex align="center"> loading state:<Switch v-model:value="delaySpinning" /> </Flex>
-  <br/>
-  <Flex align="center"> delay:<InputNumber v-model:value="delay" :min="0" /> ms </Flex>
-  <br/>
-  <Spin :delay="delay" :spinning="delaySpinning" tip="加载中...">
-    <p class="spin-content">
-      请求进行中时，此区域会变淡且不可交互；若在这段时间内请求已经结束（再次关闭开关），加载效果不会出现。
-    </p>
-  </Spin>
+  <Flex vertical>
+    <Flex align="center"> loading state:<Switch v-model:value="delaySpinning" /> </Flex>
+    <Flex align="center"> delay:<InputNumber v-model:value="delay" :min="0" /> ms </Flex>
+    <Spin :delay="delay" :spinning="delaySpinning" tip="加载中...">
+      <p class="spin-content">
+        请求进行中时，此区域会变淡且不可交互；若在这段时间内请求已经结束（再次关闭开关），加载效果不会出现。
+      </p>
+    </Spin>
+  </Flex>
 </template>
 <style lang="less" scoped>
 .spin-content {
@@ -670,15 +772,20 @@ _通过 `indicator` 传入 `VNode` 或渲染函数，或用 `#indicator` 插槽�
 
 <br/>
 
-<Space>
-  <Spin class="spin-item" :spinning="spinning" :indicator="customIndicatorVNode" />
-  <Spin class="spin-item" :spinning="spinning" :indicator="customIndicatorFn" />
-  <Spin class="spin-item" :spinning="spinning">
-    <template #indicator>
-      <LoadingOutlined spin style="font-size: 24px; color: #faad14" />
-    </template>
-  </Spin>
-</Space>
+<Flex vertical>
+  <Flex align="center">
+    Loading state:<Switch v-model:value="indicatorSpinning" />
+  </Flex>
+  <Space>
+    <Spin class="spin-item" :spinning="indicatorSpinning" :indicator="customIndicatorVNode" />
+    <Spin class="spin-item" :spinning="indicatorSpinning" :indicator="customIndicatorFn" />
+    <Spin class="spin-item" :spinning="indicatorSpinning">
+      <template #indicator>
+        <LoadingOutlined spin style="font-size: 24px; color: #faad14" />
+      </template>
+    </Spin>
+  </Space>
+</Flex>
 
 ::: details Show Code
 
@@ -695,15 +802,20 @@ const customIndicatorVNode = renderCustomIndicator('#1677ff')
 const customIndicatorFn = () => renderCustomIndicator('#52c41a')
 </script>
 <template>
-  <Space>
-    <Spin class="spin-item" :spinning="spinning" :indicator="customIndicatorVNode" />
-    <Spin class="spin-item" :spinning="spinning" :indicator="customIndicatorFn" />
-    <Spin class="spin-item" :spinning="spinning">
-      <template #indicator>
-        <LoadingOutlined spin style="font-size: 24px; color: #faad14" />
-      </template>
-    </Spin>
-  </Space>
+  <Flex vertical>
+    <Flex align="center">
+      Loading state:<Switch v-model:value="spinning" />
+    </Flex>
+    <Space>
+      <Spin class="spin-item" :spinning="spinning" :indicator="customIndicatorVNode" />
+      <Spin class="spin-item" :spinning="spinning" :indicator="customIndicatorFn" />
+      <Spin class="spin-item" :spinning="spinning">
+        <template #indicator>
+          <LoadingOutlined spin style="font-size: 24px; color: #faad14" />
+        </template>
+      </Spin>
+    </Space>
+  </Flex>
 </template>
 <style lang="less" scoped>
 // 叠加组件根类名提高特异性：组件根节点为 width / height 100%，同特异性下会随样式注入顺序反转
@@ -723,10 +835,13 @@ _内容比父容器窄时，`fitContent` 让遮罩与加载效果一起按内容
 <br/>
 
 <Flex vertical>
+  <Flex align="center">
+    Loading state:<Switch v-model:value="fitContentSpinning" />
+  </Flex>
   <Flex vertical gap="small">
     <span class="spin-parent-label">不开启：遮罩与加载效果以父容器为基准</span>
     <div class="spin-parent">
-      <Spin :spinning="spinning">
+      <Spin :spinning="fitContentSpinning">
         <p class="spin-content">内容盒宽度由文案撑开，窄于父容器</p>
       </Spin>
     </div>
@@ -734,7 +849,7 @@ _内容比父容器窄时，`fitContent` 让遮罩与加载效果一起按内容
   <Flex vertical gap="small">
     <span class="spin-parent-label">开启 <code>fitContent</code>：遮罩与加载效果随内容盒居中</span>
     <div class="spin-parent">
-      <Spin fit-content :spinning="spinning">
+      <Spin fit-content :spinning="fitContentSpinning">
         <p class="spin-content">内容盒宽度由文案撑开，窄于父容器</p>
       </Spin>
     </div>
@@ -750,6 +865,9 @@ const spinning = ref(true)
 </script>
 <template>
   <Flex vertical>
+    <Flex align="center">
+      Loading state:<Switch v-model:value="spinning" />
+    </Flex>
     <Flex vertical gap="small">
       <span class="spin-parent-label">不开启：遮罩与加载效果以父容器为基准</span>
       <div class="spin-parent">
