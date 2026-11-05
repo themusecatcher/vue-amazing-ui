@@ -22,7 +22,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 新增 `beforeLeave`、`destroyInactiveTabPane` 与 `TabPane` 的 `displayDirective`（`if` / `show` / `show:lazy`）：切换前可拦截，非激活面板的卸载时机可配置
 - 新增溢出收纳与 `centerActiveTab`：放不下的页签仍可滚动到达，完全滚出的收进「更多」下拉，激活项可滚动到导航区中间，滚动方向经 `tabScroll` 上报
 - 优化可访问性：补 `tablist` / `tab` / `tabpanel` 语义与方向键、`Home` / `End` 键盘导航
-- 更新使用者文档
+- 更新使用者文档与贡献者文档
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-11-04">3.8.2</VersionDateTag>
