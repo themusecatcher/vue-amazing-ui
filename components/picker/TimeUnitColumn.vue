@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
-import Scrollbar from 'components/scrollbar'
+import Scrollbar, { type ScrollbarExpose } from 'components/scrollbar'
 import type { PickerTimeUnit } from './types'
 export interface TimeUnitColumnProps {
   units?: PickerTimeUnit[] // 该列的候选项
@@ -25,6 +25,7 @@ const SCROLL_DURATION = 120
 /** 面板展开后等待可见的最大帧数（浮层首帧可能仍在 display: none） */
 const MAX_VISIBLE_FRAMES = 20
 const columnRef = ref<HTMLElement | null>(null)
+const scrollbarRef = ref<ScrollbarExpose | null>(null)
 const cellRefs = new Map<number, HTMLElement>()
 let frameId = 0
 function setCellRef(value: number, element: Element | ComponentPublicInstance | null): void {
@@ -37,10 +38,10 @@ function setCellRef(value: number, element: Element | ComponentPublicInstance | 
 /**
  * 列的滚动容器：滚动量写入与滚动条轨道都由 Scrollbar 组件作用在它上面
  *
- * 取组件内部容器的方式与 `Select` 面板一致（Scrollbar 未对外暴露元素引用，只暴露 scrollTo 等命令）。
+ * 直接取组件暴露的容器元素，不依赖 Scrollbar 内部类名
  */
 function getScroller(): HTMLElement | null {
-  return columnRef.value?.querySelector<HTMLElement>('.scrollbar-container') ?? null
+  return scrollbarRef.value?.scrollElement ?? null
 }
 /** 列是否可见：隐藏时（display: none）取不到客户端矩形，元素偏移也不可信 */
 function isColumnVisible(): boolean {
@@ -110,7 +111,7 @@ function onCellClick(unit: PickerTimeUnit): void {
 </script>
 <template>
   <div ref="columnRef" class="picker-time-column" :class="{ 'picker-time-column-active': columnActive }">
-    <Scrollbar>
+    <Scrollbar ref="scrollbarRef">
       <ul class="picker-time-list" role="listbox">
         <template v-for="unit in units" :key="unit.value">
           <li
