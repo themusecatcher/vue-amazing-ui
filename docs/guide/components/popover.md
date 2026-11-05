@@ -224,7 +224,7 @@ _使用 `v-model:open` 控制显隐；`openControl` 为真时 `trigger: hover` �
 
 <br/>
 
-<Space vertical align="start" :gap="12">
+<Space vertical :gap="12">
   <Space>
     <Popover v-model:open="controlledOpen" title="Click Title" trigger="click">
       <template #content>
@@ -254,7 +254,7 @@ const controlledOpen = ref(false)
 const openControlOpen = ref(false)
 </script>
 <template>
-  <Space vertical align="start" :gap="12">
+  <Space vertical :gap="12">
     <Space>
       <Popover v-model:open="controlledOpen" title="Click Title" trigger="click">
         <template #content>

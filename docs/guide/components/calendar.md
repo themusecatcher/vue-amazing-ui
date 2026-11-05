@@ -1049,7 +1049,7 @@ _`disabledDate` 入参为时间戳，返回 `true` 表示该日期不可选；�
   <Space align="center">
     display:<RadioGroup :options="displayOptions" v-model:value="disabledDisplay" button button-style="solid" />
   </Space>
-  <Space align="start" style="margin-top: 10px;">
+  <Space style="margin-top: 10px;">
     <Flex vertical>
       <Alert type="info" message="禁用指定日期 (以今天为准的前三天至后三天，含当天)" />
       <Calendar v-model:value="disableDate" :disabled-date="disabledDate" :display="disabledDisplay" @select="onSelect" @panelChange="onPanelChange" />

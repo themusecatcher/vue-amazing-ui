@@ -207,7 +207,7 @@ function gatingDisabled(): boolean {
       <code>aria-describedby</code> 与定位均以传入元素为准； <code>getDisabled</code> 在每次展示前求值，返回
       <code>true</code> 时不展示
     </p>
-    <Space vertical align="start">
+    <Space vertical>
       <Space align="center">
         <span>基础锚点</span>
         <Button ref="anchorRef">锚点元素（悬停查看提示）</Button>
@@ -281,7 +281,7 @@ function gatingDisabled(): boolean {
       <code>update:open</code> 上报；<code>openControl</code> 为真时
       <code>trigger: hover</code> 不再驱动显隐，显隐完全由 <code>open</code> 决定
     </p>
-    <Space vertical align="start" :gap="12">
+    <Space vertical :gap="12">
       <Space>
         <Tooltip v-model:open="controlledOpen" tooltip="Vue Amazing UI">
           <Button>Controlled: {{ controlledOpen }}</Button>

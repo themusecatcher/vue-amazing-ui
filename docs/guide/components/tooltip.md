@@ -540,7 +540,7 @@ _传入 `anchor` 后不再渲染触发包裹层，触发监听、`tabindex` / `a
 
 <br/>
 
-<Space vertical align="start">
+<Space vertical>
   <Space align="center">
     <span>基础锚点</span>
     <Button ref="anchorRef">锚点元素（悬停查看提示）</Button>
@@ -568,7 +568,7 @@ function gatingDisabled(): boolean {
 }
 </script>
 <template>
-  <Space vertical align="start">
+  <Space vertical>
     <Space align="center">
       <span>基础锚点</span>
       <Button ref="anchorRef">锚点元素（悬停查看提示）</Button>
@@ -761,7 +761,7 @@ _使用 `open` 属性控制浮层的显示与隐藏：传入即受控，内部�
 
 <br/>
 
-<Space vertical align="start" :gap="12">
+<Space vertical :gap="12">
   <Space>
     <Tooltip v-model:open="controlledOpen" tooltip="Vue Amazing UI">
       <Button>Controlled: {{ controlledOpen }}</Button>
@@ -786,7 +786,7 @@ const controlledOpen = ref<boolean>(false)
 const openControlOpen = ref<boolean>(false)
 </script>
 <template>
-  <Space vertical align="start" :gap="12">
+  <Space vertical :gap="12">
     <Space>
       <Tooltip v-model:open="controlledOpen" tooltip="Vue Amazing UI">
         <Button>Controlled: {{ controlledOpen }}</Button>

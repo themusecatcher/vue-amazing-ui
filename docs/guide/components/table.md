@@ -1982,7 +1982,7 @@ const dataSourceMerge = ref([
 ## 可编辑单元格
 
 <Flex vertical>
-  <Button type="primary" :icon="h(PlusOutlined)" @click="handleCellAdd">新增</Button>
+  <Space><Button type="primary" :icon="h(PlusOutlined)" @click="handleCellAdd">新增</Button></Space>
   <Table :columns="columnsCellEditable" :data-source="dataSourceCellEditable" bordered>
     <template #bodyCell="{ column, text, record }">
       <template v-if="column.dataIndex === 'name'">
@@ -2085,7 +2085,7 @@ const handleCellDelete = (key: string) => {
 </script>
 <template>
   <Flex vertical>
-    <Button type="primary" :icon="h(PlusOutlined)" @click="handleCellAdd">新增</Button>
+    <Space><Button type="primary" :icon="h(PlusOutlined)" @click="handleCellAdd">新增</Button></Space>
     <Table :columns="columnsCellEditable" :data-source="dataSourceCellEditable" bordered>
       <template #bodyCell="{ column, text, record }">
         <template v-if="column.dataIndex === 'name'">

@@ -536,7 +536,7 @@ const tokenStyle: Record<string, string> = {
           <Textarea :width="360" v-model:value="textareaValue" placeholder="custom theme textarea" />
           <Image src="https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/1.jpg" />
         </Space>
-        <Space align="center" wrap>
+        <Space align="center">
           <Badge :value="5">
             <Avatar shape="square" size="large" />
           </Badge>
@@ -674,28 +674,28 @@ const tokenStyle: Record<string, string> = {
       <code>seed</code> 的 <code>success</code> / <code>warning</code> / <code>error</code> / <code>info</code> 与
       <code>primary</code> 共用同一套色阶规则：修改单个色值，Alert / Tag / 危险按钮的常态 / 浅底 / 描边同步更新。
     </p>
-    <Flex vertical gap="middle">
-      <Space align="center" wrap>
+    <Flex vertical>
+      <Space align="center">
         <span>success:</span>
         <ColorPicker style="width: 160px" v-model:value="seedSuccess" :show-alpha="false" />
         <span>warning:</span>
         <ColorPicker style="width: 160px" v-model:value="seedWarning" :show-alpha="false" />
       </Space>
-      <Space align="center" wrap>
+      <Space align="center">
         <span>error:</span>
         <ColorPicker style="width: 160px" v-model:value="seedError" :show-alpha="false" />
         <span>info:</span>
         <ColorPicker style="width: 160px" v-model:value="seedInfo" :show-alpha="false" />
       </Space>
       <ConfigProvider :abstract="false" :theme="seedTheme">
-        <Flex vertical gap="middle">
-          <Space align="center" wrap>
+        <Flex vertical>
+          <Space align="center">
             <Alert style="width: 180px" type="success" message="Success" show-icon />
             <Alert style="width: 180px" type="warning" message="Warning" show-icon />
             <Alert style="width: 180px" type="error" message="Error" show-icon />
             <Alert style="width: 180px" type="info" message="Info" show-icon />
           </Space>
-          <Space align="center" wrap>
+          <Space align="center">
             <Button type="danger">Danger</Button>
             <Tag color="success">Success</Tag>
             <Tag color="warning">Warning</Tag>
@@ -732,8 +732,8 @@ const tokenStyle: Record<string, string> = {
       <!-- 只切 mode：带包裹元素时派生结果写到本子树，不覆盖 <html> 上的页面级主题 -->
       <ConfigProvider :abstract="false" :theme="{ mode }">
         <Card width="70%" title="作用域内的明暗切换">
-          <Flex vertical gap="middle">
-            <Space align="center" wrap>
+          <Flex vertical>
+            <Space align="center">
               <Button type="primary">Primary Button</Button>
               <Button>Default Button</Button>
               <Button type="danger">Danger Button</Button>
@@ -742,7 +742,7 @@ const tokenStyle: Record<string, string> = {
               <Slider :value="60" style="width: 160px" />
               <Progress :percent="percent" style="width: 180px" />
             </Space>
-            <Space align="center" wrap>
+            <Space align="center">
               <Input :width="180" v-model:value="modeInputValue" placeholder="please input" />
               <Select :options="darkSelectOptions" v-model:value="darkSelectValue" :width="160" />
               <Pagination v-model:page="darkPage" :total="50" :page-size="10" />
@@ -750,7 +750,7 @@ const tokenStyle: Record<string, string> = {
                 <Button>Hover me</Button>
               </Tooltip>
             </Space>
-            <Space align="center" wrap>
+            <Space align="center">
               <Alert style="width: 190px" message="Info Text" type="info" show-icon />
               <Alert style="width: 190px" message="Success Text" type="success" show-icon />
               <Alert style="width: 190px" message="Warning Text" type="warning" show-icon />
@@ -765,14 +765,14 @@ const tokenStyle: Record<string, string> = {
       <code>theme.components.&lt;组件&gt;.primaryColor</code> 仅覆盖该组件的整套主色（常态 / 悬停 / 按下 / 浅底 /
       描边），其余组件仍取 <code>seed</code>。典型场景：按钮改为品牌绿，链接保持品牌蓝。
     </p>
-    <Flex vertical gap="middle">
-      <Space align="center" wrap>
+    <Flex vertical>
+      <Space align="center">
         <span>componentPrimary:</span>
         <ColorPicker style="width: 200px" v-model:value="componentPrimary" :show-alpha="false" />
       </Space>
       <Flex vertical gap="small">
         <span class="theme-caption">默认 seed（Button / Slider / Progress 全部跟随）</span>
-        <Space align="center" wrap>
+        <Space align="center">
           <Button type="primary">Primary Button</Button>
           <Slider :value="40" style="width: 180px" />
           <Progress :percent="60" style="width: 160px" />
@@ -781,7 +781,7 @@ const tokenStyle: Record<string, string> = {
       <Flex vertical gap="small">
         <span class="theme-caption">theme.components（只改这三个组件）</span>
         <ConfigProvider :abstract="false" :theme="componentTheme">
-          <Space align="center" wrap>
+          <Space align="center">
             <Button type="primary">Primary Button</Button>
             <Slider :value="40" style="width: 180px" />
             <Progress :percent="60" style="width: 160px" />
@@ -803,8 +803,8 @@ const tokenStyle: Record<string, string> = {
       <code>ConfigProvider</code>。
     </p>
     <div class="token-zone" :style="tokenStyle">
-      <Flex vertical gap="middle">
-        <Space align="center" wrap>
+      <Flex vertical>
+        <Space align="center">
           <Button type="primary">Token Button</Button>
           <Button>Default Button</Button>
         </Space>
@@ -834,8 +834,8 @@ const tokenStyle: Record<string, string> = {
       </Space>
       <!-- 作用域换肤：外层也要带包裹元素，变量才能只落在本子树内、不覆盖 <html> 上的页面级主题 -->
       <ConfigProvider :abstract="false" :theme="theme">
-        <Flex vertical gap="middle">
-          <Space align="center" wrap>
+        <Flex vertical>
+          <Space align="center">
             <span class="theme-caption">外层作用域</span>
             <Alert style="width: 180px" message="Outer Alert" type="info" show-icon />
             <Button type="primary">Outer Button</Button>
@@ -844,7 +844,7 @@ const tokenStyle: Record<string, string> = {
           <ConfigProvider :abstract="false" :theme="{ seed: { primary: scopePrimaryColor } }">
             <Flex vertical gap="small">
               <span class="theme-caption">子树作用域：只影响这里</span>
-              <Space align="center" wrap>
+              <Space align="center">
                 <Alert style="width: 180px" message="Scoped Alert" type="info" show-icon />
                 <Button type="primary">Scoped Button</Button>
               </Space>
@@ -954,7 +954,7 @@ const tokenStyle: Record<string, string> = {
       <code>data-va-mode</code>，与主应用主题互不影响；传 <code>computed</code> 时改色即时生效，无需重建实例。
     </p>
     <Flex vertical gap="small">
-      <Space align="center" wrap>
+      <Space align="center">
         <span>customPrimary:</span>
         <ColorPicker style="width: 200px" v-model:value="discreteCustomPrimary" :show-alpha="false" />
       </Space>

@@ -333,7 +333,7 @@ function playNumsCompare() {
 | precision | 数值精度 | number | 0 |
 | prefix | 设置数值的前缀 | string | undefined |
 | suffix | 设置数值的后缀 | string | undefined |
-| separator | 设置千分位标识符 | string | , |
+| separator | 设置千分位标识符 | string | ',' |
 | formatter | 自定义数值展示 | (value: string) => string | (value: string) => value |
 | tabularNums | 是否使用等宽数字，避免数值变化时宽度抖动 | boolean | false |
 

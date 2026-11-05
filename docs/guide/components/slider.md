@@ -61,7 +61,7 @@ const formatSingleValue = ref<number>(20)
 const formatDoubleValue = ref<number[]>([20, 80])
 const hideTooltipSingleValue = ref<number>(20)
 const hideTooltipDoubleValue = ref<number[]>([20, 80])
-const tooltipOpenSingleValue = ref<number>(20)
+const tooltipOpenSingleValue = ref<number>(36)
 const tooltipOpenDoubleValue = ref<number[]>([20, 80])
 const placementTopValue = ref<number>(20)
 const placementBottomValue = ref<number>(80)
@@ -369,9 +369,9 @@ _使用 `marks` 属性可以添加刻度标记_
   </Slider>
 </Flex>
 
-_同时设置 `marks` & `step` 属性_
-
 <br/>
+
+_同时设置 `marks` & `step` 属性_
 
 <Flex vertical>
   <Slider v-model:value="markSingleValue2" :marks="marks" :step="10">
@@ -392,9 +392,9 @@ _同时设置 `marks` & `step` 属性_
   </Slider>
 </Flex>
 
-_设置 `step` 为 `'mark'`，此时 `Slider` 的可选值仅有 `marks` 标记的部分_
-
 <br/>
+
+_设置 `step` 为 `'mark'`，此时 `Slider` 的可选值仅有 `marks` 标记的部分_
 
 <Flex vertical>
   <Slider v-model:value="markSingleValue3" :marks="marks" step="mark">
@@ -739,7 +739,7 @@ watchEffect(() => {
 ```vue
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-const tooltipOpenSingleValue = ref<number>(20)
+const tooltipOpenSingleValue = ref<number>(36)
 const tooltipOpenDoubleValue = ref<number[]>([20, 80])
 watchEffect(() => {
   console.log('tooltipOpenSingleValue', tooltipOpenSingleValue.value)
