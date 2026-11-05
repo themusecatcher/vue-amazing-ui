@@ -98,7 +98,8 @@ const pendingContent = computed(() => {
   --timeline-title-font-size: 14px;
   --timeline-meta-font-size: 12px;
   --timeline-line-color: var(--va-border-split-color);
-  --timeline-head-bg: var(--va-bg-container-color);
+  // 轴点填充 / 自定义轴点的遮挡色不在此声明默认值：一旦写在根上，祖先元素的同名变量就失效，
+  // 页面底色与容器色不一致时无法把它改成页面底色（节点样式侧取 var(--timeline-head-bg, var(--va-bg-container-color))）
   --timeline-head-color: var(--va-cp-timeline-primary-color, var(--va-primary-color));
   display: flex;
   flex-direction: column;

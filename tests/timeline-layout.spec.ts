@@ -380,7 +380,35 @@ describe('时间轴节点级 position 的作用域', () => {
   })
 })
 
+describe('时间轴自定义轴点结构', () => {
+  it('与 antdv 一致：用与内容同宽的底色块遮住连线，不另加伪元素', () => {
+    const { pick } = mount('', [{}, { custom: true }])
+    const { head } = pick(1)
+
+    expect(winningValue(head, 'padding')).toBe('4px 0')
+    expect(winningValue(head, 'background')).toBe('var(--timeline-head-bg, var(--va-bg-container-color))')
+    expect(winningValue(head, 'border')).toBe('0')
+    expect(winningValue(head, 'border-radius')).toBe('0')
+    // 遮罩不通过伪元素实现：结构对齐 antdv，页面底色差异由页面覆盖 --timeline-head-bg 解决
+    expect(RULES.some((rule) => rule.selectors.some((selector) => selector.includes('head-custom::before')))).toBe(
+      false
+    )
+    // 默认轴点仍是实心圆点，不受自定义轴点样式影响
+    expect(winningValue(pick(0).head.querySelector('.timeline-item-head-dot') as HTMLElement, 'border-radius')).toBe(
+      '50%'
+    )
+  })
+})
+
 describe('时间轴轴点默认值一致性', () => {
+  it('遮挡色只在节点侧留 fallback，根上不声明默认值', () => {
+    // 写在根上会压掉祖先元素声明的同名变量：页面底色不是容器色时无法把它改成页面底色
+    const { pick } = mount('', [{ custom: true }])
+
+    expect(ROOT_DECLS.has('--timeline-head-bg')).toBe(false)
+    expect(winningValue(pick(0).head, 'background')).toBe('var(--timeline-head-bg, var(--va-bg-container-color))')
+  })
+
   it('节点侧描边 fallback 与容器根声明同值', () => {
     const { pick } = mount('', [{}, {}])
     const border = winningValue(pick(0).head.querySelector('.timeline-item-head-dot') as HTMLElement, 'border')

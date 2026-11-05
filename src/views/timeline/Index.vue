@@ -270,13 +270,10 @@ const lineTypeOptions: { label: string; value: TimelineLineType }[] = [
   height: 18px;
   border: 4px solid var(--va-primary-color);
   border-radius: 50%;
-  background: var(--va-bg-container-color);
 }
 .dot-icon {
   font-size: 16px;
   color: var(--va-primary-color);
-  background: var(--va-bg-container-color);
-  border-radius: 50%;
 }
 .desc {
   margin-bottom: 4px;
