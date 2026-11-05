@@ -381,7 +381,7 @@ describe('时间轴节点级 position 的作用域', () => {
 })
 
 describe('时间轴自定义轴点结构', () => {
-  it('与 antdv 一致：用与内容同宽的底色块遮住连线，不另加伪元素', () => {
+  it('用与内容同宽的底色块遮住连线，不另加伪元素', () => {
     const { pick } = mount('', [{}, { custom: true }])
     const { head } = pick(1)
 
@@ -389,7 +389,6 @@ describe('时间轴自定义轴点结构', () => {
     expect(winningValue(head, 'background')).toBe('var(--timeline-head-bg, var(--va-bg-container-color))')
     expect(winningValue(head, 'border')).toBe('0')
     expect(winningValue(head, 'border-radius')).toBe('0')
-    // 遮罩不通过伪元素实现：结构对齐 antdv，页面底色差异由页面覆盖 --timeline-head-bg 解决
     expect(RULES.some((rule) => rule.selectors.some((selector) => selector.includes('head-custom::before')))).toBe(
       false
     )

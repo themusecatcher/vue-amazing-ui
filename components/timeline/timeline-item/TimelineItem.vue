@@ -304,7 +304,6 @@ const itemClasses = computed(() => {
     text-align: start;
   }
 }
-// 自定义轴点与 antdv 结构一致：用与插槽内容同宽的底色块盖住穿过轴点的连线（上下各留 4px 间隙），
 // 遮罩色取 --timeline-head-bg（默认容器色），页面底色与容器色不一致时由页面覆盖该变量
 .timeline-item-head-custom {
   top: calc(var(--timeline-line-height, 22px) / 2 - var(--timeline-content-offset, 7px));
