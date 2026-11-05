@@ -284,12 +284,12 @@ function clickImage(image: CarouselImage) {
 
 ## 箭头
 
-<Space align="center">
-  showArrow: <Switch v-model:value="showArrow" />
-</Space>
-<br/>
-<br/>
-<Carousel :images="images" :height="450" :show-arrow="showArrow" @click="clickImage" />
+<Flex vertical>
+  <Space align="center">
+    showArrow: <Switch v-model:value="showArrow" />
+  </Space>
+  <Carousel :images="images" :height="450" :show-arrow="showArrow" @click="clickImage" />
+</Flex>
 
 ::: details Show Code
 
@@ -328,12 +328,12 @@ function clickImage(image: CarouselImage) {
 }
 </script>
 <template>
-  <Space align="center">
-    showArrow: <Switch v-model:value="showArrow" />
-  </Space>
-  <br/>
-  <br/>
-  <Carousel :images="images" :height="450" :show-arrow="showArrow" @click="clickImage" />
+  <Flex vertical>
+    <Space align="center">
+      showArrow: <Switch v-model:value="showArrow" />
+    </Space>
+    <Carousel :images="images" :height="450" :show-arrow="showArrow" @click="clickImage" />
+  </Flex>
 </template>
 ```
 
@@ -387,10 +387,10 @@ function clickImage(image: CarouselImage) {
 
 ## 指示点位置
 
-<RadioGroup :options="positionOptions" v-model:value="dotPosition" button button-style="solid" />
-<br/>
-<br/>
-<Carousel :images="images" :height="450" autoplay :dotPosition="dotPosition" />
+<Flex vertical>
+  <RadioGroup :options="positionOptions" v-model:value="dotPosition" button button-style="solid" />
+  <Carousel :images="images" :height="450" autoplay :dotPosition="dotPosition" />
+</Flex>
 
 ::: details Show Code
 
@@ -444,10 +444,10 @@ const positionOptions = [
 const dotPosition = ref<CarouselProps['dotPosition']>('top')
 </script>
 <template>
-  <RadioGroup :options="positionOptions" v-model:value="dotPosition" button button-style="solid" />
-  <br/>
-  <br/>
-  <Carousel :images="images" :height="450" autoplay :dotPosition="dotPosition" />
+  <Flex vertical>
+    <RadioGroup :options="positionOptions" v-model:value="dotPosition" button button-style="solid" />
+    <Carousel :images="images" :height="450" autoplay :dotPosition="dotPosition" />
+  </Flex>
 </template>
 ```
 
@@ -541,10 +541,10 @@ const images = ref<CarouselImage[]>([
 
 ## 过渡效果
 
-<RadioGroup :options="effectOptions" v-model:value="effect" button button-style="solid" />
-<br/>
-<br/>
-<Carousel :images="images" :height="450" :effect="effect" :fade-duration="1500" />
+<Flex vertical>
+  <RadioGroup :options="effectOptions" v-model:value="effect" button button-style="solid" />
+  <Carousel :images="images" :height="450" :effect="effect" :fade-duration="1500" />
+</Flex>
 
 ::: details Show Code
 
@@ -590,10 +590,10 @@ const effectOptions = [
 const effect = ref<CarouselProps['effect']>('fade')
 </script>
 <template>
-  <RadioGroup :options="effectOptions" v-model:value="effect" button button-style="solid" />
-  <br/>
-  <br/>
-  <Carousel :images="images" :height="450" :effect="effect" :fade-duration="1500" />
+  <Flex vertical>
+    <RadioGroup :options="effectOptions" v-model:value="effect" button button-style="solid" />
+    <Carousel :images="images" :height="450" :effect="effect" :fade-duration="1500" />
+  </Flex>
 </template>
 ```
 
@@ -601,10 +601,10 @@ const effect = ref<CarouselProps['effect']>('fade')
 
 ## 鼠标经过指示点切换轮播图
 
-<RadioGroup :options="triggerOptions" v-model:value="dotTrigger" button button-style="solid" />
-<br/>
-<br/>
-<Carousel :images="images" :height="450" :dot-trigger="dotTrigger" />
+<Flex vertical>
+  <RadioGroup :options="triggerOptions" v-model:value="dotTrigger" button button-style="solid" />
+  <Carousel :images="images" :height="450" :dot-trigger="dotTrigger" />
+</Flex>
 
 ::: details Show Code
 
@@ -650,10 +650,10 @@ const triggerOptions = [
 const dotTrigger = ref<CarouselProps['dotTrigger']>('hover')
 </script>
 <template>
-  <RadioGroup :options="triggerOptions" v-model:value="dotTrigger" button button-style="solid" />
-  <br/>
-  <br/>
-  <Carousel :images="images" :height="450" :dot-trigger="dotTrigger" />
+  <Flex vertical>
+    <RadioGroup :options="triggerOptions" v-model:value="dotTrigger" button button-style="solid" />
+    <Carousel :images="images" :height="450" :dot-trigger="dotTrigger" />
+  </Flex>
 </template>
 ```
 
@@ -665,19 +665,19 @@ _`slideFunction` 支持缓动预设名、三次贝塞尔控制点数组与缓动
 
 <br/>
 
-<Space>
-  <RadioGroup :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
-  <Select
-    v-if="slideEasingType === 'preset'"
-    :options="slideEasingPresetOptions"
-    v-model:value="slideEasingPreset"
-    width="200"
-    show-search
-  />
-</Space>
-<br/>
-<br/>
-<Carousel :images="images" :height="450" :slide-duration="800" :slide-function="slideEasing" />
+<Flex vertical>
+  <Space>
+    <RadioGroup :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
+    <Select
+      v-if="slideEasingType === 'preset'"
+      :options="slideEasingPresetOptions"
+      v-model:value="slideEasingPreset"
+      width="200"
+      show-search
+    />
+  </Space>
+  <Carousel :images="images" :height="450" :slide-duration="800" :slide-function="slideEasing" />
+</Flex>
 
 ::: details Show Code
 
@@ -725,19 +725,19 @@ const slideEasingBezier: CubicBezierPoints = [0.45, 1, 0.55, 1]
 const slideEasing = computed(() => (slideEasingType.value === 'preset' ? slideEasingPreset.value : slideEasingBezier))
 </script>
 <template>
-  <Space>
-    <RadioGroup :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
-    <Select
-      v-if="slideEasingType === 'preset'"
-      :options="slideEasingPresetOptions"
-      v-model:value="slideEasingPreset"
-      width="200"
-      show-search
-    />
-  </Space>
-  <br/>
-  <br/>
-  <Carousel :images="images" :height="450" :slide-duration="800" :slide-function="slideEasing" />
+  <Flex vertical>
+    <Space>
+      <RadioGroup :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
+      <Select
+        v-if="slideEasingType === 'preset'"
+        :options="slideEasingPresetOptions"
+        v-model:value="slideEasingPreset"
+        width="200"
+        show-search
+      />
+    </Space>
+    <Carousel :images="images" :height="450" :slide-duration="800" :slide-function="slideEasing" />
+  </Flex>
 </template>
 ```
 
@@ -749,10 +749,10 @@ _`fadeFunction` 可传四个三次贝塞尔控制点（自动转为 `CSS` `cubic
 
 <br/>
 
-<RadioGroup :options="fadeEasingTypeOptions" v-model:value="fadeEasingType" button button-style="solid" />
-<br/>
-<br/>
-<Carousel :images="images" :height="450" effect="fade" :fade-duration="1500" :fade-function="fadeEasing" />
+<Flex vertical>
+  <RadioGroup :options="fadeEasingTypeOptions" v-model:value="fadeEasingType" button button-style="solid" />
+  <Carousel :images="images" :height="450" effect="fade" :fade-duration="1500" :fade-function="fadeEasing" />
+</Flex>
 
 ::: details Show Code
 
@@ -797,10 +797,10 @@ const fadeEasing = computed<CarouselProps['fadeFunction']>(() =>
 )
 </script>
 <template>
-  <RadioGroup :options="fadeEasingTypeOptions" v-model:value="fadeEasingType" button button-style="solid" />
-  <br/>
-  <br/>
-  <Carousel :images="images" :height="450" effect="fade" :fade-duration="1500" :fade-function="fadeEasing" />
+  <Flex vertical>
+    <RadioGroup :options="fadeEasingTypeOptions" v-model:value="fadeEasingType" button button-style="solid" />
+    <Carousel :images="images" :height="450" effect="fade" :fade-duration="1500" :fade-function="fadeEasing" />
+  </Flex>
 </template>
 ```
 
@@ -873,10 +873,10 @@ _关闭 `loop` 后到达首尾时，该方向的切换（箭头、键盘、滚�
 
 <br/>
 
-<Space align="center"> loop: <Switch v-model:value="loop" /> </Space>
-<br/>
-<br/>
-<Carousel :images="images" :height="450" :loop="loop" />
+<Flex vertical>
+  <Space align="center"> loop: <Switch v-model:value="loop" /> </Space>
+  <Carousel :images="images" :height="450" :loop="loop" />
+</Flex>
 
 ::: details Show Code
 
@@ -912,10 +912,10 @@ const images = ref<CarouselImage[]>([
 const loop = ref<boolean>(true)
 </script>
 <template>
-  <Space align="center"> loop: <Switch v-model:value="loop" /> </Space>
-  <br/>
-  <br/>
-  <Carousel :images="images" :height="450" :loop="loop" />
+  <Flex vertical>
+    <Space align="center"> loop: <Switch v-model:value="loop" /> </Space>
+    <Carousel :images="images" :height="450" :loop="loop" />
+  </Flex>
 </template>
 ```
 
@@ -955,12 +955,12 @@ _通过 `initial-index` 指定初始展示的图片下标，仅在初始化时�
 
 <br/>
 
-<Space align="center">
-  initialIndex: <InputNumber :min="1" :max="images.length" v-model:value="initialIndex" />
-</Space>
-<br/>
-<br/>
-<Carousel :key="initialIndex" :images="images" :height="450" :initial-index="initialIndex" />
+<Flex vertical>
+  <Space align="center">
+    initialIndex: <InputNumber :min="1" :max="images.length" v-model:value="initialIndex" />
+  </Space>
+  <Carousel :key="initialIndex" :images="images" :height="450" :initial-index="initialIndex" />
+</Flex>
 
 ::: details Show Code
 
@@ -996,12 +996,12 @@ const images = ref<CarouselImage[]>([
 const initialIndex = ref<number>(3)
 </script>
 <template>
-  <Space align="center">
-    initialIndex: <InputNumber :min="1" :max="images.length" v-model:value="initialIndex" />
-  </Space>
-  <br/>
-  <br/>
-  <Carousel :key="initialIndex" :images="images" :height="450" :initial-index="initialIndex" />
+  <Flex vertical>
+    <Space align="center">
+      initialIndex: <InputNumber :min="1" :max="images.length" v-model:value="initialIndex" />
+    </Space>
+    <Carousel :key="initialIndex" :images="images" :height="450" :initial-index="initialIndex" />
+  </Flex>
 </template>
 ```
 
@@ -1013,14 +1013,14 @@ _通过 `v-model:current-index` 双向绑定当前页：外部改值即可跳转
 
 <br/>
 
-<Space align="center">
-  当前页：<InputNumber :min="1" :max="images.length" v-model:value="controlledIndex" />
-  <Button @click="controlledIndex = 1">跳转到第 1 张</Button>
-  <Button @click="controlledIndex = images.length">跳转到最后一张</Button>
-</Space>
-<br/>
-<br/>
-<Carousel v-model:current-index="controlledIndex" :images="images" :height="450" />
+<Flex vertical>
+  <Space align="center">
+    当前页：<InputNumber :min="1" :max="images.length" v-model:value="controlledIndex" />
+    <Button @click="controlledIndex = 1">跳转到第 1 张</Button>
+    <Button @click="controlledIndex = images.length">跳转到最后一张</Button>
+  </Space>
+  <Carousel v-model:current-index="controlledIndex" :images="images" :height="450" />
+</Flex>
 
 ::: details Show Code
 
@@ -1056,14 +1056,14 @@ const images = ref<CarouselImage[]>([
 const controlledIndex = ref<number>(1)
 </script>
 <template>
-  <Space align="center">
-    当前页：<InputNumber :min="1" :max="images.length" v-model:value="controlledIndex" />
-    <Button @click="controlledIndex = 1">跳转到第 1 张</Button>
-    <Button @click="controlledIndex = images.length">跳转到最后一张</Button>
-  </Space>
-  <br/>
-  <br/>
-  <Carousel v-model:current-index="controlledIndex" :images="images" :height="450" />
+  <Flex vertical>
+    <Space align="center">
+      当前页：<InputNumber :min="1" :max="images.length" v-model:value="controlledIndex" />
+      <Button @click="controlledIndex = 1">跳转到第 1 张</Button>
+      <Button @click="controlledIndex = images.length">跳转到最后一张</Button>
+    </Space>
+    <Carousel v-model:current-index="controlledIndex" :images="images" :height="450" />
+  </Flex>
 </template>
 ```
 
@@ -1075,10 +1075,10 @@ _`beforeChange` 在切换开始时触发，`afterChange` 在切换结束后触�
 
 <br/>
 
-<Space align="center"> 最近一次： {{ beforeChangeInfo }} / {{ afterChangeInfo }} </Space>
-<br/>
-<br/>
-<Carousel :images="images" :height="450" @before-change="onBeforeChange" @after-change="onAfterChange" />
+<Flex vertical>
+  <Space align="center"> 最近一次： {{ beforeChangeInfo }} / {{ afterChangeInfo }} </Space>
+  <Carousel :images="images" :height="450" @before-change="onBeforeChange" @after-change="onAfterChange" />
+</Flex>
 
 ::: details Show Code
 
@@ -1121,10 +1121,10 @@ function onAfterChange(current: number) {
 }
 </script>
 <template>
-  <Space align="center"> 最近一次： {{ beforeChangeInfo }} / {{ afterChangeInfo }} </Space>
-  <br/>
-  <br/>
-  <Carousel :images="images" :height="450" @before-change="onBeforeChange" @after-change="onAfterChange" />
+  <Flex vertical>
+    <Space align="center"> 最近一次： {{ beforeChangeInfo }} / {{ afterChangeInfo }} </Space>
+    <Carousel :images="images" :height="450" @before-change="onBeforeChange" @after-change="onAfterChange" />
+  </Flex>
 </template>
 ```
 
@@ -1136,12 +1136,12 @@ _与 `CSS` 同名属性一致，默认 `fill` 拉伸填满容器_
 
 <br/>
 
-<Space align="center">
-  objectFit: <Select :options="objectFitOptions" v-model:value="objectFit" style="width: 160px" />
-</Space>
-<br/>
-<br/>
-<Carousel :images="images" :height="450" :object-fit="objectFit" />
+<Flex vertical>
+  <Space align="center">
+    objectFit: <Select :options="objectFitOptions" v-model:value="objectFit" style="width: 160px" />
+  </Space>
+  <Carousel :images="images" :height="450" :object-fit="objectFit" />
+</Flex>
 
 ::: details Show Code
 
@@ -1199,12 +1199,12 @@ const objectFitOptions = [
 const objectFit = ref<CarouselProps['objectFit']>('fill')
 </script>
 <template>
-  <Space align="center">
-    objectFit: <Select :options="objectFitOptions" v-model:value="objectFit" style="width: 160px" />
-  </Space>
-  <br/>
-  <br/>
-  <Carousel :images="images" :height="450" :object-fit="objectFit" />
+  <Flex vertical>
+    <Space align="center">
+      objectFit: <Select :options="objectFitOptions" v-model:value="objectFit" style="width: 160px" />
+    </Space>
+    <Carousel :images="images" :height="450" :object-fit="objectFit" />
+  </Flex>
 </template>
 ```
 
@@ -1216,10 +1216,10 @@ _开启 `draggable` 后支持鼠标与触摸拖拽，位移超过容器宽度一
 
 <br/>
 
-<Space align="center"> draggable: <Switch v-model:value="draggable" /> </Space>
-<br/>
-<br/>
-<Carousel :images="images" :height="450" :draggable="draggable" />
+<Flex vertical>
+  <Space align="center"> draggable: <Switch v-model:value="draggable" /> </Space>
+  <Carousel :images="images" :height="450" :draggable="draggable" />
+</Flex>
 
 ::: details Show Code
 
@@ -1255,10 +1255,10 @@ const images = ref<CarouselImage[]>([
 const draggable = ref<boolean>(true)
 </script>
 <template>
-  <Space align="center"> draggable: <Switch v-model:value="draggable" /> </Space>
-  <br/>
-  <br/>
-  <Carousel :images="images" :height="450" :draggable="draggable" />
+  <Flex vertical>
+    <Space align="center"> draggable: <Switch v-model:value="draggable" /> </Space>
+    <Carousel :images="images" :height="450" :draggable="draggable" />
+  </Flex>
 </template>
 ```
 
@@ -1270,10 +1270,10 @@ _开启 `mousewheel` 后滚轮切换，单次滚动量需超过 `10`_
 
 <br/>
 
-<Space align="center"> mousewheel: <Switch v-model:value="mousewheel" /> </Space>
-<br/>
-<br/>
-<Carousel :images="images" :height="450" :mousewheel="mousewheel" />
+<Flex vertical>
+  <Space align="center"> mousewheel: <Switch v-model:value="mousewheel" /> </Space>
+  <Carousel :images="images" :height="450" :mousewheel="mousewheel" />
+</Flex>
 
 ::: details Show Code
 
@@ -1309,10 +1309,10 @@ const images = ref<CarouselImage[]>([
 const mousewheel = ref<boolean>(true)
 </script>
 <template>
-  <Space align="center"> mousewheel: <Switch v-model:value="mousewheel" /> </Space>
-  <br/>
-  <br/>
-  <Carousel :images="images" :height="450" :mousewheel="mousewheel" />
+  <Flex vertical>
+    <Space align="center"> mousewheel: <Switch v-model:value="mousewheel" /> </Space>
+    <Carousel :images="images" :height="450" :mousewheel="mousewheel" />
+  </Flex>
 </template>
 ```
 
@@ -1500,17 +1500,17 @@ const images = ref<CarouselImage[]>([
 
 ## 使用 Methods
 
-<Space>
-  <InputNumber :min="1" :max="images.length" v-model:value="toIndex" />
-  <Button @click="carousel?.to(toIndex)">跳转到</Button>
-  <Button @click="carousel?.to(toIndex, true)">跳转到（无动画）</Button>
-  <Button @click="carousel?.prev()">前一页</Button>
-  <Button @click="carousel?.next()">后一页</Button>
-  <Button @click="getCurrentIndex">获取当前页：{{ currentIndex }}</Button>
-</Space>
-<br/>
-<br/>
-<Carousel ref="carousel" :images="images" :height="450" />
+<Flex vertical>
+  <Space>
+    <InputNumber :min="1" :max="images.length" v-model:value="toIndex" />
+    <Button @click="carousel?.to(toIndex)">跳转到</Button>
+    <Button @click="carousel?.to(toIndex, true)">跳转到（无动画）</Button>
+    <Button @click="carousel?.prev()">前一页</Button>
+    <Button @click="carousel?.next()">后一页</Button>
+    <Button @click="getCurrentIndex">获取当前页：{{ currentIndex }}</Button>
+  </Space>
+  <Carousel ref="carousel" :images="images" :height="450" />
+</Flex>
 
 ::: details Show Code
 
@@ -1552,17 +1552,17 @@ function getCurrentIndex() {
 }
 </script>
 <template>
-  <Space>
-    <InputNumber :min="1" :max="images.length" v-model:value="toIndex" />
-    <Button @click="carousel?.to(toIndex)">跳转到</Button>
-    <Button @click="carousel?.to(toIndex, true)">跳转到（无动画）</Button>
-    <Button @click="carousel?.prev()">前一页</Button>
-    <Button @click="carousel?.next()">后一页</Button>
-    <Button @click="getCurrentIndex">获取当前页：{{ currentIndex }}</Button>
-  </Space>
-  <br/>
-  <br/>
-  <Carousel ref="carousel" :images="images" :height="450" />
+  <Flex vertical>
+    <Space>
+      <InputNumber :min="1" :max="images.length" v-model:value="toIndex" />
+      <Button @click="carousel?.to(toIndex)">跳转到</Button>
+      <Button @click="carousel?.to(toIndex, true)">跳转到（无动画）</Button>
+      <Button @click="carousel?.prev()">前一页</Button>
+      <Button @click="carousel?.next()">后一页</Button>
+      <Button @click="getCurrentIndex">获取当前页：{{ currentIndex }}</Button>
+    </Space>
+    <Carousel ref="carousel" :images="images" :height="450" />
+  </Flex>
 </template>
 ```
 
