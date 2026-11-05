@@ -346,16 +346,17 @@ function onAreaClick(e: MouseEvent, code?: number) {
   e.preventDefault()
   console.log('postcode', code)
 }
-// 长列表：省级 200、每省 200 个市级（市级文本带省级序号，便于看出父级切换）；区级共享一份数组
-const MANY_OPTIONS_LENGTH = 200
-const manyAreas: CascaderOption[] = Array.from({ length: MANY_OPTIONS_LENGTH }, (_, index) => ({
+// 长列表：省级 1000、每省 1000 个市级（市级文本带省级序号，便于看出父级切换）；区级共享一份数组
+const MANY_PROVINCE_LENGTH = 1000
+const MANY_CITY_LENGTH = 1000
+const manyAreas: CascaderOption[] = Array.from({ length: MANY_CITY_LENGTH }, (_, index) => ({
   value: `area-${index}`,
   label: `区级 ${index + 1}`
 }))
-const manyOptions: CascaderOption[] = Array.from({ length: MANY_OPTIONS_LENGTH }, (_, provinceIndex) => ({
+const manyOptions: CascaderOption[] = Array.from({ length: MANY_PROVINCE_LENGTH }, (_, provinceIndex) => ({
   value: `province-${provinceIndex}`,
   label: `省级 ${provinceIndex + 1}`,
-  children: Array.from({ length: MANY_OPTIONS_LENGTH }, (_, cityIndex) => ({
+  children: Array.from({ length: MANY_CITY_LENGTH }, (_, cityIndex) => ({
     value: `city-${provinceIndex}-${cityIndex}`,
     label: `市级 ${provinceIndex + 1}-${cityIndex + 1}`,
     children: manyAreas
@@ -704,7 +705,7 @@ function onReadCheckedData() {
     </Space>
     <h2 class="mt30 mb10">长列表虚拟滚动</h2>
     <p class="mb10">
-      省级 200、每省 200 个市级的长列表，显式开启 <code>virtual</code> 后每列只渲染可视区；<code>option-height</code>
+      省级 1000、每省 1000 个市级的长列表，显式开启 <code>virtual</code> 后每列只渲染可视区；<code>option-height</code>
       需与选项实际行高一致，列宽按整列内容锁定，滚动时不变
     </p>
     <Cascader v-model:value="virtualValue" placeholder="请选择" :options="manyOptions" virtual />

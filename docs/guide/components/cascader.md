@@ -355,16 +355,17 @@ function onAreaClick(e: MouseEvent, code?: number) {
   e.preventDefault()
   console.log('postcode', code)
 }
-// 长列表：省级 200、每省 200 个市级（市级文本带省级序号，便于看出父级切换）；区级共享一份数组
-const MANY_OPTIONS_LENGTH = 200
-const manyAreas: CascaderOption[] = Array.from({ length: MANY_OPTIONS_LENGTH }, (_, index) => ({
+// 长列表：省级 1000、每省 1000 个市级（市级文本带省级序号，便于看出父级切换）；区级共享一份数组
+const MANY_PROVINCE_LENGTH = 1000
+const MANY_CITY_LENGTH = 1000
+const manyAreas: CascaderOption[] = Array.from({ length: MANY_CITY_LENGTH }, (_, index) => ({
   value: `area-${index}`,
   label: `区级 ${index + 1}`
 }))
-const manyOptions: CascaderOption[] = Array.from({ length: MANY_OPTIONS_LENGTH }, (_, provinceIndex) => ({
+const manyOptions: CascaderOption[] = Array.from({ length: MANY_PROVINCE_LENGTH }, (_, provinceIndex) => ({
   value: `province-${provinceIndex}`,
   label: `省级 ${provinceIndex + 1}`,
-  children: Array.from({ length: MANY_OPTIONS_LENGTH }, (_, cityIndex) => ({
+  children: Array.from({ length: MANY_CITY_LENGTH }, (_, cityIndex) => ({
     value: `city-${provinceIndex}-${cityIndex}`,
     label: `市级 ${provinceIndex + 1}-${cityIndex + 1}`,
     children: manyAreas
@@ -1222,7 +1223,7 @@ const value = ref<(string | number)[]>(['1', '11', '111'])
 
 ## 自定义 tag 内容
 
-_通过 `#tagRender` 插槽接管多选 tag 的渲染，作用域参数含路径、文本与移除方法_
+_通过 `#tagRender` 插槽接管多选 `tag` 的渲染，作用域参数含路径、文本与移除方法_
 
 <br/>
 
@@ -1775,6 +1776,8 @@ const childValue = ref<(string | number)[][]>([])
 
 _已选内容的顺序跟随值中路径的先后：可折叠为父级的分支在首次出现的位置收敛成一条，其后的同级项并入该条_
 
+<br/>
+
 <Cascader v-model:value="orderValue" placeholder="请选择" :options="options" multiple @change="onChange" />
 
 ::: details Show Code
@@ -2156,21 +2159,17 @@ function onRead() {
 
 ## 键盘操作
 
-_聚焦后 `↑` `↓` 在当前列内移动（搜索态下在结果间移动）、`←` `→` 跨列、`Enter` 确认、`Esc` 收起；多选下 `Space` 勾选、`Backspace` 移除最后一个 tag_
-
-<br/>
+_聚焦后 `↑` `↓` 在当前列内移动（搜索态下在结果间移动）、`←` `→` 跨列、`Enter` 确认、`Esc` 收起；多选下 `Space` 勾选、`Backspace` 移除最后一个 `tag`_
 
 | 按键 | 说明 |
 | :-- | :-- |
-| Esc | 收起面板 |
-| Enter | 确认当前激活项（多选为切换勾选） |
-| ↑ / ↓ | 在当前列内移动激活项；搜索态下在结果间移动 |
-| → | 进入当前激活项的子列，无子项时触发 `loadData` |
-| ← | 退回上一列 |
-| Space | 多选时切换当前激活项的勾选 |
-| Backspace | 多选且搜索文本为空时移除最后一个 tag |
-
-<br/>
+| `Esc` | 收起面板 |
+| `Enter` | 确认当前激活项（多选为切换勾选） |
+| `↑` / `↓` | 在当前列内移动激活项；搜索态下在结果间移动 |
+| `→` | 进入当前激活项的子列，无子项时触发 `loadData` |
+| `←` | 退回上一列 |
+| `Space` | 多选时切换当前激活项的勾选 |
+| `Backspace` | 多选且搜索文本为空时移除最后一个 `tag` |
 
 <Cascader v-model:value="keyboardValue" placeholder="请选择" :options="options" multiple @change="onChange" />
 
@@ -2450,7 +2449,7 @@ const value = ref<(string | number)[]>(['zhejiang', 'hangzhou', 'xihu'])
 
 ## 长列表虚拟滚动
 
-_省级 200、每省 200 个市级的长列表，显式开启 `virtual` 后每列只渲染可视区；`option-height` 需与选项实际行高一致，列宽按整列内容锁定，滚动时不变_
+_省级 `1000`、每省 `1000` 个市级的长列表，显式开启 `virtual` 后每列只渲染可视区；`option-height` 需与选项实际行高一致，列宽按整列内容锁定，滚动时不变_
 
 <br/>
 
@@ -2462,16 +2461,17 @@ _省级 200、每省 200 个市级的长列表，显式开启 `virtual` 后每�
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { CascaderOption } from 'vue-amazing-ui'
-// 省级 200、每省 200 个市级：列内项数远超面板高度，用于验证虚拟滚动
-const MANY_OPTIONS_LENGTH = 200
-const manyAreas: CascaderOption[] = Array.from({ length: MANY_OPTIONS_LENGTH }, (_, index) => ({
+// 省级 1000、每省 1000 个市级：列内项数远超面板高度，用于验证虚拟滚动
+const MANY_PROVINCE_LENGTH = 1000
+const MANY_CITY_LENGTH = 1000
+const manyAreas: CascaderOption[] = Array.from({ length: MANY_CITY_LENGTH }, (_, index) => ({
   value: `area-${index}`,
   label: `区级 ${index + 1}`
 }))
-const manyOptions: CascaderOption[] = Array.from({ length: MANY_OPTIONS_LENGTH }, (_, provinceIndex) => ({
+const manyOptions: CascaderOption[] = Array.from({ length: MANY_PROVINCE_LENGTH }, (_, provinceIndex) => ({
   value: `province-${provinceIndex}`,
   label: `省级 ${provinceIndex + 1}`,
-  children: Array.from({ length: MANY_OPTIONS_LENGTH }, (_, cityIndex) => ({
+  children: Array.from({ length: MANY_CITY_LENGTH }, (_, cityIndex) => ({
     value: `city-${provinceIndex}-${cityIndex}`,
     label: `市级 ${provinceIndex + 1}-${cityIndex + 1}`,
     children: manyAreas

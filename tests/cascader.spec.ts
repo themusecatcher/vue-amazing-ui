@@ -836,7 +836,8 @@ describe('Cascader 虚拟滚动的列状态维护', () => {
     wrapper = mount(Cascader, { attachTo: document.body, props: PROPS })
     await flush()
     await openPanel()
-    await scrollColumn(0, 200)
+    // 64 落在该列最大滚动量内（5 行 × 32 − 面板高 64）：超出最大量会被夹取，测不出「保持位置」
+    await scrollColumn(0, 64)
 
     const input = wrapper.find('.search-input')
     await input.trigger('keydown', { key: 'Escape' })
@@ -845,9 +846,32 @@ describe('Cascader 虚拟滚动的列状态维护', () => {
 
     await openPanel()
     expect(columnTexts(0).length).toBeGreaterThan(0)
-    expect(columnContainer(0).scrollTop).toBe(200)
+    expect(columnContainer(0).scrollTop).toBe(64)
     // 渲染窗口跟随保持的位置：首项不再是省0，而是滚动位置对应的项
     expect(columnTexts(0)).not.toContain('省0')
+  })
+
+  it('新开一列同样接住原生滚动，渲染窗口跟随', async () => {
+    wrapper = mount(Cascader, { attachTo: document.body, props: PROPS })
+    await flush()
+    await openPanel()
+    await clickOption('省0')
+    expect(columnTexts(1)[0]).toBe('市0-0')
+
+    // 新列的滚动监听若未绑定（容器取得时机问题），窗口会停在第 0 项
+    await scrollColumn(1, 200)
+    expect(columnTexts(1)).not.toContain('市0-0')
+  })
+
+  it('程序化写 scrollTop（拖动滚动条）后渲染窗口立即跟随，不残留空白', async () => {
+    wrapper = mount(Cascader, { attachTo: document.body, props: PROPS })
+    await flush()
+    await openPanel()
+    expect(columnTexts(0)[0]).toBe('省0')
+
+    await scrollColumn(0, 64)
+    // 窗口起点按滚动位置换算（32 行高 + 上下各 1 行缓冲），不再停在顶部留下整片占位
+    expect(columnTexts(0)[0]).toBe('省1')
   })
 
   it('滚动位置超出当前列内容高度时渲染窗口自动夹取，不出现空列', async () => {
