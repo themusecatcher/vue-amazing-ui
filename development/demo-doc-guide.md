@@ -55,7 +55,7 @@ import { ref } from 'vue'
 
 - `h1`：页面标题（`$route.name` + `$route.meta.title`）。
 - `h2`：按功能分节（`mt30 mb10` 间距类）。
-- 示例用 `<Space>` 等布局组件包裹。
+- 示例用 `<Space>` 等布局组件包裹；「控制行在上、演示在下」一律用 `<Flex vertical>` 合并成一块（见下节「表单与演示的纵向布局」）。
 
 ### 状态绑定（每个演示主题独立）
 
@@ -73,6 +73,36 @@ const disabledOptionValue = ref(5)
 - **命名**：与主题语义对齐（`basicValue` / `disabledValue` / `searchableValue` …），多个主题并列时在首个变量前加一行注释说明（见上例）。
 - **例外**：**同一主题内**的成对用例可共用（如「三种尺寸」的多个 Select、「下拉面板弹出位置」的 bottom / top 对照），它们是同一用例的对照展示。
 - **文档页同源**：`docs/guide/components/{组件名}.md` 的页面级 `<script setup>` 需与演示页逐项对应（见「演示与文档的对应」）；`::: details Show Code` 代码块是独立可复制示例，块内用局部命名（如 `selectedValue`）不受此约束。
+- **跨分节共用是红线**（2026-11-05 新增）：同一个 `v-model` / 状态变量不得出现在两个及以上分节（docs 的 `## ` / `### `、views 的 `<h2>`），由 `pnpm verify:docs` 第 ③ 项校验；**同一分节内**的成对对照仍可共用（见上条「例外」）。教训：`spin` 曾用 12 个分节共用 `spinning`，改一处开关会联动整页。
+
+### 表单与演示的纵向布局（2026-11-05 新增）
+
+分节内出现「参数控制行在上、演示用例在下」时，两者必须包在**同一个** `<Flex vertical>` 里，纵向间距由 `Flex` 的默认 `gap`（`middle` = 16px）提供：
+
+```vue
+<h2 class="mt30 mb10">大小</h2>
+<Flex vertical>
+  <Flex gap="small" align="center">
+    size：<RadioGroup :options="sizeOptions" v-model:value="size" button button-style="solid" />
+  </Flex>
+  <Tabs v-model:active-key="sizeActiveKey" :size="size">…</Tabs>
+  <Tabs v-model:active-key="sizeActiveKey" :size="size" type="card">…</Tabs>
+</Flex>
+```
+
+- 控制行自身仍是水平行（`<Flex gap="small" align="center">` / `<Space align="center">`），外层再套 `<Flex vertical>` 与演示合成一个纵向块；同一行有多个控件时也用这个水平容器隔开，❌ 不用空 `<span class="demo-divider">` 之类靠 margin 撑位的占位元素。
+- ❌ 不用 `class="mb10"` / `<br /><br />` / `style="margin-bottom: 16px"` 手工撑「控制行 → 演示」的间距：控制行换行、演示组件自带外边距时会失配，也看不出两者的从属关系。
+- 同方向的多个演示（对照用例）一并放进这个 `<Flex vertical>`，与配置器（`<Flex gap="large" vertical>` 包 `Row` + 演示）保持同一形态。
+- 演示产生的结果文案（「最近操作：…」「最近事件：…」）留在 `<Flex vertical>` 之外，沿用 `class="mt10"`。
+- `docs/` 同源写法：控制行放进演示所在的 `<Flex vertical>` 内；`<br/>` 只用于「说明文字 → 演示」之间，不用于控制行与演示之间。
+- 存量用 `Space vertical` 包裹的老用例功能等价，不强制改造；新写或改动该分节时按本规范收敛。
+
+### 同组面板的渲染内容必须可区分（2026-11-05 新增）
+
+同一组 `TabPane` / 面板用 `v-for` 渲染、内容模板又完全相同时，必须把区分标识渲染出来（如 `面板 {{ item.key }}`、`Content of Tab Pane {{ item.key }}`）：
+
+- **为什么**：内容一致时切换页签视觉毫无变化，读者无法判断 `displayDirective` / `destroyInactiveTabPane` / `animated` 等属性是否生效，验证用例退化成摆设。
+- 标识写在面板内容首行，与用例说明同行：`<p class="mb10">面板 {{ item.key }}｜if：切走后内容卸载，输入不保留</p>`。
 
 ### 全局包裹（src/App.vue）
 
@@ -338,3 +368,28 @@ _格式化日期为指定格式的工具函数_
 
 - 用例标题 / 简介描述：逐字一致（`<code>` ↔ 反引号、docs 补整行斜体）。
 - 分节的状态绑定：演示页的 `ref` 与文档页级 `<script setup>` 的 `ref` **逐项对应**（见「状态绑定（每个演示主题独立）」），改一处必须同步另一处——否则两边联动行为不一致。
+- **标题用中性标识，行为差异写在内容区**：页签 / 选项标题保持 `Tab 1` / `Tab 2`、`默认` / `禁用` 这类原始标识，`返回 false` / `Promise.reject` 等行为说明写进 TabPane 内容或说明句；❌ 把行为写进标题——标题要与说明简介逐字对齐，写行为必然导致两边不一致。
+
+### 正文 demo ↔ Show Code 契约（2026-11-05 新增）
+
+> `::: details Show Code` 是正文 demo 的**可复制等价物**，不是「另一份简化示例」。以下为硬约束，其中「自包含」与「跨分节绑定」由 `pnpm verify:docs` 第 ③ 项机械校验；「用例数量 / 数据规模 / 样式同源」依赖章节性质判断，脚本只把差异打印为提示（说明型章节常并排多段代码、Show Code 只覆盖其中一段，机械比较必然误报）。
+
+- **自包含**：块内模板引用的每个标识符都必须在块内 `<script setup>` 定义（`const` / `function` / `import`），❌ 依赖页面级 script 的变量——复制后直接报错。教训：`tabs` 的「新增按钮禁用」块内定义 `editActiveKey`，模板却引用页面级 `disabledAddActiveKey` 等 6 个标识符。
+- **用例数量一致**：正文的交互控件（开关 / 选择器 / 按钮）与用例数量，块内必须一一对应，❌ 只留主组件省掉控制项（如缺 `<Switch>` 导致状态无法切换）。
+- **数据规模一致**：`v-for` 的数据项数、`slice(0, n)` 的 `n` 与正文一致，❌ 正文 6 个页签、块内只写 3 项。
+- **样式同源**：正文用 `tabClass` / 自定义类名时，页面级 `<style>` 必须有对应定义（` :deep()` 命中组件内部元素）；只在 Show Code 里写样式会造成「演示无样式、复制后有样式」。
+- **命名可局部化**：块内变量名可不同于页面级（`activeKey` vs `basicActiveKey`），但块内定义与引用必须同名自洽。
+
+### 文档站的样式与间距（2026-11-05 新增）
+
+docs 站**没有** `mt10` / `mb10` 等全局间距类（这些只在演示站 `src/assets/less/global.less` 定义），所以 `class="mb10"` 在文档里不生效。间距按「关系」选择手段，❌ 不要一律堆 `<br/>`：
+
+| 场景 | 写法 | 说明 |
+| :-- | :-- | :-- |
+| 说明句 / 表格 ↔ 其后的 demo | `<br/>` | 两者是独立内容块，`<br/>` 制造一行空隙即可（范式：说明 → `<br/>` → 表格 → `<br/>` → demo） |
+| 参数控制行 + 其驱动的演示 | 同一个 `<Flex vertical>`（或 `<Space vertical>`） | 间距由容器 `gap` 提供，与「表单与演示的纵向布局」一致；❌ 用 `<br/>` 拼出「伪段落」 |
+| 并排多个对照用例 | `<Space>` / `<Flex gap="...">` | 横向间距交给容器 `gap`；❌ 连续 `<br/>` 或空段落堆叠 |
+| 节与节之间 | 不加 | `## ` 标题自带间距；❌ 在标题前后补 `<br/>` |
+
+- 判断口径：**结构关系用容器（`Flex` / `Space`），纯行间空隙用 `<br/>`**；同一段内容不要混用两种手段。
+- 文档页可写页面级 `<style scoped>`，命中子组件内部元素时必须用 `:deep()`。
