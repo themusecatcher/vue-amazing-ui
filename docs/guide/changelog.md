@@ -14,6 +14,21 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-11-07">3.9.2</VersionDateTag>
+
+- 调整 [数字输入框 InputNumber](/guide/components/input-number.html) 的空值语义：`value` / `defaultValue` 支持 `null`，清空输入上报 `null`（不再上报 `undefined` 或回填旧值），空值步进按 `0` 起算并受 `min` / `max` 钳制
+- 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 与 [时间选择器 TimePicker](/guide/components/time-picker.html) 的键盘操作：`Enter` 展开面板后再按一次即提交并收起、收起态同样能唤起面板，`Esc` 收起，`Tab` 交给面板后 `Shift+Tab` 退回输入态，焦点移出组件即收起面板
+- 修复 [滚动条 Scrollbar](/guide/components/scrollbar.html) 的滑块显隐：指针不在滚动区域内时，程序化滚动（如时间列展开时滚到选中项）不再点亮滑块并常驻
+- 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 与 [时间选择器 TimePicker](/guide/components/time-picker.html) 键盘操作的目标列标记：底色与选中项区分开，面板收起后一并清除、重开不再带上一次残留的那一列
+- 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 的面板层级与选中态：周 / 周范围形态选完月份回到周面板，不再在月 / 年面板之间反复跳转；十年面板恒标出视图日期所在十年（未选值时也有选中态）
+- 优化浮层滚动到边界的行为：[日期选择器 DatePicker](/guide/components/date-picker.html) 与 [时间选择器 TimePicker](/guide/components/time-picker.html) 的时间列、日期选择器的预设面板、[标签页 Tabs](/guide/components/tabs.html) 的「更多」下拉，滚到顶 / 底后继续滚动不再带动页面（与 [选择器 Select](/guide/components/select.html) 面板一致）
+- 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 与 [时间选择器 TimePicker](/guide/components/time-picker.html) 的输入框：手输非法文本或命中 `disabledDate` 的日期后回填为已提交文本、不再落值；与已提交值相同的选择不再重复派发 `change`
+- 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 与 [时间选择器 TimePicker](/guide/components/time-picker.html) 的禁用行为：面板展开中切为禁用即收起、`openChange` 正常派发，解除禁用不会自行展开
+- 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 与 [时间选择器 TimePicker](/guide/components/time-picker.html) 范围形态的激活段下划线：容器宽度变化（如 `width` 用百分比）后下划线与面板箭头不再错位
+- 优化 [日期选择器 DatePicker](/guide/components/date-picker.html) 的面板响应：配置 `disabledDate` 时年 / 十年面板的悬浮预览不再重复计算各格状态
+- 优化 [轮播图 Carousel](/guide/components/carousel.html) 的导航箭头：补一层轮廓暗晕，亮色图片上不再难以辨认；悬停箭头时提亮到完全不透明；关闭 `loop` 且到达首 / 尾后，该方向的箭头置灰禁用；自定义箭头演示改用图标库箭头
+- 更新使用者文档与贡献者文档：补 [时间选择器 TimePicker](/guide/components/time-picker.html) 的键盘操作用例与演示，补库内共用内核的目录职责说明
+
 ## <VersionDateTag date="2026-11-06">3.9.1</VersionDateTag>
 
 - 增强 [滚动条 Scrollbar](/guide/components/scrollbar.html) 的实例能力：`getScrollData()` 补 `scrollLeft`，由缓存快照改为调用时实时读取（未挂载时各项为 `0`），新增导出 `ScrollbarExpose` / `ScrollDirection` / `ScrollbarScrollData` 类型
