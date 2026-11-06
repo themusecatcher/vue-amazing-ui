@@ -89,10 +89,10 @@ export function useScroll(
   let lastX = 0
   let lastY = 0
   let listening = true
-  // 滚动目标：未传或为空时默认整页滚动；SSR（Node）无 window，返回 null
+  // 滚动目标：只有「未传」才默认整页滚动；显式传了但当前为空（模板 ref 未挂载）时保持 null ——
+  // 否则目标长期不出现时会一直跟踪整页，位置与边界都是错的；SSR（Node）无 window，同样返回 null
   const scrollTarget = computed<ScrollTarget | null>(() => {
-    const targetValue = toValue(target) as ScrollTarget | null | undefined
-    if (targetValue) return targetValue
+    if (target !== undefined) return toValue(target) ?? null
     return typeof window !== 'undefined' ? window : null
   })
   function clearEndTimer(): void {
@@ -360,7 +360,7 @@ function onStop(e: Event) {
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| target? | 滚动目标：元素 / `window` / `document` / `Ref` / `getter`，未传或为空时默认监听整页滚动（绑定到 `window`） | MaybeRefOrGetter&lt;HTMLElement &#124; Window &#124; Document &#124; null&gt; | window |
+| target? | 滚动目标：元素 / `window` / `document` / `Ref` / `getter`；未传时监听整页滚动（绑定到 `window`），传入但尚未就位（如模板 `ref` 未挂载）时先不监听，就位后自动绑定 | MaybeRefOrGetter&lt;HTMLElement &#124; Window &#124; Document &#124; null&gt; | window |
 | options.scrollEndDelay | 滚动结束判定的静默时长，单位 `ms`，作为原生 `scrollend` 的兜底 | number | 200 |
 | options.onScroll | 滚动中的回调函数；状态在回调前已同步 | (e: Event) => void | undefined |
 | options.onStop | 滚动结束的回调函数，只触发一次 | (e: Event) => void | undefined |
@@ -386,6 +386,7 @@ function onStop(e: Event) {
 ## 注意事项
 
 - 未传 `target` 时默认监听整页滚动：此时内部把 `scroll` 监听绑定到 `window`（视口滚动的事件目标是 `window` / `document`，`documentElement` 收不到 `scroll`）
+- 传入 `target` 但当前为空（模板 `ref` 尚未挂载）时不监听、读数保持 `0`，元素就位后自动绑定；不会临时退化成监听整页
 - 状态同步不做节流：浏览器本身已按帧合并 `scroll` 事件，再叠加时间节流只会丢掉末次位置；需要限制回调频率时请在 `onScroll` 内自行节流
 - `direction` 由「本次位置 - 上次位置」判定，与滚动来源（滚轮 / 拖拽 / 程序化写入）无关；双轴同时位移取位移更大的一轴，滚动结束置 `null`
 - `maxX` / `maxY` 在每次滚动与调用 `refresh` 时刷新；内容尺寸变化但未产生滚动时，请手动调用 `refresh` 对齐边界标志

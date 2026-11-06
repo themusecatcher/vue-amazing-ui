@@ -242,7 +242,7 @@ const SCROLL_EDGE_TOLERANCE = 1
  * - **滚动结束**：原生 `scrollend` 与 `scrollEndDelay` 静默期定时器双保险，先到者收尾；两条路径靠
  *   `isScrolling` 幂等，`onStop` 不会重复触发（无原生 `scrollend` 的浏览器由定时器接管）。
  *
- * @param target - 滚动目标（元素 / window / document / Ref / getter），未传或为空时默认整页（window）
+ * @param target - 滚动目标（元素 / window / document / Ref / getter）；未传时默认整页（window），传入但未就位（如模板 ref 尚未挂载）时先不监听
  * @param options - 配置项
  * @returns 滚动位置、最大可滚动距离、方向与边界标志，以及 `refresh` / `start` / `stop`
  */
@@ -268,10 +268,11 @@ export function useScroll(
   let lastX = 0 // 上一次水平滚动距离（方向判定基准）
   let lastY = 0 // 上一次垂直滚动距离（方向判定基准）
   let listening = true // 监听开关（start / stop）
-  // 滚动目标：未传或为空时默认整页滚动；SSR（Node）无 window，返回 null
+  // 滚动目标：只有「未传」才默认整页滚动。显式传了目标但当前为空（模板 ref 尚未挂载）时保持 null ——
+  // 否则目标长期不出现（如 v-if 分支未渲染）时会一直跟踪整页，位置与边界标志都是错的；
+  // SSR（Node）无 window，同样返回 null
   const scrollTarget = computed<ScrollTarget | null>(() => {
-    const targetValue = toValue(target) as ScrollTarget | null | undefined
-    if (targetValue) return targetValue
+    if (target !== undefined) return toValue(target) ?? null
     return typeof window !== 'undefined' ? window : null
   })
   // 取消静默期定时器

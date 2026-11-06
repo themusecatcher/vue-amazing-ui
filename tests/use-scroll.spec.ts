@@ -108,6 +108,32 @@ describe('useScroll 的滚动监听目标', () => {
     scroller.scrollTo(0, 50)
     expect(onScroll).toHaveBeenCalledTimes(1)
   })
+
+  it('传入 Ref 但元素尚未就位时不回退监听整页，就位后自动绑定', async () => {
+    const scroller = createScroller({ scrollHeight: 400, clientHeight: 100 })
+    const elementRef = ref<HTMLElement | null>(null)
+    const onScroll = vi.fn()
+    const winAdd = vi.spyOn(window, 'addEventListener')
+    const holder: { state?: UseScrollReturn } = {}
+    const Probe = defineComponent({
+      setup() {
+        holder.state = useScroll(elementRef, { onScroll })
+        return () => h('div', 'probe')
+      }
+    })
+
+    wrapper = mount(Probe)
+    // 目标未就位：读数保持 0，且不能退化成监听整页
+    expect(winAdd.mock.calls.filter((call) => call[0] === 'scroll').length).toBe(0)
+    expect(holder.state?.y.value).toBe(0)
+
+    elementRef.value = scroller.element
+    await nextTick()
+    scroller.scrollTo(0, 60)
+
+    expect(holder.state?.y.value).toBe(60)
+    expect(onScroll).toHaveBeenCalledTimes(1)
+  })
 })
 
 describe('useScroll 的位置与状态同步', () => {
