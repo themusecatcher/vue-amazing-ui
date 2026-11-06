@@ -15,8 +15,8 @@ export interface Props {
   keyboard?: boolean // 是否启用键盘快捷键行为（上方向键增，下方向键减）
   disabled?: boolean // 是否禁用
   placeholder?: string // 数字输入的占位符
-  value?: number // (v-model) 当前值
-  defaultValue?: number // 非受控初始值，未绑 v-model:value 时生效
+  value?: number | null // (v-model) 当前值，传 null 表示空值（受控），不传则为非受控
+  defaultValue?: number | null // 非受控初始值，未绑 v-model:value 时生效，null 表示空值
   valueModifiers?: object // 用于访问组件的 v-model 上添加的修饰符
 }
 // 声明组件插槽类型
@@ -46,7 +46,8 @@ const isComposing = ref<boolean>(false) // 是否正在使用文本合成系统�
 const emits = defineEmits(['update:value', 'change', 'enter', 'focus', 'blur'])
 // 父是否提供了值（受控）—— 值的真相源始终是 DOM 元素，这里只用于两处判断：
 // ① 同步 props.value 时是否需要保留光标位置（非受控时元素自持，不能覆盖光标）；
-// ② 清空输入时是否需要回传 undefined（非受控时无值可清）
+// ② 清空 / 步进时是否需要自己把结果落到显示上（非受控时没有父回写）
+// undefined 表示父未传值（非受控），null 是受控的「空值」，仍按受控处理
 const isControlled = computed(() => props.value !== undefined)
 const slotsExist = useSlotsExist(['prefix'])
 const inputWidth = computed(() => {
@@ -62,7 +63,9 @@ const precision = computed(() => {
 })
 // 初值必须与受控路径同口径（先按 min/max 钳制、再按 precision 格式化），故只能放在 precision 之后初始化
 const numValue = ref<string | undefined>(
-  props.defaultValue === undefined ? undefined : getFormatValue(getNumberValue(String(props.defaultValue)))
+  props.defaultValue === undefined || props.defaultValue === null
+    ? undefined
+    : getFormatValue(getNumberValue(String(props.defaultValue)))
 )
 const showPrefix = computed(() => {
   return slotsExist.prefix || props.prefix
@@ -111,15 +114,24 @@ function restoreCursor(start: number, beforeTxt: string, afterTxt: string): void
   }
   inputEl.setSelectionRange(startPos, startPos)
 }
-function emitValue(value: number | undefined): void {
+function emitValue(value: number | null): void {
   emits('update:value', value) // 保证在 change 回调时能获取到最新数据
   emits('change', value)
 }
-function getFormatValue(value: number | undefined = props.value): string | undefined {
+// 上报清空：null 是「明确的空值」，与未受控的 undefined 区分；父已回写空值则不重复上报
+function emitClear(): void {
+  if (props.value !== null) {
+    emitValue(null)
+  }
+}
+function getFormatValue(value: number | null | undefined = props.value): string | undefined {
+  if (value === null || value === undefined) {
+    return undefined
+  }
   if (props.formatter) {
-    return props.formatter(value?.toFixed(precision.value) as string)
+    return props.formatter(value.toFixed(precision.value))
   } else {
-    return value?.toFixed(precision.value)
+    return value.toFixed(precision.value)
   }
 }
 function getNumberValue(value: string): number {
@@ -132,15 +144,21 @@ function getNumberValue(value: string): number {
   }
   return numberValue
 }
-// 步进 / 钳制 / 箭头禁用态的数值基准：受控时以父值为准，非受控时以当前显示值为准
+// 步进 / 钳制 / 箭头禁用态的数值基准：受控时以父值为准（空值 null 按 0 起算），非受控时以当前显示值为准
 function currentNumber(): number {
   if (props.value !== undefined) {
-    return props.value
+    return props.value ?? 0
   }
   const parsed = Number.parseFloat(numValue.value ?? '')
   return Number.isNaN(parsed) ? 0 : getNumberValue(String(parsed))
 }
 function updateValue(value: string): void {
+  // 空输入即清空：上报 null，受控时显示回父值（父回写 null 则保持空），非受控时保持空
+  if (!value) {
+    emitClear()
+    numValue.value = getFormatValue(isControlled.value ? props.value : undefined)
+    return
+  }
   // Number.isNaN() 判断传递的值是否为 NaN，并检测器类型是否为 Number
   if (!Number.isNaN(parseFloat(value))) {
     const numberValue = getNumberValue(value)
@@ -179,11 +197,16 @@ function onInput(e: Event): void {
   if (!lazyInput.value) {
     const target = e.target as HTMLInputElement
     const value = props.parser ? String(props.parser(target.value)) : target.value
-    if (value && !Number.isNaN(getNumberValue(value)) && getNumberValue(value) !== props.value) {
-      updateValue(value)
+    // 逐字符输入时清空：只上报 null，不回退显示（用户可能马上接着输入），非受控时把空值落到显示
+    if (!value) {
+      emitClear()
+      if (!isControlled.value) {
+        numValue.value = undefined
+      }
+      return
     }
-    if (!value && isControlled.value) {
-      emitValue(undefined)
+    if (!Number.isNaN(getNumberValue(value)) && getNumberValue(value) !== props.value) {
+      updateValue(value)
     }
   }
 }

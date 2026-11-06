@@ -37,7 +37,7 @@ function formatter(value: number): string {
 function parser(value: string): number {
   return Number(value.replace(/[,%]/g, ''))
 }
-function onChange(number: number) {
+function onChange(number: number | null) {
   console.log('change', number)
 }
 function onEnter(e: KeyboardEvent) {
@@ -87,7 +87,7 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('lazyValue', lazyValue.value)
 })
-function onChange(number: number) {
+function onChange(number: number | null) {
   console.log('change', number)
 }
 function onEnter(e: KeyboardEvent) {
@@ -318,8 +318,8 @@ const disabled = ref(true)
 | keyboard | 是否启用键盘快捷键行为（上方向键增，下方向键减） | boolean | true |
 | disabled | 是否禁用 | boolean | false |
 | placeholder | 数字输入的占位符 | string | undefined |
-| value <Tag color="cyan">v-model</Tag> | 当前值；传入即受控，不传时组件自持（可用 `defaultValue` 指定初值） | number | undefined |
-| defaultValue | 非受控初始值，未绑 `v-model:value` 时生效；与 `value` 同样按 `precision` / `formatter` 展示 | number | undefined |
+| value <Tag color="cyan">v-model</Tag> | 当前值；传入即受控（`null` 表示空值），不传时组件自持（可用 `defaultValue` 指定初值） | number &#124; null | undefined |
+| defaultValue | 非受控初始值，未绑 `v-model:value` 时生效，`null` 表示空值；与 `value` 同样按 `precision` / `formatter` 展示 | number &#124; null | undefined |
 
 ## Slots
 
@@ -331,7 +331,7 @@ const disabled = ref(true)
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| change | 变化回调 | (value: number) => void |
+| change | 变化回调，清空输入时传出 `null` | (value: number &#124; null) => void |
 | enter | 按下回车的回调 | (e: KeyboardEvent) => void |
 | focus | 数字输入框获取焦点时的回调，`relatedTarget` 为失去焦点的元素 | (e: FocusEvent) => void |
 | blur | 数字输入框失焦的回调，`relatedTarget` 为获得焦点的元素 | (e: FocusEvent) => void |
