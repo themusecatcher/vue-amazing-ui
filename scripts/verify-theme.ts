@@ -73,7 +73,7 @@ const COLOR_LITERAL_WHITELIST = [
 
 /**
  * 设计固定：色值本身就是设计的一部分，跟随主题反而会坏
- * - 压在图片 / 视频上的 chrome（黑遮罩 + 白图标）：跟随主题会让暗色失效
+ * - 压在图片 / 视频上的 chrome（黑遮罩 + 白图标、箭头轮廓暗晕）：跟随主题会让暗色失效
  * - 浮层方向阴影：单个 CSS 变量无法表达「x 分量取负」的方向变体，只能逐向写常量
  * - `Layout` 深色 Sider / Header：独立皮肤，改主题不应重定义
  * - `Empty` 预置插画色：插画属于品牌插图，不随主色派生
@@ -82,6 +82,8 @@ const COLOR_LITERAL_WHITELIST = [
  * 靠逐组件验收维护；本清单是「跟随主题反而会坏」的固定 chrome 与无法用变量表达的方向阴影。
  */
 const FIXED_BY_DESIGN = [
+  // 轮播箭头的柔光暗晕同样压在图片上：必须恒为深色，跟随主题会翻成浅色晕光、把白箭头糊掉
+  'carousel/Carousel.vue',
   'image/Image.vue',
   'video/Video.vue',
   'upload/Upload.vue',

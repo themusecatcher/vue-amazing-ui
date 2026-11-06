@@ -27,7 +27,7 @@ function formatter(value: string | number): string {
 function parser(value: string): number {
   return Number(value.replace(/[,%]/g, ''))
 }
-function onChange(number: number) {
+function onChange(number: number | null) {
   console.log('change', number)
 }
 function onEnter(e: KeyboardEvent) {

@@ -251,6 +251,37 @@ describe('形态 → 面板层级', () => {
     await flush()
     expect(viewHeaders()).toEqual(['2030-2039'])
   })
+
+  it('十年面板的选中格恒为视图日期所在十年：值为空时也标出当前十年', async () => {
+    // 未选值：日期面板 → 头部「2026年」→ 年面板 → 头部「2020-2029」→ 十年面板
+    await mountPicker({ type: 'date', value: null })
+    document.querySelector<HTMLElement>('.picker-panel-year-btn')?.click()
+    await flush()
+    document.querySelector<HTMLElement>('.picker-panel-decade-btn')?.click()
+    await flush()
+
+    const selectedCells = document.querySelectorAll('.picker-panel-decade-content .picker-panel-cell-selected')
+    expect(selectedCells).toHaveLength(1)
+    expect(selectedCells[0].textContent?.trim()).toBe('2020-2029')
+  })
+
+  it('十年面板翻页后选中格随视图平移（世纪 +100 年）', async () => {
+    await mountPicker({ type: 'date', value: JAN_2026 })
+    document.querySelector<HTMLElement>('.picker-panel-year-btn')?.click()
+    await flush()
+    document.querySelector<HTMLElement>('.picker-panel-decade-btn')?.click()
+    await flush()
+    expect(
+      document.querySelector('.picker-panel-decade-content .picker-panel-cell-selected')?.textContent?.trim()
+    ).toBe('2020-2029')
+
+    document.querySelector<HTMLElement>('.picker-panel-super-next')?.click()
+    await flush()
+    expect(viewHeaders()).toEqual(['2100-2199'])
+    expect(
+      document.querySelector('.picker-panel-decade-content .picker-panel-cell-selected')?.textContent?.trim()
+    ).toBe('2120-2129')
+  })
 })
 
 describe('点格提交与钻取', () => {
@@ -310,6 +341,46 @@ describe('点格提交与钻取', () => {
 
     expect(viewHeaders()).toEqual(['2026年3月'])
     expect(picker.emitted('change')).toBeUndefined()
+  })
+
+  it('周形态：月 → 年 → 选年 → 选月 回到周面板，不在月 / 年面板之间成环', async () => {
+    const picker = await mountPicker({ type: 'week' })
+
+    // 周面板头部「1月」→ 月面板；月面板头部「2026年」→ 年面板
+    document.querySelector<HTMLElement>('.picker-panel-month-btn')?.click()
+    await flush()
+    expect(viewHeaders()).toEqual(['2026年'])
+    document.querySelector<HTMLElement>('.picker-panel-year-btn')?.click()
+    await flush()
+    expect(viewHeaders()).toEqual(['2020-2029'])
+
+    // 选年回月面板（年不是周形态的可选粒度，只平移视图）
+    findCell('2026')?.click()
+    await flush()
+    expect(viewHeaders()).toEqual(['2026年'])
+
+    // 选月回周面板：回归点——此前会再次进年面板，导致永远回不到周面板
+    findCell('2026-03')?.click()
+    await flush()
+    expect(viewHeaders()).toEqual(['2026年3月'])
+    expect(picker.emitted('change')).toBeUndefined()
+    expect(picker.emitted('panelChange')?.at(-1)?.[1]).toBe('week')
+  })
+
+  it('周形态点头部「年」直入年面板，选年落月面板', async () => {
+    await mountPicker({ type: 'week' })
+
+    document.querySelector<HTMLElement>('.picker-panel-year-btn')?.click()
+    await flush()
+    expect(viewHeaders()).toEqual(['2020-2029'])
+
+    findCell('2027')?.click()
+    await flush()
+    expect(viewHeaders()).toEqual(['2027年'])
+
+    findCell('2027-03')?.click()
+    await flush()
+    expect(viewHeaders()).toEqual(['2027年3月'])
   })
 
   it('禁用粒度随层级：季形态整季不可选才禁用', async () => {
@@ -383,6 +454,28 @@ describe('范围形态的粒度与钻取', () => {
     await flush()
     expect(rangePanels()).toHaveLength(2)
     expect(viewHeaders()).toEqual(['2027年', '2028年'])
+  })
+
+  it('周范围：月 → 年 → 选年 → 选月 收起的单面板重新展开为双周面板', async () => {
+    await mountPicker({ type: 'weekrange' })
+
+    // 左面板头部「1月」→ 钻取成单月面板；再进年面板
+    rangePanels()[0].querySelector<HTMLElement>('.picker-panel-month-btn')?.click()
+    await flush()
+    expect(rangePanels()).toHaveLength(1)
+    expect(viewHeaders()).toEqual(['2026年'])
+    document.querySelector<HTMLElement>('.picker-panel-year-btn')?.click()
+    await flush()
+    expect(viewHeaders()).toEqual(['2020-2029'])
+
+    // 选年回月面板，选月回周面板：视图同步到该月，且恢复双面板
+    findCell('2026')?.click()
+    await flush()
+    expect(viewHeaders()).toEqual(['2026年'])
+    findCell('2026-03')?.click()
+    await flush()
+    expect(rangePanels()).toHaveLength(2)
+    expect(viewHeaders()).toEqual(['2026年3月', '2026年4月'])
   })
 
   it('月范围按粒度高亮：端点落在月格、区间底色覆盖整月', async () => {

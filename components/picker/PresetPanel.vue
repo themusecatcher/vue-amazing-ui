@@ -57,6 +57,8 @@ function onPresetLeave() {
     margin: 0;
     padding: 8px;
     overflow: auto;
+    /* 滚到边界不带动页面：预设较多时列表常被惯性推到顶 / 底，滚动链会带着整页跳走（同 Select 面板） */
+    overscroll-behavior: none;
     list-style: none;
     border-inline-end: 1px solid var(--va-border-split-color);
   }

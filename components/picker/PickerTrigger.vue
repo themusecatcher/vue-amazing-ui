@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
+import { useResizeObserver } from 'components/utils'
 import PickerIcon from './PickerIcon.vue'
 import type { PickerIconName } from './icons'
 import type { PickerSize, PickerStatus } from './types'
@@ -76,7 +77,9 @@ watch(
 watch(
   () => props.texts,
   (texts) => {
-    inputTexts.value = texts ?? ['', '']
+    // 必须是副本：直接持有父级数组（宿主 `displayRangeTexts` 的 computed 缓存）会让本组件的输入
+    // 直接改写宿主文本，解析失败后的「回滚为当前合法文本」把污染值又写回去、等于空操作
+    inputTexts.value = [texts?.[0] ?? '', texts?.[1] ?? '']
   },
   { immediate: true }
 )
@@ -119,6 +122,13 @@ watch(
 // 挂载后立即测量一次：下划线在展开前就位，展开时只走透明度淡入，
 // 否则首次展开会出现「自左向右拉长」的宽度过渡
 onMounted(() => {
+  if (props.range) {
+    measureActiveBar()
+  }
+})
+// 尺寸变化也要重测：宽度用百分比 / 父容器布局变化 / 字体加载完成时，上面的 prop 监听都不会触发，
+// 下划线与面板箭头会停在上一次的位置（需跟随元素尺寸一起重测）
+useResizeObserver([triggerRef, startItemRef, separatorRef, endItemRef], () => {
   if (props.range) {
     measureActiveBar()
   }

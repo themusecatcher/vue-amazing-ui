@@ -42,6 +42,7 @@ const eventValue = ref<number | null>(null)
 const eventRangeValue = ref<[number | null, number | null] | null>(null)
 const borderedValue = ref<number | null>(null)
 const borderedRangeValue = ref<[number | null, number | null] | null>(null)
+const keyboardValue = ref<number | null>(null)
 const errorValue = ref<number | null>(null)
 const warningValue = ref<number | null>(null)
 const errorRangeValue = ref<[number | null, number | null] | null>(null)
@@ -554,6 +555,28 @@ function onEventBlur(event: FocusEvent): void {
 
 :::
 
+## 键盘操作
+
+_面板收起时按 `Enter` 展开面板；展开后按 `Tab` 把键盘交给面板（输入框随之转为只读），方向键上下改当前列的取值、左右切换列，`Enter` 提交并收起，`Esc` 收起；再按 `Tab` 移出焦点（面板随之收起），`Shift+Tab` 退回文本输入态_
+
+<br/>
+
+<TimePicker v-model:value="keyboardValue" placeholder="请选择时间" />
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+const keyboardValue = ref<number | null>(null)
+</script>
+<template>
+  <TimePicker v-model:value="keyboardValue" placeholder="请选择时间" />
+</template>
+```
+
+:::
+
 ## 无边框
 
 <Space vertical>
@@ -724,9 +747,9 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 | size | 选择器大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | status | 校验状态 | 'warning' &#124; 'error' | undefined |
 | bordered | 是否展示边框 | boolean | true |
-| disabled | 是否禁用，范围形态可传两段元组逐段禁用 | boolean &#124; [boolean, boolean] | false |
+| disabled | 是否禁用，范围形态可传两段元组逐段禁用；切为禁用时已展开的面板立即收起，解除禁用不会自行展开 | boolean &#124; [boolean, boolean] | false |
 | allowClear | 是否展示清除按钮 | boolean | true |
-| allowEmpty | 范围形态各段是否允许为空，为空时该段可被单独清空并对外提交 | [boolean, boolean] | [false, false] |
+| allowEmpty | 范围形态各段是否允许为空：为 `true` 时该段为空也能对外派发 `change`；清空整段仍走 `allowClear` 的清除按钮（把某段输入框清空不会置空该段） | [boolean, boolean] | [false, false] |
 | inputReadOnly | 输入框是否只读（避免移动端唤起键盘） | boolean | false |
 | to | 面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
 | placement | 面板弹出位置 | 'topLeft' &#124; 'top' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottom' &#124; 'bottomRight' | 'bottomLeft' |
@@ -847,8 +870,8 @@ const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| change | 值变化时的回调 | (value: [TimePickerValue](#timepickervalue-type), formattedValue: [TimePickerFormattedValue](#timepickerformattedvalue-type)) => void |
-| calendarChange | 范围形态草稿段变更时的回调，`info.range` 标注本次改动的段 | (value: [TimePickerValue](#timepickervalue-type), formattedValue: [TimePickerFormattedValue](#timepickerformattedvalue-type), info: [TimePickerRangeInfo](#timepickerrangeinfo-type)) => void |
+| change | 值变化时的回调（与已提交值相同的选择不派发） | (value: [TimePickerValue](#timepickervalue-type), formattedValue: [TimePickerFormattedValue](#timepickerformattedvalue-type)) => void |
+| calendarChange | 范围形态某段提交时的回调（点「确定」或回车提交该段），`info.range` 标注本次改动的段 | (value: [TimePickerValue](#timepickervalue-type), formattedValue: [TimePickerFormattedValue](#timepickerformattedvalue-type), info: [TimePickerRangeInfo](#timepickerrangeinfo-type)) => void |
 | ok | 点击「确定」时的回调 | (value: [TimePickerValue](#timepickervalue-type), formattedValue: [TimePickerFormattedValue](#timepickerformattedvalue-type)) => void |
 | openChange | 面板展开收起时的回调 | (open: boolean) => void |
 | focus | 输入框获取焦点时的回调，`relatedTarget` 为失去焦点的元素 | (e: FocusEvent) => void |

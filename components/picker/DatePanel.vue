@@ -111,8 +111,8 @@ function chunk<T>(list: T[], size: number): T[][] {
   )
 }
 const panelMode = ref<PickerPanelMode>(props.baseMode)
-// 进入当前视图前的视图：选完该层的值后回到来源视图（日期 / 周 / 月 / 季 / 年面板各自回原面板；
-// 十年面板的进出不记录来源，见 switchPanel）
+// 进入当前视图前的视图：年面板选完年份后据此回层（十年面板的进出不记录来源，见 switchPanel）。
+// 月面板不据此回层：它恒回形态基准层级，见 onMonthSelect
 const sourceMode = ref<PickerPanelMode>(props.baseMode)
 const innerViewDate = ref<number>(props.panelValue ?? props.value ?? props.defaultPickerValue ?? Date.now())
 const viewDate = computed(() => props.panelValue ?? innerViewDate.value)
@@ -205,6 +205,65 @@ const weekPanelRows = computed(() =>
     days: row
   }))
 )
+/**
+ * 本屏各格的禁用态：按「面板层级 + 视图日期」算一次并缓存
+ *
+ * 月 / 季 / 年 / 十年格是「整段判定」，逐格现算的代价随层级放大，而 `class` / `aria-disabled` /
+ * 点击守卫要各求一次（范围形态的悬浮预览每次重渲染都会整片重算）；一屏只算一次，三者共用。
+ */
+const disabledCells = computed<Map<number, boolean>>(() => {
+  const result = new Map<number, boolean>()
+  const { disabledDate } = props
+  if (!disabledDate) {
+    return result
+  }
+  let timestamps: number[]
+  let isDisabled: (timestamp: number) => boolean
+  switch (panelMode.value) {
+    case 'month':
+      timestamps = getMonthTimestamps(viewDate.value)
+      isDisabled = isMonthDisabled
+      break
+    case 'quarter':
+      timestamps = getQuarterTimestamps(viewDate.value)
+      isDisabled = isQuarterDisabled
+      break
+    case 'year':
+      timestamps = getYearPanelGrid(viewDate.value)
+      isDisabled = isYearDisabled
+      break
+    case 'decade':
+      timestamps = getDecadePanelGrid(viewDate.value)
+      isDisabled = isDecadeDisabled
+      break
+    case 'week':
+      // 周面板恒按 ISO 周排布，格集合的起始日口径与日期面板不同
+      timestamps = getMonthGrid(viewDate.value, ISO_START_DAY_OF_WEEK)
+      isDisabled = (timestamp) => disabledDate(timestamp)
+      break
+    default:
+      timestamps = getMonthGrid(viewDate.value, props.startDayOfWeek)
+      isDisabled = (timestamp) => disabledDate(timestamp)
+  }
+  timestamps.forEach((timestamp) => result.set(timestamp, isDisabled(timestamp)))
+  return result
+})
+/** 某格的禁用态：class、aria-disabled 与点击守卫共用同一次求值 */
+function isCellDisabled(timestamp: number): boolean {
+  return disabledCells.value.get(timestamp) ?? false
+}
+/** 周面板各行是否整周禁用：同样一屏算一次（整周判定需逐天回调） */
+const disabledWeekRows = computed<Map<number, boolean>>(() => {
+  const result = new Map<number, boolean>()
+  const { disabledDate } = props
+  if (!disabledDate) {
+    return result
+  }
+  weekPanelRows.value.forEach((row) => {
+    result.set(row.weekStart, isWeekFullyDisabled(row.weekStart, disabledDate))
+  })
+  return result
+})
 /** 范围形态的格类名（非范围形态返回空对象，省去逐格的类名求值）；粒度随当前面板层级 */
 function getCellRangeClasses(timestamp: number): Record<string, boolean> {
   if (!props.range) {
@@ -258,9 +317,9 @@ function compareWeek(a: number, b: number): number {
 function isSameWeekAs(weekStart: number, target: number | null): boolean {
   return target !== null && compareWeek(weekStart, target) === 0
 }
-/** 该周是否整周不可选：整周都禁用时才降级（与月 / 季 / 年格「整段判定」口径一致） */
+/** 该周是否整周不可选：整周都禁用时才降级（与月 / 季 / 年格「整段判定」口径一致），结果取自 {@link disabledWeekRows} */
 function isWeekRowDisabled(weekStart: number): boolean {
-  return props.disabledDate ? isWeekFullyDisabled(weekStart, props.disabledDate) : false
+  return disabledWeekRows.value.get(weekStart) ?? false
 }
 /**
  * 周面板行的类名
@@ -313,9 +372,14 @@ function getWeekRowClasses(weekStart: number): Record<string, boolean> {
 function isDecadeInView(timestamp: number): boolean {
   return isDecadeInCentury(timestamp, viewDate.value)
 }
-/** 是否为当前选中的十年（十年面板格的比较粒度为十年） */
+/**
+ * 是否为当前选中的十年
+ *
+ * 十年不是可选值粒度，选中格因此恒为**视图日期所在十年**：值为空时也能看出当前落在
+ * 哪个十年、翻页 / 键盘移动后高亮随视图一起走，而不是只在有值时才有选中态
+ */
 function isSelectedDecade(timestamp: number): boolean {
-  return props.value !== null && isSameDecadeTimestamp(timestamp, props.value)
+  return isSameDecadeTimestamp(timestamp, viewDate.value)
 }
 /** 十年格代表整个十年：10 年都不可选时才禁用 */
 function isDecadeDisabled(timestamp: number): boolean {
@@ -356,7 +420,7 @@ function isTodayDisabled(): boolean {
   return props.disabledDate ? props.disabledDate(startOfDayTimestamp(Date.now())) : false
 }
 function onDateSelect(timestamp: number) {
-  if (props.disabledDate?.(timestamp)) {
+  if (isCellDisabled(timestamp)) {
     return
   }
   // 选中跨月补齐日时把面板视图带到该月（范围形态下视图由容器统一驱动，两侧面板因此一起翻页）
@@ -443,13 +507,28 @@ function onCellLeave() {
   emits('cellLeave')
 }
 /**
+ * 「日期级」面板层级：即形态基准层级（日期 / 周形态各为其自身，月 / 季 / 年形态即其基准层级）
+ *
+ * 周形态映射为周面板、月形态映射为月面板，按形态取面板层级。
+ */
+function getDateLevelMode(): PickerPanelMode {
+  return props.baseMode
+}
+/** 「月级」面板层级：月形态为月面板，季 / 年形态按形态映射回自身基准层级 */
+function getMonthLevelMode(): PickerPanelMode {
+  return props.baseMode === 'quarter' || props.baseMode === 'year' ? props.baseMode : 'month'
+}
+/**
  * 选择月份
  *
- * 形态即为月（`type="month"`）时点格即提交；其余情况（从日期面板钻取上来）只切换面板视图、
+ * 形态即为月（`type="month"`）时点格即提交；其余情况（从日期 / 周面板钻取上来）只切换面板视图、
  * 不直接提交值（与日期面板的层级递进一致）。
+ *
+ * 回层恒为**形态基准层级**（月份选择总是回到日期级面板），而不是「进入月面板前的那一层」——
+ * 否则 周 → 月 → 年 → 选年（回月）→ 选月 会再次回到年面板，用户在月 / 年面板之间来回跳、永远回不到周面板。
  */
 function onMonthSelect(timestamp: number) {
-  if (isMonthDisabled(timestamp)) {
+  if (isCellDisabled(timestamp)) {
     return
   }
   setViewDate(timestamp)
@@ -457,11 +536,11 @@ function onMonthSelect(timestamp: number) {
     emits('select', timestamp, 'mouse')
     return
   }
-  changePanel(sourceMode.value, timestamp)
+  changePanel(getDateLevelMode(), timestamp)
 }
 /** 选择季度：季面板只作为形态基准层级出现（不能从其他层级钻取进来），故点格即提交 */
 function onQuarterSelect(timestamp: number) {
-  if (isQuarterDisabled(timestamp)) {
+  if (isCellDisabled(timestamp)) {
     return
   }
   setViewDate(timestamp)
@@ -471,19 +550,21 @@ function onQuarterSelect(timestamp: number) {
  * 选择年份
  *
  * 面板层级即形态层级（`type="year"`）时点格即提交；其余情况只平移视图年份（保留当前月日）
- * 并回到来源视图——从日期面板进入年面板时选完年直接回日期面板，从月 / 季面板进入时回原面板。
+ * 并落回下一层：来源为日期面板时回日期级层级（周形态即周面板），
+ * 其余来源（月 / 季面板，或周面板头部的「年」入口）一律落回月级层级，再由其选月后回到基准层级。
  * 年份格本身是「1 月 1 日」，若直接把格时间戳写入视图会把月日重置为 1 月，故按年份差平移。
  */
 function onYearSelect(timestamp: number) {
-  if (isYearDisabled(timestamp)) {
+  if (isCellDisabled(timestamp)) {
     return
   }
   if (panelMode.value === props.baseMode) {
     emits('select', timestamp, 'mouse')
     return
   }
-  setViewDate(addYearTimestamp(viewDate.value, getYearNumber(timestamp) - viewYear.value))
-  changePanel(sourceMode.value)
+  const next = addYearTimestamp(viewDate.value, getYearNumber(timestamp) - viewYear.value)
+  setViewDate(next)
+  changePanel(sourceMode.value === 'date' ? getDateLevelMode() : getMonthLevelMode(), next)
 }
 /**
  * 选择十年
@@ -492,7 +573,7 @@ function onYearSelect(timestamp: number) {
  * 不提交值。回层同样走 {@link switchPanel}，以保留最初钻取进来的层级记录。
  */
 function onDecadeSelect(timestamp: number) {
-  if (isDecadeDisabled(timestamp)) {
+  if (isCellDisabled(timestamp)) {
     return
   }
   const next = addYearTimestamp(viewDate.value, getYearNumber(timestamp) - viewYear.value)
@@ -619,12 +700,12 @@ function onNext() {
                       'picker-panel-cell-start': getDayOfMonth(timestamp) === 1,
                       'picker-panel-cell-end': isLastDayOfMonthTimestamp(timestamp),
                       'picker-panel-cell-selected': isSelected(timestamp),
-                      'picker-panel-cell-disabled': Boolean(disabledDate?.(timestamp))
+                      'picker-panel-cell-disabled': isCellDisabled(timestamp)
                     },
                     getCellRangeClasses(timestamp)
                   ]"
                   :aria-selected="isSelected(timestamp)"
-                  :aria-disabled="Boolean(disabledDate?.(timestamp))"
+                  :aria-disabled="isCellDisabled(timestamp)"
                   :title="formatTimestamp(timestamp, 'yyyy-MM-dd')"
                   @click="onDateSelect(timestamp)"
                   @mouseenter="onCellHover(timestamp)"
@@ -664,9 +745,9 @@ function onNext() {
                   :class="{
                     'picker-panel-cell-in-view': isInView(timestamp),
                     'picker-panel-cell-today': isToday(timestamp),
-                    'picker-panel-cell-disabled': Boolean(disabledDate?.(timestamp))
+                    'picker-panel-cell-disabled': isCellDisabled(timestamp)
                   }"
-                  :aria-disabled="Boolean(disabledDate?.(timestamp))"
+                  :aria-disabled="isCellDisabled(timestamp)"
                   :title="formatTimestamp(timestamp, 'yyyy-MM-dd')"
                   @click="onDateSelect(timestamp)"
                   @mouseenter="onCellHover(timestamp)"
@@ -692,12 +773,12 @@ function onNext() {
                   :class="[
                     {
                       'picker-panel-cell-selected': isSelectedMonth(timestamp),
-                      'picker-panel-cell-disabled': isMonthDisabled(timestamp)
+                      'picker-panel-cell-disabled': isCellDisabled(timestamp)
                     },
                     getCellRangeClasses(timestamp)
                   ]"
                   :aria-selected="isSelectedMonth(timestamp)"
-                  :aria-disabled="isMonthDisabled(timestamp)"
+                  :aria-disabled="isCellDisabled(timestamp)"
                   :title="formatTimestamp(timestamp, 'yyyy-MM')"
                   @click="onMonthSelect(timestamp)"
                   @mouseenter="onCellHover(timestamp)"
@@ -720,12 +801,12 @@ function onNext() {
                   :class="[
                     {
                       'picker-panel-cell-selected': isSelectedQuarter(timestamp),
-                      'picker-panel-cell-disabled': isQuarterDisabled(timestamp)
+                      'picker-panel-cell-disabled': isCellDisabled(timestamp)
                     },
                     getCellRangeClasses(timestamp)
                   ]"
                   :aria-selected="isSelectedQuarter(timestamp)"
-                  :aria-disabled="isQuarterDisabled(timestamp)"
+                  :aria-disabled="isCellDisabled(timestamp)"
                   :title="formatTimestamp(timestamp, 'yyyy-QQQ')"
                   @click="onQuarterSelect(timestamp)"
                   @mouseenter="onCellHover(timestamp)"
@@ -751,14 +832,14 @@ function onNext() {
                       'picker-panel-cell-start': getYearNumber(timestamp) % 10 === 0,
                       'picker-panel-cell-end': getYearNumber(timestamp) % 10 === 9,
                       'picker-panel-cell-selected': isSelectedYear(timestamp),
-                      'picker-panel-cell-disabled': isYearDisabled(timestamp)
+                      'picker-panel-cell-disabled': isCellDisabled(timestamp)
                     },
                     // 十年代外的年格不参与区间底色：此格的 `-in-view` 恒真（承载选中态与文案色），
                     // 无法像日期格那样靠它在 CSS 层收边，故在类名层直接拦掉
                     isYearInView(timestamp) ? getCellRangeClasses(timestamp) : {}
                   ]"
                   :aria-selected="isSelectedYear(timestamp)"
-                  :aria-disabled="isYearDisabled(timestamp)"
+                  :aria-disabled="isCellDisabled(timestamp)"
                   :title="formatTimestamp(timestamp, 'yyyy')"
                   @click="onYearSelect(timestamp)"
                   @mouseenter="onCellHover(timestamp)"
@@ -785,10 +866,10 @@ function onNext() {
                   class="picker-panel-cell picker-panel-cell-in-view"
                   :class="{
                     'picker-panel-cell-selected': isSelectedDecade(timestamp),
-                    'picker-panel-cell-disabled': isDecadeDisabled(timestamp)
+                    'picker-panel-cell-disabled': isCellDisabled(timestamp)
                   }"
                   :aria-selected="isSelectedDecade(timestamp)"
-                  :aria-disabled="isDecadeDisabled(timestamp)"
+                  :aria-disabled="isCellDisabled(timestamp)"
                   :title="getDecadeLabel(timestamp)"
                   @click="onDecadeSelect(timestamp)"
                 >

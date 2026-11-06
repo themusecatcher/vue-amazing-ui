@@ -229,6 +229,8 @@ describe('Scrollbar 的自动隐藏延迟', () => {
     await wrapper.setProps({ delay: 1000 })
     await nextTick()
 
+    // 轨道只随「指针在滚动区域内」的滚动点亮，故先让指针进入
+    await wrapper.trigger('mouseenter')
     container.scrollTop = 80
     container.dispatchEvent(new Event('scroll'))
     await nextTick()
@@ -242,5 +244,46 @@ describe('Scrollbar 的自动隐藏延迟', () => {
     vi.advanceTimersByTime(900)
     await nextTick()
     expect(track()).not.toContain('track-visible')
+  })
+})
+
+/**
+ * 轨道显隐时机的守护
+ *
+ * hover 模式的语义是「悬停时显示」，故只有指针位于滚动区域内时，滚动才把轨道点亮。程序化滚动
+ * （选择器面板展开把选中项滚到列顶、代码里直接写 scrollTop）不是用户意图：一旦点亮，指针从未
+ * 进入过滚动区域、`mouseleave` 不会到来，轨道就会一直挂在内容上
+ */
+describe('Scrollbar 轨道的显隐时机', () => {
+  function verticalTrackClasses(): string[] {
+    return wrapper!.find('.rail-vertical .scrollbar-track').classes()
+  }
+
+  it('指针不在滚动区域内时，程序化滚动不点亮轨道', async () => {
+    wrapper = mount(Scrollbar, { attachTo: document.body })
+    const container = wrapper.find('.scrollbar-container').element as HTMLElement
+
+    container.scrollTop = 60
+    container.dispatchEvent(new Event('scroll'))
+    await nextTick()
+
+    expect(verticalTrackClasses()).not.toContain('track-visible')
+  })
+
+  it('指针在滚动区域内时滚动点亮轨道，移出后收起', async () => {
+    wrapper = mount(Scrollbar, { attachTo: document.body })
+    const container = wrapper.find('.scrollbar-container').element as HTMLElement
+
+    await wrapper.trigger('mouseenter')
+    container.scrollTop = 60
+    container.dispatchEvent(new Event('scroll'))
+    await nextTick()
+    expect(verticalTrackClasses()).toContain('track-visible')
+
+    // 移出滚动区域后按防抖延迟收起
+    await wrapper.trigger('mouseleave')
+    await new Promise((resolve) => setTimeout(resolve, 150))
+    await nextTick()
+    expect(verticalTrackClasses()).not.toContain('track-visible')
   })
 })

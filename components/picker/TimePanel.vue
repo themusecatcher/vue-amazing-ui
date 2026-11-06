@@ -166,15 +166,18 @@ const columns = computed(() => {
 })
 /** 活动列名：供各列判定自身是否为键盘操作的目标（无活动列时为 null） */
 const activeColumnName = computed(() => columns.value[activeColumnIndex.value]?.name ?? null)
-/** 面板不再是活动列时清掉列下标：下次激活从「未指定」重新开始，不接着上一次的列 */
-watch(
-  () => props.panelActive,
-  (active) => {
-    if (!active) {
-      activeColumnIndex.value = -1
-    }
+/**
+ * 面板已收起、或不再是键盘目标（日期时间面板切到日期区）时清掉列下标：下次激活从「未指定」
+ * 重新开始，不接着上一次的列 —— 收起后高亮须一并消失，否则重开面板会留下一列残留底色
+ *
+ * 两个来源须分开监听：独立时间选择器不传 `panelActive`（恒为 `false`），合成一个表达式后
+ * `false && active` 恒为 `false`，`active` 收起时源值不变，重置永远不会触发
+ */
+watch([() => props.panelActive, () => props.active], ([panelActive, active]) => {
+  if (!panelActive || !active) {
+    activeColumnIndex.value = -1
   }
-)
+})
 /**
  * 在活动列内移动取值
  *

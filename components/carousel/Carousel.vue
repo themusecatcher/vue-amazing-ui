@@ -42,7 +42,7 @@ export interface Props {
   draggable?: boolean // 是否可以拖拽滑动切换（鼠标与触摸均支持）
   mousewheel?: boolean // 是否支持鼠标滚轮切换
   fadeDuration?: number // 渐变动画持续时长，单位 ms，仅当 effect 为 'fade' 时生效
-  fadeFunction?: string | [number, number, number, number] // 渐变动画函数，仅当 effect 为 'fade' 时生效，可传四个三次贝塞尔控制点（自动转为 cubic-bezier 写法）或 CSS transition-timing-function 写法：https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function
+  fadeFunction?: string | [number, number, number, number] // 渐变动画函数，仅当 effect 为 'fade' 时生效，可传四个三次贝塞尔控制点（自动转为 cubic-bezier 写法，其中 x1 / x2 需落在 [0, 1] 内）或 CSS transition-timing-function 写法：https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function
   slideDuration?: number // 滑动动画持续时长，单位 ms，仅当 effect 为 'slide' 时生效
   // 经 `LiteralUnion` 补 `String` 分支（见 components/utils/type.ts），否则发布包会把预设名误判为非法值
   slideFunction?: LiteralUnion<EasingPreset> | CubicBezierPoints | EasingFunction // 滑动动画函数，仅当 effect 为 'slide' 时生效，可传缓动预设名、三次贝塞尔控制点数组或缓动函数，参考 transition 写法：https://vueuse.org/core/useTransition/#usage
@@ -835,7 +835,8 @@ defineExpose({
     <template v-if="showArrow && imageAmount > 1">
       <div
         class="arrow-left"
-        :class="{ 'arrow-custom': prevArrowSlotExist }"
+        :class="{ 'arrow-custom': prevArrowSlotExist, 'arrow-disabled': isPrevDisabled }"
+        :aria-disabled="isPrevDisabled || undefined"
         tabindex="0"
         :style="prevArrowSlotExist ? undefined : arrowStyle"
         @click="onLeftArrow"
@@ -860,7 +861,8 @@ defineExpose({
       </div>
       <div
         class="arrow-right"
-        :class="{ 'arrow-custom': nextArrowSlotExist }"
+        :class="{ 'arrow-custom': nextArrowSlotExist, 'arrow-disabled': isNextDisabled }"
+        :aria-disabled="isNextDisabled || undefined"
         tabindex="0"
         :style="nextArrowSlotExist ? undefined : arrowStyle"
         @click="onRightArrow"
@@ -937,14 +939,22 @@ defineExpose({
     }
   }
   &:hover {
-    // 自定义箭头由使用方决定外观，不参与悬停变暗
-    .arrow-left:not(.arrow-custom) {
-      opacity: 0.7;
+    // 鼠标进入轮播区即显形；自定义箭头由使用方决定外观，不参与显隐
+    .arrow-left:not(.arrow-custom):not(.arrow-disabled),
+    .arrow-right:not(.arrow-custom):not(.arrow-disabled) {
+      opacity: 0.72;
       pointer-events: auto;
+      &:hover {
+        opacity: 1;
+      }
     }
-    .arrow-right:not(.arrow-custom) {
-      opacity: 0.7;
+    // 到达边界（loop 为 false）时该方向已无可切换内容：置灰且不参与提亮；
+    // 仍保留指针事件，让点击由组件自行吞掉，而不是穿透到图片链接上
+    .arrow-left:not(.arrow-custom).arrow-disabled,
+    .arrow-right:not(.arrow-custom).arrow-disabled {
+      opacity: 0.32;
       pointer-events: auto;
+      cursor: not-allowed;
     }
   }
   .arrow-left,
@@ -961,18 +971,29 @@ defineExpose({
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s;
-    &:hover {
-      opacity: 1;
-    }
-    // 键盘聚焦时同样要让箭头可见：默认 opacity: 0 会把焦点样式一起隐藏
     &:focus-visible {
       opacity: 1;
       pointer-events: auto;
     }
+    // 禁用态被键盘聚焦时同样保持置灰，不给出可点击的暗示
+    &:not(.arrow-custom).arrow-disabled:focus-visible {
+      opacity: 0.32;
+      cursor: not-allowed;
+    }
     .arrow-icon {
       width: 100%;
       height: 100%;
+      fill: currentColor;
     }
+  }
+  // 默认箭头常驻一层柔光暗晕：箭头是白色图标压在任意底图上，亮图 / 高光区域只靠图标与图片叠色会糊成一片，
+  // 阴影负责把轮廓从背景里托出来。用 drop-shadow 而非 text-shadow / box-shadow —— 箭头内容是 inline SVG 的 path，
+  // text-shadow 对它不生效，box-shadow 只会画在矩形盒上；drop-shadow 沿 alpha 轮廓生成，正好贴合箭头形状。
+  // 只保留柔和外晕、不加贴边暗边：紧边虽然更「清晰」，但会给斜边描出一圈硬轮廓，视觉上突兀
+  // 必须恒为深色：跟随主题翻转后，暗色模式会变成浅色晕光，白色箭头反而更糊
+  .arrow-left:not(.arrow-custom),
+  .arrow-right:not(.arrow-custom) {
+    filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.36));
   }
   .arrow-left {
     left: 6px;

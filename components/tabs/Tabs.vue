@@ -1520,6 +1520,8 @@ function getContentStyle(pane: TabsPane): CSSProperties {
     max-height: 200px;
     padding: 4px 0;
     overflow-y: auto;
+    /* 滚到边界不带动页面：页签多时列表常被惯性推到顶 / 底，滚动链会带着整页跳走（同 Select 面板） */
+    overscroll-behavior: none;
   }
   .dropdown-menu .dropdown-menu-item-content {
     min-width: 120px;

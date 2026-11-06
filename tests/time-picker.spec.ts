@@ -481,3 +481,51 @@ describe('进阶能力', () => {
     expect(extra?.nextElementSibling?.querySelector('.timepicker-panel-ok')).not.toBeNull()
   })
 })
+
+/**
+ * 键盘操作的目标列标记
+ *
+ * 方向键移动时给目标列加底色，标明按键作用于哪一列。该标记属于**一次展开会话**：列下标是面板内
+ * 的状态，而面板收起后 DOM 仍被复用，不随收起复位就会在下次展开时留下一列残留底色
+ */
+describe('键盘操作的目标列标记', () => {
+  /** 派发一次按键：面板键盘入口挂在触发器包裹层上（真实场景里事件自输入框冒泡上来） */
+  async function press(key: string): Promise<void> {
+    const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })
+    document.querySelector<HTMLElement>('.timepicker-wrap')?.dispatchEvent(event)
+    await flush()
+  }
+  /** 带目标列标记的列下标 */
+  function activeColumns(): number[] {
+    return Array.from(document.querySelectorAll('.picker-time-column')).reduce<number[]>(
+      (result, column, index) => (column.classList.contains('picker-time-column-active') ? [...result, index] : result),
+      []
+    )
+  }
+
+  it('方向键把标记落在当前列，面板收起后清掉，重开不再残留', async () => {
+    wrapper = mount(TimePicker, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { open: true, value: BASE }
+    })
+    await flush()
+    expect(activeColumns()).toEqual([])
+
+    // Tab 把键盘交给面板；首键只把键盘落到第一列，左右键切列
+    await press('Tab')
+    await press('ArrowDown')
+    expect(activeColumns()).toEqual([0])
+    await press('ArrowRight')
+    expect(activeColumns()).toEqual([1])
+
+    // 收起后再展开：标记不跟着上一次的会话留下
+    await wrapper.setProps({ open: false })
+    await flush()
+    expect(activeColumns()).toEqual([])
+
+    await wrapper.setProps({ open: true })
+    await flush()
+    expect(activeColumns()).toEqual([])
+  })
+})
