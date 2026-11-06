@@ -16,10 +16,9 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-11-06">3.9.1</VersionDateTag>
 
-- 重构滚动监测 [useScroll](/utils/functions/use-scroll.html)：签名改为 `useScroll(target, options)`，返回 `direction` / `maxX` / `maxY` / 边界标志与 `start` / `stop` / `refresh`，滚动状态不再受节流影响（不兼容旧签名）
-- 优化 [滚动条 Scrollbar](/guide/components/scrollbar.html) 的实例能力：新增导出 `ScrollbarExpose` / `ScrollDirection` / `ScrollbarScrollData` 类型，`getScrollData()` 补 `scrollLeft` 并改为实时读取（未挂载时各项为 `0`）
-- 修复 [滚动条 Scrollbar](/guide/components/scrollbar.html) 的 `scroll` / `scrollend` 在拖动滑块、`scrollTo` / `scrollBy` 及直接写 `scrollLeft` / `scrollTop` 时丢失：方向改按实际位移上报，位置未变时不派发
-- 修复 [滚动条 Scrollbar](/guide/components/scrollbar.html) 在 `<KeepAlive>` 失活返回后滚动位置丢失；滑块与轨道等长时拖动滑块不再跳到末端
+- 重构滚动监测 [useScroll](/utils/functions/use-scroll.html)：签名改为 `useScroll(target, options)`，移除 `throttleDelay`（需要限流时在 `onScroll` 内自行处理），返回的 `xScrollMax` / `left` / `right` / `top` / `bottom` 更名为 `maxX` / `maxY` / `atLeft` / `atRight` / `atTop` / `atBottom`，并新增 `direction` 与 `start` / `stop` / `refresh`
+- 增强 [滚动条 Scrollbar](/guide/components/scrollbar.html) 的实例能力：`getScrollData()` 补 `scrollLeft` 并改为实时读取（未挂载时各项为 `0`），新增导出 `ScrollbarExpose` / `ScrollDirection` / `ScrollbarScrollData` 类型
+- 修复 [滚动条 Scrollbar](/guide/components/scrollbar.html) 的 `scroll` / `scrollend` 在拖动滑块、`scrollTo` / `scrollBy` 及直接写 `scrollLeft` / `scrollTop` 时丢失（方向按实际位移上报、位置未变不派发）；`<KeepAlive>` 失活返回后滚动位置丢失、滑块与轨道等长时拖动跳到末端
 - 修复 [级联选择 Cascader](/guide/components/cascader.html) 虚拟滚动快速滚动时列内出现整片空白：滚轮滚动与渲染窗口同帧更新，新开列与程序化滚动同样跟随
 - 修复 [时间轴 Timeline](/guide/components/timeline.html) 自定义轴点在页面底色与容器色不一致时露出方块 / 圆环；`--timeline-head-bg` 支持在祖先元素覆盖
 - 更新使用者文档：统一各组件文档的代码标识与属性表链接，修正演示用例的布局间距、主题配色与长列表规模
@@ -620,7 +619,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2025-03-07">2.2.15</VersionDateTag>
 
-- [日期选择 DatePicker](/guide/components/date-picker.html) 新增颜色样式变量，支持自定义主题色
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增颜色样式变量，支持自定义主题色
 - [触摸滑动 Swiper](/guide/components/swiper.html) 新增 `CSS` 变量，支持自定义主题色与切换动画效果
 
 ## <VersionDateTag date="2025-03-06">2.2.14</VersionDateTag>
@@ -689,7 +688,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2025-02-14">2.2.3</VersionDateTag>
 
-- [日期选择 DatePicker](/guide/components/date-picker.html) 新增 `size` 属性，支持设置尺寸，并优化样式与过渡动画
+- [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `size` 属性，支持设置尺寸，并优化样式与过渡动画
 - 优化 [触摸滑动 Swiper](/guide/components/swiper.html) 的过渡动画
 - 组件库及文档代码优化
 

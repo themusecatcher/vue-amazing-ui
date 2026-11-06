@@ -1,3 +1,3 @@
 export default {
-  title: '日期选择'
+  title: '日期选择器'
 }

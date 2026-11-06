@@ -332,7 +332,7 @@ export default defineConfig({
               link: '/guide/components/countdown'
             },
             {
-              text: '日期选择 DatePicker',
+              text: '日期选择器 DatePicker',
               link: '/guide/components/date-picker'
             },
             {
