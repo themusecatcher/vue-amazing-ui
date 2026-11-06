@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onActivated, onDeactivated } from 'vue'
+import { ref, computed, watch, onMounted, onActivated, onDeactivated, onBeforeUnmount } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import { debounce, useResizeObserver } from 'components/utils'
 export interface Props {
@@ -110,21 +110,24 @@ const hasScroll = computed(() => {
   return (props.yScrollable && hasVerticalScroll.value) || (props.xScrollable && hasHorizontalScroll.value)
 })
 // 垂直 thumb 高度：可视高度与内容高度之比 × 轨道高度，并按滚动条尺寸补足最小可拖拽高度；
-// 上限取容器高度 —— 内容只比容器高一点时比例会接近 1，不夹取会让 thumb 比轨道还长
+// 上限取轨道长度（不是容器高度）—— 内容只比容器高一点时比例会接近 1，
+// 按容器高度夹取会让 thumb 比轨道长出一截，同时把可拖行程算成负数
 const verticalTrackHeight = computed(() => {
   if (!props.yScrollable || !hasVerticalScroll.value) return 0
   if (!containerOffsetHeight.value || !contentOffsetHeight.value || !verticalRailHeight.value) return 0
   const value = Math.min(
-    containerOffsetHeight.value,
+    verticalRailHeight.value,
     (verticalRailHeight.value * containerOffsetHeight.value) / contentOffsetHeight.value + 1.5 * props.size
   )
   return Number(value.toFixed(4))
 })
-// 垂直 thumb 偏移：可滚距离与可拖距离同比例换算（无滚动余量时为 0，避免除零得到 NaN）
+// 垂直 thumb 可移动行程：轨道长度 - thumb 长度（渲染偏移与拖拽换算共用同一口径，指针与 thumb 才会 1:1 跟随）
+const verticalTrackDragRange = computed(() => Math.max(verticalRailHeight.value - verticalTrackHeight.value, 0))
+// 垂直 thumb 偏移：可滚距离与可拖行程同比例换算（无滚动余量时为 0，避免除零得到 NaN）
 const verticalTrackTop = computed(() => {
   const scrollRange = contentOffsetHeight.value - containerOffsetHeight.value
   if (scrollRange <= 0 || !verticalRailHeight.value) return 0
-  return (containerScrollTop.value / scrollRange) * (verticalRailHeight.value - verticalTrackHeight.value)
+  return (containerScrollTop.value / scrollRange) * verticalTrackDragRange.value
 })
 const verticalTrackStyle = computed(() => {
   return {
@@ -132,21 +135,23 @@ const verticalTrackStyle = computed(() => {
     height: `${verticalTrackHeight.value}px`
   }
 })
-// 水平 thumb 宽度：口径与垂直完全一致
+// 水平 thumb 宽度：口径与垂直完全一致（上限同样取轨道长度）
 const horizontalTrackWidth = computed(() => {
   if (!props.xScrollable || !hasHorizontalScroll.value) return 0
   if (!containerOffsetWidth.value || !contentOffsetWidth.value || !horizontalRailWidth.value) return 0
   const value = Math.min(
-    containerOffsetWidth.value,
+    horizontalRailWidth.value,
     (horizontalRailWidth.value * containerOffsetWidth.value) / contentOffsetWidth.value + 1.5 * props.size
   )
   return Number(value.toFixed(4))
 })
+// 水平 thumb 可移动行程：同垂直口径
+const horizontalTrackDragRange = computed(() => Math.max(horizontalRailWidth.value - horizontalTrackWidth.value, 0))
 // 水平 thumb 偏移：同垂直口径
 const horizontalTrackLeft = computed(() => {
   const scrollRange = contentOffsetWidth.value - containerOffsetWidth.value
   if (scrollRange <= 0 || !horizontalRailWidth.value) return 0
-  return (containerScrollLeft.value / scrollRange) * (horizontalRailWidth.value - horizontalTrackWidth.value)
+  return (containerScrollLeft.value / scrollRange) * horizontalTrackDragRange.value
 })
 const horizontalTrackStyle = computed(() => {
   return {
@@ -182,6 +187,10 @@ onActivated(() => {
 onDeactivated(() => {
   isDeactivated = true
 })
+// 拖拽中被卸载（父级 v-if 切换 / 路由跳转）时 pointerup 不会到来，监听需在此主动解除
+onBeforeUnmount(() => {
+  stopTrackPointerTracking()
+})
 // 同步滚动位置（thumb 偏移的渲染依据）
 function updateScrollState(): void {
   if (!containerRef.value) return
@@ -213,8 +222,16 @@ function emitScrollEnd(e: Event, direction: ScrollDirection): void {
 }
 const debounceVerticalScrollEnd = debounce(emitScrollEnd, 100)
 const debounceHorizontalScrollEnd = debounce(emitScrollEnd, 100)
-const debounceHideVerticalScrollbar = debounce(hideVerticalScrollbar, 100 + props.delay)
-const debounceHideHorizontalScrollbar = debounce(hideHorizontalScrollbar, 100 + props.delay)
+// 自动隐藏的延迟含 props.delay：顶层读到的只是初始值，delay 变化后按新值重建防抖，否则运行期改 delay 不生效
+let debounceHideVerticalScrollbar = debounce(hideVerticalScrollbar, 100 + props.delay)
+let debounceHideHorizontalScrollbar = debounce(hideHorizontalScrollbar, 100 + props.delay)
+watch(
+  () => props.delay,
+  (delay) => {
+    debounceHideVerticalScrollbar = debounce(hideVerticalScrollbar, 100 + delay)
+    debounceHideHorizontalScrollbar = debounce(hideHorizontalScrollbar, 100 + delay)
+  }
+)
 function hideVerticalScrollbar(): void {
   if (autoShowTrack.value) {
     if (props.autoHide && !isVerticalTrackHovered) {
@@ -329,9 +346,19 @@ function onLeaveHorizontalTrack(): void {
     debounceHideHorizontalScrollbar()
   }
 }
+/** 解除挂在 document 上的拖拽监听（垂直与横向共用：拖拽结束与组件卸载都要清） */
+function stopTrackPointerTracking(): void {
+  document.removeEventListener('pointermove', handleVerticalTrackPointerMove)
+  document.removeEventListener('pointerup', handleVerticalTrackPointerUp)
+  document.removeEventListener('pointercancel', handleVerticalTrackPointerUp)
+  document.removeEventListener('pointermove', handleHorizontalTrackPointerMove)
+  document.removeEventListener('pointerup', handleHorizontalTrackPointerUp)
+  document.removeEventListener('pointercancel', handleHorizontalTrackPointerUp)
+}
 function handleVerticalTrackPointerDown(e: PointerEvent): void {
   isVerticalTrackPressed = true
-  dragStartScrollTop = containerScrollTop.value
+  // 起点读容器的真实位置而不是缓存：程序化写入后 scroll 事件在下一帧才到，缓存可能滞后一格
+  dragStartScrollTop = containerRef.value?.scrollTop ?? 0
   dragStartPointerY = e.clientY
   // 捕获指针，确保即使移出元素也能继续跟踪
   ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
@@ -341,9 +368,9 @@ function handleVerticalTrackPointerDown(e: PointerEvent): void {
   handleVerticalTrackPointerMove(e)
 }
 function handleVerticalTrackPointerMove(e: PointerEvent): void {
-  // 可滚距离与可拖距离同比例换算：thumb 与轨道等高时没有可拖距离，直接忽略避免除零
+  // 可滚距离与可拖行程同比例换算（行程与 thumb 偏移同一口径）：thumb 与轨道等长时无可拖行程，直接忽略避免除零
   const scrollRange = contentOffsetHeight.value - containerOffsetHeight.value
-  const dragRange = containerOffsetHeight.value - verticalTrackHeight.value
+  const dragRange = verticalTrackDragRange.value
   if (scrollRange <= 0 || dragRange <= 0) return
   const dScrollTop = ((e.clientY - dragStartPointerY) * scrollRange) / dragRange
   const toScrollTop = Math.min(Math.max(dragStartScrollTop + dScrollTop, 0), scrollRange)
@@ -359,15 +386,13 @@ function handleVerticalTrackPointerUp(): void {
     isMouseLeftWhilePressed = false
     debounceHideVerticalScrollbar()
   }
-  document.removeEventListener('pointermove', handleVerticalTrackPointerMove)
-  document.removeEventListener('pointerup', handleVerticalTrackPointerUp)
-  document.removeEventListener('pointercancel', handleVerticalTrackPointerUp)
+  stopTrackPointerTracking()
   // 拖拽结束重测一次：拖动期间内容变化会让容器夹取滚动位置，缓存值与真实位置需要对齐
   updateState()
 }
 function handleHorizontalTrackPointerDown(e: PointerEvent): void {
   isHorizontalTrackPressed = true
-  dragStartScrollLeft = containerScrollLeft.value
+  dragStartScrollLeft = containerRef.value?.scrollLeft ?? 0
   dragStartPointerX = e.clientX
   // 捕获指针，确保即使移出元素也能继续跟踪
   ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
@@ -377,9 +402,9 @@ function handleHorizontalTrackPointerDown(e: PointerEvent): void {
   handleHorizontalTrackPointerMove(e)
 }
 function handleHorizontalTrackPointerMove(e: PointerEvent): void {
-  // 同垂直口径：没有可滚 / 可拖距离时直接忽略
+  // 同垂直口径：没有可滚距离 / 可拖行程时直接忽略
   const scrollRange = contentOffsetWidth.value - containerOffsetWidth.value
-  const dragRange = containerOffsetWidth.value - horizontalTrackWidth.value
+  const dragRange = horizontalTrackDragRange.value
   if (scrollRange <= 0 || dragRange <= 0) return
   const dScrollLeft = ((e.clientX - dragStartPointerX) * scrollRange) / dragRange
   const toScrollLeft = Math.min(Math.max(dragStartScrollLeft + dScrollLeft, 0), scrollRange)
@@ -395,9 +420,7 @@ function handleHorizontalTrackPointerUp(): void {
     isMouseLeftWhilePressed = false
     debounceHideHorizontalScrollbar()
   }
-  document.removeEventListener('pointermove', handleHorizontalTrackPointerMove)
-  document.removeEventListener('pointerup', handleHorizontalTrackPointerUp)
-  document.removeEventListener('pointercancel', handleHorizontalTrackPointerUp)
+  stopTrackPointerTracking()
   // 拖拽结束重测一次：拖动期间内容变化会让容器夹取滚动位置，缓存值与真实位置需要对齐
   updateState()
 }
@@ -446,7 +469,8 @@ function getScrollData(): ScrollbarScrollData {
     clientHeight: container.clientHeight
   }
 }
-// 暴露内部滚动容器元素，供需要指定监听目标（如 BackTop 的 listenTo）或直接操作容器的场景使用
+// 暴露内部滚动容器元素，供需要指定监听目标（如 BackTop 的 listenTo）或直接操作容器的场景使用。
+// 不必改成 getter：实例类型里这一项经 UnwrapNestedRefs 解包后就是 HTMLElement | null，与运行时一致
 const scrollElement = computed(() => containerRef.value)
 defineExpose({
   scrollTo,

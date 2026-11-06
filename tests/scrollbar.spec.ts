@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from 'vitest'
+import { describe, it, expect, afterEach, vi } from 'vitest'
 import { defineComponent, h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Scrollbar from 'components/scrollbar'
@@ -13,10 +13,18 @@ import Scrollbar from 'components/scrollbar'
 
 let wrapper: ReturnType<typeof mount> | null = null
 
+/** 给元素桩上几何量（读的是传入对象，测试中可直接改值模拟内容撑开） */
+function defineGeometry(element: HTMLElement, geometry: Record<string, number>): void {
+  Object.keys(geometry).forEach((key) => {
+    Object.defineProperty(element, key, { configurable: true, get: () => geometry[key] })
+  })
+}
+
 afterEach(() => {
   wrapper?.unmount()
   wrapper = null
   document.body.innerHTML = ''
+  vi.useRealTimers()
 })
 
 describe('Scrollbar 暴露的实例能力', () => {
@@ -93,6 +101,39 @@ describe('Scrollbar 暴露的实例能力', () => {
 })
 
 /**
+ * thumb 几何守护
+ *
+ * happy-dom 不做真实布局，几何量需自行定义。轨道有上下内边距（默认 2px + 2px），
+ * 因此轨道长度小于容器高度：thumb 上限若按容器高度夹取，内容只略高于容器时会比轨道还长，
+ * 同时把「可拖行程」算成负数（渲染偏移用轨道、拖拽换算用容器就会出现两套口径）
+ */
+describe('Scrollbar 的 thumb 几何', () => {
+  it('内容只略高于容器时 thumb 不超过轨道长度', async () => {
+    wrapper = mount(Scrollbar, { attachTo: document.body })
+    const container = wrapper.find('.scrollbar-container').element as HTMLElement
+    const content = wrapper.find('.scrollbar-content').element as HTMLElement
+    const rail = wrapper.find('.rail-vertical').element as HTMLElement
+    defineGeometry(container, {
+      offsetHeight: 120,
+      clientHeight: 120,
+      scrollHeight: 121,
+      offsetWidth: 300,
+      clientWidth: 300,
+      scrollWidth: 300
+    })
+    defineGeometry(content, { offsetHeight: 121, offsetWidth: 300 })
+    defineGeometry(rail, { offsetHeight: 116 })
+
+    // 鼠标进入会触发一次重测（尺寸观察器在 happy-dom 里不生效）
+    await wrapper.trigger('mouseenter')
+    await nextTick()
+
+    const track = wrapper.find('.rail-vertical .scrollbar-track').element as HTMLElement
+    expect(parseFloat(track.style.height)).toBeLessThanOrEqual(116)
+  })
+})
+
+/**
  * 滚动事件回归守护
  *
  * 方向不能依赖「上一条 scroll 事件」推出来的标志：程序化滚动（拖动滚动条 thumb、instant scrollTo、
@@ -159,5 +200,47 @@ describe('Scrollbar 滚动事件', () => {
     const ends = (wrapper?.emitted('scrollend') ?? []) as [Event, string][]
     expect(ends).toHaveLength(1)
     expect(ends[0][1]).toBe('bottom')
+  })
+})
+
+/**
+ * 自动隐藏的延迟守护
+ *
+ * `100 + props.delay` 在 setup 期求值，只在顶层读一次的话运行期改 `delay` 不生效 ——
+ * 这类配置在组件创建后调整（跟随用户偏好、跟随父级状态）是正常用法
+ */
+describe('Scrollbar 的自动隐藏延迟', () => {
+  it('运行期修改 delay 后按新延迟隐藏', async () => {
+    vi.useFakeTimers()
+    wrapper = mount(Scrollbar, { attachTo: document.body, props: { autoHide: true, delay: 0 } })
+    const container = wrapper.find('.scrollbar-container').element as HTMLElement
+    const content = wrapper.find('.scrollbar-content').element as HTMLElement
+    defineGeometry(container, {
+      offsetHeight: 120,
+      clientHeight: 120,
+      scrollHeight: 400,
+      offsetWidth: 300,
+      clientWidth: 300,
+      scrollWidth: 300
+    })
+    defineGeometry(content, { offsetHeight: 400, offsetWidth: 300 })
+
+    // 改成 1000ms：隐藏应排在 100 + 1000 之后，而不是初始的 100 + 0
+    await wrapper.setProps({ delay: 1000 })
+    await nextTick()
+
+    container.scrollTop = 80
+    container.dispatchEvent(new Event('scroll'))
+    await nextTick()
+    const track = (): string[] => wrapper!.find('.rail-vertical .scrollbar-track').classes()
+    expect(track()).toContain('track-visible')
+
+    vi.advanceTimersByTime(300)
+    await nextTick()
+    expect(track()).toContain('track-visible')
+
+    vi.advanceTimersByTime(900)
+    await nextTick()
+    expect(track()).not.toContain('track-visible')
   })
 })
