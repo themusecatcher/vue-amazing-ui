@@ -613,7 +613,8 @@ function syncColumnScrollTop(columnIndex: number, container: HTMLElement): void 
  * 列内滚轮接管（与 Select 面板同策略）：窗口化生效时由本组件驱动滚动。
  * 原生滚动跑在合成线程、渲染窗口算在主线程，快速滚动（尤其触控板惯性）时窗口追不上，
  * 视口上下沿会先露出未渲染的占位（整片空白，随后才被数据填充）→ 阻止原生滚动并按 delta 自行写 scrollTop，
- * 让滚动位置与渲染窗口在同一帧生效；到边界且方向朝外时不拦截，保留页面滚动链
+ * 让滚动位置与渲染窗口在同一帧生效；到边界且方向朝外时不拦截原生滚动（滚动链已由列容器的
+ * overscroll-behavior: none 切断，不会带动页面）
  */
 function proxyColumnWheel(columnIndex: number, container: HTMLElement, e: WheelEvent): void {
   const length = columns.value[columnIndex]?.length ?? 0

@@ -16,12 +16,12 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-11-06">3.9.1</VersionDateTag>
 
-- 重构滚动监测 [useScroll](/utils/functions/use-scroll.html)：签名改为 `useScroll(target, options)`，移除 `throttleDelay`（需要限流时在 `onScroll` 内自行处理），返回的 `xScrollMax` / `left` / `right` / `top` / `bottom` 更名为 `maxX` / `maxY` / `atLeft` / `atRight` / `atTop` / `atBottom`，并新增 `direction` 与 `start` / `stop` / `refresh`
-- 增强 [滚动条 Scrollbar](/guide/components/scrollbar.html) 的实例能力：`getScrollData()` 补 `scrollLeft` 并改为实时读取（未挂载时各项为 `0`），新增导出 `ScrollbarExpose` / `ScrollDirection` / `ScrollbarScrollData` 类型
-- 修复 [滚动条 Scrollbar](/guide/components/scrollbar.html) 的 `scroll` / `scrollend` 在拖动滑块、`scrollTo` / `scrollBy` 及直接写 `scrollLeft` / `scrollTop` 时丢失（方向按实际位移上报、位置未变不派发）；`<KeepAlive>` 失活返回后滚动位置丢失、滑块与轨道等长时拖动跳到末端
-- 修复 [级联选择 Cascader](/guide/components/cascader.html) 虚拟滚动快速滚动时列内出现整片空白：滚轮滚动与渲染窗口同帧更新，新开列与程序化滚动同样跟随
-- 修复 [时间轴 Timeline](/guide/components/timeline.html) 自定义轴点在页面底色与容器色不一致时露出方块 / 圆环；`--timeline-head-bg` 支持在祖先元素覆盖
-- 更新使用者文档：统一各组件文档的代码标识与属性表链接，修正演示用例的布局间距、主题配色与长列表规模
+- 增强 [滚动条 Scrollbar](/guide/components/scrollbar.html) 的实例能力：`getScrollData()` 补 `scrollLeft`，由缓存快照改为调用时实时读取（未挂载时各项为 `0`），新增导出 `ScrollbarExpose` / `ScrollDirection` / `ScrollbarScrollData` 类型
+- 修复 [滚动条 Scrollbar](/guide/components/scrollbar.html) 的滚动行为：`scroll` / `scrollend` 在拖动滑块、`scrollTo` / `scrollBy` 及直接写 `scrollLeft` / `scrollTop` 时不再丢失（位置未变不派发、横纵同帧变化各派发一次，`scrollend` 不再受 `autoHide` / `trigger` 门控）；`<KeepAlive>` 切回后恢复滚动位置，滑块不再超出轨道长度、拖拽不再跳动，`delay` 运行期修改即时生效
+- 修复 [级联选择 Cascader](/guide/components/cascader.html) 虚拟滚动快速滚动（含触控板惯性）时列内出现整片空白
+- 修复 [时间轴 Timeline](/guide/components/timeline.html) 的自定义轴点：遮挡块不再强制圆角与内边距，图标 / 文字轴点不再露出圆环或方块边角；`--timeline-head-bg` 默认值不再写死在组件根上，页面底色与容器色不一致时可改由祖先元素覆盖
+- 重构 [滚动监测 useScroll](/utils/functions/use-scroll.html)：改用 `useScroll(target, options)`，`throttleDelay` 移除（需要限流时在 `onScroll` 内自行处理），`onScroll` / `onStop` 与新增的 `scrollEndDelay` 移入 `options`；`xScrollMax` / `yScrollMax` 更名 `maxX` / `maxY`，旧 `left` / `right` / `top` / `bottom`（滚动方向）移除、方向改由新增的 `direction` 上报，新增到边界判断 `atLeft` / `atRight` / `atTop` / `atBottom` 与 `start` / `stop` / `refresh`
+- 更新使用者文档
 - 组件库及文档代码优化
 
 ## <VersionDateTag date="2026-11-05">3.9.0</VersionDateTag>

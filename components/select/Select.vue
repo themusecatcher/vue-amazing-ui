@@ -1006,7 +1006,8 @@ function onContainerScroll(): void {
 /**
  * 代理面板滚轮滚动：原生滚动由合成线程先行、窗口化渲染在主线程计算，快速滚动时渲染窗口追不上，
  * 视口下沿会露出未渲染的占位区（面板底部先空白、随后被文本填充）→ 虚拟滚动生效时接管 wheel，
- * 阻止原生滚动并按 delta 自行写 scrollTop，使滚动位置与渲染窗口同帧生效（到边界且方向朝外时不拦截，保留滚动链）
+ * 阻止原生滚动并按 delta 自行写 scrollTop，使滚动位置与渲染窗口同帧生效（到边界且方向朝外时不拦截原生滚动，
+ * 滚动链已由面板的 overscroll-behavior: none 切断，不会带动页面）
  */
 function onPanelWheel(e: WheelEvent): void {
   if (!virtualActive.value) return
