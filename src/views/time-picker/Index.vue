@@ -31,6 +31,7 @@ const rangePickerValue = ref<[number | null, number | null] | null>(null)
 // 事件用例：单选 / 范围各一，绑定后可在控制台查看各事件的触发时机与参数；初始值均为空
 const eventValue = ref<number | null>(null)
 const eventRangeValue = ref<[number | null, number | null] | null>(null)
+const keyboardValue = ref<number | null>(null)
 const borderedValue = ref<number | null>(null)
 const borderedRangeValue = ref<[number | null, number | null] | null>(null)
 const errorValue = ref<number | null>(null)
@@ -217,6 +218,14 @@ function onEventBlur(event: FocusEvent): void {
         @open-change="onEventOpenChange"
       />
     </Space>
+    <h2 class="mt30 mb10">键盘操作</h2>
+    <p class="mb10">
+      面板收起时按 <code>Enter</code> 展开面板；展开后按
+      <code>Tab</code> 把键盘交给面板（输入框随之转为只读），方向键上下改当前列的取值、左右切换列，<code>Enter</code>
+      提交并收起，<code>Esc</code> 收起；再按 <code>Tab</code> 移出焦点（面板随之收起），<code>Shift+Tab</code>
+      退回文本输入态
+    </p>
+    <TimePicker v-model:value="keyboardValue" placeholder="请选择时间" />
     <h2 class="mt30 mb10">无边框</h2>
     <Space vertical>
       <TimePicker v-model:value="borderedValue" :bordered="false" placeholder="请选择时间" />

@@ -143,6 +143,18 @@ export function isSameDayTimestamp(a: number, b: number): boolean {
   return startOfDayTimestamp(a) === startOfDayTimestamp(b)
 }
 
+/**
+ * 两个区间值是否等价（逐段严格比较；两者都为空也算等价）
+ *
+ * 供回写前判断「值有没有真的变」：同值不重复派发 `change`。
+ */
+export function isSameRangeValue(a: PickerRangeValue | null, b: PickerRangeValue | null): boolean {
+  if (a === null || b === null) {
+    return a === b
+  }
+  return a[0] === b[0] && a[1] === b[1]
+}
+
 /** 是否为同一月 */
 export function isSameMonthTimestamp(a: number, b: number): boolean {
   return startOfMonth(a).getTime() === startOfMonth(b).getTime()

@@ -3,11 +3,16 @@ import { computed, nextTick, ref, useSlots, watch } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Popup from 'components/popup'
 import {
+  ARROW_PLACEMENTS,
   DatePanel,
   DatetimePanel,
+  PANEL_NAV_KEYS,
+  PANEL_OPEN_IGNORED_KEYS,
   PickerIcon,
   PickerTrigger,
+  POPUP_OFFSET,
   PresetPanel,
+  RANGE_POPUP_OFFSET,
   RangePanel,
   formatTimestamp,
   getDefaultFormat,
@@ -15,9 +20,11 @@ import {
   getInputSize,
   getPanelModeOf,
   isOutOfRangeBoundary,
+  isPickerFocusInside,
   isRangeType,
-  PANEL_NAV_KEYS,
   parseTimestamp,
+  startOfDayTimestamp,
+  usePickerShell,
   type PickerActiveSection,
   type PickerDateRender,
   type PickerDateRenderParams,
@@ -40,7 +47,7 @@ import {
   type StartDayOfWeek
 } from 'components/picker'
 import type { FloatingPlacement, MountElement } from 'components/utils'
-import { FLOATING_LAYER_Z_INDEX, useContainerClose, useControlledModel, useSlotsExist } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX, useSlotsExist } from 'components/utils'
 export interface Props {
   value?: PickerValue // (v-model:value) 当前取值；传入即受控
   defaultValue?: PickerValue // 非受控初始值，未绑 v-model:value 时生效（与面板初始日期 defaultPickerValue 不同）
@@ -166,24 +173,6 @@ const emits = defineEmits<{
   focus: [event: FocusEvent]
   blur: [event: FocusEvent]
 }>()
-const valueModel = useControlledModel<PickerValue>('value', props.defaultValue ?? null)
-const openModel = useControlledModel<boolean>('open', false)
-const triggerRef = ref<InstanceType<typeof PickerTrigger> | null>(null)
-const popupRef = ref<InstanceType<typeof Popup> | null>(null)
-const wrapperRef = ref<HTMLElement | null>(null)
-/** 浮层与触发器的主轴间距（单段形态） */
-const POPUP_OFFSET = 4
-/** 面板指示箭头的尺寸，与 `.datepicker-range-arrow` 的宽高保持一致 */
-const RANGE_ARROW_SIZE = 16
-/**
- * 范围形态的浮层间距
- *
- * 需额外留出箭头所在的一段空白（箭头尺寸的 2 / 3），
- * 否则 16px 的箭头会压住触发器的底边、盖掉输入区下沿。
- */
-const RANGE_POPUP_OFFSET = POPUP_OFFSET + (RANGE_ARROW_SIZE * 2) / 3
-/** 带面板指示箭头的弹出方位（仅左侧对齐的两个方位，其余方位只展示面板） */
-const ARROW_PLACEMENTS: FloatingPlacement[] = ['bottomLeft', 'topLeft']
 // 主题变量随组件壳下发，浮层经 Teleport 后不在壳内，需同样注入到面板上
 const themeVars = computed(() => ({
   '--picker-primary-color': 'var(--va-cp-date-picker-primary-color, var(--va-primary-color))',
@@ -191,8 +180,6 @@ const themeVars = computed(() => ({
   '--picker-primary-shadow-color': 'var(--va-cp-date-picker-primary-bg-color, var(--va-primary-bg-color))',
   // 区间底色取主色浅底
   '--picker-primary-color-bg': 'var(--va-cp-date-picker-primary-bg-color, var(--va-primary-bg-color))',
-  // 键盘活动列的底纹：主色浅底，浅到不抢格内容
-  '--picker-time-column-active-bg': 'var(--va-cp-date-picker-primary-bg-color, var(--va-primary-bg-color))',
   // 悬浮预览的底色与虚线边界
   '--picker-primary-color-bg-hover': 'var(--va-cp-date-picker-primary-bg-color, var(--va-primary-bg-color))',
   '--picker-hover-border-color': 'var(--va-cp-date-picker-primary-border-color, var(--va-primary-border-color))'
@@ -241,19 +228,6 @@ const mergedExtraFooter = computed<(() => VNode[]) | undefined>(() => {
 const isDateTime = computed(() => props.type === 'datetime')
 /** 是否为范围形态：双面板、双段输入、值为两段元组 */
 const isRange = computed(() => isRangeType(props.type))
-/**
- * 逐段禁用状态：范围形态支持两段元组逐段禁用；单选形态只接受布尔值，传数组时任一项为真即视为
- * 整体禁用（避免「传了数组却被静默当成启用」这类歧义）
- */
-const disabledSides = computed<[boolean, boolean]>(() => {
-  const { disabled } = props
-  if (Array.isArray(disabled)) {
-    return isRange.value ? [disabled[0], disabled[1]] : [disabled[0] || disabled[1], disabled[0] || disabled[1]]
-  }
-  return [disabled, disabled]
-})
-/** 是否整体禁用：范围形态两段都禁用、单选形态同段状态 */
-const fullyDisabled = computed(() => disabledSides.value[0] && disabledSides.value[1])
 /** 是否为日期时间范围形态：单个日期时间面板，两段靠「确定」切换编辑 */
 const isDateTimeRange = computed(() => props.type === 'datetimerange')
 /** 形态对应的面板层级：周 / 月 / 季 / 年形态直接落在对应层级，日期与带时间形态落在日期层级 */
@@ -268,51 +242,56 @@ const mergedFormat = computed(() => props.format ?? getDefaultFormat(props.type)
 const mergedValueFormat = computed(() => props.valueFormat ?? mergedFormat.value)
 /** 输入框按格式长度估宽，避免浏览器按 20 字符默认估宽导致触发器明显偏宽 */
 const inputSize = computed(() => getInputSize(mergedValueFormat.value))
-/** 字符串轨道受控：父组件传入 `formattedValue` 时以它为准，与主轨道解耦 */
-const formattedControlled = computed(() => props.formattedValue !== undefined)
-const innerValue = computed<number | null>(() => {
-  if (formattedControlled.value) {
-    return typeof props.formattedValue === 'string'
-      ? parseTimestamp(props.formattedValue, mergedValueFormat.value)
-      : null
-  }
-  return typeof valueModel.value === 'number' ? valueModel.value : null
-})
-/** 单段文本 → 时间戳（空文本视为该段未选） */
-function parseSideTimestamp(text: string | null | undefined): number | null {
-  return parseTimestamp(text ?? '', mergedValueFormat.value)
-}
-/** 单段时间戳 → 展示文本（该段未选时为空字符串） */
-function formatSideTimestamp(timestamp: number | null | undefined): string {
-  return timestamp === null || timestamp === undefined ? '' : formatTimestamp(timestamp, mergedValueFormat.value)
-}
-/** 范围形态的已提交区间：字符串轨道受控时以其为准，结构不符或解析失败时该段为空 */
-const rangeValue = computed<PickerRangeValue | null>(() => {
-  if (formattedControlled.value) {
-    const formatted = props.formattedValue
-    if (!Array.isArray(formatted)) {
-      return null
-    }
-    return [parseSideTimestamp(formatted[0]), parseSideTimestamp(formatted[1])]
-  }
-  const raw = valueModel.value
-  if (!Array.isArray(raw)) {
-    return null
-  }
-  return [raw[0], raw[1]]
-})
-/** 草稿值：带时间形态在面板展开期间只把选择落在草稿上，点「确定」才提交，关闭即丢弃 */
-const draftValue = ref<number | null>(null)
-/** 草稿区间：范围形态的选择先落草稿，两段齐全（或该段允许为空）时才对外提交 */
-const draftRange = ref<PickerRangeValue | null>(null)
-/** 范围形态当前激活的段：决定悬浮预览与下一次选择作用于哪一端 */
-const activeSide = ref<PickerRangeSide>('start')
-/** 触发器上的激活段下标（0 为起点段） */
-const activeTriggerIndex = computed(() => (activeSide.value === 'start' ? 0 : 1))
 /** 面板上悬浮的日期：范围形态在当前激活段、单选形态在输入框显示该日期的预览文本 */
 const hoverTimestamp = ref<number | null>(null)
 /** 预设悬浮产生的预览区间：范围形态据此在面板上预览该区间（不改变已选值） */
 const presetPreview = ref<PickerRangeValue | null>(null)
+/** 值与开合的共享内核：与形态无关的值逻辑与 `TimePicker` 共用一份实现 */
+const {
+  openModel,
+  triggerRef,
+  popupRef,
+  wrapperRef,
+  formattedControlled,
+  disabledSides,
+  fullyDisabled,
+  innerValue,
+  rangeValue,
+  formatSideTimestamp,
+  showClear,
+  draftValue,
+  draftRange,
+  activeSide,
+  activeTriggerIndex,
+  activatedSides,
+  activateSide,
+  panelRangeValue,
+  commit,
+  commitRange,
+  applyRangeSide,
+  requestOpen,
+  onSideFocus,
+  onClear,
+  onEscKeydown,
+  focus,
+  blur
+} = usePickerShell({
+  props,
+  isRange,
+  valueFormat: mergedValueFormat,
+  onChange: (value, formattedValue) => emits('change', value, formattedValue),
+  onFormattedChange: (value) => emits('update:formattedValue', value),
+  onCalendarChange: (value, formattedValue, range) => emits('calendarChange', value, formattedValue, { range }),
+  onOpenChange: (open) => emits('openChange', open),
+  // 收起时撤掉输入框的悬浮预览与预设预览（形态自有状态）
+  onOpenToggle: (open) => {
+    if (open) {
+      return
+    }
+    hoverTimestamp.value = null
+    presetPreview.value = null
+  }
+})
 /** 当前展示预览文本（悬浮面板日期产生的临时值）的段：该段文字取提示色 */
 const hoverPreviewIndex = computed<0 | 1 | null>(() => {
   // 依赖需先读取：条件短路会让后续依赖在首轮求值时不被收集，之后悬浮变化便不再触发重算
@@ -334,17 +313,6 @@ const singlePreviewTimestamp = computed<number | null>(() => {
 })
 /** 面板指示箭头相对输入区左边缘的偏移：与激活段下划线同源、随激活段平移（范围形态专用） */
 const rangeArrowLeft = ref(0)
-/** 本次展开期间被激活过的段：决定对侧越界日期的禁用（收起即清空） */
-const activatedSides = ref<Record<PickerRangeSide, boolean>>({ start: false, end: false })
-/** 激活某段：面板展开、选完一段后切换、聚焦某段输入框都算一次激活 */
-function activateSide(side: PickerRangeSide) {
-  activeSide.value = side
-  activatedSides.value[side] = true
-}
-/** 清空段激活记录（收起面板时调用） */
-function resetActivatedSides() {
-  activatedSides.value = { start: false, end: false }
-}
 /**
  * 面板展示值：展开期间有草稿则取草稿，其余情况跟随已提交值
  *
@@ -354,11 +322,6 @@ function resetActivatedSides() {
 const panelTimestamp = computed(() => {
   const drafting = openModel.value && draftValue.value !== null
   return drafting ? draftValue.value : innerValue.value
-})
-/** 面板展示区间：范围形态展开期间取草稿，其余情况跟随已提交值 */
-const panelRangeValue = computed<PickerRangeValue | null>(() => {
-  const drafting = isRange.value && openModel.value && draftRange.value !== null
-  return drafting ? draftRange.value : rangeValue.value
 })
 /**
  * 范围形态的面板禁用判定：激活段为起点时，本次展开中终点段被激活过且有值 → 禁用「晚于终点」的日期，
@@ -441,15 +404,6 @@ const mergedPlaceholders = computed<[string, string]>(() => {
 })
 /** 单段输入的提示文字（范围形态由 `placeholders` 承担，此处传空） */
 const singlePlaceholder = computed(() => (Array.isArray(props.placeholder) ? '' : props.placeholder))
-const showClear = computed(() => {
-  if (!props.allowClear || fullyDisabled.value) {
-    return false
-  }
-  if (isRange.value) {
-    return (rangeValue.value?.[0] ?? null) !== null || (rangeValue.value?.[1] ?? null) !== null
-  }
-  return innerValue.value !== null
-})
 // 实际方向：定位内核翻转 / 次轴自适应后的结果（宿主未挂载时退回期望方向）
 const actualPlacement = computed<FloatingPlacement>(() => popupRef.value?.actualPlacement ?? props.placement)
 /**
@@ -464,33 +418,6 @@ const showRangeArrow = computed(() => {
 /** 面板过渡：仅给 name，类名走 Vue 默认派生（-enter-from/-enter-active/…）。展开 / 收起的缩放原点
     随**实际方位**取（见 `datepicker-zoom` 一节），过渡名因此与方位无关 —— 首帧方位未回填也不会取反向动效 */
 const panelTransitionProps: TransitionProps = { name: 'datepicker-zoom' }
-watch(
-  () => openModel.value,
-  (next) => {
-    if (next) {
-      draftRange.value = rangeValue.value // 展开时以已提交区间为草稿起点
-      // 展开即视为激活当前段：段由点击的输入框决定，不强制回到起点段，
-      // 以免「点第二段却被拉回第一段」
-      activateSide(activeSide.value)
-      return
-    }
-    draftValue.value = null // 收起即丢弃草稿，未点「确定」的选择不生效
-    draftRange.value = null
-    resetActivatedSides() // 段激活记录只在本次展开期间有效
-    hoverTimestamp.value = null // 收起不重置激活段：下划线因而停在原段
-    presetPreview.value = null // 预设悬浮预览同样只在本次展开期间有效
-  },
-  { immediate: true }
-)
-// 承载层（Modal / Drawer / Dialog / 外层浮层面板）关闭时收起：容器关闭只是 v-show 隐藏、不派发任何
-// 指针或焦点事件，面板会停在打开态并占着层级槽位，容器重开时以「仍打开」的样子出现。
-// 收起走同一个入口，草稿复位由上面的 open watcher 承担
-useContainerClose(() => requestOpen(false))
-function requestOpen(next: boolean) {
-  if (fullyDisabled.value || openModel.value === next) return
-  openModel.value = next
-  emits('openChange', next)
-}
 /**
  * 点击触发器只负责展开（展开态点击不收起，收起由外部点击 / Esc / 选中值触发）：按落点确定本次会话的
  * 激活段（点终点段即激活终点段，点空白区落到起点段）并把焦点移到该段输入框 —— 聚焦态由 focus 驱动，
@@ -511,14 +438,6 @@ function onTriggerClick(index: 0 | 1 = 0) {
     triggerRef.value?.focus(index)
   })
 }
-/** 回写两条轨道：主轨道始终同步，字符串轨道按同一格式生成；返回回写的字符串，供「确定」事件复用 */
-function commit(timestamp: number | null): PickerFormattedValue {
-  const nextFormatted = timestamp === null ? null : formatTimestamp(timestamp, mergedValueFormat.value)
-  valueModel.value = timestamp
-  emits('update:formattedValue', nextFormatted)
-  emits('change', timestamp, nextFormatted)
-  return nextFormatted
-}
 /**
  * 面板选择：鼠标点击即落值并收起，键盘导航只把光标落在草稿上 —— 键盘若也即时落值，
  * 单选形态会「按一下方向键就选完并收起」，用户无法连续移动光标
@@ -530,64 +449,6 @@ function onSelect(timestamp: number, source: PickerSelectSource = 'mouse') {
   }
   commit(timestamp)
   requestOpen(false)
-}
-/** 范围形态的两段文本（该段未选时为空字符串） */
-function formatRangeValue(range: PickerRangeValue | null): PickerRangeFormattedValue | null {
-  if (range === null) {
-    return null
-  }
-  return [formatSideTimestamp(range[0]), formatSideTimestamp(range[1])]
-}
-/** 回写范围形态的两条轨道，返回回写的文本供事件复用 */
-function commitRange(range: PickerRangeValue | null): PickerRangeFormattedValue | null {
-  const nextFormatted = formatRangeValue(range)
-  valueModel.value = range
-  emits('update:formattedValue', nextFormatted)
-  emits('change', range, nextFormatted)
-  return nextFormatted
-}
-/** 该段的值是否可对外提交：有值即可，为空时需该段声明「允许为空」 */
-function canTriggerSide(timestamp: number | null, index: 0 | 1): boolean {
-  return timestamp !== null || (props.allowEmpty[index] ?? false)
-}
-/**
- * 写入范围形态的某一段（面板选择与手输提交共用）：起点晚于终点时丢弃另一端、只保留本次写入，
- * 两段齐全（或未选段声明可为空）才对外提交；只写到一段时保持展开，由调用场景决定是否切到另一端。
- * 返回写入后的区间与其文本（未提交时即为草稿），供 `ok` 事件复用
- */
-function applyRangeSide(timestamp: number, side: PickerRangeSide, switchSide: boolean) {
-  const current = draftRange.value ?? rangeValue.value ?? [null, null]
-  let next: PickerRangeValue = side === 'start' ? [timestamp, current[1]] : [current[0], timestamp]
-  if (next[0] !== null && next[1] !== null && next[0] > next[1]) {
-    next = side === 'start' ? [timestamp, null] : [null, timestamp]
-  }
-  const nextFormatted = formatRangeValue(next)
-  const canCommit = canTriggerSide(next[0], 0) && canTriggerSide(next[1], 1)
-  draftRange.value = next
-  emits('calendarChange', next, nextFormatted, { range: side })
-  if (canCommit) {
-    commitRange(next)
-  }
-  // 另一端「本次展开中尚未激活」或「尚无值」且未被禁用时，切到该端继续选并保持展开；
-  // 否则视为本次区间已选完 → 收起（对端被禁用即属此类：它没有可继续选的段）
-  const otherSide: PickerRangeSide = side === 'start' ? 'end' : 'start'
-  const currentIndex = side === 'start' ? 0 : 1
-  const otherIndex = side === 'start' ? 1 : 0
-  const otherSideDisabled = disabledSides.value[otherIndex]
-  const keepOpen =
-    switchSide &&
-    !otherSideDisabled &&
-    next[currentIndex] !== null &&
-    (!activatedSides.value[otherSide] || next[otherIndex] === null)
-  if (keepOpen) {
-    activateSide(otherSide)
-    // 切到另一端时把焦点一并挪过去（等 DOM 更新后再聚焦），
-    // 否则下划线已落到另一端、输入光标还留在原段，接着输入会写进错误的一段
-    nextTick(() => triggerRef.value?.focus(otherIndex))
-    return { value: next, formatted: nextFormatted }
-  }
-  requestOpen(false)
-  return { value: next, formatted: nextFormatted }
 }
 /**
  * 面板选择日期：写入当前激活段，并把激活段切到另一端以接着选第二段；
@@ -622,10 +483,6 @@ function onRangeHover(timestamp: number | null) {
 function onSingleHover(timestamp: number | null) {
   hoverTimestamp.value = timestamp
 }
-/** 聚焦某一段输入框即把激活段切过去（后续面板选择与悬浮预览都作用于该段） */
-function onSideFocus(index: 0 | 1) {
-  activateSide(index === 0 ? 'start' : 'end')
-}
 /** 草稿变更：只更新面板草稿，不提交（带时间形态的选择由「确定」统一提交） */
 function onDraftChange(timestamp: number) {
   draftValue.value = timestamp
@@ -640,14 +497,6 @@ function onConfirm(timestamp: number, source: 'ok' | 'now') {
   if (source === 'ok') {
     emits('ok', timestamp, nextFormatted)
   }
-}
-function onClear() {
-  if (isRange.value) {
-    commitRange(null)
-  } else {
-    commit(null)
-  }
-  requestOpen(false)
 }
 /**
  * 点击预设：立即提交并收起 —— 范围形态提交整个区间、单选形态提交单个时间戳；
@@ -672,9 +521,18 @@ function onPresetHover(presetValue: PickerPresetValue | null) {
   presetPreview.value = [presetValue[0], presetValue[1]]
 }
 /**
- * 手输文本：解析成功才提交，失败时由触发器回滚为当前合法文本。面板展开期间输入框展示的可能不是
- * 用户键入的内容（需点「确定」的形态展示面板草稿、键盘操作态展示方向键的光标日期），这两类失焦
- * 都视同取消（丢弃草稿、不落值），否则未确认的选择会被当成用户输入落值；回车与「确定」同径
+ * 手输文本是否可落值：解析成功且未命中 `disabledDate`
+ *
+ * 面板选择与手输共用同一条禁用判定 —— 面板里点不到的日期，手输也不该落值：命中即不选中、
+ * 回车也不提交，文本随后回滚
+ */
+function isSubmittableText(timestamp: number | null): timestamp is number {
+  return timestamp !== null && !(props.disabledDate?.(startOfDayTimestamp(timestamp)) ?? false)
+}
+/**
+ * 手输文本：解析成功且未被禁用才提交，失败时由触发器回滚为当前合法文本。面板展开期间输入框展示的
+ * 可能不是用户键入的内容（需点「确定」的形态展示面板草稿、键盘操作态展示方向键的光标日期），这两类
+ * 失焦都视同取消（丢弃草稿、不落值），否则未确认的选择会被当成用户输入落值；回车与「确定」同径
  */
 function onTextConfirm(text: string, source: 'enter' | 'blur', index: 0 | 1) {
   if (source === 'blur' && (needConfirm.value || keyboardPanelMode.value)) {
@@ -682,24 +540,16 @@ function onTextConfirm(text: string, source: 'enter' | 'blur', index: 0 | 1) {
     draftRange.value = null
     return
   }
+  const timestamp = parseTimestamp(text, mergedValueFormat.value)
+  if (!isSubmittableText(timestamp)) return
   if (isRange.value) {
-    const rangeTimestamp = parseTimestamp(text, mergedValueFormat.value)
-    if (rangeTimestamp !== null) {
-      // 回车的提交语义与面板选择同径（写入激活段并切到另一端），失焦只落值不切段
-      applyRangeSide(rangeTimestamp, index === 0 ? 'start' : 'end', source === 'enter')
-    }
+    // 回车的提交语义与面板选择同径（写入激活段并切到另一端），失焦只落值不切段
+    applyRangeSide(timestamp, index === 0 ? 'start' : 'end', source === 'enter')
     return
   }
-  const timestamp = parseTimestamp(text, mergedValueFormat.value)
-  if (timestamp === null) return
   commit(timestamp)
   // 回车即提交并收起（与面板选择同径）：带时间形态的草稿由收起时的监听统一丢弃
   requestOpen(false)
-}
-function onEscKeydown() {
-  if (openModel.value) {
-    requestOpen(false)
-  }
 }
 function onPanelChange(timestamp: number, mode: PickerPanelMode) {
   // 翻页 / 钻取后面板内容整体更换，鼠标已不再对应原来那一格，先撤掉输入框的悬浮预览
@@ -723,8 +573,6 @@ const keyboardPanelMode = ref(false)
 const activeSection = ref<PickerActiveSection>(null)
 /** 是否具备「日期 / 时间」两个可切换的区 */
 const hasTimeSection = computed(() => isDateTime.value || isDateTimeRange.value)
-/** 唤起面板的按键中不作数的一类：修饰键不是输入意图，Esc / 回车另有既有语义 */
-const PANEL_OPEN_IGNORED_KEYS = ['Shift', 'Control', 'Alt', 'Meta', 'Escape', 'Enter']
 const rangePanelRef = ref<PanelKeydownTarget | null>(null)
 const datetimePanelRef = ref<PanelKeydownTarget | null>(null)
 const datePanelRef = ref<PanelKeydownTarget | null>(null)
@@ -772,11 +620,39 @@ function getNextSection(current: PickerActiveSection, backward: boolean): Picker
   return SECTION_CYCLE[backward ? index - 1 : index + 1] ?? null
 }
 /**
- * Tab：切换键盘归属，并在面板内的两个区之间循环；循环到头（回到「无活动区」）时不阻止
- * 默认行为，交还浏览器把焦点移出组件
+ * 按键按下时的展开态快照
+ *
+ * 展开态的回车会先被输入框的文本提交消费（提交并收起面板），事件随后才冒泡到这里 —— 用此刻的
+ * 展开态判断会把同一次回车变成「关了又开」，故以按下时的状态为准。
+ */
+let openAtKeydown = false
+function onWrapperKeydownCapture(): void {
+  openAtKeydown = openModel.value
+}
+/**
+ * 本次焦点变化是否由「按在组件内」的指针操作引起
+ *
+ * 点触发器的非输入区（图标、内边距）同样会让输入框失焦，但那是「点自己」，不该收起面板；
+ * 复位放在下一轮事件循环 —— 同一次点击的焦点变化就在本轮任务内。
+ */
+let pointerInside = false
+function onWrapperMousedown(): void {
+  pointerInside = true
+  setTimeout(() => {
+    pointerInside = false
+  }, 0)
+}
+/**
+ * Tab：文本输入态下把键盘交给面板（焦点不动），面板操作态下在两个区之间循环；循环到头（回到
+ * 「无活动区」）时不阻止默认行为，交还浏览器把焦点移出组件。Shift+Tab 反向：文本输入态直接交还
+ * 浏览器，面板操作态沿同一循环退回上一区
  */
 function onTabKeydown(event: KeyboardEvent): void {
   if (!keyboardPanelMode.value) {
+    // 文本输入态的 Shift+Tab 不接管：正向 Tab 才把键盘交给面板，反向用于快速离开组件
+    if (event.shiftKey) {
+      return
+    }
     keyboardPanelMode.value = true
     event.preventDefault()
     return
@@ -790,8 +666,19 @@ function onTabKeydown(event: KeyboardEvent): void {
     event.preventDefault()
   }
 }
-/** 触发器的按键入口：面板未展开时任意输入键唤起面板，展开后按键盘归属决定是否操作面板 */
+/**
+ * 触发器的按键入口：面板未展开时任意输入键唤起面板，展开后按键盘归属决定是否操作面板
+ *
+ * 回车两态分工：收起态唤起面板；展开态由触发器的文本提交消费（提交并收起，无值可提交则保持展开）。
+ */
 function onWrapperKeydown(event: KeyboardEvent): void {
+  if (event.key === 'Enter') {
+    event.preventDefault()
+    if (!openAtKeydown) {
+      requestOpen(true)
+    }
+    return
+  }
   if (event.key === 'Tab') {
     if (openModel.value && !fullyDisabled.value) {
       onTabKeydown(event)
@@ -809,11 +696,20 @@ function onWrapperKeydown(event: KeyboardEvent): void {
   }
   forwardKeydown(event)
 }
-function focus() {
-  triggerRef.value?.focus()
-}
-function blur() {
-  triggerRef.value?.blur()
+/**
+ * 焦点离开组件即收起面板并丢弃草稿，键盘归位到文本输入态
+ *
+ * 落点落在面板里（如焦点移到面板内的按钮）不算离开；由组件内部的按下引起的失焦同样不算。
+ */
+function onWrapperFocusout(event: FocusEvent): void {
+  const next = event.relatedTarget as Node | null
+  // 键盘一律交还文本输入态，焦点是否真的离开组件决定面板去留
+  keyboardPanelMode.value = false
+  activeSection.value = null
+  if (pointerInside || isPickerFocusInside(wrapperRef.value, popupRef.value, next)) {
+    return
+  }
+  requestOpen(false)
 }
 defineExpose({ focus, blur })
 </script>
@@ -822,9 +718,12 @@ defineExpose({ focus, blur })
     ref="wrapperRef"
     class="datepicker-wrap"
     :style="wrapperStyle"
+    @keydown.capture="onWrapperKeydownCapture"
     @keydown="onWrapperKeydown"
     @keydown.esc="onEscKeydown"
     @keydown.enter.stop
+    @focusout="onWrapperFocusout"
+    @mousedown="onWrapperMousedown"
     @input="onTriggerInput"
   >
     <PickerTrigger

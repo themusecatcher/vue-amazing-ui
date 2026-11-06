@@ -62,7 +62,7 @@ components/
 
 > 伴生而非父子关系的组件（底层组件 + `Provider` + `useXxx`）平铺在同一族目录顶层，如 `message/`、`modal/`、`dialog/`、`notification/`、`loading-bar/`。
 >
-> 库内共用内核同样平铺：多个「有自身样式、但仅库内引用、不对外开放」的组件共处一个目录，如 `picker/`（`DatePicker` / `TimePicker` 共用的 9 个面板）—— 未进 `components.ts`、也不在 `GlobalComponents` 中。它不受下一段「必须独占产物目录」的约束：该约束的主语是「可独立引入组件」，内核面板不是；它们的样式只聚合进 `picker/style` 一处。
+> 库内共用内核同样平铺：多个「有自身样式、但仅库内引用、不对外开放」的组件共处一个目录，如 `picker/`（`DatePicker` / `TimePicker` 共用的面板，外加不产出 DOM 的壳层内核 `use-picker-shell.ts`：双轨值、逐段禁用、草稿与段激活、范围写入与回写、禁用即收起等与形态无关的值逻辑，两个壳层共用同一次实现）—— 未进 `components.ts`、也不在 `GlobalComponents` 中。它不受下一段「必须独占产物目录」的约束：该约束的主语是「可独立引入组件」，内核面板不是；它们的样式只聚合进 `picker/style` 一处。
 >
 > 每个「拥有独立样式的可独立引入组件」必须独占一个产物目录：构建期样式入口按组件产物目录聚合（`build/generate-style-entries.ts`），同目录的多个组件会被合并为一个 `style/index.js`，故禁止为减少目录层级而把多个组件平铺到同一目录（会连带引入无关组件的样式）。
 >

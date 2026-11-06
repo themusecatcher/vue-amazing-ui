@@ -1738,7 +1738,7 @@ const rangePlaceholder = ['开始日期', '结束日期']
 
 ## 键盘操作
 
-_面板展开后按 `Tab` 把键盘交给面板，方向键按当前面板层级的粒度移动光标、`Enter` 提交；带时间的形态下 `Tab` 在日期与时间两列之间切换，非活动列淡化_
+_面板收起时按 `Enter` 展开，展开后按 `Tab` 把键盘交给面板，方向键按当前面板层级的粒度移动光标、`Enter` 提交并收起，`Esc` 收起；带时间的形态下 `Tab` 在日期与时间两列之间切换（`Shift+Tab` 反向收回键盘），非活动列淡化；焦点移出组件即收起面板_
 
 <br/>
 
@@ -1822,7 +1822,7 @@ const rangePlaceholder = ['开始日期', '结束日期']
 | placeholder | 输入框提示文字，范围形态可传入两段文案 | string &#124; [string, string] | '' |
 | defaultPickerValue | 面板初始日期（毫秒时间戳），默认取 `value` 或今天 | number | undefined |
 | startDayOfWeek | 一周的开始是星期几，`0-6`，`0` 是周一；周形态恒按 `ISO` 周（周一起始），该属性对周形态不生效 | 0 &#124; 1 &#124; 2 &#124; 3 &#124; 4 &#124; 5 &#124; 6 | 0 |
-| disabledDate | 不可选择的日期，入参为「当日零点」的毫秒时间戳；月 / 季 / 年形态下按整段判定（整段都不可选该格才禁用） | (timestamp: number) => boolean | undefined |
+| disabledDate | 不可选择的日期，入参为「当日零点」的毫秒时间戳；月 / 季 / 年形态下按整段判定（整段都不可选该格才禁用）；手输文本同样校验，命中即不落值 | (timestamp: number) => boolean | undefined |
 | disabledTime | 不可选择的时间，仅带时间的形态生效；入参为当前面板草稿值的时间戳，范围形态额外接收段标识 | [DatePickerDisabledTime](#datepickerdisabledtime-type) &#124; [DatePickerRangeDisabledTime](#datepickerrangedisabledtime-type) | undefined |
 | defaultTime | 选中日期时的默认时分秒（只取其中的时分秒，不参与时间面板的预选展示）；范围形态可按段传入两段元组，某段为 `undefined` 时该段退回当前时刻 | number &#124; [number &#124; undefined, number &#124; undefined] | undefined |
 | timePickerProps | 时间面板选项（步长 / `12` 小时制 / 隐藏禁用项） | [DatePickerTimeProps](#datepickertimeprops-type) | undefined |
@@ -1831,15 +1831,15 @@ const rangePlaceholder = ['开始日期', '结束日期']
 | size | 选择器大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
 | status | 校验状态 | 'warning' &#124; 'error' | undefined |
 | bordered | 是否展示边框 | boolean | true |
-| disabled | 是否禁用；范围形态可传两段元组逐段禁用（被禁用的段不可输入，且该段日期被对端的值锁死） | boolean &#124; [boolean, boolean] | false |
+| disabled | 是否禁用；范围形态可传两段元组逐段禁用（被禁用的段不可输入，且该段日期被对端的值锁死）；切为禁用时已展开的面板立即收起，解除禁用不会自行展开 | boolean &#124; [boolean, boolean] | false |
 | allowClear | 是否展示清除按钮 | boolean | true |
-| allowEmpty | 范围形态各段是否允许为空，为空时该段可被单独清空并对外提交 | [boolean, boolean] | [false, false] |
+| allowEmpty | 范围形态各段是否允许为空：为 `true` 时该段为空也能对外派发 `change`；清空整段仍走 `allowClear` 的清除按钮（把某段输入框清空不会置空该段） | [boolean, boolean] | [false, false] |
 | inputReadOnly | 输入框是否只读（避免移动端唤起键盘） | boolean | false |
 | to | 面板挂载的容器节点：显式传入时按此挂载（元素标签名 (例如 `'body'`) 或元素本身，`false` 会待在原地）；**不传时优先挂到最近的承载层内容容器**（`Modal` / `Drawer` / `Dialog` 卡片或上层浮层面板），无承载层时为 `body` | string &#124; HTMLElement &#124; false | undefined |
 | placement | 面板弹出位置 | 'topLeft' &#124; 'top' &#124; 'topRight' &#124; 'bottomLeft' &#124; 'bottom' &#124; 'bottomRight' | 'bottomLeft' |
 | showArrow | 范围形态的面板指示箭头是否展示：不传时跟随弹出方位（仅左侧对齐的 `bottomLeft` / `topLeft` 展示），`true` 始终展示、`false` 始终隐藏 | boolean | undefined |
 | showToday | 是否展示面板底部的「今天」快捷，面板切到周 / 月 / 季 / 年视图时隐藏 | boolean | true |
-| showNow | 是否展示面板底部的「此刻」快捷，仅带时间的形态生效 | boolean | true |
+| showNow | 是否展示面板底部的「此刻」快捷，仅单选带时间形态（`type="datetime"`）生效：范围形态的提交落在单段上，「此刻」无从决定属于哪一段 | boolean | true |
 | dateRender | 自定义日期单元格的内容与样式（替换日号），单元格容器与选中 / 悬浮 / 区间底色仍由组件提供；入参 `current` 为该格日期的零点时间戳、`today` 为当前时刻时间戳 | (params: { current: number; today: number }) => VNode &#124; VNode[] | undefined |
 | renderExtraFooter | 面板底部的额外页脚，渲染在「今天」「确定」等操作行之上 | () => VNode &#124; VNode[] | undefined |
 | suffixIcon | 自定义选择框后缀图标 | VNode &#124; (() => VNode) | undefined |
@@ -1968,7 +1968,7 @@ const rangePlaceholder = ['开始日期', '结束日期']
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| change | 值变化时的回调 | (value: number &#124; [number &#124; null, number &#124; null] &#124; null, formattedValue: string &#124; [string, string] &#124; null) => void |
+| change | 值变化时的回调（与已提交值相同的选择不派发） | (value: number &#124; [number &#124; null, number &#124; null] &#124; null, formattedValue: string &#124; [string, string] &#124; null) => void |
 | calendarChange | 范围形态待选区间变化时的回调，`info.range` 标识本次改动落在哪一段 | (value: [number &#124; null, number &#124; null] &#124; null, formattedValue: [string, string] &#124; null, info: [DatePickerRangeInfo](#datepickerrangeinfo-type)) => void |
 | ok | 带时间的形态点击「确定」时的回调 | (value: number &#124; [number &#124; null, number &#124; null] &#124; null, formattedValue: string &#124; [string, string] &#124; null) => void |
 | openChange | 面板展开收起时的回调 | (open: boolean) => void |
