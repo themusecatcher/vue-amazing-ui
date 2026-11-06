@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue'
+import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue'
 import { TransitionPresets } from '@vueuse/core'
-import type { CubicBezierPoints } from '@vueuse/core'
+import type { EasingFunction } from '@vueuse/core'
 import type { Carousel, CarouselEasingPreset, CarouselImage, CarouselProps } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
@@ -133,26 +134,50 @@ const mousewheel = ref<boolean>(true)
 function clickImage(image: CarouselImage) {
   console.log('image', image)
 }
-// slideFunction 的取值形式：缓动预设名 / 三次贝塞尔控制点数组
-const slideEasingType = ref<'preset' | 'bezier'>('preset')
+// slideFunction 的三种取值形式：缓动预设名 / 三次贝塞尔控制点数组 / 缓动函数
+const slideEasingType = ref<'preset' | 'bezier' | 'function'>('preset')
 const slideEasingTypeOptions = [
   { label: '缓动预设名', value: 'preset' },
-  { label: '贝塞尔数组', value: 'bezier' }
+  { label: '贝塞尔数组', value: 'bezier' },
+  { label: '缓动函数', value: 'function' }
 ]
 // 预设名派生自 @vueuse/core 的 TransitionPresets，随上游自动同步
 const slideEasingPresetOptions = Object.keys(TransitionPresets).map((preset) => ({ label: preset, value: preset }))
 const slideEasingPreset = ref<CarouselEasingPreset>('easeOutBack')
-const slideEasingBezier: CubicBezierPoints = [0.45, 1, 0.55, 1]
-const slideEasing = computed(() => (slideEasingType.value === 'preset' ? slideEasingPreset.value : slideEasingBezier))
+// 三次贝塞尔控制点：x1 / x2 需落在 [0, 1] 内，y1 / y2 可超出该区间以产生回弹过冲（如 back-out）
+const slideEasingBezier = reactive({ x1: 0.34, y1: 1.56, x2: 0.64, y2: 1 })
+const bezierPointControls = [
+  { key: 'x1', min: 0, max: 1 },
+  { key: 'y1', min: -1, max: 2 },
+  { key: 'x2', min: 0, max: 1 },
+  { key: 'y2', min: -1, max: 2 }
+] as const
+// 贝塞尔数组必须是四个有效数字：InputNumber 清空时会回传 null，此时不改写数组，输入框失焦后回滚显示
+function updateBezierPoint(key: keyof typeof slideEasingBezier, value?: number | null) {
+  if (value !== undefined && value !== null) {
+    slideEasingBezier[key] = value
+  }
+}
+// 缓动函数形态示例：smoothstep，入参 t 为 0~1 的进度，返回缓动后的进度
+const slideEasingFunction: EasingFunction = (t) => t * t * (3 - 2 * t)
+const slideEasing = computed<CarouselProps['slideFunction']>(() => {
+  const { x1, y1, x2, y2 } = slideEasingBezier
+  if (slideEasingType.value === 'preset') {
+    return slideEasingPreset.value
+  }
+  if (slideEasingType.value === 'function') {
+    return slideEasingFunction
+  }
+  return [x1, y1, x2, y2]
+})
 // fadeFunction 的两种取值形式：四个贝塞尔控制点 / CSS transition-timing-function 写法
 const fadeEasingType = ref<'bezier' | 'css'>('bezier')
 const fadeEasingTypeOptions = [
   { label: '贝塞尔控制点', value: 'bezier' },
   { label: 'CSS 写法', value: 'css' }
 ]
-const fadeEasingBezier: [number, number, number, number] = [0.25, 0.1, 0.25, 1]
 const fadeEasing = computed<CarouselProps['fadeFunction']>(() =>
-  fadeEasingType.value === 'bezier' ? fadeEasingBezier : 'ease-in-out'
+  fadeEasingType.value === 'bezier' ? [0.25, 0.1, 0.25, 1] : 'ease-in-out'
 )
 // 配置器的 fadeFunction 下拉项：CSS transition-timing-function 取值
 const fadeFunctionOptions = [
@@ -243,37 +268,37 @@ watch(
     <p class="mb10">当焦点在 <code>Arrow</code> 或 <code>Dots</code> 上时，可以通过键盘上、下、左、右按键切换</p>
     <Carousel :images="images" :width="800" :height="450" @click="clickImage" />
     <h2 class="mt30 mb10">箭头</h2>
-    <Flex vertical>
+    <Space vertical>
       <Space align="center"> showArrow: <Switch v-model:value="showArrow" /> </Space>
       <Carousel :images="images" :width="800" :height="450" :show-arrow="showArrow" @click="clickImage" />
-    </Flex>
+    </Space>
     <h2 class="mt30 mb10">自动轮播</h2>
     <Carousel :images="images" :width="800" :height="450" autoplay @click="clickImage" />
     <h2 class="mt30 mb10">指示点位置</h2>
-    <Flex vertical>
+    <Space vertical>
       <RadioGroup :options="positionOptions" v-model:value="dotPosition" button button-style="solid" />
       <Carousel :images="images" :width="800" :height="450" autoplay :dotPosition="dotPosition" />
-    </Flex>
+    </Space>
     <h2 class="mt30 mb10">垂直</h2>
     <Carousel :images="images" :width="800" :height="450" autoplay dotPosition="right" />
     <h2 class="mt30 mb10">移入暂停</h2>
     <Carousel :images="images" :width="800" :height="450" autoplay pause-on-mouse-enter dotPosition="right" />
     <h2 class="mt30 mb10">过渡效果</h2>
-    <Flex vertical>
+    <Space vertical>
       <RadioGroup :options="effectOptions" v-model:value="effect" button button-style="solid" />
       <Carousel :images="images" :width="800" :height="450" :effect="effect" :fade-duration="1500" />
-    </Flex>
+    </Space>
     <h2 class="mt30 mb10">鼠标经过指示点切换轮播图</h2>
-    <Flex vertical>
+    <Space vertical>
       <RadioGroup :options="triggerOptions" v-model:value="dotTrigger" button button-style="solid" />
       <Carousel :images="images" :width="800" :height="450" :dot-trigger="dotTrigger" />
-    </Flex>
+    </Space>
     <h2 class="mt30 mb10">自定义滑动动画</h2>
     <p class="mb10">
       <code>slideFunction</code> 支持缓动预设名、三次贝塞尔控制点数组与缓动函数，预设名与 <code>@vueuse/core</code> 的
-      <code>TransitionPresets</code> 一致
+      <a href="https://vueuse.org/core/useTransition/#usage" target="_blank"><code>TransitionPresets</code></a> 一致
     </p>
-    <Flex vertical>
+    <Space vertical>
       <Space>
         <RadioGroup :options="slideEasingTypeOptions" v-model:value="slideEasingType" button button-style="solid" />
         <Select
@@ -284,14 +309,27 @@ watch(
           show-search
         />
       </Space>
+      <Space v-if="slideEasingType === 'bezier'" align="center">
+        <template v-for="point in bezierPointControls" :key="point.key">
+          <span>{{ point.key }}</span>
+          <InputNumber
+            :value="slideEasingBezier[point.key]"
+            :min="point.min"
+            :max="point.max"
+            :step="0.01"
+            @update:value="updateBezierPoint(point.key, $event)"
+          />
+        </template>
+      </Space>
+      <p v-else-if="slideEasingType === 'function'"> 缓动函数：<code>t => t * t * (3 - 2 * t)</code> </p>
       <Carousel :images="images" :width="800" :height="450" :slide-duration="800" :slide-function="slideEasing" />
-    </Flex>
+    </Space>
     <h2 class="mt30 mb10">自定义渐变动画</h2>
     <p class="mb10">
       <code>fadeFunction</code> 可传四个三次贝塞尔控制点（自动转为 CSS <code>cubic-bezier()</code> 写法），也可直接传
       CSS <code>transition-timing-function</code> 写法
     </p>
-    <Flex vertical>
+    <Space vertical>
       <RadioGroup :options="fadeEasingTypeOptions" v-model:value="fadeEasingType" button button-style="solid" />
       <Carousel
         :images="images"
@@ -301,7 +339,7 @@ watch(
         :fade-duration="1500"
         :fade-function="fadeEasing"
       />
-    </Flex>
+    </Space>
     <h2 class="mt30 mb10">自定义样式</h2>
     <Carousel
       :images="images"
@@ -316,36 +354,36 @@ watch(
     />
     <h2 class="mt30 mb10">循环切换</h2>
     <p class="mb10">关闭 <code>loop</code> 后到达首尾时，该方向的切换（箭头、键盘、滚轮、拖拽、自动轮播）均失效</p>
-    <Flex vertical>
+    <Space vertical>
       <Space align="center"> loop: <Switch v-model:value="loop" /> </Space>
       <Carousel :images="images" :width="800" :height="450" :loop="loop" />
-    </Flex>
+    </Space>
     <h2 class="mt30 mb10">单张图片</h2>
     <p class="mb10">图片只有一张时不渲染箭头，也不会自动轮播或响应键盘、滚轮、拖拽切换（指示点仍显示）</p>
     <Carousel :images="singleImage" :width="800" :height="450" />
     <h2 class="mt30 mb10">初始展示页</h2>
     <p class="mb10">通过 <code>initial-index</code> 指定初始展示的图片下标，仅在初始化时生效</p>
-    <Flex vertical>
+    <Space vertical>
       <Space align="center">
         initialIndex: <InputNumber :min="1" :max="images.length" v-model:value="initialIndex" />
       </Space>
       <Carousel :key="initialIndex" :images="images" :width="800" :height="450" :initial-index="initialIndex" />
-    </Flex>
+    </Space>
     <h2 class="mt30 mb10">受控当前页</h2>
     <p class="mb10">
       通过 <code>v-model:current-index</code> 双向绑定当前页：外部改值即可跳转，点击指示点或箭头切换也会实时回写
     </p>
-    <Flex vertical>
+    <Space vertical>
       <Space align="center">
         当前页：<InputNumber :min="1" :max="images.length" v-model:value="controlledIndex" />
         <Button @click="controlledIndex = 1">跳转到第 1 张</Button>
         <Button @click="controlledIndex = images.length">跳转到最后一张</Button>
       </Space>
       <Carousel v-model:current-index="controlledIndex" :images="images" :width="800" :height="450" />
-    </Flex>
+    </Space>
     <h2 class="mt30 mb10">切换回调</h2>
     <p class="mb10"><code>beforeChange</code> 在切换开始时触发，<code>afterChange</code> 在切换结束后触发</p>
-    <Flex vertical>
+    <Space vertical>
       <Space align="center"> 最近一次： {{ beforeChangeInfo }} / {{ afterChangeInfo }} </Space>
       <Carousel
         :images="images"
@@ -354,39 +392,43 @@ watch(
         @before-change="onBeforeChange"
         @after-change="onAfterChange"
       />
-    </Flex>
+    </Space>
     <h2 class="mt30 mb10">图片填充方式</h2>
     <p class="mb10">与 CSS 同名属性一致，默认 <code>fill</code> 拉伸填满容器</p>
-    <Flex vertical>
+    <Space vertical>
       <Space align="center">
         objectFit: <Select :options="objectFitOptions" v-model:value="objectFit" style="width: 160px" />
       </Space>
       <Carousel :images="images" :width="800" :height="450" :object-fit="objectFit" />
-    </Flex>
+    </Space>
     <h2 class="mt30 mb10">拖拽切换</h2>
     <p class="mb10">
       开启 <code>draggable</code> 后支持鼠标与触摸拖拽，位移超过容器宽度一半或速度超过 <code>0.4px/ms</code> 即翻页
     </p>
-    <Flex vertical>
+    <Space vertical>
       <Space align="center"> draggable: <Switch v-model:value="draggable" /> </Space>
       <Carousel :images="images" :width="800" :height="450" :draggable="draggable" />
-    </Flex>
+    </Space>
     <h2 class="mt30 mb10">滚轮切换</h2>
     <p class="mb10">开启 <code>mousewheel</code> 后滚轮切换，单次滚动量需超过 <code>10</code></p>
-    <Flex vertical>
+    <Space vertical>
       <Space align="center"> mousewheel: <Switch v-model:value="mousewheel" /> </Space>
       <Carousel :images="images" :width="800" :height="450" :mousewheel="mousewheel" />
-    </Flex>
+    </Space>
     <h2 class="mt30 mb10">自定义箭头</h2>
     <p class="mb10">
       通过 <code>prevArrow</code>、<code>nextArrow</code> 插槽自定义箭头，插槽内容仅负责外观，点击切换由组件接管
     </p>
     <Carousel :images="images" :width="800" :height="450">
       <template #prevArrow="{ isPrevDisabled }">
-        <span class="custom-arrow" :class="{ 'custom-arrow-disabled': isPrevDisabled }">‹</span>
+        <span class="custom-arrow" :class="{ 'custom-arrow-disabled': isPrevDisabled }">
+          <LeftOutlined />
+        </span>
       </template>
       <template #nextArrow="{ isNextDisabled }">
-        <span class="custom-arrow" :class="{ 'custom-arrow-disabled': isNextDisabled }">›</span>
+        <span class="custom-arrow" :class="{ 'custom-arrow-disabled': isNextDisabled }">
+          <RightOutlined />
+        </span>
       </template>
     </Carousel>
     <h2 class="mt30 mb10">自定义指示点</h2>
@@ -403,7 +445,7 @@ watch(
       </template>
     </Carousel>
     <h2 class="mt30 mb10">使用 Methods</h2>
-    <Flex vertical>
+    <Space vertical>
       <Space>
         <InputNumber :min="1" :max="images.length" v-model:value="toIndex" />
         <Button @click="carousel?.to(toIndex)">跳转到</Button>
@@ -413,7 +455,7 @@ watch(
         <Button @click="getCurrentIndex">获取当前页：{{ currentIndex }}</Button>
       </Space>
       <Carousel ref="carousel" :images="images" :width="800" :height="450" />
-    </Flex>
+    </Space>
     <h2 class="mt30 mb10">轮播图配置器</h2>
     <p class="mb10">currentIndex 为受控属性，留空时由组件自行维护当前页，设置后进入受控模式</p>
     <Flex gap="large" vertical>
@@ -537,12 +579,18 @@ watch(
 <style lang="less" scoped>
 .custom-arrow {
   color: #fff;
-  font-size: 36px;
+  font-size: 30px;
   line-height: 1;
-  text-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+  opacity: 0.72;
+  // 图标是 inline SVG，text-shadow 对它不生效，需用 drop-shadow 沿轮廓生成柔和外晕
+  filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.32));
+  transition: opacity 0.3s;
+  &:not(.custom-arrow-disabled):hover {
+    opacity: 1;
+  }
 }
 .custom-arrow-disabled {
-  color: rgba(255, 255, 255, 0.3);
+  opacity: 0.32;
 }
 .custom-dot {
   display: inline-block;

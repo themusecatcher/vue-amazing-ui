@@ -12,8 +12,9 @@ _一组轮播的区域_
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue'
+import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue'
 import { TransitionPresets } from '@vueuse/core'
-import type { CubicBezierPoints } from '@vueuse/core'
+import type { EasingFunction } from '@vueuse/core'
 import { Carousel } from 'vue-amazing-ui'
 import type { CarouselProps, CarouselImage, CarouselEasingPreset } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
@@ -128,26 +129,50 @@ const mousewheel = ref<boolean>(true)
 function clickImage(image: CarouselImage) {
   console.log('image', image)
 }
-// slideFunction 的取值形式：缓动预设名 / 三次贝塞尔控制点数组
-const slideEasingType = ref<'preset' | 'bezier'>('preset')
+// slideFunction 的三种取值形式：缓动预设名 / 三次贝塞尔控制点数组 / 缓动函数
+const slideEasingType = ref<'preset' | 'bezier' | 'function'>('preset')
 const slideEasingTypeOptions = [
   { label: '缓动预设名', value: 'preset' },
-  { label: '贝塞尔数组', value: 'bezier' }
+  { label: '贝塞尔数组', value: 'bezier' },
+  { label: '缓动函数', value: 'function' }
 ]
 // 预设名派生自 @vueuse/core 的 TransitionPresets，随上游自动同步
 const slideEasingPresetOptions = Object.keys(TransitionPresets).map((preset) => ({ label: preset, value: preset }))
 const slideEasingPreset = ref<CarouselEasingPreset>('easeOutBack')
-const slideEasingBezier: CubicBezierPoints = [0.45, 1, 0.55, 1]
-const slideEasing = computed(() => (slideEasingType.value === 'preset' ? slideEasingPreset.value : slideEasingBezier))
+// 三次贝塞尔控制点：x1 / x2 需落在 [0, 1] 内，y1 / y2 可超出该区间以产生回弹过冲（如 back-out）
+const slideEasingBezier = reactive({ x1: 0.34, y1: 1.56, x2: 0.64, y2: 1 })
+const bezierPointControls = [
+  { key: 'x1', min: 0, max: 1 },
+  { key: 'y1', min: -1, max: 2 },
+  { key: 'x2', min: 0, max: 1 },
+  { key: 'y2', min: -1, max: 2 }
+] as const
+// 贝塞尔数组必须是四个有效数字：InputNumber 清空时会回传 null，此时不改写数组，输入框失焦后回滚显示
+function updateBezierPoint(key: keyof typeof slideEasingBezier, value?: number | null) {
+  if (value !== undefined && value !== null) {
+    slideEasingBezier[key] = value
+  }
+}
+// 缓动函数形态示例：smoothstep，入参 t 为 0~1 的进度，返回缓动后的进度
+const slideEasingFunction: EasingFunction = (t) => t * t * (3 - 2 * t)
+const slideEasing = computed<CarouselProps['slideFunction']>(() => {
+  const { x1, y1, x2, y2 } = slideEasingBezier
+  if (slideEasingType.value === 'preset') {
+    return slideEasingPreset.value
+  }
+  if (slideEasingType.value === 'function') {
+    return slideEasingFunction
+  }
+  return [x1, y1, x2, y2]
+})
 // fadeFunction 的两种取值形式：四个贝塞尔控制点 / CSS transition-timing-function 写法
 const fadeEasingType = ref<'bezier' | 'css'>('bezier')
 const fadeEasingTypeOptions = [
   { label: '贝塞尔控制点', value: 'bezier' },
   { label: 'CSS 写法', value: 'css' }
 ]
-const fadeEasingBezier: [number, number, number, number] = [0.25, 0.1, 0.25, 1]
 const fadeEasing = computed<CarouselProps['fadeFunction']>(() =>
-  fadeEasingType.value === 'bezier' ? fadeEasingBezier : 'ease-in-out'
+  fadeEasingType.value === 'bezier' ? [0.25, 0.1, 0.25, 1] : 'ease-in-out'
 )
 // 配置器的 fadeFunction 下拉项：CSS transition-timing-function 取值
 const fadeFunctionOptions = [
@@ -661,7 +686,7 @@ const dotTrigger = ref<CarouselProps['dotTrigger']>('hover')
 
 ## 自定义滑动动画
 
-_`slideFunction` 支持缓动预设名、三次贝塞尔控制点数组与缓动函数，预设名与 `@vueuse/core` 的 `TransitionPresets` 一致_
+_`slideFunction` 支持缓动预设名、三次贝塞尔控制点数组与缓动函数，预设名与 `@vueuse/core` 的 [`TransitionPresets`](https://vueuse.org/core/useTransition/#usage) 一致_
 
 <br/>
 
@@ -676,6 +701,19 @@ _`slideFunction` 支持缓动预设名、三次贝塞尔控制点数组与缓动
       show-search
     />
   </Space>
+  <Space v-if="slideEasingType === 'bezier'" align="center">
+    <template v-for="point in bezierPointControls" :key="point.key">
+      <span>{{ point.key }}</span>
+      <InputNumber
+        :value="slideEasingBezier[point.key]"
+        :min="point.min"
+        :max="point.max"
+        :step="0.01"
+        @update:value="updateBezierPoint(point.key, $event)"
+      />
+    </template>
+  </Space>
+  <p v-else-if="slideEasingType === 'function'">缓动函数：<code>t => t * t * (3 - 2 * t)</code></p>
   <Carousel :images="images" :height="450" :slide-duration="800" :slide-function="slideEasing" />
 </Flex>
 
@@ -683,10 +721,10 @@ _`slideFunction` 支持缓动预设名、三次贝塞尔控制点数组与缓动
 
 ```vue
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { TransitionPresets } from '@vueuse/core'
-import type { CubicBezierPoints } from '@vueuse/core'
-import type { CarouselImage, CarouselEasingPreset } from 'vue-amazing-ui'
+import type { EasingFunction } from '@vueuse/core'
+import type { CarouselImage, CarouselEasingPreset, CarouselProps } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
     name: 'image-1',
@@ -712,17 +750,42 @@ const images = ref<CarouselImage[]>([
     src: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/5.jpg'
   }
 ])
-// 缓动预设名 / 三次贝塞尔控制点数组
-const slideEasingType = ref<'preset' | 'bezier'>('preset')
+// slideFunction 的三种取值形式：缓动预设名 / 三次贝塞尔控制点数组 / 缓动函数
+const slideEasingType = ref<'preset' | 'bezier' | 'function'>('preset')
 const slideEasingTypeOptions = [
   { label: '缓动预设名', value: 'preset' },
-  { label: '贝塞尔数组', value: 'bezier' }
+  { label: '贝塞尔数组', value: 'bezier' },
+  { label: '缓动函数', value: 'function' }
 ]
 // 预设名派生自 @vueuse/core 的 TransitionPresets，随上游自动同步
 const slideEasingPresetOptions = Object.keys(TransitionPresets).map((preset) => ({ label: preset, value: preset }))
 const slideEasingPreset = ref<CarouselEasingPreset>('easeOutBack')
-const slideEasingBezier: CubicBezierPoints = [0.45, 1, 0.55, 1]
-const slideEasing = computed(() => (slideEasingType.value === 'preset' ? slideEasingPreset.value : slideEasingBezier))
+// 三次贝塞尔控制点：x1 / x2 需落在 [0, 1] 内，y1 / y2 可超出该区间以产生回弹过冲（如 back-out）
+const slideEasingBezier = reactive({ x1: 0.34, y1: 1.56, x2: 0.64, y2: 1 })
+const bezierPointControls = [
+  { key: 'x1', min: 0, max: 1 },
+  { key: 'y1', min: -1, max: 2 },
+  { key: 'x2', min: 0, max: 1 },
+  { key: 'y2', min: -1, max: 2 }
+] as const
+// 贝塞尔数组必须是四个有效数字：InputNumber 清空时会回传 null，此时不改写数组，输入框失焦后回滚显示
+function updateBezierPoint(key: keyof typeof slideEasingBezier, value?: number | null) {
+  if (value !== undefined && value !== null) {
+    slideEasingBezier[key] = value
+  }
+}
+// 缓动函数形态示例：smoothstep，入参 t 为 0~1 的进度，返回缓动后的进度
+const slideEasingFunction: EasingFunction = (t) => t * t * (3 - 2 * t)
+const slideEasing = computed<CarouselProps['slideFunction']>(() => {
+  const { x1, y1, x2, y2 } = slideEasingBezier
+  if (slideEasingType.value === 'preset') {
+    return slideEasingPreset.value
+  }
+  if (slideEasingType.value === 'function') {
+    return slideEasingFunction
+  }
+  return [x1, y1, x2, y2]
+})
 </script>
 <template>
   <Flex vertical>
@@ -736,6 +799,19 @@ const slideEasing = computed(() => (slideEasingType.value === 'preset' ? slideEa
         show-search
       />
     </Space>
+    <Space v-if="slideEasingType === 'bezier'" align="center">
+      <template v-for="point in bezierPointControls" :key="point.key">
+        <span>{{ point.key }}</span>
+        <InputNumber
+          :value="slideEasingBezier[point.key]"
+          :min="point.min"
+          :max="point.max"
+          :step="0.01"
+          @update:value="updateBezierPoint(point.key, $event)"
+        />
+      </template>
+    </Space>
+    <p v-else-if="slideEasingType === 'function'">缓动函数：<code>t => t * t * (3 - 2 * t)</code></p>
     <Carousel :images="images" :height="450" :slide-duration="800" :slide-function="slideEasing" />
   </Flex>
 </template>
@@ -791,9 +867,8 @@ const fadeEasingTypeOptions = [
   { label: '贝塞尔控制点', value: 'bezier' },
   { label: 'CSS 写法', value: 'css' }
 ]
-const fadeEasingBezier: [number, number, number, number] = [0.25, 0.1, 0.25, 1]
 const fadeEasing = computed<CarouselProps['fadeFunction']>(() =>
-  fadeEasingType.value === 'bezier' ? fadeEasingBezier : 'ease-in-out'
+  fadeEasingType.value === 'bezier' ? [0.25, 0.1, 0.25, 1] : 'ease-in-out'
 )
 </script>
 <template>
@@ -1326,22 +1401,32 @@ _通过 `prevArrow`、`nextArrow` 插槽自定义箭头，插槽内容仅负责�
 
 <Carousel :images="images" :height="450">
   <template #prevArrow="{ isPrevDisabled }">
-    <span class="custom-arrow" :class="{ 'custom-arrow-disabled': isPrevDisabled }">‹</span>
+    <span class="custom-arrow" :class="{ 'custom-arrow-disabled': isPrevDisabled }">
+      <LeftOutlined />
+    </span>
   </template>
   <template #nextArrow="{ isNextDisabled }">
-    <span class="custom-arrow" :class="{ 'custom-arrow-disabled': isNextDisabled }">›</span>
+    <span class="custom-arrow" :class="{ 'custom-arrow-disabled': isNextDisabled }">
+      <RightOutlined />
+    </span>
   </template>
 </Carousel>
 
 <style lang="less" scoped>
 .custom-arrow {
   color: #fff;
-  font-size: 36px;
+  font-size: 30px;
   line-height: 1;
-  text-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+  opacity: 0.72;
+  // 图标是 inline SVG，text-shadow 对它不生效，需用 drop-shadow 沿轮廓生成柔和外晕
+  filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.32));
+  transition: opacity 0.3s;
+  &:not(.custom-arrow-disabled):hover {
+    opacity: 1;
+  }
 }
 .custom-arrow-disabled {
-  color: rgba(255, 255, 255, 0.3);
+  opacity: 0.32;
 }
 </style>
 
@@ -1350,6 +1435,7 @@ _通过 `prevArrow`、`nextArrow` 插槽自定义箭头，插槽内容仅负责�
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
+import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue'
 import type { CarouselImage } from 'vue-amazing-ui'
 const images = ref<CarouselImage[]>([
   {
@@ -1380,22 +1466,32 @@ const images = ref<CarouselImage[]>([
 <template>
   <Carousel :images="images" :height="450">
     <template #prevArrow="{ isPrevDisabled }">
-      <span class="custom-arrow" :class="{ 'custom-arrow-disabled': isPrevDisabled }">‹</span>
+      <span class="custom-arrow" :class="{ 'custom-arrow-disabled': isPrevDisabled }">
+        <LeftOutlined />
+      </span>
     </template>
     <template #nextArrow="{ isNextDisabled }">
-      <span class="custom-arrow" :class="{ 'custom-arrow-disabled': isNextDisabled }">›</span>
+      <span class="custom-arrow" :class="{ 'custom-arrow-disabled': isNextDisabled }">
+        <RightOutlined />
+      </span>
     </template>
   </Carousel>
 </template>
 <style lang="less" scoped>
 .custom-arrow {
   color: #fff;
-  font-size: 36px;
+  font-size: 30px;
   line-height: 1;
-  text-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+  opacity: 0.72;
+  // 图标是 inline SVG，text-shadow 对它不生效，需用 drop-shadow 沿轮廓生成柔和外晕
+  filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.32));
+  transition: opacity 0.3s;
+  &:not(.custom-arrow-disabled):hover {
+    opacity: 1;
+  }
 }
 .custom-arrow-disabled {
-  color: rgba(255, 255, 255, 0.3);
+  opacity: 0.32;
 }
 </style>
 ```
@@ -2026,7 +2122,7 @@ watch(
 | draggable | 是否可以拖拽滑动切换（鼠标与触摸均支持） | boolean | false |
 | mousewheel | 是否支持鼠标滚轮切换 | boolean | false |
 | fadeDuration | 渐变动画持续时长，单位 `ms`，仅当 `effect` 为 `'fade'` 时生效 | number | 500 |
-| fadeFunction | 渐变动画函数，仅当 `effect` 为 `'fade'` 时生效，可传四个三次贝塞尔控制点（自动转为 `CSS` `cubic-bezier()` 写法）或 `CSS` [transition-timing-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function) 写法 | string &#124; [number, number, number, number] | [0.4, 0, 0.2, 1] |
+| fadeFunction | 渐变动画函数，仅当 `effect` 为 `'fade'` 时生效，可传四个三次贝塞尔控制点（自动转为 `CSS` `cubic-bezier()` 写法，其中 `x1` / `x2` 需落在 `[0, 1]` 内）或 `CSS` [transition-timing-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function) 写法 | string &#124; [number, number, number, number] | [0.4, 0, 0.2, 1] |
 | slideDuration | 滑动动画持续时长，单位 `ms`，仅当 `effect` 为 `'slide'` 时生效 | number | 800 |
 | slideFunction | 滑动动画函数，仅当 `effect` 为 `'slide'` 时生效，可传缓动预设名、三次贝塞尔控制点数组或缓动函数 | [CarouselEasingPreset](#carouseleasingpreset-type) &#124; [CubicBezierPoints](https://vueuse.org/core/useTransition/) &#124; [EasingFunction](https://vueuse.org/core/useTransition/) | [0.65, 0, 0.35, 1] |
 
