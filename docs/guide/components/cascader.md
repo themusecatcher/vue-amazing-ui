@@ -355,9 +355,9 @@ function onAreaClick(e: MouseEvent, code?: number) {
   e.preventDefault()
   console.log('postcode', code)
 }
-// 长列表：省级 1000、每省 1000 个市级（市级文本带省级序号，便于看出父级切换）；区级共享一份数组
+// 长列表：省级 1000、每省 200 个市级（市级文本带省级序号，便于看出父级切换）；区级共享一份数组
 const MANY_PROVINCE_LENGTH = 1000
-const MANY_CITY_LENGTH = 1000
+const MANY_CITY_LENGTH = 200
 const manyAreas: CascaderOption[] = Array.from({ length: MANY_CITY_LENGTH }, (_, index) => ({
   value: `area-${index}`,
   label: `区级 ${index + 1}`
@@ -2449,7 +2449,7 @@ const value = ref<(string | number)[]>(['zhejiang', 'hangzhou', 'xihu'])
 
 ## 长列表虚拟滚动
 
-_省级 `1000`、每省 `1000` 个市级的长列表，显式开启 `virtual` 后每列只渲染可视区；`option-height` 需与选项实际行高一致，列宽按整列内容锁定，滚动时不变_
+_省级 `1000`、每省 `200` 个市级的长列表，显式开启 `virtual` 后每列只渲染可视区；`option-height` 需与选项实际行高一致，列宽按整列内容锁定，滚动时不变_
 
 <br/>
 
@@ -2461,9 +2461,9 @@ _省级 `1000`、每省 `1000` 个市级的长列表，显式开启 `virtual` �
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { CascaderOption } from 'vue-amazing-ui'
-// 省级 1000、每省 1000 个市级：列内项数远超面板高度，用于验证虚拟滚动
+// 省级 1000、每省 200 个市级：列内项数远超面板高度，用于验证虚拟滚动
 const MANY_PROVINCE_LENGTH = 1000
-const MANY_CITY_LENGTH = 1000
+const MANY_CITY_LENGTH = 200
 const manyAreas: CascaderOption[] = Array.from({ length: MANY_CITY_LENGTH }, (_, index) => ({
   value: `area-${index}`,
   label: `区级 ${index + 1}`

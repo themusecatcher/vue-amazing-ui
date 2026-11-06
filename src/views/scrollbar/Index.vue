@@ -136,7 +136,7 @@ onMounted(() => {
       啦啦啦啦啦啦啦啦咧
     </Scrollbar>
     <h2 class="mt30 mb10">鼠标在滚动区域时不自动隐藏</h2>
-    <Scrollbar style="max-height: 120px" :auto-hide="false" :delay="1000">
+    <Scrollbar style="max-height: 120px" :auto-hide="false">
       我们在田野上面找猪<br />
       想象中已找到了三只<br />
       小鸟在白云上面追逐<br />
