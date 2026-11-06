@@ -259,6 +259,10 @@ function hideHorizontalScrollbar(): void {
  * scrollLeft/scrollTop 都属于程序化滚动，浏览器随后会立刻结束滚动序列并复位这类状态，
  * 依赖它就会整段丢事件，消费方（如表格表头跟随、左右阴影）便停在旧位置。
  * 按位移判定则与滚动来源无关，且方向与本次滚动真实一致；横纵同帧变化时各派发一次
+ *
+ * 滚动只在指针位于滚动区域内时点亮轨道：hover 模式的语义是「悬停时显示」，而程序化滚动（选择器
+ * 面板展开时把选中项滚到列顶、代码里写 scrollTop）不是用户意图 —— 点亮后既没有 mouseleave 兜底，
+ * 又会盖在内容上一直挂着（曾表现为时间列末尾常驻一根滚动条）
  */
 function onScroll(e: Event): void {
   const container = containerRef.value
@@ -273,7 +277,7 @@ function onScroll(e: Event): void {
     const direction: ScrollDirection = deltaX > 0 ? 'right' : 'left'
     emits('scroll', e, direction)
     debounceHorizontalScrollEnd(e, direction)
-    if (autoShowTrack.value) {
+    if (autoShowTrack.value && isMouseInside) {
       showHorizontalTrack.value = true
       if (!isHorizontalTrackPressed && props.autoHide) {
         debounceHideHorizontalScrollbar()
@@ -285,7 +289,7 @@ function onScroll(e: Event): void {
     const direction: ScrollDirection = deltaY > 0 ? 'bottom' : 'top'
     emits('scroll', e, direction)
     debounceVerticalScrollEnd(e, direction)
-    if (autoShowTrack.value) {
+    if (autoShowTrack.value && isMouseInside) {
       showVerticalTrack.value = true
       if (!isVerticalTrackPressed && props.autoHide) {
         debounceHideVerticalScrollbar()
