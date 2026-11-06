@@ -22,7 +22,17 @@ fi
 
 git add .
 git commit -m "$commitMessage"
-git push
+
+# 新建分支在远端还没有同名分支，此时裸 `git push` 会以 128 退出（no upstream branch），
+# 脚本被 set -e 中断，改动已提交却推不上去。故先探测 upstream：
+# 无 upstream 时用 -u origin HEAD 推送并建立跟踪关系，有 upstream 时维持原有行为
+if upstream=$(git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null); then
+  echo "🔗 分支 $(git rev-parse --abbrev-ref HEAD) 已跟踪 ${upstream}，直接推送"
+  git push
+else
+  echo "🆕 分支 $(git rev-parse --abbrev-ref HEAD) 尚未关联远端，推送并建立跟踪关系"
+  git push --set-upstream origin HEAD
+fi
 
 echo "✅ 已推送到远端"
 print_time
