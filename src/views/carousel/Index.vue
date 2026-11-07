@@ -328,8 +328,15 @@ watch(
     </Space>
     <h2 class="mt30 mb10">自定义渐变动画</h2>
     <p class="mb10">
-      <code>fadeFunction</code> 可传四个三次贝塞尔控制点（自动转为 CSS <code>cubic-bezier()</code> 写法），也可直接传
-      CSS <code>transition-timing-function</code> 写法
+      <code>fadeFunction</code> 可传四个三次贝塞尔控制点（自动转为 CSS
+      <a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/easing-function/cubic-bezier" target="_blank"
+        ><code>cubic-bezier()</code></a
+      >
+      写法），也可直接传 CSS
+      <a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function" target="_blank"
+        ><code>transition-timing-function</code></a
+      >
+      写法
     </p>
     <Space vertical>
       <RadioGroup :options="fadeEasingTypeOptions" v-model:value="fadeEasingType" button button-style="solid" />

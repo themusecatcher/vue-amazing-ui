@@ -824,7 +824,7 @@ const slideEasing = computed<CarouselProps['slideFunction']>(() => {
 
 ## 自定义渐变动画
 
-_`fadeFunction` 可传四个三次贝塞尔控制点（自动转为 `CSS` `cubic-bezier()` 写法），也可直接传 `CSS` `transition-timing-function` 写法_
+_`fadeFunction` 可传四个三次贝塞尔控制点（自动转为 `CSS` [`cubic-bezier()`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/easing-function/cubic-bezier) 写法），也可直接传 `CSS` [`transition-timing-function`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition-timing-function) 写法_
 
 <br/>
 
