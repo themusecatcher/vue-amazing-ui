@@ -74,7 +74,7 @@ export interface Props {
   // 状态反馈
   disabled?: boolean | [boolean, boolean] // 是否禁用，范围形态可传两段元组逐段禁用
   allowClear?: boolean // 是否展示清除按钮
-  allowEmpty?: [boolean, boolean] // 范围形态各段是否允许为空，为空时该段可被单独清空并对外提交
+  allowEmpty?: [boolean, boolean] // 范围形态各段是否允许为空：为 true 时该段为空也能对外派发 change；清空整段仍走 allowClear，清空某段输入框不会置空该段
   inputReadOnly?: boolean // 输入框是否只读（避免移动端唤起键盘）
   // 行为交互
   to?: string | MountElement | false // 面板挂载的容器节点，不传时就近挂载到承载层内容容器

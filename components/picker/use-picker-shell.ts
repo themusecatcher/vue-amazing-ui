@@ -71,6 +71,7 @@ export interface PickerShellProps {
   open?: boolean
   formattedValue?: PickerFormattedValue
   allowClear: boolean
+  /** 范围形态各段是否允许为空：该段为空也能对外提交；清空整段仍走 `allowClear` */
   allowEmpty: [boolean, boolean]
   disabled: boolean | [boolean, boolean]
 }

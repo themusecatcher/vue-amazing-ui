@@ -34,7 +34,6 @@ import {
   isSameDecadeTimestamp,
   isSameMonthTimestamp,
   isSameQuarterTimestamp,
-  isSameWeekTimestamp,
   isWeekFullyDisabled,
   isYearFullyDisabled,
   startOfDayTimestamp,
@@ -500,8 +499,8 @@ function onCellHover(timestamp: number) {
 /**
  * 移出日期格：清除预览
  *
- * 逐格 mouseleave：离开被悬浮的那一格即取消预览
- * 即撤预览——鼠标停在本面板的内边距、或两面板之间的空隙时，同样会先离开该格，预览不会滞留。
+ * 逐格 mouseleave：离开被悬浮的那一格即撤预览 —— 鼠标停在本面板的内边距、或两面板之间的空隙时，
+ * 同样会先离开该格，预览不会滞留。
  */
 function onCellLeave() {
   emits('cellLeave')

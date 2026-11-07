@@ -26,8 +26,7 @@ import {
   startOfISOWeek,
   startOfMonth,
   startOfQuarter,
-  startOfWeek,
-  startOfYear
+  startOfWeek
 } from 'date-fns'
 import type {
   PickerDefaultTime,
@@ -168,16 +167,6 @@ export function isSameQuarterTimestamp(a: number, b: number): boolean {
 /** 是否为同一年 */
 export function isSameYearTimestamp(a: number, b: number): boolean {
   return getYear(a) === getYear(b)
-}
-
-/**
- * 是否为同一周
- *
- * 以「ISO 周首日」为比较口径（而非周序号）：同一周的两天必然落在同一个周首日，
- * 跨年时周序号会回绕而周首日不会。
- */
-export function isSameWeekTimestamp(a: number, b: number): boolean {
-  return getWeekStartTimestamp(a) === getWeekStartTimestamp(b)
 }
 
 /** 是否为同一个十年（十年面板格的比较粒度） */
@@ -409,11 +398,6 @@ export function getClosingViewTimestamp(reference: number, mode: PickerPanelMode
 /** 当前月首日时间戳 */
 export function startOfMonthTimestamp(reference: number): number {
   return startOfMonth(reference).getTime()
-}
-
-/** 当前年首日时间戳 */
-export function startOfYearTimestamp(reference: number): number {
-  return startOfYear(reference).getTime()
 }
 
 /** 当前季度首日时间戳 */
