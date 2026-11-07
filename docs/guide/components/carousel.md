@@ -4,6 +4,9 @@
 
 _一组轮播的区域_
 
+<!-- 本页的演示外壳刻意与 src/views/carousel/Index.vue 不同：本文件用 `<Flex vertical>`，演示页用 `<Space vertical>`。
+     两者是既定例外，改动任何一侧都不要顺手同步另一侧（见 development/demo-doc-guide.md「表单与演示的纵向布局」）。 -->
+
 ## 何时使用
 
 - 当有一组平级的内容。
@@ -944,7 +947,7 @@ const images = ref<CarouselImage[]>([
 
 ## 循环切换
 
-_关闭 `loop` 后到达首尾时，该方向的切换（箭头、键盘、滚轮、拖拽、自动轮播）均失效_
+_关闭 `loop` 后到达首尾时，该方向的切换（箭头、键盘、滚轮、拖拽、自动轮播）均失效，该方向的箭头同时置灰_
 
 <br/>
 
@@ -2103,7 +2106,7 @@ watch(
 | pauseOnMouseEnter | 当鼠标移入轮播图时，是否暂停自动轮播 | boolean | false |
 | effect | 轮播图切换时的过渡效果 | 'slide' &#124; 'fade' | 'slide' |
 | interval | 自动轮播间隔，单位 `ms` | number | 3000 |
-| loop | 是否循环切换，为 `false` 时首尾不再回绕，到达边界后该方向的切换（箭头、键盘、滚轮、拖拽、自动轮播）失效 | boolean | true |
+| loop | 是否循环切换，为 `false` 时首尾不再回绕，到达边界后该方向的切换（箭头、键盘、滚轮、拖拽、自动轮播）失效、该方向的箭头置灰 | boolean | true |
 | initialIndex | 初始展示的图片下标，从 `1` 开始，仅在初始化时生效 | number | 1 |
 | currentIndex <Tag color="cyan">v-model</Tag> | 当前展示的图片下标（受控），从 `1` 开始，配合 `v-model:current-index` 使用 | number | undefined |
 | showArrow | 是否显示箭头，图片数量大于 `1` 时才渲染 | boolean | true |

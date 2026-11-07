@@ -31,7 +31,7 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('formatValue2', formatValue2.value)
 })
-function formatter(value: number): string {
+function formatter(value: string | number): string {
   return formatNumber(value, 2) + '%'
 }
 function parser(value: string): number {
@@ -207,7 +207,7 @@ watchEffect(() => {
 watchEffect(() => {
   console.log('formatValue2', formatValue2.value)
 })
-function formatter(value: number): string {
+function formatter(value: string | number): string {
   return formatNumber(value, 2) + '%'
 }
 function parser(value: string): number {

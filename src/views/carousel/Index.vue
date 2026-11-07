@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// 本页演示外壳刻意使用 `<Space vertical>`，与 docs/guide/components/carousel.md 的 `<Flex vertical>` 不同，
+// 是既定例外：改动任何一侧都不要顺手同步另一侧（见 development/demo-doc-guide.md「表单与演示的纵向布局」）
 import { ref, reactive, computed, watch } from 'vue'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons-vue'
 import { TransitionPresets } from '@vueuse/core'
@@ -353,7 +355,10 @@ watch(
       :spin-props="{ indicator: 'dot', color: '#13C2C2' }"
     />
     <h2 class="mt30 mb10">循环切换</h2>
-    <p class="mb10">关闭 <code>loop</code> 后到达首尾时，该方向的切换（箭头、键盘、滚轮、拖拽、自动轮播）均失效</p>
+    <p class="mb10"
+      >关闭
+      <code>loop</code> 后到达首尾时，该方向的切换（箭头、键盘、滚轮、拖拽、自动轮播）均失效，该方向的箭头同时置灰</p
+    >
     <Space vertical>
       <Space align="center"> loop: <Switch v-model:value="loop" /> </Space>
       <Carousel :images="images" :width="800" :height="450" :loop="loop" />

@@ -96,6 +96,7 @@ const disabledOptionValue = ref(5)
 - 演示产生的结果文案（「最近操作：…」「最近事件：…」）留在 `<Flex vertical>` 之外，沿用 `class="mt10"`。
 - `docs/` 同源写法：控制行放进演示所在的 `<Flex vertical>` 内；`<br/>` 只用于「说明文字 → 演示」之间，不用于控制行与演示之间。
 - 存量用 `Space vertical` 包裹的老用例功能等价，不强制改造；新写或改动该分节时按本规范收敛。
+- **唯一例外：轮播图 Carousel**（`docs/guide/components/carousel.md` ↔ `src/views/carousel/Index.vue`）—— 文档用 `<Flex vertical>`、演示页用 `<Space vertical>`，两侧刻意不同。日常「docs ↔ views 用例代码对账」遇到本页时跳过该类名差异，不要互相同步；两侧文件顶部各有一行注释指向本条目。
 
 ### 同组面板的渲染内容必须可区分（2026-11-05 新增）
 
