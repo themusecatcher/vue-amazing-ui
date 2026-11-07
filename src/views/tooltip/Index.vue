@@ -61,7 +61,7 @@ function gatingDisabled(): boolean {
       <code>popupStyle</code>，层级用 <code>zIndex</code>
     </p>
     <Space gap="large">
-      <Tooltip :max-width="360" bg-color="#fff" tooltip-class="custom-class">
+      <Tooltip placement="topLeft" :max-width="360" bg-color="#fff" tooltip-class="custom-class">
         <template #tooltip>
           <p style="text-align: center">卡片类名</p>
           通过 tooltipClass 定制气泡卡片的字号、颜色与内边距
