@@ -298,10 +298,15 @@ function onScroll(e: Event): void {
   }
   updateScrollState()
 }
-// 指针进入滚动区域：hover 模式才跟踪；非 autoHide 时直接常显 thumb
+/**
+ * 指针进入滚动区域：hover 模式才跟踪；非 autoHide 时直接常显 thumb
+ *
+ * 指针位置与「此刻是否有内容可滚」无关，先记下来再判其余条件 —— 内容异步撑开（`hasScroll` 由
+ * false 转 true）时不会再有 mouseenter，按旧判据跳过便会让随后的滚动点不亮轨道
+ */
 function onMouseEnter(): void {
-  if (!hasScroll.value || props.trigger !== 'hover') return
   isMouseInside = true
+  if (!hasScroll.value || props.trigger !== 'hover') return
   if (isHorizontalTrackPressed || isVerticalTrackPressed) {
     isMouseLeftWhilePressed = false
   } else if (!props.autoHide) {
@@ -313,8 +318,9 @@ function onMouseEnter(): void {
   updateState()
 }
 function onMouseLeave(): void {
-  if (!hasScroll.value || props.trigger !== 'hover') return
+  // 与 onMouseEnter 对称：指针一走就复位，不因「此刻无可滚内容」留下上一个 true
   isMouseInside = false
+  if (!hasScroll.value || props.trigger !== 'hover') return
   if (isHorizontalTrackPressed || isVerticalTrackPressed) {
     isMouseLeftWhilePressed = true
     return
