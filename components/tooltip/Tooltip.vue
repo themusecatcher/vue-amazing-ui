@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, getCurrentInstance, onBeforeUnmount, onMounted } from 'vue'
+import { ref, computed, watch, nextTick, getCurrentInstance, onBeforeUnmount, onMounted } from 'vue'
 import type { CSSProperties, TransitionProps, VNode } from 'vue'
 import Popup from 'components/popup'
 import {
@@ -129,9 +129,30 @@ const tooltipCardId = `va-tooltip-${getCurrentInstance()?.uid ?? 0}`
 const ariaDescribedby = computed(() =>
   showTooltip.value && tooltipVisible.value && props.describedBy ? tooltipCardId : undefined
 )
+// 箭头盒半宽（.tooltip-arrow 为 16×16）：贴边偏移 + 该值 = 箭头中心距面板对齐边的距离
+const ARROW_HALF_SIZE = 8
+// 箭头贴边偏移的下限：全局样式里 --tooltip-arrow-edge 的兜底值，两处修改需同步
+const ARROW_EDGE_MIN = 5
+// 气泡卡片「箭头所在侧」的圆角实测值，由 measureArrowEdge 在测量阶段写入
+const cardCornerRadius = ref(0)
+// 解析长度文本：'12px' / '12px 8px' / 百分比（按基数换算）→ 数值；无法解析时为 null
+function parseLength(value: string | number | undefined, base: number): number | null {
+  if (value === undefined) return null
+  const text = `${value}`.trim()
+  if (!text) return null
+  const num = Number.parseFloat(text)
+  if (!Number.isFinite(num)) return null
+  return text.endsWith('%') ? (num / 100) * base : num
+}
+// 显式指定的贴边偏移（经 popupStyle 传入）：CSS 侧由 popupStyle 最后合并且优先生效，
+// JS 侧同样以它为准 —— 否则动画原点与 arrowPointAtCenter 的让位会按实测圆角计算，与 CSS 失配
+const arrowEdgeOverride = computed(() => parseLength(props.popupStyle['--tooltip-arrow-edge'], 0))
+// 箭头贴边偏移：卡片圆角把该侧的直边起点从角上向内推进 r，基边必须让到直边上，
+// 否则会有一截落进圆角缺口（表现为箭头跑偏、露出投影灰边）
+const arrowEdge = computed(() => arrowEdgeOverride.value ?? Math.max(ARROW_EDGE_MIN, cardCornerRadius.value))
 // 复合方向时箭头中心距面板对齐边的距离，单位 px
 const arrowOffset = computed(() => {
-  return props.arrow ? 13 : 8
+  return props.arrow ? arrowEdge.value + ARROW_HALF_SIZE : 8
 })
 // 主轴方向的面板外间距：面板盒紧贴锚点外 4px（有箭头，箭头槽 12px 计在面板内）/ 6px（无箭头）
 const mainAxisGap = computed(() => {
@@ -179,12 +200,14 @@ const arrowCenterShift = computed<CSSProperties>(() => {
   const shift = crossAlign.value === 'start' ? size / 2 - arrowOffset.value : arrowOffset.value - size / 2
   return vertical ? { marginTop: `${shift}px` } : { marginLeft: `${shift}px` }
 })
-// 面板的内联皮肤：动画原点 / 箭头让位位移 + 三个 CSS 变量（箭头与卡片都要用，故落在面板上继承下去）；
+// 面板的内联皮肤：动画原点 / 箭头让位位移 + 四个 CSS 变量（箭头与卡片都要用，故落在面板上继承下去）；
 // 使用者的 popupStyle 最后合并：与 Select 的 dropdownMenuStyle 同一语义，可覆盖定位与上述皮肤值
 const tooltipPanelStyle = computed<CSSProperties>(() => ({
   '--tooltip-max-width': tooltipMaxWidth.value,
   '--tooltip-background-color': tooltipBgColor.value,
   '--tooltip-transition-duration': `${props.transitionDuration}ms`,
+  // 箭头贴边偏移由卡片实测圆角推导（见 arrowEdge），大圆角时箭头随之内移
+  '--tooltip-arrow-edge': `${arrowEdge.value}px`,
   transformOrigin: transformOrigin.value,
   ...arrowCenterShift.value,
   ...props.popupStyle
@@ -238,9 +261,11 @@ onMounted(() => {
 watch(
   () => showTooltip.value && tooltipVisible.value,
   (to) => {
-    if (to) {
-      measureAnchor()
-    }
+    if (!to) return
+    measureAnchor()
+    // 卡片首次展示才渲染，此刻 DOM 尚未就绪：等这一拍渲染完成再补测箭头贴边偏移所需的圆角（尺寸变化 /
+    // 圆角变化路径分别由 ResizeObserver 与下方 watcher 覆盖，此处只负责「首帧 / 重新展示」）
+    void nextTick(() => measureArrowEdge())
   },
   {
     immediate: true
@@ -267,6 +292,49 @@ function measureAnchor(): void {
   anchorEl.value = el
   anchorSize.value = { width: el.offsetWidth, height: el.offsetHeight }
 }
+// 读取箭头所在侧的卡片圆角：主轴决定贴哪条边（top 的箭头在卡片底边、left 的箭头在卡片右边），
+// 次轴决定贴哪个角（start 贴起点侧、end 贴终点侧）。居中放置（纯方向）与关闭箭头时不吃圆角
+function measureArrowEdge(): void {
+  if (!props.arrow || crossAlign.value === 'center') {
+    cardCornerRadius.value = 0
+    return
+  }
+  const card = tooltipCardRef.value
+  if (!card) return
+  const style = getComputedStyle(card)
+  const isEnd = crossAlign.value === 'end'
+  const vertical = mainAxis.value === 'left' || mainAxis.value === 'right'
+  let raw: string
+  if (mainAxis.value === 'top') {
+    raw = isEnd ? style.borderBottomRightRadius : style.borderBottomLeftRadius
+  } else if (mainAxis.value === 'bottom') {
+    raw = isEnd ? style.borderTopRightRadius : style.borderTopLeftRadius
+  } else if (mainAxis.value === 'left') {
+    raw = isEnd ? style.borderBottomRightRadius : style.borderTopRightRadius
+  } else {
+    raw = isEnd ? style.borderBottomLeftRadius : style.borderTopLeftRadius
+  }
+  // 百分比按所在边解析；声明值可能大于盒子尺寸（如胶囊卡片的 border-radius: 999px），浏览器会按比例
+  // 缩到 min(r, 宽/2, 高/2)，这才是直边的实际起点 —— 不按此收敛会把箭头推到卡片中间（尺寸为 0 时取声明值）
+  const base = vertical ? card.offsetHeight : card.offsetWidth
+  const radius = parseLength(raw, base) ?? 0
+  const limit = Math.min(card.offsetWidth, card.offsetHeight) / 2
+  cardCornerRadius.value = limit > 0 ? Math.min(radius, limit) : radius
+}
+// 圆角可能随 tooltipClass / tooltipStyle / popupClassName 变化，而尺寸不变时 ResizeObserver 不会回调，
+// 故单独重测；实际方向翻转（flip / 次轴自适应）后箭头贴的角也随之改变
+watch(
+  [
+    mainAxis,
+    crossAlign,
+    () => props.tooltipClass,
+    () => props.tooltipStyle,
+    () => props.popupStyle,
+    () => props.popupClassName
+  ],
+  () => measureArrowEdge(),
+  { flush: 'post' }
+)
 // 监听 tooltipCard 和 tooltipContent 的尺寸变化，更新弹出框位置
 useResizeObserver([tooltipCardRef, tooltipContentRef], (entries: ResizeObserverEntry[]) => {
   if (!(showTooltip.value && tooltipVisible.value)) return
@@ -286,6 +354,8 @@ function updatePosition(): void {
     // 取 offset 尺寸 (布局尺寸) 而非 getBoundingClientRect：缩放动画会改变 transform，
     // 使 rect 返回缩放后的视觉尺寸，导致动画期间误判为「尺寸变化」而重复重算
     cardSize.value = { width: cardEl.offsetWidth, height: cardEl.offsetHeight }
+    // 与尺寸同批测量：圆角决定箭头贴边偏移，须在面板样式重算前落定，避免箭头先出现再位移
+    measureArrowEdge()
   }
   measureAnchor()
   popupRef.value?.update()
@@ -710,6 +780,8 @@ defineExpose({
       content: '';
     }
   }
+  /* 箭头贴边偏移的兜底值：实际值由脚本按卡片实测圆角写到面板内联样式上（见上方 arrowEdge），
+     仅在首帧尚未写入时生效；与脚本里的 ARROW_EDGE_MIN 需同步修改 */
   --tooltip-arrow-edge: 5px;
   &.va-popup-placement-top .tooltip-arrow,
   &.va-popup-placement-topLeft .tooltip-arrow,
