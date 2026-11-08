@@ -131,7 +131,7 @@ const ariaDescribedby = computed(() =>
 )
 // 箭头盒半宽（.tooltip-arrow 为 16×16）：贴边偏移 + 该值 = 箭头中心距面板对齐边的距离
 const ARROW_HALF_SIZE = 8
-// 箭头贴边偏移的下限：全局样式里 --tooltip-arrow-edge 的兜底值，两处修改需同步
+// 箭头贴边偏移的下限：卡片无圆角 / 尚未测到圆角（首帧）时保持的贴边偏移，圆角小于该值时不外推
 const ARROW_EDGE_MIN = 5
 // 气泡卡片「箭头所在侧」的圆角实测值，由 measureArrowEdge 在测量阶段写入
 const cardCornerRadius = ref(0)
@@ -144,7 +144,7 @@ function parseLength(value: string | number | undefined, base: number): number |
   if (!Number.isFinite(num)) return null
   return text.endsWith('%') ? (num / 100) * base : num
 }
-// 显式指定的贴边偏移（经 popupStyle 传入）：CSS 侧由 popupStyle 最后合并且优先生效，
+// 显式指定的贴边偏移（经 popupStyle 传入，只接受 px）：CSS 侧由 popupStyle 最后合并且优先生效，
 // JS 侧同样以它为准 —— 否则动画原点与 arrowPointAtCenter 的让位会按实测圆角计算，与 CSS 失配
 const arrowEdgeOverride = computed(() => parseLength(props.popupStyle['--tooltip-arrow-edge'], 0))
 // 箭头贴边偏移：卡片圆角把该侧的直边起点从角上向内推进 r，基边必须让到直边上，
@@ -322,11 +322,12 @@ function measureArrowEdge(): void {
   cardCornerRadius.value = limit > 0 ? Math.min(radius, limit) : radius
 }
 // 圆角可能随 tooltipClass / tooltipStyle / popupClassName 变化，而尺寸不变时 ResizeObserver 不会回调，
-// 故单独重测；实际方向翻转（flip / 次轴自适应）后箭头贴的角也随之改变
+// 故单独重测；实际方向翻转（flip / 次轴自适应）后箭头贴的角也随之改变，开关箭头则切换「是否吃圆角」
 watch(
   [
     mainAxis,
     crossAlign,
+    () => props.arrow,
     () => props.tooltipClass,
     () => props.tooltipStyle,
     () => props.popupStyle,
@@ -774,15 +775,11 @@ defineExpose({
       border-radius: 0 0 2px 0;
       transform: translateY(50%) rotate(-135deg);
       box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.1);
-      /* 置于三角形**之下**：这层只负责延续投影，若压在三角形之上会把浅色（如白色）箭头染成灰色 */
       z-index: -1;
       background: transparent;
       content: '';
     }
   }
-  /* 箭头贴边偏移的兜底值：实际值由脚本按卡片实测圆角写到面板内联样式上（见上方 arrowEdge），
-     仅在首帧尚未写入时生效；与脚本里的 ARROW_EDGE_MIN 需同步修改 */
-  --tooltip-arrow-edge: 5px;
   &.va-popup-placement-top .tooltip-arrow,
   &.va-popup-placement-topLeft .tooltip-arrow,
   &.va-popup-placement-topRight .tooltip-arrow {

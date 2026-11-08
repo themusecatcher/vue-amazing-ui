@@ -88,7 +88,7 @@ function openChange(open: boolean) {
 
 ## 自定义样式
 
-_气泡卡片用 `tooltipClass` / `tooltipStyle`，其外层定位面板用 `popupClassName` / `popupStyle`，层级用 `zIndex`；复合方向下箭头贴边偏移会跟随卡片的实际圆角自动内移_
+_气泡卡片用 `tooltipClass` / `tooltipStyle`，其外层定位面板用 `popupClassName` / `popupStyle`，层级用 `zIndex`；复合方向下箭头贴边偏移会跟随卡片的实际圆角自动内移，可用 `popupStyle` 的 `--tooltip-arrow-edge` 手动指定该偏移_
 
 <br/>
 

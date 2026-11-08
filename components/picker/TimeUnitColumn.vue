@@ -136,6 +136,8 @@ function onCellClick(unit: PickerTimeUnit): void {
 </template>
 <style lang="less" scoped>
 .picker-time-column {
+  // 分隔线与活动列底纹都由本列的绝对定位伪元素绘制，故须成为它们的定位祖先；
+  // isolation 让底纹的 z-index: -1 留在本列之内，否则会沉到面板底色之下而看不见
   position: relative;
   isolation: isolate;
   flex: 1 0 auto;
@@ -143,6 +145,8 @@ function onCellClick(unit: PickerTimeUnit): void {
   margin: 4px 0;
   :deep(.scrollbar-container) {
     position: relative;
+    /* 滚到边界不带动页面：时间列常被触控板惯性推到顶 / 底，滚动链会带着整页跳走（与 Select 面板同一处理；
+       须用 none 而非 contain —— contain 只切断滚动链，元素自身的弹性回弹仍会把列表带出滚动区露出空白） */
     overscroll-behavior: none;
   }
   &:not(:first-child) {

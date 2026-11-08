@@ -16,7 +16,9 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## <VersionDateTag date="2026-11-08">3.9.3</VersionDateTag>
 
-- 修复 [文字提示 Tooltip](/guide/components/tooltip.html) 及 [气泡卡片 Popover](/guide/components/popover.html)、[弹出确认 Popconfirm](/guide/components/popconfirm.html) 在复合方向下气泡卡片圆角较大时箭头基边切进圆角缺口的问题：偏移改为随卡片实际圆角自动内移，可经 `popupStyle` 覆盖 `--tooltip-arrow-edge` 手动指定，使用者文档补充箭头偏移说明
+- 修复 [文字提示 Tooltip](/guide/components/tooltip.html) 及 [气泡卡片 Popover](/guide/components/popover.html)、[弹出确认 Popconfirm](/guide/components/popconfirm.html) 在复合方向下的箭头位置：卡片圆角较大时箭头错位，现随卡片圆角自动内移，可用 `popupStyle` 的 `--tooltip-arrow-edge` 按 `px` 覆盖
+- 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 与 [时间选择器 TimePicker](/guide/components/time-picker.html) 的输入框与时间面板样式：输入框为空时光标不再被提示文字的颜色染色；带时间形态下时间列分隔线不再挤占列宽、活动列底纹改为左右留边的圆角块
+- 更新组件库文档
 
 ## <VersionDateTag date="2026-11-07">3.9.2</VersionDateTag>
 
