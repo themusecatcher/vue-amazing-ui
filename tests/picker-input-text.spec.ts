@@ -42,6 +42,11 @@ function singleInput(): HTMLInputElement {
   return document.querySelector('.picker-trigger-input-inner') as HTMLInputElement
 }
 
+/** 触发器的输入区容器：悬浮预览的提示色类名装在它身上 */
+function triggerBox(): HTMLElement | null {
+  return document.querySelector<HTMLElement>('.picker-trigger-input')
+}
+
 /** 往输入框里键入并回车 */
 async function typeInto(input: HTMLInputElement, text: string): Promise<void> {
   input.value = text
@@ -246,5 +251,35 @@ describe('逐格禁用判定的缓存', () => {
     cellDates.forEach((dateText) => {
       expect(countByDate[new Date(dateText).toDateString()]).toBe(1)
     })
+  })
+})
+
+describe('空值态的提示色只作用于预览文本', () => {
+  // 提示色类名改的是输入框自身的 color，光标会跟着一起变浅；
+  // 空值态的提示文字由原生 ::placeholder 着色，该类名只服务「悬浮预览的临时文本」
+  it('日期选择器无值：提示文字走原生 placeholder，不套提示色类名', async () => {
+    wrapper = mount(DatePicker, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { open: false, placeholder: '请选择日期' } satisfies Partial<DatePickerProps>
+    })
+    await flush()
+
+    expect(singleInput().value).toBe('')
+    expect(singleInput().placeholder).toBe('请选择日期')
+    expect(triggerBox()?.classList.contains('picker-trigger-input-placeholder')).toBe(false)
+  })
+
+  it('时间选择器无值：提示文字走原生 placeholder，不套提示色类名', async () => {
+    wrapper = mount(TimePicker, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { open: false, placeholder: '请选择时间' }
+    })
+    await flush()
+
+    expect(singleInput().value).toBe('')
+    expect(singleInput().placeholder).toBe('请选择时间')
+    expect(triggerBox()?.classList.contains('picker-trigger-input-placeholder')).toBe(false)
   })
 })

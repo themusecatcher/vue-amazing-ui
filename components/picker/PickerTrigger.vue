@@ -206,10 +206,9 @@ defineExpose({ focus, blur })
     }"
     @click="onTriggerClick"
   >
-    <div
-      class="picker-trigger-input"
-      :class="{ 'picker-trigger-input-placeholder': !range && (inputText === '' || preview) }"
-    >
+    <!-- 提示色只套在「悬浮预览的临时文本」上：空值态的提示文字由原生 ::placeholder 着色，
+         改写 input 的 color 会让光标跟着染成提示色 -->
+    <div class="picker-trigger-input" :class="{ 'picker-trigger-input-placeholder': !range && preview }">
       <template v-if="range">
         <span
           ref="startItemRef"
