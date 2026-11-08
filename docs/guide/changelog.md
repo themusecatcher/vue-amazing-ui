@@ -14,6 +14,10 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-11-08">3.9.3</VersionDateTag>
+
+- 修复 [文字提示 Tooltip](/guide/components/tooltip.html) 及 [气泡卡片 Popover](/guide/components/popover.html)、[弹出确认 Popconfirm](/guide/components/popconfirm.html) 在复合方向下气泡卡片圆角较大时箭头基边切进圆角缺口的问题：偏移改为随卡片实际圆角自动内移，可经 `popupStyle` 覆盖 `--tooltip-arrow-edge` 手动指定，使用者文档补充箭头偏移说明
+
 ## <VersionDateTag date="2026-11-07">3.9.2</VersionDateTag>
 
 - 优化 [数字输入框 InputNumber](/guide/components/input-number.html) 的空值语义：`value` / `defaultValue` 接受 `null`（`undefined` 仍表示非受控），清空输入时 `change` 与 `update:value` 上报 `null`（原为 `undefined`），空值步进按 `0` 起算，使用者文档同步属性与事件类型

@@ -88,12 +88,12 @@ function openChange(open: boolean) {
 
 ## 自定义样式
 
-_气泡卡片用 `tooltipClass` / `tooltipStyle`，其外层定位面板用 `popupClassName` / `popupStyle`，层级用 `zIndex`_
+_气泡卡片用 `tooltipClass` / `tooltipStyle`，其外层定位面板用 `popupClassName` / `popupStyle`，层级用 `zIndex`；复合方向下箭头贴边偏移会跟随卡片的实际圆角自动内移_
 
 <br/>
 
 <Space gap="large">
-  <Tooltip :max-width="360" bg-color="#fff" tooltip-class="custom-class">
+  <Tooltip placement="topLeft" :max-width="360" bg-color="#fff" tooltip-class="custom-class">
     <template #tooltip>
       <p style="text-align: center">卡片类名</p>
       通过 tooltipClass 定制气泡卡片的字号、颜色与内边距
@@ -157,7 +157,7 @@ _气泡卡片用 `tooltipClass` / `tooltipStyle`，其外层定位面板用 `pop
 ```vue
 <template>
   <Space gap="large">
-    <Tooltip :max-width="360" bg-color="#fff" tooltip-class="custom-class">
+    <Tooltip placement="topLeft" :max-width="360" bg-color="#fff" tooltip-class="custom-class">
       <template #tooltip>
         <p style="text-align: center">卡片类名</p>
         通过 tooltipClass 定制气泡卡片的字号、颜色与内边距

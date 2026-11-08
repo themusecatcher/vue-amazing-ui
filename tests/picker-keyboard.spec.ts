@@ -195,6 +195,19 @@ describe('DatePicker 键盘操作', () => {
     expect(openEvents()).toEqual([true, false])
   })
 
+  it('展开态回车在无可提交值时保持展开', async () => {
+    wrapper = mount(DatePicker, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } }
+    })
+    await flush()
+
+    await press('Enter')
+    await press('Enter')
+
+    expect(openEvents()).toEqual([true])
+  })
+
   it('Tab 把键盘交给面板，Shift+Tab 在文本输入态不接管', async () => {
     wrapper = mount(DatePicker, {
       attachTo: document.body,

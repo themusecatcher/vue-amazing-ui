@@ -222,7 +222,8 @@ function onEventBlur(event: FocusEvent): void {
     <p class="mb10">
       面板收起时按 <code>Enter</code> 展开面板；展开后按
       <code>Tab</code> 把键盘交给面板（输入框随之转为只读），方向键上下改当前列的取值、左右切换列，<code>Enter</code>
-      提交并收起，<code>Esc</code> 收起；再按 <code>Tab</code> 移出焦点（面板随之收起），<code>Shift+Tab</code>
+      提交并收起（输入框没有可提交的值时不动作），<code>Esc</code> 收起；再按
+      <code>Tab</code> 移出焦点（面板随之收起），<code>Shift+Tab</code>
       退回文本输入态
     </p>
     <TimePicker v-model:value="keyboardValue" placeholder="请选择时间" />

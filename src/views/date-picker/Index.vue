@@ -750,10 +750,9 @@ function onStartOpenChange(open: boolean): void {
     <h2 class="mt30 mb10">键盘操作</h2>
     <p class="mb10">
       面板收起时按 <code>Enter</code> 展开，展开后按
-      <code>Tab</code> 把键盘交给面板，方向键按当前面板层级的粒度移动光标、<code>Enter</code> 提交并收起，<code
-        >Esc</code
-      >
-      收起；带时间的形态下 <code>Tab</code> 在日期与时间两列之间切换（<code>Shift+Tab</code>
+      <code>Tab</code> 把键盘交给面板，方向键按当前面板层级的粒度移动光标、<code>Enter</code>
+      提交并收起（输入框没有可提交的值时不动作），<code>Esc</code> 收起；带时间的形态下
+      <code>Tab</code> 在日期与时间两列之间切换（<code>Shift+Tab</code>
       反向收回键盘），非活动列淡化；焦点移出组件即收起面板
     </p>
     <Space vertical>

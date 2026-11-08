@@ -331,3 +331,124 @@ describe('Tooltip · 多根插槽的触发范围', () => {
     expect(panelOf(wrapper)?.style.display).not.toBe('none')
   })
 })
+
+/**
+ * 箭头贴边偏移 ↔ 卡片圆角
+ *
+ * 复合方向下箭头贴在卡片该侧的直边起点附近，而起点会被圆角向内推进 r：偏移若固定，基边就会有一截
+ * 落进圆角缺口。故偏移由实测圆角推导，且 JS 侧的箭头中心距离（动画原点 / `arrowPointAtCenter` 让位）
+ * 必须跟着变，否则 CSS 与 JS 会各算各的。
+ *
+ * 无布局环境（happy-dom）下卡片 `offsetWidth` 为 0，上限收敛分支不生效，断言只看「圆角 → 偏移」映射。
+ */
+describe('Tooltip · 箭头贴边偏移跟随卡片圆角', () => {
+  it('复合方向：大圆角卡片使偏移与箭头中心距离同步内移', async () => {
+    wrapper = mount(Tooltip, {
+      ...mountOptions,
+      props: {
+        tooltip: 'hi',
+        open: true,
+        placement: 'topLeft',
+        to: false,
+        tooltipStyle: { borderRadius: '12px' }
+      }
+    })
+    await flush()
+
+    const panel = panelOf(wrapper)
+    expect(panel?.style.getPropertyValue('--tooltip-arrow-edge')).toBe('12px')
+    // 动画原点的次轴分量 = 箭头中心距对齐边 = 偏移 + 半个箭头盒 (8px)，CSS 与 JS 取值须一致
+    expect(panel?.style.transformOrigin.startsWith('20px')).toBe(true)
+  })
+
+  it('纯方向：箭头居中不吃圆角，偏移保持基础值', async () => {
+    wrapper = mount(Tooltip, {
+      ...mountOptions,
+      props: { tooltip: 'hi', open: true, placement: 'top', to: false, tooltipStyle: { borderRadius: '12px' } }
+    })
+    await flush()
+
+    expect(panelOf(wrapper)?.style.getPropertyValue('--tooltip-arrow-edge')).toBe('5px')
+  })
+
+  it('圆角小于下限时退回基础偏移，不会把箭头外推', async () => {
+    wrapper = mount(Tooltip, {
+      ...mountOptions,
+      props: { tooltip: 'hi', open: true, placement: 'topLeft', to: false, tooltipStyle: { borderRadius: '4px' } }
+    })
+    await flush()
+
+    // 5px ≥ 4px 圆角：基边仍完整落在卡片直边上，偏移保持现状
+    expect(panelOf(wrapper)?.style.getPropertyValue('--tooltip-arrow-edge')).toBe('5px')
+    expect(panelOf(wrapper)?.style.transformOrigin.startsWith('13px')).toBe(true)
+  })
+
+  it('popupStyle 显式指定时以使用者为准，且 JS 侧同步采用', async () => {
+    wrapper = mount(Tooltip, {
+      ...mountOptions,
+      props: {
+        tooltip: 'hi',
+        open: true,
+        placement: 'topLeft',
+        to: false,
+        tooltipStyle: { borderRadius: '12px' },
+        popupStyle: { '--tooltip-arrow-edge': '16px' }
+      }
+    })
+    await flush()
+
+    const panel = panelOf(wrapper)
+    expect(panel?.style.getPropertyValue('--tooltip-arrow-edge')).toBe('16px')
+    expect(panel?.style.transformOrigin.startsWith('24px')).toBe(true)
+  })
+
+  it('四角圆角不等时只取箭头所在侧的角（主轴定边、次轴定角）', async () => {
+    // 只有右下角是 12px：左上 8px、左下 4px（同边另一侧）、右上 20px（同侧另一条边）
+    // 取四角最大值会得到 20px，取错边 / 取错角都会偏离 12px
+    wrapper = mount(Tooltip, {
+      ...mountOptions,
+      props: {
+        tooltip: 'hi',
+        open: true,
+        placement: 'topRight',
+        to: false,
+        tooltipStyle: {
+          borderTopLeftRadius: '8px',
+          borderTopRightRadius: '20px',
+          borderBottomLeftRadius: '4px',
+          borderBottomRightRadius: '12px'
+        }
+      }
+    })
+    await flush()
+
+    const panel = panelOf(wrapper)
+    expect(panel?.style.getPropertyValue('--tooltip-arrow-edge')).toBe('12px')
+    // 次轴 end：动画原点从右往内缩，距离同为「偏移 + 半个箭头盒」
+    expect(panel?.style.transformOrigin).toContain('calc(100% - 20px)')
+  })
+
+  it('垂直主轴同理：箭头在卡片右边缘左上角附近时取右上角', async () => {
+    // 箭头贴卡片右边缘 → 取右侧的角；leftTop 取上侧 → 右上角 16px
+    // 左上角 20px（同边另一端更大）、右下角 3px（同侧另一端更小）都不得被选中
+    wrapper = mount(Tooltip, {
+      ...mountOptions,
+      props: {
+        tooltip: 'hi',
+        open: true,
+        placement: 'leftTop',
+        to: false,
+        tooltipStyle: {
+          borderTopLeftRadius: '20px',
+          borderTopRightRadius: '16px',
+          borderBottomRightRadius: '3px'
+        }
+      }
+    })
+    await flush()
+
+    const panel = panelOf(wrapper)
+    expect(panel?.style.getPropertyValue('--tooltip-arrow-edge')).toBe('16px')
+    expect(panel?.style.transformOrigin).toContain('24px')
+  })
+})

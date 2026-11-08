@@ -136,23 +136,36 @@ function onCellClick(unit: PickerTimeUnit): void {
 </template>
 <style lang="less" scoped>
 .picker-time-column {
+  position: relative;
+  isolation: isolate;
   flex: 1 0 auto;
   width: 56px;
   margin: 4px 0;
   :deep(.scrollbar-container) {
     position: relative;
-    /* 滚到边界不带动页面：时间列常被触控板惯性推到顶 / 底，滚动链会带着整页跳走（与 Select 面板同一处理；
-       须用 none 而非 contain —— contain 只切断滚动链，元素自身的弹性回弹仍会把列表带出滚动区露出空白） */
     overscroll-behavior: none;
   }
   &:not(:first-child) {
-    border-left: 1px solid var(--va-border-split-color);
+    margin-left: 1px;
+    &::after {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -1px;
+      width: 1px;
+      background: var(--va-border-split-color);
+      content: '';
+    }
   }
-  /* 键盘操作的目标列：用中性浅底标记「方向键作用于哪一列」。主色浅底属于「选中项」的语义，
-     两者同色会让活动列里的选中格融进整列底色（值看起来没被选中），故列底色改走中性填充 */
   &.picker-time-column-active {
-    background: var(--va-fill-color-1);
-    // 列底已是 fill-1，格子的悬停态须再深一档，否则悬停看不到反馈；选中格不参与（须保持主色浅底）
+    &::before {
+      position: absolute;
+      inset: 0 2px;
+      z-index: -1;
+      background: var(--va-fill-color-1);
+      border-radius: 4px;
+      content: '';
+    }
     .picker-time-cell:not(.picker-time-cell-selected) .picker-time-cell-inner:hover {
       background: var(--va-fill-color-2);
     }

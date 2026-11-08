@@ -206,10 +206,7 @@ defineExpose({ focus, blur })
     }"
     @click="onTriggerClick"
   >
-    <div
-      class="picker-trigger-input"
-      :class="{ 'picker-trigger-input-placeholder': !range && (inputText === '' || preview) }"
-    >
+    <div class="picker-trigger-input" :class="{ 'picker-trigger-input-placeholder': !range && preview }">
       <template v-if="range">
         <span
           ref="startItemRef"
