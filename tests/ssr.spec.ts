@@ -2,7 +2,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { createSSRApp, defineComponent, h } from 'vue'
 import { renderToString } from 'vue/server-renderer'
-import { useFps, useMediaQuery } from 'components/utils'
+import { useFps, useMediaQuery, useOptionsSupported } from 'components/utils'
 
 import Avatar from 'components/avatar/Avatar.vue'
 import Row from 'components/grid/row/Row.vue'
@@ -58,6 +58,8 @@ const HookProbe = defineComponent({
   setup() {
     useMediaQuery('(min-width: 600px)')
     useFps()
+    // 该 hook 在 setup 期读取 window：Node 下应显式返回 false 而不是靠异常兜底
+    useOptionsSupported('passive')
     return () => h('div')
   }
 })

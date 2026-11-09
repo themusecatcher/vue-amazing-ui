@@ -37,7 +37,7 @@ import {
   type PickerValue
 } from 'components/picker'
 import type { FloatingPlacement, MountElement } from 'components/utils'
-import { FLOATING_LAYER_Z_INDEX, useSlotsExist } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX } from 'components/utils'
 /** 默认展示格式（24 小时制） */
 const DEFAULT_FORMAT = 'HH:mm:ss'
 /** 12 小时制下的默认展示格式：小时补零，与面板的小时列标签、头部文本同口径（均为两位的 `09`） */
@@ -161,7 +161,6 @@ const emits = defineEmits<{
 }>()
 // 显式标注插槽类型：`useSlots()` 的返回值参与 `mergedExtraFooter` 的推导，构成推断环
 const slots: TimePickerSlots = useSlots()
-const slotsExist = useSlotsExist(['renderExtraFooter'])
 /** 面板的键盘入口：由 `TimePanel` 经 `defineExpose` 暴露 */
 interface PanelKeydownTarget {
   handleKeydown: (event: KeyboardEvent) => boolean
@@ -308,7 +307,8 @@ const okDisabled = computed(() => panelTimestamp.value === null)
  * （内核只收函数：VNode 需在其渲染上下文内创建，`computed` 里直接求值会产生「无主的 hoisted vnode」）
  */
 const mergedExtraFooter = computed<(() => VNode[]) | undefined>(() => {
-  if (slotsExist.renderExtraFooter) {
+  // #renderExtraFooter 是渲染委托型插槽，按「是否提供」判断（空内容会被内容探测误判为未提供）
+  if (slots.renderExtraFooter) {
     return () => slots.renderExtraFooter?.() ?? []
   }
   const render = props.renderExtraFooter

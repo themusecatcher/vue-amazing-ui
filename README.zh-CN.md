@@ -272,7 +272,7 @@ pnpm docs:dev
 | useFps | 实时监测浏览器刷新率FPS | () => { fps: Ref\<number> } |
 | useMediaQuery | 使用媒体查询来判断当前环境是否符合指定的媒体查询条件 | (mediaQuery: string) => { match: Ref\<boolean> } |
 | useResizeObserver | 使用 `ResizeObserver` 观察 `DOM` 元素尺寸变化 | (target: Ref &#124; Ref[] &#124; HTMLElement &#124; HTMLElement[], callback: ResizeObserverCallback, options: object = {}) => { start: \() => void, stop: \() => void } |
-| useSlotsExist | 监听给定名称或名称数组的插槽是否存在，支持监听单个插槽或一组插槽的存在 | <T extends string &#124; string[] = 'default'>(slotsName: T) => T extends string ? ComputedRef\<boolean> : Reactive\<Record\<string, ComputedRef\<boolean>>> |
+| useSlotsExist | 监听给定名称或名称数组的插槽是否存在，支持监听单个插槽或一组插槽的存在 | <T extends string &#124; string[] = 'default'>(slotsName: T) => T extends string ? ComputedRef\<boolean> : Reactive\<Record\<string, boolean>> |
 | useOptionsSupported | 检查浏览器是否支持给定的事件监听器选项 | (option: 'capture' &#124; 'once' &#124; 'passive' &#124; 'signal') => { isSupported: Ref\<boolean> } |
 | getScrollParent | 向上查找元素最近的可滚动父元素函数 | (el: HTMLElement &#124; null) => HTMLElement &#124; null |
 | useScrollParent | 查询并监听最近可滚动父元素，响应视口 `resize` 的组合式函数 | (contentRef: Ref\<HTMLElement &#124; null>, onScroll: () => void, options: ScrollParentOptions = {}) => { scrollTarget: Ref\<HTMLElement &#124; null>, viewportWidth: Ref\<number>, viewportHeight: Ref\<number>, observeScroll: \() => void, cleanup: \() => void } |

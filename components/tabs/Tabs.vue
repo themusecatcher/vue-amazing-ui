@@ -589,17 +589,11 @@ function getContentStyle(pane: TabsPane): CSSProperties {
       }
     ]"
   >
-    <div class="tabs-nav-container" :class="{ 'tabs-nav-custom': slotsExist.tabBar }" :style="tabStyle">
+    <div class="tabs-nav-container" :class="{ 'tabs-nav-custom': slots.tabBar }" :style="tabStyle">
       <div v-if="showPrefix" class="tabs-prefix">
         <slot name="prefix">{{ prefix }}</slot>
       </div>
-      <slot
-        v-if="slotsExist.tabBar"
-        name="tabBar"
-        :tabs="panes"
-        :active-key="activeKeyModel"
-        :change="requestTabChange"
-      />
+      <slot v-if="slots.tabBar" name="tabBar" :tabs="panes" :active-key="activeKeyModel" :change="requestTabChange" />
       <div
         v-else
         ref="wrapRef"

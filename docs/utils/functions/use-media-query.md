@@ -76,6 +76,7 @@ const { match: isMobile } = useMediaQuery('(max-width: 768px)')
 
 - 传入空字符串或非字符串时抛出异常，需保证媒体查询字符串合法
 - `SSR`（`Node`）环境下 `match` 初始值恒为 `false`，挂载后才会跟随视口变化
+- `mediaQuery` 参数在 `setup` 期求值一次：由 `props` / `ref` 驱动的变化**不会重新订阅**，需要重新挂载组件（或在外层切换 `key`）才会生效
 
 ## 参考文档
 
