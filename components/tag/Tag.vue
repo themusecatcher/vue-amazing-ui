@@ -172,11 +172,22 @@ function onCloseTagsKeydown(e: KeyboardEvent) {
   e.preventDefault()
   ;(e.currentTarget as HTMLElement | null)?.click()
 }
+// 关闭按钮的可访问名称带上标签文本：同一组多个关闭按钮都叫「关闭标签」时，读屏无法区分关闭的是哪一项
+function closeLabel(item: Item) {
+  return item.label ? `关闭 ${item.label}` : '关闭标签'
+}
 async function onAdd() {
   if (props.disabled) return
   showInput.value = true
   await nextTick()
   inputRef.value?.focus()
+}
+// 加号与关闭按钮同口径：可聚焦，Enter / Space 转发为一次原生 click
+function onAddKeydown(e: KeyboardEvent) {
+  if (props.disabled) return
+  if (e.key !== 'Enter' && e.key !== ' ') return
+  e.preventDefault()
+  ;(e.currentTarget as HTMLElement | null)?.click()
 }
 // 标签文本是否已存在：动态添加时去重，避免产生同名标签
 function hasLabel(label: string) {
@@ -290,7 +301,7 @@ function onKeyboard(e: KeyboardEvent) {
         v-if="item.closable ?? closable"
         class="tag-close"
         role="button"
-        aria-label="关闭标签"
+        :aria-label="closeLabel(item)"
         :tabindex="itemDisabled(item) ? -1 : 0"
         @click="onCloseTags($event, item, index)"
         @keydown="onCloseTagsKeydown"
@@ -317,9 +328,14 @@ function onKeyboard(e: KeyboardEvent) {
     </span>
     <span
       v-if="!showInput"
-      class="tag-wrap"
-      :class="[`tag-${size}`, { 'tag-plus': dynamic, 'tag-disabled': disabled }]"
+      class="tag-wrap tag-plus"
+      :class="[`tag-${size}`, { 'tag-disabled': disabled }]"
+      role="button"
+      aria-label="新增标签"
+      :aria-disabled="disabled ? 'true' : undefined"
+      :tabindex="disabled ? -1 : 0"
       @click="onAdd"
+      @keydown="onAddKeydown"
     >
       <svg
         focusable="false"
@@ -341,6 +357,7 @@ function onKeyboard(e: KeyboardEvent) {
       class="tag-input"
       :class="`input-${size}`"
       type="text"
+      aria-label="新增标签内容"
       v-model="inputValue"
       @blur="showInput = false"
       @change="onChange"
@@ -405,7 +422,6 @@ function onKeyboard(e: KeyboardEvent) {
     font-style: normal;
     line-height: 0;
     text-align: center;
-    vertical-align: -0.175em;
     transition: color 0.2s;
   }
   .tag-close {
@@ -414,7 +430,8 @@ function onKeyboard(e: KeyboardEvent) {
     align-items: center;
     height: 100%;
     position: relative;
-    vertical-align: top;
+    // 垂直对齐由父级 `.tag-wrap` 的 align-items: center 负责：两者都是 flex item，
+    // `vertical-align` 对 flex item 无效（写在这里只会误导成「靠它对齐」）
     font-style: normal;
     line-height: 0;
     text-align: center;
@@ -469,7 +486,6 @@ function onKeyboard(e: KeyboardEvent) {
     font-size: 14px;
   }
   .tag-close {
-    vertical-align: -0.16em;
     .close-svg {
       font-size: 12px;
     }

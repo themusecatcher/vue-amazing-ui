@@ -28,13 +28,26 @@ function onClick(event: MouseEvent) {
   emits('change', nextChecked)
   emits('click', event)
 }
+// 与 Tag 的关闭 / 新增按钮同口径：Enter / Space 转发为一次原生 click，键盘与鼠标走同一条路径。
+// 模板上的 role="button" + aria-pressed 暴露切换语义与选中态，禁用时移出 tab 序列并给出 aria-disabled
+function onKeydown(e: KeyboardEvent) {
+  if (props.disabled) return
+  if (e.key !== 'Enter' && e.key !== ' ') return
+  e.preventDefault()
+  ;(e.currentTarget as HTMLElement | null)?.click()
+}
 </script>
 <template>
   <Tag
     class="checkable-tag-wrap"
     :class="{ 'checkable-tag-checked': checkedModel }"
+    role="button"
+    :aria-pressed="checkedModel"
+    :aria-disabled="disabled ? 'true' : undefined"
+    :tabindex="disabled ? -1 : 0"
     :disabled="disabled"
     @click="onClick"
+    @keydown="onKeydown"
   >
     <slot></slot>
   </Tag>

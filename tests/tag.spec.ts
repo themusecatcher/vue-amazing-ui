@@ -63,6 +63,11 @@ describe('Tag 图标与关闭', () => {
     expect(bySlot.find('.tag-close .icon-by-slot').exists()).toBe(true)
   })
 
+  it('closeIcon 支持字符串', () => {
+    const wrapper = mount(Tag, { props: { closable: true, closeIcon: '×' } })
+    expect(wrapper.find('.tag-close').text()).toBe('×')
+  })
+
   it('关闭图标点击后派发 close 并隐藏，且不冒泡到 click', async () => {
     const wrapper = mount(Tag, { props: { closable: true } })
     await wrapper.find('.tag-close').trigger('click')
@@ -189,6 +194,13 @@ describe('Tag 动态模式', () => {
     expect(wrapper.emitted('dynamicClose')).toBeUndefined()
   })
 
+  it('动态标签组复用同一 closeIcon 属性', () => {
+    const wrapper = mount(Tag, {
+      props: { dynamic: true, value: ['a', 'b'], closeIcon: h('i', { class: 'shared-close' }) }
+    })
+    expect(wrapper.findAll('.tag-close .shared-close')).toHaveLength(2)
+  })
+
   it('Escape 关闭输入框', async () => {
     const wrapper = mount(Tag, { props: { dynamic: true, value: ['a'] } })
     await wrapper.find('.tag-plus').trigger('click')
@@ -219,6 +231,29 @@ describe('CheckableTag', () => {
   it('选中态挂载时带选中 class', () => {
     const wrapper = mount(CheckableTag, { props: { checked: true }, slots: { default: () => 'Movies' } })
     expect(wrapper.classes()).toContain('checkable-tag-checked')
+  })
+
+  it('切换按钮语义：role + aria-pressed 随选中态变化', async () => {
+    const wrapper = mount(CheckableTag, { slots: { default: () => 'Movies' } })
+    expect(wrapper.attributes('role')).toBe('button')
+    expect(wrapper.attributes('aria-pressed')).toBe('false')
+    expect(wrapper.attributes('tabindex')).toBe('0')
+    await wrapper.trigger('click')
+    expect(wrapper.attributes('aria-pressed')).toBe('true')
+  })
+
+  it('禁用时移出 tab 序列并暴露 aria-disabled', () => {
+    const wrapper = mount(CheckableTag, { props: { disabled: true }, slots: { default: () => 'Movies' } })
+    expect(wrapper.attributes('tabindex')).toBe('-1')
+    expect(wrapper.attributes('aria-disabled')).toBe('true')
+  })
+
+  it('Enter / Space 可切换选中态', async () => {
+    const wrapper = mount(CheckableTag, { slots: { default: () => 'Movies' } })
+    await wrapper.trigger('keydown', { key: 'Enter' })
+    expect(wrapper.emitted('change')?.[0]).toEqual([true])
+    await wrapper.trigger('keydown', { key: ' ' })
+    expect(wrapper.emitted('change')?.[1]).toEqual([false])
   })
 })
 
@@ -287,8 +322,16 @@ describe('Tag 关闭按钮的无障碍与冒泡', () => {
     expect(close.attributes('tabindex')).toBe('0')
   })
 
-  it('动态项的关闭按钮同样带可访问名称', () => {
-    const wrapper = mount(Tag, { props: { dynamic: true, value: ['a'] } })
+  it('动态项的关闭按钮把标签文本写进可访问名称，便于区分目标', () => {
+    const wrapper = mount(Tag, { props: { dynamic: true, value: ['天空', '大海'] } })
+    expect(wrapper.findAll('.tag-close').map((close) => close.attributes('aria-label'))).toEqual([
+      '关闭 天空',
+      '关闭 大海'
+    ])
+  })
+
+  it('动态项没有文本时回落到通用可访问名称', () => {
+    const wrapper = mount(Tag, { props: { dynamic: true, value: [{ icon: '🙅' }] } })
     expect(wrapper.find('.tag-close').attributes('aria-label')).toBe('关闭标签')
   })
 
@@ -297,6 +340,24 @@ describe('Tag 关闭按钮的无障碍与冒泡', () => {
     await wrapper.find('.tag-close').trigger('click')
     expect(wrapper.emitted('close')).toHaveLength(1)
     expect(wrapper.emitted('click')).toHaveLength(1)
+  })
+
+  it('新增标签按钮具备 button 语义、可访问名称与键盘入口', async () => {
+    const wrapper = mount(Tag, { props: { dynamic: true, value: ['a'] } })
+    const plus = wrapper.find('.tag-plus')
+    expect(plus.attributes('role')).toBe('button')
+    expect(plus.attributes('aria-label')).toBe('新增标签')
+    expect(plus.attributes('tabindex')).toBe('0')
+    await plus.trigger('keydown', { key: 'Enter' })
+    expect(wrapper.find('input').exists()).toBe(true)
+    expect(wrapper.find('input').attributes('aria-label')).toBe('新增标签内容')
+  })
+
+  it('禁用时新增标签按钮不可聚焦', () => {
+    const wrapper = mount(Tag, { props: { dynamic: true, disabled: true, value: ['a'] } })
+    const plus = wrapper.find('.tag-plus')
+    expect(plus.attributes('tabindex')).toBe('-1')
+    expect(plus.attributes('aria-disabled')).toBe('true')
   })
 })
 
