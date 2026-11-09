@@ -14,29 +14,32 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
-## <VersionDateTag date="2026-11-09">3.9.4</VersionDateTag>
+## 3.9.4 <span class="changelog-date">2026-11-09</span>
 
-- [标签 Tag](/guide/components/tag.html) 动态标签组的行为变更：组件级 `bordered` 现对各项生效，关闭某一项时同时派发 `close`
-- 新增 [标签 Tag](/guide/components/tag.html) 的 `CheckableTag` 可选标签，支持 `v-model:checked` 与 `change`，未传 `checked` 时按非受控处理；另新增 `closeIcon` 属性与 `#closeIcon` 插槽
-- 新增 [标签 Tag](/guide/components/tag.html) 的 `click` 事件、`close` 的 `preventDefault()` 阻止隐藏，以及色板色的 `-inverse` 深色底变体（如 `pink-inverse`）；`icon` 与 `TagItem.icon` 支持 VNode / 渲染函数
-- 新增 [标签 Tag](/guide/components/tag.html) 的 `round` 圆角胶囊形、`disabled` 禁用态与对象形态的 `color`（可分别指定背景、文字、边框色）
-- 优化 [标签 Tag](/guide/components/tag.html) 关闭按钮的可用性：可键盘聚焦，`Enter` / `Space` 可关闭，新增 `triggerClickOnClose` 控制关闭时是否同时触发 `click`
-- 修复 [标签 Tag](/guide/components/tag.html) 无边框态：预设色 / 状态色下仍显示边框，以及背景与自定义色下的链接、关闭图标配色
-- 优化 [标签 Tag](/guide/components/tag.html) 的动态标签组新增交互：文本去除首尾空格，跳过空值与同名标签，`Esc` 取消输入
-- 修复 [标签 Tag](/guide/components/tag.html) 动态标签组的 `#icon` 插槽：插槽内容依赖 `item` / `index` 时图标不渲染
-- 优化 [标签 Tag](/guide/components/tag.html) 的关闭按钮与交互态：关闭图标改为跟随标签文字色（`-inverse` 深色底上不再看不见），键盘焦点环贴合图标且不再越出标签边界；`CheckableTag` 选中后按下补一档更深的反馈
-- 修复 [标签 Tag](/guide/components/tag.html) 内嵌 `<a>` 链接仍取页面链接色、未跟随标签文字色的问题
-- 优化 [标签 Tag](/guide/components/tag.html) 的尺寸梯度与圆角，与按钮等表单控件的视觉比例更协调
-- 更新使用者文档：补充可选标签、热门标签用例与 API 说明
+- 调整 [标签 Tag](/guide/components/tag.html) 的动态标签组：组件级 `bordered` 现对每一项生效（原仅项级生效），关闭某一项时除 `dynamicClose` 外同时派发 `close`
+- 新增 [标签 Tag](/guide/components/tag.html) 的可选标签 `CheckableTag`，选中态经 `v-model:checked` 与 `change` 交互，点击同样派发 `click`
+- 新增 [标签 Tag](/guide/components/tag.html) 的 `round` 圆角胶囊形、`disabled` 禁用态与 `closeIcon` 属性 / `#closeIcon` 插槽
+- 新增 [标签 Tag](/guide/components/tag.html) 的 `color` 对象形态（可分别指定背景、文字、边框色）与色板色的 `-inverse` 深色底变体，`icon` 支持 VNode / 渲染函数
+- 新增 [标签 Tag](/guide/components/tag.html) 的 `click` 事件与 `close` 的 `preventDefault()` 阻止关闭
+- 优化 [标签 Tag](/guide/components/tag.html) 的关闭按钮：可键盘聚焦并用 `Enter` / `Space` 关闭，补屏幕阅读器可读的名称与贴合图标的焦点环，图标改随标签文字色，新增 `triggerClickOnClose` 控制是否同时触发 `click`
+- 优化 [标签 Tag](/guide/components/tag.html) 的动态标签组新增交互：去除首尾空格、跳过空值与同名标签，`Esc` 取消输入，`disabled` 下不再可新增
+- 优化 [标签 Tag](/guide/components/tag.html) 的尺寸梯度：`small` 档高度收窄，与相邻档位的落差更明显
+- 修复 [标签 Tag](/guide/components/tag.html) 动态标签组的 `#icon` 插槽：内容依赖 `item` / `index` 时图标不渲染
+- 修复 [标签 Tag](/guide/components/tag.html) 的配色：无边框态在预设色 / 状态色下仍显示边框，标签内 `<a>` 仍取页面链接色
+- 优化 [级联选择 Cascader](/guide/components/cascader.html) 与 [选择器 Select](/guide/components/select.html)、[导航菜单 Menu](/guide/components/menu.html) 的空插槽回落：`suffixIcon`、`clearIcon`、`expandIcon`、`loadingIcon`、`removeIcon`、`notFoundContent`、`placeholder`、`action`、`overflowedIndicator` 渲染为空时回落到属性或内置内容
+- 修复 [时间轴 Timeline](/guide/components/timeline.html) 的左右分栏：节点内容里嵌套时间轴时，外层不再被误判为需要分栏
+- 修复 [监听插槽存在 useSlotsExist](/utils/functions/use-slots-exist.html)：运行期增删插槽后判定不更新，带数据作用域的插槽（如 `#option`、`#dateRender`、`#tabBar`）不再被误判为未提供；名称数组入参的返回值改为 `boolean` 映射（原为 `ComputedRef`，写 `.value` 的代码需去掉）
+- 更新使用者文档与 `README`：补充可选标签与热门标签用例、作用域插槽按「是否提供」判断的约定、浏览器支持范围与低版本引擎的降级说明
+- 更新贡献者文档：补充插槽判定口径与高版本 `CSS` 特性的使用约束
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-11-08">3.9.3</VersionDateTag>
+## 3.9.3 <span class="changelog-date">2026-11-08</span>
 
 - 修复 [文字提示 Tooltip](/guide/components/tooltip.html) 及 [气泡卡片 Popover](/guide/components/popover.html)、[弹出确认 Popconfirm](/guide/components/popconfirm.html) 在复合方向下的箭头位置：卡片圆角较大时箭头错位，现随卡片圆角自动内移，可用 `popupStyle` 的 `--tooltip-arrow-edge` 按 `px` 覆盖
 - 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 与 [时间选择器 TimePicker](/guide/components/time-picker.html) 的输入框与时间面板样式：输入框为空时光标不再被提示文字的颜色染色；带时间形态下时间列分隔线不再挤占列宽、活动列底纹改为左右留边的圆角块
 - 更新组件库文档
 
-## <VersionDateTag date="2026-11-07">3.9.2</VersionDateTag>
+## 3.9.2 <span class="changelog-date">2026-11-07</span>
 
 - 优化 [数字输入框 InputNumber](/guide/components/input-number.html) 的空值语义：`value` / `defaultValue` 接受 `null`（`undefined` 仍表示非受控），清空输入时 `change` 与 `update:value` 上报 `null`（原为 `undefined`），空值步进按 `0` 起算，使用者文档同步属性与事件类型
 - 修复 [日期选择器 DatePicker](/guide/components/date-picker.html) 与 [时间选择器 TimePicker](/guide/components/time-picker.html) 的键盘与焦点：收起态 `Enter` 展开，展开态提交并收起，`Esc` 收起，`Tab` / `Shift+Tab` 在输入框与面板间进出，焦点移出即收起；键盘目标列的底色与选中项区分开，面板收起后清除，使用者文档同步键盘操作说明
@@ -48,7 +51,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新使用者文档与贡献者文档
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-11-06">3.9.1</VersionDateTag>
+## 3.9.1 <span class="changelog-date">2026-11-06</span>
 
 - 增强 [滚动条 Scrollbar](/guide/components/scrollbar.html) 的实例能力：`getScrollData()` 补 `scrollLeft`，由缓存快照改为调用时实时读取（未挂载时各项为 `0`），新增导出 `ScrollbarExpose` / `ScrollDirection` / `ScrollbarScrollData` 类型
 - 修复 [滚动条 Scrollbar](/guide/components/scrollbar.html) 的滚动行为：`scroll` / `scrollend` 在拖动滑块、`scrollTo` / `scrollBy` 及直接写 `scrollLeft` / `scrollTop` 时不再丢失（位置未变不派发、横纵同帧变化各派发一次，`scrollend` 不再受 `autoHide` / `trigger` 门控）；`<KeepAlive>` 切回后恢复滚动位置，滑块不再超出轨道长度、拖拽不再跳动，`delay` 运行期修改即时生效
@@ -58,7 +61,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新使用者文档
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-11-05">3.9.0</VersionDateTag>
+## 3.9.0 <span class="changelog-date">2026-11-05</span>
 
 - 重构 [标签页 Tabs](/guide/components/tabs.html)：`items` 属性与 `TabsItem` 类型移除，页签改用 `TabPane` 子组件描述（`key` 写在子组件，`tab` / `content` 插槽改为 `tab` 插槽与默认插槽，`icon` 由 `tab` 插槽承接）
 - 移除 `centered` 属性，改用 `justifyContent: 'center'`（`card` 下仅 `center` 生效，`line` 下溢出时不生效）；`animated` 默认值由 `true` 改为 `false`，需要动画时须显式开启
@@ -69,7 +72,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新使用者文档与贡献者文档
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-11-04">3.8.2</VersionDateTag>
+## 3.8.2 <span class="changelog-date">2026-11-04</span>
 
 - 优化输入类组件：[输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [文本域 Textarea](/guide/components/textarea.html) 的 `v-model` 置为 `undefined` 时保留最后一次内容，不再清空输入框（需要清空时显式传空字符串）；`Textarea` 的 `value` 默认值由 `''` 改为 `undefined`
 - 新增非受控初值：[输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [文本域 Textarea](/guide/components/textarea.html) / [数字输入框 InputNumber](/guide/components/input-number.html) / [选择器 Select](/guide/components/select.html) / [日期选择器 DatePicker](/guide/components/date-picker.html) / [时间选择器 TimePicker](/guide/components/time-picker.html) / [分段控制器 Segmented](/guide/components/segmented.html) / [复选框 CheckboxGroup](/guide/components/checkbox.html) / [单选框 RadioGroup](/guide/components/radio.html) / [评分 Rate](/guide/components/rate.html) 共 `11` 个组件的 `defaultValue`；[上传 Upload](/guide/components/upload.html) 为 `defaultFileList`
@@ -79,7 +82,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新使用者文档与贡献者文档：补充 `defaultValue` 属性说明与非受控示例，明确取值类字段的非受控入口约定
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-11-04">3.8.1</VersionDateTag>
+## 3.8.1 <span class="changelog-date">2026-11-04</span>
 
 - 新增 [输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [文本域 Textarea](/guide/components/textarea.html) / [数字输入框 InputNumber](/guide/components/input-number.html) 的 `focus` 事件与 `focus()` / `blur()` 方法：事件参数为原生 `FocusEvent`，方法可程序化控制焦点
 - 修复 [输入框 Input](/guide/components/input.html) / [搜索框 InputSearch](/guide/components/input-search.html) / [数字输入框 InputNumber](/guide/components/input-number.html) 的容器误设 `tabindex="1"`：键盘 `Tab` 会多停一次且打乱全站 `Tab` 顺序，现直达输入框；`InputNumber` 点击上下箭头也不再让输入框失焦
@@ -87,7 +90,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新使用者文档与贡献者文档
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-11-04">3.8.0</VersionDateTag>
+## 3.8.0 <span class="changelog-date">2026-11-04</span>
 
 - 新增 [分页 Pagination](/guide/components/pagination.html) 的 `bordered` 属性与 `showQuickJumper` 的对象形态 `{ goButton }`（传字符串即按钮文案），跳转框改为只接受数字、有按钮时失焦不自动跳转，并补充 `PaginationQuickJumper` 类型导出
 - 修复 [分页 Pagination](/guide/components/pagination.html) 的省略号按钮类名拼写（`pagintion-jump-prev` / `pagintion-jump-next` → `pagination-jump-prev` / `pagination-jump-next`，按旧类名覆盖样式的需同步改名）与页码越界：`total` / `page` 越界时按有效页码渲染，`update:page` / `change` 也返回有效页码
@@ -100,14 +103,14 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 组件库脚本及配置优化
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-11-03">3.7.2</VersionDateTag>
+## 3.7.2 <span class="changelog-date">2026-11-03</span>
 
 - 新增 [间距 Space](/guide/components/space.html) 的 `split` 插槽：在相邻内容之间插入分隔符，内容不足两个时不渲染
 - 新增 [弹性布局 Flex](/guide/components/flex.html) 的 `flex`（容器自身作为 `flex` 子项时的伸缩简写，如 `flex: 1`）与 `component`（渲染的标签名或组件）属性
 - 修复 [弹性布局 Flex](/guide/components/flex.html) / [间距 Space](/guide/components/space.html) 的外部间距与空内容占位：写在组件上的 `margin` 类可正常生效，无内容（`v-if` 全不成立）时不再占位
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-11-03">3.7.1</VersionDateTag>
+## 3.7.1 <span class="changelog-date">2026-11-03</span>
 
 - 拖拽上传改为遵循 [上传 Upload](/guide/components/upload.html) 的 `accept` / `multiple` 约束：类型不符的文件不再入库，经新增的 `reject` 事件回传；关闭多选时拖入多个只取第一个文件
 - 修复 [上传 Upload](/guide/components/upload.html) 的 `maxCount`：为 `1` 时占满后仍可上传替换当前文件，超出上限的文件不再写入列表
@@ -115,7 +118,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新使用者文档与贡献者文档
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-11-02">3.7.0</VersionDateTag>
+## 3.7.0 <span class="changelog-date">2026-11-02</span>
 
 - 可写字段改为「传值即受控」：`value` / `open` / `activeKey` 等传入后，交互只上报 `update:`、界面以父侧回写为准；只传值不监听 `update:` 的写法不再响应交互（[评分 Rate](/guide/components/rate.html)、[日期选择器 DatePicker](/guide/components/date-picker.html)、[分页 Pagination](/guide/components/pagination.html) 等），补 `v-model` 即可，原本就用 `v-model` 的无需改动
 - 修复 [下拉菜单 Dropdown](/guide/components/dropdown.html) 受控时点击菜单项不收起：该次收起只上报 `update:open`，不触发 `openChange`
@@ -126,14 +129,14 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新使用者文档和贡献者文档
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-10-31">3.6.0</VersionDateTag>
+## 3.6.0 <span class="changelog-date">2026-10-31</span>
 
 - 重构 [级联选择 Cascader](/guide/components/cascader.html)：由三个并排选择框改为单选择器 + 多列浮层面板，层级不再固定三级；移除 `gap` / `height` / `maxDisplay` / `search` / `filter`（`maxDisplay` → `panelHeight`、`search` → `showSearch`、`filter` → `showSearch.filter` 且第二参改为完整路径），`width` / `disabled` / `placeholder` 不再接受数组，`width` 默认 `auto` → `184`、`allowClear` 默认 `false` → `true`、`placement` 改四向取值（旧 `'bottom'` / `'top'` 失效）、`change` 第二参改为选项数组
 - 新增 [级联选择 Cascader](/guide/components/cascader.html) 的多选（`multiple` / `showCheckedStrategy` / `maxTagCount` / `maxTagPlaceholder` / `tagRender` / `getCheckedData`）、`showSearch` 定制（`filter` / `sort` / `limit` / `render` / `matchInputWidth`）、`loadData` 异步加载、`virtual` 虚拟滚动、`v-model:open` / `v-model:searchValue` 受控、`displayRender` / `expandTrigger` / `status` / `bordered`、`default` / `action` 插槽、键盘操作（方向键跨列、`Space` 勾选、`Backspace` 删 tag）、`theme.components.Cascader.primaryColor` 组件级主色；使用者文档同步补全属性 / 事件 / 插槽说明
 - 组件库部分依赖版本升级
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-10-30">3.5.0</VersionDateTag>
+## 3.5.0 <span class="changelog-date">2026-10-30</span>
 
 - [文字提示 Tooltip](/guide/components/tooltip.html) 的 `open` 改为受控（默认 `false` → `undefined`，不传时行为不变，传入后需经 `v-model:open` 回写），新增 `tooltipRole` / `tooltipLabelledby` / `describedBy`；[气泡卡片 Popover](/guide/components/popover.html)、[弹出确认 Popconfirm](/guide/components/popconfirm.html) 继承其完整属性，`anchor` / `disabled` / `openControl` 等可直接写在组件上，`contentClass` / `tooltip` 移除
 - [文字提示 Tooltip](/guide/components/tooltip.html) 的 `click` 触发改为点击即开合、再次点击立刻收起，`Esc` 关闭不再要求开启 `keyboard`（此后只控制 `Enter` 切换），[气泡卡片 Popover](/guide/components/popover.html) 同步；[弹出确认 Popconfirm](/guide/components/popconfirm.html) 面板语义改为 `alertdialog`（标题即可访问名称），打开后焦点落在「确定」、关闭归还触发元素
@@ -141,19 +144,19 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 浮层的外部点击关闭改为按下即判定（触屏 `touchstart`），面板内按下、拖到面板外松手不再误关：[文字提示 Tooltip](/guide/components/tooltip.html)、[下拉菜单 Dropdown](/guide/components/dropdown.html)、[日期选择器 DatePicker](/guide/components/date-picker.html)、[时间选择器 TimePicker](/guide/components/time-picker.html)、[颜色选择器 ColorPicker](/guide/components/color-picker.html) 生效；置于 [模态框 Modal](/guide/components/modal.html) / [抽屉 Drawer](/guide/components/drawer.html) / [对话框 Dialog](/guide/components/dialog.html) 内时随容器关闭收起，不再残留打开态
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-10-29">3.4.2</VersionDateTag>
+## 3.4.2 <span class="changelog-date">2026-10-29</span>
 
 - 重构 [选择器 Select](/guide/components/select.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html) 的下拉面板：外层包裹节点 `.select-panel-wrapper` / `.auto-complete-panel-wrapper` 移除，改由公共浮层容器承载（面板根 `select-panel-container` / `auto-complete-panel` 不变），依赖旧包裹节点的 `:deep()` 选择器改用 `popupClassName` / `dropdownMenuStyle` 或直接写面板根类名
 - 修复 [下拉菜单 Dropdown](/guide/components/dropdown.html)、[菜单 Menu](/guide/components/menu.html) 等浮层面板内嵌的 `Tooltip` / `Popover` 在面板关闭时不随之收起的问题
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-10-28">3.4.1</VersionDateTag>
+## 3.4.1 <span class="changelog-date">2026-10-28</span>
 
 - 修复 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `baseZIndex` 与 `theme` 在路由守卫中创建离散实例（`createDiscreteApi`）时不生效的问题
 - 贡献者文档补充 `provide` / `inject` 注入契约与守护说明
 - 组件库代码优化
 
-## <VersionDateTag date="2026-10-28">3.4.0</VersionDateTag>
+## 3.4.0 <span class="changelog-date">2026-10-28</span>
 
 - 移除 [水印 Watermark](/guide/components/watermark.html) 的 `fixed` 属性：`fullscreen` 水印始终固定于视口，原随文档滚动的写法改用非全屏水印包裹根内容；`textStyle` 的 `fontWeight` `'light'` / `'weight'` 改为 `'lighter'` / `'bolder'`、`fontStyle` 的 `'none'` 改为 `'normal'`；`offset` 默认值改为 `gap / 2`（原 `[50, 50]`）
 - 新增 [水印 Watermark](/guide/components/watermark.html) 的 `imageOpacity` 与 `textStyle` 的 `lineHeight` / `textAlign` / `fontVariant`；图片水印未指定宽高时按原图比例显示，不再拉伸变形
@@ -161,19 +164,19 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新 [水印 Watermark](/guide/components/watermark.html) 的使用者文档与贡献者文档
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-10-27">3.3.2</VersionDateTag>
+## 3.3.2 <span class="changelog-date">2026-10-27</span>
 
 - 修复 [文字提示 Tooltip](/guide/components/tooltip.html)、[选择器 Select](/guide/components/select.html) 等组件的 `to` / `listenTo` / `anchor`，以及 [数字动画 NumberAnimation](/guide/components/number-animation.html)、[轮播图 Carousel](/guide/components/carousel.html) 的缓动预设名：发布包中传入 `DOM` 元素或预设名会误报 `Invalid prop`，原写法无需调整
 - 修复 [回到顶部 BackTop](/guide/components/back-top.html) 隐藏时跳过离场动画的问题
 - 更新使用者文档与贡献者文档
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-10-26">3.3.1</VersionDateTag>
+## 3.3.1 <span class="changelog-date">2026-10-26</span>
 
 - 修复 [文本滚动 TextScroll](/guide/components/text-scroll.html) 的滚动启停、节奏与样式：`start()` 重复调用不再叠加滚动，`KeepAlive` 失活即暂停、返回后接着滚动，`interval` 改为纯停留时长（过渡另计 `duration`，同参数下整体变慢），`ellipsis` 下 `itemStyle` 的 `maxWidth` 生效
 - 更新组件库文档与贡献者文档
 
-## <VersionDateTag date="2026-10-25">3.3.0</VersionDateTag>
+## 3.3.0 <span class="changelog-date">2026-10-25</span>
 
 - [二维码 QRCode](/guide/components/qr-code.html) 中央图标底色属性 `iconBackgroundColor` 移除，改用 `iconBgColor`
 - 新增 [二维码 QRCode](/guide/components/qr-code.html) 的 `spinProps` 属性，可配置 `loading` 状态的指示符与文案；遮罩不透明度改由 `--qr-code-mask-opacity` 控制，默认值由 `1` 改为 `0.96`
@@ -185,20 +188,20 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新使用者文档和贡献者文档
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-10-24">3.2.1</VersionDateTag>
+## 3.2.1 <span class="changelog-date">2026-10-24</span>
 
 - 修复 [按钮 Button](/guide/components/button.html)、[开关 Switch](/guide/components/switch.html)、[单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html) 的水波纹：波纹未播完时连点、或被禁用后重新启用，不再丢波或凭空补播一次
 - 优化上述四个组件的水波纹动画与样式
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-10-24">3.2.0</VersionDateTag>
+## 3.2.0 <span class="changelog-date">2026-10-24</span>
 
 - 重构并增强 [文本省略 Ellipsis](/guide/components/ellipsis.html)：提示显隐与溢出状态不再改变文本容器的结构、类名与样式，提示实例按需创建（受控开合时提前创建）；`tooltip` 由 `boolean` 扩展为 `boolean | EllipsisTooltipProps`，原先直接写在组件上的 [文字提示 Tooltip](/guide/components/tooltip.html) 属性（如 `bg-color` / `trigger`）需移入该对象，`content-class` / `content-style` 一并失效（类名与样式直接写在组件上），并新增 `EllipsisTooltipProps` 类型导出；`expand` 在单行文本下同样可展开
 - 优化 [浮动按钮 FloatButton](/guide/components/float-button.html)：无提示内容时不再创建 [文字提示 Tooltip](/guide/components/tooltip.html) 实例，按钮的结构、类名与尺寸保持不变
 - 新增 [文字提示 Tooltip](/guide/components/tooltip.html) 的 `anchor` 与 `getDisabled` 属性：前者传入外部元素作为锚点（不再渲染触发包裹层），后者在每次展示前判定是否允许展示
 - 更新组件库文档
 
-## <VersionDateTag date="2026-10-23">3.1.0</VersionDateTag>
+## 3.1.0 <span class="changelog-date">2026-10-23</span>
 
 - [时间轴 Timeline](/guide/components/timeline.html) 的属性与插槽调整：移除 `items` 属性与 `Item` 类型（节点改用 `TimelineItem` 承载）、`width`（宽度交由宿主布局控制）与空内容 `--` 占位；`desc` → `content`、`lineStyle` → `lineType`、`mode` 的 `center` → `alternate`、容器 `position` → `start`（默认 `left` → `right`，交替模式内容先从右侧出现）；旧 `dot` / `desc` 作用域插槽改为无作用域参数的 `dot` / 默认插槽
 - [时间轴 Timeline](/guide/components/timeline.html) 的类名与类型更名：除 `timeline-wrap` 外类名一律更名（如 `timeline-item` → `timeline-item-wrap`、`timeline-dot` → `timeline-item-head`），依赖旧类名的自定义样式需同步改写；`TimelineItem` 类型改为同名组件、节点配置类型改用 `TimelineItemProps`
@@ -207,7 +210,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 优化 [时间轴 Timeline](/guide/components/timeline.html) 的节点结构语义：改为 `ul` / `li` 语义化列表，补齐无障碍语义与系统「减少动效」偏好下的表现
 - 组件库文档更新优化
 
-## <VersionDateTag date="2026-10-22">3.0.0</VersionDateTag>
+## 3.0.0 <span class="changelog-date">2026-10-22</span>
 
 - [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme` 改为 `{ seed, mode, components }`：原 `{ common, 组件名 }` 写法移除（组件级配色改用 `theme.components`），颜色只需给种子，色阶、状态色与暗色档位由库内派生；主题相关迁移（`theme` 形状、`abstract` 默认值、被移除的工具函数与私有变量）对照见[定制主题](/guide/customize-theme.html#迁移-旧版主题-api)
 - [全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `abstract` 属性默认值由 `true` 改为 `false`：实例默认渲染一层包裹元素（`tag` 可换 `span` 等），主题只作用于自身子树；需要页面级主题（`Teleport` 浮层、页面链接色）时在最外层显式传 `:abstract="true"`
@@ -230,7 +233,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新组件库文档和贡献者文档
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-10-19">2.15.2</VersionDateTag>
+## 2.15.2 <span class="changelog-date">2026-10-19</span>
 
 - 移除 [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html) 的 `options` / `vertical` / `gap` 属性，配置式写法改用 `RadioGroup` / `CheckboxGroup`；Checkbox 的 `value` 不再接受数组；Radio 的 `buttonSize` 更名为 `size`（在组内由组的 `size` 下发）；选项类型统一为 `RadioGroupOption` / `CheckboxGroupOption`（`RadioOption` / `CheckboxOption` 不再导出）
 - [单选框 Radio](/guide/components/radio.html) 与 [复选框 Checkbox](/guide/components/checkbox.html) 新增 `RadioGroup` / `CheckboxGroup` 组合式用法：统一下发选中值与禁用态并承载组内选项，组内项以 `value` 标识自身（Radio 另有 `RadioButton` 按钮形态），`options` 支持字符串 / 数字简写与 `VNode` 选项名
@@ -241,7 +244,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新使用者文档与贡献者文档
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-10-18">2.15.1</VersionDateTag>
+## 2.15.1 <span class="changelog-date">2026-10-18</span>
 
 - [日历 Calendar](/guide/components/calendar.html) 的 `select` 改为每次选中都触发（含重复点击已选中日期），第二参改为 `{ source }`（新增 `year` / `customize` 来源）；年 / 月选择器与键盘操作同样写回选中值并触发 `change` / `select`，`panelChange` 在跨月 / 跨年时补发；移除 `dateStrip` 属性（日期区恒定渲染六周），新增 `CalendarSelectInfo` 类型导出
 - [日历 Calendar](/guide/components/calendar.html) 新增 `defaultValue` / `validRange`（字符串按 `valueFormat` 解析，区间外的年 / 月选项一并收窄）与 `headerFull` / `dateFull` / `monthFull` 插槽，`mode` 改为受控（外部变更同步到面板），并补齐键盘导航（月份面板按月步进）、`grid` 无障碍语义、整月 / 整年禁用与窄屏头部
@@ -249,7 +252,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新使用者文档：[日历 Calendar](/guide/components/calendar.html) 演示补充；文档站补充社交分享卡片的标签与封面图
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-10-17">2.15.0</VersionDateTag>
+## 2.15.0 <span class="changelog-date">2026-10-17</span>
 
 - [颜色选择器 ColorPicker](/guide/components/color-picker.html) 的浮层改为组件自持，显隐改用 `v-model:open`（原 `v-model:show`），面板样式改用 `panelStyle` / `panelClass`（原 `tooltipStyle`）；原 [文字提示 Tooltip](/guide/components/tooltip.html) 派生属性（延迟、箭头等）与 `trigger` 插槽旧回传值移除（现回传 `{ value }`，程序化开合请用 `v-model:open`）；`complete` 事件改为仅在输入框提交或拖动结束时触发（依赖「选色即完成」请改用 `update:value`）
 - [文字提示 Tooltip](/guide/components/tooltip.html)（含派生的 [气泡卡片 Popover](/guide/components/popover.html) / [气泡确认框 Popconfirm](/guide/components/popconfirm.html)）的显隐双向绑定统一为 `v-model:open`（原 `v-model:show`），`showControl` 改名为 `openControl`
@@ -258,7 +261,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新使用者文档与贡献者文档
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-10-16">2.14.2</VersionDateTag>
+## 2.14.2 <span class="changelog-date">2026-10-16</span>
 
 - [回到顶部 BackTop](/guide/components/back-top.html) 的 `listenTo` 支持按 `CSS` 选择器解析字符串参数（元素标签名本身是合法选择器，原写法仍有效）
 - 新增 [滚动条 Scrollbar](/guide/components/scrollbar.html) 实例属性 `scrollElement`，可获取内部滚动容器元素
@@ -266,7 +269,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新使用者文档：[布局 Layout](/guide/components/layout.html) 补充 `CSS` 变量清单与浅色侧边栏覆盖示例，[栅格 Grid](/guide/components/grid.html) 补充固定高度容器下 `align="stretch"` 的生效边界，[回到顶部 BackTop](/guide/components/back-top.html) 补充容器内滚动的监听目标选取；同步修正 `getScrollData` 类型签名（补全 `scrollTop`）
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-10-15">2.14.1</VersionDateTag>
+## 2.14.1 <span class="changelog-date">2026-10-15</span>
 
 - [二维码 QRCode](/guide/components/qr-code.html) 的 `errorLevel` 改为「最低等级」且默认值由 `'H'` 改为 `'M'`（需保留原行为可显式设置 `errorLevel="H"`）、`scale` 改为「最小像素倍率下限」，实例方法 `getQRCodeImage` 更名为 `toDataURL` 并改为同步返回 `string`（`await ref.getQRCodeImage()` 改为 `ref.toDataURL()`）
 - [二维码 QRCode](/guide/components/qr-code.html) 与 [回到顶部 BackTop](/guide/components/back-top.html) 的根类名与 `CSS` 变量前缀统一为组件目录名的短横线形式（`qrcode-wrap` → `qr-code-wrap`、`--qrcode-*` → `--qr-code-*`，BackTop 的 `desc` → `description`），依赖旧类名 / 变量的自定义用法需同步调整
@@ -274,7 +277,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - [二维码 QRCode](/guide/components/qr-code.html) 新增 `status` 属性与 `refresh` 事件（`active` / `expired` / `loading` / `scanned` 四种状态，含遮罩与点击刷新）、`iconBackgroundColor` / `iconBorderRadius` / `title` / `padding` 属性与 `--qr-code-mask-bg-color` / `--qr-code-mask-text-color` 遮罩变量，中央图标绘入二维码本体（导出图片同样包含）
 - 更新使用者文档：[二维码 QRCode](/guide/components/qr-code.html) 的演示补充
 
-## <VersionDateTag date="2026-10-14">2.14.0</VersionDateTag>
+## 2.14.0 <span class="changelog-date">2026-10-14</span>
 
 - 新增 [时间选择器 TimePicker](/guide/components/time-picker.html) 组件：时分秒三列滚动面板，支持 `type="timerange"` 范围形态、`12` 小时制与步长配置；[全局化配置 ConfigProvider](/guide/components/config-provider.html) 的 `theme` 同步新增 `TimePicker` 键
 - 重构 [日期选择器 DatePicker](/guide/components/date-picker.html) 为自研实现（移除第三方依赖）：`v-model` 改用 `v-model:value` / `v-model:formatted-value`（毫秒时间戳 / 字符串双轨），`modelType` 改用 `valueFormat`，`mode` / `range` / `showTime` / `maxRange` 移除（形态改由 `type` 承担），`format` 不再支持函数形态，`showToday` 默认值由 `false` 改为 `true`
@@ -286,7 +289,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新使用者文档与贡献者文档
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-10-13">2.13.2</VersionDateTag>
+## 2.13.2 <span class="changelog-date">2026-10-13</span>
 
 - 修复 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 组件级主题：运行期增删组件键即时生效（新增覆盖生效、移除覆盖回退 `common`），`theme` 中的非本库组件键改为忽略并告警
 - 修复 [文本省略 Ellipsis](/guide/components/ellipsis.html) 的 `tooltipMaxWidth` 属性不生效的问题
@@ -294,12 +297,12 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新使用者文档：[日历 Calendar](/guide/components/calendar.html) 的演示 通知事项改用 [文本省略 Ellipsis](/guide/components/ellipsis.html) 截断并悬浮展示完整内容
 - 优化更新贡献者文档和 `README` 文档
 
-## <VersionDateTag date="2026-10-12">2.13.1</VersionDateTag>
+## 2.13.1 <span class="changelog-date">2026-10-12</span>
 
 - 优化并增强 [加载中 Spin](/guide/components/spin.html)：新增 `delay` / `fitContent` 属性与自定义指示符（`indicator` 属性 / `#indicator` 插槽，含 `SpinIndicator` / `SpinBuiltinIndicator` 类型导出）；重做点阵 / 线阵与 `magic-ring` 翻面动效，`speed` / `spinCircleWidth` 现同时支持 `magic-ring`；指示符进出淡入淡出；修复 `spinCircleWidth` / `spinCirclePercent` 越界值导致指示符消失
 - 重命名 [加载中 Spin](/guide/components/spin.html) 属性 `indicator` 取值：`spin-dot` → `dot-wheel`、`spin-line` → `line-wheel`（旧值已移除）
 
-## <VersionDateTag date="2026-09-30">2.13.0</VersionDateTag>
+## 2.13.0 <span class="changelog-date">2026-09-30</span>
 
 - 新增 [布局 Layout](/guide/components/layout.html) 组件：含 `Layout` / `LayoutHeader` / `LayoutContent` / `LayoutFooter` / `LayoutSider`，支持侧边栏收起与 `light` / `dark` 主题
 - 新增 [导航菜单 Menu](/guide/components/menu.html) 组件：支持 `items` 配置与 `MenuItem` / `MenuSubMenu` / `MenuItemGroup` / `MenuDivider` 子组件两种写法，含 `horizontal` / `vertical` / `inline` 三种菜单类型与 `light` / `dark` 主题，展开与选中可受控、可多选，`inline` 支持收起与缩进，水平溢出收进省略子菜单
@@ -311,13 +314,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新贡献者文档：`development/` 的全局样式说明改为「组件样式基座 + 主题色由 `ConfigProvider` 提供」，并补充链接色变量的双作用域写入规则
 - 组件库及文档优化
 
-## <VersionDateTag date="2026-09-24">2.12.0</VersionDateTag>
+## 2.12.0 <span class="changelog-date">2026-09-24</span>
 
 - 新增 [下拉菜单 Dropdown](/guide/components/dropdown.html) 组件
 - 补齐 [对话框 Dialog](/guide/components/dialog.html) / [全局提示 Message](/guide/components/message.html) / [模态框 Modal](/guide/components/modal.html) / [通知提醒 Notification](/guide/components/notification.html) 的 `Provider` 默认插槽类型声明
 - 组件库及文档优化
 
-## <VersionDateTag date="2026-09-23">2.11.0</VersionDateTag>
+## 2.11.0 <span class="changelog-date">2026-09-23</span>
 
 - 优化统一 [选择器 Select](/guide/components/select.html)、[级联选择 Cascader](/guide/components/cascader.html)、[开关 Switch](/guide/components/switch.html) 的 `API` 形态：双向绑定改用 `v-model:value`（回写事件 `update:value`）；`label` / `value` 字段名属性合并为 `fieldNames` 对象，改用 `:field-names="{ label: 'name', value: 'id' }"`（分组 / 后代子选项字段名分别为 `Select` 的 `options` 与 `Cascader` 的 `children``）；Select` 的 `search` / `filter` 更名为 `showSearch` / `filterOption`（旧名移除）、`placement` 取值扩展为四向（默认 `bottomLeft`）、`change` 回调第二参由文本 `label` 改为完整 `option` 对象，并新增 `SelectValue` / `SelectFieldNames` / `CascaderFieldNames` 类型导出
 - 重构并增强 [选择器 Select](/guide/components/select.html)：单选模式属性 / 事件 / 插槽 / 方法全量补齐（`bordered` / `status` / `loading` / `dropdownRender` / `notFoundContent` 等属性与 `focus()` / `blur()` / `scrollTo()` 等方法），新增多选 / 标签模式（`mode`、标签折叠 `maxTagCount` / `tagRender`、`tokenSeparators` 分词与 `deselect` 事件，多选下 `value` 为数组）、`labelInValue`、子组件式选项 `SelectOption` / `SelectOptGroup`、默认开启的虚拟滚动 `virtual` 与无障碍语义，并优化下拉面板滚动越界回弹；按选项文本搜索需显式传 `option-filter-prop="label"`
@@ -326,14 +329,14 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 补齐 [轮播图 Carousel](/guide/components/carousel.html) 的插槽类型声明（新增 `CarouselSlots` 类型），自定义箭头 / 圆点插槽可获得作用域参数类型提示
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-09-22">2.10.1</VersionDateTag>
+## 2.10.1 <span class="changelog-date">2026-09-22</span>
 
 - 重构 [加载条 LoadingBar](/guide/components/loading-bar.html) 为 `Provider + Hook` 形态：新增 `<LoadingBarProvider>` + `useLoadingBar()` 与 `createDiscreteApi(['loadingBar'])` 两种 `api` 获取方式（形态与 [全局提示 Message](/guide/components/message.html) / [模态框 Modal](/guide/components/modal.html) 等同族组件一致），并新增 `loadingBarStyle` 属性（可按 `loading` / `finish` / `error` 三态注入自定义样式）；`<LoadingBar>` 组件本体继续导出，`props` 与 `start` / `finish` / `error` 方法签名不变，但 `api` 由 `ref` 改为经 `@ready` 回传 —— 原 `<LoadingBar ref="loadingBar">` + `loadingBar.value.start()` 写法需迁移为 `<LoadingBar @ready="api = $event" />` 或改用 `useLoadingBar()`
 - 修复 `createDiscreteApi` 在路由守卫（`app.runWithContext` 上下文）中调用时取不到 `api` 的问题，影响 [加载条 LoadingBar](/guide/components/loading-bar.html) / [对话框 Dialog](/guide/components/dialog.html) / [全局提示 Message](/guide/components/message.html) / [模态框 Modal](/guide/components/modal.html) / [通知提醒 Notification](/guide/components/notification.html)
 - 更新使用者文档：[加载条 LoadingBar](/guide/components/loading-bar.html) 重写演示与 `api` 用法说明（改用 `<LoadingBarProvider>`），[全局化配置 ConfigProvider](/guide/components/config-provider.html) 与 [快速上手](/guide/getting-started.html) 的加载条示例同步迁移
 - 更新贡献者文档：`development/component-design.md` 将 `loading-bar` 纳入「`SFC + Hook + Provider`」三段式清单并补充 `LoadingBarProvider` 的样式入口登记，`development/demo-doc-guide.md` 的全局包裹写法同步改为 `useLoadingBar()`
 
-## <VersionDateTag date="2026-09-21">2.10.0</VersionDateTag>
+## 2.10.0 <span class="changelog-date">2026-09-21</span>
 
 - 新增 [评论 Comment](/guide/components/comment.html) 组件
 - 重构按需引入的样式注入为「每组件一个样式入口」：手动引入可用 `import 'vue-amazing-ui/es/button/style'` 一次引全全局默认样式、组件自身样式与其依赖组件样式，无需再自行列举；自动按需引入（`VueAmazingUIResolver`）用法与行为不变
@@ -341,7 +344,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新贡献者文档：`development/` 补充样式入口模型、构建后处理与产物校验说明，并同步「新增组件三步接线」清单；`CONTRIBUTING` 补充 `pnpm verify` 门禁与对应自检提示
 - 工程优化：新增 `GitHub Actions` 门禁、按需引入的产物级校验脚本与发布守卫等
 
-## <VersionDateTag date="2026-09-20">2.9.0</VersionDateTag>
+## 2.9.0 <span class="changelog-date">2026-09-20</span>
 
 - 重构组件库内部浮层能力，收敛为统一内核与内部宿主，[文字提示 Tooltip](/guide/components/tooltip.html)、[选择器 Select](/guide/components/select.html)、[自动完成 AutoComplete](/guide/components/auto-complete.html)、[滑动输入条 Slider](/guide/components/slider.html) 全部接入 —— 公开 `props` / 事件 / 插槽行为均无变化，仅 [自动完成 AutoComplete](/guide/components/auto-complete.html) 的 `value` 由必填放宽为可选
 - 移除 [文字提示 Tooltip](/guide/components/tooltip.html) 与 [文本省略 Ellipsis](/guide/components/ellipsis.html) 上未文档化的 `observeScroll` 方法，滚动跟随改由内部处理
@@ -361,7 +364,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 修复 [自动完成 AutoComplete](/guide/components/auto-complete.html) 受控 `open` 模式下开合事件方向相反的问题
 - 修复 [选择器 Select](/guide/components/select.html) / [自动完成 AutoComplete](/guide/components/auto-complete.html) 容器关闭后残留聚焦边框、按 `Tab` 或点击其他区域切走焦点时面板未关闭
 
-## <VersionDateTag date="2026-09-15">2.8.1</VersionDateTag>
+## 2.8.1 <span class="changelog-date">2026-09-15</span>
 
 - 新增 [滑动输入条 Slider](/guide/components/slider.html) 的 `SliderMarks` 类型导出，用于标注刻度数据的类型
 - 优化并统一 [图片 Image](/guide/components/image.html) / [轮播图 Swiper](/guide/components/swiper.html) / [瀑布流 Waterfall](/guide/components/waterfall.html) 的图片名称提取：统一从 `src` 解析末段，剥离查询参数与哈希并做 `URL` 解码，`alt` 与下载文件名更准确
@@ -373,7 +376,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新使用者文档：类型引用统一为公开导出名（如 `TabsItem` / `SwiperImage` / `UploadFileType`），使用时可直接 `import type` 使用
 - 组件库文档优化
 
-## <VersionDateTag date="2026-09-14">2.8.0</VersionDateTag>
+## 2.8.0 <span class="changelog-date">2026-09-14</span>
 
 - 重构并增强 [描述列表 Descriptions](/guide/components/descriptions.html)：改为数据驱动渲染，新增 `layout` / `colon` / `labelAlign` 等属性、`#header` 插槽与 `xxxl` 断点，修复子项丢失等问题。移除 `vertical` 属性，改用 `layout="vertical"`
 - 增强 [抽屉 Drawer](/guide/components/drawer.html)：新增 `to` / `push` / `size` / `mask` 等属性、`afterOpenChange` 事件与 `#closeIcon` 插槽，支持多层推动与 `class` / `style` 透传，修复打开后页面滚动被永久锁死。默认挂载到 `body`，依赖原渲染位置的样式需改用 `to` 或 `rootClassName` 定制
@@ -384,7 +387,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 修复 `lockScroll` 在 `SSR` / `Node` 环境调用报错；订正 [useOptionsSupported](/utils/functions/use-options-supported.html) 参数名为 `option`
 - 修复按需引入 `VueAmazingUIResolver` 引用 `DescriptionsItem` 不存在的样式路径
 
-## <VersionDateTag date="2026-09-12">2.7.4</VersionDateTag>
+## 2.7.4 <span class="changelog-date">2026-09-12</span>
 
 - 优化 [useSlotsExist](/utils/functions/use-slots-exist.html) 作用域插槽在探测时因无参调用触发形参位置解构的 `TypeError`，导致整页渲染中断，同时新增单元测试
 - 增强 [徽标 Badge](/guide/components/badge.html)：数值变化时数字逐位上下滚动（超出 `max` 展示 `max+`），离场期间保留隐藏前最后展示的数值；`showZero` 动态切换时同步刷新展示值
@@ -395,7 +398,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 优化多个组件全局文字断行：`word-break: break-all` 调整为 `break-word`，避免英文单词与数字被从中间截断
 - 组件库文档及工程优化
 
-## <VersionDateTag date="2026-09-11">2.7.3</VersionDateTag>
+## 2.7.3 <span class="changelog-date">2026-09-11</span>
 
 - 优化 [文字提示 Tooltip](/guide/components/tooltip.html) 定位与交互：修复缩放动画期间位置错位、焦点在内容内移动时闪烁，受控 `show` 立即生效，补充 `role="tooltip"` 与 `aria-describedby`；订正 `enter` 文档描述（实际为切换显示）
 - 增强 [返回顶部 BackTop](/guide/components/back-top.html)：`listenTo` 支持 `Document` 与返回目标的函数，修复整页滚动监听失效
@@ -405,7 +408,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 新增 [Tooltip](/guide/components/tooltip.html)、[Popover](/guide/components/popover.html)、[Watermark](/guide/components/watermark.html)、[useScroll](/utils/functions/use-scroll.html)、[useScrollParent](/utils/functions/use-scroll-parent.html) 单元测试，同步更新文档
 - 优化组件库发布脚本
 
-## <VersionDateTag date="2026-09-10">2.7.2</VersionDateTag>
+## 2.7.2 <span class="changelog-date">2026-09-10</span>
 
 - 修复 `SSR` / `Node` 渲染报错：[Avatar](/guide/components/avatar.html)、[Row](/guide/components/grid.html) / [Col](/guide/components/grid.html)、[Descriptions](/guide/components/descriptions.html)、[QRCode](/guide/components/qr-code.html)、[Tag](/guide/components/tag.html)、[Watermark](/guide/components/watermark.html) 及 [useMediaQuery](/utils/functions/use-media-query.html)、[useFps](/utils/functions/use-fps.html)、[useMutationObserver](/utils/functions/use-mutation-observer.html)、[useResizeObserver](/utils/functions/use-resize-observer.html)、[useScrollParent](/utils/functions/use-scroll-parent.html)
 - 修复卸载后定时器 / 动画帧泄漏：[Countdown](/guide/components/countdown.html)、[Carousel](/guide/components/carousel.html)、[TextScroll](/guide/components/text-scroll.html)、[Select](/guide/components/select.html)、[useFps](/utils/functions/use-fps.html)、[useMediaQuery](/utils/functions/use-media-query.html)
@@ -414,13 +417,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 优化 [Rate](/guide/components/rate.html) 未选中状态守卫；收敛组件与演示的模板引用类型，并为可空引用补充 `?.` 与判空守卫
 - 工程优化：`postcss` + `autoprefixer` 按 `browserslist` 补齐产物 `CSS` 厂商前缀，`vue` 提升为 `peerDependencies`，`engines` / `packageManager` 收紧；新增 `prepublishOnly` 产物入口守卫与 `format:check` 门禁
 
-## <VersionDateTag date="2026-09-09">2.7.1</VersionDateTag>
+## 2.7.1 <span class="changelog-date">2026-09-09</span>
 
 - 优化 [Dialog](/guide/components/dialog.html) / [Modal](/guide/components/modal.html) 的点击展开：修复命令式场景（如 `createDiscreteApi`）点击丢失、退回中心；离场动画按打开时的位置收起
 - [Avatar](/guide/components/avatar.html)、[BackTop](/guide/components/back-top.html)、[Button](/guide/components/button.html)、[FloatButton](/guide/components/float-button.html)、[Popconfirm](/guide/components/popconfirm.html) 的 `icon` 类型由 `VNode | Slot` 收紧为 `VNode | (() => VNode)`，不再支持直接传组件对象，改用 `h(...)` 渲染函数或 `#icon` 插槽
 - 类型强化：具名 / 作用域插槽组件补充 `xxxSlots` 类型并接入 `defineSlots()`，文档类型表同步清理 `string | slot` 写法
 
-## <VersionDateTag date="2026-09-08">2.7.0</VersionDateTag>
+## 2.7.0 <span class="changelog-date">2026-09-08</span>
 
 - 移除 [Message](/guide/components/message.html)、[Notification](/guide/components/notification.html)、[Modal](/guide/components/modal.html) 实例 `ref` 上的命令式方法，统一改用 `useXxx()`（需外层 `XxxProvider`）或 `createDiscreteApi()`；[Dialog](/guide/components/dialog.html) 新增 `useDialog()` / `createDiscreteApi()` 命令式入口；`window['$xxx']` 写法改为赋值 `api`；`@ready` 回传 `api`，句柄支持 `destroy()` / `update()`，`Notification` 额外支持 `destroy(key)` 按 `key` 精确关闭
 - 调整四组件浮层默认挂载：`Teleport` 到 `body`，新增 `to` 指定挂载节点；依赖原渲染位置的 `scoped` 样式与 `:deep()` 覆写失效，需改为全局样式
@@ -432,21 +435,21 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 优化 `VueAmazingUIResolver` 按需引入：新增四个命令式 `Provider` 组件的自动引入与样式注入，修复 `Modal` / `Notification` 缺失 [Scrollbar](/guide/components/scrollbar.html) 样式依赖
 - 工程优化：`xxxProps` 类型由 `object` 精确为对应 `Props`；新增 `vitest` 单元测试并纳入 `pnpm check`；新增 `development/` 设计指南
 
-## <VersionDateTag date="2026-08-30">2.6.2</VersionDateTag>
+## 2.6.2 <span class="changelog-date">2026-08-30</span>
 
 - 优化 [下载文件 downloadFile](/utils/functions/download-file.html) 工具函数和文档：`iframe` 策略在未传入文件名时，自动从文件地址中提取文件名并拼接 `response-content-disposition` 参数，与 `anchor` 策略行为对齐，修复跨域图片 / `PDF` 等可预览类型在 `iframe` 内预览而非下载的问题；地址无有效文件名时（如纯域名）不拼接参数，避免发出 `filename` 为空的畸形请求
 - 优化 [图片 Image](/guide/components/image.html)：未显式设置 `name` 时，自动使用从图片地址中提取的图片名称，内置下载与 `customDownload` 自定义下载方法均生效
 - 优化组件库发布脚本
 - 组件库配置及文档代码优化
 
-## <VersionDateTag date="2026-08-29">2.6.1</VersionDateTag>
+## 2.6.1 <span class="changelog-date">2026-08-29</span>
 
 - 优化并重构 [通知提醒 Notification](/guide/components/notification.html)，修复不同弹出位置的通知相互干扰的问题，多个弹出位置的通知可同时独立展示；自动关闭时长改为优先取单条通知的 `duration`，未设置时使用组件默认 `duration`
 - 优化 [图片 Image](/guide/components/image.html)：支持从图片地址提取图片名称，兼容相对路径与带查询参数 / 哈希的地址，并支持 `URL` 解码（含非法百分号编码兜底）；优化预览动画效果，遮罩层与预览图动画一致
 - 优化组件库发布脚本
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-08-28">2.6.0</VersionDateTag>
+## 2.6.0 <span class="changelog-date">2026-08-28</span>
 
 - 更新使用者文档：文档路径统一为短横线命名，侧边栏与引用链接同步
 - 拆分 `utils` 为多模块并整理导出；新增抽象弹出定位与滚动感知组合式函数，重构 [选择器 Select](/guide/components/select.html)、[文字提示 Tooltip](/guide/components/tooltip.html)、[自动完成 AutoComplete](/guide/components/auto-complete.html) 等弹出类组件代码
@@ -460,13 +463,13 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 优化组件库发布脚本，发版时自动生成并推送版本标签，并自动创建与标签同名的 `GitHub Release`
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-08-26">2.5.3</VersionDateTag>
+## 2.5.3 <span class="changelog-date">2026-08-26</span>
 
 - 优化 [自动完成 AutoComplete](/guide/components/auto-complete.html) 和文档：新增 `width` 属性，支持显式指定组件宽度
 - 优化 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 和文档：`Theme` 类型新增 `AutoComplete` 组件级主题色配置，修复 `AutoComplete` 无法通过 `theme.AutoComplete` 单独定制主题色的问题
 - 组件库配置优化
 
-## <VersionDateTag date="2026-08-25">2.5.2</VersionDateTag>
+## 2.5.2 <span class="changelog-date">2026-08-25</span>
 
 - 优化并增强 [文字提示 Tooltip](/guide/components/tooltip.html)：`flip` 主轴翻转改为同轴方向翻转（`top`↔`bottom` / `left`↔`right`），并始终保留原次轴对齐后缀；新增次轴方向溢出兜底逻辑，避免弹出框次轴方向超出视口或滚动容器边界；箭头新增回退样式，兼容不支持 `clip-path: path` 的浏览器；消除重复的类型定义；将模板内联事件表达式提取为具名方法，提升可读性与可维护性
 - 优化 [滑动输入条 Slider](/guide/components/slider.html)、[选择器 Select](/guide/components/select.html)、[文本省略 Ellipsis](/guide/components/ellipsis.html)、[数字动画 NumberAnimation](/guide/components/number-animation.html)、[倒计时 Countdown](/guide/components/countdown.html)、[瀑布流 Waterfall](/guide/components/waterfall.html)、[文字滚动 TextScroll](/guide/components/text-scroll.html)、[日历 Calendar](/guide/components/calendar.html)、[数字输入框 InputNumber](/guide/components/input-number.html)，将多源原子值监听由「数组字面量 + deep」优化为多源 `getter` 数组，去除冗余的深度遍历
@@ -474,33 +477,33 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 文档新增 [AI Coding Kit](https://themusecatcher.github.io/ai-coding-kit/) 导航链接
 - 组件库脚本优化
 
-## <VersionDateTag date="2026-08-24">2.5.1</VersionDateTag>
+## 2.5.1 <span class="changelog-date">2026-08-24</span>
 
 - 优化并增强 [文字提示 Tooltip](/guide/components/tooltip.html) 和文档，`placement` 属性新增支持 `12` 个方向；新增 `arrowPointAtCenter` 属性使箭头指向目标元素中心；`bgColor` 支持多种预设色彩；`trigger` 新增 `focus` / `contextmenu` 触发方式；新增 `disabled` 属性支持禁用；`showDelay` / `hideDelay` 属性调整为仅在 `trigger: hover` 时生效，`click` / `focus` / `contextmenu` 等触发方式立即显示与隐藏；修复弹出框挂载到 `body` 时被中间可滚动容器边界误判导致意外翻转的问题
 - 优化 [颜色选择器 ColorPicker](/guide/components/color-picker.html) 和文档，优化弹层定位与显隐行为：弹层定位由 `bottom` 调整为 `bottomLeft`，避免面板与触发元素错位；新增 `keyboard` 键盘支持；`showDelay` / `hideDelay` 调整为立即显示与隐藏
 - 优化 [文本省略 Ellipsis](/guide/components/ellipsis.html)，过渡动画时长与库默认档位对齐
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-08-19">2.5.0</VersionDateTag>
+## 2.5.0 <span class="changelog-date">2026-08-19</span>
 
 - 新增 [自动完成 AutoComplete](/guide/components/auto-complete.html) 组件
 
-## <VersionDateTag date="2026-08-17">2.4.27</VersionDateTag>
+## 2.4.27 <span class="changelog-date">2026-08-17</span>
 
 - 修复 [搜索框 InputSearch](/guide/components/input-search.html) 搜索按钮与输入框连接处的样式问题
 - 优化 [走马灯 Carousel](/guide/components/carousel.html) `slideFunction` 属性类型定义，由 `string | number[]` 精确为 `CubicBezierPoints | EasingFunction`，提供更准确的类型提示
 - 新增项目贡献指南，优化项目构建、工程配置及发布流程
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2026-05-31">2.4.26</VersionDateTag>
+## 2.4.26 <span class="changelog-date">2026-05-31</span>
 
 - 优化 [滚动条 Scrollbar](/guide/components/scrollbar.html) 使用效果，调整属性 `autoHide` 默认值为 `false`，`delay` 属性默认值为 `0`
 
-## <VersionDateTag date="2026-05-30">2.4.25</VersionDateTag>
+## 2.4.25 <span class="changelog-date">2026-05-30</span>
 
 - 优化 [表格 Table](/guide/components/table.html) 的组件实现
 
-## <VersionDateTag date="2026-03-08">2.4.24</VersionDateTag>
+## 2.4.24 <span class="changelog-date">2026-03-08</span>
 
 - 优化 [颜色选择器 ColorPicker](/guide/components/color-picker.html)、[滚动条 Scrollbar](/guide/components/scrollbar.html)、[图片 Image](/guide/components/image.html)、[滑动输入条 Slider](/guide/components/slider.html)，将鼠标事件（`Mouse Events`）迁移为指针事件（`Pointer Events`），统一支持鼠标、触屏和手写笔等多种输入设备的交互
 - 优化 [表格 Table](/guide/components/table.html)，优化表格头部跟随滚动效果
@@ -508,86 +511,86 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 组件库及文档代码优化
 - 更新组件库部分依赖版本
 
-## <VersionDateTag date="2025-11-17">2.4.23</VersionDateTag>
+## 2.4.23 <span class="changelog-date">2025-11-17</span>
 
 - 修复 [数字输入框 InputNumber](/guide/components/input-number.html) 初始为空值时非法输入未置空问题，关闭 [#44](https://github.com/themusecatcher/vue-amazing-ui/issues/44)
 - 更新组件库部分依赖版本
 
-## <VersionDateTag date="2025-10-15">2.4.22</VersionDateTag>
+## 2.4.22 <span class="changelog-date">2025-10-15</span>
 
 - 优化 [滚动条 Scrollbar](/guide/components/scrollbar.html) 的组件实现，修复当使用 `Methods` 进行滚动时滚动条无法正常显示的问题
 - 优化 [表格 Table](/guide/components/table.html) 的组件实现
 - 优化 [标签页 Tabs](/guide/components/tabs.html) 的组件实现
 - 更新组件库部分依赖版本
 
-## <VersionDateTag date="2025-09-05">2.4.21</VersionDateTag>
+## 2.4.21 <span class="changelog-date">2025-09-05</span>
 
 - 优化 [选择器 Select](/guide/components/select.html)，兼容弹出框在文档中自动调整弹出位置的功能
 - 更新组件库部分依赖版本
 
-## <VersionDateTag date="2025-09-02">2.4.20</VersionDateTag>
+## 2.4.20 <span class="changelog-date">2025-09-02</span>
 
 - 优化 [文字提示 Tooltip](/guide/components/tooltip.html)，兼容弹出框在文档中自动调整弹出位置的功能
 
-## <VersionDateTag date="2025-08-28">2.4.19</VersionDateTag>
+## 2.4.19 <span class="changelog-date">2025-08-28</span>
 
 - 优化 [选择器 Select](/guide/components/select.html)，新增 `placement` `flip` `to` 属性，支持：设置下拉面板弹出位置；设置下拉面板被浏览器窗口或最近可滚动父元素遮挡时自动调整弹出位置；设置下拉面板挂载的容器节点，默认挂载到 `body` 下
 - 优化 [文字滚动 TextScroll](/guide/components/text-scroll.html)，属性 `amount` 新增 `false` 类型，用于支持所有文字平铺展示；新增 `ellipsis` `ellipsisProps` 属性，支持：设置文字超出时是否启用文本省略组件；配置文本省略组件属性
 - 组件库及文档代码优化
 - 更新组件库部分依赖版本
 
-## <VersionDateTag date="2025-08-22">2.4.18</VersionDateTag>
+## 2.4.18 <span class="changelog-date">2025-08-22</span>
 
 - 优化 [回到顶部 BackTop](/guide/components/back-top.html)、[加载条 LoadingBar](/guide/components/loading-bar.html)、[文字提示 Tooltip](/guide/components/tooltip.html)，在初始未展示时不进行任何组件渲染，提升初始加载性能
 
-## <VersionDateTag date="2025-08-21">2.4.17</VersionDateTag>
+## 2.4.17 <span class="changelog-date">2025-08-21</span>
 
 - 优化 [文字提示 Tooltip](/guide/components/tooltip.html)，并在文档新增自定义设置弹出框挂载容器示例
 
-## <VersionDateTag date="2025-08-19">2.4.16</VersionDateTag>
+## 2.4.16 <span class="changelog-date">2025-08-19</span>
 
 - 优化 [颜色选择器 ColorPicker](/guide/components/color-picker.html) 拖动效果，修复不透明度拖动时位置偏差的问题
 
-## <VersionDateTag date="2025-08-18">2.4.15</VersionDateTag>
+## 2.4.15 <span class="changelog-date">2025-08-18</span>
 
 - 优化 [文字提示 Tooltip](/guide/components/tooltip.html)，新增 `to` 属性，支持设置弹出框挂载的容器节点，默认挂载到 `body` 下
 - 优化组件库部分使用 `Tooltip` 组件的代码逻辑
 - 更新组件库部分依赖版本
 
-## <VersionDateTag date="2025-06-19">2.4.14</VersionDateTag>
+## 2.4.14 <span class="changelog-date">2025-06-19</span>
 
 - 修复 [触摸滑动 Swiper](/guide/components/swiper.html)，使用按需引入时样式版本引入错误的问题
 
-## <VersionDateTag date="2025-06-05">2.4.13</VersionDateTag>
+## 2.4.13 <span class="changelog-date">2025-06-05</span>
 
 - 优化 [表格 Table](/guide/components/table.html)，新增 `rowKey` 属性，用于支持设置表格内容行的唯一标识 `key`
 
-## <VersionDateTag date="2025-06-04">2.4.12</VersionDateTag>
+## 2.4.12 <span class="changelog-date">2025-06-04</span>
 
 - 优化 [瀑布流 Waterfall](/guide/components/waterfall.html) 的组件实现
 
-## <VersionDateTag date="2025-06-02">2.4.11</VersionDateTag>
+## 2.4.11 <span class="changelog-date">2025-06-02</span>
 
 - 优化 [图片 Image](/guide/components/image.html)，修复预览时图片居中的问题
 
-## <VersionDateTag date="2025-05-30">2.4.10</VersionDateTag>
+## 2.4.10 <span class="changelog-date">2025-05-30</span>
 
 - 新增 [是否支持事件监听器选项 useOptionsSupported](/utils/functions/use-options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
 - 更新组件库部分依赖版本
 
-## <VersionDateTag date="2025-05-29">2.4.9</VersionDateTag>
+## 2.4.9 <span class="changelog-date">2025-05-29</span>
 
 - 新增 [是否支持事件监听器选项 useOptionsSupported](/utils/functions/use-options-supported.html) 工具函数，用于检查浏览器是否支持给定的事件监听器选项；优化组件库中使用了 `addEventListener` 事件监听器选项的组件代码
 
-## <VersionDateTag date="2025-05-26">2.4.8</VersionDateTag>
+## 2.4.8 <span class="changelog-date">2025-05-26</span>
 
 - 优化 [图片 Image](/guide/components/image.html)，修复图片已加载（含缓存与 `SSG` 场景）时加载态不消失的问题；新增 `previewSpinProps` 配置预览加载中样式
 
-## <VersionDateTag date="2025-05-23">2.4.7</VersionDateTag>
+## 2.4.7 <span class="changelog-date">2025-05-23</span>
 
 - 修复 [输入框 Input](/guide/components/input.html)、[搜索框 InputSearch](/guide/components/input-search.html)、[文本域 Textarea](/guide/components/textarea.html) 使用文本合成系统输入且带字数提示时字数统计的问题
 
-## <VersionDateTag date="2025-05-22">2.4.6</VersionDateTag>
+## 2.4.6 <span class="changelog-date">2025-05-22</span>
 
 - 优化 [文字提示 Tooltip](/guide/components/tooltip.html)，优化自动查找最近的可滚动父元素
 - 优化 [输入框 Input](/guide/components/input.html)，修复使用文本合成系统输入时的问题；新增 `compositionstart` `compositionend` 回调事件
@@ -595,68 +598,68 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 优化 [文本域 Textarea](/guide/components/textarea.html)，修复使用文本合成系统输入时的问题；新增 `compositionstart` `compositionend` 回调事件
 - 更新组件库文档及部分依赖版本
 
-## <VersionDateTag date="2025-05-06">2.4.5</VersionDateTag>
+## 2.4.5 <span class="changelog-date">2025-05-06</span>
 
 - 优化 [瀑布流 Waterfall](/guide/components/waterfall.html) 的组件实现
 - 更新组件库部分依赖版本
 
-## <VersionDateTag date="2025-04-16">2.4.4</VersionDateTag>
+## 2.4.4 <span class="changelog-date">2025-04-16</span>
 
 - 优化 [文字滚动 TextScroll](/guide/components/text-scroll.html) 水平滚动动画
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-03-27">2.4.3</VersionDateTag>
+## 2.4.3 <span class="changelog-date">2025-03-27</span>
 
 - 优化[日期选择器 DatePicker](/guide/components/date-picker.html)，新增 `maxRange` 属性，用于支持自定义最长日期可选择范围
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-03-25">2.4.2</VersionDateTag>
+## 2.4.2 <span class="changelog-date">2025-03-25</span>
 
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-03-21">2.4.1</VersionDateTag>
+## 2.4.1 <span class="changelog-date">2025-03-21</span>
 
 - 优化[日期选择器 DatePicker](/guide/components/date-picker.html)，文档新增多种日期禁用场景及使用方式
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-03-19">2.4.0</VersionDateTag>
+## 2.4.0 <span class="changelog-date">2025-03-19</span>
 
 - 新增 [高亮文本 Highlight](/guide/components/highlight.html)，用于高亮文本
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-03-18">2.3.4</VersionDateTag>
+## 2.3.4 <span class="changelog-date">2025-03-18</span>
 
 - 优化 [滑动输入条 Slider](/guide/components/slider.html)，更新 `Marks` 类型
 
-## <VersionDateTag date="2025-03-17">2.3.3</VersionDateTag>
+## 2.3.3 <span class="changelog-date">2025-03-17</span>
 
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-03-15">2.3.2</VersionDateTag>
+## 2.3.2 <span class="changelog-date">2025-03-15</span>
 
 - 优化 [按钮 Button](/guide/components/button.html)，删除 `rippleColor` 属性，新增 `color` 属性，支持自定义按钮颜色
 - 修复 [进度条 Progress](/guide/components/progress.html) 渐变进度圈展示
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-03-14">2.3.1</VersionDateTag>
+## 2.3.1 <span class="changelog-date">2025-03-14</span>
 
 - 优化 [全局化配置 ConfigProvider](/guide/components/config-provider.html)，新增 `abstract` `tag` 属性，支持：设置是否不存在 `DOM` 包裹元素；自定义 `ConfigProvider` 被渲染成的元素，`abstract` 为 `true` 时有效
 - 更新自动按需引入，修复 [全局化配置 ConfigProvider](/guide/components/config-provider.html) 引入的问题
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-03-13">2.3.0</VersionDateTag>
+## 2.3.0 <span class="changelog-date">2025-03-13</span>
 
 - 新增 [全局化配置 ConfigProvider](/guide/components/config-provider.html)，用于支持全局自定义主题色
 - 优化 [加载条 LoadingBar](/guide/components/loading-bar.html) 的组件实现
 - 优化支持自定义主题色的组件，用于配合 `ConfigProvider` 组件支持全局自定义主题色
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-03-07">2.2.15</VersionDateTag>
+## 2.2.15 <span class="changelog-date">2025-03-07</span>
 
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增颜色样式变量，支持自定义主题色
 - [触摸滑动 Swiper](/guide/components/swiper.html) 新增 `CSS` 变量，支持自定义主题色与切换动画效果
 
-## <VersionDateTag date="2025-03-06">2.2.14</VersionDateTag>
+## 2.2.14 <span class="changelog-date">2025-03-06</span>
 
 - [警告提示 Alert](/guide/components/alert.html) 新增颜色样式变量，支持自定义主题色
 - [级联选择 Cascader](/guide/components/cascader.html) 新增 `size` 属性（三种尺寸）与颜色样式变量，支持自定义主题色
@@ -664,14 +667,14 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 优化 [选择器 Select](/guide/components/select.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-03-05">2.2.13</VersionDateTag>
+## 2.2.13 <span class="changelog-date">2025-03-05</span>
 
 - [日历 Calendar](/guide/components/calendar.html) 新增颜色样式变量与 `yearSelectProps` / `monthSelectProps` / `modeRadioProps` 属性
 - [颜色选择器 ColorPicker](/guide/components/color-picker.html) 新增颜色样式变量与 `width` / `inputProps` 属性
 - 优化 [分页 Pagination](/guide/components/pagination.html)、[选择器 Select](/guide/components/select.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-03-04">2.2.12</VersionDateTag>
+## 2.2.12 <span class="changelog-date">2025-03-04</span>
 
 - [按钮 Button](/guide/components/button.html)、[浮动按钮 FloatButton](/guide/components/float-button.html)、[输入框 Input](/guide/components/input.html)、[数字输入框 InputNumber](/guide/components/input-number.html)、[搜索框 InputSearch](/guide/components/input-search.html)、[文本域 Textarea](/guide/components/textarea.html)、[选择器 Select](/guide/components/select.html)、[步骤条 Steps](/guide/components/steps.html)、[开关 Switch](/guide/components/switch.html)、[标签页 Tabs](/guide/components/tabs.html)、[上传 Upload](/guide/components/upload.html) 新增颜色样式变量，支持自定义主题色与样式
 - [全局提示 Message](/guide/components/message.html)、[模态框 Modal](/guide/components/modal.html)、[通知提醒 Notification](/guide/components/notification.html)、[弹出确认 Popconfirm](/guide/components/popconfirm.html) 新增颜色样式变量，支持按类型自定义颜色
@@ -680,7 +683,7 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 更新 [对话框 Dialog](/guide/components/dialog.html)、[抽屉 Drawer](/guide/components/drawer.html) 文档，新增自定义主题色示例
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-02-28">2.2.11</VersionDateTag>
+## 2.2.11 <span class="changelog-date">2025-02-28</span>
 
 - [面包屑 Breadcrumb](/guide/components/breadcrumb.html) 新增多个样式变量，支持更丰富的样式自定义
 - [复选框 Checkbox](/guide/components/checkbox.html)、[单选框 Radio](/guide/components/radio.html) 新增主题色样式变量，支持自定义主题色
@@ -688,227 +691,227 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 优化 [回到顶部 BackTop](/guide/components/back-top.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-02-27">2.2.10</VersionDateTag>
+## 2.2.10 <span class="changelog-date">2025-02-27</span>
 
 - [滑动输入条 Slider](/guide/components/slider.html) 新增 `tooltipStyle` 属性与相关 `CSS` 变量，支持自定义提示气泡样式
 
-## <VersionDateTag date="2025-02-26">2.2.9</VersionDateTag>
+## 2.2.9 <span class="changelog-date">2025-02-26</span>
 
 - 优化 [表格 Table](/guide/components/table.html) 的类型定义
 - [滑动输入条 Slider](/guide/components/slider.html) 新增 `marks` 属性，支持刻度标记与自定义标记样式；`step` 类型扩展为 `number | 'mark'`，取 `'mark'` 时可选值仅为刻度取值
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-02-22">2.2.8</VersionDateTag>
+## 2.2.8 <span class="changelog-date">2025-02-22</span>
 
 - 修复 [回到顶部 BackTop](/guide/components/back-top.html) 在某些情况下无法自动找到可滚动祖先节点的问题
 
-## <VersionDateTag date="2025-02-21">2.2.7</VersionDateTag>
+## 2.2.7 <span class="changelog-date">2025-02-21</span>
 
 - 优化 [头像 Avatar](/guide/components/avatar.html)、[描述列表 Descriptions](/guide/components/descriptions.html)、[栅格 Grid](/guide/components/grid.html) 的响应式实现
 
-## <VersionDateTag date="2025-02-19">2.2.6</VersionDateTag>
+## 2.2.6 <span class="changelog-date">2025-02-19</span>
 
 - [图片 Image](/guide/components/image.html) 预览新增下载图片操作；新增 `disabled` / `previewImageStyle` 属性，支持禁用预览与自定义预览图样式
 - 优化 [下载文件 downloadFile](/utils/functions/download-file.html) 工具函数的实现
 
-## <VersionDateTag date="2025-02-18">2.2.5</VersionDateTag>
+## 2.2.5 <span class="changelog-date">2025-02-18</span>
 
 - [进度条 Progress](/guide/components/progress.html) 的 `lineCap` 类型调整为 `'round' | 'butt'`
 - [二维码 QRCode](/guide/components/qr-code.html) 新增 `type` / `icon` / `iconSize` 属性与 `getQRCodeImage()` 方法：支持 `svg` / `canvas` / `image` 三种渲染类型、中央图标及其尺寸自定义、导出二维码图片
 
-## <VersionDateTag date="2025-02-17">2.2.4</VersionDateTag>
+## 2.2.4 <span class="changelog-date">2025-02-17</span>
 
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-02-14">2.2.3</VersionDateTag>
+## 2.2.3 <span class="changelog-date">2025-02-14</span>
 
 - [日期选择器 DatePicker](/guide/components/date-picker.html) 新增 `size` 属性，支持设置尺寸，并优化样式与过渡动画
 - 优化 [触摸滑动 Swiper](/guide/components/swiper.html) 的过渡动画
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-02-13">2.2.2</VersionDateTag>
+## 2.2.2 <span class="changelog-date">2025-02-13</span>
 
 - 优化 [标签页 Tabs](/guide/components/tabs.html)、[全局提示 Message](/guide/components/message.html)、[通知提醒 Notification](/guide/components/notification.html)、[触摸滑动 Swiper](/guide/components/swiper.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-02-12">2.2.1</VersionDateTag>
+## 2.2.1 <span class="changelog-date">2025-02-12</span>
 
 - 优化自动按需引入解析器 `VueAmazingUIResolver`：使用自动按需引入时一并注入组件库全局默认样式
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-02-11">2.2.0</VersionDateTag>
+## 2.2.0 <span class="changelog-date">2025-02-11</span>
 
 - 新增 [日历 Calendar](/guide/components/calendar.html) 组件
 - 组件库代码优化
 
-## <VersionDateTag date="2025-02-10">2.1.8</VersionDateTag>
+## 2.1.8 <span class="changelog-date">2025-02-10</span>
 
 - 修复自动按需引入解析器 `VueAmazingUIResolver` 无法识别 [颜色选择器 ColorPicker](/guide/components/color-picker.html) 的问题
 - 组件库代码优化
 
-## <VersionDateTag date="2025-02-07">2.1.7</VersionDateTag>
+## 2.1.7 <span class="changelog-date">2025-02-07</span>
 
 - 优化 [徽标 Badge](/guide/components/badge.html)，将属性 `ripple` 默认值调整为 `false`
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-02-06">2.1.6</VersionDateTag>
+## 2.1.6 <span class="changelog-date">2025-02-06</span>
 
 - 优化 [选择器 Select](/guide/components/select.html) 交互，自动记录下拉面板滚动位置
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-02-05">2.1.5</VersionDateTag>
+## 2.1.5 <span class="changelog-date">2025-02-05</span>
 
 - 移除「自动引入样式」的接入方式，改用自动按需引入
 - 优化自动按需引入解析器 `VueAmazingUIResolver`，关闭 [#29](https://github.com/themusecatcher/vue-amazing-ui/issues/29)
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-01-22">2.1.4</VersionDateTag>
+## 2.1.4 <span class="changelog-date">2025-01-22</span>
 
 - [按钮 Button](/guide/components/button.html) 新增支持多种 `CSS` 变量自定义样式
 - [颜色选择器 ColorPicker](/guide/components/color-picker.html) 弹出面板默认位置调整为 `bottom`，关闭 [#27](https://github.com/themusecatcher/vue-amazing-ui/issues/27)
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-01-21">2.1.3</VersionDateTag>
+## 2.1.3 <span class="changelog-date">2025-01-21</span>
 
 - 优化 [分段控制器 Segmented](/guide/components/segmented.html) 的选项切换过渡效果
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-01-20">2.1.2</VersionDateTag>
+## 2.1.2 <span class="changelog-date">2025-01-20</span>
 
 - 优化 [颜色选择器 ColorPicker](/guide/components/color-picker.html) 的组件实现
 - 优化 [监听插槽存在 useSlotsExist](/utils/functions/use-slots-exist.html) 工具函数的实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-01-17">2.1.1</VersionDateTag>
+## 2.1.1 <span class="changelog-date">2025-01-17</span>
 
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-01-16">2.1.0</VersionDateTag>
+## 2.1.0 <span class="changelog-date">2025-01-16</span>
 
 - 新增 [颜色选择器 ColorPicker](/guide/components/color-picker.html) 组件，关闭 [#23](https://github.com/themusecatcher/vue-amazing-ui/issues/23)
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-01-15">2.0.12</VersionDateTag>
+## 2.0.12 <span class="changelog-date">2025-01-15</span>
 
 - 优化 [输入框 Input](/guide/components/input.html)、[文字提示 Tooltip](/guide/components/tooltip.html) 的组件实现
 
-## <VersionDateTag date="2025-01-14">2.0.11</VersionDateTag>
+## 2.0.11 <span class="changelog-date">2025-01-14</span>
 
 - 优化 [输入框 Input](/guide/components/input.html)、[搜索框 InputSearch](/guide/components/input-search.html)、[文本域 Textarea](/guide/components/textarea.html) 的组件实现
 - [数字输入框 InputNumber](/guide/components/input-number.html) 新增 `enter` 事件，支持监听按下回车
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-01-13">2.0.10</VersionDateTag>
+## 2.0.10 <span class="changelog-date">2025-01-13</span>
 
 - [图片 Image](/guide/components/image.html) 新增 `draggable` 属性，支持设置图片是否可拖动
 - [文字提示 Tooltip](/guide/components/tooltip.html) 新增 `animationend` 事件，在显示 / 隐藏动画结束时触发
 - 优化 [文本省略 Ellipsis](/guide/components/ellipsis.html)、[滑动输入条 Slider](/guide/components/slider.html)、[滚动条 Scrollbar](/guide/components/scrollbar.html) 的组件实现
 
-## <VersionDateTag date="2025-01-10">2.0.9</VersionDateTag>
+## 2.0.9 <span class="changelog-date">2025-01-10</span>
 
 - [文字滚动 TextScroll](/guide/components/text-scroll.html) 的 `pauseOnMouseEnter` 默认值调整为 `false`，文档示例同步更新
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-01-09">2.0.8</VersionDateTag>
+## 2.0.8 <span class="changelog-date">2025-01-09</span>
 
 - 优化 [头像 Avatar](/guide/components/avatar.html)、[分段控制器 Segmented](/guide/components/segmented.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-01-07">2.0.7</VersionDateTag>
+## 2.0.7 <span class="changelog-date">2025-01-07</span>
 
 - [轮播图 Carousel](/guide/components/carousel.html)、[瀑布流 Waterfall](/guide/components/waterfall.html) 的图片类型 `Image` 新增 `link` / `target` 属性，支持跳转链接与打开方式
 - [触摸滑动 Swiper](/guide/components/swiper.html) 的图片类型 `Image` 新增 `target` 属性
 - [表格 Table](/guide/components/table.html) 的 `rowSelection` 新增 `selectedRowKeys`，支持设置选中项的 `key` 数组（需与 `onChange` 配合）
 
-## <VersionDateTag date="2025-01-06">2.0.6</VersionDateTag>
+## 2.0.6 <span class="changelog-date">2025-01-06</span>
 
 - [对话框 Dialog](/guide/components/dialog.html) 新增 `destroyOnClose` / `scrollbarProps` 属性，支持关闭时销毁子元素、固定高度时使用滚动条并自定义样式
 - [模态框 Modal](/guide/components/modal.html) 新增 `destroyOnClose` 属性，支持关闭时销毁子元素
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2025-01-03">2.0.5</VersionDateTag>
+## 2.0.5 <span class="changelog-date">2025-01-03</span>
 
 - 优化 [复选框 Checkbox](/guide/components/checkbox.html) 的点击动画
 - 优化 [单选框 Radio](/guide/components/radio.html) 的组件实现
 - [表格 Table](/guide/components/table.html) 的 `scroll` 新增 `initialScrollPositionOnChange`（分页 / 排序变化后是否回到初始位置），并新增 `rowSelection` 属性支持列表项选择（详见 [Selection Type](/guide/components/table.html#selection-type)）
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-12-30">2.0.4</VersionDateTag>
+## 2.0.4 <span class="changelog-date">2024-12-30</span>
 
 - [水印 Watermark](/guide/components/watermark.html) 新增 `fixed` 属性，支持固定全屏水印
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-12-26">2.0.3</VersionDateTag>
+## 2.0.3 <span class="changelog-date">2024-12-26</span>
 
 - [倒计时 Countdown](/guide/components/countdown.html) 的 `finishedText` 属性更名为 `finish`
 - 修复 [搜索框 InputSearch](/guide/components/input-search.html) 使用插槽自定义搜索图标不生效的问题
 - 更新使用者文档：所有支持插槽的组件补充 `Slots` 说明
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-12-24">2.0.2</VersionDateTag>
+## 2.0.2 <span class="changelog-date">2024-12-24</span>
 
 - [浮动按钮 FloatButton](/guide/components/float-button.html) 的 `icon` 属性新增 `VNode` 类型
 - 新增 `VueAmazingUIStyleResolve` 导出，配合 `vite-plugin-style-import` 实现按需自动引入组件样式（见[自动引入样式](/guide/import-on-demand.html#%E8%87%AA%E5%8A%A8%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5-%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90)）
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-12-20">2.0.1</VersionDateTag>
+## 2.0.1 <span class="changelog-date">2024-12-20</span>
 
 - [步骤条 Steps](/guide/components/steps.html) 的 `Steps` 属性更名为 `items`
 - [标签页 Tabs](/guide/components/tabs.html) 的 `tabPages` 属性更名为 `items`
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-12-18">2.0.0</VersionDateTag>
+## 2.0.0 <span class="changelog-date">2024-12-18</span>
 
 - 所有组件支持手动或自动按需引入，全面支持基于 `ES modules` 的 `tree shaking`
 - 新增 `VueAmazingUIResolver` 导出，配合 `unplugin-vue-components` 支持自动按需引入（见[自动按需引入](/guide/import-on-demand.html#%E8%87%AA%E5%8A%A8%E6%8C%89%E9%9C%80%E5%BC%95%E5%85%A5-%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90)）
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-12-10">1.10.4</VersionDateTag>
+## 1.10.4 <span class="changelog-date">2024-12-10</span>
 
 - [复选框 Checkbox](/guide/components/checkbox.html)、[单选框 Radio](/guide/components/radio.html) 移除 `width` / `height` 属性，新增选中动画
 - [文字滚动 TextScroll](/guide/components/text-scroll.html) 的 `verticalInterval` 属性更名为 `interval`，新增 `duration` 属性控制垂直滚动过渡时长
 
-## <VersionDateTag date="2024-12-09">1.10.3</VersionDateTag>
+## 1.10.3 <span class="changelog-date">2024-12-09</span>
 
 - [表格 Table](/guide/components/table.html) 新增 `sticky` 属性，支持长表格固定表头与水平滚动条
 - [文字滚动 TextScroll](/guide/components/text-scroll.html) 的 `scrollText` 属性更名为 `items`，移除 `interval` / `step`、新增 `speed` 控制水平滚动速度，并新增 `pauseOnMouseEnter` 属性控制鼠标移入暂停
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-12-05">1.10.2</VersionDateTag>
+## 1.10.2 <span class="changelog-date">2024-12-05</span>
 
 - [播放器 Video](/guide/components/video.html) 新增 `iconSize` 属性与 `play()` / `pause()` 方法，`showPlay` 属性更名为 `playIcon`
 
-## <VersionDateTag date="2024-12-04">1.10.1</VersionDateTag>
+## 1.10.1 <span class="changelog-date">2024-12-04</span>
 
 - 优化类型声明文件导出
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-12-03">1.10.0</VersionDateTag>
+## 1.10.0 <span class="changelog-date">2024-12-03</span>
 
 - 新增类型声明文件，提供所有组件的类型定义导出，改善 `TypeScript` 开发体验
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-12-02">1.9.12</VersionDateTag>
+## 1.9.12 <span class="changelog-date">2024-12-02</span>
 
 - [折叠面板 Collapse](/guide/components/collapse.html) 的 `collapseData` 属性更名为 `items`，新增 `collapseStyle` / `copyText` / `copiedText` 等属性，支持自定义样式、箭头图标与复制按钮文本，并支持单个面板独立配置
 - [时间轴 Timeline](/guide/components/timeline.html) 的 `timelineData` 属性更名为 `items`
 
-## <VersionDateTag date="2024-11-28">1.9.11</VersionDateTag>
+## 1.9.11 <span class="changelog-date">2024-11-28</span>
 
 - 修复组件库 `vue-amazing-ui@1.9.10` 更新 `vite` 至 `v6` 后，打包时 `cssFileName` 默认值更改为 `package.json` 中的 `name` 值导致无法引入 `css` 文件的相关问题
 
-## <VersionDateTag date="2024-11-28">1.9.10</VersionDateTag>
+## 1.9.10 <span class="changelog-date">2024-11-28</span>
 
 - [回到顶部 BackTop](/guide/components/back-top.html)、[滑动输入条 Slider](/guide/components/slider.html) 新增多种 `CSS` 变量，支持自定义样式
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-11-27">1.9.9</VersionDateTag>
+## 1.9.9 <span class="changelog-date">2024-11-27</span>
 
 - 优化 [表格 Table](/guide/components/table.html) 的组件实现
 - [进度条 Progress](/guide/components/progress.html) 重构，支持更多样式自定义
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-11-26">1.9.8</VersionDateTag>
+## 1.9.8 <span class="changelog-date">2024-11-26</span>
 
 - [滚动条 Scrollbar](/guide/components/scrollbar.html) 新增 `yScrollable` 属性与 `--scrollbar-*` 变量，支持关闭垂直滚动、自定义滚动条样式
 - [表格 Table](/guide/components/table.html) 新增 `rowClassName` / `showSorterTooltip` / `sortDirections` / `tooltipProps` 属性与 `expand` / `expandedRowsChange` 事件，`columns` 支持 `align` / `className` / `key` / `children` 及排序相关配置（含表头分组、默认排序、受控排序）
@@ -916,26 +919,26 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - [气泡卡片 Popover](/guide/components/popover.html)、[弹出确认 Popconfirm](/guide/components/popconfirm.html) 新增 `keyboard` 属性，默认支持按键操作
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-11-20">1.9.7</VersionDateTag>
+## 1.9.7 <span class="changelog-date">2024-11-20</span>
 
 - [滚动条 Scrollbar](/guide/components/scrollbar.html) 新增 `xPlacement` / `yPlacement` 属性与 `getScrollData()` 方法，`horizontal` 属性更名为 `xScrollable`，`scrollend` 回调新增 `direction` 参数
 - [表格 Table](/guide/components/table.html) 新增 `scrollbarProps` 属性，所有滚动改用 [滚动条 Scrollbar](/guide/components/scrollbar.html) 并支持其属性配置
 - 新增 [滚动监测 useScroll](/utils/functions/use-scroll.html) 工具函数，移除 `useScrollDirection`
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-11-15">1.9.6</VersionDateTag>
+## 1.9.6 <span class="changelog-date">2024-11-15</span>
 
 - [选择器 Select](/guide/components/select.html)、[分页 Pagination](/guide/components/pagination.html) 新增 `size` 属性，支持设置尺寸
 - [表格 Table](/guide/components/table.html) 新增 `size` / `striped` / `scroll` / `ellipsisProps` 与展开列相关属性，支持三种尺寸、斑马条纹、固定表头与固定列、展开行、可编辑单元格等
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-11-13">1.9.5</VersionDateTag>
+## 1.9.5 <span class="changelog-date">2024-11-13</span>
 
 - [浮动按钮 FloatButton](/guide/components/float-button.html) 新增 `zIndex` 属性，支持设置层级
 - 优化 [文字滚动 TextScroll](/guide/components/text-scroll.html)、[文本省略 Ellipsis](/guide/components/ellipsis.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-11-08">1.9.4</VersionDateTag>
+## 1.9.4 <span class="changelog-date">2024-11-08</span>
 
 - 优化 [文本省略 Ellipsis](/guide/components/ellipsis.html) 弹出提示的最大宽度计算
 - 优化 [文字提示 Tooltip](/guide/components/tooltip.html) 的弹出位置自动调整
@@ -946,56 +949,56 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - [表格 Table](/guide/components/table.html) 重构：新增 `header` / `footer` / `bordered` / `tableLayout` 属性，支持 `headerCell` / `bodyCell` 自定义头部与内容单元格，单元格文本溢出自动省略并悬浮提示
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-11-06">1.9.3</VersionDateTag>
+## 1.9.3 <span class="changelog-date">2024-11-06</span>
 
 - [上传 Upload](/guide/components/upload.html) 新增 `draggable` 属性，支持拖拽上传
 - 优化 [文字提示 Tooltip](/guide/components/tooltip.html) 的动画效果，内容异步更新时提示框位置自动跟随
 - [回到顶部 BackTop](/guide/components/back-top.html)、[按钮 Button](/guide/components/button.html) 的 `icon` 属性新增 `VNode` 类型
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-11-04">1.9.2</VersionDateTag>
+## 1.9.2 <span class="changelog-date">2024-11-04</span>
 
 - [对话框 Dialog](/guide/components/dialog.html)、[模态框 Modal](/guide/components/modal.html) 新增 `titleStyle` / `contentStyle` / `bodyClass` / `bodyStyle` / `maskStyle` / `transformOrigin` / `blockScroll` / `keyboard` / `maskClosable` 等属性并移除部分原有属性，支持控制动画出现位置、打开时禁用背景滚动、`Esc` 关闭、点击蒙层关闭与各层样式
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-10-31">1.9.1</VersionDateTag>
+## 1.9.1 <span class="changelog-date">2024-10-31</span>
 
 - 优化 [对话框 Dialog](/guide/components/dialog.html)、[图片 Image](/guide/components/image.html)、[全局提示 Message](/guide/components/message.html)、[模态框 Modal](/guide/components/modal.html) 的显示 / 隐藏动画
 - [按钮 Button](/guide/components/button.html) 新增 `keyboard` 属性，支持控制是否响应键盘操作
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-10-30">1.9.0</VersionDateTag>
+## 1.9.0 <span class="changelog-date">2024-10-30</span>
 
 - [文字提示 Tooltip](/guide/components/tooltip.html) 新增 `flip` / `keyboard` / `transitionDuration` 属性，支持自动调整弹出位置、按键控制与自定义过渡时长
 - [弹出确认 Popconfirm](/guide/components/popconfirm.html)、[气泡卡片 Popover](/guide/components/popover.html) 基于 [文字提示 Tooltip](/guide/components/tooltip.html) 重构，新增 `tooltipStyle` 属性、移除部分原有属性（详见 [Tooltip](/guide/components/tooltip.html#tooltip)）
 - [文本省略 Ellipsis](/guide/components/ellipsis.html) 新增 `tooltipMaxWidth` 属性、移除 `tooltipProps`（详见 [Tooltip](/guide/components/tooltip.html#tooltip)）
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-10-25">1.8.10</VersionDateTag>
+## 1.8.10 <span class="changelog-date">2024-10-25</span>
 
 - [文字提示 Tooltip](/guide/components/tooltip.html) 新增 `tooltipClass` / `placement` 属性，支持自定义弹出位置与类名
 - 修复 [标签页 Tabs](/guide/components/tabs.html) 左右切换时页面短暂出现滚动条的问题
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-10-24">1.8.9</VersionDateTag>
+## 1.8.9 <span class="changelog-date">2024-10-24</span>
 
 - 优化 [浮动按钮 FloatButton](/guide/components/float-button.html) 的组件实现
 - 组件库文档新增赞助功能模块
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-10-22">1.8.8</VersionDateTag>
+## 1.8.8 <span class="changelog-date">2024-10-22</span>
 
 - [头像 Avatar](/guide/components/avatar.html) 新增 `href` / `target` 属性，支持链接跳转
 - [文字滚动 TextScroll](/guide/components/text-scroll.html) 新增 `hrefHoverColor` 属性，支持自定义链接悬浮颜色
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-10-21">1.8.7</VersionDateTag>
+## 1.8.7 <span class="changelog-date">2024-10-21</span>
 
 - [上传 Upload](/guide/components/upload.html) 新增 `drop` / `preview` 事件回调，`beforeUpload` 支持返回 `Promise` 控制上传
 - 优化 [加载中 Spin](/guide/components/spin.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-10-18">1.8.6</VersionDateTag>
+## 1.8.6 <span class="changelog-date">2024-10-18</span>
 
 - [警告提示 Alert](/guide/components/alert.html) 新增 `default` 类型与 `bordered` 属性
 - [头像 Avatar](/guide/components/avatar.html) 新增 `color` 属性
@@ -1003,101 +1006,101 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - [抽屉 Drawer](/guide/components/drawer.html) 支持开启时禁用背景滚动
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-10-17">1.8.5</VersionDateTag>
+## 1.8.5 <span class="changelog-date">2024-10-17</span>
 
 - 优化 [文本省略 Ellipsis](/guide/components/ellipsis.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-10-16">1.8.4</VersionDateTag>
+## 1.8.4 <span class="changelog-date">2024-10-16</span>
 
 - [评分 Rate](/guide/components/rate.html) 支持键盘左右键操作评分
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-10-15">1.8.3</VersionDateTag>
+## 1.8.3 <span class="changelog-date">2024-10-15</span>
 
 - [单选框 Radio](/guide/components/radio.html) 新增 `checked` / `width` / `height` 属性，调整 `gap` 属性相关功能
 - [评分 Rate](/guide/components/rate.html) 新增 `tooltips` / `tooltipProps` 属性，支持设置文案提示
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-10-14">1.8.2</VersionDateTag>
+## 1.8.2 <span class="changelog-date">2024-10-14</span>
 
 - 优化 [复选框 Checkbox](/guide/components/checkbox.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-10-11">1.8.1</VersionDateTag>
+## 1.8.1 <span class="changelog-date">2024-10-11</span>
 
 - [选择器 Select](/guide/components/select.html) 新增 `openChange` 事件
 - [文字滚动 TextScroll](/guide/components/text-scroll.html) 新增 `start()` / `stop()` / `reset()` 方法，支持手动控制开始、暂停、重置滚动
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-10-10">1.8.0</VersionDateTag>
+## 1.8.0 <span class="changelog-date">2024-10-10</span>
 
 - 新增 [浮动按钮 FloatButton](/guide/components/float-button.html) 组件
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-10-09">1.7.2</VersionDateTag>
+## 1.7.2 <span class="changelog-date">2024-10-09</span>
 
 - [对话框 Dialog](/guide/components/dialog.html) 的 `show` 属性更名为 `open`
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-10-01">1.7.1</VersionDateTag>
+## 1.7.1 <span class="changelog-date">2024-10-01</span>
 
 - 优化 [按钮 Button](/guide/components/button.html)、[选择器 Select](/guide/components/select.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-09-28">1.7.0</VersionDateTag>
+## 1.7.0 <span class="changelog-date">2024-09-28</span>
 
 - [标签页 Tabs](/guide/components/tabs.html) 新增 `prefix` / `suffix` / `animated` / `tabGutter` / `tabStyle` / `tabPosition` / `contentStyle` 属性
 
-## <VersionDateTag date="2024-09-26">1.6.9</VersionDateTag>
+## 1.6.9 <span class="changelog-date">2024-09-26</span>
 
 - [标签页 Tabs](/guide/components/tabs.html) 支持带图标的标签页
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-09-24">1.6.8</VersionDateTag>
+## 1.6.8 <span class="changelog-date">2024-09-24</span>
 
 - 优化 [徽标 Badge](/guide/components/badge.html) 的组件实现
 - [卡片 Card](/guide/components/card.html) 新增 `hoverable` / `skeletonProps` 属性，调整 `size` 尺寸档位
 - [折叠面板 Collapse](/guide/components/collapse.html) 新增 `copyProps` 属性
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-09-18">1.6.7</VersionDateTag>
+## 1.6.7 <span class="changelog-date">2024-09-18</span>
 
 - 组件库代码优化
 
-## <VersionDateTag date="2024-09-13">1.6.6</VersionDateTag>
+## 1.6.6 <span class="changelog-date">2024-09-13</span>
 
 - [滑动输入条 Slider](/guide/components/slider.html) 新增垂直模式
 - 优化 [数字输入框 InputNumber](/guide/components/input-number.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-09-10">1.6.5</VersionDateTag>
+## 1.6.5 <span class="changelog-date">2024-09-10</span>
 
 - [全局提示 Message](/guide/components/message.html) 新增自定义图标、类名与样式
 - [模态框 Modal](/guide/components/modal.html) 新增自定义图标、类型与样式
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-09-06">1.6.4</VersionDateTag>
+## 1.6.4 <span class="changelog-date">2024-09-06</span>
 
 - [倒计时 Countdown](/guide/components/countdown.html) 支持随时暂停与重置
 - [通知提醒 Notification](/guide/components/notification.html) 新增自定义图标、类名与样式
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-08-30">1.6.3</VersionDateTag>
+## 1.6.3 <span class="changelog-date">2024-08-30</span>
 
 - [回到顶部 BackTop](/guide/components/back-top.html) 新增 `icon` / `description` / `tooltip` / `tooltipProps` / `type` / `shape` 属性
 - [文字提示 Tooltip](/guide/components/tooltip.html) 新增 `contentStyle` 属性
 - [按钮 Button](/guide/components/button.html) 新增 `buttonClass` 属性，移除 `loadingColor` 属性
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-08-29">1.6.2</VersionDateTag>
+## 1.6.2 <span class="changelog-date">2024-08-29</span>
 
 - [对话框 Dialog](/guide/components/dialog.html) 的 `top` 属性新增 `string` 类型
 - [水印 Watermark](/guide/components/watermark.html) 新增 `textStyle` 属性，移除 `color` / `fontSize` / `fontWeight` / `fontFamily` / `fontStyle` 属性
 - [折叠面板 Collapse](/guide/components/collapse.html) 新增 `disabled` / `itemStyle` / `headerStyle` / `contentStyle` / `arrow` / `arrowStyle` / `extra` 属性
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-08-27">1.6.1</VersionDateTag>
+## 1.6.1 <span class="changelog-date">2024-08-27</span>
 
 - [文字提示 Tooltip](/guide/components/tooltip.html) 新增 `bgColor` / `tooltipStyle` / `arrow` / `trigger` / `showDelay` / `hideDelay` / `show` 属性
 - [气泡卡片 Popover](/guide/components/popover.html) 新增 `titleStyle` / `contentStyle` / `bgColor` / `popoverStyle` / `arrow` / `trigger` / `showDelay` / `hideDelay` / `show` 属性
@@ -1105,78 +1108,78 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 优化 [输入框 Input](/guide/components/input.html) 的组件实现
 - 组件库代码优化
 
-## <VersionDateTag date="2024-08-23">1.6.0</VersionDateTag>
+## 1.6.0 <span class="changelog-date">2024-08-23</span>
 
 - 新增 [搜索框 InputSearch](/guide/components/input-search.html) 组件
 - 组件库代码优化
 
-## <VersionDateTag date="2024-08-22">1.5.4</VersionDateTag>
+## 1.5.4 <span class="changelog-date">2024-08-22</span>
 
 - [按钮 Button](/guide/components/button.html) 新增 `shape` / `icon` 属性
 - 新增 [监听插槽存在 useSlotsExist](/utils/functions/use-slots-exist.html) 工具函数，用于监听 Vue 组件中插槽是否存在
 - 组件库代码优化
 
-## <VersionDateTag date="2024-08-19">1.5.3</VersionDateTag>
+## 1.5.3 <span class="changelog-date">2024-08-19</span>
 
 - [面包屑 Breadcrumb](/guide/components/breadcrumb.html) 新增 `breadcrumbClass` / `breadcrumbStyle` / `separatorStyle` 属性
 - [对话框 Dialog](/guide/components/dialog.html) 新增 `cancelProps` / `okProps` 属性
 - [加载中 Spin](/guide/components/spin.html) 新增 `spinCircleWidth` / `spinCirclePercent` / `ringRailColor` 属性
 - 组件库代码优化
 
-## <VersionDateTag date="2024-08-16">1.5.2</VersionDateTag>
+## 1.5.2 <span class="changelog-date">2024-08-16</span>
 
 - [水印 Watermark](/guide/components/watermark.html) 在浏览器暗色模式下自动反转水印颜色
 - [警告提示 Alert](/guide/components/alert.html) 新增 `actions` 属性
 - [加载中 Spin](/guide/components/spin.html) 新增 `indicator: 'ring-circle'` 类型与 `ringCirclePercent` / `ringCircleColor` 属性
 - 组件库优化
 
-## <VersionDateTag date="2024-08-15">1.5.1</VersionDateTag>
+## 1.5.1 <span class="changelog-date">2024-08-15</span>
 
 - 优化 [列表 List](/guide/components/list.html) 的组件实现
 - 组件库代码优化
 
-## <VersionDateTag date="2024-08-14">1.5.0</VersionDateTag>
+## 1.5.0 <span class="changelog-date">2024-08-14</span>
 
 - 新增 [列表 List](/guide/components/list.html) 组件
 - [空状态 Empty](/guide/components/empty.html) 新增 `footer` 属性
 - 组件库代码优化
 
-## <VersionDateTag date="2024-08-13">1.4.7</VersionDateTag>
+## 1.4.7 <span class="changelog-date">2024-08-13</span>
 
 - [表格 Table](/guide/components/table.html) 新增 `spinProps` / `emptyProps` 属性
 - [分页 Pagination](/guide/components/pagination.html) 新增 `disabled` / `pageAmount` 属性，调整 `showTotal` 属性
 - 优化 [输入框 Input](/guide/components/input.html)、[文本域 Textarea](/guide/components/textarea.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-08-08">1.4.6</VersionDateTag>
+## 1.4.6 <span class="changelog-date">2024-08-08</span>
 
 - 优化 [文字滚动 TextScroll](/guide/components/text-scroll.html) 的滚动逻辑
 - [空状态 Empty](/guide/components/empty.html) 新增 `descriptionStyle` 属性
 
-## <VersionDateTag date="2024-08-07">1.4.5</VersionDateTag>
+## 1.4.5 <span class="changelog-date">2024-08-07</span>
 
 - 优化 [倒计时 Countdown](/guide/components/countdown.html)、[弹性布局 Flex](/guide/components/flex.html)、[间距 Space](/guide/components/space.html)、[头像 Avatar](/guide/components/avatar.html)、[卡片 Card](/guide/components/card.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-08-05">1.4.4</VersionDateTag>
+## 1.4.4 <span class="changelog-date">2024-08-05</span>
 
 - 重构并优化 [开关 Switch](/guide/components/switch.html)
 - 优化 [水印 Watermark](/guide/components/watermark.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-08-02">1.4.3</VersionDateTag>
+## 1.4.3 <span class="changelog-date">2024-08-02</span>
 
 - [模态框 Modal](/guide/components/modal.html) 新增 `cancelProps` / `okType` / `okProps` / `noticeProps` 属性
 - 优化 [空状态 Empty](/guide/components/empty.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-08-01">1.4.2</VersionDateTag>
+## 1.4.2 <span class="changelog-date">2024-08-01</span>
 
 - [滚动条 Scrollbar](/guide/components/scrollbar.html) 新增 `contentClass` 属性
 - [抽屉 Drawer](/guide/components/drawer.html) 新增 `headerClass` / `scrollbarProps` / `bodyClass` / `footerClass` 属性
 - 优化 [选择器 Select](/guide/components/select.html)、[对话框 Dialog](/guide/components/dialog.html) 的组件实现
 
-## <VersionDateTag date="2024-07-31">1.4.1</VersionDateTag>
+## 1.4.1 <span class="changelog-date">2024-07-31</span>
 
 - [标签 Tag](/guide/components/tag.html) 新增 `spaceProps` 属性
 - [图片 Image](/guide/components/image.html) 新增 `spaceProps` / `spinProps` 属性并移除部分原有属性
@@ -1184,48 +1187,48 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - 优化 [按钮 Button](/guide/components/button.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-07-30">1.4.0</VersionDateTag>
+## 1.4.0 <span class="changelog-date">2024-07-30</span>
 
 - 新增 [加载条 LoadingBar](/guide/components/loading-bar.html) 组件
 
-## <VersionDateTag date="2024-07-29">1.3.4</VersionDateTag>
+## 1.3.4 <span class="changelog-date">2024-07-29</span>
 
 - [滚动条 Scrollbar](/guide/components/scrollbar.html) 新增 `autoHide` / `delay` 属性
 - [选择器 Select](/guide/components/select.html) 新增 `scrollbarProps` 属性
 
-## <VersionDateTag date="2024-07-26">1.3.3</VersionDateTag>
+## 1.3.3 <span class="changelog-date">2024-07-26</span>
 
 - [文本省略 Ellipsis](/guide/components/ellipsis.html) 新增 `tooltipProps` 属性
 
-## <VersionDateTag date="2024-07-26">1.3.2</VersionDateTag>
+## 1.3.2 <span class="changelog-date">2024-07-26</span>
 
 - 优化 [滑动输入条 Slider](/guide/components/slider.html)、[瀑布流 Waterfall](/guide/components/waterfall.html) 的组件实现
 
-## <VersionDateTag date="2024-07-25">1.3.1</VersionDateTag>
+## 1.3.1 <span class="changelog-date">2024-07-25</span>
 
 - 优化 [标签页 Tabs](/guide/components/tabs.html)、[轮播图 Carousel](/guide/components/carousel.html)、[按钮 Button](/guide/components/button.html)、[弹出确认 Popconfirm](/guide/components/popconfirm.html) 的组件实现
 - 组件库及文档代码优化
 
-## <VersionDateTag date="2024-07-24">1.3.0</VersionDateTag>
+## 1.3.0 <span class="changelog-date">2024-07-24</span>
 
 - 新增 [分段控制器 Segmented](/guide/components/segmented.html) 组件
 - 修复 [文本省略 Ellipsis](/guide/components/ellipsis.html) 在文本区域宽高变化时 `tooltip` 的显示问题
 - 修复 [文字滚动 TextScroll](/guide/components/text-scroll.html) 滚动区域尺寸变化时的横向滚动问题
 
-## <VersionDateTag date="2024-07-23">1.2.0</VersionDateTag>
+## 1.2.0 <span class="changelog-date">2024-07-23</span>
 
 - 优化 [按钮 Button](/guide/components/button.html)、[评分 Rate](/guide/components/rate.html) 的组件实现并新增相关功能
 - 修复并优化 [文本省略 Ellipsis](/guide/components/ellipsis.html)
 
-## <VersionDateTag date="2024-07-22">1.1.2</VersionDateTag>
+## 1.1.2 <span class="changelog-date">2024-07-22</span>
 
 - 新增 [监听DOM尺寸 useResizeObserver](/utils/functions/use-resize-observer.html) 工具函数
 
-## <VersionDateTag date="2024-07-19">1.1.1</VersionDateTag>
+## 1.1.1 <span class="changelog-date">2024-07-19</span>
 
 - 优化 [描述列表 Descriptions](/guide/components/descriptions.html) 的组件实现
 
-## <VersionDateTag date="2024-07-18">1.1.0</VersionDateTag>
+## 1.1.0 <span class="changelog-date">2024-07-18</span>
 
 - 新增 [滚动条 Scrollbar](/guide/components/scrollbar.html) 组件
 - 新增 [DOM监听 useMutationObserver](/utils/functions/use-mutation-observer.html) 工具函数
