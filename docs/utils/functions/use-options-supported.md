@@ -13,6 +13,8 @@ _检查浏览器是否支持给定的事件监听器选项_
  * 原理：在 options 上以 getter 定义目标选项，浏览器读取该项时即置为「支持」
  * （老浏览器把第三个参数当作布尔值，不会读取选项，故保持 false）。
  *
+ * SSR（`Node`）环境无 `window`，能力探测无意义，直接返回 `false`。
+ *
  * @param option - 待探测的选项名：`'capture'` / `'once'` / `'passive'` / `'signal'`
  * @returns `isSupported` 表示是否支持该选项
  */
@@ -20,6 +22,10 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 export function useOptionsSupported(option: 'capture' | 'once' | 'passive' | 'signal'): { isSupported: Ref<boolean> } {
   const isSupported = ref<boolean>(false) // 浏览器是否支持 options 参数
+  // SSR（Node）环境无 window：探测无意义，显式返回 false，不靠异常兜底
+  if (typeof window === 'undefined') {
+    return { isSupported }
+  }
   try {
     const options = {
       get [option]() {
@@ -30,7 +36,8 @@ export function useOptionsSupported(option: 'capture' | 'once' | 'passive' | 'si
     }
     window.addEventListener('test', () => null, options)
     window.removeEventListener('test', () => null, options)
-  } catch (err) {
+  } catch {
+    // 老浏览器不读 getter（保持 false）；环境对 options 更严格时也不应影响调用方
     isSupported.value = false
   }
   return { isSupported }
@@ -108,5 +115,5 @@ onUnmounted(() => {
 
 ## 注意事项
 
-- 探测过程包在 `try` / `catch` 中：拿不到 `window` 时（`SSR` / `Node`）恒返回 `false` 且**不会抛错**；客户端接管后按真实能力重新判定
+- 无 `window` 时（`SSR` / `Node`）直接返回 `false` 且**不会抛错**，浏览器端按真实能力判定；`catch` 只兜底老浏览器不读取 `options` `getter` 的情况
 - 判定反映的是**当前运行环境**的能力，同一份代码在服务端与浏览器端可能得到不同结果，涉及 `SSR` 时不要在服务端渲染结果上做最终决策

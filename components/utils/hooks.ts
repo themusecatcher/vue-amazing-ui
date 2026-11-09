@@ -180,7 +180,7 @@ export function useOptionsSupported(option: 'capture' | 'once' | 'passive' | 'si
     }
     window.addEventListener('test', () => null, options)
     window.removeEventListener('test', () => null, options)
-  } catch (err) {
+  } catch {
     // 老浏览器不读 getter（保持 false）；环境对 options 更严格时也不应影响调用方
     isSupported.value = false
   }
