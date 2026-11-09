@@ -21,6 +21,8 @@
 - `<script setup lang="ts">`：组合式 API，全量 TypeScript。
 - `<style lang="less" scoped>`：Less 预处理器，scoped 作用域。
 
+**模板必须保持单一根节点**：根位置多出任何节点（HTML 注释 `<!-- -->`、`<template>` 包裹层、并列元素）都会让组件退化为 `Fragment`，`$attrs`（`class` / `style` / `role` / `tabindex` / 原生事件）不再自动落到根元素 —— 包装型组件（如 `CheckableTag` → `Tag`）会**静默丢掉样式与无障碍属性且不报错**。说明性文字写在 `<script>` 注释里或属性行上方，不要写在根节点之前；确需多根时（浮层 / Provider）必须显式 `inheritAttrs: false` 并手动绑定 `$attrs`。
+
 ## Props 定义规范
 
 Props 在 SFC 内以 `interface Props` 定义，配合 `withDefaults` 声明默认值：
@@ -248,7 +250,7 @@ log('debug', 'position', '浮层精确尺寸测量失败，跳过位移取整', 
   - **必须有基础样式兜底**：正向分支之外要有 `:not(:has(...))` 或默认值分支，使不支持时退化为「正确但略简」的形态。判定标准是「去掉增强分支后不破版」，不是「写了兜底注释」。
   - **`:has()` 参数必须限定直接子项**：写 `:has(> .timeline-item-wrap.timeline-item-has-label)`，禁止 `:has(.xxx)`。后代参数会把**嵌套在内容里的同类组件**也算进来（`Timeline` 曾因此把内层 label 误判为外层分栏，实测表现为外层轴点被拉到 50%）。
   - **`:has()` 禁止与其他选择器共用逗号列表**：不支持该伪类的引擎会**丢弃整条规则**（选择器列表不是 forgiven），普通选择器会被连带失效（`Timeline` 曾因此让 `alternate` 模式的自定义节点不居中）。必须拆成两条规则。
-  - **`:has()` 全库单点收口**：当前仅 `timeline/timeline-item/TimelineItem.vue`。新增使用前先改本节，并同步 `scripts/verify-has-usage.ts` 白名单，否则 `pnpm check:static` 失败。
+  - **`:has()` 全库单点收口**：当前仅 `timeline/timeline-item/TimelineItem.vue`。新增使用前先改本节，并同步 `tests/has-usage-contract.spec.ts` 的白名单，否则 `pnpm test` 失败。
   - **禁止用 `:has()` 承担功能前提**（显隐、可交互区域、关键内容可见性、骨架布局）：失效即不可接受，只能走 JS 状态类。
   - 不支持该特性的引擎**不会报错**，只是静默不匹配；因此这类特性无法靠「跑起来看看」发现退化，只能靠兜底分支与真实低版本引擎验证。
 

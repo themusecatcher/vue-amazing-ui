@@ -9,10 +9,10 @@
 | 类型 | 判据 | 命名 | 数量 |
 | :-- | :-- | :-- | :-- |
 | **入口脚本** | 在 `package.json` 的 `scripts` 中有对应命令，或由聚合命令 / npm 生命周期（`prepublishOnly`）触发 | `verify-*`（门禁）/ `gen-*`（生成）/ `prepublish-*`（生命周期）/ `*.sh`（发布链） | 10 |
-| **判定模块** | 返回 problem 列表、由守卫或单测调用，自身不退出进程 | `check-*` | 2 |
+| **判定模块** | 返回 problem 列表、由守卫或单测调用，自身不退出进程 | `check-*` | 3 |
 | **解析工具** | 只把文本解析成结构化事实，零判定 | `-parse` 后缀 | 1 |
 
-> `check-*` 只表示「判定模块」，不表示入口 —— `check-model-props.ts`、`check-prop-runtime-types.ts` 都没有命令。门禁入口一律 `verify-*` 且与 `pnpm` 命令同名，唯一例外是 `verify-style-deps.ts` ↔ `verify:deps`：`style-deps` 指明了校验对象，信息量优先于字面对齐，映射由本文件的命令表兜住。
+> `check-*` 只表示「判定模块」，不表示入口 —— 三个 `check-*` 均无命令，判定结果由守卫或单测消费。门禁入口一律 `verify-*` 且与 `pnpm` 命令同名，唯一例外是 `verify-style-deps.ts` ↔ `verify:deps`：`style-deps` 指明了校验对象，信息量优先于字面对齐，映射由本文件的命令表兜住。
 
 ## 门禁命令（唯一清单）
 
@@ -25,7 +25,7 @@
 | `pnpm verify:artifacts` | `verify:deps` → `verify:on-demand` | 是（读 `es/` `lib/`） |
 | `pnpm verify` | `build` → `verify:artifacts` → `guard` | 是 |
 
-`check:static` 刻意排在 `test` 之前：三项源码守护合计约 0.45s，而 `vitest` 是全链最慢的一步，契约类失败应当先暴露。
+`check:static` 刻意排在 `test` 之前：三项源码守护合计约 2.1s（本机实测，含 `tsx` 冷启动），而 `vitest` 是全链最慢的一步，契约类失败应当先暴露。
 
 ## 入口脚本
 
@@ -75,6 +75,7 @@
 | :-- | :-- | :-- |
 | `check-prop-runtime-types.ts` | `interface Props` 字段文本 → 期望的运行时类型分支，并与 `es/` `lib/` 产物里的 `props` 声明比对；同样只做文本解析、不跑编译器 | `prepublish-guard.ts`、`tests/prop-runtime-types.spec.ts` |
 | `check-model-props.ts` | v-model 声明契约（三条）：① 全库禁止 `defineModel`（无白名单例外，其受控判据与全库「传值即受控」冲突）；② `useControlledModel('x', ...)` 的字段在 `withDefaults` 里只能写 `undefined`（布尔字段必须显式写），否则判据恒真；③ 同一字段必须在 `defineEmits` 里声明 `update:x`，否则每次交互输出 dev 告警且监听器落进 `$attrs`；复用 `check-prop-runtime-types.ts` 的 `collectSfcs` / `findBalancedEnd` 与 `component-vars-parse.ts` 的 `stripComments` | `prepublish-guard.ts`、`verify-docs.ts`、`tests/model-props-contract.spec.ts` |
+| `check-has-usage.ts` | `:has()` 使用契约（四条，只扫 `components/`，扫描前剥离块注释与行尾 `//` 注释）：位置白名单、参数必须限定直接子项（`:has(> .a.b)`，通配 `:has(*)` 同属违规）、不得与其他选择器共用逗号列表、同文件必须存在 `:not(:has(...))` 兜底分支（**文件级**存在性，只拦「整文件忘写兜底」，强度上限见模块头注）；接受 `componentsDir` / `whitelist` 入参以便 fixture 复用 | `tests/has-usage-contract.spec.ts` |
 
 ## 解析工具（无命令，零判定）
 
@@ -105,6 +106,7 @@
 | v-model 声明契约 | `scripts/check-model-props.ts` | `guard` 第 ⑦ 项 + `tests/model-props-contract.spec.ts` |
 | 文档 Props 默认值列 ↔ 源码 `withDefaults` | `scripts/verify-docs.ts` | — |
 | 组件文档尾部章节顺序 | `scripts/verify-docs.ts`（第 ② 项断言） | 口径文本在 `development/demo-doc-guide.md`「尾部章节顺序」，脚本只做子序列断言；与默认值同扫 `docs/`，故不单开脚本 |
+| `:has()` 使用契约 | `tests/has-usage-contract.spec.ts` | 判定逻辑在 `scripts/check-has-usage.ts`；退化只影响旧引擎上的布局形态（不影响当前引擎），不具备抢在 `lint` / `type-check` 之前失败的资格，故不进 `check:static` |
 | 生成文档 ↔ 注册表 | `tests/component-vars.spec.ts`（逐字节） | 生成脚本只负责渲染 |
 
 ## 命令链与钩子
@@ -124,7 +126,7 @@ git hook 只覆盖静态检查，不碰本目录脚本：`pre-commit` → `lint-
 
 ## 目录：为什么不分子目录
 
-13 个脚本分三类，扁平存放。前缀在字母序里已经完成分组（`check-*` → `component-*` → `deploy` → `gen-*` → `prepublish-*` → `publish` → `push` → `verify-*`），分子目录不减少扫描成本，只增加路径深度；而迁移成本是持续的：`package.json` 11 处路径（10 个文件，`prepublish-guard.ts` 被 `prepublishOnly` 与 `guard` 各引一次）、`tests/` 4 处相对 import、本文件与 `development/*.md` 的路径引用都要跟着改，且以后每个新文件都要先做一次「放哪个目录」的决策。
+14 个脚本分三类，扁平存放。前缀在字母序里已经完成分组（`check-*` → `component-*` → `deploy` → `gen-*` → `prepublish-*` → `publish` → `push` → `verify-*`），分子目录不减少扫描成本，只增加路径深度；而迁移成本是持续的：`package.json` 11 处路径（10 个文件，`prepublish-guard.ts` 被 `prepublishOnly` 与 `guard` 各引一次）、`tests/` 5 处相对 import、本文件与 `development/*.md` 的路径引用都要跟着改，且以后每个新文件都要先做一次「放哪个目录」的决策。
 
 不按「语言」拆（`.ts` / `.sh` 扩展名已表达），也不按「入口/库」拆（`package.json` 已表达）。唯一有意义的切分轴是**是否会改远端状态**（发布链 vs 只读校验），但当前只有 3 个 `.sh`，单独建目录反而会让发布脚本从 `ls` 首屏消失。
 

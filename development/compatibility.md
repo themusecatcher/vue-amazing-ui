@@ -1,6 +1,6 @@
 # 浏览器兼容性 Compatibility
 
-_本文件是「支持矩阵」与「高版本 CSS / JS 特性使用政策」的单一真相源。可机器校验的部分由 `scripts/verify-has-usage.ts` 守护，条文见 `development/component-design.md` 的样式规范章节。_
+_本文件是「支持矩阵」与「高版本 CSS / JS 特性使用政策」的单一真相源。可机器校验的部分由 `tests/has-usage-contract.spec.ts` 守护，条文见 `development/component-design.md` 的样式规范章节。_
 
 ## 支持矩阵（2026-11-09 定）
 
@@ -47,7 +47,7 @@ _本文件是「支持矩阵」与「高版本 CSS / JS 特性使用政策」的
 
 ## 存量清单（2026-11-09 实测，`components/`）
 
-- `:has()`：仅 `timeline/timeline-item/TimelineItem.vue`（单点收口，见下表「待触发项」）
+- `:has()`：仅 `timeline/timeline-item/TimelineItem.vue`（单点收口，见下表「待触发项」）；文档站 `docs/.vitepress/theme/global.less` 另有 1 处（更新日志标题排版），不随库发布，失效仅退化为默认块级标题
 - `:focus-visible`：26 处（焦点环，属 UA 可兜底项，不改造）
 - `inset` 简写：29 处（含 `utils/position.ts` 注释 1 处）
 - `ResizeObserver`：51 处（经 `@vueuse/core`，不支持时静默无效）
@@ -60,7 +60,7 @@ _本文件是「支持矩阵」与「高版本 CSS / JS 特性使用政策」的
 - 仅用于纯视觉增强，必须存在基础样式兜底分支；
 - 选择器参数必须限定直接子项（`:has(> .xxx.yyy)`）；
 - 禁止与其他选择器共用逗号列表；
-- 全库单点收口，白名单由 `scripts/verify-has-usage.ts` 校验（`pnpm verify:has-usage`，已并入 `pnpm check:static`）。
+- 全库单点收口，白名单由 `tests/has-usage-contract.spec.ts` 校验（`pnpm test`）。
 
 ## 待触发项（不排期，触发条件满足时并入当次改造）
 
