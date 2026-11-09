@@ -45,6 +45,14 @@ describe('Tag 图标与关闭', () => {
     expect(wrapper.find('.tag-icon').text()).toBe('😉')
   })
 
+  it('icon 插槽可读取作用域参数渲染图标', () => {
+    const wrapper = mount(Tag, {
+      props: { icon: '★' },
+      slots: { icon: ({ icon }: { icon?: unknown }) => [h('b', { class: 'scoped-icon' }, String(icon))] }
+    })
+    expect(wrapper.find('.tag-icon .scoped-icon').text()).toBe('★')
+  })
+
   it('closeIcon 支持 prop 与插槽', () => {
     const byProp = mount(Tag, { props: { closable: true, closeIcon: h('i', { class: 'icon-by-prop' }) } })
     expect(byProp.find('.tag-close .icon-by-prop').exists()).toBe(true)
@@ -125,6 +133,16 @@ describe('Tag 动态模式', () => {
     expect(icons[1].text()).toBe('')
   })
 
+  it('icon 插槽拿到项级图标，缺省回落到组件级', () => {
+    const wrapper = mount(Tag, {
+      props: { dynamic: true, icon: '全局', value: [{ label: 'a', icon: '项级' }, { label: 'b' }] },
+      slots: { icon: ({ icon }: { icon?: unknown }) => [h('b', { class: 'slot-icon' }, String(icon))] }
+    })
+    const icons = wrapper.findAll('.slot-icon')
+    expect(icons[0].text()).toBe('项级')
+    expect(icons[1].text()).toBe('全局')
+  })
+
   it('新增标签会 trim 并跳过空值与重复项', async () => {
     const wrapper = mount(Tag, { props: { dynamic: true, value: ['a'] } })
 
@@ -141,11 +159,18 @@ describe('Tag 动态模式', () => {
     expect(wrapper.emitted('update:value')?.[0]).toEqual([['a', '新标签']])
   })
 
-  it('对象数组新增的是对象项', async () => {
+  it('对象数组新增的是可关闭的对象项', async () => {
     const wrapper = mount(Tag, { props: { dynamic: true, value: [{ label: 'a' }] } })
     await wrapper.find('.tag-plus').trigger('click')
     await typeAndConfirm(wrapper, 'b')
-    expect(wrapper.emitted('update:value')?.[0]).toEqual([[{ label: 'a' }, { label: 'b' }]])
+    expect(wrapper.emitted('update:value')?.[0]).toEqual([[{ label: 'a' }, { label: 'b', closable: true }]])
+  })
+
+  it('禁用时点击加号不进入新增输入', async () => {
+    const wrapper = mount(Tag, { props: { dynamic: true, disabled: true, value: ['a'] } })
+    await wrapper.find('.tag-plus').trigger('click')
+    expect(wrapper.find('input').exists()).toBe(false)
+    expect(wrapper.find('.tag-plus').classes()).toContain('tag-disabled')
   })
 
   it('删除项派发 update:value / dynamicClose / close', async () => {
@@ -254,11 +279,17 @@ describe('Tag 关闭按钮的无障碍与冒泡', () => {
     expect(wrapper.classes()).toContain('tag-hidden')
   })
 
-  it('关闭按钮具备 button 语义且可聚焦', () => {
+  it('关闭按钮具备 button 语义、可访问名称且可聚焦', () => {
     const wrapper = mount(Tag, { props: { closable: true } })
     const close = wrapper.find('.tag-close')
     expect(close.attributes('role')).toBe('button')
+    expect(close.attributes('aria-label')).toBe('关闭标签')
     expect(close.attributes('tabindex')).toBe('0')
+  })
+
+  it('动态项的关闭按钮同样带可访问名称', () => {
+    const wrapper = mount(Tag, { props: { dynamic: true, value: ['a'] } })
+    expect(wrapper.find('.tag-close').attributes('aria-label')).toBe('关闭标签')
   })
 
   it('triggerClickOnClose 为 true 时点击关闭同时触发 click', async () => {

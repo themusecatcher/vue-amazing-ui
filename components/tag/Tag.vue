@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, nextTick, useSlots } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import Space, { type SpaceProps } from 'components/space'
 import { renderContentToVNode, useSlotsExist } from 'components/utils'
@@ -55,7 +55,8 @@ const props = withDefaults(defineProps<Props>(), {
   triggerClickOnClose: false,
   spaceProps: () => ({})
 })
-defineSlots<TagSlots>()
+// 仅动态分支需要插槽对象：`#icon` 带 item / index 作用域，只能按「是否提供」判断
+const slots = defineSlots<TagSlots>()
 const inputRef = ref<HTMLInputElement | null>(null)
 const showInput = ref(false)
 const inputValue = ref('')
@@ -78,8 +79,6 @@ const paletteColor = [
   'lime'
 ]
 const inverseSuffix = '-inverse'
-const slots = useSlots()
-const slotsExist = useSlotsExist(['icon'])
 const emits = defineEmits<{
   (e: 'update:value', value: string[] | Item[]): void
   (e: 'close', event: MouseEvent): void
@@ -94,11 +93,11 @@ const tagItems = computed<Item[]>(() => {
     typeof value === 'string' ? { label: value, closable: true } : { closable: true, ...value }
   )
 })
-const showIcon = computed(() => {
-  if (!props.dynamic) {
-    return slotsExist.icon || props.icon !== undefined
-  }
-  return false
+// 静态分支的 `#icon` 只带组件级 `icon` 作用域参数，内容探测足以判定；动态项依赖 item / index，改用「是否提供」
+const slotsExist = useSlotsExist(['icon'])
+const showIcon = computed<boolean>(() => {
+  if (props.dynamic) return false
+  return slotsExist.icon || props.icon !== undefined
 })
 // 颜色呈现解析：预设色名走 class（随明暗主题变量变化），自定义配色才需要内联样式
 const isColorObject = (value?: string | TagColor): value is TagColor => typeof value === 'object' && value !== null
@@ -174,6 +173,7 @@ function onCloseTagsKeydown(e: KeyboardEvent) {
   ;(e.currentTarget as HTMLElement | null)?.click()
 }
 async function onAdd() {
+  if (props.disabled) return
   showInput.value = true
   await nextTick()
   inputRef.value?.focus()
@@ -187,7 +187,10 @@ function onChange() {
   showInput.value = false
   inputValue.value = ''
   if (!label || hasLabel(label)) return
-  const nextValue = isStrArray.value ? [...(props.value as string[]), label] : [...(props.value as Item[]), { label }]
+  // 新增项与既有项同口径：对象项默认可关闭（见 tagItems 的归一化）
+  const nextValue = isStrArray.value
+    ? [...(props.value as string[]), label]
+    : [...(props.value as Item[]), { label, closable: true }]
   emits('update:value', nextValue)
 }
 function onKeyboard(e: KeyboardEvent) {
@@ -230,6 +233,7 @@ function onKeyboard(e: KeyboardEvent) {
       v-if="closable"
       class="tag-close"
       role="button"
+      aria-label="关闭标签"
       :tabindex="disabled ? -1 : 0"
       @click="onClose"
       @keydown="onCloseKeydown"
@@ -275,7 +279,7 @@ function onKeyboard(e: KeyboardEvent) {
       <!-- 按「插槽已提供」而非「插槽有内容」判断：插槽内容可能依赖 item / index，
            setup 期的空对象探测拿不到真实结果，无内容的容器由 .tag-icon:empty 隐藏 -->
       <span v-if="slots.icon || item.icon !== undefined" class="tag-icon">
-        <slot name="icon" :item="item" :icon="icon" :index="index">
+        <slot name="icon" :item="item" :icon="item.icon ?? icon" :index="index">
           <component :is="renderContentToVNode(item.icon)" v-if="item.icon !== undefined" />
         </slot>
       </span>
@@ -286,6 +290,7 @@ function onKeyboard(e: KeyboardEvent) {
         v-if="item.closable ?? closable"
         class="tag-close"
         role="button"
+        aria-label="关闭标签"
         :tabindex="itemDisabled(item) ? -1 : 0"
         @click="onCloseTags($event, item, index)"
         @keydown="onCloseTagsKeydown"
@@ -310,7 +315,12 @@ function onKeyboard(e: KeyboardEvent) {
         </slot>
       </span>
     </span>
-    <span v-if="!showInput" class="tag-wrap" :class="[`tag-${size}`, { 'tag-plus': dynamic }]" @click="onAdd">
+    <span
+      v-if="!showInput"
+      class="tag-wrap"
+      :class="[`tag-${size}`, { 'tag-plus': dynamic, 'tag-disabled': disabled }]"
+      @click="onAdd"
+    >
       <svg
         focusable="false"
         class="plus-svg"
@@ -471,7 +481,8 @@ function onKeyboard(e: KeyboardEvent) {
   padding-inline: 10px;
   text-align: center;
   cursor: pointer;
-  &:hover {
+  // 禁用态不给出可点击的悬停反馈
+  &:not(.tag-disabled):hover {
     border-color: var(--va-cp-tag-primary-color, var(--va-primary-color));
     .plus-svg {
       color: var(--va-cp-tag-primary-color, var(--va-primary-color));

@@ -254,6 +254,9 @@ _使用对象格式数组，配合 `label` / `icon` 插槽自定义单项内容_
     <template v-if="index === 1">
       {{ label }} {{ index }}
     </template>
+    <template v-else>
+      {{ label }}
+    </template>
   </template>
   <template #icon="{ index }">
     <template v-if="index === 0">
@@ -297,6 +300,9 @@ const onDynamicClose = (item: TagItem, index: number) => {
     <template #label="{ label, index }">
       <template v-if="index === 1">
         {{ label }} {{ index }}
+      </template>
+      <template v-else>
+        {{ label }}
       </template>
     </template>
     <template #icon="{ index }">
@@ -609,7 +615,7 @@ import {
 
 ## 三种尺寸
 
-<Space gap="small">
+<Space gap="small" align="center">
   <Tag size="small" closable @close="onClose">爱在西元前</Tag>
   <Tag color="warning" closable @close="onClose">超人不会飞</Tag>
   <Tag color="blue" size="large" dynamic v-model:value="sizeTags" @dynamic-close="onDynamicClose" />
@@ -634,7 +640,7 @@ const onDynamicClose = (item: TagItem, index: number) => {
 }
 </script>
 <template>
-  <Space gap="small">
+  <Space gap="small" align="center">
     <Tag size="small" closable @close="onClose">爱在西元前</Tag>
     <Tag color="warning" closable @close="onClose">超人不会飞</Tag>
     <Tag color="blue" size="large" dynamic v-model:value="strTags" @dynamic-close="onDynamicClose" />
@@ -763,7 +769,7 @@ _禁用后不再响应点击与关闭，可选择标签也不再切换选中态_
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| value <Tag color="cyan">v-model</Tag> | 动态标签数组，仅当 `dynamic: true` 时生效 | string[] &#124; [TagItem](#tagitem-type)[] | [] |
+| value <Tag color="cyan">v-model</Tag> | 动态标签数组，仅当 `dynamic: true` 时生效；数组形态按首项类型判定，空数组时新增按对象项（`TagItem`）处理 | string[] &#124; [TagItem](#tagitem-type)[] | [] |
 | icon | 设置图标，支持字符串 / VNode / 渲染函数；插槽形态请用 `#icon` | string &#124; VNode &#124; (() => VNode) | undefined |
 | closeIcon | 自定义关闭图标，支持字符串 / VNode / 渲染函数；插槽形态请用 `#closeIcon` | string &#124; VNode &#124; (() => VNode) | undefined |
 | color | 标签颜色。预置色板：`'pink'`, `'red'`, `'yellow'`, `'orange'`, `'cyan'`, `'green'`, `'blue'`, `'purple'`, `'geekblue'`, `'magenta'`, `'volcano'`, `'gold'`, `'lime'`；状态色：`'success'`, `'processing'`, `'error'`, `'warning'`, `'default'`；色板色支持 `-inverse` 深色底变体（如 `'pink-inverse'`）；也可传具体色值，或用 [TagColor](#tagcolor-type) 分别指定背景、文字与边框色 | string &#124; [TagColor](#tagcolor-type) | undefined |
@@ -803,7 +809,11 @@ _禁用后不再响应点击与关闭，可选择标签也不再切换选中态_
 | checked <Tag color="cyan">v-model</Tag> | 是否选中，未传时按非受控处理（初值 `false`） | boolean | undefined |
 | disabled | 是否禁用，禁用后不响应点击与选中切换 | boolean | false |
 
+> **属性透传**：`round` / `size` 等 `Tag` 的属性可直接写在 `CheckableTag` 上，会透传给内部的 `Tag`。
+
 ## Slots
+
+`Tag` 的插槽如下；`CheckableTag` 只支持默认插槽。
 
 | 名称 | 说明 | 用法 |
 | :-- | :-- | :-- |
@@ -816,7 +826,7 @@ _禁用后不再响应点击与关闭，可选择标签也不再切换选中态_
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| close | 关闭时的回调，调用 `event.preventDefault()` 可阻止标签隐藏 | (e: MouseEvent) => void |
-| click | 点击标签时的回调 | (e: MouseEvent) => void |
+| close | 关闭时的回调，调用 `event.preventDefault()` 可阻止关闭（动态标签组下为不从数组中移除） | (e: MouseEvent) => void |
+| click | 点击标签时的回调，`CheckableTag` 同样派发 | (e: MouseEvent) => void |
 | dynamicClose | 启用标签动态添加和删除时关闭的回调 | (item: [TagItem](#tagitem-type), index: number) => void |
 | change | `CheckableTag` 选中状态变化时的回调 | (checked: boolean) => void |

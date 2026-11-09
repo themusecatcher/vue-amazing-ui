@@ -106,6 +106,7 @@ const layoutTags = ref<string[]>(['天空', '大海', '湖泊'])
     <Tag dynamic v-model:value="objectTags">
       <template #label="{ label, index }">
         <template v-if="index === 1">{{ label }} {{ index }}</template>
+        <template v-else>{{ label }}</template>
       </template>
       <template #icon="{ index }">
         <template v-if="index === 0">
