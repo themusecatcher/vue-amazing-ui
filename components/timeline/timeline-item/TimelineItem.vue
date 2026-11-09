@@ -215,19 +215,20 @@ const itemClasses = computed(() => {
   margin-left: calc(50% + var(--timeline-alt-offset, 12px));
   text-align: start;
 }
-.timeline-alternate.timeline-wrap:not(.timeline-horizontal):not(:has(.timeline-item-has-label))
+// 分栏判定只认直接子项（> .timeline-item-wrap.*）：嵌套时间轴的内层 label 不影响外层布局
+.timeline-alternate.timeline-wrap:not(.timeline-horizontal):not(:has(> .timeline-item-wrap.timeline-item-has-label))
   > .timeline-item-wrap.timeline-item-right
   > .timeline-item-content {
   margin-left: calc(50% + var(--timeline-alt-offset, 12px));
   text-align: start;
 }
-.timeline-alternate.timeline-wrap:not(.timeline-horizontal):not(:has(.timeline-item-has-label))
+.timeline-alternate.timeline-wrap:not(.timeline-horizontal):not(:has(> .timeline-item-wrap.timeline-item-has-label))
   > .timeline-item-wrap.timeline-item-left
   > .timeline-item-content {
   margin-left: 0;
   text-align: end;
 }
-.timeline-wrap:has(.timeline-item-has-label):not(.timeline-horizontal) > .timeline-item-wrap {
+.timeline-wrap:has(> .timeline-item-wrap.timeline-item-has-label):not(.timeline-horizontal) > .timeline-item-wrap {
   .timeline-item-tail,
   .timeline-item-head {
     right: auto;
@@ -253,7 +254,8 @@ const itemClasses = computed(() => {
     text-align: start;
   }
 }
-.timeline-wrap:has(.timeline-item-has-label):not(.timeline-horizontal):where(.timeline-right) > .timeline-item-wrap {
+.timeline-wrap:has(> .timeline-item-wrap.timeline-item-has-label):not(.timeline-horizontal):where(.timeline-right)
+  > .timeline-item-wrap {
   .timeline-item-label {
     right: 0;
     left: auto;
@@ -265,7 +267,7 @@ const itemClasses = computed(() => {
     text-align: end;
   }
 }
-.timeline-wrap:has(.timeline-item-has-label):not(.timeline-horizontal):where(.timeline-alternate)
+.timeline-wrap:has(> .timeline-item-wrap.timeline-item-has-label):not(.timeline-horizontal):where(.timeline-alternate)
   > .timeline-item-wrap:nth-child(even) {
   .timeline-item-label {
     right: 0;
@@ -278,7 +280,9 @@ const itemClasses = computed(() => {
     text-align: end;
   }
 }
-.timeline-wrap:has(.timeline-item-has-label):not(.timeline-horizontal).timeline-alternate.timeline-start-left
+.timeline-wrap:has(> .timeline-item-wrap.timeline-item-has-label):not(
+    .timeline-horizontal
+  ).timeline-alternate.timeline-start-left
   > .timeline-item-wrap:nth-child(odd) {
   .timeline-item-label {
     right: 0;
@@ -291,7 +295,9 @@ const itemClasses = computed(() => {
     text-align: end;
   }
 }
-.timeline-wrap:has(.timeline-item-has-label):not(.timeline-horizontal).timeline-alternate.timeline-start-left
+.timeline-wrap:has(> .timeline-item-wrap.timeline-item-has-label):not(
+    .timeline-horizontal
+  ).timeline-alternate.timeline-start-left
   > .timeline-item-wrap:nth-child(even) {
   .timeline-item-label {
     right: auto;
@@ -321,8 +327,12 @@ const itemClasses = computed(() => {
   right: auto;
   left: calc(100% - var(--timeline-head-size, 10px) / 2);
 }
-.timeline-alternate > .timeline-item-wrap > .timeline-item-head-custom,
-.timeline-wrap:has(.timeline-item-has-label):not(.timeline-horizontal)
+// 不与 :has() 选择器共用逗号列表：不支持 :has() 的浏览器会整条丢弃，连累左对齐规则
+.timeline-alternate > .timeline-item-wrap > .timeline-item-head-custom {
+  right: auto;
+  left: 50%;
+}
+.timeline-wrap:has(> .timeline-item-wrap.timeline-item-has-label):not(.timeline-horizontal)
   > .timeline-item-wrap
   > .timeline-item-head-custom {
   right: auto;
