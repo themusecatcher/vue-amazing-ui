@@ -2754,7 +2754,7 @@ function onConfirm() {
 | notFoundContent | 自定义空数据内容 | v-slot:notFoundContent |
 | action | 面板底部的自定义操作区 | v-slot:action |
 
-> 插槽按「是否提供」生效，不做内容探测：带作用域参数的插槽在参数为空时渲染结果为空，内容探测会误判为未提供。
+> 插槽判定分两种口径：`suffixIcon` / `clearIcon` / `expandIcon` / `loadingIcon` / `removeIcon` / `notFoundContent` / `action` 按「是否渲染出内容」生效，渲染为空（如内部 `v-if` 不成立）时回落到对应属性或内置内容；带数据作用域的插槽（`default` / `displayRender` / `option` / `tagRender` / `maxTagPlaceholder` / `showSearchRender`）按「是否提供」生效，不做内容探测 —— 以空参数探测时渲染结果本为空，会被误判为未提供。
 
 ## Events
 

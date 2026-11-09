@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { h, ref } from 'vue'
 import {
   AppleOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseCircleOutlined,
+  CloseOutlined,
   ExclamationCircleOutlined,
   MinusCircleOutlined,
   SyncOutlined,
@@ -55,7 +56,7 @@ const layoutTags = ref<string[]>(['天空', '大海', '湖泊'])
       <Tag closable @close.prevent>Prevent Default</Tag>
     </Space>
     <h2 class="mt30 mb10">可选择标签</h2>
-    <p class="mb10">通过 <code>CheckableTag</code> 实现类似 Checkbox 的效果，点击切换选中状态。</p>
+    <p class="mb10">通过 <code>CheckableTag</code> 实现 Checkbox 效果，点击或按 Enter / Space 切换。</p>
     <Space gap="small" align="center">
       <span>Categories:</span>
       <CheckableTag
@@ -268,6 +269,17 @@ const layoutTags = ref<string[]>(['天空', '大海', '湖泊'])
       <Tag round color="processing">processing</Tag>
       <Tag round closable>可关闭</Tag>
       <CheckableTag round checked>可选</CheckableTag>
+    </Space>
+    <h2 class="mt30 mb10">自定义关闭图标</h2>
+    <p class="mb10"><code>closeIcon</code> 属性或同名插槽均可替换默认关闭图标。</p>
+    <Space gap="small">
+      <Tag closable :close-icon="h(CloseOutlined)">属性形态</Tag>
+      <Tag closable>
+        <template #closeIcon>
+          <CloseOutlined />
+        </template>
+        插槽形态
+      </Tag>
     </Space>
   </div>
 </template>

@@ -16,21 +16,16 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## 3.9.4 <span class="changelog-date">2026-11-09</span>
 
-- 调整 [标签 Tag](/guide/components/tag.html) 的动态标签组：组件级 `bordered` 现对每一项生效（原仅项级生效），关闭某一项时除 `dynamicClose` 外同时派发 `close`
-- 新增 [标签 Tag](/guide/components/tag.html) 的可选标签 `CheckableTag`，选中态经 `v-model:checked` 与 `change` 交互，点击同样派发 `click`
-- 新增 [标签 Tag](/guide/components/tag.html) 的 `round` 圆角胶囊形、`disabled` 禁用态与 `closeIcon` 属性 / `#closeIcon` 插槽
-- 新增 [标签 Tag](/guide/components/tag.html) 的 `color` 对象形态（可分别指定背景、文字、边框色）与色板色的 `-inverse` 深色底变体，`icon` 支持 VNode / 渲染函数
-- 新增 [标签 Tag](/guide/components/tag.html) 的 `click` 事件与 `close` 的 `preventDefault()` 阻止关闭
-- 优化 [标签 Tag](/guide/components/tag.html) 的关闭按钮：可键盘聚焦并用 `Enter` / `Space` 关闭，补屏幕阅读器可读的名称与贴合图标的焦点环，图标改随标签文字色，新增 `triggerClickOnClose` 控制是否同时触发 `click`
-- 优化 [标签 Tag](/guide/components/tag.html) 的动态标签组新增交互：去除首尾空格、跳过空值与同名标签，`Esc` 取消输入，`disabled` 下不再可新增
-- 优化 [标签 Tag](/guide/components/tag.html) 的尺寸梯度：`small` 档高度收窄，与相邻档位的落差更明显
-- 修复 [标签 Tag](/guide/components/tag.html) 动态标签组的 `#icon` 插槽：内容依赖 `item` / `index` 时图标不渲染
-- 修复 [标签 Tag](/guide/components/tag.html) 的配色：无边框态在预设色 / 状态色下仍显示边框，标签内 `<a>` 仍取页面链接色
-- 优化 [级联选择 Cascader](/guide/components/cascader.html) 与 [选择器 Select](/guide/components/select.html)、[导航菜单 Menu](/guide/components/menu.html) 的空插槽回落：`suffixIcon`、`clearIcon`、`expandIcon`、`loadingIcon`、`removeIcon`、`notFoundContent`、`placeholder`、`action`、`overflowedIndicator` 渲染为空时回落到属性或内置内容
-- 修复 [时间轴 Timeline](/guide/components/timeline.html) 的左右分栏：节点内容里嵌套时间轴时，外层不再被误判为需要分栏
-- 修复 [监听插槽存在 useSlotsExist](/utils/functions/use-slots-exist.html)：运行期增删插槽后判定不更新，带数据作用域的插槽（如 `#option`、`#dateRender`、`#tabBar`）不再被误判为未提供；名称数组入参的返回值改为 `boolean` 映射（原为 `ComputedRef`，写 `.value` 的代码需去掉）
-- 更新使用者文档与 `README`：补充可选标签与热门标签用例、作用域插槽按「是否提供」判断的约定、浏览器支持范围与低版本引擎的降级说明
-- 更新贡献者文档：补充插槽判定口径与高版本 `CSS` 特性的使用约束
+- 调整 [标签 Tag](/guide/components/tag.html) 的动态标签组：组件级 `bordered` 现对每一项生效（原仅项级生效），关闭某一项时除 `dynamicClose` 外同时派发 `close`，新增 `triggerClickOnClose` 控制是否一并触发 `click`
+- 新增 [标签 Tag](/guide/components/tag.html) 的可选标签 `CheckableTag`：选中态经 `v-model:checked` 与 `change` 交互并可键盘操作，选中态对读屏可见
+- 新增 [标签 Tag](/guide/components/tag.html) 的 `round` 圆角胶囊形、`disabled` 禁用态与 `closeIcon` 属性 / `#closeIcon` 插槽，`color` 可分别指定背景、文字、边框色并支持色板色的 `-inverse` 深色底变体，`icon` 支持 `VNode` / 渲染函数，补 `click` 事件与可 `preventDefault()` 的 `close`
+- 优化 [标签 Tag](/guide/components/tag.html) 的交互与可访问性：关闭与加号按钮可键盘操作并带读屏名称；动态标签组新增时去除首尾空格、跳过空值与同名标签，`Esc` 取消输入，`disabled` 下不可新增，修复 `#icon` 插槽不渲染
+- 调整 [标签 Tag](/guide/components/tag.html) 的尺寸与配色：整体尺寸收窄、档位落差更明显；修复无边框态在预设色 / 状态色下仍显示边框
+- 优化 [级联选择 Cascader](/guide/components/cascader.html) 与 [选择器 Select](/guide/components/select.html)、[导航菜单 Menu](/guide/components/menu.html) 的空插槽回落：`suffixIcon`、`clearIcon`、`notFoundContent` 等渲染为空时回落到属性或内置内容
+- 修复 [时间轴 Timeline](/guide/components/timeline.html) 的左右分栏：嵌套时间轴不再被误判为需要分栏
+- 修复 [监听插槽存在 useSlotsExist](/utils/functions/use-slots-exist.html)：运行期增删插槽后判定不更新，带数据作用域的插槽不再被误判为未提供；名称数组入参的返回值改为 `boolean` 映射（原为 `ComputedRef`，写 `.value` 的代码需去掉）
+- 修复 [事件选项探测 useOptionsSupported](/utils/functions/use-options-supported.html) 的服务端渲染：无 `window` 时返回 `false`
+- 更新使用者文档与贡献者文档
 - 组件库及文档代码优化
 
 ## 3.9.3 <span class="changelog-date">2026-11-08</span>

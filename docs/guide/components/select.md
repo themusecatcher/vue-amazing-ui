@@ -2097,6 +2097,8 @@ const options: SelectOption[] = []
 | maxTagPlaceholder | 隐藏 `tag` 时显示的内容，作用域参数 `omittedValues` 为被折叠的选项数组（本库统一以具名参数对象传参） | v-slot:maxTagPlaceholder="{ omittedValues }" |
 | removeIcon | 自定义 `tag` 的移除图标 | v-slot:removeIcon |
 
+> 插槽判定分两种口径：`placeholder` / `suffixIcon` / `clearIcon` / `notFoundContent` / `removeIcon` 按「是否渲染出内容」生效，渲染为空（如内部 `v-if` 不成立）时回落到对应属性或内置内容；带数据作用域的插槽（`default` / `option` / `optionLabel` / `menuItemSelectedIcon` / `dropdownRender` / `tagRender` / `maxTagPlaceholder`）按「是否提供」生效，不做内容探测。
+
 ## Events
 
 | 名称 | 说明 | 类型 |

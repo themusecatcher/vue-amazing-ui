@@ -166,7 +166,9 @@
 /* 更新日志的版本标题：源码写作 `## 3.9.4 <span class="changelog-date">2026-11-09</span>`，
    日期用纯 HTML 而非 Vue 组件 —— GitHub 渲染 markdown 时会丢弃自定义组件标签，日期就没了。
    版本号与日期放进同一 flex 行：胶囊是「有底色的一块面」，必须与 24px 版本号的视觉重心重合，
-   按基线对齐会沉到基线附近、明显偏低 */
+   按基线对齐会沉到基线附近、明显偏低。
+   取色复用 Tag 的色板变量（`--tag-volcano-*`）：文档站全量引入 `dist/style.css`，变量必然存在，
+   且随 ConfigProvider 写在 `<html>` 上的 `data-va-mode` 一起切换明暗 */
 .vp-doc h2:has(> .changelog-date) {
   display: flex;
   align-items: center;

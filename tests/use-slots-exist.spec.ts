@@ -33,7 +33,7 @@ const Probe = defineComponent({
   }
 })
 
-// 数组形式（返回 reactive 记录，属性为 computed，读取时自动解包）
+// 数组形式（返回 reactive 记录：内部为 computed，读取时自动解包，对外类型为 boolean）
 const ArrayProbe = defineComponent({
   name: 'SlotsExistArrayProbe',
   setup() {

@@ -10,11 +10,12 @@ _进行标记和分类的小标签_
 - 进行分类
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { h, ref } from 'vue'
 import {
   CheckCircleOutlined,
   SyncOutlined,
   CloseCircleOutlined,
+  CloseOutlined,
   ExclamationCircleOutlined,
   ClockCircleOutlined,
   MinusCircleOutlined,
@@ -95,7 +96,7 @@ const onClose = (e: MouseEvent) => {
 
 ## 可选择标签
 
-_通过 `CheckableTag` 实现类似 Checkbox 的效果，点击切换选中状态。_
+_通过 `CheckableTag` 实现类似 Checkbox 的效果，点击切换选中状态；也可用键盘聚焦后按 `Enter` / `Space` 切换。_
 
 <br/>
 
@@ -763,6 +764,44 @@ _禁用后不再响应点击与关闭，可选择标签也不再切换选中态_
 
 :::
 
+## 自定义关闭图标
+
+_`closeIcon` 属性接受字符串 / VNode / 渲染函数，也可用 `closeIcon` 插槽整体替换默认图标。_
+
+<br/>
+
+<Space gap="small">
+  <Tag closable :close-icon="h(CloseOutlined)">属性形态</Tag>
+  <Tag closable>
+    <template #closeIcon>
+      <CloseOutlined />
+    </template>
+    插槽形态
+  </Tag>
+</Space>
+
+:::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { h } from 'vue'
+import { CloseOutlined } from '@ant-design/icons-vue'
+</script>
+<template>
+  <Space gap="small">
+    <Tag closable :close-icon="h(CloseOutlined)">属性形态</Tag>
+    <Tag closable>
+      <template #closeIcon>
+        <CloseOutlined />
+      </template>
+      插槽形态
+    </Tag>
+  </Space>
+</template>
+```
+
+::::
+
 ## APIs
 
 ### Tag Props
@@ -798,7 +837,7 @@ _禁用后不再响应点击与关闭，可选择标签也不再切换选中态_
 | closable? | 标签是否可以关闭，默认 `true` | boolean |
 | color? | 标签颜色 | string |
 | icon? | 设置图标，支持字符串 / VNode / 渲染函数 | string &#124; VNode &#124; (() => VNode) |
-| size? | 标签尺寸，默认 `'middle'` | 'small' &#124; 'middle' &#124; 'large' |
+| size? | 标签尺寸，默认取组件的 `size` | 'small' &#124; 'middle' &#124; 'large' |
 | bordered? | 是否有边框，默认取组件的 `bordered` | boolean |
 | disabled? | 是否禁用，默认取组件的 `disabled` | boolean |
 
@@ -821,6 +860,8 @@ _禁用后不再响应点击与关闭，可选择标签也不再切换选中态_
 | closeIcon | 自定义关闭图标 | v-slot:closeIcon="{ item, index }" |
 | label | 自定义标签文本 | v-slot:label="{ item, label, index }" |
 | default | 自定义内容 | v-slot:default |
+
+> `item` / `index` 由动态标签组（`dynamic`）提供：单个标签下 `#icon` 只带 `icon`（与自身 `icon` 属性同源），`#closeIcon` 无作用域参数，`#label` 不渲染。
 
 ## Events
 
