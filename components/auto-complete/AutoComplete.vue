@@ -81,8 +81,9 @@ const props = withDefaults(defineProps<Props>(), {
   status: undefined,
   filterOption: false
 })
-defineSlots<AutoCompleteSlots>()
-const slotsExist = useSlotsExist(['default', 'clearIcon', 'option'])
+// 保留返回值：`#option` 是作用域插槽，按「是否提供」判断（空作用域探测会误判为未渲染内容）
+const slots = defineSlots<AutoCompleteSlots>()
+const slotsExist = useSlotsExist(['default', 'clearIcon'])
 const emit = defineEmits([
   'update:value',
   'search',
@@ -610,7 +611,7 @@ defineExpose({
         <template v-for="(item, index) in displayData" :key="index">
           <template v-if="isGroup(item)">
             <p class="auto-complete-group-title">
-              <slot v-if="slotsExist.option" name="option" v-bind="item" />
+              <slot v-if="slots.option" name="option" v-bind="item" />
               <template v-else>{{ item.label ?? item.value }}</template>
             </p>
             <p
@@ -629,7 +630,7 @@ defineExpose({
               @mousedown.prevent
               @click.stop="isDisabled(child) ? inputFocus() : onSelectOption(child)"
             >
-              <slot v-if="slotsExist.option" name="option" v-bind="childSlotProps(child)" />
+              <slot v-if="slots.option" name="option" v-bind="childSlotProps(child)" />
               <template v-else>{{ getLabel(child) }}</template>
             </p>
           </template>
@@ -647,7 +648,7 @@ defineExpose({
             @mousedown.prevent
             @click.stop="isDisabled(item) ? inputFocus() : onSelectOption(item)"
           >
-            <slot v-if="slotsExist.option" name="option" v-bind="childSlotProps(item)" />
+            <slot v-if="slots.option" name="option" v-bind="childSlotProps(item)" />
             <template v-else>{{ getLabel(item) }}</template>
           </p>
         </template>

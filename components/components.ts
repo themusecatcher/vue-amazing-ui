@@ -363,8 +363,8 @@ export type {
 } from './tabs'
 export { default as Tabs, TabPane } from './tabs'
 
-export type { TagProps, TagItem, TagSlots } from './tag'
-export { default as Tag } from './tag'
+export type { TagProps, TagItem, TagSlots, CheckableTagProps, CheckableTagSlots } from './tag'
+export { default as Tag, CheckableTag } from './tag'
 
 export type { TextScrollProps, TextScrollItem } from './text-scroll'
 export { default as TextScroll } from './text-scroll'

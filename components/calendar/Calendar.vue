@@ -89,7 +89,8 @@ const props = withDefaults(defineProps<Props>(), {
   monthSelectProps: () => ({}),
   modeRadioProps: () => ({})
 })
-defineSlots<CalendarSlots>()
+// 保留返回值：`#headerFull` 是作用域插槽，按「是否提供」判断（空作用域探测会误判为未渲染内容）
+const slots = defineSlots<CalendarSlots>()
 // (v-model) 当前被选中的日期
 // 非受控初值：defaultValue 同时作为初始选中值（受控 value 优先，此时初值不参与）
 const initialSelectedValue = (() => {
@@ -633,7 +634,7 @@ function onKeydown(event: KeyboardEvent): void {
 <template>
   <div class="calendar-wrap" :class="`calendar-${display}`">
     <slot
-      v-if="slotsExist.headerFull"
+      v-if="slots.headerFull"
       name="headerFull"
       :year="calendarYear"
       :month="calendarMonth"

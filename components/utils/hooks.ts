@@ -1,4 +1,15 @@
-import { ref, getCurrentInstance, onMounted, computed, onUnmounted, reactive, useSlots, Text, Comment } from 'vue'
+import {
+  ref,
+  getCurrentInstance,
+  onMounted,
+  onUnmounted,
+  onBeforeUpdate,
+  computed,
+  reactive,
+  useSlots,
+  Text,
+  Comment
+} from 'vue'
 import type { InjectionKey, Ref, ComputedRef, Reactive, VNode } from 'vue'
 
 /**
@@ -148,11 +159,17 @@ export function useWindowWidth(): Ref<number> {
  * 原理：在 options 上以 getter 定义目标选项，浏览器读取该项时即置为「支持」
  * （老浏览器把第三个参数当作布尔值，不会读取选项，故保持 false）。
  *
+ * SSR（`Node`）环境无 `window`，能力探测无意义，直接返回 `false`。
+ *
  * @param option - 待探测的选项名：`'capture'` / `'once'` / `'passive'` / `'signal'`
  * @returns `isSupported` 表示是否支持该选项
  */
 export function useOptionsSupported(option: 'capture' | 'once' | 'passive' | 'signal'): { isSupported: Ref<boolean> } {
   const isSupported = ref<boolean>(false) // 浏览器是否支持 options 参数
+  // SSR（Node）环境无 window：探测无意义，显式返回 false，不靠异常兜底
+  if (typeof window === 'undefined') {
+    return { isSupported }
+  }
   try {
     const options = {
       get [option]() {
@@ -164,6 +181,7 @@ export function useOptionsSupported(option: 'capture' | 'once' | 'passive' | 'si
     window.addEventListener('test', () => null, options)
     window.removeEventListener('test', () => null, options)
   } catch (err) {
+    // 老浏览器不读 getter（保持 false）；环境对 options 更严格时也不应影响调用方
     isSupported.value = false
   }
   return { isSupported }
@@ -174,16 +192,39 @@ export function useOptionsSupported(option: 'capture' | 'once' | 'passive' | 'si
  * 判定以「实际调用插槽并检查返回的 vnode」为准，可识别「已提供但渲染为空」的插槽；
  * 探测时以空对象作为作用域参数，插槽内抛错按「已提供」处理。
  *
+ * **时效性**：`slots` 与 `attrs` 同级，是官方明确不响应式的普通对象，`computed` 追踪不到
+ * 它的增删（vuejs/core#6202 的结论）。故在更新前比对插槽名集合，集合变化时自增版本号让
+ * 探测重算 —— 这是官方 `ref` + `onBeforeUpdate` workaround 的轻量变体，避免每次更新都重新探测。
+ *
+ * **边界**：
+ * - 作用域插槽以空对象探测：渲染内容若依赖作用域参数（如只输出 `scope.label` 文本），
+ *   可能被判为「未渲染内容」。此类插槽（含渲染委托型，如返回入参 vnode）请直接按
+ *   `slots.xxx` 是否存在判断，不要经过本函数；若仍需精确判定渲染期内容，
+ *   请在渲染函数里调用一次 `renderSlot` 复用同一批 vnode。
+ * - 插槽内组件自身渲染为 `null` 时无法识别，按「已提供」处理。
+ *
  * @param slotsName - 插槽名或插槽名数组，默认 `'default'`
  * @returns 单个名称 → 该插槽是否存在的计算属性；名称数组 → 以插槽名为键的 reactive 映射
  */
 type SlotsExistResult<T extends string | string[]> = T extends string
   ? ComputedRef<boolean>
-  : Reactive<Record<string, ComputedRef<boolean>>>
+  : Reactive<Record<string, boolean>>
 export function useSlotsExist<T extends string | string[] = 'default'>(slotsName: T): SlotsExistResult<T> {
   const slots = useSlots() // 获取当前组件的所有插槽
+  // 插槽对象非响应式：仅在插槽名集合变化时让探测失效，避免每次更新都重新调用插槽
+  const slotsVersion = ref<number>(0)
+  let prevSlotKeys = Object.keys(slots).join(',')
+  onBeforeUpdate(() => {
+    const nextSlotKeys = Object.keys(slots).join(',')
+    if (nextSlotKeys === prevSlotKeys) {
+      return
+    }
+    prevSlotKeys = nextSlotKeys
+    slotsVersion.value += 1
+  })
   // 检查特定名称的插槽是否存在且不为空
   const checkSlotsExist = (slotName: string): boolean => {
+    slotsVersion.value // 建立依赖：插槽集合变化后重新探测
     const slot = slots[slotName]
     if (slot === undefined) {
       return false
@@ -197,7 +238,7 @@ export function useSlotsExist<T extends string | string[] = 'default'>(slotsName
     } catch {
       return true
     }
-    const checkExist = (slotContent: VNode) => {
+    const checkExist = (slotContent: VNode): boolean => {
       if (slotContent.type === Comment) {
         return false
       }
@@ -207,25 +248,22 @@ export function useSlotsExist<T extends string | string[] = 'default'>(slotsName
       if (slotContent.type !== Text) {
         return true
       }
-      if (typeof slotContent.children === 'string') {
-        return slotContent.children.trim() !== ''
-      }
+      return typeof slotContent.children === 'string' ? slotContent.children.trim() !== '' : false
     }
-    if (slotsContent && slotsContent?.length) {
-      const result = slotsContent.some((slotContent: VNode) => {
+    if (slotsContent?.length) {
+      return slotsContent.some((slotContent: VNode) => {
         return checkExist(slotContent)
       })
-      return result
     }
     return false
   }
   if (Array.isArray(slotsName)) {
-    const slotsExist = reactive<Record<string, ComputedRef<boolean>>>({})
+    const slotsExist: Record<string, ComputedRef<boolean>> = {}
     slotsName.forEach((slotName: string) => {
-      const exist = computed(() => checkSlotsExist(slotName))
-      slotsExist[slotName] = exist // 将一个 ref 赋值给一个 reactive 属性时，该 ref 会自动解包
+      // 将一个 ref 赋值给一个 reactive 属性时，该 ref 会自动解包，故对外类型为 boolean
+      slotsExist[slotName] = computed(() => checkSlotsExist(slotName))
     })
-    return slotsExist as SlotsExistResult<T>
+    return reactive(slotsExist) as unknown as SlotsExistResult<T>
   } else {
     return computed(() => checkSlotsExist(slotsName)) as SlotsExistResult<T>
   }

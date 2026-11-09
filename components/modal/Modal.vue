@@ -41,7 +41,6 @@ import {
   lockScroll,
   renderContentToVNode,
   trapTabFocus,
-  useSlotsExist,
   useZIndex,
   zIndexContainerOpenKey,
   FLOATING_LAYER_Z_INDEX,
@@ -234,10 +233,10 @@ const props = withDefaults(defineProps<Props>(), {
 })
 // 仅 modalRender 需读取插槽内容做渲染，故接收返回值
 const slots = defineSlots<ModalSlots>()
+
 // 根节点是 Teleport，属性无法自动透传（Vue 会对 teleport 根告警并丢弃 class / style），
 // 故关闭自动继承并显式绑定到最外层容器，保持与 2.7.0 之前一致的行为
 defineOptions({ inheritAttrs: false })
-const slotsExist = useSlotsExist(['modalRender'])
 // 声明式实例的固定标识：由 props.open 驱动，与命令式实例共用同一渲染管线
 const DECLARATIVE_KEY = 'modal_declarative'
 // 声明式固定双按钮形态，与 Dialog 一致
@@ -444,7 +443,8 @@ function resolveModalRender(item: ModalItem): Props['modalRender'] {
   if (render) {
     return render
   }
-  return slotsExist.modalRender ? slotModalRender : undefined
+  // #modalRender 是渲染委托型作用域插槽（需真实 originVNode 才能产出 vnode），按「是否提供」判断
+  return slots.modalRender ? slotModalRender : undefined
 }
 // 从离场/入场元素上取回实例标识
 function getKey(el: Element): string {

@@ -47,7 +47,7 @@ import {
   type StartDayOfWeek
 } from 'components/picker'
 import type { FloatingPlacement, MountElement } from 'components/utils'
-import { FLOATING_LAYER_Z_INDEX, useSlotsExist } from 'components/utils'
+import { FLOATING_LAYER_Z_INDEX } from 'components/utils'
 export interface Props {
   value?: PickerValue // (v-model:value) 当前取值；传入即受控
   defaultValue?: PickerValue // 非受控初始值，未绑 v-model:value 时生效（与面板初始日期 defaultPickerValue 不同）
@@ -192,13 +192,15 @@ const wrapperStyle = computed(() => {
 const mergedPanelClass = computed(() => ['datepicker-panel-container', props.panelClass].filter(Boolean).join(' '))
 // 显式标注插槽类型：`useSlots()` 的返回值参与 `mergedDateRender` / `mergedExtraFooter` 的推导，构成推断环
 const slots: DatePickerSlots = useSlots()
-const slotsExist = useSlotsExist(['dateRender', 'renderExtraFooter'])
 /**
  * 日期单元格内容定制：同名插槽优先于 prop，两轨统一为「入参 → VNode[]」的函数下发给内核
  * （内核只收函数：VNode 需在其渲染上下文内创建，`computed` 里直接求值会产生「无主的 hoisted vnode」）
+ *
+ * 插槽存在性直接读 `slots`：`#dateRender` / `#renderExtraFooter` 是渲染委托型插槽，
+ * 用空作用域探测会因缺少真实入参而误判（详见 `useSlotsExist` 的边界说明）
  */
 const mergedDateRender = computed<PickerDateRender | undefined>(() => {
-  if (slotsExist.dateRender) {
+  if (slots.dateRender) {
     return (params) => slots.dateRender?.(params) ?? []
   }
   const render = props.dateRender
@@ -212,7 +214,7 @@ const mergedDateRender = computed<PickerDateRender | undefined>(() => {
 })
 /** 面板底部的额外页脚：同名插槽优先于 prop，同样以渲染函数下发 */
 const mergedExtraFooter = computed<(() => VNode[]) | undefined>(() => {
-  if (slotsExist.renderExtraFooter) {
+  if (slots.renderExtraFooter) {
     return () => slots.renderExtraFooter?.() ?? []
   }
   const render = props.renderExtraFooter

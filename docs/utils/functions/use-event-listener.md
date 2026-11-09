@@ -77,5 +77,14 @@ if (typeof window !== 'undefined') {
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | target | 要添加监听事件的目标元素 | HTMLElement &#124; Window &#124; Document | undefined |
-| event | 监听的事件类型（大小写敏感） | string | undefined |
+| event | 监听事件类型（大小写敏感） | string | undefined |
 | callback | 监听事件触发时的回调函数 | Function | undefined |
+
+## Return
+
+无返回值（`void`）：只在挂载时注册监听、卸载时移除，不做其他事。
+
+## 注意事项
+
+- **只在挂载时绑定一次**：`target` / `event` / `callback` 均在 `setup` 期求值，挂载后替换（例如把父级传入的新函数透传给 `callback`）**不会重新注册**，监听器仍调用首次传入的那个函数。需要跟随变化时，应重新挂载组件，或在回调内部读取 `ref` / `props` 取最新值。
+- **SSR（`Node`）环境无 `window` / `document`**：需自行判断存在性后再调用（演示代码中的 `typeof window !== 'undefined'` 即为此目的）。

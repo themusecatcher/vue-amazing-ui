@@ -14,6 +14,22 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## <VersionDateTag date="2026-11-09">3.9.4</VersionDateTag>
+
+- [标签 Tag](/guide/components/tag.html) 动态标签组的行为变更：组件级 `bordered` 现对各项生效，关闭某一项时同时派发 `close`
+- 新增 [标签 Tag](/guide/components/tag.html) 的 `CheckableTag` 可选标签，支持 `v-model:checked` 与 `change`，未传 `checked` 时按非受控处理；另新增 `closeIcon` 属性与 `#closeIcon` 插槽
+- 新增 [标签 Tag](/guide/components/tag.html) 的 `click` 事件、`close` 的 `preventDefault()` 阻止隐藏，以及色板色的 `-inverse` 深色底变体（如 `pink-inverse`）；`icon` 与 `TagItem.icon` 支持 VNode / 渲染函数
+- 新增 [标签 Tag](/guide/components/tag.html) 的 `round` 圆角胶囊形、`disabled` 禁用态与对象形态的 `color`（可分别指定背景、文字、边框色）
+- 优化 [标签 Tag](/guide/components/tag.html) 关闭按钮的可用性：可键盘聚焦，`Enter` / `Space` 可关闭，新增 `triggerClickOnClose` 控制关闭时是否同时触发 `click`
+- 修复 [标签 Tag](/guide/components/tag.html) 无边框态：预设色 / 状态色下仍显示边框，以及背景与自定义色下的链接、关闭图标配色
+- 优化 [标签 Tag](/guide/components/tag.html) 的动态标签组新增交互：文本去除首尾空格，跳过空值与同名标签，`Esc` 取消输入
+- 修复 [标签 Tag](/guide/components/tag.html) 动态标签组的 `#icon` 插槽：插槽内容依赖 `item` / `index` 时图标不渲染
+- 优化 [标签 Tag](/guide/components/tag.html) 的关闭按钮与交互态：关闭图标改为跟随标签文字色（`-inverse` 深色底上不再看不见），键盘焦点环贴合图标且不再越出标签边界；`CheckableTag` 选中后按下补一档更深的反馈
+- 修复 [标签 Tag](/guide/components/tag.html) 内嵌 `<a>` 链接仍取页面链接色、未跟随标签文字色的问题
+- 优化 [标签 Tag](/guide/components/tag.html) 的尺寸梯度与圆角，与按钮等表单控件的视觉比例更协调
+- 更新使用者文档：补充可选标签、热门标签用例与 API 说明
+- 组件库及文档代码优化
+
 ## <VersionDateTag date="2026-11-08">3.9.3</VersionDateTag>
 
 - 修复 [文字提示 Tooltip](/guide/components/tooltip.html) 及 [气泡卡片 Popover](/guide/components/popover.html)、[弹出确认 Popconfirm](/guide/components/popconfirm.html) 在复合方向下的箭头位置：卡片圆角较大时箭头错位，现随卡片圆角自动内移，可用 `popupStyle` 的 `--tooltip-arrow-edge` 按 `px` 覆盖

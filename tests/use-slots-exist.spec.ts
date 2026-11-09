@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { defineComponent, h, createCommentVNode, createTextVNode } from 'vue'
+import { defineComponent, h, ref, nextTick, createCommentVNode, createTextVNode } from 'vue'
 import { mount } from '@vue/test-utils'
 import { useSlotsExist } from 'components/utils'
 
@@ -112,5 +112,46 @@ describe('useSlotsExist 插槽判定', () => {
     })
     expect(empty.find('.probe-array').text()).toBe('false/false')
     empty.unmount()
+  })
+
+  /**
+   * 回归守护：`slots` 是官方明确不响应式的普通对象（与 `attrs` 同级，vuejs/core#6202），
+   * 单纯用 computed 包裹会让判定停留在首帧。这里守护「插槽集合变化 → 重新探测」。
+   */
+  it('父级动态增删具名插槽时判定跟随更新', async () => {
+    const show = ref(false)
+    const Parent = defineComponent({
+      setup() {
+        // 与模板 `<template v-if="show" #content>` 的编译产物同形：插槽名集合随开关变化
+        return () => h(Probe, null, show.value ? { content: () => [h('p', 'content')] } : {})
+      }
+    })
+    const wrapper = mount(Parent)
+    expect(wrapper.find('.probe').text()).toBe('icon:no/content:no')
+
+    show.value = true
+    await nextTick()
+    expect(wrapper.find('.probe').text()).toBe('icon:no/content:yes')
+
+    show.value = false
+    await nextTick()
+    expect(wrapper.find('.probe').text()).toBe('icon:no/content:no')
+    wrapper.unmount()
+  })
+
+  it('插槽内容依赖的响应式数据变化时判定跟随更新', async () => {
+    const visible = ref(true)
+    const wrapper = mount(Probe, {
+      // 插槽体在探测时即被调用，读取到的响应式数据构成 computed 的依赖
+      slots: {
+        content: () => (visible.value ? [h('p', 'content')] : [])
+      }
+    })
+    expect(wrapper.find('.probe').text()).toBe('icon:no/content:yes')
+
+    visible.value = false
+    await nextTick()
+    expect(wrapper.find('.probe').text()).toBe('icon:no/content:no')
+    wrapper.unmount()
   })
 })

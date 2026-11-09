@@ -71,8 +71,17 @@ const { fps } = useFps()
 </template>
 ```
 
+## Params
+
+该组合式函数不接受参数。
+
 ## Return
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
 | fps | 实时监测的浏览器刷新率 | Ref&lt;number&gt; |
+
+## 注意事项
+
+- 帧循环在挂载后启动（`requestAnimationFrame`）：`SSR` / 无 `requestAnimationFrame` 的环境不启动，`fps` 恒为 `0`
+- 每累计 10 帧计算一次平均帧率，数值随页面负载与设备刷新率波动

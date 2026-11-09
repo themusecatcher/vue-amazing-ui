@@ -111,8 +111,10 @@ const tooltipMaxWidth = computed(() => {
   }
   return props.maxWidth
 })
-const showTooltip = computed(() => {
-  return slotsExist.tooltip || props.tooltip
+const showTooltip = computed<boolean>(() => {
+  // 归一为布尔：`slotsExist.tooltip` 与 `props.tooltip`（文本内容）混用时，
+  // 结果可能为空串，直接参与 `&&` 会让下游拿到的显隐开关带上 `''`
+  return Boolean(slotsExist.tooltip || props.tooltip)
 })
 // 锚点模式：使用方提供外部锚点，本组件不再渲染触发包裹层（.tooltip-wrap / .tooltip-content），
 // 触发监听与无障碍属性（tabindex / aria-describedby）直接写到锚点元素上；浮层只作为「指向该元素
