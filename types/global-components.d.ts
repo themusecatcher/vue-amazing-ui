@@ -93,6 +93,7 @@ declare module 'vue' {
     Tabs: typeof VueAmazingUI.Tabs
     TabPane: typeof VueAmazingUI.TabPane
     Tag: typeof VueAmazingUI.Tag
+    CheckableTag: typeof VueAmazingUI.CheckableTag
     TextScroll: typeof VueAmazingUI.TextScroll
     Textarea: typeof VueAmazingUI.Textarea
     TimePicker: typeof VueAmazingUI.TimePicker

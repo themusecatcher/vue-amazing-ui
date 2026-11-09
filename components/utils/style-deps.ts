@@ -113,6 +113,7 @@ export const componentsMap = {
   TabPane: 'tabs/tab-pane',
   Tabs: 'tabs',
   Tag: 'tag',
+  CheckableTag: 'tag/checkable-tag',
   Textarea: 'textarea',
   TextScroll: 'text-scroll',
   TimePanel: 'picker',
@@ -179,6 +180,8 @@ export const componentDependencies: Partial<Record<ComponentName, ComponentName[
   Card: ['Skeleton'],
   Carousel: ['Spin'],
   Cascader: ['Empty', 'Scrollbar', 'Popup'],
+  // CheckableTag 内嵌 Tag，Tag 的样式入口含 Space.css，依赖表只展开一层，故 Space 需一并摊平登记
+  CheckableTag: ['Tag', 'Space'],
   CheckboxGroup: ['Checkbox'],
   Collapse: ['Button'],
   DatePicker: [
