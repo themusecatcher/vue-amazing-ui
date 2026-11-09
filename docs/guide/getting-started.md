@@ -116,3 +116,19 @@ const html = await renderToString(app, ssrContext)
 ```
 
 各浮层组件均可用 `to` 指定其他挂载节点，`to: false` 表示就地渲染在当前 `DOM`，详见对应组件页的 `to` 属性。
+
+## 浏览器支持
+
+_下表为最低可运行版本，低于该版本的引擎不在支持范围。_
+
+| 浏览器 | 支持版本 |
+| :-- | :-- |
+| `Chrome` / `Edge` | `≥ 105` |
+| `Safari` / `iOS Safari` | `≥ 15.4` |
+| `Firefox` | `≥ 121` |
+| `Firefox ESR` | `≥ 128` |
+| `Opera Mini` / `KaiOS 2.x` / `IE` | 不支持 |
+
+`Opera Mini` 与 `KaiOS` 无法运行 `Vue 3`，因此不在支持范围。
+
+- 少数视觉增强依赖较新的 `CSS` 特性：更低的引擎上会退化为等价的基础布局，功能与可访问性不受影响；个别组件存在此类增强时，其文档页会单独说明。

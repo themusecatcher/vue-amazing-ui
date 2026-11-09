@@ -176,6 +176,13 @@ import {
 </script>
 ```
 
+## Browser Support
+
+_Modern browsers only (`Chrome` / `Edge` / `Safari` / `Firefox`). `Opera Mini`, `KaiOS` and `IE` are not supported — the first two cannot run `Vue 3`._
+
+- Exact minimum versions are listed in [Browser Support](https://themusecatcher.github.io/vue-amazing-ui/guide/getting-started.html).
+- A few visual enhancements rely on newer `CSS` features and degrade to an equivalent base layout on older engines, with functionality and accessibility unaffected.
+
 ## Project
 
 - Get the project code

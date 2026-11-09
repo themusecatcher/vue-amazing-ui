@@ -155,6 +155,14 @@ const slotsExist = useSlotsExist(['icon', 'default'])
 const showIconOnly = computed(() => slotsExist.icon && !slotsExist.default)
 ```
 
+判定口径：
+
+- **默认统一用 `useSlotsExist`**：它判的是「是否真的渲染出内容」，并在更新前比对插槽名集合让探测失效（`slots` 本身不响应式）；非作用域插槽（`prefix` / `suffix` / `default` 等）一律走它；
+- **只有该工具会误判的作用域插槽才改用「是否提供」**：探测以空对象调用插槽，渲染内容依赖作用域参数的**取值**（如只输出 `scope.label` / `item` / `index` / `isSelected`）时会被判为未渲染内容。此类插槽（含 `xxxRender` 这类渲染委托型）保留 `defineSlots` 返回值，模板写 `v-if="slots.xxx"`；
+- **作用域参数只是回调、或与 props 同源时不构成误判**：如 `#clearIcon` 的 `clear`、`#removeIcon` 无参、`Tag` 静态分支的 `#icon` —— 渲染结果不随参数取值变化，仍走 `useSlotsExist`（空即回落属性 / 内置内容）。同一组件内可两种口径并存，按插槽性质分别选择；
+- 按「是否提供」判断后，插槽内容可能为空：容器需要 `:empty` 之类的样式兜底，避免留下占位间距；
+- **插槽转发层不做内容探测**：只是把插槽转交给内部组件时（如 `DropdownButton` 把 `#overlay` / `#label` 转给内部 `Dropdown`），按是否提供直接转发即可 —— 探测会让使用方的插槽被执行两次。
+
 ## 告警与日志 log
 
 组件与工具函数内**禁止直写 `console.*`**（由 `eslint.config.js` 的 `custom/no-console-in-components` 守护，仅出口文件放行），统一走 `components/utils/log.ts` 的单一出口：
@@ -236,6 +244,13 @@ log('debug', 'position', '浮层精确尺寸测量失败，跳过位移取整', 
   - **字号档位**：正文基准 `14px`；辅助 `12px`；组件标题 / `large` 尺寸 `16px`（`16px` 不得用于正文）；展示型大标题 `20px` / `24px`；装饰性字号（图标微调 `10px`、`font-size: 0` 消隙）必须注释用途。**同一 `size` 档位（`small` / `middle` / `large`）在同类语义下必须取同值**。
   - 审计口径（抽查新增组件时可用）：把宿主 `body` 的字号扰动为 `20px`，组件内自绘文本的计算字号**不得变化**；字体族同理（扰动宿主字体，库内自绘文本随宿主变化是预期行为）。
   - 字体的「可配置性」由宿主的页面字体声明提供，**不进 `ConfigProvider.theme`**（该通道只承载颜色，见「主题系统」）。
+- **高版本 CSS 特性（2026-11-09 定）**：支持矩阵与存量清单见 `development/compatibility.md`。`:has()` / `:focus-visible` / `scroll-behavior` 这类有明确引擎门槛的特性**只允许用于纯视觉增强**，且必须同时满足：
+  - **必须有基础样式兜底**：正向分支之外要有 `:not(:has(...))` 或默认值分支，使不支持时退化为「正确但略简」的形态。判定标准是「去掉增强分支后不破版」，不是「写了兜底注释」。
+  - **`:has()` 参数必须限定直接子项**：写 `:has(> .timeline-item-wrap.timeline-item-has-label)`，禁止 `:has(.xxx)`。后代参数会把**嵌套在内容里的同类组件**也算进来（`Timeline` 曾因此把内层 label 误判为外层分栏，实测表现为外层轴点被拉到 50%）。
+  - **`:has()` 禁止与其他选择器共用逗号列表**：不支持该伪类的引擎会**丢弃整条规则**（选择器列表不是 forgiven），普通选择器会被连带失效（`Timeline` 曾因此让 `alternate` 模式的自定义节点不居中）。必须拆成两条规则。
+  - **`:has()` 全库单点收口**：当前仅 `timeline/timeline-item/TimelineItem.vue`。新增使用前先改本节，并同步 `scripts/verify-has-usage.ts` 白名单，否则 `pnpm check:static` 失败。
+  - **禁止用 `:has()` 承担功能前提**（显隐、可交互区域、关键内容可见性、骨架布局）：失效即不可接受，只能走 JS 状态类。
+  - 不支持该特性的引擎**不会报错**，只是静默不匹配；因此这类特性无法靠「跑起来看看」发现退化，只能靠兜底分支与真实低版本引擎验证。
 
 ## 函数式 / 全局组件模式
 
