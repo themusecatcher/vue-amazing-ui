@@ -231,7 +231,7 @@ const props = withDefaults(defineProps<Props>(), {
   to: 'body',
   open: false
 })
-// 仅 modalRender 需读取插槽内容做渲染，故接收返回值
+// 仅 `#modalRender` 需在渲染期产出 vnode（渲染委托型作用域插槽），故保留 `defineSlots` 返回值
 const slots = defineSlots<ModalSlots>()
 
 // 根节点是 Teleport，属性无法自动透传（Vue 会对 teleport 根告警并丢弃 class / style），

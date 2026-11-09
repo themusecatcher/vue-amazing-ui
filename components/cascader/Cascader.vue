@@ -23,6 +23,7 @@ import {
   useControlledModel,
   useIsControlled,
   useResizeObserver,
+  useSlotsExist,
   zIndexContainerOpenKey,
   FLOATING_LAYER_Z_INDEX
 } from 'components/utils'
@@ -198,9 +199,20 @@ const props = withDefaults(defineProps<Props>(), {
   id: undefined
 })
 defineSlots<CascaderSlots>()
-// 插槽一律按「是否提供」判定，不以渲染内容探测：带作用域参数的插槽（displayRender / option 等）
+// 带作用域参数的插槽（displayRender / option / tagRender 等）只能按「是否提供」判定：
 // 以空对象调用时渲染结果本就为空，内容探测会把已提供的插槽误判为未提供
 const slots = useSlots()
+// 无作用域参数、或作用域仅为回调的插槽（图标 / 占位 / 底部操作区）按「是否渲染内容」判定：
+// 插槽渲染为空即视同未提供，回落到属性或内置内容，避免留下空的图标位与空面板区
+const slotsExist = useSlotsExist([
+  'suffixIcon',
+  'clearIcon',
+  'expandIcon',
+  'loadingIcon',
+  'removeIcon',
+  'notFoundContent',
+  'action'
+])
 // 声明组件事件（顺序与文档 `## Events` 表一致；update:value / update:searchValue / update:open
 // 分别是 v-model:value / v-model:searchValue / v-model:open 的回写，随对应属性一并说明）
 const emits = defineEmits([
@@ -1367,7 +1379,7 @@ function onKeydown(e: KeyboardEvent): void {
   }
 }
 const customSuffixIcon = computed<(() => (string | VNode)[]) | null>(() => {
-  if (slots.suffixIcon) {
+  if (slotsExist.suffixIcon) {
     return () => slots.suffixIcon!()
   }
   const icon = props.suffixIcon
@@ -1375,16 +1387,16 @@ const customSuffixIcon = computed<(() => (string | VNode)[]) | null>(() => {
   return () => [typeof icon === 'function' ? (icon as () => VNode)() : icon]
 })
 const customClearIcon = computed<(() => (string | VNode)[]) | null>(() => {
-  if (slots.clearIcon) {
+  if (slotsExist.clearIcon) {
     return () => slots.clearIcon!({ clear: onClear })
   }
   const icon = props.clearIcon
   if (!icon) return null
   return () => [typeof icon === 'function' ? (icon as () => VNode)() : icon]
 })
-// 次级菜单展开图标 / 加载图标 / tag 移除图标：插槽优先（项目约定），其次 prop
+// 次级菜单展开图标 / 加载图标 / tag 移除图标：插槽渲染出内容时优先（项目约定），其次 prop
 const customExpandIcon = computed<(() => (string | VNode)[]) | null>(() => {
-  if (slots.expandIcon) {
+  if (slotsExist.expandIcon) {
     return () => slots.expandIcon!()
   }
   const icon = props.expandIcon
@@ -1392,7 +1404,7 @@ const customExpandIcon = computed<(() => (string | VNode)[]) | null>(() => {
   return () => [typeof icon === 'function' ? (icon as () => VNode)() : icon]
 })
 const customLoadingIcon = computed<(() => (string | VNode)[]) | null>(() => {
-  if (slots.loadingIcon) {
+  if (slotsExist.loadingIcon) {
     return () => slots.loadingIcon!()
   }
   const icon = props.loadingIcon
@@ -1400,7 +1412,7 @@ const customLoadingIcon = computed<(() => (string | VNode)[]) | null>(() => {
   return () => [typeof icon === 'function' ? (icon as () => VNode)() : icon]
 })
 const customRemoveIcon = computed<(() => (string | VNode)[]) | null>(() => {
-  if (slots.removeIcon) {
+  if (slotsExist.removeIcon) {
     return () => slots.removeIcon!()
   }
   const icon = props.removeIcon
@@ -1621,7 +1633,7 @@ defineExpose({
               @mousedown.stop.prevent
               @click.stop="item.onClose($event)"
             >
-              <slot v-if="slots.removeIcon" name="removeIcon" />
+              <slot v-if="slotsExist.removeIcon" name="removeIcon" />
               <component :is="customRemoveIcon" v-else-if="customRemoveIcon" />
               <svg
                 v-else
@@ -1721,7 +1733,12 @@ defineExpose({
         </template>
       </template>
       <!-- 清除图标：满足清除条件时渲染，hover 触发器时显示（覆盖在箭头之上） -->
-      <span v-if="slots.clearIcon" class="icon-svg clear-svg" :class="{ 'show-svg': canClear }" @click.stop="onClear">
+      <span
+        v-if="slotsExist.clearIcon"
+        class="icon-svg clear-svg"
+        :class="{ 'show-svg': canClear }"
+        @click.stop="onClear"
+      >
         <slot name="clearIcon" :clear="onClear" />
       </span>
       <span
@@ -1908,7 +1925,7 @@ defineExpose({
                     </span>
                     <!-- 子项加载中：显示加载图标替代展开箭头 -->
                     <span v-if="isLoadingOption(option, columnIndex)" class="cascader-option-loading-icon">
-                      <slot v-if="slots.loadingIcon" name="loadingIcon" />
+                      <slot v-if="slotsExist.loadingIcon" name="loadingIcon" />
                       <component :is="customLoadingIcon" v-else-if="customLoadingIcon" />
                       <svg
                         v-else
@@ -1926,7 +1943,7 @@ defineExpose({
                       </svg>
                     </span>
                     <span v-else-if="!isLeafOption(option)" class="cascader-option-expand-icon">
-                      <slot v-if="slots.expandIcon" name="expandIcon" />
+                      <slot v-if="slotsExist.expandIcon" name="expandIcon" />
                       <component :is="customExpandIcon" v-else-if="customExpandIcon" />
                       <svg
                         v-else
@@ -1956,13 +1973,13 @@ defineExpose({
           </template>
           <!-- 空数据：与选项区同高，避免面板高度跳动 -->
           <div v-if="showEmptyPanel" class="cascader-panel-empty">
-            <slot v-if="slots.notFoundContent" name="notFoundContent" />
+            <slot v-if="slotsExist.notFoundContent" name="notFoundContent" />
             <component :is="customNotFoundContent" v-else-if="customNotFoundContent" />
             <Empty v-else image="outlined" />
           </div>
         </div>
         <!-- 底部操作区：与选项区分割，供自定义「确定 / 重置」等操作 -->
-        <div v-if="slots.action" class="cascader-panel-footer">
+        <div v-if="slotsExist.action" class="cascader-panel-footer">
           <slot name="action" />
         </div>
       </div>

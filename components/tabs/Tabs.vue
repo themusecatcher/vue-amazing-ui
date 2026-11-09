@@ -120,7 +120,7 @@ const emits = defineEmits<{
   add: [] // 点击新增页签按钮时调用
   close: [key: string | number] // 点击页签关闭按钮时调用
 }>()
-const slotsExist = useSlotsExist(['prefix', 'suffix', 'tabBar'])
+const slotsExist = useSlotsExist(['prefix', 'suffix'])
 const uid = `tabs-${getCurrentInstance()?.uid ?? 0}` // 页签与面板的 aria 关联 id 前缀
 // (v-model) 当前激活 key：传值即受控，未传时取 defaultActiveKey 自持（缺省即无激活项）
 const activeKeyModel = useControlledModel<string | number | undefined>('activeKey', props.defaultActiveKey)

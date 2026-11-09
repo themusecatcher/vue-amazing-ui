@@ -724,6 +724,30 @@ describe('Cascader 面板底部操作区', () => {
   })
 })
 
+describe('Cascader 插槽的空内容回落', () => {
+  it('action 插槽渲染为空时不渲染底部操作区', async () => {
+    wrapper = mount(Cascader, {
+      attachTo: document.body,
+      props: { options: OPTIONS },
+      slots: { action: () => [] }
+    })
+    await flush()
+    await openPanel()
+    expect(document.querySelector('.cascader-panel-footer')).toBeNull()
+  })
+
+  it('后缀图标插槽渲染为空时回落默认箭头', async () => {
+    wrapper = mount(Cascader, {
+      attachTo: document.body,
+      props: { options: OPTIONS },
+      slots: { suffixIcon: () => [] }
+    })
+    await flush()
+    expect(wrapper.find('.cascader-suffix').exists()).toBe(false)
+    expect(wrapper.find('.arrow-svg').exists()).toBe(true)
+  })
+})
+
 describe('Cascader 已勾选数据', () => {
   it('多选勾选后 getCheckedData 返回选项数据，单选返回空数组', async () => {
     const single = mount(Cascader, { attachTo: document.body, props: { options: OPTIONS } })

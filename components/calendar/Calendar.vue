@@ -184,7 +184,7 @@ const emits = defineEmits<{
   panelChange: [value: string | number | undefined, info: { year: number; month?: number }, mode: 'month' | 'year']
   select: [value: string | number | undefined, info: SelectInfo]
 }>()
-const slotsExist = useSlotsExist(['header', 'headerFull'])
+const slotsExist = useSlotsExist(['header'])
 // 月面板网格列数：12 个月按 3 列 × 4 行排布，键盘上下移动一行即跨三个月
 const MONTH_GRID_COLUMNS = 3
 // 一周起始日的收敛值：入参越界（或非数字）时归一到 0-6，避免周标题与日期网格生成陷入死循环

@@ -427,3 +427,30 @@ describe('Select 面板开合时的高亮与滚动保持', () => {
     expect(hoverTexts()).toEqual(['选项 25'])
   })
 })
+
+describe('Select 移除图标插槽的判定', () => {
+  it('removeIcon 插槽有内容时渲染自定义图标', async () => {
+    wrapper = mount(Select, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { mode: 'multiple', value: ['beijing'], options: OPTIONS },
+      slots: { removeIcon: () => [h('i', { class: 'custom-remove-icon' })] }
+    })
+    await flush()
+    expect(document.querySelector('.select-selection-item-remove .custom-remove-icon')).toBeTruthy()
+  })
+
+  it('removeIcon 插槽渲染为空时回落默认移除图标', async () => {
+    wrapper = mount(Select, {
+      attachTo: document.body,
+      global: { stubs: { transition: false } },
+      props: { mode: 'multiple', value: ['beijing'], options: OPTIONS },
+      slots: { removeIcon: () => [] }
+    })
+    await flush()
+    const remove = document.querySelector('.select-selection-item-remove')
+    expect(remove).toBeTruthy()
+    expect(remove?.querySelector('svg')).toBeTruthy()
+    expect(remove?.querySelector('.custom-remove-icon')).toBeNull()
+  })
+})

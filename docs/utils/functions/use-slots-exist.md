@@ -81,7 +81,7 @@ export function useSlotsExist<T extends string | string[] = 'default'>(slotsName
       // 将一个 ref 赋值给一个 reactive 属性时，该 ref 会自动解包，故对外类型为 boolean
       slotsExist[slotName] = computed(() => checkSlotsExist(slotName))
     })
-    return reactive(slotsExist) as SlotsExistResult<T>
+    return reactive(slotsExist) as unknown as SlotsExistResult<T>
   } else {
     return computed(() => checkSlotsExist(slotsName)) as SlotsExistResult<T>
   }

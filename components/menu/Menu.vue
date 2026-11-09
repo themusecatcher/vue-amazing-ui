@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, provide, ref, useSlots, watch } from 'vue'
 import type { VNode, VNodeChild } from 'vue'
-import { FLOATING_LAYER_Z_INDEX, injectFromChain, siderCollapsedKey, useControlledModel } from 'components/utils'
+import {
+  FLOATING_LAYER_Z_INDEX,
+  injectFromChain,
+  siderCollapsedKey,
+  useControlledModel,
+  useSlotsExist
+} from 'components/utils'
 import MenuNodes from './MenuNodes'
 import { getItemKey, menuContextKey } from './context'
 import type { MenuContext } from './context'
@@ -85,6 +91,8 @@ const EMPTY_KEYS: MenuKey[] = [] // 稳定的空数组：避免每次渲染都�
 // 显式标注插槽类型：`useSlots()` 的返回值参与 `menuItems` / `displayItems` 的推导，构成推断环
 // （构建期的 dts 程序会报 TS7022 / TS7024），标注后即断开；类型与 `defineSlots<MenuSlots>()` 一致
 const slots: MenuSlots = useSlots()
+// 溢出指示器无作用域参数：按「是否渲染内容」判定，空插槽回落到内置三点图标
+const slotsExist = useSlotsExist(['overflowedIndicator'])
 // 强调色与选中底色：皮肤 CSS 直接消费公开令牌 `--va-menu-primary-*`（未配置时回落到全局主色）。
 // 组件级主色由 ConfigProvider 写在作用域节点上；浮层面板经 Teleport 脱离作用域时，
 // Provider 的边界转发会把这些令牌一并带到面板根节点，因此不再需要把私有变量随节点下发。
@@ -120,7 +128,11 @@ const menuItems = computed<ItemType[]>(() => (slots.default ? parseSlotItems(slo
 const overflowStart = ref<number>(Number.POSITIVE_INFINITY)
 const displayItems = computed<ItemType[]>(() =>
   props.mode === 'horizontal'
-    ? splitOverflowItems(menuItems.value, overflowStart.value, slots.overflowedIndicator)
+    ? splitOverflowItems(
+        menuItems.value,
+        overflowStart.value,
+        slotsExist.overflowedIndicator ? slots.overflowedIndicator : undefined
+      )
     : menuItems.value
 )
 
@@ -333,7 +345,7 @@ provide<MenuContext>(menuContextKey, {
   onOverflowChange: (start: number) => {
     overflowStart.value = start
   },
-  overflowedIndicator: computed(() => slots.overflowedIndicator),
+  overflowedIndicator: computed(() => (slotsExist.overflowedIndicator ? slots.overflowedIndicator : undefined)),
   forceSubMenuRender: computed(() => props.forceSubMenuRender),
   selectedSubMenuKeys,
   subMenuZIndex: FLOATING_LAYER_Z_INDEX.select,

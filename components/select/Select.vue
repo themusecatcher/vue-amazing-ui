@@ -215,15 +215,9 @@ const props = withDefaults(defineProps<Props>(), {
 })
 defineSlots<SelectSlots>()
 const slots = useSlots()
-const slotsExist = useSlotsExist([
-  'option',
-  'notFoundContent',
-  'suffixIcon',
-  'menuItemSelectedIcon',
-  'clearIcon',
-  'dropdownRender',
-  'placeholder'
-])
+// 只探测「无作用域参数、或作用域仅为回调」的插槽；带数据作用域的插槽（option / tagRender /
+// optionLabel / maxTagPlaceholder / menuItemSelectedIcon / dropdownRender）一律按是否提供判断
+const slotsExist = useSlotsExist(['notFoundContent', 'suffixIcon', 'clearIcon', 'placeholder', 'removeIcon'])
 // 声明组件事件（顺序与文档 `## Events` 表一致；update:value 即 v-model:value 回写，随 value 属性一并说明）
 const emits = defineEmits([
   'update:value',
@@ -666,9 +660,9 @@ const tagItems = computed(() => {
     return { option, value, label, labelContent, closable, disabled, hidden: index >= visibleCount, params }
   })
 })
-// 自定义 tag 移除图标：插槽优先（项目约定），其次 prop；统一包成函数组件便于模板以 <component :is> 渲染
+// 自定义 tag 移除图标：插槽渲染出内容时优先（项目约定），其次 prop；统一包成函数组件便于模板以 <component :is> 渲染
 const customRemoveIcon = computed<SelectMenuNode | null>(() => {
-  if (slots.removeIcon) {
+  if (slotsExist.removeIcon) {
     return () => slots.removeIcon!()
   }
   const icon = props.removeIcon
@@ -1468,7 +1462,7 @@ function scrollTo(arg: number | { index?: number; top?: number }): void {
     onContainerScroll()
   }
 }
-/** 空态内容：插槽优先（项目约定），其次 prop，最后回落项目 Empty 组件 */
+/** 空态内容：插槽渲染出内容时优先（项目约定），其次 prop，最后回落项目 Empty 组件 */
 function renderNotFoundContent(): VNode | string | VNode[] {
   const notFoundSlot = slots.notFoundContent
   if (slotsExist.notFoundContent && notFoundSlot) {
@@ -1660,7 +1654,7 @@ const panelContent = computed<SelectMenuNode>(() => {
   }
   return menuNode
 })
-// 自定义后缀图标：插槽优先（项目约定），其次 prop；统一包成函数组件便于模板以 <component :is> 渲染
+// 自定义后缀图标：插槽渲染出内容时优先（项目约定），其次 prop；统一包成函数组件便于模板以 <component :is> 渲染
 const customSuffixIcon = computed<SelectMenuNode | null>(() => {
   if (slotsExist.suffixIcon) {
     return () => slots.suffixIcon!()
@@ -1733,7 +1727,7 @@ defineExpose({
               @mousedown.stop.prevent
               @click.stop="item.params.onClose($event)"
             >
-              <slot v-if="slots.removeIcon" name="removeIcon" />
+              <slot v-if="slotsExist.removeIcon" name="removeIcon" />
               <component v-else-if="customRemoveIcon" :is="customRemoveIcon" />
               <svg
                 v-else
