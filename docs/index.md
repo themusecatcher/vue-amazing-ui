@@ -14,7 +14,7 @@ hero:
     alt: Vue Amazing UI
   actions:
     - theme: brand
-      text: 开始使用
+      text: ✨ 开始使用
       link: /guide/features
     - theme: alt
       text: GitHub
