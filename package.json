@@ -138,7 +138,7 @@
     "vite-plugin-vue-devtools": "^8.2.1",
     "vitepress": "^1.6.4",
     "vitest": "4.1.12",
-    "vue": "^3.5.44",
+    "vue": "^3.5.45",
     "vue-amazing-ui": "3.9.4",
     "vue-router": "^4.6.4",
     "vue-tsc": "3.3.11"
