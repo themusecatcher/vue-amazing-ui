@@ -113,7 +113,7 @@ pnpm verify:deps       # 产物一致性校验：依赖表 ↔ chunk 闭包 + �
 pnpm verify:on-demand  # 按需引入端到端验证：临时消费方工程 + canary 断言（需已构建产物）
 pnpm verify:theme      # 主题架构守护（--strict）：变量引用登记与写入位置 / 公开变量闭合 / 色值三档统计 / 演示站与文档桥变量回退
 pnpm verify:inject-keys # 注入契约守护：键类型 / 命名 / 描述串 / 读取通道（只扫源码）
-pnpm verify:docs       # 文档守护：Props「默认值」列 ↔ 源码 withDefaults 逐字段比对 + 尾部章节顺序（APIs → Slots → Events → Methods → CSS 变量 → 在 setup 外使用）
+pnpm verify:docs       # 文档守护：Props「默认值」列 ↔ 源码 withDefaults 逐字段比对 + 尾部章节顺序（APIs → Slots → Events → Methods → CSS 变量 → 在 setup 外使用）+ 演示用例一致性（Show Code 自包含 / 跨分节 v-model 独立）+ 首页与 README 技术栈版本号、更新日志首条版本号 ↔ package.json
 pnpm guard             # 产物守卫：毫秒级存在性校验（样式入口 / 编号 CSS / 入口内引用 / 聚合入口类型与运行时配对 / props 运行时类型与源码类型对齐）
 ```
 

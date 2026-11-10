@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 /**
- * 组件文档契约守护（`pnpm verify:docs`）：四项断言，同一进程、同一退出码
+ * 组件文档契约守护（`pnpm verify:docs`）：五项断言，同一进程、同一退出码
  *
  * ① Props「默认值」列 ↔ 源码 `withDefaults`
  * ② 尾部章节顺序（APIs → Slots → Events → Methods → CSS 变量 → 在 setup 外使用）
  * ③ 演示用例一致性：Show Code 自包含 / 跨分节 `v-model` 绑定独立（用例数量差异降级为提示）
- * ④ 首页技术栈版本号 ↔ `package.json`（`docs/index.md` 的 frontmatter 无法执行 JS，只能手写后校验）
+ * ④ 技术栈版本号 ↔ `package.json`（`docs/index.md` frontmatter 与中英文 `README` 各手写一份，无法执行 JS）
+ * ⑤ 更新日志首条版本号 ↔ `package.json`（发版时两处必须同步，漏改任一处读者都会拿到错位的记录）
  *
  * 为什么①需要脚本：这类失真只能靠「逐字段与源码比对」发现，人工抽查必然漏 ——
  * 已发现的每一处（如 `avatar.color` / `waterfall.backgroundColor` / `time-picker.*Step` / `textarea.value`）
@@ -40,6 +41,11 @@
  * 再单开脚本 / 命令只会让收尾多跑一条 —— 并入既有入口即可。为什么「用例数量」只提示不阻断：
  * `## 使用方式` 这类说明型章节会把多段代码并排、Show Code 只覆盖其中一段，机械比较必然误报，
  * 交给人工按章节性质判断。
+ *
+ * 为什么④扩到 README、并新增⑤（2026-11-10）：技术栈文案与发版版本号都是「同一个值手写两份」，
+ * 漂移方式完全一样。④ 原只扫首页，而两个 `README` 写着同几行 `Vue@x.y.z`，升级依赖时同样会漏改；
+ * ⑤ 对应更新日志规范里「发布版本与 package.json version 不一致」这条反模式 —— 两处都是构建期常量，
+ * 判据（读文本、与 package.json 比对）与扫描方式同源，并入既有入口即可，不单开脚本。
  */
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -551,36 +557,57 @@ if (existsSync(viewsDir)) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ④ 首页 frontmatter 的技术栈版本号 ↔ package.json                            */
+/* ④ 技术栈版本号 ↔ package.json（首页 frontmatter + 中英文 README）           */
 /* -------------------------------------------------------------------------- */
 
 const pkg = JSON.parse(readFileSync(resolve(rootDir, 'package.json'), 'utf-8')) as {
+  version?: string
   dependencies?: Record<string, string>
   devDependencies?: Record<string, string>
 }
 const versionFailures: string[] = []
-const homepagePath = resolve(rootDir, 'docs/index.md')
-if (existsSync(homepagePath)) {
-  // 依赖名大小写不敏感：文档写 `Vue@3.5.45`，package.json 的键是 `vue`
-  const declared = new Map(
-    [...Object.entries(pkg.dependencies ?? {}), ...Object.entries(pkg.devDependencies ?? {})].map(([name, range]) => [
-      name.toLowerCase(),
-      range.replace(/^[\^~]/, '')
-    ])
-  )
-  const written = readFileSync(homepagePath, 'utf-8')
-  for (const [, name, version] of written.matchAll(/([A-Za-z][\w.-]*)@(\d+\.\d+\.\d+)/g)) {
-    const actual = declared.get(name.toLowerCase())
+// 依赖名大小写不敏感：文档写 `Vue@3.5.45`，package.json 的键是 `vue`
+const declaredVersions = new Map(
+  [...Object.entries(pkg.dependencies ?? {}), ...Object.entries(pkg.devDependencies ?? {})].map(([name, range]) => [
+    name.toLowerCase(),
+    range.replace(/^[\^~]/, '')
+  ])
+)
+// README 里除技术栈那一行没有别的 `name@x.y.z` 写法（邮箱、`@昵称` 都不匹配），故可整体扫描
+for (const file of ['docs/index.md', 'README.md', 'README.zh-CN.md']) {
+  const filePath = resolve(rootDir, file)
+  if (!existsSync(filePath)) continue
+  for (const [, name, version] of readFileSync(filePath, 'utf-8').matchAll(/([A-Za-z][\w.-]*)@(\d+\.\d+\.\d+)/g)) {
+    const actual = declaredVersions.get(name.toLowerCase())
     if (!actual) {
-      versionFailures.push(`docs/index.md 写的 \`${name}@${version}\` 在 package.json 中找不到该依赖`)
+      versionFailures.push(`${file} 写的 \`${name}@${version}\` 在 package.json 中找不到该依赖`)
     } else if (actual !== version) {
-      versionFailures.push(`docs/index.md 写的 \`${name}@${version}\` 与 package.json 的 \`${actual}\` 不一致`)
+      versionFailures.push(`${file} 写的 \`${name}@${version}\` 与 package.json 的 \`${actual}\` 不一致`)
     }
   }
 }
 if (versionFailures.length > 0) {
-  console.error('❌ 首页技术栈版本号与 package.json 不一致（升级依赖后需同步 docs/index.md 的 frontmatter）：')
+  console.error('❌ 技术栈版本号与 package.json 不一致（升级依赖后需同步首页 frontmatter 与 README）：')
   versionFailures.forEach((failure) => console.error(`   ✗ ${failure}`))
+}
+
+/* -------------------------------------------------------------------------- */
+/* ⑤ 更新日志首条版本号 ↔ package.json                                        */
+/* -------------------------------------------------------------------------- */
+
+const releaseFailures: string[] = []
+const changelogPath = resolve(rootDir, 'docs/guide/changelog.md')
+if (existsSync(changelogPath) && pkg.version) {
+  const latest = readFileSync(changelogPath, 'utf-8').match(/^## (\d+\.\d+\.\d+)/m)?.[1]
+  if (latest !== pkg.version) {
+    releaseFailures.push(
+      `更新日志首条版本为 ${latest ? `\`${latest}\`` : '（缺失）'}，package.json 为 \`${pkg.version}\``
+    )
+  }
+}
+if (releaseFailures.length > 0) {
+  console.error('❌ 更新日志首条版本与 package.json 不一致（发版前两处必须同步）：')
+  releaseFailures.forEach((failure) => console.error(`   ✗ ${failure}`))
 }
 
 if (valueFailures.length > 0) {
@@ -609,12 +636,13 @@ const failed =
   orderFailures.length > 0 ||
   selfContainedFailures.length > 0 ||
   bindingFailures.length > 0 ||
-  versionFailures.length > 0
+  versionFailures.length > 0 ||
+  releaseFailures.length > 0
 if (failed) process.exit(1)
 
 console.log(
   `✅ 文档守护通过：${checked} 个 prop 的默认值列与源码 withDefaults 一致` +
     (whitelisted > 0 ? `（${whitelisted} 处按白名单豁免，见 scripts/verify-docs.ts）` : '') +
     `；${orderChecked} 个组件文档尾部章节顺序合规；${demoChecked} 个文档的 Show Code 自包含、跨分节绑定独立；` +
-    `首页技术栈版本号与 package.json 一致`
+    `首页与 README 技术栈版本号、更新日志首条版本号均与 package.json 一致`
 )
