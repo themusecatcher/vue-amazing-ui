@@ -14,6 +14,10 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## 3.9.5 <span class="changelog-date">2026-11-10</span>
+
+- 修复 [时间轴 Timeline](/guide/components/timeline.html) 的嵌套布局：嵌套在内容里的时间轴不再额外保留整轴收尾的底部空白，末项内容也不再被强制撑高
+
 ## 3.9.4 <span class="changelog-date">2026-11-09</span>
 
 - 调整 [标签 Tag](/guide/components/tag.html) 的动态标签组：组件级 `bordered` 现对每一项生效（原仅项级生效），关闭某一项时除 `dynamicClose` 外同时派发 `close`，新增 `triggerClickOnClose` 控制是否一并触发 `click`
