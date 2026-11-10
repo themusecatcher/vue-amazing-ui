@@ -57,6 +57,15 @@ function readStyleBlock(file: string): string {
   return matched[1]
 }
 
+/** 选择器是否作用在根元素（`.timeline-wrap`）自身，而非它的派生层级上 */
+function isRootSelector(selector: string): boolean {
+  const root = '.timeline-wrap'
+  if (!selector.startsWith(root)) {
+    return false
+  }
+  return !/^[\s>+~]/.test(selector.slice(root.length))
+}
+
 /** 订阅媒体查询里的规则不参与本组断言（只影响动效），先整体剥离以简化解析 */
 function stripAtBlocks(css: string): string {
   return css.replace(/@media[^{]*\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g, '')
@@ -261,6 +270,21 @@ function mount(listClass: string, items: ItemOptions[]) {
   return { list, pick }
 }
 
+/** 造一条「外层节点内容里嵌着另一条时间轴」的结构，用于校验嵌套实例的作用域 */
+function mountNested() {
+  document.body.innerHTML = [
+    '<ul class="timeline-wrap">',
+    '<li class="timeline-item-wrap">',
+    '<div class="timeline-item-content"><div class="timeline-item-content-body">',
+    `<ul class="timeline-wrap">${buildItem()}${buildItem()}</ul>`,
+    '</div></div>',
+    '</li>',
+    '</ul>'
+  ].join('')
+  const lists = Array.from(document.querySelectorAll('.timeline-wrap')) as HTMLElement[]
+  return { outer: lists[0], inner: lists[1] }
+}
+
 const HEAD_HALF_EXPR = 'var(--timeline-head-size, 10px) / 2'
 const HEAD_SIZE_HALF = `calc(${HEAD_HALF_EXPR})`
 const ALT_MARGIN = 'calc(50% + var(--timeline-alt-offset, 12px))'
@@ -269,7 +293,7 @@ beforeAll(async () => {
   const timelineCss = await less.render(readStyleBlock('timeline/Timeline.vue'))
   ROOT_DECLS.clear()
   for (const rule of parseRules(timelineCss.css)) {
-    if (rule.selectors.some((selector) => selector.startsWith('.timeline-wrap'))) {
+    if (rule.selectors.some(isRootSelector)) {
       for (const [property, value] of rule.decls) {
         if (property.startsWith('--timeline-')) {
           ROOT_DECLS.set(property, value)
@@ -414,5 +438,34 @@ describe('时间轴轴点默认值一致性', () => {
 
     expect(ROOT_DECLS.get('--timeline-head-border-width')).toBe('3px')
     expect(border).toContain('var(--timeline-head-border-width, 3px)')
+  })
+})
+
+describe('时间轴收尾留白的作用域', () => {
+  it('末项收尾留白独立成变量，且根上不留默认值', () => {
+    const { pick } = mount('', [{}, {}])
+
+    expect(winningValue(pick(1).li, 'padding-bottom')).toBe('var(--timeline-end-gap, var(--timeline-gap, 20px))')
+    // 写在根上会压掉祖先元素声明的同名变量，页面就再也无法单独调这条轴的收尾留白
+    expect(ROOT_DECLS.has('--timeline-end-gap')).toBe(false)
+  })
+
+  it('嵌套实例不承担整轴收尾：收尾留白与末项撑高归零，外层保持默认', () => {
+    const { outer, inner } = mountNested()
+
+    expect(winningValue(inner, '--timeline-end-gap')).toBe('0px')
+    expect(winningValue(inner, '--timeline-last-content-min-height')).toBe('0px')
+    expect(winningValue(outer, '--timeline-end-gap')).toBeUndefined()
+    expect(winningValue(outer, '--timeline-last-content-min-height')).toBeUndefined()
+  })
+
+  it('嵌套只关收尾不动节奏：内层项间距与末项内容高度规则保持原值', () => {
+    const { inner } = mountNested()
+    const innerLast = inner.querySelector(':scope > li:last-child') as HTMLElement
+    const innerLastContent = innerLast.querySelector('.timeline-item-content') as HTMLElement
+
+    expect(winningValue(inner, 'gap')).toBe('var(--timeline-gap)')
+    expect(winningValue(innerLast, 'padding-bottom')).toBe('var(--timeline-end-gap, var(--timeline-gap, 20px))')
+    expect(winningValue(innerLastContent, 'min-height')).toBe('var(--timeline-last-content-min-height, 48px)')
   })
 })

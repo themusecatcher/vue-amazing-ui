@@ -6,16 +6,15 @@ description: 赞助 Vue Amazing UI 组件库，支持项目持续迭代
 
 <GlobalElement hide-sponsor />
 
-`Vue Amazing UI` 是采用 `MIT` 许可的开源项目，使用完全免费。组件库与文档的全部工作均由作者一人独立完成，开发迭代实属不易。为了项目的健康可持续发展，非常期望能获得您的支持与赞助。
+`Vue Amazing UI` 是采用 `MIT` 许可的开源项目，使用完全免费。目前包含 `73` 个基础组件与 `16` 个工具函数，从组件设计、开发到文档站与演示页面均由作者一人维护。如果你在工作或项目中用到了它，欢迎请作者喝杯咖啡（金额随意），项目的持续迭代离不开每一位使用者的支持。
 
 <script setup lang="ts">
-import { ref, computed, h } from 'vue'
+import { ref, computed } from 'vue'
 import type { CSSProperties } from 'vue'
 import { HeartFilled, WechatOutlined, AlipayOutlined, UserOutlined } from '@ant-design/icons-vue'
 import { useMediaQuery } from 'vue-amazing-ui'
-import WeChat from '/wechat.jpg'
-import Alipay from '/alipay.jpg'
-import Avatar0 from '/avatar.png'
+import WeChat from '/wechat.png'
+import Alipay from '/alipay.png'
 import Avatar1 from '/avatar_1.jpeg'
 import Avatar2 from '/avatar_2.jpg'
 import Avatar3 from '/avatar_3.png'
@@ -26,7 +25,7 @@ import Avatar6 from '/avatar_6.jpg'
 interface Sponsor {
   platform: string // 赞助渠道
   name: string // 赞助者昵称
-  avatar?: string // 头像地址，缺省时展示默认图标
+  avatar?: string // 头像地址，未提供时由 Avatar 的 #icon 插槽兜底（跟随主题的默认头像）
   href?: string // 主页跳转地址
   needBorder?: boolean // 头像为透明底图片时，需要白底 + 描边衬托
 }
@@ -50,10 +49,11 @@ const sloganBodyStyle: CSSProperties = {
   color: 'var(--vp-c-text-1)',
   textAlign: 'center'
 }
-// 赞助渠道：标签颜色、图标、收款码集中一处，供移动端切换器与两端二维码渲染复用
+// 赞助渠道：标签颜色、图标、收款码集中一处，供移动端切换器与两端二维码渲染复用；
+// codeName 同时用作收款码的 alt 与预览标题（Image 的 name 属性），故用中文而非渠道英文名
 const sponsorPlatforms = [
-  { name: 'WeChat', color: '#07c160', icon: WechatOutlined, src: WeChat },
-  { name: 'Alipay', color: '#1677ff', icon: AlipayOutlined, src: Alipay }
+  { name: 'WeChat', codeName: '微信收款码', color: '#07c160', icon: WechatOutlined, src: WeChat },
+  { name: 'Alipay', codeName: '支付宝收款码', color: '#1677ff', icon: AlipayOutlined, src: Alipay }
 ]
 const sponsorOptions = sponsorPlatforms.map(item => ({
   label: item.name,
@@ -61,8 +61,6 @@ const sponsorOptions = sponsorPlatforms.map(item => ({
   payload: item
 }))
 const sponsorType = ref('WeChat')
-// 无头像的赞助者，统一以默认用户图标占位
-const userIcon = () => h(UserOutlined)
 const qrcodeSize = computed(() => (isMobile.value ? 200 : 240))
 // 卡片两端均拉通全宽（Card 默认 width: auto），二维码由 .qrcode-list 的 space-evenly 居中/均分
 const cardSize = computed(() => (isMobile.value ? 'middle' : 'large'))
@@ -80,7 +78,6 @@ const tipsGradient = {
   to: '#eb2f96'
 }
 const sponsors: Sponsor[] = [
-  { platform: 'GitHub', name: '@themusecatcher', avatar: Avatar0, href: 'https://github.com/themusecatcher' },
   { platform: 'WeChat', name: '@Ant', avatar: Avatar1 },
   { platform: 'GitHub', name: '@nizhensh-i', avatar: Avatar2, href: 'https://github.com/nizhensh-i' },
   { platform: 'GitHub', name: '@beijin1949', avatar: Avatar3, href: 'https://github.com/beijin1949', needBorder: true },
@@ -131,12 +128,18 @@ const sponsors: Sponsor[] = [
             </template>
             {{ platform.name }}
           </Tag>
-          <Image :src="platform.src" :width="qrcodeSize" :height="qrcodeSize" :name="platform.name" :bordered="false" />
+          <Image
+            :src="platform.src"
+            :width="qrcodeSize"
+            :height="qrcodeSize"
+            :name="platform.codeName"
+            :bordered="false"
+          />
         </div>
       </div>
     </Card>
   </ClientOnly>
-  <Alert class="sponsor-tips" type="info" :bordered="false" show-icon>
+  <Alert type="info" :bordered="false" show-icon>
     <template #icon>
       <HeartFilled class="tips-icon" />
     </template>
@@ -145,9 +148,9 @@ const sponsors: Sponsor[] = [
     </GradientText>
     <template #description>
       <ul class="tips-list">
-        <li>您的支持和赞助对我来说至关重要！</li>
-        <li>真诚感谢每一位现有的和未来的支持者和赞助者！</li>
-        <li>生命不息，迭代不止！未来，我将继续努力！</li>
+        <li>感谢每一位使用者、Issue 提交者与赞助者。</li>
+        <li>你们的支持是这个项目继续迭代的理由。</li>
+        <li>生命不息，迭代不止！</li>
       </ul>
     </template>
   </Alert>
@@ -157,7 +160,7 @@ const sponsors: Sponsor[] = [
 
 所有赞助者都将展示在这里，非常感谢你们的支持与赞助 ❤️❤️
 
-_可自定义展示个人头像、名称以及主页的跳转地址（只需将这些信息发送至右下角邮箱，稍待片刻 😉）_
+*名单排名不分先后，想出现在这里或希望匿名，把信息发到右下角邮箱即可*
 
 <Space class="sponsor-wall">
   <Tooltip v-for="sponsor in sponsors" :key="sponsor.name">
@@ -174,17 +177,20 @@ _可自定义展示个人头像、名称以及主页的跳转地址（只需将�
       :size="36"
       :src="sponsor.avatar"
       :alt="sponsor.name"
-      :icon="sponsor.avatar ? undefined : userIcon"
       :href="sponsor.href"
       :color="sponsor.needBorder ? '#fff' : undefined"
       target="_blank"
-    />
+    >
+      <template #icon>
+        <UserOutlined />
+      </template>
+    </Avatar>
   </Tooltip>
 </Space>
 
 <style scoped lang="less">
-// 标语与二维码卡片都复用 Card：Card 的背景色与边框色是写死的浅色值、不跟随主题，
-// 这里统一覆盖为跟随主题；页面样式在组件库样式之后加载，单类名即可覆盖，无需提升特异性
+// 标语与二维码卡片都复用 Card：Card 自身已按主题变量上色（--va-card-bg-color / --va-card-border-color），
+// 此处只是刻意去掉底色、让它与页面同色，仅保留描边；页面样式加载在组件库样式之后，单类名即可覆盖
 .sponsor-card {
   background: transparent;
   border-color: var(--vp-c-divider);
@@ -218,18 +224,16 @@ _可自定义展示个人头像、名称以及主页的跳转地址（只需将�
   font-size: 16px;
   font-weight: 500;
 }
-// 结语
-.sponsor-tips {
-  background-color: var(--vp-c-brand-dimm) !important;
-}
+// 结语：底色与暗色文字颜色交由 Alert 自身的主题变量处理，页面不再覆盖
 .tips-icon {
   font-size: 36px;
-  color: #cf1322;
+  color: var(--va-error-color);
 }
 .tips-list {
   margin: 0;
   padding-left: 20px;
-  font-size: 18px;
+  // 16px：整行放下单条文案，避免 18px 时每行只溢出 1~2 个字
+  font-size: 16px;
   font-weight: 500;
   li + li {
     margin-top: 4px;
@@ -239,11 +243,12 @@ _可自定义展示个人头像、名称以及主页的跳转地址（只需将�
 .sponsor-wall {
   margin-top: 24px;
 }
+// 悬停只做轻微放大：阴影光晕与相邻头像的间距抢空间（36px 放大 1.1 + 6px 光晕 ≈ 52px，会吃掉 16px 间隙），
+// 且一半赞助者没有主页链接，光晕会暗示可点击；过渡只作用于 transform，避免默认的 all 连带过渡描边与背景
 .sponsor-avatar {
-  transition: all 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  transition: transform 0.2s ease;
   &:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 3px 3px rgba(100, 108, 255, 0.12);
+    transform: scale(1.08);
   }
 }
 .sponsor-avatar-bordered {
@@ -251,13 +256,5 @@ _可自定义展示个人头像、名称以及主页的跳转地址（只需将�
 }
 .sponsor-tooltip {
   text-align: center;
-}
-// 暗色下 Alert 组件自身为浅色底 + 深色文字，此处跟随主题
-.dark .sponsor-tips {
-  background-color: var(--vp-c-default-soft) !important;
-  :deep(.alert-message),
-  :deep(.alert-description) {
-    color: var(--vp-c-text-1);
-  }
 }
 </style>

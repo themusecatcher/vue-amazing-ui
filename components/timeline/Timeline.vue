@@ -151,6 +151,12 @@ const pendingContent = computed(() => {
     animation: timeline-pending-rotate 1s linear infinite;
   }
 }
+// 嵌套在另一条时间轴里的实例只是外层内容的一部分：收尾留白与末项撑高描述的是「这条轴到此结束」，
+// 内层继承会在外层内容中间堆出一段无意义的空白，故内层一律按「无收尾」处理
+.timeline-wrap .timeline-wrap {
+  --timeline-end-gap: 0px;
+  --timeline-last-content-min-height: 0px;
+}
 @keyframes timeline-pending-rotate {
   to {
     transform: rotate(360deg);

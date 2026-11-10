@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { withBase } from 'vitepress'
 import { BgColorsOutlined } from '@ant-design/icons-vue'
 import MailSVG from './MailSVG.vue'
 import { THEME_SWATCHES, themePrimary } from '../theme-color'
@@ -23,6 +24,9 @@ const tooltipProps = {
 }
 // 邮箱气泡：地址需整行展示，故放宽最大宽度（默认 200 会把域名尾巴挤到第二行）
 const mailTooltipProps = { ...tooltipProps, maxWidth: 240 }
+// 赞助页是站内页面（docs/sponsor/charge.md）：走站内相对路径并在当前页打开，
+// 用绝对 URL + target=_blank 会在本地开发时跳出站点、线上则无谓多开一个标签页
+const sponsorHref = withBase('/sponsor/charge.html')
 const panelOpen = ref<boolean>(false) // 取色面板显隐（受控，用于连同气泡一起收起）
 // 面板限定 hex 模式：主题种子只接受不透明的 #rgb / #rrggbb，rgb() / hsl() 会被 ConfigProvider 判为非法并回退默认值
 const triggerHovered = ref<boolean>(false) // 触发器的鼠标悬停态
@@ -75,8 +79,7 @@ const themeTooltipProps = computed(() => ({
     type="primary"
     tooltip="成为赞助者 ✨"
     :tooltip-props="tooltipProps"
-    href="https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html"
-    target="_blank"
+    :href="sponsorHref"
   >
     <template #description>
       <span style="font-size: 14px; font-weight: 600">赞助</span>

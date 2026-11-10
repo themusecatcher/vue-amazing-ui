@@ -379,11 +379,12 @@ const itemClasses = computed(() => {
     text-align: start;
   }
 }
+// 收尾留白与项间距是两种语义（节点节奏 / 整轴收尾），独立成变量后嵌套实例才能只关掉收尾而不动节奏
 .timeline-wrap:not(.timeline-horizontal):not(.timeline-reverse) > .timeline-item-wrap:last-child {
-  padding-bottom: var(--timeline-gap, 20px);
+  padding-bottom: var(--timeline-end-gap, var(--timeline-gap, 20px));
 }
 .timeline-wrap.timeline-reverse:not(.timeline-horizontal) > .timeline-item-wrap:first-child {
-  padding-bottom: var(--timeline-gap, 20px);
+  padding-bottom: var(--timeline-end-gap, var(--timeline-gap, 20px));
 }
 .timeline-wrap:not(.timeline-reverse):not(.timeline-horizontal)
   > .timeline-item-wrap:last-child:not(.timeline-item-pending)

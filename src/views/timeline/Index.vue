@@ -237,7 +237,9 @@ const lineTypeOptions: { label: string; value: TimelineLineType }[] = [
     </Timeline>
     <h2 class="mt30 mb10">进行中与倒序</h2>
     <Flex vertical>
-      <Button type="primary" @click="reverse = !reverse">Toggle Reverse</Button>
+      <Space>
+        <Button type="primary" @click="reverse = !reverse">Toggle Reverse</Button>
+      </Space>
       <Timeline pending="Recording..." :reverse="reverse">
         <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
         <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
