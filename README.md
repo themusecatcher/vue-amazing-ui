@@ -6,8 +6,13 @@
 
 <h1 align="center">Vue Amazing UI</h1>
 <p align="center">A Vue 3 Component Library</p>
-<p align="center">Theme Customizable, Fully using TypeScript and SFC, Supports tree shaking.</p>
+<p align="center"><b>Theme Customizable, Light and Dark Themes, Written in TypeScript and SFC, Tree Shaking</b></p>
 <p align="center">Kinda Interesting</p>
+<p align="center">
+  <a href="https://www.npmjs.com/package/vue-amazing-ui"><img src="https://img.shields.io/npm/v/vue-amazing-ui" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/vue-amazing-ui"><img src="https://img.shields.io/npm/dm/vue-amazing-ui" alt="npm downloads"></a>
+  <a href="https://github.com/themusecatcher/vue-amazing-ui/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/vue-amazing-ui" alt="license"></a>
+</p>
 <p align="center">English | <a href="README.zh-CN.md">中文</a></p>
 
 ## Documentation
@@ -16,12 +21,13 @@
 
 ## Features
 
-- The component library is implemented with `Vue@3.5.44` + `TypeScript@5.9.3` + `Vite@7.3.7` + `Less@4.9.1`.
 - Currently, it includes `73` basic UI components and `16` utility functions, with continuous exploration and updates ongoing...
 - Theme Customizable, all you need is to provide a theme color, then all the stuffs will be done by me.
-- By the way, they are all treeshakable.
+- Supports light and dark themes; switch them manually, or let them follow the system theme automatically.
+- By the way, they are all tree-shakable.
 - All the stuff in Vue Amazing UI is written in TypeScript. It can work with your typescript project seamlessly.
-- All components are built in single file component `SFC` and can be used independently.
+- All components are single file components (`SFC`), so the source code can be used directly.
+- SSR-ready.
 - Ready to use out of the box, no fuss.
 
 ## Installation
@@ -180,10 +186,13 @@ import {
 
 _Modern browsers only (`Chrome` / `Edge` / `Safari` / `Firefox`). `Opera Mini`, `KaiOS` and `IE` are not supported — the first two cannot run `Vue 3`._
 
+- Requires `Vue >= 3.4`.
 - Exact minimum versions are listed in [Browser Support](https://themusecatcher.github.io/vue-amazing-ui/guide/getting-started.html).
 - A few visual enhancements rely on newer `CSS` features and degrade to an equivalent base layout on older engines, with functionality and accessibility unaffected.
 
 ## Project
+
+Tech stack: `Vue@3.5.44` + `TypeScript@5.9.3` + `Vite@7.3.7` + `Less@4.9.1`
 
 - Get the project code
 

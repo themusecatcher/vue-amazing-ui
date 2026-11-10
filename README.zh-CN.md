@@ -6,8 +6,13 @@
 
 <h1 align="center">Vue Amazing UI</h1>
 <p align="center">一个 Vue 3 组件库</p>
-<p align="center">主题可调，全量使用 TypeScript 和 SFC，支持 tree shaking</p>
+<p align="center"><b>主题可调，明暗双主题，全量使用 TypeScript 和 SFC，支持 tree shaking</b></p>
 <p align="center">有点意思</p>
+<p align="center">
+  <a href="https://www.npmjs.com/package/vue-amazing-ui"><img src="https://img.shields.io/npm/v/vue-amazing-ui" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/vue-amazing-ui"><img src="https://img.shields.io/npm/dm/vue-amazing-ui" alt="npm downloads"></a>
+  <a href="https://github.com/themusecatcher/vue-amazing-ui/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/vue-amazing-ui" alt="license"></a>
+</p>
 <p align="center"><a href="README.md">English</a> | 中文</p>
 
 ## 文档
@@ -16,12 +21,13 @@
 
 ## 特性
 
-- 组件库采用 `Vue@3.5.44` + `TypeScript@5.9.3` + `Vite@7.3.7` + `Less@4.9.1` 实现
 - 目前共包含 `73` 个基础 `UI` 组件以及 `16` 个工具函数，并且持续探索更新中...
 - 主题可调，你只需提供一个主题色，剩下的都交给我
+- 支持明暗双主题，可手动切换，也可跟随系统主题自动切换
 - 顺便一提，它们全都可以 `treeshaking`
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
-- 全部组件均采用单文件组件 `SFC`，可独立使用
+- 全部组件均为单文件组件 `SFC`，可直接使用源码
+- 支持服务端渲染
 - 开箱即用，不墨迹
 
 ## 安装
@@ -180,10 +186,13 @@ import {
 
 _仅支持现代浏览器（`Chrome` / `Edge` / `Safari` / `Firefox`）。不支持 `Opera Mini` / `KaiOS` / `IE` —— 前两者无法运行 `Vue 3`。_
 
+- 组件库要求 `Vue ≥ 3.4`
 - 具体最低版本见文档的[「浏览器支持」](https://themusecatcher.github.io/vue-amazing-ui/guide/getting-started.html)
 - 少数视觉增强依赖较新的 `CSS` 特性，更低的引擎上会退化为等价的基础布局，功能与可访问性不受影响
 
 ## 项目
+
+技术栈：`Vue@3.5.44` + `TypeScript@5.9.3` + `Vite@7.3.7` + `Less@4.9.1`
 
 - 获取项目代码
 

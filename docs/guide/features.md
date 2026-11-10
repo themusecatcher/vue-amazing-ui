@@ -1,5 +1,5 @@
 ---
-description: Amazing UI 组件库的核心特性——主题可调、按需引入、全量 TypeScript 与最新技术栈
+description: Amazing UI 组件库的核心特性——主题可调、明暗双主题、按需引入、全量 TypeScript 与 SFC 编写、支持服务端渲染
 ---
 
 # 特性
@@ -61,8 +61,9 @@ description: Amazing UI 组件库的核心特性——主题可调、按需引�
 - 主题可调，你只需提供一个主题色，剩下的都交给我
 - 顺便一提，它们全都可以 `treeshaking`
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
-- 全部组件均采用单文件组件 `SFC`，可独立使用
-- 所有组件已适配 `light` / `dark`，与文档站的明暗切换同源，切换即生效
+- 全部组件均为单文件组件 `SFC`，可直接使用源码
+- 支持明暗双主题，可手动切换，也可跟随系统主题自动切换，全部组件均已适配
+- 支持服务端渲染，详见[快速上手](/guide/getting-started#服务端渲染-ssr)
 - 开箱即用，不墨迹
 
 ## 主题系统
