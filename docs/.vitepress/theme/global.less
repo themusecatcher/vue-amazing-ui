@@ -146,10 +146,6 @@
   position: relative;
   top: -1px;
 }
-/* 组件演示区的用例标签（如 `<span class="demo-label">默认面板</span>`）：弱于正文的辅助说明，
-   跟随明暗主题取次要文字色。它属于文档站的排版约定而非某个组件的演示样式 ——
-   6 个组件页共 71 处复用，且文档站会把各 md 的 <style> 合并成同一份 CSS，
-   故在此统一定义（单一来源），各页面样式块里不再重复 */
 .demo-label {
   color: var(--vp-c-text-3);
   font-size: 13px;
@@ -234,6 +230,10 @@ h1 {
   background-image: linear-gradient(to right, #09c8ce, #eb2f96);
   margin-bottom: 20px;
 }
+// 首页 GitHub 按钮图标：与 VitePress 内置 vpi-social-github 同一套 path，
+// 用 mask + currentColor 上色，图标颜色随按钮文字与明暗主题变化
+@github-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='black' d='M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E");
+
 .VPHome {
   margin-bottom: 0 !important;
   padding-bottom: 104px !important;
@@ -250,18 +250,43 @@ h1 {
     display: flex;
     align-items: center;
   }
-  .name {
-    // 标题悬浮动画效果
-    transition: all 0.3s ease-in-out;
-    &:hover {
-      transform: scale(1.02);
-    }
+  .name.clip {
+    background-size: 200% 100%;
+    background-position: 0 0;
+    transition: background-position 0.9s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+  .name.clip:hover {
+    background-position: 100% 0;
   }
   .image-src {
-    transition: transform 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     &:hover {
-      transform: translate(-50%, -50%) scale(1.2);
+      transform: translate(-50%, -50%) scale(1.06) rotate(-3deg);
     }
+  }
+  .image-container {
+    animation: hero-image-float 7s ease-in-out infinite;
+  }
+  .image-bg {
+    animation: hero-glow-breathe 6s ease-in-out infinite;
+  }
+}
+@keyframes hero-glow-breathe {
+  0%,
+  100% {
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes hero-image-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
   }
 }
 .Layout {
@@ -394,15 +419,16 @@ h1 {
 }
 .VPNavBarTitle .title {
   color: rgba(0, 0, 0, 0.72);
-  transition: all 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  transition: color 0.25s;
+  // 文字整体不动，让 logo 转一下：整体 scale(1.1) 会让站名发虚，
+  // 而回弹曲线（0.34, 1.56, 0.64, 1）在松手时会轻微回弹，比线性缓动更「活」
   .VPImage {
-    transition: transform 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   &:hover {
-    transform: scale(1.1);
     color: #bd34fe;
     .VPImage {
-      transform: scale(1.1);
+      transform: rotate(-12deg) scale(1.12);
     }
   }
 }
@@ -418,8 +444,22 @@ h1 {
   .actions {
     .action {
       .VPButton {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
         border-color: transparent !important;
         border-radius: 12px !important;
+      }
+      // 只给 GitHub 按钮配品牌图标：主按钮保持纯文字 —— 装饰性箭头与 emoji
+      // 都会和品牌图标形成两套符号语言，而 GitHub 图标承担的是品牌识别，不能省
+      .VPButton.alt::before {
+        content: '';
+        flex: none;
+        width: 18px;
+        height: 18px;
+        background-color: currentcolor;
+        -webkit-mask: @github-icon no-repeat center / contain;
+        mask: @github-icon no-repeat center / contain;
       }
       .VPButton.brand {
         position: relative;
@@ -470,9 +510,12 @@ h1 {
 .dark {
   .VPHero {
     .actions .action {
+      // 暗色下次按钮用「低饱和浅色玻璃」而非黑色叠加：
+      // 黑底压在深色页面上会糊成一块空洞，与实心渐变的主按钮读作两种东西
       .VPButton.alt {
-        background-color: rgba(0, 0, 0, 0.45) !important;
+        background-color: rgba(255, 255, 255, 0.08) !important;
         &:hover {
+          background-color: rgba(255, 255, 255, 0.12) !important;
           border-color: rgb(9, 200, 206) !important;
           box-shadow: 0 0 3px 3px rgba(9, 200, 206, 0.12);
         }
@@ -513,11 +556,35 @@ h1 {
     align-items: flex-start;
     .item {
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      transition:
+        transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.45s;
       .VPFeature {
+        position: relative;
         border-radius: 32px;
         border: none;
-        transition: all 0.25s;
+        transition: box-shadow 0.4s;
+        // 悬停浮出渐变描边（Nuxt / Tailwind 文档站的常规做法）：
+        // border 无法承载渐变，用 mask 只保留 1px 边框环，内部保持透明
+        &::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          padding: 1px;
+          background-image: linear-gradient(120deg, #09c8ce, #eb2f96);
+          -webkit-mask:
+            linear-gradient(#000 0 0) content-box,
+            linear-gradient(#000 0 0);
+          -webkit-mask-composite: xor;
+          mask:
+            linear-gradient(#000 0 0) content-box,
+            linear-gradient(#000 0 0);
+          mask-composite: exclude;
+          opacity: 0;
+          transition: opacity 0.4s;
+          pointer-events: none;
+        }
         .icon,
         .title {
           font-size: 18px;
@@ -526,12 +593,15 @@ h1 {
         .details {
           font-size: 16px;
         }
+        // 图标单独一套回弹：整卡上浮负责「离开平面」，图标再补一次位移与倾斜，
+        // 两层动作错开，比整块缩放有层次（缩放还会让相邻卡片视觉重叠）
         .icon {
           width: 72px;
           height: 72px;
           font-size: 20px;
           font-weight: 700;
           border-radius: 24px;
+          transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
           .logo {
             width: 32px;
             height: 32px;
@@ -539,13 +609,18 @@ h1 {
         }
       }
       &:hover {
-        transform: scale(1.02);
-        transform-origin: 50%, 50%;
+        transform: translateY(-6px);
         .VPFeature {
           box-shadow:
             0 6px 16px 0 rgba(0, 0, 0, 0.08),
             0 3px 6px -4px rgba(0, 0, 0, 0.12),
             0 9px 28px 8px rgba(0, 0, 0, 0.05);
+          &::after {
+            opacity: 1;
+          }
+        }
+        .icon {
+          transform: translateY(-4px) rotate(-8deg) scale(1.08);
         }
       }
     }
