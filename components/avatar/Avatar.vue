@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { VNode } from 'vue'
+import type { Component, VNode } from 'vue'
 import { useSlotsExist, useWindowWidth } from 'components/utils'
 export interface Responsive {
   xs?: number // <576px 响应式栅格
@@ -17,7 +17,7 @@ export interface Props {
   size?: number | 'small' | 'middle' | 'large' | Responsive // 设置头像的大小，为数值时单位 px
   src?: string // 图片类头像资源地址
   alt?: string // 图片无法显示时的替代文本
-  icon?: VNode | (() => VNode) // 设置头像的图标，支持 VNode / 渲染函数；插槽形态请用 #icon
+  icon?: VNode | Component | (() => VNode) // 设置头像的图标，支持 VNode / 组件 / 渲染函数；插槽形态请用 #icon
   href?: string // 点击跳转的地址，指定此属性按钮的行为和 a 链接一致
   target?: '_self' | '_blank' // 相当于 a 标签的 target 属性，href 存在时生效
 }
@@ -129,7 +129,7 @@ const strStyle = computed(() => {
     ]"
     :style="avatarStyle"
     :href="href"
-    :target="target"
+    :target="href ? target : undefined"
   >
     <img v-if="src" class="image-item" :src="src" :alt="alt" />
     <slot v-if="!src && showIcon" name="icon">
