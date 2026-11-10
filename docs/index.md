@@ -35,7 +35,7 @@ features:
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { setLabel } from './.vitepress/utils/fetchVersion'
+import { setLabel } from './.vitepress/utils/versionLabel'
 import pkg from '../package.json'
 
 onMounted(() => {
