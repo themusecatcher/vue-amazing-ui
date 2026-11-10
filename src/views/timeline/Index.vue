@@ -226,6 +226,10 @@ const lineTypeOptions: { label: string; value: TimelineLineType }[] = [
       </Timeline>
     </Flex>
     <h2 class="mt30 mb10">嵌套时间轴</h2>
+    <p class="mb10">
+      嵌套在内容里的时间轴不保留整轴的收尾留白，末项内容也不再被撑高；需要给内层留出收尾间距时，在嵌套的那条时间轴上用
+      <code>--timeline-end-gap</code> 覆盖
+    </p>
     <Timeline>
       <TimelineItem title="Release" content="Create a services site" time="2025-06-24 10:10" color="success">
         <Timeline>

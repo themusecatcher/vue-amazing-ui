@@ -16,7 +16,9 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## 3.9.5 <span class="changelog-date">2026-11-10</span>
 
-- 优化 [时间轴 Timeline](/guide/components/timeline.html) 的嵌套布局：嵌套在内容里的时间轴不再额外保留整轴收尾的底部空白，末项内容也不再被强制撑高
+- 优化 [时间轴 Timeline](/guide/components/timeline.html) 的嵌套布局：嵌套在内容里的时间轴不再额外保留整轴收尾的底部空白，末项内容也不再被撑高
+- 放宽 [头像 Avatar](/guide/components/avatar.html) 的 `icon` 类型，可直接传入组件定义对象
+- 更新使用者文档
 - 组件库及文档代码优化
 
 ## 3.9.4 <span class="changelog-date">2026-11-09</span>

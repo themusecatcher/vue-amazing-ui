@@ -656,6 +656,10 @@ const horizontalReverse = ref(false)
 
 ## 嵌套时间轴
 
+_嵌套在内容里的时间轴不保留整轴的收尾留白，末项内容也不再被撑高；需要给内层留出收尾间距时，在嵌套的那条时间轴上用 `--timeline-end-gap` 覆盖_
+
+<br/>
+
 <Timeline>
   <TimelineItem title="Release" content="Create a services site" time="2025-06-24 10:10" color="success">
     <Timeline>

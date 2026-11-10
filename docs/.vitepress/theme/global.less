@@ -146,6 +146,10 @@
   position: relative;
   top: -1px;
 }
+/* 组件演示区的用例标签（如 `<span class="demo-label">默认面板</span>`）：弱于正文的辅助说明，
+   跟随明暗主题取次要文字色。它属于文档站的排版约定而非某个组件的演示样式 ——
+   6 个组件页共 71 处复用，且文档站会把各 md 的 <style> 合并成同一份 CSS，
+   故在此统一定义（单一来源），各页面样式块里不再重复 */
 .demo-label {
   color: var(--vp-c-text-3);
   font-size: 13px;
@@ -287,6 +291,16 @@ h1 {
   }
   50% {
     transform: translateY(-10px);
+  }
+}
+// 首屏的浮动与呼吸是持续循环的装饰动效，系统开启「减少动态效果」时停用；
+// 悬停反馈由用户主动触发，不在此列
+@media (prefers-reduced-motion: reduce) {
+  .VPHero {
+    .image-container,
+    .image-bg {
+      animation: none;
+    }
   }
 }
 .Layout {
@@ -450,8 +464,8 @@ h1 {
         border-color: transparent !important;
         border-radius: 12px !important;
       }
-      // 只给 GitHub 按钮配品牌图标：主按钮保持纯文字 —— 装饰性箭头与 emoji
-      // 都会和品牌图标形成两套符号语言，而 GitHub 图标承担的是品牌识别，不能省
+      // 只给 GitHub 按钮配品牌图标：品牌识别不能省，主按钮则保持纯文案（文案里的 emoji
+      // 属点缀，不构成第二套符号语言）；图标经 ::before 占位，与文案的间距由上面的 gap 统一
       .VPButton.alt::before {
         content: '';
         flex: none;
