@@ -192,7 +192,7 @@ _仅支持现代浏览器（`Chrome` / `Edge` / `Safari` / `Firefox`）。不支
 
 ## 项目
 
-技术栈：`Vue@3.5.44` + `TypeScript@5.9.3` + `Vite@7.3.7` + `Less@4.9.1`
+技术栈：`Vue@3.5.45` + `TypeScript@5.9.3` + `Vite@7.3.7` + `Less@4.9.1`
 
 - 获取项目代码
 
@@ -240,7 +240,7 @@ pnpm docs:dev
 
 所有的赞助者都将出现在此处，非常感谢你们的支持与赞助 ❤️
 
-<a href="https://github.com/themusecatcher" target="_blank"><img width="64" height="64" src="./docs/public/avatar.png" alt="GitHub@themusecatcher" title="GitHub@themusecatcher"></a> <img width="64" height="64" src="./docs/public/avatar_1.jpeg" alt="WeChat@Ant" title="WeChat@Ant" /> <a href="https://github.com/nizhensh-i" target="_blank"><img width="64" height="64" src="./docs/public/avatar_2.jpg" alt="GitHub@nizhensh-i" title="GitHub@nizhensh-i"></a> <a href="https://github.com/beijin1949" target="_blank"><img width="64" height="64" src="./docs/public/avatar_3.png" alt="GitHub@beijin1949" title="GitHub@beijin1949"></a> <a href="https://github.com/JinZemin" target="_blank"><img width="64" height="64" src="./docs/public/avatar_4.png" alt="GitHub@JinZemin" title="GitHub@JinZemin"></a> <a href="https://github.com/ye5840" target="_blank"><img width="64" height="64" src="./docs/public/avatar_5.png" alt="GitHub@ye5840" title="GitHub@ye5840"></a><img width="64" height="64" src="./docs/public/avatar_6.jpg" alt="WeChat@**洋" title="WeChat@**洋">
+<img width="64" height="64" src="./docs/public/avatar_1.jpeg" alt="WeChat@Ant" title="WeChat@Ant" /> <a href="https://github.com/nizhensh-i" target="_blank"><img width="64" height="64" src="./docs/public/avatar_2.jpg" alt="GitHub@nizhensh-i" title="GitHub@nizhensh-i"></a> <a href="https://github.com/beijin1949" target="_blank"><img width="64" height="64" src="./docs/public/avatar_3.png" alt="GitHub@beijin1949" title="GitHub@beijin1949"></a> <a href="https://github.com/JinZemin" target="_blank"><img width="64" height="64" src="./docs/public/avatar_4.png" alt="GitHub@JinZemin" title="GitHub@JinZemin"></a> <a href="https://github.com/ye5840" target="_blank"><img width="64" height="64" src="./docs/public/avatar_5.png" alt="GitHub@ye5840" title="GitHub@ye5840"></a><img width="64" height="64" src="./docs/public/avatar_6.jpg" alt="WeChat@**洋" title="WeChat@**洋"> <img width="64" height="64" src="./docs/public/avatar_default.svg" alt="WeChat@*梦" title="WeChat@*梦"> <img width="64" height="64" src="./docs/public/avatar_default.svg" alt="Alipay@**山" title="Alipay@**山">
 
 ## 组件
 
