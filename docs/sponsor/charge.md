@@ -6,7 +6,15 @@ description: 赞助 Vue Amazing UI 组件库，支持项目持续迭代
 
 <GlobalElement hide-sponsor />
 
-`Vue Amazing UI` 是采用 `MIT` 许可的开源项目，使用完全免费。目前包含 `73` 个基础组件与 `16` 个工具函数，从组件设计、开发到文档站与演示页面均由作者一人维护。如果你在工作或项目中用到了它，欢迎请作者喝杯咖啡（金额随意），项目的持续迭代离不开每一位使用者的支持。
+<div class="sponsor-intro">
+
+`Vue Amazing UI` 是采用 `MIT` 许可的开源项目，个人与商业使用均**免费**。
+
+目前包含 **73** 个基础组件与 **16** 个工具函数，从设计、开发到文档站与演示页面，全部由作者一人维护。
+
+如果这个组件库对你的工作或项目有帮助，欢迎请作者喝杯咖啡（金额随意），项目的持续迭代离不开每一位使用者的支持。
+
+</div>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
@@ -189,6 +197,13 @@ const sponsors: Sponsor[] = [
 </Space>
 
 <style scoped lang="less">
+// 导语三段的段落间距：文档站全局把 .vp-doc p 的 margin 置 0（global.less），
+// 不补回来三段会粘成一整块；:deep 是因为 markdown 生成的 p 不一定带页面 scope 属性
+.sponsor-intro {
+  :deep(p + p) {
+    margin-top: 12px;
+  }
+}
 // 标语与二维码卡片都复用 Card：Card 自身已按主题变量上色（--va-card-bg-color / --va-card-border-color），
 // 此处只是刻意去掉底色、让它与页面同色，仅保留描边；页面样式加载在组件库样式之后，单类名即可覆盖
 .sponsor-card {
