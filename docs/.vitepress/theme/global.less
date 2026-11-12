@@ -238,6 +238,13 @@ h1 {
 // 用 mask + currentColor 上色，图标颜色随按钮文字与明暗主题变化
 @github-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='black' d='M12 .297c-6.63 0-12 5.373-12 12c0 5.303 3.438 9.8 8.205 11.385c.6.113.82-.258.82-.577c0-.285-.01-1.04-.015-2.04c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729c1.205.084 1.838 1.236 1.838 1.236c1.07 1.835 2.809 1.305 3.495.998c.108-.776.417-1.305.76-1.605c-2.665-.3-5.466-1.332-5.466-5.93c0-1.31.465-2.38 1.235-3.22c-.135-.303-.54-1.523.105-3.176c0 0 1.005-.322 3.3 1.23c.96-.267 1.98-.399 3-.405c1.02.006 2.04.138 3 .405c2.28-1.552 3.285-1.23 3.285-1.23c.645 1.653.24 2.873.12 3.176c.765.84 1.23 1.91 1.23 3.22c0 4.61-2.805 5.625-5.475 5.92c.42.36.81 1.096.81 2.22c0 1.606-.015 2.896-.015 3.286c0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E");
 
+// 首屏两个按钮共用的一档悬停/聚焦光晕：青、品红两层叠加。
+// 主按钮的填充与次按钮的描边都是「青→品红」，光晕若固定单一色，转到另一端时
+// 就会和主体不同调；两层各占一半透明度，光晕里两色都在。两处共用一份，避免各自漂移
+@hero-button-glow:
+  0 0 3px 2px rgba(9, 200, 206, 0.1),
+  0 0 8px 3px rgba(235, 47, 150, 0.08);
+
 .VPHome {
   margin-bottom: 0 !important;
   padding-bottom: 104px !important;
@@ -254,13 +261,36 @@ h1 {
     display: flex;
     align-items: center;
   }
-  .name.clip {
-    background-size: 200% 100%;
-    background-position: 0 0;
-    transition: background-position 0.9s cubic-bezier(0.33, 1, 0.68, 1);
+  // 首屏主标题的逐字悬停动效：字与配色由 docs/.vitepress/utils/heroTitle.ts 拆分写入
+  // 单词壳：逐字拆开后任意两字之间都是换行点，窄屏会断成「Vue Amazin / g UI」，
+  // 包一层不可断的单词壳把断行点交还给空格
+  .name .hero-word {
+    display: inline-block;
+    white-space: nowrap;
   }
-  .name.clip:hover {
+  .name .hero-char {
+    display: inline-block;
+    background-image: linear-gradient(to right, var(--c0), var(--c1));
+    background-size: 200% 100%;
+    background-position: 0% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    transition:
+      transform 0.62s cubic-bezier(0.34, 1.56, 0.64, 1),
+      background-position 0.62s ease,
+      text-shadow 0.45s ease;
+    transition-delay: calc(var(--i) * 24ms);
+  }
+  .name:hover .hero-char {
+    // 位移 + 奇偶交错倾斜 + 轻微放大：比整块缩放有层次，也不会互相挤压
+    transform: translateY(-0.12em) scale(1.08) rotate(calc(var(--dir) * 3deg));
+    // 渐变后移，字色在波浪里从紫向青「流过」一轮
     background-position: 100% 0;
+    // 柔光取每个字自己渐变的暖端（--glow），随字色一起流动，
+    // 不再用一个固定色硬套整条渐变
+    text-shadow: 0 0.06em 0.14em var(--glow);
   }
   .image-src {
     transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -293,14 +323,21 @@ h1 {
     transform: translateY(-10px);
   }
 }
-// 首屏的浮动与呼吸是持续循环的装饰动效，系统开启「减少动态效果」时停用；
-// 悬停反馈由用户主动触发，不在此列
-@media (prefers-reduced-motion: reduce) {
-  .VPHero {
-    .image-container,
-    .image-bg {
-      animation: none;
-    }
+// 次按钮描边的「旋转流动」需要一个可插值的角度：自定义属性默认是字符串替换、在关键帧里
+// 只能跳变，用 `@property` 注册成 <angle> 后才能从 0deg 连续转到 360deg。
+// 不支持 @property 的浏览器会退回元素上声明的静态 0deg（一圈静止渐变），不影响可用性
+@property --alt-ring-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+// 一圈转满 360°，首尾同色，接缝处颜色一致，循环没有跳变
+@keyframes alt-ring-rotate {
+  from {
+    --alt-ring-angle: 0deg;
+  }
+  to {
+    --alt-ring-angle: 360deg;
   }
 }
 .Layout {
@@ -463,6 +500,13 @@ h1 {
         gap: 8px;
         border-color: transparent !important;
         border-radius: 12px !important;
+        // 键盘 Tab 聚焦：`:focus-visible` 只在键盘导航时命中，鼠标点击不会留下焦点环。
+        // 外扩 3px 的实色环是必需的 —— 次按钮那圈 1px 渐变太细，单靠它不足以成为
+        // 一眼可辨的焦点指示
+        &:focus-visible {
+          outline: 2px solid #eb2f96;
+          outline-offset: 3px;
+        }
       }
       // 只给 GitHub 按钮配品牌图标：品牌识别不能省，主按钮则保持纯文案（文案里的 emoji
       // 属点缀，不构成第二套符号语言）；图标经 ::before 占位，与文案的间距由上面的 gap 统一
@@ -476,34 +520,54 @@ h1 {
         mask: @github-icon no-repeat center / contain;
       }
       .VPButton.brand {
-        position: relative;
-        isolation: isolate;
         font-weight: 700;
         border: none;
         background-color: transparent;
-        background-image: linear-gradient(to right, #09c8ce, #eb2f96);
-        transition: box-shadow 0.25s;
+        // 三段渐变两端同色收尾 + 200% 宽：静置时窗口正好盖住前两段（青→品红），
+        // 悬停时整条渐变横向平移一个按钮宽，窗口换成后两段（品红→青）
+        // —— 原来的做法是「两个反向渐变交叉淡入」，交叉到中点两侧都成了同一团发灰的
+        // 混色，深浅对比一起塌陷，读起来就是一次突变；平移则是颜色连续流动，不塌陷
+        background-image: linear-gradient(to right, #09c8ce, #eb2f96, #09c8ce);
+        background-size: 200% 100%;
+        background-position: 0% 0;
+        transition:
+          background-position 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.35s ease;
 
+        &:hover,
+        &:focus-visible {
+          background-position: 100% 0;
+          box-shadow: @hero-button-glow;
+        }
+      }
+      .VPButton.alt {
+        position: relative;
         &::after {
           content: '';
           position: absolute;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          z-index: -1;
+          inset: 0;
+          padding: 1px;
           border-radius: inherit;
-          background-image: linear-gradient(to right, #eb2f96, #09c8ce);
+          --alt-ring-angle: 0deg;
+          background-image: conic-gradient(from var(--alt-ring-angle), #09c8ce, #eb2f96, #09c8ce);
+          -webkit-mask:
+            linear-gradient(#000 0 0) content-box,
+            linear-gradient(#000 0 0);
+          -webkit-mask-composite: xor;
+          mask:
+            linear-gradient(#000 0 0) content-box,
+            linear-gradient(#000 0 0);
+          mask-composite: exclude;
           opacity: 0;
-          transition: opacity 0.25s;
+          transition: opacity 0.35s ease;
+          animation: alt-ring-rotate 3s linear infinite;
+          animation-play-state: paused;
+          pointer-events: none;
         }
-
-        &:hover {
-          box-shadow: 0 0 3px 3px rgba(65, 209, 255, 0.12);
-        }
-
-        &:hover::after {
+        &:hover::after,
+        &:focus-visible::after {
           opacity: 1;
+          animation-play-state: running;
         }
       }
     }
@@ -513,9 +577,9 @@ h1 {
         transition: all 0.25s;
       }
       .VPButton.alt {
-        &:hover {
-          border-color: #eb2f96 !important;
-          box-shadow: 0 0 3px 3px rgba(235, 47, 150, 0.12);
+        &:hover,
+        &:focus-visible {
+          box-shadow: @hero-button-glow;
         }
       }
     }
@@ -524,16 +588,39 @@ h1 {
 .dark {
   .VPHero {
     .actions .action {
+      // 焦点环在暗色下用品红会在深底上发闷，换成同色系的青（与悬停辉光同一取值）
+      .VPButton:focus-visible {
+        outline-color: #09c8ce;
+      }
       // 暗色下次按钮用「低饱和浅色玻璃」而非黑色叠加：
       // 黑底压在深色页面上会糊成一块空洞，与实心渐变的主按钮读作两种东西
+      // 光晕沿用上面那组双色，暗色只额外提亮底色
       .VPButton.alt {
         background-color: rgba(255, 255, 255, 0.08) !important;
-        &:hover {
+        &:hover,
+        &:focus-visible {
           background-color: rgba(255, 255, 255, 0.12) !important;
-          border-color: rgb(9, 200, 206) !important;
-          box-shadow: 0 0 3px 3px rgba(9, 200, 206, 0.12);
         }
       }
+    }
+  }
+}
+// 首屏的浮动与呼吸是持续循环的装饰动效，系统开启「减少动态效果」时停用
+@media (prefers-reduced-motion: reduce) {
+  .VPHero {
+    .image-container,
+    .image-bg {
+      animation: none;
+    }
+    .name .hero-char {
+      transition: background-position 0.4s ease;
+      transition-delay: 0s;
+    }
+    .name:hover .hero-char {
+      transform: none;
+    }
+    .actions .action .VPButton.alt::after {
+      animation: none;
     }
   }
 }
@@ -566,10 +653,12 @@ h1 {
   }
 }
 .VPFeatures .container {
+  // 不覆盖 align-items：VPFeature 与 .box 自带 height: 100%，靠弹性默认的 stretch 让三卡等高；
+  // 写成 flex-start 会关掉等高，文案行数一变（2 行 / 3 行）卡片底边立刻参差
   .items {
-    align-items: flex-start;
     .item {
-      cursor: pointer;
+      // 不设 cursor: pointer：卡片本身不可点击（未配 link），手型光标会承诺一个不存在的动作；
+      // 悬停上浮与渐变描边保留，作为「注视」反馈而非「可点」反馈
       transition:
         transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
         box-shadow 0.45s;

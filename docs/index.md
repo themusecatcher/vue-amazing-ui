@@ -8,7 +8,7 @@ description: 基于 Vue3 + TypeScript + Vite 开发的 Amazing UI 组件库，�
 hero:
   name: Vue Amazing UI
   text: Amazing UI 组件库
-  tagline: 基于 Vue3 + TypeScript + Vite 开发
+  tagline: Vue3 + TypeScript + Vite 开发
   image:
     src: /amazing-logo.svg
     alt: Vue Amazing UI
@@ -22,7 +22,7 @@ hero:
 features:
   - icon: 💡
     title: 最新技术
-    details: '基于 Vue@3.5.45、TypeScript@5.9.3、Vite@7.3.7 等最新技术栈开发'
+    details: '基于 Vue@3.5.45 · TypeScript@5.9.3 · Vite@7.3.7 等最新技术栈'
   - icon: 🚀
     title: 开箱即用
     details: 目前共包含 73 个基础 UI 组件以及 16 个工具函数，持续探索更新中
@@ -36,9 +36,11 @@ features:
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { setLabel } from './.vitepress/utils/versionLabel'
+import { setupHeroTitleAnimation } from './.vitepress/utils/heroTitle'
 import pkg from '../package.json'
 
 onMounted(() => {
   setLabel(pkg.version)
+  setupHeroTitleAnimation()
 })
 </script>
