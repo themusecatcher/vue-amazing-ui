@@ -114,12 +114,12 @@ export default defineConfig({
     ['meta', { property: 'og:image:type', content: 'image/png' }],
     ['meta', { property: 'og:image:width', content: '1200' }],
     ['meta', { property: 'og:image:height', content: '630' }],
-    ['meta', { property: 'og:image:alt', content: 'Vue Amazing UI — Amazing UI 组件库' }],
+    ['meta', { property: 'og:image:alt', content: 'Vue Amazing UI — Vue 3 + TypeScript + Vite 组件库' }],
     ['meta', { property: 'og:locale', content: 'zh_CN' }],
     // 卡片协议沿用 twitter: 前缀，X 更名后未改（不存在 x:card，改写会失效）
     ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
     ['meta', { name: 'twitter:image', content: OG_IMAGE_URL }],
-    ['meta', { name: 'twitter:image:alt', content: 'Vue Amazing UI — Amazing UI 组件库' }]
+    ['meta', { name: 'twitter:image:alt', content: 'Vue Amazing UI — Vue 3 + TypeScript + Vite 组件库' }]
   ],
 
   // 页面级描述：frontmatter 手写优先，缺省时从文档正文提取，都取不到则由 VitePress 回退站点描述

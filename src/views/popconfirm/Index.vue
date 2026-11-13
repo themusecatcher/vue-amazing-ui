@@ -58,7 +58,7 @@ const openControlOpen = ref(false)
       <template #title>
         <a href="https://themusecatcher.github.io/vue-amazing-ui/" target="_blank">Vue Amazing UI</a>
       </template>
-      <template #description> An Amazing Vue3 UI Components Library </template>
+      <template #description> An Amazing Vue 3 UI Component Library </template>
       <template #icon>
         <FireFilled style="color: #d4380d" />
       </template>

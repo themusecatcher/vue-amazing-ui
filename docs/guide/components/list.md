@@ -14,22 +14,22 @@ import { UserOutlined, StarOutlined, LikeOutlined, MessageOutlined } from '@ant-
 const listData = ref([
   {
     title: 'Vue Amazing UI Title 1',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 2',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 3',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 4',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   }
 ])
@@ -37,28 +37,28 @@ const bordered = ref(true)
 const simpleListData = ref([
   {
     title: 'Vue Amazing UI Title 1',
-    description: 'An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 2',
-    description: 'An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 3',
-    description: 'An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 4',
-    description: 'An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue 3 UI Component Library.',
     content: 'content'
   }
 ])
 const simpleList = ref([
   'Vue Amazing UI is developed using TypeScript',
-  'An Amazing Vue3 UI Components Library',
+  'An Amazing Vue 3 UI Component Library',
   'Streamline web development with Vue Amazing UI',
   'Incredible Vue components for modern web design',
   'Transform your Vue interface with Vue Amazing UI'
@@ -85,7 +85,7 @@ for (let i = 1; i <= 8; i++) {
     href: 'https://themusecatcher.github.io/vue-amazing-ui/',
     title: `Vue Amazing UI part ${i}`,
     avatar: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content:
       'Vue Amazing UI supplies streamline web development, incredible Vue components for modern web design and transform your Vue interface completely.'
   })
@@ -108,7 +108,7 @@ for (let i = 1; i <= 30; i++) {
   allConfigListData.value.push({
     href: 'https://themusecatcher.github.io/vue-amazing-ui/',
     title: `Vue Amazing UI Title ${i}`,
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'Incredible Vue components for modern web design'
   })
 }
@@ -167,22 +167,22 @@ import { ref } from 'vue'
 const listData = ref([
   {
     title: 'Vue Amazing UI Title 1',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 2',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 3',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 4',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   }
 ])
@@ -224,22 +224,22 @@ import { ref } from 'vue'
 const listData = ref([
   {
     title: 'Vue Amazing UI Title 1',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 2',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 3',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 4',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   }
 ])
@@ -292,22 +292,22 @@ import { ref } from 'vue'
 const listData = ref([
   {
     title: 'Vue Amazing UI Title 1',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 2',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 3',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 4',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   }
 ])
@@ -384,28 +384,28 @@ import { ref } from 'vue'
 const simpleListData = ref([
   {
     title: 'Vue Amazing UI Title 1',
-    description: 'An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 2',
-    description: 'An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 3',
-    description: 'An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 4',
-    description: 'An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue 3 UI Component Library.',
     content: 'content'
   }
 ])
 const simpleList = ref([
   'Vue Amazing UI is developed using TypeScript',
-  'An Amazing Vue3 UI Components Library',
+  'An Amazing Vue 3 UI Component Library',
   'Streamline web development with Vue Amazing UI',
   'Incredible Vue components for modern web design',
   'Transform your Vue interface with Vue Amazing UI'
@@ -506,28 +506,28 @@ import { ref } from 'vue'
 const simpleListData = ref([
   {
     title: 'Vue Amazing UI Title 1',
-    description: 'An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 2',
-    description: 'An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 3',
-    description: 'An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 4',
-    description: 'An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue 3 UI Component Library.',
     content: 'content'
   }
 ])
 const simpleList = ref([
   'Vue Amazing UI is developed using TypeScript',
-  'An Amazing Vue3 UI Components Library',
+  'An Amazing Vue 3 UI Component Library',
   'Streamline web development with Vue Amazing UI',
   'Incredible Vue components for modern web design',
   'Transform your Vue interface with Vue Amazing UI'
@@ -626,28 +626,28 @@ import { ref } from 'vue'
 const simpleListData = ref([
   {
     title: 'Vue Amazing UI Title 1',
-    description: 'An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 2',
-    description: 'An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 3',
-    description: 'An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 4',
-    description: 'An Amazing Vue3 UI Components Library.',
+    description: 'An Amazing Vue 3 UI Component Library.',
     content: 'content'
   }
 ])
 const simpleList = ref([
   'Vue Amazing UI is developed using TypeScript',
-  'An Amazing Vue3 UI Components Library',
+  'An Amazing Vue 3 UI Component Library',
   'Streamline web development with Vue Amazing UI',
   'Incredible Vue components for modern web design',
   'Transform your Vue interface with Vue Amazing UI'
@@ -712,22 +712,22 @@ import { ref } from 'vue'
 const listData = ref([
   {
     title: 'Vue Amazing UI Title 1',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 2',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 3',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 4',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   }
 ])
@@ -798,22 +798,22 @@ import { UserOutlined } from '@ant-design/icons-vue'
 const listData = ref([
   {
     title: 'Vue Amazing UI Title 1',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 2',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 3',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   },
   {
     title: 'Vue Amazing UI Title 4',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'content'
   }
 ])
@@ -918,7 +918,7 @@ for (let i = 1; i <= 8; i++) {
     href: 'https://themusecatcher.github.io/vue-amazing-ui/',
     title: `Vue Amazing UI part ${i}`,
     avatar: 'https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.0.5/1.jpg',
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content:
       'Vue Amazing UI supplies streamline web development, incredible Vue components for modern web design and transform your Vue interface completely.'
   })
@@ -1068,7 +1068,7 @@ for (let i = 1; i <= 30; i++) {
   allConfigListData.value.push({
     href: 'https://themusecatcher.github.io/vue-amazing-ui/',
     title: `Vue Amazing UI Title ${i}`,
-    description: 'Vue Amazing UI, An Amazing Vue3 UI Components Library.',
+    description: 'Vue Amazing UI, An Amazing Vue 3 UI Component Library.',
     content: 'Incredible Vue components for modern web design'
   })
 }

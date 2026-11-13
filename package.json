@@ -5,23 +5,26 @@
   "type": "module",
   "author": "theMuseCatcher",
   "homepage": "https://themusecatcher.github.io/vue-amazing-ui",
-  "description": "An Amazing Vue3 UI Components Library, Using TypeScript.",
+  "description": "An Amazing Vue 3 UI Component Library with 73 components and 16 utility functions — theme customizable, light and dark themes, written in TypeScript and SFC, tree-shakable, SSR-ready. Kinda Interesting 😎",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/themusecatcher/vue-amazing-ui.git"
   },
   "keywords": [
-    "Vue3",
-    "TypeScript",
-    "Vite",
-    "Less",
-    "SFC",
-    "Amazing",
-    "UI",
-    "Components",
-    "Tools",
-    "Functions",
-    "Tree Shaking"
+    "vue",
+    "vue3",
+    "vue-components",
+    "vue-component-library",
+    "ui-components",
+    "component-library",
+    "typescript",
+    "vite",
+    "less",
+    "tree-shaking",
+    "ssr",
+    "dark-mode",
+    "composables",
+    "sfc"
   ],
   "files": [
     "dist",

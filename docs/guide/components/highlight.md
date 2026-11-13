@@ -10,8 +10,8 @@ _用过搜索引擎的都知道我是做什么的_
 
 <script setup lang="ts">
 import { ref } from 'vue'
-const text = ref('Vue Amazing UI 是一个 Vue3 的组件库，主题可调，全量使用 TypeScript 和 SFC，支持 tree shaking，有点意思')
-const patterns = ref(['Vue Amazing UI', 'Vue3', 'TypeScript', 'SFC', 'tree shaking'])
+const text = ref('Vue Amazing UI 是一个 Vue 3 的组件库，主题可调，全量使用 TypeScript 和 SFC，支持 tree shaking，有点意思')
+const patterns = ref(['Vue Amazing UI', 'Vue 3', 'TypeScript', 'SFC', 'tree shaking'])
 </script>
 
 ## 基本使用
@@ -24,9 +24,9 @@ const patterns = ref(['Vue Amazing UI', 'Vue3', 'TypeScript', 'SFC', 'tree shaki
 <script setup lang="ts">
 import { ref } from 'vue'
 const text = ref(
-  'Vue Amazing UI 是一个 Vue3 的组件库，主题可调，全量使用 TypeScript 和 SFC，支持 tree shaking，有点意思'
+  'Vue Amazing UI 是一个 Vue 3 的组件库，主题可调，全量使用 TypeScript 和 SFC，支持 tree shaking，有点意思'
 )
-const patterns = ref(['Vue Amazing UI', 'Vue3', 'TypeScript', 'SFC', 'tree shaking'])
+const patterns = ref(['Vue Amazing UI', 'Vue 3', 'TypeScript', 'SFC', 'tree shaking'])
 </script>
 <template>
   <Highlight :text="text" :patterns="patterns" />
@@ -108,9 +108,9 @@ const patterns = ref(['Vue Amazing UI', 'Vue3', 'TypeScript', 'SFC', 'tree shaki
 <script setup lang="ts">
 import { ref } from 'vue'
 const text = ref(
-  'Vue Amazing UI 是一个 Vue3 的组件库，主题可调，全量使用 TypeScript 和 SFC，支持 tree shaking，有点意思'
+  'Vue Amazing UI 是一个 Vue 3 的组件库，主题可调，全量使用 TypeScript 和 SFC，支持 tree shaking，有点意思'
 )
-const patterns = ref(['Vue Amazing UI', 'Vue3', 'TypeScript', 'SFC', 'tree shaking'])
+const patterns = ref(['Vue Amazing UI', 'Vue 3', 'TypeScript', 'SFC', 'tree shaking'])
 </script>
 <template>
   <Highlight
