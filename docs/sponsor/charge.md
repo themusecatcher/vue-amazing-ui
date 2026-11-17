@@ -23,12 +23,12 @@ import { HeartFilled, WechatOutlined, AlipayOutlined, UserOutlined } from '@ant-
 import { useMediaQuery } from 'vue-amazing-ui'
 import WeChat from '/wechat.png'
 import Alipay from '/alipay.png'
-import Avatar1 from '/avatar_1.jpeg'
-import Avatar2 from '/avatar_2.jpg'
-import Avatar3 from '/avatar_3.png'
-import Avatar4 from '/avatar_4.png'
-import Avatar5 from '/avatar_5.png'
-import Avatar6 from '/avatar_6.jpg'
+import Avatar1 from '/avatar_1.webp'
+import Avatar2 from '/avatar_2.webp'
+import Avatar3 from '/avatar_3.webp'
+import Avatar4 from '/avatar_4.webp'
+import Avatar5 from '/avatar_5.webp'
+import Avatar6 from '/avatar_6.webp'
 // 赞助者名单
 interface Sponsor {
   platform: string // 赞助渠道
@@ -157,7 +157,7 @@ const sponsors: Sponsor[] = [
     <template #description>
       <ul class="tips-list">
         <li>感谢每一位使用者、Issue 提交者与赞助者。</li>
-        <li>你们的支持是这个项目继续迭代的理由。</li>
+        <li>你们的支持是这个项目继续更新的最大动力。</li>
         <li>生命不息，迭代不止！</li>
       </ul>
     </template>
@@ -170,7 +170,7 @@ const sponsors: Sponsor[] = [
 
 *名单排名不分先后，想出现在这里或希望匿名，把信息发到右下角邮箱即可*
 
-<Space class="sponsor-wall">
+<Space gap="small" class="sponsor-wall">
   <Tooltip v-for="sponsor in sponsors" :key="sponsor.name">
     <template #tooltip>
       <div class="sponsor-tooltip">
@@ -182,7 +182,7 @@ const sponsors: Sponsor[] = [
     <Avatar
       class="sponsor-avatar"
       :class="{ 'sponsor-avatar-bordered': sponsor.needBorder }"
-      :size="36"
+      :size="48"
       :src="sponsor.avatar"
       :alt="sponsor.name"
       :href="sponsor.href"
