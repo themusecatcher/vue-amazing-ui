@@ -78,10 +78,10 @@ _种子 → 派生 → `CSS` 变量 → 组件消费，`JS` 只算一次，换�
 
 | 引入方式 | 特点 | 推荐度 |
 | :-- | :-- | :-- |
-| 全局完整注册所有组件 | 一次全量注册，引入即用，包体积最大 | <Tag color="error" size="small">不推荐</Tag> |
-| 全局部分注册组件 | 手动注册需要的组件 | <Tag color="processing" size="small">按需</Tag> |
-| 局部注册组件 | 单个组件内 `import` 后使用 | <Tag color="processing" size="small">按需</Tag> |
-| 自动按需引入 | `unplugin-vue-components` 自动解析并导入组件与样式 | <Tag color="success" size="small">强烈推荐</Tag> |
+| [全局完整注册所有组件](/guide/getting-started#使用组件) | 一次全量注册，引入即用，包体积最大 | <Tag color="error" size="small">不推荐</Tag> |
+| [全局部分注册组件](/guide/import-on-demand#全局注册) | 手动注册需要的组件 | <Tag color="processing" size="small">按需</Tag> |
+| [局部注册组件](/guide/import-on-demand#局部注册) | 单个组件内 `import` 后使用 | <Tag color="processing" size="small">按需</Tag> |
+| [自动按需引入](/guide/import-on-demand#自动按需引入-强烈推荐) | `unplugin-vue-components` 自动解析并导入组件与样式 | <Tag color="success" size="small">强烈推荐</Tag> |
 | 单文件组件 `SFC` | 无需任何安装引入，直接使用组件源码 | — |
 
 ## 全局默认样式
