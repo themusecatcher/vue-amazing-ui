@@ -391,7 +391,8 @@ function onKeyboard(e: KeyboardEvent) {
   transition: all 0.2s;
   text-align: start;
   // 标签内的链接跟随标签文本色，而不是页面链接色；
-  // 插槽内容带的是父组件的 scope 标记，必须用 :deep 命中，否则规则对用户传入的链接完全不生效
+  // 此处刻意穿透：使用者常把链接包进自己的组件，只有 :deep 能覆盖到组件内部
+  // （:slotted(a) 只覆盖插槽顶层与使用者组件根元素，进不到内部）
   :deep(a),
   :deep(a:hover) {
     color: inherit;
@@ -430,14 +431,10 @@ function onKeyboard(e: KeyboardEvent) {
     align-items: center;
     height: 100%;
     position: relative;
-    // 垂直对齐由父级 `.tag-wrap` 的 align-items: center 负责：两者都是 flex item，
-    // `vertical-align` 对 flex item 无效（写在这里只会误导成「靠它对齐」）
     font-style: normal;
     line-height: 0;
     text-align: center;
     cursor: pointer;
-    // 焦点环画在居中的方框上而非点击区本身：点击区是撑满标签高度的窄条（10×22），
-    // 直接描边会得到越出标签上下边界、与图标比例失衡的长方框
     &:focus-visible {
       outline: none;
       &::after {
@@ -453,12 +450,9 @@ function onKeyboard(e: KeyboardEvent) {
         pointer-events: none;
       }
     }
-    // 尺寸必须落在 .close-svg 上：父级 font-size 会被 svg 自身的字号覆盖
     .close-svg {
       display: inline-block;
       font-size: 10px;
-      // 跟随标签文字色：固定的灰在彩色底、尤其 `-inverse` 深色底上几乎不可见；
-      // 次要层级改用透明度表达，hover 恢复满色
       color: inherit;
       opacity: 0.7;
       transition: all 0.2s;

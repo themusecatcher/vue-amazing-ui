@@ -133,6 +133,8 @@ const emits = defineEmits<{
     font-size: 13.3333px;
     font-weight: 600;
     line-height: 40px;
+    // 插槽内容由库内 DatePanel 渲染（一组固定的 button / span），不是使用者自定义结构，故可用 :slotted
+    // 使用者自行构造的插槽内容不要照此写法，那类场景靠 :deep 兜底到任意包裹层
     :slotted(button) {
       padding: 0;
       font: inherit;
