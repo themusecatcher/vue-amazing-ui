@@ -780,7 +780,7 @@ _`closeIcon` 属性接受字符串 / VNode / 渲染函数，也可用 `closeIcon
   </Tag>
 </Space>
 
-:::: details Show Code
+::: details Show Code
 
 ```vue
 <script setup lang="ts">
@@ -800,7 +800,7 @@ import { CloseOutlined } from '@ant-design/icons-vue'
 </template>
 ```
 
-::::
+:::
 
 ## APIs
 

@@ -258,7 +258,7 @@ const sponsors: Sponsor[] = [
 .sponsor-wall {
   margin-top: 24px;
 }
-// 悬停只做轻微放大：阴影光晕与相邻头像的间距抢空间（36px 放大 1.1 + 6px 光晕 ≈ 52px，会吃掉 16px 间隙），
+// 悬停只做轻微放大：阴影光晕与相邻头像抢间距（48px 放大 1.08 约 52px，8px 的间距已所剩无几），
 // 且一半赞助者没有主页链接，光晕会暗示可点击；过渡只作用于 transform，避免默认的 all 连带过渡描边与背景
 .sponsor-avatar {
   transition: transform 0.2s ease;

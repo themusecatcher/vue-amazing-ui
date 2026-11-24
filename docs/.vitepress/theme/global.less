@@ -286,7 +286,7 @@ h1 {
   .name:hover .hero-char {
     // 位移 + 奇偶交错倾斜 + 轻微放大：比整块缩放有层次，也不会互相挤压
     transform: translateY(-0.12em) scale(1.08) rotate(calc(var(--dir) * 3deg));
-    // 渐变后移，字色在波浪里从紫向青「流过」一轮
+    // 渐变后移，字色在波浪里从青向品红「流过」一轮
     background-position: 100% 0;
     // 柔光取每个字自己渐变的暖端（--glow），随字色一起流动，
     // 不再用一个固定色硬套整条渐变
@@ -575,8 +575,6 @@ h1 {
       .VPButton.alt {
         background-color: rgba(235, 235, 235, 0.85) !important;
         transition: all 0.25s;
-      }
-      .VPButton.alt {
         &:hover,
         &:focus-visible {
           box-shadow: @hero-button-glow;
