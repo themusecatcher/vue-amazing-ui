@@ -14,6 +14,14 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## 3.9.6 <span class="changelog-date">2026-11-24</span>
+
+- 新增 [倒计时 Countdown](/guide/components/countdown.html) 的 `render` 属性与 `#render` 插槽，可按年 / 月 / 日 / 时 / 分 / 秒 / 毫秒分段接管排版
+- 新增 [倒计时 Countdown](/guide/components/countdown.html) `format` 的字面量转义（`[]` 包裹）与 `S` / `SS` 毫秒位数；同一占位符重复出现时全部替换，字面量里的 `Y` / `M` / `D` 等字母不再被当作占位符
+- 修复 [倒计时 Countdown](/guide/components/countdown.html) 页面切到后台后 `finish` 不触发：改为按截止时刻判定，单次倒计时只派发一次，`#finish` 插槽在未传 `finish` 属性时也能显示
+- 优化 [倒计时 Countdown](/guide/components/countdown.html) 的刷新节奏：只展示到秒时每秒更新一次（不再逐帧刷新），显示值也不会在最后一秒内提前跳零
+- 组件库及文档代码优化
+
 ## 3.9.5 <span class="changelog-date">2026-11-10</span>
 
 - 优化 [时间轴 Timeline](/guide/components/timeline.html) 的嵌套布局：嵌套在内容里的时间轴不再额外保留整轴收尾的底部空白，末项内容也不再被撑高

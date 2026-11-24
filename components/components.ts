@@ -85,7 +85,7 @@ export type {
 } from './config-provider'
 export { default as ConfigProvider } from './config-provider'
 
-export type { CountdownProps, CountdownSlots } from './countdown'
+export type { CountdownProps, CountdownSlots, CountdownRenderParams } from './countdown'
 export { default as Countdown } from './countdown'
 
 export type {

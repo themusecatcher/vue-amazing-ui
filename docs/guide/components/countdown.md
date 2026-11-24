@@ -8,17 +8,29 @@ _倒计时_
 
 - 当要展示倒计时时
 
+::: warning 提示
+`finish` 由页面内定时器驱动：页面切到后台会被浏览器节流，移动端进入后台或页面被冻结时定时器暂停，恢复可见后按截止时刻补发。<br/>
+**不承诺业务级准时**，到点打卡、自动提交这类必须精确触发的动作，请以服务端时间为准并辅以轮询或推送。
+:::
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Countdown } from 'vue-amazing-ui'
 const active = ref(true)
 const resetActive = ref(true)
 const countdownRef = ref<InstanceType<typeof Countdown> | null>(null)
+const shortRef = ref<InstanceType<typeof Countdown> | null>(null)
 function onFinish() {
   console.log('countdown finished')
 }
 function onReset() {
   countdownRef.value?.reset()
+}
+function onShortFinish() {
+  console.log('short countdown finished')
+}
+function onShortReset() {
+  shortRef.value?.reset()
 }
 </script>
 
@@ -57,6 +69,24 @@ function onFinish() {
 
 :::
 
+## 自定义字面量
+
+_字面量中用 `[]` 包裹可避免被当成单位解析；`Time left` 含单位字符 `m`，不包裹时会被解析成分钟_
+
+<br/>
+
+<Countdown :value="12 * 60 * 60 * 1000" :future="false" format="[Time left] HH:mm:ss" />
+
+::: details Show Code
+
+```vue
+<template>
+  <Countdown :value="12 * 60 * 60 * 1000" :future="false" format="[Time left] HH:mm:ss" />
+</template>
+```
+
+:::
+
 ## 毫秒倒计时
 
 _`format`: `Y 年 M 月 D 天 H 时 m 分 s 秒 SSS 毫秒`_
@@ -80,6 +110,128 @@ _`format`: `Y 年 M 月 D 天 H 时 m 分 s 秒 SSS 毫秒`_
     :future="false"
     format="Y 年 M 月 D 天 H 时 m 分 s 秒 SSS 毫秒"
   />
+</template>
+```
+
+:::
+
+## 毫秒精度
+
+_`S`、`SS`、`SSS` 分别展示 `1`、`2`、`3` 位毫秒_
+
+<br/>
+
+<Row :gutter="16">
+  <Col :span="8">
+    <Countdown :value="12 * 60 * 60 * 1000" :future="false" format="HH:mm:ss.S" />
+  </Col>
+  <Col :span="8">
+    <Countdown :value="12 * 60 * 60 * 1000" :future="false" format="HH:mm:ss.SS" />
+  </Col>
+  <Col :span="8">
+    <Countdown :value="12 * 60 * 60 * 1000" :future="false" format="HH:mm:ss.SSS" />
+  </Col>
+</Row>
+
+::: details Show Code
+
+```vue
+<template>
+  <Row :gutter="16">
+    <Col :span="8">
+      <Countdown :value="12 * 60 * 60 * 1000" :future="false" format="HH:mm:ss.S" />
+    </Col>
+    <Col :span="8">
+      <Countdown :value="12 * 60 * 60 * 1000" :future="false" format="HH:mm:ss.SS" />
+    </Col>
+    <Col :span="8">
+      <Countdown :value="12 * 60 * 60 * 1000" :future="false" format="HH:mm:ss.SSS" />
+    </Col>
+  </Row>
+</template>
+```
+
+:::
+
+## 前缀和后缀
+
+<Countdown :value="2471875200000" format="Y 年 M 月 D 天 H 时 m 分 s 秒 SSS 毫秒">
+  <template #title>2048年 五一 Countdown</template>
+  <template #prefix>There's only</template>
+  <template #suffix>left for the end.</template>
+</Countdown>
+
+::: details Show Code
+
+```vue
+<template>
+  <Countdown :value="2471875200000" format="Y 年 M 月 D 天 H 时 m 分 s 秒 SSS 毫秒">
+    <template #title>2048年 五一 Countdown</template>
+    <template #prefix>There's only</template>
+    <template #suffix>left for the end.</template>
+  </Countdown>
+</template>
+```
+
+:::
+
+## 自定义样式
+
+<Countdown
+  :value="2485094400000"
+  format="Y 年 MM 月 DD 天 HH 时 mm 分 ss 秒 SSS 毫秒"
+  :title-style="{ fontWeight: 500, fontSize: '18px' }"
+  :value-style="{ fontWeight: 600, color: '#1677ff' }"
+>
+  <template #title>2048年 十一 Countdown</template>
+</Countdown>
+
+::: details Show Code
+
+```vue
+<template>
+  <Countdown
+    :value="2485094400000"
+    format="Y 年 MM 月 DD 天 HH 时 mm 分 ss 秒 SSS 毫秒"
+    :title-style="{ fontWeight: 500, fontSize: '18px' }"
+    :value-style="{ fontWeight: 600, color: '#1677ff' }"
+  >
+    <template #title>2048年 十一 Countdown</template>
+  </Countdown>
+</template>
+```
+
+:::
+
+## 自定义分段渲染
+
+_通过 `#render` 插槽接管各时间段的排版，作用域参数与 `render` 属性一致_
+
+<br/>
+
+<Countdown :value="12 * 60 * 60 * 1000" :future="false">
+  <template #render="{ hours, minutes, seconds }">
+    <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ hours }}</span>
+    <span>:</span>
+    <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ minutes }}</span>
+    <span>:</span>
+    <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ seconds }}</span>
+  </template>
+</Countdown>
+
+::: details Show Code
+
+```vue
+<template>
+  <Countdown :value="12 * 60 * 60 * 1000" :future="false">
+    <template #render="{ hours, minutes, seconds }">
+      <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ hours }}</span>
+      <span>:</span>
+      <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ minutes }}</span>
+      <span>:</span>
+      <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ seconds }}</span>
+    </template>
+  </Countdown>
 </template>
 ```
 
@@ -121,57 +273,36 @@ const active = ref(true)
 
 :::
 
-## 前缀和后缀
+## 完成回调
 
-<Countdown
-  :value="2471875200000"
-  format="Y 年 M 月 D 天 H 时 m 分 s 秒 SSS 毫秒"
->
-  <template #title>2048年 五一 Countdown</template>
-  <template #prefix>There's only</template>
-  <template #suffix>left for the end.</template>
-</Countdown>
+_倒计时结束后派发一次 `finish`，可点击按钮重新开始_
 
-::: details Show Code
+<br/>
 
-```vue
-<template>
-  <Countdown
-    :value="2471875200000"
-    format="Y 年 M 月 D 天 H 时 m 分 s 秒 SSS 毫秒"
-  >
-    <template #title>2048年 五一 Countdown</template>
-    <template #prefix>There's only</template>
-    <template #suffix>left for the end.</template>
-  </Countdown>
-</template>
-```
-
-:::
-
-## 自定义样式
-
-<Countdown
-  :value="2485094400000"
-  format="Y 年 MM 月 DD 天 HH 时 mm 分 ss 秒 SSS 毫秒"
-  :title-style="{ fontWeight: 500, fontSize: '18px' }"
-  :value-style="{ fontWeight: 600, color: '#1677ff' }"
->
-  <template #title>2048年 十一 Countdown</template>
-</Countdown>
+<Space align="center">
+  <Countdown ref="shortRef" :value="10 * 1000" :future="false" format="mm:ss" @finish="onShortFinish" />
+  <Button type="primary" @click="onShortReset">重新开始</Button>
+</Space>
 
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Countdown } from 'vue-amazing-ui'
+const shortRef = ref<InstanceType<typeof Countdown> | null>(null)
+function onShortFinish() {
+  console.log('short countdown finished')
+}
+function onShortReset() {
+  shortRef.value?.reset()
+}
+</script>
 <template>
-  <Countdown
-    :value="2485094400000"
-    format="Y 年 MM 月 DD 天 HH 时 mm 分 ss 秒 SSS 毫秒"
-    :title-style="{ fontWeight: 500, fontSize: '18px' }"
-    :value-style="{ fontWeight: 600, color: '#1677ff' }"
-  >
-    <template #title>2048年 十一 Countdown</template>
-  </Countdown>
+  <Space align="center">
+    <Countdown ref="shortRef" :value="10 * 1000" :future="false" format="mm:ss" @finish="onShortFinish" />
+    <Button type="primary" @click="onShortReset">重新开始</Button>
+  </Space>
 </template>
 ```
 
@@ -179,19 +310,37 @@ const active = ref(true)
 
 ## 倒计时已完成
 
-<Space gap="small" vertical>
-  <Countdown />
-  <Countdown finish="Finished" />
-</Space>
+<Row :gutter="16">
+  <Col :span="8">
+    <Countdown />
+  </Col>
+  <Col :span="8">
+    <Countdown finish="Finished" />
+  </Col>
+  <Col :span="8">
+    <Countdown>
+      <template #finish>已完成</template>
+    </Countdown>
+  </Col>
+</Row>
 
 ::: details Show Code
 
 ```vue
 <template>
-  <Space gap="small" vertical>
-    <Countdown />
-    <Countdown finish="Finished" />
-  </Space>
+  <Row :gutter="16">
+    <Col :span="8">
+      <Countdown />
+    </Col>
+    <Col :span="8">
+      <Countdown finish="Finished" />
+    </Col>
+    <Col :span="8">
+      <Countdown>
+        <template #finish>已完成</template>
+      </Countdown>
+    </Col>
+  </Row>
 </template>
 ```
 
@@ -251,15 +400,50 @@ function onReset() {
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | title | 倒计时标题 | string | undefined |
-| titleStyle | 设置标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | prefix | 倒计时的前缀 | string | undefined |
 | suffix | 倒计时的后缀 | string | undefined |
 | finish | 倒计时完成后的展示文本 | string | undefined |
-| future | `value` 是否为未来某时刻的时间戳；为 `false` 表示相对剩余时间戳 | boolean | true |
-| format | 倒计时展示格式，(`Y/YY`：年，`M/MM`：月，`D/DD`：日，`H/HH`：时，`m/mm`：分钟，`s/ss`：秒，`SSS`：毫秒) | string | 'HH:mm:ss' |
-| value | 倒计时数值，支持设置未来某时刻的时间戳或相对剩余时间，单位 `ms` | number | 0 |
+| format | 倒计时展示格式，从出现的最大单位起切分，未出现的更大单位向下折算（`HH` 是总小时数，可超过 `24`）；剩余时间向上取整到秒展示，含毫秒时不取整；支持的单位见 [占位符列表](#format-支持的格式化占位符列表) | string | 'HH:mm:ss' |
+| value | 倒计时数值，`future` 为 `true` 时是未来某时刻的时间戳，否则是相对剩余时间，单位 `ms` | number | 0 |
+| future | `value` 是否为未来某时刻的时间戳；为 `false` 表示相对剩余时间 | boolean | true |
+| titleStyle | 设置标题的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
 | valueStyle | 设置倒计时的样式 | [CSSProperties](https://cn.vuejs.org/api/utility-types.html#cssproperties) | {} |
-| active | 是否处于计时状态，仅当 `future: false` 时生效 | boolean | true |
+| active | 是否处于计时状态，仅当 `future` 为 `false` 时生效 | boolean | true |
+| render | 自定义倒计时的分段渲染，返回内容将替换默认的文本输出 | (params: [CountdownRenderParams](#countdownrenderparams-type)) => VNode &#124; string | undefined |
+
+### format 支持的格式化占位符列表
+
+| 标识 | 示例 | 描述 |
+| :-- | :-- | :-- |
+| Y | 1 | 年，不补零，按 `360` 天折算 |
+| YY | 01 | 年，补零到 `2` 位 |
+| YYYY | 0001 | 年，补零到 `4` 位 |
+| M | 1 | 月，不补零，按 `30` 天折算 |
+| MM | 01 | 月，补零到 `2` 位 |
+| D | 1 | 日，不补零 |
+| DD | 01 | 日，补零到 `2` 位 |
+| H | 1 | 时，不补零 |
+| HH | 01 | 时，补零到 `2` 位 |
+| m | 1 | 分，不补零 |
+| mm | 01 | 分，补零到 `2` 位 |
+| s | 1 | 秒，不补零 |
+| ss | 01 | 秒，补零到 `2` 位 |
+| S | 1 | 毫秒的高 `1` 位 |
+| SS | 01 | 毫秒的高 `2` 位 |
+| SSS | 001 | 毫秒的 `3` 位 |
+| [文本] | [Day] | 原样输出，不参与单位解析 |
+
+### CountdownRenderParams Type
+
+| 名称 | 说明 | 类型 |
+| :-- | :-- | :-- |
+| years | 剩余年数 | number |
+| months | 剩余月数 | number |
+| days | 剩余天数 | number |
+| hours | 剩余小时数 | number |
+| minutes | 剩余分钟数 | number |
+| seconds | 剩余秒数 | number |
+| milliseconds | 剩余毫秒数 | number |
 
 ## Slots
 
@@ -269,15 +453,16 @@ function onReset() {
 | prefix | 自定义倒计时的前缀 | v-slot:prefix |
 | suffix | 自定义倒计时的后缀 | v-slot:suffix |
 | finish | 自定义完成后的展示文本 | v-slot:finish |
+| render | 自定义倒计时的分段渲染，优先于 `render` 属性 | v-slot:render="{ hours, minutes, seconds }" |
 
 ## Events
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| finish | 倒计时结束的回调 | () => void |
+| finish | 倒计时结束的回调，单次倒计时只派发一次 | () => void |
 
 ## Methods
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| reset | 重置倒计时 | () => void |
+| reset | 重置为初始剩余时间并重新开始计时；`active` 为 `false` 时重置后保持暂停 | () => void |
