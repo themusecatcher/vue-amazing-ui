@@ -78,7 +78,6 @@ const timelineItems: TimelineItemProps[] = [
 
 <Timeline>
   <TimelineItem color="green" content="Create a services site 2025-06-24 10:10" />
-  <TimelineItem color="green" content="Create a services site 2025-06-24 10:10" />
   <TimelineItem color="red">
     <p>Solve initial network problems 1</p>
     <p>Solve initial network problems 2</p>
@@ -90,14 +89,9 @@ const timelineItems: TimelineItemProps[] = [
     <p>Technical testing 3 2025-06-24 10:10</p>
   </TimelineItem>
   <TimelineItem color="gray">
-    <p>Technical testing 1</p>
-    <p>Technical testing 2</p>
-    <p>Technical testing 3 2025-06-24 10:10</p>
-  </TimelineItem>
-  <TimelineItem color="gray">
-    <p>Technical testing 1</p>
-    <p>Technical testing 2</p>
-    <p>Technical testing 3 2025-06-24 10:10</p>
+    <p>Rolled back to 3.9.0</p>
+    <p>Snapshot retained</p>
+    <p>Cleanup finished 2025-06-24 10:10</p>
   </TimelineItem>
   <TimelineItem color="#00ccff">
     <template #dot>
@@ -116,7 +110,6 @@ import { SmileOutlined } from '@ant-design/icons-vue'
 <template>
   <Timeline>
     <TimelineItem color="green" content="Create a services site 2025-06-24 10:10" />
-    <TimelineItem color="green" content="Create a services site 2025-06-24 10:10" />
     <TimelineItem color="red">
       <p>Solve initial network problems 1</p>
       <p>Solve initial network problems 2</p>
@@ -128,14 +121,9 @@ import { SmileOutlined } from '@ant-design/icons-vue'
       <p>Technical testing 3 2025-06-24 10:10</p>
     </TimelineItem>
     <TimelineItem color="gray">
-      <p>Technical testing 1</p>
-      <p>Technical testing 2</p>
-      <p>Technical testing 3 2025-06-24 10:10</p>
-    </TimelineItem>
-    <TimelineItem color="gray">
-      <p>Technical testing 1</p>
-      <p>Technical testing 2</p>
-      <p>Technical testing 3 2025-06-24 10:10</p>
+      <p>Rolled back to 3.9.0</p>
+      <p>Snapshot retained</p>
+      <p>Cleanup finished 2025-06-24 10:10</p>
     </TimelineItem>
     <TimelineItem color="#00ccff">
       <template #dot>
@@ -228,7 +216,7 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 
 ## 标题与时间
 
-_节点按 `title` / `content` / `time` 渲染为三段结构，分别可用 `title` / `default` / `footer` 插槽覆盖_
+_节点按 `title` / `content` / `time` 渲染为三段结构，分别可用 `title` / `default` / `footer` 插槽覆盖；插槽优先于同名属性，可按节点只覆盖其中一段_
 
 <br/>
 
@@ -247,9 +235,37 @@ _节点按 `title` / `content` / `time` 渲染为三段结构，分别可用 `ti
   <TimelineItem content="Release archived" color="gray" />
 </Timeline>
 
+<br/>
+
+<Timeline>
+  <TimelineItem title="Build" time="2025-06-24" color="success">
+    <template #title>
+      <span class="slot-title">Build #128</span>
+      <span class="slot-badge">已完成</span>
+    </template>
+    <span>Bundle published to CDN</span>
+    <template #footer>
+      <ClockCircleOutlined class="slot-meta-icon" />
+      <span>2025-06-24 10:10</span>
+    </template>
+  </TimelineItem>
+  <TimelineItem
+    title="Deploy"
+    content="Preview environment ready"
+    time="2025-06-24 10:10"
+    color="info"
+    line-type="dashed"
+  >
+    <template #footer>2 小时前</template>
+  </TimelineItem>
+</Timeline>
+
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+import { ClockCircleOutlined } from '@ant-design/icons-vue'
+</script>
 <template>
   <Timeline>
     <TimelineItem content="Create a services site" color="success" />
@@ -265,7 +281,49 @@ _节点按 `title` / `content` / `time` 渲染为三段结构，分别可用 `ti
     />
     <TimelineItem content="Release archived" color="gray" />
   </Timeline>
+  <br/>
+  <Timeline>
+    <TimelineItem title="Build" time="2025-06-24" color="success">
+      <template #title>
+        <span class="slot-title">Build #128</span>
+        <span class="slot-badge">已完成</span>
+      </template>
+      <span>Bundle published to CDN</span>
+      <template #footer>
+        <ClockCircleOutlined class="slot-meta-icon" />
+        <span>2025-06-24 10:10</span>
+      </template>
+    </TimelineItem>
+    <TimelineItem
+      title="Deploy"
+      content="Preview environment ready"
+      time="2025-06-24 10:10"
+      color="info"
+      line-type="dashed"
+    >
+      <template #footer>2 小时前</template>
+    </TimelineItem>
+  </Timeline>
 </template>
+<style lang="less" scoped>
+.slot-title {
+  margin-right: 6px;
+}
+.slot-badge {
+  display: inline-block;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--va-success-color);
+  background: var(--va-success-bg-color);
+  border-radius: 4px;
+}
+.slot-meta-icon {
+  margin-right: 4px;
+  font-size: 12px;
+}
+</style>
 ```
 
 :::
@@ -745,6 +803,19 @@ _`pending` 传 `true` 时只表示进行中、不渲染内容；`pendingDot` 属
   </template>
 </Timeline>
 
+<br/>
+
+<Timeline pending="Recording...">
+  <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
+  <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
+  <template #pending>
+    <span class="slot-pending">
+      <ClockCircleOutlined class="slot-meta-icon" />
+      Recording in progress
+    </span>
+  </template>
+</Timeline>
+
 ::: details Show Code
 
 ```vue
@@ -756,6 +827,7 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
     <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
     <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
   </Timeline>
+  <br/>
   <Timeline pending="Recording...">
     <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
     <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
@@ -763,11 +835,31 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
       <ClockCircleOutlined class="dot-icon" />
     </template>
   </Timeline>
+  <br/>
+  <Timeline pending="Recording...">
+    <TimelineItem content="Create a services site" time="2025-06-24 10:10" />
+    <TimelineItem content="Solve initial network problems" time="2025-06-24 10:10" />
+    <template #pending>
+      <span class="slot-pending">
+        <ClockCircleOutlined class="slot-meta-icon" />
+        Recording in progress
+      </span>
+    </template>
+  </Timeline>
 </template>
 <style lang="less" scoped>
 .dot-icon {
   font-size: 16px;
   color: var(--va-primary-color);
+}
+.slot-meta-icon {
+  margin-right: 4px;
+  font-size: 12px;
+}
+.slot-pending {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 </style>
 ```
@@ -793,6 +885,28 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 }
 .label-strong {
   color: var(--va-error-color);
+}
+.slot-title {
+  margin-right: 6px;
+}
+.slot-badge {
+  display: inline-block;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--va-success-color);
+  background: var(--va-success-bg-color);
+  border-radius: 4px;
+}
+.slot-meta-icon {
+  margin-right: 4px;
+  font-size: 12px;
+}
+.slot-pending {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 </style>
 
