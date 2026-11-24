@@ -14,6 +14,8 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## 3.9.7 <span class="changelog-date">2026-11-25</span>
+
 ## 3.9.6 <span class="changelog-date">2026-11-24</span>
 
 - 新增 [倒计时 Countdown](/guide/components/countdown.html) 的分段渲染：`render` 属性与 `#render` 插槽可取到年 / 月 / 日 / 时 / 分 / 秒 / 毫秒自行排版（同时提供时插槽优先），并导出 `CountdownRenderParams` 类型

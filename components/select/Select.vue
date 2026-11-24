@@ -51,10 +51,10 @@ export interface FieldNames {
 export type SelectValue = string | number
 // labelInValue 打开时的 value 对象形态（LabeledValue 形态）
 export interface LabeledValue {
-  label: unknown // 选项文本（子组件式写法下由默认插槽求值而来）
+  label: SelectValue // 选项文本（文本通道：label 属性 > 插槽文本规范化结果，恒为标量）
   value: SelectValue // 选项值
   key?: string | number // 选项唯一键，缺省时与 value 一致
-  originLabel?: unknown // 原始选项文本（子组件式写法下为默认插槽函数）
+  originLabel?: SelectValue | (() => VNode[]) // 原始渲染源（子组件式写法下为默认插槽函数，否则同 label）
 }
 export type SelectPlacement = 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'
 export type SelectMode = 'multiple' | 'tags'
@@ -289,8 +289,10 @@ function toSlotChildren(result: unknown): VNode[] {
   return [result as VNode]
 }
 /**
- * 提取插槽渲染结果中的纯文本：递归进入元素子节点（组件节点取不到渲染结果，跳过）。
- * 该文本用于 tag / title / 过滤 / maxTagTextLength 截断等文本场景；富内容渲染直接取插槽函数（见 getOptionLabelSlot）
+ * 提取插槽渲染结果中的纯文本并规范化：递归进入元素子节点（组件节点取不到渲染结果，跳过），
+ * 再把内部空白折叠为单个空格、裁剪首尾 —— 模板折行 / 缩进产生的换行与空格属于排版，不属于文本语义。
+ * 该文本是「文本通道」的唯一来源（tag / title / 读屏 / 过滤 / maxTagTextLength 截断）；
+ * 富内容渲染直接取插槽函数（见 getOptionLabelSlot），两者互不覆盖
  */
 function getSlotText(nodes: VNode[] | undefined): string | undefined {
   if (!nodes?.length) return undefined
@@ -310,7 +312,7 @@ function getSlotText(nodes: VNode[] | undefined): string | undefined {
     })
   }
   walk(nodes)
-  return text || undefined
+  return text.replace(/\s+/g, ' ').trim() || undefined
 }
 /**
  * 子组件式写法下挂载的「标签插槽函数」（选项取默认插槽、分组取 #label 插槽）：富内容（图标 + 文本）由它渲染。
@@ -321,8 +323,23 @@ function getOptionLabelSlot(option: Option | undefined): (() => VNode[]) | undef
   return typeof slot === 'function' ? (slot as () => VNode[]) : undefined
 }
 /**
+ * 回填内容（触发器 / tag）的渲染源：显式 `optionLabelProp` 时以该字段为准（字段为函数则按其渲染结果处理，
+ * 标量返回 null 交给文本渲染）；未指定时取选项的渲染源（子组件式默认插槽）；都没有时返回 null 用文本渲染。
+ * 文本通道（title / 读屏 / 过滤）不受此影响，始终取 label 字段
+ */
+function resolveBackfillRender(option: Option | undefined): SelectMenuNode | null {
+  if (props.optionLabelProp) {
+    const value: unknown = option?.[props.optionLabelProp]
+    return typeof value === 'function' ? () => toSlotChildren((value as () => VNode[])()) : null
+  }
+  const labelSlot = getOptionLabelSlot(option)
+  return labelSlot ? () => labelSlot() : null
+}
+/**
  * 解析 default 插槽的 vnode 为选项数据（子组件式写法）：
- * `<SelectOption>` → 选项对象，`<SelectOptGroup>` → 分组对象（组内子项递归解析），Fragment 展开后继续，其余节点忽略
+ * `<SelectOption>` → 选项对象，`<SelectOptGroup>` → 分组对象（组内子项递归解析），Fragment 展开后继续，其余节点忽略。
+ * 文本通道（`label` 字段）与渲染通道（`children` 插槽函数）分别取值、互不覆盖：
+ * 文本 = `label` 属性（显式非空）> 插槽文本（规范化后）；渲染 = 插槽本身，未提供时才回落到文本
  */
 function parseSlotOptions(nodes: VNode[]): Option[] {
   const { label: labelKey, value: valueKey } = mergedFieldNames.value
@@ -339,17 +356,19 @@ function parseSlotOptions(nodes: VNode[]): Option[] {
     const slotFns = vnode.children as Record<string, (() => VNode[]) | undefined> | null
     const { label: labelProp, value: valueProp, disabled: disabledProp, ...restProps } = slotProps
     const optionKey = getVNodeKey(vnode)
-    // label 属性显式非空时优先于插槽文本（约定：props.label 优先）
-    const hasLabelProp = typeof labelProp === 'string' && labelProp !== ''
+    // 文本通道：label 属性显式非空白时优先于插槽文本（显式 > 推导）；首尾空白属排版，一律裁剪后判定
+    const explicitLabel = typeof labelProp === 'string' ? labelProp.trim() : ''
+    const hasLabelProp = explicitLabel !== ''
     if (kind === 'group') {
-      const labelNodes = toSlotChildren(slotFns?.label?.())
       items.push({
         ...restProps,
         key: optionKey,
-        [labelKey]: hasLabelProp ? labelProp : (getSlotText(labelNodes) ?? String(optionKey ?? '')),
+        [labelKey]: hasLabelProp
+          ? explicitLabel
+          : (getSlotText(toSlotChildren(slotFns?.label?.())) ?? String(optionKey ?? '')),
         [groupField.value]: parseSlotOptions(toSlotChildren(slotFns?.default?.())),
-        // #label 插槽：富内容（图标 + 文本）由它渲染；label 属性已指定时不再渲染（props.label 优先）
-        children: hasLabelProp ? undefined : slotFns?.label
+        // 渲染通道：#label 插槽始终保留，label 属性只作用于文本通道（标题 / 读屏）
+        children: slotFns?.label
       })
       return
     }
@@ -357,11 +376,11 @@ function parseSlotOptions(nodes: VNode[]): Option[] {
       ...restProps,
       key: optionKey,
       [valueKey]: valueProp ?? optionKey,
-      [labelKey]: hasLabelProp ? labelProp : getSlotText(toSlotChildren(slotFns?.default?.())),
+      [labelKey]: hasLabelProp ? explicitLabel : getSlotText(toSlotChildren(slotFns?.default?.())),
       // 支持 <SelectOption disabled />：静态属性编译为空串，故空串同样视为禁用（约定）
       disabled: disabledProp === '' || Boolean(disabledProp),
-      // 默认插槽：富内容由它渲染，labelInValue 的 originLabel 亦取此函数
-      children: hasLabelProp ? undefined : slotFns?.default
+      // 渲染通道：默认插槽始终保留，labelInValue 的 originLabel 亦取此函数
+      children: slotFns?.default
     })
   })
   return items
@@ -439,14 +458,19 @@ const incomingLabels = computed(() => {
   })
   return labels
 })
-/** 选项展示内容：入参 label 优先 > optionLabelProp 指定字段 > label 字段 > value 兜底（约定） */
-function resolveLabel(value: SelectValue, option: Option | undefined): unknown {
-  const incoming = incomingLabels.value.get(value)
+/** 文本通道取值：只接受标量，函数 / VNode / 对象等一律视为缺失（避免把节点塞进 title / 读屏 / 过滤 / 截断） */
+function toLabelText(value: unknown): SelectValue | undefined {
+  return typeof value === 'string' || typeof value === 'number' ? value : undefined
+}
+/** 选项展示文本：入参 label 优先 > optionLabelProp 指定字段 > label 字段 > value 兜底（约定；均只取标量） */
+function resolveLabel(value: SelectValue, option: Option | undefined): SelectValue {
+  const incoming = toLabelText(incomingLabels.value.get(value))
   if (incoming !== undefined) return incoming
   if (props.optionLabelProp && option) {
-    return option[props.optionLabelProp] ?? value
+    const configured = toLabelText(option[props.optionLabelProp])
+    if (configured !== undefined) return configured
   }
-  return getOptionLabel(option) ?? value
+  return toLabelText(getOptionLabel(option)) ?? value
 }
 /** 取选项键：key 缺省时与 value 一致（约定） */
 function getOptionKey(option: Option | undefined, value: SelectValue): string | number {
@@ -581,11 +605,8 @@ const showPlaceholder = computed(() => {
   return false
 })
 const displayText = computed<unknown>(() => optionLabelRaw.value ?? valueModel.value)
-/** 回填内容的渲染节点：子组件式写法下由标签插槽渲染富内容，普通选项仍走模板插值的快速路径 */
-const displayLabelContent = computed<SelectMenuNode | null>(() => {
-  const labelSlot = getOptionLabelSlot(selectedOption.value)
-  return labelSlot ? () => labelSlot() : null
-})
+/** 回填内容的渲染节点：按「optionLabelProp > 渲染源（插槽）> 文本」选源，无渲染源时走模板插值的快速路径 */
+const displayLabelContent = computed<SelectMenuNode | null>(() => resolveBackfillRender(selectedOption.value))
 const itemTitle = computed(() => {
   const text = displayText.value
   return typeof text === 'string' || typeof text === 'number' ? String(text) : undefined
@@ -654,9 +675,8 @@ const tagItems = computed(() => {
       },
       option
     }
-    // 子组件式写法下由标签插槽渲染富内容，普通选项仍走模板插值的快速路径
-    const labelSlot = getOptionLabelSlot(option)
-    const labelContent: SelectMenuNode | null = labelSlot ? () => labelSlot() : null
+    // tag 内容与回填同源：按「optionLabelProp > 渲染源（插槽）> 文本」选源，纯文本仍走模板插值的快速路径
+    const labelContent = resolveBackfillRender(option)
     return { option, value, label, labelContent, closable, disabled, hidden: index >= visibleCount, params }
   })
 })
@@ -1514,8 +1534,8 @@ function renderOptionState(option: Option): VNode | null {
   return h('span', { class: 'select-option-state' }, stateNode as VNode[])
 }
 /**
- * 条目可见内容：子组件式写法（挂载了标签插槽函数）时取插槽渲染结果（支持图标等富内容），
- * 否则取文本 label，均缺失时回落 fallback
+ * 条目可见内容：渲染通道优先（子组件式写法挂载了标签插槽函数时取插槽渲染结果，支持图标等富内容），
+ * 无渲染源时取文本 label，均缺失时回落 fallback
  */
 function renderItemContent(option: Option, fallback?: unknown): string | VNode[] {
   const labelSlot = getOptionLabelSlot(option)
