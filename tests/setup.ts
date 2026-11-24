@@ -1,7 +1,7 @@
 /**
  * 测试环境 setup
  *
- * 背景：组件（Countdown / Table / Dialog / picker 的 TimeUnitColumn / useFps 等）直接持有
+ * 背景：组件（Table / Dialog / picker 的 TimeUnitColumn / useFps 等）直接持有
  * requestAnimationFrame 返回的 ID，并在卸载或切换时调用 cancelAnimationFrame 取消。
  * happy-dom 的 requestAnimationFrame 返回值并非 number（为 Node Immediate 对象），且帧间隔不确定，
  * 导致取消行为与时序不可控，无法稳定测试 hover 暂停、滚动节流等依赖取消能力的场景。

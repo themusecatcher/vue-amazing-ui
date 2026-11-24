@@ -2,10 +2,12 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import TextScroll from 'components/text-scroll/TextScroll.vue'
 import Carousel from 'components/carousel/Carousel.vue'
+import Countdown from 'components/countdown/Countdown.vue'
 
 /**
- * 回归守护：TextScroll / Carousel 的定时器具备自我续期能力
- * （TextScroll 为链式 setTimeout 节拍器；Carousel 的 autoSlide 在滑动结束后被重新调度），
+ * 回归守护：TextScroll / Carousel / Countdown 的定时器具备自我续期能力
+ * （TextScroll 为链式 setTimeout 节拍器；Carousel 的 autoSlide 在滑动结束后被重新调度；
+ * Countdown 每完成一次刷新都会调度下一次），
  * 卸载时若未取消，回调会永久存活并持续持有组件作用域，阻塞 GC。
  *
  * 观测方式：统计「已注册且尚未触发、尚未取消」的定时器数（口径同 tests/internal.spec.ts）。
@@ -36,6 +38,24 @@ function mountTextScroll() {
     }
   })
 }
+
+describe('Countdown 卸载时应清理定时器', () => {
+  it('刷新定时器在卸载后不应继续自我续期', () => {
+    const base = vi.getTimerCount()
+    const wrapper = mount(Countdown, {
+      attachTo: document.body,
+      props: { future: true, value: Date.now() + 3_600_000 }
+    })
+    vi.advanceTimersByTime(3000)
+    const running = vi.getTimerCount()
+    expect(running).toBeGreaterThan(base)
+
+    wrapper.unmount()
+    vi.advanceTimersByTime(3000)
+
+    expect(vi.getTimerCount()).toBeLessThan(running)
+  })
+})
 
 describe('TextScroll 卸载时应清理定时器', () => {
   it('垂直滚动定时器在卸载后不应继续自我续期', () => {
