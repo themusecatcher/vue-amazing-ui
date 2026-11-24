@@ -69,6 +69,26 @@ describe('format 解析', () => {
     wrapper.unmount()
   })
 
+  it('年按 token 长度补零（Y / YY / YYYY）', async () => {
+    const texts: string[] = []
+    for (const format of ['Y', 'YY', 'YYYY']) {
+      const wrapper = await mountCountdown({ future: false, value: 12 * 360 * DAY, format })
+      texts.push(wrapper.text())
+      wrapper.unmount()
+    }
+    expect(texts).toEqual(['12', '12', '0012'])
+  })
+
+  it('支持长度之外的写法按原样输出，不拆分也不补零', async () => {
+    const texts: string[] = []
+    for (const format of ['YYY', 'MMMM', 'SSSS']) {
+      const wrapper = await mountCountdown({ future: false, value: 12 * 360 * DAY, format })
+      texts.push(wrapper.text())
+      wrapper.unmount()
+    }
+    expect(texts).toEqual(['YYY', 'MMMM', 'SSSS'])
+  })
+
   it('format 未出现的更大单位向下折算为总小时数', async () => {
     const wrapper = await mountCountdown({ future: false, value: DAY, format: 'HH:mm:ss' })
     expect(wrapper.text()).toBe('24:00:00')

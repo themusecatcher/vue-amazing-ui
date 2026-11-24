@@ -16,10 +16,16 @@ _倒计时_
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Countdown } from 'vue-amazing-ui'
+import type { CountdownRenderParams } from 'vue-amazing-ui'
 const active = ref(true)
 const resetActive = ref(true)
 const countdownRef = ref<InstanceType<typeof Countdown> | null>(null)
 const shortRef = ref<InstanceType<typeof Countdown> | null>(null)
+// 分段渲染拿到的都是数字，补零需要自行处理
+const pad = (value: number) => String(value).padStart(2, '0')
+function renderText(parts: CountdownRenderParams) {
+  return `${pad(parts.hours)} 时 ${pad(parts.minutes)} 分 ${pad(parts.seconds)} 秒`
+}
 function onFinish() {
   console.log('countdown finished')
 }
@@ -205,33 +211,48 @@ _`S`、`SS`、`SSS` 分别展示 `1`、`2`、`3` 位毫秒_
 
 ## 自定义分段渲染
 
-_通过 `#render` 插槽接管各时间段的排版，作用域参数与 `render` 属性一致_
+_`render` 属性与 `#render` 插槽都能接管排版：作用域参数一致，同时提供时插槽优先；属性返回字符串 / 节点，插槽可拼多个元素_
 
 <br/>
 
-<Countdown :value="12 * 60 * 60 * 1000" :future="false">
-  <template #render="{ hours, minutes, seconds }">
-    <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ hours }}</span>
-    <span>:</span>
-    <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ minutes }}</span>
-    <span>:</span>
-    <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ seconds }}</span>
-  </template>
-</Countdown>
+<Space vertical>
+  <Countdown :value="12 * 60 * 60 * 1000" :future="false" :render="renderText" />
+  <Countdown :value="12 * 60 * 60 * 1000" :future="false">
+    <template #render="{ hours, minutes, seconds }">
+      <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ pad(hours) }}</span>
+      <span>:</span>
+      <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ pad(minutes) }}</span>
+      <span>:</span>
+      <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ pad(seconds) }}</span>
+    </template>
+  </Countdown>
+</Space>
 
 ::: details Show Code
 
 ```vue
+<script setup lang="ts">
+import { Countdown } from 'vue-amazing-ui'
+import type { CountdownRenderParams } from 'vue-amazing-ui'
+// 分段渲染拿到的都是数字，补零需要自行处理
+const pad = (value: number) => String(value).padStart(2, '0')
+function renderText(parts: CountdownRenderParams) {
+  return `${pad(parts.hours)} 时 ${pad(parts.minutes)} 分 ${pad(parts.seconds)} 秒`
+}
+</script>
 <template>
-  <Countdown :value="12 * 60 * 60 * 1000" :future="false">
-    <template #render="{ hours, minutes, seconds }">
-      <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ hours }}</span>
-      <span>:</span>
-      <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ minutes }}</span>
-      <span>:</span>
-      <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ seconds }}</span>
-    </template>
-  </Countdown>
+  <Space vertical>
+    <Countdown :value="12 * 60 * 60 * 1000" :future="false" :render="renderText" />
+    <Countdown :value="12 * 60 * 60 * 1000" :future="false">
+      <template #render="{ hours, minutes, seconds }">
+        <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ pad(hours) }}</span>
+        <span>:</span>
+        <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ pad(minutes) }}</span>
+        <span>:</span>
+        <span style="padding: 0 4px; border-radius: 4px; background: var(--va-fill-color-2)">{{ pad(seconds) }}</span>
+      </template>
+    </Countdown>
+  </Space>
 </template>
 ```
 

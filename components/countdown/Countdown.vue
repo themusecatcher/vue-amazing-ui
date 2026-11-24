@@ -18,7 +18,7 @@ export interface Props {
   prefix?: string // 倒计时的前缀
   suffix?: string // 倒计时的后缀
   finish?: string // 倒计时完成后的展示文本
-  format?: string // 倒计时展示格式，(Y/YY：年，M/MM：月，D/DD：日，H/HH：时，m/mm：分钟，s/ss：秒，S/SS/SSS：毫秒，[文本]：原样输出)
+  format?: string // 倒计时展示格式，(Y/YY/YYYY：年，M/MM：月，D/DD：日，H/HH：时，m/mm：分钟，s/ss：秒，S/SS/SSS：毫秒，[文本]：原样输出)
   value?: number // 倒计时数值，支持设置未来某时刻的时间戳 (ms) 或 相对剩余时间 (ms)
   future?: boolean // value 是否为未来某时刻的时间戳；为 false 表示相对剩余时间戳
   titleStyle?: CSSProperties // 设置标题的样式
@@ -49,31 +49,34 @@ const props = withDefaults(defineProps<Props>(), {
 })
 defineSlots<CountdownSlots>()
 const emit = defineEmits<{ (e: 'finish'): void }>()
+// #render 是渲染委托型插槽，渲染内容取决于作用域参数的取值
+// title / prefix / suffix / finish 判的是是否渲染出内容，空插槽回落属性值，仍走 useSlotsExist
 const slots = useSlots()
 const slotsExist = useSlotsExist(['title', 'prefix', 'suffix', 'finish'])
 type CountdownUnit = 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second' | 'millisecond'
 type CountdownToken = { type: 'literal'; text: string } | { type: 'unit'; unit: CountdownUnit; length: number }
+// 单位换算以秒为基准：日取 24 小时，年按 360 天、月按 30 天折算
+const SECONDS_PER_MINUTE = 60
+const SECONDS_PER_HOUR = 60 * SECONDS_PER_MINUTE
+const SECONDS_PER_DAY = 24 * SECONDS_PER_HOUR
+const SECONDS_PER_MONTH = 30 * SECONDS_PER_DAY
+const SECONDS_PER_YEAR = 12 * SECONDS_PER_MONTH
 // 各单位的毫秒数，用于推导刷新间隔
 const UNIT_MS: Record<Exclude<CountdownUnit, 'millisecond'>, number> = {
-  year: 360 * 24 * 60 * 60 * 1000,
-  month: 30 * 24 * 60 * 60 * 1000,
-  day: 24 * 60 * 60 * 1000,
-  hour: 60 * 60 * 1000,
-  minute: 60 * 1000,
+  year: SECONDS_PER_YEAR * 1000,
+  month: SECONDS_PER_MONTH * 1000,
+  day: SECONDS_PER_DAY * 1000,
+  hour: SECONDS_PER_HOUR * 1000,
+  minute: SECONDS_PER_MINUTE * 1000,
   second: 1000
 }
-// 剩余毫秒数按秒切分的进制
-const SECONDS_PER_YEAR = 360 * 24 * 60 * 60
-const SECONDS_PER_MONTH = 30 * 24 * 60 * 60
-const SECONDS_PER_DAY = 24 * 60 * 60
-const SECONDS_PER_HOUR = 60 * 60
 // 切分顺序：长单位在前，逐级扣除
 const SPLIT_UNITS: [Exclude<CountdownUnit, 'millisecond'>, number][] = [
   ['year', SECONDS_PER_YEAR],
   ['month', SECONDS_PER_MONTH],
   ['day', SECONDS_PER_DAY],
   ['hour', SECONDS_PER_HOUR],
-  ['minute', 60],
+  ['minute', SECONDS_PER_MINUTE],
   ['second', 1]
 ]
 // 毫秒级显示约 30fps，与逐帧相比显著降低重渲染次数
@@ -91,15 +94,17 @@ const UNIT_KEY: Record<CountdownUnit, keyof CountdownRenderParams> = {
   millisecond: 'milliseconds'
 }
 // 字面量与单位交替匹配：`[文本]` 优先命中，其余按单位字符取最长连续段
-const FORMAT_PATTERN = /\[([^\]]*)]|(Y{1,4}|M{1,2}|D{1,2}|H{1,2}|m{1,2}|s{1,2}|S{1,3})/g
-const UNIT_CHAR: Record<string, CountdownUnit | undefined> = {
-  Y: 'year',
-  M: 'month',
-  D: 'day',
-  H: 'hour',
-  m: 'minute',
-  s: 'second',
-  S: 'millisecond'
+const FORMAT_PATTERN = /\[([^\]]*)]|([YMDHmsS])\2*/g
+// 单位字符 → 单位与支持的长度：年取 1 / 2 / 4 位（3 位没有实际语义），毫秒取高位 1 ~ 3 位。
+// 表外的长度（如 `YYY` / `MMMM`）整段按字面量原样输出，不拆成多个 token 拼出重复数字
+const UNIT_SPEC: Record<string, { unit: CountdownUnit; lengths: number[] } | undefined> = {
+  Y: { unit: 'year', lengths: [1, 2, 4] },
+  M: { unit: 'month', lengths: [1, 2] },
+  D: { unit: 'day', lengths: [1, 2] },
+  H: { unit: 'hour', lengths: [1, 2] },
+  m: { unit: 'minute', lengths: [1, 2] },
+  s: { unit: 'second', lengths: [1, 2] },
+  S: { unit: 'millisecond', lengths: [1, 2, 3] }
 }
 const remainingTime = ref(0) // 剩余毫秒数
 let deadline = 0 // 截止时刻（壁钟时间戳），所有显示值都由它与当前时刻求差得到
@@ -177,7 +182,9 @@ onUnmounted(stopTimer)
 /**
  * 解析 format 为字面量与单位交替的 token 列表
  *
- * 一次性完成，避免逐段字符串查找：字面量中出现的 Y/M/D 等字母不再被误判为单位。
+ * 一次扫描即完成切分，无需逐段字符串查找：同一占位符可以出现多次（旧实现只替换首个），
+ * `[]` 包裹的文本整段按字面量输出，不参与单位解析 —— 需要原样显示的单词必须包裹，
+ * 未包裹的字母里出现 Y / M / D 等仍按单位解析，但只认 `UNIT_SPEC` 里的长度。
  */
 function parseFormat(format: string): CountdownToken[] {
   const list: CountdownToken[] = []
@@ -194,10 +201,11 @@ function parseFormat(format: string): CountdownToken[] {
     if (escaped !== undefined) {
       list.push({ type: 'literal', text: escaped })
     } else {
-      const text = match[2] ?? ''
-      const unit = UNIT_CHAR[text.charAt(0)]
-      if (unit) {
-        list.push({ type: 'unit', unit, length: text.length })
+      // 第二分支的捕获组只落在首个字符上，整段重复在 match[0] 里
+      const text = match[0]
+      const spec = UNIT_SPEC[text.charAt(0)]
+      if (spec?.lengths.includes(text.length)) {
+        list.push({ type: 'unit', unit: spec.unit, length: text.length })
       } else {
         list.push({ type: 'literal', text })
       }
@@ -214,7 +222,8 @@ function parseFormat(format: string): CountdownToken[] {
 function padZero(value: number, length: number): string {
   return String(value).padStart(length, '0')
 }
-// 按单位取值并补零；毫秒按 token 长度取高位（S / SS / SSS 分别为高 1 / 2 / 3 位）
+// 按单位取值并补零：token 长度即补零位数（YYYY 补到 4 位）；
+// 毫秒例外，长度是「取高位」的位数（S / SS / SSS 分别为高 1 / 2 / 3 位）
 function formatUnit(token: Extract<CountdownToken, { type: 'unit' }>, parts: CountdownRenderParams): string {
   const value = parts[UNIT_KEY[token.unit]]
   if (token.unit === 'millisecond') {
@@ -362,6 +371,11 @@ defineExpose({
     .time-value {
       display: inline-block;
       direction: ltr;
+      // #render 按「是否提供」判定（见脚本内注释），插槽可能渲染为空：空的行内元素仍会撑起
+      // 一个行盒，不收敛会让倒计时区域留出一条空白
+      &:empty {
+        display: none;
+      }
     }
     .time-suffix {
       display: inline-block;
