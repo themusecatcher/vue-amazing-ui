@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
+import type { ComponentMountingOptions } from '@vue/test-utils'
 import Countdown from 'components/countdown/Countdown.vue'
 
 /**
@@ -25,8 +26,9 @@ afterEach(() => {
 })
 
 const DAY = 24 * 60 * 60 * 1000
+type CountdownMountOptions = ComponentMountingOptions<typeof Countdown>
 
-async function mountCountdown(props: Record<string, unknown>, slots?: Record<string, unknown>) {
+async function mountCountdown(props: CountdownMountOptions['props'], slots?: CountdownMountOptions['slots']) {
   const wrapper = mount(Countdown, { props, slots })
   await nextTick()
   return wrapper
