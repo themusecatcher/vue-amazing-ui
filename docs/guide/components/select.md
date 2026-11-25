@@ -927,7 +927,7 @@ const options = [
 
 ## 组件式用法
 
-_用 `SelectOption` 子组件描述选项，静态小列表更直观：插槽内容负责渲染（富内容自动用于下拉项、回填与 `tag`），其文本折叠空白后作为 `label` 供搜索 / `title` / 读屏使用；`label` 属性只覆盖文本、不影响渲染，`optionLabelProp` 可指定回填取哪个字段；选项来自接口或需搜索过滤、大数据虚拟滚动时请用 `options`（两者同时提供以子组件为准）_
+_用 `SelectOption` 子组件描述选项，静态小列表更直观：插槽内容负责渲染（富内容自动用于下拉项、回填与 `tag`），其文本折叠空白后作为 `label` 供 `title` / 读屏 / `maxTagTextLength` 截断使用（按文本搜索需把 `optionFilterProp` 设为 `label`）；`label` 属性只覆盖文本、不影响渲染，`optionLabelProp` 可指定回填取哪个字段；选项来自接口或需搜索过滤、大数据虚拟滚动时请用 `options`（两者同时提供以子组件为准）_
 
 <br/>
 
@@ -2069,7 +2069,7 @@ const options: SelectOption[] = []
 | maxTagCount | 最多显示多少个 `tag`，超出后折叠为省略提示；设为 `'responsive'` 时按容器宽度自动折叠（有性能消耗，不建议在大表单场景下使用） | number &#124; 'responsive' | undefined |
 | maxTagPlaceholder | 隐藏 `tag` 时显示的内容，为函数时接收被折叠的选项数组 | string &#124; VNode &#124; ((omittedValues: [SelectOption](#selectoption-type)[]) => VNode) | undefined |
 | maxTagTextLength | `tag` 上显示文本的最大长度，超出部分以 `...` 截断 | number | undefined |
-| tagRender | 自定义 `tag` 的渲染内容，作用域参数含 `label`（已按 `maxTagTextLength` 截断）/ `value` / `disabled` / `closable` / `onClose` / `option` | (params: { label: unknown, value?: string &#124; number, disabled: boolean, closable: boolean, onClose: (e?: MouseEvent) => void, option: [SelectOption](#selectoption-type) }) => VNode | undefined |
+| tagRender | 自定义 `tag` 的渲染内容，作用域参数含 `label`（已按 `maxTagTextLength` 截断）/ `value` / `disabled` / `closable` / `onClose` / `option` | (params: { label: string &#124; number, value?: string &#124; number, disabled: boolean, closable: boolean, onClose: (e?: MouseEvent) => void, option: [SelectOption](#selectoption-type) }) => VNode | undefined |
 | removeIcon | 自定义 `tag` 的移除图标 | VNode &#124; (() => VNode) | undefined |
 | tokenSeparators | 自动分词的分隔符，输入命中后按分隔符拆分并直接选中 | string[] | [] |
 | autoClearSearchValue | 多选模式下选中项后是否清空搜索框 | boolean | true |
@@ -2110,7 +2110,7 @@ const options: SelectOption[] = []
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| label | 选项文本（文本通道：`label` 属性 > 插槽文本折叠空白后的结果，恒为标量） | string &#124; number |
+| label | 选项文本（文本通道：入参 `label` > `optionLabelProp` 字段 > `label` 字段 > `value`，恒为标量） | string &#124; number |
 | value | 选项值 | string &#124; number |
 | key? | 选项唯一键，缺省时与 `value` 一致 | string &#124; number |
 | originLabel? | 原始渲染源（子组件式写法下为默认插槽函数，否则同 `label`） | string &#124; number &#124; (() => VNode[]) |
@@ -2128,7 +2128,7 @@ const options: SelectOption[] = []
 | disabled | 是否禁用该选项（`<SelectOption disabled />` 亦可） | boolean | false |
 | [propName: string] | 允许携带任意自定义字段，`#option` 插槽会透传原始数据对象 | any | undefined |
 
-> ℹ️ 文本通道与渲染通道互不覆盖：`label` 属性只决定标题 / 读屏 / 搜索过滤 / `maxTagTextLength` 截断 / `labelInValue.label` 所用的文本；实际渲染始终取默认插槽（无插槽时才回落到文本）。文本提取时插槽内容会折叠内部空白并裁剪首尾（组件节点如图标不计入），`label` 属性同样裁剪首尾、全空白视为未提供；纯图标选项请配合 `label` 属性提供可读文本。
+> ℹ️ 文本通道与渲染通道互不覆盖：`label` 属性只决定标题 / 读屏 / 搜索过滤（`optionFilterProp` 指向 `label` 时）/ `maxTagTextLength` 截断 / `labelInValue.label` 所用的文本；实际渲染始终取默认插槽（无插槽时才回落到文本）。文本提取时插槽内容会折叠内部空白并裁剪首尾（组件节点如图标不计入），`label` 属性同样裁剪首尾、全空白视为未提供；纯图标选项请配合 `label` 属性提供可读文本。
 
 ### SelectOptGroup Props
 

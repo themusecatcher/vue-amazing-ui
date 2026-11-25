@@ -51,7 +51,7 @@ export interface FieldNames {
 export type SelectValue = string | number
 /** labelInValue 打开时的 value 对象形态（LabeledValue 形态） */
 export interface LabeledValue {
-  label: SelectValue // 选项文本（文本通道：label 属性 > 插槽文本规范化结果，恒为标量）
+  label: SelectValue // 选项文本（文本通道：入参 label > optionLabelProp 字段 > label 字段 > value，恒为标量）
   value: SelectValue // 选项值
   key?: string | number // 选项唯一键，缺省时与 value 一致
   originLabel?: SelectValue | (() => VNode[]) // 原始渲染源（子组件式写法下为默认插槽函数，否则同 label）
@@ -65,7 +65,7 @@ export interface DropdownRenderParams {
 }
 /** tagRender（prop / 插槽）的渲染参数 */
 export interface TagRenderParams {
-  label: unknown // tag 显示文本（已按 maxTagTextLength 截断）
+  label: SelectValue // tag 显示文本（文本通道，恒为标量；已按 maxTagTextLength 截断）
   value?: SelectValue // tag 对应的选项值
   disabled: boolean // tag 是否禁用（禁用项的 tag 不可移除）
   closable: boolean // tag 是否可移除
@@ -263,7 +263,7 @@ const mergedFieldNames = computed(() => ({
 }))
 // 分组子选项字段名（约定：fieldNames.options，未指定时为 'options'）
 const groupField = computed(() => props.fieldNames?.options || 'options')
-/** 子组件式选项（default 插槽） */
+/* 子组件式选项（default 插槽） */
 /** 选项 / 分组标记组件的静态标记字段（静态标记约定） */
 interface OptionMarker {
   isSelectOption?: boolean
@@ -291,7 +291,7 @@ function toSlotChildren(result: unknown): VNode[] {
 /**
  * 提取插槽渲染结果中的纯文本并规范化：递归进入元素子节点（组件节点取不到渲染结果，跳过），
  * 再把内部空白折叠为单个空格、裁剪首尾 —— 模板折行 / 缩进产生的换行与空格属于排版，不属于文本语义。
- * 该文本是「文本通道」的唯一来源（tag / title / 读屏 / 过滤 / maxTagTextLength 截断）；
+ * 该文本是「文本通道」的唯一来源（tag / title / 读屏 / maxTagTextLength 截断；`optionFilterProp` 指向 `label` 时也用于搜索过滤）；
  * 富内容渲染直接取插槽函数（见 getOptionLabelSlot），两者互不覆盖
  */
 function getSlotText(nodes: VNode[] | undefined): string | undefined {
@@ -325,7 +325,7 @@ function getOptionLabelSlot(option: Option | undefined): (() => VNode[]) | undef
 /**
  * 回填内容（触发器 / tag）的渲染源：显式 `optionLabelProp` 时以该字段为准（字段为函数则按其渲染结果处理，
  * 标量返回 null 交给文本渲染）；未指定时取选项的渲染源（子组件式默认插槽）；都没有时返回 null 用文本渲染。
- * 文本通道（title / 读屏 / 过滤）不受此影响，始终取 label 字段
+ * 文本通道（title / 读屏 / `optionFilterProp` 指向 `label` 时的过滤）不受此影响，始终取 label 字段
  */
 function resolveBackfillRender(option: Option | undefined): SelectMenuNode | null {
   if (props.optionLabelProp) {
@@ -432,7 +432,6 @@ const isTagsMode = computed(() => props.mode === 'tags') // 是否标签模式�
 const mergedShowSearch = computed(() => props.showSearch ?? isMultiple.value)
 // 箭头显示：多选默认不显示箭头（约定），loading 时显示（后缀位置由加载中图标接管）
 const mergedShowArrow = computed(() => props.showArrow ?? (props.loading || !isMultiple.value))
-/** labelInValue */
 /** 是否为 labelInValue 对象（约定：非对象 / 数组 / 空值一律视为原始值） */
 function isLabeledValue(value: unknown): value is LabeledValue {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
@@ -620,11 +619,10 @@ const selectedOptions = computed<Option[]>(() =>
   valueList.value.map((value) => findOption(value) ?? createFallbackOption(value))
 )
 /** tag 显示文本：optionLabelProp 优先，未指定取 label 字段，均缺失回落 value；超出 maxTagTextLength 时截断 */
-function getTagLabel(option: Option, value: SelectValue): unknown {
+function getTagLabel(option: Option, value: SelectValue): SelectValue {
   const text = resolveLabel(value, option)
   const { maxTagTextLength } = props
   if (typeof maxTagTextLength !== 'number') return text
-  if (typeof text !== 'string' && typeof text !== 'number') return text
   const str = String(text)
   return str.length > maxTagTextLength ? `${str.slice(0, maxTagTextLength)}...` : text
 }

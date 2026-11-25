@@ -506,7 +506,8 @@ const emptyOptions: SelectOption[] = []
     <!-- prettier-ignore -->
     <p class="mb10">
       用 <code>SelectOption</code> 子组件描述选项，静态小列表更直观：插槽内容负责渲染（富内容自动用于下拉项、回填与 <code>tag</code>），
-      其文本折叠空白后作为 <code>label</code> 供搜索 / <code>title</code> / 读屏使用；<code>label</code> 属性只覆盖文本、不影响渲染，
+      其文本折叠空白后作为 <code>label</code> 供 <code>title</code> / 读屏 / <code>maxTagTextLength</code> 截断使用（按文本搜索需把
+      <code>optionFilterProp</code> 设为 <code>label</code>）；<code>label</code> 属性只覆盖文本、不影响渲染，
       <code>optionLabelProp</code> 可指定回填取哪个字段；选项来自接口或需搜索过滤、大数据虚拟滚动时请用
       <code>options</code>（两者同时提供以子组件为准）
     </p>

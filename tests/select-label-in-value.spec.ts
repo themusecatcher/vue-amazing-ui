@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest'
 import { h, nextTick, createTextVNode } from 'vue'
 import { mount } from '@vue/test-utils'
 import Select from 'components/select/Select.vue'
-import type { Option } from 'components/select/Select.vue'
+import type { LabeledValue, Option } from 'components/select/Select.vue'
 import SelectOption from 'components/select/select-option'
 
 /*
@@ -158,7 +158,7 @@ describe('Select labelInValue', () => {
     await flush()
 
     await clickOption(0)
-    const changeValue = wrapper.emitted('change')?.at(-1)?.[0] as { label: unknown; originLabel: unknown }
+    const changeValue = wrapper.emitted('change')?.at(-1)?.[0] as LabeledValue
     expect(changeValue.label).toBe('Jack')
     expect(typeof changeValue.originLabel).toBe('function')
   })

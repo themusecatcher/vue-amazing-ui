@@ -3,7 +3,7 @@ import { h, nextTick, createTextVNode } from 'vue'
 import type { VNode } from 'vue'
 import { mount } from '@vue/test-utils'
 import Select from 'components/select/Select.vue'
-import type { Option } from 'components/select/Select.vue'
+import type { LabeledValue, Option } from 'components/select/Select.vue'
 import SelectOption from 'components/select/select-option'
 import type { SelectOptionProps } from 'components/select/select-option'
 import SelectOptGroup from 'components/select/select-optgroup'
@@ -267,7 +267,7 @@ describe('Select 子组件式选项（default 插槽）', () => {
     await flush()
 
     await clickOption(0)
-    const payload = wrapper.emitted('change')?.at(-1)?.[0] as { label: unknown; originLabel: unknown }
+    const payload = wrapper.emitted('change')?.at(-1)?.[0] as LabeledValue
     expect(payload.label).toBe('LabelProp')
     expect(typeof payload.originLabel).toBe('function')
   })
