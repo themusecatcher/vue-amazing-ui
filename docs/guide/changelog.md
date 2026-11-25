@@ -16,13 +16,14 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 
 ## 3.9.7 <span class="changelog-date">2026-11-25</span>
 
-- [骨架屏 Skeleton](/guide/components/skeleton.html) 的 `animated` 默认值由 `true` 改为 `false`，需要扫光时显式传入；[卡片 Card](/guide/components/card.html) 的 `loading` 占位随之默认静态，可在 `skeletonProps` 中开启
-- 移除 [瀑布流 Waterfall](/guide/components/waterfall.html) 的 `loading` 与 `spinProps`：加载态改由图片占位骨架承担，`backgroundColor` 更名为 `bgColor`
-- 新增 [瀑布流 Waterfall](/guide/components/waterfall.html) 的图片占位与按需渲染：每张图片加载完成前展示占位骨架（未提供 `aspectRatio` 时先按 `1:1` 落位、尺寸取回后精化），加载失败时保留位置并显示失败图标；新增 `lazy` 属性按可视区容量分批渲染
-- 新增 [瀑布流 Waterfall](/guide/components/waterfall.html) 的 `click` 事件与 `columnCount` 响应式对象（按视口断点取列数），并导出 `WaterfallResponsive` 类型；`columnGap` 移除，改用 `gap`（数组为 [水平间距, 垂直间距]），文档补充对应示例
-- 修复 [瀑布流 Waterfall](/guide/components/waterfall.html) 图片增删或加载失败后布局错乱、布局期间切换列数后底部多出空白、空数据与非法列数 / 间隙下的定位异常
-- 优化 [瀑布流 Waterfall](/guide/components/waterfall.html) 追加图片只预取新增项、尺寸预取改为并行，首屏与追加时的渲染更快
-- 更新贡献者文档的注释规范：按「谁读这条注释」判定形式（声明与 `export` 项写 `/** */`、内部值与语句写 `//`、跨行段落写 `/* */`），启用 `spaced-comment` 校验，存量注释已按该规范统一
+- [骨架屏 Skeleton](/guide/components/skeleton.html) 的 `animated` 默认值由 `true` 改为 `false`，需要动画时显式传入（开启后扫光动画恢复正常显示，系统「减少动态效果」下自动停用）；`SkeletonInputProps.size` 改为可选，[卡片 Card](/guide/components/card.html) 的 `loading` 占位同步变静态，可在 `skeletonProps` 中开启
+- 移除 [瀑布流 Waterfall](/guide/components/waterfall.html) 的 `spinProps`（图片加载态改由占位骨架承担），`backgroundColor` 更名 `bgColor`、`columnGap` 改为 `gap`（`gap` 为数组时表示 [水平间距, 垂直间距]）
+- 调整 [选择器 Select](/guide/components/select.html) 子组件式写法的文本与渲染：插槽内容始终参与渲染，`label`（未传时取插槽文本，折叠空白）只用于 `title` / 读屏 / 过滤与 `labelInValue`；`labelInValue` 的 `label` 收紧为 `string | number`、`originLabel` 改为原始渲染源，`optionLabelProp` 可指向函数字段自定义回填
+- 新增 [瀑布流 Waterfall](/guide/components/waterfall.html) 的图片占位与 `lazy` 按需渲染：加载完成前展示骨架（提供 `aspectRatio` 时按真实比例占位，未提供时先按 `1:1` 落位），加载失败保留位置并显示失败图标；`lazy` 只渲染可视区下方约一屏，滚动接近底部时按批追加
+- 新增 [瀑布流 Waterfall](/guide/components/waterfall.html) 的 `click` 事件与响应式 `columnCount`（可传 `{ xs, sm, md, lg, xl, xxl }` 按视口断点取列数，导出 `WaterfallResponsive` 类型）：`click` 回调带图片、下标与事件，图片有 `link` 时可 `preventDefault()` 拦截跳转
+- 修复 [瀑布流 Waterfall](/guide/components/waterfall.html) 图片增删或加载失败后的布局错乱、切换列数后底部多出的空白、空数据与非法列数 / 间隙下的定位异常，并加快追加图片时的渲染
+- 更新贡献者文档的注释规范
+- 组件库及文档代码优化
 
 ## 3.9.6 <span class="changelog-date">2026-11-24</span>
 
