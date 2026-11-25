@@ -48,14 +48,14 @@ export function useMutationObserver(
   const stopObservation = ref(false)
   let observer: MutationObserver | undefined
   const targets = computed(() => resolveTargetElements(target))
-  // 定义清理函数，用于断开 MutationObserver 的连接
+  /** 定义清理函数，用于断开 MutationObserver 的连接 */
   const cleanup = () => {
     if (observer) {
       observer.disconnect()
       observer = undefined
     }
   }
-  // 初始化 MutationObserver，开始观察目标元素
+  /** 初始化 MutationObserver，开始观察目标元素 */
   const observeElements = () => {
     if (isSupported.value && targets.value.length && !stopObservation.value) {
       observer = new MutationObserver(callback)
@@ -110,14 +110,14 @@ export function useResizeObserver(
   let observer: ResizeObserver | undefined
   const stopObservation = ref(false)
   const targets = computed(() => resolveTargetElements(target))
-  // 定义清理函数，用于断开 ResizeObserver 的连接
+  /** 定义清理函数，用于断开 ResizeObserver 的连接 */
   const cleanup = () => {
     if (observer) {
       observer.disconnect()
       observer = undefined
     }
   }
-  // 初始化 ResizeObserver，开始观察目标元素
+  /** 初始化 ResizeObserver，开始观察目标元素 */
   const observeElements = () => {
     if (isSupported.value && targets.value.length && !stopObservation.value) {
       observer = new ResizeObserver(callback)
@@ -145,6 +145,58 @@ export function useResizeObserver(
     cleanup()
   }
   // 在组件卸载前清理 ResizeObserver
+  onBeforeUnmount(() => cleanup())
+  return {
+    start,
+    stop
+  }
+}
+export function useIntersectionObserver(
+  target: Ref | Ref[] | HTMLElement | HTMLElement[],
+  callback: IntersectionObserverCallback,
+  options: IntersectionObserverInit | (() => IntersectionObserverInit) = {}
+): { start: () => void; stop: () => void } {
+  // 用 typeof 判断而非裸 window：SSR（Node）下裸引用会直接抛 ReferenceError
+  const isSupported = useSupported(
+    () => typeof window !== 'undefined' && typeof window.IntersectionObserver === 'function'
+  )
+  const stopObservation = ref(false)
+  let observer: IntersectionObserver | undefined
+  const targets = computed(() => resolveTargetElements(target))
+  const cleanup = () => {
+    if (observer) {
+      observer.disconnect()
+      observer = undefined
+    }
+  }
+  const observeElements = () => {
+    if (isSupported.value && targets.value.length && !stopObservation.value) {
+      // 参数允许传函数：root（滚动容器）在挂载后才确定，重建观察时重新求值
+      observer = new IntersectionObserver(callback, typeof options === 'function' ? options() : options)
+      targets.value.forEach((element: HTMLElement) => observer!.observe(element))
+    }
+  }
+  // 监听 targets 的变化，当 targets 变化时，重新建立 IntersectionObserver 观察
+  watch(
+    () => targets.value,
+    () => {
+      cleanup()
+      observeElements()
+    },
+    {
+      immediate: true, // 立即触发回调，以便初始状态也被观察
+      flush: 'post'
+    }
+  )
+  const start = () => {
+    stopObservation.value = false
+    observeElements()
+  }
+  const stop = () => {
+    stopObservation.value = true
+    cleanup()
+  }
+  // 在组件卸载前清理 IntersectionObserver
   onBeforeUnmount(() => cleanup())
   return {
     start,
@@ -228,7 +280,7 @@ export interface UseScrollReturn {
   /** 停止监听并结束「滚动中」状态（保留当前读数） */
   stop: () => void
 }
-/** 边界判定容差（px）：内容尺寸按整数取整、滚动位置可能是小数，1px 内视为到底 */
+// 边界判定容差（px）：内容尺寸按整数取整、滚动位置可能是小数，1px 内视为到底
 const SCROLL_EDGE_TOLERANCE = 1
 /**
  * 组合式函数：实时监测滚动位置、方向与边界状态
@@ -275,21 +327,21 @@ export function useScroll(
     if (target !== undefined) return toValue(target) ?? null
     return typeof window !== 'undefined' ? window : null
   })
-  // 取消静默期定时器
+  /** 取消静默期定时器 */
   function clearEndTimer(): void {
     if (endTimer !== null) {
       clearTimeout(endTimer)
       endTimer = null
     }
   }
-  // 按当前位置刷新四个边界标志
+  /** 按当前位置刷新四个边界标志 */
   function syncEdges(): void {
     atLeft.value = x.value <= SCROLL_EDGE_TOLERANCE
     atRight.value = maxX.value - x.value <= SCROLL_EDGE_TOLERANCE
     atTop.value = y.value <= SCROLL_EDGE_TOLERANCE
     atBottom.value = maxY.value - y.value <= SCROLL_EDGE_TOLERANCE
   }
-  // 重新测量位置与上限；读到位置即作为方向判定基准，切换目标后首个事件不会误判方向
+  /** 重新测量位置与上限；读到位置即作为方向判定基准，切换目标后首个事件不会误判方向 */
   function measure(): void {
     const element = measureElement
     if (!element) return
@@ -301,7 +353,7 @@ export function useScroll(
     maxY.value = Math.max(element.scrollHeight - element.clientHeight, 0)
     syncEdges()
   }
-  // 读数复位：无可用目标时所有数值归零、边界标志全部为「无余量」
+  /** 读数复位：无可用目标时所有数值归零、边界标志全部为「无余量」 */
   function resetReading(): void {
     x.value = 0
     y.value = 0
@@ -311,7 +363,7 @@ export function useScroll(
     maxY.value = 0
     syncEdges()
   }
-  // 滚动结束：原生 scrollend 与静默期定时器可能都触发，靠 isScrolling 保证只回调一次
+  /** 滚动结束：原生 scrollend 与静默期定时器可能都触发，靠 isScrolling 保证只回调一次 */
   function finishScroll(e: Event): void {
     clearEndTimer()
     lastEvent = null
@@ -320,7 +372,7 @@ export function useScroll(
     direction.value = null
     if (onStop) onStop(e)
   }
-  // 滚动事件：先同步状态、后回调；状态不受节流影响
+  /** 滚动事件：先同步状态、后回调；状态不受节流影响 */
   function handleScroll(e: Event): void {
     const element = measureElement
     if (!element) return
@@ -354,7 +406,7 @@ export function useScroll(
     }, scrollEndDelay)
     if (onScroll) onScroll(e)
   }
-  // 解绑监听并结束「滚动中」状态（位置与上限保留，由后续 measure 覆盖）
+  /** 解绑监听并结束「滚动中」状态（位置与上限保留，由后续 measure 覆盖） */
   function unbind(): void {
     if (eventTarget) {
       eventTarget.removeEventListener('scroll', handleScroll as EventListener)
@@ -367,7 +419,7 @@ export function useScroll(
     isScrolling.value = false
     direction.value = null
   }
-  // 绑定监听：事件目标与测量元素分开解析（视口滚动的两者分别是 window 与 documentElement）
+  /** 绑定监听：事件目标与测量元素分开解析（视口滚动的两者分别是 window 与 documentElement） */
   function bind(elementTarget: ScrollTarget | null): void {
     unbind()
     if (!elementTarget) {
@@ -451,7 +503,7 @@ export function useScrollParent(
   const { isSupported: passiveSupported } = useOptionsSupported('passive')
   const usePassive = options.passive !== false && passiveSupported.value
 
-  // 更新视口尺寸，重新查询滚动父元素并触发重排
+  /** 更新视口尺寸，重新查询滚动父元素并触发重排 */
   function getViewportSize() {
     viewportWidth.value = document.documentElement.clientWidth
     viewportHeight.value = document.documentElement.clientHeight
@@ -459,7 +511,7 @@ export function useScrollParent(
     onScroll()
   }
 
-  // 查询并监听最近可滚动父元素
+  /** 查询并监听最近可滚动父元素 */
   function observeScroll() {
     cleanup()
     scrollTarget.value = getScrollParent(contentRef.value)
@@ -467,7 +519,7 @@ export function useScrollParent(
     scrollEventTarget?.addEventListener('scroll', onScroll, usePassive ? { passive: true } : undefined)
   }
 
-  // 清理滚动监听并重置滚动目标（含组件注入的附加清理）
+  /** 清理滚动监听并重置滚动目标（含组件注入的附加清理） */
   function cleanup() {
     scrollEventTarget?.removeEventListener('scroll', onScroll)
     scrollEventTarget = null
