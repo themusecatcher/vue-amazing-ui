@@ -15,7 +15,7 @@ const cancel = (e: MouseEvent) => {
 const openChange = (open: boolean) => {
   console.log('open', open)
 }
-// 弹出位置：6 个方向（含复合方向），默认的箭头与翻转行为可一屏对比
+/** 弹出位置：6 个方向（含复合方向），默认的箭头与翻转行为可一屏对比 */
 type PopconfirmPlacement = NonNullable<PopconfirmProps['placement']>
 const placements: PopconfirmPlacement[] = ['topLeft', 'top', 'topRight', 'bottomLeft', 'bottom', 'bottomRight']
 const placement = ref<PopconfirmPlacement>('top')

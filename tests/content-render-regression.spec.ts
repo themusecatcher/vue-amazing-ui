@@ -10,7 +10,7 @@ import type { ModalApi } from 'components/modal'
 import Dialog, { DialogProvider } from 'components/dialog'
 import type { DialogApi } from 'components/dialog'
 
-/**
+/*
  * 内容渲染与实例 key 接线回归（Message / Notification / Modal / Dialog）
  *
  * 本轮两处抽取直接影响这四个组件的「内容是否显示得出来」：

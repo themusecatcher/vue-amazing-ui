@@ -57,7 +57,11 @@ const config = defineConfigWithVueTs(
       'vue/multi-word-component-names': 'off',
       'vue/no-unused-vars': 'off',
       'vue/return-in-computed-property': 'off',
-      'vue/require-toggle-inside-transition': 'off'
+      'vue/require-toggle-inside-transition': 'off',
+      // 注释形态：`//` 与 `/* */` 内侧必须有空格（规范见 development/component-design.md §注释规范）。
+      // 不启用 multiline-comment-style：它会在 `//` 与块注释之间强制互转，与分区横幅、`<style>` 内块注释冲突
+      // markers 放行 `/// <reference />` 三斜线指令：它是 TS 指令而非注释，不能加空格
+      'spaced-comment': ['error', 'always', { line: { markers: ['/'] } }]
     }
   },
 

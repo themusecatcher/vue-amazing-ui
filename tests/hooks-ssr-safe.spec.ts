@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { useOptionsSupported } from 'components/utils'
 
-/**
+/*
  * 回归守护：`useOptionsSupported` 的 SSR 安全路径
  *
  * 该 hook 在 setup 期直接读取 `window`。无 `window` 的环境（SSR / Node）必须显式返回

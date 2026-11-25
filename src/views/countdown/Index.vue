@@ -5,7 +5,7 @@ const active = ref(true)
 const shortRef = ref<InstanceType<typeof Countdown> | null>(null)
 const resetActive = ref(true)
 const countdownRef = ref<InstanceType<typeof Countdown> | null>(null)
-// 分段渲染拿到的都是数字，补零需要自行处理
+/** 分段渲染拿到的都是数字，补零需要自行处理 */
 const pad = (value: number) => String(value).padStart(2, '0')
 function renderText(parts: CountdownRenderParams) {
   return `${pad(parts.hours)} 时 ${pad(parts.minutes)} 分 ${pad(parts.seconds)} 秒`

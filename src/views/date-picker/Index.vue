@@ -16,7 +16,7 @@ import {
   startOfMonth
 } from 'date-fns'
 import type { DatePickerProps } from 'vue-amazing-ui'
-/** 演示用例的固定值：取固定日期（不随当天变化），便于截图与文档展示 */
+// 演示用例的固定值：取固定日期（不随当天变化），便于截图与文档展示
 const fixedDate = new Date(2026, 9, 10).getTime()
 /** 范围用例的初始值：两端都归一到当日零点，与面板按天选择的粒度一致 */
 function initialRange(startOffset: number = 0, endOffset: number = 7): [number, number] {
@@ -102,7 +102,7 @@ const weekRangePlaceholder: [string, string] = ['开始周', '结束周']
 const monthRangePlaceholder: [string, string] = ['开始月份', '结束月份']
 const quarterRangePlaceholder: [string, string] = ['开始季度', '结束季度']
 const yearRangePlaceholder: [string, string] = ['开始年份', '结束年份']
-// 切换不同的选择器用例：分段控件切换形态，各形态共用同一个绑定值
+/** 切换不同的选择器用例：分段控件切换形态，各形态共用同一个绑定值 */
 type SwitchableType = 'date' | 'week' | 'month' | 'quarter' | 'year'
 const switchableType = ref<SwitchableType>('date')
 const switchableValue = ref<number | null>(null)
@@ -113,7 +113,7 @@ const switchableOptions: { label: string; value: SwitchableType }[] = [
   { label: '季度', value: 'quarter' },
   { label: '年份', value: 'year' }
 ]
-/** 切换选择器的提示文字：随形态切换，与各形态基本用例的提示保持一致 */
+// 切换选择器的提示文字：随形态切换，与各形态基本用例的提示保持一致
 const switchablePlaceholder = computed(() => {
   const placeholderMap: Record<SwitchableType, string> = {
     date: '请选择日期',
@@ -128,7 +128,7 @@ const switchablePlaceholder = computed(() => {
 const dateTimeRangeValue = ref<[number, number] | null>(null)
 // 按段默认时刻用例：范围形态按段指定（起点当日 0 点、终点当日 23:59:59）
 const defaultTimeRangeValue = ref<[number, number] | null>(null)
-/** 起点取当日 0 点、终点取当日 23:59:59（只取其中的时分秒，日期部分不参与落值） */
+// 起点取当日 0 点、终点取当日 23:59:59（只取其中的时分秒，日期部分不参与落值）
 const rangeDefaultTime: NonNullable<DatePickerProps['defaultTime']> = [
   startOfDay(new Date()).getTime(),
   endOfDay(new Date()).getTime()
@@ -225,7 +225,7 @@ function disabledDateTimeUnits() {
 }
 // 选择不超过七天的范围用例：初始为空值，可选范围由草稿区间动态限制
 const sevenDaysValue = ref<[number, number] | null>(null)
-/** 草稿区间：`calendarChange` 直接给出的时间戳区间 */
+// 草稿区间：`calendarChange` 直接给出的时间戳区间
 const sevenDaysDraft = ref<[number | null, number | null] | null>(null)
 /**
  * 草稿期间把可选日期限制在草稿两端 ±7 天内
@@ -258,7 +258,7 @@ const presetDateTimeRangeValue = ref<[number, number] | null>(null)
 function recentDaysRange(days: number): [number, number] {
   return [startOfDay(addDays(new Date(), -days)).getTime(), Date.now()]
 }
-/** 预设值可为时间戳，也可为返回时间戳的函数（函数值在点击时才求值） */
+// 预设值可为时间戳，也可为返回时间戳的函数（函数值在点击时才求值）
 const datePresets: NonNullable<DatePickerProps['presets']> = [
   { label: '昨天', value: startOfDay(addDays(new Date(), -1)).getTime() },
   { label: '一周前', value: () => startOfDay(addDays(new Date(), -7)).getTime() },
@@ -282,7 +282,7 @@ function firstDayCellStyle(dayOfMonth: number): CSSProperties {
 const startValue = ref<number | null>(null)
 const endValue = ref<number | null>(null)
 const endOpen = ref(false)
-/** 选中日期时的默认时分秒 */
+// 选中日期时的默认时分秒
 const defaultTime = startOfDay(new Date()).getTime()
 const sizeValue = ref<DatePickerProps['size']>('middle')
 const sizeOptions: Array<{ label: string; value: NonNullable<DatePickerProps['size']> }> = [

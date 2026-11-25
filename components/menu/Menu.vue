@@ -175,7 +175,7 @@ function isSameKeys(current: MenuKey[], next: MenuKey[]): boolean {
   return current.length === next.length && next.every((key) => current.includes(key))
 }
 
-// 后代 key：浮层型子菜单关闭时须一并收起，否则后代留在展开集合中形成「幽灵展开」
+/** 后代 key：浮层型子菜单关闭时须一并收起，否则后代留在展开集合中形成「幽灵展开」 */
 function collectDescendantKeys(key: MenuKey): MenuKey[] {
   const keys: MenuKey[] = []
   keyMetaMap.value.forEach((meta, itemKey) => {
@@ -301,7 +301,7 @@ const expandIcon = computed<MenuContext['expandIcon']['value']>(() => {
   return (info: MenuExpandIconInfo): VNodeChild => (fromSlot ? fromSlot(info) : fromProp?.(info))
 })
 
-// 点击触发模式下，浮层需在点击菜单外部时收起
+/** 点击触发模式下，浮层需在点击菜单外部时收起 */
 function handleDocumentMouseDown(event: MouseEvent): void {
   if (props.triggerSubMenuAction !== 'click' || isInlineMode.value || !openKeysModel.value.length) {
     return

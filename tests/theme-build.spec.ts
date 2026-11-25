@@ -6,7 +6,7 @@ import { describe, it, expect } from 'vitest'
 import { buildTheme, buildThemeCss, THEME_CSS_RELATIVE_PATH, writeThemeCss } from '../build/gen-theme'
 import { derive, THEME_VAR_NAMES } from 'components/theme'
 
-/**
+/*
  * 构建期默认表：内容、可复现性与变量表快照
  *
  * 快照的存在意义：依赖或算法变更不得悄悄改变默认外观。更新方式：

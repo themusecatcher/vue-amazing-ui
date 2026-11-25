@@ -36,7 +36,7 @@ const show = ref(true)
 const onClick = () => {
   show.value = false
 }
-// column 断点：与组件 Responsive 断点一一对应，rule 直观标注生效区间，min / max 用于判断当前视口命中项
+/** column 断点：与组件 Responsive 断点一一对应，rule 直观标注生效区间，min / max 用于判断当前视口命中项 */
 type BreakpointKey = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl'
 const breakpoints: { key: BreakpointKey; rule: string; min: number; max: number }[] = [
   { key: 'xs', rule: '<576px', min: 0, max: 575 },

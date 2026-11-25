@@ -52,7 +52,7 @@ function getHeaderFullYearOptions(year: number): { label: string; value: number 
   }
   return options
 }
-// 插槽参数只读：模式与年月变更经回调写回，年月变更以当月 15 日为代表日
+/** 插槽参数只读：模式与年月变更经回调写回，年月变更以当月 15 日为代表日 */
 function onHeaderFullTypeChange(value: unknown, onTypeChange: (mode: 'month' | 'year') => void): void {
   if (value === 'month' || value === 'year') onTypeChange(value)
 }
@@ -62,7 +62,7 @@ function onHeaderFullYearChange(value: unknown, month: number, onChange: (value:
 function onHeaderFullMonthChange(value: unknown, year: number, onChange: (value: string | number) => void): void {
   onChange(new Date(year, Number(value) - 1, 15).getTime())
 }
-// 头部标题里的「日」取自插槽 value（与 v-model 同源），无法解析时占位
+/** 头部标题里的「日」取自插槽 value（与 v-model 同源），无法解析时占位 */
 function getHeaderFullDay(value: string | number | undefined): string {
   if (value === undefined || value === '') return '--'
   const timestamp = Number(value)
@@ -139,15 +139,15 @@ function disabledDate(timestamp: number): boolean {
 function disabledWeekend(timestamp: number): boolean {
   return ['6', '7'].includes(format(timestamp, 'i'))
 }
-// 整层禁用用例：整个 2026-03 都不可选（月份面板的月份格应呈禁用态）
+/** 整层禁用用例：整个 2026-03 都不可选（月份面板的月份格应呈禁用态） */
 function disabledMarch(timestamp: number): boolean {
   return format(timestamp, 'yyyy-MM') === '2026-03'
 }
-// 整格替换用例：#dateFull 替换后组件不再注入选中样式，示例按选中值自行判断
+/** 整格替换用例：#dateFull 替换后组件不再注入选中样式，示例按选中值自行判断 */
 function isFullCellSelected(timestamp: number): boolean {
   return format(timestamp, 'yyyy-MM-dd') === format(fullCellDate.value, 'yyyy-MM-dd')
 }
-// 整格替换用例：#monthFull 同理由业务自绘，按「年 + 月」判断选中态
+/** 整格替换用例：#monthFull 同理由业务自绘，按「年 + 月」判断选中态 */
 function isFullMonthSelected(timestamp: number): boolean {
   return format(timestamp, 'yyyy-MM') === format(fullMonthDate.value, 'yyyy-MM')
 }

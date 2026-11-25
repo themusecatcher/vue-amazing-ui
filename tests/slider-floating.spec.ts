@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import Slider from 'components/slider/Slider.vue'
 import type { SliderProps } from 'components/slider'
 
-/**
+/*
  * Slider 手柄气泡接入定位内核后的契约回归
  *
  * 迁移前气泡的几何全部由样式表承担（`.slider-horizontal` / `.slider-vertical` 各写一套
@@ -43,9 +43,9 @@ function domRect(left: number, top: number, width: number, height: number): DOMR
   } as DOMRect
 }
 
-/** 视口桩矩形：未登记元素（含内核惰性创建的视口测量元素）统一返回它 */
+// 视口桩矩形：未登记元素（含内核惰性创建的视口测量元素）统一返回它
 const viewportRect = domRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT)
-/** 手柄桩矩形：按用例改动后触发重对齐，即可验证「移动锚点」路径 */
+// 手柄桩矩形：按用例改动后触发重对齐，即可验证「移动锚点」路径
 let handleRect = domRect(400, 300, HANDLE_SIZE, HANDLE_SIZE)
 
 /** 等待「渲染 → 内核 post flush / rAF 帧同步落位」 */

@@ -5,7 +5,7 @@ import { nextTick } from 'vue'
 import Ellipsis from 'components/ellipsis'
 import Tooltip from 'components/tooltip'
 
-/**
+/*
  * Ellipsis 能力 parity 守护（重构后）
  *
  * 设计口径（决定断言方式）：

@@ -81,7 +81,7 @@ const avatarShapeOptions = ref([
         <Skeleton :animated="animated" :button="{ shape: buttonShape, size: size, block: block }" />
         <Skeleton style="width: 200px" :animated="animated" :input="{ size: size }" />
         <Skeleton :animated="animated" image />
-        <Skeleton :avatar="{ shape: avatarShape, size: size }" :paragraph="{ rows: 2 }" />
+        <Skeleton :animated="animated" :avatar="{ shape: avatarShape, size: size }" :paragraph="{ rows: 2 }" />
       </Flex>
       <Flex vertical gap="large" width="50%">
         <Space gap="large">

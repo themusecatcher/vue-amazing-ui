@@ -24,7 +24,6 @@ export interface Props {
   tooltipProps?: TooltipProps // Tooltip 组件属性配置，参考 Tooltip Props
   badgeProps?: BadgeProps // 带徽标的浮动按钮（不支持 status 以及相关属性），参考 Badge Props
 }
-// 声明组件插槽类型
 export interface FloatButtonSlots {
   tooltip?: () => VNode[]
   icon?: () => VNode[]
@@ -117,7 +116,7 @@ function onClick(e: Event) {
     showMenu.value = !showMenu.value
   }
 }
-// 菜单显隐的指针 / 焦点行为：模板只做事件转发，避免在模板表达式里赋值
+/** 菜单显隐的指针 / 焦点行为：模板只做事件转发，避免在模板表达式里赋值 */
 function onWrapBlur(): void {
   if (props.menuTrigger === 'click') showMenu.value = false
 }
@@ -127,7 +126,7 @@ function onWrapMouseEnter(): void {
 function onWrapMouseLeave(): void {
   if (props.menuTrigger === 'hover') showMenu.value = false
 }
-/**
+/*
  * 提示包裹层的属性：仅在存在提示内容（挂载 Tooltip）时下发
  *
  * 无提示内容时改用同名 class 的普通 div 占位，故 Tooltip 的属性不能落在占位层上；

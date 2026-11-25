@@ -15,9 +15,11 @@ const tipSpinning = ref(true)
 const colorSpinning = ref(true)
 const indicatorSpinning = ref(true)
 const fitContentSpinning = ref(true)
-// 自定义指示符的两条属性路径：已构造的 VNode 与返回 VNode 的渲染函数（第三条路径为 #indicator 插槽）
-// 颜色取主题语义变量：三种路径仍是三种可区分的颜色，但两种明暗模式都跟随色板，
-// 硬编码浅色蓝（#1677ff）在暗色页面上几乎不可见
+/**
+ * 自定义指示符的两条属性路径：已构造的 VNode 与返回 VNode 的渲染函数（第三条路径为 #indicator 插槽）
+ * 颜色取主题语义变量：三种路径仍是三种可区分的颜色，但两种明暗模式都跟随色板，
+ * 硬编码浅色蓝（#1677ff）在暗色页面上几乎不可见
+ */
 function renderCustomIndicator(color: string) {
   return h(LoadingOutlined, { spin: true, style: `font-size: 24px; color: ${color}` })
 }
@@ -329,39 +331,39 @@ const rotate = ref(false)
   </div>
 </template>
 <style lang="less" scoped>
-// 内容盒配色走主题语义变量：浅色为主色浅底 + 主色描边，暗色自动换成深色主色底，
-// 硬编码浅色会在暗色下变成一块发白底、浅色文字几乎不可读
+/* 内容盒配色走主题语义变量：浅色为主色浅底 + 主色描边，暗色自动换成深色主色底， */
+/* 硬编码浅色会在暗色下变成一块发白底、浅色文字几乎不可读 */
 .spin-content {
   display: inline-block;
   border: 1px solid var(--va-primary-border-color);
   background-color: var(--va-primary-bg-color);
   padding: 30px;
 }
-// 演示内容盒宽度基准：演示页统一 800px（「延迟显示」用例）；max-width 兜底窄容器
+/* 演示内容盒宽度基准：演示页统一 800px（「延迟显示」用例）；max-width 兜底窄容器 */
 .spin-content-fixed {
   width: 800px;
   max-width: 100%;
 }
-// 窄内容盒：用于「宽度贴合内容」用例，内容窄于父容器时才能对比出「居中基准」的差异
+/* 窄内容盒：用于「宽度贴合内容」用例，内容窄于父容器时才能对比出「居中基准」的差异 */
 .spin-content-narrow {
   width: 600px;
   max-width: 100%;
 }
-// 「宽度贴合内容」用例的父容器：宽度即演示区宽度（由外层 Space 的 width + align 拉通），虚线框标示父容器边界；
-// flex 消除 inline-block 的行盒空隙，outline 不参与布局（不挤动内容盒）
+/* 「宽度贴合内容」用例的父容器：宽度即演示区宽度（由外层 Space 的 width + align 拉通），虚线框标示父容器边界； */
+/* flex 消除 inline-block 的行盒空隙，outline 不参与布局（不挤动内容盒） */
 .spin-parent {
   display: flex;
   width: 100%;
   padding: 12px 8px;
-  // 虚线框与标签同取主题中性色：硬编码浅灰 / 深灰在暗色下分别「过亮」与「不可见」
+  /* 虚线框与标签同取主题中性色：硬编码浅灰 / 深灰在暗色下分别「过亮」与「不可见」 */
   outline: 1px dashed var(--va-border-color);
 }
-// 「宽度贴合内容」用例的行标签：说明该行的遮罩居中基准
+/* 「宽度贴合内容」用例的行标签：说明该行的遮罩居中基准 */
 .spin-parent-label {
   color: var(--va-text-color-2);
 }
-// 叠加组件根类名提高特异性：组件根节点为 width / height 100%，同特异性下会随样式注入顺序反转，
-// 提高一级即可稳定覆盖，无需 !important
+/* 叠加组件根类名提高特异性：组件根节点为 width / height 100%，同特异性下会随样式注入顺序反转， */
+/* 提高一级即可稳定覆盖，无需 !important */
 div.spin-wrap.spin-item {
   width: 100px;
   height: 100px;

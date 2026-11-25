@@ -263,8 +263,7 @@ export const componentDependencies: Partial<Record<ComponentName, ComponentName[
   TimeUnitColumn: ['Scrollbar'],
   Timeline: ['TimelineItem'],
   Tooltip: ['Popup'],
-  Upload: ['Image', 'Space', 'Spin'],
-  Waterfall: ['Spin']
+  Upload: ['Image', 'Space', 'Spin']
 }
 
 /**

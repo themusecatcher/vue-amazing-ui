@@ -4,7 +4,6 @@ import type { VNode } from 'vue'
 export interface Props {
   label?: string // 分组标题文本，未提供时取 #label 插槽内容
 }
-// 声明组件插槽类型
 export interface SelectOptGroupSlots {
   label?: () => VNode[] // 分组标题
   default?: () => VNode[] // 分组内的选项

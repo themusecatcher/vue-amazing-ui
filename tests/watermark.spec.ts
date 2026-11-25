@@ -5,7 +5,7 @@ import Watermark from 'components/watermark/Watermark.vue'
 import ConfigProvider from 'components/config-provider/ConfigProvider.vue'
 import { resetLogDedup } from 'components/utils/log'
 
-/**
+/*
  * 回归守护：Watermark 的防篡改 MutationObserver 观察目标必须跟随 fullscreen 变化。
  *
  * 背景：commitWatermark 用 append() 移动同一个水印节点，fullscreen 由 false 切为 true 时
@@ -70,15 +70,17 @@ function restoreCanvasEnv(): void {
   }
 }
 
-// 水印节点无 class/id，仅以内联 style 承载背景图，故按 style 内容识别
+/** 水印节点无 class/id，仅以内联 style 承载背景图，故按 style 内容识别 */
 function findWatermarks(root: ParentNode): HTMLElement[] {
   return Array.from(root.querySelectorAll<HTMLElement>('div')).filter((el) =>
     (el.getAttribute('style') ?? '').includes(WATERMARK_STYLE_FLAG)
   )
 }
 
-// 依次推进 Vue 更新队列（nextTick）与 MutationObserver 的微任务投递；
-// 宏任务一轮用于释放 commitWatermark 里 setTimeout 控制的 stopObservation 抑制窗口
+/**
+ * 依次推进 Vue 更新队列（nextTick）与 MutationObserver 的微任务投递；
+ * 宏任务一轮用于释放 commitWatermark 里 setTimeout 控制的 stopObservation 抑制窗口
+ */
 async function flushAll(): Promise<void> {
   for (let n = 0; n < 3; n++) {
     await nextTick()
@@ -194,7 +196,7 @@ describe('Watermark 防篡改观察目标应跟随 fullscreen 变化', () => {
   })
 })
 
-/**
+/*
  * 绘制层约束：
  * - 水印层被篡改（改写 style）后必须重建，且重建后的节点仍是装饰层（`aria-hidden`）；
  * - canvas 必须复用，否则每次重绘都在分配后备缓冲区；
@@ -252,7 +254,7 @@ describe('Watermark 绘制层约束', () => {
   })
 })
 
-/**
+/*
  * 单元格几何与默认值：
  * - `offset` 缺省时按文档约定取 `gap / 2`（不再被写死的 [50, 50] 兜住）；
  * - 图片水印的单元格宽高按原图比例推算，避免任意比例图片被拉伸。
@@ -282,7 +284,7 @@ describe('Watermark 单元格几何与默认值', () => {
   })
 })
 
-/**
+/*
  * 多行文字排版：`textStyle.lineHeight` 必须同时驱动行高与单元格高度（否则多行被裁切）；
  * `textStyle.textAlign` 只影响多行，三档对齐共用一套坐标。
  */
@@ -359,7 +361,7 @@ describe('Watermark 多行文字排版', () => {
   })
 })
 
-/**
+/*
  * 图片水印走异步加载，需保证「加载失败有提示」与「后到的旧回调不覆盖新水印」。
  * happy-dom 无图片解码能力，故用最小 Image 桩手动控制 onload / onerror 时序。
  */
@@ -378,7 +380,7 @@ describe('Watermark 图片水印的异步行为', () => {
     }
   }
 
-  // 模拟图片加载完成：先给原图尺寸再触发 onload（单元格宽高依赖它）
+  /** 模拟图片加载完成：先给原图尺寸再触发 onload（单元格宽高依赖它） */
   function loadImage(index: number, naturalWidth: number, naturalHeight: number) {
     const img = FakeImage.instances[index]
     img.naturalWidth = naturalWidth
@@ -519,7 +521,7 @@ describe('Watermark 图片水印的异步行为', () => {
   })
 })
 
-/**
+/*
  * 默认色跟随主题（取 `--va-fill-color-3`）：
  * 浅色 rgba(0,0,0,.15) / 暗色 rgba(255,255,255,.18)，取自 Provider 的只读快照。
  */

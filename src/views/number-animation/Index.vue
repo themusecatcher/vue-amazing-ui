@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { TransitionPresets } from '@vueuse/core'
 import type { CubicBezierPoints } from '@vueuse/core'
 import type { NumberAnimation, NumberAnimationEasingPreset, RadioGroupOption, SelectOption } from 'vue-amazing-ui'
-// 各示例独立的组件实例，用于单独触发播放
+/** 各示例独立的组件实例，用于单独触发播放 */
 type NumberAnimationInstance = InstanceType<typeof NumberAnimation> | null
 const basicRef = ref<NumberAnimationInstance>(null)
 const precision2Ref = ref<NumberAnimationInstance>(null)

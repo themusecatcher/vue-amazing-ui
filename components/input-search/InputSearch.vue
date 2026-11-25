@@ -23,7 +23,6 @@ export interface Props {
   defaultValue?: string // 非受控初始值，未绑 v-model:value 时生效
   valueModifiers?: object // 用于访问组件的 v-model 上添加的修饰符
 }
-// 声明组件插槽类型
 export interface InputSearchSlots {
   addonBefore?: () => VNode[]
   prefix?: () => VNode[]
@@ -103,12 +102,12 @@ watch(
     immediate: true
   }
 )
-// 文本合成系统即输入法编辑器开始新的输入合成时会触发
+/** 文本合成系统即输入法编辑器开始新的输入合成时会触发 */
 function onCompositionStart(e: CompositionEvent): void {
   isComposing.value = true
   emits('compositionstart', e)
 }
-// 当文本段落的组成完成或取消时触发 (具有特殊字符的触发，需要一系列键和其他输入，如语音识别或移动中的字词建议)
+/** 当文本段落的组成完成或取消时触发 (具有特殊字符的触发，需要一系列键和其他输入，如语音识别或移动中的字词建议) */
 function onCompositionEnd(e: CompositionEvent): void {
   isComposing.value = false
   const target = e.target as HTMLInputElement | null
@@ -163,15 +162,17 @@ function onInputSearch(e: KeyboardEvent): void {
 function onSearch(e: MouseEvent | KeyboardEvent): void {
   emits('search', innerValue.value, e)
 }
-// 原生 focus / blur 从内部 input 转发：两者都不冒泡，挂在根节点上的监听收不到；同步带上 relatedTarget 供宿主判断焦点去向
-// 注意口径：事件只对应内部 input，视觉聚焦态由容器的 :focus-within 驱动，搜索按钮获得焦点时不会上报
+/**
+ * 原生 focus / blur 从内部 input 转发：两者都不冒泡，挂在根节点上的监听收不到；同步带上 relatedTarget 供宿主判断焦点去向
+ * 注意口径：事件只对应内部 input，视觉聚焦态由容器的 :focus-within 驱动，搜索按钮获得焦点时不会上报
+ */
 function onFocus(e: FocusEvent): void {
   emits('focus', e)
 }
 function onBlur(e: FocusEvent): void {
   emits('blur', e)
 }
-// 程序化控制焦点：走原生 input 的 focus / blur，聚焦态由 CSS :focus-within 驱动，无需另行同步
+/** 程序化控制焦点：走原生 input 的 focus / blur，聚焦态由 CSS :focus-within 驱动，无需另行同步 */
 function focus(): void {
   inputRef.value?.focus()
 }

@@ -22,7 +22,6 @@ export interface Props {
   format?: (percent: number) => string | number // 内容的模板函数
   type?: 'line' | 'circle' // 进度条类型
 }
-// 声明组件插槽类型
 export interface ProgressSlots {
   success?: () => VNode[]
   format?: (props: { percent: number }) => VNode[]
@@ -317,7 +316,7 @@ const showSuccess = computed(() => {
     }
   }
   .progress-success {
-    // 与 .progress-text 一致用 min-width：自定义 success 文案较长时随内容撑开，而不是溢出固定 40px
+    /* 与 .progress-text 一致用 min-width：自定义 success 文案较长时随内容撑开，而不是溢出固定 40px */
     min-width: 40px;
     text-align: center;
     display: inline-flex;

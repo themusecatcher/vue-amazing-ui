@@ -19,7 +19,7 @@ import type {
   UseFloatingReturn
 } from 'components/utils'
 
-/**
+/*
  * 浮层定位内核（`useFloating`）自证测试
  *
  * 求解层必须「逐 placement × 逐边界条件」自证等价，故此处：
@@ -28,7 +28,7 @@ import type {
  * - 用挂载集成测试校验「对外命名 ↔ 内核 kebab 命名」映射与全链滚动监听。
  */
 
-/** 合成视口尺寸 */
+// 合成视口尺寸
 const VIEW_WIDTH = 1000
 const VIEW_HEIGHT = 600
 
@@ -212,9 +212,9 @@ describe('求解层 · 查表自证', () => {
   })
 })
 
-/** 元素 → 桩矩形；未登记的元素（含惰性创建的视口测量元素）统一返回视口矩形 */
+// 元素 → 桩矩形；未登记的元素（含惰性创建的视口测量元素）统一返回视口矩形
 const rects = new Map<HTMLElement, DOMRect>()
-/** 元素 → 桩布局尺寸（offsetWidth / offsetHeight）；未登记时回落到桩矩形 */
+// 元素 → 桩布局尺寸（offsetWidth / offsetHeight）；未登记时回落到桩矩形
 const offsetSizes = new Map<HTMLElement, { width: number; height: number }>()
 const viewportRect = {
   x: 0,

@@ -6,7 +6,7 @@ import Select, { type SelectDropdownRenderParams } from 'components/select'
 import Tooltip from 'components/tooltip'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * Select 面板内嵌浮层（Tooltip / Popover）的挂载位置护栏
  *
  * 背景（重构文档 §3.4）：`Popup` 面板自带 `data-va-floating-mount`，Select 迁移为 `Popup` 基座后
@@ -114,7 +114,7 @@ describe('Select 面板内嵌浮层的挂载位置', () => {
 })
 
 describe('Select 面板关闭时内嵌浮层收起', () => {
-  /**
+  /*
    * 面板关闭只是 `v-show` 隐藏，既不给内嵌浮层的触发元素派发 `mouseleave` 也不派发 `blur`；
    * 宿主（`Popup`）经 `zIndexContainerOpenKey` 下发开合状态，内嵌浮层据此收起 —— 否则会停在
    * 打开态，面板重开时以「仍打开」的状态冒出来（宿主级同源守护见 `tests/popup.spec.ts`）。

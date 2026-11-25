@@ -19,7 +19,7 @@ import Menu from 'components/menu/Menu.vue'
 import ColorPicker from 'components/color-picker/ColorPicker.vue'
 import Slider from 'components/slider/Slider.vue'
 
-/**
+/*
  * v-model 字段的**非受控**用例（父不传 prop 也不监听）
  *
  * 契约（见 development/component-design.md 的「v-model 声明约定」）：

@@ -4,7 +4,7 @@ import DatePicker from 'components/date-picker/DatePicker.vue'
 import type { DatePickerProps } from 'components/date-picker'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * 回归守护：空草稿时的默认时分秒（`defaultTime`）。
  *
  * 锁定三组语义：
@@ -14,11 +14,11 @@ import { flushTransition } from './helpers'
  *    另一端那一日；未选中的单位按 `0` 补。
  */
 const VIEW_DATE = new Date(2026, 0, 1).getTime()
-/** 起点端的确定性值：09:00，用作「另一端时刻」以验证它不参与空段的展示与落值 */
+// 起点端的确定性值：09:00，用作「另一端时刻」以验证它不参与空段的展示与落值
 const START_AT_NINE = new Date(2026, 0, 10, 9, 0, 0).getTime()
-/** 起点端默认时刻：当日 0 点 */
+// 起点端默认时刻：当日 0 点
 const START_DEFAULT_TIME = new Date(2026, 0, 1).getTime()
-/** 终点端默认时刻：当日 16:20:30 */
+// 终点端默认时刻：当日 16:20:30
 const END_DEFAULT_TIME = new Date(2026, 0, 1, 16, 20, 30).getTime()
 
 let wrapper: ReturnType<typeof mount> | null = null

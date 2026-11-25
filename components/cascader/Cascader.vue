@@ -44,16 +44,16 @@ export interface FieldNames {
 }
 export type CascaderValue = string | number
 export type CascaderPath = CascaderValue[]
-// 绑定值形态：单选为单条路径，多选为路径数组
+/** 绑定值形态：单选为单条路径，多选为路径数组 */
 export type CascaderModelValue = CascaderPath | CascaderPath[]
 export type CascaderPlacement = 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'
 export type ShowCheckedStrategy = typeof SHOW_PARENT | typeof SHOW_CHILD
-// 搜索文本切分片段：hit 为 true 表示该片段命中了关键词（供高亮）
+/** 搜索文本切分片段：hit 为 true 表示该片段命中了关键词（供高亮） */
 export interface SearchSegment {
   text: string
   hit: boolean
 }
-// 搜索结果自定义渲染的回调参数
+/** 搜索结果自定义渲染的回调参数 */
 export interface SearchRenderParams {
   inputValue: string // 当前搜索文本
   path: Option[] // 命中项从根到自身的选项路径
@@ -67,12 +67,12 @@ export interface SearchConfig {
   limit?: number | false // 结果条数上限，false 为不限，默认 50
   matchInputWidth?: boolean // 搜索结果面板是否与选择器同宽，默认 true
 }
-// displayRender 的回调参数
+/** displayRender 的回调参数 */
 export interface DisplayRenderParams {
   labels: string[] // 各级选项文本
   selectedOptions: Option[] // 各级选项数据
 }
-// tagRender 的回调参数
+/** tagRender 的回调参数 */
 export interface TagRenderParams {
   label: string // tag 显示文本（各级文本以 ' / ' 连接）
   value: CascaderPath // tag 对应的选中路径
@@ -81,7 +81,7 @@ export interface TagRenderParams {
   disabled: boolean // 路径上是否存在禁用项（用于置灰 tag）
   onClose: (e?: MouseEvent) => void // 移除该 tag
 }
-// maxTagPlaceholder 的回调参数
+/** maxTagPlaceholder 的回调参数 */
 export interface MaxTagPlaceholderParams {
   omittedValues: CascaderPath[] // 被折叠的选中路径
   omittedLabels: string[] // 被折叠路径的文本
@@ -138,7 +138,7 @@ export interface Props {
   autofocus?: boolean // 是否自动获取焦点
   id?: string // 组件 id，用于 aria-controls / aria-owns 关联，未传时内部生成
 }
-// 声明组件插槽类型（顺序与文档 `## Slots` 表一致）
+/** 插槽顺序需与文档 Slots 表一致 */
 export interface CascaderSlots {
   default?: () => VNode[] // 自定义触发器内容，提供后整体替换选择框
   option?: (option: Option) => VNode[] // 自定义选项内容，作用域为当前选项数据
@@ -384,7 +384,7 @@ function collectLeafPaths(path: CascaderPath, result: CascaderPath[]): void {
     }
   })
 }
-/**
+/*
  * 多选勾选态表：只遍历各列**已渲染**选项的子树，一次后序汇总「已勾选叶子数 / 叶子总数」并落到路径键上。
  * 模板里每个选项要读多次勾选态（aria / 样式 / 扩散环），逐次遍历子树会把整列渲染放大成平方级；
  * 禁用分支不计入（不可勾选，其勾选态也不参与父级推导）
@@ -782,7 +782,7 @@ function restoreColumnScroll(): void {
     syncColumnScrollTop(columnIndex, container)
   })
 }
-/**
+/*
  * 激活路径变化（点选 / 键盘移动 / 悬浮展开）后的列滚动维护：
  * ① 该列父级变了 → 内容是一组新选项，滚动位置回到顶部（否则停在上一个父级的滚动位置，观感如「没切换」）；
  * ② 再把该列激活项滚入可视区（虚拟滚动下目标行可能尚未渲染，按行高换算）
@@ -909,7 +909,7 @@ function setPanelOpen(nextOpen: boolean): void {
   openModel.value = nextOpen
   if (controlled) emitPanelChange(nextOpen)
 }
-// update:open 由 useControlledModel 在写模型时派发，此处只负责语义化事件
+/** update:open 由 useControlledModel 在写模型时派发，此处只负责语义化事件 */
 function emitPanelChange(nextOpen: boolean): void {
   emits('openChange', nextOpen)
   emits('dropdownVisibleChange', nextOpen)
@@ -926,7 +926,7 @@ function closePanel(): void {
 function setSearchValue(value: string): void {
   searchValueModel.value = value
 }
-/**
+/*
  * 搜索输入框的可写目标：读统一走 searchValueModel（受控时由外部驱动），
  * 写走 setSearchValue（受控时额外回传 update:searchValue）
  */

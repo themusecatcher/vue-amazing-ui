@@ -7,7 +7,7 @@ import Modal from 'components/modal/Modal.vue'
 import { themeTeleportKey } from 'components/config-provider/context'
 import { derive, MODE_ATTRIBUTE } from 'components/theme'
 
-/**
+/*
  * Teleport 浮层的主题转发
  *
  * 变量写在包裹元素上（`abstract: false`）时，Teleport 到 body 的浮层拿不到 DOM 继承，
@@ -17,7 +17,7 @@ import { derive, MODE_ATTRIBUTE } from 'components/theme'
 const RED = '#f5222d'
 const GREEN = '#18a058'
 
-/** 读取转发通道的探针：只断言通道内容，不依赖具体组件 */
+// 读取转发通道的探针：只断言通道内容，不依赖具体组件
 const Probe = defineComponent({
   name: 'ThemeProbe',
   setup() {

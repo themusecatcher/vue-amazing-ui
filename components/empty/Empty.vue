@@ -10,7 +10,6 @@ export interface Props {
   imageStyle?: CSSProperties // 设置图片的样式
   footer?: string // 设置底部内容
 }
-// 声明组件插槽类型
 export interface EmptySlots {
   default?: () => VNode[]
   description?: () => VNode[]

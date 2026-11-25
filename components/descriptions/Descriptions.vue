@@ -26,7 +26,6 @@ export interface Props {
   labelClass?: string // 标签自定义类名，与 DescriptionsItem 的 labelClass 叠加
   contentClass?: string // 内容自定义类名，与 DescriptionsItem 的 contentClass 叠加
 }
-// 声明组件插槽类型
 export interface DescriptionsSlots {
   default?: () => VNode[]
   header?: () => VNode[] // 自定义整个头部区域，存在时替代 title 与 extra
@@ -68,11 +67,11 @@ const mdMatched = useMediaQuery(MEDIA_QUERIES.md).match
 const smMatched = useMediaQuery(MEDIA_QUERIES.sm).match
 const xsMatched = useMediaQuery(MEDIA_QUERIES.xs).match
 const isMounted = useMounted()
-// 归一化列数：非有限数或小于 1 时回退默认值，避免 colspan 出现 0 / NaN
+/** 归一化列数：非有限数或小于 1 时回退默认值，避免 colspan 出现 0 / NaN */
 function normalizeColumn(value: number): number {
   return Number.isFinite(value) && value >= 1 ? Math.floor(value) : DEFAULT_COLUMN
 }
-// 归一化 span：非有限数或小于 1 时按 1 处理
+/** 归一化 span：非有限数或小于 1 时按 1 处理 */
 function normalizeSpan(value: number): number {
   return Number.isFinite(value) && value >= 1 ? Math.floor(value) : 1
 }
@@ -126,8 +125,10 @@ interface CellData {
   labelClass: string | undefined
   contentClass: string | undefined
 }
-// 归一化任意插槽 / 属性返回值为 VNode 数组：
-// 兼容字符串、数字、布尔、单个 VNode 与嵌套数组，保证后续一律按 VNode 处理
+/**
+ * 归一化任意插槽 / 属性返回值为 VNode 数组：
+ * 兼容字符串、数字、布尔、单个 VNode 与嵌套数组，保证后续一律按 VNode 处理
+ */
 function toNodes(value: unknown): VNode[] {
   if (value === undefined || value === null || typeof value === 'boolean') {
     return []
@@ -140,15 +141,17 @@ function toNodes(value: unknown): VNode[] {
   }
   return [value as VNode]
 }
-// VNode 的 children 有两类形态：插槽对象（模板编译产物）与普通子节点（手写渲染函数场景），
-// 仅前者能按插槽名取用，故用 isVNode 将两者区分开
+/**
+ * VNode 的 children 有两类形态：插槽对象（模板编译产物）与普通子节点（手写渲染函数场景），
+ * 仅前者能按插槽名取用，故用 isVNode 将两者区分开
+ */
 function isSlotObject(value: unknown): value is Record<string, unknown> {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) {
     return false
   }
   return !isVNode(value)
 }
-// 递归拍平 Fragment 与嵌套数组：兼容 v-for / template 包裹产生的子节点结构
+/** 递归拍平 Fragment 与嵌套数组：兼容 v-for / template 包裹产生的子节点结构 */
 function flattenChildren(children: unknown): VNode[] {
   const result: VNode[] = []
   toNodes(children).forEach((vnode) => {
@@ -160,8 +163,10 @@ function flattenChildren(children: unknown): VNode[] {
   })
   return result
 }
-// 判断一组 VNode 是否含可渲染内容（空数组 / 注释 / 空白文本视为无内容）：
-// 用于「label 为空时不渲染标签与冒号」，判定口径与 useSlotsExist 的插槽探测保持一致
+/**
+ * 判断一组 VNode 是否含可渲染内容（空数组 / 注释 / 空白文本视为无内容）：
+ * 用于「label 为空时不渲染标签与冒号」，判定口径与 useSlotsExist 的插槽探测保持一致
+ */
 function hasRenderableContent(nodes: VNode[]): boolean {
   return nodes.some((node) => {
     if (node.type === Comment) {
@@ -220,7 +225,7 @@ const cells = computed<CellData[]>(() => {
     }
   })
 })
-// 行末收口：未显式设置 span、或 span 超出本行剩余列数时，按本行剩余列数渲染；显式 span 未超出时保持原值
+/** 行末收口：未显式设置 span、或 span 超出本行剩余列数时，按本行剩余列数渲染；显式 span 未超出时保持原值 */
 function fillSpan(cell: CellData, restCol: number): CellData {
   if (cell.rawSpan === undefined || cell.span > restCol) {
     if (cell.rawSpan !== undefined && cell.span > restCol) {
@@ -406,8 +411,8 @@ const rows = computed<CellData[][]>(() => {
       font-size: 14px;
     }
   }
-  // 行内单元格统一底部留白：只作用于 tr 的直接子级，
-  // 避免命中无边框水平模式中 container 内的 span（那会与 td 的内边距叠加）
+  /* 行内单元格统一底部留白：只作用于 tr 的直接子级， */
+  /* 避免命中无边框水平模式中 container 内的 span（那会与 td 的内边距叠加） */
   .descriptions-row {
     border: none; // 可选
     background: transparent; // 可选

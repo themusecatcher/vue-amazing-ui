@@ -398,7 +398,7 @@ export { default as Upload } from './upload'
 export type { VideoProps } from './video'
 export { default as Video } from './video'
 
-export type { WaterfallProps, WaterfallImage } from './waterfall'
+export type { WaterfallProps, WaterfallImage, WaterfallResponsive } from './waterfall'
 export { default as Waterfall } from './waterfall'
 
 export type { WatermarkProps, WatermarkFont, WatermarkSlots } from './watermark'

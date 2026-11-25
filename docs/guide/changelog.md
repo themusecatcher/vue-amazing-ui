@@ -14,6 +14,16 @@ description: Vue Amazing UI 组件库的版本更新记录，含新增组件、�
 - **直接联系**：通过页面右下角邮箱地址与我直接沟通
 :::
 
+## 3.9.7 <span class="changelog-date">2026-11-25</span>
+
+- [骨架屏 Skeleton](/guide/components/skeleton.html) 的 `animated` 默认值由 `true` 改为 `false`，需要扫光时显式传入；[卡片 Card](/guide/components/card.html) 的 `loading` 占位随之默认静态，可在 `skeletonProps` 中开启
+- 移除 [瀑布流 Waterfall](/guide/components/waterfall.html) 的 `loading` 与 `spinProps`：加载态改由图片占位骨架承担，`backgroundColor` 更名为 `bgColor`
+- 新增 [瀑布流 Waterfall](/guide/components/waterfall.html) 的图片占位与按需渲染：每张图片加载完成前展示占位骨架（未提供 `aspectRatio` 时先按 `1:1` 落位、尺寸取回后精化），加载失败时保留位置并显示失败图标；新增 `lazy` 属性按可视区容量分批渲染
+- 新增 [瀑布流 Waterfall](/guide/components/waterfall.html) 的 `click` 事件与 `columnCount` 响应式对象（按视口断点取列数），并导出 `WaterfallResponsive` 类型；`columnGap` 移除，改用 `gap`（数组为 [水平间距, 垂直间距]），文档补充对应示例
+- 修复 [瀑布流 Waterfall](/guide/components/waterfall.html) 图片增删或加载失败后布局错乱、布局期间切换列数后底部多出空白、空数据与非法列数 / 间隙下的定位异常
+- 优化 [瀑布流 Waterfall](/guide/components/waterfall.html) 追加图片只预取新增项、尺寸预取改为并行，首屏与追加时的渲染更快
+- 更新贡献者文档的注释规范：按「谁读这条注释」判定形式（声明与 `export` 项写 `/** */`、内部值与语句写 `//`、跨行段落写 `/* */`），启用 `spaced-comment` 校验，存量注释已按该规范统一
+
 ## 3.9.6 <span class="changelog-date">2026-11-24</span>
 
 - 新增 [倒计时 Countdown](/guide/components/countdown.html) 的分段渲染：`render` 属性与 `#render` 插槽可取到年 / 月 / 日 / 时 / 分 / 秒 / 毫秒自行排版（同时提供时插槽优先），并导出 `CountdownRenderParams` 类型

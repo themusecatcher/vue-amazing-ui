@@ -20,9 +20,9 @@ const props = withDefaults(defineProps<TimeUnitColumnProps>(), {
 const emits = defineEmits<{
   select: [value: number]
 }>()
-/** 选中项滚到列顶部的动画时长 */
+// 选中项滚到列顶部的动画时长
 const SCROLL_DURATION = 120
-/** 面板展开后等待可见的最大帧数（浮层首帧可能仍在 display: none） */
+// 面板展开后等待可见的最大帧数（浮层首帧可能仍在 display: none）
 const MAX_VISIBLE_FRAMES = 20
 const columnRef = ref<HTMLElement | null>(null)
 const scrollbarRef = ref<ScrollbarExpose | null>(null)
@@ -55,7 +55,7 @@ function scrollToOffset(to: number, duration: number): void {
     scroller.scrollTop = to
     return
   }
-  // 每帧移动「剩余距离 ÷ 剩余时长 × 10」并递减剩余时长，收尾自动吸附到目标
+  /** 每帧移动「剩余距离 ÷ 剩余时长 × 10」并递减剩余时长，收尾自动吸附到目标 */
   const step = (remaining: number) => {
     const difference = to - scroller.scrollTop
     if (Math.abs(difference) < 1 || remaining <= 0) {
@@ -136,8 +136,8 @@ function onCellClick(unit: PickerTimeUnit): void {
 </template>
 <style lang="less" scoped>
 .picker-time-column {
-  // 分隔线与活动列底纹都由本列的绝对定位伪元素绘制，故须成为它们的定位祖先；
-  // isolation 让底纹的 z-index: -1 留在本列之内，否则会沉到面板底色之下而看不见
+  /* 分隔线与活动列底纹都由本列的绝对定位伪元素绘制，故须成为它们的定位祖先； */
+  /* isolation 让底纹的 z-index: -1 留在本列之内，否则会沉到面板底色之下而看不见 */
   position: relative;
   isolation: isolate;
   flex: 1 0 auto;

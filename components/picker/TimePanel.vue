@@ -43,9 +43,9 @@ const props = withDefaults(defineProps<TimePanelProps>(), {
 const emits = defineEmits<{
   change: [timestamp: number]
 }>()
-/** 当前活动的时间列下标：-1 表示尚未指定（由首次左右键或上下键确定） */
+// 当前活动的时间列下标：-1 表示尚未指定（由首次左右键或上下键确定）
 const activeColumnIndex = ref(-1)
-/**
+/*
  * 合成新时间戳的基准：提供新值的日期部分，未传时退回展示值
  *
  * 展示值只认草稿值（空草稿即 `null`），拿它当基准会在空草稿时退回当前时刻，
@@ -57,19 +57,19 @@ const hour24 = computed(() => (props.value === null ? null : getHourNumber(props
 const minute = computed(() => (props.value === null ? null : getMinuteNumber(props.value)))
 const second = computed(() => (props.value === null ? null : getSecondNumber(props.value)))
 const isPM = computed(() => hour24.value !== null && hour24.value >= HALF_DAY_HOURS)
-/** 小时列取值：12 小时制下为 0-11，24 小时制下为 0-23 */
+// 小时列取值：12 小时制下为 0-11，24 小时制下为 0-23
 const hourColumnValue = computed(() => {
   if (hour24.value === null) return null
   return layout.value.use12Hours ? toHourColumnValue(hour24.value) : hour24.value
 })
-/**
+/*
  * 上下午列取值：空值时按上午选中
  *
  * 小时列的候选按 {@link isPM} 取半（空值即上午半天），上下午列若在空值时无选中，两列会自相矛盾 ——
  * 小时列列的是上午刻度、上下午列却什么都没选。故空值同样落在上午，点选后由 `onPeriodSelect` 补齐落值。
  */
 const periodValue = computed(() => (isPM.value ? 1 : 0))
-/** 小时列：12 小时制按上下午过滤后重映射取值与文本（0 点展示为 12） */
+// 小时列：12 小时制按上下午过滤后重映射取值与文本（0 点展示为 12）
 const hourUnits = computed<PickerTimeUnit[]>(() => {
   const units = generateTimeUnits('hour', props.timeProps?.hourStep, props.disabledUnits?.disabledHours?.())
   if (!layout.value.use12Hours) {
@@ -94,7 +94,7 @@ const secondUnits = computed(() =>
     props.disabledUnits?.disabledSeconds?.(hour24.value ?? -1, minute.value ?? -1)
   )
 )
-/** 上下午列：该半天内所有小时均禁用时才禁用 */
+// 上下午列：该半天内所有小时均禁用时才禁用
 const periodUnits = computed<PickerTimeUnit[]>(() => {
   const units = generateTimeUnits('hour', props.timeProps?.hourStep, props.disabledUnits?.disabledHours?.())
   const isHalfDisabled = (isPMHalf: boolean) =>
@@ -104,7 +104,7 @@ const periodUnits = computed<PickerTimeUnit[]>(() => {
     { label: 'PM', value: 1, disabled: isHalfDisabled(true) }
   ]
 })
-/**
+/*
  * 头部文本格式：使用方**显式传入** format 时原样使用（含日期部分则一并展示），否则按列显隐推导纯时刻
  *
  * 形态的默认展示格式不参与头部 —— 头部展示的是「时间」这一列的取值，而非整个值的展示格式。
@@ -136,8 +136,8 @@ function onSecondSelect(value: number): void {
 function onPeriodSelect(value: number): void {
   emitTime(toHour24(hourColumnValue.value ?? 0, value === 1), minute.value, second.value)
 }
-/* ============================== 键盘导航 ============================== */
-/**
+// ============================== 键盘导航 ==============================
+/*
  * 时间列清单：顺序即左右键的遍历顺序（与渲染顺序一致）
  *
  * 列清单按 props 推导而非从 DOM 取：禁用项过滤与 12 小时制重映射都发生在候选项生成阶段，
@@ -164,9 +164,9 @@ const columns = computed(() => {
   }
   return list
 })
-/** 活动列名：供各列判定自身是否为键盘操作的目标（无活动列时为 null） */
+// 活动列名：供各列判定自身是否为键盘操作的目标（无活动列时为 null）
 const activeColumnName = computed(() => columns.value[activeColumnIndex.value]?.name ?? null)
-/**
+/*
  * 面板已收起、或不再是键盘目标（日期时间面板切到日期区）时清掉列下标：下次激活从「未指定」
  * 重新开始，不接着上一次的列 —— 收起后高亮须一并消失，否则重开面板会留下一列残留底色
  *

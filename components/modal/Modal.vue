@@ -47,9 +47,9 @@ import {
   log
 } from 'components/utils'
 import type { MountElement } from 'components/utils'
-// 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数
+/** 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数 */
 export type ContentType = string | VNode | (() => VNode)
-// 按钮回调：返回 false 或 Promise reject 时阻止关闭，其余情况（含 Promise resolve）自动关闭
+/** 按钮回调：返回 false 或 Promise reject 时阻止关闭，其余情况（含 Promise resolve）自动关闭 */
 export type ModalCallback = () => unknown | Promise<unknown>
 export interface Props {
   width?: string | number // 模态框宽度，单位 px
@@ -101,7 +101,6 @@ export interface Props {
   to?: string | MountElement // 弹窗容器挂载的节点，可选：元素标签名 (例如 'body') 或者元素本身
   open?: boolean // (v-model) 模态框是否可见，声明式用法下生效
 }
-// 声明组件插槽类型
 export interface ModalSlots {
   icon?: () => VNode[] // 自定义图标
   title?: () => VNode[] // 自定义标题
@@ -174,7 +173,7 @@ export interface ModalReactive extends ModalOptions {
   update: (options: ModalUpdate) => void // 更新该弹窗；mode 可切换弹窗类型与内置图标
   show: () => void // 重新打开该弹窗；实例已被销毁（destroyOnClose: true 且离场结束）时调用无效
 }
-// custom 为完全自定义形态：不渲染内置图标与按钮组，交由 icon / footer 自行组合
+/** custom 为完全自定义形态：不渲染内置图标与按钮组，交由 icon / footer 自行组合 */
 export type Mode = 'info' | 'success' | 'error' | 'warning' | 'confirm' | 'erase' | 'custom'
 
 // 主题转发：弹窗 Teleport 到 body，作用域变量写在包裹元素上时由 Provider 下发过来
@@ -241,9 +240,11 @@ defineOptions({ inheritAttrs: false })
 const DECLARATIVE_KEY = 'modal_declarative'
 // 声明式固定双按钮形态，与 Dialog 一致
 const DECLARATIVE_MODE: Mode = 'confirm'
-// update 可更新的字段：ModalOptions 的全部属性 + mode（用于切换弹窗类型，进而决定内置图标与按钮组）
-// key 是身份标识，创建后不可变更；ModalOptions 本就不含 key，故无需额外剔除
-// 弹窗栈中的单个实例：开关状态、loading 与动画原点各自持有，避免多实例互相覆盖
+/**
+ * update 可更新的字段：ModalOptions 的全部属性 + mode（用于切换弹窗类型，进而决定内置图标与按钮组）
+ * key 是身份标识，创建后不可变更；ModalOptions 本就不含 key，故无需额外剔除
+ * 弹窗栈中的单个实例：开关状态、loading 与动画原点各自持有，避免多实例互相覆盖
+ */
 interface ModalItem extends ModalOptions {
   readonly key: string // 唯一标识，作为身份与 :key
   mode: Mode
@@ -261,7 +262,7 @@ let pendingFocusRestore = false
 // 各实例确定 / 取消按钮的 DOM，用于打开时按 autoFocusButton 聚焦
 const okBtnEls = new Map<string, HTMLElement>()
 const cancelBtnEls = new Map<string, HTMLElement>()
-// Button 的 ref 拿到的是组件实例，需取出其根 DOM
+/** Button 的 ref 拿到的是组件实例，需取出其根 DOM */
 function resolveEl(el: unknown): HTMLElement | null {
   if (!el) {
     return null
@@ -272,7 +273,7 @@ function resolveEl(el: unknown): HTMLElement | null {
   }
   return el instanceof HTMLElement ? el : null
 }
-// 用函数 ref 按 key 收集按钮 DOM；卸载时传 null，需同步清理以免泄漏
+/** 用函数 ref 按 key 收集按钮 DOM；卸载时传 null，需同步清理以免泄漏 */
 function setOkBtnEl(key: string, el: unknown): void {
   const dom = resolveEl(el)
   if (dom) {
@@ -341,14 +342,14 @@ let scrollLockRelease: (() => void) | null = null
 function findItem(key: string): ModalItem | undefined {
   return modalList.value.find((item) => item.key === key)
 }
-// 取某项配置的最终生效值：per-item 优先级高于组件 Props
+/** 取某项配置的最终生效值：per-item 优先级高于组件 Props */
 function getComputedValue<K extends keyof Props>(item: ModalItem | undefined, key: K): Props[K] {
   if (item && item[key as keyof ModalOptions] !== undefined) {
     return item[key as keyof ModalOptions] as unknown as Props[K]
   }
   return props[key]
 }
-// 单个实例的层级：遮罩取 zIndex，弹窗取 zIndex + 10，保持两者的层叠关系
+/** 单个实例的层级：遮罩取 zIndex，弹窗取 zIndex + 10，保持两者的层叠关系 */
 function itemZIndex(item: ModalItem): number {
   return getComputedValue(item, 'zIndex') ?? modalZIndex.value
 }
@@ -368,18 +369,18 @@ function itemStyle(item: ModalItem): CSSProperties {
 function itemIconClass(item: ModalItem): string {
   return `icon-${item.mode}`
 }
-// 内置双按钮组形态：仅 confirm / erase 具备；notice 为单按钮形态，custom 无内置按钮组，二者均不参与
+/** 内置双按钮组形态：仅 confirm / erase 具备；notice 为单按钮形态，custom 无内置按钮组，二者均不参与 */
 function isConfirmMode(item: ModalItem): boolean {
   return ['confirm', 'erase'].includes(item.mode)
 }
-// 取消按钮：仅在双按钮组形态下由 showCancel 控制，默认显示；其余形态该配置不生效，避免与单按钮 / 自定义底部冲突
+/** 取消按钮：仅在双按钮组形态下由 showCancel 控制，默认显示；其余形态该配置不生效，避免与单按钮 / 自定义底部冲突 */
 function showCancelBtn(item: ModalItem): boolean {
   return isConfirmMode(item) && item.showCancel !== false
 }
 function isNoticeMode(item: ModalItem): boolean {
   return ['info', 'success', 'error', 'warning'].includes(item.mode)
 }
-// 底部区域：传函数时完全自定义，false 时整块隐藏
+/** 底部区域：传函数时完全自定义，false 时整块隐藏 */
 function isFooterFn(item: ModalItem): boolean {
   return typeof getComputedValue(item, 'footer') === 'function'
 }
@@ -387,17 +388,21 @@ function footerNode(item: ModalItem): VNode {
   const footer = getComputedValue(item, 'footer')
   return typeof footer === 'function' ? footer() : createTextVNode('')
 }
-// 底部容器：仅在存在内置按钮组或自定义底部节点时渲染；
-// 否则仅因 footer 默认为 true 就会渲染出一个无内容的空壳（custom 形态与 update 切形态均会命中）
+/**
+ * 底部容器：仅在存在内置按钮组或自定义底部节点时渲染；
+ * 否则仅因 footer 默认为 true 就会渲染出一个无内容的空壳（custom 形态与 update 切形态均会命中）
+ */
 function showFooter(item: ModalItem): boolean {
   if (isFooterFn(item)) {
     return true
   }
   return getComputedValue(item, 'footer') !== false && (isConfirmMode(item) || isNoticeMode(item))
 }
-// 自定义图标：未配置时返回 null，由模板按弹窗类型渲染内置图标
-// 走 renderContentToVNode 而非直接把配置交给 <component :is>，避免渲染函数被当成函数式组件：
-// 函数式组件以函数引用为 type，声明式内联箭头函数每次渲染都是新引用，会导致图标被反复销毁重建
+/**
+ * 自定义图标：未配置时返回 null，由模板按弹窗类型渲染内置图标
+ * 走 renderContentToVNode 而非直接把配置交给 <component :is>，避免渲染函数被当成函数式组件：
+ * 函数式组件以函数引用为 type，声明式内联箭头函数每次渲染都是新引用，会导致图标被反复销毁重建
+ */
 function iconNode(item: ModalItem): VNode | null {
   const icon = getComputedValue(item, 'icon')
   if (icon === undefined || icon === null) {
@@ -405,7 +410,7 @@ function iconNode(item: ModalItem): VNode | null {
   }
   return renderContentToVNode(icon as ContentType)
 }
-// 关闭图标：未配置时返回 null，由模板渲染默认图标
+/** 关闭图标：未配置时返回 null，由模板渲染默认图标 */
 function closeIconNode(item: ModalItem): VNode | null {
   const icon = getComputedValue(item, 'closeIcon')
   if (icon === undefined || icon === null) {
@@ -413,7 +418,7 @@ function closeIconNode(item: ModalItem): VNode | null {
   }
   return renderContentToVNode(icon as ContentType)
 }
-// 内容区高度：height 为 'auto' 时不约束，由内容自然撑开
+/** 内容区高度：height 为 'auto' 时不约束，由内容自然撑开 */
 function contentHeightStyle(item: ModalItem): CSSProperties {
   const height = getComputedValue(item, 'height')
   if (height === undefined || height === 'auto') {
@@ -421,21 +426,25 @@ function contentHeightStyle(item: ModalItem): CSSProperties {
   }
   return { height: typeof height === 'number' ? `${height}px` : height }
 }
-// 标题元素 id，供 aria-labelledby 关联（无标题时不设置该属性）
+/** 标题元素 id，供 aria-labelledby 关联（无标题时不设置该属性） */
 function titleId(item: ModalItem): string {
   return `modal-title-${item.key}`
 }
-// 内容渲染判定：renderBeforeOpen 为 true 时常驻；destroyOnClose 为 false 时内容常驻（DOM 保留）
-// 为 true 时保留至离场动画结束后再销毁
+/**
+ * 内容渲染判定：renderBeforeOpen 为 true 时常驻；destroyOnClose 为 false 时内容常驻（DOM 保留）
+ * 为 true 时保留至离场动画结束后再销毁
+ */
 function shouldRenderBody(item: ModalItem): boolean {
   if (getComputedValue(item, 'renderBeforeOpen')) {
     return true
   }
   return !getComputedValue(item, 'destroyOnClose') || item.open || item.displayed
 }
-// modalRender 的 prop 与 #modalRender 插槽双通道：两者签名一致，prop 优先，未配置时回退插槽
-// 包装函数引用稳定，插槽留到调用时再读取，避免每次渲染都生成新函数触发多余更新
-// 插槽缺省（如命令式实例）或返回空时回退原始 VNode，保证 h 的 children 始终为有效节点
+/**
+ * modalRender 的 prop 与 #modalRender 插槽双通道：两者签名一致，prop 优先，未配置时回退插槽
+ * 包装函数引用稳定，插槽留到调用时再读取，避免每次渲染都生成新函数触发多余更新
+ * 插槽缺省（如命令式实例）或返回空时回退原始 VNode，保证 h 的 children 始终为有效节点
+ */
 const slotModalRender = (arg: { originVNode: VNode }): VNode =>
   h(Fragment, null, slots.modalRender?.(arg) ?? [arg.originVNode])
 function resolveModalRender(item: ModalItem): Props['modalRender'] {
@@ -446,7 +455,7 @@ function resolveModalRender(item: ModalItem): Props['modalRender'] {
   // #modalRender 是渲染委托型作用域插槽（需真实 originVNode 才能产出 vnode），按「是否提供」判断
   return slots.modalRender ? slotModalRender : undefined
 }
-// 从离场/入场元素上取回实例标识
+/** 从离场/入场元素上取回实例标识 */
 function getKey(el: Element): string {
   return (el as HTMLElement).dataset.key ?? ''
 }
@@ -490,7 +499,7 @@ onUnmounted(() => {
   // 以 scrollLockRelease 而非 openCount 判定，避免 blockScroll=false 从未加锁却误解锁他人
   scrollLockRelease?.()
 })
-// 动画原点按实例持有，避免后开弹窗改写先开弹窗的动画原点
+/** 动画原点按实例持有，避免后开弹窗改写先开弹窗的动画原点 */
 async function onBeforeEnter(el: Element) {
   showModalWrap.value = true
   await nextTick()
@@ -506,8 +515,10 @@ async function onBeforeEnter(el: Element) {
     item.origin = '50% 50%'
   }
 }
-// 入场动画结束后按 autoFocusButton 聚焦：默认聚焦确定按钮（autoFocusButton: 'ok'）；
-// 未指定或按钮不存在时聚焦弹窗主体，保证焦点进入弹窗内（Esc 监听绑定在主体上）
+/**
+ * 入场动画结束后按 autoFocusButton 聚焦：默认聚焦确定按钮（autoFocusButton: 'ok'）；
+ * 未指定或按钮不存在时聚焦弹窗主体，保证焦点进入弹窗内（Esc 监听绑定在主体上）
+ */
 function onAfterEnter(el: Element): void {
   const item = findItem(getKey(el))
   if (!item) {
@@ -541,7 +552,7 @@ function onKeydown(item: ModalItem, e: KeyboardEvent): void {
     handleEsc(item, e)
   }
 }
-// Tab 焦点锁定：Tab / Shift + Tab 在弹窗内循环，避免键盘焦点跑到背景页面
+/** Tab 焦点锁定：Tab / Shift + Tab 在弹窗内循环，避免键盘焦点跑到背景页面 */
 function trapTab(item: ModalItem, e: KeyboardEvent): void {
   trapTabFocus(e, containerEls.get(item.key), modalWrapRef.value)
 }
@@ -609,7 +620,7 @@ function confirm(data: ModalOptions): ModalReactive {
 function erase(data: ModalOptions): ModalReactive {
   return push(data, 'erase')
 }
-// 完全自定义弹窗：不渲染内置图标与按钮组，内容、图标、底部均由调用方自行组合
+/** 完全自定义弹窗：不渲染内置图标与按钮组，内容、图标、底部均由调用方自行组合 */
 function create(data: ModalOptions): ModalReactive {
   return push(data, 'custom')
 }
@@ -620,7 +631,7 @@ function updateItem(key: string, options: ModalUpdate): void {
   }
   Object.assign(item, options)
 }
-// 重新打开实例：实例仍留在栈中时（destroyOnClose: false）可复用
+/** 重新打开实例：实例仍留在栈中时（destroyOnClose: false）可复用 */
 function openItem(key: string): void {
   const item = findItem(key)
   if (!item || item.open) {
@@ -633,7 +644,7 @@ function openItem(key: string): void {
   }
   emits('change', true, key)
 }
-// 关闭实例：仅标记 open: false 并触发离场动画；实际移除（销毁）在离场结束后由 removeItem 完成
+/** 关闭实例：仅标记 open: false 并触发离场动画；实际移除（销毁）在离场结束后由 removeItem 完成 */
 function closeItem(key: string): void {
   const item = findItem(key)
   if (!item || !item.open) {
@@ -650,7 +661,7 @@ function closeItem(key: string): void {
   }
   emits('change', false, key)
 }
-// 从栈中彻底移除实例（DOM 随之销毁）
+/** 从栈中彻底移除实例（DOM 随之销毁） */
 function removeItem(key: string): void {
   const index = modalList.value.findIndex((item) => item.key === key)
   if (index === -1) {
@@ -662,7 +673,7 @@ function removeItem(key: string): void {
   cancelBtnEls.delete(key)
   containerEls.delete(key)
 }
-// 关闭所有弹窗：逐实例走正常关闭流程以保留离场动画，离场结束后统一从栈中移除
+/** 关闭所有弹窗：逐实例走正常关闭流程以保留离场动画，离场结束后统一从栈中移除 */
 function destroyAll(): void {
   modalList.value.forEach((item) => {
     if (!item.open) {
@@ -673,8 +684,10 @@ function destroyAll(): void {
     closeItem(item.key)
   })
 }
-// 声明式实例：由 props.open 驱动，具体配置经 getComputedValue 回落到组件 Props
-// 不设 destroyOnClose 与 closable：回落组件 Props 默认 false / false（保留内容 DOM、默认不显示关闭按钮）
+/**
+ * 声明式实例：由 props.open 驱动，具体配置经 getComputedValue 回落到组件 Props
+ * 不设 destroyOnClose 与 closable：回落组件 Props 默认 false / false（保留内容 DOM、默认不显示关闭按钮）
+ */
 function pushDeclarative(open: boolean): void {
   modalList.value.push({
     key: DECLARATIVE_KEY,
@@ -718,8 +731,10 @@ watch(
   },
   { immediate: true }
 )
-// 遮罩点击作用于该遮罩所属的实例：各实例遮罩按自身 zIndex 层叠，视觉最上层的不一定是栈尾，
-// 统一按 topItem 处理会在 zIndex 与入栈顺序不一致时关闭错误的实例
+/**
+ * 遮罩点击作用于该遮罩所属的实例：各实例遮罩按自身 zIndex 层叠，视觉最上层的不一定是栈尾，
+ * 统一按 topItem 处理会在 zIndex 与入栈顺序不一致时关闭错误的实例
+ */
 function handleMaskClick(item: ModalItem, e: MouseEvent): void {
   if (!item.open) {
     return
@@ -729,7 +744,7 @@ function handleMaskClick(item: ModalItem, e: MouseEvent): void {
     onCancel(item.key, e)
   }
 }
-// Esc 关闭：stopPropagation 避免冒泡后又被页面其他 Esc 监听处理一次
+/** Esc 关闭：stopPropagation 避免冒泡后又被页面其他 Esc 监听处理一次 */
 function handleEsc(item: ModalItem, e: KeyboardEvent): void {
   // 输入法组合态下的 Esc 用于取消候选词，不应关闭弹窗
   if (e.isComposing || e.keyCode === 229) {
@@ -741,7 +756,7 @@ function handleEsc(item: ModalItem, e: KeyboardEvent): void {
     onCancel(item.key, e)
   }
 }
-// 回调返回 false 或 Promise reject 时阻止关闭，其余情况（含 Promise resolve）自动关闭
+/** 回调返回 false 或 Promise reject 时阻止关闭，其余情况（含 Promise resolve）自动关闭 */
 async function onCancel(key: string, e?: Event): Promise<void> {
   const item = findItem(key)
   if (!item) {
@@ -1191,7 +1206,7 @@ emits('ready', { info, success, error, warning, confirm, erase, create, destroyA
         .modal-header {
           display: flex;
           align-items: center;
-          // 显示关闭按钮时为标题预留空间，避免被右上角按钮遮挡
+          /* 显示关闭按钮时为标题预留空间，避免被右上角按钮遮挡 */
           &.header-with-close {
             max-width: calc(100% - 24px);
           }

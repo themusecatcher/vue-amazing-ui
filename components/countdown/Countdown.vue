@@ -3,7 +3,7 @@ import { computed, onMounted, onUnmounted, ref, useSlots, watch } from 'vue'
 import type { CSSProperties, VNode } from 'vue'
 import { log, useEventListener, useSlotsExist } from 'components/utils'
 
-// 分段渲染的数值：年按 360 天、月按 30 天折算，从 format 中出现的最大单位开始切分
+/** 分段渲染的数值：年按 360 天、月按 30 天折算，从 format 中出现的最大单位开始切分 */
 export interface CountdownRenderParams {
   years: number // 剩余年数
   months: number // 剩余月数
@@ -26,7 +26,6 @@ export interface Props {
   active?: boolean // 是否处于计时状态，仅当 future: false 时生效
   render?: (params: CountdownRenderParams) => VNode | string // 自定义倒计时的分段渲染
 }
-// 声明组件插槽类型
 export interface CountdownSlots {
   title?: () => VNode[]
   prefix?: () => VNode[]
@@ -218,12 +217,14 @@ function parseFormat(format: string): CountdownToken[] {
   }
   return list
 }
-// 左侧补零到指定长度
+/** 左侧补零到指定长度 */
 function padZero(value: number, length: number): string {
   return String(value).padStart(length, '0')
 }
-// 按单位取值并补零：token 长度即补零位数（YYYY 补到 4 位）；
-// 毫秒例外，长度是「取高位」的位数（S / SS / SSS 分别为高 1 / 2 / 3 位）
+/**
+ * 按单位取值并补零：token 长度即补零位数（YYYY 补到 4 位）；
+ * 毫秒例外，长度是「取高位」的位数（S / SS / SSS 分别为高 1 / 2 / 3 位）
+ */
 function formatUnit(token: Extract<CountdownToken, { type: 'unit' }>, parts: CountdownRenderParams): string {
   const value = parts[UNIT_KEY[token.unit]]
   if (token.unit === 'millisecond') {
@@ -231,8 +232,10 @@ function formatUnit(token: Extract<CountdownToken, { type: 'unit' }>, parts: Cou
   }
   return padZero(value, token.length)
 }
-// 把剩余毫秒数切分为年、月、日、时、分、秒、毫秒
-// 只对 format 中出现的单位做扣除：未出现的更大单位不单独占用，向下折算给更小的显示单位
+/**
+ * 把剩余毫秒数切分为年、月、日、时、分、秒、毫秒
+ * 只对 format 中出现的单位做扣除：未出现的更大单位不单独占用，向下折算给更小的显示单位
+ */
 function splitRemaining(time: number, units: Set<CountdownUnit>): CountdownRenderParams {
   const total = Math.max(time, 0)
   let rest = Math.floor(total / 1000)
@@ -259,7 +262,7 @@ function stopTimer() {
     timerId = null
   }
 }
-// 下一次刷新的延迟：落在显示值将要变化的单位边界上，+1 抵消定时器提前触发
+/** 下一次刷新的延迟：落在显示值将要变化的单位边界上，+1 抵消定时器提前触发 */
 function nextDelay(): number {
   const interval = tickInterval.value
   if (interval <= MILLISECOND_TICK) return MILLISECOND_TICK
@@ -283,7 +286,7 @@ function tick() {
   remainingTime.value = rest
   scheduleTick()
 }
-// 回到前台时立即校正：后台期间定时器被节流，到期可能已发生但事件尚未派发
+/** 回到前台时立即校正：后台期间定时器被节流，到期可能已发生但事件尚未派发 */
 function handleVisibilityChange() {
   if (document.visibilityState === 'hidden') return
   if (finished || deadline === 0) return
@@ -371,8 +374,8 @@ defineExpose({
     .time-value {
       display: inline-block;
       direction: ltr;
-      // #render 按「是否提供」判定（见脚本内注释），插槽可能渲染为空：空的行内元素仍会撑起
-      // 一个行盒，不收敛会让倒计时区域留出一条空白
+      /* #render 按「是否提供」判定（见脚本内注释），插槽可能渲染为空：空的行内元素仍会撑起 */
+      /* 一个行盒，不收敛会让倒计时区域留出一条空白 */
       &:empty {
         display: none;
       }

@@ -746,11 +746,11 @@ const dataSourceFixColumn = ref([
 const dataSourceFixHeader = ref(data)
 const dataSourceFixHeaderAndColumn = ref(data)
 const dataSourceFixHeaderAndScrollbar = ref(data)
-// 获取 0~10 之间的随机整数
+/** 获取 0~10 之间的随机整数 */
 function getRandomIntInclusive(min: number, max: number) {
   min = Math.ceil(min)
   max = Math.floor(max)
-  return Math.floor(Math.random() * (max - min + 1)) + min //加 1 是因为包含 max
+  return Math.floor(Math.random() * (max - min + 1)) + min // 加 1 是因为包含 max
 }
 const dataSourceHeaderGroup = [...Array(100)].map((_, i) => ({
   key: i.toString(),

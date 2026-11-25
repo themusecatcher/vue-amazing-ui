@@ -14,7 +14,7 @@ import RadioGroup from 'components/radio/radio-group/RadioGroup.vue'
 import CheckboxGroup from 'components/checkbox/checkbox-group/CheckboxGroup.vue'
 import Upload from 'components/upload/Upload.vue'
 
-/**
+/*
  * 取值类字段的非受控入口（`defaultValue` / `defaultFileList`）
  *
  * 契约（见 development/component-design.md 的「v-model 声明约定」）：

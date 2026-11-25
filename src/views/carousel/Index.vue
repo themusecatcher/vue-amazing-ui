@@ -154,13 +154,13 @@ const bezierPointControls = [
   { key: 'x2', min: 0, max: 1 },
   { key: 'y2', min: -1, max: 2 }
 ] as const
-// 贝塞尔数组必须是四个有效数字：InputNumber 清空时会回传 null，此时不改写数组，输入框失焦后回滚显示
+/** 贝塞尔数组必须是四个有效数字：InputNumber 清空时会回传 null，此时不改写数组，输入框失焦后回滚显示 */
 function updateBezierPoint(key: keyof typeof slideEasingBezier, value?: number | null) {
   if (value !== undefined && value !== null) {
     slideEasingBezier[key] = value
   }
 }
-// 缓动函数形态示例：smoothstep，入参 t 为 0~1 的进度，返回缓动后的进度
+/** 缓动函数形态示例：smoothstep，入参 t 为 0~1 的进度，返回缓动后的进度 */
 const slideEasingFunction: EasingFunction = (t) => t * t * (3 - 2 * t)
 const slideEasing = computed<CarouselProps['slideFunction']>(() => {
   const { x1, y1, x2, y2 } = slideEasingBezier
@@ -207,9 +207,11 @@ const slideFunctionMap: Record<string, [number, number, number, number]> = {
 }
 const slideFunctionName = ref<string>('smooth')
 const slideFunction = computed(() => slideFunctionMap[slideFunctionName.value])
-// 配置器状态：字段顺序与组件 Props 定义顺序保持一致
-// height 在 Props 中为 number | string，此处收窄为 number，便于用 InputNumber 调节
-// fadeFunction 在 Props 中为 string | [number, number, number, number]，此处收窄为 string，便于用 Select 调节
+/**
+ * 配置器状态：字段顺序与组件 Props 定义顺序保持一致
+ * height 在 Props 中为 number | string，此处收窄为 number，便于用 InputNumber 调节
+ * fadeFunction 在 Props 中为 string | [number, number, number, number]，此处收窄为 string，便于用 Select 调节
+ */
 type CarouselConfigState = CarouselProps & { height: number; fadeFunction: string }
 const state = reactive<CarouselConfigState>({
   width: 800,
@@ -249,7 +251,7 @@ const widthInput = computed({
     state.width = /^\d+(\.\d+)?$/.test(input) ? Number(input) : input
   }
 })
-// height 输入框清空时不回写，避免组件回退到默认的 100vh 撑爆预览
+/** height 输入框清空时不回写，避免组件回退到默认的 100vh 撑爆预览 */
 function onHeightChange(value?: number) {
   if (value !== undefined) {
     state.height = value
@@ -594,7 +596,7 @@ watch(
   font-size: 30px;
   line-height: 1;
   opacity: 0.72;
-  // 图标是 inline SVG，text-shadow 对它不生效，需用 drop-shadow 沿轮廓生成柔和外晕
+  /* 图标是 inline SVG，text-shadow 对它不生效，需用 drop-shadow 沿轮廓生成柔和外晕 */
   filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.32));
   transition: opacity 0.3s;
   &:not(.custom-arrow-disabled):hover {

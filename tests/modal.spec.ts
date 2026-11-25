@@ -3,7 +3,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import Modal, { ModalProvider } from 'components/modal'
 import type { ModalApi } from 'components/modal'
 
-/**
+/*
  * Modal 回归测试：Esc 绑定在弹窗主体上，由「焦点是否在弹窗内」仲裁，
  * 无跨实例全局栈；遮罩点击仍作用于所属实例，而非入栈顺序的最后一个。
  */

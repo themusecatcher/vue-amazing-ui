@@ -106,7 +106,7 @@ async function init(): Promise<void> {
   await nextTick()
   transitionDisabled.value = false
 }
-// 加载条开始加载的回调函数
+/** 加载条开始加载的回调函数 */
 async function start(from = 0, to = 80, status: 'starting' | 'error' = 'starting'): Promise<void> {
   loadingStarted.value = true
   await init()
@@ -125,7 +125,7 @@ async function start(from = 0, to = 80, status: 'starting' | 'error' = 'starting
   loadingBarRef.value.style.transition = ''
   loadingBarRef.value.style.maxWidth = `${to}%`
 }
-// 加载条结束加载的回调函数
+/** 加载条结束加载的回调函数 */
 async function finish(): Promise<void> {
   if (loadingFinishing.value || loadingErroring.value) {
     return
@@ -142,7 +142,7 @@ async function finish(): Promise<void> {
   void loadingBarRef.value.offsetWidth // 触发浏览器回流(重排)
   showLoadingBar.value = false
 }
-// 加载条出现错误的回调函数
+/** 加载条出现错误的回调函数 */
 function error(): void {
   if (loadingFinishing.value || loadingErroring.value) {
     return
@@ -229,8 +229,8 @@ emits('ready', { start, finish, error })
   height: var(--loading-bar-size);
   .loading-bar {
     width: 100%;
-    // 初始上限值放在样式表中（而非内联 style）：内联 style 会被 :style 绑定纳入 diff，
-    // 组件重渲染时把进度值重置回 100%，破坏 JavaScript 驱动的进度动画
+    /* 初始上限值放在样式表中（而非内联 style）：内联 style 会被 :style 绑定纳入 diff， */
+    /* 组件重渲染时把进度值重置回 100%，破坏 JavaScript 驱动的进度动画 */
     max-width: 100%;
     transition:
       max-width 4s linear,

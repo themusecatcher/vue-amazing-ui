@@ -3,7 +3,7 @@ import { h } from 'vue'
 import { mount } from '@vue/test-utils'
 import Comment from 'components/comment/Comment.vue'
 
-/**
+/*
  * 回归守护：Comment 组件的「prop / slot 双源合并」与「头像三种形态」
  *
  * 1. 双源合并：avatar / author / datetime / actions 均可由属性或同名插槽提供，

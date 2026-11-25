@@ -4,7 +4,7 @@ import TextScroll from 'components/text-scroll/TextScroll.vue'
 import Carousel from 'components/carousel/Carousel.vue'
 import Countdown from 'components/countdown/Countdown.vue'
 
-/**
+/*
  * 回归守护：TextScroll / Carousel / Countdown 的定时器具备自我续期能力
  * （TextScroll 为链式 setTimeout 节拍器；Carousel 的 autoSlide 在滑动结束后被重新调度；
  * Countdown 每完成一次刷新都会调度下一次），

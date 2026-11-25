@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import Select from 'components/select/Select.vue'
 import Cascader from 'components/cascader/Cascader.vue'
 
-/**
+/*
  * `fieldNames` 契约回归（Select / Cascader）
  *
  * 取值语义为**逐字段 `||` 兜底**——

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
+import { describe, it, expect, vi, afterEach, beforeAll, afterAll } from 'vitest'
 import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Image from 'components/image'
@@ -135,6 +135,17 @@ describe('Swiper - alt 取自统一后的 getImageName', () => {
 })
 
 describe('Waterfall - alt 取自统一后的 getImageName（行为增强点）', () => {
+  // happy-dom 没有布局，offsetWidth 恒为 0；瀑布流需先测量容器宽度才会渲染
+  let offsetWidthDescriptor: PropertyDescriptor | undefined
+  beforeAll(() => {
+    offsetWidthDescriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetWidth')
+    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', { configurable: true, get: () => 300 })
+  })
+  afterAll(() => {
+    if (offsetWidthDescriptor) {
+      Object.defineProperty(HTMLElement.prototype, 'offsetWidth', offsetWidthDescriptor)
+    }
+  })
   it('查询参数应被剥离，且文件名会被 URL 解码', async () => {
     vi.stubGlobal('Image', ImmediateImage)
     wrapper = mount(Waterfall, {

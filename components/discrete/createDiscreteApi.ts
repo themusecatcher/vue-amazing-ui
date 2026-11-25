@@ -46,7 +46,7 @@ export interface DiscreteApiOptions {
   loadingBarProviderProps?: MaybeRef<LoadingBarProps>
 }
 
-// 调用方可按需销毁独立实例
+/** 调用方可按需销毁独立实例 */
 export type DiscreteApiInstance<K extends DiscreteApiType> = Pick<DiscreteApi, K> & {
   dispose: () => void
 }
@@ -115,7 +115,7 @@ export function createDiscreteApi<K extends DiscreteApiType>(
       }
     })
   )
-  // 逐层嵌套各 Provider，使提取器均能注入到对应 api
+  /** 逐层嵌套各 Provider，使提取器均能注入到对应 api */
   function buildProviders(index: number) {
     if (index >= types.length) {
       return null

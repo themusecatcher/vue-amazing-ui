@@ -4,7 +4,7 @@ import type { VueWrapper } from '@vue/test-utils'
 import { defineComponent, nextTick, reactive, ref } from 'vue'
 import TextScroll from 'components/text-scroll'
 
-/**
+/*
  * TextScroll 节拍、生命周期、交互与渲染守护
  *
  * 环境约定（同 tests/timer-cleanup.spec.ts）：

@@ -20,7 +20,6 @@ export interface Props {
   showPagination?: boolean // 是否显示分页
   pagination?: PaginationProps // Pagination 组件属性配置，参考 Pagination Props，用于配置分页功能
 }
-// 声明组件插槽类型
 export interface ListSlots {
   header?: () => VNode[]
   default?: () => VNode[]

@@ -19,7 +19,6 @@ export interface Props {
   defaultValue?: number | null // 非受控初始值，未绑 v-model:value 时生效，null 表示空值
   valueModifiers?: object // 用于访问组件的 v-model 上添加的修饰符
 }
-// 声明组件插槽类型
 export interface InputNumberSlots {
   prefix?: () => VNode[]
 }
@@ -118,7 +117,7 @@ function emitValue(value: number | null): void {
   emits('update:value', value) // 保证在 change 回调时能获取到最新数据
   emits('change', value)
 }
-// 上报清空：null 是「明确的空值」，与未受控的 undefined 区分；父已回写空值则不重复上报
+/** 上报清空：null 是「明确的空值」，与未受控的 undefined 区分；父已回写空值则不重复上报 */
 function emitClear(): void {
   if (props.value !== null) {
     emitValue(null)
@@ -144,7 +143,7 @@ function getNumberValue(value: string): number {
   }
   return numberValue
 }
-// 步进 / 钳制 / 箭头禁用态的数值基准：受控时以父值为准（空值 null 按 0 起算），非受控时以当前显示值为准
+/** 步进 / 钳制 / 箭头禁用态的数值基准：受控时以父值为准（空值 null 按 0 起算），非受控时以当前显示值为准 */
 function currentNumber(): number {
   if (props.value !== undefined) {
     return props.value ?? 0
@@ -178,11 +177,11 @@ function updateValue(value: string): void {
     numValue.value = getFormatValue(isControlled.value ? props.value : currentNumber())
   }
 }
-// 文本合成系统即输入法编辑器开始新的输入合成时会触发（不对外派发：Events 表无该事件）
+/** 文本合成系统即输入法编辑器开始新的输入合成时会触发（不对外派发：Events 表无该事件） */
 function onCompositionStart(): void {
   isComposing.value = true
 }
-// 合成结束统一解析一次，替代合成期的逐字符解析
+/** 合成结束统一解析一次，替代合成期的逐字符解析 */
 function onCompositionEnd(e: CompositionEvent): void {
   isComposing.value = false
   const target = e.target as HTMLInputElement | null
@@ -244,8 +243,10 @@ function onEnter(e: KeyboardEvent): void {
     updateValue(value)
   }
 }
-// 原生 focus / blur 从内部 input 转发：两者都不冒泡，挂在根节点上的监听收不到；同步带上 relatedTarget 供宿主判断焦点去向
-// 注意口径：事件只对应内部 input，视觉聚焦态由容器的 :focus-within 驱动；上下箭头已阻止 mousedown 默认行为，点击不会让 input 失焦
+/**
+ * 原生 focus / blur 从内部 input 转发：两者都不冒泡，挂在根节点上的监听收不到；同步带上 relatedTarget 供宿主判断焦点去向
+ * 注意口径：事件只对应内部 input，视觉聚焦态由容器的 :focus-within 驱动；上下箭头已阻止 mousedown 默认行为，点击不会让 input 失焦
+ */
 function onFocus(e: FocusEvent): void {
   emits('focus', e)
 }
@@ -269,7 +270,7 @@ function onDown(): void {
   }
   emitValue(numberValue)
 }
-// 程序化控制焦点：走原生 input 的 focus / blur，聚焦态由 CSS :focus-within 驱动，无需另行同步
+/** 程序化控制焦点：走原生 input 的 focus / blur，聚焦态由 CSS :focus-within 驱动，无需另行同步 */
 function focus(): void {
   inputRef.value?.focus()
 }

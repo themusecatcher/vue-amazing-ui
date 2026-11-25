@@ -6,8 +6,10 @@ import type { LiteralUnion } from 'components/utils/type'
 import { transition, TransitionPresets } from '@vueuse/core'
 import type { CubicBezierPoints, EasingFunction } from '@vueuse/core'
 import Spin, { type SpinProps } from 'components/spin'
-// 缓动预设名，派生自 @vueuse/core 的 TransitionPresets，随上游自动同步
-// 预设 / 缓动函数 / 贝塞尔控制点 / transition 文档：https://vueuse.org/core/useTransition/
+/**
+ * 缓动预设名，派生自 @vueuse/core 的 TransitionPresets，随上游自动同步
+ * 预设 / 缓动函数 / 贝塞尔控制点 / transition 文档：https://vueuse.org/core/useTransition/
+ */
 export type EasingPreset = keyof typeof TransitionPresets
 export interface Image {
   name?: string // 图片名称
@@ -47,7 +49,6 @@ export interface Props {
   // 经 `LiteralUnion` 补 `String` 分支（见 components/utils/type.ts），否则发布包会把预设名误判为非法值
   slideFunction?: LiteralUnion<EasingPreset> | CubicBezierPoints | EasingFunction // 滑动动画函数，仅当 effect 为 'slide' 时生效，可传缓动预设名、三次贝塞尔控制点数组或缓动函数，参考 transition 写法：https://vueuse.org/core/useTransition/#usage
 }
-// 声明组件插槽类型
 export interface CarouselSlots {
   prevArrow?: (props: {
     prev: () => void
@@ -336,21 +337,23 @@ useResizeObserver(carouselRef, () => {
   getImageSize()
   initCarousel()
 })
-// 把任意下标规整到 [1, imageAmount] 区间；数量为 0 或非整数时回落到 1
+/** 把任意下标规整到 [1, imageAmount] 区间；数量为 0 或非整数时回落到 1 */
 function normalizeIndex(value: number): number {
   const amount = imageAmount.value
   const safe = Number.isInteger(value) ? value : 1
   return amount === 0 ? 1 : Math.min(Math.max(safe, 1), amount)
 }
-// 图片数量减少或当前页失效时，把当前页钳制回有效区间：
-// 否则 offset 会按越界下标换算（slide 滑出空白区、fade 下所有图片都不满足选中条件而整块不可见）
+/**
+ * 图片数量减少或当前页失效时，把当前页钳制回有效区间：
+ * 否则 offset 会按越界下标换算（slide 滑出空白区、fade 下所有图片都不满足选中条件而整块不可见）
+ */
 function clampActiveSwitcher(): void {
   const clamped = normalizeIndex(activeSwitcher.value)
   if (clamped !== activeSwitcher.value) {
     activeSwitcher.value = clamped
   }
 }
-// 相对当前页取相邻页下标：loop 时环形回绕，否则线性增减（调用侧已先行做边界守卫）
+/** 相对当前页取相邻页下标：loop 时环形回绕，否则线性增减（调用侧已先行做边界守卫） */
 function nextIndexFrom(current: number, step: 1 | -1): number {
   const amount = imageAmount.value
   if (!props.loop) {
@@ -377,15 +380,15 @@ function initCarousel(): void {
   applyDeferredIndex()
   onStart()
 }
-// 图片加载完成
+/** 图片加载完成 */
 function onImageLoad(src: string): void {
   loadedSrcs.value.add(src)
 }
-// 图片加载失败同样结束加载态：否则 Spin 会一直旋转，且蒙层会让该页始终无法点击
+/** 图片加载失败同样结束加载态：否则 Spin 会一直旋转，且蒙层会让该页始终无法点击 */
 function onImageError(src: string): void {
   loadedSrcs.value.add(src)
 }
-// 获取每张图片尺寸
+/** 获取每张图片尺寸 */
 function getImageSize(): void {
   if (!carouselRef.value) return
   imageWidth.value = carouselRef.value.offsetWidth
@@ -406,7 +409,7 @@ function onKeyboard(e: KeyboardEvent): void {
     onRightArrow()
   }
 }
-// 当用户导航到新页面、切换标签页、关闭标签页、最小化或关闭浏览器，或者在移动设备上从浏览器切换到不同的应用程序时，暂停切换
+/** 当用户导航到新页面、切换标签页、关闭标签页、最小化或关闭浏览器，或者在移动设备上从浏览器切换到不同的应用程序时，暂停切换 */
 function visibilityChange(): void {
   const visibility = document.visibilityState
   if (visibility === 'hidden') {
@@ -428,7 +431,7 @@ function visibilityChange(): void {
     onStart()
   }
 }
-// force: 仅用户主动恢复（鼠标移出）时传 true；配置变更、尺寸变化等被动重启不得解除悬停暂停
+/** force: 仅用户主动恢复（鼠标移出）时传 true；配置变更、尺寸变化等被动重启不得解除悬停暂停 */
 function onStart(force = false): void {
   if (!props.autoplay || imageAmount.value <= 1 || !firstImageLoaded.value) return
   if (!force && stopCarousel.value) return
@@ -440,33 +443,35 @@ function onStop(): void {
   slideTimer.value && clearTimeout(slideTimer.value)
   stopCarousel.value = true
 }
-// 鼠标移入轮播区域：仅 pauseOnMouseEnter 时暂停自动轮播
+/** 鼠标移入轮播区域：仅 pauseOnMouseEnter 时暂停自动轮播 */
 function onCarouselEnter(): void {
   if (props.autoplay && props.pauseOnMouseEnter) {
     onStop()
   }
 }
-// 鼠标移出轮播区域：仅 pauseOnMouseEnter 时恢复自动轮播
+/** 鼠标移出轮播区域：仅 pauseOnMouseEnter 时恢复自动轮播 */
 function onCarouselLeave(): void {
   if (props.autoplay && props.pauseOnMouseEnter) {
     onStart(true)
   }
 }
-// 切换前置：锁定其他切换、清理自动轮播定时器、抛出 beforeChange
+/** 切换前置：锁定其他切换、清理自动轮播定时器、抛出 beforeChange */
 function beginSwitch(nextIndex: number): void {
   switchPrevent.value = true
   slideTimer.value && clearTimeout(slideTimer.value)
   emits('beforeChange', activeSwitcher.value, nextIndex)
 }
-// loop 下正向回绕后会停在尾部副本上（视觉等同于首张）：切换前先归位到真实起点，避免出现长距离回退动画
+/** loop 下正向回绕后会停在尾部副本上（视觉等同于首张）：切换前先归位到真实起点，避免出现长距离回退动画 */
 function normalizeCloneOffset(): void {
   if (props.loop && activeSwitcher.value === 1 && offset.value === imageAmount.value * moveUnitDistance.value) {
     offset.value = 0
   }
 }
-// 提交切换：按 effect 分派动画，两条结束路径统一走 settleSwitch 收口
-// （抛 afterChange、消费积压的受控下标、续排自动轮播）
-// instant 为 true 时不播动画直接落位（to(n, true) 使用）
+/**
+ * 提交切换：按 effect 分派动画，两条结束路径统一走 settleSwitch 收口
+ * （抛 afterChange、消费积压的受控下标、续排自动轮播）
+ * instant 为 true 时不播动画直接落位（to(n, true) 使用）
+ */
 function commitSwitch(nextIndex: number, slideTarget: number, instant: boolean): void {
   if (props.effect === 'fade') {
     // 无动画切换时临时把过渡时长压到 0，切换完成后于下一次宏任务恢复
@@ -536,9 +541,11 @@ function onRightArrow(): void {
   beginSwitch(nextIndex)
   commitSwitch(nextIndex, target, false)
 }
-// 滑动到目标位置：由 @vueuse/core 的 transition 直接驱动 offset，
-// 动画结束会精确写入目标值，因此回弹类缓动（含过冲）也能正确落位。
-// changed 为 false 表示本次只是归位、并未发生页面切换（拖拽回弹 / 边界卡住），此时不抛 afterChange
+/**
+ * 滑动到目标位置：由 @vueuse/core 的 transition 直接驱动 offset，
+ * 动画结束会精确写入目标值，因此回弹类缓动（含过冲）也能正确落位。
+ * changed 为 false 表示本次只是归位、并未发生页面切换（拖拽回弹 / 边界卡住），此时不抛 afterChange
+ */
 function slideTo(target: number, changed = true): void {
   const id = ++animationId
   const from = offset.value
@@ -561,13 +568,15 @@ function slideTo(target: number, changed = true): void {
     settleSwitch(changed)
   })
 }
-// 中止在飞的滑动动画（不写入终值）
+/** 中止在飞的滑动动画（不写入终值） */
 function abortSlide(): void {
   animationId++
   targetPosition.value = undefined
 }
-// 中止在飞切换并收口到终态：已提交的切换（activeSwitcher 已更新、beforeChange 已抛）必须补抛 afterChange，
-// 否则事件不成对；位移先落到动画终点，避免中止后停在两张图之间的中间位移
+/**
+ * 中止在飞切换并收口到终态：已提交的切换（activeSwitcher 已更新、beforeChange 已抛）必须补抛 afterChange，
+ * 否则事件不成对；位移先落到动画终点，避免中止后停在两张图之间的中间位移
+ */
 function abortInFlightSwitch(): void {
   if (targetPosition.value !== undefined) {
     offset.value = targetPosition.value
@@ -576,14 +585,14 @@ function abortInFlightSwitch(): void {
   noFadeTransition.value = false
   finishSwitch(switchPrevent.value)
 }
-// 切换终态：解锁切换并按需抛 afterChange；不含续排与受控下标消费，供「页面隐藏中止」这类特殊路径复用
+/** 切换终态：解锁切换并按需抛 afterChange；不含续排与受控下标消费，供「页面隐藏中止」这类特殊路径复用 */
 function finishSwitch(committed: boolean): void {
   switchPrevent.value = false
   if (committed) {
     emits('afterChange', activeSwitcher.value)
   }
 }
-// 消费动画期间积压的受控下标：外部意图优先于内部动画锁，避免受控方与内部下标永久失同步
+/** 消费动画期间积压的受控下标：外部意图优先于内部动画锁，避免受控方与内部下标永久失同步 */
 function applyDeferredIndex(): void {
   if (deferredIndex === null) return
   const next = deferredIndex
@@ -592,8 +601,10 @@ function applyDeferredIndex(): void {
     onSwitch(next)
   }
 }
-// 切换正常结束的统一出口：解锁、按需抛 afterChange、消费积压的受控下标、续排自动轮播。
-// 所有结束路径都必须经此收口，afterChange 与 beforeChange 的成对性才成为结构性保证
+/**
+ * 切换正常结束的统一出口：解锁、按需抛 afterChange、消费积压的受控下标、续排自动轮播。
+ * 所有结束路径都必须经此收口，afterChange 与 beforeChange 的成对性才成为结构性保证
+ */
 function settleSwitch(committed: boolean): void {
   finishSwitch(committed)
   applyDeferredIndex()
@@ -601,7 +612,7 @@ function settleSwitch(committed: boolean): void {
     autoSlide() // 自动间隔切换下一张
   }
 }
-// 分页 / 指定页切换图片
+/** 分页 / 指定页切换图片 */
 function onSwitch(n: number, dontAnimate = false): void {
   if (switchPrevent.value || activeSwitcher.value === n) return
   if (props.effect === 'slide') {
@@ -611,19 +622,19 @@ function onSwitch(n: number, dontAnimate = false): void {
   beginSwitch(n)
   commitSwitch(n, target, dontAnimate)
 }
-// 指示点点击切换
+/** 指示点点击切换 */
 function onDotClick(n: number): void {
   if (props.dotTrigger === 'click') {
     onSwitch(n)
   }
 }
-// 指示点悬停切换
+/** 指示点悬停切换 */
 function onDotMouseEnter(n: number): void {
   if (props.dotTrigger === 'hover') {
     onSwitch(n)
   }
 }
-// 轮播项点击：拖拽结束后的点击不触发 click 事件，也不跟随链接跳转
+/** 轮播项点击：拖拽结束后的点击不触发 click 事件，也不跟随链接跳转 */
 function onImageClick(e: MouseEvent, image: Image): void {
   if (dragDragged) {
     dragDragged = false
@@ -632,7 +643,7 @@ function onImageClick(e: MouseEvent, image: Image): void {
   }
   emits('click', image)
 }
-// 拖拽开始时禁止浏览器原生拖拽（否则 <img> / <a> 会抢走指针事件）
+/** 拖拽开始时禁止浏览器原生拖拽（否则 <img> / <a> 会抢走指针事件） */
 function onDragStart(e: DragEvent): void {
   if (props.draggable) {
     e.preventDefault()
@@ -687,7 +698,7 @@ function onPointerUp(): void {
 function onPointerCancel(): void {
   endDrag(true)
 }
-// 结束拖拽：按位移比例 / 速度判定是否翻页，否则回弹到起始位移
+/** 结束拖拽：按位移比例 / 速度判定是否翻页，否则回弹到起始位移 */
 function endDrag(cancel: boolean): void {
   if (!dragging.value) return
   const el = carouselRef.value
@@ -724,7 +735,7 @@ function endDrag(cancel: boolean): void {
     }
   }
 }
-// 鼠标滚轮切换：单次滚动量超过阈值才切换一页，且不与进行中的切换竞争
+/** 鼠标滚轮切换：单次滚动量超过阈值才切换一页，且不与进行中的切换竞争 */
 function onMouseWheel(e: WheelEvent): void {
   if (!props.mousewheel || dragging.value) return
   if (imageAmount.value <= 1) return
@@ -918,7 +929,7 @@ defineExpose({
     width: 100%;
     height: 100%;
     .image-wrap {
-      // 指定了 flex 元素的收缩规则。flex 元素仅在默认宽度之和大于容器的时候才会发生收缩，其收缩的大小是依据 flex-shrink 的值
+      /* 指定了 flex 元素的收缩规则。flex 元素仅在默认宽度之和大于容器的时候才会发生收缩，其收缩的大小是依据 flex-shrink 的值 */
       flex-shrink: 0; // 默认为 1，为 0 时不缩小
       display: inline-block;
       cursor: pointer;
@@ -939,7 +950,7 @@ defineExpose({
     }
   }
   &:hover {
-    // 鼠标进入轮播区即显形；自定义箭头由使用方决定外观，不参与显隐
+    /* 鼠标进入轮播区即显形；自定义箭头由使用方决定外观，不参与显隐 */
     .arrow-left:not(.arrow-custom):not(.arrow-disabled),
     .arrow-right:not(.arrow-custom):not(.arrow-disabled) {
       opacity: 0.72;
@@ -948,8 +959,8 @@ defineExpose({
         opacity: 1;
       }
     }
-    // 到达边界（loop 为 false）时该方向已无可切换内容：置灰且不参与提亮；
-    // 仍保留指针事件，让点击由组件自行吞掉，而不是穿透到图片链接上
+    /* 到达边界（loop 为 false）时该方向已无可切换内容：置灰且不参与提亮； */
+    /* 仍保留指针事件，让点击由组件自行吞掉，而不是穿透到图片链接上 */
     .arrow-left:not(.arrow-custom).arrow-disabled,
     .arrow-right:not(.arrow-custom).arrow-disabled {
       opacity: 0.32;
@@ -975,7 +986,7 @@ defineExpose({
       opacity: 1;
       pointer-events: auto;
     }
-    // 禁用态被键盘聚焦时同样保持置灰，不给出可点击的暗示
+    /* 禁用态被键盘聚焦时同样保持置灰，不给出可点击的暗示 */
     &:not(.arrow-custom).arrow-disabled:focus-visible {
       opacity: 0.32;
       cursor: not-allowed;
@@ -986,11 +997,11 @@ defineExpose({
       fill: currentColor;
     }
   }
-  // 默认箭头常驻一层柔光暗晕：箭头是白色图标压在任意底图上，亮图 / 高光区域只靠图标与图片叠色会糊成一片，
-  // 阴影负责把轮廓从背景里托出来。用 drop-shadow 而非 text-shadow / box-shadow —— 箭头内容是 inline SVG 的 path，
-  // text-shadow 对它不生效，box-shadow 只会画在矩形盒上；drop-shadow 沿 alpha 轮廓生成，正好贴合箭头形状。
-  // 只保留柔和外晕、不加贴边暗边：紧边虽然更「清晰」，但会给斜边描出一圈硬轮廓，视觉上突兀
-  // 必须恒为深色：跟随主题翻转后，暗色模式会变成浅色晕光，白色箭头反而更糊
+  /* 默认箭头常驻一层柔光暗晕：箭头是白色图标压在任意底图上，亮图 / 高光区域只靠图标与图片叠色会糊成一片， */
+  /* 阴影负责把轮廓从背景里托出来。用 drop-shadow 而非 text-shadow / box-shadow —— 箭头内容是 inline SVG 的 path， */
+  /* text-shadow 对它不生效，box-shadow 只会画在矩形盒上；drop-shadow 沿 alpha 轮廓生成，正好贴合箭头形状。 */
+  /* 只保留柔和外晕、不加贴边暗边：紧边虽然更「清晰」，但会给斜边描出一圈硬轮廓，视觉上突兀 */
+  /* 必须恒为深色：跟随主题翻转后，暗色模式会变成浅色晕光，白色箭头反而更糊 */
   .arrow-left:not(.arrow-custom),
   .arrow-right:not(.arrow-custom) {
     filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.36));
@@ -1001,7 +1012,7 @@ defineExpose({
   .arrow-right {
     right: 6px;
   }
-  // 自定义箭头由使用方决定外观，默认常显并可直接交互
+  /* 自定义箭头由使用方决定外观，默认常显并可直接交互 */
   .arrow-custom {
     opacity: 1;
     pointer-events: auto;
@@ -1017,7 +1028,7 @@ defineExpose({
     transform: translateX(-50%);
     height: auto;
     .dot-item {
-      // flex: 0 1 auto;
+      /* flex: 0 1 auto; */
       width: var(--carousel-dot-size);
       height: var(--carousel-dot-size);
       border-radius: var(--carousel-dot-size);
@@ -1047,7 +1058,7 @@ defineExpose({
     flex-direction: column;
   }
 }
-// 可拖拽时禁用浏览器默认手势：水平轮播只接管横向、垂直轮播只接管纵向，其余方向仍可滚动页面
+/* 可拖拽时禁用浏览器默认手势：水平轮播只接管横向、垂直轮播只接管纵向，其余方向仍可滚动页面 */
 .carousel-draggable {
   touch-action: pan-y;
 }

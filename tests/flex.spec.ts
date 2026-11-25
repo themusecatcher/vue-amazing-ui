@@ -4,7 +4,7 @@ import { h } from 'vue'
 import Flex from 'components/flex/Flex.vue'
 import Space from 'components/space/Space.vue'
 
-/**
+/*
  * Flex / Space 的间距归属与容器属性
  *
  * 覆盖 3.7.2 调整的两处口径：

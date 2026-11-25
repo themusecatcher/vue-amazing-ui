@@ -37,7 +37,7 @@ export interface DropdownMenuContext {
  * - 未命中：`undefined`，菜单项照常渲染，仅 `label` 插槽与选中回调缺失（点击不响应）
  */
 export const dropdownMenuContextKey: InjectionKey<DropdownMenuContext> = Symbol('vaDropdownMenuContext')
-/** 子菜单收起延迟（毫秒）：为「标题 → 子面板」之间的空隙移动留出时间，避免掠过即收起 */
+// 子菜单收起延迟（毫秒）：为「标题 → 子面板」之间的空隙移动留出时间，避免掠过即收起
 const SUBMENU_HIDE_DELAY = 100
 /**
  * 加载指示符
@@ -163,7 +163,7 @@ function renderOptions(options: MenuOption[], context: DropdownMenuContext | nul
     return renderItem(option, index, context)
   })
 }
-/**
+/*
  * 子菜单（内部组件 · 递归）
  *
  * 每级子菜单自持「标题元素引用 + 开合态」，并以独立 `Popup` 浮层承载子项列表（递归渲染 `DropdownMenu`）。
@@ -269,7 +269,7 @@ const DropdownSubMenu = defineComponent({
     }
   }
 })
-/**
+/*
  * 子菜单过渡配置
  *
  * 只动独立变换属性 `scale` 与 `opacity`：定位写在独立属性 `translate` 上（复合链最外层，不受缩放影响），

@@ -14,7 +14,7 @@ import {
 import { collectVarRefs, collectVarUsages, splitSfc, stripComments } from '../scripts/component-vars-parse'
 import { render } from '../scripts/gen-component-vars-doc'
 
-/**
+/*
  * 组件级公开令牌的契约测试（源码扫描，无 DOM）
  *
  * 覆盖四条口径：注册表自洽、消费方式（每处都带 fallback 且与注册表一致）、
@@ -23,10 +23,10 @@ import { render } from '../scripts/gen-component-vars-doc'
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const componentDir = resolve(rootDir, 'components')
 
-/** 允许出现在组件里的 `--va-*`：42 个全局别名 + 53 个组件令牌 + 全局运行时变量 */
+// 允许出现在组件里的 `--va-*`：42 个全局别名 + 53 个组件令牌 + 全局运行时变量
 const allowedVarNames = new Set<string>([...THEME_VAR_NAMES, ...COMPONENT_VAR_NAMES, '--va-scrollbar-width'])
 
-/**
+/*
  * 使用点基线：每个组件的公开令牌消费处总数
  *
  * 数量变化意味着「某个状态不再被令牌覆盖」或「新增了覆盖点」，两种情况都必须人工确认后
@@ -68,7 +68,7 @@ function walkVueFiles(dir: string, result: string[] = []): string[] {
 
 const vueFiles = walkVueFiles(componentDir)
 
-/** 读取组件源码（已剥离注释），按文件缓存 */
+// 读取组件源码（已剥离注释），按文件缓存
 const sourceCache = new Map<string, string>()
 function readSource(file: string): string {
   if (!sourceCache.has(file)) {
@@ -77,7 +77,7 @@ function readSource(file: string): string {
   return sourceCache.get(file) as string
 }
 
-/** 读取组件的 `<style>` 段（已剥离注释），按文件缓存 */
+// 读取组件的 `<style>` 段（已剥离注释），按文件缓存
 const styleCache = new Map<string, string>()
 function readStyle(file: string): string {
   if (!styleCache.has(file)) {

@@ -14,7 +14,6 @@ export interface Props {
   xl?: number | { span?: number; offset?: number } // ≥1200px 响应式栅格
   xxl?: number | { span?: number; offset?: number } // ≥1600px 响应式栅格
 }
-// 声明组件插槽类型
 export interface ColSlots {
   default?: () => VNode[]
 }

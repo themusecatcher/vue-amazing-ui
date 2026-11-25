@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import type { ComponentMountingOptions } from '@vue/test-utils'
 import Countdown from 'components/countdown/Countdown.vue'
 
-/**
+/*
  * Countdown 行为守护：
  * - format 的 token 化解析（`[...]` 可原样输出，不再逐段查找字符串）
  * - 毫秒粒度 S / SS / SSS 的取值与补零

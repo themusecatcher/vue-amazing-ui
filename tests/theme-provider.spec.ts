@@ -5,7 +5,7 @@ import ConfigProvider from 'components/config-provider/ConfigProvider.vue'
 import { derive, MODE_ATTRIBUTE, THEME_VAR_NAMES } from 'components/theme'
 import type { ConfigProviderTheme } from 'components/config-provider'
 
-/**
+/*
  * ConfigProvider 主题域：默认不写、种子派生、模式、包裹元素与卸载恢复
  *
  * 写入契约：未传 theme 时完全不写变量（静态默认表生效）；最外层写 `<html>`；

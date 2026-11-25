@@ -30,12 +30,11 @@ export interface Props {
   paragraph?: boolean | SkeletonParagraphProps // 是否显示段落占位图
   loading?: boolean // 为 true 时，显示占位图，反之则直接展示子组件
 }
-// 声明组件插槽类型
 export interface SkeletonSlots {
   default?: () => VNode[]
 }
 const props = withDefaults(defineProps<Props>(), {
-  animated: true,
+  animated: false,
   button: false,
   image: false,
   avatar: false,
@@ -246,12 +245,22 @@ const paragraphWidth = computed(() => {
       line-height: 48px;
       max-width: 192px;
       max-height: 192px;
-      // 图标需与容器底色（fill-color-2）拉开对比，否则在两种模式下都不可见
+      /* 图标需与容器底色（fill-color-2）拉开对比，否则在两种模式下都不可见 */
       color: var(--va-text-color-3);
       .svg-path {
         fill: currentColor;
       }
     }
+  }
+  /* 尺寸 / 形状 / block 切换时做几何过渡，避免占位块原地突变 */
+  .skeleton-button,
+  .skeleton-input,
+  .skeleton-header .skeleton-avatar {
+    transition:
+      width 0.2s,
+      min-width 0.2s,
+      height 0.2s,
+      border-radius 0.2s;
   }
   .skeleton-header {
     display: table-cell;
@@ -338,10 +347,11 @@ const paragraphWidth = computed(() => {
       left: -150%;
       bottom: 0;
       right: -150%;
+      /* 三段色阶必须是「底色 → 高亮 → 底色」，换成同一变量会让扫光带与底色同色，动画肉眼不可见 */
       background: linear-gradient(
         90deg,
         var(--va-fill-color-2) 25%,
-        var(--va-fill-color-2) 37%,
+        var(--va-fill-color-3) 37%,
         var(--va-fill-color-2) 63%
       );
       animation-name: skeletonLoading;
@@ -356,6 +366,22 @@ const paragraphWidth = computed(() => {
       }
       100% {
         transform: translateX(37.5%);
+      }
+    }
+  }
+}
+/* 关闭动效偏好下停掉扫光，并把底色还回占位块本身，避免 ::after 盖住图像占位图里的图标 */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-animated {
+    .skeleton-button,
+    .skeleton-input,
+    .skeleton-image,
+    .skeleton-header .skeleton-avatar,
+    .skeleton-content .skeleton-title,
+    .skeleton-content .skeleton-paragraph li {
+      background: var(--va-fill-color-2);
+      &::after {
+        display: none;
       }
     }
   }

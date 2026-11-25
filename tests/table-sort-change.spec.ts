@@ -3,7 +3,7 @@ import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Table from 'components/table/Table.vue'
 
-/**
+/*
  * 表格排序事件的上报契约
  *
  * `sortChange` 的 `column` 类型已收敛为 `TableColumn`（不再含 `null`）：

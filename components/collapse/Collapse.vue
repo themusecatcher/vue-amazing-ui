@@ -47,7 +47,6 @@ export interface Props {
   copyText?: string // 复制按钮文本，较低优先级
   copiedText?: string // 已复制按钮文本，较低优先级
 }
-// 声明组件插槽类型
 export interface CollapseSlots {
   arrow?: (props: { item: Item; key: string | number; active: boolean }) => VNode[]
   header?: (props: { item: Item; header: string | undefined; key: string | number; active: boolean }) => VNode[]
@@ -154,11 +153,11 @@ function onCopy(index: number, key: string | number) {
       if (!copyBtnClickedKeys.value.includes(key)) {
         copyBtnClickedKeys.value.push(key)
       }
-      /* clipboard successfully set */
+      // clipboard successfully set
       debounceRestCopyBtn(key)
     },
     (err) => {
-      /* clipboard write failed */
+      // clipboard write failed
       log('error', 'Collapse', '复制失败，剪贴板内容未变更', err)
     }
   )
@@ -367,7 +366,7 @@ function onCopy(index: number, key: string | number) {
         }
       }
       .collapse-header {
-        // 元素会根据自身的宽度与高度来确定尺寸，但是会伸长并吸收 flex 容器中额外的自由空间，也会缩短自身来适应 flex 容器
+        /* 元素会根据自身的宽度与高度来确定尺寸，但是会伸长并吸收 flex 容器中额外的自由空间，也会缩短自身来适应 flex 容器 */
         flex: auto; // 相当于 flex: 1 1 auto
         margin-right: auto;
         display: inline-block;

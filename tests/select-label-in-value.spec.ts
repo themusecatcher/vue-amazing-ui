@@ -5,7 +5,7 @@ import Select from 'components/select/Select.vue'
 import type { Option } from 'components/select/Select.vue'
 import SelectOption from 'components/select/select-option'
 
-/**
+/*
  * labelInValue 契约：
  * - v-model:value 入参可为 `{ label, value, key }` 对象：内部按 `value ?? key` 归一为原始值参与匹配
  * - 回填文本优先取入参 label（远程回显场景：label 可能已不在 options 中）
@@ -20,7 +20,7 @@ const OPTIONS: Option[] = [
 
 let wrapper: ReturnType<typeof mount> | null = null
 
-/**
+/*
  * 已知开发态告警：以普通函数形式提供插槽（非模板编译产物）时，Vue 会提示
  * 「Slot "default" invoked outside of the render function」——以插槽作为数据源的固有代价（Descriptions 同款）。
  * 此处收敛告警并断言「除该已知告警外无其他告警」，避免掩盖真实问题

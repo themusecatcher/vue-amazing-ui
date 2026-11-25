@@ -50,7 +50,7 @@ export function getFloatingBoundaryRect(
   }
 }
 
-/*
+/**
  * 浮层定位内核：useFloating
  *
  * 分三层：
@@ -205,7 +205,7 @@ const KEBAB_TO_FLOATING: Record<KebabPlacement, FloatingPlacement> = {
 }
 
 // ── 测量层 ────────────────────────────────────────────────────────────────────────────────────
-/** 视口测量元素的 id（占用独立命名空间，避免与页面既有元素冲突） */
+// 视口测量元素的 id（占用独立命名空间，避免与页面既有元素冲突）
 const VIEW_MEASURER_ID = 'va-floating-view-measurer'
 let viewMeasurer: HTMLElement | null = null
 
@@ -439,7 +439,7 @@ function getPointFloatingRect(x: number, y: number): FloatingRect {
   return toFloatingRect({ left: x, top: y, right: x, bottom: y, width: 0, height: 0 })
 }
 
-// ── 求解层 ────────────────────────────────────────────────────────────────────────────────────
+/** ── 求解层 ──────────────────────────────────────────────────────────────────────────────────── */
 
 /**
  * 求实际方向与对齐微调量
@@ -478,7 +478,7 @@ export function getPlacementAndOffsetOfFollower(
   const [position, align] = placement.split('-') as [AxisPlacement, FloatingAlign | undefined]
   let properAlign: FloatingAlign = align ?? 'center'
   let properOffset = { top: 0, left: 0 }
-  // 计算把浮层推回边界内所需的对齐微调量：diff 为该方向上的溢出量，方向符号由 keepOffsetDirection 决定
+  /** 计算把浮层推回边界内所需的对齐微调量：diff 为该方向上的溢出量，方向符号由 keepOffsetDirection 决定 */
   const deriveOffset = (
     oppositeAlignCssSizeProp: 'width' | 'height',
     alignCssPositionProp: AxisPlacement,
@@ -800,7 +800,7 @@ function getMainAxisOverflowOffset(
   return { top: 0, left: 0 }
 }
 
-/**
+/*
  * 内核曾写过尺寸的面板（按元素跟踪）
  *
  * `matchTriggerWidth` 为假时**不能**无条件 `style.width = ''`：那会擦掉皮肤层 / 使用方经
@@ -855,7 +855,7 @@ function applyMatchTriggerWidth(
   KERNEL_SIZED_PANELS.delete(panel)
 }
 
-// ── 同步层 ────────────────────────────────────────────────────────────────────────────────────
+/** ── 同步层 ──────────────────────────────────────────────────────────────────────────────────── */
 
 /**
  * 收集锚点的**全链**滚动祖先
@@ -885,7 +885,7 @@ export type FloatingSyncTrigger = 'scroll' | 'resize' | 'font'
 /** 遮挡边界口径：视口 / 最近可滚动祖先（仅当浮层真被其裁剪时，见 getFloatingBoundaryRect） */
 export type FloatingBoundary = 'viewport' | 'scrollParent'
 
-/**
+/*
  * 同步监听的注册选项
  *
  * 滚动 / resize 回调只读不写，passive 可避免阻塞合成线程；add / remove 复用同一对象，
@@ -893,7 +893,7 @@ export type FloatingBoundary = 'viewport' | 'scrollParent'
  */
 const SYNC_LISTENER_OPTIONS: AddEventListenerOptions = { passive: true }
 
-/**
+/*
  * 浮层「尚未渲染（`display: none`）」时的最大重试帧数
  *
  * 宿主用 `v-show` 控制浮层显隐时，`enabled` 翻真的首个求解 tick 可能仍处于 `display: none`
@@ -1021,7 +1021,7 @@ export function useFloating(panelRef: Ref<HTMLElement | null>, options: UseFloat
   // 是否具备可用的锚点来源（决定要不要建立同步监听；仅 point / virtualAnchor 时也成立）
   const hasAnchorSource = computed(() => Boolean(toValue(point) || toValue(virtualAnchor) || toValue(anchor)))
 
-  // 求当前锚点矩形：point 优先、其次虚拟锚点、最后 DOM 锚点
+  /** 求当前锚点矩形：point 优先、其次虚拟锚点、最后 DOM 锚点 */
   function resolveTargetRect(): FloatingRect | null {
     const manualPoint = toValue(point)
     if (manualPoint) {
@@ -1035,8 +1035,10 @@ export function useFloating(panelRef: Ref<HTMLElement | null>, options: UseFloat
     return anchorEl ? getFloatingRect(anchorEl) : null
   }
 
-  // 求遮挡边界：scrollParent 口径复用 getFloatingBoundaryRect（浮层未被容器裁剪时自动退化为视口）。
-  // 视口尺寸由调用方传入，避免同一帧内重复测量（求解 / 内推 / 锚点可见性判定共用同一口径）
+  /**
+   * 求遮挡边界：scrollParent 口径复用 getFloatingBoundaryRect（浮层未被容器裁剪时自动退化为视口）。
+   * 视口尺寸由调用方传入，避免同一帧内重复测量（求解 / 内推 / 锚点可见性判定共用同一口径）
+   */
   function resolveBoundaryRect(panel: HTMLElement, viewWidth: number, viewHeight: number): FloatingBoundaryRect {
     if (toValue(boundary) === 'scrollParent') {
       return getFloatingBoundaryRect(boundaryScrollParent, panel, viewWidth, viewHeight)
@@ -1044,7 +1046,7 @@ export function useFloating(panelRef: Ref<HTMLElement | null>, options: UseFloat
     return { top: 0, left: 0, bottom: viewHeight, right: viewWidth }
   }
 
-  // 计算并落盘定位样式：单次求解 = 量 → 求方向与微调量 → 求 top / left / translate
+  /** 计算并落盘定位样式：单次求解 = 量 → 求方向与微调量 → 求 top / left / translate */
   function applyPosition(): void {
     if (disposed) return
     const panel = panelRef.value
@@ -1123,13 +1125,13 @@ export function useFloating(panelRef: Ref<HTMLElement | null>, options: UseFloat
     styleTranslate.value = translate ? snapTranslate(translate, getPanelBorderBoxSize(panel, followerRect)) : translate
   }
 
-  // 帧合并：滚动 / resize / 拖动高频触发时，每帧最多重算一次
+  /** 帧合并：滚动 / resize / 拖动高频触发时，每帧最多重算一次 */
   function scheduleSync(): void {
     if (disposed || !toValue(enabled)) return
     beforeNextFrameOnce(applyPosition)
   }
 
-  // 重建同步监听：先清后建，保证锚点变化后监听对象不残留
+  /** 重建同步监听：先清后建，保证锚点变化后监听对象不残留 */
   function addSyncListeners(): void {
     removeSyncListeners()
     if (disposed) return
@@ -1157,7 +1159,7 @@ export function useFloating(panelRef: Ref<HTMLElement | null>, options: UseFloat
     }
   }
 
-  // 移除同步监听（含字体回调），幂等
+  /** 移除同步监听（含字体回调），幂等 */
   function removeSyncListeners(): void {
     scrollTargets.forEach((target) => target.removeEventListener('scroll', scheduleSync, SYNC_LISTENER_OPTIONS))
     scrollTargets = []

@@ -117,19 +117,21 @@ const buttonMenus: DropdownMenuOption[] = [{ key: '1', label: 'Submit and contin
 // 按钮加载状态
 const loading1 = ref<boolean>(false)
 const loading2 = ref<boolean>(false)
-// 事件处理
-// 打印事件**全部字段**：前缀 `Click on item ${key}`
-// + 第二个入参的完整菜单项配置（key / label / icon / disabled / danger / loading / href / target / type / children）
+/**
+ * 事件处理
+ * 打印事件**全部字段**：前缀 `Click on item ${key}`
+ * + 第二个入参的完整菜单项配置（key / label / icon / disabled / danger / loading / href / target / type / children）
+ */
 function onMenuClick(key: DropdownKey | undefined, option: DropdownMenuOption) {
   console.log(`Click on item ${key}`, option)
 }
-// 受控 open：仅在展开时记录状态，菜单项点击引发的关闭请求交由 onKeepOpenMenuClick 决定
+/** 受控 open：仅在展开时记录状态，菜单项点击引发的关闭请求交由 onKeepOpenMenuClick 决定 */
 function onKeepOpenOpenChange(val: boolean) {
   if (val) {
     visible.value = true
   }
 }
-// 仅点击第 3 项时关闭菜单，其余项保持展开
+/** 仅点击第 3 项时关闭菜单，其余项保持展开 */
 function onKeepOpenMenuClick(key: DropdownKey | undefined) {
   if (key === '3') {
     visible.value = false

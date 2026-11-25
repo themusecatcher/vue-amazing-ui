@@ -5,7 +5,7 @@ import TimePicker from 'components/time-picker/TimePicker.vue'
 import type { DatePickerProps } from 'components/date-picker'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * 回归守护：触发器的文本轨道与「同值不重复派发」
  *
  * 1. 手输解析失败 / 命中 `disabledDate` 时不落值，且输入框回滚为已提交文本

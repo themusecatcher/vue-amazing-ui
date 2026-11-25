@@ -5,7 +5,7 @@ import type { DatePickerProps } from 'components/date-picker'
 import { getClosingViewTimestamp, getPanelModeOf, getRangeCellClassNames } from 'components/picker/date-utils'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * 回归守护：月 / 季 / 年形态（`month` / `quarter` / `year` 与 `monthrange` / `yearrange` / `quarterrange`）。
  *
  * 锁定四组语义：

@@ -35,7 +35,7 @@ onBeforeUnmount(() => {
     clearTimeout(timer)
   })
 })
-// 命令式调用：dialog.open() 立即打开一个弹窗，返回该实例的句柄
+/** 命令式调用：dialog.open() 立即打开一个弹窗，返回该实例的句柄 */
 function onBasicOpen(): void {
   dialog.open({
     title: '命令式调用',
@@ -77,7 +77,7 @@ function onHandleDialog(): void {
       ])
   })
 }
-// 命令式切换全屏：switchFullscreen 同样可在 dialog.open() 中配置，右上角出现全屏切换按钮
+/** 命令式切换全屏：switchFullscreen 同样可在 dialog.open() 中配置，右上角出现全屏切换按钮 */
 function onImperativeFullscreen(): void {
   dialog.open({
     title: '命令式切换全屏',
@@ -129,7 +129,7 @@ function onSlotOk(): void {
   message.success('已提交处理')
   slotOpen.value = false
 }
-// 内容三种形态：字符串 / VNode / 渲染函数
+/** 内容三种形态：字符串 / VNode / 渲染函数 */
 function onStringContent(): void {
   dialog.open({
     title: '字符串内容',
@@ -144,7 +144,7 @@ function onVNodeContent(): void {
     onOk: () => message.success('点击了「确定」')
   })
 }
-// 渲染函数在每次渲染时调用，内部引用响应式数据即可让内容自动更新
+/** 渲染函数在每次渲染时调用，内部引用响应式数据即可让内容自动更新 */
 function onRenderFnContent(): void {
   const seconds = ref(0)
   const timer = window.setInterval(() => {
@@ -213,7 +213,7 @@ const renderSeconds = reactive<{ lazy: number | null; pre: number | null }>({ la
 function formatRenderSeconds(seconds: number | null): string {
   return seconds === null ? '未渲染' : `已渲染 ${seconds} 秒`
 }
-// 未渲染时置灰，已渲染时高亮，直观区分懒渲染与预渲染
+/** 未渲染时置灰，已渲染时高亮，直观区分懒渲染与预渲染 */
 function renderValueStyle(seconds: number | null): CSSProperties {
   return { fontSize: '20px', color: seconds === null ? 'rgba(0, 0, 0, 0.45)' : '#1677ff' }
 }
@@ -264,7 +264,7 @@ function onAfterCloseDialog(): void {
   })
 }
 
-// 生成演示用的超长内容：每次调用返回新的 VNode，避免复用同一 VNode 实例导致渲染异常
+/** 生成演示用的超长内容：每次调用返回新的 VNode，避免复用同一 VNode 实例导致渲染异常 */
 function longText(lines = 30): () => VNode {
   return () =>
     h(
@@ -275,7 +275,7 @@ function longText(lines = 30): () => VNode {
       )
     )
 }
-// 自定义宽高
+/** 自定义宽高 */
 function onNumberWidth(): void {
   dialog.open({ title: '数值宽度', content: 'width: 365，数值默认按 px 处理。', width: 365 })
 }
@@ -290,7 +290,7 @@ function onFixedHeight(): void {
     scrollbarProps: { trigger: 'none', contentStyle: { paddingRight: '12px' } }
   })
 }
-// 内容区高度与滚动
+/** 内容区高度与滚动 */
 function onWholeScroll(): void {
   dialog.open({
     title: '整体弹框滚动（height 默认 auto）',
@@ -316,7 +316,7 @@ function onCustomScrollbar(): void {
     centered: true
   })
 }
-// 自定义样式：多层结构各由不同 Class / Style 控制
+/** 自定义样式：多层结构各由不同 Class / Style 控制 */
 function onCustomClass(): void {
   dialog.open({
     title: '自定义卡片类名（bodyClass）',
@@ -348,8 +348,10 @@ function onTitleContentStyle(): void {
     onOk: () => message.success('点击了「确定」')
   })
 }
-// 定位层与卡片层：containerClass / containerStyle 作用于定位层 .dialog-container，用于覆盖 width / top / zIndex；
-// 卡片外观（背景 / 圆角 / 阴影 / 描边）请用作用于 .dialog-body-wrap 的 bodyClass / bodyStyle
+/**
+ * 定位层与卡片层：containerClass / containerStyle 作用于定位层 .dialog-container，用于覆盖 width / top / zIndex；
+ * 卡片外观（背景 / 圆角 / 阴影 / 描边）请用作用于 .dialog-body-wrap 的 bodyClass / bodyStyle
+ */
 function onContainerClass(): void {
   dialog.open({
     title: '自定义定位层类名（containerClass）',
@@ -367,7 +369,7 @@ function onContainerStyle(): void {
     onOk: () => message.success('点击了「确定」')
   })
 }
-// 无遮罩：背景可交互，点击背景不会误关
+/** 无遮罩：背景可交互，点击背景不会误关 */
 function onNoMask(): void {
   dialog.open({
     title: '无遮罩弹窗（mask: false）',
@@ -377,7 +379,7 @@ function onNoMask(): void {
     onOk: () => message.success('点击了「确定」')
   })
 }
-// 焦点：autoFocusButton 指定打开后自动聚焦的按钮
+/** 焦点：autoFocusButton 指定打开后自动聚焦的按钮 */
 function onAutoFocusCancel(): void {
   dialog.open({
     title: '自动聚焦「取消」（autoFocusButton: cancel）',
@@ -387,7 +389,7 @@ function onAutoFocusCancel(): void {
     onCancel: () => message.error('点击了「取消」')
   })
 }
-// 自定义按钮
+/** 自定义按钮 */
 function onCustomBtns(): void {
   dialog.open({
     title: '自定义按钮',
@@ -410,8 +412,10 @@ function onDangerOk(): void {
     onOk: () => message.success('已删除')
   })
 }
-// 自定义底部区域
-// footer 传渲染函数时完全接管底部，内置按钮组不再渲染
+/**
+ * 自定义底部区域
+ * footer 传渲染函数时完全接管底部，内置按钮组不再渲染
+ */
 function onFooterRender(): void {
   const handle: DialogReactive = dialog.open({
     title: '自定义底部渲染',
@@ -440,7 +444,7 @@ function onFooterless(): void {
     footer: false
   })
 }
-// 关闭按钮
+/** 关闭按钮 */
 function onNoClosable(): void {
   dialog.open({
     title: '隐藏关闭按钮',
@@ -449,7 +453,7 @@ function onNoClosable(): void {
     onOk: () => message.success('点击了「确定」')
   })
 }
-// closeIcon 支持 VNode 与渲染函数两种形态，声明式用法下还支持 #closeIcon 插槽
+/** closeIcon 支持 VNode 与渲染函数两种形态，声明式用法下还支持 #closeIcon 插槽 */
 function onVNodeCloseIcon(): void {
   dialog.open({
     title: '自定义关闭图标（VNode）',
@@ -475,8 +479,10 @@ function onNoCloseFocusable(): void {
     onOk: () => message.success('点击了「确定」')
   })
 }
-// 异步关闭与阻止关闭
-// onOk 返回 Promise：resolve 后自动关闭，期间按钮保持 loading 且禁用
+/**
+ * 异步关闭与阻止关闭
+ * onOk 返回 Promise：resolve 后自动关闭，期间按钮保持 loading 且禁用
+ */
 function onAsyncOk(): void {
   dialog.open({
     title: '确认提交这些项？',
@@ -491,7 +497,7 @@ function onAsyncOk(): void {
     onCancel: () => message.error('已取消提交')
   })
 }
-// onOk 返回的 Promise reject 时阻止关闭（在 catch 中返回 false，避免异常冒泡到控制台）
+/** onOk 返回的 Promise reject 时阻止关闭（在 catch 中返回 false，避免异常冒泡到控制台） */
 function onRejectOk(): void {
   dialog.open({
     title: '确认删除这些项？',
@@ -505,7 +511,7 @@ function onRejectOk(): void {
       })
   })
 }
-// onOk 同步返回 false 同样阻止关闭
+/** onOk 同步返回 false 同样阻止关闭 */
 function onPreventOk(): void {
   let submitted = false
   dialog.open({
@@ -521,7 +527,7 @@ function onPreventOk(): void {
     }
   })
 }
-// onCancel 返回 false 时，遮罩 / Esc / 取消按钮都无法关闭
+/** onCancel 返回 false 时，遮罩 / Esc / 取消按钮都无法关闭 */
 function onPreventCancel(): void {
   dialog.open({
     title: '取消时阻止关闭',
@@ -533,7 +539,7 @@ function onPreventCancel(): void {
     }
   })
 }
-// 原地更新 update
+/** 原地更新 update */
 function onProgressSave(): void {
   const percent = ref(0)
   const handle = dialog.open({
@@ -591,8 +597,10 @@ function onProgressSave(): void {
   }, 120)
   timers.push(timer)
 }
-// 多实例层叠
-// 遮罩会挡住页面，弹窗打开后无法再点击页面按钮，故一次点击开启多层以便观察层叠与逐层关闭
+/**
+ * 多实例层叠
+ * 遮罩会挡住页面，弹窗打开后无法再点击页面按钮，故一次点击开启多层以便观察层叠与逐层关闭
+ */
 function openStackLayers(content: string): void {
   for (let layer = 1; layer <= 3; layer += 1) {
     dialog.open({
@@ -606,7 +614,7 @@ function openStackLayers(content: string): void {
 function onStackDialog(): void {
   openStackLayers('点击遮罩或「确定」只关闭栈顶弹窗；各实例按自身 zIndex 分层（遮罩取 zIndex，弹窗取 zIndex + 10）。')
 }
-// destroyAll 同样无法在弹窗打开后从页面触发，故开启多层后用定时器演示一次性全部销毁
+/** destroyAll 同样无法在弹窗打开后从页面触发，故开启多层后用定时器演示一次性全部销毁 */
 function onDestroyAllDialogs(): void {
   openStackLayers('2s 后 destroyAll() 会一次性关闭并销毁全部弹窗。')
   timers.push(
@@ -616,7 +624,7 @@ function onDestroyAllDialogs(): void {
     }, 2000)
   )
 }
-// 遮罩、键盘与滚动锁定
+/** 遮罩、键盘与滚动锁定 */
 function onNoMaskClose(): void {
   dialog.open({
     title: '禁止遮罩关闭',
@@ -627,7 +635,7 @@ function onNoMaskClose(): void {
     onCancel: () => message.error('点击了「取消」/ Esc / 关闭按钮')
   })
 }
-// keyboard: false 禁用 Esc 关闭，但 onEsc 回调仍会触发
+/** keyboard: false 禁用 Esc 关闭，但 onEsc 回调仍会触发 */
 function onNoKeyboard(): void {
   dialog.open({
     title: '禁用 Esc 关闭',
@@ -649,7 +657,7 @@ function onNoBlockScroll(): void {
     blockScroll: false
   })
 }
-// 焦点管理
+/** 焦点管理 */
 function onNoFocusRestore(): void {
   dialog.open({
     title: '关闭不归还焦点',
@@ -658,7 +666,7 @@ function onNoFocusRestore(): void {
     onOk: () => message.success('点击了「确定」')
   })
 }
-// 可拖拽：draggable 开启后标题栏为拖拽句柄
+/** 可拖拽：draggable 开启后标题栏为拖拽句柄 */
 function onDraggableWindow(): void {
   dialog.open({
     title: '限制在视口内（默认）',
@@ -1138,16 +1146,16 @@ const layerZIndexOpen = ref(false)
 }
 </style>
 <style lang="less">
-// 弹窗通过 Teleport 挂载到 body 下，scoped 样式无法命中，需使用全局样式
-// bodyClass 演示：类名挂在卡片层 .dialog-body-wrap 上，让默认白底卡片变为橙色渐变 + 描边，一眼可辨命中层
+/* 弹窗通过 Teleport 挂载到 body 下，scoped 样式无法命中，需使用全局样式 */
+/* bodyClass 演示：类名挂在卡片层 .dialog-body-wrap 上，让默认白底卡片变为橙色渐变 + 描边，一眼可辨命中层 */
 .custom-dialog-body {
   background: linear-gradient(135deg, #fff7e6 0%, #ffd591 100%) !important;
   border: 2px solid #ff6900 !important;
   border-radius: 16px !important;
   box-shadow: 0 6px 24px rgba(255, 105, 0, 0.18) !important;
 }
-// containerClass 演示：类名挂在定位层 .dialog-container 上（透明、本身无视觉），
-// 类内用 !important 覆盖内置 top / width，即可直观看到「定位被类接管」
+/* containerClass 演示：类名挂在定位层 .dialog-container 上（透明、本身无视觉）， */
+/* 类内用 !important 覆盖内置 top / width，即可直观看到「定位被类接管」 */
 .custom-dialog-container {
   top: 200px !important;
   width: 560px !important;

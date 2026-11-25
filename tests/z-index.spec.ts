@@ -182,7 +182,7 @@ describe('useZIndex', () => {
   })
 })
 
-/** 宿组件：ConfigProvider > Drawer（可选传 baseZIndex / Drawer 的 zIndex） */
+// 宿组件：ConfigProvider > Drawer（可选传 baseZIndex / Drawer 的 zIndex）
 const DrawerHost = defineComponent({
   props: {
     baseZIndex: { type: Number, default: undefined },
@@ -300,7 +300,7 @@ describe('甲类浮层接入（Tooltip / Select / AutoComplete）', () => {
 })
 
 describe('嵌套浮层层级：承载层内嵌 Select', () => {
-  /**
+  /*
    * 承载层（Modal / Drawer 同源：关闭后内容不卸载）内嵌 Select 时的层级契约。
    *
    * 「承载层二次打开后会重新领取层级、把内嵌下拉压到下面」这一场景，用 `useZIndex` 探针模拟：
@@ -370,7 +370,7 @@ describe('嵌套浮层层级：承载层内嵌 Select', () => {
 })
 
 describe('承载层关闭时内部浮层收起（Modal 内嵌 Select）', () => {
-  /**
+  /*
    * 承载层（Modal / Drawer / Dialog）关闭**不卸载内容**，内部 Select 的关闭只依赖 input 的 blur；
    * 而容器关闭只是把内容 `display: none`、不派发 blur，于是下拉会停留在打开态：
    * 容器已关闭、下拉仍悬浮且占着层级槽位。容器再次打开时会按「后出现者在上」重新领取层级，
@@ -447,7 +447,7 @@ describe('承载层关闭时内部浮层收起（Modal 内嵌 Select）', () => 
 })
 
 describe('反馈层默认层级（Message / Notification）', () => {
-  /**
+  /*
    * 反馈层刻意**不占据最高层级**：
    * 高于承载层（Modal 弹窗 1010）、低于甲类浮层（Select 面板 1050 / Tooltip 1070），
    * 这样消息 / 通知内容里放 Select / Tooltip 时，浮层不会被消息框压住。
@@ -481,7 +481,7 @@ describe('反馈层默认层级（Message / Notification）', () => {
 })
 
 describe('同层级浮层的上下关系（未注入分配器时）', () => {
-  /**
+  /*
    * 未传 `baseZIndex` 时没有分配器，各浮层保持同一回退值（Tooltip 1070 = 1070）→ 上下由 **DOM 顺序**决定；
    * 承载浮层的 `Teleport` 随「首次展示」才挂载（容器在可见时才 appendChild），
    * 因此 DOM 顺序 = **打开顺序**，即「后打开者在上」（首次打开时确定，此后该实例的来源顺序不再变化）。
@@ -564,7 +564,7 @@ describe('同层级浮层的上下关系（未注入分配器时）', () => {
 })
 
 describe('承载层关闭时内部浮层收起（Modal 内嵌 Tooltip）', () => {
-  /**
+  /*
    * 与 Select / AutoComplete 同一不变量：承载层内容常驻不卸载，内部浮层不会随容器消失。
    *
    * 关闭容器的三条路径里，只有「点击 X / 遮罩」会顺带触发 document click 把 click 触发型关掉；
@@ -614,7 +614,7 @@ describe('承载层关闭时内部浮层收起（Modal 内嵌 Tooltip）', () =>
 })
 
 describe('承载层关闭时内部组件的聚焦态归位', () => {
-  /**
+  /*
    * 容器关闭只是把内容 display:none，input 收不到 blur 事件（`focusTriggerAfterClose` 归还焦点时
    * 也未必落到本 input 上）→ 聚焦态残留，容器重开时输入框仍显示聚焦描边。
    */

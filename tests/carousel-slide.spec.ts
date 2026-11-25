@@ -13,7 +13,7 @@ interface CarouselInst {
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
-// 轮询等待条件成立，避免依赖固定 sleep 造成的时序脆弱
+/** 轮询等待条件成立，避免依赖固定 sleep 造成的时序脆弱 */
 async function waitFor(cond: () => boolean, timeout = 2000): Promise<void> {
   const start = Date.now()
   while (!cond() && Date.now() - start < timeout) {
@@ -57,8 +57,10 @@ function restoreLayoutEnv(): void {
   }
 }
 
-// 模拟页面可见性变化（happy-dom 不支持直接改写 visibilityState）
-// 注意：回调内对 offset 的写入需等一次渲染才反映到 style 上，故此处必须 await 再断言
+/**
+ * 模拟页面可见性变化（happy-dom 不支持直接改写 visibilityState）
+ * 注意：回调内对 offset 的写入需等一次渲染才反映到 style 上，故此处必须 await 再断言
+ */
 async function setVisibility(state: 'hidden' | 'visible'): Promise<void> {
   Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => state })
   document.dispatchEvent(new Event('visibilitychange'))
@@ -86,7 +88,7 @@ async function mountCarousel(props: Partial<CarouselProps> = {}) {
 
 type CarouselWrapper = Awaited<ReturnType<typeof mountCarousel>>
 
-// 读取轮播容器的位移数值（水平/垂直轮播分别用 translateX / translateY 驱动）
+/** 读取轮播容器的位移数值（水平/垂直轮播分别用 translateX / translateY 驱动） */
 function slideOffset(el: HTMLElement): number {
   const matched = /translate[XY]\((-?[\d.]+)px\)/.exec(el.style.transform)
   return matched ? Number(matched[1]) : NaN
@@ -157,8 +159,10 @@ describe('Carousel 滑动动画', () => {
     // back-out 与演示页配置一致：缓动进度会超过 1，位移相应越过目标
     const wrapper = await mountCarousel({ slideDuration: 300, slideFunction: [0.34, 1.56, 0.64, 1] })
     const el = slideEl(wrapper)
-    // 轨道 = 末图副本 + 3 张实图 + 2 张首图副本，可显示位移 offset ∈ [-1, 4] 个单位宽，
-    // 即 transform ∈ [-4 * UNIT, UNIT]；越出该范围会在容器边缘露出空白
+    /**
+     * 轨道 = 末图副本 + 3 张实图 + 2 张首图副本，可显示位移 offset ∈ [-1, 4] 个单位宽，
+     * 即 transform ∈ [-4 * UNIT, UNIT]；越出该范围会在容器边缘露出空白
+     */
     async function sampleOffsets(target: HTMLElement, ms: number): Promise<number[]> {
       const values: number[] = []
       const start = Date.now()

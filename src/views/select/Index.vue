@@ -118,6 +118,10 @@ const groupOptions: SelectOption[] = [
     options: [{ value: 'yiminghe', label: 'Yiminghe' }]
   }
 ]
+// 组件式用法：静态小列表用 SelectOption 子组件描述选项（插槽负责渲染、其文本作为 label，两者互不覆盖）
+const componentValue = ref<SelectProps['value']>('jack')
+const componentMultipleValue = ref<SelectProps['value']>(['jack'])
+const componentPlainValue = ref<SelectProps['value']>('jack')
 // 自定义 label、value、options 字段
 const fieldOptions = [
   { id: 'jack', name: 'Jack' },
@@ -497,6 +501,30 @@ const emptyOptions: SelectOption[] = []
         </SelectOptGroup>
       </Select>
       <Select v-model:value="groupValue" :options="groupOptions" :width="200" />
+    </Space>
+    <h2 class="mt30 mb10">组件式用法</h2>
+    <!-- prettier-ignore -->
+    <p class="mb10">
+      用 <code>SelectOption</code> 子组件描述选项，静态小列表更直观：插槽内容负责渲染（富内容自动用于下拉项、回填与 <code>tag</code>），
+      其文本折叠空白后作为 <code>label</code> 供搜索 / <code>title</code> / 读屏使用；<code>label</code> 属性只覆盖文本、不影响渲染，
+      <code>optionLabelProp</code> 可指定回填取哪个字段；选项来自接口或需搜索过滤、大数据虚拟滚动时请用
+      <code>options</code>（两者同时提供以子组件为准）
+    </p>
+    <Space>
+      <Select v-model:value="componentValue" :width="220">
+        <SelectOption value="jack"><UserOutlined /> Jack</SelectOption>
+        <SelectOption value="lucy"><SmileOutlined /> Lucy</SelectOption>
+        <SelectOption value="yiminghe" disabled><MehOutlined /> Yiminghe</SelectOption>
+      </Select>
+      <Select v-model:value="componentMultipleValue" mode="multiple" placeholder="Please select" :width="320">
+        <SelectOption value="jack"><UserOutlined /> Jack</SelectOption>
+        <SelectOption value="lucy"><SmileOutlined /> Lucy</SelectOption>
+        <SelectOption value="yiminghe" disabled><MehOutlined /> Yiminghe</SelectOption>
+      </Select>
+      <Select v-model:value="componentPlainValue" option-label-prop="label" :width="220">
+        <SelectOption value="jack" label="Jack"><UserOutlined /> Jack (职员)</SelectOption>
+        <SelectOption value="lucy" label="Lucy"><SmileOutlined /> Lucy (职员)</SelectOption>
+      </Select>
     </Space>
     <h2 class="mt30 mb10">自定义 label、value、options 字段</h2>
     <p class="mb10">

@@ -6,7 +6,7 @@ import { SmileOutlined } from '@ant-design/icons-vue'
 function initialTime(hour: number, minute: number = 0, second: number = 0): number {
   return set(new Date(), { hours: hour, minutes: minute, seconds: second, milliseconds: 0 }).getTime()
 }
-/** 「不响应变更」一行：固定时刻快照，已选时间不随面板选择而变 */
+// 「不响应变更」一行：固定时刻快照，已选时间不随面板选择而变
 const fixedSnapshot = new Date()
 // 各用例独立持有一组值，避免在一个用例里选时间影响到其它用例；
 // 初始值按用例特征给：靠已选文本表达用例的给值（基本 / 禁用 / 选择时分 / 三种大小），只演示形态与浮层行为的留空
@@ -44,10 +44,10 @@ const placementTopLeftValue = ref<number | null>(null)
 const placementTopRightValue = ref<number | null>(null)
 const placementRangeBottomLeftValue = ref<[number | null, number | null] | null>(null)
 const placementRangeTopLeftValue = ref<[number | null, number | null] | null>(null)
-/** 步长用例的间隔：分钟 15、秒 10 */
+// 步长用例的间隔：分钟 15、秒 10
 const intervalMinuteStep = 15
 const intervalSecondStep = 10
-/** 范围用例的两段提示文字 */
+// 范围用例的两段提示文字
 const rangePlaceholder: [string, string] = ['开始时间', '结束时间']
 /** 附加内容用例：页脚按钮关闭浮层 */
 function closeAddonPanel() {

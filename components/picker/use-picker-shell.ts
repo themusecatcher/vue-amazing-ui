@@ -1,4 +1,4 @@
-/**
+/*
  * 日期 / 时间选择器壳层的共享内核：只承载**与形态无关**的值与开合逻辑（双轨值、逐段禁用、草稿与
  * 段激活、范围写入与回写、开合与承载层联动）；展示文本、面板选择、确认语义、键盘互动态与主题变量
  * 仍归各壳层，经 {@link PickerShellOptions} 的回调与形态自有的 ref 承接
@@ -115,9 +115,9 @@ export function usePickerShell(options: PickerShellOptions) {
   const triggerRef = ref<PickerTriggerExpose | null>(null)
   const popupRef = ref<PickerPopupExpose | null>(null)
   const wrapperRef = ref<HTMLElement | null>(null)
-  /** 字符串轨道受控：父组件传入 `formattedValue` 时以它为准，与主轨道解耦 */
+  // 字符串轨道受控：父组件传入 `formattedValue` 时以它为准，与主轨道解耦
   const formattedControlled = computed(() => props.formattedValue !== undefined)
-  /**
+  /*
    * 逐段禁用状态：范围形态支持两段元组逐段禁用；单选形态只接受布尔值，传数组时任一项为真即视为
    * 整体禁用（避免「传了数组却被静默当成启用」这类歧义）
    */
@@ -128,9 +128,9 @@ export function usePickerShell(options: PickerShellOptions) {
     }
     return [disabled, disabled]
   })
-  /** 是否整体禁用：范围形态两段都禁用、单选形态同段状态 */
+  // 是否整体禁用：范围形态两段都禁用、单选形态同段状态
   const fullyDisabled = computed(() => disabledSides.value[0] && disabledSides.value[1])
-  /** 单选形态的已提交值：字符串轨道受控时以其解析结果为准，范围形态恒为空 */
+  // 单选形态的已提交值：字符串轨道受控时以其解析结果为准，范围形态恒为空
   const innerValue = computed<number | null>(() => {
     if (isRange.value) {
       return null
@@ -148,7 +148,7 @@ export function usePickerShell(options: PickerShellOptions) {
   function parseSideTimestamp(text: string | null | undefined): number | null {
     return parseTimestamp(text ?? '', valueFormat.value)
   }
-  /** 范围形态的已提交区间：字符串轨道受控时以其为准，结构不符或解析失败时该段为空 */
+  // 范围形态的已提交区间：字符串轨道受控时以其为准，结构不符或解析失败时该段为空
   const rangeValue = computed<PickerRangeValue | null>(() => {
     if (!isRange.value) {
       return null
@@ -160,20 +160,20 @@ export function usePickerShell(options: PickerShellOptions) {
     const raw = valueModel.value
     return Array.isArray(raw) ? [raw[0], raw[1]] : null
   })
-  /**
+  /*
    * 单段草稿值：带确认语义的形态在面板展开期间只把选择落在草稿上，收起即丢弃
    *
    * 鼠标选择在单选非确认形态下即时提交、不会留下草稿，唯一会产生草稿的是键盘导航
    * —— 它只把光标落在草稿上（连同输入框文本），由回车或「确定」落值。
    */
   const draftValue = ref<number | null>(null)
-  /** 范围形态的草稿区间：选择先落草稿，两段齐全（或该段允许为空）时才对外提交 */
+  // 范围形态的草稿区间：选择先落草稿，两段齐全（或该段允许为空）时才对外提交
   const draftRange = ref<PickerRangeValue | null>(null)
-  /** 范围形态当前激活的段：决定悬浮预览与下一次选择作用于哪一端 */
+  // 范围形态当前激活的段：决定悬浮预览与下一次选择作用于哪一端
   const activeSide = ref<PickerRangeSide>('start')
-  /** 触发器上的激活段下标（0 为起点段） */
+  // 触发器上的激活段下标（0 为起点段）
   const activeTriggerIndex = computed(() => (activeSide.value === 'start' ? 0 : 1))
-  /** 本次展开期间被激活过的段：决定选完一段后是继续编辑另一端还是收起（收起即清空） */
+  // 本次展开期间被激活过的段：决定选完一段后是继续编辑另一端还是收起（收起即清空）
   const activatedSides = ref<Record<PickerRangeSide, boolean>>({ start: false, end: false })
   /** 激活某段：面板展开、选完一段后切换、聚焦某段输入框都算一次激活 */
   function activateSide(side: PickerRangeSide) {
@@ -184,7 +184,7 @@ export function usePickerShell(options: PickerShellOptions) {
   function resetActivatedSides() {
     activatedSides.value = { start: false, end: false }
   }
-  /** 面板展示区间：展开期间取草稿，其余情况跟随已提交值 */
+  // 面板展示区间：展开期间取草稿，其余情况跟随已提交值
   const panelRangeValue = computed<PickerRangeValue | null>(() => {
     const drafting = isRange.value && openModel.value && draftRange.value !== null
     return drafting ? draftRange.value : rangeValue.value
@@ -271,7 +271,7 @@ export function usePickerShell(options: PickerShellOptions) {
     requestOpen(false)
     return { value: next, formatted: nextFormatted }
   }
-  /** 清除按钮的可见性：宿主据此把 `allowClear` 折算成布尔后下发给触发器 */
+  // 清除按钮的可见性：宿主据此把 `allowClear` 折算成布尔后下发给触发器
   const showClear = computed(() => {
     if (!props.allowClear || fullyDisabled.value) {
       return false

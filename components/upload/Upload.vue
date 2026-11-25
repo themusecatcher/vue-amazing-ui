@@ -29,7 +29,6 @@ export interface Props {
   fileList?: FileType[] // (v-model) 已上传的文件列表
   defaultFileList?: FileType[] // 非受控初始值，未绑 v-model:fileList 时生效
 }
-// 声明组件插槽类型
 export interface UploadSlots {
   tip?: () => VNode[]
 }
@@ -123,19 +122,19 @@ function emitUploaded(index: number, file: FileType): void {
   emits('success', file, nextFiles)
   emits('change', nextFiles)
 }
-// 检查 url 是否为图片
+/** 检查 url 是否为图片 */
 function isImage(url: string): boolean {
   const imageUrlReg = /\.(jpg|jpeg|png|gif|bmp|webp|svg|ico)$/i
   const base64Reg = /^data:image/
   return imageUrlReg.test(url) || base64Reg.test(url)
 }
-// 检查 url 是否为 pdf
+/** 检查 url 是否为 pdf */
 function isPDF(url: string): boolean {
   const pdfUrlReg = /\.pdf$/i
   const base64Reg = /^data:application\/pdf/
   return pdfUrlReg.test(url) || base64Reg.test(url)
 }
-// 拖拽上传
+/** 拖拽上传 */
 function onDrop(e: DragEvent, index: number): void {
   const files = e.dataTransfer?.files
   if (files?.length) {
@@ -166,7 +165,7 @@ function onDrop(e: DragEvent, index: number): void {
 function onClickFileInput(index: number): void {
   uploadInputRef.value[index].click()
 }
-// 点击上传
+/** 点击上传 */
 function onUpload(e: any, index: number): void {
   const files = e.target.files as FileList | null
   if (files?.length) {
@@ -178,14 +177,16 @@ function onUpload(e: any, index: number): void {
     uploadInputRef.value[index].value = ''
   }
 }
-// 使用方返回 false 表示主动拒绝该文件：以带标记的 Error 承载这一信号，
-// 与真实异常区分（靠消息字符串判定太脆弱，使用方抛同名消息会被误判静默）
+/**
+ * 使用方返回 false 表示主动拒绝该文件：以带标记的 Error 承载这一信号，
+ * 与真实异常区分（靠消息字符串判定太脆弱，使用方抛同名消息会被误判静默）
+ */
 function createBeforeUploadRejected(): Error {
   const error = new Error('beforeUpload returned false')
   error.name = 'BeforeUploadRejected'
   return error
 }
-// 统一上传文件方法
+/** 统一上传文件方法 */
 function uploadFile(file: File, index: number): void {
   function promiseFunction() {
     return new Promise((resolve, reject) => {
@@ -524,8 +525,8 @@ function onRemove(index: number): void {
         color: var(--va-cp-upload-primary-color, var(--va-primary-color));
       }
       .file-mask {
-        // top right bottom left 简写为 inset: 0
-        // inset 无论元素的书写模式、行内方向和文本朝向如何，其所定义的都不是逻辑偏移而是实体偏移
+        /* top right bottom left 简写为 inset: 0 */
+        /* inset 无论元素的书写模式、行内方向和文本朝向如何，其所定义的都不是逻辑偏移而是实体偏移 */
         position: absolute;
         inset: 0;
         margin: 8px;

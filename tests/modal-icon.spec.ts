@@ -14,7 +14,7 @@ import type { ModalApi } from 'components/modal'
  * 因此声明式内联渲染函数在父组件重渲染时不会因函数引用变化而销毁重建。
  */
 
-// 在 Provider 内的宿主组件中取 api，用于覆盖命令式路径
+/** 在 Provider 内的宿主组件中取 api，用于覆盖命令式路径 */
 function mountWithApi(): { api: ModalApi; unmount: () => void } {
   let api!: ModalApi
   const Host = defineComponent({

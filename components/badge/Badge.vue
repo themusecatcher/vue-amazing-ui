@@ -33,7 +33,6 @@ export interface Props {
   title?: string // 设置鼠标放在状态点上时显示的文字
   ripple?: boolean // 是否开启涟漪动画效果
 }
-// 声明组件插槽类型
 export interface BadgeSlots {
   default?: () => VNode[]
   value?: () => VNode[]
@@ -264,8 +263,8 @@ function handleOffset(value: string): string {
     }
   }
 }
-// 无外层内容（纯数字 / 圆点）时改用不带位移的缩放动画，
-// 避免 @keyframes 的 transform 覆盖静态定位
+/* 无外层内容（纯数字 / 圆点）时改用不带位移的缩放动画， */
+/* 避免 @keyframes 的 transform 覆盖静态定位 */
 .only-number.zoom-enter {
   animation-name: noWrapperZoomBadgeIn;
   @keyframes noWrapperZoomBadgeIn {
@@ -362,7 +361,7 @@ function handleOffset(value: string): string {
     text-align: center;
     background: var(--va-error-color);
     border-radius: 10px;
-    // 缺口环取容器色：暗色下若用白环会变成发光圈
+    /* 缺口环取容器色：暗色下若用白环会变成发光圈 */
     box-shadow: 0 0 0 1px var(--va-bg-container-color);
     transition: background 0.2s;
     .number-value {

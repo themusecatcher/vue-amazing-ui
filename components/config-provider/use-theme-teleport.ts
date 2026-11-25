@@ -1,4 +1,4 @@
-/**
+/*
  * Teleport 浮层的主题转发
  *
  * 变量写在包裹元素上时，Teleport 到 body 的浮层拿不到 DOM 继承（Vue 的 inject 还在，

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import Progress from 'components/progress/Progress.vue'
 
-/**
+/*
  * 进度值的取值口径回归守护
  *
  * 覆盖曾缺失保护的行为：

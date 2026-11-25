@@ -19,7 +19,7 @@ const maskStyle = {
   '--qr-code-mask-bg-color': 'var(--va-warning-bg-color)',
   '--qr-code-mask-text-color': 'var(--va-text-color-1)'
 }
-// Spin 的 7 种内置指示符，直接用属性取值便于与组件文档对照
+/** Spin 的 7 种内置指示符，直接用属性取值便于与组件文档对照 */
 type BuiltinIndicator = Extract<SpinProps['indicator'], string>
 const indicatorOptions: BuiltinIndicator[] = [
   'dot',

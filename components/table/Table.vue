@@ -91,7 +91,6 @@ export interface Props {
   expandedRowKeys?: string[] // (v-model) 展开行的 key 数组，控制展开行的属性；需与 dataSource 数据中的 key 配合使用
   expandRowByClick?: boolean // 点击行是否展开
 }
-// 声明组件插槽类型
 export interface TableSlots {
   header?: () => VNode[]
   expandColumnTitle?: () => VNode[]
@@ -559,7 +558,7 @@ onUnmounted(() => {
 useResizeObserver(tableRef, () => {
   getScrollState()
 })
-// 点击复选框全选
+/** 点击复选框全选 */
 function onCheckAllChange(checked: boolean): void {
   changeRowKeys.value = []
   changeRows.value = []
@@ -599,7 +598,7 @@ function onCheckAllChange(checked: boolean): void {
     )
   props.rowSelection?.onChange && props.rowSelection.onChange(selectedRowKeys.value, selectedRows.value)
 }
-// 点击某行复选框/单选框
+/** 点击某行复选框/单选框 */
 function onTableSelectionChange(selected: boolean, rowIndex: number, key: string, record: Record<string, any>): void {
   if (selected) {
     // 选中复选框/单选框
@@ -627,7 +626,7 @@ function onTableSelectionChange(selected: boolean, rowIndex: number, key: string
     props.rowSelection.onSelect(record, selected, selectedRows.value, selectedRowKeys.value)
   props.rowSelection?.onChange && props.rowSelection.onChange(selectedRowKeys.value, selectedRows.value)
 }
-// 初始化默认排序时的数据索引，标识和展示数据
+/** 初始化默认排序时的数据索引，标识和展示数据 */
 function initDefaultSort(): void {
   const thLeaf = thColumnsLeaf.value.filter((column: Column) => column.colSpan !== 0)
   const len = thLeaf.length
@@ -641,7 +640,7 @@ function initDefaultSort(): void {
     }
   }
 }
-// 获取滚动状态信息
+/** 获取滚动状态信息 */
 function getScrollState(): void {
   if (scrollbarRef.value) {
     const scrollData = scrollbarRef.value.getScrollData()
@@ -656,7 +655,7 @@ function getScrollState(): void {
     }
   }
 }
-// 检查 children 中是否有固定列
+/** 检查 children 中是否有固定列 */
 function checkChildrenFix(columns: Column[] | undefined, fixed: 'left' | 'right'): boolean {
   if (columns && columns.length) {
     const len = columns.length
@@ -673,7 +672,7 @@ function checkChildrenFix(columns: Column[] | undefined, fixed: 'left' | 'right'
   }
   return false
 }
-// 获取 children 的叶子节点数量
+/** 获取 children 的叶子节点数量 */
 function getChildrenLeafNumber(columns: Column[]): number {
   let result = 0
   columns.forEach((column: Column) => {
@@ -685,7 +684,7 @@ function getChildrenLeafNumber(columns: Column[]): number {
   })
   return result
 }
-// 获取 columns 的最大深度
+/** 获取 columns 的最大深度 */
 function getMaxDepth(columns: Column[], currentDepth = 1): number {
   let maxDepth = currentDepth
   columns.forEach((column: Column) => {
@@ -698,8 +697,10 @@ function getMaxDepth(columns: Column[], currentDepth = 1): number {
   })
   return maxDepth
 }
-// 递归克隆列配置：colSpan/rowSpan/colStart/colEnd 等内部计算字段只落在副本上，
-// 不再就地写入用户传入的 columns 对象，避免多实例共享 / Object.freeze / 深监听等场景被污染
+/**
+ * 递归克隆列配置：colSpan/rowSpan/colStart/colEnd 等内部计算字段只落在副本上，
+ * 不再就地写入用户传入的 columns 对象，避免多实例共享 / Object.freeze / 深监听等场景被污染
+ */
 function cloneColumns(columns: Column[]): Column[] {
   return columns.map((column: Column) => {
     const clonedColumn: Column = { ...column }
@@ -709,7 +710,7 @@ function cloneColumns(columns: Column[]): Column[] {
     return clonedColumn
   })
 }
-// 计算获取表头分组的 th columns
+/** 计算获取表头分组的 th columns */
 function getThColumnsGroup(columns: Column[]): Column[][] {
   const clonedColumns = cloneColumns(columns) // 在克隆列树上计算，保留响应式字段依赖但不改写用户数据
   thColumnsLeaf.value = []
@@ -745,8 +746,10 @@ function getThColumnsGroup(columns: Column[]): Column[][] {
   processColumns(clonedColumns, 0, props.showExpandColumn ? 1 : 0)
   return result
 }
-// 获取表格对应于表头分组，处理后每行的 columns
-// 显式标注返回类型：避免模板中 slot props 类型被结构化展开（含 Column -> TooltipProps -> CSSProperties 全量属性）导致声明文件体积超限（TS7056）
+/**
+ * 获取表格对应于表头分组，处理后每行的 columns
+ * 显式标注返回类型：避免模板中 slot props 类型被结构化展开（含 Column -> TooltipProps -> CSSProperties 全量属性）导致声明文件体积超限（TS7056）
+ */
 function getTdColumnsGroup(record: Record<string, any>, rowIndex: number): Column[] {
   return thColumnsLeaf.value.filter((column: Column) => {
     if (column.customCell) {
@@ -763,7 +766,7 @@ function getTdColumnsGroup(record: Record<string, any>, rowIndex: number): Colum
     return true
   })
 }
-// 针对于 props 和 Column 都有的属性，获取计算后的值，优先级为 Column's > props's
+/** 针对于 props 和 Column 都有的属性，获取计算后的值，优先级为 Column's > props's */
 function getComputedValue(column: Column, key: keyof Props): object | ('ascend' | 'descend')[] {
   let computedValue = props[key as keyof Props]
   if (column?.[key as keyof Column] !== undefined) {
@@ -771,7 +774,7 @@ function getComputedValue(column: Column, key: keyof Props): object | ('ascend' 
   }
   return computedValue as object | ('ascend' | 'descend')[]
 }
-// 获取 sorter 排序提示文本
+/** 获取 sorter 排序提示文本 */
 function getSortTooltip(column: Column): string | undefined {
   const sortTooltipMap = {
     ascend: '点击升序',
@@ -829,7 +832,7 @@ function getSortTooltip(column: Column): string | undefined {
     }
   }
 }
-// 点击 th 单元格操作排序，更新 sortColumnDataIndex sortColumnSorter sortSymbol
+/** 点击 th 单元格操作排序，更新 sortColumnDataIndex sortColumnSorter sortSymbol */
 function onSorter(column: Column): void {
   clickSorter.value = true
   sortColumn.value = column
@@ -884,15 +887,15 @@ function onSorter(column: Column): void {
   }
   initialScrollPosition()
 }
-// 鼠标移入排序
+/** 鼠标移入排序 */
 function onEnterSorter(dataIndex: string): void {
   sortHoverDataIndex.value = dataIndex
 }
-// 鼠标离开排序
+/** 鼠标离开排序 */
 function onLeaveSorter(): void {
   sortHoverDataIndex.value = null
 }
-// 检查是否是左固定列的最后一列
+/** 检查是否是左固定列的最后一列 */
 function checkFixLeftLast(columns: Column[], column: Column, index: number): boolean {
   if (column.fixed === 'left' && index < columns.length - 1) {
     if (columns[index + 1].fixed !== 'left') {
@@ -901,7 +904,7 @@ function checkFixLeftLast(columns: Column[], column: Column, index: number): boo
   }
   return false
 }
-// 检查是否是右固定列的第一列
+/** 检查是否是右固定列的第一列 */
 function checkFixRightFirst(columns: Column[], column: Column, index: number): boolean {
   if (column.fixed === 'right' && index > 0) {
     if (columns[index - 1].fixed !== 'right') {
@@ -910,7 +913,7 @@ function checkFixRightFirst(columns: Column[], column: Column, index: number): b
   }
   return false
 }
-// 表格单元格样式
+/** 表格单元格样式 */
 function tableCellWidthStyle(column: Column): CSSProperties {
   const style: CSSProperties = {}
   if (column.width !== undefined) {
@@ -918,19 +921,19 @@ function tableCellWidthStyle(column: Column): CSSProperties {
   }
   return style
 }
-// 获取表格表头列的唯一标识 key
+/** 获取表格表头列的唯一标识 key */
 function getColumnKey(column: Column, index: number): string | number {
   if ('dataIndex' in column && column.dataIndex) {
     return column.dataIndex
   }
   return column.key !== undefined ? column.key : index
 }
-// 获取表格每行表头的唯一标识 key
+/** 获取表格每行表头的唯一标识 key */
 function getThColumnsGroupRowKey(columns: Column[]): string {
   return columns.map(getColumnKey).join('-')
 }
 
-// 展开列固定时的样式
+/** 展开列固定时的样式 */
 function tableExpandCellFixStyle(fixed: boolean): CSSProperties {
   const style: CSSProperties = {}
   if (fixed) {
@@ -939,7 +942,7 @@ function tableExpandCellFixStyle(fixed: boolean): CSSProperties {
   }
   return style
 }
-// 可选择列固定时的样式
+/** 可选择列固定时的样式 */
 function tableSelectionCellFixStyle(fixed: boolean): CSSProperties {
   const style: CSSProperties = {}
   if (fixed) {
@@ -949,7 +952,7 @@ function tableSelectionCellFixStyle(fixed: boolean): CSSProperties {
   }
   return style
 }
-// 表格单元格固定时的样式
+/** 表格单元格固定时的样式 */
 function tableCellFixStyle(column: Column): CSSProperties {
   const style: CSSProperties = {}
   const dataCols = colRef.value
@@ -982,7 +985,7 @@ function tableCellFixStyle(column: Column): CSSProperties {
   }
   return style
 }
-// 获取被合并单元格的列索引
+/** 获取被合并单元格的列索引 */
 function getMergedCellsColIndex(record: Record<string, any>, rowIndex: number): number[] {
   const mergedCellsColIndex: number[] = []
   props.columns.forEach((column: Column, colIndex: number) => {
@@ -995,7 +998,7 @@ function getMergedCellsColIndex(record: Record<string, any>, rowIndex: number): 
   })
   return mergedCellsColIndex
 }
-// 获取被合并单元格的行索引
+/** 获取被合并单元格的行索引 */
 function getMergeCellRowIndex(
   record: Record<string, any> | undefined,
   column: Column,
@@ -1011,14 +1014,14 @@ function getMergeCellRowIndex(
   }
   return undefined
 }
-// 获取每行的类名
+/** 获取每行的类名 */
 function getRowClassName(record: Record<string, any>, rowIndex: number): string | undefined {
   if (typeof props.rowClassName == 'function') {
     return props.rowClassName(record, rowIndex)
   }
   return props.rowClassName
 }
-// 鼠标悬浮某行
+/** 鼠标悬浮某行 */
 function onEnterRow(record: Record<string, any>, rowIndex: number): void {
   hoverRowIndex.value = rowIndex
   const mergedCellsColIndex = getMergedCellsColIndex(record, rowIndex)
@@ -1033,16 +1036,16 @@ function onEnterRow(record: Record<string, any>, rowIndex: number): void {
     })
   }
 }
-// 鼠标离开某行
+/** 鼠标离开某行 */
 function onLeaveRow(): void {
   hoverRowIndex.value = null
   mergeHoverCoords.value = [] // 重置被合并单元格的坐标
 }
-// 检查单元格是否处于鼠标悬浮所在的区域，包括行/列合并的单元格
+/** 检查单元格是否处于鼠标悬浮所在的区域，包括行/列合并的单元格 */
 function checkHoverCoord(row: number, col: number): boolean {
   return mergeHoverCoords.value.some((coord: Coords) => coord.row === row && coord.col === col)
 }
-// 展开/收起展开行
+/** 展开/收起展开行 */
 function onExpandCell(record: Record<string, any>, rowIndex: number): void {
   const key = getRowKey.value(record, rowIndex)
   const expanded = expandedRowKeysModel.value.includes(key)
@@ -1055,7 +1058,7 @@ function onExpandCell(record: Record<string, any>, rowIndex: number): void {
   emits('expand', !expanded, record)
   emits('expandedRowsChange', nextKeys)
 }
-// 表格滚动事件
+/** 表格滚动事件 */
 function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom'): void {
   if (['left', 'right'].includes(direction)) {
     // 水平滚动，使用 rAF 对齐浏览器渲染帧，减少表头跟随滚动的错位感
@@ -1075,7 +1078,7 @@ function onScroll(e: Event, direction: 'left' | 'right' | 'top' | 'bottom'): voi
     clientHeight.value = (e.target as HTMLElement).clientHeight
   }
 }
-// 鼠标滚轮或触摸板滑动事件
+/** 鼠标滚轮或触摸板滑动事件 */
 function onWheel(e: WheelEvent): void {
   if (e.deltaX) {
     e.stopPropagation() // 阻止事件冒泡
@@ -1088,7 +1091,7 @@ function onWheel(e: WheelEvent): void {
     })
   }
 }
-// 分页、排序等状态变化后是否滚动到表格初始位置
+/** 分页、排序等状态变化后是否滚动到表格初始位置 */
 function initialScrollPosition(): void {
   if (props.scroll?.initialScrollPositionOnChange) {
     scrollbarRef.value?.scrollTo({
@@ -1098,7 +1101,7 @@ function initialScrollPosition(): void {
     })
   }
 }
-// 分页变化事件
+/** 分页变化事件 */
 function onPaginationChange(page: number, pageSize: number): void {
   tablePage.value = page
   tablePageSize.value = pageSize

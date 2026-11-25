@@ -241,7 +241,7 @@ describe('Tabs 增强能力', () => {
     })
     await nextTick()
     const nav = wrapper.find('.tabs-nav-list')
-    // 事件构造器不带 deltaX，需显式定义后再派发
+    /** 事件构造器不带 deltaX，需显式定义后再派发 */
     const fireWheel = (deltaX: number) => {
       const wheelEvent = new WheelEvent('wheel', { bubbles: true })
       Object.defineProperty(wheelEvent, 'deltaX', { value: deltaX })
@@ -549,7 +549,7 @@ describe('Tabs 能力对齐（beforeLeave / displayDirective / justifyContent / 
   })
 })
 
-/**
+/*
  * 「更多」下拉的对齐方位
  *
  * 纵向时收纳入口在导航列底、宽度撑满整列（样式侧保证），故面板的次轴对齐边即导航列的边界：
@@ -558,8 +558,10 @@ describe('Tabs 能力对齐（beforeLeave / displayDirective / justifyContent / 
  */
 describe('Tabs 更多下拉的对齐方位', () => {
   it('纵向按导航列边界对齐：左列贴左、右列贴右；横向贴触发器左沿', async () => {
-    // jsdom 无布局：伪造「导航列表长于容器 + 次个页签完全滚出视口」，使收纳入口渲染出来。
-    // 首项贴容器起点（激活项不回滚），次项落在视口之外，故收纳集合非空
+    /**
+     * jsdom 无布局：伪造「导航列表长于容器 + 次个页签完全滚出视口」，使收纳入口渲染出来。
+     * 首项贴容器起点（激活项不回滚），次项落在视口之外，故收纳集合非空
+     */
     const stub = (prop: 'offsetWidth' | 'offsetHeight' | 'offsetLeft' | 'offsetTop') =>
       vi.spyOn(HTMLElement.prototype, prop, 'get').mockImplementation(function (this: HTMLElement) {
         if (prop === 'offsetLeft' || prop === 'offsetTop') {

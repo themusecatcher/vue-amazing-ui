@@ -16,7 +16,6 @@ export interface Props {
   name?: string // 原生 input 的表单字段名；置于 RadioGroup 内时以组的配置为准
   id?: string // 原生 input 的 id
 }
-// 声明组件插槽类型
 export interface RadioSlots {
   default?: () => VNode[] // 选项名
 }
@@ -83,7 +82,7 @@ watch(mergedDisabled, (disabled) => {
     endWave()
   }
 })
-// 状态快照取本组件 props，原生事件与方法附在其上，与原生 input 的 change 同形态
+/** 状态快照取本组件 props，原生事件与方法附在其上，与原生 input 的 change 同形态 */
 function buildChangeEvent(nativeEvent: Event, checked: boolean, value?: RadioValue): RadioChangeEvent {
   return {
     target: {
@@ -97,15 +96,17 @@ function buildChangeEvent(nativeEvent: Event, checked: boolean, value?: RadioVal
     nativeEvent
   }
 }
-// 受控模式下浏览器已先行切换原生选中态，需按组件状态回写，避免二者不一致；
-// 选项模式下点击 label 时事件目标是 label，只有落到原生 input 才写回
+/**
+ * 受控模式下浏览器已先行切换原生选中态，需按组件状态回写，避免二者不一致；
+ * 选项模式下点击 label 时事件目标是 label，只有落到原生 input 才写回
+ */
 function syncInputChecked(event: Event, checked: boolean): void {
   const { target } = event
   if (target instanceof HTMLInputElement) {
     target.checked = checked
   }
 }
-// 组外单选：已选中时不再重复上报
+/** 组外单选：已选中时不再重复上报 */
 function onChecked(event: Event): void {
   if (!radioChecked.value) {
     radioChecked.value = true
@@ -114,9 +115,11 @@ function onChecked(event: Event): void {
   }
   syncInputChecked(event, true)
 }
-// 单项点击：组内选中态由组维护，本项只上报自身 value；组外走自身的受控切换。
-// 两个分支的原生 input 均以 `@click.stop` 拦掉「label → input」的转发点击，否则使用方绑在组件根上的
-// click 会收到两次（转发点击的选中逻辑已由本函数承载）
+/**
+ * 单项点击：组内选中态由组维护，本项只上报自身 value；组外走自身的受控切换。
+ * 两个分支的原生 input 均以 `@click.stop` 拦掉「label → input」的转发点击，否则使用方绑在组件根上的
+ * click 会收到两次（转发点击的选中逻辑已由本函数承载）
+ */
 function onSingleClick(event: Event): void {
   if (mergedDisabled.value) {
     return
@@ -138,29 +141,33 @@ function onSingleClick(event: Event): void {
   }
   onChecked(event)
 }
-// 清除程序化聚焦标志：焦点真正离开原生 input 时（原生 blur）一并收尾，避免焦点环残留
+/** 清除程序化聚焦标志：焦点真正离开原生 input 时（原生 blur）一并收尾，避免焦点环残留 */
 function clearExposedFocus(): void {
   exposedSingleFocused.value = false
 }
-// 键盘聚焦：:focus-visible 无 JS 可读状态，在 focus 事件当下用 matches 判定后置位；
-// 鼠标点击与脚本调用 focus() 均不匹配该伪类，与 CSS 路径同口径（圆点形态另有一条 :focus-visible CSS 兜底）
+/**
+ * 键盘聚焦：:focus-visible 无 JS 可读状态，在 focus 事件当下用 matches 判定后置位；
+ * 鼠标点击与脚本调用 focus() 均不匹配该伪类，与 CSS 路径同口径（圆点形态另有一条 :focus-visible CSS 兜底）
+ */
 function onInputFocus(event: Event): void {
   const { target } = event
   if (target instanceof HTMLInputElement && target.matches(':focus-visible')) {
     exposedSingleFocused.value = true
   }
 }
-// 鼠标按下即撤销焦点环：浏览器对鼠标按下（含已聚焦元素被再次点击）不再给 :focus-visible，
-// 纯 CSS 方案下焦点环随之消失，class 方案需对齐该行为，避免 Tab 聚焦后点鼠标残留焦点环
+/**
+ * 鼠标按下即撤销焦点环：浏览器对鼠标按下（含已聚焦元素被再次点击）不再给 :focus-visible，
+ * 纯 CSS 方案下焦点环随之消失，class 方案需对齐该行为，避免 Tab 聚焦后点鼠标残留焦点环
+ */
 function onMouseDown(): void {
   clearExposedFocus()
 }
-// 聚焦原生 input
+/** 聚焦原生 input */
 function focus(): void {
   singleInput.value?.focus()
   exposedSingleFocused.value = true
 }
-// 失焦原生 input
+/** 失焦原生 input */
 function blur(): void {
   clearExposedFocus()
   singleInput.value?.blur()

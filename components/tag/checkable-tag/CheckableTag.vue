@@ -28,8 +28,10 @@ function onClick(event: MouseEvent) {
   emits('change', nextChecked)
   emits('click', event)
 }
-// 与 Tag 的关闭 / 新增按钮同口径：Enter / Space 转发为一次原生 click，键盘与鼠标走同一条路径。
-// 模板上的 role="button" + aria-pressed 暴露切换语义与选中态，禁用时移出 tab 序列并给出 aria-disabled
+/**
+ * 与 Tag 的关闭 / 新增按钮同口径：Enter / Space 转发为一次原生 click，键盘与鼠标走同一条路径。
+ * 模板上的 role="button" + aria-pressed 暴露切换语义与选中态，禁用时移出 tab 序列并给出 aria-disabled
+ */
 function onKeydown(e: KeyboardEvent) {
   if (props.disabled) return
   if (e.key !== 'Enter' && e.key !== ' ') return
@@ -53,7 +55,7 @@ function onKeydown(e: KeyboardEvent) {
   </Tag>
 </template>
 <style lang="less" scoped>
-// 复用 Tag 的基础尺寸与排版，只覆盖选中/悬停态；带上 .tag-wrap 是为了压过 Tag 自身的同权重样式
+/* 复用 Tag 的基础尺寸与排版，只覆盖选中/悬停态；带上 .tag-wrap 是为了压过 Tag 自身的同权重样式 */
 .tag-wrap.checkable-tag-wrap {
   cursor: pointer;
   background-color: transparent;
@@ -66,7 +68,7 @@ function onKeydown(e: KeyboardEvent) {
     background-color: var(--va-cp-tag-primary-color, var(--va-primary-color));
     border-color: transparent;
   }
-  // 禁用态保留选中/未选中的底色，只去掉交互反馈
+  /* 禁用态保留选中/未选中的底色，只去掉交互反馈 */
   &:not(.tag-disabled) {
     &:not(.checkable-tag-checked):hover {
       color: var(--va-cp-tag-primary-color, var(--va-primary-color));
@@ -79,7 +81,7 @@ function onKeydown(e: KeyboardEvent) {
     &.checkable-tag-checked:hover {
       background-color: var(--va-cp-tag-primary-color-hover, var(--va-primary-color-hover));
     }
-    // 选中态按下：与上方 hover 规则同权重，靠源码顺序覆盖，避免按下时仍停留在 hover 的浅一档
+    /* 选中态按下：与上方 hover 规则同权重，靠源码顺序覆盖，避免按下时仍停留在 hover 的浅一档 */
     &.checkable-tag-checked:active {
       background-color: var(--va-cp-tag-primary-color-active, var(--va-primary-color-active));
     }

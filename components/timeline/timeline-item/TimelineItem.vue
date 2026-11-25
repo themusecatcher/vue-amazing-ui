@@ -11,7 +11,6 @@ export interface Props {
   lineType?: 'solid' | 'dashed' | 'dotted' // 单独覆盖该节点的线型
   position?: 'left' | 'right' // 交替模式下单独指定该节点内容所在侧
 }
-// 声明组件插槽类型
 export interface TimelineItemSlots {
   default?: () => VNode[]
   dot?: () => VNode[]
@@ -215,7 +214,7 @@ const itemClasses = computed(() => {
   margin-left: calc(50% + var(--timeline-alt-offset, 12px));
   text-align: start;
 }
-// 分栏判定只认直接子项（> .timeline-item-wrap.*）：嵌套时间轴的内层 label 不影响外层布局
+/* 分栏判定只认直接子项（> .timeline-item-wrap.*）：嵌套时间轴的内层 label 不影响外层布局 */
 .timeline-alternate.timeline-wrap:not(.timeline-horizontal):not(:has(> .timeline-item-wrap.timeline-item-has-label))
   > .timeline-item-wrap.timeline-item-right
   > .timeline-item-content {
@@ -310,7 +309,7 @@ const itemClasses = computed(() => {
     text-align: start;
   }
 }
-// 遮罩色取 --timeline-head-bg（默认容器色），页面底色与容器色不一致时由页面覆盖该变量
+/* 遮罩色取 --timeline-head-bg（默认容器色），页面底色与容器色不一致时由页面覆盖该变量 */
 .timeline-item-head-custom {
   top: calc(var(--timeline-line-height, 22px) / 2 - var(--timeline-content-offset, 7px));
   left: calc(var(--timeline-head-size, 10px) / 2);
@@ -327,7 +326,7 @@ const itemClasses = computed(() => {
   right: auto;
   left: calc(100% - var(--timeline-head-size, 10px) / 2);
 }
-// 不与 :has() 选择器共用逗号列表：不支持 :has() 的浏览器会整条丢弃，连累左对齐规则
+/* 不与 :has() 选择器共用逗号列表：不支持 :has() 的浏览器会整条丢弃，连累左对齐规则 */
 .timeline-alternate > .timeline-item-wrap > .timeline-item-head-custom {
   right: auto;
   left: 50%;
@@ -379,7 +378,7 @@ const itemClasses = computed(() => {
     text-align: start;
   }
 }
-// 收尾留白与项间距是两种语义（节点节奏 / 整轴收尾），独立成变量后嵌套实例才能只关掉收尾而不动节奏
+/* 收尾留白与项间距是两种语义（节点节奏 / 整轴收尾），独立成变量后嵌套实例才能只关掉收尾而不动节奏 */
 .timeline-wrap:not(.timeline-horizontal):not(.timeline-reverse) > .timeline-item-wrap:last-child {
   padding-bottom: var(--timeline-end-gap, var(--timeline-gap, 20px));
 }

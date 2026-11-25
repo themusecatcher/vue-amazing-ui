@@ -13,7 +13,7 @@ afterEach(() => {
   document.body.style.paddingRight = ''
 })
 
-// to: false 关闭 Teleport，使 DOM 留在 wrapper 内便于断言
+/** to: false 关闭 Teleport，使 DOM 留在 wrapper 内便于断言 */
 const mountInline = (props: Partial<DrawerProps> = {}) =>
   mount(Drawer, { attachTo: document.body, props: { to: false, ...props } })
 

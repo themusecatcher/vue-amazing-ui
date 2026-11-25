@@ -129,17 +129,17 @@ function initScroll(): void {
   }
   startMove() // 开始滚动
 }
-// 获取水平滚动容器宽度；水平滚动内容宽度
+/** 获取水平滚动容器宽度；水平滚动内容宽度 */
 function getScrollSize(): void {
   if (!horizontalRef.value || !groupRef.value) return
   horizontalWrapWidth.value = horizontalRef.value.offsetWidth
   groupWidth.value = groupRef.value.offsetWidth
 }
-// 水平滚动内容 DOM 引用（渲染两份分组，仅首个分组需取宽度）
+/** 水平滚动内容 DOM 引用（渲染两份分组，仅首个分组需取宽度） */
 function setGroupRef(el: Element | ComponentPublicInstance | null): void {
   groupRef.value = el as HTMLElement | null
 }
-// 重置水平滚动状态
+/** 重置水平滚动状态 */
 function resetScrollState(): void {
   playState.value = 'paused'
   nextTick(() => {
@@ -147,7 +147,7 @@ function resetScrollState(): void {
     playState.value = 'running'
   })
 }
-// 当 CSS Animation 运动到最后一帧时触发
+/** 当 CSS Animation 运动到最后一帧时触发 */
 function onAnimationIteration(): void {
   resetScrollState()
 }
@@ -173,7 +173,7 @@ function onMouseLeave(): void {
   if (!props.pauseOnMouseEnter) return
   startMove()
 }
-// 滚动开始；可重入保护：节拍链已在运行时直接返回，避免并存两条链
+/** 滚动开始；可重入保护：节拍链已在运行时直接返回，避免并存两条链 */
 function startMove(): void {
   if (disposed) return
   if (props.vertical) {
@@ -189,7 +189,7 @@ function startMove(): void {
     }
   }
 }
-// 滚动暂停
+/** 滚动暂停 */
 function stopMove(): void {
   if (props.vertical) {
     atRest.value = true
@@ -198,7 +198,7 @@ function stopMove(): void {
     playState.value = 'paused'
   }
 }
-// 滚动重置
+/** 滚动重置 */
 function resetMove(): void {
   if (props.vertical) {
     clearVerticalTimer()
@@ -336,7 +336,7 @@ defineExpose({
   </div>
 </template>
 <style lang="less" scoped>
-// 滚动条目文字声明
+/* 滚动条目文字声明 */
 .scroll-item-base() {
   font-size: 16px;
   font-weight: 400;
@@ -346,7 +346,7 @@ defineExpose({
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-// 链接条目声明；悬浮色需盖过条目自身颜色
+/* 链接条目声明；悬浮色需盖过条目自身颜色 */
 .href-item-base() {
   cursor: pointer;
   transition: color 0.3s;
@@ -357,7 +357,7 @@ defineExpose({
     cursor: inherit;
   }
 }
-// 水平滚动
+/* 水平滚动 */
 .text-scroll-horizontal {
   overflow: hidden;
   display: flex;
@@ -392,7 +392,7 @@ defineExpose({
     animation: none;
   }
 }
-// 垂直滚动
+/* 垂直滚动 */
 .slide-enter-active,
 .slide-leave-active {
   transition: all var(--text-scroll-duration) var(--text-scroll-timing-function);

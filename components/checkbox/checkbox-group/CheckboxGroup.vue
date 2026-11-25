@@ -12,7 +12,7 @@ export interface Option {
   value: CheckboxValue // 选项值
   disabled?: boolean // 是否禁用选项
 }
-// 组内选项：label 经归一化后必有值
+/** 组内选项：label 经归一化后必有值 */
 interface NormalizedOption extends Option {
   label: string | number | VNode
 }
@@ -28,7 +28,6 @@ export interface Props {
   id?: string // 原生 input 的 id 前缀，options 模式下实际 id 追加选项下标
   autofocus?: boolean // 是否自动聚焦首项，仅 options 模式生效
 }
-// 声明组件插槽类型
 export interface CheckboxGroupSlots {
   // options 模式下为每个选项提供作用域参数；组合式用法无参数
   default?: (props: { option?: Option; label?: string | number | VNode; index?: number }) => VNode[]
@@ -66,7 +65,7 @@ const gapValue = computed(() => {
   }
   return props.vertical ? `${gap[1]}px` : `${gap[1]}px ${gap[0]}px`
 })
-// 状态快照取本组件 props，原生事件与方法附在其上，与原生 input 的 change 同形态
+/** 状态快照取本组件 props，原生事件与方法附在其上，与原生 input 的 change 同形态 */
 function buildChangeEvent(nativeEvent: Event, value: CheckboxValue[]): CheckboxChangeEvent {
   return {
     target: {

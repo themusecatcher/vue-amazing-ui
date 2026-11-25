@@ -20,7 +20,7 @@ const triggerColor1 = ref('#ff6900')
 const triggerColor2 = ref('#1677ff')
 const triggerColor3 = ref('#722ed1')
 const showPreview = ref(true)
-// 弹出位置：分段切换方位 + 数字输入框调间距，单个实例即可覆盖各组合
+/** 弹出位置：分段切换方位 + 数字输入框调间距，单个实例即可覆盖各组合 */
 type Placement = NonNullable<ColorPickerProps['placement']>
 const placement = ref<Placement>('bottomLeft')
 const offset = ref(6)
@@ -37,7 +37,7 @@ const placementOptions: { label: string; value: Placement }[] = [
 ]
 const labelValue = ref('#ff6900')
 const open = ref(false)
-// 浮层挂载与卸载：to 三态 + destroyOnHide 开关驱动同一实例
+/** 浮层挂载与卸载：to 三态 + destroyOnHide 开关驱动同一实例 */
 type ToMode = 'auto' | 'false' | 'container'
 const toMode = ref<ToMode>('auto')
 const toOptions: { label: string; value: ToMode }[] = [

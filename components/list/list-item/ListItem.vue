@@ -17,7 +17,6 @@ export interface Props {
   actionsStyle?: CSSProperties // 设置操作区域的样式
   extraStyle?: CSSProperties // 设置额外内容的样式
 }
-// 声明组件插槽类型
 export interface ListItemSlots {
   avatar?: () => VNode[]
   title?: () => VNode[]
@@ -137,7 +136,7 @@ const showExtra = computed(() => {
         fill: currentColor;
       }
       & > * {
-        // 选择所有直接子元素，不包括深层的后代
+        /* 选择所有直接子元素，不包括深层的后代 */
         position: relative;
         display: inline-flex;
         align-items: center;
@@ -163,7 +162,7 @@ const showExtra = computed(() => {
         }
       }
       & > :deep(a) {
-        // 选择所有直接子元素且是 a 标签
+        /* 选择所有直接子元素且是 a 标签 */
         color: var(--va-link-color);
         transition: color 0.3s;
         &:hover {

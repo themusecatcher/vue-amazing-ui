@@ -4,7 +4,7 @@ import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import type { VNode } from 'vue'
 import { useSlotsExist } from 'components/utils'
 
-// 内置指示符枚举（字符串取值即内置；各形态说明见行尾）
+/** 内置指示符枚举（字符串取值即内置；各形态说明见行尾） */
 export type BuiltinIndicator =
   | 'dot' // 四点闪烁：四点整体旋转 + 逐点闪烁
   | 'dot-wheel' // 八点轮：八点等距成轮，亮度沿圆周扫过（支持 speed / rotate）
@@ -31,7 +31,6 @@ export interface Props {
   rotate?: boolean // 出现时是否整体旋转一圈；仅 dot-wheel / line-wheel 生效
   speed?: number // 动画周期（ms），值越小越快：dot-wheel / line-wheel 为亮度扫过一圈、magic-ring 为翻面一圈；仅 dot-wheel / line-wheel / magic-ring 生效
 }
-// 声明组件插槽类型
 export interface SpinSlots {
   tip?: () => VNode[]
   indicator?: () => VNode[]
@@ -161,7 +160,7 @@ const showFitContent = computed(() => {
 // 初值取 false，由下方 immediate 首次同步决定：挂载时若已处于 spinning 且设了 delay，同样要等满延迟才展示
 const spinningShow = ref(false)
 let delayTimer: ReturnType<typeof setTimeout> | null = null
-// 清理延迟显示定时器：避免重复设置，也避免卸载后回调仍触发
+/** 清理延迟显示定时器：避免重复设置，也避免卸载后回调仍触发 */
 function clearDelayTimer(): void {
   if (delayTimer !== null) {
     clearTimeout(delayTimer)
@@ -336,9 +335,9 @@ onBeforeUnmount(clearDelayTimer)
           transform: translate(-50%, -50%) rotate(calc(var(--spin-points-angle) * (var(--spin-point-index) - 1)))
             translateY(calc(-1 * var(--spin-points-radius)));
           background-color: var(--spin-primary-color);
-          // 静态亮度梯度：与动画首帧一致，供「动画被禁用」（系统减弱动态效果）时兜底
+          /* 静态亮度梯度：与动画首帧一致，供「动画被禁用」（系统减弱动态效果）时兜底 */
           opacity: calc(1 - var(--spin-points-fade-step) * (var(--spin-point-index) - 1));
-          // 单一波形 + 逐点负延迟相移：一个 keyframes 取代 N 组各自成文的波形
+          /* 单一波形 + 逐点负延迟相移：一个 keyframes 取代 N 组各自成文的波形 */
           animation: spinTrace var(--spin-speed) linear infinite;
           animation-delay: calc(-1 * var(--spin-speed) * var(--spin-points-phase) * (var(--spin-point-index) - 1));
         }

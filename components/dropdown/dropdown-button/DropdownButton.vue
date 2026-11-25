@@ -1,5 +1,5 @@
 <script setup lang="ts">
-/**
+/*
  * 下拉按钮：左侧为普通按钮（承载默认插槽内容与 loading 态），右侧为仅图标的下拉触发器，两者构成按钮组。
  * 菜单能力全部透传给 Dropdown，本组件只处理按钮形态与左按钮点击。
  */
@@ -26,7 +26,6 @@ export interface Props {
   overlayClassName?: string // 下拉菜单根元素的类名
   overlayStyle?: CSSProperties // 下拉菜单根元素的样式
 }
-// 声明组件插槽类型
 export interface DropdownButtonSlots {
   default?: () => VNode[]
   overlay?: () => VNode[]
@@ -133,7 +132,7 @@ function onMenuClick(key: Key | undefined, option: MenuOption): void {
 .dropdown-button-wrap {
   display: inline-flex;
   align-items: stretch;
-  // hover / focus 时提升层级，避免相邻按钮共享的那条边框被覆盖
+  /* hover / focus 时提升层级，避免相邻按钮共享的那条边框被覆盖 */
   :deep(.dropdown-button-left),
   :deep(.dropdown-button-right) {
     position: relative;
@@ -150,7 +149,7 @@ function onMenuClick(key: Key | undefined, option: MenuOption): void {
   :deep(.dropdown-button-left) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    // 共享边用 hover 色，使两个实心按钮之间呈现可见的分隔线
+    /* 共享边用 hover 色，使两个实心按钮之间呈现可见的分隔线 */
     &.btn-primary:not(.btn-disabled) {
       border-right-color: var(--va-button-primary-color-hover, var(--va-primary-color-hover));
     }
@@ -158,7 +157,7 @@ function onMenuClick(key: Key | undefined, option: MenuOption): void {
       border-right-color: var(--va-button-danger-color-hover, var(--va-button-danger-color, var(--va-error-color)));
     }
   }
-  // 左按钮 loading 时，右按钮同步变淡且不可交互
+  /* 左按钮 loading 时，右按钮同步变淡且不可交互 */
   &.dropdown-button-loading {
     :deep(.dropdown-button-right) {
       opacity: 0.65;

@@ -92,16 +92,16 @@ const emits = defineEmits<{
   cellHover: [timestamp: number] // 悬浮日期格：范围形态据此换算预览区间，单选形态据此在输入框展示预览文本
   cellLeave: [] // 移出日期格：清除预览
 }>()
-/** 月面板格的列数（行数由格数除以列数得出） */
+// 月面板格的列数（行数由格数除以列数得出）
 const MONTH_COL_COUNT = 3
-/** 季面板格的列数：4 格 1 行 */
+// 季面板格的列数：4 格 1 行
 const QUARTER_COL_COUNT = 4
 const YEAR_COL_COUNT = 3
-/** 十年面板格的列数（与年面板同构：3 列 × 4 行） */
+// 十年面板格的列数（与年面板同构：3 列 × 4 行）
 const DECADE_COL_COUNT = 3
-/** 一周天数：日期面板「上下」键的步长 */
+// 一周天数：日期面板「上下」键的步长
 const DAYS_PER_WEEK = 7
-/** 一个季度的月份数：季面板「左右」键的步长 */
+// 一个季度的月份数：季面板「左右」键的步长
 const QUARTER_MONTH_COUNT = 3
 /** 按列数切分为矩阵，供表格逐行渲染 */
 function chunk<T>(list: T[], size: number): T[][] {
@@ -137,7 +137,7 @@ watch(
     }
   }
 )
-/**
+/*
  * 展开时把展示日期带回当前值，并回到形态基准层级
  *
  * 面板在浮层收起后并不销毁，若不在展开时重置，上一次翻页到别的月份、或钻取到年 / 月 / 季面板
@@ -156,7 +156,7 @@ watch(
     }
   }
 )
-/** 形态变化（宿主动态切换 type）时回到形态基准层级 */
+// 形态变化（宿主动态切换 type）时回到形态基准层级
 watch(
   () => props.baseMode,
   (mode) => {
@@ -172,7 +172,7 @@ watch(
     }
   }
 )
-/** 周形态恒按 ISO 周（周一起始）排布：周序号与 `RRRR-II周` 展示格式同源，不随 `startDayOfWeek` 变化 */
+// 周形态恒按 ISO 周（周一起始）排布：周序号与 `RRRR-II周` 展示格式同源，不随 `startDayOfWeek` 变化
 const ISO_START_DAY_OF_WEEK: StartDayOfWeek = 0
 const weekLabels = computed(() => getWeekLabels(props.startDayOfWeek))
 const weekPanelLabels = computed(() => getWeekLabels(ISO_START_DAY_OF_WEEK))
@@ -187,12 +187,12 @@ const decadeYears = computed(() => {
   const years = getYearTimestamps(viewDate.value)
   return `${getYearNumber(years[0])}-${getYearNumber(years[years.length - 1])}`
 })
-/** 十年面板的头部：世纪区间（如 2000-2099） */
+// 十年面板的头部：世纪区间（如 2000-2099）
 const centuryText = computed(() => {
   const [startYear, endYear] = getCenturyRange(viewDate.value)
   return `${startYear}-${endYear}`
 })
-/**
+/*
  * 周面板的日期行：除 7 个日期格外，额外携带该行的周序号（由行首日所在周得出）
  *
  * 周形态恒按 ISO 周排布（周一起始）：周序号与 `RRRR-II周` 展示格式同源，故不随 `startDayOfWeek` 变化。
@@ -204,7 +204,7 @@ const weekPanelRows = computed(() =>
     days: row
   }))
 )
-/**
+/*
  * 本屏各格的禁用态：按「面板层级 + 视图日期」算一次并缓存
  *
  * 月 / 季 / 年 / 十年格是「整段判定」，逐格现算的代价随层级放大，而 `class` / `aria-disabled` /
@@ -251,7 +251,7 @@ const disabledCells = computed<Map<number, boolean>>(() => {
 function isCellDisabled(timestamp: number): boolean {
   return disabledCells.value.get(timestamp) ?? false
 }
-/** 周面板各行是否整周禁用：同样一屏算一次（整周判定需逐天回调） */
+// 周面板各行是否整周禁用：同样一屏算一次（整周判定需逐天回调）
 const disabledWeekRows = computed<Map<number, boolean>>(() => {
   const result = new Map<number, boolean>()
   const { disabledDate } = props
@@ -302,7 +302,7 @@ function isYearInView(timestamp: number): boolean {
   const startYear = getYearNumber(getYearTimestamps(viewDate.value)[0])
   return year >= startYear && year < startYear + 10
 }
-/* ============================== 周形态 ============================== */
+/** ============================== 周形态 ============================== */
 /** 比较两个时间戳所在 ISO 周的前后（-1 在前 / 0 同周 / 1 在后） */
 function compareWeek(a: number, b: number): number {
   const weekA = getWeekStartTimestamp(a)
@@ -366,7 +366,7 @@ function getWeekRowClasses(weekStart: number): Record<string, boolean> {
     'picker-panel-week-row-range-hover': isHovered && !isInRange && !isRangeStart && !isRangeEnd
   }
 }
-/* ============================== 十年面板 ============================== */
+/** ============================== 十年面板 ============================== */
 /** 十年格是否落在当前世纪区间内：世纪之外的前后各一格据此灰显 */
 function isDecadeInView(timestamp: number): boolean {
   return isDecadeInCentury(timestamp, viewDate.value)
@@ -384,7 +384,7 @@ function isSelectedDecade(timestamp: number): boolean {
 function isDecadeDisabled(timestamp: number): boolean {
   return props.disabledDate ? isDecadeFullyDisabled(timestamp, props.disabledDate) : false
 }
-/** 底部可见性：日期时间形态的底部即「此刻 / 确定」，与「今天」的视图条件无关 */
+// 底部可见性：日期时间形态的底部即「此刻 / 确定」，与「今天」的视图条件无关
 const footerVisible = computed(() => props.datetime || (props.showToday && panelMode.value === 'date'))
 // 范围形态两个面板并排：左面板的「下一」与右面板的「上一」指向同一个相邻月份，故各自隐去；
 // 隐去仅隐本体、留占位，两个面板头部的视图区才会落在同一水平位置
@@ -607,7 +607,7 @@ function getSuperStepYears(): number {
   }
   return panelMode.value === 'year' ? YEAR_COUNT : 1
 }
-// 翻页后的视图日期先落入局部变量再上报：受控模式下 viewDate 要等宿主回传才更新，不能读回自身
+/** 翻页后的视图日期先落入局部变量再上报：受控模式下 viewDate 要等宿主回传才更新，不能读回自身 */
 function onSuperPrev() {
   const next = addYearTimestamp(viewDate.value, -getSuperStepYears())
   setViewDate(next)

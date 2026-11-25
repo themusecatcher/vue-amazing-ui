@@ -3,7 +3,7 @@ import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { FLOATING_LAYER_Z_INDEX } from 'components/utils'
 
-/**
+/*
  * 浮层默认层级「单一真源」守护
  *
  * 这些数值原先同时散落在 9 个组件的 `useZIndex` 字面量、`Popup` 的 `default-zIndex` 绑定
@@ -22,13 +22,13 @@ import { FLOATING_LAYER_Z_INDEX } from 'components/utils'
 const COMPONENTS_DIR = join(process.cwd(), 'components')
 const LAYER_DOC_PATH = join(process.cwd(), 'docs', 'guide', 'components', 'config-provider.md')
 
-/** 层内再分层的固定偏移：承载层的「弹窗」、预览层的「预览」均在遮罩之上 +10 */
+// 层内再分层的固定偏移：承载层的「弹窗」、预览层的「预览」均在遮罩之上 +10
 const INNER_OFFSET = 10
 
-/** 预览层操作按钮（`Image` 左右切换）相对预览内容的固定偏移 */
+// 预览层操作按钮（`Image` 左右切换）相对预览内容的固定偏移
 const IMAGE_OPERATION_OFFSET = 1
 
-/**
+/*
  * 不参与自动分配的页面级 / 装饰层数值
  *
  * `BackTop` 9、`FloatButton` 99、`Badge` 9、`Watermark` 90 是各自组件的 `zIndex` prop 默认值；
@@ -37,13 +37,13 @@ const IMAGE_OPERATION_OFFSET = 1
  */
 const UNMANAGED_LEVELS = [9, 99, 90]
 
-/** 允许的非字面量写法：`Popup` 宿主把默认层级透传给内部 `useZIndex` */
+// 允许的非字面量写法：`Popup` 宿主把默认层级透传给内部 `useZIndex`
 const ALLOWED_NON_CONSTANT = new Set(['props.defaultZIndex'])
 
-/** 组件右侧 `withDefaults` 中 `zIndex` prop 默认值的声明形态 */
+// 组件右侧 `withDefaults` 中 `zIndex` prop 默认值的声明形态
 const PROP_Z_INDEX_PATTERN = /^ {2}zIndex: (\d+),$/m
 
-/** 非托管行 → 真实来源（多来源对应文档中的同一行，如 `Badge` / `Watermark`） */
+// 非托管行 → 真实来源（多来源对应文档中的同一行，如 `Badge` / `Watermark`）
 const UNMANAGED_ROWS: Array<{ row: string; sources: Array<{ file: string; pattern: RegExp }> }> = [
   { row: 'BackTop', sources: [{ file: 'components/back-top/BackTop.vue', pattern: PROP_Z_INDEX_PATTERN }] },
   { row: 'FloatButton', sources: [{ file: 'components/float-button/FloatButton.vue', pattern: PROP_Z_INDEX_PATTERN }] },
@@ -57,7 +57,7 @@ const UNMANAGED_ROWS: Array<{ row: string; sources: Array<{ file: string; patter
   }
 ]
 
-/**
+/*
  * CSS 兜底层级声明
  *
  * CSS 无法 `import` JS 常量，这些「首帧兜底」层级只能以字面量重复书写。相关元素都另有内联层级
@@ -79,7 +79,7 @@ const CSS_FALLBACK_Z_INDEX: Array<{ file: string; values: number[] }> = [
   }
 ]
 
-/** 默认层级经 `Popup` 宿主透传的消费组件：绑定形态必须是常量引用，不得退回字面量 */
+// 默认层级经 `Popup` 宿主透传的消费组件：绑定形态必须是常量引用，不得退回字面量
 const DEFAULT_Z_INDEX_BINDINGS = ['select/Select.vue', 'auto-complete/AutoComplete.vue']
 
 /** 递归收集组件目录下所有 `.vue`（相对 `components/` 的路径） */

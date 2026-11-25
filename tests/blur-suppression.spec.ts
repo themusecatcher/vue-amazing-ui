@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import AutoComplete from 'components/auto-complete/AutoComplete.vue'
 import Select from 'components/select/Select.vue'
 
-/**
+/*
  * 浮层「保住焦点」的契约
  *
  * 面板关闭依赖输入框失焦，因此凡「点击浮层内、但不应关闭面板」的交互，都在 mousedown 上阻止默认行为：

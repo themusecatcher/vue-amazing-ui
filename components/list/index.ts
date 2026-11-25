@@ -5,6 +5,6 @@ import { withInstall } from '../utils/type'
 export type { Props as ListProps, ListSlots } from './List.vue'
 export type { ListItemProps, ListItemSlots } from './list-item'
 
-// 子组件经本地常量再导出（同 select/index.ts），避免纯 re-export 被 Rollup 转发优化剔除
+/** 子组件经本地常量再导出（同 select/index.ts），避免纯 re-export 被 Rollup 转发优化剔除 */
 export const ListItem = ListItemComp
 export default withInstall(List)

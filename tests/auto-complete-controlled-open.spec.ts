@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import AutoComplete from 'components/auto-complete/AutoComplete.vue'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * 回归守护：AutoComplete 的 `open` 受控语义。
  *
  * `open` 为**纯受控属性**：显隐由外部值驱动（`watch(() => props.open)` → 内部 `showOptions`），

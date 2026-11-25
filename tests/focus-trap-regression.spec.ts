@@ -5,7 +5,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import Modal from 'components/modal'
 import Dialog from 'components/dialog'
 
-/**
+/*
  * Tab 焦点锁定回归守护（Modal / Dialog）
  *
  * 本轮把 Modal 与 Dialog 各自实现的 `FOCUSABLE_SELECTOR` / `getFocusableEls` / `trapTab`
@@ -16,7 +16,7 @@ import Dialog from 'components/dialog'
  * 但不会有任何类型错误或视觉提示，因此必须由测试兜住。
  */
 
-/** 与实现保持一致的可聚焦元素选择器，用于在测试内独立复算期望序列 */
+// 与实现保持一致的可聚焦元素选择器，用于在测试内独立复算期望序列
 const FOCUSABLE_SELECTOR = [
   'a[href]',
   'area[href]',

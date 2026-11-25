@@ -4,7 +4,7 @@ import { buildComponentVars } from 'components/config-provider/use-theme-seed'
 import { resolveTeleportTheme } from 'components/config-provider/use-theme-teleport'
 import { derive, deriveBrandDarkSurfaces, deriveColorStates } from 'components/theme'
 
-/**
+/*
  * 编排层拆分后的纯函数单测
  *
  * `buildComponentVars` 与 `resolveTeleportTheme` 都不依赖 Vue / DOM，原先只能通过挂载

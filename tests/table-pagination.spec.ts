@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import Table from 'components/table/Table.vue'
 import type { TableProps } from 'components/table'
 
-/**
+/*
  * 表格分页的有效性与初值
  *
  * 锁住两条契约：

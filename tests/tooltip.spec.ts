@@ -3,7 +3,7 @@ import { h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Tooltip from 'components/tooltip'
 
-/**
+/*
  * Tooltip 显隐语义 / 无障碍 / 事件源过滤 回归守护
  *
  * 三处断言都对应「容易被后续重构无声改坏、且已有消费方依赖」的行为：
@@ -290,7 +290,7 @@ describe('Tooltip · keyboard 的 enter 切换', () => {
   })
 })
 
-/**
+/*
  * 多根默认插槽的触发范围
  *
  * 定位锚点取插槽内容的**首个元素**（同一元素兼作宿主的「外点排除」范围），而显式切换的落点是
@@ -332,7 +332,7 @@ describe('Tooltip · 多根插槽的触发范围', () => {
   })
 })
 
-/**
+/*
  * 箭头贴边偏移 ↔ 卡片圆角
  *
  * 复合方向下箭头贴在卡片该侧的直边起点附近，而起点会被圆角向内推进 r：偏移若固定，基边就会有一截

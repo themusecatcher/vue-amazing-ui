@@ -8,7 +8,6 @@ export interface Props {
   gap?: number | number[] | 'small' | 'middle' | 'large' // 间距大小，数组时表示: [水平间距, 垂直间距]
   wrap?: boolean // 是否自动换行，仅在未开启 vertical 时有效
 }
-// 声明组件插槽类型
 export interface SpaceSlots {
   default?: () => VNode[] // 间距内容
   split?: () => VNode[] // 相邻内容的间隔元素
@@ -52,7 +51,7 @@ const SpaceContent = defineComponent({
   setup: (contentProps) => () => contentProps.content
 })
 const slots: SpaceSlots = useSlots()
-// 无内容的节点（`v-if` 假分支的注释、纯空白文本）不参与排列，否则会多出一份间隔
+/** 无内容的节点（`v-if` 假分支的注释、纯空白文本）不参与排列，否则会多出一份间隔 */
 function isRenderable(node: VNode): boolean {
   if (node.type === Comment) {
     return false

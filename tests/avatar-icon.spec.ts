@@ -3,7 +3,7 @@ import { h, defineComponent, markRaw } from 'vue'
 import { mount } from '@vue/test-utils'
 import Avatar from 'components/avatar/Avatar.vue'
 
-/**
+/*
  * Avatar 的 icon 形态契约
  *
  * 模板用 `<component :is="icon">` 渲染，故 VNode / 组件定义对象 / 渲染函数三种形态都必须成立。

@@ -30,7 +30,6 @@ export interface Props {
   /** 浮层起始层级 (z-index)，传入后甲、乙两类浮层按「后出现者在上」自增分配；不传则各组件沿用自身默认层级 */
   baseZIndex?: number
 }
-// 声明组件插槽类型
 export interface ConfigProviderSlots {
   default?: () => VNode[]
 }

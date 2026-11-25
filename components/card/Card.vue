@@ -16,7 +16,6 @@ export interface Props {
   headStyle?: CSSProperties // 自定义标题区域样式
   bodyStyle?: CSSProperties // 自定义内容区域样式
 }
-// 声明组件插槽类型
 export interface CardSlots {
   title?: () => VNode[]
   extra?: () => VNode[]

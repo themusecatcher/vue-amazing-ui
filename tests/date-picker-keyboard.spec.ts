@@ -4,7 +4,7 @@ import DatePicker from 'components/date-picker/DatePicker.vue'
 import type { DatePickerProps } from 'components/date-picker'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * 回归守护：面板键盘导航与逐段禁用。
  *
  * 锁定四组语义：

@@ -6,7 +6,7 @@ import type { DiscreteApiInstance } from 'components/discrete'
 import { derive } from 'components/theme'
 import { MessageProvider, useMessage } from 'components/message'
 
-/**
+/*
  * S4 双入口 D+ 用例：
  * 1. createDiscreteApi 可脱离组件树调用（对应 axios 拦截器 / 路由守卫场景）
  * 2. 主题通过 options.configProviderProps 显式传入（支持 Ref / computed 响应式），不依赖模块级全局快照

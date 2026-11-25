@@ -1,4 +1,4 @@
-/**
+/*
  * 测试环境 setup
  *
  * 背景：组件（Table / Dialog / picker 的 TimeUnitColumn / useFps 等）直接持有

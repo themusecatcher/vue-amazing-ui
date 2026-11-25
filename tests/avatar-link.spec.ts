@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import Avatar from 'components/avatar/Avatar.vue'
 
-/**
+/*
  * Avatar 的链接语义
  *
  * `target` 的契约是「`href` 存在时生效」：没有 `href` 时根节点渲染为 `div`，

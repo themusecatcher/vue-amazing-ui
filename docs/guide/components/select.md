@@ -129,6 +129,10 @@ const groupOptions: SelectOption[] = [
     options: [{ value: 'yiminghe', label: 'Yiminghe' }]
   }
 ]
+// 组件式用法：静态小列表用 SelectOption 子组件描述选项（插槽负责渲染、其文本作为 label，两者互不覆盖）
+const componentValue = ref<SelectProps['value']>('jack')
+const componentMultipleValue = ref<SelectProps['value']>(['jack'])
+const componentPlainValue = ref<SelectProps['value']>('jack')
 // 自定义 label、value、options 字段
 const fieldOptions = [
   { id: 'jack', name: 'Jack' },
@@ -920,6 +924,62 @@ const options = [
 ```
 
 :::
+
+## 组件式用法
+
+_用 `SelectOption` 子组件描述选项，静态小列表更直观：插槽内容负责渲染（富内容自动用于下拉项、回填与 `tag`），其文本折叠空白后作为 `label` 供搜索 / `title` / 读屏使用；`label` 属性只覆盖文本、不影响渲染，`optionLabelProp` 可指定回填取哪个字段；选项来自接口或需搜索过滤、大数据虚拟滚动时请用 `options`（两者同时提供以子组件为准）_
+
+<br/>
+
+<Space>
+  <Select v-model:value="componentValue" :width="220">
+    <SelectOption value="jack"><UserOutlined /> Jack</SelectOption>
+    <SelectOption value="lucy"><SmileOutlined /> Lucy</SelectOption>
+    <SelectOption value="yiminghe" disabled><MehOutlined /> Yiminghe</SelectOption>
+  </Select>
+  <Select v-model:value="componentMultipleValue" mode="multiple" placeholder="Please select" :width="320">
+    <SelectOption value="jack"><UserOutlined /> Jack</SelectOption>
+    <SelectOption value="lucy"><SmileOutlined /> Lucy</SelectOption>
+    <SelectOption value="yiminghe" disabled><MehOutlined /> Yiminghe</SelectOption>
+  </Select>
+  <Select v-model:value="componentPlainValue" option-label-prop="label" :width="220">
+    <SelectOption value="jack" label="Jack"><UserOutlined /> Jack (职员)</SelectOption>
+    <SelectOption value="lucy" label="Lucy"><SmileOutlined /> Lucy (职员)</SelectOption>
+  </Select>
+</Space>
+
+::: details Show Code
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { MehOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons-vue'
+import type { SelectProps } from 'vue-amazing-ui'
+const value = ref<SelectProps['value']>('jack')
+const multipleValue = ref<SelectProps['value']>(['jack'])
+const plainValue = ref<SelectProps['value']>('jack')
+</script>
+<template>
+  <Space>
+    <Select v-model:value="value" :width="220">
+      <SelectOption value="jack"><UserOutlined /> Jack</SelectOption>
+      <SelectOption value="lucy"><SmileOutlined /> Lucy</SelectOption>
+      <SelectOption value="yiminghe" disabled><MehOutlined /> Yiminghe</SelectOption>
+    </Select>
+    <Select v-model:value="multipleValue" mode="multiple" placeholder="Please select" :width="320">
+      <SelectOption value="jack"><UserOutlined /> Jack</SelectOption>
+      <SelectOption value="lucy"><SmileOutlined /> Lucy</SelectOption>
+      <SelectOption value="yiminghe" disabled><MehOutlined /> Yiminghe</SelectOption>
+    </Select>
+    <Select v-model:value="plainValue" option-label-prop="label" :width="220">
+      <SelectOption value="jack" label="Jack"><UserOutlined /> Jack (职员)</SelectOption>
+      <SelectOption value="lucy" label="Lucy"><SmileOutlined /> Lucy (职员)</SelectOption>
+    </Select>
+  </Space>
+</template>
+```
+
+::::
 
 ## 自定义 label、value、options 字段
 
@@ -1988,7 +2048,7 @@ const options: SelectOption[] = []
 | fieldNames | 选项的文本 / 值字段名配置，`options` 为分组子选项的字段名；未传时按 `{ label: 'label', value: 'value', options: 'options' }` 解析 | `{ label?: string, value?: string, options?: string }` | undefined |
 | mode | 设置多选模式，`'multiple'` 为多选，`'tags'` 为标签（可输入并创建新条目），不传为单选 | 'multiple' &#124; 'tags' | undefined |
 | labelInValue | 是否把每个选项的 `label` 包装到 `value` 中，`value` 由原始值变为 `{ label, value, key, originLabel }` 对象 | boolean | false |
-| optionLabelProp | 回填到选择框的 `option` 属性值，未指定时取 `label` 字段 | string | undefined |
+| optionLabelProp | 回填到选择框的 `option` 属性值；未指定时取 `label` 字段（子组件式写法下优先取默认插槽的渲染结果） | string | undefined |
 | width | 选择器宽度，单位 `px` | string &#124; number | 'auto' |
 | height | 选择器高度，单位 `px` | number | undefined |
 | size | 选择器大小 | 'small' &#124; 'middle' &#124; 'large' | 'middle' |
@@ -2050,10 +2110,10 @@ const options: SelectOption[] = []
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| label | 选项文本（子组件式写法下由默认插槽求值而来，可能为 `string` 或 `VNode[]`） | unknown |
+| label | 选项文本（文本通道：`label` 属性 > 插槽文本折叠空白后的结果，恒为标量） | string &#124; number |
 | value | 选项值 | string &#124; number |
 | key? | 选项唯一键，缺省时与 `value` 一致 | string &#124; number |
-| originLabel? | 原始选项文本（子组件式写法下为默认插槽函数） | unknown |
+| originLabel? | 原始渲染源（子组件式写法下为默认插槽函数，否则同 `label`） | string &#124; number &#124; (() => VNode[]) |
 
 ### SelectOption Props
 
@@ -2064,9 +2124,11 @@ const options: SelectOption[] = []
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
 | value | 选项值，未传时回落 `<SelectOption>` 的 `key` | string &#124; number | undefined |
-| label | 选项文本，优先于默认插槽文本 | string | undefined |
+| label | 选项文本，优先于默认插槽文本（只覆盖文本通道，不影响渲染） | string | undefined |
 | disabled | 是否禁用该选项（`<SelectOption disabled />` 亦可） | boolean | false |
 | [propName: string] | 允许携带任意自定义字段，`#option` 插槽会透传原始数据对象 | any | undefined |
+
+> ℹ️ 文本通道与渲染通道互不覆盖：`label` 属性只决定标题 / 读屏 / 搜索过滤 / `maxTagTextLength` 截断 / `labelInValue.label` 所用的文本；实际渲染始终取默认插槽（无插槽时才回落到文本）。文本提取时插槽内容会折叠内部空白并裁剪首尾（组件节点如图标不计入），`label` 属性同样裁剪首尾、全空白视为未提供；纯图标选项请配合 `label` 属性提供可读文本。
 
 ### SelectOptGroup Props
 
@@ -2076,7 +2138,7 @@ const options: SelectOption[] = []
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| label | 分组标题，优先于 `#label` 插槽 | string | undefined |
+| label | 分组标题文本，优先于 `#label` 插槽文本（渲染仍取 `#label` 插槽） | string | undefined |
 
 > ℹ️ `options` 与默认插槽（子组件）同时提供时，本库**以子组件为准**，沿用本库「插槽优先于 `prop`」的统一约定。
 
@@ -2084,7 +2146,7 @@ const options: SelectOption[] = []
 
 | 名称 | 说明 | 用法 |
 | :-- | :-- | :-- |
-| default | 子组件式选项，直接书写 `SelectOption` / `SelectOptGroup`；与 `options` 同时提供时以此为准 | v-slot:default |
+| default | 子组件式选项，直接书写 `SelectOption` / `SelectOptGroup`；与 `options` 同时提供时以此为准。插槽内容负责渲染（富内容自动用于下拉项、回填与 `tag`，无需 `optionLabel` / `tagRender`），其文本作为 `label` | v-slot:default |
 | option | 自定义选项内容，作用域为当前选项数据，[SelectOption](#selectoption-type) 的自定义字段会一并透传 | v-slot:option="{ label, value, ...rest }" |
 | optionLabel | 自定义回填到选择框的内容，作用域为当前选中项数据 | v-slot:optionLabel="{ label, value, ...rest }" |
 | placeholder | 自定义占位内容 | v-slot:placeholder |
@@ -2098,6 +2160,8 @@ const options: SelectOption[] = []
 | removeIcon | 自定义 `tag` 的移除图标 | v-slot:removeIcon |
 
 > 插槽判定分两种口径：`placeholder` / `suffixIcon` / `clearIcon` / `notFoundContent` / `removeIcon` 按「是否渲染出内容」生效，渲染为空（如内部 `v-if` 不成立）时回落到对应属性或内置内容；带数据作用域的插槽（`default` / `option` / `optionLabel` / `menuItemSelectedIcon` / `dropdownRender` / `tagRender` / `maxTagPlaceholder`）按「是否提供」生效，不做内容探测。
+>
+> 回填内容的优先顺序：`optionLabel` 插槽（多选为 `tagRender`）> `optionLabelProp` 指定字段 > 默认插槽渲染结果 > 文本 `label`。
 
 ## Events
 

@@ -168,7 +168,7 @@ const customGapSize = ref(16)
   </div>
 </template>
 <style lang="less" scoped>
-// 自定义标签：去掉列表默认缩进与项目符号，条目改为浅底圆角块
+/* 自定义标签：去掉列表默认缩进与项目符号，条目改为浅底圆角块 */
 .flex-list {
   padding: 0;
   margin: 0;
@@ -179,7 +179,7 @@ const customGapSize = ref(16)
     border-radius: 6px;
   }
 }
-// 容器伸缩：两块以浅主色铺底，按比例分宽，文字居中
+/* 容器伸缩：两块以浅主色铺底，按比例分宽，文字居中 */
 .flex-stretch-demo {
   height: 64px;
   font-size: 14px;
@@ -188,7 +188,7 @@ const customGapSize = ref(16)
   background: var(--va-primary-bg-color);
   border-radius: 8px;
 }
-// 组合使用：左侧图与卡片等高，右侧内容上下两端贴齐
+/* 组合使用：左侧图与卡片等高，右侧内容上下两端贴齐 */
 .flex-combination-logo {
   display: block;
   width: 273px;

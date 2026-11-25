@@ -14,7 +14,6 @@ export interface Props {
   popupOffset?: [number, number] // 弹出子菜单与锚点的偏移，inline 模式下无效
   disabled?: boolean // 是否禁用
 }
-// 声明组件插槽类型
 export interface MenuSubMenuSlots {
   default?: () => VNode[] // 子菜单的菜单项
   title?: () => VNode[] // 子菜单标题

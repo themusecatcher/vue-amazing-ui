@@ -13,7 +13,7 @@ const installItems = ref([
 // import.meta.glob 都支持以字符串形式导入文件，类似于 以字符串形式导入资源
 const modules = import.meta.glob('../../../package.json', { eager: true })
 const url = '../../../package.json'
-// 字符串类型对象
+/** 字符串类型对象 */
 type Recordable<T = any> = Record<string, T>
 const dependencies = (modules as Recordable)[url].dependencies
 const devDependencies = (modules as Recordable)[url].devDependencies

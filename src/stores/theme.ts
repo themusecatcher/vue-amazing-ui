@@ -14,7 +14,7 @@ import type { ConfigProviderTheme, ThemeMode } from 'vue-amazing-ui'
 const THEME_STORAGE_KEY = 'va-theme'
 // 默认主色即组件库默认主色，演示页才能呈现组件的默认外观
 const DEFAULT_PRIMARY_COLOR = DEFAULT_PRIMARY
-/** 主色只认不透明 hex（与库内种子归一化同口径），其余视为损坏数据 */
+// 主色只认不透明 hex（与库内种子归一化同口径），其余视为损坏数据
 const PRIMARY_PATTERN = /^#(?:[0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i
 
 /** 本地存储里只认这两个字段，其余一律回落默认值（旧版本 / 手改残留不影响启动） */

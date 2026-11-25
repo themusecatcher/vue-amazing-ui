@@ -25,7 +25,6 @@ export interface Props {
   value?: number | number[] // (v-model) 设置当前取值，当 range 为 false 时为单个值，否则为区间值
   defaultValue?: number | number[] // 非受控时的初始取值（未绑 v-model:value 时生效；range 模式缺省为 [min, min]）
 }
-// 声明组件插槽类型
 export interface SliderSlots {
   mark?: (props: { label: string | VNode | null; value: number }) => VNode[]
   tooltip?: (props: { value: string | number | null }) => VNode[]
@@ -306,29 +305,29 @@ watch(
 useResizeObserver(sliderRef, () => {
   getSliderSize()
 })
-// 获取滑动输入条尺寸
+/** 获取滑动输入条尺寸 */
 function getSliderSize(): void {
   if (!sliderRef.value) return
   sliderWidth.value = sliderRef.value.offsetWidth
   sliderHeight.value = sliderRef.value.offsetHeight
   updateSliderPosition()
 }
-// 使用目标值更新双滑块时的下/左滑块位置
+/** 使用目标值更新双滑块时的下/左滑块位置 */
 function updateLowHandlePosition(value: number): void {
   const lowValue = pixelStepOperation((checkLow(value) - props.min) / stepValue.value, '*')
   low.value = fixedDigit(lowValue, 2)
 }
-// 使用目标值更新双滑块时的上/右滑块位置
+/** 使用目标值更新双滑块时的上/右滑块位置 */
 function updateHighHandlePosition(value: number): void {
   const highValue = pixelStepOperation((checkHigh(value) - props.min) / stepValue.value, '*')
   high.value = fixedDigit(highValue, 2)
 }
-// 使用目标值更新单滑块的滑块位置
+/** 使用目标值更新单滑块的滑块位置 */
 function updateSingleHandlePosition(value: number): void {
   const highValue = pixelStepOperation((checkValue(value) - props.min) / stepValue.value, '*')
   high.value = fixedDigit(highValue, 2)
 }
-// 通过数值更新滑块位置
+/** 通过数值更新滑块位置 */
 function updateSliderPosition(): void {
   if (props.range) {
     // 双滑块模式
@@ -360,7 +359,7 @@ function checkValue(value: number): number {
   }
   return value
 }
-// 获取目标值/位置最接近的 mark 标记值/位置
+/** 获取目标值/位置最接近的 mark 标记值/位置 */
 function findClosestMark(target: number, marks: number[]): number {
   if (!hasMarks.value) {
     log('warn', 'Slider', '显示刻度前请先设置 marks 属性')
@@ -378,7 +377,7 @@ function findClosestMark(target: number, marks: number[]): number {
   }
   return closestValue
 }
-// 获取指定位置对应的数值，依赖于 step 步长
+/** 获取指定位置对应的数值，依赖于 step 步长 */
 function getValueFromPosition(position: number): number {
   const targetValue = pixelStepOperation(position, '/') * stepValue.value + props.min
   if (marksDot.value.includes(fixedDigit(targetValue, markPrecision.value))) {
@@ -386,12 +385,12 @@ function getValueFromPosition(position: number): number {
   }
   return fixedDigit(targetValue, precision.value)
 }
-// 获取指定数值对应的滑块位置，不依赖于 step 步长
+/** 获取指定数值对应的滑块位置，不依赖于 step 步长 */
 function getPositionFromValue(value: number): number {
   const position = ((value - props.min) / (props.max - props.min)) * sliderSize.value
   return fixedDigit(position, 2)
 }
-// 格式化为指定精度的数值
+/** 格式化为指定精度的数值 */
 function fixedDigit(num: number, precision: number): number {
   return parseFloat(num.toFixed(precision))
 }
@@ -404,14 +403,14 @@ function tooltipShownOf(which: HandleKey): Ref<boolean> {
 function handlerBlur(which: HandleKey): void {
   tooltipShownOf(which).value = false
 }
-// 拖动开始 / 点击选中手柄 / 手柄获得焦点：展开气泡，并把焦点移入手柄以便继续键盘操作
+/** 拖动开始 / 点击选中手柄 / 手柄获得焦点：展开气泡，并把焦点移入手柄以便继续键盘操作 */
 function handlerFocus(handler: HTMLElement | null, which: HandleKey): void {
   handler?.focus()
   if (props.tooltip && !props.tooltipOpen) {
     tooltipShownOf(which).value = true
   }
 }
-// 获取指针事件触发时的点击位置 & 步长位置
+/** 获取指针事件触发时的点击位置 & 步长位置 */
 function getSliderPosition(e: PointerEvent): { originalPosition: number; stepPosition: number } {
   let originalPosition // 指针点击位置
   let stepPosition // 只考虑步长时将要移动的位置
@@ -437,7 +436,7 @@ function getSliderPosition(e: PointerEvent): { originalPosition: number; stepPos
     stepPosition
   }
 }
-// 根据初始位置和步长位置 获取将要移动的目标位置
+/** 根据初始位置和步长位置 获取将要移动的目标位置 */
 function getTargetPosition(originalPosition: number, stepPosition: number): number {
   if (hasMarks.value) {
     // 有刻度标记
@@ -453,7 +452,7 @@ function getTargetPosition(originalPosition: number, stepPosition: number): numb
     return stepPosition
   }
 }
-// 点击滑动输入条任意位置
+/** 点击滑动输入条任意位置 */
 function onClickSliderPoint(e: PointerEvent): void {
   const {
     originalPosition, // 指针点击位置
@@ -519,7 +518,7 @@ function handleLowPointerDown(e: PointerEvent): void {
   document.addEventListener('pointercancel', handleLowPointerUp)
   handleLowPointerMove(e)
 }
-// 在滑动输入条上拖动较小数值滑块
+/** 在滑动输入条上拖动较小数值滑块 */
 function handleLowPointerMove(e: PointerEvent): void {
   const {
     originalPosition, // 初始位置
@@ -575,7 +574,7 @@ function handleHighPointerDown(e: PointerEvent): void {
   document.addEventListener('pointercancel', handleHighPointerUp)
   handleHighPointerMove(e)
 }
-// 在滑动输入条上拖动较大数值滑块
+/** 在滑动输入条上拖动较大数值滑块 */
 function handleHighPointerMove(e: PointerEvent): void {
   const {
     originalPosition, // 初始位置
@@ -737,7 +736,7 @@ function handleHighSlide(source: number, place: string): void {
     }
   }
 }
-// 计算像素步长操作
+/** 计算像素步长操作 */
 function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): number {
   if (operator === '+') {
     return target + (sliderSize.value * stepValue.value) / (props.max - props.min)
@@ -876,14 +875,14 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
   cursor: pointer;
   touch-action: none;
   .slider-rail {
-    // 灰色轨道颜色
+    /* 灰色轨道颜色 */
     position: absolute;
     background-color: var(--va-slider-rail-color, var(--va-fill-color-1));
     border-radius: 2px;
     transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .slider-track {
-    // 蓝色轨道颜色
+    /* 蓝色轨道颜色 */
     position: absolute;
     background-color: var(--va-slider-track-color, var(--va-primary-border-color));
     border-radius: 2px;
@@ -918,7 +917,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       word-break: keep-all;
       cursor: pointer;
       user-select: none;
-      // 仅用于适配 vitepress 文档样式
+      /* 仅用于适配 vitepress 文档样式 */
       :deep(strong) {
         color: inherit;
       }
@@ -932,11 +931,11 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
   }
   &:hover {
     .slider-rail {
-      // 灰色轨道悬浮色
+      /* 灰色轨道悬浮色 */
       background: var(--va-slider-rail-color-hover, var(--va-fill-color-2));
     }
     .slider-track {
-      // 蓝色轨道悬浮色
+      /* 蓝色轨道悬浮色 */
       background: var(--va-slider-track-color-hover, var(--va-primary-color));
     }
     .slider-dots {
@@ -949,7 +948,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
     }
   }
   .slider-handle {
-    // 滑块
+    /* 滑块 */
     position: absolute;
     width: 10px;
     height: 10px;
@@ -963,7 +962,7 @@ function pixelStepOperation(target: number, operator: '+' | '-' | '*' | '/'): nu
       height: 14px;
       background-color: transparent;
     }
-    // 视觉层：圆点（白）+ 光环（主题色），hover / focus 时放大
+    /* 视觉层：圆点（白）+ 光环（主题色），hover / focus 时放大 */
     &::after {
       content: '';
       position: absolute;

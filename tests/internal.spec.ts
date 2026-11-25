@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 import Message from 'components/message/Message.vue'
 import type { MessageApi } from 'components/message'
 
-/**
+/*
  * P1 / P5 涉及组件内部的定时器持有情况，无法通过 DOM 断言直接观测。
  * 组件以原生 setTimeout 持有自动关闭定时器，故使用 vitest 假定时器统计
  * 「已注册且尚未触发、尚未取消」的定时器数量：被 clearTimeout 取消的定时器
@@ -27,8 +27,10 @@ function mountMessage() {
   return { wrapper, vm: api }
 }
 
-// 挂载本身（happy-dom 渲染环境）会带来常驻定时器，且其不随 unmount 释放，
-// 故断言组件自身持有的定时器增量，而非绝对数量
+/**
+ * 挂载本身（happy-dom 渲染环境）会带来常驻定时器，且其不随 unmount 释放，
+ * 故断言组件自身持有的定时器增量，而非绝对数量
+ */
 function baseline(): number {
   return vi.getTimerCount()
 }

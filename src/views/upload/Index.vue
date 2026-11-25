@@ -6,7 +6,7 @@ const message = useMessage()
 // 各分节独立绑定，操作任一用例不会联动其余用例
 const basicFiles = ref<UploadFileType[]>([])
 const multipleFiles = ref<UploadFileType[]>([])
-// 工厂每次返回新数组，避免各分节共用同一份文件列表
+/** 工厂每次返回新数组，避免各分节共用同一份文件列表 */
 function createFileList(): UploadFileType[] {
   return [
     {
@@ -87,7 +87,7 @@ function onBeforePdfUpload(file: File): boolean {
   }
   return true // 继续上传
 }
-// 拖拽投放的文件不符合 accept 时触发：点选不会走到这里（<input accept> 已由浏览器拦截）
+/** 拖拽投放的文件不符合 accept 时触发：点选不会走到这里（<input accept> 已由浏览器拦截） */
 function onReject(rejectedFiles: File[]) {
   console.log('reject', rejectedFiles)
   message.warning(`已忽略 ${rejectedFiles.length} 个类型不符的文件`)
@@ -167,7 +167,7 @@ function onError(err: unknown) {
   console.log('upload error', err)
   message.error(err instanceof Error ? err.message : String(err))
 }
-// 上传失败演示：custom 模式 reject 会触发 @error，由使用方自行提示
+/** 上传失败演示：custom 模式 reject 会触发 @error，由使用方自行提示 */
 function onUploadFailRequest(file: File): Promise<UploadFileType> {
   console.log('upload fail request', file.name)
   return new Promise((resolve, reject) => {

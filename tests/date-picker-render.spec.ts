@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import DatePicker from 'components/date-picker/DatePicker.vue'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * 渲染定制的回归守护
  *
  * `dateRender` 替换日期格的日号、`renderExtraFooter` 在面板底部追加内容。两者都有「同名插槽优先于

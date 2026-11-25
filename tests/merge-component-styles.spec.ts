@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join, relative } from 'node:path'
 import { mergeComponentStyles } from '../build/merge-component-styles'
 
-/**
+/*
  * 按需产物的样式合并守护
  *
  * 背景：同一 SFC 的每个 `<style>` 块各产出一个 CSS 资源，Vite 对同名资源追加序号
@@ -15,7 +15,7 @@ import { mergeComponentStyles } from '../build/merge-component-styles'
 
 let rootDir = ''
 
-/** 静默 logger：仅收集告警，避免测试输出噪音 */
+// 静默 logger：仅收集告警，避免测试输出噪音
 const silentLogger = { log: () => {}, warn: () => {} }
 
 function write(relativePath: string, content: string): void {

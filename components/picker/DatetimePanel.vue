@@ -73,14 +73,14 @@ const emits = defineEmits<{
   cellHover: [timestamp: number] // 悬浮日期格：范围形态据此预览区间，单选形态据此预览文本
   cellLeave: [] // 移出日期格：清除预览
 }>()
-/**
+/*
  * 禁用时间的判定基准：取「锚点链」——草稿值 → 另一端值 → 默认时分秒 → 当前时刻
  *
  * 范围形态激活段为空时判定落在另一端那一日，否则同一天内的时分秒约束会因基准日不同而整段失效；
  * 范围面板传入的 `value` 即 `value ?? 另一端值`，`disabledTime` 因而以另一端时刻为入参。
  */
 const disabledBase = computed(() => props.value ?? props.fallbackValue ?? props.defaultTime ?? Date.now())
-/**
+/*
  * 点时间的落值日期基准：与 {@link disabledBase} 同属锚点链
  *
  * 时间面板的展示值只认草稿值 —— 空草稿时不预选任何项、头部留空（不显示即不承诺，选中日期时
@@ -94,7 +94,7 @@ const steps = computed(() => ({
   minute: mergeTimeStep('minute', props.timeProps?.minuteStep),
   second: mergeTimeStep('second', props.timeProps?.secondStep)
 }))
-/**
+/*
  * 「确定」是否禁用：无草稿或草稿日被禁用
  *
  * 草稿的时分秒即使落在 `disabledTime` 的禁用区间内也不据此禁用「确定」——
@@ -149,7 +149,7 @@ function onOk(): void {
     emits('confirm', props.value, 'ok')
   }
 }
-/* ============================== 键盘导航 ============================== */
+// ============================== 键盘导航 ==============================
 const datePanelRef = ref<InstanceType<typeof DatePanel> | null>(null)
 const timePanelRef = ref<InstanceType<typeof TimePanel> | null>(null)
 /**

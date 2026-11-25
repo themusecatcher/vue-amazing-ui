@@ -16,7 +16,7 @@ import type { MessageApi } from './useMessage'
 const teleportTheme = injectFromChain(themeTeleportKey) ?? null
 const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
 const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
-// 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数
+/** 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数 */
 export type ContentType = string | VNode | (() => VNode)
 export interface Props {
   duration?: number | null // 自动关闭的延时，单位 ms，设置 null 时，不自动关闭
@@ -45,16 +45,16 @@ export interface MessageOptions {
   onClose?: () => void // 关闭时的回调函数
 }
 type Mode = 'open' | 'info' | 'success' | 'error' | 'warning' | 'loading'
-// update 可更新的字段：MessageOptions 全部属性 + mode（用于切换内置图标类型）
+/** update 可更新的字段：MessageOptions 全部属性 + mode（用于切换内置图标类型） */
 export interface MessageUpdate extends MessageOptions {
   mode?: Mode
 }
-// 每条消息的展示数据
+/** 每条消息的展示数据 */
 interface MessageItem extends MessageOptions {
   readonly key: string // 唯一标识，替代数组下标作为身份
   mode: Mode
 }
-// 单条消息的句柄，用于编程式关闭与更新
+/** 单条消息的句柄，用于编程式关闭与更新 */
 export interface MessageReactive extends MessageOptions {
   readonly key: string // 该条消息的唯一标识
   destroy: () => void // 关闭该条消息
@@ -143,7 +143,7 @@ function onClick(e: Event, item: MessageItem): void {
   item.onClick && item.onClick()
   emits('click', e)
 }
-// 关闭单条消息：按 key 精确移除，离场动画交由 TransitionGroup 播放
+/** 关闭单条消息：按 key 精确移除，离场动画交由 TransitionGroup 播放 */
 function close(key: string): void {
   const index = messageItems.value.findIndex((m) => m.key === key)
   if (index === -1) {
@@ -372,7 +372,7 @@ onBeforeUnmount(() => {
       gap: 8px;
       align-items: center;
       padding: 9px 12px;
-      // 消息是浮层：底取 elevated，暗色下才不会与页面同色
+      /* 消息是浮层：底取 elevated，暗色下才不会与页面同色 */
       background: var(--va-bg-elevated-color);
       border-radius: 8px;
       box-shadow: var(--va-popup-shadow);

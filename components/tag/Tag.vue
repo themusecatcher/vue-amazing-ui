@@ -99,7 +99,7 @@ const showIcon = computed<boolean>(() => {
   if (props.dynamic) return false
   return slotsExist.icon || props.icon !== undefined
 })
-// 颜色呈现解析：预设色名走 class（随明暗主题变量变化），自定义配色才需要内联样式
+/** 颜色呈现解析：预设色名走 class（随明暗主题变量变化），自定义配色才需要内联样式 */
 const isColorObject = (value?: string | TagColor): value is TagColor => typeof value === 'object' && value !== null
 const isPresetColor = (value?: string) => {
   if (!value) return false
@@ -110,7 +110,7 @@ const isCustomColor = (value?: string | TagColor) => {
   if (isColorObject(value)) return !!(value.color || value.textColor || value.borderColor)
   return !!value && !isPresetColor(value)
 }
-// 非自定义配色返回空对象，避免输出无效声明；文字色经 CSS 变量下发，才能被关闭图标继承
+/** 非自定义配色返回空对象，避免输出无效声明；文字色经 CSS 变量下发，才能被关闭图标继承 */
 const customStyle = (value?: string | TagColor): CSSProperties => {
   if (isColorObject(value)) {
     const style: Record<string, string> = {}
@@ -121,7 +121,7 @@ const customStyle = (value?: string | TagColor): CSSProperties => {
   }
   return value && !isPresetColor(value) ? { backgroundColor: value } : {}
 }
-// 动态标签项的颜色、边框与禁用：项级设置优先，回落到组件级
+/** 动态标签项的颜色、边框与禁用：项级设置优先，回落到组件级 */
 const itemColor = (item: Item) => item.color || props.color
 const itemBordered = (item: Item) => item.bordered ?? props.bordered
 const itemDisabled = (item: Item) => item.disabled ?? props.disabled
@@ -138,7 +138,7 @@ function onItemClick(e: MouseEvent, item: Item) {
   if (itemDisabled(item)) return
   emits('click', e)
 }
-// 关闭意图：先派发事件，父侧调用 preventDefault 时保留标签
+/** 关闭意图：先派发事件，父侧调用 preventDefault 时保留标签 */
 function requestClose(event: MouseEvent) {
   emits('close', event)
   if (event.defaultPrevented) return
@@ -149,7 +149,7 @@ function onClose(e: MouseEvent) {
   if (!props.triggerClickOnClose) e.stopPropagation()
   requestClose(e)
 }
-// 关闭按钮可聚焦：Enter / Space 转发为一次原生 click，事件载荷与鼠标操作完全一致
+/** 关闭按钮可聚焦：Enter / Space 转发为一次原生 click，事件载荷与鼠标操作完全一致 */
 function onCloseKeydown(e: KeyboardEvent) {
   if (props.disabled) return
   if (e.key !== 'Enter' && e.key !== ' ') return
@@ -172,7 +172,7 @@ function onCloseTagsKeydown(e: KeyboardEvent) {
   e.preventDefault()
   ;(e.currentTarget as HTMLElement | null)?.click()
 }
-// 关闭按钮的可访问名称带上标签文本：同一组多个关闭按钮都叫「关闭标签」时，读屏无法区分关闭的是哪一项
+/** 关闭按钮的可访问名称带上标签文本：同一组多个关闭按钮都叫「关闭标签」时，读屏无法区分关闭的是哪一项 */
 function closeLabel(item: Item) {
   return item.label ? `关闭 ${item.label}` : '关闭标签'
 }
@@ -182,14 +182,14 @@ async function onAdd() {
   await nextTick()
   inputRef.value?.focus()
 }
-// 加号与关闭按钮同口径：可聚焦，Enter / Space 转发为一次原生 click
+/** 加号与关闭按钮同口径：可聚焦，Enter / Space 转发为一次原生 click */
 function onAddKeydown(e: KeyboardEvent) {
   if (props.disabled) return
   if (e.key !== 'Enter' && e.key !== ' ') return
   e.preventDefault()
   ;(e.currentTarget as HTMLElement | null)?.click()
 }
-// 标签文本是否已存在：动态添加时去重，避免产生同名标签
+/** 标签文本是否已存在：动态添加时去重，避免产生同名标签 */
 function hasLabel(label: string) {
   return props.value.some((value) => (typeof value === 'string' ? value === label : value.label === label))
 }
@@ -366,7 +366,7 @@ function onKeyboard(e: KeyboardEvent) {
   </Space>
 </template>
 <style lang="less" scoped>
-// `-inverse` 变体：色板色反相为深色底 + 白字，底色取色板第 6 档
+/* `-inverse` 变体：色板色反相为深色底 + 白字，底色取色板第 6 档 */
 .tag-inverse(@bg) {
   color: var(--va-text-color-solid);
   background: @bg;
@@ -390,9 +390,9 @@ function onKeyboard(e: KeyboardEvent) {
   border-radius: 4px;
   transition: all 0.2s;
   text-align: start;
-  // 标签内的链接跟随标签文本色，而不是页面链接色；
-  // 此处刻意穿透：使用者常把链接包进自己的组件，只有 :deep 能覆盖到组件内部
-  // （:slotted(a) 只覆盖插槽顶层与使用者组件根元素，进不到内部）
+  /* 标签内的链接跟随标签文本色，而不是页面链接色； */
+  /* 此处刻意穿透：使用者常把链接包进自己的组件，只有 :deep 能覆盖到组件内部 */
+  /* （:slotted(a) 只覆盖插槽顶层与使用者组件根元素，进不到内部） */
   :deep(a),
   :deep(a:hover) {
     color: inherit;
@@ -405,7 +405,7 @@ function onKeyboard(e: KeyboardEvent) {
     :deep(svg) {
       fill: currentColor;
     }
-    // 插槽按条件渲染时可能产出空容器，此时不再占用间距
+    /* 插槽按条件渲染时可能产出空容器，此时不再占用间距 */
     &:empty {
       display: none;
     }
@@ -491,7 +491,7 @@ function onKeyboard(e: KeyboardEvent) {
   padding-inline: 10px;
   text-align: center;
   cursor: pointer;
-  // 禁用态不给出可点击的悬停反馈
+  /* 禁用态不给出可点击的悬停反馈 */
   &:not(.tag-disabled):hover {
     border-color: var(--va-cp-tag-primary-color, var(--va-primary-color));
     .plus-svg {
@@ -536,11 +536,11 @@ function onKeyboard(e: KeyboardEvent) {
   line-height: 26px;
   border-radius: 6px;
 }
-// 无边框标签的背景比默认深一档；声明在配色类之前，预设色/状态色才能保留各自的浅色底
+/* 无边框标签的背景比默认深一档；声明在配色类之前，预设色/状态色才能保留各自的浅色底 */
 .tag-borderless {
   background: var(--va-fill-color-1);
 }
-// 放在尺寸类之后，才能盖过各档位的圆角
+/* 放在尺寸类之后，才能盖过各档位的圆角 */
 .tag-round {
   border-radius: 999px;
 }
@@ -741,11 +741,11 @@ function onKeyboard(e: KeyboardEvent) {
   .tag-inverse(var(--tag-lime-inverse-bg));
 }
 .tag-has-color {
-  // 文字色经 `--tag-custom-text` 下发，配置对象里的 textColor 才能同时作用于文本与关闭图标
+  /* 文字色经 `--tag-custom-text` 下发，配置对象里的 textColor 才能同时作用于文本与关闭图标 */
   color: var(--tag-custom-text, var(--va-text-color-solid));
   border-color: transparent;
 }
-// 必须放在全部配色规则之后：无边框对所有配色形态统一去掉边框，配色自带的底色保持不变
+/* 必须放在全部配色规则之后：无边框对所有配色形态统一去掉边框，配色自带的底色保持不变 */
 .tag-wrap.tag-borderless {
   border-color: transparent;
 }

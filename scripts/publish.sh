@@ -82,12 +82,75 @@ if [ "$registry" != "https://registry.npmjs.org/" ] && [ "$registry" != "https:/
 fi
 echo "✅ registry 源校验通过: $registry"
 
-# 3. 校验 npm 登录态
-npm_username=$(npm whoami 2>/dev/null) || {
-    echo "❌ npm 未登录，请先执行: npm login"
-    exit 1
+# 3. 校验 npm 登录态（凭据过期 / 被撤销时自动引导重新登录，避免发布流程被 token 问题打断）
+ensure_npm_auth() {
+    local whoami_output npm_username auth_error
+    # 单次请求即可判定：失败时 stdout / stderr 合并后就是错误文本，无需重复调用 whoami
+    if whoami_output=$(npm whoami 2>&1); then
+        npm_username=$(printf '%s' "$whoami_output" | tail -1)
+        echo "✅ npm 登录校验通过: $npm_username"
+        return 0
+    fi
+    auth_error="$whoami_output"
+    # 区分「凭据失效」与「网络 / registry 异常」：后者重新登录同样无效，直接报错
+    case "$auth_error" in
+    *E401* | *Unauthorized* | *"authentication token"*)
+        echo "⚠️ npm 凭据已失效（token 过期或被撤销），将引导重新登录"
+        echo "   如需保持最小权限，登录后请到 npm 网页新建 scoped token 并替换 ~/.npmrc"
+        ;;
+    *)
+        echo "❌ 无法访问 npm registry，请检查网络后重试："
+        echo "$auth_error" | tail -3
+        return 1
+        ;;
+    esac
+    if ! npm login; then
+        echo "❌ npm 重新登录失败，请手动执行: npm login"
+        return 1
+    fi
+    if ! whoami_output=$(npm whoami 2>&1); then
+        echo "❌ 重新登录后校验仍未通过，请检查 npm 配置后重试"
+        return 1
+    fi
+    npm_username=$(printf '%s' "$whoami_output" | tail -1)
+    echo "✅ npm 重新登录成功: $npm_username"
 }
-echo "✅ npm 登录校验通过: $npm_username"
+
+# token 有效期预警：仅提示不阻断。账户存在多个未撤销 token 时无法确定本机用的是哪一个，静默跳过
+warn_token_expiry() {
+    local token_json token_info days_left expires_on
+    # npm token list 已被 npm 标记为 deprecated，命令不可用或解析失败时静默跳过，不影响发布
+    token_json=$(npm token list --json 2>/dev/null) || return 0
+    [ -n "$token_json" ] || return 0
+    token_info=$(printf '%s' "$token_json" | node -e '
+let s = "";
+process.stdin.on("data", (d) => { s += d; });
+process.stdin.on("end", () => {
+  let list;
+  try { list = JSON.parse(s); } catch { process.exit(0); }
+  const live = (Array.isArray(list) ? list : []).filter((t) => t && !t.revoked && t.expiry);
+  if (live.length !== 1) return;
+  const days = Math.ceil((new Date(live[0].expiry) - Date.now()) / 86400000);
+  if (Number.isFinite(days)) process.stdout.write(`${days} ${live[0].expiry.slice(0, 10)}`);
+});
+') || return 0
+    [ -n "$token_info" ] || return 0
+    read -r days_left expires_on <<<"$token_info" || return 0
+    case "$days_left" in
+    '' | *[!0-9-]*) return 0 ;;
+    esac
+    # 已过期却仍能通过 whoami，说明本机凭据并非列表中的这个 token，不作出判断
+    [ "$days_left" -ge 0 ] || return 0
+    if [ "$days_left" -le 7 ]; then
+        echo "⚠️ 当前 npm token 剩余 ${days_left} 天有效期（${expires_on} 到期）"
+        echo "   token 一旦过期，发布会在预检阶段被拦下（届时会自动引导登录，仍建议提前新建 token）"
+    fi
+}
+
+if ! ensure_npm_auth; then
+    exit 1
+fi
+warn_token_expiry
 
 # 4. 校验版本号未在 npm 上重复发布
 if npm view "vue-amazing-ui@$version" version >/dev/null 2>&1; then

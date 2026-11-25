@@ -10,7 +10,7 @@ import {
   parseModelDefaults
 } from '../scripts/check-model-props'
 
-/**
+/*
  * v-model 声明契约校验的用例（纯源码文本断言，无 DOM、无产物）
  *
  * 契约有三条（见 `scripts/check-model-props.ts` 头部与 development/component-design.md）：
