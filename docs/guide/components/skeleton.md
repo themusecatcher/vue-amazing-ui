@@ -290,7 +290,7 @@ const avatarShapeOptions = ref([
 
 | 名称 | 说明 | 类型 | 默认值 |
 | :-- | :-- | :-- | :-- |
-| animated | 是否展示动画效果 | boolean | true |
+| animated | 是否展示动画效果 | boolean | false |
 | button | 是否使用按钮占位图 | boolean &#124; [SkeletonButtonProps](#skeletonbuttonprops-type) | false |
 | avatar | 是否显示头像占位图 | boolean &#124; [SkeletonAvatarProps](#skeletonavatarprops-type) | false |
 | input | 是否使用输入框占位图 | boolean &#124; [SkeletonInputProps](#skeletoninputprops-type) | false |
