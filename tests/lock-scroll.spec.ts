@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { lockScroll } from 'components/utils/dom'
 
-/**
+/*
  * lockScroll 通过模块级引用计数控制锁定，与 Modal / Dialog / Drawer 等多个入口共享。
  * 用例均成对调用 lockScroll 与其释放函数，确保计数在每条用例后归零，避免相互干扰。
  *

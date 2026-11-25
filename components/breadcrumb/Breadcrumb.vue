@@ -19,7 +19,6 @@ export interface Props {
   separatorStyle?: CSSProperties // 设置分隔符样式
   target?: '_self' | '_blank' // 如何打开目标 URL，当前窗口或新窗口
 }
-// 声明组件插槽类型
 export interface BreadcrumbSlots {
   separator?: (props: { route: Route; index: number }) => VNode[]
 }

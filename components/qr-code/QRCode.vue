@@ -56,9 +56,9 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (e: 'refresh', event: MouseEvent): void
 }>()
-/** 外边框宽度：边框常驻，bordered 为 false 时仅隐去颜色，绘制区两侧恒定占用 1px */
+// 外边框宽度：边框常驻，bordered 为 false 时仅隐去颜色，绘制区两侧恒定占用 1px
 const BORDER_WIDTH = 1
-/** 纠错等级映射：传入等级为最低保障，容量允许时编码器会自动提升到更高等级 */
+// 纠错等级映射：传入等级为最低保障，容量允许时编码器会自动提升到更高等级
 const ERROR_LEVEL_MAP = {
   L: qrcodegen.QrCode.Ecc.LOW,
   M: qrcodegen.QrCode.Ecc.MEDIUM,
@@ -69,7 +69,7 @@ const canvasRef = ref<HTMLCanvasElement | null>(null)
 const imageRef = ref<HTMLImageElement | null>(null)
 const imageDataURL = ref('')
 const iconImage = shallowRef<HTMLImageElement | null>(null)
-/**
+/*
  * 默认取色：canvas 与 SVG 的绘制属性只吃实色（`var()` 在 canvas 里会被忽略并静默失败），
  * 故按优先级解析成 sRGB 值——
  * 1. Provider 的只读快照（既定用途之一，随 `mode` 切换响应式更新）；
@@ -95,9 +95,9 @@ const resolveThemeColor = (name: ThemeVarName, fallback: string) => {
 const resolvedColor = computed(() => props.color ?? resolveThemeColor('--va-text-color-1', '#000'))
 const resolvedBgColor = computed(() => props.bgColor ?? resolveThemeColor('--va-bg-container-color', '#FFF'))
 const resolvedIconBackgroundColor = computed(() => props.iconBgColor ?? resolvedBgColor.value)
-/** 二维码绘制区边长（px），扣除容器内边距与外边框 */
+// 二维码绘制区边长（px），扣除容器内边距与外边框
 const innerSize = computed(() => Math.max(props.size - props.padding * 2 - BORDER_WIDTH * 2, 0))
-/** 二维码模块矩阵：size 为每边模块数，data 按行优先存储明暗（1 为暗点） */
+// 二维码模块矩阵：size 为每边模块数，data 按行优先存储明暗（1 为暗点）
 const modules = computed(() => {
   if (!props.value) return null
   try {
@@ -118,11 +118,11 @@ const modules = computed(() => {
     return null
   }
 })
-/** 每边模块数，供 svg 模板使用 */
+// 每边模块数，供 svg 模板使用
 const moduleCount = computed(() => modules.value?.size ?? 0)
-/** svg 背景路径（整块底色） */
+// svg 背景路径（整块底色）
 const backgroundPath = computed(() => `M0 0h${moduleCount.value}v${moduleCount.value}H0z`)
-/**
+/*
  * 图标覆盖的模块矩形（半开区间）：图标区域的点阵需挖空，
  * 否则图标压住点阵会显著降低识别率；由图标显示尺寸换算到模块坐标并居中
  */
@@ -134,7 +134,7 @@ const iconExcavation = computed(() => {
   const end = Math.min(Math.ceil((numCells + covered) / 2), numCells)
   return end > start ? { start, end } : null
 })
-/** 前景暗点路径（合并同行的连续暗点为单条子路径，大幅压缩节点数） */
+// 前景暗点路径（合并同行的连续暗点为单条子路径，大幅压缩节点数）
 const foregroundPath = computed(() => {
   const matrix = modules.value
   if (!matrix) return ''
@@ -169,7 +169,7 @@ const qrcodeStyle = computed(() => {
   }
   return style
 })
-/**
+/*
  * 图标几何信息（模块坐标系）：底色块的位置尺寸与圆角，
  * 以及保持原始宽高比并在底色块内居中后的图片绘制矩形；canvas 与 svg 共用同一份
  */
@@ -197,7 +197,7 @@ const iconPlacement = computed(() => {
     imageY: y + (side - height) / 2
   }
 })
-/**
+/*
  * 每个二维码点的绘制像素数：以 scale 为下限，
  * 并按绘制区在当前屏幕像素密度下的实际所需自动提升，避免高分辨率屏下位图被放大而发虚
  */

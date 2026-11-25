@@ -6,7 +6,7 @@ import InputSearch from 'components/input-search/InputSearch.vue'
 import Textarea from 'components/textarea/Textarea.vue'
 import InputNumber from 'components/input-number/InputNumber.vue'
 
-/**
+/*
  * 输入框「渲染镜像必须追随 DOM」的契约回归
  *
  * 写入真相源在 DOM：模板把 `innerValue`（渲染镜像）绑到原生 `input` 的 `value` 上，而 Vue 在补丁阶段

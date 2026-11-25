@@ -102,7 +102,7 @@ export interface DatePickerSlots {
   dateRender?: (params: PickerDateRenderParams) => VNode[] // 自定义日期单元格内容（替换日号），优先于同名 prop
   renderExtraFooter?: () => VNode[] // 面板底部的额外页脚，优先于同名 prop
 }
-/**
+/*
  * 对外公开的值与配置类型
  *
  * 选择器内核（`components/picker`）不对外导出，这里按本组件文档所引用的类型名逐个别名转出，
@@ -192,7 +192,7 @@ const wrapperStyle = computed(() => {
 const mergedPanelClass = computed(() => ['datepicker-panel-container', props.panelClass].filter(Boolean).join(' '))
 // 显式标注插槽类型：`useSlots()` 的返回值参与 `mergedDateRender` / `mergedExtraFooter` 的推导，构成推断环
 const slots: DatePickerSlots = useSlots()
-/**
+/*
  * 日期单元格内容定制：同名插槽优先于 prop，两轨统一为「入参 → VNode[]」的函数下发给内核
  * （内核只收函数：VNode 需在其渲染上下文内创建，`computed` 里直接求值会产生「无主的 hoisted vnode」）
  *
@@ -212,7 +212,7 @@ const mergedDateRender = computed<PickerDateRender | undefined>(() => {
     return Array.isArray(node) ? node : [node]
   }
 })
-/** 面板底部的额外页脚：同名插槽优先于 prop，同样以渲染函数下发 */
+// 面板底部的额外页脚：同名插槽优先于 prop，同样以渲染函数下发
 const mergedExtraFooter = computed<(() => VNode[]) | undefined>(() => {
   if (slots.renderExtraFooter) {
     return () => slots.renderExtraFooter?.() ?? []
@@ -226,29 +226,29 @@ const mergedExtraFooter = computed<(() => VNode[]) | undefined>(() => {
     return Array.isArray(node) ? node : [node]
   }
 })
-/** 是否为带时间面板的形态：日期与时间并排，选择只改草稿，点「确定」才提交 */
+// 是否为带时间面板的形态：日期与时间并排，选择只改草稿，点「确定」才提交
 const isDateTime = computed(() => props.type === 'datetime')
-/** 是否为范围形态：双面板、双段输入、值为两段元组 */
+// 是否为范围形态：双面板、双段输入、值为两段元组
 const isRange = computed(() => isRangeType(props.type))
-/** 是否为日期时间范围形态：单个日期时间面板，两段靠「确定」切换编辑 */
+// 是否为日期时间范围形态：单个日期时间面板，两段靠「确定」切换编辑
 const isDateTimeRange = computed(() => props.type === 'datetimerange')
-/** 形态对应的面板层级：周 / 月 / 季 / 年形态直接落在对应层级，日期与带时间形态落在日期层级 */
+// 形态对应的面板层级：周 / 月 / 季 / 年形态直接落在对应层级，日期与带时间形态落在日期层级
 const panelBaseMode = computed<PickerPanelMode>(() => getPanelModeOf(props.type))
-/** 是否为需点「确定」才提交的形态（含时间面板）：面板内的选择只落草稿，失焦按取消处理 */
+// 是否为需点「确定」才提交的形态（含时间面板）：面板内的选择只落草稿，失焦按取消处理
 const needConfirm = computed(() => isDateTime.value || isDateTimeRange.value)
-/** 浮层与触发器的间距：范围形态额外预留箭头的高度 */
+// 浮层与触发器的间距：范围形态额外预留箭头的高度
 const popupOffset = computed(() => (isRange.value ? RANGE_POPUP_OFFSET : POPUP_OFFSET))
-/** 展示格式：未指定时随形态取默认值；面板的时间列显隐也按它推导 */
+// 展示格式：未指定时随形态取默认值；面板的时间列显隐也按它推导
 const mergedFormat = computed(() => props.format ?? getDefaultFormat(props.type))
-/** 展示与回写共用的格式：`valueFormat` 优先，未指定时跟随展示格式 */
+// 展示与回写共用的格式：`valueFormat` 优先，未指定时跟随展示格式
 const mergedValueFormat = computed(() => props.valueFormat ?? mergedFormat.value)
-/** 输入框按格式长度估宽，避免浏览器按 20 字符默认估宽导致触发器明显偏宽 */
+// 输入框按格式长度估宽，避免浏览器按 20 字符默认估宽导致触发器明显偏宽
 const inputSize = computed(() => getInputSize(mergedValueFormat.value))
-/** 面板上悬浮的日期：范围形态在当前激活段、单选形态在输入框显示该日期的预览文本 */
+// 面板上悬浮的日期：范围形态在当前激活段、单选形态在输入框显示该日期的预览文本
 const hoverTimestamp = ref<number | null>(null)
-/** 预设悬浮产生的预览区间：范围形态据此在面板上预览该区间（不改变已选值） */
+// 预设悬浮产生的预览区间：范围形态据此在面板上预览该区间（不改变已选值）
 const presetPreview = ref<PickerRangeValue | null>(null)
-/** 值与开合的共享内核：与形态无关的值逻辑与 `TimePicker` 共用一份实现 */
+// 值与开合的共享内核：与形态无关的值逻辑与 `TimePicker` 共用一份实现
 const {
   openModel,
   triggerRef,
@@ -294,7 +294,7 @@ const {
     presetPreview.value = null
   }
 })
-/** 当前展示预览文本（悬浮面板日期产生的临时值）的段：该段文字取提示色 */
+// 当前展示预览文本（悬浮面板日期产生的临时值）的段：该段文字取提示色
 const hoverPreviewIndex = computed<0 | 1 | null>(() => {
   // 依赖需先读取：条件短路会让后续依赖在首轮求值时不被收集，之后悬浮变化便不再触发重算
   const hovered = hoverTimestamp.value
@@ -305,7 +305,7 @@ const hoverPreviewIndex = computed<0 | 1 | null>(() => {
   }
   return activeTriggerIndex.value
 })
-/** 单选形态下正在预览的时间戳（面板展开且悬浮了日期格），无预览为 null */
+// 单选形态下正在预览的时间戳（面板展开且悬浮了日期格），无预览为 null
 const singlePreviewTimestamp = computed<number | null>(() => {
   // 依赖先读取（同 hoverPreviewIndex）：条件短路会漏采依赖，悬浮变化便不再触发重算
   const hovered = hoverTimestamp.value
@@ -313,9 +313,9 @@ const singlePreviewTimestamp = computed<number | null>(() => {
   const isPanelOpen = openModel.value
   return !isRangeType && isPanelOpen ? hovered : null
 })
-/** 面板指示箭头相对输入区左边缘的偏移：与激活段下划线同源、随激活段平移（范围形态专用） */
+// 面板指示箭头相对输入区左边缘的偏移：与激活段下划线同源、随激活段平移（范围形态专用）
 const rangeArrowLeft = ref(0)
-/**
+/*
  * 面板展示值：展开期间有草稿则取草稿，其余情况跟随已提交值
  *
  * 草稿对**所有形态**生效（不限于带时间形态）：鼠标选择在单选形态下即时提交并收起、不会留下草稿，
@@ -325,7 +325,7 @@ const panelTimestamp = computed(() => {
   const drafting = openModel.value && draftValue.value !== null
   return drafting ? draftValue.value : innerValue.value
 })
-/**
+/*
  * 范围形态的面板禁用判定：激活段为起点时，本次展开中终点段被激活过且有值 → 禁用「晚于终点」的日期，
  * 反之同理。用户传入的 `disabledDate` 始终优先
  */
@@ -351,17 +351,17 @@ const mergedRangeDisabledDate = computed<((timestamp: number) => boolean) | unde
     return isOutOfRangeBoundary(timestamp, boundary, !isStartSide)
   }
 })
-/** 单选形态的禁用时间：对外口径兼容两种签名，此处只透传时间戳 */
+// 单选形态的禁用时间：对外口径兼容两种签名，此处只透传时间戳
 const singleDisabledTime = computed<PickerDisabledTime | undefined>(() => {
   const disabledTime = props.disabledTime
   return disabledTime ? (timestamp) => (disabledTime as PickerDisabledTime)(timestamp) : undefined
 })
-/** 日期时间范围形态的禁用时间：段标识由面板容器按当前激活段注入 */
+// 日期时间范围形态的禁用时间：段标识由面板容器按当前激活段注入
 const rangeDisabledTime = computed<PickerRangeDisabledTime | undefined>(() => {
   const disabledTime = props.disabledTime
   return isDateTimeRange.value && disabledTime ? (disabledTime as PickerRangeDisabledTime) : undefined
 })
-/** 单选形态的默认时分秒：按段指定时取首项（单选只有一段），范围形态由范围面板按激活段取 */
+// 单选形态的默认时分秒：按段指定时取首项（单选只有一段），范围形态由范围面板按激活段取
 const singleDefaultTime = computed(() => getDefaultTime(props.defaultTime))
 // 受控字符串解析失败时原样展示，避免用户输入被静默丢弃
 // （字符串轨道受管时展示以受管文本为准，草稿不回写展示，避免与应用层持有的文本脱节）
@@ -376,7 +376,7 @@ const displayText = computed(() => {
   }
   return panelTimestamp.value === null ? '' : formatTimestamp(panelTimestamp.value, mergedValueFormat.value)
 })
-/** 触发器两段文本：字符串轨道受控时以其为准，否则按展示格式逐段生成 */
+// 触发器两段文本：字符串轨道受控时以其为准，否则按展示格式逐段生成
 const displayRangeTexts = computed<[string, string]>(() => {
   const formatted = props.formattedValue
   let texts: [string, string]
@@ -396,7 +396,7 @@ const displayRangeTexts = computed<[string, string]>(() => {
   }
   return texts
 })
-/** 两段输入的提示文字：只给单值时两段共用同一文案 */
+// 两段输入的提示文字：只给单值时两段共用同一文案
 const mergedPlaceholders = computed<[string, string]>(() => {
   const placeholder = props.placeholder
   if (Array.isArray(placeholder)) {
@@ -404,11 +404,11 @@ const mergedPlaceholders = computed<[string, string]>(() => {
   }
   return [placeholder, placeholder]
 })
-/** 单段输入的提示文字（范围形态由 `placeholders` 承担，此处传空） */
+// 单段输入的提示文字（范围形态由 `placeholders` 承担，此处传空）
 const singlePlaceholder = computed(() => (Array.isArray(props.placeholder) ? '' : props.placeholder))
 // 实际方向：定位内核翻转 / 次轴自适应后的结果（宿主未挂载时退回期望方向）
 const actualPlacement = computed<FloatingPlacement>(() => popupRef.value?.actualPlacement ?? props.placement)
-/**
+/*
  * 是否展示面板指示箭头
  *
  * 不传 `showArrow` 时按「实际方位」判定，传值则以显式开关为准。
@@ -417,7 +417,7 @@ const showRangeArrow = computed(() => {
   if (!isRange.value || props.showArrow === false) return false
   return props.showArrow === true || ARROW_PLACEMENTS.includes(actualPlacement.value)
 })
-/** 面板过渡：仅给 name，类名走 Vue 默认派生（-enter-from/-enter-active/…）。展开 / 收起的缩放原点
+/* 面板过渡：仅给 name，类名走 Vue 默认派生（-enter-from/-enter-active/…）。展开 / 收起的缩放原点
     随**实际方位**取（见 `datepicker-zoom` 一节），过渡名因此与方位无关 —— 首帧方位未回填也不会取反向动效 */
 const panelTransitionProps: TransitionProps = { name: 'datepicker-zoom' }
 /**
@@ -558,12 +558,12 @@ function onPanelChange(timestamp: number, mode: PickerPanelMode) {
   hoverTimestamp.value = null
   emits('panelChange', timestamp, mode)
 }
-/* 键盘导航 */
+/** 键盘导航 */
 /** 面板的键盘入口：各面板经 `defineExpose` 暴露，组件壳层按当前形态把按键转给对应的面板 */
 interface PanelKeydownTarget {
   handleKeydown: (event: KeyboardEvent) => boolean
 }
-/**
+/*
  * 键盘归属：`false` 为文本输入态（方向键移动输入光标），`true` 为面板操作态（方向键操作面板光标）。
  * 两态由 Tab 切换：输入态下 Tab 只把键盘交给面板、焦点不动（否则第一下 Tab 就移出组件）；面板操作态
  * 下 Tab 在两个区之间循环，循环到头交还浏览器移出焦点。输入字符、点击输入区或重新聚焦即回到输入态。
@@ -571,9 +571,9 @@ interface PanelKeydownTarget {
  * 面板操作态同时把输入框置为只读（插入光标不应再提示「可直接输入」，此刻键盘归面板所有）。
  */
 const keyboardPanelMode = ref(false)
-/** 键盘操作当前所在的区：仅带时间形态有两个区可取，其余形态恒为日期区（面板内部按该状态转发） */
+// 键盘操作当前所在的区：仅带时间形态有两个区可取，其余形态恒为日期区（面板内部按该状态转发）
 const activeSection = ref<PickerActiveSection>(null)
-/** 是否具备「日期 / 时间」两个可切换的区 */
+// 是否具备「日期 / 时间」两个可切换的区
 const hasTimeSection = computed(() => isDateTime.value || isDateTimeRange.value)
 const rangePanelRef = ref<PanelKeydownTarget | null>(null)
 const datetimePanelRef = ref<PanelKeydownTarget | null>(null)
@@ -621,7 +621,7 @@ function getNextSection(current: PickerActiveSection, backward: boolean): Picker
   const index = SECTION_CYCLE.indexOf(current)
   return SECTION_CYCLE[backward ? index - 1 : index + 1] ?? null
 }
-/**
+/*
  * 按键按下时的展开态快照
  *
  * 展开态的回车会先被输入框的文本提交消费（提交并收起面板），事件随后才冒泡到这里 —— 用此刻的
@@ -631,7 +631,7 @@ let openAtKeydown = false
 function onWrapperKeydownCapture(): void {
   openAtKeydown = openModel.value
 }
-/**
+/*
  * 本次焦点变化是否由「按在组件内」的指针操作引起
  *
  * 点触发器的非输入区（图标、内边距）同样会让输入框失焦，但那是「点自己」，不该收起面板；

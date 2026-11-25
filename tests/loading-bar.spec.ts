@@ -54,8 +54,10 @@ describe('LoadingBarProvider', () => {
     wrapper.unmount()
   })
 
-  // 每个状态用全新 Provider 驱动，避免 finishing / erroring 的早返回分支相互干扰；
-  // 返回内层进度条的内联 background，用于断言当前生效的状态样式
+  /**
+   * 每个状态用全新 Provider 驱动，避免 finishing / erroring 的早返回分支相互干扰；
+   * 返回内层进度条的内联 background，用于断言当前生效的状态样式
+   */
   async function driveTo(
     loadingBarStyle: LoadingBarProps['loadingBarStyle'],
     run: (api: LoadingBarApi) => unknown

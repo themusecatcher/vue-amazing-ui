@@ -7,7 +7,7 @@ import type { GenerateStyleEntriesOptions } from '../build/generate-style-entrie
 import { componentsMap, styleSources, componentDependencies, stylelessComponents } from 'components/utils/style-deps'
 import { vendorStylesByComponent } from 'components/utils/vendor-styles'
 
-/**
+/*
  * 每组件样式入口生成器的守护
  *
  * 背景：产物 JS 不 import 任何 CSS，组件样式由消费方 resolver 的 sideEffects 决定。生成器把
@@ -60,7 +60,7 @@ function lines(relativePath: string): string[] {
   return read(relativePath).trimEnd().split('\n')
 }
 
-/** 静默 logger：断言走返回值与产物文件，避免测试输出噪音 */
+// 静默 logger：断言走返回值与产物文件，避免测试输出噪音
 const silentLogger: GenerateStyleEntriesOptions['logger'] = null
 
 function generate(): string[] {

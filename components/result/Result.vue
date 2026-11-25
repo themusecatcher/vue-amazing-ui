@@ -9,7 +9,6 @@ export interface Props {
   subTitle?: string // 副标题文字
   extra?: string // 额外内容
 }
-// 声明组件插槽类型
 export interface ResultSlots {
   icon?: () => VNode[]
   title?: () => VNode[]

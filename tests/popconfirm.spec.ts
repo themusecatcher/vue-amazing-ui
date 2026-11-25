@@ -7,7 +7,7 @@ import Button from 'components/button'
 import Tooltip from 'components/tooltip'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * Popconfirm 落在 `<Popup>` 浮层链上的回归守护
  *
  * `Popconfirm` 只提供「皮肤 + 按钮内容」，浮层宿主（Teleport / 首帧优化 / 显隐 / 层级 /
@@ -134,7 +134,7 @@ describe('Popconfirm 落在 Popup 浮层链上', () => {
   })
 })
 
-/**
+/*
  * 无障碍语义与焦点管理
  *
  * 面板是「要求用户做决策」的气泡，不是描述性提示：
@@ -200,7 +200,7 @@ describe('Popconfirm · 无障碍语义与焦点管理', () => {
   })
 })
 
-/**
+/*
  * `Popconfirm` 未声明 `destroyOnHide`，该属性依赖**两跳**属性透传
  * （`Popconfirm` → `Popover` → `Tooltip`）才能落到浮层宿主 —— 链路任一环被切断即失效，故用行为断言锁住。
  */
@@ -233,7 +233,7 @@ describe('Popconfirm · destroyOnHide 经两跳透传到浮层宿主', () => {
   })
 })
 
-/**
+/*
  * `Popconfirm` 的 prop 契约改为 `extends Omit<TooltipProps, …>` 之后的守护：
  *
  * - 类型继承**不继承默认值**，默认值必须显式补：`trigger: 'click'` 漏写会让确认框从

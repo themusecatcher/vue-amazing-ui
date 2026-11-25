@@ -17,7 +17,7 @@ import type { NotificationApi } from './useNotification'
 const teleportTheme = injectFromChain(themeTeleportKey) ?? null
 const teleportThemeVars = computed<CSSProperties>(() => (teleportTheme?.value?.vars as CSSProperties) ?? {})
 const teleportThemeMode = computed(() => teleportTheme?.value?.mode)
-// 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数
+/** 内容支持的三种形态：纯文本、已构造的 VNode、返回 VNode 的渲染函数 */
 export type ContentType = string | VNode | (() => VNode)
 export interface Props {
   top?: number // 消息从顶部弹出时，距离顶部的位置，单位 px
@@ -62,23 +62,25 @@ export interface NotificationOptions {
 }
 type Placement = 'top' | 'topLeft' | 'topRight' | 'bottom' | 'bottomLeft' | 'bottomRight'
 type Mode = 'open' | 'info' | 'success' | 'error' | 'warning'
-// update 可更新的字段：NotificationOptions 除 key 外的全部属性 + mode（用于切换内置图标类型）
-// key 是通知的身份标识，创建后不可变更，故从可更新字段中剔除
+/**
+ * update 可更新的字段：NotificationOptions 除 key 外的全部属性 + mode（用于切换内置图标类型）
+ * key 是通知的身份标识，创建后不可变更，故从可更新字段中剔除
+ */
 export interface NotificationUpdate extends Omit<NotificationOptions, 'key'> {
   mode?: Mode
 }
-// 每条通知的展示数据
+/** 每条通知的展示数据 */
 interface NotificationItem extends NotificationOptions {
   readonly key: string // 唯一标识，替代数组下标作为身份
   mode: Mode
 }
-// 单条通知的句柄，用于编程式关闭与更新
+/** 单条通知的句柄，用于编程式关闭与更新 */
 export interface NotificationReactive extends NotificationOptions {
   readonly key: string // 该条通知的唯一标识
   destroy: () => void // 关闭该条通知
   update: (options: NotificationUpdate) => void // 更新该条通知；mode 可切换内置图标类型
 }
-// 单个 placement 分组的状态：独立的通知列表
+/** 单个 placement 分组的状态：独立的通知列表 */
 interface NotificationGroup {
   placement: Placement
   data: NotificationItem[]
@@ -118,7 +120,7 @@ const LEAVE_DURATION = 200
 const recycleTimers = new Set<ReturnType<typeof setTimeout>>()
 // 每条通知的唯一标识生成器
 const createKey = createKeyGenerator('notification')
-// 根据 placement 找到对应分组，不存在则创建
+/** 根据 placement 找到对应分组，不存在则创建 */
 function getGroup(placement: Placement): NotificationGroup {
   let group = notificationGroups.value.find((g) => g.placement === placement)
   if (!group) {
@@ -151,8 +153,10 @@ function bottomStyle(placement: Placement): CSSProperties {
   }
   return {}
 }
-// 通知内容区布局：flex 纵向排列，宽度不一致的通知按 placement 语义对齐（左右位贴边、居中位居中）
-// 滚动模式额外保留对向留白，使滚到极限时内容不贴容器边缘
+/**
+ * 通知内容区布局：flex 纵向排列，宽度不一致的通知按 placement 语义对齐（左右位贴边、居中位居中）
+ * 滚动模式额外保留对向留白，使滚到极限时内容不贴容器边缘
+ */
 function contentStyle(placement: Placement): CSSProperties {
   const isTop = ['top', 'topRight', 'topLeft'].includes(placement)
   const offset = isTop ? props.top : props.bottom
@@ -184,7 +188,7 @@ function contentStyle(placement: Placement): CSSProperties {
 // 使通知过多时在容器内滚动而非突破容器边界
 const scrollbarMaxHeight = ref<string | undefined>(undefined)
 let containerObserver: ResizeObserver | null = null
-// 解析 to 指向的挂载容器（兼容选择器字符串与 DOM 元素，与 Teleport 解析规则一致）
+/** 解析 to 指向的挂载容器（兼容选择器字符串与 DOM 元素，与 Teleport 解析规则一致） */
 function resolveContainer(target: string | HTMLElement): HTMLElement | null {
   if (typeof target !== 'string' || !target) {
     return typeof target === 'string' ? null : target
@@ -279,13 +283,15 @@ function onLeave(group: NotificationGroup, key: string): void {
   }
   autoClose(group, key)
 }
-// 离场前固定当前高度，使 max-height 收缩动画具备确定的起始值
+/** 离场前固定当前高度，使 max-height 收缩动画具备确定的起始值 */
 function onBeforeLeave(el: Element): void {
   const target = el as HTMLElement
   target.style.maxHeight = `${target.offsetHeight}px`
 }
-// 分组内最后一条通知关闭后，等离场动画播完再回收该分组，避免长期残留空的容器 DOM
-// 必须延后回收：立即移除容器会连同待播动画的离场节点一起摘掉，导致最后一条通知失去离场动画
+/**
+ * 分组内最后一条通知关闭后，等离场动画播完再回收该分组，避免长期残留空的容器 DOM
+ * 必须延后回收：立即移除容器会连同待播动画的离场节点一起摘掉，导致最后一条通知失去离场动画
+ */
 function recycleGroup(group: NotificationGroup): void {
   if (group.data.length > 0) {
     return
@@ -303,16 +309,18 @@ function recycleGroup(group: NotificationGroup): void {
   }, LEAVE_DURATION + 100)
   recycleTimers.add(timer)
 }
-// 单条通知是否显示关闭按钮：未指定时回落到组件级 closable
+/** 单条通知是否显示关闭按钮：未指定时回落到组件级 closable */
 function isClosable(item: NotificationItem): boolean {
   return item.closable ?? props.closable
 }
-// 点击通知体触发单条通知的 onClick；关闭按钮已 stopPropagation，不会走到这里
+/** 点击通知体触发单条通知的 onClick；关闭按钮已 stopPropagation，不会走到这里 */
 function onClick(e: MouseEvent, item: NotificationItem): void {
   item.onClick?.(e)
 }
-// 关闭单条通知：按 key 精确移除，离场动画交由 TransitionGroup 播放；
-// onClose 返回 false（或 Promise resolve false）时取消本次关闭，通知保留且不再自动关闭
+/**
+ * 关闭单条通知：按 key 精确移除，离场动画交由 TransitionGroup 播放；
+ * onClose 返回 false（或 Promise resolve false）时取消本次关闭，通知保留且不再自动关闭
+ */
 async function close(group: NotificationGroup, key: string): Promise<void> {
   let index = group.data.findIndex((n) => n.key === key)
   if (index === -1) {
@@ -341,7 +349,7 @@ function destroyAll(): void {
     })
   })
 }
-// 按 key 精确关闭任意分组内的通知，便于跨调用点定位（如 axios 拦截器内关闭组件中打开的那条）
+/** 按 key 精确关闭任意分组内的通知，便于跨调用点定位（如 axios 拦截器内关闭组件中打开的那条） */
 function destroy(key: string): void {
   notificationGroups.value.forEach((group) => {
     if (group.data.some((n) => n.key === key)) {
@@ -360,7 +368,7 @@ function updateItem(group: NotificationGroup, key: string, options: Notification
     autoClose(group, key)
   }
 }
-// 单条通知的编程式句柄，新增与命中去重两种路径共用
+/** 单条通知的编程式句柄，新增与命中去重两种路径共用 */
 function createHandle(group: NotificationGroup, key: string): NotificationReactive {
   return {
     key,
@@ -752,7 +760,7 @@ emits('ready', { open, info, success, error, warning, destroy, destroyAll })
 .notification-bottomLeft {
   left: 0;
 }
-// 通知列表滚动容器：内容较少时高度自适应，超出视口高度时滚动显示
+/* 通知列表滚动容器：内容较少时高度自适应，超出视口高度时滚动显示 */
 .notification-wrap .notification-scrollbar {
   height: fit-content;
   :deep(.scrollbar-container) {

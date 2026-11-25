@@ -14,7 +14,6 @@ export interface Props {
   xPlacement?: 'top' | 'bottom' // 横向滚动时滚动条的位置
   yPlacement?: 'left' | 'right' // 纵向滚动时滚动条的位置
 }
-// 声明组件插槽类型
 export interface ScrollbarSlots {
   default?: () => VNode[]
 }
@@ -169,7 +168,7 @@ let lastScrollLeft = 0
 let isDeactivated = false // 是否被 <KeepAlive> 失活（失活期间 DOM 尺寸为 0，测量会把滚动条算成 0 尺寸）
 let activatedOnce = false // 首次激活与 onMounted 重叠，跳过恢复
 useResizeObserver([containerRef, contentRef], updateState)
-/**
+/*
  * 被 <KeepAlive> 切回来时恢复滚动位置：
  * 失活期间 DOM 被移出文档，scrollTop / scrollLeft 归零，只能按失活前记录的位置写回
  */
@@ -191,13 +190,13 @@ onDeactivated(() => {
 onBeforeUnmount(() => {
   stopTrackPointerTracking()
 })
-// 同步滚动位置（thumb 偏移的渲染依据）
+/** 同步滚动位置（thumb 偏移的渲染依据） */
 function updateScrollState(): void {
   if (!containerRef.value) return
   containerScrollTop.value = containerRef.value.scrollTop
   containerScrollLeft.value = containerRef.value.scrollLeft
 }
-// 同步容器 / 内容 / 轨道的尺寸（thumb 大小与显隐的渲染依据）
+/** 同步容器 / 内容 / 轨道的尺寸（thumb 大小与显隐的渲染依据） */
 function updateScrollbarState(): void {
   if (!containerRef.value || !contentRef.value || !verticalRailRef.value || !horizontalRailRef.value) return
   containerScrollHeight.value = containerRef.value.scrollHeight
@@ -211,7 +210,7 @@ function updateScrollbarState(): void {
   verticalRailHeight.value = verticalRailRef.value.offsetHeight
   horizontalRailWidth.value = horizontalRailRef.value.offsetWidth
 }
-// 全量重测：挂载、尺寸变化、鼠标进入、拖拽结束、激活恢复后调用
+/** 全量重测：挂载、尺寸变化、鼠标进入、拖拽结束、激活恢复后调用 */
 function updateState(): void {
   if (isDeactivated) return
   updateScrollState()
@@ -333,7 +332,7 @@ function onMouseLeave(): void {
     debounceHideVerticalScrollbar()
   }
 }
-// 指针进入 / 离开 thumb：仅 hover + autoHide 时需要靠悬停保持显示
+/** 指针进入 / 离开 thumb：仅 hover + autoHide 时需要靠悬停保持显示 */
 function onEnterVerticalTrack(): void {
   if (!autoShowTrack.value || !props.autoHide) return
   isVerticalTrackHovered = true

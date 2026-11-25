@@ -12,7 +12,6 @@ export interface Props {
   disabled?: boolean // 是否禁用
   danger?: boolean // 是否展示错误状态样式
 }
-// 声明组件插槽类型
 export interface MenuItemSlots {
   default?: () => VNode[] // 菜单项标题
   icon?: () => VNode[] // 菜单图标

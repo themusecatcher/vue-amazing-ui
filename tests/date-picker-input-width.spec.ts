@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { getInputSize } from 'components/picker/date-utils'
 
-/**
+/*
  * 回归守护：触发器输入框的宽度估算（原生 `size` 属性）。
  *
  * 触发器宽度随展示格式自适应，估算不足会把末位字符裁掉：中文格式里的全角字符（年 / 月 / 日）

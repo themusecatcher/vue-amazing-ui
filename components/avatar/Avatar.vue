@@ -21,7 +21,6 @@ export interface Props {
   href?: string // 点击跳转的地址，指定此属性按钮的行为和 a 链接一致
   target?: '_self' | '_blank' // 相当于 a 标签的 target 属性，href 存在时生效
 }
-// 声明组件插槽类型
 export interface AvatarSlots {
   icon?: () => VNode[]
   default?: () => VNode[]

@@ -10,7 +10,7 @@ import {
   splitUnionMembers
 } from '../scripts/check-prop-runtime-types'
 
-/**
+/*
  * props 运行时类型契约校验的用例（源码扫描 + 产物文本断言，无 DOM）
  *
  * 背景见 `scripts/check-prop-runtime-types.ts` 头部：`defineProps<Props>()` 无法为 DOM 接口与

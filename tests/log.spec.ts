@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { log, isDevEnv, resetLogDedup } from 'components/utils'
 
-/**
+/*
  * 告警 / 日志统一出口（`components/utils/log.ts`）契约回归
  *
  * 该模块承载四条对外承诺（见 development/component-design.md 的「告警与日志 log」）：

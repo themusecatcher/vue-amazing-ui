@@ -90,7 +90,7 @@ const collapsedSiderWidth = computed(() => {
   }
   return getResponsiveCollapsedWidth(props.collapsedWidth)
 })
-/** 视窗宽度是否已低于 breakpoint；未配置 breakpoint 时为 null（不参与响应式收起） */
+// 视窗宽度是否已低于 breakpoint；未配置 breakpoint 时为 null（不参与响应式收起）
 const breakpointBroken = computed(() => {
   if (!props.breakpoint) {
     return null

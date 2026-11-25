@@ -21,7 +21,7 @@ const OPTIONS = [
 
 let wrapper: ReturnType<typeof mount> | null = null
 
-/** 面板经 Teleport 挂到 body，卸载时需一并清理，避免污染后续用例 */
+// 面板经 Teleport 挂到 body，卸载时需一并清理，避免污染后续用例
 afterEach(() => {
   wrapper?.unmount()
   wrapper = null
@@ -783,7 +783,7 @@ describe('Cascader 已勾选数据', () => {
 })
 
 describe('Cascader 虚拟滚动', () => {
-  /** 60 个叶子选项的根列，面板高 180 一行 32 时一屏只装得下约 6 行 */
+  // 60 个叶子选项的根列，面板高 180 一行 32 时一屏只装得下约 6 行
   const MANY = Array.from({ length: 60 }, (_, index) => ({
     label: `选项${index}`,
     value: `v${index}`
@@ -817,7 +817,7 @@ describe('Cascader 虚拟滚动', () => {
 })
 
 describe('Cascader 虚拟滚动的列状态维护', () => {
-  /** 5 个省 × 40 个市，面板高 64（两行），足以触发虚拟滚动 */
+  // 5 个省 × 40 个市，面板高 64（两行），足以触发虚拟滚动
   const TREE = Array.from({ length: 5 }, (_, province) => ({
     label: `省${province}`,
     value: `p-${province}`,
@@ -913,7 +913,7 @@ describe('Cascader 虚拟滚动的列状态维护', () => {
 })
 
 describe('Cascader 重开面板后的激活项可见性', () => {
-  /** 100 个省，value 指向靠后的第 60 个 */
+  // 100 个省，value 指向靠后的第 60 个
   const MANY = Array.from({ length: 100 }, (_, index) => ({
     label: `省${index}`,
     value: `p-${index}`
@@ -937,7 +937,7 @@ describe('Cascader 重开面板后的激活项可见性', () => {
 })
 
 describe('Cascader 全量渲染下的激活项定位', () => {
-  /** 100 个省，value 指向第 60 个；行高按 32、面板视口 64（jsdom 无布局，几何由下面的 stub 提供） */
+  // 100 个省，value 指向第 60 个；行高按 32、面板视口 64（jsdom 无布局，几何由下面的 stub 提供）
   const MANY = Array.from({ length: 100 }, (_, index) => ({
     label: `省${index}`,
     value: `p-${index}`

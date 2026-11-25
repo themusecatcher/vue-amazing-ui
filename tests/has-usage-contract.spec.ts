@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { checkHasUsage, DEFAULT_WHITELIST } from '../scripts/check-has-usage'
 
-/**
+/*
  * `:has()` 使用契约（权威层，条文见 development/component-design.md 的「高版本 CSS 特性」）
  *
  * 为什么是单测而不是门禁脚本：豁免路径（写法退化）不会让源码在当前引擎上出错，
@@ -17,7 +17,7 @@ import { checkHasUsage, DEFAULT_WHITELIST } from '../scripts/check-has-usage'
  */
 
 const tempDirs: string[] = []
-/** 反向用例统一把待测文件放进白名单，避免「非白名单」规则干扰单条断言 */
+// 反向用例统一把待测文件放进白名单，避免「非白名单」规则干扰单条断言
 const FIXTURE_WHITELIST = ['demo/Demo.vue']
 
 function createComponents(files: Record<string, string>): string {

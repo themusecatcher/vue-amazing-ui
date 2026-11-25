@@ -49,7 +49,6 @@ export interface TabsTabBarSlotProps {
   activeKey?: string | number // 当前激活 key
   change: (key: string | number) => void // 切换页签
 }
-// 声明组件插槽类型
 export interface TabsSlots {
   default?: () => VNode[] // 标签页内容（TabPane 子组件）
   prefix?: () => VNode[] // 自定义标签页前缀
@@ -79,7 +78,7 @@ const props = withDefaults(defineProps<Props>(), {
   beforeLeave: undefined
 })
 defineSlots<TabsSlots>()
-/**
+/*
  * 插槽内容渲染器：把 `() => VNode[]` 当插槽函数求值
  *
  * 直接把槽函数交给 `<component :is>` 会被 Vue 当作函数式组件，而槽函数每次解析都是新引用，
@@ -431,7 +430,7 @@ function onTabKeydown(event: KeyboardEvent, index: number): void {
 function onClose(key: string | number): void {
   emits('close', key)
 }
-/**
+/*
  * 溢出页签：完整落在视口外的页签收纳进「更多」下拉
  *
  * 判定以页签盒子的实际位置为准，随滚动位置与容器尺寸重算；只被裁掉一部分的页签仍留在导航区
@@ -455,7 +454,7 @@ const hiddenPanes = computed<TabsPane[]>(() => {
   })
 })
 const moreOpen = ref(false)
-/**
+/*
  * 「更多」面板的弹出方位：纵向（left / right）时面板贴导航列的外沿 —— 左列贴左、右列贴右
  *
  * 纵向的收纳入口在列底、宽度撑满整列（见样式），故 `bottomLeft` / `bottomRight` 的次轴对齐边
@@ -543,7 +542,7 @@ function onAddClick(): void {
   if (addDisabled.value) return
   emits('add')
 }
-// 滚轮与触摸板滑动：默认行为会连带滚动页面，且本库用 transform 而非原生滚动，故须先拦截再折算滚动量
+/** 滚轮与触摸板滑动：默认行为会连带滚动页面，且本库用 transform 而非原生滚动，故须先拦截再折算滚动量 */
 function onWheel(e: WheelEvent): void {
   e.stopPropagation()
   e.preventDefault() // 禁止浏览器捕获触摸板滑动事件
@@ -1496,8 +1495,8 @@ function getContentStyle(pane: TabsPane): CSSProperties {
 }
 </style>
 <style lang="less">
-// 「更多」下拉：面板由宿主 Dropdown 渲染并 Teleport 到 body，作用域样式无法命中，故落在全局样式块。
-// 内边距只留菜单自身一层（内容层归零），面板高度与首项间距才与页签栏密度一致；菜单项 30px 高 / 最小宽 120px / 超过 200px 滚动
+/* 「更多」下拉：面板由宿主 Dropdown 渲染并 Teleport 到 body，作用域样式无法命中，故落在全局样式块。 */
+/* 内边距只留菜单自身一层（内容层归零），面板高度与首项间距才与页签栏密度一致；菜单项 30px 高 / 最小宽 120px / 超过 200px 滚动 */
 .tabs-more-menu {
   &.dropdown-overlay.va-popup-placement-bottomLeft,
   &.dropdown-overlay.va-popup-placement-bottomRight {

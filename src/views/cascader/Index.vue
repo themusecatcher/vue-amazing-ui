@@ -261,7 +261,7 @@ function onChange(values: (string | number)[], selectedOptions: CascaderOption[]
   console.log('values', values)
   console.log('selectedOptions', selectedOptions)
 }
-// 搜索过滤函数：只匹配第三级（区）文本
+/** 搜索过滤函数：只匹配第三级（区）文本 */
 function searchFilter(inputValue: string, path: CascaderOption[]) {
   const target = path[path.length - 1]
   return String(target?.label ?? '')
@@ -341,7 +341,7 @@ function loadLazyData(selectedOptions: CascaderOption[]) {
     target.loading = false
   }, 600)
 }
-// 自定义已选项：末级展示邮编
+/** 自定义已选项：末级展示邮编 */
 function onAreaClick(e: MouseEvent, code?: number) {
   e.preventDefault()
   console.log('postcode', code)

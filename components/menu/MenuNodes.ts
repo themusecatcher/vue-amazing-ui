@@ -29,7 +29,7 @@ import type {
 } from './interface'
 import { flattenOverflowItems, renderOverflowIndicator } from './overflow'
 
-/**
+/*
  * 菜单节点渲染内核（内部组件，不对外导出）
  *
  * 按 `items` 配置递归产出列表：根列表与各级子列表共用同一份实现，差异只在层级与容器类名。
@@ -40,14 +40,14 @@ import { flattenOverflowItems, renderOverflowIndicator } from './overflow'
  * 回传给根组件，由其把放不下的项切分进「…」子菜单（见 `Menu` 的 `overflowStart`）。
  */
 
-/** 子菜单列表（内嵌与浮层内同构）与分组列表的容器类名 */
+// 子菜单列表（内嵌与浮层内同构）与分组列表的容器类名
 const SUBMENU_LIST_CLASS = 'menu-submenu-list'
 const GROUP_LIST_CLASS = 'menu-item-group-list'
 
-/** 分组标题的缩进步长：小于菜单项的 inlineIndent，使分组标题与其下菜单项在视觉上分出层次 */
+// 分组标题的缩进步长：小于菜单项的 inlineIndent，使分组标题与其下菜单项在视觉上分出层次
 const GROUP_TITLE_INDENT = 16
 
-/**
+/*
  * 弹出浮层的间距
  *
  * 向外弹出的一对取值（水平菜单 `[0, 8]`、其余 `[10, 0]`），
@@ -55,21 +55,21 @@ const GROUP_TITLE_INDENT = 16
  */
 const POPUP_GAP = { horizontal: 8, vertical: 10 } as const
 
-/**
+/*
  * 收起态标题提示的面板盒外间距
  *
  * 面板为箭头预留 12px 槽位（见 `.menu-tooltip-popup` 的方向类），故可见卡片距锚点 16px
  */
 const TOOLTIP_GAP = 4
 
-/**
+/*
  * 收起态标题提示的显隐延时（毫秒）
  *
  * 显示与隐藏各取一段，与浮层提示族同口径：菜单项可被快速扫过，即时显隐会让提示持续闪烁。
  */
 const TIP_DELAY = 100
 
-/**
+/*
  * 弹出浮层的过渡
  *
  * 类名与关键帧统一带 `menu-` 前缀：过渡类由浮层宿主落在面板上（无法用选择器作用域收口），
@@ -85,7 +85,7 @@ const POPUP_TRANSITION: TransitionProps = {
   leaveToClass: 'menu-zoom-leave menu-zoom-leave-active'
 }
 
-/** 收起态悬浮标题提示的浮层过渡：与浮层提示同口径（缩放 0.8 起步、时长 0.1s），复用同一组关键帧 */
+// 收起态悬浮标题提示的浮层过渡：与浮层提示同口径（缩放 0.8 起步、时长 0.1s），复用同一组关键帧
 const TOOLTIP_TRANSITION: TransitionProps = {
   name: 'menu-zoom-fast',
   enterFromClass: 'menu-zoom-fast-enter',
@@ -96,7 +96,7 @@ const TOOLTIP_TRANSITION: TransitionProps = {
   leaveToClass: 'menu-zoom-fast-leave menu-zoom-fast-leave-active'
 }
 
-/**
+/*
  * 水平菜单一级子菜单的浮层过渡：纵向展开（顶边为原点做纵向缩放）
  *
  * 与纵向浮层的等比缩放分开：纵向浮层从锚点侧向外等比铺开，水平一级子菜单则自顶边向下展开，

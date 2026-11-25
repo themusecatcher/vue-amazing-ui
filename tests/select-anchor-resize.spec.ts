@@ -3,7 +3,7 @@ import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Select from 'components/select/Select.vue'
 
-/**
+/*
  * 触发器自身尺寸变化后的面板重算（重构文档 §6.3 第 4 条）
  *
  * 定位内核的 `'resize'` 监听只覆盖视口（`window`），**锚点自身长高不会触发重算**。`Select` 因此
@@ -38,9 +38,9 @@ function domRect(left: number, top: number, width: number, height: number): DOMR
 }
 
 const viewportRect = domRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT)
-/** 触发器桩矩形：用例中改高度以模拟「标签换行使触发器长高」 */
+// 触发器桩矩形：用例中改高度以模拟「标签换行使触发器长高」
 let anchorRect = domRect(400, 300, 100, 40)
-/** 面板桩布局尺寸（内核按 offsetWidth / offsetHeight 测量浮层） */
+// 面板桩布局尺寸（内核按 offsetWidth / offsetHeight 测量浮层）
 const panelSize = { width: 100, height: 80 }
 
 /** 等待「打开 → 渲染 → 内核 post flush 落位」 */
@@ -52,7 +52,7 @@ async function flush(): Promise<void> {
 
 const queryPanel = (): HTMLElement | null => document.querySelector('.select-panel-container')
 
-/** 已注册的 ResizeObserver 回调（`useResizeObserver` 会为观察目标各建一个实例） */
+// 已注册的 ResizeObserver 回调（`useResizeObserver` 会为观察目标各建一个实例）
 let resizeCallbacks: ResizeObserverCallback[] = []
 let originalGetBoundingClientRect: typeof HTMLElement.prototype.getBoundingClientRect
 let originalOffsetWidth: PropertyDescriptor | undefined

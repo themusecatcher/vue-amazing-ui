@@ -17,7 +17,6 @@ export interface Props {
   value?: string | number // (v-model) 当前选中的值
   defaultValue?: string | number // 非受控初始值，未绑 v-model:value 时生效
 }
-// 声明组件插槽类型
 export interface SegmentedSlots {
   label?: (props: {
     option: string | number | Option

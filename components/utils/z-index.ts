@@ -41,7 +41,7 @@ export const FLOATING_LAYER_Z_INDEX = {
   loadingBar: 9999
 } as const
 
-/**
+/*
  * 层级步长
  *
  * 同一层内部还会再分层（如 Modal 的遮罩与弹窗、Image 的遮罩与预览均相差 10），
@@ -49,7 +49,7 @@ export const FLOATING_LAYER_Z_INDEX = {
  */
 const Z_INDEX_STEP = 10
 
-/** 单层默认占用的段数 */
+// 单层默认占用的段数
 const DEFAULT_SPAN = 1
 
 /**
@@ -203,14 +203,14 @@ export function useZIndex(
   const manager = injectFromChain(zIndexManagerKey) ?? null
   const zIndex = ref(fallback)
   let slot: number | null = null
-  // 归还当前槽位（幂等）
+  /** 归还当前槽位（幂等） */
   function release(): void {
     if (manager && slot !== null) {
       manager.release(slot)
       slot = null
     }
   }
-  // 领取槽位：先归还再领取，保证「重新出现 = 位于最上层」
+  /** 领取槽位：先归还再领取，保证「重新出现 = 位于最上层」 */
   function allocate(): void {
     if (!manager) return
     release()

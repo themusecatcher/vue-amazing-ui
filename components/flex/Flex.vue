@@ -11,7 +11,6 @@ export interface Props {
   gap?: number | number[] | 'small' | 'middle' | 'large' // 设置网格之间的间隙，数组时表示: [水平间距, 垂直间距]
   component?: string | Component // 渲染的标签名或组件，用于语义化布局
 }
-// 声明组件插槽类型
 export interface FlexSlots {
   default?: () => VNode[]
 }

@@ -3,7 +3,7 @@ import { defineComponent, h, ref, nextTick, createCommentVNode, createTextVNode 
 import { mount } from '@vue/test-utils'
 import { useSlotsExist } from 'components/utils'
 
-/**
+/*
  * 回归守护：`useSlotsExist` 的判定方式
  *
  * 该组合式函数以「实际调用一次插槽 → 检查返回的 vnode」判定插槽是否真的渲染了内容。
@@ -114,7 +114,7 @@ describe('useSlotsExist 插槽判定', () => {
     empty.unmount()
   })
 
-  /**
+  /*
    * 回归守护：`slots` 是官方明确不响应式的普通对象（与 `attrs` 同级，vuejs/core#6202），
    * 单纯用 computed 包裹会让判定停留在首帧。这里守护「插槽集合变化 → 重新探测」。
    */

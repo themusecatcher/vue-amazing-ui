@@ -1,4 +1,4 @@
-/**
+/*
  * 日期选择内核的日期工具
  *
  * 值一律以毫秒时间戳在层间传递（与 `Calendar` 的 `disabledDate(timestamp)` / `valueFormat` 口径一致），
@@ -41,26 +41,26 @@ import type {
 /** 周起始日：0 为周一，6 为周日（与 `Calendar` 的 startDayOfWeek 口径一致） */
 export type StartDayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
 
-/** 周标题（索引 0 为周一，与 startDayOfWeek 口径对齐） */
+// 周标题（索引 0 为周一，与 startDayOfWeek 口径对齐）
 const WEEK_LABELS = ['一', '二', '三', '四', '五', '六', '日']
-/** 日期面板展开周数：始终渲染 6 周，避免面板高度跳动 */
+// 日期面板展开周数：始终渲染 6 周，避免面板高度跳动
 const WEEK_COUNT = 6
-/** 一周天数 */
+// 一周天数
 const DAYS_PER_WEEK = 7
-/** 一年中的月份数 */
+// 一年中的月份数
 const MONTH_COUNT = 12
-/** 一个季度包含的月份数 */
+// 一个季度包含的月份数
 const QUARTER_MONTH_COUNT = 3
 /** 年面板一次展示的年数（一个十年区间的年数） */
 export const YEAR_COUNT = 10
-/** 年面板网格格数：3 列 × 4 行（比十年区间多出的两格用于展示相邻年份） */
+// 年面板网格格数：3 列 × 4 行（比十年区间多出的两格用于展示相邻年份）
 const YEAR_PANEL_SIZE = 12
 /** 世纪年数：十年面板的翻页步长与头部区间宽度 */
 export const CENTURY_YEAR_COUNT = 100
-/** 十年面板网格格数：3 列 × 4 行（比世纪区间多出的两格用于展示相邻十年） */
+// 十年面板网格格数：3 列 × 4 行（比世纪区间多出的两格用于展示相邻十年）
 const DECADE_PANEL_SIZE = 12
 
-/**
+/*
  * 形态 → 默认展示格式（date-fns 占位符）
  *
  * 周形态取 ISO 周口径（`RRRR-II`）并带「周」字后缀（如 `2026-41周`，中文语境下「42」不足以自证是周序号）：
@@ -434,7 +434,7 @@ export function getQuarterNumber(reference: number): number {
   return getQuarter(reference)
 }
 
-/* ============================== 范围形态 ============================== */
+/** ============================== 范围形态 ============================== */
 
 /** 范围格类名判定的上下文 */
 export interface RangeCellContext {
@@ -563,14 +563,14 @@ export function getRangeCellClassNames(timestamp: number, context: RangeCellCont
   }
 }
 
-/* ================================ 时间 ================================ */
+/** ================================ 时间 ================================ */
 
 /** 时间面板的三类单位 */
 export type PickerTimeUnitName = 'hour' | 'minute' | 'second'
 
 /** 各时间单位的取值上限（时 0-23，分 / 秒 0-59） */
 export const TIME_UNIT_MAX: Record<PickerTimeUnitName, number> = { hour: 23, minute: 59, second: 59 }
-/** 列文本不足两位时补零的长度 */
+// 列文本不足两位时补零的长度
 const UNIT_LABEL_LENGTH = 2
 /** 12 小时制的半天小时数 */
 export const HALF_DAY_HOURS = 12

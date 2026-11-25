@@ -5,7 +5,7 @@ import Select from 'components/select/Select.vue'
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
-/**
+/*
  * 回归守护：搜索模式的输入法（IME）合成期保护。
  *
  * 组件内部以 `v-model` 绑定搜索文本，并在 input 处理中读取元素上的 `composing` 标记：
@@ -56,7 +56,7 @@ describe('Select 搜索模式的输入法（IME）合成', () => {
     }
   })
 
-  /**
+  /*
    * 回归守护：输入法组合期间的 Enter 是「确认候选 / 上屏」，不是「选中高亮项」。
    *
    * 浏览器对 IME 消费的按键会派发 `isComposing: true` 的 keydown，而既有实现以 keyCode 判定
@@ -108,7 +108,7 @@ describe('Select 搜索模式的输入法（IME）合成', () => {
   })
 })
 
-/**
+/*
  * 契约守护：关闭面板后搜索文本与过滤态一并复位（单选行为）。
  *
  * 旧实现用「200ms 延迟重置定时器」在面板关闭动画期间保留过滤结果，该机制会引入

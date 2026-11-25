@@ -5,7 +5,7 @@ import Popover from 'components/popover'
 import type { PopoverProps } from 'components/popover'
 import Tooltip from 'components/tooltip'
 
-/**
+/*
  * 回归守护：Popover 未声明 `trigger` / `keyboard`（以及 `open`），
  * 这些能力**依赖 Vue 的属性透传**落到内层 Tooltip 上。
  *
@@ -103,7 +103,7 @@ describe('Popover 依赖属性透传到内层 Tooltip', () => {
   })
 })
 
-/**
+/*
  * 回归守护：`Popover` 只提供「皮肤 + 内容」，浮层宿主（Teleport / 首帧优化 / 显隐 /
  * 层级 / 箭头 DOM）经 `Tooltip` 落到 `<Popup>`。
  *
@@ -146,7 +146,7 @@ describe('Popover 落在 Popup 浮层链上', () => {
   })
 })
 
-/**
+/*
  * `Popover` 的 prop 契约改为 `extends Omit<TooltipProps, …>` 之后的两条硬约束：
  *
  * 1. 类型继承**不继承默认值**。缺省且无默认值的布尔 prop 会被 Vue 强转成 `false` 并经 rest

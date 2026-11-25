@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { createRequire } from 'node:module'
 
-/**
+/*
  * 时间轴「自定义轴点定位」与「节点级 position 作用域」布局契约
  *
  * 为什么这样测：这两类缺陷都发生在**同一元素的最终取值**上（多层布局规则互相覆盖），

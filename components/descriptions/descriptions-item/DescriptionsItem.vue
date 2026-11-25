@@ -8,7 +8,6 @@ export interface Props {
   labelClass?: string // 标签自定义类名，与 Descriptions 的 labelClass 叠加
   contentClass?: string // 内容自定义类名，与 Descriptions 的 contentClass 叠加
 }
-// 声明组件插槽类型
 export interface DescriptionsItemSlots {
   label?: () => VNode[]
   default?: () => VNode[]

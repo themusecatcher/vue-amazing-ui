@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, it, expect } from 'vitest'
 
-/**
+/*
  * 主题表面契约（源码扫描）
  *
  * 两类容易在暗色下出错的写法：
@@ -13,7 +13,7 @@ import { describe, it, expect } from 'vitest'
  */
 const MASK_COMPONENTS = ['modal/Modal.vue', 'drawer/Drawer.vue', 'image/Image.vue', 'dialog/Dialog.vue']
 
-/** [文件, 必须包含的片段] */
+// [文件, 必须包含的片段]
 const SURFACE_CASES: [string, string[]][] = [
   // 二维码状态遮罩：白底白字的经典组合，底与文案必须同源
   ['qr-code/QRCode.vue', ['--qr-code-mask-bg-color: var(--va-bg-container-color)']],

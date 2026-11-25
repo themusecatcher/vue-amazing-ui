@@ -6,7 +6,7 @@ import { themeTeleportKey } from 'components/config-provider/context'
 import { derive, deriveColorStates, MODE_ATTRIBUTE } from 'components/theme'
 import type { ConfigProviderTheme } from 'components/config-provider'
 
-/**
+/*
  * 组件级主色：ConfigProvider 把 `theme.components.<Component>.primaryColor`
  * 映射为组件消费的 CSS 变量（有公开令牌的组件走 `--va-<component>-*`，
  * 其余组件走内部桥 `--va-cp-<component>-primary-*`），组件本身不持有主题逻辑。
@@ -25,7 +25,7 @@ const styleOf = (element: Element): CSSStyleDeclaration => (element as HTMLEleme
 const buttonBase = (color: string, mode: 'light' | 'dark' = 'light'): string => deriveColorStates(color, mode).base
 const sliderTrack = (color: string, mode: 'light' | 'dark' = 'light'): string => deriveColorStates(color, mode).border
 
-/** 读取 Teleport 转发通道里的指定令牌 */
+// 读取 Teleport 转发通道里的指定令牌
 const TeleportProbe = defineComponent({
   name: 'ComponentThemeTeleportProbe',
   props: { name: { type: String, required: true } },

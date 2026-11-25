@@ -4,7 +4,7 @@ import type { VueWrapper } from '@vue/test-utils'
 import { nextTick } from 'vue'
 import InputNumber from 'components/input-number/InputNumber.vue'
 
-/**
+/*
  * 数字输入框的「空值」语义
  *
  * 口径：
@@ -26,7 +26,7 @@ afterEach(() => {
 const field = (w: VueWrapper) => w.find('input.input-number')
 const domValue = (w: VueWrapper) => (field(w).element as HTMLInputElement).value
 
-// 模拟浏览器里的清空输入：直接改 DOM 再派发 input，v-model 与组件监听都按原生顺序执行
+/** 模拟浏览器里的清空输入：直接改 DOM 再派发 input，v-model 与组件监听都按原生顺序执行 */
 async function clearInput(w: VueWrapper): Promise<void> {
   ;(field(w).element as HTMLInputElement).value = ''
   await field(w).trigger('input')

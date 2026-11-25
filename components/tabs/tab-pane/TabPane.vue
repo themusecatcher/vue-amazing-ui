@@ -13,7 +13,6 @@ export interface Props {
   closable?: boolean // 是否展示关闭按钮，点击后由 `Tabs` 抛出 `close` 事件
   displayDirective?: 'if' | 'show' | 'show:lazy' // 面板内容渲染口径：非激活时立即卸载 | 保留 | 首次激活后保留
 }
-// 声明组件插槽类型
 export interface TabPaneSlots {
   default?: () => VNode[] // 标签页内容
   tab?: () => VNode[] // 自定义页签显示内容（图标 + 文字等富内容）

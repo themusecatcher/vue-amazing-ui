@@ -5,7 +5,7 @@ import Modal from './Modal.vue'
 import { modalApiKey } from './useModal'
 import type { ModalApi } from './useModal'
 
-// 默认插槽渲染应用内容（Provider 只做 api 注入 + 内部实例挂载）
+/** 默认插槽渲染应用内容（Provider 只做 api 注入 + 内部实例挂载） */
 export interface ModalProviderSlots {
   default?: () => VNode[]
 }
@@ -14,7 +14,7 @@ defineSlots<ModalProviderSlots>()
 // 透传属性给内部实例，使 <ModalProvider :width="600"> 等声明式配置继续生效
 defineOptions({ inheritAttrs: false })
 
-// 占位实现：子组件挂载完成前的调用直接报错，避免静默失效
+/** 占位实现：子组件挂载完成前的调用直接报错，避免静默失效 */
 function notReady(method: string): never {
   throw new Error(`[ModalProvider] Modal 尚未挂载，无法调用 ${method}`)
 }

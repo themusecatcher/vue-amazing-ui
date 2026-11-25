@@ -14,7 +14,6 @@ export interface Props {
   formatter?: (value: string) => string // 自定义数值展示
   tabularNums?: boolean // 是否使用等宽数字，避免数值变化时宽度抖动
 }
-// 声明组件插槽类型
 export interface StatisticSlots {
   title?: () => VNode[]
   prefix?: () => VNode[]

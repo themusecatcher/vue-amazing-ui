@@ -142,7 +142,7 @@ function onInput(event: Event) {
 function onRangeInput(event: Event, index: 0 | 1) {
   inputTexts.value[index] = (event.target as HTMLInputElement).value
 }
-// 提交输入文本时交给宿主解析，随后先回滚为当前合法文本，解析失败即自然保持原值
+/** 提交输入文本时交给宿主解析，随后先回滚为当前合法文本，解析失败即自然保持原值 */
 function onTextSubmit(source: 'enter' | 'blur', index: 0 | 1 = 0) {
   if (props.range) {
     emits('textConfirm', inputTexts.value[index], source, index)

@@ -9,7 +9,7 @@ import Popup from 'components/popup'
 import { getRangeCellClassNames, isInRangeTimestamp, isOutOfRangeBoundary } from 'components/picker/date-utils'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * 回归守护：范围形态（`type="daterange"` / `type="datetimerange"`）与预设选项。
  *
  * 锁定五组语义：
@@ -25,12 +25,12 @@ const END = new Date(2026, 0, 20).getTime()
 const MIDDLE = new Date(2026, 0, 15).getTime()
 const LATE_START = new Date(2026, 0, 25).getTime()
 const VIEW_DATE = new Date(2026, 0, 1).getTime()
-/** 日期时间形态的确定性时分秒（不传时取当前时刻，用例结果会随时间变化） */
+// 日期时间形态的确定性时分秒（不传时取当前时刻，用例结果会随时间变化）
 const DEFAULT_TIME = new Date(2026, 0, 1, 8, 30, 0).getTime()
-/** 空草稿选中的日期会带上 `defaultTime` 的时分秒 */
+// 空草稿选中的日期会带上 `defaultTime` 的时分秒
 const START_WITH_TIME = new Date(2026, 0, 10, 8, 30, 0).getTime()
 const END_WITH_TIME = new Date(2026, 0, 20, 8, 30, 0).getTime()
-/** 头部文本用例的确定性时分秒：起点 09:30:15、终点 18:45:05 */
+// 头部文本用例的确定性时分秒：起点 09:30:15、终点 18:45:05
 const START_AT_NINE = new Date(2026, 0, 10, 9, 30, 15).getTime()
 const END_AT_EIGHTEEN = new Date(2026, 0, 20, 18, 45, 5).getTime()
 

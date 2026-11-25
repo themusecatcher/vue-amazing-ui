@@ -40,7 +40,7 @@ const payloadCases: [string, Component, string][] = [
   ['AutoComplete', AutoComplete, 'input.auto-complete-input']
 ]
 
-/** 容器曾误设 `tabindex="1"`：多一个焦点停靠点，且正 tabindex 会打乱整页 Tab 顺序 */
+// 容器曾误设 `tabindex="1"`：多一个焦点停靠点，且正 tabindex 会打乱整页 Tab 顺序
 const noExtraTabStopCases: [string, Component, string][] = [
   ['Input', Input, '.input-container'],
   ['InputSearch', InputSearch, '.input-search-container'],

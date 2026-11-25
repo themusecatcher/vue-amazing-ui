@@ -171,7 +171,7 @@ async function onPageJump(): Promise<void> {
   await nextTick()
   jumpNumber.value = '' // 清空跳转输入框（传 undefined 属「父不再传值」，不会清空非受控的输入框）
 }
-// 跳转框只接受数字：非数字字符在 keydown 阶段就拦下，否则非法内容会被静默丢弃、用户无从判断
+/** 跳转框只接受数字：非数字字符在 keydown 阶段就拦下，否则非法内容会被静默丢弃、用户无从判断 */
 function onJumperKeydown(e: KeyboardEvent): void {
   // 组合键（复制 / 粘贴 / 撤销）与功能键（退格 / 方向 / 回车 / Tab）放行，单字符键才校验
   if (e.ctrlKey || e.metaKey || e.altKey || e.key.length !== 1) {
@@ -181,7 +181,7 @@ function onJumperKeydown(e: KeyboardEvent): void {
     e.preventDefault()
   }
 }
-// 粘贴 / 输入法绕过 keydown，取值时再过滤一次
+/** 粘贴 / 输入法绕过 keydown，取值时再过滤一次 */
 function onJumperValue(value: string): void {
   const digits = value.replace(/\D/g, '')
   if (digits === value) {
@@ -197,7 +197,7 @@ function onJumperValue(value: string): void {
     })
   }
 }
-// 跳转框失焦：落在分页项上时由点击本身负责跳转，这里只清空输入，避免「先跳到输入页、再被点击页覆盖」的重复上报
+/** 跳转框失焦：落在分页项上时由点击本身负责跳转，这里只清空输入，避免「先跳到输入页、再被点击页覆盖」的重复上报 */
 async function onJumperBlur(e: FocusEvent): Promise<void> {
   const related = e.relatedTarget as HTMLElement | null
   const isPagerNode = related?.closest?.(
@@ -213,7 +213,7 @@ async function onJumperBlur(e: FocusEvent): Promise<void> {
   }
   await onPageJump()
 }
-// 键盘操作后把焦点交给当前页码，避免焦点停留在已失效的元素上
+/** 键盘操作后把焦点交给当前页码，避免焦点停留在已失效的元素上 */
 async function activePageFocus(activePage: number): Promise<void> {
   await nextTick()
   const targetIndex = pageWindow.value.pages.findIndex((page: number) => page === activePage)
@@ -234,7 +234,7 @@ function onPageChange(page: number, inPageList: boolean = false): void {
     emits('change', target, pageSizeModel.value)
   }
 }
-// pageSize 切换器变化时的回调
+/** pageSize 切换器变化时的回调 */
 function onPageSizeChange(pageSize: number): void {
   pageSizeModel.value = pageSize
   // 换每页条数后总页数变化，当前页可能越界，统一按新总页数钳制
@@ -806,7 +806,7 @@ function onPageSizeChange(pageSize: number): void {
     cursor: not-allowed;
   }
 }
-// 无边框风格：常态无边框无底色，悬浮出浅底且文字 / 箭头保持默认色，按压再深一档
+/* 无边框风格：常态无边框无底色，悬浮出浅底且文字 / 箭头保持默认色，按压再深一档 */
 .pagination-borderless {
   .pagination-item:not(.pagination-item-active),
   .pagination-prev,
@@ -840,7 +840,7 @@ function onPageSizeChange(pageSize: number): void {
     }
   }
 }
-// 无边框风格禁用态：未选中项保持无边框无底色（仅文字转禁用色），仅选中页保留边框与更深的禁用底色
+/* 无边框风格禁用态：未选中项保持无边框无底色（仅文字转禁用色），仅选中页保留边框与更深的禁用底色 */
 .pagination-borderless.pagination-disabled {
   .pagination-item:not(.pagination-item-active),
   .pagination-prev,

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import BackTop from 'components/back-top'
 
-/**
+/*
  * BackTop 监听目标解析回归守护
  *
  * 背景：`listenTo` 的字符串参数此前按**标签名**解析（`document.getElementsByTagName`），

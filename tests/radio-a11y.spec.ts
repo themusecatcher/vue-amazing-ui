@@ -10,7 +10,7 @@ import type { RadioGroupSlots } from 'components/radio'
 /** options 模式下默认插槽的作用域参数（取自组件声明的插槽类型） */
 type OptionSlotProps = Parameters<NonNullable<RadioGroupSlots['default']>>[0]
 
-/**
+/*
  * 单选组件「原生 input 承载」「change 事件对象」与「组级配置下发」的契约回归
  *
  * 每一项都渲染视觉隐藏的 `input[type=radio]`：键盘操作、表单字段名与屏幕阅读器语义均落在它上面，

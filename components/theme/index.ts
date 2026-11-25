@@ -1,4 +1,4 @@
-/**
+/*
  * 主题派生的库内出口
  *
  * 只包含纯函数与类型：不访问 DOM、不依赖 Vue，构建期（`build/gen-theme.ts`）与运行期共用。
@@ -18,8 +18,10 @@ export type { ResolvedMode, ThemeMode, ThemeSnapshot, ThemeVarName, ThemeVars } 
 // 类型从真实 `.ts` 出，不经过手写 `.d.ts`：后者不会被 tsc 搬进产物，转发的声明会在 `es|lib` 里悬空
 export type { ComponentThemeState, ComponentVarMeta, ThemeComponentKey, ThemeComponentMeta } from './component-vars'
 
-// 经本地常量再导出（同 grid/index.ts）：纯转发模块会被 Rollup 转发优化整体剔除产物 JS，
-// 而 index.d.ts 仍会生成，致深层路径 `vue-amazing-ui/es|lib/theme` 报 ERR_MODULE_NOT_FOUND
+/**
+ * 经本地常量再导出（同 grid/index.ts）：纯转发模块会被 Rollup 转发优化整体剔除产物 JS，
+ * 而 index.d.ts 仍会生成，致深层路径 `vue-amazing-ui/es|lib/theme` 报 ERR_MODULE_NOT_FOUND
+ */
 export const DEFAULT_PRIMARY = deriveSource.DEFAULT_PRIMARY
 export const DEFAULT_SEEDS = deriveSource.DEFAULT_SEEDS
 export const derive = deriveSource.derive

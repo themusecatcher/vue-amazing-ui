@@ -3,7 +3,7 @@ import { nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Select from 'components/select/Select.vue'
 
-/**
+/*
  * 键盘导航回归：Select 原实现无任何键盘处理（`grep keydown` 全库 0 命中、HEAD 同样，文档亦未承诺），
  * 本组用例锁定新增的 ↑↓（跳过禁用项、环形、随面板滚入可视区）/ Enter 选中 / Esc 关闭行为；
  * 其中「事件参数口径」与鼠标点击保持一致（下拉下标均为过滤后列表的下标），

@@ -5,8 +5,10 @@ import { formatNumber } from 'components/utils'
 import type { LiteralUnion } from 'components/utils/type'
 import { transition, TransitionPresets } from '@vueuse/core'
 import type { CubicBezierPoints, EasingFunction } from '@vueuse/core'
-// 缓动预设名，派生自 @vueuse/core 的 TransitionPresets，随上游自动同步
-// 预设 / 缓动函数 / 贝塞尔控制点 / transition 文档：https://vueuse.org/core/useTransition/
+/**
+ * 缓动预设名，派生自 @vueuse/core 的 TransitionPresets，随上游自动同步
+ * 预设 / 缓动函数 / 贝塞尔控制点 / transition 文档：https://vueuse.org/core/useTransition/
+ */
 export type EasingPreset = keyof typeof TransitionPresets
 export interface Props {
   from?: number // 数值动画起始数值，未播放时展示值同步跟随该值

@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import Select from 'components/select/Select.vue'
 import type { Option } from 'components/select/Select.vue'
 
-/**
+/*
  * 多选 / 标签模式（P2）的契约回归。
  *
  * 关键行为约定：
@@ -353,7 +353,7 @@ describe('Select 多选模式的标签折叠', () => {
   })
 })
 
-/**
+/*
  * 面板开合时的高亮 / 滚动保持 ——
  * 「打开即复位到选中项并滚入可视区」带 `!multiple && rawValues.size === 1` 前置条件
  * （components/vc-select/OptionList.tsx），故单选复位、多选保留用户上次移动的高亮与滚动位置。

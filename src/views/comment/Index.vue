@@ -34,7 +34,7 @@ const listData = [
     datetime: '3 days ago'
   }
 ]
-// 回复框
+/** 回复框 */
 interface CommentItem {
   author: string
   avatar: string

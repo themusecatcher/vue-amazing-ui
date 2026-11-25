@@ -20,7 +20,6 @@ export interface Props {
   to?: string | MountElement // BackTop 渲染的容器节点，可选：CSS 选择器（例如 'body'）或者元素本身
   listenTo?: string | MountElement | MountDocument | (() => HTMLElement | Document) // 监听滚动的元素，如果为 undefined 会监听距离最近的一个可滚动的祖先节点；支持 CSS 选择器、元素、Document 或返回目标的函数
 }
-// 声明组件插槽类型
 export interface BackTopSlots {
   tooltip?: () => VNode[]
   default?: () => VNode[]
@@ -93,7 +92,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   cleanup()
 })
-// 解析 listenTo 指定的滚动目标：CSS 选择器、元素、Document 或返回目标的函数
+/** 解析 listenTo 指定的滚动目标：CSS 选择器、元素、Document 或返回目标的函数 */
 function resolveListenTarget(): HTMLElement | Document | null {
   const { listenTo } = props
   if (typeof listenTo === 'function') {
@@ -114,7 +113,7 @@ function resolveListenTarget(): HTMLElement | Document | null {
   }
   return null
 }
-// 查询并监听滚动元素
+/** 查询并监听滚动元素 */
 function observeScroll(): void {
   cleanup()
   if (props.listenTo === undefined) {
@@ -129,23 +128,23 @@ function observeScroll(): void {
   scrollEventTarget?.addEventListener('scroll', updateScrollTop, passiveSupported.value ? { passive: true } : undefined)
   updateScrollTop()
 }
-// scroll 事件的实际监听目标：整页滚动时只派发到 window，documentElement 收不到，需改听 window
+/** scroll 事件的实际监听目标：整页滚动时只派发到 window，documentElement 收不到，需改听 window */
 function getScrollEventTarget(): Window | HTMLElement | Document | null {
   const target = scrollTarget.value
   if (!target) return null
   return target === document.documentElement ? window : target
 }
-// 读取滚动距离与执行 scrollTo 的元素：Document 自身没有这两个能力，需回退到 documentElement
+/** 读取滚动距离与执行 scrollTo 的元素：Document 自身没有这两个能力，需回退到 documentElement */
 function getScrollElement(): HTMLElement | null {
   const target = scrollTarget.value
   if (!target) return null
   return target instanceof Document ? target.documentElement : target
 }
-// 从滚动元素读取滚动距离
+/** 从滚动元素读取滚动距离 */
 function updateScrollTop(): void {
   scrollTop.value = getScrollElement()?.scrollTop ?? 0
 }
-// 清理 scroll 监听与目标引用
+/** 清理 scroll 监听与目标引用 */
 function cleanup(): void {
   scrollEventTarget?.removeEventListener('scroll', updateScrollTop)
   scrollEventTarget = null

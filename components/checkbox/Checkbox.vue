@@ -14,7 +14,6 @@ export interface Props {
   name?: string // 原生 input 的表单字段名；置于 CheckboxGroup 内时以组的配置为准
   id?: string // 原生 input 的 id
 }
-// 声明组件插槽类型
 export interface CheckboxSlots {
   default?: () => VNode[] // 选项名
 }
@@ -84,7 +83,7 @@ watch(mergedDisabled, (disabled) => {
     endWave()
   }
 })
-// 状态快照取本组件 props，原生事件与方法附在其上，与原生 input 的 change 同形态
+/** 状态快照取本组件 props，原生事件与方法附在其上，与原生 input 的 change 同形态 */
 function buildChangeEvent(nativeEvent: Event, checked: boolean, value?: CheckboxValue): CheckboxChangeEvent {
   return {
     target: {
@@ -98,14 +97,14 @@ function buildChangeEvent(nativeEvent: Event, checked: boolean, value?: Checkbox
     nativeEvent
   }
 }
-// 受控模式下浏览器已先行切换原生选中态，需按组件状态回写，避免二者不一致
+/** 受控模式下浏览器已先行切换原生选中态，需按组件状态回写，避免二者不一致 */
 function syncInputChecked(event: Event, checked: boolean): void {
   const { target } = event
   if (target instanceof HTMLInputElement) {
     target.checked = checked
   }
 }
-// 组外单项切换：自身受控，取消选中同样上报
+/** 组外单项切换：自身受控，取消选中同样上报 */
 function onCheckedChange(event: Event): void {
   const nextChecked = !checkboxChecked.value
   checkboxChecked.value = nextChecked
@@ -113,9 +112,11 @@ function onCheckedChange(event: Event): void {
   emits('change', nextChecked, buildChangeEvent(event, nextChecked, props.value))
   syncInputChecked(event, nextChecked)
 }
-// 单项切换：组内选中集合由组维护，本项只上报新的选中态，避免同一次选择双出口。
-// 交互统一走原生 click（鼠标经外层 label 转发后事件目标仍是本 input），由此天然单点触发；
-// input 上的 `@click.stop` 同时拦掉这条转发点击的冒泡，否则使用方绑在组件根上的 click 会触发两次
+/**
+ * 单项切换：组内选中集合由组维护，本项只上报新的选中态，避免同一次选择双出口。
+ * 交互统一走原生 click（鼠标经外层 label 转发后事件目标仍是本 input），由此天然单点触发；
+ * input 上的 `@click.stop` 同时拦掉这条转发点击的冒泡，否则使用方绑在组件根上的 click 会触发两次
+ */
 function onSingleClick(event: Event): void {
   if (!inGroupItem.value) {
     onCheckedChange(event)
@@ -129,29 +130,33 @@ function onSingleClick(event: Event): void {
   groupContext?.onChange(nextChecked, target, event)
   syncInputChecked(event, nextChecked)
 }
-// 清除程序化聚焦标志：焦点真正离开原生 input 时（原生 blur）一并收尾，避免焦点环残留
+/** 清除程序化聚焦标志：焦点真正离开原生 input 时（原生 blur）一并收尾，避免焦点环残留 */
 function clearExposedFocus(): void {
   exposedSingleFocused.value = false
 }
-// 键盘聚焦：:focus-visible 无 JS 可读状态，在 focus 事件当下用 matches 判定后置位；
-// 鼠标点击与脚本调用 focus() 均不匹配该伪类，与容器上 :focus-visible 的 CSS 路径同口径
+/**
+ * 键盘聚焦：:focus-visible 无 JS 可读状态，在 focus 事件当下用 matches 判定后置位；
+ * 鼠标点击与脚本调用 focus() 均不匹配该伪类，与容器上 :focus-visible 的 CSS 路径同口径
+ */
 function onInputFocus(event: Event): void {
   const { target } = event
   if (target instanceof HTMLInputElement && target.matches(':focus-visible')) {
     exposedSingleFocused.value = true
   }
 }
-// 鼠标按下即撤销焦点环：浏览器对鼠标按下（含已聚焦元素被再次点击）不再给 :focus-visible，
-// 纯 CSS 方案下焦点环随之消失，class 方案需对齐该行为，避免 Tab 聚焦后点鼠标残留焦点环
+/**
+ * 鼠标按下即撤销焦点环：浏览器对鼠标按下（含已聚焦元素被再次点击）不再给 :focus-visible，
+ * 纯 CSS 方案下焦点环随之消失，class 方案需对齐该行为，避免 Tab 聚焦后点鼠标残留焦点环
+ */
 function onMouseDown(): void {
   clearExposedFocus()
 }
-// 聚焦原生 input
+/** 聚焦原生 input */
 function focus(): void {
   singleInput.value?.focus()
   exposedSingleFocused.value = true
 }
-// 失焦原生 input
+/** 失焦原生 input */
 function blur(): void {
   clearExposedFocus()
   singleInput.value?.blur()

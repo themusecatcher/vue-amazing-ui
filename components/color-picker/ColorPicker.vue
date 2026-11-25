@@ -67,7 +67,7 @@ export interface Props {
   to?: string | MountElement | false // 弹出面板挂载的容器节点，可选：元素标签名 (例如 'body') 或者元素本身，false 会待在原地
   inputProps?: InputProps // 输入框组件 props，透传给内部 Input 组件
 }
-// 自定义触发器的插槽参数：值由使用方渲染，点击开合 / 面板定位与外点判定均由组件外壳接管
+/** 自定义触发器的插槽参数：值由使用方渲染，点击开合 / 面板定位与外点判定均由组件外壳接管 */
 export interface ColorPickerTriggerSlotProps {
   value: string | undefined
 }
@@ -598,7 +598,7 @@ function getModeFromValue(color: string | undefined): ColorPickerMode | undefine
   if (color.includes('hsv')) return 'hsv'
   return undefined
 }
-// 解析失败的色值（如 CSS4 带 alpha 的 hsl()）会抛错：兜底为 null，让调用方按「空值」降级
+/** 解析失败的色值（如 CSS4 带 alpha 的 hsl()）会抛错：兜底为 null，让调用方按「空值」降级 */
 function safeParseColor<T>(parse: () => T): T | null {
   try {
     return parse()
@@ -606,8 +606,8 @@ function safeParseColor<T>(parse: () => T): T | null {
     return null
   }
 }
-/* 浮层交互：Popup（宿主）只按 show 渲染，点击开合 / 外点关闭 / Esc / 键盘可达由本组件接管 */
-// 显隐的统一入口：禁用拦截 + 幂等（受控时以父组件回传为准，非受控时组件自持）
+/** 浮层交互：Popup（宿主）只按 show 渲染，点击开合 / 外点关闭 / Esc / 键盘可达由本组件接管 */
+/** 显隐的统一入口：禁用拦截 + 幂等（受控时以父组件回传为准，非受控时组件自持） */
 function requestOpen(next: boolean): void {
   if (props.disabled || panelOpen.value === next) return
   openModel.value = next
@@ -615,15 +615,17 @@ function requestOpen(next: boolean): void {
 // 承载层（Modal / Drawer / Dialog / 外层浮层面板）关闭时收起：容器关闭只是 v-show 隐藏、不派发任何
 // 指针或焦点事件，面板会停在打开态并占着层级槽位，容器重开时以「仍打开」的样子出现
 useContainerClose(() => requestOpen(false))
-// 外壳点击：内置触发器与自定义触发器内容都渲染在外壳内部，点击由外壳统一接管；
-// 面板就地渲染（to: false）时其 DOM 也在外壳内，故需排除面板内部的点击（拖拽指针 / 输入框聚焦等）
+/**
+ * 外壳点击：内置触发器与自定义触发器内容都渲染在外壳内部，点击由外壳统一接管；
+ * 面板就地渲染（to: false）时其 DOM 也在外壳内，故需排除面板内部的点击（拖拽指针 / 输入框聚焦等）
+ */
 function onWrapperClick(event: MouseEvent): void {
   const target = event.target as Node | null
   if (!target) return
   if (popupRef.value?.panelRef?.contains(target)) return
   requestOpen(!panelOpen.value)
 }
-// 键盘可达：Enter / Space 与点击同语义（展开 / 收起）；面板内的按键留给面板内容（如色板的 Enter 选色）
+/** 键盘可达：Enter / Space 与点击同语义（展开 / 收起）；面板内的按键留给面板内容（如色板的 Enter 选色） */
 function onWrapperKeydown(event: KeyboardEvent): void {
   if (event.key !== 'Enter' && event.key !== ' ') return
   const target = event.target as Node | null
@@ -645,7 +647,7 @@ watch(
 watch(panelOpen, (next) => {
   emits('openChange', next)
 })
-// Esc 收起并把焦点交还触发区（键盘操作不因收起而丢失落点）
+/** Esc 收起并把焦点交还触发区（键盘操作不因收起而丢失落点） */
 function onEscKeydown(): void {
   if (!panelOpen.value) return
   requestOpen(false)
@@ -655,7 +657,7 @@ function onEscKeydown(): void {
 if (props.defaultOpen && !isOpenControlled.value && !props.disabled) {
   openModel.value = true
 }
-// 触发器展示内容：label 函数可返回字符串或 VNode，未提供时直接展示颜色值
+/** 触发器展示内容：label 函数可返回字符串或 VNode，未提供时直接展示颜色值 */
 function renderLabelContent(): VNodeChild {
   const { label } = props
   const color = valueModel.value
@@ -685,35 +687,35 @@ function normalizeHexaUnit(value: string): boolean {
   }
   return false
 }
-// 0 - 360
+/** 0 - 360 */
 function normalizeHueUnit(value: string): number | false {
   if (/^\d{1,3}\.?\d*$/.test(value.trim())) {
     return Math.max(0, Math.min(Number.parseInt(value), 360))
   }
   return false
 }
-// 0 - 100
+/** 0 - 100 */
 function normalizeSlvUnit(value: string): number | false {
   if (/^\d{1,3}\.?\d*$/.test(value.trim())) {
     return Math.max(0, Math.min(Number.parseInt(value), 100))
   }
   return false
 }
-// 0 - 100%，换算为 0 - 1
+/** 0 - 100%，换算为 0 - 1 */
 function normalizeAlphaUnit(value: string): number | false {
   if (/^\d{1,3}\.?\d*%$/.test(value.trim())) {
     return Math.max(0, Math.min(Number.parseInt(value) / 100, 1))
   }
   return false
 }
-// 0 - 255
+/** 0 - 255 */
 function normalizeRgbUnit(value: string): number | false {
   if (/^\d{1,3}\.?\d*$/.test(value.trim())) {
     return Math.max(0, Math.min(Number.parseInt(value), 255))
   }
   return false
 }
-// 组件内部值 → 输入框显示串（alpha 通道按百分比显示）
+/** 组件内部值 → 输入框显示串（alpha 通道按百分比显示） */
 function formatInputValueArr(): string[] {
   const valueArr = valueModelArr.value
   if (!valueArr) return new Array(props.showAlpha ? 4 : 3).fill(undefined)
@@ -721,12 +723,12 @@ function formatInputValueArr(): string[] {
     props.showAlpha && index === 3 ? `${Math.floor(value * 100)}%` : `${Math.floor(value)}`
   )
 }
-// 组件内部值 → hex 输入框显示串
+/** 组件内部值 → hex 输入框显示串 */
 function formatHexValue(): string | undefined {
   const valueArr = valueModelArr.value
   return valueArr ? (props.showAlpha ? toHexaString : toHexString)(valueArr as RGBA) : undefined
 }
-// 非法输入：回滚为组件内部值，并重建输入框以清掉其自身状态
+/** 非法输入：回滚为组件内部值，并重建输入框以清掉其自身状态 */
 function restoreInput(): void {
   hexValue.value = formatHexValue()
   inputValueArr.value = formatInputValueArr()
@@ -812,8 +814,10 @@ function handleInputChange(e: Event, index: number): void {
       break
   }
 }
-// 色板底色归一化：hsv 预设不是浏览器可识别的 CSS 颜色，转为等价的 rgba 串；
-// 其余模式与颜色名本身合法，保持原值（输出时再按当前模式格式化）
+/**
+ * 色板底色归一化：hsv 预设不是浏览器可识别的 CSS 颜色，转为等价的 rgba 串；
+ * 其余模式与颜色名本身合法，保持原值（输出时再按当前模式格式化）
+ */
 function normalizeColor(color: string, mode: ColorPickerMode | undefined): string {
   if (mode === 'hsv') {
     const hsvValue = safeParseColor(() => hsva(color))
@@ -1445,7 +1449,7 @@ function onClear() {
 }
 .color-picker-disabled {
   cursor: not-allowed;
-  // 内层 wrap 铺满整个展示区且自带 pointer，需一并覆盖，否则悬浮在内层仍是小手
+  /* 内层 wrap 铺满整个展示区且自带 pointer，需一并覆盖，否则悬浮在内层仍是小手 */
   .color-picker-wrap {
     cursor: not-allowed;
   }

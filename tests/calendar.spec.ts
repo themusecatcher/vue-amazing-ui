@@ -9,7 +9,7 @@ import Select from 'components/select'
 import { startOfDayTimestamp } from 'components/picker/date-utils'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * 日历交互与取值口径的回归守护
  *
  * 覆盖曾缺失保护的行为：

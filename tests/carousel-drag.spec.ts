@@ -13,7 +13,7 @@ interface CarouselInst {
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
-// 轮询等待条件成立，避免依赖固定 sleep 造成的时序脆弱
+/** 轮询等待条件成立，避免依赖固定 sleep 造成的时序脆弱 */
 async function waitFor(cond: () => boolean, timeout = 2000): Promise<void> {
   const start = Date.now()
   while (!cond() && Date.now() - start < timeout) {
@@ -96,7 +96,7 @@ function dispatchPointer(el: HTMLElement, type: string, init: Record<string, unk
   el.dispatchEvent(event)
 }
 
-// 拖拽 40px 且耗时 200ms：位移与速度均低于翻页阈值 → 回弹、不翻页
+/** 拖拽 40px 且耗时 200ms：位移与速度均低于翻页阈值 → 回弹、不翻页 */
 async function dragBelowThreshold(wrapper: CarouselWrapper): Promise<void> {
   const nowSpy = vi.spyOn(Date, 'now')
   nowSpy.mockReturnValue(1_000_000)
@@ -117,7 +117,7 @@ function dispatchDrag(wrapper: CarouselWrapper, toX: number): void {
   dispatchPointer(root, 'pointerup', { pointerId: 1, pointerType: 'mouse', clientX: toX, clientY: 0 })
 }
 
-// 模拟页面可见性变化（happy-dom 下用实例属性遮蔽原型 getter）
+/** 模拟页面可见性变化（happy-dom 下用实例属性遮蔽原型 getter） */
 function setVisibility(state: 'hidden' | 'visible'): void {
   Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => state })
   document.dispatchEvent(new Event('visibilitychange'))
@@ -127,7 +127,7 @@ function restoreVisibility(): void {
   delete (document as unknown as Record<string, unknown>).visibilityState
 }
 
-/**
+/*
  * 回归守护：拖拽交互与切换事件契约
  *
  * 覆盖四类曾真实存在的缺陷：

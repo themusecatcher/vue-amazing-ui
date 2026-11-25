@@ -17,7 +17,6 @@ export interface Props {
   name?: string // 原生 input 的表单字段名；置于 RadioGroup 内时以组的配置为准
   id?: string // 原生 input 的 id
 }
-// 声明组件插槽类型
 export interface RadioButtonSlots {
   default?: () => VNode[] // 按钮文本
 }
@@ -40,7 +39,7 @@ function onCheckedChange(checked: boolean): void {
 function onChange(value: boolean | RadioValue, event: RadioChangeEvent): void {
   emits('change', value, event)
 }
-// 聚焦 / 失焦原生 input，与 Radio 同口径（调用 focus 时同样显示焦点环）
+/** 聚焦 / 失焦原生 input，与 Radio 同口径（调用 focus 时同样显示焦点环） */
 function focus(): void {
   radioRef.value?.focus()
 }

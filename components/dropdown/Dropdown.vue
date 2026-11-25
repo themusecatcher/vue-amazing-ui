@@ -1,5 +1,5 @@
 <script setup lang="ts">
-/**
+/*
  * 下拉菜单：由「触发器 + 触发语义 + 浮层 + 菜单内容」四层职责构成。
  * 浮层的定位 / Teleport / 动画承载由 Popup 承担，触发语义（hover / click / contextmenu）由本组件自持。
  */
@@ -29,11 +29,11 @@ export interface MenuOption {
   children?: MenuOption[] // 子菜单（多级菜单）或分组子项
   [propName: string]: any // 允许携带任意自定义字段，会随原始对象透传
 }
-// 箭头配置（arrow 传对象可控制箭头是否指向触发器中心）
+/** 箭头配置（arrow 传对象可控制箭头是否指向触发器中心） */
 export interface DropdownArrowOptions {
   pointAtCenter?: boolean // 箭头是否指向触发器中心
 }
-// 触发方式
+/** 触发方式 */
 export type DropdownTrigger = 'hover' | 'click' | 'contextmenu'
 export interface Props {
   open?: boolean // (v-model) 下拉菜单是否展开
@@ -52,7 +52,6 @@ export interface Props {
   overlayStyle?: CSSProperties // 下拉菜单根元素的样式
   zIndex?: number // 下拉菜单层级，优先级最高（未传时使用默认层级或 ConfigProvider 的 baseZIndex 分配）
 }
-// 声明组件插槽类型
 export interface DropdownSlots {
   default?: () => VNode[]
   overlay?: () => VNode[]
@@ -186,7 +185,7 @@ const panelTransitionProps: TransitionProps = {
   leaveActiveClass: 'dropdown-slide-leave dropdown-slide-leave-active',
   leaveToClass: 'dropdown-slide-leave dropdown-slide-leave-active'
 }
-// label 插槽透传给菜单渲染模块（菜单为渲染函数实现，无法在模板内直接消费插槽）
+/** label 插槽透传给菜单渲染模块（菜单为渲染函数实现，无法在模板内直接消费插槽） */
 function renderLabel(option: MenuOption): VNode[] | undefined {
   return slots.label?.({ option })
 }
@@ -198,7 +197,7 @@ provide(dropdownMenuContextKey, {
 })
 let showTimer: ReturnType<typeof setTimeout> | null = null // 延迟展开的定时器
 let hideTimer: ReturnType<typeof setTimeout> | null = null // 延迟收起的定时器
-// 测量触发器宽度（箭头指向中心时面板需按此让位）
+/** 测量触发器宽度（箭头指向中心时面板需按此让位） */
 function measureAnchor(): void {
   anchorWidth.value = triggerRef.value?.offsetWidth ?? 0
 }
@@ -240,7 +239,7 @@ function requestOpen(val: boolean, notify = true): void {
     emits('openChange', val)
   }
 }
-// 触发器移入：hover 触发时按 mouseEnterDelay 延迟展开
+/** 触发器移入：hover 触发时按 mouseEnterDelay 延迟展开 */
 function onTriggerEnter(): void {
   if (!useHover.value) return
   clearHideTimer()
@@ -251,22 +250,24 @@ function onTriggerEnter(): void {
     requestOpen(true)
   }, props.mouseEnterDelay)
 }
-// 触发器移出：无论是否已展开都先取消「待展开」定时器，再按 mouseLeaveDelay 延迟收起（移入浮层会取消）。
-// ⚠️ 取消必须先于「是否已展开」判定：若未展开就早返回，快速划过触发器时鼠标已离开、
-// 延迟展开仍会照常触发
+/**
+ * 触发器移出：无论是否已展开都先取消「待展开」定时器，再按 mouseLeaveDelay 延迟收起（移入浮层会取消）。
+ * ⚠️ 取消必须先于「是否已展开」判定：若未展开就早返回，快速划过触发器时鼠标已离开、
+ * 延迟展开仍会照常触发
+ */
 function onTriggerLeave(): void {
   if (!useHover.value) return
   clearShowTimer()
   if (!openModel.value) return
   scheduleHide()
 }
-// 浮层移入：取消待执行的收起（鼠标从触发器移到浮层时必经此处）
+/** 浮层移入：取消待执行的收起（鼠标从触发器移到浮层时必经此处） */
 function onPanelEnter(): void {
   if (useHover.value) {
     clearHideTimer()
   }
 }
-// 浮层移出：hover 触发时延迟收起
+/** 浮层移出：hover 触发时延迟收起 */
 function onPanelLeave(): void {
   if (useHover.value) {
     scheduleHide()
@@ -279,8 +280,10 @@ function scheduleHide(): void {
     requestOpen(false)
   }, props.mouseLeaveDelay)
 }
-// 触发器点击：click 触发时切换展开态；contextmenu 触发时左键点击收起 —— 右键唤起的菜单没有
-// 左键 toggle 语义，但「点触发器关掉它」是最直觉的关闭动作
+/**
+ * 触发器点击：click 触发时切换展开态；contextmenu 触发时左键点击收起 —— 右键唤起的菜单没有
+ * 左键 toggle 语义，但「点触发器关掉它」是最直觉的关闭动作
+ */
 function onTriggerClick(): void {
   if (useClick.value) {
     clearTimers()
@@ -292,8 +295,10 @@ function onTriggerClick(): void {
     requestOpen(false)
   }
 }
-// 触发器右键：contextmenu 触发时阻止默认菜单，并以「右键点相对触发器的偏移」为锚点展开
-// （展开状态下重复右键只更新偏移，面板保持打开、平滑跟随，不经历收起再展开）
+/**
+ * 触发器右键：contextmenu 触发时阻止默认菜单，并以「右键点相对触发器的偏移」为锚点展开
+ * （展开状态下重复右键只更新偏移，面板保持打开、平滑跟随，不经历收起再展开）
+ */
 function onTriggerContextMenu(e: MouseEvent): void {
   if (!useContextMenu.value || !canOpen.value) return
   e.preventDefault()
@@ -302,13 +307,15 @@ function onTriggerContextMenu(e: MouseEvent): void {
   contextOffset.value = rect ? { x: e.clientX - rect.left, y: e.clientY - rect.top } : null
   requestOpen(true)
 }
-// 面板 / 触发器 esc：click / contextmenu 触发时关闭
+/** 面板 / 触发器 esc：click / contextmenu 触发时关闭 */
 function onEscKeydown(): void {
   if (!needOutsideClick.value || !openModel.value) return
   requestOpen(false)
 }
-// 外部点击 / 承载层关闭：两种「非用户主动切换」的收起，统一清理定时器后关闭。
-// 「面板外 && 触发器外」的判定与监听挂卸已下沉到宿主（Popup），此处只接收上报结果
+/**
+ * 外部点击 / 承载层关闭：两种「非用户主动切换」的收起，统一清理定时器后关闭。
+ * 「面板外 && 触发器外」的判定与监听挂卸已下沉到宿主（Popup），此处只接收上报结果
+ */
 function closeFromOutside(): void {
   clearTimers()
   requestOpen(false)
@@ -317,7 +324,7 @@ function closeFromOutside(): void {
 // 容器消失，若保持打开，容器重开时会以「仍打开」的状态冒出来；Esc / 程序化关闭都不产生 document click，
 // 故必须显式收起（订阅实现见 utils/z-index.ts 的 useContainerClose）
 useContainerClose(closeFromOutside)
-// 菜单项点击：触发 menuClick；无子项的菜单项点击后收起浮层（任意菜单项点击即关闭，含链接项）
+/** 菜单项点击：触发 menuClick；无子项的菜单项点击后收起浮层（任意菜单项点击即关闭，含链接项） */
 function onMenuSelect(option: MenuOption): void {
   if (option.disabled || option.loading) return
   emits('menuClick', option.key, option)
@@ -406,13 +413,13 @@ onBeforeUnmount(clearTimers)
 }
 .dropdown-trigger-disabled {
   cursor: not-allowed;
-  // 按钮触发器：改用禁用配色，不再叠加整体透明度
+  /* 按钮触发器：改用禁用配色，不再叠加整体透明度 */
   :deep(.btn-wrap) {
     color: var(--va-text-color-disabled);
     border-color: var(--va-border-color);
     background-color: var(--va-fill-color-1);
   }
-  // 其他触发器（链接 / 文本等）：降低整体不透明度示意禁用
+  /* 其他触发器（链接 / 文本等）：降低整体不透明度示意禁用 */
   > :deep(*:not(.btn-wrap)) {
     opacity: 0.65;
   }

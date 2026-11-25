@@ -1,5 +1,5 @@
 <script setup lang="ts">
-/**
+/*
  * 在容器（或全屏）上铺一层由 canvas 绘制、按 `background-repeat` 平铺的重复水印。
  * 水印层被删除或被改写 style / class 时自动重建；绘制失败（图片不可用）只告警、不影响宿主内容。
  */
@@ -31,7 +31,6 @@ export interface Props {
   zIndex?: number // 水印层的 z-index
   fullscreen?: boolean // 是否启用全屏水印，启用后挂载到 <html> 并固定于视口
 }
-// 声明组件插槽类型
 export interface WatermarkSlots {
   default?: () => VNode[]
 }
@@ -61,7 +60,7 @@ const watermarkRef = shallowRef<HTMLDivElement>() // 水印元素，尚未创建
 const markParent = shallowRef<HTMLElement | null>(null)
 // SSR（Node）环境无 document，htmlRef 为 null；浏览器端仍指向 <html> 元素
 const htmlRef = shallowRef<HTMLElement | null>(typeof document !== 'undefined' ? document.documentElement : null)
-/**
+/*
  * 水印默认色：canvas 读不到 CSS 变量，故按优先级取色——
  * 1. 显式 `textStyle.color`；
  * 2. Provider 的只读快照（既定用途之一）；
@@ -70,7 +69,7 @@ const htmlRef = shallowRef<HTMLElement | null>(typeof document !== 'undefined' ?
  * 4. SSR 等拿不到 DOM 时才回落浅色默认。
  */
 const themeSnapshot = injectFromChain(themeSnapshotKey) ?? null
-// 静态变量表里的默认色：computed 读的是快照，这里把「外部属性换模式」的结果存成响应式值，才能驱动重绘
+/** 静态变量表里的默认色：computed 读的是快照，这里把「外部属性换模式」的结果存成响应式值，才能驱动重绘 */
 function readStaticTextColor() {
   if (typeof document === 'undefined') return ''
   return getComputedStyle(document.documentElement).getPropertyValue('--va-fill-color-3').trim()
@@ -202,7 +201,7 @@ function resolveMarkParent(): HTMLElement | null {
 function toLowercaseSeparator(key: string) {
   return key.replace(/([A-Z])/g, '-$1').toLowerCase()
 }
-// 由 camelCase 转为 CSS 属性名（zIndex → z-index），用于拼装 style 字符串
+/** 由 camelCase 转为 CSS 属性名（zIndex → z-index），用于拼装 style 字符串 */
 function getStyleStr(style: CSSProperties): string {
   return Object.keys(style)
     .map((key) => `${toLowercaseSeparator(key)}: ${String(style[key as keyof CSSProperties])};`)
@@ -301,7 +300,7 @@ function getCellGeometry(markWidth: number, markHeight: number) {
     alternateRotateY: rotateY + canvasHeight
   }
 }
-// 当前显示设备的物理像素分辨率与 CSS 像素分辨率之比
+/** 当前显示设备的物理像素分辨率与 CSS 像素分辨率之比 */
 function getPixelRatio() {
   return window.devicePixelRatio || 1
 }
@@ -450,13 +449,13 @@ function commitWatermark(canvas: HTMLCanvasElement, markWidth: number) {
     stopObservation.value = false
   })
 }
-// 以单元格中心为原点旋转
+/** 以单元格中心为原点旋转 */
 function rotateWatermark(ctx: CanvasRenderingContext2D, rotateX: number, rotateY: number, rotate: number) {
   ctx.translate(rotateX, rotateY)
   ctx.rotate((Math.PI / 180) * Number(rotate))
   ctx.translate(-rotateX, -rotateY)
 }
-// 是否需要重建水印：节点被移除，或节点自身的 style / class 被改写
+/** 是否需要重建水印：节点被移除，或节点自身的 style / class 被改写 */
 function reRendering(mutation: MutationRecord, watermarkElement?: HTMLElement) {
   let flag = false
   if (mutation.removedNodes.length) {

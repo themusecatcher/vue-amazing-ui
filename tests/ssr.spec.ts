@@ -30,7 +30,7 @@ import Layout from 'components/layout/Layout.vue'
 import LayoutSider from 'components/layout/layout-sider/LayoutSider.vue'
 import Menu from 'components/menu/Menu.vue'
 
-/**
+/*
  * 回归守护：`SSR` / `Node` 环境下组件不得在 `setup` 阶段裸访问 `window` / `document` /
  * `requestAnimationFrame`。
  *
@@ -116,7 +116,7 @@ describe('SSR 渲染安全性', () => {
   })
 })
 
-/**
+/*
  * 浮层组件默认挂载 `body`（`Teleport`），服务端渲染时内容进入 `ssrContext.teleports`，
  * 需应用侧注入到 HTML；此处锁定该契约，避免后续把 Teleport 去掉或改错目标节点而无人察觉。
  */

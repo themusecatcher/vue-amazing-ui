@@ -398,9 +398,9 @@ describe('浮层挂载点（同域模型）', () => {
   it('Message / Notification 容器无内容时不占位（有内容才持有、全部关闭即归还）', async () => {
     let messageApi!: MessageApi
     let notificationApi!: NotificationApi
-    /** 常驻参照层：挂载即持有起始段，用于观察后续分配点被抬高 / 回落 */
+    // 常驻参照层：挂载即持有起始段，用于观察后续分配点被抬高 / 回落
     let anchor!: ReturnType<typeof useZIndex>
-    /** 探针层：按需领取，读取「当前最低可用段」 */
+    // 探针层：按需领取，读取「当前最低可用段」
     let probe!: ReturnType<typeof useZIndex>
     const Anchor = defineComponent({
       setup() {

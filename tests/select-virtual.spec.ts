@@ -5,7 +5,7 @@ import Select from 'components/select/Select.vue'
 import type { SelectProps } from 'components/select'
 import type { Option } from 'components/select/Select.vue'
 
-/**
+/*
  * 虚拟滚动（P4）与 ARIA 语义的契约回归。
  *
  * 关键行为约定：

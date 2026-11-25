@@ -3,7 +3,7 @@ import { defineComponent, h, ref, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import { useScrollParent } from 'components/utils'
 
-/**
+/*
  * 回归守护：整页滚动场景下，scroll 监听必须绑到 window，而不是 documentElement。
  *
  * 背景：页面（视口）滚动时 scroll 事件只派发到 document / window，documentElement 收不到
@@ -22,7 +22,7 @@ const Probe = defineComponent({
   }
 })
 
-/**
+/*
  * 元素滚动容器路径：内容元素存在可滚动祖先（overflow: auto）时，
  * scrollTarget 应为该容器，监听也必须落在它身上，而不是 window。
  */

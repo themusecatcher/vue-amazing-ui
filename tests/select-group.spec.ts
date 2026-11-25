@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import Select from 'components/select/Select.vue'
 import type { Option } from 'components/select/Select.vue'
 
-/**
+/*
  * 分组子选项（`fieldNames.options`）契约（分组标题与子选项）：
  * - 分组条目自身不可选中，只渲染标题；组内子选项按扁平常量顺序参与选中 / 键盘导航 / 过滤
  * - 分组标题不占「展示下标」：change 第 3 参仍等于扁平候选中的下标

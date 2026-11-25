@@ -9,7 +9,6 @@ export interface Props {
   content?: string // 评论的主要内容
   datetime?: string // 展示时间描述
 }
-// 声明组件插槽类型
 export interface CommentSlots {
   actions?: () => VNode[]
   author?: () => VNode[]

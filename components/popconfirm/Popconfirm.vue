@@ -13,8 +13,10 @@ import { TOOLTIP_INHERITED_DEFAULTS } from '../tooltip/types'
  *
  * 契约：面板语义为 `alertdialog`，打开聚焦「确定」、关闭归还焦点；其余能力继承 Tooltip
  */
-// 排除名单独立成类型：Omit 的 K 约束是 keyof any，拼错会静默漏剔除，
-// 用 AssertKeys 补上 key 存在性校验（pnpm type-check 会拦住）
+/**
+ * 排除名单独立成类型：Omit 的 K 约束是 keyof any，拼错会静默漏剔除，
+ * 用 AssertKeys 补上 key 存在性校验（pnpm type-check 会拦住）
+ */
 type OmittedTooltipKeys = 'tooltip' | 'contentClass' | 'contentStyle' | 'tooltipStyle'
 type AssertKeys<T extends keyof TooltipProps> = T
 type _OmittedKeysExist = AssertKeys<OmittedTooltipKeys>
@@ -41,7 +43,6 @@ export interface Props extends Omit<TooltipProps, OmittedTooltipKeys> {
   okProps?: ButtonProps // 确认按钮 props，优先级高于 okType，参考 Button 组件 props
   showCancel?: boolean // 是否显示取消按钮
 }
-// 声明组件插槽类型
 export interface PopconfirmSlots {
   icon?: () => VNode[]
   title?: () => VNode[]
@@ -121,8 +122,10 @@ const titleId = `va-popconfirm-title-${getCurrentInstance()?.uid ?? 0}`
 const okButtonRef = ref<InstanceType<typeof Button> | null>(null)
 // 焦点是否由本组件送入面板：为真才在关闭时归还，避免把用户点到别处的焦点抢回来
 let focusInsidePending = false
-// 打开时把焦点送进「确定」：面板 Teleport 到 body 末尾，不主动聚焦时 Tab 的下一个落点是触发器
-// 之后的 DOM，键盘用户根本到不了面板里的按钮。仅 click 触发聚焦 —— hover 打开时抢焦点会打断输入
+/**
+ * 打开时把焦点送进「确定」：面板 Teleport 到 body 末尾，不主动聚焦时 Tab 的下一个落点是触发器
+ * 之后的 DOM，键盘用户根本到不了面板里的按钮。仅 click 触发聚焦 —— hover 打开时抢焦点会打断输入
+ */
 function focusPanelOk(): void {
   if (props.trigger !== 'click') return
   nextTick(() => {
@@ -132,7 +135,7 @@ function focusPanelOk(): void {
     focusInsidePending = true
   })
 }
-// 关闭后归还焦点：仅当焦点仍在面板内（或已落到 body）时归还，用户点到别处则不抢回来
+/** 关闭后归还焦点：仅当焦点仍在面板内（或已落到 body）时归还，用户点到别处则不抢回来 */
 function restoreFocusToTrigger(): void {
   if (!focusInsidePending) return
   focusInsidePending = false

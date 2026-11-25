@@ -30,7 +30,7 @@ import { useControlledModel, useSlotsExist } from 'components/utils'
 export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
 export type DefaultWeek = '一' | '二' | '三' | '四' | '五' | '六' | '日'
 
-// select 事件的来源：年选择器 / 月（选择器或月面板格）/ 日期面板格 / 头部整体替换
+/** select 事件的来源：年选择器 / 月（选择器或月面板格）/ 日期面板格 / 头部整体替换 */
 export interface SelectInfo {
   source: 'year' | 'month' | 'date' | 'customize'
 }
@@ -51,7 +51,7 @@ export interface Props {
   monthSelectProps?: SelectProps // 月选择器 props，参考 Select 组件 Props
   modeRadioProps?: RadioGroupProps // 模式切换器 props，参考 RadioGroup 组件 Props
 }
-// 头部整体替换插槽的入参：当前面板年月 / 模式、当前选中值，以及写回选中值与切换模式的回调
+/** 头部整体替换插槽的入参：当前面板年月 / 模式、当前选中值，以及写回选中值与切换模式的回调 */
 export interface HeaderFullSlotProps {
   year: number
   month: number
@@ -60,7 +60,6 @@ export interface HeaderFullSlotProps {
   onChange: (value: string | number) => void
   onTypeChange: (mode: 'month' | 'year') => void
 }
-// 声明组件插槽类型
 export interface CalendarSlots {
   header?: () => VNode[]
   headerFull?: (props: HeaderFullSlotProps) => VNode[]
@@ -119,7 +118,7 @@ export interface MonthItem {
   timestamp: number // 当月开始的时间戳
   isCurrent: boolean // 是否为当前月
 }
-// 把对外值（时间戳或格式化串）归一为时间戳：格式未知或无法解析时返回 undefined
+/** 把对外值（时间戳或格式化串）归一为时间戳：格式未知或无法解析时返回 undefined */
 function toTimestamp(value: string | number): number | undefined {
   if (typeof value === 'number') return Number.isFinite(value) ? value : undefined
   if (value === '') return undefined
@@ -270,8 +269,10 @@ watch(
     immediate: true
   }
 )
-// 年份选项：有可选区间时收窄到该区间的年份，否则取锚点年前 10 年起的 20 个年份
-// （循环为左闭右开 [startYear, endYear)，故 endYear 取「结束年 + 1」才能包含结束年）
+/**
+ * 年份选项：有可选区间时收窄到该区间的年份，否则取锚点年前 10 年起的 20 个年份
+ * （循环为左闭右开 [startYear, endYear)，故 endYear 取「结束年 + 1」才能包含结束年）
+ */
 function getYearOptions(): SelectOption[] {
   const range = validRangeTimestamp.value
   const startYear = range ? getYear(range[0]) : yearOptionsAnchor.value - 10
@@ -286,7 +287,7 @@ function getYearOptions(): SelectOption[] {
   }
   return options
 }
-// 月份选项：当前年为可选区间端点年时收窄到区间内的月份；整月不可选的月份禁用
+/** 月份选项：当前年为可选区间端点年时收窄到区间内的月份；整月不可选的月份禁用 */
 function getMonthOptions(): SelectOption[] {
   const range = validRangeTimestamp.value
   let startMonth = 1
@@ -375,14 +376,14 @@ function getCalendarMonths(): MonthItem[][] {
   }
   return result
 }
-// 格子的原生 tooltip 文案：固定格式，不随 dateFormat / monthFormat 变化
+/** 格子的原生 tooltip 文案：固定格式，不随 dateFormat / monthFormat 变化 */
 function getDateStr(date: DateItem): string {
   return format(date.timestamp, 'yyyy-MM-dd')
 }
 function getMonthStr(month: MonthItem): string {
   return format(month.timestamp, 'yyyy-MM')
 }
-// 三处展示格式：未传自定义函数时用内置文案（日期不补零、星期为一…日、月份带「月」后缀）
+/** 三处展示格式：未传自定义函数时用内置文案（日期不补零、星期为一…日、月份带「月」后缀） */
 function getDateFormat(date: number, timestamp: number): string {
   if (props.dateFormat === undefined) {
     return `${date}`
@@ -404,7 +405,7 @@ function getMonthFormat(month: number, timestamp: number): string {
     return props.monthFormat(month, timestamp)
   }
 }
-// 禁用判定：可选区间（按日期粒度）与 disabledDate 合并
+/** 禁用判定：可选区间（按日期粒度）与 disabledDate 合并 */
 function isDateDisabled(timestamp: number): boolean {
   const range = validRangeTimestamp.value
   if (range) {
@@ -413,15 +414,17 @@ function isDateDisabled(timestamp: number): boolean {
   }
   return Boolean(props.disabledDate?.(timestamp))
 }
-// 月份的整层禁用：整月每一天都不可选（禁用来源为 disabledDate 或 validRange）；
-// 月格禁用态与月面板键盘导航共用该判定
+/**
+ * 月份的整层禁用：整月每一天都不可选（禁用来源为 disabledDate 或 validRange）；
+ * 月格禁用态与月面板键盘导航共用该判定
+ */
 function isMonthTimestampDisabled(monthTimestamp: number): boolean {
   return hasDisableSource.value && isMonthFullyDisabled(monthTimestamp, isDateDisabled)
 }
 function isMonthItemDisabled(monthItem: MonthItem): boolean {
   return isMonthTimestampDisabled(monthItem.timestamp)
 }
-// 选中态判定：日期按「当日零点」比较、月份按「同月」比较（展示态与事件判定共用同一口径）
+/** 选中态判定：日期按「当日零点」比较、月份按「同月」比较（展示态与事件判定共用同一口径） */
 function isDateSelected(dateItem: DateItem): boolean {
   const selectedTimestamp = selectedValueTimestamp.value
   return (
@@ -433,7 +436,7 @@ function isMonthSelected(monthItem: MonthItem): boolean {
   const selectedTimestamp = selectedValueTimestamp.value
   return selectedTimestamp !== undefined && isSameMonthTimestamp(selectedTimestamp, monthItem.timestamp)
 }
-// 把时间戳按 valueFormat 表达为对外值；未指定格式（或 'T'）时输出当日零点时间戳
+/** 把时间戳按 valueFormat 表达为对外值；未指定格式（或 'T'）时输出当日零点时间戳 */
 function formatDate(timestamp: number): number | string {
   const dayTimestamp = startOfDayTimestamp(timestamp)
   if (props.valueFormat === undefined || props.valueFormat === 'T') {
@@ -441,13 +444,13 @@ function formatDate(timestamp: number): number | string {
   }
   return formatTimestamp(dayTimestamp, props.valueFormat)
 }
-// 按「年 + 月」重组选中值：保留原有「日」，目标月天数不足时收敛到月末，避免溢出到下个月
+/** 按「年 + 月」重组选中值：保留原有「日」，目标月天数不足时收敛到月末，避免溢出到下个月 */
 function mergeYearMonth(baseTimestamp: number, year: number, month: number): number {
   const dayCount = new Date(year, month, 0).getDate()
   const day = Math.min(getDate(baseTimestamp), dayCount)
   return startOfDayTimestamp(new Date(year, month - 1, day).getTime())
 }
-// 年份变更时收窄月份：落在可选区间端点年时，把月份收敛到区间内
+/** 年份变更时收窄月份：落在可选区间端点年时，把月份收敛到区间内 */
 function clampMonthToRange(year: number, month: number): number {
   const range = validRangeTimestamp.value
   if (!range) return month
@@ -472,7 +475,7 @@ function resolveYearMonthSelection(baseTimestamp: number, year: number, month: n
   if (!isDateDisabled(inRangeTimestamp)) return inRangeTimestamp
   return findNearestEnabledDay(inRangeTimestamp) ?? inRangeTimestamp
 }
-// 同月内离目标日期最近的可用日：先向后、再向前；同距离取靠后的一天
+/** 同月内离目标日期最近的可用日：先向后、再向前；同距离取靠后的一天 */
 function findNearestEnabledDay(timestamp: number): number | undefined {
   const year = getYear(timestamp)
   const zeroBasedMonth = getMonth(timestamp)
@@ -492,7 +495,7 @@ function findNearestEnabledDay(timestamp: number): number | undefined {
   }
   return undefined
 }
-// 由时间戳取出对外的日期对象：change 事件的第二参，与日期格的选择同口径
+/** 由时间戳取出对外的日期对象：change 事件的第二参，与日期格的选择同口径 */
 function getDateObject(timestamp: number): DateItem['dateObject'] {
   return {
     date: getDate(timestamp),
@@ -531,48 +534,48 @@ function commitSelectedTimestamp(
   }
   emits('select', newValue, { source })
 }
-// 日期格选择：禁用格不响应
+/** 日期格选择：禁用格不响应 */
 function onDateSelected(date: DateItem): void {
   if (isDateDisabled(date.timestamp)) return
   commitSelectedTimestamp(date.timestamp, 'date', date.dateObject)
 }
-// 月格选择：仅替换年月，保留原有「日」；来源为月，change 第二参回传月份对象
+/** 月格选择：仅替换年月，保留原有「日」；来源为月，change 第二参回传月份对象 */
 function onMonthSelected(month: MonthItem): void {
   if (isMonthItemDisabled(month)) return
   const baseTimestamp = selectedValueTimestamp.value ?? month.timestamp
   const { year, month: targetMonth } = month.monthObject
   commitSelectedTimestamp(resolveYearMonthSelection(baseTimestamp, year, targetMonth + 1), 'month', month.monthObject)
 }
-// 年选择器开合：展开时把选项区间对齐到当前面板定位年；关闭时不刷新，保证列表在收起动画中不突变
+/** 年选择器开合：展开时把选项区间对齐到当前面板定位年；关闭时不刷新，保证列表在收起动画中不突变 */
 function onYearSelectOpenChange(open: boolean): void {
   yearSelectOpen.value = open
   if (open) yearOptionsAnchor.value = calendarYear.value
 }
-// 头部年选择器：仅替换年份，保留原有「月日」，并收窄到可选区间
+/** 头部年选择器：仅替换年份，保留原有「月日」，并收窄到可选区间 */
 function onYearSelectChanged(year: number): void {
   const baseTimestamp = selectedValueTimestamp.value ?? startOfMonthTimestamp.value
   const month = clampMonthToRange(year, getMonth(baseTimestamp) + 1)
   const nextTimestamp = resolveYearMonthSelection(baseTimestamp, year, month)
   commitSelectedTimestamp(nextTimestamp, 'year', getDateObject(nextTimestamp))
 }
-// 头部月选择器：仅替换月份，保留原有「日」；来源为月，change 第二参回传月份对象
+/** 头部月选择器：仅替换月份，保留原有「日」；来源为月，change 第二参回传月份对象 */
 function onMonthSelectChanged(month: number): void {
   const baseTimestamp = selectedValueTimestamp.value ?? startOfMonthTimestamp.value
   const monthObject: MonthItem['monthObject'] = { month: month - 1, year: calendarYear.value }
   commitSelectedTimestamp(resolveYearMonthSelection(baseTimestamp, monthObject.year, month), 'month', monthObject)
 }
-// 头部整体替换插槽的写回：来源记为 customize
+/** 头部整体替换插槽的写回：来源记为 customize */
 function onHeaderFullChange(value: string | number): void {
   const timestamp = toTimestamp(value)
   if (timestamp === undefined) return
   commitSelectedTimestamp(timestamp, 'customize')
 }
-// 头部整体替换插槽的模式切换：切换面板模式并上报（不写回选中值）
+/** 头部整体替换插槽的模式切换：切换面板模式并上报（不写回选中值） */
 function onTypeChange(mode: 'month' | 'year'): void {
   calendarMode.value = mode
   onPanelChange()
 }
-// 模式切换：只上报面板变化，不写回选中值
+/** 模式切换：只上报面板变化，不写回选中值 */
 function onPanelChange(): void {
   if (calendarMode.value === 'month') {
     emits(
@@ -585,7 +588,7 @@ function onPanelChange(): void {
     emits('panelChange', selectedValue.value, { year: calendarYear.value }, calendarMode.value)
   }
 }
-// 键盘移动的基准日期：优先选中值，其次面板定位月的首日
+/** 键盘移动的基准日期：优先选中值，其次面板定位月的首日 */
 function getKeyStepBase(): number {
   return selectedValueTimestamp.value ?? startOfMonthTimestamp.value
 }
@@ -610,12 +613,12 @@ function getKeydownHandlers(): PickerKeydownHandlers {
     onPageUpDown: (step) => selectByKey(addMonths(base, step).getTime())
   }
 }
-// 日期面板键盘移动即选中：面板随之定位到目标日期所在月
+/** 日期面板键盘移动即选中：面板随之定位到目标日期所在月 */
 function selectByKey(timestamp: number): void {
   if (isDateDisabled(timestamp)) return
   commitSelectedTimestamp(timestamp, 'date', getDateObject(timestamp))
 }
-// 月面板键盘移动即选中：与月格点击同口径（仅替换年月、保留「日」、回传月份对象），面板随之定位到目标月
+/** 月面板键盘移动即选中：与月格点击同口径（仅替换年月、保留「日」、回传月份对象），面板随之定位到目标月 */
 function selectMonthByKey(monthTimestamp: number): void {
   if (isMonthTimestampDisabled(monthTimestamp)) return
   const monthObject: MonthItem['monthObject'] = {
@@ -626,7 +629,7 @@ function selectMonthByKey(monthTimestamp: number): void {
   const nextTimestamp = resolveYearMonthSelection(baseTimestamp, monthObject.year, monthObject.month + 1)
   commitSelectedTimestamp(nextTimestamp, 'month', monthObject)
 }
-// 面板导航按键：未声明的意图不消费该键，按键交还浏览器
+/** 面板导航按键：未声明的意图不消费该键，按键交还浏览器 */
 function onKeydown(event: KeyboardEvent): void {
   handlePanelKeydown(event, getKeydownHandlers())
 }
@@ -865,7 +868,7 @@ function onKeydown(event: KeyboardEvent): void {
     }
   }
 }
-// 面板承载键盘导航：焦点指示沿用内核日期面板口径——容器不画焦点环，
+/* 面板承载键盘导航：焦点指示沿用内核日期面板口径——容器不画焦点环， */
 .calendar-display-wrap:focus-visible {
   outline: none;
 }
@@ -917,7 +920,7 @@ function onKeydown(event: KeyboardEvent): void {
               }
             }
           }
-          // 选中：保留原有底色，并把该格的网格线（顶线）一并取主色
+          /* 选中：保留原有底色，并把该格的网格线（顶线）一并取主色 */
           .date-cell-selected {
             .date-cell-inner {
               color: var(--va-cp-calendar-primary-color, var(--va-primary-color));
@@ -1038,7 +1041,7 @@ function onKeydown(event: KeyboardEvent): void {
               color: var(--va-cp-calendar-primary-color, var(--va-primary-color));
             }
           }
-          // 今天本身不可选且未被选中时，描边与文字一并退为中性色（选中态优先，保持白字）
+          /* 今天本身不可选且未被选中时，描边与文字一并退为中性色（选中态优先，保持白字） */
           .calendar-date-cell.date-cell-disabled:not(.date-cell-selected) .date-cell-inner.date-cell-today {
             &::before {
               border-color: var(--va-text-color-disabled);
@@ -1047,13 +1050,13 @@ function onKeydown(event: KeyboardEvent): void {
               color: var(--va-text-color-disabled);
             }
           }
-          // 卡片形态的选中态是实心主色块：面板形态的浅底（`-bg-color`）配白字会看不清
+          /* 卡片形态的选中态是实心主色块：面板形态的浅底（`-bg-color`）配白字会看不清 */
           .date-cell-selected {
             .date-cell-inner {
               color: var(--va-text-color-solid);
               background: var(--va-cp-calendar-primary-color, var(--va-primary-color));
             }
-            // 选中与今天重叠时，文字以选中态为准
+            /* 选中与今天重叠时，文字以选中态为准 */
             .date-cell-inner.date-cell-today .date-value {
               color: var(--va-text-color-solid);
             }
@@ -1062,7 +1065,7 @@ function onKeydown(event: KeyboardEvent): void {
       }
     }
     .calendar-date-panel {
-      // 日期区恒定六周，行高固定即可保证卡片高度稳定，无需再写死内容区高度
+      /* 日期区恒定六周，行高固定即可保证卡片高度稳定，无需再写死内容区高度 */
       .calendar-body {
         .calendar-table {
           .calendar-date-cell {
@@ -1086,7 +1089,7 @@ function onKeydown(event: KeyboardEvent): void {
     }
   }
 }
-// 窄屏（≤480px）：头部操作区换行堆叠，年 / 月选择器各占半行、模式切换独占整行
+/* 窄屏（≤480px）：头部操作区换行堆叠，年 / 月选择器各占半行、模式切换独占整行 */
 @media (max-width: 480px) {
   .calendar-header-actions {
     flex-wrap: wrap;

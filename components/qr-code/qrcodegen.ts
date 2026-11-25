@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-/**
+/*
  * 二维码编码内核（ISO/IEC 18004），仅暴露「文本 → 模块矩阵」所需能力
  * 内置原因：组件只需模块矩阵，内置可避免为未使用的渲染器 / CLI 依赖付出体积
  * 版权归属：Project Nayuki 的 QR Code generator library（MIT License，声明见下方原文）
@@ -34,9 +34,9 @@ namespace qrcodegen {
   type byte = number
   type int = number
 
-  /* ---- QR Code symbol class ---- */
+  /** ---- QR Code symbol class ---- */
 
-  /*
+  /**
    * A QR Code symbol, which is a type of two-dimension barcode.
    * Invented by Denso Wave and described in the ISO/IEC 18004 standard.
    * Instances of this class represent an immutable square grid of dark and light cells.
@@ -53,7 +53,7 @@ namespace qrcodegen {
    * (Note that all ways require supplying the desired error correction level.)
    */
   export class QrCode {
-    /* -- Static factory functions (high level) -- */
+    // -- Static factory functions (high level) --
 
     // Returns a QR Code representing the given Unicode text string at the given error correction level.
     // As a conservative upper bound, this function is guaranteed to succeed for strings that have 738 or fewer
@@ -74,7 +74,7 @@ namespace qrcodegen {
       return QrCode.encodeSegments([seg], ecl)
     }
 
-    /* -- Static factory functions (mid level) -- */
+    // -- Static factory functions (mid level) --
 
     // Returns a QR Code representing the given segments with the given encoding parameters.
     // The smallest possible QR Code version within the given range is automatically
@@ -156,7 +156,7 @@ namespace qrcodegen {
       return new QrCode(version, ecl, dataCodewords, mask)
     }
 
-    /* -- Fields -- */
+    // -- Fields --
 
     // The width and height of this QR Code, measured in modules, between
     // 21 and 177 (inclusive). This is equal to version * 4 + 17.
@@ -174,7 +174,7 @@ namespace qrcodegen {
     // Indicates function modules that are not subjected to masking. Discarded when constructor finishes.
     private readonly isFunction: boolean[][] = []
 
-    /* -- Constructor (low level) and fields -- */
+    // -- Constructor (low level) and fields --
 
     // Creates a new QR Code with the given version number,
     // error correction level, data codeword bytes, and mask number.
@@ -238,7 +238,7 @@ namespace qrcodegen {
       this.isFunction = []
     }
 
-    /* -- Accessor methods -- */
+    // -- Accessor methods --
 
     // Returns the color of the module (pixel) at the given coordinates, which is false
     // for light or true for dark. The top left corner has the coordinates (x=0, y=0).
@@ -252,7 +252,7 @@ namespace qrcodegen {
       return this.modules
     }
 
-    /* -- Private helper methods for constructor: Drawing function modules -- */
+    // -- Private helper methods for constructor: Drawing function modules --
 
     // Reads this object's version field, and draws and marks all function modules.
     private drawFunctionPatterns(): void {
@@ -372,7 +372,7 @@ namespace qrcodegen {
       this.isFunction[y][x] = true
     }
 
-    /* -- Private helper methods for constructor: Codewords and masking -- */
+    // -- Private helper methods for constructor: Codewords and masking --
 
     // Returns a new byte string representing the given data with the appropriate error correction
     // codewords appended to it, based on this object's version and error correction level.
@@ -573,7 +573,7 @@ namespace qrcodegen {
       return result
     }
 
-    /* -- Private helper functions -- */
+    // -- Private helper functions --
 
     // Returns an ascending list of positions of alignment patterns for this version number.
     // Each position is in the range [0,177), and are used on both the x and y axes.
@@ -711,7 +711,7 @@ namespace qrcodegen {
       runHistory.unshift(currentRunLength)
     }
 
-    /* -- Constants and tables -- */
+    // -- Constants and tables --
 
     // The minimum version number supported in the QR Code Model 2 standard.
     public static readonly MIN_VERSION: int = 1
@@ -767,8 +767,10 @@ namespace qrcodegen {
     ]
   }
 
-  // Appends the given number of low-order bits of the given value
-  // to the given buffer. Requires 0 <= len <= 31 and 0 <= val < 2^len.
+  /**
+   * Appends the given number of low-order bits of the given value
+   * to the given buffer. Requires 0 <= len <= 31 and 0 <= val < 2^len.
+   */
   function appendBits(val: int, len: int, bb: bit[]): void {
     if (len < 0 || len > 31 || val >>> len !== 0) {
       throw new RangeError('Value out of range')
@@ -782,14 +784,14 @@ namespace qrcodegen {
     }
   }
 
-  // Returns true iff the i'th bit of x is set to 1.
+  /** Returns true iff the i'th bit of x is set to 1. */
   function getBit(x: int, i: int): boolean {
     return ((x >>> i) & 1) !== 0
   }
 
-  /* ---- Data segment class ---- */
+  /** ---- Data segment class ---- */
 
-  /*
+  /**
    * A segment of character/binary/control data in a QR Code symbol.
    * Instances of this class are immutable.
    * The mid-level way to create a segment is to take the payload data
@@ -801,7 +803,7 @@ namespace qrcodegen {
    * Any segment longer than this is meaningless for the purpose of generating QR Codes.
    */
   export class QrSegment {
-    /* -- Static factory functions (mid level) -- */
+    // -- Static factory functions (mid level) --
 
     // Returns a segment representing the given binary data encoded in
     // byte mode. All input byte arrays are acceptable. Any text string
@@ -899,7 +901,7 @@ namespace qrcodegen {
       return QrSegment.ALPHANUMERIC_REGEX.test(text)
     }
 
-    /* -- Constructor (low level) and fields -- */
+    // -- Constructor (low level) and fields --
 
     // Creates a new QR Code segment with the given attributes and data.
     // The character count (numChars) must agree with the mode and the bit buffer length,
@@ -922,7 +924,7 @@ namespace qrcodegen {
       this.bitData = bitData.slice() // Make defensive copy
     }
 
-    /* -- Methods -- */
+    // -- Methods --
 
     // Returns a new copy of the data bits of this segment.
     public getData(): bit[] {
@@ -958,7 +960,7 @@ namespace qrcodegen {
       return result
     }
 
-    /* -- Constants -- */
+    // -- Constants --
 
     // Describes precisely all strings that are encodable in numeric mode.
     private static readonly NUMERIC_REGEX: RegExp = /^[0-9]*$/
@@ -972,22 +974,22 @@ namespace qrcodegen {
   }
 }
 
-/* ---- Public helper enumeration ---- */
+// ---- Public helper enumeration ----
 namespace qrcodegen.QrCode {
   type int = number
 
-  /*
+  /**
    * The error correction level in a QR Code symbol. Immutable.
    */
   export class Ecc {
-    /* -- Constants -- */
+    // -- Constants --
 
     public static readonly LOW = new Ecc(0, 1) // The QR Code can tolerate about  7% erroneous codewords
     public static readonly MEDIUM = new Ecc(1, 0) // The QR Code can tolerate about 15% erroneous codewords
     public static readonly QUARTILE = new Ecc(2, 3) // The QR Code can tolerate about 25% erroneous codewords
     public static readonly HIGH = new Ecc(3, 2) // The QR Code can tolerate about 30% erroneous codewords
 
-    /* -- Constructor and fields -- */
+    // -- Constructor and fields --
 
     private constructor(
       // In the range 0 to 3 (unsigned 2-bit integer).
@@ -998,15 +1000,15 @@ namespace qrcodegen.QrCode {
   }
 }
 
-/* ---- Public helper enumeration ---- */
+// ---- Public helper enumeration ----
 namespace qrcodegen.QrSegment {
   type int = number
 
-  /*
+  /**
    * Describes how a segment's data bits are interpreted. Immutable.
    */
   export class Mode {
-    /* -- Constants -- */
+    // -- Constants --
 
     public static readonly NUMERIC = new Mode(0x1, [10, 12, 14])
     public static readonly ALPHANUMERIC = new Mode(0x2, [9, 11, 13])
@@ -1014,7 +1016,7 @@ namespace qrcodegen.QrSegment {
     public static readonly KANJI = new Mode(0x8, [8, 10, 12])
     public static readonly ECI = new Mode(0x7, [0, 0, 0])
 
-    /* -- Constructor and fields -- */
+    // -- Constructor and fields --
 
     private constructor(
       // The mode indicator bits, which is a uint4 value (range 0 to 15).
@@ -1023,7 +1025,7 @@ namespace qrcodegen.QrSegment {
       private readonly numBitsCharCount: [int, int, int]
     ) {}
 
-    /* -- Method -- */
+    // -- Method --
 
     // (Package-private) Returns the bit width of the character count field for a segment in
     // this mode in a QR Code at the given version number. The result is in the range [0, 16].

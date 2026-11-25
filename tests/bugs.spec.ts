@@ -17,8 +17,10 @@ import type { ModalApi } from 'components/modal'
  * 三组件已移除 defineExpose，统一通过 @ready 事件回传命令式 api 驱动。
  */
 
-// 自动关闭依赖真实计时，此处直接等待对应时长推进；
-// 不引入假定时器，以免干扰 Teleport 与过渡相关的断言
+/**
+ * 自动关闭依赖真实计时，此处直接等待对应时长推进；
+ * 不引入假定时器，以免干扰 Teleport 与过渡相关的断言
+ */
 function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }

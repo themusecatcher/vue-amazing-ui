@@ -51,7 +51,6 @@ export interface Props {
   */
   filterOption?: boolean | ((inputValue: string, option: Option) => boolean) // 过滤条件函数
 }
-// 声明组件插槽类型
 export interface AutoCompleteSlots {
   default?: () => VNode[]
   clearIcon?: (props: { clearIcon: () => void }) => VNode[]
@@ -131,32 +130,32 @@ const optionsStyle = computed(() => {
   }
   return style
 })
-// 判断是否为分组项：存在 options 字段即视为分组
+/** 判断是否为分组项：存在 options 字段即视为分组 */
 function isGroup(item: string | number | Option | GroupOption): item is GroupOption {
   return typeof item === 'object' && Array.isArray((item as GroupOption).options)
 }
-// 获取叶子选项的 value 值
+/** 获取叶子选项的 value 值 */
 function getValue(item: string | number | Option): string | number {
   if (typeof item === 'string' || typeof item === 'number') {
     return item
   }
   return item.value
 }
-// 获取叶子选项的 label 文本，缺失时兜底 value 的字符串形式
+/** 获取叶子选项的 label 文本，缺失时兜底 value 的字符串形式 */
 function getLabel(item: string | number | Option): string {
   if (typeof item === 'string' || typeof item === 'number') {
     return String(item)
   }
   return item.label ?? String(item.value)
 }
-// 判断叶子选项是否禁用
+/** 判断叶子选项是否禁用 */
 function isDisabled(item: string | number | Option): boolean | undefined {
   if (typeof item === 'string' || typeof item === 'number') {
     return false
   }
   return item.disabled
 }
-// 选项过滤是否匹配（value 可选，非受控时按空串参与匹配，与「空输入不过滤」的行为一致）
+/** 选项过滤是否匹配（value 可选，非受控时按空串参与匹配，与「空输入不过滤」的行为一致） */
 function matchOption(item: string | number | Option): boolean {
   const label = getLabel(item)
   const inputValue = props.value ?? ''
@@ -166,7 +165,7 @@ function matchOption(item: string | number | Option): boolean {
   }
   return label.includes(inputValue)
 }
-// #option 插槽参数，字符串/数字包装为 Option 结构，对象透传原始数据（保留自定义字段）
+/** #option 插槽参数，字符串/数字包装为 Option 结构，对象透传原始数据（保留自定义字段） */
 function childSlotProps(item: string | number | Option): Option {
   if (typeof item === 'string' || typeof item === 'number') {
     return { value: item, label: String(item) }
@@ -302,20 +301,24 @@ onMounted(() => {
     openPanel()
   }
 })
-// 滚动跟随 / 视口 resize / 字体就绪的重对齐由定位内核统一承担（遍历锚点全链滚动祖先 + 帧合并）
-// 面板开合状态变更 / 用户开合请求的语义化上报：
-// update:open 由 useControlledModel 在写模型时派发，此处只负责 openChange（项目惯例）
-// 与 dropdownVisibleChange（对应的对外事件）
+/**
+ * 滚动跟随 / 视口 resize / 字体就绪的重对齐由定位内核统一承担（遍历锚点全链滚动祖先 + 帧合并）
+ * 面板开合状态变更 / 用户开合请求的语义化上报：
+ * update:open 由 useControlledModel 在写模型时派发，此处只负责 openChange（项目惯例）
+ * 与 dropdownVisibleChange（对应的对外事件）
+ */
 function emitPanelChange(nextOpen: boolean): void {
   emit('openChange', nextOpen)
   emit('dropdownVisibleChange', nextOpen)
 }
-// 统一控制面板显隐：写模型即完成两种路径 ——
-// - 非受控：本地生效，语义化事件由 watch(openModel) 派发
-// - 受控：实际显隐由外部 open 驱动，但必须把用户的「开合请求」上报出去 ——
-//   若受控时直接 return，用户交互（聚焦 / 点击 / 输入）既打不开面板也不派发任何事件，
-//   而 openChange / dropdownVisibleChange 只在 props 变化时回传，与文档「通过 open 控制面板显隐，
-//   配合 dropdownVisibleChange 事件使用」的用法完全相反；与目标值相同的请求不再重复上报，避免噪声
+/**
+ * 统一控制面板显隐：写模型即完成两种路径 ——
+ * - 非受控：本地生效，语义化事件由 watch(openModel) 派发
+ * - 受控：实际显隐由外部 open 驱动，但必须把用户的「开合请求」上报出去 ——
+ *   若受控时直接 return，用户交互（聚焦 / 点击 / 输入）既打不开面板也不派发任何事件，
+ *   而 openChange / dropdownVisibleChange 只在 props 变化时回传，与文档「通过 open 控制面板显隐，
+ *   配合 dropdownVisibleChange 事件使用」的用法完全相反；与目标值相同的请求不再重复上报，避免噪声
+ */
 function setPanelOpen(nextOpen: boolean): void {
   if (openModel.value === nextOpen) return
   const controlled = isOpenControlled.value
@@ -341,11 +344,11 @@ function onInput(e: Event): void {
   emit('search', input)
   openPanel()
 }
-// 输入法合成开始：标记合成中，暂停 search/filter
+/** 输入法合成开始：标记合成中，暂停 search/filter */
 function onCompositionStart(): void {
   isComposing.value = true
 }
-// 输入法合成结束：清除标记并触发一次 search/filter（此时才是真正上屏的完整输入）
+/** 输入法合成结束：清除标记并触发一次 search/filter（此时才是真正上屏的完整输入） */
 function onCompositionEnd(e: Event): void {
   isComposing.value = false
   const input = (e.target as HTMLInputElement)?.value ?? ''
@@ -383,7 +386,7 @@ function onMousedown(e: MouseEvent): void {
   }
   e.preventDefault()
 }
-// 键盘导航：↑↓ 移动高亮（backfill 时回填到输入框），Enter 选中，Esc 还原为用户原始输入
+/** 键盘导航：↑↓ 移动高亮（backfill 时回填到输入框），Enter 选中，Esc 还原为用户原始输入 */
 function onKeydown(e: KeyboardEvent): void {
   if (props.disabled) return
   const list = flattenOptions.value
@@ -486,7 +489,7 @@ function blurInput(): void {
     inputRef.value?.blur()
   }
 }
-// 获取自定义输入组件插槽内的 input/textarea 元素
+/** 获取自定义输入组件插槽内的 input/textarea 元素 */
 function getCustomInputEl(): HTMLInputElement | HTMLTextAreaElement | null {
   return customInputRef.value?.querySelector('input, textarea') as HTMLInputElement | HTMLTextAreaElement | null
 }
@@ -726,7 +729,7 @@ defineExpose({
       &:hover {
         color: var(--va-text-color-3);
       }
-      // 自定义 clearIcon 插槽内的图标统一约束尺寸，避免默认图标组件尺寸过大或垂直错位
+      /* 自定义 clearIcon 插槽内的图标统一约束尺寸，避免默认图标组件尺寸过大或垂直错位 */
       :deep(svg) {
         display: block;
         width: 1em;
@@ -811,7 +814,7 @@ defineExpose({
   .auto-complete-custom-input {
     width: 100%;
   }
-  // 自定义输入组件模式下，边框与聚焦阴影由内部输入组件(如 InputSearch)自行渲染，外层不再叠加，避免阴影覆盖搜索按钮等附加内容
+  /* 自定义输入组件模式下，边框与聚焦阴影由内部输入组件(如 InputSearch)自行渲染，外层不再叠加，避免阴影覆盖搜索按钮等附加内容 */
   &:not(.auto-complete-disabled):hover .auto-complete-content,
   &.auto-complete-focused .auto-complete-content {
     border-color: transparent;
@@ -877,11 +880,11 @@ defineExpose({
       white-space: nowrap;
       text-overflow: ellipsis;
       transition: background 0.3s ease;
-      // 分组内选项相对分组标题额外缩进 12px
+      /* 分组内选项相对分组标题额外缩进 12px */
       &.option-grouped {
         padding-left: 24px;
       }
-      // 自定义选项内容为 flex 布局时，允许子项收缩并对超宽文本省略号截断
+      /* 自定义选项内容为 flex 布局时，允许子项收缩并对超宽文本省略号截断 */
       > div {
         min-width: 0;
         > span,

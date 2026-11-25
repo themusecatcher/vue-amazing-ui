@@ -5,7 +5,7 @@ import Menu, { MenuDivider, MenuItem, MenuItemGroup, MenuSubMenu } from 'compone
 import type { ItemType, MenuKey, SubMenuType } from 'components/menu'
 import { MENU_OVERFLOW_KEY, flattenOverflowItems, splitOverflowItems } from 'components/menu/overflow'
 
-/**
+/*
  * Menu 回归守护
  *
  * 覆盖三类易回归点：① 模式归一（inline 收起后降级为 vertical）与收起态的首字兜底；

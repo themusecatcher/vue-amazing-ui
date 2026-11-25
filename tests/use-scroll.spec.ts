@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import { useScroll } from 'components/utils'
 import type { UseScrollOptions, UseScrollReturn } from 'components/utils'
 
-/**
+/*
  * useScroll 的契约测试
  *
  * 覆盖四类行为：
@@ -40,7 +40,7 @@ function createScroller(
     clientWidth: { configurable: true, get: () => geometry.clientWidth },
     clientHeight: { configurable: true, get: () => geometry.clientHeight }
   })
-  // 浏览器写 scrollLeft / scrollTop 后异步派发 scroll，这里同步模拟
+  /** 浏览器写 scrollLeft / scrollTop 后异步派发 scroll，这里同步模拟 */
   function scrollTo(left: number, top: number): void {
     element.scrollLeft = left
     element.scrollTop = top

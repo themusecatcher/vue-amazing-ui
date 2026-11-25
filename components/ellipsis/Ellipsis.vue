@@ -21,7 +21,6 @@ export interface Props {
   expand?: boolean // 是否启用点击文本展开全部
   tooltip?: boolean | EllipsisTooltipProps // 是否启用文本提示框；传对象即 [文字提示 Tooltip] 的属性配置
 }
-// 声明组件插槽类型
 export interface EllipsisSlots {
   tooltip?: () => VNode[]
   default?: () => VNode[]

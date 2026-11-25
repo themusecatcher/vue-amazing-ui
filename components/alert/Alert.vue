@@ -13,7 +13,6 @@ export interface Props {
   icon?: string // 自定义图标，showIcon 为 true 时有效
   showIcon?: boolean // 是否显示辅助图标
 }
-// 声明组件插槽类型
 export interface AlertSlots {
   icon?: () => VNode[]
   default?: () => VNode[]
@@ -54,18 +53,20 @@ function onClose(e: Event) {
   closing.value = true
   emit('close', e)
 }
-// 离场动画开始前，用当前实际高度冻结 max-height 作为收缩起点，避免内容高度变化导致过渡异常
+/** 离场动画开始前，用当前实际高度冻结 max-height 作为收缩起点，避免内容高度变化导致过渡异常 */
 function onBeforeLeave(el: Element) {
   const dom = el as HTMLElement
   dom.style.maxHeight = `${dom.offsetHeight}px`
 }
-// 离场动画启动后把 max-height 收敛到 0：
-// 既是收缩目标值，也会作为内联终值保留在元素上，保证元素卸载前不会回弹到原始高度
+/**
+ * 离场动画启动后把 max-height 收敛到 0：
+ * 既是收缩目标值，也会作为内联终值保留在元素上，保证元素卸载前不会回弹到原始高度
+ */
 function onLeave(el: Element) {
   const dom = el as HTMLElement
   dom.style.maxHeight = '0px'
 }
-// 离场动画结束后才真正卸载元素
+/** 离场动画结束后才真正卸载元素 */
 function onAfterLeave() {
   closing.value = false
   closed.value = true

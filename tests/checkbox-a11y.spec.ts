@@ -9,7 +9,7 @@ import type { CheckboxGroupSlots } from 'components/checkbox'
 /** options 模式下默认插槽的作用域参数（取自组件声明的插槽类型） */
 type OptionSlotProps = Parameters<NonNullable<CheckboxGroupSlots['default']>>[0]
 
-/**
+/*
  * 多选组件「原生 input 承载」「change 事件对象」与「组内受控」的契约回归
  *
  * 每项渲染视觉隐藏的 `input[type=checkbox]` 承载键盘操作、表单字段名与屏幕阅读器语义

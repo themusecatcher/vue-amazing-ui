@@ -121,7 +121,7 @@ export function useMediaQuery(mediaQuery: string): { match: Ref<boolean> } {
   // SSR（Node）环境无 window，matchMediaList 为 null，match 取 false；浏览器端初始值与原来一致
   const mediaQueryList = typeof window !== 'undefined' ? window.matchMedia(mediaQuery) : null
   const match = ref(mediaQueryList?.matches ?? false)
-  // 处理媒体查询状态改变的事件
+  /** 处理媒体查询状态改变的事件 */
   const updateChange = (e: MediaQueryListEvent) => {
     match.value = e.matches // 一个布尔值，如果当前 document 与媒体查询列表相匹配，则返回 true，否则返回 false
   }
@@ -222,7 +222,7 @@ export function useSlotsExist<T extends string | string[] = 'default'>(slotsName
     prevSlotKeys = nextSlotKeys
     slotsVersion.value += 1
   })
-  // 检查特定名称的插槽是否存在且不为空
+  /** 检查特定名称的插槽是否存在且不为空 */
   const checkSlotsExist = (slotName: string): boolean => {
     slotsVersion.value // 建立依赖：插槽集合变化后重新探测
     const slot = slots[slotName]

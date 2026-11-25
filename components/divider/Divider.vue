@@ -11,7 +11,6 @@ export interface Props {
   vertical?: boolean // 是否垂直分割
   height?: string | number // 垂直分割线高度，仅当 vertical: true 时生效
 }
-// 声明组件插槽类型
 export interface DividerSlots {
   default?: () => VNode[]
 }

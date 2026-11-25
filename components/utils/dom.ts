@@ -1,4 +1,4 @@
-/**
+/*
  * 文件下载工具
  *
  * 统一入口 downloadFile，内置两种下载策略：
@@ -17,10 +17,10 @@
 
 import { log } from './log'
 
-/** iframe 加载完成后等待检查下载结果的时间（ms），确保内容加载完成 */
+// iframe 加载完成后等待检查下载结果的时间（ms），确保内容加载完成
 const IFRAME_CHECK_DELAY = 1000
 
-/** iframe 触发下载后自动移除的时间（ms），避免内存泄漏 */
+// iframe 触发下载后自动移除的时间（ms），避免内存泄漏
 const IFRAME_REMOVE_DELAY = 10000
 
 /**
@@ -419,7 +419,7 @@ export function lockScroll(): () => void {
   }
 }
 
-/** 焦点锁定的可聚焦元素选择器，覆盖常见交互元素与显式 tabindex */
+// 焦点锁定的可聚焦元素选择器，覆盖常见交互元素与显式 tabindex
 const FOCUSABLE_SELECTOR = [
   'a[href]',
   'area[href]',

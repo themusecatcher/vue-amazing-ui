@@ -8,7 +8,7 @@ import SelectOption from 'components/select/select-option'
 import type { SelectOptionProps } from 'components/select/select-option'
 import SelectOptGroup from 'components/select/select-optgroup'
 
-/**
+/*
  * 子组件式选项契约（`SelectOption` / `SelectOptGroup` 标记组件）：
  * - 选项数据由 default 插槽解析而来：值为 value 属性（缺省回落 vnode key）
  * - 文本通道与渲染通道正交，互不覆盖：
@@ -22,7 +22,7 @@ const BASE_OPTIONS: Option[] = [{ label: 'FromOptions', value: 'from-options' }]
 
 let wrapper: ReturnType<typeof mount> | null = null
 
-/**
+/*
  * 已知开发态告警：本文件以普通函数形式提供插槽（非模板编译产物），Vue 会提示
  * 「Slot "default" invoked outside of the render function」——以插槽作为数据源的固有代价（Descriptions 同款）。
  * 此处收敛告警并断言「除该已知告警外无其他告警」，避免掩盖真实问题

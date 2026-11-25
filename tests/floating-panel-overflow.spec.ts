@@ -7,7 +7,7 @@ import AutoComplete from 'components/auto-complete'
 import Tooltip from 'components/tooltip'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * 下拉面板根的裁剪口径（Select / AutoComplete）
  *
  * 两个面板迁至 `Popup` 基座后都带 `data-va-floating-mount`，于是 `dropdownRender`（Select）与

@@ -317,7 +317,7 @@ for (const subject of subjects) {
   })
 }
 
-/**
+/*
  * 锚点模式（Tooltip 独有，走模板的第二个 Popup 分支）
  *
  * 触发监听与无障碍属性都绑在外部锚点上，因此「触发器」= 锚点元素：click toggle、

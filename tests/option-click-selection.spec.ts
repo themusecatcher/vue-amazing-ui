@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import AutoComplete from 'components/auto-complete/AutoComplete.vue'
 import Select from 'components/select/Select.vue'
 
-/**
+/*
  * 浮层选项「真实鼠标点击选中」与「悬浮高亮重置」的契约回归
  *
  * 背景（真实浏览器 + CDP 实测的事件序列：`mousedown@选项 → blur@input → mouseup@面板后方元素 → click@body`）：

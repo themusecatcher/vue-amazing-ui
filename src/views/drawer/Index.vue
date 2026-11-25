@@ -433,7 +433,7 @@ const layerZIndexOpen = ref<boolean>(false)
   </div>
 </template>
 <style lang="less" scoped>
-// 演示页文字与容器统一走主题语义变量：抽屉内容会 Teleport 到 body，跟随 <html> 上的明暗变量表
+/* 演示页文字与容器统一走主题语义变量：抽屉内容会 Teleport 到 body，跟随 <html> 上的明暗变量表 */
 p {
   color: var(--va-text-color-1);
 }
@@ -446,7 +446,7 @@ p {
   border-radius: 2px;
   padding: 48px;
   text-align: center;
-  // 取微弱填充色：浅色下近似 #fafafa，暗色下比页面底色略亮，两种模式都能与页面区分
+  /* 取微弱填充色：浅色下近似 #fafafa，暗色下比页面底色略亮，两种模式都能与页面区分 */
   background: var(--va-fill-color-4);
 }
 

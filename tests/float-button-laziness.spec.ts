@@ -4,7 +4,7 @@ import { nextTick } from 'vue'
 import Tooltip from 'components/tooltip'
 import FloatButton from 'components/float-button'
 
-/**
+/*
  * FloatButton 浮层实例惰性挂载回归守护
  *
  * 背景：FloatButton 无条件用 `Tooltip` 包裹按钮内容，未传 `tooltip` / 未提供 `#tooltip` 插槽时

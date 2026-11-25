@@ -1,4 +1,4 @@
-/**
+/*
  * `<html>` 全局变量写入与多实例仲裁
  *
  * 只有 `abstract: true` 且处于根作用域的实例才会写 `<html>`。这里集中三件事：
@@ -25,7 +25,7 @@ interface WriterRegistration {
   sync: () => void
 }
 
-/** 模块级注册表：只收录「无祖先作用域、未被离散实例跳过、无包裹元素」的实例 */
+// 模块级注册表：只收录「无祖先作用域、未被离散实例跳过、无包裹元素」的实例
 const globalWriters: WriterRegistration[] = []
 
 /** 取最后一个已配置主题的写者 —— 它就是全局写入的唯一 owner */

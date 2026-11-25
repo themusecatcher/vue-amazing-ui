@@ -6,7 +6,7 @@ import type { AutoCompleteProps } from 'components/auto-complete'
 import Tooltip from 'components/tooltip'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * AutoComplete 走 L1 旁路接入定位内核后的契约回归
  *
  * 迁移前定位由组件自己算（旧测量骨架 + 自研 `findPlace` / `getAlign` + 手拼
@@ -37,11 +37,11 @@ function domRect(left: number, top: number, width: number, height: number): DOMR
   } as DOMRect
 }
 
-/** 视口桩矩形：未登记元素（含内核惰性创建的视口测量元素、定位参照容器）统一返回它 */
+// 视口桩矩形：未登记元素（含内核惰性创建的视口测量元素、定位参照容器）统一返回它
 const viewportRect = domRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT)
-/** 触发器桩矩形：按用例改动后再挂载，以影响求解 */
+// 触发器桩矩形：按用例改动后再挂载，以影响求解
 let anchorRect = domRect(400, 300, 100, 40)
-/** 面板桩**布局**尺寸（内核按 offsetWidth / offsetHeight 测量浮层） */
+// 面板桩**布局**尺寸（内核按 offsetWidth / offsetHeight 测量浮层）
 const panelSize = { width: 100, height: 80 }
 const TRIGGER_WIDTH = 100
 
@@ -50,7 +50,7 @@ async function flush(): Promise<void> {
   await flushTransition()
 }
 
-// 面板改由 Popup 宿主承载后，定位参照容器即宿主的 .va-popup-container（原 .auto-complete-panel-wrapper 已消失）
+/** 面板改由 Popup 宿主承载后，定位参照容器即宿主的 .va-popup-container（原 .auto-complete-panel-wrapper 已消失） */
 const queryWrapperEl = (): HTMLElement | null => document.querySelector('.va-popup-container')
 const queryPanel = (): HTMLElement | null => document.querySelector('.auto-complete-panel')
 
@@ -222,7 +222,7 @@ describe('AutoComplete · 浮层字体承接', () => {
 })
 
 describe('AutoComplete 面板关闭时内嵌浮层收起', () => {
-  /**
+  /*
    * 与 `Select` 同源：面板自带 `data-va-floating-mount`，`option` 插槽里的浮层会挂进面板；
    * 面板关闭只是 `v-show` 隐藏，不派发 `mouseleave`，故由宿主（`Popup`）经
    * `zIndexContainerOpenKey` 下发开合状态，内嵌浮层据此收起（宿主级守护见 `tests/popup.spec.ts`）。

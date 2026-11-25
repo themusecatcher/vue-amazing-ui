@@ -5,7 +5,7 @@ import { nextTick } from 'vue'
 import TextScroll from 'components/text-scroll'
 import Tooltip from 'components/tooltip'
 
-/**
+/*
  * TextScroll ellipsis 模式回归守护
  *
  * 背景：ellipsis 模式下，链接类名（`href-item`）与文字样式此前经 `content-class` / `content-style`

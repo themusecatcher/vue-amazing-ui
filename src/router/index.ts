@@ -49,14 +49,16 @@ const modules = import.meta.glob('../views/**/index.ts', {
   eager: true, // 直接引入模块
   import: 'default' // 设置 import 为 default 可以加载默认导出
 })
-// console.log('modules', modules)
-// 将目录名统一为短横线命名（如 datePicker → date-picker），已是短横线则原样返回，用于生成路由路径
+/**
+ * console.log('modules', modules)
+ * 将目录名统一为短横线命名（如 datePicker → date-picker），已是短横线则原样返回，用于生成路由路径
+ */
 function toKebabCase(word: string): string {
   return word.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
 }
 // 缩写词片段：整体大写，使路由 name 与组件对外名一致（qr-code → QRCode）
 const acronyms = new Set(['qr'])
-// 将短横线目录名片段转换为 PascalCase（如 date-picker → DatePicker、qr-code → QRCode），用于生成路由 name
+/** 将短横线目录名片段转换为 PascalCase（如 date-picker → DatePicker、qr-code → QRCode），用于生成路由 name */
 function toPascalCase(word: string): string {
   return word
     .split('-')
@@ -64,11 +66,13 @@ function toPascalCase(word: string): string {
     .map((part) => (acronyms.has(part) ? part.toUpperCase() : part[0].toUpperCase() + part.slice(1)))
     .join('')
 }
-// import.meta.glob 的键顺序取自文件系统目录项（不保证字母序），直接展开会让侧栏菜单乱序
-// （如 input-number 排在 input 之前）。这里按视图目录名的字典序排序，
-// 使菜单顺序与 components/ 目录的排列保持同一套字母表顺序。
-// 只取目录部分比较：完整路径里同名目录的后续字符是 `/`，`/` 大于 `-`，
-// 会让 input-number / input-search 排到 input 之前
+/**
+ * import.meta.glob 的键顺序取自文件系统目录项（不保证字母序），直接展开会让侧栏菜单乱序
+ * （如 input-number 排在 input 之前）。这里按视图目录名的字典序排序，
+ * 使菜单顺序与 components/ 目录的排列保持同一套字母表顺序。
+ * 只取目录部分比较：完整路径里同名目录的后续字符是 `/`，`/` 大于 `-`，
+ * 会让 input-number / input-search 排到 input 之前
+ */
 function toViewDir(path: string): string {
   return path.replace('../views/', '').replace('/index.ts', '')
 }

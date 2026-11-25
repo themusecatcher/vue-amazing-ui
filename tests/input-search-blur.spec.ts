@@ -2,7 +2,7 @@ import { describe, it, expect, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import InputSearch from 'components/input-search/InputSearch.vue'
 
-/**
+/*
  * 搜索框失焦事件的契约回归
  *
  * `blur` 必须由内部原生 `input` 转发：该事件不冒泡，挂在组件根节点（`.input-search-wrap`）上的监听收不到，

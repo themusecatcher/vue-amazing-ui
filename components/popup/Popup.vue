@@ -189,7 +189,7 @@ const mergedPanelStyle = computed<CSSProperties>(() => ({
 const arrowVNode = computed<VNode | null>(() =>
   props.arrow ? h('div', { class: ['va-popup-arrow', props.arrowClass] }) : null
 )
-/**
+/*
  * 面板类名：宿主基础类 + 皮肤类（panelClass）+ 实际方向类 + 离开态类
  *
  * 方向以**类名**落地（与 `notification-${placement}` / `drawer-${placement}` 同一约定）：皮肤层用
@@ -275,16 +275,16 @@ watch(
 )
 // 卸载时移除监听，避免回调在组件卸载后仍触发
 onBeforeUnmount(detachOutsideListener)
-// 仅响应面板自身的动画结束：插槽内容中的嵌套动画冒泡上来时 target 不是面板，需忽略
+/** 仅响应面板自身的动画结束：插槽内容中的嵌套动画冒泡上来时 target 不是面板，需忽略 */
 function onAnimationEnd(e: AnimationEvent): void {
   if (e.target !== panelRef.value) return
   emits('animationend')
 }
-// 离开动画开始：面板在动画期间不再接管指针事件（避免「正在消失的面板」仍可点击 / 悬浮）
+/** 离开动画开始：面板在动画期间不再接管指针事件（避免「正在消失的面板」仍可点击 / 悬浮） */
 function onBeforeLeave(): void {
   leaving.value = true
 }
-// 进入动画开始：复位离开态 —— 离开被中途取消（动画未结束就重新 show）时不会走 afterLeave，需在此兜底
+/** 进入动画开始：复位离开态 —— 离开被中途取消（动画未结束就重新 show）时不会走 afterLeave，需在此兜底 */
 function onBeforeEnter(): void {
   leaving.value = false
 }

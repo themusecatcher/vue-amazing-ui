@@ -20,7 +20,7 @@ function getOkButton(): Element | null {
   return buttons[buttons.length - 1] ?? null
 }
 
-/**
+/*
  * Dialog 冒烟测试：验证声明式渲染、ARIA 语义与命令式内容渲染。
  * 不依赖过渡动画完成时机的断言，保证在 happy-dom 环境下稳定。
  */

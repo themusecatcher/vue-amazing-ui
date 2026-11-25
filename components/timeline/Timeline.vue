@@ -13,7 +13,6 @@ export interface Props {
   pending?: boolean | string | VNode // 幽灵节点：为 true 时只表示进行中，字符串或 VNode 作为其内容
   pendingDot?: string | VNode // 幽灵节点的轴点，未指定时使用内置加载环
 }
-// 声明组件插槽类型
 export interface TimelineSlots {
   default?: () => VNode[]
   pending?: () => VNode[]
@@ -98,8 +97,8 @@ const pendingContent = computed(() => {
   --timeline-title-font-size: 14px;
   --timeline-meta-font-size: 12px;
   --timeline-line-color: var(--va-border-split-color);
-  // 轴点填充 / 自定义轴点的遮挡色不在此声明默认值：一旦写在根上，祖先元素的同名变量就失效，
-  // 页面底色与容器色不一致时无法把它改成页面底色（节点样式侧取 var(--timeline-head-bg, var(--va-bg-container-color))）
+  /* 轴点填充 / 自定义轴点的遮挡色不在此声明默认值：一旦写在根上，祖先元素的同名变量就失效， */
+  /* 页面底色与容器色不一致时无法把它改成页面底色（节点样式侧取 var(--timeline-head-bg, var(--va-bg-container-color))） */
   --timeline-head-color: var(--va-cp-timeline-primary-color, var(--va-primary-color));
   display: flex;
   flex-direction: column;
@@ -151,8 +150,8 @@ const pendingContent = computed(() => {
     animation: timeline-pending-rotate 1s linear infinite;
   }
 }
-// 嵌套在另一条时间轴里的实例只是外层内容的一部分：收尾留白与末项撑高描述的是「这条轴到此结束」，
-// 内层继承会在外层内容中间堆出一段无意义的空白，故内层一律按「无收尾」处理
+/* 嵌套在另一条时间轴里的实例只是外层内容的一部分：收尾留白与末项撑高描述的是「这条轴到此结束」， */
+/* 内层继承会在外层内容中间堆出一段无意义的空白，故内层一律按「无收尾」处理 */
 .timeline-wrap .timeline-wrap {
   --timeline-end-gap: 0px;
   --timeline-last-content-min-height: 0px;

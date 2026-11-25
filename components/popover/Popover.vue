@@ -12,8 +12,10 @@ import { TOOLTIP_INHERITED_DEFAULTS } from '../tooltip/types'
  *
  * 契约：自有字段从下发的 rest 中剔除，剩余属性全量透传给内层 Tooltip
  */
-// 排除名单独立成类型：Omit 的 K 约束是 keyof any，拼错会静默漏剔除，
-// 用 AssertKeys 补上 key 存在性校验（pnpm type-check 会拦住）
+/**
+ * 排除名单独立成类型：Omit 的 K 约束是 keyof any，拼错会静默漏剔除，
+ * 用 AssertKeys 补上 key 存在性校验（pnpm type-check 会拦住）
+ */
 type OmittedTooltipKeys = 'content' | 'contentClass' | 'contentStyle' | 'tooltip' | 'tooltipStyle'
 type AssertKeys<T extends keyof TooltipProps> = T
 type _OmittedKeysExist = AssertKeys<OmittedTooltipKeys>
@@ -32,7 +34,6 @@ export interface Props extends Omit<TooltipProps, OmittedTooltipKeys> {
   contentStyle?: CSSProperties // 卡片内容样式
   tooltipStyle?: CSSProperties // 设置弹出提示的样式
 }
-// 声明组件插槽类型
 export interface PopoverSlots {
   title?: () => VNode[]
   content?: () => VNode[]

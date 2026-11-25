@@ -107,7 +107,6 @@ export interface Props {
   open?: boolean // (v-model) 对话框是否可见，声明式用法下生效
   to?: string | MountElement // 对话框 Teleport 挂载的节点，可选：元素标签名 (例如 'body') 或者元素本身
 }
-// 声明组件插槽类型
 export interface DialogSlots {
   title?: () => VNode[]
   default?: () => VNode[]
@@ -348,36 +347,36 @@ let contentPressTimer: ReturnType<typeof setTimeout> | null = null
 function findItem(key: string): DialogItem | undefined {
   return dialogList.value.find((item) => item.key === key)
 }
-// 取某项配置的最终生效值：per-item 优先级高于组件 Props
+/** 取某项配置的最终生效值：per-item 优先级高于组件 Props */
 function getComputedValue<K extends keyof Props>(item: DialogItem | undefined, key: K): Props[K] {
   if (item && item[key as keyof DialogOptions] !== undefined) {
     return item[key as keyof DialogOptions] as unknown as Props[K]
   }
   return props[key]
 }
-// 长度类配置统一转字符串：数字补 px，字符串（含百分比）原样透传
+/** 长度类配置统一转字符串：数字补 px，字符串（含百分比）原样透传 */
 function resolveSize(value: string | number | undefined): string | undefined {
   if (value === undefined) {
     return undefined
   }
   return typeof value === 'number' ? `${value}px` : value
 }
-// 单个实例的层级：遮罩取 zIndex，弹窗取 zIndex + 10，保持两者的层叠关系
+/** 单个实例的层级：遮罩取 zIndex，弹窗取 zIndex + 10，保持两者的层叠关系 */
 function itemZIndex(item: DialogItem): number {
   return getComputedValue(item, 'zIndex') ?? dialogZIndex.value
 }
-// 标题元素 id，供 aria-labelledby 关联（无标题时不设置该属性）
+/** 标题元素 id，供 aria-labelledby 关联（无标题时不设置该属性） */
 function titleId(item: DialogItem): string {
   return `dialog-title-${item.key}`
 }
-// 外层容器的类名 / 样式：以「打开中」实例为准（共享表现取最上层实例）
+/** 外层容器的类名 / 样式：以「打开中」实例为准（共享表现取最上层实例） */
 function wrapClassOf(): string {
   return getComputedValue(topOpenItem.value, 'wrapClass') ?? ''
 }
 function wrapStyleOf(): CSSProperties {
   return getComputedValue(topOpenItem.value, 'wrapStyle') ?? {}
 }
-// 取引用对应的 DOM：原生元素直接返回，组件（Button 未 expose）取其 $el 根节点
+/** 取引用对应的 DOM：原生元素直接返回，组件（Button 未 expose）取其 $el 根节点 */
 function resolveRefEl(el: unknown): HTMLElement | null {
   if (el instanceof HTMLElement) {
     return el
@@ -390,7 +389,7 @@ function resolveRefEl(el: unknown): HTMLElement | null {
   }
   return null
 }
-// 收集按钮 DOM 供 autoFocusButton 聚焦，按钮随弹窗销毁而移除
+/** 收集按钮 DOM 供 autoFocusButton 聚焦，按钮随弹窗销毁而移除 */
 function setOkBtnEl(key: string, el: unknown): void {
   const dom = resolveRefEl(el)
   if (dom) {
@@ -407,15 +406,15 @@ function setCancelBtnEl(key: string, el: unknown): void {
     cancelBtnEls.delete(key)
   }
 }
-// 是否存在标题：title 配置与 #title 插槽任一存在即可，仅判断配置会让插槽标题丢失无障碍关联
+/** 是否存在标题：title 配置与 #title 插槽任一存在即可，仅判断配置会让插槽标题丢失无障碍关联 */
 function hasTitle(item: DialogItem): boolean {
   return Boolean(getComputedValue(item, 'title') || slotsExist.title)
 }
-// header 同时充当拖拽句柄，故开启拖拽时即便无标题也需渲染
+/** header 同时充当拖拽句柄，故开启拖拽时即便无标题也需渲染 */
 function hasHeader(item: DialogItem): boolean {
   return hasTitle(item) || Boolean(getComputedValue(item, 'draggable'))
 }
-// 底部区域：传函数时完全自定义，false 时整块隐藏
+/** 底部区域：传函数时完全自定义，false 时整块隐藏 */
 function isFooterFn(item: DialogItem): boolean {
   return typeof getComputedValue(item, 'footer') === 'function'
 }
@@ -426,9 +425,11 @@ function footerNode(item: DialogItem): VNode {
 function showFooter(item: DialogItem): boolean {
   return getComputedValue(item, 'footer') !== false
 }
-// 内容渲染判定：destroyOnClose 为 false 时内容常驻（DOM 保留）；
-// 为 true 时保留至离场动画结束后再销毁，避免关闭瞬间内容闪空；
-// renderBeforeOpen 优先级最高：即便配置了关闭即销毁，首次打开前内容也已渲染完成
+/**
+ * 内容渲染判定：destroyOnClose 为 false 时内容常驻（DOM 保留）；
+ * 为 true 时保留至离场动画结束后再销毁，避免关闭瞬间内容闪空；
+ * renderBeforeOpen 优先级最高：即便配置了关闭即销毁，首次打开前内容也已渲染完成
+ */
 function shouldRenderBody(item: DialogItem): boolean {
   if (getComputedValue(item, 'renderBeforeOpen')) {
     return true
@@ -438,7 +439,7 @@ function shouldRenderBody(item: DialogItem): boolean {
   }
   return true
 }
-// 关闭图标：未配置时返回 null，由模板渲染默认图标
+/** 关闭图标：未配置时返回 null，由模板渲染默认图标 */
 function closeIconNode(item: DialogItem): VNode | null {
   const icon = getComputedValue(item, 'closeIcon')
   if (icon === undefined || icon === null) {
@@ -446,11 +447,11 @@ function closeIconNode(item: DialogItem): VNode | null {
   }
   return renderContentToVNode(icon)
 }
-// 确定按钮的 loading：实例内部异步 loading 与受控 confirmLoading 任一为真即展示
+/** 确定按钮的 loading：实例内部异步 loading 与受控 confirmLoading 任一为真即展示 */
 function okLoading(item: DialogItem): boolean {
   return item.loading || getComputedValue(item, 'confirmLoading') === true
 }
-// 容器定位与拖拽偏移：非居中时拖拽偏移以 calc 叠加在基准 top 之上，兼容百分比 top
+/** 容器定位与拖拽偏移：非居中时拖拽偏移以 calc 叠加在基准 top 之上，兼容百分比 top */
 function itemStyle(item: DialogItem): CSSProperties {
   const style: CSSProperties = {
     transformOrigin: item.origin,
@@ -478,7 +479,7 @@ function itemStyle(item: DialogItem): CSSProperties {
   }
   return style
 }
-// 内容区高度：全屏时铺满视口，否则取 height（'auto' 时由内容自然撑开）
+/** 内容区高度：全屏时铺满视口，否则取 height（'auto' 时由内容自然撑开） */
 function dialogBodyStyle(item: DialogItem): CSSProperties {
   if (item.fullscreen) {
     return { height: '100vh', ...getComputedValue(item, 'bodyStyle') }
@@ -488,11 +489,11 @@ function dialogBodyStyle(item: DialogItem): CSSProperties {
     ...getComputedValue(item, 'bodyStyle')
   }
 }
-// 拖拽句柄类名：仅开启 draggable 时挂载，供控制器查找
+/** 拖拽句柄类名：仅开启 draggable 时挂载，供控制器查找 */
 function draggableClass(item: DialogItem): string {
   return getComputedValue(item, 'draggable') ? 'dialog-draggable' : ''
 }
-// 从离场/入场元素上取回实例标识
+/** 从离场/入场元素上取回实例标识 */
 function getKey(el: Element): string {
   return (el as HTMLElement).dataset.key ?? ''
 }
@@ -539,9 +540,11 @@ onUnmounted(() => {
   // 以 scrollLockRelease 而非 openCount 判定，避免 blockScroll=false 从未加锁却误解锁他人
   scrollLockRelease?.()
 })
-// 鼠标点击位置由上方模块级 <script> 统一捕获（import 即注册），组件实例无需再监听
-//
-// 动画原点按实例持有，避免后开弹窗改写先开弹窗的动画原点
+/**
+ * 鼠标点击位置由上方模块级 <script> 统一捕获（import 即注册），组件实例无需再监听
+ *
+ * 动画原点按实例持有，避免后开弹窗改写先开弹窗的动画原点
+ */
 async function onBeforeEnter(el: Element) {
   showDialogWrap.value = true
   await nextTick()
@@ -670,8 +673,10 @@ function createDragController(target: DragTarget, draggable: boolean | DialogDra
 
   return { start, stop }
 }
-// 入场聚焦目标：autoFocusButton 指定 ok / cancel 按钮；undefined 沿用默认聚焦内容容器；
-// null 不聚焦。按钮不存在时回落内容容器，保证首次 Tab 前 Esc 可用
+/**
+ * 入场聚焦目标：autoFocusButton 指定 ok / cancel 按钮；undefined 沿用默认聚焦内容容器；
+ * null 不聚焦。按钮不存在时回落内容容器，保证首次 Tab 前 Esc 可用
+ */
 function resolveAutoFocusTarget(item: DialogItem, container: HTMLElement): HTMLElement | null {
   const autoFocusButton = getComputedValue(item, 'autoFocusButton')
   const defaultTarget = container.querySelector<HTMLElement>('.dialog-body-wrap') ?? container
@@ -681,7 +686,7 @@ function resolveAutoFocusTarget(item: DialogItem, container: HTMLElement): HTMLE
   const btnEl = autoFocusButton === 'cancel' ? cancelBtnEls.get(item.key) : okBtnEls.get(item.key)
   return btnEl ?? defaultTarget
 }
-// 入场动画结束后聚焦并按需启动拖拽：此时动画类已移除，设置 left / top 不会被动画覆盖
+/** 入场动画结束后聚焦并按需启动拖拽：此时动画类已移除，设置 left / top 不会被动画覆盖 */
 function onAfterEnter(el: Element): void {
   const item = findItem(getKey(el))
   if (!item) {
@@ -749,11 +754,11 @@ function onKeydown(item: DialogItem, e: KeyboardEvent): void {
     handleEsc(item, e)
   }
 }
-// Tab 焦点锁定：Tab / Shift + Tab 在弹窗内循环，避免键盘焦点跑到背景页面
+/** Tab 焦点锁定：Tab / Shift + Tab 在弹窗内循环，避免键盘焦点跑到背景页面 */
 function trapTab(item: DialogItem, e: KeyboardEvent): void {
   trapTabFocus(e, containerEls.get(item.key), dialogWrapRef.value)
 }
-// Esc 关闭：stopPropagation 避免冒泡后又被页面其他 Esc 监听处理一次
+/** Esc 关闭：stopPropagation 避免冒泡后又被页面其他 Esc 监听处理一次 */
 function handleEsc(item: DialogItem, e: KeyboardEvent): void {
   // 输入法组合态下的 Esc 用于取消候选词，不应关闭弹窗
   if (e.isComposing || e.keyCode === 229) {
@@ -765,7 +770,7 @@ function handleEsc(item: DialogItem, e: KeyboardEvent): void {
     void onCancel(item.key, e)
   }
 }
-// 内容区按下 / 抬起标记：用于区分拖选（内容内按下、遮罩抬起）与真实遮罩点击
+/** 内容区按下 / 抬起标记：用于区分拖选（内容内按下、遮罩抬起）与真实遮罩点击 */
 function onContentMouseDown(): void {
   if (contentPressTimer) {
     clearTimeout(contentPressTimer)
@@ -777,8 +782,10 @@ function onContentMouseUp(): void {
     contentPressed = false
   })
 }
-// 遮罩点击作用于该遮罩所属的实例：各实例遮罩按自身 zIndex 层叠，视觉最上层的不一定是栈尾，
-// 统一按 topOpenItem 处理会在 zIndex 与入栈顺序不一致时关闭错误的实例
+/**
+ * 遮罩点击作用于该遮罩所属的实例：各实例遮罩按自身 zIndex 层叠，视觉最上层的不一定是栈尾，
+ * 统一按 topOpenItem 处理会在 zIndex 与入栈顺序不一致时关闭错误的实例
+ */
 function handleMaskClick(item: DialogItem, e: MouseEvent): void {
   if (!item.open) {
     return
@@ -796,7 +803,7 @@ function handleMaskClick(item: DialogItem, e: MouseEvent): void {
 function onToggleFullscreen(item: DialogItem): void {
   item.fullscreen = !item.fullscreen
 }
-// 回调返回 false 或 Promise reject 时阻止关闭，其余情况（含 Promise resolve）自动关闭
+/** 回调返回 false 或 Promise reject 时阻止关闭，其余情况（含 Promise resolve）自动关闭 */
 async function onCancel(key: string, e?: Event): Promise<void> {
   const item = findItem(key)
   if (!item) {
@@ -883,7 +890,7 @@ function updateItem(key: string, options: DialogUpdate): void {
     dragControllers.delete(key)
   }
 }
-// 重新打开实例：实例仍留在栈中时（destroyOnClose: false）可复用
+/** 重新打开实例：实例仍留在栈中时（destroyOnClose: false）可复用 */
 function openItem(key: string): void {
   const item = findItem(key)
   if (!item || item.open) {
@@ -896,7 +903,7 @@ function openItem(key: string): void {
   }
   emits('change', true, key)
 }
-// 关闭实例：仅标记 open: false 并触发离场动画；实际移除（销毁）在离场结束后由 removeItem 完成
+/** 关闭实例：仅标记 open: false 并触发离场动画；实际移除（销毁）在离场结束后由 removeItem 完成 */
 function closeItem(key: string): void {
   const item = findItem(key)
   if (!item || !item.open) {
@@ -913,7 +920,7 @@ function closeItem(key: string): void {
   }
   emits('change', false, key)
 }
-// 从栈中彻底移除实例（DOM 随之销毁）
+/** 从栈中彻底移除实例（DOM 随之销毁） */
 function removeItem(key: string): void {
   const index = dialogList.value.findIndex((item) => item.key === key)
   if (index === -1) {
@@ -926,7 +933,7 @@ function removeItem(key: string): void {
   dragControllers.get(key)?.stop()
   dragControllers.delete(key)
 }
-// 关闭所有弹窗：逐实例走正常关闭流程以保留离场动画，离场结束后统一从栈中移除
+/** 关闭所有弹窗：逐实例走正常关闭流程以保留离场动画，离场结束后统一从栈中移除 */
 function destroyAll(): void {
   dialogList.value.forEach((item) => {
     if (!item.open) {
@@ -937,7 +944,7 @@ function destroyAll(): void {
     closeItem(item.key)
   })
 }
-// 声明式实例：由 props.open 驱动，具体配置经 getComputedValue 回落到组件 Props
+/** 声明式实例：由 props.open 驱动，具体配置经 getComputedValue 回落到组件 Props */
 function pushDeclarative(open: boolean): void {
   dialogList.value.push({
     key: DECLARATIVE_KEY,
@@ -984,7 +991,7 @@ watch(
   },
   { immediate: true }
 )
-// 用函数 ref 按 key 收集容器 DOM；卸载时传 null，需同步清理以免泄漏
+/** 用函数 ref 按 key 收集容器 DOM；卸载时传 null，需同步清理以免泄漏 */
 function setContainerEl(key: string, el: unknown): void {
   const dom = el instanceof HTMLElement ? el : null
   if (dom) {
@@ -1301,7 +1308,7 @@ emits('ready', { open: openDialog, destroyAll })
       &.header-with-switch {
         max-width: calc(100% - 54px);
       }
-      // 仅有全屏按钮时按单个按钮宽度预留
+      /* 仅有全屏按钮时按单个按钮宽度预留 */
       &.header-with-switch:not(.header-with-close) {
         max-width: calc(100% - 24px);
       }

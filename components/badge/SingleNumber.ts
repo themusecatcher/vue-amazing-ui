@@ -7,12 +7,12 @@ import type { CSSProperties, PropType } from 'vue'
  * 刻意保持为无样式组件（.ts 而非 .vue）：滚动所依赖的 transition / transform-style /
  * overflow 等样式统一由 Badge.vue 提供，避免新增 CSS chunk 从而影响按需引入的样式注入。
  */
-// 数字位单元：offset 为相对当前项的偏移格数，0 表示位于文档流中的当前项，其余项绝对定位
+/** 数字位单元：offset 为相对当前项的偏移格数，0 表示位于文档流中的当前项，其余项绝对定位 */
 interface UnitNumber {
   value: string
   offset: number
 }
-// 计算从 start 滚动到 end 需要走过的格数
+/** 计算从 start 滚动到 end 需要走过的格数 */
 function getOffset(start: number, end: number, unit: -1 | 1): number {
   let index = start
   let offset = 0
@@ -41,7 +41,7 @@ export default defineComponent({
         transitionEndTimer = null
       }
     }
-    // 滚动结束（或 transitionend 未触发时的兜底）后复位状态，使 DOM 收敛为单个当前数字
+    /** 滚动结束（或 transitionend 未触发时的兜底）后复位状态，使 DOM 收敛为单个当前数字 */
     function onTransitionEnd(): void {
       clearTransitionEndTimer()
       prevValue.value = originValue.value

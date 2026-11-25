@@ -18,7 +18,6 @@ export interface Props {
   align?: 'top' | 'middle' | 'bottom' | 'stretch' // 垂直对齐方式
   justify?: 'start' | 'end' | 'center' | 'space-around' | 'space-between' | 'space-evenly' // 水平排列方式
 }
-// 声明组件插槽类型
 export interface RowSlots {
   default?: () => VNode[]
 }

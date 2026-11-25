@@ -49,7 +49,7 @@ const animActiveKey = ref<TabsProps['activeKey']>('1')
 const animEnabled = ref(true)
 const destroyActiveKey = ref<TabsProps['activeKey']>('1')
 const destroyEnabled = ref(true)
-// 增删类用例各自持有一份页签数据：操作任一用例不会联动其余用例
+/** 增删类用例各自持有一份页签数据：操作任一用例不会联动其余用例 */
 interface EditPane {
   key: string
   tab: string
@@ -665,7 +665,7 @@ const cardTopContentStyle: CSSProperties = {
   </div>
 </template>
 <style lang="less" scoped>
-// 卡片式页签头：未选中为描边卡片，选中为主色实心，等同实体按钮的观感
+/* 卡片式页签头：未选中为描边卡片，选中为主色实心，等同实体按钮的观感 */
 .custom-tab-bar {
   display: flex;
   gap: 8px;

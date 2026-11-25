@@ -27,7 +27,7 @@
 /** 告警级别：`error` 线上可观测，`warn` / `debug` 仅开发期输出 */
 export type LogLevel = 'warn' | 'error' | 'debug'
 
-/**
+/*
  * 已输出过的提醒类告警（`warn` / `debug`）
  *
  * 提醒类告警常写在 `computed` / `getter` 等渲染路径上，同一问题会随每次重算重复触发；
@@ -77,7 +77,7 @@ export function log(level: LogLevel, component: string, message: string, error?:
   console[level](text, error)
 }
 
-/**
+/*
  * `process` 的最小类型声明
  *
  * 组件库产物在浏览器运行时，`process` 由消费方的打包工具在打包时替换；

@@ -19,7 +19,7 @@ export interface VendorStyle {
 /** 第三方样式在产物（es/lib）中的存放目录名 */
 export const vendorStylesDir = 'vendor-styles'
 
-/** swiper 依赖的模块样式清单（与 Swiper.vue 中实际 import 的模块保持一致） */
+// swiper 依赖的模块样式清单（与 Swiper.vue 中实际 import 的模块保持一致）
 const swiperModules = [
   'effect-cards',
   'effect-creative',

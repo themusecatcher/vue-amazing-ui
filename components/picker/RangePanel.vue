@@ -70,7 +70,7 @@ const emits = defineEmits<{
   panelChange: [value: number, mode: PickerPanelMode, side: PickerRangeSide]
   hoverChange: [timestamp: number | null] // 悬浮的日期，供触发器在该段显示预览文本
 }>()
-/**
+/*
  * 左右面板共用一份视图日期：右面板固定为左面板的相邻一格，任一侧翻页都带动另一侧
  *
  * 「一格」的粒度随形态变化（日期形态为 1 个月、月 / 季形态为 1 年、年形态为一个十年区间）。
@@ -81,10 +81,10 @@ const emits = defineEmits<{
 const manualViewDate = ref<number | null>(null)
 const viewDate = computed(() => manualViewDate.value ?? props.value?.[0] ?? props.defaultPickerValue ?? Date.now())
 const endViewDate = computed(() => getClosingViewTimestamp(viewDate.value, props.baseMode))
-/** 两侧面板当前的面板层级：与 `baseMode` 不一致即表示该侧已钻取（如月面板点「年」进年面板） */
+// 两侧面板当前的面板层级：与 `baseMode` 不一致即表示该侧已钻取（如月面板点「年」进年面板）
 const startMode = ref<PickerPanelMode | null>(null)
 const endMode = ref<PickerPanelMode | null>(null)
-/**
+/*
  * 正在钻取的一侧
  *
  * 钻取时收成单面板：两个面板并排展示不同层级（一侧年面板、一侧月面板）会读不出对应关系。
@@ -98,10 +98,10 @@ const drillSide = computed<PickerRangeSide | null>(() => {
   }
   return null
 })
-/** 钻取时只留该侧面板（其视图由自身的关系决定：左面板用左视图、右面板用右视图） */
+// 钻取时只留该侧面板（其视图由自身的关系决定：左面板用左视图、右面板用右视图）
 const startPanelVisible = computed(() => drillSide.value !== 'end')
 const endPanelVisible = computed(() => drillSide.value !== 'start')
-/**
+/*
  * 展开时清掉手动视图
  *
  * 浮层收起后两个面板并不销毁，若不在展开时重置，上一次翻页留下的月份会一直留在视图里，
@@ -118,20 +118,20 @@ watch(
   }
 )
 const hoverValue = ref<PickerRangeValue | null>(null)
-/**
+/*
  * 额外页脚的落点
  *
  * 日期时间范围的操作行（「确定」）由内层日期时间面板给出，额外页脚须落在同一个页脚内才排在其上方；
  * 其余范围形态没有操作行，额外页脚落在跨两个面板的页脚上。
  */
 const panelExtraFooter = computed(() => (props.datetime ? undefined : props.extraFooter))
-/** 当前激活段的值：日期时间范围的面板以此为展示值（决定选中格与面板视图） */
+// 当前激活段的值：日期时间范围的面板以此为展示值（决定选中格与面板视图）
 const activeValue = computed<number | null>(() => props.value?.[props.activeSide === 'start' ? 0 : 1] ?? null)
-/** 另一端的值：激活段为空时作为时间面板的日期基准 */
+// 另一端的值：激活段为空时作为时间面板的日期基准
 const otherSideValue = computed<number | null>(() => props.value?.[props.activeSide === 'start' ? 1 : 0] ?? null)
-/** 激活段的默认时分秒：按段指定时取该段，单值时两段共用 */
+// 激活段的默认时分秒：按段指定时取该段，单值时两段共用
 const activeDefaultTime = computed(() => getDefaultTime(props.defaultTime, props.activeSide))
-/** 激活段的禁用时间：把段标识注入判定函数（对外口径为 `(timestamp, side)`） */
+// 激活段的禁用时间：把段标识注入判定函数（对外口径为 `(timestamp, side)`）
 const activeDisabledTime = computed<PickerDisabledTime | undefined>(() => {
   const disabledTime = props.disabledTime
   if (!disabledTime) {
@@ -139,7 +139,7 @@ const activeDisabledTime = computed<PickerDisabledTime | undefined>(() => {
   }
   return (timestamp) => disabledTime(timestamp, props.activeSide)
 })
-/**
+/*
  * 悬浮预览区间（格子悬浮产生）：两段齐全且终点晚于起点时才生效，否则不产生任何预览类名
  *
  * 只承载「格子悬浮」这一路；预设悬浮走 {@link rangedValue}。
@@ -151,7 +151,7 @@ const hoverRangedValue = computed<PickerRangeValue | null>(() => {
   }
   return source
 })
-/**
+/*
  * 面板的区间取值：预设悬浮预览优先于已选值
  *
  * 预设悬浮时面板按「已选区间」渲染，
@@ -208,7 +208,7 @@ function onEndPanelChange(value: number, mode: PickerPanelMode) {
 function onDatetimePanelChange(value: number, mode: PickerPanelMode) {
   emits('panelChange', value, mode, props.activeSide)
 }
-/* ============================== 键盘导航 ============================== */
+// ============================== 键盘导航 ==============================
 const startPanelRef = ref<InstanceType<typeof DatePanel> | null>(null)
 const endPanelRef = ref<InstanceType<typeof DatePanel> | null>(null)
 const datetimePanelRef = ref<InstanceType<typeof DatetimePanel> | null>(null)

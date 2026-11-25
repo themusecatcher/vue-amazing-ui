@@ -18,7 +18,6 @@ export interface Props {
   value?: number // (v-model) 当前评分，取值 0,1,2,3...（0 为未评分）；传入即受控
   defaultValue?: number // 非受控初始值，未绑 v-model:value 时生效
 }
-// 声明组件插槽类型
 export interface RateSlots {
   tooltip?: (props: { tooltip: string; value: number }) => VNode[]
   character?: (props: { value: number }) => VNode[]

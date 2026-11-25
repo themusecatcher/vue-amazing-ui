@@ -16,7 +16,7 @@ import {
   SettingOutlined
 } from '@ant-design/icons-vue'
 import type { ItemType, MenuExpandIconInfo, MenuIcon, MenuKey } from 'vue-amazing-ui'
-// 演示数据构造：图标以渲染函数给出
+/** 演示数据构造：图标以渲染函数给出 */
 function getItem(label: string, key: string, icon?: MenuIcon, children?: ItemType[], type?: 'group'): ItemType {
   return { key, icon, children, label, type } as ItemType
 }
@@ -238,7 +238,7 @@ const parentItems: ItemType[] = [
     getItem('Option 12', '12')
   ])
 ]
-// 展开集合受控：仅保留最新展开的顶层子菜单，其余一并收起
+/** 展开集合受控：仅保留最新展开的顶层子菜单，其余一并收起 */
 function onParentOpenChange(openKeys: MenuKey[]) {
   const latestOpenKey = openKeys.find((key) => !parentOpenKeys.value.includes(key))
   if (latestOpenKey === undefined || !rootSubmenuKeys.includes(latestOpenKey)) {
@@ -284,7 +284,7 @@ const expandIconItems: ItemType[] = [
   ]),
   getItem('Navigation Two', 'sub3', () => h(AppstoreOutlined), [getItem('Option 5', '5'), getItem('Option 6', '6')])
 ]
-// 属性形态的展开图标：与插槽形态等价，渲染函数入参含所在子菜单配置与 isOpen
+/** 属性形态的展开图标：与插槽形态等价，渲染函数入参含所在子菜单配置与 isOpen */
 const expandIconByProp = (info: MenuExpandIconInfo) =>
   h(RightOutlined, { class: ['demo-expand-icon', { 'demo-expand-icon-open': info.isOpen }] })
 const expandIconPropOpenKeys = ref<MenuKey[]>(['sub1'])

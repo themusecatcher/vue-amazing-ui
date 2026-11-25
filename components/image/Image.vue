@@ -36,7 +36,6 @@ export interface Props {
   } // 图片下载配置，透传给内置 downloadFile 的第三个参数 options；默认 auto 策略（同源 anchor / 跨域 iframe）
   customDownload?: (url: string, fileName?: string) => void | Promise<void> // 自定义下载方法，提供时优先于内置 downloadFile，用于解决跨域图床下载受限等内置策略无法满足的场景
 }
-// 声明组件插槽类型
 export interface ImageSlots {
   preview?: () => VNode[]
 }
@@ -130,11 +129,11 @@ function getImages(): Image[] {
     ]
   }
 }
-// 图片加载完成
+/** 图片加载完成 */
 function onImageLoaded(index: number): void {
   imagesCompleted.value[index] = true
 }
-// 预览图片加载完成（例如相册模式，可在预览中切换到未加载完成的图片）
+/** 预览图片加载完成（例如相册模式，可在预览中切换到未加载完成的图片） */
 function onPreviewLoaded(index: number): void {
   previewCompleted.value[index] = true
 }
@@ -151,7 +150,7 @@ function getImageSize(size: string | number | (string | number)[], index: number
     return size
   }
 }
-// 使用键盘切换图片
+/** 使用键盘切换图片 */
 function onKeyboard(e: KeyboardEvent): void {
   if (showPreview.value && imageAmount.value > 1) {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
@@ -162,7 +161,7 @@ function onKeyboard(e: KeyboardEvent): void {
     }
   }
 }
-// 预览
+/** 预览 */
 async function onPreview(index: number): Promise<void> {
   scale.value = 1
   rotate.value = 0
@@ -176,11 +175,11 @@ async function onPreview(index: number): Promise<void> {
 defineExpose({
   preview: onPreview
 })
-// 关闭
+/** 关闭 */
 function onClose(): void {
   showPreview.value = false
 }
-// 下载
+/** 下载 */
 function onDownload(): void {
   const image = images.value[previewIndex.value]
   // 提供自定义下载方法时优先使用，绕开内置下载方法
@@ -191,7 +190,7 @@ function onDownload(): void {
   // 未自定义时走内置 downloadFile，透传下载配置
   downloadFile(image.src, getImageName(image), props.downloadOptions)
 }
-// 放大
+/** 放大 */
 function onZoomin(): void {
   if (scale.value + props.zoomRatio > props.maxZoomScale) {
     scale.value = props.maxZoomScale
@@ -199,7 +198,7 @@ function onZoomin(): void {
     scale.value = add(scale.value, props.zoomRatio)
   }
 }
-// 缩小
+/** 缩小 */
 function onZoomout(): void {
   if (scale.value - props.zoomRatio < props.minZoomScale) {
     scale.value = props.minZoomScale
@@ -207,7 +206,7 @@ function onZoomout(): void {
     scale.value = add(scale.value, -props.zoomRatio)
   }
 }
-// 重置图片为初始状态
+/** 重置图片为初始状态 */
 function onResetOrigin(): void {
   scale.value = 1
   swapX.value = 1
@@ -216,23 +215,23 @@ function onResetOrigin(): void {
   dragX.value = 0
   dragY.value = 0
 }
-// 顺时针旋转
+/** 顺时针旋转 */
 function onClockwiseRotate(): void {
   rotate.value += 90
 }
-// 逆时针旋转
+/** 逆时针旋转 */
 function onAnticlockwiseRotate(): void {
   rotate.value -= 90
 }
-// 水平镜像
+/** 水平镜像 */
 function onHorizontalMirror(): void {
   swapX.value *= -1
 }
-// 垂直镜像
+/** 垂直镜像 */
 function onVerticalMirror(): void {
   swapY.value *= -1
 }
-// 鼠标滚轮缩放
+/** 鼠标滚轮缩放 */
 function onWheel(e: WheelEvent) {
   // e.preventDefault() // 禁止浏览器捕获滑动事件
   const scrollZoom = e.deltaY * props.zoomRatio * 0.1 // 滚轮的纵向滚动量
@@ -303,7 +302,7 @@ function handlePointerUp() {
   document.removeEventListener('pointerup', handlePointerUp)
   document.removeEventListener('pointercancel', handlePointerUp)
 }
-// 切换到上一张
+/** 切换到上一张 */
 function onSwitchLeft(): void {
   if (props.loop) {
     previewIndex.value = (previewIndex.value - 1 + imageAmount.value) % imageAmount.value
@@ -314,7 +313,7 @@ function onSwitchLeft(): void {
   }
   onResetOrigin()
 }
-// 切换到下一张
+/** 切换到下一张 */
 function onSwitchRight(): void {
   if (props.loop) {
     previewIndex.value = (previewIndex.value + 1) % imageAmount.value
@@ -764,8 +763,8 @@ function onSwitchRight(): void {
       vertical-align: bottom;
     }
     .image-mask {
-      // top right bottom left 简写为 inset: 0
-      // insert 无论元素的书写模式、行内方向和文本朝向如何，其所定义的都不是逻辑偏移而是实体偏移
+      /* top right bottom left 简写为 inset: 0 */
+      /* insert 无论元素的书写模式、行内方向和文本朝向如何，其所定义的都不是逻辑偏移而是实体偏移 */
       position: absolute;
       inset: 0;
       display: flex;

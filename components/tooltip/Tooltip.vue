@@ -19,7 +19,6 @@ import { TOOLTIP_INHERITED_DEFAULTS } from './types'
  *
  * 契约：显式传入 `open` 即为受控，内部触发只经 `update:open` / `openChange` 上报
  */
-// 声明组件插槽类型
 export interface TooltipSlots {
   tooltip?: () => VNode[]
   default?: () => VNode[]
@@ -137,7 +136,7 @@ const ARROW_HALF_SIZE = 8
 const ARROW_EDGE_MIN = 5
 // 气泡卡片「箭头所在侧」的圆角实测值，由 measureArrowEdge 在测量阶段写入
 const cardCornerRadius = ref(0)
-// 解析长度文本：'12px' / '12px 8px' / 百分比（按基数换算）→ 数值；无法解析时为 null
+/** 解析长度文本：'12px' / '12px 8px' / 百分比（按基数换算）→ 数值；无法解析时为 null */
 function parseLength(value: string | number | undefined, base: number): number | null {
   if (value === undefined) return null
   const text = `${value}`.trim()
@@ -279,8 +278,10 @@ watch(
 // 与 **程序化关闭**（接口回调 / 父状态变更）没有任何指针事件，浮层会残留打开态。
 // 开合状态的订阅收敛在 useContainerClose（Popup 只提供状态，不自订阅）
 useContainerClose(() => onHide(true))
-// 测量锚点：定位内核按「单一 anchorRect」口径求解，锚点尺寸另供箭头中心让位使用。
-// 锚点模式直接以外部元素为锚点；包裹层模式取插槽内容的首个元素，仅文本内容时退回 .tooltip-content
+/**
+ * 测量锚点：定位内核按「单一 anchorRect」口径求解，锚点尺寸另供箭头中心让位使用。
+ * 锚点模式直接以外部元素为锚点；包裹层模式取插槽内容的首个元素，仅文本内容时退回 .tooltip-content
+ */
 function measureAnchor(): void {
   const externalAnchor = props.anchor
   if (externalAnchor) {
@@ -294,8 +295,10 @@ function measureAnchor(): void {
   anchorEl.value = el
   anchorSize.value = { width: el.offsetWidth, height: el.offsetHeight }
 }
-// 读取箭头所在侧的卡片圆角：主轴决定贴哪条边（top 的箭头在卡片底边、left 的箭头在卡片右边），
-// 次轴决定贴哪个角（start 贴起点侧、end 贴终点侧）。居中放置（纯方向）与关闭箭头时不吃圆角
+/**
+ * 读取箭头所在侧的卡片圆角：主轴决定贴哪条边（top 的箭头在卡片底边、left 的箭头在卡片右边），
+ * 次轴决定贴哪个角（start 贴起点侧、end 贴终点侧）。居中放置（纯方向）与关闭箭头时不吃圆角
+ */
 function measureArrowEdge(): void {
   if (!props.arrow || crossAlign.value === 'center') {
     cardCornerRadius.value = 0
@@ -350,7 +353,7 @@ useResizeObserver([tooltipCardRef, tooltipContentRef], (entries: ResizeObserverE
   }
   updatePosition()
 })
-// 重算位置：滚动 / resize / 尺寸变化由内核与监听统一驱动，宿主内部已做帧合并（每帧至多一次）
+/** 重算位置：滚动 / resize / 尺寸变化由内核与监听统一驱动，宿主内部已做帧合并（每帧至多一次） */
 function updatePosition(): void {
   const cardEl = tooltipCardRef.value
   if (cardEl) {
@@ -379,8 +382,10 @@ function clearTimers(): void {
   clearShowTimer()
   clearHideTimer()
 }
-// 请求变更显隐：受控时只上报（状态以 open 属性为准，组件不自行改写），非受控时写内部状态；
-// 两者都只在「值真的变化」时上报 —— 与 Dropdown 的 requestOpen 同口径，避免无变化通知
+/**
+ * 请求变更显隐：受控时只上报（状态以 open 属性为准，组件不自行改写），非受控时写内部状态；
+ * 两者都只在「值真的变化」时上报 —— 与 Dropdown 的 requestOpen 同口径，避免无变化通知
+ */
 function requestVisible(val: boolean): void {
   if (tooltipVisible.value === val) return
   // 写模型即完成两种路径：受控时只上报（显示以父侧回写为准），非受控时本地生效
@@ -415,7 +420,7 @@ function onHide(immediate = false): void {
   const delay = props.trigger === 'hover' && !immediate ? props.hideDelay : 0
   hideTimer = setTimeout(applyHide, delay)
 }
-// 显式切换（click 触发 / keyboard 的 enter）：状态在同一拍内落定，不依赖定时器时序
+/** 显式切换（click 触发 / keyboard 的 enter）：状态在同一拍内落定，不依赖定时器时序 */
 function toggleVisible(): void {
   if (!showTooltip.value) return
   clearTimers()
@@ -426,9 +431,11 @@ function toggleVisible(): void {
   if (props.disabled || props.getDisabled?.()) return
   applyShow()
 }
-// 触发器点击：click 触发时显式切换（与 Dropdown 的 onTriggerClick 同口径）。
-// contextmenu 触发时左键点击触发器应收起 —— 右键唤起的浮层没有左键 toggle 语义，
-// 但「点触发器关掉它」是最直觉的关闭动作
+/**
+ * 触发器点击：click 触发时显式切换（与 Dropdown 的 onTriggerClick 同口径）。
+ * contextmenu 触发时左键点击触发器应收起 —— 右键唤起的浮层没有左键 toggle 语义，
+ * 但「点触发器关掉它」是最直觉的关闭动作
+ */
 function onTriggerClick(): void {
   if (props.trigger === 'contextmenu') {
     if (tooltipVisible.value) {
@@ -445,8 +452,10 @@ function onTriggerClick(): void {
   }
   toggleVisible()
 }
-// 外部点击：判定与监听已下沉到宿主（closeOnOutsideClick，口径为「面板之外 且 触发器之外」），
-// 此处只接上报结果、不参与判定
+/**
+ * 外部点击：判定与监听已下沉到宿主（closeOnOutsideClick，口径为「面板之外 且 触发器之外」），
+ * 此处只接上报结果、不参与判定
+ */
 function closeFromOutside(): void {
   onHide()
 }
@@ -460,7 +469,7 @@ function onLeaveWrap() {
     onHide()
   }
 }
-// 面板自身的动画结束由宿主过滤（忽略插槽内容中嵌套动画的冒泡），此处只负责对外转发
+/** 面板自身的动画结束由宿主过滤（忽略插槽内容中嵌套动画的冒泡），此处只负责对外转发 */
 function onAnimationEnd() {
   emits('animationend', tooltipVisible.value)
 }
@@ -474,9 +483,11 @@ function onLeaveTooltip() {
     onHide()
   }
 }
-// focus 触发：内容元素（或其内部可聚焦子元素）获得/失去焦点时显示/隐藏
-// focus/blur 不冒泡，包裹元素无法在冒泡阶段捕获内部子元素的焦点变化，故使用捕获阶段监听 (.capture)
-// 选择捕获阶段而非 focusin/focusout：后者依赖浏览器原生支持 (Firefox 52+ 才支持)，捕获阶段监听兼容面更大
+/**
+ * focus 触发：内容元素（或其内部可聚焦子元素）获得/失去焦点时显示/隐藏
+ * focus/blur 不冒泡，包裹元素无法在冒泡阶段捕获内部子元素的焦点变化，故使用捕获阶段监听 (.capture)
+ * 选择捕获阶段而非 focusin/focusout：后者依赖浏览器原生支持 (Firefox 52+ 才支持)，捕获阶段监听兼容面更大
+ */
 function onFocus() {
   if (showTooltip.value && props.trigger === 'focus') {
     onShow()
@@ -489,8 +500,10 @@ function onBlur(e: FocusEvent) {
   if (container?.contains(e.relatedTarget as Node | null)) return
   onHide()
 }
-// contextmenu 触发：右键时显示并阻止浏览器原生菜单。**展开状态下同样要阻止** ——
-// 否则同一个手势第一次拦、第二次放行，原生菜单会叠在浮层上
+/**
+ * contextmenu 触发：右键时显示并阻止浏览器原生菜单。**展开状态下同样要阻止** ——
+ * 否则同一个手势第一次拦、第二次放行，原生菜单会叠在浮层上
+ */
 function onContextmenu(e: Event) {
   if (!showTooltip.value || props.trigger !== 'contextmenu') return
   e.preventDefault()
@@ -498,13 +511,15 @@ function onContextmenu(e: Event) {
     onShow()
   }
 }
-// esc：click / contextmenu 触发时关闭。触发器与面板两处都响应（与 Dropdown 同口径）：
-// 焦点落在触发子树上时按键事件经冒泡到此处，不必要求焦点停在面板内
+/**
+ * esc：click / contextmenu 触发时关闭。触发器与面板两处都响应（与 Dropdown 同口径）：
+ * 焦点落在触发子树上时按键事件经冒泡到此处，不必要求焦点停在面板内
+ */
 function onEscKeydown() {
   if (!needOutsideClick.value || !tooltipVisible.value) return
   onHide()
 }
-// enter：click 触发且开启 keyboard 时切换显示（click 切换本身由 onTriggerClick 承担，与本键无关）
+/** enter：click 触发且开启 keyboard 时切换显示（click 切换本身由 onTriggerClick 承担，与本键无关） */
 function onEnterKeydown() {
   if (!showTooltip.value || props.trigger !== 'click' || !props.keyboard) return
   enterActivated = true
@@ -535,7 +550,7 @@ function bindAnchor(el: HTMLElement): void {
   el.addEventListener('blur', onBlur, true)
   el.addEventListener('keydown', onAnchorKeydown)
 }
-// 还原写入锚点的无障碍属性：tabindex 仅在本组件补过时才移除
+/** 还原写入锚点的无障碍属性：tabindex 仅在本组件补过时才移除 */
 function releaseAnchorA11y(el: HTMLElement): void {
   if (anchorTabIndexApplied) {
     el.removeAttribute('tabindex')
@@ -555,8 +570,10 @@ function unbindAnchor(el: HTMLElement): void {
   el.removeEventListener('keydown', onAnchorKeydown)
   releaseAnchorA11y(el)
 }
-// 无障碍属性同步：tabindex 仅在 focus 触发时补（使用方已设置则不动），
-// aria-describedby 仅在提示实际可见时关联，避免读屏器朗读隐藏内容
+/**
+ * 无障碍属性同步：tabindex 仅在 focus 触发时补（使用方已设置则不动），
+ * aria-describedby 仅在提示实际可见时关联，避免读屏器朗读隐藏内容
+ */
 function syncAnchorA11y(el: HTMLElement | null): void {
   if (!el) return
   if (props.trigger === 'focus') {
@@ -600,8 +617,10 @@ onBeforeUnmount(() => {
     boundAnchor = null
   }
 })
-// 焦点归还：把焦点送回触发元素。包裹层模式取「触发内容里的首个可聚焦元素」（触发器常是 Button，
-// 包裹用的 `.tooltip-content` 本身不可聚焦，聚焦它等于没还）；锚点模式直接聚焦使用方提供的锚点
+/**
+ * 焦点归还：把焦点送回触发元素。包裹层模式取「触发内容里的首个可聚焦元素」（触发器常是 Button，
+ * 包裹用的 `.tooltip-content` 本身不可聚焦，聚焦它等于没还）；锚点模式直接聚焦使用方提供的锚点
+ */
 function focusTrigger(): void {
   const root = anchorMode.value ? anchorEl.value : tooltipContentRef.value
   if (!root) return
@@ -798,7 +817,7 @@ defineExpose({
       right: 0;
     }
   }
-  // 主轴 bottom：箭头贴面板上边缘
+  /* 主轴 bottom：箭头贴面板上边缘 */
   &.va-popup-placement-bottom .tooltip-arrow,
   &.va-popup-placement-bottomLeft .tooltip-arrow,
   &.va-popup-placement-bottomRight .tooltip-arrow {
@@ -815,7 +834,7 @@ defineExpose({
       right: 0;
     }
   }
-  // 主轴 left：箭头贴面板右边缘
+  /* 主轴 left：箭头贴面板右边缘 */
   &.va-popup-placement-left .tooltip-arrow,
   &.va-popup-placement-leftTop .tooltip-arrow,
   &.va-popup-placement-leftBottom .tooltip-arrow {
@@ -832,7 +851,7 @@ defineExpose({
       right: 0;
     }
   }
-  // 主轴 right：箭头贴面板左边缘
+  /* 主轴 right：箭头贴面板左边缘 */
   &.va-popup-placement-right .tooltip-arrow,
   &.va-popup-placement-rightTop .tooltip-arrow,
   &.va-popup-placement-rightBottom .tooltip-arrow {
@@ -849,9 +868,9 @@ defineExpose({
       right: 0;
     }
   }
-  // 次轴对齐（复合方向）：Left / Top 后缀为次轴 start，Right / Bottom 为次轴 end；
-  // 纯方向（top / bottom / left / right）不带次轴类，中心对齐由上面的主轴规则承担
-  // 水平主轴 (top/bottom)：箭头沿水平方向靠边
+  /* 次轴对齐（复合方向）：Left / Top 后缀为次轴 start，Right / Bottom 为次轴 end； */
+  /* 纯方向（top / bottom / left / right）不带次轴类，中心对齐由上面的主轴规则承担 */
+  /* 水平主轴 (top/bottom)：箭头沿水平方向靠边 */
   &.va-popup-placement-topLeft .tooltip-arrow,
   &.va-popup-placement-bottomLeft .tooltip-arrow {
     left: var(--tooltip-arrow-edge);
@@ -869,7 +888,7 @@ defineExpose({
   &.va-popup-placement-bottomRight .tooltip-arrow {
     transform: translateX(0) translateY(-100%) rotate(0deg);
   }
-  // 垂直主轴 (left/right)：箭头沿垂直方向靠边
+  /* 垂直主轴 (left/right)：箭头沿垂直方向靠边 */
   &.va-popup-placement-leftTop .tooltip-arrow,
   &.va-popup-placement-rightTop .tooltip-arrow {
     top: var(--tooltip-arrow-edge);

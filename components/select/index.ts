@@ -18,8 +18,10 @@ export type { LabeledValue as SelectLabeledValue } from './Select.vue'
 export type { SelectOptionProps, SelectOptionSlots } from './select-option'
 export type { SelectOptGroupProps, SelectOptGroupSlots } from './select-optgroup'
 
-// 选项元素类型与子组件同名，二者共存（类型位 = 选项数据对象，值位 = 选项子组件）：
-// const options: SelectOption[] = [...] 与 <SelectOption value="jack">Jack</SelectOption> 均为合法用法
+/**
+ * 选项元素类型与子组件同名，二者共存（类型位 = 选项数据对象，值位 = 选项子组件）：
+ * const options: SelectOption[] = [...] 与 <SelectOption value="jack">Jack</SelectOption> 均为合法用法
+ */
 export type SelectOption = SelectOptionType
 export const SelectOption = SelectOptionComp
 export const SelectOptGroup = SelectOptGroupComp

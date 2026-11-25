@@ -4,7 +4,7 @@ import DatePicker from 'components/date-picker/DatePicker.vue'
 import TimePicker from 'components/time-picker/TimePicker.vue'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * 回归守护：日期 / 时间选择器的键盘操作
  *
  * 锁定一组键位口径：`Enter` 收起态展开、展开态提交并收起（无可提交值则保持展开）、`Esc` 收起、

@@ -38,11 +38,11 @@ import {
 } from 'components/picker'
 import type { FloatingPlacement, MountElement } from 'components/utils'
 import { FLOATING_LAYER_Z_INDEX } from 'components/utils'
-/** 默认展示格式（24 小时制） */
+// 默认展示格式（24 小时制）
 const DEFAULT_FORMAT = 'HH:mm:ss'
-/** 12 小时制下的默认展示格式：小时补零，与面板的小时列标签、头部文本同口径（均为两位的 `09`） */
+// 12 小时制下的默认展示格式：小时补零，与面板的小时列标签、头部文本同口径（均为两位的 `09`）
 const DEFAULT_12_HOURS_FORMAT = 'hh:mm:ss a'
-/** 输入框估宽的字符下限：时间格式短（`HH:mm:ss` 仅 8 字符），沿用日期形态的 10 会让触发器凭空宽出约 14px */
+// 输入框估宽的字符下限：时间格式短（`HH:mm:ss` 仅 8 字符），沿用日期形态的 10 会让触发器凭空宽出约 14px
 const TIME_INPUT_MIN_SIZE = 8
 /** 选择形态：单选（单段值）或范围（两段元组值，双段输入） */
 export type TimePickerType = 'time' | 'timerange'
@@ -96,7 +96,7 @@ export interface TimePickerSlots {
   separator?: () => VNode[] // 范围形态两段之间的分隔符，默认右向箭头
   renderExtraFooter?: () => VNode[] // 面板底部的额外页脚，优先于同名 prop
 }
-/**
+/*
  * 对外公开的值与配置类型
  *
  * 选择器内核（`components/picker`）不对外导出，这里按本组件文档所引用的类型名逐个别名转出，
@@ -166,7 +166,7 @@ interface PanelKeydownTarget {
   handleKeydown: (event: KeyboardEvent) => boolean
 }
 const timePanelRef = ref<PanelKeydownTarget | null>(null)
-/**
+/*
  * 键盘归属：`false` 为文本输入态（方向键移动插入光标），`true` 为面板操作态（方向键操作时间列）
  *
  * 两态由 Tab 切换，面板操作态下输入框置为只读；声明须在收起监听之前（该监听带 `immediate`，初始收起时即会重置本状态）
@@ -185,15 +185,15 @@ const wrapperStyle = computed(() => {
   return { ...themeVars.value, '--timepicker-width': width ?? 'auto' } as CSSProperties
 })
 const mergedPanelClass = computed(() => ['timepicker-panel-container', props.panelClass].filter(Boolean).join(' '))
-/** 展示格式：未指定时按 12 小时制开关取默认值 */
+// 展示格式：未指定时按 12 小时制开关取默认值
 const mergedFormat = computed(() => props.format ?? (props.use12Hours ? DEFAULT_12_HOURS_FORMAT : DEFAULT_FORMAT))
-/** 展示与回写共用的格式：`valueFormat` 优先，未指定时跟随展示格式 */
+// 展示与回写共用的格式：`valueFormat` 优先，未指定时跟随展示格式
 const mergedValueFormat = computed(() => props.valueFormat ?? mergedFormat.value)
-/** 输入框按**绑定值格式**估宽：下限取时间格式的 8 字符（沿用日期形态的 10 会让触发器凭空宽出约 14px），宽度与展示文本一致 */
+// 输入框按**绑定值格式**估宽：下限取时间格式的 8 字符（沿用日期形态的 10 会让触发器凭空宽出约 14px），宽度与展示文本一致
 const inputSize = computed(() => getInputSize(mergedValueFormat.value, TIME_INPUT_MIN_SIZE))
-/** 是否为范围形态：双段输入，值为两段元组 */
+// 是否为范围形态：双段输入，值为两段元组
 const isRange = computed(() => props.type === 'timerange')
-/** 值与开合的共享内核：与形态无关的值逻辑与 `DatePicker` 共用一份实现 */
+// 值与开合的共享内核：与形态无关的值逻辑与 `DatePicker` 共用一份实现
 const {
   openModel,
   triggerRef,
@@ -235,11 +235,11 @@ const {
     }
   }
 })
-/** 激活段在元组中的下标 */
+// 激活段在元组中的下标
 const activeSideIndex = computed(() => (activeSide.value === 'start' ? 0 : 1))
-/** 对端在元组中的下标 */
+// 对端在元组中的下标
 const otherSideIndex = computed(() => (activeSide.value === 'start' ? 1 : 0))
-/** 面板展示值：范围形态取激活段，单选形态取单值（展开期间有草稿则取草稿） */
+// 面板展示值：范围形态取激活段，单选形态取单值（展开期间有草稿则取草稿）
 const panelTimestamp = computed(() => {
   if (isRange.value) {
     return panelRangeValue.value?.[activeSideIndex.value] ?? null
@@ -247,7 +247,7 @@ const panelTimestamp = computed(() => {
   const drafting = openModel.value && draftValue.value !== null
   return drafting ? draftValue.value : innerValue.value
 })
-/**
+/*
  * 合成新时间戳的日期基准：范围形态下激活段自身优先，为空时取另一端（两段都空则由面板退回当前时刻）
  *
  * 时间列只表达时分秒，落值仍要一个日期承接 —— 取另一端那一日，同一区间的两段因此落在同一天上。
@@ -256,14 +256,14 @@ const panelBaseTimestamp = computed(() => {
   if (!isRange.value) return undefined
   return panelRangeValue.value?.[activeSideIndex.value] ?? panelRangeValue.value?.[otherSideIndex.value] ?? undefined
 })
-/** 输入框展示文本：字符串轨道受控时原样展示（解析失败也不丢弃用户输入），否则按展示格式生成 */
+// 输入框展示文本：字符串轨道受控时原样展示（解析失败也不丢弃用户输入），否则按展示格式生成
 const displayText = computed(() => {
   if (formattedControlled.value) {
     return typeof props.formattedValue === 'string' ? props.formattedValue : ''
   }
   return panelTimestamp.value === null ? '' : formatTimestamp(panelTimestamp.value, mergedValueFormat.value)
 })
-/** 范围形态的两段文本：字符串轨道受控时以其为准，否则按展示格式逐段生成 */
+// 范围形态的两段文本：字符串轨道受控时以其为准，否则按展示格式逐段生成
 const displayRangeTexts = computed<[string, string]>(() => {
   const formatted = props.formattedValue
   if (formattedControlled.value && Array.isArray(formatted)) {
@@ -272,7 +272,7 @@ const displayRangeTexts = computed<[string, string]>(() => {
   const current = panelRangeValue.value
   return [formatSideTimestamp(current?.[0]), formatSideTimestamp(current?.[1])]
 })
-/** 两段输入的提示文字：只给单值时两段共用同一文案 */
+// 两段输入的提示文字：只给单值时两段共用同一文案
 const mergedPlaceholders = computed<[string, string]>(() => {
   const placeholder = props.placeholder
   if (Array.isArray(placeholder)) {
@@ -280,9 +280,9 @@ const mergedPlaceholders = computed<[string, string]>(() => {
   }
   return [placeholder, placeholder]
 })
-/** 单段输入的提示文字（范围形态由两段提示文字承担，此处传空） */
+// 单段输入的提示文字（范围形态由两段提示文字承担，此处传空）
 const singlePlaceholder = computed(() => (Array.isArray(props.placeholder) ? '' : props.placeholder))
-/** 时间面板选项：把扁平属性组装成内核口径 */
+// 时间面板选项：把扁平属性组装成内核口径
 const timePanelProps = computed<PickerTimePanelProps>(() => ({
   hourStep: props.hourStep,
   minuteStep: props.minuteStep,
@@ -290,9 +290,9 @@ const timePanelProps = computed<PickerTimePanelProps>(() => ({
   use12Hours: props.use12Hours,
   hideDisabledOptions: props.hideDisabledOptions
 }))
-/** 禁用时间的判定基准：激活段自身优先，为空时取另一端，两段都空取当前时刻 */
+// 禁用时间的判定基准：激活段自身优先，为空时取另一端，两段都空取当前时刻
 const disabledBase = computed(() => (isRange.value ? panelBaseTimestamp.value : panelTimestamp.value) ?? Date.now())
-/** 禁用时间：范围形态把段标识注入判定函数（对外口径为 `(timestamp, side)`） */
+// 禁用时间：范围形态把段标识注入判定函数（对外口径为 `(timestamp, side)`）
 const disabledUnits = computed<PickerDisabledTimeUnits>(() => {
   const disabledTime = props.disabledTime
   if (!disabledTime) return {}
@@ -300,9 +300,9 @@ const disabledUnits = computed<PickerDisabledTimeUnits>(() => {
     ? (disabledTime as PickerRangeDisabledTime)(disabledBase.value, activeSide.value)
     : (disabledTime as PickerDisabledTime)(disabledBase.value)
 })
-/** 「确定」是否可点：激活段（单选形态即该段自身）没有可提交的时间 */
+// 「确定」是否可点：激活段（单选形态即该段自身）没有可提交的时间
 const okDisabled = computed(() => panelTimestamp.value === null)
-/**
+/*
  * 面板底部的额外页脚：同名插槽优先于 prop，两轨统一为「入参 → VNode[]」的函数下发给内核
  * （内核只收函数：VNode 需在其渲染上下文内创建，`computed` 里直接求值会产生「无主的 hoisted vnode」）
  */
@@ -318,18 +318,18 @@ const mergedExtraFooter = computed<(() => VNode[]) | undefined>(() => {
     return Array.isArray(node) ? node : [node]
   }
 })
-/** 实际方向：定位内核翻转 / 次轴自适应后的结果（宿主未挂载时退回期望方位） */
+// 实际方向：定位内核翻转 / 次轴自适应后的结果（宿主未挂载时退回期望方位）
 const actualPlacement = computed<FloatingPlacement>(() => popupRef.value?.actualPlacement ?? props.placement)
-/** 面板指示箭头相对输入区左边缘的偏移：与激活段下划线同源，由触发器测量后下发 */
+// 面板指示箭头相对输入区左边缘的偏移：与激活段下划线同源，由触发器测量后下发
 const rangeArrowLeft = ref(0)
-/** 是否展示面板指示箭头：不传 `showArrow` 时按「实际方位」判定，传值则以显式开关为准 */
+// 是否展示面板指示箭头：不传 `showArrow` 时按「实际方位」判定，传值则以显式开关为准
 const showRangeArrow = computed(() => {
   if (!isRange.value || props.showArrow === false) return false
   return props.showArrow === true || ARROW_PLACEMENTS.includes(actualPlacement.value)
 })
-/** 浮层与触发器的间距：范围形态额外预留箭头所在的那一段空白 */
+// 浮层与触发器的间距：范围形态额外预留箭头所在的那一段空白
 const popupOffset = computed(() => (isRange.value ? RANGE_POPUP_OFFSET : POPUP_OFFSET))
-/** 面板过渡：仅给 name，类名走 Vue 默认派生（-enter-from/-enter-active/…），缩放原点由 <Popup> 按方位写入 */
+// 面板过渡：仅给 name，类名走 Vue 默认派生（-enter-from/-enter-active/…），缩放原点由 <Popup> 按方位写入
 const panelTransitionProps: TransitionProps = { name: 'timepicker-zoom' }
 /**
  * 点击触发器只负责展开（展开态点击不收起，收起由外部点击 / Esc / 提交触发）：
@@ -428,8 +428,8 @@ function onTextConfirm(text: string, source: 'enter' | 'blur', index: 0 | 1 = 0)
   commit(rangeTimestamp)
   requestOpen(false)
 }
-/* ============================== 键盘导航 ============================== */
-/**
+// ============================== 键盘导航 ==============================
+/*
  * 按键按下时的展开态快照
  *
  * 展开态的回车会先被输入框的文本提交消费（提交并收起面板），事件随后才冒泡到这里 —— 用此刻的
@@ -439,7 +439,7 @@ let openAtKeydown = false
 function onWrapperKeydownCapture(): void {
   openAtKeydown = openModel.value
 }
-/**
+/*
  * 本次焦点变化是否由「按在组件内」的指针操作引起
  *
  * 点触发器的非输入区（图标、内边距）同样会让输入框失焦，但那是「点自己」，不该收起面板；
@@ -617,7 +617,7 @@ defineExpose({ focus, blur })
 </template>
 <style lang="less" scoped>
 .timepicker-wrap {
-  // 行内弹性容器：未传 width 时收缩为内容宽，不被父容器拉伸
+  /* 行内弹性容器：未传 width 时收缩为内容宽，不被父容器拉伸 */
   display: inline-flex;
   width: var(--timepicker-width, auto);
   :deep(.picker-trigger) {
@@ -633,11 +633,11 @@ defineExpose({ focus, blur })
   z-index: 1;
   width: 16px;
   height: 16px;
-  // 取触发器水平内边距的 1.5 倍
+  /* 取触发器水平内边距的 1.5 倍 */
   margin-left: 16.5px;
   overflow: hidden;
   pointer-events: none;
-  // 面板在触发器下方：贴上边缘并向上突出（尖朝上）
+  /* 面板在触发器下方：贴上边缘并向上突出（尖朝上） */
   transform: translateY(-100%);
   transition: left 0.3s ease-out;
   &::before {
@@ -646,8 +646,8 @@ defineExpose({ focus, blur })
     left: 0;
     width: 16px;
     height: 8px;
-    // 与面板同底：箭头自绘三角形，必须取 .picker-panel 的同一底色变量，
-    // 否则暗色下浮层底（elevated）比容器底（container）亮一档，箭头会显成一块更暗的补丁
+    /* 与面板同底：箭头自绘三角形，必须取 .picker-panel 的同一底色变量， */
+    /* 否则暗色下浮层底（elevated）比容器底（container）亮一档，箭头会显成一块更暗的补丁 */
     background-color: var(--picker-panel-bg-color, var(--va-bg-elevated-color));
     clip-path: polygon(
       1.6568542494923806px 100%,
@@ -668,7 +668,7 @@ defineExpose({ focus, blur })
     width: 8.970562748477143px;
     height: 8.970562748477143px;
     margin: auto;
-    // 只延续投影：置于三角形之下，压在三角形之上会把浅色箭头染灰
+    /* 只延续投影：置于三角形之下，压在三角形之上会把浅色箭头染灰 */
     z-index: -1;
     background: transparent;
     border-radius: 0 0 2px 0;
@@ -677,8 +677,8 @@ defineExpose({ focus, blur })
     content: '';
   }
 }
-// 面板宽度交给时间列内容（内核面板默认 280px 是日期列宽度）；尾随占位取「列可视高 - 格高」：本形态
-// 216px → 188px，末项滚到底正好落在列顶、完整可悬浮（内核默认 204px 属日期时间形态，其列被撑到 232px）
+/* 面板宽度交给时间列内容（内核面板默认 280px 是日期列宽度）；尾随占位取「列可视高 - 格高」：本形态 */
+/* 216px → 188px，末项滚到底正好落在列顶、完整可悬浮（内核默认 204px 属日期时间形态，其列被撑到 232px） */
 .picker-panel.timepicker-panel {
   width: auto;
   --picker-time-column-trailing-height: 188px;
@@ -693,12 +693,12 @@ defineExpose({ focus, blur })
   list-style: none;
   > li {
     display: inline-block;
-    // 面板就地渲染（`to` 默认 false）会落在宿主文档的内容区内，宿主会给相邻 li 补外边距（如
-    // VitePress 的 `.vp-doc li + li`），使「确定」相对「此刻」下沉；此处归零，间距由本组件自行掌控
+    /* 面板就地渲染（`to` 默认 false）会落在宿主文档的内容区内，宿主会给相邻 li 补外边距（如 */
+    /* VitePress 的 `.vp-doc li + li`），使「确定」相对「此刻」下沉；此处归零，间距由本组件自行掌控 */
     margin: 0;
   }
-  // 隐藏「此刻」时底部只剩「确定」，靠自身外边距顶到行尾；高度须显式取页脚行高（flex 后行高不再参与
-  // 内在高度，不声明则页脚矮 10px），弹性居中用于补偿按钮根节点为 inline-block div 的基线偏移
+  /* 隐藏「此刻」时底部只剩「确定」，靠自身外边距顶到行尾；高度须显式取页脚行高（flex 后行高不再参与 */
+  /* 内在高度，不声明则页脚矮 10px），弹性居中用于补偿按钮根节点为 inline-block div 的基线偏移 */
   .timepicker-panel-ok {
     display: flex;
     align-items: center;
@@ -707,7 +707,7 @@ defineExpose({ focus, blur })
   }
 }
 .timepicker-panel-now-btn {
-  // 还原被宿主文档链接样式接管的字重与下划线
+  /* 还原被宿主文档链接样式接管的字重与下划线 */
   color: var(--picker-primary-color, var(--va-cp-time-picker-primary-color, var(--va-primary-color)));
   font-weight: normal;
   text-decoration: none;

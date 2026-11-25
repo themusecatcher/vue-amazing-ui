@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import Select from 'components/select/Select.vue'
 import type { SelectProps } from 'components/select'
 
-/**
+/*
  * Select 走 L1 旁路接入定位内核后的契约回归
  *
  * 迁移前定位由组件自己算（旧测量骨架 + 自研 `findPlace` + 手拼 top / bottom / left / width），
@@ -36,11 +36,11 @@ function domRect(left: number, top: number, width: number, height: number): DOMR
   } as DOMRect
 }
 
-/** 视口桩矩形：未登记元素（含内核惰性创建的视口测量元素、定位参照容器）统一返回它 */
+// 视口桩矩形：未登记元素（含内核惰性创建的视口测量元素、定位参照容器）统一返回它
 const viewportRect = domRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT)
-/** 触发器桩矩形：按用例改动后再挂载，以影响求解 */
+// 触发器桩矩形：按用例改动后再挂载，以影响求解
 let anchorRect = domRect(400, 300, 100, 40)
-/** 面板桩**布局**尺寸（内核按 offsetWidth / offsetHeight 测量浮层；等宽由内核写入 style 后再测量） */
+// 面板桩**布局**尺寸（内核按 offsetWidth / offsetHeight 测量浮层；等宽由内核写入 style 后再测量）
 const panelSize = { width: 100, height: 80 }
 
 /** 等待「打开 → 渲染 → 内核 post flush 落位」 */
@@ -50,7 +50,7 @@ async function flush(): Promise<void> {
   await nextTick()
 }
 
-// 面板改由 Popup 宿主承载后，定位参照容器即宿主的 .va-popup-container（原 .select-panel-wrapper 已消失）
+/** 面板改由 Popup 宿主承载后，定位参照容器即宿主的 .va-popup-container（原 .select-panel-wrapper 已消失） */
 const queryWrapperEl = (): HTMLElement | null => document.querySelector('.va-popup-container')
 const queryPanel = (): HTMLElement | null => document.querySelector('.select-panel-container')
 
@@ -179,7 +179,7 @@ describe('Select 定位内核接入（L1 旁路）', () => {
 })
 
 describe('Select 面板的公开覆盖入口（popupClassName / dropdownMenuStyle / zIndex）', () => {
-  /**
+  /*
    * 面板改由 Popup 宿主承载后，两层结构升级为 `.va-popup-container` + `.va-popup-panel`（面板根仍挂
    * `select-panel-container`），`body > .xxx` / 直接子代选择器等 DOM 结构依赖会失效，故面板样式
    * 必须提供公开入口。

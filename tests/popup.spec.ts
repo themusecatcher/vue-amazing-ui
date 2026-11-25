@@ -7,7 +7,7 @@ import ConfigProvider from 'components/config-provider'
 import { injectFromChain, zIndexContainerOpenKey } from 'components/utils'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * `<Popup>` 浮层宿主回归守护
  *
  * 锁定的是**宿主契约**，而非求解结果（求解层已由
@@ -40,11 +40,11 @@ function domRect(left: number, top: number, width: number, height: number): DOMR
   } as DOMRect
 }
 
-/** 视口桩矩形：未登记元素（含内核惰性创建的视口测量元素、定位容器）统一返回它 */
+// 视口桩矩形：未登记元素（含内核惰性创建的视口测量元素、定位容器）统一返回它
 const viewportRect = domRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT)
-/** 锚点桩矩形：按用例改动后再挂载，以影响首次求解 */
+// 锚点桩矩形：按用例改动后再挂载，以影响首次求解
 let anchorRect = domRect(400, 300, 100, 40)
-/** 面板桩**布局**尺寸（内核按 offsetWidth / offsetHeight 测量浮层） */
+// 面板桩**布局**尺寸（内核按 offsetWidth / offsetHeight 测量浮层）
 const panelSize = { width: 200, height: 80 }
 
 /** 一个 tick 的等待：让内核的 post flush 与 Transition 归位（公共等待见 tests/helpers.ts） */
@@ -506,7 +506,7 @@ describe('Popup · destroyOnHide（隐藏后卸载）', () => {
     await flush()
     panels = document.querySelectorAll('.va-popup-panel')
     expect(panels).toHaveLength(2)
-    // 重新展示 = 重新挂载容器 → 追加到目标末尾（DOM 顺序即「后出现者在上」），故按内容取面板
+    /** 重新展示 = 重新挂载容器 → 追加到目标末尾（DOM 顺序即「后出现者在上」），故按内容取面板 */
     const panelOf = (text: string): HTMLElement =>
       [...panels].find((panel) => panel.textContent?.includes(text)) as HTMLElement
     // 重新领取：位于当前所有已打开层之上
@@ -680,7 +680,7 @@ describe('Popup · 浮层字体承接', () => {
 })
 
 describe('Popup · 承载层开合契约', () => {
-  /**
+  /*
    * 面板携带 `data-va-floating-mount` 后，插槽里的浮层（Tooltip / Dropdown / 内层选择器等）会挂进面板。
    * 面板关闭只是 `v-show` 隐藏，既不给内部浮层的触发元素派发 `mouseleave` 也不派发 `blur`，
    * 故宿主必须下发开合状态（`zIndexContainerOpenKey`，与 Modal / Drawer / Dialog 同一契约）；
@@ -717,7 +717,7 @@ describe('Popup · 承载层开合契约', () => {
   })
 })
 
-/**
+/*
  * 外点上报（`closeOnOutsideClick`）
  *
  * 判定口径固定为「面板之外 且 锚点之外」：只判「面板外」时消费方仍要各自排触发器，

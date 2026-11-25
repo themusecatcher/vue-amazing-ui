@@ -9,7 +9,6 @@ import type { VNode } from 'vue'
 export interface Props {
   title?: string // 分组标题
 }
-// 声明组件插槽类型
 export interface MenuItemGroupSlots {
   default?: () => VNode[] // 分组的菜单项
   title?: () => VNode[] // 分组标题

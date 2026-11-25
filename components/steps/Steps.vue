@@ -43,7 +43,7 @@ const currentStep = computed(() => {
     return props.current
   }
 })
-// 点击切换选择步骤
+/** 点击切换选择步骤 */
 function onChange(index: number): void {
   if (currentStep.value !== index) {
     emits('update:current', index)

@@ -20,7 +20,6 @@ export interface Props {
   defaultValue?: string // 非受控初始值，未绑 v-model:value 时生效
   valueModifiers?: object // 用于访问组件的 v-model 上添加的修饰符
 }
-// 声明组件插槽类型
 export interface InputSlots {
   addonBefore?: () => VNode[]
   prefix?: () => VNode[]
@@ -119,12 +118,12 @@ function onBlur(e: FocusEvent): void {
   // 原生 blur 带上 relatedTarget：宿主可据此区分「失焦到哪」，如分页跳转框失焦到页码时不必再跳一次
   emits('blur', e)
 }
-// 文本合成系统即输入法编辑器开始新的输入合成时会触发
+/** 文本合成系统即输入法编辑器开始新的输入合成时会触发 */
 function onCompositionStart(e: CompositionEvent): void {
   isComposing.value = true
   emits('compositionstart', e)
 }
-// 当文本段落的组成完成或取消时触发 (具有特殊字符的触发，需要一系列键和其他输入，如语音识别或移动中的字词建议)
+/** 当文本段落的组成完成或取消时触发 (具有特殊字符的触发，需要一系列键和其他输入，如语音识别或移动中的字词建议) */
 function onCompositionEnd(e: CompositionEvent): void {
   isComposing.value = false
   const target = e.target as HTMLInputElement | null
@@ -179,7 +178,7 @@ function onClear(): void {
 function onPassword(): void {
   showPassword.value = !showPassword.value
 }
-// 程序化控制焦点：走原生 input 的 focus / blur，聚焦态由原生 focus / blur 事件驱动，无需另行同步
+/** 程序化控制焦点：走原生 input 的 focus / blur，聚焦态由原生 focus / blur 事件驱动，无需另行同步 */
 function focus(): void {
   inputRef.value?.focus()
 }

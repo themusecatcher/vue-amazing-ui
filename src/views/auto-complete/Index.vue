@@ -63,7 +63,7 @@ const options5 = ref([
     value: 'all'
   }
 ])
-// 查询模式 - 不确定类目
+/** 查询模式 - 不确定类目 */
 interface SearchOption {
   query: string
   category: string

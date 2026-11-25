@@ -49,7 +49,7 @@ export interface FieldNames {
   options?: string // 分组子选项的字段名（对应分组 / 树形数据的下级选项数组）
 }
 export type SelectValue = string | number
-// labelInValue 打开时的 value 对象形态（LabeledValue 形态）
+/** labelInValue 打开时的 value 对象形态（LabeledValue 形态） */
 export interface LabeledValue {
   label: SelectValue // 选项文本（文本通道：label 属性 > 插槽文本规范化结果，恒为标量）
   value: SelectValue // 选项值
@@ -58,12 +58,12 @@ export interface LabeledValue {
 }
 export type SelectPlacement = 'bottomLeft' | 'bottomRight' | 'topLeft' | 'topRight'
 export type SelectMode = 'multiple' | 'tags'
-// dropdownRender 的 menuNode：以函数组件形式提供，模板中可直接 <component :is="menuNode" /> 渲染
+/** dropdownRender 的 menuNode：以函数组件形式提供，模板中可直接 <component :is="menuNode" /> 渲染 */
 export type SelectMenuNode = () => VNode[]
 export interface DropdownRenderParams {
   menuNode: SelectMenuNode // 内置下拉菜单节点
 }
-// tagRender（prop / 插槽）的渲染参数
+/** tagRender（prop / 插槽）的渲染参数 */
 export interface TagRenderParams {
   label: unknown // tag 显示文本（已按 maxTagTextLength 截断）
   value?: SelectValue // tag 对应的选项值
@@ -143,7 +143,7 @@ export interface Props {
   // 可访问性
   id?: string // 组件 id，用于 aria-controls / aria-activedescendant 关联，未传时内部生成
 }
-// 声明组件插槽类型（顺序与文档 `## Slots` 表一致）
+/** 插槽顺序需与文档 Slots 表一致 */
 export interface SelectSlots {
   default?: () => VNode[] // 子组件式选项（<SelectOption> / <SelectOptGroup>）
   option?: (props: Option) => VNode[] // 自定义选项内容，作用域为当前选项数据
@@ -263,7 +263,7 @@ const mergedFieldNames = computed(() => ({
 }))
 // 分组子选项字段名（约定：fieldNames.options，未指定时为 'options'）
 const groupField = computed(() => props.fieldNames?.options || 'options')
-// 子组件式选项（default 插槽）
+/** 子组件式选项（default 插槽） */
 /** 选项 / 分组标记组件的静态标记字段（静态标记约定） */
 interface OptionMarker {
   isSelectOption?: boolean
@@ -385,16 +385,16 @@ function parseSlotOptions(nodes: VNode[]): Option[] {
   })
   return items
 }
-/** 选项数据源：default 插槽（子组件式写法）存在时以插槽为准，否则取 options（本项目「插槽优先于 prop」的统一约定） */
+// 选项数据源：default 插槽（子组件式写法）存在时以插槽为准，否则取 options（本项目「插槽优先于 prop」的统一约定）
 const rawOptions = computed<Option[]>(() => (slots.default ? parseSlotOptions(slots.default()) : props.options))
-/** 是否为「分组」形态：任一 option 的分组字段是非空数组即成立 */
+// 是否为「分组」形态：任一 option 的分组字段是非空数组即成立
 const hasGroupedOptions = computed(() =>
   rawOptions.value.some((option) => {
     const children = option?.[groupField.value]
     return Array.isArray(children) && children.length > 0
   })
 )
-/**
+/*
  * 参与选中 / 过滤 / 键盘导航的扁平候选集：
  * 分组形态取组内子选项（组条目本身不可选中），非分组形态即原始 options。
  * 分组标题只在渲染时插入、不进索引空间 —— 故 change 第 3 参（展示列表下标）与扁平候选保持一致。
@@ -406,7 +406,7 @@ const flatOptions = computed<Option[]>(() => {
     return Array.isArray(children) && children.length > 0 ? (children as Option[]) : [option]
   })
 })
-/**
+/*
  * 子选项值 → 所属分组信息：渲染分组标题用。
  * 同时保存分组键（key 缺省时回落组序号）—— 标题内容可能是 VNode 数组，无法用引用比较判断是否跨组
  */
@@ -432,7 +432,7 @@ const isTagsMode = computed(() => props.mode === 'tags') // 是否标签模式�
 const mergedShowSearch = computed(() => props.showSearch ?? isMultiple.value)
 // 箭头显示：多选默认不显示箭头（约定），loading 时显示（后缀位置由加载中图标接管）
 const mergedShowArrow = computed(() => props.showArrow ?? (props.loading || !isMultiple.value))
-// labelInValue
+/** labelInValue */
 /** 是否为 labelInValue 对象（约定：非对象 / 数组 / 空值一律视为原始值） */
 function isLabeledValue(value: unknown): value is LabeledValue {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
@@ -448,7 +448,7 @@ function toValueItems(value: Props['value']): (SelectValue | LabeledValue)[] {
   if (value === undefined || value === null) return []
   return [value]
 }
-/** 入参 labelInValue 对象携带的 label：回填文本与事件回传时保留调用方传入的文本（约定：入参 label 优先于选项数据） */
+// 入参 labelInValue 对象携带的 label：回填文本与事件回传时保留调用方传入的文本（约定：入参 label 优先于选项数据）
 const incomingLabels = computed(() => {
   const labels = new Map<SelectValue, unknown>()
   toValueItems(valueModel.value).forEach((item) => {
@@ -605,7 +605,7 @@ const showPlaceholder = computed(() => {
   return false
 })
 const displayText = computed<unknown>(() => optionLabelRaw.value ?? valueModel.value)
-/** 回填内容的渲染节点：按「optionLabelProp > 渲染源（插槽）> 文本」选源，无渲染源时走模板插值的快速路径 */
+// 回填内容的渲染节点：按「optionLabelProp > 渲染源（插槽）> 文本」选源，无渲染源时走模板插值的快速路径
 const displayLabelContent = computed<SelectMenuNode | null>(() => resolveBackfillRender(selectedOption.value))
 const itemTitle = computed(() => {
   const text = displayText.value
@@ -787,7 +787,7 @@ const DEFAULT_ROW_HEIGHT = 32
 // 可视区上下各多渲染 1 行：快速滚动时内容不落在窗口空隙里
 const VIRTUAL_OVERSCAN = 1
 const rowHeight = computed(() => (props.listItemHeight > 0 ? props.listItemHeight : DEFAULT_ROW_HEIGHT))
-/**
+/*
  * 虚拟滚动开关（开关判定）：
  * dropdownMatchSelectWidth 为 false 时面板宽度按内容自适应，须全量渲染才能量出真实宽度，故自动关闭虚拟滚动
  */
@@ -813,7 +813,7 @@ const menuRows = computed<MenuRow[]>(() => {
   })
   return rows
 })
-/** 扁平选项下标 → 渲染行下标：键盘导航与滚动定位均按下标换算，与目标行是否已渲染无关 */
+// 扁平选项下标 → 渲染行下标：键盘导航与滚动定位均按下标换算，与目标行是否已渲染无关
 const optionRowIndexMap = computed(() => {
   const map = new Map<number, number>()
   menuRows.value.forEach((row, rowIndex) => {
@@ -824,16 +824,16 @@ const optionRowIndexMap = computed(() => {
   return map
 })
 const totalRowsHeight = computed(() => menuRows.value.length * rowHeight.value)
-/** 是否真正窗口化：开启虚拟滚动且内容高于面板（装得下时全量渲染，虚拟列表同款判定） */
+// 是否真正窗口化：开启虚拟滚动且内容高于面板（装得下时全量渲染，虚拟列表同款判定）
 const virtualActive = computed(() => virtualEnabled.value && totalRowsHeight.value > optionsMaxHeight.value)
-/** 面板可视区高度：内容装不下时即面板最大高度 */
+// 面板可视区高度：内容装不下时即面板最大高度
 const virtualViewportHeight = computed(() => Math.min(optionsMaxHeight.value, totalRowsHeight.value))
 const virtualScrollTop = ref(0) // 面板滚动位置（由容器原生 scroll 事件同步），作为渲染窗口起点
-/** 当前高亮项在 displayOptions 中的扁平下标（无高亮时为 -1） */
+// 当前高亮项在 displayOptions 中的扁平下标（无高亮时为 -1）
 const activeOptionIndex = computed(() =>
   displayOptions.value.findIndex((option) => !option.disabled && getOptionValue(option) === hoverValue.value)
 )
-/** 渲染窗口 [start, end)：滚动位置决定起点，末端一屏 + 上下缓冲行 */
+// 渲染窗口 [start, end)：滚动位置决定起点，末端一屏 + 上下缓冲行
 const renderWindow = computed(() => {
   const total = menuRows.value.length
   if (!virtualActive.value) {
@@ -845,7 +845,7 @@ const renderWindow = computed(() => {
   const end = Math.min(total, Math.ceil((top + virtualViewportHeight.value) / height) + VIRTUAL_OVERSCAN)
   return { start, end }
 })
-/**
+/*
  * 高亮行的行下标 / 是否落在渲染窗口内。
  * ⚠️ 不把高亮行强行纳入窗口：鼠标悬浮行与滚动位置是两个独立状态，强制纳入会让「滚动后窗口跳回悬浮行」
  * （等于与用户滚动对抗）。改为：高亮行不在窗口内时不设置 aria-activedescendant，避免指向不存在的节点。
@@ -870,13 +870,13 @@ const listboxId = computed(() => `${mergedSelectId.value}_list`)
 function optionDomId(optionIndex: number): string {
   return `${listboxId.value}_${optionIndex}`
 }
-/** 当前高亮项对应的 DOM id：面板未展开 / 无高亮 / 高亮行不在渲染窗口内时均不设置（避免指向不存在的节点） */
+// 当前高亮项对应的 DOM id：面板未展开 / 无高亮 / 高亮行不在渲染窗口内时均不设置（避免指向不存在的节点）
 const activeDescendantId = computed(() =>
   openModel.value && activeRowRendered.value && activeOptionIndex.value >= 0
     ? optionDomId(activeOptionIndex.value)
     : undefined
 )
-/** 屏幕阅读器播报文本：面板关闭时聚合已选内容（隐藏 aria-live 节点同款） */
+// 屏幕阅读器播报文本：面板关闭时聚合已选内容（隐藏 aria-live 节点同款）
 const screenReaderText = computed(() => {
   if (openModel.value) return ''
   return selectedOptions.value
@@ -943,7 +943,7 @@ const panelTransitionProps: TransitionProps = {
   leaveToClass: 'select-slide-leave select-slide-leave-active'
 }
 
-/**
+/*
  * 打开面板时的高亮 / 滚动处理：仅「单选且已有选中值」把高亮复位到选中项并滚入可视区；
  * 其余情形（多选 / 标签 / 单选无值）保留用户上次移动的高亮与滚动位置，避免打断已定位的位置
  */
@@ -1379,8 +1379,10 @@ function onClear(e?: MouseEvent): void {
   emits('clear')
   selectFocus()
 }
-// 键盘导航：↑↓ 移动高亮（跳过禁用项、环形，随即滚入可视区）、Enter 选中高亮项、Esc 关闭面板
-// 面板未打开时 ↑↓（或任意可打印字符）打开面板，沿用既有的键盘行为
+/**
+ * 键盘导航：↑↓ 移动高亮（跳过禁用项、环形，随即滚入可视区）、Enter 选中高亮项、Esc 关闭面板
+ * 面板未打开时 ↑↓（或任意可打印字符）打开面板，沿用既有的键盘行为
+ */
 function onKeydown(e: KeyboardEvent): void {
   emits('inputKeyDown', e)
   if (props.disabled) return
@@ -1543,10 +1545,12 @@ function renderItemContent(option: Option, fallback?: unknown): string | VNode[]
   const label = getOptionLabel(option)
   return label === undefined || label === null ? String(fallback ?? '') : String(label)
 }
-// 选项节点渲染：默认菜单与 dropdownRender 共用同一实现，避免两处重复
-// key 必传：虚拟滚动下窗口滑动时，缺 key 会让 Vue 按下标复用 DOM 节点 ——
-// 同一节点被换上别的选项的类名，配合 .select-option 的 background 过渡即表现为「已选项蓝色标记闪动」
-// （按 key 渲染：窗口滑动只增删两端的行，既有行节点原地保留）
+/**
+ * 选项节点渲染：默认菜单与 dropdownRender 共用同一实现，避免两处重复
+ * key 必传：虚拟滚动下窗口滑动时，缺 key 会让 Vue 按下标复用 DOM 节点 ——
+ * 同一节点被换上别的选项的类名，配合 .select-option 的 background 过渡即表现为「已选项蓝色标记闪动」
+ * （按 key 渲染：窗口滑动只增删两端的行，既有行节点原地保留）
+ */
 function renderOptionNode(option: Option, index: number, key: string): VNode {
   const value = getOptionValue(option)
   const label = getOptionLabel(option)
@@ -1593,7 +1597,7 @@ function renderOptionNode(option: Option, index: number, key: string): VNode {
     ]
   )
 }
-// 内置菜单节点（函数组件）：直接渲染选项列表与空态，通过 v-show 切换避免销毁重建
+/** 内置菜单节点（函数组件）：直接渲染选项列表与空态，通过 v-show 切换避免销毁重建 */
 const menuNode: SelectMenuNode = () => {
   // 分组标题已并入渲染行（见 menuRows，标题不可选中、不占展示下标）；
   // 虚拟滚动时只渲染窗口内的行，上下用等高空 div 撑出未渲染区，滚动几何与全量渲染等价

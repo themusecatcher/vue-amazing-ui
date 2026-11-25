@@ -3,7 +3,7 @@ import { defineComponent, h, nextTick } from 'vue'
 import { mount } from '@vue/test-utils'
 import Scrollbar from 'components/scrollbar'
 
-/**
+/*
  * Scrollbar 实例能力回归守护
  *
  * `defineExpose` 除滚动方法外另暴露 `scrollElement`（内部滚动容器元素），
@@ -100,7 +100,7 @@ describe('Scrollbar 暴露的实例能力', () => {
   })
 })
 
-/**
+/*
  * thumb 几何守护
  *
  * happy-dom 不做真实布局，几何量需自行定义。轨道有上下内边距（默认 2px + 2px），
@@ -133,7 +133,7 @@ describe('Scrollbar 的 thumb 几何', () => {
   })
 })
 
-/**
+/*
  * 滚动事件回归守护
  *
  * 方向不能依赖「上一条 scroll 事件」推出来的标志：程序化滚动（拖动滚动条 thumb、instant scrollTo、
@@ -203,7 +203,7 @@ describe('Scrollbar 滚动事件', () => {
   })
 })
 
-/**
+/*
  * 自动隐藏的延迟守护
  *
  * `100 + props.delay` 在 setup 期求值，只在顶层读一次的话运行期改 `delay` 不生效 ——
@@ -247,7 +247,7 @@ describe('Scrollbar 的自动隐藏延迟', () => {
   })
 })
 
-/**
+/*
  * 轨道显隐时机的守护
  *
  * hover 模式的语义是「悬停时显示」，故只有指针位于滚动区域内时，滚动才把轨道点亮。程序化滚动

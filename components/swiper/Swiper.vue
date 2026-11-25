@@ -223,7 +223,7 @@ function onSlideChange(swiper: SwiperTypes) {
   width: var(--swiper-width);
   height: var(--swiper-height);
   :deep(.swiper-wrapper) {
-    // 自动切换过渡效果设置
+    /* 自动切换过渡效果设置 */
     transition-timing-function: var(--swiper-timing-function); // 线性过渡模拟走马灯效果
   }
 }

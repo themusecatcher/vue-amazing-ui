@@ -12,7 +12,6 @@ export interface Props {
   weight?: number // 文字粗细
   type?: 'primary' | 'info' | 'success' | 'warning' | 'error' // 渐变文字的类型
 }
-// 声明组件插槽类型
 export interface GradientTextSlots {
   default?: () => VNode[]
 }
@@ -23,7 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
   type: 'primary'
 })
 defineSlots<GradientTextSlots>()
-/**
+/*
  * 预设渐变的两端 → 主题变量
  *
  * 起点取语义色的描边档（浅色为最浅一档，暗色比常态更深，形成「深 → 亮」的渐变），

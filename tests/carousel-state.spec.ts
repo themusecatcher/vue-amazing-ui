@@ -13,7 +13,7 @@ interface CarouselInst {
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
-// 轮询等待条件成立，避免依赖固定 sleep 造成的时序脆弱
+/** 轮询等待条件成立，避免依赖固定 sleep 造成的时序脆弱 */
 async function waitFor(cond: () => boolean, timeout = 2000): Promise<void> {
   const start = Date.now()
   while (!cond() && Date.now() - start < timeout) {
@@ -75,7 +75,7 @@ async function mountCarousel(props: Partial<CarouselProps> = {}) {
 
 type CarouselWrapper = Awaited<ReturnType<typeof mountCarousel>>
 
-// 读取轮播容器的位移数值（水平/垂直轮播分别用 translateX / translateY 驱动）
+/** 读取轮播容器的位移数值（水平/垂直轮播分别用 translateX / translateY 驱动） */
 function slideOffset(el: HTMLElement): number {
   const matched = /translate[XY]\((-?[\d.]+)px\)/.exec(el.style.transform)
   return matched ? Number(matched[1]) : NaN
@@ -93,12 +93,12 @@ function slideWraps(wrapper: CarouselWrapper) {
   return wrapper.findAll('.image-wrap')
 }
 
-// 第 index 个轮播项是否仍处于加载态（Spin 加载中会给内容加 spin-blur）
+/** 第 index 个轮播项是否仍处于加载态（Spin 加载中会给内容加 spin-blur） */
 function isSpinning(wrapper: CarouselWrapper, index: number): boolean {
   return slideWraps(wrapper)[index].find('.spin-blur').exists()
 }
 
-/**
+/*
  * 回归守护：Carousel 的状态边界与键盘可访问性
  *
  * 覆盖四类曾真实存在的缺陷：
@@ -280,7 +280,7 @@ describe('Carousel 状态与可访问性', () => {
 const setPointerCaptureDescriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'setPointerCapture')
 const releasePointerCaptureDescriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'releasePointerCapture')
 
-// happy-dom 未实现指针捕获：补齐为无操作实现，否则 onPointerDown 中的捕获调用会直接抛错
+/** happy-dom 未实现指针捕获：补齐为无操作实现，否则 onPointerDown 中的捕获调用会直接抛错 */
 function stubPointerCapture(): void {
   Object.defineProperty(HTMLElement.prototype, 'setPointerCapture', { configurable: true, value: () => {} })
   Object.defineProperty(HTMLElement.prototype, 'releasePointerCapture', { configurable: true, value: () => {} })
@@ -300,7 +300,7 @@ function restorePointerCapture(): void {
   })
 }
 
-// happy-dom 的 PointerEvent / WheelEvent 支持不完整：改用 MouseEvent 承载并补齐组件读取的字段
+/** happy-dom 的 PointerEvent / WheelEvent 支持不完整：改用 MouseEvent 承载并补齐组件读取的字段 */
 function dispatchPointer(el: HTMLElement, type: string, init: Record<string, unknown>): void {
   const event = new MouseEvent(type, { bubbles: true, cancelable: true })
   Object.assign(event, init)
@@ -313,7 +313,7 @@ function dispatchWheel(el: HTMLElement, deltaX: number, deltaY: number): void {
   el.dispatchEvent(event)
 }
 
-// 临时把系统「减弱动态效果」偏好置为命中，返回还原函数
+/** 临时把系统「减弱动态效果」偏好置为命中，返回还原函数 */
 function stubReducedMotion(): () => void {
   const original = window.matchMedia
   window.matchMedia = ((query: string) => ({
@@ -335,7 +335,7 @@ function carouselRoot(wrapper: CarouselWrapper): HTMLElement {
   return wrapper.find('.carousel-wrap').element as HTMLElement
 }
 
-/**
+/*
  * P2 能力守护：loop / initialIndex / 受控 currentIndex / beforeChange·afterChange /
  * to(n, dontAnimate) / objectFit / prefers-reduced-motion / 拖拽 / 滚轮 / 箭头与指示点插槽
  */

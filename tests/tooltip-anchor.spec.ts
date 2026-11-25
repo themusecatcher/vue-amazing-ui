@@ -4,7 +4,7 @@ import type { VueWrapper } from '@vue/test-utils'
 import { defineComponent, nextTick, ref } from 'vue'
 import Tooltip from 'components/tooltip'
 
-/**
+/*
  * Tooltip 锚点模式与展示前动态判定守护
  *
  * 契约（供 Ellipsis 等「已经有元素」的消费者复用）：

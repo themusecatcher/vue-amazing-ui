@@ -15,7 +15,6 @@ export interface Props {
   circleStyle?: CSSProperties // 圆点样式
   value?: boolean | string | number // (v-model) 指定当前是否选中
 }
-// 声明组件插槽类型
 export interface SwitchSlots {
   checked?: () => VNode[]
   unchecked?: () => VNode[]

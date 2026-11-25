@@ -8,7 +8,7 @@ import Popup from 'components/popup'
 import type { DropdownMenuOption } from 'components/dropdown'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * Dropdown 契约守护（基于 Popup + useFloating 重建）
  *
  * 覆盖三类「后续重构容易无声改坏」的行为：
@@ -65,7 +65,7 @@ const groupMenus: DropdownMenuOption[] = [
   }
 ]
 
-/** 三层菜单：用于验证「递归渲染任意层级」 */
+// 三层菜单：用于验证「递归渲染任意层级」
 const nestedMenus: DropdownMenuOption[] = [
   { key: '1', label: '1st menu item' },
   {

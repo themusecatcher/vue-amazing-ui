@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 import DatePicker from 'components/date-picker/DatePicker.vue'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * 回归守护：面板的展示月份跟随当前值。
  *
  * 浮层收起后面板并不销毁，展示月份必须在「展开」这一刻回到当前值；

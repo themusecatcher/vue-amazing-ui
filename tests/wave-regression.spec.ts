@@ -7,7 +7,7 @@ import Radio from 'components/radio'
 import { RadioGroup } from 'components/radio'
 import Switch from 'components/switch'
 
-/**
+/*
  * 水波纹动画回归守护（Button / Checkbox / Radio / Switch）
  *
  * 本轮把四个组件各自实现的 `wave / startWave / endWave` 统一收敛到 `useWave()`，

@@ -546,14 +546,14 @@ const onBreakpoint = (broken: boolean) => {
   </div>
 </template>
 <style lang="less" scoped>
-// 承载「整页」形态的用例，限高并允许内部滚动，避免撑高文档页面
+/* 承载「整页」形态的用例，限高并允许内部滚动，避免撑高文档页面 */
 .demo-container {
   height: 360px;
   overflow: auto;
   border-radius: 6px;
   box-shadow: 0 2px 8px #00000047;
 }
-// 自定义滚动条用例的承载盒：加高以放大滚动区域，滚动条的滚动幅度更易观察
+/* 自定义滚动条用例的承载盒：加高以放大滚动区域，滚动条的滚动幅度更易观察 */
 .demo-container-lg {
   height: 480px;
 }
@@ -569,7 +569,7 @@ const onBreakpoint = (broken: boolean) => {
   margin: 16px;
   background: rgba(255, 255, 255, 0.3);
 }
-// 占位块更淡的用例
+/* 占位块更淡的用例 */
 .faint {
   background: rgba(255, 255, 255, 0.2);
 }

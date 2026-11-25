@@ -99,13 +99,13 @@ watch(
     flush: 'post'
   }
 )
-/*
+/**
   自定义设置播放速度，经测试：
   在vue2中需设置：this.$refs.veoRef.playbackRate = 2
   在vue3中需设置：veoRef.value.defaultPlaybackRate = 2
 */
-// veoRef.value.defaultPlaybackRate = 2
-/*
+/** veoRef.value.defaultPlaybackRate = 2 */
+/**
   loadedmetadata 事件在元数据（metadata）被加载完成后触发
   loadeddata 事件在媒体当前播放位置的视频帧（通常是第一帧）加载完成后触发
     若在移动/平板设备的浏览器设置中开启了流量节省（data-saver）模式，该事件则不会被触发。

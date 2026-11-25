@@ -56,7 +56,6 @@ export interface Props {
   push?: boolean | { distance: string | number } // 用于设置多层 Drawer 的推动行为，distance 为推动距离，单位 px
   blockScroll?: boolean // 是否在打开时禁用 body 滚动
 }
-// 声明组件插槽类型
 export interface DrawerSlots {
   title?: () => VNode[] // 自定义标题
   extra?: () => VNode[] // 自定义抽屉右上角的操作区域
@@ -104,7 +103,7 @@ defineSlots<DrawerSlots>()
 // 故关闭自动继承并显式绑定到最外层容器
 defineOptions({ inheritAttrs: false })
 const drawerRef = ref<HTMLElement | null>(null)
-// 将焦点切回抽屉 DOM：父抽屉复位、打开态初始化、开合动画后共用
+/** 将焦点切回抽屉 DOM：父抽屉复位、打开态初始化、开合动画后共用 */
 function focusDrawer() {
   nextTick(() => {
     drawerRef.value?.focus()
@@ -137,7 +136,7 @@ provide(parentDrawerOptsKey, { setPush, setPull })
 // 尺寸
 const mergedWidth = computed(() => props.width ?? (props.size === 'large' ? 736 : 378))
 const mergedHeight = computed(() => props.height ?? (props.size === 'large' ? 736 : 378))
-// 尺寸值：纯数字及其字符串形式（如 "520"）补 px 单位，百分比 / 视口单位（如 "50%"、"100vh"）原样返回
+/** 尺寸值：纯数字及其字符串形式（如 "520"）补 px 单位，百分比 / 视口单位（如 "50%"、"100vh"）原样返回 */
 function toCssSize(value: string | number): string {
   const numeric = !Number.isNaN(parseFloat(String(value))) && Number.isFinite(Number(value))
   return numeric ? `${value}px` : String(value)
@@ -396,7 +395,7 @@ watch(
   z-index: 1000;
   pointer-events: none;
   outline: none;
-  // to 为 false 时渲染在当前 DOM，改用绝对定位相对最近定位祖先
+  /* to 为 false 时渲染在当前 DOM，改用绝对定位相对最近定位祖先 */
   &.is-inline {
     position: absolute;
   }
@@ -468,7 +467,7 @@ watch(
         .drawer-body {
           height: 100%;
           padding: 24px;
-          // 按单词换行，仅当单词超长放不下时才在词内断行，避免英文被腰斩
+          /* 按单词换行，仅当单词超长放不下时才在词内断行，避免英文被腰斩 */
           word-break: break-word;
         }
         .drawer-footer {

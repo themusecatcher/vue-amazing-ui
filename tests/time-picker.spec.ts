@@ -5,14 +5,14 @@ import TimePicker from 'components/time-picker/TimePicker.vue'
 import type { TimePickerRangeDisabledTime } from 'components/time-picker'
 import { flushTransition } from './helpers'
 
-/**
+/*
  * 独立时间选择器的交互守护
  *
  * 面板为**确认制**：点时间列只改草稿，点「确定」才提交并收起；「此刻」是取整后直接落值的快捷入口；
  * 面板收起即丢弃草稿。此外列显隐与 12 小时制由 `format` 推导，头部在独立形态下隐藏。
  */
 const BASE = new Date(2026, 9, 15, 8, 30, 45).getTime()
-/** 当日 08:30:45 的展示文本（与默认 `format` 一致） */
+// 当日 08:30:45 的展示文本（与默认 `format` 一致）
 const BASE_TEXT = '08:30:45'
 
 let wrapper: ReturnType<typeof mount> | null = null
@@ -482,7 +482,7 @@ describe('进阶能力', () => {
   })
 })
 
-/**
+/*
  * 键盘操作的目标列标记
  *
  * 方向键移动时给目标列加底色，标明按键作用于哪一列。该标记属于**一次展开会话**：列下标是面板内

@@ -1,4 +1,4 @@
-/**
+/*
  * ConfigProvider 的配置结构与小判定
  *
  * 单独成文件的原因：编排（`theme-scope`）、`<html>` 写入（`theme-global-writer`）、

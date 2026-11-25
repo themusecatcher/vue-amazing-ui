@@ -101,12 +101,12 @@ function getAreaHeight(): void {
   }
   areaHeight.value = textareaRef.value.scrollHeight + 2
 }
-// 文本合成系统即输入法编辑器开始新的输入合成时会触发
+/** 文本合成系统即输入法编辑器开始新的输入合成时会触发 */
 function onCompositionStart(e: CompositionEvent): void {
   isComposing.value = true
   emits('compositionstart', e)
 }
-// 当文本段落的组成完成或取消时触发 (具有特殊字符的触发，需要一系列键和其他输入，如语音识别或移动中的字词建议)
+/** 当文本段落的组成完成或取消时触发 (具有特殊字符的触发，需要一系列键和其他输入，如语音识别或移动中的字词建议) */
 function onCompositionEnd(e: CompositionEvent): void {
   isComposing.value = false
   const target = e.target as HTMLInputElement | null
@@ -150,8 +150,10 @@ function onEnter(e: KeyboardEvent): void {
   }
   emits('enter', e)
 }
-// 原生 focus / blur 从内部 textarea 转发：两者都不冒泡，挂在根节点上的监听收不到；同步带上 relatedTarget 供宿主判断焦点来源 / 去向
-// 注意点击清除图标会先让 textarea 失焦、再清空值，宿主若用 blur 做校验，拿到的是清空前的值（与 Input 的清除行为一致）
+/**
+ * 原生 focus / blur 从内部 textarea 转发：两者都不冒泡，挂在根节点上的监听收不到；同步带上 relatedTarget 供宿主判断焦点来源 / 去向
+ * 注意点击清除图标会先让 textarea 失焦、再清空值，宿主若用 blur 做校验，拿到的是清空前的值（与 Input 的清除行为一致）
+ */
 function onFocus(e: FocusEvent): void {
   emits('focus', e)
 }
@@ -164,7 +166,7 @@ function onClear(): void {
   emits('update:value', '')
   textareaRef.value?.focus()
 }
-// 程序化控制焦点：走原生 textarea 的 focus / blur
+/** 程序化控制焦点：走原生 textarea 的 focus / blur */
 function focus(): void {
   textareaRef.value?.focus()
 }

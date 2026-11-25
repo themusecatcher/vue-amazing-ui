@@ -21,7 +21,6 @@ export interface Props {
   loadingType?: 'static' | 'dynamic' // 加载指示符类型
   block?: boolean // 是否将按钮宽度调整为其父宽度
 }
-// 声明组件插槽类型
 export interface ButtonSlots {
   icon?: () => VNode[]
   default?: () => VNode[]
@@ -155,7 +154,7 @@ function onKeyboard(e: KeyboardEvent) {
 </template>
 <style lang="less" scoped>
 .btn-wrap {
-  // 文本按钮的悬浮 / 按下底色跟随 fill 令牌，无「只改这个按钮」的独立意图，故保持私有
+  /* 文本按钮的悬浮 / 按下底色跟随 fill 令牌，无「只改这个按钮」的独立意图，故保持私有 */
   --button-text-color-hover: var(--va-fill-color-1);
   --button-text-color-active: var(--va-fill-color-2);
   position: relative;
@@ -328,7 +327,7 @@ function onKeyboard(e: KeyboardEvent) {
   }
 }
 .btn-danger {
-  // 波纹跟随危险色：波纹的回落链默认取主色，不声明会在这里显示成蓝色
+  /* 波纹跟随危险色：波纹的回落链默认取主色，不声明会在这里显示成蓝色 */
   --button-ripple-color: var(--va-button-danger-color, var(--va-error-color));
   color: var(--va-button-solid-text-color, var(--va-text-color-solid));
   background-color: var(--va-button-danger-color, var(--va-error-color));
