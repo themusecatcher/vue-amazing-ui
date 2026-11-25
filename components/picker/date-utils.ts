@@ -434,7 +434,7 @@ export function getQuarterNumber(reference: number): number {
   return getQuarter(reference)
 }
 
-/** ============================== 范围形态 ============================== */
+/* ============================== 范围形态 ============================== */
 
 /** 范围格类名判定的上下文 */
 export interface RangeCellContext {
@@ -563,7 +563,7 @@ export function getRangeCellClassNames(timestamp: number, context: RangeCellCont
   }
 }
 
-/** ================================ 时间 ================================ */
+/* ================================ 时间 ================================ */
 
 /** 时间面板的三类单位 */
 export type PickerTimeUnitName = 'hour' | 'minute' | 'second'

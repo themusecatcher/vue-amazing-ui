@@ -34,7 +34,7 @@ namespace qrcodegen {
   type byte = number
   type int = number
 
-  /** ---- QR Code symbol class ---- */
+  /* ---- QR Code symbol class ---- */
 
   /**
    * A QR Code symbol, which is a type of two-dimension barcode.
@@ -789,7 +789,7 @@ namespace qrcodegen {
     return ((x >>> i) & 1) !== 0
   }
 
-  /** ---- Data segment class ---- */
+  /* ---- Data segment class ---- */
 
   /**
    * A segment of character/binary/control data in a QR Code symbol.

@@ -216,7 +216,7 @@ import { ClockCircleOutlined } from '@ant-design/icons-vue'
 
 ## 标题与时间
 
-_节点按 `title` / `content` / `time` 渲染为三段结构，分别可用 `title` / `default` / `footer` 插槽覆盖；插槽优先于同名属性，可按节点只覆盖其中一段_
+_节点按 `title` / `content` / `time` 渲染为三段结构，分别可用 `title` / `default` / `footer` 插槽覆盖；插槽优先于对应的属性，可按节点只覆盖其中一段_
 
 <br/>
 

@@ -49,10 +49,7 @@ const modules = import.meta.glob('../views/**/index.ts', {
   eager: true, // 直接引入模块
   import: 'default' // 设置 import 为 default 可以加载默认导出
 })
-/**
- * console.log('modules', modules)
- * 将目录名统一为短横线命名（如 datePicker → date-picker），已是短横线则原样返回，用于生成路由路径
- */
+/** 将目录名统一为短横线命名（如 datePicker → date-picker），已是短横线则原样返回，用于生成路由路径 */
 function toKebabCase(word: string): string {
   return word.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
 }

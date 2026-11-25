@@ -558,7 +558,7 @@ function onPanelChange(timestamp: number, mode: PickerPanelMode) {
   hoverTimestamp.value = null
   emits('panelChange', timestamp, mode)
 }
-/** 键盘导航 */
+/* 键盘导航 */
 /** 面板的键盘入口：各面板经 `defineExpose` 暴露，组件壳层按当前形态把按键转给对应的面板 */
 interface PanelKeydownTarget {
   handleKeydown: (event: KeyboardEvent) => boolean

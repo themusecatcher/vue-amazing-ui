@@ -302,7 +302,7 @@ function isYearInView(timestamp: number): boolean {
   const startYear = getYearNumber(getYearTimestamps(viewDate.value)[0])
   return year >= startYear && year < startYear + 10
 }
-/** ============================== 周形态 ============================== */
+/* ============================== 周形态 ============================== */
 /** 比较两个时间戳所在 ISO 周的前后（-1 在前 / 0 同周 / 1 在后） */
 function compareWeek(a: number, b: number): number {
   const weekA = getWeekStartTimestamp(a)
@@ -366,7 +366,7 @@ function getWeekRowClasses(weekStart: number): Record<string, boolean> {
     'picker-panel-week-row-range-hover': isHovered && !isInRange && !isRangeStart && !isRangeEnd
   }
 }
-/** ============================== 十年面板 ============================== */
+/* ============================== 十年面板 ============================== */
 /** 十年格是否落在当前世纪区间内：世纪之外的前后各一格据此灰显 */
 function isDecadeInView(timestamp: number): boolean {
   return isDecadeInCentury(timestamp, viewDate.value)

@@ -67,7 +67,7 @@ _本文件是「支持矩阵」与「高版本 CSS / JS 特性使用政策」的
 | 项 | 触发条件 | 改动面 |
 | --- | --- | --- |
 | `Timeline` 改为容器类判定（删除 8 条 `:has()`） | 矩阵下调到 Safari < 15.4 / 新增 RTL / 新增「按项混排布局」 | `Timeline.vue` 增加 `hasLabelItem`（扫 slot vnodes，Fragment 需递归）并让 `label` 与 `mode` 类互斥；`TimelineItem.vue` 重组 10 条 `alternate` + 6 条 `:nth-child` + 8 条 `:has()` 规则；同步两个 layout 单测与文档 |
-| `inset` 简写展开 | 矩阵下调到 Safari < 14.1 | 29 处改为 `top/right/bottom/left`（或引入构建期 postcss 映射，参考 antdv `legacyLogicalProperties`） |
+| `inset` 简写展开 | 矩阵下调到 Safari < 14.1 | 29 处改为 `top/right/bottom/left`（或引入构建期 postcss 逻辑属性映射插件 `legacyLogicalProperties`） |
 | `ResizeObserver` 兜底 | 矩阵下调到 Safari < 13.1 | 51 处调用点统一加特性检测或引入 polyfill |
 | `browserslist` 与 `build.target` 基线对齐 | 出现实际前缀缺失时 | 前者按 Safari 26 解析、后者为 Safari 16；当前实测 `-webkit-user-select` / `-webkit-appearance` 均在，无实际缺陷 |
 

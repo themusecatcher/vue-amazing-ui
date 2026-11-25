@@ -90,7 +90,7 @@ const lineTypeOptions: { label: string; value: TimelineLineType }[] = [
     <h2 class="mt30 mb10">标题与时间</h2>
     <p class="mb10">
       节点按 <code>title</code> / <code>content</code> / <code>time</code> 渲染为三段结构，分别可用 <code>title</code> /
-      <code>default</code> / <code>footer</code> 插槽覆盖；插槽优先于同名属性，可按节点只覆盖其中一段
+      <code>default</code> / <code>footer</code> 插槽覆盖；插槽优先于对应的属性，可按节点只覆盖其中一段
     </p>
     <Timeline>
       <TimelineItem content="Create a services site" color="success" />

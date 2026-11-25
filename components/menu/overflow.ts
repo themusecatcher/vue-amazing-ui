@@ -42,8 +42,8 @@ export function renderOverflowIndicator(): VNode {
 /**
  * 合成溢出子菜单：被收起的菜单项原样成为其子项，展开后与平铺时表现一致
  *
- * @param {ItemType[]} children 被收起的菜单项
- * @param {() => VNodeChild} [indicator] 溢出指示器的渲染函数，缺省用内置三点图标
+ * @param children - 被收起的菜单项
+ * @param indicator - 溢出指示器的渲染函数，缺省用内置三点图标
  */
 export function createOverflowNode(children: ItemType[], indicator?: () => VNodeChild): SubMenuType {
   return { key: MENU_OVERFLOW_KEY, label: indicator ?? renderOverflowIndicator, children }
@@ -55,10 +55,10 @@ export function createOverflowNode(children: ItemType[], indicator?: () => VNode
  * 起点之后的菜单项整体收进溢出子菜单；未发生溢出时原样返回入参，避免每次求值都产生新数组引用。
  * 切分结果直接参与渲染与 key 索引，因此合成节点对下游（keyPath、父级高亮、后代收起）与用户配置等价。
  *
- * @param {ItemType[]} items 原始菜单配置
- * @param {number} start 溢出起点（`Infinity` 表示未溢出）
- * @param {() => VNodeChild} [indicator] 溢出指示器的渲染函数，缺省用内置三点图标
- * @returns {ItemType[]} 可直接渲染的菜单配置
+ * @param items - 原始菜单配置
+ * @param start - 溢出起点（`Infinity` 表示未溢出）
+ * @param indicator - 溢出指示器的渲染函数，缺省用内置三点图标
+ * @returns 可直接渲染的菜单配置
  */
 export function splitOverflowItems(items: ItemType[], start: number, indicator?: () => VNodeChild): ItemType[] {
   if (!Number.isFinite(start) || start >= items.length) {
@@ -73,8 +73,8 @@ export function splitOverflowItems(items: ItemType[], start: number, indicator?:
  * 溢出子菜单的子项即被收起的原菜单项，展开后与前面的项合起来就是完整顺序，
  * 故测量探针可按同一套下标与原始菜单项一一对应。
  *
- * @param {ItemType[]} nodes 已切分的菜单配置
- * @returns {ItemType[]} 原始顺序的菜单配置
+ * @param nodes - 已切分的菜单配置
+ * @returns 原始顺序的菜单配置
  */
 export function flattenOverflowItems(nodes: ItemType[]): ItemType[] {
   const list: ItemType[] = []
