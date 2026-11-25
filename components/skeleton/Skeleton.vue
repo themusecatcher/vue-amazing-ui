@@ -11,7 +11,7 @@ export interface SkeletonAvatarProps {
   size?: number | 'small' | 'middle' | 'large' // 设置头像占位图的大小，默认 'middle'
 }
 export interface SkeletonInputProps {
-  size: 'small' | 'middle' | 'large' // 设置输入框的大小，默认 'middle'
+  size?: 'small' | 'middle' | 'large' // 设置输入框的大小，默认 'middle'（与 Button / Avatar 子类型一致，可整体省略）
 }
 export interface SkeletonTitleProps {
   width?: number | string // 设置标题占位图的宽度，默认 '38%'

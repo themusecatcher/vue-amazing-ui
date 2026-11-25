@@ -318,7 +318,7 @@ const avatarShapeOptions = ref([
 
 | 名称 | 说明 | 类型 |
 | :-- | :-- | :-- |
-| size | 设置输入框的大小 | 'small' &#124; 'middle' &#124; 'large' |
+| size? | 设置输入框的大小，默认 `'middle'` | 'small' &#124; 'middle' &#124; 'large' |
 
 ### SkeletonTitleProps Type
 
