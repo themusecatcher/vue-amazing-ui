@@ -141,9 +141,9 @@ const scrollRoot = computed<HTMLElement | null>(() => {
   const parent = getScrollParent(waterfallRef.value)
   return parent && parent !== document.documentElement ? parent : null
 })
-// 只看图片地址序列：增删 / 换图才重排，名称、链接等不影响布局的字段变化不触发
+// 只看影响布局的字段（地址与宽高比）：增删 / 换图 / 改比例才重排，名称、链接等变化不触发
 watch(
-  () => props.images.map((image) => image.src).join('\n'),
+  () => props.images.map((image) => `${image.src}|${image.aspectRatio ?? ''}`).join('\n'),
   () => {
     // 数据整体变化时允许重新尝试失败过的图片
     clearFailedSizes()
@@ -571,6 +571,12 @@ function handleCellClick(index: number, event: MouseEvent): void {
   }
   50% {
     opacity: 0.55;
+  }
+}
+/* 关闭动效偏好下停掉呼吸，占位框保持静态底色 */
+@media (prefers-reduced-motion: reduce) {
+  .waterfall-wrap .placeholder-item {
+    animation: none;
   }
 }
 </style>

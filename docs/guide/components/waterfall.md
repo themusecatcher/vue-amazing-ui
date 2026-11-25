@@ -8,7 +8,7 @@ _瀑布流图片展示_
 
 - 宽度固定，图片等比例缩放；使用 `JS` 获取每张图片宽度和高度，结合 `relative` 和 `absolute` 定位计算每个图片的位置 `top`、`left`，保证每张新的图片都追加在当前高度最小的那列末尾
 
-- 每张图片一进入列表就会生成占位框：加载完成前展示呼吸骨架，加载失败时保留位置并显示失败图标；提供 `aspectRatio`（宽高比）时无需测量即可按真实比例占位，未提供时先按 `1:1` 占位、尺寸取回后原地精化，首屏高度不会先塌陷再撑开
+- 每张图片一进入列表就会生成占位框：加载完成前展示呼吸骨架，加载失败时已落位的格子保留位置并显示失败图标；提供 `aspectRatio`（宽高比）时无需测量即可按真实比例占位，未提供时先按 `1:1` 占位、尺寸取回后原地精化（连尺寸都取不到则跳过该图、不占位，且在 `images` 数组变化前不再重试）
 
 - 开启 `lazy` 后只渲染可视区下方约一屏的内容，滚动接近底部时按批追加
 :::
@@ -81,6 +81,8 @@ function clearImages() {
   dynamicImages.value = []
 }
 function handleClick(image: WaterfallImage, index: number, event: MouseEvent) {
+  // 示例数据带 link：这里拦截跳转，专注演示 click 回调（删掉本行即恢复默认跳转）
+  event.preventDefault()
   clicked.value = image
   clickedIndex.value = index
   console.log('click', image, index, event)
@@ -246,7 +248,7 @@ onBeforeMount(() => {
 
 ## 点击事件
 
-`click` 回调会拿到当前图片与下标；图片带 `link` 时同样先派发事件，可在回调中 `preventDefault()` 拦截跳转：
+`click` 回调会拿到当前图片与下标；图片带 `link` 时同样先派发事件，可在回调中 `preventDefault()` 拦截跳转（下方示例即如此）。未设 `link` 的格子不进入 `Tab` 序列，`click` 也就没有键盘等价路径（需要键盘可达时请为图片提供 `link`）：
 
 <br/>
 
@@ -272,6 +274,8 @@ function loadImages() {
   }
 }
 function handleClick(image: WaterfallImage, index: number, event: MouseEvent) {
+  // 示例数据带 link：这里拦截跳转，专注演示 click 回调（删掉本行即恢复默认跳转）
+  event.preventDefault()
   clicked.value = image
   clickedIndex.value = index
   console.log('click', image, index, event)
@@ -476,7 +480,7 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div ref="lazyWrapRef">
-    <div style="position: sticky; top: 8px; z-index: 2; text-align: right">
+    <div style="position: sticky; top: calc(var(--vp-nav-height, 64px) + 8px); z-index: 2; text-align: right">
       <Tag :color="lazyRenderCount === lazyImages.length ? 'success' : 'processing'">
         已渲染 {{ lazyRenderCount }} / {{ lazyImages.length }} 张
       </Tag>

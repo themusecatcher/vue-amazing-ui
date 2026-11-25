@@ -66,6 +66,8 @@ function clearImages() {
   dynamicImages.value = []
 }
 function handleClick(image: WaterfallImage, index: number, event: MouseEvent) {
+  // 示例数据带 link：这里拦截跳转，专注演示 click 回调（删掉本行即恢复默认跳转）
+  event.preventDefault()
   clicked.value = image
   clickedIndex.value = index
   console.log('click', image, index, event)
@@ -90,8 +92,8 @@ function loadImages() {
   for (let i = 1; i <= 10; i++) {
     images.value.push({
       name: `image-${i}`,
-      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/${i}.jpg`
-      // link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/${i}.jpg`
+      src: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/${i}.jpg`,
+      link: `https://cdn.jsdelivr.net/gh/themusecatcher/resources@0.1.2/${i}.jpg`
     })
   }
 }
@@ -138,6 +140,11 @@ onBeforeUnmount(() => {
     <h2 class="mt30 mb10">间隙</h2>
     <Waterfall :images="images" :gap="[40, 8]" />
     <h2 class="mt30 mb10">点击事件</h2>
+    <p class="mb10">
+      <code>click</code> 回调会拿到当前图片与下标；图片带 <code>link</code> 时同样先派发事件，可在回调中
+      <code>preventDefault()</code> 拦截跳转（下方示例即如此）。未设 <code>link</code> 的格子不进入
+      <code>Tab</code> 序列，<code>click</code> 也就没有键盘等价路径（需要键盘可达时请为图片提供 <code>link</code>）
+    </p>
     <Alert class="mb10" type="info" show-icon :message="clickMessage" :description="clickDescription" />
     <Waterfall :images="images" @click="handleClick" />
     <h2 class="mt30 mb10">动态增删</h2>
