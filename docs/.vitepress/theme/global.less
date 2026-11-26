@@ -89,6 +89,114 @@
 }
 
 /**
+ * Component: Custom Block: Details（Show Code）
+ * -------------------------------------------------------------------------- */
+
+/*
+ * 原生 <details> 有两处天生不可动画：::marker 上的 transform / transition 全部无效，
+ * 内容区又是 content-visibility 的离散切换。所以「箭头生硬转向 + 内容瞬间展开」
+ * 不是样式没写，而是无从下手。这里换成两件事：自绘 chevron 承担转向，::details-content 承担高度。
+ * 不认识 ::details-content 的浏览器会整条忽略该规则，退回原生瞬时展开，不会产生破坏。
+ */
+.custom-block.details {
+  --details-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5.5 4 10.5 8l-5 4'/%3E%3C/svg%3E");
+  interpolate-size: allow-keywords;
+
+  &::details-content {
+    height: 0;
+    overflow: hidden;
+    transition:
+      height 0.32s cubic-bezier(0.33, 1, 0.68, 1),
+      content-visibility 0.32s;
+    transition-behavior: allow-discrete;
+  }
+
+  & > :not(summary) {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.32s ease,
+      transform 0.32s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+
+  &[open]::details-content {
+    height: auto;
+  }
+
+  &[open] > :not(summary) {
+    opacity: 1;
+    transform: none;
+    animation: details-content-in 0.24s cubic-bezier(0.33, 1, 0.68, 1) 0.06s backwards;
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    transition: color 0.18s ease-out;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::marker {
+      content: '';
+    }
+
+    // 用 mask 而非背景图：图形只定义一次，颜色交给 background-color，明暗主题共用一份 SVG
+    &::before {
+      content: '';
+      flex: none;
+      width: 18px;
+      height: 18px;
+      margin-right: 4px;
+      background-color: var(--vp-c-text-2);
+      -webkit-mask: var(--details-chevron) center / 16px 16px no-repeat;
+      mask: var(--details-chevron) center / 16px 16px no-repeat;
+      transition:
+        transform 0.3s cubic-bezier(0.34, 1.5, 0.64, 1),
+        background-color 0.18s ease-out;
+    }
+
+    // 与文件后面既有的 summary:hover 文字色同色阶，悬停时图标与标题一起转紫
+    &:hover::before {
+      background-color: var(--vp-c-brand-lighter);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--vp-c-brand-1);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+  }
+
+  // 展开态只靠旋转表达状态，不再额外染主色
+  &[open] summary::before {
+    transform: rotate(90deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    summary::before,
+    &::details-content,
+    & > :not(summary) {
+      transition: none;
+      animation: none;
+    }
+  }
+}
+
+@keyframes details-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/**
  * Component: Algolia
  * -------------------------------------------------------------------------- */
 
