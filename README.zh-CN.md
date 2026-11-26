@@ -224,21 +224,23 @@ pnpm docs:dev
 
 `Vue Amazing UI` 的每一次成长，都离不开每一位贡献者。无论是新增组件、修复缺陷，还是完善文档与示例，都欢迎参与。
 
-提交代码前，请先阅读[贡献指南](CONTRIBUTING.zh-CN.md)。
+- 提交代码前请阅读[贡献指南](CONTRIBUTING.zh-CN.md)（分支规范、提交信息、质量门禁）
+- 遇到问题或有新想法，欢迎[提交 Issue](https://github.com/themusecatcher/vue-amazing-ui/issues)
+- 版本变更见[更新日志](https://themusecatcher.github.io/vue-amazing-ui/guide/changelog.html)
 
 ## 博客
 
-[My CSDN Blogs](https://themusecatcher.blog.csdn.net)
+[CSDN](https://themusecatcher.blog.csdn.net)
 
 ## 赞助
 
-`Vue Amazing UI` 是采用 `MIT` 许可的开源项目，使用完全免费。组件库及文档所有工作均由作者一人完成，开发迭代过程实属不易...为了组件库的健康可持续发展，非常期望能获得您的支持与赞助。
+`Vue Amazing UI` 采用 `MIT` 许可，个人与商业使用均免费。从设计、开发到文档站与演示页面，全部由作者一人维护；如果这个组件库对你的工作或项目有帮助，欢迎请作者喝杯咖啡（金额随意）。
 
-#### [成为赞助者](https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html)
+[成为赞助者](https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html)
 
-## 赞助者 🫡
+### 赞助者
 
-所有的赞助者都将出现在此处，非常感谢你们的支持与赞助 ❤️
+感谢以下支持者（排名不分先后）：
 
 <img width="56" height="56" src="./docs/public/avatar_1.webp" alt="WeChat@Ant" title="WeChat@Ant" />&nbsp;&nbsp;<a href="https://github.com/nizhensh-i" target="_blank"><img width="56" height="56" src="./docs/public/avatar_2.webp" alt="GitHub@nizhensh-i" title="GitHub@nizhensh-i"></a>&nbsp;&nbsp;<a href="https://github.com/beijin1949" target="_blank"><img width="56" height="56" src="./docs/public/avatar_3.webp" alt="GitHub@beijin1949" title="GitHub@beijin1949"></a>&nbsp;&nbsp;<a href="https://github.com/JinZemin" target="_blank"><img width="56" height="56" src="./docs/public/avatar_4.webp" alt="GitHub@JinZemin" title="GitHub@JinZemin"></a>&nbsp;&nbsp;<a href="https://github.com/ye5840" target="_blank"><img width="56" height="56" src="./docs/public/avatar_5.webp" alt="GitHub@ye5840" title="GitHub@ye5840"></a>&nbsp;&nbsp;<img width="56" height="56" src="./docs/public/avatar_6.webp" alt="WeChat@**洋" title="WeChat@**洋">&nbsp;&nbsp;<img width="56" height="56" src="./docs/public/avatar_default.svg" alt="WeChat@*梦" title="WeChat@*梦">&nbsp;&nbsp;<img width="56" height="56" src="./docs/public/avatar_default.svg" alt="Alipay@**山" title="Alipay@**山">
 
@@ -292,3 +294,7 @@ pnpm docs:dev
 | useOptionsSupported | 检查浏览器是否支持给定的事件监听器选项 | (option: 'capture' &#124; 'once' &#124; 'passive' &#124; 'signal') => { isSupported: Ref\<boolean> } |
 | getScrollParent | 向上查找元素最近的可滚动父元素函数 | (el: HTMLElement &#124; null) => HTMLElement &#124; null |
 | useScrollParent | 查询并监听最近可滚动父元素，响应视口 `resize` 的组合式函数 | (contentRef: Ref\<HTMLElement &#124; null>, onScroll: () => void, options: ScrollParentOptions = {}) => { scrollTarget: Ref\<HTMLElement &#124; null>, viewportWidth: Ref\<number>, viewportHeight: Ref\<number>, observeScroll: \() => void, cleanup: \() => void } |
+
+## 许可
+
+基于 [MIT](./LICENSE) 许可发布。

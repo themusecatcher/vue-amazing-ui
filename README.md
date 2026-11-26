@@ -224,21 +224,23 @@ pnpm docs:dev
 
 `Vue Amazing UI` grows together with its community. Whether you are adding a component, fixing a bug, or improving the docs and examples, your contribution is always welcome.
 
-Before submitting code, please read the [Contributing Guide](CONTRIBUTING.md).
+- Read the [Contributing Guide](CONTRIBUTING.md) before submitting code (branch naming, commit messages, quality gates).
+- Found a problem or have an idea? [Open an issue](https://github.com/themusecatcher/vue-amazing-ui/issues).
+- See the [changelog](https://themusecatcher.github.io/vue-amazing-ui/guide/changelog.html) for version changes.
 
-## Blogs
+## Blog
 
-[My CSDN Blogs](https://themusecatcher.blog.csdn.net)
+[CSDN](https://themusecatcher.blog.csdn.net)
 
 ## Sponsorship
 
-`Vue Amazing UI` is an open-source project licensed under the `MIT` license, and it is completely free to use. All work on the component library and documentation is completed by the author alone, and the development and iteration process has been challenging. For the healthy and sustainable development of the component library, your support and sponsorship are greatly appreciated.
+`Vue Amazing UI` is released under the `MIT` license and is completely free for personal and commercial use. From design and development to the documentation site and demos, everything is maintained by a single author. If this library helps your work or project, you are welcome to buy the author a coffee — any amount is appreciated.
 
-#### [Become a Sponsor](https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html)
+[Become a Sponsor](https://themusecatcher.github.io/vue-amazing-ui/sponsor/charge.html)
 
-## Sponsors 🫡
+### Sponsors
 
-All sponsors will be listed here, thank you very much for your support and sponsorship ❤️
+Thanks to the following supporters (in no particular order):
 
 <img width="56" height="56" src="./docs/public/avatar_1.webp" alt="WeChat@Ant" title="WeChat@Ant" />&nbsp;&nbsp;<a href="https://github.com/nizhensh-i" target="_blank"><img width="56" height="56" src="./docs/public/avatar_2.webp" alt="GitHub@nizhensh-i" title="GitHub@nizhensh-i"></a>&nbsp;&nbsp;<a href="https://github.com/beijin1949" target="_blank"><img width="56" height="56" src="./docs/public/avatar_3.webp" alt="GitHub@beijin1949" title="GitHub@beijin1949"></a>&nbsp;&nbsp;<a href="https://github.com/JinZemin" target="_blank"><img width="56" height="56" src="./docs/public/avatar_4.webp" alt="GitHub@JinZemin" title="GitHub@JinZemin"></a>&nbsp;&nbsp;<a href="https://github.com/ye5840" target="_blank"><img width="56" height="56" src="./docs/public/avatar_5.webp" alt="GitHub@ye5840" title="GitHub@ye5840"></a>&nbsp;&nbsp;<img width="56" height="56" src="./docs/public/avatar_6.webp" alt="WeChat@**洋" title="WeChat@**洋">&nbsp;&nbsp;<img width="56" height="56" src="./docs/public/avatar_default.svg" alt="WeChat@*梦" title="WeChat@*梦">&nbsp;&nbsp;<img width="56" height="56" src="./docs/public/avatar_default.svg" alt="Alipay@**山" title="Alipay@**山">
 
@@ -292,3 +294,7 @@ All sponsors will be listed here, thank you very much for your support and spons
 | useOptionsSupported | Checks if the browser supports the given event listener options | (option: 'capture' &#124; 'once' &#124; 'passive' &#124; 'signal') => { isSupported: Ref\<boolean> } |
 | getScrollParent | Function to find the nearest scrollable parent element upward | (el: HTMLElement &#124; null) => HTMLElement &#124; null |
 | useScrollParent | Composable to query and watch the nearest scrollable parent element and respond to viewport `resize` | (contentRef: Ref\<HTMLElement &#124; null>, onScroll: () => void, options: ScrollParentOptions = {}) => { scrollTarget: Ref\<HTMLElement &#124; null>, viewportWidth: Ref\<number>, viewportHeight: Ref\<number>, observeScroll: \() => void, cleanup: \() => void } |
+
+## License
+
+Released under the [MIT](./LICENSE) license.
