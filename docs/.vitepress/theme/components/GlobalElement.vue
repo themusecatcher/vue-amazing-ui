@@ -7,12 +7,10 @@ import { THEME_SWATCHES, themePrimary } from '../theme-color'
 interface Props {
   hideSponsor?: boolean // 是否隐藏 赞助 按钮
   hideBackTop?: boolean // 是否隐藏 BackTop 组件
-  hideWatermark?: boolean // 是否隐藏 Watermark 组件
 }
 withDefaults(defineProps<Props>(), {
   hideSponsor: false,
-  hideBackTop: false,
-  hideWatermark: false
+  hideBackTop: false
 })
 // 常驻浮钮的气泡皮肤：几处共用一份，避免逐条重复
 const tooltipProps = {
@@ -97,7 +95,6 @@ const themeTooltipProps = computed(() => ({
     </template>
   </FloatButton>
   <BackTop v-if="!hideBackTop" />
-  <Watermark v-if="!hideWatermark" fullscreen content="Vue Amazing UI" />
 </template>
 <style lang="less" scoped>
 /* 取色器外壳：本身固定成 44 × 44 的浮钮占位，既是面板锚点也是浮钮的排布容器 */

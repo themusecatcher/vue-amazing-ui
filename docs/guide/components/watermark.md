@@ -1,6 +1,6 @@
 # 水印 Watermark
 
-<GlobalElement hide-watermark />
+<GlobalElement />
 
 _给页面的某个区域加上水印_
 
