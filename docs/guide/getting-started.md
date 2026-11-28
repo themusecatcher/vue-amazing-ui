@@ -56,7 +56,7 @@ import 'vue-amazing-ui/es/tag/style'
 ```
 
 - 组件可直接在 `main.ts` 中 `app.use(Button).use(Tag)` 全局注册，也可在 `SFC` 中按需使用；
-- 更省心的是自动按需引入（无需手写样式引入），详见[按需引入](./import-on-demand.md#自动按需引入-强烈推荐)。
+- 更省心的是[自动按需引入](./import-on-demand.md#自动按需引入-强烈推荐)：`unplugin-vue-components` 自动解析模板中用到的组件，并连同样式一起导入，无需手写 `import`。
 
 ## 使用类型
 

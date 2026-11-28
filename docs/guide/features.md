@@ -10,7 +10,7 @@ description: Amazing UI 组件库的核心特性——主题可调、明暗双�
   <template #icon>
     <TeamOutlined />
   </template>
-  <p style="font-size: 18px; font-weight: 600; color: #1677ff;">Join Me</p>
+  <p style="font-size: 18px; font-weight: 600; color: var(--va-primary-color);">Join Me</p>
   <template #description>
     <p style="font-size: 16px;">
       如果您对
@@ -63,30 +63,30 @@ description: Amazing UI 组件库的核心特性——主题可调、明暗双�
 - `Vue Amazing UI` 全量使用 `TypeScript` 编写，和你的 `TypeScript` 项目无缝衔接
 - 全部组件均为单文件组件 `SFC`，可直接使用源码
 - 支持明暗双主题，可手动切换，也可跟随系统主题自动切换，全部组件均已适配
-- 支持服务端渲染，详见[快速上手](/guide/getting-started#服务端渲染-ssr)
+- 支持服务端渲染，详见[快速上手](/guide/getting-started.html#服务端渲染-ssr)
 - 开箱即用，不墨迹
 
 ## 主题系统
 
-_种子 → 派生 → `CSS` 变量 → 组件消费，`JS` 只算一次，换肤不重建样式、不闪烁_
+_种子 → 派生 → `CSS` 变量 → 组件消费，`JS` 只算一次，换肤不重建组件、不闪烁_
 
-改整套用 `ConfigProvider` 的 `theme.seed`，切浅色 / 暗色用 `theme.mode`，单组件主色用 `theme.components.<组件>.primaryColor`，单点用 `--va-<组件>-*` 令牌。
+改整套用 `ConfigProvider` 的 `theme.seed.primary`，切浅色 / 暗色用 `theme.mode`，单组件主色用 `theme.components.<组件>.primaryColor`，改某个作用域用 `--va-*`，只改单个视觉面用 `--va-<组件>-*` 令牌。
 
-详见[定制主题](/guide/customize-theme)，组件级令牌见[同页附录](/guide/customize-theme#组件级令牌与整组覆盖)。
+详见[定制主题](/guide/customize-theme.html)（主题概念、派生模型、四层配置面、变量 / 令牌清单、排查与迁移），组件令牌明细见[文末清单](/guide/customize-theme.html#组件级令牌与整组覆盖)。
 
 ## 使用方式
 
 | 引入方式 | 特点 | 推荐度 |
 | :-- | :-- | :-- |
-| [全局完整注册所有组件](/guide/getting-started#使用组件) | 一次全量注册，引入即用，包体积最大 | <Tag color="error" size="small">不推荐</Tag> |
-| [全局部分注册组件](/guide/import-on-demand#全局注册) | 手动注册需要的组件 | <Tag color="processing" size="small">按需</Tag> |
-| [局部注册组件](/guide/import-on-demand#局部注册) | 单个组件内 `import` 后使用 | <Tag color="processing" size="small">按需</Tag> |
-| [自动按需引入](/guide/import-on-demand#自动按需引入-强烈推荐) | `unplugin-vue-components` 自动解析并导入组件与样式 | <Tag color="success" size="small">强烈推荐</Tag> |
+| [全局完整注册所有组件](/guide/getting-started.html#使用组件) | 一次全量注册，引入即用，包体积最大 | <Tag color="error" size="small">不推荐</Tag> |
+| [全局部分注册组件](/guide/import-on-demand.html#全局注册) | 手动注册需要的组件 | <Tag color="processing" size="small">按需</Tag> |
+| [局部注册组件](/guide/import-on-demand.html#局部注册) | 单个组件内 `import` 后使用 | <Tag color="processing" size="small">按需</Tag> |
+| [自动按需引入](/guide/import-on-demand.html#自动按需引入-强烈推荐) | `unplugin-vue-components` 自动解析并导入组件与样式 | <Tag color="success" size="small">强烈推荐</Tag> |
 | 单文件组件 `SFC` | 无需任何安装引入，直接使用组件源码 | — |
 
 ## 全局默认样式
 
-_每个组件的样式入口（如 `import 'vue-amazing-ui/es/button/style'`）已内含下面的全局默认样式，无需单独引入（推荐使用[自动按需引入](/guide/import-on-demand#自动按需引入-强烈推荐)）：_
+_每个组件的样式入口（如 `import 'vue-amazing-ui/es/button/style'`）已内含下面的全局默认样式，无需单独引入（推荐使用[自动按需引入](/guide/import-on-demand.html#自动按需引入-强烈推荐)）：_
 
 ```less
 // 组件库全局样式定义（主题变量表由构建期内联在此之上，为便于阅读此处省略）

@@ -16,7 +16,7 @@ description: '通过 ConfigProvider 的 7 个颜色种子定制主题，默认�
 
 默认主题色为 <Tag :bordered="false" color="#1677ff">#1677ff</Tag>，无需任何配置。
 
-> 本页主要说明概念、派生规则、变量清单与各层用法；可交互示例与 `API` 参考见[全局化配置 ConfigProvider](/guide/components/config-provider.html)。
+> 本页主要说明主题概念、派生模型、四层配置面、变量 / 令牌清单、排查与迁移；可交互示例与 `API` 参考见[全局化配置 ConfigProvider](/guide/components/config-provider.html)。
 
 ## 术语说明：种子 / 派生 / 变量 / 令牌
 
